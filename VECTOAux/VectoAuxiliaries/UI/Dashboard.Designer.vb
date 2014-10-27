@@ -23,18 +23,18 @@ Partial Class Dashboard
     <System.Diagnostics.DebuggerStepThrough()> _
     Private Sub InitializeComponent()
         Me.components = New System.ComponentModel.Container()
-        Dim DataGridViewCellStyle13 As System.Windows.Forms.DataGridViewCellStyle = New System.Windows.Forms.DataGridViewCellStyle()
-        Dim DataGridViewCellStyle14 As System.Windows.Forms.DataGridViewCellStyle = New System.Windows.Forms.DataGridViewCellStyle()
-        Dim DataGridViewCellStyle15 As System.Windows.Forms.DataGridViewCellStyle = New System.Windows.Forms.DataGridViewCellStyle()
-        Dim DataGridViewCellStyle16 As System.Windows.Forms.DataGridViewCellStyle = New System.Windows.Forms.DataGridViewCellStyle()
-        Dim DataGridViewCellStyle17 As System.Windows.Forms.DataGridViewCellStyle = New System.Windows.Forms.DataGridViewCellStyle()
-        Dim DataGridViewCellStyle18 As System.Windows.Forms.DataGridViewCellStyle = New System.Windows.Forms.DataGridViewCellStyle()
-        Dim DataGridViewCellStyle19 As System.Windows.Forms.DataGridViewCellStyle = New System.Windows.Forms.DataGridViewCellStyle()
-        Dim DataGridViewCellStyle20 As System.Windows.Forms.DataGridViewCellStyle = New System.Windows.Forms.DataGridViewCellStyle()
-        Dim DataGridViewCellStyle21 As System.Windows.Forms.DataGridViewCellStyle = New System.Windows.Forms.DataGridViewCellStyle()
-        Dim DataGridViewCellStyle22 As System.Windows.Forms.DataGridViewCellStyle = New System.Windows.Forms.DataGridViewCellStyle()
-        Dim DataGridViewCellStyle23 As System.Windows.Forms.DataGridViewCellStyle = New System.Windows.Forms.DataGridViewCellStyle()
-        Dim DataGridViewCellStyle24 As System.Windows.Forms.DataGridViewCellStyle = New System.Windows.Forms.DataGridViewCellStyle()
+        Dim DataGridViewCellStyle25 As System.Windows.Forms.DataGridViewCellStyle = New System.Windows.Forms.DataGridViewCellStyle()
+        Dim DataGridViewCellStyle26 As System.Windows.Forms.DataGridViewCellStyle = New System.Windows.Forms.DataGridViewCellStyle()
+        Dim DataGridViewCellStyle27 As System.Windows.Forms.DataGridViewCellStyle = New System.Windows.Forms.DataGridViewCellStyle()
+        Dim DataGridViewCellStyle28 As System.Windows.Forms.DataGridViewCellStyle = New System.Windows.Forms.DataGridViewCellStyle()
+        Dim DataGridViewCellStyle29 As System.Windows.Forms.DataGridViewCellStyle = New System.Windows.Forms.DataGridViewCellStyle()
+        Dim DataGridViewCellStyle30 As System.Windows.Forms.DataGridViewCellStyle = New System.Windows.Forms.DataGridViewCellStyle()
+        Dim DataGridViewCellStyle31 As System.Windows.Forms.DataGridViewCellStyle = New System.Windows.Forms.DataGridViewCellStyle()
+        Dim DataGridViewCellStyle32 As System.Windows.Forms.DataGridViewCellStyle = New System.Windows.Forms.DataGridViewCellStyle()
+        Dim DataGridViewCellStyle33 As System.Windows.Forms.DataGridViewCellStyle = New System.Windows.Forms.DataGridViewCellStyle()
+        Dim DataGridViewCellStyle34 As System.Windows.Forms.DataGridViewCellStyle = New System.Windows.Forms.DataGridViewCellStyle()
+        Dim DataGridViewCellStyle35 As System.Windows.Forms.DataGridViewCellStyle = New System.Windows.Forms.DataGridViewCellStyle()
+        Dim DataGridViewCellStyle36 As System.Windows.Forms.DataGridViewCellStyle = New System.Windows.Forms.DataGridViewCellStyle()
         Me.pnlMain = New System.Windows.Forms.Panel()
         Me.btnCancel = New System.Windows.Forms.Button()
         Me.btnFinish = New System.Windows.Forms.Button()
@@ -122,7 +122,6 @@ Partial Class Dashboard
         Me.txtPerStopBrakeActuationNIperKG = New System.Windows.Forms.TextBox()
         Me.txtSmartRegenFractionTotalAirDemand = New System.Windows.Forms.TextBox()
         Me.tabHVACConfig = New System.Windows.Forms.TabPage()
-        Me.lblHVACTitle = New System.Windows.Forms.Label()
         Me.txtHVACFuellingLitresPerHour = New System.Windows.Forms.TextBox()
         Me.lblHVACFuellingLitresPerHour = New System.Windows.Forms.Label()
         Me.txtHVACMechanicalLoadPowerWatts = New System.Windows.Forms.TextBox()
@@ -130,27 +129,10 @@ Partial Class Dashboard
         Me.txtHVACElectricalLoadPowerWatts = New System.Windows.Forms.TextBox()
         Me.lblHVACElectricalLoadPowerWatts = New System.Windows.Forms.Label()
         Me.tabPlayground = New System.Windows.Forms.TabPage()
-        Me.lblM0Outputs = New System.Windows.Forms.Label()
-        Me.Panel1 = New System.Windows.Forms.Panel()
-        Me.lblAlternatorsEfficiency = New System.Windows.Forms.Label()
-        Me.txtM0_Out_AlternatorsEfficiency = New System.Windows.Forms.TextBox()
-        Me.txtM0_Out_HVacElectricalCurrentDemand = New System.Windows.Forms.TextBox()
-        Me.btnInitialise = New System.Windows.Forms.Button()
-        Me.chkClutchEngaged = New System.Windows.Forms.CheckBox()
-        Me.lblTotalCycleTimeSeconds = New System.Windows.Forms.Label()
-        Me.lblEngineSpeed = New System.Windows.Forms.Label()
-        Me.lblEngineMotoringPower = New System.Windows.Forms.Label()
-        Me.lblEngineDrivelineTorque = New System.Windows.Forms.Label()
-        Me.lblEngineDrivelinePower = New System.Windows.Forms.Label()
-        Me.txtTotalCycleTimeSeconds = New System.Windows.Forms.TextBox()
-        Me.txtEngineSpeed = New System.Windows.Forms.TextBox()
-        Me.txtEngineMotoringPower = New System.Windows.Forms.TextBox()
-        Me.txtEngineDrivelineTorque = New System.Windows.Forms.TextBox()
-        Me.txtEngineDrivelinePower = New System.Windows.Forms.TextBox()
         Me.resultCardContextMenu = New System.Windows.Forms.ContextMenuStrip(Me.components)
         Me.DeleteToolStripMenuItem = New System.Windows.Forms.ToolStripMenuItem()
         Me.ErrorProvider = New System.Windows.Forms.ErrorProvider(Me.components)
-        Me.lblOutHVACElectricalCurrentDemand = New System.Windows.Forms.Label()
+        Me.lblHVACTitle = New System.Windows.Forms.Label()
         Me.pnlMain.SuspendLayout
         Me.tabMain.SuspendLayout
         Me.tabGeneralConfig.SuspendLayout
@@ -163,8 +145,6 @@ Partial Class Dashboard
         Me.pnlPneumaticsUserInput.SuspendLayout
         Me.pnlPneumaticAuxillaries.SuspendLayout
         Me.tabHVACConfig.SuspendLayout
-        Me.tabPlayground.SuspendLayout
-        Me.Panel1.SuspendLayout
         Me.resultCardContextMenu.SuspendLayout
         CType(Me.ErrorProvider,System.ComponentModel.ISupportInitialize).BeginInit
         Me.SuspendLayout
@@ -331,97 +311,97 @@ Partial Class Dashboard
         '
         'gvResultsCardOverrun
         '
-        DataGridViewCellStyle13.Alignment = System.Windows.Forms.DataGridViewContentAlignment.MiddleLeft
-        DataGridViewCellStyle13.BackColor = System.Drawing.SystemColors.Control
-        DataGridViewCellStyle13.Font = New System.Drawing.Font("Microsoft Sans Serif", 8.25!, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, CType(0,Byte))
-        DataGridViewCellStyle13.ForeColor = System.Drawing.SystemColors.WindowText
-        DataGridViewCellStyle13.SelectionBackColor = System.Drawing.SystemColors.Highlight
-        DataGridViewCellStyle13.SelectionForeColor = System.Drawing.SystemColors.HighlightText
-        DataGridViewCellStyle13.WrapMode = System.Windows.Forms.DataGridViewTriState.[True]
-        Me.gvResultsCardOverrun.ColumnHeadersDefaultCellStyle = DataGridViewCellStyle13
+        DataGridViewCellStyle25.Alignment = System.Windows.Forms.DataGridViewContentAlignment.MiddleLeft
+        DataGridViewCellStyle25.BackColor = System.Drawing.SystemColors.Control
+        DataGridViewCellStyle25.Font = New System.Drawing.Font("Microsoft Sans Serif", 8.25!, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, CType(0,Byte))
+        DataGridViewCellStyle25.ForeColor = System.Drawing.SystemColors.WindowText
+        DataGridViewCellStyle25.SelectionBackColor = System.Drawing.SystemColors.Highlight
+        DataGridViewCellStyle25.SelectionForeColor = System.Drawing.SystemColors.HighlightText
+        DataGridViewCellStyle25.WrapMode = System.Windows.Forms.DataGridViewTriState.[True]
+        Me.gvResultsCardOverrun.ColumnHeadersDefaultCellStyle = DataGridViewCellStyle25
         Me.gvResultsCardOverrun.ColumnHeadersHeightSizeMode = System.Windows.Forms.DataGridViewColumnHeadersHeightSizeMode.AutoSize
-        DataGridViewCellStyle14.Alignment = System.Windows.Forms.DataGridViewContentAlignment.MiddleLeft
-        DataGridViewCellStyle14.BackColor = System.Drawing.SystemColors.Window
-        DataGridViewCellStyle14.Font = New System.Drawing.Font("Microsoft Sans Serif", 8.25!, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, CType(0,Byte))
-        DataGridViewCellStyle14.ForeColor = System.Drawing.SystemColors.ControlText
-        DataGridViewCellStyle14.SelectionBackColor = System.Drawing.SystemColors.Highlight
-        DataGridViewCellStyle14.SelectionForeColor = System.Drawing.SystemColors.HighlightText
-        DataGridViewCellStyle14.WrapMode = System.Windows.Forms.DataGridViewTriState.[False]
-        Me.gvResultsCardOverrun.DefaultCellStyle = DataGridViewCellStyle14
+        DataGridViewCellStyle26.Alignment = System.Windows.Forms.DataGridViewContentAlignment.MiddleLeft
+        DataGridViewCellStyle26.BackColor = System.Drawing.SystemColors.Window
+        DataGridViewCellStyle26.Font = New System.Drawing.Font("Microsoft Sans Serif", 8.25!, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, CType(0,Byte))
+        DataGridViewCellStyle26.ForeColor = System.Drawing.SystemColors.ControlText
+        DataGridViewCellStyle26.SelectionBackColor = System.Drawing.SystemColors.Highlight
+        DataGridViewCellStyle26.SelectionForeColor = System.Drawing.SystemColors.HighlightText
+        DataGridViewCellStyle26.WrapMode = System.Windows.Forms.DataGridViewTriState.[False]
+        Me.gvResultsCardOverrun.DefaultCellStyle = DataGridViewCellStyle26
         Me.gvResultsCardOverrun.Location = New System.Drawing.Point(590, 451)
         Me.gvResultsCardOverrun.Name = "gvResultsCardOverrun"
-        DataGridViewCellStyle15.Alignment = System.Windows.Forms.DataGridViewContentAlignment.MiddleLeft
-        DataGridViewCellStyle15.BackColor = System.Drawing.SystemColors.Control
-        DataGridViewCellStyle15.Font = New System.Drawing.Font("Microsoft Sans Serif", 8.25!, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, CType(0,Byte))
-        DataGridViewCellStyle15.ForeColor = System.Drawing.SystemColors.WindowText
-        DataGridViewCellStyle15.SelectionBackColor = System.Drawing.SystemColors.Highlight
-        DataGridViewCellStyle15.SelectionForeColor = System.Drawing.SystemColors.HighlightText
-        DataGridViewCellStyle15.WrapMode = System.Windows.Forms.DataGridViewTriState.[True]
-        Me.gvResultsCardOverrun.RowHeadersDefaultCellStyle = DataGridViewCellStyle15
+        DataGridViewCellStyle27.Alignment = System.Windows.Forms.DataGridViewContentAlignment.MiddleLeft
+        DataGridViewCellStyle27.BackColor = System.Drawing.SystemColors.Control
+        DataGridViewCellStyle27.Font = New System.Drawing.Font("Microsoft Sans Serif", 8.25!, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, CType(0,Byte))
+        DataGridViewCellStyle27.ForeColor = System.Drawing.SystemColors.WindowText
+        DataGridViewCellStyle27.SelectionBackColor = System.Drawing.SystemColors.Highlight
+        DataGridViewCellStyle27.SelectionForeColor = System.Drawing.SystemColors.HighlightText
+        DataGridViewCellStyle27.WrapMode = System.Windows.Forms.DataGridViewTriState.[True]
+        Me.gvResultsCardOverrun.RowHeadersDefaultCellStyle = DataGridViewCellStyle27
         Me.gvResultsCardOverrun.Size = New System.Drawing.Size(246, 125)
         Me.gvResultsCardOverrun.TabIndex = 18
         '
         'gvResultsCardTraction
         '
-        DataGridViewCellStyle16.Alignment = System.Windows.Forms.DataGridViewContentAlignment.MiddleLeft
-        DataGridViewCellStyle16.BackColor = System.Drawing.SystemColors.Control
-        DataGridViewCellStyle16.Font = New System.Drawing.Font("Microsoft Sans Serif", 8.25!, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, CType(0,Byte))
-        DataGridViewCellStyle16.ForeColor = System.Drawing.SystemColors.WindowText
-        DataGridViewCellStyle16.SelectionBackColor = System.Drawing.SystemColors.Highlight
-        DataGridViewCellStyle16.SelectionForeColor = System.Drawing.SystemColors.HighlightText
-        DataGridViewCellStyle16.WrapMode = System.Windows.Forms.DataGridViewTriState.[True]
-        Me.gvResultsCardTraction.ColumnHeadersDefaultCellStyle = DataGridViewCellStyle16
+        DataGridViewCellStyle28.Alignment = System.Windows.Forms.DataGridViewContentAlignment.MiddleLeft
+        DataGridViewCellStyle28.BackColor = System.Drawing.SystemColors.Control
+        DataGridViewCellStyle28.Font = New System.Drawing.Font("Microsoft Sans Serif", 8.25!, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, CType(0,Byte))
+        DataGridViewCellStyle28.ForeColor = System.Drawing.SystemColors.WindowText
+        DataGridViewCellStyle28.SelectionBackColor = System.Drawing.SystemColors.Highlight
+        DataGridViewCellStyle28.SelectionForeColor = System.Drawing.SystemColors.HighlightText
+        DataGridViewCellStyle28.WrapMode = System.Windows.Forms.DataGridViewTriState.[True]
+        Me.gvResultsCardTraction.ColumnHeadersDefaultCellStyle = DataGridViewCellStyle28
         Me.gvResultsCardTraction.ColumnHeadersHeightSizeMode = System.Windows.Forms.DataGridViewColumnHeadersHeightSizeMode.AutoSize
-        DataGridViewCellStyle17.Alignment = System.Windows.Forms.DataGridViewContentAlignment.MiddleLeft
-        DataGridViewCellStyle17.BackColor = System.Drawing.SystemColors.Window
-        DataGridViewCellStyle17.Font = New System.Drawing.Font("Microsoft Sans Serif", 8.25!, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, CType(0,Byte))
-        DataGridViewCellStyle17.ForeColor = System.Drawing.SystemColors.ControlText
-        DataGridViewCellStyle17.SelectionBackColor = System.Drawing.SystemColors.Highlight
-        DataGridViewCellStyle17.SelectionForeColor = System.Drawing.SystemColors.HighlightText
-        DataGridViewCellStyle17.WrapMode = System.Windows.Forms.DataGridViewTriState.[False]
-        Me.gvResultsCardTraction.DefaultCellStyle = DataGridViewCellStyle17
+        DataGridViewCellStyle29.Alignment = System.Windows.Forms.DataGridViewContentAlignment.MiddleLeft
+        DataGridViewCellStyle29.BackColor = System.Drawing.SystemColors.Window
+        DataGridViewCellStyle29.Font = New System.Drawing.Font("Microsoft Sans Serif", 8.25!, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, CType(0,Byte))
+        DataGridViewCellStyle29.ForeColor = System.Drawing.SystemColors.ControlText
+        DataGridViewCellStyle29.SelectionBackColor = System.Drawing.SystemColors.Highlight
+        DataGridViewCellStyle29.SelectionForeColor = System.Drawing.SystemColors.HighlightText
+        DataGridViewCellStyle29.WrapMode = System.Windows.Forms.DataGridViewTriState.[False]
+        Me.gvResultsCardTraction.DefaultCellStyle = DataGridViewCellStyle29
         Me.gvResultsCardTraction.Location = New System.Drawing.Point(311, 451)
         Me.gvResultsCardTraction.Name = "gvResultsCardTraction"
-        DataGridViewCellStyle18.Alignment = System.Windows.Forms.DataGridViewContentAlignment.MiddleLeft
-        DataGridViewCellStyle18.BackColor = System.Drawing.SystemColors.Control
-        DataGridViewCellStyle18.Font = New System.Drawing.Font("Microsoft Sans Serif", 8.25!, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, CType(0,Byte))
-        DataGridViewCellStyle18.ForeColor = System.Drawing.SystemColors.WindowText
-        DataGridViewCellStyle18.SelectionBackColor = System.Drawing.SystemColors.Highlight
-        DataGridViewCellStyle18.SelectionForeColor = System.Drawing.SystemColors.HighlightText
-        DataGridViewCellStyle18.WrapMode = System.Windows.Forms.DataGridViewTriState.[True]
-        Me.gvResultsCardTraction.RowHeadersDefaultCellStyle = DataGridViewCellStyle18
+        DataGridViewCellStyle30.Alignment = System.Windows.Forms.DataGridViewContentAlignment.MiddleLeft
+        DataGridViewCellStyle30.BackColor = System.Drawing.SystemColors.Control
+        DataGridViewCellStyle30.Font = New System.Drawing.Font("Microsoft Sans Serif", 8.25!, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, CType(0,Byte))
+        DataGridViewCellStyle30.ForeColor = System.Drawing.SystemColors.WindowText
+        DataGridViewCellStyle30.SelectionBackColor = System.Drawing.SystemColors.Highlight
+        DataGridViewCellStyle30.SelectionForeColor = System.Drawing.SystemColors.HighlightText
+        DataGridViewCellStyle30.WrapMode = System.Windows.Forms.DataGridViewTriState.[True]
+        Me.gvResultsCardTraction.RowHeadersDefaultCellStyle = DataGridViewCellStyle30
         Me.gvResultsCardTraction.Size = New System.Drawing.Size(258, 125)
         Me.gvResultsCardTraction.TabIndex = 17
         '
         'gvResultsCardIdle
         '
-        DataGridViewCellStyle19.Alignment = System.Windows.Forms.DataGridViewContentAlignment.MiddleLeft
-        DataGridViewCellStyle19.BackColor = System.Drawing.SystemColors.Control
-        DataGridViewCellStyle19.Font = New System.Drawing.Font("Microsoft Sans Serif", 8.25!, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, CType(0,Byte))
-        DataGridViewCellStyle19.ForeColor = System.Drawing.SystemColors.WindowText
-        DataGridViewCellStyle19.SelectionBackColor = System.Drawing.SystemColors.Highlight
-        DataGridViewCellStyle19.SelectionForeColor = System.Drawing.SystemColors.HighlightText
-        DataGridViewCellStyle19.WrapMode = System.Windows.Forms.DataGridViewTriState.[True]
-        Me.gvResultsCardIdle.ColumnHeadersDefaultCellStyle = DataGridViewCellStyle19
+        DataGridViewCellStyle31.Alignment = System.Windows.Forms.DataGridViewContentAlignment.MiddleLeft
+        DataGridViewCellStyle31.BackColor = System.Drawing.SystemColors.Control
+        DataGridViewCellStyle31.Font = New System.Drawing.Font("Microsoft Sans Serif", 8.25!, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, CType(0,Byte))
+        DataGridViewCellStyle31.ForeColor = System.Drawing.SystemColors.WindowText
+        DataGridViewCellStyle31.SelectionBackColor = System.Drawing.SystemColors.Highlight
+        DataGridViewCellStyle31.SelectionForeColor = System.Drawing.SystemColors.HighlightText
+        DataGridViewCellStyle31.WrapMode = System.Windows.Forms.DataGridViewTriState.[True]
+        Me.gvResultsCardIdle.ColumnHeadersDefaultCellStyle = DataGridViewCellStyle31
         Me.gvResultsCardIdle.ColumnHeadersHeightSizeMode = System.Windows.Forms.DataGridViewColumnHeadersHeightSizeMode.AutoSize
-        DataGridViewCellStyle20.Alignment = System.Windows.Forms.DataGridViewContentAlignment.MiddleLeft
-        DataGridViewCellStyle20.BackColor = System.Drawing.SystemColors.Window
-        DataGridViewCellStyle20.Font = New System.Drawing.Font("Microsoft Sans Serif", 8.25!, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, CType(0,Byte))
-        DataGridViewCellStyle20.ForeColor = System.Drawing.SystemColors.ControlText
-        DataGridViewCellStyle20.SelectionBackColor = System.Drawing.SystemColors.Highlight
-        DataGridViewCellStyle20.SelectionForeColor = System.Drawing.SystemColors.HighlightText
-        DataGridViewCellStyle20.WrapMode = System.Windows.Forms.DataGridViewTriState.[False]
-        Me.gvResultsCardIdle.DefaultCellStyle = DataGridViewCellStyle20
+        DataGridViewCellStyle32.Alignment = System.Windows.Forms.DataGridViewContentAlignment.MiddleLeft
+        DataGridViewCellStyle32.BackColor = System.Drawing.SystemColors.Window
+        DataGridViewCellStyle32.Font = New System.Drawing.Font("Microsoft Sans Serif", 8.25!, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, CType(0,Byte))
+        DataGridViewCellStyle32.ForeColor = System.Drawing.SystemColors.ControlText
+        DataGridViewCellStyle32.SelectionBackColor = System.Drawing.SystemColors.Highlight
+        DataGridViewCellStyle32.SelectionForeColor = System.Drawing.SystemColors.HighlightText
+        DataGridViewCellStyle32.WrapMode = System.Windows.Forms.DataGridViewTriState.[False]
+        Me.gvResultsCardIdle.DefaultCellStyle = DataGridViewCellStyle32
         Me.gvResultsCardIdle.Location = New System.Drawing.Point(35, 451)
         Me.gvResultsCardIdle.Name = "gvResultsCardIdle"
-        DataGridViewCellStyle21.Alignment = System.Windows.Forms.DataGridViewContentAlignment.MiddleLeft
-        DataGridViewCellStyle21.BackColor = System.Drawing.SystemColors.Control
-        DataGridViewCellStyle21.Font = New System.Drawing.Font("Microsoft Sans Serif", 8.25!, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, CType(0,Byte))
-        DataGridViewCellStyle21.ForeColor = System.Drawing.SystemColors.WindowText
-        DataGridViewCellStyle21.SelectionBackColor = System.Drawing.SystemColors.Highlight
-        DataGridViewCellStyle21.SelectionForeColor = System.Drawing.SystemColors.HighlightText
-        DataGridViewCellStyle21.WrapMode = System.Windows.Forms.DataGridViewTriState.[True]
-        Me.gvResultsCardIdle.RowHeadersDefaultCellStyle = DataGridViewCellStyle21
+        DataGridViewCellStyle33.Alignment = System.Windows.Forms.DataGridViewContentAlignment.MiddleLeft
+        DataGridViewCellStyle33.BackColor = System.Drawing.SystemColors.Control
+        DataGridViewCellStyle33.Font = New System.Drawing.Font("Microsoft Sans Serif", 8.25!, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, CType(0,Byte))
+        DataGridViewCellStyle33.ForeColor = System.Drawing.SystemColors.WindowText
+        DataGridViewCellStyle33.SelectionBackColor = System.Drawing.SystemColors.Highlight
+        DataGridViewCellStyle33.SelectionForeColor = System.Drawing.SystemColors.HighlightText
+        DataGridViewCellStyle33.WrapMode = System.Windows.Forms.DataGridViewTriState.[True]
+        Me.gvResultsCardIdle.RowHeadersDefaultCellStyle = DataGridViewCellStyle33
         Me.gvResultsCardIdle.Size = New System.Drawing.Size(256, 125)
         Me.gvResultsCardIdle.TabIndex = 16
         '
@@ -473,33 +453,33 @@ Partial Class Dashboard
         '
         'gvElectricalConsumables
         '
-        DataGridViewCellStyle22.Alignment = System.Windows.Forms.DataGridViewContentAlignment.MiddleLeft
-        DataGridViewCellStyle22.BackColor = System.Drawing.SystemColors.Control
-        DataGridViewCellStyle22.Font = New System.Drawing.Font("Microsoft Sans Serif", 8.25!, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, CType(0,Byte))
-        DataGridViewCellStyle22.ForeColor = System.Drawing.SystemColors.WindowText
-        DataGridViewCellStyle22.SelectionBackColor = System.Drawing.SystemColors.Highlight
-        DataGridViewCellStyle22.SelectionForeColor = System.Drawing.SystemColors.HighlightText
-        DataGridViewCellStyle22.WrapMode = System.Windows.Forms.DataGridViewTriState.[True]
-        Me.gvElectricalConsumables.ColumnHeadersDefaultCellStyle = DataGridViewCellStyle22
+        DataGridViewCellStyle34.Alignment = System.Windows.Forms.DataGridViewContentAlignment.MiddleLeft
+        DataGridViewCellStyle34.BackColor = System.Drawing.SystemColors.Control
+        DataGridViewCellStyle34.Font = New System.Drawing.Font("Microsoft Sans Serif", 8.25!, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, CType(0,Byte))
+        DataGridViewCellStyle34.ForeColor = System.Drawing.SystemColors.WindowText
+        DataGridViewCellStyle34.SelectionBackColor = System.Drawing.SystemColors.Highlight
+        DataGridViewCellStyle34.SelectionForeColor = System.Drawing.SystemColors.HighlightText
+        DataGridViewCellStyle34.WrapMode = System.Windows.Forms.DataGridViewTriState.[True]
+        Me.gvElectricalConsumables.ColumnHeadersDefaultCellStyle = DataGridViewCellStyle34
         Me.gvElectricalConsumables.ColumnHeadersHeightSizeMode = System.Windows.Forms.DataGridViewColumnHeadersHeightSizeMode.AutoSize
-        DataGridViewCellStyle23.Alignment = System.Windows.Forms.DataGridViewContentAlignment.MiddleLeft
-        DataGridViewCellStyle23.BackColor = System.Drawing.SystemColors.Window
-        DataGridViewCellStyle23.Font = New System.Drawing.Font("Microsoft Sans Serif", 8.25!, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, CType(0,Byte))
-        DataGridViewCellStyle23.ForeColor = System.Drawing.SystemColors.ControlText
-        DataGridViewCellStyle23.SelectionBackColor = System.Drawing.SystemColors.Highlight
-        DataGridViewCellStyle23.SelectionForeColor = System.Drawing.SystemColors.HighlightText
-        DataGridViewCellStyle23.WrapMode = System.Windows.Forms.DataGridViewTriState.[False]
-        Me.gvElectricalConsumables.DefaultCellStyle = DataGridViewCellStyle23
+        DataGridViewCellStyle35.Alignment = System.Windows.Forms.DataGridViewContentAlignment.MiddleLeft
+        DataGridViewCellStyle35.BackColor = System.Drawing.SystemColors.Window
+        DataGridViewCellStyle35.Font = New System.Drawing.Font("Microsoft Sans Serif", 8.25!, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, CType(0,Byte))
+        DataGridViewCellStyle35.ForeColor = System.Drawing.SystemColors.ControlText
+        DataGridViewCellStyle35.SelectionBackColor = System.Drawing.SystemColors.Highlight
+        DataGridViewCellStyle35.SelectionForeColor = System.Drawing.SystemColors.HighlightText
+        DataGridViewCellStyle35.WrapMode = System.Windows.Forms.DataGridViewTriState.[False]
+        Me.gvElectricalConsumables.DefaultCellStyle = DataGridViewCellStyle35
         Me.gvElectricalConsumables.Location = New System.Drawing.Point(33, 170)
         Me.gvElectricalConsumables.Name = "gvElectricalConsumables"
-        DataGridViewCellStyle24.Alignment = System.Windows.Forms.DataGridViewContentAlignment.MiddleLeft
-        DataGridViewCellStyle24.BackColor = System.Drawing.SystemColors.Control
-        DataGridViewCellStyle24.Font = New System.Drawing.Font("Microsoft Sans Serif", 8.25!, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, CType(0,Byte))
-        DataGridViewCellStyle24.ForeColor = System.Drawing.SystemColors.WindowText
-        DataGridViewCellStyle24.SelectionBackColor = System.Drawing.SystemColors.Highlight
-        DataGridViewCellStyle24.SelectionForeColor = System.Drawing.SystemColors.HighlightText
-        DataGridViewCellStyle24.WrapMode = System.Windows.Forms.DataGridViewTriState.[True]
-        Me.gvElectricalConsumables.RowHeadersDefaultCellStyle = DataGridViewCellStyle24
+        DataGridViewCellStyle36.Alignment = System.Windows.Forms.DataGridViewContentAlignment.MiddleLeft
+        DataGridViewCellStyle36.BackColor = System.Drawing.SystemColors.Control
+        DataGridViewCellStyle36.Font = New System.Drawing.Font("Microsoft Sans Serif", 8.25!, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, CType(0,Byte))
+        DataGridViewCellStyle36.ForeColor = System.Drawing.SystemColors.WindowText
+        DataGridViewCellStyle36.SelectionBackColor = System.Drawing.SystemColors.Highlight
+        DataGridViewCellStyle36.SelectionForeColor = System.Drawing.SystemColors.HighlightText
+        DataGridViewCellStyle36.WrapMode = System.Windows.Forms.DataGridViewTriState.[True]
+        Me.gvElectricalConsumables.RowHeadersDefaultCellStyle = DataGridViewCellStyle36
         Me.gvElectricalConsumables.Size = New System.Drawing.Size(803, 250)
         Me.gvElectricalConsumables.TabIndex = 10
         '
@@ -1117,17 +1097,6 @@ Partial Class Dashboard
         Me.tabHVACConfig.Text = "HVACConfig"
         Me.tabHVACConfig.UseVisualStyleBackColor = true
         '
-        'lblHVACTitle
-        '
-        Me.lblHVACTitle.AutoSize = true
-        Me.lblHVACTitle.Font = New System.Drawing.Font("Microsoft Sans Serif", 8.25!, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, CType(0,Byte))
-        Me.lblHVACTitle.ForeColor = System.Drawing.SystemColors.MenuHighlight
-        Me.lblHVACTitle.Location = New System.Drawing.Point(31, 37)
-        Me.lblHVACTitle.Name = "lblHVACTitle"
-        Me.lblHVACTitle.Size = New System.Drawing.Size(164, 13)
-        Me.lblHVACTitle.TabIndex = 25
-        Me.lblHVACTitle.Text = "Steady State Output Values"
-        '
         'txtHVACFuellingLitresPerHour
         '
         Me.txtHVACFuellingLitresPerHour.Location = New System.Drawing.Point(192, 189)
@@ -1178,169 +1147,12 @@ Partial Class Dashboard
         '
         'tabPlayground
         '
-        Me.tabPlayground.Controls.Add(Me.lblM0Outputs)
-        Me.tabPlayground.Controls.Add(Me.Panel1)
-        Me.tabPlayground.Controls.Add(Me.btnInitialise)
-        Me.tabPlayground.Controls.Add(Me.chkClutchEngaged)
-        Me.tabPlayground.Controls.Add(Me.lblTotalCycleTimeSeconds)
-        Me.tabPlayground.Controls.Add(Me.lblEngineSpeed)
-        Me.tabPlayground.Controls.Add(Me.lblEngineMotoringPower)
-        Me.tabPlayground.Controls.Add(Me.lblEngineDrivelineTorque)
-        Me.tabPlayground.Controls.Add(Me.lblEngineDrivelinePower)
-        Me.tabPlayground.Controls.Add(Me.txtTotalCycleTimeSeconds)
-        Me.tabPlayground.Controls.Add(Me.txtEngineSpeed)
-        Me.tabPlayground.Controls.Add(Me.txtEngineMotoringPower)
-        Me.tabPlayground.Controls.Add(Me.txtEngineDrivelineTorque)
-        Me.tabPlayground.Controls.Add(Me.txtEngineDrivelinePower)
         Me.tabPlayground.Location = New System.Drawing.Point(4, 22)
         Me.tabPlayground.Name = "tabPlayground"
         Me.tabPlayground.Size = New System.Drawing.Size(909, 610)
         Me.tabPlayground.TabIndex = 4
         Me.tabPlayground.Text = "Playground"
         Me.tabPlayground.UseVisualStyleBackColor = true
-        '
-        'lblM0Outputs
-        '
-        Me.lblM0Outputs.AutoSize = true
-        Me.lblM0Outputs.Font = New System.Drawing.Font("Microsoft Sans Serif", 8.25!, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, CType(0,Byte))
-        Me.lblM0Outputs.Location = New System.Drawing.Point(244, 29)
-        Me.lblM0Outputs.Name = "lblM0Outputs"
-        Me.lblM0Outputs.Size = New System.Drawing.Size(229, 13)
-        Me.lblM0Outputs.TabIndex = 23
-        Me.lblM0Outputs.Text = "M0-Non-Smart Alternator Set Efficiency"
-        '
-        'Panel1
-        '
-        Me.Panel1.Controls.Add(Me.lblOutHVACElectricalCurrentDemand)
-        Me.Panel1.Controls.Add(Me.lblAlternatorsEfficiency)
-        Me.Panel1.Controls.Add(Me.txtM0_Out_AlternatorsEfficiency)
-        Me.Panel1.Controls.Add(Me.txtM0_Out_HVacElectricalCurrentDemand)
-        Me.Panel1.Location = New System.Drawing.Point(244, 49)
-        Me.Panel1.Name = "Panel1"
-        Me.Panel1.Size = New System.Drawing.Size(223, 100)
-        Me.Panel1.TabIndex = 22
-        '
-        'lblAlternatorsEfficiency
-        '
-        Me.lblAlternatorsEfficiency.AutoSize = true
-        Me.lblAlternatorsEfficiency.Location = New System.Drawing.Point(29, 52)
-        Me.lblAlternatorsEfficiency.Name = "lblAlternatorsEfficiency"
-        Me.lblAlternatorsEfficiency.Size = New System.Drawing.Size(106, 13)
-        Me.lblAlternatorsEfficiency.TabIndex = 24
-        Me.lblAlternatorsEfficiency.Text = "Alternators Efficiency"
-        '
-        'txtM0_Out_AlternatorsEfficiency
-        '
-        Me.txtM0_Out_AlternatorsEfficiency.Location = New System.Drawing.Point(32, 68)
-        Me.txtM0_Out_AlternatorsEfficiency.Name = "txtM0_Out_AlternatorsEfficiency"
-        Me.txtM0_Out_AlternatorsEfficiency.Size = New System.Drawing.Size(100, 20)
-        Me.txtM0_Out_AlternatorsEfficiency.TabIndex = 1
-        '
-        'txtM0_Out_HVacElectricalCurrentDemand
-        '
-        Me.txtM0_Out_HVacElectricalCurrentDemand.Location = New System.Drawing.Point(32, 25)
-        Me.txtM0_Out_HVacElectricalCurrentDemand.Name = "txtM0_Out_HVacElectricalCurrentDemand"
-        Me.txtM0_Out_HVacElectricalCurrentDemand.Size = New System.Drawing.Size(100, 20)
-        Me.txtM0_Out_HVacElectricalCurrentDemand.TabIndex = 0
-        '
-        'btnInitialise
-        '
-        Me.btnInitialise.Location = New System.Drawing.Point(25, 315)
-        Me.btnInitialise.Name = "btnInitialise"
-        Me.btnInitialise.Size = New System.Drawing.Size(75, 23)
-        Me.btnInitialise.TabIndex = 21
-        Me.btnInitialise.Text = "Initialise"
-        Me.btnInitialise.UseVisualStyleBackColor = true
-        '
-        'chkClutchEngaged
-        '
-        Me.chkClutchEngaged.AutoSize = true
-        Me.chkClutchEngaged.Location = New System.Drawing.Point(25, 29)
-        Me.chkClutchEngaged.Name = "chkClutchEngaged"
-        Me.chkClutchEngaged.Size = New System.Drawing.Size(102, 17)
-        Me.chkClutchEngaged.TabIndex = 20
-        Me.chkClutchEngaged.Text = "Clutch Engaged"
-        Me.chkClutchEngaged.UseVisualStyleBackColor = true
-        '
-        'lblTotalCycleTimeSeconds
-        '
-        Me.lblTotalCycleTimeSeconds.AutoSize = true
-        Me.lblTotalCycleTimeSeconds.Location = New System.Drawing.Point(25, 246)
-        Me.lblTotalCycleTimeSeconds.Name = "lblTotalCycleTimeSeconds"
-        Me.lblTotalCycleTimeSeconds.Size = New System.Drawing.Size(134, 13)
-        Me.lblTotalCycleTimeSeconds.TabIndex = 14
-        Me.lblTotalCycleTimeSeconds.Text = "Total Cycle Time Seconds "
-        '
-        'lblEngineSpeed
-        '
-        Me.lblEngineSpeed.AutoSize = true
-        Me.lblEngineSpeed.Location = New System.Drawing.Point(23, 201)
-        Me.lblEngineSpeed.Name = "lblEngineSpeed"
-        Me.lblEngineSpeed.Size = New System.Drawing.Size(107, 13)
-        Me.lblEngineSpeed.TabIndex = 13
-        Me.lblEngineSpeed.Text = "Engine Speed (RPM)"
-        '
-        'lblEngineMotoringPower
-        '
-        Me.lblEngineMotoringPower.AutoSize = true
-        Me.lblEngineMotoringPower.Location = New System.Drawing.Point(24, 157)
-        Me.lblEngineMotoringPower.Name = "lblEngineMotoringPower"
-        Me.lblEngineMotoringPower.Size = New System.Drawing.Size(117, 13)
-        Me.lblEngineMotoringPower.TabIndex = 12
-        Me.lblEngineMotoringPower.Text = "Engine Motoring Power"
-        '
-        'lblEngineDrivelineTorque
-        '
-        Me.lblEngineDrivelineTorque.AutoSize = true
-        Me.lblEngineDrivelineTorque.Location = New System.Drawing.Point(24, 112)
-        Me.lblEngineDrivelineTorque.Name = "lblEngineDrivelineTorque"
-        Me.lblEngineDrivelineTorque.Size = New System.Drawing.Size(121, 13)
-        Me.lblEngineDrivelineTorque.TabIndex = 11
-        Me.lblEngineDrivelineTorque.Text = "Engine Driveline Torque"
-        '
-        'lblEngineDrivelinePower
-        '
-        Me.lblEngineDrivelinePower.AutoSize = true
-        Me.lblEngineDrivelinePower.Location = New System.Drawing.Point(22, 70)
-        Me.lblEngineDrivelinePower.Name = "lblEngineDrivelinePower"
-        Me.lblEngineDrivelinePower.Size = New System.Drawing.Size(120, 13)
-        Me.lblEngineDrivelinePower.TabIndex = 10
-        Me.lblEngineDrivelinePower.Text = "Engine Driveline Power "
-        '
-        'txtTotalCycleTimeSeconds
-        '
-        Me.txtTotalCycleTimeSeconds.Location = New System.Drawing.Point(25, 263)
-        Me.txtTotalCycleTimeSeconds.Name = "txtTotalCycleTimeSeconds"
-        Me.txtTotalCycleTimeSeconds.Size = New System.Drawing.Size(100, 20)
-        Me.txtTotalCycleTimeSeconds.TabIndex = 5
-        '
-        'txtEngineSpeed
-        '
-        Me.txtEngineSpeed.Location = New System.Drawing.Point(25, 214)
-        Me.txtEngineSpeed.Name = "txtEngineSpeed"
-        Me.txtEngineSpeed.Size = New System.Drawing.Size(100, 20)
-        Me.txtEngineSpeed.TabIndex = 4
-        '
-        'txtEngineMotoringPower
-        '
-        Me.txtEngineMotoringPower.Location = New System.Drawing.Point(25, 174)
-        Me.txtEngineMotoringPower.Name = "txtEngineMotoringPower"
-        Me.txtEngineMotoringPower.Size = New System.Drawing.Size(100, 20)
-        Me.txtEngineMotoringPower.TabIndex = 3
-        '
-        'txtEngineDrivelineTorque
-        '
-        Me.txtEngineDrivelineTorque.Location = New System.Drawing.Point(25, 129)
-        Me.txtEngineDrivelineTorque.Name = "txtEngineDrivelineTorque"
-        Me.txtEngineDrivelineTorque.Size = New System.Drawing.Size(100, 20)
-        Me.txtEngineDrivelineTorque.TabIndex = 2
-        '
-        'txtEngineDrivelinePower
-        '
-        Me.txtEngineDrivelinePower.Location = New System.Drawing.Point(25, 85)
-        Me.txtEngineDrivelinePower.Name = "txtEngineDrivelinePower"
-        Me.txtEngineDrivelinePower.Size = New System.Drawing.Size(100, 20)
-        Me.txtEngineDrivelinePower.TabIndex = 1
         '
         'resultCardContextMenu
         '
@@ -1358,14 +1170,16 @@ Partial Class Dashboard
         '
         Me.ErrorProvider.ContainerControl = Me
         '
-        'lblOutHVACElectricalCurrentDemand
+        'lblHVACTitle
         '
-        Me.lblOutHVACElectricalCurrentDemand.AutoSize = true
-        Me.lblOutHVACElectricalCurrentDemand.Location = New System.Drawing.Point(32, 6)
-        Me.lblOutHVACElectricalCurrentDemand.Name = "lblOutHVACElectricalCurrentDemand"
-        Me.lblOutHVACElectricalCurrentDemand.Size = New System.Drawing.Size(182, 13)
-        Me.lblOutHVACElectricalCurrentDemand.TabIndex = 25
-        Me.lblOutHVACElectricalCurrentDemand.Text = "Out HVAC Electrical Current Demand"
+        Me.lblHVACTitle.AutoSize = true
+        Me.lblHVACTitle.Font = New System.Drawing.Font("Microsoft Sans Serif", 8.25!, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, CType(0,Byte))
+        Me.lblHVACTitle.ForeColor = System.Drawing.SystemColors.MenuHighlight
+        Me.lblHVACTitle.Location = New System.Drawing.Point(31, 37)
+        Me.lblHVACTitle.Name = "lblHVACTitle"
+        Me.lblHVACTitle.Size = New System.Drawing.Size(164, 13)
+        Me.lblHVACTitle.TabIndex = 25
+        Me.lblHVACTitle.Text = "Steady State Output Values"
         '
         'Dashboard
         '
@@ -1393,10 +1207,6 @@ Partial Class Dashboard
         Me.pnlPneumaticAuxillaries.PerformLayout
         Me.tabHVACConfig.ResumeLayout(false)
         Me.tabHVACConfig.PerformLayout
-        Me.tabPlayground.ResumeLayout(false)
-        Me.tabPlayground.PerformLayout
-        Me.Panel1.ResumeLayout(false)
-        Me.Panel1.PerformLayout
         Me.resultCardContextMenu.ResumeLayout(false)
         CType(Me.ErrorProvider,System.ComponentModel.ISupportInitialize).EndInit
         Me.ResumeLayout(false)
@@ -1500,22 +1310,4 @@ End Sub
     Friend WithEvents txtHVACElectricalLoadPowerWatts As System.Windows.Forms.TextBox
     Friend WithEvents lblHVACElectricalLoadPowerWatts As System.Windows.Forms.Label
     Friend WithEvents lblHVACTitle As System.Windows.Forms.Label
-    Friend WithEvents lblTotalCycleTimeSeconds As System.Windows.Forms.Label
-    Friend WithEvents lblEngineSpeed As System.Windows.Forms.Label
-    Friend WithEvents lblEngineMotoringPower As System.Windows.Forms.Label
-    Friend WithEvents lblEngineDrivelineTorque As System.Windows.Forms.Label
-    Friend WithEvents lblEngineDrivelinePower As System.Windows.Forms.Label
-    Friend WithEvents txtTotalCycleTimeSeconds As System.Windows.Forms.TextBox
-    Friend WithEvents txtEngineSpeed As System.Windows.Forms.TextBox
-    Friend WithEvents txtEngineMotoringPower As System.Windows.Forms.TextBox
-    Friend WithEvents txtEngineDrivelineTorque As System.Windows.Forms.TextBox
-    Friend WithEvents txtEngineDrivelinePower As System.Windows.Forms.TextBox
-    Friend WithEvents chkClutchEngaged As System.Windows.Forms.CheckBox
-    Friend WithEvents btnInitialise As System.Windows.Forms.Button
-    Friend WithEvents lblM0Outputs As System.Windows.Forms.Label
-    Friend WithEvents Panel1 As System.Windows.Forms.Panel
-    Friend WithEvents lblAlternatorsEfficiency As System.Windows.Forms.Label
-    Friend WithEvents txtM0_Out_AlternatorsEfficiency As System.Windows.Forms.TextBox
-    Friend WithEvents txtM0_Out_HVacElectricalCurrentDemand As System.Windows.Forms.TextBox
-    Friend WithEvents lblOutHVACElectricalCurrentDemand As System.Windows.Forms.Label
 End Class
