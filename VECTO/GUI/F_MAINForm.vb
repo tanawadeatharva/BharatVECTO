@@ -464,7 +464,7 @@ Imports TUGraz.VectoCore.Models.Simulation
 
 		FB_Initialize()
 
-		Me.Text = "VECTO " & VECTOvers
+		Me.Text = "VECTO " & VECTOvers & " / VectoCore " & COREvers
 
 
 		'FileLists
@@ -479,9 +479,9 @@ Imports TUGraz.VectoCore.Models.Simulation
 		LoadOptions()
 
 		'Resize columns ... after Loading the @file-lists
-		Me.LvGEN.Columns(1).Width = - 2
-		Me.LvDRI.Columns(1).Width = - 2
-		Me.LvMsg.Columns(2).Width = - 2
+		Me.LvGEN.Columns(1).Width = -2
+		Me.LvDRI.Columns(1).Width = -2
+		Me.LvMsg.Columns(2).Width = -2
 
 		'Initialize BackgroundWorker
 		VECTOworker = Me.BackgroundWorker1
@@ -501,8 +501,7 @@ Imports TUGraz.VectoCore.Models.Simulation
 		ModeUpdate()
 
 		'License check
-		'TODO uncomment license check
-		If False And Not Lic.LICcheck() Then
+		If Not Lic.LICcheck() Then
 			MsgBox("License File invalid!" & vbCrLf & vbCrLf & Lic.FailMsg)
 			If Lic.CreateActFile(MyAppPath & "ActivationCode.dat") Then
 				MsgBox("Activation File created.")
@@ -529,11 +528,11 @@ Imports TUGraz.VectoCore.Models.Simulation
 	Private Sub DeclOnOff()
 
 		If Cfg.DeclMode Then
-			Me.Text = "VECTO " & VECTOvers & " - Declaration Mode"
+			Me.Text = "VECTO " & VECTOvers & " / VectoCore " & COREvers & " - Declaration Mode"
 			Me.CbBatch.Checked = False
 			Cfg.DeclInit()
 		Else
-			Me.Text = "VECTO " & VECTOvers
+			Me.Text = "VECTO " & VECTOvers & " / VectoCore " & COREvers
 		End If
 
 		If Cfg.DeclMode Then
@@ -854,7 +853,7 @@ Imports TUGraz.VectoCore.Models.Simulation
 
 		lastindx = LvGEN.SelectedIndices(LvGEN.SelectedItems.Count - 1)
 
-		For i = UBound(SelIx) To 0 Step - 1
+		For i = UBound(SelIx) To 0 Step -1
 			LvGEN.Items.RemoveAt(SelIx(i))
 		Next
 
@@ -914,7 +913,7 @@ Imports TUGraz.VectoCore.Models.Simulation
 		Dim p As Int16
 		Dim f As Int16
 		Dim fList As String()
-		Dim fListDim As Int16 = - 1
+		Dim fListDim As Int16 = -1
 		Dim ListViewItem0 As ListViewItem
 
 		'If VECTO runs: Cancel operation (because Mode-change during calculation is not very clever)
@@ -969,7 +968,7 @@ Imports TUGraz.VectoCore.Models.Simulation
 			ListViewItem0.Selected = True
 			Me.LvGEN.Items.Add(ListViewItem0)
 			ListViewItem0.EnsureVisible()
-			lbFound:
+lbFound:
 		Next
 
 		Me.LvGEN.EndUpdate()
@@ -1133,7 +1132,7 @@ Imports TUGraz.VectoCore.Models.Simulation
 
 		lastindx = LvDRI.SelectedIndices(LvDRI.SelectedItems.Count - 1)
 
-		For i = UBound(SelIx) To 0 Step - 1
+		For i = UBound(SelIx) To 0 Step -1
 			LvDRI.Items.RemoveAt(SelIx(i))
 		Next
 
@@ -1191,7 +1190,7 @@ Imports TUGraz.VectoCore.Models.Simulation
 			ListViewItem0.SubItems.Add(" ")
 			ListViewItem0.Checked = True
 			Me.LvDRI.Items.Add(ListViewItem0)
-			lbFound:
+lbFound:
 		Next
 
 		Me.LvDRI.EndUpdate()
@@ -1544,62 +1543,61 @@ Imports TUGraz.VectoCore.Models.Simulation
 	Private Sub VectoWorkerV3_OnDoWork(sender As BackgroundWorker, e As DoWorkEventArgs)
 		AllowSleepOFF()
 
-		Dim sumFileName As String = Path.GetFileNameWithoutExtension(JobFileList(0) + Constants.FileExtensions.SumFile)
+		Dim sumFileName As String = Path.Combine(Path.GetDirectoryName(JobFileList(0)), Path.GetFileNameWithoutExtension(JobFileList(0)) + ".v3" + Constants.FileExtensions.SumFile)
 		Dim sumWriter As SummaryFileWriter = New SummaryFileWriter(sumFileName)
 		Dim jobContainer As JobContainer = New JobContainer(sumWriter)
 
+		Dim mode As SimulatorFactory.FactoryMode
+
+		If Cfg.DeclMode Then
+			mode = SimulatorFactory.FactoryMode.DeclarationMode
+		Else
+			mode = SimulatorFactory.FactoryMode.EngineeringMode
+		End If
+
 		For Each jobFile As String In JobFileList
 			sender.ReportProgress(0, New With {.Target = "ListBox", .Message = "Reading File " + jobFile})
-			Dim runsFactory As SimulatorFactory = New SimulatorFactory(SimulatorFactory.FactoryMode.DeclarationMode, jobFile)
+			Dim runsFactory As SimulatorFactory = New SimulatorFactory(mode, jobFile)
+			runsFactory.WriteModalResults = Cfg.ModOut
 			jobContainer.AddRuns(runsFactory)
 			sender.ReportProgress(0, New With {.Target = "ListBox", .Message = "Finished Reading File " + jobFile})
 		Next
 
 
-		sender.ReportProgress(0,
-							New _
+		sender.ReportProgress(0, New _
 								With {.Target = "ListBox",
 								.Message = _
 								String.Format("Starting Simulation ({0} Jobs, {1} Runs)", JobFileList.Count, jobContainer.GetProgress().Count)})
 
 		jobContainer.Execute(True)
-		Dim start As DateTime
+		Dim start As DateTime = DateTime.Now()
 		While Not jobContainer.AllCompleted
 			If sender.CancellationPending Then
 				jobContainer.Cancel()
 				Return
 			End If
 
-			Dim progress As Dictionary(Of String, Double) = jobContainer.GetProgress()
+			Dim progress As Dictionary(Of String, JobContainer.ProgressEntry) = jobContainer.GetProgress()
+			Dim sumProgress As Double = progress.Sum(Function(pair) pair.Value.Progress)
+			Dim duration As Double = (DateTime.Now() - start).TotalSeconds
 
-			Dim NumLines As Double = progress.Count
-			Dim sumProgress As Double = progress.Sum(Function(pair) pair.Value)
-
-
-			If sumProgress > 0 And start = DateTime.MinValue Then
-				start = DateTime.Now()
-			End If
-
-			Dim sumPercent As Integer = Int(sumProgress/NumLines*100)
-
-			Dim progString As String = String.Join(", ", progress.Select(Function(pair) String.Format("{0,4:P}", pair.Value)))
-
-			Dim duration As Double = 0.0
-			Dim remainingDuration As Double = 0
-			If start > DateTime.MinValue Then
-				duration = (DateTime.Now() - start).TotalSeconds
-				remainingDuration = duration/(sumProgress/NumLines) - duration
-			End If
-
-
-			sender.ReportProgress(sumPercent,
-								New _
-									With {.Target = "Status",
-									.Message = String.Format("Time: {0:0}s, Remaining: {1:0}s, Current Progress: {2:P} ({3})",
-															duration, remainingDuration, sumPercent/100, progString)
-									})
+			sender.ReportProgress(Int((sumProgress * 100.0) / progress.Count),
+								New With {.Target = "Status", .Message = _
+									String.Format("Duration: {0:0}s, Current Progress: {1:P} ({2})", duration, sumProgress / progress.Count,
+												String.Join(", ", progress.Select(Function(pair) String.Format("{0,4:P}", pair.Value.Progress))))})
 			Thread.Sleep(1000)
 		End While
+
+		For Each progressEntry As KeyValuePair(Of String, JobContainer.ProgressEntry) In jobContainer.GetProgress()
+			sender.ReportProgress(100, New With {.Target = "ListBox", .Message = String.Format("{0,-60} {1,8:P} {2,10:F2}s - {3}", _
+				progressEntry.Key, progressEntry.Value.Progress, progressEntry.Value.ExecTime / 1000.0, IIf(progressEntry.Value.Success, "Success", "Aborted"))})
+			If (Not progressEntry.Value.Success) Then
+				sender.ReportProgress(100, New With {.Target = "ListBox", .Message = progressEntry.Value.Error.Message})
+			End If
+
+		Next
+
+		sender.ReportProgress(100, New With {.Target = "ListBox", .Message = "Simulation Finished"})
 	End Sub
 
 	Private Sub VectoWorkerV3_OnProgressChanged(sender As Object, e As ProgressChangedEventArgs)

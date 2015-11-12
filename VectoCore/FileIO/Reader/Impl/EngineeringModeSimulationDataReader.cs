@@ -27,7 +27,7 @@ namespace TUGraz.VectoCore.FileIO.Reader.Impl
 		{
 			if (info.SavedInDeclarationMode) {
 				Logger<EngineeringModeSimulationDataReader>()
-					.Warn("File was saved in Declaration Mode but is used for Engineering Mode!");
+					.Warn("{0} File was saved in Declaration Mode but is used for Engineering Mode!", msg);
 			}
 		}
 
@@ -62,10 +62,9 @@ namespace TUGraz.VectoCore.FileIO.Reader.Impl
 				Technology = a.Technology,
 				TechList = a.TechList.DefaultIfNull(Enumerable.Empty<string>()).ToArray(),
 				DemandType = AuxiliaryDemandType.Mapping,
-				Data =
-					(!string.IsNullOrWhiteSpace(a.Path) && a.Path != "<NOFILE>")
-						? AuxiliaryData.ReadFromFile(Path.Combine(basePath, a.Path))
-						: null
+				Data = (!string.IsNullOrWhiteSpace(a.Path) && a.Path != "<NOFILE>")
+					? AuxiliaryData.ReadFromFile(Path.Combine(basePath, a.Path))
+					: null
 			}).Concat(new VectoRunData.AuxData { ID = "", DemandType = AuxiliaryDemandType.Direct }.ToEnumerable()).ToList();
 		}
 

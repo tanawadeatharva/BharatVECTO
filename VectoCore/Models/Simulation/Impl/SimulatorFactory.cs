@@ -1,6 +1,7 @@
 using System.Collections.Generic;
 using System.IO;
-using NLog;
+using System.Reflection;
+using System.Threading;
 using TUGraz.VectoCore.Configuration;
 using TUGraz.VectoCore.Exceptions;
 using TUGraz.VectoCore.FileIO.Reader;
@@ -9,9 +10,9 @@ using TUGraz.VectoCore.Models.Simulation.Data;
 
 namespace TUGraz.VectoCore.Models.Simulation.Impl
 {
-	public class SimulatorFactory
+	public class SimulatorFactory : LoggingObject
 	{
-		//private IModalDataWriter _dataWriter;
+		private static int _jobNumberCounter;
 
 		public enum FactoryMode
 		{
@@ -24,7 +25,8 @@ namespace TUGraz.VectoCore.Models.Simulation.Impl
 
 		public SimulatorFactory(FactoryMode mode, string jobFile)
 		{
-			JobNumber = 0;
+			Log.Fatal("########## VectoCore Version {0} ##########", Assembly.GetExecutingAssembly().GetName().Version);
+			JobNumber = Interlocked.Increment(ref _jobNumberCounter);
 			_mode = mode;
 			switch (mode) {
 				case FactoryMode.DeclarationMode:
@@ -48,6 +50,8 @@ namespace TUGraz.VectoCore.Models.Simulation.Impl
 
 		public int JobNumber { get; set; }
 
+		public bool WriteModalResults { get; set; }
+
 		/// <summary>
 		/// Creates powertrain and initializes it with the component's data.
 		/// </summary>
@@ -63,39 +67,24 @@ namespace TUGraz.VectoCore.Models.Simulation.Impl
 				IModalDataWriter modWriter =
 					new ModalDataWriter(string.Format(modFileName, data.Cycle.Name, data.ModFileSuffix ?? ""),
 						writer => d.Report.AddResult(d.Loading, d.Mission, writer), _mode);
-				var jobName = string.Format("{0}-{1}", JobNumber, i++);
-				var sumWriterDecorator = DecorateSumWriter(data.IsEngineOnly, SumWriter, data.JobFileName, jobName, data.Cycle.Name);
-				var builder = new PowertrainBuilder(modWriter, sumWriterDecorator, DataReader.IsEngineOnly);
+				modWriter.WriteModalResults = WriteModalResults;
+				var builder = new PowertrainBuilder(modWriter,
+					DataReader.IsEngineOnly, (writer, mass, loading) =>
+						SumWriter.Write(d.IsEngineOnly, modWriter, d.JobFileName, string.Format("{0}-{1}", JobNumber, i++),
+							d.Cycle.Name + ".vdri",
+							mass, loading));
 
 				VectoRun run;
 				if (data.IsEngineOnly) {
 					run = new TimeRun(builder.Build(data));
 				} else {
-					var runCaption = string.Format("Cycle: {0} Loading: {1}", data.Cycle.Name, data.ModFileSuffix);
+					var runCaption = string.Format("{0}-{1}-{2}",
+						Path.GetFileNameWithoutExtension(data.JobFileName), data.Cycle.Name, data.ModFileSuffix);
 					run = new DistanceRun(runCaption, builder.Build(data));
 				}
 
 				yield return run;
 			}
-		}
-
-		/// <summary>
-		/// Decorates the sum writer with a correct decorator (either EngineOnly or FullPowertrain).
-		/// </summary>
-		/// <param name="engineOnly">if set to <c>true</c> [engine only].</param>
-		/// <param name="sumWriter">The sum writer.</param>
-		/// <param name="jobFileName">Name of the job file.</param>
-		/// <param name="jobName">Name of the job.</param>
-		/// <param name="cycleName">The cycle file.</param>
-		/// <returns></returns>
-		private static ISummaryDataWriter DecorateSumWriter(bool engineOnly, SummaryFileWriter sumWriter,
-			string jobFileName, string jobName, string cycleName)
-		{
-			if (engineOnly) {
-				return new SumWriterDecoratorEngineOnly(sumWriter, jobFileName, jobName, cycleName);
-			}
-
-			return new SumWriterDecoratorFullPowertrain(sumWriter, jobFileName, jobName, cycleName);
 		}
 	}
 }

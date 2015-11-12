@@ -128,7 +128,7 @@ namespace TUGraz.VectoCore.Models.SimulationComponent.Impl
 			if (_currentState.Velocity.IsEqual(0.SI<MeterPerSecond>(), Constants.SimulationSettings.VehicleSpeedHaltTolerance)) {
 				_currentState.Velocity = 0.SI<MeterPerSecond>();
 			}
-			_currentState.Distance = _previousState.Distance + dt * (_previousState.Velocity + _currentState.Velocity) / 2;
+			_currentState.Distance = _previousState.Distance + _previousState.Velocity * dt + acceleration * dt * dt / 2;
 
 			_currentState.DriverAcceleration = DriverAcceleration(acceleration);
 			_currentState.RollingResistance = RollingResistance(gradient);
@@ -151,13 +151,12 @@ namespace TUGraz.VectoCore.Models.SimulationComponent.Impl
 			var averageVelocity = (_previousState.Velocity + _currentState.Velocity) / 2;
 
 			writer[ModalResultField.v_act] = averageVelocity;
-			writer[ModalResultField.PaVeh] = (_previousState.VehicleAccelerationForce * _previousState.Velocity +
-											_currentState.VehicleAccelerationForce * _currentState.Velocity) / 2;
-			writer[ModalResultField.Pgrad] = (_previousState.SlopeResistance * _previousState.Velocity +
-											_currentState.SlopeResistance * _currentState.Velocity) / 2;
-			writer[ModalResultField.Proll] = (_previousState.RollingResistance * _previousState.Velocity +
-											_currentState.RollingResistance * _currentState.Velocity) / 2;
-			// TODO: comptuation of AirResistancePower is wrong!
+			writer[ModalResultField.PaVeh] = ((_previousState.VehicleAccelerationForce * _previousState.Velocity +
+												_currentState.VehicleAccelerationForce * _currentState.Velocity) / 2.0).Cast<Watt>();
+			writer[ModalResultField.Pgrad] = ((_previousState.SlopeResistance * _previousState.Velocity +
+												_currentState.SlopeResistance * _currentState.Velocity) / 2.0).Cast<Watt>();
+			writer[ModalResultField.Proll] = ((_previousState.RollingResistance * _previousState.Velocity +
+												_currentState.RollingResistance * _currentState.Velocity) / 2.0).Cast<Watt>();
 
 			writer[ModalResultField.Pair] = ComputeAirDragPowerLoss(_previousState.Velocity, _currentState.Velocity,
 				_currentState.dt);

@@ -1,9 +1,9 @@
-﻿using System.Collections.Generic;
+﻿using System;
+using System.Collections.Generic;
 using System.Collections.ObjectModel;
 using System.Diagnostics;
 using TUGraz.VectoCore.Exceptions;
 using TUGraz.VectoCore.Models.Connector.Ports;
-using TUGraz.VectoCore.Models.Declaration;
 using TUGraz.VectoCore.Models.Simulation.Data;
 using TUGraz.VectoCore.Models.Simulation.DataBus;
 using TUGraz.VectoCore.Models.SimulationComponent;
@@ -29,8 +29,8 @@ namespace TUGraz.VectoCore.Models.Simulation.Impl
 
 		internal ISimulationOutPort Cycle;
 
-		internal ISummaryDataWriter SumWriter;
 		internal IModalDataWriter DataWriter;
+		internal WriteSumData WriteSumData;
 
 		#region IGearCockpit
 
@@ -130,10 +130,10 @@ namespace TUGraz.VectoCore.Models.Simulation.Impl
 
 		#endregion
 
-		public VehicleContainer(IModalDataWriter dataWriter = null, ISummaryDataWriter sumWriter = null)
+		public VehicleContainer(IModalDataWriter dataWriter = null, WriteSumData writeSumData = null)
 		{
 			DataWriter = dataWriter;
-			SumWriter = sumWriter;
+			WriteSumData = writeSumData ?? delegate {};
 		}
 
 		#region IVehicleContainer
@@ -211,10 +211,12 @@ namespace TUGraz.VectoCore.Models.Simulation.Impl
 		public void FinishSimulation()
 		{
 			Log.Info("VehicleContainer finishing simulation.");
-			DataWriter.Finish();
+			DataWriter.Finish(RunStatus);
 
-			SumWriter.Write(DataWriter, VehicleMass, VehicleLoading);
+			WriteSumData(DataWriter, VehicleMass, VehicleLoading);
 		}
+
+		public VectoRun.Status RunStatus { get; set; }
 
 		#endregion
 
@@ -245,10 +247,10 @@ namespace TUGraz.VectoCore.Models.Simulation.Impl
 			return Road.LookAhead(time);
 		}
 
-		public Watt BreakPower
+		public Watt BrakePower
 		{
-			get { return Brakes.BreakPower; }
-			set { Brakes.BreakPower = value; }
+			get { return Brakes.BrakePower; }
+			set { Brakes.BrakePower = value; }
 		}
 
 		public bool ClutchClosed(Second absTime)

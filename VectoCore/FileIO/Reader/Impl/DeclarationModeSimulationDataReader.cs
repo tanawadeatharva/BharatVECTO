@@ -2,6 +2,7 @@
 using System.Collections.Generic;
 using System.IO;
 using System.Linq;
+using System.Security.Principal;
 using Newtonsoft.Json;
 using TUGraz.VectoCore.Exceptions;
 using TUGraz.VectoCore.FileIO.DeclarationFile;
@@ -15,6 +16,9 @@ namespace TUGraz.VectoCore.FileIO.Reader.Impl
 {
 	public class DeclarationModeSimulationDataReader : AbstractSimulationDataReader
 	{
+		protected static Dictionary<MissionType, DrivingCycleData> CyclesCache =
+			new Dictionary<MissionType, DrivingCycleData>();
+
 		internal DeclarationModeSimulationDataReader() {}
 
 		protected void CheckForDeclarationMode(VersionInfo info, string msg)
@@ -44,12 +48,19 @@ namespace TUGraz.VectoCore.FileIO.Reader.Impl
 			var gearboxData = dao.CreateGearboxData(Gearbox, engineData);
 			var gearboxTypeString = string.Format("{0}-Speed {1}", gearboxData.Gears.Count, gearboxData.Type);
 
-			// todo: set correct <USERNAME> in Report
-			var report = new DeclarationReport(engineData.FullLoadCurve, segment, "<USERNAME>", engineData.ModelName,
-				engineTypeString, gearboxData.ModelName, gearboxTypeString, Job.BasePath, Job.JobFile, resultCount);
+			var report = new DeclarationReport(engineData.FullLoadCurve, segment, WindowsIdentity.GetCurrent().Name,
+				engineData.ModelName,
+				engineTypeString, gearboxData.ModelName, gearboxTypeString, Job.BasePath,
+				Path.GetFileNameWithoutExtension(Job.JobFile), resultCount);
 
 			foreach (var mission in segment.Missions) {
-				var cycle = DrivingCycleDataReader.ReadFromStream(mission.CycleFile, CycleType.DistanceBased);
+				DrivingCycleData cycle;
+				if (CyclesCache.ContainsKey(mission.MissionType)) {
+					cycle = CyclesCache[mission.MissionType];
+				} else {
+					cycle = DrivingCycleDataReader.ReadFromStream(mission.CycleFile, CycleType.DistanceBased);
+					CyclesCache.Add(mission.MissionType, cycle);
+				}
 				foreach (var loading in mission.Loadings) {
 					var simulationRunData = new VectoRunData {
 						Loading = loading.Key,
@@ -61,11 +72,13 @@ namespace TUGraz.VectoCore.FileIO.Reader.Impl
 						DriverData = driverdata,
 						IsEngineOnly = IsEngineOnly,
 						JobFileName = Job.JobFile,
-						BasePath = "",
+						BasePath = Job.BasePath,
 						ModFileSuffix = loading.Key.ToString(),
 						Report = report,
 						Mission = mission,
 					};
+					simulationRunData.EngineData.WHTCCorrectionFactor = DeclarationData.WHTCCorrection.Lookup(mission.MissionType,
+						engineData.WHTCRural.Value(), engineData.WHTCUrban.Value(), engineData.WHTCMotorway.Value());
 					simulationRunData.Cycle.Name = mission.MissionType.ToString();
 					simulationRunData.VehicleData.VehicleClass = segment.VehicleClass;
 					yield return simulationRunData;
@@ -177,7 +190,8 @@ namespace TUGraz.VectoCore.FileIO.Reader.Impl
 					Log.Error(message);
 					throw new VectoException(message);
 				}
-			}).Concat(new VectoRunData.AuxData { ID = "", DemandType = AuxiliaryDemandType.Direct }.ToEnumerable()).ToList();
+			}).ToList();
+			//.Concat(new VectoRunData.AuxData { ID = "", DemandType = AuxiliaryDemandType.Direct}.ToEnumerable()).ToList();
 		}
 
 		internal Segment GetVehicleClassification(VehicleCategory category, AxleConfiguration axles, Kilogram grossMassRating,
