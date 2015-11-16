@@ -88,6 +88,13 @@ Imports TUGraz.VectoCore.Models.Simulation
 
 	Private Sub FB_Initialize()
 		FB_Init = False
+        Try
+            VECTO_Global.COREvers = Assembly.LoadFrom("VectoCore.dll").GetName().Version.ToString()
+        Catch ex As Exception
+            LogFile.WriteToLog(tMsgID.Err, ex.StackTrace)
+        End Try
+
+
 		fbFolder = New cFileBrowser("WorkDir", True)
 		fbFileLists = New cFileBrowser("FileLists")
 		fbVECTO = New cFileBrowser("vecto")
