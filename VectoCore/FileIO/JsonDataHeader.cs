@@ -1,12 +1,22 @@
-﻿using Newtonsoft.Json;
+﻿using System;
+using Newtonsoft.Json;
+using TUGraz.VectoCore.Utils;
 
 namespace TUGraz.VectoCore.FileIO
 {
+	/// <summary>
+	/// "Header": {
+	///		"CreatedBy": "Raphael Luz IVT TU-Graz (85407225-fc3f-48a8-acda-c84a05df6837)",
+	///		"Date": "29.07.2015 16:59:03",
+	///		"AppVersion": "2.2",
+	///		"FileVersion": 7
+	/// },
+	/// </summary>
 	public class JsonDataHeader
 	{
-		[JsonProperty(Required = Required.Always)] public string AppVersion;
 		[JsonProperty(Required = Required.Always)] public string CreatedBy;
-		[JsonProperty(Required = Required.Always)] public string Date;
+		[JsonProperty(Required = Required.Always), JsonConverter(typeof(DateTimeFallbackDeserializer))] public DateTime Date;
+		[JsonProperty(Required = Required.Always)] public string AppVersion;
 		[JsonProperty(Required = Required.Always)] public uint FileVersion;
 
 		#region Equality members
