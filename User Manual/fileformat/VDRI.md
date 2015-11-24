@@ -27,7 +27,7 @@ Supported Identifiers
 | **\<vair_beta\>** | Wind Yaw Angle | \[°\] | Only required if [**Cross Wind Correction**](#cross-wind-correction) is set to **Vair & Beta Input**.
 | **\<Pe\>** | Engine power | \[kW\] | Effective engine power at clutch. Only required in [Engine Only Mode](#engine-only-mode). Alternatively torque <Me> can be defined. Use **\<DRAG>** to define motoring operation.
 | **\<Me\>** | Engine torque | \[Nm\] | Effective engine torque at clutch. Only required in [Engine Only Mode](#engine-only-mode). Alternatively power <Pe> can be defined. Use **\<DRAG\>** to define motoring operation.
-| **\<Pwheel\>** | Power at wheels | \[kW\] | Overwrites power calculation. Requires Gear and Engine Speed input.Cycle must be time based.
+| **\<Pwheel\>** | Power at wheels | \[kW\] | Overwrites power calculation. Requires Gear and Engine Speed input. Cycle must be time based.
 
 Examples
 --------

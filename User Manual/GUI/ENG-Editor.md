@@ -4,7 +4,7 @@ Engine Editor
 
 Description
 -----------
-The Engine File (.veng) defines all engine-related parameters and input files like Fuel Consumption Map and Full Load Curves.
+The Engine File (.veng) defines all engine-related parameters and input files like Fuel Consumption Map and Full Load Curve.
 
 Relative File Paths
 -------------------
@@ -16,7 +16,7 @@ VECTO automatically uses relative paths if the input file (e.g. FC Map) is in th
 
 Main Engine Parameters
 ----------------------
-Make and Model
+Make and Model \[text]\
 :   Free text defining the engine model, type, etc.
 
 Idling Engine Speed \[rpm\]
@@ -47,7 +47,7 @@ The input file (.vmap) file format is described [here](#fuel-consumption-map-.vm
 WHTC Correction Factors
 -----------------------
 
-The WHTC Corretion Factors are required in [Declaration Mode](#declaration-mode) for the [WHTC FC Correction](#fuel-consumption-calculation).
+The WHTC Correction Factors are required in [Declaration Mode](#declaration-mode) for the [WHTC FC Correction](#fuel-consumption-calculation).
 
 
 Chart Area
@@ -72,6 +72,8 @@ Controls
 
 ![sendto](pics/export-icon.png)Send current file to the [VECTO Editor](#job-editor)
 :   **Note:** If the current file was opened via the [VECTO Editor](#job-editor) the file will be sent automatically when saved.
+
+![](pics/browse.png)***Open file browser***.
 
 ![](pics/OpenFile.PNG)***Open file*** (see [File Open Command)](#settings).
 

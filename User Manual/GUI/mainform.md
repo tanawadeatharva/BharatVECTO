@@ -13,9 +13,10 @@ The Main Form is loaded when starting VECTO. Closing this form will close VECTO 
 In order to start a calculation the [Calculation Mode](#calculation-modes) must be set and at least one [Job File (.vecto)](#job-editor) must added to the Job List. After clicking START all checked files in the Job List will be calculated.
 
 The Main Form includes three tabs as described below:
-:   -   Job Files Tab
--   Driving Cycles Tab (only if [Batch Mode](#batch-mode) is enabled)
--   Options Tab
+
+* Job Files Tab
+* Driving Cycles Tab (only if [Batch Mode](#batch-mode) is enabled)
+* Options Tab
 
 
 Job Files Tab
@@ -126,9 +127,12 @@ Controls
 
 ![info](pics/Help-icon.png) ***Help***
 
-
 - **User Manual**
     - Opens this User Manual
+- **Release Notes**
+    - Open the Release Notes (pdf)
+- **Report Bug via CITnet / JIRA**
+    - Open the CITnet/JIRA website for reporting bug
 - **Create Activation File**
     - Create an Activation File used for Licensing
 - **About VECTO**

@@ -34,7 +34,7 @@ HDV Class
 Weight/Loading
 --------------
 
-These fields define the weight and loading of the vehicle. **Max. Loading** displayes the maximum possible loading for the selected vehicle depending on curb weight and GVW values.
+These fields define the weight and loading of the vehicle. **Max. Loading** displays the maximum possible loading for the selected vehicle depending on curb weight and GVW values.
 
 ***Note:*** *VECTO uses the sum of* ***Curb Weight Vehicle, Curb Weight Extra Trailer/Body*** *and* ***Loading*** *for calculation!*
 
@@ -64,9 +64,9 @@ If available a **Retarder Torque Loss Map** can be defined here to consider idli
 ***Note: Do not use this function if the retarder's losses are already included in the Transmission Loss Maps!***
 
 Three options are available:
-: -	None
--   Primary (before gearbox): The rpm ratio is relative to the engine speed
--   Secondary (after gearbox): The rpm ratio is relative to the cardan shaft speed
+: -	Included in Transmission Loss Maps: Use this if the [Transmission Loss Maps](#transmission-loss-map-.vtlm) already include retarder losses.
+-   Primary Retarder (before gearbox): The rpm ratio is relative to the engine speed
+-   Secondary Retarder (after gearbox): The rpm ratio is relative to the cardan shaft speed
 
 Both, primary and secondary retarders, require an [Retarder Loss Torque Input File (.vrlm)](#retarder-loss-torque-input-file-.vrlm).
 
@@ -74,7 +74,7 @@ Both, primary and secondary retarders, require an [Retarder Loss Torque Input Fi
 Cross Wind Correction
 ---------------------
 
-Three different options are available:
+Four different options are available:
 : -  No Correction
 -  Speed dependent (User-defined)
 -  Speed dependent (Declaration Mode)

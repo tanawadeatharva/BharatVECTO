@@ -31,10 +31,10 @@ Make and Model
 
 
 Transmission Type
-:   Depending on the transmission type some options below are not available.The following types are available:
-:   -   **Manual Transmission** (MT)
--   **Automated Manual Transmission** (AMT)
--   **Automatic Transmission** (AT)
+:   Depending on the transmission type some options below are not available. The following types are available:
+:   -   **MT**: Manual Transmission
+-   **AMT**: Automated Manual Transmission
+-   **AT**: Automatic Transmission
 -   **Custom**
 :	Note: The types AT and Custom are not available in [Declaration Mode](#declaration-mode).
 
@@ -51,12 +51,12 @@ Gears
 -----
 
 
-Use the ![add](pics/plus-circle-icon.png) and ![remove](pics/minus-circle-icon.png) buttons to add or remove gears form the vehicle. Doubleclick entries to edit existing gears.
+Use the ![add](pics/plus-circle-icon.png) and ![remove](pics/minus-circle-icon.png) buttons to add or remove gears from the vehicle. Doubleclick entries to edit existing gears.
 
 -   Gear **"A"** defines the ratio of the axle transmission / differential.
 -   Column **"TC"** (AT only) defines which gears are using the torque converter (lock-up clutch open).
 -   Column **"Loss Map or Efficiency"** allows to define either a constant efficiency value or a [loss map (.vtlm)](#transmission-loss-map-.vtlm).
--   Column **"Shift polygons"** defines the [Shift Polygons InputFile (.vgbs)](#shift-polygons-input-file-.vgbs) for each gear. Not requiredin [Declaration Mode](#declaration-mode). See [GearShift Model](#gear-shift-model) for details.
+-   Column **"Shift polygons"** defines the [Shift Polygons InputFile (.vgbs)](#shift-polygons-input-file-.vgbs) for each gear. Not required in [Declaration Mode](#declaration-mode). See [GearShift Model](#gear-shift-model) for details.
 -	Column **"Full Load Curves"** defines the [Full Load Curve for (.vfld)](#full-load-and-drag-curves-.vfld) each gear. It is used for torque limiting and [generic shift polygons](#gear-shift-model) in Declaration Mode. If no file is defined the engine full load curve will be used. 
 
 
@@ -117,7 +117,7 @@ Controls
 ![SaveAs](pics/Actions-document-save-as-icon.png) ***Save file as...***
 
 ![sendto](pics/export-icon.png) Send current file to the [VECTO Editor](#job-editor)
-:   **Note:** If the current file was opened via the [VECTO Editor](#job-editor) the file will be sentautomatically when saved.
+:   **Note:** If the current file was opened via the [VECTO Editor](#job-editor) the file will be sent automatically when saved.
 
 
 ![](pics/browse.png) ***Open file browser***

@@ -16,13 +16,13 @@ The .vsum file includes total / average results for each calculation run in one 
 |  speed | [km/h] | Average vehicle speed
 |  ∆altitude | [m] | Altitude difference between start and end of cycle
 |  Ppos | [kW] | Average positive engine power
+|  PwheelPos | [kW] | Average positive wheel power
 |  Pneg | [kW] | Average negative engine power 
 |  FC-Final | [g/km], [l/100km], [l/100tkm] | Average fuel consumption. Final value after all corrections.
-|  FC-Map | [g/h], [g/km] | Fuel consumption interpolated fromm [Fuel Map](#fuel-consumption-calculation).
-|  FC-AUXc | [g/h], [g/km] | Fuel consumption after [Auxiliary-Start/Stop Correction](#fuel-consumption-calculation). (Based on FC.)
-|  FC-WHTCc | [g/km] | Fuel consumption after [WHTC Correction](#fuel-consumption-calculation). (Based on FC-AUXc.)
+|  FC-Map | [g/h], [g/km] | Fuel consumption interpolated from [Fuel Map](#fuel-consumption-calculation).
+|  FC-AUXc | [g/h], [g/km] | Fuel consumption after [Auxiliary-Start/Stop Correction](#fuel-consumption-calculation). (Based on FC-Map.)
+|  FC-WHTCc | [g/h], [g/km] | Fuel consumption after [WHTC Correction](#fuel-consumption-calculation). (Based on FC-AUXc.)
 |  Co~2~ | [g/km], [g/tkm] | Average CO~2~ emissions.
-|  PwheelPos | [kW] | Average positive wheel power
 |  Pbrake | [kW] | Average brake power (not including engine drag)
 |  EposICE | [kWh] | Total positive engine work
 |  EnegICE | [kWh] | Total negative engine work (engine brake)
@@ -47,17 +47,13 @@ The .vsum file includes total / average results for each calculation run in one 
 |  pCruise | [%] | Time share of cruise phases \*
 |  pStop | [%] | Time share of stop phases \*
 
-\*Driving conditions:
+\*Definition of phases:
+:	Acceleration Phase: a~3s~ &gt; 0.125 \[m/s^2^\]
+:	Deceleration Phase: a~3s~ &lt; -0.125 \[m/s^2^\]
+:	Cruise Phase: -0.125 ≤ a~3s~ ≤ 0.125 \[m/s^2^\]
+:	Stop Phase: v &lt; 0.1 \[m/s\]
 
--	Acceleration: a~3s~ &gt; 0.125 \[m/s^2^\]
-
--	Deceleration: a~3s~ &lt; -0.125 \[m/s^2^\]
-
--	Cruise: -0.125 ≤ a~3s~ ≤ 0.125 \[m/s^2^\]
-
--	Stop: v &lt; 0.1 \[m/s\]
-
-	*a~3s~ = 3 seconds-averaged acceleration*
+*a~3s~ = 3-seconds-averaged acceleration*
 
 
 Definition of work (E...):

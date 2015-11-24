@@ -7,25 +7,43 @@ body {
 nav, #TOC {
   position: fixed;
   width: 21em;
-  top: 54px;
-  bottom: 0;
+  left: 0px;
+  top: 3.5em;
+  bottom: 2em;
   background-color: #eee;
   overflow: scroll;
-  border: 0, 0, 0, 1px solid black;
+}
+
+#HEADER{
+  top: 0px;
+  left: 1px;
+  border-bottom-style: solid;
+  border-bottom-width: thin;
+  border-bottom-color: #aaa;
+  height: 3.5em-5px;
+}
+
+#FOOTER {
+  border-top-style: solid;
+  border-top-width: thin;
+  border-top-color: #aaa;
+  bottom: 0px;
+  left: 1px;
 }
 
 #HEADER, #FOOTER {
+  width: auto;
   position: fixed;
-  border: 0, 0, 0, 1px solid black;
+  width: 99%;
+  background: white;
+  padding: 5px;
 }
-
-
-
 
 body > div:not(#TOC):not(#HEADER):not(#FOOTER)  {
 	display: none;
 	padding-left: 21em;
-	padding-top: 1em;
+	padding-top: 2em;
+  padding-bottom: 2em;
 	margin-left: 1em;
 }
 
@@ -44,12 +62,16 @@ th {
 
 th, td {
   padding: 6px;
-  border: 1px solid #aaa;
+  border-width: 1px;
+  border-style: solid;
+  border-color: #aaa;
 }
 
 h1 {
   padding-bottom: 3px;
-  border-bottom: 1px solid #aaa;
+  border-bottom-width: 1px;
+  border-bottom-style: solid;
+  border-bottom-color: #aaa;
 }
 
 body h1 {
@@ -58,7 +80,9 @@ body h1 {
 
 h2 {
   padding-bottom: 3px;
-  border-bottom: 1px solid #aaa;
+  border-bottom-width: 1px;
+  border-bottom-style: solid;
+  border-bottom-color: #aaa;
 }
 
 dt {
