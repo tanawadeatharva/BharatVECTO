@@ -18,7 +18,7 @@ Setup for Conventional AT gearboxes 
 -----------------------------------
 
 Torque converter file is defined for **torque converter only**
-![](pics/GBX-TC-Setup1-1.svg)
+![](pics/GBX-TC-Setup-1-1.svg)
 
 -   Define TC gear with ratio of first (mechanical) gear
 -   Set transmission losses of first gear (map or constant efficiency)

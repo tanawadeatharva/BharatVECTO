@@ -102,11 +102,11 @@ Controls
 ![sendto](pics/export-icon.png) Send current file to Job List in [Main Form](#main-form)
 :	**Note:** The file will be sent to the Job List automatically when saved.
 
-![veh](pics/VECTO/Veh.png) ***Open [Vehicle Editor](#vehicle-editor)***
+![veh](pics/Veh.png) ***Open [Vehicle Editor](#vehicle-editor)***
 
-![eng](pics/VECTO/Eng.png) ***Open [Engine Editor](#engine-editor)***
+![eng](pics/Eng.png) ***Open [Engine Editor](#engine-editor)***
 
-![gbx](pics/VECTO/Gbx.png) ***Open [Gearbox Editor](#gearbox-editor)***
+![gbx](pics/Gbx.png) ***Open [Gearbox Editor](#gearbox-editor)***
 
 ![](pics/browse.png) ***Browse for vehicle/engine/gearbox files***
 

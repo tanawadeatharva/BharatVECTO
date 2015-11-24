@@ -1,4 +1,24 @@
-<link rel="stylesheet" type="text/css" href="style.css" />
-<script src="https://ajax.googleapis.com/ajax/libs/jquery/1.11.3/jquery.min.js"></script>
-<script src="https://code.jquery.com/ui/1.11.4/jquery-ui.min.js"></script>
-<script type="text/javascript" src="include.js"></script>
+<script type="text/javascript">$(function () {
+    var hash = window.location.hash;
+    if (hash) {
+        $(hash.replace(".", "\\.")).show();
+        $(hash.replace(".", "\\.")).parents().show();
+    } else $("#user-manual").show();
+
+    
+    $('a').click(function() {
+        $("body > div:not(#TOC):not(#HEADER):not(#FOOTER)").hide();
+        $($(this).attr("href").replace(".", "\\.")).show();
+        $($(this).attr("href").replace(".", "\\.")).parents().show();
+    });
+
+    $("#TOC").resizable({
+        handles: "e",
+        resize: function(event, ui) {
+            $("body > div:not(#TOC)").css("padding-left", ui.size.width);
+        }
+    });
+    $("#TOC").scroll(function() {
+        $(".ui-resizable-handle").css('top', $("#TOC").scrollTop());
+    });
+});</script>
