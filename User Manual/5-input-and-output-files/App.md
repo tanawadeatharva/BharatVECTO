@@ -18,5 +18,4 @@ The tabulator-separated log file saves all messages of the [Main Form's Message 
 ###License file
 The license file license.dat is located in VECTO's program directory. Without a valid lisence file VECTO won't run.
 
-It no valid license file is provided with your VECTO version please contact <vecto@jrc.ec.europa.eu>.
-
+It no valid license file is provided with your VECTO version please contact [vecto@jrc.ec.europa.eu](mailto:vecto@jrc.ec.europa.eu).
