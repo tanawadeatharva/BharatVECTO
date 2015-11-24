@@ -58,3 +58,4 @@ Definition of work (E...):
 : sign &gt; 0: positive work applied to the vehicle (e.g. from engine, from kinetic energy)
 : sign &lt; 0: losses
 : The sum of EposICE, EnegICE, Eair, Eroll, Egrad, Eacc, Eaux, Ebrake, Etransm and Eretarder is zero (besides small rounding error for long driving cycles)
+

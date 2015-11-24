@@ -7,7 +7,7 @@ Every chapter is written in an own file (extension: .md) and the files.txt
 defines the included files and their order.
 
 The script "convert.bat" uses the files.txt to find all needed files and
-generates the help.html in the "output" directory using pandoc [2].
+generates the help.html using pandoc [2].
 
 The output help.html is self-contained (all images and scripts are contained in
 the html), except the mathjax library which is loaded via the internet.
@@ -29,20 +29,18 @@ Directory Structure
 Meta:
 |- convert.bat: Script to convert the markdown files.
 |- files.txt: List of files which should be included.
-|- output: directory for the generated files.
 |- README.txt: This readme.
-
-For HTML Output:
-|- style.css: stylesheet
-|- jquery*: jquery scripts
-|- mathjax.js: mathjax loader script
+|- help.html: the generated html help
+|- includes: directory with include files for html-output
 
 Content:
-|- fileformat: contains the .md files regarding the input/output files
-|- general: contains the .md files regarding general concepts
-|- GUI: contains the .md files regarding the graphical user interface
+|- 1-user-interface
+|- 2-calculation-modes
+|- 3-functions
+|- 4-command-line-arguments
+|- 5-input-and-output-files
+|- 6-changelog
 |- pics: contains all pictures
-
 
 References:
 -----------
