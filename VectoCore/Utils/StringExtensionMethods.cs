@@ -16,5 +16,10 @@ namespace TUGraz.VectoCore.Utils
 		{
 			return double.Parse(self, CultureInfo.InvariantCulture);
 		}
+
+	    public static double IndulgentParse(this string self)
+	    {
+	        return double.Parse(new string(self.Trim().TakeWhile(c => char.IsDigit(c) || c == '.').ToArray()), CultureInfo.InvariantCulture);
+	    }
 	}
 }
