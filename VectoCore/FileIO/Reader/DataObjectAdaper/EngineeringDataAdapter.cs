@@ -1,4 +1,5 @@
-﻿using System.IO;
+﻿using System;
+using System.IO;
 using System.Linq;
 using TUGraz.VectoCore.Exceptions;
 using TUGraz.VectoCore.FileIO.EngineeringFile;
@@ -68,32 +69,32 @@ namespace TUGraz.VectoCore.FileIO.Reader.DataObjectAdaper
 			var lookAheadData = new DriverData.LACData {
 				Enabled = data.LookAheadCoasting.Enabled,
 				Deceleration = data.LookAheadCoasting.Dec.SI<MeterPerSquareSecond>(),
-				MinSpeed = data.LookAheadCoasting.MinSpeed.KMPHtoMeterPerSecond(),
+				MinSpeed = data.LookAheadCoasting.MinSpeed.KMPHtoMeterPerSecond()
 			};
 			var overspeedData = new DriverData.OverSpeedEcoRollData {
 				Mode = DriverData.ParseDriverMode(data.OverSpeedEcoRoll.Mode),
 				MinSpeed = data.OverSpeedEcoRoll.MinSpeed.KMPHtoMeterPerSecond(),
 				OverSpeed = data.OverSpeedEcoRoll.OverSpeed.KMPHtoMeterPerSecond(),
-				UnderSpeed = data.OverSpeedEcoRoll.UnderSpeed.KMPHtoMeterPerSecond(),
+				UnderSpeed = data.OverSpeedEcoRoll.UnderSpeed.KMPHtoMeterPerSecond()
 			};
 			var startstopData = new VectoRunData.StartStopData {
 				Enabled = data.StartStop.Enabled,
 				Delay = data.StartStop.Delay.SI<Second>(),
 				MinTime = data.StartStop.MinTime.SI<Second>(),
-				MaxSpeed = data.StartStop.MaxSpeed.KMPHtoMeterPerSecond(),
+				MaxSpeed = data.StartStop.MaxSpeed.KMPHtoMeterPerSecond()
 			};
 			var retVal = new DriverData {
 				AccelerationCurve = accelerationData,
 				LookAheadCoasting = lookAheadData,
 				OverSpeedEcoRoll = overspeedData,
-				StartStop = startstopData,
+				StartStop = startstopData
 			};
 			return retVal;
 		}
 
 		/// <summary>
-		/// convert datastructure representing file-contents into internal datastructure
-		/// Vehicle, file-format version 5
+		///     convert datastructure representing file-contents into internal datastructure
+		///     Vehicle, file-format version 5
 		/// </summary>
 		/// <param name="vehicle">VehicleFileV5 container</param>
 		/// <returns>VehicleData instance</returns>
@@ -108,24 +109,43 @@ namespace TUGraz.VectoCore.FileIO.Reader.DataObjectAdaper
 			retVal.Loading = data.Loading.SI<Kilogram>();
 			retVal.DynamicTyreRadius = data.DynamicTyreRadius.SI().Milli.Meter.Cast<Meter>();
 
-			retVal.CrossWindCorrectionMode = CrossWindCorrectionModeHelper.Parse(data.CrossWindCorrectionModeStr);
+			//retVal.CrossWindCorrectionMode = CrossWindCorrectionModeHelper.Parse(data.CrossWindCorrectionModeStr);
 			retVal.AerodynamicDragAera = data.DragCoefficient.SI<SquareMeter>();
+
+			var crosswindCorrectionMode = CrossWindCorrectionModeHelper.Parse(data.CrossWindCorrectionModeStr);
+			switch (crosswindCorrectionMode) {
+				case CrossWindCorrectionMode.NoCorrection:
+					retVal.CrossWindCorrectionCurve =
+						CrossWindCorrectionCurve.GetNoCorrectionCurve(retVal.AerodynamicDragAera);
+					break;
+				case CrossWindCorrectionMode.SpeedDependentCorrectionFactor:
+					break;
+				case CrossWindCorrectionMode.VAirBetaLookupTable:
+					throw new VectoException("CrosswindCorrection mode {0} not implemented", crosswindCorrectionMode);
+				case CrossWindCorrectionMode.DeclarationModeCorrection:
+					retVal.CrossWindCorrectionCurve =
+						DeclarationDataAdapter.GetDeclarationAirResistanceCurve(retVal.VehicleCategory,
+							retVal.AerodynamicDragAera);
+					break;
+				default:
+					throw new ArgumentOutOfRangeException();
+			}
+
 
 			retVal.AxleData = data.AxleConfig.Axles.Select(axle => new Axle {
 				Inertia = axle.Inertia.SI<KilogramSquareMeter>(),
 				TwinTyres = axle.TwinTyres,
 				RollResistanceCoefficient = axle.RollResistanceCoefficient,
 				AxleWeightShare = axle.AxleWeightShare,
-				TyreTestLoad = axle.TyreTestLoad.SI<Newton>(),
+				TyreTestLoad = axle.TyreTestLoad.SI<Newton>()
 				//Wheels = axle.WheelsStr
 			}).ToList();
 			return retVal;
 		}
 
-
 		/// <summary>
-		/// convert datastructure representing the file-contents into internal data structure
-		/// Engine, file-format version 2
+		///     convert datastructure representing the file-contents into internal data structure
+		///     Engine, file-format version 2
 		/// </summary>
 		/// <param name="engine">Engin-Data file (Engineering mode)</param>
 		/// <returns></returns>
@@ -133,15 +153,15 @@ namespace TUGraz.VectoCore.FileIO.Reader.DataObjectAdaper
 		{
 			var retVal = SetCommonCombustionEngineData(engine.Body, engine.BasePath);
 			retVal.Inertia = engine.Body.Inertia.SI<KilogramSquareMeter>();
-			retVal.FullLoadCurve = EngineFullLoadCurve.ReadFromFile(Path.Combine(engine.BasePath, engine.Body.FullLoadCurve));
+			retVal.FullLoadCurve =
+				EngineFullLoadCurve.ReadFromFile(Path.Combine(engine.BasePath, engine.Body.FullLoadCurve));
 			retVal.FullLoadCurve.EngineData = retVal;
 			return retVal;
 		}
 
-
 		/// <summary>
-		/// convert datastructure representing the file-contents into internal data structure
-		/// Gearbox, File-format Version 4
+		///     convert datastructure representing the file-contents into internal data structure
+		///     Gearbox, File-format Version 4
 		/// </summary>
 		/// <param name="gearbox"></param>
 		/// <param name="engineData"></param>
@@ -177,7 +197,8 @@ namespace TUGraz.VectoCore.FileIO.Reader.DataObjectAdaper
 									gearSettings.ShiftPolygon != "<NOFILE>"
 					? ShiftPolygon.ReadFromFile(Path.Combine(gearbox.BasePath, gearSettings.ShiftPolygon))
 					: null;
-				var fullLoad = !string.IsNullOrEmpty(gearSettings.FullLoadCurve) && gearSettings.FullLoadCurve != "<NOFILE>" &&
+				var fullLoad = !string.IsNullOrEmpty(gearSettings.FullLoadCurve) &&
+								gearSettings.FullLoadCurve != "<NOFILE>" &&
 								gearSettings.FullLoadCurve != "-"
 					? FullLoadCurve.ReadFromFile(Path.Combine(gearbox.BasePath, gearSettings.FullLoadCurve))
 					: null;

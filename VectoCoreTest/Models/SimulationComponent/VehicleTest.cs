@@ -1,9 +1,10 @@
 ﻿using System;
 using Microsoft.VisualStudio.TestTools.UnitTesting;
+using TUGraz.VectoCore.FileIO.Reader.DataObjectAdaper;
 using TUGraz.VectoCore.FileIO.Reader.Impl;
+using TUGraz.VectoCore.Models.Declaration;
 using TUGraz.VectoCore.Models.Simulation.Data;
 using TUGraz.VectoCore.Models.Simulation.Impl;
-using TUGraz.VectoCore.Models.SimulationComponent.Data;
 using TUGraz.VectoCore.Models.SimulationComponent.Impl;
 using TUGraz.VectoCore.Tests.Utils;
 using TUGraz.VectoCore.Utils;
@@ -13,11 +14,9 @@ namespace TUGraz.VectoCore.Tests.Models.SimulationComponent
 	[TestClass]
 	public class VehicleTest
 	{
-		public static readonly double Tolerance = 0.001;
-
 		private const string VehicleDataFileCoach = @"TestData\Components\24t Coach.vveh";
-
 		private const string VehicleDataFileTruck = @"TestData\Components\40t_Long_Haul_Truck.vveh";
+		public static readonly double Tolerance = 0.001;
 
 		[TestMethod]
 		public void VehiclePortTest()
@@ -62,28 +61,6 @@ namespace TUGraz.VectoCore.Tests.Models.SimulationComponent
 			var mockPort = new MockFvOutPort();
 			vehicle.InPort().Connect(mockPort);
 
-
-			var tmp = vehicle.ComputeEffectiveAirDragArea(0.KMPHtoMeterPerSecond());
-			Assert.AreEqual(8.12204, tmp.Value(), Tolerance);
-
-			tmp = vehicle.ComputeEffectiveAirDragArea(60.KMPHtoMeterPerSecond());
-			Assert.AreEqual(8.12204, tmp.Value(), Tolerance);
-
-			tmp = vehicle.ComputeEffectiveAirDragArea(75.KMPHtoMeterPerSecond());
-			Assert.AreEqual(7.67058, tmp.Value(), Tolerance);
-
-			tmp = vehicle.ComputeEffectiveAirDragArea(100.KMPHtoMeterPerSecond());
-			Assert.AreEqual(7.23735, tmp.Value(), Tolerance);
-
-			tmp = vehicle.ComputeEffectiveAirDragArea(52.1234.KMPHtoMeterPerSecond());
-			Assert.AreEqual(8.12196, tmp.Value(), Tolerance);
-
-			tmp = vehicle.ComputeEffectiveAirDragArea(73.5432.KMPHtoMeterPerSecond());
-			Assert.AreEqual(7.70815, tmp.Value(), Tolerance);
-
-			tmp = vehicle.ComputeEffectiveAirDragArea(92.8765.KMPHtoMeterPerSecond());
-			Assert.AreEqual(7.33443, tmp.Value(), Tolerance);
-
 			// ====================
 
 			var dt = 0.5.SI<Second>();
@@ -117,12 +94,17 @@ namespace TUGraz.VectoCore.Tests.Models.SimulationComponent
 
 			var vehicleData = EngineeringModeSimulationDataReader.CreateVehicleDataFromFile(VehicleDataFileTruck);
 			vehicleData.AerodynamicDragAera = 6.2985.SI<SquareMeter>();
-			vehicleData.CrossWindCorrectionMode = CrossWindCorrectionMode.DeclarationModeCorrection;
+			vehicleData.CrossWindCorrectionCurve =
+				DeclarationDataAdapter.GetDeclarationAirResistanceCurve(VehicleCategory.Tractor,
+					vehicleData.AerodynamicDragAera);
+			//vehicleData.CrossWindCorrectionMode = CrossWindCorrectionMode.DeclarationModeCorrection;
 
 			var vehicle = new Vehicle(container, vehicleData);
 
 			var mockPort = new MockFvOutPort();
 			vehicle.InPort().Connect(mockPort);
+
+			// ----
 
 			var writer = new MockModalDataWriter();
 			vehicle.Initialize(80.KMPHtoMeterPerSecond(), 0.SI<Radian>());

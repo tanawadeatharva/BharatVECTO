@@ -20,7 +20,7 @@ namespace TUGraz.VectoCore.Models.SimulationComponent.Impl
         private VehicleState _currentState;
         private readonly VehicleData _data;
 
-        private readonly Point[] _airResistanceCurve;
+        private readonly CrossWindCorrectionCurve _airResistanceCurve;
 
         public MeterPerSecond VehicleSpeed
         {
@@ -55,7 +55,7 @@ namespace TUGraz.VectoCore.Models.SimulationComponent.Impl
             _currentState = new VehicleState { Distance = 0.SI<Meter>(), Velocity = 0.SI<MeterPerSecond>() };
 
             var values = DeclarationData.AirDrag.Lookup(_data.VehicleCategory);
-            _airResistanceCurve = CalculateAirResistanceCurve(values);
+            _airResistanceCurve = data.CrossWindCorrectionCurve;
         }
 
 
@@ -232,7 +232,7 @@ namespace TUGraz.VectoCore.Models.SimulationComponent.Impl
         private Watt ComputeAirDragPowerLoss(MeterPerSecond v1, MeterPerSecond v2, Second dt)
         {
             var vAverage = (v1 + v2) / 2;
-            var CdA = ComputeEffectiveAirDragArea(vAverage);
+            var CdA = _airResistanceCurve.EffectiveAirDragArea(vAverage);
             Watt averageAirDragPower;
             if (v1.IsEqual(v2)) {
                 averageAirDragPower = (Physics.AirDensity / 2.0 * CdA * vAverage * vAverage * vAverage).Cast<Watt>();
@@ -248,68 +248,6 @@ namespace TUGraz.VectoCore.Models.SimulationComponent.Impl
             return averageAirDragPower;
         }
 
-        protected internal SquareMeter ComputeEffectiveAirDragArea(MeterPerSecond velocity)
-        {
-            var CdA = _data.AerodynamicDragAera;
-            switch (_data.CrossWindCorrectionMode) {
-                case CrossWindCorrectionMode.NoCorrection:
-                    break;
-                case CrossWindCorrectionMode.DeclarationModeCorrection:
-                    CdA = AirDragInterpolate(velocity);
-                    break;
-                default:
-                    throw new NotImplementedException(string.Format("CrossWindcorrection {0} is not implemented",
-                        _data.CrossWindCorrectionMode));
-            }
-            return CdA;
-        }
-
-        private SquareMeter AirDragInterpolate(MeterPerSecond x)
-        {
-            var p = _airResistanceCurve.GetSection(c => c.X < x);
-
-            if (x < p.Item1.X || p.Item2.X < x) {
-                Log.Error(_data.CrossWindCorrectionMode == CrossWindCorrectionMode.VAirBetaLookupTable
-                    ? string.Format("CdExtrapol β = {0}", x)
-                    : string.Format("CdExtrapol v = {0}", x));
-            }
-
-            return VectoMath.Interpolate(p.Item1.X, p.Item2.X, p.Item1.Y, p.Item2.Y, x);
-        }
-
-        protected Point[] CalculateAirResistanceCurve(AirDrag.AirDragEntry values)
-        {
-            var points = new List<Point> { new Point { X = 0.SI<MeterPerSecond>(), Y = 0.SI<SquareMeter>() } };
-
-            for (var speed = 60; speed <= 100; speed += 5) {
-                var vVeh = speed.KMPHtoMeterPerSecond();
-                var cdASum = 0.0.SI<SquareMeter>();
-                for (var alpha = 0; alpha <= 180; alpha += 10) {
-                    var vWindX = Physics.BaseWindSpeed * Math.Cos(alpha.ToRadian());
-                    var vWindY = Physics.BaseWindSpeed * Math.Sin(alpha.ToRadian());
-                    var vAirX = vVeh + vWindX;
-                    var vAirY = vWindY;
-//					var vAir = VectoMath.Sqrt<MeterPerSecond>(vAirX * vAirX + vAirY * vAirY);
-                    var beta = Math.Atan((vAirY / vAirX).Value()).ToDegree();
-                    var deltaCdA = ComputeDeltaCd(beta, values);
-                    var cdA = _data.AerodynamicDragAera + deltaCdA;
-
-                    var degreeShare = ((alpha != 0 && alpha != 180) ? 10.0 / 180.0 : 5.0 / 180.0);
-
-//					cdASum += degreeShare * cdA * (vAir * vAir / (vVeh * vVeh)).Cast<Scalar>();
-                    cdASum += degreeShare * cdA * ((vAirX * vAirX + vAirY * vAirY) / (vVeh * vVeh)).Cast<Scalar>();
-                }
-                points.Add(new Point { X = vVeh, Y = cdASum });
-            }
-
-            points[0].Y = points[1].Y;
-            return points.ToArray();
-        }
-
-        protected SquareMeter ComputeDeltaCd(double beta, AirDrag.AirDragEntry values)
-        {
-            return (values.A1 * beta + values.A2 * beta * beta + values.A3 * beta * beta * beta).SI<SquareMeter>();
-        }
 
         public class VehicleState
         {
@@ -323,12 +261,6 @@ namespace TUGraz.VectoCore.Models.SimulationComponent.Impl
             public Newton AirDragResistance;
             public Newton RollingResistance;
             public MeterPerSquareSecond Acceleration { get; set; }
-        }
-
-        public class Point
-        {
-            public MeterPerSecond X;
-            public SquareMeter Y;
         }
     }
 }
