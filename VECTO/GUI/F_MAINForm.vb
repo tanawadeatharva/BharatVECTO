@@ -13,6 +13,7 @@ Imports System.Collections.Generic
 Imports System.ComponentModel
 Imports System.IO
 Imports System.Linq
+Imports System.Reflection
 Imports System.Threading
 Imports TUGraz.VectoCore.Models.Simulation.Data
 Imports TUGraz.VectoCore.Models.Simulation.Impl
