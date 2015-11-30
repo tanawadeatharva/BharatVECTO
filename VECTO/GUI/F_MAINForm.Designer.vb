@@ -40,7 +40,7 @@ Partial Class F_MAINForm
 		Me.ToolStripProgBarOverall = New System.Windows.Forms.ToolStripProgressBar()
 		Me.TabControl1 = New System.Windows.Forms.TabControl()
 		Me.TabPageGEN = New System.Windows.Forms.TabPage()
-		Me.Button2 = New System.Windows.Forms.Button()
+		Me.btStartV3 = New System.Windows.Forms.Button()
 		Me.LbDecl = New System.Windows.Forms.Label()
 		Me.PictureBox1 = New System.Windows.Forms.PictureBox()
 		Me.BtGENdown = New System.Windows.Forms.Button()
@@ -204,7 +204,7 @@ Partial Class F_MAINForm
 		'
 		'TabPageGEN
 		'
-		Me.TabPageGEN.Controls.Add(Me.Button2)
+		Me.TabPageGEN.Controls.Add(Me.btStartV3)
 		Me.TabPageGEN.Controls.Add(Me.LbDecl)
 		Me.TabPageGEN.Controls.Add(Me.PictureBox1)
 		Me.TabPageGEN.Controls.Add(Me.BtGENdown)
@@ -224,17 +224,17 @@ Partial Class F_MAINForm
 		Me.TabPageGEN.Text = "Job Files"
 		Me.TabPageGEN.UseVisualStyleBackColor = True
 		'
-		'Button2
+		'btStartV3
 		'
-		Me.Button2.Image = Global.VECTO.My.Resources.Resources.Play_icon
-		Me.Button2.ImageAlign = System.Drawing.ContentAlignment.MiddleLeft
-		Me.Button2.Location = New System.Drawing.Point(6, 100)
-		Me.Button2.Name = "Button2"
-		Me.Button2.Size = New System.Drawing.Size(105, 41)
-		Me.Button2.TabIndex = 20
-		Me.Button2.Text = "START V3"
-		Me.Button2.TextImageRelation = System.Windows.Forms.TextImageRelation.ImageBeforeText
-		Me.Button2.UseVisualStyleBackColor = True
+		Me.btStartV3.Image = Global.VECTO.My.Resources.Resources.Play_icon
+		Me.btStartV3.ImageAlign = System.Drawing.ContentAlignment.MiddleLeft
+		Me.btStartV3.Location = New System.Drawing.Point(6, 100)
+		Me.btStartV3.Name = "btStartV3"
+		Me.btStartV3.Size = New System.Drawing.Size(105, 41)
+		Me.btStartV3.TabIndex = 20
+		Me.btStartV3.Text = "START V3"
+		Me.btStartV3.TextImageRelation = System.Windows.Forms.TextImageRelation.ImageBeforeText
+		Me.btStartV3.UseVisualStyleBackColor = True
 		'
 		'LbDecl
 		'
@@ -1163,6 +1163,6 @@ Partial Class F_MAINForm
 	Friend WithEvents GroupBox1 As System.Windows.Forms.GroupBox
 	Friend WithEvents Label1 As System.Windows.Forms.Label
 	Friend WithEvents ReportBugViaCITnetToolStripMenuItem As System.Windows.Forms.ToolStripMenuItem
-	Friend WithEvents Button2 As System.Windows.Forms.Button
+	Friend WithEvents btStartV3 As System.Windows.Forms.Button
 
 End Class
