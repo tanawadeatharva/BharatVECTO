@@ -16,9 +16,7 @@ Imports System.Linq
 Imports System.Threading
 Imports TUGraz.VectoCore.Models.Simulation.Data
 Imports TUGraz.VectoCore.Models.Simulation.Impl
-Imports TUGraz.VectoCore
 Imports TUGraz.VectoCore.Configuration
-Imports TUGraz.VectoCore.Models.Simulation
 Imports System.Reflection
 Imports System.Text
 
