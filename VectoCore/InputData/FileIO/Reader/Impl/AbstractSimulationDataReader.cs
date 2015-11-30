@@ -1,7 +1,7 @@
 ﻿using System.Collections.Generic;
 using TUGraz.VectoCore.Models.Simulation.Data;
 
-namespace TUGraz.VectoCore.FileIO.Reader.Impl
+namespace TUGraz.VectoCore.InputData.FileIO.Reader.Impl
 {
 	public abstract class AbstractSimulationDataReader : InputFileReader, ISimulationDataReader
 	{

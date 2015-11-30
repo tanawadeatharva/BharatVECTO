@@ -1,9 +1,8 @@
 ﻿using System.Collections.Generic;
 using Newtonsoft.Json;
-using TUGraz.VectoCore.FileIO.DeclarationFile;
-using TUGraz.VectoCore.Models.SimulationComponent.Data;
+using TUGraz.VectoCore.InputData.FileIO.DeclarationFile;
 
-namespace TUGraz.VectoCore.FileIO.EngineeringFile
+namespace TUGraz.VectoCore.InputData.FileIO.EngineeringFile
 {
 	/// <summary>
 	///     Represents the Vecto Job File. Fileformat: .vecto

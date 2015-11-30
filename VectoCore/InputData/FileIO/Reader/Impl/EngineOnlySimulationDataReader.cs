@@ -1,11 +1,11 @@
 ﻿using System.Collections.Generic;
 using System.IO;
 using TUGraz.VectoCore.Exceptions;
-using TUGraz.VectoCore.FileIO.EngineeringFile;
-using TUGraz.VectoCore.FileIO.Reader.DataObjectAdaper;
+using TUGraz.VectoCore.InputData.FileIO.EngineeringFile;
+using TUGraz.VectoCore.InputData.FileIO.Reader.DataObjectAdaper;
 using TUGraz.VectoCore.Models.Simulation.Data;
 
-namespace TUGraz.VectoCore.FileIO.Reader.Impl
+namespace TUGraz.VectoCore.InputData.FileIO.Reader.Impl
 {
 	public class EngineOnlySimulationDataReader : EngineeringModeSimulationDataReader
 	{

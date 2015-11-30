@@ -5,14 +5,14 @@ using System.Linq;
 using System.Security.Principal;
 using Newtonsoft.Json;
 using TUGraz.VectoCore.Exceptions;
-using TUGraz.VectoCore.FileIO.DeclarationFile;
-using TUGraz.VectoCore.FileIO.Reader.DataObjectAdaper;
+using TUGraz.VectoCore.InputData.FileIO.DeclarationFile;
+using TUGraz.VectoCore.InputData.FileIO.Reader.DataObjectAdaper;
 using TUGraz.VectoCore.Models.Declaration;
 using TUGraz.VectoCore.Models.Simulation.Data;
 using TUGraz.VectoCore.Models.SimulationComponent.Data;
 using TUGraz.VectoCore.Utils;
 
-namespace TUGraz.VectoCore.FileIO.Reader.Impl
+namespace TUGraz.VectoCore.InputData.FileIO.Reader.Impl
 {
 	public class DeclarationModeSimulationDataReader : AbstractSimulationDataReader
 	{

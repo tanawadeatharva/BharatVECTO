@@ -2,7 +2,7 @@
 using Newtonsoft.Json;
 using TUGraz.VectoCore.Utils;
 
-namespace TUGraz.VectoCore.FileIO
+namespace TUGraz.VectoCore.InputData.FileIO
 {
 	/// <summary>
 	/// "Header": {

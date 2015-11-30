@@ -2,9 +2,8 @@
 using System.Collections.Generic;
 using Newtonsoft.Json;
 using TUGraz.VectoCore.Models.Declaration;
-using TUGraz.VectoCore.Models.SimulationComponent.Data;
 
-namespace TUGraz.VectoCore.FileIO.DeclarationFile
+namespace TUGraz.VectoCore.InputData.FileIO.DeclarationFile
 {
 	internal class VehicleFileV7Declaration : VectoVehicleFile
 	{

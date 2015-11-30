@@ -1,7 +1,7 @@
 ﻿using Newtonsoft.Json;
 using TUGraz.VectoCore.Models;
 
-namespace TUGraz.VectoCore.FileIO
+namespace TUGraz.VectoCore.InputData.FileIO
 {
 	public class InputFileReader : LoggingObject
 	{

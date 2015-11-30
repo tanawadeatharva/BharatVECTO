@@ -1,5 +1,5 @@
 ﻿using Microsoft.VisualStudio.TestTools.UnitTesting;
-using TUGraz.VectoCore.FileIO.Reader.Impl;
+using TUGraz.VectoCore.InputData.FileIO.Reader.Impl;
 using TUGraz.VectoCore.Models.Simulation.Impl;
 using TUGraz.VectoCore.Models.SimulationComponent.Impl;
 

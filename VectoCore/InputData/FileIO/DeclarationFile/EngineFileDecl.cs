@@ -1,8 +1,6 @@
-﻿using System.Collections.Generic;
-using Newtonsoft.Json;
-using TUGraz.VectoCore.Models.SimulationComponent.Data;
+﻿using Newtonsoft.Json;
 
-namespace TUGraz.VectoCore.FileIO.DeclarationFile
+namespace TUGraz.VectoCore.InputData.FileIO.DeclarationFile
 {
 	/// <summary>
 	///     Represents the CombustionEngineData. Fileformat: .veng

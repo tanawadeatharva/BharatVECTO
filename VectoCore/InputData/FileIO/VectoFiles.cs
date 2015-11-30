@@ -1,7 +1,7 @@
 ﻿using System.IO;
 using System.Runtime.Serialization;
 
-namespace TUGraz.VectoCore.FileIO
+namespace TUGraz.VectoCore.InputData.FileIO
 {
 	public abstract class VectoBaseFile
 	{
@@ -16,7 +16,7 @@ namespace TUGraz.VectoCore.FileIO
 	}
 
 
-	public abstract class VectoJobFile : VectoBaseFile
+	public abstract class VectoJobFile : VectoBaseFile, IJobInputData
 	{
 		private string _jobFile;
 
@@ -28,11 +28,11 @@ namespace TUGraz.VectoCore.FileIO
 		}
 	}
 
-	public abstract class VectoVehicleFile : VectoBaseFile {}
+	public abstract class VectoVehicleFile : VectoBaseFile, IVehicleInputData {}
 
-	public abstract class VectoGearboxFile : VectoBaseFile {}
+	public abstract class VectoGearboxFile : VectoBaseFile, IGearboxInputData, IAxleGearInputData {}
 
-	public abstract class VectoEngineFile : VectoBaseFile {}
+	public abstract class VectoEngineFile : VectoBaseFile, IEngineInputData {}
 
-	public abstract class VectoAuxiliaryFile : VectoBaseFile {}
+	public abstract class VectoAuxiliaryFile : VectoBaseFile, IAuxiliaryInputData {}
 }

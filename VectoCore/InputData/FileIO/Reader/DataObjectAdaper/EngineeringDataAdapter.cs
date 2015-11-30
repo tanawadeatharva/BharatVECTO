@@ -1,7 +1,7 @@
 ﻿using System.IO;
 using System.Linq;
 using TUGraz.VectoCore.Exceptions;
-using TUGraz.VectoCore.FileIO.EngineeringFile;
+using TUGraz.VectoCore.InputData.FileIO.EngineeringFile;
 using TUGraz.VectoCore.Models.Declaration;
 using TUGraz.VectoCore.Models.Simulation.Data;
 using TUGraz.VectoCore.Models.SimulationComponent.Data;
@@ -9,17 +9,17 @@ using TUGraz.VectoCore.Models.SimulationComponent.Data.Engine;
 using TUGraz.VectoCore.Models.SimulationComponent.Data.Gearbox;
 using TUGraz.VectoCore.Utils;
 
-namespace TUGraz.VectoCore.FileIO.Reader.DataObjectAdaper
+namespace TUGraz.VectoCore.InputData.FileIO.Reader.DataObjectAdaper
 {
 	public class EngineeringDataAdapter : AbstractSimulationDataAdapter
 	{
-		public override VehicleData CreateVehicleData(VectoVehicleFile vehicle, Mission mission,
+		internal override VehicleData CreateVehicleData(IVehicleInputData vehicle, Mission mission,
 			Kilogram loading)
 		{
 			return CreateVehicleData(vehicle);
 		}
 
-		public override VehicleData CreateVehicleData(VectoVehicleFile vehicle)
+		internal override VehicleData CreateVehicleData(IVehicleInputData vehicle)
 		{
 			var fileV7Eng = vehicle as VehicleFileV7Engineering;
 			if (fileV7Eng != null) {
@@ -28,7 +28,7 @@ namespace TUGraz.VectoCore.FileIO.Reader.DataObjectAdaper
 			throw new VectoException("Unsupported EngineData File Instance");
 		}
 
-		public override CombustionEngineData CreateEngineData(VectoEngineFile engine)
+		internal override CombustionEngineData CreateEngineData(IEngineInputData engine)
 		{
 			var fileV2Eng = engine as EngineFileV3Engineering;
 			if (fileV2Eng != null) {
@@ -37,7 +37,7 @@ namespace TUGraz.VectoCore.FileIO.Reader.DataObjectAdaper
 			throw new VectoException("Unsupported EngineData File Instance");
 		}
 
-		public override GearboxData CreateGearboxData(VectoGearboxFile gearbox, CombustionEngineData engine)
+		internal override GearboxData CreateGearboxData(IGearboxInputData gearbox, CombustionEngineData engine)
 		{
 			var fileV5Eng = gearbox as GearboxFileV5Engineering;
 			if (fileV5Eng != null) {
@@ -46,7 +46,7 @@ namespace TUGraz.VectoCore.FileIO.Reader.DataObjectAdaper
 			throw new VectoException("Unsupported GearboxData File Instance");
 		}
 
-		public override DriverData CreateDriverData(VectoJobFile job)
+		internal override DriverData CreateDriverData(IJobInputData job)
 		{
 			var filev2Eng = job as VectoJobFileV2Engineering;
 			if (filev2Eng != null) {
@@ -112,11 +112,11 @@ namespace TUGraz.VectoCore.FileIO.Reader.DataObjectAdaper
 			retVal.AerodynamicDragAera = data.DragCoefficient.SI<SquareMeter>();
 
 			retVal.AxleData = data.AxleConfig.Axles.Select(axle => new Axle {
-				Inertia = axle.Inertia.SI<KilogramSquareMeter>(),
+				Inertia = DoubleExtensionMethods.SI<KilogramSquareMeter>((double)axle.Inertia),
 				TwinTyres = axle.TwinTyres,
 				RollResistanceCoefficient = axle.RollResistanceCoefficient,
 				AxleWeightShare = axle.AxleWeightShare,
-				TyreTestLoad = axle.TyreTestLoad.SI<Newton>(),
+				TyreTestLoad = DoubleExtensionMethods.SI<Newton>((double)axle.TyreTestLoad),
 				//Wheels = axle.WheelsStr
 			}).ToList();
 			return retVal;

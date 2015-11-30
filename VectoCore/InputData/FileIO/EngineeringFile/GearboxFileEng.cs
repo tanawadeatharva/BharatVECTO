@@ -1,9 +1,9 @@
 ﻿using System.Collections.Generic;
 using JetBrains.Annotations;
 using Newtonsoft.Json;
-using TUGraz.VectoCore.FileIO.DeclarationFile;
+using TUGraz.VectoCore.InputData.FileIO.DeclarationFile;
 
-namespace TUGraz.VectoCore.FileIO.EngineeringFile
+namespace TUGraz.VectoCore.InputData.FileIO.EngineeringFile
 {
 	/// <summary>
 	///		Represents the Data containing all parameters of the gearbox

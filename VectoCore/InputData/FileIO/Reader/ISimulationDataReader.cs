@@ -1,8 +1,7 @@
 ﻿using System.Collections.Generic;
-using System.Security.Cryptography.X509Certificates;
 using TUGraz.VectoCore.Models.Simulation.Data;
 
-namespace TUGraz.VectoCore.FileIO.Reader
+namespace TUGraz.VectoCore.InputData.FileIO.Reader
 {
 	public interface ISimulationDataReader
 	{

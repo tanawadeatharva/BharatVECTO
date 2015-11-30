@@ -1,8 +1,7 @@
 ﻿using System.Collections.Generic;
 using Newtonsoft.Json;
-using TUGraz.VectoCore.Utils;
 
-namespace TUGraz.VectoCore.FileIO.DeclarationFile
+namespace TUGraz.VectoCore.InputData.FileIO.DeclarationFile
 {
 	/// <summary>
 	///		Represents the Data containing all parameters of the gearbox

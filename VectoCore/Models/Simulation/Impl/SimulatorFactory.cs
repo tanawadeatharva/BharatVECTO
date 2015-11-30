@@ -4,8 +4,8 @@ using System.Reflection;
 using System.Threading;
 using TUGraz.VectoCore.Configuration;
 using TUGraz.VectoCore.Exceptions;
-using TUGraz.VectoCore.FileIO.Reader;
-using TUGraz.VectoCore.FileIO.Reader.Impl;
+using TUGraz.VectoCore.InputData.FileIO.Reader;
+using TUGraz.VectoCore.InputData.FileIO.Reader.Impl;
 using TUGraz.VectoCore.Models.Simulation.Data;
 
 namespace TUGraz.VectoCore.Models.Simulation.Impl

@@ -3,7 +3,7 @@ using System.IO;
 using System.Linq;
 using TUGraz.VectoCore.Configuration;
 using TUGraz.VectoCore.Exceptions;
-using TUGraz.VectoCore.FileIO.DeclarationFile;
+using TUGraz.VectoCore.InputData.FileIO.DeclarationFile;
 using TUGraz.VectoCore.Models.Declaration;
 using TUGraz.VectoCore.Models.Simulation.Data;
 using TUGraz.VectoCore.Models.SimulationComponent.Data;
@@ -11,11 +11,11 @@ using TUGraz.VectoCore.Models.SimulationComponent.Data.Engine;
 using TUGraz.VectoCore.Models.SimulationComponent.Data.Gearbox;
 using TUGraz.VectoCore.Utils;
 
-namespace TUGraz.VectoCore.FileIO.Reader.DataObjectAdaper
+namespace TUGraz.VectoCore.InputData.FileIO.Reader.DataObjectAdaper
 {
 	public class DeclarationDataAdapter : AbstractSimulationDataAdapter
 	{
-		public override VehicleData CreateVehicleData(VectoVehicleFile vehicle, Mission mission, Kilogram loading)
+		internal override VehicleData CreateVehicleData(IVehicleInputData vehicle, Mission mission, Kilogram loading)
 		{
 			var fileV5Decl = vehicle as VehicleFileV7Declaration;
 			if (fileV5Decl != null) {
@@ -24,7 +24,7 @@ namespace TUGraz.VectoCore.FileIO.Reader.DataObjectAdaper
 			throw new VectoException("Unsupported VehicleData File Instance");
 		}
 
-		public override VehicleData CreateVehicleData(VectoVehicleFile vehicle)
+		internal override VehicleData CreateVehicleData(IVehicleInputData vehicle)
 		{
 			var fileV7Decl = vehicle as VehicleFileV7Declaration;
 			if (fileV7Decl != null) {
@@ -33,7 +33,7 @@ namespace TUGraz.VectoCore.FileIO.Reader.DataObjectAdaper
 			throw new VectoException("Mission Data and loading required in DeclarationMode");
 		}
 
-		public override CombustionEngineData CreateEngineData(VectoEngineFile engine)
+		internal override CombustionEngineData CreateEngineData(IEngineInputData engine)
 		{
 			var fileV2Decl = engine as EngineFileV3Declaration;
 			if (fileV2Decl != null) {
@@ -42,7 +42,7 @@ namespace TUGraz.VectoCore.FileIO.Reader.DataObjectAdaper
 			throw new VectoException("Unsupported EngineData File Instance");
 		}
 
-		public override GearboxData CreateGearboxData(VectoGearboxFile gearbox, CombustionEngineData engine)
+		internal override GearboxData CreateGearboxData(IGearboxInputData gearbox, CombustionEngineData engine)
 		{
 			var fileV5Decl = gearbox as GearboxFileV5Declaration;
 			if (fileV5Decl != null) {
@@ -51,7 +51,7 @@ namespace TUGraz.VectoCore.FileIO.Reader.DataObjectAdaper
 			throw new VectoException("Unsupported GearboxData File Instance");
 		}
 
-		public override DriverData CreateDriverData(VectoJobFile job)
+		internal override DriverData CreateDriverData(IJobInputData job)
 		{
 			var fileV2Decl = job as VectoJobFileV2Declaration;
 			if (fileV2Decl != null) {

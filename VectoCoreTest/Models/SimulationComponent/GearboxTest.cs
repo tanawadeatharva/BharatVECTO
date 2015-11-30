@@ -3,7 +3,7 @@ using System.Linq;
 using Microsoft.VisualStudio.TestTools.UnitTesting;
 using NLog;
 using TUGraz.VectoCore.Exceptions;
-using TUGraz.VectoCore.FileIO.Reader.Impl;
+using TUGraz.VectoCore.InputData.FileIO.Reader.Impl;
 using TUGraz.VectoCore.Models.Connector.Ports.Impl;
 using TUGraz.VectoCore.Models.Simulation.DataBus;
 using TUGraz.VectoCore.Models.Simulation.Impl;

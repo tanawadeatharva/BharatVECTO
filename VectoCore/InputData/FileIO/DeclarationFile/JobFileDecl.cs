@@ -1,7 +1,7 @@
 ﻿using System.Collections.Generic;
 using Newtonsoft.Json;
 
-namespace TUGraz.VectoCore.FileIO.DeclarationFile
+namespace TUGraz.VectoCore.InputData.FileIO.DeclarationFile
 {
 	/// <summary>
 	/// A class which represents the json data format for serializing and deserializing the Job Data files.

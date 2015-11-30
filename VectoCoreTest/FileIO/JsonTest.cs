@@ -1,7 +1,7 @@
 ﻿using System;
 using Microsoft.VisualStudio.TestTools.UnitTesting;
 using Newtonsoft.Json;
-using TUGraz.VectoCore.FileIO;
+using TUGraz.VectoCore.InputData.FileIO;
 
 namespace TUGraz.VectoCore.Tests.FileIO
 {

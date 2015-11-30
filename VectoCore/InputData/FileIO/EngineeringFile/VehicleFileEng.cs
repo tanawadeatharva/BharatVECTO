@@ -1,8 +1,7 @@
-﻿using System.Collections.Generic;
-using Newtonsoft.Json;
-using TUGraz.VectoCore.FileIO.DeclarationFile;
+﻿using Newtonsoft.Json;
+using TUGraz.VectoCore.InputData.FileIO.DeclarationFile;
 
-namespace TUGraz.VectoCore.FileIO.EngineeringFile
+namespace TUGraz.VectoCore.InputData.FileIO.EngineeringFile
 {
 	internal class VehicleFileV7Engineering : VehicleFileV7Declaration
 	{

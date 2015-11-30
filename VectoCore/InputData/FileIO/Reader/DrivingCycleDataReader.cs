@@ -9,7 +9,7 @@ using TUGraz.VectoCore.Models;
 using TUGraz.VectoCore.Models.SimulationComponent.Data;
 using TUGraz.VectoCore.Utils;
 
-namespace TUGraz.VectoCore.FileIO.Reader
+namespace TUGraz.VectoCore.InputData.FileIO.Reader
 {
 	public class DrivingCycleDataReader : LoggingObject
 	{

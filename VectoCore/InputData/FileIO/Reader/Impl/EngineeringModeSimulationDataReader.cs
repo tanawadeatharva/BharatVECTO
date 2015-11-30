@@ -3,18 +3,16 @@ using System.IO;
 using System.Linq;
 using System.Runtime.CompilerServices;
 using Newtonsoft.Json;
-using NLog;
 using TUGraz.VectoCore.Exceptions;
-using TUGraz.VectoCore.FileIO.EngineeringFile;
-using TUGraz.VectoCore.FileIO.Reader.DataObjectAdaper;
+using TUGraz.VectoCore.InputData.FileIO.EngineeringFile;
+using TUGraz.VectoCore.InputData.FileIO.Reader.DataObjectAdaper;
 using TUGraz.VectoCore.Models.Simulation.Data;
 using TUGraz.VectoCore.Models.SimulationComponent.Data;
-using TUGraz.VectoCore.Models.SimulationComponent.Impl;
 using TUGraz.VectoCore.Utils;
 
 [assembly: InternalsVisibleTo("VectoCoreTest")]
 
-namespace TUGraz.VectoCore.FileIO.Reader.Impl
+namespace TUGraz.VectoCore.InputData.FileIO.Reader.Impl
 {
 	public class EngineeringModeSimulationDataReader : AbstractSimulationDataReader
 	{

@@ -1,22 +1,24 @@
 ﻿using System;
 using System.IO;
-using TUGraz.VectoCore.FileIO.DeclarationFile;
+using TUGraz.VectoCore.InputData.FileIO.DeclarationFile;
 using TUGraz.VectoCore.Models.Declaration;
 using TUGraz.VectoCore.Models.SimulationComponent.Data;
 using TUGraz.VectoCore.Models.SimulationComponent.Data.Engine;
 using TUGraz.VectoCore.Utils;
 
-namespace TUGraz.VectoCore.FileIO.Reader.DataObjectAdaper
+namespace TUGraz.VectoCore.InputData.FileIO.Reader.DataObjectAdaper
 {
 	public abstract class AbstractSimulationDataAdapter
 	{
-		public abstract VehicleData CreateVehicleData(VectoVehicleFile vehicle, Mission mission, Kilogram loading);
+		internal abstract VehicleData CreateVehicleData(IVehicleInputData vehicle, Mission mission, Kilogram loading);
 
-		public abstract VehicleData CreateVehicleData(VectoVehicleFile vehicle);
+		internal abstract VehicleData CreateVehicleData(IVehicleInputData vehicle);
 
-		public abstract CombustionEngineData CreateEngineData(VectoEngineFile engine);
+		internal abstract CombustionEngineData CreateEngineData(IEngineInputData engine);
 
-		public abstract GearboxData CreateGearboxData(VectoGearboxFile gearbox, CombustionEngineData engine);
+		internal abstract GearboxData CreateGearboxData(IGearboxInputData gearbox, CombustionEngineData engine);
+
+		internal abstract DriverData CreateDriverData(IJobInputData job);
 
 		// =========================
 
@@ -74,7 +76,5 @@ namespace TUGraz.VectoCore.FileIO.Reader.DataObjectAdaper
 				Type = data.GearboxType.Parse<GearboxType>()
 			};
 		}
-
-		public abstract DriverData CreateDriverData(VectoJobFile job);
 	}
 }

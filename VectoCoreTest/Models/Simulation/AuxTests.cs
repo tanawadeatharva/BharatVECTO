@@ -1,11 +1,11 @@
 ﻿using TUGraz.VectoCore.Utils;
 using TUGraz.VectoCore.Exceptions;
 using TUGraz.VectoCore.Tests.Utils;
-using TUGraz.VectoCore.FileIO.Reader;
 using TUGraz.VectoCore.Models.Declaration;
 using TUGraz.VectoCore.Models.Simulation.Data;
 using TUGraz.VectoCore.Models.Simulation.Impl;
 using Microsoft.VisualStudio.TestTools.UnitTesting;
+using TUGraz.VectoCore.InputData.FileIO.Reader;
 using TUGraz.VectoCore.Models.SimulationComponent.Data;
 using TUGraz.VectoCore.Models.SimulationComponent.Impl;
 
