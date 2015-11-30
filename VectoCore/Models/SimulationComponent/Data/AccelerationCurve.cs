@@ -21,7 +21,13 @@ namespace TUGraz.VectoCore.Models.SimulationComponent.Data
 
 		public static AccelerationCurveData ReadFromFile(string fileName)
 		{
-			var data = VectoCSVFile.Read(fileName);
+			DataTable data;
+			try {
+				data = VectoCSVFile.Read(fileName);
+			} catch (Exception ex) {
+				throw new VectoException("ERROR while reading AccelerationCurve File: " + ex.Message);
+			}
+
 			return ParseData(data);
 		}
 
@@ -35,17 +41,51 @@ namespace TUGraz.VectoCore.Models.SimulationComponent.Data
 				throw new VectoException("Acceleration Limiting File must consist of at least two entries.");
 			}
 
+			if (HeaderIsValid(data.Columns)) {
+				return CreateFromColumnNames(data);
+			}
+			Logger<AccelerationCurveData>().Warn(
+				"Acceleration Curve: Header Line is not valid. Expected: '{0}, {1}, {2}', Got: {3}",
+				Fields.Velocity, Fields.Acceleration, Fields.Deceleration,
+				string.Join(", ", data.Columns.Cast<DataColumn>().Select(c => c.ColumnName)));
+			return CreateFromColumnIndizes(data);
+		}
+
+		private static AccelerationCurveData CreateFromColumnIndizes(DataTable data)
+		{
 			return new AccelerationCurveData {
 				_entries = data.Rows.Cast<DataRow>()
 					.Select(r => new KeyValuePair<MeterPerSecond, AccelerationEntry>(
-						r.ParseDouble("v").KMPHtoMeterPerSecond(),
+						r.ParseDouble(0).KMPHtoMeterPerSecond(),
 						new AccelerationEntry {
-							Acceleration = r.ParseDouble("acc").SI<MeterPerSquareSecond>(),
-							Deceleration = r.ParseDouble("dec").SI<MeterPerSquareSecond>()
+							Acceleration = r.ParseDouble(1).SI<MeterPerSquareSecond>(),
+							Deceleration = r.ParseDouble(2).SI<MeterPerSquareSecond>()
 						}))
 					.OrderBy(x => x.Key)
 					.ToList()
 			};
+		}
+
+		private static AccelerationCurveData CreateFromColumnNames(DataTable data)
+		{
+			return new AccelerationCurveData {
+				_entries = data.Rows.Cast<DataRow>()
+					.Select(r => new KeyValuePair<MeterPerSecond, AccelerationEntry>(
+						r.ParseDouble(Fields.Velocity).KMPHtoMeterPerSecond(),
+						new AccelerationEntry {
+							Acceleration = r.ParseDouble(Fields.Acceleration).SI<MeterPerSquareSecond>(),
+							Deceleration = r.ParseDouble(Fields.Deceleration).SI<MeterPerSquareSecond>()
+						}))
+					.OrderBy(x => x.Key)
+					.ToList()
+			};
+		}
+
+		private static bool HeaderIsValid(DataColumnCollection columns)
+		{
+			return columns.Contains(Fields.Velocity) &&
+					columns.Contains(Fields.Acceleration) &&
+					columns.Contains(Fields.Deceleration);
 		}
 
 		public AccelerationEntry Lookup(MeterPerSecond key)
@@ -54,10 +94,12 @@ namespace TUGraz.VectoCore.Models.SimulationComponent.Data
 
 			return new AccelerationEntry {
 				Acceleration =
-					VectoMath.Interpolate(_entries[index - 1].Key, _entries[index].Key, _entries[index - 1].Value.Acceleration,
+					VectoMath.Interpolate(_entries[index - 1].Key, _entries[index].Key,
+						_entries[index - 1].Value.Acceleration,
 						_entries[index].Value.Acceleration, key),
 				Deceleration =
-					VectoMath.Interpolate(_entries[index - 1].Key, _entries[index].Key, _entries[index - 1].Value.Deceleration,
+					VectoMath.Interpolate(_entries[index - 1].Key, _entries[index].Key,
+						_entries[index - 1].Value.Deceleration,
 						_entries[index].Value.Deceleration, key)
 			};
 		}
@@ -161,6 +203,15 @@ namespace TUGraz.VectoCore.Models.SimulationComponent.Data
 			var c = 0.SI<Meter>() - m / k;
 			var t = Math.Log(((v2 * k + d) / (v1 * k + d)).Cast<Scalar>()) / k;
 			return m / k * Math.Exp((k * t).Value()) + b * t + c;
+		}
+
+		private static class Fields
+		{
+			public const string Velocity = "v";
+
+			public const string Acceleration = "acc";
+
+			public const string Deceleration = "dec";
 		}
 	}
 }

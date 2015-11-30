@@ -20,6 +20,7 @@ Imports TUGraz.VectoCore
 Imports TUGraz.VectoCore.Configuration
 Imports TUGraz.VectoCore.Models.Simulation
 Imports System.Reflection
+Imports System.Text
 
 ''' <summary>
 ''' Main application form. Loads at application start. Closing form ends application.
@@ -1564,14 +1565,20 @@ Imports System.Reflection
 			mode = SimulatorFactory.FactoryMode.EngineeringMode
 		End If
 
-		For Each jobFile As String In JobFileList
-			sender.ReportProgress(0, New With {.Target = "ListBox", .Message = "Reading File " + jobFile})
-			Dim runsFactory As SimulatorFactory = New SimulatorFactory(mode, jobFile)
-			runsFactory.WriteModalResults = Cfg.ModOut
-			jobContainer.AddRuns(runsFactory)
-			sender.ReportProgress(0, New With {.Target = "ListBox", .Message = "Finished Reading File " + jobFile})
-		Next
+		Dim doneProcesses As List(Of String) = New List(Of String)
 
+		For Each jobFile As String In JobFileList
+			Try
+				sender.ReportProgress(0, New With {.Target = "ListBox", .Message = "Reading File " + jobFile})
+				Dim runsFactory As SimulatorFactory = New SimulatorFactory(mode, jobFile)
+				runsFactory.WriteModalResults = Cfg.ModOut
+				jobContainer.AddRuns(runsFactory)
+				sender.ReportProgress(0, New With {.Target = "ListBox", .Message = "Finished Reading File " + jobFile})
+			Catch ex As Exception
+				MsgBox(String.Format("ERROR running job {0}: {1}", jobFile, ex.Message), MsgBoxStyle.Critical)
+				sender.ReportProgress(0, New With {.Target = "ListBox", .Message = ex.Message})
+			End Try
+		Next
 
 		sender.ReportProgress(0, New _
 								With {.Target = "ListBox",
@@ -1580,7 +1587,7 @@ Imports System.Reflection
 
 		jobContainer.Execute(True)
 		Dim start As DateTime = DateTime.Now()
-		Dim doneProcesses As List(Of String) = New List(Of String)
+
 
 		While Not jobContainer.AllCompleted
 			If sender.CancellationPending Then
@@ -1600,30 +1607,39 @@ Imports System.Reflection
 			For Each p As KeyValuePair(Of String, JobContainer.ProgressEntry) In progress
 				If p.Value.Done And Not doneProcesses.Contains(p.Key) Then
 					sender.ReportProgress(0, New With {.Target = "ListBox", .Message = String.Format("Finished Run {0}", p.Key)})
+					If Not p.Value.Error Is Nothing Then
+						sender.ReportProgress(0, New With {.Target = "ListBox",
+												.Message = String.Format("ERROR {0}: {1}", p.Key, p.Value.Error.Message),
+												.Link = p.Value.ModFileName})
+					End If
 					'If Not Cfg.DeclMode Then
 					sender.ReportProgress(0, New With {.Target = "ListBox",
 											.Message = String.Format("Run {0}: Modal Results written to {1}", p.Key, p.Value.ModFileName),
 											.Link = p.Value.ModFileName})
 					'End If
+
 					doneProcesses.Add(p.Key)
 				End If
 			Next
 			Thread.Sleep(500)
 		End While
 
-		sender.ReportProgress(100,
-							New _
-								With {.Target = "ListBox", .Message = String.Format("Sum File written to {0}", jobContainer.SumFileName),
-								.Link = jobContainer.SumFileName})
-
+		If File.Exists(jobContainer.SumFileName) Then
+			sender.ReportProgress(100,
+								New _
+									With {.Target = "ListBox", .Message = String.Format("Sum File written to {0}", jobContainer.SumFileName),
+									.Link = jobContainer.SumFileName})
+		End If
 		If Cfg.DeclMode Then
 			For Each job As String In JobFileList
 				Dim report As String = Path.Combine(Path.GetDirectoryName(job), Path.GetFileNameWithoutExtension(job) + ".pdf")
-				sender.ReportProgress(100,
-									New With {.Target = "ListBox", .Message = String.Format("PDF Report written to {0}", report), .Link = report})
+
+				If File.Exists(report) Then
+					sender.ReportProgress(100,
+										New With {.Target = "ListBox", .Message = String.Format("PDF Report written to {0}", report), .Link = report})
+				End If
 			Next
 		End If
-
 
 		For Each progressEntry As KeyValuePair(Of String, JobContainer.ProgressEntry) In jobContainer.GetProgress()
 			sender.ReportProgress(100,
@@ -2238,6 +2254,12 @@ Imports System.Reflection
 		Else
 			LvMsg.Cursor = Cursors.Hand
 		End If
+		If mouseDownOnListView Then
+			Try
+				LvMsg.HitTest(e.Location).Item.Selected = True
+			Catch
+			End Try
+		End If
 	End Sub
 
 #Region "Open File Context Menu"
@@ -2308,6 +2330,7 @@ Imports System.Reflection
 #Region "GUI Tests"
 
 	Private GUItest0 As New GUItest(Me)
+	Private mouseDownOnListView As Boolean
 
 	Private Class GUItest
 		Private RowLim As Int16 = 9
@@ -2655,4 +2678,23 @@ Imports System.Reflection
 	End Sub
 
 #End Region
+
+	Private Sub LvMsg_KeyUp(sender As Object, e As KeyEventArgs) Handles LvMsg.KeyUp
+		If (e.Control And e.KeyCode = Keys.C) Then
+			Dim builder As StringBuilder = New StringBuilder()
+			For Each selectedItem As ListViewItem In LvMsg.SelectedItems
+				builder.AppendLine(String.Join(", ",
+												selectedItem.SubItems.Cast (Of ListViewItem.ListViewSubItem).Select(Function(item) item.Text)))
+			Next
+			Clipboard.SetText(builder.ToString())
+		End If
+	End Sub
+
+	Private Sub LvMsg_MouseDown(sender As Object, e As MouseEventArgs) Handles LvMsg.MouseDown
+		mouseDownOnListView = True
+	End Sub
+
+	Private Sub LvMsg_MouseUp(sender As Object, e As MouseEventArgs) Handles LvMsg.MouseUp
+		mouseDownOnListView = False
+	End Sub
 End Class

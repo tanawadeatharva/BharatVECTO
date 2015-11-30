@@ -1,6 +1,7 @@
 using System;
 using System.Collections.Generic;
 using System.Data;
+using TUGraz.VectoCore.Exceptions;
 using TUGraz.VectoCore.Utils;
 
 namespace TUGraz.VectoCore.Models.Declaration
@@ -19,7 +20,12 @@ namespace TUGraz.VectoCore.Models.Declaration
 
 		public override Watt Lookup(MissionType mission, VehicleClass hdvClass)
 		{
-			return _data[Tuple.Create(mission, hdvClass)];
+			try {
+				return _data[Tuple.Create(mission, hdvClass)];
+			} catch (KeyNotFoundException) {
+				throw new VectoException("Auxiliary Lookup Error: No value found for HVAC with mission '{0}' and HDVClass '{1}'",
+					mission, hdvClass);
+			}
 		}
 
 		protected override void ParseData(DataTable table)

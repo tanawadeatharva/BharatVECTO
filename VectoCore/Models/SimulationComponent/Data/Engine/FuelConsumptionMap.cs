@@ -19,18 +19,24 @@ namespace TUGraz.VectoCore.Models.SimulationComponent.Data.Engine
 		public static FuelConsumptionMap ReadFromFile(string fileName)
 		{
 			var fuelConsumptionMap = new FuelConsumptionMap();
-			var data = VectoCSVFile.Read(fileName);
+			DataTable data;
 
+			try {
+				data = VectoCSVFile.Read(fileName);
+			} catch (Exception ex) {
+				throw new VectoException("ERROR while reading FuelConsumptionMap: {0}", ex.Message);
+			}
+			var headerValid = HeaderIsValid(data.Columns);
+			if (!headerValid) {
+				Logger<FuelConsumptionMap>().Warn(
+					"FuelConsumptionMap: Header Line is not valid. Expected: '{0}, {1}, {2}', Got: {3}",
+					Fields.EngineSpeed, Fields.Torque, Fields.FuelConsumption,
+					string.Join(", ", data.Columns.Cast<DataColumn>().Select(c => c.ColumnName)));
+			}
 			try {
 				foreach (DataRow row in data.Rows) {
 					try {
-						var entry = new FuelConsumptionEntry {
-							EngineSpeed =
-								row.ParseDouble(Fields.EngineSpeed).SI().Rounds.Per.Minute.Cast<PerSecond>(),
-							Torque = row.ParseDouble(Fields.Torque).SI<NewtonMeter>(),
-							FuelConsumption =
-								row.ParseDouble(Fields.FuelConsumption).SI().Gramm.Per.Hour.ConvertTo().Kilo.Gramm.Per.Second
-						};
+						var entry = headerValid ? CreateFromColumNames(row) : CreateFromColumnIndizes(row);
 
 						if (entry.FuelConsumption < 0) {
 							throw new ArgumentOutOfRangeException("FuelConsumption", "FuelConsumption < 0 not allowed.");
@@ -39,7 +45,8 @@ namespace TUGraz.VectoCore.Models.SimulationComponent.Data.Engine
 						fuelConsumptionMap._entries.Add(entry);
 
 						// Delauney map works only as expected, when the engineSpeed is in rpm.
-						fuelConsumptionMap._fuelMap.AddPoint(entry.Torque.Value(), row.ParseDouble(Fields.EngineSpeed),
+						fuelConsumptionMap._fuelMap.AddPoint(entry.Torque.Value(),
+							headerValid ? row.ParseDouble(Fields.EngineSpeed) : row.ParseDouble(0),
 							entry.FuelConsumption.Value());
 					} catch (Exception e) {
 						throw new VectoException(string.Format("Line {0}: {1}", data.Rows.IndexOf(row), e.Message), e);
@@ -51,6 +58,32 @@ namespace TUGraz.VectoCore.Models.SimulationComponent.Data.Engine
 
 			fuelConsumptionMap._fuelMap.Triangulate();
 			return fuelConsumptionMap;
+		}
+
+		private static bool HeaderIsValid(DataColumnCollection columns)
+		{
+			return columns.Contains(Fields.EngineSpeed) && columns.Contains(Fields.Torque) &&
+					columns.Contains(Fields.FuelConsumption);
+		}
+
+		private static FuelConsumptionEntry CreateFromColumnIndizes(DataRow row)
+		{
+			return new FuelConsumptionEntry {
+				EngineSpeed = row.ParseDouble(0).RPMtoRad(),
+				Torque = row.ParseDouble(1).SI<NewtonMeter>(),
+				FuelConsumption =
+					row.ParseDouble(2).SI().Gramm.Per.Hour.ConvertTo().Kilo.Gramm.Per.Second
+			};
+		}
+
+		private static FuelConsumptionEntry CreateFromColumNames(DataRow row)
+		{
+			return new FuelConsumptionEntry {
+				EngineSpeed = row.ParseDouble(Fields.EngineSpeed).SI().Rounds.Per.Minute.Cast<PerSecond>(),
+				Torque = row.ParseDouble(Fields.Torque).SI<NewtonMeter>(),
+				FuelConsumption =
+					row.ParseDouble(Fields.FuelConsumption).SI().Gramm.Per.Hour.ConvertTo().Kilo.Gramm.Per.Second
+			};
 		}
 
 		/// <summary>

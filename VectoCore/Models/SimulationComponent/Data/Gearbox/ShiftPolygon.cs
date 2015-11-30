@@ -1,4 +1,5 @@
-﻿using System.Collections.Generic;
+﻿using System;
+using System.Collections.Generic;
 using System.Collections.ObjectModel;
 using System.Data;
 using System.Diagnostics;
@@ -21,8 +22,12 @@ namespace TUGraz.VectoCore.Models.SimulationComponent.Data.Gearbox
 
 		public static ShiftPolygon ReadFromFile(string fileName)
 		{
-			var data = VectoCSVFile.Read(fileName);
-
+			DataTable data;
+			try {
+				data = VectoCSVFile.Read(fileName);
+			} catch (Exception ex) {
+				throw new VectoException("ERROR while reading ShiftPolygon: " + ex.Message);
+			}
 			if (data.Columns.Count != 3) {
 				throw new VectoException("ShiftPolygon Data File must contain exactly 3 columns.");
 			}

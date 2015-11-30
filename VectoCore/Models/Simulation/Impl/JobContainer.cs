@@ -185,7 +185,12 @@ namespace TUGraz.VectoCore.Models.Simulation.Impl
 				Container.JobCompleted(this);
 			}
 
-			public void RunWorkerCompleted(object sender, RunWorkerCompletedEventArgs e) {}
+			public void RunWorkerCompleted(object sender, RunWorkerCompletedEventArgs e)
+			{
+				if (e.Error != null) {
+					ExecException = e.Error;
+				}
+			}
 
 			public void ProgressChanged(object sender, ProgressChangedEventArgs e)
 			{
