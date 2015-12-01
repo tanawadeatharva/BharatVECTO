@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using System.ComponentModel;
 using System.Diagnostics;
 using System.Linq;
+using System.Linq.Expressions;
 using System.Threading;
 using TUGraz.VectoCore.Models.Simulation.Data;
 
@@ -35,7 +36,7 @@ namespace TUGraz.VectoCore.Models.Simulation.Impl
 		public void AddRun(IVectoRun run)
 		{
 			_jobNumber++;
-			Runs.Add(new RunEntry { Run = run, Container = this });
+			Runs.Add(new RunEntry { Run = run, JobContainer = this });
 		}
 
 		public void AddRuns(IEnumerable<IVectoRun> runs)
@@ -43,7 +44,7 @@ namespace TUGraz.VectoCore.Models.Simulation.Impl
 			_jobNumber++;
 			//Runs.AddRange(runs);
 			foreach (var run in runs) {
-				Runs.Add(new RunEntry { Run = run, Container = this });
+				Runs.Add(new RunEntry { Run = run, JobContainer = this });
 			}
 		}
 
@@ -62,40 +63,29 @@ namespace TUGraz.VectoCore.Models.Simulation.Impl
 			Log.Info("VectoRun started running. Executing Runs.");
 
 			foreach (var job in Runs) {
-				job.Worker = new BackgroundWorker() {
-					WorkerSupportsCancellation = true,
-					WorkerReportsProgress = true,
-				};
-				job.Worker.DoWork += job.DoWork;
-				job.Worker.ProgressChanged += job.ProgressChanged;
-				job.Worker.RunWorkerCompleted += job.RunWorkerCompleted;
 				if (multithreaded) {
 					job.Started = true;
-					job.Worker.RunWorkerAsync();
+					job.RunWorkerAsync();
 				}
 			}
 			if (!multithreaded) {
 				var entry = Runs.First();
 				entry.Started = true;
-				entry.Worker.RunWorkerAsync();
+				entry.RunWorkerAsync();
 			}
 		}
 
 		public void Cancel()
 		{
 			foreach (var job in Runs) {
-				if (job.Worker != null && job.Worker.WorkerSupportsCancellation) {
-					job.Worker.CancelAsync();
-				}
+				job.CancelAsync();
 			}
 		}
 
 		public void CancelCurrent()
 		{
 			foreach (var job in Runs) {
-				if (job.Worker != null && job.Worker.IsBusy && job.Worker.WorkerSupportsCancellation) {
-					job.Worker.CancelAsync();
-				}
+				job.CancelAsync();
 			}
 		}
 
@@ -107,12 +97,12 @@ namespace TUGraz.VectoCore.Models.Simulation.Impl
 		}
 
 
-		private void JobCompleted(RunEntry runEntry)
+		private void JobCompleted()
 		{
 			var next = Runs.FirstOrDefault(x => x.Started == false);
 			if (next != null) {
 				next.Started = true;
-				next.Worker.RunWorkerAsync();
+				next.RunWorkerAsync();
 			}
 			if (AllCompleted) {
 				_sumWriter.Finish();
@@ -152,7 +142,7 @@ namespace TUGraz.VectoCore.Models.Simulation.Impl
 		internal class RunEntry : LoggingObject
 		{
 			public IVectoRun Run;
-			public JobContainer Container;
+			public JobContainer JobContainer;
 			public double Progress;
 			public bool Done;
 			public bool Started;
@@ -161,20 +151,35 @@ namespace TUGraz.VectoCore.Models.Simulation.Impl
 			public double ExecTime;
 			public Exception ExecException;
 
-			public BackgroundWorker Worker;
+			private readonly BackgroundWorker _worker = new BackgroundWorker();
 
-			public void DoWork(object sender, DoWorkEventArgs e)
+			public RunEntry()
 			{
-				var stopWatch = new Stopwatch();
-				stopWatch.Start();
-				var worker = sender as BackgroundWorker;
+				_worker.DoWork += OnDoWork;
+				_worker.RunWorkerCompleted += OnRunWorkerCompleted;
+				_worker.WorkerSupportsCancellation = true;
+			}
+
+			public void RunWorkerAsync()
+			{
+				_worker.RunWorkerAsync();
+			}
+
+			public void CancelAsync()
+			{
+				_worker.CancelAsync();
+			}
+
+			private void OnDoWork(object sender, DoWorkEventArgs e)
+			{
+				var stopWatch = Stopwatch.StartNew();
 				try {
-					Run.Run(worker);
+					Run.Run(_worker, (x => Progress = x));
 				} catch (Exception ex) {
 					Log.Error(ex, "Error during simulation run!");
 					ExecException = ex;
 				}
-				if (worker != null && worker.CancellationPending) {
+				if (_worker.CancellationPending) {
 					e.Cancel = true;
 					Canceled = true;
 				}
@@ -182,19 +187,14 @@ namespace TUGraz.VectoCore.Models.Simulation.Impl
 				Success = Run.FinishedWithoutErrors;
 				Done = true;
 				ExecTime = stopWatch.Elapsed.TotalMilliseconds;
-				Container.JobCompleted(this);
+				JobContainer.JobCompleted();
 			}
 
-			public void RunWorkerCompleted(object sender, RunWorkerCompletedEventArgs e)
+			private void OnRunWorkerCompleted(object sender, RunWorkerCompletedEventArgs e)
 			{
 				if (e.Error != null) {
 					ExecException = e.Error;
 				}
-			}
-
-			public void ProgressChanged(object sender, ProgressChangedEventArgs e)
-			{
-				Progress = e.ProgressPercentage / 10000.0;
 			}
 		}
 	}

@@ -1594,6 +1594,7 @@ Imports System.Text
 			End If
 
 			Dim progress As Dictionary(Of String, JobContainer.ProgressEntry) = jobContainer.GetProgress()
+
 			Dim sumProgress As Double = progress.Sum(Function(pair) pair.Value.Progress)
 			Dim duration As Double = (DateTime.Now() - start).TotalSeconds
 

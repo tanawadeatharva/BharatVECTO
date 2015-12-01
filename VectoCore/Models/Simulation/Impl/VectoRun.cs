@@ -39,7 +39,7 @@ namespace TUGraz.VectoCore.Models.Simulation.Impl
 		}
 
 
-		public void Run(BackgroundWorker worker = null)
+		public void Run(BackgroundWorker worker = null, Action<double> ReportProgress = null)
 		{
 			Log.Info("VectoJob started running.");
 
@@ -51,10 +51,10 @@ namespace TUGraz.VectoCore.Models.Simulation.Impl
 					if (response is ResponseSuccess) {
 						Container.CommitSimulationStep(AbsTime, dt);
 						AbsTime += dt;
-					}
-					if (worker != null) {
-						worker.ReportProgress((int)(CyclePort.Progress * 10000));
-						if (worker.CancellationPending) {
+						if (ReportProgress != null) {
+							ReportProgress(CyclePort.Progress);
+						}
+						if (worker != null && worker.CancellationPending) {
 							Log.Error("Background Task canceled!");
 							Container.RunStatus = Status.Canceled;
 							Container.FinishSimulation();

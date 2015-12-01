@@ -33,6 +33,7 @@ namespace TUGraz.VectoCore.Models.Connector.Ports
 		IResponse Request(Second absTime, Second dt);
 
 		IResponse Initialize();
+
 		double Progress { get; }
 	}
 }
