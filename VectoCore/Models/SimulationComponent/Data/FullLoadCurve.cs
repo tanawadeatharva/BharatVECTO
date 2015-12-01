@@ -12,11 +12,23 @@ namespace TUGraz.VectoCore.Models.SimulationComponent.Data
 {
 	public class FullLoadCurve : SimulationComponentData
 	{
+		protected Watt _maxPower;
+		protected PerSecond _ratedSpeed;
 		internal List<FullLoadCurveEntry> FullLoadEntries;
 		internal LookupData<PerSecond, Second> PT1Data;
 
-		protected PerSecond _ratedSpeed;
-		protected Watt _maxPower;
+		/// <summary>
+		///     Get the rated speed from the given full-load curve (i.e. speed with max. power)
+		/// </summary>
+		public PerSecond RatedSpeed
+		{
+			get { return (_ratedSpeed ?? ComputeRatedSpeed().Item1); }
+		}
+
+		public Watt MaxPower
+		{
+			get { return (_maxPower ?? ComputeRatedSpeed().Item2); }
+		}
 
 		public static FullLoadCurve ReadFromFile(string fileName, bool declarationMode = false)
 		{
@@ -70,7 +82,7 @@ namespace TUGraz.VectoCore.Models.SimulationComponent.Data
 				select new FullLoadCurveEntry {
 					EngineSpeed = row.ParseDouble(Fields.EngineSpeed).RPMtoRad(),
 					TorqueFullLoad = row.ParseDouble(Fields.TorqueFullLoad).SI<NewtonMeter>(),
-					TorqueDrag = row.ParseDouble(Fields.TorqueDrag).SI<NewtonMeter>(),
+					TorqueDrag = row.ParseDouble(Fields.TorqueDrag).SI<NewtonMeter>()
 					//PT1 = row.ParseDouble(Fields.PT1).SI<Second>()
 				}).ToList();
 		}
@@ -82,27 +94,13 @@ namespace TUGraz.VectoCore.Models.SimulationComponent.Data
 				select new FullLoadCurveEntry {
 					EngineSpeed = row.ParseDouble(0).RPMtoRad(),
 					TorqueFullLoad = row.ParseDouble(1).SI<NewtonMeter>(),
-					TorqueDrag = row.ParseDouble(2).SI<NewtonMeter>(),
+					TorqueDrag = row.ParseDouble(2).SI<NewtonMeter>()
 					//PT1 = row.ParseDouble(3).SI<Second>()
 				}).ToList();
 		}
 
 		/// <summary>
-		/// Get the rated speed from the given full-load curve (i.e. speed with max. power)
-		/// </summary>
-		public PerSecond RatedSpeed
-		{
-			get { return (_ratedSpeed ?? ComputeRatedSpeed().Item1); }
-		}
-
-		public Watt MaxPower
-		{
-			get { return (_maxPower ?? ComputeRatedSpeed().Item2); }
-		}
-
-
-		/// <summary>
-		///	Compute the engine's rated speed from the given full-load curve (i.e. engine speed with max. power)
+		///     Compute the engine's rated speed from the given full-load curve (i.e. engine speed with max. power)
 		/// </summary>
 		protected Tuple<PerSecond, Watt> ComputeRatedSpeed()
 		{
@@ -182,11 +180,8 @@ namespace TUGraz.VectoCore.Models.SimulationComponent.Data
 		internal class FullLoadCurveEntry
 		{
 			public PerSecond EngineSpeed { get; set; }
-
 			public NewtonMeter TorqueFullLoad { get; set; }
-
 			public NewtonMeter TorqueDrag { get; set; }
-
 			//public Second PT1 { get; set; }
 
 			#region Equality members

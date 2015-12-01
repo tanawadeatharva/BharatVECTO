@@ -119,6 +119,10 @@ namespace TUGraz.VectoCore.FileIO.Reader.DataObjectAdaper
 						CrossWindCorrectionCurve.GetNoCorrectionCurve(retVal.AerodynamicDragAera);
 					break;
 				case CrossWindCorrectionMode.SpeedDependentCorrectionFactor:
+					retVal.CrossWindCorrectionCurve =
+						CrossWindCorrectionCurve.ReadSpeedDependentCorrectionFromFile(
+							Path.Combine(vehicle.BasePath, data.CrossWindCorrectionFile),
+							retVal.AerodynamicDragAera);
 					break;
 				case CrossWindCorrectionMode.VAirBetaLookupTable:
 					throw new VectoException("CrosswindCorrection mode {0} not implemented", crosswindCorrectionMode);

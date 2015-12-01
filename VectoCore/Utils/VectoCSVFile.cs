@@ -31,7 +31,7 @@ namespace TUGraz.VectoCore.Utils
 		private const char Comment = '#';
 
 		/// <summary>
-		/// Reads a CSV file which is stored in Vecto-CSV-Format.
+		///     Reads a CSV file which is stored in Vecto-CSV-Format.
 		/// </summary>
 		/// <param name="fileName"></param>
 		/// <param name="ignoreEmptyColumns"></param>
@@ -44,7 +44,7 @@ namespace TUGraz.VectoCore.Utils
 				return ReadData(File.ReadAllLines(fileName), ignoreEmptyColumns, fullHeader);
 			} catch (Exception e) {
 				Logger<VectoCSVFile>().Error(e);
-				throw new VectoException(string.Format("File {0}: {1}", fileName, e.Message));
+				throw new VectoException("File {0}: {1}", fileName, e.Message);
 			}
 		}
 
@@ -143,8 +143,8 @@ namespace TUGraz.VectoCore.Utils
 		}
 
 		/// <summary>
-		/// Writes the datatable to the csv file.
-		/// Uses the column caption as header (with fallback to column name) for the csv header.
+		///     Writes the datatable to the csv file.
+		///     Uses the column caption as header (with fallback to column name) for the csv header.
 		/// </summary>
 		/// <param name="fileName">Path to the file.</param>
 		/// <param name="table">The Datatable.</param>
