@@ -11,13 +11,9 @@ namespace TUGraz.VectoCore.FileIO.Reader.DataObjectAdaper
 	public abstract class AbstractSimulationDataAdapter
 	{
 		public abstract VehicleData CreateVehicleData(VectoVehicleFile vehicle, Mission mission, Kilogram loading);
-
 		public abstract VehicleData CreateVehicleData(VectoVehicleFile vehicle);
-
 		public abstract CombustionEngineData CreateEngineData(VectoEngineFile engine);
-
 		public abstract GearboxData CreateGearboxData(VectoGearboxFile gearbox, CombustionEngineData engine);
-
 		// =========================
 
 		internal VehicleData SetCommonVehicleData(VehicleFileV7Declaration.DataBodyDecl data, string basePath)
@@ -35,14 +31,16 @@ namespace TUGraz.VectoCore.FileIO.Reader.DataObjectAdaper
 				//DragCoefficientRigidTruck = data.DragCoefficientRigidTruck,
 				//CrossSectionAreaRigidTruck = data.CrossSectionAreaRigidTruck.SI<SquareMeter>(),
 				//TyreRadius = data.TyreRadius.SI().Milli.Meter.Cast<Meter>(),
-				Rim = data.RimStr,
+				Rim = data.RimStr
 			};
 
 			var retarder = new RetarderData {
 				Type =
-					(RetarderData.RetarderType)Enum.Parse(typeof(RetarderData.RetarderType), data.Retarder.TypeStr.ToString(), true),
+					(RetarderData.RetarderType)
+						Enum.Parse(typeof(RetarderData.RetarderType), data.Retarder.TypeStr, true)
 			};
-			if (retarder.Type == RetarderData.RetarderType.Primary || retarder.Type == RetarderData.RetarderType.Secondary) {
+			if (retarder.Type == RetarderData.RetarderType.Primary ||
+				retarder.Type == RetarderData.RetarderType.Secondary) {
 				retarder.LossMap = RetarderLossMap.ReadFromFile(Path.Combine(basePath, data.Retarder.File));
 				retarder.Ratio = data.Retarder.Ratio;
 			}
@@ -51,7 +49,8 @@ namespace TUGraz.VectoCore.FileIO.Reader.DataObjectAdaper
 			return retVal;
 		}
 
-		internal CombustionEngineData SetCommonCombustionEngineData(EngineFileV3Declaration.DataBodyDecl data, string basePath)
+		internal CombustionEngineData SetCommonCombustionEngineData(EngineFileV3Declaration.DataBodyDecl data,
+			string basePath)
 		{
 			var retVal = new CombustionEngineData {
 				SavedInDeclarationMode = data.SavedInDeclarationMode,
@@ -61,7 +60,7 @@ namespace TUGraz.VectoCore.FileIO.Reader.DataObjectAdaper
 				ConsumptionMap = FuelConsumptionMap.ReadFromFile(Path.Combine(basePath, data.FuelMap)),
 				WHTCUrban = data.WHTCUrban.SI<KilogramPerWattSecond>(),
 				WHTCMotorway = data.WHTCMotorway.SI<KilogramPerWattSecond>(),
-				WHTCRural = data.WHTCRural.SI<KilogramPerWattSecond>(),
+				WHTCRural = data.WHTCRural.SI<KilogramPerWattSecond>()
 			};
 			return retVal;
 		}

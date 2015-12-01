@@ -8,20 +8,17 @@ namespace TUGraz.VectoCore.Models.SimulationComponent.Data
 {
 	public class VehicleData : SimulationComponentData
 	{
+		private List<Axle> _axleData;
 		public string BasePath { get; internal set; }
-
 		public VehicleCategory VehicleCategory { get; internal set; }
-
 		public VehicleClass VehicleClass { get; internal set; }
+		//public CrossWindCorrectionMode CrossWindCorrectionMode { get; internal set; }
 
-		public CrossWindCorrectionMode CrossWindCorrectionMode { get; internal set; }
-
+		public CrossWindCorrectionCurve CrossWindCorrectionCurve { get; internal set; }
 		public RetarderData Retarder { get; internal set; }
 
-		private List<Axle> _axleData;
-
 		/// <summary>
-		/// Set the properties for all axles of the vehicle
+		///     Set the properties for all axles of the vehicle
 		/// </summary>
 		public List<Axle> AxleData
 		{
@@ -34,12 +31,15 @@ namespace TUGraz.VectoCore.Models.SimulationComponent.Data
 		}
 
 		public AxleConfiguration AxleConfiguration { get; internal set; }
-
 		public Kilogram CurbWeight { get; internal set; }
-
 		public Kilogram CurbWeigthExtra { get; internal set; }
-
 		public Kilogram Loading { get; internal set; }
+		public Kilogram GrossVehicleMassRating { get; internal set; }
+		public SquareMeter AerodynamicDragAera { get; internal set; }
+		public Meter DynamicTyreRadius { get; internal set; }
+		public Kilogram ReducedMassWheels { get; private set; }
+		public string Rim { get; internal set; }
+		public double TotalRollResistanceCoefficient { get; private set; }
 
 		public Kilogram TotalVehicleWeight()
 		{
@@ -58,22 +58,11 @@ namespace TUGraz.VectoCore.Models.SimulationComponent.Data
 			return retVal;
 		}
 
-		public Kilogram GrossVehicleMassRating { get; internal set; }
-
-		public SquareMeter AerodynamicDragAera { get; internal set; }
-
-		public Meter DynamicTyreRadius { get; internal set; }
-
-		public Kilogram ReducedMassWheels { get; private set; }
-
-		public string Rim { get; internal set; }
-
-		public double TotalRollResistanceCoefficient { get; private set; }
-
 		protected void ComputeRollResistanceAndReducedMassWheels()
 		{
 			if (TotalVehicleWeight() == 0.SI<Kilogram>()) {
-				throw new VectoException("Total vehicle weight must be greater than 0! Set CurbWeight and Loading before!");
+				throw new VectoException(
+					"Total vehicle weight must be greater than 0! Set CurbWeight and Loading before!");
 			}
 			if (DynamicTyreRadius == null) {
 				throw new VectoException("Dynamic tyre radius must be set before axles!");
@@ -85,7 +74,8 @@ namespace TUGraz.VectoCore.Models.SimulationComponent.Data
 				var nrWheels = axle.TwinTyres ? 4 : 2;
 				RRC += axle.AxleWeightShare * axle.RollResistanceCoefficient *
 						Math.Pow(
-							(axle.AxleWeightShare * TotalVehicleWeight() * Physics.GravityAccelleration / axle.TyreTestLoad /
+							(axle.AxleWeightShare * TotalVehicleWeight() * Physics.GravityAccelleration /
+							axle.TyreTestLoad /
 							nrWheels).Value(), Physics.RollResistanceExponent - 1);
 				mRed0 += nrWheels * (axle.Inertia / DynamicTyreRadius / DynamicTyreRadius).Cast<Kilogram>();
 			}

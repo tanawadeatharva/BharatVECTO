@@ -11,7 +11,6 @@ namespace TUGraz.VectoCore.Models.SimulationComponent.Data
 	{
 		private List<RetarderLossEntry> _entries;
 
-
 		public static RetarderLossMap ReadFromFile(string fileName)
 		{
 			DataTable data;
@@ -25,7 +24,7 @@ namespace TUGraz.VectoCore.Models.SimulationComponent.Data
 			}
 
 			if (data.Rows.Count < 2) {
-				throw new VectoException("RetarderLossMap must consist of at leas two entries.");
+				throw new VectoException("RetarderLossMap must consist of at least two entries.");
 			}
 
 			List<RetarderLossEntry> entries;
@@ -53,7 +52,8 @@ namespace TUGraz.VectoCore.Models.SimulationComponent.Data
 			int idx;
 			if (angularVelocity < _entries[0].RetarderSpeed) {
 				Log.Info("requested rpm below minimum rpm in retarder loss map - extrapolating. n: {0}, rpm_min: {1}",
-					angularVelocity.ConvertTo().Rounds.Per.Minute, _entries[0].RetarderSpeed.ConvertTo().Rounds.Per.Minute);
+					angularVelocity.ConvertTo().Rounds.Per.Minute,
+					_entries[0].RetarderSpeed.ConvertTo().Rounds.Per.Minute);
 				idx = 1;
 			} else {
 				idx = _entries.FindIndex(x => x.RetarderSpeed > angularVelocity);
@@ -91,19 +91,18 @@ namespace TUGraz.VectoCore.Models.SimulationComponent.Data
 		private class RetarderLossEntry
 		{
 			public PerSecond RetarderSpeed { get; set; }
-
 			public NewtonMeter TorqueLoss { get; set; }
 		}
 
 		private static class Fields
 		{
 			/// <summary>
-			///		[rpm]
+			///     [rpm]
 			/// </summary>
 			public const string RetarderSpeed = "Retarder Speed";
 
 			/// <summary>
-			///		[Nm]
+			///     [Nm]
 			/// </summary>
 			public const string TorqueLoss = "Torque Loss";
 		}

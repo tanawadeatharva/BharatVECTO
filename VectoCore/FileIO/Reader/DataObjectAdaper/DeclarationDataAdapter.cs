@@ -1,4 +1,5 @@
-﻿using System.Collections.Generic;
+﻿using System;
+using System.Collections.Generic;
 using System.IO;
 using System.Linq;
 using TUGraz.VectoCore.Configuration;
@@ -79,23 +80,23 @@ namespace TUGraz.VectoCore.FileIO.Reader.DataObjectAdaper
 				UnderSpeed = DeclarationData.Driver.OverSpeedEcoRoll.UnderSpeed
 			};
 			if (!DeclarationData.Driver.OverSpeedEcoRoll.AllowedModes.Contains(overspeedData.Mode)) {
-				throw new VectoSimulationException("Specified Overspeed/EcoRoll Mode not allowed in declaration mode! {0}",
+				throw new VectoSimulationException(
+					"Specified Overspeed/EcoRoll Mode not allowed in declaration mode! {0}",
 					overspeedData.Mode);
 			}
 			var startstopData = new VectoRunData.StartStopData {
 				Enabled = data.StartStop.Enabled,
 				Delay = DeclarationData.Driver.StartStop.Delay,
 				MinTime = DeclarationData.Driver.StartStop.MinTime,
-				MaxSpeed = DeclarationData.Driver.StartStop.MaxSpeed,
+				MaxSpeed = DeclarationData.Driver.StartStop.MaxSpeed
 			};
 			var retVal = new DriverData {
 				LookAheadCoasting = lookAheadData,
 				OverSpeedEcoRoll = overspeedData,
-				StartStop = startstopData,
+				StartStop = startstopData
 			};
 			return retVal;
 		}
-
 
 		internal VehicleData CreateVehicleData(VehicleFileV7Declaration vehicle, Mission mission, Kilogram loading)
 		{
@@ -109,17 +110,20 @@ namespace TUGraz.VectoCore.FileIO.Reader.DataObjectAdaper
 			retVal.CurbWeigthExtra = mission.MassExtra;
 			retVal.Loading = loading;
 			retVal.DynamicTyreRadius =
-				DeclarationData.DynamicTyreRadius(data.AxleConfig.Axles[DeclarationData.PoweredAxle()].WheelsStr, data.RimStr);
+				DeclarationData.DynamicTyreRadius(data.AxleConfig.Axles[DeclarationData.PoweredAxle()].WheelsStr,
+					data.RimStr);
 
-			retVal.CrossWindCorrectionMode = CrossWindCorrectionMode.DeclarationModeCorrection;
 			retVal.AerodynamicDragAera = mission.UseCdA2
 				? data.DragCoefficientRigidTruck.SI<SquareMeter>()
 				: data.DragCoefficient.SI<SquareMeter>();
 
+
+			retVal.CrossWindCorrectionCurve = GetDeclarationAirResistanceCurve(retVal.VehicleCategory,
+				retVal.AerodynamicDragAera);
+
 			if (data.AxleConfig.Axles.Count < mission.AxleWeightDistribution.Length) {
-				throw new VectoException(
-					string.Format("Vehicle does not contain sufficient axles. {0} axles defined, {1} axles required",
-						data.AxleConfig.Axles.Count, mission.AxleWeightDistribution.Count()));
+				throw new VectoException("Vehicle does not contain sufficient axles. {0} axles defined, {1} axles required",
+					data.AxleConfig.Axles.Count, mission.AxleWeightDistribution.Count());
 			}
 			var axleData = new List<Axle>();
 			for (var i = 0; i < mission.AxleWeightDistribution.Length; i++) {
@@ -129,7 +133,7 @@ namespace TUGraz.VectoCore.FileIO.Reader.DataObjectAdaper
 					TwinTyres = axleInput.TwinTyres,
 					RollResistanceCoefficient = axleInput.RollResistanceCoefficient,
 					TyreTestLoad = axleInput.TyreTestLoad.SI<Newton>(),
-					Inertia = DeclarationData.Wheels.Lookup(axleInput.WheelsStr.Replace(" ", "")).Inertia,
+					Inertia = DeclarationData.Wheels.Lookup(axleInput.WheelsStr.Replace(" ", "")).Inertia
 				};
 				axleData.Add(axle);
 			}
@@ -149,8 +153,9 @@ namespace TUGraz.VectoCore.FileIO.Reader.DataObjectAdaper
 		{
 			var retVal = SetCommonCombustionEngineData(engine.Body, engine.BasePath);
 			retVal.Inertia = DeclarationData.Engine.EngineInertia(retVal.Displacement);
-			retVal.FullLoadCurve = EngineFullLoadCurve.ReadFromFile(Path.Combine(engine.BasePath, engine.Body.FullLoadCurve),
-				true);
+			retVal.FullLoadCurve =
+				EngineFullLoadCurve.ReadFromFile(Path.Combine(engine.BasePath, engine.Body.FullLoadCurve),
+					true);
 			retVal.FullLoadCurve.EngineData = retVal;
 			return retVal;
 		}
@@ -160,7 +165,8 @@ namespace TUGraz.VectoCore.FileIO.Reader.DataObjectAdaper
 			var retVal = SetCommonGearboxData(gearbox.Body);
 			switch (retVal.Type) {
 				case GearboxType.AT:
-					throw new VectoSimulationException("Automatic Transmission currently not supported in DeclarationMode!");
+					throw new VectoSimulationException(
+						"Automatic Transmission currently not supported in DeclarationMode!");
 				case GearboxType.Custom:
 					throw new VectoSimulationException("Custom Transmission not supported in DeclarationMode!");
 			}
@@ -183,12 +189,18 @@ namespace TUGraz.VectoCore.FileIO.Reader.DataObjectAdaper
 			retVal.HasTorqueConverter = false;
 
 			var axleGear = gearbox.Body.Gears.First();
-			var axleLossMap = TransmissionLossMap.ReadFromFile(Path.Combine(gearbox.BasePath, axleGear.LossMap), axleGear.Ratio,
+			var axleLossMap = TransmissionLossMap.ReadFromFile(Path.Combine(gearbox.BasePath, axleGear.LossMap),
+				axleGear.Ratio,
 				"AxleGear");
-			retVal.AxleGearData = new GearData { LossMap = axleLossMap, Ratio = axleGear.Ratio, TorqueConverterActive = false };
+			retVal.AxleGearData = new GearData {
+				LossMap = axleLossMap,
+				Ratio = axleGear.Ratio,
+				TorqueConverterActive = false
+			};
 
 			retVal.Gears = gearbox.Body.Gears.Skip(1).Select((gear, i) => {
-				var gearLossMap = TransmissionLossMap.ReadFromFile(Path.Combine(gearbox.BasePath, gear.LossMap), gear.Ratio,
+				var gearLossMap = TransmissionLossMap.ReadFromFile(Path.Combine(gearbox.BasePath, gear.LossMap),
+					gear.Ratio,
 					string.Format("Gear {0}", i));
 				var gearFullLoad = (string.IsNullOrWhiteSpace(gear.FullLoadCurve) || gear.FullLoadCurve == "<NOFILE>")
 					? engine.FullLoadCurve
@@ -209,11 +221,13 @@ namespace TUGraz.VectoCore.FileIO.Reader.DataObjectAdaper
 		}
 
 		/// <summary>
-		/// Intersects full load curves.
+		///     Intersects full load curves.
 		/// </summary>
-		/// <param name="curves">full load curves</param>
+		/// <param name="engineCurve">engine's full-load curve</param>
+		/// <param name="gearCurve">gearbox' full-load curve for a certain gear</param>
 		/// <returns>A combined EngineFullLoadCurve with the minimum full load torque over all inputs curves.</returns>
-		private static EngineFullLoadCurve IntersectFullLoadCurves(EngineFullLoadCurve engineCurve, FullLoadCurve gearCurve)
+		private static EngineFullLoadCurve IntersectFullLoadCurves(EngineFullLoadCurve engineCurve,
+			FullLoadCurve gearCurve)
 		{
 			var entries = gearCurve.FullLoadEntries.Concat(engineCurve.FullLoadEntries)
 				.Select(entry => entry.EngineSpeed)
@@ -222,7 +236,8 @@ namespace TUGraz.VectoCore.FileIO.Reader.DataObjectAdaper
 				.Select(engineSpeed => new FullLoadCurve.FullLoadCurveEntry {
 					EngineSpeed = engineSpeed,
 					TorqueFullLoad =
-						VectoMath.Min(engineCurve.FullLoadStationaryTorque(engineSpeed), gearCurve.FullLoadStationaryTorque(engineSpeed))
+						VectoMath.Min(engineCurve.FullLoadStationaryTorque(engineSpeed),
+							gearCurve.FullLoadStationaryTorque(engineSpeed))
 				});
 
 			var flc = new EngineFullLoadCurve {
@@ -263,6 +278,50 @@ namespace TUGraz.VectoCore.FileIO.Reader.DataObjectAdaper
 				}
 				yield return aux;
 			}
+		}
+
+		public static CrossWindCorrectionCurve GetDeclarationAirResistanceCurve(VehicleCategory vehicleCategory,
+			SquareMeter aerodynamicDragAera)
+		{
+			var values = DeclarationData.AirDrag.Lookup(vehicleCategory);
+			var points = new List<CrossWindCorrectionCurve.CrossWindCorrectionEntry> {
+				new CrossWindCorrectionCurve.CrossWindCorrectionEntry {
+					Velocity = 0.SI<MeterPerSecond>(),
+					EffectiveCrossSectionArea = 0.SI<SquareMeter>()
+				}
+			};
+
+			for (var speed = 60; speed <= 100; speed += 5) {
+				var vVeh = speed.KMPHtoMeterPerSecond();
+				var cdASum = 0.0.SI<SquareMeter>();
+				for (var alpha = 0; alpha <= 180; alpha += 10) {
+					var vWindX = Physics.BaseWindSpeed * Math.Cos(alpha.ToRadian());
+					var vWindY = Physics.BaseWindSpeed * Math.Sin(alpha.ToRadian());
+					var vAirX = vVeh + vWindX;
+					var vAirY = vWindY;
+//					var vAir = VectoMath.Sqrt<MeterPerSecond>(vAirX * vAirX + vAirY * vAirY);
+					var beta = Math.Atan((vAirY / vAirX).Value()).ToDegree();
+					var deltaCdA = ComputeDeltaCd(beta, values);
+					var cdA = aerodynamicDragAera + deltaCdA;
+
+					var degreeShare = ((alpha != 0 && alpha != 180) ? 10.0 / 180.0 : 5.0 / 180.0);
+
+//					cdASum += degreeShare * cdA * (vAir * vAir / (vVeh * vVeh)).Cast<Scalar>();
+					cdASum += degreeShare * cdA * ((vAirX * vAirX + vAirY * vAirY) / (vVeh * vVeh)).Cast<Scalar>();
+				}
+				points.Add(new CrossWindCorrectionCurve.CrossWindCorrectionEntry {
+					Velocity = vVeh,
+					EffectiveCrossSectionArea = cdASum
+				});
+			}
+
+			points[0].EffectiveCrossSectionArea = points[1].EffectiveCrossSectionArea;
+			return new CrossWindCorrectionCurve(points, CrossWindCorrectionMode.DeclarationModeCorrection);
+		}
+
+		protected static SquareMeter ComputeDeltaCd(double beta, AirDrag.AirDragEntry values)
+		{
+			return (values.A1 * beta + values.A2 * beta * beta + values.A3 * beta * beta * beta).SI<SquareMeter>();
 		}
 	}
 }
