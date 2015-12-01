@@ -16,9 +16,9 @@ Imports System.Linq
 Imports System.Threading
 Imports TUGraz.VectoCore.Models.Simulation.Data
 Imports TUGraz.VectoCore.Models.Simulation.Impl
-Imports TUGraz.VectoCore
 Imports TUGraz.VectoCore.Configuration
-Imports TUGraz.VectoCore.Models.Simulation
+Imports System.Reflection
+Imports System.Text
 
 ''' <summary>
 ''' Main application form. Loads at application start. Closing form ends application.
@@ -88,11 +88,11 @@ Imports TUGraz.VectoCore.Models.Simulation
 
 	Private Sub FB_Initialize()
 		FB_Init = False
-        Try
-            VECTO_Global.COREvers = Assembly.LoadFrom("VectoCore.dll").GetName().Version.ToString()
-        Catch ex As Exception
-            LogFile.WriteToLog(tMsgID.Err, ex.StackTrace)
-        End Try
+		Try
+			VECTO_Global.COREvers = Assembly.LoadFrom("VectoCore.dll").GetName().Version.ToString()
+		Catch ex As Exception
+			LogFile.WriteToLog(tMsgID.Err, ex.StackTrace)
+		End Try
 
 
 		fbFolder = New cFileBrowser("WorkDir", True)
@@ -245,7 +245,7 @@ Imports TUGraz.VectoCore.Models.Simulation
 		Me.ChBoxAllDRI.Enabled = Not Lock
 
 		Button1.Enabled = Not Lock
-		Button2.Enabled = Not Lock
+		btStartV3.Enabled = Not Lock
 
 		If DEV.Enabled Then
 			Me.LvDEVoptions.Enabled = Not Lock
@@ -486,9 +486,9 @@ Imports TUGraz.VectoCore.Models.Simulation
 		LoadOptions()
 
 		'Resize columns ... after Loading the @file-lists
-		Me.LvGEN.Columns(1).Width = -2
-		Me.LvDRI.Columns(1).Width = -2
-		Me.LvMsg.Columns(2).Width = -2
+		Me.LvGEN.Columns(1).Width = - 2
+		Me.LvDRI.Columns(1).Width = - 2
+		Me.LvMsg.Columns(2).Width = - 2
 
 		'Initialize BackgroundWorker
 		VECTOworker = Me.BackgroundWorker1
@@ -508,7 +508,7 @@ Imports TUGraz.VectoCore.Models.Simulation
 		ModeUpdate()
 
 		'License check
-		If Not Lic.LICcheck() Then
+		If False And Not Lic.LICcheck() Then
 			MsgBox("License File invalid!" & vbCrLf & vbCrLf & Lic.FailMsg)
 			If Lic.CreateActFile(MyAppPath & "ActivationCode.dat") Then
 				MsgBox("Activation File created.")
@@ -860,7 +860,7 @@ Imports TUGraz.VectoCore.Models.Simulation
 
 		lastindx = LvGEN.SelectedIndices(LvGEN.SelectedItems.Count - 1)
 
-		For i = UBound(SelIx) To 0 Step -1
+		For i = UBound(SelIx) To 0 Step - 1
 			LvGEN.Items.RemoveAt(SelIx(i))
 		Next
 
@@ -920,7 +920,7 @@ Imports TUGraz.VectoCore.Models.Simulation
 		Dim p As Int16
 		Dim f As Int16
 		Dim fList As String()
-		Dim fListDim As Int16 = -1
+		Dim fListDim As Int16 = - 1
 		Dim ListViewItem0 As ListViewItem
 
 		'If VECTO runs: Cancel operation (because Mode-change during calculation is not very clever)
@@ -975,7 +975,7 @@ Imports TUGraz.VectoCore.Models.Simulation
 			ListViewItem0.Selected = True
 			Me.LvGEN.Items.Add(ListViewItem0)
 			ListViewItem0.EnsureVisible()
-lbFound:
+			lbFound:
 		Next
 
 		Me.LvGEN.EndUpdate()
@@ -1139,7 +1139,7 @@ lbFound:
 
 		lastindx = LvDRI.SelectedIndices(LvDRI.SelectedItems.Count - 1)
 
-		For i = UBound(SelIx) To 0 Step -1
+		For i = UBound(SelIx) To 0 Step - 1
 			LvDRI.Items.RemoveAt(SelIx(i))
 		Next
 
@@ -1197,7 +1197,7 @@ lbFound:
 			ListViewItem0.SubItems.Add(" ")
 			ListViewItem0.Checked = True
 			Me.LvDRI.Items.Add(ListViewItem0)
-lbFound:
+			lbFound:
 		Next
 
 		Me.LvDRI.EndUpdate()
@@ -1509,7 +1509,7 @@ lbFound:
 		End If
 	End Sub
 
-	Private Sub Button2_Click(sender As Object, e As EventArgs) Handles Button2.Click
+	Private Sub btStartV3_Click(sender As Object, e As EventArgs) Handles btStartV3.Click
 		If Not VECTOworkerV3.IsBusy Then
 			'Save Lists for Crash
 			SaveFileLists()
@@ -1530,9 +1530,9 @@ lbFound:
 			ClearMSG()
 
 			LockGUI(True)
-			Button2.Enabled = True
-			Button2.Text = "STOP"
-			Button2.Image = My.Resources.Stop_icon
+			btStartV3.Enabled = True
+			btStartV3.Text = "STOP"
+			btStartV3.Image = My.Resources.Stop_icon
 
 			ToolStripProgBarOverall.Value = 0
 			ToolStripProgBarOverall.Style = ProgressBarStyle.Continuous
@@ -1540,9 +1540,9 @@ lbFound:
 
 			VECTOworkerV3.RunWorkerAsync()
 		Else
-			Button2.Enabled = False
-			Button2.Text = "Aborting..."
-			Button2.Image = My.Resources.Play_icon_gray
+			btStartV3.Enabled = False
+			btStartV3.Text = "Aborting..."
+			btStartV3.Image = My.Resources.Play_icon_gray
 			VECTOworkerV3.CancelAsync()
 		End If
 	End Sub
@@ -1550,7 +1550,8 @@ lbFound:
 	Private Sub VectoWorkerV3_OnDoWork(sender As BackgroundWorker, e As DoWorkEventArgs)
 		AllowSleepOFF()
 
-		Dim sumFileName As String = Path.Combine(Path.GetDirectoryName(JobFileList(0)), Path.GetFileNameWithoutExtension(JobFileList(0)) + ".v3" + Constants.FileExtensions.SumFile)
+		Dim sumFileName As String = Path.Combine(Path.GetDirectoryName(JobFileList(0)),
+												Path.GetFileNameWithoutExtension(JobFileList(0)) + ".v3" + Constants.FileExtensions.SumFile)
 		Dim sumWriter As SummaryFileWriter = New SummaryFileWriter(sumFileName)
 		Dim jobContainer As JobContainer = New JobContainer(sumWriter)
 
@@ -1562,14 +1563,20 @@ lbFound:
 			mode = SimulatorFactory.FactoryMode.EngineeringMode
 		End If
 
-		For Each jobFile As String In JobFileList
-			sender.ReportProgress(0, New With {.Target = "ListBox", .Message = "Reading File " + jobFile})
-			Dim runsFactory As SimulatorFactory = New SimulatorFactory(mode, jobFile)
-			runsFactory.WriteModalResults = Cfg.ModOut
-			jobContainer.AddRuns(runsFactory)
-			sender.ReportProgress(0, New With {.Target = "ListBox", .Message = "Finished Reading File " + jobFile})
-		Next
+		Dim doneProcesses As List(Of String) = New List(Of String)
 
+		For Each jobFile As String In JobFileList
+			Try
+				sender.ReportProgress(0, New With {.Target = "ListBox", .Message = "Reading File " + jobFile})
+				Dim runsFactory As SimulatorFactory = New SimulatorFactory(mode, jobFile)
+				runsFactory.WriteModalResults = Cfg.ModOut
+				jobContainer.AddRuns(runsFactory)
+				sender.ReportProgress(0, New With {.Target = "ListBox", .Message = "Finished Reading File " + jobFile})
+			Catch ex As Exception
+				MsgBox(String.Format("ERROR running job {0}: {1}", jobFile, ex.Message), MsgBoxStyle.Critical)
+				sender.ReportProgress(0, New With {.Target = "ListBox", .Message = ex.Message})
+			End Try
+		Next
 
 		sender.ReportProgress(0, New _
 								With {.Target = "ListBox",
@@ -1578,6 +1585,8 @@ lbFound:
 
 		jobContainer.Execute(True)
 		Dim start As DateTime = DateTime.Now()
+
+
 		While Not jobContainer.AllCompleted
 			If sender.CancellationPending Then
 				jobContainer.Cancel()
@@ -1588,16 +1597,53 @@ lbFound:
 			Dim sumProgress As Double = progress.Sum(Function(pair) pair.Value.Progress)
 			Dim duration As Double = (DateTime.Now() - start).TotalSeconds
 
-			sender.ReportProgress(Int((sumProgress * 100.0) / progress.Count),
+			sender.ReportProgress(Int((sumProgress*100.0)/progress.Count),
 								New With {.Target = "Status", .Message = _
-									String.Format("Duration: {0:0}s, Current Progress: {1:P} ({2})", duration, sumProgress / progress.Count,
+									String.Format("Duration: {0:0}s, Current Progress: {1:P} ({2})", duration, sumProgress/progress.Count,
 												String.Join(", ", progress.Select(Function(pair) String.Format("{0,4:P}", pair.Value.Progress))))})
-			Thread.Sleep(1000)
+
+			For Each p As KeyValuePair(Of String, JobContainer.ProgressEntry) In progress
+				If p.Value.Done And Not doneProcesses.Contains(p.Key) Then
+					sender.ReportProgress(0, New With {.Target = "ListBox", .Message = String.Format("Finished Run {0}", p.Key)})
+					If Not p.Value.Error Is Nothing Then
+						sender.ReportProgress(0, New With {.Target = "ListBox",
+												.Message = String.Format("ERROR {0}: {1}", p.Key, p.Value.Error.Message),
+												.Link = p.Value.ModFileName})
+					End If
+					'If Not Cfg.DeclMode Then
+					sender.ReportProgress(0, New With {.Target = "ListBox",
+											.Message = String.Format("Run {0}: Modal Results written to {1}", p.Key, p.Value.ModFileName),
+											.Link = p.Value.ModFileName})
+					'End If
+
+					doneProcesses.Add(p.Key)
+				End If
+			Next
+			Thread.Sleep(500)
 		End While
 
+		If File.Exists(jobContainer.SumFileName) Then
+			sender.ReportProgress(100,
+								New _
+									With {.Target = "ListBox", .Message = String.Format("Sum File written to {0}", jobContainer.SumFileName),
+									.Link = jobContainer.SumFileName})
+		End If
+		If Cfg.DeclMode Then
+			For Each job As String In JobFileList
+				Dim report As String = Path.Combine(Path.GetDirectoryName(job), Path.GetFileNameWithoutExtension(job) + ".pdf")
+
+				If File.Exists(report) Then
+					sender.ReportProgress(100,
+										New With {.Target = "ListBox", .Message = String.Format("PDF Report written to {0}", report), .Link = report})
+				End If
+			Next
+		End If
+
 		For Each progressEntry As KeyValuePair(Of String, JobContainer.ProgressEntry) In jobContainer.GetProgress()
-			sender.ReportProgress(100, New With {.Target = "ListBox", .Message = String.Format("{0,-60} {1,8:P} {2,10:F2}s - {3}", _
-				progressEntry.Key, progressEntry.Value.Progress, progressEntry.Value.ExecTime / 1000.0, IIf(progressEntry.Value.Success, "Success", "Aborted"))})
+			sender.ReportProgress(100,
+								New With {.Target = "ListBox", .Message = String.Format("{0,-60} {1,8:P} {2,10:F2}s - {3}",
+																						progressEntry.Key, progressEntry.Value.Progress, progressEntry.Value.ExecTime/1000.0,
+																						IIf(progressEntry.Value.Success, "Success", "Aborted"))})
 			If (Not progressEntry.Value.Success) Then
 				sender.ReportProgress(100, New With {.Target = "ListBox", .Message = progressEntry.Value.Error.Message})
 			End If
@@ -1609,11 +1655,16 @@ lbFound:
 
 	Private Sub VectoWorkerV3_OnProgressChanged(sender As Object, e As ProgressChangedEventArgs)
 		ToolStripProgBarOverall.Value = e.ProgressPercentage
-		If e.UserState.Target = "ListBox" Then
-			MSGtoForm(tMsgID.Normal, e.UserState.Message, "", "")
-		ElseIf e.UserState.Target = "Status" Then
-			Status(e.UserState.Message)
-		End If
+		Select Case e.UserState.Target
+			Case "ListBox"
+				If e.UserState.GetType().GetProperty("Link") Is Nothing Then
+					MSGtoForm(tMsgID.Normal, e.UserState.Message, "", "")
+				Else
+					MSGtoForm(tMsgID.Normal, e.UserState.Message, "", e.UserState.Link)
+				End If
+			Case "Status"
+				Status(e.UserState.Message)
+		End Select
 	End Sub
 
 	Private Sub VectoWorkerV3_OnRunWorkerCompleted(sender As Object, e As RunWorkerCompletedEventArgs)
@@ -1638,8 +1689,8 @@ lbFound:
 
 		'Options enable / GUI reset
 		LockGUI(False)
-		Button2.Text = "START V3"
-		Button2.Image = My.Resources.Play_icon
+		btStartV3.Text = "START V3"
+		btStartV3.Image = My.Resources.Play_icon
 		Status(LastModeName & " Mode")
 
 		'SLEEP reactivate
@@ -2201,6 +2252,12 @@ lbFound:
 		Else
 			LvMsg.Cursor = Cursors.Hand
 		End If
+		If mouseDownOnListView Then
+			Try
+				LvMsg.HitTest(e.Location).Item.Selected = True
+			Catch
+			End Try
+		End If
 	End Sub
 
 #Region "Open File Context Menu"
@@ -2271,6 +2328,7 @@ lbFound:
 #Region "GUI Tests"
 
 	Private GUItest0 As New GUItest(Me)
+	Private mouseDownOnListView As Boolean
 
 	Private Class GUItest
 		Private RowLim As Int16 = 9
@@ -2618,4 +2676,23 @@ lbFound:
 	End Sub
 
 #End Region
+
+	Private Sub LvMsg_KeyUp(sender As Object, e As KeyEventArgs) Handles LvMsg.KeyUp
+		If (e.Control And e.KeyCode = Keys.C) Then
+			Dim builder As StringBuilder = New StringBuilder()
+			For Each selectedItem As ListViewItem In LvMsg.SelectedItems
+				builder.AppendLine(String.Join(", ",
+												selectedItem.SubItems.Cast (Of ListViewItem.ListViewSubItem).Select(Function(item) item.Text)))
+			Next
+			Clipboard.SetText(builder.ToString())
+		End If
+	End Sub
+
+	Private Sub LvMsg_MouseDown(sender As Object, e As MouseEventArgs) Handles LvMsg.MouseDown
+		mouseDownOnListView = True
+	End Sub
+
+	Private Sub LvMsg_MouseUp(sender As Object, e As MouseEventArgs) Handles LvMsg.MouseUp
+		mouseDownOnListView = False
+	End Sub
 End Class

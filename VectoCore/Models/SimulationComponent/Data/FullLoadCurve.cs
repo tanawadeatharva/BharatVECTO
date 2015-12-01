@@ -20,7 +20,14 @@ namespace TUGraz.VectoCore.Models.SimulationComponent.Data
 
 		public static FullLoadCurve ReadFromFile(string fileName, bool declarationMode = false)
 		{
-			var data = VectoCSVFile.Read(fileName);
+			DataTable data;
+
+			try {
+				data = VectoCSVFile.Read(fileName);
+			} catch (Exception ex) {
+				throw new VectoException("ERROR while reading FullLoadCurve File: " + ex.Message);
+			}
+
 
 			if (data.Columns.Count < 3) {
 				throw new VectoException("FullLoadCurve Data File must consist of at least 3 columns.");

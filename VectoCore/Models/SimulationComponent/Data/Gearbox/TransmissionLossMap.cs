@@ -2,6 +2,7 @@
 using System.Collections.Generic;
 using System.Data;
 using System.Linq;
+using System.Linq.Expressions;
 using Newtonsoft.Json;
 using TUGraz.VectoCore.Exceptions;
 using TUGraz.VectoCore.Utils;
@@ -29,7 +30,12 @@ namespace TUGraz.VectoCore.Models.SimulationComponent.Data.Gearbox
 
 		public static TransmissionLossMap ReadFromFile(string fileName, double gearRatio, string gearName)
 		{
-			var data = VectoCSVFile.Read(fileName, true);
+			DataTable data;
+			try {
+				data = VectoCSVFile.Read(fileName, true);
+			} catch (Exception ex) {
+				throw new VectoException("ERROR while reading TransmissionLossMap: " + ex.Message);
+			}
 
 			if (data.Columns.Count < 3) {
 				throw new VectoException("TransmissionLossMap Data File for {0} must consist of at least 3 columns.", gearName);

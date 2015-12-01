@@ -1,4 +1,5 @@
-﻿using System.Collections.Generic;
+﻿using System;
+using System.Collections.Generic;
 using System.Data;
 using System.Linq;
 using TUGraz.VectoCore.Exceptions;
@@ -18,7 +19,14 @@ namespace TUGraz.VectoCore.Models.SimulationComponent.Data.Engine
 
 		protected PT1Curve(string file)
 		{
-			ParseData(ReadCsvFile(file));
+			DataTable data;
+			try {
+				data = VectoCSVFile.Read(file);
+			} catch (Exception ex) {
+				throw new VectoException("ERROR while reading PT1 Curve File: " + ex.Message);
+			}
+
+			ParseData(data);
 		}
 
 

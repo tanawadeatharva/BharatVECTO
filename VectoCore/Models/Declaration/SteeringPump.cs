@@ -2,6 +2,7 @@
 using System.Collections.Generic;
 using System.Data;
 using System.Linq;
+using TUGraz.VectoCore.Exceptions;
 using TUGraz.VectoCore.Utils;
 
 namespace TUGraz.VectoCore.Models.Declaration
@@ -22,14 +23,20 @@ namespace TUGraz.VectoCore.Models.Declaration
 
 		public override Watt Lookup(MissionType mission, VehicleClass hdvClass, string technology)
 		{
-			var shares = _data[Tuple.Create(mission, hdvClass)];
-			var factors = _technologies.Lookup(technology);
+			try {
+				var shares = _data[Tuple.Create(mission, hdvClass)];
+				var factors = _technologies.Lookup(technology);
 
-			var sum = 0.SI<Watt>();
-			for (var i = 0; i < factors.Length; i++) {
-				sum += shares[i] * factors[i];
+				var sum = 0.SI<Watt>();
+				for (var i = 0; i < factors.Length; i++) {
+					sum += shares[i] * factors[i];
+				}
+				return sum;
+			} catch (KeyNotFoundException) {
+				throw new VectoException(
+					"Auxiliary Lookup Error: No value found for Steering Pump with mission '{0}', HDVClass '{1}' and technology '{3}'",
+					mission, hdvClass, technology);
 			}
-			return sum;
 		}
 
 		protected override void ParseData(DataTable table)
@@ -66,7 +73,11 @@ namespace TUGraz.VectoCore.Models.Declaration
 
 			public override double[] Lookup(string tech)
 			{
-				return Data[tech];
+				try {
+					return Data[tech];
+				} catch (KeyNotFoundException) {
+					throw new VectoException("Auxiliary Lookup Error: No value found for SteeringPump Technology with key '{0}'", tech);
+				}
 			}
 		}
 	}

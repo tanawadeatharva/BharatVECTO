@@ -31,5 +31,7 @@ namespace TUGraz.VectoCore.Models.Simulation
 		void FinishSimulation();
 
 		VectoRun.Status RunStatus { get; set; }
+
+		string ModFileName { get; }
 	}
 }

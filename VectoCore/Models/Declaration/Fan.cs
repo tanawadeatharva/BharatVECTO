@@ -1,6 +1,7 @@
 using System;
 using System.Collections.Generic;
 using System.Data;
+using TUGraz.VectoCore.Exceptions;
 using TUGraz.VectoCore.Utils;
 
 namespace TUGraz.VectoCore.Models.Declaration
@@ -38,7 +39,13 @@ namespace TUGraz.VectoCore.Models.Declaration
 			if (string.IsNullOrWhiteSpace(technology)) {
 				technology = DefaultTechnology;
 			}
-			return _data[Tuple.Create(mission, technology)];
+
+			try {
+				return _data[Tuple.Create(mission, technology)];
+			} catch (KeyNotFoundException) {
+				throw new VectoException("Auxiliary Lookup Error: No value found for Fan with key '{0}' in mission '{1}'",
+					technology, mission);
+			}
 		}
 	}
 }

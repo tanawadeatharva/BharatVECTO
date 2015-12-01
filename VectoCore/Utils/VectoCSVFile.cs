@@ -44,7 +44,7 @@ namespace TUGraz.VectoCore.Utils
 				return ReadData(File.ReadAllLines(fileName), ignoreEmptyColumns, fullHeader);
 			} catch (Exception e) {
 				Logger<VectoCSVFile>().Error(e);
-				throw new VectoException(string.Format("File {0}: {1}", fileName, e.Message));
+				throw new VectoException("File {0}: {1}", fileName, e.Message);
 			}
 		}
 

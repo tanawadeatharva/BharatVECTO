@@ -64,8 +64,10 @@ namespace TUGraz.VectoCore.Models.Simulation.Data
 		private readonly string _sumFileName;
 		private bool _engineOnly = true;
 
+		public string SumFileName{get { return _sumFileName; }}
+		
 		protected SummaryFileWriter() {}
-
+		
 		private readonly IList<string> _auxColumns = new List<string>();
 
 		/// <summary>
