@@ -16,6 +16,8 @@ namespace TUGraz.VectoCore.Models.Simulation.Data
 		/// <returns></returns>
 		object this[ModalResultField key] { get; set; }
 
+		string ModFileName { get; }
+
 		/// <summary>
 		/// Indexer for auxiliary fields of the DataWriter.
 		/// </summary>

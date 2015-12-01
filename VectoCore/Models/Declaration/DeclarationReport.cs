@@ -9,7 +9,6 @@ using System.IO;
 using System.Linq;
 using System.Runtime.CompilerServices;
 using System.Windows.Forms.DataVisualization.Charting;
-using NLog;
 using TUGraz.VectoCore.Models.Simulation.Data;
 using TUGraz.VectoCore.Models.SimulationComponent.Data;
 using TUGraz.VectoCore.Utils;
@@ -29,31 +28,36 @@ namespace TUGraz.VectoCore.Models.Declaration
 		/// </summary>
 		private class ResultContainer
 		{
+			/// <summary>
+			/// The mission
+			/// </summary>
 			public Mission Mission;
+
+			/// <summary>
+			/// Dictionary of LoadingTypes and their resulting Modal Data
+			/// </summary>
 			public Dictionary<LoadingType, IModalDataWriter> ModData;
 		}
 
 		/// <summary>
-		/// Data Dictionary for all missions.
+		/// Dictionary of MissionTypes and their corresponding results.
 		/// </summary>
 		private readonly Dictionary<MissionType, ResultContainer> _missions = new Dictionary<MissionType, ResultContainer>();
 
 		/// <summary>
 		/// The full load curve.
 		/// </summary>
-		private readonly FullLoadCurve _flc;
+		private readonly FullLoadCurve _fullLoadCurve;
 
 		/// <summary>
 		/// The declaration segment from the segment table
 		/// </summary>
 		private readonly Segment _segment;
 
-
 		/// <summary>
 		/// The creator name for the report.
 		/// </summary>
 		private readonly string _creator;
-
 
 		/// <summary>
 		/// The engine model string from engine file.
@@ -93,7 +97,7 @@ namespace TUGraz.VectoCore.Models.Declaration
 		/// <summary>
 		/// Initializes a new instance of the <see cref="DeclarationReport"/> class.
 		/// </summary>
-		/// <param name="flc">The full load curve.</param>
+		/// <param name="fullLoadCurve">The full load curve.</param>
 		/// <param name="segment">The segment of the current vehicle from the segment table.</param>
 		/// <param name="creator">The creator name.</param>
 		/// <param name="engineModel">The engine model.</param>
@@ -103,10 +107,11 @@ namespace TUGraz.VectoCore.Models.Declaration
 		/// <param name="basePath">The base path.</param>
 		/// <param name="jobFile">The name of the job file.</param>
 		/// <param name="resultCount">The result count which defines after how many finished results the report gets written.</param>
-		public DeclarationReport(FullLoadCurve flc, Segment segment, string creator, string engineModel, string engineStr,
+		public DeclarationReport(FullLoadCurve fullLoadCurve, Segment segment, string creator, string engineModel,
+			string engineStr,
 			string gearboxModel, string gearboxStr, string basePath, string jobFile, int resultCount)
 		{
-			_flc = flc;
+			_fullLoadCurve = fullLoadCurve;
 			_segment = segment;
 			_creator = creator;
 			_engineModel = engineModel;
@@ -151,7 +156,9 @@ namespace TUGraz.VectoCore.Models.Declaration
 			var titlePage = CreateTitlePage(_missions);
 			var cyclePages = _missions.OrderBy(m => m.Key).Select((m, i) => CreateCyclePage(m.Value, i + 2, _missions.Count + 1));
 
-			MergeDocuments(titlePage, cyclePages, Path.Combine(_basePath, _jobFile + ".pdf"));
+			var pages = titlePage.ToEnumerable().Concat(cyclePages);
+
+			WritePagesToFile(pages, Path.Combine(_basePath, _jobFile + ".pdf"));
 		}
 
 
@@ -296,7 +303,8 @@ namespace TUGraz.VectoCore.Models.Declaration
 			img.SetAbsolutePosition(17, 270);
 			content.AddImage(img);
 
-			img = Image.GetInstance(DrawOperatingPointsChart(results.ModData[LoadingType.ReferenceLoad], _flc), BaseColor.WHITE);
+			img = Image.GetInstance(DrawOperatingPointsChart(results.ModData[LoadingType.ReferenceLoad], _fullLoadCurve),
+				BaseColor.WHITE);
 			img.ScaleAbsolute(420, 178);
 			img.SetAbsolutePosition(375, 75);
 			content.AddImage(img);
@@ -311,20 +319,16 @@ namespace TUGraz.VectoCore.Models.Declaration
 		/// <summary>
 		/// Merges the given stream to one document and writes it to a file on disk.
 		/// </summary>
-		/// <param name="titlePage">The title page.</param>
-		/// <param name="cyclePages">The cycle pages.</param>
+		/// <param name="pages">The pages.</param>
 		/// <param name="outputFileName">Name of the output file.</param>
-		private static void MergeDocuments(Stream titlePage, IEnumerable<Stream> cyclePages, string outputFileName)
+		private static void WritePagesToFile(IEnumerable<Stream> pages, string outputFileName)
 		{
 			var document = new Document(PageSize.A4.Rotate(), 12, 12, 12, 12);
 			var writer = PdfWriter.GetInstance(document, new FileStream(outputFileName, FileMode.Create));
 
 			document.Open();
 
-			titlePage.Position = 0;
-			document.Add(Image.GetInstance(writer.GetImportedPage(new PdfReader(titlePage), 1)));
-
-			foreach (var cyclePage in cyclePages) {
+			foreach (var cyclePage in pages) {
 				cyclePage.Position = 0;
 				document.Add(Image.GetInstance(writer.GetImportedPage(new PdfReader(cyclePage), 1)));
 			}

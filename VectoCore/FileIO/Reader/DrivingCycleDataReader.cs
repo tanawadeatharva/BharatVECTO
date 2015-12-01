@@ -36,7 +36,13 @@ namespace TUGraz.VectoCore.FileIO.Reader
 
 		public static DrivingCycleData ReadFromFile(string fileName, CycleType type)
 		{
-			var retVal = DoReadCycleData(type, VectoCSVFile.Read(fileName));
+			DataTable data;
+			try {
+				data = VectoCSVFile.Read(fileName);
+			} catch (Exception ex) {
+				throw new VectoException("ERROR while reading DrivingCycle File: " + ex.Message);
+			}
+			var retVal = DoReadCycleData(type, data);
 			retVal.Name = Path.GetFileNameWithoutExtension(fileName);
 			return retVal;
 		}

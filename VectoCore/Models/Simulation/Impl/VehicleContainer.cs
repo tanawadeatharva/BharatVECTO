@@ -1,5 +1,4 @@
-﻿using System;
-using System.Collections.Generic;
+﻿using System.Collections.Generic;
 using System.Collections.ObjectModel;
 using System.Diagnostics;
 using TUGraz.VectoCore.Exceptions;
@@ -105,6 +104,11 @@ namespace TUGraz.VectoCore.Models.Simulation.Impl
 		}
 
 		#endregion
+
+		public string ModFileName
+		{
+			get { return DataWriter.ModFileName; }
+		}
 
 		#region IVehicleCockpit
 

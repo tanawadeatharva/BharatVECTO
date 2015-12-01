@@ -107,7 +107,12 @@ namespace TUGraz.VectoCore.FileIO.Reader.Impl
 
 		protected override VectoJobFile ReadJobFile(string file)
 		{
-			var json = File.ReadAllText(file);
+			string json;
+			try {
+				json = File.ReadAllText(file);
+			} catch (Exception ex) {
+				throw new VectoException("ERROR while reading Job File: " + ex.Message);
+			}
 			var fileInfo = GetFileVersion(json);
 			CheckForDeclarationMode(fileInfo, "Job");
 
@@ -124,7 +129,13 @@ namespace TUGraz.VectoCore.FileIO.Reader.Impl
 
 		protected override VectoVehicleFile ReadVehicle(string file)
 		{
-			var json = File.ReadAllText(file);
+			string json;
+			try {
+				json = File.ReadAllText(file);
+			} catch (Exception ex) {
+				throw new VectoException("ERROR while reading Vehicle File: " + ex.Message);
+			}
+
 			var fileInfo = GetFileVersion(json);
 			CheckForDeclarationMode(fileInfo, "Vehicle");
 
@@ -140,7 +151,12 @@ namespace TUGraz.VectoCore.FileIO.Reader.Impl
 
 		protected override VectoEngineFile ReadEngine(string file)
 		{
-			var json = File.ReadAllText(file);
+			string json;
+			try {
+				json = File.ReadAllText(file);
+			} catch (Exception ex) {
+				throw new VectoException("ERROR while reading Engine File: " + ex.Message);
+			}
 			var fileInfo = GetFileVersion(json);
 			CheckForDeclarationMode(fileInfo, "Engine");
 
@@ -156,7 +172,12 @@ namespace TUGraz.VectoCore.FileIO.Reader.Impl
 
 		protected override VectoGearboxFile ReadGearbox(string file)
 		{
-			var json = File.ReadAllText(file);
+			string json;
+			try {
+				json = File.ReadAllText(file);
+			} catch (Exception ex) {
+				throw new VectoException("ERROR while reading Gearbox File: " + ex.Message);
+			}
 			var fileInfo = GetFileVersion(json);
 			CheckForDeclarationMode(fileInfo, "Gearbox");
 

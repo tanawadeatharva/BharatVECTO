@@ -13,7 +13,7 @@ namespace TUGraz.VectoCore.Models.Simulation.Data
 		private readonly Action<ModalDataWriter> _addReportResult;
 		private ModalResults Data { get; set; }
 		private DataRow CurrentRow { get; set; }
-		private string ModFileName { get; set; }
+		public string ModFileName { get; protected set; }
 
 		public bool WriteModalResults { get; set; }
 

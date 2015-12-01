@@ -22,6 +22,11 @@ namespace TUGraz.VectoCore.Tests.Utils
 		public ModalResults Data { get; set; }
 		public DataRow CurrentRow { get; set; }
 
+		public string ModFileName
+		{
+			get { return ""; }
+		}
+
 		public object this[string auxId]
 		{
 			get { return CurrentRow[Auxiliaries[auxId]]; }

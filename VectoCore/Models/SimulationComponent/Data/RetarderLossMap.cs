@@ -1,4 +1,5 @@
-﻿using System.Collections.Generic;
+﻿using System;
+using System.Collections.Generic;
 using System.Data;
 using System.Linq;
 using TUGraz.VectoCore.Exceptions;
@@ -12,8 +13,12 @@ namespace TUGraz.VectoCore.Models.SimulationComponent.Data
 
 		public static RetarderLossMap ReadFromFile(string fileName)
 		{
-			var data = VectoCSVFile.Read(fileName);
-
+			DataTable data;
+			try {
+				data = VectoCSVFile.Read(fileName);
+			} catch (Exception ex) {
+				throw new VectoException("ERROR while loading RetarderLossMap: " + ex.Message);
+			}
 			if (data.Columns.Count != 2) {
 				throw new VectoException("RetarderLossMap Data File must consist of 2 columns.");
 			}

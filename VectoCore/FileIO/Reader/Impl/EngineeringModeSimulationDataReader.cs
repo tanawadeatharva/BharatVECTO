@@ -1,15 +1,14 @@
-﻿using System.Collections.Generic;
+﻿using System;
+using System.Collections.Generic;
 using System.IO;
 using System.Linq;
 using System.Runtime.CompilerServices;
 using Newtonsoft.Json;
-using NLog;
 using TUGraz.VectoCore.Exceptions;
 using TUGraz.VectoCore.FileIO.EngineeringFile;
 using TUGraz.VectoCore.FileIO.Reader.DataObjectAdaper;
 using TUGraz.VectoCore.Models.Simulation.Data;
 using TUGraz.VectoCore.Models.SimulationComponent.Data;
-using TUGraz.VectoCore.Models.SimulationComponent.Impl;
 using TUGraz.VectoCore.Utils;
 
 [assembly: InternalsVisibleTo("VectoCoreTest")]
@@ -36,9 +35,8 @@ namespace TUGraz.VectoCore.FileIO.Reader.Impl
 			try {
 				var job = vectoJob as VectoJobFileV2Engineering;
 				if (job == null) {
-					throw new VectoException(
-						string.Format("Unhandled Job File Format. Expected: Job File, Version 2, Engineering Mode. Got: {0}",
-							vectoJob.GetType()));
+					throw new VectoException("Unhandled Job File Format. Expected: Job File, Version 2, Engineering Mode. Got: {0}",
+						vectoJob.GetType());
 				}
 
 				if (job.Body.EngineOnlyMode) {
@@ -50,7 +48,7 @@ namespace TUGraz.VectoCore.FileIO.Reader.Impl
 				Gearbox = ReadGearbox(Path.Combine(job.BasePath, job.Body.GearboxFile));
 				Aux = ReadAuxiliary(job.BasePath, job.Body.Aux);
 			} catch (VectoException e) {
-				Log.Error("Exception during processing of job file {0}: {1}", e.Message);
+				Log.Error("Exception during processing of job file: " + e.Message);
 			}
 		}
 
@@ -71,7 +69,12 @@ namespace TUGraz.VectoCore.FileIO.Reader.Impl
 
 		protected override VectoVehicleFile ReadVehicle(string file)
 		{
-			var json = File.ReadAllText(file);
+			string json;
+			try {
+				json = File.ReadAllText(file);
+			} catch (Exception ex) {
+				throw new VectoException("ERROR while reading Vehicle File: " + ex.Message);
+			}
 			var fileInfo = GetFileVersion(json);
 			CheckForEngineeringMode(fileInfo, "Vehicle");
 
@@ -192,7 +195,12 @@ namespace TUGraz.VectoCore.FileIO.Reader.Impl
 		/// <param name="file">file</param>
 		protected static VectoJobFile DoReadJobFile(string file)
 		{
-			var json = File.ReadAllText(file);
+			string json;
+			try {
+				json = File.ReadAllText(file);
+			} catch (Exception ex) {
+				throw new VectoException("ERROR while reading Job File: " + ex.Message);
+			}
 			var fileInfo = GetFileVersion(json);
 			CheckForEngineeringMode(fileInfo, "Job");
 
@@ -214,7 +222,12 @@ namespace TUGraz.VectoCore.FileIO.Reader.Impl
 		/// <returns></returns>
 		protected static VectoEngineFile DoReadEngineFile(string file)
 		{
-			var json = File.ReadAllText(file);
+			string json;
+			try {
+				json = File.ReadAllText(file);
+			} catch (Exception ex) {
+				throw new VectoException("ERROR while reading Engine File: " + ex.Message);
+			}
 			var fileInfo = GetFileVersion(json);
 			CheckForEngineeringMode(fileInfo, "Engine");
 
@@ -235,7 +248,12 @@ namespace TUGraz.VectoCore.FileIO.Reader.Impl
 		/// <returns></returns>
 		protected static VectoGearboxFile DoReadGearboxFile(string file)
 		{
-			var json = File.ReadAllText(file);
+			string json;
+			try {
+				json = File.ReadAllText(file);
+			} catch (Exception ex) {
+				throw new VectoException("ERROR while reading Gearbox File: " + ex.Message);
+			}
 			var fileInfo = GetFileVersion(json);
 			CheckForEngineeringMode(fileInfo, "Gearbox");
 
@@ -256,7 +274,12 @@ namespace TUGraz.VectoCore.FileIO.Reader.Impl
 		/// <returns></returns>
 		protected static VectoVehicleFile DoReadVehicleFile(string file)
 		{
-			var json = File.ReadAllText(file);
+			string json;
+			try {
+				json = File.ReadAllText(file);
+			} catch (Exception ex) {
+				throw new VectoException("ERROR while reading Vehicle File: " + ex.Message);
+			}
 			var fileInfo = GetFileVersion(json);
 			CheckForEngineeringMode(fileInfo, "Vehicle");
 
