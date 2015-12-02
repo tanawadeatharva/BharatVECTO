@@ -237,7 +237,7 @@ namespace TUGraz.VectoCore.FileIO.Reader.Impl
 					tmp.BasePath = file;
 					return tmp;
 				default:
-					throw new UnsupportedFileVersionException("Unsopported Version of engine-file. Got version " + fileInfo.Version);
+					throw new UnsupportedFileVersionException("Unsupported Version of engine-file. Got version " + fileInfo.Version);
 			}
 		}
 
