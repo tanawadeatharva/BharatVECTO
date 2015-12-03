@@ -77,6 +77,16 @@ namespace TUGraz.VectoCore.FileIO.Reader
 			//foreach (var entry in entries) {
 			for (var i = 0; i < entries.Count; i++) {
 				var entry = entries[i];
+				if (!entry.StoppingTime.IsEqual(0) && !entry.VehicleTargetSpeed.IsEqual(0)) {
+					throw new VectoException(
+						"Error in DrivingCycle: stop time specified but target-speed > 0! Distance: {0}, stop-time: {1}, target speed: {2}",
+						entry.Distance, entry.StoppingTime, entry.VehicleTargetSpeed);
+				}
+				if (entry.Distance < distance) {
+					throw new VectoException(
+						"Error in DrivingCycle: distance entry is smaller than last distance! last distance: {0}, current distance: {1} ",
+						distance, entry.Distance);
+				}
 				if (i > 0) {
 					altitude += (entry.Distance - distance) * entries[i - 1].RoadGradientPercent / 100.0;
 				}
