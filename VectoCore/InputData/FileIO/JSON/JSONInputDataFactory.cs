@@ -2,9 +2,8 @@
 using Newtonsoft.Json;
 using Newtonsoft.Json.Linq;
 using TUGraz.VectoCore.Exceptions;
-using TUGraz.VectoCore.InputData.FileIO.JSON;
 
-namespace TUGraz.VectoCore.InputData.FileIO
+namespace TUGraz.VectoCore.InputData.FileIO.JSON
 {
 	public class JSONInputDataFactory
 	{

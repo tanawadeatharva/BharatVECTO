@@ -113,4 +113,154 @@
 	<data name="Vehicle_VehicleFile" xml:space="preserve">
     <value>VehicleFile</value>
   </data>
+	<data name="SavedInDeclMode" xml:space="preserve">
+    <value>SavedInDeclMode</value>
+  </data>
+	<data name="Vehicle_VehicleCategory" xml:space="preserve">
+    <value>VehCat</value>
+  </data>
+	<data name="Vehicle_CurbWeight" xml:space="preserve">
+    <value>CurbWeight</value>
+  </data>
+	<data name="Vehicle_GrossVehicleMassRating" xml:space="preserve">
+    <value>MassMax</value>
+  </data>
+	<data name="JsonBody" xml:space="preserve">
+    <value>Body</value>
+  </data>
+	<data name="Vehicle_DragCoefficient" xml:space="preserve">
+    <value>CdA</value>
+  </data>
+	<data name="Vehicle_DragCoefficientRigidTruck" xml:space="preserve">
+    <value>CdA2</value>
+  </data>
+	<data name="Vehicle_Rim" xml:space="preserve">
+    <value>Rim</value>
+  </data>
+	<data name="Vehicle_AxleConfiguration" xml:space="preserve">
+    <value>AxleConfig</value>
+  </data>
+	<data name="Vehicle_AxleConfiguration_Type" xml:space="preserve">
+    <value>Type</value>
+  </data>
+	<data name="Vehicle_AxleConfiguration_Axles" xml:space="preserve">
+    <value>Axles</value>
+  </data>
+	<data name="Vehicle_Axles_Inertia" xml:space="preserve">
+    <value>Inertia</value>
+  </data>
+	<data name="Vehicle_Axles_Wheels" xml:space="preserve">
+    <value>Wheels</value>
+  </data>
+	<data name="Vehicle_Axles_TwinTyres" xml:space="preserve">
+    <value>TwinTyres</value>
+  </data>
+	<data name="Vehicle_Axles_RollResistanceCoefficient" xml:space="preserve">
+    <value>RRCISO</value>
+  </data>
+	<data name="Vehicle_Axles_TyreTestLoad" xml:space="preserve">
+    <value>FzISO</value>
+  </data>
+	<data name="Vehicle_Retarder" xml:space="preserve">
+    <value>Retarder</value>
+  </data>
+	<data name="Vehicle_Retarder_Type" xml:space="preserve">
+    <value>Type</value>
+  </data>
+	<data name="Vehicle_Retarder_Ratio" xml:space="preserve">
+    <value>Ratio</value>
+  </data>
+	<data name="Vehicle_Retarder_LossMapFile" xml:space="preserve">
+    <value>File</value>
+  </data>
+	<data name="Engine_ModelName" xml:space="preserve">
+    <value>ModelName</value>
+  </data>
+	<data name="Engine_Displacement" xml:space="preserve">
+    <value>Displacement</value>
+  </data>
+	<data name="Engine_IdleSpeed" xml:space="preserve">
+    <value>IdlingSpeed</value>
+  </data>
+	<data name="Engine_FullLoadCurveFile" xml:space="preserve">
+    <value>FullLoadCurve</value>
+  </data>
+	<data name="Engine_Inertia" xml:space="preserve">
+    <value>Inertia</value>
+  </data>
+	<data name="Engine_WHTC_Motorway" xml:space="preserve">
+    <value>WHTC-Motorway</value>
+  </data>
+	<data name="Engine_WHTC_Rural" xml:space="preserve">
+    <value>WHTC-Rural</value>
+  </data>
+	<data name="Engine_WHTC_Urban" xml:space="preserve">
+    <value>WHTC-Urban</value>
+  </data>
+	<data name="Gearbox_Gears" xml:space="preserve">
+    <value>Gears</value>
+  </data>
+	<data name="Gearbox_Gear_Ratio" xml:space="preserve">
+    <value>Ratio</value>
+  </data>
+	<data name="Gearbox_Gear_LossMapFile" xml:space="preserve">
+    <value>LossMap</value>
+  </data>
+	<data name="Gearbox_ModelName" xml:space="preserve">
+    <value>ModelName</value>
+  </data>
+	<data name="Gearbox_GearboxType" xml:space="preserve">
+    <value>GearboxType</value>
+  </data>
+	<data name="Gearbox_Inertia" xml:space="preserve">
+    <value>Inertia</value>
+  </data>
+	<data name="Gearbox_TractionInterruption" xml:space="preserve">
+    <value>TracInt</value>
+  </data>
+	<data name="Gearbox_Gear_FullLoadCurveFile" xml:space="preserve">
+    <value>FullLoadCurve</value>
+  </data>
+	<data name="Gearbox_Gear_ShiftPolygonFile" xml:space="preserve">
+    <value>ShiftPolygon</value>
+  </data>
+	<data name="Gearbox_Gear_TCactive" xml:space="preserve">
+    <value>TCactive</value>
+  </data>
+	<data name="Gearbox_SkipGears" xml:space="preserve">
+    <value>SkipGears</value>
+  </data>
+	<data name="Gearbox_ShiftTime" xml:space="preserve">
+    <value>ShiftTime</value>
+  </data>
+	<data name="Gearbox_EarlyShiftUp" xml:space="preserve">
+    <value>EarlyShiftUp</value>
+  </data>
+	<data name="Gearbox_TorqueReserve" xml:space="preserve">
+    <value>TqReserve</value>
+  </data>
+	<data name="Gearbox_StartSpeed" xml:space="preserve">
+    <value>StartSpeed</value>
+  </data>
+	<data name="Gearbox_StartAcceleration" xml:space="preserve">
+    <value>StartAcc</value>
+  </data>
+	<data name="Gearbox_StartTorqueReserve" xml:space="preserve">
+    <value>StartTqReserve</value>
+  </data>
+	<data name="Gearbox_TorqueConverter" xml:space="preserve">
+    <value>TorqueConverter</value>
+  </data>
+	<data name="Gearbox_TorqueConverter_ReferenceRPM" xml:space="preserve">
+    <value>RefRPM</value>
+  </data>
+	<data name="Gearbox_TorqueConverter_TCMap" xml:space="preserve">
+    <value>File</value>
+  </data>
+	<data name="Gearbox_TorqueConverter_Inertia" xml:space="preserve">
+    <value>Inertia</value>
+  </data>
+	<data name="Engine_FuelConsumptionMap" xml:space="preserve">
+    <value>FuelMap</value>
+  </data>
 </root>

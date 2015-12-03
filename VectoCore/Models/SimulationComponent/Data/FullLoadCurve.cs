@@ -21,7 +21,11 @@ namespace TUGraz.VectoCore.Models.SimulationComponent.Data
 		public static FullLoadCurve ReadFromFile(string fileName, bool declarationMode = false)
 		{
 			var data = VectoCSVFile.Read(fileName);
+			return Create(data, declarationMode);
+		}
 
+		public static FullLoadCurve Create(DataTable data, bool declarationMode = false)
+		{
 			if (data.Columns.Count < 3) {
 				throw new VectoException("FullLoadCurve Data File must consist of at least 3 columns.");
 			}
@@ -48,7 +52,7 @@ namespace TUGraz.VectoCore.Models.SimulationComponent.Data
 			if (declarationMode) {
 				tmp = new PT1();
 			} else {
-				tmp = PT1Curve.ReadFromFile(fileName);
+				tmp = PT1Curve.Create(data);
 			}
 
 			return new FullLoadCurve { FullLoadEntries = entriesFld, PT1Data = tmp };

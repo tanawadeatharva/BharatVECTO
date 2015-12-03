@@ -61,11 +61,155 @@ namespace TUGraz.VectoCore {
         }
         
         /// <summary>
+        ///   Looks up a localized string similar to VACC.
+        /// </summary>
+        internal static string DriverData_AccelerationCurve {
+            get {
+                return ResourceManager.GetString("DriverData_AccelerationCurve", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Dec.
+        /// </summary>
+        internal static string DriverData_Lookahead_Deceleration {
+            get {
+                return ResourceManager.GetString("DriverData_Lookahead_Deceleration", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Enabled.
+        /// </summary>
+        internal static string DriverData_Lookahead_Enabled {
+            get {
+                return ResourceManager.GetString("DriverData_Lookahead_Enabled", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to MinSpeed.
+        /// </summary>
+        internal static string DriverData_Lookahead_MinSpeed {
+            get {
+                return ResourceManager.GetString("DriverData_Lookahead_MinSpeed", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to LAC.
+        /// </summary>
+        internal static string DriverData_LookaheadCoasting {
+            get {
+                return ResourceManager.GetString("DriverData_LookaheadCoasting", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to OverspeedEcoRoll.
+        /// </summary>
+        internal static string DriverData_OverspeedEcoRoll {
+            get {
+                return ResourceManager.GetString("DriverData_OverspeedEcoRoll", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to MinSpeed.
+        /// </summary>
+        internal static string DriverData_OverspeedEcoRoll_MinSpeed {
+            get {
+                return ResourceManager.GetString("DriverData_OverspeedEcoRoll_MinSpeed", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Mode.
+        /// </summary>
+        internal static string DriverData_OverspeedEcoRoll_Mode {
+            get {
+                return ResourceManager.GetString("DriverData_OverspeedEcoRoll_Mode", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to OverSpeed.
+        /// </summary>
+        internal static string DriverData_OverspeedEcoRoll_OverSpeed {
+            get {
+                return ResourceManager.GetString("DriverData_OverspeedEcoRoll_OverSpeed", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to UnderSpeed.
+        /// </summary>
+        internal static string DriverData_OverspeedEcoRoll_UnderSpeed {
+            get {
+                return ResourceManager.GetString("DriverData_OverspeedEcoRoll_UnderSpeed", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to StartStop.
+        /// </summary>
+        internal static string DriverData_StartStop {
+            get {
+                return ResourceManager.GetString("DriverData_StartStop", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Delay.
+        /// </summary>
+        internal static string DriverData_StartStop_Delay {
+            get {
+                return ResourceManager.GetString("DriverData_StartStop_Delay", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Enabled.
+        /// </summary>
+        internal static string DriverData_StartStop_Enabled {
+            get {
+                return ResourceManager.GetString("DriverData_StartStop_Enabled", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to MaxSpeed.
+        /// </summary>
+        internal static string DriverData_StartStop_MaxSpeed {
+            get {
+                return ResourceManager.GetString("DriverData_StartStop_MaxSpeed", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to MinTime.
+        /// </summary>
+        internal static string DriverData_StartStop_MinTime {
+            get {
+                return ResourceManager.GetString("DriverData_StartStop_MinTime", resourceCulture);
+            }
+        }
+        
+        /// <summary>
         ///   Looks up a localized string similar to Displacement.
         /// </summary>
         internal static string Engine_Displacement {
             get {
                 return ResourceManager.GetString("Engine_Displacement", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to FuelMap.
+        /// </summary>
+        internal static string Engine_FuelConsumptionMap {
+            get {
+                return ResourceManager.GetString("Engine_FuelConsumptionMap", resourceCulture);
             }
         }
         
@@ -318,6 +462,24 @@ namespace TUGraz.VectoCore {
         internal static string Gearbox_TractionInterruption {
             get {
                 return ResourceManager.GetString("Gearbox_TractionInterruption", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Cycles.
+        /// </summary>
+        internal static string Job_Cycles {
+            get {
+                return ResourceManager.GetString("Job_Cycles", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to EngineOnlyMode.
+        /// </summary>
+        internal static string Job_EngineOnlyMode {
+            get {
+                return ResourceManager.GetString("Job_EngineOnlyMode", resourceCulture);
             }
         }
         

@@ -10,11 +10,14 @@ namespace TUGraz.VectoCore.Models.SimulationComponent.Data
 	{
 		private List<RetarderLossEntry> _entries;
 
-
 		public static RetarderLossMap ReadFromFile(string fileName)
 		{
 			var data = VectoCSVFile.Read(fileName);
+			return Create(data);
+		}
 
+		public static RetarderLossMap Create(DataTable data)
+		{
 			if (data.Columns.Count != 2) {
 				throw new VectoException("RetarderLossMap Data File must consist of 2 columns.");
 			}

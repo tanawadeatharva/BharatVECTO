@@ -140,6 +140,8 @@ namespace TUGraz.VectoCore.InputData
 		/// <summary>
 		/// engine speed in rpm, torque in NM, fuel consumption in g/h
 		/// </summary>
+		DataTable FuelConsumptionMap { get; }
+
 		DataTable FullLoadCurve { get; }
 
 		KilogramSquareMeter Inertia { get; }
@@ -149,7 +151,38 @@ namespace TUGraz.VectoCore.InputData
 		KilogramPerWattSecond WHTCUrban { get; }
 	}
 
-	public interface IDriverInputData {}
+	public interface IDriverInputData
+	{
+		IStartStopInputData StartStop { get; }
+		ILookaheadCoastingInputData Lookahead { get; }
+		IOverspeedEcoRollInputData OverspeedEcoRoll { get; }
+
+		DataTable AccelerationCurve { get; }
+	}
+
+	public interface IOverspeedEcoRollInputData
+	{
+		DriverData.DriverMode Mode { get; }
+		MeterPerSecond MinSpeed { get; }
+		MeterPerSecond OverSpeed { get; }
+		MeterPerSecond UnderSpeed { get; }
+	}
+
+	public interface ILookaheadCoastingInputData
+	{
+		bool Enabled { get; }
+		MeterPerSquareSecond Deceleration { get; }
+		MeterPerSecond MinSpeed { get; }
+	}
+
+	public interface IStartStopInputData
+	{
+		bool Enabled { get; }
+		MeterPerSecond MaxSpeed { get; }
+		Second MinTime { get; }
+		Second Delay { get; }
+	}
+
 
 	public interface IAuxiliaryInputData
 	{

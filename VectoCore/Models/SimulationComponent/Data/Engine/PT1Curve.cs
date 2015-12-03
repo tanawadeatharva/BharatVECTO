@@ -16,6 +16,16 @@ namespace TUGraz.VectoCore.Models.SimulationComponent.Data.Engine
 			return new PT1Curve(fileName);
 		}
 
+		public static PT1Curve Create(DataTable data)
+		{
+			return new PT1Curve(data);
+		}
+
+		protected PT1Curve(DataTable data)
+		{
+			ParseData(data);
+		}
+
 		protected PT1Curve(string file)
 		{
 			ParseData(ReadCsvFile(file));

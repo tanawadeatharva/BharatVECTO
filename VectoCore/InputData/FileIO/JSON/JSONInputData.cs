@@ -5,7 +5,6 @@ using System.IO;
 using System.Linq;
 using Newtonsoft.Json.Linq;
 using TUGraz.VectoCore.Exceptions;
-using TUGraz.VectoCore.Models.Declaration;
 using TUGraz.VectoCore.Models.SimulationComponent.Data;
 using TUGraz.VectoCore.Utils;
 
@@ -39,6 +38,17 @@ namespace TUGraz.VectoCore.InputData.FileIO.JSON
 		{
 			get { return _basePath; }
 			set { _basePath = Path.GetDirectoryName(Path.GetFullPath(value)); }
+		}
+
+		protected DataTable ReadTableData(string filename, string tableType, bool required = true)
+		{
+			if (filename == null || !filename.Any() || filename.Equals("<NOFILE>", StringComparison.InvariantCultureIgnoreCase)) {
+				if (required) {
+					throw new VectoException("Invalid {0}: {1}", tableType, filename);
+				}
+				return null;
+			}
+			return VectoCSVFile.Read(Path.Combine(BasePath, filename));
 		}
 	}
 
@@ -128,367 +138,108 @@ namespace TUGraz.VectoCore.InputData.FileIO.JSON
 		{
 			get
 			{
-				return Body["Cycles"].Select(cycle => VectoCSVFile.Read(Path.Combine(BasePath, cycle.Value<string>()))).ToList();
+				return
+					Body[JsonKeys.Job_Cycles].Select(cycle => VectoCSVFile.Read(Path.Combine(BasePath, cycle.Value<string>())))
+						.ToList();
 			}
 		}
 
 		public bool EngineOnlyMode
 		{
-			get { return Body["EngineOnlyMode"].Value<bool>(); }
+			get { return Body[JsonKeys.Job_EngineOnlyMode].Value<bool>(); }
+		}
+
+		#endregion
+
+		#region DriverInputData
+
+		public IStartStopInputData StartStop
+		{
+			get
+			{
+				return new JSONStartStop() {
+					Enabled = Body[JsonKeys.DriverData_StartStop][JsonKeys.DriverData_StartStop_Enabled].Value<bool>(),
+					Delay = Body[JsonKeys.DriverData_StartStop][JsonKeys.DriverData_StartStop_Delay].Value<double>().SI<Second>(),
+					MaxSpeed =
+						Body[JsonKeys.DriverData_StartStop][JsonKeys.DriverData_StartStop_MaxSpeed].Value<double>().KMPHtoMeterPerSecond(),
+					MinTime = Body[JsonKeys.DriverData_StartStop][JsonKeys.DriverData_StartStop_MinTime].Value<double>().SI<Second>(),
+				};
+			}
+		}
+
+		public ILookaheadCoastingInputData Lookahead
+		{
+			get
+			{
+				return new JSONLookaheadCoasting() {
+					Enabled = Body[JsonKeys.DriverData_LookaheadCoasting][JsonKeys.DriverData_Lookahead_Enabled].Value<bool>(),
+					Deceleration =
+						Body[JsonKeys.DriverData_LookaheadCoasting][JsonKeys.DriverData_Lookahead_Deceleration].Value<double>()
+							.SI<MeterPerSquareSecond>(),
+					MinSpeed =
+						Body[JsonKeys.DriverData_LookaheadCoasting][JsonKeys.DriverData_Lookahead_MinSpeed].Value<double>()
+							.KMPHtoMeterPerSecond(),
+				};
+			}
+		}
+
+		public IOverspeedEcoRollInputData OverspeedEcoRoll
+		{
+			get
+			{
+				return new JSONOverSpeedEcoRoll() {
+					Mode =
+						DriverData.ParseDriverMode(
+							Body[JsonKeys.DriverData_OverspeedEcoRoll][JsonKeys.DriverData_OverspeedEcoRoll_Mode].Value<string>()),
+					MinSpeed =
+						Body[JsonKeys.DriverData_OverspeedEcoRoll][JsonKeys.DriverData_OverspeedEcoRoll_MinSpeed].Value<double>()
+							.KMPHtoMeterPerSecond(),
+					OverSpeed =
+						Body[JsonKeys.DriverData_OverspeedEcoRoll][JsonKeys.DriverData_OverspeedEcoRoll_OverSpeed].Value<double>()
+							.KMPHtoMeterPerSecond(),
+					UnderSpeed =
+						Body[JsonKeys.DriverData_OverspeedEcoRoll][JsonKeys.DriverData_OverspeedEcoRoll_UnderSpeed].Value<double>()
+							.KMPHtoMeterPerSecond()
+				};
+			}
+		}
+
+		public DataTable AccelerationCurve
+		{
+			get { return ReadTableData(Body[JsonKeys.DriverData_AccelerationCurve].Value<string>(), "DriverAccelerationCurve"); }
 		}
 
 		#endregion
 	}
 
-	public class JSONVehicleDataV7 : JSONFile, IVehicleInputData, IRetarderInputData
+	public class JSONStartStop : IStartStopInputData
 	{
-		public JSONVehicleDataV7(JObject data, string fileName) : base(data, fileName) {}
+		public bool Enabled { get; internal set; }
 
-		#region IVehicleInputData
+		public MeterPerSecond MaxSpeed { get; internal set; }
 
-		public VehicleCategory VehicleCategory
-		{
-			get
-			{
-				return
-					(VehicleCategory)Enum.Parse(typeof(VehicleCategory), Body[JsonKeys.Vehicle_VehicleCategory].Value<string>(), true);
-			}
-		}
+		public Second MinTime { get; internal set; }
 
-		public Kilogram CurbWeight
-		{
-			get { return Body[JsonKeys.Vehicle_CurbWeight].Value<double>().SI<Kilogram>(); }
-		}
-
-		public Kilogram GrossVehicleMassRating
-		{
-			get { return Body[JsonKeys.Vehicle_GrossVehicleMassRating].Value<double>().SI<Ton>().Cast<Kilogram>(); }
-		}
-
-		public SquareMeter DragCoefficient
-		{
-			get { return Body[JsonKeys.Vehicle_DragCoefficient].Value<double>().SI<SquareMeter>(); }
-		}
-
-		public SquareMeter DragCoefficientRigidTruck
-		{
-			get { return Body[JsonKeys.Vehicle_DragCoefficientRigidTruck].Value<double>().SI<SquareMeter>(); }
-		}
-
-		public string Rim
-		{
-			get { return Body[JsonKeys.Vehicle_Rim].Value<string>(); }
-		}
-
-		public AxleConfiguration AxleConfiguration
-		{
-			get
-			{
-				return
-					AxleConfigurationHelper.Parse(
-						Body[JsonKeys.Vehicle_AxleConfiguration][JsonKeys.Vehicle_AxleConfiguration_Type].Value<string>());
-			}
-		}
-
-		public IList<IAxleInputData> Axles
-		{
-			get
-			{
-				return
-					Body[JsonKeys.Vehicle_AxleConfiguration][JsonKeys.Vehicle_AxleConfiguration_Axles].Select(
-						axle => new JSONAxleInputData() {
-							Inertia = axle[JsonKeys.Vehicle_Axles_Inertia].Value<double>().SI<KilogramSquareMeter>(),
-							Wheels = axle[JsonKeys.Vehicle_Axles_Wheels].Value<string>(),
-							TwinTyres = axle[JsonKeys.Vehicle_Axles_TwinTyres].Value<bool>(),
-							RollResistanceCoefficient = axle[JsonKeys.Vehicle_Axles_RollResistanceCoefficient].Value<double>(),
-							TyreTestLoad = axle[JsonKeys.Vehicle_Axles_TyreTestLoad].Value<double>().SI<Newton>()
-						}).Cast<IAxleInputData>().ToList();
-			}
-		}
-
-		#endregion
-
-		#region IRetarderInputData
-
-		public RetarderData.RetarderType Type
-		{
-			get
-			{
-				return
-					(RetarderData.RetarderType)
-						Enum.Parse(typeof(RetarderData.RetarderType),
-							Body[JsonKeys.Vehicle_Retarder][JsonKeys.Vehicle_Retarder_Type].Value<string>(), true);
-			}
-		}
-
-		public double Ratio
-		{
-			get { return Body[JsonKeys.Vehicle_Retarder][JsonKeys.Vehicle_Retarder_Ratio].Value<double>(); }
-		}
-
-		public DataTable LossMap
-		{
-			get
-			{
-				var filename = Body[JsonKeys.Vehicle_Retarder][JsonKeys.Vehicle_Retarder_LossMapFile].Value<string>();
-				if (filename == null || !filename.Any() || filename.Equals("<NOFILE>", StringComparison.InvariantCultureIgnoreCase)) {
-					throw new VectoException("Invalid Lossmap: {0}", filename);
-				}
-				return VectoCSVFile.Read(Path.Combine(BasePath, filename));
-			}
-		}
-
-		#endregion
+		public Second Delay { get; internal set; }
 	}
 
-	public class JSONEngineDataV3 : JSONFile, IEngineInputData
+	public class JSONLookaheadCoasting : ILookaheadCoastingInputData
 	{
-		public JSONEngineDataV3(JObject data, string fileName) : base(data, fileName) {}
+		public bool Enabled { get; internal set; }
 
-		public string ModelName
-		{
-			get { return Body[JsonKeys.Engine_ModelName].Value<string>(); }
-		}
+		public MeterPerSquareSecond Deceleration { get; internal set; }
 
-		public CubicMeter Displacement
-		{
-			get { return Body[JsonKeys.Engine_Displacement].Value<double>().SI().Cubic.Centi.Meter.Cast<CubicMeter>(); }
-		}
-
-		public RoundsPerMinute IdleSpeed
-		{
-			get { return Body[JsonKeys.Engine_IdleSpeed].Value<double>().SI<RoundsPerMinute>(); }
-		}
-
-		public DataTable FullLoadCurve
-		{
-			get
-			{
-				var filename = Body[JsonKeys.Engine_FullLoadCurveFile].Value<string>();
-				if (filename == null || !filename.Any() || filename.Equals("<NOFILE>", StringComparison.InvariantCultureIgnoreCase)) {
-					throw new VectoException("Invalid FullLoadCurve: {0}", filename);
-				}
-				return VectoCSVFile.Read(Path.Combine(BasePath, filename));
-			}
-		}
-
-		public KilogramSquareMeter Inertia
-		{
-			get { return Body[JsonKeys.Engine_Inertia].Value<double>().SI<KilogramSquareMeter>(); }
-		}
-
-		public KilogramPerWattSecond WHTCMotorway
-		{
-			get { return Body[JsonKeys.Engine_WHTC_Motorway].Value<double>().SI<KilogramPerWattSecond>(); }
-		}
-
-		public KilogramPerWattSecond WHTCRural
-		{
-			get { return Body[JsonKeys.Engine_WHTC_Rural].Value<double>().SI<KilogramPerWattSecond>(); }
-		}
-
-		public KilogramPerWattSecond WHTCUrban
-		{
-			get { return Body[JsonKeys.Engine_WHTC_Urban].Value<double>().SI<KilogramPerWattSecond>(); }
-		}
+		public MeterPerSecond MinSpeed { get; internal set; }
 	}
 
-	public class JSONGearboxDataV5 : JSONFile, IGearboxInputData, IAxleGearInputData, ITorqueConverterInputData
+	public class JSONOverSpeedEcoRoll : IOverspeedEcoRollInputData
 	{
-		public JSONGearboxDataV5(JObject data, string filename) : base(data, filename) {}
+		public DriverData.DriverMode Mode { get; internal set; }
 
-		#region IAxleGearInputData
+		public MeterPerSecond MinSpeed { get; internal set; }
 
-		public double Ratio
-		{
-			get { return Body[JsonKeys.Gearbox_Gears][0][JsonKeys.Gearbox_Gear_Ratio].Value<double>(); }
-		}
+		public MeterPerSecond OverSpeed { get; internal set; }
 
-		public DataTable LossMap
-		{
-			get
-			{
-				var filename = Body[JsonKeys.Gearbox_Gears][0][JsonKeys.Gearbox_Gear_LossMapFile].Value<string>();
-				if (filename == null || !filename.Any() || filename.Equals("<NOFILE>", StringComparison.InvariantCultureIgnoreCase)) {
-					throw new VectoException("Invalid AxleGear LossMap: {0}", filename);
-				}
-				return VectoCSVFile.Read(Path.Combine(BasePath, filename));
-			}
-		}
-
-		#endregion
-
-		#region IGearboxInputData
-
-		public string ModelName
-		{
-			get { return Body[JsonKeys.Gearbox_ModelName].Value<string>(); }
-		}
-
-		public GearboxType Type
-		{
-			get { return Body[JsonKeys.Gearbox_GearboxType].Value<string>().Parse<GearboxType>(); }
-		}
-
-
-		public KilogramSquareMeter Inertia
-		{
-			get { return Body[JsonKeys.Gearbox_Inertia].Value<double>().SI<KilogramSquareMeter>(); }
-		}
-
-		public Second TractionInterruption
-		{
-			get { return Body[JsonKeys.Gearbox_TractionInterruption].Value<double>().SI<Second>(); }
-		}
-
-		public IList<ITransmissionInputData> Gears
-		{
-			get
-			{
-				var retVal = new List<ITransmissionInputData>();
-				var i = 0;
-				foreach (var gear in Body[JsonKeys.Gearbox_Gears]) {
-					if (i++ == 0) {
-						continue;
-					}
-					var lossMapFile = gear[JsonKeys.Gearbox_Gear_LossMapFile].Value<string>();
-					if (lossMapFile == null || !lossMapFile.Any() ||
-						lossMapFile.Equals("<NOFILE>", StringComparison.InvariantCultureIgnoreCase)) {
-						throw new VectoException("Invalid AxleGear LossMap: {0}", lossMapFile);
-					}
-					var lossMap = VectoCSVFile.Read(Path.Combine(BasePath, lossMapFile));
-
-					var fullLoadCurveFile = gear[JsonKeys.Gearbox_Gear_FullLoadCurveFile].Value<string>();
-					DataTable fullLoadCurve = null;
-					if (fullLoadCurveFile != null && fullLoadCurveFile.Any()) {
-						fullLoadCurve = VectoCSVFile.Read(Path.Combine(BasePath, fullLoadCurveFile));
-					}
-
-					var shiftPolygonFile = gear[JsonKeys.Gearbox_Gear_ShiftPolygonFile].Value<string>();
-					DataTable shiftPolygon = null;
-					if (shiftPolygonFile != null && shiftPolygonFile.Any() && !shiftPolygonFile.Equals("-")) {
-						shiftPolygon = VectoCSVFile.Read(Path.Combine(BasePath, shiftPolygonFile));
-					}
-
-					retVal.Add(new JSONTransmissionInputData() {
-						Gear = i,
-						Ratio = gear[JsonKeys.Gearbox_Gear_Ratio].Value<double>(),
-						FullLoadCurve = fullLoadCurve,
-						LossMap = lossMap,
-						ShiftPolygon = shiftPolygon,
-						TorqueConverterActive = gear[JsonKeys.Gearbox_Gear_TCactive].Value<bool>()
-					});
-				}
-				return retVal;
-			}
-		}
-
-		public bool SkipGears
-		{
-			get { return Body[JsonKeys.Gearbox_SkipGears].Value<bool>(); }
-		}
-
-		public Second ShiftTime
-		{
-			get { return Body[JsonKeys.Gearbox_ShiftTime].Value<double>().SI<Second>(); }
-		}
-
-		public bool EarlyShiftUp
-		{
-			get { return Body[JsonKeys.Gearbox_EarlyShiftUp].Value<bool>(); }
-		}
-
-		public double TorqueReserve
-		{
-			get { return Body[JsonKeys.Gearbox_TorqueReserve].Value<double>() / 100.0; }
-		}
-
-		public MeterPerSecond StartSpeed
-		{
-			get { return Body[JsonKeys.Gearbox_StartSpeed].Value<double>().SI<MeterPerSecond>(); }
-		}
-
-		public MeterPerSquareSecond StartAcceleration
-		{
-			get { return Body[JsonKeys.Gearbox_StartAcceleration].Value<double>().SI<MeterPerSquareSecond>(); }
-		}
-
-		public double StartTorqueReserve
-		{
-			get { return Body[JsonKeys.Gearbox_StartTorqueReserve].Value<double>() / 100.0; }
-		}
-
-		public ITorqueConverterInputData TorqueConverter
-		{
-			get { return this; }
-		}
-
-		#endregion
-
-		#region ITorqueConverterInputData
-
-		public RoundsPerMinute ReferenceRPM
-		{
-			get
-			{
-				return
-					Body[JsonKeys.Gearbox_TorqueConverter][JsonKeys.Gearbox_TorqueConverter_ReferenceRPM].Value<double>()
-						.SI<RoundsPerMinute>();
-			}
-		}
-
-		public DataTable TCData
-		{
-			get
-			{
-				var filename = Body[JsonKeys.Gearbox_TorqueConverter][JsonKeys.Gearbox_TorqueConverter_TCMap].Value<string>();
-				if (filename == null || !filename.Any() || filename.Equals("<NOFILE>", StringComparison.InvariantCultureIgnoreCase)) {
-					throw new VectoException("Invalid TroqueConverter Curve: {0}", filename);
-				}
-				return VectoCSVFile.Read(Path.Combine(BasePath, filename));
-			}
-		}
-
-		KilogramSquareMeter ITorqueConverterInputData.Inertia
-		{
-			get
-			{
-				return
-					Body[JsonKeys.Gearbox_TorqueConverter][JsonKeys.Gearbox_TorqueConverter_Inertia].Value<double>()
-						.SI<KilogramSquareMeter>();
-			}
-		}
-
-		#endregion
-	}
-
-	public class JSONTransmissionInputData : ITransmissionInputData
-	{
-		public int Gear { get; internal set; }
-
-		public double Ratio { get; internal set; }
-
-		public DataTable LossMap { get; internal set; }
-
-		public DataTable FullLoadCurve { get; internal set; }
-
-		public DataTable ShiftPolygon { get; internal set; }
-
-		public bool TorqueConverterActive { get; internal set; }
-	}
-
-	public class JSONAxleInputData : IAxleInputData
-	{
-		public string Wheels { get; internal set; }
-
-		public bool TwinTyres { get; internal set; }
-
-		public double RollResistanceCoefficient { get; internal set; }
-
-		public Newton TyreTestLoad { get; internal set; }
-
-		public double AxleWeightShare { get; internal set; }
-
-		public KilogramSquareMeter Inertia { get; internal set; }
+		public MeterPerSecond UnderSpeed { get; internal set; }
 	}
 }

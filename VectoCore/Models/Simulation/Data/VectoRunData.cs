@@ -21,6 +21,8 @@ namespace TUGraz.VectoCore.Models.Simulation.Data
 
 		public string AccelerationLimitingFile { get; internal set; }
 
+		public RetarderData Retarder { get; internal set; }
+
 		public DriverData DriverData { get; internal set; }
 
 		public bool IsEngineOnly { get; internal set; }

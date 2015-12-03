@@ -4,6 +4,7 @@ using System.Reflection;
 using System.Threading;
 using TUGraz.VectoCore.Configuration;
 using TUGraz.VectoCore.Exceptions;
+using TUGraz.VectoCore.InputData;
 using TUGraz.VectoCore.InputData.FileIO.Reader;
 using TUGraz.VectoCore.InputData.FileIO.Reader.Impl;
 using TUGraz.VectoCore.Models.Simulation.Data;
@@ -30,13 +31,13 @@ namespace TUGraz.VectoCore.Models.Simulation.Impl
 			_mode = mode;
 			switch (mode) {
 				case FactoryMode.DeclarationMode:
-					DataReader = new DeclarationModeSimulationDataReader();
+					DataReader = new DeclarationModeVectoRunDataFactory();
 					break;
 				case FactoryMode.EngineeringMode:
-					DataReader = new EngineeringModeSimulationDataReader();
+					DataReader = new EngineeringModeVectoRunDataFactory();
 					break;
 				case FactoryMode.EngineOnlyMode:
-					DataReader = new EngineOnlySimulationDataReader();
+					DataReader = new EngineOnlyVectoRunDataFactory();
 					break;
 				default:
 					throw new VectoException("Unkown factory mode in SimulatorFactory: {0}", mode);
@@ -44,7 +45,7 @@ namespace TUGraz.VectoCore.Models.Simulation.Impl
 			DataReader.SetJobFile(jobFile);
 		}
 
-		public ISimulationDataReader DataReader { get; private set; }
+		public IVectoRunDataFactory DataReader { get; private set; }
 
 		public SummaryFileWriter SumWriter { get; set; }
 
