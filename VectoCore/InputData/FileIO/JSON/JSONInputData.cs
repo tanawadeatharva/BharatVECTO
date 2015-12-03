@@ -20,8 +20,8 @@ namespace TUGraz.VectoCore.InputData.FileIO.JSON
 
 		protected JSONFile(JObject data, string filename)
 		{
-			Header = (JObject)data["Header"];
-			Body = (JObject)data["Body"];
+			Header = (JObject)data[JsonKeys.JsonHeader];
+			Body = (JObject)data[JsonKeys.JsonBody];
 			BasePath = filename;
 		}
 
@@ -167,35 +167,42 @@ namespace TUGraz.VectoCore.InputData.FileIO.JSON
 
 		public SquareMeter DragCoefficient
 		{
-			get { return Body["CdA"].Value<double>().SI<SquareMeter>(); }
+			get { return Body[JsonKeys.Vehicle_DragCoefficient].Value<double>().SI<SquareMeter>(); }
 		}
 
 		public SquareMeter DragCoefficientRigidTruck
 		{
-			get { return Body["CdA2"].Value<double>().SI<SquareMeter>(); }
+			get { return Body[JsonKeys.Vehicle_DragCoefficientRigidTruck].Value<double>().SI<SquareMeter>(); }
 		}
 
 		public string Rim
 		{
-			get { return Body["Rim"].Value<string>(); }
+			get { return Body[JsonKeys.Vehicle_Rim].Value<string>(); }
 		}
 
 		public AxleConfiguration AxleConfiguration
 		{
-			get { return AxleConfigurationHelper.Parse(Body["AxleConfig"]["Type"].Value<string>()); }
+			get
+			{
+				return
+					AxleConfigurationHelper.Parse(
+						Body[JsonKeys.Vehicle_AxleConfiguration][JsonKeys.Vehicle_AxleConfiguration_Type].Value<string>());
+			}
 		}
 
 		public IList<IAxleInputData> Axles
 		{
 			get
 			{
-				return Body["AxleConfig"]["Axles"].Select(axle => new JSONAxleInputData() {
-					Inertia = axle["Inertia"].Value<double>().SI<KilogramSquareMeter>(),
-					Wheels = axle["Wheels"].Value<string>(),
-					TwinTyres = axle["TwinTyres"].Value<bool>(),
-					RollResistanceCoefficient = axle["RRCISO"].Value<double>(),
-					TyreTestLoad = axle["FzISO"].Value<double>().SI<Newton>()
-				}).Cast<IAxleInputData>().ToList();
+				return
+					Body[JsonKeys.Vehicle_AxleConfiguration][JsonKeys.Vehicle_AxleConfiguration_Axles].Select(
+						axle => new JSONAxleInputData() {
+							Inertia = axle[JsonKeys.Vehicle_Axles_Inertia].Value<double>().SI<KilogramSquareMeter>(),
+							Wheels = axle[JsonKeys.Vehicle_Axles_Wheels].Value<string>(),
+							TwinTyres = axle[JsonKeys.Vehicle_Axles_TwinTyres].Value<bool>(),
+							RollResistanceCoefficient = axle[JsonKeys.Vehicle_Axles_RollResistanceCoefficient].Value<double>(),
+							TyreTestLoad = axle[JsonKeys.Vehicle_Axles_TyreTestLoad].Value<double>().SI<Newton>()
+						}).Cast<IAxleInputData>().ToList();
 			}
 		}
 
@@ -209,20 +216,21 @@ namespace TUGraz.VectoCore.InputData.FileIO.JSON
 			{
 				return
 					(RetarderData.RetarderType)
-						Enum.Parse(typeof(RetarderData.RetarderType), Body["Retarder"]["Type"].Value<string>(), true);
+						Enum.Parse(typeof(RetarderData.RetarderType),
+							Body[JsonKeys.Vehicle_Retarder][JsonKeys.Vehicle_Retarder_Type].Value<string>(), true);
 			}
 		}
 
 		public double Ratio
 		{
-			get { return Body["Retarder"]["Ratio"].Value<double>(); }
+			get { return Body[JsonKeys.Vehicle_Retarder][JsonKeys.Vehicle_Retarder_Ratio].Value<double>(); }
 		}
 
 		public DataTable LossMap
 		{
 			get
 			{
-				var filename = Body["Retarder"]["File"].Value<string>();
+				var filename = Body[JsonKeys.Vehicle_Retarder][JsonKeys.Vehicle_Retarder_LossMapFile].Value<string>();
 				if (filename == null || !filename.Any() || filename.Equals("<NOFILE>", StringComparison.InvariantCultureIgnoreCase)) {
 					throw new VectoException("Invalid Lossmap: {0}", filename);
 				}
@@ -239,24 +247,24 @@ namespace TUGraz.VectoCore.InputData.FileIO.JSON
 
 		public string ModelName
 		{
-			get { return Body["ModelName"].Value<string>(); }
+			get { return Body[JsonKeys.Engine_ModelName].Value<string>(); }
 		}
 
 		public CubicMeter Displacement
 		{
-			get { return Body["Displacement"].Value<double>().SI().Cubic.Centi.Meter.Cast<CubicMeter>(); }
+			get { return Body[JsonKeys.Engine_Displacement].Value<double>().SI().Cubic.Centi.Meter.Cast<CubicMeter>(); }
 		}
 
 		public RoundsPerMinute IdleSpeed
 		{
-			get { return Body["IdlingSpeed"].Value<double>().SI<RoundsPerMinute>(); }
+			get { return Body[JsonKeys.Engine_IdleSpeed].Value<double>().SI<RoundsPerMinute>(); }
 		}
 
 		public DataTable FullLoadCurve
 		{
 			get
 			{
-				var filename = Body["FullLoadCurve"].Value<string>();
+				var filename = Body[JsonKeys.Engine_FullLoadCurveFile].Value<string>();
 				if (filename == null || !filename.Any() || filename.Equals("<NOFILE>", StringComparison.InvariantCultureIgnoreCase)) {
 					throw new VectoException("Invalid FullLoadCurve: {0}", filename);
 				}
@@ -266,22 +274,22 @@ namespace TUGraz.VectoCore.InputData.FileIO.JSON
 
 		public KilogramSquareMeter Inertia
 		{
-			get { return Body["Inertia"].Value<double>().SI<KilogramSquareMeter>(); }
+			get { return Body[JsonKeys.Engine_Inertia].Value<double>().SI<KilogramSquareMeter>(); }
 		}
 
 		public KilogramPerWattSecond WHTCMotorway
 		{
-			get { return Body["WHTC-Motorway"].Value<double>().SI<KilogramPerWattSecond>(); }
+			get { return Body[JsonKeys.Engine_WHTC_Motorway].Value<double>().SI<KilogramPerWattSecond>(); }
 		}
 
 		public KilogramPerWattSecond WHTCRural
 		{
-			get { return Body["WHTC-Rural"].Value<double>().SI<KilogramPerWattSecond>(); }
+			get { return Body[JsonKeys.Engine_WHTC_Rural].Value<double>().SI<KilogramPerWattSecond>(); }
 		}
 
 		public KilogramPerWattSecond WHTCUrban
 		{
-			get { return Body["WHTC-Urban"].Value<double>().SI<KilogramPerWattSecond>(); }
+			get { return Body[JsonKeys.Engine_WHTC_Urban].Value<double>().SI<KilogramPerWattSecond>(); }
 		}
 	}
 
@@ -293,14 +301,14 @@ namespace TUGraz.VectoCore.InputData.FileIO.JSON
 
 		public double Ratio
 		{
-			get { return Body["Gears"][0]["Ratio"].Value<double>(); }
+			get { return Body[JsonKeys.Gearbox_Gears][0][JsonKeys.Gearbox_Gear_Ratio].Value<double>(); }
 		}
 
 		public DataTable LossMap
 		{
 			get
 			{
-				var filename = Body["Gears"][0]["LossMap"].Value<string>();
+				var filename = Body[JsonKeys.Gearbox_Gears][0][JsonKeys.Gearbox_Gear_LossMapFile].Value<string>();
 				if (filename == null || !filename.Any() || filename.Equals("<NOFILE>", StringComparison.InvariantCultureIgnoreCase)) {
 					throw new VectoException("Invalid AxleGear LossMap: {0}", filename);
 				}
@@ -314,23 +322,23 @@ namespace TUGraz.VectoCore.InputData.FileIO.JSON
 
 		public string ModelName
 		{
-			get { return Body["ModelName"].Value<string>(); }
+			get { return Body[JsonKeys.Gearbox_ModelName].Value<string>(); }
 		}
 
 		public GearboxType Type
 		{
-			get { return Body["GearboxType"].Value<string>().Parse<GearboxType>(); }
+			get { return Body[JsonKeys.Gearbox_GearboxType].Value<string>().Parse<GearboxType>(); }
 		}
 
 
 		public KilogramSquareMeter Inertia
 		{
-			get { return Body["Inertia"].Value<double>().SI<KilogramSquareMeter>(); }
+			get { return Body[JsonKeys.Gearbox_Inertia].Value<double>().SI<KilogramSquareMeter>(); }
 		}
 
 		public Second TractionInterruption
 		{
-			get { return Body["TracInt"].Value<double>().SI<Second>(); }
+			get { return Body[JsonKeys.Gearbox_TractionInterruption].Value<double>().SI<Second>(); }
 		}
 
 		public IList<ITransmissionInputData> Gears
@@ -339,36 +347,36 @@ namespace TUGraz.VectoCore.InputData.FileIO.JSON
 			{
 				var retVal = new List<ITransmissionInputData>();
 				var i = 0;
-				foreach (var gear in Body["Gears"]) {
+				foreach (var gear in Body[JsonKeys.Gearbox_Gears]) {
 					if (i++ == 0) {
 						continue;
 					}
-					var lossMapFile = gear["LossMap"].Value<string>();
+					var lossMapFile = gear[JsonKeys.Gearbox_Gear_LossMapFile].Value<string>();
 					if (lossMapFile == null || !lossMapFile.Any() ||
 						lossMapFile.Equals("<NOFILE>", StringComparison.InvariantCultureIgnoreCase)) {
 						throw new VectoException("Invalid AxleGear LossMap: {0}", lossMapFile);
 					}
 					var lossMap = VectoCSVFile.Read(Path.Combine(BasePath, lossMapFile));
 
-					var fullLoadCurveFile = gear["FullLoadCurve"].Value<string>();
+					var fullLoadCurveFile = gear[JsonKeys.Gearbox_Gear_FullLoadCurveFile].Value<string>();
 					DataTable fullLoadCurve = null;
 					if (fullLoadCurveFile != null && fullLoadCurveFile.Any()) {
 						fullLoadCurve = VectoCSVFile.Read(Path.Combine(BasePath, fullLoadCurveFile));
 					}
 
-					var shiftPolygonFile = gear["ShiftPolygon"].Value<string>();
+					var shiftPolygonFile = gear[JsonKeys.Gearbox_Gear_ShiftPolygonFile].Value<string>();
 					DataTable shiftPolygon = null;
 					if (shiftPolygonFile != null && shiftPolygonFile.Any() && !shiftPolygonFile.Equals("-")) {
-						fullLoadCurve = VectoCSVFile.Read(Path.Combine(BasePath, shiftPolygonFile));
+						shiftPolygon = VectoCSVFile.Read(Path.Combine(BasePath, shiftPolygonFile));
 					}
 
 					retVal.Add(new JSONTransmissionInputData() {
 						Gear = i,
-						Ratio = gear["Ratio"].Value<double>(),
+						Ratio = gear[JsonKeys.Gearbox_Gear_Ratio].Value<double>(),
 						FullLoadCurve = fullLoadCurve,
 						LossMap = lossMap,
 						ShiftPolygon = shiftPolygon,
-						TorqueConverterActive = gear["TCactive"].Value<bool>()
+						TorqueConverterActive = gear[JsonKeys.Gearbox_Gear_TCactive].Value<bool>()
 					});
 				}
 				return retVal;
@@ -377,37 +385,37 @@ namespace TUGraz.VectoCore.InputData.FileIO.JSON
 
 		public bool SkipGears
 		{
-			get { return Body["SkipGears"].Value<bool>(); }
+			get { return Body[JsonKeys.Gearbox_SkipGears].Value<bool>(); }
 		}
 
 		public Second ShiftTime
 		{
-			get { return Body["ShiftTime"].Value<double>().SI<Second>(); }
+			get { return Body[JsonKeys.Gearbox_ShiftTime].Value<double>().SI<Second>(); }
 		}
 
 		public bool EarlyShiftUp
 		{
-			get { return Body["EarlyShiftUp"].Value<bool>(); }
+			get { return Body[JsonKeys.Gearbox_EarlyShiftUp].Value<bool>(); }
 		}
 
 		public double TorqueReserve
 		{
-			get { return Body["TqReserve"].Value<double>() / 100.0; }
+			get { return Body[JsonKeys.Gearbox_TorqueReserve].Value<double>() / 100.0; }
 		}
 
 		public MeterPerSecond StartSpeed
 		{
-			get { return Body["StartSpeed"].Value<double>().SI<MeterPerSecond>(); }
+			get { return Body[JsonKeys.Gearbox_StartSpeed].Value<double>().SI<MeterPerSecond>(); }
 		}
 
 		public MeterPerSquareSecond StartAcceleration
 		{
-			get { return Body["StartAcc"].Value<double>().SI<MeterPerSquareSecond>(); }
+			get { return Body[JsonKeys.Gearbox_StartAcceleration].Value<double>().SI<MeterPerSquareSecond>(); }
 		}
 
 		public double StartTorqueReserve
 		{
-			get { return Body["StartTqReserve"].Value<double>() / 100.0; }
+			get { return Body[JsonKeys.Gearbox_StartTorqueReserve].Value<double>() / 100.0; }
 		}
 
 		public ITorqueConverterInputData TorqueConverter
@@ -421,14 +429,19 @@ namespace TUGraz.VectoCore.InputData.FileIO.JSON
 
 		public RoundsPerMinute ReferenceRPM
 		{
-			get { return Body["TorqueConverter"]["RefRPM"].Value<double>().SI<RoundsPerMinute>(); }
+			get
+			{
+				return
+					Body[JsonKeys.Gearbox_TorqueConverter][JsonKeys.Gearbox_TorqueConverter_ReferenceRPM].Value<double>()
+						.SI<RoundsPerMinute>();
+			}
 		}
 
 		public DataTable TCData
 		{
 			get
 			{
-				var filename = Body["TorqueConverter"]["File"].Value<string>();
+				var filename = Body[JsonKeys.Gearbox_TorqueConverter][JsonKeys.Gearbox_TorqueConverter_TCMap].Value<string>();
 				if (filename == null || !filename.Any() || filename.Equals("<NOFILE>", StringComparison.InvariantCultureIgnoreCase)) {
 					throw new VectoException("Invalid TroqueConverter Curve: {0}", filename);
 				}
@@ -438,7 +451,12 @@ namespace TUGraz.VectoCore.InputData.FileIO.JSON
 
 		KilogramSquareMeter ITorqueConverterInputData.Inertia
 		{
-			get { return Body["TorqueConverter"]["Inertia"].Value<double>().SI<KilogramSquareMeter>(); }
+			get
+			{
+				return
+					Body[JsonKeys.Gearbox_TorqueConverter][JsonKeys.Gearbox_TorqueConverter_Inertia].Value<double>()
+						.SI<KilogramSquareMeter>();
+			}
 		}
 
 		#endregion

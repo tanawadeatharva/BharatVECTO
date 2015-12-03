@@ -119,17 +119,21 @@
     <Compile Include="InputData\FileIO\EngineeringFile\VehicleFileEng.cs" />
     <Compile Include="InputData\FileIO\InputFileReader.cs" />
     <Compile Include="InputData\FileIO\JsonDataHeader.cs" />
+    <Compile Include="InputData\FileIO\JSONInputDataFactory.cs" />
+    <Compile Include="InputData\FileIO\JsonInputDataProviderDEPRECATED.cs" />
+    <Compile Include="InputData\FileIO\JSON\JSONInputDataV2.cs" />
     <Compile Include="InputData\FileIO\Reader\DataObjectAdaper\AbstractSimulationDataAdapter.cs" />
     <Compile Include="InputData\FileIO\Reader\DataObjectAdaper\DeclarationDataAdapter.cs" />
     <Compile Include="InputData\FileIO\Reader\DataObjectAdaper\EngineeringDataAdapter.cs" />
     <Compile Include="InputData\FileIO\Reader\DrivingCycleDataReader.cs" />
-    <Compile Include="InputData\FileIO\Reader\Impl\AbstractSimulationDataReader.cs" />
-    <Compile Include="InputData\FileIO\Reader\Impl\DeclarationModeSimulationDataReader.cs" />
-    <Compile Include="InputData\FileIO\Reader\Impl\EngineeringModeSimulationDataReader.cs" />
-    <Compile Include="InputData\FileIO\Reader\Impl\EngineOnlySimulationDataReader.cs" />
-    <Compile Include="InputData\FileIO\Reader\ISimulationDataReader.cs" />
+    <Compile Include="InputData\FileIO\Reader\Impl\AbstractVectoRunDataFactory.cs" />
+    <Compile Include="InputData\FileIO\Reader\Impl\DeclarationModeVectoRunDataFactory.cs" />
+    <Compile Include="InputData\FileIO\Reader\Impl\EngineeringModeVectoRunDataFactory.cs" />
+    <Compile Include="InputData\FileIO\Reader\Impl\EngineOnlyVectoRunDataFactory.cs" />
     <Compile Include="InputData\FileIO\VectoFiles.cs" />
+    <Compile Include="InputData\IInputDataProvider.cs" />
     <Compile Include="InputData\InputData.cs" />
+    <Compile Include="InputData\IVectoRunDataFactory.cs" />
     <Compile Include="Models\Connector\Ports\IDriverDemandPort.cs" />
     <Compile Include="Models\Connector\Ports\IDrivingCyclePort.cs" />
     <Compile Include="Models\Connector\Ports\IResponse.cs" />
@@ -184,6 +188,11 @@
     <Compile Include="Models\Simulation\Impl\DistanceRun.cs" />
     <Compile Include="Models\Simulation\Impl\PowertrainBuilder.cs" />
     <Compile Include="Models\Simulation\Impl\TimeRun.cs" />
+    <Compile Include="Properties\Resources.Designer.cs">
+      <AutoGen>True</AutoGen>
+      <DesignTime>True</DesignTime>
+      <DependentUpon>Resources.resx</DependentUpon>
+    </Compile>
     <Compile Include="Properties\Version.cs">
       <AutoGen>True</AutoGen>
       <DesignTime>True</DesignTime>
@@ -269,6 +278,10 @@
   <ItemGroup>
     <None Include="app.config" />
     <None Include="packages.config" />
+    <EmbeddedResource Include="Properties\Resources.resx">
+      <Generator>ResXFileCodeGenerator</Generator>
+      <LastGenOutput>Resources.Designer.cs</LastGenOutput>
+    </EmbeddedResource>
     <EmbeddedResource Include="Resources\Declaration\Rims.csv" />
     <EmbeddedResource Include="Resources\Declaration\Wheels.csv" />
     <EmbeddedResource Include="Resources\Declaration\SegmentTable.csv" />
