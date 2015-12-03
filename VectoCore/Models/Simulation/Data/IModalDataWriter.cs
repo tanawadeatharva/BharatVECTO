@@ -138,8 +138,7 @@ namespace TUGraz.VectoCore.Models.Simulation.Data
 		{
 			var stopTime = data.GetValues<MeterPerSecond>(ModalResultField.v_act)
 				.Zip(data.SimulationIntervals(), (v, dt) => new { v, dt })
-				.Where(x => x.v < 0.1).Select(x => x.dt).Sum();
-
+				.Where(x => x.v < 0.1).Select(x => x.dt).Sum() ?? 0.SI<Second>();
 			return 100 * (stopTime / data.Duration()).Cast<Scalar>();
 		}
 
