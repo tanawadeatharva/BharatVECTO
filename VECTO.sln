@@ -19,6 +19,8 @@ Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "GraphDrawer", "GraphDrawer\
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "DeclarationCycleZip", "DeclarationCycleZip\DeclarationCycleZip.csproj", "{2320CD6F-FE7B-4341-A9BB-3ABCA7EF18F6}"
 EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "LicenceHeader", "LicenceHeader\LicenceHeader.csproj", "{E8B0B447-1A54-4BEC-A160-AF0017000781}"
+EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
 		Debug|Any CPU = Debug|Any CPU
@@ -93,6 +95,14 @@ Global
 		{2320CD6F-FE7B-4341-A9BB-3ABCA7EF18F6}.Release|Any CPU.Build.0 = Release|Any CPU
 		{2320CD6F-FE7B-4341-A9BB-3ABCA7EF18F6}.Release|x64.ActiveCfg = Release|Any CPU
 		{2320CD6F-FE7B-4341-A9BB-3ABCA7EF18F6}.Release|x86.ActiveCfg = Release|Any CPU
+		{E8B0B447-1A54-4BEC-A160-AF0017000781}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{E8B0B447-1A54-4BEC-A160-AF0017000781}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{E8B0B447-1A54-4BEC-A160-AF0017000781}.Debug|x64.ActiveCfg = Debug|Any CPU
+		{E8B0B447-1A54-4BEC-A160-AF0017000781}.Debug|x86.ActiveCfg = Debug|Any CPU
+		{E8B0B447-1A54-4BEC-A160-AF0017000781}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{E8B0B447-1A54-4BEC-A160-AF0017000781}.Release|Any CPU.Build.0 = Release|Any CPU
+		{E8B0B447-1A54-4BEC-A160-AF0017000781}.Release|x64.ActiveCfg = Release|Any CPU
+		{E8B0B447-1A54-4BEC-A160-AF0017000781}.Release|x86.ActiveCfg = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE
