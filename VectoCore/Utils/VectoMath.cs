@@ -155,8 +155,6 @@ namespace TUGraz.VectoCore.Utils
 
 		public static Point operator -(Point p1, Point p2)
 		{
-			//Contract.Requires(p1 != null);
-			//Contract.Requires(p2 != null);
 			return new Point(p1.X - p2.X, p1.Y - p2.Y, p1.Z - p2.Z);
 		}
 
@@ -208,11 +206,6 @@ namespace TUGraz.VectoCore.Utils
 
 		public Plane(Triangle tr)
 		{
-			Contract.Requires(tr != null);
-			//Contract.Requires(tr.P1 != null);
-			//Contract.Requires(tr.P2 != null);
-			//Contract.Requires(tr.P3 != null);
-
 			var ab = tr.P2 - tr.P1;
 			var ac = tr.P3 - tr.P1;
 
@@ -241,13 +234,7 @@ namespace TUGraz.VectoCore.Utils
 
 		public bool IsInside(double x, double y, bool exact)
 		{
-			//Contract.Requires(P1 != null);
-			//Contract.Requires(P2 != null);
-			//Contract.Requires(P3 != null);
-
 			//Barycentric Technique: http://www.blackpawn.com/texts/pointinpoly/default.html
-			//var p = new Point(x, y, 0);
-
 			var v0X = P3.X - P1.X;
 			var v0Y = P3.Y - P1.Y;
 			var v1X = P2.X - P1.X;
@@ -274,11 +261,6 @@ namespace TUGraz.VectoCore.Utils
 
 		public bool ContainsInCircumcircle(Point p)
 		{
-			//Contract.Requires(p != null);
-			//Contract.Requires(P1 != null);
-			//Contract.Requires(P2 != null);
-			//Contract.Requires(P3 != null);
-
 			var p0X = P1.X - p.X;
 			var p0Y = P1.Y - p.Y;
 			var p1X = P2.X - p.X;

@@ -71,7 +71,7 @@ namespace TUGraz.VectoCore.Tests.Models.SimulationComponentData
 
 			var angSpeed = SpeedToAngularSpeed(speed, rdyn) * gbxData.AxleGearData.Ratio;
 			if (TestContext.DataRow["Gear"].ToString() == "A") {
-				torqueFromEngine = gbxData.AxleGearData.LossMap.GearboxInTorque(angSpeed, torqueToWheels);
+				torqueFromEngine = gbxData.AxleGearData.LossMap.GetInTorque(angSpeed, torqueToWheels);
 			}
 
 			var powerEngine = Formulas.TorqueToPower(torqueFromEngine, angSpeed);

@@ -140,7 +140,7 @@ namespace TUGraz.VectoCore.Models.SimulationComponent.Impl
 			}
 
 			var inAngularVelocity = outAngularVelocity * Data.Gears[Gear].Ratio;
-			var inTorque = Data.Gears[Gear].LossMap.GearboxInTorque(inAngularVelocity, outTorque);
+			var inTorque = Data.Gears[Gear].LossMap.GetInTorque(inAngularVelocity, outTorque);
 
 			var torqueLossInertia = outAngularVelocity.IsEqual(0)
 				? 0.SI<NewtonMeter>()
@@ -160,7 +160,7 @@ namespace TUGraz.VectoCore.Models.SimulationComponent.Impl
 		internal ResponseDryRun Initialize(uint gear, NewtonMeter outTorque, PerSecond outAngularVelocity)
 		{
 			var inAngularVelocity = outAngularVelocity * Data.Gears[gear].Ratio;
-			var inTorque = Data.Gears[gear].LossMap.GearboxInTorque(inAngularVelocity, outTorque);
+			var inTorque = Data.Gears[gear].LossMap.GetInTorque(inAngularVelocity, outTorque);
 
 			if (!inAngularVelocity.IsEqual(0)) {
 				var alpha = (Data.Inertia.IsEqual(0))
@@ -304,7 +304,7 @@ namespace TUGraz.VectoCore.Models.SimulationComponent.Impl
 			var inEngineSpeed = outAngularVelocity * Data.Gears[Gear].Ratio;
 			var inTorque = (outAngularVelocity.IsEqual(0))
 				? outTorque / Data.Gears[Gear].Ratio
-				: Data.Gears[Gear].LossMap.GearboxInTorque(inEngineSpeed, outTorque);
+				: Data.Gears[Gear].LossMap.GetInTorque(inEngineSpeed, outTorque);
 
 			_powerLoss = inTorque * inEngineSpeed - outTorque * outAngularVelocity;
 

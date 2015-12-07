@@ -57,7 +57,7 @@ namespace TUGraz.VectoCore.Models.SimulationComponent.Impl
 			var inAngularVelocity = angularVelocity * _gearData.Ratio;
 			var inTorque = angularVelocity.IsEqual(0)
 				? 0.SI<NewtonMeter>()
-				: _gearData.LossMap.GearboxInTorque(inAngularVelocity, torque);
+				: _gearData.LossMap.GetInTorque(inAngularVelocity, torque);
 
 			Loss = inTorque * inAngularVelocity - torque * angularVelocity;
 
@@ -70,7 +70,7 @@ namespace TUGraz.VectoCore.Models.SimulationComponent.Impl
 		public IResponse Initialize(NewtonMeter torque, PerSecond angularVelocity)
 		{
 			var inAngularVelocity = angularVelocity * _gearData.Ratio;
-			var inTorque = _gearData.LossMap.GearboxInTorque(inAngularVelocity, torque);
+			var inTorque = _gearData.LossMap.GetInTorque(inAngularVelocity, torque);
 
 			return NextComponent.Initialize(inTorque, inAngularVelocity);
 		}

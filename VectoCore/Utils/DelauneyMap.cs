@@ -16,7 +16,6 @@
 
 using System;
 using System.Collections.Generic;
-using System.Diagnostics.Contracts;
 using System.Linq;
 using Newtonsoft.Json;
 using TUGraz.VectoCore.Exceptions;
@@ -29,13 +28,6 @@ namespace TUGraz.VectoCore.Utils
 	{
 		private readonly List<Point> _points = new List<Point>();
 		private List<Triangle> _triangles = new List<Triangle>();
-
-		[ContractInvariantMethod]
-		private void Invariant()
-		{
-			Contract.Invariant(_points != null);
-			Contract.Invariant(_triangles != null);
-		}
 
 		public void AddPoint(double x, double y, double z)
 		{
@@ -55,8 +47,9 @@ namespace TUGraz.VectoCore.Utils
 			var superTriangle = new Triangle(new Point(max, 0), new Point(0, max), new Point(-max, -max));
 			var triangles = new List<Triangle> { superTriangle };
 
+			// iteratively add each point into the correct triangle and split up the triangle
 			foreach (var point in _points) {
-				// If the actual vertex lies inside a triangle, the edges of the triangle are 
+				// If the vertex lies inside a triangle, the edges of the triangle are 
 				// added to the edge buffer and the triangle is removed from list.
 				var containerTriangles = triangles.FindAll(t => t.ContainsInCircumcircle(point));
 				triangles.RemoveAll(t => t.ContainsInCircumcircle(point));
@@ -90,6 +83,14 @@ namespace TUGraz.VectoCore.Utils
 
 			var plane = new Plane(tr);
 			return (plane.W - plane.X * x - plane.Y * y) / plane.Z;
+		}
+
+		public DelauneyMap CreateInvertedMap()
+		{
+			var reverted = new DelauneyMap();
+			reverted._points.AddRange(_points.Select(p=>new Point(p.X, p.Z, p.Y)));
+			reverted.Triangulate();
+			return reverted;
 		}
 
 		#region Equality members

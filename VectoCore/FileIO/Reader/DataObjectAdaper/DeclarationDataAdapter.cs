@@ -18,6 +18,7 @@ using System;
 using System.Collections.Generic;
 using System.IO;
 using System.Linq;
+using System.Windows.Forms;
 using TUGraz.VectoCore.Configuration;
 using TUGraz.VectoCore.Exceptions;
 using TUGraz.VectoCore.FileIO.DeclarationFile;
@@ -59,11 +60,11 @@ namespace TUGraz.VectoCore.FileIO.Reader.DataObjectAdaper
 			throw new VectoException("Unsupported EngineData File Instance");
 		}
 
-		public override GearboxData CreateGearboxData(VectoGearboxFile gearbox, CombustionEngineData engine)
+		public override GearboxData CreateGearboxData(VectoGearboxFile gearbox, CombustionEngineData engineData)
 		{
 			var fileV5Decl = gearbox as GearboxFileV5Declaration;
 			if (fileV5Decl != null) {
-				return CreateGearboxData(fileV5Decl, engine);
+				return CreateGearboxData(fileV5Decl, engineData);
 			}
 			throw new VectoException("Unsupported GearboxData File Instance");
 		}
@@ -176,7 +177,7 @@ namespace TUGraz.VectoCore.FileIO.Reader.DataObjectAdaper
 			return retVal;
 		}
 
-		internal GearboxData CreateGearboxData(GearboxFileV5Declaration gearbox, CombustionEngineData engine)
+		internal GearboxData CreateGearboxData(GearboxFileV5Declaration gearbox, CombustionEngineData engineData)
 		{
 			var retVal = SetCommonGearboxData(gearbox.Body);
 			switch (retVal.Type) {
@@ -219,27 +220,49 @@ namespace TUGraz.VectoCore.FileIO.Reader.DataObjectAdaper
 					gear.Ratio,
 					string.Format("Gear {0}", i));
 				var gearFullLoad = (string.IsNullOrWhiteSpace(gear.FullLoadCurve) || gear.FullLoadCurve == "<NOFILE>")
-					? engine.FullLoadCurve
+					? engineData.FullLoadCurve
 					: FullLoadCurve.ReadFromFile(Path.Combine(gearbox.BasePath, gear.FullLoadCurve));
 
-				var fullLoadCurve = IntersectFullLoadCurves(engine.FullLoadCurve, gearFullLoad);
-				var shiftPolygon = DeclarationData.Gearbox.ComputeShiftPolygon(fullLoadCurve, engine.IdleSpeed);
+				var fullLoadCurve = IntersectFullLoadCurves(engineData.FullLoadCurve, gearFullLoad);
+				var shiftPolygon = DeclarationData.Gearbox.ComputeShiftPolygon(fullLoadCurve, engineData.IdleSpeed);
 				return new KeyValuePair<uint, GearData>((uint)i + 1,
 					new GearData {
 						LossMap = gearLossMap,
 						ShiftPolygon = shiftPolygon,
-						FullLoadCurve = gearFullLoad ?? engine.FullLoadCurve,
+						FullLoadCurve = gearFullLoad ?? engineData.FullLoadCurve,
 						Ratio = gear.Ratio,
 						TorqueConverterActive = false
 					});
 			}).ToDictionary(kv => kv.Key, kv => kv.Value);
+
+			CheckLossMapRangeForFullLoadCurves(retVal, engineData);
 			return retVal;
+		}
+
+		private void CheckLossMapRangeForFullLoadCurves(GearboxData gearboxData, CombustionEngineData engineData)
+		{
+			foreach (var gear in gearboxData.Gears) {
+				for (var angularSpeed = engineData.IdleSpeed;
+					angularSpeed < engineData.FullLoadCurve.RatedSpeed;
+					angularSpeed += 2.0 / 3.0 * (engineData.FullLoadCurve.RatedSpeed - engineData.IdleSpeed) / 10.0) {
+					for (var inTorque = engineData.FullLoadCurve.FullLoadStationaryTorque(angularSpeed) / 3;
+						inTorque < engineData.FullLoadCurve.FullLoadStationaryPower(angularSpeed);
+						inTorque += 2.0 / 3.0 * engineData.FullLoadCurve.FullLoadStationaryTorque(angularSpeed) / 10.0) {
+
+						var outTorque = gear.Value.LossMap.OutTorque(angularSpeed, inTorque);
+
+						// todo: additionally test axle gear! with gear-ratio and loss
+						// todo: test retarder with gear-ratio and loss
+						
+					}
+				}
+			}
 		}
 
 		/// <summary>
 		///     Intersects full load curves.
 		/// </summary>
-		/// <param name="engineCurve">engine's full-load curve</param>
+		/// <param name="engineCurve">engineData's full-load curve</param>
 		/// <param name="gearCurve">gearbox' full-load curve for a certain gear</param>
 		/// <returns>A combined EngineFullLoadCurve with the minimum full load torque over all inputs curves.</returns>
 		private static EngineFullLoadCurve IntersectFullLoadCurves(EngineFullLoadCurve engineCurve,

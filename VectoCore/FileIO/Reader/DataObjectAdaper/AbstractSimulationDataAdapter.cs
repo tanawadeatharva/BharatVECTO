@@ -29,7 +29,7 @@ namespace TUGraz.VectoCore.FileIO.Reader.DataObjectAdaper
 		public abstract VehicleData CreateVehicleData(VectoVehicleFile vehicle, Mission mission, Kilogram loading);
 		public abstract VehicleData CreateVehicleData(VectoVehicleFile vehicle);
 		public abstract CombustionEngineData CreateEngineData(VectoEngineFile engine);
-		public abstract GearboxData CreateGearboxData(VectoGearboxFile gearbox, CombustionEngineData engine);
+		public abstract GearboxData CreateGearboxData(VectoGearboxFile gearbox, CombustionEngineData engineData);
 		// =========================
 
 		internal VehicleData SetCommonVehicleData(VehicleFileV7Declaration.DataBodyDecl data, string basePath)

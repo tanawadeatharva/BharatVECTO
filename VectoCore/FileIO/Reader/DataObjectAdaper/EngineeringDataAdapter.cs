@@ -54,11 +54,11 @@ namespace TUGraz.VectoCore.FileIO.Reader.DataObjectAdaper
 			throw new VectoException("Unsupported EngineData File Instance");
 		}
 
-		public override GearboxData CreateGearboxData(VectoGearboxFile gearbox, CombustionEngineData engine)
+		public override GearboxData CreateGearboxData(VectoGearboxFile gearbox, CombustionEngineData engineData)
 		{
 			var fileV5Eng = gearbox as GearboxFileV5Engineering;
 			if (fileV5Eng != null) {
-				return CreateGearboxData(fileV5Eng, engine);
+				return CreateGearboxData(fileV5Eng, engineData);
 			}
 			throw new VectoException("Unsupported GearboxData File Instance");
 		}
