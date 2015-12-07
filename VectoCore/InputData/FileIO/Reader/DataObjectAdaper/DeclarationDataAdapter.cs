@@ -15,65 +15,15 @@ namespace TUGraz.VectoCore.InputData.FileIO.Reader.DataObjectAdaper
 {
 	public class DeclarationDataAdapter : AbstractSimulationDataAdapter
 	{
-		internal override VehicleData CreateVehicleData(IVehicleInputData vehicle, Mission mission, Kilogram loading)
+		public DriverData CreateDriverData(IDriverInputData data)
 		{
-			var fileV5Decl = vehicle as VehicleFileV7Declaration;
-			if (fileV5Decl != null) {
-				return CreateVehicleData(fileV5Decl, mission, loading);
-			}
-			throw new VectoException("Unsupported VehicleData File Instance");
-		}
-
-		internal override VehicleData CreateVehicleData(IVehicleInputData vehicle)
-		{
-			var fileV7Decl = vehicle as VehicleFileV7Declaration;
-			if (fileV7Decl != null) {
-				return SetCommonVehicleData(fileV7Decl.Body, fileV7Decl.BasePath);
-			}
-			throw new VectoException("Mission Data and loading required in DeclarationMode");
-		}
-
-		internal override CombustionEngineData CreateEngineData(IEngineInputData engine)
-		{
-			var fileV2Decl = engine as EngineFileV3Declaration;
-			if (fileV2Decl != null) {
-				return CreateEngineData(fileV2Decl);
-			}
-			throw new VectoException("Unsupported EngineData File Instance");
-		}
-
-		internal override GearboxData CreateGearboxData(IGearboxInputData gearbox, CombustionEngineData engine)
-		{
-			var fileV5Decl = gearbox as GearboxFileV5Declaration;
-			if (fileV5Decl != null) {
-				return CreateGearboxData(fileV5Decl, engine);
-			}
-			throw new VectoException("Unsupported GearboxData File Instance");
-		}
-
-		internal override DriverData CreateDriverData(IJobInputData job)
-		{
-			var fileV2Decl = job as VectoJobFileV2Declaration;
-			if (fileV2Decl != null) {
-				return CreateDriverData(fileV2Decl);
-			}
-			throw new VectoException("Unsupported Job File Instance");
-		}
-
-		//==========================
-
-
-		public DriverData CreateDriverData(VectoJobFileV2Declaration job)
-		{
-			var data = job.Body;
-
 			var lookAheadData = new DriverData.LACData {
 				Enabled = DeclarationData.Driver.LookAhead.Enabled,
 				Deceleration = DeclarationData.Driver.LookAhead.Deceleration,
 				MinSpeed = DeclarationData.Driver.LookAhead.MinimumSpeed
 			};
 			var overspeedData = new DriverData.OverSpeedEcoRollData {
-				Mode = DriverData.ParseDriverMode(data.OverSpeedEcoRoll.Mode),
+				Mode = data.OverspeedEcoRoll.Mode,
 				MinSpeed = DeclarationData.Driver.OverSpeedEcoRoll.MinSpeed,
 				OverSpeed = DeclarationData.Driver.OverSpeedEcoRoll.OverSpeed,
 				UnderSpeed = DeclarationData.Driver.OverSpeedEcoRoll.UnderSpeed
@@ -97,39 +47,37 @@ namespace TUGraz.VectoCore.InputData.FileIO.Reader.DataObjectAdaper
 		}
 
 
-		internal VehicleData CreateVehicleData(VehicleFileV7Declaration vehicle, Mission mission, Kilogram loading)
+		internal VehicleData CreateVehicleData(IVehicleInputData data, Mission mission, Kilogram loading)
 		{
-			var data = vehicle.Body;
-			var retVal = SetCommonVehicleData(data, vehicle.BasePath);
+			var retVal = SetCommonVehicleData(data);
 
-			retVal.BasePath = vehicle.BasePath;
-
-			retVal.GrossVehicleMassRating = vehicle.Body.GrossVehicleMassRating.SI<Ton>().Cast<Kilogram>();
+			retVal.GrossVehicleMassRating = data.GrossVehicleMassRating;
 
 			retVal.CurbWeigthExtra = mission.MassExtra;
 			retVal.Loading = loading;
 			retVal.DynamicTyreRadius =
-				DeclarationData.DynamicTyreRadius(data.AxleConfig.Axles[DeclarationData.PoweredAxle()].WheelsStr, data.RimStr);
+				DeclarationData.DynamicTyreRadius(data.Axles[DeclarationData.PoweredAxle()].Wheels, data.Rim);
 
 			retVal.CrossWindCorrectionMode = CrossWindCorrectionMode.DeclarationModeCorrection;
 			retVal.AerodynamicDragAera = mission.UseCdA2
-				? data.DragCoefficientRigidTruck.SI<SquareMeter>()
-				: data.DragCoefficient.SI<SquareMeter>();
+				? data.DragCoefficientRigidTruck
+				: data.DragCoefficient;
 
-			if (data.AxleConfig.Axles.Count < mission.AxleWeightDistribution.Length) {
+			var axles = data.Axles;
+			if (axles.Count < mission.AxleWeightDistribution.Length) {
 				throw new VectoException(
 					string.Format("Vehicle does not contain sufficient axles. {0} axles defined, {1} axles required",
-						data.AxleConfig.Axles.Count, mission.AxleWeightDistribution.Count()));
+						axles.Count, mission.AxleWeightDistribution.Count()));
 			}
 			var axleData = new List<Axle>();
 			for (var i = 0; i < mission.AxleWeightDistribution.Length; i++) {
-				var axleInput = data.AxleConfig.Axles[i];
+				var axleInput = axles[i];
 				var axle = new Axle {
 					AxleWeightShare = mission.AxleWeightDistribution[i],
 					TwinTyres = axleInput.TwinTyres,
 					RollResistanceCoefficient = axleInput.RollResistanceCoefficient,
-					TyreTestLoad = axleInput.TyreTestLoad.SI<Newton>(),
-					Inertia = DeclarationData.Wheels.Lookup(axleInput.WheelsStr.Replace(" ", "")).Inertia,
+					TyreTestLoad = axleInput.TyreTestLoad,
+					Inertia = DeclarationData.Wheels.Lookup(axleInput.Wheels.Replace(" ", "")).Inertia,
 				};
 				axleData.Add(axle);
 			}
@@ -145,28 +93,28 @@ namespace TUGraz.VectoCore.InputData.FileIO.Reader.DataObjectAdaper
 			return retVal;
 		}
 
-		internal CombustionEngineData CreateEngineData(EngineFileV3Declaration engine)
+		internal CombustionEngineData CreateEngineData(IEngineInputData engine)
 		{
-			var retVal = SetCommonCombustionEngineData(engine.Body, engine.BasePath);
+			var retVal = SetCommonCombustionEngineData(engine);
 			retVal.Inertia = DeclarationData.Engine.EngineInertia(retVal.Displacement);
-			retVal.FullLoadCurve = EngineFullLoadCurve.ReadFromFile(Path.Combine(engine.BasePath, engine.Body.FullLoadCurve),
-				true);
+			retVal.FullLoadCurve = EngineFullLoadCurve.Create(engine.FullLoadCurve, true);
 			retVal.FullLoadCurve.EngineData = retVal;
 			return retVal;
 		}
 
-		internal GearboxData CreateGearboxData(GearboxFileV5Declaration gearbox, CombustionEngineData engine)
+		internal GearboxData CreateGearboxData(IGearboxInputData gearbox, CombustionEngineData engine)
 		{
-			var retVal = SetCommonGearboxData(gearbox.Body);
+			var retVal = SetCommonGearboxData(gearbox);
 			switch (retVal.Type) {
 				case GearboxType.AT:
 					throw new VectoSimulationException("Automatic Transmission currently not supported in DeclarationMode!");
 				case GearboxType.Custom:
 					throw new VectoSimulationException("Custom Transmission not supported in DeclarationMode!");
 			}
-			if (gearbox.Body.Gears.Count < 2) {
+			var gears = gearbox.Gears;
+			if (gears.Count < 1) {
 				throw new VectoSimulationException(
-					"At least two Gear-Entries must be defined in Gearbox: 1 Axle-Gear and at least 1 Gearbox-Gear!");
+					"At least one Gear-Entry must be defined in Gearbox!");
 			}
 
 			retVal.Inertia = DeclarationData.Gearbox.Inertia.SI<KilogramSquareMeter>();
@@ -182,17 +130,12 @@ namespace TUGraz.VectoCore.InputData.FileIO.Reader.DataObjectAdaper
 
 			retVal.HasTorqueConverter = false;
 
-			var axleGear = gearbox.Body.Gears.First();
-			var axleLossMap = TransmissionLossMap.ReadFromFile(Path.Combine(gearbox.BasePath, axleGear.LossMap), axleGear.Ratio,
-				"AxleGear");
-			retVal.AxleGearData = new GearData { LossMap = axleLossMap, Ratio = axleGear.Ratio, TorqueConverterActive = false };
 
-			retVal.Gears = gearbox.Body.Gears.Skip(1).Select((gear, i) => {
-				var gearLossMap = TransmissionLossMap.ReadFromFile(Path.Combine(gearbox.BasePath, gear.LossMap), gear.Ratio,
-					string.Format("Gear {0}", i));
-				var gearFullLoad = (string.IsNullOrWhiteSpace(gear.FullLoadCurve) || gear.FullLoadCurve == "<NOFILE>")
+			retVal.Gears = gears.Select((gear, i) => {
+				var gearLossMap = TransmissionLossMap.Create(gear.LossMap, gear.Ratio, string.Format("Gear {0}", i + 1));
+				var gearFullLoad = gear.FullLoadCurve == null
 					? engine.FullLoadCurve
-					: FullLoadCurve.ReadFromFile(Path.Combine(gearbox.BasePath, gear.FullLoadCurve));
+					: FullLoadCurve.Create(gear.FullLoadCurve);
 
 				var fullLoadCurve = IntersectFullLoadCurves(engine.FullLoadCurve, gearFullLoad);
 				var shiftPolygon = DeclarationData.Gearbox.ComputeShiftPolygon(fullLoadCurve, engine.IdleSpeed);
@@ -208,34 +151,11 @@ namespace TUGraz.VectoCore.InputData.FileIO.Reader.DataObjectAdaper
 			return retVal;
 		}
 
-		/// <summary>
-		/// Intersects full load curves.
-		/// </summary>
-		/// <param name="curves">full load curves</param>
-		/// <returns>A combined EngineFullLoadCurve with the minimum full load torque over all inputs curves.</returns>
-		private static EngineFullLoadCurve IntersectFullLoadCurves(EngineFullLoadCurve engineCurve, FullLoadCurve gearCurve)
-		{
-			var entries = gearCurve.FullLoadEntries.Concat(engineCurve.FullLoadEntries)
-				.Select(entry => entry.EngineSpeed)
-				.OrderBy(engineSpeed => engineSpeed)
-				.Distinct()
-				.Select(engineSpeed => new FullLoadCurve.FullLoadCurveEntry {
-					EngineSpeed = engineSpeed,
-					TorqueFullLoad =
-						VectoMath.Min(engineCurve.FullLoadStationaryTorque(engineSpeed), gearCurve.FullLoadStationaryTorque(engineSpeed))
-				});
 
-			var flc = new EngineFullLoadCurve {
-				FullLoadEntries = entries.ToList(),
-				EngineData = engineCurve.EngineData,
-				PT1Data = engineCurve.PT1Data
-			};
-			return flc;
-		}
-
-		public IEnumerable<VectoRunData.AuxData> CreateAuxiliaryData(IEnumerable<VectoRunData.AuxData> auxList,
+		public IList<VectoRunData.AuxData> CreateAuxiliaryData(IEnumerable<IAuxiliaryInputData> auxList,
 			MissionType mission, VehicleClass hvdClass)
 		{
+			var retVal = new List<VectoRunData.AuxData>();
 			foreach (var auxData in auxList) {
 				var aux = new VectoRunData.AuxData { DemandType = AuxiliaryDemandType.Constant };
 
@@ -257,12 +177,15 @@ namespace TUGraz.VectoCore.InputData.FileIO.Reader.DataObjectAdaper
 						aux.ID = Constants.Auxiliaries.IDs.PneumaticSystem;
 						break;
 					case AuxiliaryType.ElectricSystem:
-						aux.PowerDemand = DeclarationData.ElectricSystem.Lookup(mission, auxData.TechList);
+						aux.PowerDemand = DeclarationData.ElectricSystem.Lookup(mission, auxData.TechList.ToArray());
 						aux.ID = Constants.Auxiliaries.IDs.ElectricSystem;
 						break;
+					default:
+						continue;
 				}
-				yield return aux;
+				retVal.Add(aux);
 			}
+			return retVal;
 		}
 	}
 }

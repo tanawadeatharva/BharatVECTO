@@ -1,80 +1,106 @@
 ﻿using System;
 using System.IO;
+using System.Linq;
 using TUGraz.VectoCore.InputData.FileIO.DeclarationFile;
 using TUGraz.VectoCore.Models.Declaration;
 using TUGraz.VectoCore.Models.SimulationComponent.Data;
 using TUGraz.VectoCore.Models.SimulationComponent.Data.Engine;
+using TUGraz.VectoCore.Models.SimulationComponent.Data.Gearbox;
 using TUGraz.VectoCore.Utils;
 
 namespace TUGraz.VectoCore.InputData.FileIO.Reader.DataObjectAdaper
 {
 	public abstract class AbstractSimulationDataAdapter
 	{
-		internal abstract VehicleData CreateVehicleData(IVehicleInputData vehicle, Mission mission, Kilogram loading);
-
-		internal abstract VehicleData CreateVehicleData(IVehicleInputData vehicle);
-
-		internal abstract CombustionEngineData CreateEngineData(IEngineInputData engine);
-
-		internal abstract GearboxData CreateGearboxData(IGearboxInputData gearbox, CombustionEngineData engine);
-
-		internal abstract DriverData CreateDriverData(IJobInputData job);
-
 		// =========================
 
-		internal VehicleData SetCommonVehicleData(VehicleFileV7Declaration.DataBodyDecl data, string basePath)
+		internal VehicleData SetCommonVehicleData(IVehicleInputData data)
 		{
 			var retVal = new VehicleData {
 				SavedInDeclarationMode = data.SavedInDeclarationMode,
-				VehicleCategory = data.VehicleCategory(),
-				AxleConfiguration = AxleConfigurationHelper.Parse(data.AxleConfig.TypeStr),
-				CurbWeight = data.CurbWeight.SI<Kilogram>(),
+				VehicleCategory = data.VehicleCategory,
+				AxleConfiguration = data.AxleConfiguration,
+				CurbWeight = data.CurbWeight,
 				//CurbWeigthExtra = data.CurbWeightExtra.SI<Kilogram>(),
 				//Loading = data.Loading.SI<Kilogram>(),
-				GrossVehicleMassRating = data.GrossVehicleMassRating.SI<Ton>().Cast<Kilogram>(),
+				GrossVehicleMassRating = data.GrossVehicleMassRating,
 				//DragCoefficient = data.DragCoefficient,
 				//CrossSectionArea = data.CrossSectionArea.SI<SquareMeter>(),
 				//DragCoefficientRigidTruck = data.DragCoefficientRigidTruck,
 				//CrossSectionAreaRigidTruck = data.CrossSectionAreaRigidTruck.SI<SquareMeter>(),
 				//TyreRadius = data.TyreRadius.SI().Milli.Meter.Cast<Meter>(),
-				Rim = data.RimStr,
+				Rim = data.Rim,
 			};
-
-			var retarder = new RetarderData {
-				Type =
-					(RetarderData.RetarderType)Enum.Parse(typeof(RetarderData.RetarderType), data.Retarder.TypeStr.ToString(), true),
-			};
-			if (retarder.Type == RetarderData.RetarderType.Primary || retarder.Type == RetarderData.RetarderType.Secondary) {
-				retarder.LossMap = RetarderLossMap.ReadFromFile(Path.Combine(basePath, data.Retarder.File));
-				retarder.Ratio = data.Retarder.Ratio;
-			}
-			retVal.Retarder = retarder;
 
 			return retVal;
 		}
 
-		internal CombustionEngineData SetCommonCombustionEngineData(EngineFileV3Declaration.DataBodyDecl data, string basePath)
+		internal RetarderData SetCommonRetarderData(IRetarderInputData data)
+		{
+			var retarder = new RetarderData {
+				Type = data.Type,
+			};
+			if (retarder.Type == RetarderData.RetarderType.Primary || retarder.Type == RetarderData.RetarderType.Secondary) {
+				retarder.LossMap = RetarderLossMap.Create(data.LossMap);
+				retarder.Ratio = data.Ratio;
+			}
+			return retarder;
+		}
+
+		internal CombustionEngineData SetCommonCombustionEngineData(IEngineInputData data)
 		{
 			var retVal = new CombustionEngineData {
 				SavedInDeclarationMode = data.SavedInDeclarationMode,
 				ModelName = data.ModelName,
-				Displacement = data.Displacement.SI().Cubic.Centi.Meter.Cast<CubicMeter>(), // convert vom ccm to m^3
-				IdleSpeed = data.IdleSpeed.RPMtoRad(),
-				ConsumptionMap = FuelConsumptionMap.ReadFromFile(Path.Combine(basePath, data.FuelMap)),
-				WHTCUrban = data.WHTCUrban.SI<KilogramPerWattSecond>(),
-				WHTCMotorway = data.WHTCMotorway.SI<KilogramPerWattSecond>(),
-				WHTCRural = data.WHTCRural.SI<KilogramPerWattSecond>(),
+				Displacement = data.Displacement,
+				IdleSpeed = data.IdleSpeed.Value().RPMtoRad(),
+				ConsumptionMap = FuelConsumptionMap.Create(data.FuelConsumptionMap),
+				WHTCUrban = data.WHTCUrban,
+				WHTCMotorway = data.WHTCMotorway,
+				WHTCRural = data.WHTCRural,
 			};
 			return retVal;
 		}
 
-		internal GearboxData SetCommonGearboxData(GearboxFileV5Declaration.DataBodyDecl data)
+		internal GearboxData SetCommonGearboxData(IGearboxInputData data)
 		{
 			return new GearboxData {
 				SavedInDeclarationMode = data.SavedInDeclarationMode,
 				ModelName = data.ModelName,
-				Type = data.GearboxType.Parse<GearboxType>()
+				Type = data.Type
 			};
+		}
+
+		internal AxleGearData CreateAxleGearData(IAxleGearInputData axleGear)
+		{
+			var axleLossMap = TransmissionLossMap.Create(axleGear.LossMap, axleGear.Ratio, "AxleGear");
+			return new AxleGearData() { LossMap = axleLossMap, Ratio = axleGear.Ratio, TorqueConverterActive = false };
+		}
+
+		/// <summary>
+		/// Intersects full load curves.
+		/// </summary>
+		/// <param name="engineCurve"></param>
+		/// <param name="gearCurve"></param>
+		/// <returns>A combined EngineFullLoadCurve with the minimum full load torque over all inputs curves.</returns>
+		internal static EngineFullLoadCurve IntersectFullLoadCurves(EngineFullLoadCurve engineCurve, FullLoadCurve gearCurve)
+		{
+			var entries = gearCurve.FullLoadEntries.Concat(engineCurve.FullLoadEntries)
+				.Select(entry => entry.EngineSpeed)
+				.OrderBy(engineSpeed => engineSpeed)
+				.Distinct()
+				.Select(engineSpeed => new FullLoadCurve.FullLoadCurveEntry {
+					EngineSpeed = engineSpeed,
+					TorqueFullLoad =
+						VectoMath.Min(engineCurve.FullLoadStationaryTorque(engineSpeed), gearCurve.FullLoadStationaryTorque(engineSpeed))
+				});
+
+			var flc = new EngineFullLoadCurve {
+				FullLoadEntries = entries.ToList(),
+				EngineData = engineCurve.EngineData,
+				PT1Data = engineCurve.PT1Data
+			};
+			return flc;
 		}
 	}
 }

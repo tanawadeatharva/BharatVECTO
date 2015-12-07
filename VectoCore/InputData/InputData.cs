@@ -20,6 +20,8 @@ namespace TUGraz.VectoCore.InputData
 		IList<DataTable> Cycles { get; }
 
 		bool EngineOnlyMode { get; }
+
+		string JobName { get; }
 	}
 
 	public interface IVehicleInputData
@@ -30,11 +32,19 @@ namespace TUGraz.VectoCore.InputData
 
 		Kilogram CurbWeight { get; }
 
+		Kilogram CurbWeightExtra { get; }
+
 		Kilogram GrossVehicleMassRating { get; }
+
+		Kilogram Loading { get; }
+
+		Meter DynamicTyreRadius { get; }
 
 		SquareMeter DragCoefficient { get; }
 
 		SquareMeter DragCoefficientRigidTruck { get; } // without trailer
+
+		CrossWindCorrectionMode CrossWindCorrectionMode { get; }
 
 		string Rim { get; }
 
@@ -121,6 +131,8 @@ namespace TUGraz.VectoCore.InputData
 
 	public interface ITorqueConverterInputData
 	{
+		bool Enabled { get; }
+
 		RoundsPerMinute ReferenceRPM { get; }
 
 		KilogramSquareMeter Inertia { get; }
@@ -187,5 +199,11 @@ namespace TUGraz.VectoCore.InputData
 	public interface IAuxiliaryInputData
 	{
 		bool SavedInDeclarationMode { get; }
+
+		AuxiliaryType Type { get; }
+
+		string Technology { get; }
+
+		IList<string> TechList { get; }
 	}
 }

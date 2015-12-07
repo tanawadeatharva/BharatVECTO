@@ -32,64 +32,64 @@ namespace TUGraz.VectoCore.InputData.FileIO.DeclarationFile
 	///  }
 	/// }
 	/// </code>
-	internal class EngineFileV3Declaration : VectoEngineFile
-	{
-		[JsonProperty(Required = Required.Always)] public JsonDataHeader Header;
-		[JsonProperty(Required = Required.Always)] public DataBodyDecl Body;
+	//internal class EngineFileV3Declaration : VectoEngineFile
+	//{
+	//	[JsonProperty(Required = Required.Always)] public JsonDataHeader Header;
+	//	[JsonProperty(Required = Required.Always)] public DataBodyDecl Body;
 
-		public class DataBodyDecl
-		{
-			[JsonProperty("SavedInDeclMode", Required = Required.Always)] public bool SavedInDeclarationMode;
+	//	public class DataBodyDecl
+	//	{
+	//		[JsonProperty("SavedInDeclMode", Required = Required.Always)] public bool SavedInDeclarationMode;
 
-			/// <summary>
-			///     Model. Free text defining the engine model, type, etc.
-			/// </summary>
-			[JsonProperty(Required = Required.Always)] public string ModelName;
+	//		/// <summary>
+	//		///     Model. Free text defining the engine model, type, etc.
+	//		/// </summary>
+	//		[JsonProperty(Required = Required.Always)] public string ModelName;
 
-			/// <summary>
-			///     [ccm] Displacement in cubic centimeter.
-			///     Used in Declaration Mode to calculate inertia.
-			/// </summary>
-			[JsonProperty(Required = Required.Always)] public double Displacement;
+	//		/// <summary>
+	//		///     [ccm] Displacement in cubic centimeter.
+	//		///     Used in Declaration Mode to calculate inertia.
+	//		/// </summary>
+	//		[JsonProperty(Required = Required.Always)] public double Displacement;
 
-			/// <summary>
-			///     [rpm] Idling Engine Speed
-			///     Low idle, applied in simulation for vehicle standstill in neutral gear position.
-			/// </summary>
-			[JsonProperty("IdlingSpeed", Required = Required.Always)] public double IdleSpeed;
+	//		/// <summary>
+	//		///     [rpm] Idling Engine Speed
+	//		///     Low idle, applied in simulation for vehicle standstill in neutral gear position.
+	//		/// </summary>
+	//		[JsonProperty("IdlingSpeed", Required = Required.Always)] public double IdleSpeed;
 
-			//[JsonProperty(Required = Required.Always)] public IList<DataFullLoadCurve> FullLoadCurves;
-			[JsonProperty(Required = Required.Always)] public string FullLoadCurve;
+	//		//[JsonProperty(Required = Required.Always)] public IList<DataFullLoadCurve> FullLoadCurves;
+	//		[JsonProperty(Required = Required.Always)] public string FullLoadCurve;
 
-			/// <summary>
-			///     The Fuel Consumption Map is used to calculate the base Fuel Consumption (FC) value.
-			/// </summary>
-			[JsonProperty(Required = Required.Always)] public string FuelMap;
+	//		/// <summary>
+	//		///     The Fuel Consumption Map is used to calculate the base Fuel Consumption (FC) value.
+	//		/// </summary>
+	//		[JsonProperty(Required = Required.Always)] public string FuelMap;
 
-			/// <summary>
-			///     [g/kWh] The WHTC test results are required in Declaration Mode for the motorway WHTC FC Correction.
-			/// </summary>
-			[JsonProperty("WHTC-Motorway")] public double WHTCMotorway;
+	//		/// <summary>
+	//		///     [g/kWh] The WHTC test results are required in Declaration Mode for the motorway WHTC FC Correction.
+	//		/// </summary>
+	//		[JsonProperty("WHTC-Motorway")] public double WHTCMotorway;
 
-			/// <summary>
-			///     [g/kWh] The WHTC test results are required in Declaration Mode for the rural WHTC FC Correction.
-			/// </summary>
-			[JsonProperty("WHTC-Rural")] public double WHTCRural;
+	//		/// <summary>
+	//		///     [g/kWh] The WHTC test results are required in Declaration Mode for the rural WHTC FC Correction.
+	//		/// </summary>
+	//		[JsonProperty("WHTC-Rural")] public double WHTCRural;
 
-			/// <summary>
-			///     [g/kWh] The WHTC test results are required in Declaration Mode for the urban WHTC FC Correction.
-			/// </summary>
-			[JsonProperty("WHTC-Urban")] public double WHTCUrban;
+	//		/// <summary>
+	//		///     [g/kWh] The WHTC test results are required in Declaration Mode for the urban WHTC FC Correction.
+	//		/// </summary>
+	//		[JsonProperty("WHTC-Urban")] public double WHTCUrban;
 
-			/// <summary>
-			///     Multiple Full Load and Drag Curves (.vfld) can be defined and assigned to different gears.
-			///     GearData "0" must be assigned for idling and Engine Only Mode.
-			/// </summary>
-			public class DataFullLoadCurve
-			{
-				[JsonProperty(Required = Required.Always)] public string Gears;
-				[JsonProperty(Required = Required.Always)] public string Path;
-			}
-		}
-	}
+	//		/// <summary>
+	//		///     Multiple Full Load and Drag Curves (.vfld) can be defined and assigned to different gears.
+	//		///     GearData "0" must be assigned for idling and Engine Only Mode.
+	//		/// </summary>
+	//		public class DataFullLoadCurve
+	//		{
+	//			[JsonProperty(Required = Required.Always)] public string Gears;
+	//			[JsonProperty(Required = Required.Always)] public string Path;
+	//		}
+	//	}
+	//}
 }

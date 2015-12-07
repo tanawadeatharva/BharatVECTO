@@ -29,9 +29,24 @@ namespace TUGraz.VectoCore.InputData.FileIO.JSON
 			get { return Body[JsonKeys.Vehicle_CurbWeight].Value<double>().SI<Kilogram>(); }
 		}
 
+		public Kilogram CurbWeightExtra
+		{
+			get { return Body[JsonKeys.Vehicle_CurbWeightExtra].Value<double>().SI<Kilogram>(); }
+		}
+
 		public Kilogram GrossVehicleMassRating
 		{
 			get { return Body[JsonKeys.Vehicle_GrossVehicleMassRating].Value<double>().SI<Ton>().Cast<Kilogram>(); }
+		}
+
+		public Kilogram Loading
+		{
+			get { return Body[JsonKeys.Vehicle_Loading].Value<double>().SI<Kilogram>(); }
+		}
+
+		public Meter DynamicTyreRadius
+		{
+			get { return Body[JsonKeys.Vehicle_DynamicTyreRadius].Value<double>().SI().Milli.Meter.Cast<Meter>(); }
 		}
 
 		public SquareMeter DragCoefficient
@@ -42,6 +57,11 @@ namespace TUGraz.VectoCore.InputData.FileIO.JSON
 		public SquareMeter DragCoefficientRigidTruck
 		{
 			get { return Body[JsonKeys.Vehicle_DragCoefficientRigidTruck].Value<double>().SI<SquareMeter>(); }
+		}
+
+		public CrossWindCorrectionMode CrossWindCorrectionMode
+		{
+			get { throw new NotImplementedException(); }
 		}
 
 		public string Rim
@@ -66,11 +86,11 @@ namespace TUGraz.VectoCore.InputData.FileIO.JSON
 				return
 					Body[JsonKeys.Vehicle_AxleConfiguration][JsonKeys.Vehicle_AxleConfiguration_Axles].Select(
 						axle => new JSONAxleInputData() {
-							Inertia = Extensions.Value<double>(axle[JsonKeys.Vehicle_Axles_Inertia]).SI<KilogramSquareMeter>(),
-							Wheels = Extensions.Value<string>(axle[JsonKeys.Vehicle_Axles_Wheels]),
-							TwinTyres = Extensions.Value<bool>(axle[JsonKeys.Vehicle_Axles_TwinTyres]),
-							RollResistanceCoefficient = Extensions.Value<double>(axle[JsonKeys.Vehicle_Axles_RollResistanceCoefficient]),
-							TyreTestLoad = Extensions.Value<double>(axle[JsonKeys.Vehicle_Axles_TyreTestLoad]).SI<Newton>()
+							Inertia = axle[JsonKeys.Vehicle_Axles_Inertia].Value<double>().SI<KilogramSquareMeter>(),
+							Wheels = axle[JsonKeys.Vehicle_Axles_Wheels].Value<string>(),
+							TwinTyres = axle[JsonKeys.Vehicle_Axles_TwinTyres].Value<bool>(),
+							RollResistanceCoefficient = axle[JsonKeys.Vehicle_Axles_RollResistanceCoefficient].Value<double>(),
+							TyreTestLoad = axle[JsonKeys.Vehicle_Axles_TyreTestLoad].Value<double>().SI<Newton>()
 						}).Cast<IAxleInputData>().ToList();
 			}
 		}

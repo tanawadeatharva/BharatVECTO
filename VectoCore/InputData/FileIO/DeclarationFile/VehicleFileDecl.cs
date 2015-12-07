@@ -5,68 +5,68 @@ using TUGraz.VectoCore.Models.Declaration;
 
 namespace TUGraz.VectoCore.InputData.FileIO.DeclarationFile
 {
-	internal class VehicleFileV7Declaration : VectoVehicleFile
-	{
-		[JsonProperty(Required = Required.Always)] public JsonDataHeader Header;
-		[JsonProperty(Required = Required.Always)] public DataBodyDecl Body;
+	//internal class VehicleFileV7Declaration : VectoVehicleFile
+	//{
+	//	[JsonProperty(Required = Required.Always)] public JsonDataHeader Header;
+	//	[JsonProperty(Required = Required.Always)] public DataBodyDecl Body;
 
-		public class DataBodyDecl
-		{
-			[JsonProperty("SavedInDeclMode", Required = Required.Always)] public bool SavedInDeclarationMode;
+	//	public class DataBodyDecl
+	//	{
+	//		[JsonProperty("SavedInDeclMode", Required = Required.Always)] public bool SavedInDeclarationMode;
 
-			[JsonProperty("VehCat", Required = Required.Always)] public string VehicleCategoryStr;
+	//		[JsonProperty("VehCat", Required = Required.Always)] public string VehicleCategoryStr;
 
-			public VehicleCategory VehicleCategory()
-			{
-				return (VehicleCategory)Enum.Parse(typeof(VehicleCategory), VehicleCategoryStr, true);
-			}
+	//		public VehicleCategory VehicleCategory()
+	//		{
+	//			return (VehicleCategory)Enum.Parse(typeof(VehicleCategory), VehicleCategoryStr, true);
+	//		}
 
-			[JsonProperty(Required = Required.Always)] public double CurbWeight;
+	//		[JsonProperty(Required = Required.Always)] public double CurbWeight;
 
-			[JsonProperty("MassMax", Required = Required.Always)] public double GrossVehicleMassRating;
+	//		[JsonProperty("MassMax", Required = Required.Always)] public double GrossVehicleMassRating;
 
-			[JsonProperty("CdA", Required = Required.Always)] public double DragCoefficient;
+	//		[JsonProperty("CdA", Required = Required.Always)] public double DragCoefficient;
 
-			[JsonProperty("CdA2")] public double DragCoefficientRigidTruck; // without trailer
+	//		[JsonProperty("CdA2")] public double DragCoefficientRigidTruck; // without trailer
 
-			[JsonProperty("Rim", Required = Required.Always)] public string RimStr;
+	//		[JsonProperty("Rim", Required = Required.Always)] public string RimStr;
 
-			[JsonProperty("Retarder", Required = Required.Always)] public RetarderData Retarder;
+	//		[JsonProperty("Retarder", Required = Required.Always)] public RetarderData Retarder;
 
-			[JsonProperty(Required = Required.Always)] public AxleConfigData AxleConfig;
+	//		[JsonProperty(Required = Required.Always)] public AxleConfigData AxleConfig;
 
 
-			public class AxleConfigData
-			{
-				[JsonProperty("Type", Required = Required.Always)] public string TypeStr;
-				[JsonProperty(Required = Required.Always)] public IList<AxleDataDecl> Axles;
-			}
+	//		public class AxleConfigData
+	//		{
+	//			[JsonProperty("Type", Required = Required.Always)] public string TypeStr;
+	//			[JsonProperty(Required = Required.Always)] public IList<AxleDataDecl> Axles;
+	//		}
 
-			public class AxleDataDecl
-			{
-				//[JsonProperty]
-				//public double Inertia;
-				[JsonProperty("Wheels", Required = Required.Always)] public string WheelsStr;
-				//[JsonProperty(Required = Required.Always)]
-				//public double AxleWeightShare;
-				[JsonProperty(Required = Required.Always)] public bool TwinTyres;
-				[JsonProperty("RRCISO", Required = Required.Always)] public double RollResistanceCoefficient;
-				[JsonProperty("FzISO", Required = Required.Always)] public double TyreTestLoad;
+	//		public class AxleDataDecl
+	//		{
+	//			//[JsonProperty]
+	//			//public double Inertia;
+	//			[JsonProperty("Wheels", Required = Required.Always)] public string WheelsStr;
+	//			//[JsonProperty(Required = Required.Always)]
+	//			//public double AxleWeightShare;
+	//			[JsonProperty(Required = Required.Always)] public bool TwinTyres;
+	//			[JsonProperty("RRCISO", Required = Required.Always)] public double RollResistanceCoefficient;
+	//			[JsonProperty("FzISO", Required = Required.Always)] public double TyreTestLoad;
 
-				[JsonProperty] public double Inertia;
-				[JsonProperty] public double AxleWeightShare;
-			}
+	//			[JsonProperty] public double Inertia;
+	//			[JsonProperty] public double AxleWeightShare;
+	//		}
 
-			public class RetarderData
-			{
-				[JsonProperty("Type", Required = Required.Always)] public string TypeStr;
+	//		public class RetarderData
+	//		{
+	//			[JsonProperty("Type", Required = Required.Always)] public string TypeStr;
 
-				[JsonProperty] public double Ratio;
+	//			[JsonProperty] public double Ratio;
 
-				[JsonProperty] public string File;
-			}
-		}
-	}
+	//			[JsonProperty] public string File;
+	//		}
+	//	}
+	//}
 
 //	}
 }

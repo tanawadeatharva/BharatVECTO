@@ -3,42 +3,42 @@ using TUGraz.VectoCore.InputData.FileIO.DeclarationFile;
 
 namespace TUGraz.VectoCore.InputData.FileIO.EngineeringFile
 {
-	internal class VehicleFileV7Engineering : VehicleFileV7Declaration
-	{
-		[JsonProperty(Required = Required.Always)] public new DataBodyEng Body;
+	//internal class VehicleFileV7Engineering : VehicleFileV7Declaration
+	//{
+	//	[JsonProperty(Required = Required.Always)] public new DataBodyEng Body;
 
 
-		internal class DataBodyEng : DataBodyDecl
-		{
-			[JsonProperty] public double CurbWeightExtra;
+	//	internal class DataBodyEng : DataBodyDecl
+	//	{
+	//		[JsonProperty] public double CurbWeightExtra;
 
-			[JsonProperty] public double Loading;
-
-
-			[JsonProperty("rdyn")] public double DynamicTyreRadius;
+	//		[JsonProperty] public double Loading;
 
 
-			[JsonProperty("CdCorrMode")] public string CrossWindCorrectionModeStr;
-
-			[JsonProperty("CdCorrFile")] public string CrossWindCorrectionFile;
+	//		[JsonProperty("rdyn")] public double DynamicTyreRadius;
 
 
-			//[JsonProperty(Required = Required.Always)] public new AxleConfigData AxleConfig;
+	//		[JsonProperty("CdCorrMode")] public string CrossWindCorrectionModeStr;
+
+	//		[JsonProperty("CdCorrFile")] public string CrossWindCorrectionFile;
 
 
-			//public new class AxleConfigData
-			//{
-			//	[JsonProperty("Type", Required = Required.Always)] public string TypeStr;
-			//	[JsonProperty(Required = Required.Always)] public IList<AxleDataEng> Axles;
-			//}
+	//		//[JsonProperty(Required = Required.Always)] public new AxleConfigData AxleConfig;
 
-			//public class AxleDataEng : AxleDataDecl
-			//{
-			//	[JsonProperty] public double Inertia;
-			//	[JsonProperty] public double AxleWeightShare;
-			//}
-		}
-	}
+
+	//		//public new class AxleConfigData
+	//		//{
+	//		//	[JsonProperty("Type", Required = Required.Always)] public string TypeStr;
+	//		//	[JsonProperty(Required = Required.Always)] public IList<AxleDataEng> Axles;
+	//		//}
+
+	//		//public class AxleDataEng : AxleDataDecl
+	//		//{
+	//		//	[JsonProperty] public double Inertia;
+	//		//	[JsonProperty] public double AxleWeightShare;
+	//		//}
+	//	}
+	//}
 }
 
 //}

@@ -263,4 +263,55 @@
 	<data name="Engine_FuelConsumptionMap" xml:space="preserve">
     <value>FuelMap</value>
   </data>
+	<data name="Job_Cycles" xml:space="preserve">
+    <value>Cycles</value>
+  </data>
+	<data name="Job_EngineOnlyMode" xml:space="preserve">
+    <value>EngineOnlyMode</value>
+  </data>
+	<data name="DriverData_StartStop" xml:space="preserve">
+    <value>StartStop</value>
+  </data>
+	<data name="DriverData_StartStop_Enabled" xml:space="preserve">
+    <value>Enabled</value>
+  </data>
+	<data name="DriverData_StartStop_Delay" xml:space="preserve">
+    <value>Delay</value>
+  </data>
+	<data name="DriverData_StartStop_MaxSpeed" xml:space="preserve">
+    <value>MaxSpeed</value>
+  </data>
+	<data name="DriverData_StartStop_MinTime" xml:space="preserve">
+    <value>MinTime</value>
+  </data>
+	<data name="DriverData_LookaheadCoasting" xml:space="preserve">
+    <value>LAC</value>
+  </data>
+	<data name="DriverData_Lookahead_Enabled" xml:space="preserve">
+    <value>Enabled</value>
+  </data>
+	<data name="DriverData_Lookahead_Deceleration" xml:space="preserve">
+    <value>Dec</value>
+  </data>
+	<data name="DriverData_Lookahead_MinSpeed" xml:space="preserve">
+    <value>MinSpeed</value>
+  </data>
+	<data name="DriverData_OverspeedEcoRoll" xml:space="preserve">
+    <value>OverspeedEcoRoll</value>
+  </data>
+	<data name="DriverData_OverspeedEcoRoll_Mode" xml:space="preserve">
+    <value>Mode</value>
+  </data>
+	<data name="DriverData_OverspeedEcoRoll_MinSpeed" xml:space="preserve">
+    <value>MinSpeed</value>
+  </data>
+	<data name="DriverData_OverspeedEcoRoll_OverSpeed" xml:space="preserve">
+    <value>OverSpeed</value>
+  </data>
+	<data name="DriverData_OverspeedEcoRoll_UnderSpeed" xml:space="preserve">
+    <value>UnderSpeed</value>
+  </data>
+	<data name="DriverData_AccelerationCurve" xml:space="preserve">
+    <value>VACC</value>
+  </data>
 </root>

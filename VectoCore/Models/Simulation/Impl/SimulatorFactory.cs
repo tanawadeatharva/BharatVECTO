@@ -1,12 +1,14 @@
 using System.Collections.Generic;
 using System.IO;
 using System.Reflection;
+using System.Security.Principal;
 using System.Threading;
 using TUGraz.VectoCore.Configuration;
 using TUGraz.VectoCore.Exceptions;
 using TUGraz.VectoCore.InputData;
 using TUGraz.VectoCore.InputData.FileIO.Reader;
 using TUGraz.VectoCore.InputData.FileIO.Reader.Impl;
+using TUGraz.VectoCore.Models.Declaration;
 using TUGraz.VectoCore.Models.Simulation.Data;
 
 namespace TUGraz.VectoCore.Models.Simulation.Impl
@@ -31,6 +33,9 @@ namespace TUGraz.VectoCore.Models.Simulation.Impl
 			_mode = mode;
 			switch (mode) {
 				case FactoryMode.DeclarationMode:
+					var report = new DeclarationReport(WindowsIdentity.GetCurrent().Name,
+						Path.GetDirectoryName(jobFile), Path.GetFileNameWithoutExtension(jobFile));
+
 					DataReader = new DeclarationModeVectoRunDataFactory();
 					break;
 				case FactoryMode.EngineeringMode:
@@ -62,7 +67,7 @@ namespace TUGraz.VectoCore.Models.Simulation.Impl
 			var i = 0;
 			foreach (var data in DataReader.NextRun()) {
 				var modFileName = Path.Combine(data.BasePath,
-					data.JobFileName.Replace(Constants.FileExtensions.VectoJobFile, "") + "_{0}{1}" +
+					data.JobName.Replace(Constants.FileExtensions.VectoJobFile, "") + "_{0}{1}" +
 					Constants.FileExtensions.ModDataFile);
 				var d = data;
 				IModalDataWriter modWriter =
@@ -71,7 +76,7 @@ namespace TUGraz.VectoCore.Models.Simulation.Impl
 				modWriter.WriteModalResults = WriteModalResults;
 				var builder = new PowertrainBuilder(modWriter,
 					DataReader.IsEngineOnly, (writer, mass, loading) =>
-						SumWriter.Write(d.IsEngineOnly, modWriter, d.JobFileName, string.Format("{0}-{1}", JobNumber, i++),
+						SumWriter.Write(d.IsEngineOnly, modWriter, d.JobName, string.Format("{0}-{1}", JobNumber, i++),
 							d.Cycle.Name + ".vdri",
 							mass, loading));
 
@@ -80,7 +85,7 @@ namespace TUGraz.VectoCore.Models.Simulation.Impl
 					run = new TimeRun(builder.Build(data));
 				} else {
 					var runCaption = string.Format("{0}-{1}-{2}",
-						Path.GetFileNameWithoutExtension(data.JobFileName), data.Cycle.Name, data.ModFileSuffix);
+						Path.GetFileNameWithoutExtension(data.JobName), data.Cycle.Name, data.ModFileSuffix);
 					run = new DistanceRun(runCaption, builder.Build(data));
 				}
 

@@ -121,6 +121,11 @@ namespace TUGraz.VectoCore.InputData.FileIO.JSON
 
 		#region ITorqueConverterInputData
 
+		public bool Enabled
+		{
+			get { throw new System.NotImplementedException(); }
+		}
+
 		public RoundsPerMinute ReferenceRPM
 		{
 			get

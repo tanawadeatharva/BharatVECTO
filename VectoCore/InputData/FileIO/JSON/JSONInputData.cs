@@ -64,9 +64,11 @@ namespace TUGraz.VectoCore.InputData.FileIO.JSON
 
 		protected IRetarderInputData Retarder;
 
+		private string _jobname;
 
 		public JSONInputDataV2(JObject data, string filename) : base(data, filename)
 		{
+			_jobname = filename;
 			Gearbox = JSONInputDataFactory.ReadGearbox(
 				Path.Combine(BasePath, Body[JsonKeys.Vehicle_GearboxFile].Value<string>()));
 			var axleGear = Gearbox as IAxleGearInputData;
@@ -110,7 +112,7 @@ namespace TUGraz.VectoCore.InputData.FileIO.JSON
 			get { return Engine; }
 		}
 
-		public IEnumerable<IAuxiliaryInputData> AuxiliaryInputData()
+		public IList<IAuxiliaryInputData> AuxiliaryInputData()
 		{
 			return null;
 		}
@@ -147,6 +149,11 @@ namespace TUGraz.VectoCore.InputData.FileIO.JSON
 		public bool EngineOnlyMode
 		{
 			get { return Body[JsonKeys.Job_EngineOnlyMode].Value<bool>(); }
+		}
+
+		public string JobName
+		{
+			get { return _jobname; }
 		}
 
 		#endregion

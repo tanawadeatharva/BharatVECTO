@@ -3,18 +3,18 @@ using TUGraz.VectoCore.InputData.FileIO.DeclarationFile;
 
 namespace TUGraz.VectoCore.InputData.FileIO.EngineeringFile
 {
-	internal class EngineFileV3Engineering : EngineFileV3Declaration
-	{
-		[JsonProperty(Required = Required.Always)] public new DataBodyEng Body;
+	//internal class EngineFileV3Engineering : EngineFileV3Declaration
+	//{
+	//	[JsonProperty(Required = Required.Always)] public new DataBodyEng Body;
 
-		public class DataBodyEng : DataBodyDecl
-		{
-			/// <summary>
-			///     [kgm^2] Inertia including Flywheel
-			///     Inertia for rotating parts including engine flywheel.
-			///     In Declaration Mode the inertia is calculated automatically.
-			/// </summary>
-			[JsonProperty(Required = Required.Always)] public double Inertia;
-		}
-	}
+	//	public class DataBodyEng : DataBodyDecl
+	//	{
+	//		/// <summary>
+	//		///     [kgm^2] Inertia including Flywheel
+	//		///     Inertia for rotating parts including engine flywheel.
+	//		///     In Declaration Mode the inertia is calculated automatically.
+	//		/// </summary>
+	//		[JsonProperty(Required = Required.Always)] public double Inertia;
+	//	}
+	//}
 }

@@ -41,12 +41,12 @@ namespace TUGraz.VectoCore.Models.Declaration
 		/// <summary>
 		/// The full load curve.
 		/// </summary>
-		private readonly FullLoadCurve _flc;
+		internal FullLoadCurve Flc { get; set; }
 
 		/// <summary>
 		/// The declaration segment from the segment table
 		/// </summary>
-		private readonly Segment _segment;
+		internal Segment Segment { get; set; }
 
 
 		/// <summary>
@@ -58,32 +58,32 @@ namespace TUGraz.VectoCore.Models.Declaration
 		/// <summary>
 		/// The engine model string from engine file.
 		/// </summary>
-		private readonly string _engineModel;
+		public string EngineModel { get; set; }
 
 		/// <summary>
 		/// The engine description (displacement and max power)
 		/// </summary>
-		private readonly string _engineStr;
+		public string EngineStr { get; set; }
 
 		/// <summary>
 		/// The gearbox model string from gearbox file.
 		/// </summary>
-		private readonly string _gearboxModel;
+		public string GearboxModel { get; set; }
 
 		/// <summary>
 		/// The gearbox description (gear-count and gear type)
 		/// </summary>
-		private readonly string _gearboxStr;
+		public string GearboxStr { get; set; }
 
 		/// <summary>
 		/// The name of the job file (report name will be the same)
 		/// </summary>
-		private readonly string _jobFile;
+		public string JobFile { get; set; }
 
 		/// <summary>
 		/// The result count determines how many results must be given before the report gets written.
 		/// </summary>
-		private readonly int _resultCount;
+		public int ResultCount { get; set; }
 
 		/// <summary>
 		/// The base path of the application
@@ -103,18 +103,19 @@ namespace TUGraz.VectoCore.Models.Declaration
 		/// <param name="basePath">The base path.</param>
 		/// <param name="jobFile">The name of the job file.</param>
 		/// <param name="resultCount">The result count which defines after how many finished results the report gets written.</param>
-		public DeclarationReport(FullLoadCurve flc, Segment segment, string creator, string engineModel, string engineStr,
-			string gearboxModel, string gearboxStr, string basePath, string jobFile, int resultCount)
+//		public DeclarationReport(FullLoadCurve flc, Segment segment, string creator, string engineModel, string engineStr,
+//			string gearboxModel, string gearboxStr, string basePath, string jobFile, int resultCount)
+		public DeclarationReport(string creator, string basePath, string jobFile)
 		{
-			_flc = flc;
-			_segment = segment;
+			//_flc = flc;
+			//_segment = segment;
 			_creator = creator;
-			_engineModel = engineModel;
-			_engineStr = engineStr;
-			_gearboxModel = gearboxModel;
-			_gearboxStr = gearboxStr;
-			_jobFile = jobFile;
-			_resultCount = resultCount;
+			//_engineModel = engineModel;
+			//_engineStr = engineStr;
+			//_gearboxModel = gearboxModel;
+			//_gearboxStr = gearboxStr;
+			JobFile = jobFile;
+			//_resultCount = resultCount;
 			_basePath = basePath;
 		}
 
@@ -137,7 +138,7 @@ namespace TUGraz.VectoCore.Models.Declaration
 				_missions[mission.MissionType].ModData[loadingType] = modData;
 			}
 
-			if (_resultCount == _missions.Sum(v => v.Value.ModData.Count)) {
+			if (ResultCount == _missions.Sum(v => v.Value.ModData.Count)) {
 				WriteReport();
 			}
 		}
@@ -151,7 +152,7 @@ namespace TUGraz.VectoCore.Models.Declaration
 			var titlePage = CreateTitlePage(_missions);
 			var cyclePages = _missions.OrderBy(m => m.Key).Select((m, i) => CreateCyclePage(m.Value, i + 2, _missions.Count + 1));
 
-			MergeDocuments(titlePage, cyclePages, Path.Combine(_basePath, _jobFile + ".pdf"));
+			MergeDocuments(titlePage, cyclePages, Path.Combine(_basePath, JobFile + ".pdf"));
 		}
 
 
@@ -171,18 +172,18 @@ namespace TUGraz.VectoCore.Models.Declaration
 
 			var pdfFields = stamper.AcroFields;
 			pdfFields.SetField("version", System.Reflection.Assembly.GetExecutingAssembly().GetName().Version.ToString());
-			pdfFields.SetField("Job", _jobFile);
+			pdfFields.SetField("Job", JobFile);
 			pdfFields.SetField("Date", DateTime.Now.ToString(CultureInfo.InvariantCulture));
 			pdfFields.SetField("Created", _creator);
 			pdfFields.SetField("Config",
 				string.Format(CultureInfo.InvariantCulture, "{0}t {1} {2}",
-					_segment.GrossVehicleMassRating.ConvertTo().Ton.ToOutputFormat(1),
-					_segment.AxleConfiguration.GetName(), _segment.VehicleCategory));
-			pdfFields.SetField("HDVclass", "HDV Class " + _segment.VehicleClass.GetClassNumber());
-			pdfFields.SetField("Engine", _engineStr);
-			pdfFields.SetField("EngM", _engineModel);
-			pdfFields.SetField("Gearbox", _gearboxStr);
-			pdfFields.SetField("GbxM", _gearboxModel);
+					Segment.GrossVehicleMassRating.ConvertTo().Ton.ToOutputFormat(1),
+					Segment.AxleConfiguration.GetName(), Segment.VehicleCategory));
+			pdfFields.SetField("HDVclass", "HDV Class " + Segment.VehicleClass.GetClassNumber());
+			pdfFields.SetField("Engine", EngineStr);
+			pdfFields.SetField("EngM", EngineModel);
+			pdfFields.SetField("Gearbox", GearboxStr);
+			pdfFields.SetField("GbxM", GearboxModel);
 			pdfFields.SetField("PageNr", string.Format("Page {0} of {1}", 1, missions.Count + 1));
 
 
@@ -222,7 +223,7 @@ namespace TUGraz.VectoCore.Models.Declaration
 			img.SetAbsolutePosition(360, 75);
 			content.AddImage(img);
 
-			img = GetVehicleImage(_segment, MissionType.LongHaul);
+			img = GetVehicleImage(Segment, MissionType.LongHaul);
 			img.ScaleAbsolute(180, 50);
 			img.SetAbsolutePosition(30, 475);
 			content.AddImage(img);
@@ -251,13 +252,13 @@ namespace TUGraz.VectoCore.Models.Declaration
 
 			var pdfFields = stamper.AcroFields;
 			pdfFields.SetField("version", System.Reflection.Assembly.GetExecutingAssembly().GetName().Version.ToString());
-			pdfFields.SetField("Job", _jobFile);
+			pdfFields.SetField("Job", JobFile);
 			pdfFields.SetField("Date", DateTime.Now.ToString(CultureInfo.InvariantCulture));
 			pdfFields.SetField("Created", _creator);
 			pdfFields.SetField("Config",
-				string.Format("{0}t {1} {2}", _segment.GrossVehicleMassRating.ConvertTo().Ton.ToOutputFormat(1),
-					_segment.AxleConfiguration.GetName(), _segment.VehicleCategory));
-			pdfFields.SetField("HDVclass", "HDV Class " + _segment.VehicleClass.GetClassNumber());
+				string.Format("{0}t {1} {2}", Segment.GrossVehicleMassRating.ConvertTo().Ton.ToOutputFormat(1),
+					Segment.AxleConfiguration.GetName(), Segment.VehicleCategory));
+			pdfFields.SetField("HDVclass", "HDV Class " + Segment.VehicleClass.GetClassNumber());
 			pdfFields.SetField("PageNr", string.Format("Page {0} of {1}", currentPageNr, pageCount));
 			pdfFields.SetField("Mission", results.Mission.MissionType.ToString());
 
@@ -286,7 +287,7 @@ namespace TUGraz.VectoCore.Models.Declaration
 
 			var content = stamper.GetOverContent(1);
 
-			var img = GetVehicleImage(_segment, results.Mission.MissionType);
+			var img = GetVehicleImage(Segment, results.Mission.MissionType);
 			img.ScaleAbsolute(180, 50);
 			img.SetAbsolutePosition(600, 475);
 			content.AddImage(img);
@@ -296,7 +297,7 @@ namespace TUGraz.VectoCore.Models.Declaration
 			img.SetAbsolutePosition(17, 270);
 			content.AddImage(img);
 
-			img = Image.GetInstance(DrawOperatingPointsChart(results.ModData[LoadingType.ReferenceLoad], _flc), BaseColor.WHITE);
+			img = Image.GetInstance(DrawOperatingPointsChart(results.ModData[LoadingType.ReferenceLoad], Flc), BaseColor.WHITE);
 			img.ScaleAbsolute(420, 178);
 			img.SetAbsolutePosition(375, 75);
 			content.AddImage(img);

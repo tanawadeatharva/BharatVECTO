@@ -33,9 +33,9 @@ namespace TUGraz.VectoCore.Models.Simulation.Data
 
 		//public OverSpeedEcoRollData OverSpeedEcoRoll { get; internal set; }
 
-		public string JobFileName { get; set; }
+		public string JobName { get; set; }
 
-		public string BasePath { get; set; }
+		//public string BasePath { get; set; }
 		public string ModFileSuffix { get; set; }
 		public DeclarationReport Report { get; set; }
 		public LoadingType Loading { get; set; }

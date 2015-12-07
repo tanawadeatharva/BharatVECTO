@@ -7,7 +7,7 @@ using TUGraz.VectoCore.Models.Simulation.Data;
 
 namespace TUGraz.VectoCore.InputData.FileIO.Reader.Impl
 {
-	public class EngineOnlySimulationDataReader : EngineeringModeSimulationDataReader
+	public class EngineOnlyVectoRunDataFactory : EngineeringModeVectoRunDataFactory
 	{
 		public override IEnumerable<VectoRunData> NextRun()
 		{
@@ -20,7 +20,7 @@ namespace TUGraz.VectoCore.InputData.FileIO.Reader.Impl
 			foreach (var cycle in job.Body.Cycles) {
 				var simulationRunData = new VectoRunData {
 					BasePath = job.BasePath,
-					JobFileName = job.JobFile,
+					JobName = job.JobFile,
 					EngineData = dao.CreateEngineData(Engine),
 					Cycle = DrivingCycleDataReader.ReadFromFileEngineOnly(Path.Combine(job.BasePath, cycle)),
 					IsEngineOnly = IsEngineOnly
@@ -29,16 +29,16 @@ namespace TUGraz.VectoCore.InputData.FileIO.Reader.Impl
 			}
 		}
 
-		protected override void ProcessJob(VectoJobFile vectoJob)
-		{
-			var declaration = vectoJob as VectoJobFileV2Engineering;
-			if (declaration == null) {
-				throw new VectoException("Unhandled Job File Format");
-			}
-			var job = declaration;
+		//protected override void ProcessJob(VectoJobFile vectoJob)
+		//{
+		//	var declaration = vectoJob as VectoJobFileV2Engineering;
+		//	if (declaration == null) {
+		//		throw new VectoException("Unhandled Job File Format");
+		//	}
+		//	var job = declaration;
 
-			Engine = ReadEngine(Path.Combine(job.BasePath, job.Body.EngineFile));
-		}
+		//	Engine = ReadEngine(Path.Combine(job.BasePath, job.Body.EngineFile));
+		//}
 
 		public override bool IsEngineOnly
 		{

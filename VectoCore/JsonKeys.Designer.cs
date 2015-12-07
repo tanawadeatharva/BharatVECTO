@@ -601,6 +601,15 @@ namespace TUGraz.VectoCore {
         }
         
         /// <summary>
+        ///   Looks up a localized string similar to CurbWeightExtra.
+        /// </summary>
+        internal static string Vehicle_CurbWeightExtra {
+            get {
+                return ResourceManager.GetString("Vehicle_CurbWeightExtra", resourceCulture);
+            }
+        }
+        
+        /// <summary>
         ///   Looks up a localized string similar to CdA.
         /// </summary>
         internal static string Vehicle_DragCoefficient {
@@ -615,6 +624,15 @@ namespace TUGraz.VectoCore {
         internal static string Vehicle_DragCoefficientRigidTruck {
             get {
                 return ResourceManager.GetString("Vehicle_DragCoefficientRigidTruck", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to rdyn.
+        /// </summary>
+        internal static string Vehicle_DynamicTyreRadius {
+            get {
+                return ResourceManager.GetString("Vehicle_DynamicTyreRadius", resourceCulture);
             }
         }
         
@@ -642,6 +660,15 @@ namespace TUGraz.VectoCore {
         internal static string Vehicle_GrossVehicleMassRating {
             get {
                 return ResourceManager.GetString("Vehicle_GrossVehicleMassRating", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Loading.
+        /// </summary>
+        internal static string Vehicle_Loading {
+            get {
+                return ResourceManager.GetString("Vehicle_Loading", resourceCulture);
             }
         }
         

@@ -3,21 +3,21 @@ using TUGraz.VectoCore.Models;
 
 namespace TUGraz.VectoCore.InputData.FileIO
 {
-	public class InputFileReader : LoggingObject
-	{
-		protected class VersionInfo
-		{
-			public bool SavedInDeclarationMode;
-			public int Version;
-		}
+	//public class InputFileReader : LoggingObject
+	//{
+	//	//protected class VersionInfo
+	//	//{
+	//	//	public bool SavedInDeclarationMode;
+	//	//	public int Version;
+	//	//}
 
-		protected InputFileReader() {}
+	//	protected InputFileReader() {}
 
-		protected static VersionInfo GetFileVersion(string jsonStr)
-		{
-			var data = new { Header = new { FileVersion = -1 }, Body = new { SavedInDeclMode = false } };
-			data = JsonConvert.DeserializeAnonymousType(jsonStr, data);
-			return new VersionInfo { SavedInDeclarationMode = data.Body.SavedInDeclMode, Version = data.Header.FileVersion };
-		}
-	}
+	//	//protected static VersionInfo GetFileVersion(string jsonStr)
+	//	//{
+	//	//	var data = new { Header = new { FileVersion = -1 }, Body = new { SavedInDeclMode = false } };
+	//	//	data = JsonConvert.DeserializeAnonymousType(jsonStr, data);
+	//	//	return new VersionInfo { SavedInDeclarationMode = data.Body.SavedInDeclMode, Version = data.Header.FileVersion };
+	//	//}
+	//}
 }

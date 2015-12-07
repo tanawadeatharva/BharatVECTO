@@ -119,9 +119,12 @@
     <Compile Include="InputData\FileIO\EngineeringFile\VehicleFileEng.cs" />
     <Compile Include="InputData\FileIO\InputFileReader.cs" />
     <Compile Include="InputData\FileIO\JsonDataHeader.cs" />
-    <Compile Include="InputData\FileIO\JSONInputDataFactory.cs" />
     <Compile Include="InputData\FileIO\JsonInputDataProviderDEPRECATED.cs" />
-    <Compile Include="InputData\FileIO\JSON\JSONInputDataV2.cs" />
+    <Compile Include="InputData\FileIO\JSON\JSONEngineData.cs" />
+    <Compile Include="InputData\FileIO\JSON\JSONGearboxData.cs" />
+    <Compile Include="InputData\FileIO\JSON\JSONInputData.cs" />
+    <Compile Include="InputData\FileIO\JSON\JSONInputDataFactory.cs" />
+    <Compile Include="InputData\FileIO\JSON\JSONVehicleData.cs" />
     <Compile Include="InputData\FileIO\Reader\DataObjectAdaper\AbstractSimulationDataAdapter.cs" />
     <Compile Include="InputData\FileIO\Reader\DataObjectAdaper\DeclarationDataAdapter.cs" />
     <Compile Include="InputData\FileIO\Reader\DataObjectAdaper\EngineeringDataAdapter.cs" />
@@ -155,6 +158,7 @@
     <Compile Include="Models\Declaration\WHTCCorrection.cs" />
     <Compile Include="Models\SimulationComponent\Data\AuxiliaryData.cs" />
     <Compile Include="Models\SimulationComponent\Data\AuxSupplyPowerReader.cs" />
+    <Compile Include="Models\SimulationComponent\Data\AxleGearData.cs" />
     <Compile Include="Models\SimulationComponent\Data\CycleData.cs" />
     <Compile Include="Models\SimulationComponent\Data\AccelerationCurve.cs" />
     <Compile Include="Models\Declaration\DeclarationData.cs" />
@@ -197,6 +201,11 @@
       <AutoGen>True</AutoGen>
       <DesignTime>True</DesignTime>
       <DependentUpon>Version.tt</DependentUpon>
+    </Compile>
+    <Compile Include="JsonKeys.Designer.cs">
+      <AutoGen>True</AutoGen>
+      <DesignTime>True</DesignTime>
+      <DependentUpon>JsonKeys.resx</DependentUpon>
     </Compile>
     <Compile Include="Utils\DataTableExtensionMethods.cs" />
     <Compile Include="Utils\DateTimeFallbackDeserializer.cs" />
@@ -281,6 +290,11 @@
     <EmbeddedResource Include="Properties\Resources.resx">
       <Generator>ResXFileCodeGenerator</Generator>
       <LastGenOutput>Resources.Designer.cs</LastGenOutput>
+    </EmbeddedResource>
+    <EmbeddedResource Include="JsonKeys.resx">
+      <Generator>ResXFileCodeGenerator</Generator>
+      <LastGenOutput>JsonKeys.Designer.cs</LastGenOutput>
+      <SubType>Designer</SubType>
     </EmbeddedResource>
     <EmbeddedResource Include="Resources\Declaration\Rims.csv" />
     <EmbeddedResource Include="Resources\Declaration\Wheels.csv" />
