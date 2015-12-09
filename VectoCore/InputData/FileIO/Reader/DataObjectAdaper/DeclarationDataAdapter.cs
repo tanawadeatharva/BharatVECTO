@@ -17,6 +17,9 @@ namespace TUGraz.VectoCore.InputData.FileIO.Reader.DataObjectAdaper
 	{
 		public DriverData CreateDriverData(IDriverInputData data)
 		{
+			if (!data.SavedInDeclarationMode) {
+				WarnDeclarationMode("DriverData");
+			}
 			var lookAheadData = new DriverData.LACData {
 				Enabled = DeclarationData.Driver.LookAhead.Enabled,
 				Deceleration = DeclarationData.Driver.LookAhead.Deceleration,
@@ -46,9 +49,12 @@ namespace TUGraz.VectoCore.InputData.FileIO.Reader.DataObjectAdaper
 			return retVal;
 		}
 
-
 		internal VehicleData CreateVehicleData(IVehicleInputData data, Mission mission, Kilogram loading)
 		{
+			if (!data.SavedInDeclarationMode) {
+				WarnDeclarationMode("VehicleData");
+			}
+
 			var retVal = SetCommonVehicleData(data);
 
 			retVal.GrossVehicleMassRating = data.GrossVehicleMassRating;
@@ -95,6 +101,10 @@ namespace TUGraz.VectoCore.InputData.FileIO.Reader.DataObjectAdaper
 
 		internal CombustionEngineData CreateEngineData(IEngineInputData engine)
 		{
+			if (!engine.SavedInDeclarationMode) {
+				WarnDeclarationMode("EngineData");
+			}
+
 			var retVal = SetCommonCombustionEngineData(engine);
 			retVal.Inertia = DeclarationData.Engine.EngineInertia(retVal.Displacement);
 			retVal.FullLoadCurve = EngineFullLoadCurve.Create(engine.FullLoadCurve, true);
@@ -104,6 +114,9 @@ namespace TUGraz.VectoCore.InputData.FileIO.Reader.DataObjectAdaper
 
 		internal GearboxData CreateGearboxData(IGearboxInputData gearbox, CombustionEngineData engine)
 		{
+			if (!gearbox.SavedInDeclarationMode) {
+				WarnDeclarationMode("GearboxData");
+			}
 			var retVal = SetCommonGearboxData(gearbox);
 			switch (retVal.Type) {
 				case GearboxType.AT:
@@ -152,11 +165,14 @@ namespace TUGraz.VectoCore.InputData.FileIO.Reader.DataObjectAdaper
 		}
 
 
-		public IList<VectoRunData.AuxData> CreateAuxiliaryData(IEnumerable<IAuxiliaryInputData> auxList,
+		public IList<VectoRunData.AuxData> CreateAuxiliaryData(IAuxiliariesInputData auxInputData,
 			MissionType mission, VehicleClass hvdClass)
 		{
+			if (!auxInputData.SavedInDeclarationMode) {
+				WarnDeclarationMode("AuxiliariesData");
+			}
 			var retVal = new List<VectoRunData.AuxData>();
-			foreach (var auxData in auxList) {
+			foreach (var auxData in auxInputData.Auxiliaries) {
 				var aux = new VectoRunData.AuxData { DemandType = AuxiliaryDemandType.Constant };
 
 				switch (auxData.Type) {
@@ -186,6 +202,11 @@ namespace TUGraz.VectoCore.InputData.FileIO.Reader.DataObjectAdaper
 				retVal.Add(aux);
 			}
 			return retVal;
+		}
+
+		private void WarnDeclarationMode(string inputData)
+		{
+			Log.Warn("{0} not in Declaration Mode!", inputData);
 		}
 	}
 }

@@ -15,9 +15,11 @@ namespace TUGraz.VectoCore.InputData
 {
 	public interface IJobInputData
 	{
+		bool SavedInDeclarationMode { get; }
+
 		IVehicleInputData Vehicle { get; }
 
-		IList<DataTable> Cycles { get; }
+		IList<ICycleData> Cycles { get; }
 
 		bool EngineOnlyMode { get; }
 
@@ -56,6 +58,8 @@ namespace TUGraz.VectoCore.InputData
 
 	public interface IRetarderInputData
 	{
+		bool SavedInDeclarationMode { get; }
+
 		RetarderData.RetarderType Type { get; }
 
 		double Ratio { get; }
@@ -163,8 +167,23 @@ namespace TUGraz.VectoCore.InputData
 		KilogramPerWattSecond WHTCUrban { get; }
 	}
 
+	public interface IAuxiliariesInputData
+	{
+		bool SavedInDeclarationMode { get; }
+
+		IList<IAuxiliaryInputData> Auxiliaries { get; }
+	}
+
+	public interface ICycleData
+	{
+		string Name { get; }
+		DataTable CycleData { get; }
+	}
+
 	public interface IDriverInputData
 	{
+		bool SavedInDeclarationMode { get; }
+
 		IStartStopInputData StartStop { get; }
 		ILookaheadCoastingInputData Lookahead { get; }
 		IOverspeedEcoRollInputData OverspeedEcoRoll { get; }
@@ -195,15 +214,24 @@ namespace TUGraz.VectoCore.InputData
 		Second Delay { get; }
 	}
 
-
 	public interface IAuxiliaryInputData
 	{
 		bool SavedInDeclarationMode { get; }
+
+		string ID { get; }
 
 		AuxiliaryType Type { get; }
 
 		string Technology { get; }
 
 		IList<string> TechList { get; }
+
+		double TransmissionRatio { get; }
+
+		double EfficiencyToEngine { get; }
+
+		double EfficiencyToSupply { get; }
+
+		DataTable DemandMap { get; }
 	}
 }

@@ -8,6 +8,7 @@ using TUGraz.VectoCore.Models.Simulation.Impl;
 using TUGraz.VectoCore.Models.SimulationComponent.Data;
 using TUGraz.VectoCore.Models.SimulationComponent.Data.Gearbox;
 using TUGraz.VectoCore.Models.SimulationComponent.Impl;
+using TUGraz.VectoCore.OutputData;
 using TUGraz.VectoCore.Tests.Utils;
 using TUGraz.VectoCore.Utils;
 using Wheels = TUGraz.VectoCore.Models.SimulationComponent.Impl.Wheels;
@@ -44,10 +45,10 @@ namespace TUGraz.VectoCore.Tests.Integration
 		public static VehicleContainer CreatePowerTrain(DrivingCycleData cycleData, string modFileName, Kilogram massExtra,
 			Kilogram loading, bool overspeed = false)
 		{
-			var modalWriter = new ModalDataWriter(modFileName);
+			var modalWriter = new ModalDataContainer(modFileName);
 			var container = new VehicleContainer(modalWriter);
 
-			var engineData = EngineeringModeSimulationDataReader.CreateEngineDataFromFile(EngineFile);
+			var engineData = MockSimulationDataFactory.CreateEngineDataFromFile(EngineFile);
 			var axleGearData = CreateAxleGearData();
 			var gearboxData = CreateGearboxData(engineData);
 			var vehicleData = CreateVehicleData(massExtra, loading);
@@ -164,7 +165,6 @@ namespace TUGraz.VectoCore.Tests.Integration
 				CurbWeigthExtra = massExtra,
 				Loading = loading,
 				DynamicTyreRadius = 0.4882675.SI<Meter>(),
-				Retarder = new RetarderData { Type = RetarderData.RetarderType.None },
 				AxleData = axles,
 				SavedInDeclarationMode = false,
 			};

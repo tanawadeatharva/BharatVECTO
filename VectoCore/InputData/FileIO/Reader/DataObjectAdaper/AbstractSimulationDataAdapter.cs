@@ -2,6 +2,7 @@
 using System.IO;
 using System.Linq;
 using TUGraz.VectoCore.InputData.FileIO.DeclarationFile;
+using TUGraz.VectoCore.Models;
 using TUGraz.VectoCore.Models.Declaration;
 using TUGraz.VectoCore.Models.SimulationComponent.Data;
 using TUGraz.VectoCore.Models.SimulationComponent.Data.Engine;
@@ -10,7 +11,7 @@ using TUGraz.VectoCore.Utils;
 
 namespace TUGraz.VectoCore.InputData.FileIO.Reader.DataObjectAdaper
 {
-	public abstract class AbstractSimulationDataAdapter
+	public abstract class AbstractSimulationDataAdapter : LoggingObject
 	{
 		// =========================
 

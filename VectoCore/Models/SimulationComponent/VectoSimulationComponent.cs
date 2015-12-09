@@ -2,6 +2,7 @@ using System;
 using TUGraz.VectoCore.Models.Simulation;
 using TUGraz.VectoCore.Models.Simulation.Data;
 using TUGraz.VectoCore.Models.Simulation.DataBus;
+using TUGraz.VectoCore.OutputData;
 
 namespace TUGraz.VectoCore.Models.SimulationComponent
 {
@@ -22,15 +23,15 @@ namespace TUGraz.VectoCore.Models.SimulationComponent
 			dataBus.AddComponent(this);
 		}
 
-		public void CommitSimulationStep(IModalDataWriter writer)
+		public void CommitSimulationStep(IModalDataContainer container)
 		{
-			if (writer != null) {
-				DoWriteModalResults(writer);
+			if (container != null) {
+				DoWriteModalResults(container);
 			}
 			DoCommitSimulationStep();
 		}
 
-		protected abstract void DoWriteModalResults(IModalDataWriter writer);
+		protected abstract void DoWriteModalResults(IModalDataContainer container);
 
 		/// <summary>
 		/// Commits the simulation step.

@@ -19,7 +19,7 @@ namespace TUGraz.VectoCore.Tests.Models.SimulationComponent
 		{
 			var container = new VehicleContainer();
 			//var reader = new EngineeringModeSimulationDataReader();
-			var vehicleData = EngineeringModeSimulationDataReader.CreateVehicleDataFromFile(VehicleDataFile);
+			var vehicleData = MockSimulationDataFactory.CreateVehicleDataFromFile(VehicleDataFile);
 
 			IWheels wheels = new Wheels(container, vehicleData.DynamicTyreRadius);
 			var mockPort = new MockTnOutPort();

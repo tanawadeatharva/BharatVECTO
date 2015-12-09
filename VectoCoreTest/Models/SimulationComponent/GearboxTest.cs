@@ -65,9 +65,9 @@ namespace TUGraz.VectoCore.Tests.Models.SimulationComponent
 		public void AxleGearTest()
 		{
 			var vehicle = new VehicleContainer();
-			var gbxData = EngineeringModeSimulationDataReader.CreateGearboxDataFromFile(GearboxDataFile);
+			var axleGearData = MockSimulationDataFactory.CreateAxleGearDataFromFile(GearboxDataFile);
 			//Gears gearData = new Gears();
-			var axleGear = new AxleGear(vehicle, gbxData.AxleGearData);
+			var axleGear = new AxleGear(vehicle, axleGearData);
 
 			var mockPort = new MockTnOutPort();
 			axleGear.InPort().Connect(mockPort);
@@ -90,9 +90,9 @@ namespace TUGraz.VectoCore.Tests.Models.SimulationComponent
 
 			var loss = 9401.44062.SI<Watt>();
 
-			Assert.AreEqual(Formulas.PowerToTorque(PvD + loss, angSpeed * gbxData.AxleGearData.Ratio).Value(),
+			Assert.AreEqual(Formulas.PowerToTorque(PvD + loss, angSpeed * axleGearData.Ratio).Value(),
 				mockPort.Torque.Value(), 0.01, "Torque Engine Side");
-			Assert.AreEqual((angSpeed * gbxData.AxleGearData.Ratio).Value(), mockPort.AngularVelocity.Value(), 0.01,
+			Assert.AreEqual((angSpeed * axleGearData.Ratio).Value(), mockPort.AngularVelocity.Value(), 0.01,
 				"Torque Engine Side");
 		}
 
@@ -106,14 +106,14 @@ namespace TUGraz.VectoCore.Tests.Models.SimulationComponent
 		{
 			var wrongFile = @"TestData\Components\24t Coach LessThanTwoGears.vgbx";
 			AssertHelper.Exception<VectoSimulationException>(
-				() => DeclarationModeSimulationDataReader.CreateGearboxDataFromFile(wrongFile, EngineDataFile),
+				() => MockSimulationDataFactory.CreateGearboxDataFromFile(wrongFile, EngineDataFile),
 				"At least two Gear-Entries must be defined in Gearbox: 1 Axle-Gear and at least 1 Gearbox-Gear!");
 		}
 
 		[TestMethod]
 		public void Gearbox_LossMapInterpolationFail()
 		{
-			var gearboxData = DeclarationModeSimulationDataReader.CreateGearboxDataFromFile(GearboxDataFile, EngineDataFile);
+			var gearboxData = MockSimulationDataFactory.CreateGearboxDataFromFile(GearboxDataFile, EngineDataFile);
 			var container = new VehicleContainer();
 			var gearbox = new Gearbox(container, gearboxData, new AMTShiftStrategy(gearboxData, container));
 			var driver = new MockDriver(container);
@@ -147,7 +147,7 @@ namespace TUGraz.VectoCore.Tests.Models.SimulationComponent
 		public void Gearbox_IntersectFullLoadCurves()
 		{
 			var container = new VehicleContainer();
-			var gearboxData = DeclarationModeSimulationDataReader.CreateGearboxDataFromFile(GearboxDataFile, EngineDataFile);
+			var gearboxData = MockSimulationDataFactory.CreateGearboxDataFromFile(GearboxDataFile, EngineDataFile);
 			var gearbox = new Gearbox(container, gearboxData, new AMTShiftStrategy(gearboxData, container));
 			var driver = new MockDriver(container);
 
@@ -257,7 +257,7 @@ namespace TUGraz.VectoCore.Tests.Models.SimulationComponent
 		public void Gearbox_ShiftDown()
 		{
 			var container = new VehicleContainer();
-			var gearboxData = DeclarationModeSimulationDataReader.CreateGearboxDataFromFile(GearboxDataFile, EngineDataFile);
+			var gearboxData = MockSimulationDataFactory.CreateGearboxDataFromFile(GearboxDataFile, EngineDataFile);
 			var gearbox = new Gearbox(container, gearboxData, new AMTShiftStrategy(gearboxData, container));
 
 			var driver = new MockDriver(container);
@@ -309,7 +309,7 @@ namespace TUGraz.VectoCore.Tests.Models.SimulationComponent
 		public void Gearbox_ShiftUp()
 		{
 			var container = new VehicleContainer();
-			var gearboxData = DeclarationModeSimulationDataReader.CreateGearboxDataFromFile(GearboxDataFile, EngineDataFile);
+			var gearboxData = MockSimulationDataFactory.CreateGearboxDataFromFile(GearboxDataFile, EngineDataFile);
 			var gearbox = new Gearbox(container, gearboxData, new AMTShiftStrategy(gearboxData, container));
 			var driver = new MockDriver(container);
 			var vehicle = new MockVehicle(container) { MyVehicleSpeed = 10.SI<MeterPerSecond>() };

@@ -1,17 +1,20 @@
 ﻿using System.Collections.Generic;
 using System.Data;
+using System.IO;
 using System.Linq;
 using System.Runtime.CompilerServices;
+using TUGraz.VectoCore.Models;
+using TUGraz.VectoCore.Models.Simulation.Data;
 using TUGraz.VectoCore.Utils;
 
-namespace TUGraz.VectoCore.Models.Simulation.Data
+namespace TUGraz.VectoCore.OutputData
 {
-	public delegate void WriteSumData(IModalDataWriter data, Kilogram vehicleMass, Kilogram loading);
+	public delegate void WriteSumData(IModalDataContainer data, Kilogram vehicleMass, Kilogram loading);
 
 	/// <summary>
 	/// Class for the sum file in vecto.
 	/// </summary>
-	public class SummaryFileWriter : LoggingObject
+	public class SummaryDataContainer : LoggingObject
 	{
 		// ReSharper disable InconsistentNaming
 		private const string JOB = "Job [-]";
@@ -61,20 +64,20 @@ namespace TUGraz.VectoCore.Models.Simulation.Data
 		// ReSharper restore InconsistentNaming
 
 		private readonly DataTable _table;
-		private readonly string _sumFileName;
+		private readonly ISummaryWriter _sumWriter;
 		private bool _engineOnly = true;
 
-		protected SummaryFileWriter() {}
+		protected SummaryDataContainer() {}
 
 		private readonly IList<string> _auxColumns = new List<string>();
 
 		/// <summary>
-		/// Initializes a new instance of the <see cref="SummaryFileWriter"/> class.
+		/// Initializes a new instance of the <see cref="SummaryDataContainer"/> class.
 		/// </summary>
-		/// <param name="sumFileName">Name of the sum file.</param>
-		public SummaryFileWriter(string sumFileName)
+		/// <param name="writer"></param>
+		public SummaryDataContainer(ISummaryWriter writer)
 		{
-			_sumFileName = sumFileName;
+			_sumWriter = writer;
 
 			_table = new DataTable();
 			_table.Columns.Add(JOB, typeof(string));
@@ -90,7 +93,7 @@ namespace TUGraz.VectoCore.Models.Simulation.Data
 			}.Select(x => new DataColumn(x, typeof(SI))).ToArray());
 		}
 
-		public virtual void Write(bool isEngineOnly, IModalDataWriter data, string jobFileName, string jobName,
+		public virtual void Write(bool isEngineOnly, IModalDataContainer data, string jobFileName, string jobName,
 			string cycleFileName,
 			Kilogram vehicleMass, Kilogram vehicleLoading)
 		{
@@ -102,7 +105,7 @@ namespace TUGraz.VectoCore.Models.Simulation.Data
 		}
 
 
-		protected internal void WriteEngineOnly(IModalDataWriter data, string jobFileName, string jobName,
+		protected internal void WriteEngineOnly(IModalDataContainer data, string jobFileName, string jobName,
 			string cycleFileName)
 		{
 			var row = _table.NewRow();
@@ -122,7 +125,7 @@ namespace TUGraz.VectoCore.Models.Simulation.Data
 		}
 
 
-		protected internal void WriteFullPowertrain(IModalDataWriter data, string jobFileName, string jobName,
+		protected internal void WriteFullPowertrain(IModalDataContainer data, string jobFileName, string jobName,
 			string cycleFileName, Kilogram vehicleMass, Kilogram vehicleLoading)
 		{
 			_engineOnly = false;
@@ -181,7 +184,7 @@ namespace TUGraz.VectoCore.Models.Simulation.Data
 		}
 
 		[MethodImpl(MethodImplOptions.Synchronized)]
-		private void WriteAuxiliaries(IModalDataWriter data, DataRow row)
+		private void WriteAuxiliaries(IModalDataContainer data, DataRow row)
 		{
 			foreach (var aux in data.Auxiliaries) {
 				var colName = "Eaux_" + aux.Key + " [kWh]";
@@ -215,7 +218,7 @@ namespace TUGraz.VectoCore.Models.Simulation.Data
 			var sortedAndFilteredTable = new DataView(_table, "", JOB, DataViewRowState.CurrentRows).ToTable(false,
 				dataColumns.ToArray());
 
-			VectoCSVFile.Write(_sumFileName, sortedAndFilteredTable);
+			_sumWriter.WriteSumData(sortedAndFilteredTable);
 		}
 	}
 }

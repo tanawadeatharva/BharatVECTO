@@ -1,6 +1,4 @@
 ﻿using System;
-using iTextSharp.text;
-using iTextSharp.text.pdf;
 using System.Collections.Generic;
 using System.Drawing;
 using System.Drawing.Imaging;
@@ -9,7 +7,10 @@ using System.IO;
 using System.Linq;
 using System.Runtime.CompilerServices;
 using System.Windows.Forms.DataVisualization.Charting;
-using NLog;
+using iTextSharp.text;
+using iTextSharp.text.pdf;
+using Org.BouncyCastle.Crypto.IO;
+using TUGraz.VectoCore.Models.Declaration;
 using TUGraz.VectoCore.Models.Simulation.Data;
 using TUGraz.VectoCore.Models.SimulationComponent.Data;
 using TUGraz.VectoCore.Utils;
@@ -17,7 +18,7 @@ using Font = System.Drawing.Font;
 using Image = iTextSharp.text.Image;
 using Rectangle = System.Drawing.Rectangle;
 
-namespace TUGraz.VectoCore.Models.Declaration
+namespace TUGraz.VectoCore.OutputData.PDF
 {
 	/// <summary>
 	/// Class for creating a declaration report.
@@ -30,7 +31,7 @@ namespace TUGraz.VectoCore.Models.Declaration
 		private class ResultContainer
 		{
 			public Mission Mission;
-			public Dictionary<LoadingType, IModalDataWriter> ModData;
+			public Dictionary<LoadingType, IModalDataContainer> ModData;
 		}
 
 		/// <summary>
@@ -53,6 +54,8 @@ namespace TUGraz.VectoCore.Models.Declaration
 		/// The creator name for the report.
 		/// </summary>
 		private readonly string _creator;
+
+		private IReportWriter _writer;
 
 
 		/// <summary>
@@ -78,7 +81,7 @@ namespace TUGraz.VectoCore.Models.Declaration
 		/// <summary>
 		/// The name of the job file (report name will be the same)
 		/// </summary>
-		public string JobFile { get; set; }
+		public string JobName { get; set; }
 
 		/// <summary>
 		/// The result count determines how many results must be given before the report gets written.
@@ -88,24 +91,15 @@ namespace TUGraz.VectoCore.Models.Declaration
 		/// <summary>
 		/// The base path of the application
 		/// </summary>
-		private readonly string _basePath;
-
 		/// <summary>
 		/// Initializes a new instance of the <see cref="DeclarationReport"/> class.
 		/// </summary>
-		/// <param name="flc">The full load curve.</param>
-		/// <param name="segment">The segment of the current vehicle from the segment table.</param>
 		/// <param name="creator">The creator name.</param>
-		/// <param name="engineModel">The engine model.</param>
-		/// <param name="engineStr">The engine description string.</param>
-		/// <param name="gearboxModel">The gearbox model.</param>
-		/// <param name="gearboxStr">The gearbox description string.</param>
-		/// <param name="basePath">The base path.</param>
-		/// <param name="jobFile">The name of the job file.</param>
-		/// <param name="resultCount">The result count which defines after how many finished results the report gets written.</param>
+		/// <param name="jobName"></param>
+		/// <param name="writer"></param>
 //		public DeclarationReport(FullLoadCurve flc, Segment segment, string creator, string engineModel, string engineStr,
 //			string gearboxModel, string gearboxStr, string basePath, string jobFile, int resultCount)
-		public DeclarationReport(string creator, string basePath, string jobFile)
+		public DeclarationReport(string creator, string jobName, IReportWriter writer)
 		{
 			//_flc = flc;
 			//_segment = segment;
@@ -114,9 +108,10 @@ namespace TUGraz.VectoCore.Models.Declaration
 			//_engineStr = engineStr;
 			//_gearboxModel = gearboxModel;
 			//_gearboxStr = gearboxStr;
-			JobFile = jobFile;
+			JobName = jobName;
 			//_resultCount = resultCount;
-			_basePath = basePath;
+			//_basePath = basePath;
+			_writer = writer;
 		}
 
 
@@ -127,12 +122,12 @@ namespace TUGraz.VectoCore.Models.Declaration
 		/// <param name="mission">The mission.</param>
 		/// <param name="modData">The mod data.</param>
 		[MethodImpl(MethodImplOptions.Synchronized)]
-		public void AddResult(LoadingType loadingType, Mission mission, IModalDataWriter modData)
+		public void AddResult(LoadingType loadingType, Mission mission, IModalDataContainer modData)
 		{
 			if (!_missions.ContainsKey(mission.MissionType)) {
 				_missions[mission.MissionType] = new ResultContainer {
 					Mission = mission,
-					ModData = new Dictionary<LoadingType, IModalDataWriter> { { loadingType, modData } }
+					ModData = new Dictionary<LoadingType, IModalDataContainer> { { loadingType, modData } }
 				};
 			} else {
 				_missions[mission.MissionType].ModData[loadingType] = modData;
@@ -152,7 +147,7 @@ namespace TUGraz.VectoCore.Models.Declaration
 			var titlePage = CreateTitlePage(_missions);
 			var cyclePages = _missions.OrderBy(m => m.Key).Select((m, i) => CreateCyclePage(m.Value, i + 2, _missions.Count + 1));
 
-			MergeDocuments(titlePage, cyclePages, Path.Combine(_basePath, JobFile + ".pdf"));
+			MergeDocuments(titlePage, cyclePages, _writer.WriterStream(ReportType.DeclarationReportPdf));
 		}
 
 
@@ -172,7 +167,7 @@ namespace TUGraz.VectoCore.Models.Declaration
 
 			var pdfFields = stamper.AcroFields;
 			pdfFields.SetField("version", System.Reflection.Assembly.GetExecutingAssembly().GetName().Version.ToString());
-			pdfFields.SetField("Job", JobFile);
+			pdfFields.SetField("Job", JobName);
 			pdfFields.SetField("Date", DateTime.Now.ToString(CultureInfo.InvariantCulture));
 			pdfFields.SetField("Created", _creator);
 			pdfFields.SetField("Config",
@@ -252,7 +247,7 @@ namespace TUGraz.VectoCore.Models.Declaration
 
 			var pdfFields = stamper.AcroFields;
 			pdfFields.SetField("version", System.Reflection.Assembly.GetExecutingAssembly().GetName().Version.ToString());
-			pdfFields.SetField("Job", JobFile);
+			pdfFields.SetField("Job", JobName);
 			pdfFields.SetField("Date", DateTime.Now.ToString(CultureInfo.InvariantCulture));
 			pdfFields.SetField("Created", _creator);
 			pdfFields.SetField("Config",
@@ -314,11 +309,11 @@ namespace TUGraz.VectoCore.Models.Declaration
 		/// </summary>
 		/// <param name="titlePage">The title page.</param>
 		/// <param name="cyclePages">The cycle pages.</param>
-		/// <param name="outputFileName">Name of the output file.</param>
-		private static void MergeDocuments(Stream titlePage, IEnumerable<Stream> cyclePages, string outputFileName)
+		/// <param name="reportWriter"></param>
+		private static void MergeDocuments(Stream titlePage, IEnumerable<Stream> cyclePages, Stream reportWriter)
 		{
 			var document = new Document(PageSize.A4.Rotate(), 12, 12, 12, 12);
-			var writer = PdfWriter.GetInstance(document, new FileStream(outputFileName, FileMode.Create));
+			var writer = PdfWriter.GetInstance(document, reportWriter);
 
 			document.Open();
 
@@ -537,7 +532,7 @@ namespace TUGraz.VectoCore.Models.Declaration
 		/// <param name="modData">The mod data.</param>
 		/// <param name="flc">The FLC.</param>
 		/// <returns></returns>
-		private static Bitmap DrawOperatingPointsChart(IModalDataWriter modData, FullLoadCurve flc)
+		private static Bitmap DrawOperatingPointsChart(IModalDataContainer modData, FullLoadCurve flc)
 		{
 			var operatingPointsChart = new Chart { Width = 1000, Height = 427 };
 			operatingPointsChart.Legends.Add(new Legend("main") {

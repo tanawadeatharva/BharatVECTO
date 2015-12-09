@@ -25,7 +25,7 @@ namespace TUGraz.VectoCore.Tests.Models.SimulationComponent
 			var container = new VehicleContainer();
 
 			//var reader = new EngineeringModeSimulationDataReader();
-			var vehicleData = EngineeringModeSimulationDataReader.CreateVehicleDataFromFile(VehicleDataFileCoach);
+			var vehicleData = MockSimulationDataFactory.CreateVehicleDataFromFile(VehicleDataFileCoach);
 			//VehicleData.ReadFromFile(VehicleDataFile);
 			//vehicleData.CrossWindCorrection = VehicleData.CrossWindCorrectionMode.NoCorrection;
 			var vehicle = new Vehicle(container, vehicleData);
@@ -54,7 +54,7 @@ namespace TUGraz.VectoCore.Tests.Models.SimulationComponent
 		{
 			var container = new VehicleContainer();
 
-			var vehicleData = EngineeringModeSimulationDataReader.CreateVehicleDataFromFile(VehicleDataFileTruck);
+			var vehicleData = MockSimulationDataFactory.CreateVehicleDataFromFile(VehicleDataFileTruck);
 			vehicleData.AerodynamicDragAera = 6.46.SI<SquareMeter>();
 
 			var vehicle = new Vehicle(container, vehicleData);
@@ -115,7 +115,7 @@ namespace TUGraz.VectoCore.Tests.Models.SimulationComponent
 		{
 			var container = new VehicleContainer();
 
-			var vehicleData = EngineeringModeSimulationDataReader.CreateVehicleDataFromFile(VehicleDataFileTruck);
+			var vehicleData = MockSimulationDataFactory.CreateVehicleDataFromFile(VehicleDataFileTruck);
 			vehicleData.AerodynamicDragAera = 6.2985.SI<SquareMeter>();
 			vehicleData.CrossWindCorrectionMode = CrossWindCorrectionMode.DeclarationModeCorrection;
 
@@ -124,7 +124,7 @@ namespace TUGraz.VectoCore.Tests.Models.SimulationComponent
 			var mockPort = new MockFvOutPort();
 			vehicle.InPort().Connect(mockPort);
 
-			var writer = new MockModalDataWriter();
+			var writer = new MockModalDataContainer();
 			vehicle.Initialize(80.KMPHtoMeterPerSecond(), 0.SI<Radian>());
 
 			var absTime = 0.SI<Second>();

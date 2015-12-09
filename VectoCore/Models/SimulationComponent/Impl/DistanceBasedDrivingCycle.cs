@@ -9,6 +9,7 @@ using TUGraz.VectoCore.Models.Simulation;
 using TUGraz.VectoCore.Models.Simulation.Data;
 using TUGraz.VectoCore.Models.Simulation.DataBus;
 using TUGraz.VectoCore.Models.SimulationComponent.Data;
+using TUGraz.VectoCore.OutputData;
 using TUGraz.VectoCore.Utils;
 
 namespace TUGraz.VectoCore.Models.SimulationComponent.Impl
@@ -249,13 +250,13 @@ namespace TUGraz.VectoCore.Models.SimulationComponent.Impl
 
 		#region VectoSimulationComponent
 
-		protected override void DoWriteModalResults(IModalDataWriter writer)
+		protected override void DoWriteModalResults(IModalDataContainer container)
 		{
-			writer[ModalResultField.dist] = CurrentState.Distance;
-			writer[ModalResultField.simulationDistance] = CurrentState.SimulationDistance;
-			writer[ModalResultField.v_targ] = CurrentState.VehicleTargetSpeed;
-			writer[ModalResultField.grad] = (Math.Tan(CurrentState.Gradient.Value()) * 100).SI<Scalar>();
-			writer[ModalResultField.altitude] = CurrentState.Altitude;
+			container[ModalResultField.dist] = CurrentState.Distance;
+			container[ModalResultField.simulationDistance] = CurrentState.SimulationDistance;
+			container[ModalResultField.v_targ] = CurrentState.VehicleTargetSpeed;
+			container[ModalResultField.grad] = (Math.Tan(CurrentState.Gradient.Value()) * 100).SI<Scalar>();
+			container[ModalResultField.altitude] = CurrentState.Altitude;
 		}
 
 		protected override void DoCommitSimulationStep()

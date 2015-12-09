@@ -4,6 +4,7 @@ using TUGraz.VectoCore.Exceptions;
 using TUGraz.VectoCore.Models.Connector.Ports;
 using TUGraz.VectoCore.Models.Connector.Ports.Impl;
 using TUGraz.VectoCore.Models.Simulation.Data;
+using TUGraz.VectoCore.OutputData;
 using TUGraz.VectoCore.Utils;
 
 namespace TUGraz.VectoCore.Models.Simulation.Impl
@@ -17,7 +18,7 @@ namespace TUGraz.VectoCore.Models.Simulation.Impl
 
 		protected Second AbsTime = 0.SI<Second>();
 		protected Second dt = 1.SI<Second>();
-		protected SummaryFileWriter SumWriter { get; set; }
+		protected SummaryDataContainer SumWriter { get; set; }
 		protected string JobFileName { get; set; }
 		protected string JobName { get; set; }
 		protected ISimulationOutPort CyclePort { get; set; }

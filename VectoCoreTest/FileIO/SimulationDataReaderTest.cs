@@ -1,6 +1,7 @@
 ﻿using System.IO;
 using System.Linq;
 using Microsoft.VisualStudio.TestTools.UnitTesting;
+using TUGraz.VectoCore.InputData.FileIO.JSON;
 using TUGraz.VectoCore.InputData.FileIO.Reader.Impl;
 using TUGraz.VectoCore.Models.Declaration;
 using TUGraz.VectoCore.Models.SimulationComponent.Data;
@@ -17,14 +18,15 @@ namespace TUGraz.VectoCore.Tests.FileIO
 		[TestMethod]
 		public void ReadDeclarationJobFile()
 		{
-			var reader = new DeclarationModeSimulationDataReader();
-			reader.SetJobFile(DeclarationJob);
+			var dataProvider = JSONInputDataFactory.ReadJsonJob(DeclarationJob);
+			var reader = new DeclarationModeVectoRunDataFactory(dataProvider, null);
+			//reader.SetJobFile(DeclarationJob);
 
 			var runData = reader.NextRun().First();
 
 			Assert.AreEqual(false, runData.IsEngineOnly);
 
-			Assert.AreEqual(Path.GetFileName(DeclarationJob), runData.JobFileName);
+			Assert.AreEqual(Path.GetFileName(DeclarationJob), runData.JobName);
 			Assert.AreEqual(5850, runData.VehicleData.CurbWeight.Value());
 			Assert.AreEqual(1900, runData.VehicleData.CurbWeigthExtra.Value()); // taken from segmentation table
 			Assert.AreEqual(11900, runData.VehicleData.GrossVehicleMassRating.Value());

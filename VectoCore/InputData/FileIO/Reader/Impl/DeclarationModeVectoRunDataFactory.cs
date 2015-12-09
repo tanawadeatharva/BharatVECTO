@@ -1,17 +1,12 @@
 ﻿using System;
 using System.Collections.Generic;
-using System.IO;
 using System.Linq;
-using System.Security.Principal;
-using Newtonsoft.Json;
-using TUGraz.VectoCore.Exceptions;
-using TUGraz.VectoCore.InputData.FileIO.DeclarationFile;
 using TUGraz.VectoCore.InputData.FileIO.Reader.DataObjectAdaper;
 using TUGraz.VectoCore.Models;
 using TUGraz.VectoCore.Models.Declaration;
 using TUGraz.VectoCore.Models.Simulation.Data;
 using TUGraz.VectoCore.Models.SimulationComponent.Data;
-using TUGraz.VectoCore.Models.SimulationComponent.Impl;
+using TUGraz.VectoCore.OutputData.PDF;
 using TUGraz.VectoCore.Utils;
 
 namespace TUGraz.VectoCore.InputData.FileIO.Reader.Impl
@@ -68,7 +63,9 @@ namespace TUGraz.VectoCore.InputData.FileIO.Reader.Impl
 						VehicleData = dao.CreateVehicleData(InputDataProvider.VehicleInputData, mission, loading.Value),
 						EngineData = engineData,
 						GearboxData = dao.CreateGearboxData(InputDataProvider.GearboxInputData, engineData),
-						Aux = dao.CreateAuxiliaryData(InputDataProvider.AuxiliaryInputData(), mission.MissionType, segment.VehicleClass),
+						Aux =
+							dao.CreateAuxiliaryData(InputDataProvider.AuxiliaryInputData(), mission.MissionType,
+								segment.VehicleClass),
 						Cycle = cycle,
 						DriverData = driverdata,
 						IsEngineOnly = false, // InputDataProvider.JobInputData().EngineOnlyMode,
@@ -101,7 +98,6 @@ namespace TUGraz.VectoCore.InputData.FileIO.Reader.Impl
 			Report.GearboxStr = string.Format("{0}-Speed {1}", gearboxData.Gears.Count, gearboxData.Type);
 			Report.Segment = segment;
 			Report.ResultCount = segment.Missions.Sum(m => m.Loadings.Count);
-			;
 		}
 
 		internal Segment GetVehicleClassification(VehicleCategory category, AxleConfiguration axles, Kilogram grossMassRating,
@@ -236,21 +232,5 @@ namespace TUGraz.VectoCore.InputData.FileIO.Reader.Impl
 		//	{
 		//		get { return false; }
 		//	}
-
-		/// <summary>
-		/// Create gearboxdata instance directly from a file
-		/// </summary>
-		/// <param name="gearBoxFile"></param>
-		/// <param name="engineFile"></param>
-		/// <returns>GearboxData instance</returns>
-		public static GearboxData CreateGearboxDataFromFile(string gearBoxFile, string engineFile)
-		{
-			//var reader = new DeclarationModeVectoRunDataFactory();
-			//var engine = reader.ReadEngine(engineFile);
-			//var gearbox = reader.ReadGearbox(gearBoxFile);
-			//var dao = new DeclarationDataAdapter();
-			//var engineData = dao.CreateEngineData(engine);
-			//return dao.CreateGearboxData(gearbox, engineData);
-		}
 	}
 }

@@ -15,7 +15,7 @@ namespace TUGraz.VectoCore.InputData
 
 		IEngineInputData EngineInputData { get; }
 
-		IList<IAuxiliaryInputData> AuxiliaryInputData();
+		IAuxiliariesInputData AuxiliaryInputData();
 
 		IRetarderInputData RetarderInputData { get; }
 

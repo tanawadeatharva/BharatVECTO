@@ -8,15 +8,19 @@ using TUGraz.VectoCore.Models.Simulation.Data;
 using TUGraz.VectoCore.Models.SimulationComponent.Data;
 using TUGraz.VectoCore.Models.SimulationComponent.Data.Engine;
 using TUGraz.VectoCore.Models.SimulationComponent.Data.Gearbox;
+using TUGraz.VectoCore.OutputData;
 using TUGraz.VectoCore.Utils;
 
 namespace TUGraz.VectoCore.InputData.FileIO.Reader.DataObjectAdaper
 {
 	public class EngineeringDataAdapter : AbstractSimulationDataAdapter
 	{
-		internal VehicleData CreateVehicleData(IVehicleInputData data, Mission mission,
-			Kilogram loading)
+		internal VehicleData CreateVehicleData(IVehicleInputData data)
 		{
+			if (data.SavedInDeclarationMode) {
+				WarnEngineeringMode("VehicleData");
+			}
+
 			var retVal = SetCommonVehicleData(data);
 
 			retVal.CurbWeigthExtra = data.CurbWeightExtra;
@@ -38,8 +42,17 @@ namespace TUGraz.VectoCore.InputData.FileIO.Reader.DataObjectAdaper
 			return retVal;
 		}
 
+		private void WarnEngineeringMode(string msg)
+		{
+			Log.Warn("{0} is in Declaration Mode but is used for Engineering Mode!", msg);
+		}
+
 		internal CombustionEngineData CreateEngineData(IEngineInputData engine)
 		{
+			if (engine.SavedInDeclarationMode) {
+				WarnEngineeringMode("EngineData");
+			}
+
 			var retVal = SetCommonCombustionEngineData(engine);
 			retVal.Inertia = engine.Inertia;
 			retVal.FullLoadCurve = EngineFullLoadCurve.Create(engine.FullLoadCurve);
@@ -49,6 +62,10 @@ namespace TUGraz.VectoCore.InputData.FileIO.Reader.DataObjectAdaper
 
 		internal GearboxData CreateGearboxData(IGearboxInputData gearbox, CombustionEngineData engineData)
 		{
+			if (gearbox.SavedInDeclarationMode) {
+				WarnEngineeringMode("GearboxData");
+			}
+
 			var retVal = SetCommonGearboxData(gearbox);
 
 			var gears = gearbox.Gears;
@@ -92,8 +109,27 @@ namespace TUGraz.VectoCore.InputData.FileIO.Reader.DataObjectAdaper
 			return retVal;
 		}
 
+		public IList<VectoRunData.AuxData> CreateAuxiliaryData(IAuxiliariesInputData auxInputData)
+		{
+			if (auxInputData.SavedInDeclarationMode) {
+				WarnEngineeringMode("AuxData");
+			}
+
+			return auxInputData.Auxiliaries.Select(a => new VectoRunData.AuxData {
+				ID = a.ID,
+				Technology = a.Technology,
+				TechList = a.TechList.DefaultIfNull(Enumerable.Empty<string>()).ToArray(),
+				DemandType = AuxiliaryDemandType.Mapping,
+				Data = new AuxiliaryData(a) //AuxiliaryData.Create(a.DemandMap)
+			}).Concat(new VectoRunData.AuxData { ID = "", DemandType = AuxiliaryDemandType.Direct }.ToEnumerable()).ToList();
+		}
+
 		internal DriverData CreateDriverData(IDriverInputData driver)
 		{
+			if (driver.SavedInDeclarationMode) {
+				WarnEngineeringMode("DriverData");
+			}
+
 			AccelerationCurveData accelerationData = null;
 			if (driver.AccelerationCurve != null) {
 				accelerationData = AccelerationCurveData.Create(driver.AccelerationCurve);

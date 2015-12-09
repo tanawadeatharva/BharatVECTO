@@ -19,7 +19,7 @@ namespace TUGraz.VectoCore.Tests.Models.SimulationComponent
 		public void TestClutch()
 		{
 			var container = new VehicleContainer();
-			var engineData = EngineeringModeSimulationDataReader.CreateEngineDataFromFile(CoachEngine);
+			var engineData = MockSimulationDataFactory.CreateEngineDataFromFile(CoachEngine);
 			var gearbox = new MockGearbox(container);
 
 			var clutch = new Clutch(container, engineData, null);

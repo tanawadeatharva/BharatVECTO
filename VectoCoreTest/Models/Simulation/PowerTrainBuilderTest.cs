@@ -1,5 +1,6 @@
 ﻿using System.Linq;
 using Microsoft.VisualStudio.TestTools.UnitTesting;
+using TUGraz.VectoCore.InputData.FileIO.JSON;
 using TUGraz.VectoCore.InputData.FileIO.Reader.Impl;
 using TUGraz.VectoCore.Models.Connector.Ports;
 using TUGraz.VectoCore.Models.Simulation;
@@ -17,11 +18,11 @@ namespace TUGraz.VectoCore.Tests.Models.Simulation
 		[TestMethod]
 		public void BuildFullPowerTrainTest()
 		{
-			var reader = new EngineeringModeSimulationDataReader();
-			reader.SetJobFile(JobFile);
+			var dataProvider = JSONInputDataFactory.ReadJsonJob(JobFile);
+			var reader = new EngineeringModeVectoRunDataFactory(dataProvider);
 			var runData = reader.NextRun().First();
 
-			var writer = new MockModalDataWriter();
+			var writer = new MockModalDataContainer();
 			var builder = new PowertrainBuilder(writer, false);
 
 			var powerTrain = builder.Build(runData);

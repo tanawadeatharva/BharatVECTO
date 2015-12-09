@@ -150,14 +150,21 @@ namespace TUGraz.VectoCore.Utils
 		/// <param name="table">The Datatable.</param>
 		public static void Write(string fileName, DataTable table)
 		{
-			var sb = new StringBuilder();
+			Write(new StreamWriter(fileName), table);
+		}
 
+		public static void Write(StreamWriter writer, DataTable table)
+		{
+			if (writer == null) {
+				return;
+			}
 			var header = table.Columns.Cast<DataColumn>().Select(col => col.Caption ?? col.ColumnName);
-			sb.AppendLine(string.Join(Delimiter.ToString(), header));
+			writer.WriteLineAsync(string.Join(Delimiter.ToString(), header));
 
 			foreach (DataRow row in table.Rows) {
+				var row1 = row;
 				var formattedList = table.Columns.Cast<DataColumn>().Select(col => {
-					var item = row[col];
+					var item = row1[col];
 					var decimals = (uint?)col.ExtendedProperties["decimals"];
 					var outputFactor = (double?)col.ExtendedProperties["outputFactor"];
 					var showUnit = (bool?)col.ExtendedProperties["showUnit"];
@@ -168,10 +175,8 @@ namespace TUGraz.VectoCore.Utils
 						: string.Format(CultureInfo.InvariantCulture, "{0}", item));
 				});
 
-				sb.AppendLine(string.Join(Delimiter.ToString(), formattedList));
+				writer.WriteLineAsync(string.Join(Delimiter.ToString(), formattedList));
 			}
-
-			File.WriteAllText(fileName, sb.ToString());
 		}
 	}
 }

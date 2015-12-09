@@ -3,8 +3,10 @@ using System.Collections.Generic;
 using System.Data;
 using System.IO;
 using System.Linq;
+using System.Text;
 using Newtonsoft.Json.Linq;
 using TUGraz.VectoCore.Exceptions;
+using TUGraz.VectoCore.InputData.Impl;
 using TUGraz.VectoCore.Models.SimulationComponent.Data;
 using TUGraz.VectoCore.Utils;
 
@@ -52,7 +54,7 @@ namespace TUGraz.VectoCore.InputData.FileIO.JSON
 		}
 	}
 
-	public class JSONInputDataV2 : JSONFile, IInputDataProvider, IJobInputData, IDriverInputData
+	public class JSONInputDataV2 : JSONFile, IInputDataProvider, IJobInputData, IDriverInputData, IAuxiliariesInputData
 	{
 		protected IGearboxInputData Gearbox;
 
@@ -112,9 +114,9 @@ namespace TUGraz.VectoCore.InputData.FileIO.JSON
 			get { return Engine; }
 		}
 
-		public IList<IAuxiliaryInputData> AuxiliaryInputData()
+		public IAuxiliariesInputData AuxiliaryInputData()
 		{
-			return null;
+			return this;
 		}
 
 		public IRetarderInputData RetarderInputData
@@ -136,13 +138,14 @@ namespace TUGraz.VectoCore.InputData.FileIO.JSON
 			get { return VehicleData; }
 		}
 
-		public IList<DataTable> Cycles
+		public IList<ICycleData> Cycles
 		{
 			get
 			{
-				return
-					Body[JsonKeys.Job_Cycles].Select(cycle => VectoCSVFile.Read(Path.Combine(BasePath, cycle.Value<string>())))
-						.ToList();
+				return Body[JsonKeys.Job_Cycles].Select(cycle => new CycleInputData() {
+					Name = cycle.Value<string>(),
+					CycleData = VectoCSVFile.Read(Path.Combine(BasePath, cycle.Value<string>()))
+				}).Cast<ICycleData>().ToList();
 			}
 		}
 
@@ -164,7 +167,7 @@ namespace TUGraz.VectoCore.InputData.FileIO.JSON
 		{
 			get
 			{
-				return new JSONStartStop() {
+				return new StartStopInputData() {
 					Enabled = Body[JsonKeys.DriverData_StartStop][JsonKeys.DriverData_StartStop_Enabled].Value<bool>(),
 					Delay = Body[JsonKeys.DriverData_StartStop][JsonKeys.DriverData_StartStop_Delay].Value<double>().SI<Second>(),
 					MaxSpeed =
@@ -178,7 +181,7 @@ namespace TUGraz.VectoCore.InputData.FileIO.JSON
 		{
 			get
 			{
-				return new JSONLookaheadCoasting() {
+				return new LookAheadCoastingInputData() {
 					Enabled = Body[JsonKeys.DriverData_LookaheadCoasting][JsonKeys.DriverData_Lookahead_Enabled].Value<bool>(),
 					Deceleration =
 						Body[JsonKeys.DriverData_LookaheadCoasting][JsonKeys.DriverData_Lookahead_Deceleration].Value<double>()
@@ -194,7 +197,7 @@ namespace TUGraz.VectoCore.InputData.FileIO.JSON
 		{
 			get
 			{
-				return new JSONOverSpeedEcoRoll() {
+				return new OverSpeedEcoRollInputData() {
 					Mode =
 						DriverData.ParseDriverMode(
 							Body[JsonKeys.DriverData_OverspeedEcoRoll][JsonKeys.DriverData_OverspeedEcoRoll_Mode].Value<string>()),
@@ -217,36 +220,26 @@ namespace TUGraz.VectoCore.InputData.FileIO.JSON
 		}
 
 		#endregion
-	}
 
-	public class JSONStartStop : IStartStopInputData
-	{
-		public bool Enabled { get; internal set; }
-
-		public MeterPerSecond MaxSpeed { get; internal set; }
-
-		public Second MinTime { get; internal set; }
-
-		public Second Delay { get; internal set; }
-	}
-
-	public class JSONLookaheadCoasting : ILookaheadCoastingInputData
-	{
-		public bool Enabled { get; internal set; }
-
-		public MeterPerSquareSecond Deceleration { get; internal set; }
-
-		public MeterPerSecond MinSpeed { get; internal set; }
-	}
-
-	public class JSONOverSpeedEcoRoll : IOverspeedEcoRollInputData
-	{
-		public DriverData.DriverMode Mode { get; internal set; }
-
-		public MeterPerSecond MinSpeed { get; internal set; }
-
-		public MeterPerSecond OverSpeed { get; internal set; }
-
-		public MeterPerSecond UnderSpeed { get; internal set; }
+		public IList<IAuxiliaryInputData> Auxiliaries
+		{
+			get
+			{
+				var retVal = new List<IAuxiliaryInputData>();
+				foreach (var aux in Body["Aux"]) {
+					var auxData = new AuxiliaryDataInputData();
+					var stream = new StreamReader(aux["Path"].Value<string>());
+					stream.ReadLine(); // skip header "Transmission ration to engine rpm [-]"
+					auxData.TransmissionRatio = stream.ReadLine().IndulgentParse();
+					stream.ReadLine(); // skip header "Efficiency to engine [-]"
+					auxData.EfficiencyToEngine = stream.ReadLine().IndulgentParse();
+					stream.ReadLine(); // skip header "Efficiency auxiliary to supply [-]"
+					auxData.EfficiencyToSupply = stream.ReadLine().IndulgentParse();
+					auxData.DemandMap = VectoCSVFile.ReadStream(new MemoryStream(Encoding.UTF8.GetBytes(stream.ReadToEnd())));
+					retVal.Add(auxData);
+				}
+				return retVal;
+			}
+		}
 	}
 }

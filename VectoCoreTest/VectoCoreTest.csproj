@@ -83,6 +83,7 @@
     <Compile Include="Integration\SimulationRuns\FullPowertrain.cs" />
     <Compile Include="Integration\Truck40tPowerTrain.cs" />
     <Compile Include="Models\SimulationComponent\GearboxPowertrainTest.cs" />
+    <Compile Include="Utils\MockSimulationDataFactory.cs" />
     <Compile Include="Utils\Port.cs" />
     <Compile Include="Models\SimulationComponentData\AuxiliaryTypeHelperTest.cs" />
     <Compile Include="Models\Simulation\AuxTests.cs" />
@@ -121,7 +122,7 @@
     <Compile Include="Utils\MockGearbox.cs" />
     <Compile Include="Utils\SITest.cs" />
     <Compile Include="Utils\DelauneyMapTest.cs" />
-    <Compile Include="Utils\MockModalDataWriter.cs" />
+    <Compile Include="Utils\MockModalDataContainer.cs" />
     <Compile Include="Utils\DoubleExtensionMethodTest.cs" />
     <Compile Include="Utils\VectoMathTest.cs" />
   </ItemGroup>

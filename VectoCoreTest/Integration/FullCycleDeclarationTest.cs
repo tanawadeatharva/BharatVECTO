@@ -7,6 +7,7 @@ using TUGraz.VectoCore.Models.Simulation.Data;
 using TUGraz.VectoCore.Models.Simulation.Impl;
 using TUGraz.VectoCore.Models.SimulationComponent.Data;
 using TUGraz.VectoCore.Models.SimulationComponent.Impl;
+using TUGraz.VectoCore.OutputData;
 using TUGraz.VectoCore.Utils;
 
 namespace TUGraz.VectoCore.Tests.Integration
@@ -126,7 +127,7 @@ namespace TUGraz.VectoCore.Tests.Integration
             var factory = new SimulatorFactory(SimulatorFactory.FactoryMode.DeclarationMode, TruckDeclarationJob);
             factory.WriteModalResults = true;
             var sumFileName = Path.GetFileNameWithoutExtension(TruckDeclarationJob) + Constants.FileExtensions.SumFile;
-            var sumWriter = new SummaryFileWriter(sumFileName);
+            var sumWriter = new SummaryDataContainer(sumFileName);
             var jobContainer = new JobContainer(sumWriter);
             jobContainer.AddRuns(factory);
 
@@ -144,7 +145,7 @@ namespace TUGraz.VectoCore.Tests.Integration
             var factory = new SimulatorFactory(SimulatorFactory.FactoryMode.DeclarationMode,
                 @"c:\Users\Technik\Downloads\40t Long Haul Truck\40t_Long_Haul_Truck.vecto");
             factory.WriteModalResults = true;
-            factory.SumWriter = new SummaryFileWriter("Test.vsum");
+            factory.SumData = new SummaryDataContainer("Test.vsum");
             var runs = factory.SimulationRuns().ToArray();
 
             var run = runs[4];
@@ -160,7 +161,7 @@ namespace TUGraz.VectoCore.Tests.Integration
             var factory = new SimulatorFactory(SimulatorFactory.FactoryMode.DeclarationMode,
                 @"c:\Users\Technik\Downloads\12t Delivery Truck\12t Delivery Truck.vecto") {
                     WriteModalResults = true,
-                    SumWriter = new SummaryFileWriter("Test.vsum")
+                    SumData = new SummaryDataContainer("Test.vsum")
                 };
             var runs = factory.SimulationRuns().ToArray();
 
@@ -177,7 +178,7 @@ namespace TUGraz.VectoCore.Tests.Integration
             var factory = new SimulatorFactory(SimulatorFactory.FactoryMode.DeclarationMode,
                 @"c:\Users\Technik\Downloads\12t Delivery Truck\12t Delivery Truck.vecto") {
                     WriteModalResults = true,
-                    SumWriter = new SummaryFileWriter("Test.vsum")
+                    SumData = new SummaryDataContainer("Test.vsum")
                 };
             var runs = factory.SimulationRuns().ToArray();
 

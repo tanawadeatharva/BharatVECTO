@@ -6,6 +6,7 @@ using TUGraz.VectoCore.Models.Simulation.Data;
 using TUGraz.VectoCore.Models.Simulation.DataBus;
 using TUGraz.VectoCore.Models.SimulationComponent;
 using TUGraz.VectoCore.Models.SimulationComponent.Data;
+using TUGraz.VectoCore.OutputData;
 using TUGraz.VectoCore.Utils;
 
 namespace TUGraz.VectoCore.Tests.Utils
@@ -40,12 +41,12 @@ namespace TUGraz.VectoCore.Tests.Utils
 			};
 		}
 
-		protected override void DoWriteModalResults(IModalDataWriter writer)
+		protected override void DoWriteModalResults(IModalDataContainer container)
 		{
-			writer[ModalResultField.dist] = 0.SI<Meter>();
-			writer[ModalResultField.v_targ] = 0.KMPHtoMeterPerSecond();
-			writer[ModalResultField.grad] = 0.SI<Scalar>();
-			writer[ModalResultField.altitude] = 0.SI<Meter>();
+			container[ModalResultField.dist] = 0.SI<Meter>();
+			container[ModalResultField.v_targ] = 0.KMPHtoMeterPerSecond();
+			container[ModalResultField.grad] = 0.SI<Scalar>();
+			container[ModalResultField.altitude] = 0.SI<Meter>();
 		}
 
 		protected override void DoCommitSimulationStep()

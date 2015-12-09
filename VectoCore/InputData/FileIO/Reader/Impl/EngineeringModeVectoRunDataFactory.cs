@@ -1,4 +1,5 @@
-﻿using System.Collections.Generic;
+﻿using System;
+using System.Collections.Generic;
 using System.IO;
 using System.Linq;
 using System.Runtime.CompilerServices;
@@ -19,7 +20,12 @@ namespace TUGraz.VectoCore.InputData.FileIO.Reader.Impl
 	{
 		protected DriverData Driver;
 
-		internal EngineeringModeVectoRunDataFactory() {}
+		protected IInputDataProvider InputDataProvider;
+
+		internal EngineeringModeVectoRunDataFactory(IInputDataProvider dataProvider)
+		{
+			InputDataProvider = dataProvider;
+		}
 
 
 		//protected static void CheckForEngineeringMode(VersionInfo info, string msg)
@@ -90,27 +96,23 @@ namespace TUGraz.VectoCore.InputData.FileIO.Reader.Impl
 		/// <returns>VectoRunData instance for initializing the powertrain.</returns>
 		public IEnumerable<VectoRunData> NextRun()
 		{
-			var job = Job as VectoJobFileV2Engineering;
-			if (job == null) {
-				Log.Warn("Job-file is null or unsupported version");
-				yield break;
-			}
 			var dao = new EngineeringDataAdapter();
-			var driver = dao.CreateDriverData(job);
-			var engineData = dao.CreateEngineData(Engine);
-			foreach (var cycle in job.Body.Cycles) {
+			var driver = dao.CreateDriverData(InputDataProvider.DriverInputData);
+			var engineData = dao.CreateEngineData(InputDataProvider.EngineInputData);
+
+			foreach (var cycle in InputDataProvider.JobInputData().Cycles) {
 				var simulationRunData = new VectoRunData {
-					BasePath = job.BasePath,
-					JobName = job.JobFile,
+					//BasePath = job.BasePath,
+					JobName = InputDataProvider.JobInputData().JobName,
 					EngineData = engineData,
-					GearboxData = dao.CreateGearboxData(Gearbox, engineData),
-					VehicleData = dao.CreateVehicleData(Vehicle),
+					GearboxData = dao.CreateGearboxData(InputDataProvider.GearboxInputData, engineData),
+					VehicleData = dao.CreateVehicleData(InputDataProvider.VehicleInputData),
 					DriverData = driver,
-					Aux = Aux,
+					Aux = dao.CreateAuxiliaryData(InputDataProvider.AuxiliaryInputData()),
 					// TODO: distance or time-based cycle!
 					Cycle =
-						DrivingCycleDataReader.ReadFromFile(Path.Combine(job.BasePath, cycle), CycleType.DistanceBased),
-					IsEngineOnly = IsEngineOnly
+						DrivingCycleDataReader.Create(cycle.CycleData, cycle.Name, CycleType.DistanceBased),
+					IsEngineOnly = InputDataProvider.JobInputData().EngineOnlyMode
 				};
 				yield return simulationRunData;
 			}

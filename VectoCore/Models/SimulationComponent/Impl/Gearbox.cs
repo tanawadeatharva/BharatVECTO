@@ -7,6 +7,7 @@ using TUGraz.VectoCore.Models.Simulation;
 using TUGraz.VectoCore.Models.Simulation.Data;
 using TUGraz.VectoCore.Models.Simulation.DataBus;
 using TUGraz.VectoCore.Models.SimulationComponent.Data;
+using TUGraz.VectoCore.OutputData;
 using TUGraz.VectoCore.Utils;
 
 namespace TUGraz.VectoCore.Models.SimulationComponent.Impl
@@ -358,11 +359,11 @@ namespace TUGraz.VectoCore.Models.SimulationComponent.Impl
 
 		#region VectoSimulationComponent
 
-		protected override void DoWriteModalResults(IModalDataWriter writer)
+		protected override void DoWriteModalResults(IModalDataContainer container)
 		{
-			writer[ModalResultField.Gear] = _disengaged || DataBus.VehicleStopped ? 0 : Gear;
-			writer[ModalResultField.PlossGB] = _powerLoss;
-			writer[ModalResultField.PaGB] = _powerLossInertia;
+			container[ModalResultField.Gear] = _disengaged || DataBus.VehicleStopped ? 0 : Gear;
+			container[ModalResultField.PlossGB] = _powerLoss;
+			container[ModalResultField.PaGB] = _powerLossInertia;
 		}
 
 		protected override void DoCommitSimulationStep()

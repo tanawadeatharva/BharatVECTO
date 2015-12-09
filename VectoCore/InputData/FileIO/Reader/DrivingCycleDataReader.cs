@@ -41,6 +41,14 @@ namespace TUGraz.VectoCore.InputData.FileIO.Reader
 			return retVal;
 		}
 
+
+		public static DrivingCycleData Create(DataTable cycle, string name, CycleType type)
+		{
+			var retVal = DoReadCycleData(type, cycle);
+			retVal.Name = name;
+			return retVal;
+		}
+
 		private static DrivingCycleData DoReadCycleData(CycleType type, DataTable data)
 		{
 			var parser = CreateDataParser(type);

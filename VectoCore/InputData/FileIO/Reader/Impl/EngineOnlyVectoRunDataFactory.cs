@@ -4,25 +4,27 @@ using TUGraz.VectoCore.Exceptions;
 using TUGraz.VectoCore.InputData.FileIO.EngineeringFile;
 using TUGraz.VectoCore.InputData.FileIO.Reader.DataObjectAdaper;
 using TUGraz.VectoCore.Models.Simulation.Data;
+using TUGraz.VectoCore.Models.SimulationComponent.Data;
 
 namespace TUGraz.VectoCore.InputData.FileIO.Reader.Impl
 {
 	public class EngineOnlyVectoRunDataFactory : EngineeringModeVectoRunDataFactory
 	{
-		public override IEnumerable<VectoRunData> NextRun()
+		internal EngineOnlyVectoRunDataFactory(IInputDataProvider dataProvider) : base(dataProvider) {}
+
+		public new IEnumerable<VectoRunData> NextRun()
 		{
-			var job = Job as VectoJobFileV2Engineering;
-			if (job == null) {
-				Log.Warn("Job-file is null or unsupported version");
+			if (InputDataProvider == null) {
+				Log.Warn("No valid data provider given");
 				yield break;
 			}
 			var dao = new EngineeringDataAdapter();
-			foreach (var cycle in job.Body.Cycles) {
+			foreach (var cycle in InputDataProvider.JobInputData().Cycles) {
 				var simulationRunData = new VectoRunData {
-					BasePath = job.BasePath,
-					JobName = job.JobFile,
-					EngineData = dao.CreateEngineData(Engine),
-					Cycle = DrivingCycleDataReader.ReadFromFileEngineOnly(Path.Combine(job.BasePath, cycle)),
+					//BasePath = job.BasePath,
+					JobName = InputDataProvider.JobInputData().JobName,
+					EngineData = dao.CreateEngineData(InputDataProvider.EngineInputData),
+					Cycle = DrivingCycleDataReader.Create(cycle.CycleData, cycle.Name, CycleType.EngineOnly),
 					IsEngineOnly = IsEngineOnly
 				};
 				yield return simulationRunData;
@@ -40,7 +42,7 @@ namespace TUGraz.VectoCore.InputData.FileIO.Reader.Impl
 		//	Engine = ReadEngine(Path.Combine(job.BasePath, job.Body.EngineFile));
 		//}
 
-		public override bool IsEngineOnly
+		public bool IsEngineOnly
 		{
 			get { return true; }
 		}

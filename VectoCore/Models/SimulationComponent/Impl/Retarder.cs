@@ -3,6 +3,7 @@ using TUGraz.VectoCore.Models.Connector.Ports;
 using TUGraz.VectoCore.Models.Simulation;
 using TUGraz.VectoCore.Models.Simulation.Data;
 using TUGraz.VectoCore.Models.SimulationComponent.Data;
+using TUGraz.VectoCore.OutputData;
 using TUGraz.VectoCore.Utils;
 
 namespace TUGraz.VectoCore.Models.SimulationComponent.Impl
@@ -21,9 +22,9 @@ namespace TUGraz.VectoCore.Models.SimulationComponent.Impl
 			_lossMap = lossMap;
 		}
 
-		protected override void DoWriteModalResults(IModalDataWriter writer)
+		protected override void DoWriteModalResults(IModalDataContainer container)
 		{
-			writer[ModalResultField.PlossRetarder] = _retarderLoss;
+			container[ModalResultField.PlossRetarder] = _retarderLoss;
 		}
 
 		protected override void DoCommitSimulationStep() {}

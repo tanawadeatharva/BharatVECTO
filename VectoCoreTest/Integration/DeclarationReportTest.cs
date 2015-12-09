@@ -1,8 +1,11 @@
 ﻿using System.IO;
 using System.Threading;
 using Microsoft.VisualStudio.TestTools.UnitTesting;
+using TUGraz.VectoCore.InputData.FileIO.JSON;
 using TUGraz.VectoCore.Models.Simulation.Data;
 using TUGraz.VectoCore.Models.Simulation.Impl;
+using TUGraz.VectoCore.OutputData;
+using TUGraz.VectoCore.OutputData.FileIO;
 
 namespace TUGraz.VectoCore.Tests.Integration
 {
@@ -20,9 +23,11 @@ namespace TUGraz.VectoCore.Tests.Integration
 				File.Delete("job-report.pdf");
 			}
 
-			var sumWriter = new SummaryFileWriter(@"job-report.vsum");
-			var jobContainer = new JobContainer(sumWriter);
-			var factory = new SimulatorFactory(SimulatorFactory.FactoryMode.DeclarationMode, @"TestData\Jobs\job-report.vecto");
+			var fileWriter = new FileOutputWriter("job-report", "");
+			var sumData = new SummaryDataContainer(fileWriter);
+			var jobContainer = new JobContainer(sumData);
+			var inputData = JSONInputDataFactory.ReadJsonJob(@"TestData\Jobs\job-report.vecto");
+			var factory = new SimulatorFactory(SimulatorFactory.FactoryMode.DeclarationMode, inputData, fileWriter);
 
 			jobContainer.AddRuns(factory);
 			jobContainer.Execute();

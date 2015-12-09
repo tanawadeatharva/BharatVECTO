@@ -1,37 +1,56 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Data;
+using System.IO;
 using System.Linq;
+using TUGraz.VectoCore.Models.Simulation;
+using TUGraz.VectoCore.Models.Simulation.Data;
 using TUGraz.VectoCore.Models.Simulation.Impl;
 using TUGraz.VectoCore.Utils;
 
-namespace TUGraz.VectoCore.Models.Simulation.Data
+namespace TUGraz.VectoCore.OutputData
 {
-	public class ModalDataWriter : IModalDataWriter
+	public class ModalDataContainer : IModalDataContainer
 	{
 		private readonly SimulatorFactory.FactoryMode _mode;
-		private readonly Action<ModalDataWriter> _addReportResult;
+		private readonly Action<ModalDataContainer> _addReportResult;
 		private ModalResults Data { get; set; }
 		private DataRow CurrentRow { get; set; }
-		private string ModFileName { get; set; }
+		//private readonly VectoRunData _runData;
+
+		private readonly IModalDataWriter _writer;
+		private string _runName;
+		private string _cycleName;
+		private string _runSuffix;
 
 		public bool WriteModalResults { get; set; }
 
 		public VectoRun.Status RunStatus { get; protected set; }
 
-		public ModalDataWriter(string modFileName,
-			SimulatorFactory.FactoryMode mode = SimulatorFactory.FactoryMode.EngineeringMode) : this(modFileName, _ => {}, mode) {}
-
-		public ModalDataWriter(string modFileName, Action<ModalDataWriter> addReportResult,
+		public ModalDataContainer(string runName, IModalDataWriter writer,
 			SimulatorFactory.FactoryMode mode = SimulatorFactory.FactoryMode.EngineeringMode)
+			: this(runName, "", "", writer, _ => {}, mode) {}
+
+		public ModalDataContainer(VectoRunData runData, IModalDataWriter writer, Action<ModalDataContainer> addReportResult,
+			SimulatorFactory.FactoryMode mode = SimulatorFactory.FactoryMode.EngineeringMode)
+			: this(runData.JobName, runData.Cycle.Name, runData.ModFileSuffix, writer, addReportResult, mode) {}
+
+		protected ModalDataContainer(string runName, string cycleName, string runSuffix, IModalDataWriter writer,
+			Action<ModalDataContainer> addReportResult, SimulatorFactory.FactoryMode mode)
+
 		{
 			HasTorqueConverter = false;
-			ModFileName = modFileName;
+			_runName = runName;
+			_cycleName = cycleName;
+			_runSuffix = runSuffix;
+			_writer = writer;
+
+			_mode = mode;
+			_addReportResult = addReportResult;
+
 			Data = new ModalResults();
 			Auxiliaries = new Dictionary<string, DataColumn>();
 			CurrentRow = Data.NewRow();
-			_mode = mode;
-			_addReportResult = addReportResult;
 		}
 
 		public bool HasTorqueConverter { get; set; }
@@ -103,7 +122,9 @@ namespace TUGraz.VectoCore.Models.Simulation.Data
 				.Concat(new[] { ModalResultField.FCMap, ModalResultField.FCAUXc, ModalResultField.FCWHTCc }.Select(x => x.GetName()));
 
 			if (_mode != SimulatorFactory.FactoryMode.DeclarationMode || WriteModalResults) {
-				VectoCSVFile.Write(ModFileName, new DataView(Data).ToTable(false, strCols.ToArray()));
+				//VectoCSVFile.Write(_modWriter, new DataView(Data).ToTable(false, strCols.ToArray()));
+				_writer.WriteModData(_runName, _cycleName, _runSuffix,
+					new DataView(Data).ToTable(false, strCols.ToArray()));
 			}
 
 			if (_mode == SimulatorFactory.FactoryMode.DeclarationMode) {

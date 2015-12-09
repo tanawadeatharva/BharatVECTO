@@ -4,6 +4,7 @@ using System.Linq;
 using Microsoft.VisualStudio.TestTools.UnitTesting;
 using NLog;
 using TUGraz.VectoCore.Configuration;
+using TUGraz.VectoCore.InputData.FileIO.JSON;
 using TUGraz.VectoCore.InputData.FileIO.Reader;
 using TUGraz.VectoCore.InputData.FileIO.Reader.Impl;
 using TUGraz.VectoCore.Models.Connector.Ports;
@@ -14,6 +15,8 @@ using TUGraz.VectoCore.Models.Simulation.Impl;
 using TUGraz.VectoCore.Models.SimulationComponent.Data;
 using TUGraz.VectoCore.Models.SimulationComponent.Data.Gearbox;
 using TUGraz.VectoCore.Models.SimulationComponent.Impl;
+using TUGraz.VectoCore.OutputData;
+using TUGraz.VectoCore.OutputData.FileIO;
 using TUGraz.VectoCore.Tests.Utils;
 using TUGraz.VectoCore.Utils;
 using Wheels = TUGraz.VectoCore.Models.SimulationComponent.Impl.Wheels;
@@ -38,10 +41,11 @@ namespace TUGraz.VectoCore.Tests.Integration.SimulationRuns
 		[TestMethod]
 		public void Test_FullPowertrain_SimpleGearbox()
 		{
-			var modalWriter = new ModalDataWriter("Coach_FullPowertrain_SimpleGearbox.vmod");
-			var container = new VehicleContainer(modalWriter);
+			var fileWriter = new FileOutputWriter("Coach_FullPowertrain_SimpleGearbox", "");
+			var modData = new ModalDataContainer("Coach_FullPowertrain_SimpleGearbox", fileWriter);
+			var container = new VehicleContainer(modData);
 
-			var engineData = EngineeringModeSimulationDataReader.CreateEngineDataFromFile(EngineFile);
+			var engineData = MockSimulationDataFactory.CreateEngineDataFromFile(EngineFile);
 			var cycleData = DrivingCycleDataReader.ReadFromFileDistanceBased(CycleFile);
 			var axleGearData = CreateAxleGearData();
 			var gearboxData = CreateSimpleGearboxData();
@@ -84,22 +88,23 @@ namespace TUGraz.VectoCore.Tests.Integration.SimulationRuns
 							: Constants.SimulationSettings.TargetTimeInterval * container.VehicleSpeed;
 
 						if (cnt++ % 100 == 0) {
-							modalWriter.Finish(VectoRun.Status.Success);
+							modData.Finish(VectoRun.Status.Success);
 						}
 					}).
 					Default(r => Assert.Fail("Unexpected Response: {0}", r));
 			} while (!(response is ResponseCycleFinished));
-			modalWriter.Finish(VectoRun.Status.Success);
+			modData.Finish(VectoRun.Status.Success);
 			Assert.IsInstanceOfType(response, typeof(ResponseCycleFinished));
 		}
 
 		[TestMethod, Ignore]
 		public void Test_FullPowertrain()
 		{
-			var modalWriter = new ModalDataWriter("Coach_FullPowertrain.vmod");
-			var container = new VehicleContainer(modalWriter);
+			var fileWriter = new FileOutputWriter("Coach_FullPowertrain", "");
+			var modData = new ModalDataContainer("Coach_FullPowertrain", fileWriter);
+			var container = new VehicleContainer(modData);
 
-			var engineData = EngineeringModeSimulationDataReader.CreateEngineDataFromFile(EngineFile);
+			var engineData = MockSimulationDataFactory.CreateEngineDataFromFile(EngineFile);
 			var cycleData = DrivingCycleDataReader.ReadFromFileDistanceBased(CoachCycleFile);
 			var axleGearData = CreateAxleGearData();
 			var gearboxData = CreateGearboxData();
@@ -139,7 +144,7 @@ namespace TUGraz.VectoCore.Tests.Integration.SimulationRuns
 				try {
 					response = cyclePort.Request(absTime, ds);
 				} catch (Exception) {
-					modalWriter.Finish(VectoRun.Status.Success);
+					modData.Finish(VectoRun.Status.Success);
 					throw;
 				}
 				Log.Info("Test Got Response: {0},", response);
@@ -159,22 +164,23 @@ namespace TUGraz.VectoCore.Tests.Integration.SimulationRuns
 							: Constants.SimulationSettings.TargetTimeInterval * container.VehicleSpeed;
 
 						if (cnt++ % 100 == 0) {
-							modalWriter.Finish(VectoRun.Status.Success);
+							modData.Finish(VectoRun.Status.Success);
 						}
 					}).
 					Default(r => Assert.Fail("Unexpected Response: {0}", r));
 			}
-			modalWriter.Finish(VectoRun.Status.Success);
+			modData.Finish(VectoRun.Status.Success);
 			Assert.IsInstanceOfType(response, typeof(ResponseCycleFinished));
 		}
 
 		[TestMethod]
 		public void Test_FullPowertrain_LowSpeed()
 		{
-			var modalWriter = new ModalDataWriter("Coach_FullPowertrain_LowSpeed.vmod");
-			var container = new VehicleContainer(modalWriter);
+			var fileWriter = new FileOutputWriter("Coach_FullPowertrain_LowSpeed", "");
+			var modData = new ModalDataContainer("Coach_FullPowertrain_LowSpeed", fileWriter);
+			var container = new VehicleContainer(modData);
 
-			var engineData = EngineeringModeSimulationDataReader.CreateEngineDataFromFile(EngineFile);
+			var engineData = MockSimulationDataFactory.CreateEngineDataFromFile(EngineFile);
 			var cycleData = DrivingCycleDataReader.ReadFromFileDistanceBased(CycleFile);
 			var axleGearData = CreateAxleGearData();
 			var gearboxData = CreateGearboxData();
@@ -212,7 +218,7 @@ namespace TUGraz.VectoCore.Tests.Integration.SimulationRuns
 				try {
 					response = cyclePort.Request(absTime, ds);
 				} catch (Exception) {
-					modalWriter.Finish(VectoRun.Status.Success);
+					modData.Finish(VectoRun.Status.Success);
 					throw;
 				}
 				Log.Info("Test Got Response: {0},", response);
@@ -232,25 +238,27 @@ namespace TUGraz.VectoCore.Tests.Integration.SimulationRuns
 							: Constants.SimulationSettings.TargetTimeInterval * container.VehicleSpeed;
 
 						if (cnt++ % 100 == 0) {
-							modalWriter.Finish(VectoRun.Status.Success);
+							modData.Finish(VectoRun.Status.Success);
 						}
 					}).
 					Default(r => {
-						modalWriter.Finish(VectoRun.Status.Success);
+						modData.Finish(VectoRun.Status.Success);
 						Assert.Fail("Unexpected Response: {0}", r);
 					});
 			}
-			modalWriter.Finish(VectoRun.Status.Success);
+			modData.Finish(VectoRun.Status.Success);
 			Assert.IsInstanceOfType(response, typeof(ResponseCycleFinished));
 		}
 
 		[TestMethod]
 		public void Test_FullPowerTrain_JobFile()
 		{
-			var sumWriter = new SummaryFileWriter(@"job.vsum");
-			var jobContainer = new JobContainer(sumWriter);
+			var fileWriter = new FileOutputWriter("job", "");
+			var sumData = new SummaryDataContainer(fileWriter);
+			var jobContainer = new JobContainer(sumData);
 
-			var factory = new SimulatorFactory(SimulatorFactory.FactoryMode.EngineeringMode, @"TestData\job.vecto");
+			var inputData = JSONInputDataFactory.ReadJsonJob(@"TestData\job.vecto");
+			var factory = new SimulatorFactory(SimulatorFactory.FactoryMode.EngineeringMode, inputData, fileWriter);
 
 			jobContainer.AddRuns(factory);
 			jobContainer.Execute();
@@ -355,7 +363,6 @@ namespace TUGraz.VectoCore.Tests.Integration.SimulationRuns
 				CurbWeigthExtra = 0.SI<Kilogram>(),
 				Loading = loading,
 				DynamicTyreRadius = 0.52.SI<Meter>(),
-				Retarder = new RetarderData { Type = RetarderData.RetarderType.None },
 				AxleData = axles,
 				SavedInDeclarationMode = false,
 			};

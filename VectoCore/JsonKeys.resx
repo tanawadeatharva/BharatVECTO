@@ -314,4 +314,13 @@
 	<data name="DriverData_AccelerationCurve" xml:space="preserve">
     <value>VACC</value>
   </data>
+	<data name="Vehicle_CurbWeightExtra" xml:space="preserve">
+    <value>CurbWeightExtra</value>
+  </data>
+	<data name="Vehicle_Loading" xml:space="preserve">
+    <value>Loading</value>
+  </data>
+	<data name="Vehicle_DynamicTyreRadius" xml:space="preserve">
+    <value>rdyn</value>
+  </data>
 </root>

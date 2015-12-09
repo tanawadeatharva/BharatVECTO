@@ -8,6 +8,7 @@ using TUGraz.VectoCore.Models.Connector.Ports.Impl;
 using TUGraz.VectoCore.Models.Simulation.Data;
 using TUGraz.VectoCore.Models.Simulation.Impl;
 using TUGraz.VectoCore.Models.SimulationComponent.Impl;
+using TUGraz.VectoCore.OutputData;
 using TUGraz.VectoCore.Tests.Utils;
 using TUGraz.VectoCore.Utils;
 
@@ -29,7 +30,7 @@ namespace TUGraz.VectoCore.Tests.Integration.EngineOnlyCycle
 			var cycle = new MockDrivingCycle(container, data);
 			var vehicle = new VehicleContainer();
 			var engineData =
-				EngineeringModeSimulationDataReader.CreateEngineDataFromFile(TestContext.DataRow["EngineFile"].ToString());
+				MockSimulationDataFactory.CreateEngineDataFromFile(TestContext.DataRow["EngineFile"].ToString());
 
 			var aux = new Auxiliary(vehicle);
 			aux.AddDirect(cycle);
@@ -45,7 +46,7 @@ namespace TUGraz.VectoCore.Tests.Integration.EngineOnlyCycle
 			var dt = 1.SI<Second>();
 
 			var modFile = Path.GetRandomFileName() + ".vmod";
-			var dataWriter = new ModalDataWriter(modFile, SimulatorFactory.FactoryMode.EngineOnlyMode);
+			var dataWriter = new ModalDataContainer(modFile, SimulatorFactory.FactoryMode.EngineOnlyMode);
 
 			foreach (var cycleEntry in data.Entries) {
 				var response = port.Request(absTime, dt, cycleEntry.EngineTorque, cycleEntry.EngineSpeed);
@@ -66,13 +67,13 @@ namespace TUGraz.VectoCore.Tests.Integration.EngineOnlyCycle
 		[TestMethod]
 		public void AssembleEngineOnlyPowerTrain()
 		{
-			var dataWriter = new MockModalDataWriter();
+			var dataWriter = new MockModalDataContainer();
 
 			var vehicleContainer = new VehicleContainer();
 
 			var gearbox = new EngineOnlyGearbox(vehicleContainer);
 			var engine = new CombustionEngine(vehicleContainer,
-				EngineeringModeSimulationDataReader.CreateEngineDataFromFile(EngineFile));
+				MockSimulationDataFactory.CreateEngineDataFromFile(EngineFile));
 
 			gearbox.InPort().Connect(engine.OutPort());
 

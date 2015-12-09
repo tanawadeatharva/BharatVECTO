@@ -3,6 +3,7 @@ using System.Globalization;
 using Microsoft.VisualStudio.TestTools.UnitTesting;
 using TUGraz.VectoCore.InputData.FileIO.Reader.Impl;
 using TUGraz.VectoCore.Models.SimulationComponent.Data;
+using TUGraz.VectoCore.Tests.Utils;
 using TUGraz.VectoCore.Utils;
 
 namespace TUGraz.VectoCore.Tests.Models.SimulationComponentData
@@ -14,16 +15,18 @@ namespace TUGraz.VectoCore.Tests.Models.SimulationComponentData
 
 		protected const string GearboxFile = @"Testdata\Components\24t Coach.vgbx";
 
+		protected const string EngineFile = @"TestData\Components\24t Coach.veng";
+
 		[TestMethod]
 		public void TestGearboxDataReadTest()
 		{
-			var gbxData = EngineeringModeSimulationDataReader.CreateGearboxDataFromFile(GearboxFile);
+			var gbxData = MockSimulationDataFactory.CreateGearboxDataFromFile(GearboxFile, EngineFile);
 
 			Assert.AreEqual(GearboxType.AMT, gbxData.Type);
 			Assert.AreEqual(1.0, gbxData.TractionInterruption.Value(), 0.0001);
 			Assert.AreEqual(8, gbxData.Gears.Count);
 
-			Assert.AreEqual(3.240355, gbxData.AxleGearData.Ratio, 0.0001);
+			// Todo: Assert.AreEqual(3.240355, gbxData.AxleGearData.Ratio, 0.0001);
 			Assert.AreEqual(1.0, gbxData.Gears[7].Ratio, 0.0001);
 
 			Assert.AreEqual(-400, gbxData.Gears[1].ShiftPolygon.Downshift[0].Torque.Value(), 0.0001);
@@ -44,18 +47,18 @@ namespace TUGraz.VectoCore.Tests.Models.SimulationComponentData
 			var rdyn = double.Parse(TestContext.DataRow["rDyn"].ToString(), CultureInfo.InvariantCulture);
 			var speed = double.Parse(TestContext.DataRow["v"].ToString(), CultureInfo.InvariantCulture);
 
-			var gbxData =
-				EngineeringModeSimulationDataReader.CreateGearboxDataFromFile(TestContext.DataRow["GearboxDataFile"].ToString());
-
+			var gbxData = MockSimulationDataFactory.CreateGearboxDataFromFile(TestContext.DataRow["GearboxDataFile"].ToString(),
+				EngineFile);
+			var axleData = MockSimulationDataFactory.CreateAxleGearDataFromFile(TestContext.DataRow["GearboxDataFile"].ToString());
 
 			var PvD = double.Parse(TestContext.DataRow["PowerGbxOut"].ToString(), CultureInfo.InvariantCulture).SI<Watt>();
 
 			var torqueToWheels = Formulas.PowerToTorque(PvD, SpeedToAngularSpeed(speed, rdyn));
 			var torqueFromEngine = 0.SI<NewtonMeter>();
 
-			var angSpeed = SpeedToAngularSpeed(speed, rdyn) * gbxData.AxleGearData.Ratio;
+			var angSpeed = SpeedToAngularSpeed(speed, rdyn) * axleData.Ratio;
 			if (TestContext.DataRow["Gear"].ToString() == "A") {
-				torqueFromEngine = gbxData.AxleGearData.LossMap.GearboxInTorque(angSpeed, torqueToWheels);
+				torqueFromEngine = axleData.LossMap.GearboxInTorque(angSpeed, torqueToWheels);
 			}
 
 			var powerEngine = Formulas.TorqueToPower(torqueFromEngine, angSpeed);
@@ -69,7 +72,7 @@ namespace TUGraz.VectoCore.Tests.Models.SimulationComponentData
 		[TestMethod]
 		public void TestInputOutOfRange()
 		{
-			var gbxData = EngineeringModeSimulationDataReader.CreateGearboxDataFromFile(GearboxFile);
+			var gbxData = MockSimulationDataFactory.CreateGearboxDataFromFile(GearboxFile, EngineFile);
 
 			Assert.Inconclusive("test another file which is not correct");
 		}

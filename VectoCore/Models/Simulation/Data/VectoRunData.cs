@@ -1,7 +1,9 @@
 ﻿using System.Collections.Generic;
 using System.Runtime.Serialization;
+using System.Security.Permissions;
 using TUGraz.VectoCore.Models.Declaration;
 using TUGraz.VectoCore.Models.SimulationComponent.Data;
+using TUGraz.VectoCore.OutputData.PDF;
 using TUGraz.VectoCore.Utils;
 
 namespace TUGraz.VectoCore.Models.Simulation.Data
@@ -14,6 +16,8 @@ namespace TUGraz.VectoCore.Models.Simulation.Data
 		public CombustionEngineData EngineData { get; internal set; }
 
 		public GearboxData GearboxData { get; internal set; }
+
+		public AxleGearData AxleGearData { get; internal set; }
 
 		public DrivingCycleData Cycle { get; internal set; }
 
