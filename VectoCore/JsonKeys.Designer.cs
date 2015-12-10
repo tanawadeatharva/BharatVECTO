@@ -106,7 +106,7 @@ namespace TUGraz.VectoCore {
         }
         
         /// <summary>
-        ///   Looks up a localized string similar to OverspeedEcoRoll.
+        ///   Looks up a localized string similar to OverSpeedEcoRoll.
         /// </summary>
         internal static string DriverData_OverspeedEcoRoll {
             get {
@@ -277,7 +277,7 @@ namespace TUGraz.VectoCore {
         }
         
         /// <summary>
-        ///   Looks up a localized string similar to EarlyShiftUp.
+        ///   Looks up a localized string similar to EaryShiftUp.
         /// </summary>
         internal static string Gearbox_EarlyShiftUp {
             get {

@@ -234,7 +234,7 @@
     <value>ShiftTime</value>
   </data>
 	<data name="Gearbox_EarlyShiftUp" xml:space="preserve">
-    <value>EarlyShiftUp</value>
+    <value>EaryShiftUp</value>
   </data>
 	<data name="Gearbox_TorqueReserve" xml:space="preserve">
     <value>TqReserve</value>
@@ -297,7 +297,7 @@
     <value>MinSpeed</value>
   </data>
 	<data name="DriverData_OverspeedEcoRoll" xml:space="preserve">
-    <value>OverspeedEcoRoll</value>
+    <value>OverSpeedEcoRoll</value>
   </data>
 	<data name="DriverData_OverspeedEcoRoll_Mode" xml:space="preserve">
     <value>Mode</value>
