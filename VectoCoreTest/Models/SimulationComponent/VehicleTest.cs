@@ -27,7 +27,7 @@ namespace TUGraz.VectoCore.Tests.Models.SimulationComponent
 			//var reader = new EngineeringModeSimulationDataReader();
 			var vehicleData = MockSimulationDataFactory.CreateVehicleDataFromFile(VehicleDataFileCoach);
 			//VehicleData.ReadFromFile(VehicleDataFile);
-			//vehicleData.CrossWindCorrection = VehicleData.CrossWindCorrectionMode.NoCorrection;
+			//vehicleData.CrossWindCorrectionMode = CrossWindCorrectionMode.NoCorrection;
 			var vehicle = new Vehicle(container, vehicleData);
 
 			var mockPort = new MockFvOutPort();

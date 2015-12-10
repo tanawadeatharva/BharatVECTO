@@ -20,7 +20,7 @@ namespace TUGraz.VectoCore.Tests.Models.SimulationComponentData
 		[TestMethod]
 		public void TestGearboxDataReadTest()
 		{
-			var gbxData = MockSimulationDataFactory.CreateGearboxDataFromFile(GearboxFile, EngineFile);
+			var gbxData = MockSimulationDataFactory.CreateGearboxDataFromFile(GearboxFile, EngineFile, false);
 
 			Assert.AreEqual(GearboxType.AMT, gbxData.Type);
 			Assert.AreEqual(1.0, gbxData.TractionInterruption.Value(), 0.0001);

@@ -12,14 +12,21 @@ namespace TUGraz.VectoCore.Tests.Utils
 		/// </summary>
 		/// <param name="gearBoxFile"></param>
 		/// <param name="engineFile"></param>
+		/// <param name="declarationMode"></param>
 		/// <returns>GearboxData instance</returns>
-		public static GearboxData CreateGearboxDataFromFile(string gearBoxFile, string engineFile)
+		public static GearboxData CreateGearboxDataFromFile(string gearBoxFile, string engineFile, bool declarationMode = true)
 		{
 			var gearboxInput = JSONInputDataFactory.ReadGearbox(gearBoxFile);
 			var engineInput = JSONInputDataFactory.ReadEngine(engineFile);
-			var dao = new DeclarationDataAdapter();
-			var engineData = dao.CreateEngineData(engineInput);
-			return dao.CreateGearboxData(gearboxInput, engineData);
+			if (declarationMode) {
+				var dao = new DeclarationDataAdapter();
+				var engineData = dao.CreateEngineData(engineInput);
+				return dao.CreateGearboxData(gearboxInput, engineData);
+			} else {
+				var dao = new EngineeringDataAdapter();
+				var engineData = dao.CreateEngineData(engineInput);
+				return dao.CreateGearboxData(gearboxInput, engineData);
+			}
 		}
 
 		public static AxleGearData CreateAxleGearDataFromFile(string axleGearFile)

@@ -162,5 +162,9 @@ namespace TUGraz.VectoCore.InputData.FileIO.Reader.DataObjectAdaper
 		}
 
 		//=================================
+		public RetarderData CreateRetarderData(IRetarderInputData retarder)
+		{
+			return SetCommonRetarderData(retarder);
+		}
 	}
 }

@@ -123,7 +123,10 @@ namespace TUGraz.VectoCore.InputData.FileIO.JSON
 
 		public bool Enabled
 		{
-			get { throw new System.NotImplementedException(); }
+			get
+			{
+				return false; // TODO @@@
+			}
 		}
 
 		public RoundsPerMinute ReferenceRPM

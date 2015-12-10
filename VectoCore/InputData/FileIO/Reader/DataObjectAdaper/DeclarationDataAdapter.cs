@@ -175,7 +175,7 @@ namespace TUGraz.VectoCore.InputData.FileIO.Reader.DataObjectAdaper
 			foreach (var auxData in auxInputData.Auxiliaries) {
 				var aux = new VectoRunData.AuxData { DemandType = AuxiliaryDemandType.Constant };
 
-				switch (auxData.Type) {
+				switch (AuxiliaryTypeHelper.Parse(auxData.Type)) {
 					case AuxiliaryType.Fan:
 						aux.PowerDemand = DeclarationData.Fan.Lookup(mission, auxData.Technology);
 						aux.ID = Constants.Auxiliaries.IDs.Fan;
@@ -207,6 +207,11 @@ namespace TUGraz.VectoCore.InputData.FileIO.Reader.DataObjectAdaper
 		private void WarnDeclarationMode(string inputData)
 		{
 			Log.Warn("{0} not in Declaration Mode!", inputData);
+		}
+
+		public RetarderData CreateRetarderData(IRetarderInputData retarder)
+		{
+			return SetCommonRetarderData(retarder);
 		}
 	}
 }

@@ -15,18 +15,20 @@ namespace TUGraz.VectoCore.Tests.Integration
 		[TestMethod]
 		public void DeclarationReport_Test()
 		{
-			if (File.Exists("job-report.vsum")) {
-				File.Delete("job-report.vsum");
+			const string jobFile = @"TestData\Jobs\job-report.vecto";
+
+			if (File.Exists(@"TestData\Jobs\job-report.vsum")) {
+				File.Delete(@"TestData\Jobs\job-report.vsum");
 			}
 
-			if (File.Exists("job-report.pdf")) {
-				File.Delete("job-report.pdf");
+			if (File.Exists(@"TestData\Jobs\job-report.pdf")) {
+				File.Delete(@"TestData\Jobs\job-report.pdf");
 			}
 
-			var fileWriter = new FileOutputWriter("job-report", "");
+			var fileWriter = new FileOutputWriter(jobFile);
 			var sumData = new SummaryDataContainer(fileWriter);
 			var jobContainer = new JobContainer(sumData);
-			var inputData = JSONInputDataFactory.ReadJsonJob(@"TestData\Jobs\job-report.vecto");
+			var inputData = JSONInputDataFactory.ReadJsonJob(jobFile);
 			var factory = new SimulatorFactory(SimulatorFactory.FactoryMode.DeclarationMode, inputData, fileWriter);
 
 			jobContainer.AddRuns(factory);
@@ -34,7 +36,7 @@ namespace TUGraz.VectoCore.Tests.Integration
 
 			jobContainer.WaitFinished();
 
-			Assert.IsTrue(File.Exists(@"job-report.vsum"));
+			Assert.IsTrue(File.Exists(@"TestData\Jobs\job-report.vsum"));
 			Assert.IsTrue(File.Exists(@"TestData\Jobs\job-report.pdf"));
 		}
 	}

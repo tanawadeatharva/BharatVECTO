@@ -144,7 +144,7 @@ namespace TUGraz.VectoCore.OutputData
 			row[PNEG] = data.EnginePowerNegativeAverage().ConvertTo().Kilo.Watt;
 			row[FCFINAL] = data.FuelConsumptionFinal().ConvertTo().Gramm.Per.Kilo.Meter;
 			row[FCFINAL_LITERPER100KM] = data.FuelConsumptionFinalLiterPer100Kilometer();
-			if (!vehicleLoading.IsEqual(0)) {
+			if (vehicleLoading != null && !vehicleLoading.IsEqual(0)) {
 				row[FCFINAL_LITERPER100TKM] = data.FuelConsumptionFinalLiterPer100Kilometer() / vehicleLoading.ConvertTo().Ton;
 			}
 			row[FCMAP] = data.FuelConsumptionPerSecond().ConvertTo().Gramm.Per.Hour;
@@ -154,7 +154,7 @@ namespace TUGraz.VectoCore.OutputData
 			row[FCWHTCC] = data.FuelConsumptionWHTCCorrectedPerSecond().ConvertTo().Gramm.Per.Hour;
 			row[FCWHTCCKM] = data.FuelConsumptionWHTCCorrected().ConvertTo().Gramm.Per.Kilo.Meter;
 			row[CO2KM] = data.CO2PerMeter().ConvertTo().Gramm.Per.Kilo.Meter;
-			if (!vehicleLoading.IsEqual(0)) {
+			if (vehicleLoading != null && !vehicleLoading.IsEqual(0)) {
 				row[CO2TKM] = data.CO2PerMeter().ConvertTo().Gramm.Per.Kilo.Meter / vehicleLoading.ConvertTo().Ton;
 			}
 			row[PWHEELPOS] = data.PowerWheelPositive().ConvertTo().Kilo.Watt;

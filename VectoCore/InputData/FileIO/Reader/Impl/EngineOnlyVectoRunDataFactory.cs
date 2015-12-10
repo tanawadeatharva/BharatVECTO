@@ -12,7 +12,7 @@ namespace TUGraz.VectoCore.InputData.FileIO.Reader.Impl
 	{
 		internal EngineOnlyVectoRunDataFactory(IInputDataProvider dataProvider) : base(dataProvider) {}
 
-		public new IEnumerable<VectoRunData> NextRun()
+		public override IEnumerable<VectoRunData> NextRun()
 		{
 			if (InputDataProvider == null) {
 				Log.Warn("No valid data provider given");

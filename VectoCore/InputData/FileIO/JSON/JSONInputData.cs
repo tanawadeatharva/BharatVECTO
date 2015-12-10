@@ -44,13 +44,20 @@ namespace TUGraz.VectoCore.InputData.FileIO.JSON
 
 		protected DataTable ReadTableData(string filename, string tableType, bool required = true)
 		{
-			if (filename == null || !filename.Any() || filename.Equals("<NOFILE>", StringComparison.InvariantCultureIgnoreCase)) {
-				if (required) {
-					throw new VectoException("Invalid {0}: {1}", tableType, filename);
-				}
-				return null;
+			if (!EmptyOrInvalidFileName(filename)) {
+				return VectoCSVFile.Read(Path.Combine(BasePath, filename), true);
 			}
-			return VectoCSVFile.Read(Path.Combine(BasePath, filename));
+			if (required) {
+				throw new VectoException("Invalid {0}: {1}", tableType, filename);
+			}
+			return null;
+		}
+
+		internal static bool EmptyOrInvalidFileName(string filename)
+		{
+			return filename == null || !filename.Any() ||
+					filename.Equals("<NOFILE>", StringComparison.InvariantCultureIgnoreCase)
+					|| filename.Equals("-");
 		}
 	}
 
@@ -70,17 +77,23 @@ namespace TUGraz.VectoCore.InputData.FileIO.JSON
 
 		public JSONInputDataV2(JObject data, string filename) : base(data, filename)
 		{
-			_jobname = filename;
-			Gearbox = JSONInputDataFactory.ReadGearbox(
-				Path.Combine(BasePath, Body[JsonKeys.Vehicle_GearboxFile].Value<string>()));
+			_jobname = Path.GetFileName(filename);
+			var gearboxFile = Body[JsonKeys.Vehicle_GearboxFile].Value<string>();
+			if (!EmptyOrInvalidFileName(gearboxFile)) {
+				Gearbox = JSONInputDataFactory.ReadGearbox(Path.Combine(BasePath, gearboxFile));
+			}
 			var axleGear = Gearbox as IAxleGearInputData;
 			if (axleGear != null) {
 				AxleGear = axleGear;
 			}
 			Engine = JSONInputDataFactory.ReadEngine(
 				Path.Combine(BasePath, Body[JsonKeys.Vehicle_EngineFile].Value<string>()));
-			VehicleData = JSONInputDataFactory.ReadJsonVehicle(
-				Path.Combine(BasePath, Body[JsonKeys.Vehicle_VehicleFile].Value<string>()));
+			var vehicleFile = Body[JsonKeys.Vehicle_VehicleFile].Value<string>();
+			if (!EmptyOrInvalidFileName(vehicleFile)) {
+				VehicleData = JSONInputDataFactory.ReadJsonVehicle(
+					Path.Combine(BasePath, vehicleFile));
+			}
+
 			var retarder = VehicleData as IRetarderInputData;
 			if (retarder != null) {
 				Retarder = retarder;
@@ -143,7 +156,7 @@ namespace TUGraz.VectoCore.InputData.FileIO.JSON
 			get
 			{
 				return Body[JsonKeys.Job_Cycles].Select(cycle => new CycleInputData() {
-					Name = cycle.Value<string>(),
+					Name = Path.GetFileNameWithoutExtension(cycle.Value<string>()),
 					CycleData = VectoCSVFile.Read(Path.Combine(BasePath, cycle.Value<string>()))
 				}).Cast<ICycleData>().ToList();
 			}
@@ -227,8 +240,16 @@ namespace TUGraz.VectoCore.InputData.FileIO.JSON
 			{
 				var retVal = new List<IAuxiliaryInputData>();
 				foreach (var aux in Body["Aux"]) {
-					var auxData = new AuxiliaryDataInputData();
-					var stream = new StreamReader(aux["Path"].Value<string>());
+					var auxData = new AuxiliaryDataInputData {
+						ID = aux["ID"].Value<string>(),
+						Type = aux["Type"].Value<string>(),
+						Technology = aux["Technology"].Value<string>()
+					};
+					var auxFile = aux["Path"].Value<string>();
+					if (EmptyOrInvalidFileName(auxFile)) {
+						continue;
+					}
+					var stream = new StreamReader(Path.Combine(BasePath, auxFile));
 					stream.ReadLine(); // skip header "Transmission ration to engine rpm [-]"
 					auxData.TransmissionRatio = stream.ReadLine().IndulgentParse();
 					stream.ReadLine(); // skip header "Efficiency to engine [-]"

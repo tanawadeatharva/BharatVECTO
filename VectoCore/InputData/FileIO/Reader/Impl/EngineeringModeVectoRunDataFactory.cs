@@ -94,7 +94,7 @@ namespace TUGraz.VectoCore.InputData.FileIO.Reader.Impl
 		/// Iterate over all cycles defined in the JobFile and create a container with all data required for creating a simulation run
 		/// </summary>
 		/// <returns>VectoRunData instance for initializing the powertrain.</returns>
-		public IEnumerable<VectoRunData> NextRun()
+		public virtual IEnumerable<VectoRunData> NextRun()
 		{
 			var dao = new EngineeringDataAdapter();
 			var driver = dao.CreateDriverData(InputDataProvider.DriverInputData);
@@ -106,9 +106,11 @@ namespace TUGraz.VectoCore.InputData.FileIO.Reader.Impl
 					JobName = InputDataProvider.JobInputData().JobName,
 					EngineData = engineData,
 					GearboxData = dao.CreateGearboxData(InputDataProvider.GearboxInputData, engineData),
+					AxleGearData = dao.CreateAxleGearData(InputDataProvider.AxleGearInputData),
 					VehicleData = dao.CreateVehicleData(InputDataProvider.VehicleInputData),
 					DriverData = driver,
 					Aux = dao.CreateAuxiliaryData(InputDataProvider.AuxiliaryInputData()),
+					Retarder = dao.CreateRetarderData(InputDataProvider.RetarderInputData),
 					// TODO: distance or time-based cycle!
 					Cycle =
 						DrivingCycleDataReader.Create(cycle.CycleData, cycle.Name, CycleType.DistanceBased),

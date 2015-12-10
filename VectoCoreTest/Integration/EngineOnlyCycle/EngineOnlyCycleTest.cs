@@ -2,6 +2,7 @@ using System.Data;
 using System.IO;
 using System.Linq;
 using Microsoft.VisualStudio.TestTools.UnitTesting;
+using TUGraz.VectoCore.Configuration;
 using TUGraz.VectoCore.InputData.FileIO.Reader;
 using TUGraz.VectoCore.InputData.FileIO.Reader.Impl;
 using TUGraz.VectoCore.Models.Connector.Ports.Impl;
@@ -46,7 +47,7 @@ namespace TUGraz.VectoCore.Tests.Integration.EngineOnlyCycle
 			var absTime = 0.SI<Second>();
 			var dt = 1.SI<Second>();
 
-			var modFile = Path.GetRandomFileName(); // + ".vmod";
+			var modFile = Path.GetFileNameWithoutExtension(Path.GetRandomFileName()); // + ".vmod";
 			var fileWriter = new FileOutputWriter(modFile, "");
 			var modData = new ModalDataContainer(modFile, fileWriter, SimulatorFactory.FactoryMode.EngineOnlyMode);
 
@@ -63,7 +64,8 @@ namespace TUGraz.VectoCore.Tests.Integration.EngineOnlyCycle
 			}
 			modData.Finish(VectoRun.Status.Success);
 
-			ResultFileHelper.TestModFile(TestContext.DataRow["ModalResultFile"].ToString(), modFile);
+			ResultFileHelper.TestModFile(TestContext.DataRow["ModalResultFile"].ToString(),
+				modFile + Constants.FileExtensions.ModDataFile);
 		}
 
 		[TestMethod]

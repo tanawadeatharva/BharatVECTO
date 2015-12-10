@@ -61,7 +61,7 @@ namespace TUGraz.VectoCore.InputData.FileIO.JSON
 
 		public CrossWindCorrectionMode CrossWindCorrectionMode
 		{
-			get { throw new NotImplementedException(); }
+			get { return CrossWindCorrectionModeHelper.Parse(Body["CdCorrMode"].Value<string>()); }
 		}
 
 		public string Rim

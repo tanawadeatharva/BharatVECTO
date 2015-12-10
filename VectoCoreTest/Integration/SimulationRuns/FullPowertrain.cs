@@ -253,18 +253,19 @@ namespace TUGraz.VectoCore.Tests.Integration.SimulationRuns
 		[TestMethod]
 		public void Test_FullPowerTrain_JobFile()
 		{
-			var fileWriter = new FileOutputWriter("job", "");
+			const string jobFile = @"TestData\job.vecto";
+			var fileWriter = new FileOutputWriter(jobFile);
 			var sumData = new SummaryDataContainer(fileWriter);
 			var jobContainer = new JobContainer(sumData);
 
-			var inputData = JSONInputDataFactory.ReadJsonJob(@"TestData\job.vecto");
+			var inputData = JSONInputDataFactory.ReadJsonJob(jobFile);
 			var factory = new SimulatorFactory(SimulatorFactory.FactoryMode.EngineeringMode, inputData, fileWriter);
 
 			jobContainer.AddRuns(factory);
 			jobContainer.Execute();
 
 			jobContainer.WaitFinished();
-			ResultFileHelper.TestSumFile(@"TestData\Results\Integration\job.vsum", @"job.vsum");
+			ResultFileHelper.TestSumFile(@"TestData\Results\Integration\job.vsum", @"TestData\job.vsum");
 
 			ResultFileHelper.TestModFile(@"TestData\Results\Integration\job_1-Gear-Test-dist.vmod",
 				@"TestData\job_1-Gear-Test-dist.vmod", testRowCount: false);

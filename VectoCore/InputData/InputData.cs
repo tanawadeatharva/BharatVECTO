@@ -151,7 +151,7 @@ namespace TUGraz.VectoCore.InputData
 		string ModelName { get; }
 		CubicMeter Displacement { get; }
 
-		RoundsPerMinute IdleSpeed { get; }
+		PerSecond IdleSpeed { get; }
 
 		/// <summary>
 		/// engine speed in rpm, torque in NM, fuel consumption in g/h
@@ -220,7 +220,7 @@ namespace TUGraz.VectoCore.InputData
 
 		string ID { get; }
 
-		AuxiliaryType Type { get; }
+		string Type { get; }
 
 		string Technology { get; }
 

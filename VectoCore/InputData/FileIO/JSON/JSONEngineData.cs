@@ -19,9 +19,9 @@ namespace TUGraz.VectoCore.InputData.FileIO.JSON
 			// convert vom ccm to m^3}
 		}
 
-		public RoundsPerMinute IdleSpeed
+		public PerSecond IdleSpeed
 		{
-			get { return Body[JsonKeys.Engine_IdleSpeed].Value<double>().SI<RoundsPerMinute>(); }
+			get { return Body[JsonKeys.Engine_IdleSpeed].Value<double>().RPMtoRad(); }
 		}
 
 		public DataTable FuelConsumptionMap

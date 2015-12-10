@@ -63,10 +63,12 @@ namespace TUGraz.VectoCore.InputData.FileIO.Reader.Impl
 						VehicleData = dao.CreateVehicleData(InputDataProvider.VehicleInputData, mission, loading.Value),
 						EngineData = engineData,
 						GearboxData = dao.CreateGearboxData(InputDataProvider.GearboxInputData, engineData),
+						AxleGearData = dao.CreateAxleGearData(InputDataProvider.AxleGearInputData),
 						Aux =
 							dao.CreateAuxiliaryData(InputDataProvider.AuxiliaryInputData(), mission.MissionType,
 								segment.VehicleClass),
 						Cycle = cycle,
+						Retarder = dao.CreateRetarderData(InputDataProvider.RetarderInputData),
 						DriverData = driverdata,
 						IsEngineOnly = false, // InputDataProvider.JobInputData().EngineOnlyMode,
 						JobName = InputDataProvider.JobInputData().JobName,

@@ -131,7 +131,7 @@ Examples:
 				stopWatch.Start();
 				foreach (var file in fileList.Where(f => Path.GetExtension(f) == Constants.FileExtensions.VectoJobFile)) {
 					var dataProvider = JSONInputDataFactory.ReadJsonJob(file);
-					var runsFactory = new SimulatorFactory(mode, dataProvider, fileWriter) { ModWriter = fileWriter };
+					var runsFactory = new SimulatorFactory(mode, dataProvider, fileWriter);
 					if (args.Contains("-mod")) {
 						runsFactory.WriteModalResults = true;
 					}

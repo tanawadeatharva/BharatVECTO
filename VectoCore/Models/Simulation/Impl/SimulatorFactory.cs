@@ -28,11 +28,12 @@ namespace TUGraz.VectoCore.Models.Simulation.Impl
 
 		private FactoryMode _mode;
 
-		public SimulatorFactory(FactoryMode mode, IInputDataProvider dataProvider, IReportWriter writer)
+		public SimulatorFactory(FactoryMode mode, IInputDataProvider dataProvider, IOutputDataWriter writer)
 		{
 			Log.Fatal("########## VectoCore Version {0} ##########", Assembly.GetExecutingAssembly().GetName().Version);
 			JobNumber = Interlocked.Increment(ref _jobNumberCounter);
 			_mode = mode;
+			ModWriter = writer;
 			switch (mode) {
 				case FactoryMode.DeclarationMode:
 					var report = new DeclarationReport(WindowsIdentity.GetCurrent().Name,
@@ -56,7 +57,7 @@ namespace TUGraz.VectoCore.Models.Simulation.Impl
 
 		public SummaryDataContainer SumData { get; set; }
 
-		public IModalDataWriter ModWriter { get; set; }
+		public IOutputDataWriter ModWriter { get; private set; }
 
 
 		public int JobNumber { get; set; }

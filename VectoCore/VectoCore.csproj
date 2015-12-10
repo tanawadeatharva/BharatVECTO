@@ -117,10 +117,10 @@
     <Compile Include="InputData\FileIO\EngineeringFile\GearboxFileEng.cs" />
     <Compile Include="InputData\FileIO\EngineeringFile\JobFileEng.cs" />
     <Compile Include="InputData\FileIO\EngineeringFile\VehicleFileEng.cs" />
+    <Compile Include="InputData\FileIO\Reader\DataObjectAdaper\EngineOnlyDataAdapter.cs" />
     <Compile Include="InputData\Impl\InputData.cs" />
     <Compile Include="InputData\FileIO\InputFileReader.cs" />
     <Compile Include="InputData\FileIO\JsonDataHeader.cs" />
-    <Compile Include="InputData\FileIO\JsonInputDataProviderDEPRECATED.cs" />
     <Compile Include="InputData\FileIO\JSON\JSONEngineData.cs" />
     <Compile Include="InputData\FileIO\JSON\JSONGearboxData.cs" />
     <Compile Include="InputData\FileIO\JSON\JSONInputData.cs" />

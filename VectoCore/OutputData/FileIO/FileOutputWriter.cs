@@ -9,7 +9,7 @@ using TUGraz.VectoCore.Utils;
 
 namespace TUGraz.VectoCore.OutputData.FileIO
 {
-	public class FileOutputWriter : LoggingObject, IModalDataWriter, ISummaryWriter, IReportWriter
+	public class FileOutputWriter : LoggingObject, IOutputDataWriter
 	{
 		private readonly string _basePath;
 		private readonly string _jobName;

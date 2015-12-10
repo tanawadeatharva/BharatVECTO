@@ -49,7 +49,7 @@ namespace TUGraz.VectoCore.InputData.Impl
 
 		public string ID { get; internal set; }
 
-		public AuxiliaryType Type { get; internal set; }
+		public string Type { get; internal set; }
 
 		public string Technology { get; internal set; }
 

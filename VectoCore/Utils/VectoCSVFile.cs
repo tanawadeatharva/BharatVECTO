@@ -150,16 +150,25 @@ namespace TUGraz.VectoCore.Utils
 		/// <param name="table">The Datatable.</param>
 		public static void Write(string fileName, DataTable table)
 		{
-			Write(new StreamWriter(fileName), table);
+			var stream = new StreamWriter(fileName);
+			Write(stream, table);
+			stream.Close();
 		}
 
+		/// <summary>
+		/// writes the datatable to a csv file.
+		/// Uses the column caption as header (with fallback to column name) for the csv header.
+		/// <remarks>Note: the callee has to make suree to close the stream after use.</remarks>
+		/// </summary>
+		/// <param name="writer"></param>
+		/// <param name="table"></param>
 		public static void Write(StreamWriter writer, DataTable table)
 		{
 			if (writer == null) {
 				return;
 			}
 			var header = table.Columns.Cast<DataColumn>().Select(col => col.Caption ?? col.ColumnName);
-			writer.WriteLineAsync(string.Join(Delimiter.ToString(), header));
+			writer.WriteLine(string.Join(Delimiter.ToString(), header));
 
 			foreach (DataRow row in table.Rows) {
 				var row1 = row;
@@ -175,7 +184,7 @@ namespace TUGraz.VectoCore.Utils
 						: string.Format(CultureInfo.InvariantCulture, "{0}", item));
 				});
 
-				writer.WriteLineAsync(string.Join(Delimiter.ToString(), formattedList));
+				writer.WriteLine(string.Join(Delimiter.ToString(), formattedList));
 			}
 		}
 	}

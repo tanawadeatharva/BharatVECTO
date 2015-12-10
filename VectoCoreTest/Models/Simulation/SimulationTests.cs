@@ -89,11 +89,12 @@ namespace TUGraz.VectoCore.Tests.Models.Simulation
 		[TestMethod]
 		public void Test_VectoJob()
 		{
-			var fileWriter = new FileOutputWriter(@"24t Coach.vsum", "");
+			var jobFile = @"TestData\Jobs\24t Coach EngineOnly.vecto";
+			var fileWriter = new FileOutputWriter(jobFile);
 			var sumWriter = new SummaryDataContainer(fileWriter);
 			var jobContainer = new JobContainer(sumWriter);
 
-			var inputData = JSONInputDataFactory.ReadJsonJob(@"TestData\Jobs\24t Coach EngineOnly.vecto");
+			var inputData = JSONInputDataFactory.ReadJsonJob(jobFile);
 			var runsFactory = new SimulatorFactory(SimulatorFactory.FactoryMode.EngineOnlyMode,
 				inputData, fileWriter);
 

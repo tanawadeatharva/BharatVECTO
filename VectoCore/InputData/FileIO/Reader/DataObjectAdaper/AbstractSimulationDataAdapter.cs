@@ -54,7 +54,7 @@ namespace TUGraz.VectoCore.InputData.FileIO.Reader.DataObjectAdaper
 				SavedInDeclarationMode = data.SavedInDeclarationMode,
 				ModelName = data.ModelName,
 				Displacement = data.Displacement,
-				IdleSpeed = data.IdleSpeed.Value().RPMtoRad(),
+				IdleSpeed = data.IdleSpeed,
 				ConsumptionMap = FuelConsumptionMap.Create(data.FuelConsumptionMap),
 				WHTCUrban = data.WHTCUrban,
 				WHTCMotorway = data.WHTCMotorway,
@@ -86,6 +86,9 @@ namespace TUGraz.VectoCore.InputData.FileIO.Reader.DataObjectAdaper
 		/// <returns>A combined EngineFullLoadCurve with the minimum full load torque over all inputs curves.</returns>
 		internal static EngineFullLoadCurve IntersectFullLoadCurves(EngineFullLoadCurve engineCurve, FullLoadCurve gearCurve)
 		{
+			if (gearCurve == null) {
+				return engineCurve;
+			}
 			var entries = gearCurve.FullLoadEntries.Concat(engineCurve.FullLoadEntries)
 				.Select(entry => entry.EngineSpeed)
 				.OrderBy(engineSpeed => engineSpeed)

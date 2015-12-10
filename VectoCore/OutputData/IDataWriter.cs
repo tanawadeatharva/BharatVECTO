@@ -4,6 +4,8 @@ using TUGraz.VectoCore.Models.Simulation.Data;
 
 namespace TUGraz.VectoCore.OutputData
 {
+	public interface IOutputDataWriter : IModalDataWriter, ISummaryWriter, IReportWriter {}
+
 	public interface IModalDataWriter
 	{
 		void WriteModData(string runName, string cycleName, string runSuffix, DataTable modData);
