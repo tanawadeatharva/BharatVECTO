@@ -7,6 +7,32 @@ using TUGraz.VectoCore.Utils;
 
 namespace TUGraz.VectoCore.InputData.FileIO.JSON
 {
+	/// <summary>
+	///		Represents the Data containing all parameters of the gearbox
+	/// </summary>
+	/// {
+	///  "Header": {
+	///    "CreatedBy": "Raphael Luz IVT TU-Graz (85407225-fc3f-48a8-acda-c84a05df6837)",
+	///    "Date": "29.07.2014 16:59:17",
+	///    "AppVersion": "2.0.4-beta",
+	///    "FileVersion": 4
+	///  },
+	///  "Body": {
+	///    "SavedInDeclMode": false,
+	///    "ModelName": "Generic 24t Coach",
+	///		"GearboxType": "AMT",
+	///    "Gears": [
+	///      {
+	///        "Ratio": 3.240355,
+	///        "LossMap": "Axle.vtlm"
+	///      },
+	///      {
+	///        "Ratio": 6.38,
+	///        "LossMap": "Indirect GearData.vtlm",
+	///      },
+	///		...
+	///		]
+	/// }
 	public class JSONGearboxDataV5 : JSONFile, IGearboxInputData, IAxleGearInputData, ITorqueConverterInputData
 	{
 		public JSONGearboxDataV5(JObject data, string filename) : base(data, filename) {}

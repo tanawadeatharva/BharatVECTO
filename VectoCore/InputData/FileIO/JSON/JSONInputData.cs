@@ -12,6 +12,14 @@ using TUGraz.VectoCore.Utils;
 
 namespace TUGraz.VectoCore.InputData.FileIO.JSON
 {
+	/// <summary>
+	/// "Header": {
+	///		"CreatedBy": "Raphael Luz IVT TU-Graz (85407225-fc3f-48a8-acda-c84a05df6837)",
+	///		"Date": "29.07.2015 16:59:03",
+	///		"AppVersion": "2.2",
+	///		"FileVersion": 7
+	/// },
+	/// </summary>
 	public abstract class JSONFile
 	{
 		private string _basePath;
@@ -61,6 +69,83 @@ namespace TUGraz.VectoCore.InputData.FileIO.JSON
 		}
 	}
 
+	/// <summary>
+	/// A class which represents the json data format for serializing and deserializing the Job Data files.
+	/// Fileformat: .vecto
+	/// </summary>
+	/// <code>
+	/// {
+	///   "Header": {
+	///     "CreatedBy": " ()",
+	///     "Date": "3/4/2015 12:31:06 PM",
+	///     "AppVersion": "2.0.4-beta3",
+	///     "FileVersion": 2
+	///   },
+	///   "Body": {
+	///     "SavedInDeclMode": true,
+	///     "VehicleFile": "../Components/12t Delivery Truck.vveh",
+	///     "EngineFile": "../Components/12t Delivery Truck.veng",
+	///     "GearboxFile": "../Components/12t Delivery Truck.vgbx",
+	///     "Cycles": [
+	///       "Long Haul",
+	///       "Regional Delivery",
+	///       "Urban Delivery"
+	///     ],
+	///     "Aux": [
+	///       {
+	///         "ID": "FAN",
+	///         "Type": "Fan",
+	///         "Path": "<NOFILE>",
+	///         "Technology": ""
+	///       },
+	///       {
+	///         "ID": "STP",
+	///         "Type": "Steering pump",
+	///         "Path": "<NOFILE>",
+	///         "Technology": ""
+	///       },
+	///       {
+	///         "ID": "AC",
+	///         "Type": "HVAC",
+	///         "Path": "<NOFILE>",
+	///         "Technology": ""
+	///       },
+	///       {
+	///         "ID": "ES",
+	///         "Type": "Electric System",
+	///         "Path": "<NOFILE>",
+	///         "Technology": "",
+	///         "TechList": []
+	///       },
+	///       {
+	///         "ID": "PS",
+	///         "Type": "Pneumatic System",
+	///         "Path": "<NOFILE>",
+	///         "Technology": ""
+	///       }
+	///     ],
+	///     "VACC": "<NOFILE>",
+	///     "EngineOnlyMode": true,
+	///     "StartStop": {
+	///       "Enabled": false,
+	///       "MaxSpeed": 5.0,
+	///       "MinTime": 5.0,
+	///       "Delay": 5
+	///     },
+	///     "LAC": {
+	///       "Enabled": true,
+	///       "Dec": -0.5,
+	///       "MinSpeed": 50.0
+	///     },
+	///     "OverSpeedEcoRoll": {
+	///       "Mode": "OverSpeed",
+	///       "MinSpeed": 50.0,
+	///       "OverSpeed": 5.0,
+	///       "UnderSpeed": 5.0
+	///     }
+	///   }
+	/// }
+	/// </code>
 	public class JSONInputDataV2 : JSONFile, IInputDataProvider, IJobInputData, IDriverInputData, IAuxiliariesInputData
 	{
 		protected IGearboxInputData Gearbox;
