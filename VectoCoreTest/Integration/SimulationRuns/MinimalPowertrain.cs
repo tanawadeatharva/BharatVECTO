@@ -12,6 +12,7 @@ using TUGraz.VectoCore.Models.SimulationComponent.Data;
 using TUGraz.VectoCore.Models.SimulationComponent.Data.Gearbox;
 using TUGraz.VectoCore.Models.SimulationComponent.Impl;
 using TUGraz.VectoCore.OutputData;
+using TUGraz.VectoCore.OutputData.FileIO;
 using TUGraz.VectoCore.Tests.Utils;
 using TUGraz.VectoCore.Utils;
 using Wheels = TUGraz.VectoCore.Models.SimulationComponent.Impl.Wheels;
@@ -45,8 +46,9 @@ namespace TUGraz.VectoCore.Tests.Integration.SimulationRuns
 
 			var driverData = CreateDriverData(AccelerationFile);
 
-			var modalWriter = new ModalDataContainer("Coach_MinimalPowertrainOverload.vmod"); //new TestModalDataWriter();
-			var vehicleContainer = new VehicleContainer(modalWriter);
+			var fileWriter = new FileOutputWriter("Coach_MinimalPowertrainOverload", "");
+			var modData = new ModalDataContainer("Coach_MinimalPowertrainOverload", fileWriter); //new TestModalDataWriter();
+			var vehicleContainer = new VehicleContainer(modData);
 
 			var driver = new Driver(vehicleContainer, driverData, new DefaultDriverStrategy());
 			dynamic tmp = Port.AddComponent(driver, new Vehicle(vehicleContainer, vehicleData));
@@ -95,8 +97,9 @@ namespace TUGraz.VectoCore.Tests.Integration.SimulationRuns
 
 			var driverData = CreateDriverData(AccelerationFile);
 
-			var modalWriter = new ModalDataContainer("Coach_MinimalPowertrain.vmod"); //new TestModalDataWriter();
-			var vehicleContainer = new VehicleContainer(modalWriter);
+			var fileWriter = new FileOutputWriter("Coach_MinimalPowertrain", "");
+			var modData = new ModalDataContainer("Coach_MinimalPowertrain", fileWriter); //new TestModalDataWriter();
+			var vehicleContainer = new VehicleContainer(modData);
 
 			var cycle = new DistanceBasedDrivingCycle(vehicleContainer, cycleData);
 
@@ -142,7 +145,7 @@ namespace TUGraz.VectoCore.Tests.Integration.SimulationRuns
 							: (Constants.SimulationSettings.TargetTimeInterval * vehicleContainer.VehicleSpeed).Cast<Meter>();
 
 						if (cnt++ % 100 == 0) {
-							modalWriter.Finish(VectoRun.Status.Success);
+							modData.Finish(VectoRun.Status.Success);
 						}
 					}).
 					Default(r => Assert.Fail("Unexpected Response: {0}", r));
@@ -150,7 +153,7 @@ namespace TUGraz.VectoCore.Tests.Integration.SimulationRuns
 
 			Assert.IsInstanceOfType(response, typeof(ResponseCycleFinished));
 
-			modalWriter.Finish(VectoRun.Status.Success);
+			modData.Finish(VectoRun.Status.Success);
 		}
 
 		[TestMethod]
@@ -165,9 +168,9 @@ namespace TUGraz.VectoCore.Tests.Integration.SimulationRuns
 
 			var driverData = CreateDriverData(AccelerationFile2);
 
-			var modalWriter = new ModalDataContainer("Coach_MinimalPowertrainOverload.vmod",
-				SimulatorFactory.FactoryMode.EngineeringMode);
-			var vehicleContainer = new VehicleContainer(modalWriter);
+			var fileWriter = new FileOutputWriter("Coach_MinimalPowertrainOverload");
+			var modData = new ModalDataContainer("Coach_MinimalPowertrainOverload", fileWriter);
+			var vehicleContainer = new VehicleContainer(modData);
 
 			var cycle = new DistanceBasedDrivingCycle(vehicleContainer, cycleData);
 
@@ -206,11 +209,11 @@ namespace TUGraz.VectoCore.Tests.Integration.SimulationRuns
 							? Constants.SimulationSettings.DriveOffDistance
 							: (Constants.SimulationSettings.TargetTimeInterval * vehicleContainer.VehicleSpeed).Cast<Meter>();
 
-						modalWriter.Finish(VectoRun.Status.Success);
+						modData.Finish(VectoRun.Status.Success);
 					});
 			}
 
-			modalWriter.Finish(VectoRun.Status.Success);
+			modData.Finish(VectoRun.Status.Success);
 		}
 
 		private static GearData CreateAxleGearData()

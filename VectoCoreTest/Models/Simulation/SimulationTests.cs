@@ -1,10 +1,12 @@
 ﻿using System.Linq;
 using Microsoft.VisualStudio.TestTools.UnitTesting;
 using TUGraz.VectoCore.Configuration;
+using TUGraz.VectoCore.InputData.FileIO.JSON;
 using TUGraz.VectoCore.Models.Simulation;
 using TUGraz.VectoCore.Models.Simulation.Data;
 using TUGraz.VectoCore.Models.Simulation.Impl;
 using TUGraz.VectoCore.OutputData;
+using TUGraz.VectoCore.OutputData.FileIO;
 using TUGraz.VectoCore.Tests.Utils;
 using TUGraz.VectoCore.Utils;
 
@@ -70,12 +72,14 @@ namespace TUGraz.VectoCore.Tests.Models.Simulation
 
 		public IVectoRun CreateRun(string resultFileName)
 		{
-			var sumFileName = resultFileName.Substring(0, resultFileName.Length - 5) + Constants.FileExtensions.SumFile;
+			//var sumFileName = resultFileName.Substring(0, resultFileName.Length - 5) + Constants.FileExtensions.SumFile;
 
-			var dataWriter = new ModalDataContainer(resultFileName, SimulatorFactory.FactoryMode.EngineOnlyMode);
-			var sumWriter = new SummaryDataContainer(sumFileName);
+			var fileWriter = new FileOutputWriter(resultFileName, "");
+			var modData = new ModalDataContainer(resultFileName, fileWriter, SimulatorFactory.FactoryMode.EngineOnlyMode);
+			var sumWriter = new SummaryDataContainer(fileWriter);
 
-			var factory = new SimulatorFactory(SimulatorFactory.FactoryMode.EngineOnlyMode, EngineOnlyJob) {
+			var inputData = JSONInputDataFactory.ReadJsonJob(EngineOnlyJob);
+			var factory = new SimulatorFactory(SimulatorFactory.FactoryMode.EngineOnlyMode, inputData, fileWriter) {
 				SumData = sumWriter
 			};
 
@@ -85,11 +89,13 @@ namespace TUGraz.VectoCore.Tests.Models.Simulation
 		[TestMethod]
 		public void Test_VectoJob()
 		{
-			var sumWriter = new SummaryDataContainer(@"24t Coach.vsum");
+			var fileWriter = new FileOutputWriter(@"24t Coach.vsum", "");
+			var sumWriter = new SummaryDataContainer(fileWriter);
 			var jobContainer = new JobContainer(sumWriter);
 
+			var inputData = JSONInputDataFactory.ReadJsonJob(@"TestData\Jobs\24t Coach EngineOnly.vecto");
 			var runsFactory = new SimulatorFactory(SimulatorFactory.FactoryMode.EngineOnlyMode,
-				@"TestData\Jobs\24t Coach EngineOnly.vecto");
+				inputData, fileWriter);
 
 			jobContainer.AddRuns(runsFactory);
 			jobContainer.Execute();

@@ -9,6 +9,7 @@ using TUGraz.VectoCore.Models.SimulationComponent.Data;
 using TUGraz.VectoCore.Models.SimulationComponent.Data.Gearbox;
 using TUGraz.VectoCore.Models.SimulationComponent.Impl;
 using TUGraz.VectoCore.OutputData;
+using TUGraz.VectoCore.OutputData.FileIO;
 using TUGraz.VectoCore.Tests.Utils;
 using TUGraz.VectoCore.Utils;
 using Wheels = TUGraz.VectoCore.Models.SimulationComponent.Impl.Wheels;
@@ -29,7 +30,8 @@ namespace TUGraz.VectoCore.Tests.Integration
 
 		public static VectoRun CreateEngineeringRun(DrivingCycleData cycleData, string modFileName, bool overspeed = false)
 		{
-			var container = CreatePowerTrain(cycleData, modFileName, 7500.SI<Kilogram>(), 19300.SI<Kilogram>(), overspeed);
+			var container = CreatePowerTrain(cycleData, modFileName.Replace(".vmod", ""), 7500.SI<Kilogram>(),
+				19300.SI<Kilogram>(), overspeed);
 
 			return new DistanceRun("", container);
 		}
@@ -37,7 +39,7 @@ namespace TUGraz.VectoCore.Tests.Integration
 		public static VectoRun CreateEngineeringRun(DrivingCycleData cycleData, string modFileName, Kilogram massExtra,
 			Kilogram loading, bool overspeed = false)
 		{
-			var container = CreatePowerTrain(cycleData, modFileName, massExtra, loading, overspeed);
+			var container = CreatePowerTrain(cycleData, modFileName.Replace(".vmod", ""), massExtra, loading, overspeed);
 
 			return new DistanceRun("", container);
 		}
@@ -45,8 +47,9 @@ namespace TUGraz.VectoCore.Tests.Integration
 		public static VehicleContainer CreatePowerTrain(DrivingCycleData cycleData, string modFileName, Kilogram massExtra,
 			Kilogram loading, bool overspeed = false)
 		{
-			var modalWriter = new ModalDataContainer(modFileName);
-			var container = new VehicleContainer(modalWriter);
+			var fileWriter = new FileOutputWriter(modFileName, "");
+			var modData = new ModalDataContainer(modFileName, fileWriter);
+			var container = new VehicleContainer(modData);
 
 			var engineData = MockSimulationDataFactory.CreateEngineDataFromFile(EngineFile);
 			var axleGearData = CreateAxleGearData();

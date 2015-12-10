@@ -14,6 +14,10 @@ namespace TUGraz.VectoCore.OutputData.FileIO
 		private readonly string _basePath;
 		private readonly string _jobName;
 
+		public FileOutputWriter(string jobFile)
+			: this(Path.GetFileNameWithoutExtension(jobFile), Path.GetDirectoryName(jobFile)) {}
+
+
 		public FileOutputWriter(string jobName, string basePath)
 		{
 			_jobName = jobName;

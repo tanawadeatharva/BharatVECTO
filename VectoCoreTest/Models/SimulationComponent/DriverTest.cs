@@ -13,6 +13,7 @@ using TUGraz.VectoCore.Models.SimulationComponent;
 using TUGraz.VectoCore.Models.SimulationComponent.Data;
 using TUGraz.VectoCore.Models.SimulationComponent.Impl;
 using TUGraz.VectoCore.OutputData;
+using TUGraz.VectoCore.OutputData.FileIO;
 using TUGraz.VectoCore.Tests.Utils;
 using TUGraz.VectoCore.Utils;
 using Wheels = TUGraz.VectoCore.Models.SimulationComponent.Impl.Wheels;
@@ -41,9 +42,9 @@ namespace TUGraz.VectoCore.Tests.Models.SimulationComponent
 
 			var driverData = CreateDriverData();
 
-			var modalWriter = new ModalDataContainer("Coach_MinimalPowertrain_Coasting.vmod",
-				SimulatorFactory.FactoryMode.EngineeringMode); //new TestModalDataWriter();
-			var vehicleContainer = new VehicleContainer(modalWriter);
+			var fileWriter = new FileOutputWriter("Coach_MinimalPowertrain_Coasting", "");
+			var modData = new ModalDataContainer("Coach_MinimalPowertrain_Coasting", fileWriter);
+			var vehicleContainer = new VehicleContainer(modData);
 
 			var driver = new Driver(vehicleContainer, driverData, new DefaultDriverStrategy());
 			var engine = new CombustionEngine(vehicleContainer, engineData);
@@ -82,9 +83,9 @@ namespace TUGraz.VectoCore.Tests.Models.SimulationComponent
 
 				vehicleContainer.CommitSimulationStep(absTime, response.SimulationInterval);
 				absTime += response.SimulationInterval;
-				modalWriter.Finish(VectoRun.Status.Success);
+				modData.Finish(VectoRun.Status.Success);
 			}
-			modalWriter.Finish(VectoRun.Status.Success);
+			modData.Finish(VectoRun.Status.Success);
 		}
 
 		[TestMethod]
@@ -96,8 +97,9 @@ namespace TUGraz.VectoCore.Tests.Models.SimulationComponent
 
 			var driverData = CreateDriverData();
 
-			var modalWriter = new ModalDataContainer("Coach_MinimalPowertrain_Coasting.vmod");
-			var vehicleContainer = new VehicleContainer(modalWriter);
+			var fileWriter = new FileOutputWriter("Coach_MinimalPowertrain_Coasting", "");
+			var modData = new ModalDataContainer("Coach_MinimalPowertrain_Coasting", fileWriter);
+			var vehicleContainer = new VehicleContainer(modData);
 
 			var driver = new Driver(vehicleContainer, driverData, new DefaultDriverStrategy());
 			var engine = new CombustionEngine(vehicleContainer, engineData);
@@ -139,9 +141,9 @@ namespace TUGraz.VectoCore.Tests.Models.SimulationComponent
 
 				vehicleContainer.CommitSimulationStep(absTime, response.SimulationInterval);
 				absTime += response.SimulationInterval;
-				modalWriter.Finish(VectoRun.Status.Success);
+				modData.Finish(VectoRun.Status.Success);
 			}
-			modalWriter.Finish(VectoRun.Status.Success);
+			modData.Finish(VectoRun.Status.Success);
 		}
 
 
@@ -154,8 +156,9 @@ namespace TUGraz.VectoCore.Tests.Models.SimulationComponent
 
 			var driverData = CreateDriverData();
 
-			var modalWriter = new ModalDataContainer("Coach_MinimalPowertrain.vmod", SimulatorFactory.FactoryMode.EngineeringMode);
-			var vehicleContainer = new VehicleContainer(modalWriter);
+			var fileWriter = new FileOutputWriter("Coach_MinimalPowertrain", "");
+			var modData = new ModalDataContainer("Coach_MinimalPowertrain", fileWriter);
+			var vehicleContainer = new VehicleContainer(modData);
 
 			var cycle = new MockDrivingCycle(vehicleContainer, null);
 
@@ -184,7 +187,7 @@ namespace TUGraz.VectoCore.Tests.Models.SimulationComponent
 			vehicleContainer.CommitSimulationStep(absTime, response.SimulationInterval);
 			absTime += response.SimulationInterval;
 
-			Assert.AreEqual(0.955, modalWriter.GetValues<SI>(ModalResultField.acc).Last().Value(), Tolerance);
+			Assert.AreEqual(0.955, modData.GetValues<SI>(ModalResultField.acc).Last().Value(), Tolerance);
 
 			response = driverPort.Request(absTime, 1.SI<Meter>(), 10.SI<MeterPerSecond>(), 0.SI<Radian>());
 
@@ -193,7 +196,7 @@ namespace TUGraz.VectoCore.Tests.Models.SimulationComponent
 			vehicleContainer.CommitSimulationStep(absTime, response.SimulationInterval);
 			absTime += response.SimulationInterval;
 
-			Assert.AreEqual(0.7914, modalWriter.GetValues<SI>(ModalResultField.acc).Last().Value(), Tolerance);
+			Assert.AreEqual(0.7914, modData.GetValues<SI>(ModalResultField.acc).Last().Value(), Tolerance);
 		}
 
 		[TestMethod]

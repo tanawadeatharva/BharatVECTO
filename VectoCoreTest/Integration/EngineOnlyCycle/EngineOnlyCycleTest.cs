@@ -9,6 +9,7 @@ using TUGraz.VectoCore.Models.Simulation.Data;
 using TUGraz.VectoCore.Models.Simulation.Impl;
 using TUGraz.VectoCore.Models.SimulationComponent.Impl;
 using TUGraz.VectoCore.OutputData;
+using TUGraz.VectoCore.OutputData.FileIO;
 using TUGraz.VectoCore.Tests.Utils;
 using TUGraz.VectoCore.Utils;
 
@@ -45,21 +46,22 @@ namespace TUGraz.VectoCore.Tests.Integration.EngineOnlyCycle
 			var absTime = 0.SI<Second>();
 			var dt = 1.SI<Second>();
 
-			var modFile = Path.GetRandomFileName() + ".vmod";
-			var dataWriter = new ModalDataContainer(modFile, SimulatorFactory.FactoryMode.EngineOnlyMode);
+			var modFile = Path.GetRandomFileName(); // + ".vmod";
+			var fileWriter = new FileOutputWriter(modFile, "");
+			var modData = new ModalDataContainer(modFile, fileWriter, SimulatorFactory.FactoryMode.EngineOnlyMode);
 
 			foreach (var cycleEntry in data.Entries) {
 				var response = port.Request(absTime, dt, cycleEntry.EngineTorque, cycleEntry.EngineSpeed);
 				Assert.IsInstanceOfType(response, typeof(ResponseSuccess));
 				foreach (var sc in vehicle.SimulationComponents()) {
-					dataWriter[ModalResultField.time] = absTime + dt / 2;
-					sc.CommitSimulationStep(dataWriter);
+					modData[ModalResultField.time] = absTime + dt / 2;
+					sc.CommitSimulationStep(modData);
 				}
 
-				dataWriter.CommitSimulationStep();
+				modData.CommitSimulationStep();
 				absTime += dt;
 			}
-			dataWriter.Finish(VectoRun.Status.Success);
+			modData.Finish(VectoRun.Status.Success);
 
 			ResultFileHelper.TestModFile(TestContext.DataRow["ModalResultFile"].ToString(), modFile);
 		}
