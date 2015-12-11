@@ -1,5 +1,5 @@
 /*
-* Copyright 2015 European Union
+* Copyright 2015 Graz University of Technology
 *
 * Licensed under the EUPL (the "Licence");
 * You may not use this work except in compliance with the Licence.
