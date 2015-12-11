@@ -14,10 +14,16 @@
 * limitations under the Licence.
 */
 
+using System.IO;
 using Microsoft.VisualStudio.TestTools.UnitTesting;
 using TUGraz.VectoCore.Exceptions;
+using TUGraz.VectoCore.Models.Declaration;
+using TUGraz.VectoCore.Models.Simulation.Data;
+using TUGraz.VectoCore.Models.Simulation.Impl;
 using TUGraz.VectoCore.Models.SimulationComponent.Data;
 using TUGraz.VectoCore.Models.SimulationComponent.Data.Engine;
+using TUGraz.VectoCore.Models.SimulationComponent.Data.Gearbox;
+using TUGraz.VectoCore.Models.SimulationComponent.Impl;
 using TUGraz.VectoCore.Tests.Utils;
 using TUGraz.VectoCore.Utils;
 
@@ -142,6 +148,24 @@ namespace TUGraz.VectoCore.Tests.Models.SimulationComponentData
 			AssertHelper.Exception<VectoException>(
 				() => EngineFullLoadCurve.ReadFromFile(@"TestData\Components\FullLoadCurve insufficient entries.vfld"),
 				"FullLoadCurve must consist of at least two lines with numeric values (below file header)");
+		}
+
+		[TestMethod]
+		public void FullLoad_LossMap_Test()
+		{
+			var engineData = new CombustionEngineData {
+				FullLoadCurve = EngineFullLoadCurve.ReadFromFile(@"TestData\Components\12t Delivery Truck.vfld"),
+				IdleSpeed = 560.RPMtoRad()
+			};
+
+			var gearboxData = new GearboxData();
+			gearboxData.Gears[1] = new GearData {
+				LossMap = TransmissionLossMap.ReadFromFile(@"TestData\Components\limited.vtlm", 1, "1"),
+				Ratio = 1
+			};
+
+			AssertHelper.Exception<VectoException>(
+				() => SimulatorFactory.CheckLossMapRangeForFullLoadCurves(gearboxData, engineData));
 		}
 	}
 }

@@ -107,7 +107,7 @@ namespace TUGraz.VectoCore.Models.Simulation.Impl
 			}
 		}
 
-		private void CheckLossMapRangeForFullLoadCurves(GearboxData gearboxData, CombustionEngineData engineData)
+		internal static void CheckLossMapRangeForFullLoadCurves(GearboxData gearboxData, CombustionEngineData engineData)
 		{
 			foreach (var gear in gearboxData.Gears) {
 				for (var angularVelocity = engineData.IdleSpeed;

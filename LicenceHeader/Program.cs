@@ -34,6 +34,7 @@ namespace LicenceHeader
 			var count = 0;
 
 			foreach (var file in Directory.GetFiles(SolutionRootDirectory, "*.cs", SearchOption.AllDirectories)) {
+				Console.WriteLine(file);
 				if (file.Contains("\\obj\\") || file.Contains("\\bin\\")) {
 					continue;
 				}
