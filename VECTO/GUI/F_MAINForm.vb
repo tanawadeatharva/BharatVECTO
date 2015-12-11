@@ -1574,7 +1574,7 @@ Imports System.Text
 				sender.ReportProgress(0, New With {.Target = "ListBox", .Message = "Finished Reading File " + jobFile})
 			Catch ex As Exception
 				MsgBox(String.Format("ERROR running job {0}: {1}", jobFile, ex.Message), MsgBoxStyle.Critical)
-				sender.ReportProgress(0, New With {.Target = "ListBox", .Message = ex.Message})
+				sender.ReportProgress(0, New With {.Target = "ListBox", .Message = ex.Message, .MessageType = tMsgID.Err})
 			End Try
 		Next
 
@@ -1609,7 +1609,7 @@ Imports System.Text
 					If Not p.Value.Error Is Nothing Then
 						sender.ReportProgress(0, New With {.Target = "ListBox",
 												.Message = String.Format("ERROR {0}: {1}", p.Key, p.Value.Error.Message),
-												.Link = p.Value.ModFileName})
+												.Link = p.Value.ModFileName, .MessageType = tMsgID.Err})
 					End If
 					'If Not Cfg.DeclMode Then
 					sender.ReportProgress(0, New With {.Target = "ListBox",
@@ -1657,17 +1657,17 @@ Imports System.Text
 	Private Sub VectoWorkerV3_OnProgressChanged(sender As Object, e As ProgressChangedEventArgs)
 		ToolStripProgBarOverall.Value = e.ProgressPercentage
 
-		Dim MessageType As tMsgID = tMsgID.Normal
+		Dim messageType As tMsgID = tMsgID.Normal
 		If Not e.UserState.GetType().GetProperty("MessageType") Is Nothing Then
-			MessageType = e.UserState.MessageType
+			messageType = e.UserState.MessageType
 		End If
 
 		Select Case e.UserState.Target
 			Case "ListBox"
 				If e.UserState.GetType().GetProperty("Link") Is Nothing Then
-					MSGtoForm(MessageType, e.UserState.Message, "", "")
+					MSGtoForm(messageType, e.UserState.Message, "", "")
 				Else
-					MSGtoForm(MessageType, e.UserState.Message, "", e.UserState.Link)
+					MSGtoForm(messageType, e.UserState.Message, "", e.UserState.Link)
 				End If
 			Case "Status"
 				Status(e.UserState.Message)
