@@ -48,7 +48,7 @@ Imports System.Text
 	Private DEVpage As TabPage
 	Private CmDEVitem As ListViewItem
 
-	Private CheckLock As Boolean
+	Public CheckLock As Boolean
 	Private GENchecked As Integer
 	Private DRIchecked As Integer
 	Private GENcheckAllLock As Boolean
