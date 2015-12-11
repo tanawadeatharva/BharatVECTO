@@ -31,19 +31,19 @@ namespace TUGraz.VectoCore.InputData.FileIO.JSON
 
 		protected JSONFile(JObject data, string filename)
 		{
-			Header = (JObject)data[JsonKeys.JsonHeader];
-			Body = (JObject)data[JsonKeys.JsonBody];
+			Header = (JObject)data.GetEx(JsonKeys.JsonHeader);
+			Body = (JObject)data.GetEx(JsonKeys.JsonBody);
 			BasePath = filename;
 		}
 
 		public int FileVersion
 		{
-			get { return Header[JsonKeys.JsonHeader_FileVersion].Value<int>(); }
+			get { return Header.GetEx(JsonKeys.JsonHeader_FileVersion).Value<int>(); }
 		}
 
 		public bool SavedInDeclarationMode
 		{
-			get { return Body[JsonKeys.SavedInDeclMode].Value<bool>(); }
+			get { return Body.GetEx(JsonKeys.SavedInDeclMode).Value<bool>(); }
 		}
 
 		internal string BasePath
@@ -165,7 +165,7 @@ namespace TUGraz.VectoCore.InputData.FileIO.JSON
 		public JSONInputDataV2(JObject data, string filename) : base(data, filename)
 		{
 			_jobname = Path.GetFileName(filename);
-			var gearboxFile = Body[JsonKeys.Vehicle_GearboxFile].Value<string>();
+			var gearboxFile = Body.GetEx(JsonKeys.Vehicle_GearboxFile).Value<string>();
 			if (!EmptyOrInvalidFileName(gearboxFile)) {
 				Gearbox = JSONInputDataFactory.ReadGearbox(Path.Combine(BasePath, gearboxFile));
 			}
@@ -174,8 +174,8 @@ namespace TUGraz.VectoCore.InputData.FileIO.JSON
 				AxleGear = axleGear;
 			}
 			Engine = JSONInputDataFactory.ReadEngine(
-				Path.Combine(BasePath, Body[JsonKeys.Vehicle_EngineFile].Value<string>()));
-			var vehicleFile = Body[JsonKeys.Vehicle_VehicleFile].Value<string>();
+				Path.Combine(BasePath, Body.GetEx(JsonKeys.Vehicle_EngineFile).Value<string>()));
+			var vehicleFile = Body.GetEx(JsonKeys.Vehicle_VehicleFile).Value<string>();
 			if (!EmptyOrInvalidFileName(vehicleFile)) {
 				VehicleData = JSONInputDataFactory.ReadJsonVehicle(
 					Path.Combine(BasePath, vehicleFile));
@@ -196,22 +196,46 @@ namespace TUGraz.VectoCore.InputData.FileIO.JSON
 
 		public IVehicleInputData VehicleInputData
 		{
-			get { return VehicleData; }
+			get
+			{
+				if (VehicleData == null) {
+					throw new InvalidFileFormatException("VehicleData not found ");
+				}
+				return VehicleData;
+			}
 		}
 
 		public IGearboxInputData GearboxInputData
 		{
-			get { return Gearbox; }
+			get
+			{
+				if (Gearbox == null) {
+					throw new InvalidFileFormatException("GearboxData not found");
+				}
+				return Gearbox;
+			}
 		}
 
 		public IAxleGearInputData AxleGearInputData
 		{
-			get { return AxleGear; }
+			get
+			{
+				if (AxleGear == null) {
+					throw new InvalidFileFormatException("AxleGearData not found");
+				}
+				return AxleGear;
+			}
 		}
 
 		public IEngineInputData EngineInputData
 		{
-			get { return Engine; }
+			get
+			{
+				if (Engine == null) {
+					throw new InvalidFileFormatException("EngineData not found");
+				}
+				return Engine;
+			}
 		}
 
 		public IAuxiliariesInputData AuxiliaryInputData()
@@ -221,7 +245,13 @@ namespace TUGraz.VectoCore.InputData.FileIO.JSON
 
 		public IRetarderInputData RetarderInputData
 		{
-			get { return Retarder; }
+			get
+			{
+				if (Retarder == null) {
+					throw new InvalidFileFormatException("RetarderData not found");
+				}
+				return Retarder;
+			}
 		}
 
 		public IDriverInputData DriverInputData
@@ -243,7 +273,7 @@ namespace TUGraz.VectoCore.InputData.FileIO.JSON
 			get
 			{
 				var retVal = new List<ICycleData>();
-				foreach (var cycle in Body[JsonKeys.Job_Cycles]) {
+				foreach (var cycle in Body.GetEx(JsonKeys.Job_Cycles)) {
 					//.Select(cycle => 
 					var cycleFile = Path.Combine(BasePath, cycle.Value<string>());
 					DataTable cycleData;
@@ -270,7 +300,7 @@ namespace TUGraz.VectoCore.InputData.FileIO.JSON
 
 		public bool EngineOnlyMode
 		{
-			get { return Body[JsonKeys.Job_EngineOnlyMode].Value<bool>(); }
+			get { return Body.GetEx(JsonKeys.Job_EngineOnlyMode).Value<bool>(); }
 		}
 
 		public string JobName
@@ -286,12 +316,12 @@ namespace TUGraz.VectoCore.InputData.FileIO.JSON
 		{
 			get
 			{
+				var startStop = Body.GetEx(JsonKeys.DriverData_StartStop);
 				return new StartStopInputData() {
-					Enabled = Body[JsonKeys.DriverData_StartStop][JsonKeys.DriverData_StartStop_Enabled].Value<bool>(),
-					Delay = Body[JsonKeys.DriverData_StartStop][JsonKeys.DriverData_StartStop_Delay].Value<double>().SI<Second>(),
-					MaxSpeed =
-						Body[JsonKeys.DriverData_StartStop][JsonKeys.DriverData_StartStop_MaxSpeed].Value<double>().KMPHtoMeterPerSecond(),
-					MinTime = Body[JsonKeys.DriverData_StartStop][JsonKeys.DriverData_StartStop_MinTime].Value<double>().SI<Second>(),
+					Enabled = startStop.GetEx(JsonKeys.DriverData_StartStop_Enabled).Value<bool>(),
+					Delay = startStop.GetEx(JsonKeys.DriverData_StartStop_Delay).Value<double>().SI<Second>(),
+					MaxSpeed = startStop.GetEx(JsonKeys.DriverData_StartStop_MaxSpeed).Value<double>().KMPHtoMeterPerSecond(),
+					MinTime = startStop.GetEx(JsonKeys.DriverData_StartStop_MinTime).Value<double>().SI<Second>(),
 				};
 			}
 		}
@@ -300,14 +330,11 @@ namespace TUGraz.VectoCore.InputData.FileIO.JSON
 		{
 			get
 			{
+				var lac = Body.GetEx(JsonKeys.DriverData_LookaheadCoasting);
 				return new LookAheadCoastingInputData() {
-					Enabled = Body[JsonKeys.DriverData_LookaheadCoasting][JsonKeys.DriverData_Lookahead_Enabled].Value<bool>(),
-					Deceleration =
-						Body[JsonKeys.DriverData_LookaheadCoasting][JsonKeys.DriverData_Lookahead_Deceleration].Value<double>()
-							.SI<MeterPerSquareSecond>(),
-					MinSpeed =
-						Body[JsonKeys.DriverData_LookaheadCoasting][JsonKeys.DriverData_Lookahead_MinSpeed].Value<double>()
-							.KMPHtoMeterPerSecond(),
+					Enabled = lac.GetEx(JsonKeys.DriverData_Lookahead_Enabled).Value<bool>(),
+					Deceleration = lac.GetEx(JsonKeys.DriverData_Lookahead_Deceleration).Value<double>().SI<MeterPerSquareSecond>(),
+					MinSpeed = lac.GetEx(JsonKeys.DriverData_Lookahead_MinSpeed).Value<double>().KMPHtoMeterPerSecond(),
 				};
 			}
 		}
@@ -316,19 +343,13 @@ namespace TUGraz.VectoCore.InputData.FileIO.JSON
 		{
 			get
 			{
+				var overspeed = Body.GetEx(JsonKeys.DriverData_OverspeedEcoRoll);
 				return new OverSpeedEcoRollInputData() {
-					Mode =
-						DriverData.ParseDriverMode(
-							Body[JsonKeys.DriverData_OverspeedEcoRoll][JsonKeys.DriverData_OverspeedEcoRoll_Mode].Value<string>()),
-					MinSpeed =
-						Body[JsonKeys.DriverData_OverspeedEcoRoll][JsonKeys.DriverData_OverspeedEcoRoll_MinSpeed].Value<double>()
-							.KMPHtoMeterPerSecond(),
-					OverSpeed =
-						Body[JsonKeys.DriverData_OverspeedEcoRoll][JsonKeys.DriverData_OverspeedEcoRoll_OverSpeed].Value<double>()
-							.KMPHtoMeterPerSecond(),
+					Mode = DriverData.ParseDriverMode(overspeed.GetEx(JsonKeys.DriverData_OverspeedEcoRoll_Mode).Value<string>()),
+					MinSpeed = overspeed.GetEx(JsonKeys.DriverData_OverspeedEcoRoll_MinSpeed).Value<double>().KMPHtoMeterPerSecond(),
+					OverSpeed = overspeed.GetEx(JsonKeys.DriverData_OverspeedEcoRoll_OverSpeed).Value<double>().KMPHtoMeterPerSecond(),
 					UnderSpeed =
-						Body[JsonKeys.DriverData_OverspeedEcoRoll][JsonKeys.DriverData_OverspeedEcoRoll_UnderSpeed].Value<double>()
-							.KMPHtoMeterPerSecond()
+						overspeed.GetEx(JsonKeys.DriverData_OverspeedEcoRoll_UnderSpeed).Value<double>().KMPHtoMeterPerSecond()
 				};
 			}
 		}
@@ -337,8 +358,10 @@ namespace TUGraz.VectoCore.InputData.FileIO.JSON
 		{
 			get
 			{
-				var accelerationFile = Body[JsonKeys.DriverData_AccelerationCurve].Value<string>();
-				return EmptyOrInvalidFileName(accelerationFile) ? null : ReadTableData(accelerationFile, "DriverAccelerationCurve");
+				var accelerationFile = Body[JsonKeys.DriverData_AccelerationCurve];
+				return accelerationFile != null && !EmptyOrInvalidFileName(accelerationFile.Value<string>())
+					? ReadTableData(accelerationFile.Value<string>(), "DriverAccelerationCurve")
+					: null;
 			}
 		}
 
@@ -349,17 +372,17 @@ namespace TUGraz.VectoCore.InputData.FileIO.JSON
 			get
 			{
 				var retVal = new List<IAuxiliaryInputData>();
-				foreach (var aux in Body["Aux"]) {
+				foreach (var aux in Body.GetEx("Aux")) {
 					var auxData = new AuxiliaryDataInputData {
-						ID = aux["ID"].Value<string>(),
-						Type = aux["Type"].Value<string>(),
-						Technology = aux["Technology"].Value<string>()
+						ID = aux.GetEx("ID").Value<string>(),
+						Type = aux.GetEx("Type").Value<string>(),
+						Technology = aux.GetEx("Technology").Value<string>()
 					};
-					var auxFile = aux["Path"].Value<string>();
-					if (EmptyOrInvalidFileName(auxFile)) {
+					var auxFile = aux["Path"];
+					if (auxFile == null || EmptyOrInvalidFileName(auxFile.Value<string>())) {
 						continue;
 					}
-					var stream = new StreamReader(Path.Combine(BasePath, auxFile));
+					var stream = new StreamReader(Path.Combine(BasePath, auxFile.Value<string>()));
 					stream.ReadLine(); // skip header "Transmission ration to engine rpm [-]"
 					auxData.TransmissionRatio = stream.ReadLine().IndulgentParse();
 					stream.ReadLine(); // skip header "Efficiency to engine [-]"

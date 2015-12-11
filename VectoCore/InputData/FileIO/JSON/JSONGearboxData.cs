@@ -2,6 +2,7 @@ using System.Collections.Generic;
 using System.Data;
 using System.Linq;
 using Newtonsoft.Json.Linq;
+using TUGraz.VectoCore.InputData.Impl;
 using TUGraz.VectoCore.Models.SimulationComponent.Data;
 using TUGraz.VectoCore.Utils;
 
@@ -41,14 +42,15 @@ namespace TUGraz.VectoCore.InputData.FileIO.JSON
 
 		public double Ratio
 		{
-			get { return Body[JsonKeys.Gearbox_Gears][0][JsonKeys.Gearbox_Gear_Ratio].Value<double>(); }
+			get { return Body.GetEx(JsonKeys.Gearbox_Gears)[0].GetEx(JsonKeys.Gearbox_Gear_Ratio).Value<double>(); }
 		}
 
 		public DataTable LossMap
 		{
 			get
 			{
-				return ReadTableData(Body[JsonKeys.Gearbox_Gears][0][JsonKeys.Gearbox_Gear_LossMapFile].Value<string>(), "AxleGear");
+				return ReadTableData(
+					Body.GetEx(JsonKeys.Gearbox_Gears)[0].GetEx(JsonKeys.Gearbox_Gear_LossMapFile).Value<string>(), "AxleGear");
 			}
 		}
 
@@ -58,23 +60,23 @@ namespace TUGraz.VectoCore.InputData.FileIO.JSON
 
 		public string ModelName
 		{
-			get { return Body[JsonKeys.Gearbox_ModelName].Value<string>(); }
+			get { return Body.GetEx(JsonKeys.Gearbox_ModelName).Value<string>(); }
 		}
 
 		public GearboxType Type
 		{
-			get { return Body[JsonKeys.Gearbox_GearboxType].Value<string>().Parse<GearboxType>(); }
+			get { return Body.GetEx(JsonKeys.Gearbox_GearboxType).Value<string>().Parse<GearboxType>(); }
 		}
 
 
 		public KilogramSquareMeter Inertia
 		{
-			get { return Body[JsonKeys.Gearbox_Inertia].Value<double>().SI<KilogramSquareMeter>(); }
+			get { return Body.GetEx(JsonKeys.Gearbox_Inertia).Value<double>().SI<KilogramSquareMeter>(); }
 		}
 
 		public Second TractionInterruption
 		{
-			get { return Body[JsonKeys.Gearbox_TractionInterruption].Value<double>().SI<Second>(); }
+			get { return Body.GetEx(JsonKeys.Gearbox_TractionInterruption).Value<double>().SI<Second>(); }
 		}
 
 		public IList<ITransmissionInputData> Gears
@@ -82,60 +84,60 @@ namespace TUGraz.VectoCore.InputData.FileIO.JSON
 			get
 			{
 				var i = 0;
-				return (from gear in Body[JsonKeys.Gearbox_Gears]
+				return (from gear in Body.GetEx(JsonKeys.Gearbox_Gears)
 					where i++ != 0
 					let lossMap =
-						ReadTableData(gear[JsonKeys.Gearbox_Gear_LossMapFile].Value<string>(), string.Format("Gear {0} LossMap", i))
+						ReadTableData(gear.GetEx(JsonKeys.Gearbox_Gear_LossMapFile).Value<string>(), string.Format("Gear {0} LossMap", i))
 					let fullLoadCurve =
-						ReadTableData(gear[JsonKeys.Gearbox_Gear_FullLoadCurveFile].Value<string>(),
+						ReadTableData(gear.GetEx(JsonKeys.Gearbox_Gear_FullLoadCurveFile).Value<string>(),
 							string.Format("Gear {0} FLD", i), false)
 					let shiftPolygon =
-						ReadTableData(gear[JsonKeys.Gearbox_Gear_ShiftPolygonFile].Value<string>(),
+						ReadTableData(gear.GetEx(JsonKeys.Gearbox_Gear_ShiftPolygonFile).Value<string>(),
 							string.Format("Gear {0} shiftPolygon", i), false)
-					select new JSONTransmissionInputData() {
+					select new TransmissionInputData() {
 						Gear = i,
-						Ratio = gear[JsonKeys.Gearbox_Gear_Ratio].Value<double>(),
+						Ratio = gear.GetEx(JsonKeys.Gearbox_Gear_Ratio).Value<double>(),
 						FullLoadCurve = fullLoadCurve,
 						LossMap = lossMap,
 						ShiftPolygon = shiftPolygon,
-						TorqueConverterActive = gear[JsonKeys.Gearbox_Gear_TCactive].Value<bool>()
+						TorqueConverterActive = gear.GetEx(JsonKeys.Gearbox_Gear_TCactive).Value<bool>()
 					}).Cast<ITransmissionInputData>().ToList();
 			}
 		}
 
 		public bool SkipGears
 		{
-			get { return Body[JsonKeys.Gearbox_SkipGears].Value<bool>(); }
+			get { return Body.GetEx(JsonKeys.Gearbox_SkipGears).Value<bool>(); }
 		}
 
 		public Second ShiftTime
 		{
-			get { return Body[JsonKeys.Gearbox_ShiftTime].Value<double>().SI<Second>(); }
+			get { return Body.GetEx(JsonKeys.Gearbox_ShiftTime).Value<double>().SI<Second>(); }
 		}
 
 		public bool EarlyShiftUp
 		{
-			get { return Body[JsonKeys.Gearbox_EarlyShiftUp].Value<bool>(); }
+			get { return Body.GetEx(JsonKeys.Gearbox_EarlyShiftUp).Value<bool>(); }
 		}
 
 		public double TorqueReserve
 		{
-			get { return Body[JsonKeys.Gearbox_TorqueReserve].Value<double>() / 100.0; }
+			get { return Body.GetEx(JsonKeys.Gearbox_TorqueReserve).Value<double>() / 100.0; }
 		}
 
 		public MeterPerSecond StartSpeed
 		{
-			get { return Body[JsonKeys.Gearbox_StartSpeed].Value<double>().SI<MeterPerSecond>(); }
+			get { return Body.GetEx(JsonKeys.Gearbox_StartSpeed).Value<double>().SI<MeterPerSecond>(); }
 		}
 
 		public MeterPerSquareSecond StartAcceleration
 		{
-			get { return Body[JsonKeys.Gearbox_StartAcceleration].Value<double>().SI<MeterPerSquareSecond>(); }
+			get { return Body.GetEx(JsonKeys.Gearbox_StartAcceleration).Value<double>().SI<MeterPerSquareSecond>(); }
 		}
 
 		public double StartTorqueReserve
 		{
-			get { return Body[JsonKeys.Gearbox_StartTorqueReserve].Value<double>() / 100.0; }
+			get { return Body.GetEx(JsonKeys.Gearbox_StartTorqueReserve).Value<double>() / 100.0; }
 		}
 
 		public ITorqueConverterInputData TorqueConverter
@@ -149,9 +151,7 @@ namespace TUGraz.VectoCore.InputData.FileIO.JSON
 
 		public bool Enabled
 		{
-			get
-			{
-				return false; // TODO @@@
+			get { return false; // TODO @@@
 			}
 		}
 
@@ -160,7 +160,7 @@ namespace TUGraz.VectoCore.InputData.FileIO.JSON
 			get
 			{
 				return
-					Body[JsonKeys.Gearbox_TorqueConverter][JsonKeys.Gearbox_TorqueConverter_ReferenceRPM].Value<double>()
+					Body.GetEx(JsonKeys.Gearbox_TorqueConverter).GetEx(JsonKeys.Gearbox_TorqueConverter_ReferenceRPM).Value<double>()
 						.SI<RoundsPerMinute>();
 			}
 		}
@@ -170,7 +170,7 @@ namespace TUGraz.VectoCore.InputData.FileIO.JSON
 			get
 			{
 				return ReadTableData(
-					Body[JsonKeys.Gearbox_TorqueConverter][JsonKeys.Gearbox_TorqueConverter_TCMap].Value<string>(),
+					Body.GetEx(JsonKeys.Gearbox_TorqueConverter).GetEx(JsonKeys.Gearbox_TorqueConverter_TCMap).Value<string>(),
 					"TorqueConverter Data");
 			}
 		}
@@ -180,26 +180,11 @@ namespace TUGraz.VectoCore.InputData.FileIO.JSON
 			get
 			{
 				return
-					Body[JsonKeys.Gearbox_TorqueConverter][JsonKeys.Gearbox_TorqueConverter_Inertia].Value<double>()
+					Body.GetEx(JsonKeys.Gearbox_TorqueConverter).GetEx(JsonKeys.Gearbox_TorqueConverter_Inertia).Value<double>()
 						.SI<KilogramSquareMeter>();
 			}
 		}
 
 		#endregion
-	}
-
-	public class JSONTransmissionInputData : ITransmissionInputData
-	{
-		public int Gear { get; internal set; }
-
-		public double Ratio { get; internal set; }
-
-		public DataTable LossMap { get; internal set; }
-
-		public DataTable FullLoadCurve { get; internal set; }
-
-		public DataTable ShiftPolygon { get; internal set; }
-
-		public bool TorqueConverterActive { get; internal set; }
 	}
 }

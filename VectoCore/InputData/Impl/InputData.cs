@@ -43,6 +43,36 @@ namespace TUGraz.VectoCore.InputData.Impl
 		public MeterPerSecond UnderSpeed { get; internal set; }
 	}
 
+	public class TransmissionInputData : ITransmissionInputData
+	{
+		public int Gear { get; internal set; }
+
+		public double Ratio { get; internal set; }
+
+		public DataTable LossMap { get; internal set; }
+
+		public DataTable FullLoadCurve { get; internal set; }
+
+		public DataTable ShiftPolygon { get; internal set; }
+
+		public bool TorqueConverterActive { get; internal set; }
+	}
+
+	public class AxleInputData : IAxleInputData
+	{
+		public string Wheels { get; internal set; }
+
+		public bool TwinTyres { get; internal set; }
+
+		public double RollResistanceCoefficient { get; internal set; }
+
+		public Newton TyreTestLoad { get; internal set; }
+
+		public double AxleWeightShare { get; internal set; }
+
+		public KilogramSquareMeter Inertia { get; internal set; }
+	}
+
 	public class AuxiliaryDataInputData : IAuxiliaryInputData
 	{
 		public bool SavedInDeclarationMode { get; internal set; }

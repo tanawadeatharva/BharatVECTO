@@ -1,10 +1,25 @@
 ﻿using System;
 using Microsoft.VisualStudio.TestTools.UnitTesting;
 using Newtonsoft.Json;
+using TUGraz.VectoCore.Exceptions;
 using TUGraz.VectoCore.InputData.FileIO;
+using TUGraz.VectoCore.InputData.FileIO.JSON;
+using TUGraz.VectoCore.Tests.Utils;
 
 namespace TUGraz.VectoCore.Tests.FileIO
 {
+	[TestClass]
+	public class JsonTest
+	{
+		[TestMethod]
+		public void ReadJobTest()
+		{
+			var filename = @"Testdata\Jobs\40t_Long_Haul_Truck_invalid-JSON.vecto";
+			AssertHelper.Exception<InvalidFileFormatException>(() => JSONInputDataFactory.ReadJsonJob(filename));
+		}
+	}
+
+
 //	[TestClass]
 //	public class JsonTest
 //	{
