@@ -1,9 +1,11 @@
 ﻿using System.Linq;
 using Microsoft.VisualStudio.TestTools.UnitTesting;
 using TUGraz.VectoCore.Configuration;
+using TUGraz.VectoCore.InputData.FileIO.JSON;
 using TUGraz.VectoCore.Models.Simulation.Data;
 using TUGraz.VectoCore.Models.Simulation.Impl;
 using TUGraz.VectoCore.Models.SimulationComponent.Impl;
+using TUGraz.VectoCore.OutputData.FileIO;
 using TUGraz.VectoCore.Utils;
 
 namespace TUGraz.VectoCore.Tests.Models.Simulation
@@ -18,67 +20,66 @@ namespace TUGraz.VectoCore.Tests.Models.Simulation
 		[TestMethod]
 		public void CreateDeclarationSimulationRun()
 		{
-			var resultFileName = "test.vmod";
-			var sumFileName = resultFileName.Substring(0, resultFileName.Length - 5) + Constants.FileExtensions.SumFile;
+			var fileWriter = new FileOutputWriter(DeclarationJobFile);
 
-			//var dataWriter = new ModalDataWriter(resultFileName, engineOnly: true);
-			var sumWriter = new SummaryFileWriter(sumFileName);
+			var inputData = JSONInputDataFactory.ReadJsonJob(DeclarationJobFile);
+			var factory = new SimulatorFactory(SimulatorFactory.FactoryMode.DeclarationMode, inputData, fileWriter);
 
-			var factory = new SimulatorFactory(SimulatorFactory.FactoryMode.DeclarationMode) { SumWriter = sumWriter };
-
-			factory.DataReader.SetJobFile(DeclarationJobFile);
+			//factory.DataReader.SetJobFile(DeclarationJobFile);
 
 			var run = factory.SimulationRuns().First();
-			var vehicleContainer = (VehicleContainer) run.GetContainer();
+			var vehicleContainer = (VehicleContainer)run.GetContainer();
 
-			Assert.AreEqual(9, vehicleContainer._components.Count);
+			Assert.AreEqual(10, vehicleContainer.Components.Count);
 
-			Assert.IsInstanceOfType(vehicleContainer._gearbox, typeof (Gearbox), "gearbox not installed");
-			Assert.IsInstanceOfType(vehicleContainer._engine, typeof (CombustionEngine), "engine not installed");
-			Assert.IsInstanceOfType(vehicleContainer._vehicle, typeof (Vehicle), "vehicle not installed");
+			Assert.IsInstanceOfType(vehicleContainer.Gearbox, typeof(Gearbox), "gearbox not installed");
+			Assert.IsInstanceOfType(vehicleContainer.Engine, typeof(CombustionEngine), "engine not installed");
+			Assert.IsInstanceOfType(vehicleContainer.Vehicle, typeof(Vehicle), "vehicle not installed");
 
-			var gearbox = vehicleContainer._gearbox as Gearbox;
+			var gearbox = vehicleContainer.Gearbox as Gearbox;
 			Assert.IsNotNull(gearbox);
 
 
 			// -- shiftpolygon downshift 
 
-			Assert.AreEqual(600.RPMtoRad().Double(), gearbox.Data[1].ShiftPolygon.Downshift[0].AngularSpeed.Double(), 0.0001);
-			Assert.AreEqual(0.0, gearbox.Data[1].ShiftPolygon.Downshift[0].Torque.Double(), 0.0001);
+			Assert.AreEqual(600.RPMtoRad().Value(), gearbox.Data.Gears[1].ShiftPolygon.Downshift[0].AngularSpeed.Value(), 0.0001);
+			Assert.AreEqual(0.0, gearbox.Data.Gears[1].ShiftPolygon.Downshift[0].Torque.Value(), 0.0001);
 
-			Assert.AreEqual(600.RPMtoRad().Double(), gearbox.Data[1].ShiftPolygon.Downshift[1].AngularSpeed.Double(), 0.0001);
-			Assert.AreEqual(266.8277, gearbox.Data[1].ShiftPolygon.Downshift[1].Torque.Double(), 0.1);
+			Assert.AreEqual(600.RPMtoRad().Value(), gearbox.Data.Gears[1].ShiftPolygon.Downshift[1].AngularSpeed.Value(), 0.0001);
+			Assert.AreEqual(266.8277, gearbox.Data.Gears[1].ShiftPolygon.Downshift[1].Torque.Value(), 0.1);
 
-			Assert.AreEqual(1310.7646.RPMtoRad().Double(), gearbox.Data[1].ShiftPolygon.Downshift[2].AngularSpeed.Double(), 0.1);
-			Assert.AreEqual(899, gearbox.Data[1].ShiftPolygon.Downshift[2].Torque.Double(), 0.0001);
+			Assert.AreEqual(1310.7646.RPMtoRad().Value(), gearbox.Data.Gears[1].ShiftPolygon.Downshift[2].AngularSpeed.Value(),
+				0.1);
+			Assert.AreEqual(899, gearbox.Data.Gears[1].ShiftPolygon.Downshift[2].Torque.Value(), 0.0001);
 
 			// -- shiftpolygon upshift
 
-			Assert.AreEqual(1531.5293.RPMtoRad().Double(), gearbox.Data[1].ShiftPolygon.Upshift[0].AngularSpeed.Double(), 0.1);
-			Assert.AreEqual(0, gearbox.Data[1].ShiftPolygon.Upshift[0].Torque.Double(), 0.0001);
+			Assert.AreEqual(1531.5293.RPMtoRad().Value(), gearbox.Data.Gears[1].ShiftPolygon.Upshift[0].AngularSpeed.Value(), 0.1);
+			Assert.AreEqual(0, gearbox.Data.Gears[1].ShiftPolygon.Upshift[0].Torque.Value(), 0.0001);
 
-			Assert.AreEqual(1531.5293.RPMtoRad().Double(), gearbox.Data[1].ShiftPolygon.Upshift[1].AngularSpeed.Double(), 0.1);
-			Assert.AreEqual(459.881, gearbox.Data[1].ShiftPolygon.Upshift[1].Torque.Double(), 0.1);
+			Assert.AreEqual(1531.5293.RPMtoRad().Value(), gearbox.Data.Gears[1].ShiftPolygon.Upshift[1].AngularSpeed.Value(), 0.1);
+			Assert.AreEqual(459.881, gearbox.Data.Gears[1].ShiftPolygon.Upshift[1].Torque.Value(), 0.1);
 
-			Assert.AreEqual(2421.RPMtoRad().Double(), gearbox.Data[1].ShiftPolygon.Upshift[2].AngularSpeed.Double(), 0.1);
-			Assert.AreEqual(899, gearbox.Data[1].ShiftPolygon.Upshift[2].Torque.Double(), 0.1);
+			Assert.AreEqual(2421.RPMtoRad().Value(), gearbox.Data.Gears[1].ShiftPolygon.Upshift[2].AngularSpeed.Value(), 0.1);
+			Assert.AreEqual(899, gearbox.Data.Gears[1].ShiftPolygon.Upshift[2].Torque.Value(), 0.1);
 		}
 
 		[TestMethod]
 		public void CreateEngineeringSimulationRun()
 		{
-			var factory = new SimulatorFactory(SimulatorFactory.FactoryMode.EngineeringMode);
+			var fileWriter = new FileOutputWriter(EngineeringJobFile);
 
-			factory.DataReader.SetJobFile(EngineeringJobFile);
+			var inputData = JSONInputDataFactory.ReadJsonJob(EngineeringJobFile);
+			var factory = new SimulatorFactory(SimulatorFactory.FactoryMode.EngineeringMode, inputData, fileWriter);
 
 			var run = factory.SimulationRuns().First();
 
-			var vehicleContainer = (VehicleContainer) run.GetContainer();
-			Assert.AreEqual(10, vehicleContainer._components.Count);
+			var vehicleContainer = (VehicleContainer)run.GetContainer();
+			Assert.AreEqual(11, vehicleContainer.Components.Count);
 
-			Assert.IsInstanceOfType(vehicleContainer._gearbox, typeof (Gearbox), "gearbox not installed");
-			Assert.IsInstanceOfType(vehicleContainer._engine, typeof (CombustionEngine), "engine not installed");
-			Assert.IsInstanceOfType(vehicleContainer._vehicle, typeof (Vehicle), "vehicle not installed");
+			Assert.IsInstanceOfType(vehicleContainer.Gearbox, typeof(Gearbox), "gearbox not installed");
+			Assert.IsInstanceOfType(vehicleContainer.Engine, typeof(CombustionEngine), "engine not installed");
+			Assert.IsInstanceOfType(vehicleContainer.Vehicle, typeof(Vehicle), "vehicle not installed");
 		}
 	}
 }

@@ -76,6 +76,7 @@
       <SubType>Code</SubType>
     </Compile>
     <Compile Include="Integration\DeclarationReportTest.cs" />
+    <Compile Include="Models\Simulation\FactoryTest.cs" />
     <Compile Include="Reports\SumWriterTest.cs" />
     <Compile Include="Utils\GraphWriter.cs" />
     <Compile Include="Integration\EngineOnlyCycle\EngineOnlyCycleTest.cs" />

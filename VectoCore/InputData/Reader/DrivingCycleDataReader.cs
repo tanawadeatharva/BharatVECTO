@@ -247,6 +247,10 @@ namespace TUGraz.VectoCore.InputData.Reader
 		{
 			public IEnumerable<DrivingCycleData.DrivingCycleEntry> Parse(DataTable table)
 			{
+				if (table == null) {
+					Logger<DistanceBasedDataParser>().Warn("Invalid data for DistanceBasedDrivingCycle -- null");
+					throw new VectoException("Invalid data for DistanceBasedDrivingCycle -- null");
+				}
 				ValidateHeader(table.Columns.Cast<DataColumn>().Select(col => col.ColumnName).ToArray());
 
 				return table.Rows.Cast<DataRow>().Select(row => new DrivingCycleData.DrivingCycleEntry {

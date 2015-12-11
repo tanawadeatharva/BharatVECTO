@@ -110,14 +110,11 @@
     <Compile Include="Exceptions\VectoExceptions.cs" />
     <Compile Include="Exceptions\VectoSimulationException.cs" />
     <Compile Include="InputData\Impl\InputData.cs" />
-    <Compile Include="InputData\FileIO\InputFileReader.cs" />
-    <Compile Include="InputData\FileIO\JsonDataHeader.cs" />
     <Compile Include="InputData\FileIO\JSON\JSONEngineData.cs" />
     <Compile Include="InputData\FileIO\JSON\JSONGearboxData.cs" />
     <Compile Include="InputData\FileIO\JSON\JSONInputData.cs" />
     <Compile Include="InputData\FileIO\JSON\JSONInputDataFactory.cs" />
     <Compile Include="InputData\FileIO\JSON\JSONVehicleData.cs" />
-    <Compile Include="InputData\FileIO\VectoFiles.cs" />
     <Compile Include="InputData\IInputDataProvider.cs" />
     <Compile Include="InputData\InputData.cs" />
     <Compile Include="InputData\IVectoRunDataFactory.cs" />
@@ -189,11 +186,6 @@
     <Compile Include="OutputData\ModalDataContainer.cs" />
     <Compile Include="OutputData\PDF\DeclarationReport.cs" />
     <Compile Include="OutputData\SummaryDataContainer.cs" />
-    <Compile Include="Properties\Resources.Designer.cs">
-      <AutoGen>True</AutoGen>
-      <DesignTime>True</DesignTime>
-      <DependentUpon>Resources.resx</DependentUpon>
-    </Compile>
     <Compile Include="Properties\Version.cs">
       <AutoGen>True</AutoGen>
       <DesignTime>True</DesignTime>
@@ -281,10 +273,6 @@
   <ItemGroup>
     <None Include="app.config" />
     <None Include="packages.config" />
-    <EmbeddedResource Include="Properties\Resources.resx">
-      <Generator>ResXFileCodeGenerator</Generator>
-      <LastGenOutput>Resources.Designer.cs</LastGenOutput>
-    </EmbeddedResource>
     <EmbeddedResource Include="JsonKeys.resx">
       <Generator>ResXFileCodeGenerator</Generator>
       <LastGenOutput>JsonKeys.Designer.cs</LastGenOutput>

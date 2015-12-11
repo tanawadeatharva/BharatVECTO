@@ -5,8 +5,10 @@ using System.IO;
 using System.Linq;
 using System.Text;
 using Newtonsoft.Json.Linq;
+using NLog;
 using TUGraz.VectoCore.Exceptions;
 using TUGraz.VectoCore.InputData.Impl;
+using TUGraz.VectoCore.Models.Declaration;
 using TUGraz.VectoCore.Models.SimulationComponent.Data;
 using TUGraz.VectoCore.Utils;
 
@@ -240,10 +242,29 @@ namespace TUGraz.VectoCore.InputData.FileIO.JSON
 		{
 			get
 			{
-				return Body[JsonKeys.Job_Cycles].Select(cycle => new CycleInputData() {
-					Name = Path.GetFileNameWithoutExtension(cycle.Value<string>()),
-					CycleData = VectoCSVFile.Read(Path.Combine(BasePath, cycle.Value<string>()))
-				}).Cast<ICycleData>().ToList();
+				var retVal = new List<ICycleData>();
+				foreach (var cycle in Body[JsonKeys.Job_Cycles]) {
+					//.Select(cycle => 
+					var cycleFile = Path.Combine(BasePath, cycle.Value<string>());
+					DataTable cycleData;
+					if (File.Exists(cycleFile)) {
+						cycleData = VectoCSVFile.Read(cycleFile);
+					} else {
+						try {
+							var cycleDataRes =
+								RessourceHelper.ReadStream(RessourceHelper.Namespace + "MissionCycles." + cycle.Value<string>() + ".vdri");
+							cycleData = VectoCSVFile.ReadStream(cycleDataRes);
+						} catch {
+							// todo: log?
+							cycleData = null;
+						}
+					}
+					retVal.Add(new CycleInputData() {
+						Name = Path.GetFileNameWithoutExtension(cycle.Value<string>()),
+						CycleData = cycleData
+					});
+				}
+				return retVal;
 			}
 		}
 
@@ -314,7 +335,11 @@ namespace TUGraz.VectoCore.InputData.FileIO.JSON
 
 		public DataTable AccelerationCurve
 		{
-			get { return ReadTableData(Body[JsonKeys.DriverData_AccelerationCurve].Value<string>(), "DriverAccelerationCurve"); }
+			get
+			{
+				var accelerationFile = Body[JsonKeys.DriverData_AccelerationCurve].Value<string>();
+				return EmptyOrInvalidFileName(accelerationFile) ? null : ReadTableData(accelerationFile, "DriverAccelerationCurve");
+			}
 		}
 
 		#endregion
