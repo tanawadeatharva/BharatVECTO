@@ -24,7 +24,7 @@ namespace TUGraz.VectoCore.InputData.Reader.DataObjectAdaper
 				MinSpeed = DeclarationData.Driver.LookAhead.MinimumSpeed
 			};
 			var overspeedData = new DriverData.OverSpeedEcoRollData {
-				Mode = data.OverspeedEcoRoll.Mode,
+				Mode = data.OverSpeedEcoRoll.Mode,
 				MinSpeed = DeclarationData.Driver.OverSpeedEcoRoll.MinSpeed,
 				OverSpeed = DeclarationData.Driver.OverSpeedEcoRoll.OverSpeed,
 				UnderSpeed = DeclarationData.Driver.OverSpeedEcoRoll.UnderSpeed
@@ -64,8 +64,8 @@ namespace TUGraz.VectoCore.InputData.Reader.DataObjectAdaper
 
 			retVal.CrossWindCorrectionMode = CrossWindCorrectionMode.DeclarationModeCorrection;
 			retVal.AerodynamicDragAera = mission.UseCdA2
-				? data.DragCoefficientRigidTruck
-				: data.DragCoefficient;
+				? data.AirDragAreaRigidTruck
+				: data.AirDragArea;
 
 			var axles = data.Axles;
 			if (axles.Count < mission.AxleWeightDistribution.Length) {

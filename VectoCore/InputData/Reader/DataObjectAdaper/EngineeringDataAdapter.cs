@@ -26,7 +26,7 @@ namespace TUGraz.VectoCore.InputData.Reader.DataObjectAdaper
 			retVal.DynamicTyreRadius = data.DynamicTyreRadius;
 
 			retVal.CrossWindCorrectionMode = data.CrossWindCorrectionMode;
-			retVal.AerodynamicDragAera = data.DragCoefficient;
+			retVal.AerodynamicDragAera = data.AirDragArea;
 
 			var axles = data.Axles;
 			retVal.AxleData = axles.Select(axle => new Axle {
@@ -139,10 +139,10 @@ namespace TUGraz.VectoCore.InputData.Reader.DataObjectAdaper
 				MinSpeed = driver.Lookahead.MinSpeed,
 			};
 			var overspeedData = new DriverData.OverSpeedEcoRollData {
-				Mode = driver.OverspeedEcoRoll.Mode,
-				MinSpeed = driver.OverspeedEcoRoll.MinSpeed,
-				OverSpeed = driver.OverspeedEcoRoll.OverSpeed,
-				UnderSpeed = driver.OverspeedEcoRoll.UnderSpeed,
+				Mode = driver.OverSpeedEcoRoll.Mode,
+				MinSpeed = driver.OverSpeedEcoRoll.MinSpeed,
+				OverSpeed = driver.OverSpeedEcoRoll.OverSpeed,
+				UnderSpeed = driver.OverSpeedEcoRoll.UnderSpeed,
 			};
 			var startstopData = new VectoRunData.StartStopData {
 				Enabled = driver.StartStop.Enabled,

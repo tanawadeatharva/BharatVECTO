@@ -12,8 +12,16 @@ namespace TUGraz.VectoCore.InputData
 
 		IVehicleInputData Vehicle { get; }
 
+		/// <summary>
+		/// P008  Cycles
+		/// cf. VECTO Input Parameters.xlsx
+		/// </summary>
 		IList<ICycleData> Cycles { get; }
 
+		/// <summary>
+		/// P001
+		/// cf. VECTO Input Parameters.xlsx
+		/// </summary>
 		bool EngineOnlyMode { get; }
 
 		string JobName { get; }
@@ -23,22 +31,50 @@ namespace TUGraz.VectoCore.InputData
 	{
 		bool SavedInDeclarationMode { get; }
 
+		/// <summary>
+		/// P036
+		/// cf. VECTO Input Parameters.xlsx
+		/// </summary>
 		VehicleCategory VehicleCategory { get; }
 
+		/// <summary>
+		/// P038  Curb Weight Vehicle
+		/// </summary>
 		Kilogram CurbWeight { get; }
 
+		/// <summary>
+		/// P039  Curb Weight Extra Trailer/Body
+		/// </summary>
 		Kilogram CurbWeightExtra { get; }
 
+		/// <summary>
+		/// P041  Max. vehicle weight
+		/// </summary>
 		Kilogram GrossVehicleMassRating { get; }
 
+		/// <summary>
+		/// P040  Loading
+		/// </summary>
 		Kilogram Loading { get; }
 
+		/// <summary>
+		/// P049
+		/// </summary>
 		Meter DynamicTyreRadius { get; }
 
-		SquareMeter DragCoefficient { get; }
+		/// <summary>
+		/// P146  DragCoefficient * Cross Section Area - Truck & Trailer
+		/// </summary>
+		SquareMeter AirDragArea { get; }
 
-		SquareMeter DragCoefficientRigidTruck { get; } // without trailer
+		/// <summary>
+		/// P147  DragCoefficient * Cross Section Area - Rigid
+		/// </summary>
+		SquareMeter AirDragAreaRigidTruck { get; } // without trailer
 
+		/// <summary>
+		/// P050
+		/// </summary>
 		CrossWindCorrectionMode CrossWindCorrectionMode { get; }
 
 		string Rim { get; }
@@ -170,6 +206,11 @@ namespace TUGraz.VectoCore.InputData
 	public interface ICycleData
 	{
 		string Name { get; }
+
+		/// <summary>
+		/// P028, P029, P030, P031, P032, P119, P120, P121, P122, P123, P124, P125, P126
+		/// cf. VECTO Input Parameters.xlsx
+		/// </summary>
 		DataTable CycleData { get; }
 	}
 
@@ -179,31 +220,87 @@ namespace TUGraz.VectoCore.InputData
 
 		IStartStopInputData StartStop { get; }
 		ILookaheadCoastingInputData Lookahead { get; }
-		IOverspeedEcoRollInputData OverspeedEcoRoll { get; }
+		IOverSpeedEcoRollInputData OverSpeedEcoRoll { get; }
 
+		/// <summary>
+		/// P009; P033, P034, P035
+		/// cf. VECTO Input Parameters.xlsx
+		/// </summary>
 		DataTable AccelerationCurve { get; }
 	}
 
-	public interface IOverspeedEcoRollInputData
+	public interface IOverSpeedEcoRollInputData
 	{
+		/// <summary>
+		/// P015
+		/// cf. VECTO Input Parameters.xlsx
+		/// </summary>
 		DriverData.DriverMode Mode { get; }
+
+		/// <summary>
+		/// P016
+		/// cf. VECTO Input Parameters.xlsx
+		/// </summary>
 		MeterPerSecond MinSpeed { get; }
+
+		/// <summary>
+		/// P017
+		/// cf. VECTO Input Parameters.xlsx
+		/// </summary>
 		MeterPerSecond OverSpeed { get; }
+
+		/// <summary>
+		/// P018
+		/// cf. VECTO Input Parameters.xlsx
+		/// </summary>
 		MeterPerSecond UnderSpeed { get; }
 	}
 
 	public interface ILookaheadCoastingInputData
 	{
+		/// <summary>
+		/// P019
+		/// cf. VECTO Input Parameters.xlsx
+		/// </summary>
 		bool Enabled { get; }
+
+		/// <summary>
+		/// P020
+		/// cf. VECTO Input Parameters.xlsx
+		/// </summary>
 		MeterPerSquareSecond Deceleration { get; }
+
+		/// <summary>
+		/// P021
+		/// cf. VECTO Input Parameters.xlsx
+		/// </summary>
 		MeterPerSecond MinSpeed { get; }
 	}
 
 	public interface IStartStopInputData
 	{
+		/// <summary>
+		/// P010  StartStop - enabled
+		/// cf. VECTO Input Parameters.xlsx
+		/// </summary>
 		bool Enabled { get; }
+
+		/// <summary>
+		/// P011  StartStop - Max speed
+		/// cf. VECTO Input Parameters.xlsx
+		/// </summary>
 		MeterPerSecond MaxSpeed { get; }
+
+		/// <summary>
+		/// P012  StartStop - Min ICE-ON Time
+		/// cf. VECTO Input Parameters.xlsx
+		/// </summary>
 		Second MinTime { get; }
+
+		/// <summary>
+		/// P013  StartStop - Activation Delay
+		/// cf. VECTO Input Parameters.xlsx
+		/// </summary>
 		Second Delay { get; }
 	}
 
@@ -211,20 +308,52 @@ namespace TUGraz.VectoCore.InputData
 	{
 		bool SavedInDeclarationMode { get; }
 
+		/// <summary>
+		/// P006  Aux-ID
+		/// cf. VECTO Input Parameters.xlsx
+		/// </summary>
 		string ID { get; }
 
+		/// <summary>
+		/// P005  Aux-Type
+		/// cf. VECTO Input Parameters.xlsx
+		/// </summary>
 		string Type { get; }
 
+		/// <summary>
+		/// P118  Aux-Technology
+		/// cf. VECTO Input Parameters.xlsx
+		/// </summary>
 		string Technology { get; }
 
+		/// <summary>
+		/// P143  Aux-Techlist
+		/// cf. VECTO Input Parameters.xlsx
+		/// </summary>
 		IList<string> TechList { get; }
 
+		/// <summary>
+		/// P022  Aux-InputFile: transmission ratio
+		/// cf. VECTO Input Parameters.xlsx
+		/// </summary>
 		double TransmissionRatio { get; }
 
+		/// <summary>
+		/// P023  Aux-InputFile: efficiency to engine
+		/// cf. VECTO Input Parameters.xlsx
+		/// </summary>
 		double EfficiencyToEngine { get; }
 
+		/// <summary>
+		/// P024  Aux-InputFile: efficiency to supply
+		/// cf. VECTO Input Parameters.xlsx
+		/// </summary>
 		double EfficiencyToSupply { get; }
 
+		/// <summary>
+		/// P025, P026, P027  Aux-InputFile: map
+		/// cf. VECTO Input Parameters.xlsx
+		/// </summary>
 		DataTable DemandMap { get; }
 	}
 }
