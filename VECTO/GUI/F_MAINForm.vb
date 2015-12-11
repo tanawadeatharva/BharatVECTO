@@ -1656,12 +1656,18 @@ Imports System.Text
 
 	Private Sub VectoWorkerV3_OnProgressChanged(sender As Object, e As ProgressChangedEventArgs)
 		ToolStripProgBarOverall.Value = e.ProgressPercentage
+
+		Dim MessageType As tMsgID = tMsgID.Normal
+		If Not e.UserState.GetType().GetProperty("MessageType") Is Nothing Then
+			MessageType = e.UserState.MessageType
+		End If
+
 		Select Case e.UserState.Target
 			Case "ListBox"
 				If e.UserState.GetType().GetProperty("Link") Is Nothing Then
-					MSGtoForm(tMsgID.Normal, e.UserState.Message, "", "")
+					MSGtoForm(MessageType, e.UserState.Message, "", "")
 				Else
-					MSGtoForm(tMsgID.Normal, e.UserState.Message, "", e.UserState.Link)
+					MSGtoForm(MessageType, e.UserState.Message, "", e.UserState.Link)
 				End If
 			Case "Status"
 				Status(e.UserState.Message)
