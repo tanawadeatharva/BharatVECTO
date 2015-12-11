@@ -88,7 +88,7 @@ namespace TUGraz.VectoCore.Utils
 		public DelauneyMap CreateInvertedMap()
 		{
 			var reverted = new DelauneyMap();
-			reverted._points.AddRange(_points.Select(p=>new Point(p.X, p.Z, p.Y)));
+			reverted._points.AddRange(_points.Select(p => new Point(p.X, p.Z, p.Y)));
 			reverted.Triangulate();
 			return reverted;
 		}

@@ -44,7 +44,7 @@ namespace TUGraz.VectoCore.Models.SimulationComponent.Data.Gearbox
 		private readonly NewtonMeter _maxTorque = double.NegativeInfinity.SI<NewtonMeter>();
 		private readonly PerSecond _maxSpeed = double.NegativeInfinity.SI<PerSecond>();
 		private readonly PerSecond _minSpeed = double.PositiveInfinity.SI<PerSecond>();
-		
+
 
 		public string GearName { get; protected set; }
 
@@ -121,7 +121,6 @@ namespace TUGraz.VectoCore.Models.SimulationComponent.Data.Gearbox
 			_ratio = gearRatio;
 			_entries = entries;
 			_lossMap = new DelauneyMap();
-			_invertedLossMap = _lossMap.CreateInvertedMap();
 			foreach (var entry in _entries) {
 				var outTorque = (entry.InputTorque - entry.TorqueLoss) * _ratio;
 				_minTorque = VectoMath.Min(_minTorque, outTorque);
@@ -134,6 +133,7 @@ namespace TUGraz.VectoCore.Models.SimulationComponent.Data.Gearbox
 			}
 
 			_lossMap.Triangulate();
+			_invertedLossMap = _lossMap.CreateInvertedMap();
 		}
 
 
@@ -169,21 +169,7 @@ namespace TUGraz.VectoCore.Models.SimulationComponent.Data.Gearbox
 		/// <returns>Torque needed at input side (towards the engine).</returns>
 		public NewtonMeter GetOutTorque(PerSecond inAngularVelocity, NewtonMeter inTorque)
 		{
-			try
-			{
-				var outTorque = _invertedLossMap.Interpolate(inAngularVelocity.Value(), inTorque.Value()).SI<NewtonMeter>();
-				Log.Debug("GearboxLoss {0}: {1}", GearName, inTorque - outTorque);
-
-				// Limit input torque to a maximum value without losses (just torque/ratio)
-				return VectoMath.Min(outTorque, inTorque * _ratio);
-			}
-			catch (VectoException)
-			{
-				Log.Error("{0} - Failed to interpolate in TransmissionLossMap OutTorque. angularVelocity: {1}, torque: {2}", GearName,
-					inAngularVelocity, inTorque);
-
-				return inTorque * _ratio;
-			}
+			return _invertedLossMap.Interpolate(inAngularVelocity.Value(), inTorque.Value()).SI<NewtonMeter>();
 		}
 
 		public GearLossMapEntry this[int i]

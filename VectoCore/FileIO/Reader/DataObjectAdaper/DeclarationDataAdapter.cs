@@ -234,29 +234,7 @@ namespace TUGraz.VectoCore.FileIO.Reader.DataObjectAdaper
 						TorqueConverterActive = false
 					});
 			}).ToDictionary(kv => kv.Key, kv => kv.Value);
-
-			CheckLossMapRangeForFullLoadCurves(retVal, engineData);
 			return retVal;
-		}
-
-		private void CheckLossMapRangeForFullLoadCurves(GearboxData gearboxData, CombustionEngineData engineData)
-		{
-			foreach (var gear in gearboxData.Gears) {
-				for (var angularSpeed = engineData.IdleSpeed;
-					angularSpeed < engineData.FullLoadCurve.RatedSpeed;
-					angularSpeed += 2.0 / 3.0 * (engineData.FullLoadCurve.RatedSpeed - engineData.IdleSpeed) / 10.0) {
-					for (var inTorque = engineData.FullLoadCurve.FullLoadStationaryTorque(angularSpeed) / 3;
-						inTorque < engineData.FullLoadCurve.FullLoadStationaryPower(angularSpeed);
-						inTorque += 2.0 / 3.0 * engineData.FullLoadCurve.FullLoadStationaryTorque(angularSpeed) / 10.0) {
-
-						var outTorque = gear.Value.LossMap.OutTorque(angularSpeed, inTorque);
-
-						// todo: additionally test axle gear! with gear-ratio and loss
-						// todo: test retarder with gear-ratio and loss
-						
-					}
-				}
-			}
 		}
 
 		/// <summary>
