@@ -165,22 +165,37 @@ namespace TUGraz.VectoCore.InputData.FileIO.JSON
 		public JSONInputDataV2(JObject data, string filename) : base(data, filename)
 		{
 			_jobname = Path.GetFileName(filename);
-			var gearboxFile = Body.GetEx(JsonKeys.Vehicle_GearboxFile).Value<string>();
-			if (!EmptyOrInvalidFileName(gearboxFile)) {
-				Gearbox = JSONInputDataFactory.ReadGearbox(Path.Combine(BasePath, gearboxFile));
+			try {
+				var gearboxFile = Body.GetEx(JsonKeys.Vehicle_GearboxFile).Value<string>();
+				if (!EmptyOrInvalidFileName(gearboxFile)) {
+					Gearbox = JSONInputDataFactory.ReadGearbox(Path.Combine(BasePath, gearboxFile));
+				}
+			} catch (Exception e) {
+				throw new VectoException("Failed to read Gearbox file.", e);
 			}
-			var axleGear = Gearbox as IAxleGearInputData;
-			if (axleGear != null) {
-				AxleGear = axleGear;
+			try {
+				var axleGear = Gearbox as IAxleGearInputData;
+				if (axleGear != null) {
+					AxleGear = axleGear;
+				}
+			} catch (Exception e) {
+				throw new VectoException("Failed to read AxleGear file.", e);
 			}
-			Engine = JSONInputDataFactory.ReadEngine(
-				Path.Combine(BasePath, Body.GetEx(JsonKeys.Vehicle_EngineFile).Value<string>()));
-			var vehicleFile = Body.GetEx(JsonKeys.Vehicle_VehicleFile).Value<string>();
-			if (!EmptyOrInvalidFileName(vehicleFile)) {
-				VehicleData = JSONInputDataFactory.ReadJsonVehicle(
-					Path.Combine(BasePath, vehicleFile));
+			try {
+				Engine = JSONInputDataFactory.ReadEngine(
+					Path.Combine(BasePath, Body.GetEx(JsonKeys.Vehicle_EngineFile).Value<string>()));
+			} catch (Exception e) {
+				throw new VectoException("Failed to read Engine file.", e);
 			}
-
+			try {
+				var vehicleFile = Body.GetEx(JsonKeys.Vehicle_VehicleFile).Value<string>();
+				if (!EmptyOrInvalidFileName(vehicleFile)) {
+					VehicleData = JSONInputDataFactory.ReadJsonVehicle(
+						Path.Combine(BasePath, vehicleFile));
+				}
+			} catch (Exception e) {
+				throw new VectoException("Faled to read Vehicle file.", e);
+			}
 			var retarder = VehicleData as IRetarderInputData;
 			if (retarder != null) {
 				Retarder = retarder;
@@ -189,12 +204,12 @@ namespace TUGraz.VectoCore.InputData.FileIO.JSON
 
 		#region IInputDataProvider
 
-		public IJobInputData JobInputData()
+		public virtual IJobInputData JobInputData()
 		{
 			return this;
 		}
 
-		public IVehicleInputData VehicleInputData
+		public virtual IVehicleInputData VehicleInputData
 		{
 			get
 			{
@@ -205,7 +220,7 @@ namespace TUGraz.VectoCore.InputData.FileIO.JSON
 			}
 		}
 
-		public IGearboxInputData GearboxInputData
+		public virtual IGearboxInputData GearboxInputData
 		{
 			get
 			{
@@ -216,7 +231,7 @@ namespace TUGraz.VectoCore.InputData.FileIO.JSON
 			}
 		}
 
-		public IAxleGearInputData AxleGearInputData
+		public virtual IAxleGearInputData AxleGearInputData
 		{
 			get
 			{
@@ -227,7 +242,7 @@ namespace TUGraz.VectoCore.InputData.FileIO.JSON
 			}
 		}
 
-		public IEngineInputData EngineInputData
+		public virtual IEngineInputData EngineInputData
 		{
 			get
 			{
@@ -238,12 +253,12 @@ namespace TUGraz.VectoCore.InputData.FileIO.JSON
 			}
 		}
 
-		public IAuxiliariesInputData AuxiliaryInputData()
+		public virtual IAuxiliariesInputData AuxiliaryInputData()
 		{
 			return this;
 		}
 
-		public IRetarderInputData RetarderInputData
+		public virtual IRetarderInputData RetarderInputData
 		{
 			get
 			{
@@ -254,7 +269,7 @@ namespace TUGraz.VectoCore.InputData.FileIO.JSON
 			}
 		}
 
-		public IDriverInputData DriverInputData
+		public virtual IDriverInputData DriverInputData
 		{
 			get { return this; }
 		}
@@ -263,12 +278,12 @@ namespace TUGraz.VectoCore.InputData.FileIO.JSON
 
 		#region IJobInputData
 
-		public IVehicleInputData Vehicle
+		public virtual IVehicleInputData Vehicle
 		{
 			get { return VehicleData; }
 		}
 
-		public IList<ICycleData> Cycles
+		public virtual IList<ICycleData> Cycles
 		{
 			get
 			{
@@ -298,12 +313,12 @@ namespace TUGraz.VectoCore.InputData.FileIO.JSON
 			}
 		}
 
-		public bool EngineOnlyMode
+		public virtual bool EngineOnlyMode
 		{
 			get { return Body.GetEx(JsonKeys.Job_EngineOnlyMode).Value<bool>(); }
 		}
 
-		public string JobName
+		public virtual string JobName
 		{
 			get { return _jobname; }
 		}
@@ -312,7 +327,7 @@ namespace TUGraz.VectoCore.InputData.FileIO.JSON
 
 		#region DriverInputData
 
-		public IStartStopInputData StartStop
+		public virtual IStartStopInputData StartStop
 		{
 			get
 			{
@@ -326,7 +341,7 @@ namespace TUGraz.VectoCore.InputData.FileIO.JSON
 			}
 		}
 
-		public ILookaheadCoastingInputData Lookahead
+		public virtual ILookaheadCoastingInputData Lookahead
 		{
 			get
 			{
@@ -339,7 +354,7 @@ namespace TUGraz.VectoCore.InputData.FileIO.JSON
 			}
 		}
 
-		public IOverSpeedEcoRollInputData OverSpeedEcoRoll
+		public virtual IOverSpeedEcoRollInputData OverSpeedEcoRoll
 		{
 			get
 			{
@@ -354,7 +369,7 @@ namespace TUGraz.VectoCore.InputData.FileIO.JSON
 			}
 		}
 
-		public DataTable AccelerationCurve
+		public virtual DataTable AccelerationCurve
 		{
 			get
 			{
@@ -367,7 +382,7 @@ namespace TUGraz.VectoCore.InputData.FileIO.JSON
 
 		#endregion
 
-		public IList<IAuxiliaryInputData> Auxiliaries
+		public virtual IList<IAuxiliaryInputData> Auxiliaries
 		{
 			get
 			{

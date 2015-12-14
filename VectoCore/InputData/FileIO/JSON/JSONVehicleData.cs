@@ -25,52 +25,52 @@ namespace TUGraz.VectoCore.InputData.FileIO.JSON
 			}
 		}
 
-		public Kilogram CurbWeight
+		public virtual Kilogram CurbWeight
 		{
 			get { return Body.GetEx(JsonKeys.Vehicle_CurbWeight).Value<double>().SI<Kilogram>(); }
 		}
 
-		public Kilogram CurbWeightExtra
+		public virtual Kilogram CurbWeightExtra
 		{
 			get { return Body.GetEx(JsonKeys.Vehicle_CurbWeightExtra).Value<double>().SI<Kilogram>(); }
 		}
 
-		public Kilogram GrossVehicleMassRating
+		public virtual Kilogram GrossVehicleMassRating
 		{
 			get { return Body.GetEx(JsonKeys.Vehicle_GrossVehicleMassRating).Value<double>().SI<Ton>().Cast<Kilogram>(); }
 		}
 
-		public Kilogram Loading
+		public virtual Kilogram Loading
 		{
 			get { return Body.GetEx(JsonKeys.Vehicle_Loading).Value<double>().SI<Kilogram>(); }
 		}
 
-		public Meter DynamicTyreRadius
+		public virtual Meter DynamicTyreRadius
 		{
 			get { return Body.GetEx(JsonKeys.Vehicle_DynamicTyreRadius).Value<double>().SI().Milli.Meter.Cast<Meter>(); }
 		}
 
-		public SquareMeter AirDragArea
+		public virtual SquareMeter AirDragArea
 		{
 			get { return Body.GetEx(JsonKeys.Vehicle_DragCoefficient).Value<double>().SI<SquareMeter>(); }
 		}
 
-		public SquareMeter AirDragAreaRigidTruck
+		public virtual SquareMeter AirDragAreaRigidTruck
 		{
 			get { return Body.GetEx(JsonKeys.Vehicle_DragCoefficientRigidTruck).Value<double>().SI<SquareMeter>(); }
 		}
 
-		public CrossWindCorrectionMode CrossWindCorrectionMode
+		public virtual CrossWindCorrectionMode CrossWindCorrectionMode
 		{
 			get { return CrossWindCorrectionModeHelper.Parse(Body.GetEx("CdCorrMode").Value<string>()); }
 		}
 
-		public string Rim
+		public virtual string Rim
 		{
 			get { return Body.GetEx(JsonKeys.Vehicle_Rim).Value<string>(); }
 		}
 
-		public AxleConfiguration AxleConfiguration
+		public virtual AxleConfiguration AxleConfiguration
 		{
 			get
 			{
@@ -80,7 +80,7 @@ namespace TUGraz.VectoCore.InputData.FileIO.JSON
 			}
 		}
 
-		public IList<IAxleInputData> Axles
+		public virtual IList<IAxleInputData> Axles
 		{
 			get
 			{
@@ -91,12 +91,13 @@ namespace TUGraz.VectoCore.InputData.FileIO.JSON
 							Wheels = axle.GetEx(JsonKeys.Vehicle_Axles_Wheels).Value<string>(),
 							TwinTyres = axle.GetEx(JsonKeys.Vehicle_Axles_TwinTyres).Value<bool>(),
 							RollResistanceCoefficient = axle.GetEx(JsonKeys.Vehicle_Axles_RollResistanceCoefficient).Value<double>(),
-							TyreTestLoad = axle.GetEx(JsonKeys.Vehicle_Axles_TyreTestLoad).Value<double>().SI<Newton>()
+							TyreTestLoad = axle.GetEx(JsonKeys.Vehicle_Axles_TyreTestLoad).Value<double>().SI<Newton>(),
+							AxleWeightShare = axle.GetEx("AxleWeightShare").Value<double>()
 						}).Cast<IAxleInputData>().ToList();
 			}
 		}
 
-		public DataTable CrosswindCorrectionMap
+		public virtual DataTable CrosswindCorrectionMap
 		{
 			get { return ReadTableData(Body.GetEx("CdCorrFile").Value<string>(), "CrosswindCorrection File"); }
 		}
@@ -105,7 +106,7 @@ namespace TUGraz.VectoCore.InputData.FileIO.JSON
 
 		#region IRetarderInputData
 
-		public RetarderData.RetarderType Type
+		public virtual RetarderData.RetarderType Type
 		{
 			get
 			{
@@ -116,12 +117,12 @@ namespace TUGraz.VectoCore.InputData.FileIO.JSON
 			}
 		}
 
-		public double Ratio
+		public virtual double Ratio
 		{
 			get { return Body.GetEx(JsonKeys.Vehicle_Retarder).GetEx(JsonKeys.Vehicle_Retarder_Ratio).Value<double>(); }
 		}
 
-		public DataTable LossMap
+		public virtual DataTable LossMap
 		{
 			get
 			{
