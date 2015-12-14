@@ -1,4 +1,4 @@
-﻿/*
+/*
 * Copyright 2015 European Union
 *
 * Licensed under the EUPL (the "Licence");
@@ -39,7 +39,7 @@ namespace LicenceHeader
 					continue;
 				}
 
-				var re = new Regex("^.*?(?=using|namespace)");
+				var re = new Regex("^.*?(?=using|namespace)", RegexOptions.Singleline);
 				var content = File.ReadAllText(file, Encoding.Default);
 				var updatedContent = re.Replace(content, licence);
 				if (updatedContent != content) {
