@@ -51,7 +51,6 @@ namespace TUGraz.VectoCore.Models.SimulationComponent.Data
 		public Kilogram CurbWeigthExtra { get; internal set; }
 		public Kilogram Loading { get; internal set; }
 		public Kilogram GrossVehicleMassRating { get; internal set; }
-		public SquareMeter AerodynamicDragAera { get; internal set; }
 		public Meter DynamicTyreRadius { get; internal set; }
 		public Kilogram ReducedMassWheels { get; private set; }
 		public string Rim { get; internal set; }

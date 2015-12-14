@@ -168,7 +168,7 @@ namespace TUGraz.VectoCore.InputData
 	{
 		bool Enabled { get; }
 
-		RoundsPerMinute ReferenceRPM { get; }
+		PerSecond ReferenceRPM { get; }
 
 		KilogramSquareMeter Inertia { get; }
 

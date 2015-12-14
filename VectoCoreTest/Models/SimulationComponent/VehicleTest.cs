@@ -71,8 +71,10 @@ namespace TUGraz.VectoCore.Tests.Models.SimulationComponent
 			var container = new VehicleContainer();
 
 			var vehicleData = MockSimulationDataFactory.CreateVehicleDataFromFile(VehicleDataFileTruck);
-			vehicleData.AerodynamicDragAera = 6.46.SI<SquareMeter>();
-
+			//vehicleData.AerodynamicDragAera = 6.46.SI<SquareMeter>();
+			vehicleData.CrossWindCorrectionCurve =
+				DeclarationDataAdapter.GetDeclarationAirResistanceCurve(VehicleCategory.Tractor,
+					6.46.SI<SquareMeter>());
 			var vehicle = new Vehicle(container, vehicleData);
 
 			var mockPort = new MockFvOutPort();
@@ -110,11 +112,9 @@ namespace TUGraz.VectoCore.Tests.Models.SimulationComponent
 			var container = new VehicleContainer();
 
 			var vehicleData = MockSimulationDataFactory.CreateVehicleDataFromFile(VehicleDataFileTruck);
-			vehicleData.AerodynamicDragAera = 6.2985.SI<SquareMeter>();
 			vehicleData.CrossWindCorrectionCurve =
 				DeclarationDataAdapter.GetDeclarationAirResistanceCurve(VehicleCategory.Tractor,
-					vehicleData.AerodynamicDragAera);
-			//vehicleData.CrossWindCorrectionMode = CrossWindCorrectionMode.DeclarationModeCorrection;
+					6.2985.SI<SquareMeter>());
 
 			var vehicle = new Vehicle(container, vehicleData);
 

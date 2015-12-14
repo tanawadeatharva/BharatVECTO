@@ -366,8 +366,6 @@ namespace TUGraz.VectoCore.Tests.Integration.SimulationRuns
 			};
 			return new VehicleData {
 				AxleConfiguration = AxleConfiguration.AxleConfig_6x2,
-				AerodynamicDragAera = 3.2634.SI<SquareMeter>(),
-				//CrossWindCorrectionMode = CrossWindCorrectionMode.NoCorrection,
 				CrossWindCorrectionCurve = CrossWindCorrectionCurve.GetNoCorrectionCurve(3.2634.SI<SquareMeter>()),
 				CurbWeight = 15700.SI<Kilogram>(),
 				CurbWeigthExtra = 0.SI<Kilogram>(),

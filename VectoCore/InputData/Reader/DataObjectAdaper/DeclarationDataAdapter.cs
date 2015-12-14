@@ -81,11 +81,11 @@ namespace TUGraz.VectoCore.InputData.Reader.DataObjectAdaper
 			retVal.DynamicTyreRadius =
 				DeclarationData.DynamicTyreRadius(data.Axles[DeclarationData.PoweredAxle()].Wheels, data.Rim);
 
-			retVal.AerodynamicDragAera = mission.UseCdA2
+			var aerodynamicDragAera = mission.UseCdA2
 				? data.AirDragAreaRigidTruck
 				: data.AirDragArea;
 
-			retVal.CrossWindCorrectionCurve = GetDeclarationAirResistanceCurve(retVal.VehicleCategory, retVal.AerodynamicDragAera);
+			retVal.CrossWindCorrectionCurve = GetDeclarationAirResistanceCurve(retVal.VehicleCategory, aerodynamicDragAera);
 			var axles = data.Axles;
 			if (axles.Count < mission.AxleWeightDistribution.Length) {
 				throw new VectoException("Vehicle does not contain sufficient axles. {0} axles defined, {1} axles required",
