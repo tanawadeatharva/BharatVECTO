@@ -1,5 +1,5 @@
-/*
-* Copyright 2015 Graz University of Technology
+﻿/*
+* Copyright 2015 European Union
 *
 * Licensed under the EUPL (the "Licence");
 * You may not use this work except in compliance with the Licence.
@@ -39,7 +39,7 @@ namespace LicenceHeader
 					continue;
 				}
 
-				var re = new Regex("^.*?(?=using|namespace)", RegexOptions.Singleline);
+				var re = new Regex("^.*?(?=using|namespace)");
 				var content = File.ReadAllText(file, Encoding.Default);
 				var updatedContent = re.Replace(content, licence);
 				if (updatedContent != content) {
