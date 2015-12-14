@@ -129,8 +129,7 @@ Examples:
 				// process the file list and start simulation
 				//var sumFileName = Path.Combine(Path.GetDirectoryName(fileList.First()) ?? "",
 				//	Path.GetFileNameWithoutExtension(fileList.First()) + Constants.FileExtensions.SumFile);
-				var fileWriter = new FileOutputWriter(Path.GetFileNameWithoutExtension(fileList.First()),
-					Path.GetDirectoryName(fileList.First() ?? ""));
+				var fileWriter = new FileOutputWriter(Path.GetDirectoryName(fileList.First() ?? ""));
 				var sumWriter = new SummaryDataContainer(fileWriter);
 				jobContainer = new JobContainer(sumWriter);
 

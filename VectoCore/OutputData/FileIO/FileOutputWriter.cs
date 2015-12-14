@@ -46,7 +46,7 @@ namespace TUGraz.VectoCore.OutputData.FileIO
 
 		public void WriteModData(string runName, string cycleName, string runSuffix, DataTable modData)
 		{
-			VectoCSVFile.Write(GetModDataFileName(runName, cycleName, runSuffix).ToString(), modData);
+			VectoCSVFile.Write(GetModDataFileName(runName, cycleName, runSuffix), modData);
 		}
 
 		public string GetSumFileName()
