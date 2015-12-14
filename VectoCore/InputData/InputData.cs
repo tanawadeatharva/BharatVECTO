@@ -72,18 +72,32 @@ namespace TUGraz.VectoCore.InputData
 		/// </summary>
 		SquareMeter AirDragAreaRigidTruck { get; } // without trailer
 
+
+		/// <summary>
+		/// P117  Powered axle tyres/rims
+		/// </summary>
+		string Rim { get; }
+
+		/// <summary>
+		/// P037  
+		/// </summary>
+		AxleConfiguration AxleConfiguration { get; }
+
+		/// <summary>
+		/// parameters for every axle
+		/// P044, P045, P046, P047, P048, P108
+		/// </summary>
+		IList<IAxleInputData> Axles { get; }
+
 		/// <summary>
 		/// P050
 		/// </summary>
 		CrossWindCorrectionMode CrossWindCorrectionMode { get; }
 
-		string Rim { get; }
-
-		//IRetarderInputData Retarder { get; }
-
-		AxleConfiguration AxleConfiguration { get; }
-		IList<IAxleInputData> Axles { get; }
-
+		/// <summary>
+		/// P051
+		/// P055, P056
+		/// </summary>
 		DataTable CrosswindCorrectionMap { get; }
 	}
 
@@ -91,67 +105,156 @@ namespace TUGraz.VectoCore.InputData
 	{
 		bool SavedInDeclarationMode { get; }
 
+		/// <summary>
+		/// P052  
+		/// </summary>
 		RetarderData.RetarderType Type { get; }
 
+		/// <summary>
+		/// P053
+		/// </summary>
 		double Ratio { get; }
 
+		/// <summary>
+		/// P054
+		/// P057, P058
+		/// </summary>
 		DataTable LossMap { get; }
 	}
 
 	public interface IAxleInputData
 	{
+		/// <summary>
+		/// P108  
+		/// </summary>
 		string Wheels { get; }
+
+		/// <summary>
+		/// P045
+		/// </summary>
 		bool TwinTyres { get; }
 
+		/// <summary>
+		/// P046
+		/// </summary>
 		double RollResistanceCoefficient { get; }
+
+		/// <summary>
+		/// P047
+		/// </summary>
 		Newton TyreTestLoad { get; }
 
+		/// <summary>
+		/// P044 (0 - 1)
+		/// </summary>
 		double AxleWeightShare { get; }
 
+		/// <summary>
+		/// P048
+		/// </summary>
 		KilogramSquareMeter Inertia { get; }
 	}
 
 	public interface IGearboxInputData
 	{
 		bool SavedInDeclarationMode { get; }
+
+		/// <summary>
+		/// P075
+		/// </summary>
 		string ModelName { get; }
 
+		/// <summary>
+		/// P076
+		/// </summary>
 		GearboxType Type { get; }
 
+		/// <summary>
+		/// P080
+		/// </summary>
 		KilogramSquareMeter Inertia { get; }
 
+		/// <summary>
+		/// P081
+		/// </summary>
 		Second TractionInterruption { get; }
 
+		/// <summary>
+		/// P078, P079, P077, P082, P145 (for every gear)
+		/// </summary>
 		IList<ITransmissionInputData> Gears { get; }
 
+		/// <summary>
+		/// P084
+		/// </summary>
 		bool SkipGears { get; }
+
+		/// <summary>
+		/// P086
+		/// </summary>
 		Second ShiftTime { get; }
+
+		/// <summary>
+		/// P083
+		/// </summary>
 		bool EarlyShiftUp { get; }
 
+		/// <summary>
+		/// P085
+		/// </summary>
 		double TorqueReserve { get; }
 
+		/// <summary>
+		/// P087
+		/// </summary>
 		MeterPerSecond StartSpeed { get; }
 
+		/// <summary>
+		/// P088
+		/// </summary>
 		MeterPerSquareSecond StartAcceleration { get; }
 
 		/// <summary>
+		/// P089
 		/// [%] (0-1)
 		/// </summary>
 		double StartTorqueReserve { get; }
 
+		/// <summary>
+		/// P090, P091, P092, P127
+		/// </summary>
 		ITorqueConverterInputData TorqueConverter { get; }
 	}
 
 	public interface ITransmissionInputData
 	{
 		int Gear { get; }
+
+		/// <summary>
+		/// P078
+		/// </summary>
 		double Ratio { get; }
+
+		/// <summary>
+		/// P079
+		/// P096, P097, P098
+		/// </summary>
 		DataTable LossMap { get; }
 
+		/// <summary>
+		/// P145
+		/// </summary>
 		DataTable FullLoadCurve { get; }
 
+		/// <summary>
+		/// P082
+		/// P093, P094, P095
+		/// </summary>
 		DataTable ShiftPolygon { get; }
 
+		/// <summary>
+		/// P077
+		/// </summary>
 		bool TorqueConverterActive { get; }
 	}
 
@@ -159,19 +262,39 @@ namespace TUGraz.VectoCore.InputData
 	{
 		bool SavedInDeclarationMode { get; }
 
+		/// <summary>
+		/// P078
+		/// </summary>
 		double Ratio { get; }
 
+		/// <summary>
+		/// P079
+		/// P096, P097, P098
+		/// </summary>
 		DataTable LossMap { get; }
 	}
 
 	public interface ITorqueConverterInputData
 	{
+		/// <summary>
+		/// P090
+		/// </summary>
 		bool Enabled { get; }
 
+		/// <summary>
+		/// P092
+		/// </summary>
 		PerSecond ReferenceRPM { get; }
 
+		/// <summary>
+		/// P127
+		/// </summary>
 		KilogramSquareMeter Inertia { get; }
 
+		/// <summary>
+		/// P091
+		/// P099, P100, P101
+		/// </summary>
 		DataTable TCData { get; }
 	}
 
@@ -179,22 +302,52 @@ namespace TUGraz.VectoCore.InputData
 	{
 		bool SavedInDeclarationMode { get; }
 
+		/// <summary>
+		/// P059
+		/// </summary>
 		string ModelName { get; }
+
+		/// <summary>
+		/// P061
+		/// </summary>
 		CubicMeter Displacement { get; }
 
+		/// <summary>
+		/// P063
+		/// </summary>
 		PerSecond IdleSpeed { get; }
 
 		/// <summary>
+		/// P067
+		/// P072, P073, P074
 		/// engine speed in rpm, torque in NM, fuel consumption in g/h
 		/// </summary>
 		DataTable FuelConsumptionMap { get; }
 
+		/// <summary>
+		/// P144
+		/// P068, P069, P70, P71
+		/// </summary>
 		DataTable FullLoadCurve { get; }
 
+		/// <summary>
+		/// P062
+		/// </summary>
 		KilogramSquareMeter Inertia { get; }
 
+		/// <summary>
+		/// P111
+		/// </summary>
 		KilogramPerWattSecond WHTCMotorway { get; }
+
+		/// <summary>
+		/// P110
+		/// </summary>
 		KilogramPerWattSecond WHTCRural { get; }
+
+		/// <summary>
+		/// P109
+		/// </summary>
 		KilogramPerWattSecond WHTCUrban { get; }
 	}
 
