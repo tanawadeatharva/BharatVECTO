@@ -1,8 +1,23 @@
-﻿using System.Collections.Generic;
+/*
+* Copyright 2015 European Union
+*
+* Licensed under the EUPL (the "Licence");
+* You may not use this work except in compliance with the Licence.
+* You may obtain a copy of the Licence at:
+*
+* http://ec.europa.eu/idabc/eupl5
+*
+* Unless required by applicable law or agreed to in writing, software 
+* distributed under the Licence is distributed on an "AS IS" basis,
+* WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+* See the Licence for the specific language governing permissions and 
+* limitations under the Licence.
+*/
+
+using System.Collections.Generic;
 using Microsoft.VisualStudio.TestTools.UnitTesting;
 using TUGraz.VectoCore.Configuration;
 using TUGraz.VectoCore.InputData.Reader;
-using TUGraz.VectoCore.Models.Connector.Ports;
 using TUGraz.VectoCore.Models.Connector.Ports.Impl;
 using TUGraz.VectoCore.Models.Declaration;
 using TUGraz.VectoCore.Models.Simulation.Data;
@@ -26,13 +41,9 @@ namespace TUGraz.VectoCore.Tests.Integration.SimulationRuns
 		public const string EngineFile = @"TestData\Integration\MinimalPowerTrain\24t Coach.veng";
 		public const string GearboxFile = @"TestData\Integration\MinimalPowerTrain\24t Coach-1Gear.vgbx";
 		public const string GbxLossMap = @"TestData\Integration\MinimalPowerTrain\NoLossGbxMap.vtlm";
-
-
 		public const string AccelerationFile = @"TestData\Components\Coach.vacc";
 		public const string AccelerationFile2 = @"TestData\Components\Truck.vacc";
-
 		public const double Tolerance = 0.001;
-
 
 		[TestMethod]
 		public void TestWheelsAndEngineInitialize()
@@ -66,7 +77,8 @@ namespace TUGraz.VectoCore.Tests.Integration.SimulationRuns
 
 			gbx.Gear = 1;
 
-			var response = driverPort.Initialize(18.KMPHtoMeterPerSecond(), VectoMath.InclinationToAngle(2.842372037 / 100));
+			var response = driverPort.Initialize(18.KMPHtoMeterPerSecond(),
+				VectoMath.InclinationToAngle(2.842372037 / 100));
 
 
 			var absTime = 0.SI<Second>();
@@ -82,7 +94,6 @@ namespace TUGraz.VectoCore.Tests.Integration.SimulationRuns
 
 			Assert.AreEqual(323.7562, engine.PreviousState.EngineTorque.Value(), Tolerance);
 		}
-
 
 		[TestMethod]
 		public void TestWheelsAndEngine()
@@ -134,14 +145,15 @@ namespace TUGraz.VectoCore.Tests.Integration.SimulationRuns
 				response = cyclePort.Request(absTime, ds);
 				response.Switch().
 					Case<ResponseDrivingCycleDistanceExceeded>(r => ds = r.MaxDistance).
-					Case<ResponseCycleFinished>(r => {}).
+					Case<ResponseCycleFinished>(r => { }).
 					Case<ResponseSuccess>(r => {
 						vehicleContainer.CommitSimulationStep(absTime, r.SimulationInterval);
 						absTime += r.SimulationInterval;
 
 						ds = vehicleContainer.VehicleSpeed.IsEqual(0)
 							? Constants.SimulationSettings.DriveOffDistance
-							: (Constants.SimulationSettings.TargetTimeInterval * vehicleContainer.VehicleSpeed).Cast<Meter>();
+							: (Constants.SimulationSettings.TargetTimeInterval * vehicleContainer.VehicleSpeed)
+								.Cast<Meter>();
 
 						if (cnt++ % 100 == 0) {
 							modData.Finish(VectoRun.Status.Success);
@@ -206,7 +218,8 @@ namespace TUGraz.VectoCore.Tests.Integration.SimulationRuns
 
 						ds = vehicleContainer.VehicleSpeed.IsEqual(0)
 							? Constants.SimulationSettings.DriveOffDistance
-							: (Constants.SimulationSettings.TargetTimeInterval * vehicleContainer.VehicleSpeed).Cast<Meter>();
+							: (Constants.SimulationSettings.TargetTimeInterval * vehicleContainer.VehicleSpeed)
+								.Cast<Meter>();
 
 						modData.Finish(VectoRun.Status.Success);
 					});
@@ -222,7 +235,6 @@ namespace TUGraz.VectoCore.Tests.Integration.SimulationRuns
 				LossMap = TransmissionLossMap.ReadFromFile(GbxLossMap, 3.0 * 3.5, "AxleGear")
 			};
 		}
-
 
 		private static VehicleData CreateVehicleData(Kilogram loading)
 		{
@@ -252,13 +264,14 @@ namespace TUGraz.VectoCore.Tests.Integration.SimulationRuns
 			return new VehicleData {
 				AxleConfiguration = AxleConfiguration.AxleConfig_6x2,
 				AerodynamicDragAera = 3.2634.SI<SquareMeter>(),
-				CrossWindCorrectionMode = CrossWindCorrectionMode.NoCorrection,
+				//CrossWindCorrectionMode = CrossWindCorrectionMode.NoCorrection,
+				CrossWindCorrectionCurve = CrossWindCorrectionCurve.GetNoCorrectionCurve(3.2634.SI<SquareMeter>()),
 				CurbWeight = 15700.SI<Kilogram>(),
 				CurbWeigthExtra = 0.SI<Kilogram>(),
 				Loading = loading,
 				DynamicTyreRadius = 0.52.SI<Meter>(),
 				AxleData = axles,
-				SavedInDeclarationMode = false,
+				SavedInDeclarationMode = false
 			};
 		}
 
@@ -274,7 +287,7 @@ namespace TUGraz.VectoCore.Tests.Integration.SimulationRuns
 					Mode = DriverData.DriverMode.Off
 				},
 				StartStop = new VectoRunData.StartStopData {
-					Enabled = false,
+					Enabled = false
 				}
 			};
 		}

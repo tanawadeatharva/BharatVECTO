@@ -50,12 +50,12 @@ namespace TUGraz.VectoCore.InputData.FileIO.JSON
 			get { return Body.GetEx(JsonKeys.Vehicle_DynamicTyreRadius).Value<double>().SI().Milli.Meter.Cast<Meter>(); }
 		}
 
-		public SquareMeter DragCoefficient
+		public SquareMeter AirDragArea
 		{
 			get { return Body.GetEx(JsonKeys.Vehicle_DragCoefficient).Value<double>().SI<SquareMeter>(); }
 		}
 
-		public SquareMeter DragCoefficientRigidTruck
+		public SquareMeter AirDragAreaRigidTruck
 		{
 			get { return Body.GetEx(JsonKeys.Vehicle_DragCoefficientRigidTruck).Value<double>().SI<SquareMeter>(); }
 		}
@@ -94,6 +94,11 @@ namespace TUGraz.VectoCore.InputData.FileIO.JSON
 							TyreTestLoad = axle.GetEx(JsonKeys.Vehicle_Axles_TyreTestLoad).Value<double>().SI<Newton>()
 						}).Cast<IAxleInputData>().ToList();
 			}
+		}
+
+		public DataTable CrosswindCorrectionMap
+		{
+			get { return ReadTableData(Body.GetEx("CdCorrFile").Value<string>(), "CrosswindCorrection File"); }
 		}
 
 		#endregion

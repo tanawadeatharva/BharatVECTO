@@ -1,4 +1,20 @@
-﻿using System;
+/*
+* Copyright 2015 European Union
+*
+* Licensed under the EUPL (the "Licence");
+* You may not use this work except in compliance with the Licence.
+* You may obtain a copy of the Licence at:
+*
+* http://ec.europa.eu/idabc/eupl5
+*
+* Unless required by applicable law or agreed to in writing, software 
+* distributed under the Licence is distributed on an "AS IS" basis,
+* WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+* See the Licence for the specific language governing permissions and 
+* limitations under the Licence.
+*/
+
+using System;
 using System.Collections.Generic;
 using System.Data;
 using System.IO;
@@ -36,7 +52,13 @@ namespace TUGraz.VectoCore.InputData.Reader
 
 		public static DrivingCycleData ReadFromFile(string fileName, CycleType type)
 		{
-			var retVal = DoReadCycleData(type, VectoCSVFile.Read(fileName));
+			DataTable data;
+			try {
+				data = VectoCSVFile.Read(fileName);
+			} catch (Exception ex) {
+				throw new VectoException("ERROR while reading DrivingCycle File: " + ex.Message);
+			}
+			var retVal = DoReadCycleData(type, data);
 			retVal.Name = Path.GetFileNameWithoutExtension(fileName);
 			return retVal;
 		}
@@ -79,6 +101,16 @@ namespace TUGraz.VectoCore.InputData.Reader
 			//foreach (var entry in entries) {
 			for (var i = 0; i < entries.Count; i++) {
 				var entry = entries[i];
+				if (!entry.StoppingTime.IsEqual(0) && !entry.VehicleTargetSpeed.IsEqual(0)) {
+					throw new VectoException(
+						"Error in DrivingCycle: stop time specified but target-speed > 0! Distance: {0}, stop-time: {1}, target speed: {2}",
+						entry.Distance, entry.StoppingTime, entry.VehicleTargetSpeed);
+				}
+				if (entry.Distance < distance) {
+					throw new VectoException(
+						"Error in DrivingCycle: distance entry is smaller than last distance! last distance: {0}, current distance: {1} ",
+						distance, entry.Distance);
+				}
 				if (i > 0) {
 					altitude += (entry.Distance - distance) * entries[i - 1].RoadGradientPercent / 100.0;
 				}

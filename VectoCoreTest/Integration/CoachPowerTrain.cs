@@ -1,3 +1,19 @@
+/*
+* Copyright 2015 European Union
+*
+* Licensed under the EUPL (the "Licence");
+* You may not use this work except in compliance with the Licence.
+* You may obtain a copy of the Licence at:
+*
+* http://ec.europa.eu/idabc/eupl5
+*
+* Unless required by applicable law or agreed to in writing, software 
+* distributed under the Licence is distributed on an "AS IS" basis,
+* WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+* See the Licence for the specific language governing permissions and 
+* limitations under the Licence.
+*/
+
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -18,26 +34,23 @@ namespace TUGraz.VectoCore.Tests.Integration
 	public class CoachPowerTrain
 	{
 		public const string AccelerationFile = @"TestData\Components\Truck.vacc";
-
 		public const string EngineFile = @"TestData\Components\24t Coach.veng";
-
 		public const string AxleGearLossMap = @"TestData\Components\Axle.vtlm";
 		public const string GearboxIndirectLoss = @"TestData\Components\Indirect Gear.vtlm";
 		public const string GearboxDirectLoss = @"TestData\Components\Direct Gear.vtlm";
-
 		public const string GearboxShiftPolygonFile = @"TestData\Components\ShiftPolygons.vgbs";
-
 		public const string GearboxFullLoadCurveFile = @"TestData\Components\Gearbox.vfld";
 
-		public static VectoRun CreateEngineeringRun(DrivingCycleData cycleData, string modFileName, bool overspeed = false)
+		public static VectoRun CreateEngineeringRun(DrivingCycleData cycleData, string modFileName,
+			bool overspeed = false)
 		{
 			var container = CreatePowerTrain(cycleData, modFileName.Replace(".vmod", ""), overspeed);
 
-			return new DistanceRun("", container);
+			return new DistanceRun(container);
 		}
 
-
-		public static VehicleContainer CreatePowerTrain(DrivingCycleData cycleData, string modFileName, bool overspeed = false)
+		public static VehicleContainer CreatePowerTrain(DrivingCycleData cycleData, string modFileName,
+			bool overspeed = false)
 		{
 			var fileWriter = new FileOutputWriter(modFileName, "");
 			var modData = new ModalDataContainer(modFileName, fileWriter);
@@ -59,7 +72,8 @@ namespace TUGraz.VectoCore.Tests.Integration
 			tmp = Port.AddComponent(tmp, new Wheels(container, vehicleData.DynamicTyreRadius));
 			tmp = Port.AddComponent(tmp, new Brakes(container));
 			tmp = Port.AddComponent(tmp, new AxleGear(container, axleGearData));
-			tmp = Port.AddComponent(tmp, new Gearbox(container, gearboxData, new AMTShiftStrategy(gearboxData, container)));
+			tmp = Port.AddComponent(tmp,
+				new Gearbox(container, gearboxData, new AMTShiftStrategy(gearboxData, container)));
 			tmp = Port.AddComponent(tmp, clutch);
 
 			var aux = new Auxiliary(container);
@@ -74,7 +88,6 @@ namespace TUGraz.VectoCore.Tests.Integration
 			return container;
 		}
 
-
 		private static GearboxData CreateGearboxData()
 		{
 			var ratios = new[] { 6.38, 4.63, 3.44, 2.59, 1.86, 1.35, 1, 0.76 };
@@ -85,8 +98,10 @@ namespace TUGraz.VectoCore.Tests.Integration
 						new GearData {
 							FullLoadCurve = FullLoadCurve.ReadFromFile(GearboxFullLoadCurveFile),
 							LossMap = (ratio != 1.0)
-								? TransmissionLossMap.ReadFromFile(GearboxIndirectLoss, ratio, string.Format("Gear {0}", i))
-								: TransmissionLossMap.ReadFromFile(GearboxDirectLoss, ratio, string.Format("Gear {0}", i)),
+								? TransmissionLossMap.ReadFromFile(GearboxIndirectLoss, ratio,
+									string.Format("Gear {0}", i))
+								: TransmissionLossMap.ReadFromFile(GearboxDirectLoss, ratio,
+									string.Format("Gear {0}", i)),
 							Ratio = ratio,
 							ShiftPolygon = ShiftPolygon.ReadFromFile(GearboxShiftPolygonFile)
 						}))
@@ -98,7 +113,7 @@ namespace TUGraz.VectoCore.Tests.Integration
 				StartAcceleration = 0.6.SI<MeterPerSquareSecond>(),
 				StartTorqueReserve = 0.2,
 				SkipGears = true,
-				TorqueReserve = 0.2,
+				TorqueReserve = 0.2
 			};
 		}
 
@@ -139,13 +154,14 @@ namespace TUGraz.VectoCore.Tests.Integration
 			return new VehicleData {
 				AxleConfiguration = AxleConfiguration.AxleConfig_6x2,
 				AerodynamicDragAera = 3.2634.SI<SquareMeter>(),
-				CrossWindCorrectionMode = CrossWindCorrectionMode.NoCorrection,
+				//CrossWindCorrectionMode = CrossWindCorrectionMode.NoCorrection,
+				CrossWindCorrectionCurve = CrossWindCorrectionCurve.GetNoCorrectionCurve(3.2634.SI<SquareMeter>()),
 				CurbWeight = 15700.SI<Kilogram>(),
 				CurbWeigthExtra = 0.SI<Kilogram>(),
 				Loading = loading,
 				DynamicTyreRadius = 0.52.SI<Meter>(),
 				AxleData = axles,
-				SavedInDeclarationMode = false,
+				SavedInDeclarationMode = false
 			};
 		}
 
@@ -156,19 +172,19 @@ namespace TUGraz.VectoCore.Tests.Integration
 				LookAheadCoasting = new DriverData.LACData {
 					Enabled = true,
 					MinSpeed = 50.KMPHtoMeterPerSecond(),
-					Deceleration = -0.5.SI<MeterPerSquareSecond>(),
+					Deceleration = -0.5.SI<MeterPerSquareSecond>()
 				},
 				OverSpeedEcoRoll = overspeed
-					? new DriverData.OverSpeedEcoRollData() {
+					? new DriverData.OverSpeedEcoRollData {
 						Mode = DriverData.DriverMode.Overspeed,
 						MinSpeed = 50.KMPHtoMeterPerSecond(),
-						OverSpeed = 5.KMPHtoMeterPerSecond(),
+						OverSpeed = 5.KMPHtoMeterPerSecond()
 					}
 					: new DriverData.OverSpeedEcoRollData {
 						Mode = DriverData.DriverMode.Off
 					},
 				StartStop = new VectoRunData.StartStopData {
-					Enabled = false,
+					Enabled = false
 				}
 			};
 		}

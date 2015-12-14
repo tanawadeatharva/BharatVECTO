@@ -339,7 +339,7 @@ namespace TUGraz.VectoCore.InputData.FileIO.JSON
 			}
 		}
 
-		public IOverspeedEcoRollInputData OverspeedEcoRoll
+		public IOverSpeedEcoRollInputData OverSpeedEcoRoll
 		{
 			get
 			{

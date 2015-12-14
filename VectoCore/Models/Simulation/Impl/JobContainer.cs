@@ -1,8 +1,25 @@
+/*
+* Copyright 2015 European Union
+*
+* Licensed under the EUPL (the "Licence");
+* You may not use this work except in compliance with the Licence.
+* You may obtain a copy of the Licence at:
+*
+* http://ec.europa.eu/idabc/eupl5
+*
+* Unless required by applicable law or agreed to in writing, software 
+* distributed under the Licence is distributed on an "AS IS" basis,
+* WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+* See the Licence for the specific language governing permissions and 
+* limitations under the Licence.
+*/
+
 using System;
 using System.Collections.Generic;
 using System.ComponentModel;
 using System.Diagnostics;
 using System.Linq;
+using System.Linq.Expressions;
 using System.Threading;
 using TUGraz.VectoCore.Models.Simulation.Data;
 using TUGraz.VectoCore.OutputData;
@@ -14,7 +31,7 @@ namespace TUGraz.VectoCore.Models.Simulation.Impl
 	/// </summary>
 	public class JobContainer : LoggingObject
 	{
-		internal readonly List<JobEntry> Runs = new List<JobEntry>();
+		internal readonly List<RunEntry> Runs = new List<RunEntry>();
 		private readonly SummaryDataContainer _sumWriter;
 
 		private static int _jobNumber;
@@ -31,10 +48,7 @@ namespace TUGraz.VectoCore.Models.Simulation.Impl
 		public void AddRun(IVectoRun run)
 		{
 			_jobNumber++;
-			Runs.Add(new JobEntry() {
-				Run = run,
-				Container = this,
-			});
+			Runs.Add(new RunEntry { Run = run, JobContainer = this });
 		}
 
 		public void AddRuns(IEnumerable<IVectoRun> runs)
@@ -42,10 +56,7 @@ namespace TUGraz.VectoCore.Models.Simulation.Impl
 			_jobNumber++;
 			//Runs.AddRange(runs);
 			foreach (var run in runs) {
-				Runs.Add(new JobEntry() {
-					Run = run,
-					Container = this,
-				});
+				Runs.Add(new RunEntry { Run = run, JobContainer = this });
 			}
 		}
 
@@ -64,47 +75,33 @@ namespace TUGraz.VectoCore.Models.Simulation.Impl
 			Log.Info("VectoRun started running. Executing Runs.");
 
 			foreach (var job in Runs) {
-				job.Worker = new BackgroundWorker() {
-					WorkerSupportsCancellation = true,
-					WorkerReportsProgress = true,
-				};
-				job.Worker.DoWork += job.DoWork;
-				job.Worker.ProgressChanged += job.ProgressChanged;
-				job.Worker.RunWorkerCompleted += job.RunWorkerCompleted;
 				if (multithreaded) {
 					job.Started = true;
-					job.Worker.RunWorkerAsync();
+					job.RunWorkerAsync();
 				}
 			}
 			if (!multithreaded) {
 				var entry = Runs.First();
 				entry.Started = true;
-				entry.Worker.RunWorkerAsync();
+				entry.RunWorkerAsync();
 			}
-			//Task.WaitAll(_runs.Select(r => Task.Factory.StartNew(r.Run)).ToArray());
-
-			//_sumWriter.Finish();
 		}
 
 		public void Cancel()
 		{
 			foreach (var job in Runs) {
-				if (job.Worker != null && job.Worker.WorkerSupportsCancellation) {
-					job.Worker.CancelAsync();
-				}
+				job.CancelAsync();
 			}
 		}
 
 		public void CancelCurrent()
 		{
 			foreach (var job in Runs) {
-				if (job.Worker != null && job.Worker.IsBusy && job.Worker.WorkerSupportsCancellation) {
-					job.Worker.CancelAsync();
-				}
+				job.CancelAsync();
 			}
 		}
 
-		private static AutoResetEvent resetEvent = new AutoResetEvent(false);
+		private static readonly AutoResetEvent resetEvent = new AutoResetEvent(false);
 
 		public void WaitFinished()
 		{
@@ -112,14 +109,14 @@ namespace TUGraz.VectoCore.Models.Simulation.Impl
 		}
 
 
-		private void JobCompleted(JobEntry jobEntry)
+		private void JobCompleted()
 		{
 			var next = Runs.FirstOrDefault(x => x.Started == false);
 			if (next != null) {
 				next.Started = true;
-				next.Worker.RunWorkerAsync();
+				next.RunWorkerAsync();
 			}
-			if (Runs.Count(x => x.Done == true) == Runs.Count()) {
+			if (AllCompleted) {
 				_sumWriter.Finish();
 				resetEvent.Set();
 			}
@@ -127,7 +124,10 @@ namespace TUGraz.VectoCore.Models.Simulation.Impl
 
 		public Dictionary<string, ProgressEntry> GetProgress()
 		{
-			return Runs.ToDictionary(jobEntry => jobEntry.Run.Name, entry => new ProgressEntry() {
+			return Runs.ToDictionary(jobEntry => jobEntry.Run.RunIdentifier, entry => new ProgressEntry {
+				RunName = entry.Run.RunName,
+				CycleName = entry.Run.CycleName,
+				RunSuffix = entry.Run.RunSuffix,
 				Progress = entry.Progress,
 				Done = entry.Done,
 				ExecTime = entry.ExecTime,
@@ -144,18 +144,21 @@ namespace TUGraz.VectoCore.Models.Simulation.Impl
 
 		public class ProgressEntry
 		{
+			public string RunName;
 			public double Progress;
 			public double ExecTime;
 			public Exception Error;
 			public bool Canceled;
 			public bool Success;
 			public bool Done;
+			public string CycleName;
+			public string RunSuffix;
 		}
 
-		internal class JobEntry : LoggingObject
+		internal class RunEntry : LoggingObject
 		{
 			public IVectoRun Run;
-			public JobContainer Container;
+			public JobContainer JobContainer;
 			public double Progress;
 			public bool Done;
 			public bool Started;
@@ -164,20 +167,35 @@ namespace TUGraz.VectoCore.Models.Simulation.Impl
 			public double ExecTime;
 			public Exception ExecException;
 
-			public BackgroundWorker Worker;
+			private readonly BackgroundWorker _worker = new BackgroundWorker();
 
-			public void DoWork(object sender, DoWorkEventArgs e)
+			public RunEntry()
 			{
-				var stopWatch = new Stopwatch();
-				stopWatch.Start();
-				var worker = sender as BackgroundWorker;
+				_worker.DoWork += OnDoWork;
+				_worker.RunWorkerCompleted += OnRunWorkerCompleted;
+				_worker.WorkerSupportsCancellation = true;
+			}
+
+			public void RunWorkerAsync()
+			{
+				_worker.RunWorkerAsync();
+			}
+
+			public void CancelAsync()
+			{
+				_worker.CancelAsync();
+			}
+
+			private void OnDoWork(object sender, DoWorkEventArgs e)
+			{
+				var stopWatch = Stopwatch.StartNew();
 				try {
-					Run.Run(worker);
+					Run.Run(_worker, (x => Progress = x));
 				} catch (Exception ex) {
 					Log.Error(ex, "Error during simulation run!");
 					ExecException = ex;
 				}
-				if (worker != null && worker.CancellationPending) {
+				if (_worker.CancellationPending) {
 					e.Cancel = true;
 					Canceled = true;
 				}
@@ -185,14 +203,14 @@ namespace TUGraz.VectoCore.Models.Simulation.Impl
 				Success = Run.FinishedWithoutErrors;
 				Done = true;
 				ExecTime = stopWatch.Elapsed.TotalMilliseconds;
-				Container.JobCompleted(this);
+				JobContainer.JobCompleted();
 			}
 
-			public void RunWorkerCompleted(object sender, RunWorkerCompletedEventArgs e) {}
-
-			public void ProgressChanged(object sender, ProgressChangedEventArgs e)
+			private void OnRunWorkerCompleted(object sender, RunWorkerCompletedEventArgs e)
 			{
-				Progress = e.ProgressPercentage / 10000.0;
+				if (e.Error != null) {
+					ExecException = e.Error;
+				}
 			}
 		}
 	}

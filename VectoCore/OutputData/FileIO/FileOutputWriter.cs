@@ -24,7 +24,7 @@ namespace TUGraz.VectoCore.OutputData.FileIO
 			_basePath = basePath;
 		}
 
-		public void WriteModData(string runName, string cycleName, string runSuffix, DataTable modData)
+		public string GetModDataFileName(string runName, string cycleName, string runSuffix)
 		{
 			//var modFilePattern = Path.Combine(_basePath,
 			//	runName.Replace(Constants.FileExtensions.VectoJobFile, "") + "_{0}{1}" +
@@ -41,13 +41,22 @@ namespace TUGraz.VectoCore.OutputData.FileIO
 				}
 			}
 			modFileName.Append(Constants.FileExtensions.ModDataFile);
-			VectoCSVFile.Write(modFileName.ToString(), modData);
+			return modFileName.ToString();
+		}
+
+		public void WriteModData(string runName, string cycleName, string runSuffix, DataTable modData)
+		{
+			VectoCSVFile.Write(GetModDataFileName(runName, cycleName, runSuffix).ToString(), modData);
+		}
+
+		public string GetSumFileName()
+		{
+			return Path.Combine(_basePath, Path.GetFileNameWithoutExtension(_jobName) + Constants.FileExtensions.SumFile);
 		}
 
 		public void WriteSumData(DataTable data)
 		{
-			var sumFile = Path.Combine(_basePath, Path.GetFileNameWithoutExtension(_jobName) + Constants.FileExtensions.SumFile);
-			VectoCSVFile.Write(sumFile, data);
+			VectoCSVFile.Write(GetSumFileName(), data);
 		}
 
 

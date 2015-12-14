@@ -1,7 +1,24 @@
-﻿using System;
+/*
+* Copyright 2015 European Union
+*
+* Licensed under the EUPL (the "Licence");
+* You may not use this work except in compliance with the Licence.
+* You may obtain a copy of the Licence at:
+*
+* http://ec.europa.eu/idabc/eupl5
+*
+* Unless required by applicable law or agreed to in writing, software 
+* distributed under the Licence is distributed on an "AS IS" basis,
+* WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+* See the Licence for the specific language governing permissions and 
+* limitations under the Licence.
+*/
+
+using System;
 using System.Collections.Generic;
 using System.Data;
 using System.Linq;
+using System.Linq.Expressions;
 using Newtonsoft.Json;
 using TUGraz.VectoCore.Exceptions;
 using TUGraz.VectoCore.Utils;
@@ -29,8 +46,12 @@ namespace TUGraz.VectoCore.Models.SimulationComponent.Data.Gearbox
 
 		public static TransmissionLossMap ReadFromFile(string fileName, double gearRatio, string gearName)
 		{
-			var data = VectoCSVFile.Read(fileName, true);
-			return Create(data, gearRatio, gearName);
+			try {
+				var data = VectoCSVFile.Read(fileName, true);
+				return Create(data, gearRatio, gearName);
+			} catch (Exception ex) {
+				throw new VectoException("ERROR while reading TransmissionLossMap: " + ex.Message);
+			}
 		}
 
 		public static TransmissionLossMap Create(DataTable data, double gearRatio, string gearName)

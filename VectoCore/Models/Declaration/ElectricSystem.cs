@@ -1,6 +1,23 @@
+/*
+* Copyright 2015 European Union
+*
+* Licensed under the EUPL (the "Licence");
+* You may not use this work except in compliance with the Licence.
+* You may obtain a copy of the Licence at:
+*
+* http://ec.europa.eu/idabc/eupl5
+*
+* Unless required by applicable law or agreed to in writing, software 
+* distributed under the Licence is distributed on an "AS IS" basis,
+* WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+* See the Licence for the specific language governing permissions and 
+* limitations under the Licence.
+*/
+
 using System;
 using System.Collections.Generic;
 using System.Data;
+using TUGraz.VectoCore.Exceptions;
 using TUGraz.VectoCore.Utils;
 
 namespace TUGraz.VectoCore.Models.Declaration
@@ -39,15 +56,17 @@ namespace TUGraz.VectoCore.Models.Declaration
 			var sum = _data[Tuple.Create(missionType, BaseLine)];
 
 			if (technologies != null) {
-				foreach (var s in technologies) {
-					Watt w;
-					if (_data.TryGetValue(Tuple.Create(missionType, s), out w)) {
-						sum += w;
-					} else {
-						Log.Error(string.Format("electric system technology not found: {0}", s));
+				foreach (var technology in technologies) {
+					try {
+						sum += _data[Tuple.Create(missionType, technology)];
+					} catch (KeyNotFoundException) {
+						throw new VectoException(
+							"Auxiliary Lookup Error: No value found for Electric System with mission '{0}' and technology '{1}'",
+							missionType, technology);
 					}
 				}
 			}
+
 			return sum / _alternator.Lookup(missionType, null);
 		}
 
@@ -84,7 +103,13 @@ namespace TUGraz.VectoCore.Models.Declaration
 					technology = Default;
 				}
 
-				return _data[Tuple.Create(missionType, technology)];
+				try {
+					return _data[Tuple.Create(missionType, technology)];
+				} catch (KeyNotFoundException) {
+					throw new VectoException(
+						"Auxiliary Lookup Error: No value found for Alternator with mission '{0}' and technology '{1}'",
+						missionType, technology);
+				}
 			}
 		}
 	}

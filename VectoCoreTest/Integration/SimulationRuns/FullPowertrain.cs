@@ -1,4 +1,20 @@
-﻿using System;
+/*
+* Copyright 2015 European Union
+*
+* Licensed under the EUPL (the "Licence");
+* You may not use this work except in compliance with the Licence.
+* You may obtain a copy of the Licence at:
+*
+* http://ec.europa.eu/idabc/eupl5
+*
+* Unless required by applicable law or agreed to in writing, software 
+* distributed under the Licence is distributed on an "AS IS" basis,
+* WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+* See the Licence for the specific language governing permissions and 
+* limitations under the Licence.
+*/
+
+using System;
 using System.Collections.Generic;
 using System.Linq;
 using Microsoft.VisualStudio.TestTools.UnitTesting;
@@ -25,17 +41,14 @@ namespace TUGraz.VectoCore.Tests.Integration.SimulationRuns
 	[TestClass]
 	public class FullPowerTrain
 	{
-		private static Logger Log = LogManager.GetLogger(typeof(FullPowerTrain).ToString());
-
 		public const string CycleFile = @"TestData\Integration\FullPowerTrain\1-Gear-Test-dist.vdri";
 		public const string CoachCycleFile = @"TestData\Integration\FullPowerTrain\Coach.vdri";
 		public const string EngineFile = @"TestData\Components\24t Coach.veng";
-
 		public const string AccelerationFile = @"TestData\Components\Coach.vacc";
-
 		public const string GearboxLossMap = @"TestData\Components\Indirect Gear.vtlm";
 		public const string GearboxShiftPolygonFile = @"TestData\Components\ShiftPolygons.vgbs";
 		public const string GearboxFullLoadCurveFile = @"TestData\Components\Gearbox.vfld";
+		private static readonly Logger Log = LogManager.GetLogger(typeof(FullPowerTrain).ToString());
 
 		[TestMethod]
 		public void Test_FullPowertrain_SimpleGearbox()
@@ -77,7 +90,7 @@ namespace TUGraz.VectoCore.Tests.Integration.SimulationRuns
 				response = cyclePort.Request(absTime, ds);
 				response.Switch().
 					Case<ResponseDrivingCycleDistanceExceeded>(r => ds = r.MaxDistance).
-					Case<ResponseCycleFinished>(r => {}).
+					Case<ResponseCycleFinished>(r => { }).
 					Case<ResponseSuccess>(r => {
 						container.CommitSimulationStep(absTime, r.SimulationInterval);
 						absTime += r.SimulationInterval;
@@ -150,10 +163,8 @@ namespace TUGraz.VectoCore.Tests.Integration.SimulationRuns
 
 				response.Switch().
 					Case<ResponseDrivingCycleDistanceExceeded>(r => ds = r.MaxDistance).
-					Case<ResponseCycleFinished>(r => {}).
-					Case<ResponseGearShift>(r => {
-						Log.Debug("Gearshift");
-					}).
+					Case<ResponseCycleFinished>(r => { }).
+					Case<ResponseGearShift>(r => { Log.Debug("Gearshift"); }).
 					Case<ResponseSuccess>(r => {
 						container.CommitSimulationStep(absTime, r.SimulationInterval);
 						absTime += r.SimulationInterval;
@@ -193,7 +204,8 @@ namespace TUGraz.VectoCore.Tests.Integration.SimulationRuns
 			tmp = Port.AddComponent(tmp, new Wheels(container, vehicleData.DynamicTyreRadius));
 			tmp = Port.AddComponent(tmp, new Brakes(container));
 			tmp = Port.AddComponent(tmp, new AxleGear(container, axleGearData));
-			tmp = Port.AddComponent(tmp, new Gearbox(container, gearboxData, new AMTShiftStrategy(gearboxData, container)));
+			tmp = Port.AddComponent(tmp,
+				new Gearbox(container, gearboxData, new AMTShiftStrategy(gearboxData, container)));
 			var engine = new CombustionEngine(container, engineData);
 			var clutch = new Clutch(container, engineData, engine.IdleController);
 			tmp = Port.AddComponent(tmp, clutch);
@@ -224,10 +236,8 @@ namespace TUGraz.VectoCore.Tests.Integration.SimulationRuns
 
 				response.Switch().
 					Case<ResponseDrivingCycleDistanceExceeded>(r => ds = r.MaxDistance).
-					Case<ResponseCycleFinished>(r => {}).
-					Case<ResponseGearShift>(r => {
-						Log.Debug("Gearshift");
-					}).
+					Case<ResponseCycleFinished>(r => { }).
+					Case<ResponseGearShift>(r => { Log.Debug("Gearshift"); }).
 					Case<ResponseSuccess>(r => {
 						container.CommitSimulationStep(absTime, r.SimulationInterval);
 						absTime += r.SimulationInterval;
@@ -270,7 +280,6 @@ namespace TUGraz.VectoCore.Tests.Integration.SimulationRuns
 				@"TestData\job_1-Gear-Test-dist.vmod", testRowCount: false);
 		}
 
-
 		// todo: add realistic FullLoadCurve
 		private static GearboxData CreateGearboxData()
 		{
@@ -281,7 +290,8 @@ namespace TUGraz.VectoCore.Tests.Integration.SimulationRuns
 					Tuple.Create((uint)i,
 						new GearData {
 							FullLoadCurve = FullLoadCurve.ReadFromFile(GearboxFullLoadCurveFile),
-							LossMap = TransmissionLossMap.ReadFromFile(GearboxLossMap, ratio, string.Format("Gear {0}", i)),
+							LossMap =
+								TransmissionLossMap.ReadFromFile(GearboxLossMap, ratio, string.Format("Gear {0}", i)),
 							Ratio = ratio,
 							ShiftPolygon = ShiftPolygon.ReadFromFile(GearboxShiftPolygonFile)
 						}))
@@ -295,7 +305,6 @@ namespace TUGraz.VectoCore.Tests.Integration.SimulationRuns
 				TorqueReserve = 0.2
 			};
 		}
-
 
 		private static GearData CreateAxleGearData()
 		{
@@ -358,13 +367,14 @@ namespace TUGraz.VectoCore.Tests.Integration.SimulationRuns
 			return new VehicleData {
 				AxleConfiguration = AxleConfiguration.AxleConfig_6x2,
 				AerodynamicDragAera = 3.2634.SI<SquareMeter>(),
-				CrossWindCorrectionMode = CrossWindCorrectionMode.NoCorrection,
+				//CrossWindCorrectionMode = CrossWindCorrectionMode.NoCorrection,
+				CrossWindCorrectionCurve = CrossWindCorrectionCurve.GetNoCorrectionCurve(3.2634.SI<SquareMeter>()),
 				CurbWeight = 15700.SI<Kilogram>(),
 				CurbWeigthExtra = 0.SI<Kilogram>(),
 				Loading = loading,
 				DynamicTyreRadius = 0.52.SI<Meter>(),
 				AxleData = axles,
-				SavedInDeclarationMode = false,
+				SavedInDeclarationMode = false
 			};
 		}
 
@@ -380,7 +390,7 @@ namespace TUGraz.VectoCore.Tests.Integration.SimulationRuns
 					Mode = DriverData.DriverMode.Off
 				},
 				StartStop = new VectoRunData.StartStopData {
-					Enabled = false,
+					Enabled = false
 				}
 			};
 		}

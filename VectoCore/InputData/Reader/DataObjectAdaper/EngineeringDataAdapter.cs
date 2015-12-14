@@ -1,4 +1,5 @@
-﻿using System.Collections.Generic;
+﻿using System;
+using System.Collections.Generic;
 using System.Linq;
 using TUGraz.VectoCore.Exceptions;
 using TUGraz.VectoCore.Models.Declaration;
@@ -25,7 +26,24 @@ namespace TUGraz.VectoCore.InputData.Reader.DataObjectAdaper
 			retVal.Loading = data.Loading;
 			retVal.DynamicTyreRadius = data.DynamicTyreRadius;
 
-			retVal.CrossWindCorrectionMode = data.CrossWindCorrectionMode;
+			switch (data.CrossWindCorrectionMode) {
+				case CrossWindCorrectionMode.NoCorrection:
+					retVal.CrossWindCorrectionCurve = CrossWindCorrectionCurve.GetNoCorrectionCurve(retVal.AerodynamicDragAera);
+					break;
+				case CrossWindCorrectionMode.SpeedDependentCorrectionFactor:
+					retVal.CrossWindCorrectionCurve =
+						CrossWindCorrectionCurve.ReadSpeedDependentCorrectionCurve(data.CrosswindCorrectionMap,
+							retVal.AerodynamicDragAera);
+					break;
+				case CrossWindCorrectionMode.VAirBetaLookupTable:
+					throw new VectoException("CrosswindCorrection mode {0} not implemented", data.CrossWindCorrectionMode);
+				case CrossWindCorrectionMode.DeclarationModeCorrection:
+					retVal.CrossWindCorrectionCurve = DeclarationDataAdapter.GetDeclarationAirResistanceCurve(retVal.VehicleCategory,
+						retVal.AerodynamicDragAera);
+					break;
+				default:
+					throw new ArgumentOutOfRangeException();
+			}
 			retVal.AerodynamicDragAera = data.AirDragArea;
 
 			var axles = data.Axles;

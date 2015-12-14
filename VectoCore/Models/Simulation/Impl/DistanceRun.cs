@@ -1,4 +1,20 @@
-﻿using System;
+/*
+* Copyright 2015 European Union
+*
+* Licensed under the EUPL (the "Licence");
+* You may not use this work except in compliance with the Licence.
+* You may obtain a copy of the Licence at:
+*
+* http://ec.europa.eu/idabc/eupl5
+*
+* Unless required by applicable law or agreed to in writing, software 
+* distributed under the Licence is distributed on an "AS IS" basis,
+* WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+* See the Licence for the specific language governing permissions and 
+* limitations under the Licence.
+*/
+
+using System;
 using TUGraz.VectoCore.Configuration;
 using TUGraz.VectoCore.Exceptions;
 using TUGraz.VectoCore.Models.Connector.Ports;
@@ -9,10 +25,7 @@ namespace TUGraz.VectoCore.Models.Simulation.Impl
 {
 	public class DistanceRun : VectoRun
 	{
-		public DistanceRun(string name, IVehicleContainer container) : base(container)
-		{
-			Name = name;
-		}
+		public DistanceRun(IVehicleContainer container) : base(container) {}
 
 		protected override IResponse DoSimulationStep()
 		{
@@ -26,9 +39,7 @@ namespace TUGraz.VectoCore.Models.Simulation.Impl
 			do {
 				response = CyclePort.Request(AbsTime, ds);
 				response.Switch().
-					Case<ResponseSuccess>(r => {
-						dt = r.SimulationInterval;
-					}).
+					Case<ResponseSuccess>(r => { dt = r.SimulationInterval; }).
 					Case<ResponseDrivingCycleDistanceExceeded>(r => {
 						if (r.MaxDistance.IsSmallerOrEqual(0)) {
 							throw new VectoSimulationException("DistanceExceeded, MaxDistance is invalid: {0}", r.MaxDistance);
@@ -39,9 +50,7 @@ namespace TUGraz.VectoCore.Models.Simulation.Impl
 						FinishedWithoutErrors = true;
 						Log.Info("========= Driving Cycle Finished");
 					}).
-					Default(r => {
-						throw new VectoException("DistanceRun got an unexpected response: {0}", r);
-					});
+					Default(r => { throw new VectoException("DistanceRun got an unexpected response: {0}", r); });
 				if (loopCount++ > Constants.SimulationSettings.MaximumIterationCountForSimulationStep) {
 					throw new VectoSimulationException("Maximum iteration count for a single simulation interval reached! Aborting!");
 				}
@@ -52,7 +61,7 @@ namespace TUGraz.VectoCore.Models.Simulation.Impl
 
 		protected override IResponse Initialize()
 		{
-			Log.Info("Starting {0}", Name);
+			Log.Info("Starting {0}", RunIdentifier);
 			return CyclePort.Initialize();
 		}
 	}

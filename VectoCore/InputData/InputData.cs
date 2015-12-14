@@ -83,6 +83,8 @@ namespace TUGraz.VectoCore.InputData
 
 		AxleConfiguration AxleConfiguration { get; }
 		IList<IAxleInputData> Axles { get; }
+
+		DataTable CrosswindCorrectionMap { get; }
 	}
 
 	public interface IRetarderInputData

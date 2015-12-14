@@ -1,3 +1,19 @@
+/*
+* Copyright 2015 European Union
+*
+* Licensed under the EUPL (the "Licence");
+* You may not use this work except in compliance with the Licence.
+* You may obtain a copy of the Licence at:
+*
+* http://ec.europa.eu/idabc/eupl5
+*
+* Unless required by applicable law or agreed to in writing, software 
+* distributed under the Licence is distributed on an "AS IS" basis,
+* WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+* See the Licence for the specific language governing permissions and 
+* limitations under the Licence.
+*/
+
 using System.Collections.Generic;
 using System.Data;
 using System.Linq;
@@ -22,6 +38,11 @@ namespace TUGraz.VectoCore.Tests.Utils
 
 		public ModalResults Data { get; set; }
 		public DataRow CurrentRow { get; set; }
+
+		public string ModFileName
+		{
+			get { return ""; }
+		}
 
 		public object this[string auxId]
 		{
@@ -67,6 +88,10 @@ namespace TUGraz.VectoCore.Tests.Utils
 			}
 			Auxiliaries[id] = Data.Columns[auxColName];
 		}
+
+		public string RunName { get; set; }
+		public string CycleName { get; set; }
+		public string RunSuffix { get; set; }
 
 		public object this[ModalResultField key]
 		{

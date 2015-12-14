@@ -1,4 +1,20 @@
-﻿using System;
+/*
+* Copyright 2015 European Union
+*
+* Licensed under the EUPL (the "Licence");
+* You may not use this work except in compliance with the Licence.
+* You may obtain a copy of the Licence at:
+*
+* http://ec.europa.eu/idabc/eupl5
+*
+* Unless required by applicable law or agreed to in writing, software 
+* distributed under the Licence is distributed on an "AS IS" basis,
+* WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+* See the Licence for the specific language governing permissions and 
+* limitations under the Licence.
+*/
+
+using System;
 using System.Collections.Generic;
 using System.Data;
 using System.IO;
@@ -19,9 +35,9 @@ namespace TUGraz.VectoCore.OutputData
 		//private readonly VectoRunData _runData;
 
 		private readonly IModalDataWriter _writer;
-		private string _runName;
-		private string _cycleName;
-		private string _runSuffix;
+		public string RunName { get; private set; }
+		public string CycleName { get; private set; }
+		public string RunSuffix { get; private set; }
 
 		public bool WriteModalResults { get; set; }
 
@@ -40,9 +56,9 @@ namespace TUGraz.VectoCore.OutputData
 
 		{
 			HasTorqueConverter = false;
-			_runName = runName;
-			_cycleName = cycleName;
-			_runSuffix = runSuffix;
+			RunName = runName;
+			CycleName = cycleName;
+			RunSuffix = runSuffix;
 			_writer = writer;
 
 			_mode = mode;
@@ -123,7 +139,7 @@ namespace TUGraz.VectoCore.OutputData
 
 			if (_mode != SimulatorFactory.FactoryMode.DeclarationMode || WriteModalResults) {
 				//VectoCSVFile.Write(_modWriter, new DataView(Data).ToTable(false, strCols.ToArray()));
-				_writer.WriteModData(_runName, _cycleName, _runSuffix,
+				_writer.WriteModData(RunName, CycleName, RunSuffix,
 					new DataView(Data).ToTable(false, strCols.ToArray()));
 			}
 

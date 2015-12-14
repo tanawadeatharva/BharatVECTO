@@ -1,4 +1,22 @@
-﻿using System.Collections.Generic;
+/*
+* Copyright 2015 European Union
+*
+* Licensed under the EUPL (the "Licence");
+* You may not use this work except in compliance with the Licence.
+* You may obtain a copy of the Licence at:
+*
+* http://ec.europa.eu/idabc/eupl5
+*
+* Unless required by applicable law or agreed to in writing, software 
+* distributed under the Licence is distributed on an "AS IS" basis,
+* WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+* See the Licence for the specific language governing permissions and 
+* limitations under the Licence.
+*/
+
+using System;
+using System.Collections.Generic;
+using System.IO;
 using System.Linq;
 using TUGraz.VectoCore.Configuration;
 using TUGraz.VectoCore.Exceptions;
@@ -30,19 +48,20 @@ namespace TUGraz.VectoCore.InputData.Reader.DataObjectAdaper
 				UnderSpeed = DeclarationData.Driver.OverSpeedEcoRoll.UnderSpeed
 			};
 			if (!DeclarationData.Driver.OverSpeedEcoRoll.AllowedModes.Contains(overspeedData.Mode)) {
-				throw new VectoSimulationException("Specified Overspeed/EcoRoll Mode not allowed in declaration mode! {0}",
+				throw new VectoSimulationException(
+					"Specified Overspeed/EcoRoll Mode not allowed in declaration mode! {0}",
 					overspeedData.Mode);
 			}
 			var startstopData = new VectoRunData.StartStopData {
 				Enabled = data.StartStop.Enabled,
 				Delay = DeclarationData.Driver.StartStop.Delay,
 				MinTime = DeclarationData.Driver.StartStop.MinTime,
-				MaxSpeed = DeclarationData.Driver.StartStop.MaxSpeed,
+				MaxSpeed = DeclarationData.Driver.StartStop.MaxSpeed
 			};
 			var retVal = new DriverData {
 				LookAheadCoasting = lookAheadData,
 				OverSpeedEcoRoll = overspeedData,
-				StartStop = startstopData,
+				StartStop = startstopData
 			};
 			return retVal;
 		}
@@ -62,16 +81,15 @@ namespace TUGraz.VectoCore.InputData.Reader.DataObjectAdaper
 			retVal.DynamicTyreRadius =
 				DeclarationData.DynamicTyreRadius(data.Axles[DeclarationData.PoweredAxle()].Wheels, data.Rim);
 
-			retVal.CrossWindCorrectionMode = CrossWindCorrectionMode.DeclarationModeCorrection;
 			retVal.AerodynamicDragAera = mission.UseCdA2
 				? data.AirDragAreaRigidTruck
 				: data.AirDragArea;
 
+			retVal.CrossWindCorrectionCurve = GetDeclarationAirResistanceCurve(retVal.VehicleCategory, retVal.AerodynamicDragAera);
 			var axles = data.Axles;
 			if (axles.Count < mission.AxleWeightDistribution.Length) {
-				throw new VectoException(
-					string.Format("Vehicle does not contain sufficient axles. {0} axles defined, {1} axles required",
-						axles.Count, mission.AxleWeightDistribution.Count()));
+				throw new VectoException("Vehicle does not contain sufficient axles. {0} axles defined, {1} axles required",
+					data.Axles.Count, mission.AxleWeightDistribution.Count());
 			}
 			var axleData = new List<Axle>();
 			for (var i = 0; i < mission.AxleWeightDistribution.Length; i++) {
@@ -118,7 +136,8 @@ namespace TUGraz.VectoCore.InputData.Reader.DataObjectAdaper
 			var retVal = SetCommonGearboxData(gearbox);
 			switch (retVal.Type) {
 				case GearboxType.AT:
-					throw new VectoSimulationException("Automatic Transmission currently not supported in DeclarationMode!");
+					throw new VectoSimulationException(
+						"Automatic Transmission currently not supported in DeclarationMode!");
 				case GearboxType.Custom:
 					throw new VectoSimulationException("Custom Transmission not supported in DeclarationMode!");
 			}
@@ -140,7 +159,6 @@ namespace TUGraz.VectoCore.InputData.Reader.DataObjectAdaper
 			retVal.StartAcceleration = DeclarationData.Gearbox.StartAcceleration.SI<MeterPerSquareSecond>();
 
 			retVal.HasTorqueConverter = false;
-
 
 			retVal.Gears = gears.Select((gear, i) => {
 				var gearLossMap = TransmissionLossMap.Create(gear.LossMap, gear.Ratio, string.Format("Gear {0}", i + 1));
@@ -210,6 +228,50 @@ namespace TUGraz.VectoCore.InputData.Reader.DataObjectAdaper
 		public RetarderData CreateRetarderData(IRetarderInputData retarder)
 		{
 			return SetCommonRetarderData(retarder);
+		}
+
+
+		public static CrossWindCorrectionCurve GetDeclarationAirResistanceCurve(VehicleCategory vehicleCategory,
+			SquareMeter aerodynamicDragAera)
+		{
+			var values = DeclarationData.AirDrag.Lookup(vehicleCategory);
+			var points = new List<CrossWindCorrectionCurve.CrossWindCorrectionEntry> {
+				new CrossWindCorrectionCurve.CrossWindCorrectionEntry {
+					Velocity = 0.SI<MeterPerSecond>(),
+					EffectiveCrossSectionArea = 0.SI<SquareMeter>()
+				}
+			};
+			for (var speed = 60; speed <= 100; speed += 5) {
+				var vVeh = speed.KMPHtoMeterPerSecond();
+				var cdASum = 0.0.SI<SquareMeter>();
+				for (var alpha = 0; alpha <= 180; alpha += 10) {
+					var vWindX = Physics.BaseWindSpeed * Math.Cos(alpha.ToRadian());
+					var vWindY = Physics.BaseWindSpeed * Math.Sin(alpha.ToRadian());
+					var vAirX = vVeh + vWindX;
+					var vAirY = vWindY;
+//					var vAir = VectoMath.Sqrt<MeterPerSecond>(vAirX * vAirX + vAirY * vAirY);
+					var beta = Math.Atan((vAirY / vAirX).Value()).ToDegree();
+					var deltaCdA = ComputeDeltaCd(beta, values);
+					var cdA = aerodynamicDragAera + deltaCdA;
+
+					var degreeShare = ((alpha != 0 && alpha != 180) ? 10.0 / 180.0 : 5.0 / 180.0);
+
+//					cdASum += degreeShare * cdA * (vAir * vAir / (vVeh * vVeh)).Cast<Scalar>();
+					cdASum += degreeShare * cdA * ((vAirX * vAirX + vAirY * vAirY) / (vVeh * vVeh)).Cast<Scalar>();
+				}
+				points.Add(new CrossWindCorrectionCurve.CrossWindCorrectionEntry {
+					Velocity = vVeh,
+					EffectiveCrossSectionArea = cdASum
+				});
+			}
+
+			points[0].EffectiveCrossSectionArea = points[1].EffectiveCrossSectionArea;
+			return new CrossWindCorrectionCurve(points, CrossWindCorrectionMode.DeclarationModeCorrection);
+		}
+
+		protected static SquareMeter ComputeDeltaCd(double beta, AirDrag.AirDragEntry values)
+		{
+			return (values.A1 * beta + values.A2 * beta * beta + values.A3 * beta * beta * beta).SI<SquareMeter>();
 		}
 	}
 }

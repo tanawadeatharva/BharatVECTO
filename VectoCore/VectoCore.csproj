@@ -145,6 +145,7 @@
     <Compile Include="Models\Declaration\VehicleClass.cs" />
     <Compile Include="Models\Declaration\Wheels.cs" />
     <Compile Include="Models\Declaration\WHTCCorrection.cs" />
+    <Compile Include="Models\SimulationComponent\Data\CrossWindCorrectionCurve.cs" />
     <Compile Include="Models\SimulationComponent\Data\AuxiliaryData.cs" />
     <Compile Include="Models\SimulationComponent\Data\AuxSupplyPowerReader.cs" />
     <Compile Include="Models\SimulationComponent\Data\AxleGearData.cs" />

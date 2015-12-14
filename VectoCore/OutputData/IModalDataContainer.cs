@@ -1,3 +1,19 @@
+/*
+* Copyright 2015 European Union
+*
+* Licensed under the EUPL (the "Licence");
+* You may not use this work except in compliance with the Licence.
+* You may obtain a copy of the Licence at:
+*
+* http://ec.europa.eu/idabc/eupl5
+*
+* Unless required by applicable law or agreed to in writing, software 
+* distributed under the Licence is distributed on an "AS IS" basis,
+* WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+* See the Licence for the specific language governing permissions and 
+* limitations under the Licence.
+*/
+
 using System;
 using System.Collections.Generic;
 using System.Data;
@@ -10,6 +26,21 @@ namespace TUGraz.VectoCore.OutputData
 {
 	public interface IModalDataContainer
 	{
+		/// <summary>
+		/// Identify which run this modaldata container is for
+		/// </summary>
+		string RunName { get; }
+
+		/// <summary>
+		/// Identify which cycle is simulated 
+		/// </summary>
+		string CycleName { get; }
+
+		/// <summary>
+		/// Custom suffix for this run, typically the loading type
+		/// </summary>
+		string RunSuffix { get; }
+
 		/// <summary>
 		/// Indexer for fields of the DataWriter. Accesses the data of the current step.
 		/// </summary>
@@ -138,7 +169,6 @@ namespace TUGraz.VectoCore.OutputData
 			var stopTime = data.GetValues<MeterPerSecond>(ModalResultField.v_act)
 				.Zip(data.SimulationIntervals(), (v, dt) => new { v, dt })
 				.Where(x => x.v < 0.1).Select(x => x.dt).Sum() ?? 0.SI<Second>();
-
 			return 100 * (stopTime / data.Duration()).Cast<Scalar>();
 		}
 

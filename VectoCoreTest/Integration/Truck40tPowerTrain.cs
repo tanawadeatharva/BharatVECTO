@@ -1,3 +1,19 @@
+/*
+* Copyright 2015 European Union
+*
+* Licensed under the EUPL (the "Licence");
+* You may not use this work except in compliance with the Licence.
+* You may obtain a copy of the Licence at:
+*
+* http://ec.europa.eu/idabc/eupl5
+*
+* Unless required by applicable law or agreed to in writing, software 
+* distributed under the Licence is distributed on an "AS IS" basis,
+* WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+* See the Licence for the specific language governing permissions and 
+* limitations under the Licence.
+*/
+
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -27,12 +43,13 @@ namespace TUGraz.VectoCore.Tests.Integration
 		public const string GearboxShiftPolygonFile = @"TestData\Components\ShiftPolygons.vgbs";
 		public const string GearboxFullLoadCurveFile = @"TestData\Components\Gearbox.vfld";
 
-		public static VectoRun CreateEngineeringRun(DrivingCycleData cycleData, string modFileName, bool overspeed = false)
+		public static VectoRun CreateEngineeringRun(DrivingCycleData cycleData, string modFileName,
+			bool overspeed = false)
 		{
 			var container = CreatePowerTrain(cycleData, modFileName.Replace(".vmod", ""), 7500.SI<Kilogram>(),
 				19300.SI<Kilogram>(), overspeed);
 
-			return new DistanceRun("", container);
+			return new DistanceRun(container);
 		}
 
 		public static VectoRun CreateEngineeringRun(DrivingCycleData cycleData, string modFileName, Kilogram massExtra,
@@ -40,10 +57,11 @@ namespace TUGraz.VectoCore.Tests.Integration
 		{
 			var container = CreatePowerTrain(cycleData, modFileName.Replace(".vmod", ""), massExtra, loading, overspeed);
 
-			return new DistanceRun("", container);
+			return new DistanceRun(container);
 		}
 
-		public static VehicleContainer CreatePowerTrain(DrivingCycleData cycleData, string modFileName, Kilogram massExtra,
+		public static VehicleContainer CreatePowerTrain(DrivingCycleData cycleData, string modFileName,
+			Kilogram massExtra,
 			Kilogram loading, bool overspeed = false)
 		{
 			var fileWriter = new FileOutputWriter(modFileName, "");
@@ -65,7 +83,8 @@ namespace TUGraz.VectoCore.Tests.Integration
 			tmp = Port.AddComponent(tmp, new Wheels(container, vehicleData.DynamicTyreRadius));
 			tmp = Port.AddComponent(tmp, new Brakes(container));
 			tmp = Port.AddComponent(tmp, new AxleGear(container, axleGearData));
-			tmp = Port.AddComponent(tmp, new Gearbox(container, gearboxData, new AMTShiftStrategy(gearboxData, container)));
+			tmp = Port.AddComponent(tmp,
+				new Gearbox(container, gearboxData, new AMTShiftStrategy(gearboxData, container)));
 			tmp = Port.AddComponent(tmp, clutch);
 
 			var aux = new Auxiliary(container);
@@ -90,8 +109,10 @@ namespace TUGraz.VectoCore.Tests.Integration
 							FullLoadCurve = FullLoadCurve.ReadFromFile(GearboxFullLoadCurveFile),
 							LossMap =
 								(ratio != 1.0)
-									? TransmissionLossMap.ReadFromFile(GearboxIndirectLoss, ratio, string.Format("Gear {0}", i))
-									: TransmissionLossMap.ReadFromFile(GearboxDirectLoss, ratio, string.Format("Gear {0}", i)),
+									? TransmissionLossMap.ReadFromFile(GearboxIndirectLoss, ratio,
+										string.Format("Gear {0}", i))
+									: TransmissionLossMap.ReadFromFile(GearboxDirectLoss, ratio,
+										string.Format("Gear {0}", i)),
 							Ratio = ratio,
 							ShiftPolygon = ShiftPolygon.ReadFromFile(ShiftPolygonFile),
 							//ShiftPolygon =    DeclarationData.Gearbox.ComputeShiftPolygon(engineData.FullLoadCurve, engineData.IdleSpeed)
@@ -162,7 +183,8 @@ namespace TUGraz.VectoCore.Tests.Integration
 			return new VehicleData {
 				AxleConfiguration = AxleConfiguration.AxleConfig_4x2,
 				AerodynamicDragAera = 6.2985.SI<SquareMeter>(),
-				CrossWindCorrectionMode = CrossWindCorrectionMode.NoCorrection,
+				//CrossWindCorrectionMode = CrossWindCorrectionMode.NoCorrection,
+				CrossWindCorrectionCurve = CrossWindCorrectionCurve.GetNoCorrectionCurve(6.2985.SI<SquareMeter>()),
 				CurbWeight = 7100.SI<Kilogram>(),
 				CurbWeigthExtra = massExtra,
 				Loading = loading,

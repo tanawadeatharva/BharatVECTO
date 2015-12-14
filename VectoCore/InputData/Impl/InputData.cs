@@ -32,7 +32,7 @@ namespace TUGraz.VectoCore.InputData.Impl
 		public MeterPerSecond MinSpeed { get; internal set; }
 	}
 
-	public class OverSpeedEcoRollInputData : IOverspeedEcoRollInputData
+	public class OverSpeedEcoRollInputData : IOverSpeedEcoRollInputData
 	{
 		public DriverData.DriverMode Mode { get; internal set; }
 

@@ -1,3 +1,19 @@
+/*
+* Copyright 2015 European Union
+*
+* Licensed under the EUPL (the "Licence");
+* You may not use this work except in compliance with the Licence.
+* You may obtain a copy of the Licence at:
+*
+* http://ec.europa.eu/idabc/eupl5
+*
+* Unless required by applicable law or agreed to in writing, software 
+* distributed under the Licence is distributed on an "AS IS" basis,
+* WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+* See the Licence for the specific language governing permissions and 
+* limitations under the Licence.
+*/
+
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -23,7 +39,7 @@ namespace TUGraz.VectoCore.Models.SimulationComponent.Impl
 		protected const double LookaheadTimeSafetyMargin = 1.5;
 		protected readonly DrivingCycleData Data;
 
-		internal DrivingCycleState PreviousState = null;
+		internal DrivingCycleState PreviousState;
 		internal DrivingCycleState CurrentState = new DrivingCycleState();
 
 		internal readonly DrivingCycleEnumerator CycleIntervalIterator;
@@ -68,10 +84,7 @@ namespace TUGraz.VectoCore.Models.SimulationComponent.Impl
 		IResponse ISimulationOutPort.Request(Second absTime, Meter ds)
 		{
 			var retVal = DoHandleRequest(absTime, ds);
-
 			CurrentState.Response = retVal;
-
-			//switch (retVal.ResponseType) {}
 			return retVal;
 		}
 
@@ -197,6 +210,9 @@ namespace TUGraz.VectoCore.Models.SimulationComponent.Impl
 			return null;
 		}
 
+		/// <summary>
+		/// time request not implemented in distance based driving cycle (method <see cref="DriveTimeInterval"/> is used).
+		/// </summary>
 		IResponse ISimulationOutPort.Request(Second absTime, Second dt)
 		{
 			throw new NotImplementedException();
@@ -242,11 +258,6 @@ namespace TUGraz.VectoCore.Models.SimulationComponent.Impl
 		}
 
 		#endregion
-
-		protected IResponse ProcessResponse(IResponse response)
-		{
-			throw new NotImplementedException();
-		}
 
 		#region VectoSimulationComponent
 
@@ -388,6 +399,7 @@ namespace TUGraz.VectoCore.Models.SimulationComponent.Impl
 				if (CurrentCycleIndex == Data.Entries.Count - 2) {
 					LastEntry = true;
 				}
+
 				return true;
 			}
 
@@ -426,7 +438,7 @@ namespace TUGraz.VectoCore.Models.SimulationComponent.Impl
 
 			public IResponse Response;
 
-			public bool RequestToNextSamplePointDone = false;
+			public bool RequestToNextSamplePointDone;
 
 			public Meter SimulationDistance;
 		}

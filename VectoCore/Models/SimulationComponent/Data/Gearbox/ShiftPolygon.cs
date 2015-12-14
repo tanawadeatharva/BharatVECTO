@@ -1,4 +1,21 @@
-﻿using System.Collections.Generic;
+/*
+* Copyright 2015 European Union
+*
+* Licensed under the EUPL (the "Licence");
+* You may not use this work except in compliance with the Licence.
+* You may obtain a copy of the Licence at:
+*
+* http://ec.europa.eu/idabc/eupl5
+*
+* Unless required by applicable law or agreed to in writing, software 
+* distributed under the Licence is distributed on an "AS IS" basis,
+* WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+* See the Licence for the specific language governing permissions and 
+* limitations under the Licence.
+*/
+
+using System;
+using System.Collections.Generic;
 using System.Collections.ObjectModel;
 using System.Data;
 using System.Diagnostics;
@@ -22,8 +39,12 @@ namespace TUGraz.VectoCore.Models.SimulationComponent.Data.Gearbox
 
 		public static ShiftPolygon ReadFromFile(string fileName)
 		{
-			var data = VectoCSVFile.Read(fileName);
-			return Create(data);
+			try {
+				var data = VectoCSVFile.Read(fileName);
+				return Create(data);
+			} catch (Exception ex) {
+				throw new VectoException("ERROR while reading ShiftPolygon: " + ex.Message);
+			}
 		}
 
 		public static ShiftPolygon Create(DataTable data)

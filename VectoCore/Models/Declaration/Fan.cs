@@ -1,6 +1,23 @@
+/*
+* Copyright 2015 European Union
+*
+* Licensed under the EUPL (the "Licence");
+* You may not use this work except in compliance with the Licence.
+* You may obtain a copy of the Licence at:
+*
+* http://ec.europa.eu/idabc/eupl5
+*
+* Unless required by applicable law or agreed to in writing, software 
+* distributed under the Licence is distributed on an "AS IS" basis,
+* WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+* See the Licence for the specific language governing permissions and 
+* limitations under the Licence.
+*/
+
 using System;
 using System.Collections.Generic;
 using System.Data;
+using TUGraz.VectoCore.Exceptions;
 using TUGraz.VectoCore.Utils;
 
 namespace TUGraz.VectoCore.Models.Declaration
@@ -38,7 +55,13 @@ namespace TUGraz.VectoCore.Models.Declaration
 			if (string.IsNullOrWhiteSpace(technology)) {
 				technology = DefaultTechnology;
 			}
-			return _data[Tuple.Create(mission, technology)];
+
+			try {
+				return _data[Tuple.Create(mission, technology)];
+			} catch (KeyNotFoundException) {
+				throw new VectoException("Auxiliary Lookup Error: No value found for Fan with key '{0}' in mission '{1}'",
+					technology, mission);
+			}
 		}
 	}
 }

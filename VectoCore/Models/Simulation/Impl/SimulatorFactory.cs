@@ -1,3 +1,19 @@
+/*
+* Copyright 2015 European Union
+*
+* Licensed under the EUPL (the "Licence");
+* You may not use this work except in compliance with the Licence.
+* You may obtain a copy of the Licence at:
+*
+* http://ec.europa.eu/idabc/eupl5
+*
+* Unless required by applicable law or agreed to in writing, software 
+* distributed under the Licence is distributed on an "AS IS" basis,
+* WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+* See the Licence for the specific language governing permissions and 
+* limitations under the Licence.
+*/
+
 using System.Collections.Generic;
 using System.IO;
 using System.Reflection;
@@ -87,16 +103,15 @@ namespace TUGraz.VectoCore.Models.Simulation.Impl
 				var builder = new PowertrainBuilder(modContainer,
 					data.IsEngineOnly, (writer, mass, loading) =>
 						SumData.Write(d.IsEngineOnly, modContainer, d.JobName, string.Format("{0}-{1}", JobNumber, i++),
-							d.Cycle.Name + ".vdri",
-							mass, loading));
+							d.Cycle.Name + Constants.FileExtensions.CycleFile, mass, loading));
 
 				VectoRun run;
 				if (data.IsEngineOnly) {
 					run = new TimeRun(builder.Build(data));
 				} else {
-					var runCaption = string.Format("{0}-{1}-{2}",
-						Path.GetFileNameWithoutExtension(data.JobName), data.Cycle.Name, data.ModFileSuffix);
-					run = new DistanceRun(runCaption, builder.Build(data));
+					//var runCaption = string.Format("{0}-{1}-{2}",
+					//	Path.GetFileNameWithoutExtension(data.JobName), data.Cycle.Name, data.ModFileSuffix);
+					run = new DistanceRun(builder.Build(data));
 				}
 
 				yield return run;

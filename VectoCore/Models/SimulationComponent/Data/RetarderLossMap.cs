@@ -1,4 +1,21 @@
-﻿using System.Collections.Generic;
+/*
+* Copyright 2015 European Union
+*
+* Licensed under the EUPL (the "Licence");
+* You may not use this work except in compliance with the Licence.
+* You may obtain a copy of the Licence at:
+*
+* http://ec.europa.eu/idabc/eupl5
+*
+* Unless required by applicable law or agreed to in writing, software 
+* distributed under the Licence is distributed on an "AS IS" basis,
+* WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+* See the Licence for the specific language governing permissions and 
+* limitations under the Licence.
+*/
+
+using System;
+using System.Collections.Generic;
 using System.Data;
 using System.Linq;
 using TUGraz.VectoCore.Exceptions;
@@ -12,8 +29,13 @@ namespace TUGraz.VectoCore.Models.SimulationComponent.Data
 
 		public static RetarderLossMap ReadFromFile(string fileName)
 		{
-			var data = VectoCSVFile.Read(fileName);
-			return Create(data);
+			try {
+				DataTable data;
+				data = VectoCSVFile.Read(fileName);
+				return Create(data);
+			} catch (Exception ex) {
+				throw new VectoException("ERROR while loading RetarderLossMap: " + ex.Message);
+			}
 		}
 
 		public static RetarderLossMap Create(DataTable data)
@@ -23,7 +45,7 @@ namespace TUGraz.VectoCore.Models.SimulationComponent.Data
 			}
 
 			if (data.Rows.Count < 2) {
-				throw new VectoException("RetarderLossMap must consist of at leas two entries.");
+				throw new VectoException("RetarderLossMap must consist of at least two entries.");
 			}
 
 			List<RetarderLossEntry> entries;
@@ -51,7 +73,8 @@ namespace TUGraz.VectoCore.Models.SimulationComponent.Data
 			int idx;
 			if (angularVelocity < _entries[0].RetarderSpeed) {
 				Log.Info("requested rpm below minimum rpm in retarder loss map - extrapolating. n: {0}, rpm_min: {1}",
-					angularVelocity.ConvertTo().Rounds.Per.Minute, _entries[0].RetarderSpeed.ConvertTo().Rounds.Per.Minute);
+					angularVelocity.ConvertTo().Rounds.Per.Minute,
+					_entries[0].RetarderSpeed.ConvertTo().Rounds.Per.Minute);
 				idx = 1;
 			} else {
 				idx = _entries.FindIndex(x => x.RetarderSpeed > angularVelocity);
@@ -89,19 +112,18 @@ namespace TUGraz.VectoCore.Models.SimulationComponent.Data
 		private class RetarderLossEntry
 		{
 			public PerSecond RetarderSpeed { get; set; }
-
 			public NewtonMeter TorqueLoss { get; set; }
 		}
 
 		private static class Fields
 		{
 			/// <summary>
-			///		[rpm]
+			///     [rpm]
 			/// </summary>
 			public const string RetarderSpeed = "Retarder Speed";
 
 			/// <summary>
-			///		[Nm]
+			///     [Nm]
 			/// </summary>
 			public const string TorqueLoss = "Torque Loss";
 		}

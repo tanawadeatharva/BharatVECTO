@@ -1,4 +1,20 @@
-﻿using System;
+/*
+* Copyright 2015 European Union
+*
+* Licensed under the EUPL (the "Licence");
+* You may not use this work except in compliance with the Licence.
+* You may obtain a copy of the Licence at:
+*
+* http://ec.europa.eu/idabc/eupl5
+*
+* Unless required by applicable law or agreed to in writing, software 
+* distributed under the Licence is distributed on an "AS IS" basis,
+* WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+* See the Licence for the specific language governing permissions and 
+* limitations under the Licence.
+*/
+
+using System;
 using System.Collections.Generic;
 using System.Drawing;
 using System.Drawing.Imaging;
@@ -30,12 +46,19 @@ namespace TUGraz.VectoCore.OutputData.PDF
 		/// </summary>
 		private class ResultContainer
 		{
+			/// <summary>
+			/// The mission
+			/// </summary>
 			public Mission Mission;
+
+			/// <summary>
+			/// Dictionary of LoadingTypes and their resulting Modal Data
+			/// </summary>
 			public Dictionary<LoadingType, IModalDataContainer> ModData;
 		}
 
 		/// <summary>
-		/// Data Dictionary for all missions.
+		/// Dictionary of MissionTypes and their corresponding results.
 		/// </summary>
 		private readonly Dictionary<MissionType, ResultContainer> _missions = new Dictionary<MissionType, ResultContainer>();
 
@@ -49,14 +72,12 @@ namespace TUGraz.VectoCore.OutputData.PDF
 		/// </summary>
 		internal Segment Segment { get; set; }
 
-
 		/// <summary>
 		/// The creator name for the report.
 		/// </summary>
 		private readonly string _creator;
 
 		private IReportWriter _writer;
-
 
 		/// <summary>
 		/// The engine model string from engine file.
@@ -97,20 +118,10 @@ namespace TUGraz.VectoCore.OutputData.PDF
 		/// <param name="creator">The creator name.</param>
 		/// <param name="jobName"></param>
 		/// <param name="writer"></param>
-//		public DeclarationReport(FullLoadCurve flc, Segment segment, string creator, string engineModel, string engineStr,
-//			string gearboxModel, string gearboxStr, string basePath, string jobFile, int resultCount)
 		public DeclarationReport(string creator, string jobName, IReportWriter writer)
 		{
-			//_flc = flc;
-			//_segment = segment;
 			_creator = creator;
-			//_engineModel = engineModel;
-			//_engineStr = engineStr;
-			//_gearboxModel = gearboxModel;
-			//_gearboxStr = gearboxStr;
 			JobName = jobName;
-			//_resultCount = resultCount;
-			//_basePath = basePath;
 			_writer = writer;
 		}
 
@@ -307,20 +318,16 @@ namespace TUGraz.VectoCore.OutputData.PDF
 		/// <summary>
 		/// Merges the given stream to one document and writes it to a file on disk.
 		/// </summary>
-		/// <param name="titlePage">The title page.</param>
-		/// <param name="cyclePages">The cycle pages.</param>
+		/// <param name="pages">The pages.</param>
 		/// <param name="reportWriter"></param>
-		private static void MergeDocuments(Stream titlePage, IEnumerable<Stream> cyclePages, Stream reportWriter)
+		private static void MergeDocuments(Stream titlePage, IEnumerable<Stream> pages, Stream reportWriter)
 		{
 			var document = new Document(PageSize.A4.Rotate(), 12, 12, 12, 12);
 			var writer = PdfWriter.GetInstance(document, reportWriter);
 
 			document.Open();
 
-			titlePage.Position = 0;
-			document.Add(Image.GetInstance(writer.GetImportedPage(new PdfReader(titlePage), 1)));
-
-			foreach (var cyclePage in cyclePages) {
+			foreach (var cyclePage in pages) {
 				cyclePage.Position = 0;
 				document.Add(Image.GetInstance(writer.GetImportedPage(new PdfReader(cyclePage), 1)));
 			}
