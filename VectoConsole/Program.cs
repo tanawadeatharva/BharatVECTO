@@ -20,7 +20,6 @@ using System.Diagnostics;
 using System.IO;
 using System.Linq;
 using System.Reflection;
-using System.Runtime.Remoting.Channels;
 using System.Threading;
 using NLog;
 using NLog.Config;
@@ -129,9 +128,9 @@ Examples:
                 var sumWriter = new SummaryFileWriter(sumFileName);
                 jobContainer = new JobContainer(sumWriter);
 
-                var mode = SimulatorFactory.FactoryMode.DeclarationMode;
+                var mode = ExecutionMode.Declaration;
                 if (args.Contains("-eng")) {
-                    mode = SimulatorFactory.FactoryMode.EngineeringMode;
+                    mode = ExecutionMode.Engineering;
                     Console.ForegroundColor = ConsoleColor.White;
                     Console.WriteLine(
                         "Switching to Engineering Mode. Make sure the job-file is saved in engineering mode!");

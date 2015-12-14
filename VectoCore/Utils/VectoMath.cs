@@ -232,9 +232,15 @@ namespace TUGraz.VectoCore.Utils
 			P3 = p3;
 		}
 
+		/// <summary>
+		/// Barycentric Technique: http://www.blackpawn.com/texts/pointinpoly/default.html
+		/// </summary>
+		/// <param name="x"></param>
+		/// <param name="y"></param>
+		/// <param name="exact"></param>
+		/// <returns></returns>
 		public bool IsInside(double x, double y, bool exact)
 		{
-			//Barycentric Technique: http://www.blackpawn.com/texts/pointinpoly/default.html
 			var v0X = P3.X - P1.X;
 			var v0Y = P3.Y - P1.Y;
 			var v1X = P2.X - P1.X;

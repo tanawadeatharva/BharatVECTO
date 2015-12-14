@@ -25,7 +25,7 @@ namespace TUGraz.VectoCore.Models.Simulation.Data
 {
 	public class ModalDataWriter : IModalDataWriter
 	{
-		private readonly SimulatorFactory.FactoryMode _mode;
+		private readonly ExecutionMode _mode;
 		private readonly Action<ModalDataWriter> _addReportResult;
 		private ModalResults Data { get; set; }
 		private DataRow CurrentRow { get; set; }
@@ -36,10 +36,10 @@ namespace TUGraz.VectoCore.Models.Simulation.Data
 		public VectoRun.Status RunStatus { get; protected set; }
 
 		public ModalDataWriter(string modFileName,
-			SimulatorFactory.FactoryMode mode = SimulatorFactory.FactoryMode.EngineeringMode) : this(modFileName, _ => {}, mode) {}
+			ExecutionMode mode = ExecutionMode.Engineering) : this(modFileName, _ => {}, mode) {}
 
 		public ModalDataWriter(string modFileName, Action<ModalDataWriter> addReportResult,
-			SimulatorFactory.FactoryMode mode = SimulatorFactory.FactoryMode.EngineeringMode)
+			ExecutionMode mode = ExecutionMode.Engineering)
 		{
 			HasTorqueConverter = false;
 			ModFileName = modFileName;
@@ -64,7 +64,7 @@ namespace TUGraz.VectoCore.Models.Simulation.Data
 
 			RunStatus = runStatus;
 
-			if (_mode != SimulatorFactory.FactoryMode.EngineOnlyMode) {
+			if (_mode != ExecutionMode.EngineOnly) {
 				dataColumns.AddRange(new[] {
 					ModalResultField.simulationInterval,
 					ModalResultField.dist,
@@ -89,7 +89,7 @@ namespace TUGraz.VectoCore.Models.Simulation.Data
 				ModalResultField.Paux
 			});
 
-			if (_mode != SimulatorFactory.FactoryMode.EngineOnlyMode) {
+			if (_mode != ExecutionMode.EngineOnly) {
 				dataColumns.AddRange(new[] {
 					ModalResultField.Gear,
 					ModalResultField.PlossGB,
@@ -118,11 +118,11 @@ namespace TUGraz.VectoCore.Models.Simulation.Data
 				.Concat((Auxiliaries.Values.Select(c => c.ColumnName)))
 				.Concat(new[] { ModalResultField.FCMap, ModalResultField.FCAUXc, ModalResultField.FCWHTCc }.Select(x => x.GetName()));
 
-			if (_mode != SimulatorFactory.FactoryMode.DeclarationMode || WriteModalResults) {
+			if (_mode != ExecutionMode.Declaration || WriteModalResults) {
 				VectoCSVFile.Write(ModFileName, new DataView(Data).ToTable(false, strCols.ToArray()));
 			}
 
-			if (_mode == SimulatorFactory.FactoryMode.DeclarationMode) {
+			if (_mode == ExecutionMode.Declaration) {
 				_addReportResult(this);
 			}
 		}

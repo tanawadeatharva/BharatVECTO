@@ -14,9 +14,7 @@
 * limitations under the Licence.
 */
 
-using System.Data;
 using System.IO;
-using System.Linq;
 using Microsoft.VisualStudio.TestTools.UnitTesting;
 using TUGraz.VectoCore.FileIO.Reader;
 using TUGraz.VectoCore.FileIO.Reader.Impl;
@@ -61,7 +59,7 @@ namespace TUGraz.VectoCore.Tests.Integration.EngineOnlyCycle
 			var dt = 1.SI<Second>();
 
 			var modFile = Path.GetRandomFileName() + ".vmod";
-			var dataWriter = new ModalDataWriter(modFile, SimulatorFactory.FactoryMode.EngineOnlyMode);
+			var dataWriter = new ModalDataWriter(modFile, ExecutionMode.EngineOnly);
 
 			foreach (var cycleEntry in data.Entries) {
 				var response = port.Request(absTime, dt, cycleEntry.EngineTorque, cycleEntry.EngineSpeed);

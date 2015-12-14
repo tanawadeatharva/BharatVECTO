@@ -87,10 +87,10 @@ namespace TUGraz.VectoCore.Tests.Models.Simulation
 		{
 			var sumFileName = resultFileName.Substring(0, resultFileName.Length - 5) + Constants.FileExtensions.SumFile;
 
-			var dataWriter = new ModalDataWriter(resultFileName, SimulatorFactory.FactoryMode.EngineOnlyMode);
+			var dataWriter = new ModalDataWriter(resultFileName, ExecutionMode.EngineOnly);
 			var sumWriter = new SummaryFileWriter(sumFileName);
 
-			var factory = new SimulatorFactory(SimulatorFactory.FactoryMode.EngineOnlyMode, EngineOnlyJob) {
+			var factory = new SimulatorFactory(ExecutionMode.EngineOnly, EngineOnlyJob) {
 				SumWriter = sumWriter
 			};
 
@@ -103,7 +103,7 @@ namespace TUGraz.VectoCore.Tests.Models.Simulation
 			var sumWriter = new SummaryFileWriter(@"24t Coach.vsum");
 			var jobContainer = new JobContainer(sumWriter);
 
-			var runsFactory = new SimulatorFactory(SimulatorFactory.FactoryMode.EngineOnlyMode,
+			var runsFactory = new SimulatorFactory(ExecutionMode.EngineOnly,
 				@"TestData\Jobs\24t Coach EngineOnly.vecto");
 
 			jobContainer.AddRuns(runsFactory);

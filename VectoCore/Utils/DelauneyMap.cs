@@ -70,20 +70,29 @@ namespace TUGraz.VectoCore.Utils
 			_triangles = triangles.FindAll(t => !t.SharesVertexWith(superTriangle));
 		}
 
-		public double Interpolate(double x, double y)
+		public double Interpolate(double x, double y, bool allowExtrapolation = false)
 		{
-			var tr = _triangles.Find(triangle => triangle.IsInside(x, y, exact: true));
-			if (tr == null) {
-				Log.Info("Exact search found no fitting triangle. Approximation will be used.");
-				tr = _triangles.Find(triangle => triangle.IsInside(x, y, exact: false));
-				if (tr == null) {
-					throw new VectoException("Interpolation failed. x: {0}, y: {1}", x, y);
-				}
+			var tr = _triangles.Find(triangle => triangle.IsInside(x, y, exact: true)) ??
+					_triangles.Find(triangle => triangle.IsInside(x, y, exact: false));
+
+			if (tr != null) {
+				Extrapolated = false;
+				var plane = new Plane(tr);
+				return (plane.W - plane.X * x - plane.Y * y) / plane.Z;
 			}
 
-			var plane = new Plane(tr);
-			return (plane.W - plane.X * x - plane.Y * y) / plane.Z;
+			if (!allowExtrapolation) {
+				throw new VectoException("Interpolation failed. x: {0}, y: {1}", x, y);
+			}
+
+			// todo: extrapolate
+			Extrapolated = true;
+
+
+			return y;
 		}
+
+		public bool Extrapolated { get; set; }
 
 		public DelauneyMap CreateInvertedMap()
 		{

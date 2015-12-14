@@ -1,4 +1,4 @@
-/*
+﻿/*
 * Copyright 2015 European Union
 *
 * Licensed under the EUPL (the "Licence");
@@ -142,7 +142,7 @@ namespace TUGraz.VectoCore.Tests.Integration.SimulationRuns
 				response = cyclePort.Request(absTime, ds);
 				response.Switch().
 					Case<ResponseDrivingCycleDistanceExceeded>(r => ds = r.MaxDistance).
-					Case<ResponseCycleFinished>(r => { }).
+					Case<ResponseCycleFinished>(r => {}).
 					Case<ResponseSuccess>(r => {
 						vehicleContainer.CommitSimulationStep(absTime, r.SimulationInterval);
 						absTime += r.SimulationInterval;
@@ -176,8 +176,7 @@ namespace TUGraz.VectoCore.Tests.Integration.SimulationRuns
 
 			var driverData = CreateDriverData(AccelerationFile2);
 
-			var modalWriter = new ModalDataWriter("Coach_MinimalPowertrainOverload.vmod",
-				SimulatorFactory.FactoryMode.EngineeringMode);
+			var modalWriter = new ModalDataWriter("Coach_MinimalPowertrainOverload.vmod", ExecutionMode.Engineering);
 			var vehicleContainer = new VehicleContainer(modalWriter);
 
 			var cycle = new DistanceBasedDrivingCycle(vehicleContainer, cycleData);

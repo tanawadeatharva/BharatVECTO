@@ -1555,12 +1555,12 @@ Imports System.Text
 		Dim sumWriter As SummaryFileWriter = New SummaryFileWriter(sumFileName)
 		Dim jobContainer As JobContainer = New JobContainer(sumWriter)
 
-		Dim mode As SimulatorFactory.FactoryMode
+		Dim mode As ExecutionMode
 
 		If Cfg.DeclMode Then
-			mode = SimulatorFactory.FactoryMode.DeclarationMode
+			mode = ExecutionMode.Declaration
 		Else
-			mode = SimulatorFactory.FactoryMode.EngineeringMode
+			mode = ExecutionMode.Engineering
 		End If
 
 		Dim doneProcesses As List(Of String) = New List(Of String)

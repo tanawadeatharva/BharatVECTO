@@ -33,7 +33,7 @@ namespace TUGraz.VectoCore.Tests.Integration
     public class FullCycleDeclarationTest
     {
         public const string TruckDeclarationJob =
-            @"TestData\Integration\DeclarationMode\40t Truck\40t_Long_Haul_Truck.vecto";
+            @"TestData\Integration\Declaration\40t Truck\40t_Long_Haul_Truck.vecto";
 
 
         [TestMethod]
@@ -141,7 +141,7 @@ namespace TUGraz.VectoCore.Tests.Integration
         {
             LogManager.DisableLogging();
 
-            var factory = new SimulatorFactory(SimulatorFactory.FactoryMode.DeclarationMode, TruckDeclarationJob);
+            var factory = new SimulatorFactory(ExecutionMode.Declaration, TruckDeclarationJob);
             factory.WriteModalResults = true;
             var sumFileName = Path.GetFileNameWithoutExtension(TruckDeclarationJob) + Constants.FileExtensions.SumFile;
             var sumWriter = new SummaryFileWriter(sumFileName);
@@ -159,7 +159,7 @@ namespace TUGraz.VectoCore.Tests.Integration
         [TestMethod, Ignore]
         public void Truck40t_RegionalDeliveryCycle_RefLoad_Declaration()
         {
-            var factory = new SimulatorFactory(SimulatorFactory.FactoryMode.DeclarationMode,
+            var factory = new SimulatorFactory(ExecutionMode.Declaration,
                 @"c:\Users\Technik\Downloads\40t Long Haul Truck\40t_Long_Haul_Truck.vecto");
             factory.WriteModalResults = true;
             factory.SumWriter = new SummaryFileWriter("Test.vsum");
@@ -175,7 +175,7 @@ namespace TUGraz.VectoCore.Tests.Integration
         public void Truck12t_LongHaulCycle_RefLoad_Declaration()
         {
             // TODO: fails due to interpolaion failure in Gear 4
-            var factory = new SimulatorFactory(SimulatorFactory.FactoryMode.DeclarationMode,
+            var factory = new SimulatorFactory(ExecutionMode.Declaration,
                 @"c:\Users\Technik\Downloads\12t Delivery Truck\12t Delivery Truck.vecto") {
                     WriteModalResults = true,
                     SumWriter = new SummaryFileWriter("Test.vsum")
@@ -192,7 +192,7 @@ namespace TUGraz.VectoCore.Tests.Integration
         public void Truck12t_UrbanDeliveryCycle_RefLoad_Declaration()
         {
             // TODO: fails due to interpolaion failure in Gear 4
-            var factory = new SimulatorFactory(SimulatorFactory.FactoryMode.DeclarationMode,
+            var factory = new SimulatorFactory(ExecutionMode.Declaration,
                 @"c:\Users\Technik\Downloads\12t Delivery Truck\12t Delivery Truck.vecto") {
                     WriteModalResults = true,
                     SumWriter = new SummaryFileWriter("Test.vsum")

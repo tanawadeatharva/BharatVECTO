@@ -150,10 +150,12 @@ namespace TUGraz.VectoCore.Models.Simulation.Impl
 
 		#endregion
 
-		public VehicleContainer(IModalDataWriter dataWriter = null, WriteSumData writeSumData = null)
+		public VehicleContainer(IModalDataWriter dataWriter = null, WriteSumData writeSumData = null,
+			ExecutionMode executionMode = ExecutionMode.Declaration)
 		{
 			DataWriter = dataWriter;
 			WriteSumData = writeSumData ?? delegate {};
+			ExecutionMode = executionMode;
 		}
 
 		#region IVehicleContainer
@@ -296,5 +298,7 @@ namespace TUGraz.VectoCore.Models.Simulation.Impl
 		{
 			get { return Road == null ? 0.SI<Meter>() : Road.CycleStartDistance; }
 		}
+
+		public ExecutionMode ExecutionMode { get; set; }
 	}
 }

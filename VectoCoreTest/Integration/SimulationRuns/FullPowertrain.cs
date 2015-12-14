@@ -260,7 +260,7 @@ namespace TUGraz.VectoCore.Tests.Integration.SimulationRuns
 			var sumWriter = new SummaryFileWriter(@"job.vsum");
 			var jobContainer = new JobContainer(sumWriter);
 
-			var factory = new SimulatorFactory(SimulatorFactory.FactoryMode.EngineeringMode, @"TestData\job.vecto");
+			var factory = new SimulatorFactory(ExecutionMode.Engineering, @"TestData\job.vecto");
 
 			jobContainer.AddRuns(factory);
 			jobContainer.Execute();

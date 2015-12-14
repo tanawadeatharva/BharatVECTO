@@ -28,32 +28,32 @@ using TUGraz.VectoCore.Utils;
 
 namespace TUGraz.VectoCore.Models.Simulation.Impl
 {
+	public enum ExecutionMode
+	{
+		Engineering,
+		Declaration,
+		EngineOnly,
+	}
+
 	public class SimulatorFactory : LoggingObject
 	{
 		private static int _jobNumberCounter;
 
-		public enum FactoryMode
-		{
-			EngineeringMode,
-			DeclarationMode,
-			EngineOnlyMode,
-		};
+		private readonly ExecutionMode _mode;
 
-		private FactoryMode _mode;
-
-		public SimulatorFactory(FactoryMode mode, string jobFile)
+		public SimulatorFactory(ExecutionMode mode, string jobFile)
 		{
 			Log.Fatal("########## VectoCore Version {0} ##########", Assembly.GetExecutingAssembly().GetName().Version);
 			JobNumber = Interlocked.Increment(ref _jobNumberCounter);
 			_mode = mode;
 			switch (mode) {
-				case FactoryMode.DeclarationMode:
+				case ExecutionMode.Declaration:
 					DataReader = new DeclarationModeSimulationDataReader();
 					break;
-				case FactoryMode.EngineeringMode:
+				case ExecutionMode.Engineering:
 					DataReader = new EngineeringModeSimulationDataReader();
 					break;
-				case FactoryMode.EngineOnlyMode:
+				case ExecutionMode.EngineOnly:
 					DataReader = new EngineOnlySimulationDataReader();
 					break;
 				default:
@@ -62,7 +62,7 @@ namespace TUGraz.VectoCore.Models.Simulation.Impl
 			DataReader.SetJobFile(jobFile);
 		}
 
-		public ISimulationDataReader DataReader { get; private set; }
+		public ISimulationDataReader DataReader { get; }
 
 		public SummaryFileWriter SumWriter { get; set; }
 
