@@ -11,9 +11,9 @@
     "EngineFile": "../Components/12t Delivery Truck.veng",
     "GearboxFile": "../Components/12t Delivery Truck.vgbx",
     "Cycles": [
-      "Long Haul",
-      "Regional Delivery",
-      "Urban Delivery"
+      "LongHaul",
+      "RegionalDelivery",
+      "UrbanDelivery"
     ],
     "Aux": [
       {

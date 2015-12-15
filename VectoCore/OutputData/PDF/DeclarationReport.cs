@@ -1,0 +1,636 @@
+/*
+* Copyright 2015 European Union
+*
+* Licensed under the EUPL (the "Licence");
+* You may not use this work except in compliance with the Licence.
+* You may obtain a copy of the Licence at:
+*
+* http://ec.europa.eu/idabc/eupl5
+*
+* Unless required by applicable law or agreed to in writing, software 
+* distributed under the Licence is distributed on an "AS IS" basis,
+* WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+* See the Licence for the specific language governing permissions and 
+* limitations under the Licence.
+*/
+
+using System;
+using System.Collections.Generic;
+using System.Drawing;
+using System.Drawing.Imaging;
+using System.Globalization;
+using System.IO;
+using System.Linq;
+using System.Runtime.CompilerServices;
+using System.Windows.Forms.DataVisualization.Charting;
+using iTextSharp.text;
+using iTextSharp.text.pdf;
+using Org.BouncyCastle.Crypto.IO;
+using TUGraz.VectoCore.Models.Declaration;
+using TUGraz.VectoCore.Models.Simulation.Data;
+using TUGraz.VectoCore.Models.SimulationComponent.Data;
+using TUGraz.VectoCore.Utils;
+using Font = System.Drawing.Font;
+using Image = iTextSharp.text.Image;
+using Rectangle = System.Drawing.Rectangle;
+
+namespace TUGraz.VectoCore.OutputData.PDF
+{
+	/// <summary>
+	/// Class for creating a declaration report.
+	/// </summary>
+	public class DeclarationReport
+	{
+		/// <summary>
+		/// Container class for one mission and the modData for the different loadings.
+		/// </summary>
+		private class ResultContainer
+		{
+			/// <summary>
+			/// The mission
+			/// </summary>
+			public Mission Mission;
+
+			/// <summary>
+			/// Dictionary of LoadingTypes and their resulting Modal Data
+			/// </summary>
+			public Dictionary<LoadingType, IModalDataContainer> ModData;
+		}
+
+		/// <summary>
+		/// Dictionary of MissionTypes and their corresponding results.
+		/// </summary>
+		private readonly Dictionary<MissionType, ResultContainer> _missions = new Dictionary<MissionType, ResultContainer>();
+
+		/// <summary>
+		/// The full load curve.
+		/// </summary>
+		internal FullLoadCurve Flc { get; set; }
+
+		/// <summary>
+		/// The declaration segment from the segment table
+		/// </summary>
+		internal Segment Segment { get; set; }
+
+		/// <summary>
+		/// The creator name for the report.
+		/// </summary>
+		private readonly string _creator;
+
+		private IReportWriter _writer;
+
+		/// <summary>
+		/// The engine model string from engine file.
+		/// </summary>
+		public string EngineModel { get; set; }
+
+		/// <summary>
+		/// The engine description (displacement and max power)
+		/// </summary>
+		public string EngineStr { get; set; }
+
+		/// <summary>
+		/// The gearbox model string from gearbox file.
+		/// </summary>
+		public string GearboxModel { get; set; }
+
+		/// <summary>
+		/// The gearbox description (gear-count and gear type)
+		/// </summary>
+		public string GearboxStr { get; set; }
+
+		/// <summary>
+		/// The name of the job file (report name will be the same)
+		/// </summary>
+		public string JobName { get; set; }
+
+		/// <summary>
+		/// The result count determines how many results must be given before the report gets written.
+		/// </summary>
+		public int ResultCount { get; set; }
+
+		/// <summary>
+		/// The base path of the application
+		/// </summary>
+		/// <summary>
+		/// Initializes a new instance of the <see cref="DeclarationReport"/> class.
+		/// </summary>
+		/// <param name="creator">The creator name.</param>
+		/// <param name="jobName"></param>
+		/// <param name="writer"></param>
+		public DeclarationReport(string creator, string jobName, IReportWriter writer)
+		{
+			_creator = creator;
+			JobName = jobName;
+			_writer = writer;
+		}
+
+
+		/// <summary>
+		/// Adds the result of one run for the specific mission and loading. If all runs finished (given by the resultCount) the report will be written.
+		/// </summary>
+		/// <param name="loadingType">Type of the loading.</param>
+		/// <param name="mission">The mission.</param>
+		/// <param name="modData">The mod data.</param>
+		[MethodImpl(MethodImplOptions.Synchronized)]
+		public void AddResult(LoadingType loadingType, Mission mission, IModalDataContainer modData)
+		{
+			if (!_missions.ContainsKey(mission.MissionType)) {
+				_missions[mission.MissionType] = new ResultContainer {
+					Mission = mission,
+					ModData = new Dictionary<LoadingType, IModalDataContainer> { { loadingType, modData } }
+				};
+			} else {
+				_missions[mission.MissionType].ModData[loadingType] = modData;
+			}
+
+			if (ResultCount == _missions.Sum(v => v.Value.ModData.Count)) {
+				WriteReport();
+			}
+		}
+
+
+		/// <summary>
+		/// Creates the report and writes it to a pdf file.
+		/// </summary>
+		private void WriteReport()
+		{
+			var titlePage = CreateTitlePage(_missions);
+			var cyclePages = _missions.OrderBy(m => m.Key).Select((m, i) => CreateCyclePage(m.Value, i + 2, _missions.Count + 1));
+
+			MergeDocuments(titlePage, cyclePages, _writer.WriterStream(ReportType.DeclarationReportPdf));
+		}
+
+
+		/// <summary>
+		/// Creates the title page.
+		/// </summary>
+		/// <param name="missions">The missions.</param>
+		/// <returns>the out stream of the pdf stamper with the title page.</returns>
+		private Stream CreateTitlePage(Dictionary<MissionType, ResultContainer> missions)
+		{
+			var stream = new MemoryStream();
+			var resourceName = string.Format("{0}Report.title{1}CyclesTemplate.pdf", RessourceHelper.Namespace, missions.Count);
+			var inputStream = RessourceHelper.ReadStream(resourceName);
+			var reader = new PdfReader(inputStream);
+			var stamper = new PdfStamper(reader, stream);
+
+
+			var pdfFields = stamper.AcroFields;
+			pdfFields.SetField("version", System.Reflection.Assembly.GetExecutingAssembly().GetName().Version.ToString());
+			pdfFields.SetField("Job", JobName);
+			pdfFields.SetField("Date", DateTime.Now.ToString(CultureInfo.InvariantCulture));
+			pdfFields.SetField("Created", _creator);
+			pdfFields.SetField("Config",
+				string.Format(CultureInfo.InvariantCulture, "{0}t {1} {2}",
+					Segment.GrossVehicleMassRating.ConvertTo().Ton.ToOutputFormat(1),
+					Segment.AxleConfiguration.GetName(), Segment.VehicleCategory));
+			pdfFields.SetField("HDVclass", "HDV Class " + Segment.VehicleClass.GetClassNumber());
+			pdfFields.SetField("Engine", EngineStr);
+			pdfFields.SetField("EngM", EngineModel);
+			pdfFields.SetField("Gearbox", GearboxStr);
+			pdfFields.SetField("GbxM", GearboxModel);
+			pdfFields.SetField("PageNr", string.Format("Page {0} of {1}", 1, missions.Count + 1));
+
+
+			var i = 1;
+			foreach (var results in missions.Values.OrderBy(m => m.Mission.MissionType)) {
+				pdfFields.SetField("Mission" + i, results.Mission.MissionType.ToString());
+
+				var data = results.ModData[LoadingType.ReferenceLoad];
+
+				pdfFields.SetField("Loading" + i, results.Mission.RefLoad.ConvertTo().Ton.ToOutputFormat(1) + " t");
+				pdfFields.SetField("Speed" + i, data.Speed().ConvertTo().Kilo.Meter.Per.Hour.ToOutputFormat(1) + " km/h");
+
+				var fcLiterPer100Km = data.FuelConsumptionLiterPer100Kilometer();
+				pdfFields.SetField("FC" + i, fcLiterPer100Km.ToOutputFormat(1));
+
+				var loadingTon = results.Mission.RefLoad.ConvertTo().Ton;
+				var fcLiterPer100Tonkm = fcLiterPer100Km / loadingTon;
+				pdfFields.SetField("FCt" + i, fcLiterPer100Tonkm.ToOutputFormat(1));
+
+				var co2GrammPerKm = data.CO2PerMeter().ConvertTo().Gramm.Per.Kilo.Meter;
+				var co2GrammPerTonKm = co2GrammPerKm / loadingTon;
+
+				pdfFields.SetField("CO2" + i, co2GrammPerKm.ToOutputFormat(1));
+				pdfFields.SetField("CO2t" + i, co2GrammPerTonKm.ToOutputFormat(1));
+				i++;
+			}
+
+			// Add Images
+			var content = stamper.GetOverContent(1);
+			var img = Image.GetInstance(DrawCo2MissionsChart(missions), BaseColor.WHITE);
+			img.ScaleAbsolute(440, 195);
+			img.SetAbsolutePosition(360, 270);
+			content.AddImage(img);
+
+			img = Image.GetInstance(DrawCo2SpeedChart(missions), BaseColor.WHITE);
+			img.ScaleAbsolute(440, 195);
+			img.SetAbsolutePosition(360, 75);
+			content.AddImage(img);
+
+			img = GetVehicleImage(Segment, MissionType.LongHaul);
+			img.ScaleAbsolute(180, 50);
+			img.SetAbsolutePosition(30, 475);
+			content.AddImage(img);
+
+			stamper.FormFlattening = true;
+			stamper.Writer.CloseStream = false;
+			stamper.Close();
+
+			return stream;
+		}
+
+
+		/// <summary>
+		/// Creates the cycle page.
+		/// </summary>
+		/// <param name="results">The results.</param>
+		/// <param name="currentPageNr">The current page nr.</param>
+		/// <param name="pageCount">The page count.</param>
+		/// <returns>the out stream of the pdfstamper for a single cycle page</returns>
+		private Stream CreateCyclePage(ResultContainer results, int currentPageNr, int pageCount)
+		{
+			var stream = new MemoryStream();
+
+			var reader = new PdfReader(RessourceHelper.ReadStream(RessourceHelper.Namespace + "Report.cyclePageTemplate.pdf"));
+			var stamper = new PdfStamper(reader, stream);
+
+			var pdfFields = stamper.AcroFields;
+			pdfFields.SetField("version", System.Reflection.Assembly.GetExecutingAssembly().GetName().Version.ToString());
+			pdfFields.SetField("Job", JobName);
+			pdfFields.SetField("Date", DateTime.Now.ToString(CultureInfo.InvariantCulture));
+			pdfFields.SetField("Created", _creator);
+			pdfFields.SetField("Config",
+				string.Format("{0}t {1} {2}", Segment.GrossVehicleMassRating.ConvertTo().Ton.ToOutputFormat(1),
+					Segment.AxleConfiguration.GetName(), Segment.VehicleCategory));
+			pdfFields.SetField("HDVclass", "HDV Class " + Segment.VehicleClass.GetClassNumber());
+			pdfFields.SetField("PageNr", string.Format("Page {0} of {1}", currentPageNr, pageCount));
+			pdfFields.SetField("Mission", results.Mission.MissionType.ToString());
+
+
+			foreach (var pair in results.ModData) {
+				var loadingType = pair.Key;
+				var data = pair.Value;
+
+				var loadingTon = results.Mission.Loadings[loadingType].ConvertTo().Ton;
+				var loadAppendix = loadingType.GetShortName();
+
+				pdfFields.SetField("Load" + loadAppendix, loadingTon.ToOutputFormat(1) + " t");
+				pdfFields.SetField("Speed" + loadAppendix, data.Speed().ConvertTo().Kilo.Meter.Per.Hour.ToOutputFormat(1));
+
+				var fcLiterPer100Km = data.FuelConsumptionLiterPer100Kilometer();
+				pdfFields.SetField("FCkm" + loadAppendix, fcLiterPer100Km.ToOutputFormat(1));
+				pdfFields.SetField("FCtkm" + loadAppendix,
+					loadingTon.IsEqual(0) ? "-" : (fcLiterPer100Km / loadingTon).ToOutputFormat(1));
+
+
+				var co2GrammPerKm = data.CO2PerMeter().ConvertTo().Gramm.Per.Kilo.Meter;
+				pdfFields.SetField("CO2km" + loadAppendix, co2GrammPerKm.ToOutputFormat(1));
+				pdfFields.SetField("CO2tkm" + loadAppendix,
+					loadingTon.IsEqual(0) ? "-" : (co2GrammPerKm / loadingTon).ToOutputFormat(1));
+			}
+
+			var content = stamper.GetOverContent(1);
+
+			var img = GetVehicleImage(Segment, results.Mission.MissionType);
+			img.ScaleAbsolute(180, 50);
+			img.SetAbsolutePosition(600, 475);
+			content.AddImage(img);
+
+			img = Image.GetInstance(DrawCycleChart(results), BaseColor.WHITE);
+			img.ScaleAbsolute(780, 156);
+			img.SetAbsolutePosition(17, 270);
+			content.AddImage(img);
+
+			img = Image.GetInstance(DrawOperatingPointsChart(results.ModData[LoadingType.ReferenceLoad], Flc), BaseColor.WHITE);
+			img.ScaleAbsolute(420, 178);
+			img.SetAbsolutePosition(375, 75);
+			content.AddImage(img);
+
+			stamper.FormFlattening = true;
+
+			stamper.Writer.CloseStream = false;
+			stamper.Close();
+			return stream;
+		}
+
+		/// <summary>
+		/// Merges the given stream to one document and writes it to a file on disk.
+		/// </summary>
+		/// <param name="pages">The pages.</param>
+		/// <param name="reportWriter"></param>
+		private static void MergeDocuments(Stream titlePage, IEnumerable<Stream> pages, Stream reportWriter)
+		{
+			var document = new Document(PageSize.A4.Rotate(), 12, 12, 12, 12);
+			var writer = PdfWriter.GetInstance(document, reportWriter);
+
+			document.Open();
+
+			foreach (var cyclePage in pages) {
+				cyclePage.Position = 0;
+				document.Add(Image.GetInstance(writer.GetImportedPage(new PdfReader(cyclePage), 1)));
+			}
+
+			document.Close();
+		}
+
+		/// <summary>
+		/// Draws the co2 missions chart for the title page.
+		/// </summary>
+		/// <param name="missions">The missions.</param>
+		/// <returns></returns>
+		private static Bitmap DrawCo2MissionsChart(Dictionary<MissionType, ResultContainer> missions)
+		{
+			var co2Chart = new Chart { Width = 1500, Height = 700 };
+			co2Chart.Legends.Add(new Legend("main") {
+				Font = new Font("Helvetica", 20),
+				BorderColor = Color.Black,
+				BorderWidth = 3,
+			});
+			co2Chart.ChartAreas.Add(new ChartArea {
+				Name = "main",
+				AxisX = {
+					Title = "Missions",
+					TitleFont = new Font("Helvetica", 20),
+					LabelStyle = { Enabled = false }
+				},
+				AxisY = {
+					Title = "CO2 [g/tkm]",
+					TitleFont = new Font("Helvetica", 20),
+					LabelStyle = { Font = new Font("Helvetica", 20) },
+					LabelAutoFitStyle = LabelAutoFitStyles.None
+				},
+				BorderDashStyle = ChartDashStyle.Solid,
+				BorderWidth = 3
+			});
+
+			foreach (var missionResult in missions.OrderBy(m => m.Key)) {
+				var data = missionResult.Value.ModData[LoadingType.ReferenceLoad];
+
+				var loadingTon = missionResult.Value.Mission.Loadings[LoadingType.ReferenceLoad].ConvertTo().Ton;
+				var co2GrammPerTonKm = data.CO2PerMeter().ConvertTo().Gramm.Per.Kilo.Meter / loadingTon;
+
+				var series = new Series(missionResult.Key + " (Ref. load.)");
+				var dataPoint = new DataPoint {
+					Name = missionResult.Key.ToString(),
+					YValues = new[] { co2GrammPerTonKm.Value() },
+					Label = co2GrammPerTonKm.ToOutputFormat(1, showUnit: true),
+					Font = new Font("Helvetica", 20),
+					LabelBackColor = Color.White
+				};
+				series.Points.Add(dataPoint);
+				co2Chart.Series.Add(series);
+			}
+
+			co2Chart.Update();
+
+			var chartCo2Tkm = new Bitmap(co2Chart.Width, co2Chart.Height, PixelFormat.Format32bppArgb);
+			co2Chart.DrawToBitmap(chartCo2Tkm, new Rectangle(0, 0, chartCo2Tkm.Width, chartCo2Tkm.Height));
+			return chartCo2Tkm;
+		}
+
+		/// <summary>
+		/// Draws the co2 speed chart for the title page.
+		/// </summary>
+		/// <param name="missions">The missions.</param>
+		/// <returns></returns>
+		private static Bitmap DrawCo2SpeedChart(Dictionary<MissionType, ResultContainer> missions)
+		{
+			var co2SpeedChart = new Chart { Width = 1500, Height = 700 };
+			co2SpeedChart.Legends.Add(new Legend("main") {
+				Font = new Font("Helvetica", 20),
+				BorderColor = Color.Black,
+				BorderWidth = 3,
+			});
+			co2SpeedChart.ChartAreas.Add(new ChartArea("main") {
+				BorderDashStyle = ChartDashStyle.Solid,
+				BorderWidth = 3,
+				AxisX = {
+					Title = "vehicle speed [km/h]",
+					TitleFont = new Font("Helvetica", 20),
+					LabelStyle = { Font = new Font("Helvetica", 20) },
+					LabelAutoFitStyle = LabelAutoFitStyles.None,
+					Minimum = 0,
+					Maximum = 80
+				},
+				AxisY = {
+					Title = "CO2 [g/km]",
+					TitleFont = new Font("Helvetica", 20),
+					LabelStyle = { Font = new Font("Helvetica", 20) },
+					LabelAutoFitStyle = LabelAutoFitStyles.None
+				}
+			});
+
+			foreach (var missionResult in missions) {
+				var series = new Series {
+					MarkerSize = 15,
+					MarkerStyle = MarkerStyle.Circle,
+					ChartType = SeriesChartType.Point
+				};
+				foreach (var pair in missionResult.Value.ModData) {
+					var data = missionResult.Value.ModData[pair.Key];
+
+					var co2GramPerKilometer = data.CO2PerMeter().ConvertTo().Gramm.Per.Kilo.Meter;
+					var loadingTon = missionResult.Value.Mission.Loadings[pair.Key].ConvertTo().Ton;
+
+					var point = new DataPoint(data.Speed().ConvertTo().Kilo.Meter.Per.Hour.Value(), co2GramPerKilometer.Value()) {
+						Label = string.Format(CultureInfo.InvariantCulture, "{0:0.0} t", loadingTon.Value()),
+						Font = new Font("Helvetica", 16),
+						LabelBackColor = Color.White
+					};
+
+					if (pair.Key != LoadingType.ReferenceLoad) {
+						point.MarkerSize = 10;
+						point.Font = new Font("Helvetica", 14);
+					}
+					series.Points.Add(point);
+				}
+				series.Name = missionResult.Key.ToString();
+				co2SpeedChart.Series.Add(series);
+			}
+
+			co2SpeedChart.Update();
+			var chartCo2Speed = new Bitmap(co2SpeedChart.Width, co2SpeedChart.Height, PixelFormat.Format32bppArgb);
+			co2SpeedChart.DrawToBitmap(chartCo2Speed, new Rectangle(0, 0, co2SpeedChart.Width, co2SpeedChart.Height));
+			return chartCo2Speed;
+		}
+
+		/// <summary>
+		/// Draws the cycle chart for a cycle page.
+		/// </summary>
+		/// <param name="results">The results.</param>
+		/// <returns></returns>
+		private static Bitmap DrawCycleChart(ResultContainer results)
+		{
+			var missionCycleChart = new Chart { Width = 2000, Height = 400 };
+			missionCycleChart.Legends.Add(new Legend("main") {
+				Font = new Font("Helvetica", 14),
+				BorderColor = Color.Black,
+				BorderWidth = 3,
+				Position = { X = 97, Y = 3, Width = 10, Height = 40 }
+			});
+
+			missionCycleChart.ChartAreas.Add(new ChartArea {
+				Name = "main",
+				BorderDashStyle = ChartDashStyle.Solid,
+				BorderWidth = 3,
+				AxisX = {
+					Title = "distance [km]",
+					TitleFont = new Font("Helvetica", 16),
+					LabelStyle = { Font = new Font("Helvetica", 16), Format = "0.0" },
+					LabelAutoFitStyle = LabelAutoFitStyles.None,
+					Minimum = 0
+				},
+				AxisY = {
+					Title = "vehicle speed [km/h]",
+					TitleFont = new Font("Helvetica", 16),
+					LabelStyle = { Font = new Font("Helvetica", 16) },
+					LabelAutoFitStyle = LabelAutoFitStyles.None
+				},
+				AxisY2 = {
+					Title = "altitude [m]",
+					TitleFont = new Font("Helvetica", 16),
+					LabelStyle = { Font = new Font("Helvetica", 16) },
+					LabelAutoFitStyle = LabelAutoFitStyles.None,
+					MinorGrid = { Enabled = false },
+					MajorGrid = { Enabled = false }
+				},
+				Position = { X = 0f, Y = 0f, Width = 90, Height = 100 },
+			});
+
+			var altitude = new Series {
+				ChartType = SeriesChartType.Area,
+				Color = Color.Lavender,
+				Name = "Altitude",
+				YAxisType = AxisType.Secondary
+			};
+
+			var m = results.ModData.First().Value;
+			var distanceKm = m.GetValues<Meter>(ModalResultField.dist).Select(v => v.ConvertTo().Kilo.Meter).ToDouble();
+
+			altitude.Points.DataBindXY(distanceKm, m.GetValues<Meter>(ModalResultField.altitude).ToDouble());
+			missionCycleChart.Series.Add(altitude);
+
+			var targetSpeed = new Series { ChartType = SeriesChartType.FastLine, BorderWidth = 3, Name = "Target speed" };
+			targetSpeed.Points.DataBindXY(distanceKm,
+				m.GetValues<MeterPerSecond>(ModalResultField.v_targ).Select(v => v.ConvertTo().Kilo.Meter.Per.Hour).ToDouble());
+			missionCycleChart.Series.Add(targetSpeed);
+
+			foreach (var result in results.ModData) {
+				var name = result.Key.ToString();
+				var values = result.Value;
+				var series = new Series { ChartType = SeriesChartType.FastLine, Name = name };
+				series.Points.DataBindXY(
+					values.GetValues<Meter>(ModalResultField.dist).Select(v => v.ConvertTo().Kilo.Meter).ToDouble(),
+					values.GetValues<MeterPerSecond>(ModalResultField.v_act).Select(v => v.ConvertTo().Kilo.Meter.Per.Hour).ToDouble());
+				missionCycleChart.Series.Add(series);
+			}
+			missionCycleChart.Update();
+
+			var cycleChart = new Bitmap(missionCycleChart.Width, missionCycleChart.Height, PixelFormat.Format32bppArgb);
+			missionCycleChart.DrawToBitmap(cycleChart, new Rectangle(0, 0, missionCycleChart.Width, missionCycleChart.Height));
+			return cycleChart;
+		}
+
+		/// <summary>
+		/// Draws the operating points chart for a cycle page.
+		/// </summary>
+		/// <param name="modData">The mod data.</param>
+		/// <param name="flc">The FLC.</param>
+		/// <returns></returns>
+		private static Bitmap DrawOperatingPointsChart(IModalDataContainer modData, FullLoadCurve flc)
+		{
+			var operatingPointsChart = new Chart { Width = 1000, Height = 427 };
+			operatingPointsChart.Legends.Add(new Legend("main") {
+				Font = new Font("Helvetica", 14),
+				BorderColor = Color.Black,
+				BorderWidth = 3
+			});
+
+			operatingPointsChart.ChartAreas.Add(new ChartArea("main") {
+				BorderDashStyle = ChartDashStyle.Solid,
+				BorderWidth = 3,
+				AxisX = {
+					Title = "engine speed [1/min]",
+					TitleFont = new Font("Helvetica", 20),
+					LabelStyle = { Font = new Font("Helvetica", 20) },
+					LabelAutoFitStyle = LabelAutoFitStyles.None,
+					Minimum = 300.0
+				},
+				AxisY = {
+					Title = "engine torque [Nm]",
+					TitleFont = new Font("Helvetica", 20),
+					LabelStyle = { Font = new Font("Helvetica", 20) },
+					LabelAutoFitStyle = LabelAutoFitStyles.None
+				}
+			});
+
+			var n = flc.FullLoadEntries.Select(x => x.EngineSpeed.ConvertTo().Rounds.Per.Minute).ToDouble();
+			var torqueFull = flc.FullLoadEntries.Select(x => x.TorqueFullLoad).ToDouble();
+			var torqueDrag = flc.FullLoadEntries.Select(x => x.TorqueDrag).ToDouble();
+
+			var fullLoadCurve = new Series("Full load curve") {
+				ChartType = SeriesChartType.FastLine,
+				BorderWidth = 3,
+				Color = Color.DarkBlue
+			};
+			fullLoadCurve.Points.DataBindXY(n, torqueFull);
+			operatingPointsChart.Series.Add(fullLoadCurve);
+
+			var dragLoadCurve = new Series("Drag curve") {
+				ChartType = SeriesChartType.FastLine,
+				BorderWidth = 3,
+				Color = Color.Blue
+			};
+			dragLoadCurve.Points.DataBindXY(n, torqueDrag);
+			operatingPointsChart.Series.Add(dragLoadCurve);
+
+			var dataPoints = new Series("load points (Ref. load.)") { ChartType = SeriesChartType.Point, Color = Color.Red };
+			dataPoints.Points.DataBindXY(
+				modData.GetValues<PerSecond>(ModalResultField.n).Select(x => x.ConvertTo().Rounds.Per.Minute).ToDouble(),
+				modData.GetValues<NewtonMeter>(ModalResultField.Tq_eng).ToDouble());
+			operatingPointsChart.Series.Add(dataPoints);
+
+			operatingPointsChart.Update();
+
+			var tqnBitmap = new Bitmap(operatingPointsChart.Width, operatingPointsChart.Height, PixelFormat.Format32bppArgb);
+			operatingPointsChart.DrawToBitmap(tqnBitmap, new Rectangle(0, 0, tqnBitmap.Width, tqnBitmap.Height));
+			return tqnBitmap;
+		}
+
+		/// <summary>
+		/// Gets the appropriate vehicle image.
+		/// </summary>
+		/// <param name="segment">The segment.</param>
+		/// <param name="missionType">Type of the mission.</param>
+		/// <returns></returns>
+		private static Image GetVehicleImage(Segment segment, MissionType missionType)
+		{
+			var name = "Undef.png";
+			switch (segment.VehicleClass) {
+				case VehicleClass.Class1:
+				case VehicleClass.Class2:
+				case VehicleClass.Class3:
+					name = "4x2r.png";
+					break;
+				case VehicleClass.Class4:
+					name = missionType == MissionType.LongHaul ? "4x2rt.png" : "4x2r.png";
+					break;
+				case VehicleClass.Class5:
+					name = "4x2tt.png";
+					break;
+				case VehicleClass.Class9:
+					name = missionType == MissionType.LongHaul ? "6x2rt.png" : "6x2r.png";
+					break;
+				case VehicleClass.Class10:
+					name = "6x2tt.png";
+					break;
+			}
+
+			var hdvClassImagePath = RessourceHelper.Namespace + "Report." + name;
+			var hdvClassImage = RessourceHelper.ReadStream(hdvClassImagePath);
+			return Image.GetInstance(hdvClassImage);
+		}
+	}
+}

@@ -16,7 +16,7 @@
 
 using System.Diagnostics.CodeAnalysis;
 using System.IO;
-using TUGraz.VectoCore.FileIO.Reader;
+using TUGraz.VectoCore.InputData.Reader;
 using TUGraz.VectoCore.Models.SimulationComponent.Data;
 using TUGraz.VectoCore.Utils;
 

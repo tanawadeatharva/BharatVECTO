@@ -23,6 +23,7 @@ using TUGraz.VectoCore.Models.Simulation.Data;
 using TUGraz.VectoCore.Models.Simulation.DataBus;
 using TUGraz.VectoCore.Models.SimulationComponent;
 using TUGraz.VectoCore.Models.SimulationComponent.Data;
+using TUGraz.VectoCore.OutputData;
 using TUGraz.VectoCore.Utils;
 
 namespace TUGraz.VectoCore.Models.Simulation.Impl
@@ -44,7 +45,7 @@ namespace TUGraz.VectoCore.Models.Simulation.Impl
 
 		internal ISimulationOutPort Cycle;
 
-		internal IModalDataWriter DataWriter;
+		internal IModalDataContainer ModData;
 		internal WriteSumData WriteSumData;
 
 		#region IGearCockpit
@@ -121,11 +122,6 @@ namespace TUGraz.VectoCore.Models.Simulation.Impl
 
 		#endregion
 
-		public string ModFileName
-		{
-			get { return DataWriter.ModFileName; }
-		}
-
 		#region IVehicleCockpit
 
 		public MeterPerSecond VehicleSpeed
@@ -150,13 +146,18 @@ namespace TUGraz.VectoCore.Models.Simulation.Impl
 
 		#endregion
 
-		public VehicleContainer(IModalDataWriter dataWriter = null, WriteSumData writeSumData = null)
+		public VehicleContainer(IModalDataContainer modData = null, WriteSumData writeSumData = null)
 		{
-			DataWriter = dataWriter;
-			WriteSumData = writeSumData ?? delegate {};
+			ModData = modData;
+			WriteSumData = writeSumData ?? delegate { };
 		}
 
 		#region IVehicleContainer
+
+		public IModalDataContainer ModalData
+		{
+			get { return ModData; }
+		}
 
 		public ISimulationOutPort GetCycleOutPort()
 		{
@@ -218,22 +219,22 @@ namespace TUGraz.VectoCore.Models.Simulation.Impl
 		{
 			Log.Info("VehicleContainer committing simulation. time: {0}, dist: {1}, speed: {2}", time, Distance, VehicleSpeed);
 			foreach (var component in Components) {
-				component.CommitSimulationStep(DataWriter);
+				component.CommitSimulationStep(ModData);
 			}
 
-			if (DataWriter != null) {
-				DataWriter[ModalResultField.time] = time + simulationInterval / 2;
-				DataWriter[ModalResultField.simulationInterval] = simulationInterval;
-				DataWriter.CommitSimulationStep();
+			if (ModData != null) {
+				ModData[ModalResultField.time] = time + simulationInterval / 2;
+				ModData[ModalResultField.simulationInterval] = simulationInterval;
+				ModData.CommitSimulationStep();
 			}
 		}
 
 		public void FinishSimulation()
 		{
 			Log.Info("VehicleContainer finishing simulation.");
-			DataWriter.Finish(RunStatus);
+			ModData.Finish(RunStatus);
 
-			WriteSumData(DataWriter, VehicleMass, VehicleLoading);
+			WriteSumData(ModData, VehicleMass, VehicleLoading);
 		}
 
 		public VectoRun.Status RunStatus { get; set; }
@@ -296,5 +297,7 @@ namespace TUGraz.VectoCore.Models.Simulation.Impl
 		{
 			get { return Road == null ? 0.SI<Meter>() : Road.CycleStartDistance; }
 		}
+
+		public VectoRunData RunData { get; set; }
 	}
 }

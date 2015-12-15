@@ -21,6 +21,7 @@ using TUGraz.VectoCore.Models.Connector.Ports;
 using TUGraz.VectoCore.Models.Simulation;
 using TUGraz.VectoCore.Models.Simulation.Data;
 using TUGraz.VectoCore.Models.SimulationComponent.Data;
+using TUGraz.VectoCore.OutputData;
 using TUGraz.VectoCore.Utils;
 
 namespace TUGraz.VectoCore.Models.SimulationComponent.Impl
@@ -99,17 +100,17 @@ namespace TUGraz.VectoCore.Models.SimulationComponent.Impl
 
 		#region VectoSimulationComponent
 
-		protected override void DoWriteModalResults(IModalDataWriter writer)
+		protected override void DoWriteModalResults(IModalDataContainer container)
 		{
 			var sum = 0.SI<Watt>();
 			foreach (var kv in _powerDemands) {
 				sum += kv.Value;
 				// todo: aux write directauxiliary somewhere to moddata .... probably Padd column??
 				if (!string.IsNullOrWhiteSpace(kv.Key)) {
-					writer[kv.Key] = kv.Value;
+					container[kv.Key] = kv.Value;
 				}
 			}
-			writer[ModalResultField.Paux] = sum;
+			container[ModalResultField.Paux] = sum;
 		}
 
 		protected override void DoCommitSimulationStep() {}
@@ -136,7 +137,7 @@ namespace TUGraz.VectoCore.Models.SimulationComponent.Impl
 
 			_auxDict[auxId] = speed => {
 				var powerSupply = cycle.CycleData().LeftSample.AuxiliarySupplyPower["Aux_" + auxId];
-				var nAuxiliary = speed * data.TransitionRatio;
+				var nAuxiliary = speed * data.TransmissionRatio;
 				var powerAuxOut = powerSupply / data.EfficiencyToSupply;
 				var powerAuxIn = data.GetPowerDemand(nAuxiliary, powerAuxOut);
 				return powerAuxIn / data.EfficiencyToEngine;

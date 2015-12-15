@@ -32,22 +32,20 @@ namespace TUGraz.VectoCore.Models.SimulationComponent.Data
 		public static AccelerationCurveData ReadFromStream(Stream stream)
 		{
 			var data = VectoCSVFile.ReadStream(stream);
-			return ParseData(data);
+			return Create(data);
 		}
 
 		public static AccelerationCurveData ReadFromFile(string fileName)
 		{
-			DataTable data;
 			try {
-				data = VectoCSVFile.Read(fileName);
+				var data = VectoCSVFile.Read(fileName);
+				return Create(data);
 			} catch (Exception ex) {
 				throw new VectoException("ERROR while reading AccelerationCurve File: " + ex.Message);
 			}
-
-			return ParseData(data);
 		}
 
-		private static AccelerationCurveData ParseData(DataTable data)
+		internal static AccelerationCurveData Create(DataTable data)
 		{
 			if (data.Columns.Count != 3) {
 				throw new VectoException("Acceleration Limiting File must consist of 3 columns.");

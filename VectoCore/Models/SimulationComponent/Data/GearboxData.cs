@@ -33,10 +33,10 @@ namespace TUGraz.VectoCore.Models.SimulationComponent.Data
 		/// </summary>
 		public string ModelName { get; internal set; }
 
-		/// <summary>
-		/// The axle gear data.
-		/// </summary>
-		public GearData AxleGearData { get; internal set; }
+		///// <summary>
+		///// The axle gear data.
+		///// </summary>
+		//public GearData AxleGearData { get; internal set; }
 
 		/// <summary>
 		/// The gear data.

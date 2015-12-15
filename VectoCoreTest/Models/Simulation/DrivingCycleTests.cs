@@ -16,7 +16,7 @@
 
 using System;
 using Microsoft.VisualStudio.TestTools.UnitTesting;
-using TUGraz.VectoCore.FileIO.Reader;
+using TUGraz.VectoCore.InputData.Reader;
 using TUGraz.VectoCore.Models.Connector.Ports.Impl;
 using TUGraz.VectoCore.Models.Simulation.Impl;
 using TUGraz.VectoCore.Models.SimulationComponent.Data;
@@ -32,7 +32,7 @@ namespace TUGraz.VectoCore.Tests.Models.Simulation
 		[TestMethod]
 		public void TestEngineOnly()
 		{
-			var dataWriter = new MockModalDataWriter();
+			var dataWriter = new MockModalDataContainer();
 			var container = new VehicleContainer(dataWriter);
 
 			var cycleData = DrivingCycleDataReader.ReadFromFileEngineOnly(@"TestData\Cycles\Coach Engine Only.vdri");
@@ -83,7 +83,7 @@ namespace TUGraz.VectoCore.Tests.Models.Simulation
 			response = cycle.OutPort().Request(absTime, dt);
 			Assert.IsInstanceOfType(response, typeof(ResponseSuccess));
 
-			var dataWriter = new MockModalDataWriter();
+			var dataWriter = new MockModalDataContainer();
 			container.CommitSimulationStep(absTime, dt);
 
 			Assert.AreEqual(absTime, outPort.AbsTime);
@@ -104,7 +104,7 @@ namespace TUGraz.VectoCore.Tests.Models.Simulation
 				response = cycle.OutPort().Request(absTime, dt);
 				Assert.IsInstanceOfType(response, typeof(ResponseSuccess));
 
-				dataWriter = new MockModalDataWriter();
+				dataWriter = new MockModalDataContainer();
 				container.CommitSimulationStep(absTime, dt);
 
 				Assert.AreEqual(absTime, outPort.AbsTime);
@@ -148,7 +148,7 @@ namespace TUGraz.VectoCore.Tests.Models.Simulation
 		[TestMethod]
 		public void Test_TimeBased_TimeFieldMissing()
 		{
-			var container = new VehicleContainer(new MockModalDataWriter());
+			var container = new VehicleContainer(new MockModalDataContainer());
 
 			var cycleData = DrivingCycleDataReader.ReadFromFileTimeBased(@"TestData\Cycles\Cycle time field missing.vdri");
 			var cycle = new TimeBasedDrivingCycle(container, cycleData);
@@ -160,7 +160,7 @@ namespace TUGraz.VectoCore.Tests.Models.Simulation
 
 			inPort.Connect(outPort);
 
-			var dataWriter = new MockModalDataWriter();
+			var dataWriter = new MockModalDataContainer();
 			var absTime = 0.SI<Second>();
 			var dt = 1.SI<Second>();
 

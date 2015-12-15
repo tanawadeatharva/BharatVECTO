@@ -17,13 +17,14 @@
 using System;
 using System.Collections.Generic;
 using System.Linq;
-using TUGraz.VectoCore.FileIO.Reader.Impl;
 using TUGraz.VectoCore.Models.Declaration;
 using TUGraz.VectoCore.Models.Simulation.Data;
 using TUGraz.VectoCore.Models.Simulation.Impl;
 using TUGraz.VectoCore.Models.SimulationComponent.Data;
 using TUGraz.VectoCore.Models.SimulationComponent.Data.Gearbox;
 using TUGraz.VectoCore.Models.SimulationComponent.Impl;
+using TUGraz.VectoCore.OutputData;
+using TUGraz.VectoCore.OutputData.FileIO;
 using TUGraz.VectoCore.Tests.Utils;
 using TUGraz.VectoCore.Utils;
 using Wheels = TUGraz.VectoCore.Models.SimulationComponent.Impl.Wheels;
@@ -43,21 +44,23 @@ namespace TUGraz.VectoCore.Tests.Integration
 		public static VectoRun CreateEngineeringRun(DrivingCycleData cycleData, string modFileName,
 			bool overspeed = false)
 		{
-			var container = CreatePowerTrain(cycleData, modFileName, overspeed);
+			var container = CreatePowerTrain(cycleData, modFileName.Replace(".vmod", ""), overspeed);
 
-			return new DistanceRun("", container);
+			return new DistanceRun(container);
 		}
 
 		public static VehicleContainer CreatePowerTrain(DrivingCycleData cycleData, string modFileName,
 			bool overspeed = false)
 		{
-			var modalWriter = new ModalDataWriter(modFileName);
-			var container = new VehicleContainer(modalWriter);
+			var fileWriter = new FileOutputWriter(modFileName, "");
+			var modData = new ModalDataContainer(modFileName, fileWriter);
+			var container = new VehicleContainer(modData);
 
-			var engineData = EngineeringModeSimulationDataReader.CreateEngineDataFromFile(EngineFile);
+			var engineData = MockSimulationDataFactory.CreateEngineDataFromFile(EngineFile);
 			var axleGearData = CreateAxleGearData();
 			var gearboxData = CreateGearboxData();
 			var vehicleData = CreateVehicleData(3300.SI<Kilogram>());
+			//var retarder = new RetarderData { Type = RetarderData.RetarderType.None };
 			var driverData = CreateDriverData(AccelerationFile, overspeed);
 
 			var cycle = new DistanceBasedDrivingCycle(container, cycleData);
@@ -150,14 +153,13 @@ namespace TUGraz.VectoCore.Tests.Integration
 			};
 			return new VehicleData {
 				AxleConfiguration = AxleConfiguration.AxleConfig_6x2,
-				AerodynamicDragAera = 3.2634.SI<SquareMeter>(),
+				//AerodynamicDragAera = 3.2634.SI<SquareMeter>(),
 				//CrossWindCorrectionMode = CrossWindCorrectionMode.NoCorrection,
 				CrossWindCorrectionCurve = CrossWindCorrectionCurve.GetNoCorrectionCurve(3.2634.SI<SquareMeter>()),
 				CurbWeight = 15700.SI<Kilogram>(),
 				CurbWeigthExtra = 0.SI<Kilogram>(),
 				Loading = loading,
 				DynamicTyreRadius = 0.52.SI<Meter>(),
-				Retarder = new RetarderData { Type = RetarderData.RetarderType.None },
 				AxleData = axles,
 				SavedInDeclarationMode = false
 			};

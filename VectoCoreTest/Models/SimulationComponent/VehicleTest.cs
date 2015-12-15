@@ -17,8 +17,7 @@
 using System;
 using System.IO;
 using Microsoft.VisualStudio.TestTools.UnitTesting;
-using TUGraz.VectoCore.FileIO.Reader.DataObjectAdaper;
-using TUGraz.VectoCore.FileIO.Reader.Impl;
+using TUGraz.VectoCore.InputData.Reader.DataObjectAdaper;
 using TUGraz.VectoCore.Models.Declaration;
 using TUGraz.VectoCore.Models.Simulation.Data;
 using TUGraz.VectoCore.Models.Simulation.Impl;
@@ -42,9 +41,9 @@ namespace TUGraz.VectoCore.Tests.Models.SimulationComponent
 			var container = new VehicleContainer();
 
 			//var reader = new EngineeringModeSimulationDataReader();
-			var vehicleData = EngineeringModeSimulationDataReader.CreateVehicleDataFromFile(VehicleDataFileCoach);
+			var vehicleData = MockSimulationDataFactory.CreateVehicleDataFromFile(VehicleDataFileCoach);
 			//VehicleData.ReadFromFile(VehicleDataFile);
-			//vehicleData.CrossWindCorrection = VehicleData.CrossWindCorrectionMode.NoCorrection;
+			//vehicleData.CrossWindCorrectionMode = CrossWindCorrectionMode.NoCorrection;
 			var vehicle = new Vehicle(container, vehicleData);
 
 			var mockPort = new MockFvOutPort();
@@ -71,9 +70,11 @@ namespace TUGraz.VectoCore.Tests.Models.SimulationComponent
 		{
 			var container = new VehicleContainer();
 
-			var vehicleData = EngineeringModeSimulationDataReader.CreateVehicleDataFromFile(VehicleDataFileTruck);
-			vehicleData.AerodynamicDragAera = 6.46.SI<SquareMeter>();
-
+			var vehicleData = MockSimulationDataFactory.CreateVehicleDataFromFile(VehicleDataFileTruck);
+			//vehicleData.AerodynamicDragAera = 6.46.SI<SquareMeter>();
+			vehicleData.CrossWindCorrectionCurve =
+				DeclarationDataAdapter.GetDeclarationAirResistanceCurve(VehicleCategory.Tractor,
+					6.46.SI<SquareMeter>());
 			var vehicle = new Vehicle(container, vehicleData);
 
 			var mockPort = new MockFvOutPort();
@@ -110,21 +111,18 @@ namespace TUGraz.VectoCore.Tests.Models.SimulationComponent
 		{
 			var container = new VehicleContainer();
 
-			var vehicleData = EngineeringModeSimulationDataReader.CreateVehicleDataFromFile(VehicleDataFileTruck);
-			vehicleData.AerodynamicDragAera = 6.2985.SI<SquareMeter>();
+			var vehicleData = MockSimulationDataFactory.CreateVehicleDataFromFile(VehicleDataFileTruck);
 			vehicleData.CrossWindCorrectionCurve =
 				DeclarationDataAdapter.GetDeclarationAirResistanceCurve(VehicleCategory.Tractor,
-					vehicleData.AerodynamicDragAera);
-			//vehicleData.CrossWindCorrectionMode = CrossWindCorrectionMode.DeclarationModeCorrection;
+					6.2985.SI<SquareMeter>());
 
 			var vehicle = new Vehicle(container, vehicleData);
 
 			var mockPort = new MockFvOutPort();
 			vehicle.InPort().Connect(mockPort);
 
-			// ----
+			var writer = new MockModalDataContainer();
 
-			var writer = new MockModalDataWriter();
 			vehicle.Initialize(80.KMPHtoMeterPerSecond(), 0.SI<Radian>());
 
 			var absTime = 0.SI<Second>();

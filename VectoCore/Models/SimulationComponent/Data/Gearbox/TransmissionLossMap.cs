@@ -46,13 +46,16 @@ namespace TUGraz.VectoCore.Models.SimulationComponent.Data.Gearbox
 
 		public static TransmissionLossMap ReadFromFile(string fileName, double gearRatio, string gearName)
 		{
-			DataTable data;
 			try {
-				data = VectoCSVFile.Read(fileName, true);
+				var data = VectoCSVFile.Read(fileName, true);
+				return Create(data, gearRatio, gearName);
 			} catch (Exception ex) {
 				throw new VectoException("ERROR while reading TransmissionLossMap: " + ex.Message);
 			}
+		}
 
+		public static TransmissionLossMap Create(DataTable data, double gearRatio, string gearName)
+		{
 			if (data.Columns.Count < 3) {
 				throw new VectoException("TransmissionLossMap Data File for {0} must consist of at least 3 columns.", gearName);
 			}

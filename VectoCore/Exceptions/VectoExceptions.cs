@@ -58,6 +58,7 @@ namespace TUGraz.VectoCore.Exceptions
 	public class InvalidFileFormatException : FileIOException
 	{
 		public InvalidFileFormatException(string message) : base(message) {}
+		public InvalidFileFormatException(string message, params object[] args) : base(string.Format(message, args)) {}
 		public InvalidFileFormatException(string message, Exception inner) : base(message) {}
 	}
 

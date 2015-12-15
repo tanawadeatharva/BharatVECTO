@@ -21,6 +21,7 @@ using TUGraz.VectoCore.Models.Simulation.Data;
 using TUGraz.VectoCore.Models.Simulation.DataBus;
 using TUGraz.VectoCore.Models.SimulationComponent;
 using TUGraz.VectoCore.Models.SimulationComponent.Data;
+using TUGraz.VectoCore.OutputData;
 using TUGraz.VectoCore.Utils;
 
 namespace TUGraz.VectoCore.Tests.Utils
@@ -84,7 +85,7 @@ namespace TUGraz.VectoCore.Tests.Utils
 		}
 
 
-		protected override void DoWriteModalResults(IModalDataWriter writer)
+		protected override void DoWriteModalResults(IModalDataContainer container)
 		{
 			// nothing to write
 		}

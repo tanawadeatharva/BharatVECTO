@@ -15,9 +15,11 @@
 */
 
 using TUGraz.VectoCore.Models.Connector.Ports;
+using TUGraz.VectoCore.Models.Simulation.Data;
 using TUGraz.VectoCore.Models.Simulation.DataBus;
 using TUGraz.VectoCore.Models.Simulation.Impl;
 using TUGraz.VectoCore.Models.SimulationComponent;
+using TUGraz.VectoCore.OutputData;
 using TUGraz.VectoCore.Utils;
 
 namespace TUGraz.VectoCore.Models.Simulation
@@ -28,6 +30,10 @@ namespace TUGraz.VectoCore.Models.Simulation
 	/// </summary>
 	public interface IVehicleContainer : IDataBus
 	{
+		IModalDataContainer ModalData { get; }
+
+		VectoRunData RunData { get; }
+
 		ISimulationOutPort GetCycleOutPort();
 
 		/// <summary>
@@ -47,7 +53,5 @@ namespace TUGraz.VectoCore.Models.Simulation
 		void FinishSimulation();
 
 		VectoRun.Status RunStatus { get; set; }
-
-		string ModFileName { get; }
 	}
 }

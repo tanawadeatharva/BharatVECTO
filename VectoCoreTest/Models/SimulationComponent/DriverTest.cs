@@ -18,7 +18,6 @@ using System.Collections.Generic;
 using System.Linq;
 using Microsoft.VisualStudio.TestTools.UnitTesting;
 using TUGraz.VectoCore.Configuration;
-using TUGraz.VectoCore.FileIO.Reader.Impl;
 using TUGraz.VectoCore.Models.Connector.Ports;
 using TUGraz.VectoCore.Models.Connector.Ports.Impl;
 using TUGraz.VectoCore.Models.Declaration;
@@ -27,6 +26,8 @@ using TUGraz.VectoCore.Models.Simulation.Impl;
 using TUGraz.VectoCore.Models.SimulationComponent;
 using TUGraz.VectoCore.Models.SimulationComponent.Data;
 using TUGraz.VectoCore.Models.SimulationComponent.Impl;
+using TUGraz.VectoCore.OutputData;
+using TUGraz.VectoCore.OutputData.FileIO;
 using TUGraz.VectoCore.Tests.Utils;
 using TUGraz.VectoCore.Utils;
 using Wheels = TUGraz.VectoCore.Models.SimulationComponent.Impl.Wheels;
@@ -44,15 +45,15 @@ namespace TUGraz.VectoCore.Tests.Models.SimulationComponent
 		[TestMethod]
 		public void DriverCoastingTest()
 		{
-			var engineData = EngineeringModeSimulationDataReader.CreateEngineDataFromFile(EngineFile);
+			var engineData = MockSimulationDataFactory.CreateEngineDataFromFile(EngineFile);
 
 			var vehicleData = CreateVehicleData(33000.SI<Kilogram>());
 
 			var driverData = CreateDriverData();
 
-			var modalWriter = new ModalDataWriter("Coach_MinimalPowertrain_Coasting.vmod",
-				SimulatorFactory.FactoryMode.EngineeringMode); //new TestModalDataWriter();
-			var vehicleContainer = new VehicleContainer(modalWriter);
+			var fileWriter = new FileOutputWriter("Coach_MinimalPowertrain_Coasting", "");
+			var modData = new ModalDataContainer("Coach_MinimalPowertrain_Coasting", fileWriter);
+			var vehicleContainer = new VehicleContainer(modData);
 
 			var driver = new Driver(vehicleContainer, driverData, new DefaultDriverStrategy());
 			var engine = new CombustionEngine(vehicleContainer, engineData);
@@ -91,22 +92,23 @@ namespace TUGraz.VectoCore.Tests.Models.SimulationComponent
 
 				vehicleContainer.CommitSimulationStep(absTime, response.SimulationInterval);
 				absTime += response.SimulationInterval;
-				modalWriter.Finish(VectoRun.Status.Success);
+				modData.Finish(VectoRun.Status.Success);
 			}
-			modalWriter.Finish(VectoRun.Status.Success);
+			modData.Finish(VectoRun.Status.Success);
 		}
 
 		[TestMethod]
 		public void DriverCoastingTest2()
 		{
-			var engineData = EngineeringModeSimulationDataReader.CreateEngineDataFromFile(EngineFile);
+			var engineData = MockSimulationDataFactory.CreateEngineDataFromFile(EngineFile);
 
 			var vehicleData = CreateVehicleData(33000.SI<Kilogram>());
 
 			var driverData = CreateDriverData();
 
-			var modalWriter = new ModalDataWriter("Coach_MinimalPowertrain_Coasting.vmod");
-			var vehicleContainer = new VehicleContainer(modalWriter);
+			var fileWriter = new FileOutputWriter("Coach_MinimalPowertrain_Coasting", "");
+			var modData = new ModalDataContainer("Coach_MinimalPowertrain_Coasting", fileWriter);
+			var vehicleContainer = new VehicleContainer(modData);
 
 			var driver = new Driver(vehicleContainer, driverData, new DefaultDriverStrategy());
 			var engine = new CombustionEngine(vehicleContainer, engineData);
@@ -148,23 +150,23 @@ namespace TUGraz.VectoCore.Tests.Models.SimulationComponent
 
 				vehicleContainer.CommitSimulationStep(absTime, response.SimulationInterval);
 				absTime += response.SimulationInterval;
-				modalWriter.Finish(VectoRun.Status.Success);
+				modData.Finish(VectoRun.Status.Success);
 			}
-			modalWriter.Finish(VectoRun.Status.Success);
+			modData.Finish(VectoRun.Status.Success);
 		}
 
 		[TestMethod]
 		public void DriverOverloadTest()
 		{
-			var engineData = EngineeringModeSimulationDataReader.CreateEngineDataFromFile(EngineFile);
+			var engineData = MockSimulationDataFactory.CreateEngineDataFromFile(EngineFile);
 
 			var vehicleData = CreateVehicleData(33000.SI<Kilogram>());
 
 			var driverData = CreateDriverData();
 
-			var modalWriter = new ModalDataWriter("Coach_MinimalPowertrain.vmod",
-				SimulatorFactory.FactoryMode.EngineeringMode);
-			var vehicleContainer = new VehicleContainer(modalWriter);
+			var fileWriter = new FileOutputWriter("Coach_MinimalPowertrain", "");
+			var modData = new ModalDataContainer("Coach_MinimalPowertrain", fileWriter);
+			var vehicleContainer = new VehicleContainer(modData);
 
 			var cycle = new MockDrivingCycle(vehicleContainer, null);
 
@@ -193,7 +195,7 @@ namespace TUGraz.VectoCore.Tests.Models.SimulationComponent
 			vehicleContainer.CommitSimulationStep(absTime, response.SimulationInterval);
 			absTime += response.SimulationInterval;
 
-			Assert.AreEqual(0.955, modalWriter.GetValues<SI>(ModalResultField.acc).Last().Value(), Tolerance);
+			Assert.AreEqual(0.955, modData.GetValues<SI>(ModalResultField.acc).Last().Value(), Tolerance);
 
 			response = driverPort.Request(absTime, 1.SI<Meter>(), 10.SI<MeterPerSecond>(), 0.SI<Radian>());
 
@@ -202,7 +204,7 @@ namespace TUGraz.VectoCore.Tests.Models.SimulationComponent
 			vehicleContainer.CommitSimulationStep(absTime, response.SimulationInterval);
 			absTime += response.SimulationInterval;
 
-			Assert.AreEqual(0.7914, modalWriter.GetValues<SI>(ModalResultField.acc).Last().Value(), Tolerance);
+			Assert.AreEqual(0.7914, modData.GetValues<SI>(ModalResultField.acc).Last().Value(), Tolerance);
 		}
 
 		[TestMethod]
@@ -211,7 +213,7 @@ namespace TUGraz.VectoCore.Tests.Models.SimulationComponent
 			var vehicleContainer = new VehicleContainer();
 			var vehicle = new MockVehicle(vehicleContainer);
 
-			var driverData = EngineeringModeSimulationDataReader.CreateDriverDataFromFile(JobFile);
+			var driverData = MockSimulationDataFactory.CreateDriverDataFromFile(JobFile);
 			var driver = new Driver(vehicleContainer, driverData, new DefaultDriverStrategy());
 
 			var cycle = new MockDrivingCycle(vehicleContainer, null);
@@ -282,7 +284,7 @@ namespace TUGraz.VectoCore.Tests.Models.SimulationComponent
 			var vehicleContainer = new VehicleContainer();
 			var vehicle = new MockVehicle(vehicleContainer);
 
-			var driverData = EngineeringModeSimulationDataReader.CreateDriverDataFromFile(JobFile);
+			var driverData = MockSimulationDataFactory.CreateDriverDataFromFile(JobFile);
 			var driver = new Driver(vehicleContainer, driverData, new DefaultDriverStrategy());
 
 			var cycle = new MockDrivingCycle(vehicleContainer, null);
@@ -372,14 +374,11 @@ namespace TUGraz.VectoCore.Tests.Models.SimulationComponent
 			};
 			return new VehicleData {
 				AxleConfiguration = AxleConfiguration.AxleConfig_4x2,
-				AerodynamicDragAera = 3.2634.SI<SquareMeter>(),
-				//CrossWindCorrectionMode = CrossWindCorrectionMode.NoCorrection,
 				CrossWindCorrectionCurve = CrossWindCorrectionCurve.GetNoCorrectionCurve(3.2634.SI<SquareMeter>()),
 				CurbWeight = 15700.SI<Kilogram>(),
 				CurbWeigthExtra = 0.SI<Kilogram>(),
 				Loading = loading,
 				DynamicTyreRadius = 0.52.SI<Meter>(),
-				Retarder = new RetarderData { Type = RetarderData.RetarderType.None },
 				AxleData = axles,
 				SavedInDeclarationMode = false
 			};

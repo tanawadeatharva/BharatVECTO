@@ -20,6 +20,7 @@ using TUGraz.VectoCore.Models.Simulation.Data;
 using TUGraz.VectoCore.Models.SimulationComponent;
 using TUGraz.VectoCore.Models.SimulationComponent.Data;
 using TUGraz.VectoCore.Models.SimulationComponent.Impl;
+using TUGraz.VectoCore.OutputData;
 
 namespace TUGraz.VectoCore.Models.Simulation.Impl
 {
@@ -30,14 +31,14 @@ namespace TUGraz.VectoCore.Models.Simulation.Impl
 	{
 		private readonly bool _engineOnly;
 		private readonly VehicleContainer _container;
-		private readonly IModalDataWriter _dataWriter;
+		private readonly IModalDataContainer _modData;
 
 
-		public PowertrainBuilder(IModalDataWriter dataWriter, bool engineOnly, WriteSumData sumWriter = null)
+		public PowertrainBuilder(IModalDataContainer modData, bool engineOnly, WriteSumData sumWriter = null)
 		{
 			_engineOnly = engineOnly;
-			_dataWriter = dataWriter;
-			_container = new VehicleContainer(dataWriter, sumWriter);
+			_modData = modData;
+			_container = new VehicleContainer(modData, sumWriter);
 		}
 
 		public VehicleContainer Build(VectoRunData data)
@@ -47,6 +48,7 @@ namespace TUGraz.VectoCore.Models.Simulation.Impl
 
 		private VehicleContainer BuildFullPowertrain(VectoRunData data)
 		{
+			_container.RunData = data;
 			IDrivingCycle cycle;
 			switch (data.Cycle.CycleType) {
 				case CycleType.EngineOnly:
@@ -65,16 +67,16 @@ namespace TUGraz.VectoCore.Models.Simulation.Impl
 			var vehicle = AddComponent(driver, new Vehicle(_container, data.VehicleData));
 			var wheels = AddComponent(vehicle, new Wheels(_container, data.VehicleData.DynamicTyreRadius));
 			var brakes = AddComponent(wheels, new Brakes(_container));
-			var tmp = AddComponent(brakes, new AxleGear(_container, data.GearboxData.AxleGearData));
+			var tmp = AddComponent(brakes, new AxleGear(_container, data.AxleGearData));
 
-			switch (data.VehicleData.Retarder.Type) {
+			switch (data.Retarder.Type) {
 				case RetarderData.RetarderType.Primary:
-					tmp = AddComponent(tmp, new Retarder(_container, data.VehicleData.Retarder.LossMap));
+					tmp = AddComponent(tmp, new Retarder(_container, data.Retarder.LossMap));
 					tmp = AddComponent(tmp, GetGearbox(_container, data.GearboxData));
 					break;
 				case RetarderData.RetarderType.Secondary:
 					tmp = AddComponent(tmp, GetGearbox(_container, data.GearboxData));
-					tmp = AddComponent(tmp, new Retarder(_container, data.VehicleData.Retarder.LossMap));
+					tmp = AddComponent(tmp, new Retarder(_container, data.Retarder.LossMap));
 					break;
 				case RetarderData.RetarderType.None:
 					tmp = AddComponent(tmp, GetGearbox(_container, data.GearboxData));
@@ -106,7 +108,7 @@ namespace TUGraz.VectoCore.Models.Simulation.Impl
 							aux.AddMapping(auxData.ID, cycle, auxData.Data);
 							break;
 					}
-					_dataWriter.AddAuxiliary(auxData.ID);
+					_modData.AddAuxiliary(auxData.ID);
 				}
 				tmp = AddComponent(tmp, aux);
 			}

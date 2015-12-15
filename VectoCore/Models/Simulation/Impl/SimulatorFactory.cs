@@ -17,12 +17,16 @@
 using System.Collections.Generic;
 using System.IO;
 using System.Reflection;
+using System.Security.Principal;
 using System.Threading;
 using TUGraz.VectoCore.Configuration;
 using TUGraz.VectoCore.Exceptions;
-using TUGraz.VectoCore.FileIO.Reader;
-using TUGraz.VectoCore.FileIO.Reader.Impl;
+using TUGraz.VectoCore.InputData;
+using TUGraz.VectoCore.InputData.Reader.Impl;
+using TUGraz.VectoCore.Models.Declaration;
 using TUGraz.VectoCore.Models.Simulation.Data;
+using TUGraz.VectoCore.OutputData;
+using TUGraz.VectoCore.OutputData.PDF;
 
 namespace TUGraz.VectoCore.Models.Simulation.Impl
 {
@@ -39,30 +43,37 @@ namespace TUGraz.VectoCore.Models.Simulation.Impl
 
 		private FactoryMode _mode;
 
-		public SimulatorFactory(FactoryMode mode, string jobFile)
+		public SimulatorFactory(FactoryMode mode, IInputDataProvider dataProvider, IOutputDataWriter writer)
 		{
 			Log.Fatal("########## VectoCore Version {0} ##########", Assembly.GetExecutingAssembly().GetName().Version);
 			JobNumber = Interlocked.Increment(ref _jobNumberCounter);
 			_mode = mode;
+			ModWriter = writer;
 			switch (mode) {
 				case FactoryMode.DeclarationMode:
-					DataReader = new DeclarationModeSimulationDataReader();
+					var report = new DeclarationReport(WindowsIdentity.GetCurrent().Name,
+						dataProvider.JobInputData().JobName, writer);
+
+					DataReader = new DeclarationModeVectoRunDataFactory(dataProvider, report);
 					break;
 				case FactoryMode.EngineeringMode:
-					DataReader = new EngineeringModeSimulationDataReader();
+					DataReader = new EngineeringModeVectoRunDataFactory(dataProvider);
 					break;
 				case FactoryMode.EngineOnlyMode:
-					DataReader = new EngineOnlySimulationDataReader();
+					DataReader = new EngineOnlyVectoRunDataFactory(dataProvider);
 					break;
 				default:
 					throw new VectoException("Unkown factory mode in SimulatorFactory: {0}", mode);
 			}
-			DataReader.SetJobFile(jobFile);
+			//DataReader.SetJobFile(jobFile);
 		}
 
-		public ISimulationDataReader DataReader { get; private set; }
+		public IVectoRunDataFactory DataReader { get; private set; }
 
-		public SummaryFileWriter SumWriter { get; set; }
+		public SummaryDataContainer SumData { get; set; }
+
+		public IOutputDataWriter ModWriter { get; private set; }
+
 
 		public int JobNumber { get; set; }
 
@@ -76,27 +87,31 @@ namespace TUGraz.VectoCore.Models.Simulation.Impl
 		{
 			var i = 0;
 			foreach (var data in DataReader.NextRun()) {
-				var modFileName = Path.Combine(data.BasePath,
-					data.JobFileName.Replace(Constants.FileExtensions.VectoJobFile, "") + "_{0}{1}" +
-					Constants.FileExtensions.ModDataFile);
+				//var modFileName = Path.Combine(data.BasePath,
+				//	data.JobName.Replace(Constants.FileExtensions.VectoJobFile, "") + "_{0}{1}" +
+				//	Constants.FileExtensions.ModDataFile);
+				// -> string.Format(modFileName, data.Cycle.Name, data.ModFileSuffix ?? "")
 				var d = data;
-				IModalDataWriter modWriter =
-					new ModalDataWriter(string.Format(modFileName, data.Cycle.Name, data.ModFileSuffix ?? ""),
-						writer => d.Report.AddResult(d.Loading, d.Mission, writer), _mode);
-				modWriter.WriteModalResults = WriteModalResults;
-				var builder = new PowertrainBuilder(modWriter,
-					DataReader.IsEngineOnly, (writer, mass, loading) =>
-						SumWriter.Write(d.IsEngineOnly, modWriter, d.JobFileName, string.Format("{0}-{1}", JobNumber, i++),
-							d.Cycle.Name + ".vdri",
-							mass, loading));
+				IModalDataContainer modContainer =
+					new ModalDataContainer(data, ModWriter,
+						writer => {
+							if (d.Report != null) {
+								d.Report.AddResult(d.Loading, d.Mission, writer);
+							}
+						}, _mode);
+				modContainer.WriteModalResults = WriteModalResults;
+				var builder = new PowertrainBuilder(modContainer,
+					data.IsEngineOnly, (writer, mass, loading) =>
+						SumData.Write(d.IsEngineOnly, modContainer, d.JobName, string.Format("{0}-{1}", JobNumber, i++),
+							d.Cycle.Name + Constants.FileExtensions.CycleFile, mass, loading));
 
 				VectoRun run;
 				if (data.IsEngineOnly) {
 					run = new TimeRun(builder.Build(data));
 				} else {
-					var runCaption = string.Format("{0}-{1}-{2}",
-						Path.GetFileNameWithoutExtension(data.JobFileName), data.Cycle.Name, data.ModFileSuffix);
-					run = new DistanceRun(runCaption, builder.Build(data));
+					//var runCaption = string.Format("{0}-{1}-{2}",
+					//	Path.GetFileNameWithoutExtension(data.JobName), data.Cycle.Name, data.ModFileSuffix);
+					run = new DistanceRun(builder.Build(data));
 				}
 
 				yield return run;

@@ -24,14 +24,14 @@ namespace TUGraz.VectoCore.Models.SimulationComponent.Data
 {
 	public class VehicleData : SimulationComponentData
 	{
+		//public string BasePath { get; internal set; }
 		private List<Axle> _axleData;
-		public string BasePath { get; internal set; }
+
 		public VehicleCategory VehicleCategory { get; internal set; }
 		public VehicleClass VehicleClass { get; internal set; }
 		//public CrossWindCorrectionMode CrossWindCorrectionMode { get; internal set; }
 
 		public CrossWindCorrectionCurve CrossWindCorrectionCurve { get; internal set; }
-		public RetarderData Retarder { get; internal set; }
 
 		/// <summary>
 		///     Set the properties for all axles of the vehicle
@@ -51,7 +51,6 @@ namespace TUGraz.VectoCore.Models.SimulationComponent.Data
 		public Kilogram CurbWeigthExtra { get; internal set; }
 		public Kilogram Loading { get; internal set; }
 		public Kilogram GrossVehicleMassRating { get; internal set; }
-		public SquareMeter AerodynamicDragAera { get; internal set; }
 		public Meter DynamicTyreRadius { get; internal set; }
 		public Kilogram ReducedMassWheels { get; private set; }
 		public string Rim { get; internal set; }

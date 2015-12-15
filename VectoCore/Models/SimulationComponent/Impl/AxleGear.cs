@@ -18,6 +18,7 @@ using TUGraz.VectoCore.Models.Connector.Ports;
 using TUGraz.VectoCore.Models.Simulation.Data;
 using TUGraz.VectoCore.Models.Simulation.Impl;
 using TUGraz.VectoCore.Models.SimulationComponent.Data.Gearbox;
+using TUGraz.VectoCore.OutputData;
 using TUGraz.VectoCore.Utils;
 
 namespace TUGraz.VectoCore.Models.SimulationComponent.Impl
@@ -75,9 +76,9 @@ namespace TUGraz.VectoCore.Models.SimulationComponent.Impl
 			return NextComponent.Initialize(inTorque, inAngularVelocity);
 		}
 
-		protected override void DoWriteModalResults(IModalDataWriter writer)
+		protected override void DoWriteModalResults(IModalDataContainer container)
 		{
-			writer[ModalResultField.PlossDiff] = Loss;
+			container[ModalResultField.PlossDiff] = Loss;
 		}
 
 		protected override void DoCommitSimulationStep()

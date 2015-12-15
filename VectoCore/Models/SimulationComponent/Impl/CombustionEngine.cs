@@ -27,6 +27,7 @@ using TUGraz.VectoCore.Models.Simulation;
 using TUGraz.VectoCore.Models.Simulation.Data;
 using TUGraz.VectoCore.Models.Simulation.DataBus;
 using TUGraz.VectoCore.Models.SimulationComponent.Data;
+using TUGraz.VectoCore.OutputData;
 using TUGraz.VectoCore.Utils;
 
 namespace TUGraz.VectoCore.Models.SimulationComponent.Impl
@@ -218,30 +219,30 @@ namespace TUGraz.VectoCore.Models.SimulationComponent.Impl
 
 		#region VectoSimulationComponent
 
-		protected override void DoWriteModalResults(IModalDataWriter writer)
+		protected override void DoWriteModalResults(IModalDataContainer container)
 		{
-			writer[ModalResultField.PaEng] = CurrentState.EnginePowerLoss;
-			writer[ModalResultField.Pe_drag] = CurrentState.FullDragPower;
-			writer[ModalResultField.Pe_full] = CurrentState.DynamicFullLoadPower;
-			writer[ModalResultField.Pe_eng] = CurrentState.EnginePower;
+			container[ModalResultField.PaEng] = CurrentState.EnginePowerLoss;
+			container[ModalResultField.Pe_drag] = CurrentState.FullDragPower;
+			container[ModalResultField.Pe_full] = CurrentState.DynamicFullLoadPower;
+			container[ModalResultField.Pe_eng] = CurrentState.EnginePower;
 
-			writer[ModalResultField.Tq_drag] = CurrentState.FullDragTorque;
-			writer[ModalResultField.Tq_full] = CurrentState.DynamicFullLoadTorque;
-			writer[ModalResultField.Tq_eng] = CurrentState.EngineTorque;
-			writer[ModalResultField.n] = CurrentState.EngineSpeed;
+			container[ModalResultField.Tq_drag] = CurrentState.FullDragTorque;
+			container[ModalResultField.Tq_full] = CurrentState.DynamicFullLoadTorque;
+			container[ModalResultField.Tq_eng] = CurrentState.EngineTorque;
+			container[ModalResultField.n] = CurrentState.EngineSpeed;
 
 			try {
 				var fc = Data.ConsumptionMap.GetFuelConsumption(CurrentState.EngineTorque, CurrentState.EngineSpeed);
-				writer[ModalResultField.FCMap] = fc;
+				container[ModalResultField.FCMap] = fc;
 
 				//todo (MK, 2015-11-11): calculate aux start stop correction when start stop functionality is implemented in v3
 				var fcaux = fc;
-				writer[ModalResultField.FCAUXc] = fcaux;
-				writer[ModalResultField.FCWHTCc] = fcaux * Data.WHTCCorrectionFactor;
+				container[ModalResultField.FCAUXc] = fcaux;
+				container[ModalResultField.FCWHTCc] = fcaux * Data.WHTCCorrectionFactor;
 			} catch (VectoException ex) {
 				Log.Warn("t: {0} - {1} n: {2} Tq: {3}", CurrentState.AbsTime, ex.Message, CurrentState.EngineSpeed,
 					CurrentState.EngineTorque);
-				writer[ModalResultField.FCMap] = double.NaN.SI<KilogramPerSecond>();
+				container[ModalResultField.FCMap] = double.NaN.SI<KilogramPerSecond>();
 			}
 		}
 

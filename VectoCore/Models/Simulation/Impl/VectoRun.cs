@@ -20,6 +20,7 @@ using TUGraz.VectoCore.Exceptions;
 using TUGraz.VectoCore.Models.Connector.Ports;
 using TUGraz.VectoCore.Models.Connector.Ports.Impl;
 using TUGraz.VectoCore.Models.Simulation.Data;
+using TUGraz.VectoCore.OutputData;
 using TUGraz.VectoCore.Utils;
 
 namespace TUGraz.VectoCore.Models.Simulation.Impl
@@ -29,22 +30,35 @@ namespace TUGraz.VectoCore.Models.Simulation.Impl
 	/// </summary>
 	public abstract class VectoRun : LoggingObject, IVectoRun
 	{
-		public string Name { get; protected set; }
-
 		protected Second AbsTime = 0.SI<Second>();
 		protected Second dt = 1.SI<Second>();
-		protected SummaryFileWriter SumWriter { get; set; }
-		protected string JobFileName { get; set; }
+		protected SummaryDataContainer SumWriter { get; set; }
 		protected string JobName { get; set; }
 		protected ISimulationOutPort CyclePort { get; set; }
-		//protected IModalDataWriter DataWriter { get; set; }
 		protected IVehicleContainer Container { get; set; }
-
 		public bool FinishedWithoutErrors { get; protected set; }
+		public string RunIdentifier { get; protected set; }
+
+		public string RunName
+		{
+			get { return Container.RunData.JobName; }
+		}
+
+		public string CycleName
+		{
+			get { return Container.RunData.Cycle.Name; }
+		}
+
+		public string RunSuffix
+		{
+			get { return Container.RunData.ModFileSuffix; }
+		}
 
 		protected VectoRun(IVehicleContainer container)
 		{
 			Container = container;
+			RunIdentifier = string.Format("{0}-{1}-{2}", Container.ModalData.RunName, Container.ModalData.CycleName,
+				Container.ModalData.RunSuffix);
 			Container.RunStatus = Status.Pending;
 			CyclePort = container.GetCycleOutPort();
 		}
@@ -84,21 +98,21 @@ namespace TUGraz.VectoCore.Models.Simulation.Impl
 				Container.RunStatus = Status.Aborted;
 				Container.FinishSimulation();
 				throw new VectoSimulationException("{6} - absTime: {0}, distance: {1}, dt: {2}, v: {3}, Gear: {4} | {5}", vse,
-					AbsTime, Container.Distance, dt, Container.VehicleSpeed, Container.Gear, vse.Message, Name);
+					AbsTime, Container.Distance, dt, Container.VehicleSpeed, Container.Gear, vse.Message, RunIdentifier);
 			} catch (VectoException ve) {
 				Log.Error("SIMULATION RUN ABORTED! ========================");
 				Log.Error(ve);
 				Container.RunStatus = Status.Aborted;
 				Container.FinishSimulation();
 				throw new VectoSimulationException("{6} - absTime: {0}, distance: {1}, dt: {2}, v: {3}, Gear: {4} | {5}", ve,
-					AbsTime, Container.Distance, dt, Container.VehicleSpeed, Container.Gear, ve.Message, Name);
+					AbsTime, Container.Distance, dt, Container.VehicleSpeed, Container.Gear, ve.Message, RunIdentifier);
 			} catch (Exception e) {
 				Log.Error("SIMULATION RUN ABORTED! ========================");
 				Log.Error(e);
 				Container.RunStatus = Status.Aborted;
 				Container.FinishSimulation();
 				throw new VectoSimulationException("{6} - absTime: {0}, distance: {1}, dt: {2}, v: {3}, Gear: {4} | {5}", e, AbsTime,
-					Container.Distance, dt, Container.VehicleSpeed, Container.Gear, e.Message, Name);
+					Container.Distance, dt, Container.VehicleSpeed, Container.Gear, e.Message, RunIdentifier);
 			}
 			Container.RunStatus = Status.Success;
 			Container.FinishSimulation();
