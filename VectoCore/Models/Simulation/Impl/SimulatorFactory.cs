@@ -100,9 +100,10 @@ namespace TUGraz.VectoCore.Models.Simulation.Impl
 							}
 						}, _mode);
 				modContainer.WriteModalResults = WriteModalResults;
+				var current = i++;
 				var builder = new PowertrainBuilder(modContainer,
 					data.IsEngineOnly, (writer, mass, loading) =>
-						SumData.Write(d.IsEngineOnly, modContainer, d.JobName, string.Format("{0}-{1}", JobNumber, i++),
+						SumData.Write(d.IsEngineOnly, modContainer, d.JobName, string.Format("{0}-{1}", JobNumber, current),
 							d.Cycle.Name + Constants.FileExtensions.CycleFile, mass, loading));
 
 				VectoRun run;
