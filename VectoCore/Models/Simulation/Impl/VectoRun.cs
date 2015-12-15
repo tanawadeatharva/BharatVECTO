@@ -30,6 +30,8 @@ namespace TUGraz.VectoCore.Models.Simulation.Impl
 	/// </summary>
 	public abstract class VectoRun : LoggingObject, IVectoRun
 	{
+		private static uint _runIdCounter = 0;
+
 		protected Second AbsTime = 0.SI<Second>();
 		protected Second dt = 1.SI<Second>();
 		protected SummaryDataContainer SumWriter { get; set; }
@@ -37,7 +39,7 @@ namespace TUGraz.VectoCore.Models.Simulation.Impl
 		protected ISimulationOutPort CyclePort { get; set; }
 		protected IVehicleContainer Container { get; set; }
 		public bool FinishedWithoutErrors { get; protected set; }
-		public string RunIdentifier { get; protected set; }
+		public uint RunIdentifier { get; protected set; }
 
 		public string RunName
 		{
@@ -57,8 +59,7 @@ namespace TUGraz.VectoCore.Models.Simulation.Impl
 		protected VectoRun(IVehicleContainer container)
 		{
 			Container = container;
-			RunIdentifier = string.Format("{0}-{1}-{2}", Container.ModalData.RunName, Container.ModalData.CycleName,
-				Container.ModalData.RunSuffix);
+			RunIdentifier = _runIdCounter++;
 			Container.RunStatus = Status.Pending;
 			CyclePort = container.GetCycleOutPort();
 		}

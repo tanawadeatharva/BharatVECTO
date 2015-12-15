@@ -122,7 +122,7 @@ namespace TUGraz.VectoCore.Models.Simulation.Impl
 			}
 		}
 
-		public Dictionary<string, ProgressEntry> GetProgress()
+		public Dictionary<uint, ProgressEntry> GetProgress()
 		{
 			return Runs.ToDictionary(jobEntry => jobEntry.Run.RunIdentifier, entry => new ProgressEntry {
 				RunName = entry.Run.RunName,

@@ -208,7 +208,7 @@ Examples:
 			Console.WriteLine("VectoCore: {0}", vectodll.Version);
 		}
 
-		private static void PrintProgress(Dictionary<string, JobContainer.ProgressEntry> progessData,
+		private static void PrintProgress(Dictionary<uint, JobContainer.ProgressEntry> progessData,
 			bool showTiming = true)
 		{
 			Console.SetCursorPosition(0, Console.CursorTop - NumLines);
@@ -224,7 +224,9 @@ Examples:
 				if (showTiming && progressEntry.Value.ExecTime > 0) {
 					timingString = string.Format("{0,9:F2}s", progressEntry.Value.ExecTime / 1000.0);
 				}
-				Console.WriteLine("{0,-60} {1,8:P}{2}", progressEntry.Key, progressEntry.Value.Progress, timingString);
+				var runName = string.Format("{0} {1} {2}", progressEntry.Value.RunName, progressEntry.Value.CycleName,
+					progressEntry.Value.RunSuffix);
+				Console.WriteLine("{0,-60} {1,8:P}{2}", runName, progressEntry.Value.Progress, timingString);
 				Console.ResetColor();
 				sumProgress += progressEntry.Value.Progress;
 				NumLines++;
