@@ -6,8 +6,11 @@ using System.Linq;
 using System.Text;
 using Newtonsoft.Json.Linq;
 using NLog;
+using NLog.Fluent;
+using TUGraz.VectoCore.Configuration;
 using TUGraz.VectoCore.Exceptions;
 using TUGraz.VectoCore.InputData.Impl;
+using TUGraz.VectoCore.Models;
 using TUGraz.VectoCore.Models.Declaration;
 using TUGraz.VectoCore.Models.SimulationComponent.Data;
 using TUGraz.VectoCore.Utils;
@@ -22,7 +25,7 @@ namespace TUGraz.VectoCore.InputData.FileIO.JSON
 	///		"FileVersion": 7
 	/// },
 	/// </summary>
-	public abstract class JSONFile
+	public abstract class JSONFile : LoggingObject
 	{
 		private string _basePath;
 
@@ -55,7 +58,14 @@ namespace TUGraz.VectoCore.InputData.FileIO.JSON
 		protected DataTable ReadTableData(string filename, string tableType, bool required = true)
 		{
 			if (!EmptyOrInvalidFileName(filename)) {
-				return VectoCSVFile.Read(Path.Combine(BasePath, filename), true);
+				try {
+					return VectoCSVFile.Read(Path.Combine(BasePath, filename), true);
+				} catch (Exception e) {
+					if (required) {
+						throw new VectoException(string.Format("Invalid {0}: {1}", tableType, filename), e);
+					}
+					Log.Warn("Failed to read file {0} {1}", Path.Combine(BasePath, filename), tableType);
+				}
 			}
 			if (required) {
 				throw new VectoException("Invalid {0}: {1}", tableType, filename);
@@ -194,7 +204,7 @@ namespace TUGraz.VectoCore.InputData.FileIO.JSON
 						Path.Combine(BasePath, vehicleFile));
 				}
 			} catch (Exception e) {
-				throw new VectoException("Faled to read Vehicle file.", e);
+				throw new VectoException("Failed to read Vehicle file.", e);
 			}
 			var retarder = VehicleData as IRetarderInputData;
 			if (retarder != null) {
@@ -373,10 +383,23 @@ namespace TUGraz.VectoCore.InputData.FileIO.JSON
 		{
 			get
 			{
-				var accelerationFile = Body[JsonKeys.DriverData_AccelerationCurve];
-				return accelerationFile != null && !EmptyOrInvalidFileName(accelerationFile.Value<string>())
-					? ReadTableData(accelerationFile.Value<string>(), "DriverAccelerationCurve")
-					: null;
+				var acceleration = Body[JsonKeys.DriverData_AccelerationCurve];
+				if (acceleration == null || EmptyOrInvalidFileName(acceleration.Value<string>())) {
+					throw new VectoException("AccelerationCurve (VACC) required");
+				}
+				var accelerationData = ReadTableData(acceleration.Value<string>(), "DriverAccelerationCurve", false);
+				if (accelerationData != null) {
+					return accelerationData;
+				}
+				try {
+					var cycleDataRes =
+						RessourceHelper.ReadStream(RessourceHelper.Namespace + "VACC." + acceleration.Value<string>() +
+													Constants.FileExtensions.DriverAccelerationCurve);
+					accelerationData = VectoCSVFile.ReadStream(cycleDataRes);
+				} catch (Exception e) {
+					throw new VectoException("Failed to read Driver Acceleration Curve", e);
+				}
+				return accelerationData;
 			}
 		}
 

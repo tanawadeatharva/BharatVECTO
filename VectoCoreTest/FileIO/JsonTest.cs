@@ -15,9 +15,13 @@
 */
 
 using System;
+using System.Collections.Generic;
+using System.IO;
 using Microsoft.VisualStudio.TestTools.UnitTesting;
 using Newtonsoft.Json;
+using Newtonsoft.Json.Linq;
 using TUGraz.VectoCore.Exceptions;
+using TUGraz.VectoCore.InputData;
 using TUGraz.VectoCore.InputData.FileIO;
 using TUGraz.VectoCore.InputData.FileIO.JSON;
 using TUGraz.VectoCore.Tests.Utils;
@@ -27,11 +31,108 @@ namespace TUGraz.VectoCore.Tests.FileIO
 	[TestClass]
 	public class JsonTest
 	{
+		private const string TestJobFile = @"Testdata\Jobs\40t_Long_Haul_Truck.vecto";
+
 		[TestMethod]
 		public void ReadJobTest()
 		{
-			var filename = @"Testdata\Jobs\40t_Long_Haul_Truck_invalid-JSON.vecto";
-			AssertHelper.Exception<InvalidFileFormatException>(() => JSONInputDataFactory.ReadJsonJob(filename));
+			var job = JSONInputDataFactory.ReadJsonJob(TestJobFile);
+
+			Assert.IsNotNull(job);
+//			AssertHelper.Exception<InvalidFileFormatException>(() => );
+		}
+
+		[TestMethod]
+		public void NoEngineFileTest()
+		{
+			var json = (JObject)JToken.ReadFrom(new JsonTextReader(File.OpenText(TestJobFile)));
+			((JObject)json["Body"]).Property("EngineFile").Remove();
+
+			AssertHelper.Exception<VectoException>(() => new JSONInputDataV2(json, TestJobFile), "Failed to read Engine file.");
+		}
+
+		[TestMethod]
+		public void NoGearboxFileTest()
+		{
+			var json = (JObject)JToken.ReadFrom(new JsonTextReader(File.OpenText(TestJobFile)));
+			((JObject)json["Body"]).Property("GearboxFile").Remove();
+
+			AssertHelper.Exception<VectoException>(() => new JSONInputDataV2(json, TestJobFile), "Failed to read Gearbox file.");
+		}
+
+		[TestMethod]
+		public void NoVehicleFileTest()
+		{
+			var json = (JObject)JToken.ReadFrom(new JsonTextReader(File.OpenText(TestJobFile)));
+			((JObject)json["Body"]).Property("VehicleFile").Remove();
+
+			AssertHelper.Exception<VectoException>(() => new JSONInputDataV2(json, TestJobFile), "Failed to read Vehicle file.");
+		}
+
+		[TestMethod]
+		public void NoCyclesTest()
+		{
+			var json = (JObject)JToken.ReadFrom(new JsonTextReader(File.OpenText(TestJobFile)));
+			((JObject)json["Body"]).Property("Cycles").Remove();
+
+			AssertHelper.Exception<InvalidFileFormatException>(() => {
+				var tmp = new JSONInputDataV2(json, TestJobFile).Cycles;
+			}, "Key Cycles not found");
+		}
+
+		[TestMethod]
+		public void NoAuxTest()
+		{
+			var json = (JObject)JToken.ReadFrom(new JsonTextReader(File.OpenText(TestJobFile)));
+			((JObject)json["Body"]).Property("Aux").Remove();
+
+			AssertHelper.Exception<InvalidFileFormatException>(() => {
+				var tmp = new JSONInputDataV2(json, TestJobFile).Auxiliaries;
+			}, "Key Aux not found");
+		}
+
+		[TestMethod]
+		public void NoDriverAccCurveTest()
+		{
+			var json = (JObject)JToken.ReadFrom(new JsonTextReader(File.OpenText(TestJobFile)));
+			((JObject)json["Body"]).Property("VACC").Remove();
+
+			AssertHelper.Exception<VectoException>(() => {
+				var tmp = new JSONInputDataV2(json, TestJobFile).DriverInputData.AccelerationCurve;
+			}, "AccelerationCurve (VACC) required");
+		}
+
+
+		[TestMethod]
+		public void UseDeclarationDriverAccCurveTest()
+		{
+			var json = (JObject)JToken.ReadFrom(new JsonTextReader(File.OpenText(TestJobFile)));
+			json["Body"]["VACC"] = "Truck";
+
+			var tmp = new JSONInputDataV2(json, TestJobFile).DriverInputData.AccelerationCurve;
+			Assert.IsNotNull(tmp);
+		}
+
+		[TestMethod]
+		public void NoLookaheadCoastingTest()
+		{
+			var json = (JObject)JToken.ReadFrom(new JsonTextReader(File.OpenText(TestJobFile)));
+			((JObject)json["Body"]).Property("LAC").Remove();
+
+			AssertHelper.Exception<VectoException>(() => {
+				var tmp = new JSONInputDataV2(json, TestJobFile).DriverInputData.Lookahead;
+			}, "Key LAC not found");
+		}
+
+		[TestMethod]
+		public void NoOverspeedEcoRollTest()
+		{
+			var json = (JObject)JToken.ReadFrom(new JsonTextReader(File.OpenText(TestJobFile)));
+			((JObject)json["Body"]).Property("OverSpeedEcoRoll").Remove();
+
+			AssertHelper.Exception<VectoException>(() => {
+				var tmp = new JSONInputDataV2(json, TestJobFile).DriverInputData.OverSpeedEcoRoll;
+			}, "Key OverSpeedEcoRoll not found");
 		}
 	}
 
