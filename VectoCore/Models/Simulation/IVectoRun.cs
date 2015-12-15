@@ -30,9 +30,9 @@ namespace TUGraz.VectoCore.Models.Simulation
 		void Run(BackgroundWorker worker = null, Action<double> ReportProgress = null);
 
 		/// <summary>
-		/// unique identifier of a single run. i.e., vehicle + cycle + loading
+		/// unique identifier of a single run
 		/// </summary>
-		string RunIdentifier { get; }
+		uint RunIdentifier { get; }
 
 		string RunName { get; }
 		string CycleName { get; }
