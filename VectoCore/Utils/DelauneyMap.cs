@@ -28,12 +28,19 @@ namespace TUGraz.VectoCore.Utils
 	{
 		private readonly List<Point> _points = new List<Point>();
 		private List<Triangle> _triangles = new List<Triangle>();
+		private IEnumerable<Edge> _convexHull;
 
 		public void AddPoint(double x, double y, double z)
 		{
 			_points.Add(new Point(x, y, z));
 		}
 
+		/// <summary>
+		/// Triangulate the points.
+		/// </summary>
+		/// <remarks>
+		/// Triangulation with the Bowyer-Watson algorithm (iteratively insert points into a super triangle).
+		/// https://en.wikipedia.org/wiki/Bowyer%E2%80%93Watson_algorithm</remarks>
 		public void Triangulate()
 		{
 			if (_points.Count < 3) {
@@ -67,6 +74,10 @@ namespace TUGraz.VectoCore.Utils
 				triangles.AddRange(newTriangles);
 			}
 
+			_convexHull = triangles.FindAll(t => t.SharesVertexWith(superTriangle)).
+				SelectMany(t => t.GetEdges()).
+				Where(e => !(superTriangle.Contains(e.P1) || superTriangle.Contains(e.P2)));
+
 			_triangles = triangles.FindAll(t => !t.SharesVertexWith(superTriangle));
 		}
 
@@ -85,11 +96,45 @@ namespace TUGraz.VectoCore.Utils
 				throw new VectoException("Interpolation failed. x: {0}, y: {1}", x, y);
 			}
 
-			// todo: extrapolate
+			// todo: TEST!!
+			// http://mathworld.wolfram.com/Point-LineDistance2-Dimensional.html
 			Extrapolated = true;
+			var point = new Point(x, y);
+
+			// get the nearest point
+			var nearestPoint = _points.MinBy(p => Math.Pow(x - p.X, 2) + Math.Pow(y - p.Y, 2));
+
+			// get the 2 edges to the nearest point
+			// (p1)--edge1-->(nearestPoint)
+			var edge1 = _convexHull.First(e => e.P2.Equals(nearestPoint));
+			// (nearestPoint)--edge2-->(p2)
+			var edge2 = _convexHull.First(e => e.P1.Equals(nearestPoint));
 
 
-			return y;
+			// get the perpendicular vectors to the edge (pointing away!) (perpendicular to x,y-components)
+			var perpendicular = edge1.Vector.CrossXY();
+
+			// calculate cross product and check if pointing out (right of perpendicular vector) or in (left or perpendicular vector)
+			var cross = perpendicular.Cross(point - nearestPoint);
+			if (cross.Z.IsGreater(0)) {
+				//https://en.wikibooks.org/wiki/Linear_Algebra/Orthogonal_Projection_Onto_a_Line
+				var AB = new Point(edge1.Vector.X, edge1.Vector.Y, 0);
+				var AP = new Point(x - edge1.P1.X, y - edge1.P1.Y, 0);
+				var z = edge1.P1.Z + AB.Z * (AP.Dot(AB) / AB.Dot(AB));
+				return z;
+			}
+
+			var perpendicular2 = edge2.Vector.CrossXY();
+			var cross2 = perpendicular2.Cross(point - nearestPoint);
+			if (cross2.Z.IsSmaller(0)) {
+				//https://en.wikibooks.org/wiki/Linear_Algebra/Orthogonal_Projection_Onto_a_Line
+				var AB = new Point(edge2.Vector.X, edge2.Vector.Y, 0);
+				var AP = new Point(x - edge2.P1.X, y - edge2.P1.Y, 0);
+				var z = edge2.P1.Z + AB.Z * (AP.Dot(AB) / AB.Dot(AB));
+				return z;
+			}
+
+			return nearestPoint.Z;
 		}
 
 		public bool Extrapolated { get; set; }

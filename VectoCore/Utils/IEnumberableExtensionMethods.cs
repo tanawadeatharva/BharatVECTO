@@ -125,5 +125,25 @@ namespace TUGraz.VectoCore.Utils
 			to = to < 0 ? to + s.Count : to;
 			return s.Skip(from).Take(Math.Max(to - from, 0));
 		}
+
+		public static TSource MinBy<TSource>(this IEnumerable<TSource> source,
+			Func<TSource, IComparable> projectionToComparable)
+		{
+			using (var e = source.GetEnumerator()) {
+				if (!e.MoveNext()) {
+					throw new InvalidOperationException("Sequence is empty.");
+				}
+				var min = e.Current;
+				var minProjection = projectionToComparable(e.Current);
+				while (e.MoveNext()) {
+					var currentProjection = projectionToComparable(e.Current);
+					if (currentProjection.CompareTo(minProjection) < 0) {
+						min = e.Current;
+						minProjection = currentProjection;
+					}
+				}
+				return min;
+			}
+		}
 	}
 }

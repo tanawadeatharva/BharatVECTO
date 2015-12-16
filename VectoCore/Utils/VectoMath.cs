@@ -19,6 +19,7 @@ using System.Collections.Generic;
 using System.Diagnostics;
 using System.Diagnostics.Contracts;
 using TUGraz.VectoCore.Exceptions;
+using TUGraz.VectoCore.Models.Declaration;
 
 namespace TUGraz.VectoCore.Utils
 {
@@ -140,7 +141,7 @@ namespace TUGraz.VectoCore.Utils
 	}
 
 	[DebuggerDisplay("(X:{X}, Y:{Y}, Z:{Z})")]
-	public struct Point
+	public class Point
 	{
 		public readonly double X;
 		public readonly double Y;
@@ -153,14 +154,64 @@ namespace TUGraz.VectoCore.Utils
 			Z = z;
 		}
 
+		public static Point operator +(Point p1, Point p2)
+		{
+			return new Point(p1.X + p2.X, p1.Y + p2.Y, p1.Z + p2.Z);
+		}
+
 		public static Point operator -(Point p1, Point p2)
 		{
 			return new Point(p1.X - p2.X, p1.Y - p2.Y, p1.Z - p2.Z);
 		}
 
-		public Point CrossProduct(Point other)
+		public static Point operator -(Point p1)
+		{
+			return new Point(-p1.X, -p1.Y);
+		}
+
+		public static Point operator *(Point p1, double scalar)
+		{
+			return new Point(p1.X * scalar, p1.Y * scalar, p1.Z * scalar);
+		}
+
+		/// <summary>
+		/// 
+		/// </summary>
+		/// <param name="scalar"></param>
+		/// <param name="p1"></param>
+		/// <returns></returns>
+		public static Point operator *(double scalar, Point p1)
+		{
+			return p1 * scalar;
+		}
+
+		/// <summary>
+		/// Calculates cross product between two 3d-vectors.
+		/// </summary>
+		/// <param name="other"></param>
+		/// <returns></returns>
+		public Point Cross(Point other)
 		{
 			return new Point(Y * other.Z - Z * other.Y, Z * other.X - X * other.Z, X * other.Y - Y * other.X);
+		}
+
+		/// <summary>
+		/// Returns perpendicular vector for xy-components of this point. P = (-Y, X)
+		/// </summary>
+		/// <returns></returns>
+		public Point CrossXY()
+		{
+			return new Point(-Y, X);
+		}
+
+		/// <summary>
+		/// Returns dot product between two 3d-vectors.
+		/// </summary>
+		/// <param name="other"></param>
+		/// <returns></returns>
+		public double Dot(Point other)
+		{
+			return X * other.X + Y * other.Y + Z * other.Z;
 		}
 
 		#region Equality members
@@ -209,7 +260,7 @@ namespace TUGraz.VectoCore.Utils
 			var ab = tr.P2 - tr.P1;
 			var ac = tr.P3 - tr.P1;
 
-			var cross = ab.CrossProduct(ac);
+			var cross = ab.Cross(ac);
 
 			X = cross.X;
 			Y = cross.Y;
@@ -218,7 +269,7 @@ namespace TUGraz.VectoCore.Utils
 		}
 	}
 
-	[DebuggerDisplay("Triangle({P1.X, P1.Y, P1.Z}, {P2.X, P2.Y, P2.Z}, {P3.X, P3.Y, P3.Z})")]
+	[DebuggerDisplay("Triangle(({P1.X}, {P1.Y}, {P1.Z}), ({P2.X}, {P2.Y}, {P2.Z}), ({P3.X}, {P3.Y}, {P3.Z}))")]
 	public class Triangle
 	{
 		public Point P1;
@@ -287,7 +338,7 @@ namespace TUGraz.VectoCore.Utils
 			return result > 0;
 		}
 
-		private bool Contains(Point p)
+		public bool Contains(Point p)
 		{
 			return p.Equals(P1) || p.Equals(P2) || p.Equals(P3);
 		}
@@ -338,16 +389,22 @@ namespace TUGraz.VectoCore.Utils
 		#endregion
 	}
 
-	[DebuggerDisplay("Edge({P1}, {P2})")]
+	[DebuggerDisplay("Edge(({P1.X}, {P1.Y},{P1.Z}), ({P2.X}, {P2.Y},{P2.Z}))")]
 	public class Edge
 	{
-		public Point P1;
-		public Point P2;
+		public readonly Point P1;
+		public readonly Point P2;
+		private Point _vector;
 
 		public Edge(Point p1, Point p2)
 		{
 			P1 = p1;
 			P2 = p2;
+		}
+
+		public Point Vector
+		{
+			get { return _vector ?? (_vector = P2 - P1); }
 		}
 
 		#region Equality members

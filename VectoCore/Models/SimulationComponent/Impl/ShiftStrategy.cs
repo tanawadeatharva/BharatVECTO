@@ -106,9 +106,11 @@ namespace TUGraz.VectoCore.Models.SimulationComponent.Impl
 		private static bool IsOnLeftSide(PerSecond angularSpeed, NewtonMeter torque, ShiftPolygon.ShiftPolygonEntry from,
 			ShiftPolygon.ShiftPolygonEntry to)
 		{
-			var ab = new { X = to.AngularSpeed - from.AngularSpeed, Y = to.Torque - from.Torque };
-			var ac = new { X = angularSpeed - from.AngularSpeed, Y = torque - from.Torque };
-			var z = ab.X * ac.Y - ab.Y * ac.X;
+			var abX = to.AngularSpeed - from.AngularSpeed;
+			var abY = to.Torque - from.Torque;
+			var acX = angularSpeed - from.AngularSpeed;
+			var acY = torque - from.Torque;
+			var z = abX * acY - abY * acX;
 			return z.IsGreater(0);
 		}
 
@@ -125,9 +127,11 @@ namespace TUGraz.VectoCore.Models.SimulationComponent.Impl
 		private static bool IsOnRightSide(PerSecond angularSpeed, NewtonMeter torque, ShiftPolygon.ShiftPolygonEntry from,
 			ShiftPolygon.ShiftPolygonEntry to)
 		{
-			var ab = new { X = to.AngularSpeed - from.AngularSpeed, Y = to.Torque - from.Torque };
-			var ac = new { X = angularSpeed - from.AngularSpeed, Y = torque - from.Torque };
-			var z = ab.X * ac.Y - ab.Y * ac.X;
+			var abX = to.AngularSpeed - from.AngularSpeed;
+			var abY = to.Torque - from.Torque;
+			var acX = angularSpeed - from.AngularSpeed;
+			var acY = torque - from.Torque;
+			var z = abX * acY - abY * acX;
 			return z.IsSmaller(0);
 		}
 	}
