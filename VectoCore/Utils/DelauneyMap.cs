@@ -96,45 +96,58 @@ namespace TUGraz.VectoCore.Utils
 				throw new VectoException("Interpolation failed. x: {0}, y: {1}", x, y);
 			}
 
-			// todo: TEST!!
-			// http://mathworld.wolfram.com/Point-LineDistance2-Dimensional.html
 			Extrapolated = true;
 			var point = new Point(x, y);
+			var nearestPoint = _points.MinBy(p => Math.Pow(p.X - x, 2) + Math.Pow(p.Y - y, 2));
 
-			// get the nearest point
-			var nearestPoint = _points.MinBy(p => Math.Pow(x - p.X, 2) + Math.Pow(y - p.Y, 2));
-
-			// get the 2 edges to the nearest point
+			// test if point is on left side of the perpendicular vector of edge1 in the nearest point
+			//                            ^
+			//          (point)           |
+			//                            |
 			// (p1)--edge1-->(nearestPoint)
 			var edge1 = _convexHull.First(e => e.P2.Equals(nearestPoint));
+			if (point.IsLeftOf(new Edge(nearestPoint, edge1.Vector.Perpendicular() + nearestPoint))) {
+				return Extrapolate(x, y, edge1);
+			}
+
+			// test if point is on right side of the perpendicular vector of edge2 in the nearest point
+			// ^
+			// |      (point)
+			// |        
 			// (nearestPoint)--edge2-->(p2)
 			var edge2 = _convexHull.First(e => e.P1.Equals(nearestPoint));
-
-
-			// get the perpendicular vectors to the edge (pointing away!) (perpendicular to x,y-components)
-			var perpendicular = edge1.Vector.CrossXY();
-
-			// calculate cross product and check if pointing out (right of perpendicular vector) or in (left or perpendicular vector)
-			var cross = perpendicular.Cross(point - nearestPoint);
-			if (cross.Z.IsGreater(0)) {
-				//https://en.wikibooks.org/wiki/Linear_Algebra/Orthogonal_Projection_Onto_a_Line
-				var AB = new Point(edge1.Vector.X, edge1.Vector.Y, 0);
-				var AP = new Point(x - edge1.P1.X, y - edge1.P1.Y, 0);
-				var z = edge1.P1.Z + AB.Z * (AP.Dot(AB) / AB.Dot(AB));
-				return z;
+			if (!point.IsLeftOf(new Edge(nearestPoint, edge2.Vector.Perpendicular() + nearestPoint))) {
+				return Extrapolate(x, y, edge2);
 			}
 
-			var perpendicular2 = edge2.Vector.CrossXY();
-			var cross2 = perpendicular2.Cross(point - nearestPoint);
-			if (cross2.Z.IsSmaller(0)) {
-				//https://en.wikibooks.org/wiki/Linear_Algebra/Orthogonal_Projection_Onto_a_Line
-				var AB = new Point(edge2.Vector.X, edge2.Vector.Y, 0);
-				var AP = new Point(x - edge2.P1.X, y - edge2.P1.Y, 0);
-				var z = edge2.P1.Z + AB.Z * (AP.Dot(AB) / AB.Dot(AB));
-				return z;
-			}
-
+			// if point is right of perpendicular vector of edge1 and left of perpendicular vector of edge2: take the nearest point z-value
 			return nearestPoint.Z;
+		}
+
+		/// <summary>
+		/// Constant z-axis-extrapolation of a point from a line
+		/// </summary>
+		/// <remarks>
+		/// https://en.wikibooks.org/wiki/Linear_Algebra/Orthogonal_Projection_Onto_a_Line
+		/// </remarks>
+		/// <param name="x"></param>
+		/// <param name="y"></param>
+		/// <param name="edge"></param>
+		/// <returns></returns>
+		private static double Extrapolate(double x, double y, Edge edge)
+		{
+			if (edge.P1.Z == edge.P2.Z) {
+				return edge.P1.Z;
+			}
+
+			// 2d vector of the edge:  A--->B
+			var AB = new Point(edge.Vector.X, edge.Vector.Y, 0);
+
+			// 2d vector of the point: A---->P
+			var AP = new Point(x - edge.P1.X, y - edge.P1.Y, 0);
+
+			var z = edge.P1.Z + AB.Z * (AP.Dot(AB) / AB.Dot(AB));
+			return z;
 		}
 
 		public bool Extrapolated { get; set; }

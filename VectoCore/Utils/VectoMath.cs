@@ -199,7 +199,7 @@ namespace TUGraz.VectoCore.Utils
 		/// Returns perpendicular vector for xy-components of this point. P = (-Y, X)
 		/// </summary>
 		/// <returns></returns>
-		public Point CrossXY()
+		public Point Perpendicular()
 		{
 			return new Point(-Y, X);
 		}
@@ -237,6 +237,21 @@ namespace TUGraz.VectoCore.Utils
 		}
 
 		#endregion
+
+		/// <summary>
+		/// Test if point is on the left side of an edge.
+		/// </summary>
+		/// <param name="e"></param>
+		/// <returns></returns>
+		public bool IsLeftOf(Edge e)
+		{
+			var abX = e.P2.X - e.P1.X;
+			var abY = e.P2.Y - e.P2.Y;
+			var acX = X - e.P1.X;
+			var acY = Y - e.P1.Y;
+			var z = abX * acY - abY * acX;
+			return z.IsGreater(0);
+		}
 	}
 
 	[DebuggerDisplay("Plane({X}, {Y}, {Z}, {W})")]

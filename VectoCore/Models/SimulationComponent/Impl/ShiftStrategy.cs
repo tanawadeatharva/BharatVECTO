@@ -68,7 +68,7 @@ namespace TUGraz.VectoCore.Models.SimulationComponent.Impl
 				return false;
 			}
 
-			return IsOnLeftSide(inEngineSpeed, inTorque, downSection.Item1, downSection.Item2);
+			return IsLeftOf(inEngineSpeed, inTorque, downSection.Item1, downSection.Item2);
 		}
 
 		/// <summary>
@@ -90,7 +90,7 @@ namespace TUGraz.VectoCore.Models.SimulationComponent.Impl
 				return true;
 			}
 
-			return IsOnRightSide(inEngineSpeed, inTorque, upSection.Item1, upSection.Item2);
+			return IsRightOf(inEngineSpeed, inTorque, upSection.Item1, upSection.Item2);
 		}
 
 		/// <summary>
@@ -103,7 +103,7 @@ namespace TUGraz.VectoCore.Models.SimulationComponent.Impl
 		/// <returns><c>true</c> if current power request is on the left side of the shiftpolygon segment; otherwise, <c>false</c>.</returns>
 		/// <remarks>Computes a simplified cross product for the vectors: from--X, from--to and checks
 		/// if the z-component is positive (which means that X was on the right side of from--to).</remarks>
-		private static bool IsOnLeftSide(PerSecond angularSpeed, NewtonMeter torque, ShiftPolygon.ShiftPolygonEntry from,
+		private static bool IsLeftOf(PerSecond angularSpeed, NewtonMeter torque, ShiftPolygon.ShiftPolygonEntry from,
 			ShiftPolygon.ShiftPolygonEntry to)
 		{
 			var abX = to.AngularSpeed - from.AngularSpeed;
@@ -124,7 +124,7 @@ namespace TUGraz.VectoCore.Models.SimulationComponent.Impl
 		/// <returns><c>true</c> if current power request is on the left side of the shiftpolygon segment; otherwise, <c>false</c>.</returns>
 		/// <remarks>Computes a simplified cross product for the vectors: from--X, from--to and checks
 		/// if the z-component is negative (which means that X was on the left side of from--to).</remarks>
-		private static bool IsOnRightSide(PerSecond angularSpeed, NewtonMeter torque, ShiftPolygon.ShiftPolygonEntry from,
+		private static bool IsRightOf(PerSecond angularSpeed, NewtonMeter torque, ShiftPolygon.ShiftPolygonEntry from,
 			ShiftPolygon.ShiftPolygonEntry to)
 		{
 			var abX = to.AngularSpeed - from.AngularSpeed;

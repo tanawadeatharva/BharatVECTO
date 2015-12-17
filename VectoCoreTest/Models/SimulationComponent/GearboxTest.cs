@@ -127,7 +127,7 @@ namespace TUGraz.VectoCore.Tests.Models.SimulationComponent
 		}
 
 		[TestMethod]
-		public void Gearbox_LossMapInterpolationFail()
+		public void Gearbox_LossMapInterpolation()
 		{
 			var gearboxData = DeclarationModeSimulationDataReader.CreateGearboxDataFromFile(GearboxDataFile, EngineDataFile);
 			var container = new VehicleContainer();
@@ -156,7 +156,7 @@ namespace TUGraz.VectoCore.Tests.Models.SimulationComponent
 			Assert.AreEqual(absTime, port.AbsTime);
 			Assert.AreEqual(dt, port.Dt);
 			Assert.AreEqual(n, port.AngularVelocity);
-			Assert.AreEqual(t, port.Torque);
+			Assert.AreEqual(-1000.SI<NewtonMeter>(), port.Torque);
 		}
 
 		[TestMethod]
