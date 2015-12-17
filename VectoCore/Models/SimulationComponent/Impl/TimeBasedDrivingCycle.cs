@@ -20,6 +20,7 @@ using TUGraz.VectoCore.Models.Connector.Ports.Impl;
 using TUGraz.VectoCore.Models.Simulation;
 using TUGraz.VectoCore.Models.Simulation.Data;
 using TUGraz.VectoCore.Models.SimulationComponent.Data;
+using TUGraz.VectoCore.OutputData;
 using TUGraz.VectoCore.Utils;
 
 namespace TUGraz.VectoCore.Models.SimulationComponent.Impl
@@ -28,8 +29,7 @@ namespace TUGraz.VectoCore.Models.SimulationComponent.Impl
 	///     Class representing one Time Based Driving Cycle
 	/// </summary>
 	public class TimeBasedDrivingCycle : VectoSimulationComponent, IDrivingCycle,
-		IDrivingCycleInPort,
-		ISimulationOutPort
+		IDrivingCycleInPort, ISimulationOutPort
 	{
 		protected DrivingCycleData Data;
 		protected IDrivingCycleOutPort NextComponent;
@@ -85,6 +85,7 @@ namespace TUGraz.VectoCore.Models.SimulationComponent.Impl
 			throw new NotImplementedException();
 		}
 
+
 		public double Progress
 		{
 			get { throw new NotImplementedException(); }
@@ -110,7 +111,7 @@ namespace TUGraz.VectoCore.Models.SimulationComponent.Impl
 
 		#region VectoSimulationComponent
 
-		protected override void DoWriteModalResults(IModalDataWriter writer)
+		protected override void DoWriteModalResults(IModalDataContainer container)
 		{
 			// TODO: write data...
 		}

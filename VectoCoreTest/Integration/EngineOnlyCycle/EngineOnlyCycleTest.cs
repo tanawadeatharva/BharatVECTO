@@ -14,14 +14,18 @@
 * limitations under the Licence.
 */
 
+using System.Data;
 using System.IO;
+using System.Linq;
 using Microsoft.VisualStudio.TestTools.UnitTesting;
-using TUGraz.VectoCore.FileIO.Reader;
-using TUGraz.VectoCore.FileIO.Reader.Impl;
+using TUGraz.VectoCore.Configuration;
+using TUGraz.VectoCore.InputData.Reader;
 using TUGraz.VectoCore.Models.Connector.Ports.Impl;
 using TUGraz.VectoCore.Models.Simulation.Data;
 using TUGraz.VectoCore.Models.Simulation.Impl;
 using TUGraz.VectoCore.Models.SimulationComponent.Impl;
+using TUGraz.VectoCore.OutputData;
+using TUGraz.VectoCore.OutputData.FileIO;
 using TUGraz.VectoCore.Tests.Utils;
 using TUGraz.VectoCore.Utils;
 
@@ -43,7 +47,7 @@ namespace TUGraz.VectoCore.Tests.Integration.EngineOnlyCycle
 			var cycle = new MockDrivingCycle(container, data);
 			var vehicle = new VehicleContainer();
 			var engineData =
-				EngineeringModeSimulationDataReader.CreateEngineDataFromFile(TestContext.DataRow["EngineFile"].ToString());
+				MockSimulationDataFactory.CreateEngineDataFromFile(TestContext.DataRow["EngineFile"].ToString());
 
 			var aux = new Auxiliary(vehicle);
 			aux.AddDirect(cycle);
@@ -58,35 +62,37 @@ namespace TUGraz.VectoCore.Tests.Integration.EngineOnlyCycle
 			var absTime = 0.SI<Second>();
 			var dt = 1.SI<Second>();
 
-			var modFile = Path.GetRandomFileName() + ".vmod";
-			var dataWriter = new ModalDataWriter(modFile, ExecutionMode.EngineOnly);
+			var modFile = Path.GetFileNameWithoutExtension(Path.GetRandomFileName()); // + ".vmod";
+			var fileWriter = new FileOutputWriter(modFile, "");
+			var modData = new ModalDataContainer(modFile, fileWriter, SimulatorFactory.FactoryMode.EngineOnlyMode);
 
 			foreach (var cycleEntry in data.Entries) {
 				var response = port.Request(absTime, dt, cycleEntry.EngineTorque, cycleEntry.EngineSpeed);
 				Assert.IsInstanceOfType(response, typeof(ResponseSuccess));
 				foreach (var sc in vehicle.SimulationComponents()) {
-					dataWriter[ModalResultField.time] = absTime + dt / 2;
-					sc.CommitSimulationStep(dataWriter);
+					modData[ModalResultField.time] = absTime + dt / 2;
+					sc.CommitSimulationStep(modData);
 				}
 
-				dataWriter.CommitSimulationStep();
+				modData.CommitSimulationStep();
 				absTime += dt;
 			}
-			dataWriter.Finish(VectoRun.Status.Success);
+			modData.Finish(VectoRun.Status.Success);
 
-			ResultFileHelper.TestModFile(TestContext.DataRow["ModalResultFile"].ToString(), modFile);
+			ResultFileHelper.TestModFile(TestContext.DataRow["ModalResultFile"].ToString(),
+				modFile + Constants.FileExtensions.ModDataFile);
 		}
 
 		[TestMethod]
 		public void AssembleEngineOnlyPowerTrain()
 		{
-			var dataWriter = new MockModalDataWriter();
+			var dataWriter = new MockModalDataContainer();
 
 			var vehicleContainer = new VehicleContainer();
 
 			var gearbox = new EngineOnlyGearbox(vehicleContainer);
 			var engine = new CombustionEngine(vehicleContainer,
-				EngineeringModeSimulationDataReader.CreateEngineDataFromFile(EngineFile));
+				MockSimulationDataFactory.CreateEngineDataFromFile(EngineFile));
 
 			gearbox.InPort().Connect(engine.OutPort());
 

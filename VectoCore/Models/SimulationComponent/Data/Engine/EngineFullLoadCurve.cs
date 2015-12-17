@@ -16,7 +16,9 @@
 
 using System;
 using System.Collections.Generic;
+using System.Data;
 using System.Diagnostics.Contracts;
+using System.Dynamic;
 using System.Linq;
 using TUGraz.VectoCore.Utils;
 
@@ -36,6 +38,12 @@ namespace TUGraz.VectoCore.Models.SimulationComponent.Data.Engine
 		{
 			var curve = FullLoadCurve.ReadFromFile(fileName, declarationMode);
 			return new EngineFullLoadCurve { FullLoadEntries = curve.FullLoadEntries, PT1Data = curve.PT1Data };
+		}
+
+		public new static EngineFullLoadCurve Create(DataTable data, bool declarationMode = false)
+		{
+			var curve = FullLoadCurve.Create(data, declarationMode);
+			return new EngineFullLoadCurve() {FullLoadEntries = curve.FullLoadEntries, PT1Data = curve.PT1Data};
 		}
 
 		public Watt FullLoadStationaryPower(PerSecond angularVelocity)

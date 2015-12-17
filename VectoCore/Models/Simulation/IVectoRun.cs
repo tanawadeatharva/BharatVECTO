@@ -29,7 +29,15 @@ namespace TUGraz.VectoCore.Models.Simulation
 		/// </summary>
 		void Run(BackgroundWorker worker = null, Action<double> ReportProgress = null);
 
-		string Name { get; }
+		/// <summary>
+		/// unique identifier of a single run
+		/// </summary>
+		uint RunIdentifier { get; }
+
+		string RunName { get; }
+		string CycleName { get; }
+
+		string RunSuffix { get; }
 
 		/// <summary>
 		/// Return the vehicle container.

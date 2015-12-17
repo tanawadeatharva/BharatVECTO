@@ -34,14 +34,16 @@ namespace TUGraz.VectoCore.Models.SimulationComponent.Data.Engine
 
 		public static FuelConsumptionMap ReadFromFile(string fileName)
 		{
-			var fuelConsumptionMap = new FuelConsumptionMap();
-			DataTable data;
-
 			try {
-				data = VectoCSVFile.Read(fileName);
-			} catch (Exception ex) {
-				throw new VectoException("ERROR while reading FuelConsumptionMap: {0}", ex.Message);
+				var data = VectoCSVFile.Read(fileName);
+				return Create(data);
+			} catch (Exception e) {
+				throw new VectoException(string.Format("File {0}: {1}", fileName, e.Message), e);
 			}
+		}
+
+		public static FuelConsumptionMap Create(DataTable data)
+		{
 			var headerValid = HeaderIsValid(data.Columns);
 			if (!headerValid) {
 				Logger<FuelConsumptionMap>().Warn(
@@ -49,27 +51,25 @@ namespace TUGraz.VectoCore.Models.SimulationComponent.Data.Engine
 					Fields.EngineSpeed, Fields.Torque, Fields.FuelConsumption,
 					string.Join(", ", data.Columns.Cast<DataColumn>().Select(c => c.ColumnName)));
 			}
-			try {
-				foreach (DataRow row in data.Rows) {
-					try {
-						var entry = headerValid ? CreateFromColumNames(row) : CreateFromColumnIndizes(row);
+			var fuelConsumptionMap = new FuelConsumptionMap();
 
-						if (entry.FuelConsumption < 0) {
-							throw new ArgumentOutOfRangeException("FuelConsumption", "FuelConsumption < 0 not allowed.");
-						}
+			foreach (DataRow row in data.Rows) {
+				try {
+					var entry = headerValid ? CreateFromColumNames(row) : CreateFromColumnIndizes(row);
 
-						fuelConsumptionMap._entries.Add(entry);
-
-						// Delauney map works only as expected, when the engineSpeed is in rpm.
-						fuelConsumptionMap._fuelMap.AddPoint(entry.Torque.Value(),
-							headerValid ? row.ParseDouble(Fields.EngineSpeed) : row.ParseDouble(0),
-							entry.FuelConsumption.Value());
-					} catch (Exception e) {
-						throw new VectoException(string.Format("Line {0}: {1}", data.Rows.IndexOf(row), e.Message), e);
+					if (entry.FuelConsumption < 0) {
+						throw new ArgumentOutOfRangeException("FuelConsumption", "FuelConsumption < 0 not allowed.");
 					}
+
+					fuelConsumptionMap._entries.Add(entry);
+
+					// Delauney map works only as expected, when the engineSpeed is in rpm.
+					fuelConsumptionMap._fuelMap.AddPoint(entry.Torque.Value(),
+						headerValid ? row.ParseDouble(Fields.EngineSpeed) : row.ParseDouble(0),
+						entry.FuelConsumption.Value());
+				} catch (Exception e) {
+					throw new VectoException(string.Format("Line {0}: {1}", data.Rows.IndexOf(row), e.Message), e);
 				}
-			} catch (Exception e) {
-				throw new VectoException(string.Format("File {0}: {1}", fileName, e.Message), e);
 			}
 
 			fuelConsumptionMap._fuelMap.Triangulate();

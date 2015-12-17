@@ -22,6 +22,7 @@ using System.Linq;
 using System.Linq.Expressions;
 using System.Threading;
 using TUGraz.VectoCore.Models.Simulation.Data;
+using TUGraz.VectoCore.OutputData;
 
 namespace TUGraz.VectoCore.Models.Simulation.Impl
 {
@@ -31,7 +32,7 @@ namespace TUGraz.VectoCore.Models.Simulation.Impl
 	public class JobContainer : LoggingObject
 	{
 		internal readonly List<RunEntry> Runs = new List<RunEntry>();
-		private readonly SummaryFileWriter _sumWriter;
+		private readonly SummaryDataContainer _sumWriter;
 
 		private static int _jobNumber;
 
@@ -39,14 +40,9 @@ namespace TUGraz.VectoCore.Models.Simulation.Impl
 		/// Initializes a new empty instance of the <see cref="JobContainer"/> class.
 		/// </summary>
 		/// <param name="sumWriter">The sum writer.</param>
-		public JobContainer(SummaryFileWriter sumWriter)
+		public JobContainer(SummaryDataContainer sumWriter)
 		{
 			_sumWriter = sumWriter;
-		}
-
-		public string SumFileName
-		{
-			get { return _sumWriter.SumFileName; }
 		}
 
 		public void AddRun(IVectoRun run)
@@ -66,7 +62,7 @@ namespace TUGraz.VectoCore.Models.Simulation.Impl
 
 		public void AddRuns(SimulatorFactory factory)
 		{
-			factory.SumWriter = _sumWriter;
+			factory.SumData = _sumWriter;
 			factory.JobNumber = _jobNumber++;
 			AddRuns(factory.SimulationRuns());
 		}
@@ -126,33 +122,37 @@ namespace TUGraz.VectoCore.Models.Simulation.Impl
 			}
 		}
 
-		public Dictionary<string, ProgressEntry> GetProgress()
+		public Dictionary<uint, ProgressEntry> GetProgress()
 		{
-			return Runs.ToDictionary(jobEntry => jobEntry.Run.Name, entry => new ProgressEntry {
+			return Runs.ToDictionary(jobEntry => jobEntry.Run.RunIdentifier, entry => new ProgressEntry {
+				RunName = entry.Run.RunName,
+				CycleName = entry.Run.CycleName,
+				RunSuffix = entry.Run.RunSuffix,
 				Progress = entry.Progress,
 				Done = entry.Done,
 				ExecTime = entry.ExecTime,
 				Success = entry.Success,
 				Canceled = entry.Canceled,
-				Error = entry.ExecException,
-				ModFileName = entry.Run.GetContainer().ModFileName
+				Error = entry.ExecException
 			});
 		}
 
 		public bool AllCompleted
 		{
-			get { return Runs.All(x => x.Done); }
+			get { return (Runs.Count(x => x.Done == true) == Runs.Count()); }
 		}
 
 		public class ProgressEntry
 		{
+			public string RunName;
 			public double Progress;
 			public double ExecTime;
 			public Exception Error;
 			public bool Canceled;
 			public bool Success;
 			public bool Done;
-			public string ModFileName;
+			public string CycleName;
+			public string RunSuffix;
 		}
 
 		internal class RunEntry : LoggingObject

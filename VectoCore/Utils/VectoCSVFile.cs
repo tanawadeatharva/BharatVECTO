@@ -166,14 +166,30 @@ namespace TUGraz.VectoCore.Utils
 		/// <param name="table">The Datatable.</param>
 		public static void Write(string fileName, DataTable table)
 		{
-			var sb = new StringBuilder();
+			var stream = new StreamWriter(fileName);
+			Write(stream, table);
+			stream.Close();
+		}
 
+		/// <summary>
+		/// writes the datatable to a csv file.
+		/// Uses the column caption as header (with fallback to column name) for the csv header.
+		/// <remarks>Note: the callee has to make suree to close the stream after use.</remarks>
+		/// </summary>
+		/// <param name="writer"></param>
+		/// <param name="table"></param>
+		public static void Write(StreamWriter writer, DataTable table)
+		{
+			if (writer == null) {
+				return;
+			}
 			var header = table.Columns.Cast<DataColumn>().Select(col => col.Caption ?? col.ColumnName);
-			sb.AppendLine(string.Join(Delimiter.ToString(), header));
+			writer.WriteLine(string.Join(Delimiter.ToString(), header));
 
 			foreach (DataRow row in table.Rows) {
+				var row1 = row;
 				var formattedList = table.Columns.Cast<DataColumn>().Select(col => {
-					var item = row[col];
+					var item = row1[col];
 					var decimals = (uint?)col.ExtendedProperties["decimals"];
 					var outputFactor = (double?)col.ExtendedProperties["outputFactor"];
 					var showUnit = (bool?)col.ExtendedProperties["showUnit"];
@@ -184,10 +200,8 @@ namespace TUGraz.VectoCore.Utils
 						: string.Format(CultureInfo.InvariantCulture, "{0}", item));
 				});
 
-				sb.AppendLine(string.Join(Delimiter.ToString(), formattedList));
+				writer.WriteLine(string.Join(Delimiter.ToString(), formattedList));
 			}
-
-			File.WriteAllText(fileName, sb.ToString());
 		}
 	}
 }

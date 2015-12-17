@@ -23,6 +23,7 @@ using TUGraz.VectoCore.Models.Connector.Ports.Impl;
 using TUGraz.VectoCore.Models.Simulation;
 using TUGraz.VectoCore.Models.Simulation.Data;
 using TUGraz.VectoCore.Models.SimulationComponent.Data;
+using TUGraz.VectoCore.OutputData;
 using TUGraz.VectoCore.Utils;
 
 namespace TUGraz.VectoCore.Models.SimulationComponent.Impl
@@ -94,6 +95,11 @@ namespace TUGraz.VectoCore.Models.SimulationComponent.Impl
 			return NextComponent.Initialize(Data.Entries[index].EngineTorque, Data.Entries[index].EngineSpeed);
 		}
 
+		public string CycleName
+		{
+			get { return Data.Name; }
+		}
+
 		public double Progress
 		{
 			get { return AbsTime.Value() / Data.Entries.Last().Time.Value(); }
@@ -118,7 +124,7 @@ namespace TUGraz.VectoCore.Models.SimulationComponent.Impl
 
 		#region VectoSimulationComponent
 
-		protected override void DoWriteModalResults(IModalDataWriter writer) {}
+		protected override void DoWriteModalResults(IModalDataContainer container) {}
 
 		protected override void DoCommitSimulationStep()
 		{

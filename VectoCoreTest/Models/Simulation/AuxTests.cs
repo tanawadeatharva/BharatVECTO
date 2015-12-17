@@ -17,13 +17,16 @@
 using TUGraz.VectoCore.Utils;
 using TUGraz.VectoCore.Exceptions;
 using TUGraz.VectoCore.Tests.Utils;
-using TUGraz.VectoCore.FileIO.Reader;
 using TUGraz.VectoCore.Models.Declaration;
 using TUGraz.VectoCore.Models.Simulation.Data;
 using TUGraz.VectoCore.Models.Simulation.Impl;
 using Microsoft.VisualStudio.TestTools.UnitTesting;
+using TUGraz.VectoCore.InputData.FileIO.JSON;
+using TUGraz.VectoCore.InputData.Reader;
 using TUGraz.VectoCore.Models.SimulationComponent.Data;
 using TUGraz.VectoCore.Models.SimulationComponent.Impl;
+using TUGraz.VectoCore.OutputData;
+using TUGraz.VectoCore.OutputData.FileIO;
 
 namespace TUGraz.VectoCore.Tests.Models.Simulation
 {
@@ -33,16 +36,17 @@ namespace TUGraz.VectoCore.Tests.Models.Simulation
 		[TestMethod]
 		public void AuxWriteModFileSumFile()
 		{
-			var dataWriter = new ModalDataWriter(@"AuxWriteModFileSumFile.vmod");
-			dataWriter.AddAuxiliary("FAN");
-			dataWriter.AddAuxiliary("PS");
-			dataWriter.AddAuxiliary("STP");
-			dataWriter.AddAuxiliary("ES");
-			dataWriter.AddAuxiliary("AC");
+			var fileWriter = new FileOutputWriter("AuxWriteModFileSumFile", "");
+			var modData = new ModalDataContainer("AuxWriteModFileSumFile", fileWriter);
+			modData.AddAuxiliary("FAN");
+			modData.AddAuxiliary("PS");
+			modData.AddAuxiliary("STP");
+			modData.AddAuxiliary("ES");
+			modData.AddAuxiliary("AC");
 
-			var sumWriter = new SummaryFileWriter(@"AuxWriteModFileSumFile.vsum");
-			var container = new VehicleContainer(dataWriter,
-				(writer, mass, loading) => sumWriter.WriteFullPowertrain(dataWriter, "", "", "", null, null));
+			var sumWriter = new SummaryDataContainer(fileWriter);
+			var container = new VehicleContainer(modData,
+				(writer, mass, loading) => sumWriter.WriteFullPowertrain(modData, "", "", "", null, null));
 			var data = DrivingCycleDataReader.ReadFromFileDistanceBased(@"TestData\Cycles\LongHaul_short.vdri");
 			var mockcycle = new MockDrivingCycle(container, data);
 			var port = new MockTnOutPort();
@@ -69,9 +73,9 @@ namespace TUGraz.VectoCore.Tests.Models.Simulation
 
 			for (var i = 0; i < 11; i++) {
 				aux.OutPort().Request(t, dt, torque, speed);
-				dataWriter[ModalResultField.dist] = i.SI<Meter>();
-				dataWriter[ModalResultField.Pe_eng] = 0.SI<Watt>();
-				dataWriter[ModalResultField.acc] = 0.SI<MeterPerSquareSecond>();
+				modData[ModalResultField.dist] = i.SI<Meter>();
+				modData[ModalResultField.Pe_eng] = 0.SI<Watt>();
+				modData[ModalResultField.acc] = 0.SI<MeterPerSquareSecond>();
 				container.CommitSimulationStep(t, dt);
 				t += dt;
 			}
@@ -92,7 +96,7 @@ namespace TUGraz.VectoCore.Tests.Models.Simulation
 		[TestMethod]
 		public void AuxConstant()
 		{
-			var dataWriter = new MockModalDataWriter();
+			var dataWriter = new MockModalDataContainer();
 			var container = new VehicleContainer(dataWriter);
 			var port = new MockTnOutPort();
 			var aux = new Auxiliary(container);
@@ -127,7 +131,7 @@ namespace TUGraz.VectoCore.Tests.Models.Simulation
 		[TestMethod]
 		public void AuxDirect()
 		{
-			var dataWriter = new MockModalDataWriter();
+			var dataWriter = new MockModalDataContainer();
 			var container = new VehicleContainer(dataWriter);
 			var data = DrivingCycleDataReader.ReadFromFileTimeBased(@"TestData\Cycles\Coach time based short.vdri");
 			var cycle = new MockDrivingCycle(container, data);
@@ -156,7 +160,7 @@ namespace TUGraz.VectoCore.Tests.Models.Simulation
 		[TestMethod]
 		public void AuxAllCombined()
 		{
-			var dataWriter = new MockModalDataWriter();
+			var dataWriter = new MockModalDataContainer();
 			dataWriter.AddAuxiliary("ALT1");
 			dataWriter.AddAuxiliary("CONSTANT");
 
@@ -216,7 +220,7 @@ namespace TUGraz.VectoCore.Tests.Models.Simulation
 		public void AuxMapping()
 		{
 			var auxId = "ALT1";
-			var dataWriter = new MockModalDataWriter();
+			var dataWriter = new MockModalDataContainer();
 			dataWriter.AddAuxiliary(auxId);
 
 			var container = new VehicleContainer(dataWriter);
@@ -288,11 +292,13 @@ namespace TUGraz.VectoCore.Tests.Models.Simulation
 		[TestMethod, Ignore]
 		public void AuxReadJobFileDeclarationMode()
 		{
-			var sumWriter = new SummaryFileWriter(@"AuxReadJobFileDeclarationMode.vsum");
-			var jobContainer = new JobContainer(sumWriter);
+			var fileWriter = new FileOutputWriter("AuxReadJobFileDeclarationMode", "");
+			var sumData = new SummaryDataContainer(fileWriter);
+			var jobContainer = new JobContainer(sumData);
 
-			var runsFactory = new SimulatorFactory(ExecutionMode.Declaration,
-				@"TestData\Jobs\40t_Long_Haul_Truck.vecto");
+			var inputData = JSONInputDataFactory.ReadJsonJob(@"TestData\Jobs\40t_Long_Haul_Truck.vecto");
+			var runsFactory = new SimulatorFactory(SimulatorFactory.FactoryMode.DeclarationMode,
+				inputData, fileWriter);
 
 			jobContainer.AddRuns(runsFactory);
 			jobContainer.Execute();
@@ -304,11 +310,13 @@ namespace TUGraz.VectoCore.Tests.Models.Simulation
 		[TestMethod, Ignore]
 		public void AuxReadJobFileEngineeringMode()
 		{
-			var sumWriter = new SummaryFileWriter(@"AuxReadJobFileEngineeringMode.vsum");
-			var jobContainer = new JobContainer(sumWriter);
+			var fileWriter = new FileOutputWriter("AuxReadJobFileEngineeringMode", "");
+			var sumData = new SummaryDataContainer(fileWriter);
+			var jobContainer = new JobContainer(sumData);
 
-			var runsFactory = new SimulatorFactory(ExecutionMode.Engineering,
-				@"TestData\Jobs\24t Coach.vecto");
+			var inputData = JSONInputDataFactory.ReadJsonJob(@"TestData\Jobs\24t Coach.vecto");
+			var runsFactory = new SimulatorFactory(SimulatorFactory.FactoryMode.EngineeringMode,
+				inputData, fileWriter);
 
 			jobContainer.AddRuns(runsFactory);
 			jobContainer.Execute();

@@ -36,14 +36,19 @@ namespace TUGraz.VectoCore.Models.SimulationComponent.Data.Gearbox
 			_downShiftPolygon = downshift;
 		}
 
+
 		public static ShiftPolygon ReadFromFile(string fileName)
 		{
-			DataTable data;
 			try {
-				data = VectoCSVFile.Read(fileName);
+				var data = VectoCSVFile.Read(fileName);
+				return Create(data);
 			} catch (Exception ex) {
 				throw new VectoException("ERROR while reading ShiftPolygon: " + ex.Message);
 			}
+		}
+
+		public static ShiftPolygon Create(DataTable data)
+		{
 			if (data.Columns.Count != 3) {
 				throw new VectoException("ShiftPolygon Data File must contain exactly 3 columns.");
 			}

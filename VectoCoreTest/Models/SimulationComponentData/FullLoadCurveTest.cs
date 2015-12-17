@@ -115,7 +115,7 @@ namespace TUGraz.VectoCore.Tests.Models.SimulationComponentData
 		{
 			AssertHelper.Exception<VectoException>(
 				() => EngineFullLoadCurve.ReadFromFile(@"TestData\Components\FullLoadCurve insufficient columns.vfld"),
-				"FullLoadCurve Data File must consist of at least 3 columns.");
+				"ERROR while reading FullLoadCurve File: FullLoadCurve Data File must consist of at least 3 columns.");
 		}
 
 		/// <summary>
@@ -147,7 +147,7 @@ namespace TUGraz.VectoCore.Tests.Models.SimulationComponentData
 		{
 			AssertHelper.Exception<VectoException>(
 				() => EngineFullLoadCurve.ReadFromFile(@"TestData\Components\FullLoadCurve insufficient entries.vfld"),
-				"FullLoadCurve must consist of at least two lines with numeric values (below file header)");
+				"ERROR while reading FullLoadCurve File: FullLoadCurve must consist of at least two lines with numeric values (below file header)");
 		}
 
 		[TestMethod]

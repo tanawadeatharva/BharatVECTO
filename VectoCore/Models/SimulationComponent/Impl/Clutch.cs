@@ -19,6 +19,7 @@ using TUGraz.VectoCore.Models.Connector.Ports;
 using TUGraz.VectoCore.Models.Simulation;
 using TUGraz.VectoCore.Models.Simulation.Data;
 using TUGraz.VectoCore.Models.SimulationComponent.Data;
+using TUGraz.VectoCore.OutputData;
 using TUGraz.VectoCore.Utils;
 
 namespace TUGraz.VectoCore.Models.SimulationComponent.Impl
@@ -50,10 +51,10 @@ namespace TUGraz.VectoCore.Models.SimulationComponent.Impl
 			return _clutchState;
 		}
 
-		protected override void DoWriteModalResults(IModalDataWriter writer)
+		protected override void DoWriteModalResults(IModalDataContainer container)
 		{
-			writer[ModalResultField.Pe_clutch] = _RequiredPower;
-			writer[ModalResultField.Tq_clutch] = _RequiredTorque;
+			container[ModalResultField.Pe_clutch] = _RequiredPower;
+			container[ModalResultField.Tq_clutch] = _RequiredTorque;
 		}
 
 		protected override void DoCommitSimulationStep()

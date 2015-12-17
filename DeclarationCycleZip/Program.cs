@@ -14,15 +14,11 @@
 * limitations under the Licence.
 */
 
-using System;
-using System.Collections.Generic;
 using System.Data;
 using System.Globalization;
 using System.IO;
 using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
-using TUGraz.VectoCore.FileIO.Reader;
+using TUGraz.VectoCore.InputData.Reader;
 using TUGraz.VectoCore.Utils;
 
 namespace DeclarationCycleZip

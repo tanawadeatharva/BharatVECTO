@@ -17,9 +17,12 @@
 using System.Linq;
 using Microsoft.VisualStudio.TestTools.UnitTesting;
 using TUGraz.VectoCore.Configuration;
+using TUGraz.VectoCore.InputData.FileIO.JSON;
 using TUGraz.VectoCore.Models.Simulation;
 using TUGraz.VectoCore.Models.Simulation.Data;
 using TUGraz.VectoCore.Models.Simulation.Impl;
+using TUGraz.VectoCore.OutputData;
+using TUGraz.VectoCore.OutputData.FileIO;
 using TUGraz.VectoCore.Tests.Utils;
 using TUGraz.VectoCore.Utils;
 
@@ -57,9 +60,9 @@ namespace TUGraz.VectoCore.Tests.Models.Simulation
 			ResultFileHelper.TestModFile(expected, actual);
 		}
 
-		private class MockSumWriter : SummaryFileWriter
+		private class MockSumWriter : SummaryDataContainer
 		{
-			public override void Write(bool isEngineOnly, IModalDataWriter data, string jobFileName, string jobName,
+			public override void Write(bool isEngineOnly, IModalDataContainer data, string jobFileName, string jobName,
 				string cycleFileName,
 				Kilogram vehicleMass, Kilogram vehicleLoading) {}
 
@@ -85,13 +88,15 @@ namespace TUGraz.VectoCore.Tests.Models.Simulation
 
 		public IVectoRun CreateRun(string resultFileName)
 		{
-			var sumFileName = resultFileName.Substring(0, resultFileName.Length - 5) + Constants.FileExtensions.SumFile;
+			//var sumFileName = resultFileName.Substring(0, resultFileName.Length - 5) + Constants.FileExtensions.SumFile;
 
-			var dataWriter = new ModalDataWriter(resultFileName, ExecutionMode.EngineOnly);
-			var sumWriter = new SummaryFileWriter(sumFileName);
+			var fileWriter = new FileOutputWriter(resultFileName, "");
+			var modData = new ModalDataContainer(resultFileName, fileWriter, SimulatorFactory.FactoryMode.EngineOnlyMode);
+			var sumWriter = new SummaryDataContainer(fileWriter);
 
-			var factory = new SimulatorFactory(ExecutionMode.EngineOnly, EngineOnlyJob) {
-				SumWriter = sumWriter
+			var inputData = JSONInputDataFactory.ReadJsonJob(EngineOnlyJob);
+			var factory = new SimulatorFactory(SimulatorFactory.FactoryMode.EngineOnlyMode, inputData, fileWriter) {
+				SumData = sumWriter
 			};
 
 			return factory.SimulationRuns().First();
@@ -100,11 +105,14 @@ namespace TUGraz.VectoCore.Tests.Models.Simulation
 		[TestMethod]
 		public void Test_VectoJob()
 		{
-			var sumWriter = new SummaryFileWriter(@"24t Coach.vsum");
+			var jobFile = @"TestData\Jobs\24t Coach EngineOnly.vecto";
+			var fileWriter = new FileOutputWriter(jobFile);
+			var sumWriter = new SummaryDataContainer(fileWriter);
 			var jobContainer = new JobContainer(sumWriter);
 
-			var runsFactory = new SimulatorFactory(ExecutionMode.EngineOnly,
-				@"TestData\Jobs\24t Coach EngineOnly.vecto");
+			var inputData = JSONInputDataFactory.ReadJsonJob(jobFile);
+			var runsFactory = new SimulatorFactory(SimulatorFactory.FactoryMode.EngineOnlyMode,
+				inputData, fileWriter);
 
 			jobContainer.AddRuns(runsFactory);
 			jobContainer.Execute();
@@ -121,7 +129,8 @@ namespace TUGraz.VectoCore.Tests.Models.Simulation
 				@"TestData\Jobs\24t Coach EngineOnly_Engine Only1.vmod",
 				@"TestData\Jobs\24t Coach EngineOnly_Engine Only2.vmod",
 				@"TestData\Jobs\24t Coach EngineOnly_Engine Only3.vmod"
-			});
+			})
+				;
 		}
 	}
 }

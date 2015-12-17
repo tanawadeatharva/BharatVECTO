@@ -22,6 +22,7 @@ using TUGraz.VectoCore.Models.Simulation;
 using TUGraz.VectoCore.Models.Simulation.Data;
 using TUGraz.VectoCore.Models.Simulation.DataBus;
 using TUGraz.VectoCore.Models.SimulationComponent.Data;
+using TUGraz.VectoCore.OutputData;
 using TUGraz.VectoCore.Utils;
 
 namespace TUGraz.VectoCore.Models.SimulationComponent.Impl
@@ -160,30 +161,30 @@ namespace TUGraz.VectoCore.Models.SimulationComponent.Impl
 			return this;
 		}
 
-		protected override void DoWriteModalResults(IModalDataWriter writer)
+		protected override void DoWriteModalResults(IModalDataContainer container)
 		{
 			var averageVelocity = (_previousState.Velocity + _currentState.Velocity) / 2;
 
-			writer[ModalResultField.v_act] = averageVelocity;
-			writer[ModalResultField.PaVeh] = ((_previousState.VehicleAccelerationForce * _previousState.Velocity +
+			container[ModalResultField.v_act] = averageVelocity;
+			container[ModalResultField.PaVeh] = ((_previousState.VehicleAccelerationForce * _previousState.Velocity +
 												_currentState.VehicleAccelerationForce * _currentState.Velocity) / 2.0)
 				.Cast<Watt>();
-			writer[ModalResultField.Pgrad] = ((_previousState.SlopeResistance * _previousState.Velocity +
+			container[ModalResultField.Pgrad] = ((_previousState.SlopeResistance * _previousState.Velocity +
 												_currentState.SlopeResistance * _currentState.Velocity) / 2.0).Cast<Watt>
 				();
-			writer[ModalResultField.Proll] = ((_previousState.RollingResistance * _previousState.Velocity +
+			container[ModalResultField.Proll] = ((_previousState.RollingResistance * _previousState.Velocity +
 												_currentState.RollingResistance * _currentState.Velocity) / 2.0)
 				.Cast<Watt>();
 
-			writer[ModalResultField.Pair] = ComputeAirDragPowerLoss(_previousState.Velocity, _currentState.Velocity,
+			container[ModalResultField.Pair] = ComputeAirDragPowerLoss(_previousState.Velocity, _currentState.Velocity,
 				_currentState.dt);
 
 
 			// sanity check: is the vehicle in step with the cycle?
-			if (writer[ModalResultField.dist] == DBNull.Value) {
+			if (container[ModalResultField.dist] == DBNull.Value) {
 				Log.Warn("distance field is not set!");
 			} else {
-				var distance = (SI)writer[ModalResultField.dist];
+				var distance = (SI)container[ModalResultField.dist];
 				if (!distance.IsEqual(_currentState.Distance, 1e-12.SI<Meter>())) {
 					Log.Warn("distance diverges: {0}, distance: {1}", (distance - _currentState.Distance).Value(),
 						distance);

@@ -16,8 +16,10 @@
 
 using System.Collections.Generic;
 using System.Runtime.Serialization;
+using System.Security.Permissions;
 using TUGraz.VectoCore.Models.Declaration;
 using TUGraz.VectoCore.Models.SimulationComponent.Data;
+using TUGraz.VectoCore.OutputData.PDF;
 using TUGraz.VectoCore.Utils;
 
 namespace TUGraz.VectoCore.Models.Simulation.Data
@@ -31,11 +33,15 @@ namespace TUGraz.VectoCore.Models.Simulation.Data
 
 		public GearboxData GearboxData { get; internal set; }
 
+		public AxleGearData AxleGearData { get; internal set; }
+
 		public DrivingCycleData Cycle { get; internal set; }
 
 		public IEnumerable<AuxData> Aux { get; internal set; }
 
 		public string AccelerationLimitingFile { get; internal set; }
+
+		public RetarderData Retarder { get; internal set; }
 
 		public DriverData DriverData { get; internal set; }
 
@@ -47,9 +53,9 @@ namespace TUGraz.VectoCore.Models.Simulation.Data
 
 		//public OverSpeedEcoRollData OverSpeedEcoRoll { get; internal set; }
 
-		public string JobFileName { get; set; }
+		public string JobName { get; set; }
 
-		public string BasePath { get; set; }
+		//public string BasePath { get; set; }
 		public string ModFileSuffix { get; set; }
 		public DeclarationReport Report { get; set; }
 		public LoadingType Loading { get; set; }

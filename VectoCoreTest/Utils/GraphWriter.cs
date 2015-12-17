@@ -15,14 +15,22 @@
 */
 
 using System;
+using System.Collections.Generic;
+using System.Collections.Specialized;
 using System.Data;
 using System.IO;
 using System.Drawing;
+using System.Drawing.Text;
 using System.Linq;
+using System.Net;
+using System.Security.Cryptography.X509Certificates;
+using System.Text.RegularExpressions;
 using System.Windows.Forms.DataVisualization.Charting;
+using Microsoft.VisualStudio.TestTools.UnitTesting;
 using NLog;
 using TUGraz.VectoCore.Models.Simulation.Data;
 using TUGraz.VectoCore.Utils;
+using Point = System.Drawing.Point;
 
 namespace TUGraz.VectoCore.Tests.Utils
 {
@@ -69,18 +77,18 @@ namespace TUGraz.VectoCore.Tests.Utils
 				ModalResultField.Pe_eng, ModalResultField.Tq_eng, ModalResultField.FCMap
 			};
 
-			var titleHeight = (50 * 100.0f) / (_diagramSize.Height * yfields.Length);
+			var titleHeight = (50 * 100.0f) / (_diagramSize.Height * yfields.Count());
 
 			foreach (var xfield in xfields) {
 				var fileName = string.Format("{0}_{1}.png", Path.GetFileNameWithoutExtension(fileNameV3),
 					xfield.GetName());
 
 				var x = LoadData(modDataV3, xfield.GetName());
-				var x2 = new[] { double.NegativeInfinity };
+				var x2 = new double[] { double.NegativeInfinity };
 				if (fileNameV22 != null && modDataV22 != null) {
 					x2 = LoadData(modDataV22, xfield.GetName());
 				}
-				var plotSize = new Size(_diagramSize.Width, _diagramSize.Height * yfields.Length);
+				var plotSize = new Size(_diagramSize.Width, _diagramSize.Height * yfields.Count());
 				var maxX = (int)(Math.Ceiling(Math.Max(x.Max(), x2.Max()) * 1.01 / 10.0) * 10.0);
 				var minX = (int)(Math.Floor(Math.Max(x.Min(), x2.Min()) / 10.0) * 10.0);
 				var chart = new Chart { Size = plotSize };
@@ -130,7 +138,7 @@ namespace TUGraz.VectoCore.Tests.Utils
 							y2);
 					}
 
-					PositionChartArea(chartArea, titleHeight, i, yfields.Length);
+					PositionChartArea(chartArea, titleHeight, i, yfields.Count());
 
 					if (i > 0) {
 						AlignChart(chart, yfield.ToString(), yfields[0].ToString());
@@ -194,18 +202,18 @@ namespace TUGraz.VectoCore.Tests.Utils
 				ModalResultField.Pe_eng, ModalResultField.Tq_eng, ModalResultField.FCMap
 			};
 
-			var titleHeight = (50 * 100.0f) / (_diagramSize.Height * yfields.Length);
+			var titleHeight = (50 * 100.0f) / (_diagramSize.Height * yfields.Count());
 
 			//foreach (var xfield in xfields) {
 			var fileName = string.Format("{0}_{1}-{2:D3}_{3:D3}.png", Path.GetFileNameWithoutExtension(fileNameV3),
 				xfield.GetName(), (int)(start / 1000), (int)(end / 1000));
 
 			var x = LoadData(modDataV3, xfield.GetName());
-			var x2 = new[] { double.NegativeInfinity };
+			var x2 = new double[] { double.NegativeInfinity };
 			if (fileNameV22 != null && modDataV22 != null) {
 				x2 = LoadData(modDataV22, xfield.GetName());
 			}
-			var plotSize = new Size(_diagramSize.Width, _diagramSize.Height * yfields.Length);
+			var plotSize = new Size(_diagramSize.Width, _diagramSize.Height * yfields.Count());
 			var maxX = (int)(Math.Ceiling(Math.Max(x.Max(), x2.Max()) * 1.01 / 10.0) * 10.0);
 			var minX = (int)(Math.Floor(Math.Max(x.Min(), x2.Min()) / 10.0) * 10.0);
 			var chart = new Chart { Size = plotSize };
@@ -254,7 +262,7 @@ namespace TUGraz.VectoCore.Tests.Utils
 						Color.Red, x2, y2);
 				}
 
-				PositionChartArea(chartArea, titleHeight, i, yfields.Length);
+				PositionChartArea(chartArea, titleHeight, i, yfields.Count());
 
 				if (i > 0) {
 					AlignChart(chart, yfield.ToString(), yfields[0].ToString());
@@ -272,12 +280,12 @@ namespace TUGraz.VectoCore.Tests.Utils
 
 		private static void AddTitle(Chart chart, string titleText, string dockToChartArea)
 		{
-			chart.Titles.Add(new Title {
-				Text = titleText,
-				DockedToChartArea = dockToChartArea,
-				IsDockedInsideChartArea = false,
-				Font = new Font("Verdana", 18, FontStyle.Bold)
-			});
+			var title = new Title();
+			title.Text = titleText;
+			title.DockedToChartArea = dockToChartArea;
+			title.IsDockedInsideChartArea = false;
+			title.Font = new Font("Verdana", 18, FontStyle.Bold);
+			chart.Titles.Add(title);
 		}
 
 		private static double[] LoadData(DataTable modDataV3, string field)
@@ -344,7 +352,7 @@ namespace TUGraz.VectoCore.Tests.Utils
 
 		private static Legend CreateLegend(Chart chart, string dockToChartArea)
 		{
-			var legend = new Legend(dockToChartArea) {
+			var legend = new Legend(dockToChartArea.ToString()) {
 				Docking = Docking.Right,
 				IsDockedInsideChartArea = false,
 				DockedToChartArea = dockToChartArea,
@@ -355,8 +363,9 @@ namespace TUGraz.VectoCore.Tests.Utils
 		}
 
 		private static Series CreateSeries(String name, Legend legend, ChartArea chartArea, Chart chart, Color color,
-			double[] x, double[] y)
+			IEnumerable<double> x, IEnumerable<double> y)
 		{
+			//ModalResultField yfield;
 			var series1 = new Series {
 				Name = name,
 				ChartType = SeriesChartType.Line,
