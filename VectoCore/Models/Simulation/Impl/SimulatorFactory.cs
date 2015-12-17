@@ -25,6 +25,10 @@ using TUGraz.VectoCore.InputData;
 using TUGraz.VectoCore.InputData.Reader.Impl;
 using TUGraz.VectoCore.Models.Declaration;
 using TUGraz.VectoCore.Models.Simulation.Data;
+using TUGraz.VectoCore.Models.SimulationComponent.Data;
+using TUGraz.VectoCore.OutputData;
+using TUGraz.VectoCore.OutputData.PDF;
+using TUGraz.VectoCore.Utils;
 
 namespace TUGraz.VectoCore.Models.Simulation.Impl
 {
@@ -41,7 +45,7 @@ namespace TUGraz.VectoCore.Models.Simulation.Impl
 
 		private readonly ExecutionMode _mode;
 
-		public SimulatorFactory(FactoryMode mode, IInputDataProvider dataProvider, IOutputDataWriter writer)
+		public SimulatorFactory(ExecutionMode mode, IInputDataProvider dataProvider, IOutputDataWriter writer)
 		{
 			Log.Fatal("########## VectoCore Version {0} ##########", Assembly.GetExecutingAssembly().GetName().Version);
 			JobNumber = Interlocked.Increment(ref _jobNumberCounter);
@@ -66,11 +70,11 @@ namespace TUGraz.VectoCore.Models.Simulation.Impl
 			//DataReader.SetJobFile(jobFile);
 		}
 
-		public ISimulationDataReader DataReader { get; private set; }
+		public IVectoRunDataFactory DataReader { get; }
 
 		public SummaryDataContainer SumData { get; set; }
 
-		public IOutputDataWriter ModWriter { get; private set; }
+		public IOutputDataWriter ModWriter { get; }
 
 
 		public int JobNumber { get; set; }
@@ -85,7 +89,7 @@ namespace TUGraz.VectoCore.Models.Simulation.Impl
 		{
 			var i = 0;
 			foreach (var data in DataReader.NextRun()) {
-				CheckLossMapRangeForFullLoadCurves(data.GearboxData, data.EngineData);
+				CheckLossMapRangeForFullLoadCurves(data.GearboxData, data.EngineData, data.AxleGearData);
 
 				//var modFileName = Path.Combine(data.BasePath,
 				//	data.JobName.Replace(Constants.FileExtensions.VectoJobFile, "") + "_{0}{1}" +
@@ -119,7 +123,8 @@ namespace TUGraz.VectoCore.Models.Simulation.Impl
 			}
 		}
 
-		internal static void CheckLossMapRangeForFullLoadCurves(GearboxData gearboxData, CombustionEngineData engineData)
+		internal static void CheckLossMapRangeForFullLoadCurves(GearboxData gearboxData, CombustionEngineData engineData,
+			AxleGearData axleGearData)
 		{
 			foreach (var gear in gearboxData.Gears) {
 				for (var angularVelocity = engineData.IdleSpeed;
@@ -139,7 +144,7 @@ namespace TUGraz.VectoCore.Models.Simulation.Impl
 
 						var axleAngularVelocity = angularVelocity / gear.Value.Ratio;
 						try {
-							gearboxData.AxleGearData.LossMap.GetOutTorque(axleAngularVelocity, axleTorque);
+							axleGearData.LossMap.GetOutTorque(axleAngularVelocity, axleTorque);
 						} catch (VectoException ex) {
 							throw new VectoException(
 								string.Format("Interpolation of LossMap failed for AxleGear with torque={0} and angularSpeed={1}",

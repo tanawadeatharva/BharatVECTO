@@ -91,11 +91,11 @@ namespace TUGraz.VectoCore.Tests.Models.Simulation
 			//var sumFileName = resultFileName.Substring(0, resultFileName.Length - 5) + Constants.FileExtensions.SumFile;
 
 			var fileWriter = new FileOutputWriter(resultFileName, "");
-			var modData = new ModalDataContainer(resultFileName, fileWriter, SimulatorFactory.FactoryMode.EngineOnlyMode);
+			var modData = new ModalDataContainer(resultFileName, fileWriter, ExecutionMode.EngineOnly);
 			var sumWriter = new SummaryDataContainer(fileWriter);
 
 			var inputData = JSONInputDataFactory.ReadJsonJob(EngineOnlyJob);
-			var factory = new SimulatorFactory(SimulatorFactory.FactoryMode.EngineOnlyMode, inputData, fileWriter) {
+			var factory = new SimulatorFactory(ExecutionMode.EngineOnly, inputData, fileWriter) {
 				SumData = sumWriter
 			};
 
@@ -111,7 +111,7 @@ namespace TUGraz.VectoCore.Tests.Models.Simulation
 			var jobContainer = new JobContainer(sumWriter);
 
 			var inputData = JSONInputDataFactory.ReadJsonJob(jobFile);
-			var runsFactory = new SimulatorFactory(SimulatorFactory.FactoryMode.EngineOnlyMode,
+			var runsFactory = new SimulatorFactory(ExecutionMode.EngineOnly,
 				inputData, fileWriter);
 
 			jobContainer.AddRuns(runsFactory);

@@ -1564,15 +1564,15 @@ lbFound:
         Dim sumWriter As SummaryDataContainer = New SummaryDataContainer(fileWriter)
         Dim jobContainer As JobContainer = New JobContainer(sumWriter)
 
-        Dim mode As SimulatorFactory.FactoryMode
+        Dim mode As ExecutionMode
 
         If Cfg.DeclMode Then
-            mode = SimulatorFactory.FactoryMode.DeclarationMode
+            mode = ExecutionMode.Declaration
         Else
-            mode = SimulatorFactory.FactoryMode.EngineeringMode
+            mode = ExecutionMode.Engineering
         End If
 
-		Dim doneProcesses As List(Of UInteger) = New List(Of UInteger)
+        Dim doneProcesses As List(Of UInteger) = New List(Of UInteger)
 
         For Each jobFile As String In JobFileList
             Try
@@ -1590,7 +1590,7 @@ lbFound:
 
         sender.ReportProgress(0, New _
                                  With {.Target = "ListBox",
-                                 .Message = _
+                                 .Message =
                                  String.Format("Starting Simulation ({0} Jobs, {1} Runs)", JobFileList.Count,
                                                jobContainer.GetProgress().Count)})
 
@@ -1604,13 +1604,13 @@ lbFound:
                 Return
             End If
 
-			Dim progress As Dictionary(Of UInteger, JobContainer.ProgressEntry) = jobContainer.GetProgress()
+            Dim progress As Dictionary(Of UInteger, JobContainer.ProgressEntry) = jobContainer.GetProgress()
 
             Dim sumProgress As Double = progress.Sum(Function(pair) pair.Value.Progress)
             Dim duration As Double = (DateTime.Now() - start).TotalSeconds
 
             sender.ReportProgress(Int((sumProgress * 100.0) / progress.Count),
-                                  New With {.Target = "Status", .Message = _
+                                  New With {.Target = "Status", .Message =
                                      String.Format("Duration: {0:0}s, Current Progress: {1:P} ({2})", duration,
                                                    sumProgress / progress.Count,
                                                    String.Join(", ",
@@ -1619,31 +1619,31 @@ lbFound:
                                                                                   String.Format("{0,4:P}",
                                                                                                 pair.Value.Progress))))})
 
-			For Each p As KeyValuePair(Of UInteger, JobContainer.ProgressEntry) In progress
-				If p.Value.Done And Not doneProcesses.Contains(p.Key) Then
-					Dim modFilename As String = fileWriter.GetModDataFileName(p.Value.RunName, p.Value.CycleName,
-																			  p.Value.RunSuffix)
-					Dim runName As String = String.Format("{0} {1} {2}", p.Value.RunName, p.Value.CycleName, p.Value.RunSuffix)
-					sender.ReportProgress(0,
-										  New _
-											 With {.Target = "ListBox",
-											 .Message = String.Format("Finished Run {0}", runName)})
-					If Not p.Value.Error Is Nothing Then
-						sender.ReportProgress(0, New With {.Target = "ListBox",
-												 .Message = _
-												 String.Format("ERROR {0}: {1}", runName, p.Value.Error.Message), _
-												.Link = p.Value.ModFileName})
-					End If
-					'If Not Cfg.DeclMode Then
-					sender.ReportProgress(0, New With {.Target = "ListBox",
-											 .Message = _
-											 String.Format("Run {0}: Modal Results written to {1}", runName, modFilename), _
-											 .Link = modFilename})
-					'End If
+            For Each p As KeyValuePair(Of UInteger, JobContainer.ProgressEntry) In progress
+                If p.Value.Done And Not doneProcesses.Contains(p.Key) Then
+                    Dim modFilename As String = fileWriter.GetModDataFileName(p.Value.RunName, p.Value.CycleName,
+                                                                              p.Value.RunSuffix)
+                    Dim runName As String = String.Format("{0} {1} {2}", p.Value.RunName, p.Value.CycleName, p.Value.RunSuffix)
+                    sender.ReportProgress(0,
+                                          New _
+                                             With {.Target = "ListBox",
+                                             .Message = String.Format("Finished Run {0}", runName)})
+                    If Not p.Value.Error Is Nothing Then
+                        sender.ReportProgress(0, New With {.Target = "ListBox",
+                                                 .Message =
+                                                 String.Format("ERROR {0}: {1}", runName, p.Value.Error.Message),
+                                                 .Link = modFilename})
+                    End If
+                    'If Not Cfg.DeclMode Then
+                    sender.ReportProgress(0, New With {.Target = "ListBox",
+                                             .Message =
+                                             String.Format("Run {0}: Modal Results written to {1}", runName, modFilename),
+                                             .Link = modFilename})
+                    'End If
 
-					doneProcesses.Add(p.Key)
-				End If
-			Next
+                    doneProcesses.Add(p.Key)
+                End If
+            Next
             Thread.Sleep(500)
         End While
 
@@ -1670,38 +1670,32 @@ lbFound:
             Next
         End If
 
-		For Each progressEntry As KeyValuePair(Of UInteger, JobContainer.ProgressEntry) In jobContainer.GetProgress()
-			Dim runName As String = String.Format("{0} {1} {2}", progressEntry.Value.RunName, progressEntry.Value.CycleName, progressEntry.Value.RunSuffix)
-			sender.ReportProgress(100,
-								  New _
-									 With {.Target = "ListBox",
-									 .Message = String.Format("{0,-60} {1,8:P} {2,10:F2}s - {3}",
-															  runName, progressEntry.Value.Progress,
-															  progressEntry.Value.ExecTime / 1000.0,
-															  IIf(progressEntry.Value.Success, "Success", "Aborted"))})
-			If (Not progressEntry.Value.Success) Then
-				sender.ReportProgress(100, New With {.Target = "ListBox", .Message = progressEntry.Value.Error.Message})
-			End If
+        For Each progressEntry As KeyValuePair(Of UInteger, JobContainer.ProgressEntry) In jobContainer.GetProgress()
+            Dim runName As String = String.Format("{0} {1} {2}", progressEntry.Value.RunName, progressEntry.Value.CycleName, progressEntry.Value.RunSuffix)
+            sender.ReportProgress(100,
+                                  New _
+                                     With {.Target = "ListBox",
+                                     .Message = String.Format("{0,-60} {1,8:P} {2,10:F2}s - {3}",
+                                                              runName, progressEntry.Value.Progress,
+                                                              progressEntry.Value.ExecTime / 1000.0,
+                                                              IIf(progressEntry.Value.Success, "Success", "Aborted"))})
+            If (Not progressEntry.Value.Success) Then
+                sender.ReportProgress(100, New With {.Target = "ListBox", .Message = progressEntry.Value.Error.Message})
+            End If
 
-		Next
+        Next
 
         sender.ReportProgress(100, New With {.Target = "ListBox", .Message = "Simulation Finished"})
     End Sub
 
     Private Sub VectoWorkerV3_OnProgressChanged(sender As Object, e As ProgressChangedEventArgs)
         ToolStripProgBarOverall.Value = e.ProgressPercentage
-
-		Dim messageType As tMsgID = tMsgID.Normal
-		If Not e.UserState.GetType().GetProperty("MessageType") Is Nothing Then
-			messageType = e.UserState.MessageType
-		End If
-
         Select Case e.UserState.Target
             Case "ListBox"
                 If e.UserState.GetType().GetProperty("Link") Is Nothing Then
-					MSGtoForm(messageType, e.UserState.Message, "", "")
+                    MSGtoForm(tMsgID.Normal, e.UserState.Message, "", "")
                 Else
-					MSGtoForm(messageType, e.UserState.Message, "", e.UserState.Link)
+                    MSGtoForm(tMsgID.Normal, e.UserState.Message, "", e.UserState.Link)
                 End If
             Case "Status"
                 Status(e.UserState.Message)

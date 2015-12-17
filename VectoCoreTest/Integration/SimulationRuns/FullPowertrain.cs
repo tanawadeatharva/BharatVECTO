@@ -90,7 +90,7 @@ namespace TUGraz.VectoCore.Tests.Integration.SimulationRuns
 				response = cyclePort.Request(absTime, ds);
 				response.Switch().
 					Case<ResponseDrivingCycleDistanceExceeded>(r => ds = r.MaxDistance).
-					Case<ResponseCycleFinished>(r => { }).
+					Case<ResponseCycleFinished>(r => {}).
 					Case<ResponseSuccess>(r => {
 						container.CommitSimulationStep(absTime, r.SimulationInterval);
 						absTime += r.SimulationInterval;
@@ -163,8 +163,10 @@ namespace TUGraz.VectoCore.Tests.Integration.SimulationRuns
 
 				response.Switch().
 					Case<ResponseDrivingCycleDistanceExceeded>(r => ds = r.MaxDistance).
-					Case<ResponseCycleFinished>(r => { }).
-					Case<ResponseGearShift>(r => { Log.Debug("Gearshift"); }).
+					Case<ResponseCycleFinished>(r => {}).
+					Case<ResponseGearShift>(r => {
+						Log.Debug("Gearshift");
+					}).
 					Case<ResponseSuccess>(r => {
 						container.CommitSimulationStep(absTime, r.SimulationInterval);
 						absTime += r.SimulationInterval;
@@ -236,8 +238,10 @@ namespace TUGraz.VectoCore.Tests.Integration.SimulationRuns
 
 				response.Switch().
 					Case<ResponseDrivingCycleDistanceExceeded>(r => ds = r.MaxDistance).
-					Case<ResponseCycleFinished>(r => { }).
-					Case<ResponseGearShift>(r => { Log.Debug("Gearshift"); }).
+					Case<ResponseCycleFinished>(r => {}).
+					Case<ResponseGearShift>(r => {
+						Log.Debug("Gearshift");
+					}).
 					Case<ResponseSuccess>(r => {
 						container.CommitSimulationStep(absTime, r.SimulationInterval);
 						absTime += r.SimulationInterval;
@@ -268,7 +272,7 @@ namespace TUGraz.VectoCore.Tests.Integration.SimulationRuns
 			var jobContainer = new JobContainer(sumData);
 
 			var inputData = JSONInputDataFactory.ReadJsonJob(jobFile);
-			var factory = new SimulatorFactory(SimulatorFactory.FactoryMode.EngineeringMode, @"TestData\job.vecto");
+			var factory = new SimulatorFactory(ExecutionMode.Engineering, inputData, fileWriter);
 
 			jobContainer.AddRuns(factory);
 			jobContainer.Execute();

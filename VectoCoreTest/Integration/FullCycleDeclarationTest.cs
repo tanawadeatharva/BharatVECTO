@@ -18,12 +18,8 @@ using System.IO;
 using System.Linq;
 using Microsoft.VisualStudio.TestTools.UnitTesting;
 using NLog;
-using TUGraz.VectoCore.Configuration;
 using TUGraz.VectoCore.InputData.FileIO.JSON;
-using TUGraz.VectoCore.Models.Simulation.Data;
 using TUGraz.VectoCore.Models.Simulation.Impl;
-using TUGraz.VectoCore.Models.SimulationComponent.Data;
-using TUGraz.VectoCore.Models.SimulationComponent.Impl;
 using TUGraz.VectoCore.OutputData;
 using TUGraz.VectoCore.OutputData.FileIO;
 using TUGraz.VectoCore.Utils;
@@ -34,7 +30,7 @@ namespace TUGraz.VectoCore.Tests.Integration
 	public class FullCycleDeclarationTest
 	{
 		public const string TruckDeclarationJob =
-            @"TestData\Integration\Declaration\40t Truck\40t_Long_Haul_Truck.vecto";
+			@"TestData\Integration\Declaration\40t Truck\40t_Long_Haul_Truck.vecto";
 
 
 		[TestMethod]
@@ -145,7 +141,7 @@ namespace TUGraz.VectoCore.Tests.Integration
 			var inputData = JSONInputDataFactory.ReadJsonJob(TruckDeclarationJob);
 			var fileWriter = new FileOutputWriter(Path.GetFileNameWithoutExtension(TruckDeclarationJob),
 				Path.GetDirectoryName(TruckDeclarationJob));
-            var factory = new SimulatorFactory(SimulatorFactory.FactoryMode.DeclarationMode, TruckDeclarationJob);
+			var factory = new SimulatorFactory(ExecutionMode.Declaration, inputData, fileWriter) {
 				WriteModalResults = true
 			};
 			var sumData = new SummaryDataContainer(fileWriter);
@@ -166,7 +162,7 @@ namespace TUGraz.VectoCore.Tests.Integration
 			const string jobFile = @"c:\Users\Technik\Downloads\40t Long Haul Truck\40t_Long_Haul_Truck.vecto";
 			var inputData = JSONInputDataFactory.ReadJsonJob(jobFile);
 			var fileWriter = new FileOutputWriter(jobFile);
-            var factory = new SimulatorFactory(ExecutionMode.Declaration,
+			var factory = new SimulatorFactory(ExecutionMode.Declaration,
 				inputData, fileWriter) {
 					WriteModalResults = true,
 					SumData = new SummaryDataContainer(fileWriter)
@@ -187,7 +183,7 @@ namespace TUGraz.VectoCore.Tests.Integration
 			var fileWriter = new FileOutputWriter(jobFile);
 
 			// TODO: fails due to interpolaion failure in Gear 4
-            var factory = new SimulatorFactory(SimulatorFactory.FactoryMode.DeclarationMode,
+			var factory = new SimulatorFactory(ExecutionMode.Declaration, inputData, fileWriter) {
 				WriteModalResults = true,
 				SumData = new SummaryDataContainer(fileWriter)
 			};
@@ -200,22 +196,21 @@ namespace TUGraz.VectoCore.Tests.Integration
 		}
 
 		[TestMethod, Ignore]
-		public void Truck12t_UrbanDeliveryCycle_RefLoad_Declaration()
+		public
+		void Truck12t_UrbanDeliveryCycle_RefLoad_Declaration()
 		{
 			var jobFile = @"c:\Users\Technik\Downloads\12t Delivery Truck\12t Delivery Truck.vecto";
 			var inputData = JSONInputDataFactory.ReadJsonJob(jobFile);
 			var fileWriter = new FileOutputWriter(jobFile);
 
 			// TODO: fails due to interpolaion failure in Gear 4
-            var factory = new SimulatorFactory(SimulatorFactory.FactoryMode.DeclarationMode,
+			var factory = new SimulatorFactory(ExecutionMode.Declaration, inputData, fileWriter) {
 				WriteModalResults = true,
 				SumData = new SummaryDataContainer(fileWriter)
 			};
 			var runs = factory.SimulationRuns().ToArray();
-
 			var run = runs[7];
 			run.Run();
-
 			Assert.IsTrue(run.FinishedWithoutErrors);
 		}
 	}
