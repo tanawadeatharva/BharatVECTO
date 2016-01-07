@@ -70,11 +70,11 @@ namespace TUGraz.VectoCore.Models.Simulation.Impl
 			//DataReader.SetJobFile(jobFile);
 		}
 
-		public IVectoRunDataFactory DataReader { get; }
+		public IVectoRunDataFactory DataReader { get; private set; }
 
 		public SummaryDataContainer SumData { get; set; }
 
-		public IOutputDataWriter ModWriter { get; }
+		public IOutputDataWriter ModWriter { get; private set; }
 
 
 		public int JobNumber { get; set; }
@@ -126,10 +126,14 @@ namespace TUGraz.VectoCore.Models.Simulation.Impl
 		internal static void CheckLossMapRangeForFullLoadCurves(GearboxData gearboxData, CombustionEngineData engineData,
 			AxleGearData axleGearData)
 		{
+			if (gearboxData == null) {
+				return;
+			}
+
 			foreach (var gear in gearboxData.Gears) {
 				for (var angularVelocity = engineData.IdleSpeed;
 					angularVelocity < engineData.FullLoadCurve.RatedSpeed;
-					angularVelocity += 2.0 / 3.0 * (engineData.FullLoadCurve.RatedSpeed - engineData.IdleSpeed) / 10.0) {
+					angularVelocity += 2.0 / 3.0 * (engineData.FullLoadCurve.RatedSpeed - engineData.IdleSpeed) / 10.09) {
 					for (var inTorque = engineData.FullLoadCurve.FullLoadStationaryTorque(angularVelocity) / 3;
 						inTorque < engineData.FullLoadCurve.FullLoadStationaryTorque(angularVelocity);
 						inTorque += 2.0 / 3.0 * engineData.FullLoadCurve.FullLoadStationaryTorque(angularVelocity) / 10.0) {
@@ -142,13 +146,15 @@ namespace TUGraz.VectoCore.Models.Simulation.Impl
 									gear.Key, inTorque, angularVelocity.ConvertTo().Rounds.Per.Minute), ex);
 						}
 
-						var axleAngularVelocity = angularVelocity / gear.Value.Ratio;
-						try {
-							axleGearData.LossMap.GetOutTorque(axleAngularVelocity, axleTorque);
-						} catch (VectoException ex) {
-							throw new VectoException(
-								string.Format("Interpolation of LossMap failed for AxleGear with torque={0} and angularSpeed={1}",
-									axleTorque, axleAngularVelocity.ConvertTo().Rounds.Per.Minute), ex);
+						if (axleGearData != null) {
+							var axleAngularVelocity = angularVelocity / gear.Value.Ratio;
+							try {
+								axleGearData.LossMap.GetOutTorque(axleAngularVelocity, axleTorque);
+							} catch (VectoException ex) {
+								throw new VectoException(
+									string.Format("Interpolation of LossMap failed for AxleGear with torque={0} and angularSpeed={1}",
+										axleTorque, axleAngularVelocity.ConvertTo().Rounds.Per.Minute), ex);
+							}
 						}
 					}
 				}

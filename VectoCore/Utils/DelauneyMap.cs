@@ -98,11 +98,13 @@ namespace TUGraz.VectoCore.Utils
 
 			Extrapolated = true;
 			var point = new Point(x, y);
-			var nearestPoint = _points.MinBy(p => Math.Pow(p.X - x, 2) + Math.Pow(p.Y - y, 2));
 
-			// test if point is on left side of the perpendicular vector of edge1 in the nearest point
+			// get nearest point on convex hull
+			var nearestPoint = _convexHull.Select(e => e.P1).MinBy(p => Math.Pow(p.X - x, 2) + Math.Pow(p.Y - y, 2));
+
+			// test if point is on left side of the perpendicular vector (to x,y coordinates) of edge1 in the nearest point
 			//                            ^
-			//          (point)           |
+			//                 (point)    |
 			//                            |
 			// (p1)--edge1-->(nearestPoint)
 			var edge1 = _convexHull.First(e => e.P2.Equals(nearestPoint));
@@ -112,7 +114,7 @@ namespace TUGraz.VectoCore.Utils
 
 			// test if point is on right side of the perpendicular vector of edge2 in the nearest point
 			// ^
-			// |      (point)
+			// |   (point)
 			// |        
 			// (nearestPoint)--edge2-->(p2)
 			var edge2 = _convexHull.First(e => e.P1.Equals(nearestPoint));
@@ -141,11 +143,12 @@ namespace TUGraz.VectoCore.Utils
 			}
 
 			// 2d vector of the edge:  A--->B
-			var AB = new Point(edge.Vector.X, edge.Vector.Y, 0);
+			var AB = new Point(edge.Vector.X, edge.Vector.Y);
 
 			// 2d vector of the point: A---->P
-			var AP = new Point(x - edge.P1.X, y - edge.P1.Y, 0);
+			var AP = new Point(x - edge.P1.X, y - edge.P1.Y);
 
+			// projection of point (x,y) onto the edge
 			var z = edge.P1.Z + AB.Z * (AP.Dot(AB) / AB.Dot(AB));
 			return z;
 		}
