@@ -46,6 +46,7 @@ namespace TUGraz.VectoCore.Tests.Integration.SimulationRuns
 		public const string EngineFile = @"TestData\Components\24t Coach.veng";
 		public const string AccelerationFile = @"TestData\Components\Coach.vacc";
 		public const string GearboxLossMap = @"TestData\Components\Indirect Gear.vtlm";
+		public const string AxleLossMap = @"TestData\Components\Axle.vtlm";
 		public const string GearboxShiftPolygonFile = @"TestData\Components\ShiftPolygons.vgbs";
 		public const string GearboxFullLoadCurveFile = @"TestData\Components\Gearbox.vfld";
 		private static readonly Logger Log = LogManager.GetLogger(typeof(FullPowerTrain).ToString());
@@ -315,7 +316,7 @@ namespace TUGraz.VectoCore.Tests.Integration.SimulationRuns
 			var ratio = 3.240355;
 			return new GearData {
 				Ratio = ratio,
-				LossMap = TransmissionLossMap.ReadFromFile(GearboxLossMap, ratio, "AxleGear")
+				LossMap = TransmissionLossMap.ReadFromFile(AxleLossMap, ratio, "AxleGear")
 			};
 		}
 

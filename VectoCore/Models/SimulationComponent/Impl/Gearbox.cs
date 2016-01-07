@@ -388,10 +388,10 @@ namespace TUGraz.VectoCore.Models.SimulationComponent.Impl
 			if (!_disengaged) {
 				if (Data.Gears[Gear].LossMap.Extrapolated) {
 					// todo (MK, 2015-12-14): should we throw an interpolation error in EngineOnly Mode also?
+					Log.Warn("Gear {0} LossMap data was extrapolated: range for loss map is not sufficient.", Gear);
 					if (DataBus.ExecutionMode == ExecutionMode.Declaration) {
-						throw new VectoException("Gear {0} LossMap data was extrapolated: range for loss map is not sufficient.", Gear);
-					} else {
-						Log.Warn("Gear {0} LossMap data was extrapolated: range for loss map is not sufficient.", Gear);
+						throw new VectoException(
+							"Gear {0} LossMap data was extrapolated in Declaration Mode: range for loss map is not sufficient.", Gear);
 					}
 				}
 			}

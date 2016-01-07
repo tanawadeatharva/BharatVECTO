@@ -30,7 +30,7 @@ namespace TUGraz.VectoCore.Tests.Integration
 	public class FullCycleDeclarationTest
 	{
 		public const string TruckDeclarationJob =
-			@"TestData\Integration\Declaration\40t Truck\40t_Long_Haul_Truck.vecto";
+			@"TestData\Integration\DeclarationMode\40t Truck\40t_Long_Haul_Truck.vecto";
 
 
 		[TestMethod]
