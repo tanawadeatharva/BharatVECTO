@@ -34,10 +34,13 @@ namespace TUGraz.VectoCore.Tests.Models.Simulation
 		public const string AxleGearLossMap = @"TestData\Components\Axle 40t Truck.vtlm";
 		public const string GearboxIndirectLoss = @"TestData\Components\Indirect Gear.vtlm";
 		public const string GearboxDirectLoss = @"TestData\Components\Direct Gear.vtlm";
-		public const string GearboxInsufficient = @"TestData\Components\Insufficient Gear.vtlm";
+		public const string GearboxLimited = @"TestData\Components\limited.vtlm";
 		public const string GearboxShiftPolygonFile = @"TestData\Components\ShiftPolygons.vgbs";
 		public const string GearboxFullLoadCurveFile = @"TestData\Components\Gearbox.vfld";
 
+		/// <summary>
+		/// VECTO-173
+		/// </summary>
 		[TestMethod]
 		public void LossMapValid()
 		{
@@ -47,6 +50,9 @@ namespace TUGraz.VectoCore.Tests.Models.Simulation
 			SimulatorFactory.CheckLossMapRangeForFullLoadCurves(gearboxData, engineData, axleGearData);
 		}
 
+		/// <summary>
+		/// VECTO-173
+		/// </summary>
 		[TestMethod]
 		public void LossMapInvalidAxle()
 		{
@@ -58,13 +64,40 @@ namespace TUGraz.VectoCore.Tests.Models.Simulation
 			});
 		}
 
+		/// <summary>
+		/// VECTO-173
+		/// </summary>
 		[TestMethod]
-		public void LossMapInvalid()
+		public void LossMapLimited()
 		{
-			var gearboxData = CreateGearboxData(GearboxInsufficient, GearboxInsufficient);
+			var gearboxData = CreateGearboxData(GearboxLimited, GearboxLimited);
 			var engineData = MockSimulationDataFactory.CreateEngineDataFromFile(EngineFile);
 			var axleGearData = CreateAxleGearData(AxleGearLossMap);
-			SimulatorFactory.CheckLossMapRangeForFullLoadCurves(gearboxData, engineData, axleGearData);
+			AssertHelper.Exception<VectoException>(() => {
+				SimulatorFactory.CheckLossMapRangeForFullLoadCurves(gearboxData, engineData, axleGearData);
+			});
+		}
+
+		/// <summary>
+		/// VECTO-173
+		/// </summary>
+		[TestMethod]
+		public void LossMapAxleLossMapMissing()
+		{
+			var gearboxData = CreateGearboxData(GearboxDirectLoss, GearboxIndirectLoss);
+			var engineData = MockSimulationDataFactory.CreateEngineDataFromFile(EngineFile);
+			SimulatorFactory.CheckLossMapRangeForFullLoadCurves(gearboxData, engineData, null);
+		}
+
+		/// <summary>
+		/// VECTO-173
+		/// </summary>
+		[TestMethod]
+		public void LossMapGearLossMapMissing()
+		{
+			var engineData = MockSimulationDataFactory.CreateEngineDataFromFile(EngineFile);
+			var axleGearData = CreateAxleGearData(AxleGearLossMap);
+			SimulatorFactory.CheckLossMapRangeForFullLoadCurves(null, engineData, axleGearData);
 		}
 
 
