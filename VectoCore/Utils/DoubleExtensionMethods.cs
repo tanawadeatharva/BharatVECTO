@@ -16,6 +16,7 @@
 
 using System;
 using System.Collections.Generic;
+using System.Diagnostics;
 using System.Linq;
 
 namespace TUGraz.VectoCore.Utils
@@ -43,6 +44,7 @@ namespace TUGraz.VectoCore.Utils
 		/// <param name="other">The other.</param>
 		/// <param name="tolerance">The tolerance.</param>
 		/// <returns></returns>
+		[DebuggerHidden]
 		public static bool IsEqual(this double self, double other, double tolerance = Tolerance)
 		{
 			return Math.Abs(self - other) < tolerance;
@@ -55,6 +57,7 @@ namespace TUGraz.VectoCore.Utils
 		/// <param name="other">The other.</param>
 		/// <param name="tolerance">The tolerance.</param>
 		/// <returns></returns>
+		[DebuggerHidden]
 		public static bool IsSmaller(this double self, double other, double tolerance = Tolerance)
 		{
 			return self < other - tolerance;

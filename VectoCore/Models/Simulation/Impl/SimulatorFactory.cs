@@ -142,7 +142,7 @@ namespace TUGraz.VectoCore.Models.Simulation.Impl
 							axleTorque = gear.Value.LossMap.GetOutTorque(angularVelocity, inTorque);
 						} catch (VectoException ex) {
 							throw new VectoException(
-								string.Format("Interpolation of LossMap failed for Gear {0} with torque={1} and angularSpeed={2}",
+								string.Format("Interpolation of Gear-{0}-LossMap failed with torque={1} and angularSpeed={2}",
 									gear.Key, inTorque, angularVelocity.ConvertTo().Rounds.Per.Minute), ex);
 						}
 
@@ -152,7 +152,7 @@ namespace TUGraz.VectoCore.Models.Simulation.Impl
 								axleGearData.LossMap.GetOutTorque(axleAngularVelocity, axleTorque);
 							} catch (VectoException ex) {
 								throw new VectoException(
-									string.Format("Interpolation of LossMap failed for AxleGear with torque={0} and angularSpeed={1}",
+									string.Format("Interpolation of AxleGear-LossMap failed with torque={0} and angularSpeed={1}",
 										axleTorque, axleAngularVelocity.ConvertTo().Rounds.Per.Minute), ex);
 							}
 						}

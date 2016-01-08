@@ -576,8 +576,10 @@ namespace TUGraz.VectoCore.Utils
 		[DebuggerHidden]
 		protected SIBase(SI si) : base(si) {}
 
+		[DebuggerHidden]
 		protected SIBase(double value) : base(value) {}
 
+		[DebuggerHidden]
 		public new T Abs()
 		{
 			return base.Abs().Cast<T>();
