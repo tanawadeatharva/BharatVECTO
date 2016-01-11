@@ -246,7 +246,7 @@ namespace TUGraz.VectoCore.Utils
 		public bool IsLeftOf(Edge e)
 		{
 			var abX = e.P2.X - e.P1.X;
-			var abY = e.P2.Y - e.P2.Y;
+			var abY = e.P2.Y - e.P1.Y;
 			var acX = X - e.P1.X;
 			var acY = Y - e.P1.Y;
 			var z = abX * acY - abY * acX;

@@ -1741,6 +1741,7 @@ namespace TUGraz.VectoCore.Utils
 		/// <param name="val">The value.</param>
 		/// <param name="tolerance">The tolerance.</param>
 		/// <returns></returns>
+		[DebuggerHidden]
 		public bool IsEqual(double val, double tolerance = DoubleExtensionMethods.Tolerance)
 		{
 			return Val.IsEqual(val, tolerance);

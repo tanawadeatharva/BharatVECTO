@@ -135,6 +135,11 @@ namespace TUGraz.VectoCore.Tests.Models.SimulationComponent
 			var n = 1600.RPMtoRad();
 			var response = gearbox.OutPort().Request(absTime, dt, t * ratio, n / ratio);
 			Assert.IsInstanceOfType(response, typeof(ResponseSuccess));
+			Assert.AreEqual(absTime, port.AbsTime);
+			Assert.AreEqual(dt, port.Dt);
+			Assert.AreEqual(n, port.AngularVelocity);
+			Assert.AreEqual(2654.06.SI<NewtonMeter>(), port.Torque);
+
 
 			absTime += dt;
 			t = -1300.SI<NewtonMeter>();

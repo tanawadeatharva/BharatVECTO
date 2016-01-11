@@ -151,7 +151,7 @@ namespace TUGraz.VectoCore.Utils
 			var AP = new Point(x - edge.P1.X, y - edge.P1.Y);
 
 			// projection of point (x,y) onto the edge
-			var z = edge.P1.Z + AB.Z * (AP.Dot(AB) / AB.Dot(AB));
+			var z = edge.P1.Z + edge.Vector.Z * (AP.Dot(AB) / AB.Dot(AB));
 			return z;
 		}
 
