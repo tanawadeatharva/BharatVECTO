@@ -222,7 +222,7 @@ namespace TUGraz.VectoCore.Tests.Models.SimulationComponent
 			Assert.AreEqual(absTime, port.AbsTime);
 			Assert.AreEqual(dt, port.Dt);
 			Assert.AreEqual(n, port.AngularVelocity);
-			Assert.AreEqual(-1000.SI<NewtonMeter>(), port.Torque);
+			Assert.AreEqual(-2464.82.SI<NewtonMeter>(), port.Torque);
 
 			var modData = new MockModalDataContainer();
 			Assert.IsTrue(gearbox.Data.Gears[gearbox.Gear].LossMap.Extrapolated);

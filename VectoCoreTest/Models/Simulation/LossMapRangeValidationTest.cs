@@ -58,7 +58,7 @@ namespace TUGraz.VectoCore.Tests.Models.Simulation
 		{
 			var gearboxData = CreateGearboxData(GearboxDirectLoss, GearboxIndirectLoss);
 			var engineData = MockSimulationDataFactory.CreateEngineDataFromFile(EngineFile);
-			var axleGearData = CreateAxleGearData(GearboxIndirectLoss);
+			var axleGearData = CreateAxleGearData(GearboxLimited);
 			AssertHelper.Exception<VectoException>(() => {
 				SimulatorFactory.CheckLossMapRangeForFullLoadCurves(gearboxData, engineData, axleGearData);
 			});
