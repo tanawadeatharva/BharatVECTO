@@ -40,7 +40,8 @@ namespace TUGraz.VectoCore.Utils
 		/// </summary>
 		/// <remarks>
 		/// Triangulation with the Bowyer-Watson algorithm (iteratively insert points into a super triangle).
-		/// https://en.wikipedia.org/wiki/Bowyer%E2%80%93Watson_algorithm</remarks>
+		/// https://en.wikipedia.org/wiki/Bowyer%E2%80%93Watson_algorithm
+		/// </remarks>
 		public void Triangulate()
 		{
 			if (_points.Count < 3) {
@@ -138,6 +139,7 @@ namespace TUGraz.VectoCore.Utils
 		/// <returns></returns>
 		private static double Extrapolate(double x, double y, Edge edge)
 		{
+			// shortcut if edge end points have same Z values
 			if (edge.P1.Z == edge.P2.Z) {
 				return edge.P1.Z;
 			}

@@ -15,9 +15,11 @@
 */
 
 using System;
+using System.Data;
 using System.Globalization;
 using Microsoft.VisualStudio.TestTools.UnitTesting;
 using TUGraz.VectoCore.Models.SimulationComponent.Data;
+using TUGraz.VectoCore.Models.SimulationComponent.Data.Gearbox;
 using TUGraz.VectoCore.Tests.Utils;
 using TUGraz.VectoCore.Utils;
 
@@ -83,6 +85,34 @@ namespace TUGraz.VectoCore.Tests.Models.SimulationComponentData
 				loss.Value(), 0.1,
 				TestContext.DataRow["TestName"].ToString());
 		}
+
+		[TestMethod]
+		public void TestExtrapolation()
+		{
+			var data = new DataTable();
+			data.Columns.Add("");
+			data.Columns.Add("");
+			data.Columns.Add("");
+			data.Rows.Add("0", "0", "10");
+			data.Rows.Add("0", "100", "10");
+
+			data.Rows.Add("100", "0", "10");
+			data.Rows.Add("100", "100", "10");
+
+			var lossMap = TransmissionLossMap.Create(data, 1.0, "1");
+
+			AssertHelper.AreRelativeEqual(-20.SI<NewtonMeter>(), lossMap.GetInTorque(-10.RPMtoRad(), -10.SI<NewtonMeter>()));
+			AssertHelper.AreRelativeEqual(-20.SI<NewtonMeter>(), lossMap.GetInTorque(50.RPMtoRad(), -10.SI<NewtonMeter>()));
+			AssertHelper.AreRelativeEqual(-20.SI<NewtonMeter>(), lossMap.GetInTorque(110.RPMtoRad(), -10.SI<NewtonMeter>()));
+
+			AssertHelper.AreRelativeEqual(100.SI<NewtonMeter>(), lossMap.GetInTorque(-10.RPMtoRad(), 110.SI<NewtonMeter>()));
+			AssertHelper.AreRelativeEqual(100.SI<NewtonMeter>(), lossMap.GetInTorque(50.RPMtoRad(), 110.SI<NewtonMeter>()));
+			AssertHelper.AreRelativeEqual(100.SI<NewtonMeter>(), lossMap.GetInTorque(110.RPMtoRad(), 110.SI<NewtonMeter>()));
+
+			AssertHelper.AreRelativeEqual(90.SI<NewtonMeter>(), lossMap.GetInTorque(-10.RPMtoRad(), 100.SI<NewtonMeter>()));
+			AssertHelper.AreRelativeEqual(90.SI<NewtonMeter>(), lossMap.GetInTorque(110.RPMtoRad(), 100.SI<NewtonMeter>()));
+		}
+
 
 		[TestMethod]
 		public void TestInputOutOfRange()

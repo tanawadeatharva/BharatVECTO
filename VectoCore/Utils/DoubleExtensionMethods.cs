@@ -149,6 +149,7 @@ namespace TUGraz.VectoCore.Utils
 		/// <summary>
 		/// Creates an templated SI object for the number.
 		/// </summary>
+		[DebuggerHidden]
 		public static T SI<T>(this double value) where T : SIBase<T>
 		{
 			return SIBase<T>.Create(value);

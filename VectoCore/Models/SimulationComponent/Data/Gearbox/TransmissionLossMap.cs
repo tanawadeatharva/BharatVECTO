@@ -40,11 +40,6 @@ namespace TUGraz.VectoCore.Models.SimulationComponent.Data.Gearbox
 		/// </summary>
 		private readonly DelauneyMap _invertedLossMap;
 
-		private readonly NewtonMeter _minTorque = double.PositiveInfinity.SI<NewtonMeter>();
-		private readonly NewtonMeter _maxTorque = double.NegativeInfinity.SI<NewtonMeter>();
-		private readonly PerSecond _maxSpeed = double.NegativeInfinity.SI<PerSecond>();
-		private readonly PerSecond _minSpeed = double.PositiveInfinity.SI<PerSecond>();
-
 		/// <summary>
 		/// True if the last access to GetInTorque was an extrapolation.
 		/// </summary>
@@ -133,12 +128,6 @@ namespace TUGraz.VectoCore.Models.SimulationComponent.Data.Gearbox
 			_lossMap = new DelauneyMap();
 			foreach (var entry in _entries) {
 				var outTorque = (entry.InputTorque - entry.TorqueLoss) * _ratio;
-				_minTorque = VectoMath.Min(_minTorque, outTorque);
-				_maxTorque = VectoMath.Max(_maxTorque, outTorque);
-
-				_minSpeed = VectoMath.Min(_minSpeed, entry.InputSpeed);
-				_maxSpeed = VectoMath.Max(_maxSpeed, entry.InputSpeed);
-
 				_lossMap.AddPoint(entry.InputSpeed.Value(), outTorque.Value(), entry.InputTorque.Value());
 			}
 
@@ -155,13 +144,12 @@ namespace TUGraz.VectoCore.Models.SimulationComponent.Data.Gearbox
 		/// <returns>Torque needed at input side (towards the engine).</returns>
 		public NewtonMeter GetInTorque(PerSecond inAngularVelocity, NewtonMeter outTorque)
 		{
-			var inTorque = _lossMap.Interpolate(inAngularVelocity.Value(), outTorque.Value(), true).SI<NewtonMeter>();
+			var torqueLoss = _lossMap.Interpolate(inAngularVelocity.Value(), outTorque.Value(), true).SI<NewtonMeter>();
+			// ouT = (inT - loss) * ratio    =>    inT = outT/ratio + loss
+			var inTorque = outTorque / _ratio + torqueLoss;
 
-			// Limit input torque to a maximum value without losses (just torque/ratio)
-			inTorque = VectoMath.Max(inTorque, outTorque / _ratio);
-
-			Log.Debug("GearboxLoss {0}: {1}, inAngularVelocity: {2}, outTorque: {3}", GearName, inTorque - outTorque,
-				inAngularVelocity, outTorque);
+			Log.Debug("GearboxLoss {0}: {1}, inAngularVelocity: {2}, outTorque: {3}", GearName, torqueLoss, inAngularVelocity,
+				outTorque);
 			return inTorque;
 		}
 
@@ -173,7 +161,8 @@ namespace TUGraz.VectoCore.Models.SimulationComponent.Data.Gearbox
 		/// <returns>Torque needed at input side (towards the engine).</returns>
 		public NewtonMeter GetOutTorque(PerSecond inAngularVelocity, NewtonMeter inTorque)
 		{
-			return _invertedLossMap.Interpolate(inAngularVelocity.Value(), inTorque.Value()).SI<NewtonMeter>();
+			var torqueLoss = _invertedLossMap.Interpolate(inAngularVelocity.Value(), inTorque.Value()).SI<NewtonMeter>();
+			return (inTorque - torqueLoss) * _ratio;
 		}
 
 		public GearLossMapEntry this[int i]
