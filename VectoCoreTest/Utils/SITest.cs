@@ -348,7 +348,6 @@ namespace TUGraz.VectoCore.Tests.Utils
 			AssertHelper.AreRelativeEqual(3.SI(), 12.SI() / 4);
 			AssertHelper.AreRelativeEqual(3.SI(), 12.SI() / 4.SI());
 			AssertHelper.AreRelativeEqual(3.SI(), 12.SI<NewtonMeter>() / 4.SI<NewtonMeter>());
-			AssertHelper.AreRelativeEqual(3.SI<Scalar>(), 12.SI<NewtonMeter>() / 4.SI<NewtonMeter>());
 
 			AssertHelper.AreRelativeEqual(3.SI<NewtonMeter>(), 12.SI<NewtonMeter>() / 4);
 			AssertHelper.AreRelativeEqual(3.SI().Per.Newton.Meter, 12 / 4.SI<NewtonMeter>());

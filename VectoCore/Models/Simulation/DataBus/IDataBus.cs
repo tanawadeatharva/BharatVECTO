@@ -14,8 +14,8 @@
 * limitations under the Licence.
 */
 
+using TUGraz.VectoCore.Models.Simulation.Impl;
 using TUGraz.VectoCore.Models.SimulationComponent;
-using TUGraz.VectoCore.Utils;
 
 namespace TUGraz.VectoCore.Models.Simulation.DataBus
 {
@@ -23,5 +23,8 @@ namespace TUGraz.VectoCore.Models.Simulation.DataBus
 	/// Defines interfaces for all different cockpits to access shared data of the powertrain.
 	/// </summary>
 	public interface IDataBus : IGearboxInfo, IEngineInfo, IVehicleInfo, IMileageCounter, IClutchInfo, IBrakes,
-		IRoadLookAhead, IDriverInfo {}
+		IRoadLookAhead, IDriverInfo
+	{
+		ExecutionMode ExecutionMode { get; set; }
+	}
 }

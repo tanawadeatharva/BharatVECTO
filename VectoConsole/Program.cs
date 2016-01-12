@@ -133,9 +133,9 @@ Examples:
 				var sumWriter = new SummaryDataContainer(fileWriter);
 				jobContainer = new JobContainer(sumWriter);
 
-				var mode = SimulatorFactory.FactoryMode.DeclarationMode;
+				var mode = ExecutionMode.Declaration;
 				if (args.Contains("-eng")) {
-					mode = SimulatorFactory.FactoryMode.EngineeringMode;
+					mode = ExecutionMode.Engineering;
 					Console.ForegroundColor = ConsoleColor.White;
 					Console.WriteLine(
 						"Switching to Engineering Mode. Make sure the job-file is saved in engineering mode!");

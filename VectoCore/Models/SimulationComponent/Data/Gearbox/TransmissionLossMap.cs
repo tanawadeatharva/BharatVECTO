@@ -18,7 +18,6 @@ using System;
 using System.Collections.Generic;
 using System.Data;
 using System.Linq;
-using System.Linq.Expressions;
 using Newtonsoft.Json;
 using TUGraz.VectoCore.Exceptions;
 using TUGraz.VectoCore.Utils;
@@ -32,14 +31,22 @@ namespace TUGraz.VectoCore.Models.SimulationComponent.Data.Gearbox
 		private readonly double _ratio;
 
 		/// <summary>
-		/// [X=Input EngineSpeed, Y=Output Torque] => Z=Input Torque
+		/// The Loss map. [X=Input EngineSpeed, Y=Output Torque] => Z=Input Torque
 		/// </summary>
 		private readonly DelauneyMap _lossMap;
 
-		private readonly NewtonMeter _minTorque = double.PositiveInfinity.SI<NewtonMeter>();
-		private readonly NewtonMeter _maxTorque = double.NegativeInfinity.SI<NewtonMeter>();
-		private readonly PerSecond _maxSpeed = double.NegativeInfinity.SI<PerSecond>();
-		private readonly PerSecond _minSpeed = double.PositiveInfinity.SI<PerSecond>();
+		/// <summary>
+		/// The inverted loss map for range sanity checks. [X=Input EngineSpeed, Y=Input Torque] => Z=Output Torque
+		/// </summary>
+		private readonly DelauneyMap _invertedLossMap;
+
+		/// <summary>
+		/// True if the last access to GetInTorque was an extrapolation.
+		/// </summary>
+		public bool Extrapolated
+		{
+			get { return _lossMap.Extrapolated; }
+		}
 
 		public string GearName { get; protected set; }
 
@@ -119,44 +126,48 @@ namespace TUGraz.VectoCore.Models.SimulationComponent.Data.Gearbox
 			_ratio = gearRatio;
 			_entries = entries;
 			_lossMap = new DelauneyMap();
+			_invertedLossMap = new DelauneyMap();
 			foreach (var entry in _entries) {
 				var outTorque = (entry.InputTorque - entry.TorqueLoss) * _ratio;
-				_minTorque = VectoMath.Min(_minTorque, outTorque);
-				_maxTorque = VectoMath.Max(_maxTorque, outTorque);
 
-				_minSpeed = VectoMath.Min(_minSpeed, entry.InputSpeed);
-				_maxSpeed = VectoMath.Max(_maxSpeed, entry.InputSpeed);
-
-				_lossMap.AddPoint(entry.InputSpeed.Value(), outTorque.Value(), entry.InputTorque.Value());
+				_lossMap.AddPoint(entry.InputSpeed.Value(), outTorque.Value(), entry.TorqueLoss.Value());
+				_invertedLossMap.AddPoint(entry.InputSpeed.Value(), entry.InputTorque.Value(), entry.TorqueLoss.Value());
 			}
 
 			_lossMap.Triangulate();
+			_invertedLossMap.Triangulate();
 		}
 
 
 		/// <summary>
-		///	Computes the INPUT torque given by the input engineSpeed and the output torque.
+		///	Computes the INPUT torque given by the input-engineSpeed and the output-torque.
 		/// </summary>
 		/// <param name="inAngularVelocity">Angular speed at input side.</param>
 		/// <param name="outTorque">Torque at output side (as requested by the previous componend towards the wheels).</param>
 		/// <returns>Torque needed at input side (towards the engine).</returns>
-		public NewtonMeter GearboxInTorque(PerSecond inAngularVelocity, NewtonMeter outTorque)
+		public NewtonMeter GetInTorque(PerSecond inAngularVelocity, NewtonMeter outTorque)
 		{
-			try {
-				//var limitedAngularVelocity = VectoMath.Limit(inAngularVelocity, _minSpeed, _maxSpeed).Value();
-				//var limitedTorque = VectoMath.Limit(outTorque, _minTorque, _maxTorque).Value();
+			var torqueLoss = _lossMap.Interpolate(inAngularVelocity.Value(), outTorque.Value(), true).SI<NewtonMeter>();
 
-				var inTorque = _lossMap.Interpolate(inAngularVelocity.Value(), outTorque.Value()).SI<NewtonMeter>();
-				Log.Debug("GearboxLoss {0}: {1}", GearName, inTorque - outTorque);
+			var inTorque = outTorque / _ratio + torqueLoss;
 
-				// Limit input torque to a maximum value without losses (just torque/ratio)
-				return VectoMath.Max(inTorque, outTorque / _ratio);
-			} catch (VectoException) {
-				Log.Error("{0} - Failed to interpolate in TransmissionLossMap. angularVelocity: {1}, torque: {2}", GearName,
-					inAngularVelocity, outTorque);
+			Log.Debug("GearboxLoss {0}: {1}, inAngularVelocity: {2}, outTorque: {3}", GearName, torqueLoss,
+				inAngularVelocity, outTorque);
+			return inTorque;
+		}
 
-				return outTorque / _ratio;
-			}
+		///  <summary>
+		/// 	Computes the OUTPUT torque given by the input engineSpeed and the output torque.
+		///  </summary>
+		///  <param name="inAngularVelocity">Angular speed at input side.</param>
+		///  <param name="inTorque">Torque at output side (as requested by the previous componend towards the wheels).</param>
+		/// <param name="allowExtrapolation"></param>
+		/// <returns>Torque needed at input side (towards the engine).</returns>
+		public NewtonMeter GetOutTorque(PerSecond inAngularVelocity, NewtonMeter inTorque, bool allowExtrapolation = false)
+		{
+			var torqueLoss =
+				_invertedLossMap.Interpolate(inAngularVelocity.Value(), inTorque.Value(), allowExtrapolation).SI<NewtonMeter>();
+			return (inTorque - torqueLoss) / _ratio;
 		}
 
 		public GearLossMapEntry this[int i]

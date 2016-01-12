@@ -66,11 +66,11 @@ namespace TUGraz.VectoCore.Tests.Integration
 		{
 			var fileWriter = new FileOutputWriter(modFileName, "");
 			var modData = new ModalDataContainer(modFileName, fileWriter);
-			var container = new VehicleContainer(modData);
+			var container = new VehicleContainer(modData, executionMode: ExecutionMode.Engineering);
 
 			var engineData = MockSimulationDataFactory.CreateEngineDataFromFile(EngineFile);
 			var axleGearData = CreateAxleGearData();
-			var gearboxData = CreateGearboxData(engineData);
+			var gearboxData = CreateGearboxData();
 			var vehicleData = CreateVehicleData(massExtra, loading);
 			var driverData = CreateDriverData(AccelerationFile, overspeed);
 
@@ -98,24 +98,19 @@ namespace TUGraz.VectoCore.Tests.Integration
 			return container;
 		}
 
-		private static GearboxData CreateGearboxData(CombustionEngineData engineData)
+		private static GearboxData CreateGearboxData()
 		{
-			var ratios = new[] { 14.93, 11.64, 9.02, 7.04, 5.64, 4.4, 3.39, 2.65, 2.05, 1.6, 1.28, 1.0, };
+			var ratios = new[] { 14.93, 11.64, 9.02, 7.04, 5.64, 4.4, 3.39, 2.65, 2.05, 1.6, 1.28, 1.0 };
 
 			return new GearboxData {
 				Gears = ratios.Select((ratio, i) =>
 					Tuple.Create((uint)i,
 						new GearData {
 							FullLoadCurve = FullLoadCurve.ReadFromFile(GearboxFullLoadCurveFile),
-							LossMap =
-								(ratio != 1.0)
-									? TransmissionLossMap.ReadFromFile(GearboxIndirectLoss, ratio,
-										string.Format("Gear {0}", i))
-									: TransmissionLossMap.ReadFromFile(GearboxDirectLoss, ratio,
-										string.Format("Gear {0}", i)),
+							LossMap = TransmissionLossMap.ReadFromFile(ratio != 1.0 ? GearboxIndirectLoss : GearboxDirectLoss, ratio,
+								string.Format("Gear {0}", i)),
 							Ratio = ratio,
-							ShiftPolygon = ShiftPolygon.ReadFromFile(ShiftPolygonFile),
-							//ShiftPolygon =    DeclarationData.Gearbox.ComputeShiftPolygon(engineData.FullLoadCurve, engineData.IdleSpeed)
+							ShiftPolygon = ShiftPolygon.ReadFromFile(ShiftPolygonFile)
 						}))
 					.ToDictionary(k => k.Item1 + 1, v => v.Item2),
 				ShiftTime = 2.SI<Second>(),

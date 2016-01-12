@@ -46,6 +46,7 @@ namespace TUGraz.VectoCore.Tests.Integration.SimulationRuns
 		public const string EngineFile = @"TestData\Components\24t Coach.veng";
 		public const string AccelerationFile = @"TestData\Components\Coach.vacc";
 		public const string GearboxLossMap = @"TestData\Components\Indirect Gear.vtlm";
+		public const string AxleLossMap = @"TestData\Components\Axle.vtlm";
 		public const string GearboxShiftPolygonFile = @"TestData\Components\ShiftPolygons.vgbs";
 		public const string GearboxFullLoadCurveFile = @"TestData\Components\Gearbox.vfld";
 		private static readonly Logger Log = LogManager.GetLogger(typeof(FullPowerTrain).ToString());
@@ -90,7 +91,7 @@ namespace TUGraz.VectoCore.Tests.Integration.SimulationRuns
 				response = cyclePort.Request(absTime, ds);
 				response.Switch().
 					Case<ResponseDrivingCycleDistanceExceeded>(r => ds = r.MaxDistance).
-					Case<ResponseCycleFinished>(r => { }).
+					Case<ResponseCycleFinished>(r => {}).
 					Case<ResponseSuccess>(r => {
 						container.CommitSimulationStep(absTime, r.SimulationInterval);
 						absTime += r.SimulationInterval;
@@ -163,8 +164,10 @@ namespace TUGraz.VectoCore.Tests.Integration.SimulationRuns
 
 				response.Switch().
 					Case<ResponseDrivingCycleDistanceExceeded>(r => ds = r.MaxDistance).
-					Case<ResponseCycleFinished>(r => { }).
-					Case<ResponseGearShift>(r => { Log.Debug("Gearshift"); }).
+					Case<ResponseCycleFinished>(r => {}).
+					Case<ResponseGearShift>(r => {
+						Log.Debug("Gearshift");
+					}).
 					Case<ResponseSuccess>(r => {
 						container.CommitSimulationStep(absTime, r.SimulationInterval);
 						absTime += r.SimulationInterval;
@@ -236,8 +239,10 @@ namespace TUGraz.VectoCore.Tests.Integration.SimulationRuns
 
 				response.Switch().
 					Case<ResponseDrivingCycleDistanceExceeded>(r => ds = r.MaxDistance).
-					Case<ResponseCycleFinished>(r => { }).
-					Case<ResponseGearShift>(r => { Log.Debug("Gearshift"); }).
+					Case<ResponseCycleFinished>(r => {}).
+					Case<ResponseGearShift>(r => {
+						Log.Debug("Gearshift");
+					}).
 					Case<ResponseSuccess>(r => {
 						container.CommitSimulationStep(absTime, r.SimulationInterval);
 						absTime += r.SimulationInterval;
@@ -268,7 +273,7 @@ namespace TUGraz.VectoCore.Tests.Integration.SimulationRuns
 			var jobContainer = new JobContainer(sumData);
 
 			var inputData = JSONInputDataFactory.ReadJsonJob(jobFile);
-			var factory = new SimulatorFactory(SimulatorFactory.FactoryMode.EngineeringMode, inputData, fileWriter);
+			var factory = new SimulatorFactory(ExecutionMode.Engineering, inputData, fileWriter);
 
 			jobContainer.AddRuns(factory);
 			jobContainer.Execute();
@@ -311,7 +316,7 @@ namespace TUGraz.VectoCore.Tests.Integration.SimulationRuns
 			var ratio = 3.240355;
 			return new GearData {
 				Ratio = ratio,
-				LossMap = TransmissionLossMap.ReadFromFile(GearboxLossMap, ratio, "AxleGear")
+				LossMap = TransmissionLossMap.ReadFromFile(AxleLossMap, ratio, "AxleGear")
 			};
 		}
 

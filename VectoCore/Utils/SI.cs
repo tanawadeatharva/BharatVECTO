@@ -576,8 +576,10 @@ namespace TUGraz.VectoCore.Utils
 		[DebuggerHidden]
 		protected SIBase(SI si) : base(si) {}
 
+		[DebuggerHidden]
 		protected SIBase(double value) : base(value) {}
 
+		[DebuggerHidden]
 		public new T Abs()
 		{
 			return base.Abs().Cast<T>();
@@ -1739,6 +1741,7 @@ namespace TUGraz.VectoCore.Utils
 		/// <param name="val">The value.</param>
 		/// <param name="tolerance">The tolerance.</param>
 		/// <returns></returns>
+		[DebuggerHidden]
 		public bool IsEqual(double val, double tolerance = DoubleExtensionMethods.Tolerance)
 		{
 			return Val.IsEqual(val, tolerance);

@@ -28,7 +28,7 @@ namespace TUGraz.VectoCore.OutputData
 {
 	public class ModalDataContainer : IModalDataContainer
 	{
-		private readonly SimulatorFactory.FactoryMode _mode;
+		private readonly ExecutionMode _mode;
 		private readonly Action<ModalDataContainer> _addReportResult;
 		private ModalResults Data { get; set; }
 		private DataRow CurrentRow { get; set; }
@@ -44,15 +44,15 @@ namespace TUGraz.VectoCore.OutputData
 		public VectoRun.Status RunStatus { get; protected set; }
 
 		public ModalDataContainer(string runName, IModalDataWriter writer,
-			SimulatorFactory.FactoryMode mode = SimulatorFactory.FactoryMode.EngineeringMode)
+			ExecutionMode mode = ExecutionMode.Engineering)
 			: this(runName, "", "", writer, _ => {}, mode) {}
 
 		public ModalDataContainer(VectoRunData runData, IModalDataWriter writer, Action<ModalDataContainer> addReportResult,
-			SimulatorFactory.FactoryMode mode = SimulatorFactory.FactoryMode.EngineeringMode)
+			ExecutionMode mode = ExecutionMode.Engineering)
 			: this(runData.JobName, runData.Cycle.Name, runData.ModFileSuffix, writer, addReportResult, mode) {}
 
 		protected ModalDataContainer(string runName, string cycleName, string runSuffix, IModalDataWriter writer,
-			Action<ModalDataContainer> addReportResult, SimulatorFactory.FactoryMode mode)
+			Action<ModalDataContainer> addReportResult, ExecutionMode mode)
 
 		{
 			HasTorqueConverter = false;
@@ -83,7 +83,7 @@ namespace TUGraz.VectoCore.OutputData
 
 			RunStatus = runStatus;
 
-			if (_mode != SimulatorFactory.FactoryMode.EngineOnlyMode) {
+			if (_mode != ExecutionMode.EngineOnly) {
 				dataColumns.AddRange(new[] {
 					ModalResultField.simulationInterval,
 					ModalResultField.dist,
@@ -108,7 +108,7 @@ namespace TUGraz.VectoCore.OutputData
 				ModalResultField.Paux
 			});
 
-			if (_mode != SimulatorFactory.FactoryMode.EngineOnlyMode) {
+			if (_mode != ExecutionMode.EngineOnly) {
 				dataColumns.AddRange(new[] {
 					ModalResultField.Gear,
 					ModalResultField.PlossGB,
@@ -137,13 +137,13 @@ namespace TUGraz.VectoCore.OutputData
 				.Concat((Auxiliaries.Values.Select(c => c.ColumnName)))
 				.Concat(new[] { ModalResultField.FCMap, ModalResultField.FCAUXc, ModalResultField.FCWHTCc }.Select(x => x.GetName()));
 
-			if (_mode != SimulatorFactory.FactoryMode.DeclarationMode || WriteModalResults) {
+			if (_mode != ExecutionMode.Declaration || WriteModalResults) {
 				//VectoCSVFile.Write(_modWriter, new DataView(Data).ToTable(false, strCols.ToArray()));
 				_writer.WriteModData(RunName, CycleName, RunSuffix,
 					new DataView(Data).ToTable(false, strCols.ToArray()));
 			}
 
-			if (_mode == SimulatorFactory.FactoryMode.DeclarationMode) {
+			if (_mode == ExecutionMode.Declaration) {
 				_addReportResult(this);
 			}
 		}

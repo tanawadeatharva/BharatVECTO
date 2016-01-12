@@ -146,10 +146,12 @@ namespace TUGraz.VectoCore.Models.Simulation.Impl
 
 		#endregion
 
-		public VehicleContainer(IModalDataContainer modData = null, WriteSumData writeSumData = null)
+		public VehicleContainer(IModalDataContainer modData = null, WriteSumData writeSumData = null,
+			ExecutionMode executionMode = ExecutionMode.Declaration)
 		{
 			ModData = modData;
-			WriteSumData = writeSumData ?? delegate { };
+			WriteSumData = writeSumData ?? delegate {};
+			ExecutionMode = executionMode;
 		}
 
 		#region IVehicleContainer
@@ -299,5 +301,6 @@ namespace TUGraz.VectoCore.Models.Simulation.Impl
 		}
 
 		public VectoRunData RunData { get; set; }
+		public ExecutionMode ExecutionMode { get; set; }
 	}
 }

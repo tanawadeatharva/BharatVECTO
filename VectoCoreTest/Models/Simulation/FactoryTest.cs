@@ -39,7 +39,7 @@ namespace TUGraz.VectoCore.Tests.Models.Simulation
 			var fileWriter = new FileOutputWriter(DeclarationJobFile);
 
 			var inputData = JSONInputDataFactory.ReadJsonJob(DeclarationJobFile);
-			var factory = new SimulatorFactory(SimulatorFactory.FactoryMode.DeclarationMode, inputData, fileWriter);
+			var factory = new SimulatorFactory(ExecutionMode.Declaration, inputData, fileWriter);
 
 			//factory.DataReader.SetJobFile(DeclarationJobFile);
 
@@ -86,7 +86,7 @@ namespace TUGraz.VectoCore.Tests.Models.Simulation
 			var fileWriter = new FileOutputWriter(EngineeringJobFile);
 
 			var inputData = JSONInputDataFactory.ReadJsonJob(EngineeringJobFile);
-			var factory = new SimulatorFactory(SimulatorFactory.FactoryMode.EngineeringMode, inputData, fileWriter);
+			var factory = new SimulatorFactory(ExecutionMode.Engineering, inputData, fileWriter);
 
 			var run = factory.SimulationRuns().First();
 

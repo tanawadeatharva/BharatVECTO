@@ -64,7 +64,7 @@ namespace TUGraz.VectoCore.Tests.Integration.EngineOnlyCycle
 
 			var modFile = Path.GetFileNameWithoutExtension(Path.GetRandomFileName()); // + ".vmod";
 			var fileWriter = new FileOutputWriter(modFile, "");
-			var modData = new ModalDataContainer(modFile, fileWriter, SimulatorFactory.FactoryMode.EngineOnlyMode);
+			var modData = new ModalDataContainer(modFile, fileWriter, ExecutionMode.EngineOnly);
 
 			foreach (var cycleEntry in data.Entries) {
 				var response = port.Request(absTime, dt, cycleEntry.EngineTorque, cycleEntry.EngineSpeed);

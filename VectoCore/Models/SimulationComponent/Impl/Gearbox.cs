@@ -22,6 +22,7 @@ using TUGraz.VectoCore.Models.Connector.Ports.Impl;
 using TUGraz.VectoCore.Models.Simulation;
 using TUGraz.VectoCore.Models.Simulation.Data;
 using TUGraz.VectoCore.Models.Simulation.DataBus;
+using TUGraz.VectoCore.Models.Simulation.Impl;
 using TUGraz.VectoCore.Models.SimulationComponent.Data;
 using TUGraz.VectoCore.OutputData;
 using TUGraz.VectoCore.Utils;
@@ -141,7 +142,7 @@ namespace TUGraz.VectoCore.Models.SimulationComponent.Impl
 			}
 
 			var inAngularVelocity = outAngularVelocity * Data.Gears[Gear].Ratio;
-			var inTorque = Data.Gears[Gear].LossMap.GearboxInTorque(inAngularVelocity, outTorque);
+			var inTorque = Data.Gears[Gear].LossMap.GetInTorque(inAngularVelocity, outTorque);
 
 			var torqueLossInertia = outAngularVelocity.IsEqual(0)
 				? 0.SI<NewtonMeter>()
@@ -161,7 +162,7 @@ namespace TUGraz.VectoCore.Models.SimulationComponent.Impl
 		internal ResponseDryRun Initialize(uint gear, NewtonMeter outTorque, PerSecond outAngularVelocity)
 		{
 			var inAngularVelocity = outAngularVelocity * Data.Gears[gear].Ratio;
-			var inTorque = Data.Gears[gear].LossMap.GearboxInTorque(inAngularVelocity, outTorque);
+			var inTorque = Data.Gears[gear].LossMap.GetInTorque(inAngularVelocity, outTorque);
 
 			if (!inAngularVelocity.IsEqual(0)) {
 				var alpha = (Data.Inertia.IsEqual(0))
@@ -305,7 +306,7 @@ namespace TUGraz.VectoCore.Models.SimulationComponent.Impl
 			var inEngineSpeed = outAngularVelocity * Data.Gears[Gear].Ratio;
 			var inTorque = (outAngularVelocity.IsEqual(0))
 				? outTorque / Data.Gears[Gear].Ratio
-				: Data.Gears[Gear].LossMap.GearboxInTorque(inEngineSpeed, outTorque);
+				: Data.Gears[Gear].LossMap.GetInTorque(inEngineSpeed, outTorque);
 
 			_powerLoss = inTorque * inEngineSpeed - outTorque * outAngularVelocity;
 
@@ -384,6 +385,18 @@ namespace TUGraz.VectoCore.Models.SimulationComponent.Impl
 
 		protected override void DoCommitSimulationStep()
 		{
+			if (!_disengaged) {
+				if (Data.Gears[Gear].LossMap.Extrapolated) {
+					// todo (MK, 2015-12-14): should we throw an interpolation error in EngineOnly Mode also?
+					Log.Warn("Gear {0} LossMap data was extrapolated: range for loss map is not sufficient.", Gear);
+					if (DataBus.ExecutionMode == ExecutionMode.Declaration) {
+						// todo (MK, 2016-01-07): add operating point and loss values for easier debugging
+						throw new VectoException(
+							"Gear {0} LossMap data was extrapolated in Declaration Mode: range for loss map is not sufficient.", Gear);
+					}
+				}
+			}
+
 			_powerLoss = null;
 			_powerLossInertia = null;
 		}

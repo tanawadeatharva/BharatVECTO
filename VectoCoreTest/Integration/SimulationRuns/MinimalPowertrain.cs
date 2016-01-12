@@ -1,4 +1,4 @@
-/*
+﻿/*
 * Copyright 2015 European Union
 *
 * Licensed under the EUPL (the "Licence");

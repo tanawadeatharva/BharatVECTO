@@ -16,7 +16,6 @@
 
 using System;
 using System.Collections.Generic;
-using System.Diagnostics.Contracts;
 using System.Linq;
 using Newtonsoft.Json;
 using TUGraz.VectoCore.Exceptions;
@@ -29,19 +28,20 @@ namespace TUGraz.VectoCore.Utils
 	{
 		private readonly List<Point> _points = new List<Point>();
 		private List<Triangle> _triangles = new List<Triangle>();
-
-		[ContractInvariantMethod]
-		private void Invariant()
-		{
-			Contract.Invariant(_points != null);
-			Contract.Invariant(_triangles != null);
-		}
+		private IEnumerable<Edge> _convexHull;
 
 		public void AddPoint(double x, double y, double z)
 		{
 			_points.Add(new Point(x, y, z));
 		}
 
+		/// <summary>
+		/// Triangulate the points.
+		/// </summary>
+		/// <remarks>
+		/// Triangulation with the Bowyer-Watson algorithm (iteratively insert points into a super triangle).
+		/// https://en.wikipedia.org/wiki/Bowyer%E2%80%93Watson_algorithm
+		/// </remarks>
 		public void Triangulate()
 		{
 			if (_points.Count < 3) {
@@ -55,8 +55,9 @@ namespace TUGraz.VectoCore.Utils
 			var superTriangle = new Triangle(new Point(max, 0), new Point(0, max), new Point(-max, -max));
 			var triangles = new List<Triangle> { superTriangle };
 
+			// iteratively add each point into the correct triangle and split up the triangle
 			foreach (var point in _points) {
-				// If the actual vertex lies inside a triangle, the edges of the triangle are 
+				// If the vertex lies inside a triangle, the edges of the triangle are 
 				// added to the edge buffer and the triangle is removed from list.
 				var containerTriangles = triangles.FindAll(t => t.ContainsInCircumcircle(point));
 				triangles.RemoveAll(t => t.ContainsInCircumcircle(point));
@@ -74,22 +75,94 @@ namespace TUGraz.VectoCore.Utils
 				triangles.AddRange(newTriangles);
 			}
 
+			_convexHull = triangles.FindAll(t => t.SharesVertexWith(superTriangle)).
+				SelectMany(t => t.GetEdges()).
+				Where(e => !(superTriangle.Contains(e.P1) || superTriangle.Contains(e.P2)));
+
 			_triangles = triangles.FindAll(t => !t.SharesVertexWith(superTriangle));
 		}
 
-		public double Interpolate(double x, double y)
+		public double Interpolate(double x, double y, bool allowExtrapolation = false)
 		{
-			var tr = _triangles.Find(triangle => triangle.IsInside(x, y, exact: true));
-			if (tr == null) {
-				Log.Info("Exact search found no fitting triangle. Approximation will be used.");
-				tr = _triangles.Find(triangle => triangle.IsInside(x, y, exact: false));
-				if (tr == null) {
-					throw new VectoException("Interpolation failed. x: {0}, y: {1}", x, y);
-				}
+			var tr = _triangles.Find(triangle => triangle.IsInside(x, y, exact: true)) ??
+					_triangles.Find(triangle => triangle.IsInside(x, y, exact: false));
+
+			if (tr != null) {
+				Extrapolated = false;
+				var plane = new Plane(tr);
+				return (plane.W - plane.X * x - plane.Y * y) / plane.Z;
 			}
 
-			var plane = new Plane(tr);
-			return (plane.W - plane.X * x - plane.Y * y) / plane.Z;
+			if (!allowExtrapolation) {
+				throw new VectoException("Interpolation failed. x: {0}, y: {1}", x, y);
+			}
+
+			Extrapolated = true;
+			var point = new Point(x, y);
+
+			// get nearest point on convex hull
+			var nearestPoint = _convexHull.Select(e => e.P1).MinBy(p => Math.Pow(p.X - x, 2) + Math.Pow(p.Y - y, 2));
+
+			// test if point is on left side of the perpendicular vector (to x,y coordinates) of edge1 in the nearest point
+			//                            ^
+			//                 (point)    |
+			//                            |
+			// (p1)--edge1-->(nearestPoint)
+			var edge1 = _convexHull.First(e => e.P2.Equals(nearestPoint));
+			if (point.IsLeftOf(new Edge(nearestPoint, edge1.Vector.Perpendicular() + nearestPoint))) {
+				return Extrapolate(x, y, edge1);
+			}
+
+			// test if point is on right side of the perpendicular vector of edge2 in the nearest point
+			// ^
+			// |   (point)
+			// |        
+			// (nearestPoint)--edge2-->(p2)
+			var edge2 = _convexHull.First(e => e.P1.Equals(nearestPoint));
+			if (!point.IsLeftOf(new Edge(nearestPoint, edge2.Vector.Perpendicular() + nearestPoint))) {
+				return Extrapolate(x, y, edge2);
+			}
+
+			// if point is right of perpendicular vector of edge1 and left of perpendicular vector of edge2: take the nearest point z-value
+			return nearestPoint.Z;
+		}
+
+		/// <summary>
+		/// Constant z-axis-extrapolation of a point from a line
+		/// </summary>
+		/// <remarks>
+		/// https://en.wikibooks.org/wiki/Linear_Algebra/Orthogonal_Projection_Onto_a_Line
+		/// </remarks>
+		/// <param name="x"></param>
+		/// <param name="y"></param>
+		/// <param name="edge"></param>
+		/// <returns></returns>
+		private static double Extrapolate(double x, double y, Edge edge)
+		{
+			// shortcut if edge end points have same Z values
+			if (edge.P1.Z == edge.P2.Z) {
+				return edge.P1.Z;
+			}
+
+			// 2d vector of the edge:  A--->B
+			var AB = new Point(edge.Vector.X, edge.Vector.Y);
+
+			// 2d vector of the point: A---->P
+			var AP = new Point(x - edge.P1.X, y - edge.P1.Y);
+
+			// projection of point (x,y) onto the edge
+			var z = edge.P1.Z + edge.Vector.Z * (AP.Dot(AB) / AB.Dot(AB));
+			return z;
+		}
+
+		public bool Extrapolated { get; set; }
+
+		public DelauneyMap CreateInvertedMap()
+		{
+			var reverted = new DelauneyMap();
+			reverted._points.AddRange(_points.Select(p => new Point(p.X, p.Z, p.Y)));
+			reverted.Triangulate();
+			return reverted;
 		}
 
 		#region Equality members

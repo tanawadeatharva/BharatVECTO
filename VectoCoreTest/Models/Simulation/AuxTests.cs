@@ -297,7 +297,7 @@ namespace TUGraz.VectoCore.Tests.Models.Simulation
 			var jobContainer = new JobContainer(sumData);
 
 			var inputData = JSONInputDataFactory.ReadJsonJob(@"TestData\Jobs\40t_Long_Haul_Truck.vecto");
-			var runsFactory = new SimulatorFactory(SimulatorFactory.FactoryMode.DeclarationMode,
+			var runsFactory = new SimulatorFactory(ExecutionMode.Declaration,
 				inputData, fileWriter);
 
 			jobContainer.AddRuns(runsFactory);
@@ -315,7 +315,7 @@ namespace TUGraz.VectoCore.Tests.Models.Simulation
 			var jobContainer = new JobContainer(sumData);
 
 			var inputData = JSONInputDataFactory.ReadJsonJob(@"TestData\Jobs\24t Coach.vecto");
-			var runsFactory = new SimulatorFactory(SimulatorFactory.FactoryMode.EngineeringMode,
+			var runsFactory = new SimulatorFactory(ExecutionMode.Engineering,
 				inputData, fileWriter);
 
 			jobContainer.AddRuns(runsFactory);
