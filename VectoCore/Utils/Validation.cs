@@ -18,22 +18,26 @@ namespace TUGraz.VectoCore.Utils
 			Validator.TryValidateObject(entity, new ValidationContext(entity), results, true);
 
 			foreach (
-				var p in entity.GetType().GetProperties(BindingFlags.Instance | BindingFlags.Static | BindingFlags.NonPublic)) {
+				var p in
+					entity.GetType()
+						.GetProperties(BindingFlags.Instance | BindingFlags.Static | BindingFlags.NonPublic | BindingFlags.Public |
+										BindingFlags.FlattenHierarchy)) {
 				var val = p.GetValue(entity);
 				var attrs = p.GetCustomAttributes(typeof(ValidationAttribute)).Cast<ValidationAttribute>();
-				context.MemberName = p.Name;
 				context.DisplayName = p.Name;
+				context.MemberName = p.Name;
 				Validator.TryValidateValue(val, context, results, attrs);
 			}
 
 			foreach (
 				var f in
 					entity.GetType()
-						.GetFields(BindingFlags.Instance | BindingFlags.Static | BindingFlags.NonPublic | BindingFlags.Public)) {
+						.GetFields(BindingFlags.Instance | BindingFlags.Static | BindingFlags.NonPublic | BindingFlags.Public |
+									BindingFlags.FlattenHierarchy)) {
 				var val = f.GetValue(entity);
 				var attrs = f.GetCustomAttributes(typeof(ValidationAttribute)).Cast<ValidationAttribute>();
-				context.MemberName = f.Name;
 				context.DisplayName = f.Name;
+				context.MemberName = f.Name;
 				Validator.TryValidateValue(val, context, results, attrs);
 			}
 
@@ -63,7 +67,7 @@ namespace TUGraz.VectoCore.Utils
 					if (results.Any()) {
 						return
 							new ValidationResult(
-								string.Format("Validation for Element {0} in {1} failed: {2}.", i, validationContext.DisplayName,
+								string.Format("Validation for list {1}[{0}] in {1} failed: {2}", i, validationContext.DisplayName,
 									string.Join(" ", results)));
 					}
 					i++;
@@ -72,7 +76,8 @@ namespace TUGraz.VectoCore.Utils
 				var results = value.Validate();
 				if (results.Any()) {
 					return new ValidationResult(
-						string.Format("Validation for {0} failed: {1}.", validationContext.DisplayName, string.Join(" ", results)));
+						string.Format("Validation for object {{{0}}} failed: {1}", validationContext.DisplayName,
+							string.Join(" ", results)));
 				}
 			}
 

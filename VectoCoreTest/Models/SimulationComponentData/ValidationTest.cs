@@ -1,11 +1,6 @@
-﻿using System;
-using System.Collections.Generic;
-using System.ComponentModel.DataAnnotations;
+﻿using System.ComponentModel.DataAnnotations;
 using System.Data;
-using System.Diagnostics;
 using System.Linq;
-using System.Reflection;
-using System.Runtime.Serialization;
 using Microsoft.VisualStudio.TestTools.UnitTesting;
 using TUGraz.VectoCore.Models.Simulation.Data;
 using TUGraz.VectoCore.Models.Simulation.Impl;
@@ -89,31 +84,184 @@ namespace TUGraz.VectoCore.Tests.Models.SimulationComponentData
 		[TestMethod]
 		public void Validation_Test()
 		{
-			var data = new Data();
-			data.lu = new deep();
-			var results = data.Validate();
-			Assert.IsFalse(results.Any(), "Validation Failed: " + string.Join(" ", results.Select(r => r.ErrorMessage)));
+			var results = new DataObject().Validate();
+
+			// every field and property should be tested except private parent fields and properties and 
+			// (4*4+1) * 2 = 17*2= 34 - 4 private parent fields (+2 public field and property which are tested twice) = 32
+			Assert.AreEqual(32, results.Count, "Validation Error: " + string.Join("\n", results.Select(r => r.ErrorMessage)));
 		}
 
 
-		public class deep
+		public class DeepDataObject
 		{
-			[Required, Range(10, 16)] public int mah = 45;
+			[Required, Range(41, 42)] protected int public_field = 5;
 		}
 
 
-		public abstract class Muh
+		public abstract class ParentDataObject
 		{
-			[Required, Range(6, 9)]
-			protected int higss { get; set; }
+			#region 4 parent instance fields
 
-			[Required, ValidateObject] public deep lu;
+			[Required, Range(1, 2)] private int private_parent_field = 7;
+			[Required, Range(3, 4)] protected int protected_parent_field = 7;
+			[Required, Range(5, 6)] internal int internal_parent_field = 7;
+			[Required, Range(7, 8)] public int public_parent_field = 5;
+
+			#endregion
+
+			#region 4 parent static field
+
+			[Required, Range(43, 44)] private static int private_static_parent_field = 7;
+			[Required, Range(43, 44)] protected static int protected_static_parent_field = 7;
+			[Required, Range(50, 51)] internal static int internal_static_parent_field = 7;
+			[Required, Range(45, 46)] public static int public_static_parent_field = 7;
+
+			#endregion
+
+			#region 4 parent instance properties
+
+			[Required, Range(11, 12)]
+			private int private_parent_property
+			{
+				get { return 7; }
+			}
+
+			[Required, Range(13, 14)]
+			protected int protected_parent_property
+			{
+				get { return 7; }
+			}
+
+			[Required, Range(15, 16)]
+			internal int internal_parent_property
+			{
+				get { return 7; }
+			}
+
+			[Required, Range(17, 18)]
+			public int public_parent_property
+			{
+				get { return 7; }
+			}
+
+			#endregion
+
+			#region 4 parent static properties
+
+			[Required, Range(19, 20)]
+			private static int private_static_parent_property
+			{
+				get { return 7; }
+			}
+
+			[Required, Range(19, 20)]
+			protected static int protected_static_parent_property
+			{
+				get { return 7; }
+			}
+
+			[Required, Range(19, 20)]
+			internal static int internal_static_parent_property
+			{
+				get { return 7; }
+			}
+
+			[Required, Range(19, 20)]
+			public static int public_static_parent_property
+			{
+				get { return 7; }
+			}
+
+			#endregion
+
+			#region 1 parent sub objects
+
+			[Required, ValidateObject] public DeepDataObject parent_sub_object = new DeepDataObject();
+
+			#endregion
 		}
 
-
-		public class Data : Muh
+		public class DataObject : ParentDataObject
 		{
-			[Required, Range(2, 5)] private int bla = 7;
+			#region 4 instance fields
+
+			[Required, Range(1, 2)] private int private_field = 7;
+			[Required, Range(3, 4)] protected int protected_field = 7;
+			[Required, Range(5, 6)] internal int internal_field = 7;
+			[Required, Range(7, 8)] public int public_field = 5;
+
+			#endregion
+
+			#region 4 static field
+
+			[Required, Range(43, 44)] private static int private_static_field = 7;
+			[Required, Range(43, 44)] protected static int protected_static_field = 7;
+			[Required, Range(50, 51)] internal static int internal_static_field = 7;
+			[Required, Range(45, 46)] public static int public_static_field = 7;
+
+			#endregion
+
+			#region 4 instance properties
+
+			[Required, Range(11, 12)]
+			private int private_property
+			{
+				get { return 7; }
+			}
+
+			[Required, Range(13, 14)]
+			protected int protected_property
+			{
+				get { return 7; }
+			}
+
+			[Required, Range(15, 16)]
+			internal int internal_property
+			{
+				get { return 7; }
+			}
+
+			[Required, Range(17, 18)]
+			public int public_property
+			{
+				get { return 7; }
+			}
+
+			#endregion
+
+			#region 4 static properties
+
+			[Required, Range(19, 20)]
+			private static int private_static_property
+			{
+				get { return 7; }
+			}
+
+			[Required, Range(19, 20)]
+			protected static int protected_static_property
+			{
+				get { return 7; }
+			}
+
+			[Required, Range(19, 20)]
+			internal static int internal_static_property
+			{
+				get { return 7; }
+			}
+
+			[Required, Range(19, 20)]
+			public static int public_static_property
+			{
+				get { return 7; }
+			}
+
+			#endregion
+
+			#region 1 sub objects
+
+			[Required, ValidateObject] public DeepDataObject sub_object = new DeepDataObject();
+
+			#endregion
 		}
 	}
 }

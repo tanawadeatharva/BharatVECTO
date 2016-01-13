@@ -16,6 +16,7 @@
 
 using System.Collections.Generic;
 using System.IO;
+using System.Linq;
 using System.Reflection;
 using System.Security.Principal;
 using System.Threading;
@@ -67,7 +68,6 @@ namespace TUGraz.VectoCore.Models.Simulation.Impl
 				default:
 					throw new VectoException("Unkown factory mode in SimulatorFactory: {0}", mode);
 			}
-			//DataReader.SetJobFile(jobFile);
 		}
 
 		public IVectoRunDataFactory DataReader { get; private set; }
@@ -89,12 +89,6 @@ namespace TUGraz.VectoCore.Models.Simulation.Impl
 		{
 			var i = 0;
 			foreach (var data in DataReader.NextRun()) {
-				CheckLossMapRangeForFullLoadCurves(data.GearboxData, data.EngineData, data.AxleGearData);
-
-				//var modFileName = Path.Combine(data.BasePath,
-				//	data.JobName.Replace(Constants.FileExtensions.VectoJobFile, "") + "_{0}{1}" +
-				//	Constants.FileExtensions.ModDataFile);
-				// -> string.Format(modFileName, data.Cycle.Name, data.ModFileSuffix ?? "")
 				var d = data;
 				IModalDataContainer modContainer =
 					new ModalDataContainer(data, ModWriter,
@@ -114,50 +108,17 @@ namespace TUGraz.VectoCore.Models.Simulation.Impl
 				if (data.IsEngineOnly) {
 					run = new TimeRun(builder.Build(data));
 				} else {
-					//var runCaption = string.Format("{0}-{1}-{2}",
-					//	Path.GetFileNameWithoutExtension(data.JobName), data.Cycle.Name, data.ModFileSuffix);
 					run = new DistanceRun(builder.Build(data));
 				}
 
-				yield return run;
-			}
-		}
-
-		internal static void CheckLossMapRangeForFullLoadCurves(GearboxData gearboxData, CombustionEngineData engineData,
-			AxleGearData axleGearData)
-		{
-			if (gearboxData == null) {
-				return;
-			}
-
-			foreach (var gear in gearboxData.Gears) {
-				for (var angularVelocity = engineData.IdleSpeed;
-					angularVelocity < engineData.FullLoadCurve.RatedSpeed;
-					angularVelocity += 2.0 / 3.0 * (engineData.FullLoadCurve.RatedSpeed - engineData.IdleSpeed) / 10.09) {
-					for (var inTorque = engineData.FullLoadCurve.FullLoadStationaryTorque(angularVelocity) / 3;
-						inTorque < engineData.FullLoadCurve.FullLoadStationaryTorque(angularVelocity);
-						inTorque += 2.0 / 3.0 * engineData.FullLoadCurve.FullLoadStationaryTorque(angularVelocity) / 10.0) {
-						NewtonMeter axleTorque;
-						try {
-							axleTorque = gear.Value.LossMap.GetOutTorque(angularVelocity, inTorque);
-						} catch (VectoException ex) {
-							throw new VectoException(
-								string.Format("Interpolation of Gear-{0}-LossMap failed with torque={1} and angularSpeed={2}",
-									gear.Key, inTorque, angularVelocity.ConvertTo().Rounds.Per.Minute), ex);
-						}
-
-						if (axleGearData != null) {
-							var axleAngularVelocity = angularVelocity / gear.Value.Ratio;
-							try {
-								axleGearData.LossMap.GetOutTorque(axleAngularVelocity, axleTorque);
-							} catch (VectoException ex) {
-								throw new VectoException(
-									string.Format("Interpolation of AxleGear-LossMap failed with torque={0} and angularSpeed={1}",
-										axleTorque, axleAngularVelocity.ConvertTo().Rounds.Per.Minute), ex);
-							}
-						}
-					}
+				var validationErrors = ValidationHelper.Validate(run);
+				if (validationErrors.Any()) {
+					throw new VectoException("Validation of Run-Data Failed: " +
+											string.Join("; ", validationErrors.Select(r => r.ErrorMessage)));
 				}
+
+
+				yield return run;
 			}
 		}
 	}
