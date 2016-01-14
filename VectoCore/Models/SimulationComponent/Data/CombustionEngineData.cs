@@ -16,6 +16,7 @@
 
 using System;
 using System.ComponentModel.DataAnnotations;
+using TUGraz.VectoCore.Configuration;
 using TUGraz.VectoCore.Models.SimulationComponent.Data.Engine;
 using TUGraz.VectoCore.Utils;
 
@@ -25,22 +26,22 @@ namespace TUGraz.VectoCore.Models.SimulationComponent.Data
 	{
 		public string ModelName { get; internal set; }
 
-		[Required, SIRange(1000 * 1e-6, 20000 * 1e-6)]
+		[Required, SIRange(1000 / (Constants.Kilo * Constants.Kilo), 20000 / (Constants.Kilo * Constants.Kilo))]
 		public CubicMeter Displacement { get; internal set; }
 
-		[Required, SIRange(400 * 2 * Math.PI / 60, 1000 * 2 * Math.PI / 60)]
+		[Required, SIRange(400 * Constants.RPMToRad, 1000 * Constants.RPMToRad)]
 		public PerSecond IdleSpeed { get; internal set; }
 
 		[Required, SIRange(0, 10)]
 		public KilogramSquareMeter Inertia { get; internal set; }
 
-		[Required, SIRange(double.Epsilon, 1000 / (1000.0 * 1000 * 3600))]
+		[Required, SIRange(double.Epsilon, 1000 / (Constants.Kilo * Constants.Kilo * Constants.SecondsPerHour))]
 		public KilogramPerWattSecond WHTCUrban { get; internal set; }
 
-		[Required, SIRange(double.Epsilon, 1000 / (1000.0 * 1000 * 3600))]
+		[Required, SIRange(double.Epsilon, 1000 / (Constants.Kilo * Constants.Kilo * Constants.SecondsPerHour))]
 		public KilogramPerWattSecond WHTCRural { get; internal set; }
 
-		[Required, SIRange(double.Epsilon, 1000 / (1000.0 * 1000 * 3600))]
+		[Required, SIRange(double.Epsilon, 1000 / (Constants.Kilo * Constants.Kilo * Constants.SecondsPerHour))]
 		public KilogramPerWattSecond WHTCMotorway { get; internal set; }
 
 		[Required, ValidateObject]

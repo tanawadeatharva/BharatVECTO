@@ -38,12 +38,12 @@ namespace TUGraz.VectoCore.Tests.Models.SimulationComponentData
 
 			var data = new CombustionEngineData {
 				ModelName = "asdf",
-				Displacement = 0.005.SI<CubicMeter>(),
+				Displacement = 5.SI().Cubic.Centi.Meter.Cast<CubicMeter>(),
 				IdleSpeed = 560.RPMtoRad(),
 				Inertia = 1.SI<KilogramSquareMeter>(),
-				WHTCUrban = 1.SI<KilogramPerWattSecond>() * 3.6e-9,
-				WHTCRural = 1.SI<KilogramPerWattSecond>() * 3.6e-9,
-				WHTCMotorway = 1.SI<KilogramPerWattSecond>() * 3.6e-9,
+				WHTCUrban = 1.SI().Gramm.Per.Kilo.Watt.Hour.Cast<KilogramPerWattSecond>(),
+				WHTCRural = 1.SI().Gramm.Per.Kilo.Watt.Hour.Cast<KilogramPerWattSecond>(),
+				WHTCMotorway = 1.SI().Gramm.Per.Kilo.Watt.Hour.Cast<KilogramPerWattSecond>(),
 				FullLoadCurve = EngineFullLoadCurve.Create(fullLoad),
 				ConsumptionMap = FuelConsumptionMap.Create(fuelConsumption)
 			};

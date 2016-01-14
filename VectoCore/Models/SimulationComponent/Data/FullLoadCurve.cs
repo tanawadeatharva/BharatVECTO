@@ -19,6 +19,7 @@ using System.Collections.Generic;
 using System.ComponentModel.DataAnnotations;
 using System.Data;
 using System.Linq;
+using TUGraz.VectoCore.Configuration;
 using TUGraz.VectoCore.Exceptions;
 using TUGraz.VectoCore.Models.Declaration;
 using TUGraz.VectoCore.Models.SimulationComponent.Data.Engine;
@@ -37,7 +38,7 @@ namespace TUGraz.VectoCore.Models.SimulationComponent.Data
 		/// <summary>
 		/// Get the rated speed from the given full-load curve (i.e. speed with max. power)
 		/// </summary>
-		[Required, SIRange(0, 5000 * 2 * Math.PI / 60)]
+		[Required, SIRange(0, 5000 * Constants.RPMToRad)]
 		public PerSecond RatedSpeed
 		{
 			get { return _ratedSpeed ?? ComputeRatedSpeed().Item1; }
@@ -46,7 +47,7 @@ namespace TUGraz.VectoCore.Models.SimulationComponent.Data
 		/// <summary>
 		/// Gets the maximum power.
 		/// </summary>
-		[Required, SIRange(0, 10000 * 5000 * 2 * Math.PI / 60)]
+		[Required, SIRange(0, 10000 * 5000 * Constants.RPMToRad)]
 		public Watt MaxPower
 		{
 			get { return _maxPower ?? ComputeRatedSpeed().Item2; }
@@ -202,7 +203,7 @@ namespace TUGraz.VectoCore.Models.SimulationComponent.Data
 
 		internal class FullLoadCurveEntry
 		{
-			[Required, SIRange(0, 5000 * 2 * Math.PI / 60)]
+			[Required, SIRange(0, 5000 * Constants.RPMToRad)]
 			public PerSecond EngineSpeed { get; set; }
 
 			[Required, SIRange(0, 10000)]

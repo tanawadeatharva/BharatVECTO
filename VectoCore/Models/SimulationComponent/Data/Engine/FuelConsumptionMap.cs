@@ -20,6 +20,7 @@ using System.ComponentModel.DataAnnotations;
 using System.Data;
 using System.Diagnostics.Contracts;
 using System.Linq;
+using TUGraz.VectoCore.Configuration;
 using TUGraz.VectoCore.Exceptions;
 using TUGraz.VectoCore.Utils;
 
@@ -144,7 +145,7 @@ namespace TUGraz.VectoCore.Models.SimulationComponent.Data.Engine
 
 		private class FuelConsumptionEntry
 		{
-			[Required, SIRange(0, 5000 * 2 * Math.PI / 60)]
+			[Required, SIRange(0, 5000 * Constants.RPMToRad)]
 			public PerSecond EngineSpeed { get; set; }
 
 			[Required]

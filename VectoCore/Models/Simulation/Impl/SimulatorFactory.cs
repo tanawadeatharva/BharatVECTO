@@ -111,7 +111,7 @@ namespace TUGraz.VectoCore.Models.Simulation.Impl
 					run = new DistanceRun(builder.Build(data));
 				}
 
-				var validationErrors = ValidationHelper.Validate(run);
+				var validationErrors = run.Validate();
 				if (validationErrors.Any()) {
 					throw new VectoException("Validation of Run-Data Failed: " +
 											string.Join("; ", validationErrors.Select(r => r.ErrorMessage)));

@@ -17,6 +17,7 @@
 using System.Collections.Generic;
 using System.ComponentModel.DataAnnotations;
 using System.Runtime.Serialization;
+using TUGraz.VectoCore.Configuration;
 using TUGraz.VectoCore.Exceptions;
 using TUGraz.VectoCore.Models.Declaration;
 using TUGraz.VectoCore.Models.SimulationComponent.Data;
@@ -58,7 +59,7 @@ namespace TUGraz.VectoCore.Models.Simulation.Data
 
 		public bool IsEngineOnly { get; internal set; }
 
-		[Required]
+		[Required, MinLength(1)]
 		public string JobName { get; set; }
 
 		[Required]
@@ -79,13 +80,11 @@ namespace TUGraz.VectoCore.Models.Simulation.Data
 
 			[Required] public AuxiliaryType Type;
 
-			[Path] public string Path;
-
 			public string Technology;
 
 			[Required] public string[] TechList;
 
-			[Required, SIRange(0, 100 * 1000)] public Watt PowerDemand;
+			[Required, SIRange(0, 100 * Constants.Kilo)] public Watt PowerDemand;
 
 			[Required] public AuxiliaryDemandType DemandType;
 
@@ -95,7 +94,7 @@ namespace TUGraz.VectoCore.Models.Simulation.Data
 		public class StartStopData
 		{
 			public bool Enabled;
-			[Required, SIRange(0, 120 / 3.6)] public MeterPerSecond MaxSpeed;
+			[Required, SIRange(0, 120 / Constants.MeterPerSecondToKMH)] public MeterPerSecond MaxSpeed;
 			[Required, SIRange(0, 100)] public Second MinTime;
 			[Required, SIRange(0, 100)] public Second Delay;
 		}
@@ -110,7 +109,7 @@ namespace TUGraz.VectoCore.Models.Simulation.Data
 				foreach (var gear in gearboxData.Gears) {
 					for (var angularVelocity = engineData.IdleSpeed;
 						angularVelocity < engineData.FullLoadCurve.RatedSpeed;
-						angularVelocity += 2.0 / 3.0 * (engineData.FullLoadCurve.RatedSpeed - engineData.IdleSpeed) / 10.09) {
+						angularVelocity += 2.0 / 3.0 * (engineData.FullLoadCurve.RatedSpeed - engineData.IdleSpeed) / 10.0) {
 						for (var inTorque = engineData.FullLoadCurve.FullLoadStationaryTorque(angularVelocity) / 3;
 							inTorque < engineData.FullLoadCurve.FullLoadStationaryTorque(angularVelocity);
 							inTorque += 2.0 / 3.0 * engineData.FullLoadCurve.FullLoadStationaryTorque(angularVelocity) / 10.0) {
