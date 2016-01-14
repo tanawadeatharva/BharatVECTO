@@ -40,48 +40,51 @@ namespace TUGraz.VectoCore.InputData.FileIO.JSON
 
 		public virtual string ModelName
 		{
-			get { return Body.GetEx(JsonKeys.Engine_ModelName).Value<string>(); }
+			get { return Body.GetEx<string>(JsonKeys.Engine_ModelName); }
 		}
 
 		public virtual CubicMeter Displacement
 		{
-			get { return Body.GetEx(JsonKeys.Engine_Displacement).Value<double>().SI().Cubic.Centi.Meter.Cast<CubicMeter>(); }
+			get { return Body.GetEx<double>(JsonKeys.Engine_Displacement).SI().Cubic.Centi.Meter.Cast<CubicMeter>(); }
 			// convert vom ccm to m^3}
 		}
 
 		public virtual PerSecond IdleSpeed
 		{
-			get { return Body.GetEx(JsonKeys.Engine_IdleSpeed).Value<double>().RPMtoRad(); }
+			get { return Body.GetEx<double>(JsonKeys.Engine_IdleSpeed).RPMtoRad(); }
 		}
 
 		public virtual DataTable FuelConsumptionMap
 		{
-			get { return ReadTableData(Body.GetEx(JsonKeys.Engine_FuelConsumptionMap).Value<string>(), "FuelConsumptionMap"); }
+			get { return ReadTableData(Body.GetEx<string>(JsonKeys.Engine_FuelConsumptionMap), "FuelConsumptionMap"); }
 		}
 
 		public virtual DataTable FullLoadCurve
 		{
-			get { return ReadTableData(Body.GetEx(JsonKeys.Engine_FullLoadCurveFile).Value<string>(), "FullLoadCurve"); }
+			get { return ReadTableData(Body.GetEx<string>(JsonKeys.Engine_FullLoadCurveFile), "FullLoadCurve"); }
 		}
 
 		public virtual KilogramSquareMeter Inertia
 		{
-			get { return Body.GetEx(JsonKeys.Engine_Inertia).Value<double>().SI<KilogramSquareMeter>(); }
+			get { return Body.GetEx<double>(JsonKeys.Engine_Inertia).SI<KilogramSquareMeter>(); }
 		}
 
 		public virtual KilogramPerWattSecond WHTCMotorway
 		{
-			get { return Body.GetEx(JsonKeys.Engine_WHTC_Motorway).Value<double>().SI<KilogramPerWattSecond>(); }
+			get { return Body.GetEx<double>(JsonKeys.Engine_WHTC_Motorway).SI<KilogramPerWattSecond>(); }
 		}
 
 		public virtual KilogramPerWattSecond WHTCRural
 		{
-			get { return Body.GetEx(JsonKeys.Engine_WHTC_Rural).Value<double>().SI<KilogramPerWattSecond>(); }
+			get { return Body.GetEx<double>(JsonKeys.Engine_WHTC_Rural).SI<KilogramPerWattSecond>(); }
 		}
 
 		public virtual KilogramPerWattSecond WHTCUrban
 		{
-			get { return Body.GetEx(JsonKeys.Engine_WHTC_Urban).Value<double>().SI<KilogramPerWattSecond>(); }
+			get
+			{
+				return Body.GetEx<double>(JsonKeys.Engine_WHTC_Urban).SI().Gramm.Per.Kilo.Watt.Hour.Cast<KilogramPerWattSecond>();
+			}
 		}
 	}
 }
