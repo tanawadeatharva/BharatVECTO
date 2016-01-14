@@ -15,6 +15,7 @@
 */
 
 using System;
+using System.ComponentModel.DataAnnotations;
 using System.Linq;
 using Microsoft.VisualStudio.TestTools.UnitTesting;
 using TUGraz.VectoCore.Models.Simulation.Data;
@@ -49,8 +50,10 @@ namespace TUGraz.VectoCore.Tests.Models.Simulation
 			var axleGearData = CreateAxleGearData(AxleGearLossMap);
 
 			var runData = new VectoRunData { GearboxData = gearboxData, EngineData = engineData, AxleGearData = axleGearData };
-			var results = runData.Validate();
-			Assert.IsTrue(results.Count == 0, string.Join("", results));
+
+			var result = runData.ValidateRunData(runData, new ValidationContext(runData));
+			Assert.IsTrue(ValidationResult.Success == result);
+			Assert.IsFalse(runData.IsValid());
 		}
 
 		/// <summary>
@@ -77,7 +80,8 @@ namespace TUGraz.VectoCore.Tests.Models.Simulation
 			var engineData = MockSimulationDataFactory.CreateEngineDataFromFile(EngineFile);
 			var axleGearData = CreateAxleGearData(AxleGearLossMap);
 			var runData = new VectoRunData { GearboxData = gearboxData, EngineData = engineData, AxleGearData = axleGearData };
-			Assert.IsFalse(runData.IsValid());
+			var result = runData.ValidateRunData(runData, new ValidationContext(runData));
+			Assert.IsFalse(ValidationResult.Success == result);
 		}
 
 		/// <summary>
@@ -89,8 +93,9 @@ namespace TUGraz.VectoCore.Tests.Models.Simulation
 			var gearboxData = CreateGearboxData(GearboxDirectLoss, GearboxIndirectLoss);
 			var engineData = MockSimulationDataFactory.CreateEngineDataFromFile(EngineFile);
 			var runData = new VectoRunData { GearboxData = gearboxData, EngineData = engineData };
-			var results = runData.Validate();
-			Assert.IsTrue(results.Count == 0, string.Join("", results));
+			var result = runData.ValidateRunData(runData, new ValidationContext(runData));
+			Assert.IsTrue(ValidationResult.Success == result);
+			Assert.IsFalse(runData.IsValid());
 		}
 
 		/// <summary>
@@ -103,8 +108,9 @@ namespace TUGraz.VectoCore.Tests.Models.Simulation
 			var axleGearData = CreateAxleGearData(AxleGearLossMap);
 
 			var runData = new VectoRunData { EngineData = engineData, AxleGearData = axleGearData };
-			var results = runData.Validate();
-			Assert.IsTrue(results.Count == 0, string.Join("", results));
+			var result = runData.ValidateRunData(runData, new ValidationContext(runData));
+			Assert.IsTrue(ValidationResult.Success == result);
+			Assert.IsFalse(runData.IsValid());
 		}
 
 

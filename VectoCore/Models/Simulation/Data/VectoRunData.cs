@@ -26,7 +26,7 @@ using TUGraz.VectoCore.Utils;
 namespace TUGraz.VectoCore.Models.Simulation.Data
 {
 	[DataContract]
-	[CustomValidation(typeof(VectoRunData), "Validate")]
+	[CustomValidation(typeof(VectoRunData), "ValidateRunData")]
 	public class VectoRunData : SimulationComponentData
 	{
 		[Required, ValidateObject]
@@ -100,7 +100,7 @@ namespace TUGraz.VectoCore.Models.Simulation.Data
 			[Required, SIRange(0, 100)] public Second Delay;
 		}
 
-		protected ValidationResult Validate(VectoRunData runData, ValidationContext validationContext)
+		public ValidationResult ValidateRunData(VectoRunData runData, ValidationContext validationContext)
 		{
 			var gearboxData = runData.GearboxData;
 			var engineData = runData.EngineData;

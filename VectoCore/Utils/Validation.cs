@@ -22,11 +22,13 @@ namespace TUGraz.VectoCore.Utils
 					entity.GetType()
 						.GetProperties(BindingFlags.Instance | BindingFlags.Static | BindingFlags.NonPublic | BindingFlags.Public |
 										BindingFlags.FlattenHierarchy)) {
-				var val = p.GetValue(entity);
-				var attrs = p.GetCustomAttributes(typeof(ValidationAttribute)).Cast<ValidationAttribute>();
-				context.DisplayName = p.Name;
-				context.MemberName = p.Name;
-				Validator.TryValidateValue(val, context, results, attrs);
+				var attrs = p.GetCustomAttributes(typeof(ValidationAttribute)).Cast<ValidationAttribute>().ToList();
+				if (attrs.Any()) {
+					var val = p.GetValue(entity);
+					context.DisplayName = p.Name;
+					context.MemberName = p.Name;
+					Validator.TryValidateValue(val, context, results, attrs);
+				}
 			}
 
 			foreach (

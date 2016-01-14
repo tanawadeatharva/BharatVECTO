@@ -147,7 +147,7 @@ namespace TUGraz.VectoCore.Models.SimulationComponent.Data.Engine
 			[Required, SIRange(0, 5000 * 2 * Math.PI / 60)]
 			public PerSecond EngineSpeed { get; set; }
 
-			[Required, SIRange(0, double.MaxValue)]
+			[Required]
 			public NewtonMeter Torque { get; set; }
 
 			[Required, SIRange(0, double.MaxValue)]

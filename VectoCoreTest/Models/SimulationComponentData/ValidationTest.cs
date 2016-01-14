@@ -29,24 +29,26 @@ namespace TUGraz.VectoCore.Tests.Models.SimulationComponentData
 			fuelConsumption.Rows.Add("3", "3", "3");
 
 			var fullLoad = new DataTable();
-			fullLoad.Columns.Add("");
-			fullLoad.Columns.Add("");
-			fullLoad.Columns.Add("");
-			fullLoad.Columns.Add("");
-			fullLoad.Rows.Add("3", "3", "3", "3");
-			fullLoad.Rows.Add("3", "3", "3", "3");
+			fullLoad.Columns.Add("Engine speed");
+			fullLoad.Columns.Add("max torque");
+			fullLoad.Columns.Add("drag torque");
+			fullLoad.Columns.Add("PT1");
+			fullLoad.Rows.Add("3", "3", "-3", "3");
+			fullLoad.Rows.Add("3", "3", "-3", "3");
 
 			var data = new CombustionEngineData {
 				ModelName = "asdf",
-				Displacement = 1.SI<CubicMeter>(),
+				Displacement = 0.005.SI<CubicMeter>(),
 				IdleSpeed = 560.RPMtoRad(),
 				Inertia = 1.SI<KilogramSquareMeter>(),
-				WHTCUrban = 1.SI<KilogramPerWattSecond>(),
-				WHTCRural = 1.SI<KilogramPerWattSecond>(),
-				WHTCMotorway = 1.SI<KilogramPerWattSecond>(),
+				WHTCUrban = 1.SI<KilogramPerWattSecond>() * 3.6e-9,
+				WHTCRural = 1.SI<KilogramPerWattSecond>() * 3.6e-9,
+				WHTCMotorway = 1.SI<KilogramPerWattSecond>() * 3.6e-9,
 				FullLoadCurve = EngineFullLoadCurve.Create(fullLoad),
 				ConsumptionMap = FuelConsumptionMap.Create(fuelConsumption)
 			};
+			data.FullLoadCurve.EngineData = data;
+
 			var results = data.Validate();
 			Assert.IsFalse(results.Any(), "Validation Failed: " + string.Join("; ", results.Select(r => r.ErrorMessage)));
 			Assert.IsTrue(data.IsValid());

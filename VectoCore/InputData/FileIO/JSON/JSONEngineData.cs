@@ -71,12 +71,18 @@ namespace TUGraz.VectoCore.InputData.FileIO.JSON
 
 		public virtual KilogramPerWattSecond WHTCMotorway
 		{
-			get { return Body.GetEx<double>(JsonKeys.Engine_WHTC_Motorway).SI<KilogramPerWattSecond>(); }
+			get
+			{
+				return Body.GetEx<double>(JsonKeys.Engine_WHTC_Motorway).SI().Gramm.Per.Kilo.Watt.Hour.Cast<KilogramPerWattSecond>();
+			}
 		}
 
 		public virtual KilogramPerWattSecond WHTCRural
 		{
-			get { return Body.GetEx<double>(JsonKeys.Engine_WHTC_Rural).SI<KilogramPerWattSecond>(); }
+			get
+			{
+				return Body.GetEx<double>(JsonKeys.Engine_WHTC_Rural).SI().Gramm.Per.Kilo.Watt.Hour.Cast<KilogramPerWattSecond>();
+			}
 		}
 
 		public virtual KilogramPerWattSecond WHTCUrban

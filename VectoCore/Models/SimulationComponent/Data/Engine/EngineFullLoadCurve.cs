@@ -39,37 +39,31 @@ namespace TUGraz.VectoCore.Models.SimulationComponent.Data.Engine
 		/// <summary>
 		///	Get the engine's preferred speed from the given full-load curve (i.e. Speed at 51% torque/speed-integral between idling and N95h.)
 		/// </summary>
-		[Required, SIRange(0, 5000 * 2 * Math.PI / 60)]
 		public PerSecond PreferredSpeed
 		{
 			get { return _preferredSpeed ?? (_preferredSpeed = ComputePreferredSpeed()); }
 		}
 
-		[Required, SIRange(0, 5000 * 2 * Math.PI / 60)]
 		public PerSecond N95hSpeed
 		{
 			get { return _n95hSpeed ?? (_n95hSpeed = FindEngineSpeedForPower(0.95 * MaxPower).Last()); }
 		}
 
-		[Required, SIRange(0, 5000 * 2 * Math.PI / 60)]
 		public PerSecond LoSpeed
 		{
 			get { return _engineSpeedLo ?? (_engineSpeedLo = FindEngineSpeedForPower(0.55 * MaxPower).First()); }
 		}
 
-		[Required, SIRange(0, 5000 * 2 * Math.PI / 60)]
 		public PerSecond HiSpeed
 		{
 			get { return _engineSpeedHi ?? (_engineSpeedHi = FindEngineSpeedForPower(0.7 * MaxPower).Last()); }
 		}
 
-		[Required, SIRange(0, 10000)]
 		public NewtonMeter MaxLoadTorque
 		{
 			get { return FullLoadEntries.Max(x => x.TorqueFullLoad); }
 		}
 
-		[Required, SIRange(-10000, 0)]
 		public NewtonMeter MaxDragTorque
 		{
 			get { return FullLoadEntries.Min(x => x.TorqueDrag); }
