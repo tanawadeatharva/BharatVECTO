@@ -28,7 +28,7 @@ namespace TUGraz.VectoCore.Tests.Integration
 	[TestClass]
 	public class DeclarationReportTest
 	{
-		[TestMethod]
+		[TestMethod, TestCategory("LongRunning")]
 		public void DeclarationReport_Test()
 		{
 			const string jobFile = @"TestData\Jobs\job-report.vecto";

@@ -403,7 +403,7 @@ namespace TUGraz.VectoCore.Tests.Integration.DriverStrategy
                 @"..\..\TestData\Integration\DriverStrategy\Vecto2.2\Coach\24t Coach_Cycle_Decelerate_60_20_uphill_25.vmod");
         }
 
-        [TestMethod]
+        [TestMethod, TestCategory("LongRunning")]
         public void Coach_Decelerate_60_20_downhill_25()
         {
             var cycle = SimpleDrivingCycles.CreateCycleData(SimpleDrivingCycles.CycleDecelerate_60_20_downhill_25);

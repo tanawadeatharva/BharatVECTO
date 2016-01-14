@@ -133,7 +133,7 @@ namespace TUGraz.VectoCore.Tests.Integration
 			Assert.IsTrue(run.FinishedWithoutErrors);
 		}
 
-		[TestMethod]
+		[TestMethod, TestCategory("LongRunning")]
 		public void Truck40tDeclarationTest()
 		{
 			LogManager.DisableLogging();

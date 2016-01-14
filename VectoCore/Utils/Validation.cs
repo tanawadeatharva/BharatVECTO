@@ -1,8 +1,6 @@
-using System;
 using System.Collections;
 using System.Collections.Generic;
 using System.ComponentModel.DataAnnotations;
-using System.Diagnostics;
 using System.IO;
 using System.Linq;
 using System.Reflection;
@@ -36,11 +34,13 @@ namespace TUGraz.VectoCore.Utils
 					entity.GetType()
 						.GetFields(BindingFlags.Instance | BindingFlags.Static | BindingFlags.NonPublic | BindingFlags.Public |
 									BindingFlags.FlattenHierarchy)) {
-				var val = f.GetValue(entity);
-				var attrs = f.GetCustomAttributes(typeof(ValidationAttribute)).Cast<ValidationAttribute>();
-				context.DisplayName = f.Name;
-				context.MemberName = f.Name;
-				Validator.TryValidateValue(val, context, results, attrs);
+				var attrs = f.GetCustomAttributes(typeof(ValidationAttribute)).Cast<ValidationAttribute>().ToList();
+				if (attrs.Any()) {
+					var val = f.GetValue(entity);
+					context.DisplayName = f.Name;
+					context.MemberName = f.Name;
+					Validator.TryValidateValue(val, context, results, attrs);
+				}
 			}
 
 			return results;
