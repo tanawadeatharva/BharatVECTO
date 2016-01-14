@@ -56,7 +56,7 @@ namespace TUGraz.VectoCore.Tests.Integration
 		}
 
 
-		[TestMethod]
+		[TestMethod, TestCategory("LongRunning")]
 		public void Truck40t_UrbanDeliveryCycle_RefLoad()
 		{
 			var cycle = SimpleDrivingCycles.ReadDeclarationCycle("UrbanDelivery");
@@ -67,7 +67,7 @@ namespace TUGraz.VectoCore.Tests.Integration
 			Assert.IsTrue(run.FinishedWithoutErrors);
 		}
 
-		[TestMethod]
+		[TestMethod, TestCategory("LongRunning")]
 		public void Truck40t_MunicipalCycle_RefLoad()
 		{
 			var cycle = SimpleDrivingCycles.ReadDeclarationCycle("MunicipalUtility");
@@ -78,7 +78,7 @@ namespace TUGraz.VectoCore.Tests.Integration
 			Assert.IsTrue(run.FinishedWithoutErrors);
 		}
 
-		[TestMethod]
+		[TestMethod, TestCategory("LongRunning")]
 		public void Truck40t_ConstructionCycle_RefLoad()
 		{
 			var cycle = SimpleDrivingCycles.ReadDeclarationCycle("Construction");
