@@ -30,14 +30,12 @@ namespace TUGraz.VectoCore.Utils
 		public static PerSecond RPMtoRad(this int d)
 		{
 			return (d * 2.0 * Math.PI / 60.0).SI<PerSecond>();
-			//d.SI().Rounds.Per.Minute.ConvertTo().Radian.Per.Second.Cast<PerSecond>();
 		}
 
 		[DebuggerHidden]
 		public static MeterPerSecond KMPHtoMeterPerSecond(this int d)
 		{
 			return (d / 3.6).SI<MeterPerSecond>();
-			//d.SI().Kilo.Meter.Per.Hour.Cast<MeterPerSecond>();
 		}
 
 

@@ -14,6 +14,8 @@
 * limitations under the Licence.
 */
 
+using System;
+using System.ComponentModel.DataAnnotations;
 using TUGraz.VectoCore.Models.SimulationComponent.Data.Engine;
 using TUGraz.VectoCore.Utils;
 
@@ -23,29 +25,31 @@ namespace TUGraz.VectoCore.Models.SimulationComponent.Data
 	{
 		public string ModelName { get; internal set; }
 
+		[Required, SIRange(1000 * 1e-6, 20000 * 1e-6)]
 		public CubicMeter Displacement { get; internal set; }
 
+		[Required, SIRange(400 * 2 * Math.PI / 60, 1000 * 2 * Math.PI / 60)]
 		public PerSecond IdleSpeed { get; internal set; }
 
+		[Required, SIRange(0, 10)]
 		public KilogramSquareMeter Inertia { get; internal set; }
 
+		[Required, SIRange(double.Epsilon, 1000 / (1000.0 * 1000 * 3600))]
 		public KilogramPerWattSecond WHTCUrban { get; internal set; }
 
+		[Required, SIRange(double.Epsilon, 1000 / (1000.0 * 1000 * 3600))]
 		public KilogramPerWattSecond WHTCRural { get; internal set; }
 
+		[Required, SIRange(double.Epsilon, 1000 / (1000.0 * 1000 * 3600))]
 		public KilogramPerWattSecond WHTCMotorway { get; internal set; }
 
+		[Required, ValidateObject]
 		public FuelConsumptionMap ConsumptionMap { get; internal set; }
 
+		[Required, ValidateObject]
 		public EngineFullLoadCurve FullLoadCurve { get; internal set; }
 
-		private double _whtcCorrectionFactor = 1;
-
-		public double WHTCCorrectionFactor
-		{
-			get { return _whtcCorrectionFactor; }
-			internal set { _whtcCorrectionFactor = value; }
-		}
+		internal double WHTCCorrectionFactor = 1;
 
 		#region Equality Member
 

@@ -14,6 +14,9 @@ namespace TUGraz.VectoCore.Tests.Models.SimulationComponentData
 	[TestClass]
 	public class CombustionEngineDataValidationTestClass
 	{
+		/// <summary>
+		/// VECTO-107 Check valid range of input parameters
+		/// </summary>
 		[TestMethod]
 		public void Validation_CombustionEngineData()
 		{
@@ -49,6 +52,9 @@ namespace TUGraz.VectoCore.Tests.Models.SimulationComponentData
 			Assert.IsTrue(data.IsValid());
 		}
 
+		/// <summary>
+		/// VECTO-107 Check valid range of input parameters
+		/// </summary>
 		[TestMethod]
 		public void Validation_VectoRun()
 		{
@@ -80,7 +86,9 @@ namespace TUGraz.VectoCore.Tests.Models.SimulationComponentData
 			Assert.IsFalse(results.Any(), "Validation Failed: " + string.Join("; ", results.Select(r => r.ErrorMessage)));
 		}
 
-
+		/// <summary>
+		/// VECTO-107 Check valid range of input parameters
+		/// </summary>
 		[TestMethod]
 		public void Validation_Test()
 		{

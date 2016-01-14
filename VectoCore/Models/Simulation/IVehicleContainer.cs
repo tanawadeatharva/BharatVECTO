@@ -14,6 +14,7 @@
 * limitations under the Licence.
 */
 
+using System.ComponentModel.DataAnnotations;
 using TUGraz.VectoCore.Models.Connector.Ports;
 using TUGraz.VectoCore.Models.Simulation.Data;
 using TUGraz.VectoCore.Models.Simulation.DataBus;
@@ -32,9 +33,12 @@ namespace TUGraz.VectoCore.Models.Simulation
 	{
 		IModalDataContainer ModalData { get; }
 
+		[Required, ValidateObject]
 		VectoRunData RunData { get; }
 
 		ISimulationOutPort GetCycleOutPort();
+
+		VectoRun.Status RunStatus { get; set; }
 
 		/// <summary>
 		/// Adds a component to the vehicle container.
@@ -51,7 +55,5 @@ namespace TUGraz.VectoCore.Models.Simulation
 		/// Finishes the simulation.
 		/// </summary>
 		void FinishSimulation();
-
-		VectoRun.Status RunStatus { get; set; }
 	}
 }
