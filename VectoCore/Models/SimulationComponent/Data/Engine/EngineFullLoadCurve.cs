@@ -33,7 +33,7 @@ namespace TUGraz.VectoCore.Models.SimulationComponent.Data.Engine
 		private PerSecond _engineSpeedHi; // 70% of Pmax
 		private PerSecond _n95hSpeed; // 95% of Pmax
 
-		[Required, ValidateObject]
+		[Required]
 		public CombustionEngineData EngineData { get; internal set; }
 
 		/// <summary>

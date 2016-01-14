@@ -33,7 +33,7 @@ namespace TUGraz.VectoCore.Tests.Integration
 			@"TestData\Integration\DeclarationMode\40t Truck\40t_Long_Haul_Truck.vecto";
 
 
-		[TestMethod]
+		[TestMethod, TestCategory("LongRunning")]
 		public void Truck40t_LongHaulCycle_RefLoad()
 		{
 			var cycle = SimpleDrivingCycles.ReadDeclarationCycle("LongHaul");
@@ -44,7 +44,7 @@ namespace TUGraz.VectoCore.Tests.Integration
 			Assert.IsTrue(run.FinishedWithoutErrors);
 		}
 
-		[TestMethod]
+		[TestMethod, TestCategory("LongRunning")]
 		public void Truck40t_RegionalDeliveryCycle_RefLoad()
 		{
 			var cycle = SimpleDrivingCycles.ReadDeclarationCycle("RegionalDelivery");
@@ -89,7 +89,7 @@ namespace TUGraz.VectoCore.Tests.Integration
 			Assert.IsTrue(run.FinishedWithoutErrors);
 		}
 
-		[TestMethod]
+		[TestMethod, TestCategory("LongRunning")]
 		public void Truck40t_HeavyUrbanCycle_RefLoad()
 		{
 			var cycle = SimpleDrivingCycles.ReadDeclarationCycle("HeavyUrban");
@@ -100,7 +100,7 @@ namespace TUGraz.VectoCore.Tests.Integration
 			Assert.IsTrue(run.FinishedWithoutErrors);
 		}
 
-		[TestMethod]
+		[TestMethod, TestCategory("LongRunning")]
 		public void Truck40t_SubUrbanCycle_RefLoad()
 		{
 			var cycle = SimpleDrivingCycles.ReadDeclarationCycle("Suburban");
@@ -111,7 +111,7 @@ namespace TUGraz.VectoCore.Tests.Integration
 			Assert.IsTrue(run.FinishedWithoutErrors);
 		}
 
-		[TestMethod]
+		[TestMethod, TestCategory("LongRunning")]
 		public void Truck40t_InterUrbanCycle_RefLoad()
 		{
 			var cycle = SimpleDrivingCycles.ReadDeclarationCycle("Interurban");
@@ -122,7 +122,7 @@ namespace TUGraz.VectoCore.Tests.Integration
 			Assert.IsTrue(run.FinishedWithoutErrors);
 		}
 
-		[TestMethod]
+		[TestMethod, TestCategory("LongRunning")]
 		public void Truck40t_CoachCycle_RefLoad()
 		{
 			var cycle = SimpleDrivingCycles.ReadDeclarationCycle("Coach");
