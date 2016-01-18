@@ -60,6 +60,8 @@ namespace TUGraz.VectoCore.InputData.Impl
 
 	public class AxleInputData : IAxleInputData
 	{
+		public string MakeAndModel { get; internal set; }
+
 		public string Wheels { get; internal set; }
 
 		public bool TwinTyres { get; internal set; }

@@ -106,6 +106,11 @@ namespace TUGraz.VectoCore.InputData.FileIO.JSON
 
 		#region IRetarderInputData
 
+		public string ModelName
+		{
+			get { return ""; }
+		}
+
 		public virtual RetarderData.RetarderType Type
 		{
 			get

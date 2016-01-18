@@ -117,6 +117,8 @@ namespace TUGraz.VectoCore.InputData
 	{
 		bool SavedInDeclarationMode { get; }
 
+		string ModelName { get; }
+
 		/// <summary>
 		/// P052  
 		/// cf. VECTO Input Parameters.xlsx
@@ -139,6 +141,8 @@ namespace TUGraz.VectoCore.InputData
 
 	public interface IAxleInputData
 	{
+		string MakeAndModel { get; }
+
 		/// <summary>
 		/// P108  
 		/// cf. VECTO Input Parameters.xlsx
@@ -300,6 +304,8 @@ namespace TUGraz.VectoCore.InputData
 	public interface IAxleGearInputData
 	{
 		bool SavedInDeclarationMode { get; }
+
+		string ModelName { get; }
 
 		/// <summary>
 		/// P078
