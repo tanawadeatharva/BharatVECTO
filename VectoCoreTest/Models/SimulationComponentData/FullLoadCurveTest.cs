@@ -169,9 +169,8 @@ namespace TUGraz.VectoCore.Tests.Models.SimulationComponentData
 				LossMap = TransmissionLossMap.ReadFromFile(@"TestData\Components\limited.vtlm", 1, "1"),
 			};
 
-
-			AssertHelper.Exception<VectoException>(
-				() => SimulatorFactory.CheckLossMapRangeForFullLoadCurves(gearboxData, engineData, axleGearData));
+			var runData = new VectoRunData { GearboxData = gearboxData, EngineData = engineData, AxleGearData = axleGearData };
+			Assert.IsFalse(runData.IsValid());
 		}
 	}
 }

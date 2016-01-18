@@ -342,11 +342,11 @@ namespace TUGraz.VectoCore.InputData.FileIO.JSON
 			get
 			{
 				var startStop = Body.GetEx(JsonKeys.DriverData_StartStop);
-				return new StartStopInputData() {
-					Enabled = startStop.GetEx(JsonKeys.DriverData_StartStop_Enabled).Value<bool>(),
-					Delay = startStop.GetEx(JsonKeys.DriverData_StartStop_Delay).Value<double>().SI<Second>(),
-					MaxSpeed = startStop.GetEx(JsonKeys.DriverData_StartStop_MaxSpeed).Value<double>().KMPHtoMeterPerSecond(),
-					MinTime = startStop.GetEx(JsonKeys.DriverData_StartStop_MinTime).Value<double>().SI<Second>(),
+				return new StartStopInputData {
+					Enabled = startStop.GetEx<bool>(JsonKeys.DriverData_StartStop_Enabled),
+					Delay = startStop.GetEx<double>(JsonKeys.DriverData_StartStop_Delay).SI<Second>(),
+					MaxSpeed = startStop.GetEx<double>(JsonKeys.DriverData_StartStop_MaxSpeed).KMPHtoMeterPerSecond(),
+					MinTime = startStop.GetEx<double>(JsonKeys.DriverData_StartStop_MinTime).SI<Second>(),
 				};
 			}
 		}
@@ -357,9 +357,9 @@ namespace TUGraz.VectoCore.InputData.FileIO.JSON
 			{
 				var lac = Body.GetEx(JsonKeys.DriverData_LookaheadCoasting);
 				return new LookAheadCoastingInputData() {
-					Enabled = lac.GetEx(JsonKeys.DriverData_Lookahead_Enabled).Value<bool>(),
-					Deceleration = lac.GetEx(JsonKeys.DriverData_Lookahead_Deceleration).Value<double>().SI<MeterPerSquareSecond>(),
-					MinSpeed = lac.GetEx(JsonKeys.DriverData_Lookahead_MinSpeed).Value<double>().KMPHtoMeterPerSecond(),
+					Enabled = lac.GetEx<bool>(JsonKeys.DriverData_Lookahead_Enabled),
+					Deceleration = lac.GetEx<double>(JsonKeys.DriverData_Lookahead_Deceleration).SI<MeterPerSquareSecond>(),
+					MinSpeed = lac.GetEx<double>(JsonKeys.DriverData_Lookahead_MinSpeed).KMPHtoMeterPerSecond(),
 				};
 			}
 		}
@@ -370,11 +370,11 @@ namespace TUGraz.VectoCore.InputData.FileIO.JSON
 			{
 				var overspeed = Body.GetEx(JsonKeys.DriverData_OverspeedEcoRoll);
 				return new OverSpeedEcoRollInputData() {
-					Mode = DriverData.ParseDriverMode(overspeed.GetEx(JsonKeys.DriverData_OverspeedEcoRoll_Mode).Value<string>()),
-					MinSpeed = overspeed.GetEx(JsonKeys.DriverData_OverspeedEcoRoll_MinSpeed).Value<double>().KMPHtoMeterPerSecond(),
-					OverSpeed = overspeed.GetEx(JsonKeys.DriverData_OverspeedEcoRoll_OverSpeed).Value<double>().KMPHtoMeterPerSecond(),
+					Mode = DriverData.ParseDriverMode(overspeed.GetEx<string>(JsonKeys.DriverData_OverspeedEcoRoll_Mode)),
+					MinSpeed = overspeed.GetEx<double>(JsonKeys.DriverData_OverspeedEcoRoll_MinSpeed).KMPHtoMeterPerSecond(),
+					OverSpeed = overspeed.GetEx<double>(JsonKeys.DriverData_OverspeedEcoRoll_OverSpeed).KMPHtoMeterPerSecond(),
 					UnderSpeed =
-						overspeed.GetEx(JsonKeys.DriverData_OverspeedEcoRoll_UnderSpeed).Value<double>().KMPHtoMeterPerSecond()
+						overspeed.GetEx<double>(JsonKeys.DriverData_OverspeedEcoRoll_UnderSpeed).KMPHtoMeterPerSecond()
 				};
 			}
 		}
@@ -412,9 +412,9 @@ namespace TUGraz.VectoCore.InputData.FileIO.JSON
 				var retVal = new List<IAuxiliaryInputData>();
 				foreach (var aux in Body.GetEx("Aux")) {
 					var auxData = new AuxiliaryDataInputData {
-						ID = aux.GetEx("ID").Value<string>(),
-						Type = aux.GetEx("Type").Value<string>(),
-						Technology = aux.GetEx("Technology").Value<string>()
+						ID = aux.GetEx<string>("ID"),
+						Type = aux.GetEx<string>("Type"),
+						Technology = aux.GetEx<string>("Technology")
 					};
 					var auxFile = aux["Path"];
 					if (auxFile == null || EmptyOrInvalidFileName(auxFile.Value<string>())) {

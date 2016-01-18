@@ -14,6 +14,9 @@
 * limitations under the Licence.
 */
 
+using System;
+using System.ComponentModel.DataAnnotations;
+using TUGraz.VectoCore.Configuration;
 using TUGraz.VectoCore.Models.SimulationComponent.Data.Engine;
 using TUGraz.VectoCore.Utils;
 
@@ -23,29 +26,31 @@ namespace TUGraz.VectoCore.Models.SimulationComponent.Data
 	{
 		public string ModelName { get; internal set; }
 
+		[Required, SIRange(1000 / (Constants.Kilo * Constants.Kilo), 20000 / (Constants.Kilo * Constants.Kilo))]
 		public CubicMeter Displacement { get; internal set; }
 
+		[Required, SIRange(400 * Constants.RPMToRad, 1000 * Constants.RPMToRad)]
 		public PerSecond IdleSpeed { get; internal set; }
 
+		[Required, SIRange(0, 10)]
 		public KilogramSquareMeter Inertia { get; internal set; }
 
+		[Required, SIRange(double.Epsilon, 1000 / (Constants.Kilo * Constants.Kilo * Constants.SecondsPerHour))]
 		public KilogramPerWattSecond WHTCUrban { get; internal set; }
 
+		[Required, SIRange(double.Epsilon, 1000 / (Constants.Kilo * Constants.Kilo * Constants.SecondsPerHour))]
 		public KilogramPerWattSecond WHTCRural { get; internal set; }
 
+		[Required, SIRange(double.Epsilon, 1000 / (Constants.Kilo * Constants.Kilo * Constants.SecondsPerHour))]
 		public KilogramPerWattSecond WHTCMotorway { get; internal set; }
 
+		[Required, ValidateObject]
 		public FuelConsumptionMap ConsumptionMap { get; internal set; }
 
+		[Required, ValidateObject]
 		public EngineFullLoadCurve FullLoadCurve { get; internal set; }
 
-		private double _whtcCorrectionFactor = 1;
-
-		public double WHTCCorrectionFactor
-		{
-			get { return _whtcCorrectionFactor; }
-			internal set { _whtcCorrectionFactor = value; }
-		}
+		internal double WHTCCorrectionFactor = 1;
 
 		#region Equality Member
 

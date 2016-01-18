@@ -14,12 +14,18 @@
 * limitations under the Licence.
 */
 
+using System;
 using TUGraz.VectoCore.Utils;
 
 namespace TUGraz.VectoCore.Configuration
 {
 	public static class Constants
 	{
+		public const double RPMToRad =  2 * Math.PI / 60;
+		public const double Kilo = 1000;
+		public const double MeterPerSecondToKMH = 3.6;
+		public const double SecondsPerHour = 3600;
+
 		public static class Auxiliaries
 		{
 			public static class IDs

@@ -16,20 +16,24 @@
 
 using System;
 using System.Collections.Generic;
+using System.ComponentModel.DataAnnotations;
 using System.Data;
 using System.Diagnostics.Contracts;
 using System.Linq;
-using Newtonsoft.Json;
+using TUGraz.VectoCore.Configuration;
 using TUGraz.VectoCore.Exceptions;
 using TUGraz.VectoCore.Utils;
 
 namespace TUGraz.VectoCore.Models.SimulationComponent.Data.Engine
 {
-	[JsonObject(MemberSerialization.Fields)]
 	public class FuelConsumptionMap : SimulationComponentData
 	{
-		private readonly IList<FuelConsumptionEntry> _entries = new List<FuelConsumptionEntry>();
-		private readonly DelauneyMap _fuelMap = new DelauneyMap();
+		[Required, ValidateObject] private readonly IList<FuelConsumptionEntry> _entries =
+			new List<FuelConsumptionEntry>();
+
+		[Required, ValidateObject] private readonly DelauneyMap _fuelMap = new DelauneyMap();
+
+
 		private FuelConsumptionMap() {}
 
 		public static FuelConsumptionMap ReadFromFile(string fileName)
@@ -88,7 +92,7 @@ namespace TUGraz.VectoCore.Models.SimulationComponent.Data.Engine
 				EngineSpeed = row.ParseDouble(0).RPMtoRad(),
 				Torque = row.ParseDouble(1).SI<NewtonMeter>(),
 				FuelConsumption =
-					row.ParseDouble(2).SI().Gramm.Per.Hour.ConvertTo().Kilo.Gramm.Per.Second
+					row.ParseDouble(2).SI().Gramm.Per.Hour.ConvertTo().Kilo.Gramm.Per.Second.Cast<KilogramPerSecond>()
 			};
 		}
 
@@ -98,7 +102,10 @@ namespace TUGraz.VectoCore.Models.SimulationComponent.Data.Engine
 				EngineSpeed = row.ParseDouble(Fields.EngineSpeed).SI().Rounds.Per.Minute.Cast<PerSecond>(),
 				Torque = row.ParseDouble(Fields.Torque).SI<NewtonMeter>(),
 				FuelConsumption =
-					row.ParseDouble(Fields.FuelConsumption).SI().Gramm.Per.Hour.ConvertTo().Kilo.Gramm.Per.Second
+					row.ParseDouble(Fields.FuelConsumption)
+						.SI()
+						.Gramm.Per.Hour.ConvertTo()
+						.Kilo.Gramm.Per.Second.Cast<KilogramPerSecond>()
 			};
 		}
 
@@ -121,43 +128,36 @@ namespace TUGraz.VectoCore.Models.SimulationComponent.Data.Engine
 		private static class Fields
 		{
 			/// <summary>
-			///     [rpm]
+			/// [rpm]
 			/// </summary>
 			public const string EngineSpeed = "engine speed";
 
 			/// <summary>
-			///     [Nm]
+			/// [Nm]
 			/// </summary>
 			public const string Torque = "torque";
 
 			/// <summary>
-			///     [g/h]
+			/// [g/h]
 			/// </summary>
 			public const string FuelConsumption = "fuel consumption";
-		};
+		}
 
 		private class FuelConsumptionEntry
 		{
-			/// <summary>
-			///     engine speed [rad/s]
-			/// </summary>
+			[Required, SIRange(0, 5000 * Constants.RPMToRad)]
 			public PerSecond EngineSpeed { get; set; }
 
-			/// <summary>
-			///     Torque [Nm]
-			/// </summary>
+			[Required]
 			public NewtonMeter Torque { get; set; }
 
-			/// <summary>
-			///     Fuel consumption [kg/s]
-			/// </summary>
-			public SI FuelConsumption { get; set; }
+			[Required, SIRange(0, double.MaxValue)]
+			public KilogramPerSecond FuelConsumption { get; set; }
 
 			#region Equality members
 
 			private bool Equals(FuelConsumptionEntry other)
 			{
-				Contract.Requires(other != null);
 				return EngineSpeed.Equals(other.EngineSpeed) && Torque.Equals(other.Torque) &&
 						FuelConsumption.Equals(other.FuelConsumption);
 			}

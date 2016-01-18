@@ -26,13 +26,13 @@ namespace TUGraz.VectoCore.Utils
 	[JsonObject(MemberSerialization.Fields)]
 	public class DelauneyMap : LoggingObject
 	{
-		private readonly List<Point> _points = new List<Point>();
+		internal readonly List<Point> Points = new List<Point>();
 		private List<Triangle> _triangles = new List<Triangle>();
 		private IEnumerable<Edge> _convexHull;
 
 		public void AddPoint(double x, double y, double z)
 		{
-			_points.Add(new Point(x, y, z));
+			Points.Add(new Point(x, y, z));
 		}
 
 		/// <summary>
@@ -44,19 +44,19 @@ namespace TUGraz.VectoCore.Utils
 		/// </remarks>
 		public void Triangulate()
 		{
-			if (_points.Count < 3) {
-				throw new ArgumentException(string.Format("Triangulation needs at least 3 Points. Got {0} Points.", _points.Count));
+			if (Points.Count < 3) {
+				throw new ArgumentException(string.Format("Triangulation needs at least 3 Points. Got {0} Points.", Points.Count));
 			}
 
 			// The "supertriangle" encompasses all triangulation points.
 			// This is just a helper triangle which initializes the algorithm and will be removed later.
 			const int superTriangleScalingFactor = 10;
-			var max = _points.Max(point => Math.Max(Math.Abs(point.X), Math.Abs(point.Y))) * superTriangleScalingFactor;
+			var max = Points.Max(point => Math.Max(Math.Abs(point.X), Math.Abs(point.Y))) * superTriangleScalingFactor;
 			var superTriangle = new Triangle(new Point(max, 0), new Point(0, max), new Point(-max, -max));
 			var triangles = new List<Triangle> { superTriangle };
 
 			// iteratively add each point into the correct triangle and split up the triangle
-			foreach (var point in _points) {
+			foreach (var point in Points) {
 				// If the vertex lies inside a triangle, the edges of the triangle are 
 				// added to the edge buffer and the triangle is removed from list.
 				var containerTriangles = triangles.FindAll(t => t.ContainsInCircumcircle(point));
@@ -160,7 +160,7 @@ namespace TUGraz.VectoCore.Utils
 		public DelauneyMap CreateInvertedMap()
 		{
 			var reverted = new DelauneyMap();
-			reverted._points.AddRange(_points.Select(p => new Point(p.X, p.Z, p.Y)));
+			reverted.Points.AddRange(Points.Select(p => new Point(p.X, p.Z, p.Y)));
 			reverted.Triangulate();
 			return reverted;
 		}
@@ -169,7 +169,7 @@ namespace TUGraz.VectoCore.Utils
 
 		protected bool Equals(DelauneyMap other)
 		{
-			return _points.SequenceEqual(other._points) && _triangles.SequenceEqual(other._triangles);
+			return Points.SequenceEqual(other.Points) && _triangles.SequenceEqual(other._triangles);
 		}
 
 		public override bool Equals(object obj)
@@ -189,7 +189,7 @@ namespace TUGraz.VectoCore.Utils
 		public override int GetHashCode()
 		{
 			unchecked {
-				return ((_points != null ? _points.GetHashCode() : 0) * 397) ^
+				return ((Points != null ? Points.GetHashCode() : 0) * 397) ^
 						(_triangles != null ? _triangles.GetHashCode() : 0);
 			}
 		}

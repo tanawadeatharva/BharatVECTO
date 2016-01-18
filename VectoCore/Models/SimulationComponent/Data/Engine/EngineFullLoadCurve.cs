@@ -16,9 +16,8 @@
 
 using System;
 using System.Collections.Generic;
+using System.ComponentModel.DataAnnotations;
 using System.Data;
-using System.Diagnostics.Contracts;
-using System.Dynamic;
 using System.Linq;
 using TUGraz.VectoCore.Utils;
 
@@ -34,60 +33,21 @@ namespace TUGraz.VectoCore.Models.SimulationComponent.Data.Engine
 		private PerSecond _engineSpeedHi; // 70% of Pmax
 		private PerSecond _n95hSpeed; // 95% of Pmax
 
-		public new static EngineFullLoadCurve ReadFromFile(string fileName, bool declarationMode = false)
-		{
-			var curve = FullLoadCurve.ReadFromFile(fileName, declarationMode);
-			return new EngineFullLoadCurve { FullLoadEntries = curve.FullLoadEntries, PT1Data = curve.PT1Data };
-		}
-
-		public new static EngineFullLoadCurve Create(DataTable data, bool declarationMode = false)
-		{
-			var curve = FullLoadCurve.Create(data, declarationMode);
-			return new EngineFullLoadCurve() {FullLoadEntries = curve.FullLoadEntries, PT1Data = curve.PT1Data};
-		}
-
-		public Watt FullLoadStationaryPower(PerSecond angularVelocity)
-		{
-			return Formulas.TorqueToPower(FullLoadStationaryTorque(angularVelocity), angularVelocity);
-		}
-
-		public Watt DragLoadStationaryPower(PerSecond angularVelocity)
-		{
-			Contract.Requires(angularVelocity.HasEqualUnit(new SI().Radian.Per.Second));
-			Contract.Ensures(Contract.Result<SI>().HasEqualUnit(new SI().Watt));
-
-			return Formulas.TorqueToPower(DragLoadStationaryTorque(angularVelocity), angularVelocity);
-		}
-
-
+		[Required]
 		public CombustionEngineData EngineData { get; internal set; }
-
-
-		public Second PT1(PerSecond angularVelocity)
-		{
-			return PT1Data.Lookup(angularVelocity);
-		}
-
 
 		/// <summary>
 		///	Get the engine's preferred speed from the given full-load curve (i.e. Speed at 51% torque/speed-integral between idling and N95h.)
 		/// </summary>
 		public PerSecond PreferredSpeed
 		{
-			get
-			{
-				if (_preferredSpeed == null) {
-					ComputePreferredSpeed();
-				}
-				return _preferredSpeed;
-			}
+			get { return _preferredSpeed ?? (_preferredSpeed = ComputePreferredSpeed()); }
 		}
 
 		public PerSecond N95hSpeed
 		{
 			get { return _n95hSpeed ?? (_n95hSpeed = FindEngineSpeedForPower(0.95 * MaxPower).Last()); }
 		}
-
 
 		public PerSecond LoSpeed
 		{
@@ -99,7 +59,6 @@ namespace TUGraz.VectoCore.Models.SimulationComponent.Data.Engine
 			get { return _engineSpeedHi ?? (_engineSpeedHi = FindEngineSpeedForPower(0.7 * MaxPower).Last()); }
 		}
 
-
 		public NewtonMeter MaxLoadTorque
 		{
 			get { return FullLoadEntries.Max(x => x.TorqueFullLoad); }
@@ -110,8 +69,44 @@ namespace TUGraz.VectoCore.Models.SimulationComponent.Data.Engine
 			get { return FullLoadEntries.Min(x => x.TorqueDrag); }
 		}
 
+		/// <summary>
+		/// Reads the EngineFullLoadCurve from a csv file.
+		/// </summary>
+		/// <param name="fileName">Name of the file.</param>
+		/// <param name="declarationMode">if set to <c>true</c> then the file is read in declaration mode.</param>
+		public new static EngineFullLoadCurve ReadFromFile(string fileName, bool declarationMode = false)
+		{
+			var curve = FullLoadCurve.ReadFromFile(fileName, declarationMode);
+			return new EngineFullLoadCurve { FullLoadEntries = curve.FullLoadEntries, PT1Data = curve.PT1Data };
+		}
 
-		private void ComputePreferredSpeed()
+		/// <summary>
+		/// Creates the FullLoadCurve from a datatable.
+		/// </summary>
+		/// <param name="data">The data.</param>
+		/// <param name="declarationMode">if set to <c>true</c> then the file is read in declaration mode.</param>
+		public new static EngineFullLoadCurve Create(DataTable data, bool declarationMode = false)
+		{
+			var curve = FullLoadCurve.Create(data, declarationMode);
+			return new EngineFullLoadCurve() { FullLoadEntries = curve.FullLoadEntries, PT1Data = curve.PT1Data };
+		}
+
+		public Watt FullLoadStationaryPower(PerSecond angularVelocity)
+		{
+			return Formulas.TorqueToPower(FullLoadStationaryTorque(angularVelocity), angularVelocity);
+		}
+
+		public Watt DragLoadStationaryPower(PerSecond angularVelocity)
+		{
+			return DragLoadStationaryTorque(angularVelocity) * angularVelocity;
+		}
+
+		public Second PT1(PerSecond angularVelocity)
+		{
+			return PT1Data.Lookup(angularVelocity);
+		}
+
+		private PerSecond ComputePreferredSpeed()
 		{
 			var maxArea = ComputeArea(EngineData.IdleSpeed, N95hSpeed);
 
@@ -121,12 +116,12 @@ namespace TUGraz.VectoCore.Models.SimulationComponent.Data.Engine
 				var additionalArea = ComputeArea(FullLoadEntries[idx - 1].EngineSpeed, FullLoadEntries[idx].EngineSpeed);
 				if (area + additionalArea > 0.51 * maxArea) {
 					var deltaArea = 0.51 * maxArea - area;
-					_preferredSpeed = ComputeEngineSpeedForSegmentArea(FullLoadEntries[idx - 1], FullLoadEntries[idx], deltaArea);
-					return;
+					return ComputeEngineSpeedForSegmentArea(FullLoadEntries[idx - 1], FullLoadEntries[idx], deltaArea);
 				}
 				area += additionalArea;
 			}
 			Log.Warn("Could not compute preferred speed, check FullLoadCurve! N95h: {0}, maxArea: {1}", N95hSpeed, maxArea);
+			return null;
 		}
 
 		private PerSecond ComputeEngineSpeedForSegmentArea(FullLoadCurveEntry p1, FullLoadCurveEntry p2, Watt area)
@@ -150,7 +145,7 @@ namespace TUGraz.VectoCore.Models.SimulationComponent.Data.Engine
 			return retVal.First(x => x >= p1.EngineSpeed && x <= p2.EngineSpeed).SI<PerSecond>();
 		}
 
-		private List<PerSecond> FindEngineSpeedForPower(Watt power)
+		private IEnumerable<PerSecond> FindEngineSpeedForPower(Watt power)
 		{
 			var retVal = new List<PerSecond>();
 			for (var idx = 1; idx < FullLoadEntries.Count; idx++) {
@@ -161,7 +156,7 @@ namespace TUGraz.VectoCore.Models.SimulationComponent.Data.Engine
 			return retVal;
 		}
 
-		private List<PerSecond> FindEngineSpeedForPower(FullLoadCurveEntry p1, FullLoadCurveEntry p2, Watt power)
+		private IEnumerable<PerSecond> FindEngineSpeedForPower(FullLoadCurveEntry p1, FullLoadCurveEntry p2, Watt power)
 		{
 			var k = (p2.TorqueFullLoad - p1.TorqueFullLoad) / (p2.EngineSpeed - p1.EngineSpeed);
 			var d = p2.TorqueFullLoad - k * p2.EngineSpeed;

@@ -14,7 +14,8 @@
 * limitations under the Licence.
 */
 
-using System.Collections;
+using System.Collections.Generic;
+using System.ComponentModel.DataAnnotations;
 using System.Data;
 using System.IO;
 using System.Linq;
@@ -27,17 +28,22 @@ namespace TUGraz.VectoCore.Models.SimulationComponent.Data
 {
 	public class AuxiliaryData
 	{
+		[Required, Range(double.Epsilon, 1)]
 		public double EfficiencyToSupply { get; set; }
+
+		[Required, Range(double.Epsilon, double.MaxValue)]
 		public double TransmissionRatio { get; set; }
+
+		[Required, Range(double.Epsilon, 1)]
 		public double EfficiencyToEngine { get; set; }
 
-		private readonly DelauneyMap _map = new DelauneyMap();
+		[Required, CustomValidation(typeof(AuxiliaryData), "ValidateAuxMap")] private readonly DelauneyMap _map =
+			new DelauneyMap();
 
 		public Watt GetPowerDemand(PerSecond nAuxiliary, Watt powerAuxOut)
 		{
 			return _map.Interpolate(nAuxiliary.Value(), powerAuxOut.Value()).SI<Watt>();
 		}
-
 
 		public static AuxiliaryData ReadFromFile(string fileName)
 		{
@@ -55,7 +61,6 @@ namespace TUGraz.VectoCore.Models.SimulationComponent.Data
 				var m = new MemoryStream(Encoding.UTF8.GetBytes(stream.ReadToEnd()));
 				var table = VectoCSVFile.ReadStream(m);
 
-				// todo: @@@ check for valid header columns, otherwise use index
 				if (HeaderIsValid(table.Columns)) {
 					FillFromColumnNames(table, auxData._map);
 				} else {
@@ -118,9 +123,52 @@ namespace TUGraz.VectoCore.Models.SimulationComponent.Data
 
 		private static class Fields
 		{
+			/// <summary>
+			/// [1/min]
+			/// </summary>
 			public const string AuxSpeed = "Auxiliary speed";
+
+			/// <summary>
+			/// [kW]
+			/// </summary>
 			public const string MechPower = "Mechanical power";
+
+			/// <summary>
+			/// [kW]
+			/// </summary>
 			public const string SupplyPower = "Supply power";
+		}
+
+		/// <summary>
+		/// Validates the aux map.
+		/// </summary>
+		/// <param name="data">The data.</param>
+		/// <param name="context">The validation context.</param>
+		/// <returns></returns>
+		protected static ValidationResult ValidateAuxMap(AuxiliaryData data, ValidationContext context)
+		{
+			var xValidationRules = new[] { new RangeAttribute(0, double.MaxValue) };
+			var yValidationRules = new[] { new RangeAttribute(0, 100.SI().Kilo.Watt.Value()) };
+			var zValidationRules = new[] { new RangeAttribute(0, 100.SI().Kilo.Watt.Value()) };
+
+			var results = new List<ValidationResult>();
+			foreach (var entry in data._map.Points) {
+				context.DisplayName = Fields.AuxSpeed;
+				if (!Validator.TryValidateValue(entry.X, context, results, xValidationRules)) {
+					return new ValidationResult(string.Join("", results));
+				}
+
+				context.DisplayName = Fields.SupplyPower;
+				if (!Validator.TryValidateValue(entry.Y, context, results, yValidationRules)) {
+					return new ValidationResult(string.Join("", results));
+				}
+
+				context.DisplayName = Fields.MechPower;
+				if (!Validator.TryValidateValue(entry.Z, context, results, zValidationRules)) {
+					return new ValidationResult(string.Join("", results));
+				}
+			}
+			return ValidationResult.Success;
 		}
 	}
 }

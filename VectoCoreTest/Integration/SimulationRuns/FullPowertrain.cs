@@ -51,7 +51,7 @@ namespace TUGraz.VectoCore.Tests.Integration.SimulationRuns
 		public const string GearboxFullLoadCurveFile = @"TestData\Components\Gearbox.vfld";
 		private static readonly Logger Log = LogManager.GetLogger(typeof(FullPowerTrain).ToString());
 
-		[TestMethod]
+		[TestMethod, TestCategory("LongRunning")]
 		public void Test_FullPowertrain_SimpleGearbox()
 		{
 			var fileWriter = new FileOutputWriter("Coach_FullPowertrain_SimpleGearbox", "");
@@ -186,7 +186,7 @@ namespace TUGraz.VectoCore.Tests.Integration.SimulationRuns
 			Assert.IsInstanceOfType(response, typeof(ResponseCycleFinished));
 		}
 
-		[TestMethod]
+		[TestMethod, TestCategory("LongRunning")]
 		public void Test_FullPowertrain_LowSpeed()
 		{
 			var fileWriter = new FileOutputWriter("Coach_FullPowertrain_LowSpeed", "");
@@ -264,7 +264,7 @@ namespace TUGraz.VectoCore.Tests.Integration.SimulationRuns
 			Assert.IsInstanceOfType(response, typeof(ResponseCycleFinished));
 		}
 
-		[TestMethod]
+		[TestMethod, TestCategory("LongRunning")]
 		public void Test_FullPowerTrain_JobFile()
 		{
 			const string jobFile = @"TestData\job.vecto";

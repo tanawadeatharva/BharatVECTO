@@ -16,6 +16,7 @@
 
 using System;
 using System.ComponentModel;
+using System.ComponentModel.DataAnnotations;
 using TUGraz.VectoCore.Exceptions;
 using TUGraz.VectoCore.Models.Connector.Ports;
 using TUGraz.VectoCore.Models.Connector.Ports.Impl;
@@ -37,6 +38,8 @@ namespace TUGraz.VectoCore.Models.Simulation.Impl
 		protected SummaryDataContainer SumWriter { get; set; }
 		protected string JobName { get; set; }
 		protected ISimulationOutPort CyclePort { get; set; }
+
+		[Required, ValidateObject]
 		protected IVehicleContainer Container { get; set; }
 		public bool FinishedWithoutErrors { get; protected set; }
 		public uint RunIdentifier { get; protected set; }
@@ -70,7 +73,7 @@ namespace TUGraz.VectoCore.Models.Simulation.Impl
 		}
 
 
-		public void Run(BackgroundWorker worker = null, Action<double> ReportProgress = null)
+		public void Run(BackgroundWorker worker = null, Action<double> reportProgressAction = null)
 		{
 			Log.Info("VectoJob started running.");
 
@@ -82,8 +85,8 @@ namespace TUGraz.VectoCore.Models.Simulation.Impl
 					if (response is ResponseSuccess) {
 						Container.CommitSimulationStep(AbsTime, dt);
 						AbsTime += dt;
-						if (ReportProgress != null) {
-							ReportProgress(CyclePort.Progress);
+						if (reportProgressAction != null) {
+							reportProgressAction(CyclePort.Progress);
 						}
 						if (worker != null && worker.CancellationPending) {
 							Log.Error("Background Task canceled!");

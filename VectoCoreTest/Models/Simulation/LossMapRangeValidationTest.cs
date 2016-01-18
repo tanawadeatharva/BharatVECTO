@@ -15,13 +15,14 @@
 */
 
 using System;
+using System.ComponentModel.DataAnnotations;
 using System.Linq;
 using Microsoft.VisualStudio.TestTools.UnitTesting;
-using TUGraz.VectoCore.Exceptions;
-using TUGraz.VectoCore.Models.Simulation.Impl;
+using TUGraz.VectoCore.Models.Simulation.Data;
 using TUGraz.VectoCore.Models.SimulationComponent.Data;
 using TUGraz.VectoCore.Models.SimulationComponent.Data.Gearbox;
 using TUGraz.VectoCore.Tests.Utils;
+using TUGraz.VectoCore.Utils;
 
 namespace TUGraz.VectoCore.Tests.Models.Simulation
 {
@@ -47,7 +48,12 @@ namespace TUGraz.VectoCore.Tests.Models.Simulation
 			var gearboxData = CreateGearboxData(GearboxDirectLoss, GearboxIndirectLoss);
 			var engineData = MockSimulationDataFactory.CreateEngineDataFromFile(EngineFile);
 			var axleGearData = CreateAxleGearData(AxleGearLossMap);
-			SimulatorFactory.CheckLossMapRangeForFullLoadCurves(gearboxData, engineData, axleGearData);
+
+			var runData = new VectoRunData { GearboxData = gearboxData, EngineData = engineData, AxleGearData = axleGearData };
+
+			var result = runData.ValidateRunData(runData, new ValidationContext(runData));
+			Assert.IsTrue(ValidationResult.Success == result);
+			Assert.IsFalse(runData.IsValid());
 		}
 
 		/// <summary>
@@ -59,9 +65,9 @@ namespace TUGraz.VectoCore.Tests.Models.Simulation
 			var gearboxData = CreateGearboxData(GearboxDirectLoss, GearboxIndirectLoss);
 			var engineData = MockSimulationDataFactory.CreateEngineDataFromFile(EngineFile);
 			var axleGearData = CreateAxleGearData(GearboxLimited);
-			AssertHelper.Exception<VectoException>(() => {
-				SimulatorFactory.CheckLossMapRangeForFullLoadCurves(gearboxData, engineData, axleGearData);
-			});
+
+			var runData = new VectoRunData { GearboxData = gearboxData, EngineData = engineData, AxleGearData = axleGearData };
+			Assert.IsFalse(runData.IsValid());
 		}
 
 		/// <summary>
@@ -73,9 +79,9 @@ namespace TUGraz.VectoCore.Tests.Models.Simulation
 			var gearboxData = CreateGearboxData(GearboxLimited, GearboxLimited);
 			var engineData = MockSimulationDataFactory.CreateEngineDataFromFile(EngineFile);
 			var axleGearData = CreateAxleGearData(AxleGearLossMap);
-			AssertHelper.Exception<VectoException>(() => {
-				SimulatorFactory.CheckLossMapRangeForFullLoadCurves(gearboxData, engineData, axleGearData);
-			});
+			var runData = new VectoRunData { GearboxData = gearboxData, EngineData = engineData, AxleGearData = axleGearData };
+			var result = runData.ValidateRunData(runData, new ValidationContext(runData));
+			Assert.IsFalse(ValidationResult.Success == result);
 		}
 
 		/// <summary>
@@ -86,7 +92,10 @@ namespace TUGraz.VectoCore.Tests.Models.Simulation
 		{
 			var gearboxData = CreateGearboxData(GearboxDirectLoss, GearboxIndirectLoss);
 			var engineData = MockSimulationDataFactory.CreateEngineDataFromFile(EngineFile);
-			SimulatorFactory.CheckLossMapRangeForFullLoadCurves(gearboxData, engineData, null);
+			var runData = new VectoRunData { GearboxData = gearboxData, EngineData = engineData };
+			var result = runData.ValidateRunData(runData, new ValidationContext(runData));
+			Assert.IsTrue(ValidationResult.Success == result);
+			Assert.IsFalse(runData.IsValid());
 		}
 
 		/// <summary>
@@ -97,7 +106,11 @@ namespace TUGraz.VectoCore.Tests.Models.Simulation
 		{
 			var engineData = MockSimulationDataFactory.CreateEngineDataFromFile(EngineFile);
 			var axleGearData = CreateAxleGearData(AxleGearLossMap);
-			SimulatorFactory.CheckLossMapRangeForFullLoadCurves(null, engineData, axleGearData);
+
+			var runData = new VectoRunData { EngineData = engineData, AxleGearData = axleGearData };
+			var result = runData.ValidateRunData(runData, new ValidationContext(runData));
+			Assert.IsTrue(ValidationResult.Success == result);
+			Assert.IsFalse(runData.IsValid());
 		}
 
 

@@ -15,10 +15,8 @@
 */
 
 using System.IO;
-using System.Threading;
 using Microsoft.VisualStudio.TestTools.UnitTesting;
 using TUGraz.VectoCore.InputData.FileIO.JSON;
-using TUGraz.VectoCore.Models.Simulation.Data;
 using TUGraz.VectoCore.Models.Simulation.Impl;
 using TUGraz.VectoCore.OutputData;
 using TUGraz.VectoCore.OutputData.FileIO;
@@ -28,7 +26,7 @@ namespace TUGraz.VectoCore.Tests.Integration
 	[TestClass]
 	public class DeclarationReportTest
 	{
-		[TestMethod]
+		[TestMethod, TestCategory("LongRunning")]
 		public void DeclarationReport_Test()
 		{
 			const string jobFile = @"TestData\Jobs\job-report.vecto";

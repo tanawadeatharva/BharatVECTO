@@ -16,10 +16,8 @@
 
 using System.Linq;
 using Microsoft.VisualStudio.TestTools.UnitTesting;
-using TUGraz.VectoCore.Configuration;
 using TUGraz.VectoCore.InputData.FileIO.JSON;
 using TUGraz.VectoCore.Models.Simulation;
-using TUGraz.VectoCore.Models.Simulation.Data;
 using TUGraz.VectoCore.Models.Simulation.Impl;
 using TUGraz.VectoCore.OutputData;
 using TUGraz.VectoCore.OutputData.FileIO;
@@ -31,9 +29,6 @@ namespace TUGraz.VectoCore.Tests.Models.Simulation
 	[TestClass]
 	public class SimulationTests
 	{
-		private const string EngineFile = @"TestData\Components\24t Coach.veng";
-		private const string CycleFile = @"TestData\Cycles\Coach Engine Only short.vdri";
-
 		private const string EngineOnlyJob = @"TestData\Jobs\EngineOnlyJob.vecto";
 
 		[TestMethod]
@@ -63,8 +58,7 @@ namespace TUGraz.VectoCore.Tests.Models.Simulation
 		private class MockSumWriter : SummaryDataContainer
 		{
 			public override void Write(bool isEngineOnly, IModalDataContainer data, string jobFileName, string jobName,
-				string cycleFileName,
-				Kilogram vehicleMass, Kilogram vehicleLoading) {}
+				string cycleFileName, Kilogram vehicleMass, Kilogram vehicleLoading) {}
 
 			public override void Finish() {}
 		}
@@ -88,10 +82,7 @@ namespace TUGraz.VectoCore.Tests.Models.Simulation
 
 		public IVectoRun CreateRun(string resultFileName)
 		{
-			//var sumFileName = resultFileName.Substring(0, resultFileName.Length - 5) + Constants.FileExtensions.SumFile;
-
 			var fileWriter = new FileOutputWriter(resultFileName, "");
-			var modData = new ModalDataContainer(resultFileName, fileWriter, ExecutionMode.EngineOnly);
 			var sumWriter = new SummaryDataContainer(fileWriter);
 
 			var inputData = JSONInputDataFactory.ReadJsonJob(EngineOnlyJob);

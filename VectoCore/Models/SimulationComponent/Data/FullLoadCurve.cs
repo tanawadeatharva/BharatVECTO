@@ -16,9 +16,10 @@
 
 using System;
 using System.Collections.Generic;
+using System.ComponentModel.DataAnnotations;
 using System.Data;
-using System.Diagnostics.Contracts;
 using System.Linq;
+using TUGraz.VectoCore.Configuration;
 using TUGraz.VectoCore.Exceptions;
 using TUGraz.VectoCore.Models.Declaration;
 using TUGraz.VectoCore.Models.SimulationComponent.Data.Engine;
@@ -28,22 +29,28 @@ namespace TUGraz.VectoCore.Models.SimulationComponent.Data
 {
 	public class FullLoadCurve : SimulationComponentData
 	{
-		protected Watt _maxPower;
-		protected PerSecond _ratedSpeed;
-		internal List<FullLoadCurveEntry> FullLoadEntries;
-		internal LookupData<PerSecond, Second> PT1Data;
+		private Watt _maxPower;
+		private PerSecond _ratedSpeed;
+
+		[Required, ValidateObject] internal List<FullLoadCurveEntry> FullLoadEntries;
+		[Required] internal LookupData<PerSecond, Second> PT1Data;
 
 		/// <summary>
-		///     Get the rated speed from the given full-load curve (i.e. speed with max. power)
+		/// Get the rated speed from the given full-load curve (i.e. speed with max. power)
 		/// </summary>
+		[Required, SIRange(0, 5000 * Constants.RPMToRad)]
 		public PerSecond RatedSpeed
 		{
-			get { return (_ratedSpeed ?? ComputeRatedSpeed().Item1); }
+			get { return _ratedSpeed ?? ComputeRatedSpeed().Item1; }
 		}
 
+		/// <summary>
+		/// Gets the maximum power.
+		/// </summary>
+		[Required, SIRange(0, 10000 * 5000 * Constants.RPMToRad)]
 		public Watt MaxPower
 		{
-			get { return (_maxPower ?? ComputeRatedSpeed().Item2); }
+			get { return _maxPower ?? ComputeRatedSpeed().Item2; }
 		}
 
 		public static FullLoadCurve ReadFromFile(string fileName, bool declarationMode = false)
@@ -93,39 +100,33 @@ namespace TUGraz.VectoCore.Models.SimulationComponent.Data
 
 		private static bool HeaderIsValid(DataColumnCollection columns)
 		{
-			Contract.Requires(columns != null);
 			return columns.Contains(Fields.EngineSpeed)
 					&& columns.Contains(Fields.TorqueDrag)
 					&& columns.Contains(Fields.TorqueFullLoad);
-			//&& columns.Contains(Fields.PT1);
 		}
 
 		private static List<FullLoadCurveEntry> CreateFromColumnNames(DataTable data)
 		{
-			Contract.Requires(data != null);
 			return (from DataRow row in data.Rows
 				select new FullLoadCurveEntry {
 					EngineSpeed = row.ParseDouble(Fields.EngineSpeed).RPMtoRad(),
 					TorqueFullLoad = row.ParseDouble(Fields.TorqueFullLoad).SI<NewtonMeter>(),
 					TorqueDrag = row.ParseDouble(Fields.TorqueDrag).SI<NewtonMeter>()
-					//PT1 = row.ParseDouble(Fields.PT1).SI<Second>()
 				}).ToList();
 		}
 
 		private static List<FullLoadCurveEntry> CreateFromColumnIndizes(DataTable data)
 		{
-			Contract.Requires(data != null);
 			return (from DataRow row in data.Rows
 				select new FullLoadCurveEntry {
 					EngineSpeed = row.ParseDouble(0).RPMtoRad(),
 					TorqueFullLoad = row.ParseDouble(1).SI<NewtonMeter>(),
 					TorqueDrag = row.ParseDouble(2).SI<NewtonMeter>()
-					//PT1 = row.ParseDouble(3).SI<Second>()
 				}).ToList();
 		}
 
 		/// <summary>
-		///     Compute the engine's rated speed from the given full-load curve (i.e. engine speed with max. power)
+		/// Compute the engine's rated speed from the given full-load curve (i.e. engine speed with max. power)
 		/// </summary>
 		protected Tuple<PerSecond, Watt> ComputeRatedSpeed()
 		{
@@ -189,10 +190,8 @@ namespace TUGraz.VectoCore.Models.SimulationComponent.Data
 		}
 
 		/// <summary>
-		///     [rad/s] => index. Get item index for angularVelocity.
+		/// Get item index for angularVelocity.
 		/// </summary>
-		/// <param name="angularVelocity">[rad/s]</param>
-		/// <returns>index</returns>
 		protected int FindIndex(PerSecond angularVelocity)
 		{
 			int index;
@@ -204,10 +203,14 @@ namespace TUGraz.VectoCore.Models.SimulationComponent.Data
 
 		internal class FullLoadCurveEntry
 		{
+			[Required, SIRange(0, 5000 * Constants.RPMToRad)]
 			public PerSecond EngineSpeed { get; set; }
+
+			[Required, SIRange(0, 10000)]
 			public NewtonMeter TorqueFullLoad { get; set; }
+
+			[Required, SIRange(-10000, 0)]
 			public NewtonMeter TorqueDrag { get; set; }
-			//public Second PT1 { get; set; }
 
 			#region Equality members
 
@@ -247,17 +250,17 @@ namespace TUGraz.VectoCore.Models.SimulationComponent.Data
 		private static class Fields
 		{
 			/// <summary>
-			///     [rpm] engine speed
+			/// [rpm] engine speed
 			/// </summary>
 			public const string EngineSpeed = "engine speed";
 
 			/// <summary>
-			///     [Nm] full load torque
+			/// [Nm] full load torque
 			/// </summary>
 			public const string TorqueFullLoad = "full load torque";
 
 			/// <summary>
-			///     [Nm] motoring torque
+			/// [Nm] motoring torque
 			/// </summary>
 			public const string TorqueDrag = "motoring torque";
 		}
