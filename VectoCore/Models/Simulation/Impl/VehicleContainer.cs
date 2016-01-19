@@ -170,52 +170,17 @@ namespace TUGraz.VectoCore.Models.Simulation.Impl
 		{
 			Components.Add(component);
 
-			var engine = component as IEngineInfo;
-			if (engine != null) {
-				Engine = engine;
-			}
-
-			var driver = component as IDriverInfo;
-			if (driver != null) {
-				Driver = driver;
-			}
-
-			var gearbox = component as IGearboxInfo;
-			if (gearbox != null) {
-				Gearbox = gearbox;
-			}
-
-			var vehicle = component as IVehicleInfo;
-			if (vehicle != null) {
-				Vehicle = vehicle;
-			}
-
-			var cycle = component as ISimulationOutPort;
-			if (cycle != null) {
-				Cycle = cycle;
-			}
-
-			var milage = component as IMileageCounter;
-			if (milage != null) {
-				MilageCounter = milage;
-			}
-
-			var breaks = component as IBrakes;
-			if (breaks != null) {
-				Brakes = breaks;
-			}
-
-			var road = component as IRoadLookAhead;
-			if (road != null) {
-				Road = road;
-			}
-
-			var clutch = component as IClutchInfo;
-			if (clutch != null) {
-				Clutch = clutch;
-			}
+			component.Switch()
+				.If<IEngineInfo>(c => Engine = c)
+				.If<IDriverInfo>(c => Driver = c)
+				.If<IGearboxInfo>(c => Gearbox = c)
+				.If<IVehicleInfo>(c => Vehicle = c)
+				.If<ISimulationOutPort>(c => Cycle = c)
+				.If<IMileageCounter>(c => MilageCounter = c)
+				.If<IBrakes>(c => Brakes = c)
+				.If<IRoadLookAhead>(c => Road = c)
+				.If<IClutchInfo>(c => Clutch = c);
 		}
-
 
 		public void CommitSimulationStep(Second time, Second simulationInterval)
 		{
