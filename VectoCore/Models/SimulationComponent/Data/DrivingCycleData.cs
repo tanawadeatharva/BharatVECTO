@@ -150,6 +150,8 @@ namespace TUGraz.VectoCore.Models.SimulationComponent.Data
 	{
 		EngineOnly,
 		TimeBased,
-		DistanceBased
+		DistanceBased,
+		PWheel,
+		MeasuredSpeed
 	}
 }

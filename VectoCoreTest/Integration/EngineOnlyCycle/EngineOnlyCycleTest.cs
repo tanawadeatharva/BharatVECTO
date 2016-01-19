@@ -23,6 +23,7 @@ using TUGraz.VectoCore.InputData.Reader;
 using TUGraz.VectoCore.Models.Connector.Ports.Impl;
 using TUGraz.VectoCore.Models.Simulation.Data;
 using TUGraz.VectoCore.Models.Simulation.Impl;
+using TUGraz.VectoCore.Models.SimulationComponent.Data;
 using TUGraz.VectoCore.Models.SimulationComponent.Impl;
 using TUGraz.VectoCore.OutputData;
 using TUGraz.VectoCore.OutputData.FileIO;
@@ -42,7 +43,7 @@ namespace TUGraz.VectoCore.Tests.Integration.EngineOnlyCycle
 		[TestMethod]
 		public void TestEngineOnlyDrivingCycle()
 		{
-			var data = DrivingCycleDataReader.ReadFromFileEngineOnly(TestContext.DataRow["CycleFile"].ToString());
+			var data = DrivingCycleDataReader.ReadFromFile(TestContext.DataRow["CycleFile"].ToString(), CycleType.EngineOnly);
 			var container = new VehicleContainer();
 			var cycle = new MockDrivingCycle(container, data);
 			var vehicle = new VehicleContainer();

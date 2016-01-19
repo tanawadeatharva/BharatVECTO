@@ -42,7 +42,7 @@ namespace TUGraz.VectoCore.InputData.Reader.Impl
 					Retarder = dao.CreateRetarderData(InputDataProvider.RetarderInputData),
 					// TODO: distance or time-based cycle!
 					Cycle =
-						DrivingCycleDataReader.Create(cycle.CycleData, cycle.Name, CycleType.DistanceBased),
+						DrivingCycleDataReader.ReadFromDataTable(cycle.CycleData, CycleType.DistanceBased, cycle.Name),
 					IsEngineOnly = InputDataProvider.JobInputData().EngineOnlyMode
 				};
 				yield return simulationRunData;

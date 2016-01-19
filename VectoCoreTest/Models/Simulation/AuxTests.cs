@@ -47,7 +47,7 @@ namespace TUGraz.VectoCore.Tests.Models.Simulation
 			var sumWriter = new SummaryDataContainer(fileWriter);
 			var container = new VehicleContainer(modData,
 				(writer, mass, loading) => sumWriter.WriteFullPowertrain(modData, "", "", "", null, null));
-			var data = DrivingCycleDataReader.ReadFromFileDistanceBased(@"TestData\Cycles\LongHaul_short.vdri");
+			var data = DrivingCycleDataReader.ReadFromFile(@"TestData\Cycles\LongHaul_short.vdri", CycleType.DistanceBased);
 			var mockcycle = new MockDrivingCycle(container, data);
 			var port = new MockTnOutPort();
 
@@ -133,7 +133,7 @@ namespace TUGraz.VectoCore.Tests.Models.Simulation
 		{
 			var dataWriter = new MockModalDataContainer();
 			var container = new VehicleContainer(dataWriter);
-			var data = DrivingCycleDataReader.ReadFromFileTimeBased(@"TestData\Cycles\Coach time based short.vdri");
+			var data = DrivingCycleDataReader.ReadFromFile(@"TestData\Cycles\Coach time based short.vdri", CycleType.TimeBased);
 			var cycle = new MockDrivingCycle(container, data);
 			var port = new MockTnOutPort();
 			var aux = new Auxiliary(container);
@@ -165,7 +165,7 @@ namespace TUGraz.VectoCore.Tests.Models.Simulation
 			dataWriter.AddAuxiliary("CONSTANT");
 
 			var container = new VehicleContainer(dataWriter);
-			var data = DrivingCycleDataReader.ReadFromFileTimeBased(@"TestData\Cycles\Coach time based short.vdri");
+			var data = DrivingCycleDataReader.ReadFromFile(@"TestData\Cycles\Coach time based short.vdri", CycleType.TimeBased);
 			// cycle ALT1 is set to values to equal the first few fixed points in the auxiliary file.
 			// ALT1.aux file: nAuxiliary speed 2358: 0, 0.38, 0.49, 0.64, ...
 			// ALT1 in cycle file: 0, 0.3724 (=0.38*0.96), 0.4802 (=0.49*0.96), 0.6272 (0.64*0.96), ...
@@ -224,7 +224,7 @@ namespace TUGraz.VectoCore.Tests.Models.Simulation
 			dataWriter.AddAuxiliary(auxId);
 
 			var container = new VehicleContainer(dataWriter);
-			var data = DrivingCycleDataReader.ReadFromFileTimeBased(@"TestData\Cycles\Coach time based short.vdri");
+			var data = DrivingCycleDataReader.ReadFromFile(@"TestData\Cycles\Coach time based short.vdri", CycleType.TimeBased);
 			// cycle ALT1 is set to values to equal the first few fixed points in the auxiliary file.
 			// ALT1.aux file: nAuxiliary speed 2358: 0, 0.38, 0.49, 0.64, ...
 			// ALT1 in cycle file: 0, 0.3724 (=0.38*0.96), 0.4802 (=0.49*0.96), 0.6272 (0.64*0.96), ...
@@ -274,7 +274,7 @@ namespace TUGraz.VectoCore.Tests.Models.Simulation
 		public void AuxColumnMissing()
 		{
 			var container = new VehicleContainer();
-			var data = DrivingCycleDataReader.ReadFromFileTimeBased(@"TestData\Cycles\Coach time based short.vdri");
+			var data = DrivingCycleDataReader.ReadFromFile(@"TestData\Cycles\Coach time based short.vdri", CycleType.TimeBased);
 			var cycle = new MockDrivingCycle(container, data);
 
 			var aux = new Auxiliary(container);

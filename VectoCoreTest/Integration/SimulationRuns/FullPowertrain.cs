@@ -59,7 +59,7 @@ namespace TUGraz.VectoCore.Tests.Integration.SimulationRuns
 			var container = new VehicleContainer(modData);
 
 			var engineData = MockSimulationDataFactory.CreateEngineDataFromFile(EngineFile);
-			var cycleData = DrivingCycleDataReader.ReadFromFileDistanceBased(CycleFile);
+			var cycleData = DrivingCycleDataReader.ReadFromFile(CycleFile, CycleType.DistanceBased);
 			var axleGearData = CreateAxleGearData();
 			var gearboxData = CreateSimpleGearboxData();
 			var vehicleData = CreateVehicleData(3300.SI<Kilogram>());
@@ -118,7 +118,7 @@ namespace TUGraz.VectoCore.Tests.Integration.SimulationRuns
 			var container = new VehicleContainer(modData);
 
 			var engineData = MockSimulationDataFactory.CreateEngineDataFromFile(EngineFile);
-			var cycleData = DrivingCycleDataReader.ReadFromFileDistanceBased(CoachCycleFile);
+			var cycleData = DrivingCycleDataReader.ReadFromFile(CoachCycleFile, CycleType.DistanceBased);
 			var axleGearData = CreateAxleGearData();
 			var gearboxData = CreateGearboxData();
 			var vehicleData = CreateVehicleData(3300.SI<Kilogram>());
@@ -194,7 +194,7 @@ namespace TUGraz.VectoCore.Tests.Integration.SimulationRuns
 			var container = new VehicleContainer(modData);
 
 			var engineData = MockSimulationDataFactory.CreateEngineDataFromFile(EngineFile);
-			var cycleData = DrivingCycleDataReader.ReadFromFileDistanceBased(CycleFile);
+			var cycleData = DrivingCycleDataReader.ReadFromFile(CycleFile, CycleType.DistanceBased);
 			var axleGearData = CreateAxleGearData();
 			var gearboxData = CreateGearboxData();
 			var vehicleData = CreateVehicleData(3300.SI<Kilogram>());
