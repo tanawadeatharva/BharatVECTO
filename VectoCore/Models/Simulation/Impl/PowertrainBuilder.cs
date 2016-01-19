@@ -46,28 +46,57 @@ namespace TUGraz.VectoCore.Models.Simulation.Impl
 			return _engineOnly ? BuildEngineOnly(data) : BuildFullPowertrain(data);
 		}
 
+		private VehicleContainer BuildEngineOnly(VectoRunData data)
+		{
+			var cycle = new EngineOnlyDrivingCycle(_container, data.Cycle);
+
+			var gearbox = new EngineOnlyGearbox(_container);
+			cycle.InPort().Connect(gearbox.OutPort());
+
+			var directAux = new Auxiliary(_container);
+			directAux.AddDirect(cycle);
+			gearbox.InPort().Connect(directAux.OutPort());
+
+			var engine = new EngineOnlyCombustionEngine(_container, data.EngineData);
+			directAux.InPort().Connect(engine.OutPort());
+
+			return _container;
+		}
+
 		private VehicleContainer BuildFullPowertrain(VectoRunData data)
 		{
 			_container.RunData = data;
 			IDrivingCycle cycle;
 			switch (data.Cycle.CycleType) {
-				case CycleType.EngineOnly:
-					throw new VectoSimulationException("Engine-Only cycle File for full PowerTrain not allowed!");
 				case CycleType.DistanceBased:
 					cycle = new DistanceBasedDrivingCycle(_container, data.Cycle);
 					break;
 				case CycleType.TimeBased:
 					cycle = new TimeBasedDrivingCycle(_container, data.Cycle);
 					break;
+				//case CycleType.PWheel:
+				//	cycle = new PWheelDrivingCycle(_container, data.Cycle);
+				//	break;
+				//case CycleType.MeasuredSpeed:
+				//	cycle = new MeasuredSpeedDrivingCycle(_container, data.Cycle);
+				//	break;
 				default:
 					throw new VectoSimulationException("Unhandled Cycle Type");
 			}
 			// cycle --> driver --> vehicle --> wheels --> axleGear --> retarder --> gearBox
 			var driver = AddComponent(cycle, new Driver(_container, data.DriverData, new DefaultDriverStrategy()));
 			var vehicle = AddComponent(driver, new Vehicle(_container, data.VehicleData));
+
 			var wheels = AddComponent(vehicle, new Wheels(_container, data.VehicleData.DynamicTyreRadius));
 			var brakes = AddComponent(wheels, new Brakes(_container));
-			var tmp = AddComponent(brakes, new AxleGear(_container, data.AxleGearData));
+
+			IPowerTrainComponent tmp;
+			if (data.Cycle.CycleType == CycleType.PWheel) {
+				tmp = new AxleGear(_container, data.AxleGearData);
+				//((PWheelDrivingCycle)cycle).InPort().Connect(tmp.OutPort());
+			} else {
+				tmp = AddComponent(brakes, new AxleGear(_container, data.AxleGearData));
+			}
 
 			switch (data.Retarder.Type) {
 				case RetarderData.RetarderType.Primary:
@@ -120,7 +149,7 @@ namespace TUGraz.VectoCore.Models.Simulation.Impl
 			return _container;
 		}
 
-		protected IGearbox GetGearbox(VehicleContainer container, GearboxData data)
+		private IGearbox GetGearbox(VehicleContainer container, GearboxData data)
 		{
 			IShiftStrategy strategy;
 			switch (data.Type) {
@@ -142,59 +171,39 @@ namespace TUGraz.VectoCore.Models.Simulation.Impl
 			return new Gearbox(container, data, strategy);
 		}
 
-		protected virtual IDriver AddComponent(IDrivingCycle prev, IDriver next)
+		private static IDriver AddComponent(IDrivingCycleInProvider prev, IDriver next)
 		{
 			prev.InPort().Connect(next.OutPort());
 			return next;
 		}
 
-		protected virtual IVehicle AddComponent(IDriver prev, IVehicle next)
+		private static IVehicle AddComponent(IDriverDemandInProvider prev, IVehicle next)
 		{
 			prev.InPort().Connect(next.OutPort());
 			return next;
 		}
 
-		protected virtual IWheels AddComponent(IFvInProvider prev, IWheels next)
+		private static IWheels AddComponent(IFvInProvider prev, IWheels next)
 		{
 			prev.InPort().Connect(next.OutPort());
 			return next;
 		}
 
-
-		protected virtual IPowerTrainComponent AddComponent(IWheels prev, IPowerTrainComponent next)
+		private static IPowerTrainComponent AddComponent(ITnInProvider prev, IPowerTrainComponent next)
 		{
 			prev.InPort().Connect(next.OutPort());
 			return next;
 		}
 
-		protected virtual IPowerTrainComponent AddComponent(IPowerTrainComponent prev, IPowerTrainComponent next)
+		private static IPowerTrainComponent AddComponent(IPowerTrainComponent prev, IPowerTrainComponent next)
 		{
 			prev.InPort().Connect(next.OutPort());
 			return next;
 		}
 
-		protected virtual void AddComponent(IPowerTrainComponent prev, ITnOutProvider next)
+		private static void AddComponent(ITnInProvider prev, ITnOutProvider next)
 		{
 			prev.InPort().Connect(next.OutPort());
-		}
-
-
-		private VehicleContainer BuildEngineOnly(VectoRunData data)
-		{
-			var cycle = new EngineOnlyDrivingCycle(_container, data.Cycle);
-
-			var gearbox = new EngineOnlyGearbox(_container);
-			cycle.InPort().Connect(gearbox.OutPort());
-
-
-			var directAux = new Auxiliary(_container);
-			directAux.AddDirect(cycle);
-			gearbox.InPort().Connect(directAux.OutPort());
-
-			var engine = new EngineOnlyCombustionEngine(_container, data.EngineData);
-			directAux.InPort().Connect(engine.OutPort());
-
-			return _container;
 		}
 	}
 }

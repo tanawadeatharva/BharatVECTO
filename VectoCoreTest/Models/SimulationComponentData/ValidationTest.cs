@@ -1,5 +1,6 @@
 ﻿using System.ComponentModel.DataAnnotations;
 using System.Data;
+using System.Diagnostics.CodeAnalysis;
 using System.Linq;
 using Microsoft.VisualStudio.TestTools.UnitTesting;
 using TUGraz.VectoCore.Models.Simulation.Data;
@@ -9,9 +10,13 @@ using TUGraz.VectoCore.Models.SimulationComponent.Data.Engine;
 using TUGraz.VectoCore.Models.SimulationComponent.Data.Gearbox;
 using TUGraz.VectoCore.Utils;
 
+#pragma warning disable 169
+
 namespace TUGraz.VectoCore.Tests.Models.SimulationComponentData
 {
 	[TestClass]
+	[SuppressMessage("ReSharper", "InconsistentNaming")]
+	[SuppressMessage("ReSharper", "UnusedMember.Local")]
 	public class CombustionEngineDataValidationTestClass
 	{
 		/// <summary>
@@ -38,7 +43,7 @@ namespace TUGraz.VectoCore.Tests.Models.SimulationComponentData
 
 			var data = new CombustionEngineData {
 				ModelName = "asdf",
-				Displacement = 5.SI().Cubic.Centi.Meter.Cast<CubicMeter>(),
+				Displacement = 6374.SI().Cubic.Centi.Meter.Cast<CubicMeter>(),
 				IdleSpeed = 560.RPMtoRad(),
 				Inertia = 1.SI<KilogramSquareMeter>(),
 				WHTCUrban = 1.SI().Gramm.Per.Kilo.Watt.Hour.Cast<KilogramPerWattSecond>(),
@@ -189,6 +194,11 @@ namespace TUGraz.VectoCore.Tests.Models.SimulationComponentData
 			[Required, ValidateObject] public DeepDataObject parent_sub_object = new DeepDataObject();
 
 			#endregion
+
+			private void just_to_remove_compiler_warnings()
+			{
+				private_parent_field = private_static_parent_field;
+			}
 		}
 
 		public class DataObject : ParentDataObject
@@ -272,6 +282,11 @@ namespace TUGraz.VectoCore.Tests.Models.SimulationComponentData
 			[Required, ValidateObject] public DeepDataObject sub_object = new DeepDataObject();
 
 			#endregion
+
+			private void just_to_remove_compiler_warnings()
+			{
+				private_field = private_static_field;
+			}
 		}
 	}
 }

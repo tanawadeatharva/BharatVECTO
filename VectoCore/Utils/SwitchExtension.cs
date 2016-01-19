@@ -27,6 +27,14 @@ namespace TUGraz.VectoCore.Utils
 	/// </remarks>
 	public static class SwitchExtension
 	{
+		/// <summary>
+		/// Switches on the type.
+		/// With ".Case" you can define single alternatives (only the first suitable case will be executed).
+		/// With ".If" you can define multiple type-conditionals (every suitable if will be executed)
+		/// </summary>
+		/// <typeparam name="T"></typeparam>
+		/// <param name="self">The self.</param>
+		/// <returns></returns>
 		[DebuggerHidden]
 		public static Switch<T> Switch<T>(this T self)
 		{
@@ -65,6 +73,21 @@ namespace TUGraz.VectoCore.Utils
 			if (!_handled && _value.GetType() == typeof(TFilter)) {
 				action((TFilter)_value);
 				_handled = true;
+			}
+			return this;
+		}
+
+		/// <summary>
+		/// Does the action if the type is fullfilled and continues the evaluation.
+		/// </summary>
+		/// <typeparam name="TFilter">The type of the filter.</typeparam>
+		/// <param name="action">The action.</param>
+		/// <returns></returns>
+		[DebuggerHidden]
+		public Switch<T> If<TFilter>(Action<TFilter> action) where TFilter : class
+		{
+			if (_value is TFilter) {
+				action(_value as TFilter);
 			}
 			return this;
 		}
