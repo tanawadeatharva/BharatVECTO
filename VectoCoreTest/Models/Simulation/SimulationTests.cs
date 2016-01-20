@@ -81,7 +81,7 @@ namespace TUGraz.VectoCore.Tests.Models.Simulation
 
 		public IVectoRun CreateRun(string resultFileName)
 		{
-			var fileWriter = new FileOutputWriter(resultFileName, "");
+			var fileWriter = new FileOutputWriter(resultFileName);
 			var sumWriter = new SummaryDataContainer(fileWriter);
 
 			var inputData = JSONInputDataFactory.ReadJsonJob(EngineOnlyJob);
