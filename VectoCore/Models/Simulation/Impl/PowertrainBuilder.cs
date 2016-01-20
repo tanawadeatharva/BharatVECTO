@@ -74,9 +74,9 @@ namespace TUGraz.VectoCore.Models.Simulation.Impl
 				case CycleType.TimeBased:
 					cycle = new TimeBasedDrivingCycle(_container, data.Cycle);
 					break;
-				//case CycleType.PWheel:
-				//	cycle = new PWheelDrivingCycle(_container, data.Cycle);
-				//	break;
+				case CycleType.PWheel:
+					cycle = new PWheelDrivingCycle(_container, data.Cycle);
+					break;
 				//case CycleType.MeasuredSpeed:
 				//	cycle = new MeasuredSpeedDrivingCycle(_container, data.Cycle);
 				//	break;

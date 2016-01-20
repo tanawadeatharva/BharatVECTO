@@ -1,4 +1,5 @@
 ﻿using System;
+using System.Collections;
 using System.Collections.Generic;
 using System.Data;
 using System.IO;
@@ -410,7 +411,7 @@ namespace TUGraz.VectoCore.InputData.FileIO.JSON
 			get
 			{
 				var retVal = new List<IAuxiliaryInputData>();
-				foreach (var aux in Body.GetEx("Aux")) {
+				foreach (var aux in Body["Aux"] ?? Enumerable.Empty<JToken>()) {
 					var auxData = new AuxiliaryDataInputData {
 						ID = aux.GetEx<string>("ID"),
 						Type = aux.GetEx<string>("Type"),

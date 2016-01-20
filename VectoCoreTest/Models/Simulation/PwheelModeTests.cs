@@ -60,19 +60,12 @@ namespace TUGraz.VectoCore.Tests.Models.Simulation
 
 			jobContainer.WaitFinished();
 
-			ResultFileHelper.TestSumFile(@"TestData\Results\EngineOnlyCycles\24t Coach.vsum", @"24t Coach.vsum");
+			//todo MK-2016-01-20: add sumdata file for pwheel mode tests.
+			ResultFileHelper.TestSumFile(@"TestData\Results\Pwheel\Atego_ges.v2.vsum", @"Pwheel.vsum");
 
-			ResultFileHelper.TestModFiles(new[] {
-				@"TestData\Results\EngineOnlyCycles\24t Coach_Engine Only1.vmod",
-				@"TestData\Results\EngineOnlyCycles\24t Coach_Engine Only2.vmod",
-				@"TestData\Results\EngineOnlyCycles\24t Coach_Engine Only3.vmod"
-			}, new[] {
-				@"TestData\Jobs\24t Coach EngineOnly_Engine Only1.vmod",
-				@"TestData\Jobs\24t Coach EngineOnly_Engine Only2.vmod",
-				@"TestData\Jobs\24t Coach EngineOnly_Engine Only3.vmod"
-			})
-				;
-
+			//todo MK-2016-01-20: add moddata file for pwheel mode tests.
+			ResultFileHelper.TestModFile(@"TestData\Results\Pwheel\Atego_ges_Gear2_pt1_rep1_actual.vmod",
+				@"TestData\Jobs\Pwheel.vmod");
 
 			Assert.Fail("Test not implemented");
 		}
