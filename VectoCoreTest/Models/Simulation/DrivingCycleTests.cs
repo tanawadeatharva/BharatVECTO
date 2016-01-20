@@ -36,7 +36,7 @@ namespace TUGraz.VectoCore.Tests.Models.Simulation
 			var container = new VehicleContainer(dataWriter);
 
 			var cycleData = DrivingCycleDataReader.ReadFromFile(@"TestData\Cycles\Coach Engine Only.vdri", CycleType.EngineOnly);
-			var cycle = new EngineOnlyDrivingCycle(container, cycleData);
+			var cycle = new PowertrainDrivingCycle(container, cycleData);
 
 			var outPort = new MockTnOutPort();
 			var inPort = cycle.InPort();
@@ -67,7 +67,7 @@ namespace TUGraz.VectoCore.Tests.Models.Simulation
 
 			var cycleData = DrivingCycleDataReader.ReadFromFile(@"TestData\Cycles\Coach Engine Only Paux_var-dt.vdri",
 				CycleType.EngineOnly);
-			var cycle = new EngineOnlyDrivingCycle(container, cycleData);
+			var cycle = new PowertrainDrivingCycle(container, cycleData);
 
 			var outPort = new MockTnOutPort();
 			var inPort = cycle.InPort();

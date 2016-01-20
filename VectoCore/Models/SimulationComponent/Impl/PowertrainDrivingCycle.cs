@@ -21,7 +21,6 @@ using TUGraz.VectoCore.Exceptions;
 using TUGraz.VectoCore.Models.Connector.Ports;
 using TUGraz.VectoCore.Models.Connector.Ports.Impl;
 using TUGraz.VectoCore.Models.Simulation;
-using TUGraz.VectoCore.Models.Simulation.Data;
 using TUGraz.VectoCore.Models.SimulationComponent.Data;
 using TUGraz.VectoCore.OutputData;
 using TUGraz.VectoCore.Utils;
@@ -29,9 +28,9 @@ using TUGraz.VectoCore.Utils;
 namespace TUGraz.VectoCore.Models.SimulationComponent.Impl
 {
 	/// <summary>
-	///     Class representing one EngineOnly Driving Cycle
+	/// Represents a driving cycle which directly is connected to the powertrain (e.g. engine, or axle gear).
 	/// </summary>
-	public class EngineOnlyDrivingCycle : VectoSimulationComponent, IDrivingCycleInfo, IEngineOnlySimulation, ITnInPort,
+	public class PowertrainDrivingCycle : VectoSimulationComponent, IDrivingCycleInfo, IEngineOnlySimulation, ITnInPort,
 		ISimulationOutPort
 	{
 		protected DrivingCycleData Data;
@@ -41,8 +40,7 @@ namespace TUGraz.VectoCore.Models.SimulationComponent.Impl
 
 		protected Second AbsTime { get; set; }
 
-
-		public EngineOnlyDrivingCycle(IVehicleContainer container, DrivingCycleData cycle) : base(container)
+		public PowertrainDrivingCycle(IVehicleContainer container, DrivingCycleData cycle) : base(container)
 		{
 			Data = cycle;
 			LeftSample = Data.Entries.GetEnumerator();
@@ -75,7 +73,7 @@ namespace TUGraz.VectoCore.Models.SimulationComponent.Impl
 
 		public IResponse Request(Second absTime, Meter ds)
 		{
-			throw new VectoSimulationException("Engine-Only Simulation can not handle distance request.");
+			throw new VectoSimulationException("Powertrain Only Simulation can not handle distance request.");
 		}
 
 		IResponse ISimulationOutPort.Request(Second absTime, Second dt)
