@@ -50,12 +50,10 @@ namespace TUGraz.VectoCore.Tests.Integration.EngineOnlyCycle
 
 			var aux = new Auxiliary(vehicle);
 			aux.AddDirect(cycle);
-			var gearbox = new ManualGearbox(vehicle);
 
 			var engine = new EngineOnlyCombustionEngine(vehicle, engineData);
 
 			aux.InPort().Connect(engine.OutPort());
-			gearbox.InPort().Connect(aux.OutPort());
 			var port = aux.OutPort();
 
 			var absTime = 0.SI<Second>();
@@ -89,11 +87,7 @@ namespace TUGraz.VectoCore.Tests.Integration.EngineOnlyCycle
 
 			var vehicleContainer = new VehicleContainer();
 
-			var gearbox = new ManualGearbox(vehicleContainer);
-			var engine = new CombustionEngine(vehicleContainer,
-				MockSimulationDataFactory.CreateEngineDataFromFile(EngineFile));
-
-			gearbox.InPort().Connect(engine.OutPort());
+			var engine = new CombustionEngine(vehicleContainer, MockSimulationDataFactory.CreateEngineDataFromFile(EngineFile));
 
 			var absTime = 0.SI<Second>();
 			var dt = 1.SI<Second>();
@@ -101,7 +95,7 @@ namespace TUGraz.VectoCore.Tests.Integration.EngineOnlyCycle
 			var angularVelocity = 644.4445.RPMtoRad();
 			var power = 2329.973.SI<Watt>();
 
-			gearbox.OutPort().Request(absTime, dt, power / angularVelocity, angularVelocity);
+			engine.OutPort().Request(absTime, dt, power / angularVelocity, angularVelocity);
 
 			foreach (var sc in vehicleContainer.SimulationComponents()) {
 				sc.CommitSimulationStep(dataWriter);

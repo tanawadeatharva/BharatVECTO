@@ -29,7 +29,7 @@ namespace TUGraz.VectoCore.Models.SimulationComponent.Impl
 
 		public EngineOnlyCombustionEngine(IVehicleContainer cockpit, CombustionEngineData data) : base(cockpit, data) {}
 
-		// the behavior in engin-only mode differs a little bit from normal driving cycle simulation: in engine-only mode
+		// the behavior in engine-only mode differs a little bit from normal driving cycle simulation: in engine-only mode
 		// certain amount of overload is tolerated.
 		protected override IResponse DoHandleRequest(Second absTime, Second dt, NewtonMeter torque, PerSecond engineSpeed,
 			bool dryRun)
@@ -46,8 +46,8 @@ namespace TUGraz.VectoCore.Models.SimulationComponent.Impl
 
 			if (dryRun) {
 				return new ResponseDryRun {
-					DeltaFullLoad = (requestedEnginePower - CurrentState.DynamicFullLoadPower),
-					DeltaDragLoad = (requestedEnginePower - CurrentState.FullDragPower)
+					DeltaFullLoad = requestedEnginePower - CurrentState.DynamicFullLoadPower,
+					DeltaDragLoad = requestedEnginePower - CurrentState.FullDragPower
 				};
 			}
 
@@ -59,11 +59,6 @@ namespace TUGraz.VectoCore.Models.SimulationComponent.Impl
 			return new ResponseSuccess();
 		}
 
-		/// <summary>
-		///     [W] => [W]
-		/// </summary>
-		/// <param name="requestedEnginePower">[W]</param>
-		/// <returns>[W]</returns>
 		protected override Watt LimitEnginePower(Watt requestedEnginePower)
 		{
 			if (requestedEnginePower > CurrentState.DynamicFullLoadPower) {

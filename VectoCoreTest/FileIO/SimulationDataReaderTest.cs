@@ -42,7 +42,7 @@ namespace TUGraz.VectoCore.Tests.FileIO
 
 			Assert.AreEqual(false, runData.IsEngineOnly);
 
-			Assert.AreEqual(Path.GetFileName(DeclarationJob), runData.JobName);
+			Assert.AreEqual(Path.GetFileNameWithoutExtension(DeclarationJob), runData.JobName);
 			Assert.AreEqual(5850, runData.VehicleData.CurbWeight.Value());
 			Assert.AreEqual(1900, runData.VehicleData.CurbWeigthExtra.Value()); // taken from segmentation table
 			Assert.AreEqual(11900, runData.VehicleData.GrossVehicleMassRating.Value());

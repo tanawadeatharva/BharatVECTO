@@ -26,22 +26,14 @@ namespace TUGraz.VectoCore.OutputData.FileIO
 
 		public string GetModDataFileName(string runName, string cycleName, string runSuffix)
 		{
-			//var modFilePattern = Path.Combine(_basePath,
-			//	runName.Replace(Constants.FileExtensions.VectoJobFile, "") + "_{0}{1}" +
-			//	Constants.FileExtensions.ModDataFile);
-			//var modFileName = string.Format(modFilePattern, cycleName, runSuffix ?? "");
-			var modFileName = new StringBuilder(runName);
-			if (!string.IsNullOrEmpty(cycleName) || !string.IsNullOrEmpty(runSuffix)) {
-				modFileName.Append("_");
-				if (!string.IsNullOrEmpty(cycleName)) {
-					modFileName.Append(cycleName);
-				}
-				if (!string.IsNullOrEmpty(runSuffix)) {
-					modFileName.Append(cycleName);
-				}
+			string modFileName;
+			if (!string.IsNullOrWhiteSpace(cycleName) || !string.IsNullOrWhiteSpace(runSuffix)) {
+				modFileName = string.Format("{0}_{1}{2}{3}", runName, cycleName, runSuffix, Constants.FileExtensions.ModDataFile);
+			} else {
+				modFileName = string.Format("{0}{1}", runName, Constants.FileExtensions.ModDataFile);
 			}
-			modFileName.Append(Constants.FileExtensions.ModDataFile);
-			return modFileName.ToString();
+
+			return Path.Combine(_basePath, modFileName);
 		}
 
 		public void WriteModData(string runName, string cycleName, string runSuffix, DataTable modData)

@@ -1,18 +1,14 @@
 ﻿using System;
-using System.Collections;
 using System.Collections.Generic;
 using System.Data;
 using System.IO;
 using System.Linq;
 using System.Text;
 using Newtonsoft.Json.Linq;
-using NLog;
-using NLog.Fluent;
 using TUGraz.VectoCore.Configuration;
 using TUGraz.VectoCore.Exceptions;
 using TUGraz.VectoCore.InputData.Impl;
 using TUGraz.VectoCore.Models;
-using TUGraz.VectoCore.Models.Declaration;
 using TUGraz.VectoCore.Models.SimulationComponent.Data;
 using TUGraz.VectoCore.Utils;
 
@@ -175,7 +171,7 @@ namespace TUGraz.VectoCore.InputData.FileIO.JSON
 
 		public JSONInputDataV2(JObject data, string filename) : base(data, filename)
 		{
-			_jobname = Path.GetFileName(filename);
+			_jobname = Path.GetFileNameWithoutExtension(filename);
 			try {
 				var gearboxFile = Body.GetEx(JsonKeys.Vehicle_GearboxFile).Value<string>();
 				if (!EmptyOrInvalidFileName(gearboxFile)) {

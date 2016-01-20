@@ -56,12 +56,10 @@ namespace TUGraz.VectoCore.Models.Simulation.Impl
 		{
 			var cycle = new PowertrainDrivingCycle(_container, data.Cycle);
 
-			var gearbox = new ManualGearbox(_container);
-			cycle.InPort().Connect(gearbox.OutPort());
-
 			var directAux = new Auxiliary(_container);
 			directAux.AddDirect(cycle);
-			gearbox.InPort().Connect(directAux.OutPort());
+			
+			cycle.InPort().Connect(directAux.OutPort());
 
 			var engine = new EngineOnlyCombustionEngine(_container, data.EngineData);
 			directAux.InPort().Connect(engine.OutPort());

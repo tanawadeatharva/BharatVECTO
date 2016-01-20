@@ -85,8 +85,6 @@ namespace TUGraz.VectoCore.Tests.Models.SimulationComponent
 			var engineData = MockSimulationDataFactory.CreateEngineDataFromFile(CoachEngine);
 			var engine = new CombustionEngine(vehicle, engineData);
 
-			new ManualGearbox(vehicle);
-
 			var port = engine.OutPort();
 
 			var absTime = 0.SI<Second>();
@@ -103,7 +101,6 @@ namespace TUGraz.VectoCore.Tests.Models.SimulationComponent
 			var vehicle = new VehicleContainer();
 			var engineData = MockSimulationDataFactory.CreateEngineDataFromFile(CoachEngine);
 			var engine = new CombustionEngine(vehicle, engineData);
-			var gearbox = new ManualGearbox(vehicle);
 			var port = engine.OutPort();
 
 			var absTime = 0.SI<Second>();
@@ -165,17 +162,14 @@ namespace TUGraz.VectoCore.Tests.Models.SimulationComponent
 		public void TestEngineFullLoadJump()
 		{
 			var vehicleContainer = new VehicleContainer();
-			var gearbox = new ManualGearbox(vehicleContainer);
 			var engineData =
 				MockSimulationDataFactory.CreateEngineDataFromFile(
 					TestContext.DataRow["EngineFile"].ToString());
 			var engine = new EngineOnlyCombustionEngine(vehicleContainer, engineData);
 
-			gearbox.InPort().Connect(engine.OutPort());
-
 			var expectedResults = VectoCSVFile.Read(TestContext.DataRow["ResultFile"].ToString());
 
-			var requestPort = gearbox.OutPort();
+			var requestPort = engine.OutPort();
 
 			//var modalData = new ModalDataWriter(string.Format("load_jump_{0}.csv", TestContext.DataRow["TestName"].ToString()));
 			var modalData = new MockModalDataContainer();

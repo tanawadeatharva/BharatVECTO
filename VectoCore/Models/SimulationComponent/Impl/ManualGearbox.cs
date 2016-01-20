@@ -18,7 +18,9 @@ using TUGraz.VectoCore.Configuration;
 using TUGraz.VectoCore.Models.Connector.Ports;
 using TUGraz.VectoCore.Models.Connector.Ports.Impl;
 using TUGraz.VectoCore.Models.Simulation;
+using TUGraz.VectoCore.Models.Simulation.Data;
 using TUGraz.VectoCore.Models.SimulationComponent.Data;
+using TUGraz.VectoCore.OutputData;
 using TUGraz.VectoCore.Utils;
 
 namespace TUGraz.VectoCore.Models.SimulationComponent.Impl
@@ -39,6 +41,15 @@ namespace TUGraz.VectoCore.Models.SimulationComponent.Impl
 				Gear = DataBus.Gear;
 			}
 
+			if (Data == null || Data.Gears == null) {
+				var r = NextComponent.Initialize(outTorque, outAngularVelocity);
+				if (r is ResponseSuccess) {
+					PreviousInAngularSpeed = outAngularVelocity;
+					Disengaged = false;
+				}
+				return r;
+			}
+
 			var inAngularVelocity = outAngularVelocity * Data.Gears[Gear].Ratio;
 			var inTorque = Data.Gears[Gear].LossMap.GetInTorque(inAngularVelocity, outTorque);
 
@@ -55,6 +66,30 @@ namespace TUGraz.VectoCore.Models.SimulationComponent.Impl
 			}
 
 			return response;
+		}
+
+		/// <summary>
+		/// Requests the Gearbox to deliver torque and angularVelocity
+		/// </summary>
+		/// <returns>
+		/// <list type="bullet">
+		/// <item><description>ResponseDryRun</description></item>
+		/// <item><description>ResponseOverload</description></item>
+		/// <item><description>ResponseGearshift</description></item>
+		/// </list>
+		/// </returns>
+		public override IResponse Request(Second absTime, Second dt, NewtonMeter torque, PerSecond angularVelocity,
+			bool dryRun)
+		{
+			Log.Debug("Gearbox Power Request: torque: {0}, angularVelocity: {1}", torque, angularVelocity);
+			IResponse retVal;
+			if (ClutchClosed(absTime)) {
+				retVal = RequestGearEngaged(absTime, dt, torque, angularVelocity, dryRun);
+			} else {
+				retVal = RequestGearDisengaged(absTime, dt, torque, angularVelocity, dryRun);
+			}
+
+			return retVal;
 		}
 
 
@@ -78,6 +113,13 @@ namespace TUGraz.VectoCore.Models.SimulationComponent.Impl
 				Log.Debug("Gearbox engaged gear {0}", Gear);
 			}
 
+			if (Data == null || Data.Gears == null) {
+				var r = NextComponent.Request(absTime, dt, outTorque, outAngularVelocity);
+				r.GearboxPowerRequest = outTorque * outAngularVelocity;
+
+				PreviousInAngularSpeed = outAngularVelocity;
+				return r;
+			}
 			var inEngineSpeed = outAngularVelocity * Data.Gears[Gear].Ratio;
 			var inTorque = outAngularVelocity.IsEqual(0)
 				? outTorque / Data.Gears[Gear].Ratio
@@ -118,5 +160,19 @@ namespace TUGraz.VectoCore.Models.SimulationComponent.Impl
 		}
 
 		#endregion
+
+		protected override void DoWriteModalResults(IModalDataContainer container)
+		{
+			container[ModalResultField.Gear] = Gear;
+			container[ModalResultField.PlossGB] = PowerLoss;
+			container[ModalResultField.PaGB] = PowerLossInertia;
+		}
+
+		protected override void DoCommitSimulationStep()
+		{
+			if (Data != null && Data.Gears != null) {
+				base.DoCommitSimulationStep();
+			}
+		}
 	}
 }

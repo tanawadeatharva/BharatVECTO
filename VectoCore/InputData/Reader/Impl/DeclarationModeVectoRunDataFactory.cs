@@ -61,7 +61,7 @@ namespace TUGraz.VectoCore.InputData.Reader.Impl
 						Cycle = cycle,
 						Retarder = dao.CreateRetarderData(InputDataProvider.RetarderInputData),
 						DriverData = driverdata,
-						IsEngineOnly = false, // InputDataProvider.JobInputData().EngineOnlyMode,
+						IsEngineOnly = false,
 						JobName = InputDataProvider.JobInputData().JobName,
 						ModFileSuffix = loading.Key.ToString(),
 						Report = Report,

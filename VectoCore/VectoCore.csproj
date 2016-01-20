@@ -221,7 +221,7 @@
     <Compile Include="Models\Declaration\VehicleCategory.cs" />
     <Compile Include="Models\SimulationComponent\Data\VehicleData.cs" />
     <Compile Include="Models\SimulationComponent\IClutch.cs" />
-    <Compile Include="Models\SimulationComponent\IEngineOnlyDrivingCycle.cs" />
+    <Compile Include="Models\SimulationComponent\IPowertrainSimulation.cs" />
     <Compile Include="Models\SimulationComponent\IDrivingCycle.cs" />
     <Compile Include="Models\SimulationComponent\IDriver.cs" />
     <Compile Include="Models\SimulationComponent\Impl\Vehicle.cs" />
