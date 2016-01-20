@@ -30,7 +30,7 @@ namespace TUGraz.VectoCore.Models.SimulationComponent.Impl
 	/// <summary>
 	/// Represents a driving cycle which directly is connected to the powertrain (e.g. engine, or axle gear).
 	/// </summary>
-	public class PowertrainDrivingCycle : VectoSimulationComponent, IDrivingCycleInfo, IEngineOnlySimulation, ITnInPort,
+	public class PowertrainDrivingCycle : VectoSimulationComponent, IPowertrainSimulation, ITnInPort,
 		ISimulationOutPort
 	{
 		protected DrivingCycleData Data;

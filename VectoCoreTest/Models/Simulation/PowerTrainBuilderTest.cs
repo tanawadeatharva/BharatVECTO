@@ -39,7 +39,7 @@ namespace TUGraz.VectoCore.Tests.Models.Simulation
 			var runData = reader.NextRun().First();
 
 			var writer = new MockModalDataContainer();
-			var builder = new PowertrainBuilder(writer, false);
+			var builder = new PowertrainBuilder(writer);
 
 			var powerTrain = builder.Build(runData);
 

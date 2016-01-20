@@ -14,9 +14,7 @@
 * limitations under the Licence.
 */
 
-using System.Data;
 using System.IO;
-using System.Linq;
 using Microsoft.VisualStudio.TestTools.UnitTesting;
 using TUGraz.VectoCore.Configuration;
 using TUGraz.VectoCore.InputData.Reader;
@@ -52,7 +50,7 @@ namespace TUGraz.VectoCore.Tests.Integration.EngineOnlyCycle
 
 			var aux = new Auxiliary(vehicle);
 			aux.AddDirect(cycle);
-			var gearbox = new EngineOnlyGearbox(vehicle);
+			var gearbox = new ManualGearbox(vehicle);
 
 			var engine = new EngineOnlyCombustionEngine(vehicle, engineData);
 
@@ -91,7 +89,7 @@ namespace TUGraz.VectoCore.Tests.Integration.EngineOnlyCycle
 
 			var vehicleContainer = new VehicleContainer();
 
-			var gearbox = new EngineOnlyGearbox(vehicleContainer);
+			var gearbox = new ManualGearbox(vehicleContainer);
 			var engine = new CombustionEngine(vehicleContainer,
 				MockSimulationDataFactory.CreateEngineDataFromFile(EngineFile));
 
