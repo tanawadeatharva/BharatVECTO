@@ -164,7 +164,7 @@ namespace TUGraz.VectoCore.InputData.Reader.DataObjectAdaper
 				var gearLossMap = TransmissionLossMap.Create(gear.LossMap, gear.Ratio, string.Format("Gear {0}", i + 1));
 				var gearFullLoad = gear.FullLoadCurve == null
 					? engine.FullLoadCurve
-					: FullLoadCurve.Create(gear.FullLoadCurve);
+					: FullLoadCurve.Create(gear.FullLoadCurve, true);
 
 				var fullLoadCurve = IntersectFullLoadCurves(engine.FullLoadCurve, gearFullLoad);
 				var shiftPolygon = DeclarationData.Gearbox.ComputeShiftPolygon(fullLoadCurve, engine.IdleSpeed);

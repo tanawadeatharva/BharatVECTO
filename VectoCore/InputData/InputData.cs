@@ -155,6 +155,8 @@ namespace TUGraz.VectoCore.InputData
 		/// </summary>
 		bool TwinTyres { get; }
 
+		AxleType AxleType { get; }
+
 		/// <summary>
 		/// P046
 		/// cf. VECTO Input Parameters.xlsx
@@ -179,6 +181,7 @@ namespace TUGraz.VectoCore.InputData
 		/// </summary>
 		KilogramSquareMeter Inertia { get; }
 	}
+
 
 	public interface IGearboxInputData
 	{

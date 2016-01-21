@@ -1,5 +1,7 @@
 ﻿using System.Collections.Generic;
 using System.Data;
+using TUGraz.VectoCore.InputData;
+using TUGraz.VectoCore.Models.Declaration;
 using TUGraz.VectoCore.Models.SimulationComponent.Data;
 using TUGraz.VectoCore.Utils;
 
@@ -65,6 +67,8 @@ namespace TUGraz.VectoCore.InputData.Impl
 		public string Wheels { get; internal set; }
 
 		public bool TwinTyres { get; internal set; }
+
+		public AxleType AxleType { get; internal set; }
 
 		public double RollResistanceCoefficient { get; internal set; }
 
