@@ -14,57 +14,80 @@
 * limitations under the Licence.
 */
 
+using System;
+using System.Diagnostics;
 using TUGraz.VectoCore.Configuration;
 using TUGraz.VectoCore.Models.Connector.Ports;
 using TUGraz.VectoCore.Models.Connector.Ports.Impl;
 using TUGraz.VectoCore.Models.Simulation;
 using TUGraz.VectoCore.Models.Simulation.Data;
+using TUGraz.VectoCore.Models.Simulation.DataBus;
 using TUGraz.VectoCore.Models.SimulationComponent.Data;
 using TUGraz.VectoCore.OutputData;
 using TUGraz.VectoCore.Utils;
 
 namespace TUGraz.VectoCore.Models.SimulationComponent.Impl
 {
-	public class ManualGearbox : Gearbox
+	public class ManualGearbox : VectoSimulationComponent, IGearbox, ITnOutPort, ITnInPort, IClutchInfo
 	{
-		public ManualGearbox(IVehicleContainer container, GearboxData gearboxData = null) : base(container, gearboxData) {}
+		private readonly GearboxData _data;
+		private ITnOutPort NextComponent { get; set; }
+		private PerSecond PreviousInAngularSpeed { get; set; }
+		private Watt PowerLossInertia { get; set; }
+		private Watt PowerLoss { get; set; }
 
-		#region ITnOutPort
+		private Func<uint> GetGear { get; set; }
 
-		public override IResponse Initialize(NewtonMeter outTorque, PerSecond outAngularVelocity)
+		public uint Gear
+		{
+			get { return GetGear(); }
+		}
+
+		public MeterPerSecond StartSpeed
+		{
+			get { return _data.StartSpeed; }
+		}
+
+		public MeterPerSquareSecond StartAcceleration
+		{
+			get { return _data.StartAcceleration; }
+		}
+
+		public FullLoadCurve GearFullLoadCurve
+		{
+			get { return Gear == 0 ? null : _data.Gears[Gear].FullLoadCurve; }
+		}
+
+		public ManualGearbox(IVehicleContainer container, GearboxData gearboxData, Func<uint> getGear)
+			: base(container)
+		{
+			_data = gearboxData;
+			GetGear = getGear;
+		}
+
+		public IResponse Initialize(NewtonMeter outTorque, PerSecond outAngularVelocity)
 		{
 			var dt = Constants.SimulationSettings.TargetTimeInterval;
-			ShiftTime = double.NegativeInfinity.SI<Second>();
 			PowerLoss = null;
 
-			if (Disengaged) {
-				Gear = DataBus.Gear;
-			}
-
-			if (Data == null || Data.Gears == null) {
+			if (_data == null || _data.Gears == null) {
 				var r = NextComponent.Initialize(outTorque, outAngularVelocity);
 				if (r is ResponseSuccess) {
 					PreviousInAngularSpeed = outAngularVelocity;
-					Disengaged = false;
 				}
 				return r;
 			}
 
-			var inAngularVelocity = outAngularVelocity * Data.Gears[Gear].Ratio;
-			var inTorque = Data.Gears[Gear].LossMap.GetInTorque(inAngularVelocity, outTorque);
+			var inAngularVelocity = outAngularVelocity * _data.Gears[Gear].Ratio;
+			var inTorque = _data.Gears[Gear].LossMap.GetInTorque(inAngularVelocity, outTorque);
 
 			var torqueLossInertia = outAngularVelocity.IsEqual(0)
 				? 0.SI<NewtonMeter>()
-				: Formulas.InertiaPower(inAngularVelocity, PreviousInAngularSpeed, Data.Inertia, dt) / inAngularVelocity;
+				: Formulas.InertiaPower(inAngularVelocity, PreviousInAngularSpeed, _data.Inertia, dt) / inAngularVelocity;
 
 			inTorque += torqueLossInertia;
 
 			var response = NextComponent.Initialize(inTorque, inAngularVelocity);
-			if (response is ResponseSuccess) {
-				PreviousInAngularSpeed = inAngularVelocity;
-				Disengaged = false;
-			}
-
 			return response;
 		}
 
@@ -78,78 +101,28 @@ namespace TUGraz.VectoCore.Models.SimulationComponent.Impl
 		/// <item><description>ResponseGearshift</description></item>
 		/// </list>
 		/// </returns>
-		public override IResponse Request(Second absTime, Second dt, NewtonMeter torque, PerSecond angularVelocity,
+		public IResponse Request(Second absTime, Second dt, NewtonMeter outTorque, PerSecond outAngularVelocity,
 			bool dryRun)
 		{
-			Log.Debug("Gearbox Power Request: torque: {0}, angularVelocity: {1}", torque, angularVelocity);
-			IResponse retVal;
-			if (ClutchClosed(absTime)) {
-				retVal = RequestGearEngaged(absTime, dt, torque, angularVelocity, dryRun);
-			} else {
-				retVal = RequestGearDisengaged(absTime, dt, torque, angularVelocity, dryRun);
+			Log.Debug("Gearbox Power Request: torque: {0}, angularVelocity: {1}", outTorque, outAngularVelocity);
+
+			if (Gear == 0) {
+				var disengagedResponse = NextComponent.Request(absTime, dt, 0.SI<NewtonMeter>(), null);
+				disengagedResponse.GearboxPowerRequest = outTorque * outAngularVelocity;
+				PreviousInAngularSpeed = DataBus.EngineIdleSpeed;
+				return disengagedResponse;
 			}
 
-			return retVal;
-		}
-
-
-		/// <summary>
-		/// Requests the gearbox in engaged mode. Sets the gear if no gear was set previously.
-		/// </summary>
-		/// <returns>
-		/// <list type="bullet">
-		/// <item><term>ResponseGearShift</term><description>if a shift is needed.</description></item>
-		/// <item><term>else</term><description>Response from NextComponent.</description></item>
-		/// </list>
-		/// </returns>
-		protected override IResponse RequestGearEngaged(Second absTime, Second dt, NewtonMeter outTorque,
-			PerSecond outAngularVelocity,
-			bool dryRun)
-		{
-			// Set a Gear if no gear was set and engineSpeed is not zero
-			if (Disengaged && !outAngularVelocity.IsEqual(0)) {
-				Disengaged = false;
-				Gear = DataBus.Gear;
-				Log.Debug("Gearbox engaged gear {0}", Gear);
-			}
-
-			if (Data == null || Data.Gears == null) {
-				var r = NextComponent.Request(absTime, dt, outTorque, outAngularVelocity);
-				r.GearboxPowerRequest = outTorque * outAngularVelocity;
-
-				PreviousInAngularSpeed = outAngularVelocity;
-				return r;
-			}
-			var inEngineSpeed = outAngularVelocity * Data.Gears[Gear].Ratio;
-			var inTorque = outAngularVelocity.IsEqual(0)
-				? outTorque / Data.Gears[Gear].Ratio
-				: Data.Gears[Gear].LossMap.GetInTorque(inEngineSpeed, outTorque);
+			var inEngineSpeed = outAngularVelocity * _data.Gears[Gear].Ratio;
+			var inTorque = _data.Gears[Gear].LossMap.GetInTorque(inEngineSpeed, outTorque);
 
 			PowerLoss = inTorque * inEngineSpeed - outTorque * outAngularVelocity;
 
 			if (!inEngineSpeed.IsEqual(0)) {
-				PowerLossInertia = Formulas.InertiaPower(inEngineSpeed, PreviousInAngularSpeed, Data.Inertia, dt);
+				PowerLossInertia = Formulas.InertiaPower(inEngineSpeed, PreviousInAngularSpeed, _data.Inertia, dt);
 				inTorque += PowerLossInertia / inEngineSpeed;
 			} else {
 				PowerLossInertia = 0.SI<Watt>();
-			}
-
-			var shiftRequired = Gear != DataBus.Gear;
-
-			if (shiftRequired) {
-				ShiftTime = absTime + Data.TractionInterruption;
-
-				Log.Debug("Gearbox is shifting. absTime: {0}, dt: {1}, shiftTime: {2}, out: ({3}, {4}), in: ({5}, {6})", absTime, dt,
-					ShiftTime, outTorque, outAngularVelocity, inTorque, inEngineSpeed);
-
-				Disengaged = true;
-				Log.Info("Gearbox disengaged");
-
-				return new ResponseGearShift {
-					Source = this,
-					SimulationInterval = Data.TractionInterruption,
-					GearboxPowerRequest = outTorque * outAngularVelocity
-				};
 			}
 
 			var response = NextComponent.Request(absTime, dt, inTorque, inEngineSpeed);
@@ -159,8 +132,6 @@ namespace TUGraz.VectoCore.Models.SimulationComponent.Impl
 			return response;
 		}
 
-		#endregion
-
 		protected override void DoWriteModalResults(IModalDataContainer container)
 		{
 			container[ModalResultField.Gear] = Gear;
@@ -168,11 +139,37 @@ namespace TUGraz.VectoCore.Models.SimulationComponent.Impl
 			container[ModalResultField.PaGB] = PowerLossInertia;
 		}
 
+
 		protected override void DoCommitSimulationStep()
 		{
-			if (Data != null && Data.Gears != null) {
-				base.DoCommitSimulationStep();
+			if (_data.Gears[Gear].LossMap.Extrapolated) {
+				Log.Warn("Gear {0} LossMap data was extrapolated: range for loss map is not sufficient.", Gear);
 			}
+
+			PowerLoss = null;
+			PowerLossInertia = null;
+		}
+
+		[DebuggerHidden]
+		public ITnInPort InPort()
+		{
+			return this;
+		}
+
+		[DebuggerHidden]
+		public ITnOutPort OutPort()
+		{
+			return this;
+		}
+
+		void ITnInPort.Connect(ITnOutPort other)
+		{
+			NextComponent = other;
+		}
+
+		public bool ClutchClosed(Second absTime)
+		{
+			return true;
 		}
 	}
 }

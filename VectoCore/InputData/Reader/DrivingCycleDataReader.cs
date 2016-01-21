@@ -289,8 +289,8 @@ namespace TUGraz.VectoCore.InputData.Reader
 					RoadGradient = VectoMath.InclinationToAngle(row.ParseDoubleOrGetDefault(Fields.RoadGradient) / 100.0),
 					StoppingTime = row.ParseDouble(Fields.StoppingTime).SI<Second>(),
 					AdditionalAuxPowerDemand = row.ParseDoubleOrGetDefault(Fields.AdditionalAuxPowerDemand).SI().Kilo.Watt.Cast<Watt>(),
-					EngineSpeed = row.ParseDoubleOrGetDefault(Fields.EngineSpeed).RPMtoRad(),
-					Gear = row.ParseDoubleOrGetDefault(Fields.Gear),
+					AngularVelocity = row.ParseDoubleOrGetDefault(Fields.EngineSpeed).RPMtoRad(),
+					Gear = (uint)row.ParseDoubleOrGetDefault(Fields.Gear),
 					AirSpeedRelativeToVehicle = row.ParseDoubleOrGetDefault(Fields.AirSpeedRelativeToVehicle).KMPHtoMeterPerSecond(),
 					WindYawAngle = row.ParseDoubleOrGetDefault(Fields.WindYawAngle),
 					AuxiliarySupplyPower = AuxSupplyPowerReader.Read(row)
@@ -359,8 +359,8 @@ namespace TUGraz.VectoCore.InputData.Reader
 					RoadGradientPercent = row.ParseDoubleOrGetDefault(Fields.RoadGradient),
 					RoadGradient = VectoMath.InclinationToAngle(row.ParseDoubleOrGetDefault(Fields.RoadGradient) / 100.0),
 					AdditionalAuxPowerDemand = row.ParseDoubleOrGetDefault(Fields.AdditionalAuxPowerDemand).SI().Kilo.Watt.Cast<Watt>(),
-					Gear = row.ParseDoubleOrGetDefault(Fields.Gear),
-					EngineSpeed = row.ParseDoubleOrGetDefault(Fields.EngineSpeed).RPMtoRad(),
+					Gear = (uint)row.ParseDoubleOrGetDefault(Fields.Gear),
+					AngularVelocity = row.ParseDoubleOrGetDefault(Fields.EngineSpeed).RPMtoRad(),
 					AirSpeedRelativeToVehicle = row.ParseDoubleOrGetDefault(Fields.AirSpeedRelativeToVehicle).KMPHtoMeterPerSecond(),
 					WindYawAngle = row.ParseDoubleOrGetDefault(Fields.WindYawAngle),
 					AuxiliarySupplyPower = AuxSupplyPowerReader.Read(row)
@@ -426,7 +426,7 @@ namespace TUGraz.VectoCore.InputData.Reader
 				var absTime = 0.SI<Second>();
 				foreach (DataRow row in table.Rows) {
 					var entry = new DrivingCycleData.DrivingCycleEntry {
-						EngineSpeed = row.ParseDoubleOrGetDefault(Fields.EngineSpeed).RPMtoRad(),
+						AngularVelocity = row.ParseDoubleOrGetDefault(Fields.EngineSpeed).RPMtoRad(),
 						AdditionalAuxPowerDemand =
 							row.ParseDoubleOrGetDefault(Fields.AdditionalAuxPowerDemand).SI().Kilo.Watt.Cast<Watt>(),
 						AuxiliarySupplyPower = AuxSupplyPowerReader.Read(row)
@@ -436,13 +436,13 @@ namespace TUGraz.VectoCore.InputData.Reader
 						if (row.Field<string>(Fields.EngineTorque).Equals("<DRAG>")) {
 							entry.Drag = true;
 						} else {
-							entry.EngineTorque = row.ParseDouble(Fields.EngineTorque).SI<NewtonMeter>();
+							entry.Torque = row.ParseDouble(Fields.EngineTorque).SI<NewtonMeter>();
 						}
 					} else {
 						if (row.Field<string>(Fields.EnginePower).Equals("<DRAG>")) {
 							entry.Drag = true;
 						} else {
-							entry.EngineTorque = row.ParseDouble(Fields.EnginePower).SI().Kilo.Watt.Cast<Watt>() / entry.EngineSpeed;
+							entry.Torque = row.ParseDouble(Fields.EnginePower).SI().Kilo.Watt.Cast<Watt>() / entry.AngularVelocity;
 						}
 					}
 					entry.Time = absTime;
@@ -506,8 +506,8 @@ namespace TUGraz.VectoCore.InputData.Reader
 				var entries = table.Rows.Cast<DataRow>().Select(row => new DrivingCycleData.DrivingCycleEntry {
 					Time = row.ParseDouble(Fields.Time).SI<Second>(),
 					PWheel = row.ParseDouble(Fields.PWheel).SI().Kilo.Watt.Cast<Watt>(),
-					Gear = row.ParseDouble(Fields.Gear),
-					EngineSpeed = row.ParseDouble(Fields.EngineSpeed).RPMtoRad(),
+					Gear = (uint)row.ParseDouble(Fields.Gear),
+					AngularVelocity = row.ParseDouble(Fields.EngineSpeed).RPMtoRad(),
 					AdditionalAuxPowerDemand = row.ParseDouble(Fields.AdditionalAuxPowerDemand).SI().Kilo.Watt.Cast<Watt>(),
 				}).ToArray();
 
@@ -553,7 +553,7 @@ namespace TUGraz.VectoCore.InputData.Reader
 					Time = row.ParseDouble(Fields.Time).SI<Second>(),
 					VehicleTargetSpeed = row.ParseDouble(Fields.VehicleSpeed).KMPHtoMeterPerSecond(),
 					RoadGradient = VectoMath.InclinationToAngle(row.ParseDoubleOrGetDefault(Fields.RoadGradient) / 100.0),
-					Gear = row.ParseDouble(Fields.Gear),
+					Gear = (uint)row.ParseDouble(Fields.Gear),
 					AdditionalAuxPowerDemand = row.ParseDouble(Fields.AdditionalAuxPowerDemand).SI().Kilo.Watt.Cast<Watt>(),
 				}).ToArray();
 

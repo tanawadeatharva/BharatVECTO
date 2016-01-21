@@ -64,7 +64,7 @@ namespace TUGraz.VectoCore.Tests.Integration.EngineOnlyCycle
 			var modData = new ModalDataContainer(modFile, fileWriter, ExecutionMode.EngineOnly);
 
 			foreach (var cycleEntry in data.Entries) {
-				var response = port.Request(absTime, dt, cycleEntry.EngineTorque, cycleEntry.EngineSpeed);
+				var response = port.Request(absTime, dt, cycleEntry.Torque, cycleEntry.AngularVelocity);
 				Assert.IsInstanceOfType(response, typeof(ResponseSuccess));
 				foreach (var sc in vehicle.SimulationComponents()) {
 					modData[ModalResultField.time] = absTime + dt / 2;

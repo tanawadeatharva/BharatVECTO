@@ -21,7 +21,9 @@ using TUGraz.VectoCore.Exceptions;
 using TUGraz.VectoCore.Models.Connector.Ports;
 using TUGraz.VectoCore.Models.Connector.Ports.Impl;
 using TUGraz.VectoCore.Models.Simulation;
+using TUGraz.VectoCore.Models.Simulation.Impl;
 using TUGraz.VectoCore.Models.SimulationComponent.Data;
+using TUGraz.VectoCore.Models.SimulationComponent.Data.Gearbox;
 using TUGraz.VectoCore.OutputData;
 using TUGraz.VectoCore.Utils;
 
@@ -84,13 +86,13 @@ namespace TUGraz.VectoCore.Models.SimulationComponent.Impl
 				return new ResponseCycleFinished();
 			}
 			AbsTime = absTime;
-			return NextComponent.Request(absTime, dt, Data.Entries[index].EngineTorque, Data.Entries[index].EngineSpeed);
+			return NextComponent.Request(absTime, dt, Data.Entries[index].Torque, Data.Entries[index].AngularVelocity);
 		}
 
 		public IResponse Initialize()
 		{
 			var index = 0;
-			return NextComponent.Initialize(Data.Entries[index].EngineTorque, Data.Entries[index].EngineSpeed);
+			return NextComponent.Initialize(Data.Entries[index].Torque, Data.Entries[index].AngularVelocity);
 		}
 
 		public string CycleName
@@ -140,6 +142,19 @@ namespace TUGraz.VectoCore.Models.SimulationComponent.Impl
 				LeftSample = LeftSample.Current,
 				RightSample = RightSample.Current,
 			};
+		}
+	}
+
+	public class PWheelCycle : PowertrainDrivingCycle
+	{
+		public PWheelCycle(IVehicleContainer container, DrivingCycleData cycle, double axleRatio,
+			IDictionary<uint, double> gears) : base(container, cycle)
+		{
+			gears[0] = 1;
+			foreach (var entry in Data.Entries) {
+				entry.AngularVelocity *= axleRatio * gears[entry.Gear];
+				entry.Torque = entry.PWheel / entry.AngularVelocity;
+			}
 		}
 	}
 }

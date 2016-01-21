@@ -50,12 +50,12 @@ namespace TUGraz.VectoCore.Models.SimulationComponent.Data
 				RoadGradient = entry.RoadGradient;
 				Altitude = entry.Altitude;
 				StoppingTime = entry.StoppingTime;
-				EngineSpeed = entry.EngineSpeed;
+				AngularVelocity = entry.AngularVelocity;
 				Gear = entry.Gear;
 				AdditionalAuxPowerDemand = entry.AdditionalAuxPowerDemand;
 				AirSpeedRelativeToVehicle = entry.AirSpeedRelativeToVehicle;
 				WindYawAngle = entry.WindYawAngle;
-				EngineTorque = entry.EngineTorque;
+				Torque = entry.Torque;
 				Drag = entry.Drag;
 				AuxiliarySupplyPower = new Dictionary<string, Watt>(entry.AuxiliarySupplyPower);
 			}
@@ -104,12 +104,12 @@ namespace TUGraz.VectoCore.Models.SimulationComponent.Data
 			/// <summary>
 			/// If "n" is defined VECTO uses that instead of the calculated engine speed value.
 			/// </summary>
-			public PerSecond EngineSpeed { get; set; }
+			public PerSecond AngularVelocity { get; set; }
 
 			/// <summary>
 			/// [-] Gear input. Overwrites the gear shift model.
 			/// </summary>
-			public double Gear { get; set; }
+			public uint Gear { get; set; }
 
 			/// <summary>
 			/// This power input will be directly added to the engine power in addition to possible other auxiliaries. Also used in Engine Only Mode.
@@ -129,7 +129,7 @@ namespace TUGraz.VectoCore.Models.SimulationComponent.Data
 			/// <summary>
 			/// Effective engine torque at clutch. Only required in Engine Only Mode. Alternatively power "Pe" can be defined. Use "DRAG" to define motoring operation.
 			/// </summary>
-			public NewtonMeter EngineTorque { get; set; }
+			public NewtonMeter Torque { get; set; }
 
 			public bool Drag { get; set; }
 
