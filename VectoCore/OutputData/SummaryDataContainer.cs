@@ -84,8 +84,8 @@ namespace TUGraz.VectoCore.OutputData
 		private bool _engineOnly = true;
 
 		protected SummaryDataContainer() {}
-		
-		
+
+
 		private readonly IList<string> _auxColumns = new List<string>();
 
 		/// <summary>
@@ -235,7 +235,9 @@ namespace TUGraz.VectoCore.OutputData
 			var sortedAndFilteredTable = new DataView(_table, "", JOB, DataViewRowState.CurrentRows).ToTable(false,
 				dataColumns.ToArray());
 
-			_sumWriter.WriteSumData(sortedAndFilteredTable);
+			if (_sumWriter != null) {
+				_sumWriter.WriteSumData(sortedAndFilteredTable);
+			}
 		}
 	}
 }

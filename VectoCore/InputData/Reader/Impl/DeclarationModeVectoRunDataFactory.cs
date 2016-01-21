@@ -5,6 +5,7 @@ using TUGraz.VectoCore.Models;
 using TUGraz.VectoCore.Models.Declaration;
 using TUGraz.VectoCore.Models.Simulation.Data;
 using TUGraz.VectoCore.Models.SimulationComponent.Data;
+using TUGraz.VectoCore.OutputData;
 using TUGraz.VectoCore.OutputData.PDF;
 using TUGraz.VectoCore.Utils;
 
@@ -55,9 +56,8 @@ namespace TUGraz.VectoCore.InputData.Reader.Impl
 						EngineData = engineData,
 						GearboxData = dao.CreateGearboxData(InputDataProvider.GearboxInputData, engineData),
 						AxleGearData = dao.CreateAxleGearData(InputDataProvider.AxleGearInputData),
-						Aux =
-							dao.CreateAuxiliaryData(InputDataProvider.AuxiliaryInputData(), mission.MissionType,
-								segment.VehicleClass),
+						Aux = dao.CreateAuxiliaryData(InputDataProvider.AuxiliaryInputData(), mission.MissionType,
+							segment.VehicleClass),
 						Cycle = cycle,
 						Retarder = dao.CreateRetarderData(InputDataProvider.RetarderInputData),
 						DriverData = driverdata,
