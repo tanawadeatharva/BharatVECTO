@@ -15,6 +15,8 @@
 */
 
 using System;
+using System.Collections.Generic;
+using System.Linq;
 using TUGraz.VectoCore.Exceptions;
 using TUGraz.VectoCore.Models.Connector.Ports;
 using TUGraz.VectoCore.Models.Simulation.Data;
@@ -58,7 +60,7 @@ namespace TUGraz.VectoCore.Models.Simulation.Impl
 
 			var directAux = new Auxiliary(_container);
 			directAux.AddDirect(cycle);
-			
+
 			cycle.InPort().Connect(directAux.OutPort());
 
 			var engine = new EngineOnlyCombustionEngine(_container, data.EngineData);
@@ -69,7 +71,8 @@ namespace TUGraz.VectoCore.Models.Simulation.Impl
 
 		private VehicleContainer BuildPWheel(VectoRunData data)
 		{
-			var cycle = new PowertrainDrivingCycle(_container, data.Cycle);
+			var cycle = new PWheelCycle(_container, data.Cycle, data.AxleGearData.Ratio,
+				data.GearboxData.Gears.ToDictionary(g => g.Key, g => g.Value.Ratio));
 
 			var tmp = AddComponent(cycle, new AxleGear(_container, data.AxleGearData));
 

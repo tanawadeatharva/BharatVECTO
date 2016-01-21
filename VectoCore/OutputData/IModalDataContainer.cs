@@ -127,41 +127,65 @@ namespace TUGraz.VectoCore.OutputData
 
 		public static MeterPerSquareSecond AccelerationsPositive3SecondAverage(this IModalDataContainer data)
 		{
-			var acceleration3SecondAverage = AccelerationPer3Seconds(data);
-			return acceleration3SecondAverage.Where(x => x > 0.125).Average();
+			try {
+				var acceleration3SecondAverage = AccelerationPer3Seconds(data);
+				return acceleration3SecondAverage.Where(x => x > 0.125).Average();
+			} catch (NullReferenceException) {
+				return null;
+			}
 		}
 
 		public static MeterPerSquareSecond AccelerationNoise(this IModalDataContainer data)
 		{
-			var avg = data.AccelerationAverage();
-			var accelerationAverages = AccelerationPerSecond(data).ToList();
-			var sqareAvg = accelerationAverages.Select(x => (x - avg) * (x - avg)).Sum() / accelerationAverages.Count;
-			return sqareAvg.Sqrt().Cast<MeterPerSquareSecond>();
+			try {
+				var avg = data.AccelerationAverage();
+				var accelerationAverages = AccelerationPerSecond(data).ToList();
+				var sqareAvg = accelerationAverages.Select(x => (x - avg) * (x - avg)).Sum() / accelerationAverages.Count;
+				return sqareAvg.Sqrt().Cast<MeterPerSquareSecond>();
+			} catch (NullReferenceException) {
+				return null;
+			}
 		}
 
 		public static MeterPerSquareSecond AverageAccelerations3SecondNegative(this IModalDataContainer data)
 		{
-			var acceleration3SecondAverage = AccelerationPer3Seconds(data);
-			return acceleration3SecondAverage.Where(x => x < -0.125).Average();
+			try {
+				var acceleration3SecondAverage = AccelerationPer3Seconds(data);
+				return acceleration3SecondAverage.Where(x => x < -0.125).Average();
+			} catch (NullReferenceException) {
+				return null;
+			}
 		}
 
 		public static Scalar PercentAccelerationTime(this IModalDataContainer data)
 		{
-			var acceleration3SecondAverage = AccelerationPer3Seconds(data).ToList();
-			return 100.SI<Scalar>() * acceleration3SecondAverage.Count(x => x > 0.125) / acceleration3SecondAverage.Count;
+			try {
+				var acceleration3SecondAverage = AccelerationPer3Seconds(data).ToList();
+				return 100.SI<Scalar>() * acceleration3SecondAverage.Count(x => x > 0.125) / acceleration3SecondAverage.Count;
+			} catch (NullReferenceException) {
+				return null;
+			}
 		}
 
 		public static Scalar PercentDecelerationTime(this IModalDataContainer data)
 		{
-			var acceleration3SecondAverage = AccelerationPer3Seconds(data).ToList();
-			return 100.SI<Scalar>() * acceleration3SecondAverage.Count(x => x < -0.125) / acceleration3SecondAverage.Count;
+			try {
+				var acceleration3SecondAverage = AccelerationPer3Seconds(data).ToList();
+				return 100.SI<Scalar>() * acceleration3SecondAverage.Count(x => x < -0.125) / acceleration3SecondAverage.Count;
+			} catch (NullReferenceException) {
+				return null;
+			}
 		}
 
 		public static Scalar PercentCruiseTime(this IModalDataContainer data)
 		{
-			var acceleration3SecondAverage = AccelerationPer3Seconds(data).ToList();
-			return 100.SI<Scalar>() * acceleration3SecondAverage.Count(x => x.IsBetween(-0.125, -0.125)) /
-					acceleration3SecondAverage.Count;
+			try {
+				var acceleration3SecondAverage = AccelerationPer3Seconds(data).ToList();
+				return 100.SI<Scalar>() * acceleration3SecondAverage.Count(x => x.IsBetween(-0.125, -0.125)) /
+						acceleration3SecondAverage.Count;
+			} catch (NullReferenceException) {
+				return null;
+			}
 		}
 
 		public static Scalar PercentStopTime(this IModalDataContainer data)
@@ -184,8 +208,10 @@ namespace TUGraz.VectoCore.OutputData
 
 		public static Meter AltitudeDelta(this IModalDataContainer data)
 		{
-			return data.GetValues<Meter>(ModalResultField.altitude).Last() -
-					data.GetValues<Meter>(ModalResultField.altitude).First();
+			var altitudes = data.GetValues<Meter>(ModalResultField.altitude).ToList();
+			var first = altitudes.First();
+			var last = altitudes.Last();
+			return first == null || last == null ? null : last - first;
 		}
 
 		public static WattSecond PowerAccelerations(this IModalDataContainer data)
@@ -220,7 +246,9 @@ namespace TUGraz.VectoCore.OutputData
 
 		public static Meter Distance(this IModalDataContainer data)
 		{
-			return (data.Max(ModalResultField.dist) - data.Min(ModalResultField.dist)).Cast<Meter>();
+			var max = data.Max(ModalResultField.dist);
+			var min = data.Min(ModalResultField.dist);
+			return max == null || min == null ? null : (max - min).Cast<Meter>();
 		}
 
 		public static WattSecond WorkTotalMechanicalBrake(this IModalDataContainer data)
@@ -270,7 +298,11 @@ namespace TUGraz.VectoCore.OutputData
 
 		public static KilogramPerMeter FuelConsumptionWHTCCorrected(this IModalDataContainer data)
 		{
-			return data.TimeIntegral<Kilogram>(ModalResultField.FCWHTCc) / data.Distance();
+			var distance = data.Distance();
+			if (distance == null) {
+				return null;
+			}
+			return data.TimeIntegral<Kilogram>(ModalResultField.FCWHTCc) / distance;
 		}
 
 		public static KilogramPerSecond FuelConsumptionWHTCCorrectedPerSecond(this IModalDataContainer data)
@@ -280,7 +312,11 @@ namespace TUGraz.VectoCore.OutputData
 
 		public static KilogramPerMeter FuelConsumptionAuxStartStopCorrected(this IModalDataContainer data)
 		{
-			return data.TimeIntegral<Kilogram>(ModalResultField.FCAUXc) / data.Distance();
+			var distance = data.Distance();
+			if (distance == null) {
+				return null;
+			}
+			return data.TimeIntegral<Kilogram>(ModalResultField.FCAUXc) / distance;
 		}
 
 		public static KilogramPerSecond FuelConsumptionAuxStartStopCorrectedPerSecond(this IModalDataContainer data)
@@ -290,18 +326,31 @@ namespace TUGraz.VectoCore.OutputData
 
 		public static KilogramPerMeter FuelConsumptionFinal(this IModalDataContainer data)
 		{
-			return data.TimeIntegral<Kilogram>(ModalResultField.FCWHTCc) / data.Distance();
+			var distance = data.Distance();
+			if (distance == null) {
+				return null;
+			}
+			return data.TimeIntegral<Kilogram>(ModalResultField.FCWHTCc) / distance;
 		}
 
 		public static SI FuelConsumptionFinalLiterPer100Kilometer(this IModalDataContainer data)
 		{
-			var fcVolumePerMeter = data.FuelConsumptionFinal() / Physics.FuelDensity;
+			var fuelConsumptionFinal = data.FuelConsumptionFinal();
+			if (fuelConsumptionFinal == null) {
+				return null;
+			}
+
+			var fcVolumePerMeter = fuelConsumptionFinal / Physics.FuelDensity;
 			return fcVolumePerMeter.ConvertTo().Cubic.Dezi.Meter * 100.SI().Kilo.Meter;
 		}
 
 		public static KilogramPerMeter CO2PerMeter(this IModalDataContainer data)
 		{
-			return data.TimeIntegral<Kilogram>(ModalResultField.FCMap) * Physics.CO2PerFuelWeight / data.Distance();
+			var distance = data.Distance();
+			if (distance == null) {
+				return null;
+			}
+			return data.TimeIntegral<Kilogram>(ModalResultField.FCMap) * Physics.CO2PerFuelWeight / distance;
 		}
 
 		public static SI FuelConsumptionLiterPer100Kilometer(this IModalDataContainer data)
@@ -317,7 +366,11 @@ namespace TUGraz.VectoCore.OutputData
 
 		public static KilogramPerMeter FuelConsumptionPerMeter(this IModalDataContainer data)
 		{
-			return data.TimeIntegral<Kilogram>(ModalResultField.FCMap) / data.Distance();
+			var distance = data.Distance();
+			if (distance == null) {
+				return null;
+			}
+			return data.TimeIntegral<Kilogram>(ModalResultField.FCMap) / distance;
 		}
 
 		public static Watt EnginePowerNegativeAverage(this IModalDataContainer data)
@@ -346,7 +399,12 @@ namespace TUGraz.VectoCore.OutputData
 
 		public static MeterPerSecond Speed(this IModalDataContainer data)
 		{
-			return Distance(data) / Duration(data);
+			var distance = Distance(data);
+			var duration = Duration(data);
+			if (distance == null || duration == null) {
+				return null;
+			}
+			return distance / duration;
 		}
 
 		public static WattSecond AuxiliaryWork(this IModalDataContainer data, DataColumn auxCol)

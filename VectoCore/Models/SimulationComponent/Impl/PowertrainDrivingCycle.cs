@@ -21,9 +21,8 @@ using TUGraz.VectoCore.Exceptions;
 using TUGraz.VectoCore.Models.Connector.Ports;
 using TUGraz.VectoCore.Models.Connector.Ports.Impl;
 using TUGraz.VectoCore.Models.Simulation;
-using TUGraz.VectoCore.Models.Simulation.Impl;
+using TUGraz.VectoCore.Models.Simulation.DataBus;
 using TUGraz.VectoCore.Models.SimulationComponent.Data;
-using TUGraz.VectoCore.Models.SimulationComponent.Data.Gearbox;
 using TUGraz.VectoCore.OutputData;
 using TUGraz.VectoCore.Utils;
 
@@ -37,11 +36,16 @@ namespace TUGraz.VectoCore.Models.SimulationComponent.Impl
 	{
 		protected DrivingCycleData Data;
 		protected ITnOutPort NextComponent;
-		private IEnumerator<DrivingCycleData.DrivingCycleEntry> RightSample { get; set; }
-		private IEnumerator<DrivingCycleData.DrivingCycleEntry> LeftSample { get; set; }
+		protected IEnumerator<DrivingCycleData.DrivingCycleEntry> RightSample { get; set; }
+		protected IEnumerator<DrivingCycleData.DrivingCycleEntry> LeftSample { get; set; }
 
 		protected Second AbsTime { get; set; }
 
+		/// <summary>
+		/// Initializes a new instance of the <see cref="PowertrainDrivingCycle"/> class.
+		/// </summary>
+		/// <param name="container">The container.</param>
+		/// <param name="cycle">The cycle.</param>
 		public PowertrainDrivingCycle(IVehicleContainer container, DrivingCycleData cycle) : base(container)
 		{
 			Data = cycle;
@@ -80,8 +84,7 @@ namespace TUGraz.VectoCore.Models.SimulationComponent.Impl
 
 		IResponse ISimulationOutPort.Request(Second absTime, Second dt)
 		{
-			//todo: change to variable time steps
-			var index = (int)Math.Floor(absTime.Value());
+			var index = (int)absTime.Value();
 			if (index >= Data.Entries.Count) {
 				return new ResponseCycleFinished();
 			}
@@ -91,8 +94,8 @@ namespace TUGraz.VectoCore.Models.SimulationComponent.Impl
 
 		public IResponse Initialize()
 		{
-			var index = 0;
-			return NextComponent.Initialize(Data.Entries[index].Torque, Data.Entries[index].AngularVelocity);
+			AbsTime = Data.Entries.First().Time;
+			return NextComponent.Initialize(Data.Entries.First().Torque, Data.Entries.First().AngularVelocity);
 		}
 
 		public string CycleName
@@ -128,8 +131,9 @@ namespace TUGraz.VectoCore.Models.SimulationComponent.Impl
 
 		protected override void DoCommitSimulationStep()
 		{
-			LeftSample.MoveNext();
-			RightSample.MoveNext();
+			if (RightSample.MoveNext()) {
+				LeftSample.MoveNext();
+			}
 		}
 
 		#endregion
@@ -145,14 +149,30 @@ namespace TUGraz.VectoCore.Models.SimulationComponent.Impl
 		}
 	}
 
-	public class PWheelCycle : PowertrainDrivingCycle
+	public class PWheelCycle : PowertrainDrivingCycle, IDriverInfo
 	{
+		/// <summary>
+		/// True if the angularVelocity at the wheels is 0.
+		/// </summary>
+		public bool VehicleStopped
+		{
+			get { return LeftSample.Current.AngularVelocity.IsEqual(0); }
+		}
+
+		/// <summary>
+		/// Always Driving.
+		/// </summary>
+		public DrivingBehavior DrivingBehavior
+		{
+			get { return DrivingBehavior.Driving; }
+		}
+
 		public PWheelCycle(IVehicleContainer container, DrivingCycleData cycle, double axleRatio,
 			IDictionary<uint, double> gears) : base(container, cycle)
 		{
 			gears[0] = 1;
 			foreach (var entry in Data.Entries) {
-				entry.AngularVelocity *= axleRatio * gears[entry.Gear];
+				entry.AngularVelocity = entry.AngularVelocity / (axleRatio * gears[entry.Gear]);
 				entry.Torque = entry.PWheel / entry.AngularVelocity;
 			}
 		}

@@ -90,6 +90,7 @@ namespace TUGraz.VectoCore.Models.SimulationComponent.Impl
 
 		#region ITnInProvider
 
+		[DebuggerHidden]
 		public ITnInPort InPort()
 		{
 			return this;
@@ -279,6 +280,8 @@ namespace TUGraz.VectoCore.Models.SimulationComponent.Impl
 
 			var response = NextComponent.Request(absTime, dt, 0.SI<NewtonMeter>(), null);
 			response.GearboxPowerRequest = outTorque * outAngularVelocity;
+
+			PreviousInAngularSpeed = DataBus.EngineIdleSpeed;
 
 			return response;
 		}

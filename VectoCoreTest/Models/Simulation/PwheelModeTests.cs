@@ -61,7 +61,7 @@ namespace TUGraz.VectoCore.Tests.Models.Simulation
 			jobContainer.WaitFinished();
 
 			//todo MK-2016-01-20: add sumdata file for pwheel mode tests.
-			ResultFileHelper.TestSumFile(@"TestData\Results\Pwheel\Atego_ges.v2.vsum", @"Pwheel.vsum");
+			ResultFileHelper.TestSumFile(@"TestData\Results\Pwheel\Atego_ges.v2.vsum", @"TestData\Jobs\Pwheel.vsum");
 
 			//todo MK-2016-01-20: add moddata file for pwheel mode tests.
 			ResultFileHelper.TestModFile(@"TestData\Results\Pwheel\Atego_ges_Gear2_pt1_rep1_actual.vmod",
