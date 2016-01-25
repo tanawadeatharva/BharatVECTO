@@ -49,7 +49,12 @@ Public Interface IAdvancedAuxiliaries
   ReadOnly Property AA_CompressorFlag As integer?
   Readonly Property AA_TotalCycleFC_Grams As single?
   ReadOnly Property AA_TotalCycleFC_Litres As single?
-  
+    ReadOnly Property AA_AveragePowerDemandCrankHVACMechanicals As Single?
+    ReadOnly Property AA_AveragePowerDemandCrankHVACElectricals As Single?
+    ReadOnly Property AA_AveragePowerDemandCrankElectrics As Single?
+    ReadOnly Property AA_AveragePowerDemandCrankPneumatics As Single?
+    ReadOnly Property AA_TotalCycleFuelConsumptionCompressorOff As Single?
+    ReadOnly Property AA_TotalCycleFuelConsumptionCompressorOn As Single?
   ''' <summary>
   ''' Total Cycle Fuel In Grams
   ''' </summary>

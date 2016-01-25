@@ -234,12 +234,9 @@ Public Class AdvancedAuxiliaries
             M11.CycleStep(seconds)
 
             Signals.CurrentCycleTimeInSeconds += 1
-
-
         Catch ex As Exception
-            MessageBox.Show("Im an exception")
+            MessageBox.Show("Exception: " + ex.Message)
             Return False
-
         End Try
 
 
@@ -431,6 +428,37 @@ Public Class AdvancedAuxiliaries
     Public ReadOnly Property AuxiliaryPowerAtCrankWatts As Single Implements IAdvancedAuxiliaries.AuxiliaryPowerAtCrankWatts
         Get
             Return M8.AuxPowerAtCrankFromElectricalHVACAndPneumaticsAncillaries
+        End Get
+    End Property
+
+    Public ReadOnly Property AA_AveragePowerDemandCrankHVACMechanicals As Single? Implements IAdvancedAuxiliaries.AA_AveragePowerDemandCrankHVACMechanicals
+        Get
+            Return M1.AveragePowerDemandAtCrankFromHVACMechanicalsWatts()
+        End Get
+    End Property
+    Public ReadOnly Property AA_AveragePowerDemandCrankHVACElectricals As Single? Implements IAdvancedAuxiliaries.AA_AveragePowerDemandCrankHVACElectricals
+        Get
+            Return M1.AveragePowerDemandAtCrankFromHVACElectricsWatts()
+        End Get
+    End Property
+    Public ReadOnly Property AA_AveragePowerDemandCrankElectrics As Single? Implements IAdvancedAuxiliaries.AA_AveragePowerDemandCrankElectrics
+        Get
+            Return M2.GetAveragePowerAtCrankFromElectrics()
+        End Get
+    End Property
+    Public ReadOnly Property AA_AveragePowerDemandCrankPneumatics As Single? Implements IAdvancedAuxiliaries.AA_AveragePowerDemandCrankPneumatics
+        Get
+            Return M3.GetAveragePowerDemandAtCrankFromPneumatics()
+        End Get
+    End Property
+    Public ReadOnly Property AA_TotalCycleFuelConsumptionCompressorOff As Single? Implements IAdvancedAuxiliaries.AA_TotalCycleFuelConsumptionCompressorOff
+        Get
+            Return M9.TotalCycleFuelConsumptionCompressorOffContinuously
+        End Get
+    End Property
+    Public ReadOnly Property AA_TotalCycleFuelConsumptionCompressorOn As Single? Implements IAdvancedAuxiliaries.AA_TotalCycleFuelConsumptionCompressorOn
+        Get
+            Return M9.TotalCycleFuelConsumptionCompressorOnContinuously
         End Get
     End Property
 

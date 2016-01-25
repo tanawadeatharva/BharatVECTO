@@ -1515,6 +1515,13 @@ lb_nOK:
          ModData.AA_TotalCycleFC_Grams                             .Add( advancedAuxModel.AA_TotalCycleFC_Grams)
          ModData.AA_TotalCycleFC_Litres                            .Add( advancedAuxModel.AA_TotalCycleFC_Litres)
 
+                    MODdata.AA_AveragePowerDemandCrankHVACMechanicals.Add(advancedAuxModel.AA_AveragePowerDemandCrankHVACMechanicals)
+                    MODdata.AA_AveragePowerDemandCrankHVACElectricals.Add(advancedAuxModel.AA_AveragePowerDemandCrankHVACElectricals)
+                    MODdata.AA_AveragePowerDemandCrankElectrics.Add(advancedAuxModel.AA_AveragePowerDemandCrankElectrics)
+                    MODdata.AA_AveragePowerDemandCrankPneumatics.Add(advancedAuxModel.AA_AveragePowerDemandCrankPneumatics)
+                    MODdata.AA_TotalCycleFuelConsumptionCompressorOff.Add(advancedAuxModel.AA_TotalCycleFuelConsumptionCompressorOff)
+                    MODdata.AA_TotalCycleFuelConsumptionCompressorOn.Add(advancedAuxModel.AA_TotalCycleFuelConsumptionCompressorOn)
+
 
          'TODO:DIAGNOSTICS - REMOVE WHEN TESTED
          'ModData.AA_D_M12_P1X                                      .Add( advancedAuxModel.AA_D_M12_P1X)

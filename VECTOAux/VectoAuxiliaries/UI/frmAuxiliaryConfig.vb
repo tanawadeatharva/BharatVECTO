@@ -338,7 +338,7 @@ Public Class frmAuxiliaryConfig
         'Retarder Brake : chkRetarderBrake
 
         'txtKneelingHeightMillimeters : txtKneelingHeightMillimeters
-        If Not IsPostiveNumber(txtKneelingHeightMillimeters.Text) Then
+        If Not IsZeroOrPostiveNumber(txtKneelingHeightMillimeters.Text) Then
             ErrorProvider.SetError(txtKneelingHeightMillimeters, "Please enter a number greater than 0.")
             result = False
         Else

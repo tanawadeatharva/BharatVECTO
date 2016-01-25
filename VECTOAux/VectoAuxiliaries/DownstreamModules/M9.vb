@@ -194,7 +194,6 @@ Namespace DownstreamModules
             _LitresOfAirCompressorOnOnlyInOverrunAggregate += stepTimeInSeconds * s10 * sw1
             _TotalCycleFuelConsumptionCompressorOnContinuouslyAggregate += stepTimeInSeconds * s11 * sw1
             _TotalCycleFuelConsumptionCompressorOffContinuouslyAggregate += stepTimeInSeconds * s12 * sw1
-
         End Sub
 
         'Constructor
@@ -205,8 +204,7 @@ Namespace DownstreamModules
             Me.M8 = m8
             Me.FMAP = fmap
             Me.PSAC = psac
-            Me.Signals = signals
-
+            Me.Signals = signals            
         End Sub
 
         'Auxiliary Event
