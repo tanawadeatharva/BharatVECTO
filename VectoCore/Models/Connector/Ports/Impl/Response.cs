@@ -45,6 +45,8 @@ namespace TUGraz.VectoCore.Models.Connector.Ports.Impl
 
 		public Watt BrakePower { get; set; }
 
+		public Second AbsTime { get; set; }
+
 		public object Source { get; set; }
 
 		public override string ToString()
@@ -92,7 +94,6 @@ namespace TUGraz.VectoCore.Models.Connector.Ports.Impl
 
 	public class ResponseDrivingCycleDistanceExceeded : AbstractResponse
 	{
-		public ResponseDrivingCycleDistanceExceeded() {}
 		public Meter MaxDistance { get; set; }
 	}
 

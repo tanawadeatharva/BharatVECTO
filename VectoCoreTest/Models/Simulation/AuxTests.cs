@@ -83,12 +83,10 @@ namespace TUGraz.VectoCore.Tests.Models.Simulation
 			container.FinishSimulation();
 			sumWriter.Finish();
 
-			//todo: add aux columns to test
 			var testColumns = new[] { "Paux_FAN", "Paux_STP", "Paux_AC", "Paux_ES", "Paux_PS", "Paux" };
 
-			ResultFileHelper.TestModFile(
-				@"TestData\Results\EngineOnlyCycles\40t_Long_Haul_Truck_Long_Haul_Empty Loading.vmod",
-				@"AuxWriteModFileSumFile.vmod", testColumns, testRowCount: false);
+			ResultFileHelper.TestModFile(@"TestData\Results\EngineOnlyCycles\40t_Long_Haul_Truck_Long_Haul_Empty Loading.vmod",
+				@"AuxWriteModFileSumFile.vmod", testColumns);
 			ResultFileHelper.TestSumFile(@"TestData\Results\EngineOnlyCycles\40t_Long_Haul_Truck.vsum",
 				@"AuxWriteModFileSumFile.vsum");
 		}

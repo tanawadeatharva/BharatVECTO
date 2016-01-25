@@ -210,12 +210,9 @@ namespace TUGraz.VectoCore.Models.SimulationComponent.Impl
 			return null;
 		}
 
-		/// <summary>
-		/// time request not implemented in distance based driving cycle (method <see cref="DriveTimeInterval"/> is used).
-		/// </summary>
 		IResponse ISimulationOutPort.Request(Second absTime, Second dt)
 		{
-			throw new NotImplementedException();
+			throw new NotImplementedException("Distance Based Driving Cycle does not support time requests.");
 		}
 
 		IResponse ISimulationOutPort.Initialize()

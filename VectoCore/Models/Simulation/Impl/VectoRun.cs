@@ -20,7 +20,6 @@ using System.ComponentModel.DataAnnotations;
 using TUGraz.VectoCore.Exceptions;
 using TUGraz.VectoCore.Models.Connector.Ports;
 using TUGraz.VectoCore.Models.Connector.Ports.Impl;
-using TUGraz.VectoCore.Models.Simulation.Data;
 using TUGraz.VectoCore.OutputData;
 using TUGraz.VectoCore.Utils;
 
@@ -31,7 +30,7 @@ namespace TUGraz.VectoCore.Models.Simulation.Impl
 	/// </summary>
 	public abstract class VectoRun : LoggingObject, IVectoRun
 	{
-		private static uint _runIdCounter = 0;
+		private static uint _runIdCounter;
 
 		protected Second AbsTime = 0.SI<Second>();
 		protected Second dt = 1.SI<Second>();
@@ -41,6 +40,7 @@ namespace TUGraz.VectoCore.Models.Simulation.Impl
 
 		[Required, ValidateObject]
 		protected IVehicleContainer Container { get; set; }
+
 		public bool FinishedWithoutErrors { get; protected set; }
 		public uint RunIdentifier { get; protected set; }
 
