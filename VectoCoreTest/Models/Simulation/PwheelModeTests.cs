@@ -2,6 +2,7 @@
 using System.Text;
 using TUGraz.VectoCore.Utils;
 using System.Collections.Generic;
+using System.Data;
 using TUGraz.VectoCore.OutputData;
 using TUGraz.VectoCore.Tests.Utils;
 using TUGraz.VectoCore.InputData.Reader;
@@ -10,7 +11,10 @@ using TUGraz.VectoCore.OutputData.FileIO;
 using TUGraz.VectoCore.InputData.FileIO.JSON;
 using TUGraz.VectoCore.Models.Simulation.Impl;
 using Microsoft.VisualStudio.TestTools.UnitTesting;
+using TUGraz.VectoCore.Models.Simulation.Data;
 using TUGraz.VectoCore.Models.SimulationComponent.Data;
+using TUGraz.VectoCore.Models.SimulationComponent.Data.Engine;
+using TUGraz.VectoCore.Models.SimulationComponent.Data.Gearbox;
 using TUGraz.VectoCore.Models.SimulationComponent.Impl;
 
 namespace TUGraz.VectoCore.Tests.Models.Simulation
@@ -26,9 +30,7 @@ namespace TUGraz.VectoCore.Tests.Models.Simulation
 		public void Pwheel_ReadCycle_Test()
 		{
 			IVehicleContainer container = new VehicleContainer();
-			var inputData = @"<t>,<Pwheel>,<Gear>,<n>,<Padd>
-1,89,2,1748,1.300
-2,120,2,1400,0.4";
+			var inputData = "<t>,<Pwheel>,<Gear>,<n>,<Padd>\n1,89,2,1748,1.300\n2,120,2,1400,0.4";
 
 			Stream cycleFile = new MemoryStream(Encoding.UTF8.GetBytes(inputData));
 			var drivingCycle = DrivingCycleDataReader.ReadFromStream(cycleFile, CycleType.PWheel);
@@ -60,33 +62,48 @@ namespace TUGraz.VectoCore.Tests.Models.Simulation
 		[TestMethod]
 		public void Pwheel_CreatePowertrain_Test()
 		{
-			var jobFile = @"TestData\Jobs\Pwheel.vecto";
-			var fileWriter = new FileOutputWriter(jobFile);
-			var sumWriter = new SummaryDataContainer(fileWriter);
-			var jobContainer = new JobContainer(sumWriter);
+			// prepare input data
+			var inputData = "<t>,<Pwheel>,<Gear>,<n>,<Padd>\n1,89,2,1748,1.300\n2,120,2,1400,0.4";
 
-			var inputData = JSONInputDataFactory.ReadJsonJob(jobFile);
-			var runsFactory = new SimulatorFactory(ExecutionMode.Engineering, inputData, fileWriter);
+			Stream cycleFile = new MemoryStream(Encoding.UTF8.GetBytes(inputData));
+			var drivingCycle = DrivingCycleDataReader.ReadFromStream(cycleFile, CycleType.PWheel);
 
-			jobContainer.AddRuns(runsFactory);
+			var fuelConsumption = new DataTable();
+			fuelConsumption.Columns.Add("");
+			fuelConsumption.Columns.Add("");
+			fuelConsumption.Columns.Add("");
+			fuelConsumption.Rows.Add("1", "1", "1");
+			fuelConsumption.Rows.Add("2", "2", "2");
+			fuelConsumption.Rows.Add("3", "3", "3");
+
+			var fullLoad = new DataTable();
+			fullLoad.Columns.Add("Engine speed");
+			fullLoad.Columns.Add("max torque");
+			fullLoad.Columns.Add("drag torque");
+			fullLoad.Columns.Add("PT1");
+			fullLoad.Rows.Add("0", "5000", "-5000", "0");
+			fullLoad.Rows.Add("3000", "5000", "-5000", "0");
+
+			var fullLoadCurve = EngineFullLoadCurve.Create(fullLoad);
+			var data = new VectoRunData {
+				Cycle = drivingCycle,
+				AxleGearData = new AxleGearData { Ratio = 2.3 },
+				EngineData = new CombustionEngineData() { IdleSpeed = 560.RPMtoRad(), FullLoadCurve = fullLoadCurve },
+				GearboxData = new GearboxData { Gears = new Dictionary<uint, GearData> { { 2, new GearData { Ratio = 3.5 } } } },
+				Retarder = new RetarderData(),
+			};
+
+			// call builder (actual test)
+			var builder = new PowertrainBuilder(null);
+			var jobContainer = builder.Build(data);
 		}
 
 		/// <summary>
-		/// Tests if the simulation runs a Pwheel mode.
+		/// Tests if the simulation works and the modfile and sumfile are correct in Pwheel mode.
 		/// </summary>
 		/// <remarks>VECTO-177</remarks>
 		[TestMethod]
-		public void Pwheel_Simulate_Test()
-		{
-			Assert.Fail("Test not implemented");
-		}
-
-		/// <summary>
-		/// Tests if the modfile is correct in Pwheel mode.
-		/// </summary>
-		/// <remarks>VECTO-177</remarks>
-		[TestMethod]
-		public void Pwheel_Output_Modfile_Test()
+		public void Pwheel_Run_Test()
 		{
 			var jobFile = @"TestData\Jobs\Pwheel.vecto";
 			var fileWriter = new FileOutputWriter(jobFile);

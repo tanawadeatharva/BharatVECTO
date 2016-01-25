@@ -17,6 +17,7 @@
 using System;
 using System.ComponentModel;
 using System.ComponentModel.DataAnnotations;
+using NLog;
 using TUGraz.VectoCore.Exceptions;
 using TUGraz.VectoCore.Models.Connector.Ports;
 using TUGraz.VectoCore.Models.Connector.Ports.Impl;
@@ -116,11 +117,22 @@ namespace TUGraz.VectoCore.Models.Simulation.Impl
 				Container.RunStatus = Status.Aborted;
 				Container.FinishSimulation();
 				throw new VectoSimulationException("{6} - absTime: {0}, distance: {1}, dt: {2}, v: {3}, Gear: {4} | {5}", e, AbsTime,
-					Container.Distance, dt, Container.VehicleSpeed, Container.Gear, e.Message, RunIdentifier);
+					Container.Distance, dt, Container.VehicleSpeed, TryCatch<VectoException>(() => Container.Gear), e.Message,
+					RunIdentifier);
 			}
 			Container.RunStatus = Status.Success;
 			Container.FinishSimulation();
 			Log.Info("VectoJob finished.");
+		}
+
+		private static object TryCatch<T>(Func<object> action) where T : Exception
+		{
+			try {
+				return action();
+			} catch (T e) {
+				LogManager.GetLogger(typeof(VectoRun).FullName).Info(e);
+				return null;
+			}
 		}
 
 		protected abstract IResponse DoSimulationStep();

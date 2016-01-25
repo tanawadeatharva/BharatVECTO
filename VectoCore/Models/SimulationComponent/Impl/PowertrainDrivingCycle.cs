@@ -83,17 +83,17 @@ namespace TUGraz.VectoCore.Models.SimulationComponent.Impl
 
 		IResponse ISimulationOutPort.Request(Second absTime, Second dt)
 		{
+			// cycle finished (no more entries in cycle)
+			if (RightSample.Current == null) {
+				return new ResponseCycleFinished { Source = this };
+			}
+
 			// interval exceeded
 			if ((absTime + dt).IsGreater(RightSample.Current.Time)) {
 				return new ResponseFailTimeInterval {
 					Source = this,
-					DeltaT = RightSample.Current.Time - absTime
+					DeltaT = (absTime + dt) - RightSample.Current.Time
 				};
-			}
-
-			// cycle finished (no more entries in cycle)
-			if (RightSample.Current == null) {
-				return new ResponseCycleFinished { Source = this };
 			}
 
 			var request = NextComponent.Request(absTime, dt, LeftSample.Current.Torque, LeftSample.Current.AngularVelocity);
@@ -146,7 +146,7 @@ namespace TUGraz.VectoCore.Models.SimulationComponent.Impl
 
 		protected override void DoCommitSimulationStep()
 		{
-			if (AbsTime.IsGreaterOrEqual(RightSample.Current.Time)) {
+			if (AbsTime.IsGreater(RightSample.Current.Time)) {
 				RightSample.MoveNext();
 				LeftSample.MoveNext();
 			}
