@@ -103,14 +103,16 @@ namespace TUGraz.VectoCore.Models.Simulation.Impl
 				Container.RunStatus = Status.Aborted;
 				Container.FinishSimulation();
 				throw new VectoSimulationException("{6} - absTime: {0}, distance: {1}, dt: {2}, v: {3}, Gear: {4} | {5}", vse,
-					AbsTime, Container.Distance, dt, Container.VehicleSpeed, Container.Gear, vse.Message, RunIdentifier);
+					AbsTime, Container.Distance, dt, Container.VehicleSpeed, TryCatch<VectoException>(() => Container.Gear),
+					vse.Message, RunIdentifier);
 			} catch (VectoException ve) {
 				Log.Error("SIMULATION RUN ABORTED! ========================");
 				Log.Error(ve);
 				Container.RunStatus = Status.Aborted;
 				Container.FinishSimulation();
 				throw new VectoSimulationException("{6} - absTime: {0}, distance: {1}, dt: {2}, v: {3}, Gear: {4} | {5}", ve,
-					AbsTime, Container.Distance, dt, Container.VehicleSpeed, Container.Gear, ve.Message, RunIdentifier);
+					AbsTime, Container.Distance, dt, Container.VehicleSpeed, TryCatch<VectoException>(() => Container.Gear), ve.Message,
+					RunIdentifier);
 			} catch (Exception e) {
 				Log.Error("SIMULATION RUN ABORTED! ========================");
 				Log.Error(e);

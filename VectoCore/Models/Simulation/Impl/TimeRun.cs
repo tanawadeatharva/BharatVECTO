@@ -35,7 +35,7 @@ namespace TUGraz.VectoCore.Models.Simulation.Impl
 				response.Switch().
 					Case<ResponseSuccess>().
 					Case<ResponseFailTimeInterval>(r => {
-						dt = r.SimulationInterval;
+						dt = r.DeltaT;
 					}).
 					Case<ResponseCycleFinished>(r => {
 						FinishedWithoutErrors = true;

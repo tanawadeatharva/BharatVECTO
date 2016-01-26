@@ -84,12 +84,12 @@ namespace TUGraz.VectoCore.Models.SimulationComponent.Impl
 		IResponse ISimulationOutPort.Request(Second absTime, Second dt)
 		{
 			// cycle finished (no more entries in cycle)
-			if (RightSample.Current == null) {
+			if (LeftSample.Current == null) {
 				return new ResponseCycleFinished { Source = this };
 			}
 
 			// interval exceeded
-			if ((absTime + dt).IsGreater(RightSample.Current.Time)) {
+			if (RightSample.Current != null && (absTime + dt).IsGreater(RightSample.Current.Time)) {
 				return new ResponseFailTimeInterval {
 					Source = this,
 					DeltaT = (absTime + dt) - RightSample.Current.Time
@@ -146,7 +146,7 @@ namespace TUGraz.VectoCore.Models.SimulationComponent.Impl
 
 		protected override void DoCommitSimulationStep()
 		{
-			if (AbsTime.IsGreater(RightSample.Current.Time)) {
+			if ((RightSample.Current == null) || AbsTime.IsGreaterOrEqual(RightSample.Current.Time)) {
 				RightSample.MoveNext();
 				LeftSample.MoveNext();
 			}
