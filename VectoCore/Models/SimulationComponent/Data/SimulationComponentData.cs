@@ -14,10 +14,22 @@
 * limitations under the Licence.
 */
 
+using TUGraz.VectoCore.InputData;
+
 namespace TUGraz.VectoCore.Models.SimulationComponent.Data
 {
 	public class SimulationComponentData : LoggingObject
 	{
 		public bool SavedInDeclarationMode { get; internal set; }
+
+		public string Vendor { get; internal set; }
+
+		public string MakeAndModel { get; internal set; }
+
+		public string TypeId { get; internal set; }
+
+		public string DigestValue { get; internal set; }
+
+		public IntegrityStatus IntegrityStatus { get; internal set; }
 	}
 }

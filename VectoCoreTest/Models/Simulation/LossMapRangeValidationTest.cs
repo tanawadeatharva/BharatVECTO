@@ -135,8 +135,10 @@ namespace TUGraz.VectoCore.Tests.Models.Simulation
 		{
 			const double ratio = 2.59;
 			return new AxleGearData {
-				Ratio = ratio,
-				LossMap = TransmissionLossMap.ReadFromFile(lossMap, ratio, "AxleGear")
+				AxleGear = new GearData {
+					Ratio = ratio,
+					LossMap = TransmissionLossMap.ReadFromFile(lossMap, ratio, "AxleGear")
+				}
 			};
 		}
 	}

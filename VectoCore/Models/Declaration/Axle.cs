@@ -14,11 +14,12 @@
 * limitations under the Licence.
 */
 
+using TUGraz.VectoCore.Models.SimulationComponent.Data;
 using TUGraz.VectoCore.Utils;
 
 namespace TUGraz.VectoCore.Models.Declaration
 {
-	public class Axle
+	public class Axle : SimulationComponentData
 	{
 		public KilogramSquareMeter Inertia { get; internal set; }
 
@@ -29,5 +30,6 @@ namespace TUGraz.VectoCore.Models.Declaration
 		public double AxleWeightShare { get; internal set; }
 
 		public bool TwinTyres { get; internal set; }
+		public AxleType AxleType { get; internal set; }
 	}
 }

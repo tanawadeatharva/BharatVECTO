@@ -18,6 +18,7 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Runtime.CompilerServices;
 using TUGraz.VectoCore.Models.Declaration;
+using TUGraz.VectoCore.Models.Simulation.Data;
 using TUGraz.VectoCore.Models.SimulationComponent.Data;
 using Font = System.Drawing.Font;
 using Image = iTextSharp.text.Image;
@@ -68,26 +69,6 @@ namespace TUGraz.VectoCore.OutputData
 		public string Creator { get; internal set; }
 
 		/// <summary>
-		/// The engine model string from engine file.
-		/// </summary>
-		public string EngineModel { get; set; }
-
-		/// <summary>
-		/// The engine description (displacement and max power)
-		/// </summary>
-		public string EngineStr { get; set; }
-
-		/// <summary>
-		/// The gearbox model string from gearbox file.
-		/// </summary>
-		public string GearboxModel { get; set; }
-
-		/// <summary>
-		/// The gearbox description (gear-count and gear type)
-		/// </summary>
-		public string GearboxStr { get; set; }
-
-		/// <summary>
 		/// The name of the job file (report name will be the same)
 		/// </summary>
 		public string JobName { get; set; }
@@ -117,10 +98,20 @@ namespace TUGraz.VectoCore.OutputData
 			}
 
 			if (ResultCount == _missions.Sum(v => v.Value.ModData.Count)) {
-				WriteReport();
+				DoWriteReport();
 			}
 		}
 
-		protected abstract void WriteReport();
+		protected abstract void DoWriteReport();
+
+		public void InitializeReport(VectoRunData modelData, Segment segment)
+		{
+			Segment = segment;
+			ResultCount = segment.Missions.Sum(m => m.Loadings.Count);
+
+			DoInitializeReport(modelData, segment);
+		}
+
+		public abstract void DoInitializeReport(VectoRunData modelData, Segment segment);
 	}
 }

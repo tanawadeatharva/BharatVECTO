@@ -71,7 +71,9 @@ namespace TUGraz.VectoCore.InputData.Reader.DataObjectAdaper
 		internal AxleGearData CreateAxleGearData(IAxleGearInputData axleGear)
 		{
 			var axleLossMap = TransmissionLossMap.Create(axleGear.LossMap, axleGear.Ratio, "AxleGear");
-			return new AxleGearData() { LossMap = axleLossMap, Ratio = axleGear.Ratio, TorqueConverterActive = false };
+			return new AxleGearData() {
+				AxleGear = new GearData() { LossMap = axleLossMap, Ratio = axleGear.Ratio, TorqueConverterActive = false }
+			};
 		}
 
 		/// <summary>

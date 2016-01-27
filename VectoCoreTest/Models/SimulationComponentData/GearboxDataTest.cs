@@ -74,9 +74,9 @@ namespace TUGraz.VectoCore.Tests.Models.SimulationComponentData
 			var torqueToWheels = Formulas.PowerToTorque(PvD, SpeedToAngularSpeed(speed, rdyn));
 			var torqueFromEngine = 0.SI<NewtonMeter>();
 
-			var angSpeed = SpeedToAngularSpeed(speed, rdyn) * axleData.Ratio;
+			var angSpeed = SpeedToAngularSpeed(speed, rdyn) * axleData.AxleGear.Ratio;
 			if (TestContext.DataRow["Gear"].ToString() == "A") {
-				torqueFromEngine = axleData.LossMap.GetInTorque(angSpeed, torqueToWheels);
+				torqueFromEngine = axleData.AxleGear.LossMap.GetInTorque(angSpeed, torqueToWheels);
 			}
 
 			var powerEngine = Formulas.TorqueToPower(torqueFromEngine, angSpeed);

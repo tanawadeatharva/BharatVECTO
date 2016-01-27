@@ -165,8 +165,10 @@ namespace TUGraz.VectoCore.Tests.Models.SimulationComponentData
 			};
 
 			var axleGearData = new AxleGearData() {
-				Ratio = 1,
-				LossMap = TransmissionLossMap.ReadFromFile(@"TestData\Components\limited.vtlm", 1, "1"),
+				AxleGear = new GearData {
+					Ratio = 1,
+					LossMap = TransmissionLossMap.ReadFromFile(@"TestData\Components\limited.vtlm", 1, "1"),
+				}
 			};
 
 			var runData = new VectoRunData { GearboxData = gearboxData, EngineData = engineData, AxleGearData = axleGearData };

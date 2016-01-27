@@ -105,6 +105,7 @@ namespace TUGraz.VectoCore.InputData.Reader.DataObjectAdaper
 			}
 
 			axleData.AddRange(mission.TrailerAxleWeightDistribution.Select(tmp => new Axle {
+				AxleType = AxleType.Trailer,
 				AxleWeightShare = tmp,
 				TwinTyres = DeclarationData.Trailer.TwinTyres,
 				RollResistanceCoefficient = DeclarationData.Trailer.RollResistanceCoefficient,

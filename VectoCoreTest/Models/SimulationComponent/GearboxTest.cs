@@ -95,9 +95,9 @@ namespace TUGraz.VectoCore.Tests.Models.SimulationComponent
 
 			var loss = 9401.44062.SI<Watt>();
 
-			Assert.AreEqual(Formulas.PowerToTorque(PvD + loss, angSpeed * axleGearData.Ratio).Value(),
+			Assert.AreEqual(Formulas.PowerToTorque(PvD + loss, angSpeed * axleGearData.AxleGear.Ratio).Value(),
 				mockPort.Torque.Value(), 0.01, "Torque Engine Side");
-			Assert.AreEqual((angSpeed * axleGearData.Ratio).Value(), mockPort.AngularVelocity.Value(), 0.01,
+			Assert.AreEqual((angSpeed * axleGearData.AxleGear.Ratio).Value(), mockPort.AngularVelocity.Value(), 0.01,
 				"Torque Engine Side");
 		}
 

@@ -20,7 +20,27 @@ namespace TUGraz.VectoCore.OutputData.PDF
 {
 	public class PDFDeclarationReport : DeclarationReport
 	{
-		private IReportWriter _writer;
+		private readonly IReportWriter _writer;
+
+		/// <summary>
+		/// The engine model string from engine file.
+		/// </summary>
+		public string EngineModel { get; set; }
+
+		/// <summary>
+		/// The engine description (displacement and max power)
+		/// </summary>
+		public string EngineStr { get; set; }
+
+		/// <summary>
+		/// The gearbox model string from gearbox file.
+		/// </summary>
+		public string GearboxModel { get; set; }
+
+		/// <summary>
+		/// The gearbox description (gear-count and gear type)
+		/// </summary>
+		public string GearboxStr { get; set; }
 
 		public PDFDeclarationReport(IReportWriter writer)
 		{
@@ -30,12 +50,23 @@ namespace TUGraz.VectoCore.OutputData.PDF
 		/// <summary>
 		/// Creates the report and writes it to a pdf file.
 		/// </summary>
-		protected override void WriteReport()
+		protected override void DoWriteReport()
 		{
 			var titlePage = CreateTitlePage(_missions);
 			var cyclePages = _missions.OrderBy(m => m.Key).Select((m, i) => CreateCyclePage(m.Value, i + 2, _missions.Count + 1));
 
 			MergeDocuments(titlePage, cyclePages, _writer.WriterStream(ReportType.DeclarationReportPdf));
+		}
+
+		public override void DoInitializeReport(VectoRunData modelData, Segment segment)
+		{
+			EngineModel = modelData.EngineData.ModelName;
+			EngineStr = string.Format("{0} l, {1} kW",
+				modelData.EngineData.Displacement.ConvertTo().Cubic.Dezi.Meter.ToOutputFormat(1),
+				modelData.EngineData.FullLoadCurve.MaxPower.ConvertTo().Kilo.Watt.ToOutputFormat(0));
+			Flc = modelData.EngineData.FullLoadCurve;
+			GearboxModel = modelData.GearboxData.ModelName;
+			GearboxStr = string.Format("{0}-Speed {1}", modelData.GearboxData.Gears.Count, modelData.GearboxData.Type);
 		}
 
 		/// <summary>
