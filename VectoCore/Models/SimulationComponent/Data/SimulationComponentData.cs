@@ -26,6 +26,9 @@ namespace TUGraz.VectoCore.Models.SimulationComponent.Data
 
 		public string MakeAndModel { get; internal set; }
 
+		public string Creator { get; internal set; }
+		public string Date { get; internal set; }
+
 		public string TypeId { get; internal set; }
 
 		public string DigestValue { get; internal set; }

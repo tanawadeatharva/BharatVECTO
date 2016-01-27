@@ -50,7 +50,7 @@ namespace TUGraz.VectoCore.OutputData.PDF
 		/// <summary>
 		/// Creates the report and writes it to a pdf file.
 		/// </summary>
-		protected override void DoWriteReport()
+		protected internal override void DoWriteReport()
 		{
 			var titlePage = CreateTitlePage(_missions);
 			var cyclePages = _missions.OrderBy(m => m.Key).Select((m, i) => CreateCyclePage(m.Value, i + 2, _missions.Count + 1));
@@ -58,9 +58,9 @@ namespace TUGraz.VectoCore.OutputData.PDF
 			MergeDocuments(titlePage, cyclePages, _writer.WriterStream(ReportType.DeclarationReportPdf));
 		}
 
-		public override void DoInitializeReport(VectoRunData modelData, Segment segment)
+		protected override void DoInitializeReport(VectoRunData modelData, Segment segment)
 		{
-			EngineModel = modelData.EngineData.ModelName;
+			EngineModel = modelData.EngineData.MakeAndModel;
 			EngineStr = string.Format("{0} l, {1} kW",
 				modelData.EngineData.Displacement.ConvertTo().Cubic.Dezi.Meter.ToOutputFormat(1),
 				modelData.EngineData.FullLoadCurve.MaxPower.ConvertTo().Kilo.Watt.ToOutputFormat(0));

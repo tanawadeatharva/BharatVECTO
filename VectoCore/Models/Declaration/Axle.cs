@@ -21,6 +21,8 @@ namespace TUGraz.VectoCore.Models.Declaration
 {
 	public class Axle : SimulationComponentData
 	{
+		public object WheelsDimension { get; internal set; }
+
 		public KilogramSquareMeter Inertia { get; internal set; }
 
 		public double RollResistanceCoefficient { get; internal set; }

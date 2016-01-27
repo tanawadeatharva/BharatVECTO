@@ -138,5 +138,40 @@ namespace TUGraz.VectoCore.InputData.FileIO.JSON
 		}
 
 		#endregion
+
+		public string Vendor
+		{
+			get { return "N/A"; }
+		}
+
+		public string MakeAndModel
+		{
+			get { return "N/A"; }
+		}
+
+		public string Creator
+		{
+			get { return "N/A"; }
+		}
+
+		public string Date
+		{
+			get { return "N/A"; }
+		}
+
+		public string TypeId
+		{
+			get { return "N/A"; }
+		}
+
+		public string DigestValue
+		{
+			get { return ""; }
+		}
+
+		public IntegrityStatus IntegrityStatus
+		{
+			get { return IntegrityStatus.Unknown; }
+		}
 	}
 }

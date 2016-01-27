@@ -95,6 +95,8 @@ namespace TUGraz.VectoCore.InputData.Reader.DataObjectAdaper
 			for (var i = 0; i < mission.AxleWeightDistribution.Length; i++) {
 				var axleInput = axles[i];
 				var axle = new Axle {
+					WheelsDimension = axleInput.Wheels,
+					AxleType = axleInput.AxleType,
 					AxleWeightShare = mission.AxleWeightDistribution[i],
 					TwinTyres = axleInput.TwinTyres,
 					RollResistanceCoefficient = axleInput.RollResistanceCoefficient,
@@ -191,7 +193,7 @@ namespace TUGraz.VectoCore.InputData.Reader.DataObjectAdaper
 			var retVal = new List<VectoRunData.AuxData>();
 			foreach (var auxData in auxInputData.Auxiliaries) {
 				var aux = new VectoRunData.AuxData { DemandType = AuxiliaryDemandType.Constant };
-
+				aux.Technology = auxData.Technology;
 				switch (AuxiliaryTypeHelper.Parse(auxData.Type)) {
 					case AuxiliaryType.Fan:
 						aux.PowerDemand = DeclarationData.Fan.Lookup(mission, auxData.Technology);
@@ -212,6 +214,7 @@ namespace TUGraz.VectoCore.InputData.Reader.DataObjectAdaper
 					case AuxiliaryType.ElectricSystem:
 						aux.PowerDemand = DeclarationData.ElectricSystem.Lookup(mission, auxData.TechList.ToArray());
 						aux.ID = Constants.Auxiliaries.IDs.ElectricSystem;
+						aux.TechList = auxData.TechList.ToArray();
 						break;
 					default:
 						continue;

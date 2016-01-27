@@ -48,6 +48,7 @@ namespace TUGraz.VectoCore.InputData.Reader.DataObjectAdaper
 
 			var axles = data.Axles;
 			retVal.AxleData = axles.Select(axle => new Axle {
+				WheelsDimension = axle.Wheels,
 				Inertia = axle.Inertia,
 				TwinTyres = axle.TwinTyres,
 				RollResistanceCoefficient = axle.RollResistanceCoefficient,

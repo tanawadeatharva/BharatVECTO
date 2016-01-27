@@ -91,18 +91,18 @@ namespace TUGraz.VectoCore.OutputData
 			if (!_missions.ContainsKey(mission.MissionType)) {
 				_missions[mission.MissionType] = new DeclarationReport.ResultContainer {
 					Mission = mission,
-					ModData = new Dictionary<LoadingType, IModalDataContainer> { { loadingType, modData } }
+					ModData = new Dictionary<LoadingType, IModalDataContainer>()
 				};
-			} else {
-				_missions[mission.MissionType].ModData[loadingType] = modData;
 			}
+			_missions[mission.MissionType].ModData[loadingType] = modData;
+
 
 			if (ResultCount == _missions.Sum(v => v.Value.ModData.Count)) {
 				DoWriteReport();
 			}
 		}
 
-		protected abstract void DoWriteReport();
+		protected internal abstract void DoWriteReport();
 
 		public void InitializeReport(VectoRunData modelData, Segment segment)
 		{
@@ -112,6 +112,6 @@ namespace TUGraz.VectoCore.OutputData
 			DoInitializeReport(modelData, segment);
 		}
 
-		public abstract void DoInitializeReport(VectoRunData modelData, Segment segment);
+		protected abstract void DoInitializeReport(VectoRunData modelData, Segment segment);
 	}
 }
