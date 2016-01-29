@@ -3,6 +3,7 @@ using System.Text;
 using TUGraz.VectoCore.Utils;
 using System.Collections.Generic;
 using System.Data;
+using System.Linq;
 using TUGraz.VectoCore.OutputData;
 using TUGraz.VectoCore.Tests.Utils;
 using TUGraz.VectoCore.InputData.Reader;
@@ -118,10 +119,38 @@ namespace TUGraz.VectoCore.Tests.Models.Simulation
 
 			jobContainer.WaitFinished();
 
+			Assert.IsTrue(jobContainer.Runs.All(r => r.Success));
+
 			ResultFileHelper.TestSumFile(@"TestData\Results\Pwheel\Atego_ges.v2.vsum", @"TestData\Jobs\Pwheel.vsum");
 
 			ResultFileHelper.TestModFile(@"TestData\Results\Pwheel\Atego_ges_Gear2_pt1_rep1_actual.vmod",
 				@"TestData\Jobs\Pwheel_Gear2_pt1_rep1_actual.vmod");
+		}
+
+		/// <summary>
+		/// Tests if the simulation works and the modfile and sumfile are correct in Pwheel mode.
+		/// </summary>
+		/// <remarks>VECTO-177</remarks>
+		[TestMethod]
+		public void Pwheel_ultimate_Run_Test()
+		{
+			var jobFile = @"TestData\Jobs\Pwheel_ultimate.vecto";
+			var fileWriter = new FileOutputWriter(jobFile);
+			var sumWriter = new SummaryDataContainer(fileWriter);
+			var jobContainer = new JobContainer(sumWriter);
+
+			var inputData = JSONInputDataFactory.ReadJsonJob(jobFile);
+			var runsFactory = new SimulatorFactory(ExecutionMode.Engineering, inputData, fileWriter);
+
+			jobContainer.AddRuns(runsFactory);
+			jobContainer.Execute();
+
+			jobContainer.WaitFinished();
+
+			Assert.IsTrue(jobContainer.Runs.All(r => r.Success));
+
+			ResultFileHelper.TestModFile(@"TestData\Results\Pwheel\Atego_HDVCO2_RD_#1_AuxStd.vmod",
+				@"TestData\Jobs\Pwheel_ultimate_RD_#1_Pwheel_AuxStd.vmod");
 		}
 	}
 }

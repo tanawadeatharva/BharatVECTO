@@ -181,6 +181,10 @@ namespace TUGraz.VectoCore.Models.SimulationComponent.Impl
 		public PWheelCycle(IVehicleContainer container, DrivingCycleData cycle, double axleRatio,
 			IDictionary<uint, double> gears) : base(container, cycle)
 		{
+			if (!gears.ContainsKey(0)) {
+				gears[0] = 1;
+			}
+
 			foreach (var entry in Data.Entries) {
 				entry.AngularVelocity = entry.AngularVelocity / (axleRatio * gears[entry.Gear]);
 				entry.Torque = entry.PWheel / entry.AngularVelocity;
