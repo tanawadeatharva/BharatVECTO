@@ -140,6 +140,7 @@ namespace TUGraz.VectoCore.Models.SimulationComponent.Impl
 			var dt = Constants.SimulationSettings.TargetTimeInterval;
 			ShiftTime = double.NegativeInfinity.SI<Second>();
 			PowerLoss = null;
+			VehicleStopped = DataBus.VehicleStopped;
 
 			if (Disengaged) {
 				Gear = Strategy.InitGear(absTime, dt, outTorque, outAngularVelocity);
@@ -167,7 +168,7 @@ namespace TUGraz.VectoCore.Models.SimulationComponent.Impl
 		{
 			var inAngularVelocity = outAngularVelocity * Data.Gears[gear].Ratio;
 			var inTorque = Data.Gears[gear].LossMap.GetInTorque(inAngularVelocity, outTorque);
-
+			VehicleStopped = DataBus.VehicleStopped;
 			if (!inAngularVelocity.IsEqual(0)) {
 				var alpha = Data.Inertia.IsEqual(0)
 					? 0.SI<PerSquareSecond>()
@@ -214,7 +215,9 @@ namespace TUGraz.VectoCore.Models.SimulationComponent.Impl
 		public virtual IResponse Request(Second absTime, Second dt, NewtonMeter torque, PerSecond angularVelocity, bool dryRun)
 		{
 			Log.Debug("Gearbox Power Request: torque: {0}, angularVelocity: {1}", torque, angularVelocity);
-			if (DataBus.VehicleStopped) {
+			VehicleStopped = DataBus.VehicleStopped;
+
+			if (VehicleStopped) {
 				ShiftTime = absTime;
 			}
 			IResponse retVal;
@@ -226,6 +229,8 @@ namespace TUGraz.VectoCore.Models.SimulationComponent.Impl
 
 			return retVal;
 		}
+
+		protected bool VehicleStopped { get; set; }
 
 		/// <summary>
 		/// Requests the Gearbox in Disengaged mode
@@ -302,7 +307,7 @@ namespace TUGraz.VectoCore.Models.SimulationComponent.Impl
 			// Set a Gear if no gear was set and engineSpeed is not zero
 			if (Disengaged && !outAngularVelocity.IsEqual(0)) {
 				Disengaged = false;
-				if (DataBus.VehicleStopped) {
+				if (VehicleStopped) {
 					Gear = Strategy.InitGear(absTime, dt, outTorque, outAngularVelocity);
 				} else {
 					Gear = Strategy.Engage(absTime, dt, outTorque, outAngularVelocity);
@@ -386,7 +391,7 @@ namespace TUGraz.VectoCore.Models.SimulationComponent.Impl
 
 		protected override void DoWriteModalResults(IModalDataContainer container)
 		{
-			container[ModalResultField.Gear] = Disengaged || DataBus.VehicleStopped ? 0 : Gear;
+			container[ModalResultField.Gear] = Disengaged || VehicleStopped ? 0 : Gear;
 			container[ModalResultField.PlossGB] = PowerLoss;
 			container[ModalResultField.PaGB] = PowerLossInertia;
 		}

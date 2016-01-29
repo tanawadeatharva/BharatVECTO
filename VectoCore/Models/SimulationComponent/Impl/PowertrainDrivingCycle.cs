@@ -81,7 +81,7 @@ namespace TUGraz.VectoCore.Models.SimulationComponent.Impl
 			throw new VectoSimulationException("Powertrain Only Simulation can not handle distance request.");
 		}
 
-		IResponse ISimulationOutPort.Request(Second absTime, Second dt)
+		public virtual IResponse Request(Second absTime, Second dt)
 		{
 			// cycle finished (no more entries in cycle)
 			if (LeftSample.Current == null) {
@@ -192,6 +192,14 @@ namespace TUGraz.VectoCore.Models.SimulationComponent.Impl
 		public bool VehicleStopped
 		{
 			get { return LeftSample.Current.AngularVelocity.IsEqual(0); }
+		}
+
+		public override IResponse Request(Second absTime, Second dt)
+		{
+			if (RightSample.Current == null) {
+				return new ResponseCycleFinished { Source = this };
+			}
+			return base.Request(absTime, dt);
 		}
 
 		/// <summary>

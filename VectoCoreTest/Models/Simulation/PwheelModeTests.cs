@@ -88,9 +88,9 @@ namespace TUGraz.VectoCore.Tests.Models.Simulation
 			var data = new VectoRunData {
 				Cycle = drivingCycle,
 				AxleGearData = new AxleGearData { Ratio = 2.3 },
-				EngineData = new CombustionEngineData() { IdleSpeed = 560.RPMtoRad(), FullLoadCurve = fullLoadCurve },
+				EngineData = new CombustionEngineData { IdleSpeed = 560.RPMtoRad(), FullLoadCurve = fullLoadCurve },
 				GearboxData = new GearboxData { Gears = new Dictionary<uint, GearData> { { 2, new GearData { Ratio = 3.5 } } } },
-				Retarder = new RetarderData(),
+				Retarder = new RetarderData()
 			};
 
 			// call builder (actual test)
