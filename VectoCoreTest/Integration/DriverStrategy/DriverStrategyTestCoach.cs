@@ -15,7 +15,6 @@
 */
 
 using Microsoft.VisualStudio.TestTools.UnitTesting;
-using NLog;
 using TUGraz.VectoCore.Tests.Utils;
 
 namespace TUGraz.VectoCore.Tests.Integration.DriverStrategy
@@ -33,9 +32,8 @@ namespace TUGraz.VectoCore.Tests.Integration.DriverStrategy
 		[TestMethod]
 		public void TestGraph()
 		{
-			var imgV3 = @"..\..\..\VectoCoreTest\bin\Debug\Coach_DriverStrategy_Drive_50_slope_dec-inc.vmod";
-			var imgv22 =
-				@"..\..\..\VectoCoreTest\TestData\Integration\DriverStrategy\Vecto2.2\Coach\24t Coach_Cycle_Drive_50_Dec_Increasing_Slope.vmod";
+			var imgV3 = @"TestData\Results\Integration\Coach_DriverStrategy_Drive_50_slope_dec-inc.vmod";
+			var imgv22 = @"TestData\Integration\DriverStrategy\Vecto2.2\Coach\24t Coach_Cycle_Drive_50_Dec_Increasing_Slope.vmod";
 
 			GraphWriter.Write(imgV3, imgv22);
 		}
@@ -212,7 +210,7 @@ namespace TUGraz.VectoCore.Tests.Integration.DriverStrategy
 				@"..\..\TestData\Integration\DriverStrategy\Vecto2.2\Coach\24t Coach_Cycle_Accelerate_0_85_downhill_5.vmod");
 		}
 
-		[TestMethod]
+		[TestMethod, Ignore]
 		public void Coach_Accelerate_0_85_uphill_25()
 		{
 			var cycle = SimpleDrivingCycles.CreateCycleData(SimpleDrivingCycles.CycleAccelerate_0_85_uphill_25);

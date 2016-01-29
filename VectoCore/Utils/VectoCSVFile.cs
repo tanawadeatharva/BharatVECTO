@@ -128,7 +128,6 @@ namespace TUGraz.VectoCore.Utils
 
 		private static IEnumerable<string> GetValidHeaderColumns(string line, bool fullHeader = false)
 		{
-			Contract.Requires(line != null);
 			double test;
 			var validColumns = GetColumns(line, fullHeader).
 				Where(col => !double.TryParse(col, NumberStyles.Any, CultureInfo.InvariantCulture, out test));
@@ -137,8 +136,6 @@ namespace TUGraz.VectoCore.Utils
 
 		private static IEnumerable<string> GetColumns(string line, bool fullHeader = false)
 		{
-			Contract.Requires(line != null);
-
 			if (!fullHeader) {
 				line = Regex.Replace(line, @"\[.*?\]", "");
 				line = line.Replace("<", "");

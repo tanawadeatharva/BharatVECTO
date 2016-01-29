@@ -137,53 +137,53 @@ namespace TUGraz.VectoCore.OutputData
 
 		public static MeterPerSquareSecond AccelerationNoise(this IModalDataContainer data)
 		{
-			try {
-				var avg = data.AccelerationAverage();
-				var accelerationAverages = AccelerationPerSecond(data).ToList();
+			var avg = data.AccelerationAverage();
+			var accelerationAverages = AccelerationPerSecond(data).ToList();
+			if (accelerationAverages.Any()) {
 				var sqareAvg = accelerationAverages.Select(x => (x - avg) * (x - avg)).Sum() / accelerationAverages.Count;
 				return sqareAvg.Sqrt().Cast<MeterPerSquareSecond>();
-			} catch (NullReferenceException) {
+			} else {
 				return null;
 			}
 		}
 
 		public static MeterPerSquareSecond AverageAccelerations3SecondNegative(this IModalDataContainer data)
 		{
-			try {
-				var acceleration3SecondAverage = AccelerationPer3Seconds(data);
+			var acceleration3SecondAverage = AccelerationPer3Seconds(data).ToList();
+			if (acceleration3SecondAverage.Any()) {
 				return acceleration3SecondAverage.Where(x => x < -0.125).Average();
-			} catch (NullReferenceException) {
+			} else {
 				return null;
 			}
 		}
 
 		public static Scalar PercentAccelerationTime(this IModalDataContainer data)
 		{
-			try {
-				var acceleration3SecondAverage = AccelerationPer3Seconds(data).ToList();
+			var acceleration3SecondAverage = AccelerationPer3Seconds(data).ToList();
+			if (acceleration3SecondAverage.Any()) {
 				return 100.SI<Scalar>() * acceleration3SecondAverage.Count(x => x > 0.125) / acceleration3SecondAverage.Count;
-			} catch (NullReferenceException) {
+			} else {
 				return null;
 			}
 		}
 
 		public static Scalar PercentDecelerationTime(this IModalDataContainer data)
 		{
-			try {
-				var acceleration3SecondAverage = AccelerationPer3Seconds(data).ToList();
+			var acceleration3SecondAverage = AccelerationPer3Seconds(data).ToList();
+			if (acceleration3SecondAverage.Any()) {
 				return 100.SI<Scalar>() * acceleration3SecondAverage.Count(x => x < -0.125) / acceleration3SecondAverage.Count;
-			} catch (NullReferenceException) {
+			} else {
 				return null;
 			}
 		}
 
 		public static Scalar PercentCruiseTime(this IModalDataContainer data)
 		{
-			try {
-				var acceleration3SecondAverage = AccelerationPer3Seconds(data).ToList();
+			var acceleration3SecondAverage = AccelerationPer3Seconds(data).ToList();
+			if (acceleration3SecondAverage.Any()) {
 				return 100.SI<Scalar>() * acceleration3SecondAverage.Count(x => x.IsBetween(-0.125, -0.125)) /
 						acceleration3SecondAverage.Count;
-			} catch (NullReferenceException) {
+			} else {
 				return null;
 			}
 		}
@@ -241,7 +241,12 @@ namespace TUGraz.VectoCore.OutputData
 
 		public static Second Duration(this IModalDataContainer data)
 		{
-			return (data.Max(ModalResultField.time) - data.Min(ModalResultField.time)).Cast<Second>();
+			var time = data.GetValues<Second>(ModalResultField.time).ToList();
+			if (time.Count == 1) {
+				return time.First();
+			} else {
+				return time.Max() - time.Min();
+			}
 		}
 
 		public static Meter Distance(this IModalDataContainer data)
@@ -430,15 +435,19 @@ namespace TUGraz.VectoCore.OutputData
 		private static IEnumerable<MeterPerSquareSecond> AccelerationPer3Seconds(IModalDataContainer data)
 		{
 			var accelerationAverages = AccelerationPerSecond(data).ToList();
-			var runningAverage = (accelerationAverages[0] + accelerationAverages[1] + accelerationAverages[2]) / 3.0;
-			yield return runningAverage;
+			if (accelerationAverages.Count >= 3) {
+				var runningAverage = (accelerationAverages[0] + accelerationAverages[1] + accelerationAverages[2]) / 3.0;
 
-			for (var i = 2; i < accelerationAverages.Count() - 1; i++) {
-				runningAverage -= accelerationAverages[i - 2] / 3.0;
-				runningAverage += accelerationAverages[i + 1] / 3.0;
 				yield return runningAverage;
+
+				for (var i = 2; i < accelerationAverages.Count - 1; i++) {
+					runningAverage -= accelerationAverages[i - 2] / 3.0;
+					runningAverage += accelerationAverages[i + 1] / 3.0;
+					yield return runningAverage;
+				}
 			}
 		}
+
 
 		/// <summary>
 		/// Calculates the average acceleration for whole seconds.
@@ -450,7 +459,8 @@ namespace TUGraz.VectoCore.OutputData
 
 			var accValues = data.GetValues<MeterPerSquareSecond>(ModalResultField.acc);
 
-			foreach (var value in accValues.Zip(SimulationIntervals(data), (acc, dt) => new { acc, dt })) {
+			foreach (
+				var value in accValues.Zip(SimulationIntervals(data), (acc, dt) => new { acc, dt }).Where(v => v.acc != null)) {
 				var dt = value.dt;
 				var acc = value.acc;
 

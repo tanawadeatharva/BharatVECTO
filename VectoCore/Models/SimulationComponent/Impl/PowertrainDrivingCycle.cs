@@ -20,6 +20,7 @@ using TUGraz.VectoCore.Exceptions;
 using TUGraz.VectoCore.Models.Connector.Ports;
 using TUGraz.VectoCore.Models.Connector.Ports.Impl;
 using TUGraz.VectoCore.Models.Simulation;
+using TUGraz.VectoCore.Models.Simulation.Data;
 using TUGraz.VectoCore.Models.Simulation.DataBus;
 using TUGraz.VectoCore.Models.SimulationComponent.Data;
 using TUGraz.VectoCore.OutputData;
@@ -186,6 +187,14 @@ namespace TUGraz.VectoCore.Models.SimulationComponent.Impl
 			}
 		}
 
+		protected override void DoWriteModalResults(IModalDataContainer container)
+		{
+			container[ModalResultField.Pwheel] = LeftSample.Current.PWheel;
+			base.DoWriteModalResults(container);
+		}
+
+		#region IDriverInfo
+
 		/// <summary>
 		/// True if the angularVelocity at the wheels is 0.
 		/// </summary>
@@ -209,5 +218,7 @@ namespace TUGraz.VectoCore.Models.SimulationComponent.Impl
 		{
 			get { return DrivingBehavior.Driving; }
 		}
+
+		#endregion
 	}
 }

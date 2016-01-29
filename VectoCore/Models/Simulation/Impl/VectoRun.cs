@@ -103,7 +103,7 @@ namespace TUGraz.VectoCore.Models.Simulation.Impl
 				Container.RunStatus = Status.Aborted;
 				Container.FinishSimulation();
 				throw new VectoSimulationException("{6} - absTime: {0}, distance: {1}, dt: {2}, v: {3}, Gear: {4} | {5}", vse,
-					AbsTime, Container.Distance, dt, Container.VehicleSpeed, TryCatch<VectoException>(() => Container.Gear),
+					AbsTime, Container.Distance, dt, Container.VehicleSpeed, TryCatch(() => Container.Gear),
 					vse.Message, RunIdentifier);
 			} catch (VectoException ve) {
 				Log.Error("SIMULATION RUN ABORTED! ========================");
@@ -111,7 +111,7 @@ namespace TUGraz.VectoCore.Models.Simulation.Impl
 				Container.RunStatus = Status.Aborted;
 				Container.FinishSimulation();
 				throw new VectoSimulationException("{6} - absTime: {0}, distance: {1}, dt: {2}, v: {3}, Gear: {4} | {5}", ve,
-					AbsTime, Container.Distance, dt, Container.VehicleSpeed, TryCatch<VectoException>(() => Container.Gear), ve.Message,
+					AbsTime, Container.Distance, dt, Container.VehicleSpeed, TryCatch(() => Container.Gear), ve.Message,
 					RunIdentifier);
 			} catch (Exception e) {
 				Log.Error("SIMULATION RUN ABORTED! ========================");
@@ -119,7 +119,7 @@ namespace TUGraz.VectoCore.Models.Simulation.Impl
 				Container.RunStatus = Status.Aborted;
 				Container.FinishSimulation();
 				throw new VectoSimulationException("{6} - absTime: {0}, distance: {1}, dt: {2}, v: {3}, Gear: {4} | {5}", e, AbsTime,
-					Container.Distance, dt, Container.VehicleSpeed, TryCatch<VectoException>(() => Container.Gear), e.Message,
+					Container.Distance, dt, Container.VehicleSpeed, TryCatch(() => Container.Gear), e.Message,
 					RunIdentifier);
 			}
 			Container.RunStatus = Status.Success;
@@ -127,11 +127,11 @@ namespace TUGraz.VectoCore.Models.Simulation.Impl
 			Log.Info("VectoJob finished.");
 		}
 
-		private static object TryCatch<T>(Func<object> action) where T : Exception
+		private static object TryCatch(Func<object> action)
 		{
 			try {
 				return action();
-			} catch (T e) {
+			} catch (VectoException e) {
 				LogManager.GetLogger(typeof(VectoRun).FullName).Info(e);
 				return null;
 			}
