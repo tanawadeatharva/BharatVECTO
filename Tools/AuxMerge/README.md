@@ -4,12 +4,12 @@
 
 The merging of VECTO-AUX <--> VECTO-Core has happenned in these stages:
 
-1. Identify fork-point in VECTO-code's history 
-   (see `git-rewrite.sh`): 
-       
-	   milistone/2.0.4-beta 
+1. Identify fork-point in VECTO-code's history
+   (see `git-rewrite.sh`):
 
-2. FIXUP VECT-AUX sources to be similar to the above VECTO-core sources 
+        milestone/2.0.4-beta
+
+2. FIXUP VECT-AUX sources to be similar to the above VECTO-core sources
    (see `git-rewrite.sh`).
 
 
@@ -21,9 +21,12 @@ The merging of VECTO-AUX <--> VECTO-Core has happenned in these stages:
 
 5. Append these tools into sources.
 
-6. NEXT steps: 
+6. NEXT steps:
    - Await Ricardo's fixes (TCs failing, aux-model discrepancy).
    - Merge with later milestones, till latest 2.2.
 
-   
+
+- The `del*.sh` files are utilities for other remotes,
+  to delete refs now abandoned (not complete).
+
 That's it.

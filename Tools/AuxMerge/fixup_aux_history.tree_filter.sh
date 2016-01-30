@@ -13,6 +13,25 @@
 set -o  errexit
 shopt -s globstar
 
+
+## Remove TeamFoundationServer bindings.
+#
+rm -f **/*.vssscc **/*.vspscc
+for f in `find . -name '*.sln'`; do 
+    res="`gawk '
+        START                                           {del=0}
+        /GlobalSection\(TeamFoundationVersionControl/   {del=1}
+        del != 1                                        {print $0}
+        /EndGlobalSection/                              {del=0}
+    ' $f`"
+    echo "$res" | unix2dos > $f
+done
+
+## Remove compiled artifacts.
+#
+find . -name bin -type d -print0|xargs -0 rm -rf
+
+
 ## /New Folder: A short-lived experiment.
 # Completely discarded from history.
 #
@@ -21,9 +40,9 @@ rm -rf "New Folder"
 
 ## /vecto-sim-ricardoaea: Original sources, never touched.
 # Completely discarded from history, to use originals.
-#
 rm -rf vecto-sim-ricardoaea
 
+## WHY??
 # if [ -d "Third Party Libraries" ]; then
     # mkdir -p packages
     # mv "Third Party Libraries/*" packages/.
@@ -94,22 +113,6 @@ if [ -d vecto-sim-ricardoaeaTB ]; then
 fi
 grep 'vecto-sim-ricardoaeaTB' -rlZ * | xargs -r0I XXX sed 's/vecto-sim-ricardoaeaTB\\//g' -i XXX
 
-## Remove TeamFoundationServer bindings.
-#
-rm -f **/*.vssscc **/*.vspscc
-for f in `find . -name '*.sln'`; do 
-    res="`gawk '
-        START                                           {del=0}
-        /GlobalSection\(TeamFoundationVersionControl/   {del=1}
-        del != 1                                        {print $0}
-        /EndGlobalSection/                              {del=0}
-    ' $f`"
-    echo "$res" | unix2dos > $f
-done
-
-## Remove compiled artifacts.
-#
-find . -name bin -type d -print0|xargs -0 rm -rf
 
 ## Ensure .gitignore
 if [ ! -f .gitignore ]; then
