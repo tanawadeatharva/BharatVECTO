@@ -92,6 +92,7 @@ namespace TUGraz.VectoCore.Models.SimulationComponent.Impl
 			// interval exceeded
 			if (RightSample.Current != null && (absTime + dt).IsGreater(RightSample.Current.Time)) {
 				return new ResponseFailTimeInterval {
+					AbsTime = absTime,
 					Source = this,
 					DeltaT = (absTime + dt) - RightSample.Current.Time
 				};
@@ -103,9 +104,8 @@ namespace TUGraz.VectoCore.Models.SimulationComponent.Impl
 					// if response successfull update internal AbsTime for DoCommit
 					AbsTime = absTime + dt;
 				})
-				.Default(r => {
-					throw new UnexpectedResponseException("PowertrainDrivingCycle received an unexpected response.", r);
-				});
+				.Default(
+					r => { throw new UnexpectedResponseException("PowertrainDrivingCycle received an unexpected response.", r); });
 
 			return request;
 		}

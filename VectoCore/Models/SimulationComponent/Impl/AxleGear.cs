@@ -61,7 +61,9 @@ namespace TUGraz.VectoCore.Models.SimulationComponent.Impl
 				? 0.SI<NewtonMeter>()
 				: _gearData.LossMap.GetInTorque(inAngularVelocity, torque);
 
-			Loss = inTorque * inAngularVelocity - torque * angularVelocity;
+			var outPower = torque * angularVelocity;
+			var inPower = inTorque * inAngularVelocity;
+			Loss = inPower - outPower;
 
 			var retVal = NextComponent.Request(absTime, dt, inTorque, inAngularVelocity, dryRun);
 

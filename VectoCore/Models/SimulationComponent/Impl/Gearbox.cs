@@ -184,9 +184,7 @@ namespace TUGraz.VectoCore.Models.SimulationComponent.Impl
 				Case<ResponseSuccess>().
 				Case<ResponseOverload>().
 				Case<ResponseUnderload>().
-				Default(r => {
-					throw new UnexpectedResponseException("Gearbox.Initialize", r);
-				});
+				Default(r => { throw new UnexpectedResponseException("Gearbox.Initialize", r); });
 
 			var fullLoadGearbox = Data.Gears[gear].FullLoadCurve.FullLoadStationaryTorque(inAngularVelocity) * inAngularVelocity;
 			var fullLoadEngine = DataBus.EngineStationaryFullPower(inAngularVelocity);
@@ -322,7 +320,11 @@ namespace TUGraz.VectoCore.Models.SimulationComponent.Impl
 				? outTorque / Data.Gears[Gear].Ratio
 				: Data.Gears[Gear].LossMap.GetInTorque(inEngineSpeed, outTorque);
 
-			PowerLoss = inTorque * inEngineSpeed - outTorque * outAngularVelocity;
+			var inPower = inTorque * inEngineSpeed;
+			var outPower = outTorque * outAngularVelocity;
+
+
+			PowerLoss = inPower - outPower;
 
 			if (!inEngineSpeed.IsEqual(0)) {
 				PowerLossInertia = Formulas.InertiaPower(inEngineSpeed, PreviousInAngularSpeed, Data.Inertia, dt);
@@ -339,7 +341,11 @@ namespace TUGraz.VectoCore.Models.SimulationComponent.Impl
 					ShiftTime = absTime + dt;
 					Strategy.Disengage(absTime, dt, outTorque, outAngularVelocity);
 					Log.Debug("EngineSpeed is below IdleSpeed, Gearbox disengage!");
-					return new ResponseEngineSpeedTooLow() { Source = this, GearboxPowerRequest = outTorque * outAngularVelocity };
+					return new ResponseEngineSpeedTooLow {
+						AbsTime = absTime,
+						Source = this,
+						GearboxPowerRequest = outTorque * outAngularVelocity
+					};
 				}
 				var dryRunResponse = NextComponent.Request(absTime, dt, inTorque, inEngineSpeed, true);
 				dryRunResponse.GearboxPowerRequest = outTorque * outAngularVelocity;
