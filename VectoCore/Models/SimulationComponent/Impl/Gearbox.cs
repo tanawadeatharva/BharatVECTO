@@ -269,6 +269,7 @@ namespace TUGraz.VectoCore.Models.SimulationComponent.Impl
 
 			if ((outTorque * outAngularVelocity).IsGreater(0.SI<Watt>(), Constants.SimulationSettings.EnginePowerSearchTolerance)) {
 				return new ResponseOverload {
+					AbsTime = absTime,
 					Source = this,
 					Delta = outTorque * outAngularVelocity,
 					GearboxPowerRequest = outTorque * outAngularVelocity

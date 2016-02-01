@@ -142,11 +142,10 @@ namespace TUGraz.VectoCore.Models.SimulationComponent.Impl
 
 			ValidatePowerDemand(requestedEnginePower);
 
-
 			if (dryRun) {
 				return new ResponseDryRun {
-					DeltaFullLoad = (requestedEnginePower - CurrentState.DynamicFullLoadPower),
-					DeltaDragLoad = (requestedEnginePower - CurrentState.FullDragPower),
+					DeltaFullLoad = requestedEnginePower - CurrentState.DynamicFullLoadPower,
+					DeltaDragLoad = requestedEnginePower - CurrentState.FullDragPower,
 					EnginePowerRequest = requestedEnginePower
 				};
 			}
@@ -156,7 +155,12 @@ namespace TUGraz.VectoCore.Models.SimulationComponent.Impl
 
 			if (delta.IsGreater(0.SI<Watt>(), Constants.SimulationSettings.EnginePowerSearchTolerance)) {
 				Log.Debug("requested engine power exceeds fullload power: delta: {0}", delta);
-				return new ResponseOverload { Delta = delta, EnginePowerRequest = requestedEnginePower, Source = this };
+				return new ResponseOverload {
+					AbsTime = absTime,
+					Delta = delta,
+					EnginePowerRequest = requestedEnginePower,
+					Source = this
+				};
 			}
 
 			if (delta.IsSmaller(0.SI<Watt>(), Constants.SimulationSettings.EnginePowerSearchTolerance)) {
@@ -518,9 +522,7 @@ namespace TUGraz.VectoCore.Models.SimulationComponent.Impl
 						retVal = RequestPort.Request(absTime, dt, torque, nextAngularSpeed);
 						retVal = SearchIdlingSpeed(absTime, dt, torque, nextAngularSpeed, r);
 					}).
-					Default(r => {
-						throw new UnexpectedResponseException("searching Idling point", r);
-					});
+					Default(r => { throw new UnexpectedResponseException("searching Idling point", r); });
 
 				return retVal;
 			}
