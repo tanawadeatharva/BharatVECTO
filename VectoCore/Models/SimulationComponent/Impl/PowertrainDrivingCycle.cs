@@ -94,7 +94,7 @@ namespace TUGraz.VectoCore.Models.SimulationComponent.Impl
 				return new ResponseFailTimeInterval {
 					AbsTime = absTime,
 					Source = this,
-					DeltaT = (absTime + dt) - RightSample.Current.Time
+					DeltaT = RightSample.Current.Time - absTime
 				};
 			}
 

@@ -147,7 +147,8 @@ namespace TUGraz.VectoCore.Tests.Models.Simulation
 
 			jobContainer.WaitFinished();
 
-			Assert.IsTrue(jobContainer.Runs.All(r => r.Success));
+			Assert.IsTrue(jobContainer.Runs.All(r => r.Success),
+				string.Join("", jobContainer.Runs.Select(r => r.ExecException.ToString())));
 
 			ResultFileHelper.TestModFile(@"TestData\Results\Pwheel\Atego_HDVCO2_RD_#1_AuxStd.vmod",
 				@"TestData\Jobs\Pwheel_ultimate_RD_#1_Pwheel_AuxStd.vmod");

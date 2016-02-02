@@ -31,14 +31,12 @@ namespace TUGraz.VectoCore.Models.SimulationComponent.Impl
 
 		// the behavior in engine-only mode differs a little bit from normal driving cycle simulation: in engine-only mode
 		// certain amount of overload is tolerated.
-		protected override IResponse DoHandleRequest(Second absTime, Second dt, NewtonMeter torque, PerSecond engineSpeed,
+		protected override IResponse DoHandleRequest(Second absTime, Second dt, NewtonMeter torque, PerSecond angularVelocity,
 			bool dryRun)
 		{
-			Watt requestedPower;
-			Watt requestedEnginePower;
-			ComputeRequestedEnginePower(absTime, dt, torque, engineSpeed, out requestedPower, out requestedEnginePower);
+			var requestedEnginePower = ComputeRequestedEnginePower(absTime, dt, torque, angularVelocity);
 
-			ComputeFullLoadPower(engineSpeed, dt);
+			ComputeFullLoadPower(angularVelocity, dt);
 
 			ValidatePowerDemand(requestedEnginePower);
 

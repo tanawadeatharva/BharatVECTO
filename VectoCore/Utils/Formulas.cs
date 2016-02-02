@@ -52,7 +52,7 @@ namespace TUGraz.VectoCore.Utils
 		/// <summary>
 		/// Calculates power loss caused by inertia.
 		/// https://en.wikipedia.org/wiki/Angular_acceleration
-		/// alpha = delta_omega / dt
+		/// alpha = delta_omega / delta_t
 		/// tau = I * alpha
 		/// </summary>
 		/// <param name="currentOmega">The current omega (new angularSpeed).</param>
@@ -64,10 +64,11 @@ namespace TUGraz.VectoCore.Utils
 			Second dt)
 		{
 			var deltaOmega = currentOmega - previousOmega;
-			var avgOmega = (currentOmega + previousOmega) / 2;
-
+			
 			var alpha = deltaOmega / dt;
 			var torque = inertia * alpha;
+
+			var avgOmega = (currentOmega + previousOmega) / 2;
 			return (torque * avgOmega).Cast<Watt>();
 		}
 

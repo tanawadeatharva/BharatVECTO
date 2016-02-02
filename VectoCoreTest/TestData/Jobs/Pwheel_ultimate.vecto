@@ -1,19 +1,19 @@
 ﻿{
   "Header": {
-    "CreatedBy": "TUG ITI (59f3bd5f-1e50-474f-928a-435968d769f6)",
-    "Date": "23.11.2015 10:27:34",
+    "CreatedBy": " ()",
+    "Date": "02.02.2016 12:21:59",
     "AppVersion": "2.2",
     "FileVersion": 2
   },
   "Body": {
     "SavedInDeclMode": false,
-    "VehicleFile": "../Components/Pwheel/Atego.vveh",
-    "EngineFile": "../Components/Pwheel/OM906.veng",
-    "GearboxFile": "../Components/Pwheel/G_85-6_6_7-0_17.vgbx",
+    "VehicleFile": "..\\Components\\Pwheel\\Atego.vveh",
+    "EngineFile": "..\\Components\\Pwheel\\OM906.veng",
+    "GearboxFile": "..\\Components\\Pwheel\\G_85-6_6_7-0_17.vgbx",
     "Cycles": [
-      "../Components/Pwheel/RD_#1_Pwheel_AuxStd.vdri"
+      "..\\Components\\Pwheel\\RD_#1_Pwheel_AuxStd.vdri"
     ],
-    "VACC": "../Components/Pwheel/Truck.vacc",
+    "VACC": "..\\Components\\Pwheel\\Truck.vacc",
     "EngineOnlyMode": false,
     "StartStop": {
       "Enabled": false,
