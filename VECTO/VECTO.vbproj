@@ -1456,7 +1456,9 @@
   </ItemGroup>
   <Import Project="$(MSBuildBinPath)\Microsoft.VisualBasic.targets" />
   <PropertyGroup>
-    <PostBuildEvent>XCOPY "$(SolutionDir)User Manual" "$(SolutionDir)Generic Vehicles" "$(TargetDir)" /Y /E</PostBuildEvent>
+    <PostBuildEvent>ROBOCOPY "$(ProjectDir)..\Generic Vehicles" "$(TargetDir)Generic Vehicles" /E
+ROBOCOPY "$(ProjectDir)..\User Manual" "$(TargetDir)User Manual" /E
+ROBOCOPY "$(ProjectDir)..\Declaration" "$(TargetDir)Declaration" /E</PostBuildEvent>
   </PropertyGroup>
   <!-- To modify your build process, add your task inside one of the targets below and uncomment it.
        Other similar extension points exist, see Microsoft.Common.targets.
