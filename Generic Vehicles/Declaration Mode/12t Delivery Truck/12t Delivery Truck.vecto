@@ -1,7 +1,7 @@
 ﻿{
   "Header": {
-    "CreatedBy": "Raphael Luz IVT TU-Graz (85407225-fc3f-48a8-acda-c84a05df6837)",
-    "Date": "29.07.2014 16:58:58",
+    "CreatedBy": "John.Norris@ricardo-aea.com, Rasa.Narkeviciute@ricardo-aea.com, Scott.Hanchett@ricardo-aea.com, Dana.Nurse@ricardo-aea.com, pascal.revereault@ricardo.com, james.baxter@ricardo.com (51e9f02e-c88f-4c25-9798-3f807530e154)",
+    "Date": "20/07/2015 12:06:40",
     "AppVersion": "2.0.4-beta",
     "FileVersion": 2
   },
@@ -15,43 +15,46 @@
       "Regional Delivery",
       "Urban Delivery"
     ],
+    "AuxiliaryAssembly": "CLASSIC",
+    "AuxiliaryVersion": "CLASSIC",
+    "AdvancedAuxiliaryFilePath": "",
     "Aux": [
       {
         "ID": "FAN",
         "Type": "Fan",
         "Path": "<NOFILE>",
-        "Technology": "Belt driven or driven via transm. - Discrete step clutch"
+        "Technology": "Crankshaft mounted - Discrete step clutch"
       },
       {
         "ID": "STP",
         "Type": "Steering pump",
         "Path": "<NOFILE>",
-        "Technology": "Variable displacement"
+        "Technology": "Fixed displacement"
       },
       {
         "ID": "AC",
         "Type": "HVAC",
         "Path": "<NOFILE>",
-        "Technology": "Default"
+        "Technology": ""
       },
       {
         "ID": "ES",
         "Type": "Electric System",
         "Path": "<NOFILE>",
-        "Technology": "Custom Technology List",
+        "Technology": "",
         "TechList": []
       },
       {
         "ID": "PS",
         "Type": "Pneumatic System",
         "Path": "<NOFILE>",
-        "Technology": "Default"
+        "Technology": ""
       }
     ],
     "VACC": "<NOFILE>",
     "EngineOnlyMode": false,
     "StartStop": {
-      "Enabled": false,
+      "Enabled": true,
       "MaxSpeed": 5.0,
       "MinTime": 5.0,
       "Delay": 5

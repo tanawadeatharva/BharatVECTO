@@ -1,7 +1,7 @@
 ﻿{
   "Header": {
-    "CreatedBy": "Raphael Luz IVT TU-Graz (85407225-fc3f-48a8-acda-c84a05df6837)",
-    "Date": "29.07.2014 16:59:17",
+    "CreatedBy": "John.Norris@ricardo-aea.com, Rasa.Narkeviciute@ricardo-aea.com, Scott.Hanchett@ricardo-aea.com, Dana.Nurse@ricardo-aea.com, pascal.revereault@ricardo.com, james.baxter@ricardo.com (51e9f02e-c88f-4c25-9798-3f807530e154)",
+    "Date": "20/07/2015 11:48:25",
     "AppVersion": "2.0.4-beta",
     "FileVersion": 2
   },
@@ -13,6 +13,9 @@
     "Cycles": [
       "Coach.vdri"
     ],
+    "AuxiliaryAssembly": "CLASSIC",
+    "AuxiliaryVersion": "CLASSIC",
+    "AdvancedAuxiliaryFilePath": "",
     "Aux": [
       {
         "ID": "ALT1",
