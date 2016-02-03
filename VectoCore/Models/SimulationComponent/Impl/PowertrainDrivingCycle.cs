@@ -229,7 +229,7 @@ namespace TUGraz.VectoCore.Models.SimulationComponent.Impl
 		/// </summary>
 		public bool VehicleStopped
 		{
-			get { return LeftSample.Current.PWheel.Abs().IsEqual(0); }
+			get { return false; }
 		}
 
 		/// <summary>

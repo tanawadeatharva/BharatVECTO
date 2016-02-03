@@ -7,7 +7,6 @@ using System.Linq;
 using TUGraz.VectoCore.OutputData;
 using TUGraz.VectoCore.Tests.Utils;
 using TUGraz.VectoCore.InputData.Reader;
-using TUGraz.VectoCore.Models.Simulation;
 using TUGraz.VectoCore.OutputData.FileIO;
 using TUGraz.VectoCore.InputData.FileIO.JSON;
 using TUGraz.VectoCore.Models.Simulation.Impl;
@@ -94,7 +93,7 @@ namespace TUGraz.VectoCore.Tests.Models.Simulation
 			var fullLoadCurve = EngineFullLoadCurve.Create(fullLoad);
 			var data = new VectoRunData {
 				Cycle = drivingCycle,
-				AxleGearData = new AxleGearData { Ratio = 2.3 },
+				AxleGearData = new AxleGearData { AxleGear = new GearData { Ratio = 2.3 } },
 				EngineData = new CombustionEngineData { IdleSpeed = 560.RPMtoRad(), FullLoadCurve = fullLoadCurve },
 				GearboxData = new GearboxData { Gears = new Dictionary<uint, GearData> { { 2, new GearData { Ratio = 3.5 } } } },
 				Retarder = new RetarderData()
