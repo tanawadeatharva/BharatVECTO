@@ -37,9 +37,12 @@ namespace TUGraz.VectoCore.Models.SimulationComponent.Impl
 		private NewtonMeter _requiredTorque;
 
 
-		public Clutch(IVehicleContainer cockpit, CombustionEngineData engineData,
+		protected Clutch(IVehicleContainer container) : base(container) {}
+
+
+		public Clutch(IVehicleContainer container, CombustionEngineData engineData,
 			ICombustionEngineIdleController idleController)
-			: base(cockpit)
+			: base(container)
 		{
 			_idleSpeed = engineData.IdleSpeed;
 			_ratedSpeed = engineData.FullLoadCurve.RatedSpeed;
@@ -67,7 +70,6 @@ namespace TUGraz.VectoCore.Models.SimulationComponent.Impl
 		{
 			return this;
 		}
-
 
 		public ITnOutPort OutPort()
 		{
@@ -120,7 +122,7 @@ namespace TUGraz.VectoCore.Models.SimulationComponent.Impl
 			NextComponent = other;
 		}
 
-		private void AddClutchLoss(NewtonMeter torque, PerSecond angularVelocity, out NewtonMeter torqueIn,
+		protected virtual void AddClutchLoss(NewtonMeter torque, PerSecond angularVelocity, out NewtonMeter torqueIn,
 			out PerSecond engineSpeedIn)
 		{
 			Log.Debug("from Wheels: torque: {0}, angularVelocity: {1}, power {2}", torque, angularVelocity,
@@ -133,8 +135,7 @@ namespace TUGraz.VectoCore.Models.SimulationComponent.Impl
 				engineSpeedIn = _idleSpeed;
 				torqueIn = 0.SI<NewtonMeter>();
 			} else {
-				var engineSpeedNorm = (angularVelocity - _idleSpeed) /
-									(_ratedSpeed - _idleSpeed);
+				var engineSpeedNorm = (angularVelocity - _idleSpeed) / (_ratedSpeed - _idleSpeed);
 				if (engineSpeedNorm < Constants.SimulationSettings.CluchNormSpeed) {
 					_clutchState = ClutchState.ClutchSlipping;
 
@@ -142,8 +143,7 @@ namespace TUGraz.VectoCore.Models.SimulationComponent.Impl
 					var clutchSpeedNorm = Constants.SimulationSettings.CluchNormSpeed /
 										((_idleSpeed + Constants.SimulationSettings.CluchNormSpeed * (_ratedSpeed - _idleSpeed)) / _ratedSpeed);
 					engineSpeedIn =
-						((clutchSpeedNorm * engineSpeed0 / _ratedSpeed) * (_ratedSpeed - _idleSpeed) + _idleSpeed).Radian
-							.Cast<PerSecond>();
+						((clutchSpeedNorm * engineSpeed0 / _ratedSpeed) * (_ratedSpeed - _idleSpeed) + _idleSpeed).Radian.Cast<PerSecond>();
 
 					torqueIn = (torque * angularVelocity) / ClutchEff / engineSpeedIn;
 				} else {
@@ -152,6 +152,24 @@ namespace TUGraz.VectoCore.Models.SimulationComponent.Impl
 			}
 			Log.Debug("to Engine:   torque: {0}, angularVelocity: {1}, power {2}", torqueIn, engineSpeedIn,
 				Formulas.TorqueToPower(torqueIn, engineSpeedIn));
+		}
+	}
+
+	/// <summary>
+	/// Clutch without losses and slipping behaviour for PWheel driving cycle.
+	/// </summary>
+	public class PWheelClutch : Clutch
+	{
+		public PWheelClutch(IVehicleContainer container, ICombustionEngineIdleController idleController) : base(container)
+		{
+			IdleController = idleController;
+		}
+
+		protected override void AddClutchLoss(NewtonMeter torque, PerSecond angularVelocity, out NewtonMeter torqueIn,
+			out PerSecond engineSpeedIn)
+		{
+			torqueIn = torque;
+			engineSpeedIn = angularVelocity;
 		}
 	}
 }

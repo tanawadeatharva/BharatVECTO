@@ -97,9 +97,8 @@ namespace TUGraz.VectoCore.Models.Simulation.Impl
 					throw new ArgumentOutOfRangeException();
 			}
 
-			// pWheel: pt1 disabled!!
 			var engine = new CombustionEngine(_container, data.EngineData, pt1Disabled: true);
-			var clutch = new Clutch(_container, data.EngineData, engine.IdleController);
+			var clutch = new PWheelClutch(_container, engine.IdleController);
 
 			// gearbox --> clutch
 			tmp = AddComponent(tmp, clutch);
