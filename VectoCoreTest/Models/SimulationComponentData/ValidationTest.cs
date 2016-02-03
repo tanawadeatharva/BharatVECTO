@@ -37,7 +37,7 @@ namespace TUGraz.VectoCore.Tests.Models.SimulationComponentData
 			fullLoad.Rows.Add("3", "3", "-3", "3");
 
 			var data = new CombustionEngineData {
-				ModelName = "asdf",
+				MakeAndModel = "asdf",
 				Displacement = 5.SI().Cubic.Centi.Meter.Cast<CubicMeter>(),
 				IdleSpeed = 560.RPMtoRad(),
 				Inertia = 1.SI<KilogramSquareMeter>(),
