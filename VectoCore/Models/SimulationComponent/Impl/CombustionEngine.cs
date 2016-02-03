@@ -22,6 +22,7 @@ using TUGraz.VectoCore.Configuration;
 using TUGraz.VectoCore.Exceptions;
 using TUGraz.VectoCore.Models.Connector.Ports;
 using TUGraz.VectoCore.Models.Connector.Ports.Impl;
+using TUGraz.VectoCore.Models.Declaration;
 using TUGraz.VectoCore.Models.Simulation;
 using TUGraz.VectoCore.Models.Simulation.Data;
 using TUGraz.VectoCore.Models.Simulation.DataBus;
@@ -184,25 +185,25 @@ namespace TUGraz.VectoCore.Models.SimulationComponent.Impl
 			return new ResponseSuccess { EnginePowerRequest = requestedEnginePower };
 		}
 
-		protected Watt ComputeRequestedEnginePower(Second absTime, Second dt, NewtonMeter torque, PerSecond angularVelocity)
+		protected Watt ComputeRequestedEnginePower(Second absTime, Second dt, NewtonMeter torque, PerSecond angularSpeed)
 		{
-			var requestedPower = torque * angularVelocity;
-			var enginePowerLoss = Formulas.InertiaPower(angularVelocity, PreviousState.EngineSpeed, Data.Inertia, dt);
-			var requestedEnginePower = requestedPower + enginePowerLoss;
+			CurrentState.dt = dt;
+			CurrentState.EngineSpeed = angularSpeed;
+			CurrentState.AbsTime = absTime;
 
-			if (angularVelocity < Data.IdleSpeed.Value() - EngineIdleSpeedStopThreshold) {
+			var requestedPower = torque * angularSpeed;
+			CurrentState.EnginePowerLoss = Formulas.InertiaPower(angularSpeed, PreviousState.EngineSpeed, Data.Inertia, dt);
+			var requestedEnginePower = requestedPower + CurrentState.EnginePowerLoss;
+
+			if (angularSpeed < Data.IdleSpeed.Value() - EngineIdleSpeedStopThreshold) {
 				CurrentState.OperationMode = EngineOperationMode.Stopped;
 				//todo: _currentState.EnginePowerLoss = enginePowerLoss;
 			}
 
-			CurrentState.dt = dt;
-			CurrentState.EngineSpeed = angularVelocity;
-			CurrentState.AbsTime = absTime;
-			CurrentState.EnginePowerLoss = enginePowerLoss;
-			CurrentState.FullDragTorque = Data.FullLoadCurve.DragLoadStationaryTorque(angularVelocity);
-			CurrentState.FullDragPower = CurrentState.FullDragTorque * angularVelocity;
+			CurrentState.FullDragTorque = Data.FullLoadCurve.DragLoadStationaryTorque(angularSpeed);
+			CurrentState.FullDragPower = CurrentState.FullDragTorque * angularSpeed;
 
-			Log.Debug("EnginePowerLoss: {0}", enginePowerLoss);
+			Log.Debug("EnginePowerLoss: {0}", CurrentState.EnginePowerLoss);
 			Log.Debug("Drag Curve: torque: {0}, power: {1}", CurrentState.FullDragTorque, CurrentState.FullDragPower);
 
 			return requestedEnginePower;
@@ -324,29 +325,33 @@ namespace TUGraz.VectoCore.Models.SimulationComponent.Impl
 				throw new VectoException("ComputeFullLoadPower cannot compute for simulation interval length 0.");
 			}
 
-			var stationaryFullLoadTorque = Data.FullLoadCurve.FullLoadStationaryTorque(angularVelocity);
-			var stationaryFullLoadPower = stationaryFullLoadTorque * angularVelocity;
+			//_currentState.StationaryFullLoadPower = _data.GetFullLoadCurve(gear).FullLoadStationaryPower(rpm);
+			CurrentState.StationaryFullLoadTorque =
+				Data.FullLoadCurve.FullLoadStationaryTorque(angularVelocity);
+			CurrentState.StationaryFullLoadPower = CurrentState.StationaryFullLoadTorque * angularVelocity;
 
-			Watt dynFullPower;
-			if (PT1Disabled) {
-				dynFullPower = stationaryFullLoadPower;
-			} else {
-				var pt1 = Data.FullLoadCurve.PT1(angularVelocity).Value();
-				var powerRatio = PreviousState.EnginePower / stationaryFullLoadPower;
-				var tStarPrev = pt1 * Math.Log(1 / (1 - powerRatio.Value())).SI<Second>();
-				var tStar = tStarPrev + PreviousState.dt;
-				dynFullPower = stationaryFullLoadPower * (1 - Math.Exp((-tStar / pt1).Value()));
+			var pt1 = Data.FullLoadCurve.PT1(angularVelocity).Value();
+
+//			var dynFullPowerCalculated = (1 / (pt1 + 1)) *
+//										(_currentState.StationaryFullLoadPower + pt1 * _previousState.EnginePower);
+			var tStarPrev = pt1 *
+							Math.Log(1 / (1 - (PreviousState.EnginePower / CurrentState.StationaryFullLoadPower).Value()), Math.E)
+								.SI<Second>();
+			var tStar = tStarPrev + PreviousState.dt;
+			var dynFullPowerCalculated = CurrentState.StationaryFullLoadPower * (1 - Math.Exp((-tStar / pt1).Value()));
+			CurrentState.DynamicFullLoadPower = (dynFullPowerCalculated < CurrentState.StationaryFullLoadPower)
+				? dynFullPowerCalculated
+				: CurrentState.StationaryFullLoadPower;
+
+			// new check in vecto 3.x (according to Martin Rexeis)
+			if (CurrentState.DynamicFullLoadPower < StationaryIdleFullLoadPower) {
+				CurrentState.DynamicFullLoadPower = StationaryIdleFullLoadPower;
 			}
 
-			CurrentState.StationaryFullLoadPower = stationaryFullLoadPower;
-			CurrentState.StationaryFullLoadTorque = stationaryFullLoadTorque;
-			CurrentState.DynamicFullLoadPower = VectoMath.Limit(dynFullPower, StationaryIdleFullLoadPower,
-				stationaryFullLoadPower);
 			CurrentState.DynamicFullLoadTorque = CurrentState.DynamicFullLoadPower / angularVelocity;
 
 			Log.Debug("FullLoad: torque: {0}, power: {1}", CurrentState.DynamicFullLoadTorque, CurrentState.DynamicFullLoadPower);
 		}
-
 
 		protected bool IsFullLoad(Watt requestedPower, Watt maxPower)
 		{

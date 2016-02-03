@@ -42,9 +42,8 @@ namespace TUGraz.VectoCore.Tests.Integration.EngineOnlyCycle
 		public void TestEngineOnlyDrivingCycle()
 		{
 			var data = DrivingCycleDataReader.ReadFromFile(TestContext.DataRow["CycleFile"].ToString(), CycleType.EngineOnly);
-			var container = new VehicleContainer();
-			var cycle = new MockDrivingCycle(container, data);
 			var vehicle = new VehicleContainer();
+			var cycle = new MockDrivingCycle(vehicle, data);
 			var engineData =
 				MockSimulationDataFactory.CreateEngineDataFromFile(TestContext.DataRow["EngineFile"].ToString());
 

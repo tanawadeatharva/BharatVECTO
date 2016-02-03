@@ -156,7 +156,7 @@ namespace TUGraz.VectoCore.Tests.Models.Simulation
 			Assert.IsTrue(jobContainer.Runs.All(r => r.Success), string.Join("", jobContainer.Runs.Select(r => r.ExecException)));
 
 			ResultFileHelper.TestModFile(@"TestData\Results\Pwheel\Atego_HDVCO2_RD_#1_AuxStd.vmod",
-				@"TestData\Jobs\Pwheel_ultimate_RD_#1_Pwheel_AuxStd.vmod");
+				@"TestData\Jobs\Pwheel_ultimate_RD_#1_Pwheel_AuxStd.vmod", testRowCount: false);
 		}
 	}
 }
