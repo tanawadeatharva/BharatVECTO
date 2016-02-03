@@ -35,7 +35,7 @@ namespace TUGraz.VectoCore.Models.SimulationComponent.Impl
 	/// <summary>
 	/// Component for a combustion engine.
 	/// </summary>
-	public class CombustionEngine : VectoSimulationComponent, ICombustionEngine, ITnOutPort
+	public class CombustionEngine : StatefulVectoSimulationComponent<CombustionEngine.EngineState>, ICombustionEngine, ITnOutPort
 	{
 		public enum EngineOperationMode
 		{
@@ -54,13 +54,6 @@ namespace TUGraz.VectoCore.Models.SimulationComponent.Impl
 		protected const double FullLoadMargin = 0.01;
 
 		protected readonly Watt StationaryIdleFullLoadPower;
-
-		/// <summary>
-		/// Current state is computed in request method
-		/// </summary>
-		internal EngineState CurrentState = new EngineState();
-
-		internal EngineState PreviousState = new EngineState();
 
 		protected internal readonly CombustionEngineData Data;
 
