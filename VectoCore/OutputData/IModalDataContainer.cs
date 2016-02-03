@@ -82,7 +82,7 @@ namespace TUGraz.VectoCore.OutputData
 		void AddAuxiliary(string id);
 	}
 
-	public static class ModalDataWriterExtensions
+	public static class ModalDataContainerExtensions
 	{
 		public static SI Max(this IModalDataContainer data, ModalResultField field)
 		{

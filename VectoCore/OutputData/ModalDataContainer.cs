@@ -30,7 +30,7 @@ namespace TUGraz.VectoCore.OutputData
 	{
 		private readonly ExecutionMode _mode;
 		private readonly Action<ModalDataContainer> _addReportResult;
-		private ModalResults Data { get; set; }
+		internal ModalResults Data { get; set; }
 		private DataRow CurrentRow { get; set; }
 		//private readonly VectoRunData _runData;
 

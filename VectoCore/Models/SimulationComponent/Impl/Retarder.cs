@@ -76,5 +76,6 @@ namespace TUGraz.VectoCore.Models.SimulationComponent.Impl
 			var retarderTorqueLoss = _lossMap.RetarderLoss(angularVelocity);
 			return NextComponent.Initialize(torque + retarderTorqueLoss, angularVelocity);
 		}
+
 	}
 }

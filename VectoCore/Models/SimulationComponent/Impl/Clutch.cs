@@ -153,5 +153,6 @@ namespace TUGraz.VectoCore.Models.SimulationComponent.Impl
 			Log.Debug("to Engine:   torque: {0}, angularVelocity: {1}, power {2}", torqueIn, engineSpeedIn,
 				Formulas.TorqueToPower(torqueIn, engineSpeedIn));
 		}
+
 	}
 }
