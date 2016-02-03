@@ -5,6 +5,7 @@ using TUGraz.VectoCore.Models;
 using TUGraz.VectoCore.Models.Declaration;
 using TUGraz.VectoCore.Models.Simulation.Data;
 using TUGraz.VectoCore.Models.SimulationComponent.Data;
+using TUGraz.VectoCore.OutputData;
 using TUGraz.VectoCore.OutputData.PDF;
 using TUGraz.VectoCore.Utils;
 
@@ -37,8 +38,22 @@ namespace TUGraz.VectoCore.InputData.Reader.Impl
 			var engineData = dao.CreateEngineData(InputDataProvider.EngineInputData);
 
 			var gearboxData = dao.CreateGearboxData(InputDataProvider.GearboxInputData, engineData);
+			var axlegearData = dao.CreateAxleGearData(InputDataProvider.AxleGearInputData);
+			var retarderData = dao.CreateRetarderData(InputDataProvider.RetarderInputData);
 
-			ConfigureReport(engineData, gearboxData, segment);
+			if (Report != null) {
+				var powertrainConfig = new VectoRunData() {
+					VehicleData = dao.CreateVehicleData(InputDataProvider.VehicleInputData, segment.Missions.First(),
+						segment.Missions.First().Loadings.First().Value),
+					EngineData = engineData,
+					GearboxData = gearboxData,
+					AxleGearData = axlegearData,
+					Retarder = retarderData,
+					Aux = dao.CreateAuxiliaryData(InputDataProvider.AuxiliaryInputData(), segment.Missions.First().MissionType,
+						segment.VehicleClass)
+				};
+				Report.InitializeReport(powertrainConfig, segment);
+			}
 
 			foreach (var mission in segment.Missions) {
 				DrivingCycleData cycle;
@@ -53,13 +68,12 @@ namespace TUGraz.VectoCore.InputData.Reader.Impl
 						Loading = loading.Key,
 						VehicleData = dao.CreateVehicleData(InputDataProvider.VehicleInputData, mission, loading.Value),
 						EngineData = engineData,
-						GearboxData = dao.CreateGearboxData(InputDataProvider.GearboxInputData, engineData),
-						AxleGearData = dao.CreateAxleGearData(InputDataProvider.AxleGearInputData),
-						Aux =
-							dao.CreateAuxiliaryData(InputDataProvider.AuxiliaryInputData(), mission.MissionType,
-								segment.VehicleClass),
+						GearboxData = gearboxData,
+						AxleGearData = axlegearData,
+						Aux = dao.CreateAuxiliaryData(InputDataProvider.AuxiliaryInputData(), mission.MissionType,
+							segment.VehicleClass),
 						Cycle = cycle,
-						Retarder = dao.CreateRetarderData(InputDataProvider.RetarderInputData),
+						Retarder = retarderData,
 						DriverData = driverdata,
 						IsEngineOnly = false, // InputDataProvider.JobInputData().EngineOnlyMode,
 						JobName = InputDataProvider.JobInputData().JobName,
@@ -74,22 +88,6 @@ namespace TUGraz.VectoCore.InputData.Reader.Impl
 					yield return simulationRunData;
 				}
 			}
-		}
-
-		private void ConfigureReport(CombustionEngineData engineData, GearboxData gearboxData, Segment segment)
-		{
-			if (Report == null) {
-				return;
-			}
-			Report.EngineModel = engineData.ModelName;
-			Report.EngineStr = string.Format("{0} l, {1} kW",
-				engineData.Displacement.ConvertTo().Cubic.Dezi.Meter.ToOutputFormat(1),
-				engineData.FullLoadCurve.MaxPower.ConvertTo().Kilo.Watt.ToOutputFormat(0));
-			Report.Flc = engineData.FullLoadCurve;
-			Report.GearboxModel = gearboxData.ModelName;
-			Report.GearboxStr = string.Format("{0}-Speed {1}", gearboxData.Gears.Count, gearboxData.Type);
-			Report.Segment = segment;
-			Report.ResultCount = segment.Missions.Sum(m => m.Loadings.Count);
 		}
 
 		internal Segment GetVehicleClassification(VehicleCategory category, AxleConfiguration axles, Kilogram grossMassRating,

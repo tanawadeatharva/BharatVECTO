@@ -2,5 +2,8 @@
 
 namespace TUGraz.VectoCore.Models.SimulationComponent.Data
 {
-	public class AxleGearData : GearData {}
+	public class AxleGearData : SimulationComponentData
+	{
+		public GearData AxleGear;
+	}
 }

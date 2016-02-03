@@ -53,21 +53,27 @@ namespace TUGraz.VectoCore.Models.SimulationComponent.Data
 			get { return _maxPower ?? ComputeRatedSpeed().Item2; }
 		}
 
-		public static FullLoadCurve ReadFromFile(string fileName, bool declarationMode = false)
+		public static FullLoadCurve ReadFromFile(string fileName, bool declarationMode = false, bool engineFld = false)
 		{
 			try {
 				var data = VectoCSVFile.Read(fileName);
-				return Create(data, declarationMode);
+				return Create(data, declarationMode, engineFld);
 			} catch (Exception ex) {
 				throw new VectoException("ERROR while reading FullLoadCurve File: " + ex.Message);
 			}
 		}
 
 
-		public static FullLoadCurve Create(DataTable data, bool declarationMode = false)
+		public static FullLoadCurve Create(DataTable data, bool declarationMode = false, bool engineFld = false)
 		{
-			if (data.Columns.Count < 3) {
-				throw new VectoException("FullLoadCurve Data File must consist of at least 3 columns.");
+			if (engineFld) {
+				if (data.Columns.Count < 3) {
+					throw new VectoException("Engine FullLoadCurve Data File must consist of at least 3 columns.");
+				}
+			} else {
+				if (data.Columns.Count < 2) {
+					throw new VectoException("Gearbox FullLoadCurve Data File must consist of at least 2 columns.");
+				}
 			}
 
 			if (data.Rows.Count < 2) {
@@ -76,8 +82,8 @@ namespace TUGraz.VectoCore.Models.SimulationComponent.Data
 			}
 
 			List<FullLoadCurveEntry> entriesFld;
-			if (HeaderIsValid(data.Columns)) {
-				entriesFld = CreateFromColumnNames(data);
+			if (HeaderIsValid(data.Columns, engineFld)) {
+				entriesFld = CreateFromColumnNames(data, engineFld);
 			} else {
 				Logger<FullLoadCurve>().Warn(
 					"FullLoadCurve: Header Line is not valid. Expected: '{0}, {1}, {2}', Got: '{3}'. Falling back to column index.",
@@ -85,7 +91,7 @@ namespace TUGraz.VectoCore.Models.SimulationComponent.Data
 					Fields.TorqueDrag,
 					string.Join(", ", data.Columns.Cast<DataColumn>().Select(c => c.ColumnName)));
 
-				entriesFld = CreateFromColumnIndizes(data);
+				entriesFld = CreateFromColumnIndizes(data, engineFld);
 			}
 
 			LookupData<PerSecond, Second> tmp;
@@ -98,30 +104,30 @@ namespace TUGraz.VectoCore.Models.SimulationComponent.Data
 			return new FullLoadCurve { FullLoadEntries = entriesFld, PT1Data = tmp };
 		}
 
-		private static bool HeaderIsValid(DataColumnCollection columns)
+		private static bool HeaderIsValid(DataColumnCollection columns, bool engineFld)
 		{
 			return columns.Contains(Fields.EngineSpeed)
-					&& columns.Contains(Fields.TorqueDrag)
-					&& columns.Contains(Fields.TorqueFullLoad);
+					&& columns.Contains(Fields.TorqueFullLoad)
+					&& (!engineFld || columns.Contains(Fields.TorqueDrag));
 		}
 
-		private static List<FullLoadCurveEntry> CreateFromColumnNames(DataTable data)
+		private static List<FullLoadCurveEntry> CreateFromColumnNames(DataTable data, bool engineFld)
 		{
 			return (from DataRow row in data.Rows
 				select new FullLoadCurveEntry {
 					EngineSpeed = row.ParseDouble(Fields.EngineSpeed).RPMtoRad(),
 					TorqueFullLoad = row.ParseDouble(Fields.TorqueFullLoad).SI<NewtonMeter>(),
-					TorqueDrag = row.ParseDouble(Fields.TorqueDrag).SI<NewtonMeter>()
+					TorqueDrag = (engineFld ? row.ParseDouble(Fields.TorqueDrag).SI<NewtonMeter>() : null)
 				}).ToList();
 		}
 
-		private static List<FullLoadCurveEntry> CreateFromColumnIndizes(DataTable data)
+		private static List<FullLoadCurveEntry> CreateFromColumnIndizes(DataTable data, bool engineFld)
 		{
 			return (from DataRow row in data.Rows
 				select new FullLoadCurveEntry {
 					EngineSpeed = row.ParseDouble(0).RPMtoRad(),
 					TorqueFullLoad = row.ParseDouble(1).SI<NewtonMeter>(),
-					TorqueDrag = row.ParseDouble(2).SI<NewtonMeter>()
+					TorqueDrag = (engineFld ? row.ParseDouble(2).SI<NewtonMeter>() : null)
 				}).ToList();
 		}
 

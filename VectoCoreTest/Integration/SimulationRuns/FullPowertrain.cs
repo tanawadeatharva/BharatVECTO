@@ -17,6 +17,7 @@
 using System;
 using System.Collections.Generic;
 using System.Linq;
+using System.Reflection;
 using Microsoft.VisualStudio.TestTools.UnitTesting;
 using NLog;
 using TUGraz.VectoCore.Configuration;
@@ -311,12 +312,14 @@ namespace TUGraz.VectoCore.Tests.Integration.SimulationRuns
 			};
 		}
 
-		private static GearData CreateAxleGearData()
+		private static AxleGearData CreateAxleGearData()
 		{
 			var ratio = 3.240355;
-			return new GearData {
-				Ratio = ratio,
-				LossMap = TransmissionLossMap.ReadFromFile(AxleLossMap, ratio, "AxleGear")
+			return new AxleGearData {
+				AxleGear = new GearData {
+					Ratio = ratio,
+					LossMap = TransmissionLossMap.ReadFromFile(AxleLossMap, ratio, "AxleGear")
+				}
 			};
 		}
 

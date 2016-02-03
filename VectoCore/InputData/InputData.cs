@@ -27,10 +27,27 @@ namespace TUGraz.VectoCore.InputData
 		string JobName { get; }
 	}
 
-	public interface IVehicleInputData
+	public interface IComponentInputData
 	{
 		bool SavedInDeclarationMode { get; }
 
+		string Vendor { get; }
+
+		string MakeAndModel { get; }
+
+		string Creator { get; }
+
+		string Date { get; }
+
+		string TypeId { get; }
+
+		string DigestValue { get; }
+
+		IntegrityStatus IntegrityStatus { get; }
+	}
+
+	public interface IVehicleInputData : IComponentInputData
+	{
 		/// <summary>
 		/// P036
 		/// cf. VECTO Input Parameters.xlsx
@@ -113,10 +130,8 @@ namespace TUGraz.VectoCore.InputData
 		DataTable CrosswindCorrectionMap { get; }
 	}
 
-	public interface IRetarderInputData
+	public interface IRetarderInputData : IComponentInputData
 	{
-		bool SavedInDeclarationMode { get; }
-
 		/// <summary>
 		/// P052  
 		/// cf. VECTO Input Parameters.xlsx
@@ -137,7 +152,7 @@ namespace TUGraz.VectoCore.InputData
 		DataTable LossMap { get; }
 	}
 
-	public interface IAxleInputData
+	public interface IAxleInputData : IComponentInputData
 	{
 		/// <summary>
 		/// P108  
@@ -150,6 +165,8 @@ namespace TUGraz.VectoCore.InputData
 		/// cf. VECTO Input Parameters.xlsx
 		/// </summary>
 		bool TwinTyres { get; }
+
+		AxleType AxleType { get; }
 
 		/// <summary>
 		/// P046
@@ -176,16 +193,9 @@ namespace TUGraz.VectoCore.InputData
 		KilogramSquareMeter Inertia { get; }
 	}
 
-	public interface IGearboxInputData
+
+	public interface IGearboxInputData : IComponentInputData
 	{
-		bool SavedInDeclarationMode { get; }
-
-		/// <summary>
-		/// P075
-		/// cf. VECTO Input Parameters.xlsx
-		/// </summary>
-		string ModelName { get; }
-
 		/// <summary>
 		/// P076
 		/// cf. VECTO Input Parameters.xlsx
@@ -297,10 +307,8 @@ namespace TUGraz.VectoCore.InputData
 		bool TorqueConverterActive { get; }
 	}
 
-	public interface IAxleGearInputData
+	public interface IAxleGearInputData : IComponentInputData
 	{
-		bool SavedInDeclarationMode { get; }
-
 		/// <summary>
 		/// P078
 		/// cf. VECTO Input Parameters.xlsx
@@ -343,16 +351,8 @@ namespace TUGraz.VectoCore.InputData
 		DataTable TCData { get; }
 	}
 
-	public interface IEngineInputData
+	public interface IEngineInputData : IComponentInputData
 	{
-		bool SavedInDeclarationMode { get; }
-
-		/// <summary>
-		/// P059
-		/// cf. VECTO Input Parameters.xlsx
-		/// </summary>
-		string ModelName { get; }
-
 		/// <summary>
 		/// P061
 		/// cf. VECTO Input Parameters.xlsx

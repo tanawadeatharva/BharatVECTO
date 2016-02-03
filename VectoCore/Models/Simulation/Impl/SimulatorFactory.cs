@@ -46,7 +46,8 @@ namespace TUGraz.VectoCore.Models.Simulation.Impl
 
 		private readonly ExecutionMode _mode;
 
-		public SimulatorFactory(ExecutionMode mode, IInputDataProvider dataProvider, IOutputDataWriter writer)
+		public SimulatorFactory(ExecutionMode mode, IInputDataProvider dataProvider, IOutputDataWriter writer,
+			DeclarationReport report = null)
 		{
 			Log.Fatal("########## VectoCore Version {0} ##########", Assembly.GetExecutingAssembly().GetName().Version);
 			JobNumber = Interlocked.Increment(ref _jobNumberCounter);
@@ -54,9 +55,10 @@ namespace TUGraz.VectoCore.Models.Simulation.Impl
 			ModWriter = writer;
 			switch (mode) {
 				case ExecutionMode.Declaration:
-					var report = new DeclarationReport(WindowsIdentity.GetCurrent().Name,
-						dataProvider.JobInputData().JobName, writer);
-
+					report = report ?? new PDFDeclarationReport(writer);
+					var windowsIdentity = WindowsIdentity.GetCurrent();
+					report.Creator = windowsIdentity != null ? windowsIdentity.Name : "N/A";
+					report.JobName = dataProvider.JobInputData().JobName;
 					DataReader = new DeclarationModeVectoRunDataFactory(dataProvider, report);
 					break;
 				case ExecutionMode.Engineering:

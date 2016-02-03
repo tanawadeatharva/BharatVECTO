@@ -33,6 +33,13 @@ namespace TUGraz.VectoCore.Models.Declaration
 		AxleConfig_8x8,
 	}
 
+	public enum AxleType
+	{
+		VehicleDriven,
+		VehicleNonDriven,
+		Trailer
+	}
+
 	public static class AxleConfigurationHelper
 	{
 		private const string Prefix = "AxleConfig_";

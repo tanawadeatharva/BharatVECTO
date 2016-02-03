@@ -1,19 +1,3 @@
-/*
-* Copyright 2015 European Union
-*
-* Licensed under the EUPL (the "Licence");
-* You may not use this work except in compliance with the Licence.
-* You may obtain a copy of the Licence at:
-*
-* http://ec.europa.eu/idabc/eupl5
-*
-* Unless required by applicable law or agreed to in writing, software 
-* distributed under the Licence is distributed on an "AS IS" basis,
-* WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
-* See the Licence for the specific language governing permissions and 
-* limitations under the Licence.
-*/
-
 using System;
 using System.Collections.Generic;
 using System.Drawing;
@@ -21,11 +5,9 @@ using System.Drawing.Imaging;
 using System.Globalization;
 using System.IO;
 using System.Linq;
-using System.Runtime.CompilerServices;
 using System.Windows.Forms.DataVisualization.Charting;
 using iTextSharp.text;
 using iTextSharp.text.pdf;
-using Org.BouncyCastle.Crypto.IO;
 using TUGraz.VectoCore.Models.Declaration;
 using TUGraz.VectoCore.Models.Simulation.Data;
 using TUGraz.VectoCore.Models.SimulationComponent.Data;
@@ -36,48 +18,9 @@ using Rectangle = System.Drawing.Rectangle;
 
 namespace TUGraz.VectoCore.OutputData.PDF
 {
-	/// <summary>
-	/// Class for creating a declaration report.
-	/// </summary>
-	public class DeclarationReport
+	public class PDFDeclarationReport : DeclarationReport
 	{
-		/// <summary>
-		/// Container class for one mission and the modData for the different loadings.
-		/// </summary>
-		private class ResultContainer
-		{
-			/// <summary>
-			/// The mission
-			/// </summary>
-			public Mission Mission;
-
-			/// <summary>
-			/// Dictionary of LoadingTypes and their resulting Modal Data
-			/// </summary>
-			public Dictionary<LoadingType, IModalDataContainer> ModData;
-		}
-
-		/// <summary>
-		/// Dictionary of MissionTypes and their corresponding results.
-		/// </summary>
-		private readonly Dictionary<MissionType, ResultContainer> _missions = new Dictionary<MissionType, ResultContainer>();
-
-		/// <summary>
-		/// The full load curve.
-		/// </summary>
-		internal FullLoadCurve Flc { get; set; }
-
-		/// <summary>
-		/// The declaration segment from the segment table
-		/// </summary>
-		internal Segment Segment { get; set; }
-
-		/// <summary>
-		/// The creator name for the report.
-		/// </summary>
-		private readonly string _creator;
-
-		private IReportWriter _writer;
+		private readonly IReportWriter _writer;
 
 		/// <summary>
 		/// The engine model string from engine file.
@@ -99,61 +42,15 @@ namespace TUGraz.VectoCore.OutputData.PDF
 		/// </summary>
 		public string GearboxStr { get; set; }
 
-		/// <summary>
-		/// The name of the job file (report name will be the same)
-		/// </summary>
-		public string JobName { get; set; }
-
-		/// <summary>
-		/// The result count determines how many results must be given before the report gets written.
-		/// </summary>
-		public int ResultCount { get; set; }
-
-		/// <summary>
-		/// The base path of the application
-		/// </summary>
-		/// <summary>
-		/// Initializes a new instance of the <see cref="DeclarationReport"/> class.
-		/// </summary>
-		/// <param name="creator">The creator name.</param>
-		/// <param name="jobName"></param>
-		/// <param name="writer"></param>
-		public DeclarationReport(string creator, string jobName, IReportWriter writer)
+		public PDFDeclarationReport(IReportWriter writer)
 		{
-			_creator = creator;
-			JobName = jobName;
 			_writer = writer;
 		}
-
-
-		/// <summary>
-		/// Adds the result of one run for the specific mission and loading. If all runs finished (given by the resultCount) the report will be written.
-		/// </summary>
-		/// <param name="loadingType">Type of the loading.</param>
-		/// <param name="mission">The mission.</param>
-		/// <param name="modData">The mod data.</param>
-		[MethodImpl(MethodImplOptions.Synchronized)]
-		public void AddResult(LoadingType loadingType, Mission mission, IModalDataContainer modData)
-		{
-			if (!_missions.ContainsKey(mission.MissionType)) {
-				_missions[mission.MissionType] = new ResultContainer {
-					Mission = mission,
-					ModData = new Dictionary<LoadingType, IModalDataContainer> { { loadingType, modData } }
-				};
-			} else {
-				_missions[mission.MissionType].ModData[loadingType] = modData;
-			}
-
-			if (ResultCount == _missions.Sum(v => v.Value.ModData.Count)) {
-				WriteReport();
-			}
-		}
-
 
 		/// <summary>
 		/// Creates the report and writes it to a pdf file.
 		/// </summary>
-		private void WriteReport()
+		protected internal override void DoWriteReport()
 		{
 			var titlePage = CreateTitlePage(_missions);
 			var cyclePages = _missions.OrderBy(m => m.Key).Select((m, i) => CreateCyclePage(m.Value, i + 2, _missions.Count + 1));
@@ -161,13 +58,23 @@ namespace TUGraz.VectoCore.OutputData.PDF
 			MergeDocuments(titlePage, cyclePages, _writer.WriterStream(ReportType.DeclarationReportPdf));
 		}
 
+		protected override void DoInitializeReport(VectoRunData modelData, Segment segment)
+		{
+			EngineModel = modelData.EngineData.MakeAndModel;
+			EngineStr = string.Format("{0} l, {1} kW",
+				modelData.EngineData.Displacement.ConvertTo().Cubic.Dezi.Meter.ToOutputFormat(1),
+				modelData.EngineData.FullLoadCurve.MaxPower.ConvertTo().Kilo.Watt.ToOutputFormat(0));
+			Flc = modelData.EngineData.FullLoadCurve;
+			GearboxModel = modelData.GearboxData.ModelName;
+			GearboxStr = string.Format("{0}-Speed {1}", modelData.GearboxData.Gears.Count, modelData.GearboxData.Type);
+		}
 
 		/// <summary>
 		/// Creates the title page.
 		/// </summary>
 		/// <param name="missions">The missions.</param>
 		/// <returns>the out stream of the pdf stamper with the title page.</returns>
-		private Stream CreateTitlePage(Dictionary<MissionType, ResultContainer> missions)
+		private Stream CreateTitlePage(Dictionary<MissionType, DeclarationReport.ResultContainer> missions)
 		{
 			var stream = new MemoryStream();
 			var resourceName = string.Format("{0}Report.title{1}CyclesTemplate.pdf", RessourceHelper.Namespace, missions.Count);
@@ -180,11 +87,11 @@ namespace TUGraz.VectoCore.OutputData.PDF
 			pdfFields.SetField("version", System.Reflection.Assembly.GetExecutingAssembly().GetName().Version.ToString());
 			pdfFields.SetField("Job", JobName);
 			pdfFields.SetField("Date", DateTime.Now.ToString(CultureInfo.InvariantCulture));
-			pdfFields.SetField("Created", _creator);
+			pdfFields.SetField("Created", Creator);
 			pdfFields.SetField("Config",
 				string.Format(CultureInfo.InvariantCulture, "{0}t {1} {2}",
-					Segment.GrossVehicleMassRating.ConvertTo().Ton.ToOutputFormat(1),
-					Segment.AxleConfiguration.GetName(), Segment.VehicleCategory));
+					Segment.GrossVehicleMassRating.ConvertTo().Ton.ToOutputFormat(1), Segment.AxleConfiguration.GetName(),
+					Segment.VehicleCategory));
 			pdfFields.SetField("HDVclass", "HDV Class " + Segment.VehicleClass.GetClassNumber());
 			pdfFields.SetField("Engine", EngineStr);
 			pdfFields.SetField("EngM", EngineModel);
@@ -241,7 +148,6 @@ namespace TUGraz.VectoCore.OutputData.PDF
 			return stream;
 		}
 
-
 		/// <summary>
 		/// Creates the cycle page.
 		/// </summary>
@@ -249,7 +155,7 @@ namespace TUGraz.VectoCore.OutputData.PDF
 		/// <param name="currentPageNr">The current page nr.</param>
 		/// <param name="pageCount">The page count.</param>
 		/// <returns>the out stream of the pdfstamper for a single cycle page</returns>
-		private Stream CreateCyclePage(ResultContainer results, int currentPageNr, int pageCount)
+		private Stream CreateCyclePage(DeclarationReport.ResultContainer results, int currentPageNr, int pageCount)
 		{
 			var stream = new MemoryStream();
 
@@ -260,7 +166,7 @@ namespace TUGraz.VectoCore.OutputData.PDF
 			pdfFields.SetField("version", System.Reflection.Assembly.GetExecutingAssembly().GetName().Version.ToString());
 			pdfFields.SetField("Job", JobName);
 			pdfFields.SetField("Date", DateTime.Now.ToString(CultureInfo.InvariantCulture));
-			pdfFields.SetField("Created", _creator);
+			pdfFields.SetField("Created", Creator);
 			pdfFields.SetField("Config",
 				string.Format("{0}t {1} {2}", Segment.GrossVehicleMassRating.ConvertTo().Ton.ToOutputFormat(1),
 					Segment.AxleConfiguration.GetName(), Segment.VehicleCategory));
@@ -318,6 +224,7 @@ namespace TUGraz.VectoCore.OutputData.PDF
 		/// <summary>
 		/// Merges the given stream to one document and writes it to a file on disk.
 		/// </summary>
+		/// <param name="titlePage"></param>
 		/// <param name="pages">The pages.</param>
 		/// <param name="reportWriter"></param>
 		private static void MergeDocuments(Stream titlePage, IEnumerable<Stream> pages, Stream reportWriter)
@@ -340,7 +247,7 @@ namespace TUGraz.VectoCore.OutputData.PDF
 		/// </summary>
 		/// <param name="missions">The missions.</param>
 		/// <returns></returns>
-		private static Bitmap DrawCo2MissionsChart(Dictionary<MissionType, ResultContainer> missions)
+		private static Bitmap DrawCo2MissionsChart(Dictionary<MissionType, DeclarationReport.ResultContainer> missions)
 		{
 			var co2Chart = new Chart { Width = 1500, Height = 700 };
 			co2Chart.Legends.Add(new Legend("main") {
@@ -395,7 +302,7 @@ namespace TUGraz.VectoCore.OutputData.PDF
 		/// </summary>
 		/// <param name="missions">The missions.</param>
 		/// <returns></returns>
-		private static Bitmap DrawCo2SpeedChart(Dictionary<MissionType, ResultContainer> missions)
+		private static Bitmap DrawCo2SpeedChart(Dictionary<MissionType, DeclarationReport.ResultContainer> missions)
 		{
 			var co2SpeedChart = new Chart { Width = 1500, Height = 700 };
 			co2SpeedChart.Legends.Add(new Legend("main") {
@@ -461,7 +368,7 @@ namespace TUGraz.VectoCore.OutputData.PDF
 		/// </summary>
 		/// <param name="results">The results.</param>
 		/// <returns></returns>
-		private static Bitmap DrawCycleChart(ResultContainer results)
+		private static Bitmap DrawCycleChart(DeclarationReport.ResultContainer results)
 		{
 			var missionCycleChart = new Chart { Width = 2000, Height = 400 };
 			missionCycleChart.Legends.Add(new Legend("main") {

@@ -1,5 +1,7 @@
 ﻿using System.Collections.Generic;
 using System.Data;
+using TUGraz.VectoCore.InputData;
+using TUGraz.VectoCore.Models.Declaration;
 using TUGraz.VectoCore.Models.SimulationComponent.Data;
 using TUGraz.VectoCore.Utils;
 
@@ -60,9 +62,30 @@ namespace TUGraz.VectoCore.InputData.Impl
 
 	public class AxleInputData : IAxleInputData
 	{
+		public bool SavedInDeclarationMode
+		{
+			get { throw new System.NotImplementedException(); }
+		}
+
+		public string Vendor { get; internal set; }
+
+		public string MakeAndModel { get; internal set; }
+
+		public string Creator { get; internal set; }
+
+		public string Date { get; internal set; }
+
+		public string TypeId { get; internal set; }
+
+		public string DigestValue { get; internal set; }
+
+		public IntegrityStatus IntegrityStatus { get; internal set; }
+
 		public string Wheels { get; internal set; }
 
 		public bool TwinTyres { get; internal set; }
+
+		public AxleType AxleType { get; internal set; }
 
 		public double RollResistanceCoefficient { get; internal set; }
 

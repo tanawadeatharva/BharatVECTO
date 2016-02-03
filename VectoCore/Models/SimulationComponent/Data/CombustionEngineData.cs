@@ -24,8 +24,6 @@ namespace TUGraz.VectoCore.Models.SimulationComponent.Data
 {
 	public class CombustionEngineData : SimulationComponentData
 	{
-		public string ModelName { get; internal set; }
-
 		[Required, SIRange(1000 / (Constants.Kilo * Constants.Kilo), 20000 / (Constants.Kilo * Constants.Kilo))]
 		public CubicMeter Displacement { get; internal set; }
 
@@ -56,7 +54,7 @@ namespace TUGraz.VectoCore.Models.SimulationComponent.Data
 
 		protected bool Equals(CombustionEngineData other)
 		{
-			return Equals(FullLoadCurve, other.FullLoadCurve) && string.Equals(ModelName, other.ModelName) &&
+			return Equals(FullLoadCurve, other.FullLoadCurve) && string.Equals(MakeAndModel, other.MakeAndModel) &&
 					Equals(Displacement, other.Displacement) && Equals(IdleSpeed, other.IdleSpeed) && Equals(Inertia, other.Inertia) &&
 					Equals(WHTCUrban, other.WHTCUrban) && Equals(WHTCRural, other.WHTCRural) &&
 					Equals(WHTCMotorway, other.WHTCMotorway) && Equals(ConsumptionMap, other.ConsumptionMap);
@@ -80,7 +78,7 @@ namespace TUGraz.VectoCore.Models.SimulationComponent.Data
 		{
 			unchecked {
 				var hashCode = (FullLoadCurve != null ? FullLoadCurve.GetHashCode() : 0);
-				hashCode = (hashCode * 397) ^ (ModelName != null ? ModelName.GetHashCode() : 0);
+				hashCode = (hashCode * 397) ^ (MakeAndModel != null ? MakeAndModel.GetHashCode() : 0);
 				hashCode = (hashCode * 397) ^ (Displacement != null ? Displacement.GetHashCode() : 0);
 				hashCode = (hashCode * 397) ^ (IdleSpeed != null ? IdleSpeed.GetHashCode() : 0);
 				hashCode = (hashCode * 397) ^ (Inertia != null ? Inertia.GetHashCode() : 0);

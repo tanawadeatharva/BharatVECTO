@@ -14,10 +14,18 @@ namespace TUGraz.VectoCore.OutputData.FileIO
 		private readonly string _basePath;
 		private readonly string _jobName;
 
+		/// <summary>
+		/// 
+		/// </summary>
+		/// <param name="jobFile">full path of the json job-file. jobName and basePath are extracted</param>
 		public FileOutputWriter(string jobFile)
 			: this(Path.GetFileNameWithoutExtension(jobFile), Path.GetDirectoryName(jobFile)) {}
 
-
+		/// <summary>
+		/// 
+		/// </summary>
+		/// <param name="jobName">Name of the job, used for the filename of the sum-file</param>
+		/// <param name="basePath">path where to store the sum-file and report</param>
 		public FileOutputWriter(string jobName, string basePath)
 		{
 			_jobName = jobName;
