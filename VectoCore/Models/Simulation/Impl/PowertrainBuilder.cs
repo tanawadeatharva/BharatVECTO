@@ -73,7 +73,7 @@ namespace TUGraz.VectoCore.Models.Simulation.Impl
 			data.GearboxData.Type = GearboxType.PWheel;
 			var gearbox = GetGearbox(_container, data.GearboxData);
 
-			var cycle = new PWheelCycle(_container, data.Cycle, data.AxleGearData.Ratio, (Gearbox)gearbox);
+			var cycle = new PWheelCycle(_container, data.Cycle, data.AxleGearData.AxleGear.Ratio, (Gearbox)gearbox);
 
 			var tmp = AddComponent(cycle, new AxleGear(_container, data.AxleGearData));
 

@@ -119,6 +119,7 @@
     <Compile Include="InputData\FileIO\JSON\JSONVehicleData.cs" />
     <Compile Include="InputData\IInputDataProvider.cs" />
     <Compile Include="InputData\InputData.cs" />
+    <Compile Include="InputData\IntegrityStatus.cs" />
     <Compile Include="InputData\IVectoRunDataFactory.cs" />
     <Compile Include="InputData\Reader\DataObjectAdaper\AbstractSimulationDataAdapter.cs" />
     <Compile Include="InputData\Reader\DataObjectAdaper\DeclarationDataAdapter.cs" />
@@ -183,11 +184,12 @@
     <Compile Include="Models\Simulation\Impl\DistanceRun.cs" />
     <Compile Include="Models\Simulation\Impl\PowertrainBuilder.cs" />
     <Compile Include="Models\Simulation\Impl\TimeRun.cs" />
+    <Compile Include="OutputData\DeclarationReport.cs" />
     <Compile Include="OutputData\FileIO\FileOutputWriter.cs" />
     <Compile Include="OutputData\IModalDataContainer.cs" />
     <Compile Include="OutputData\IDataWriter.cs" />
     <Compile Include="OutputData\ModalDataContainer.cs" />
-    <Compile Include="OutputData\PDF\DeclarationReport.cs" />
+    <Compile Include="OutputData\PDF\PDFDeclarationReport.cs" />
     <Compile Include="OutputData\SummaryDataContainer.cs" />
     <Compile Include="Properties\Version.cs">
       <AutoGen>True</AutoGen>

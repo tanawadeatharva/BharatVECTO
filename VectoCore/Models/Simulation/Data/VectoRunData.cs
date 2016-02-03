@@ -21,6 +21,7 @@ using TUGraz.VectoCore.Configuration;
 using TUGraz.VectoCore.Exceptions;
 using TUGraz.VectoCore.Models.Declaration;
 using TUGraz.VectoCore.Models.SimulationComponent.Data;
+using TUGraz.VectoCore.OutputData;
 using TUGraz.VectoCore.OutputData.PDF;
 using TUGraz.VectoCore.Utils;
 
@@ -126,7 +127,7 @@ namespace TUGraz.VectoCore.Models.Simulation.Data
 							if (axleGearData != null) {
 								var axleAngularVelocity = angularVelocity / gear.Value.Ratio;
 								try {
-									axleGearData.LossMap.GetOutTorque(axleAngularVelocity, axleTorque);
+									axleGearData.AxleGear.LossMap.GetOutTorque(axleAngularVelocity, axleTorque);
 								} catch (VectoException) {
 									return
 										new ValidationResult(

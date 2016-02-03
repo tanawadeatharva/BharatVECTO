@@ -15,7 +15,13 @@ namespace TUGraz.VectoCore.InputData.Reader.DataObjectAdaper
 		{
 			var retVal = new VehicleData {
 				SavedInDeclarationMode = data.SavedInDeclarationMode,
-				VehicleCategory = data.VehicleCategory,
+				Vendor = data.Vendor,
+				MakeAndModel = data.MakeAndModel,
+				Creator = data.Creator,
+				Date = data.Date,
+				TypeId = data.TypeId,
+				DigestValue = data.DigestValue,
+				IntegrityStatus = data.IntegrityStatus,
 				AxleConfiguration = data.AxleConfiguration,
 				CurbWeight = data.CurbWeight,
 				//CurbWeigthExtra = data.CurbWeightExtra.SI<Kilogram>(),
@@ -35,6 +41,14 @@ namespace TUGraz.VectoCore.InputData.Reader.DataObjectAdaper
 		internal RetarderData SetCommonRetarderData(IRetarderInputData data)
 		{
 			var retarder = new RetarderData {
+				SavedInDeclarationMode = data.SavedInDeclarationMode,
+				Vendor = data.Vendor,
+				MakeAndModel = data.MakeAndModel,
+				Creator = data.Creator,
+				Date = data.Date,
+				TypeId = data.TypeId,
+				DigestValue = data.DigestValue,
+				IntegrityStatus = data.IntegrityStatus,
 				Type = data.Type,
 			};
 			if (retarder.Type == RetarderData.RetarderType.Primary || retarder.Type == RetarderData.RetarderType.Secondary) {
@@ -48,7 +62,13 @@ namespace TUGraz.VectoCore.InputData.Reader.DataObjectAdaper
 		{
 			var retVal = new CombustionEngineData {
 				SavedInDeclarationMode = data.SavedInDeclarationMode,
-				ModelName = data.ModelName,
+				Vendor = data.Vendor,
+				MakeAndModel = data.MakeAndModel,
+				Creator = data.Creator,
+				Date = data.Date,
+				TypeId = data.TypeId,
+				DigestValue = data.DigestValue,
+				IntegrityStatus = data.IntegrityStatus,
 				Displacement = data.Displacement,
 				IdleSpeed = data.IdleSpeed,
 				ConsumptionMap = FuelConsumptionMap.Create(data.FuelConsumptionMap),
@@ -63,15 +83,31 @@ namespace TUGraz.VectoCore.InputData.Reader.DataObjectAdaper
 		{
 			return new GearboxData {
 				SavedInDeclarationMode = data.SavedInDeclarationMode,
-				ModelName = data.ModelName,
+				Vendor = data.Vendor,
+				MakeAndModel = data.MakeAndModel,
+				Creator = data.Creator,
+				Date = data.Date,
+				TypeId = data.TypeId,
+				DigestValue = data.DigestValue,
+				IntegrityStatus = data.IntegrityStatus,
 				Type = data.Type
 			};
 		}
 
-		internal AxleGearData CreateAxleGearData(IAxleGearInputData axleGear)
+		internal AxleGearData CreateAxleGearData(IAxleGearInputData data)
 		{
-			var axleLossMap = TransmissionLossMap.Create(axleGear.LossMap, axleGear.Ratio, "AxleGear");
-			return new AxleGearData() { LossMap = axleLossMap, Ratio = axleGear.Ratio, TorqueConverterActive = false };
+			var axleLossMap = TransmissionLossMap.Create(data.LossMap, data.Ratio, "AxleGear");
+			return new AxleGearData() {
+				SavedInDeclarationMode = data.SavedInDeclarationMode,
+				Vendor = data.Vendor,
+				MakeAndModel = data.MakeAndModel,
+				Creator = data.Creator,
+				Date = data.Date,
+				TypeId = data.TypeId,
+				DigestValue = data.DigestValue,
+				IntegrityStatus = data.IntegrityStatus,
+				AxleGear = new GearData() { LossMap = axleLossMap, Ratio = data.Ratio, TorqueConverterActive = false }
+			};
 		}
 
 		/// <summary>

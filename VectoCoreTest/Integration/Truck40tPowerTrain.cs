@@ -125,12 +125,14 @@ namespace TUGraz.VectoCore.Tests.Integration
 			};
 		}
 
-		private static GearData CreateAxleGearData()
+		private static AxleGearData CreateAxleGearData()
 		{
 			const double ratio = 2.59;
-			return new GearData {
-				Ratio = ratio,
-				LossMap = TransmissionLossMap.ReadFromFile(AxleGearLossMap, ratio, "AxleGear")
+			return new AxleGearData {
+				AxleGear = new GearData {
+					Ratio = ratio,
+					LossMap = TransmissionLossMap.ReadFromFile(AxleGearLossMap, ratio, "AxleGear")
+				}
 			};
 		}
 

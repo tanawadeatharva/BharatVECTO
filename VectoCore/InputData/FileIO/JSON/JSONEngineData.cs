@@ -38,11 +38,6 @@ namespace TUGraz.VectoCore.InputData.FileIO.JSON
 	{
 		public JSONEngineDataV3(JObject data, string fileName) : base(data, fileName) {}
 
-		public virtual string ModelName
-		{
-			get { return Body.GetEx<string>(JsonKeys.Engine_ModelName); }
-		}
-
 		public virtual CubicMeter Displacement
 		{
 			get { return Body.GetEx<double>(JsonKeys.Engine_Displacement).SI().Cubic.Centi.Meter.Cast<CubicMeter>(); }
@@ -91,6 +86,41 @@ namespace TUGraz.VectoCore.InputData.FileIO.JSON
 			{
 				return Body.GetEx<double>(JsonKeys.Engine_WHTC_Urban).SI().Gramm.Per.Kilo.Watt.Hour.Cast<KilogramPerWattSecond>();
 			}
+		}
+
+		public string Vendor
+		{
+			get { return "N/A"; }
+		}
+
+		public string MakeAndModel
+		{
+			get { return Body.GetEx<string>(JsonKeys.Engine_ModelName); }
+		}
+
+		public string Creator
+		{
+			get { return "N/A"; }
+		}
+
+		public string Date
+		{
+			get { return "N/A"; }
+		}
+
+		public string TypeId
+		{
+			get { return "N/A"; }
+		}
+
+		public string DigestValue
+		{
+			get { return "N/A"; }
+		}
+
+		public IntegrityStatus IntegrityStatus
+		{
+			get { return IntegrityStatus.Unknown; }
 		}
 	}
 }

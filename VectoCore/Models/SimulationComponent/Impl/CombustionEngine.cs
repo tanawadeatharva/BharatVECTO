@@ -290,8 +290,8 @@ namespace TUGraz.VectoCore.Models.SimulationComponent.Impl
 			var curve = DataBus.GearFullLoadCurve;
 			if (curve != null) {
 				var gearboxFullLoad = curve.FullLoadStationaryTorque(CurrentState.EngineSpeed) * CurrentState.EngineSpeed;
-				var gearboxDragLoad = curve.DragLoadStationaryTorque(CurrentState.EngineSpeed) * CurrentState.EngineSpeed;
-				requestedEnginePower = VectoMath.Limit(requestedEnginePower, gearboxDragLoad, gearboxFullLoad);
+				// var gearboxDragLoad = curve.DragLoadStationaryTorque(CurrentState.EngineSpeed) * CurrentState.EngineSpeed;
+                requestedEnginePower = VectoMath.Limit(requestedEnginePower, -gearboxFullLoad, gearboxFullLoad);
 			}
 
 			return VectoMath.Limit(requestedEnginePower, CurrentState.FullDragPower, CurrentState.DynamicFullLoadPower);

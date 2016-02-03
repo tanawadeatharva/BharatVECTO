@@ -18,6 +18,7 @@ using TUGraz.VectoCore.Exceptions;
 using TUGraz.VectoCore.Models.Connector.Ports;
 using TUGraz.VectoCore.Models.Simulation.Data;
 using TUGraz.VectoCore.Models.Simulation.Impl;
+using TUGraz.VectoCore.Models.SimulationComponent.Data;
 using TUGraz.VectoCore.Models.SimulationComponent.Data.Gearbox;
 using TUGraz.VectoCore.OutputData;
 using TUGraz.VectoCore.Utils;
@@ -27,11 +28,11 @@ namespace TUGraz.VectoCore.Models.SimulationComponent.Impl
 	public class AxleGear : VectoSimulationComponent, IPowerTrainComponent, ITnInPort, ITnOutPort
 	{
 		protected ITnOutPort NextComponent;
-		private readonly GearData _gearData;
+		private readonly AxleGearData _gearData;
 
 		protected Watt Loss;
 
-		public AxleGear(VehicleContainer container, GearData gearData) : base(container)
+		public AxleGear(VehicleContainer container, AxleGearData gearData) : base(container)
 		{
 			_gearData = gearData;
 		}
@@ -56,10 +57,10 @@ namespace TUGraz.VectoCore.Models.SimulationComponent.Impl
 		{
 			Log.Debug("request: torque: {0}, angularVelocity: {1}", torque, angularVelocity);
 
-			var inAngularVelocity = angularVelocity * _gearData.Ratio;
+			var inAngularVelocity = angularVelocity * _gearData.AxleGear.Ratio;
 			var inTorque = angularVelocity.IsEqual(0)
 				? 0.SI<NewtonMeter>()
-				: _gearData.LossMap.GetInTorque(inAngularVelocity, torque);
+				: _gearData.AxleGear.LossMap.GetInTorque(inAngularVelocity, torque);
 
 			var outPower = torque * angularVelocity;
 			var inPower = inTorque * inAngularVelocity;
@@ -73,8 +74,8 @@ namespace TUGraz.VectoCore.Models.SimulationComponent.Impl
 
 		public IResponse Initialize(NewtonMeter torque, PerSecond angularVelocity)
 		{
-			var inAngularVelocity = angularVelocity * _gearData.Ratio;
-			var inTorque = _gearData.LossMap.GetInTorque(inAngularVelocity, torque);
+			var inAngularVelocity = angularVelocity * _gearData.AxleGear.Ratio;
+			var inTorque = _gearData.AxleGear.LossMap.GetInTorque(inAngularVelocity, torque);
 
 			return NextComponent.Initialize(inTorque, inAngularVelocity);
 		}
@@ -86,7 +87,7 @@ namespace TUGraz.VectoCore.Models.SimulationComponent.Impl
 
 		protected override void DoCommitSimulationStep()
 		{
-			if (_gearData.LossMap.Extrapolated) {
+			if (_gearData.AxleGear.LossMap.Extrapolated) {
 				// todo (MK, 2015-12-14): should we throw an interpolation error in EngineOnly Mode also?
 				if (DataBus.ExecutionMode == ExecutionMode.Declaration) {
 					throw new VectoException("AxleGear LossMap data was extrapolated: range for loss map is not sufficient.");

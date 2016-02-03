@@ -228,11 +228,13 @@ namespace TUGraz.VectoCore.Tests.Integration.SimulationRuns
 			modData.Finish(VectoRun.Status.Success);
 		}
 
-		private static GearData CreateAxleGearData()
+		private static AxleGearData CreateAxleGearData()
 		{
-			return new GearData {
-				Ratio = 3.0 * 3.5,
-				LossMap = TransmissionLossMap.ReadFromFile(GbxLossMap, 3.0 * 3.5, "AxleGear")
+			return new AxleGearData() {
+				AxleGear = new GearData {
+					Ratio = 3.0 * 3.5,
+					LossMap = TransmissionLossMap.ReadFromFile(GbxLossMap, 3.0 * 3.5, "AxleGear")
+				}
 			};
 		}
 
