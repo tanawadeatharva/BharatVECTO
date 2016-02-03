@@ -41,6 +41,8 @@ namespace TUGraz.VectoCore.Models.Simulation.Impl
 
 		internal IClutchInfo Clutch;
 
+		internal IDrivingCycleInfo DrivingCycle;
+
 		internal IRoadLookAhead Road;
 
 		internal ISimulationOutPort Cycle;
@@ -150,7 +152,7 @@ namespace TUGraz.VectoCore.Models.Simulation.Impl
 			ExecutionMode executionMode = ExecutionMode.Declaration)
 		{
 			ModData = modData;
-			WriteSumData = writeSumData ?? delegate {};
+			WriteSumData = writeSumData ?? delegate { };
 			ExecutionMode = executionMode;
 		}
 
@@ -179,8 +181,10 @@ namespace TUGraz.VectoCore.Models.Simulation.Impl
 				.If<IMileageCounter>(c => MilageCounter = c)
 				.If<IBrakes>(c => Brakes = c)
 				.If<IRoadLookAhead>(c => Road = c)
-				.If<IClutchInfo>(c => Clutch = c);
+				.If<IClutchInfo>(c => Clutch = c)
+				.If<IDrivingCycleInfo>(c => DrivingCycle = c);
 		}
+
 
 		public void CommitSimulationStep(Second time, Second simulationInterval)
 		{
@@ -267,5 +271,10 @@ namespace TUGraz.VectoCore.Models.Simulation.Impl
 
 		public VectoRunData RunData { get; set; }
 		public ExecutionMode ExecutionMode { get; set; }
+
+		public CycleData CycleData
+		{
+			get { return DrivingCycle.CycleData; }
+		}
 	}
 }

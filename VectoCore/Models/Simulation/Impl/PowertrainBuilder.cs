@@ -58,7 +58,7 @@ namespace TUGraz.VectoCore.Models.Simulation.Impl
 			var cycle = new PowertrainDrivingCycle(_container, data.Cycle);
 
 			var directAux = new Auxiliary(_container);
-			directAux.AddDirect(cycle);
+			directAux.AddDirect();
 
 			cycle.InPort().Connect(directAux.OutPort());
 
@@ -70,31 +70,35 @@ namespace TUGraz.VectoCore.Models.Simulation.Impl
 
 		private VehicleContainer BuildPWheel(VectoRunData data)
 		{
-			var cycle = new PWheelCycle(_container, data.Cycle, data.AxleGearData.Ratio,
-				data.GearboxData.Gears.ToDictionary(g => g.Key, g => g.Value.Ratio));
+			data.GearboxData.Type = GearboxType.PWheel;
+			var gearbox = GetGearbox(_container, data.GearboxData);
+
+			var cycle = new PWheelCycle(_container, data.Cycle, data.AxleGearData.Ratio, (Gearbox)gearbox);
 
 			var tmp = AddComponent(cycle, new AxleGear(_container, data.AxleGearData));
+
 
 			switch (data.Retarder.Type) {
 				case RetarderData.RetarderType.Primary:
 					tmp = AddComponent(tmp, new Retarder(_container, data.Retarder.LossMap));
-					tmp = AddComponent(tmp, GetGearbox(_container, data.GearboxData));
+					tmp = AddComponent(tmp, gearbox);
 					break;
 				case RetarderData.RetarderType.Secondary:
-					tmp = AddComponent(tmp, GetGearbox(_container, data.GearboxData));
+					tmp = AddComponent(tmp, gearbox);
 					tmp = AddComponent(tmp, new Retarder(_container, data.Retarder.LossMap));
 					break;
 				case RetarderData.RetarderType.None:
-					tmp = AddComponent(tmp, GetGearbox(_container, data.GearboxData));
+					tmp = AddComponent(tmp, gearbox);
 					break;
 				case RetarderData.RetarderType.LossesIncludedInTransmission:
-					tmp = AddComponent(tmp, GetGearbox(_container, data.GearboxData));
+					tmp = AddComponent(tmp, gearbox);
 					break;
 				default:
 					throw new ArgumentOutOfRangeException();
 			}
 
-			var engine = new CombustionEngine(_container, data.EngineData);
+			// pWheel: pt1 disabled!!
+			var engine = new CombustionEngine(_container, data.EngineData, pt1Disabled: true);
 			var clutch = new Clutch(_container, data.EngineData, engine.IdleController);
 
 			// gearbox --> clutch
@@ -109,10 +113,10 @@ namespace TUGraz.VectoCore.Models.Simulation.Impl
 							aux.AddConstant(auxData.ID, auxData.PowerDemand);
 							break;
 						case AuxiliaryDemandType.Direct:
-							aux.AddDirect(cycle);
+							aux.AddDirect();
 							break;
 						case AuxiliaryDemandType.Mapping:
-							aux.AddMapping(auxData.ID, cycle, auxData.Data);
+							aux.AddMapping(auxData.ID, auxData.Data);
 							break;
 					}
 					_modData.AddAuxiliary(auxData.ID);
@@ -184,10 +188,10 @@ namespace TUGraz.VectoCore.Models.Simulation.Impl
 							aux.AddConstant(auxData.ID, auxData.PowerDemand);
 							break;
 						case AuxiliaryDemandType.Direct:
-							aux.AddDirect(cycle);
+							aux.AddDirect();
 							break;
 						case AuxiliaryDemandType.Mapping:
-							aux.AddMapping(auxData.ID, cycle, auxData.Data);
+							aux.AddMapping(auxData.ID, auxData.Data);
 							break;
 					}
 					_modData.AddAuxiliary(auxData.ID);
@@ -217,6 +221,9 @@ namespace TUGraz.VectoCore.Models.Simulation.Impl
 					break;
 				case GearboxType.Custom:
 					strategy = new CustomShiftStrategy(data, container);
+					break;
+				case GearboxType.PWheel:
+					strategy = new PWheelShiftStrategy(data, container);
 					break;
 				default:
 					throw new VectoSimulationException("Unknown Gearbox Type: {0}", data.Type);

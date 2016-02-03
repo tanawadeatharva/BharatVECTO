@@ -123,15 +123,17 @@ namespace TUGraz.VectoCore.Models.SimulationComponent.Impl
 
 		#endregion
 
-		public CycleData CycleData()
+		public CycleData CycleData
 		{
-			//todo: leftsample, rightsample
-			return new CycleData {
-				AbsTime = 0.SI<Second>(),
-				AbsDistance = 0.SI<Meter>(),
-				LeftSample = null,
-				RightSample = null
-			};
+			get
+			{
+				return new CycleData {
+					AbsTime = 0.SI<Second>(),
+					AbsDistance = 0.SI<Meter>(),
+					LeftSample = null,
+					RightSample = null
+				};
+			}
 		}
 	}
 }

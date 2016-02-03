@@ -137,7 +137,7 @@ namespace TUGraz.VectoCore.Tests.Models.Simulation
 			var aux = new Auxiliary(container);
 			aux.InPort().Connect(port);
 
-			aux.AddDirect(cycle);
+			aux.AddDirect();
 
 			var speed = 2358.RPMtoRad();
 			var torque = 500.SI<NewtonMeter>();
@@ -179,8 +179,8 @@ namespace TUGraz.VectoCore.Tests.Models.Simulation
 			// efficiency_engine = 0.96
 			// efficiency_supply = 0.98
 
-			aux.AddMapping("ALT1", cycle, auxData);
-			aux.AddDirect(cycle);
+			aux.AddMapping("ALT1", auxData);
+			aux.AddDirect();
 			var constPower = 1200.SI<Watt>();
 			aux.AddConstant("CONSTANT", constPower);
 
@@ -238,7 +238,7 @@ namespace TUGraz.VectoCore.Tests.Models.Simulation
 			// efficiency_engine = 0.96
 			// efficiency_supply = 0.98
 
-			aux.AddMapping(auxId, cycle, auxData);
+			aux.AddMapping(auxId, auxData);
 
 			var speed = 578.22461991.RPMtoRad(); // = 2358 (nAuxiliary) * ratio
 			var torque = 500.SI<NewtonMeter>();
@@ -276,7 +276,7 @@ namespace TUGraz.VectoCore.Tests.Models.Simulation
 			var cycle = new MockDrivingCycle(container, data);
 
 			var aux = new Auxiliary(container);
-			AssertHelper.Exception<VectoException>(() => aux.AddMapping("NONEXISTING_AUX", cycle, null),
+			AssertHelper.Exception<VectoException>(() => aux.AddMapping("NONEXISTING_AUX", null),
 				"driving cycle does not contain column for auxiliary: NONEXISTING_AUX");
 		}
 

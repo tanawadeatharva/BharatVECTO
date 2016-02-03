@@ -98,16 +98,25 @@ namespace TUGraz.VectoCore.Models.SimulationComponent.Impl
 				};
 			}
 
-			var request = NextComponent.Request(absTime, dt, LeftSample.Current.Torque, LeftSample.Current.AngularVelocity);
-			request.Switch()
-				.Case<ResponseSuccess>(() => {
-					// if response successfull update internal AbsTime for DoCommit
-					AbsTime = absTime + dt;
+			var response = NextComponent.Request(absTime, dt, LeftSample.Current.Torque,
+				DataBus.ClutchClosed(absTime) ? LeftSample.Current.AngularVelocity : 0.SI<PerSecond>());
+
+			AbsTime = absTime + dt;
+
+			response.Switch()
+				.Case<ResponseUnderload>(r => {
+					Log.Warn("PowertrainDrivingCycle got an underload response. Using PDrag.");
+					response = new ResponseSuccess();
 				})
+				.Case<ResponseOverload>(r => {
+					Log.Warn("PowertrainDrivingCycle got an underload response. Using PFullLoad.");
+					response = new ResponseSuccess();
+				})
+				.Case<ResponseSuccess>(() => { })
 				.Default(
 					r => { throw new UnexpectedResponseException("PowertrainDrivingCycle received an unexpected response.", r); });
 
-			return request;
+			return response;
 		}
 
 		public IResponse Initialize()
@@ -155,41 +164,57 @@ namespace TUGraz.VectoCore.Models.SimulationComponent.Impl
 
 		#endregion
 
-		public CycleData CycleData()
+		public CycleData CycleData
 		{
-			return new CycleData {
-				AbsTime = LeftSample.Current.Time,
-				AbsDistance = null,
-				LeftSample = LeftSample.Current,
-				RightSample = RightSample.Current,
-			};
+			get
+			{
+				return new CycleData {
+					AbsTime = LeftSample.Current.Time,
+					AbsDistance = null,
+					LeftSample = LeftSample.Current,
+					RightSample = RightSample.Current,
+				};
+			}
 		}
 	}
 
 	/// <summary>
 	/// Driving Cycle for the PWheel driving cycle.
 	/// </summary>
-	public class PWheelCycle : PowertrainDrivingCycle, IDriverInfo
+	public class PWheelCycle : PowertrainDrivingCycle, IDriverInfo, IClutchInfo
 	{
+		public Gearbox Gearbox { get; set; }
+
 		/// <summary>
 		/// Initializes a new instance of the <see cref="PWheelCycle"/> class.
 		/// </summary>
 		/// <param name="container">The container.</param>
 		/// <param name="cycle">The cycle.</param>
 		/// <param name="axleRatio">The axle ratio.</param>
-		/// <param name="gears">The gears.</param>
-		public PWheelCycle(IVehicleContainer container, DrivingCycleData cycle, double axleRatio,
-			IDictionary<uint, double> gears) : base(container, cycle)
+		/// <param name="gearbox"></param>
+		public PWheelCycle(IVehicleContainer container, DrivingCycleData cycle, double axleRatio, Gearbox gearbox)
+			: base(container, cycle)
 		{
-			if (!gears.ContainsKey(0)) {
-				gears[0] = 1;
-			}
+			Gearbox = gearbox;
 
 			foreach (var entry in Data.Entries) {
-				entry.AngularVelocity = entry.AngularVelocity / (axleRatio * gears[entry.Gear]);
+				entry.AngularVelocity = entry.AngularVelocity /
+										(axleRatio * (entry.Gear == 0 ? 1 : Gearbox.Data.Gears[entry.Gear].Ratio));
 				entry.Torque = entry.PWheel / entry.AngularVelocity;
 			}
 		}
+
+		public override IResponse Request(Second absTime, Second dt)
+		{
+			if (RightSample.Current == null) {
+				return new ResponseCycleFinished { Source = this };
+			}
+
+			Gearbox.Gear = LeftSample.Current.Gear;
+			Gearbox.Disengaged = LeftSample.Current.Gear == 0;
+			return base.Request(absTime, dt);
+		}
+
 
 		protected override void DoWriteModalResults(IModalDataContainer container)
 		{
@@ -204,15 +229,7 @@ namespace TUGraz.VectoCore.Models.SimulationComponent.Impl
 		/// </summary>
 		public bool VehicleStopped
 		{
-			get { return LeftSample.Current.AngularVelocity.IsEqual(0); }
-		}
-
-		public override IResponse Request(Second absTime, Second dt)
-		{
-			if (RightSample.Current == null) {
-				return new ResponseCycleFinished { Source = this };
-			}
-			return base.Request(absTime, dt);
+			get { return LeftSample.Current.PWheel.Abs().IsEqual(0); }
 		}
 
 		/// <summary>
@@ -224,5 +241,10 @@ namespace TUGraz.VectoCore.Models.SimulationComponent.Impl
 		}
 
 		#endregion
+
+		public bool ClutchClosed(Second absTime)
+		{
+			return LeftSample.Current.Gear != 0;
+		}
 	}
 }

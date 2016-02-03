@@ -25,7 +25,8 @@ namespace TUGraz.VectoCore.Models.SimulationComponent.Data
 		MT, // Manual Transmission
 		AMT, // Automated Manual Transmission
 		AT, // Automatic Transmission
-		Custom
+		Custom,
+		PWheel // for PWheel Mode where the gear is given by the cycle
 	}
 
 	public static class GearBoxTypeExtension

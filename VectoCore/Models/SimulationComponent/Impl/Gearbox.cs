@@ -54,7 +54,7 @@ namespace TUGraz.VectoCore.Models.SimulationComponent.Impl
 		/// <summary>
 		/// True if gearbox is disengaged (no gear is set).
 		/// </summary>
-		protected bool Disengaged = true;
+		protected internal bool Disengaged = true;
 
 		/// <summary>
 		/// The power loss for the mod data.
@@ -219,7 +219,7 @@ namespace TUGraz.VectoCore.Models.SimulationComponent.Impl
 				ShiftTime = absTime;
 			}
 			IResponse retVal;
-			if (ClutchClosed(absTime)) {
+			if (DataBus.ClutchClosed(absTime)) {
 				retVal = RequestGearEngaged(absTime, dt, torque, angularVelocity, dryRun);
 			} else {
 				retVal = RequestGearDisengaged(absTime, dt, torque, angularVelocity, dryRun);

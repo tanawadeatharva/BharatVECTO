@@ -14,7 +14,6 @@
 * limitations under the Licence.
 */
 
-using TUGraz.VectoCore.Models.Connector.Ports;
 using TUGraz.VectoCore.Models.Simulation.DataBus;
 
 namespace TUGraz.VectoCore.Models.SimulationComponent

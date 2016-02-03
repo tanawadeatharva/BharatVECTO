@@ -326,14 +326,17 @@ namespace TUGraz.VectoCore.Models.SimulationComponent.Impl
 			return LookAhead((LookaheadTimeSafetyMargin * DataBus.VehicleSpeed * time).Cast<Meter>());
 		}
 
-		public CycleData CycleData()
+		public CycleData CycleData
 		{
-			return new CycleData {
-				AbsTime = CurrentState.AbsTime,
-				AbsDistance = CurrentState.Distance,
-				LeftSample = CycleIntervalIterator.LeftSample,
-				RightSample = CycleIntervalIterator.RightSample
-			};
+			get
+			{
+				return new CycleData {
+					AbsTime = CurrentState.AbsTime,
+					AbsDistance = CurrentState.Distance,
+					LeftSample = CycleIntervalIterator.LeftSample,
+					RightSample = CycleIntervalIterator.RightSample
+				};
+			}
 		}
 
 		public class DrivingCycleEnumerator : IEnumerator<DrivingCycleData.DrivingCycleEntry>
