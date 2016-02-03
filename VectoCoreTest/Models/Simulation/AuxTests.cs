@@ -14,6 +14,7 @@
 * limitations under the Licence.
 */
 
+using System.Configuration;
 using TUGraz.VectoCore.Utils;
 using TUGraz.VectoCore.Exceptions;
 using TUGraz.VectoCore.Tests.Utils;
@@ -331,14 +332,19 @@ namespace TUGraz.VectoCore.Tests.Models.Simulation
 		[TestMethod]
 		public void AuxDeclarationWrongConfiguration()
 		{
-			// test what happens if there was a wrong auxiliary configuration in declaration mode
-			Assert.Inconclusive();
-		}
+			var fileWriter = new FileOutputWriter("AuxReadJobFileDeclarationMode", "");
+			var sumData = new SummaryDataContainer(fileWriter);
+			var jobContainer = new JobContainer(sumData);
 
-		[TestMethod]
-		public void AuxCycleAdditionalFieldMissing()
-		{
-			// test the case when the Padd field is missing (no direct auxiliary)
+			var inputData = JSONInputDataFactory.ReadJsonJob(@"TestData\Jobs\40t_Long_Haul_Truck_wrong_AUX.vecto");
+			var runsFactory = new SimulatorFactory(ExecutionMode.Declaration, inputData, fileWriter);
+
+			jobContainer.AddRuns(runsFactory);
+			jobContainer.Execute();
+
+			ResultFileHelper.TestSumFile(@"TestData\Results\Declaration\40t_Long_Haul_Truck.vsum",
+				@"AuxReadJobFileDeclarationMode.vsum");
+
 			Assert.Inconclusive();
 		}
 	}
