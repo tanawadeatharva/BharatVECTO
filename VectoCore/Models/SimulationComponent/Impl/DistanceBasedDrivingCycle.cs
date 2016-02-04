@@ -210,12 +210,9 @@ namespace TUGraz.VectoCore.Models.SimulationComponent.Impl
 			return null;
 		}
 
-		/// <summary>
-		/// time request not implemented in distance based driving cycle (method <see cref="DriveTimeInterval"/> is used).
-		/// </summary>
 		IResponse ISimulationOutPort.Request(Second absTime, Second dt)
 		{
-			throw new NotImplementedException();
+			throw new NotImplementedException("Distance Based Driving Cycle does not support time requests.");
 		}
 
 		IResponse ISimulationOutPort.Initialize()
@@ -329,14 +326,17 @@ namespace TUGraz.VectoCore.Models.SimulationComponent.Impl
 			return LookAhead((LookaheadTimeSafetyMargin * DataBus.VehicleSpeed * time).Cast<Meter>());
 		}
 
-		public CycleData CycleData()
+		public CycleData CycleData
 		{
-			return new CycleData {
-				AbsTime = CurrentState.AbsTime,
-				AbsDistance = CurrentState.Distance,
-				LeftSample = CycleIntervalIterator.LeftSample,
-				RightSample = CycleIntervalIterator.RightSample
-			};
+			get
+			{
+				return new CycleData {
+					AbsTime = CurrentState.AbsTime,
+					AbsDistance = CurrentState.Distance,
+					LeftSample = CycleIntervalIterator.LeftSample,
+					RightSample = CycleIntervalIterator.RightSample
+				};
+			}
 		}
 
 		public class DrivingCycleEnumerator : IEnumerator<DrivingCycleData.DrivingCycleEntry>

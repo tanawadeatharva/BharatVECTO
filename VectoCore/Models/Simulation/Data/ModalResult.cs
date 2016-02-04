@@ -190,12 +190,12 @@ namespace TUGraz.VectoCore.Models.Simulation.Data
 		/// <summary>
 		///     [km/h]	Target vehicle speed.
 		/// </summary>
-		[ModalResultField(typeof(SI), outputFactor: 3.6)] v_targ,
+		[ModalResultField(typeof(SI), caption: "v_targ [km/h]", outputFactor: 3.6)] v_targ,
 
 		/// <summary>
 		///     [m/s2]	Vehicle acceleration.
 		/// </summary>
-		[ModalResultField(typeof(SI), caption: "acc [m/s^2]")] acc,
+		[ModalResultField(typeof(SI), caption: "acc [m/s²]")] acc,
 
 		/// <summary>
 		///     [%]	    Road gradient.

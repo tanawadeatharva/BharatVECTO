@@ -27,6 +27,6 @@ namespace TUGraz.VectoCore.Models.SimulationComponent
 		/// <summary>
 		/// Returns the data samples for the current position in the cycle.
 		/// </summary>
-		CycleData CycleData();
+		CycleData CycleData { get; }
 	}
 }

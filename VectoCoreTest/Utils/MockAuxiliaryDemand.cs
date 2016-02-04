@@ -47,14 +47,17 @@ namespace TUGraz.VectoCore.Tests.Utils
 		}
 
 
-		public CycleData CycleData()
+		public CycleData CycleData
 		{
-			return new CycleData {
-				AbsTime = 0.SI<Second>(),
-				AbsDistance = 0.SI<Meter>(),
-				LeftSample = _left.Current,
-				RightSample = _right.Current
-			};
+			get
+			{
+				return new CycleData {
+					AbsTime = 0.SI<Second>(),
+					AbsDistance = 0.SI<Meter>(),
+					LeftSample = _left.Current,
+					RightSample = _right.Current
+				};
+			}
 		}
 
 		protected override void DoWriteModalResults(IModalDataContainer container)

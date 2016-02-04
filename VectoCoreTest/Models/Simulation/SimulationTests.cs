@@ -40,7 +40,6 @@ namespace TUGraz.VectoCore.Tests.Models.Simulation
 			var container = job.GetContainer();
 
 			Assert.AreEqual(560.RPMtoRad(), container.EngineSpeed);
-			Assert.AreEqual(0U, container.Gear);
 		}
 
 		[TestMethod]
@@ -82,7 +81,7 @@ namespace TUGraz.VectoCore.Tests.Models.Simulation
 
 		public IVectoRun CreateRun(string resultFileName)
 		{
-			var fileWriter = new FileOutputWriter(resultFileName, "");
+			var fileWriter = new FileOutputWriter(resultFileName);
 			var sumWriter = new SummaryDataContainer(fileWriter);
 
 			var inputData = JSONInputDataFactory.ReadJsonJob(EngineOnlyJob);
@@ -110,7 +109,8 @@ namespace TUGraz.VectoCore.Tests.Models.Simulation
 
 			jobContainer.WaitFinished();
 
-			ResultFileHelper.TestSumFile(@"TestData\Results\EngineOnlyCycles\24t Coach.vsum", @"24t Coach.vsum");
+			ResultFileHelper.TestSumFile(@"TestData\Results\EngineOnlyCycles\24t Coach.vsum",
+				@"TestData\Jobs\24t Coach EngineOnly.vsum");
 
 			ResultFileHelper.TestModFiles(new[] {
 				@"TestData\Results\EngineOnlyCycles\24t Coach_Engine Only1.vmod",

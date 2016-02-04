@@ -14,6 +14,7 @@
 * limitations under the Licence.
 */
 
+using System;
 using System.Collections.Generic;
 using System.IO;
 using System.Linq;
@@ -101,16 +102,30 @@ namespace TUGraz.VectoCore.Models.Simulation.Impl
 						}, _mode);
 				modContainer.WriteModalResults = WriteModalResults;
 				var current = i++;
-				var builder = new PowertrainBuilder(modContainer,
-					data.IsEngineOnly, (writer, mass, loading) =>
-						SumData.Write(d.IsEngineOnly, modContainer, d.JobName, string.Format("{0}-{1}", JobNumber, current),
-							d.Cycle.Name + Constants.FileExtensions.CycleFile, mass, loading));
+				var builder = new PowertrainBuilder(modContainer, (writer, mass, loading) =>
+					SumData.Write(d.IsEngineOnly, modContainer, d.JobName, string.Format("{0}-{1}", JobNumber, current),
+						d.Cycle.Name + Constants.FileExtensions.CycleFile, mass, loading));
 
 				VectoRun run;
-				if (data.IsEngineOnly) {
-					run = new TimeRun(builder.Build(data));
-				} else {
-					run = new DistanceRun(builder.Build(data));
+
+				switch (data.Cycle.CycleType) {
+					case CycleType.DistanceBased:
+						run = new DistanceRun(builder.Build(data));
+						break;
+					case CycleType.EngineOnly:
+						run = new TimeRun(builder.Build(data));
+						break;
+					case CycleType.TimeBased:
+						run = new TimeRun(builder.Build(data));
+						break;
+					case CycleType.PWheel:
+						run = new TimeRun(builder.Build(data));
+						break;
+					case CycleType.MeasuredSpeed:
+						run = new TimeRun(builder.Build(data));
+						break;
+					default:
+						throw new ArgumentOutOfRangeException("CycleType unknown:" + data.Cycle.CycleType);
 				}
 
 				var validationErrors = run.Validate();

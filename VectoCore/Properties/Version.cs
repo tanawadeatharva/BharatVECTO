@@ -1,4 +1,4 @@
-/*
+﻿/*
 * Copyright 2015 European Union
 *
 * Licensed under the EUPL (the "Licence");
@@ -13,7 +13,6 @@
 * See the Licence for the specific language governing permissions and 
 * limitations under the Licence.
 */
-
 using System.Reflection;
-[assembly: AssemblyVersion("3.0.1.334")]
-[assembly: AssemblyFileVersion("3.0.1.334")]
+[assembly: AssemblyVersion("3.0.1.397")]
+[assembly: AssemblyFileVersion("3.0.1.397")]

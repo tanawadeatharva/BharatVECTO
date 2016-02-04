@@ -14,9 +14,7 @@
 * limitations under the Licence.
 */
 
-using System;
 using System.Linq;
-using TUGraz.VectoCore.Models.SimulationComponent;
 using TUGraz.VectoCore.Utils;
 
 namespace TUGraz.VectoCore.Models.Connector.Ports.Impl
@@ -44,6 +42,8 @@ namespace TUGraz.VectoCore.Models.Connector.Ports.Impl
 		public Watt VehiclePowerRequest { get; set; }
 
 		public Watt BrakePower { get; set; }
+
+		public Second AbsTime { get; set; }
 
 		public object Source { get; set; }
 
@@ -79,7 +79,9 @@ namespace TUGraz.VectoCore.Models.Connector.Ports.Impl
 	/// </summary>
 	public class ResponseUnderload : ResponseOverload {}
 
-
+	/// <summary>
+	/// Response when the Speed Limit was exceeded.
+	/// </summary>
 	public class ResponseSpeedLimitExceeded : AbstractResponse {}
 
 	/// <summary>
@@ -92,7 +94,6 @@ namespace TUGraz.VectoCore.Models.Connector.Ports.Impl
 
 	public class ResponseDrivingCycleDistanceExceeded : AbstractResponse
 	{
-		public ResponseDrivingCycleDistanceExceeded() {}
 		public Meter MaxDistance { get; set; }
 	}
 

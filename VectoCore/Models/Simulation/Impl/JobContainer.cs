@@ -190,7 +190,7 @@ namespace TUGraz.VectoCore.Models.Simulation.Impl
 			{
 				var stopWatch = Stopwatch.StartNew();
 				try {
-					Run.Run(_worker, (x => Progress = x));
+					Run.Run(_worker, x => Progress = x);
 				} catch (Exception ex) {
 					Log.Error(ex, "Error during simulation run!");
 					ExecException = ex;

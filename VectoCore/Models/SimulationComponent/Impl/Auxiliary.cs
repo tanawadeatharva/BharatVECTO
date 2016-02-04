@@ -122,21 +122,21 @@ namespace TUGraz.VectoCore.Models.SimulationComponent.Impl
 			_auxDict[auxId] = speed => powerDemand;
 		}
 
-		public void AddDirect(IDrivingCycleInfo cycle)
+		public void AddDirect()
 		{
-			_auxDict[DirectAuxiliaryId] = speed => cycle.CycleData().LeftSample.AdditionalAuxPowerDemand;
+			_auxDict[DirectAuxiliaryId] = speed => DataBus.CycleData.LeftSample.AdditionalAuxPowerDemand;
 		}
 
-		public void AddMapping(string auxId, IDrivingCycleInfo cycle, AuxiliaryData data)
+		public void AddMapping(string auxId, AuxiliaryData data)
 		{
-			if (!cycle.CycleData().LeftSample.AuxiliarySupplyPower.ContainsKey("Aux_" + auxId)) {
+			if (!DataBus.CycleData.LeftSample.AuxiliarySupplyPower.ContainsKey("Aux_" + auxId)) {
 				var error = string.Format("driving cycle does not contain column for auxiliary: {0}", auxId);
 				Log.Error(error);
 				throw new VectoException(error);
 			}
 
 			_auxDict[auxId] = speed => {
-				var powerSupply = cycle.CycleData().LeftSample.AuxiliarySupplyPower["Aux_" + auxId];
+				var powerSupply = DataBus.CycleData.LeftSample.AuxiliarySupplyPower["Aux_" + auxId];
 				var nAuxiliary = speed * data.TransmissionRatio;
 				var powerAuxOut = powerSupply / data.EfficiencyToSupply;
 				var powerAuxIn = data.GetPowerDemand(nAuxiliary, powerAuxOut);

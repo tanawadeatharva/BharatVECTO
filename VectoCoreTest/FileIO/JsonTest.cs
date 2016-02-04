@@ -86,9 +86,9 @@ namespace TUGraz.VectoCore.Tests.FileIO
 			var json = (JObject)JToken.ReadFrom(new JsonTextReader(File.OpenText(TestJobFile)));
 			((JObject)json["Body"]).Property("Aux").Remove();
 
-			AssertHelper.Exception<InvalidFileFormatException>(() => {
-				var tmp = new JSONInputDataV2(json, TestJobFile).Auxiliaries;
-			}, "Key Aux not found");
+			// MK,2016-01-20: Changed for PWheel: aux entry may be missing, and that is ok.
+			var tmp = new JSONInputDataV2(json, TestJobFile).Auxiliaries;
+			Assert.IsTrue(tmp.Count == 0);
 		}
 
 		[TestMethod]

@@ -14,7 +14,6 @@
 * limitations under the Licence.
 */
 
-using System;
 using System.ComponentModel.DataAnnotations;
 using TUGraz.VectoCore.Configuration;
 using TUGraz.VectoCore.Models.SimulationComponent.Data.Engine;

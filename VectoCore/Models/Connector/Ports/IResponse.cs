@@ -14,9 +14,6 @@
 * limitations under the Licence.
 */
 
-using System;
-using System.Diagnostics;
-using System.Security.Cryptography.X509Certificates;
 using TUGraz.VectoCore.Utils;
 
 namespace TUGraz.VectoCore.Models.Connector.Ports
@@ -47,5 +44,7 @@ namespace TUGraz.VectoCore.Models.Connector.Ports
 		Watt VehiclePowerRequest { get; set; }
 
 		Watt BrakePower { get; set; }
+
+		Second AbsTime { get; set; }
 	}
 }

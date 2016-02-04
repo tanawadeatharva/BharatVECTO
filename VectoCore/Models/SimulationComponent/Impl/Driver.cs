@@ -154,12 +154,8 @@ namespace TUGraz.VectoCore.Models.SimulationComponent.Impl
 					// Delta is negative we are already below the Drag-load curve. activate breaks
 					retVal = r; // => return, strategy should brake
 				}).
-				Case<ResponseGearShift>(r => {
-					retVal = r;
-				}).
-				Default(r => {
-					throw new UnexpectedResponseException("DrivingAction Accelerate.", r);
-				});
+				Case<ResponseGearShift>(r => { retVal = r; }).
+				Default(r => { throw new UnexpectedResponseException("DrivingAction Accelerate.", r); });
 
 			if (retVal == null) {
 				// unhandled response (overload, delta > 0) - we need to search for a valid operating point..	
@@ -193,15 +189,11 @@ namespace TUGraz.VectoCore.Models.SimulationComponent.Impl
 						retVal.Switch().
 							Case<ResponseSuccess>(() => operatingPoint = nextOperatingPoint).
 							Case<ResponseGearShift>(() => operatingPoint = nextOperatingPoint).
-							Default(r => {
-								throw new UnexpectedResponseException("DrivingAction Accelerate after Overload", r);
-							});
+							Default(r => { throw new UnexpectedResponseException("DrivingAction Accelerate after Overload", r); });
 					}).
 					Case<ResponseGearShift>(() => operatingPoint = limitedOperatingPoint).
 					Case<ResponseSuccess>(() => operatingPoint = limitedOperatingPoint).
-					Default(r => {
-						throw new UnexpectedResponseException("DrivingAction Accelerate after SearchOperatingPoint.", r);
-					});
+					Default(r => { throw new UnexpectedResponseException("DrivingAction Accelerate after SearchOperatingPoint.", r); });
 			}
 			CurrentState.Acceleration = operatingPoint.Acceleration;
 			CurrentState.dt = operatingPoint.SimulationInterval;
@@ -242,9 +234,8 @@ namespace TUGraz.VectoCore.Models.SimulationComponent.Impl
 
 			var retVal = CoastOrRollAction(absTime, ds, maxVelocity, gradient, true);
 			retVal.Switch().
-				Case<ResponseGearShift>(() => {
-					throw new UnexpectedResponseException("DrivingAction Roll: Gearshift during Roll action.", retVal);
-				});
+				Case<ResponseGearShift>(
+					() => { throw new UnexpectedResponseException("DrivingAction Roll: Gearshift during Roll action.", retVal); });
 			return retVal;
 		}
 
@@ -327,9 +318,8 @@ namespace TUGraz.VectoCore.Models.SimulationComponent.Impl
 						MaxDistance = DataBus.VehicleSpeed * r.DeltaT + CurrentState.Acceleration / 2 * r.DeltaT * r.DeltaT
 					};
 				}).
-				Default(() => {
-					throw new UnexpectedResponseException("CoastOrRoll Action: unhandled response from powertrain.", retVal);
-				});
+				Default(
+					() => { throw new UnexpectedResponseException("CoastOrRoll Action: unhandled response from powertrain.", retVal); });
 			return retVal;
 		}
 
@@ -384,9 +374,7 @@ namespace TUGraz.VectoCore.Models.SimulationComponent.Impl
 						Source = this,
 						MaxDistance = DataBus.VehicleSpeed * r.DeltaT + operatingPoint.Acceleration / 2 * r.DeltaT * r.DeltaT
 					}).
-				Default(r => {
-					throw new UnexpectedResponseException("DrivingAction Brake: first request.", r);
-				});
+				Default(r => { throw new UnexpectedResponseException("DrivingAction Brake: first request.", r); });
 
 			if (retVal != null) {
 				retVal.Acceleration = operatingPoint.Acceleration;
@@ -424,9 +412,10 @@ namespace TUGraz.VectoCore.Models.SimulationComponent.Impl
 						Source = this,
 						MaxDistance = DataBus.VehicleSpeed * r.DeltaT + operatingPoint.Acceleration / 2 * r.DeltaT * r.DeltaT
 					}).
-				Default(r => {
-					throw new UnexpectedResponseException("DrivingAction Brake: request failed after braking power was found.", r);
-				});
+				Default(
+					r => {
+						throw new UnexpectedResponseException("DrivingAction Brake: request failed after braking power was found.", r);
+					});
 			CurrentState.Acceleration = operatingPoint.Acceleration;
 			CurrentState.dt = operatingPoint.SimulationInterval;
 			CurrentState.Response = retVal;
@@ -499,9 +488,7 @@ namespace TUGraz.VectoCore.Models.SimulationComponent.Impl
 				Case<ResponseUnderload>(r => origDelta = DataBus.ClutchClosed(absTime)
 					? r.Delta
 					: r.GearboxPowerRequest).
-				Default(r => {
-					throw new UnexpectedResponseException("cannot use response for searching braking power!", r);
-				});
+				Default(r => { throw new UnexpectedResponseException("cannot use response for searching braking power!", r); });
 
 			// braking power is in the range of the exceeding delta. set searching range to 2/3 so that 
 			// the target point is approximately in the center of the second interval
@@ -589,16 +576,12 @@ namespace TUGraz.VectoCore.Models.SimulationComponent.Impl
 				initialResponse.Switch().
 					Case<ResponseDryRun>(r => origDelta = r.GearboxPowerRequest).
 					Case<ResponseFailTimeInterval>(r => origDelta = r.GearboxPowerRequest).
-					Default(r => {
-						throw new UnexpectedResponseException("Unknown response type.", r);
-					});
+					Default(r => { throw new UnexpectedResponseException("Unknown response type.", r); });
 			} else {
 				initialResponse.Switch().
 					Case<ResponseOverload>(r => origDelta = r.Delta). // search operating point in drive action after overload
 					Case<ResponseDryRun>(r => origDelta = coasting ? r.DeltaDragLoad : r.DeltaFullLoad).
-					Default(r => {
-						throw new UnexpectedResponseException("Unknown response type.", r);
-					});
+					Default(r => { throw new UnexpectedResponseException("Unknown response type.", r); });
 			}
 			var delta = origDelta;
 
@@ -791,9 +774,8 @@ namespace TUGraz.VectoCore.Models.SimulationComponent.Impl
 			}
 			var retVal = NextComponent.Request(absTime, dt, 0.SI<MeterPerSquareSecond>(), gradient);
 			retVal.Switch().
-				Case<ResponseGearShift>(r => {
-					retVal = NextComponent.Request(absTime, dt, 0.SI<MeterPerSquareSecond>(), gradient);
-				});
+				Case<ResponseGearShift>(
+					r => { retVal = NextComponent.Request(absTime, dt, 0.SI<MeterPerSquareSecond>(), gradient); });
 			CurrentState.dt = dt;
 			CurrentState.Acceleration = 0.SI<MeterPerSquareSecond>();
 			return retVal;

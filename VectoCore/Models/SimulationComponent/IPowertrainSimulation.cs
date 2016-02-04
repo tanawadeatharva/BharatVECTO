@@ -19,7 +19,7 @@ using TUGraz.VectoCore.Models.Connector.Ports;
 namespace TUGraz.VectoCore.Models.SimulationComponent
 {
 	/// <summary>
-	/// Defines interfaces for a engine only driving cycle.
+	/// Defines interfaces for a powertrain only driving cycle.
 	/// </summary>
-	public interface IEngineOnlySimulation : ISimulationOutProvider, ITnInProvider {}
+	public interface IPowertrainSimulation : IDrivingCycleInfo, ISimulationOutProvider, ITnInProvider {}
 }

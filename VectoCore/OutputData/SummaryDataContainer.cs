@@ -111,8 +111,7 @@ namespace TUGraz.VectoCore.OutputData
 		}
 
 		public virtual void Write(bool isEngineOnly, IModalDataContainer data, string jobFileName, string jobName,
-			string cycleFileName,
-			Kilogram vehicleMass, Kilogram vehicleLoading)
+			string cycleFileName, Kilogram vehicleMass, Kilogram vehicleLoading)
 		{
 			if (isEngineOnly) {
 				WriteEngineOnly(data, jobFileName, jobName, cycleFileName);
@@ -154,26 +153,55 @@ namespace TUGraz.VectoCore.OutputData
 			row[CYCLE] = cycleFileName;
 			row[STATUS] = data.RunStatus;
 			row[TIME] = data.Duration();
-			row[DISTANCE] = data.Distance().ConvertTo().Kilo.Meter;
-			row[SPEED] = data.Speed().ConvertTo().Kilo.Meter.Per.Hour;
+
+			var distance = data.Distance();
+			if (distance != null) {
+				row[DISTANCE] = distance.ConvertTo().Kilo.Meter;
+			}
+
+			var speed = data.Speed();
+			if (speed != null) {
+				row[SPEED] = speed.ConvertTo().Kilo.Meter.Per.Hour;
+			}
+
 			row[ALTITUDE] = data.AltitudeDelta();
 			row[PPOS] = data.EnginePowerPositiveAverage().ConvertTo().Kilo.Watt;
 			row[PNEG] = data.EnginePowerNegativeAverage().ConvertTo().Kilo.Watt;
-			row[FCFINAL] = data.FuelConsumptionFinal().ConvertTo().Gramm.Per.Kilo.Meter;
+
+			var fcfinal = data.FuelConsumptionFinal();
+			if (fcfinal != null) {
+				row[FCFINAL] = fcfinal.ConvertTo().Gramm.Per.Kilo.Meter;
+			}
 			row[FCFINAL_LITERPER100KM] = data.FuelConsumptionFinalLiterPer100Kilometer();
 			if (vehicleLoading != null && !vehicleLoading.IsEqual(0)) {
 				row[FCFINAL_LITERPER100TKM] = data.FuelConsumptionFinalLiterPer100Kilometer() / vehicleLoading.ConvertTo().Ton;
 			}
 			row[FCMAP] = data.FuelConsumptionPerSecond().ConvertTo().Gramm.Per.Hour;
-			row[FCMAPKM] = data.FuelConsumptionPerMeter().ConvertTo().Gramm.Per.Kilo.Meter;
-			row[FCAUXC] = data.FuelConsumptionAuxStartStopCorrectedPerSecond().ConvertTo().Gramm.Per.Hour;
-			row[FCAUXCKM] = data.FuelConsumptionAuxStartStopCorrected().ConvertTo().Gramm.Per.Kilo.Meter;
-			row[FCWHTCC] = data.FuelConsumptionWHTCCorrectedPerSecond().ConvertTo().Gramm.Per.Hour;
-			row[FCWHTCCKM] = data.FuelConsumptionWHTCCorrected().ConvertTo().Gramm.Per.Kilo.Meter;
-			row[CO2KM] = data.CO2PerMeter().ConvertTo().Gramm.Per.Kilo.Meter;
-			if (vehicleLoading != null && !vehicleLoading.IsEqual(0)) {
-				row[CO2TKM] = data.CO2PerMeter().ConvertTo().Gramm.Per.Kilo.Meter / vehicleLoading.ConvertTo().Ton;
+
+
+			var fuelConsumptionPerMeter = data.FuelConsumptionPerMeter();
+			if (fuelConsumptionPerMeter != null) {
+				row[FCMAPKM] = fuelConsumptionPerMeter.ConvertTo().Gramm.Per.Kilo.Meter;
 			}
+			row[FCAUXC] = data.FuelConsumptionAuxStartStopCorrectedPerSecond().ConvertTo().Gramm.Per.Hour;
+			var fuelConsumptionAuxStartStopCorrected = data.FuelConsumptionAuxStartStopCorrected();
+			if (fuelConsumptionAuxStartStopCorrected != null) {
+				row[FCAUXCKM] = fuelConsumptionAuxStartStopCorrected.ConvertTo().Gramm.Per.Kilo.Meter;
+			}
+			row[FCWHTCC] = data.FuelConsumptionWHTCCorrectedPerSecond().ConvertTo().Gramm.Per.Hour;
+			var fuelConsumptionWHTCCorrected = data.FuelConsumptionWHTCCorrected();
+			if (fuelConsumptionWHTCCorrected != null) {
+				row[FCWHTCCKM] = fuelConsumptionWHTCCorrected.ConvertTo().Gramm.Per.Kilo.Meter;
+			}
+
+			var kilogramPerMeter = data.CO2PerMeter();
+			if (kilogramPerMeter != null) {
+				row[CO2KM] = kilogramPerMeter.ConvertTo().Gramm.Per.Kilo.Meter;
+				if (vehicleLoading != null && !vehicleLoading.IsEqual(0)) {
+					row[CO2TKM] = kilogramPerMeter.ConvertTo().Gramm.Per.Kilo.Meter / vehicleLoading.ConvertTo().Ton;
+				}
+			}
+
 			row[PWHEELPOS] = data.PowerWheelPositive().ConvertTo().Kilo.Watt;
 			row[PBRAKE] = data.PowerBrake().ConvertTo().Kilo.Watt;
 			row[EPOSICE] = data.EngineWorkPositive().ConvertTo().Kilo.Watt.Hour;

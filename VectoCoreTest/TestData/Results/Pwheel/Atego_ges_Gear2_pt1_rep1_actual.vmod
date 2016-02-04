@@ -1,0 +1,2 @@
+﻿time [s],dt [s],dist [m],v_act [km/h],v_targ [km/h],acc [m/s²],grad [%],n [1/min],Tq_eng [Nm],Tq_clutch [Nm],Tq_full [Nm],Tq_drag [Nm],Pe_eng [kW],Pe_full [kW],Pe_drag [kW],Pe_clutch [kW],Pa Eng [kW],Paux [kW],Gear [-],Ploss GB [kW],Ploss Diff [kW],Ploss Retarder [kW],Pa GB [kW],Pa Veh [kW],Proll [kW],Pair [kW],Pgrad [kW],Pwheel [kW],Pbrake [kW],FC-Map [g/h],FC-AUXc [g/h],FC-WHTCc [g/h]
+1.5,1,-,-,-,-,0,1748.324,511.0588,511.0588,838.134,-102.6453,93.56673,153.449,-18.79272,93.56673,0,0,2,2.408721,2.138174,0,0,0,0,0,0,89.01983,0,19058.18,-,-
