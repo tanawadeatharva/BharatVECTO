@@ -80,9 +80,11 @@ namespace TUGraz.VectoCore.Models.Simulation.Impl
 					break;
 				case RetarderData.RetarderType.None:
 					tmp = AddComponent(tmp, GetGearbox(_container, data.GearboxData));
+					tmp = AddComponent(tmp, new DummyRetarder(_container));
 					break;
 				case RetarderData.RetarderType.LossesIncludedInTransmission:
 					tmp = AddComponent(tmp, GetGearbox(_container, data.GearboxData));
+					tmp = AddComponent(tmp, new DummyRetarder(_container));
 					break;
 			}
 
