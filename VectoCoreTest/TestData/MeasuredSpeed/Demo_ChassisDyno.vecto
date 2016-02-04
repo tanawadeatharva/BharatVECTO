@@ -6,6 +6,7 @@
     "FileVersion": 2
   },
   "Body": {
+    "SavedInDeclMode": false,
     "VehicleFile": "Demo_Vehicle_ChassisDyno.vveh",
     "EngineFile": "Demo_Engine.veng",
     "GearboxFile": "Demo_Gearbox.vgbx",
@@ -16,9 +17,10 @@
     ],
     "Aux": [
       {
-        "ID": "ALT",
+        "ID": "Alt",
         "Type": "Alternator",
-        "Path": "Demo_AuxAlternator.vaux"
+        "Path": "Demo_AuxAlternator.vaux",
+		"Technology": ""
       }
     ],
     "VACC": "Dummy.vacc",

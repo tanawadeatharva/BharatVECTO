@@ -254,13 +254,14 @@ namespace TUGraz.VectoCore.Models.SimulationComponent.Impl
 	/// <summary>
 	/// Driving Cycle for the PWheel driving cycle.
 	/// </summary>
-	public class MeasuredSpeedCycle : VectoSimulationComponent, IDrivingCycleInfo, IDriverDemandInProvider,
+	public class MeasuredSpeedCycle : VectoSimulationComponent, IDriverInfo, IDrivingCycleInfo, IDriverDemandInProvider,
 		IDriverDemandInPort, ISimulationOutProvider, ISimulationOutPort
 	{
 		protected DrivingCycleData Data;
 		protected IDriverDemandOutPort NextComponent;
 		protected IEnumerator<DrivingCycleData.DrivingCycleEntry> RightSample { get; set; }
 		protected IEnumerator<DrivingCycleData.DrivingCycleEntry> LeftSample { get; set; }
+		protected Gearbox Gearbox;
 
 		protected Second AbsTime { get; set; }
 
@@ -269,9 +270,12 @@ namespace TUGraz.VectoCore.Models.SimulationComponent.Impl
 		/// </summary>
 		/// <param name="container">The container.</param>
 		/// <param name="cycle">The cycle.</param>
-		public MeasuredSpeedCycle(IVehicleContainer container, DrivingCycleData cycle)
+		/// <param name="gearbox">the gearbox.</param>
+		public MeasuredSpeedCycle(IVehicleContainer container, DrivingCycleData cycle, Gearbox gearbox)
 			: base(container)
 		{
+			Gearbox = gearbox;
+
 			Data = cycle;
 			LeftSample = Data.Entries.GetEnumerator();
 			LeftSample.MoveNext();
@@ -326,6 +330,9 @@ namespace TUGraz.VectoCore.Models.SimulationComponent.Impl
 			var delta_t = RightSample.Current.Time - LeftSample.Current.Time;
 			var acceleration = delta_v / delta_t;
 			var gradient = LeftSample.Current.RoadGradient;
+
+			Gearbox.Gear = LeftSample.Current.Gear;
+			Gearbox.Disengaged = LeftSample.Current.Gear == 0;
 
 			var response = NextComponent.Request(absTime, dt, acceleration, gradient);
 
@@ -403,5 +410,15 @@ namespace TUGraz.VectoCore.Models.SimulationComponent.Impl
 		}
 
 		protected override void DoWriteModalResults(IModalDataContainer container) {}
+
+		public bool VehicleStopped
+		{
+			get { return false; }
+		}
+
+		public DrivingBehavior DrivingBehavior
+		{
+			get { return DrivingBehavior.Driving; }
+		}
 	}
 }

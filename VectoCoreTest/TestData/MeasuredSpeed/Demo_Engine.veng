@@ -1,24 +1,20 @@
 ﻿{
   "Header": {
-    "CreatedBy": "Raphael Luz IVT TU-Graz (eed25180-b54a-46f8-a51e-2182e6c955c5)",
-    "Date": "07.10.2013 16:38:55",
-    "AppVersion": "1.4",
-    "FileVersion": "1.0"
+    "CreatedBy": "Michael Krisper",
+    "Date": "04.02.2016 16:38:55",
+    "AppVersion": "3.0.2",
+    "FileVersion": 3
   },
   "Body": {
+    "SavedInDeclMode": false,
     "ModelName": "Demo Engine",
     "Displacement": 6000.0,
-    "RatedPower": 185.0,
-    "RatedSpeed": 2200.0,
-    "IdlingSpeed": 600.0,
-    "Inertia": 2.8,
-    "FullLoadCurves": [
-      {
-        "Path": "Demo_EngineFullload.vfld",
-        "Gears": "0 - 99"
-      }
-    ],
-    "FuelMap": "Demo_EngineFcmap.vmap",
-    "WHTCresults": "<NOFILE>"
+	"IdlingSpeed": 600.0,
+	"Inertia": 2.8,
+    "FullLoadCurve": "Demo_EngineFullload.vfld",
+	"FuelMap": "Demo_EngineFcmap.vmap",
+	"WHTC-Urban": 1,
+    "WHTC-Rural": 1,
+    "WHTC-Motorway": 1
   }
 }

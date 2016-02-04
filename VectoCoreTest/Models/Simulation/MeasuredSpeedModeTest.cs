@@ -49,13 +49,18 @@ namespace TUGraz.VectoCore.Tests.Models.Simulation
 		public void MeasuredSpeed_ReadCycle_Test()
 		{
 			var container = new VehicleContainer();
-			var inputData = @"<t>,<v>,   <grad>,<Gear>,<Aux_Alt>, <Padd>
+			var inputData = @"<t>,<v>,   <grad>,<gear>,<Aux_Alt>, <Padd>
 							   1,  1.383, 0,     1,     0.5767916, 1.969367304
 							   2,  3.515, 0,     1,     0.5426120, 2.042128260";
 
 			var drivingCycle = DrivingCycleDataReader.ReadFromStream(inputData.GetStream(), CycleType.MeasuredSpeed);
 
-			var cycle = new MeasuredSpeedCycle(container, drivingCycle);
+			var gearbox = new Gearbox(container,
+				new GearboxData {
+					Gears = new Dictionary<uint, GearData> { { 1, new GearData { Ratio = 2.0 } }, { 2, new GearData { Ratio = 3.5 } } }
+				}, new PWheelShiftStrategy(null, container));
+
+			var cycle = new MeasuredSpeedCycle(container, drivingCycle, gearbox);
 
 			Assert.AreEqual(container.CycleData.LeftSample.Time, 1.SI<Second>());
 			Assert.AreEqual(container.CycleData.RightSample.Time, 2.SI<Second>());
@@ -84,7 +89,7 @@ namespace TUGraz.VectoCore.Tests.Models.Simulation
 		public void MeasuredSpeed_CreatePowertrain_Test()
 		{
 			// prepare input data
-			var inputData = @"<t>,<v>,   <grad>,<Gear>,<Aux_Alt>, <Padd>
+			var inputData = @"<t>,<v>,   <grad>,<gear>,<Aux_Alt>, <Padd>
 							   1,  1.383, 0,     1,     0.5767916, 1.969367304
 							   2,  3.515, 0,     1,     0.5426120, 2.042128260";
 
@@ -143,7 +148,7 @@ namespace TUGraz.VectoCore.Tests.Models.Simulation
 
 			Assert.IsTrue(jobContainer.Runs.All(r => r.Success), string.Join("", jobContainer.Runs.Select(r => r.ExecException)));
 
-			//ResultFileHelper.TestSumFile(@"TestData\Results\Pwheel\Atego_ges.v2.vsum", @"TestData\Jobs\Pwheel.vsum");
+			ResultFileHelper.TestSumFile(@"TestData\Results\Pwheel\Atego_ges.v2.vsum", @"TestData\Jobs\Pwheel.vsum");
 
 			//ResultFileHelper.TestModFile(@"TestData\Results\Pwheel\Atego_ges_Gear2_pt1_rep1_actual.vmod",@"TestData\Jobs\Pwheel_Gear2_pt1_rep1_actual.vmod");
 

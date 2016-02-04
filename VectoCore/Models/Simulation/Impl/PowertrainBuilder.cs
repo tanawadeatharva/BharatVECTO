@@ -140,28 +140,30 @@ namespace TUGraz.VectoCore.Models.Simulation.Impl
 		private VehicleContainer BuildMeasuredSpeed(VectoRunData data)
 		{
 			_container.RunData = data;
-			var cycle = new MeasuredSpeedCycle(_container, data.Cycle);
+			data.GearboxData.Type = GearboxType.PWheel;
+			var gearbox = GetGearbox(_container, data.GearboxData);
+
+			var cycle = new MeasuredSpeedCycle(_container, data.Cycle, (Gearbox)gearbox);
 			var vehicle = AddComponent(cycle, new Vehicle(_container, data.VehicleData));
 			var wheels = AddComponent(vehicle, new Wheels(_container, data.VehicleData.DynamicTyreRadius));
 			var brakes = AddComponent(wheels, new Brakes(_container));
 			var tmp = AddComponent(brakes, new AxleGear(_container, data.AxleGearData));
 
-			data.GearboxData.Type = GearboxType.PWheel;
 
 			switch (data.Retarder.Type) {
 				case RetarderData.RetarderType.Primary:
 					tmp = AddComponent(tmp, new Retarder(_container, data.Retarder.LossMap));
-					tmp = AddComponent(tmp, GetGearbox(_container, data.GearboxData));
+					tmp = AddComponent(tmp, gearbox);
 					break;
 				case RetarderData.RetarderType.Secondary:
-					tmp = AddComponent(tmp, GetGearbox(_container, data.GearboxData));
+					tmp = AddComponent(tmp, gearbox);
 					tmp = AddComponent(tmp, new Retarder(_container, data.Retarder.LossMap));
 					break;
 				case RetarderData.RetarderType.None:
-					tmp = AddComponent(tmp, GetGearbox(_container, data.GearboxData));
+					tmp = AddComponent(tmp, gearbox);
 					break;
 				case RetarderData.RetarderType.LossesIncludedInTransmission:
-					tmp = AddComponent(tmp, GetGearbox(_container, data.GearboxData));
+					tmp = AddComponent(tmp, gearbox);
 					break;
 				default:
 					throw new ArgumentOutOfRangeException();

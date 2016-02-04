@@ -263,7 +263,7 @@ namespace TUGraz.VectoCore.InputData.Reader
 			public const string StoppingTime = "stop";
 			public const string AuxiliarySupplyPower = "Aux_";
 			public const string EngineSpeed = "n";
-			public const string Gear = "Gear";
+			public const string Gear = "gear";
 			public const string AdditionalAuxPowerDemand = "Padd";
 			public const string AirSpeedRelativeToVehicle = "vair_res";
 			public const string WindYawAngle = "vair_beta";
