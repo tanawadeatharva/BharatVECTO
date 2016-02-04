@@ -802,6 +802,63 @@
     <None Include="TestData\Jobs\Pwheel_ultimate.vecto">
       <CopyToOutputDirectory>Always</CopyToOutputDirectory>
     </None>
+    <None Include="TestData\MeasuredSpeed\Axle.vtlm">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </None>
+    <None Include="TestData\MeasuredSpeed\ChassisDyno_Motorway.vdri">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </None>
+    <None Include="TestData\MeasuredSpeed\ChassisDyno_Rural.vdri">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </None>
+    <None Include="TestData\MeasuredSpeed\ChassisDyno_Urban.vdri">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </None>
+    <None Include="TestData\MeasuredSpeed\Demo_ChassisDyno.v2.vsum">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </None>
+    <None Include="TestData\MeasuredSpeed\Demo_ChassisDyno.vecto">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </None>
+    <None Include="TestData\MeasuredSpeed\Demo_Engine.veng">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </None>
+    <None Include="TestData\MeasuredSpeed\Demo_EngineFullload.vfld">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </None>
+    <None Include="TestData\MeasuredSpeed\Demo_Gearbox.vgbx">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </None>
+    <None Include="TestData\MeasuredSpeed\Demo_Rigid.vcdb">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </None>
+    <None Include="TestData\MeasuredSpeed\Demo_TestTrackCycle.v2.vsum">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </None>
+    <None Include="TestData\MeasuredSpeed\Demo_TestTrackCycle.vecto">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </None>
+    <None Include="TestData\MeasuredSpeed\Demo_Vehicle_ChassisDyno.vveh">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </None>
+    <None Include="TestData\MeasuredSpeed\Demo_Vehicle_TestTrack.vveh">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </None>
+    <None Include="TestData\MeasuredSpeed\Direct Gear.vtlm">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </None>
+    <None Include="TestData\MeasuredSpeed\Dummy.vacc">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </None>
+    <None Include="TestData\MeasuredSpeed\Indirect Gear.vtlm">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </None>
+    <None Include="TestData\MeasuredSpeed\ShiftPolygons.vgbs">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </None>
+    <None Include="TestData\MeasuredSpeed\TestTrackCycle_ActualSpeed.vdri">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </None>
     <None Include="TestData\Results\Engineering\24t Coach.vsum">
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
     </None>

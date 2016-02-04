@@ -29,6 +29,7 @@ using TUGraz.VectoCore.OutputData.FileIO;
 using TUGraz.VectoCore.InputData.FileIO.JSON;
 using TUGraz.VectoCore.Models.Simulation.Impl;
 using Microsoft.VisualStudio.TestTools.UnitTesting;
+using TUGraz.VectoCore.Models.Declaration;
 using TUGraz.VectoCore.Models.Simulation.Data;
 using TUGraz.VectoCore.Models.SimulationComponent.Data;
 using TUGraz.VectoCore.Models.SimulationComponent.Data.Engine;
@@ -47,38 +48,32 @@ namespace TUGraz.VectoCore.Tests.Models.Simulation
 		[TestMethod]
 		public void MeasuredSpeed_ReadCycle_Test()
 		{
-			//var container = new VehicleContainer();
-			//var inputData = "<t>,<Pwheel>,<Gear>,<n>,<Padd>\n1,89,2,1748,1.300\n2,120,2,1400,0.4";
+			var container = new VehicleContainer();
+			var inputData = @"<t>,<v>,   <grad>,<Gear>,<Aux_Alt>, <Padd>
+							   1,  1.383, 0,     1,     0.5767916, 1.969367304
+							   2,  3.515, 0,     1,     0.5426120, 2.042128260";
 
-			//var cycleFile = new MemoryStream(Encoding.UTF8.GetBytes(inputData));
-			//var drivingCycle = DrivingCycleDataReader.ReadFromStream(cycleFile, CycleType.PWheel);
+			var drivingCycle = DrivingCycleDataReader.ReadFromStream(inputData.GetStream(), CycleType.MeasuredSpeed);
 
-			//var gearbox = new Gearbox(container,
-			//	new GearboxData {
-			//		Gears = new Dictionary<uint, GearData> { { 1, new GearData { Ratio = 2.0 } }, { 2, new GearData { Ratio = 3.5 } } }
-			//	}, new PWheelShiftStrategy(null, container));
+			var cycle = new MeasuredSpeedCycle(container, drivingCycle);
 
-			//var cycle = new PWheelCycle(container, drivingCycle, 2.3, gearbox);
+			Assert.AreEqual(container.CycleData.LeftSample.Time, 1.SI<Second>());
+			Assert.AreEqual(container.CycleData.RightSample.Time, 2.SI<Second>());
 
-			//Assert.AreEqual(container.CycleData.LeftSample.Time, 1.SI<Second>());
-			//Assert.AreEqual(container.CycleData.RightSample.Time, 2.SI<Second>());
+			Assert.AreEqual(1.383.KMPHtoMeterPerSecond(), container.CycleData.LeftSample.VehicleTargetSpeed);
+			Assert.AreEqual(3.515.KMPHtoMeterPerSecond(), container.CycleData.RightSample.VehicleTargetSpeed);
 
-			//Assert.AreEqual(1748.RPMtoRad() / (2.3 * 3.5), container.CycleData.LeftSample.AngularVelocity);
-			//Assert.AreEqual(1400.RPMtoRad() / (2.3 * 3.5), container.CycleData.RightSample.AngularVelocity);
+			Assert.AreEqual(0.5767916.SI().Kilo.Watt, container.CycleData.LeftSample.AuxiliarySupplyPower["Aux_Alt"]);
+			Assert.AreEqual(0.5426120.SI().Kilo.Watt, container.CycleData.RightSample.AuxiliarySupplyPower["Aux_Alt"]);
 
-			//Assert.AreEqual(89.SI().Kilo.Watt, container.CycleData.LeftSample.PWheel);
-			//Assert.AreEqual(120.SI().Kilo.Watt, container.CycleData.RightSample.PWheel);
+			Assert.AreEqual(1u, container.CycleData.LeftSample.Gear);
+			Assert.AreEqual(1u, container.CycleData.RightSample.Gear);
 
-			//Assert.AreEqual(2u, container.CycleData.LeftSample.Gear);
-			//Assert.AreEqual(2u, container.CycleData.RightSample.Gear);
+			Assert.AreEqual(1.969367304.SI().Kilo.Watt, container.CycleData.LeftSample.AdditionalAuxPowerDemand);
+			Assert.AreEqual(2.042128260.SI().Kilo.Watt, container.CycleData.RightSample.AdditionalAuxPowerDemand);
 
-			//Assert.AreEqual(1300.SI<Watt>(), container.CycleData.LeftSample.AdditionalAuxPowerDemand);
-			//Assert.AreEqual(400.SI<Watt>(), container.CycleData.RightSample.AdditionalAuxPowerDemand);
-
-			//Assert.AreEqual(89.SI().Kilo.Watt / (1748.RPMtoRad() / (2.3 * 3.5)), container.CycleData.LeftSample.Torque);
-			//Assert.AreEqual(120.SI().Kilo.Watt / (1400.RPMtoRad() / (2.3 * 3.5)), container.CycleData.RightSample.Torque);
-
-			Assert.Fail();
+			Assert.AreEqual(0.SI<Radian>(), container.CycleData.LeftSample.RoadGradient);
+			Assert.AreEqual(0.SI<Radian>(), container.CycleData.RightSample.RoadGradient);
 		}
 
 		/// <summary>
@@ -88,42 +83,42 @@ namespace TUGraz.VectoCore.Tests.Models.Simulation
 		[TestMethod]
 		public void MeasuredSpeed_CreatePowertrain_Test()
 		{
-			//// prepare input data
-			//var inputData = "<t>,<Pwheel>,<Gear>,<n>,<Padd>\n1,89,2,1748,1.300\n2,120,2,1400,0.4";
+			// prepare input data
+			var inputData = @"<t>,<v>,   <grad>,<Gear>,<Aux_Alt>, <Padd>
+							   1,  1.383, 0,     1,     0.5767916, 1.969367304
+							   2,  3.515, 0,     1,     0.5426120, 2.042128260";
 
-			//var cycleFile = new MemoryStream(Encoding.UTF8.GetBytes(inputData));
-			//var drivingCycle = DrivingCycleDataReader.ReadFromStream(cycleFile, CycleType.PWheel);
+			var drivingCycle = DrivingCycleDataReader.ReadFromStream(inputData.GetStream(), CycleType.MeasuredSpeed);
 
-			//var fuelConsumption = new DataTable();
-			//fuelConsumption.Columns.Add("");
-			//fuelConsumption.Columns.Add("");
-			//fuelConsumption.Columns.Add("");
-			//fuelConsumption.Rows.Add("1", "1", "1");
-			//fuelConsumption.Rows.Add("2", "2", "2");
-			//fuelConsumption.Rows.Add("3", "3", "3");
+			var fuelConsumption = new DataTable();
+			fuelConsumption.Columns.Add("");
+			fuelConsumption.Columns.Add("");
+			fuelConsumption.Columns.Add("");
+			fuelConsumption.Rows.Add("1", "1", "1");
+			fuelConsumption.Rows.Add("2", "2", "2");
+			fuelConsumption.Rows.Add("3", "3", "3");
 
-			//var fullLoad = new DataTable();
-			//fullLoad.Columns.Add("Engine speed");
-			//fullLoad.Columns.Add("max torque");
-			//fullLoad.Columns.Add("drag torque");
-			//fullLoad.Columns.Add("PT1");
-			//fullLoad.Rows.Add("0", "5000", "-5000", "0");
-			//fullLoad.Rows.Add("3000", "5000", "-5000", "0");
+			var fullLoad = new DataTable();
+			fullLoad.Columns.Add("Engine speed");
+			fullLoad.Columns.Add("max torque");
+			fullLoad.Columns.Add("drag torque");
+			fullLoad.Columns.Add("PT1");
+			fullLoad.Rows.Add("0", "5000", "-5000", "0");
+			fullLoad.Rows.Add("3000", "5000", "-5000", "0");
 
-			//var fullLoadCurve = EngineFullLoadCurve.Create(fullLoad);
-			//var data = new VectoRunData {
-			//	Cycle = drivingCycle,
-			//	AxleGearData = new AxleGearData { AxleGear = new GearData { Ratio = 2.3 } },
-			//	EngineData = new CombustionEngineData { IdleSpeed = 560.RPMtoRad(), FullLoadCurve = fullLoadCurve },
-			//	GearboxData = new GearboxData { Gears = new Dictionary<uint, GearData> { { 2, new GearData { Ratio = 3.5 } } } },
-			//	Retarder = new RetarderData()
-			//};
+			var fullLoadCurve = EngineFullLoadCurve.Create(fullLoad);
+			var data = new VectoRunData {
+				Cycle = drivingCycle,
+				VehicleData = new VehicleData { VehicleCategory = VehicleCategory.RigidTruck },
+				AxleGearData = new AxleGearData { AxleGear = new GearData { Ratio = 2.3 } },
+				EngineData = new CombustionEngineData { IdleSpeed = 560.RPMtoRad(), FullLoadCurve = fullLoadCurve },
+				GearboxData = new GearboxData { Gears = new Dictionary<uint, GearData> { { 2, new GearData { Ratio = 3.5 } } } },
+				Retarder = new RetarderData()
+			};
 
-			//// call builder (actual test)
-			//var builder = new PowertrainBuilder(null);
-			//var jobContainer = builder.Build(data);
-
-			Assert.Fail();
+			// call builder (actual test)
+			var builder = new PowertrainBuilder(null);
+			var jobContainer = builder.Build(data);
 		}
 
 		/// <summary>
@@ -133,25 +128,24 @@ namespace TUGraz.VectoCore.Tests.Models.Simulation
 		[TestMethod]
 		public void MeasuredSpeed_Run_Test()
 		{
-			//var jobFile = @"TestData\Jobs\Pwheel.vecto";
-			//var fileWriter = new FileOutputWriter(jobFile);
-			//var sumWriter = new SummaryDataContainer(fileWriter);
-			//var jobContainer = new JobContainer(sumWriter);
+			var jobFile = @"TestData\MeasuredSpeed\Demo_ChassisDyno.vecto";
+			var fileWriter = new FileOutputWriter(jobFile);
+			var sumWriter = new SummaryDataContainer(fileWriter);
+			var jobContainer = new JobContainer(sumWriter);
 
-			//var inputData = JSONInputDataFactory.ReadJsonJob(jobFile);
-			//var runsFactory = new SimulatorFactory(ExecutionMode.Engineering, inputData, fileWriter);
+			var inputData = JSONInputDataFactory.ReadJsonJob(jobFile);
+			var runsFactory = new SimulatorFactory(ExecutionMode.Engineering, inputData, fileWriter);
 
-			//jobContainer.AddRuns(runsFactory);
-			//jobContainer.Execute();
+			jobContainer.AddRuns(runsFactory);
+			jobContainer.Execute();
 
-			//jobContainer.WaitFinished();
+			jobContainer.WaitFinished();
 
-			//Assert.IsTrue(jobContainer.Runs.All(r => r.Success), string.Join("", jobContainer.Runs.Select(r => r.ExecException)));
+			Assert.IsTrue(jobContainer.Runs.All(r => r.Success), string.Join("", jobContainer.Runs.Select(r => r.ExecException)));
 
 			//ResultFileHelper.TestSumFile(@"TestData\Results\Pwheel\Atego_ges.v2.vsum", @"TestData\Jobs\Pwheel.vsum");
 
-			//ResultFileHelper.TestModFile(@"TestData\Results\Pwheel\Atego_ges_Gear2_pt1_rep1_actual.vmod",
-			//	@"TestData\Jobs\Pwheel_Gear2_pt1_rep1_actual.vmod");
+			//ResultFileHelper.TestModFile(@"TestData\Results\Pwheel\Atego_ges_Gear2_pt1_rep1_actual.vmod",@"TestData\Jobs\Pwheel_Gear2_pt1_rep1_actual.vmod");
 
 			Assert.Fail();
 		}
