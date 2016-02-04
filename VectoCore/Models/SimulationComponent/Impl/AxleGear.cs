@@ -15,8 +15,10 @@
 */
 
 using System;
+using Org.BouncyCastle.Asn1.Mozilla;
 using TUGraz.VectoCore.Exceptions;
 using TUGraz.VectoCore.Models.Connector.Ports;
+using TUGraz.VectoCore.Models.Simulation;
 using TUGraz.VectoCore.Models.Simulation.Data;
 using TUGraz.VectoCore.Models.Simulation.Impl;
 using TUGraz.VectoCore.Models.SimulationComponent.Data;
@@ -26,14 +28,13 @@ using TUGraz.VectoCore.Utils;
 
 namespace TUGraz.VectoCore.Models.SimulationComponent.Impl
 {
-	public class AxleGear : VectoSimulationComponent, IPowerTrainComponent, ITnInPort, ITnOutPort
+	public class AxleGear : StatefulVectoSimulationComponent<SimpleComponentState>, IPowerTrainComponent, ITnInPort,
+		ITnOutPort
 	{
 		protected ITnOutPort NextComponent;
 		private readonly AxleGearData _gearData;
 
-		protected Watt Loss;
-
-		public AxleGear(VehicleContainer container, AxleGearData gearData) : base(container)
+		public AxleGear(IVehicleContainer container, AxleGearData gearData) : base(container)
 		{
 			_gearData = gearData;
 		}
@@ -63,7 +64,8 @@ namespace TUGraz.VectoCore.Models.SimulationComponent.Impl
 				? 0.SI<NewtonMeter>()
 				: _gearData.AxleGear.LossMap.GetInTorque(inAngularVelocity, torque);
 
-			Loss = inTorque * inAngularVelocity - torque * angularVelocity;
+			//Loss = inTorque * inAngularVelocity - torque * angularVelocity;
+			CurrentState.SetState(inTorque, inAngularVelocity, torque, angularVelocity);
 
 			var retVal = NextComponent.Request(absTime, dt, inTorque, inAngularVelocity, dryRun);
 
@@ -76,12 +78,16 @@ namespace TUGraz.VectoCore.Models.SimulationComponent.Impl
 			var inAngularVelocity = angularVelocity * _gearData.AxleGear.Ratio;
 			var inTorque = _gearData.AxleGear.LossMap.GetInTorque(inAngularVelocity, torque);
 
+			PreviousState.SetState(inTorque, inAngularVelocity, torque, angularVelocity);
+
 			return NextComponent.Initialize(inTorque, inAngularVelocity);
 		}
 
 		protected override void DoWriteModalResults(IModalDataContainer container)
 		{
-			container[ModalResultField.PlossDiff] = Loss;
+			//container[ModalResultField.PlossDiff] = Loss;
+
+			container[ModalResultField.PlossDiff] = (PreviousState.PowerLoss() + CurrentState.PowerLoss()) / 2.0;
 		}
 
 		protected override void DoCommitSimulationStep()
@@ -94,7 +100,7 @@ namespace TUGraz.VectoCore.Models.SimulationComponent.Impl
 					Log.Warn("AxleGear LossMap data was extrapolated.");
 				}
 			}
-			Loss = null;
+			AdvanceState();
 		}
 	}
 }

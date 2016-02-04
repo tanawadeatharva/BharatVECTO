@@ -170,6 +170,7 @@
     <Compile Include="Models\SimulationComponent\IDrivingCycleInfo.cs" />
     <Compile Include="Models\SimulationComponent\Impl\Brakes.cs" />
     <Compile Include="Models\SimulationComponent\Impl\DefaultDriverStrategy.cs" />
+    <Compile Include="Models\SimulationComponent\Impl\DummyRetarder.cs" />
     <Compile Include="Models\SimulationComponent\Impl\EngineOnlyCombustionEngine.cs" />
     <Compile Include="Models\SimulationComponent\IShiftStrategy.cs" />
     <Compile Include="Models\SimulationComponent\Impl\ShiftStrategy.cs" />

@@ -20,6 +20,7 @@ using TUGraz.VectoCore.Models.Simulation.Data;
 using TUGraz.VectoCore.Models.Simulation.DataBus;
 using TUGraz.VectoCore.Models.Simulation.Impl;
 using TUGraz.VectoCore.OutputData;
+using TUGraz.VectoCore.Utils;
 
 namespace TUGraz.VectoCore.Models.SimulationComponent
 {
@@ -56,12 +57,10 @@ namespace TUGraz.VectoCore.Models.SimulationComponent
 		/// Commits the internal state of the object if needed.
 		/// </summary>
 		protected abstract void DoCommitSimulationStep();
-
 	}
 
 	public abstract class StatefulVectoSimulationComponent<TStateType> : VectoSimulationComponent where TStateType : new()
 	{
-
 		protected internal TStateType CurrentState;
 		protected internal TStateType PreviousState;
 
@@ -76,6 +75,29 @@ namespace TUGraz.VectoCore.Models.SimulationComponent
 		{
 			PreviousState = CurrentState;
 			CurrentState = new TStateType();
+		}
+	}
+
+	public class SimpleComponentState
+	{
+		public NewtonMeter OutTorque;
+		public NewtonMeter InTorque;
+
+		public PerSecond OutAngularVelocity;
+		public PerSecond InAngularVelocity;
+
+		public Watt PowerLoss()
+		{
+			return InTorque * InAngularVelocity - OutTorque * OutAngularVelocity;
+		}
+
+		public void SetState(NewtonMeter inTorque, PerSecond inAngularVelocity, NewtonMeter outTorque,
+			PerSecond outAngularVelocity)
+		{
+			InTorque = inTorque;
+			InAngularVelocity = inAngularVelocity;
+			OutTorque = outTorque;
+			OutAngularVelocity = outAngularVelocity;
 		}
 	}
 }

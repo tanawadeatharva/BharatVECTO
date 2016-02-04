@@ -24,23 +24,21 @@ using TUGraz.VectoCore.Utils;
 
 namespace TUGraz.VectoCore.Models.SimulationComponent.Impl
 {
-	public class Retarder : VectoSimulationComponent, IPowerTrainComponent, ITnInPort, ITnOutPort
+	public class Retarder : StatefulVectoSimulationComponent<SimpleComponentState>, IPowerTrainComponent, ITnInPort,
+		ITnOutPort
 	{
 		protected ITnOutPort NextComponent;
 
 		private readonly RetarderLossMap _lossMap;
 
-		private Watt _retarderLoss;
-
 		public Retarder(IVehicleContainer cockpit, RetarderLossMap lossMap) : base(cockpit)
 		{
-			_retarderLoss = 0.SI<Watt>();
 			_lossMap = lossMap;
 		}
 
 		protected override void DoWriteModalResults(IModalDataContainer container)
 		{
-			container[ModalResultField.PlossRetarder] = _retarderLoss;
+			container[ModalResultField.PlossRetarder] = (PreviousState.PowerLoss() + CurrentState.PowerLoss()) / 2.0;
 		}
 
 		protected override void DoCommitSimulationStep() {}
@@ -66,7 +64,8 @@ namespace TUGraz.VectoCore.Models.SimulationComponent.Impl
 				return NextComponent.Request(absTime, dt, torque, null, dryRun);
 			}
 			var retarderTorqueLoss = _lossMap.RetarderLoss(angularVelocity);
-			_retarderLoss = retarderTorqueLoss * angularVelocity;
+			//_retarderLoss = retarderTorqueLoss * angularVelocity;
+			CurrentState.SetState(torque + retarderTorqueLoss, angularVelocity, torque, angularVelocity);
 
 			return NextComponent.Request(absTime, dt, torque + retarderTorqueLoss, angularVelocity, dryRun);
 		}
@@ -74,8 +73,9 @@ namespace TUGraz.VectoCore.Models.SimulationComponent.Impl
 		public IResponse Initialize(NewtonMeter torque, PerSecond angularVelocity)
 		{
 			var retarderTorqueLoss = _lossMap.RetarderLoss(angularVelocity);
+			PreviousState.SetState(torque + retarderTorqueLoss, angularVelocity, torque, angularVelocity);
+
 			return NextComponent.Initialize(torque + retarderTorqueLoss, angularVelocity);
 		}
-
 	}
 }
