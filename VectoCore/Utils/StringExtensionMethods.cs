@@ -16,6 +16,7 @@
 * limitations under the Licence.
 */
 
+using System;
 using System.Collections.Generic;
 using System.Globalization;
 using System.IO;
@@ -36,14 +37,20 @@ namespace TUGraz.VectoCore.Utils
 			return double.Parse(self, CultureInfo.InvariantCulture);
 		}
 
-	    public static double IndulgentParse(this string self)
-	    {
-	        return double.Parse(new string(self.Trim().TakeWhile(c => char.IsDigit(c) || c == '.').ToArray()), CultureInfo.InvariantCulture);
-	    }
+		public static double IndulgentParse(this string self)
+		{
+			return double.Parse(new string(self.Trim().TakeWhile(c => char.IsDigit(c) || c == '.').ToArray()),
+				CultureInfo.InvariantCulture);
+		}
 
 		public static Stream GetStream(this string self)
 		{
 			return new MemoryStream(Encoding.UTF8.GetBytes(self));
+		}
+
+		public static string RemoveWhitespace(this string self)
+		{
+			return string.Concat(self.Split());
 		}
 	}
 }

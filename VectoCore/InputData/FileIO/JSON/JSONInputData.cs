@@ -432,6 +432,8 @@ namespace TUGraz.VectoCore.InputData.FileIO.JSON
 						Technology = aux.GetEx<string>("Technology")
 					};
 					var auxFile = aux["Path"];
+					retVal.Add(auxData);
+
 					if (auxFile == null || EmptyOrInvalidFileName(auxFile.Value<string>())) {
 						continue;
 					}
@@ -443,7 +445,6 @@ namespace TUGraz.VectoCore.InputData.FileIO.JSON
 					stream.ReadLine(); // skip header "Efficiency auxiliary to supply [-]"
 					auxData.EfficiencyToSupply = stream.ReadLine().IndulgentParse();
 					auxData.DemandMap = VectoCSVFile.ReadStream(new MemoryStream(Encoding.UTF8.GetBytes(stream.ReadToEnd())));
-					retVal.Add(auxData);
 				}
 				return retVal;
 			}

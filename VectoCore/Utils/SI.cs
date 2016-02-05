@@ -1649,14 +1649,14 @@ namespace TUGraz.VectoCore.Utils
 		{
 			if (Denominator.Any()) {
 				if (Numerator.Any()) {
-					return string.Format("{0}/{1}", string.Join("", Numerator), string.Join("", Denominator));
+					return string.Format("{0}/{1}", string.Concat(Numerator), string.Concat(Denominator));
 				} else {
-					return string.Format("1/{0}", string.Join("", Denominator));
+					return string.Format("1/{0}", string.Concat(Denominator));
 				}
 			}
 
 			if (Numerator.Any()) {
-				return string.Format("{0}", string.Join("", Numerator));
+				return string.Format("{0}", string.Concat(Numerator));
 			}
 
 			return "-";

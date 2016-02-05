@@ -157,17 +157,17 @@ namespace TUGraz.VectoCore.Models.SimulationComponent.Data
 			foreach (var entry in data._map.Points) {
 				context.DisplayName = Fields.AuxSpeed;
 				if (!Validator.TryValidateValue(entry.X, context, results, xValidationRules)) {
-					return new ValidationResult(string.Join("", results));
+					return new ValidationResult(string.Concat(results));
 				}
 
 				context.DisplayName = Fields.SupplyPower;
 				if (!Validator.TryValidateValue(entry.Y, context, results, yValidationRules)) {
-					return new ValidationResult(string.Join("", results));
+					return new ValidationResult(string.Concat(results));
 				}
 
 				context.DisplayName = Fields.MechPower;
 				if (!Validator.TryValidateValue(entry.Z, context, results, zValidationRules)) {
-					return new ValidationResult(string.Join("", results));
+					return new ValidationResult(string.Concat(results));
 				}
 			}
 			return ValidationResult.Success;

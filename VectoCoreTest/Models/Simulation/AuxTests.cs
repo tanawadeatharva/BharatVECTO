@@ -17,6 +17,7 @@
 */
 
 using System.Configuration;
+using System.Linq;
 using TUGraz.VectoCore.Utils;
 using TUGraz.VectoCore.Exceptions;
 using TUGraz.VectoCore.Tests.Utils;
@@ -341,13 +342,7 @@ namespace TUGraz.VectoCore.Tests.Models.Simulation
 			var inputData = JSONInputDataFactory.ReadJsonJob(@"TestData\Jobs\40t_Long_Haul_Truck_wrong_AUX.vecto");
 			var runsFactory = new SimulatorFactory(ExecutionMode.Declaration, inputData, fileWriter);
 
-			jobContainer.AddRuns(runsFactory);
-			jobContainer.Execute();
-
-			ResultFileHelper.TestSumFile(@"TestData\Results\Declaration\40t_Long_Haul_Truck.vsum",
-				@"AuxReadJobFileDeclarationMode.vsum");
-
-			Assert.Inconclusive();
+			AssertHelper.Exception<VectoException>(() => jobContainer.AddRuns(runsFactory));
 		}
 	}
 }

@@ -170,7 +170,7 @@ namespace TUGraz.VectoCore.Models.Simulation.Impl
 			}
 
 			var engine = new CombustionEngine(_container, data.EngineData);
-			var clutch = new Clutch(_container, data.EngineData, engine.IdleController);
+			var clutch = new PWheelClutch(_container, engine.IdleController);
 
 			// gearbox --> clutch
 			tmp = AddComponent(tmp, clutch);
