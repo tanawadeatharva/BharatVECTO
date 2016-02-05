@@ -35,7 +35,7 @@ namespace TUGraz.VectoCore.Tests.Integration.DriverStrategy
 		public void TestGraph()
 		{
 			var imgV3 = @"TestData\Results\Integration\Coach_DriverStrategy_Drive_50_slope_dec-inc.vmod";
-			var imgv22 = @"TestData\Integration\DriverStrategy\Vecto2.2\Coach\24t Coach_Cycle_Drive_50_Dec_Increasing_Slope.vmod";
+			var imgv22 = @"TestData\Results\Integration\24t Coach_Cycle_Drive_50_Dec_Increasing_Slope.vmod";
 
 			GraphWriter.Write(imgV3, imgv22);
 		}
