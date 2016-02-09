@@ -85,11 +85,12 @@ namespace TUGraz.VectoCore.Models.SimulationComponent
 
 		public PerSecond OutAngularVelocity;
 		public PerSecond InAngularVelocity;
+		public NewtonMeter TorqueLoss;
 
-		public Watt PowerLoss()
-		{
-			return InTorque * InAngularVelocity - OutTorque * OutAngularVelocity;
-		}
+		//public Watt PowerLoss()
+		//{
+		//	return InTorque * InAngularVelocity - OutTorque * OutAngularVelocity;
+		//}
 
 		public void SetState(NewtonMeter inTorque, PerSecond inAngularVelocity, NewtonMeter outTorque,
 			PerSecond outAngularVelocity)
@@ -98,6 +99,8 @@ namespace TUGraz.VectoCore.Models.SimulationComponent
 			InAngularVelocity = inAngularVelocity;
 			OutTorque = outTorque;
 			OutAngularVelocity = outAngularVelocity;
+
+			TorqueLoss = (inTorque * inAngularVelocity - outTorque * outAngularVelocity) / inAngularVelocity;
 		}
 	}
 }

@@ -22,7 +22,6 @@ using TUGraz.VectoCore.Configuration;
 using TUGraz.VectoCore.Exceptions;
 using TUGraz.VectoCore.Models.Connector.Ports;
 using TUGraz.VectoCore.Models.Connector.Ports.Impl;
-using TUGraz.VectoCore.Models.Declaration;
 using TUGraz.VectoCore.Models.Simulation;
 using TUGraz.VectoCore.Models.Simulation.Data;
 using TUGraz.VectoCore.Models.Simulation.DataBus;
@@ -35,7 +34,8 @@ namespace TUGraz.VectoCore.Models.SimulationComponent.Impl
 	/// <summary>
 	/// Component for a combustion engine.
 	/// </summary>
-	public class CombustionEngine : StatefulVectoSimulationComponent<CombustionEngine.EngineState>, ICombustionEngine, ITnOutPort
+	public class CombustionEngine : StatefulVectoSimulationComponent<CombustionEngine.EngineState>, ICombustionEngine,
+		ITnOutPort
 	{
 		public enum EngineOperationMode
 		{
@@ -214,18 +214,21 @@ namespace TUGraz.VectoCore.Models.SimulationComponent.Impl
 
 		protected override void DoWriteModalResults(IModalDataContainer container)
 		{
-			container[ModalResultField.PaEng] = CurrentState.EnginePowerLoss;
 			container[ModalResultField.Pe_drag] = CurrentState.FullDragPower;
 			container[ModalResultField.Pe_full] = CurrentState.DynamicFullLoadPower;
-			container[ModalResultField.Pe_eng] = CurrentState.EnginePower;
+			container[ModalResultField.Pe_eng] = (PreviousState.EnginePower + CurrentState.EnginePower) / 2.0;
+			//container[ModalResultField.Pe_eng] = (PreviousState.EngineSpeed + CurrentState.EngineSpeed) / 2.0 *
+			//									(CurrentState.EngineTorque);
+			container[ModalResultField.PaEng] = (PreviousState.EnginePowerLoss + CurrentState.EnginePowerLoss) / 2.0;
 
 			container[ModalResultField.Tq_drag] = CurrentState.FullDragTorque;
 			container[ModalResultField.Tq_full] = CurrentState.DynamicFullLoadTorque;
-			container[ModalResultField.Tq_eng] = CurrentState.EngineTorque;
-			container[ModalResultField.n] = CurrentState.EngineSpeed;
+			container[ModalResultField.Tq_eng] = (PreviousState.EngineTorque + CurrentState.EngineTorque) / 2.0;
+			container[ModalResultField.n] = (PreviousState.EngineSpeed + CurrentState.EngineSpeed) / 2.0;
 
 			try {
-				var fc = Data.ConsumptionMap.GetFuelConsumption(CurrentState.EngineTorque, CurrentState.EngineSpeed);
+				var fc = Data.ConsumptionMap.GetFuelConsumption((PreviousState.EngineTorque + CurrentState.EngineTorque) / 2.0,
+					(PreviousState.EngineSpeed + CurrentState.EngineSpeed) / 2.0);
 				container[ModalResultField.FCMap] = fc;
 
 				//todo (MK, 2015-11-11): calculate aux start stop correction when start stop functionality is implemented in v3
@@ -271,7 +274,7 @@ namespace TUGraz.VectoCore.Models.SimulationComponent.Impl
 			if (curve != null) {
 				var gearboxFullLoad = curve.FullLoadStationaryTorque(CurrentState.EngineSpeed) * CurrentState.EngineSpeed;
 				// var gearboxDragLoad = curve.DragLoadStationaryTorque(CurrentState.EngineSpeed) * CurrentState.EngineSpeed;
-                requestedEnginePower = VectoMath.Limit(requestedEnginePower, -gearboxFullLoad, gearboxFullLoad);
+				requestedEnginePower = VectoMath.Limit(requestedEnginePower, -gearboxFullLoad, gearboxFullLoad);
 			}
 
 			return VectoMath.Limit(requestedEnginePower, CurrentState.FullDragPower, CurrentState.DynamicFullLoadPower);
@@ -305,15 +308,12 @@ namespace TUGraz.VectoCore.Models.SimulationComponent.Impl
 				throw new VectoException("ComputeFullLoadPower cannot compute for simulation interval length 0.");
 			}
 
-			//_currentState.StationaryFullLoadPower = _data.GetFullLoadCurve(gear).FullLoadStationaryPower(rpm);
 			CurrentState.StationaryFullLoadTorque =
 				Data.FullLoadCurve.FullLoadStationaryTorque(angularVelocity);
 			CurrentState.StationaryFullLoadPower = CurrentState.StationaryFullLoadTorque * angularVelocity;
 
 			var pt1 = Data.FullLoadCurve.PT1(angularVelocity).Value();
 
-//			var dynFullPowerCalculated = (1 / (pt1 + 1)) *
-//										(_currentState.StationaryFullLoadPower + pt1 * _previousState.EnginePower);
 			var tStarPrev = pt1 *
 							Math.Log(1 / (1 - (PreviousState.EnginePower / CurrentState.StationaryFullLoadPower).Value()), Math.E)
 								.SI<Second>();
@@ -511,9 +511,7 @@ namespace TUGraz.VectoCore.Models.SimulationComponent.Impl
 						retVal = RequestPort.Request(absTime, dt, torque, nextAngularSpeed);
 						retVal = SearchIdlingSpeed(absTime, dt, torque, nextAngularSpeed, r);
 					}).
-					Default(r => {
-						throw new UnexpectedResponseException("searching Idling point", r);
-					});
+					Default(r => { throw new UnexpectedResponseException("searching Idling point", r); });
 
 				return retVal;
 			}

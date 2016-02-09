@@ -87,7 +87,8 @@ namespace TUGraz.VectoCore.Models.SimulationComponent.Impl
 		{
 			//container[ModalResultField.PlossDiff] = Loss;
 
-			container[ModalResultField.PlossDiff] = (PreviousState.PowerLoss() + CurrentState.PowerLoss()) / 2.0;
+			container[ModalResultField.PlossDiff] = CurrentState.TorqueLoss *
+													(PreviousState.InAngularVelocity + CurrentState.InAngularVelocity) / 2.0;
 		}
 
 		protected override void DoCommitSimulationStep()

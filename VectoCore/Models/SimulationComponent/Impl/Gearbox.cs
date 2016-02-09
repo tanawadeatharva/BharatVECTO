@@ -148,11 +148,8 @@ namespace TUGraz.VectoCore.Models.SimulationComponent.Impl
 
 			inTorque += torqueLossInertia;
 
-			PreviousState.OutAngularVelocity = outAngularVelocity;
-			PreviousState.OutTorque = outTorque;
-			PreviousState.InAngularVelocity = inAngularVelocity;
-			PreviousState.OutTorqueWithLosses = inTorque;
-			PreviousState.InertiaLoss = 0.SI<Watt>();
+			PreviousState.SetState(inTorque, inAngularVelocity, outTorque, outAngularVelocity);
+			PreviousState.InertiaTorqueLoss = 0.SI<NewtonMeter>();
 
 			var response = NextComponent.Initialize(inTorque, inAngularVelocity);
 			if (response is ResponseSuccess) {
@@ -275,11 +272,7 @@ namespace TUGraz.VectoCore.Models.SimulationComponent.Impl
 				};
 			}
 
-			CurrentState.OutAngularVelocity = outAngularVelocity;
-			CurrentState.OutTorque = outTorque;
-			CurrentState.InAngularVelocity = null;
-			CurrentState.OutTorqueWithLosses = 0.SI<NewtonMeter>();
-			CurrentState.InertiaLoss = 0.SI<Watt>();
+			CurrentState.SetState(0.SI<NewtonMeter>(), null, outTorque, outAngularVelocity);
 
 			var response = NextComponent.Request(absTime, dt, 0.SI<NewtonMeter>(), null);
 			response.GearboxPowerRequest = outTorque * outAngularVelocity;
@@ -356,17 +349,16 @@ namespace TUGraz.VectoCore.Models.SimulationComponent.Impl
 				}
 			}
 
-			//_powerLoss = inTorque * inEngineSpeed - outTorque * outAngularVelocity;
-			CurrentState.OutAngularVelocity = outAngularVelocity;
-			CurrentState.OutTorque = outTorque;
-			CurrentState.InAngularVelocity = inEngineSpeed;
-			CurrentState.OutTorqueWithLosses = inTorque;
+			//_powerLoss = outTorqueWithTransmissionLosses * inEngineSpeed - outTorque * outAngularVelocity;
+
+			CurrentState.SetState(inTorque, inEngineSpeed, outTorque, outAngularVelocity);
 
 			if (!inEngineSpeed.IsEqual(0)) {
-				CurrentState.InertiaLoss = Formulas.InertiaPower(inEngineSpeed, _previousInAngularSpeed, Data.Inertia, dt);
-				inTorque += CurrentState.InertiaLoss / inEngineSpeed;
+				CurrentState.InertiaTorqueLoss = Formulas.InertiaPower(inEngineSpeed, _previousInAngularSpeed, Data.Inertia, dt) /
+												inEngineSpeed;
+				inTorque += CurrentState.InertiaTorqueLoss;
 			} else {
-				CurrentState.InertiaLoss = 0.SI<Watt>();
+				CurrentState.InertiaTorqueLoss = 0.SI<NewtonMeter>();
 			}
 
 			var response = NextComponent.Request(absTime, dt, inTorque, inEngineSpeed);
@@ -392,16 +384,11 @@ namespace TUGraz.VectoCore.Models.SimulationComponent.Impl
 		protected override void DoWriteModalResults(IModalDataContainer container)
 		{
 			container[ModalResultField.Gear] = _disengaged || DataBus.VehicleStopped ? 0 : Gear;
-			var previousLoss = PreviousState.InAngularVelocity == null
-				? 0.SI<Watt>()
-				: PreviousState.InAngularVelocity * PreviousState.OutTorqueWithLosses -
-				PreviousState.OutAngularVelocity * PreviousState.OutTorque;
-			var currentLoss = CurrentState.InAngularVelocity == null
-				? 0.SI<Watt>()
-				: CurrentState.InAngularVelocity * CurrentState.OutTorqueWithLosses -
-				CurrentState.OutAngularVelocity * CurrentState.OutTorque;
-			container[ModalResultField.PlossGB] = (previousLoss + currentLoss) / 2.0;
-			container[ModalResultField.PaGB] = (PreviousState.InertiaLoss + CurrentState.InertiaLoss) / 2.0;
+
+			container[ModalResultField.PlossGB] = CurrentState.TransmissionTorqueLoss *
+												(PreviousState.InAngularVelocity + CurrentState.InAngularVelocity) / 2.0;
+			container[ModalResultField.PaGB] = CurrentState.InertiaTorqueLoss *
+												(PreviousState.InAngularVelocity + CurrentState.InAngularVelocity) / 2.0;
 		}
 
 		protected override void DoCommitSimulationStep()
@@ -425,12 +412,26 @@ namespace TUGraz.VectoCore.Models.SimulationComponent.Impl
 
 		public class GearboxState
 		{
-			public NewtonMeter OutTorqueWithLosses;
+			public NewtonMeter OutTorqueWithTransmissionLosses;
 			public NewtonMeter OutTorque;
 
 			public PerSecond InAngularVelocity;
 			public PerSecond OutAngularVelocity;
-			public Watt InertiaLoss { get; set; }
+
+			public NewtonMeter InertiaTorqueLoss;
+			public NewtonMeter TransmissionTorqueLoss;
+
+			public void SetState(NewtonMeter outTorqueWithTransmissionLosses, PerSecond inAngularVelocity, NewtonMeter outTorque,
+				PerSecond outAngularVelocity)
+			{
+				OutTorqueWithTransmissionLosses = outTorqueWithTransmissionLosses;
+				InAngularVelocity = inAngularVelocity;
+				OutTorque = outTorque;
+				OutAngularVelocity = outAngularVelocity;
+
+				TransmissionTorqueLoss = (outTorqueWithTransmissionLosses * inAngularVelocity - outTorque * outAngularVelocity) /
+										inAngularVelocity;
+			}
 		}
 	}
 }
