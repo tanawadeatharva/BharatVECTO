@@ -79,7 +79,7 @@ namespace TUGraz.VectoCore.Tests.Utils
 		public IResponse Initialize(MeterPerSecond vehicleSpeed, Radian roadGradient, MeterPerSquareSecond startAcceleration)
 		{
 			if (_next != null) {
-				return _next.Initialize(vehicleSpeed, startAcceleration, roadGradient);
+				return _next.Initialize(vehicleSpeed, roadGradient, startAcceleration);
 			}
 
 			return new ResponseSuccess { Source = this };

@@ -125,16 +125,16 @@ namespace TUGraz.VectoCore.Models.SimulationComponent.Impl
 		}
 
 		protected virtual void AddClutchLoss(NewtonMeter torque, PerSecond angularVelocity, out NewtonMeter torqueIn,
-			out PerSecond engineSpeedIn)
+			out PerSecond angularVelocityIn)
 		{
 			Log.Debug("from Wheels: torque: {0}, angularVelocity: {1}, power {2}", torque, angularVelocity,
 				Formulas.TorqueToPower(torque, angularVelocity));
 			torqueIn = torque;
-			engineSpeedIn = angularVelocity;
+			angularVelocityIn = angularVelocity;
 
 			if (DataBus.VehicleStopped) {
 				_clutchState = ClutchState.ClutchOpened;
-				engineSpeedIn = _idleSpeed;
+				angularVelocityIn = _idleSpeed;
 				torqueIn = 0.SI<NewtonMeter>();
 			} else {
 				var engineSpeedNorm = (angularVelocity - _idleSpeed) / (_ratedSpeed - _idleSpeed);
@@ -144,16 +144,16 @@ namespace TUGraz.VectoCore.Models.SimulationComponent.Impl
 					var engineSpeed0 = VectoMath.Max(_idleSpeed, angularVelocity);
 					var clutchSpeedNorm = Constants.SimulationSettings.CluchNormSpeed /
 										((_idleSpeed + Constants.SimulationSettings.CluchNormSpeed * (_ratedSpeed - _idleSpeed)) / _ratedSpeed);
-					engineSpeedIn =
+					angularVelocityIn =
 						((clutchSpeedNorm * engineSpeed0 / _ratedSpeed) * (_ratedSpeed - _idleSpeed) + _idleSpeed).Radian.Cast<PerSecond>();
 
-					torqueIn = (torque * angularVelocity) / ClutchEff / engineSpeedIn;
+					torqueIn = (torque * angularVelocity) / ClutchEff / angularVelocityIn;
 				} else {
 					_clutchState = ClutchState.ClutchClosed;
 				}
 			}
-			Log.Debug("to Engine:   torque: {0}, angularVelocity: {1}, power {2}", torqueIn, engineSpeedIn,
-				Formulas.TorqueToPower(torqueIn, engineSpeedIn));
+			Log.Debug("to Engine:   torque: {0}, angularVelocity: {1}, power {2}", torqueIn, angularVelocityIn,
+				Formulas.TorqueToPower(torqueIn, angularVelocityIn));
 		}
 	}
 
@@ -168,10 +168,10 @@ namespace TUGraz.VectoCore.Models.SimulationComponent.Impl
 		}
 
 		protected override void AddClutchLoss(NewtonMeter torque, PerSecond angularVelocity, out NewtonMeter torqueIn,
-			out PerSecond engineSpeedIn)
+			out PerSecond angularVelocityIn)
 		{
 			torqueIn = torque;
-			engineSpeedIn = angularVelocity;
+			angularVelocityIn = angularVelocity;
 		}
 	}
 }

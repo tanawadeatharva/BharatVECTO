@@ -358,6 +358,14 @@ namespace TUGraz.VectoCore.Models.SimulationComponent.Impl
 			var first = Data.Entries.First();
 
 			AbsTime = first.Time;
+
+			if (first.VehicleTargetSpeed.IsEqual(0)) {
+				var retVal = NextComponent.Initialize(DataBus.StartSpeed, first.RoadGradient, DataBus.StartAcceleration);
+				if (!(retVal is ResponseSuccess)) {
+					throw new UnexpectedResponseException("Couldn't find start gear.", retVal);
+				}
+			}
+
 			var response = NextComponent.Initialize(first.VehicleTargetSpeed, first.RoadGradient);
 			response.AbsTime = AbsTime;
 			return response;

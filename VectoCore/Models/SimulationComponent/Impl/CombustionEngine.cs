@@ -217,8 +217,7 @@ namespace TUGraz.VectoCore.Models.SimulationComponent.Impl
 				EngineSpeed = angularSpeed,
 				dt = 1.SI<Second>(),
 				EnginePowerLoss = 0.SI<Watt>(),
-				StationaryFullLoadTorque =
-					Data.FullLoadCurve.FullLoadStationaryTorque(angularSpeed),
+				StationaryFullLoadTorque = Data.FullLoadCurve.FullLoadStationaryTorque(angularSpeed),
 				FullDragTorque = Data.FullLoadCurve.DragLoadStationaryTorque(angularSpeed),
 				EngineTorque = torque,
 				EnginePower = torque * angularSpeed,
@@ -258,7 +257,7 @@ namespace TUGraz.VectoCore.Models.SimulationComponent.Impl
 			} catch (VectoException ex) {
 				Log.Warn("t: {0} - {1} n: {2} Tq: {3}", CurrentState.AbsTime, ex.Message, CurrentState.EngineSpeed,
 					CurrentState.EngineTorque);
-				container[ModalResultField.FCMap] = double.NaN.SI<KilogramPerSecond>();
+				container[ModalResultField.FCMap] = null;
 			}
 		}
 
@@ -293,7 +292,7 @@ namespace TUGraz.VectoCore.Models.SimulationComponent.Impl
 			if (curve != null) {
 				var gearboxFullLoad = curve.FullLoadStationaryTorque(CurrentState.EngineSpeed) * CurrentState.EngineSpeed;
 				// var gearboxDragLoad = curve.DragLoadStationaryTorque(CurrentState.EngineSpeed) * CurrentState.EngineSpeed;
-                requestedEnginePower = VectoMath.Limit(requestedEnginePower, -gearboxFullLoad, gearboxFullLoad);
+				requestedEnginePower = VectoMath.Limit(requestedEnginePower, -gearboxFullLoad, gearboxFullLoad);
 			}
 
 			return VectoMath.Limit(requestedEnginePower, CurrentState.FullDragPower, CurrentState.DynamicFullLoadPower);

@@ -73,8 +73,7 @@ namespace TUGraz.VectoCore.Models.SimulationComponent.Impl
 			return NextComponent.Initialize(_currentState.VehicleAccelerationForce, vehicleSpeed);
 		}
 
-		public IResponse Initialize(MeterPerSecond vehicleSpeed, MeterPerSquareSecond startAcceleration,
-			Radian roadGradient)
+		public IResponse Initialize(MeterPerSecond vehicleSpeed, Radian roadGradient, MeterPerSquareSecond startAcceleration)
 		{
 			var tmp = _previousState.Velocity;
 			// set vehicle speed to get accurate airdrag resistance
@@ -116,9 +115,7 @@ namespace TUGraz.VectoCore.Models.SimulationComponent.Impl
 													+ _currentState.AirDragResistance
 													+ _currentState.SlopeResistance;
 
-			var retval = NextComponent.Request(absTime, dt, _currentState.VehicleAccelerationForce,
-				_currentState.Velocity,
-				dryRun);
+			var retval = NextComponent.Request(absTime, dt, _currentState.VehicleAccelerationForce, _currentState.Velocity, dryRun);
 			return retval;
 		}
 

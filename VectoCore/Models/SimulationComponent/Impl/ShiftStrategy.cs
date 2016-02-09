@@ -376,7 +376,7 @@ namespace TUGraz.VectoCore.Models.SimulationComponent.Impl
 
 		public override uint InitGear(Second absTime, Second dt, NewtonMeter outTorque, PerSecond outEngineSpeed)
 		{
-			return DataBus.VehicleSpeed.IsEqual(0) ? 1u : DataBus.CycleData.LeftSample.Gear;
+			return DataBus.CycleData.LeftSample.Gear == 0 ? 1u : DataBus.CycleData.LeftSample.Gear;
 		}
 	}
 
