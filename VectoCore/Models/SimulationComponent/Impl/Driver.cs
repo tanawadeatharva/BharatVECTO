@@ -34,11 +34,10 @@ using TUGraz.VectoCore.Utils;
 
 namespace TUGraz.VectoCore.Models.SimulationComponent.Impl
 {
-	public class Driver : VectoSimulationComponent, IDriver, IDrivingCycleOutPort, IDriverDemandInPort, IDriverActions,
+	public class Driver : StatefulVectoSimulationComponent<Driver.DriverState>, IDriver, IDrivingCycleOutPort, IDriverDemandInPort, IDriverActions,
 		IDriverInfo
 	{
-		internal DriverState CurrentState = new DriverState();
-
+		
 		protected IDriverDemandOutPort NextComponent;
 
 		public DriverData DriverData { get; protected set; }

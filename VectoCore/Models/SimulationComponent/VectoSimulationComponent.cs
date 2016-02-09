@@ -19,6 +19,7 @@
 using System;
 using TUGraz.VectoCore.Models.Simulation;
 using TUGraz.VectoCore.Models.Simulation.DataBus;
+using TUGraz.VectoCore.Models.Simulation.Impl;
 using TUGraz.VectoCore.OutputData;
 
 namespace TUGraz.VectoCore.Models.SimulationComponent
@@ -40,7 +41,7 @@ namespace TUGraz.VectoCore.Models.SimulationComponent
 			dataBus.AddComponent(this);
 		}
 
-		public void CommitSimulationStep(IModalDataContainer container)
+		public virtual void CommitSimulationStep(IModalDataContainer container)
 		{
 			if (container != null) {
 				DoWriteModalResults(container);
@@ -56,5 +57,26 @@ namespace TUGraz.VectoCore.Models.SimulationComponent
 		/// Commits the internal state of the object if needed.
 		/// </summary>
 		protected abstract void DoCommitSimulationStep();
+
+	}
+
+	public abstract class StatefulVectoSimulationComponent<TStateType> : VectoSimulationComponent where TStateType : new()
+	{
+
+		protected internal TStateType CurrentState;
+		protected internal TStateType PreviousState;
+
+		protected StatefulVectoSimulationComponent(IVehicleContainer contaier)
+			: base(contaier)
+		{
+			CurrentState = new TStateType();
+			PreviousState = new TStateType();
+		}
+
+		protected void AdvanceState()
+		{
+			PreviousState = CurrentState;
+			CurrentState = new TStateType();
+		}
 	}
 }

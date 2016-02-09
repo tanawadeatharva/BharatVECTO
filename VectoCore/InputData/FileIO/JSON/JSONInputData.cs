@@ -435,6 +435,7 @@ namespace TUGraz.VectoCore.InputData.FileIO.JSON
 					retVal.Add(auxData);
 
 					if (auxFile == null || EmptyOrInvalidFileName(auxFile.Value<string>())) {
+						retVal.Add(auxData);
 						continue;
 					}
 					var stream = new StreamReader(Path.Combine(BasePath, auxFile.Value<string>()));

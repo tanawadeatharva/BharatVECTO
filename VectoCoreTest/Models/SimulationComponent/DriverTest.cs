@@ -61,7 +61,7 @@ namespace TUGraz.VectoCore.Tests.Models.SimulationComponent
 			var engine = new CombustionEngine(vehicleContainer, engineData);
 			var clutch = new Clutch(vehicleContainer, engineData, engine.IdleController);
 			dynamic tmp = AddComponent(driver, new Vehicle(vehicleContainer, vehicleData));
-			tmp = AddComponent(tmp, new Wheels(vehicleContainer, vehicleData.DynamicTyreRadius));
+			tmp = AddComponent(tmp, new Wheels(vehicleContainer, vehicleData.DynamicTyreRadius, vehicleData.WheelsInertia));
 			tmp = AddComponent(tmp, clutch);
 			AddComponent(tmp, engine);
 			engine.IdleController.RequestPort = clutch.IdleControlPort;
@@ -117,7 +117,7 @@ namespace TUGraz.VectoCore.Tests.Models.SimulationComponent
 			var clutch = new Clutch(vehicleContainer, engineData, engine.IdleController);
 
 			dynamic tmp = AddComponent(driver, new Vehicle(vehicleContainer, vehicleData));
-			tmp = AddComponent(tmp, new Wheels(vehicleContainer, vehicleData.DynamicTyreRadius));
+			tmp = AddComponent(tmp, new Wheels(vehicleContainer, vehicleData.DynamicTyreRadius, vehicleData.WheelsInertia));
 			tmp = AddComponent(tmp, clutch);
 			AddComponent(tmp, engine);
 			engine.IdleController.RequestPort = clutch.IdleControlPort;
@@ -175,7 +175,7 @@ namespace TUGraz.VectoCore.Tests.Models.SimulationComponent
 			var driver = new Driver(vehicleContainer, driverData, new DefaultDriverStrategy());
 
 			dynamic tmp = AddComponent(driver, new Vehicle(vehicleContainer, vehicleData));
-			tmp = AddComponent(tmp, new Wheels(vehicleContainer, vehicleData.DynamicTyreRadius));
+			tmp = AddComponent(tmp, new Wheels(vehicleContainer, vehicleData.DynamicTyreRadius, vehicleData.WheelsInertia));
 			var engine = new CombustionEngine(vehicleContainer, engineData);
 			var clutch = new Clutch(vehicleContainer, engineData, engine.IdleController);
 			engine.IdleController.RequestPort = clutch.IdleControlPort;

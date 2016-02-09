@@ -241,6 +241,7 @@ namespace TUGraz.VectoCore.InputData.Reader.DataObjectAdaper
 			return retVal;
 		}
 
+
 		private void WarnDeclarationMode(string inputData)
 		{
 			Log.Warn("{0} not in Declaration Mode!", inputData);

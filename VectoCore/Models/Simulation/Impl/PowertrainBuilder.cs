@@ -62,14 +62,13 @@ namespace TUGraz.VectoCore.Models.Simulation.Impl
 			var container = new VehicleContainer(_modData, _sumWriter, ExecutionMode.EngineOnly);
 			var cycle = new PowertrainDrivingCycle(container, data.Cycle);
 
-			var directAux = new Auxiliary(container);
+			var directAux = new EngineAuxiliary(container);
 			directAux.AddDirect();
 
-			cycle.InPort().Connect(directAux.OutPort());
-
 			var engine = new EngineOnlyCombustionEngine(container, data.EngineData);
-			directAux.InPort().Connect(engine.OutPort());
+			engine.Connect(directAux.Port());
 
+			cycle.InPort().Connect(engine.OutPort());
 			return container;
 		}
 
@@ -109,9 +108,13 @@ namespace TUGraz.VectoCore.Models.Simulation.Impl
 			// gearbox --> clutch
 			tmp = AddComponent(tmp, clutch);
 
-			// clutch --> direct aux --> ... --> aux_XXX --> directAux
+			// clutch --> engine
+
+			AddComponent(tmp, engine);
+
+			// engine --> aux
 			if (data.Aux != null) {
-				var aux = new Auxiliary(container);
+				var aux = new EngineAuxiliary(container);
 				foreach (var auxData in data.Aux) {
 					switch (auxData.DemandType) {
 						case AuxiliaryDemandType.Constant:
@@ -126,11 +129,8 @@ namespace TUGraz.VectoCore.Models.Simulation.Impl
 					}
 					_modData.AddAuxiliary(auxData.ID);
 				}
-				tmp = AddComponent(tmp, aux);
+				engine.Connect(aux.Port());
 			}
-			// connect aux --> engine
-			AddComponent(tmp, engine);
-
 			engine.IdleController.RequestPort = clutch.IdleControlPort;
 
 			return container;
@@ -148,7 +148,8 @@ namespace TUGraz.VectoCore.Models.Simulation.Impl
 
 			var cycle = new MeasuredSpeedCycle(container, data.Cycle, (Gearbox)gearbox);
 			var vehicle = AddComponent(cycle, new Vehicle(container, data.VehicleData));
-			var wheels = AddComponent(vehicle, new Wheels(container, data.VehicleData.DynamicTyreRadius));
+			var wheels = AddComponent(vehicle,
+				new Wheels(container, data.VehicleData.DynamicTyreRadius, data.VehicleData.WheelsInertia));
 			var brakes = AddComponent(wheels, new Brakes(container));
 			var tmp = AddComponent(brakes, new AxleGear(container, data.AxleGearData));
 
@@ -180,7 +181,7 @@ namespace TUGraz.VectoCore.Models.Simulation.Impl
 
 			// clutch --> direct aux --> ... --> aux_XXX --> directAux
 			if (data.Aux != null) {
-				var aux = new Auxiliary(container);
+				var aux = new EngineAuxiliary(container);
 				foreach (var auxData in data.Aux) {
 					switch (auxData.DemandType) {
 						case AuxiliaryDemandType.Constant:
@@ -224,7 +225,8 @@ namespace TUGraz.VectoCore.Models.Simulation.Impl
 			// cycle --> driver --> vehicle --> wheels --> axleGear --> retarder --> gearBox
 			var driver = AddComponent(cycle, new Driver(container, data.DriverData, new DefaultDriverStrategy()));
 			var vehicle = AddComponent(driver, new Vehicle(container, data.VehicleData));
-			var wheels = AddComponent(vehicle, new Wheels(container, data.VehicleData.DynamicTyreRadius));
+			var wheels = AddComponent(vehicle,
+				new Wheels(container, data.VehicleData.DynamicTyreRadius, data.VehicleData.WheelsInertia));
 			var brakes = AddComponent(wheels, new Brakes(container));
 			var tmp = AddComponent(brakes, new AxleGear(container, data.AxleGearData));
 
@@ -253,10 +255,12 @@ namespace TUGraz.VectoCore.Models.Simulation.Impl
 			// gearbox --> clutch
 			tmp = AddComponent(tmp, clutch);
 
+			// clutch --> engine			
+			AddComponent(tmp, engine);
 
-			// clutch --> direct aux --> ... --> aux_XXX --> directAux
+			// connect aux --> engine
 			if (data.Aux != null) {
-				var aux = new Auxiliary(container);
+				var aux = new EngineAuxiliary(container);
 				foreach (var auxData in data.Aux) {
 					switch (auxData.DemandType) {
 						case AuxiliaryDemandType.Constant:
@@ -271,10 +275,8 @@ namespace TUGraz.VectoCore.Models.Simulation.Impl
 					}
 					_modData.AddAuxiliary(auxData.ID);
 				}
-				tmp = AddComponent(tmp, aux);
+				engine.Connect(aux.Port());
 			}
-			// connect aux --> engine
-			AddComponent(tmp, engine);
 
 			engine.IdleController.RequestPort = clutch.IdleControlPort;
 

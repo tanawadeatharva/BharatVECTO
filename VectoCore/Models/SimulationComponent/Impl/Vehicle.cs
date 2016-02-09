@@ -19,7 +19,6 @@
 using System;
 using TUGraz.VectoCore.Configuration;
 using TUGraz.VectoCore.Models.Connector.Ports;
-using TUGraz.VectoCore.Models.Declaration;
 using TUGraz.VectoCore.Models.Simulation;
 using TUGraz.VectoCore.Models.Simulation.Data;
 using TUGraz.VectoCore.Models.Simulation.DataBus;
@@ -43,12 +42,12 @@ namespace TUGraz.VectoCore.Models.SimulationComponent.Impl
 			_previousState = new VehicleState { Distance = 0.SI<Meter>(), Velocity = 0.SI<MeterPerSecond>() };
 			_currentState = new VehicleState { Distance = 0.SI<Meter>(), Velocity = 0.SI<MeterPerSecond>() };
 
-			var values = DeclarationData.AirDrag.Lookup(_data.VehicleCategory);
 			_airResistanceCurve = data.CrossWindCorrectionCurve;
 		}
 
 		public IResponse Initialize(MeterPerSecond vehicleSpeed, Radian roadGradient)
 		{
+			// ReSharper disable once UseObjectOrCollectionInitializer @@@ computation of AirDragResistance (below) needs VecicleSpeed!
 			_previousState = new VehicleState {
 				Distance = DataBus.CycleStartDistance,
 				Velocity = vehicleSpeed,
@@ -204,7 +203,7 @@ namespace TUGraz.VectoCore.Models.SimulationComponent.Impl
 
 		protected Newton DriverAcceleration(MeterPerSquareSecond accelleration)
 		{
-			var retVal = (_data.TotalVehicleWeight() + _data.ReducedMassWheels) * accelleration;
+			var retVal = _data.TotalVehicleWeight() * accelleration;
 			Log.Debug("DriverAcceleration: {0}", retVal);
 			return retVal;
 		}
