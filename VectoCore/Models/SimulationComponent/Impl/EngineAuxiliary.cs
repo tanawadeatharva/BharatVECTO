@@ -1,25 +1,6 @@
-/*
-* Copyright 2015, 2016 Graz University of Technology,
-* Institute of Internal Combustion Engines and Thermodynamics,
-* Institute of Technical Informatics
-*
-* Licensed under the EUPL (the "Licence");
-* You may not use this work except in compliance with the Licence.
-* You may obtain a copy of the Licence at:
-*
-* http://ec.europa.eu/idabc/eupl
-*
-* Unless required by applicable law or agreed to in writing, software 
-* distributed under the Licence is distributed on an "AS IS" basis,
-* WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
-* See the Licence for the specific language governing permissions and 
-* limitations under the Licence.
-*/
-
-using System;
+﻿using System;
 using System.Collections.Generic;
 using TUGraz.VectoCore.Exceptions;
-using TUGraz.VectoCore.Models.Connector.Ports;
 using TUGraz.VectoCore.Models.Simulation;
 using TUGraz.VectoCore.Models.Simulation.Data;
 using TUGraz.VectoCore.Models.SimulationComponent.Data;
@@ -28,55 +9,33 @@ using TUGraz.VectoCore.Utils;
 
 namespace TUGraz.VectoCore.Models.SimulationComponent.Impl
 {
-	public class Auxiliary : VectoSimulationComponent, IAuxiliary, ITnInPort, ITnOutPort
+	public class EngineAuxiliary : StatefulVectoSimulationComponent<EngineAuxiliary.EngineAuxState>, IEngineAuxInProvider,
+		IEngineAuxPort
 	{
 		public const string DirectAuxiliaryId = "";
 
 		private readonly Dictionary<string, Func<PerSecond, Watt>> _auxDict = new Dictionary<string, Func<PerSecond, Watt>>();
 		private readonly Dictionary<string, Watt> _powerDemands = new Dictionary<string, Watt>();
 
-		protected ITnOutPort NextComponent;
+		public EngineAuxiliary(IVehicleContainer container) : base(container) {}
 
-		public Auxiliary(IVehicleContainer container) : base(container) {}
-
-		#region ITnInProvider
-
-		public ITnInPort InPort()
+		public IEngineAuxPort Port()
 		{
 			return this;
 		}
 
-		#endregion
-
-		#region ITnOutProvider
-
-		public ITnOutPort OutPort()
+		public NewtonMeter PowerDemand(Second absTime, Second dt, NewtonMeter torque, PerSecond angularSpeed,
+			bool dryRun = false)
 		{
-			return this;
+			CurrentState.AngularSpeed = angularSpeed;
+			var avgAngularSpeed = (CurrentState.AngularSpeed + PreviousState.AngularSpeed) / 2.0;
+			return ComputePowerDemand(avgAngularSpeed) / avgAngularSpeed;
 		}
 
-		#endregion
-
-		#region ITnInPort
-
-		void ITnInPort.Connect(ITnOutPort other)
+		public NewtonMeter Initialize(NewtonMeter torque, PerSecond angularSpeed)
 		{
-			NextComponent = other;
-		}
-
-		#endregion
-
-		#region ITnOutPort
-
-		IResponse ITnOutPort.Request(Second absTime, Second dt, NewtonMeter torque, PerSecond angularVelocity, bool dryRun)
-		{
-			var currentAngularVelocity = angularVelocity ?? DataBus.EngineSpeed;
-			var powerDemand = ComputePowerDemand(currentAngularVelocity);
-
-			var retVal = NextComponent.Request(absTime, dt, torque + powerDemand / currentAngularVelocity, angularVelocity,
-				dryRun);
-			retVal.AuxiliariesPowerDemand = powerDemand;
-			return retVal;
+			PreviousState.AngularSpeed = angularSpeed;
+			return ComputePowerDemand(angularSpeed) / angularSpeed;
 		}
 
 		private Watt ComputePowerDemand(PerSecond engineSpeed)
@@ -92,16 +51,6 @@ namespace TUGraz.VectoCore.Models.SimulationComponent.Impl
 			return powerDemand;
 		}
 
-		public IResponse Initialize(NewtonMeter torque, PerSecond angularSpeed)
-		{
-			var powerDemand = ComputePowerDemand(angularSpeed);
-			return NextComponent.Initialize(torque + powerDemand / angularSpeed, angularSpeed);
-		}
-
-		#endregion
-
-		#region VectoSimulationComponent
-
 		protected override void DoWriteModalResults(IModalDataContainer container)
 		{
 			var sum = 0.SI<Watt>();
@@ -115,9 +64,10 @@ namespace TUGraz.VectoCore.Models.SimulationComponent.Impl
 			container[ModalResultField.Paux] = sum;
 		}
 
-		protected override void DoCommitSimulationStep() {}
-
-		#endregion
+		protected override void DoCommitSimulationStep()
+		{
+			AdvanceState();
+		}
 
 		public void AddConstant(string auxId, Watt powerDemand)
 		{
@@ -144,6 +94,11 @@ namespace TUGraz.VectoCore.Models.SimulationComponent.Impl
 				var powerAuxIn = data.GetPowerDemand(nAuxiliary, powerAuxOut);
 				return powerAuxIn / data.EfficiencyToEngine;
 			};
+		}
+
+		public class EngineAuxState
+		{
+			public PerSecond AngularSpeed;
 		}
 	}
 }
