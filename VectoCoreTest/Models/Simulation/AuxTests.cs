@@ -52,10 +52,8 @@ namespace TUGraz.VectoCore.Tests.Models.Simulation
 				(writer, mass, loading) => sumWriter.WriteFullPowertrain(modData, "", "", "", null, null));
 			var data = DrivingCycleDataReader.ReadFromFile(@"TestData\Cycles\LongHaul_short.vdri", CycleType.DistanceBased);
 			var mockcycle = new MockDrivingCycle(container, data);
-			var port = new MockTnOutPort();
 
-			var aux = new Auxiliary(container);
-			aux.InPort().Connect(port);
+			var aux = new EngineAuxiliary(container);
 
 			var hdvClass = VehicleClass.Class5;
 			var mission = MissionType.LongHaul;
@@ -74,8 +72,9 @@ namespace TUGraz.VectoCore.Tests.Models.Simulation
 			var t = 0.SI<Second>();
 			var dt = 1.SI<Second>();
 
+			aux.Initialize(torque, speed);
 			for (var i = 0; i < 11; i++) {
-				aux.OutPort().Request(t, dt, torque, speed);
+				aux.PowerDemand(t, dt, torque, speed);
 				modData[ModalResultField.dist] = i.SI<Meter>();
 				modData[ModalResultField.Pe_eng] = 0.SI<Watt>();
 				modData[ModalResultField.acc] = 0.SI<MeterPerSquareSecond>();
@@ -99,9 +98,8 @@ namespace TUGraz.VectoCore.Tests.Models.Simulation
 		{
 			var dataWriter = new MockModalDataContainer();
 			var container = new VehicleContainer(dataWriter);
-			var port = new MockTnOutPort();
-			var aux = new Auxiliary(container);
-			aux.InPort().Connect(port);
+			//var port = new MockTnOutPort();
+			var aux = new EngineAuxiliary(container);
 
 			var constPower = 1200.SI<Watt>();
 			aux.AddConstant("CONSTANT", constPower);
@@ -109,24 +107,22 @@ namespace TUGraz.VectoCore.Tests.Models.Simulation
 			var speed = 2358.RPMtoRad();
 			var torque = 500.SI<NewtonMeter>();
 			var t = 0.SI<Second>();
-			aux.OutPort().Request(t, t, torque, speed);
-			Assert.AreEqual(speed, port.AngularVelocity);
-			var newTorque = torque + constPower / speed;
-			AssertHelper.AreRelativeEqual(port.Torque, newTorque);
+
+			aux.Initialize(torque, speed);
+			var auxDemand = aux.PowerDemand(t, t, torque, speed);
+			AssertHelper.AreRelativeEqual(constPower / speed, auxDemand);
 
 			speed = 2358.RPMtoRad();
 			torque = 1500.SI<NewtonMeter>();
-			aux.OutPort().Request(t, t, torque, speed);
-			Assert.AreEqual(speed, port.AngularVelocity);
-			newTorque = torque + constPower / speed;
-			AssertHelper.AreRelativeEqual(port.Torque, newTorque);
+			aux.Initialize(torque, speed);
+			auxDemand = aux.PowerDemand(t, t, torque, speed);
+			AssertHelper.AreRelativeEqual(constPower / speed, auxDemand);
 
 			speed = 1500.RPMtoRad();
 			torque = 1500.SI<NewtonMeter>();
-			aux.OutPort().Request(t, t, torque, speed);
-			Assert.AreEqual(speed, port.AngularVelocity);
-			newTorque = torque + constPower / speed;
-			AssertHelper.AreRelativeEqual(port.Torque, newTorque);
+			aux.Initialize(torque, speed);
+			auxDemand = aux.PowerDemand(t, t, torque, speed);
+			AssertHelper.AreRelativeEqual(constPower / speed, auxDemand);
 		}
 
 		[TestMethod]
@@ -136,9 +132,8 @@ namespace TUGraz.VectoCore.Tests.Models.Simulation
 			var container = new VehicleContainer(dataWriter);
 			var data = DrivingCycleDataReader.ReadFromFile(@"TestData\Cycles\Coach time based short.vdri", CycleType.TimeBased);
 			var cycle = new MockDrivingCycle(container, data);
-			var port = new MockTnOutPort();
-			var aux = new Auxiliary(container);
-			aux.InPort().Connect(port);
+
+			var aux = new EngineAuxiliary(container);
 
 			aux.AddDirect();
 
@@ -149,11 +144,10 @@ namespace TUGraz.VectoCore.Tests.Models.Simulation
 
 			var expected = new[] { 6100, 3100, 2300, 4500, 6100 };
 			foreach (var e in expected) {
-				aux.OutPort().Request(t, t, torque, speed);
-				Assert.AreEqual(speed, port.AngularVelocity);
-				var newTorque = torque + e.SI<Watt>() / speed;
-				AssertHelper.AreRelativeEqual(port.Torque, newTorque);
+				aux.Initialize(torque, speed);
+				var auxDemand = aux.PowerDemand(t, t, torque, speed);
 
+				AssertHelper.AreRelativeEqual((e.SI<Watt>() / speed).Value(), auxDemand.Value());
 				cycle.CommitSimulationStep(null);
 			}
 		}
@@ -172,10 +166,8 @@ namespace TUGraz.VectoCore.Tests.Models.Simulation
 			// ALT1 in cycle file: 0, 0.3724 (=0.38*0.96), 0.4802 (=0.49*0.96), 0.6272 (0.64*0.96), ...
 
 			var cycle = new MockDrivingCycle(container, data);
-			var port = new MockTnOutPort();
 
-			var aux = new Auxiliary(container);
-			aux.InPort().Connect(port);
+			var aux = new EngineAuxiliary(container);
 
 			var auxData = AuxiliaryData.ReadFromFile(@"TestData\Components\24t_Coach_ALT.vaux");
 			// ratio = 4.078
@@ -208,10 +200,10 @@ namespace TUGraz.VectoCore.Tests.Models.Simulation
 			};
 
 			foreach (var e in expected) {
-				aux.OutPort().Request(t, t, torque, speed);
-				Assert.AreEqual(speed, port.AngularVelocity);
+				aux.Initialize(torque, speed);
+				var auxDemand = aux.PowerDemand(t, t, torque, speed);
 
-				AssertHelper.AreRelativeEqual(port.Torque, torque + e.SI<Watt>() / speed);
+				AssertHelper.AreRelativeEqual((e.SI<Watt>() / speed).Value(), auxDemand.Value());
 
 				cycle.CommitSimulationStep(null);
 			}
@@ -233,8 +225,7 @@ namespace TUGraz.VectoCore.Tests.Models.Simulation
 			var cycle = new MockDrivingCycle(container, data);
 			var port = new MockTnOutPort();
 
-			var aux = new Auxiliary(container);
-			aux.InPort().Connect(port);
+			var aux = new EngineAuxiliary(container);
 
 			var auxData = AuxiliaryData.ReadFromFile(@"TestData\Components\24t_Coach_ALT.vaux");
 			// ratio = 4.078
@@ -262,10 +253,10 @@ namespace TUGraz.VectoCore.Tests.Models.Simulation
 			};
 
 			foreach (var e in expected) {
-				aux.OutPort().Request(t, t, torque, speed);
-				Assert.AreEqual(speed, port.AngularVelocity);
+				aux.Initialize(torque, speed);
+				var auxDemand = aux.PowerDemand(t, t, torque, speed);
 
-				AssertHelper.AreRelativeEqual(port.Torque, torque + e.SI<Watt>() / speed);
+				AssertHelper.AreRelativeEqual((e.SI<Watt>() / speed).Value(), auxDemand);
 
 				cycle.CommitSimulationStep(null);
 			}
@@ -278,7 +269,7 @@ namespace TUGraz.VectoCore.Tests.Models.Simulation
 			var data = DrivingCycleDataReader.ReadFromFile(@"TestData\Cycles\Coach time based short.vdri", CycleType.TimeBased);
 			var cycle = new MockDrivingCycle(container, data);
 
-			var aux = new Auxiliary(container);
+			var aux = new EngineAuxiliary(container);
 			AssertHelper.Exception<VectoException>(() => aux.AddMapping("NONEXISTING_AUX", null),
 				"driving cycle does not contain column for auxiliary: NONEXISTING_AUX");
 		}
@@ -341,13 +332,7 @@ namespace TUGraz.VectoCore.Tests.Models.Simulation
 			var inputData = JSONInputDataFactory.ReadJsonJob(@"TestData\Jobs\40t_Long_Haul_Truck_wrong_AUX.vecto");
 			var runsFactory = new SimulatorFactory(ExecutionMode.Declaration, inputData, fileWriter);
 
-			jobContainer.AddRuns(runsFactory);
-			jobContainer.Execute();
-
-			ResultFileHelper.TestSumFile(@"TestData\Results\Declaration\40t_Long_Haul_Truck.vsum",
-				@"AuxReadJobFileDeclarationMode.vsum");
-
-			Assert.Inconclusive();
+			AssertHelper.Exception<VectoException>(() => jobContainer.AddRuns(runsFactory));
 		}
 	}
 }

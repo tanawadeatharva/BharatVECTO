@@ -37,7 +37,8 @@ namespace TUGraz.VectoCore.Models.SimulationComponent.Impl
 	/// <summary>
 	/// Component for a combustion engine.
 	/// </summary>
-	public class CombustionEngine : StatefulVectoSimulationComponent<CombustionEngine.EngineState>, ICombustionEngine, ITnOutPort
+	public class CombustionEngine : StatefulVectoSimulationComponent<CombustionEngine.EngineState>, ICombustionEngine,
+		ITnOutPort
 	{
 		public bool PT1Disabled { get; set; }
 
@@ -60,6 +61,8 @@ namespace TUGraz.VectoCore.Models.SimulationComponent.Impl
 		protected readonly Watt StationaryIdleFullLoadPower;
 
 		protected internal readonly CombustionEngineData Data;
+
+		protected IEngineAuxPort EngineAux;
 
 		public CombustionEngine(IVehicleContainer cockpit, CombustionEngineData data, bool pt1Disabled = false)
 			: base(cockpit)
@@ -119,8 +122,9 @@ namespace TUGraz.VectoCore.Models.SimulationComponent.Impl
 
 		IResponse ITnOutPort.Request(Second absTime, Second dt, NewtonMeter torque, PerSecond angularVelocity, bool dryRun)
 		{
-			Log.Debug("Engine Power Request: torque: {0}, angularVelocity: {1}, power: {2}", torque, angularVelocity,
+			Log.Debug("Engine Powertrain Power Request: torque: {0}, angularVelocity: {1}, power: {2}", torque, angularVelocity,
 				torque * angularVelocity);
+
 			return DoHandleRequest(absTime, dt, torque, angularVelocity, dryRun);
 		}
 
@@ -132,7 +136,11 @@ namespace TUGraz.VectoCore.Models.SimulationComponent.Impl
 				angularVelocity = PreviousState.EngineSpeed;
 			}
 
-			var requestedEnginePower = ComputeRequestedEnginePower(absTime, dt, torque, angularVelocity);
+			var auxPowerDemand = EngineAux == null
+				? 0.SI<NewtonMeter>()
+				: EngineAux.PowerDemand(absTime, dt, torque, angularVelocity, dryRun);
+
+			var requestedEnginePower = ComputeRequestedEnginePower(absTime, dt, torque + auxPowerDemand, angularVelocity);
 
 			ComputeFullLoadPower(angularVelocity, dt);
 
@@ -206,6 +214,7 @@ namespace TUGraz.VectoCore.Models.SimulationComponent.Impl
 
 		public IResponse Initialize(NewtonMeter torque, PerSecond angularSpeed)
 		{
+			var auxDemand = EngineAux == null ? 0.SI<NewtonMeter>() : EngineAux.Initialize(torque, angularSpeed);
 			PreviousState = new EngineState {
 				EngineSpeed = angularSpeed,
 				dt = 1.SI<Second>(),
@@ -213,8 +222,8 @@ namespace TUGraz.VectoCore.Models.SimulationComponent.Impl
 				StationaryFullLoadTorque =
 					Data.FullLoadCurve.FullLoadStationaryTorque(angularSpeed),
 				FullDragTorque = Data.FullLoadCurve.DragLoadStationaryTorque(angularSpeed),
-				EngineTorque = torque,
-				EnginePower = torque * angularSpeed,
+				EngineTorque = torque + auxDemand,
+				EnginePower = (torque + auxDemand) * angularSpeed,
 			};
 			PreviousState.StationaryFullLoadPower = PreviousState.StationaryFullLoadTorque * angularSpeed;
 			PreviousState.DynamicFullLoadTorque = PreviousState.StationaryFullLoadTorque;
@@ -286,7 +295,7 @@ namespace TUGraz.VectoCore.Models.SimulationComponent.Impl
 			if (curve != null) {
 				var gearboxFullLoad = curve.FullLoadStationaryTorque(CurrentState.EngineSpeed) * CurrentState.EngineSpeed;
 				// var gearboxDragLoad = curve.DragLoadStationaryTorque(CurrentState.EngineSpeed) * CurrentState.EngineSpeed;
-                requestedEnginePower = VectoMath.Limit(requestedEnginePower, -gearboxFullLoad, gearboxFullLoad);
+				requestedEnginePower = VectoMath.Limit(requestedEnginePower, -gearboxFullLoad, gearboxFullLoad);
 			}
 
 			return VectoMath.Limit(requestedEnginePower, CurrentState.FullDragPower, CurrentState.DynamicFullLoadPower);
@@ -450,6 +459,11 @@ namespace TUGraz.VectoCore.Models.SimulationComponent.Impl
 				hashCode = (hashCode * 397) ^ (CurrentState != null ? CurrentState.GetHashCode() : 0);
 				return hashCode;
 			}
+		}
+
+		public void Connect(IEngineAuxPort aux)
+		{
+			EngineAux = aux;
 		}
 
 		#endregion

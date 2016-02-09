@@ -78,10 +78,10 @@ namespace TUGraz.VectoCore.Tests.Integration
 				new Gearbox(container, gearboxData, new AMTShiftStrategy(gearboxData, container)));
 			tmp = Port.AddComponent(tmp, clutch);
 
-			var aux = new Auxiliary(container);
+			var aux = new EngineAuxiliary(container);
 			aux.AddConstant("", 0.SI<Watt>());
 
-			tmp = Port.AddComponent(tmp, aux);
+			engine.Connect(aux.Port());
 
 			Port.AddComponent(tmp, engine);
 
