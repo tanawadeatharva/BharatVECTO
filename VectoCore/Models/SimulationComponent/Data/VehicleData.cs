@@ -54,7 +54,8 @@ namespace TUGraz.VectoCore.Models.SimulationComponent.Data
 		public Kilogram Loading { get; internal set; }
 		public Kilogram GrossVehicleMassRating { get; internal set; }
 		public Meter DynamicTyreRadius { get; internal set; }
-		public Kilogram ReducedMassWheels { get; private set; }
+		public KilogramSquareMeter WheelsInertia { get; internal set; }
+		// public Kilogram ReducedMassWheels { get; private set; }
 		public string Rim { get; internal set; }
 		public double TotalRollResistanceCoefficient { get; private set; }
 
@@ -86,7 +87,7 @@ namespace TUGraz.VectoCore.Models.SimulationComponent.Data
 			}
 
 			var RRC = 0.0;
-			var mRed0 = 0.SI<Kilogram>();
+			var wheelsInertia = 0.SI<KilogramSquareMeter>();
 			foreach (var axle in _axleData) {
 				var nrWheels = axle.TwinTyres ? 4 : 2;
 				RRC += axle.AxleWeightShare * axle.RollResistanceCoefficient *
@@ -94,10 +95,10 @@ namespace TUGraz.VectoCore.Models.SimulationComponent.Data
 							(axle.AxleWeightShare * TotalVehicleWeight() * Physics.GravityAccelleration /
 							axle.TyreTestLoad /
 							nrWheels).Value(), Physics.RollResistanceExponent - 1);
-				mRed0 += nrWheels * (axle.Inertia / DynamicTyreRadius / DynamicTyreRadius).Cast<Kilogram>();
+				wheelsInertia += nrWheels * axle.Inertia;
 			}
 			TotalRollResistanceCoefficient = RRC;
-			ReducedMassWheels = mRed0;
+			WheelsInertia = wheelsInertia;
 		}
 	}
 }

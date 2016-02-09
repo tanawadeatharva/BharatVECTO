@@ -17,6 +17,7 @@
 */
 
 using System;
+using NLog.Fluent;
 using TUGraz.VectoCore.Models.Connector.Ports;
 using TUGraz.VectoCore.Models.Simulation;
 using TUGraz.VectoCore.Models.Simulation.Data;
@@ -28,14 +29,17 @@ namespace TUGraz.VectoCore.Models.SimulationComponent.Impl
 	public class Wheels : VectoSimulationComponent, IWheels, IFvOutPort, ITnInPort
 	{
 		protected ITnOutPort NextComponent;
+
 		private readonly Meter _dynamicWheelRadius;
+		private readonly KilogramSquareMeter _totalWheelsInertia;
 
 		protected Watt WheelsPowerRequest { get; set; }
 
-		public Wheels(IVehicleContainer cockpit, Meter rdyn)
+		public Wheels(IVehicleContainer cockpit, Meter rdyn, KilogramSquareMeter totalWheelsInertia)
 			: base(cockpit)
 		{
 			_dynamicWheelRadius = rdyn;
+			_totalWheelsInertia = totalWheelsInertia;
 		}
 
 		#region IFvOutProvider
@@ -62,6 +66,7 @@ namespace TUGraz.VectoCore.Models.SimulationComponent.Impl
 		{
 			Log.Debug("request: force: {0}, velocity: {1}", force, velocity);
 			var torque = force * _dynamicWheelRadius;
+			var inertiaLoss = _totalWheelsInertia;
 			var angularVelocity = velocity / _dynamicWheelRadius;
 			WheelsPowerRequest = torque * angularVelocity;
 			var retVal = NextComponent.Request(absTime, dt, torque, angularVelocity, dryRun);
@@ -102,5 +107,10 @@ namespace TUGraz.VectoCore.Models.SimulationComponent.Impl
 		}
 
 		#endregion
+
+		public class WheelsState
+		{
+			public MeterPerSquareSecond AngularVelocity;
+		}
 	}
 }
