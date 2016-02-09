@@ -49,6 +49,7 @@ namespace TUGraz.VectoCore.Models.SimulationComponent.Impl
 
 		public IResponse Initialize(MeterPerSecond vehicleSpeed, Radian roadGradient)
 		{
+			// ReSharper disable once UseObjectOrCollectionInitializer @@@ computation of AirDragResistance (below) needs VecicleSpeed!
 			_previousState = new VehicleState {
 				Distance = DataBus.CycleStartDistance,
 				Velocity = vehicleSpeed,
@@ -211,7 +212,7 @@ namespace TUGraz.VectoCore.Models.SimulationComponent.Impl
 
 		protected Newton DriverAcceleration(MeterPerSquareSecond accelleration)
 		{
-			var retVal = ((_data.TotalVehicleWeight() + _data.ReducedMassWheels) * accelleration).Cast<Newton>();
+			var retVal = (_data.TotalVehicleWeight() * accelleration).Cast<Newton>();
 			Log.Debug("DriverAcceleration: {0}", retVal);
 			return retVal;
 		}

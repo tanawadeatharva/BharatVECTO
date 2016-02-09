@@ -38,7 +38,7 @@ namespace TUGraz.VectoCore.Tests.Models.SimulationComponent
 			//var reader = new EngineeringModeSimulationDataReader();
 			var vehicleData = MockSimulationDataFactory.CreateVehicleDataFromFile(VehicleDataFile);
 
-			IWheels wheels = new Wheels(container, vehicleData.DynamicTyreRadius);
+			IWheels wheels = new Wheels(container, vehicleData.DynamicTyreRadius, vehicleData.WheelsInertia);
 			var mockPort = new MockTnOutPort();
 
 			wheels.InPort().Connect(mockPort);
@@ -50,6 +50,8 @@ namespace TUGraz.VectoCore.Tests.Models.SimulationComponent
 
 			var force = 5000.SI<Newton>();
 			var velocity = 20.SI<MeterPerSecond>();
+
+			requestPort.Initialize(force, velocity);
 
 			var retVal = requestPort.Request(absTime, dt, force, velocity);
 
