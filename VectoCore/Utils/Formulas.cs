@@ -1,11 +1,13 @@
 /*
-* Copyright 2015 European Union
+* Copyright 2015, 2016 Graz University of Technology,
+* Institute of Internal Combustion Engines and Thermodynamics,
+* Institute of Technical Informatics
 *
 * Licensed under the EUPL (the "Licence");
 * You may not use this work except in compliance with the Licence.
 * You may obtain a copy of the Licence at:
 *
-* http://ec.europa.eu/idabc/eupl5
+* http://ec.europa.eu/idabc/eupl
 *
 * Unless required by applicable law or agreed to in writing, software 
 * distributed under the Licence is distributed on an "AS IS" basis,
@@ -52,7 +54,7 @@ namespace TUGraz.VectoCore.Utils
 		/// <summary>
 		/// Calculates power loss caused by inertia.
 		/// https://en.wikipedia.org/wiki/Angular_acceleration
-		/// alpha = delta_omega / dt
+		/// alpha = delta_omega / delta_t
 		/// tau = I * alpha
 		/// </summary>
 		/// <param name="currentOmega">The current omega (new angularSpeed).</param>
@@ -64,10 +66,11 @@ namespace TUGraz.VectoCore.Utils
 			Second dt)
 		{
 			var deltaOmega = currentOmega - previousOmega;
-			var avgOmega = (currentOmega + previousOmega) / 2;
-
+			
 			var alpha = deltaOmega / dt;
 			var torque = inertia * alpha;
+
+			var avgOmega = (currentOmega + previousOmega) / 2;
 			return (torque * avgOmega).Cast<Watt>();
 		}
 

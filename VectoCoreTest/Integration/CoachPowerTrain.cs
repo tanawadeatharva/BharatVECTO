@@ -1,11 +1,13 @@
 /*
-* Copyright 2015 European Union
+* Copyright 2015, 2016 Graz University of Technology,
+* Institute of Internal Combustion Engines and Thermodynamics,
+* Institute of Technical Informatics
 *
 * Licensed under the EUPL (the "Licence");
 * You may not use this work except in compliance with the Licence.
 * You may obtain a copy of the Licence at:
 *
-* http://ec.europa.eu/idabc/eupl5
+* http://ec.europa.eu/idabc/eupl
 *
 * Unless required by applicable law or agreed to in writing, software 
 * distributed under the Licence is distributed on an "AS IS" basis,
@@ -69,7 +71,7 @@ namespace TUGraz.VectoCore.Tests.Integration
 
 			dynamic tmp = Port.AddComponent(cycle, new Driver(container, driverData, new DefaultDriverStrategy()));
 			tmp = Port.AddComponent(tmp, new Vehicle(container, vehicleData));
-			tmp = Port.AddComponent(tmp, new Wheels(container, vehicleData.DynamicTyreRadius));
+			tmp = Port.AddComponent(tmp, new Wheels(container, vehicleData.DynamicTyreRadius, vehicleData.WheelsInertia));
 			tmp = Port.AddComponent(tmp, new Brakes(container));
 			tmp = Port.AddComponent(tmp, new AxleGear(container, axleGearData));
 			tmp = Port.AddComponent(tmp,
@@ -77,10 +79,10 @@ namespace TUGraz.VectoCore.Tests.Integration
 			tmp = Port.AddComponent(tmp, new DummyRetarder(container));
 			tmp = Port.AddComponent(tmp, clutch);
 
-			var aux = new Auxiliary(container);
+			var aux = new EngineAuxiliary(container);
 			aux.AddConstant("", 0.SI<Watt>());
 
-			tmp = Port.AddComponent(tmp, aux);
+			engine.Connect(aux.Port());
 
 			Port.AddComponent(tmp, engine);
 

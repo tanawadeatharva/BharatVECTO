@@ -1,11 +1,13 @@
 /*
-* Copyright 2015 European Union
+* Copyright 2015, 2016 Graz University of Technology,
+* Institute of Internal Combustion Engines and Thermodynamics,
+* Institute of Technical Informatics
 *
 * Licensed under the EUPL (the "Licence");
 * You may not use this work except in compliance with the Licence.
 * You may obtain a copy of the Licence at:
 *
-* http://ec.europa.eu/idabc/eupl5
+* http://ec.europa.eu/idabc/eupl
 *
 * Unless required by applicable law or agreed to in writing, software 
 * distributed under the Licence is distributed on an "AS IS" basis,
@@ -40,6 +42,8 @@ namespace TUGraz.VectoCore.Models.Simulation.Impl
 		internal IMileageCounter MilageCounter;
 
 		internal IClutchInfo Clutch;
+
+		internal IDrivingCycleInfo DrivingCycle;
 
 		internal IRoadLookAhead Road;
 
@@ -150,7 +154,7 @@ namespace TUGraz.VectoCore.Models.Simulation.Impl
 			ExecutionMode executionMode = ExecutionMode.Declaration)
 		{
 			ModData = modData;
-			WriteSumData = writeSumData ?? delegate {};
+			WriteSumData = writeSumData ?? delegate { };
 			ExecutionMode = executionMode;
 		}
 
@@ -170,50 +174,17 @@ namespace TUGraz.VectoCore.Models.Simulation.Impl
 		{
 			Components.Add(component);
 
-			var engine = component as IEngineInfo;
-			if (engine != null) {
-				Engine = engine;
-			}
-
-			var driver = component as IDriverInfo;
-			if (driver != null) {
-				Driver = driver;
-			}
-
-			var gearbox = component as IGearboxInfo;
-			if (gearbox != null) {
-				Gearbox = gearbox;
-			}
-
-			var vehicle = component as IVehicleInfo;
-			if (vehicle != null) {
-				Vehicle = vehicle;
-			}
-
-			var cycle = component as ISimulationOutPort;
-			if (cycle != null) {
-				Cycle = cycle;
-			}
-
-			var milage = component as IMileageCounter;
-			if (milage != null) {
-				MilageCounter = milage;
-			}
-
-			var breaks = component as IBrakes;
-			if (breaks != null) {
-				Brakes = breaks;
-			}
-
-			var road = component as IRoadLookAhead;
-			if (road != null) {
-				Road = road;
-			}
-
-			var clutch = component as IClutchInfo;
-			if (clutch != null) {
-				Clutch = clutch;
-			}
+			component.Switch()
+				.If<IEngineInfo>(c => Engine = c)
+				.If<IDriverInfo>(c => Driver = c)
+				.If<IGearboxInfo>(c => Gearbox = c)
+				.If<IVehicleInfo>(c => Vehicle = c)
+				.If<ISimulationOutPort>(c => Cycle = c)
+				.If<IMileageCounter>(c => MilageCounter = c)
+				.If<IBrakes>(c => Brakes = c)
+				.If<IRoadLookAhead>(c => Road = c)
+				.If<IClutchInfo>(c => Clutch = c)
+				.If<IDrivingCycleInfo>(c => DrivingCycle = c);
 		}
 
 
@@ -302,5 +273,10 @@ namespace TUGraz.VectoCore.Models.Simulation.Impl
 
 		public VectoRunData RunData { get; set; }
 		public ExecutionMode ExecutionMode { get; set; }
+
+		public CycleData CycleData
+		{
+			get { return DrivingCycle.CycleData; }
+		}
 	}
 }

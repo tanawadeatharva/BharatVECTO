@@ -1,4 +1,22 @@
-﻿using System;
+/*
+* Copyright 2015, 2016 Graz University of Technology,
+* Institute of Internal Combustion Engines and Thermodynamics,
+* Institute of Technical Informatics
+*
+* Licensed under the EUPL (the "Licence");
+* You may not use this work except in compliance with the Licence.
+* You may obtain a copy of the Licence at:
+*
+* http://ec.europa.eu/idabc/eupl
+*
+* Unless required by applicable law or agreed to in writing, software 
+* distributed under the Licence is distributed on an "AS IS" basis,
+* WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+* See the Licence for the specific language governing permissions and 
+* limitations under the Licence.
+*/
+
+using System;
 using System.Data;
 using System.IO;
 using System.Text;
@@ -34,22 +52,14 @@ namespace TUGraz.VectoCore.OutputData.FileIO
 
 		public string GetModDataFileName(string runName, string cycleName, string runSuffix)
 		{
-			//var modFilePattern = Path.Combine(_basePath,
-			//	runName.Replace(Constants.FileExtensions.VectoJobFile, "") + "_{0}{1}" +
-			//	Constants.FileExtensions.ModDataFile);
-			//var modFileName = string.Format(modFilePattern, cycleName, runSuffix ?? "");
-			var modFileName = new StringBuilder(runName);
-			if (!string.IsNullOrEmpty(cycleName) || !string.IsNullOrEmpty(runSuffix)) {
-				modFileName.Append("_");
-				if (!string.IsNullOrEmpty(cycleName)) {
-					modFileName.Append(cycleName);
-				}
-				if (!string.IsNullOrEmpty(runSuffix)) {
-					modFileName.Append(cycleName);
-				}
+			string modFileName;
+			if (!string.IsNullOrWhiteSpace(cycleName) || !string.IsNullOrWhiteSpace(runSuffix)) {
+				modFileName = string.Format("{0}_{1}{2}{3}", runName, cycleName, runSuffix, Constants.FileExtensions.ModDataFile);
+			} else {
+				modFileName = string.Format("{0}{1}", runName, Constants.FileExtensions.ModDataFile);
 			}
-			modFileName.Append(Constants.FileExtensions.ModDataFile);
-			return modFileName.ToString();
+
+			return Path.Combine(_basePath, modFileName);
 		}
 
 		public void WriteModData(string runName, string cycleName, string runSuffix, DataTable modData)

@@ -1,11 +1,13 @@
 /*
-* Copyright 2015 European Union
+* Copyright 2015, 2016 Graz University of Technology,
+* Institute of Internal Combustion Engines and Thermodynamics,
+* Institute of Technical Informatics
 *
 * Licensed under the EUPL (the "Licence");
 * You may not use this work except in compliance with the Licence.
 * You may obtain a copy of the Licence at:
 *
-* http://ec.europa.eu/idabc/eupl5
+* http://ec.europa.eu/idabc/eupl
 *
 * Unless required by applicable law or agreed to in writing, software 
 * distributed under the Licence is distributed on an "AS IS" basis,
@@ -15,7 +17,6 @@
 */
 
 using Microsoft.VisualStudio.TestTools.UnitTesting;
-using NLog;
 using TUGraz.VectoCore.Tests.Utils;
 
 namespace TUGraz.VectoCore.Tests.Integration.DriverStrategy
@@ -33,9 +34,8 @@ namespace TUGraz.VectoCore.Tests.Integration.DriverStrategy
 		[TestMethod]
 		public void TestGraph()
 		{
-			var imgV3 = @"..\..\..\VectoCoreTest\bin\Debug\Coach_DriverStrategy_Drive_50_slope_dec-inc.vmod";
-			var imgv22 =
-				@"..\..\..\VectoCoreTest\TestData\Integration\DriverStrategy\Vecto2.2\Coach\24t Coach_Cycle_Drive_50_Dec_Increasing_Slope.vmod";
+			var imgV3 = @"TestData\Results\Integration\Coach_DriverStrategy_Drive_50_slope_dec-inc.vmod";
+			var imgv22 = @"TestData\Integration\DriverStrategy\Vecto2.2\Coach\24t Coach_Cycle_Drive_50_Dec_Increasing_Slope.vmod";
 
 			GraphWriter.Write(imgV3, imgv22);
 		}
@@ -212,7 +212,7 @@ namespace TUGraz.VectoCore.Tests.Integration.DriverStrategy
 				@"..\..\TestData\Integration\DriverStrategy\Vecto2.2\Coach\24t Coach_Cycle_Accelerate_0_85_downhill_5.vmod");
 		}
 
-		[TestMethod]
+		[TestMethod, Ignore]
 		public void Coach_Accelerate_0_85_uphill_25()
 		{
 			var cycle = SimpleDrivingCycles.CreateCycleData(SimpleDrivingCycles.CycleAccelerate_0_85_uphill_25);

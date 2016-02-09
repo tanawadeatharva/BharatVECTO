@@ -1,11 +1,13 @@
 /*
-* Copyright 2015 European Union
+* Copyright 2015, 2016 Graz University of Technology,
+* Institute of Internal Combustion Engines and Thermodynamics,
+* Institute of Technical Informatics
 *
 * Licensed under the EUPL (the "Licence");
 * You may not use this work except in compliance with the Licence.
 * You may obtain a copy of the Licence at:
 *
-* http://ec.europa.eu/idabc/eupl5
+* http://ec.europa.eu/idabc/eupl
 *
 * Unless required by applicable law or agreed to in writing, software 
 * distributed under the Licence is distributed on an "AS IS" basis,
@@ -36,7 +38,7 @@ namespace TUGraz.VectoCore.Tests.Models.SimulationComponent
 			//var reader = new EngineeringModeSimulationDataReader();
 			var vehicleData = MockSimulationDataFactory.CreateVehicleDataFromFile(VehicleDataFile);
 
-			IWheels wheels = new Wheels(container, vehicleData.DynamicTyreRadius);
+			IWheels wheels = new Wheels(container, vehicleData.DynamicTyreRadius, vehicleData.WheelsInertia);
 			var mockPort = new MockTnOutPort();
 
 			wheels.InPort().Connect(mockPort);
@@ -48,6 +50,8 @@ namespace TUGraz.VectoCore.Tests.Models.SimulationComponent
 
 			var force = 5000.SI<Newton>();
 			var velocity = 20.SI<MeterPerSecond>();
+
+			requestPort.Initialize(force, velocity);
 
 			var retVal = requestPort.Request(absTime, dt, force, velocity);
 

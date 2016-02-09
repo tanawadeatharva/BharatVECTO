@@ -1,11 +1,13 @@
 /*
-* Copyright 2015 European Union
+* Copyright 2015, 2016 Graz University of Technology,
+* Institute of Internal Combustion Engines and Thermodynamics,
+* Institute of Technical Informatics
 *
 * Licensed under the EUPL (the "Licence");
 * You may not use this work except in compliance with the Licence.
 * You may obtain a copy of the Licence at:
 *
-* http://ec.europa.eu/idabc/eupl5
+* http://ec.europa.eu/idabc/eupl
 *
 * Unless required by applicable law or agreed to in writing, software 
 * distributed under the Licence is distributed on an "AS IS" basis,
@@ -42,7 +44,7 @@ namespace TUGraz.VectoCore.Tests.FileIO
 
 			Assert.AreEqual(false, runData.IsEngineOnly);
 
-			Assert.AreEqual(Path.GetFileName(DeclarationJob), runData.JobName);
+			Assert.AreEqual(Path.GetFileNameWithoutExtension(DeclarationJob), runData.JobName);
 			Assert.AreEqual(5850, runData.VehicleData.CurbWeight.Value());
 			Assert.AreEqual(1900, runData.VehicleData.CurbWeigthExtra.Value()); // taken from segmentation table
 			Assert.AreEqual(11900, runData.VehicleData.GrossVehicleMassRating.Value());

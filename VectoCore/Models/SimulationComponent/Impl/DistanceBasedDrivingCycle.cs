@@ -1,11 +1,13 @@
 /*
-* Copyright 2015 European Union
+* Copyright 2015, 2016 Graz University of Technology,
+* Institute of Internal Combustion Engines and Thermodynamics,
+* Institute of Technical Informatics
 *
 * Licensed under the EUPL (the "Licence");
 * You may not use this work except in compliance with the Licence.
 * You may obtain a copy of the Licence at:
 *
-* http://ec.europa.eu/idabc/eupl5
+* http://ec.europa.eu/idabc/eupl
 *
 * Unless required by applicable law or agreed to in writing, software 
 * distributed under the Licence is distributed on an "AS IS" basis,
@@ -210,12 +212,9 @@ namespace TUGraz.VectoCore.Models.SimulationComponent.Impl
 			return null;
 		}
 
-		/// <summary>
-		/// time request not implemented in distance based driving cycle (method <see cref="DriveTimeInterval"/> is used).
-		/// </summary>
 		IResponse ISimulationOutPort.Request(Second absTime, Second dt)
 		{
-			throw new NotImplementedException();
+			throw new NotImplementedException("Distance Based Driving Cycle does not support time requests.");
 		}
 
 		IResponse ISimulationOutPort.Initialize()
@@ -329,14 +328,17 @@ namespace TUGraz.VectoCore.Models.SimulationComponent.Impl
 			return LookAhead((LookaheadTimeSafetyMargin * DataBus.VehicleSpeed * time).Cast<Meter>());
 		}
 
-		public CycleData CycleData()
+		public CycleData CycleData
 		{
-			return new CycleData {
-				AbsTime = CurrentState.AbsTime,
-				AbsDistance = CurrentState.Distance,
-				LeftSample = CycleIntervalIterator.LeftSample,
-				RightSample = CycleIntervalIterator.RightSample
-			};
+			get
+			{
+				return new CycleData {
+					AbsTime = CurrentState.AbsTime,
+					AbsDistance = CurrentState.Distance,
+					LeftSample = CycleIntervalIterator.LeftSample,
+					RightSample = CycleIntervalIterator.RightSample
+				};
+			}
 		}
 
 		public class DrivingCycleEnumerator : IEnumerator<DrivingCycleData.DrivingCycleEntry>

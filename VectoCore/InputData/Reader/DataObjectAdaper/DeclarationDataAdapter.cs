@@ -1,11 +1,13 @@
 /*
-* Copyright 2015 European Union
+* Copyright 2015, 2016 Graz University of Technology,
+* Institute of Internal Combustion Engines and Thermodynamics,
+* Institute of Technical Informatics
 *
 * Licensed under the EUPL (the "Licence");
 * You may not use this work except in compliance with the Licence.
 * You may obtain a copy of the Licence at:
 *
-* http://ec.europa.eu/idabc/eupl5
+* http://ec.europa.eu/idabc/eupl
 *
 * Unless required by applicable law or agreed to in writing, software 
 * distributed under the Licence is distributed on an "AS IS" basis,
@@ -25,6 +27,7 @@ using TUGraz.VectoCore.Models.Simulation.Data;
 using TUGraz.VectoCore.Models.SimulationComponent.Data;
 using TUGraz.VectoCore.Models.SimulationComponent.Data.Engine;
 using TUGraz.VectoCore.Models.SimulationComponent.Data.Gearbox;
+using TUGraz.VectoCore.OutputData;
 using TUGraz.VectoCore.Utils;
 
 namespace TUGraz.VectoCore.InputData.Reader.DataObjectAdaper
@@ -191,10 +194,24 @@ namespace TUGraz.VectoCore.InputData.Reader.DataObjectAdaper
 				WarnDeclarationMode("AuxiliariesData");
 			}
 			var retVal = new List<VectoRunData.AuxData>();
-			foreach (var auxData in auxInputData.Auxiliaries) {
-				var aux = new VectoRunData.AuxData { DemandType = AuxiliaryDemandType.Constant };
-				aux.Technology = auxData.Technology;
-				switch (AuxiliaryTypeHelper.Parse(auxData.Type)) {
+
+			if (auxInputData.Auxiliaries.Count != 5) {
+				Log.Error(
+					"In Declaration Mode exactly 5 Auxiliaries must be defined: Fan, Steering pump, HVAC, Electric System, Pneumatic System.");
+				throw new VectoException(
+					"In Declaration Mode exactly 5 Auxiliaries must be defined: Fan, Steering pump, HVAC, Electric System, Pneumatic System.");
+			}
+
+			foreach (var auxType in EnumHelper.GetValues<AuxiliaryType>()) {
+				var auxData = auxInputData.Auxiliaries.FirstOrDefault(a => AuxiliaryTypeHelper.Parse(a.Type) == auxType);
+				if (auxData == null) {
+					throw new VectoException("Auxiliary {0} not found.", auxType);
+				}
+				var aux = new VectoRunData.AuxData {
+					DemandType = AuxiliaryDemandType.Constant,
+					Technology = auxData.Technology
+				};
+				switch (auxType) {
 					case AuxiliaryType.Fan:
 						aux.PowerDemand = DeclarationData.Fan.Lookup(mission, auxData.Technology);
 						aux.ID = Constants.Auxiliaries.IDs.Fan;
@@ -212,9 +229,10 @@ namespace TUGraz.VectoCore.InputData.Reader.DataObjectAdaper
 						aux.ID = Constants.Auxiliaries.IDs.PneumaticSystem;
 						break;
 					case AuxiliaryType.ElectricSystem:
-						aux.PowerDemand = DeclarationData.ElectricSystem.Lookup(mission, auxData.TechList.ToArray());
+						aux.PowerDemand = DeclarationData.ElectricSystem.Lookup(mission,
+							auxData.TechList.DefaultIfNull(Enumerable.Empty<string>()).ToArray());
 						aux.ID = Constants.Auxiliaries.IDs.ElectricSystem;
-						aux.TechList = auxData.TechList.ToArray();
+						aux.TechList = auxData.TechList.DefaultIfNull(Enumerable.Empty<string>()).ToArray();
 						break;
 					default:
 						continue;
@@ -223,6 +241,7 @@ namespace TUGraz.VectoCore.InputData.Reader.DataObjectAdaper
 			}
 			return retVal;
 		}
+
 
 		private void WarnDeclarationMode(string inputData)
 		{

@@ -1,0 +1,20 @@
+﻿{
+  "Header": {
+    "CreatedBy": "TUG ITI (59f3bd5f-1e50-474f-928a-435968d769f6)",
+    "Date": "23.11.2015 10:25:59",
+    "AppVersion": "2.2",
+    "FileVersion": 3
+  },
+  "Body": {
+    "SavedInDeclMode": false,
+    "ModelName": "OM906 175 kW",
+    "Displacement": 6374.0,
+    "IdlingSpeed": 600.0,
+    "Inertia": 2.13098,
+    "FullLoadCurve": "o9061750850E4.vfld",
+    "FuelMap": "om9062101120_e4e5_b7c_sl2499_20110727.vmap",
+    "WHTC-Urban": 0.0,
+    "WHTC-Rural": 0.0,
+    "WHTC-Motorway": 0.0
+  }
+}

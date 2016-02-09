@@ -1,11 +1,13 @@
 /*
-* Copyright 2015 European Union
+* Copyright 2015, 2016 Graz University of Technology,
+* Institute of Internal Combustion Engines and Thermodynamics,
+* Institute of Technical Informatics
 *
 * Licensed under the EUPL (the "Licence");
 * You may not use this work except in compliance with the Licence.
 * You may obtain a copy of the Licence at:
 *
-* http://ec.europa.eu/idabc/eupl5
+* http://ec.europa.eu/idabc/eupl
 *
 * Unless required by applicable law or agreed to in writing, software 
 * distributed under the Licence is distributed on an "AS IS" basis,
@@ -16,7 +18,6 @@
 
 using System;
 using TUGraz.VectoCore.Models.Simulation;
-using TUGraz.VectoCore.Models.Simulation.Data;
 using TUGraz.VectoCore.Models.Simulation.DataBus;
 using TUGraz.VectoCore.Models.Simulation.Impl;
 using TUGraz.VectoCore.OutputData;
@@ -57,6 +58,27 @@ namespace TUGraz.VectoCore.Models.SimulationComponent
 		/// Commits the internal state of the object if needed.
 		/// </summary>
 		protected abstract void DoCommitSimulationStep();
+
+	}
+
+	public abstract class StatefulVectoSimulationComponent<TStateType> : VectoSimulationComponent where TStateType : new()
+	{
+
+		protected internal TStateType CurrentState;
+		protected internal TStateType PreviousState;
+
+		protected StatefulVectoSimulationComponent(IVehicleContainer contaier)
+			: base(contaier)
+		{
+			CurrentState = new TStateType();
+			PreviousState = new TStateType();
+		}
+
+		protected void AdvanceState()
+		{
+			PreviousState = CurrentState;
+			CurrentState = new TStateType();
+		}
 	}
 
 	public abstract class StatefulVectoSimulationComponent<TStateType> : VectoSimulationComponent where TStateType : new()

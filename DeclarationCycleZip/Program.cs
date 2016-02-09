@@ -1,11 +1,13 @@
 /*
-* Copyright 2015 European Union
+* Copyright 2015, 2016 Graz University of Technology,
+* Institute of Internal Combustion Engines and Thermodynamics,
+* Institute of Technical Informatics
 *
 * Licensed under the EUPL (the "Licence");
 * You may not use this work except in compliance with the Licence.
 * You may obtain a copy of the Licence at:
 *
-* http://ec.europa.eu/idabc/eupl5
+* http://ec.europa.eu/idabc/eupl
 *
 * Unless required by applicable law or agreed to in writing, software 
 * distributed under the Licence is distributed on an "AS IS" basis,
@@ -19,6 +21,7 @@ using System.Globalization;
 using System.IO;
 using System.Linq;
 using TUGraz.VectoCore.InputData.Reader;
+using TUGraz.VectoCore.Models.SimulationComponent.Data;
 using TUGraz.VectoCore.Utils;
 
 namespace DeclarationCycleZip
@@ -27,7 +30,7 @@ namespace DeclarationCycleZip
 	{
 		private static void Main(string[] args)
 		{
-			var cycleData = DrivingCycleDataReader.ReadFromFileDistanceBased(args[0]);
+			var cycleData = DrivingCycleDataReader.ReadFromFile(args[0], CycleType.DistanceBased);
 
 			var table = new DataTable();
 			table.Columns.Add("<s>");

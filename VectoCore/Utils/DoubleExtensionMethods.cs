@@ -1,11 +1,13 @@
 /*
-* Copyright 2015 European Union
+* Copyright 2015, 2016 Graz University of Technology,
+* Institute of Internal Combustion Engines and Thermodynamics,
+* Institute of Technical Informatics
 *
 * Licensed under the EUPL (the "Licence");
 * You may not use this work except in compliance with the Licence.
 * You may obtain a copy of the Licence at:
 *
-* http://ec.europa.eu/idabc/eupl5
+* http://ec.europa.eu/idabc/eupl
 *
 * Unless required by applicable law or agreed to in writing, software 
 * distributed under the Licence is distributed on an "AS IS" basis,
@@ -118,18 +120,16 @@ namespace TUGraz.VectoCore.Utils
 		public static PerSecond RPMtoRad(this double self)
 		{
 			return SI<PerSecond>(self * 2 * Math.PI / 60.0);
-			//self.SI().Rounds.Per.Minute.ConvertTo().Radian.Per.Second.Cast<PerSecond>();
 		}
 
 		public static MeterPerSecond KMPHtoMeterPerSecond(this double self)
 		{
 			return SI<MeterPerSecond>(self / 3.6);
-			//return self.SI().Kilo.Meter.Per.Hour.Cast<MeterPerSecond>();
 		}
 
-		public static double ToRadian(this double self)
+		public static PerSecond RadToRPM(this double self)
 		{
-			return self * Math.PI / 180.0;
+			return SI<PerSecond>(self * 60.0 / (2 * Math.PI));
 		}
 
 		public static double ToDegree(this double self)

@@ -168,9 +168,11 @@
     <Compile Include="Models\SimulationComponent\IDriverActions.cs" />
     <Compile Include="Models\SimulationComponent\IDriverStrategy.cs" />
     <Compile Include="Models\SimulationComponent\IDrivingCycleInfo.cs" />
+    <Compile Include="Models\SimulationComponent\IEngineAuxPort.cs" />
     <Compile Include="Models\SimulationComponent\Impl\Brakes.cs" />
     <Compile Include="Models\SimulationComponent\Impl\DefaultDriverStrategy.cs" />
     <Compile Include="Models\SimulationComponent\Impl\DummyRetarder.cs" />
+    <Compile Include="Models\SimulationComponent\Impl\EngineAuxiliary.cs" />
     <Compile Include="Models\SimulationComponent\Impl\EngineOnlyCombustionEngine.cs" />
     <Compile Include="Models\SimulationComponent\IShiftStrategy.cs" />
     <Compile Include="Models\SimulationComponent\Impl\ShiftStrategy.cs" />
@@ -224,7 +226,7 @@
     <Compile Include="Models\Declaration\VehicleCategory.cs" />
     <Compile Include="Models\SimulationComponent\Data\VehicleData.cs" />
     <Compile Include="Models\SimulationComponent\IClutch.cs" />
-    <Compile Include="Models\SimulationComponent\IEngineOnlyDrivingCycle.cs" />
+    <Compile Include="Models\SimulationComponent\IPowertrainSimulation.cs" />
     <Compile Include="Models\SimulationComponent\IDrivingCycle.cs" />
     <Compile Include="Models\SimulationComponent\IDriver.cs" />
     <Compile Include="Models\SimulationComponent\Impl\Vehicle.cs" />
@@ -246,15 +248,14 @@
     <Compile Include="Models\SimulationComponent\IGearbox.cs" />
     <Compile Include="Models\Connector\Ports\ISimulationPort.cs" />
     <Compile Include="Models\SimulationComponent\Impl\DistanceBasedDrivingCycle.cs" />
-    <Compile Include="Models\SimulationComponent\Impl\Auxiliary.cs" />
     <Compile Include="Models\SimulationComponent\Impl\TimeBasedDrivingCycle.cs" />
     <Compile Include="Models\SimulationComponent\Impl\CombustionEngine.cs" />
-    <Compile Include="Models\SimulationComponent\Impl\EngineOnlyGearbox.cs" />
+    <Compile Include="Models\SimulationComponent\Impl\ManualGearbox.cs" />
     <Compile Include="Models\SimulationComponent\Impl\Gearbox.cs" />
     <Compile Include="Models\SimulationComponent\Impl\Wheels.cs" />
     <Compile Include="Models\SimulationComponent\IWheels.cs" />
     <Compile Include="Models\SimulationComponent\VectoSimulationComponent.cs" />
-    <Compile Include="Models\SimulationComponent\Impl\EngineOnlyDrivingCycle.cs" />
+    <Compile Include="Models\SimulationComponent\Impl\PowertrainDrivingCycle.cs" />
     <Compile Include="Models\Simulation\Data\ModalResult.cs">
       <SubType>Component</SubType>
     </Compile>

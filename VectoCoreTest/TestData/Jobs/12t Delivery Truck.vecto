@@ -20,32 +20,32 @@
         "ID": "FAN",
         "Type": "Fan",
         "Path": "<NOFILE>",
-        "Technology": ""
+        "Technology": "Belt driven or driven via transm. - Discrete step clutch"
       },
       {
         "ID": "STP",
         "Type": "Steering pump",
         "Path": "<NOFILE>",
-        "Technology": ""
+        "Technology": "Variable displacement"
       },
       {
         "ID": "AC",
         "Type": "HVAC",
         "Path": "<NOFILE>",
-        "Technology": ""
+        "Technology": "Default"
       },
       {
         "ID": "ES",
         "Type": "Electric System",
         "Path": "<NOFILE>",
-        "Technology": "",
+        "Technology": "Custom Technology List",
         "TechList": []
       },
       {
         "ID": "PS",
         "Type": "Pneumatic System",
         "Path": "<NOFILE>",
-        "Technology": ""
+        "Technology": "Default"
       }
     ],
     "VACC": "<NOFILE>",

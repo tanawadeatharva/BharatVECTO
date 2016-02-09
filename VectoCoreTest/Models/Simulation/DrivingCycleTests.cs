@@ -1,11 +1,13 @@
 /*
-* Copyright 2015 European Union
+* Copyright 2015, 2016 Graz University of Technology,
+* Institute of Internal Combustion Engines and Thermodynamics,
+* Institute of Technical Informatics
 *
 * Licensed under the EUPL (the "Licence");
 * You may not use this work except in compliance with the Licence.
 * You may obtain a copy of the Licence at:
 *
-* http://ec.europa.eu/idabc/eupl5
+* http://ec.europa.eu/idabc/eupl
 *
 * Unless required by applicable law or agreed to in writing, software 
 * distributed under the Licence is distributed on an "AS IS" basis,
@@ -35,8 +37,8 @@ namespace TUGraz.VectoCore.Tests.Models.Simulation
 			var dataWriter = new MockModalDataContainer();
 			var container = new VehicleContainer(dataWriter);
 
-			var cycleData = DrivingCycleDataReader.ReadFromFileEngineOnly(@"TestData\Cycles\Coach Engine Only.vdri");
-			var cycle = new EngineOnlyDrivingCycle(container, cycleData);
+			var cycleData = DrivingCycleDataReader.ReadFromFile(@"TestData\Cycles\Coach Engine Only.vdri", CycleType.EngineOnly);
+			var cycle = new PowertrainDrivingCycle(container, cycleData);
 
 			var outPort = new MockTnOutPort();
 			var inPort = cycle.InPort();
@@ -65,8 +67,9 @@ namespace TUGraz.VectoCore.Tests.Models.Simulation
 		{
 			var container = new VehicleContainer();
 
-			var cycleData = DrivingCycleDataReader.ReadFromFileEngineOnly(@"TestData\Cycles\Coach Engine Only Paux_var-dt.vdri");
-			var cycle = new EngineOnlyDrivingCycle(container, cycleData);
+			var cycleData = DrivingCycleDataReader.ReadFromFile(@"TestData\Cycles\Coach Engine Only Paux_var-dt.vdri",
+				CycleType.EngineOnly);
+			var cycle = new PowertrainDrivingCycle(container, cycleData);
 
 			var outPort = new MockTnOutPort();
 			var inPort = cycle.InPort();
@@ -124,7 +127,8 @@ namespace TUGraz.VectoCore.Tests.Models.Simulation
 		{
 			var container = new VehicleContainer();
 
-			var cycleData = DrivingCycleDataReader.ReadFromFileTimeBased(@"TestData\Cycles\Coach First Cycle only.vdri");
+			var cycleData = DrivingCycleDataReader.ReadFromFile(@"TestData\Cycles\Coach First Cycle only.vdri",
+				CycleType.TimeBased);
 			var cycle = new TimeBasedDrivingCycle(container, cycleData);
 
 			var outPort = new MockDrivingCycleOutPort();
@@ -150,7 +154,8 @@ namespace TUGraz.VectoCore.Tests.Models.Simulation
 		{
 			var container = new VehicleContainer(new MockModalDataContainer());
 
-			var cycleData = DrivingCycleDataReader.ReadFromFileTimeBased(@"TestData\Cycles\Cycle time field missing.vdri");
+			var cycleData = DrivingCycleDataReader.ReadFromFile(@"TestData\Cycles\Cycle time field missing.vdri",
+				CycleType.TimeBased);
 			var cycle = new TimeBasedDrivingCycle(container, cycleData);
 
 			var outPort = new MockDrivingCycleOutPort();

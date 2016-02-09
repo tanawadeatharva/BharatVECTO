@@ -1,11 +1,13 @@
 /*
-* Copyright 2015 European Union
+* Copyright 2015, 2016 Graz University of Technology,
+* Institute of Internal Combustion Engines and Thermodynamics,
+* Institute of Technical Informatics
 *
 * Licensed under the EUPL (the "Licence");
 * You may not use this work except in compliance with the Licence.
 * You may obtain a copy of the Licence at:
 *
-* http://ec.europa.eu/idabc/eupl5
+* http://ec.europa.eu/idabc/eupl
 *
 * Unless required by applicable law or agreed to in writing, software 
 * distributed under the Licence is distributed on an "AS IS" basis,
@@ -14,9 +16,7 @@
 * limitations under the Licence.
 */
 
-using System;
 using System.Linq;
-using TUGraz.VectoCore.Models.SimulationComponent;
 using TUGraz.VectoCore.Utils;
 
 namespace TUGraz.VectoCore.Models.Connector.Ports.Impl
@@ -44,6 +44,8 @@ namespace TUGraz.VectoCore.Models.Connector.Ports.Impl
 		public Watt VehiclePowerRequest { get; set; }
 
 		public Watt BrakePower { get; set; }
+
+		public Second AbsTime { get; set; }
 
 		public object Source { get; set; }
 
@@ -79,7 +81,9 @@ namespace TUGraz.VectoCore.Models.Connector.Ports.Impl
 	/// </summary>
 	public class ResponseUnderload : ResponseOverload {}
 
-
+	/// <summary>
+	/// Response when the Speed Limit was exceeded.
+	/// </summary>
 	public class ResponseSpeedLimitExceeded : AbstractResponse {}
 
 	/// <summary>
@@ -92,7 +96,6 @@ namespace TUGraz.VectoCore.Models.Connector.Ports.Impl
 
 	public class ResponseDrivingCycleDistanceExceeded : AbstractResponse
 	{
-		public ResponseDrivingCycleDistanceExceeded() {}
 		public Meter MaxDistance { get; set; }
 	}
 

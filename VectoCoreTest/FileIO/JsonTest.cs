@@ -1,11 +1,13 @@
 /*
-* Copyright 2015 European Union
+* Copyright 2015, 2016 Graz University of Technology,
+* Institute of Internal Combustion Engines and Thermodynamics,
+* Institute of Technical Informatics
 *
 * Licensed under the EUPL (the "Licence");
 * You may not use this work except in compliance with the Licence.
 * You may obtain a copy of the Licence at:
 *
-* http://ec.europa.eu/idabc/eupl5
+* http://ec.europa.eu/idabc/eupl
 *
 * Unless required by applicable law or agreed to in writing, software 
 * distributed under the Licence is distributed on an "AS IS" basis,
@@ -86,9 +88,9 @@ namespace TUGraz.VectoCore.Tests.FileIO
 			var json = (JObject)JToken.ReadFrom(new JsonTextReader(File.OpenText(TestJobFile)));
 			((JObject)json["Body"]).Property("Aux").Remove();
 
-			AssertHelper.Exception<InvalidFileFormatException>(() => {
-				var tmp = new JSONInputDataV2(json, TestJobFile).Auxiliaries;
-			}, "Key Aux not found");
+			// MK,2016-01-20: Changed for PWheel: aux entry may be missing, and that is ok.
+			var tmp = new JSONInputDataV2(json, TestJobFile).Auxiliaries;
+			Assert.IsTrue(tmp.Count == 0);
 		}
 
 		[TestMethod]

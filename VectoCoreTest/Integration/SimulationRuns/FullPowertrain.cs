@@ -1,11 +1,13 @@
 /*
-* Copyright 2015 European Union
+* Copyright 2015, 2016 Graz University of Technology,
+* Institute of Internal Combustion Engines and Thermodynamics,
+* Institute of Technical Informatics
 *
 * Licensed under the EUPL (the "Licence");
 * You may not use this work except in compliance with the Licence.
 * You may obtain a copy of the Licence at:
 *
-* http://ec.europa.eu/idabc/eupl5
+* http://ec.europa.eu/idabc/eupl
 *
 * Unless required by applicable law or agreed to in writing, software 
 * distributed under the Licence is distributed on an "AS IS" basis,
@@ -60,7 +62,7 @@ namespace TUGraz.VectoCore.Tests.Integration.SimulationRuns
 			var container = new VehicleContainer(modData);
 
 			var engineData = MockSimulationDataFactory.CreateEngineDataFromFile(EngineFile);
-			var cycleData = DrivingCycleDataReader.ReadFromFileDistanceBased(CycleFile);
+			var cycleData = DrivingCycleDataReader.ReadFromFile(CycleFile, CycleType.DistanceBased);
 			var axleGearData = CreateAxleGearData();
 			var gearboxData = CreateSimpleGearboxData();
 			var vehicleData = CreateVehicleData(3300.SI<Kilogram>());
@@ -70,7 +72,7 @@ namespace TUGraz.VectoCore.Tests.Integration.SimulationRuns
 			var cyclePort = cycle.OutPort();
 			dynamic tmp = Port.AddComponent(cycle, new Driver(container, driverData, new DefaultDriverStrategy()));
 			tmp = Port.AddComponent(tmp, new Vehicle(container, vehicleData));
-			tmp = Port.AddComponent(tmp, new Wheels(container, vehicleData.DynamicTyreRadius));
+			tmp = Port.AddComponent(tmp, new Wheels(container, vehicleData.DynamicTyreRadius, vehicleData.WheelsInertia));
 			tmp = Port.AddComponent(tmp, new Brakes(container));
 			tmp = Port.AddComponent(tmp, new AxleGear(container, axleGearData));
 			var gbx = new Gearbox(container, gearboxData, new AMTShiftStrategy(gearboxData, container));
@@ -92,7 +94,7 @@ namespace TUGraz.VectoCore.Tests.Integration.SimulationRuns
 				response = cyclePort.Request(absTime, ds);
 				response.Switch().
 					Case<ResponseDrivingCycleDistanceExceeded>(r => ds = r.MaxDistance).
-					Case<ResponseCycleFinished>(r => {}).
+					Case<ResponseCycleFinished>(r => { }).
 					Case<ResponseSuccess>(r => {
 						container.CommitSimulationStep(absTime, r.SimulationInterval);
 						absTime += r.SimulationInterval;
@@ -119,7 +121,7 @@ namespace TUGraz.VectoCore.Tests.Integration.SimulationRuns
 			var container = new VehicleContainer(modData);
 
 			var engineData = MockSimulationDataFactory.CreateEngineDataFromFile(EngineFile);
-			var cycleData = DrivingCycleDataReader.ReadFromFileDistanceBased(CoachCycleFile);
+			var cycleData = DrivingCycleDataReader.ReadFromFile(CoachCycleFile, CycleType.DistanceBased);
 			var axleGearData = CreateAxleGearData();
 			var gearboxData = CreateGearboxData();
 			var vehicleData = CreateVehicleData(3300.SI<Kilogram>());
@@ -129,7 +131,7 @@ namespace TUGraz.VectoCore.Tests.Integration.SimulationRuns
 			var cyclePort = cycle.OutPort();
 			dynamic tmp = Port.AddComponent(cycle, new Driver(container, driverData, new DefaultDriverStrategy()));
 			tmp = Port.AddComponent(tmp, new Vehicle(container, vehicleData));
-			tmp = Port.AddComponent(tmp, new Wheels(container, vehicleData.DynamicTyreRadius));
+			tmp = Port.AddComponent(tmp, new Wheels(container, vehicleData.DynamicTyreRadius, vehicleData.WheelsInertia));
 			tmp = Port.AddComponent(tmp, new Brakes(container));
 			tmp = Port.AddComponent(tmp, new AxleGear(container, axleGearData));
 			var gbx = new Gearbox(container, gearboxData, new AMTShiftStrategy(gearboxData, container));
@@ -165,10 +167,8 @@ namespace TUGraz.VectoCore.Tests.Integration.SimulationRuns
 
 				response.Switch().
 					Case<ResponseDrivingCycleDistanceExceeded>(r => ds = r.MaxDistance).
-					Case<ResponseCycleFinished>(r => {}).
-					Case<ResponseGearShift>(r => {
-						Log.Debug("Gearshift");
-					}).
+					Case<ResponseCycleFinished>(r => { }).
+					Case<ResponseGearShift>(r => { Log.Debug("Gearshift"); }).
 					Case<ResponseSuccess>(r => {
 						container.CommitSimulationStep(absTime, r.SimulationInterval);
 						absTime += r.SimulationInterval;
@@ -195,7 +195,7 @@ namespace TUGraz.VectoCore.Tests.Integration.SimulationRuns
 			var container = new VehicleContainer(modData);
 
 			var engineData = MockSimulationDataFactory.CreateEngineDataFromFile(EngineFile);
-			var cycleData = DrivingCycleDataReader.ReadFromFileDistanceBased(CycleFile);
+			var cycleData = DrivingCycleDataReader.ReadFromFile(CycleFile, CycleType.DistanceBased);
 			var axleGearData = CreateAxleGearData();
 			var gearboxData = CreateGearboxData();
 			var vehicleData = CreateVehicleData(3300.SI<Kilogram>());
@@ -205,7 +205,7 @@ namespace TUGraz.VectoCore.Tests.Integration.SimulationRuns
 			var cyclePort = cycle.OutPort();
 			dynamic tmp = Port.AddComponent(cycle, new Driver(container, driverData, new DefaultDriverStrategy()));
 			tmp = Port.AddComponent(tmp, new Vehicle(container, vehicleData));
-			tmp = Port.AddComponent(tmp, new Wheels(container, vehicleData.DynamicTyreRadius));
+			tmp = Port.AddComponent(tmp, new Wheels(container, vehicleData.DynamicTyreRadius, vehicleData.WheelsInertia));
 			tmp = Port.AddComponent(tmp, new Brakes(container));
 			tmp = Port.AddComponent(tmp, new AxleGear(container, axleGearData));
 			tmp = Port.AddComponent(tmp,
@@ -240,10 +240,8 @@ namespace TUGraz.VectoCore.Tests.Integration.SimulationRuns
 
 				response.Switch().
 					Case<ResponseDrivingCycleDistanceExceeded>(r => ds = r.MaxDistance).
-					Case<ResponseCycleFinished>(r => {}).
-					Case<ResponseGearShift>(r => {
-						Log.Debug("Gearshift");
-					}).
+					Case<ResponseCycleFinished>(r => { }).
+					Case<ResponseGearShift>(r => { Log.Debug("Gearshift"); }).
 					Case<ResponseSuccess>(r => {
 						container.CommitSimulationStep(absTime, r.SimulationInterval);
 						absTime += r.SimulationInterval;

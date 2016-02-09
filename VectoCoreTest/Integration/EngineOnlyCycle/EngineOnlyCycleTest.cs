@@ -1,11 +1,13 @@
 /*
-* Copyright 2015 European Union
+* Copyright 2015, 2016 Graz University of Technology,
+* Institute of Internal Combustion Engines and Thermodynamics,
+* Institute of Technical Informatics
 *
 * Licensed under the EUPL (the "Licence");
 * You may not use this work except in compliance with the Licence.
 * You may obtain a copy of the Licence at:
 *
-* http://ec.europa.eu/idabc/eupl5
+* http://ec.europa.eu/idabc/eupl
 *
 * Unless required by applicable law or agreed to in writing, software 
 * distributed under the Licence is distributed on an "AS IS" basis,
@@ -14,15 +16,14 @@
 * limitations under the Licence.
 */
 
-using System.Data;
 using System.IO;
-using System.Linq;
 using Microsoft.VisualStudio.TestTools.UnitTesting;
 using TUGraz.VectoCore.Configuration;
 using TUGraz.VectoCore.InputData.Reader;
 using TUGraz.VectoCore.Models.Connector.Ports.Impl;
 using TUGraz.VectoCore.Models.Simulation.Data;
 using TUGraz.VectoCore.Models.Simulation.Impl;
+using TUGraz.VectoCore.Models.SimulationComponent.Data;
 using TUGraz.VectoCore.Models.SimulationComponent.Impl;
 using TUGraz.VectoCore.OutputData;
 using TUGraz.VectoCore.OutputData.FileIO;
@@ -42,22 +43,20 @@ namespace TUGraz.VectoCore.Tests.Integration.EngineOnlyCycle
 		[TestMethod]
 		public void TestEngineOnlyDrivingCycle()
 		{
-			var data = DrivingCycleDataReader.ReadFromFileEngineOnly(TestContext.DataRow["CycleFile"].ToString());
-			var container = new VehicleContainer();
-			var cycle = new MockDrivingCycle(container, data);
+			var data = DrivingCycleDataReader.ReadFromFile(TestContext.DataRow["CycleFile"].ToString(), CycleType.EngineOnly);
 			var vehicle = new VehicleContainer();
+			var cycle = new MockDrivingCycle(vehicle, data);
 			var engineData =
 				MockSimulationDataFactory.CreateEngineDataFromFile(TestContext.DataRow["EngineFile"].ToString());
 
-			var aux = new Auxiliary(vehicle);
-			aux.AddDirect(cycle);
-			var gearbox = new EngineOnlyGearbox(vehicle);
+			var aux = new EngineAuxiliary(vehicle);
+			aux.AddDirect();
 
 			var engine = new EngineOnlyCombustionEngine(vehicle, engineData);
+			engine.Connect(aux);
 
-			aux.InPort().Connect(engine.OutPort());
-			gearbox.InPort().Connect(aux.OutPort());
-			var port = aux.OutPort();
+			//aux.InPort().Connect(engine.OutPort());
+			var port = engine.OutPort();
 
 			var absTime = 0.SI<Second>();
 			var dt = 1.SI<Second>();
@@ -67,7 +66,7 @@ namespace TUGraz.VectoCore.Tests.Integration.EngineOnlyCycle
 			var modData = new ModalDataContainer(modFile, fileWriter, ExecutionMode.EngineOnly);
 
 			foreach (var cycleEntry in data.Entries) {
-				var response = port.Request(absTime, dt, cycleEntry.EngineTorque, cycleEntry.EngineSpeed);
+				var response = port.Request(absTime, dt, cycleEntry.Torque, cycleEntry.AngularVelocity);
 				Assert.IsInstanceOfType(response, typeof(ResponseSuccess));
 				foreach (var sc in vehicle.SimulationComponents()) {
 					modData[ModalResultField.time] = absTime + dt / 2;
@@ -90,11 +89,7 @@ namespace TUGraz.VectoCore.Tests.Integration.EngineOnlyCycle
 
 			var vehicleContainer = new VehicleContainer();
 
-			var gearbox = new EngineOnlyGearbox(vehicleContainer);
-			var engine = new CombustionEngine(vehicleContainer,
-				MockSimulationDataFactory.CreateEngineDataFromFile(EngineFile));
-
-			gearbox.InPort().Connect(engine.OutPort());
+			var engine = new CombustionEngine(vehicleContainer, MockSimulationDataFactory.CreateEngineDataFromFile(EngineFile));
 
 			var absTime = 0.SI<Second>();
 			var dt = 1.SI<Second>();
@@ -102,7 +97,7 @@ namespace TUGraz.VectoCore.Tests.Integration.EngineOnlyCycle
 			var angularVelocity = 644.4445.RPMtoRad();
 			var power = 2329.973.SI<Watt>();
 
-			gearbox.OutPort().Request(absTime, dt, power / angularVelocity, angularVelocity);
+			engine.OutPort().Request(absTime, dt, power / angularVelocity, angularVelocity);
 
 			foreach (var sc in vehicleContainer.SimulationComponents()) {
 				sc.CommitSimulationStep(dataWriter);

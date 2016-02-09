@@ -1,17 +1,32 @@
-﻿using System;
+/*
+* Copyright 2015, 2016 Graz University of Technology,
+* Institute of Internal Combustion Engines and Thermodynamics,
+* Institute of Technical Informatics
+*
+* Licensed under the EUPL (the "Licence");
+* You may not use this work except in compliance with the Licence.
+* You may obtain a copy of the Licence at:
+*
+* http://ec.europa.eu/idabc/eupl
+*
+* Unless required by applicable law or agreed to in writing, software 
+* distributed under the Licence is distributed on an "AS IS" basis,
+* WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+* See the Licence for the specific language governing permissions and 
+* limitations under the Licence.
+*/
+
+using System;
 using System.Collections.Generic;
 using System.Data;
 using System.IO;
 using System.Linq;
 using System.Text;
 using Newtonsoft.Json.Linq;
-using NLog;
-using NLog.Fluent;
 using TUGraz.VectoCore.Configuration;
 using TUGraz.VectoCore.Exceptions;
 using TUGraz.VectoCore.InputData.Impl;
 using TUGraz.VectoCore.Models;
-using TUGraz.VectoCore.Models.Declaration;
 using TUGraz.VectoCore.Models.SimulationComponent.Data;
 using TUGraz.VectoCore.Utils;
 
@@ -174,7 +189,7 @@ namespace TUGraz.VectoCore.InputData.FileIO.JSON
 
 		public JSONInputDataV2(JObject data, string filename) : base(data, filename)
 		{
-			_jobname = Path.GetFileName(filename);
+			_jobname = Path.GetFileNameWithoutExtension(filename);
 			try {
 				var gearboxFile = Body.GetEx(JsonKeys.Vehicle_GearboxFile).Value<string>();
 				if (!EmptyOrInvalidFileName(gearboxFile)) {
@@ -410,7 +425,7 @@ namespace TUGraz.VectoCore.InputData.FileIO.JSON
 			get
 			{
 				var retVal = new List<IAuxiliaryInputData>();
-				foreach (var aux in Body.GetEx("Aux")) {
+				foreach (var aux in Body["Aux"] ?? Enumerable.Empty<JToken>()) {
 					var auxData = new AuxiliaryDataInputData {
 						ID = aux.GetEx<string>("ID"),
 						Type = aux.GetEx<string>("Type"),
@@ -418,6 +433,7 @@ namespace TUGraz.VectoCore.InputData.FileIO.JSON
 					};
 					var auxFile = aux["Path"];
 					if (auxFile == null || EmptyOrInvalidFileName(auxFile.Value<string>())) {
+						retVal.Add(auxData);
 						continue;
 					}
 					var stream = new StreamReader(Path.Combine(BasePath, auxFile.Value<string>()));

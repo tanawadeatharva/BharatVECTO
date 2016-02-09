@@ -1,11 +1,13 @@
 /*
-* Copyright 2015 European Union
+* Copyright 2015, 2016 Graz University of Technology,
+* Institute of Internal Combustion Engines and Thermodynamics,
+* Institute of Technical Informatics
 *
 * Licensed under the EUPL (the "Licence");
 * You may not use this work except in compliance with the Licence.
 * You may obtain a copy of the Licence at:
 *
-* http://ec.europa.eu/idabc/eupl5
+* http://ec.europa.eu/idabc/eupl
 *
 * Unless required by applicable law or agreed to in writing, software 
 * distributed under the Licence is distributed on an "AS IS" basis,
@@ -19,7 +21,7 @@ using TUGraz.VectoCore.Models.Connector.Ports;
 namespace TUGraz.VectoCore.Models.SimulationComponent
 {
 	/// <summary>
-	/// Defines interfaces for a engine only driving cycle.
+	/// Defines interfaces for a powertrain only driving cycle.
 	/// </summary>
-	public interface IEngineOnlySimulation : ISimulationOutProvider, ITnInProvider {}
+	public interface IPowertrainSimulation : IDrivingCycleInfo, ISimulationOutProvider, ITnInProvider {}
 }

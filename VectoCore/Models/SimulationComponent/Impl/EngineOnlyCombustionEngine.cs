@@ -1,11 +1,13 @@
 /*
-* Copyright 2015 European Union
+* Copyright 2015, 2016 Graz University of Technology,
+* Institute of Internal Combustion Engines and Thermodynamics,
+* Institute of Technical Informatics
 *
 * Licensed under the EUPL (the "Licence");
 * You may not use this work except in compliance with the Licence.
 * You may obtain a copy of the Licence at:
 *
-* http://ec.europa.eu/idabc/eupl5
+* http://ec.europa.eu/idabc/eupl
 *
 * Unless required by applicable law or agreed to in writing, software 
 * distributed under the Licence is distributed on an "AS IS" basis,
@@ -29,16 +31,14 @@ namespace TUGraz.VectoCore.Models.SimulationComponent.Impl
 
 		public EngineOnlyCombustionEngine(IVehicleContainer cockpit, CombustionEngineData data) : base(cockpit, data) {}
 
-		// the behavior in engin-only mode differs a little bit from normal driving cycle simulation: in engine-only mode
+		// the behavior in engine-only mode differs a little bit from normal driving cycle simulation: in engine-only mode
 		// certain amount of overload is tolerated.
-		protected override IResponse DoHandleRequest(Second absTime, Second dt, NewtonMeter torque, PerSecond engineSpeed,
+		protected override IResponse DoHandleRequest(Second absTime, Second dt, NewtonMeter torque, PerSecond angularVelocity,
 			bool dryRun)
 		{
-			Watt requestedPower;
-			Watt requestedEnginePower;
-			ComputeRequestedEnginePower(absTime, dt, torque, engineSpeed, out requestedPower, out requestedEnginePower);
+			var requestedEnginePower = ComputeRequestedEnginePower(absTime, dt, torque, angularVelocity);
 
-			ComputeFullLoadPower(engineSpeed, dt);
+			ComputeFullLoadPower(angularVelocity, dt);
 
 			ValidatePowerDemand(requestedEnginePower);
 
@@ -46,8 +46,8 @@ namespace TUGraz.VectoCore.Models.SimulationComponent.Impl
 
 			if (dryRun) {
 				return new ResponseDryRun {
-					DeltaFullLoad = (requestedEnginePower - CurrentState.DynamicFullLoadPower),
-					DeltaDragLoad = (requestedEnginePower - CurrentState.FullDragPower)
+					DeltaFullLoad = requestedEnginePower - CurrentState.DynamicFullLoadPower,
+					DeltaDragLoad = requestedEnginePower - CurrentState.FullDragPower
 				};
 			}
 
@@ -59,11 +59,6 @@ namespace TUGraz.VectoCore.Models.SimulationComponent.Impl
 			return new ResponseSuccess();
 		}
 
-		/// <summary>
-		///     [W] => [W]
-		/// </summary>
-		/// <param name="requestedEnginePower">[W]</param>
-		/// <returns>[W]</returns>
 		protected override Watt LimitEnginePower(Watt requestedEnginePower)
 		{
 			if (requestedEnginePower > CurrentState.DynamicFullLoadPower) {
