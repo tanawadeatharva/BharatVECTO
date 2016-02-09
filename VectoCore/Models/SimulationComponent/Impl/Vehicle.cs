@@ -53,10 +53,9 @@ namespace TUGraz.VectoCore.Models.SimulationComponent.Impl
 				Distance = DataBus.CycleStartDistance,
 				Velocity = vehicleSpeed,
 				RollingResistance = RollingResistance(roadGradient),
-				SlopeResistance = SlopeResistance(roadGradient)
+				SlopeResistance = SlopeResistance(roadGradient),
+				AirDragResistance = AirDragResistance(0.SI<MeterPerSquareSecond>(), Constants.SimulationSettings.TargetTimeInterval)
 			};
-			_previousState.AirDragResistance = AirDragResistance(0.SI<MeterPerSquareSecond>(),
-				Constants.SimulationSettings.TargetTimeInterval);
 			_previousState.VehicleAccelerationForce = _previousState.RollingResistance
 													+ _previousState.AirDragResistance
 													+ _previousState.SlopeResistance;
@@ -168,19 +167,14 @@ namespace TUGraz.VectoCore.Models.SimulationComponent.Impl
 			var averageVelocity = (_previousState.Velocity + _currentState.Velocity) / 2;
 
 			container[ModalResultField.v_act] = averageVelocity;
-			container[ModalResultField.PaVeh] = ((_previousState.VehicleAccelerationForce * _previousState.Velocity +
-												_currentState.VehicleAccelerationForce * _currentState.Velocity) / 2.0)
-				.Cast<Watt>();
-			container[ModalResultField.Pgrad] = ((_previousState.SlopeResistance * _previousState.Velocity +
-												_currentState.SlopeResistance * _currentState.Velocity) / 2.0).Cast<Watt>
-				();
-			container[ModalResultField.Proll] = ((_previousState.RollingResistance * _previousState.Velocity +
-												_currentState.RollingResistance * _currentState.Velocity) / 2.0)
-				.Cast<Watt>();
-
+			container[ModalResultField.PaVeh] = (_previousState.VehicleAccelerationForce * _previousState.Velocity +
+												_currentState.VehicleAccelerationForce * _currentState.Velocity) / 2.0;
+			container[ModalResultField.Pgrad] = (_previousState.SlopeResistance * _previousState.Velocity +
+												_currentState.SlopeResistance * _currentState.Velocity) / 2.0;
+			container[ModalResultField.Proll] = (_previousState.RollingResistance * _previousState.Velocity +
+												_currentState.RollingResistance * _currentState.Velocity) / 2.0;
 			container[ModalResultField.Pair] = ComputeAirDragPowerLoss(_previousState.Velocity, _currentState.Velocity,
 				_currentState.dt);
-
 
 			// sanity check: is the vehicle in step with the cycle?
 			if (container[ModalResultField.dist] == DBNull.Value) {
@@ -202,24 +196,25 @@ namespace TUGraz.VectoCore.Models.SimulationComponent.Impl
 
 		protected Newton RollingResistance(Radian gradient)
 		{
-			var retVal = (Math.Cos(gradient.Value()) * _data.TotalVehicleWeight() *
-						Physics.GravityAccelleration *
-						_data.TotalRollResistanceCoefficient).Cast<Newton>();
+			var weight = _data.TotalVehicleWeight();
+			var gravity = Physics.GravityAccelleration;
+			var rollCoefficient = _data.TotalRollResistanceCoefficient;
+
+			var retVal = Math.Cos(gradient.Value()) * weight * gravity * rollCoefficient;
 			Log.Debug("RollingResistance: {0}", retVal);
 			return retVal;
 		}
 
 		protected Newton DriverAcceleration(MeterPerSquareSecond accelleration)
 		{
-			var retVal = ((_data.TotalVehicleWeight() + _data.ReducedMassWheels) * accelleration).Cast<Newton>();
+			var retVal = (_data.TotalVehicleWeight() + _data.ReducedMassWheels) * accelleration;
 			Log.Debug("DriverAcceleration: {0}", retVal);
 			return retVal;
 		}
 
 		protected internal Newton SlopeResistance(Radian gradient)
 		{
-			var retVal =
-				(_data.TotalVehicleWeight() * Physics.GravityAccelleration * Math.Sin(gradient.Value())).Cast<Newton>();
+			var retVal = _data.TotalVehicleWeight() * Physics.GravityAccelleration * Math.Sin(gradient.Value());
 			Log.Debug("SlopeResistance: {0}", retVal);
 			return retVal;
 		}
@@ -230,9 +225,8 @@ namespace TUGraz.VectoCore.Models.SimulationComponent.Impl
 			if (vAverage.IsEqual(0)) {
 				return 0.SI<Newton>();
 			}
-			var result =
-				(ComputeAirDragPowerLoss(_previousState.Velocity, _previousState.Velocity + acceleration * dt, dt) /
-				vAverage).Cast<Newton>();
+			var result = ComputeAirDragPowerLoss(_previousState.Velocity, _previousState.Velocity + acceleration * dt, dt) /
+						vAverage;
 
 			Log.Debug("AirDragResistance: {0}", result);
 			return result;

@@ -231,7 +231,7 @@ namespace TUGraz.VectoCore.Models.SimulationComponent.Impl
 		/// </summary>
 		public bool VehicleStopped
 		{
-			get { return false; }
+			get { return LeftSample.Current.VehicleTargetSpeed.IsEqual(0); }
 		}
 
 		/// <summary>
@@ -244,7 +244,7 @@ namespace TUGraz.VectoCore.Models.SimulationComponent.Impl
 
 		#endregion
 
-		public bool ClutchClosed(Second absTime)
+		public virtual bool ClutchClosed(Second absTime)
 		{
 			return LeftSample.Current.Gear != 0;
 		}
@@ -255,7 +255,7 @@ namespace TUGraz.VectoCore.Models.SimulationComponent.Impl
 	/// Driving Cycle for the PWheel driving cycle.
 	/// </summary>
 	public class MeasuredSpeedCycle : VectoSimulationComponent, IDriverInfo, IDrivingCycleInfo, IDriverDemandInProvider,
-		IDriverDemandInPort, ISimulationOutProvider, ISimulationOutPort
+		IDriverDemandInPort, ISimulationOutProvider, ISimulationOutPort, IClutchInfo
 	{
 		protected DrivingCycleData Data;
 		protected IDriverDemandOutPort NextComponent;
@@ -413,12 +413,17 @@ namespace TUGraz.VectoCore.Models.SimulationComponent.Impl
 
 		public bool VehicleStopped
 		{
-			get { return false; }
+			get { return LeftSample.Current.VehicleTargetSpeed.IsEqual(0); }
 		}
 
 		public DrivingBehavior DrivingBehavior
 		{
 			get { return DrivingBehavior.Driving; }
+		}
+
+		public virtual bool ClutchClosed(Second absTime)
+		{
+			return LeftSample.Current.Gear != 0;
 		}
 	}
 }

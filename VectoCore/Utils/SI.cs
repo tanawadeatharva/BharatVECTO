@@ -124,6 +124,13 @@ namespace TUGraz.VectoCore.Utils
 		{
 			return SIBase<NewtonMeter>.Create(newton.Val * meter.Value());
 		}
+
+		[DebuggerHidden]
+		public static Watt operator *(Newton newton, MeterPerSecond meterPerSecond)
+		{
+			return SIBase<Watt>.Create(newton.Val * meterPerSecond.Value());
+		}
+
 	}
 
 	/// <summary>
@@ -249,6 +256,12 @@ namespace TUGraz.VectoCore.Utils
 		{
 			return SIBase<KilogramPerMeter>.Create(kg.Val / m.Value());
 		}
+
+		[DebuggerHidden]
+		public static Newton operator *(Kilogram kg, MeterPerSquareSecond m)
+		{
+			return SIBase<Newton>.Create(kg.Val * m.Value());
+		}
 	}
 
 	/// <summary>
@@ -373,6 +386,12 @@ namespace TUGraz.VectoCore.Utils
 		public static PerSecond operator /(Watt watt, NewtonMeter newtonMeter)
 		{
 			return SIBase<PerSecond>.Create(watt.Val / newtonMeter.Value());
+		}
+
+		[DebuggerHidden]
+		public static Newton operator /(Watt watt, MeterPerSecond meterPerSecond)
+		{
+			return SIBase<Newton>.Create(watt.Val / meterPerSecond.Value());
 		}
 
 		/// <summary>
@@ -807,6 +826,10 @@ namespace TUGraz.VectoCore.Utils
 			Numerator = new Unit[0];
 			Denominator = new Unit[0];
 			Exponent = 1;
+
+			if (double.IsNaN(val)) {
+				throw new VectoException("SI value is NaN: [{0}]", GetUnitString());
+			}
 		}
 
 		/// <summary>
