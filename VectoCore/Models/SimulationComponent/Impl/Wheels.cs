@@ -31,6 +31,7 @@ namespace TUGraz.VectoCore.Models.SimulationComponent.Impl
 
 		private readonly Meter _dynamicWheelRadius;
 		private readonly KilogramSquareMeter _totalWheelsInertia;
+
 		public Wheels(IVehicleContainer cockpit, Meter rdyn, KilogramSquareMeter totalWheelsInertia)
 			: base(cockpit)
 		{
@@ -99,8 +100,8 @@ namespace TUGraz.VectoCore.Models.SimulationComponent.Impl
 
 		protected override void DoWriteModalResults(IModalDataContainer container)
 		{
-			container[ModalResultField.Pwheel] = WheelsPowerRequest;
-			container[ModalResultField.Pwheel] = (CurrentState.Torque *( CurrentState.AngularSpeed + PreviousState.AngularSpeed) / 2.0).Cast<Watt>();
+			container[ModalResultField.Pwheel] =
+				(CurrentState.Torque * (CurrentState.AngularVelocity + PreviousState.AngularVelocity) / 2.0).Cast<Watt>();
 		}
 
 		protected override void DoCommitSimulationStep()

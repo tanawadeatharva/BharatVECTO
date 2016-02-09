@@ -68,7 +68,6 @@ namespace TUGraz.VectoCore.Models.SimulationComponent.Impl
 
 			//Loss = inTorque * inAngularVelocity - torque * angularVelocity;
 			CurrentState.SetState(inTorque, inAngularVelocity, torque, angularVelocity);
-			Loss = inPower - outPower;
 
 			var retVal = NextComponent.Request(absTime, dt, inTorque, inAngularVelocity, dryRun);
 

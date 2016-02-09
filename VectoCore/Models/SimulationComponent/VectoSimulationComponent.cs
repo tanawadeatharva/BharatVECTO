@@ -58,28 +58,8 @@ namespace TUGraz.VectoCore.Models.SimulationComponent
 		/// Commits the internal state of the object if needed.
 		/// </summary>
 		protected abstract void DoCommitSimulationStep();
-
 	}
 
-	public abstract class StatefulVectoSimulationComponent<TStateType> : VectoSimulationComponent where TStateType : new()
-	{
-
-		protected internal TStateType CurrentState;
-		protected internal TStateType PreviousState;
-
-		protected StatefulVectoSimulationComponent(IVehicleContainer contaier)
-			: base(contaier)
-		{
-			CurrentState = new TStateType();
-			PreviousState = new TStateType();
-		}
-
-		protected void AdvanceState()
-		{
-			PreviousState = CurrentState;
-			CurrentState = new TStateType();
-		}
-	}
 
 	public abstract class StatefulVectoSimulationComponent<TStateType> : VectoSimulationComponent where TStateType : new()
 	{
@@ -97,6 +77,12 @@ namespace TUGraz.VectoCore.Models.SimulationComponent
 		{
 			PreviousState = CurrentState;
 			CurrentState = new TStateType();
+		}
+
+		protected virtual Watt GetPowerLoss(SimpleComponentState previousState, SimpleComponentState currentState)
+		{
+			return (previousState.InAngularVelocity + currentState.InAngularVelocity) / 2.0 *
+					(currentState.InTorque - currentState.OutTorque);
 		}
 	}
 

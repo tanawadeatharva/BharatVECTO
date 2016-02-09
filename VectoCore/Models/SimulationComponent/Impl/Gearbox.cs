@@ -55,7 +55,7 @@ namespace TUGraz.VectoCore.Models.SimulationComponent.Impl
 		/// <summary>
 		/// True if gearbox is disengaged (no gear is set).
 		/// </summary>
-		private bool _disengaged = true;
+		protected internal bool Disengaged = true;
 
 		/// <summary>
 		/// The power loss for the mod data.
@@ -135,7 +135,7 @@ namespace TUGraz.VectoCore.Models.SimulationComponent.Impl
 			var dt = Constants.SimulationSettings.TargetTimeInterval;
 			_shiftTime = double.NegativeInfinity.SI<Second>();
 
-			if (_disengaged) {
+			if (Disengaged) {
 				Gear = _strategy.InitGear(absTime, dt, outTorque, outAngularVelocity);
 			}
 
@@ -154,7 +154,7 @@ namespace TUGraz.VectoCore.Models.SimulationComponent.Impl
 			var response = NextComponent.Initialize(inTorque, inAngularVelocity);
 			if (response is ResponseSuccess) {
 				_previousInAngularSpeed = inAngularVelocity;
-				_disengaged = false;
+				Disengaged = false;
 			}
 
 			return response;
@@ -293,8 +293,8 @@ namespace TUGraz.VectoCore.Models.SimulationComponent.Impl
 			bool dryRun)
 		{
 			// Set a Gear if no gear was set and engineSpeed is not zero
-			if (_disengaged && !outAngularVelocity.IsEqual(0)) {
-				_disengaged = false;
+			if (Disengaged && !outAngularVelocity.IsEqual(0)) {
+				Disengaged = false;
 				if (DataBus.VehicleStopped) {
 					Gear = _strategy.InitGear(absTime, dt, outTorque, outAngularVelocity);
 				} else {
@@ -314,7 +314,7 @@ namespace TUGraz.VectoCore.Models.SimulationComponent.Impl
 				if ((DataBus.DrivingBehavior == DrivingBehavior.Braking || DataBus.DrivingBehavior == DrivingBehavior.Coasting) &&
 					inEngineSpeed < DataBus.EngineIdleSpeed &&
 					DataBus.VehicleSpeed < Constants.SimulationSettings.VehicleStopClutchDisengageSpeed) {
-					_disengaged = true;
+					Disengaged = true;
 					_shiftTime = absTime + dt;
 					_strategy.Disengage(absTime, dt, outTorque, outAngularVelocity);
 					Log.Debug("EngineSpeed is below IdleSpeed, Gearbox disengage!");
@@ -337,7 +337,7 @@ namespace TUGraz.VectoCore.Models.SimulationComponent.Impl
 					Log.Debug("Gearbox is shifting. absTime: {0}, dt: {1}, shiftTime: {2}, out: ({3}, {4}), in: ({5}, {6})", absTime,
 						dt, _shiftTime, outTorque, outAngularVelocity, inTorque, inEngineSpeed);
 
-					_disengaged = true;
+					Disengaged = true;
 					_strategy.Disengage(absTime, dt, outTorque, outAngularVelocity);
 					Log.Info("Gearbox disengaged");
 
@@ -383,7 +383,7 @@ namespace TUGraz.VectoCore.Models.SimulationComponent.Impl
 
 		protected override void DoWriteModalResults(IModalDataContainer container)
 		{
-			container[ModalResultField.Gear] = _disengaged || DataBus.VehicleStopped ? 0 : Gear;
+			container[ModalResultField.Gear] = Disengaged || DataBus.VehicleStopped ? 0 : Gear;
 
 			container[ModalResultField.PlossGB] = CurrentState.TransmissionTorqueLoss *
 												(PreviousState.InAngularVelocity + CurrentState.InAngularVelocity) / 2.0;
@@ -393,7 +393,7 @@ namespace TUGraz.VectoCore.Models.SimulationComponent.Impl
 
 		protected override void DoCommitSimulationStep()
 		{
-			if (!_disengaged) {
+			if (!Disengaged) {
 				if (Data.Gears[Gear].LossMap.Extrapolated) {
 					// todo (MK, 2015-12-14): should we throw an interpolation error in EngineOnly Mode also?
 					Log.Warn("Gear {0} LossMap data was extrapolated: range for loss map is not sufficient.", Gear);
