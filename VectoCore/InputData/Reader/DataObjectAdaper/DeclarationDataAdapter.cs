@@ -18,7 +18,6 @@
 
 using System;
 using System.Collections.Generic;
-using System.IO;
 using System.Linq;
 using TUGraz.VectoCore.Configuration;
 using TUGraz.VectoCore.Exceptions;
@@ -239,8 +238,6 @@ namespace TUGraz.VectoCore.InputData.Reader.DataObjectAdaper
 				}
 				retVal.Add(aux);
 			}
-
-
 			return retVal;
 		}
 

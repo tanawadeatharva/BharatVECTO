@@ -245,8 +245,7 @@ namespace TUGraz.VectoCore.Models.SimulationComponent.Impl
 		/// </list>
 		/// </returns>
 		protected virtual IResponse RequestGearDisengaged(Second absTime, Second dt, NewtonMeter outTorque,
-			PerSecond outAngularVelocity,
-			bool dryRun)
+			PerSecond outAngularVelocity, bool dryRun)
 		{
 			Log.Debug("Current Gear: Neutral");
 
@@ -303,8 +302,7 @@ namespace TUGraz.VectoCore.Models.SimulationComponent.Impl
 		/// </list>
 		/// </returns>
 		protected virtual IResponse RequestGearEngaged(Second absTime, Second dt, NewtonMeter outTorque,
-			PerSecond outAngularVelocity,
-			bool dryRun)
+			PerSecond outAngularVelocity, bool dryRun)
 		{
 			// Set a Gear if no gear was set and engineSpeed is not zero
 			if (Disengaged && !outAngularVelocity.IsEqual(0)) {

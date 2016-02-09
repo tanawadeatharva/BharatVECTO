@@ -231,7 +231,7 @@ namespace TUGraz.VectoCore.Models.SimulationComponent.Impl
 		/// </summary>
 		public bool VehicleStopped
 		{
-			get { return LeftSample.Current.VehicleTargetSpeed.IsEqual(0); }
+			get { return false; }
 		}
 
 		/// <summary>
@@ -326,7 +326,7 @@ namespace TUGraz.VectoCore.Models.SimulationComponent.Impl
 				};
 			}
 
-			var delta_v = RightSample.Current.VehicleTargetSpeed - LeftSample.Current.VehicleTargetSpeed;
+			var delta_v = RightSample.Current.VehicleTargetSpeed - DataBus.VehicleSpeed;
 			var delta_t = RightSample.Current.Time - LeftSample.Current.Time;
 			var acceleration = delta_v / delta_t;
 			var gradient = LeftSample.Current.RoadGradient;
@@ -334,17 +334,33 @@ namespace TUGraz.VectoCore.Models.SimulationComponent.Impl
 			Gearbox.Gear = LeftSample.Current.Gear;
 			Gearbox.Disengaged = LeftSample.Current.Gear == 0;
 
+			if (LeftSample.Current.Gear == 0 && LeftSample.Current.RoadGradient.IsEqual(0) && !acceleration.IsEqual(0)) {
+				acceleration = 0.SI<MeterPerSquareSecond>();
+			}
+
 			var response = NextComponent.Request(absTime, dt, acceleration, gradient);
 
 			response.Switch()
-				//.Case<ResponseUnderload>(r => {
-				//	Log.Warn("PowertrainDrivingCycle got an underload response. Using PDrag.");
-				//	response = new ResponseSuccess();
-				//})
-				//.Case<ResponseOverload>(r => {
-				//	Log.Warn("PowertrainDrivingCycle got an underload response. Using PFullLoad.");
-				//	response = new ResponseSuccess();
-				//})
+				.Case<ResponseUnderload>(r => {
+					if (r.Source is CombustionEngine) {
+						Log.Warn("PowertrainDrivingCycle got an underload response. Using PDrag.");
+						response = new ResponseSuccess();
+					} else {
+						// todo MK-2016-02-09: should we search for the braking power here?
+						DataBus.BrakePower = -r.GearboxPowerRequest;
+						response = NextComponent.Request(absTime, dt, acceleration, gradient);
+					}
+				})
+				.Case<ResponseOverload>(r => {
+					if (r.Source is CombustionEngine) {
+						Log.Warn("PowertrainDrivingCycle got an underload response. Using PFullLoad.");
+						response = new ResponseSuccess();
+					}
+					while (response is ResponseOverload && !(((ResponseOverload)response).Source is CombustionEngine)) {
+						acceleration -= 0.01.SI<MeterPerSquareSecond>();
+						response = NextComponent.Request(absTime, dt, acceleration, gradient);
+					}
+				})
 				.Case<ResponseSuccess>(() => { })
 				.Default(
 					r => { throw new UnexpectedResponseException("PowertrainDrivingCycle received an unexpected response.", r); });

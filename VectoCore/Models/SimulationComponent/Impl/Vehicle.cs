@@ -98,8 +98,7 @@ namespace TUGraz.VectoCore.Models.SimulationComponent.Impl
 			_currentState.dt = dt;
 			_currentState.Acceleration = acceleration;
 			_currentState.Velocity = _previousState.Velocity + acceleration * dt;
-			if (_currentState.Velocity.IsEqual(0.SI<MeterPerSecond>(),
-				Constants.SimulationSettings.VehicleSpeedHaltTolerance)) {
+			if (_currentState.Velocity.IsSmaller(0.SI<MeterPerSecond>(), Constants.SimulationSettings.VehicleSpeedHaltTolerance)) {
 				_currentState.Velocity = 0.SI<MeterPerSecond>();
 			}
 			_currentState.Distance = _previousState.Distance + _previousState.Velocity * dt + acceleration * dt * dt / 2;
@@ -115,7 +114,8 @@ namespace TUGraz.VectoCore.Models.SimulationComponent.Impl
 													+ _currentState.AirDragResistance
 													+ _currentState.SlopeResistance;
 
-			var retval = NextComponent.Request(absTime, dt, _currentState.VehicleAccelerationForce, _currentState.Velocity, dryRun);
+			var retval = NextComponent.Request(absTime, dt, _currentState.VehicleAccelerationForce, _currentState.Velocity,
+				dryRun);
 			return retval;
 		}
 
