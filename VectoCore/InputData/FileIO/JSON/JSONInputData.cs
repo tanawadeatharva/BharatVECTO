@@ -433,6 +433,7 @@ namespace TUGraz.VectoCore.InputData.FileIO.JSON
 					};
 					var auxFile = aux["Path"];
 					if (auxFile == null || EmptyOrInvalidFileName(auxFile.Value<string>())) {
+						retVal.Add(auxData);
 						continue;
 					}
 					var stream = new StreamReader(Path.Combine(BasePath, auxFile.Value<string>()));
