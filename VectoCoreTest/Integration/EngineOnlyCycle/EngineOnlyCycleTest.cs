@@ -49,13 +49,14 @@ namespace TUGraz.VectoCore.Tests.Integration.EngineOnlyCycle
 			var engineData =
 				MockSimulationDataFactory.CreateEngineDataFromFile(TestContext.DataRow["EngineFile"].ToString());
 
-			var aux = new Auxiliary(vehicle);
+			var aux = new EngineAuxiliary(vehicle);
 			aux.AddDirect();
 
 			var engine = new EngineOnlyCombustionEngine(vehicle, engineData);
+			engine.Connect(aux);
 
-			aux.InPort().Connect(engine.OutPort());
-			var port = aux.OutPort();
+			//aux.InPort().Connect(engine.OutPort());
+			var port = engine.OutPort();
 
 			var absTime = 0.SI<Second>();
 			var dt = 1.SI<Second>();

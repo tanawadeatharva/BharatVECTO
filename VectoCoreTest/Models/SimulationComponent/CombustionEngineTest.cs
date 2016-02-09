@@ -223,15 +223,15 @@ namespace TUGraz.VectoCore.Tests.Models.SimulationComponent
 
 			var driver = new MockDriver(container);
 
-			var aux = new Auxiliary(container);
+			var aux = new EngineAuxiliary(container);
 			aux.AddConstant("", 5000.SI<Watt>());
 
 			gearbox.Gear = 1;
 
 			//gearbox.InPort().Connect(engine.OutPort());
 			gearbox.InPort().Connect(clutch.OutPort());
-			clutch.InPort().Connect(aux.OutPort());
-			aux.InPort().Connect(engine.OutPort());
+			clutch.InPort().Connect(engine.OutPort());
+			engine.Connect(aux.Port());
 			engine.IdleController.RequestPort = clutch.IdleControlPort;
 
 //			var expectedResults = VectoCSVFile.Read(TestContext.DataRow["ResultFile"].ToString());
@@ -314,8 +314,8 @@ namespace TUGraz.VectoCore.Tests.Models.SimulationComponent
 				absTime += dt;
 
 				Assert.IsInstanceOfType(response, typeof(ResponseSuccess));
-				Assert.AreEqual(engineSpeed[i].Value(), engine.PreviousState.EngineSpeed.Value(), Tolerance);
-				Assert.AreEqual(enginePower[i].Value(), engine.PreviousState.EnginePower.Value(), Tolerance);
+				Assert.AreEqual(engineSpeed[i].Value(), engine.PreviousState.EngineSpeed.Value(), Tolerance, "i: {0}", i);
+				Assert.AreEqual(enginePower[i].Value(), engine.PreviousState.EnginePower.Value(), Tolerance, "i: {0}", i);
 			}
 		}
 
@@ -510,15 +510,15 @@ namespace TUGraz.VectoCore.Tests.Models.SimulationComponent
 
 			var driver = new MockDriver(container);
 
-			var aux = new Auxiliary(container);
+			var aux = new EngineAuxiliary(container);
 			aux.AddConstant("", 5000.SI<Watt>());
 
 			gearbox.Gear = 1;
 
 			//gearbox.InPort().Connect(engine.OutPort());
 			gearbox.InPort().Connect(clutch.OutPort());
-			clutch.InPort().Connect(aux.OutPort());
-			aux.InPort().Connect(engine.OutPort());
+			clutch.InPort().Connect(engine.OutPort());
+			engine.Connect(aux.Port());
 
 			// has to be done after connecting components!
 			engine.IdleController.RequestPort = clutch.IdleControlPort;
