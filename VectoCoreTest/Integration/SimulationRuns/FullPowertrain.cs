@@ -72,7 +72,7 @@ namespace TUGraz.VectoCore.Tests.Integration.SimulationRuns
 			var cyclePort = cycle.OutPort();
 			dynamic tmp = Port.AddComponent(cycle, new Driver(container, driverData, new DefaultDriverStrategy()));
 			tmp = Port.AddComponent(tmp, new Vehicle(container, vehicleData));
-			tmp = Port.AddComponent(tmp, new Wheels(container, vehicleData.DynamicTyreRadius));
+			tmp = Port.AddComponent(tmp, new Wheels(container, vehicleData.DynamicTyreRadius, vehicleData.WheelsInertia));
 			tmp = Port.AddComponent(tmp, new Brakes(container));
 			tmp = Port.AddComponent(tmp, new AxleGear(container, axleGearData));
 			var gbx = new Gearbox(container, gearboxData, new AMTShiftStrategy(gearboxData, container));
@@ -94,7 +94,7 @@ namespace TUGraz.VectoCore.Tests.Integration.SimulationRuns
 				response = cyclePort.Request(absTime, ds);
 				response.Switch().
 					Case<ResponseDrivingCycleDistanceExceeded>(r => ds = r.MaxDistance).
-					Case<ResponseCycleFinished>(r => {}).
+					Case<ResponseCycleFinished>(r => { }).
 					Case<ResponseSuccess>(r => {
 						container.CommitSimulationStep(absTime, r.SimulationInterval);
 						absTime += r.SimulationInterval;
@@ -131,7 +131,7 @@ namespace TUGraz.VectoCore.Tests.Integration.SimulationRuns
 			var cyclePort = cycle.OutPort();
 			dynamic tmp = Port.AddComponent(cycle, new Driver(container, driverData, new DefaultDriverStrategy()));
 			tmp = Port.AddComponent(tmp, new Vehicle(container, vehicleData));
-			tmp = Port.AddComponent(tmp, new Wheels(container, vehicleData.DynamicTyreRadius));
+			tmp = Port.AddComponent(tmp, new Wheels(container, vehicleData.DynamicTyreRadius, vehicleData.WheelsInertia));
 			tmp = Port.AddComponent(tmp, new Brakes(container));
 			tmp = Port.AddComponent(tmp, new AxleGear(container, axleGearData));
 			var gbx = new Gearbox(container, gearboxData, new AMTShiftStrategy(gearboxData, container));
@@ -167,10 +167,8 @@ namespace TUGraz.VectoCore.Tests.Integration.SimulationRuns
 
 				response.Switch().
 					Case<ResponseDrivingCycleDistanceExceeded>(r => ds = r.MaxDistance).
-					Case<ResponseCycleFinished>(r => {}).
-					Case<ResponseGearShift>(r => {
-						Log.Debug("Gearshift");
-					}).
+					Case<ResponseCycleFinished>(r => { }).
+					Case<ResponseGearShift>(r => { Log.Debug("Gearshift"); }).
 					Case<ResponseSuccess>(r => {
 						container.CommitSimulationStep(absTime, r.SimulationInterval);
 						absTime += r.SimulationInterval;
@@ -207,7 +205,7 @@ namespace TUGraz.VectoCore.Tests.Integration.SimulationRuns
 			var cyclePort = cycle.OutPort();
 			dynamic tmp = Port.AddComponent(cycle, new Driver(container, driverData, new DefaultDriverStrategy()));
 			tmp = Port.AddComponent(tmp, new Vehicle(container, vehicleData));
-			tmp = Port.AddComponent(tmp, new Wheels(container, vehicleData.DynamicTyreRadius));
+			tmp = Port.AddComponent(tmp, new Wheels(container, vehicleData.DynamicTyreRadius, vehicleData.WheelsInertia));
 			tmp = Port.AddComponent(tmp, new Brakes(container));
 			tmp = Port.AddComponent(tmp, new AxleGear(container, axleGearData));
 			tmp = Port.AddComponent(tmp,
@@ -242,10 +240,8 @@ namespace TUGraz.VectoCore.Tests.Integration.SimulationRuns
 
 				response.Switch().
 					Case<ResponseDrivingCycleDistanceExceeded>(r => ds = r.MaxDistance).
-					Case<ResponseCycleFinished>(r => {}).
-					Case<ResponseGearShift>(r => {
-						Log.Debug("Gearshift");
-					}).
+					Case<ResponseCycleFinished>(r => { }).
+					Case<ResponseGearShift>(r => { Log.Debug("Gearshift"); }).
 					Case<ResponseSuccess>(r => {
 						container.CommitSimulationStep(absTime, r.SimulationInterval);
 						absTime += r.SimulationInterval;

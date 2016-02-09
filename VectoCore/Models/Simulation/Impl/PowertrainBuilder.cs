@@ -150,7 +150,8 @@ namespace TUGraz.VectoCore.Models.Simulation.Impl
 			// cycle --> driver --> vehicle --> wheels --> axleGear --> retarder --> gearBox
 			var driver = AddComponent(cycle, new Driver(_container, data.DriverData, new DefaultDriverStrategy()));
 			var vehicle = AddComponent(driver, new Vehicle(_container, data.VehicleData));
-			var wheels = AddComponent(vehicle, new Wheels(_container, data.VehicleData.DynamicTyreRadius));
+			var wheels = AddComponent(vehicle,
+				new Wheels(_container, data.VehicleData.DynamicTyreRadius, data.VehicleData.WheelsInertia));
 			var brakes = AddComponent(wheels, new Brakes(_container));
 			var tmp = AddComponent(brakes, new AxleGear(_container, data.AxleGearData));
 
