@@ -169,18 +169,18 @@ namespace TUGraz.VectoCore.Models.SimulationComponent.Impl
 
 			container[ModalResultField.v_act] = averageVelocity;
 
-			//container[ModalResultField.PaVeh] = ((_previousState.VehicleTractiveForce * _previousState.Velocity +
+			//container[ModalResultField.P_veh_inertia] = ((_previousState.VehicleTractiveForce * _previousState.Velocity +
 			//									_currentState.VehicleTractiveForce * _currentState.Velocity) / 2.0).Cast<Watt>();
-			container[ModalResultField.PaVeh] =
+			container[ModalResultField.P_veh_inertia] =
 				(CurrentState.DriverAcceleration * (CurrentState.Velocity + PreviousState.Velocity) / 2).Cast<Watt>();
-			container[ModalResultField.Pgrad] = ((PreviousState.SlopeResistance * PreviousState.Velocity +
+			container[ModalResultField.P_slope] = ((PreviousState.SlopeResistance * PreviousState.Velocity +
 												CurrentState.SlopeResistance * CurrentState.Velocity) / 2.0).Cast<Watt>
 				();
-			container[ModalResultField.Proll] = ((PreviousState.RollingResistance * PreviousState.Velocity +
+			container[ModalResultField.P_roll] = ((PreviousState.RollingResistance * PreviousState.Velocity +
 												CurrentState.RollingResistance * CurrentState.Velocity) / 2.0)
 				.Cast<Watt>();
 
-			container[ModalResultField.Pair] = ComputeAirDragPowerLoss(PreviousState.Velocity, CurrentState.Velocity,
+			container[ModalResultField.P_air] = ComputeAirDragPowerLoss(PreviousState.Velocity, CurrentState.Velocity,
 				CurrentState.dt);
 
 

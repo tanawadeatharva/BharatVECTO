@@ -1,4 +1,4 @@
-' Copyright 2014 European Union.
+﻿' Copyright 2014 European Union.
 ' Licensed under the EUPL (the 'Licence');
 '
 ' * You may not use this work except in compliance with the Licence.
@@ -517,10 +517,10 @@ Public Class cMOD
 		HeaderList.Add(New String() {"Tq_clutch", "Nm"})
 		HeaderList.Add(New String() {"Tq_full", "Nm"})
 		HeaderList.Add(New String() {"Tq_drag", "Nm"})
-		HeaderList.Add(New String() {"Pe_eng", "kW"})
+		HeaderList.Add(New String() {"P_eng_out", "kW"})
 		HeaderList.Add(New String() {"Pe_full", "kW"})
 		HeaderList.Add(New String() {"Pe_drag", "kW"})
-		HeaderList.Add(New String() {"Pe_clutch", "kW"})
+		HeaderList.Add(New String() {"P_clutch_out", "kW"})
 		HeaderList.Add(New String() {"Pa Eng", "kW"})
 		HeaderList.Add(New String() {"Paux", "kW"})
 

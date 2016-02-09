@@ -75,8 +75,8 @@ namespace TUGraz.VectoCore.Tests.Utils
 			var xfields = new[] { ModalResultField.time, ModalResultField.dist };
 
 			var yfields = new[] {
-				ModalResultField.v_act, ModalResultField.acc, ModalResultField.n, ModalResultField.Gear,
-				ModalResultField.Pe_eng, ModalResultField.Tq_eng, ModalResultField.FCMap
+				ModalResultField.v_act, ModalResultField.acc, ModalResultField.n_eng_avg, ModalResultField.Gear,
+				ModalResultField.P_eng_out, ModalResultField.T_eng_fcmap, ModalResultField.FCMap
 			};
 
 			var titleHeight = (50 * 100.0f) / (_diagramSize.Height * yfields.Count());
@@ -200,8 +200,8 @@ namespace TUGraz.VectoCore.Tests.Utils
 			//var xfields = new[] { ModalResultField.dist };
 			var xfield = ModalResultField.dist;
 			var yfields = new[] {
-				ModalResultField.v_act, ModalResultField.acc, ModalResultField.n, ModalResultField.Gear,
-				ModalResultField.Pe_eng, ModalResultField.Tq_eng, ModalResultField.FCMap
+				ModalResultField.v_act, ModalResultField.acc, ModalResultField.n_eng_avg, ModalResultField.Gear,
+				ModalResultField.P_eng_out, ModalResultField.T_eng_fcmap, ModalResultField.FCMap
 			};
 
 			var titleHeight = (50 * 100.0f) / (_diagramSize.Height * yfields.Count());
@@ -394,8 +394,8 @@ namespace TUGraz.VectoCore.Tests.Utils
 		//	var xfields = new[] { ModalResultField.time, ModalResultField.dist };
 
 		//	var yfields = new[] {
-		//		ModalResultField.v_act, ModalResultField.acc, ModalResultField.n, ModalResultField.Gear, ModalResultField.Pe_eng,
-		//		ModalResultField.Tq_eng, ModalResultField.FCMap
+		//		ModalResultField.v_act, ModalResultField.acc, ModalResultField.n_eng_avg, ModalResultField.Gear, ModalResultField.P_eng_out,
+		//		ModalResultField.T_eng_fcmap, ModalResultField.FCMap
 		//	};
 
 		//	var images = new List<Stream>();

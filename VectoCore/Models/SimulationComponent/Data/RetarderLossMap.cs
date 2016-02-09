@@ -74,7 +74,7 @@ namespace TUGraz.VectoCore.Models.SimulationComponent.Data
 		{
 			int idx;
 			if (angularVelocity < _entries[0].RetarderSpeed) {
-				Log.Info("requested rpm below minimum rpm in retarder loss map - extrapolating. n: {0}, rpm_min: {1}",
+				Log.Info("requested rpm below minimum rpm in retarder loss map - extrapolating. n_eng_avg: {0}, rpm_min: {1}",
 					angularVelocity.ConvertTo().Rounds.Per.Minute,
 					_entries[0].RetarderSpeed.ConvertTo().Rounds.Per.Minute);
 				idx = 1;

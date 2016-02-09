@@ -87,9 +87,9 @@ namespace TUGraz.VectoCore.Models.SimulationComponent.Impl
 
 		protected override void DoWriteModalResults(IModalDataContainer container)
 		{
-			//container[ModalResultField.PlossDiff] = Loss;
+			//container[ModalResultField.P_axle_loss] = Loss;
 
-			container[ModalResultField.PlossDiff] = CurrentState.TorqueLoss *
+			container[ModalResultField.P_axle_loss] = CurrentState.TorqueLoss *
 													(PreviousState.InAngularVelocity + CurrentState.InAngularVelocity) / 2.0;
 		}
 

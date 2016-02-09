@@ -255,14 +255,14 @@ namespace TUGraz.VectoCore.InputData.Reader
 		// todo MK-2016-01-19: move fields to resource file
 		private static class Fields
 		{
-			public const string PWheel = "Pwheel";
+			public const string PWheel = "P_wheel_in";
 			public const string Distance = "s";
 			public const string Time = "t";
 			public const string VehicleSpeed = "v";
 			public const string RoadGradient = "grad";
 			public const string StoppingTime = "stop";
 			public const string AuxiliarySupplyPower = "Aux_";
-			public const string EngineSpeed = "n";
+			public const string EngineSpeed = "n_eng_avg";
 			public const string Gear = "Gear";
 			public const string AdditionalAuxPowerDemand = "Padd";
 			public const string AirSpeedRelativeToVehicle = "vair_res";

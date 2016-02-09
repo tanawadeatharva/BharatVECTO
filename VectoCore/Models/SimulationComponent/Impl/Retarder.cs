@@ -40,7 +40,7 @@ namespace TUGraz.VectoCore.Models.SimulationComponent.Impl
 
 		protected override void DoWriteModalResults(IModalDataContainer container)
 		{
-			container[ModalResultField.PlossRetarder] = GetPowerLoss(PreviousState, CurrentState);
+			container[ModalResultField.P_ret_loss] = GetPowerLoss(PreviousState, CurrentState);
 		}
 
 		protected override void DoCommitSimulationStep() {}

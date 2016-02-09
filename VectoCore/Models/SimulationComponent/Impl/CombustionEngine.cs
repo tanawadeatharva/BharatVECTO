@@ -238,17 +238,17 @@ namespace TUGraz.VectoCore.Models.SimulationComponent.Impl
 
 		protected override void DoWriteModalResults(IModalDataContainer container)
 		{
-			container[ModalResultField.Pe_drag] = CurrentState.FullDragPower;
-			container[ModalResultField.Pe_full] = CurrentState.DynamicFullLoadPower;
-			container[ModalResultField.Pe_eng] = (PreviousState.EnginePower + CurrentState.EnginePower) / 2.0;
-			//container[ModalResultField.Pe_eng] = (PreviousState.EngineSpeed + CurrentState.EngineSpeed) / 2.0 *
+			container[ModalResultField.P_eng_drag] = CurrentState.FullDragPower;
+			container[ModalResultField.P_eng_full] = CurrentState.DynamicFullLoadPower;
+			container[ModalResultField.P_eng_out] = (PreviousState.EnginePower + CurrentState.EnginePower) / 2.0;
+			//container[ModalResultField.P_eng_out] = (PreviousState.EngineSpeed + CurrentState.EngineSpeed) / 2.0 *
 			//									(CurrentState.EngineTorque);
-			container[ModalResultField.PaEng] = (PreviousState.EnginePowerLoss + CurrentState.EnginePowerLoss) / 2.0;
+			container[ModalResultField.P_eng_inertia] = (PreviousState.EnginePowerLoss + CurrentState.EnginePowerLoss) / 2.0;
 
 			container[ModalResultField.Tq_drag] = CurrentState.FullDragTorque;
 			container[ModalResultField.Tq_full] = CurrentState.DynamicFullLoadTorque;
-			container[ModalResultField.Tq_eng] = (PreviousState.EngineTorque + CurrentState.EngineTorque) / 2.0;
-			container[ModalResultField.n] = (PreviousState.EngineSpeed + CurrentState.EngineSpeed) / 2.0;
+			container[ModalResultField.T_eng_fcmap] = (PreviousState.EngineTorque + CurrentState.EngineTorque) / 2.0;
+			container[ModalResultField.n_eng_avg] = (PreviousState.EngineSpeed + CurrentState.EngineSpeed) / 2.0;
 
 			try {
 				var fc = Data.ConsumptionMap.GetFuelConsumption((PreviousState.EngineTorque + CurrentState.EngineTorque) / 2.0,
@@ -260,7 +260,7 @@ namespace TUGraz.VectoCore.Models.SimulationComponent.Impl
 				container[ModalResultField.FCAUXc] = fcaux;
 				container[ModalResultField.FCWHTCc] = fcaux * Data.WHTCCorrectionFactor;
 			} catch (VectoException ex) {
-				Log.Warn("t: {0} - {1} n: {2} Tq: {3}", CurrentState.AbsTime, ex.Message, CurrentState.EngineSpeed,
+				Log.Warn("t: {0} - {1} n_eng_avg: {2} Tq: {3}", CurrentState.AbsTime, ex.Message, CurrentState.EngineSpeed,
 					CurrentState.EngineTorque);
 				container[ModalResultField.FCMap] = double.NaN.SI<KilogramPerSecond>();
 			}
@@ -280,11 +280,11 @@ namespace TUGraz.VectoCore.Models.SimulationComponent.Impl
 		protected virtual void ValidatePowerDemand(Watt requestedEnginePower)
 		{
 			if (CurrentState.FullDragPower >= 0 && requestedEnginePower < 0) {
-				throw new VectoSimulationException("P_engine_drag > 0! n: {0} [1/min] ", CurrentState.EngineSpeed.Value().RadToRPM());
+				throw new VectoSimulationException("P_engine_drag > 0! n_eng_avg: {0} [1/min] ", CurrentState.EngineSpeed.Value().RadToRPM());
 			}
 
 			if (CurrentState.DynamicFullLoadPower <= 0 && requestedEnginePower > 0) {
-				throw new VectoSimulationException("P_engine_full < 0! n: {0} [1/min] ", CurrentState.EngineSpeed.Value().RadToRPM());
+				throw new VectoSimulationException("P_engine_full < 0! n_eng_avg: {0} [1/min] ", CurrentState.EngineSpeed.Value().RadToRPM());
 			}
 		}
 

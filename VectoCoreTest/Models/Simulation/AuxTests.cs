@@ -76,7 +76,7 @@ namespace TUGraz.VectoCore.Tests.Models.Simulation
 			for (var i = 0; i < 11; i++) {
 				aux.PowerDemand(t, dt, torque, speed);
 				modData[ModalResultField.dist] = i.SI<Meter>();
-				modData[ModalResultField.Pe_eng] = 0.SI<Watt>();
+				modData[ModalResultField.P_eng_out] = 0.SI<Watt>();
 				modData[ModalResultField.acc] = 0.SI<MeterPerSquareSecond>();
 				container.CommitSimulationStep(t, dt);
 				t += dt;
@@ -85,7 +85,7 @@ namespace TUGraz.VectoCore.Tests.Models.Simulation
 			container.FinishSimulation();
 			sumWriter.Finish();
 
-			var testColumns = new[] { "Paux_FAN", "Paux_STP", "Paux_AC", "Paux_ES", "Paux_PS", "Paux" };
+			var testColumns = new[] { "Paux_FAN", "Paux_STP", "Paux_AC", "Paux_ES", "Paux_PS", "P_aux" };
 
 			ResultFileHelper.TestModFile(@"TestData\Results\EngineOnlyCycles\40t_Long_Haul_Truck_Long_Haul_Empty Loading.vmod",
 				@"AuxWriteModFileSumFile.vmod", testColumns);

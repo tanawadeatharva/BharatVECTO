@@ -58,8 +58,8 @@ namespace TUGraz.VectoCore.Models.SimulationComponent.Impl
 
 		protected override void DoWriteModalResults(IModalDataContainer container)
 		{
-			container[ModalResultField.Pe_clutch] = _requiredPower;
-			container[ModalResultField.Tq_clutch] = _requiredTorque;
+			container[ModalResultField.P_clutch_out] = _requiredPower;
+			//container[ModalResultField.t_] = _requiredTorque;
 		}
 
 		protected override void DoCommitSimulationStep()
@@ -155,7 +155,6 @@ namespace TUGraz.VectoCore.Models.SimulationComponent.Impl
 			Log.Debug("to Engine:   torque: {0}, angularVelocity: {1}, power {2}", torqueIn, engineSpeedIn,
 				Formulas.TorqueToPower(torqueIn, engineSpeedIn));
 		}
-
 	}
 
 	/// <summary>

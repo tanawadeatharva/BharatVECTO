@@ -385,9 +385,9 @@ namespace TUGraz.VectoCore.Models.SimulationComponent.Impl
 		{
 			container[ModalResultField.Gear] = Disengaged || DataBus.VehicleStopped ? 0 : Gear;
 
-			container[ModalResultField.PlossGB] = CurrentState.TransmissionTorqueLoss *
+			container[ModalResultField.P_gbx_loss] = CurrentState.TransmissionTorqueLoss *
 												(PreviousState.InAngularVelocity + CurrentState.InAngularVelocity) / 2.0;
-			container[ModalResultField.PaGB] = CurrentState.InertiaTorqueLoss *
+			container[ModalResultField.P_gbx_inertia] = CurrentState.InertiaTorqueLoss *
 												(PreviousState.InAngularVelocity + CurrentState.InAngularVelocity) / 2.0;
 		}
 

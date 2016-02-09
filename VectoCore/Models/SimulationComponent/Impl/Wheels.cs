@@ -100,7 +100,7 @@ namespace TUGraz.VectoCore.Models.SimulationComponent.Impl
 
 		protected override void DoWriteModalResults(IModalDataContainer container)
 		{
-			container[ModalResultField.Pwheel] =
+			container[ModalResultField.P_wheel_in] =
 				(CurrentState.Torque * (CurrentState.AngularVelocity + PreviousState.AngularVelocity) / 2.0).Cast<Watt>();
 		}
 

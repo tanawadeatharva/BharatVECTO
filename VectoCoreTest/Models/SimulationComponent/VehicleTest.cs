@@ -133,11 +133,11 @@ namespace TUGraz.VectoCore.Tests.Models.SimulationComponent
 			var retVal = vehicle.Request(absTime, dt, 0.SI<MeterPerSquareSecond>(), 0.SI<Radian>());
 			vehicle.CommitSimulationStep(writer);
 
-			Assert.AreEqual(48201.2777, ((SI)writer[ModalResultField.Pair]).Value(), 0.1);
+			Assert.AreEqual(48201.2777, ((SI)writer[ModalResultField.P_air]).Value(), 0.1);
 
 			retVal = vehicle.Request(absTime, dt, 1.SI<MeterPerSquareSecond>(), 0.SI<Radian>());
 			vehicle.CommitSimulationStep(writer);
-			Assert.AreEqual(49735.26379, ((SI)writer[ModalResultField.Pair]).Value(), 0.1);
+			Assert.AreEqual(49735.26379, ((SI)writer[ModalResultField.P_air]).Value(), 0.1);
 		}
 
 		[TestMethod]

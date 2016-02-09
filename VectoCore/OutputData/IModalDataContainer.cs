@@ -218,21 +218,21 @@ namespace TUGraz.VectoCore.OutputData
 
 		public static WattSecond PowerAccelerations(this IModalDataContainer data)
 		{
-			var paEngine = data.TimeIntegral<WattSecond>(ModalResultField.PaEng);
-			var paGearbox = data.TimeIntegral<WattSecond>(ModalResultField.PaGB);
+			var paEngine = data.TimeIntegral<WattSecond>(ModalResultField.P_eng_inertia);
+			var paGearbox = data.TimeIntegral<WattSecond>(ModalResultField.P_gbx_inertia);
 			return paEngine + paGearbox;
 		}
 
 		public static WattSecond WorkTransmission(this IModalDataContainer data)
 		{
-			var plossdiff = data.TimeIntegral<WattSecond>(ModalResultField.PlossGB);
-			var plossgb = data.TimeIntegral<WattSecond>(ModalResultField.PlossDiff);
+			var plossdiff = data.TimeIntegral<WattSecond>(ModalResultField.P_gbx_loss);
+			var plossgb = data.TimeIntegral<WattSecond>(ModalResultField.P_axle_loss);
 			return plossdiff + plossgb;
 		}
 
 		public static WattSecond WorkRetarder(this IModalDataContainer data)
 		{
-			return data.TimeIntegral<WattSecond>(ModalResultField.PlossRetarder);
+			return data.TimeIntegral<WattSecond>(ModalResultField.P_ret_loss);
 		}
 
 		public static WattSecond WorkTorqueConverter(this IModalDataContainer data)
@@ -260,47 +260,47 @@ namespace TUGraz.VectoCore.OutputData
 
 		public static WattSecond WorkTotalMechanicalBrake(this IModalDataContainer data)
 		{
-			return data.TimeIntegral<WattSecond>(ModalResultField.Pbrake);
+			return data.TimeIntegral<WattSecond>(ModalResultField.P_brake_loss);
 		}
 
 		public static WattSecond WorkAuxiliaries(this IModalDataContainer data)
 		{
-			return data.TimeIntegral<WattSecond>(ModalResultField.Paux);
+			return data.TimeIntegral<WattSecond>(ModalResultField.P_aux);
 		}
 
 		public static WattSecond WorkRoadGradientResistance(this IModalDataContainer data)
 		{
-			return data.TimeIntegral<WattSecond>(ModalResultField.Pgrad);
+			return data.TimeIntegral<WattSecond>(ModalResultField.P_slope);
 		}
 
 		public static WattSecond WorkRollingResistance(this IModalDataContainer data)
 		{
-			return data.TimeIntegral<WattSecond>(ModalResultField.Proll);
+			return data.TimeIntegral<WattSecond>(ModalResultField.P_roll);
 		}
 
 		public static WattSecond WorkAirResistance(this IModalDataContainer data)
 		{
-			return data.TimeIntegral<WattSecond>(ModalResultField.Pair);
+			return data.TimeIntegral<WattSecond>(ModalResultField.P_air);
 		}
 
 		public static WattSecond EngineWorkPositive(this IModalDataContainer data)
 		{
-			return data.TimeIntegral<WattSecond>(ModalResultField.Pe_eng, x => x > 0);
+			return data.TimeIntegral<WattSecond>(ModalResultField.P_eng_out, x => x > 0);
 		}
 
 		public static WattSecond EngineWorkNegative(this IModalDataContainer data)
 		{
-			return data.TimeIntegral<WattSecond>(ModalResultField.Pe_eng, x => x < 0);
+			return data.TimeIntegral<WattSecond>(ModalResultField.P_eng_out, x => x < 0);
 		}
 
 		public static Watt PowerBrake(this IModalDataContainer data)
 		{
-			return data.TimeIntegral<WattSecond>(ModalResultField.Pbrake) / data.Duration();
+			return data.TimeIntegral<WattSecond>(ModalResultField.P_brake_loss) / data.Duration();
 		}
 
 		public static Watt PowerWheelPositive(this IModalDataContainer data)
 		{
-			return data.TimeIntegral<WattSecond>(ModalResultField.Pwheel, x => x > 0) / data.Duration();
+			return data.TimeIntegral<WattSecond>(ModalResultField.P_wheel_in, x => x > 0) / data.Duration();
 		}
 
 		public static KilogramPerMeter FuelConsumptionWHTCCorrected(this IModalDataContainer data)
@@ -383,7 +383,7 @@ namespace TUGraz.VectoCore.OutputData
 		public static Watt EnginePowerNegativeAverage(this IModalDataContainer data)
 		{
 			var simulationIntervals = data.GetValues<Second>(ModalResultField.simulationInterval);
-			var values = data.GetValues<Watt>(ModalResultField.Pe_eng)
+			var values = data.GetValues<Watt>(ModalResultField.P_eng_out)
 				.Zip(simulationIntervals, (value, dt) => new { Dt = dt, Value = value * dt })
 				.Where(v => v.Value < 0).ToList();
 			if (values.Any()) {
@@ -395,7 +395,7 @@ namespace TUGraz.VectoCore.OutputData
 		public static Watt EnginePowerPositiveAverage(this IModalDataContainer data)
 		{
 			var simulationIntervals = data.GetValues<Second>(ModalResultField.simulationInterval);
-			var values = data.GetValues<Watt>(ModalResultField.Pe_eng)
+			var values = data.GetValues<Watt>(ModalResultField.P_eng_out)
 				.Zip(simulationIntervals, (value, dt) => new { Dt = dt, Value = value * dt })
 				.Where(v => v.Value > 0).ToList();
 			if (values.Any()) {

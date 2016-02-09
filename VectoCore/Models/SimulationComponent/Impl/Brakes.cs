@@ -79,7 +79,7 @@ namespace TUGraz.VectoCore.Models.SimulationComponent.Impl
 
 		protected override void DoWriteModalResults(IModalDataContainer container)
 		{
-			container[ModalResultField.Pbrake] = BrakePower;
+			container[ModalResultField.P_brake_loss] = BrakePower;
 		}
 
 		protected override void DoCommitSimulationStep()

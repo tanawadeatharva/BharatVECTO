@@ -43,17 +43,17 @@ namespace TUGraz.VectoCore.Tests.Reports
 				modData[ModalResultField.time] = i.SI<Second>();
 				modData[ModalResultField.dist] = i.SI<Meter>();
 				modData["FAN"] = 3000.SI<Watt>();
-				modData[ModalResultField.Pair] = 3000.SI<Watt>();
-				modData[ModalResultField.Proll] = 3000.SI<Watt>();
-				modData[ModalResultField.Pgrad] = 3000.SI<Watt>();
-				modData[ModalResultField.Paux] = 3000.SI<Watt>();
-				modData[ModalResultField.Pbrake] = 3000.SI<Watt>();
+				modData[ModalResultField.P_air] = 3000.SI<Watt>();
+				modData[ModalResultField.P_roll] = 3000.SI<Watt>();
+				modData[ModalResultField.P_slope] = 3000.SI<Watt>();
+				modData[ModalResultField.P_aux] = 3000.SI<Watt>();
+				modData[ModalResultField.P_brake_loss] = 3000.SI<Watt>();
 
 				modData[ModalResultField.FCMap] = 1e-4.SI<KilogramPerSecond>();
 
 				modData[ModalResultField.altitude] = 0.SI<Meter>();
 				modData[ModalResultField.acc] = 0.SI<MeterPerSquareSecond>();
-				modData[ModalResultField.Pe_eng] = (i % 2 == 0 ? 1 : -1) * 3000.SI<Watt>();
+				modData[ModalResultField.P_eng_out] = (i % 2 == 0 ? 1 : -1) * 3000.SI<Watt>();
 
 				modData.CommitSimulationStep();
 			}
@@ -98,15 +98,15 @@ namespace TUGraz.VectoCore.Tests.Reports
 				modData[ModalResultField.time] = i.SI<Second>();
 				modData[ModalResultField.dist] = i.SI<Meter>();
 				modData["FAN"] = powerDemand[i % powerDemand.Count()];
-				modData[ModalResultField.Pair] = powerDemand[i % powerDemand.Count()];
-				modData[ModalResultField.Proll] = powerDemand[i % powerDemand.Count()];
-				modData[ModalResultField.Pgrad] = powerDemand[i % powerDemand.Count()];
-				modData[ModalResultField.Paux] = powerDemand[i % powerDemand.Count()];
-				modData[ModalResultField.Pbrake] = powerDemand[i % powerDemand.Count()];
+				modData[ModalResultField.P_air] = powerDemand[i % powerDemand.Count()];
+				modData[ModalResultField.P_roll] = powerDemand[i % powerDemand.Count()];
+				modData[ModalResultField.P_slope] = powerDemand[i % powerDemand.Count()];
+				modData[ModalResultField.P_aux] = powerDemand[i % powerDemand.Count()];
+				modData[ModalResultField.P_brake_loss] = powerDemand[i % powerDemand.Count()];
 
 				modData[ModalResultField.altitude] = 0.SI<Meter>();
 				modData[ModalResultField.acc] = 0.SI<MeterPerSquareSecond>();
-				modData[ModalResultField.Pe_eng] = (i % 2 == 0 ? 1 : -1) * powerDemand[i % powerDemand.Count()];
+				modData[ModalResultField.P_eng_out] = (i % 2 == 0 ? 1 : -1) * powerDemand[i % powerDemand.Count()];
 				modData.CommitSimulationStep();
 			}
 

@@ -36,8 +36,8 @@ namespace TUGraz.VectoCore.Tests.Reports
 			foreach (DataRow row in modData.Data.Rows) {
 				var time = (Second)row[(int)ModalResultField.time];
 				var distance = (Meter)row[(int)ModalResultField.dist];
-				var torqueEngine = (NewtonMeter)row[(int)ModalResultField.Tq_eng];
-				var engineSpeed = (PerSecond)row[(int)ModalResultField.n];
+				var torqueEngine = (NewtonMeter)row[(int)ModalResultField.T_eng_fcmap];
+				var engineSpeed = (PerSecond)row[(int)ModalResultField.n_eng_avg];
 
 				// check fuel consumption interpolation
 				var fuelConsumption = (SI)row[(int)ModalResultField.FCMap];
@@ -45,30 +45,30 @@ namespace TUGraz.VectoCore.Tests.Reports
 					engineData.ConsumptionMap.GetFuelConsumption(torqueEngine, engineSpeed).Value(), 1E-3, "time: {0}  distance: {1}",
 					time, distance);
 
-				// check Pe_eng = Tq_eng * n_eng
-				var enginePower = (SI)row[(int)ModalResultField.Pe_eng];
+				// check P_eng_out = T_eng_fcmap * n_eng
+				var enginePower = (SI)row[(int)ModalResultField.P_eng_out];
 				Assert.AreEqual(enginePower.Value(), (torqueEngine * engineSpeed).Value(), 1E-3, "time: {0}  distance: {1}", time,
 					distance);
 
 				// P_wheel = P_air + P_roll + P_grad + Pa_veh
-				var pWheel = (Watt)row[(int)ModalResultField.Pwheel];
-				var pAir = (Watt)row[(int)ModalResultField.Pair];
-				var pRoll = (Watt)row[(int)ModalResultField.Proll];
-				var pGrad = (Watt)row[(int)ModalResultField.Pgrad];
-				var paVeh = (Watt)row[(int)ModalResultField.PaVeh];
+				var pWheel = (Watt)row[(int)ModalResultField.P_wheel_in];
+				var pAir = (Watt)row[(int)ModalResultField.P_air];
+				var pRoll = (Watt)row[(int)ModalResultField.P_roll];
+				var pGrad = (Watt)row[(int)ModalResultField.P_slope];
+				var paVeh = (Watt)row[(int)ModalResultField.P_veh_inertia];
 
 				Assert.AreEqual(pWheel.Value(), (pAir + pRoll + pGrad + paVeh).Value(), 1E-3, "time: {0}  distance: {1}", time,
 					distance);
 
-				// Pe_﻿eng = P﻿_wheel + P_loss﻿gearbox + P_loss﻿axle + P_loss﻿retarder + P_a﻿gbx + Pa_﻿eng + P_aux - Pbrake
-				var peEng = (Watt)row[(int)ModalResultField.Pe_eng];
-				var pLossGbx = (Watt)row[(int)ModalResultField.PlossGB];
-				var pLossAxle = (Watt)row[(int)ModalResultField.PlossDiff];
-				var pLossRet = (Watt)row[(int)ModalResultField.PlossRetarder];
-				var paGbx = (Watt)row[(int)ModalResultField.PaGB];
-				var paEng = (Watt)row[(int)ModalResultField.PaEng];
-				var pAux = (Watt)row[(int)ModalResultField.Paux];
-				var pBrake = (Watt)row[(int)ModalResultField.Pbrake];
+				// Pe_﻿eng = P﻿_wheel + P_loss﻿gearbox + P_loss﻿axle + P_loss﻿retarder + P_a﻿gbx + Pa_﻿eng + P_aux - P_brake_loss
+				var peEng = (Watt)row[(int)ModalResultField.P_eng_out];
+				var pLossGbx = (Watt)row[(int)ModalResultField.P_gbx_loss];
+				var pLossAxle = (Watt)row[(int)ModalResultField.P_axle_loss];
+				var pLossRet = (Watt)row[(int)ModalResultField.P_ret_loss];
+				var paGbx = (Watt)row[(int)ModalResultField.P_gbx_inertia];
+				var paEng = (Watt)row[(int)ModalResultField.P_eng_inertia];
+				var pAux = (Watt)row[(int)ModalResultField.P_aux];
+				var pBrake = (Watt)row[(int)ModalResultField.P_brake_loss];
 
 				var gear = (uint)row[(int)ModalResultField.Gear];
 

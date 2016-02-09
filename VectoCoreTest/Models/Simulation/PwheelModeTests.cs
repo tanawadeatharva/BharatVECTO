@@ -48,7 +48,7 @@ namespace TUGraz.VectoCore.Tests.Models.Simulation
 		public void Pwheel_ReadCycle_Test()
 		{
 			var container = new VehicleContainer();
-			var inputData = "<t>,<Pwheel>,<Gear>,<n>,<Padd>\n1,89,2,1748,1.300\n2,120,2,1400,0.4";
+			var inputData = "<t>,<P_wheel_in>,<Gear>,<n_eng_avg>,<Padd>\n1,89,2,1748,1.300\n2,120,2,1400,0.4";
 
 			var cycleFile = new MemoryStream(Encoding.UTF8.GetBytes(inputData));
 			var drivingCycle = DrivingCycleDataReader.ReadFromStream(cycleFile, CycleType.PWheel);
@@ -80,14 +80,14 @@ namespace TUGraz.VectoCore.Tests.Models.Simulation
 		}
 
 		/// <summary>
-		/// Tests if the powertrain can be created in Pwheel mode.
+		/// Tests if the powertrain can be created in P_wheel_in mode.
 		/// </summary>
 		/// <remarks>VECTO-177</remarks>
 		[TestMethod]
 		public void Pwheel_CreatePowertrain_Test()
 		{
 			// prepare input data
-			var inputData = "<t>,<Pwheel>,<Gear>,<n>,<Padd>\n1,89,2,1748,1.300\n2,120,2,1400,0.4";
+			var inputData = "<t>,<P_wheel_in>,<Gear>,<n_eng_avg>,<Padd>\n1,89,2,1748,1.300\n2,120,2,1400,0.4";
 
 			var cycleFile = new MemoryStream(Encoding.UTF8.GetBytes(inputData));
 			var drivingCycle = DrivingCycleDataReader.ReadFromStream(cycleFile, CycleType.PWheel);
@@ -123,13 +123,13 @@ namespace TUGraz.VectoCore.Tests.Models.Simulation
 		}
 
 		/// <summary>
-		/// Tests if the simulation works and the modfile and sumfile are correct in Pwheel mode.
+		/// Tests if the simulation works and the modfile and sumfile are correct in P_wheel_in mode.
 		/// </summary>
 		/// <remarks>VECTO-177</remarks>
 		[TestMethod]
 		public void Pwheel_Run_Test()
 		{
-			var jobFile = @"TestData\Jobs\Pwheel.vecto";
+			var jobFile = @"TestData\Jobs\P_wheel_in.vecto";
 			var fileWriter = new FileOutputWriter(jobFile);
 			var sumWriter = new SummaryDataContainer(fileWriter);
 			var jobContainer = new JobContainer(sumWriter);
@@ -144,14 +144,14 @@ namespace TUGraz.VectoCore.Tests.Models.Simulation
 
 			Assert.IsTrue(jobContainer.Runs.All(r => r.Success), string.Join("", jobContainer.Runs.Select(r => r.ExecException)));
 
-			ResultFileHelper.TestSumFile(@"TestData\Results\Pwheel\Atego_ges.v2.vsum", @"TestData\Jobs\Pwheel.vsum");
+			ResultFileHelper.TestSumFile(@"TestData\Results\P_wheel_in\Atego_ges.v2.vsum", @"TestData\Jobs\P_wheel_in.vsum");
 
-			ResultFileHelper.TestModFile(@"TestData\Results\Pwheel\Atego_ges_Gear2_pt1_rep1_actual.vmod",
+			ResultFileHelper.TestModFile(@"TestData\Results\P_wheel_in\Atego_ges_Gear2_pt1_rep1_actual.vmod",
 				@"TestData\Jobs\Pwheel_Gear2_pt1_rep1_actual.vmod");
 		}
 
 		/// <summary>
-		/// Tests if the simulation works and the modfile and sumfile are correct in Pwheel mode.
+		/// Tests if the simulation works and the modfile and sumfile are correct in P_wheel_in mode.
 		/// </summary>
 		/// <remarks>VECTO-177</remarks>
 		[TestMethod]
@@ -172,7 +172,7 @@ namespace TUGraz.VectoCore.Tests.Models.Simulation
 
 			Assert.IsTrue(jobContainer.Runs.All(r => r.Success), string.Join("", jobContainer.Runs.Select(r => r.ExecException)));
 
-			ResultFileHelper.TestModFile(@"TestData\Results\Pwheel\Atego_HDVCO2_RD_#1_AuxStd.vmod",
+			ResultFileHelper.TestModFile(@"TestData\Results\P_wheel_in\Atego_HDVCO2_RD_#1_AuxStd.vmod",
 				@"TestData\Jobs\Pwheel_ultimate_RD_#1_Pwheel_AuxStd.vmod", testRowCount: false);
 		}
 	}

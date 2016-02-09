@@ -220,7 +220,7 @@ namespace TUGraz.VectoCore.Models.SimulationComponent.Impl
 
 		protected override void DoWriteModalResults(IModalDataContainer container)
 		{
-			container[ModalResultField.Pwheel] = LeftSample.Current.PWheel;
+			container[ModalResultField.P_wheel_in] = LeftSample.Current.PWheel;
 			base.DoWriteModalResults(container);
 		}
 

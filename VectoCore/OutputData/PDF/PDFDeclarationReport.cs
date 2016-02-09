@@ -513,8 +513,8 @@ namespace TUGraz.VectoCore.OutputData.PDF
 
 			var dataPoints = new Series("load points (Ref. load.)") { ChartType = SeriesChartType.Point, Color = Color.Red };
 			dataPoints.Points.DataBindXY(
-				modData.GetValues<PerSecond>(ModalResultField.n).Select(x => x.ConvertTo().Rounds.Per.Minute).ToDouble(),
-				modData.GetValues<NewtonMeter>(ModalResultField.Tq_eng).ToDouble());
+				modData.GetValues<PerSecond>(ModalResultField.n_eng_avg).Select(x => x.ConvertTo().Rounds.Per.Minute).ToDouble(),
+				modData.GetValues<NewtonMeter>(ModalResultField.T_eng_fcmap).ToDouble());
 			operatingPointsChart.Series.Add(dataPoints);
 
 			operatingPointsChart.Update();

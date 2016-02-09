@@ -97,32 +97,32 @@ namespace TUGraz.VectoCore.OutputData
 			}
 
 			dataColumns.AddRange(new[] {
-				ModalResultField.n,
-				ModalResultField.Tq_eng,
-				ModalResultField.Tq_clutch,
+				ModalResultField.n_eng_avg,
+				ModalResultField.T_eng_fcmap,
+				//ModalResultField.Tq_clutch,
 				ModalResultField.Tq_full,
 				ModalResultField.Tq_drag,
-				ModalResultField.Pe_eng,
-				ModalResultField.Pe_full,
-				ModalResultField.Pe_drag,
-				ModalResultField.Pe_clutch,
-				ModalResultField.PaEng,
-				ModalResultField.Paux
+				ModalResultField.P_eng_out,
+				ModalResultField.P_eng_full,
+				ModalResultField.P_eng_drag,
+				ModalResultField.P_clutch_out,
+				ModalResultField.P_eng_inertia,
+				ModalResultField.P_aux
 			});
 
 			if (_mode != ExecutionMode.EngineOnly) {
 				dataColumns.AddRange(new[] {
 					ModalResultField.Gear,
-					ModalResultField.PlossGB,
-					ModalResultField.PlossDiff,
-					ModalResultField.PlossRetarder,
-					ModalResultField.PaGB,
-					ModalResultField.PaVeh,
-					ModalResultField.Proll,
-					ModalResultField.Pair,
-					ModalResultField.Pgrad,
-					ModalResultField.Pwheel,
-					ModalResultField.Pbrake
+					ModalResultField.P_gbx_loss,
+					ModalResultField.P_axle_loss,
+					ModalResultField.P_ret_loss,
+					ModalResultField.P_gbx_inertia,
+					ModalResultField.P_veh_inertia,
+					ModalResultField.P_roll,
+					ModalResultField.P_air,
+					ModalResultField.P_slope,
+					ModalResultField.P_wheel_in,
+					ModalResultField.P_brake_loss
 				});
 
 				if (HasTorqueConverter) {
@@ -179,13 +179,13 @@ namespace TUGraz.VectoCore.OutputData
 		{
 			if (!string.IsNullOrWhiteSpace(id)) {
 				if (!Auxiliaries.ContainsKey(id)) {
-					var col = Data.Columns.Add(ModalResultField.Paux_ + id, typeof(SI));
+					var col = Data.Columns.Add(ModalResultField.P_aux_ + id, typeof(SI));
 					col.ExtendedProperties[ModalResults.ExtendedPropertyNames.Decimals] =
-						ModalResultField.Paux_.GetAttribute().Decimals;
+						ModalResultField.P_aux_.GetAttribute().Decimals;
 					col.ExtendedProperties[ModalResults.ExtendedPropertyNames.OutputFactor] =
-						ModalResultField.Paux_.GetAttribute().OutputFactor;
+						ModalResultField.P_aux_.GetAttribute().OutputFactor;
 					col.ExtendedProperties[ModalResults.ExtendedPropertyNames.ShowUnit] =
-						ModalResultField.Paux_.GetAttribute().ShowUnit;
+						ModalResultField.P_aux_.GetAttribute().ShowUnit;
 
 					Auxiliaries[id] = col;
 				}

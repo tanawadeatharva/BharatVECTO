@@ -1,4 +1,4 @@
-/*
+﻿/*
 * Copyright 2015, 2016 Graz University of Technology,
 * Institute of Internal Combustion Engines and Thermodynamics,
 * Institute of Technical Informatics
@@ -52,7 +52,7 @@ namespace TUGraz.VectoCore.OutputData
 		private const string FCWHTCC = "FC-WHTCc [g/h]";
 		private const string FCWHTCCKM = "FC-WHTCc [g/km]";
 		private const string PWHEELPOS = "PwheelPos [kW]";
-		private const string PBRAKE = "Pbrake [kW]";
+		private const string PBRAKE = "P_brake_loss [kW]";
 		private const string EPOSICE = "EposICE [kWh]";
 		private const string ENEGICE = "EnegICE [kWh]";
 		private const string EAIR = "Eair [kWh]";
