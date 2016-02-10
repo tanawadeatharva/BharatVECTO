@@ -241,9 +241,8 @@ namespace TUGraz.VectoCore.OutputData
 			var time = data.GetValues<Second>(ModalResultField.time).ToList();
 			if (time.Count == 1) {
 				return time.First();
-			} else {
-				return time.Max() - time.Min();
 			}
+			return time.Max() - time.Min();
 		}
 
 		public static Meter Distance(this IModalDataContainer data)
