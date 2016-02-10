@@ -89,7 +89,7 @@ namespace TUGraz.VectoCore.Models.SimulationComponent.Data
 			var g = Physics.GravityAccelleration;
 
 			var RRC = 0.0.SI<Scalar>();
-			var wheelsInertia = 0.SI<KilogramSquareMeter>();
+			var wheelsInertia = 0.0.SI<KilogramSquareMeter>();
 			foreach (var axle in _axleData) {
 				var nrWheels = axle.TwinTyres ? 4 : 2;
 				RRC += axle.AxleWeightShare * axle.RollResistanceCoefficient *
@@ -97,6 +97,8 @@ namespace TUGraz.VectoCore.Models.SimulationComponent.Data
 							Physics.RollResistanceExponent - 1);
 				wheelsInertia += nrWheels * axle.Inertia;
 			}
+			TotalRollResistanceCoefficient = RRC;
+			WheelsInertia = wheelsInertia;
 		}
 	}
 }
