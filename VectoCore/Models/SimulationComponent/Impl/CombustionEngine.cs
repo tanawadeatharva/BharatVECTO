@@ -345,8 +345,14 @@ namespace TUGraz.VectoCore.Models.SimulationComponent.Impl
 				dynFullPowerCalculated = CurrentState.StationaryFullLoadPower * (1 - Math.Exp((-tStar / pt1).Value()));
 			}
 
-			CurrentState.DynamicFullLoadPower = VectoMath.Limit(dynFullPowerCalculated, StationaryIdleFullLoadPower,
-				CurrentState.StationaryFullLoadPower);
+			CurrentState.DynamicFullLoadPower = (dynFullPowerCalculated < CurrentState.StationaryFullLoadPower)
+				? dynFullPowerCalculated
+				: CurrentState.StationaryFullLoadPower;
+
+			// new check in vecto 3.x (according to Martin Rexeis)
+			if (CurrentState.DynamicFullLoadPower < StationaryIdleFullLoadPower) {
+				CurrentState.DynamicFullLoadPower = StationaryIdleFullLoadPower;
+			}
 
 			CurrentState.DynamicFullLoadTorque = CurrentState.DynamicFullLoadPower / angularVelocity;
 
