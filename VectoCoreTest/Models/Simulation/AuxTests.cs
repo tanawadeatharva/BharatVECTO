@@ -282,16 +282,15 @@ namespace TUGraz.VectoCore.Tests.Models.Simulation
 				"Auxiliary file not found: NOT_EXISTING_AUX_FILE.vaux");
 		}
 
-		[TestMethod, Ignore]
-		public void AuxReadJobFileDeclarationMode()
+		[TestMethod]
+		public void AuxRunJobFileDeclarationMode()
 		{
 			var fileWriter = new FileOutputWriter("AuxReadJobFileDeclarationMode", "");
 			var sumData = new SummaryDataContainer(fileWriter);
 			var jobContainer = new JobContainer(sumData);
 
 			var inputData = JSONInputDataFactory.ReadJsonJob(@"TestData\Jobs\40t_Long_Haul_Truck.vecto");
-			var runsFactory = new SimulatorFactory(ExecutionMode.Declaration,
-				inputData, fileWriter);
+			var runsFactory = new SimulatorFactory(ExecutionMode.Declaration, inputData, fileWriter);
 
 			jobContainer.AddRuns(runsFactory);
 			jobContainer.Execute();
@@ -300,27 +299,23 @@ namespace TUGraz.VectoCore.Tests.Models.Simulation
 				@"AuxReadJobFileDeclarationMode.vsum");
 		}
 
-		[TestMethod, Ignore]
-		public void AuxReadJobFileEngineeringMode()
+		[TestMethod]
+		public void AuxRunJobFileEngineeringMode()
 		{
 			var fileWriter = new FileOutputWriter("AuxReadJobFileEngineeringMode", "");
 			var sumData = new SummaryDataContainer(fileWriter);
 			var jobContainer = new JobContainer(sumData);
 
 			var inputData = JSONInputDataFactory.ReadJsonJob(@"TestData\Jobs\24t Coach.vecto");
-			var runsFactory = new SimulatorFactory(ExecutionMode.Engineering,
-				inputData, fileWriter);
+			var runsFactory = new SimulatorFactory(ExecutionMode.Engineering, inputData, fileWriter);
 
 			jobContainer.AddRuns(runsFactory);
 			jobContainer.Execute();
 
-			ResultFileHelper.TestSumFile(@"TestData\Results\Engineering\24t Coach.vsum",
-				@"AuxReadJobFileEngineeringMode.vsum");
+			ResultFileHelper.TestSumFile(@"TestData\Results\Engineering\24t Coach.vsum", @"AuxReadJobFileEngineeringMode.vsum");
 
-			ResultFileHelper.TestModFile(
-				@"TestData\Results\Engineering\24t Coach_Coach_24t_xshort.vmod",
+			ResultFileHelper.TestModFile(@"TestData\Results\Engineering\24t Coach_Coach_24t_xshort.vmod",
 				@"TestData\Jobs\24t Coach_Coach_24t_xshort.vmod");
-			Assert.Inconclusive();
 		}
 
 		[TestMethod]
