@@ -285,18 +285,21 @@ namespace TUGraz.VectoCore.Tests.Models.Simulation
 		[TestMethod]
 		public void AuxRunJobFileDeclarationMode()
 		{
-			var fileWriter = new FileOutputWriter("AuxReadJobFileDeclarationMode", "");
+			var fileWriter = new FileOutputWriter("AuxReadJobFileDeclarationMode.vsum", "");
 			var sumData = new SummaryDataContainer(fileWriter);
 			var jobContainer = new JobContainer(sumData);
 
-			var inputData = JSONInputDataFactory.ReadJsonJob(@"TestData\Jobs\40t_Long_Haul_Truck.vecto");
+			var inputData =
+				JSONInputDataFactory.ReadJsonJob(
+					@"TestData\Generic Vehicles\Declaration Mode\40t Long Haul Truck\40t_Long_Haul_Truck.vecto");
 			var runsFactory = new SimulatorFactory(ExecutionMode.Declaration, inputData, fileWriter);
 
 			jobContainer.AddRuns(runsFactory);
 			jobContainer.Execute();
 
-			ResultFileHelper.TestSumFile(@"TestData\Results\Declaration\40t_Long_Haul_Truck.vsum",
-				@"AuxReadJobFileDeclarationMode.vsum");
+			ResultFileHelper.TestSumFile(
+				@"AuxReadJobFileDeclarationMode.vsum",
+				@"TestData\Generic Vehicles\Declaration Mode\40t Long Haul Truck\40t_Long_Haul_Truck.v2.vsum");
 		}
 
 		[TestMethod]
@@ -306,7 +309,8 @@ namespace TUGraz.VectoCore.Tests.Models.Simulation
 			var sumData = new SummaryDataContainer(fileWriter);
 			var jobContainer = new JobContainer(sumData);
 
-			var inputData = JSONInputDataFactory.ReadJsonJob(@"TestData\Jobs\24t Coach.vecto");
+			var inputData =
+				JSONInputDataFactory.ReadJsonJob(@"TestData\Generic Vehicles\Engineering Mode\24t Coach\24t Coach.vecto");
 			var runsFactory = new SimulatorFactory(ExecutionMode.Engineering, inputData, fileWriter);
 
 			jobContainer.AddRuns(runsFactory);
