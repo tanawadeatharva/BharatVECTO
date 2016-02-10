@@ -33,13 +33,13 @@ namespace TUGraz.VectoCore.Models.SimulationComponent.Impl
 		IDriverDemandOutPort
 	{
 		//private readonly CrossWindCorrectionCurve _airResistanceCurve;
-		protected readonly VehicleData _data;
+		internal readonly VehicleData ModelData;
 
 		protected IFvOutPort NextComponent;
 
-		public Vehicle(IVehicleContainer container, VehicleData data) : base(container)
+		public Vehicle(IVehicleContainer container, VehicleData modelData) : base(container)
 		{
-			_data = data;
+			ModelData = modelData;
 
 			//_airResistanceCurve = data.CrossWindCorrectionCurve;
 		}
@@ -130,17 +130,17 @@ namespace TUGraz.VectoCore.Models.SimulationComponent.Impl
 
 		public Kilogram VehicleMass
 		{
-			get { return _data.TotalCurbWeight(); }
+			get { return ModelData.TotalCurbWeight(); }
 		}
 
 		public Kilogram VehicleLoading
 		{
-			get { return _data.Loading; }
+			get { return ModelData.Loading; }
 		}
 
 		public Kilogram TotalMass
 		{
-			get { return _data.TotalVehicleWeight(); }
+			get { return ModelData.TotalVehicleWeight(); }
 		}
 
 		public IFvInPort InPort()
@@ -155,7 +155,7 @@ namespace TUGraz.VectoCore.Models.SimulationComponent.Impl
 
 		protected override void DoWriteModalResults(IModalDataContainer container)
 		{
-			var averageVelocity = (PreviousState.Velocity + CurrentState.Velocity) / 2;
+			var averageVelocity = (PreviousState.Velocity + CurrentState.Velocity) / 2.0;
 
 			container[ModalResultField.v_act] = averageVelocity;
 
@@ -184,16 +184,16 @@ namespace TUGraz.VectoCore.Models.SimulationComponent.Impl
 
 		protected internal Newton RollingResistance(Radian gradient)
 		{
-			var retVal = (Math.Cos(gradient.Value()) * _data.TotalVehicleWeight() *
+			var retVal = (Math.Cos(gradient.Value()) * ModelData.TotalVehicleWeight() *
 						Physics.GravityAccelleration *
-						_data.TotalRollResistanceCoefficient).Cast<Newton>();
+						ModelData.TotalRollResistanceCoefficient).Cast<Newton>();
 			Log.Debug("RollingResistance: {0}", retVal);
 			return retVal;
 		}
 
 		protected internal Newton DriverAcceleration(MeterPerSquareSecond accelleration)
 		{
-			var retVal = (_data.TotalVehicleWeight() * accelleration).Cast<Newton>();
+			var retVal = (ModelData.TotalVehicleWeight() * accelleration).Cast<Newton>();
 			Log.Debug("DriverAcceleration: {0}", retVal);
 			return retVal;
 		}
@@ -201,7 +201,7 @@ namespace TUGraz.VectoCore.Models.SimulationComponent.Impl
 		protected internal Newton SlopeResistance(Radian gradient)
 		{
 			var retVal =
-				(_data.TotalVehicleWeight() * Physics.GravityAccelleration * Math.Sin(gradient.Value())).Cast<Newton>();
+				(ModelData.TotalVehicleWeight() * Physics.GravityAccelleration * Math.Sin(gradient.Value())).Cast<Newton>();
 			Log.Debug("SlopeResistance: {0}", retVal);
 			return retVal;
 		}
@@ -223,7 +223,7 @@ namespace TUGraz.VectoCore.Models.SimulationComponent.Impl
 		private Watt ComputeAirDragPowerLoss(MeterPerSecond v1, MeterPerSecond v2, Second dt)
 		{
 			var vAverage = (v1 + v2) / 2;
-			var CdA = _data.CrossWindCorrectionCurve.EffectiveAirDragArea(vAverage);
+			var CdA = ModelData.CrossWindCorrectionCurve.EffectiveAirDragArea(vAverage);
 			Watt averageAirDragPower;
 			if (v1.IsEqual(v2)) {
 				averageAirDragPower = (Physics.AirDensity / 2.0 * CdA * vAverage * vAverage * vAverage).Cast<Watt>();

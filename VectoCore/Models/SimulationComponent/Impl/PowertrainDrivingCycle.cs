@@ -201,7 +201,7 @@ namespace TUGraz.VectoCore.Models.SimulationComponent.Impl
 
 			foreach (var entry in Data.Entries) {
 				entry.AngularVelocity = entry.AngularVelocity /
-										(axleRatio * (entry.Gear == 0 ? 1 : Gearbox.Data.Gears[entry.Gear].Ratio));
+										(axleRatio * (entry.Gear == 0 ? 1 : Gearbox.ModelData.Gears[entry.Gear].Ratio));
 				entry.Torque = entry.PWheel / entry.AngularVelocity;
 			}
 		}

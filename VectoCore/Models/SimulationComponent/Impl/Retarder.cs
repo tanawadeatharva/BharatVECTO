@@ -40,7 +40,9 @@ namespace TUGraz.VectoCore.Models.SimulationComponent.Impl
 
 		protected override void DoWriteModalResults(IModalDataContainer container)
 		{
-			container[ModalResultField.P_ret_loss] = GetPowerLoss(PreviousState, CurrentState);
+			var avgAngularSpeed = (PreviousState.InAngularVelocity + CurrentState.InAngularVelocity) / 2.0;
+			container[ModalResultField.P_ret_loss] = (PreviousState.InTorque - PreviousState.OutTorque) * avgAngularSpeed;
+			container[ModalResultField.P_retarder_in] = CurrentState.InTorque * avgAngularSpeed;
 		}
 
 		protected override void DoCommitSimulationStep() {}
@@ -65,8 +67,8 @@ namespace TUGraz.VectoCore.Models.SimulationComponent.Impl
 			if (angularVelocity == null) {
 				return NextComponent.Request(absTime, dt, torque, null, dryRun);
 			}
-			var retarderTorqueLoss = _lossMap.RetarderLoss(angularVelocity);
-			//_retarderLoss = retarderTorqueLoss * angularVelocity;
+			var avgAngularSpeed = (PreviousState.InAngularVelocity + angularVelocity) / 2.0;
+			var retarderTorqueLoss = _lossMap.RetarderLoss(avgAngularSpeed);
 			CurrentState.SetState(torque + retarderTorqueLoss, angularVelocity, torque, angularVelocity);
 
 			return NextComponent.Request(absTime, dt, torque + retarderTorqueLoss, angularVelocity, dryRun);

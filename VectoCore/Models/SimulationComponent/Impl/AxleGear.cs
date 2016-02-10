@@ -34,11 +34,12 @@ namespace TUGraz.VectoCore.Models.SimulationComponent.Impl
 		ITnOutPort
 	{
 		protected ITnOutPort NextComponent;
-		private readonly AxleGearData _gearData;
 
-		public AxleGear(IVehicleContainer container, AxleGearData gearData) : base(container)
+		internal readonly AxleGearData ModelData;
+
+		public AxleGear(IVehicleContainer container, AxleGearData modelData) : base(container)
 		{
-			_gearData = gearData;
+			ModelData = modelData;
 		}
 
 		public ITnInPort InPort()
@@ -61,24 +62,23 @@ namespace TUGraz.VectoCore.Models.SimulationComponent.Impl
 		{
 			Log.Debug("request: torque: {0}, angularVelocity: {1}", torque, angularVelocity);
 
-			var inAngularVelocity = angularVelocity * _gearData.AxleGear.Ratio;
-			var inTorque = angularVelocity.IsEqual(0)
-				? 0.SI<NewtonMeter>()
-				: _gearData.AxleGear.LossMap.GetInTorque(inAngularVelocity, torque);
+			var inAngularVelocity = angularVelocity * ModelData.AxleGear.Ratio;
+			var avgInAngularVelocity = (PreviousState.InAngularVelocity + inAngularVelocity) / 2.0;
 
-			//Loss = inTorque * inAngularVelocity - torque * angularVelocity;
+			var inTorque = ModelData.AxleGear.LossMap.GetInTorque(avgInAngularVelocity, torque);
+
 			CurrentState.SetState(inTorque, inAngularVelocity, torque, angularVelocity);
 
 			var retVal = NextComponent.Request(absTime, dt, inTorque, inAngularVelocity, dryRun);
 
-			retVal.AxlegearPowerRequest = torque * angularVelocity;
+			retVal.AxlegearPowerRequest = torque * (PreviousState.OutAngularVelocity + CurrentState.OutAngularVelocity) / 2.0;
 			return retVal;
 		}
 
 		public IResponse Initialize(NewtonMeter torque, PerSecond angularVelocity)
 		{
-			var inAngularVelocity = angularVelocity * _gearData.AxleGear.Ratio;
-			var inTorque = _gearData.AxleGear.LossMap.GetInTorque(inAngularVelocity, torque);
+			var inAngularVelocity = angularVelocity * ModelData.AxleGear.Ratio;
+			var inTorque = ModelData.AxleGear.LossMap.GetInTorque(inAngularVelocity, torque);
 
 			PreviousState.SetState(inTorque, inAngularVelocity, torque, angularVelocity);
 
@@ -87,15 +87,15 @@ namespace TUGraz.VectoCore.Models.SimulationComponent.Impl
 
 		protected override void DoWriteModalResults(IModalDataContainer container)
 		{
-			//container[ModalResultField.P_axle_loss] = Loss;
-
-			container[ModalResultField.P_axle_loss] = CurrentState.TorqueLoss *
-													(PreviousState.InAngularVelocity + CurrentState.InAngularVelocity) / 2.0;
+			var avgAngularVelocity = (PreviousState.InAngularVelocity + CurrentState.InAngularVelocity) / 2.0;
+			container[ModalResultField.P_axle_loss] = (CurrentState.InTorque - CurrentState.OutTorque / ModelData.AxleGear.Ratio) *
+													avgAngularVelocity;
+			container[ModalResultField.P_axle_in] = CurrentState.InTorque * avgAngularVelocity;
 		}
 
 		protected override void DoCommitSimulationStep()
 		{
-			if (_gearData.AxleGear.LossMap.Extrapolated) {
+			if (ModelData.AxleGear.LossMap.Extrapolated) {
 				// todo (MK, 2015-12-14): should we throw an interpolation error in EngineOnly Mode also?
 				if (DataBus.ExecutionMode == ExecutionMode.Declaration) {
 					throw new VectoException("AxleGear LossMap data was extrapolated: range for loss map is not sufficient.");

@@ -29,29 +29,48 @@ namespace TUGraz.VectoCore.Models.SimulationComponent.Impl
 	{
 		protected readonly List<Second> EnginePowerCorrections = new List<Second>();
 
-		public EngineOnlyCombustionEngine(IVehicleContainer cockpit, CombustionEngineData data) : base(cockpit, data) {}
+		public EngineOnlyCombustionEngine(IVehicleContainer cockpit, CombustionEngineData modelData)
+			: base(cockpit, modelData) {}
 
 		// the behavior in engine-only mode differs a little bit from normal driving cycle simulation: in engine-only mode
 		// certain amount of overload is tolerated.
 		protected override IResponse DoHandleRequest(Second absTime, Second dt, NewtonMeter torque, PerSecond angularVelocity,
 			bool dryRun)
 		{
-			var requestedEnginePower = ComputeRequestedEnginePower(absTime, dt, torque, angularVelocity);
+			CurrentState.dt = dt;
+			CurrentState.EngineSpeed = angularVelocity;
+			CurrentState.EngineTorqueOut = torque;
+//			var requestedEnginePower = ComputeRequestedEnginePower(absTime, dt, torque, angularVelocity);
 
-			ComputeFullLoadPower(angularVelocity, dt);
+			var avgEngineSpeed = (PreviousState.EngineSpeed + CurrentState.EngineSpeed) / 2.0;
 
-			ValidatePowerDemand(requestedEnginePower);
+			var auxTorqueDemand = EngineAux == null
+				? 0.SI<NewtonMeter>()
+				: EngineAux.PowerDemand(absTime, dt, CurrentState.EngineTorqueOut, angularVelocity, dryRun);
 
-			CurrentState.EnginePower = LimitEnginePower(requestedEnginePower);
+			CurrentState.InertiaTorqueLoss =
+				Formulas.InertiaPower(angularVelocity, PreviousState.EngineSpeed, ModelData.Inertia, dt) /
+				avgEngineSpeed;
+			var totalTorqueDemand = CurrentState.EngineTorqueOut + auxTorqueDemand + CurrentState.InertiaTorqueLoss;
+			CurrentState.EngineTorque = totalTorqueDemand;
 
+			CurrentState.FullDragTorque = ModelData.FullLoadCurve.DragLoadStationaryTorque(avgEngineSpeed);
+			var dynamicFullLoadPower = ComputeFullLoadPower(angularVelocity, dt);
+			CurrentState.DynamicFullLoadTorque = dynamicFullLoadPower / avgEngineSpeed;
+
+			ValidatePowerDemand();
+
+			CurrentState.EngineTorque = LimitEnginePower(CurrentState.EngineTorque, avgEngineSpeed, absTime);
+
+			CurrentState.EnginePower = CurrentState.EngineTorque * avgEngineSpeed;
 			if (dryRun) {
 				return new ResponseDryRun {
-					DeltaFullLoad = requestedEnginePower - CurrentState.DynamicFullLoadPower,
-					DeltaDragLoad = requestedEnginePower - CurrentState.FullDragPower
+					DeltaFullLoad = CurrentState.EnginePower - CurrentState.DynamicFullLoadTorque * avgEngineSpeed,
+					DeltaDragLoad = CurrentState.EnginePower - CurrentState.FullDragTorque * avgEngineSpeed
 				};
 			}
 
-			UpdateEngineState(CurrentState.EnginePower);
+			UpdateEngineState(CurrentState.EnginePower, avgEngineSpeed);
 
 			// = requestedEnginePower; //todo + _currentState.EnginePowerLoss;
 			CurrentState.EngineTorque = CurrentState.EnginePower / CurrentState.EngineSpeed;
@@ -59,27 +78,26 @@ namespace TUGraz.VectoCore.Models.SimulationComponent.Impl
 			return new ResponseSuccess();
 		}
 
-		protected override Watt LimitEnginePower(Watt requestedEnginePower)
+		protected NewtonMeter LimitEnginePower(NewtonMeter requestedEngineTorque, PerSecond avgEngineSpeed, Second AbsTime)
 		{
-			if (requestedEnginePower > CurrentState.DynamicFullLoadPower) {
-				if (requestedEnginePower / CurrentState.DynamicFullLoadPower > MaxPowerExceededThreshold) {
-					EnginePowerCorrections.Add(CurrentState.AbsTime);
-					Log.Warn(
-						"t: {0}  requested power > P_engine_full * 1.05 - corrected. P_request: {1}  P_engine_full: {2}",
-						CurrentState.AbsTime, requestedEnginePower, CurrentState.DynamicFullLoadPower);
+			if (requestedEngineTorque > CurrentState.DynamicFullLoadTorque) {
+				if (requestedEngineTorque / CurrentState.DynamicFullLoadTorque > MaxTorqueExceededThreshold) {
+					EnginePowerCorrections.Add(AbsTime);
+					Log.Warn("t: {0}  requested power > P_engine_full * 1.05 - corrected. P_request: {1}  P_engine_full: {2}",
+						AbsTime, requestedEngineTorque * avgEngineSpeed, CurrentState.DynamicFullLoadTorque * avgEngineSpeed);
 				}
-				return CurrentState.DynamicFullLoadPower;
+				return CurrentState.DynamicFullLoadTorque;
 			}
-			if (requestedEnginePower < CurrentState.FullDragPower) {
-				if (requestedEnginePower / CurrentState.FullDragPower > MaxPowerExceededThreshold &&
-					requestedEnginePower > -99999) {
-					EnginePowerCorrections.Add(CurrentState.AbsTime);
+			if (requestedEngineTorque < CurrentState.FullDragTorque) {
+				if (requestedEngineTorque / CurrentState.FullDragTorque > MaxTorqueExceededThreshold &&
+					requestedEngineTorque > -99999) {
+					EnginePowerCorrections.Add(AbsTime);
 					Log.Warn("t: {0}  requested power < P_engine_drag * 1.05 - corrected. P_request: {1}  P_engine_drag: {2}",
-						CurrentState.AbsTime, requestedEnginePower, CurrentState.FullDragPower);
+						AbsTime, requestedEngineTorque * avgEngineSpeed, CurrentState.FullDragTorque * avgEngineSpeed);
 				}
-				return CurrentState.FullDragPower;
+				return CurrentState.FullDragTorque;
 			}
-			return requestedEnginePower;
+			return requestedEngineTorque;
 		}
 
 		public IList<string> Warnings()
