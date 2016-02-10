@@ -19,6 +19,7 @@
 using TUGraz.VectoCore.Utils;
 using System.Collections.Generic;
 using System.Data;
+using System.IO;
 using System.Linq;
 using TUGraz.VectoCore.OutputData;
 using TUGraz.VectoCore.InputData.Reader;
@@ -43,21 +44,63 @@ namespace TUGraz.VectoCore.Tests.Models.Simulation
 		/// </summary>
 		/// <remarks>VECTO-181</remarks>
 		[TestMethod]
-		public void MeasuredSpeed_ReadCycle_Test()
+		public void MeasuredSpeed_Dyno_ReadCycle_Test()
 		{
 			var container = new VehicleContainer();
 			var inputData = @"<t>,<v>,   <grad>,<gear>,<Aux_Alt>, <Padd>
 							   1,  1.383, 0,     1,     0.5767916, 1.969367304
 							   2,  3.515, 0,     1,     0.5426120, 2.042128260";
 
-			var drivingCycle = DrivingCycleDataReader.ReadFromStream(inputData.GetStream(), CycleType.MeasuredSpeed);
+			var drivingCycle = DrivingCycleDataReader.ReadFromStream(inputData.GetStream(), CycleType.MeasuredSpeedDyno);
 
 			var gearbox = new Gearbox(container,
 				new GearboxData {
 					Gears = new Dictionary<uint, GearData> { { 1, new GearData { Ratio = 2.0 } }, { 2, new GearData { Ratio = 3.5 } } }
 				}, new PWheelShiftStrategy(null, container));
 
-			var cycle = new MeasuredSpeedCycle(container, drivingCycle, gearbox);
+			var cycle = new MeasuredSpeedDynoCycle(container, drivingCycle, gearbox);
+
+			Assert.AreEqual(container.CycleData.LeftSample.Time, 1.SI<Second>());
+			Assert.AreEqual(container.CycleData.RightSample.Time, 2.SI<Second>());
+
+			Assert.AreEqual(1.383.KMPHtoMeterPerSecond(), container.CycleData.LeftSample.VehicleTargetSpeed);
+			Assert.AreEqual(3.515.KMPHtoMeterPerSecond(), container.CycleData.RightSample.VehicleTargetSpeed);
+
+			Assert.AreEqual(0.5767916.SI().Kilo.Watt, container.CycleData.LeftSample.AuxiliarySupplyPower["Aux_Alt"]);
+			Assert.AreEqual(0.5426120.SI().Kilo.Watt, container.CycleData.RightSample.AuxiliarySupplyPower["Aux_Alt"]);
+
+			Assert.AreEqual(1u, container.CycleData.LeftSample.Gear);
+			Assert.AreEqual(1u, container.CycleData.RightSample.Gear);
+
+			Assert.AreEqual(1.969367304.SI().Kilo.Watt, container.CycleData.LeftSample.AdditionalAuxPowerDemand);
+			Assert.AreEqual(2.042128260.SI().Kilo.Watt, container.CycleData.RightSample.AdditionalAuxPowerDemand);
+
+			Assert.AreEqual(0.SI<Radian>(), container.CycleData.LeftSample.RoadGradient);
+			Assert.AreEqual(0.SI<Radian>(), container.CycleData.RightSample.RoadGradient);
+		}
+
+		/// <summary>
+		/// Test if the cycle file can be read.
+		/// </summary>
+		/// <remarks>VECTO-181</remarks>
+		[TestMethod]
+		public void MeasuredSpeed_Track_ReadCycle_Test()
+		{
+			var container = new VehicleContainer();
+			var inputData = @"<t>, <v>,    <grad>,       <n>,    <vair_res>, <vair_beta>, <Aux_Alt>,  <Padd>
+							   11, 10.5768, -0.041207832, 1223.25, 8.532,      0,           0.42,       2.453370264";
+
+			var drivingCycle = DrivingCycleDataReader.ReadFromStream(inputData.GetStream(), CycleType.MeasuredSpeedTrack);
+
+			var gearbox = new Gearbox(container,
+				new GearboxData {
+					Gears = new Dictionary<uint, GearData> {
+						{ 1, new GearData { Ratio = 8.7 } },
+						{ 2, new GearData { Ratio = 2 } }
+					}
+				}, new PWheelShiftStrategy(null, container));
+
+			var cycle = new MeasuredSpeedTrackCycle(container, drivingCycle, gearbox, 4.3, 0.848974.SI<Meter>());
 
 			Assert.AreEqual(container.CycleData.LeftSample.Time, 1.SI<Second>());
 			Assert.AreEqual(container.CycleData.RightSample.Time, 2.SI<Second>());
@@ -83,14 +126,14 @@ namespace TUGraz.VectoCore.Tests.Models.Simulation
 		/// </summary>
 		/// <remarks>VECTO-181</remarks>
 		[TestMethod]
-		public void MeasuredSpeed_CreatePowertrain_Test()
+		public void MeasuredSpeed_Dyno_CreatePowertrain_Test()
 		{
 			// prepare input data
 			var inputData = @"<t>,<v>,   <grad>,<gear>,<Aux_Alt>, <Padd>
 							   1,  1.383, 0,     1,     0.5767916, 1.969367304
 							   2,  3.515, 0,     1,     0.5426120, 2.042128260";
 
-			var drivingCycle = DrivingCycleDataReader.ReadFromStream(inputData.GetStream(), CycleType.MeasuredSpeed);
+			var drivingCycle = DrivingCycleDataReader.ReadFromStream(inputData.GetStream(), CycleType.MeasuredSpeedDyno);
 
 			var fuelConsumption = new DataTable();
 			fuelConsumption.Columns.Add("");
@@ -128,7 +171,7 @@ namespace TUGraz.VectoCore.Tests.Models.Simulation
 		/// </summary>
 		/// <remarks>VECTO-181</remarks>
 		[TestMethod]
-		public void MeasuredSpeed_Run_Test()
+		public void MeasuredSpeed_Dyno_Run_Test()
 		{
 			var jobFile = @"TestData\MeasuredSpeed\Demo_ChassisDyno.vecto";
 			var fileWriter = new FileOutputWriter(jobFile);
@@ -145,12 +188,8 @@ namespace TUGraz.VectoCore.Tests.Models.Simulation
 
 			Assert.IsTrue(jobContainer.Runs.All(r => r.Success), string.Concat(jobContainer.Runs.Select(r => r.ExecException)));
 
-			// todo mk-2016-02-09: compare with correct mod files
-            //ResultFileHelper.TestSumFile(@"TestData\Results\Pwheel\Atego_ges.v2.vsum", @"TestData\Jobs\Pwheel.vsum");
-
-			//ResultFileHelper.TestModFile(@"TestData\Results\Pwheel\Atego_ges_Gear2_pt1_rep1_actual.vmod",@"TestData\Jobs\Pwheel_Gear2_pt1_rep1_actual.vmod");
-                        
-            Assert.Inconclusive("TODO: Compare MOD FILES!!!");
+			Assert.IsTrue(File.Exists(@"TestData\Jobs\Pwheel.vsum"));
+			Assert.IsTrue(File.Exists(@"TestData\Jobs\Pwheel_Gear2_pt1_rep1_actual.vmod"));
 		}
 	}
 }

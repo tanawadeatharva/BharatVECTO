@@ -44,8 +44,11 @@ namespace TUGraz.VectoCore.InputData.Reader
 			if (PWheelCycleDataParser.ValidateHeader(cols, false)) {
 				return CycleType.PWheel;
 			}
-			if (MeasuredSpeedDataParser.ValidateHeader(cols, false)) {
-				return CycleType.MeasuredSpeed;
+			if (MeasuredSpeedTrackDataParser.ValidateHeader(cols, false)) {
+				return CycleType.MeasuredSpeedTrack;
+			}
+			if (MeasuredSpeedDynoDataParser.ValidateHeader(cols, false)) {
+				return CycleType.MeasuredSpeedDyno;
 			}
 			if (EngineOnlyCycleDataParser.ValidateHeader(cols, false)) {
 				return CycleType.EngineOnly;
@@ -70,8 +73,10 @@ namespace TUGraz.VectoCore.InputData.Reader
 					return new DistanceBasedCycleDataParser();
 				case CycleType.PWheel:
 					return new PWheelCycleDataParser();
-				case CycleType.MeasuredSpeed:
-					return new MeasuredSpeedDataParser();
+				case CycleType.MeasuredSpeedDyno:
+					return new MeasuredSpeedDynoDataParser();
+				case CycleType.MeasuredSpeedTrack:
+					return new MeasuredSpeedTrackDataParser();
 				default:
 					throw new ArgumentOutOfRangeException("type");
 			}
@@ -545,7 +550,7 @@ namespace TUGraz.VectoCore.InputData.Reader
 			}
 		}
 
-		private class MeasuredSpeedDataParser : ICycleDataParser
+		private class MeasuredSpeedDynoDataParser : ICycleDataParser
 		{
 			public IEnumerable<DrivingCycleData.DrivingCycleEntry> Parse(DataTable table)
 			{
@@ -570,6 +575,61 @@ namespace TUGraz.VectoCore.InputData.Reader
 					Fields.VehicleSpeed,
 					Fields.RoadGradient,
 					Fields.Gear,
+					Fields.AdditionalAuxPowerDemand
+				};
+
+				header = header.Where(c => !c.StartsWith(Fields.AuxiliarySupplyPower)).ToArray();
+
+				var requiredCols = allowedCols;
+
+				var diff = header.Except(allowedCols).ToList();
+				if (diff.Any()) {
+					if (throwExceptions) {
+						throw new VectoException("Column(s) '{0}' not allowed.", string.Join(", ", diff));
+					}
+					return false;
+				}
+
+				diff = requiredCols.Except(header).ToList();
+				if (diff.Any()) {
+					if (throwExceptions) {
+						throw new VectoException("Column(s) '{0}' missing.", string.Join(", ", diff));
+					}
+					return false;
+				}
+				return true;
+			}
+		}
+
+
+		private class MeasuredSpeedTrackDataParser : ICycleDataParser
+		{
+			public IEnumerable<DrivingCycleData.DrivingCycleEntry> Parse(DataTable table)
+			{
+				ValidateHeader(table.Columns.Cast<DataColumn>().Select(col => col.ColumnName).ToArray());
+				var entries = table.Rows.Cast<DataRow>().Select(row => new DrivingCycleData.DrivingCycleEntry {
+					Time = row.ParseDouble(Fields.Time).SI<Second>(),
+					VehicleTargetSpeed = row.ParseDouble(Fields.VehicleSpeed).KMPHtoMeterPerSecond(),
+					RoadGradient = VectoMath.InclinationToAngle(row.ParseDoubleOrGetDefault(Fields.RoadGradient) / 100.0),
+					AngularVelocity = row.ParseDouble(Fields.EngineSpeed).RPMtoRad(),
+					AirSpeedRelativeToVehicle = row.ParseDouble(Fields.AirSpeedRelativeToVehicle).KMPHtoMeterPerSecond(),
+					WindYawAngle = row.ParseDouble(Fields.WindYawAngle),
+					AuxiliarySupplyPower = AuxSupplyPowerReader.Read(row),
+					AdditionalAuxPowerDemand = row.ParseDouble(Fields.AdditionalAuxPowerDemand).SI().Kilo.Watt.Cast<Watt>()
+				}).ToArray();
+
+				return entries;
+			}
+
+			public static bool ValidateHeader(string[] header, bool throwExceptions = true)
+			{
+				var allowedCols = new[] {
+					Fields.Time,
+					Fields.VehicleSpeed,
+					Fields.RoadGradient,
+					Fields.EngineSpeed,
+					Fields.AirSpeedRelativeToVehicle,
+					Fields.WindYawAngle,
 					Fields.AdditionalAuxPowerDemand
 				};
 

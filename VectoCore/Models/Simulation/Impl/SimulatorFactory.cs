@@ -120,7 +120,7 @@ namespace TUGraz.VectoCore.Models.Simulation.Impl
 					case CycleType.PWheel:
 						run = new TimeRun(builder.Build(data));
 						break;
-					case CycleType.MeasuredSpeed:
+					case CycleType.MeasuredSpeedDyno:
 						run = new TimeRun(builder.Build(data));
 						break;
 					default:

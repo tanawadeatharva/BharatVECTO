@@ -13,8 +13,7 @@
     "MassMax": 11990.0,
     "Cd": 0.6014823,
     "CrossSecArea": 8.8,
-    "WheelsInertia": 254.6922,
-    "WheelsDiaEff": 0.848974,
+    "rdyn": 520.0,
     "CdCorrMode": "CdOfBeta",
     "CdCorrFile": "Demo_Rigid.vcdb",
     "Retarder": {

@@ -18,6 +18,7 @@
 
 using System.Collections.Generic;
 using System.Linq;
+using System.Runtime.CompilerServices;
 using TUGraz.VectoCore.Exceptions;
 using TUGraz.VectoCore.Models.Connector.Ports;
 using TUGraz.VectoCore.Models.Connector.Ports.Impl;
@@ -254,7 +255,7 @@ namespace TUGraz.VectoCore.Models.SimulationComponent.Impl
 	/// <summary>
 	/// Driving Cycle for the PWheel driving cycle.
 	/// </summary>
-	public class MeasuredSpeedCycle : VectoSimulationComponent, IDriverInfo, IDrivingCycleInfo, IDriverDemandInProvider,
+	public class MeasuredSpeedDynoCycle : VectoSimulationComponent, IDriverInfo, IDrivingCycleInfo, IDriverDemandInProvider,
 		IDriverDemandInPort, ISimulationOutProvider, ISimulationOutPort, IClutchInfo
 	{
 		protected DrivingCycleData Data;
@@ -271,7 +272,7 @@ namespace TUGraz.VectoCore.Models.SimulationComponent.Impl
 		/// <param name="container">The container.</param>
 		/// <param name="cycle">The cycle.</param>
 		/// <param name="gearbox">the gearbox.</param>
-		public MeasuredSpeedCycle(IVehicleContainer container, DrivingCycleData cycle, Gearbox gearbox)
+		public MeasuredSpeedDynoCycle(IVehicleContainer container, DrivingCycleData cycle, Gearbox gearbox)
 			: base(container)
 		{
 			Gearbox = gearbox;
@@ -448,6 +449,27 @@ namespace TUGraz.VectoCore.Models.SimulationComponent.Impl
 		public virtual bool ClutchClosed(Second absTime)
 		{
 			return LeftSample.Current.Gear != 0;
+		}
+	}
+
+	public class MeasuredSpeedTrackCycle : MeasuredSpeedDynoCycle
+	{
+		public MeasuredSpeedTrackCycle(IVehicleContainer container, DrivingCycleData cycle, Gearbox gearbox, double axleRatio,
+			Meter dynamicWheelRadius) : base(container, cycle, gearbox)
+		{
+			// find the right gear for the current vehicleSpeed and engineSpeed.
+			foreach (var entry in cycle.Entries) {
+				var gear = (uint)gearbox.Data.Gears.Count;
+				while (gear > 0) {
+					var calculatedVehicleVelocity = dynamicWheelRadius * entry.AngularVelocity /
+													(gearbox.Data.Gears[gear].Ratio * axleRatio);
+					if (calculatedVehicleVelocity.IsEqual(entry.VehicleTargetSpeed)) {
+						break;
+					}
+					gear--;
+				}
+				entry.Gear = gear;
+			}
 		}
 	}
 }

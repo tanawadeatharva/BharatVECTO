@@ -209,7 +209,13 @@ namespace TUGraz.VectoCore.Utils
 		[DebuggerHidden]
 		public static MeterPerSecond operator /(Meter meter, Second second)
 		{
-			return ((meter as SI) / second).Cast<MeterPerSecond>();
+			return SIBase<MeterPerSecond>.Create(meter.Val / second.Value());
+		}
+
+		[DebuggerHidden]
+		public static MeterPerSecond operator *(Meter meter, PerSecond perSecond)
+		{
+			return SIBase<MeterPerSecond>.Create(meter.Val * perSecond.Value());
 		}
 
 		/// <summary>

@@ -49,10 +49,12 @@ namespace TUGraz.VectoCore.Models.Simulation.Impl
 			if (data.Cycle.CycleType == CycleType.PWheel) {
 				return BuildPWheel(data);
 			}
-			if (data.Cycle.CycleType == CycleType.MeasuredSpeed) {
-				return BuildMeasuredSpeed(data);
+			if (data.Cycle.CycleType == CycleType.MeasuredSpeedDyno) {
+				return BuildMeasuredSpeedDyno(data);
 			}
-
+			if (data.Cycle.CycleType == CycleType.MeasuredSpeedTrack) {
+				return BuildMeasuredSpeedTrack(data);
+			}
 
 			return BuildFullPowertrain(data);
 		}
@@ -137,7 +139,7 @@ namespace TUGraz.VectoCore.Models.Simulation.Impl
 		}
 
 
-		private VehicleContainer BuildMeasuredSpeed(VectoRunData data)
+		private VehicleContainer BuildMeasuredSpeedDyno(VectoRunData data)
 		{
 			var container = new VehicleContainer(_modData, _sumWriter, ExecutionMode.Engineering) {
 				RunData = data,
@@ -146,7 +148,77 @@ namespace TUGraz.VectoCore.Models.Simulation.Impl
 			data.GearboxData.Type = GearboxType.PWheel;
 			var gearbox = GetGearbox(container, data.GearboxData);
 
-			var cycle = new MeasuredSpeedCycle(container, data.Cycle, (Gearbox)gearbox);
+			var cycle = new MeasuredSpeedDynoCycle(container, data.Cycle, (Gearbox)gearbox);
+			var vehicle = AddComponent(cycle, new Vehicle(container, data.VehicleData));
+			var wheels = AddComponent(vehicle,
+				new Wheels(container, data.VehicleData.DynamicTyreRadius, data.VehicleData.WheelsInertia));
+			var brakes = AddComponent(wheels, new Brakes(container));
+			var tmp = AddComponent(brakes, new AxleGear(container, data.AxleGearData));
+
+
+			switch (data.Retarder.Type) {
+				case RetarderData.RetarderType.Primary:
+					tmp = AddComponent(tmp, new Retarder(container, data.Retarder.LossMap));
+					tmp = AddComponent(tmp, gearbox);
+					break;
+				case RetarderData.RetarderType.Secondary:
+					tmp = AddComponent(tmp, gearbox);
+					tmp = AddComponent(tmp, new Retarder(container, data.Retarder.LossMap));
+					break;
+				case RetarderData.RetarderType.None:
+					tmp = AddComponent(tmp, gearbox);
+					break;
+				case RetarderData.RetarderType.LossesIncludedInTransmission:
+					tmp = AddComponent(tmp, gearbox);
+					break;
+				default:
+					throw new ArgumentOutOfRangeException();
+			}
+
+			var engine = new CombustionEngine(container, data.EngineData);
+			var clutch = new Clutch(container, data.EngineData, engine.IdleController);
+
+			// gearbox --> clutch
+			tmp = AddComponent(tmp, clutch);
+
+			// clutch --> direct aux --> ... --> aux_XXX --> directAux
+			if (data.Aux != null) {
+				var aux = new EngineAuxiliary(container);
+				foreach (var auxData in data.Aux) {
+					switch (auxData.DemandType) {
+						case AuxiliaryDemandType.Constant:
+							aux.AddConstant(auxData.ID, auxData.PowerDemand);
+							break;
+						case AuxiliaryDemandType.Direct:
+							aux.AddDirect();
+							break;
+						case AuxiliaryDemandType.Mapping:
+							aux.AddMapping(auxData.ID, auxData.Data);
+							break;
+					}
+					_modData.AddAuxiliary(auxData.ID);
+				}
+				engine.Connect(aux.Port());
+			}
+			// connect aux --> engine
+			AddComponent(tmp, engine);
+
+			engine.IdleController.RequestPort = clutch.IdleControlPort;
+
+			return container;
+		}
+
+
+		private VehicleContainer BuildMeasuredSpeedTrack(VectoRunData data)
+		{
+			var container = new VehicleContainer(_modData, _sumWriter, ExecutionMode.Engineering) {
+				RunData = data,
+				ExecutionMode = ExecutionMode.Engineering
+			};
+			data.GearboxData.Type = GearboxType.PWheel;
+			var gearbox = GetGearbox(container, data.GearboxData);
+
+			var cycle = new MeasuredSpeedDynoCycle(container, data.Cycle, (Gearbox)gearbox);
 			var vehicle = AddComponent(cycle, new Vehicle(container, data.VehicleData));
 			var wheels = AddComponent(vehicle,
 				new Wheels(container, data.VehicleData.DynamicTyreRadius, data.VehicleData.WheelsInertia));
