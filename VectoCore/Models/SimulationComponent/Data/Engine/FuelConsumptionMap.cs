@@ -69,7 +69,7 @@ namespace TUGraz.VectoCore.Models.SimulationComponent.Data.Engine
 
 					fuelConsumptionMap._entries.Add(entry);
 
-					// Delauney map works only as expected, when the engineSpeed is in rpm.
+					// Delauney map works only as expected, when the angularVelocity is in rpm.
 					fuelConsumptionMap._fuelMap.AddPoint(entry.Torque.Value(),
 						headerValid ? row.ParseDouble(Fields.EngineSpeed) : row.ParseDouble(0),
 						entry.FuelConsumption.Value());
@@ -112,19 +112,13 @@ namespace TUGraz.VectoCore.Models.SimulationComponent.Data.Engine
 		}
 
 		/// <summary>
-		///     [kg/s] Calculates the fuel consumption based on the given fuel map,
-		///     the engineSpeed [rad/s] and the torque [Nm].
+		/// Calculates the fuel consumption based on the given fuel map, the angularVelocity and the torque.
 		/// </summary>
-		/// <param name="engineSpeed">[rad/sec]</param>
-		/// <param name="torque">[Nm]</param>
-		/// <returns>[kg/s]</returns>
-		public KilogramPerSecond GetFuelConsumption(NewtonMeter torque, PerSecond engineSpeed)
+		public KilogramPerSecond GetFuelConsumption(NewtonMeter torque, PerSecond angularVelocity)
 		{
-			// delauney map needs is initialised with rpm, therefore the engineSpeed has to be converted.
-			return
-				_fuelMap.Interpolate(torque.Value(), engineSpeed.ConvertTo().Rounds.Per.Minute.Value())
-					.SI()
-					.Kilo.Gramm.Per.Second.Cast<KilogramPerSecond>();
+			// delauney map needs is initialised with rpm, therefore the angularVelocity has to be converted.
+			return _fuelMap.Interpolate(torque.Value(), angularVelocity.ConvertTo().Rounds.Per.Minute.Value())
+				.SI().Kilo.Gramm.Per.Second.Cast<KilogramPerSecond>();
 		}
 
 		private static class Fields

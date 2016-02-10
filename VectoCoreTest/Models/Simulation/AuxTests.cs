@@ -17,6 +17,7 @@
 */
 
 using System.Configuration;
+using System.Linq;
 using TUGraz.VectoCore.Utils;
 using TUGraz.VectoCore.Exceptions;
 using TUGraz.VectoCore.Tests.Utils;
@@ -281,45 +282,34 @@ namespace TUGraz.VectoCore.Tests.Models.Simulation
 				"Auxiliary file not found: NOT_EXISTING_AUX_FILE.vaux");
 		}
 
-		[TestMethod, Ignore]
+		[TestMethod]
 		public void AuxReadJobFileDeclarationMode()
 		{
 			var fileWriter = new FileOutputWriter("AuxReadJobFileDeclarationMode", "");
 			var sumData = new SummaryDataContainer(fileWriter);
 			var jobContainer = new JobContainer(sumData);
 
-			var inputData = JSONInputDataFactory.ReadJsonJob(@"TestData\Jobs\40t_Long_Haul_Truck.vecto");
-			var runsFactory = new SimulatorFactory(ExecutionMode.Declaration,
-				inputData, fileWriter);
+			var inputData = JSONInputDataFactory.ReadJsonJob(
+				@"TestData\Generic Vehicles\Declaration Mode\40t Long Haul Truck\40t_Long_Haul_Truck.vecto");
+			var runsFactory = new SimulatorFactory(ExecutionMode.Declaration, inputData, fileWriter);
 
 			jobContainer.AddRuns(runsFactory);
 			jobContainer.Execute();
-
-			ResultFileHelper.TestSumFile(@"TestData\Results\Declaration\40t_Long_Haul_Truck.vsum",
-				@"AuxReadJobFileDeclarationMode.vsum");
 		}
 
-		[TestMethod, Ignore]
+		[TestMethod]
 		public void AuxReadJobFileEngineeringMode()
 		{
 			var fileWriter = new FileOutputWriter("AuxReadJobFileEngineeringMode", "");
 			var sumData = new SummaryDataContainer(fileWriter);
 			var jobContainer = new JobContainer(sumData);
 
-			var inputData = JSONInputDataFactory.ReadJsonJob(@"TestData\Jobs\24t Coach.vecto");
-			var runsFactory = new SimulatorFactory(ExecutionMode.Engineering,
-				inputData, fileWriter);
+			var inputData =
+				JSONInputDataFactory.ReadJsonJob(@"TestData\Generic Vehicles\Engineering Mode\24t Coach\24t Coach.vecto");
+			var runsFactory = new SimulatorFactory(ExecutionMode.Engineering, inputData, fileWriter);
 
 			jobContainer.AddRuns(runsFactory);
 			jobContainer.Execute();
-
-			ResultFileHelper.TestSumFile(@"TestData\Results\Engineering\24t Coach.vsum",
-				@"AuxReadJobFileEngineeringMode.vsum");
-
-			ResultFileHelper.TestModFile(
-				@"TestData\Results\Engineering\24t Coach_Coach_24t_xshort.vmod",
-				@"TestData\Jobs\24t Coach_Coach_24t_xshort.vmod");
-			Assert.Inconclusive();
 		}
 
 		[TestMethod]

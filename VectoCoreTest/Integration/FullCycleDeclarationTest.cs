@@ -153,9 +153,7 @@ namespace TUGraz.VectoCore.Tests.Integration
 			jobContainer.Execute();
 			jobContainer.WaitFinished();
 
-			foreach (var run in jobContainer.Runs) {
-				Assert.IsTrue(run.Run.FinishedWithoutErrors);
-			}
+			Assert.IsTrue(jobContainer.Runs.All(r => r.Success), string.Concat(jobContainer.Runs.Select(r => r.ExecException)));
 		}
 
 		[TestMethod, Ignore]

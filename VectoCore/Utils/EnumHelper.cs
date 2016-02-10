@@ -24,9 +24,9 @@ namespace TUGraz.VectoCore.Utils
 {
 	public static class EnumHelper
 	{
-		public static T Parse<T>(this string s, bool ignoreCase = true)
+		public static T ParseEnum<T>(this string s, bool ignoreCase = true)
 		{
-			return (T)Enum.Parse(typeof(T), s, ignoreCase);
+			return (T)Enum.Parse(typeof(T), s.RemoveWhitespace(), ignoreCase);
 		}
 
 		public static IEnumerable<T> GetValues<T>()

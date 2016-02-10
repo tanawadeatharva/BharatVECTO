@@ -64,17 +64,10 @@ namespace TUGraz.VectoCore.Models.Connector.Ports
 	/// </summary>
 	public interface IDriverDemandOutPort
 	{
-		/// <summary>
-		/// Requests the Outport with the given accelleration [m/s] and road gradient [rad].
-		/// </summary>
-		/// <param name="absTime">[s]</param>
-		/// <param name="dt">[s]</param>
-		/// <param name="acceleration">[m/s^2]</param>
-		/// <param name="gradient">[rad]</param>
-		/// <param name="dryRun"></param>
 		IResponse Request(Second absTime, Second dt, MeterPerSquareSecond acceleration, Radian gradient, bool dryRun = false);
 
 		IResponse Initialize(MeterPerSecond vehicleSpeed, Radian roadGradient);
-		IResponse Initialize(MeterPerSecond vehicleSpeed, MeterPerSquareSecond startAcceleration, Radian roadGradient);
+
+		IResponse Initialize(MeterPerSecond vehicleSpeed, Radian roadGradient, MeterPerSquareSecond startAcceleration);
 	}
 }

@@ -69,7 +69,7 @@ namespace TUGraz.VectoCore.Models.Declaration
 
 		public static Meter DynamicTyreRadius(string wheels, string rims)
 		{
-			var wheelsEntry = Wheels.Lookup(wheels.Replace(" ", ""));
+			var wheelsEntry = Wheels.Lookup(wheels.RemoveWhitespace());
 			var rimsEntry = Rims.Lookup(rims);
 
 			var correction = wheelsEntry.SizeClass != "a" ? rimsEntry.F_b : rimsEntry.F_a;

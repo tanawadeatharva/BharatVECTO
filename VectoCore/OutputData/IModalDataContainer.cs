@@ -144,9 +144,8 @@ namespace TUGraz.VectoCore.OutputData
 			if (accelerationAverages.Any()) {
 				var sqareAvg = accelerationAverages.Select(x => (x - avg) * (x - avg)).Sum() / accelerationAverages.Count;
 				return sqareAvg.Sqrt().Cast<MeterPerSquareSecond>();
-			} else {
-				return null;
 			}
+			return null;
 		}
 
 		public static MeterPerSquareSecond AverageAccelerations3SecondNegative(this IModalDataContainer data)
@@ -154,9 +153,8 @@ namespace TUGraz.VectoCore.OutputData
 			var acceleration3SecondAverage = AccelerationPer3Seconds(data).ToList();
 			if (acceleration3SecondAverage.Any()) {
 				return acceleration3SecondAverage.Where(x => x < -0.125).Average();
-			} else {
-				return null;
 			}
+			return null;
 		}
 
 		public static Scalar PercentAccelerationTime(this IModalDataContainer data)
@@ -164,9 +162,8 @@ namespace TUGraz.VectoCore.OutputData
 			var acceleration3SecondAverage = AccelerationPer3Seconds(data).ToList();
 			if (acceleration3SecondAverage.Any()) {
 				return 100.SI<Scalar>() * acceleration3SecondAverage.Count(x => x > 0.125) / acceleration3SecondAverage.Count;
-			} else {
-				return null;
 			}
+			return null;
 		}
 
 		public static Scalar PercentDecelerationTime(this IModalDataContainer data)
@@ -174,9 +171,8 @@ namespace TUGraz.VectoCore.OutputData
 			var acceleration3SecondAverage = AccelerationPer3Seconds(data).ToList();
 			if (acceleration3SecondAverage.Any()) {
 				return 100.SI<Scalar>() * acceleration3SecondAverage.Count(x => x < -0.125) / acceleration3SecondAverage.Count;
-			} else {
-				return null;
 			}
+			return null;
 		}
 
 		public static Scalar PercentCruiseTime(this IModalDataContainer data)
@@ -185,9 +181,8 @@ namespace TUGraz.VectoCore.OutputData
 			if (acceleration3SecondAverage.Any()) {
 				return 100.SI<Scalar>() * acceleration3SecondAverage.Count(x => x.IsBetween(-0.125, -0.125)) /
 						acceleration3SecondAverage.Count;
-			} else {
-				return null;
 			}
+			return null;
 		}
 
 		public static Scalar PercentStopTime(this IModalDataContainer data)
@@ -246,9 +241,8 @@ namespace TUGraz.VectoCore.OutputData
 			var time = data.GetValues<Second>(ModalResultField.time).ToList();
 			if (time.Count == 1) {
 				return time.First();
-			} else {
-				return time.Max() - time.Min();
 			}
+			return time.Max() - time.Min();
 		}
 
 		public static Meter Distance(this IModalDataContainer data)
@@ -306,7 +300,7 @@ namespace TUGraz.VectoCore.OutputData
 		public static KilogramPerMeter FuelConsumptionWHTCCorrected(this IModalDataContainer data)
 		{
 			var distance = data.Distance();
-			if (distance == null) {
+			if (distance == null || distance.IsEqual(0)) {
 				return null;
 			}
 			return data.TimeIntegral<Kilogram>(ModalResultField.FCWHTCc) / distance;
@@ -320,7 +314,7 @@ namespace TUGraz.VectoCore.OutputData
 		public static KilogramPerMeter FuelConsumptionAuxStartStopCorrected(this IModalDataContainer data)
 		{
 			var distance = data.Distance();
-			if (distance == null) {
+			if (distance == null || distance.IsEqual(0)) {
 				return null;
 			}
 			return data.TimeIntegral<Kilogram>(ModalResultField.FCAUXc) / distance;
@@ -334,7 +328,7 @@ namespace TUGraz.VectoCore.OutputData
 		public static KilogramPerMeter FuelConsumptionFinal(this IModalDataContainer data)
 		{
 			var distance = data.Distance();
-			if (distance == null) {
+			if (distance == null || distance.IsEqual(0)) {
 				return null;
 			}
 			return data.TimeIntegral<Kilogram>(ModalResultField.FCWHTCc) / distance;
@@ -354,7 +348,7 @@ namespace TUGraz.VectoCore.OutputData
 		public static KilogramPerMeter CO2PerMeter(this IModalDataContainer data)
 		{
 			var distance = data.Distance();
-			if (distance == null) {
+			if (distance == null || distance.IsEqual(0)) {
 				return null;
 			}
 			return data.TimeIntegral<Kilogram>(ModalResultField.FCMap) * Physics.CO2PerFuelWeight / distance;
@@ -374,7 +368,7 @@ namespace TUGraz.VectoCore.OutputData
 		public static KilogramPerMeter FuelConsumptionPerMeter(this IModalDataContainer data)
 		{
 			var distance = data.Distance();
-			if (distance == null) {
+			if (distance == null || distance.IsEqual(0)) {
 				return null;
 			}
 			return data.TimeIntegral<Kilogram>(ModalResultField.FCMap) / distance;
@@ -408,7 +402,7 @@ namespace TUGraz.VectoCore.OutputData
 		{
 			var distance = Distance(data);
 			var duration = Duration(data);
-			if (distance == null || duration == null) {
+			if (distance == null || duration == null || duration.IsEqual(0)) {
 				return null;
 			}
 			return distance / duration;

@@ -18,10 +18,10 @@
 
 using System.IO;
 using System.Text;
-using TUGraz.VectoCore.Utils;
-using System.Collections.Generic;
 using System.Data;
 using System.Linq;
+using TUGraz.VectoCore.Utils;
+using System.Collections.Generic;
 using TUGraz.VectoCore.OutputData;
 using TUGraz.VectoCore.Tests.Utils;
 using TUGraz.VectoCore.InputData.Reader;
@@ -48,7 +48,9 @@ namespace TUGraz.VectoCore.Tests.Models.Simulation
 		public void Pwheel_ReadCycle_Test()
 		{
 			var container = new VehicleContainer();
-			var inputData = "<t>,<Pwheel>,<Gear>,<n>,<Padd>\n1,89,2,1748,1.300\n2,120,2,1400,0.4";
+			var inputData = @"<t>,<Pwheel>,<gear>,<n>,<Padd>
+                               1,89,2,1748,1.300
+                               2,120,2,1400,0.4";
 
 			var cycleFile = new MemoryStream(Encoding.UTF8.GetBytes(inputData));
 			var drivingCycle = DrivingCycleDataReader.ReadFromStream(cycleFile, CycleType.PWheel);
@@ -87,7 +89,9 @@ namespace TUGraz.VectoCore.Tests.Models.Simulation
 		public void Pwheel_CreatePowertrain_Test()
 		{
 			// prepare input data
-			var inputData = "<t>,<Pwheel>,<Gear>,<n>,<Padd>\n1,89,2,1748,1.300\n2,120,2,1400,0.4";
+			var inputData = @"<t>,<Pwheel>,<gear>,<n>,  <Padd>
+                               1,  89,      2,     1748, 1.3
+                               2,  120,     2,     1400, 0.4";
 
 			var cycleFile = new MemoryStream(Encoding.UTF8.GetBytes(inputData));
 			var drivingCycle = DrivingCycleDataReader.ReadFromStream(cycleFile, CycleType.PWheel);
@@ -142,7 +146,7 @@ namespace TUGraz.VectoCore.Tests.Models.Simulation
 
 			jobContainer.WaitFinished();
 
-			Assert.IsTrue(jobContainer.Runs.All(r => r.Success), string.Join("", jobContainer.Runs.Select(r => r.ExecException)));
+			Assert.IsTrue(jobContainer.Runs.All(r => r.Success), string.Concat(jobContainer.Runs.Select(r => r.ExecException)));
 
 			ResultFileHelper.TestSumFile(@"TestData\Results\Pwheel\Atego_ges.v2.vsum", @"TestData\Jobs\Pwheel.vsum");
 
@@ -170,7 +174,7 @@ namespace TUGraz.VectoCore.Tests.Models.Simulation
 
 			jobContainer.WaitFinished();
 
-			Assert.IsTrue(jobContainer.Runs.All(r => r.Success), string.Join("", jobContainer.Runs.Select(r => r.ExecException)));
+			Assert.IsTrue(jobContainer.Runs.All(r => r.Success), string.Concat(jobContainer.Runs.Select(r => r.ExecException)));
 
 			ResultFileHelper.TestModFile(@"TestData\Results\Pwheel\Atego_HDVCO2_RD_#1_AuxStd.vmod",
 				@"TestData\Jobs\Pwheel_ultimate_RD_#1_Pwheel_AuxStd.vmod", testRowCount: false);

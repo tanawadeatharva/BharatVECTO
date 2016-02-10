@@ -53,7 +53,7 @@ namespace TUGraz.VectoCore.Models.Declaration
 
 		public static AxleConfiguration Parse(string typeString)
 		{
-			return (Prefix + typeString).Parse<AxleConfiguration>();
+			return (Prefix + typeString).ParseEnum<AxleConfiguration>();
 		}
 	}
 }

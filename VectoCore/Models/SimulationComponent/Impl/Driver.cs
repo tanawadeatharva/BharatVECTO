@@ -80,7 +80,7 @@ namespace TUGraz.VectoCore.Models.SimulationComponent.Impl
 		public IResponse Initialize(MeterPerSecond vehicleSpeed, Radian roadGradient, MeterPerSquareSecond startAcceleration)
 		{
 			VehicleStopped = vehicleSpeed.IsEqual(0);
-			var retVal = NextComponent.Initialize(vehicleSpeed, startAcceleration, roadGradient);
+			var retVal = NextComponent.Initialize(vehicleSpeed, roadGradient, startAcceleration);
 
 			return retVal;
 		}

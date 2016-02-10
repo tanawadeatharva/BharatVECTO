@@ -263,7 +263,7 @@ namespace TUGraz.VectoCore.InputData.Reader
 			public const string StoppingTime = "stop";
 			public const string AuxiliarySupplyPower = "Aux_";
 			public const string EngineSpeed = "n";
-			public const string Gear = "Gear";
+			public const string Gear = "gear";
 			public const string AdditionalAuxPowerDemand = "Padd";
 			public const string AirSpeedRelativeToVehicle = "vair_res";
 			public const string WindYawAngle = "vair_beta";
@@ -557,6 +557,7 @@ namespace TUGraz.VectoCore.InputData.Reader
 					RoadGradient = VectoMath.InclinationToAngle(row.ParseDoubleOrGetDefault(Fields.RoadGradient) / 100.0),
 					Gear = (uint)row.ParseDouble(Fields.Gear),
 					AdditionalAuxPowerDemand = row.ParseDouble(Fields.AdditionalAuxPowerDemand).SI().Kilo.Watt.Cast<Watt>(),
+					AuxiliarySupplyPower = AuxSupplyPowerReader.Read(row)
 				}).ToArray();
 
 				return entries;
@@ -571,6 +572,8 @@ namespace TUGraz.VectoCore.InputData.Reader
 					Fields.Gear,
 					Fields.AdditionalAuxPowerDemand
 				};
+
+				header = header.Where(c => !c.StartsWith(Fields.AuxiliarySupplyPower)).ToArray();
 
 				var requiredCols = allowedCols;
 

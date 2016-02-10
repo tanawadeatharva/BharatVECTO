@@ -18,7 +18,6 @@
 
 using System;
 using System.Collections.Generic;
-using System.IO;
 using System.Linq;
 using TUGraz.VectoCore.Configuration;
 using TUGraz.VectoCore.Exceptions;
@@ -104,7 +103,7 @@ namespace TUGraz.VectoCore.InputData.Reader.DataObjectAdaper
 					TwinTyres = axleInput.TwinTyres,
 					RollResistanceCoefficient = axleInput.RollResistanceCoefficient,
 					TyreTestLoad = axleInput.TyreTestLoad,
-					Inertia = DeclarationData.Wheels.Lookup(axleInput.Wheels.Replace(" ", "")).Inertia,
+					Inertia = DeclarationData.Wheels.Lookup(axleInput.Wheels.RemoveWhitespace()).Inertia,
 				};
 				axleData.Add(axle);
 			}

@@ -244,7 +244,208 @@ namespace TUGraz.VectoCore.Models.SimulationComponent.Impl
 
 		#endregion
 
-		public bool ClutchClosed(Second absTime)
+		public virtual bool ClutchClosed(Second absTime)
+		{
+			return LeftSample.Current.Gear != 0;
+		}
+	}
+
+
+	/// <summary>
+	/// Driving Cycle for the PWheel driving cycle.
+	/// </summary>
+	public class MeasuredSpeedCycle : VectoSimulationComponent, IDriverInfo, IDrivingCycleInfo, IDriverDemandInProvider,
+		IDriverDemandInPort, ISimulationOutProvider, ISimulationOutPort, IClutchInfo
+	{
+		protected DrivingCycleData Data;
+		protected IDriverDemandOutPort NextComponent;
+		protected IEnumerator<DrivingCycleData.DrivingCycleEntry> RightSample { get; set; }
+		protected IEnumerator<DrivingCycleData.DrivingCycleEntry> LeftSample { get; set; }
+		protected Gearbox Gearbox;
+
+		protected Second AbsTime { get; set; }
+
+		/// <summary>
+		/// Initializes a new instance of the <see cref="PowertrainDrivingCycle"/> class.
+		/// </summary>
+		/// <param name="container">The container.</param>
+		/// <param name="cycle">The cycle.</param>
+		/// <param name="gearbox">the gearbox.</param>
+		public MeasuredSpeedCycle(IVehicleContainer container, DrivingCycleData cycle, Gearbox gearbox)
+			: base(container)
+		{
+			Gearbox = gearbox;
+
+			Data = cycle;
+			LeftSample = Data.Entries.GetEnumerator();
+			LeftSample.MoveNext();
+
+			RightSample = Data.Entries.GetEnumerator();
+			RightSample.MoveNext();
+			RightSample.MoveNext();
+		}
+
+		#region IDriverDemandInProvider
+
+		public IDriverDemandInPort InPort()
+		{
+			return this;
+		}
+
+		#endregion
+
+		#region ISimulationOutProvider
+
+		public ISimulationOutPort OutPort()
+		{
+			return this;
+		}
+
+		#endregion
+
+		#region ISimulationOutPort
+
+		public IResponse Request(Second absTime, Meter ds)
+		{
+			throw new VectoSimulationException("MeasuredSpeed Cycle can not handle distance request.");
+		}
+
+		public virtual IResponse Request(Second absTime, Second dt)
+		{
+			// cycle finished (no more entries in cycle)
+			if (RightSample.Current == null || LeftSample.Current == null) {
+				return new ResponseCycleFinished { AbsTime = absTime, Source = this };
+			}
+
+			// interval exceeded
+			if (RightSample.Current != null && (absTime + dt).IsGreater(RightSample.Current.Time)) {
+				return new ResponseFailTimeInterval {
+					AbsTime = absTime,
+					Source = this,
+					DeltaT = RightSample.Current.Time - absTime
+				};
+			}
+
+			var delta_v = RightSample.Current.VehicleTargetSpeed - DataBus.VehicleSpeed;
+			var delta_t = RightSample.Current.Time - LeftSample.Current.Time;
+			var acceleration = delta_v / delta_t;
+			var gradient = LeftSample.Current.RoadGradient;
+
+			Gearbox.Gear = LeftSample.Current.Gear;
+			Gearbox.Disengaged = LeftSample.Current.Gear == 0;
+
+			if (LeftSample.Current.Gear == 0 && LeftSample.Current.RoadGradient.IsEqual(0) && !acceleration.IsEqual(0)) {
+				acceleration = 0.SI<MeterPerSquareSecond>();
+			}
+
+			var response = NextComponent.Request(absTime, dt, acceleration, gradient);
+
+			response.Switch()
+				.Case<ResponseUnderload>(r => {
+					if (r.Source is CombustionEngine) {
+						Log.Warn("PowertrainDrivingCycle got an underload response. Using PDrag.");
+						response = new ResponseSuccess();
+					} else {
+						// todo MK-2016-02-09: should we search for the braking power here?
+						DataBus.BrakePower = -r.GearboxPowerRequest;
+						response = NextComponent.Request(absTime, dt, acceleration, gradient);
+					}
+				})
+				.Case<ResponseOverload>(r => {
+					if (r.Source is CombustionEngine) {
+						Log.Warn("PowertrainDrivingCycle got an underload response. Using PFullLoad.");
+						response = new ResponseSuccess();
+					}
+					while (response is ResponseOverload && !(((ResponseOverload)response).Source is CombustionEngine)) {
+						acceleration -= 0.01.SI<MeterPerSquareSecond>();
+						response = NextComponent.Request(absTime, dt, acceleration, gradient);
+					}
+				})
+				.Case<ResponseSuccess>(() => { })
+				.Default(
+					r => { throw new UnexpectedResponseException("PowertrainDrivingCycle received an unexpected response.", r); });
+
+			AbsTime = absTime + dt;
+			return response;
+		}
+
+		public IResponse Initialize()
+		{
+			var first = Data.Entries.First();
+
+			AbsTime = first.Time;
+
+			if (first.VehicleTargetSpeed.IsEqual(0)) {
+				var retVal = NextComponent.Initialize(DataBus.StartSpeed, first.RoadGradient, DataBus.StartAcceleration);
+				if (!(retVal is ResponseSuccess)) {
+					throw new UnexpectedResponseException("Couldn't find start gear.", retVal);
+				}
+			}
+
+			var response = NextComponent.Initialize(first.VehicleTargetSpeed, first.RoadGradient);
+			response.AbsTime = AbsTime;
+			return response;
+		}
+
+		public string CycleName
+		{
+			get { return Data.Name; }
+		}
+
+		public double Progress
+		{
+			get { return AbsTime.Value() / Data.Entries.Last().Time.Value(); }
+		}
+
+		#endregion
+
+		#region IDriverDemandInPort
+
+		void IDriverDemandInPort.Connect(IDriverDemandOutPort other)
+		{
+			NextComponent = other;
+		}
+
+		#endregion
+
+		#region VectoSimulationComponent
+
+		protected override void DoCommitSimulationStep()
+		{
+			if ((RightSample.Current == null) || AbsTime.IsGreaterOrEqual(RightSample.Current.Time)) {
+				RightSample.MoveNext();
+				LeftSample.MoveNext();
+			}
+		}
+
+		#endregion
+
+		public CycleData CycleData
+		{
+			get
+			{
+				return new CycleData {
+					AbsTime = LeftSample.Current.Time,
+					AbsDistance = null,
+					LeftSample = LeftSample.Current,
+					RightSample = RightSample.Current,
+				};
+			}
+		}
+
+		protected override void DoWriteModalResults(IModalDataContainer container) {}
+
+		public bool VehicleStopped
+		{
+			get { return LeftSample.Current.VehicleTargetSpeed.IsEqual(0); }
+		}
+
+		public DrivingBehavior DrivingBehavior
+		{
+			get { return DrivingBehavior.Driving; }
+		}
+
+		public virtual bool ClutchClosed(Second absTime)
 		{
 			return LeftSample.Current.Gear != 0;
 		}

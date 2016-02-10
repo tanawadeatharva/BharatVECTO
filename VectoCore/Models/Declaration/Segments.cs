@@ -35,7 +35,7 @@ namespace TUGraz.VectoCore.Models.Declaration
 		{
 			// normalize column names, remove whitespaces and lowercase
 			foreach (DataColumn col in table.Columns) {
-				table.Columns[col.ColumnName].ColumnName = col.ColumnName.ToLower().Replace(" ", "");
+				table.Columns[col.ColumnName].ColumnName = col.ColumnName.ToLower().RemoveWhitespace();
 			}
 			SegmentTable = table.Copy();
 		}

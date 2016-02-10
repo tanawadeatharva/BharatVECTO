@@ -140,7 +140,9 @@ namespace TUGraz.VectoCore.Models.SimulationComponent.Impl
 		{
 			var absTime = 0.SI<Second>();
 			var dt = Constants.SimulationSettings.TargetTimeInterval;
-			ShiftTime = double.NegativeInfinity.SI<Second>();
+
+			// MK 2016-02-10: SI doesn't allow inifinity anymore -- therefore simply a very negative value is used.
+			ShiftTime = -1e10.SI<Second>(); //double.NegativeInfinity.SI<Second>();
 			PowerLoss = null;
 			VehicleStopped = DataBus.VehicleStopped;
 
@@ -245,8 +247,7 @@ namespace TUGraz.VectoCore.Models.SimulationComponent.Impl
 		/// </list>
 		/// </returns>
 		protected virtual IResponse RequestGearDisengaged(Second absTime, Second dt, NewtonMeter outTorque,
-			PerSecond outAngularVelocity,
-			bool dryRun)
+			PerSecond outAngularVelocity, bool dryRun)
 		{
 			Log.Debug("Current Gear: Neutral");
 
@@ -303,8 +304,7 @@ namespace TUGraz.VectoCore.Models.SimulationComponent.Impl
 		/// </list>
 		/// </returns>
 		protected virtual IResponse RequestGearEngaged(Second absTime, Second dt, NewtonMeter outTorque,
-			PerSecond outAngularVelocity,
-			bool dryRun)
+			PerSecond outAngularVelocity, bool dryRun)
 		{
 			// Set a Gear if no gear was set and engineSpeed is not zero
 			if (Disengaged && !outAngularVelocity.IsEqual(0)) {
