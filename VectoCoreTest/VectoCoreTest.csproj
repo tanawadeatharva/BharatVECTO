@@ -400,9 +400,6 @@
     <None Include="TestData\Generic Vehicles\Engineering Mode\24t Coach\24t Coach.vmap">
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
     </None>
-    <None Include="TestData\Generic Vehicles\Engineering Mode\24t Coach\24t Coach.vsum.json">
-      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
-    </None>
     <None Include="TestData\Generic Vehicles\Engineering Mode\24t Coach\24t Coach.vveh">
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
     </None>

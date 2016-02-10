@@ -11,7 +11,7 @@
     "EngineFile": "24t Coach.veng",
     "GearboxFile": "24t Coach.vgbx",
     "Cycles": [
-      "Coach Engine Only.vdri"
+      "Coach.vdri"
     ],
     "Aux": [
       {
@@ -34,7 +34,7 @@
       }
     ],
     "VACC": "Coach.vacc",
-    "EngineOnlyMode": true,
+    "EngineOnlyMode": false,
     "StartStop": {
       "Enabled": false,
       "MaxSpeed": 5.0,
