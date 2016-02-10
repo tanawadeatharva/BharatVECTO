@@ -196,7 +196,7 @@ namespace TUGraz.VectoCore.Models.Simulation.Impl
 					}
 					_modData.AddAuxiliary(auxData.ID);
 				}
-				tmp = AddComponent(tmp, aux);
+				engine.Connect(aux.Port());
 			}
 			// connect aux --> engine
 			AddComponent(tmp, engine);

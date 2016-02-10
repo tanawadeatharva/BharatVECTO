@@ -130,7 +130,6 @@ namespace TUGraz.VectoCore.Utils
 		{
 			return SIBase<Watt>.Create(newton.Val * meterPerSecond.Value());
 		}
-
 	}
 
 	/// <summary>
@@ -827,8 +826,12 @@ namespace TUGraz.VectoCore.Utils
 			Denominator = new Unit[0];
 			Exponent = 1;
 
-			if (double.IsNaN(val)) {
-				throw new VectoException("SI value is NaN: [{0}]", GetUnitString());
+			if (double.IsNaN(Val)) {
+				throw new VectoException("NaN [{0}] is not allowed for SI-Values in Vecto.", GetUnitString());
+			}
+
+			if (double.IsInfinity(Val)) {
+				throw new VectoException("Infinity [{0}] is not allowed for SI-Values in Vecto.", GetUnitString());
 			}
 		}
 
@@ -863,6 +866,14 @@ namespace TUGraz.VectoCore.Utils
 
 			Numerator = tmpNumerator.ToArray();
 			Denominator = tmpDenominator.ToArray();
+
+			if (double.IsNaN(Val)) {
+				throw new VectoException("NaN [{0}] is not allowed for SI-Values in Vecto.", GetUnitString());
+			}
+
+			if (double.IsInfinity(Val)) {
+				throw new VectoException("Infinity [{0}] is not allowed for SI-Values in Vecto.", GetUnitString());
+			}
 		}
 
 		/// <summary>
@@ -914,6 +925,14 @@ namespace TUGraz.VectoCore.Utils
 
 			Numerator = denominator.ToArray();
 			Denominator = numerator.ToArray();
+
+			if (double.IsNaN(Val)) {
+				throw new VectoException("NaN [{0}] is not allowed for SI-Values in Vecto.", GetUnitString());
+			}
+
+			if (double.IsInfinity(Val)) {
+				throw new VectoException("Infinity [{0}] is not allowed for SI-Values in Vecto.", GetUnitString());
+			}
 		}
 
 		/// <summary>
@@ -921,6 +940,7 @@ namespace TUGraz.VectoCore.Utils
 		/// </summary>
 		/// <param name="fromUnit">From unit.</param>
 		/// <param name="toUnit">To unit.</param>
+		/// 
 		/// <param name="units">The units.</param>
 		/// <exception cref="VectoException"></exception>
 		[DebuggerHidden]

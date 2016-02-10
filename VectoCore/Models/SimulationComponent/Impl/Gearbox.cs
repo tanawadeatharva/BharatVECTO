@@ -140,7 +140,9 @@ namespace TUGraz.VectoCore.Models.SimulationComponent.Impl
 		{
 			var absTime = 0.SI<Second>();
 			var dt = Constants.SimulationSettings.TargetTimeInterval;
-			ShiftTime = double.NegativeInfinity.SI<Second>();
+
+			// MK 2016-02-10: SI doesn't allow inifinity anymore -- therefore simply a very negative value is used.
+			ShiftTime = -1e10.SI<Second>(); //double.NegativeInfinity.SI<Second>();
 			PowerLoss = null;
 			VehicleStopped = DataBus.VehicleStopped;
 

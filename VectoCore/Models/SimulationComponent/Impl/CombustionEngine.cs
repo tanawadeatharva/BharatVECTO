@@ -329,30 +329,24 @@ namespace TUGraz.VectoCore.Models.SimulationComponent.Impl
 			}
 
 			//_currentState.StationaryFullLoadPower = _data.GetFullLoadCurve(gear).FullLoadStationaryPower(rpm);
-			CurrentState.StationaryFullLoadTorque =
-				Data.FullLoadCurve.FullLoadStationaryTorque(angularVelocity);
+			CurrentState.StationaryFullLoadTorque = Data.FullLoadCurve.FullLoadStationaryTorque(angularVelocity);
 			CurrentState.StationaryFullLoadPower = CurrentState.StationaryFullLoadTorque * angularVelocity;
 
 			Watt dynFullPowerCalculated;
-			if (!PT1Disabled) {
+
+			// disable pt1 behaviour if PT1Disabled is true, or if the previous enginepower is greater than the current stationary fullload power (in this case the pt1 calculation fails)
+			if (PT1Disabled || PreviousState.EnginePower.IsGreaterOrEqual(CurrentState.StationaryFullLoadPower)) {
+				dynFullPowerCalculated = CurrentState.StationaryFullLoadPower;
+			} else {
 				var pt1 = Data.FullLoadCurve.PT1(angularVelocity).Value();
-				var tStarPrev = pt1 *
-								Math.Log(1 / (1 - (PreviousState.EnginePower / CurrentState.StationaryFullLoadPower).Value()), Math.E)
-									.SI<Second>();
+				var powerRatio = (PreviousState.EnginePower / CurrentState.StationaryFullLoadPower).Value();
+				var tStarPrev = pt1 * Math.Log(1 / (1 - powerRatio), Math.E).SI<Second>();
 				var tStar = tStarPrev + PreviousState.dt;
 				dynFullPowerCalculated = CurrentState.StationaryFullLoadPower * (1 - Math.Exp((-tStar / pt1).Value()));
-			} else {
-				dynFullPowerCalculated = CurrentState.StationaryFullLoadPower;
 			}
 
-			CurrentState.DynamicFullLoadPower = (dynFullPowerCalculated < CurrentState.StationaryFullLoadPower)
-				? dynFullPowerCalculated
-				: CurrentState.StationaryFullLoadPower;
-
-			// new check in vecto 3.x (according to Martin Rexeis)
-			if (CurrentState.DynamicFullLoadPower < StationaryIdleFullLoadPower) {
-				CurrentState.DynamicFullLoadPower = StationaryIdleFullLoadPower;
-			}
+			CurrentState.DynamicFullLoadPower = VectoMath.Limit(dynFullPowerCalculated, StationaryIdleFullLoadPower,
+				CurrentState.StationaryFullLoadPower);
 
 			CurrentState.DynamicFullLoadTorque = CurrentState.DynamicFullLoadPower / angularVelocity;
 
