@@ -413,7 +413,7 @@ namespace TUGraz.VectoCore.Tests.Models.SimulationComponent
 			var dt = Constants.SimulationSettings.TargetTimeInterval;
 
 			var angularVelocity = 95.5596.SI<PerSecond>();
-			var torque = (engine.Data.FullLoadCurve.DragLoadStationaryPower(angularVelocity) - 5000.SI<Watt>()) / angularVelocity;
+			var torque = (engine.ModelData.FullLoadCurve.DragLoadStationaryPower(angularVelocity) - 5000.SI<Watt>()) / angularVelocity;
 
 			var response = requestPort.Initialize(torque, angularVelocity);
 			Assert.IsInstanceOfType(response, typeof(ResponseSuccess));

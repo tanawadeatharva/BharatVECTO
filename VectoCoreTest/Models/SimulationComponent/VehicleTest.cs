@@ -85,26 +85,29 @@ namespace TUGraz.VectoCore.Tests.Models.SimulationComponent
 			// ====================
 
 			var dt = 0.5.SI<Second>();
-			vehicle.Initialize(60.KMPHtoMeterPerSecond(), 0.SI<Radian>());
+			var vehicleSpeed = 60.KMPHtoMeterPerSecond();
+			vehicle.Initialize(vehicleSpeed, 0.SI<Radian>());
 
-			var avgForce = vehicle.AirDragResistance(0.SI<MeterPerSquareSecond>(), dt);
+
+			var avgForce = vehicle.AirDragResistance(vehicleSpeed, 0.SI<MeterPerSquareSecond>(), dt);
 			Assert.AreEqual(1340.12357, avgForce.Value(), Tolerance);
 
-			avgForce = vehicle.AirDragResistance(1.SI<MeterPerSquareSecond>(), dt);
+			avgForce = vehicle.AirDragResistance(vehicleSpeed, 1.SI<MeterPerSquareSecond>(), dt);
 			Assert.AreEqual(1375.63226, avgForce.Value(), Tolerance);
 
-			avgForce = vehicle.AirDragResistance(0.5.SI<MeterPerSquareSecond>(), dt);
+			avgForce = vehicle.AirDragResistance(vehicleSpeed, 0.5.SI<MeterPerSquareSecond>(), dt);
 			Assert.AreEqual(1357.76658, avgForce.Value(), Tolerance);
 
 			// - - - - - - 
-			vehicle.Initialize(72.KMPHtoMeterPerSecond(), 0.SI<Radian>());
+			vehicleSpeed = 72.KMPHtoMeterPerSecond();
+			vehicle.Initialize(vehicleSpeed, 0.SI<Radian>());
 
-			avgForce = vehicle.AirDragResistance(0.5.SI<MeterPerSquareSecond>(), dt);
+			avgForce = vehicle.AirDragResistance(vehicleSpeed, 0.5.SI<MeterPerSquareSecond>(), dt);
 			Assert.AreEqual(1861.2734, avgForce.Value(), Tolerance);
 
 			dt = 3.SI<Second>();
 
-			avgForce = vehicle.AirDragResistance(1.SI<MeterPerSquareSecond>(), dt);
+			avgForce = vehicle.AirDragResistance(vehicleSpeed, 1.SI<MeterPerSquareSecond>(), dt);
 			Assert.AreEqual(2101.63000, avgForce.Value(), Tolerance);
 		}
 

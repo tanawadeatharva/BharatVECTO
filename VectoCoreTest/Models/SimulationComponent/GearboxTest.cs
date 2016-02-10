@@ -188,7 +188,7 @@ namespace TUGraz.VectoCore.Tests.Models.SimulationComponent
 			Assert.AreEqual(-2264.82.SI<NewtonMeter>(), port.Torque);
 
 			var modData = new MockModalDataContainer();
-			Assert.IsTrue(gearbox.Data.Gears[gearbox.Gear].LossMap.Extrapolated);
+			Assert.IsTrue(gearbox.ModelData.Gears[gearbox.Gear].LossMap.Extrapolated);
 			AssertHelper.Exception<VectoException>(() => {
 				gearbox.CommitSimulationStep(modData);
 			});
@@ -227,7 +227,7 @@ namespace TUGraz.VectoCore.Tests.Models.SimulationComponent
 			Assert.AreEqual(-2464.82.SI<NewtonMeter>(), port.Torque);
 
 			var modData = new MockModalDataContainer();
-			Assert.IsTrue(gearbox.Data.Gears[gearbox.Gear].LossMap.Extrapolated);
+			Assert.IsTrue(gearbox.ModelData.Gears[gearbox.Gear].LossMap.Extrapolated);
 			gearbox.CommitSimulationStep(modData);
 		}
 
@@ -256,7 +256,7 @@ namespace TUGraz.VectoCore.Tests.Models.SimulationComponent
 			t = -2500.SI<NewtonMeter>();
 			n = 1000.RPMtoRad();
 			response = gearbox.OutPort().Request(absTime, dt, t * ratio, n / ratio, dryRun: true);
-			Assert.IsTrue(gearbox.Data.Gears[gearbox.Gear].LossMap.Extrapolated);
+			Assert.IsTrue(gearbox.ModelData.Gears[gearbox.Gear].LossMap.Extrapolated);
 
 			Assert.IsInstanceOfType(response, typeof(ResponseDryRun));
 			Assert.AreEqual(absTime, port.AbsTime);
@@ -268,7 +268,7 @@ namespace TUGraz.VectoCore.Tests.Models.SimulationComponent
 			t = -1000.SI<NewtonMeter>();
 			n = 1000.RPMtoRad();
 			response = gearbox.OutPort().Request(absTime, dt, t * ratio, n / ratio);
-			Assert.IsFalse(gearbox.Data.Gears[gearbox.Gear].LossMap.Extrapolated);
+			Assert.IsFalse(gearbox.ModelData.Gears[gearbox.Gear].LossMap.Extrapolated);
 
 			Assert.IsInstanceOfType(response, typeof(ResponseSuccess));
 			Assert.AreEqual(absTime, port.AbsTime);

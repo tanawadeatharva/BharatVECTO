@@ -84,7 +84,7 @@ namespace TUGraz.VectoCore.Tests.Models.SimulationComponent
 
 			Assert.AreEqual(4.9812, vehicleContainer.VehicleSpeed.Value(), Tolerance);
 			Assert.AreEqual(0.2004, response.SimulationInterval.Value(), Tolerance);
-			Assert.AreEqual(engine.PreviousState.FullDragPower.Value(), engine.PreviousState.EnginePower.Value(),
+			Assert.AreEqual(engine.PreviousState.FullDragTorque.Value(), engine.PreviousState.EngineTorque.Value(),
 				Constants.SimulationSettings.EnginePowerSearchTolerance.Value());
 
 			while (vehicleContainer.VehicleSpeed > 1) {
@@ -142,7 +142,7 @@ namespace TUGraz.VectoCore.Tests.Models.SimulationComponent
 
 			Assert.AreEqual(4.9812, vehicleContainer.VehicleSpeed.Value(), Tolerance);
 			Assert.AreEqual(0.2004, response.SimulationInterval.Value(), Tolerance);
-			Assert.AreEqual(engine.PreviousState.FullDragPower.Value(), engine.PreviousState.EnginePower.Value(),
+			Assert.AreEqual(engine.PreviousState.FullDragTorque.Value(), engine.PreviousState.EngineTorque.Value(),
 				Constants.SimulationSettings.EnginePowerSearchTolerance.Value());
 
 			while (vehicleContainer.VehicleSpeed > 1) {
