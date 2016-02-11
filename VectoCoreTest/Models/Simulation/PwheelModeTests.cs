@@ -133,7 +133,7 @@ namespace TUGraz.VectoCore.Tests.Models.Simulation
 		[TestMethod]
 		public void Pwheel_Run_Test()
 		{
-			var jobFile = @"TestData\Jobs\P_wheel_in.vecto";
+			var jobFile = @"TestData\Jobs\Pwheel.vecto";
 			var fileWriter = new FileOutputWriter(jobFile);
 			var sumWriter = new SummaryDataContainer(fileWriter);
 			var jobContainer = new JobContainer(sumWriter);

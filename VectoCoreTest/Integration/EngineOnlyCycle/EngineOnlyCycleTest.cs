@@ -97,6 +97,7 @@ namespace TUGraz.VectoCore.Tests.Integration.EngineOnlyCycle
 			var angularVelocity = 644.4445.RPMtoRad();
 			var power = 2329.973.SI<Watt>();
 
+			engine.OutPort().Initialize(power / angularVelocity, angularVelocity);
 			engine.OutPort().Request(absTime, dt, power / angularVelocity, angularVelocity);
 
 			foreach (var sc in vehicleContainer.SimulationComponents()) {
