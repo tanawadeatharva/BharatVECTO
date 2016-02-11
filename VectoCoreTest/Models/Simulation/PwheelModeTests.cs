@@ -148,9 +148,9 @@ namespace TUGraz.VectoCore.Tests.Models.Simulation
 
 			Assert.IsTrue(jobContainer.Runs.All(r => r.Success), string.Concat(jobContainer.Runs.Select(r => r.ExecException)));
 
-			ResultFileHelper.TestSumFile(@"TestData\Results\P_wheel_in\Atego_ges.v2.vsum", @"TestData\Jobs\P_wheel_in.vsum");
+			ResultFileHelper.TestSumFile(@"TestData\Results\Pwheel\Atego_ges.v2.vsum", @"TestData\Jobs\Pwheel.vsum");
 
-			ResultFileHelper.TestModFile(@"TestData\Results\P_wheel_in\Atego_ges_Gear2_pt1_rep1_actual.vmod",
+			ResultFileHelper.TestModFile(@"TestData\Results\Pwheel\Atego_ges_Gear2_pt1_rep1_actual.vmod",
 				@"TestData\Jobs\Pwheel_Gear2_pt1_rep1_actual.vmod");
 		}
 
