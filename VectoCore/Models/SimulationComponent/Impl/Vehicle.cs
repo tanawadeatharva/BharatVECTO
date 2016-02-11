@@ -57,16 +57,7 @@ namespace TUGraz.VectoCore.Models.SimulationComponent.Impl
 												+ PreviousState.AirDragResistance
 												+ PreviousState.SlopeResistance;
 
-			//CurrentState = new VehicleState {
-			//	Distance = DataBus.CycleStartDistance,
-			//	Velocity = vehicleSpeed,
-			//	AirDragResistance = PreviousState.AirDragResistance,
-			//	RollingResistance = PreviousState.RollingResistance,
-			//	SlopeResistance = PreviousState.SlopeResistance,
-			//	VehicleTractionForce = PreviousState.VehicleTractionForce
-			//};
-
-			return NextComponent.Initialize(CurrentState.VehicleTractionForce, vehicleSpeed);
+			return NextComponent.Initialize(PreviousState.VehicleTractionForce, vehicleSpeed);
 		}
 
 		public IResponse Initialize(MeterPerSecond vehicleSpeed, Radian roadGradient, MeterPerSquareSecond startAcceleration)
@@ -88,7 +79,8 @@ namespace TUGraz.VectoCore.Models.SimulationComponent.Impl
 			CurrentState.SimulationInterval = dt;
 			CurrentState.Acceleration = acceleration;
 			CurrentState.Velocity = PreviousState.Velocity + acceleration * dt;
-			if (CurrentState.Velocity.IsSmallerOrEqual(0.SI<MeterPerSecond>(), Constants.SimulationSettings.VehicleSpeedHaltTolerance)) {	
+			if (CurrentState.Velocity.IsSmallerOrEqual(0.SI<MeterPerSecond>(),
+				Constants.SimulationSettings.VehicleSpeedHaltTolerance)) {
 				CurrentState.Velocity = 0.SI<MeterPerSecond>();
 			}
 			CurrentState.Distance = PreviousState.Distance + PreviousState.Velocity * dt + acceleration * dt * dt / 2;
