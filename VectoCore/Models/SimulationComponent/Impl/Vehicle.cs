@@ -105,8 +105,7 @@ namespace TUGraz.VectoCore.Models.SimulationComponent.Impl
 												+ CurrentState.SlopeResistance;
 
 			var retval = NextComponent.Request(absTime, dt, CurrentState.VehicleTractionForce,
-				CurrentState.Velocity,
-				dryRun);
+				CurrentState.Velocity, dryRun);
 			return retval;
 		}
 

@@ -94,6 +94,7 @@ namespace TUGraz.VectoCore.Tests.Models.SimulationComponent
 			var torque = 400.SI<NewtonMeter>();
 			var engineSpeed = 1500.RPMtoRad();
 
+			port.Initialize(torque, engineSpeed);
 			port.Request(absTime, dt, torque, engineSpeed);
 		}
 
@@ -112,6 +113,7 @@ namespace TUGraz.VectoCore.Tests.Models.SimulationComponent
 			var engineSpeed = 600.RPMtoRad();
 			var dataWriter = new MockModalDataContainer();
 
+			port.Initialize(torque, engineSpeed);
 			for (var i = 0; i < 21; i++) {
 				port.Request(absTime, dt, torque, engineSpeed);
 				engine.CommitSimulationStep(dataWriter);
