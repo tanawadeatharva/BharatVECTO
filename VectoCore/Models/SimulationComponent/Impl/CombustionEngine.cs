@@ -134,8 +134,7 @@ namespace TUGraz.VectoCore.Models.SimulationComponent.Impl
 		}
 
 		protected virtual IResponse DoHandleRequest(Second absTime, Second dt, NewtonMeter torqueOut,
-			PerSecond angularVelocity,
-			bool dryRun)
+			PerSecond angularVelocity, bool dryRun)
 		{
 			CurrentState.dt = dt;
 			CurrentState.EngineSpeed = angularVelocity;
@@ -207,19 +206,19 @@ namespace TUGraz.VectoCore.Models.SimulationComponent.Impl
 			CurrentState.EngineTorque = maxEngineTorque;
 			CurrentState.EnginePower = CurrentState.EngineTorque * avgEngineSpeed;
 
-			NewtonMeter delta = null;
+			Watt delta = null;
 			if (deltaGbxFld != null && deltaEngineFld != null) {
-				delta = deltaEngineFld;
+				delta = deltaEngineFld * avgEngineSpeed;
 			} else if (deltaGbxFld != null) {
-				delta = deltaGbxFld;
+				delta = deltaGbxFld * avgEngineSpeed;
 			} else if (deltaEngineFld != null) {
-				delta = deltaEngineFld;
+				delta = deltaEngineFld * avgEngineSpeed;
 			}
 			if (delta != null && delta.IsGreater(0.SI<Watt>(), Constants.SimulationSettings.EnginePowerSearchTolerance)) {
 				Log.Debug("requested engine power exceeds fullload power: delta: {0}", deltaEngineFld);
 				return new ResponseOverload {
 					AbsTime = absTime,
-					Delta = delta * avgEngineSpeed,
+					Delta = delta,
 					EnginePowerRequest = totalTorqueDemand * avgEngineSpeed,
 					Source = this
 				};
@@ -229,7 +228,7 @@ namespace TUGraz.VectoCore.Models.SimulationComponent.Impl
 				Log.Debug("requested engine power is below drag power: delta: {0}", deltaEngineFld);
 				return new ResponseUnderload {
 					AbsTime = absTime,
-					Delta = delta * avgEngineSpeed,
+					Delta = delta,
 					EnginePowerRequest = totalTorqueDemand * avgEngineSpeed,
 					Source = this
 				};
