@@ -134,7 +134,7 @@ namespace TUGraz.VectoCore.Tests.Utils
 						Color.Blue, x, y);
 
 					if (fileNameV22 != null) {
-						var y2 = LoadData(modDataV22, yfield.GetName());
+						var y2 = LoadData(modDataV22, TranslateFieldname(yfield));
 						var series2 = CreateSeries(string.Format("Vecto 2.2 - {0}", yfield), legend, chartArea, chart,
 							Color.Red, x2,
 							y2);
@@ -151,6 +151,20 @@ namespace TUGraz.VectoCore.Tests.Utils
 
 				chart.Invalidate();
 				chart.SaveImage(fileName, ChartImageFormat.Png);
+			}
+		}
+
+		private static string TranslateFieldname(ModalResultField modalResultField)
+		{
+			switch (modalResultField) {
+				case ModalResultField.n_eng_avg:
+					return "n";
+				case ModalResultField.P_eng_out:
+					return "Pe_eng";
+				case ModalResultField.T_eng_fcmap:
+					return "Tq_eng";
+				default:
+					return modalResultField.GetName();
 			}
 		}
 

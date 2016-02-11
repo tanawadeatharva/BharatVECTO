@@ -53,6 +53,18 @@ namespace TUGraz.VectoCore.Tests.Utils
 				var actualCols = actual.Columns.Cast<DataColumn>().Select(x => x.ColumnName).OrderBy(x => x).ToList();
 				var expectedCols = expected.Columns.Cast<DataColumn>().Select(x => x.ColumnName).OrderBy(x => x).ToList();
 
+				if (testColumns != null) {
+					actualCols =
+						actual.Columns.Cast<DataColumn>()
+							.Where(col => testColumns.Any(req => req.Equals(col.ColumnName))).Select(x => x.ColumnName)
+							.OrderBy(x => x)
+							.ToList();
+					expectedCols = expected.Columns.Cast<DataColumn>()
+						.Where(col => testColumns.Any(req => req.Equals(col.ColumnName))).Select(x => x.ColumnName)
+						.OrderBy(x => x)
+						.ToList();
+				}
+
 				Assert.IsTrue(expectedCols.SequenceEqual(actualCols),
 					string.Format("Moddata: Columns differ:\nExpected: {0}\nActual: {1}", string.Join(", ", expectedCols),
 						string.Join(", ", actualCols)));
