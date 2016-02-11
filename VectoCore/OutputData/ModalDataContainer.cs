@@ -19,9 +19,7 @@
 using System;
 using System.Collections.Generic;
 using System.Data;
-using System.IO;
 using System.Linq;
-using TUGraz.VectoCore.Models.Simulation;
 using TUGraz.VectoCore.Models.Simulation.Data;
 using TUGraz.VectoCore.Models.Simulation.Impl;
 using TUGraz.VectoCore.Utils;
@@ -47,7 +45,7 @@ namespace TUGraz.VectoCore.OutputData
 
 		public ModalDataContainer(string runName, IModalDataWriter writer,
 			ExecutionMode mode = ExecutionMode.Engineering)
-			: this(runName, "", "", writer, _ => {}, mode) {}
+			: this(runName, "", "", writer, _ => { }, mode) {}
 
 		public ModalDataContainer(VectoRunData runData, IModalDataWriter writer, Action<ModalDataContainer> addReportResult,
 			ExecutionMode mode = ExecutionMode.Engineering)
@@ -95,34 +93,44 @@ namespace TUGraz.VectoCore.OutputData
 					ModalResultField.grad
 				});
 			}
-
+			if (_mode != ExecutionMode.EngineOnly) {
+				dataColumns.AddRange(new[] {
+					ModalResultField.Gear,
+				});
+			}
 			dataColumns.AddRange(new[] {
 				ModalResultField.n_eng_avg,
 				ModalResultField.T_eng_fcmap,
-				//ModalResultField.Tq_clutch,
 				ModalResultField.Tq_full,
 				ModalResultField.Tq_drag,
-				ModalResultField.P_eng_out,
+				ModalResultField.P_eng_fcmap,
 				ModalResultField.P_eng_full,
 				ModalResultField.P_eng_drag,
-				ModalResultField.P_clutch_out,
 				ModalResultField.P_eng_inertia,
+				ModalResultField.P_eng_out,
+				ModalResultField.P_clutch_loss,
+				ModalResultField.P_clutch_out,
 				ModalResultField.P_aux
 			});
 
 			if (_mode != ExecutionMode.EngineOnly) {
 				dataColumns.AddRange(new[] {
-					ModalResultField.Gear,
+					ModalResultField.P_gbx_in,
 					ModalResultField.P_gbx_loss,
-					ModalResultField.P_axle_loss,
-					ModalResultField.P_ret_loss,
 					ModalResultField.P_gbx_inertia,
-					ModalResultField.P_veh_inertia,
-					ModalResultField.P_roll,
-					ModalResultField.P_air,
-					ModalResultField.P_slope,
+					ModalResultField.P_retarder_in,
+					ModalResultField.P_ret_loss,
+					ModalResultField.P_axle_in,
+					ModalResultField.P_axle_loss,
+					ModalResultField.P_brake_in,
+					ModalResultField.P_brake_loss,
 					ModalResultField.P_wheel_in,
-					ModalResultField.P_brake_loss
+					ModalResultField.P_wheel_inertia,
+					ModalResultField.P_trac,
+					ModalResultField.P_slope,
+					ModalResultField.P_air,
+					ModalResultField.P_roll,
+					ModalResultField.P_veh_inertia,
 				});
 
 				if (HasTorqueConverter) {
