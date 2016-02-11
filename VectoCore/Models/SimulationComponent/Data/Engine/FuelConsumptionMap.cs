@@ -54,8 +54,7 @@ namespace TUGraz.VectoCore.Models.SimulationComponent.Data.Engine
 			if (!headerValid) {
 				Logger<FuelConsumptionMap>().Warn(
 					"FuelConsumptionMap: Header Line is not valid. Expected: '{0}, {1}, {2}', Got: {3}",
-					Fields.EngineSpeed, Fields.Torque, Fields.FuelConsumption,
-					string.Join(", ", data.Columns.Cast<DataColumn>().Select(c => c.ColumnName)));
+					Fields.EngineSpeed, Fields.Torque, Fields.FuelConsumption, ", ".Join(data.Columns.Cast<DataColumn>().Select(c => c.ColumnName)));
 			}
 			var fuelConsumptionMap = new FuelConsumptionMap();
 

@@ -60,10 +60,10 @@ namespace TUGraz.VectoCore.Models.SimulationComponent.Data
 			if (HeaderIsValid(data.Columns)) {
 				return CreateFromColumnNames(data);
 			}
-			Logger<AccelerationCurveData>().Warn(
-				"Acceleration Curve: Header Line is not valid. Expected: '{0}, {1}, {2}', Got: {3}",
-				Fields.Velocity, Fields.Acceleration, Fields.Deceleration,
-				string.Join(", ", data.Columns.Cast<DataColumn>().Select(c => c.ColumnName)));
+			Logger<AccelerationCurveData>()
+				.Warn("Acceleration Curve: Header Line is not valid. Expected: '{0}, {1}, {2}', Got: {3}",
+					Fields.Velocity, Fields.Acceleration, Fields.Deceleration,
+					", ".Join(data.Columns.Cast<DataColumn>().Select(c => c.ColumnName)));
 			return CreateFromColumnIndizes(data);
 		}
 

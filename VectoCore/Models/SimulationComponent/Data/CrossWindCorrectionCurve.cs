@@ -74,8 +74,7 @@ namespace TUGraz.VectoCore.Models.SimulationComponent.Data
 			Logger<CrossWindCorrectionCurve>()
 				.Warn(
 					"Crosswind correction file: Header line is not valid. Expected: '{0}, {1}', Got: '{2}'. Falling back to column index.",
-					Fields.Velocity, Fields.Cd,
-					string.Join(", ", data.Columns.Cast<DataColumn>().Select(c => c.ColumnName).Reverse()));
+					Fields.Velocity, Fields.Cd,", ".Join(data.Columns.Cast<DataColumn>().Select(c => c.ColumnName).Reverse()));
 			return new CrossWindCorrectionCurve(ReadSpeedDependentFromColumnIndizes(data, aerodynamicDragArea),
 				CrossWindCorrectionMode.SpeedDependentCorrectionFactor);
 		}

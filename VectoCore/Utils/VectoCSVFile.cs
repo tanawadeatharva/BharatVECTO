@@ -183,7 +183,7 @@ namespace TUGraz.VectoCore.Utils
 				return;
 			}
 			var header = table.Columns.Cast<DataColumn>().Select(col => col.Caption ?? col.ColumnName);
-			writer.WriteLine(string.Join(Delimiter.ToString(), header));
+			writer.WriteLine(Delimiter.ToString().Join(header));
 
 			foreach (DataRow row in table.Rows) {
 				var row1 = row;
@@ -199,7 +199,7 @@ namespace TUGraz.VectoCore.Utils
 						: string.Format(CultureInfo.InvariantCulture, "{0}", item));
 				});
 
-				writer.WriteLine(string.Join(Delimiter.ToString(), formattedList));
+				writer.WriteLine(Delimiter.ToString().Join(formattedList));
 			}
 		}
 	}

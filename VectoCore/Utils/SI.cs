@@ -956,8 +956,8 @@ namespace TUGraz.VectoCore.Utils
 				if (units.Contains(fromUnit.Value)) {
 					units.Remove(fromUnit.Value);
 				} else {
-					throw new VectoException("Unit missing. Conversion not possible. [{0}] does not contain a [{1}].",
-						string.Join(", ", units), fromUnit);
+					throw new VectoException("Unit missing. Conversion not possible. [{0}] does not contain a [{1}].", ", ".Join(units),
+						fromUnit);
 				}
 			}
 

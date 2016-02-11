@@ -54,8 +54,8 @@ namespace TUGraz.VectoCore.Tests.Utils
 				var expectedCols = expected.Columns.Cast<DataColumn>().Select(x => x.ColumnName).OrderBy(x => x).ToList();
 
 				Assert.IsTrue(expectedCols.SequenceEqual(actualCols),
-					string.Format("Moddata: Columns differ:\nExpected: {0}\nActual: {1}", string.Join(", ", expectedCols),
-						string.Join(", ", actualCols)));
+					string.Format("Moddata: Columns differ:\nExpected: {0}\nActual: {1}", ", ".Join(expectedCols),
+						", ".Join(actualCols)));
 
 				for (var i = 0; testRowcount && i < expected.Rows.Count; i++) {
 					var expectedRow = expected.Rows[i];
@@ -84,8 +84,8 @@ namespace TUGraz.VectoCore.Tests.Utils
 			var expectedCols = expected.Columns.Cast<DataColumn>().Select(x => x.ColumnName).OrderBy(x => x).ToList();
 
 			Assert.IsTrue(expectedCols.SequenceEqual(actualCols),
-				string.Format("SUM FILE: Columns differ:\nExpected: {0}\nActual: {1}", string.Join(", ", expectedCols),
-					string.Join(", ", actualCols)));
+				string.Format("SUM FILE: Columns differ:\nExpected: {0}\nActual: {1}", ", ".Join(expectedCols),
+					", ".Join(actualCols)));
 
 			for (var i = 0; i < expected.Rows.Count; i++) {
 				var expectedRow = expected.Rows[i];

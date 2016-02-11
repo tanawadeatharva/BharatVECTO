@@ -73,7 +73,7 @@ namespace TUGraz.VectoCore.Tests.Models.SimulationComponentData
 			data.FullLoadCurve.EngineData = data;
 
 			var results = data.Validate();
-			Assert.IsFalse(results.Any(), "Validation Failed: " + string.Join("; ", results.Select(r => r.ErrorMessage)));
+			Assert.IsFalse(results.Any(), "Validation Failed: " + "; ".Join(results.Select(r => r.ErrorMessage)));
 			Assert.IsTrue(data.IsValid());
 		}
 
@@ -98,8 +98,8 @@ namespace TUGraz.VectoCore.Tests.Models.SimulationComponentData
 
 			var axleGearData = new AxleGearData {
 				AxleGear = new GearData {
-				Ratio = 1,
-				LossMap = TransmissionLossMap.ReadFromFile(@"TestData\Components\limited.vtlm", 1, "1"),
+					Ratio = 1,
+					LossMap = TransmissionLossMap.ReadFromFile(@"TestData\Components\limited.vtlm", 1, "1"),
 				}
 			};
 
@@ -110,7 +110,7 @@ namespace TUGraz.VectoCore.Tests.Models.SimulationComponentData
 			};
 
 			var results = data.Validate();
-			Assert.IsFalse(results.Any(), "Validation Failed: " + string.Join("; ", results.Select(r => r.ErrorMessage)));
+			Assert.IsFalse(results.Any(), "Validation Failed: " + "; ".Join(results.Select(r => r.ErrorMessage)));
 		}
 
 		/// <summary>
@@ -123,7 +123,7 @@ namespace TUGraz.VectoCore.Tests.Models.SimulationComponentData
 
 			// every field and property should be tested except private parent fields and properties and 
 			// (4*4+1) * 2 = 17*2= 34 - 4 private parent fields (+2 public field and property which are tested twice) = 32
-			Assert.AreEqual(32, results.Count, "Validation Error: " + string.Join("\n", results.Select(r => r.ErrorMessage)));
+			Assert.AreEqual(32, results.Count, "Validation Error: " + "\n".Join(results.Select(r => r.ErrorMessage)));
 		}
 
 
