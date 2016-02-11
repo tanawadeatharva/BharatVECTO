@@ -19,7 +19,6 @@
 using System;
 using TUGraz.VectoCore.Configuration;
 using TUGraz.VectoCore.Models.Connector.Ports;
-using TUGraz.VectoCore.Models.Declaration;
 using TUGraz.VectoCore.Models.Simulation;
 using TUGraz.VectoCore.Models.Simulation.Data;
 using TUGraz.VectoCore.Models.Simulation.DataBus;
@@ -70,8 +69,7 @@ namespace TUGraz.VectoCore.Models.SimulationComponent.Impl
 			return NextComponent.Initialize(CurrentState.VehicleTractionForce, vehicleSpeed);
 		}
 
-
-		public IResponse Initialize(MeterPerSecond vehicleSpeed, MeterPerSquareSecond startAcceleration, Radian roadGradient)
+		public IResponse Initialize(MeterPerSecond vehicleSpeed, Radian roadGradient, MeterPerSquareSecond startAcceleration)
 		{
 			//CurrentState.Velocity = vehicleSpeed + startAcceleration * Constants.SimulationSettings.TargetTimeInterval;
 			var vehicleAccelerationForce = DriverAcceleration(startAcceleration)
@@ -91,6 +89,7 @@ namespace TUGraz.VectoCore.Models.SimulationComponent.Impl
 			CurrentState.Acceleration = acceleration;
 			CurrentState.Velocity = PreviousState.Velocity + acceleration * dt;
 			if (CurrentState.Velocity.IsEqual(0.SI<MeterPerSecond>(),
+			if (_currentState.Velocity.IsSmaller(0.SI<MeterPerSecond>(), Constants.SimulationSettings.VehicleSpeedHaltTolerance)) {
 				Constants.SimulationSettings.VehicleSpeedHaltTolerance)) {
 				CurrentState.Velocity = 0.SI<MeterPerSecond>();
 			}
@@ -164,7 +163,6 @@ namespace TUGraz.VectoCore.Models.SimulationComponent.Impl
 			container[ModalResultField.P_air] = CurrentState.AirDragResistance * averageVelocity;
 			container[ModalResultField.P_slope] = CurrentState.SlopeResistance * averageVelocity;
 			container[ModalResultField.P_trac] = CurrentState.VehicleTractionForce * averageVelocity;
-
 			// sanity check: is the vehicle in step with the cycle?
 			if (container[ModalResultField.dist] == DBNull.Value) {
 				Log.Warn("distance field is not set!");
@@ -184,24 +182,25 @@ namespace TUGraz.VectoCore.Models.SimulationComponent.Impl
 
 		protected internal Newton RollingResistance(Radian gradient)
 		{
-			var retVal = (Math.Cos(gradient.Value()) * ModelData.TotalVehicleWeight() *
-						Physics.GravityAccelleration *
-						ModelData.TotalRollResistanceCoefficient).Cast<Newton>();
+			var weight = _data.TotalVehicleWeight();
+			var gravity = Physics.GravityAccelleration;
+			var rollCoefficient = _data.TotalRollResistanceCoefficient;
+
+			var retVal = Math.Cos(gradient.Value()) * weight * gravity * rollCoefficient;
 			Log.Debug("RollingResistance: {0}", retVal);
 			return retVal;
 		}
 
 		protected internal Newton DriverAcceleration(MeterPerSquareSecond accelleration)
 		{
-			var retVal = (ModelData.TotalVehicleWeight() * accelleration).Cast<Newton>();
+			var retVal = _data.TotalVehicleWeight() * accelleration;
 			Log.Debug("DriverAcceleration: {0}", retVal);
 			return retVal;
 		}
 
 		protected internal Newton SlopeResistance(Radian gradient)
 		{
-			var retVal =
-				(ModelData.TotalVehicleWeight() * Physics.GravityAccelleration * Math.Sin(gradient.Value())).Cast<Newton>();
+			var retVal = _data.TotalVehicleWeight() * Physics.GravityAccelleration * Math.Sin(gradient.Value());
 			Log.Debug("SlopeResistance: {0}", retVal);
 			return retVal;
 		}
@@ -213,8 +212,8 @@ namespace TUGraz.VectoCore.Models.SimulationComponent.Impl
 			if (vAverage.IsEqual(0)) {
 				return 0.SI<Newton>();
 			}
-			var result =
-				(ComputeAirDragPowerLoss(previousVelocity, previousVelocity + acceleration * dt, dt) / vAverage).Cast<Newton>();
+			var result = ComputeAirDragPowerLoss(_previousState.Velocity, _previousState.Velocity + acceleration * dt, dt) /
+						vAverage;
 
 			Log.Debug("AirDragResistance: {0}", result);
 			return result;

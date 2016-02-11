@@ -27,16 +27,16 @@
       "Axles": [
         {
           "Inertia": 14.9,
-          "Wheels": "315/70 R 22.5",
-          "AxleWeightShare": 0.0,
+          "Wheels": "315/70 R22.5",
+          "AxleWeightShare": 0.5,
           "TwinTyres": false,
           "RRCISO": 0.00555,
           "FzISO": 31300.0
         },
         {
           "Inertia": 14.9,
-          "Wheels": "315/70 R 22.5",
-          "AxleWeightShare": 0.0,
+          "Wheels": "315/70 R22.5",
+          "AxleWeightShare": 0.5,
           "TwinTyres": true,
           "RRCISO": 0.00628,
           "FzISO": 31300.0

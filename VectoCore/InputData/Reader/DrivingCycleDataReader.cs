@@ -255,15 +255,15 @@ namespace TUGraz.VectoCore.InputData.Reader
 		// todo MK-2016-01-19: move fields to resource file
 		private static class Fields
 		{
-			public const string PWheel = "P_wheel_in";
+			public const string PWheel = "Pwheel";
 			public const string Distance = "s";
 			public const string Time = "t";
 			public const string VehicleSpeed = "v";
 			public const string RoadGradient = "grad";
 			public const string StoppingTime = "stop";
 			public const string AuxiliarySupplyPower = "Aux_";
-			public const string EngineSpeed = "n_eng_avg";
-			public const string Gear = "Gear";
+			public const string EngineSpeed = "n";
+			public const string Gear = "gear";
 			public const string AdditionalAuxPowerDemand = "Padd";
 			public const string AirSpeedRelativeToVehicle = "vair_res";
 			public const string WindYawAngle = "vair_beta";
@@ -557,6 +557,7 @@ namespace TUGraz.VectoCore.InputData.Reader
 					RoadGradient = VectoMath.InclinationToAngle(row.ParseDoubleOrGetDefault(Fields.RoadGradient) / 100.0),
 					Gear = (uint)row.ParseDouble(Fields.Gear),
 					AdditionalAuxPowerDemand = row.ParseDouble(Fields.AdditionalAuxPowerDemand).SI().Kilo.Watt.Cast<Watt>(),
+					AuxiliarySupplyPower = AuxSupplyPowerReader.Read(row)
 				}).ToArray();
 
 				return entries;
@@ -571,6 +572,8 @@ namespace TUGraz.VectoCore.InputData.Reader
 					Fields.Gear,
 					Fields.AdditionalAuxPowerDemand
 				};
+
+				header = header.Where(c => !c.StartsWith(Fields.AuxiliarySupplyPower)).ToArray();
 
 				var requiredCols = allowedCols;
 

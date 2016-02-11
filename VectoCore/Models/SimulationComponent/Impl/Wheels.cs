@@ -16,7 +16,6 @@
 * limitations under the Licence.
 */
 
-using NLog.Fluent;
 using TUGraz.VectoCore.Models.Connector.Ports;
 using TUGraz.VectoCore.Models.Simulation;
 using TUGraz.VectoCore.Models.Simulation.Data;

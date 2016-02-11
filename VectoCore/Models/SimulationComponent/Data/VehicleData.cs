@@ -18,6 +18,7 @@
 
 using System;
 using System.Collections.Generic;
+using System.Linq;
 using TUGraz.VectoCore.Exceptions;
 using TUGraz.VectoCore.Models.Declaration;
 using TUGraz.VectoCore.Utils;
@@ -79,22 +80,21 @@ namespace TUGraz.VectoCore.Models.SimulationComponent.Data
 		protected void ComputeRollResistanceAndReducedMassWheels()
 		{
 			if (TotalVehicleWeight() == 0.SI<Kilogram>()) {
-				throw new VectoException(
-					"Total vehicle weight must be greater than 0! Set CurbWeight and Loading before!");
+				throw new VectoException("Total vehicle weight must be greater than 0! Set CurbWeight and Loading before!");
 			}
 			if (DynamicTyreRadius == null) {
 				throw new VectoException("Dynamic tyre radius must be set before axles!");
 			}
 
-			var RRC = 0.0;
-			var wheelsInertia = 0.SI<KilogramSquareMeter>();
+			var g = Physics.GravityAccelleration;
+
+			var RRC = 0.0.SI<Scalar>();
+			var wheelsInertia = 0.0.SI<KilogramSquareMeter>();
 			foreach (var axle in _axleData) {
 				var nrWheels = axle.TwinTyres ? 4 : 2;
 				RRC += axle.AxleWeightShare * axle.RollResistanceCoefficient *
-						Math.Pow(
-							(axle.AxleWeightShare * TotalVehicleWeight() * Physics.GravityAccelleration /
-							axle.TyreTestLoad /
-							nrWheels).Value(), Physics.RollResistanceExponent - 1);
+						Math.Pow((axle.AxleWeightShare * TotalVehicleWeight() * g / axle.TyreTestLoad / nrWheels).Value(),
+							Physics.RollResistanceExponent - 1);
 				wheelsInertia += nrWheels * axle.Inertia;
 			}
 			TotalRollResistanceCoefficient = RRC;

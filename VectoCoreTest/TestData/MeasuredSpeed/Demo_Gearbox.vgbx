@@ -1,0 +1,76 @@
+﻿{
+  "Header": {
+    "CreatedBy": "Michael Krisper",
+    "Date": "04.02.2016 16:38:57",
+    "AppVersion": "3.0.2",
+    "FileVersion": 5
+  },
+  "Body": {
+    "SavedInDeclMode": false,
+    "ModelName": "Demo",
+    "Inertia": 0.0,
+    "TracInt": 1.0,
+    "Gears": [
+      {
+        "Ratio": 4.3,
+        "LossMap": "Axle.vtlm"
+      },
+      {
+        "Ratio": 6.696,
+        "LossMap": "Indirect Gear.vtlm",
+        "TCactive": false,
+        "ShiftPolygon": "ShiftPolygons.vgbs",
+        "FullLoadCurve": "<NOFILE>"
+      },
+      {
+        "Ratio": 3.806,
+        "LossMap": "Indirect Gear.vtlm",
+        "TCactive": false,
+        "ShiftPolygon": "ShiftPolygons.vgbs",
+        "FullLoadCurve": "<NOFILE>"
+      },
+      {
+        "Ratio": 2.289,
+        "LossMap": "Indirect Gear.vtlm",
+        "TCactive": false,
+        "ShiftPolygon": "ShiftPolygons.vgbs",
+        "FullLoadCurve": "<NOFILE>"
+      },
+      {
+        "Ratio": 1.48,
+        "LossMap": "Indirect Gear.vtlm",
+        "TCactive": false,
+        "ShiftPolygon": "ShiftPolygons.vgbs",
+        "FullLoadCurve": "<NOFILE>"
+      },
+      {
+        "Ratio": 1.0,
+        "LossMap": "Direct Gear.vtlm",
+        "TCactive": false,
+        "ShiftPolygon": "ShiftPolygons.vgbs",
+        "FullLoadCurve": "<NOFILE>"
+      },
+      {
+        "Ratio": 0.728,
+        "LossMap": "Indirect Gear.vtlm",
+        "TCactive": false,
+        "ShiftPolygon": "ShiftPolygons.vgbs",
+        "FullLoadCurve": "<NOFILE>"
+      }
+    ],
+    "TqReserve": 10.0,
+    "SkipGears": true,
+    "ShiftTime": 3,
+    "EaryShiftUp": false,
+    "StartTqReserve": 40.0,
+    "StartSpeed": 2.0,
+    "StartAcc": 0.6,
+    "GearboxType": "MT",
+    "TorqueConverter": {
+      "Enabled": false,
+      "File": "<NOFILE>",
+      "RefRPM": 0.0,
+	  "Inertia": 0.0
+    }
+  }
+}

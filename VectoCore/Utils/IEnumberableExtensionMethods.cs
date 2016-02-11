@@ -17,6 +17,7 @@
 */
 
 using System;
+using System.Collections;
 using System.Collections.Generic;
 using System.Linq;
 using NLog;
@@ -65,6 +66,12 @@ namespace TUGraz.VectoCore.Utils
 		{
 			var valueList = values.ToList();
 			return valueList.Any() ? valueList.Aggregate((sum, current) => sum + current) : null;
+		}
+
+		public static TResult Sum<U, TResult>(this IEnumerable<U> values, Func<U, TResult> selector)
+			where TResult : SIBase<TResult>
+		{
+			return values.Select(selector).Sum();
 		}
 
 		public static T Average<T>(this IEnumerable<T> values) where T : SIBase<T>

@@ -382,57 +382,5 @@ namespace TUGraz.VectoCore.Tests.Utils
 			chart.Series[series1.Name].Points.DataBindXY(x, y);
 			return series1;
 		}
-
-		//public static void Write(string fileName)
-		//{
-		//	if (!_enabled) {
-		//		return;
-		//	}
-
-		//	var modDataV3 = VectoCSVFile.Read(fileName);
-
-		//	var xfields = new[] { ModalResultField.time, ModalResultField.dist };
-
-		//	var yfields = new[] {
-		//		ModalResultField.v_act, ModalResultField.acc, ModalResultField.n_eng_avg, ModalResultField.Gear, ModalResultField.P_eng_out,
-		//		ModalResultField.T_eng_fcmap, ModalResultField.FCMap
-		//	};
-
-		//	var images = new List<Stream>();
-		//	try {
-		//		foreach (var xfield in xfields) {
-		//			var x = modDataV3.Rows.Cast<DataRow>().Select(v => v.Field<string>(xfield.GetName())).ToArray();
-
-		//			for (var i = 1; i <= yfields.Length; i++) {
-		//				var yfield = yfields[i - 1];
-		//				var y = modDataV3.Rows.Cast<DataRow>().Select(v => v.Field<string>(yfield.GetName())).ToArray();
-
-		//				var values = string.Format("{0}|{1}", string.Join(",", x), string.Join(",", y));
-
-		//				if (yfield == ModalResultField.v_act) {
-		//					var y3 =
-		//						modDataV3.Rows.Cast<DataRow>()
-		//							.Select(v => v.Field<string>(ModalResultField.v_targ.GetName()))
-		//							.Select(v => string.IsNullOrWhiteSpace(v) ? "0" : v);
-
-		//					values += string.Format("|{0}|{1}|0|0", string.Join(",", x), string.Join(",", y3));
-		//				}
-
-		//				values = values.Replace("NaN", "0");
-		//				if (values.Length > 14000) {
-		//					// remove all decimal places to reduce request size
-		//					values = Regex.Replace(values, @"\..*?,", ",");
-		//				}
-		//				var maxX = (int)Math.Ceiling(x.ToDouble().Max());
-		//				images.Add(CreateGraphStream(xfield.GetCaption(), yfield.GetCaption(), maxX, values));
-		//			}
-		//			var outfileName = string.Format("{0}_{1}.png", Path.GetFileNameWithoutExtension(fileName), xfield.GetName());
-		//			SaveImages(outfileName, images.ToArray());
-		//			images.Clear();
-		//		}
-		//	} finally {
-		//		images.ForEach(x => x.Close());
-		//	}
-		//}
 	}
 }

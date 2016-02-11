@@ -39,7 +39,7 @@ namespace TUGraz.VectoCore.Models.SimulationComponent.Data
 
 		public static DriverMode ParseDriverMode(string mode)
 		{
-			return mode.Replace("-", "").Parse<DriverMode>();
+			return mode.Replace("-", "").ParseEnum<DriverMode>();
 		}
 
 		public class OverSpeedEcoRollData

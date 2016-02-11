@@ -54,7 +54,7 @@ namespace TUGraz.VectoCore.Models.Declaration
 
 		public static VehicleClass Parse(string text)
 		{
-			return text.Replace(Prefix, "").Parse<VehicleClass>();
+			return text.Replace(Prefix, "").ParseEnum<VehicleClass>();
 		}
 
 		public static string GetClassNumber(this VehicleClass hdvClass)

@@ -83,7 +83,7 @@ namespace TUGraz.VectoCore.InputData.FileIO.JSON
 
 		public virtual GearboxType Type
 		{
-			get { return Body.GetEx<string>(JsonKeys.Gearbox_GearboxType).Parse<GearboxType>(); }
+			get { return Body.GetEx<string>(JsonKeys.Gearbox_GearboxType).ParseEnum<GearboxType>(); }
 		}
 
 

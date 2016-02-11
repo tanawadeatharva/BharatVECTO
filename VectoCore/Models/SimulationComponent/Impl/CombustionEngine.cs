@@ -247,8 +247,7 @@ namespace TUGraz.VectoCore.Models.SimulationComponent.Impl
 				EngineSpeed = angularSpeed,
 				dt = 1.SI<Second>(),
 				InertiaTorqueLoss = 0.SI<NewtonMeter>(),
-				StationaryFullLoadTorque =
-					ModelData.FullLoadCurve.FullLoadStationaryTorque(angularSpeed),
+				StationaryFullLoadTorque = Data.FullLoadCurve.FullLoadStationaryTorque(angularSpeed),
 				FullDragTorque = ModelData.FullLoadCurve.DragLoadStationaryTorque(angularSpeed),
 				EngineTorque = torque + auxDemand,
 				EnginePower = (torque + auxDemand) * angularSpeed,
@@ -303,7 +302,7 @@ namespace TUGraz.VectoCore.Models.SimulationComponent.Impl
 				container[ModalResultField.FCWHTCc] = fcaux * ModelData.WHTCCorrectionFactor;
 			} catch (VectoException ex) {
 				Log.Warn("{0} n_eng_avg: {1} Tq: {2}", ex.Message, avgEngineSpeed, CurrentState.EngineTorque);
-				container[ModalResultField.FCMap] = double.NaN.SI<KilogramPerSecond>();
+				container[ModalResultField.FCMap] = null;
 			}
 		}
 
@@ -347,12 +346,17 @@ namespace TUGraz.VectoCore.Models.SimulationComponent.Impl
 
 			var pt1 = ModelData.FullLoadCurve.PT1(angularVelocity).Value();
 
-			var tStarPrev = pt1 *
-							Math.Log(1 / (1 - (PreviousState.EnginePower / stationaryFullLoadPower).Value()), Math.E)
-								.SI<Second>();
-			var tStar = tStarPrev + PreviousState.dt;
-			var dynFullPowerCalculated = stationaryFullLoadPower * (1 - Math.Exp((-tStar / pt1).Value()));
-			var dynamicFullLoadPower = (dynFullPowerCalculated < stationaryFullLoadPower)
+			// disable pt1 behaviour if PT1Disabled is true, or if the previous enginepower is greater than the current stationary fullload power (in this case the pt1 calculation fails)
+			if (PT1Disabled || PreviousState.EnginePower.IsGreaterOrEqual(CurrentState.StationaryFullLoadPower)) {
+				dynFullPowerCalculated = CurrentState.StationaryFullLoadPower;
+			} else {
+				var pt1 = Data.FullLoadCurve.PT1(angularVelocity).Value();
+				var powerRatio = (PreviousState.EnginePower / CurrentState.StationaryFullLoadPower).Value();
+				var tStarPrev = pt1 * Math.Log(1 / (1 - powerRatio), Math.E).SI<Second>();
+				var tStar = tStarPrev + PreviousState.dt;
+				dynFullPowerCalculated = CurrentState.StationaryFullLoadPower * (1 - Math.Exp((-tStar / pt1).Value()));
+			}
+
 				? dynFullPowerCalculated
 				: stationaryFullLoadPower;
 

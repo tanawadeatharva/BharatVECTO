@@ -117,7 +117,7 @@ namespace TUGraz.VectoCore.Tests.Models.SimulationComponentData
 		{
 			AssertHelper.Exception<VectoException>(
 				() => EngineFullLoadCurve.ReadFromFile(@"TestData\Components\FullLoadCurve insufficient columns.vfld"),
-				"ERROR while reading FullLoadCurve File: FullLoadCurve Data File must consist of at least 3 columns.");
+				"ERROR while reading FullLoadCurve File: Engine FullLoadCurve Data File must consist of at least 3 columns.");
 		}
 
 		/// <summary>
