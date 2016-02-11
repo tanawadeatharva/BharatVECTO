@@ -184,7 +184,7 @@ namespace TUGraz.VectoCore.Tests.Models.SimulationComponent
 
 			var t = 0.SI<Second>();
 			var dt = 0.1.SI<Second>();
-
+			requestPort.Initialize(Formulas.PowerToTorque(idlePower, angularSpeed), angularSpeed);
 			for (; t < 2; t += dt) {
 				requestPort.Request(t, dt, Formulas.PowerToTorque(idlePower, angularSpeed), angularSpeed);
 				engine.CommitSimulationStep(modalData);
