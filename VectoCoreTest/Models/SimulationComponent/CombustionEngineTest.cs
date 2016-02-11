@@ -257,7 +257,8 @@ namespace TUGraz.VectoCore.Tests.Models.SimulationComponent
 			Assert.IsInstanceOfType(response, typeof(ResponseSuccess));
 			container.CommitSimulationStep(absTime, dt);
 			var row = dataWriter.Data.Rows.Cast<DataRow>().Last();
-			Assert.AreEqual(105530.96491487339.SI<Watt>(), row[ModalResultField.P_eng_out.GetName()]);
+			Assert.AreEqual(100530.96491487339.SI<Watt>().Value(), ((SI)row[ModalResultField.P_eng_out.GetName()]).Value());
+			Assert.AreEqual(105530.96491487339.SI<Watt>().Value(), ((SI)row[ModalResultField.P_eng_fcmap.GetName()]).Value());
 			Assert.AreEqual(5000.SI<Watt>(), row[ModalResultField.P_aux.GetName()]);
 			Assert.AreEqual(800.RPMtoRad(), row[ModalResultField.n_eng_avg.GetName()]);
 
@@ -413,7 +414,8 @@ namespace TUGraz.VectoCore.Tests.Models.SimulationComponent
 			var dt = Constants.SimulationSettings.TargetTimeInterval;
 
 			var angularVelocity = 95.5596.SI<PerSecond>();
-			var torque = (engine.ModelData.FullLoadCurve.DragLoadStationaryPower(angularVelocity) - 5000.SI<Watt>()) / angularVelocity;
+			var torque = (engine.ModelData.FullLoadCurve.DragLoadStationaryPower(angularVelocity) - 5000.SI<Watt>()) /
+						angularVelocity;
 
 			var response = requestPort.Initialize(torque, angularVelocity);
 			Assert.IsInstanceOfType(response, typeof(ResponseSuccess));
