@@ -283,9 +283,40 @@ namespace TUGraz.VectoCore.InputData.Reader
 			IEnumerable<DrivingCycleData.DrivingCycleEntry> Parse(DataTable table);
 		}
 
-		private class DistanceBasedCycleDataParser : ICycleDataParser
+		private abstract class AbstractCycleDataParser : ICycleDataParser
 		{
-			public IEnumerable<DrivingCycleData.DrivingCycleEntry> Parse(DataTable table)
+			protected static bool CheckColumns(string[] header, IEnumerable<string> allowedCols, IEnumerable<string> requiredCols,
+				bool throwExceptions,
+				bool filterAux)
+			{
+				if (filterAux) {
+					header = header.Where(c => !c.StartsWith(Fields.AuxiliarySupplyPower)).ToArray();
+				}
+
+				var diff = header.Except(allowedCols).ToList();
+				if (diff.Any()) {
+					if (throwExceptions) {
+						throw new VectoException("Column(s) not allowed: " + ", ".Join(diff));
+					}
+					return false;
+				}
+
+				diff = requiredCols.Except(header).ToList();
+				if (diff.Any()) {
+					if (throwExceptions) {
+						throw new VectoException("Column(s) required: " + ", ".Join(diff));
+					}
+					return false;
+				}
+				return true;
+			}
+
+			public abstract IEnumerable<DrivingCycleData.DrivingCycleEntry> Parse(DataTable table);
+		}
+
+		private class DistanceBasedCycleDataParser : AbstractCycleDataParser
+		{
+			public override IEnumerable<DrivingCycleData.DrivingCycleEntry> Parse(DataTable table)
 			{
 				ValidateHeader(table.Columns.Cast<DataColumn>().Select(col => col.ColumnName).ToArray());
 
@@ -324,21 +355,7 @@ namespace TUGraz.VectoCore.InputData.Reader
 					Fields.WindYawAngle
 				};
 
-				header = header.Where(c => !c.StartsWith(Fields.AuxiliarySupplyPower)).ToArray();
-
-				var diff = header.Except(allowedCols).ToList();
-				if (diff.Any()) {
-					if (throwExceptions) {
-						throw new VectoException("Column(s) not allowed: " + string.Join(", ", diff));
-					}
-					return false;
-				}
-
-				diff = requiredCols.Except(header).ToList();
-				if (diff.Any()) {
-					if (throwExceptions) {
-						throw new VectoException("Column(s) missing: " + string.Join(", ", diff));
-					}
+				if (!CheckColumns(header, allowedCols, requiredCols, throwExceptions, filterAux: true)) {
 					return false;
 				}
 
@@ -354,9 +371,9 @@ namespace TUGraz.VectoCore.InputData.Reader
 			}
 		}
 
-		private class TimeBasedCycleDataParser : ICycleDataParser
+		private class TimeBasedCycleDataParser : AbstractCycleDataParser
 		{
-			public IEnumerable<DrivingCycleData.DrivingCycleEntry> Parse(DataTable table)
+			public override IEnumerable<DrivingCycleData.DrivingCycleEntry> Parse(DataTable table)
 			{
 				ValidateHeader(table.Columns.Cast<DataColumn>().Select(col => col.ColumnName).ToArray());
 
@@ -393,22 +410,7 @@ namespace TUGraz.VectoCore.InputData.Reader
 					Fields.VehicleSpeed,
 				};
 
-
-				header = header.Where(c => !c.StartsWith(Fields.AuxiliarySupplyPower)).ToArray();
-
-				var diff = header.Except(allowedCols).ToList();
-				if (diff.Any()) {
-					if (throwExceptions) {
-						throw new VectoException("Column(s) not allowed: " + string.Join(", ", diff));
-					}
-					return false;
-				}
-
-				diff = requiredCols.Except(header).ToList();
-				if (diff.Any()) {
-					if (throwExceptions) {
-						throw new VectoException("Column(s) missing: " + string.Join(", ", diff));
-					}
+				if (!CheckColumns(header, allowedCols, requiredCols, throwExceptions, filterAux: true)) {
 					return false;
 				}
 
@@ -424,9 +426,9 @@ namespace TUGraz.VectoCore.InputData.Reader
 			}
 		}
 
-		private class EngineOnlyCycleDataParser : ICycleDataParser
+		private class EngineOnlyCycleDataParser : AbstractCycleDataParser
 		{
-			public IEnumerable<DrivingCycleData.DrivingCycleEntry> Parse(DataTable table)
+			public override IEnumerable<DrivingCycleData.DrivingCycleEntry> Parse(DataTable table)
 			{
 				ValidateHeader(table.Columns.Cast<DataColumn>().Select(col => col.ColumnName).ToArray());
 
@@ -472,19 +474,7 @@ namespace TUGraz.VectoCore.InputData.Reader
 					Fields.EngineSpeed
 				};
 
-				var diff = header.Except(allowedCols).ToList();
-				if (diff.Any()) {
-					if (throwExceptions) {
-						throw new VectoException("Column(s) not allowed: " + string.Join(", ", diff));
-					}
-					return false;
-				}
-
-				diff = requiredCols.Except(header).ToList();
-				if (diff.Any()) {
-					if (throwExceptions) {
-						throw new VectoException("Column(s) missing: " + string.Join(", ", diff));
-					}
+				if (!CheckColumns(header, allowedCols, requiredCols, throwExceptions, filterAux: false)) {
 					return false;
 				}
 
@@ -504,9 +494,9 @@ namespace TUGraz.VectoCore.InputData.Reader
 			}
 		}
 
-		private class PWheelCycleDataParser : ICycleDataParser
+		private class PWheelCycleDataParser : AbstractCycleDataParser
 		{
-			public IEnumerable<DrivingCycleData.DrivingCycleEntry> Parse(DataTable table)
+			public override IEnumerable<DrivingCycleData.DrivingCycleEntry> Parse(DataTable table)
 			{
 				ValidateHeader(table.Columns.Cast<DataColumn>().Select(col => col.ColumnName).ToArray());
 
@@ -530,29 +520,15 @@ namespace TUGraz.VectoCore.InputData.Reader
 					Fields.EngineSpeed,
 					Fields.AdditionalAuxPowerDemand
 				};
+				var requiredCols = allowedCols;
 
-				var diff = header.Except(allowedCols).ToList();
-				if (diff.Any()) {
-					if (throwExceptions) {
-						throw new VectoException("Column(s) '{0}' not allowed.", string.Join(", ", diff));
-					}
-					return false;
-				}
-
-				diff = allowedCols.Except(header).ToList();
-				if (diff.Any()) {
-					if (throwExceptions) {
-						throw new VectoException("Column(s) '{0}' missing.", string.Join(", ", diff));
-					}
-					return false;
-				}
-				return true;
+				return CheckColumns(header, allowedCols, requiredCols, throwExceptions, filterAux: false);
 			}
 		}
 
-		private class MeasuredSpeedDynoDataParser : ICycleDataParser
+		private class MeasuredSpeedDynoDataParser : AbstractCycleDataParser
 		{
-			public IEnumerable<DrivingCycleData.DrivingCycleEntry> Parse(DataTable table)
+			public override IEnumerable<DrivingCycleData.DrivingCycleEntry> Parse(DataTable table)
 			{
 				ValidateHeader(table.Columns.Cast<DataColumn>().Select(col => col.ColumnName).ToArray());
 
@@ -577,34 +553,16 @@ namespace TUGraz.VectoCore.InputData.Reader
 					Fields.Gear,
 					Fields.AdditionalAuxPowerDemand
 				};
-
-				header = header.Where(c => !c.StartsWith(Fields.AuxiliarySupplyPower)).ToArray();
-
 				var requiredCols = allowedCols;
 
-				var diff = header.Except(allowedCols).ToList();
-				if (diff.Any()) {
-					if (throwExceptions) {
-						throw new VectoException("Column(s) '{0}' not allowed.", string.Join(", ", diff));
-					}
-					return false;
-				}
-
-				diff = requiredCols.Except(header).ToList();
-				if (diff.Any()) {
-					if (throwExceptions) {
-						throw new VectoException("Column(s) '{0}' missing.", string.Join(", ", diff));
-					}
-					return false;
-				}
-				return true;
+				return CheckColumns(header, allowedCols, requiredCols, throwExceptions, filterAux: true);
 			}
 		}
 
 
-		private class MeasuredSpeedTrackDataParser : ICycleDataParser
+		private class MeasuredSpeedTrackDataParser : AbstractCycleDataParser
 		{
-			public IEnumerable<DrivingCycleData.DrivingCycleEntry> Parse(DataTable table)
+			public override IEnumerable<DrivingCycleData.DrivingCycleEntry> Parse(DataTable table)
 			{
 				ValidateHeader(table.Columns.Cast<DataColumn>().Select(col => col.ColumnName).ToArray());
 				var entries = table.Rows.Cast<DataRow>().Select(row => new DrivingCycleData.DrivingCycleEntry {
@@ -632,27 +590,9 @@ namespace TUGraz.VectoCore.InputData.Reader
 					Fields.WindYawAngle,
 					Fields.AdditionalAuxPowerDemand
 				};
-
-				header = header.Where(c => !c.StartsWith(Fields.AuxiliarySupplyPower)).ToArray();
-
 				var requiredCols = allowedCols;
 
-				var diff = header.Except(allowedCols).ToList();
-				if (diff.Any()) {
-					if (throwExceptions) {
-						throw new VectoException("Column(s) '{0}' not allowed.", string.Join(", ", diff));
-					}
-					return false;
-				}
-
-				diff = requiredCols.Except(header).ToList();
-				if (diff.Any()) {
-					if (throwExceptions) {
-						throw new VectoException("Column(s) '{0}' missing.", string.Join(", ", diff));
-					}
-					return false;
-				}
-				return true;
+				return CheckColumns(header, allowedCols, requiredCols, throwExceptions, filterAux: true);
 			}
 		}
 	}
