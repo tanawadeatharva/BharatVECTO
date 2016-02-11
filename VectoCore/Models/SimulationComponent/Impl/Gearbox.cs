@@ -122,7 +122,7 @@ namespace TUGraz.VectoCore.Models.SimulationComponent.Impl
 			var dt = Constants.SimulationSettings.TargetTimeInterval;
 
 			// MK 2016-02-10: SI doesn't allow inifinity anymore -- therefore simply a very negative value is used.
-			ShiftTime = -1e10.SI<Second>(); //double.NegativeInfinity.SI<Second>();
+			_shiftTime = -1e10.SI<Second>(); //double.NegativeInfinity.SI<Second>();
 
 			if (Disengaged) {
 				Gear = _strategy.InitGear(absTime, dt, outTorque, outAngularVelocity);
@@ -133,7 +133,8 @@ namespace TUGraz.VectoCore.Models.SimulationComponent.Impl
 
 			var torqueLossInertia = outAngularVelocity.IsEqual(0)
 				? 0.SI<NewtonMeter>()
-				: Formulas.InertiaPower(inAngularVelocity, PreviousState.InAngularVelocity, ModelData.Inertia, dt) / inAngularVelocity;
+				: Formulas.InertiaPower(inAngularVelocity, PreviousState.InAngularVelocity, ModelData.Inertia, dt) /
+				inAngularVelocity;
 
 			inTorque += torqueLossInertia;
 
@@ -171,7 +172,8 @@ namespace TUGraz.VectoCore.Models.SimulationComponent.Impl
 				Case<ResponseUnderload>().
 				Default(r => { throw new UnexpectedResponseException("Gearbox.Initialize", r); });
 
-			var fullLoadGearbox = ModelData.Gears[gear].FullLoadCurve.FullLoadStationaryTorque(inAngularVelocity) * inAngularVelocity;
+			var fullLoadGearbox = ModelData.Gears[gear].FullLoadCurve.FullLoadStationaryTorque(inAngularVelocity) *
+								inAngularVelocity;
 			var fullLoadEngine = DataBus.EngineStationaryFullPower(inAngularVelocity);
 
 			var fullLoad = VectoMath.Min(fullLoadGearbox, fullLoadEngine);
@@ -224,7 +226,7 @@ namespace TUGraz.VectoCore.Models.SimulationComponent.Impl
 		/// </list>
 		/// </returns>
 		private IResponse RequestGearDisengaged(Second absTime, Second dt, NewtonMeter outTorque, PerSecond outAngularVelocity,
-			PerSecond outAngularVelocity, bool dryRun)
+			bool dryRun)
 		{
 			Log.Debug("Current Gear: Neutral");
 
@@ -279,7 +281,7 @@ namespace TUGraz.VectoCore.Models.SimulationComponent.Impl
 		/// </list>
 		/// </returns>
 		private IResponse RequestGearEngaged(Second absTime, Second dt, NewtonMeter outTorque, PerSecond outAngularVelocity,
-			PerSecond outAngularVelocity, bool dryRun)
+			bool dryRun)
 		{
 			// Set a Gear if no gear was set and engineSpeed is not zero
 			if (Disengaged && !outAngularVelocity.IsEqual(0)) {

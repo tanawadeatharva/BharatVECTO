@@ -247,7 +247,7 @@ namespace TUGraz.VectoCore.Models.SimulationComponent.Impl
 				EngineSpeed = angularSpeed,
 				dt = 1.SI<Second>(),
 				InertiaTorqueLoss = 0.SI<NewtonMeter>(),
-				StationaryFullLoadTorque = Data.FullLoadCurve.FullLoadStationaryTorque(angularSpeed),
+				StationaryFullLoadTorque = ModelData.FullLoadCurve.FullLoadStationaryTorque(angularSpeed),
 				FullDragTorque = ModelData.FullLoadCurve.DragLoadStationaryTorque(angularSpeed),
 				EngineTorque = torque + auxDemand,
 				EnginePower = (torque + auxDemand) * angularSpeed,
@@ -343,29 +343,25 @@ namespace TUGraz.VectoCore.Models.SimulationComponent.Impl
 
 			CurrentState.StationaryFullLoadTorque = ModelData.FullLoadCurve.FullLoadStationaryTorque(angularVelocity);
 			var stationaryFullLoadPower = CurrentState.StationaryFullLoadTorque * angularVelocity;
-
-			var pt1 = ModelData.FullLoadCurve.PT1(angularVelocity).Value();
+			Watt dynFullPowerCalculated;
 
 			// disable pt1 behaviour if PT1Disabled is true, or if the previous enginepower is greater than the current stationary fullload power (in this case the pt1 calculation fails)
-			if (PT1Disabled || PreviousState.EnginePower.IsGreaterOrEqual(CurrentState.StationaryFullLoadPower)) {
-				dynFullPowerCalculated = CurrentState.StationaryFullLoadPower;
+			if (PT1Disabled || PreviousState.EnginePower.IsGreaterOrEqual(stationaryFullLoadPower)) {
+				dynFullPowerCalculated = stationaryFullLoadPower;
 			} else {
-				var pt1 = Data.FullLoadCurve.PT1(angularVelocity).Value();
-				var powerRatio = (PreviousState.EnginePower / CurrentState.StationaryFullLoadPower).Value();
-				var tStarPrev = pt1 * Math.Log(1 / (1 - powerRatio), Math.E).SI<Second>();
+				var pt1 = ModelData.FullLoadCurve.PT1(angularVelocity).Value();
+				var powerRatio = (PreviousState.EnginePower / stationaryFullLoadPower).Value();
+				var tStarPrev = pt1 * Math.Log(1.0 / (1 - powerRatio), Math.E).SI<Second>();
 				var tStar = tStarPrev + PreviousState.dt;
-				dynFullPowerCalculated = CurrentState.StationaryFullLoadPower * (1 - Math.Exp((-tStar / pt1).Value()));
+				dynFullPowerCalculated = stationaryFullLoadPower * (1 - Math.Exp((-tStar / pt1).Value()));
 			}
-
-				? dynFullPowerCalculated
-				: stationaryFullLoadPower;
 
 			// new check in vecto 3.x (according to Martin Rexeis)
-			if (dynamicFullLoadPower < StationaryIdleFullLoadPower) {
-				dynamicFullLoadPower = StationaryIdleFullLoadPower;
+			if (dynFullPowerCalculated < StationaryIdleFullLoadPower) {
+				dynFullPowerCalculated = StationaryIdleFullLoadPower;
 			}
 
-			return dynamicFullLoadPower;
+			return dynFullPowerCalculated;
 		}
 
 		protected bool IsFullLoad(Watt requestedPower, Watt maxPower)

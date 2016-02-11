@@ -81,5 +81,6 @@ namespace TUGraz.VectoCore.Models.Connector.Ports
 		/// <param name="startAcceleration"></param>
 		/// <param name="roadGradient"></param>
 		/// <returns></returns>
+		IResponse Initialize(MeterPerSecond vehicleSpeed, Radian roadGradient, MeterPerSquareSecond startAcceleration);
 	}
 }
