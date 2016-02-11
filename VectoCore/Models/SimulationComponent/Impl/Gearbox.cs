@@ -296,7 +296,8 @@ namespace TUGraz.VectoCore.Models.SimulationComponent.Impl
 			}
 
 			var inAngularVelocity = outAngularVelocity * ModelData.Gears[Gear].Ratio;
-			var avgInAngularVelocity = (PreviousState.InAngularVelocity + inAngularVelocity) / 2.0;
+			var avgInAngularVelocity = ((PreviousState.InAngularVelocity ??
+										PreviousState.OutAngularVelocity * ModelData.Gears[Gear].Ratio) + inAngularVelocity) / 2.0;
 			var inTorque = ModelData.Gears[Gear].LossMap.GetInTorque(avgInAngularVelocity, outTorque);
 
 			CurrentState.TransmissionTorqueLoss = inTorque - (outTorque / ModelData.Gears[Gear].Ratio);
@@ -344,7 +345,9 @@ namespace TUGraz.VectoCore.Models.SimulationComponent.Impl
 
 			if (!inAngularVelocity.IsEqual(0)) {
 				CurrentState.InertiaTorqueLoss =
-					Formulas.InertiaPower(inAngularVelocity, PreviousState.InAngularVelocity, ModelData.Inertia, dt) /
+					Formulas.InertiaPower(inAngularVelocity,
+						PreviousState.InAngularVelocity ?? PreviousState.OutAngularVelocity * ModelData.Gears[Gear].Ratio,
+						ModelData.Inertia, dt) /
 					avgInAngularVelocity;
 				inTorque += CurrentState.InertiaTorqueLoss;
 			} else {

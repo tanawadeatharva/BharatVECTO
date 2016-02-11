@@ -130,6 +130,8 @@ namespace TUGraz.VectoCore.Utils
 		{
 			return SIBase<Watt>.Create(newton.Val * meterPerSecond.Value());
 		}
+
+		[DebuggerHidden]
 		public static Watt operator *(MeterPerSecond meterPerSecond, Newton newton)
 		{
 			return SIBase<Watt>.Create(newton.Val * meterPerSecond.Value());

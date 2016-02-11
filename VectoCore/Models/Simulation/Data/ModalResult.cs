@@ -17,12 +17,13 @@
 */
 
 using System;
-using System.CodeDom;
 using System.ComponentModel;
 using System.Data;
 using System.Reflection;
 using TUGraz.VectoCore.Exceptions;
 using TUGraz.VectoCore.Utils;
+
+// ReSharper disable InconsistentNaming
 
 namespace TUGraz.VectoCore.Models.Simulation.Data
 {
@@ -120,11 +121,6 @@ namespace TUGraz.VectoCore.Models.Simulation.Data
 		/// </summary>
 		[ModalResultField(typeof(SI), caption: "T_eng_fcmap [Nm]")] T_eng_fcmap,
 
-		///// <summary>
-		/////     [Nm]	Torque at clutch (before clutch, engine-side)
-		///// </summary>
-		//[ModalResultField(typeof(SI), caption: "Tq_clutch [Nm]")] Tq_clutch,
-
 		/// <summary>
 		///     [Nm]	Full load torque
 		/// </summary>
@@ -158,7 +154,7 @@ namespace TUGraz.VectoCore.Models.Simulation.Data
 		/// <summary>
 		///     [kW]	Rotational acceleration power: Engine.
 		/// </summary>
-		[ModalResultField(typeof(SI), name: "P_eng_inertia", caption: "Pa Eng [kW]", outputFactor: 1e-3)] P_eng_inertia,
+		[ModalResultField(typeof(SI), name: "P_eng_inertia", caption: "P_eng_inertia [kW]", outputFactor: 1e-3)] P_eng_inertia,
 
 		/// <summary>
 		///     [kW]	Total auxiliary power demand .
@@ -261,7 +257,7 @@ namespace TUGraz.VectoCore.Models.Simulation.Data
 		/// </summary>
 		[ModalResultField(typeof(SI), caption: "P_brake_loss [kW]", outputFactor: 1e-3)] P_brake_loss,
 
-		[ModalResultField(typeof(SI), caption: "P_wheel_inertia [kW]", outputFactor: 1e-3)] PWheel_inertia,
+		[ModalResultField(typeof(SI), caption: "P_wheel_inertia [kW]", outputFactor: 1e-3)] P_wheel_inertia,
 
 		[ModalResultField(typeof(SI), caption: "P_brake_in [kW]", outputFactor: 1e-3)] P_brake_in,
 

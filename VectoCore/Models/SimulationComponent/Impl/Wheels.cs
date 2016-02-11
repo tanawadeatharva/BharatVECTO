@@ -101,7 +101,7 @@ namespace TUGraz.VectoCore.Models.SimulationComponent.Impl
 			var avgAngularSpeed = (CurrentState.AngularVelocity + PreviousState.AngularVelocity) / 2.0;
 
 			container[ModalResultField.P_wheel_in] = CurrentState.Torque * avgAngularSpeed;
-			container[ModalResultField.PWheel_inertia] = CurrentState.InertiaTorqueLoss * avgAngularSpeed;
+			container[ModalResultField.P_wheel_inertia] = CurrentState.InertiaTorqueLoss * avgAngularSpeed;
 		}
 
 		protected override void DoCommitSimulationStep()
