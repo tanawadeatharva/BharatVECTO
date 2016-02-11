@@ -17,6 +17,7 @@
 */
 
 using System.Collections.Generic;
+using System.Diagnostics;
 using TUGraz.VectoCore.Utils;
 
 namespace TUGraz.VectoCore.Models.SimulationComponent.Data
@@ -41,6 +42,8 @@ namespace TUGraz.VectoCore.Models.SimulationComponent.Data
 
 		public CycleType CycleType { get; internal set; }
 
+		[DebuggerDisplay(
+			"s:{Distance}, t:{Time}, v:{VehicleTargetSpeed}, grad:{RoadGradient}, n:{AngularVelocity}, gear:{Gear}")]
 		public class DrivingCycleEntry
 		{
 			public DrivingCycleEntry() {}
