@@ -44,34 +44,34 @@ namespace TUGraz.VectoCore.Utils
 			yield return item;
 		}
 
-		public static IEnumerable<TResult> ZipAll<TFirst, TSecond, TResult>(this IEnumerable<TFirst> first,
-			IEnumerable<TSecond> second, Func<TFirst, TSecond, TResult> resultSelector)
+		/// <summary>
+		/// Zips all elements of two enumerable together. If the enumerables dont have the same length an exception is thrown.
+		/// </summary>
+		/// <exception cref="System.InvalidOperationException">Enumeration already finished. Thrown if the enumerables dont have the same length.</exception>
+		public static IEnumerable<TResult> ZipAll<TFirst, TSecond, TResult>(this IEnumerable<TFirst> firstEnumerable,
+			IEnumerable<TSecond> secondEnumerable, Func<TFirst, TSecond, TResult> resultSelector)
 		{
-			var firstEnum = first.GetEnumerator();
-			var secondEnum = second.GetEnumerator();
-			while (true) {
-				var firstHadNext = firstEnum.MoveNext();
-				var secondHadNext = secondEnum.MoveNext();
-				if (firstHadNext && secondHadNext) {
-					yield return resultSelector(firstEnum.Current, secondEnum.Current);
-				} else if (firstHadNext != secondHadNext) {
-					throw new IndexOutOfRangeException("The argument enumerables must have the same length.");
-				} else {
-					yield break;
+			using (var first = firstEnumerable.GetEnumerator()) {
+				using (var second = secondEnumerable.GetEnumerator()) {
+					while (first.MoveNext() | second.MoveNext()) {
+						yield return resultSelector(first.Current, second.Current);
+					}
 				}
 			}
 		}
 
-		public static T Sum<T>(this IEnumerable<T> values) where T : SIBase<T>
-		{
-			var valueList = values.ToList();
-			return valueList.Any() ? valueList.Aggregate((sum, current) => sum + current) : null;
-		}
-
+		/// <summary>
+		/// Sums up the values of selector.
+		/// </summary>
+		/// <typeparam name="U"></typeparam>
+		/// <typeparam name="TResult"></typeparam>
+		/// <param name="values"></param>
+		/// <param name="selector"></param>
+		/// <returns></returns>
 		public static TResult Sum<U, TResult>(this IEnumerable<U> values, Func<U, TResult> selector)
 			where TResult : SIBase<TResult>
 		{
-			return values.Select(selector).Sum();
+			return values.Select(selector).Aggregate((sum, current) => sum + current);
 		}
 
 		public static T Average<T>(this IEnumerable<T> values) where T : SIBase<T>
@@ -144,6 +144,7 @@ namespace TUGraz.VectoCore.Utils
 				}
 				var min = e.Current;
 				var minProjection = projectionToComparable(e.Current);
+
 				while (e.MoveNext()) {
 					var currentProjection = projectionToComparable(e.Current);
 					if (currentProjection.CompareTo(minProjection) < 0) {
