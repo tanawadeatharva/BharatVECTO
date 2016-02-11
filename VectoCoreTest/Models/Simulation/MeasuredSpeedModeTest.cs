@@ -87,38 +87,54 @@ namespace TUGraz.VectoCore.Tests.Models.Simulation
 		public void MeasuredSpeed_Track_ReadCycle_Test()
 		{
 			var container = new VehicleContainer();
-			var inputData = @"<t>, <v>,    <grad>,       <n>,    <vair_res>, <vair_beta>, <Aux_Alt>,  <Padd>
-							   11, 10.5768, -0.041207832, 1223.25, 8.532,      0,           0.42,       2.453370264";
+			var inputData = @"  <t> ,<v>     ,<grad>      ,<n>    ,<vair_res>,<vair_beta>,<Aux_Alt>,<Padd>     
+								9   ,0       ,0           ,595.75 ,0         ,0          ,0.504    ,3.201815003
+								10  ,0.3112  ,0           ,983.75 ,0         ,0          ,0.476    ,4.532197507
+								11  ,5.2782  ,-0.041207832,723.75 ,8.532     ,0          ,0.42     ,2.453370264
+								12  ,10.5768 ,-0.049730127,1223.25,12.024    ,34         ,0.476    ,3.520827362";
 
 			var drivingCycle = DrivingCycleDataReader.ReadFromStream(inputData.GetStream(), CycleType.MeasuredSpeedTrack);
 
 			var gearbox = new Gearbox(container,
 				new GearboxData {
 					Gears = new Dictionary<uint, GearData> {
-						{ 1, new GearData { Ratio = 8.7 } },
-						{ 2, new GearData { Ratio = 2 } }
+						{ 1, new GearData { Ratio = 6.696 } },
+						{ 2, new GearData { Ratio = 3.806 } },
+						{ 3, new GearData { Ratio = 2.289 } }
 					}
 				}, new PWheelShiftStrategy(null, container));
 
-			var cycle = new MeasuredSpeedTrackCycle(container, drivingCycle, gearbox, 4.3, 0.848974.SI<Meter>());
+			var cycle = new MeasuredSpeedTrackCycle(container, drivingCycle, gearbox, 4.3, 0.848974.SI<Meter>(), 600.RPMtoRad(),
+				1736.RPMtoRad());
 
-			Assert.AreEqual(container.CycleData.LeftSample.Time, 1.SI<Second>());
-			Assert.AreEqual(container.CycleData.RightSample.Time, 2.SI<Second>());
+			AssertCycleEntry(
+				new DrivingCycleData.DrivingCycleEntry {
+					Time = 9.SI<Second>(),
+					VehicleTargetSpeed = 0.KMPHtoMeterPerSecond(),
+					AngularVelocity = 595.75.RPMtoRad(),
+					Gear = 0u
+				}, container.CycleData.LeftSample);
 
-			Assert.AreEqual(1.383.KMPHtoMeterPerSecond(), container.CycleData.LeftSample.VehicleTargetSpeed);
-			Assert.AreEqual(3.515.KMPHtoMeterPerSecond(), container.CycleData.RightSample.VehicleTargetSpeed);
+			AssertCycleEntry(
+				new DrivingCycleData.DrivingCycleEntry {
+					Time = 10.SI<Second>(),
+					VehicleTargetSpeed = 0.3112.KMPHtoMeterPerSecond(),
+					AngularVelocity = 983.75.RPMtoRad(),
+					Gear = 1u
+				}, container.CycleData.RightSample);
+		}
 
-			Assert.AreEqual(0.5767916.SI().Kilo.Watt, container.CycleData.LeftSample.AuxiliarySupplyPower["Aux_Alt"]);
-			Assert.AreEqual(0.5426120.SI().Kilo.Watt, container.CycleData.RightSample.AuxiliarySupplyPower["Aux_Alt"]);
-
-			Assert.AreEqual(1u, container.CycleData.LeftSample.Gear);
-			Assert.AreEqual(1u, container.CycleData.RightSample.Gear);
-
-			Assert.AreEqual(1.969367304.SI().Kilo.Watt, container.CycleData.LeftSample.AdditionalAuxPowerDemand);
-			Assert.AreEqual(2.042128260.SI().Kilo.Watt, container.CycleData.RightSample.AdditionalAuxPowerDemand);
-
-			Assert.AreEqual(0.SI<Radian>(), container.CycleData.LeftSample.RoadGradient);
-			Assert.AreEqual(0.SI<Radian>(), container.CycleData.RightSample.RoadGradient);
+		/// <summary>
+		/// asserts that two cycle entries are the same.
+		/// </summary>
+		/// <param name="expected"></param>
+		/// <param name="actual"></param>
+		private void AssertCycleEntry(DrivingCycleData.DrivingCycleEntry expected, DrivingCycleData.DrivingCycleEntry actual)
+		{
+			Assert.AreEqual(expected.Time, actual.Time);
+			Assert.AreEqual(expected.VehicleTargetSpeed, actual.VehicleTargetSpeed);
+			Assert.AreEqual(expected.AngularVelocity, actual.AngularVelocity);
+			Assert.AreEqual(expected.Gear, actual.Gear);
 		}
 
 		/// <summary>

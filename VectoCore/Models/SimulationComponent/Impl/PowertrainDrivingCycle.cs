@@ -17,8 +17,10 @@
 */
 
 using System.Collections.Generic;
+using System.Diagnostics;
 using System.Linq;
 using System.Runtime.CompilerServices;
+using TUGraz.VectoCore.Configuration;
 using TUGraz.VectoCore.Exceptions;
 using TUGraz.VectoCore.Models.Connector.Ports;
 using TUGraz.VectoCore.Models.Connector.Ports.Impl;
@@ -455,20 +457,27 @@ namespace TUGraz.VectoCore.Models.SimulationComponent.Impl
 	public class MeasuredSpeedTrackCycle : MeasuredSpeedDynoCycle
 	{
 		public MeasuredSpeedTrackCycle(IVehicleContainer container, DrivingCycleData cycle, Gearbox gearbox, double axleRatio,
-			Meter dynamicWheelRadius) : base(container, cycle, gearbox)
+			Meter dynamicWheelRadius, PerSecond engineIdleSpeed, PerSecond ratedSpeed) : base(container, cycle, gearbox)
 		{
-			// find the right gear for the current vehicleSpeed and engineSpeed.
 			foreach (var entry in cycle.Entries) {
-				var gear = (uint)gearbox.Data.Gears.Count;
-				while (gear > 0) {
-					var calculatedVehicleVelocity = dynamicWheelRadius * entry.AngularVelocity /
-													(gearbox.Data.Gears[gear].Ratio * axleRatio);
-					if (calculatedVehicleVelocity.IsEqual(entry.VehicleTargetSpeed)) {
-						break;
-					}
-					gear--;
+				// working hypothesis (mk, 2016-02-11): if the engine speed is approximately idle the gearbox is disengaged => gear 0
+				// for approximately idling the same rule as in the clutch-slipping was used.
+				var engineSpeedNorm = (entry.AngularVelocity - engineIdleSpeed) / (ratedSpeed - engineIdleSpeed);
+				if (engineSpeedNorm < Constants.SimulationSettings.CluchNormSpeed) {
+					entry.Gear = 0;
+					continue;
 				}
-				entry.Gear = gear;
+
+				// find the gear which matches the target speed.
+				// working hypothesis (mk, 2016-02-11): choose gear with smallest vehicle speed error (n is fixed, v will be approximated)
+				// n_engine = (v / rdyn) * ratio_axle * ratio_gear
+				// => v = (n_engine * rdyn) / (ratio_axle * ratio_gear)
+				// error = |v_target - v_calc|
+				//       = |v_target - (n_engine * rdyn) / (ratio_axle * ratio_gear)|
+
+				entry.Gear = gearbox.Data.Gears.MinBy(
+					g => (entry.VehicleTargetSpeed - dynamicWheelRadius * entry.AngularVelocity / (g.Value.Ratio * axleRatio)).Abs())
+					.Key;
 			}
 		}
 	}
