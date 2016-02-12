@@ -238,7 +238,7 @@
     <Compile Include="Models\SimulationComponent\Impl\Driver.cs" />
     <Compile Include="Models\SimulationComponent\Data\DriverData.cs" />
     <Compile Include="Utils\Formulas.cs" />
-    <Compile Include="Utils\IEnumberableExtensionMethods.cs" />
+    <Compile Include="Utils\EnumberableExtensionMethods.cs" />
     <Compile Include="Utils\IntExtensionMethods.cs" />
     <Compile Include="Utils\Physics.cs" />
     <Compile Include="Utils\SI.cs" />

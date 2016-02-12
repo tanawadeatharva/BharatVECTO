@@ -17,14 +17,13 @@
 */
 
 using System;
-using System.Collections;
 using System.Collections.Generic;
 using System.Linq;
 using NLog;
 
 namespace TUGraz.VectoCore.Utils
 {
-	public static class IEnumberableExtensionMethods
+	public static class EnumberableExtensionMethods
 	{
 		public static IEnumerable<double> ToDouble(this IEnumerable<string> self)
 		{
@@ -63,15 +62,15 @@ namespace TUGraz.VectoCore.Utils
 		/// <summary>
 		/// Sums up the values of selector.
 		/// </summary>
-		/// <typeparam name="U"></typeparam>
+		/// <typeparam name="TU"></typeparam>
 		/// <typeparam name="TResult"></typeparam>
 		/// <param name="values"></param>
 		/// <param name="selector"></param>
 		/// <returns></returns>
-		public static TResult Sum<U, TResult>(this IEnumerable<U> values, Func<U, TResult> selector)
+		public static TResult Sum<TU, TResult>(this IEnumerable<TU> values, Func<TU, TResult> selector)
 			where TResult : SIBase<TResult>
 		{
-			return values.Select(selector).Aggregate((sum, current) => sum + current);
+			return values.Select(selector).DefaultIfEmpty().Aggregate((sum, current) => sum + current);
 		}
 
 		public static T Average<T>(this IEnumerable<T> values) where T : SIBase<T>
@@ -82,8 +81,7 @@ namespace TUGraz.VectoCore.Utils
 
 		public static SI Sum(this IEnumerable<SI> values)
 		{
-			var valueList = values.ToList();
-			return valueList.Any() ? valueList.Aggregate((sum, current) => sum + current) : null;
+			return values.DefaultIfEmpty().Aggregate((sum, current) => sum + current);
 		}
 
 		public static Func<bool> Once()
@@ -106,8 +104,7 @@ namespace TUGraz.VectoCore.Utils
 
 			if (!string.IsNullOrWhiteSpace(message)) {
 				if (!skip(list[index]) || skip(list[index + 1])) {
-					var Log = LogManager.GetLogger(typeof(T).ToString());
-					Log.Error(message);
+					LogManager.GetLogger(typeof(T).ToString()).Error(message);
 				}
 			}
 
