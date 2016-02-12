@@ -68,6 +68,7 @@ namespace TUGraz.VectoCore.Models.SimulationComponent.Impl
 
 			//WheelsPowerRequest = (torque + CurrentState.InertiaTorqueLoss) * CurrentState.AngularVelocity;
 			CurrentState.Torque = force * _dynamicWheelRadius + CurrentState.InertiaTorqueLoss;
+			
 			var retVal = NextComponent.Request(absTime, dt, CurrentState.Torque, CurrentState.AngularVelocity,
 				dryRun);
 			retVal.WheelsPowerRequest = CurrentState.PowerRequest();

@@ -273,26 +273,28 @@ namespace TUGraz.VectoCore.Tests.Models.Simulation
 		///// Tests if the simulation works and the modfile and sumfile are correct in MeasuredSpeed mode.
 		///// </summary>
 		///// <remarks>VECTO-181</remarks>
-		//[TestMethod]
-		//public void MeasuredSpeed_Track_Run_Test()
-		//{
-		//	var jobFile = @"TestData\MeasuredSpeed\Demo_ChassisDyno.vecto";
-		//	var fileWriter = new FileOutputWriter(jobFile);
-		//	var sumWriter = new SummaryDataContainer(fileWriter);
-		//	var jobContainer = new JobContainer(sumWriter);
+		[TestMethod]
+		public void MeasuredSpeed_Track_Run_Test()
+		{
+			var jobFile = @"TestData\MeasuredSpeed\Demo_TestTrackCycle.vecto";
+			var fileWriter = new FileOutputWriter(jobFile);
+			var sumWriter = new SummaryDataContainer(fileWriter);
+			var jobContainer = new JobContainer(sumWriter);
 
-		//	var inputData = JSONInputDataFactory.ReadJsonJob(jobFile);
-		//	var runsFactory = new SimulatorFactory(ExecutionMode.Engineering, inputData, fileWriter);
+			var inputData = JSONInputDataFactory.ReadJsonJob(jobFile);
+			var runsFactory = new SimulatorFactory(ExecutionMode.Engineering, inputData, fileWriter);
 
-		//	jobContainer.AddRuns(runsFactory);
-		//	jobContainer.Execute();
+			jobContainer.AddRuns(runsFactory);
+			jobContainer.Execute();
 
-		//	jobContainer.WaitFinished();
+			jobContainer.WaitFinished();
 
-		//	Assert.IsTrue(jobContainer.Runs.All(r => r.Success), string.Concat(jobContainer.Runs.Select(r => r.ExecException)));
+			Assert.IsTrue(jobContainer.Runs.All(r => r.Success), string.Concat(jobContainer.Runs.Select(r => r.ExecException)));
 
-		//	Assert.IsTrue(File.Exists(@"TestData\Jobs\Pwheel.vsum"));
-		//	Assert.IsTrue(File.Exists(@"TestData\Jobs\Pwheel_Gear2_pt1_rep1_actual.vmod"));
-		//}
+			//Assert.IsTrue(File.Exists(@"TestData\Jobs\Pwheel.vsum"));
+			//Assert.IsTrue(File.Exists(@"TestData\Jobs\Pwheel_Gear2_pt1_rep1_actual.vmod"));
+
+			Assert.Fail("Implement this test!");
+		}
 	}
 }

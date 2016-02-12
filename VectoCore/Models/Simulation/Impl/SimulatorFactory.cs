@@ -112,15 +112,10 @@ namespace TUGraz.VectoCore.Models.Simulation.Impl
 						run = new DistanceRun(builder.Build(data));
 						break;
 					case CycleType.EngineOnly:
-						run = new TimeRun(builder.Build(data));
-						break;
 					case CycleType.TimeBased:
-						run = new TimeRun(builder.Build(data));
-						break;
 					case CycleType.PWheel:
-						run = new TimeRun(builder.Build(data));
-						break;
 					case CycleType.MeasuredSpeedDyno:
+					case CycleType.MeasuredSpeedTrack:
 						run = new TimeRun(builder.Build(data));
 						break;
 					default:

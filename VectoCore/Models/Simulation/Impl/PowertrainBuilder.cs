@@ -218,7 +218,8 @@ namespace TUGraz.VectoCore.Models.Simulation.Impl
 			data.GearboxData.Type = GearboxType.PWheel;
 			var gearbox = GetGearbox(container, data.GearboxData);
 
-			var cycle = new MeasuredSpeedDynoCycle(container, data.Cycle, (Gearbox)gearbox);
+			var cycle = new MeasuredSpeedTrackCycle(container, data.Cycle, (Gearbox)gearbox, data.AxleGearData.AxleGear.Ratio,
+				data.VehicleData.DynamicTyreRadius, data.EngineData.IdleSpeed, data.EngineData.FullLoadCurve.RatedSpeed);
 			var vehicle = AddComponent(cycle, new Vehicle(container, data.VehicleData));
 			var wheels = AddComponent(vehicle,
 				new Wheels(container, data.VehicleData.DynamicTyreRadius, data.VehicleData.WheelsInertia));

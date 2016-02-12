@@ -85,7 +85,8 @@ namespace TUGraz.VectoCore.InputData.FileIO.JSON
 
 		private static int ReadVersion(JObject json)
 		{
-			return json.GetEx(JsonKeys.JsonHeader).GetEx<int>(JsonKeys.JsonHeader_FileVersion);
+			var value = json.GetEx(JsonKeys.JsonHeader).GetEx<string>(JsonKeys.JsonHeader_FileVersion);
+			return (int)double.Parse(value.Trim('"'));
 		}
 	}
 }

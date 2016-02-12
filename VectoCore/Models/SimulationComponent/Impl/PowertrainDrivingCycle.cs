@@ -360,7 +360,7 @@ namespace TUGraz.VectoCore.Models.SimulationComponent.Impl
 						response = new ResponseSuccess();
 					}
 					while (response is ResponseOverload && !(((ResponseOverload)response).Source is CombustionEngine)) {
-						acceleration -= 0.01.SI<MeterPerSquareSecond>();
+						acceleration -= 0.1.SI<MeterPerSquareSecond>();
 						response = NextComponent.Request(absTime, dt, acceleration, gradient);
 					}
 				})
@@ -457,7 +457,7 @@ namespace TUGraz.VectoCore.Models.SimulationComponent.Impl
 	public class MeasuredSpeedTrackCycle : MeasuredSpeedDynoCycle
 	{
 		public MeasuredSpeedTrackCycle(IVehicleContainer container, DrivingCycleData cycle, Gearbox gearbox, double axleRatio,
-			Meter dynamicWheelRadius, PerSecond engineIdleSpeed, PerSecond ratedSpeed) : base(container, cycle, gearbox)
+			Meter dynamicTyreRadius, PerSecond engineIdleSpeed, PerSecond ratedSpeed) : base(container, cycle, gearbox)
 		{
 			foreach (var entry in cycle.Entries) {
 				// working hypothesis (mk, 2016-02-11): if the engine speed is approximately idle the gearbox is disengaged => gear 0
@@ -476,7 +476,7 @@ namespace TUGraz.VectoCore.Models.SimulationComponent.Impl
 				//       = |v_target - (n_engine * rdyn) / (ratio_axle * ratio_gear)|
 
 				entry.Gear = gearbox.Data.Gears.MinBy(
-					g => (entry.VehicleTargetSpeed - dynamicWheelRadius * entry.AngularVelocity / (g.Value.Ratio * axleRatio)).Abs())
+					g => (entry.VehicleTargetSpeed - dynamicTyreRadius * entry.AngularVelocity / (g.Value.Ratio * axleRatio)).Abs())
 					.Key;
 			}
 		}
