@@ -182,6 +182,66 @@ namespace TUGraz.VectoCore.Tests.Models.Simulation
 			var jobContainer = builder.Build(data);
 		}
 
+
+		/// <summary>
+		/// Tests if the powertrain can be created in MeasuredSpeed mode.
+		/// </summary>
+		/// <remarks>VECTO-181</remarks>
+		[TestMethod]
+		public void MeasuredSpeed_Track_CreatePowertrain_Test()
+		{
+			// prepare input data
+			var inputData = @"  <t> ,<v>     ,<grad>      ,<n>    ,<vair_res>,<vair_beta>,<Aux_Alt>,<Padd>     
+								1   ,0       ,0           ,595.75 ,0         ,0          ,0.504    ,3.201815003
+								2   ,0.3112  ,0           ,983.75 ,0         ,0          ,0.476    ,4.532197507
+								3   ,5.2782  ,-0.041207832,723.75 ,8.532     ,0          ,0.42     ,2.453370264
+								4   ,10.5768 ,-0.049730127,1223.25,12.024    ,34         ,0.476    ,3.520827362";
+
+			var drivingCycle = DrivingCycleDataReader.ReadFromStream(inputData.GetStream(), CycleType.MeasuredSpeedTrack);
+
+			var fuelConsumption = new DataTable();
+			fuelConsumption.Columns.Add("");
+			fuelConsumption.Columns.Add("");
+			fuelConsumption.Columns.Add("");
+			fuelConsumption.Rows.Add("1", "1", "1");
+			fuelConsumption.Rows.Add("2", "2", "2");
+			fuelConsumption.Rows.Add("3", "3", "3");
+
+			var fullLoad = new DataTable();
+			fullLoad.Columns.Add("Engine speed");
+			fullLoad.Columns.Add("max torque");
+			fullLoad.Columns.Add("drag torque");
+			fullLoad.Columns.Add("PT1");
+			fullLoad.Rows.Add("0", "5000", "-5000", "0");
+			fullLoad.Rows.Add("3000", "5000", "-5000", "0");
+
+			var fullLoadCurve = EngineFullLoadCurve.Create(fullLoad);
+			var data = new VectoRunData {
+				Cycle = drivingCycle,
+				VehicleData =
+					new VehicleData {
+						VehicleCategory = VehicleCategory.RigidTruck,
+						WheelsInertia = 2.SI<KilogramSquareMeter>(),
+						DynamicTyreRadius = 0.85.SI<Meter>()
+					},
+				AxleGearData = new AxleGearData { AxleGear = new GearData { Ratio = 2.3 } },
+				EngineData = new CombustionEngineData { IdleSpeed = 560.RPMtoRad(), FullLoadCurve = fullLoadCurve },
+				GearboxData = new GearboxData {
+					Gears = new Dictionary<uint, GearData> {
+						{ 1, new GearData { Ratio = 6.696 } },
+						{ 2, new GearData { Ratio = 3.806 } },
+						{ 3, new GearData { Ratio = 2.289 } }
+					}
+				},
+				Retarder = new RetarderData()
+			};
+
+			// call builder (actual test)
+			var builder = new PowertrainBuilder(null);
+			var jobContainer = builder.Build(data);
+		}
+
+
 		/// <summary>
 		/// Tests if the simulation works and the modfile and sumfile are correct in MeasuredSpeed mode.
 		/// </summary>
@@ -207,5 +267,32 @@ namespace TUGraz.VectoCore.Tests.Models.Simulation
 			Assert.IsTrue(File.Exists(@"TestData\Jobs\Pwheel.vsum"));
 			Assert.IsTrue(File.Exists(@"TestData\Jobs\Pwheel_Gear2_pt1_rep1_actual.vmod"));
 		}
+
+
+		///// <summary>
+		///// Tests if the simulation works and the modfile and sumfile are correct in MeasuredSpeed mode.
+		///// </summary>
+		///// <remarks>VECTO-181</remarks>
+		//[TestMethod]
+		//public void MeasuredSpeed_Track_Run_Test()
+		//{
+		//	var jobFile = @"TestData\MeasuredSpeed\Demo_ChassisDyno.vecto";
+		//	var fileWriter = new FileOutputWriter(jobFile);
+		//	var sumWriter = new SummaryDataContainer(fileWriter);
+		//	var jobContainer = new JobContainer(sumWriter);
+
+		//	var inputData = JSONInputDataFactory.ReadJsonJob(jobFile);
+		//	var runsFactory = new SimulatorFactory(ExecutionMode.Engineering, inputData, fileWriter);
+
+		//	jobContainer.AddRuns(runsFactory);
+		//	jobContainer.Execute();
+
+		//	jobContainer.WaitFinished();
+
+		//	Assert.IsTrue(jobContainer.Runs.All(r => r.Success), string.Concat(jobContainer.Runs.Select(r => r.ExecException)));
+
+		//	Assert.IsTrue(File.Exists(@"TestData\Jobs\Pwheel.vsum"));
+		//	Assert.IsTrue(File.Exists(@"TestData\Jobs\Pwheel_Gear2_pt1_rep1_actual.vmod"));
+		//}
 	}
 }
