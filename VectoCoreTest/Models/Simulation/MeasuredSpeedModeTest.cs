@@ -16,6 +16,7 @@
 * limitations under the Licence.
 */
 
+using System;
 using TUGraz.VectoCore.Utils;
 using System.Collections.Generic;
 using System.Data;
@@ -39,6 +40,41 @@ namespace TUGraz.VectoCore.Tests.Models.Simulation
 	[TestClass]
 	public class MeasuredSpeedModeTest
 	{
+		string inputData = @"  <t>         ,<v>     ,<grad>      ,<Padd>     ,<n>    ,<gear>,<vair_res>,<vair_beta>,<Aux_Alt>
+								0           ,0       ,0           ,3.2018     ,595.75 ,0     ,0         ,0          ,0.504    
+								1           ,0.3112  ,0           ,4.5321     ,983.75 ,1     ,0         ,0          ,0.476    
+								2           ,5.2782  ,-0.0412     ,2.4533     ,723.75 ,1     ,8.532     ,0          ,0.42     
+								3           ,10.576  ,-0.0497     ,3.5208     ,1223.25,1     ,12.024    ,34         ,0.476     ";
+
+
+		/// <summary>
+		/// Test if the cycle file can be read.
+		/// </summary>
+		/// <remarks>VECTO-181</remarks>
+		[TestMethod]
+		public void MeasuredSpeed_Shift_ReadCycle_Test()
+		{
+			var container = new VehicleContainer();
+			var gearbox = new Gearbox(container,
+				new GearboxData {
+					Gears = new Dictionary<uint, GearData> {
+						{ 1, new GearData { Ratio = 6.696 } },
+						{ 2, new GearData { Ratio = 3.806 } },
+						{ 3, new GearData { Ratio = 2.289 } }
+					}
+				}, new PWheelShiftStrategy(null, container));
+
+			string inputData = @"<t>         ,<v>     ,<grad>      ,<Padd>     ,<n>    ,<gear>,<vair_res>,<vair_beta>,<Aux_Alt>
+								 0           ,0       ,0           ,3.2018     ,595.75 ,0     ,0         ,0          ,0.504";
+			var drivingCycle = DrivingCycleDataReader.ReadFromStream(inputData.GetStream(), CycleType.MeasuredSpeedTrack);
+			var cycle = new MeasuredSpeedCycle(container, drivingCycle, gearbox, 4.3, 0.848974.SI<Meter>(), 600.RPMtoRad(),
+				1736.RPMtoRad());
+		}
+
+		#region rewrite!
+
+		//todo mk-2016-02-15: rewrite!! test are old and use old cycle format
+
 		/// <summary>
 		/// Test if the cycle file can be read.
 		/// </summary>
@@ -47,9 +83,25 @@ namespace TUGraz.VectoCore.Tests.Models.Simulation
 		public void MeasuredSpeed_Dyno_ReadCycle_Test()
 		{
 			var container = new VehicleContainer();
-			var inputData = @"<t>,<v>,   <grad>,<gear>,<Aux_Alt>, <Padd>
-							   1,  1.383, 0,     1,     0.5767916, 1.969367304
-							   2,  3.515, 0,     1,     0.5426120, 2.042128260";
+			var inputData = @" < t >, <
+			v >,   <
+			grad >,<
+			gear >,<
+			Aux_Alt >, <
+			Padd >
+			1,
+			1.383,
+			0,
+			1,
+			0.5767916,
+			1.969367304
+			2,
+			3.515,
+			0,
+			1,
+			0.5426120,
+			2.042128260
+			";
 
 			var drivingCycle = DrivingCycleDataReader.ReadFromStream(inputData.GetStream(), CycleType.MeasuredSpeedDyno);
 
@@ -79,50 +131,6 @@ namespace TUGraz.VectoCore.Tests.Models.Simulation
 			Assert.AreEqual(0.SI<Radian>(), container.CycleData.RightSample.RoadGradient);
 		}
 
-		/// <summary>
-		/// Test if the cycle file can be read.
-		/// </summary>
-		/// <remarks>VECTO-181</remarks>
-		[TestMethod]
-		public void MeasuredSpeed_Track_ReadCycle_Test()
-		{
-			var container = new VehicleContainer();
-			var inputData = @"  <t> ,<v>     ,<grad>      ,<n>    ,<vair_res>,<vair_beta>,<Aux_Alt>,<Padd>     
-								9   ,0       ,0           ,595.75 ,0         ,0          ,0.504    ,3.201815003
-								10  ,0.3112  ,0           ,983.75 ,0         ,0          ,0.476    ,4.532197507
-								11  ,5.2782  ,-0.041207832,723.75 ,8.532     ,0          ,0.42     ,2.453370264
-								12  ,10.5768 ,-0.049730127,1223.25,12.024    ,34         ,0.476    ,3.520827362";
-
-			var drivingCycle = DrivingCycleDataReader.ReadFromStream(inputData.GetStream(), CycleType.MeasuredSpeedTrack);
-
-			var gearbox = new Gearbox(container,
-				new GearboxData {
-					Gears = new Dictionary<uint, GearData> {
-						{ 1, new GearData { Ratio = 6.696 } },
-						{ 2, new GearData { Ratio = 3.806 } },
-						{ 3, new GearData { Ratio = 2.289 } }
-					}
-				}, new PWheelShiftStrategy(null, container));
-
-			var cycle = new MeasuredSpeedTrackCycle(container, drivingCycle, gearbox, 4.3, 0.848974.SI<Meter>(), 600.RPMtoRad(),
-				1736.RPMtoRad());
-
-			AssertCycleEntry(
-				new DrivingCycleData.DrivingCycleEntry {
-					Time = 9.SI<Second>(),
-					VehicleTargetSpeed = 0.KMPHtoMeterPerSecond(),
-					AngularVelocity = 595.75.RPMtoRad(),
-					Gear = 0u
-				}, container.CycleData.LeftSample);
-
-			AssertCycleEntry(
-				new DrivingCycleData.DrivingCycleEntry {
-					Time = 10.SI<Second>(),
-					VehicleTargetSpeed = 0.3112.KMPHtoMeterPerSecond(),
-					AngularVelocity = 983.75.RPMtoRad(),
-					Gear = 1u
-				}, container.CycleData.RightSample);
-		}
 
 		/// <summary>
 		/// asserts that two cycle entries are the same.
@@ -296,5 +304,7 @@ namespace TUGraz.VectoCore.Tests.Models.Simulation
 
 			Assert.Fail("Implement this test!");
 		}
+
+		#endregion
 	}
 }

@@ -114,8 +114,8 @@ namespace TUGraz.VectoCore.Models.Simulation.Impl
 					case CycleType.EngineOnly:
 					case CycleType.TimeBased:
 					case CycleType.PWheel:
-					case CycleType.MeasuredSpeedDyno:
-					case CycleType.MeasuredSpeedTrack:
+					case CycleType.MeasuredSpeed:
+					case CycleType.MeasuredSpeedGear:
 						run = new TimeRun(builder.Build(data));
 						break;
 					default:

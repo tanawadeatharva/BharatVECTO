@@ -44,11 +44,11 @@ namespace TUGraz.VectoCore.InputData.Reader
 			if (PWheelCycleDataParser.ValidateHeader(cols, false)) {
 				return CycleType.PWheel;
 			}
-			if (MeasuredSpeedTrackDataParser.ValidateHeader(cols, false)) {
-				return CycleType.MeasuredSpeedTrack;
+			if (MeasuredSpeedGearDataParser.ValidateHeader(cols, false)) {
+				return CycleType.MeasuredSpeedGear;
 			}
-			if (MeasuredSpeedDynoDataParser.ValidateHeader(cols, false)) {
-				return CycleType.MeasuredSpeedDyno;
+			if (MeasuredSpeedDataParser.ValidateHeader(cols, false)) {
+				return CycleType.MeasuredSpeed;
 			}
 			if (EngineOnlyCycleDataParser.ValidateHeader(cols, false)) {
 				return CycleType.EngineOnly;
@@ -73,10 +73,10 @@ namespace TUGraz.VectoCore.InputData.Reader
 					return new DistanceBasedCycleDataParser();
 				case CycleType.PWheel:
 					return new PWheelCycleDataParser();
-				case CycleType.MeasuredSpeedDyno:
-					return new MeasuredSpeedDynoDataParser();
-				case CycleType.MeasuredSpeedTrack:
-					return new MeasuredSpeedTrackDataParser();
+				case CycleType.MeasuredSpeedGear:
+					return new MeasuredSpeedGearDataParser();
+				case CycleType.MeasuredSpeed:
+					return new MeasuredSpeedDataParser();
 				default:
 					throw new ArgumentOutOfRangeException("type");
 			}
@@ -286,10 +286,9 @@ namespace TUGraz.VectoCore.InputData.Reader
 		private abstract class AbstractCycleDataParser : ICycleDataParser
 		{
 			protected static bool CheckColumns(string[] header, IEnumerable<string> allowedCols, IEnumerable<string> requiredCols,
-				bool throwExceptions,
-				bool filterAux)
+				bool throwExceptions, bool allowAux)
 			{
-				if (filterAux) {
+				if (allowAux) {
 					header = header.Where(c => !c.StartsWith(Fields.AuxiliarySupplyPower)).ToArray();
 				}
 
@@ -308,6 +307,19 @@ namespace TUGraz.VectoCore.InputData.Reader
 					}
 					return false;
 				}
+				return true;
+			}
+
+			protected static bool CheckComboColumns(string[] header, string[] cols, bool throwExceptions)
+			{
+				var colCount = header.Intersect(cols).Count();
+				if (colCount == 0 || colCount == cols.Length) {
+					if (throwExceptions) {
+						throw new VectoException("Either all columns have to be defined or none of them: {0}", ", ".Join(cols));
+					}
+					return false;
+				}
+
 				return true;
 			}
 
@@ -331,7 +343,7 @@ namespace TUGraz.VectoCore.InputData.Reader
 					Gear = (uint)row.ParseDoubleOrGetDefault(Fields.Gear),
 					AirSpeedRelativeToVehicle = row.ParseDoubleOrGetDefault(Fields.AirSpeedRelativeToVehicle).KMPHtoMeterPerSecond(),
 					WindYawAngle = row.ParseDoubleOrGetDefault(Fields.WindYawAngle),
-					AuxiliarySupplyPower = AuxSupplyPowerReader.Read(row)
+					AuxiliarySupplyPower = row.GetAuxiliaries()
 				});
 			}
 
@@ -355,23 +367,12 @@ namespace TUGraz.VectoCore.InputData.Reader
 					Fields.WindYawAngle
 				};
 
-				if (!CheckColumns(header, allowedCols, requiredCols, throwExceptions, filterAux: true)) {
-					return false;
-				}
-
-				if (header.Contains(Fields.AirSpeedRelativeToVehicle) ^
-					header.Contains(Fields.WindYawAngle)) {
-					if (throwExceptions) {
-						throw new VectoException("Both Columns, '{0}' and '{1}', must be defined, or none of them.",
-							Fields.AirSpeedRelativeToVehicle, Fields.WindYawAngle);
-					}
-					return false;
-				}
-				return true;
+				return CheckColumns(header, allowedCols, requiredCols, throwExceptions, allowAux: true) &&
+						CheckComboColumns(header, new[] { Fields.AirSpeedRelativeToVehicle, Fields.WindYawAngle }, throwExceptions);
 			}
 		}
 
-		private class TimeBasedCycleDataParser : AbstractCycleDataParser
+		private class TimeBasedCycleDataParser : DistanceBasedCycleDataParser
 		{
 			public override IEnumerable<DrivingCycleData.DrivingCycleEntry> Parse(DataTable table)
 			{
@@ -387,13 +388,13 @@ namespace TUGraz.VectoCore.InputData.Reader
 					AngularVelocity = row.ParseDoubleOrGetDefault(Fields.EngineSpeed).RPMtoRad(),
 					AirSpeedRelativeToVehicle = row.ParseDoubleOrGetDefault(Fields.AirSpeedRelativeToVehicle).KMPHtoMeterPerSecond(),
 					WindYawAngle = row.ParseDoubleOrGetDefault(Fields.WindYawAngle),
-					AuxiliarySupplyPower = AuxSupplyPowerReader.Read(row)
+					AuxiliarySupplyPower = row.GetAuxiliaries()
 				}).ToArray();
 
 				return entries;
 			}
 
-			public static bool ValidateHeader(string[] header, bool throwExceptions = true)
+			public new static bool ValidateHeader(string[] header, bool throwExceptions = true)
 			{
 				var allowedCols = new[] {
 					Fields.Time,
@@ -410,19 +411,8 @@ namespace TUGraz.VectoCore.InputData.Reader
 					Fields.VehicleSpeed,
 				};
 
-				if (!CheckColumns(header, allowedCols, requiredCols, throwExceptions, filterAux: true)) {
-					return false;
-				}
-
-				if (header.Contains(Fields.AirSpeedRelativeToVehicle) ^
-					header.Contains(Fields.WindYawAngle)) {
-					if (throwExceptions) {
-						throw new VectoException("Both Columns, '{0}' and '{1}', must be defined, or none of them.",
-							Fields.AirSpeedRelativeToVehicle, Fields.WindYawAngle);
-					}
-					return false;
-				}
-				return true;
+				return CheckColumns(header, allowedCols, requiredCols, throwExceptions, allowAux: true) &&
+						CheckComboColumns(header, new[] { Fields.AirSpeedRelativeToVehicle, Fields.WindYawAngle }, throwExceptions);
 			}
 		}
 
@@ -438,7 +428,7 @@ namespace TUGraz.VectoCore.InputData.Reader
 						AngularVelocity = row.ParseDoubleOrGetDefault(Fields.EngineSpeed).RPMtoRad(),
 						AdditionalAuxPowerDemand =
 							row.ParseDoubleOrGetDefault(Fields.AdditionalAuxPowerDemand).SI().Kilo.Watt.Cast<Watt>(),
-						AuxiliarySupplyPower = AuxSupplyPowerReader.Read(row)
+						AuxiliarySupplyPower = row.GetAuxiliaries()
 					};
 
 					if (row.Table.Columns.Contains(Fields.EngineTorque)) {
@@ -474,11 +464,12 @@ namespace TUGraz.VectoCore.InputData.Reader
 					Fields.EngineSpeed
 				};
 
-				if (!CheckColumns(header, allowedCols, requiredCols, throwExceptions, filterAux: false)) {
+				if (!CheckColumns(header, allowedCols, requiredCols, throwExceptions, allowAux: false)) {
 					return false;
 				}
 
-				if (!(header.Contains(Fields.EngineTorque) || header.Contains(Fields.EnginePower))) {
+				var containsNone = !header.Contains(Fields.EngineTorque) && !header.Contains(Fields.EnginePower);
+				if (containsNone) {
 					if (throwExceptions) {
 						throw new VectoException("Column(s) missing: Either column '{0}' or column '{1}' must be defined.",
 							Fields.EngineTorque, Fields.EnginePower);
@@ -486,7 +477,8 @@ namespace TUGraz.VectoCore.InputData.Reader
 					return false;
 				}
 
-				if (header.Contains(Fields.EngineTorque) && header.Contains(Fields.EnginePower)) {
+				var containsBoth = header.Contains(Fields.EngineTorque) && header.Contains(Fields.EnginePower);
+				if (containsBoth) {
 					Logger<DrivingCycleDataReader>().Warn("Found column '{0}' and column '{1}': Only column '{0}' will be used.",
 						Fields.EngineTorque, Fields.EnginePower);
 				}
@@ -494,6 +486,10 @@ namespace TUGraz.VectoCore.InputData.Reader
 			}
 		}
 
+		/// <summary>
+		/// Parser for PWheel (SiCo) Mode.
+		/// </summary>
+		// <t>, <Pwheel>, <Gear>, <n>, <Padd>
 		private class PWheelCycleDataParser : AbstractCycleDataParser
 		{
 			public override IEnumerable<DrivingCycleData.DrivingCycleEntry> Parse(DataTable table)
@@ -522,11 +518,15 @@ namespace TUGraz.VectoCore.InputData.Reader
 				};
 				var requiredCols = allowedCols;
 
-				return CheckColumns(header, allowedCols, requiredCols, throwExceptions, filterAux: false);
+				return CheckColumns(header, allowedCols, requiredCols, throwExceptions, allowAux: false);
 			}
 		}
 
-		private class MeasuredSpeedDynoDataParser : AbstractCycleDataParser
+		/// <summary>
+		/// Parser for Measured Speed Mode Option 1.
+		/// </summary>
+		// <t>, <v>, <grad>, <Padd>[, <vair_res>, <vair_beta>][, Aux_...]
+		private class MeasuredSpeedDataParser : AbstractCycleDataParser
 		{
 			public override IEnumerable<DrivingCycleData.DrivingCycleEntry> Parse(DataTable table)
 			{
@@ -536,9 +536,10 @@ namespace TUGraz.VectoCore.InputData.Reader
 					Time = row.ParseDouble(Fields.Time).SI<Second>(),
 					VehicleTargetSpeed = row.ParseDouble(Fields.VehicleSpeed).KMPHtoMeterPerSecond(),
 					RoadGradient = VectoMath.InclinationToAngle(row.ParseDoubleOrGetDefault(Fields.RoadGradient) / 100.0),
-					Gear = (uint)row.ParseDouble(Fields.Gear),
 					AdditionalAuxPowerDemand = row.ParseDouble(Fields.AdditionalAuxPowerDemand).SI().Kilo.Watt.Cast<Watt>(),
-					AuxiliarySupplyPower = AuxSupplyPowerReader.Read(row)
+					AirSpeedRelativeToVehicle = row.ParseDoubleOrGetDefault(Fields.AirSpeedRelativeToVehicle).KMPHtoMeterPerSecond(),
+					WindYawAngle = row.ParseDoubleOrGetDefault(Fields.WindYawAngle),
+					AuxiliarySupplyPower = row.GetAuxiliaries()
 				}).ToArray();
 
 				return entries;
@@ -546,34 +547,48 @@ namespace TUGraz.VectoCore.InputData.Reader
 
 			public static bool ValidateHeader(string[] header, bool throwExceptions = true)
 			{
+				//todo mk-2016-02-15: check if vair_res, and vair_beta only when needed
 				var allowedCols = new[] {
 					Fields.Time,
 					Fields.VehicleSpeed,
 					Fields.RoadGradient,
-					Fields.Gear,
-					Fields.AdditionalAuxPowerDemand
+					Fields.AdditionalAuxPowerDemand,
+					Fields.AirSpeedRelativeToVehicle,
+					Fields.WindYawAngle
 				};
-				var requiredCols = allowedCols;
+				var requiredCols = new[] {
+					Fields.Time,
+					Fields.VehicleSpeed,
+					Fields.RoadGradient,
+					Fields.AdditionalAuxPowerDemand,
+				};
 
-				return CheckColumns(header, allowedCols, requiredCols, throwExceptions, filterAux: true);
+				return CheckColumns(header, allowedCols, requiredCols, throwExceptions, allowAux: true) &&
+						CheckComboColumns(header, new[] { Fields.AirSpeedRelativeToVehicle, Fields.WindYawAngle }, throwExceptions);
 			}
 		}
 
 
-		private class MeasuredSpeedTrackDataParser : AbstractCycleDataParser
+		/// <summary>
+		/// Parser for Measured Speed Mode Option 2.
+		/// </summary>
+		// <t>, <v>, <grad>, <Padd>, <n>, <gear>[, <vair_res>, <vair_beta>][, Aux_...]
+		private class MeasuredSpeedGearDataParser : AbstractCycleDataParser
 		{
 			public override IEnumerable<DrivingCycleData.DrivingCycleEntry> Parse(DataTable table)
 			{
 				ValidateHeader(table.Columns.Cast<DataColumn>().Select(col => col.ColumnName).ToArray());
+
 				var entries = table.Rows.Cast<DataRow>().Select(row => new DrivingCycleData.DrivingCycleEntry {
 					Time = row.ParseDouble(Fields.Time).SI<Second>(),
 					VehicleTargetSpeed = row.ParseDouble(Fields.VehicleSpeed).KMPHtoMeterPerSecond(),
 					RoadGradient = VectoMath.InclinationToAngle(row.ParseDoubleOrGetDefault(Fields.RoadGradient) / 100.0),
+					AdditionalAuxPowerDemand = row.ParseDouble(Fields.AdditionalAuxPowerDemand).SI().Kilo.Watt.Cast<Watt>(),
 					AngularVelocity = row.ParseDouble(Fields.EngineSpeed).RPMtoRad(),
-					AirSpeedRelativeToVehicle = row.ParseDouble(Fields.AirSpeedRelativeToVehicle).KMPHtoMeterPerSecond(),
-					WindYawAngle = row.ParseDouble(Fields.WindYawAngle),
-					AuxiliarySupplyPower = AuxSupplyPowerReader.Read(row),
-					AdditionalAuxPowerDemand = row.ParseDouble(Fields.AdditionalAuxPowerDemand).SI().Kilo.Watt.Cast<Watt>()
+					Gear = (uint)row.ParseDouble(Fields.Gear),
+					AirSpeedRelativeToVehicle = row.ParseDoubleOrGetDefault(Fields.AirSpeedRelativeToVehicle).KMPHtoMeterPerSecond(),
+					WindYawAngle = row.ParseDoubleOrGetDefault(Fields.WindYawAngle),
+					AuxiliarySupplyPower = row.GetAuxiliaries()
 				}).ToArray();
 
 				return entries;
@@ -581,18 +596,29 @@ namespace TUGraz.VectoCore.InputData.Reader
 
 			public static bool ValidateHeader(string[] header, bool throwExceptions = true)
 			{
+				//todo mk-2016-02-15: check if vair_res, and vair_beta only when needed
 				var allowedCols = new[] {
 					Fields.Time,
 					Fields.VehicleSpeed,
 					Fields.RoadGradient,
+					Fields.AdditionalAuxPowerDemand,
 					Fields.EngineSpeed,
+					Fields.Gear,
 					Fields.AirSpeedRelativeToVehicle,
-					Fields.WindYawAngle,
-					Fields.AdditionalAuxPowerDemand
+					Fields.WindYawAngle
 				};
-				var requiredCols = allowedCols;
 
-				return CheckColumns(header, allowedCols, requiredCols, throwExceptions, filterAux: true);
+				var requiredCols = new[] {
+					Fields.Time,
+					Fields.VehicleSpeed,
+					Fields.RoadGradient,
+					Fields.AdditionalAuxPowerDemand,
+					Fields.EngineSpeed,
+					Fields.Gear
+				};
+
+				return CheckColumns(header, allowedCols, requiredCols, throwExceptions, allowAux: true) &&
+						CheckComboColumns(header, new[] { Fields.AirSpeedRelativeToVehicle, Fields.WindYawAngle }, throwExceptions);
 			}
 		}
 	}

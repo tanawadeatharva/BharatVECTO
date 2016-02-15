@@ -33,7 +33,7 @@ namespace TUGraz.VectoCore.Models.SimulationComponent.Data
 		/// <summary>
 		/// [W]. Reads Auxiliary Supply Power (defined by Fields.AuxiliarySupplyPower-Prefix).
 		/// </summary>
-		public static Dictionary<string, Watt> Read(DataRow row)
+		public static Dictionary<string, Watt> GetAuxiliaries(this DataRow row)
 		{
 			var auxCols = row.Table.Columns.Cast<DataColumn>().
 				Where(col => col.ColumnName.StartsWith(AuxSupplyPowerField));
