@@ -34,10 +34,10 @@ using TUGraz.VectoCore.Utils;
 
 namespace TUGraz.VectoCore.Models.SimulationComponent.Impl
 {
-	public class Driver : StatefulVectoSimulationComponent<Driver.DriverState>, IDriver, IDrivingCycleOutPort, IDriverDemandInPort, IDriverActions,
+	public class Driver : StatefulVectoSimulationComponent<Driver.DriverState>, IDriver, IDrivingCycleOutPort,
+		IDriverDemandInPort, IDriverActions,
 		IDriverInfo
 	{
-		
 		protected IDriverDemandOutPort NextComponent;
 
 		public DriverData DriverData { get; protected set; }
@@ -815,6 +815,11 @@ namespace TUGraz.VectoCore.Models.SimulationComponent.Impl
 			public MeterPerSquareSecond Acceleration;
 			public Meter SimulationDistance;
 			public Second SimulationInterval;
+
+			public override string ToString()
+			{
+				return string.Format("a: {0}, dt: {1}, ds: {2}", Acceleration, SimulationInterval, SimulationDistance);
+			}
 		}
 
 		[Flags]

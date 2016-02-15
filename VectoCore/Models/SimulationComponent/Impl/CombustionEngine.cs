@@ -159,7 +159,7 @@ namespace TUGraz.VectoCore.Models.SimulationComponent.Impl
 				var gearboxFullLoad = curve.FullLoadStationaryTorque(avgEngineSpeed);
 				var maxGbxTorque = VectoMath.Limit(torqueOut, -gearboxFullLoad, gearboxFullLoad);
 				if (!torqueOut.IsEqual(maxGbxTorque)) {
-					deltaGbxFld = maxGbxTorque - torqueOut;
+					deltaGbxFld = torqueOut - maxGbxTorque;
 				}
 				CurrentState.EngineTorqueOut = maxGbxTorque;
 			}
@@ -199,7 +199,7 @@ namespace TUGraz.VectoCore.Models.SimulationComponent.Impl
 
 			NewtonMeter deltaEngineFld = null;
 			if (!maxEngineTorque.IsEqual(CurrentState.EngineTorque)) {
-				deltaEngineFld = maxEngineTorque - CurrentState.EngineTorque;
+				deltaEngineFld = CurrentState.EngineTorque - maxEngineTorque;
 			}
 
 			// set engine torque and power to max value
