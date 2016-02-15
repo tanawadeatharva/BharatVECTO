@@ -257,7 +257,7 @@ namespace TUGraz.VectoCore.Models.SimulationComponent.Impl
 	/// <summary>
 	/// Driving Cycle for the PWheel driving cycle.
 	/// </summary>
-	public class MeasuredSpeedDynoCycle : VectoSimulationComponent, IDriverInfo, IDrivingCycleInfo, IDriverDemandInProvider,
+	public class MeasuredSpeedCycle : VectoSimulationComponent, IDriverInfo, IDrivingCycleInfo, IDriverDemandInProvider,
 		IDriverDemandInPort, ISimulationOutProvider, ISimulationOutPort, IClutchInfo
 	{
 		protected DrivingCycleData Data;
@@ -274,7 +274,7 @@ namespace TUGraz.VectoCore.Models.SimulationComponent.Impl
 		/// <param name="container">The container.</param>
 		/// <param name="cycle">The cycle.</param>
 		/// <param name="gearbox">the gearbox.</param>
-		public MeasuredSpeedDynoCycle(IVehicleContainer container, DrivingCycleData cycle, Gearbox gearbox)
+		public MeasuredSpeedCycle(IVehicleContainer container, DrivingCycleData cycle, Gearbox gearbox)
 			: base(container)
 		{
 			Gearbox = gearbox;
@@ -451,34 +451,6 @@ namespace TUGraz.VectoCore.Models.SimulationComponent.Impl
 		public virtual bool ClutchClosed(Second absTime)
 		{
 			return LeftSample.Current.Gear != 0;
-		}
-	}
-
-	public class MeasuredSpeedTrackCycle : MeasuredSpeedDynoCycle
-	{
-		public MeasuredSpeedTrackCycle(IVehicleContainer container, DrivingCycleData cycle, Gearbox gearbox, double axleRatio,
-			Meter dynamicTyreRadius, PerSecond engineIdleSpeed, PerSecond ratedSpeed) : base(container, cycle, gearbox)
-		{
-			foreach (var entry in cycle.Entries) {
-				// working hypothesis (mk, 2016-02-11): if the engine speed is approximately idle the gearbox is disengaged => gear 0
-				// for approximately idling the same rule as in the clutch-slipping was used.
-				var engineSpeedNorm = (entry.AngularVelocity - engineIdleSpeed) / (ratedSpeed - engineIdleSpeed);
-				if (engineSpeedNorm < Constants.SimulationSettings.CluchNormSpeed) {
-					entry.Gear = 0;
-					continue;
-				}
-
-				// find the gear which matches the target speed.
-				// working hypothesis (mk, 2016-02-11): choose gear with smallest vehicle speed error (n is fixed, v will be approximated)
-				// n_engine = (v / rdyn) * ratio_axle * ratio_gear
-				// => v = (n_engine * rdyn) / (ratio_axle * ratio_gear)
-				// error = |v_target - v_calc|
-				//       = |v_target - (n_engine * rdyn) / (ratio_axle * ratio_gear)|
-
-				entry.Gear = gearbox.Data.Gears.MinBy(
-					g => (entry.VehicleTargetSpeed - dynamicTyreRadius * entry.AngularVelocity / (g.Value.Ratio * axleRatio)).Abs())
-					.Key;
-			}
 		}
 	}
 }

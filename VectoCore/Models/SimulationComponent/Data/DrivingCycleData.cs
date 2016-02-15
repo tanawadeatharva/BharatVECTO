@@ -28,8 +28,8 @@ namespace TUGraz.VectoCore.Models.SimulationComponent.Data
 		TimeBased,
 		DistanceBased,
 		PWheel,
-		MeasuredSpeedDyno,
-		MeasuredSpeedTrack
+		MeasuredSpeed,
+		MeasuredSpeedShift
 	}
 
 	public class DrivingCycleData : SimulationComponentData
