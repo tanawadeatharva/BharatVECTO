@@ -1,7 +1,7 @@
 ﻿{
   "Header": {
     "CreatedBy": "Michael Krisper",
-    "Date": "04.02.2016 16:38:57",
+    "Date": "2016-02-16T17:05:02+01:00",
     "AppVersion": "3.0.2",
     "FileVersion": 5
   },
@@ -13,46 +13,46 @@
     "Gears": [
       {
         "Ratio": 4.3,
-        "LossMap": "Axle.vtlm"
+        "LossMap": "Gear_Axle_loss.vtlm"
       },
       {
         "Ratio": 6.696,
-        "LossMap": "Indirect Gear.vtlm",
+        "LossMap": "Gear_Indirect_loss.vtlm",
         "TCactive": false,
         "ShiftPolygon": "ShiftPolygons.vgbs",
         "FullLoadCurve": "<NOFILE>"
       },
       {
         "Ratio": 3.806,
-        "LossMap": "Indirect Gear.vtlm",
+        "LossMap": "Gear_Indirect_loss.vtlm",
         "TCactive": false,
         "ShiftPolygon": "ShiftPolygons.vgbs",
         "FullLoadCurve": "<NOFILE>"
       },
       {
         "Ratio": 2.289,
-        "LossMap": "Indirect Gear.vtlm",
+        "LossMap": "Gear_Indirect_loss.vtlm",
         "TCactive": false,
         "ShiftPolygon": "ShiftPolygons.vgbs",
         "FullLoadCurve": "<NOFILE>"
       },
       {
         "Ratio": 1.48,
-        "LossMap": "Indirect Gear.vtlm",
+        "LossMap": "Gear_Indirect_loss.vtlm",
         "TCactive": false,
         "ShiftPolygon": "ShiftPolygons.vgbs",
         "FullLoadCurve": "<NOFILE>"
       },
       {
         "Ratio": 1.0,
-        "LossMap": "Direct Gear.vtlm",
+        "LossMap": "Gear_Direct_loss.vtlm",
         "TCactive": false,
         "ShiftPolygon": "ShiftPolygons.vgbs",
         "FullLoadCurve": "<NOFILE>"
       },
       {
         "Ratio": 0.728,
-        "LossMap": "Indirect Gear.vtlm",
+        "LossMap": "Gear_Indirect_loss.vtlm",
         "TCactive": false,
         "ShiftPolygon": "ShiftPolygons.vgbs",
         "FullLoadCurve": "<NOFILE>"

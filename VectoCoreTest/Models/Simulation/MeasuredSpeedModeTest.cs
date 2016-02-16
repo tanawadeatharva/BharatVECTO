@@ -30,7 +30,6 @@ using TUGraz.VectoCore.Models.Simulation.Data;
 using TUGraz.VectoCore.Models.Simulation.Impl;
 using Microsoft.VisualStudio.TestTools.UnitTesting;
 using TUGraz.VectoCore.Exceptions;
-using TUGraz.VectoCore.Models.SimulationComponent;
 using TUGraz.VectoCore.Models.SimulationComponent.Impl;
 using TUGraz.VectoCore.Models.SimulationComponent.Data;
 using TUGraz.VectoCore.Models.SimulationComponent.Data.Engine;
@@ -212,7 +211,7 @@ namespace TUGraz.VectoCore.Tests.Models.Simulation
 
 			// call builder (actual test)
 			var builder = new PowertrainBuilder(null);
-			var jobContainer = builder.Build(data);
+			builder.Build(data);
 		}
 
 
@@ -282,7 +281,7 @@ namespace TUGraz.VectoCore.Tests.Models.Simulation
 		[TestMethod]
 		public void MeasuredSpeed_Run_Gear()
 		{
-			var jobFile = @"TestData\MeasuredSpeed\MeasuredSpeed_Gear.vecto";
+			var jobFile = @"TestData\MeasuredSpeed\MeasuredSpeedGear.vecto";
 			var fileWriter = new FileOutputWriter(jobFile);
 			var sumWriter = new SummaryDataContainer(fileWriter);
 			var jobContainer = new JobContainer(sumWriter);
@@ -329,7 +328,5 @@ namespace TUGraz.VectoCore.Tests.Models.Simulation
 
 			Assert.Fail("Implement this test!");
 		}
-
-//		#endregion
 	}
 }

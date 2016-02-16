@@ -1,30 +1,30 @@
 ﻿{
   "Header": {
-    "CreatedBy": "Raphael Luz IVT TU-Graz (eed25180-b54a-46f8-a51e-2182e6c955c5)",
-    "Date": "07.10.2013 16:39:00",
-    "AppVersion": "1.4",
+    "CreatedBy": "Michael Krisper",
+    "Date": "2016-02-16T16:57:05+01:00",
+    "AppVersion": "3.0.2",
     "FileVersion": 2
   },
   "Body": {
     "SavedInDeclMode": false,
-    "VehicleFile": "Demo_Vehicle_ChassisDyno.vveh",
-    "EngineFile": "Demo_Engine.veng",
-    "GearboxFile": "Demo_Gearbox.vgbx",
+    "EngineOnlyMode": false,
+    "VehicleFile": "Vehicle.vveh",
+    "EngineFile": "Engine.veng",
+    "GearboxFile": "Gearbox.vgbx",
     "Cycles": [
-      "ChassisDyno_Motorway.vdri",
-      "ChassisDyno_Rural.vdri",
-      "ChassisDyno_Urban.vdri"
+      "MeasuredSpeed_Motorway.vdri",
+      "MeasuredSpeed_Rural.vdri",
+      "MeasuredSpeed_Urban.vdri"
     ],
     "Aux": [
       {
         "ID": "Alt",
         "Type": "Alternator",
-        "Path": "Demo_AuxAlternator.vaux",
-		"Technology": ""
+        "Path": "Alternator.vaux",
+        "Technology": ""
       }
     ],
-    "VACC": "Dummy.vacc",
-    "EngineOnlyMode": false,
+    "VACC": "Driver.vacc",
     "StartStop": {
       "Enabled": false,
       "MaxSpeed": 5.0,

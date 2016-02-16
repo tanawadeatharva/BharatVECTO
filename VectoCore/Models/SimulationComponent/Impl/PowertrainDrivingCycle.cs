@@ -265,6 +265,7 @@ namespace TUGraz.VectoCore.Models.SimulationComponent.Impl
 		protected IEnumerator<DrivingCycleData.DrivingCycleEntry> RightSample { get; set; }
 		protected IEnumerator<DrivingCycleData.DrivingCycleEntry> LeftSample { get; set; }
 		protected Gearbox Gearbox;
+		private bool initialize;
 
 		protected Second AbsTime { get; set; }
 
@@ -378,6 +379,8 @@ namespace TUGraz.VectoCore.Models.SimulationComponent.Impl
 
 			AbsTime = first.Time;
 
+			initialize = true;
+
 			if (first.VehicleTargetSpeed.IsEqual(0)) {
 				var retVal = NextComponent.Initialize(DataBus.StartSpeed, first.RoadGradient, DataBus.StartAcceleration);
 				if (!(retVal is ResponseSuccess)) {
@@ -387,6 +390,8 @@ namespace TUGraz.VectoCore.Models.SimulationComponent.Impl
 
 			var response = NextComponent.Initialize(first.VehicleTargetSpeed, first.RoadGradient);
 			response.AbsTime = AbsTime;
+
+			initialize = false;
 			return response;
 		}
 
@@ -440,7 +445,7 @@ namespace TUGraz.VectoCore.Models.SimulationComponent.Impl
 
 		public bool VehicleStopped
 		{
-			get { return LeftSample.Current.VehicleTargetSpeed.IsEqual(0); }
+			get { return !initialize && LeftSample.Current.VehicleTargetSpeed.IsEqual(0); }
 		}
 
 		public DrivingBehavior DrivingBehavior
