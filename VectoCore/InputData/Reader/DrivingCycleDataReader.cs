@@ -59,7 +59,7 @@ namespace TUGraz.VectoCore.InputData.Reader
 			if (DistanceBasedCycleDataParser.ValidateHeader(cols, false)) {
 				return CycleType.DistanceBased;
 			}
-			throw new VectoException("CycleFile Format is unknown.");
+			throw new VectoException("CycleFile format is unknown.");
 		}
 
 		private static ICycleDataParser GetDataParser(CycleType type)
@@ -313,7 +313,7 @@ namespace TUGraz.VectoCore.InputData.Reader
 			protected static bool CheckComboColumns(string[] header, string[] cols, bool throwExceptions)
 			{
 				var colCount = header.Intersect(cols).Count();
-				if (colCount == 0 || colCount == cols.Length) {
+				if (colCount != 0 && colCount != cols.Length) {
 					if (throwExceptions) {
 						throw new VectoException("Either all columns have to be defined or none of them: {0}", ", ".Join(cols));
 					}

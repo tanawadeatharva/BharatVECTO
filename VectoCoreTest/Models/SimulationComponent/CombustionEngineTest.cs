@@ -51,24 +51,6 @@ namespace TUGraz.VectoCore.Tests.Models.SimulationComponent
 			AppDomain.CurrentDomain.SetData("DataDirectory", Path.GetDirectoryName(Assembly.GetExecutingAssembly().Location));
 		}
 
-		/// <summary>
-		/// Assert an expected Exception.
-		/// </summary>
-		/// <typeparam name="T"></typeparam>
-		/// <param name="func"></param>
-		/// <param name="message"></param>
-		public static void AssertException<T>(Action func, string message = null) where T : Exception
-		{
-			try {
-				func();
-				Assert.Fail("Expected Exception {0}, but no exception occured.", typeof(T));
-			} catch (T ex) {
-				if (message != null) {
-					Assert.AreEqual(message, ex.Message);
-				}
-			}
-		}
-
 		[TestMethod]
 		public void TestEngineHasOutPort()
 		{

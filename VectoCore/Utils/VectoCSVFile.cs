@@ -85,7 +85,7 @@ namespace TUGraz.VectoCore.Utils
 				return ReadData(lines.ToArray(), ignoreEmptyColumns);
 			} catch (Exception e) {
 				Logger<VectoCSVFile>().Error(e);
-				throw new VectoException("failed to read stream", e);
+				throw new VectoException("Failed to read stream: " + e.Message, e);
 			}
 		}
 
