@@ -2815,7 +2815,7 @@ Example: “Gears\Gear1.vtlm” points to the “Gears” subdirectory of the Ge
 <td align="left">The engine speed (will always be maintained - even when &lt;v&gt; cannot be reached in the simulation)</td>
 </tr>
 <tr class="even">
-<td align="left"><strong>&lt;gear</strong></td>
+<td align="left"><strong>&lt;gear&gt;</strong></td>
 <td align="left">Gear</td>
 <td align="left">[-]</td>
 <td align="left">The current gear</td>
@@ -2845,9 +2845,109 @@ Example: “Gears\Gear1.vtlm” points to the “Gears” subdirectory of the Ge
 </div>
 <div id="pwheel-sico-mode-cycle" class="section level3">
 <h3>Pwheel (SiCo) Mode Cycle</h3>
+<p>Power measured at the</p>
+<p>Header: <strong>&lt;t&gt;</strong>,<strong>&lt;Pwheel&gt;</strong>,<strong>&lt;gear&gt;</strong>,<strong>&lt;n&gt;</strong>,<strong>&lt;Padd&gt;</strong></p>
+<table>
+<colgroup>
+<col width="14%"></col>
+<col width="11%"></col>
+<col width="9%"></col>
+<col width="64%"></col>
+</colgroup>
+<thead>
+<tr class="header">
+<th align="left">Identifier</th>
+<th align="left">Quantity</th>
+<th align="left">Unit</th>
+<th align="left">Description</th>
+</tr>
+</thead>
+<tbody>
+<tr class="odd">
+<td align="left"><strong>&lt;t&gt;</strong></td>
+<td align="left">Time</td>
+<td align="left">[s]</td>
+<td align="left">The absolute time.</td>
+</tr>
+<tr class="even">
+<td align="left"><strong>&lt;Pwheel&gt;</strong></td>
+<td align="left">Wheel Power</td>
+<td align="left">[kW]</td>
+<td align="left">Power at the wheels.</td>
+</tr>
+<tr class="odd">
+<td align="left"><strong>&lt;gear&gt;</strong></td>
+<td align="left">Gear</td>
+<td align="left">[-]</td>
+<td align="left">The current gear</td>
+</tr>
+<tr class="even">
+<td align="left"><strong>&lt;n&gt;</strong></td>
+<td align="left">Engine Speed</td>
+<td align="left">[rpm]</td>
+<td align="left">The engine speed (will always be maintained - even when &lt;v&gt; cannot be reached in the simulation)</td>
+</tr>
+<tr class="odd">
+<td align="left"><strong>&lt;Padd&gt;</strong></td>
+<td align="left">Additional Aux Power Demand</td>
+<td align="left">[kW]</td>
+<td align="left">This power input will be directly added to the engine power.</td>
+</tr>
+</tbody>
+</table>
 </div>
 <div id="engine-only-mode-cycle" class="section level3">
 <h3>Engine Only Mode Cycle</h3>
+<p>Either power or torque must be defined.</p>
+<p>Header: <strong>&lt;t&gt;</strong>,<strong>&lt;n&gt;</strong>,<strong>[&lt;Pe&gt;|&lt;Me&gt;]</strong>,<strong>&lt;Padd&gt;</strong></p>
+<table>
+<colgroup>
+<col width="14%"></col>
+<col width="11%"></col>
+<col width="9%"></col>
+<col width="64%"></col>
+</colgroup>
+<thead>
+<tr class="header">
+<th align="left">Identifier</th>
+<th align="left">Quantity</th>
+<th align="left">Unit</th>
+<th align="left">Description</th>
+</tr>
+</thead>
+<tbody>
+<tr class="odd">
+<td align="left"><strong>&lt;t&gt;</strong></td>
+<td align="left">Time</td>
+<td align="left">[s]</td>
+<td align="left">The absolute time.</td>
+</tr>
+<tr class="even">
+<td align="left"><strong>&lt;n&gt;</strong></td>
+<td align="left">Engine Speed</td>
+<td align="left">[km/h]</td>
+<td align="left">The engine speed.</td>
+</tr>
+<tr class="odd">
+<td align="left"><strong>&lt;Pe&gt;</strong></td>
+<td align="left">Engine Power</td>
+<td align="left">[kW]</td>
+<td align="left">The power consumption of the engine. (either power or torque must be defined)</td>
+</tr>
+<tr class="even">
+<td align="left"><strong>&lt;Me&gt;</strong></td>
+<td align="left">Engine Torque</td>
+<td align="left">[Nm]</td>
+<td align="left">The torque of the engine. (either power or torque must be defined)</td>
+</tr>
+<tr class="odd">
+<td align="left"><strong>&lt;Padd&gt;</strong></td>
+<td align="left">Additional Aux Power Demand</td>
+<td align="left">[kW]</td>
+<td align="left">This power input will be directly added to the engine power.</td>
+</tr>
+</tbody>
+</table>
 </div>
 </div>
 <div id="acceleration-limiting-input-file-.vacc" class="section level2">
