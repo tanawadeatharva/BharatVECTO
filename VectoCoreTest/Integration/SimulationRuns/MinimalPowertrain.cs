@@ -94,7 +94,7 @@ namespace TUGraz.VectoCore.Tests.Integration.SimulationRuns
 			Assert.AreEqual(2208.664, engine.PreviousState.StationaryFullLoadTorque.Value(), Tolerance);
 			Assert.AreEqual(-158.0261, engine.PreviousState.FullDragTorque.Value(), Tolerance);
 
-			Assert.AreEqual(323.7562, engine.PreviousState.EngineTorque.Value(), Tolerance);
+			Assert.AreEqual(323.6485, engine.PreviousState.EngineTorque.Value(), Tolerance);
 		}
 
 		[TestMethod, TestCategory("LongRunning")]
@@ -147,7 +147,7 @@ namespace TUGraz.VectoCore.Tests.Integration.SimulationRuns
 				response = cyclePort.Request(absTime, ds);
 				response.Switch().
 					Case<ResponseDrivingCycleDistanceExceeded>(r => ds = r.MaxDistance).
-					Case<ResponseCycleFinished>(r => {}).
+					Case<ResponseCycleFinished>(r => { }).
 					Case<ResponseSuccess>(r => {
 						vehicleContainer.CommitSimulationStep(absTime, r.SimulationInterval);
 						absTime += r.SimulationInterval;
