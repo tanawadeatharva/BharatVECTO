@@ -201,7 +201,7 @@ namespace TUGraz.VectoCore.Models.SimulationComponent.Impl
 			if (vAverage.IsEqual(0)) {
 				return 0.SI<Newton>();
 			}
-			var result = ComputeAirDragPowerLoss(PreviousState.Velocity, PreviousState.Velocity + acceleration * dt, dt) /
+			var result = ComputeAirDragPowerLoss(previousVelocity, previousVelocity + acceleration * dt, dt) /
 						vAverage;
 
 			Log.Debug("AirDragResistance: {0}", result);
