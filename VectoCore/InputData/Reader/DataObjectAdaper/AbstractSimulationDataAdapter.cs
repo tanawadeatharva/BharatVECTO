@@ -40,6 +40,7 @@ namespace TUGraz.VectoCore.InputData.Reader.DataObjectAdaper
 				TypeId = data.TypeId,
 				DigestValue = data.DigestValue,
 				IntegrityStatus = data.IntegrityStatus,
+				VehicleCategory = data.VehicleCategory,
 				AxleConfiguration = data.AxleConfiguration,
 				CurbWeight = data.CurbWeight,
 				//CurbWeigthExtra = data.CurbWeightExtra.SI<Kilogram>(),
