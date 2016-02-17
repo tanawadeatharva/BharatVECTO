@@ -190,7 +190,8 @@ namespace TUGraz.VectoCore.Models.SimulationComponent.Impl
 				return new ResponseDryRun {
 					DeltaFullLoad = (CurrentState.EngineTorque - CurrentState.DynamicFullLoadTorque) * avgEngineSpeed,
 					DeltaDragLoad = (CurrentState.EngineTorque - CurrentState.FullDragTorque) * avgEngineSpeed,
-					EnginePowerRequest = CurrentState.EngineTorque * avgEngineSpeed
+					EnginePowerRequest = CurrentState.EngineTorque * avgEngineSpeed,
+					AuxiliariesPowerDemand = auxTorqueDemand * avgEngineSpeed,
 				};
 			}
 
@@ -220,7 +221,8 @@ namespace TUGraz.VectoCore.Models.SimulationComponent.Impl
 					AbsTime = absTime,
 					Delta = delta,
 					EnginePowerRequest = totalTorqueDemand * avgEngineSpeed,
-					Source = this
+					Source = this,
+					AuxiliariesPowerDemand = auxTorqueDemand * avgEngineSpeed,
 				};
 			}
 
@@ -230,13 +232,17 @@ namespace TUGraz.VectoCore.Models.SimulationComponent.Impl
 					AbsTime = absTime,
 					Delta = delta,
 					EnginePowerRequest = totalTorqueDemand * avgEngineSpeed,
-					Source = this
+					Source = this,
+					AuxiliariesPowerDemand = auxTorqueDemand * avgEngineSpeed,
 				};
 			}
 
 			UpdateEngineState(CurrentState.EnginePower, avgEngineSpeed);
 
-			return new ResponseSuccess { EnginePowerRequest = totalTorqueDemand * avgEngineSpeed };
+			return new ResponseSuccess {
+				EnginePowerRequest = totalTorqueDemand * avgEngineSpeed,
+				AuxiliariesPowerDemand = auxTorqueDemand * avgEngineSpeed,
+			};
 		}
 
 		public IResponse Initialize(NewtonMeter torque, PerSecond angularSpeed)
