@@ -190,23 +190,23 @@ namespace TUGraz.VectoCore.Tests.Models.SimulationComponent
 
 			var absTime = 0.SI<Second>();
 
-			var response = driverPort.Request(absTime, 1.SI<Meter>(), 10.SI<MeterPerSecond>(), 0.SI<Radian>());
+			var response = driverPort.Request(absTime, 1.SI<Meter>(), 20.SI<MeterPerSecond>(), 0.SI<Radian>());
 
 			Assert.IsInstanceOfType(response, typeof(ResponseSuccess));
 
 			vehicleContainer.CommitSimulationStep(absTime, response.SimulationInterval);
 			absTime += response.SimulationInterval;
 
-			Assert.AreEqual(0.955, modData.GetValues<SI>(ModalResultField.acc).Last().Value(), Tolerance);
+			Assert.AreEqual(0.9748, modData.GetValues<SI>(ModalResultField.acc).Last().Value(), Tolerance);
 
-			response = driverPort.Request(absTime, 1.SI<Meter>(), 10.SI<MeterPerSecond>(), 0.SI<Radian>());
+			response = driverPort.Request(absTime, 1.SI<Meter>(), 20.SI<MeterPerSecond>(), 0.SI<Radian>());
 
 			Assert.IsInstanceOfType(response, typeof(ResponseSuccess));
 
 			vehicleContainer.CommitSimulationStep(absTime, response.SimulationInterval);
 			absTime += response.SimulationInterval;
 
-			Assert.AreEqual(0.7914, modData.GetValues<SI>(ModalResultField.acc).Last().Value(), Tolerance);
+			Assert.AreEqual(0.78766, modData.GetValues<SI>(ModalResultField.acc).Last().Value(), Tolerance);
 		}
 
 		[TestMethod]
