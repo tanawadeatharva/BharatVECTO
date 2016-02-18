@@ -209,8 +209,8 @@ namespace TUGraz.VectoCore.Models.SimulationComponent.Impl
 			var minTorque = CurrentState.FullDragTorque;
 			var maxTorque = CurrentState.DynamicFullLoadTorque;
 			if (gearboxFullLoad != null) {
-				minTorque = VectoMath.Min(minTorque, -gearboxFullLoad);
-				maxTorque = VectoMath.Max(maxTorque, gearboxFullLoad);
+				minTorque = VectoMath.Max(minTorque, -gearboxFullLoad);
+				maxTorque = VectoMath.Min(maxTorque, gearboxFullLoad);
 			}
 
 			CurrentState.EngineTorque = VectoMath.Limit(totalTorqueDemand, minTorque, maxTorque);
