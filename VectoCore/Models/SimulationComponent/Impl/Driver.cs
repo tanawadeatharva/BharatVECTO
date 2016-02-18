@@ -152,7 +152,7 @@ namespace TUGraz.VectoCore.Models.SimulationComponent.Impl
 				}).
 				Case<ResponseOverload>(). // do nothing, searchOperatingPoint is called later on
 				Case<ResponseUnderload>(r => {
-					// Delta is negative we are already below the Drag-load curve. activate breaks
+					// Delta is negative we are already below the Drag-load curve. activate braks
 					retVal = r; // => return, strategy should brake
 				}).
 				Case<ResponseGearShift>(r => { retVal = r; }).
@@ -180,7 +180,7 @@ namespace TUGraz.VectoCore.Models.SimulationComponent.Impl
 					Case<ResponseUnderload>(() => operatingPoint = limitedOperatingPoint)
 					. // acceleration is limited by driver model, operating point moves below drag curve
 					Case<ResponseOverload>(() => {
-						// deceleration is liited by driver model, operating point moves above full load (e.g., steep uphill)
+						// deceleration is limited by driver model, operating point moves above full load (e.g., steep uphill)
 						// the vehicle/driver can't achieve an acceleration higher than deceleration curve, try again with higher deceleration
 						Log.Warn(
 							"Operating point with limited acceleration resulted in an overload! trying again with original acceleration {0}",
