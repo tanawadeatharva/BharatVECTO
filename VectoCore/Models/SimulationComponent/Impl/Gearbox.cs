@@ -230,10 +230,12 @@ namespace TUGraz.VectoCore.Models.SimulationComponent.Impl
 		{
 			Log.Debug("Current Gear: Neutral");
 
+			var avgAngularVelocity = (PreviousState.OutAngularVelocity + outAngularVelocity) / 2.0;
+
 			if (dryRun) {
 				return new ResponseDryRun {
 					Source = this,
-					GearboxPowerRequest = outTorque * (PreviousState.OutAngularVelocity + outAngularVelocity) / 2.0
+					GearboxPowerRequest = outTorque * avgAngularVelocity
 				};
 			}
 
@@ -247,26 +249,26 @@ namespace TUGraz.VectoCore.Models.SimulationComponent.Impl
 				};
 			}
 
-			if ((outTorque * outAngularVelocity).IsGreater(0.SI<Watt>(), Constants.SimulationSettings.EnginePowerSearchTolerance)) {
+			if ((outTorque * avgAngularVelocity).IsGreater(0.SI<Watt>(), Constants.SimulationSettings.EnginePowerSearchTolerance)) {
 				return new ResponseOverload {
 					Source = this,
-					Delta = outTorque * (PreviousState.OutAngularVelocity + outAngularVelocity) / 2.0,
-					GearboxPowerRequest = outTorque * (PreviousState.OutAngularVelocity + outAngularVelocity) / 2.0
+					Delta = outTorque * avgAngularVelocity,
+					GearboxPowerRequest = outTorque * avgAngularVelocity
 				};
 			}
 
-			if ((outTorque * outAngularVelocity).IsSmaller(0.SI<Watt>(), Constants.SimulationSettings.EnginePowerSearchTolerance)) {
+			if ((outTorque * avgAngularVelocity).IsSmaller(0.SI<Watt>(), Constants.SimulationSettings.EnginePowerSearchTolerance)) {
 				return new ResponseUnderload {
 					Source = this,
-					Delta = outTorque * (PreviousState.OutAngularVelocity + outAngularVelocity) / 2.0,
-					GearboxPowerRequest = outTorque * (PreviousState.OutAngularVelocity + outAngularVelocity) / 2.0
+					Delta = outTorque * avgAngularVelocity,
+					GearboxPowerRequest = outTorque * avgAngularVelocity
 				};
 			}
 
 			CurrentState.SetState(0.SI<NewtonMeter>(), null, outTorque, outAngularVelocity);
 
 			var response = NextComponent.Request(absTime, dt, 0.SI<NewtonMeter>(), null);
-			response.GearboxPowerRequest = outTorque * (PreviousState.OutAngularVelocity + outAngularVelocity) / 2.0;
+			response.GearboxPowerRequest = outTorque * avgAngularVelocity;
 
 			return response;
 		}
