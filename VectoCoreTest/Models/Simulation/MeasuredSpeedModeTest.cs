@@ -279,33 +279,6 @@ namespace TUGraz.VectoCore.Tests.Models.Simulation
 		/// </summary>
 		/// <remarks>VECTO-181</remarks>
 		[TestMethod]
-		public void MeasuredSpeed_Run_Gear()
-		{
-			var jobFile = @"TestData\MeasuredSpeed\MeasuredSpeedGear.vecto";
-			var fileWriter = new FileOutputWriter(jobFile);
-			var sumWriter = new SummaryDataContainer(fileWriter);
-			var jobContainer = new JobContainer(sumWriter);
-
-			var inputData = JSONInputDataFactory.ReadJsonJob(jobFile);
-			var runsFactory = new SimulatorFactory(ExecutionMode.Engineering, inputData, fileWriter);
-
-			jobContainer.AddRuns(runsFactory);
-			jobContainer.Execute();
-
-			jobContainer.WaitFinished();
-
-			Assert.IsTrue(jobContainer.Runs.All(r => r.Success), string.Concat(jobContainer.Runs.Select(r => r.ExecException)));
-
-			Assert.IsTrue(File.Exists(@"TestData\Jobs\MeasuredSpeed_Gear.vsum"));
-			Assert.IsTrue(File.Exists(@"TestData\Jobs\MeasuredSpeed_Gear.vmod"));
-		}
-
-
-		///// <summary>
-		///// Tests if the simulation works and the modfile and sumfile are correct in MeasuredSpeed mode.
-		///// </summary>
-		///// <remarks>VECTO-181</remarks>
-		[TestMethod]
 		public void MeasuredSpeed_Run()
 		{
 			var jobFile = @"TestData\MeasuredSpeed\MeasuredSpeed.vecto";
@@ -324,7 +297,34 @@ namespace TUGraz.VectoCore.Tests.Models.Simulation
 			Assert.IsTrue(jobContainer.Runs.All(r => r.Success), string.Concat(jobContainer.Runs.Select(r => r.ExecException)));
 
 			Assert.IsTrue(File.Exists(@"TestData\Jobs\MeasuredSpeed.vsum"));
-			Assert.IsTrue(File.Exists(@"TestData\Jobs\Measuredspeed.vmod"));
+			Assert.IsTrue(File.Exists(@"TestData\Jobs\MeasuredSpeed.vmod"));
+		}
+
+
+		///// <summary>
+		///// Tests if the simulation works and the modfile and sumfile are correct in MeasuredSpeed mode.
+		///// </summary>
+		///// <remarks>VECTO-181</remarks>
+		[TestMethod]
+		public void MeasuredSpeed_Run_Gear()
+		{
+			var jobFile = @"TestData\MeasuredSpeed\MeasuredSpeedGear.vecto";
+			var fileWriter = new FileOutputWriter(jobFile);
+			var sumWriter = new SummaryDataContainer(fileWriter);
+			var jobContainer = new JobContainer(sumWriter);
+
+			var inputData = JSONInputDataFactory.ReadJsonJob(jobFile);
+			var runsFactory = new SimulatorFactory(ExecutionMode.Engineering, inputData, fileWriter);
+
+			jobContainer.AddRuns(runsFactory);
+			jobContainer.Execute();
+
+			jobContainer.WaitFinished();
+
+			Assert.IsTrue(jobContainer.Runs.All(r => r.Success), string.Concat(jobContainer.Runs.Select(r => r.ExecException)));
+
+			Assert.IsTrue(File.Exists(@"TestData\Jobs\MeasuredSpeed_Gear.vsum"));
+			Assert.IsTrue(File.Exists(@"TestData\Jobs\Measuredspeed_Gear.vmod"));
 
 			Assert.Fail("Implement this test!");
 		}

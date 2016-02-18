@@ -752,6 +752,12 @@ namespace TUGraz.VectoCore.Utils
 			return ((si as SI) / d).Cast<T>();
 		}
 
+		[DebuggerHidden]
+		public static Scalar operator /(SIBase<T> si, SIBase<T> si2)
+		{
+			return ((si as SI) / si2).Cast<Scalar>();
+		}
+
 		#endregion
 	}
 

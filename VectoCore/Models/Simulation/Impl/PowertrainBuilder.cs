@@ -78,7 +78,8 @@ namespace TUGraz.VectoCore.Models.Simulation.Impl
 		private VehicleContainer BuildPWheel(VectoRunData data)
 		{
 			var container = new VehicleContainer(_modData, _sumWriter, ExecutionMode.Engineering);
-			data.GearboxData.Type = GearboxType.PWheel;
+
+			data.GearboxData.Type = GearboxType.DrivingCycle;
 			var gearbox = GetGearbox(container, data.GearboxData);
 
 			var cycle = new PWheelCycle(container, data.Cycle, data.AxleGearData.AxleGear.Ratio, (Gearbox)gearbox);
@@ -104,27 +105,25 @@ namespace TUGraz.VectoCore.Models.Simulation.Impl
 					throw new ArgumentOutOfRangeException();
 			}
 
-			var engine = new CombustionEngine(container, data.EngineData, pt1Disabled: true);
-			var clutch = new PWheelClutch(container, engine.IdleController);
-
 			// gearbox --> clutch
-			tmp = AddComponent(tmp, clutch);
+			tmp = AddComponent(tmp, new MediatorClutch(container));
 
 			// clutch --> engine
-
+			var engine = new CombustionEngine(container, data.EngineData, pt1Disabled: true);
 			AddComponent(tmp, engine);
 
 			// connect aux --> engine		
 			if (data.Aux != null) {
 				engine.Connect(CreateAuxiliaries(data, container).Port());
 			}
-			engine.IdleController.RequestPort = clutch.IdleControlPort;
 
 			return container;
 		}
 
 		private VehicleContainer BuildMeasuredSpeed(VectoRunData data)
 		{
+			Debug.Assert(data.Cycle.CycleType == CycleType.MeasuredSpeed);
+
 			var container = new VehicleContainer(_modData, _sumWriter, ExecutionMode.EngineOnly) { RunData = data };
 			var gearbox = GetGearbox(container, data.GearboxData);
 
@@ -154,7 +153,7 @@ namespace TUGraz.VectoCore.Models.Simulation.Impl
 					throw new ArgumentOutOfRangeException();
 			}
 
-			var engine = new CombustionEngine(container, data.EngineData);
+			var engine = new CombustionEngine(container, data.EngineData, pt1Disabled: true);
 			var clutch = new Clutch(container, data.EngineData, engine.IdleController);
 
 			// gearbox --> clutch
@@ -178,6 +177,9 @@ namespace TUGraz.VectoCore.Models.Simulation.Impl
 			Debug.Assert(data.Cycle.CycleType == CycleType.MeasuredSpeedGear);
 
 			var container = new VehicleContainer(_modData, _sumWriter, ExecutionMode.EngineOnly) { RunData = data };
+
+			data.GearboxData.Type = GearboxType.DrivingCycle;
+
 			var gearbox = GetGearbox(container, data.GearboxData);
 			var cycle = new MeasuredSpeedCycle(container, data.Cycle, (Gearbox)gearbox);
 
@@ -207,21 +209,17 @@ namespace TUGraz.VectoCore.Models.Simulation.Impl
 					throw new ArgumentOutOfRangeException();
 			}
 
-			var engine = new CombustionEngine(container, data.EngineData);
-			var clutch = new Clutch(container, data.EngineData, engine.IdleController);
-
 			// gearbox --> clutch
-			tmp = AddComponent(tmp, clutch);
+			tmp = AddComponent(tmp, new MediatorClutch(container));
 
 			// clutch --> engine			
+			var engine = new CombustionEngine(container, data.EngineData);
 			AddComponent(tmp, engine);
 
 			// connect aux --> engine
 			if (data.Aux != null) {
 				engine.Connect(CreateAuxiliaries(data, container).Port());
 			}
-
-			engine.IdleController.RequestPort = clutch.IdleControlPort;
 
 			return container;
 		}
@@ -323,7 +321,7 @@ namespace TUGraz.VectoCore.Models.Simulation.Impl
 				case GearboxType.Custom:
 					strategy = new CustomShiftStrategy(data, container);
 					break;
-				case GearboxType.PWheel:
+				case GearboxType.DrivingCycle:
 					strategy = new PWheelShiftStrategy(data, container);
 					break;
 				default:

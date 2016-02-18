@@ -20,6 +20,7 @@ using System;
 using System.Collections.Generic;
 using System.ComponentModel.DataAnnotations;
 using System.Data;
+using System.Diagnostics;
 using System.Linq;
 using TUGraz.VectoCore.Configuration;
 using TUGraz.VectoCore.Exceptions;
@@ -208,6 +209,7 @@ namespace TUGraz.VectoCore.Models.SimulationComponent.Data
 			return index + 1;
 		}
 
+		[DebuggerDisplay("n: {EngineSpeed}, fullTorque: {TorqueFullLoad}, dragTorque: {TorqueDrag}")]
 		internal class FullLoadCurveEntry
 		{
 			[Required, SIRange(0, 5000 * Constants.RPMToRad)]

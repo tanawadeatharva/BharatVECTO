@@ -254,7 +254,9 @@ namespace TUGraz.VectoCore.Models.SimulationComponent.Impl
 			if (dryRun) {
 				return new ResponseDryRun {
 					Source = this,
-					GearboxPowerRequest = outTorque * outAngularVelocity
+					GearboxPowerRequest = outTorque * outAngularVelocity,
+					DeltaDragLoad = outTorque * outAngularVelocity,
+					DeltaFullLoad = outTorque * outAngularVelocity,
 				};
 			}
 

@@ -72,6 +72,7 @@ namespace TUGraz.VectoCore.Models.Connector.Ports.Impl
 	/// </summary>
 	public class ResponseOverload : AbstractResponse
 	{
+		public ResponseOverload() {}
 		public Watt Delta { get; set; }
 		public double Gradient { get; set; }
 	}
@@ -79,7 +80,12 @@ namespace TUGraz.VectoCore.Models.Connector.Ports.Impl
 	/// <summary>
 	/// Response when the request resulted in an engine under-load. 
 	/// </summary>
-	public class ResponseUnderload : ResponseOverload {}
+	public class ResponseUnderload : AbstractResponse
+	{
+		public ResponseUnderload() {}
+		public Watt Delta { get; set; }
+		public double Gradient { get; set; }
+	}
 
 	/// <summary>
 	/// Response when the Speed Limit was exceeded.
