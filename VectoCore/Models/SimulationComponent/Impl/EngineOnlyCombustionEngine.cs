@@ -58,7 +58,7 @@ namespace TUGraz.VectoCore.Models.SimulationComponent.Impl
 			var dynamicFullLoadPower = ComputeFullLoadPower(angularVelocity, dt);
 			CurrentState.DynamicFullLoadTorque = dynamicFullLoadPower / avgEngineSpeed;
 
-			ValidatePowerDemand();
+			ValidatePowerDemand(totalTorqueDemand);
 
 			CurrentState.EngineTorque = LimitEnginePower(CurrentState.EngineTorque, avgEngineSpeed, absTime);
 
