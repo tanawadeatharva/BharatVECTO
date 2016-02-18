@@ -367,14 +367,14 @@ namespace TUGraz.VectoCore.Tests.Models.SimulationComponent
 			absTime += dt;
 
 			var engineSpeed = new[] {
-				1680.RPMtoRad(), 1680.RPMtoRad(), 1439.579379.RPMtoRad(), 1225.53858.RPMtoRad(), 1026.674479.RPMtoRad(),
-				834.1940821.RPMtoRad(), 641.136908.RPMtoRad(), 560.RPMtoRad(), 560.RPMtoRad(), 560.RPMtoRad(), 560.RPMtoRad(),
+				1680.RPMtoRad(), 1680.RPMtoRad(), 1424.880146.RPMtoRad(), 1201.792344.RPMtoRad(), 998.69122.RPMtoRad(),
+				805.9864149.RPMtoRad(), 612.5100267.RPMtoRad(), 560.RPMtoRad(), 560.RPMtoRad(), 560.RPMtoRad(), 560.RPMtoRad(),
 				560.RPMtoRad(), 560.RPMtoRad(), 560.RPMtoRad(), 560.RPMtoRad(), 560.RPMtoRad(), 560.RPMtoRad(), 560.RPMtoRad(),
 				560.RPMtoRad()
 			};
 			var enginePower = new[] {
-				5000.SI<Watt>(), 5000.SI<Watt>(), -37333.7880.SI<Watt>(), -27198.3588.SI<Watt>(), -20280.4978.SI<Watt>(),
-				-15216.7820.SI<Watt>(), -11076.6829.SI<Watt>(), -500.8597.SI<Watt>(), 5000.SI<Watt>(), 5000.SI<Watt>(),
+				5000.SI<Watt>(), 5000.SI<Watt>(), -36967.1249.SI<Watt>(), -26488.7680.SI<Watt>(), -19531.9403.SI<Watt>(),
+				-14611.2765.SI<Watt>(), -10490.8989.SI<Watt>(), 1524.8368.SI<Watt>(), 5000.SI<Watt>(), 5000.SI<Watt>(),
 				5000.SI<Watt>(), 5000.SI<Watt>(), 5000.SI<Watt>(), 5000.SI<Watt>(), 5000.SI<Watt>(), 5000.SI<Watt>(),
 				5000.SI<Watt>(), 5000.SI<Watt>(), 5000.SI<Watt>(), 5000.SI<Watt>()
 			};
