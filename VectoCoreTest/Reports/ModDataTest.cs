@@ -18,9 +18,12 @@ namespace TUGraz.VectoCore.Tests.Reports
 		{
 			var cycleData = new[] {
 				// <s>,<v>,<grad>,<stop>
-				"  0,  20, 0,     0",
-				" 100, 60, 0,     0",
-				"1000, 60, 0,     0"
+				"  0,  20, 0,    0",
+				" 100, 60, 0,    0",
+				"1000, 60, 0,    0",
+				"1500, 40, 1,    0",
+				"2000, 50,-1,    0",
+				"2500,  0, 0,    2"
 			};
 			var cycle = SimpleDrivingCycles.CreateCycleData(cycleData);
 			var run = Truck40tPowerTrain.CreateEngineeringRun(cycle, "Truck_ModDataIntegrity.vmod");
@@ -33,49 +36,83 @@ namespace TUGraz.VectoCore.Tests.Reports
 			run.Run();
 			Assert.IsTrue(run.FinishedWithoutErrors);
 
+			var skipNext = false;
 			foreach (DataRow row in modData.Data.Rows) {
+				if (skipNext) {
+					continue;
+				}
 				var time = (Second)row[(int)ModalResultField.time];
 				var distance = (Meter)row[(int)ModalResultField.dist];
-				var torqueEngine = (NewtonMeter)row[(int)ModalResultField.T_eng_fcmap];
-				var engineSpeed = (PerSecond)row[(int)ModalResultField.n_eng_avg];
+				var tqEngFcmap = (NewtonMeter)row[(int)ModalResultField.T_eng_fcmap];
+				var nEngFcMap = (PerSecond)row[(int)ModalResultField.n_eng_avg];
 
 				// check fuel consumption interpolation
 				var fuelConsumption = (SI)row[(int)ModalResultField.FCMap];
 				Assert.AreEqual(fuelConsumption.Value(),
-					engineData.ConsumptionMap.GetFuelConsumption(torqueEngine, engineSpeed).Value(), 1E-3, "time: {0}  distance: {1}",
+					engineData.ConsumptionMap.GetFuelConsumption(tqEngFcmap, nEngFcMap).Value(), 1E-3, "time: {0}  distance: {1}",
 					time, distance);
 
-				// check P_eng_out = T_eng_fcmap * n_eng
-				var enginePower = (SI)row[(int)ModalResultField.P_eng_out];
-				Assert.AreEqual(enginePower.Value(), (torqueEngine * engineSpeed).Value(), 1E-3, "time: {0}  distance: {1}", time,
+				// check P_eng_FCmap = T_eng_fcmap * n_eng
+				var pEngFcmap = (SI)row[(int)ModalResultField.P_eng_fcmap];
+				Assert.AreEqual(pEngFcmap.Value(), (tqEngFcmap * nEngFcMap).Value(), 1E-3, "time: {0}  distance: {1}", time,
 					distance);
 
-				// P_wheel = P_air + P_roll + P_grad + Pa_veh
-				var pWheel = (Watt)row[(int)ModalResultField.P_wheel_in];
+
+				var pWheelIn = (Watt)row[(int)ModalResultField.P_wheel_in];
 				var pAir = (Watt)row[(int)ModalResultField.P_air];
 				var pRoll = (Watt)row[(int)ModalResultField.P_roll];
 				var pGrad = (Watt)row[(int)ModalResultField.P_slope];
-				var paVeh = (Watt)row[(int)ModalResultField.P_veh_inertia];
+				var pVehInertia = (Watt)row[(int)ModalResultField.P_veh_inertia];
+				var pTrac = (Watt)row[(int)ModalResultField.P_trac];
 
-				Assert.AreEqual(pWheel.Value(), (pAir + pRoll + pGrad + paVeh).Value(), 1E-3, "time: {0}  distance: {1}", time,
-					distance);
 
 				// Pe_﻿eng = P﻿_wheel + P_loss﻿gearbox + P_loss﻿axle + P_loss﻿retarder + P_a﻿gbx + Pa_﻿eng + P_aux - P_brake_loss
-				var peEng = (Watt)row[(int)ModalResultField.P_eng_out];
+				var pEngOut = (Watt)row[(int)ModalResultField.P_eng_out];
 				var pLossGbx = (Watt)row[(int)ModalResultField.P_gbx_loss];
+				var pGbxIn = (Watt)row[(int)ModalResultField.P_gbx_in];
 				var pLossAxle = (Watt)row[(int)ModalResultField.P_axle_loss];
+				var pAxleIn = (Watt)row[(int)ModalResultField.P_axle_in];
 				var pLossRet = (Watt)row[(int)ModalResultField.P_ret_loss];
-				var paGbx = (Watt)row[(int)ModalResultField.P_gbx_inertia];
-				var paEng = (Watt)row[(int)ModalResultField.P_eng_inertia];
+				var pRetIn = (Watt)row[(int)ModalResultField.P_retarder_in];
+				var pGbxInertia = (Watt)row[(int)ModalResultField.P_gbx_inertia];
+				var pEngInertia = (Watt)row[(int)ModalResultField.P_eng_inertia];
 				var pAux = (Watt)row[(int)ModalResultField.P_aux];
-				var pBrake = (Watt)row[(int)ModalResultField.P_brake_loss];
-
+				var pBrakeLoss = (Watt)row[(int)ModalResultField.P_brake_loss];
+				var pBrakeIn = (Watt)row[(int)ModalResultField.P_brake_in];
+				var pClutchLoss = (Watt)row[(int)ModalResultField.P_clutch_loss];
+				var pClutchOut = (Watt)row[(int)ModalResultField.P_clutch_out];
+				var pWheelInertia = (Watt)row[(int)ModalResultField.P_wheel_inertia];
 				var gear = (uint)row[(int)ModalResultField.Gear];
 
+				// P_trac = P_veh_inertia + P_roll + P_air + P_slope
+				Assert.AreEqual(pTrac.Value(), (pAir + pRoll + pGrad + pVehInertia).Value(), 1E-3, "time: {0}  distance: {1}", time,
+					distance);
+
+				// P_wheel_in = P_trac + P_wheel_inertia
+				Assert.AreEqual(pWheelIn.Value(), (pTrac + pWheelInertia).Value(), 1E-3, "time: {0}  distance: {1}", time, distance);
+
+				Assert.AreEqual(pBrakeIn.Value(), (pWheelIn + pBrakeLoss).Value(), 1E-3, "time: {0}  distance: {1}", time, distance);
+
+				Assert.AreEqual(pAxleIn.Value(), (pBrakeIn + pLossAxle).Value(), 1E-3, "time: {0}  distance: {1}", time, distance);
+
+				Assert.AreEqual(pRetIn.Value(), (pAxleIn + pLossRet).Value(), 1E-3, "time: {0}  distance: {1}", time, distance);
+
+				Assert.AreEqual(pGbxIn.Value(), (pRetIn + pLossGbx + pGbxInertia).Value(), gear != 0 ? 1E-3 : 0.5,
+					"time: {0}  distance: {1}", time,
+					distance);
+
+				Assert.AreEqual(pGbxIn.Value(), pClutchOut.Value(), 1E-3, "time: {0}  distance: {1}", time, distance);
+
+				Assert.AreEqual(pEngOut.Value(), (pClutchOut + pClutchLoss).Value(), 1E-3,
+					"time: {0}  distance: {1}", time, distance);
+
 				if (gear != 0) {
-					Assert.AreEqual(peEng.Value(), (pWheel + pLossGbx + pLossAxle + pLossRet + paGbx + paEng + pAux - pBrake).Value(),
-						1E-3, "time: {0}  distance: {1}", time, distance);
+					Assert.AreEqual(pEngFcmap.Value(),
+						(pTrac + pWheelInertia + pBrakeLoss + pLossAxle + pLossRet + pLossGbx + pGbxInertia + pEngInertia + pAux +
+						pClutchLoss)
+							.Value(), 1E-3, "time: {0}  distance: {1}", time, distance);
 				}
+				skipNext = gear == 0;
 			}
 		}
 	}
