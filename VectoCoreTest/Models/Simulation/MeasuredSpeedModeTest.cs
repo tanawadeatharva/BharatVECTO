@@ -21,6 +21,7 @@ using System.Data;
 using System.Linq;
 using TUGraz.VectoCore.Utils;
 using System.Collections.Generic;
+using System.Net.Cache;
 using TUGraz.VectoCore.OutputData;
 using TUGraz.VectoCore.InputData.Reader;
 using TUGraz.VectoCore.OutputData.FileIO;
@@ -147,14 +148,6 @@ namespace TUGraz.VectoCore.Tests.Models.Simulation
 		private static void TestCycleRead(string inputData, CycleType cycleType, bool autoCycle = true)
 		{
 			var container = new VehicleContainer();
-			var gearbox = new Gearbox(container,
-				new GearboxData {
-					Gears = new Dictionary<uint, GearData> {
-						{ 1, new GearData { Ratio = 6.696 } },
-						{ 2, new GearData { Ratio = 3.806 } },
-						{ 3, new GearData { Ratio = 2.289 } }
-					}
-				}, new PWheelShiftStrategy(null, container));
 
 			if (autoCycle) {
 				var cycleTypeCalc = DrivingCycleDataReader.GetCycleType(VectoCSVFile.ReadStream(inputData.GetStream()));
@@ -163,7 +156,19 @@ namespace TUGraz.VectoCore.Tests.Models.Simulation
 			var drivingCycle = DrivingCycleDataReader.ReadFromStream(inputData.GetStream(), cycleType);
 			Assert.AreEqual(cycleType, drivingCycle.CycleType);
 
-			var cycle = new MeasuredSpeedCycle(container, drivingCycle, gearbox);
+			if (cycleType == CycleType.MeasuredSpeed) {
+				var cycle = new MeasuredSpeedDrivingCycle(container, drivingCycle);
+			} else {
+				var gearbox = new Gearbox(container,
+					new GearboxData {
+						Gears = new Dictionary<uint, GearData> {
+							{ 1, new GearData { Ratio = 6.696 } },
+							{ 2, new GearData { Ratio = 3.806 } },
+							{ 3, new GearData { Ratio = 2.289 } }
+						}
+					}, new PWheelShiftStrategy(null, container));
+				var cycle = new MeasuredSpeedGearCycle(container, drivingCycle, gearbox);
+			}
 		}
 
 
@@ -296,8 +301,8 @@ namespace TUGraz.VectoCore.Tests.Models.Simulation
 
 			Assert.IsTrue(jobContainer.Runs.All(r => r.Success), string.Concat(jobContainer.Runs.Select(r => r.ExecException)));
 
-			Assert.IsTrue(File.Exists(@"TestData\Jobs\MeasuredSpeed.vsum"));
-			Assert.IsTrue(File.Exists(@"TestData\Jobs\MeasuredSpeed.vmod"));
+			Assert.IsTrue(File.Exists(@"TestData\Jobs\MeasuredSpeed_MeasuredSpeed.vmod"), "Mod file not found.");
+			Assert.IsTrue(File.Exists(@"TestData\Jobs\MeasuredSpeed.vsum"), "Sum file not found.");
 		}
 
 

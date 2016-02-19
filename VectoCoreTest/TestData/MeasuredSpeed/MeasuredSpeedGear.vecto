@@ -12,9 +12,7 @@
     "EngineFile": "Engine.veng",
     "GearboxFile": "Gearbox.vgbx",
     "Cycles": [
-      "MeasuredSpeed_Gear_Motorway.vdri",
-      "MeasuredSpeed_Gear_Rural.vdri",
-      "MeasuredSpeed_Gear_Urban.vdri"
+      "MeasuredSpeed_Gear_Motorway.vdri"
     ],
     "Aux": [
       {
