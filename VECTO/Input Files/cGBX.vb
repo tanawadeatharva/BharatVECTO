@@ -467,7 +467,7 @@ Public Class cGBX
             nuMax = Math.Min(TCnu(TCdim), nUout / ENG.Nidle)
 
         Else
-            nuMin = Math.Max(nUout / FLD(Gear).N95h, TCnu(0))
+            nuMin = Math.Max(nUout / DEV.TClimit, TCnu(0))
             nuMax = Math.Min(TCnuMax, nUout / ENG.Nidle)
         End If
 
@@ -477,7 +477,7 @@ Public Class cGBX
         End If
 
         'Reduce step size if nu-range is too low
-        Do While (nuMax - nuMin) / nuStep < 10
+        Do While (nuMax - nuMin) / nuStep < 10 And nuStep > 0.00001
             nuStep *= 0.1
         Loop
 
