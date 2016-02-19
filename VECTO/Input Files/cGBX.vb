@@ -66,6 +66,8 @@ Public Class cGBX
     Public TCnUout As Single
     Public TCReduce As Boolean
     Public TCNeutral As Boolean
+    Public TC_mu As Single
+    Public TC_nu As Single
     Private TCnuMax As Single
 
 
@@ -465,9 +467,19 @@ Public Class cGBX
             nuMax = Math.Min(TCnu(TCdim), nUout / ENG.Nidle)
 
         Else
-            nuMin = Math.Max(nUout / ENG.Nrated, TCnu(0))
+            nuMin = Math.Max(nUout / FLD(Gear).N95h, TCnu(0))
             nuMax = Math.Min(TCnuMax, nUout / ENG.Nidle)
         End If
+
+        If nuMax <= nuMin Then
+            TCReduce = True
+            Return True
+        End If
+
+        'Reduce step size if nu-range is too low
+        Do While (nuMax - nuMin) / nuStep < 10
+            nuStep *= 0.1
+        Loop
 
         FirstDone = False
         nu = nuMin - nuStep
@@ -539,7 +551,7 @@ Public Class cGBX
             'Min
             Min = Mout / mu
 
-            'Correct Min if too high
+            'Check if Min is too high
             If Min > MinMax Then Continue Do
 
             'Calculated output torque for given mu
@@ -616,6 +628,9 @@ Public Class cGBX
         TCMout = fTCtorque(nu, TCnUin) * mu
         TCMin = TCMout / mu
         TCnUout = nUout
+
+        TC_mu = mu
+        TC_nu = nu
 
         If Brake Then TC_PeBrake = nMtoPe(TCnUout, Mout - TCMout)
 
