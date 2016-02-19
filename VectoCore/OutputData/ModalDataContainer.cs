@@ -19,9 +19,7 @@
 using System;
 using System.Collections.Generic;
 using System.Data;
-using System.IO;
 using System.Linq;
-using TUGraz.VectoCore.Models.Simulation;
 using TUGraz.VectoCore.Models.Simulation.Data;
 using TUGraz.VectoCore.Models.Simulation.Impl;
 using TUGraz.VectoCore.Utils;
@@ -32,7 +30,7 @@ namespace TUGraz.VectoCore.OutputData
 	{
 		private readonly ExecutionMode _mode;
 		private readonly Action<ModalDataContainer> _addReportResult;
-		private ModalResults Data { get; set; }
+		internal ModalResults Data { get; set; }
 		private DataRow CurrentRow { get; set; }
 		//private readonly VectoRunData _runData;
 
@@ -47,7 +45,7 @@ namespace TUGraz.VectoCore.OutputData
 
 		public ModalDataContainer(string runName, IModalDataWriter writer,
 			ExecutionMode mode = ExecutionMode.Engineering)
-			: this(runName, "", "", writer, _ => {}, mode) {}
+			: this(runName, "", "", writer, _ => { }, mode) {}
 
 		public ModalDataContainer(VectoRunData runData, IModalDataWriter writer, Action<ModalDataContainer> addReportResult,
 			ExecutionMode mode = ExecutionMode.Engineering)
@@ -95,34 +93,44 @@ namespace TUGraz.VectoCore.OutputData
 					ModalResultField.grad
 				});
 			}
-
+			if (_mode != ExecutionMode.EngineOnly) {
+				dataColumns.AddRange(new[] {
+					ModalResultField.Gear,
+				});
+			}
 			dataColumns.AddRange(new[] {
-				ModalResultField.n,
-				ModalResultField.Tq_eng,
-				ModalResultField.Tq_clutch,
+				ModalResultField.n_eng_avg,
+				ModalResultField.T_eng_fcmap,
 				ModalResultField.Tq_full,
 				ModalResultField.Tq_drag,
-				ModalResultField.Pe_eng,
-				ModalResultField.Pe_full,
-				ModalResultField.Pe_drag,
-				ModalResultField.Pe_clutch,
-				ModalResultField.PaEng,
-				ModalResultField.Paux
+				ModalResultField.P_eng_fcmap,
+				ModalResultField.P_eng_full,
+				ModalResultField.P_eng_drag,
+				ModalResultField.P_eng_inertia,
+				ModalResultField.P_eng_out,
+				ModalResultField.P_clutch_loss,
+				ModalResultField.P_clutch_out,
+				ModalResultField.P_aux
 			});
 
 			if (_mode != ExecutionMode.EngineOnly) {
 				dataColumns.AddRange(new[] {
-					ModalResultField.Gear,
-					ModalResultField.PlossGB,
-					ModalResultField.PlossDiff,
-					ModalResultField.PlossRetarder,
-					ModalResultField.PaGB,
-					ModalResultField.PaVeh,
-					ModalResultField.Proll,
-					ModalResultField.Pair,
-					ModalResultField.Pgrad,
-					ModalResultField.Pwheel,
-					ModalResultField.Pbrake
+					ModalResultField.P_gbx_in,
+					ModalResultField.P_gbx_loss,
+					ModalResultField.P_gbx_inertia,
+					ModalResultField.P_retarder_in,
+					ModalResultField.P_ret_loss,
+					ModalResultField.P_axle_in,
+					ModalResultField.P_axle_loss,
+					ModalResultField.P_brake_in,
+					ModalResultField.P_brake_loss,
+					ModalResultField.P_wheel_in,
+					ModalResultField.P_wheel_inertia,
+					ModalResultField.P_trac,
+					ModalResultField.P_slope,
+					ModalResultField.P_air,
+					ModalResultField.P_roll,
+					ModalResultField.P_veh_inertia,
 				});
 
 				if (HasTorqueConverter) {
@@ -179,13 +187,13 @@ namespace TUGraz.VectoCore.OutputData
 		{
 			if (!string.IsNullOrWhiteSpace(id)) {
 				if (!Auxiliaries.ContainsKey(id)) {
-					var col = Data.Columns.Add(ModalResultField.Paux_ + id, typeof(SI));
+					var col = Data.Columns.Add(ModalResultField.P_aux_ + id, typeof(SI));
 					col.ExtendedProperties[ModalResults.ExtendedPropertyNames.Decimals] =
-						ModalResultField.Paux_.GetAttribute().Decimals;
+						ModalResultField.P_aux_.GetAttribute().Decimals;
 					col.ExtendedProperties[ModalResults.ExtendedPropertyNames.OutputFactor] =
-						ModalResultField.Paux_.GetAttribute().OutputFactor;
+						ModalResultField.P_aux_.GetAttribute().OutputFactor;
 					col.ExtendedProperties[ModalResults.ExtendedPropertyNames.ShowUnit] =
-						ModalResultField.Paux_.GetAttribute().ShowUnit;
+						ModalResultField.P_aux_.GetAttribute().ShowUnit;
 
 					Auxiliaries[id] = col;
 				}

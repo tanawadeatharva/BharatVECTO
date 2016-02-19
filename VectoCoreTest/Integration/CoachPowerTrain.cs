@@ -56,7 +56,7 @@ namespace TUGraz.VectoCore.Tests.Integration
 		{
 			var fileWriter = new FileOutputWriter(modFileName, "");
 			var modData = new ModalDataContainer(modFileName, fileWriter);
-			var container = new VehicleContainer(modData);
+			var container = new VehicleContainer(modData, null, ExecutionMode.Engineering);
 
 			var engineData = MockSimulationDataFactory.CreateEngineDataFromFile(EngineFile);
 			var axleGearData = CreateAxleGearData();
@@ -76,6 +76,7 @@ namespace TUGraz.VectoCore.Tests.Integration
 			tmp = Port.AddComponent(tmp, new AxleGear(container, axleGearData));
 			tmp = Port.AddComponent(tmp,
 				new Gearbox(container, gearboxData, new AMTShiftStrategy(gearboxData, container)));
+			tmp = Port.AddComponent(tmp, new DummyRetarder(container));
 			tmp = Port.AddComponent(tmp, clutch);
 
 			var aux = new EngineAuxiliary(container);

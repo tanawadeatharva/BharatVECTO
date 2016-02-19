@@ -17,6 +17,7 @@
 */
 
 using System.IO;
+using System.Linq;
 using Microsoft.VisualStudio.TestTools.UnitTesting;
 using TUGraz.VectoCore.Configuration;
 using TUGraz.VectoCore.InputData.Reader;
@@ -65,6 +66,7 @@ namespace TUGraz.VectoCore.Tests.Integration.EngineOnlyCycle
 			var fileWriter = new FileOutputWriter(modFile, "");
 			var modData = new ModalDataContainer(modFile, fileWriter, ExecutionMode.EngineOnly);
 
+			port.Initialize(data.Entries.First().Torque, data.Entries.First().AngularVelocity);
 			foreach (var cycleEntry in data.Entries) {
 				var response = port.Request(absTime, dt, cycleEntry.Torque, cycleEntry.AngularVelocity);
 				Assert.IsInstanceOfType(response, typeof(ResponseSuccess));
@@ -97,6 +99,7 @@ namespace TUGraz.VectoCore.Tests.Integration.EngineOnlyCycle
 			var angularVelocity = 644.4445.RPMtoRad();
 			var power = 2329.973.SI<Watt>();
 
+			engine.OutPort().Initialize(power / angularVelocity, angularVelocity);
 			engine.OutPort().Request(absTime, dt, power / angularVelocity, angularVelocity);
 
 			foreach (var sc in vehicleContainer.SimulationComponents()) {

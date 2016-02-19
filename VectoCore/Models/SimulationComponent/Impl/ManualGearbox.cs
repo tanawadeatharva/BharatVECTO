@@ -137,8 +137,8 @@ namespace TUGraz.VectoCore.Models.SimulationComponent.Impl
 		protected override void DoWriteModalResults(IModalDataContainer container)
 		{
 			container[ModalResultField.Gear] = Gear;
-			container[ModalResultField.PlossGB] = PowerLoss;
-			container[ModalResultField.PaGB] = PowerLossInertia;
+			container[ModalResultField.P_gbx_loss] = PowerLoss;
+			container[ModalResultField.P_gbx_inertia] = PowerLossInertia;
 		}
 
 

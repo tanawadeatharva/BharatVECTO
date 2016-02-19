@@ -66,8 +66,21 @@ namespace TUGraz.VectoCore.Models.Connector.Ports
 	{
 		IResponse Request(Second absTime, Second dt, MeterPerSquareSecond acceleration, Radian gradient, bool dryRun = false);
 
+		/// <summary>
+		/// Initialize the powertrain component to drive at the given steady state
+		/// </summary>
+		/// <param name="vehicleSpeed"></param>
+		/// <param name="roadGradient"></param>
+		/// <returns></returns>
 		IResponse Initialize(MeterPerSecond vehicleSpeed, Radian roadGradient);
 
+		/// <summary>
+		/// Pre-Initialize the powertrain when the vehicle is stopped with an assumed start acceleration to find correct drive-off gear
+		/// </summary>
+		/// <param name="vehicleSpeed"></param>
+		/// <param name="startAcceleration"></param>
+		/// <param name="roadGradient"></param>
+		/// <returns></returns>
 		IResponse Initialize(MeterPerSecond vehicleSpeed, Radian roadGradient, MeterPerSquareSecond startAcceleration);
 	}
 }

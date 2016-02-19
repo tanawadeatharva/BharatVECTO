@@ -61,7 +61,7 @@ namespace TUGraz.VectoCore.Models.SimulationComponent.Impl
 					container[kv.Key] = kv.Value;
 				}
 			}
-			container[ModalResultField.Paux] = sum;
+			container[ModalResultField.P_aux] = sum;
 		}
 
 		protected override void DoCommitSimulationStep()

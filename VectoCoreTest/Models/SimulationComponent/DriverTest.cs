@@ -84,7 +84,7 @@ namespace TUGraz.VectoCore.Tests.Models.SimulationComponent
 
 			Assert.AreEqual(4.9812, vehicleContainer.VehicleSpeed.Value(), Tolerance);
 			Assert.AreEqual(0.2004, response.SimulationInterval.Value(), Tolerance);
-			Assert.AreEqual(engine.PreviousState.FullDragPower.Value(), engine.PreviousState.EnginePower.Value(),
+			Assert.AreEqual(engine.PreviousState.FullDragTorque.Value(), engine.PreviousState.EngineTorque.Value(),
 				Constants.SimulationSettings.EnginePowerSearchTolerance.Value());
 
 			while (vehicleContainer.VehicleSpeed > 1) {
@@ -142,7 +142,7 @@ namespace TUGraz.VectoCore.Tests.Models.SimulationComponent
 
 			Assert.AreEqual(4.9812, vehicleContainer.VehicleSpeed.Value(), Tolerance);
 			Assert.AreEqual(0.2004, response.SimulationInterval.Value(), Tolerance);
-			Assert.AreEqual(engine.PreviousState.FullDragPower.Value(), engine.PreviousState.EnginePower.Value(),
+			Assert.AreEqual(engine.PreviousState.FullDragTorque.Value(), engine.PreviousState.EngineTorque.Value(),
 				Constants.SimulationSettings.EnginePowerSearchTolerance.Value());
 
 			while (vehicleContainer.VehicleSpeed > 1) {
@@ -190,23 +190,23 @@ namespace TUGraz.VectoCore.Tests.Models.SimulationComponent
 
 			var absTime = 0.SI<Second>();
 
-			var response = driverPort.Request(absTime, 1.SI<Meter>(), 10.SI<MeterPerSecond>(), 0.SI<Radian>());
+			var response = driverPort.Request(absTime, 1.SI<Meter>(), 20.SI<MeterPerSecond>(), 0.SI<Radian>());
 
 			Assert.IsInstanceOfType(response, typeof(ResponseSuccess));
 
 			vehicleContainer.CommitSimulationStep(absTime, response.SimulationInterval);
 			absTime += response.SimulationInterval;
 
-			Assert.AreEqual(0.955, modData.GetValues<SI>(ModalResultField.acc).Last().Value(), Tolerance);
+			Assert.AreEqual(0.9748, modData.GetValues<SI>(ModalResultField.acc).Last().Value(), Tolerance);
 
-			response = driverPort.Request(absTime, 1.SI<Meter>(), 10.SI<MeterPerSecond>(), 0.SI<Radian>());
+			response = driverPort.Request(absTime, 1.SI<Meter>(), 20.SI<MeterPerSecond>(), 0.SI<Radian>());
 
 			Assert.IsInstanceOfType(response, typeof(ResponseSuccess));
 
 			vehicleContainer.CommitSimulationStep(absTime, response.SimulationInterval);
 			absTime += response.SimulationInterval;
 
-			Assert.AreEqual(0.7914, modData.GetValues<SI>(ModalResultField.acc).Last().Value(), Tolerance);
+			Assert.AreEqual(0.78766, modData.GetValues<SI>(ModalResultField.acc).Last().Value(), Tolerance);
 		}
 
 		[TestMethod]

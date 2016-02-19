@@ -17,12 +17,13 @@
 */
 
 using System;
-using System.CodeDom;
 using System.ComponentModel;
 using System.Data;
 using System.Reflection;
 using TUGraz.VectoCore.Exceptions;
 using TUGraz.VectoCore.Utils;
+
+// ReSharper disable InconsistentNaming
 
 namespace TUGraz.VectoCore.Models.Simulation.Data
 {
@@ -68,7 +69,8 @@ namespace TUGraz.VectoCore.Models.Simulation.Data
 							continue;
 						}
 
-						if (col.ColumnName.StartsWith(ModalResultField.Paux_.ToString()) && !modalResults.Columns.Contains(col.ColumnName)) {
+						if (col.ColumnName.StartsWith(ModalResultField.P_aux_.ToString()) &&
+							!modalResults.Columns.Contains(col.ColumnName)) {
 							modalResults.Columns.Add(col.ColumnName, typeof(SI));
 						}
 
@@ -112,17 +114,12 @@ namespace TUGraz.VectoCore.Models.Simulation.Data
 		/// <summary>
 		///     Engine speed [1/min].
 		/// </summary>
-		[ModalResultField(typeof(SI), caption: "n [1/min]", outputFactor: 60 / (2 * Math.PI))] n,
+		[ModalResultField(typeof(SI), caption: "n_eng_avg [1/min]", outputFactor: 60 / (2 * Math.PI))] n_eng_avg,
 
 		/// <summary>
 		///     [Nm]	Engine torque.
 		/// </summary>
-		[ModalResultField(typeof(SI), caption: "Tq_eng [Nm]")] Tq_eng,
-
-		/// <summary>
-		///     [Nm]	Torque at clutch (before clutch, engine-side)
-		/// </summary>
-		[ModalResultField(typeof(SI), caption: "Tq_clutch [Nm]")] Tq_clutch,
+		[ModalResultField(typeof(SI), caption: "T_eng_fcmap [Nm]")] T_eng_fcmap,
 
 		/// <summary>
 		///     [Nm]	Full load torque
@@ -137,32 +134,32 @@ namespace TUGraz.VectoCore.Models.Simulation.Data
 		/// <summary>
 		///     [kW]	Engine power.
 		/// </summary>
-		[ModalResultField(typeof(SI), caption: "Pe_eng [kW]", outputFactor: 1e-3)] Pe_eng,
+		[ModalResultField(typeof(SI), caption: "P_eng_out [kW]", outputFactor: 1e-3)] P_eng_out,
 
 		/// <summary>
 		///     [kW]	Engine full load power.
 		/// </summary>
-		[ModalResultField(typeof(SI), caption: "Pe_full [kW]", outputFactor: 1e-3)] Pe_full,
+		[ModalResultField(typeof(SI), caption: "P_eng_full [kW]", outputFactor: 1e-3)] P_eng_full,
 
 		/// <summary>
 		///     [kW]	Engine drag power.
 		/// </summary>
-		[ModalResultField(typeof(SI), caption: "Pe_drag [kW]", outputFactor: 1e-3)] Pe_drag,
+		[ModalResultField(typeof(SI), caption: "P_eng_drag [kW]", outputFactor: 1e-3)] P_eng_drag,
 
 		/// <summary>
 		///     [kW]	Engine power at clutch (equals Pe minus loss due to rotational inertia Pa Eng).
 		/// </summary>
-		[ModalResultField(typeof(SI), caption: "Pe_clutch [kW]", outputFactor: 1e-3)] Pe_clutch,
+		[ModalResultField(typeof(SI), caption: "P_clutch_out [kW]", outputFactor: 1e-3)] P_clutch_out,
 
 		/// <summary>
 		///     [kW]	Rotational acceleration power: Engine.
 		/// </summary>
-		[ModalResultField(typeof(SI), name: "Pa Eng", caption: "Pa Eng [kW]", outputFactor: 1e-3)] PaEng,
+		[ModalResultField(typeof(SI), name: "P_eng_inertia", caption: "P_eng_inertia [kW]", outputFactor: 1e-3)] P_eng_inertia,
 
 		/// <summary>
 		///     [kW]	Total auxiliary power demand .
 		/// </summary>
-		[ModalResultField(typeof(SI), caption: "Paux [kW]", outputFactor: 1e-3)] Paux,
+		[ModalResultField(typeof(SI), caption: "P_aux [kW]", outputFactor: 1e-3)] P_aux,
 
 		/// <summary>
 		///     [g/h]	Fuel consumption from FC map..
@@ -213,57 +210,74 @@ namespace TUGraz.VectoCore.Models.Simulation.Data
 		/// <summary>
 		///     [kW]	Gearbox losses.
 		/// </summary>
-		[ModalResultField(typeof(SI), name: "Ploss GB", caption: "Ploss GB [kW]", outputFactor: 1e-3)] PlossGB,
+		[ModalResultField(typeof(SI), name: "Ploss GB", caption: "P_gbx_loss GB [kW]", outputFactor: 1e-3)] P_gbx_loss,
 
 		/// <summary>
 		///     [kW]	Losses in differential / axle transmission.
 		/// </summary>
-		[ModalResultField(typeof(SI), name: "Ploss Diff", caption: "Ploss Diff [kW]", outputFactor: 1e-3)] PlossDiff,
+		[ModalResultField(typeof(SI), name: "Ploss Diff", caption: "P_axle_loss [kW]", outputFactor: 1e-3)] P_axle_loss,
 
 		/// <summary>
 		///     [kW]	Retarder losses.
 		/// </summary>
-		[ModalResultField(typeof(SI), name: "Ploss Retarder", caption: "Ploss Retarder [kW]", outputFactor: 1e-3)] PlossRetarder,
+		[ModalResultField(typeof(SI), name: "Ploss Retarder", caption: "Ploss Retarder [kW]", outputFactor: 1e-3)] P_ret_loss,
 
 		/// <summary>
 		///     [kW]	Rotational acceleration power: Gearbox.
 		/// </summary>
-		[ModalResultField(typeof(SI), name: "Pa GB", caption: "Pa GB [kW]", outputFactor: 1e-3)] PaGB,
+		[ModalResultField(typeof(SI), name: "Pa GB", caption: "Pa GB [kW]", outputFactor: 1e-3)] P_gbx_inertia,
 
 		/// <summary>
 		///     [kW]	Vehicle acceleration power.
 		/// </summary>
-		[ModalResultField(typeof(SI), name: "Pa Veh", caption: "Pa Veh [kW]", outputFactor: 1e-3)] PaVeh,
+		[ModalResultField(typeof(SI), name: "Pa Veh", caption: "Pa Veh [kW]", outputFactor: 1e-3)] P_veh_inertia,
 
 		/// <summary>
 		///     [kW]	Rolling resistance power demand.
 		/// </summary>
-		[ModalResultField(typeof(SI), caption: "Proll [kW]", outputFactor: 1e-3)] Proll,
+		[ModalResultField(typeof(SI), caption: "P_roll [kW]", outputFactor: 1e-3)] P_roll,
 
 		/// <summary>
 		///     [kW]	Air resistance power demand.
 		/// </summary>
-		[ModalResultField(typeof(SI), caption: "Pair [kW]", outputFactor: 1e-3)] Pair,
+		[ModalResultField(typeof(SI), caption: "P_air [kW]", outputFactor: 1e-3)] P_air,
 
 		/// <summary>
 		///     [kW]	Power demand due to road gradient.
 		/// </summary>
-		[ModalResultField(typeof(SI), caption: "Pgrad [kW]", outputFactor: 1e-3)] Pgrad,
+		[ModalResultField(typeof(SI), caption: "P_slope [kW]", outputFactor: 1e-3)] P_slope,
 
 		/// <summary>
 		///     [kW]	Total power demand at wheel = sum of rolling, air, acceleration and road gradient resistance.
 		/// </summary>
-		[ModalResultField(typeof(SI), caption: "Pwheel [kW]", outputFactor: 1e-3)] Pwheel,
+		[ModalResultField(typeof(SI), caption: "P_wheel_in [kW]", outputFactor: 1e-3)] P_wheel_in,
 
 		/// <summary>
 		///     [kW]	Brake power. Drag power is included in Pe.
 		/// </summary>
-		[ModalResultField(typeof(SI), caption: "Pbrake [kW]", outputFactor: 1e-3)] Pbrake,
+		[ModalResultField(typeof(SI), caption: "P_brake_loss [kW]", outputFactor: 1e-3)] P_brake_loss,
+
+		[ModalResultField(typeof(SI), caption: "P_wheel_inertia [kW]", outputFactor: 1e-3)] P_wheel_inertia,
+
+		[ModalResultField(typeof(SI), caption: "P_brake_in [kW]", outputFactor: 1e-3)] P_brake_in,
+
+		[ModalResultField(typeof(SI), caption: "P_axle_in [kW]", outputFactor: 1e-3)] P_axle_in,
+
+		[ModalResultField(typeof(SI), caption: "P_ret_in [kW]", outputFactor: 1e-3)] P_retarder_in,
+
+		[ModalResultField(typeof(SI), caption: "P_gbx_in [kW]", outputFactor: 1e-3)] P_gbx_in,
+
+		[ModalResultField(typeof(SI), caption: "P_clutch_loss [kW]", outputFactor: 1e-3)] P_clutch_loss,
+
+		[ModalResultField(typeof(SI), caption: "P_trac [kW]", outputFactor: 1e-3)] P_trac,
+
+		[ModalResultField(typeof(SI), caption: "P_eng_fcmap [kW]", outputFactor: 1e-3)] P_eng_fcmap,
+
 
 		/// <summary>
 		///     [kW]	Power demand of Auxiliary with ID xxx. See also Aux Dialog and Driving Cycle.
 		/// </summary>
-		[ModalResultField(typeof(SI), outputFactor: 1e-3)] Paux_,
+		[ModalResultField(typeof(SI), outputFactor: 1e-3)] P_aux_,
 
 		/// <summary>
 		///     [-]	    Torque converter speed ratio

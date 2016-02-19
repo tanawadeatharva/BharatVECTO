@@ -123,7 +123,7 @@ namespace TUGraz.VectoCore.Tests.Models.SimulationComponentData
 
 			// every field and property should be tested except private parent fields and properties and 
 			// (4*4+1) * 2 = 17*2= 34 - 4 private parent fields (+2 public field and property which are tested twice) = 32
-			Assert.AreEqual(32, results.Count, "Validation Error: " + string.Join("\n", results.Select(r => r.ErrorMessage)));
+			Assert.AreEqual(32, results.Count, "Validation Error: " + string.Join("\n_eng_avg", results.Select(r => r.ErrorMessage)));
 		}
 
 

@@ -47,6 +47,8 @@ namespace TUGraz.VectoCore.Models.Connector.Ports
 
 		Watt BrakePower { get; set; }
 
+		PerSecond EngineSpeed { get; set; }
+
 		Second AbsTime { get; set; }
 	}
 }

@@ -130,6 +130,12 @@ namespace TUGraz.VectoCore.Utils
 		{
 			return SIBase<Watt>.Create(newton.Val * meterPerSecond.Value());
 		}
+
+		[DebuggerHidden]
+		public static Watt operator *(MeterPerSecond meterPerSecond, Newton newton)
+		{
+			return SIBase<Watt>.Create(newton.Val * meterPerSecond.Value());
+		}
 	}
 
 	/// <summary>
@@ -516,7 +522,7 @@ namespace TUGraz.VectoCore.Utils
 		[DebuggerHidden]
 		public static Watt operator *(PerSecond perSecond, NewtonMeter newtonMeter)
 		{
-			return SIBase<Watt>.Create(perSecond.Value() * newtonMeter.Value());
+			return SIBase<Watt>.Create(perSecond.Value() * newtonMeter.Val);
 		}
 
 		[DebuggerHidden]
@@ -1800,8 +1806,14 @@ namespace TUGraz.VectoCore.Utils
 		/// <returns></returns>
 		public bool IsSmaller(SI si, SI tolerance = null)
 		{
-			return (tolerance == null || HasEqualUnit(tolerance)) && HasEqualUnit(si) &&
-					Val.IsSmaller(si.Val, tolerance == null ? DoubleExtensionMethods.Tolerance : tolerance.Value());
+			if (!HasEqualUnit(si)) {
+				throw new VectoException("compared value has to be the same unit. Got: {0} <=> {1}", this, si);
+			}
+			if (tolerance != null && !HasEqualUnit(tolerance)) {
+				throw new VectoException("tolerance has to be the same unit. Got: {0} <=> {1}", this, tolerance);
+			}
+
+			return Val.IsSmaller(si.Val, tolerance == null ? DoubleExtensionMethods.Tolerance : tolerance.Value());
 		}
 
 		/// <summary>
@@ -1812,8 +1824,14 @@ namespace TUGraz.VectoCore.Utils
 		/// <returns></returns>
 		public bool IsSmallerOrEqual(SI si, SI tolerance = null)
 		{
-			return (tolerance == null || HasEqualUnit(tolerance)) && HasEqualUnit(si) &&
-					Val.IsSmallerOrEqual(si.Val, tolerance == null ? DoubleExtensionMethods.Tolerance : tolerance.Value());
+			if (!HasEqualUnit(si)) {
+				throw new VectoException("compared value has to be the same unit. Got: {0} <=> {1}", this, si);
+			}
+			if (tolerance != null && !HasEqualUnit(tolerance)) {
+				throw new VectoException("tolerance has to be the same unit. Got: {0} <=> {1}", this, tolerance);
+			}
+
+			return Val.IsSmallerOrEqual(si.Val, tolerance == null ? DoubleExtensionMethods.Tolerance : tolerance.Value());
 		}
 
 		/// <summary>
@@ -1824,8 +1842,14 @@ namespace TUGraz.VectoCore.Utils
 		/// <returns></returns>
 		public bool IsGreater(SI si, SI tolerance = null)
 		{
-			return (tolerance == null || HasEqualUnit(tolerance)) && HasEqualUnit(si) &&
-					Val.IsGreater(si.Val, tolerance == null ? DoubleExtensionMethods.Tolerance : tolerance.Value());
+			if (!HasEqualUnit(si)) {
+				throw new VectoException("compared value has to be the same unit. Got: {0} <=> {1}", this, si);
+			}
+			if (tolerance != null && !HasEqualUnit(tolerance)) {
+				throw new VectoException("tolerance has to be the same unit. Got: {0} <=> {1}", this, tolerance);
+			}
+
+			return Val.IsGreater(si.Val, tolerance == null ? DoubleExtensionMethods.Tolerance : tolerance.Value());
 		}
 
 		/// <summary>
@@ -1836,8 +1860,14 @@ namespace TUGraz.VectoCore.Utils
 		/// <returns></returns>
 		public bool IsGreaterOrEqual(SI si, SI tolerance = null)
 		{
-			return (tolerance == null || HasEqualUnit(tolerance)) && HasEqualUnit(si) &&
-					Val.IsGreaterOrEqual(si.Val, tolerance == null ? DoubleExtensionMethods.Tolerance : tolerance.Value());
+			if (!HasEqualUnit(si)) {
+				throw new VectoException("compared value has to be the same unit. Got: {0} <=> {1}", this, si);
+			}
+			if (tolerance != null && !HasEqualUnit(tolerance)) {
+				throw new VectoException("tolerance has to be the same unit. Got: {0} <=> {1}", this, tolerance);
+			}
+
+			return Val.IsGreaterOrEqual(si.Val, tolerance == null ? DoubleExtensionMethods.Tolerance : tolerance.Value());
 		}
 
 		/// <summary>

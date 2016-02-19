@@ -63,25 +63,27 @@ namespace TUGraz.VectoCore.Models.SimulationComponent.Impl
 			Log.Debug("request: force: {0}, velocity: {1}", force, velocity);
 
 			CurrentState.AngularVelocity = velocity / _dynamicWheelRadius;
-			CurrentState.InertiaTorqueLoss =
-				(_totalWheelsInertia * (CurrentState.AngularVelocity - PreviousState.AngularVelocity) / dt).Cast<NewtonMeter>();
-
-			//WheelsPowerRequest = (torque + CurrentState.InertiaTorqueLoss) * CurrentState.AngularVelocity;
-			CurrentState.Torque = force * _dynamicWheelRadius + CurrentState.InertiaTorqueLoss;
-			var retVal = NextComponent.Request(absTime, dt, CurrentState.Torque, CurrentState.AngularVelocity,
+			var avgAngularSpeed = (CurrentState.AngularVelocity + PreviousState.AngularVelocity) / 2.0;
+			CurrentState.InertiaTorqueLoss = avgAngularSpeed.IsEqual(0.SI<PerSecond>())
+				? 0.SI<NewtonMeter>()
+				: Formulas.InertiaPower(CurrentState.AngularVelocity, PreviousState.AngularVelocity, _totalWheelsInertia, dt) /
+				avgAngularSpeed; //(_totalWheelsInertia * avgAngularSpeed / dt).Cast<NewtonMeter>();
+			CurrentState.TorqueIn = force * _dynamicWheelRadius + CurrentState.InertiaTorqueLoss;
+			var retVal = NextComponent.Request(absTime, dt, CurrentState.TorqueIn, CurrentState.AngularVelocity,
 				dryRun);
-			retVal.WheelsPowerRequest = CurrentState.PowerRequest();
+
+			retVal.WheelsPowerRequest = CurrentState.TorqueIn * avgAngularSpeed;
 			return retVal;
 		}
 
 
 		public IResponse Initialize(Newton force, MeterPerSecond velocity)
 		{
-			PreviousState.Torque = force * _dynamicWheelRadius;
+			PreviousState.TorqueIn = force * _dynamicWheelRadius;
 			PreviousState.AngularVelocity = velocity / _dynamicWheelRadius;
 			PreviousState.InertiaTorqueLoss = 0.SI<NewtonMeter>();
 
-			return NextComponent.Initialize(PreviousState.Torque, PreviousState.AngularVelocity);
+			return NextComponent.Initialize(PreviousState.TorqueIn, PreviousState.AngularVelocity);
 		}
 
 		#endregion
@@ -99,7 +101,10 @@ namespace TUGraz.VectoCore.Models.SimulationComponent.Impl
 
 		protected override void DoWriteModalResults(IModalDataContainer container)
 		{
-			container[ModalResultField.Pwheel] = CurrentState.PowerRequest();
+			var avgAngularSpeed = (CurrentState.AngularVelocity + PreviousState.AngularVelocity) / 2.0;
+
+			container[ModalResultField.P_wheel_in] = CurrentState.TorqueIn * avgAngularSpeed;
+			container[ModalResultField.P_wheel_inertia] = CurrentState.InertiaTorqueLoss * avgAngularSpeed;
 		}
 
 		protected override void DoCommitSimulationStep()
@@ -112,13 +117,8 @@ namespace TUGraz.VectoCore.Models.SimulationComponent.Impl
 		public class WheelsState
 		{
 			public PerSecond AngularVelocity;
-			public NewtonMeter Torque;
+			public NewtonMeter TorqueIn;
 			public NewtonMeter InertiaTorqueLoss;
-
-			public Watt PowerRequest()
-			{
-				return AngularVelocity * Torque;
-			}
 		}
 	}
 }
