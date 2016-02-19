@@ -146,9 +146,7 @@ namespace TUGraz.VectoCore.Models.SimulationComponent.Impl
 			PowerLoss = null;
 			VehicleStopped = DataBus.VehicleStopped;
 
-			if (Disengaged) {
 				Gear = Strategy.InitGear(absTime, dt, outTorque, outAngularVelocity);
-			}
 
 			var inAngularVelocity = outAngularVelocity * Data.Gears[Gear].Ratio;
 			var inTorque = Data.Gears[Gear].LossMap.GetInTorque(inAngularVelocity, outTorque);

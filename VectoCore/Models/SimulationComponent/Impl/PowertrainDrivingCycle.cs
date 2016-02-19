@@ -538,6 +538,10 @@ namespace TUGraz.VectoCore.Models.SimulationComponent.Impl
 			var gradient = LeftSample.Current.RoadGradient;
 
 			var response = NextComponent.Request(absTime, dt, acceleration, gradient);
+			if (response is ResponseGearShift) {
+				response = NextComponent.Request(absTime, dt, acceleration, gradient);
+			}
+
 
 			// todo mk-2016-02-19: remove after finished working on measured speed cycle
 			var debugFirstResponse = response;
