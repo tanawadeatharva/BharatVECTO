@@ -196,6 +196,7 @@ namespace TUGraz.VectoCore.Models.SimulationComponent.Impl
 					DeltaDragLoad = deltaDrag * avgEngineSpeed,
 					EnginePowerRequest = torqueOut * avgEngineSpeed,
 					AuxiliariesPowerDemand = auxTorqueDemand * avgEngineSpeed,
+					EngineSpeed = angularVelocity,
 				};
 			}
 
@@ -232,6 +233,7 @@ namespace TUGraz.VectoCore.Models.SimulationComponent.Impl
 					EnginePowerRequest = totalTorqueDemand * avgEngineSpeed,
 					Source = this,
 					AuxiliariesPowerDemand = auxTorqueDemand * avgEngineSpeed,
+					EngineSpeed = angularVelocity,
 				};
 			}
 
@@ -244,6 +246,7 @@ namespace TUGraz.VectoCore.Models.SimulationComponent.Impl
 					EnginePowerRequest = totalTorqueDemand * avgEngineSpeed,
 					Source = this,
 					AuxiliariesPowerDemand = auxTorqueDemand * avgEngineSpeed,
+					EngineSpeed = angularVelocity,
 				};
 			}
 
@@ -252,6 +255,7 @@ namespace TUGraz.VectoCore.Models.SimulationComponent.Impl
 			return new ResponseSuccess {
 				EnginePowerRequest = totalTorqueDemand * avgEngineSpeed,
 				AuxiliariesPowerDemand = auxTorqueDemand * avgEngineSpeed,
+				EngineSpeed = angularVelocity
 			};
 		}
 

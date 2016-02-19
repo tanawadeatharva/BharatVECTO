@@ -47,6 +47,8 @@ namespace TUGraz.VectoCore.Models.Connector.Ports.Impl
 
 		public Second AbsTime { get; set; }
 
+		public PerSecond EngineSpeed { get; set; }
+
 		public object Source { get; set; }
 
 		public override string ToString()
