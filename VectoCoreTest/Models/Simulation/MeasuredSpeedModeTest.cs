@@ -301,8 +301,8 @@ namespace TUGraz.VectoCore.Tests.Models.Simulation
 
 			Assert.IsTrue(jobContainer.Runs.All(r => r.Success), string.Concat(jobContainer.Runs.Select(r => r.ExecException)));
 
-			Assert.IsTrue(File.Exists(@"TestData\Jobs\MeasuredSpeed_MeasuredSpeed.vmod"), "Mod file not found.");
-			Assert.IsTrue(File.Exists(@"TestData\Jobs\MeasuredSpeed.vsum"), "Sum file not found.");
+			Assert.IsTrue(File.Exists(@"TestData\MeasuredSpeed\MeasuredSpeed_MeasuredSpeed.vmod"), "Mod file not found.");
+			Assert.IsTrue(File.Exists(@"TestData\MeasuredSpeed\MeasuredSpeed.vsum"), "Sum file not found.");
 		}
 
 
