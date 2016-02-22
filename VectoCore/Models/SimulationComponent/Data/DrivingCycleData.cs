@@ -1,4 +1,4 @@
-/*
+﻿/*
 * Copyright 2015, 2016 Graz University of Technology,
 * Institute of Internal Combustion Engines and Thermodynamics,
 * Institute of Technical Informatics
@@ -108,7 +108,7 @@ namespace TUGraz.VectoCore.Models.SimulationComponent.Data
 			public Dictionary<string, Watt> AuxiliarySupplyPower { get; set; }
 
 			/// <summary>
-			/// If "n" is defined VECTO uses that instead of the calculated engine speed value.
+			/// If "n_eng_avg" is defined VECTO uses that instead of the calculated engine speed value.
 			/// </summary>
 			public PerSecond AngularVelocity { get; set; }
 

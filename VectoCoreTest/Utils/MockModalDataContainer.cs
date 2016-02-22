@@ -84,7 +84,7 @@ namespace TUGraz.VectoCore.Tests.Utils
 
 		public void AddAuxiliary(string id)
 		{
-			var auxColName = ModalResultField.Paux_ + id;
+			var auxColName = ModalResultField.P_aux_ + id;
 			if (!Data.Columns.Contains(auxColName)) {
 				Auxiliaries[id] = Data.Columns.Add(auxColName, typeof(Watt));
 			}

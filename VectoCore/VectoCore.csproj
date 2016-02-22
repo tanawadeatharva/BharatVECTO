@@ -171,6 +171,7 @@
     <Compile Include="Models\SimulationComponent\IEngineAuxPort.cs" />
     <Compile Include="Models\SimulationComponent\Impl\Brakes.cs" />
     <Compile Include="Models\SimulationComponent\Impl\DefaultDriverStrategy.cs" />
+    <Compile Include="Models\SimulationComponent\Impl\DummyRetarder.cs" />
     <Compile Include="Models\SimulationComponent\Impl\EngineAuxiliary.cs" />
     <Compile Include="Models\SimulationComponent\Impl\EngineOnlyCombustionEngine.cs" />
     <Compile Include="Models\SimulationComponent\Impl\MediatorClutch.cs" />

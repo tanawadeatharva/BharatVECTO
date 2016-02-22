@@ -87,14 +87,14 @@ namespace TUGraz.VectoCore.Tests.Integration.SimulationRuns
 
 			Assert.IsInstanceOfType(response, typeof(ResponseSuccess));
 
-//			time [s] , dist [m] , v_act [km/h] , v_targ [km/h] , acc [m/s²] , grad [%] , n [1/min] , Tq_eng [Nm] , Tq_clutch [Nm] , Tq_full [Nm] , Tq_drag [Nm] , Pe_eng [kW] , Pe_full [kW] , Pe_drag [kW] , Pe_clutch [kW] , Pa Eng [kW] , Paux [kW] , Gear [-] , Ploss GB [kW] , Ploss Diff [kW] , Ploss Retarder [kW] , Pa GB [kW] , Pa Veh [kW] , Proll [kW] , Pair [kW] , Pgrad [kW] , Pwheel [kW] , Pbrake [kW] , FC-Map [g/h] , FC-AUXc [g/h] , FC-WHTCc [g/h]
+//			time [s] , dist [m] , v_act [km/h] , v_targ [km/h] , acc [m/s²] , grad [%] , n_eng_avg [1/min] , T_eng_fcmap [Nm] , Tq_clutch [Nm] , Tq_full [Nm] , Tq_drag [Nm] , P_eng_out [kW] , P_eng_full [kW] , P_eng_drag [kW] , P_clutch_out [kW] , Pa Eng [kW] , P_aux [kW] , Gear [-] , Ploss GB [kW] , Ploss Diff [kW] , Ploss Retarder [kW] , Pa GB [kW] , Pa Veh [kW] , P_roll [kW] , P_air [kW] , P_slope [kW] , P_wheel_in [kW] , P_brake_loss [kW] , FC-Map [g/h] , FC-AUXc [g/h] , FC-WHTCc [g/h]
 //			1.5      , 5        , 18           , 18            , 0          , 2.842372 , 964.1117  , 323.7562    , 323.7562       , 2208.664     , -158.0261    , 32.68693    , 222.9902     , -15.95456    , 32.68693       , 0           , 0         , 1        , 0             , 0               , 0                   , 0          , 0           , 5.965827   , 0.2423075 , 26.47879   , 32.68693    , 0           , 7574.113     , -             , -
 
 			AssertHelper.AreRelativeEqual(964.1117.RPMtoRad().Value(), vehicleContainer.Engine.EngineSpeed.Value());
 			Assert.AreEqual(2208.664, engine.PreviousState.StationaryFullLoadTorque.Value(), Tolerance);
 			Assert.AreEqual(-158.0261, engine.PreviousState.FullDragTorque.Value(), Tolerance);
 
-			Assert.AreEqual(323.7562, engine.PreviousState.EngineTorque.Value(), Tolerance);
+			Assert.AreEqual(323.6485, engine.PreviousState.EngineTorque.Value(), Tolerance);
 		}
 
 		[TestMethod, TestCategory("LongRunning")]
@@ -147,7 +147,7 @@ namespace TUGraz.VectoCore.Tests.Integration.SimulationRuns
 				response = cyclePort.Request(absTime, ds);
 				response.Switch().
 					Case<ResponseDrivingCycleDistanceExceeded>(r => ds = r.MaxDistance).
-					Case<ResponseCycleFinished>(r => {}).
+					Case<ResponseCycleFinished>(r => { }).
 					Case<ResponseSuccess>(r => {
 						vehicleContainer.CommitSimulationStep(absTime, r.SimulationInterval);
 						absTime += r.SimulationInterval;

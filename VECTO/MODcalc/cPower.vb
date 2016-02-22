@@ -1,4 +1,4 @@
-' Copyright 2014 European Union.
+﻿' Copyright 2014 European Union.
 ' Licensed under the EUPL (the 'Licence');
 '
 ' * You may not use this work except in compliance with the Licence.
@@ -1466,7 +1466,7 @@ lb_nOK:
 			'Reset the second-by-second Errors
 			MODdata.ModErrors.ResetAll()
 
-			'OLD and wrong because not time shifted: P_mr(jz) = 0.001 * (I_mot * 0.0109662 * (n(jz) * nnrom) * nnrom * (n(jz) - n(jz - 1))) 
+			'OLD and wrong because not time shifted: P_mr(jz) = 0.001 * (I_mot * 0.0109662 * (n(jz) * nnrom) * nnrom * (n_eng_avg(jz) - n_eng_avg(jz - 1))) 
 			If t > 0 And t < t1 Then
 				Pmr = 0.001 *
 					(ENG.I_mot * (2 * Math.PI / 60) ^ 2 * ((MODdata.nU(t + 1) + MODdata.nU(t - 1)) / 2) * 0.5 * (MODdata.nU(t + 1) - MODdata.nU(t - 1)))

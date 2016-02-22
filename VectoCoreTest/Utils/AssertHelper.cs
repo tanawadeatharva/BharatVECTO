@@ -71,7 +71,7 @@ namespace TUGraz.VectoCore.Tests.Utils
 			double toleranceFactor = DoubleExtensionMethods.ToleranceFactor)
 		{
 			if (!string.IsNullOrWhiteSpace(message)) {
-				message = "\n" + message;
+				message = "\n_eng_avg" + message;
 			} else {
 				message = "";
 			}

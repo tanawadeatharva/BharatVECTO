@@ -82,7 +82,7 @@ namespace TUGraz.VectoCore.Tests.Models.Simulation
 		}
 
 		/// <summary>
-		/// Tests if the powertrain can be created in Pwheel mode.
+		/// Tests if the powertrain can be created in P_wheel_in mode.
 		/// </summary>
 		/// <remarks>VECTO-177</remarks>
 		[TestMethod]
@@ -127,7 +127,7 @@ namespace TUGraz.VectoCore.Tests.Models.Simulation
 		}
 
 		/// <summary>
-		/// Tests if the simulation works and the modfile and sumfile are correct in Pwheel mode.
+		/// Tests if the simulation works and the modfile and sumfile are correct in P_wheel_in mode.
 		/// </summary>
 		/// <remarks>VECTO-177</remarks>
 		[TestMethod]
@@ -155,7 +155,7 @@ namespace TUGraz.VectoCore.Tests.Models.Simulation
 		}
 
 		/// <summary>
-		/// Tests if the simulation works and the modfile and sumfile are correct in Pwheel mode.
+		/// Tests if the simulation works and the modfile and sumfile are correct in P_wheel_in mode.
 		/// </summary>
 		/// <remarks>VECTO-177</remarks>
 		[TestMethod]
@@ -176,7 +176,7 @@ namespace TUGraz.VectoCore.Tests.Models.Simulation
 
 			Assert.IsTrue(jobContainer.Runs.All(r => r.Success), string.Concat(jobContainer.Runs.Select(r => r.ExecException)));
 
-			ResultFileHelper.TestModFile(@"TestData\Results\Pwheel\Atego_HDVCO2_RD_#1_AuxStd.vmod",
+			ResultFileHelper.TestModFile(@"TestData\Results\P_wheel_in\Atego_HDVCO2_RD_#1_AuxStd.vmod",
 				@"TestData\Jobs\Pwheel_ultimate_RD_#1_Pwheel_AuxStd.vmod", testRowCount: false);
 		}
 	}

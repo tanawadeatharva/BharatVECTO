@@ -138,11 +138,11 @@ namespace TUGraz.VectoCore.Models.SimulationComponent.Data.Engine
 
 			if (k.IsEqual(0)) {
 				// rectangle
-				// area = M * n
+				// area = M * n_eng_avg
 				return p1.EngineSpeed + area / d;
 			}
 
-			// non-constant torque, M(n) = k * n + d
+			// non-constant torque, M(n_eng_avg) = k * n_eng_avg + d
 			// area = M(n1) * (n2 - n1) + (M(n1) + M(n2))/2 * (n2 - n1) => solve for n2
 			var retVal = VectoMath.QuadraticEquationSolver(k.Value() / 2.0, d.Value(),
 				(k * p1.EngineSpeed * p1.EngineSpeed + 2 * p1.EngineSpeed * d).Value());
@@ -171,11 +171,11 @@ namespace TUGraz.VectoCore.Models.SimulationComponent.Data.Engine
 			var retVal = new List<PerSecond>();
 			if (k.IsEqual(0, 0.0001)) {
 				// constant torque, solve linear equation
-				// power = M * n
+				// power = M * n_eng_avg
 				retVal.Add(power / d);
 			} else {
-				// non-constant torque, solve quadratic equation for engine speed (n)
-				// power = M(n) * n = (k * n + d) * n =  k * n^2 + d * n
+				// non-constant torque, solve quadratic equation for engine speed (n_eng_avg)
+				// power = M(n_eng_avg) * n_eng_avg = (k * n_eng_avg + d) * n_eng_avg =  k * n_eng_avg^2 + d * n_eng_avg
 				retVal = VectoMath.QuadraticEquationSolver(k.Value(), d.Value(), -power.Value()).SI<PerSecond>().ToList();
 				if (retVal.Count == 0) {
 					Log.Info("No real solution found for requested power demand: P: {0}, p1: {1}, p2: {2}", power, p1, p2);

@@ -85,6 +85,7 @@ namespace TUGraz.VectoCore.Tests.Integration
 			tmp = Port.AddComponent(tmp, new Wheels(container, vehicleData.DynamicTyreRadius, vehicleData.WheelsInertia));
 			tmp = Port.AddComponent(tmp, new Brakes(container));
 			tmp = Port.AddComponent(tmp, new AxleGear(container, axleGearData));
+			tmp = Port.AddComponent(tmp, new DummyRetarder(container));
 			tmp = Port.AddComponent(tmp,
 				new Gearbox(container, gearboxData, new AMTShiftStrategy(gearboxData, container)));
 			tmp = Port.AddComponent(tmp, clutch);

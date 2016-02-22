@@ -26,7 +26,8 @@ using TUGraz.VectoCore.Utils;
 
 namespace TUGraz.VectoCore.Models.SimulationComponent.Impl
 {
-	public class Brakes : VectoSimulationComponent, IPowerTrainComponent, ITnOutPort, ITnInPort, IBrakes
+	public class Brakes : StatefulVectoSimulationComponent<SimpleComponentState>, IPowerTrainComponent, ITnOutPort,
+		ITnInPort, IBrakes
 	{
 		protected ITnOutPort NextComponent;
 
@@ -48,24 +49,29 @@ namespace TUGraz.VectoCore.Models.SimulationComponent.Impl
 		public IResponse Request(Second absTime, Second dt, NewtonMeter torque, PerSecond angularVelocity, bool dryRun = false)
 		{
 			var brakeTorque = 0.SI<NewtonMeter>();
+			var avgAngularSpeed = (PreviousState.OutAngularVelocity + angularVelocity) / 2.0;
+
 			if (!BrakePower.IsEqual(0)) {
-				if (angularVelocity.IsEqual(0)) {
+				if (avgAngularSpeed.IsEqual(0)) {
 					brakeTorque = torque;
 				} else {
-					brakeTorque = BrakePower / angularVelocity;
+					brakeTorque = BrakePower / avgAngularSpeed;
 				}
 			}
 			if (!dryRun && BrakePower < 0) {
 				throw new VectoSimulationException("Negative Braking Power is not allowed!");
 			}
+			CurrentState.SetState(torque + brakeTorque, angularVelocity, torque, angularVelocity);
+
 			var retVal = NextComponent.Request(absTime, dt, torque + brakeTorque, angularVelocity, dryRun);
-			retVal.BrakePower = brakeTorque * angularVelocity;
+			retVal.BrakePower = brakeTorque * avgAngularSpeed;
 			return retVal;
 		}
 
 		public IResponse Initialize(NewtonMeter torque, PerSecond angularVelocity)
 		{
 			BrakePower = 0.SI<Watt>();
+			PreviousState.SetState(torque, angularVelocity, torque, angularVelocity);
 			return DataBus.VehicleStopped
 				? NextComponent.Initialize(0.SI<NewtonMeter>(), 0.SI<PerSecond>())
 				: NextComponent.Initialize(torque, angularVelocity);
@@ -79,12 +85,18 @@ namespace TUGraz.VectoCore.Models.SimulationComponent.Impl
 
 		protected override void DoWriteModalResults(IModalDataContainer container)
 		{
-			container[ModalResultField.Pbrake] = BrakePower;
+			container[ModalResultField.P_brake_loss] = BrakePower;
+			container[ModalResultField.P_brake_in] = CurrentState.InTorque *
+													(PreviousState.InAngularVelocity + CurrentState.InAngularVelocity) / 2.0;
 		}
 
-		protected override void DoCommitSimulationStep()
+		protected override
+			void DoCommitSimulationStep()
 		{
-			BrakePower = 0.SI<Watt>();
+			BrakePower = 0.
+				SI<Watt>
+				();
+			AdvanceState();
 		}
 	}
 }

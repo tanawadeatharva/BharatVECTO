@@ -26,23 +26,23 @@ using TUGraz.VectoCore.Utils;
 
 namespace TUGraz.VectoCore.Models.SimulationComponent.Impl
 {
-	public class Retarder : VectoSimulationComponent, IPowerTrainComponent, ITnInPort, ITnOutPort
+	public class Retarder : StatefulVectoSimulationComponent<SimpleComponentState>, IPowerTrainComponent, ITnInPort,
+		ITnOutPort
 	{
 		protected ITnOutPort NextComponent;
 
 		private readonly RetarderLossMap _lossMap;
 
-		private Watt _retarderLoss;
-
 		public Retarder(IVehicleContainer cockpit, RetarderLossMap lossMap) : base(cockpit)
 		{
-			_retarderLoss = 0.SI<Watt>();
 			_lossMap = lossMap;
 		}
 
 		protected override void DoWriteModalResults(IModalDataContainer container)
 		{
-			container[ModalResultField.PlossRetarder] = _retarderLoss;
+			var avgAngularSpeed = (PreviousState.InAngularVelocity + CurrentState.InAngularVelocity) / 2.0;
+			container[ModalResultField.P_ret_loss] = (PreviousState.InTorque - PreviousState.OutTorque) * avgAngularSpeed;
+			container[ModalResultField.P_retarder_in] = CurrentState.InTorque * avgAngularSpeed;
 		}
 
 		protected override void DoCommitSimulationStep() {}
@@ -67,8 +67,9 @@ namespace TUGraz.VectoCore.Models.SimulationComponent.Impl
 			if (angularVelocity == null) {
 				return NextComponent.Request(absTime, dt, torque, null, dryRun);
 			}
-			var retarderTorqueLoss = _lossMap.RetarderLoss(angularVelocity);
-			_retarderLoss = retarderTorqueLoss * angularVelocity;
+			var avgAngularSpeed = (PreviousState.InAngularVelocity + angularVelocity) / 2.0;
+			var retarderTorqueLoss = _lossMap.RetarderLoss(avgAngularSpeed);
+			CurrentState.SetState(torque + retarderTorqueLoss, angularVelocity, torque, angularVelocity);
 
 			return NextComponent.Request(absTime, dt, torque + retarderTorqueLoss, angularVelocity, dryRun);
 		}
@@ -76,6 +77,8 @@ namespace TUGraz.VectoCore.Models.SimulationComponent.Impl
 		public IResponse Initialize(NewtonMeter torque, PerSecond angularVelocity)
 		{
 			var retarderTorqueLoss = _lossMap.RetarderLoss(angularVelocity);
+			PreviousState.SetState(torque + retarderTorqueLoss, angularVelocity, torque, angularVelocity);
+
 			return NextComponent.Initialize(torque + retarderTorqueLoss, angularVelocity);
 		}
 	}

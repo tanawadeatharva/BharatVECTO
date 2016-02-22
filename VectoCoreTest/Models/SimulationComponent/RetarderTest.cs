@@ -48,19 +48,21 @@ namespace TUGraz.VectoCore.Tests.Models.SimulationComponent
 			var dt = 0.SI<Second>();
 
 			// --------
+			outPort.Initialize(0.SI<NewtonMeter>(), 10.RPMtoRad());
 			outPort.Request(absTime, dt, 0.SI<NewtonMeter>(), 10.RPMtoRad());
 
 			Assert.AreEqual(10.RPMtoRad().Value(), nextRequest.AngularVelocity.Value(), Delta);
 			Assert.AreEqual(10.002, nextRequest.Torque.Value(), Delta);
 
 			// --------
+			outPort.Initialize(100.SI<NewtonMeter>(), 1000.RPMtoRad());
 			outPort.Request(absTime, dt, 100.SI<NewtonMeter>(), 1000.RPMtoRad());
 
 			Assert.AreEqual(1000.RPMtoRad().Value(), nextRequest.AngularVelocity.Value(), Delta);
 			Assert.AreEqual(112, nextRequest.Torque.Value(), Delta);
 
 			// --------
-
+			outPort.Initialize(50.SI<NewtonMeter>(), 1550.RPMtoRad());
 			outPort.Request(absTime, dt, 50.SI<NewtonMeter>(), 1550.RPMtoRad());
 
 			Assert.AreEqual(1550.RPMtoRad().Value(), nextRequest.AngularVelocity.Value(), Delta);

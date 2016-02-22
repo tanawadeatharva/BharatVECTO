@@ -97,9 +97,11 @@ namespace TUGraz.VectoCore.Models.Simulation.Impl
 					tmp = AddComponent(tmp, new Retarder(container, data.Retarder.LossMap));
 					break;
 				case RetarderData.RetarderType.None:
+					tmp = AddComponent(tmp, new DummyRetarder(container));
 					tmp = AddComponent(tmp, gearbox);
 					break;
 				case RetarderData.RetarderType.LossesIncludedInTransmission:
+					tmp = AddComponent(tmp, new DummyRetarder(container));
 					tmp = AddComponent(tmp, gearbox);
 					break;
 				default:
@@ -116,7 +118,7 @@ namespace TUGraz.VectoCore.Models.Simulation.Impl
 			// connect aux --> engine		
 			if (data.Aux != null) {
 				engine.Connect(CreateAuxiliaries(data, container).Port());
-			}
+					}
 
 			return container;
 		}
@@ -142,9 +144,11 @@ namespace TUGraz.VectoCore.Models.Simulation.Impl
 					break;
 				case RetarderData.RetarderType.None:
 					tmp = AddComponent(tmp, GetGearbox(container, data.GearboxData));
+					tmp = AddComponent(tmp, new DummyRetarder(container));
 					break;
 				case RetarderData.RetarderType.LossesIncludedInTransmission:
 					tmp = AddComponent(tmp, GetGearbox(container, data.GearboxData));
+					tmp = AddComponent(tmp, new DummyRetarder(container));
 					break;
 				default:
 					throw new ArgumentOutOfRangeException();
@@ -162,7 +166,7 @@ namespace TUGraz.VectoCore.Models.Simulation.Impl
 			// connect aux --> engine
 			if (data.Aux != null) {
 				engine.Connect(CreateAuxiliaries(data, container).Port());
-			}
+				}
 
 			engine.IdleController.RequestPort = clutch.IdleControlPort;
 
@@ -258,9 +262,11 @@ namespace TUGraz.VectoCore.Models.Simulation.Impl
 					break;
 				case RetarderData.RetarderType.None:
 					tmp = AddComponent(tmp, GetGearbox(container, data.GearboxData));
+					tmp = AddComponent(tmp, new DummyRetarder(container));
 					break;
 				case RetarderData.RetarderType.LossesIncludedInTransmission:
 					tmp = AddComponent(tmp, GetGearbox(container, data.GearboxData));
+					tmp = AddComponent(tmp, new DummyRetarder(container));
 					break;
 				default:
 					throw new ArgumentOutOfRangeException();
@@ -287,21 +293,21 @@ namespace TUGraz.VectoCore.Models.Simulation.Impl
 
 		private EngineAuxiliary CreateAuxiliaries(VectoRunData data, VehicleContainer container)
 		{
-			var aux = new EngineAuxiliary(container);
-			foreach (var auxData in data.Aux) {
-				switch (auxData.DemandType) {
-					case AuxiliaryDemandType.Constant:
-						aux.AddConstant(auxData.ID, auxData.PowerDemand);
-						break;
-					case AuxiliaryDemandType.Direct:
-						aux.AddDirect();
-						break;
-					case AuxiliaryDemandType.Mapping:
-						aux.AddMapping(auxData.ID, auxData.Data);
-						break;
+				var aux = new EngineAuxiliary(container);
+				foreach (var auxData in data.Aux) {
+					switch (auxData.DemandType) {
+						case AuxiliaryDemandType.Constant:
+							aux.AddConstant(auxData.ID, auxData.PowerDemand);
+							break;
+						case AuxiliaryDemandType.Direct:
+							aux.AddDirect();
+							break;
+						case AuxiliaryDemandType.Mapping:
+							aux.AddMapping(auxData.ID, auxData.Data);
+							break;
+					}
+					_modData.AddAuxiliary(auxData.ID);
 				}
-				_modData.AddAuxiliary(auxData.ID);
-			}
 			return aux;
 		}
 

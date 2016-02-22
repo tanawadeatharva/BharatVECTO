@@ -63,7 +63,7 @@ namespace TUGraz.VectoCore.Tests.Models.SimulationComponent
 
 			var retVal = requestPort.Request(absTime, dt, accell, gradient);
 
-			Assert.AreEqual(-2428.0205, mockPort.Force.Value(), 0.0001);
+			Assert.AreEqual(-2305.43268, mockPort.Force.Value(), 0.0001);
 			Assert.AreEqual(16.954303841, mockPort.Velocity.Value(), 0.0001);
 		}
 
@@ -85,26 +85,29 @@ namespace TUGraz.VectoCore.Tests.Models.SimulationComponent
 			// ====================
 
 			var dt = 0.5.SI<Second>();
-			vehicle.Initialize(60.KMPHtoMeterPerSecond(), 0.SI<Radian>());
+			var vehicleSpeed = 60.KMPHtoMeterPerSecond();
+			vehicle.Initialize(vehicleSpeed, 0.SI<Radian>());
 
-			var avgForce = vehicle.AirDragResistance(0.SI<MeterPerSquareSecond>(), dt);
+
+			var avgForce = vehicle.AirDragResistance(vehicleSpeed, 0.SI<MeterPerSquareSecond>(), dt);
 			Assert.AreEqual(1340.12357, avgForce.Value(), Tolerance);
 
-			avgForce = vehicle.AirDragResistance(1.SI<MeterPerSquareSecond>(), dt);
+			avgForce = vehicle.AirDragResistance(vehicleSpeed, 1.SI<MeterPerSquareSecond>(), dt);
 			Assert.AreEqual(1375.63226, avgForce.Value(), Tolerance);
 
-			avgForce = vehicle.AirDragResistance(0.5.SI<MeterPerSquareSecond>(), dt);
+			avgForce = vehicle.AirDragResistance(vehicleSpeed, 0.5.SI<MeterPerSquareSecond>(), dt);
 			Assert.AreEqual(1357.76658, avgForce.Value(), Tolerance);
 
 			// - - - - - - 
-			vehicle.Initialize(72.KMPHtoMeterPerSecond(), 0.SI<Radian>());
+			vehicleSpeed = 72.KMPHtoMeterPerSecond();
+			vehicle.Initialize(vehicleSpeed, 0.SI<Radian>());
 
-			avgForce = vehicle.AirDragResistance(0.5.SI<MeterPerSquareSecond>(), dt);
+			avgForce = vehicle.AirDragResistance(vehicleSpeed, 0.5.SI<MeterPerSquareSecond>(), dt);
 			Assert.AreEqual(1861.2734, avgForce.Value(), Tolerance);
 
 			dt = 3.SI<Second>();
 
-			avgForce = vehicle.AirDragResistance(1.SI<MeterPerSquareSecond>(), dt);
+			avgForce = vehicle.AirDragResistance(vehicleSpeed, 1.SI<MeterPerSquareSecond>(), dt);
 			Assert.AreEqual(2101.63000, avgForce.Value(), Tolerance);
 		}
 
@@ -133,11 +136,11 @@ namespace TUGraz.VectoCore.Tests.Models.SimulationComponent
 			var retVal = vehicle.Request(absTime, dt, 0.SI<MeterPerSquareSecond>(), 0.SI<Radian>());
 			vehicle.CommitSimulationStep(writer);
 
-			Assert.AreEqual(48201.2777, ((SI)writer[ModalResultField.Pair]).Value(), 0.1);
+			Assert.AreEqual(48201.2777, ((SI)writer[ModalResultField.P_air]).Value(), 0.1);
 
 			retVal = vehicle.Request(absTime, dt, 1.SI<MeterPerSquareSecond>(), 0.SI<Radian>());
 			vehicle.CommitSimulationStep(writer);
-			Assert.AreEqual(49735.26379, ((SI)writer[ModalResultField.Pair]).Value(), 0.1);
+			Assert.AreEqual(49735.26379, ((SI)writer[ModalResultField.P_air]).Value(), 0.1);
 		}
 
 		[TestMethod]

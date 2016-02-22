@@ -100,7 +100,7 @@ namespace TUGraz.VectoCore.Models.SimulationComponent.Data.Engine
 		{
 			var index = 1;
 			if (key < _entries[0].Key) {
-				Log.Error("requested rpm below minimum rpm in pt1 - extrapolating. n: {0}, rpm_min: {1}",
+				Log.Error("requested rpm below minimum rpm in pt1 - extrapolating. n_eng_avg: {0}, rpm_min: {1}",
 					key.ConvertTo().Rounds.Per.Minute, _entries[0].Key.ConvertTo().Rounds.Per.Minute);
 			} else {
 				index = _entries.FindIndex(x => x.Key > key);
