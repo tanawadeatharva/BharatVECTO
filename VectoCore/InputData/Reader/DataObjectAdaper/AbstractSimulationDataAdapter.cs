@@ -16,6 +16,7 @@
 * limitations under the Licence.
 */
 
+using System.Collections.Generic;
 using System.Linq;
 using TUGraz.VectoCore.Models;
 using TUGraz.VectoCore.Models.SimulationComponent.Data;
@@ -141,13 +142,13 @@ namespace TUGraz.VectoCore.InputData.Reader.DataObjectAdaper
 				return engineCurve;
 			}
 			var entries = gearCurve.FullLoadEntries.Concat(engineCurve.FullLoadEntries)
-				.Select(entry => entry.EngineSpeed)
-				.OrderBy(engineSpeed => engineSpeed)
-				.Distinct()
-				.Select(engineSpeed => new FullLoadCurve.FullLoadCurveEntry {
-					EngineSpeed = engineSpeed,
+				.OrderBy(x => x.EngineSpeed)
+				.Distinct(new FullLoadEntryEqualityComparer())
+				.Select(x => new FullLoadCurve.FullLoadCurveEntry {
+					EngineSpeed = x.EngineSpeed,
 					TorqueFullLoad =
-						VectoMath.Min(engineCurve.FullLoadStationaryTorque(engineSpeed), gearCurve.FullLoadStationaryTorque(engineSpeed))
+						VectoMath.Min(engineCurve.FullLoadStationaryTorque(x.EngineSpeed),
+							gearCurve.FullLoadStationaryTorque(x.EngineSpeed))
 				});
 
 			var flc = new EngineFullLoadCurve {
@@ -156,6 +157,19 @@ namespace TUGraz.VectoCore.InputData.Reader.DataObjectAdaper
 				PT1Data = engineCurve.PT1Data
 			};
 			return flc;
+		}
+
+		internal class FullLoadEntryEqualityComparer : IEqualityComparer<FullLoadCurve.FullLoadCurveEntry>
+		{
+			public bool Equals(FullLoadCurve.FullLoadCurveEntry x, FullLoadCurve.FullLoadCurveEntry y)
+			{
+				return x.EngineSpeed.Value().IsEqual(y.EngineSpeed.Value());
+			}
+
+			public int GetHashCode(FullLoadCurve.FullLoadCurveEntry obj)
+			{
+				return obj.EngineSpeed.Value().GetHashCode();
+			}
 		}
 	}
 }
