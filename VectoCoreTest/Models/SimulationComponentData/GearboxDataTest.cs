@@ -21,8 +21,11 @@ using System.Data;
 using System.Globalization;
 using Microsoft.VisualStudio.TestTools.UnitTesting;
 using TUGraz.VectoCore.Exceptions;
+using TUGraz.VectoCore.InputData.Reader.DataObjectAdaper;
 using TUGraz.VectoCore.Models.SimulationComponent.Data;
+using TUGraz.VectoCore.Models.SimulationComponent.Data.Engine;
 using TUGraz.VectoCore.Models.SimulationComponent.Data.Gearbox;
+using TUGraz.VectoCore.Tests.Integration;
 using TUGraz.VectoCore.Tests.Utils;
 using TUGraz.VectoCore.Utils;
 
@@ -267,9 +270,7 @@ namespace TUGraz.VectoCore.Tests.Models.SimulationComponentData
 			AssertHelper.AreRelativeEqual(25, map.GetOutTorque(120.RPMtoRad(), 50.SI<NewtonMeter>(), true));
 
 			// test extrapolation not allowed
-			AssertHelper.Exception<VectoException>(() => {
-				map.GetOutTorque(120.RPMtoRad(), 50.SI<NewtonMeter>());
-			});
+			AssertHelper.Exception<VectoException>(() => { map.GetOutTorque(120.RPMtoRad(), 50.SI<NewtonMeter>()); });
 		}
 
 		[TestMethod]
@@ -278,6 +279,37 @@ namespace TUGraz.VectoCore.Tests.Models.SimulationComponentData
 			var gbxData = MockSimulationDataFactory.CreateGearboxDataFromFile(GearboxFile, EngineFile);
 
 			Assert.Inconclusive("test another file which is not correct");
+		}
+
+		[TestMethod]
+		public void TestFullLoadCurveIntersection()
+		{
+			var engineFLDString = new[] {
+				"560, 1180, -149",
+				"600, 1282, -148",
+				"800, 1791, -149",
+				"1000, 2300, -160",
+				"1200, 2300, -179",
+				"1400, 2300, -203",
+				"1600, 2079, -235",
+				"1800, 1857, -264",
+				"2000, 1352, -301",
+				"2100, 1100, -320",
+			};
+			var gbxFLDString = new[] {
+				"560, 2500",
+				"2100, 2500"
+			};
+			var dataEng =
+				VectoCSVFile.ReadStream(SimpleDrivingCycles.InputDataAsStream("n [U/min],Mfull [Nm],Mdrag [Nm]", engineFLDString));
+			var engineFLD = EngineFullLoadCurve.Create(dataEng, true);
+
+			var dataGbx = VectoCSVFile.ReadStream(SimpleDrivingCycles.InputDataAsStream("n [U/min],Mfull [Nm]", gbxFLDString));
+			var gbxFLD = FullLoadCurve.Create(dataGbx, true);
+
+			var fullLoadCurve = AbstractSimulationDataAdapter.IntersectFullLoadCurves(engineFLD, gbxFLD);
+
+			Assert.AreEqual(10, fullLoadCurve.FullLoadEntries.Count);
 		}
 
 		protected PerSecond SpeedToAngularSpeed(double v, double r)

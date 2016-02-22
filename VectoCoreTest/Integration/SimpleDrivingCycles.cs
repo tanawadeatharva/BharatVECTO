@@ -29,15 +29,21 @@ namespace TUGraz.VectoCore.Tests.Integration
 	{
 		public static DrivingCycleData CreateCycleData(string[] entries)
 		{
+			var cycleData = InputDataAsStream("<s>,<v>,<grad>,<stop>", entries);
+			return DrivingCycleDataReader.ReadFromStream(cycleData, CycleType.DistanceBased);
+		}
+
+		public static MemoryStream InputDataAsStream(string header, string[] entries)
+		{
 			var cycleData = new MemoryStream();
 			var writer = new StreamWriter(cycleData);
-			writer.WriteLine("<s>,<v>,<grad>,<stop>");
+			writer.WriteLine(header);
 			foreach (var entry in entries) {
 				writer.WriteLine(entry);
 			}
 			writer.Flush();
 			cycleData.Seek(0, SeekOrigin.Begin);
-			return DrivingCycleDataReader.ReadFromStream(cycleData, CycleType.DistanceBased);
+			return cycleData;
 		}
 
 		#region Accelerate
