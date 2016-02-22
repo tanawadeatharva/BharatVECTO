@@ -189,23 +189,19 @@ namespace TUGraz.VectoCore.Models.SimulationComponent.Impl
 	/// </summary>
 	public class PWheelCycle : PowertrainDrivingCycle, IDriverInfo, IClutchInfo
 	{
-		public Gearbox Gearbox { get; set; }
-
 		/// <summary>
 		/// Initializes a new instance of the <see cref="PWheelCycle"/> class.
 		/// </summary>
 		/// <param name="container">The container.</param>
 		/// <param name="cycle">The cycle.</param>
 		/// <param name="axleRatio">The axle ratio.</param>
-		/// <param name="gearbox"></param>
-		public PWheelCycle(IVehicleContainer container, DrivingCycleData cycle, double axleRatio, Gearbox gearbox)
+		public PWheelCycle(IVehicleContainer container, DrivingCycleData cycle, double axleRatio,
+			Dictionary<uint, double> ratios)
 			: base(container, cycle)
 		{
-			Gearbox = gearbox;
-
 			foreach (var entry in Data.Entries) {
 				entry.AngularVelocity = entry.AngularVelocity /
-										(axleRatio * (entry.Gear == 0 ? 1 : Gearbox.ModelData.Gears[entry.Gear].Ratio));
+										(axleRatio * (entry.Gear == 0 ? 1 : ratios[entry.Gear]));
 				entry.Torque = entry.PWheel / entry.AngularVelocity;
 			}
 		}
@@ -216,8 +212,6 @@ namespace TUGraz.VectoCore.Models.SimulationComponent.Impl
 				return new ResponseCycleFinished { Source = this };
 			}
 
-			Gearbox.Gear = LeftSample.Current.Gear;
-			Gearbox.Disengaged = LeftSample.Current.Gear == 0;
 			return base.Request(absTime, dt);
 		}
 

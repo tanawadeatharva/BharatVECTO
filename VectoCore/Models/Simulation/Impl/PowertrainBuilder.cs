@@ -18,6 +18,7 @@
 
 using System;
 using System.Diagnostics;
+using System.Linq;
 using TUGraz.VectoCore.Exceptions;
 using TUGraz.VectoCore.Models.Connector.Ports;
 using TUGraz.VectoCore.Models.Simulation.Data;
@@ -79,10 +80,10 @@ namespace TUGraz.VectoCore.Models.Simulation.Impl
 		{
 			var container = new VehicleContainer(_modData, _sumWriter, ExecutionMode.Engineering);
 
-			data.GearboxData.Type = GearboxType.DrivingCycle;
-			var gearbox = GetGearbox(container, data.GearboxData);
+			var gearbox = new CycleGearbox(container, data.GearboxData);
 
-			var cycle = new PWheelCycle(container, data.Cycle, data.AxleGearData.AxleGear.Ratio, (Gearbox)gearbox);
+			var cycle = new PWheelCycle(container, data.Cycle, data.AxleGearData.AxleGear.Ratio,
+				gearbox.ModelData.Gears.ToDictionary(g => g.Key, g => g.Value.Ratio));
 
 			var tmp = AddComponent(cycle, new AxleGear(container, data.AxleGearData));
 
@@ -185,7 +186,7 @@ namespace TUGraz.VectoCore.Models.Simulation.Impl
 				new Wheels(container, data.VehicleData.DynamicTyreRadius, data.VehicleData.WheelsInertia));
 			var brakes = AddComponent(wheels, new Brakes(container));
 			var tmp = AddComponent(brakes, new AxleGear(container, data.AxleGearData));
-			
+
 			var gearbox = new CycleGearbox(container, data.GearboxData);
 
 			switch (data.Retarder.Type) {
@@ -324,9 +325,6 @@ namespace TUGraz.VectoCore.Models.Simulation.Impl
 					break;
 				case GearboxType.Custom:
 					strategy = new CustomShiftStrategy(data, container);
-					break;
-				case GearboxType.DrivingCycle:
-					strategy = new PWheelShiftStrategy(data, container);
 					break;
 				default:
 					throw new VectoSimulationException("Unknown Gearbox Type: {0}", data.Type);
