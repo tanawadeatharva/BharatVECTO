@@ -310,6 +310,9 @@ namespace TUGraz.VectoCore.Tests.Models.SimulationComponentData
 			var fullLoadCurve = AbstractSimulationDataAdapter.IntersectFullLoadCurves(engineFLD, gbxFLD);
 
 			Assert.AreEqual(10, fullLoadCurve.FullLoadEntries.Count);
+
+			Assert.AreEqual(1180.0, fullLoadCurve.FullLoadStationaryTorque(560.RPMtoRad()).Value());
+			Assert.AreEqual(1100.0, fullLoadCurve.FullLoadStationaryTorque(2100.RPMtoRad()).Value());
 		}
 
 		protected PerSecond SpeedToAngularSpeed(double v, double r)
