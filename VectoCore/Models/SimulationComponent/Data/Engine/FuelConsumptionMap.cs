@@ -48,13 +48,19 @@ namespace TUGraz.VectoCore.Models.SimulationComponent.Data.Engine
 			}
 		}
 
+		public bool Extrapolated
+		{
+			get { return _fuelMap.Extrapolated; }
+		}
+
 		public static FuelConsumptionMap Create(DataTable data)
 		{
 			var headerValid = HeaderIsValid(data.Columns);
 			if (!headerValid) {
 				Logger<FuelConsumptionMap>().Warn(
 					"FuelConsumptionMap: Header Line is not valid. Expected: '{0}, {1}, {2}', Got: {3}",
-					Fields.EngineSpeed, Fields.Torque, Fields.FuelConsumption, ", ".Join(data.Columns.Cast<DataColumn>().Select(c => c.ColumnName)));
+					Fields.EngineSpeed, Fields.Torque, Fields.FuelConsumption,
+					", ".Join(data.Columns.Cast<DataColumn>().Select(c => c.ColumnName)));
 			}
 			var fuelConsumptionMap = new FuelConsumptionMap();
 
@@ -113,11 +119,13 @@ namespace TUGraz.VectoCore.Models.SimulationComponent.Data.Engine
 		/// <summary>
 		/// Calculates the fuel consumption based on the given fuel map, the angularVelocity and the torque.
 		/// </summary>
-		public KilogramPerSecond GetFuelConsumption(NewtonMeter torque, PerSecond angularVelocity)
+		public KilogramPerSecond GetFuelConsumption(NewtonMeter torque, PerSecond angularVelocity,
+			bool allowExtrapolation = false)
 		{
 			// delauney map needs is initialised with rpm, therefore the angularVelocity has to be converted.
-			return _fuelMap.Interpolate(torque.Value(), angularVelocity.ConvertTo().Rounds.Per.Minute.Value())
-				.SI().Kilo.Gramm.Per.Second.Cast<KilogramPerSecond>();
+			return
+				_fuelMap.Interpolate(torque.Value(), angularVelocity.ConvertTo().Rounds.Per.Minute.Value(), allowExtrapolation)
+					.SI().Kilo.Gramm.Per.Second.Cast<KilogramPerSecond>();
 		}
 
 		private static class Fields
