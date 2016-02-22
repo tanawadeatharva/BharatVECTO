@@ -26,7 +26,7 @@ namespace TUGraz.VectoCore.Models.SimulationComponent.Impl
 			if (!dryRun && retVal is ResponseUnderload && torque.IsEqual(0) && angularVelocity.IsEqual(0)) {
 				var x1 = angularVelocityIn;
 				var y1 = ((ResponseUnderload)retVal).Delta;
-				angularVelocityIn = SearchAlgorithm.InterpolateQuadratic(x1, y1, 100.RPMtoRad(),
+				angularVelocityIn = SearchAlgorithm.Search(x1, y1, 100.RPMtoRad(),
 					r => ((ResponseDryRun)r).DeltaDragLoad,
 					x => NextComponent.Request(absTime, dt, torqueIn, x),
 					r => ((ResponseUnderload)r).Delta < Constants.SimulationSettings.EnginePowerSearchTolerance);

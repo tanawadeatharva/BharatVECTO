@@ -344,7 +344,7 @@ namespace TUGraz.VectoCore.Models.SimulationComponent.Impl
 
 			response.Switch()
 				.Case<ResponseUnderload>(r => {
-					DataBus.BrakePower = SearchAlgorithm.InterpolateLinear(DataBus.BrakePower, -r.Delta, -r.Delta,
+					DataBus.BrakePower = SearchAlgorithm.Search(DataBus.BrakePower, -r.Delta, -r.Delta,
 						getYValue: result => ((ResponseDryRun)result).DeltaDragLoad,
 						evaluateFunction: x => {
 							DataBus.BrakePower = x;
@@ -354,7 +354,7 @@ namespace TUGraz.VectoCore.Models.SimulationComponent.Impl
 					response = NextComponent.Request(absTime, dt, acceleration, gradient);
 				})
 				.Case<ResponseOverload>(r => {
-					acceleration = SearchAlgorithm.InterpolateLinear(acceleration, r.Delta, -0.5.SI<MeterPerSquareSecond>(),
+					acceleration = SearchAlgorithm.Search(acceleration, r.Delta, -0.5.SI<MeterPerSquareSecond>(),
 						getYValue: result => ((ResponseDryRun)result).DeltaFullLoad,
 						evaluateFunction: x => NextComponent.Request(absTime, dt, x, gradient, true),
 						criterion: y => ((ResponseDryRun)y).DeltaFullLoad.Abs() < Constants.SimulationSettings.EnginePowerSearchTolerance);
@@ -546,19 +546,25 @@ namespace TUGraz.VectoCore.Models.SimulationComponent.Impl
 			// todo mk-2016-02-19: remove after finished working on measured speed cycle
 			var debugFirstResponse = response;
 
+
+			//var delta = DataBus.ClutchClosed(absTime) ? response.DeltaDragLoad : response.GearboxPowerRequest
+
 			response.Switch()
 				.Case<ResponseUnderload>(r => {
-					DataBus.BrakePower = SearchAlgorithm.InterpolateLinear(DataBus.BrakePower, -r.Delta, r.Delta,
+					DataBus.BrakePower = SearchAlgorithm.Search(DataBus.BrakePower, r.Delta, -r.Delta,
 						getYValue: result => ((ResponseDryRun)result).DeltaDragLoad,
 						evaluateFunction: x => {
 							DataBus.BrakePower = x;
 							return NextComponent.Request(absTime, dt, acceleration, gradient, true);
 						},
-						criterion: y => ((ResponseDryRun)y).DeltaDragLoad.Abs() < Constants.SimulationSettings.EnginePowerSearchTolerance);
+						criterion:
+							y =>
+								((ResponseDryRun)y).DeltaDragLoad.IsEqual(0.SI<Watt>(), Constants.SimulationSettings.EnginePowerSearchTolerance));
 					response = NextComponent.Request(absTime, dt, acceleration, gradient);
 				})
 				.Case<ResponseOverload>(r => {
-					acceleration = SearchAlgorithm.InterpolateLinear(acceleration, r.Delta, -0.5.SI<MeterPerSquareSecond>(),
+					acceleration = SearchAlgorithm.Search(acceleration, r.Delta,
+						Constants.SimulationSettings.OperatingPointInitialSearchIntervalAccelerating,
 						getYValue: result => ((ResponseDryRun)result).DeltaFullLoad,
 						evaluateFunction: x => NextComponent.Request(absTime, dt, x, gradient, true),
 						criterion: y => ((ResponseDryRun)y).DeltaFullLoad.Abs() < Constants.SimulationSettings.EnginePowerSearchTolerance);

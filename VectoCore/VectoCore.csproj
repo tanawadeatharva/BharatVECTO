@@ -242,6 +242,7 @@
     <Compile Include="Utils\EnumberableExtensionMethods.cs" />
     <Compile Include="Utils\IntExtensionMethods.cs" />
     <Compile Include="Utils\Physics.cs" />
+    <Compile Include="Utils\SearchAlgorithm.cs" />
     <Compile Include="Utils\SI.cs" />
     <Compile Include="Models\SimulationComponent\Data\SimulationComponentData.cs" />
     <Compile Include="Models\SimulationComponent\ICombustionEngine.cs" />

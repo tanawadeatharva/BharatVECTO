@@ -52,6 +52,24 @@ namespace TUGraz.VectoCore.Utils
 			return Math.Abs(self - other) < tolerance;
 		}
 
+		[DebuggerHidden]
+		public static bool IsRelativeEqual(this SI expected, SI actual, double toleranceFactor = ToleranceFactor)
+		{
+			return IsRelativeEqual(expected.Value(), actual.Value(), toleranceFactor: toleranceFactor);
+		}
+
+		[DebuggerHidden]
+		public static bool IsRelativeEqual(this double expected, double actual,
+			double toleranceFactor = DoubleExtensionMethods.ToleranceFactor)
+		{
+			if (double.IsNaN(expected)) {
+				return double.IsNaN(actual);
+			}
+
+			var ratio = expected.IsEqual(0, toleranceFactor) ? Math.Abs(actual) : Math.Abs(actual / expected - 1);
+			return ratio < toleranceFactor;
+		}
+		
 		/// <summary>
 		/// Determines whether the specified other is smaller within tolerance.
 		/// </summary>
