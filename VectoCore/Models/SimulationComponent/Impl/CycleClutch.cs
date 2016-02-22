@@ -10,14 +10,15 @@ namespace TUGraz.VectoCore.Models.SimulationComponent.Impl
 	/// Clutch which mediates angularSpeed from powertrain (depending on vehicle speed) with engineSpeed directly set from driving cycle.
 	/// Can be thought as: Clutch which is always slipping.
 	/// </summary>
-	public class MediatorClutch : Clutch
+	public class CycleClutch : Clutch
 	{
-		public MediatorClutch(IVehicleContainer container) : base(container) {}
+		public CycleClutch(IVehicleContainer container) : base(container) {}
 
 		public override IResponse Request(Second absTime, Second dt, NewtonMeter torque, PerSecond angularVelocity,
 			bool dryRun = false)
 		{
 			var angularVelocityIn = DataBus.CycleData.LeftSample.AngularVelocity;
+
 			angularVelocity = angularVelocity ?? 0.RPMtoRad();
 			var torqueIn = torque * angularVelocity / angularVelocityIn;
 

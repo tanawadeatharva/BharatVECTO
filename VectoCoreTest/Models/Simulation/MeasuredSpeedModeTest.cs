@@ -21,7 +21,6 @@ using System.Data;
 using System.Linq;
 using TUGraz.VectoCore.Utils;
 using System.Collections.Generic;
-using System.Net.Cache;
 using TUGraz.VectoCore.OutputData;
 using TUGraz.VectoCore.InputData.Reader;
 using TUGraz.VectoCore.OutputData.FileIO;
@@ -167,7 +166,7 @@ namespace TUGraz.VectoCore.Tests.Models.Simulation
 							{ 3, new GearData { Ratio = 2.289 } }
 						}
 					}, new PWheelShiftStrategy(null, container));
-				var cycle = new MeasuredSpeedGearCycle(container, drivingCycle, gearbox);
+				var cycle = new MeasuredSpeedGearDrivingCycle(container, drivingCycle);
 			}
 		}
 

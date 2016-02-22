@@ -174,7 +174,7 @@
     <Compile Include="Models\SimulationComponent\Impl\DummyRetarder.cs" />
     <Compile Include="Models\SimulationComponent\Impl\EngineAuxiliary.cs" />
     <Compile Include="Models\SimulationComponent\Impl\EngineOnlyCombustionEngine.cs" />
-    <Compile Include="Models\SimulationComponent\Impl\MediatorClutch.cs" />
+    <Compile Include="Models\SimulationComponent\Impl\CycleClutch.cs" />
     <Compile Include="Models\SimulationComponent\IShiftStrategy.cs" />
     <Compile Include="Models\SimulationComponent\Impl\ShiftStrategy.cs" />
     <Compile Include="Models\Simulation\DataBus\IClutchInfo.cs" />
@@ -252,7 +252,6 @@
     <Compile Include="Models\SimulationComponent\Impl\DistanceBasedDrivingCycle.cs" />
     <Compile Include="Models\SimulationComponent\Impl\TimeBasedDrivingCycle.cs" />
     <Compile Include="Models\SimulationComponent\Impl\CombustionEngine.cs" />
-    <Compile Include="Models\SimulationComponent\Impl\ManualGearbox.cs" />
     <Compile Include="Models\SimulationComponent\Impl\Gearbox.cs" />
     <Compile Include="Models\SimulationComponent\Impl\Wheels.cs" />
     <Compile Include="Models\SimulationComponent\IWheels.cs" />

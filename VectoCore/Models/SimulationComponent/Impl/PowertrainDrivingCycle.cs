@@ -258,14 +258,14 @@ namespace TUGraz.VectoCore.Models.SimulationComponent.Impl
 	/// <summary>
 	/// Driving Cycle for the Measured Speed Gear driving cycle.
 	/// </summary>
-	public class MeasuredSpeedGearCycle : VectoSimulationComponent, IDriverInfo, IDrivingCycleInfo, IDriverDemandInProvider,
+	public class MeasuredSpeedGearDrivingCycle : VectoSimulationComponent, IDriverInfo, IDrivingCycleInfo,
+		IDriverDemandInProvider,
 		IDriverDemandInPort, ISimulationOutProvider, ISimulationOutPort, IClutchInfo
 	{
 		protected DrivingCycleData Data;
 		protected IDriverDemandOutPort NextComponent;
 		protected IEnumerator<DrivingCycleData.DrivingCycleEntry> RightSample { get; set; }
 		protected IEnumerator<DrivingCycleData.DrivingCycleEntry> LeftSample { get; set; }
-		protected Gearbox Gearbox;
 		private bool initialize;
 
 		protected Second AbsTime { get; set; }
@@ -275,12 +275,9 @@ namespace TUGraz.VectoCore.Models.SimulationComponent.Impl
 		/// </summary>
 		/// <param name="container">The container.</param>
 		/// <param name="cycle">The cycle.</param>
-		/// <param name="gearbox">the gearbox.</param>
-		public MeasuredSpeedGearCycle(IVehicleContainer container, DrivingCycleData cycle, Gearbox gearbox)
+		public MeasuredSpeedGearDrivingCycle(IVehicleContainer container, DrivingCycleData cycle)
 			: base(container)
 		{
-			Gearbox = gearbox;
-
 			Data = cycle;
 			LeftSample = Data.Entries.GetEnumerator();
 			LeftSample.MoveNext();
@@ -335,9 +332,6 @@ namespace TUGraz.VectoCore.Models.SimulationComponent.Impl
 			var delta_t = RightSample.Current.Time - LeftSample.Current.Time;
 			var acceleration = delta_v / delta_t;
 			var gradient = LeftSample.Current.RoadGradient;
-
-			Gearbox.Gear = RightSample.Current != null ? RightSample.Current.Gear : LeftSample.Current.Gear;
-			Gearbox.Disengaged = Gearbox.Gear == 0;
 
 			var response = NextComponent.Request(absTime, dt, acceleration, gradient);
 			var firstResponse = response;
