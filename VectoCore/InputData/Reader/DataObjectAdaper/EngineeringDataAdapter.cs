@@ -136,7 +136,7 @@ namespace TUGraz.VectoCore.InputData.Reader.DataObjectAdaper
 				return new KeyValuePair<uint, GearData>((uint)(i + 1), new GearData {
 					LossMap = lossMap,
 					ShiftPolygon = shiftPolygon,
-					FullLoadCurve = gearFullLoad ?? engineData.FullLoadCurve,
+					FullLoadCurve = gearFullLoad,
 					Ratio = gear.Ratio,
 					TorqueConverterActive = gear.TorqueConverterActive
 				});

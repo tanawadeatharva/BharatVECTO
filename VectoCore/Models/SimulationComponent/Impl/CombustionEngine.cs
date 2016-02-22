@@ -170,21 +170,13 @@ namespace TUGraz.VectoCore.Models.SimulationComponent.Impl
 			ValidatePowerDemand(totalTorqueDemand); // requires CurrentState.FullDragTorque and DynamicfullLoad to be set!
 
 			// get max. torque as limited by gearbox. gearbox only limits torqueOut!
-			//NewtonMeter deltaGbxFld = null;
 			NewtonMeter gearboxFullLoad = null;
 			var curve = DataBus.GearFullLoadCurve;
 			if (curve != null) {
 				// if the current gear has a full-load curve, limit the max. torque to the 
 				// gbx. full-load and continue (remmber the delta for further below)
 				gearboxFullLoad = curve.FullLoadStationaryTorque(avgEngineSpeed);
-				//var maxGbxTorque = VectoMath.Limit(torqueOut, -gearboxFullLoad, gearboxFullLoad);
-				//if (!torqueOut.IsEqual(maxGbxTorque)) {
-				//	deltaGbxFld = torqueOut - maxGbxTorque;
-				//}
-				//CurrentState.EngineTorqueOut = maxGbxTorque;
 			}
-
-			//CurrentState.EngineTorque = totalTorqueDemand;
 
 			var deltaFull = ComputeDelta(torqueOut, totalTorqueDemand, CurrentState.DynamicFullLoadTorque, gearboxFullLoad, true);
 			var deltaDrag = ComputeDelta(torqueOut, totalTorqueDemand, CurrentState.FullDragTorque,
@@ -216,13 +208,6 @@ namespace TUGraz.VectoCore.Models.SimulationComponent.Impl
 
 			CurrentState.EngineTorque = VectoMath.Limit(totalTorqueDemand, minTorque, maxTorque);
 			CurrentState.EnginePower = CurrentState.EngineTorque * avgEngineSpeed;
-
-			//NewtonMeter deltaEngineFld = null;
-			//Watt delta = null;
-			//if (!CurrentState.EngineTorque.IsEqual(totalTorqueDemand)) {
-			//	delta = (torqueOut - CurrentState.EngineTorque) * avgEngineSpeed;
-			//}
-
 
 			if (torqueOut.IsGreater(0.SI<NewtonMeter>()) &&
 				(deltaFull * avgEngineSpeed).IsGreater(0.SI<Watt>(), Constants.SimulationSettings.EnginePowerSearchTolerance)) {
