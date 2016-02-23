@@ -451,6 +451,17 @@ namespace TUGraz.VectoCore.Tests.Models.Declaration
 		}
 
 		[TestMethod]
+		public void SegmentLookupTest()
+		{
+			//mock vehicleData
+
+			var segment = DeclarationData.Segments.Lookup(VehicleCategory.RigidTruck, AxleConfiguration.AxleConfig_4x2,
+				12000.SI<Kilogram>(), 0.SI<Kilogram>());
+
+			Assert.AreEqual(VehicleClass.Class2, segment.VehicleClass);
+		}
+
+		[TestMethod]
 		public void SegmentTest()
 		{
 			//mock vehicleData
