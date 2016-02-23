@@ -39,26 +39,26 @@ namespace TUGraz.VectoCore.InputData
 
 		IRetarderInputData RetarderInputData { get; }
 
-		IDriverInputData DriverInputData { get; }
+		IDriverDeclarationInputData DriverInputData { get; }
 	}
 
 
-	public interface IEngineeringInputDataProvider : IDeclarationInputDataProvider
+	public interface IEngineeringInputDataProvider : IInputDataProvider
 	{
-		new IEngineeringJobInputData JobInputData();
+		IEngineeringJobInputData JobInputData();
 
-		new IVehicleEngineeringInputData VehicleInputData { get; }
+		IVehicleEngineeringInputData VehicleInputData { get; }
 
-		new IGearboxEngineeringInputData GearboxInputData { get; }
+		IGearboxEngineeringInputData GearboxInputData { get; }
 
-		//IAxleGearInputData AxleGearInputData { get; }
+		IAxleGearInputData AxleGearInputData { get; }
 
-		new IEngineEngineeringInputData EngineInputData { get; }
+		IEngineEngineeringInputData EngineInputData { get; }
 
-		new IAuxiliariesEngineeringInputData AuxiliaryInputData();
+		IAuxiliariesEngineeringInputData AuxiliaryInputData();
 
-		//IRetarderInputData RetarderInputData { get; }
+		IRetarderInputData RetarderInputData { get; }
 
-		//IDriverInputData DriverInputData { get; }
+		IDriverEngineeringInputData DriverInputData { get; }
 	}
 }

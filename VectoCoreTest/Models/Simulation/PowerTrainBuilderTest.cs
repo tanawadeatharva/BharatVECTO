@@ -18,6 +18,8 @@
 
 using System.Linq;
 using Microsoft.VisualStudio.TestTools.UnitTesting;
+using TUGraz.VectoCore.Exceptions;
+using TUGraz.VectoCore.InputData;
 using TUGraz.VectoCore.InputData.FileIO.JSON;
 using TUGraz.VectoCore.InputData.Reader.Impl;
 using TUGraz.VectoCore.Models.Connector.Ports;
@@ -37,7 +39,11 @@ namespace TUGraz.VectoCore.Tests.Models.Simulation
 		public void BuildFullPowerTrainTest()
 		{
 			var dataProvider = JSONInputDataFactory.ReadJsonJob(JobFile);
-			var reader = new EngineeringModeVectoRunDataFactory(dataProvider);
+			var engineeringProvider = dataProvider as IEngineeringInputDataProvider;
+			if (engineeringProvider == null) {
+				throw new VectoException("Failed to cas to Engineering InputDataProvider");
+			}
+			var reader = new EngineeringModeVectoRunDataFactory(engineeringProvider);
 			var runData = reader.NextRun().First();
 
 			var writer = new MockModalDataContainer();

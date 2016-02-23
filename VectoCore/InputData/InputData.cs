@@ -472,29 +472,41 @@ namespace TUGraz.VectoCore.InputData
 		DataTable CycleData { get; }
 	}
 
-	public interface IDriverInputData
+	public interface IDriverDeclarationInputData
 	{
 		bool SavedInDeclarationMode { get; }
 
-		IStartStopInputData StartStop { get; }
-		ILookaheadCoastingInputData Lookahead { get; }
-		IOverSpeedEcoRollInputData OverSpeedEcoRoll { get; }
+		IStartStopDeclarationInputData StartStop { get; }
+
+		IOverSpeedEcoRollDeclarationInputData OverSpeedEcoRoll { get; }
+	}
+
+	public interface IDriverEngineeringInputData : IDriverDeclarationInputData
+	{
+		new IStartStopEngineeringInputData StartStop { get; }
+
+		new IOverSpeedEcoRollEngineeringInputData OverSpeedEcoRoll { get; }
 
 		/// <summary>
 		/// P009; P033, P034, P035
 		/// cf. VECTO Input Parameters.xlsx
 		/// </summary>
 		DataTable AccelerationCurve { get; }
+
+		ILookaheadCoastingInputData Lookahead { get; }
 	}
 
-	public interface IOverSpeedEcoRollInputData
+	public interface IOverSpeedEcoRollDeclarationInputData
 	{
 		/// <summary>
 		/// P015
 		/// cf. VECTO Input Parameters.xlsx
 		/// </summary>
 		DriverData.DriverMode Mode { get; }
+	}
 
+	public interface IOverSpeedEcoRollEngineeringInputData : IOverSpeedEcoRollDeclarationInputData
+	{
 		/// <summary>
 		/// P016
 		/// cf. VECTO Input Parameters.xlsx
@@ -535,14 +547,17 @@ namespace TUGraz.VectoCore.InputData
 		MeterPerSecond MinSpeed { get; }
 	}
 
-	public interface IStartStopInputData
+	public interface IStartStopDeclarationInputData
 	{
 		/// <summary>
 		/// P010  StartStop - enabled
 		/// cf. VECTO Input Parameters.xlsx
 		/// </summary>
 		bool Enabled { get; }
+	}
 
+	public interface IStartStopEngineeringInputData : IStartStopDeclarationInputData
+	{
 		/// <summary>
 		/// P011  StartStop - Max speed
 		/// cf. VECTO Input Parameters.xlsx

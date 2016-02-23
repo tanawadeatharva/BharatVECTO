@@ -173,8 +173,8 @@ namespace TUGraz.VectoCore.InputData.FileIO.JSON
 	///   }
 	/// }
 	/// </code>
-	public class JSONInputDataV2 : JSONFile, IEngineeringInputDataProvider, IEngineeringJobInputData, IDriverInputData,
-		IAuxiliariesEngineeringInputData
+	public class JSONInputDataV2 : JSONFile, IEngineeringInputDataProvider, IDeclarationInputDataProvider,
+		IEngineeringJobInputData, IDriverEngineeringInputData, IAuxiliariesEngineeringInputData
 	{
 		protected IGearboxEngineeringInputData Gearbox;
 
@@ -304,6 +304,11 @@ namespace TUGraz.VectoCore.InputData.FileIO.JSON
 			return this;
 		}
 
+		IDriverEngineeringInputData IEngineeringInputDataProvider.DriverInputData
+		{
+			get { return this; }
+		}
+
 		IAuxiliariesDeclarationInputData IDeclarationInputDataProvider.AuxiliaryInputData()
 		{
 			return AuxiliaryInputData();
@@ -320,7 +325,7 @@ namespace TUGraz.VectoCore.InputData.FileIO.JSON
 			}
 		}
 
-		public virtual IDriverInputData DriverInputData
+		public virtual IDriverDeclarationInputData DriverInputData
 		{
 			get { return this; }
 		}
@@ -383,7 +388,7 @@ namespace TUGraz.VectoCore.InputData.FileIO.JSON
 
 		#region DriverInputData
 
-		public virtual IStartStopInputData StartStop
+		public virtual IStartStopEngineeringInputData StartStop
 		{
 			get
 			{
@@ -393,6 +398,17 @@ namespace TUGraz.VectoCore.InputData.FileIO.JSON
 					Delay = startStop.GetEx<double>(JsonKeys.DriverData_StartStop_Delay).SI<Second>(),
 					MaxSpeed = startStop.GetEx<double>(JsonKeys.DriverData_StartStop_MaxSpeed).KMPHtoMeterPerSecond(),
 					MinTime = startStop.GetEx<double>(JsonKeys.DriverData_StartStop_MinTime).SI<Second>(),
+				};
+			}
+		}
+
+		IOverSpeedEcoRollDeclarationInputData IDriverDeclarationInputData.OverSpeedEcoRoll
+		{
+			get
+			{
+				var overspeed = Body.GetEx(JsonKeys.DriverData_OverspeedEcoRoll);
+				return new OverSpeedEcoRollInputData() {
+					Mode = DriverData.ParseDriverMode(overspeed.GetEx<string>(JsonKeys.DriverData_OverspeedEcoRoll_Mode))
 				};
 			}
 		}
@@ -410,7 +426,12 @@ namespace TUGraz.VectoCore.InputData.FileIO.JSON
 			}
 		}
 
-		public virtual IOverSpeedEcoRollInputData OverSpeedEcoRoll
+		IStartStopDeclarationInputData IDriverDeclarationInputData.StartStop
+		{
+			get { return StartStop; }
+		}
+
+		public virtual IOverSpeedEcoRollEngineeringInputData OverSpeedEcoRoll
 		{
 			get
 			{

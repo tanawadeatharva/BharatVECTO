@@ -159,7 +159,7 @@ namespace TUGraz.VectoCore.InputData.Reader.DataObjectAdaper
 			}).Concat(new VectoRunData.AuxData { ID = "", DemandType = AuxiliaryDemandType.Direct }.ToEnumerable()).ToList();
 		}
 
-		internal DriverData CreateDriverData(IDriverInputData driver)
+		internal DriverData CreateDriverData(IDriverEngineeringInputData driver)
 		{
 			if (driver.SavedInDeclarationMode) {
 				WarnEngineeringMode("DriverData");

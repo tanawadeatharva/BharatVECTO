@@ -16,6 +16,7 @@
 * limitations under the Licence.
 */
 
+using TUGraz.VectoCore.Exceptions;
 using TUGraz.VectoCore.InputData;
 using TUGraz.VectoCore.InputData.FileIO.JSON;
 using TUGraz.VectoCore.InputData.Reader.DataObjectAdaper;
@@ -71,8 +72,12 @@ namespace TUGraz.VectoCore.Tests.Utils
 		public static DriverData CreateDriverDataFromFile(string driverDataFile)
 		{
 			var jobInput = JSONInputDataFactory.ReadJsonJob(driverDataFile);
+			var engineeringJob = jobInput as IEngineeringInputDataProvider;
+			if (engineeringJob == null) {
+				throw new VectoException("Failed to cas to Engineering InputDataProvider");
+			}
 			var dao = new EngineeringDataAdapter();
-			return dao.CreateDriverData(jobInput.DriverInputData);
+			return dao.CreateDriverData(engineeringJob.DriverInputData);
 		}
 	}
 }

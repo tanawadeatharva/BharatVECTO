@@ -33,7 +33,7 @@ namespace TUGraz.VectoCore.InputData.Reader.DataObjectAdaper
 {
 	public class DeclarationDataAdapter : AbstractSimulationDataAdapter
 	{
-		public DriverData CreateDriverData(IDriverInputData data)
+		public DriverData CreateDriverData(IDriverDeclarationInputData data)
 		{
 			if (!data.SavedInDeclarationMode) {
 				WarnDeclarationMode("DriverData");

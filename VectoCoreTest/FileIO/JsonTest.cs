@@ -77,9 +77,8 @@ namespace TUGraz.VectoCore.Tests.FileIO
 			var json = (JObject)JToken.ReadFrom(new JsonTextReader(File.OpenText(TestJobFile)));
 			((JObject)json["Body"]).Property("Cycles").Remove();
 
-			AssertHelper.Exception<InvalidFileFormatException>(() => {
-				var tmp = new JSONInputDataV2(json, TestJobFile).Cycles;
-			}, "Key Cycles not found");
+			AssertHelper.Exception<InvalidFileFormatException>(
+				() => { var tmp = new JSONInputDataV2(json, TestJobFile).Cycles; }, "Key Cycles not found");
 		}
 
 		[TestMethod]
@@ -100,7 +99,8 @@ namespace TUGraz.VectoCore.Tests.FileIO
 			((JObject)json["Body"]).Property("VACC").Remove();
 
 			AssertHelper.Exception<VectoException>(() => {
-				var tmp = new JSONInputDataV2(json, TestJobFile).DriverInputData.AccelerationCurve;
+				IEngineeringInputDataProvider input = new JSONInputDataV2(json, TestJobFile);
+				var tmp = input.DriverInputData.AccelerationCurve;
 			}, "AccelerationCurve (VACC) required");
 		}
 
@@ -111,7 +111,8 @@ namespace TUGraz.VectoCore.Tests.FileIO
 			var json = (JObject)JToken.ReadFrom(new JsonTextReader(File.OpenText(TestJobFile)));
 			json["Body"]["VACC"] = "Truck";
 
-			var tmp = new JSONInputDataV2(json, TestJobFile).DriverInputData.AccelerationCurve;
+			IEngineeringInputDataProvider input = new JSONInputDataV2(json, TestJobFile);
+			var tmp = input.DriverInputData.AccelerationCurve;
 			Assert.IsNotNull(tmp);
 		}
 
@@ -121,9 +122,11 @@ namespace TUGraz.VectoCore.Tests.FileIO
 			var json = (JObject)JToken.ReadFrom(new JsonTextReader(File.OpenText(TestJobFile)));
 			((JObject)json["Body"]).Property("LAC").Remove();
 
-			AssertHelper.Exception<VectoException>(() => {
-				var tmp = new JSONInputDataV2(json, TestJobFile).DriverInputData.Lookahead;
-			}, "Key LAC not found");
+			AssertHelper.Exception<VectoException>(
+				() => {
+					IEngineeringInputDataProvider input = new JSONInputDataV2(json, TestJobFile);
+					var tmp = input.DriverInputData.Lookahead;
+				}, "Key LAC not found");
 		}
 
 		[TestMethod]
@@ -132,9 +135,9 @@ namespace TUGraz.VectoCore.Tests.FileIO
 			var json = (JObject)JToken.ReadFrom(new JsonTextReader(File.OpenText(TestJobFile)));
 			((JObject)json["Body"]).Property("OverSpeedEcoRoll").Remove();
 
-			AssertHelper.Exception<VectoException>(() => {
-				var tmp = new JSONInputDataV2(json, TestJobFile).DriverInputData.OverSpeedEcoRoll;
-			}, "Key OverSpeedEcoRoll not found");
+			AssertHelper.Exception<VectoException>(
+				() => { var tmp = new JSONInputDataV2(json, TestJobFile).DriverInputData.OverSpeedEcoRoll; },
+				"Key OverSpeedEcoRoll not found");
 		}
 	}
 

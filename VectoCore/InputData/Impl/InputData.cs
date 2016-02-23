@@ -32,7 +32,7 @@ namespace TUGraz.VectoCore.InputData.Impl
 		public DataTable CycleData { get; internal set; }
 	}
 
-	public class StartStopInputData : IStartStopInputData
+	public class StartStopInputData : IStartStopEngineeringInputData
 	{
 		public bool Enabled { get; internal set; }
 
@@ -52,7 +52,7 @@ namespace TUGraz.VectoCore.InputData.Impl
 		public MeterPerSecond MinSpeed { get; internal set; }
 	}
 
-	public class OverSpeedEcoRollInputData : IOverSpeedEcoRollInputData
+	public class OverSpeedEcoRollInputData : IOverSpeedEcoRollEngineeringInputData
 	{
 		public DriverData.DriverMode Mode { get; internal set; }
 

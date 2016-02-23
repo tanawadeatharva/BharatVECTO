@@ -35,7 +35,7 @@ namespace TUGraz.VectoCore.InputData.FileIO.JSON
 			}
 		}
 
-		public static IEngineeringInputDataProvider ReadJsonJob(string filename)
+		public static IInputDataProvider ReadJsonJob(string filename)
 		{
 			var json = ReadFile(filename);
 			var version = ReadVersion(json);
