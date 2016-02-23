@@ -37,7 +37,7 @@ namespace TUGraz.VectoCore.Tests.Models.SimulationComponent
 		{
 			var vehicle = new VehicleContainer();
 			var retarderData = RetarderLossMap.ReadFromFile(RetarderLossMapFile);
-			var retarder = new Retarder(vehicle, retarderData);
+			var retarder = new Retarder(vehicle, retarderData, 1.0);
 
 			var nextRequest = new MockTnOutPort();
 
