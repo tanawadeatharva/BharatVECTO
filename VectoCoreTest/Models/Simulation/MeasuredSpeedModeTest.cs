@@ -155,19 +155,7 @@ namespace TUGraz.VectoCore.Tests.Models.Simulation
 			var drivingCycle = DrivingCycleDataReader.ReadFromStream(inputData.GetStream(), cycleType);
 			Assert.AreEqual(cycleType, drivingCycle.CycleType);
 
-			if (cycleType == CycleType.MeasuredSpeed) {
-				var cycle = new MeasuredSpeedDrivingCycle(container, drivingCycle);
-			} else {
-				var gearbox = new CycleGearbox(container,
-					new GearboxData {
-						Gears = new Dictionary<uint, GearData> {
-							{ 1, new GearData { Ratio = 6.696 } },
-							{ 2, new GearData { Ratio = 3.806 } },
-							{ 3, new GearData { Ratio = 2.289 } }
-						}
-					});
-				var cycle = new MeasuredSpeedGearDrivingCycle(container, drivingCycle);
-			}
+			var cycle = new MeasuredSpeedDrivingCycle(container, drivingCycle);
 		}
 
 
@@ -327,10 +315,9 @@ namespace TUGraz.VectoCore.Tests.Models.Simulation
 
 			Assert.IsTrue(jobContainer.Runs.All(r => r.Success), string.Concat(jobContainer.Runs.Select(r => r.ExecException)));
 
-			Assert.IsTrue(File.Exists(@"TestData\Jobs\MeasuredSpeed_Gear.vsum"));
-			Assert.IsTrue(File.Exists(@"TestData\Jobs\Measuredspeed_Gear.vmod"));
-
-			Assert.Fail("Implement this test!");
+			Assert.IsTrue(File.Exists(@"TestData\MeasuredSpeed\MeasuredSpeedGear.vsum"), "SUM file missing.");
+			Assert.IsTrue(File.Exists(@"TestData\MeasuredSpeed\MeasuredSpeedGear_MeasuredSpeed_Gear_Rural.vmod"),
+				"MOD File missing.");
 		}
 	}
 }

@@ -180,7 +180,7 @@ namespace TUGraz.VectoCore.Models.Simulation.Impl
 			Debug.Assert(data.Cycle.CycleType == CycleType.MeasuredSpeedGear);
 
 			var container = new VehicleContainer(_modData, _sumWriter, ExecutionMode.Engineering) { RunData = data };
-			var cycle = new MeasuredSpeedGearDrivingCycle(container, data.Cycle);
+			var cycle = new MeasuredSpeedDrivingCycle(container, data.Cycle);
 			var vehicle = AddComponent(cycle, new Vehicle(container, data.VehicleData));
 			var wheels = AddComponent(vehicle,
 				new Wheels(container, data.VehicleData.DynamicTyreRadius, data.VehicleData.WheelsInertia));

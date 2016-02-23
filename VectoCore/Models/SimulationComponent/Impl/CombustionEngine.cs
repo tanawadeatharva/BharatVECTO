@@ -414,6 +414,7 @@ namespace TUGraz.VectoCore.Models.SimulationComponent.Impl
 
 			//public Second AbsTime { get; set; }
 
+			// ReSharper disable once InconsistentNaming
 			public Second dt { get; set; }
 
 			public PerSecond EngineSpeed { get; set; }

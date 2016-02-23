@@ -12,15 +12,7 @@
     "EngineFile": "Engine.veng",
     "GearboxFile": "Gearbox.vgbx",
     "Cycles": [
-      "MeasuredSpeed_Gear_Motorway.vdri"
-    ],
-    "Aux": [
-      {
-        "ID": "Alt",
-        "Type": "Alternator",
-        "Path": "Alternator.vaux",
-        "Technology": ""
-      }
+      "MeasuredSpeed_Gear_Rural.vdri"
     ],
     "VACC": "Driver.vacc",
     "StartStop": {
