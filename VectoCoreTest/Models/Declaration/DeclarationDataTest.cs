@@ -453,12 +453,58 @@ namespace TUGraz.VectoCore.Tests.Models.Declaration
 		[TestMethod]
 		public void SegmentLookupTest()
 		{
-			//mock vehicleData
+			AssertHelper.Exception<VectoException>(
+				() => DeclarationData.Segments.Lookup(VehicleCategory.RigidTruck, AxleConfiguration.AxleConfig_4x2,
+					1000.SI<Kilogram>(), 0.SI<Kilogram>()), "Gross vehicle mass must be greater than 7.5 tons");
 
 			var segment = DeclarationData.Segments.Lookup(VehicleCategory.RigidTruck, AxleConfiguration.AxleConfig_4x2,
-				12000.SI<Kilogram>(), 0.SI<Kilogram>());
+				10000.SI<Kilogram>(), 0.SI<Kilogram>());
+			Assert.AreEqual(VehicleClass.Class1, segment.VehicleClass);
 
+			segment = DeclarationData.Segments.Lookup(VehicleCategory.Tractor, AxleConfiguration.AxleConfig_4x2,
+				10000.SI<Kilogram>(), 0.SI<Kilogram>());
+			Assert.AreEqual(VehicleClass.Class1, segment.VehicleClass);
+
+			segment = DeclarationData.Segments.Lookup(VehicleCategory.RigidTruck, AxleConfiguration.AxleConfig_4x2,
+				12000.SI<Kilogram>(), 0.SI<Kilogram>());
 			Assert.AreEqual(VehicleClass.Class2, segment.VehicleClass);
+
+			segment = DeclarationData.Segments.Lookup(VehicleCategory.Tractor, AxleConfiguration.AxleConfig_4x2,
+				12000.SI<Kilogram>(), 0.SI<Kilogram>());
+			Assert.AreEqual(VehicleClass.Class2, segment.VehicleClass);
+
+			segment = DeclarationData.Segments.Lookup(VehicleCategory.RigidTruck, AxleConfiguration.AxleConfig_4x2,
+				16000.SI<Kilogram>(), 0.SI<Kilogram>());
+			Assert.AreEqual(VehicleClass.Class3, segment.VehicleClass);
+
+			segment = DeclarationData.Segments.Lookup(VehicleCategory.Tractor, AxleConfiguration.AxleConfig_4x2,
+				16000.SI<Kilogram>(), 0.SI<Kilogram>());
+			Assert.AreEqual(VehicleClass.Class3, segment.VehicleClass);
+
+			segment = DeclarationData.Segments.Lookup(VehicleCategory.RigidTruck, AxleConfiguration.AxleConfig_4x2,
+				16001.SI<Kilogram>(), 0.SI<Kilogram>());
+			Assert.AreEqual(VehicleClass.Class4, segment.VehicleClass);
+
+			segment = DeclarationData.Segments.Lookup(VehicleCategory.Tractor, AxleConfiguration.AxleConfig_4x2,
+				16001.SI<Kilogram>(), 0.SI<Kilogram>());
+			Assert.AreEqual(VehicleClass.Class5, segment.VehicleClass);
+
+
+			segment = DeclarationData.Segments.Lookup(VehicleCategory.RigidTruck, AxleConfiguration.AxleConfig_6x2,
+				7500.SI<Kilogram>(), 0.SI<Kilogram>());
+			Assert.AreEqual(VehicleClass.Class9, segment.VehicleClass);
+
+			segment = DeclarationData.Segments.Lookup(VehicleCategory.Tractor, AxleConfiguration.AxleConfig_6x2,
+				7500.SI<Kilogram>(), 0.SI<Kilogram>());
+			Assert.AreEqual(VehicleClass.Class10, segment.VehicleClass);
+
+			segment = DeclarationData.Segments.Lookup(VehicleCategory.RigidTruck, AxleConfiguration.AxleConfig_6x2,
+				40000.SI<Kilogram>(), 0.SI<Kilogram>());
+			Assert.AreEqual(VehicleClass.Class9, segment.VehicleClass);
+
+			segment = DeclarationData.Segments.Lookup(VehicleCategory.Tractor, AxleConfiguration.AxleConfig_6x2,
+				40000.SI<Kilogram>(), 0.SI<Kilogram>());
+			Assert.AreEqual(VehicleClass.Class10, segment.VehicleClass);
 		}
 
 		[TestMethod]
