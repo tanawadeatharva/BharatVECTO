@@ -91,6 +91,7 @@
     <Compile Include="Integration\SimulationRuns\FullPowertrain.cs" />
     <Compile Include="Integration\Truck40tPowerTrain.cs" />
     <Compile Include="Models\SimulationComponent\GearboxPowertrainTest.cs" />
+    <Compile Include="Utils\InputDataHelper.cs" />
     <Compile Include="Utils\MockSimulationDataFactory.cs" />
     <Compile Include="Utils\Port.cs" />
     <Compile Include="Models\SimulationComponentData\AuxiliaryTypeHelperTest.cs" />

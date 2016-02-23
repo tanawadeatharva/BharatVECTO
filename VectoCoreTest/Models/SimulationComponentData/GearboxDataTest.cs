@@ -302,10 +302,10 @@ namespace TUGraz.VectoCore.Tests.Models.SimulationComponentData
 				"2100, 2500"
 			};
 			var dataEng =
-				VectoCSVFile.ReadStream(SimpleDrivingCycles.InputDataAsStream("n [U/min],Mfull [Nm],Mdrag [Nm]", engineFLDString));
+				VectoCSVFile.ReadStream(InputDataHelper.InputDataAsStream("n [U/min],Mfull [Nm],Mdrag [Nm]", engineFLDString));
 			var engineFLD = EngineFullLoadCurve.Create(dataEng, true);
 
-			var dataGbx = VectoCSVFile.ReadStream(SimpleDrivingCycles.InputDataAsStream("n [U/min],Mfull [Nm]", gbxFLDString));
+			var dataGbx = VectoCSVFile.ReadStream(InputDataHelper.InputDataAsStream("n [U/min],Mfull [Nm]", gbxFLDString));
 			var gbxFLD = FullLoadCurve.Create(dataGbx, true);
 
 			var fullLoadCurve = AbstractSimulationDataAdapter.IntersectFullLoadCurves(engineFLD, gbxFLD);
