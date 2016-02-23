@@ -34,11 +34,11 @@ namespace TUGraz.VectoCore.InputData.Reader.Impl
 		protected static Dictionary<MissionType, DrivingCycleData> CyclesCache =
 			new Dictionary<MissionType, DrivingCycleData>();
 
-		protected IInputDataProvider InputDataProvider;
+		protected IDeclarationInputDataProvider InputDataProvider;
 
 		protected DeclarationReport Report;
 
-		internal DeclarationModeVectoRunDataFactory(IInputDataProvider dataProvider, DeclarationReport report)
+		internal DeclarationModeVectoRunDataFactory(IDeclarationInputDataProvider dataProvider, DeclarationReport report)
 		{
 			InputDataProvider = dataProvider;
 			Report = report;
@@ -49,7 +49,7 @@ namespace TUGraz.VectoCore.InputData.Reader.Impl
 			var dao = new DeclarationDataAdapter();
 			var segment = GetVehicleClassification(InputDataProvider.VehicleInputData.VehicleCategory,
 				InputDataProvider.VehicleInputData.AxleConfiguration,
-				InputDataProvider.VehicleInputData.GrossVehicleMassRating, InputDataProvider.VehicleInputData.CurbWeight);
+				InputDataProvider.VehicleInputData.GrossVehicleMassRating, InputDataProvider.VehicleInputData.CurbWeightChassis);
 			var driverdata = dao.CreateDriverData(InputDataProvider.DriverInputData);
 			driverdata.AccelerationCurve = AccelerationCurveData.ReadFromStream(segment.AccelerationFile);
 

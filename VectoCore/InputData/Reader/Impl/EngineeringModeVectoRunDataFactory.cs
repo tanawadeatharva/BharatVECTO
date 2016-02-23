@@ -32,9 +32,9 @@ namespace TUGraz.VectoCore.InputData.Reader.Impl
 	{
 		protected DriverData Driver;
 
-		protected IInputDataProvider InputDataProvider;
+		protected IEngineeringInputDataProvider InputDataProvider;
 
-		internal EngineeringModeVectoRunDataFactory(IInputDataProvider dataProvider)
+		internal EngineeringModeVectoRunDataFactory(IEngineeringInputDataProvider dataProvider)
 		{
 			InputDataProvider = dataProvider;
 		}
