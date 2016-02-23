@@ -33,7 +33,7 @@ namespace TUGraz.VectoCore.Models.SimulationComponent.Data.Gearbox
 		private readonly double _ratio;
 
 		/// <summary>
-		/// The Loss map. [X=Input EngineSpeed, Y=Output Torque] => Z=Input Torque
+		/// The Loss map. [X=Output EngineSpeed, Y=Output Torque] => Z=Torque Loss
 		/// </summary>
 		private readonly DelauneyMap _lossMap;
 
@@ -131,8 +131,8 @@ namespace TUGraz.VectoCore.Models.SimulationComponent.Data.Gearbox
 			_invertedLossMap = new DelauneyMap();
 			foreach (var entry in _entries) {
 				var outTorque = (entry.InputTorque - entry.TorqueLoss) * _ratio;
-
-				_lossMap.AddPoint(entry.InputSpeed.Value(), outTorque.Value(), entry.TorqueLoss.Value());
+				var outSpeed = entry.InputSpeed.Value() / _ratio;
+				_lossMap.AddPoint(outSpeed, outTorque.Value(), entry.TorqueLoss.Value());
 				_invertedLossMap.AddPoint(entry.InputSpeed.Value(), entry.InputTorque.Value(), entry.TorqueLoss.Value());
 			}
 
@@ -142,20 +142,18 @@ namespace TUGraz.VectoCore.Models.SimulationComponent.Data.Gearbox
 
 
 		/// <summary>
-		///	Computes the INPUT torque given by the input-engineSpeed and the output-torque.
+		///	Computes the torque loss (input side) given by the output gearbox speed and the output-torque.
 		/// </summary>
-		/// <param name="inAngularVelocity">Angular speed at input side.</param>
+		/// <param name="outAngularVelocity">Angular speed at output side.</param>
 		/// <param name="outTorque">Torque at output side (as requested by the previous componend towards the wheels).</param>
-		/// <returns>Torque needed at input side (towards the engine).</returns>
-		public NewtonMeter GetInTorque(PerSecond inAngularVelocity, NewtonMeter outTorque)
+		/// <returns>Torque loss as seen on input side (towards the engine).</returns>
+		public NewtonMeter GetTorqueLoss(PerSecond outAngularVelocity, NewtonMeter outTorque)
 		{
-			var torqueLoss = _lossMap.Interpolate(inAngularVelocity.Value(), outTorque.Value(), true).SI<NewtonMeter>();
+			var torqueLoss = _lossMap.Interpolate(outAngularVelocity.Value(), outTorque.Value(), true).SI<NewtonMeter>();
 
-			var inTorque = outTorque / _ratio + torqueLoss;
-
-			Log.Debug("GearboxLoss {0}: {1}, inAngularVelocity: {2}, outTorque: {3}", GearName, torqueLoss,
-				inAngularVelocity, outTorque);
-			return inTorque;
+			Log.Debug("GearboxLoss {0}: {1}, outAngularVelocity: {2}, outTorque: {3}", GearName, torqueLoss,
+				outAngularVelocity, outTorque);
+			return torqueLoss;
 		}
 
 		///  <summary>
