@@ -134,7 +134,7 @@ namespace TUGraz.VectoCore.Tests.Models.Simulation
 		[TestMethod]
 		public void Pwheel_Run_Test()
 		{
-			var jobFile = @"TestData\Jobs\Pwheel.vecto";
+			var jobFile = @"TestData\Pwheel\Pwheel.vecto";
 			var fileWriter = new FileOutputWriter(jobFile);
 			var sumWriter = new SummaryDataContainer(fileWriter);
 			var jobContainer = new JobContainer(sumWriter);
@@ -149,10 +149,10 @@ namespace TUGraz.VectoCore.Tests.Models.Simulation
 
 			Assert.IsTrue(jobContainer.Runs.All(r => r.Success), string.Concat(jobContainer.Runs.Select(r => r.ExecException)));
 
-			ResultFileHelper.TestSumFile(@"TestData\Results\Pwheel\Atego_ges.v2.vsum", @"TestData\Jobs\Pwheel.vsum");
+			ResultFileHelper.TestSumFile(@"TestData\Pwheel\Results\Atego_ges.v2.vsum", @"TestData\Jobs\Pwheel.vsum");
 
-			ResultFileHelper.TestModFile(@"TestData\Results\Pwheel\Atego_ges_Gear2_pt1_rep1_actual.vmod",
-				@"TestData\Jobs\Pwheel_Gear2_pt1_rep1_actual.vmod");
+			ResultFileHelper.TestModFile(@"TestData\Pwheel\Results\Atego_ges_Gear2_pt1_rep1_actual.vmod",
+				@"TestData\Pwheel\Pwheel_Gear2_pt1_rep1_actual.vmod");
 		}
 
 		/// <summary>
@@ -162,7 +162,7 @@ namespace TUGraz.VectoCore.Tests.Models.Simulation
 		[TestMethod]
 		public void Pwheel_ultimate_Run_Test()
 		{
-			var jobFile = @"TestData\Jobs\Pwheel_ultimate.vecto";
+			var jobFile = @"TestData\Pwheel\Pwheel_ultimate.vecto";
 			var fileWriter = new FileOutputWriter(jobFile);
 			var sumWriter = new SummaryDataContainer(fileWriter);
 			var jobContainer = new JobContainer(sumWriter);
@@ -177,8 +177,8 @@ namespace TUGraz.VectoCore.Tests.Models.Simulation
 
 			Assert.IsTrue(jobContainer.Runs.All(r => r.Success), string.Concat(jobContainer.Runs.Select(r => r.ExecException)));
 
-			ResultFileHelper.TestModFile(@"TestData\Results\P_wheel_in\Atego_HDVCO2_RD_#1_AuxStd.vmod",
-				@"TestData\Jobs\Pwheel_ultimate_RD_#1_Pwheel_AuxStd.vmod", testRowCount: false);
+			ResultFileHelper.TestModFile(@"TestData\Pwheel\Results\P_wheel_in\Atego_HDVCO2_RD_#1_AuxStd.vmod",
+				@"TestData\Pwheel\Pwheel_ultimate_RD_#1_Pwheel_AuxStd.vmod", testRowCount: false);
 		}
 	}
 }

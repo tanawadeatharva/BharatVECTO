@@ -890,12 +890,6 @@
     <None Include="TestData\Jobs\EngineOnlyJob.vecto">
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
     </None>
-    <None Include="TestData\Jobs\Pwheel.vecto">
-      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
-    </None>
-    <None Include="TestData\Jobs\Pwheel_ultimate.vecto">
-      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
-    </None>
     <None Include="TestData\MeasuredSpeed\Alternator.vaux">
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
     </None>
@@ -951,6 +945,21 @@
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
     </None>
     <None Include="TestData\MeasuredSpeed\Vehicle.vveh">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </None>
+    <None Include="TestData\Pwheel\Pwheel.vecto">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </None>
+    <None Include="TestData\Pwheel\Pwheel_ultimate.vecto">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </None>
+    <None Include="TestData\Pwheel\Results\Atego_ges.v2.vsum">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </None>
+    <None Include="TestData\Pwheel\Results\Atego_ges_Gear2_pt1_rep1_actual.vmod">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </None>
+    <None Include="TestData\Pwheel\Results\Atego_HDVCO2_RD_#1_AuxStd.vmod">
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
     </None>
     <None Include="TestData\Results\Engineering\24t Coach.vsum">
@@ -1027,21 +1036,6 @@
     </None>
     <None Include="TestData\Results\Integration\job_1-Gear-Test-dist.vmod">
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
-    </None>
-    <None Include="TestData\Results\Pwheel\Atego_ges.v2.vsig">
-      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
-    </None>
-    <None Include="TestData\Results\Pwheel\Atego_ges.v2.vsum">
-      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
-    </None>
-    <None Include="TestData\Results\Pwheel\Atego_ges.v2.vsum.json">
-      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
-    </None>
-    <None Include="TestData\Results\Pwheel\Atego_ges_Gear2_pt1_rep1_actual.vmod">
-      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
-    </None>
-    <None Include="TestData\Results\Pwheel\Atego_HDVCO2_RD_#1_AuxStd.vmod">
-      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
     </None>
   </ItemGroup>
   <ItemGroup>
