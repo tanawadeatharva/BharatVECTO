@@ -176,5 +176,33 @@ namespace TUGraz.VectoCore.Tests.Models.SimulationComponentData
 			var runData = new VectoRunData { GearboxData = gearboxData, EngineData = engineData, AxleGearData = axleGearData };
 			Assert.IsFalse(runData.IsValid());
 		}
+
+		/// <summary>
+		///		[VECTO-190]
+		/// </summary>
+		[TestMethod]
+		public void TestSortingFullLoadEntries()
+		{
+			var fldEntries = new[] {
+				"600,1282,-148,0.6			 ",
+				"799.9999999,1791,-149,0.6	 ",
+				"560,1180,-149,0.6			 ",
+				"1000,2300,-160,0.6			 ",
+				"1599.999999,2079,-235,0.49	 ",
+				"1200,2300,-179,0.6			 ",
+				"1800,1857,-264,0.25		 ",
+				"1400,2300,-203,0.6			 ",
+				"2000.000001,1352,-301,0.25	 ",
+				"2100,1100,-320,0.25		 ",
+			};
+
+			var fldCurve =
+				EngineFullLoadCurve.Create(
+					VectoCSVFile.ReadStream(InputDataHelper.InputDataAsStream("n [U/min],Mfull [Nm],Mdrag [Nm],<PT1> [s]", fldEntries)));
+
+			Assert.AreEqual(1180, fldCurve.FullLoadStationaryTorque(560.RPMtoRad()).Value(), Tolerance);
+			Assert.AreEqual(1352, fldCurve.FullLoadStationaryTorque(2000.RPMtoRad()).Value(), Tolerance);
+			Assert.AreEqual(1231, fldCurve.FullLoadStationaryTorque(580.RPMtoRad()).Value(), Tolerance);
+		}
 	}
 }
