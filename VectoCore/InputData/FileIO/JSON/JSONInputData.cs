@@ -173,15 +173,16 @@ namespace TUGraz.VectoCore.InputData.FileIO.JSON
 	///   }
 	/// }
 	/// </code>
-	public class JSONInputDataV2 : JSONFile, IInputDataProvider, IJobInputData, IDriverInputData, IAuxiliariesInputData
+	public class JSONInputDataV2 : JSONFile, IEngineeringInputDataProvider, IEngineeringJobInputData, IDriverInputData,
+		IAuxiliariesEngineeringInputData
 	{
-		protected IGearboxInputData Gearbox;
+		protected IGearboxEngineeringInputData Gearbox;
 
 		protected IAxleGearInputData AxleGear;
 
-		protected IEngineInputData Engine;
+		protected IEngineEngineeringInputData Engine;
 
-		protected IVehicleInputData VehicleData;
+		protected IVehicleEngineeringInputData VehicleData;
 
 		protected IRetarderInputData Retarder;
 
@@ -229,12 +230,27 @@ namespace TUGraz.VectoCore.InputData.FileIO.JSON
 
 		#region IInputDataProvider
 
-		public virtual IJobInputData JobInputData()
+		public virtual IEngineeringJobInputData JobInputData()
 		{
 			return this;
 		}
 
-		public virtual IVehicleInputData VehicleInputData
+		IVehicleDeclarationInputData IDeclarationInputDataProvider.VehicleInputData
+		{
+			get { return VehicleInputData; }
+		}
+
+		IGearboxDeclarationInputData IDeclarationInputDataProvider.GearboxInputData
+		{
+			get { return GearboxInputData; }
+		}
+
+		IDeclarationJobInputData IDeclarationInputDataProvider.JobInputData()
+		{
+			return JobInputData();
+		}
+
+		public virtual IVehicleEngineeringInputData VehicleInputData
 		{
 			get
 			{
@@ -245,7 +261,7 @@ namespace TUGraz.VectoCore.InputData.FileIO.JSON
 			}
 		}
 
-		public virtual IGearboxInputData GearboxInputData
+		public virtual IGearboxEngineeringInputData GearboxInputData
 		{
 			get
 			{
@@ -267,7 +283,12 @@ namespace TUGraz.VectoCore.InputData.FileIO.JSON
 			}
 		}
 
-		public virtual IEngineInputData EngineInputData
+		IEngineDeclarationInputData IDeclarationInputDataProvider.EngineInputData
+		{
+			get { return EngineInputData; }
+		}
+
+		public virtual IEngineEngineeringInputData EngineInputData
 		{
 			get
 			{
@@ -278,9 +299,14 @@ namespace TUGraz.VectoCore.InputData.FileIO.JSON
 			}
 		}
 
-		public virtual IAuxiliariesInputData AuxiliaryInputData()
+		public virtual IAuxiliariesEngineeringInputData AuxiliaryInputData()
 		{
 			return this;
+		}
+
+		IAuxiliariesDeclarationInputData IDeclarationInputDataProvider.AuxiliaryInputData()
+		{
+			return AuxiliaryInputData();
 		}
 
 		public virtual IRetarderInputData RetarderInputData
@@ -303,7 +329,7 @@ namespace TUGraz.VectoCore.InputData.FileIO.JSON
 
 		#region IJobInputData
 
-		public virtual IVehicleInputData Vehicle
+		public virtual IVehicleEngineeringInputData Vehicle
 		{
 			get { return VehicleData; }
 		}
@@ -341,6 +367,11 @@ namespace TUGraz.VectoCore.InputData.FileIO.JSON
 		public virtual bool EngineOnlyMode
 		{
 			get { return Body.GetEx(JsonKeys.Job_EngineOnlyMode).Value<bool>(); }
+		}
+
+		IVehicleDeclarationInputData IDeclarationJobInputData.Vehicle
+		{
+			get { return Vehicle; }
 		}
 
 		public virtual string JobName
@@ -420,34 +451,41 @@ namespace TUGraz.VectoCore.InputData.FileIO.JSON
 
 		#endregion
 
-		public virtual IList<IAuxiliaryInputData> Auxiliaries
+		public virtual IList<IAuxiliaryEngineeringInputData> Auxiliaries
 		{
-			get
-			{
-				var retVal = new List<IAuxiliaryInputData>();
-				foreach (var aux in Body["Aux"] ?? Enumerable.Empty<JToken>()) {
-					var auxData = new AuxiliaryDataInputData {
-						ID = aux.GetEx<string>("ID"),
-						Type = aux.GetEx<string>("Type"),
-						Technology = aux.GetEx<string>("Technology")
-					};
-					var auxFile = aux["Path"];
-					retVal.Add(auxData);
+			get { return AuxData().Cast<IAuxiliaryEngineeringInputData>().ToList(); }
+		}
 
-					if (auxFile == null || EmptyOrInvalidFileName(auxFile.Value<string>())) {
-						continue;
-					}
-					var stream = new StreamReader(Path.Combine(BasePath, auxFile.Value<string>()));
-					stream.ReadLine(); // skip header "Transmission ration to engine rpm [-]"
-					auxData.TransmissionRatio = stream.ReadLine().IndulgentParse();
-					stream.ReadLine(); // skip header "Efficiency to engine [-]"
-					auxData.EfficiencyToEngine = stream.ReadLine().IndulgentParse();
-					stream.ReadLine(); // skip header "Efficiency auxiliary to supply [-]"
-					auxData.EfficiencyToSupply = stream.ReadLine().IndulgentParse();
-					auxData.DemandMap = VectoCSVFile.ReadStream(new MemoryStream(Encoding.UTF8.GetBytes(stream.ReadToEnd())));
+		IList<IAuxiliaryDeclarationInputData> IAuxiliariesDeclarationInputData.Auxiliaries
+		{
+			get { return AuxData().Cast<IAuxiliaryDeclarationInputData>().ToList(); }
+		}
+
+		private IList<AuxiliaryDataInputData> AuxData()
+		{
+			var retVal = new List<AuxiliaryDataInputData>();
+			foreach (var aux in Body["Aux"] ?? Enumerable.Empty<JToken>()) {
+				var auxData = new AuxiliaryDataInputData {
+					ID = aux.GetEx<string>("ID"),
+					Type = aux.GetEx<string>("Type"),
+					Technology = aux.GetEx<string>("Technology")
+				};
+				var auxFile = aux["Path"];
+				retVal.Add(auxData);
+
+				if (auxFile == null || EmptyOrInvalidFileName(auxFile.Value<string>())) {
+					continue;
 				}
-				return retVal;
+				var stream = new StreamReader(Path.Combine(BasePath, auxFile.Value<string>()));
+				stream.ReadLine(); // skip header "Transmission ration to engine rpm [-]"
+				auxData.TransmissionRatio = stream.ReadLine().IndulgentParse();
+				stream.ReadLine(); // skip header "Efficiency to engine [-]"
+				auxData.EfficiencyToEngine = stream.ReadLine().IndulgentParse();
+				stream.ReadLine(); // skip header "Efficiency auxiliary to supply [-]"
+				auxData.EfficiencyToSupply = stream.ReadLine().IndulgentParse();
+				auxData.DemandMap = VectoCSVFile.ReadStream(new MemoryStream(Encoding.UTF8.GetBytes(stream.ReadToEnd())));
 			}
+			return retVal;
 		}
 	}
 }

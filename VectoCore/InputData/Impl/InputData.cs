@@ -78,7 +78,7 @@ namespace TUGraz.VectoCore.InputData.Impl
 		public bool TorqueConverterActive { get; internal set; }
 	}
 
-	public class AxleInputData : IAxleInputData
+	public class AxleInputData : IAxleEngineeringInputData
 	{
 		public bool SavedInDeclarationMode
 		{
@@ -114,7 +114,7 @@ namespace TUGraz.VectoCore.InputData.Impl
 		public KilogramSquareMeter Inertia { get; internal set; }
 	}
 
-	public class AuxiliaryDataInputData : IAuxiliaryInputData
+	public class AuxiliaryDataInputData : IAuxiliaryEngineeringInputData
 	{
 		public bool SavedInDeclarationMode { get; internal set; }
 
