@@ -33,6 +33,7 @@ namespace TUGraz.VectoCore.Models.SimulationComponent.Impl
 	public class ManualGearbox : VectoSimulationComponent, IGearbox, ITnOutPort, ITnInPort, IClutchInfo
 	{
 		private readonly GearboxData _data;
+		private PerSecond PreviousOutAngularSpeed { get; set; }
 		private ITnOutPort NextComponent { get; set; }
 		private PerSecond PreviousInAngularSpeed { get; set; }
 		private Watt PowerLossInertia { get; set; }
@@ -81,15 +82,18 @@ namespace TUGraz.VectoCore.Models.SimulationComponent.Impl
 			}
 
 			var inAngularVelocity = outAngularVelocity * _data.Gears[Gear].Ratio;
-			var inTorque = _data.Gears[Gear].LossMap.GetInTorque(inAngularVelocity, outTorque);
+			var inTorque = outTorque / _data.Gears[Gear].Ratio;
+			var torqueLoss = _data.Gears[Gear].LossMap.GetTorqueLoss(outAngularVelocity, outTorque);
+			inTorque += torqueLoss;
 
 			var torqueLossInertia = outAngularVelocity.IsEqual(0)
 				? 0.SI<NewtonMeter>()
-				: Formulas.InertiaPower(inAngularVelocity, PreviousInAngularSpeed, _data.Inertia, dt) / inAngularVelocity;
+				: Formulas.InertiaPower(outAngularVelocity, PreviousOutAngularSpeed, _data.Inertia, dt) / inAngularVelocity;
 
 			inTorque += torqueLossInertia;
 
 			var response = NextComponent.Initialize(inTorque, inAngularVelocity);
+			PreviousOutAngularSpeed = outAngularVelocity;
 			return response;
 		}
 
@@ -116,7 +120,8 @@ namespace TUGraz.VectoCore.Models.SimulationComponent.Impl
 			}
 
 			var inEngineSpeed = outAngularVelocity * _data.Gears[Gear].Ratio;
-			var inTorque = _data.Gears[Gear].LossMap.GetInTorque(inEngineSpeed, outTorque);
+			var torqueLoss = _data.Gears[Gear].LossMap.GetTorqueLoss(outAngularVelocity, outTorque);
+			var inTorque = outTorque / _data.Gears[Gear].Ratio + torqueLoss;
 
 			PowerLoss = inTorque * inEngineSpeed - outTorque * outAngularVelocity;
 

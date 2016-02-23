@@ -62,9 +62,10 @@ namespace TUGraz.VectoCore.Models.SimulationComponent.Impl
 			Log.Debug("request: torque: {0}, angularVelocity: {1}", torque, angularVelocity);
 
 			var inAngularVelocity = angularVelocity * ModelData.AxleGear.Ratio;
-			var avgInAngularVelocity = (PreviousState.InAngularVelocity + inAngularVelocity) / 2.0;
+			var avgOutAngularVelocity = (PreviousState.OutAngularVelocity + angularVelocity) / 2.0;
 
-			var inTorque = ModelData.AxleGear.LossMap.GetInTorque(avgInAngularVelocity, torque);
+			var torqueLoss = ModelData.AxleGear.LossMap.GetTorqueLoss(avgOutAngularVelocity, torque);
+			var inTorque = torque / ModelData.AxleGear.Ratio + torqueLoss;
 
 			CurrentState.SetState(inTorque, inAngularVelocity, torque, angularVelocity);
 
@@ -77,7 +78,8 @@ namespace TUGraz.VectoCore.Models.SimulationComponent.Impl
 		public IResponse Initialize(NewtonMeter torque, PerSecond angularVelocity)
 		{
 			var inAngularVelocity = angularVelocity * ModelData.AxleGear.Ratio;
-			var inTorque = ModelData.AxleGear.LossMap.GetInTorque(inAngularVelocity, torque);
+			var torqueLoss = ModelData.AxleGear.LossMap.GetTorqueLoss(angularVelocity, torque);
+			var inTorque = torque / ModelData.AxleGear.Ratio + torqueLoss;
 
 			PreviousState.SetState(inTorque, inAngularVelocity, torque, angularVelocity);
 
