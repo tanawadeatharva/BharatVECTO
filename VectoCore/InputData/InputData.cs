@@ -146,6 +146,12 @@ namespace TUGraz.VectoCore.InputData
 		/// cf. VECTO Input Parameters.xlsx
 		/// </summary>
 		DataTable CrosswindCorrectionMap { get; }
+
+		/// <summary>
+		/// P053
+		/// cf. VECTO Input Parameters.xlsx
+		/// </summary>
+		double RetarderRatio { get; }
 	}
 
 	public interface IRetarderInputData : IComponentInputData
@@ -155,12 +161,6 @@ namespace TUGraz.VectoCore.InputData
 		/// cf. VECTO Input Parameters.xlsx
 		/// </summary>
 		RetarderData.RetarderType Type { get; }
-
-		/// <summary>
-		/// P053
-		/// cf. VECTO Input Parameters.xlsx
-		/// </summary>
-		double Ratio { get; }
 
 		/// <summary>
 		/// P054

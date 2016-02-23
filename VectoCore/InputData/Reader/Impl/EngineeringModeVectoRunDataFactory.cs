@@ -57,7 +57,7 @@ namespace TUGraz.VectoCore.InputData.Reader.Impl
 				VehicleData = dao.CreateVehicleData(InputDataProvider.VehicleInputData),
 				DriverData = driver,
 				Aux = dao.CreateAuxiliaryData(InputDataProvider.AuxiliaryInputData()),
-				Retarder = dao.CreateRetarderData(InputDataProvider.RetarderInputData),
+				Retarder = dao.CreateRetarderData(InputDataProvider.RetarderInputData, InputDataProvider.VehicleInputData),
 				Cycle = DrivingCycleDataReader.ReadFromDataTable(cycle.CycleData, cycle.Name),
 				IsEngineOnly = InputDataProvider.JobInputData().EngineOnlyMode
 			});

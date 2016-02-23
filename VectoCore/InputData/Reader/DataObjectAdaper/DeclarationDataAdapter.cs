@@ -247,9 +247,9 @@ namespace TUGraz.VectoCore.InputData.Reader.DataObjectAdaper
 			Log.Warn("{0} not in Declaration Mode!", inputData);
 		}
 
-		public RetarderData CreateRetarderData(IRetarderInputData retarder)
+		public RetarderData CreateRetarderData(IRetarderInputData retarder, IVehicleInputData vehicle)
 		{
-			return SetCommonRetarderData(retarder);
+			return SetCommonRetarderData(retarder, vehicle);
 		}
 
 
