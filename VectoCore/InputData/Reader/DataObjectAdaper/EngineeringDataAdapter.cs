@@ -197,9 +197,9 @@ namespace TUGraz.VectoCore.InputData.Reader.DataObjectAdaper
 		}
 
 		//=================================
-		public RetarderData CreateRetarderData(IRetarderInputData retarder)
+		public RetarderData CreateRetarderData(IRetarderInputData retarder, IVehicleInputData vehicle)
 		{
-			return SetCommonRetarderData(retarder);
+			return SetCommonRetarderData(retarder, vehicle);
 		}
 	}
 }

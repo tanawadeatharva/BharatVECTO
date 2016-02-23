@@ -58,7 +58,7 @@ namespace TUGraz.VectoCore.InputData.Reader.DataObjectAdaper
 			return retVal;
 		}
 
-		internal RetarderData SetCommonRetarderData(IRetarderInputData data)
+		internal RetarderData SetCommonRetarderData(IRetarderInputData data, IVehicleInputData vehicle)
 		{
 			var retarder = new RetarderData {
 				SavedInDeclarationMode = data.SavedInDeclarationMode,
@@ -73,7 +73,7 @@ namespace TUGraz.VectoCore.InputData.Reader.DataObjectAdaper
 			};
 			if (retarder.Type == RetarderData.RetarderType.Primary || retarder.Type == RetarderData.RetarderType.Secondary) {
 				retarder.LossMap = RetarderLossMap.Create(data.LossMap);
-				retarder.Ratio = data.Ratio;
+				retarder.Ratio = vehicle.RetarderRatio;
 			}
 			return retarder;
 		}
