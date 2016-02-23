@@ -30,7 +30,7 @@ namespace TUGraz.VectoCore.InputData.Reader.DataObjectAdaper
 	{
 		// =========================
 
-		internal VehicleData SetCommonVehicleData(IVehicleInputData data)
+		internal VehicleData SetCommonVehicleData(IVehicleDeclarationInputData data)
 		{
 			var retVal = new VehicleData {
 				SavedInDeclarationMode = data.SavedInDeclarationMode,
@@ -43,7 +43,7 @@ namespace TUGraz.VectoCore.InputData.Reader.DataObjectAdaper
 				IntegrityStatus = data.IntegrityStatus,
 				VehicleCategory = data.VehicleCategory,
 				AxleConfiguration = data.AxleConfiguration,
-				CurbWeight = data.CurbWeight,
+				CurbWeight = data.CurbWeightChassis,
 				//CurbWeigthExtra = data.CurbWeightExtra.SI<Kilogram>(),
 				//Loading = data.Loading.SI<Kilogram>(),
 				GrossVehicleMassRating = data.GrossVehicleMassRating,
@@ -58,7 +58,7 @@ namespace TUGraz.VectoCore.InputData.Reader.DataObjectAdaper
 			return retVal;
 		}
 
-		internal RetarderData SetCommonRetarderData(IRetarderInputData data, IVehicleInputData vehicle)
+		internal RetarderData SetCommonRetarderData(IRetarderInputData data, IVehicleDeclarationInputData vehicle)
 		{
 			var retarder = new RetarderData {
 				SavedInDeclarationMode = data.SavedInDeclarationMode,
@@ -78,7 +78,7 @@ namespace TUGraz.VectoCore.InputData.Reader.DataObjectAdaper
 			return retarder;
 		}
 
-		internal CombustionEngineData SetCommonCombustionEngineData(IEngineInputData data)
+		internal CombustionEngineData SetCommonCombustionEngineData(IEngineDeclarationInputData data)
 		{
 			var retVal = new CombustionEngineData {
 				SavedInDeclarationMode = data.SavedInDeclarationMode,
@@ -99,7 +99,7 @@ namespace TUGraz.VectoCore.InputData.Reader.DataObjectAdaper
 			return retVal;
 		}
 
-		internal GearboxData SetCommonGearboxData(IGearboxInputData data)
+		internal GearboxData SetCommonGearboxData(IGearboxDeclarationInputData data)
 		{
 			return new GearboxData {
 				SavedInDeclarationMode = data.SavedInDeclarationMode,
