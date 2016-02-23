@@ -20,6 +20,7 @@ using System.Diagnostics.CodeAnalysis;
 using System.IO;
 using TUGraz.VectoCore.InputData.Reader;
 using TUGraz.VectoCore.Models.SimulationComponent.Data;
+using TUGraz.VectoCore.Tests.Utils;
 using TUGraz.VectoCore.Utils;
 
 namespace TUGraz.VectoCore.Tests.Integration
@@ -29,22 +30,11 @@ namespace TUGraz.VectoCore.Tests.Integration
 	{
 		public static DrivingCycleData CreateCycleData(string[] entries)
 		{
-			var cycleData = InputDataAsStream("<s>,<v>,<grad>,<stop>", entries);
+			var cycleData = InputDataHelper.InputDataAsStream("<s>,<v>,<grad>,<stop>", entries);
 			return DrivingCycleDataReader.ReadFromStream(cycleData, CycleType.DistanceBased);
 		}
 
-		public static MemoryStream InputDataAsStream(string header, string[] entries)
-		{
-			var cycleData = new MemoryStream();
-			var writer = new StreamWriter(cycleData);
-			writer.WriteLine(header);
-			foreach (var entry in entries) {
-				writer.WriteLine(entry);
-			}
-			writer.Flush();
-			cycleData.Seek(0, SeekOrigin.Begin);
-			return cycleData;
-		}
+
 
 		#region Accelerate
 
