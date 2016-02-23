@@ -158,14 +158,14 @@ namespace TUGraz.VectoCore.Tests.Models.Simulation
 			if (cycleType == CycleType.MeasuredSpeed) {
 				var cycle = new MeasuredSpeedDrivingCycle(container, drivingCycle);
 			} else {
-				var gearbox = new Gearbox(container,
+				var gearbox = new CycleGearbox(container,
 					new GearboxData {
 						Gears = new Dictionary<uint, GearData> {
 							{ 1, new GearData { Ratio = 6.696 } },
 							{ 2, new GearData { Ratio = 3.806 } },
 							{ 3, new GearData { Ratio = 2.289 } }
 						}
-					}, new PWheelShiftStrategy(null, container));
+					});
 				var cycle = new MeasuredSpeedGearDrivingCycle(container, drivingCycle);
 			}
 		}

@@ -55,12 +55,13 @@ namespace TUGraz.VectoCore.Tests.Models.Simulation
 			var cycleFile = new MemoryStream(Encoding.UTF8.GetBytes(inputData));
 			var drivingCycle = DrivingCycleDataReader.ReadFromStream(cycleFile, CycleType.PWheel);
 
-			var gearbox = new Gearbox(container,
+			var gearbox = new CycleGearbox(container,
 				new GearboxData {
 					Gears = new Dictionary<uint, GearData> { { 1, new GearData { Ratio = 2.0 } }, { 2, new GearData { Ratio = 3.5 } } }
-				}, new PWheelShiftStrategy(null, container));
+				});
 
-			var cycle = new PWheelCycle(container, drivingCycle, 2.3, gearbox);
+			var cycle = new PWheelCycle(container, drivingCycle, 2.3,
+				gearbox.ModelData.Gears.ToDictionary(g => g.Key, g => g.Value.Ratio));
 
 			Assert.AreEqual(container.CycleData.LeftSample.Time, 1.SI<Second>());
 			Assert.AreEqual(container.CycleData.RightSample.Time, 2.SI<Second>());

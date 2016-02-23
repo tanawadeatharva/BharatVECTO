@@ -195,13 +195,15 @@ namespace TUGraz.VectoCore.Models.SimulationComponent.Impl
 		/// <param name="container">The container.</param>
 		/// <param name="cycle">The cycle.</param>
 		/// <param name="axleRatio">The axle ratio.</param>
+		/// <param name="gearRatios"></param>
 		public PWheelCycle(IVehicleContainer container, DrivingCycleData cycle, double axleRatio,
-			Dictionary<uint, double> ratios)
+			IReadOnlyDictionary<uint, double> gearRatios)
 			: base(container, cycle)
 		{
 			foreach (var entry in Data.Entries) {
+				// calculate angularVelocity on Wheel: n / (axelRatio * gearRatio)
 				entry.AngularVelocity = entry.AngularVelocity /
-										(axleRatio * (entry.Gear == 0 ? 1 : ratios[entry.Gear]));
+										(entry.Gear == 0 ? axleRatio : axleRatio * gearRatios[entry.Gear]);
 				entry.Torque = entry.PWheel / entry.AngularVelocity;
 			}
 		}

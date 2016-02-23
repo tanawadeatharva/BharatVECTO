@@ -353,33 +353,6 @@ namespace TUGraz.VectoCore.Models.SimulationComponent.Impl
 		}
 	}
 
-	/// <summary>
-	/// Shift Strategy for PWheel Mode. The Cycle should set the gear, therefore the shift strategy has nothing to do.
-	/// </summary>
-	public class PWheelShiftStrategy : ShiftStrategy
-	{
-		public PWheelShiftStrategy(GearboxData data, IDataBus bus) : base(data, bus) {}
-
-		public override uint Engage(Second absTime, Second dt, NewtonMeter outTorque, PerSecond outEngineSpeed)
-		{
-			return DataBus.CycleData.LeftSample.Gear;
-		}
-
-		public override void Disengage(Second absTime, Second dt, NewtonMeter outTorque, PerSecond outEngineSpeed) {}
-
-		public override bool ShiftRequired(Second absTime, Second dt, NewtonMeter outTorque, PerSecond outAngularVelocity,
-			NewtonMeter inTorque,
-			PerSecond inAngularSpeed, uint gear, Second lastShiftTime)
-		{
-			return false;
-		}
-
-		public override uint InitGear(Second absTime, Second dt, NewtonMeter outTorque, PerSecond outEngineSpeed)
-		{
-			return DataBus.CycleData.LeftSample.Gear == 0 ? 1u : DataBus.CycleData.LeftSample.Gear;
-		}
-	}
-
 	// TODO Implement ATShiftStrategy
 	public class ATShiftStrategy : ShiftStrategy
 	{
