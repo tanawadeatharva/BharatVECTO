@@ -60,6 +60,7 @@ namespace TUGraz.VectoCore.Models.SimulationComponent.Data
 					string.Join(", ", data.Columns.Cast<DataColumn>().Select(c => c.ColumnName).Reverse()));
 				entries = CreateFromColumnIndizes(data);
 			}
+			entries.Sort((entry1, entry2) => entry1.RetarderSpeed.Value().CompareTo(entry2.RetarderSpeed.Value()));
 			return new RetarderLossMap { _entries = entries };
 		}
 
