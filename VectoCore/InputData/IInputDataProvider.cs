@@ -21,22 +21,44 @@ using System.Deployment.Internal;
 
 namespace TUGraz.VectoCore.InputData
 {
-	public interface IInputDataProvider
+	public interface IInputDataProvider {}
+
+	public interface IDeclarationInputDataProvider : IInputDataProvider
 	{
-		IJobInputData JobInputData();
+		IDeclarationJobInputData JobInputData();
 
-		IVehicleInputData VehicleInputData { get; }
+		IVehicleDeclarationInputData VehicleInputData { get; }
 
-		IGearboxInputData GearboxInputData { get; }
+		IGearboxDeclarationInputData GearboxInputData { get; }
 
 		IAxleGearInputData AxleGearInputData { get; }
 
-		IEngineInputData EngineInputData { get; }
+		IEngineDeclarationInputData EngineInputData { get; }
 
-		IAuxiliariesInputData AuxiliaryInputData();
+		IAuxiliariesDeclarationInputData AuxiliaryInputData();
 
 		IRetarderInputData RetarderInputData { get; }
 
 		IDriverInputData DriverInputData { get; }
+	}
+
+
+	public interface IEngineeringInputDataProvider : IDeclarationInputDataProvider
+	{
+		new IEngineeringJobInputData JobInputData();
+
+		new IVehicleEngineeringInputData VehicleInputData { get; }
+
+		new IGearboxEngineeringInputData GearboxInputData { get; }
+
+		//IAxleGearInputData AxleGearInputData { get; }
+
+		new IEngineEngineeringInputData EngineInputData { get; }
+
+		new IAuxiliariesEngineeringInputData AuxiliaryInputData();
+
+		//IRetarderInputData RetarderInputData { get; }
+
+		//IDriverInputData DriverInputData { get; }
 	}
 }

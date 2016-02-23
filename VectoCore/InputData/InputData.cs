@@ -24,11 +24,18 @@ using TUGraz.VectoCore.Utils;
 
 namespace TUGraz.VectoCore.InputData
 {
-	public interface IJobInputData
+	public interface IDeclarationJobInputData
 	{
 		bool SavedInDeclarationMode { get; }
 
-		IVehicleInputData Vehicle { get; }
+		IVehicleDeclarationInputData Vehicle { get; }
+
+		string JobName { get; }
+	}
+
+	public interface IEngineeringJobInputData : IDeclarationJobInputData
+	{
+		new IVehicleEngineeringInputData Vehicle { get; }
 
 		/// <summary>
 		/// P008  Cycles
@@ -41,8 +48,6 @@ namespace TUGraz.VectoCore.InputData
 		/// cf. VECTO Input Parameters.xlsx
 		/// </summary>
 		bool EngineOnlyMode { get; }
-
-		string JobName { get; }
 	}
 
 	public interface IComponentInputData
@@ -64,7 +69,7 @@ namespace TUGraz.VectoCore.InputData
 		IntegrityStatus IntegrityStatus { get; }
 	}
 
-	public interface IVehicleInputData : IComponentInputData
+	public interface IVehicleDeclarationInputData : IComponentInputData
 	{
 		/// <summary>
 		/// P036
@@ -73,34 +78,22 @@ namespace TUGraz.VectoCore.InputData
 		VehicleCategory VehicleCategory { get; }
 
 		/// <summary>
+		/// P037  
+		/// cf. VECTO Input Parameters.xlsx
+		/// </summary>
+		AxleConfiguration AxleConfiguration { get; }
+
+		/// <summary>
 		/// P038  Curb Weight Vehicle
 		/// cf. VECTO Input Parameters.xlsx
 		/// </summary>
-		Kilogram CurbWeight { get; }
-
-		/// <summary>
-		/// P039  Curb Weight Extra Trailer/Body
-		/// cf. VECTO Input Parameters.xlsx
-		/// </summary>
-		Kilogram CurbWeightExtra { get; }
+		Kilogram CurbWeightChassis { get; }
 
 		/// <summary>
 		/// P041  Max. vehicle weight
 		/// cf. VECTO Input Parameters.xlsx
 		/// </summary>
 		Kilogram GrossVehicleMassRating { get; }
-
-		/// <summary>
-		/// P040  Loading
-		/// cf. VECTO Input Parameters.xlsx
-		/// </summary>
-		Kilogram Loading { get; }
-
-		/// <summary>
-		/// P049
-		/// cf. VECTO Input Parameters.xlsx
-		/// </summary>
-		Meter DynamicTyreRadius { get; }
 
 		/// <summary>
 		/// P146  DragCoefficient * Cross Section Area - Truck & Trailer
@@ -121,18 +114,47 @@ namespace TUGraz.VectoCore.InputData
 		/// </summary>
 		string Rim { get; }
 
-		/// <summary>
-		/// P037  
-		/// cf. VECTO Input Parameters.xlsx
-		/// </summary>
-		AxleConfiguration AxleConfiguration { get; }
 
 		/// <summary>
 		/// parameters for every axle
 		/// P044, P045, P046, P047, P048, P108
 		/// cf. VECTO Input Parameters.xlsx
 		/// </summary>
-		IList<IAxleInputData> Axles { get; }
+		IList<IAxleDeclarationInputData> Axles { get; }
+
+		/// <summary>
+		/// P053
+		/// cf. VECTO Input Parameters.xlsx
+		/// </summary>
+		double RetarderRatio { get; }
+	}
+
+	public interface IVehicleEngineeringInputData : IVehicleDeclarationInputData
+	{
+		/// <summary>
+		/// P039  Curb Weight Extra Trailer/Body
+		/// cf. VECTO Input Parameters.xlsx
+		/// </summary>
+		Kilogram CurbWeightExtra { get; }
+
+		/// <summary>
+		/// P040  Loading
+		/// cf. VECTO Input Parameters.xlsx
+		/// </summary>
+		Kilogram Loading { get; }
+
+		/// <summary>
+		/// parameters for every axle
+		/// P044, P045, P046, P047, P048, P108
+		/// cf. VECTO Input Parameters.xlsx
+		/// </summary>
+		new IList<IAxleEngineeringInputData> Axles { get; }
+
+		/// <summary>
+		/// P049
+		/// cf. VECTO Input Parameters.xlsx
+		/// </summary>
+		Meter DynamicTyreRadius { get; }
 
 		/// <summary>
 		/// P050
@@ -146,12 +168,6 @@ namespace TUGraz.VectoCore.InputData
 		/// cf. VECTO Input Parameters.xlsx
 		/// </summary>
 		DataTable CrosswindCorrectionMap { get; }
-
-		/// <summary>
-		/// P053
-		/// cf. VECTO Input Parameters.xlsx
-		/// </summary>
-		double RetarderRatio { get; }
 	}
 
 	public interface IRetarderInputData : IComponentInputData
@@ -170,7 +186,7 @@ namespace TUGraz.VectoCore.InputData
 		DataTable LossMap { get; }
 	}
 
-	public interface IAxleInputData : IComponentInputData
+	public interface IAxleDeclarationInputData : IComponentInputData
 	{
 		/// <summary>
 		/// P108  
@@ -197,7 +213,10 @@ namespace TUGraz.VectoCore.InputData
 		/// cf. VECTO Input Parameters.xlsx
 		/// </summary>
 		Newton TyreTestLoad { get; }
+	}
 
+	public interface IAxleEngineeringInputData : IAxleDeclarationInputData
+	{
 		/// <summary>
 		/// P044 (0 - 1)
 		/// cf. VECTO Input Parameters.xlsx
@@ -212,7 +231,7 @@ namespace TUGraz.VectoCore.InputData
 	}
 
 
-	public interface IGearboxInputData : IComponentInputData
+	public interface IGearboxDeclarationInputData : IComponentInputData
 	{
 		/// <summary>
 		/// P076
@@ -220,6 +239,15 @@ namespace TUGraz.VectoCore.InputData
 		/// </summary>
 		GearboxType Type { get; }
 
+		/// <summary>
+		/// P078, P079, P077, P082, P145 (for every gear)
+		/// cf. VECTO Input Parameters.xlsx
+		/// </summary>
+		IList<ITransmissionInputData> Gears { get; }
+	}
+
+	public interface IGearboxEngineeringInputData : IGearboxDeclarationInputData
+	{
 		/// <summary>
 		/// P080
 		/// cf. VECTO Input Parameters.xlsx
@@ -231,18 +259,6 @@ namespace TUGraz.VectoCore.InputData
 		/// cf. VECTO Input Parameters.xlsx
 		/// </summary>
 		Second TractionInterruption { get; }
-
-		/// <summary>
-		/// P078, P079, P077, P082, P145 (for every gear)
-		/// cf. VECTO Input Parameters.xlsx
-		/// </summary>
-		IList<ITransmissionInputData> Gears { get; }
-
-		/// <summary>
-		/// P084
-		/// cf. VECTO Input Parameters.xlsx
-		/// </summary>
-		bool SkipGears { get; }
 
 		/// <summary>
 		/// P086
@@ -280,6 +296,13 @@ namespace TUGraz.VectoCore.InputData
 		/// cf. VECTO Input Parameters.xlsx
 		/// </summary>
 		double StartTorqueReserve { get; }
+
+		/// <summary>
+		/// P084
+		/// cf. VECTO Input Parameters.xlsx
+		/// </summary>
+		bool SkipGears { get; }
+
 
 		/// <summary>
 		/// P090, P091, P092, P127
@@ -369,7 +392,7 @@ namespace TUGraz.VectoCore.InputData
 		DataTable TCData { get; }
 	}
 
-	public interface IEngineInputData : IComponentInputData
+	public interface IEngineDeclarationInputData : IComponentInputData
 	{
 		/// <summary>
 		/// P061
@@ -382,27 +405,6 @@ namespace TUGraz.VectoCore.InputData
 		/// cf. VECTO Input Parameters.xlsx
 		/// </summary>
 		PerSecond IdleSpeed { get; }
-
-		/// <summary>
-		/// P067
-		/// P072, P073, P074
-		/// cf. VECTO Input Parameters.xlsx
-		/// engine speed in rpm, torque in NM, fuel consumption in g/h
-		/// </summary>
-		DataTable FuelConsumptionMap { get; }
-
-		/// <summary>
-		/// P144
-		/// P068, P069, P70, P71
-		/// cf. VECTO Input Parameters.xlsx
-		/// </summary>
-		DataTable FullLoadCurve { get; }
-
-		/// <summary>
-		/// P062
-		/// cf. VECTO Input Parameters.xlsx
-		/// </summary>
-		KilogramSquareMeter Inertia { get; }
 
 		/// <summary>
 		/// P111
@@ -421,13 +423,42 @@ namespace TUGraz.VectoCore.InputData
 		/// cf. VECTO Input Parameters.xlsx
 		/// </summary>
 		KilogramPerWattSecond WHTCUrban { get; }
+
+		/// <summary>
+		/// P067
+		/// P072, P073, P074
+		/// cf. VECTO Input Parameters.xlsx
+		/// engine speed in rpm, torque in NM, fuel consumption in g/h
+		/// </summary>
+		DataTable FuelConsumptionMap { get; }
+
+		/// <summary>
+		/// P144
+		/// P068, P069, P70, P71
+		/// cf. VECTO Input Parameters.xlsx
+		/// </summary>
+		DataTable FullLoadCurve { get; }
 	}
 
-	public interface IAuxiliariesInputData
+	public interface IEngineEngineeringInputData : IEngineDeclarationInputData
+	{
+		/// <summary>
+		/// P062
+		/// cf. VECTO Input Parameters.xlsx
+		/// </summary>
+		KilogramSquareMeter Inertia { get; }
+	}
+
+	public interface IAuxiliariesDeclarationInputData
 	{
 		bool SavedInDeclarationMode { get; }
 
-		IList<IAuxiliaryInputData> Auxiliaries { get; }
+		IList<IAuxiliaryDeclarationInputData> Auxiliaries { get; }
+	}
+
+	public interface IAuxiliariesEngineeringInputData : IAuxiliariesDeclarationInputData
+	{
+		new IList<IAuxiliaryEngineeringInputData> Auxiliaries { get; }
 	}
 
 	public interface ICycleData
@@ -531,7 +562,7 @@ namespace TUGraz.VectoCore.InputData
 		Second Delay { get; }
 	}
 
-	public interface IAuxiliaryInputData
+	public interface IAuxiliaryDeclarationInputData
 	{
 		bool SavedInDeclarationMode { get; }
 
@@ -558,7 +589,10 @@ namespace TUGraz.VectoCore.InputData
 		/// cf. VECTO Input Parameters.xlsx
 		/// </summary>
 		IList<string> TechList { get; }
+	}
 
+	public interface IAuxiliaryEngineeringInputData : IAuxiliaryDeclarationInputData
+	{
 		/// <summary>
 		/// P022  Aux-InputFile: transmission ratio
 		/// cf. VECTO Input Parameters.xlsx
