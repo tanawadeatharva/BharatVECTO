@@ -316,6 +316,25 @@ namespace TUGraz.VectoCore.Tests.Models.SimulationComponentData
 			Assert.AreEqual(1100.0, fullLoadCurve.FullLoadStationaryTorque(2100.RPMtoRad()).Value());
 		}
 
+		/// <summary>
+		///		VECTO-190
+		/// </summary>
+		[TestMethod]
+		public void TestFullLoadSorting()
+		{
+			var gbxFLDString = new[] {
+				"600, 1000",
+				"2400, 2000",
+				"1000, 500"
+			};
+
+			var dataGbx = VectoCSVFile.ReadStream(InputDataHelper.InputDataAsStream("n [U/min],Mfull [Nm]", gbxFLDString));
+			var gbxFLD = FullLoadCurve.Create(dataGbx, true);
+
+			var maxTorque = gbxFLD.FullLoadStationaryTorque(800.RPMtoRad());
+			Assert.AreEqual(750, maxTorque.Value());
+		}
+
 		protected PerSecond SpeedToAngularSpeed(double v, double r)
 		{
 			return ((60 * v) / (2 * r * Math.PI / 1000)).RPMtoRad();
