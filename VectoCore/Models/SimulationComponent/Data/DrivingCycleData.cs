@@ -143,6 +143,11 @@ namespace TUGraz.VectoCore.Models.SimulationComponent.Data
 			/// Power on the Wheels (only used in PWheel Mode).
 			/// </summary>
 			public Watt PWheel { get; set; }
+
+			/// <summary>
+			/// The angular velocity at the wheel. only used in PWheelCycle.
+			/// </summary>
+			public PerSecond WheelAngularVelocity;
 		}
 	}
 }

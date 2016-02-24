@@ -230,57 +230,6 @@
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
     </None>
     <None Include="TestData\Components\Indirect Gear.vtlm" />
-    <None Include="TestData\Components\Pwheel\Atego.vveh">
-      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
-    </None>
-    <None Include="TestData\Components\Pwheel\Atego_ges.v2.vsig">
-      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
-    </None>
-    <None Include="TestData\Components\Pwheel\axle_losses_r390_80_serie_1306.vtlm">
-      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
-    </None>
-    <None Include="TestData\Components\Pwheel\Gear2_pt1_rep1_actual.vdri">
-      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
-    </None>
-    <None Include="TestData\Components\Pwheel\G_85-6_6_7-0_17.vgbx">
-      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
-    </None>
-    <None Include="TestData\Components\Pwheel\losses_g85_6_6696_0728_1401_loss_1.vtlm">
-      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
-    </None>
-    <None Include="TestData\Components\Pwheel\losses_g85_6_6696_0728_1401_loss_2.vtlm">
-      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
-    </None>
-    <None Include="TestData\Components\Pwheel\losses_g85_6_6696_0728_1401_loss_3.vtlm">
-      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
-    </None>
-    <None Include="TestData\Components\Pwheel\losses_g85_6_6696_0728_1401_loss_4.vtlm">
-      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
-    </None>
-    <None Include="TestData\Components\Pwheel\losses_g85_6_6696_0728_1401_loss_5.vtlm">
-      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
-    </None>
-    <None Include="TestData\Components\Pwheel\losses_g85_6_6696_0728_1401_loss_6.vtlm">
-      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
-    </None>
-    <None Include="TestData\Components\Pwheel\o9061750850E4.vfld">
-      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
-    </None>
-    <None Include="TestData\Components\Pwheel\OM906.veng">
-      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
-    </None>
-    <None Include="TestData\Components\Pwheel\om9062101120_e4e5_b7c_sl2499_20110727.vmap">
-      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
-    </None>
-    <None Include="TestData\Components\Pwheel\RD_#1_Pwheel_AuxStd.vdri">
-      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
-    </None>
-    <None Include="TestData\Components\Pwheel\ShiftPolygons_o9061750850E4.vgbs">
-      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
-    </None>
-    <None Include="TestData\Components\Pwheel\Truck.vacc">
-      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
-    </None>
     <None Include="TestData\Components\Retarder.vrlm">
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
     </None>
@@ -947,10 +896,55 @@
     <None Include="TestData\MeasuredSpeed\Vehicle.vveh">
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
     </None>
+    <None Include="TestData\Pwheel\Atego.vveh">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </None>
+    <None Include="TestData\Pwheel\Atego_ges.v2.vsig">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </None>
+    <None Include="TestData\Pwheel\axle_losses_r390_80_serie_1306.vtlm">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </None>
+    <None Include="TestData\Pwheel\Gear2_pt1_rep1_actual.vdri">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </None>
+    <None Include="TestData\Pwheel\G_85-6_6_7-0_17.vgbx">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </None>
+    <None Include="TestData\Pwheel\losses_g85_6_6696_0728_1401_loss_1.vtlm">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </None>
+    <None Include="TestData\Pwheel\losses_g85_6_6696_0728_1401_loss_2.vtlm">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </None>
+    <None Include="TestData\Pwheel\losses_g85_6_6696_0728_1401_loss_3.vtlm">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </None>
+    <None Include="TestData\Pwheel\losses_g85_6_6696_0728_1401_loss_4.vtlm">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </None>
+    <None Include="TestData\Pwheel\losses_g85_6_6696_0728_1401_loss_5.vtlm">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </None>
+    <None Include="TestData\Pwheel\losses_g85_6_6696_0728_1401_loss_6.vtlm">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </None>
+    <None Include="TestData\Pwheel\o9061750850E4.vfld">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </None>
+    <None Include="TestData\Pwheel\OM906.veng">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </None>
+    <None Include="TestData\Pwheel\om9062101120_e4e5_b7c_sl2499_20110727.vmap">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </None>
     <None Include="TestData\Pwheel\Pwheel.vecto">
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
     </None>
     <None Include="TestData\Pwheel\Pwheel_ultimate.vecto">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </None>
+    <None Include="TestData\Pwheel\RD_#1_Pwheel_AuxStd.vdri">
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
     </None>
     <None Include="TestData\Pwheel\Results\Atego_ges.v2.vsum">
@@ -962,6 +956,10 @@
     <None Include="TestData\Pwheel\Results\Atego_HDVCO2_RD_#1_AuxStd.vmod">
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
     </None>
+    <None Include="TestData\Pwheel\ShiftPolygons_o9061750850E4.vgbs">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </None>
+    <None Include="TestData\Pwheel\Truck.vacc" />
     <None Include="TestData\Results\Engineering\24t Coach.vsum">
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
     </None>

@@ -7,13 +7,13 @@
   },
   "Body": {
     "SavedInDeclMode": false,
-    "VehicleFile": "..\\Components\\Pwheel\\Atego.vveh",
-    "EngineFile": "..\\Components\\Pwheel\\OM906.veng",
-    "GearboxFile": "..\\Components\\Pwheel\\G_85-6_6_7-0_17.vgbx",
+    "VehicleFile": "Atego.vveh",
+    "EngineFile": "OM906.veng",
+    "GearboxFile": "G_85-6_6_7-0_17.vgbx",
     "Cycles": [
-      "..\\Components\\Pwheel\\Gear2_pt1_rep1_actual.vdri"
+      "Gear2_pt1_rep1_actual.vdri"
     ],
-    "VACC": "..\\Components\\Pwheel\\Truck.vacc",
+    "VACC": "Truck.vacc",
     "EngineOnlyMode": false,
     "StartStop": {
       "Enabled": false,

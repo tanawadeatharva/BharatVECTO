@@ -101,24 +101,43 @@ namespace TUGraz.VectoCore.Models.SimulationComponent.Impl
 				};
 			}
 
-			var response = NextComponent.Request(absTime, dt, LeftSample.Current.Torque,
-				DataBus.ClutchClosed(absTime) ? LeftSample.Current.AngularVelocity : 0.SI<PerSecond>());
+			return DoHandleRequest(absTime, dt, LeftSample.Current.AngularVelocity);
+		}
 
-			AbsTime = absTime + dt;
+		protected IResponse DoHandleRequest(Second absTime, Second dt, PerSecond angularVelocity)
+		{
+			var response = NextComponent.Request(absTime, dt, LeftSample.Current.Torque, angularVelocity);
+
+			if (response is ResponseGearShift) {
+				response = NextComponent.Request(absTime, dt, LeftSample.Current.Torque, angularVelocity);
+			}
 
 			response.Switch()
 				.Case<ResponseUnderload>(r => {
-					Log.Warn("PowertrainDrivingCycle got an underload response. Using PDrag.");
-					response = new ResponseSuccess();
+					var torqueInterval = -r.Delta / (angularVelocity.IsEqual(0) ? 10.RPMtoRad() : angularVelocity);
+					var torque = SearchAlgorithm.Search(LeftSample.Current.Torque, r.Delta, torqueInterval,
+						getYValue: result => ((ResponseDryRun)result).DeltaDragLoad,
+						evaluateFunction: t => NextComponent.Request(absTime, dt, t, angularVelocity, true),
+						criterion: y =>
+							((ResponseDryRun)y).DeltaDragLoad.IsEqual(0.SI<Watt>(), Constants.SimulationSettings.EnginePowerSearchTolerance));
+					response = NextComponent.Request(absTime, dt, torque, angularVelocity);
 				})
 				.Case<ResponseOverload>(r => {
-					Log.Warn("PowertrainDrivingCycle got an underload response. Using PFullLoad.");
-					response = new ResponseSuccess();
+					angularVelocity = SearchAlgorithm.Search(angularVelocity, r.Delta, 50.RPMtoRad(),
+						getYValue: result => ((ResponseDryRun)result).DeltaFullLoad,
+						evaluateFunction: n => NextComponent.Request(absTime, dt, LeftSample.Current.Torque, n, true),
+						criterion: y => ((ResponseDryRun)y).DeltaFullLoad.Abs() < Constants.SimulationSettings.EnginePowerSearchTolerance);
+					response = NextComponent.Request(absTime, dt, LeftSample.Current.Torque, angularVelocity);
 				})
 				.Case<ResponseSuccess>(() => { })
 				.Default(
-					r => { throw new UnexpectedResponseException("PowertrainDrivingCycle received an unexpected response.", r); });
+					r => { throw new UnexpectedResponseException("MeasuredSpeedDrivingCycle received an unexpected response.", r); });
 
+			if (!(response is ResponseSuccess)) {
+				throw new UnexpectedResponseException("MeasuredSpeedDrivingCycle received an unexpected response.", response);
+			}
+
+			AbsTime = absTime + dt;
 			return response;
 		}
 
@@ -184,7 +203,7 @@ namespace TUGraz.VectoCore.Models.SimulationComponent.Impl
 	/// <summary>
 	/// Driving Cycle for the PWheel driving cycle.
 	/// </summary>
-	public class PWheelCycle : PowertrainDrivingCycle, IDriverInfo, IClutchInfo
+	public class PWheelCycle : PowertrainDrivingCycle, IDriverInfo
 	{
 		/// <summary>
 		/// Initializes a new instance of the <see cref="PWheelCycle"/> class.
@@ -194,14 +213,14 @@ namespace TUGraz.VectoCore.Models.SimulationComponent.Impl
 		/// <param name="axleRatio">The axle ratio.</param>
 		/// <param name="gearRatios"></param>
 		public PWheelCycle(IVehicleContainer container, DrivingCycleData cycle, double axleRatio,
-			IReadOnlyDictionary<uint, double> gearRatios)
-			: base(container, cycle)
+			IDictionary<uint, double> gearRatios) : base(container, cycle)
 		{
+			// just to ensure that null-gear has ratio 1
+			gearRatios[0] = 1;
+
 			foreach (var entry in Data.Entries) {
-				// calculate angularVelocity on Wheel: n / (axelRatio * gearRatio)
-				entry.AngularVelocity = entry.AngularVelocity /
-										(entry.Gear == 0 ? axleRatio : axleRatio * gearRatios[entry.Gear]);
-				entry.Torque = entry.PWheel / entry.AngularVelocity;
+				entry.WheelAngularVelocity = entry.AngularVelocity / (axleRatio * gearRatios[entry.Gear]);
+				entry.Torque = entry.PWheel / entry.WheelAngularVelocity;
 			}
 		}
 
@@ -211,7 +230,16 @@ namespace TUGraz.VectoCore.Models.SimulationComponent.Impl
 				return new ResponseCycleFinished { Source = this };
 			}
 
-			return base.Request(absTime, dt);
+			// interval exceeded
+			if ((absTime + dt).IsGreater(RightSample.Current.Time)) {
+				return new ResponseFailTimeInterval {
+					AbsTime = absTime,
+					Source = this,
+					DeltaT = RightSample.Current.Time - absTime
+				};
+			}
+
+			return DoHandleRequest(absTime, dt, LeftSample.Current.WheelAngularVelocity);
 		}
 
 
@@ -240,11 +268,6 @@ namespace TUGraz.VectoCore.Models.SimulationComponent.Impl
 		}
 
 		#endregion
-
-		public virtual bool ClutchClosed(Second absTime)
-		{
-			return LeftSample.Current.Gear != 0;
-		}
 	}
 
 	/// <summary>
@@ -353,10 +376,10 @@ namespace TUGraz.VectoCore.Models.SimulationComponent.Impl
 				})
 				.Case<ResponseSuccess>(() => { })
 				.Default(
-					r => { throw new UnexpectedResponseException("PowertrainDrivingCycle received an unexpected response.", r); });
+					r => { throw new UnexpectedResponseException("MeasuredSpeedDrivingCycle received an unexpected response.", r); });
 
 			if (!(response is ResponseSuccess)) {
-				throw new UnexpectedResponseException("PowertrainDrivingCycle received an unexpected response.", response);
+				throw new UnexpectedResponseException("MeasuredSpeedDrivingCycle received an unexpected response.", response);
 			}
 
 			AbsTime = absTime + dt;

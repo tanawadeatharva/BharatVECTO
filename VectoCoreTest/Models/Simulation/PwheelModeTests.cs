@@ -66,8 +66,8 @@ namespace TUGraz.VectoCore.Tests.Models.Simulation
 			Assert.AreEqual(container.CycleData.LeftSample.Time, 1.SI<Second>());
 			Assert.AreEqual(container.CycleData.RightSample.Time, 2.SI<Second>());
 
-			Assert.AreEqual(1748.RPMtoRad() / (2.3 * 3.5), container.CycleData.LeftSample.AngularVelocity);
-			Assert.AreEqual(1400.RPMtoRad() / (2.3 * 3.5), container.CycleData.RightSample.AngularVelocity);
+			Assert.AreEqual(1748.RPMtoRad() / (2.3 * 3.5), container.CycleData.LeftSample.WheelAngularVelocity);
+			Assert.AreEqual(1400.RPMtoRad() / (2.3 * 3.5), container.CycleData.RightSample.WheelAngularVelocity);
 
 			Assert.AreEqual(89.SI().Kilo.Watt, container.CycleData.LeftSample.PWheel);
 			Assert.AreEqual(120.SI().Kilo.Watt, container.CycleData.RightSample.PWheel);
@@ -177,7 +177,7 @@ namespace TUGraz.VectoCore.Tests.Models.Simulation
 
 			Assert.IsTrue(jobContainer.Runs.All(r => r.Success), string.Concat(jobContainer.Runs.Select(r => r.ExecException)));
 
-			ResultFileHelper.TestModFile(@"TestData\Pwheel\Results\P_wheel_in\Atego_HDVCO2_RD_#1_AuxStd.vmod",
+			ResultFileHelper.TestModFile(@"TestData\Pwheel\Results\Atego_HDVCO2_RD_#1_AuxStd.vmod",
 				@"TestData\Pwheel\Pwheel_ultimate_RD_#1_Pwheel_AuxStd.vmod", testRowCount: false);
 		}
 	}
