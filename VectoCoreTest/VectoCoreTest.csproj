@@ -960,7 +960,9 @@
     <None Include="TestData\Pwheel\ShiftPolygons_o9061750850E4.vgbs">
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
     </None>
-    <None Include="TestData\Pwheel\Truck.vacc" />
+    <None Include="TestData\Pwheel\Truck.vacc">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </None>
     <None Include="TestData\Results\Engineering\24t Coach.vsum">
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
     </None>

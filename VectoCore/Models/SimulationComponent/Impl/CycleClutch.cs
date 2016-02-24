@@ -19,23 +19,19 @@ namespace TUGraz.VectoCore.Models.SimulationComponent.Impl
 		{
 			var angularVelocityIn = DataBus.CycleData.LeftSample.AngularVelocity;
 
-			angularVelocity = angularVelocity ?? 0.RPMtoRad();
-			var torqueIn = torque * angularVelocity / angularVelocityIn;
+			if (angularVelocity != null) {
+				// engaged - act like transmission torque converter (convert torque for angularVelocity to torque for angularVelocityIn) 
+				// convert requested power to equivalent torque with angularVelocityIn
+				var torqueIn = torque * angularVelocity / angularVelocityIn;
 
-			var retVal = NextComponent.Request(absTime, dt, torqueIn, angularVelocityIn, dryRun);
-
-			if (!dryRun && retVal is ResponseUnderload && torque.IsEqual(0) && angularVelocity.IsEqual(0)) {
-				var x1 = angularVelocityIn;
-				var y1 = ((ResponseUnderload)retVal).Delta;
-				angularVelocityIn = SearchAlgorithm.Search(x1, y1, 100.RPMtoRad(),
-					r => ((ResponseDryRun)r).DeltaDragLoad,
-					x => NextComponent.Request(absTime, dt, torqueIn, x),
-					r => ((ResponseUnderload)r).Delta < Constants.SimulationSettings.EnginePowerSearchTolerance);
-				retVal = NextComponent.Request(absTime, dt, torqueIn, angularVelocityIn);
+				var retVal = NextComponent.Request(absTime, dt, torqueIn, angularVelocityIn, dryRun);
+				retVal.ClutchPowerRequest = torque * angularVelocity;
+				return retVal;
+			} else {
+				// disengaged -> clutch open
+				var retVal = NextComponent.Request(absTime, dt, torque, angularVelocityIn, dryRun);
+				return retVal;
 			}
-
-			retVal.ClutchPowerRequest = torque * angularVelocity;
-			return retVal;
 		}
 
 		public override IResponse Initialize(NewtonMeter torque, PerSecond angularVelocity)
