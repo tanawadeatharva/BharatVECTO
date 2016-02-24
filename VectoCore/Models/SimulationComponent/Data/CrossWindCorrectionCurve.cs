@@ -21,13 +21,16 @@ using System.Data;
 using System.IO;
 using System.Linq;
 using TUGraz.VectoCore.Exceptions;
+using TUGraz.VectoCore.Models.Simulation.DataBus;
 using TUGraz.VectoCore.Utils;
 
 namespace TUGraz.VectoCore.Models.SimulationComponent.Data
 {
-	public class CrossWindCorrectionCurve : LoggingObject
+	public class CrossWindCorrectionCurve : LoggingObject, ICrossWindCorrection
 	{
 		protected List<CrossWindCorrectionEntry> Entries;
+
+		public CrossWindCorrectionMode CorrectionMode { get; internal set; }
 
 		public CrossWindCorrectionCurve(List<CrossWindCorrectionEntry> entries, CrossWindCorrectionMode correctionMode)
 		{
@@ -35,7 +38,6 @@ namespace TUGraz.VectoCore.Models.SimulationComponent.Data
 			Entries = entries;
 		}
 
-		public CrossWindCorrectionMode CorrectionMode { get; internal set; }
 
 		public static CrossWindCorrectionCurve ReadSpeedDependentCorrectionCurve(DataTable data,
 			SquareMeter aerodynamicDragArea)
@@ -57,7 +59,7 @@ namespace TUGraz.VectoCore.Models.SimulationComponent.Data
 			return ParseSpeedDependent(data, aerodynamicDragArea);
 		}
 
-		private static CrossWindCorrectionCurve ParseSpeedDependent(DataTable data,
+		protected static CrossWindCorrectionCurve ParseSpeedDependent(DataTable data,
 			SquareMeter aerodynamicDragArea)
 		{
 			if (data.Columns.Count != 2) {
@@ -74,12 +76,12 @@ namespace TUGraz.VectoCore.Models.SimulationComponent.Data
 			Logger<CrossWindCorrectionCurve>()
 				.Warn(
 					"Crosswind correction file: Header line is not valid. Expected: '{0}, {1}', Got: '{2}'. Falling back to column index.",
-					Fields.Velocity, Fields.Cd,", ".Join(data.Columns.Cast<DataColumn>().Select(c => c.ColumnName).Reverse()));
+					Fields.Velocity, Fields.Cd, ", ".Join(data.Columns.Cast<DataColumn>().Select(c => c.ColumnName).Reverse()));
 			return new CrossWindCorrectionCurve(ReadSpeedDependentFromColumnIndizes(data, aerodynamicDragArea),
 				CrossWindCorrectionMode.SpeedDependentCorrectionFactor);
 		}
 
-		private static List<CrossWindCorrectionEntry> ReadSpeedDependentFromColumnIndizes(DataTable data,
+		protected static List<CrossWindCorrectionEntry> ReadSpeedDependentFromColumnIndizes(DataTable data,
 			SquareMeter aerodynamicDragArea)
 		{
 			return (from DataRow row in data.Rows
@@ -89,7 +91,7 @@ namespace TUGraz.VectoCore.Models.SimulationComponent.Data
 				}).ToList();
 		}
 
-		private static List<CrossWindCorrectionEntry> ReadSpeedDependentFromColumnNames(DataTable data,
+		protected static List<CrossWindCorrectionEntry> ReadSpeedDependentFromColumnNames(DataTable data,
 			SquareMeter aerodynamicDragArea)
 		{
 			return (from DataRow row in data.Rows
@@ -118,7 +120,28 @@ namespace TUGraz.VectoCore.Models.SimulationComponent.Data
 			}.ToList(), CrossWindCorrectionMode.NoCorrection);
 		}
 
-		public SquareMeter EffectiveAirDragArea(MeterPerSecond x)
+		public void SetDataBus(IDataBus dataBus) {}
+
+		public Watt AverageAirDragPowerLoss(MeterPerSecond v1, MeterPerSecond v2, Second dt)
+		{
+			var vAverage = (v1 + v2) / 2;
+			var CdA = EffectiveAirDragArea(vAverage);
+			Watt averageAirDragPower;
+			if (v1.IsEqual(v2)) {
+				averageAirDragPower = (Physics.AirDensity / 2.0 * CdA * vAverage * vAverage * vAverage).Cast<Watt>();
+			} else {
+				// compute the average force within the current simulation interval
+				// P(t) = k * CdA * v(t)^3  , v(t) = v0 + a * t  // a != 0, P_avg = 1/dt * Integral P(t)
+				// => P_avg = (CdA * rho/2)/(4*a * dt) * (v2^4 - v1^4)
+				var acceleration = (v2 - v1) / dt;
+				averageAirDragPower =
+					(Physics.AirDensity / 2.0 * CdA * (v2 * v2 * v2 * v2 - v1 * v1 * v1 * v1) / (4 * acceleration * dt))
+						.Cast<Watt>();
+			}
+			return averageAirDragPower;
+		}
+
+		protected internal SquareMeter EffectiveAirDragArea(MeterPerSecond x)
 		{
 			var p = Entries.GetSection(c => c.Velocity < x);
 
