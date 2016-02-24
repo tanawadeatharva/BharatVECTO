@@ -137,12 +137,12 @@ namespace TUGraz.VectoCore.Models.Simulation.Impl
 
 			switch (data.Retarder.Type) {
 				case RetarderData.RetarderType.Primary:
-					tmp = AddComponent(tmp, new Retarder(container, data.Retarder.LossMap));
+					tmp = AddComponent(tmp, new Retarder(container, data.Retarder.LossMap, data.Retarder.Ratio));
 					tmp = AddComponent(tmp, GetGearbox(container, data.GearboxData));
 					break;
 				case RetarderData.RetarderType.Secondary:
 					tmp = AddComponent(tmp, GetGearbox(container, data.GearboxData));
-					tmp = AddComponent(tmp, new Retarder(container, data.Retarder.LossMap));
+					tmp = AddComponent(tmp, new Retarder(container, data.Retarder.LossMap, data.Retarder.Ratio));
 					break;
 				case RetarderData.RetarderType.None:
 					tmp = AddComponent(tmp, new DummyRetarder(container));

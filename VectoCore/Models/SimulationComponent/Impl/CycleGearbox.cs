@@ -104,7 +104,8 @@ namespace TUGraz.VectoCore.Models.SimulationComponent.Impl
 
 			if (Gear != 0) {
 				inAngularVelocity = outAngularVelocity * ModelData.Gears[Gear].Ratio;
-				inTorque = ModelData.Gears[Gear].LossMap.GetInTorque(inAngularVelocity, outTorque);
+				var inTorqueLoss = ModelData.Gears[Gear].LossMap.GetTorqueLoss(outAngularVelocity, outTorque);
+				inTorque = outTorque / ModelData.Gears[Gear].Ratio - inTorqueLoss;
 
 				var torqueLossInertia = outAngularVelocity.IsEqual(0)
 					? 0.SI<NewtonMeter>()
@@ -125,10 +126,18 @@ namespace TUGraz.VectoCore.Models.SimulationComponent.Impl
 			return response;
 		}
 
+		/// <summary>
+		/// Special Initialize with gear as additional param. For initial Gear-Searching Purposes.
+		/// </summary>
+		/// <param name="gear"></param>
+		/// <param name="outTorque"></param>
+		/// <param name="outAngularVelocity"></param>
+		/// <returns></returns>
 		internal ResponseDryRun Initialize(uint gear, NewtonMeter outTorque, PerSecond outAngularVelocity)
 		{
 			var inAngularVelocity = outAngularVelocity * ModelData.Gears[gear].Ratio;
-			var inTorque = ModelData.Gears[gear].LossMap.GetInTorque(inAngularVelocity, outTorque);
+			var inTorqueLoss = ModelData.Gears[Gear].LossMap.GetTorqueLoss(outAngularVelocity, outTorque);
+			var inTorque = outTorque / ModelData.Gears[Gear].Ratio - inTorqueLoss;
 
 			if (!inAngularVelocity.IsEqual(0)) {
 				var alpha = (ModelData.Inertia.IsEqual(0))
@@ -217,8 +226,8 @@ namespace TUGraz.VectoCore.Models.SimulationComponent.Impl
 				return disengagedResponse;
 			} else {
 				//engaged
-				var inTorque = ModelData.Gears[Gear].LossMap.GetInTorque(avgOutAngularVelocity * ModelData.Gears[Gear].Ratio,
-					outTorque);
+				var inTorqueLoss = ModelData.Gears[Gear].LossMap.GetTorqueLoss(avgOutAngularVelocity, outTorque);
+				var inTorque = outTorque / ModelData.Gears[Gear].Ratio - inTorqueLoss;
 				var inAngularVelocity = outAngularVelocity * ModelData.Gears[Gear].Ratio;
 
 				if (dryRun) {
