@@ -1,7 +1,7 @@
-/*
+﻿/*
 * This file is part of VECTO.
 *
-* Copyright � 2012-2016 European Union
+* Copyright © 2012-2016 European Union
 *
 * Developed by Graz University of Technology,
 *              Institute of Internal Combustion Engines and Thermodynamics,
@@ -55,10 +55,10 @@ namespace LicenceHeader
 				}
 
 				var re = new Regex("^.*?(?=using|namespace)", RegexOptions.Singleline);
-				var content = File.ReadAllText(file, Encoding.Default);
+				var content = File.ReadAllText(file, Encoding.UTF8);
 				var updatedContent = re.Replace(content, licence);
 				if (updatedContent != content) {
-					File.WriteAllText(file, updatedContent, Encoding.Default);
+					File.WriteAllText(file, updatedContent, Encoding.UTF8);
 					Console.WriteLine("Updated " + file);
 					count++;
 				}
