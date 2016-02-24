@@ -37,7 +37,8 @@ Public Class F_AboutBox
 	End Sub
 
 
-    Private Sub LinkLabel2_LinkClicked(sender As System.Object, e As System.Windows.Forms.LinkLabelLinkClickedEventArgs) Handles LinkLabel2.LinkClicked
-		System.Diagnostics.Process.Start("https://joinup.ec.europa.eu/software/page/eupl")
+	Private Sub LinkLabel2_LinkClicked(sender As System.Object, e As System.Windows.Forms.LinkLabelLinkClickedEventArgs) _
+		Handles LinkLabel2.LinkClicked
+		System.Diagnostics.Process.Start("https://joinup.ec.europa.eu/community/eupl/og_page/eupl")
 	End Sub
 End Class

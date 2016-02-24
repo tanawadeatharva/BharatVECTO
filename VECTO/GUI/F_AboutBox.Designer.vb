@@ -145,10 +145,10 @@ Partial Class F_AboutBox
 		Me.LinkLabel2.Font = New System.Drawing.Font("Verdana", 8.25!)
 		Me.LinkLabel2.Location = New System.Drawing.Point(20, 197)
 		Me.LinkLabel2.Name = "LinkLabel2"
-		Me.LinkLabel2.Size = New System.Drawing.Size(179, 13)
+		Me.LinkLabel2.Size = New System.Drawing.Size(210, 13)
 		Me.LinkLabel2.TabIndex = 18
 		Me.LinkLabel2.TabStop = True
-		Me.LinkLabel2.Text = "VECTO is licensed under EUPL"
+		Me.LinkLabel2.Text = "VECTO is licensed under EUPL 1.1+"
 		'
 		'Label3
 		'
@@ -156,9 +156,9 @@ Partial Class F_AboutBox
 		Me.Label3.Font = New System.Drawing.Font("Verdana", 8.25!)
 		Me.Label3.Location = New System.Drawing.Point(20, 213)
 		Me.Label3.Name = "Label3"
-		Me.Label3.Size = New System.Drawing.Size(194, 13)
+		Me.Label3.Size = New System.Drawing.Size(237, 13)
 		Me.Label3.TabIndex = 19
-		Me.Label3.Text = "Copyright: 2015 European Union"
+		Me.Label3.Text = "Copyright © 2012-2016 European Union"
 		'
 		'PictureBoxJRC
 		'
@@ -209,5 +209,5 @@ Partial Class F_AboutBox
     Friend WithEvents LinkLabel1 As System.Windows.Forms.LinkLabel
     Friend WithEvents LinkLabel2 As System.Windows.Forms.LinkLabel
     Friend WithEvents Label3 As System.Windows.Forms.Label
-    Friend WithEvents PictureBoxJRC As System.Windows.Forms.PictureBox
+	Friend WithEvents PictureBoxJRC As System.Windows.Forms.PictureBox
 End Class
