@@ -28,7 +28,7 @@ namespace TUGraz.VectoCore.InputData.FileIO.JSON
 		protected static JObject ReadFile(string fileName)
 		{
 			if (!File.Exists(fileName)) {
-				throw new FileNotFoundException("failed to load file", fileName);
+				throw new FileNotFoundException("failed to load file: " + fileName, fileName);
 			}
 			using (var reader = File.OpenText(fileName)) {
 				return (JObject)JToken.ReadFrom(new JsonTextReader(reader));

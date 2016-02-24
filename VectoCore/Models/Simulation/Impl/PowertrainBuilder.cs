@@ -290,22 +290,27 @@ namespace TUGraz.VectoCore.Models.Simulation.Impl
 			return container;
 		}
 
-		private EngineAuxiliary CreateAuxiliaries(VectoRunData data, VehicleContainer container)
+		private EngineAuxiliary CreateAuxiliaries(VectoRunData data, IVehicleContainer container)
 		{
 			var aux = new EngineAuxiliary(container);
 			foreach (var auxData in data.Aux) {
+				// id's in upper case
+				var id = auxData.ID.ToUpper();
+
 				switch (auxData.DemandType) {
 					case AuxiliaryDemandType.Constant:
-						aux.AddConstant(auxData.ID, auxData.PowerDemand);
+						aux.AddConstant(id, auxData.PowerDemand);
 						break;
 					case AuxiliaryDemandType.Direct:
 						aux.AddDirect();
 						break;
 					case AuxiliaryDemandType.Mapping:
-						aux.AddMapping(auxData.ID, auxData.Data);
+						aux.AddMapping(id, auxData.Data);
 						break;
+					default:
+						throw new ArgumentOutOfRangeException();
 				}
-				_modData.AddAuxiliary(auxData.ID);
+				_modData.AddAuxiliary(id);
 			}
 			return aux;
 		}

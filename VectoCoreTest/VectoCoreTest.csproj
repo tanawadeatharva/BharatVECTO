@@ -882,19 +882,28 @@
     <None Include="TestData\MeasuredSpeed\MeasuredSpeed.vecto">
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
     </None>
-    <None Include="TestData\MeasuredSpeed\MeasuredSpeed_Gear_Motorway.vdri">
+    <None Include="TestData\MeasuredSpeed\MeasuredSpeedGearAux.vecto">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </None>
+    <None Include="TestData\MeasuredSpeed\MeasuredSpeedGearVair.vecto">
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
     </None>
     <None Include="TestData\MeasuredSpeed\MeasuredSpeed_Gear_Rural.vdri">
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
     </None>
-    <None Include="TestData\MeasuredSpeed\MeasuredSpeed_Gear_Urban.vdri">
+    <None Include="TestData\MeasuredSpeed\MeasuredSpeed_Gear_Rural_Aux.vdri">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </None>
+    <None Include="TestData\MeasuredSpeed\MeasuredSpeed_Gear_Rural_Vair.vdri">
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
     </None>
     <None Include="TestData\MeasuredSpeed\ShiftPolygons.vgbs">
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
     </None>
     <None Include="TestData\MeasuredSpeed\Vehicle.vveh">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </None>
+    <None Include="TestData\MeasuredSpeed\VehicleVair.vveh">
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
     </None>
     <None Include="TestData\Pwheel\Atego.vveh">

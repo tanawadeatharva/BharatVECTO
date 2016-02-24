@@ -293,10 +293,10 @@ namespace TUGraz.VectoCore.Tests.Models.Simulation
 		}
 
 
-		///// <summary>
-		///// Tests if the simulation works and the modfile and sumfile are correct in MeasuredSpeed mode.
-		///// </summary>
-		///// <remarks>VECTO-181</remarks>
+		/// <summary>
+		/// Tests if the simulation works and the modfile and sumfile are correct in MeasuredSpeed mode.
+		/// </summary>
+		/// <remarks>VECTO-181</remarks>
 		[TestMethod]
 		public void MeasuredSpeed_Run_Gear()
 		{
@@ -317,6 +317,61 @@ namespace TUGraz.VectoCore.Tests.Models.Simulation
 
 			Assert.IsTrue(File.Exists(@"TestData\MeasuredSpeed\MeasuredSpeedGear.vsum"), "SUM file missing.");
 			Assert.IsTrue(File.Exists(@"TestData\MeasuredSpeed\MeasuredSpeedGear_MeasuredSpeed_Gear_Rural.vmod"),
+				"MOD File missing.");
+		}
+
+		/// <summary>
+		/// Tests if the simulation works and the modfile and sumfile are correct in MeasuredSpeed mode with Aux.
+		/// </summary>
+		/// <remarks>VECTO-181</remarks>
+		[TestMethod]
+		public void MeasuredSpeed_Run_Gear_Aux()
+		{
+			var jobFile = @"TestData\MeasuredSpeed\MeasuredSpeedGearAux.vecto";
+			var fileWriter = new FileOutputWriter(jobFile);
+			var sumWriter = new SummaryDataContainer(fileWriter);
+			var jobContainer = new JobContainer(sumWriter);
+
+			var inputData = JSONInputDataFactory.ReadJsonJob(jobFile);
+			var runsFactory = new SimulatorFactory(ExecutionMode.Engineering, inputData, fileWriter);
+
+			jobContainer.AddRuns(runsFactory);
+			jobContainer.Execute();
+
+			jobContainer.WaitFinished();
+
+			Assert.IsTrue(jobContainer.Runs.All(r => r.Success), string.Concat(jobContainer.Runs.Select(r => r.ExecException)));
+
+			Assert.IsTrue(File.Exists(@"TestData\MeasuredSpeed\MeasuredSpeedGearAux.vsum"), "SUM file missing.");
+			Assert.IsTrue(File.Exists(@"TestData\MeasuredSpeed\MeasuredSpeedGearAux_MeasuredSpeed_Gear_Rural_Aux.vmod"),
+				"MOD File missing.");
+		}
+
+
+		/// <summary>
+		/// Tests if the simulation works and the modfile and sumfile are correct in MeasuredSpeed mode with Vair & Beta
+		/// </summary>
+		/// <remarks>VECTO-181</remarks>
+		[TestMethod]
+		public void MeasuredSpeed_Run_Gear_Vair()
+		{
+			var jobFile = @"TestData\MeasuredSpeed\MeasuredSpeedGearVair.vecto";
+			var fileWriter = new FileOutputWriter(jobFile);
+			var sumWriter = new SummaryDataContainer(fileWriter);
+			var jobContainer = new JobContainer(sumWriter);
+
+			var inputData = JSONInputDataFactory.ReadJsonJob(jobFile);
+			var runsFactory = new SimulatorFactory(ExecutionMode.Engineering, inputData, fileWriter);
+
+			jobContainer.AddRuns(runsFactory);
+			jobContainer.Execute();
+
+			jobContainer.WaitFinished();
+
+			Assert.IsTrue(jobContainer.Runs.All(r => r.Success), string.Concat(jobContainer.Runs.Select(r => r.ExecException)));
+
+			Assert.IsTrue(File.Exists(@"TestData\MeasuredSpeed\MeasuredSpeedGearVair.vsum"), "SUM file missing.");
+			Assert.IsTrue(File.Exists(@"TestData\MeasuredSpeed\MeasuredSpeedGearVair_MeasuredSpeed_Gear_Rural_Vair.vmod"),
 				"MOD File missing.");
 		}
 	}
