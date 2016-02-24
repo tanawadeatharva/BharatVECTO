@@ -102,7 +102,7 @@ namespace TUGraz.VectoCore.Models.SimulationComponent.Data
 			} else {
 				tmp = PT1Curve.Create(data);
 			}
-
+			entriesFld.Sort((entry1, entry2) => entry1.EngineSpeed.Value().CompareTo(entry2.EngineSpeed.Value()));
 			return new FullLoadCurve { FullLoadEntries = entriesFld, PT1Data = tmp };
 		}
 

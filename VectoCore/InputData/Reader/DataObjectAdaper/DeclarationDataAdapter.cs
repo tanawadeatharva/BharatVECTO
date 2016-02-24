@@ -177,7 +177,7 @@ namespace TUGraz.VectoCore.InputData.Reader.DataObjectAdaper
 					new GearData {
 						LossMap = gearLossMap,
 						ShiftPolygon = shiftPolygon,
-						FullLoadCurve = gearFullLoad ?? engine.FullLoadCurve,
+						FullLoadCurve = gearFullLoad,
 						Ratio = gear.Ratio,
 						TorqueConverterActive = false
 					});
@@ -247,9 +247,9 @@ namespace TUGraz.VectoCore.InputData.Reader.DataObjectAdaper
 			Log.Warn("{0} not in Declaration Mode!", inputData);
 		}
 
-		public RetarderData CreateRetarderData(IRetarderInputData retarder)
+		public RetarderData CreateRetarderData(IRetarderInputData retarder, IVehicleInputData vehicle)
 		{
-			return SetCommonRetarderData(retarder);
+			return SetCommonRetarderData(retarder, vehicle);
 		}
 
 

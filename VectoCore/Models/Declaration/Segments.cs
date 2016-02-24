@@ -20,6 +20,7 @@ using System;
 using System.Collections.Generic;
 using System.Data;
 using System.Linq;
+using TUGraz.VectoCore.Exceptions;
 using TUGraz.VectoCore.Utils;
 
 namespace TUGraz.VectoCore.Models.Declaration
@@ -45,12 +46,15 @@ namespace TUGraz.VectoCore.Models.Declaration
 		public override Segment Lookup(VehicleCategory vehicleCategory, AxleConfiguration axleConfiguration,
 			Kilogram grossVehicleMassRating, Kilogram curbWeight)
 		{
+			if (grossVehicleMassRating < 7.5.SI<Ton>()) {
+				throw new VectoException("Gross vehicle mass must be greater than 7.5 tons");
+			}
 			var row =
 				SegmentTable.Rows.Cast<DataRow>().First(r => r.Field<string>("valid") == "1"
 															&& r.Field<string>("vehiclecategory") == vehicleCategory.ToString()
 															&& r.Field<string>("axleconf.") == axleConfiguration.GetName()
-															&& r.ParseDouble("gvw_min").SI<Ton>() <= grossVehicleMassRating
-															&& r.ParseDouble("gvw_max").SI<Ton>() > grossVehicleMassRating
+															&& r.ParseDouble("gvw_min").SI<Ton>() < grossVehicleMassRating
+															&& r.ParseDouble("gvw_max").SI<Ton>() >= grossVehicleMassRating
 					);
 			var segment = new Segment {
 				GrossVehicleWeightMin = row.ParseDouble("gvw_min").SI().Ton.Cast<Kilogram>(),

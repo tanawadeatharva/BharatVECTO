@@ -120,6 +120,11 @@ namespace TUGraz.VectoCore.InputData.FileIO.JSON
 			get { return ReadTableData(Body.GetEx<string>("CdCorrFile"), "CrosswindCorrection File"); }
 		}
 
+		public virtual double RetarderRatio
+		{
+			get { return Body.GetEx(JsonKeys.Vehicle_Retarder).GetEx<double>(JsonKeys.Vehicle_Retarder_Ratio); }
+		}
+
 		#endregion
 
 		#region IRetarderInputData
@@ -140,10 +145,6 @@ namespace TUGraz.VectoCore.InputData.FileIO.JSON
 			}
 		}
 
-		public virtual double Ratio
-		{
-			get { return Body.GetEx(JsonKeys.Vehicle_Retarder).GetEx<double>(JsonKeys.Vehicle_Retarder_Ratio); }
-		}
 
 		public virtual DataTable LossMap
 		{

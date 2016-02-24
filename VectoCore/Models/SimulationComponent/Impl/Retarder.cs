@@ -20,6 +20,7 @@ using System;
 using TUGraz.VectoCore.Models.Connector.Ports;
 using TUGraz.VectoCore.Models.Simulation;
 using TUGraz.VectoCore.Models.Simulation.Data;
+using TUGraz.VectoCore.Models.Simulation.Impl;
 using TUGraz.VectoCore.Models.SimulationComponent.Data;
 using TUGraz.VectoCore.OutputData;
 using TUGraz.VectoCore.Utils;
@@ -32,10 +33,12 @@ namespace TUGraz.VectoCore.Models.SimulationComponent.Impl
 		protected ITnOutPort NextComponent;
 
 		private readonly RetarderLossMap _lossMap;
+		private double _ratio;
 
-		public Retarder(IVehicleContainer cockpit, RetarderLossMap lossMap) : base(cockpit)
+		public Retarder(IVehicleContainer cockpit, RetarderLossMap lossMap, double ratio) : base(cockpit)
 		{
 			_lossMap = lossMap;
+			_ratio = ratio;
 		}
 
 		protected override void DoWriteModalResults(IModalDataContainer container)
@@ -68,7 +71,8 @@ namespace TUGraz.VectoCore.Models.SimulationComponent.Impl
 				return NextComponent.Request(absTime, dt, torque, null, dryRun);
 			}
 			var avgAngularSpeed = (PreviousState.InAngularVelocity + angularVelocity) / 2.0;
-			var retarderTorqueLoss = _lossMap.RetarderLoss(avgAngularSpeed);
+			var retarderTorqueLoss =
+				_lossMap.RetarderLoss(avgAngularSpeed * _ratio, DataBus.ExecutionMode != ExecutionMode.Declaration) / _ratio;
 			CurrentState.SetState(torque + retarderTorqueLoss, angularVelocity, torque, angularVelocity);
 
 			return NextComponent.Request(absTime, dt, torque + retarderTorqueLoss, angularVelocity, dryRun);
@@ -76,7 +80,8 @@ namespace TUGraz.VectoCore.Models.SimulationComponent.Impl
 
 		public IResponse Initialize(NewtonMeter torque, PerSecond angularVelocity)
 		{
-			var retarderTorqueLoss = _lossMap.RetarderLoss(angularVelocity);
+			var retarderTorqueLoss =
+				_lossMap.RetarderLoss(angularVelocity * _ratio, DataBus.ExecutionMode != ExecutionMode.Declaration) / _ratio;
 			PreviousState.SetState(torque + retarderTorqueLoss, angularVelocity, torque, angularVelocity);
 
 			return NextComponent.Initialize(torque + retarderTorqueLoss, angularVelocity);

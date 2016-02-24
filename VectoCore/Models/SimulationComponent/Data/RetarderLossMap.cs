@@ -60,11 +60,29 @@ namespace TUGraz.VectoCore.Models.SimulationComponent.Data
 					", ".Join(data.Columns.Cast<DataColumn>().Select(c => c.ColumnName).Reverse()));
 				entries = CreateFromColumnIndizes(data);
 			}
+			entries.Sort((entry1, entry2) => entry1.RetarderSpeed.Value().CompareTo(entry2.RetarderSpeed.Value()));
 			return new RetarderLossMap { _entries = entries };
 		}
 
-		public NewtonMeter RetarderLoss(PerSecond angularVelocity)
+		public NewtonMeter RetarderLoss(PerSecond angularVelocity, bool allowExtrapolation)
 		{
+			if (angularVelocity < _entries.First().RetarderSpeed) {
+				if (!allowExtrapolation) {
+					throw new VectoSimulationException("angular velocity {0} below min. entry in retarder loss map ({1})",
+						angularVelocity, _entries.First().RetarderSpeed);
+				}
+				Log.Warn("Extrapolating retarder losses! Angular velocity {0} below min. entry in retarder loss map ({1})",
+					angularVelocity, _entries.First().RetarderSpeed);
+			}
+			if (angularVelocity > _entries.Last().RetarderSpeed) {
+				if (!allowExtrapolation) {
+					throw new VectoSimulationException("angular velocity {0} above max. entry in retarder loss map ({1})",
+						angularVelocity, _entries.Last().RetarderSpeed);
+				}
+				Log.Warn("Extrapolating retarder losses! Angular velocity {0} above max. entry in retarder loss map ({1})",
+					angularVelocity, _entries.Last().RetarderSpeed);
+			}
+
 			var idx = FindIndex(angularVelocity);
 			return VectoMath.Interpolate(_entries[idx - 1].RetarderSpeed, _entries[idx].RetarderSpeed,
 				_entries[idx - 1].TorqueLoss, _entries[idx].TorqueLoss, angularVelocity);

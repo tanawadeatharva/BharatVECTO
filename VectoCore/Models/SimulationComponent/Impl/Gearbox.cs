@@ -130,8 +130,8 @@ namespace TUGraz.VectoCore.Models.SimulationComponent.Impl
 			}
 
 			var inAngularVelocity = outAngularVelocity * ModelData.Gears[Gear].Ratio;
-			var inTorque = ModelData.Gears[Gear].LossMap.GetInTorque(inAngularVelocity, outTorque);
-
+			var torqueLoss = ModelData.Gears[Gear].LossMap.GetTorqueLoss(outAngularVelocity, outTorque);
+			var inTorque = outTorque / ModelData.Gears[Gear].Ratio + torqueLoss;
 			var torqueLossInertia = outAngularVelocity.IsEqual(0)
 				? 0.SI<NewtonMeter>()
 				: Formulas.InertiaPower(inAngularVelocity, PreviousState.InAngularVelocity, ModelData.Inertia, dt) /
@@ -142,12 +142,9 @@ namespace TUGraz.VectoCore.Models.SimulationComponent.Impl
 			PreviousState.SetState(inTorque, inAngularVelocity, outTorque, outAngularVelocity);
 			PreviousState.InertiaTorqueLossOut = 0.SI<NewtonMeter>();
 			PreviousState.Gear = Gear;
+			Disengaged = false;
 
 			var response = NextComponent.Initialize(inTorque, inAngularVelocity);
-			if (response is ResponseSuccess) {
-				PreviousState.InAngularVelocity = inAngularVelocity;
-				Disengaged = false;
-			}
 
 			return response;
 		}
@@ -155,7 +152,8 @@ namespace TUGraz.VectoCore.Models.SimulationComponent.Impl
 		internal ResponseDryRun Initialize(uint gear, NewtonMeter outTorque, PerSecond outAngularVelocity)
 		{
 			var inAngularVelocity = outAngularVelocity * ModelData.Gears[gear].Ratio;
-			var inTorque = ModelData.Gears[gear].LossMap.GetInTorque(inAngularVelocity, outTorque);
+			var torqueLoss = ModelData.Gears[gear].LossMap.GetTorqueLoss(outAngularVelocity, outTorque);
+			var inTorque = outTorque / ModelData.Gears[gear].Ratio + torqueLoss;
 
 			if (!inAngularVelocity.IsEqual(0)) {
 				var alpha = (ModelData.Inertia.IsEqual(0))
@@ -304,8 +302,9 @@ namespace TUGraz.VectoCore.Models.SimulationComponent.Impl
 			}
 
 			var avgOutAngularVelocity = (PreviousState.OutAngularVelocity + outAngularVelocity) / 2.0;
-			var inTorque = ModelData.Gears[Gear].LossMap.GetInTorque(avgOutAngularVelocity * ModelData.Gears[Gear].Ratio,
-				outTorque);
+			var torqueLoss = ModelData.Gears[Gear].LossMap.GetTorqueLoss(avgOutAngularVelocity, outTorque);
+			var inTorque = outTorque / ModelData.Gears[Gear].Ratio + torqueLoss;
+
 			var inAngularVelocity = outAngularVelocity * ModelData.Gears[Gear].Ratio;
 
 			if (dryRun) {
