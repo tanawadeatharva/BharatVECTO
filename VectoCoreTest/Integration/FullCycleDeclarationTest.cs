@@ -22,6 +22,7 @@ using Microsoft.VisualStudio.TestTools.UnitTesting;
 using NLog;
 using TUGraz.VectoCore.InputData.FileIO.JSON;
 using TUGraz.VectoCore.Models.Simulation.Impl;
+using TUGraz.VectoCore.Models.SimulationComponent.Impl;
 using TUGraz.VectoCore.OutputData;
 using TUGraz.VectoCore.OutputData.FileIO;
 using TUGraz.VectoCore.Utils;
@@ -131,6 +132,7 @@ namespace TUGraz.VectoCore.Tests.Integration
 			var run = Truck40tPowerTrain.CreateEngineeringRun(cycle, "Truck40t_CoachCycle_RefLoad.vmod",
 				7500.SI<Kilogram>(), 12900.SI<Kilogram>());
 
+			((DistanceBasedDrivingCycle)((VehicleContainer)run.GetContainer()).Cycle).SetDriveOffDistance(152429.9.SI<Meter>());
 			run.Run();
 			Assert.IsTrue(run.FinishedWithoutErrors);
 		}
