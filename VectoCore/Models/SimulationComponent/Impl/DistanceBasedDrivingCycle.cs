@@ -341,6 +341,12 @@ namespace TUGraz.VectoCore.Models.SimulationComponent.Impl
 			}
 		}
 
+		internal void SetDriveOffDistance(Meter startDistance)
+		{
+			while (CycleIntervalIterator.MoveNext() && CycleIntervalIterator.RightSample.Distance < startDistance) {}
+			CycleIntervalIterator.MoveNext();
+		}
+
 		public class DrivingCycleEnumerator : IEnumerator<DrivingCycleData.DrivingCycleEntry>
 		{
 			protected int CurrentCycleIndex;
