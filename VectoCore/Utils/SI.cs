@@ -1,19 +1,32 @@
-/*
-* Copyright 2015, 2016 Graz University of Technology,
-* Institute of Internal Combustion Engines and Thermodynamics,
-* Institute of Technical Informatics
+ï»¿/*
+* This file is part of VECTO.
 *
-* Licensed under the EUPL (the "Licence");
-* You may not use this work except in compliance with the Licence.
+* Copyright Â© 2012-2016 European Union
+*
+* Developed by Graz University of Technology,
+*              Institute of Internal Combustion Engines and Thermodynamics,
+*              Institute of Technical Informatics
+*
+* VECTO is licensed under the EUPL, Version 1.1 or - as soon they will be approved
+* by the European Commission - subsequent versions of the EUPL (the "Licence");
+* You may not use VECTO except in compliance with the Licence.
 * You may obtain a copy of the Licence at:
 *
-* http://ec.europa.eu/idabc/eupl
+* https://joinup.ec.europa.eu/community/eupl/og_page/eupl
 *
-* Unless required by applicable law or agreed to in writing, software 
+* Unless required by applicable law or agreed to in writing, VECTO
 * distributed under the Licence is distributed on an "AS IS" basis,
 * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
-* See the Licence for the specific language governing permissions and 
+* See the Licence for the specific language governing permissions and
 * limitations under the Licence.
+*
+* Authors:
+*   Stefan Hausberger, hausberger@ivt.tugraz.at, IVT, Graz University of Technology
+*   Christian Kreiner, christian.kreiner@tugraz.at, ITI, Graz University of Technology
+*   Michael Krisper, michael.krisper@tugraz.at, ITI, Graz University of Technology
+*   Raphael Luz, luz@ivt.tugraz.at, IVT, Graz University of Technology
+*   Markus Quaritsch, markus.quaritsch@tugraz.at, IVT, Graz University of Technology
+*   Martin Rexeis, rexeis@ivt.tugraz.at, IVT, Graz University of Technology
 */
 
 using System;
@@ -148,7 +161,7 @@ namespace TUGraz.VectoCore.Utils
 	}
 
 	/// <summary>
-	/// SI Class for PerSquareSecond [1/s²].
+	/// SI Class for PerSquareSecond [1/sÂ²].
 	/// </summary>
 	public class PerSquareSecond : SIBase<PerSquareSecond>
 	{
@@ -167,7 +180,7 @@ namespace TUGraz.VectoCore.Utils
 
 
 	/// <summary>
-	/// SI Class for Meter per square second [m/s²].
+	/// SI Class for Meter per square second [m/sÂ²].
 	/// </summary>
 	public class MeterPerSquareSecond : SIBase<MeterPerSquareSecond>
 	{
@@ -304,7 +317,7 @@ namespace TUGraz.VectoCore.Utils
 	}
 
 	/// <summary>
-	/// SI Class for Square meter [m²].
+	/// SI Class for Square meter [mÂ²].
 	/// </summary>
 	public class SquareMeter : SIBase<SquareMeter>
 	{
@@ -316,7 +329,7 @@ namespace TUGraz.VectoCore.Utils
 	}
 
 	/// <summary>
-	/// SI Class for cubic meter [m³].
+	/// SI Class for cubic meter [mÂ³].
 	/// </summary>
 	public class CubicMeter : SIBase<CubicMeter>
 	{
@@ -328,7 +341,7 @@ namespace TUGraz.VectoCore.Utils
 	}
 
 	/// <summary>
-	/// SI Class for Kilogram Square Meter [kgm²].
+	/// SI Class for Kilogram Square Meter [kgmÂ²].
 	/// </summary>
 	public class KilogramSquareMeter : SIBase<KilogramSquareMeter>
 	{
@@ -1022,7 +1035,7 @@ namespace TUGraz.VectoCore.Utils
 
 
 		/// <summary>
-		/// Converts to basic units. e.g [W] => [kgm²/s³]
+		/// Converts to basic units. e.g [W] => [kgmÂ²/sÂ³]
 		/// </summary>
 		/// <param name="unit">The unit.</param>
 		/// <param name="numerator">The numerator.</param>

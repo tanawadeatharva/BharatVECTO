@@ -1,19 +1,32 @@
-/*
-* Copyright 2015, 2016 Graz University of Technology,
-* Institute of Internal Combustion Engines and Thermodynamics,
-* Institute of Technical Informatics
+﻿/*
+* This file is part of VECTO.
 *
-* Licensed under the EUPL (the "Licence");
-* You may not use this work except in compliance with the Licence.
+* Copyright © 2012-2016 European Union
+*
+* Developed by Graz University of Technology,
+*              Institute of Internal Combustion Engines and Thermodynamics,
+*              Institute of Technical Informatics
+*
+* VECTO is licensed under the EUPL, Version 1.1 or - as soon they will be approved
+* by the European Commission - subsequent versions of the EUPL (the "Licence");
+* You may not use VECTO except in compliance with the Licence.
 * You may obtain a copy of the Licence at:
 *
-* http://ec.europa.eu/idabc/eupl
+* https://joinup.ec.europa.eu/community/eupl/og_page/eupl
 *
-* Unless required by applicable law or agreed to in writing, software 
+* Unless required by applicable law or agreed to in writing, VECTO
 * distributed under the Licence is distributed on an "AS IS" basis,
 * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
-* See the Licence for the specific language governing permissions and 
+* See the Licence for the specific language governing permissions and
 * limitations under the Licence.
+*
+* Authors:
+*   Stefan Hausberger, hausberger@ivt.tugraz.at, IVT, Graz University of Technology
+*   Christian Kreiner, christian.kreiner@tugraz.at, ITI, Graz University of Technology
+*   Michael Krisper, michael.krisper@tugraz.at, ITI, Graz University of Technology
+*   Raphael Luz, luz@ivt.tugraz.at, IVT, Graz University of Technology
+*   Markus Quaritsch, markus.quaritsch@tugraz.at, IVT, Graz University of Technology
+*   Martin Rexeis, rexeis@ivt.tugraz.at, IVT, Graz University of Technology
 */
 
 using System;
@@ -32,7 +45,7 @@ namespace LicenceHeader
 
 		private static void Main()
 		{
-			var licence = File.ReadAllText("header.txt");
+			var licence = File.ReadAllText("header.txt", Encoding.Default);
 			var count = 0;
 
 			foreach (var file in Directory.GetFiles(SolutionRootDirectory, "*.cs", SearchOption.AllDirectories)) {
@@ -42,10 +55,10 @@ namespace LicenceHeader
 				}
 
 				var re = new Regex("^.*?(?=using|namespace)", RegexOptions.Singleline);
-				var content = File.ReadAllText(file, Encoding.Default);
+				var content = File.ReadAllText(file, Encoding.UTF8);
 				var updatedContent = re.Replace(content, licence);
 				if (updatedContent != content) {
-					File.WriteAllText(file, updatedContent, Encoding.Default);
+					File.WriteAllText(file, updatedContent, Encoding.UTF8);
 					Console.WriteLine("Updated " + file);
 					count++;
 				}
