@@ -382,7 +382,8 @@ namespace TUGraz.VectoCore.Tests.Models.Simulation
 			var tbl = VectoCSVFile.Read(@"TestData/MeasuredSpeed/VairBeta.vcdb");
 
 			var dataBus = new MockVairVechicleContainer();
-			var vairbeta = new VAirBetaCrosswindCorrection(5.SI<SquareMeter>(), tbl);
+			var vairbeta = new CrosswindCorrectionVAirBeta(5.SI<SquareMeter>(),
+				CrossWindCorrectionCurveReader.ReadCdxABetaTable(tbl));
 			vairbeta.SetDataBus(dataBus);
 
 			var cycleEntry = new DrivingCycleData.DrivingCycleEntry() {

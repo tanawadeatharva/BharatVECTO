@@ -47,21 +47,23 @@ namespace TUGraz.VectoCore.InputData.Reader.DataObjectAdaper
 			retVal.DynamicTyreRadius = data.DynamicTyreRadius;
 			switch (data.CrossWindCorrectionMode) {
 				case CrossWindCorrectionMode.NoCorrection:
-					retVal.CrossWindCorrectionCurve = CrossWindCorrectionCurve.GetNoCorrectionCurve(data.AirDragArea);
+					retVal.CrossWindCorrectionCurve =
+						new CrosswindCorrectionCdxALookup(CrossWindCorrectionCurveReader.GetNoCorrectionCurve(data.AirDragArea),
+							CrossWindCorrectionMode.NoCorrection);
 					break;
 				case CrossWindCorrectionMode.SpeedDependentCorrectionFactor:
-					retVal.CrossWindCorrectionCurve =
-						CrossWindCorrectionCurve.ReadSpeedDependentCorrectionCurve(data.CrosswindCorrectionMap,
-							data.AirDragArea);
+					retVal.CrossWindCorrectionCurve = new CrosswindCorrectionCdxALookup(
+						CrossWindCorrectionCurveReader.ReadSpeedDependentCorrectionCurve(data.CrosswindCorrectionMap,
+							data.AirDragArea), CrossWindCorrectionMode.SpeedDependentCorrectionFactor);
 					break;
 				case CrossWindCorrectionMode.VAirBetaLookupTable:
-					var delcEntries = DeclarationDataAdapter.GetDeclarationAirResistanceCurve(retVal.VehicleCategory,
-						data.AirDragArea);
-					retVal.CrossWindCorrectionCurve = new VAirBetaCrosswindCorrection(data.AirDragArea, data.CrosswindCorrectionMap);
+					retVal.CrossWindCorrectionCurve = new CrosswindCorrectionVAirBeta(data.AirDragArea,
+						CrossWindCorrectionCurveReader.ReadCdxABetaTable(data.CrosswindCorrectionMap));
 					break;
 				case CrossWindCorrectionMode.DeclarationModeCorrection:
-					retVal.CrossWindCorrectionCurve = DeclarationDataAdapter.GetDeclarationAirResistanceCurve(retVal.VehicleCategory,
-						data.AirDragArea);
+					retVal.CrossWindCorrectionCurve =
+						new CrosswindCorrectionCdxALookup(DeclarationDataAdapter.GetDeclarationAirResistanceCurve(retVal.VehicleCategory,
+							data.AirDragArea), CrossWindCorrectionMode.DeclarationModeCorrection);
 					break;
 				default:
 					throw new ArgumentOutOfRangeException();
