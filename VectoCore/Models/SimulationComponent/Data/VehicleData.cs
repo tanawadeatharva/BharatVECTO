@@ -47,7 +47,7 @@ namespace TUGraz.VectoCore.Models.SimulationComponent.Data
 		public VehicleClass VehicleClass { get; internal set; }
 		//public CrossWindCorrectionMode CrossWindCorrectionMode { get; internal set; }
 
-		public CrossWindCorrectionCurve CrossWindCorrectionCurve { get; internal set; }
+		public ICrossWindCorrection CrossWindCorrectionCurve { get; internal set; }
 
 		/// <summary>
 		///     Set the properties for all axles of the vehicle

@@ -47,6 +47,7 @@ using TUGraz.VectoCore.Models.SimulationComponent.Impl;
 using TUGraz.VectoCore.Models.SimulationComponent.Data;
 using TUGraz.VectoCore.Models.SimulationComponent.Data.Engine;
 using TUGraz.VectoCore.Models.SimulationComponent.Data.Gearbox;
+using TUGraz.VectoCore.Tests.Integration;
 using TUGraz.VectoCore.Tests.Utils;
 
 namespace TUGraz.VectoCore.Tests.Models.Simulation
@@ -386,6 +387,16 @@ namespace TUGraz.VectoCore.Tests.Models.Simulation
 			Assert.IsTrue(File.Exists(@"TestData\MeasuredSpeed\MeasuredSpeedGearVair.vsum"), "SUM file missing.");
 			Assert.IsTrue(File.Exists(@"TestData\MeasuredSpeed\MeasuredSpeedGearVair_MeasuredSpeed_Gear_Rural_Vair.vmod"),
 				"MOD File missing.");
+		}
+
+		[TestMethod]
+		public void VcdbTest()
+		{
+			var tbl = VectoCSVFile.Read(@"TestData/MeasuredSpeed/VairBeta.vcdb");
+
+			var vairbeta = new VAirBetaCrosswindCorrection(1.SI<SquareMeter>(), tbl);
+			
+			Assert.AreEqual(0, vairbeta.AverageAirDragPowerLoss(20.KMPHtoMeterPerSecond(), 20.KMPHtoMeterPerSecond(), 1.SI<Second>()) );
 		}
 	}
 }

@@ -34,6 +34,7 @@ using System.Collections.Generic;
 using System.IO;
 using System.Linq;
 using TUGraz.VectoCore.Exceptions;
+using TUGraz.VectoCore.Models;
 using TUGraz.VectoCore.Models.Declaration;
 using TUGraz.VectoCore.Models.Simulation.Data;
 using TUGraz.VectoCore.Models.SimulationComponent.Data;
@@ -67,7 +68,10 @@ namespace TUGraz.VectoCore.InputData.Reader.DataObjectAdaper
 							data.AirDragArea);
 					break;
 				case CrossWindCorrectionMode.VAirBetaLookupTable:
-					throw new VectoException("CrosswindCorrection mode {0} not implemented", data.CrossWindCorrectionMode);
+					var delcEntries = DeclarationDataAdapter.GetDeclarationAirResistanceCurve(retVal.VehicleCategory,
+						data.AirDragArea);
+					retVal.CrossWindCorrectionCurve = new VAirBetaCrosswindCorrection(data.AirDragArea, data.CrosswindCorrectionMap);
+					break;
 				case CrossWindCorrectionMode.DeclarationModeCorrection:
 					retVal.CrossWindCorrectionCurve = DeclarationDataAdapter.GetDeclarationAirResistanceCurve(retVal.VehicleCategory,
 						data.AirDragArea);
