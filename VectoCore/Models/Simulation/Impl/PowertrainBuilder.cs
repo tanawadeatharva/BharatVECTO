@@ -138,7 +138,7 @@ namespace TUGraz.VectoCore.Models.Simulation.Impl
 
 		private VehicleContainer BuildMeasuredSpeed(VectoRunData data)
 		{
-			Debug.Assert(data.Cycle.CycleType == CycleType.MeasuredSpeed);
+			Debug.Assert(data.Cycle.CycleType == CycleType.MeasuredSpeed, "CycleType must be MeasuredSpeed.");
 
 			var container = new VehicleContainer(_modData, _sumWriter, ExecutionMode.Engineering) { RunData = data };
 			var cycle = new MeasuredSpeedDrivingCycle(container, data.Cycle);
@@ -190,7 +190,7 @@ namespace TUGraz.VectoCore.Models.Simulation.Impl
 
 		private VehicleContainer BuildMeasuredSpeedGear(VectoRunData data)
 		{
-			Debug.Assert(data.Cycle.CycleType == CycleType.MeasuredSpeedGear);
+			Debug.Assert(data.Cycle.CycleType == CycleType.MeasuredSpeedGear, "CycleType must be MeasuredSpeed with Gear.");
 
 			var container = new VehicleContainer(_modData, _sumWriter, ExecutionMode.Engineering) { RunData = data };
 			var cycle = new MeasuredSpeedDrivingCycle(container, data.Cycle);

@@ -233,8 +233,6 @@ namespace TUGraz.VectoCore.Utils
 
 		private bool Equals(Point other)
 		{
-			//Contract.Requires(other != null);
-
 			return X.Equals(other.X) && Y.Equals(other.Y) && Z.Equals(other.Z);
 		}
 
@@ -375,7 +373,6 @@ namespace TUGraz.VectoCore.Utils
 
 		public bool SharesVertexWith(Triangle t)
 		{
-			Contract.Requires(t != null);
 			return Contains(t.P1) || Contains(t.P2) || Contains(t.P3);
 		}
 
@@ -388,7 +385,6 @@ namespace TUGraz.VectoCore.Utils
 
 		protected bool Equals(Triangle other)
 		{
-			Contract.Requires(other != null);
 			return Equals(P1, other.P1) && Equals(P2, other.P2) && Equals(P3, other.P3);
 		}
 
@@ -441,7 +437,6 @@ namespace TUGraz.VectoCore.Utils
 
 		protected bool Equals(Edge other)
 		{
-			Contract.Requires(other != null);
 			return Equals(P1, other.P1) && Equals(P2, other.P2)
 					|| Equals(P1, other.P2) && Equals(P1, other.P2);
 		}

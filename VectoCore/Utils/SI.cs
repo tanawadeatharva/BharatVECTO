@@ -879,9 +879,6 @@ namespace TUGraz.VectoCore.Utils
 		protected SI(double val, IEnumerable<Unit> numerator, IEnumerable<Unit> denominator, bool reciproc = false,
 			bool reverse = false, int exponent = 1)
 		{
-			Contract.Requires(numerator != null);
-			Contract.Requires(denominator != null);
-
 			Val = val;
 			Reciproc = reciproc;
 			Reverse = reverse;
@@ -919,10 +916,6 @@ namespace TUGraz.VectoCore.Utils
 		protected SI(SI si, double? factor = null, Unit? fromUnit = null, Unit? toUnit = null,
 			bool? reciproc = null, bool? reverse = null, int? exponent = null)
 		{
-			Contract.Requires(si != null);
-			Contract.Requires(si.Denominator != null);
-			Contract.Requires(si.Numerator != null);
-
 			var numerator = si.Denominator.ToList();
 			var denominator = si.Numerator.ToList();
 
@@ -1325,8 +1318,6 @@ namespace TUGraz.VectoCore.Utils
 		[DebuggerHidden]
 		public static SI operator +(SI si1, SI si2)
 		{
-			Contract.Requires(si1 != null);
-			Contract.Requires(si2 != null);
 			if (!si1.HasEqualUnit(si2)) {
 				throw new VectoException("Operator '+' can only operate on SI Objects with the same unit. Got: {0} + {1}", si1, si2);
 			}
@@ -1349,8 +1340,6 @@ namespace TUGraz.VectoCore.Utils
 		[DebuggerHidden]
 		public static SI operator -(SI si1, SI si2)
 		{
-			Contract.Requires(si1 != null);
-			Contract.Requires(si2 != null);
 			if (!si1.HasEqualUnit(si2)) {
 				throw new VectoException("Operator '-' can only operate on SI Objects with the same unit. Got: {0} - {1}", si1, si2);
 			}
@@ -1370,7 +1359,6 @@ namespace TUGraz.VectoCore.Utils
 		[DebuggerHidden]
 		public static SI operator -(SI si1)
 		{
-			Contract.Requires(si1 != null);
 			return new SI(-si1.Val) { Numerator = si1.Numerator, Denominator = si1.Denominator };
 		}
 
@@ -1385,8 +1373,6 @@ namespace TUGraz.VectoCore.Utils
 		[DebuggerHidden]
 		public static SI operator *(SI si1, SI si2)
 		{
-			Contract.Requires(si1 != null);
-			Contract.Requires(si2 != null);
 			var numerator = si1.Numerator.Concat(si2.Numerator);
 			var denominator = si1.Denominator.Concat(si2.Denominator);
 			return new SI(si1.Val * si2.Val, numerator, denominator);
@@ -1403,7 +1389,6 @@ namespace TUGraz.VectoCore.Utils
 		[DebuggerHidden]
 		public static SI operator *(SI si1, double d)
 		{
-			Contract.Requires(si1 != null);
 			return new SI(si1.Val * d) { Numerator = si1.Numerator, Denominator = si1.Denominator };
 		}
 
@@ -1418,7 +1403,6 @@ namespace TUGraz.VectoCore.Utils
 		[DebuggerHidden]
 		public static SI operator *(double d, SI si1)
 		{
-			Contract.Requires(si1 != null);
 			return new SI(d * si1.Val) { Numerator = si1.Numerator, Denominator = si1.Denominator };
 		}
 
@@ -1433,9 +1417,6 @@ namespace TUGraz.VectoCore.Utils
 		[DebuggerHidden]
 		public static SI operator /(SI si1, SI si2)
 		{
-			Contract.Requires(si1 != null);
-			Contract.Requires(si2 != null);
-
 			if (si2.IsEqual(0)) {
 				throw new VectoException(
 					string.Format("Can not compute division by zero ([{0}] / 0[{1}])", si1.GetUnitString(), si2.GetUnitString()),
@@ -1458,8 +1439,6 @@ namespace TUGraz.VectoCore.Utils
 		[DebuggerHidden]
 		public static SI operator /(SI si1, double d)
 		{
-			Contract.Requires(si1 != null);
-
 			if (d.IsEqual(0)) {
 				throw new VectoException(string.Format("Can not compute division by zero ([{0}] / 0)", si1.GetUnitString()),
 					new DivideByZeroException());
@@ -1479,8 +1458,6 @@ namespace TUGraz.VectoCore.Utils
 		[DebuggerHidden]
 		public static SI operator /(double d, SI si1)
 		{
-			Contract.Requires(si1 != null);
-
 			if (si1.IsEqual(0)) {
 				throw new VectoException(string.Format("Can not compute division by zero (x / 0[{0}])", si1.GetUnitString()),
 					new DivideByZeroException());
@@ -1501,8 +1478,6 @@ namespace TUGraz.VectoCore.Utils
 		[DebuggerHidden]
 		public static bool operator <(SI si1, SI si2)
 		{
-			Contract.Requires(si1 != null);
-			Contract.Requires(si2 != null);
 			if (!si1.HasEqualUnit(si2)) {
 				throw new VectoException("Operator '<' can only operate on SI Objects with the same unit. Got: {0} < {1}", si1, si2);
 			}
@@ -1520,7 +1495,6 @@ namespace TUGraz.VectoCore.Utils
 		[DebuggerHidden]
 		public static bool operator <(SI si1, double d)
 		{
-			Contract.Requires(si1 != null);
 			return si1 != null && si1.Val < d;
 		}
 
@@ -1536,8 +1510,6 @@ namespace TUGraz.VectoCore.Utils
 		[DebuggerHidden]
 		public static bool operator >(SI si1, SI si2)
 		{
-			Contract.Requires(si1 != null);
-			Contract.Requires(si2 != null);
 			if (!si1.HasEqualUnit(si2)) {
 				throw new VectoException("Operator '>' can only operate on SI Objects with the same unit. Got: {0} > {1}", si1, si2);
 			}
@@ -1555,7 +1527,6 @@ namespace TUGraz.VectoCore.Utils
 		[DebuggerHidden]
 		public static bool operator >(SI si1, double d)
 		{
-			Contract.Requires(si1 != null);
 			return si1 != null && si1.Val > d;
 		}
 
@@ -1570,7 +1541,6 @@ namespace TUGraz.VectoCore.Utils
 		[DebuggerHidden]
 		public static bool operator >(double d, SI si1)
 		{
-			Contract.Requires(si1 != null);
 			return si1 != null && d > si1.Val;
 		}
 
@@ -1585,7 +1555,6 @@ namespace TUGraz.VectoCore.Utils
 		[DebuggerHidden]
 		public static bool operator <(double d, SI si1)
 		{
-			Contract.Requires(si1 != null);
 			return si1 != null && d < si1.Val;
 		}
 
@@ -1601,8 +1570,6 @@ namespace TUGraz.VectoCore.Utils
 		[DebuggerHidden]
 		public static bool operator <=(SI si1, SI si2)
 		{
-			Contract.Requires(si1 != null);
-			Contract.Requires(si2 != null);
 			if (!si1.HasEqualUnit(si2)) {
 				throw new VectoException("Operator '<=' can only operate on SI Objects with the same unit. Got: {0} <= {1}", si1,
 					si2);
@@ -1621,7 +1588,6 @@ namespace TUGraz.VectoCore.Utils
 		[DebuggerHidden]
 		public static bool operator <=(SI si1, double d)
 		{
-			Contract.Requires(si1 != null);
 			return si1 != null && si1.Val <= d;
 		}
 
@@ -1637,8 +1603,6 @@ namespace TUGraz.VectoCore.Utils
 		[DebuggerHidden]
 		public static bool operator >=(SI si1, SI si2)
 		{
-			Contract.Requires(si1 != null);
-			Contract.Requires(si2 != null);
 			if (!si1.HasEqualUnit(si2)) {
 				throw new VectoException("Operator '>=' can only operate on SI Objects with the same unit. Got: {0} >= {1}", si1,
 					si2);
@@ -1657,7 +1621,6 @@ namespace TUGraz.VectoCore.Utils
 		[DebuggerHidden]
 		public static bool operator >=(SI si1, double d)
 		{
-			Contract.Requires(si1 != null);
 			return si1 != null && si1.Val >= d;
 		}
 
@@ -1672,7 +1635,6 @@ namespace TUGraz.VectoCore.Utils
 		[DebuggerHidden]
 		public static bool operator >=(double d, SI si1)
 		{
-			Contract.Requires(si1 != null);
 			return si1 != null && d >= si1.Val;
 		}
 
@@ -1686,7 +1648,6 @@ namespace TUGraz.VectoCore.Utils
 		/// </returns>
 		public static bool operator <=(double d, SI si1)
 		{
-			Contract.Requires(si1 != null);
 			return si1 != null && d <= si1.Val;
 		}
 
@@ -1772,7 +1733,6 @@ namespace TUGraz.VectoCore.Utils
 		[DebuggerHidden]
 		public bool HasEqualUnit(SI si)
 		{
-			Contract.Requires(si != null);
 			if (Numerator.SequenceEqual(si.Numerator) && Denominator.SequenceEqual(si.Denominator)) {
 				return true;
 			}

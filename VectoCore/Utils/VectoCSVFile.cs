@@ -162,8 +162,6 @@ namespace TUGraz.VectoCore.Utils
 
 		private static string[] RemoveComments(string[] lines)
 		{
-			Debug.Assert(lines != null);
-
 			lines = lines.
 				Select(line => line.Contains('#') ? line.Substring(0, line.IndexOf(Comment)) : line).
 				Where(line => !string.IsNullOrEmpty(line)).
