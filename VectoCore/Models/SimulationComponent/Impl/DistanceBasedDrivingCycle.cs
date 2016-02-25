@@ -35,14 +35,12 @@ namespace TUGraz.VectoCore.Models.SimulationComponent.Impl
 	/// <summary>
 	///     Class representing one Distance Based Driving Cycle
 	/// </summary>
-	public class DistanceBasedDrivingCycle : VectoSimulationComponent, IDrivingCycle,
+	public class DistanceBasedDrivingCycle : StatefulVectoSimulationComponent<DistanceBasedDrivingCycle.DrivingCycleState>,
+		IDrivingCycle,
 		ISimulationOutPort, IDrivingCycleInPort, IRoadLookAhead
 	{
 		protected const double LookaheadTimeSafetyMargin = 1.5;
 		protected readonly DrivingCycleData Data;
-
-		internal DrivingCycleState PreviousState;
-		internal DrivingCycleState CurrentState = new DrivingCycleState();
 
 		internal readonly DrivingCycleEnumerator CycleIntervalIterator;
 
@@ -52,6 +50,16 @@ namespace TUGraz.VectoCore.Models.SimulationComponent.Impl
 		{
 			Data = cycle;
 			CycleIntervalIterator = new DrivingCycleEnumerator(Data);
+			CycleStartDistance = Data.Entries.Count > 0 ? Data.Entries.First().Distance : 0.SI<Meter>();
+
+			var first = Data.Entries.First();
+			PreviousState = new DrivingCycleState {
+				AbsTime = 0.SI<Second>(),
+				WaitTime = 0.SI<Second>(),
+				Distance = first.Distance,
+				Altitude = first.Altitude,
+			};
+			CurrentState = PreviousState.Clone();
 		}
 
 		#region IDrivingCycleInProvider
@@ -219,15 +227,6 @@ namespace TUGraz.VectoCore.Models.SimulationComponent.Impl
 
 		IResponse ISimulationOutPort.Initialize()
 		{
-			var first = Data.Entries.First();
-			PreviousState = new DrivingCycleState {
-				AbsTime = 0.SI<Second>(),
-				WaitTime = 0.SI<Second>(),
-				Distance = first.Distance,
-				Altitude = first.Altitude,
-			};
-			CurrentState = PreviousState.Clone();
-
 			if (CycleIntervalIterator.LeftSample.VehicleTargetSpeed.IsEqual(0)) {
 				var retVal = NextComponent.Initialize(DataBus.StartSpeed,
 					CycleIntervalIterator.LeftSample.RoadGradient, DataBus.StartAcceleration);
@@ -251,10 +250,7 @@ namespace TUGraz.VectoCore.Models.SimulationComponent.Impl
 			}
 		}
 
-		public Meter CycleStartDistance
-		{
-			get { return Data.Entries.Count > 0 ? Data.Entries.First().Distance : 0.SI<Meter>(); }
-		}
+		public Meter CycleStartDistance { get; internal set; }
 
 		#endregion
 
@@ -344,7 +340,9 @@ namespace TUGraz.VectoCore.Models.SimulationComponent.Impl
 		internal void SetDriveOffDistance(Meter startDistance)
 		{
 			while (CycleIntervalIterator.MoveNext() && CycleIntervalIterator.RightSample.Distance < startDistance) {}
-			CycleIntervalIterator.MoveNext();
+			//CycleIntervalIterator.MoveNext();
+			PreviousState.Distance = startDistance;
+			CycleStartDistance = startDistance;
 		}
 
 		public class DrivingCycleEnumerator : IEnumerator<DrivingCycleData.DrivingCycleEntry>
