@@ -29,6 +29,7 @@
 *   Martin Rexeis, rexeis@ivt.tugraz.at, IVT, Graz University of Technology
 */
 
+using System;
 using System.Collections.Generic;
 using System.Data;
 using System.Linq;
@@ -38,59 +39,28 @@ using TUGraz.VectoCore.Utils;
 
 namespace TUGraz.VectoCore.Models.SimulationComponent.Data
 {
-	internal class VAirBetaCrosswindCorrection : LoggingObject, ICrossWindCorrection
+	internal class CrosswindCorrectionVAirBeta : LoggingObject, ICrossWindCorrection
 	{
 		protected SquareMeter AirDragArea { get; set; }
 
-		protected List<AirDragBetaEntry> AirDragEntries;
+		protected List<CrossWindCorrectionCurveReader.AirDragBetaEntry> AirDragEntries;
 		protected IDataBus DataBus;
 
-		public VAirBetaCrosswindCorrection(SquareMeter airDragArea, DataTable betaTable)
+		public CrosswindCorrectionVAirBeta(SquareMeter airDragArea,
+			List<CrossWindCorrectionCurveReader.AirDragBetaEntry> entries)
 		{
 			AirDragArea = airDragArea;
-			if (betaTable.Columns.Count != 2) {
-				throw new VectoException("VAir/Beta Crosswind Correction must consist of 2 columns");
-			}
-			if (betaTable.Rows.Count < 2) {
-				throw new VectoException("VAir/Beta Crosswind Correction must consist of at least 2 rows");
-			}
-			if (HeaderIsValid(betaTable.Columns)) {
-				AirDragEntries = CreateFromColumnNames(betaTable);
-			} else {
-				Log.Warn("VAir/Beta Crosswind Correction header Line is not valid");
-				AirDragEntries = CreateFromColumnIndices(betaTable);
-			}
+			AirDragEntries = entries;
 		}
-
-		private static List<AirDragBetaEntry> CreateFromColumnIndices(DataTable betaTable)
-		{
-			return (from DataRow row in betaTable.Rows
-				select
-					new AirDragBetaEntry() {
-						Beta = row.ParseDouble(0),
-						DeltaCdA = row.ParseDouble(1).SI<SquareMeter>()
-					}).ToList();
-		}
-
-		private static List<AirDragBetaEntry> CreateFromColumnNames(DataTable betaTable)
-		{
-			return (from DataRow row in betaTable.Rows
-				select
-					new AirDragBetaEntry() {
-						Beta = row.ParseDouble(Fields.Beta),
-						DeltaCdA = row.ParseDouble(Fields.DeltaCdxA).SI<SquareMeter>()
-					}).ToList();
-		}
-
-		private static bool HeaderIsValid(DataColumnCollection columns)
-		{
-			return columns.Contains(Fields.Beta) && columns.Contains(Fields.DeltaCdxA);
-		}
-
 
 		public void SetDataBus(IDataBus dataBus)
 		{
 			DataBus = dataBus;
+		}
+
+		public CrossWindCorrectionMode CorrectionMode
+		{
+			get { return CrossWindCorrectionMode.VAirBetaLookupTable; }
 		}
 
 		public Watt AverageAirDragPowerLoss(MeterPerSecond v1, MeterPerSecond v2, Second dt)
@@ -101,16 +71,17 @@ namespace TUGraz.VectoCore.Models.SimulationComponent.Data
 			var vAir = DataBus.CycleData.LeftSample.AirSpeedRelativeToVehicle;
 			var beta = DataBus.CycleData.LeftSample.WindYawAngle;
 
-			var airDragForce = (AirDragArea + DeltaCdA(beta)) * Physics.AirDensity / 2.0 * vAir * vAir;
+			// F_air(t) = k * CdA_korr * v_air^2   // assumption: v_air = const for the current interval
+			// P(t) = F_air(t) * v(t) , v(t) = v1 + a * t
+			// P_avg = 1/T * Integral P(t) dt
+			// P_avg = k * CdA_korr * v_air^2 * (v1 + v2) / 2
+			var airDragForce = (AirDragArea + DeltaCdxA(Math.Abs(beta))) * Physics.AirDensity / 2.0 * vAir * vAir;
 			var vAverage = (v1 + v2) / 2;
-			if (v1.IsEqual(v2)) {
-				return (airDragForce * vAverage).Cast<Watt>();
-			}
-			var acceleration = (v2 - v1) / dt;
-			return (airDragForce * (v2 * v2 - v1 * v1) / (2 * acceleration * dt)).Cast<Watt>();
+
+			return (airDragForce * vAverage).Cast<Watt>();
 		}
 
-		protected SquareMeter DeltaCdA(double beta)
+		protected SquareMeter DeltaCdxA(double beta)
 		{
 			var idx = FindIndex(beta);
 			return VectoMath.Interpolate(AirDragEntries[idx - 1].Beta, AirDragEntries[idx].Beta, AirDragEntries[idx - 1].DeltaCdA,
@@ -128,19 +99,6 @@ namespace TUGraz.VectoCore.Models.SimulationComponent.Data
 			int index;
 			AirDragEntries.GetSection(x => x.Beta < beta, out index);
 			return index + 1;
-		}
-
-		protected class AirDragBetaEntry
-		{
-			public double Beta;
-			public SquareMeter DeltaCdA;
-		}
-
-		private static class Fields
-		{
-			public const string Beta = "Beta";
-
-			public const string DeltaCdxA = "Delta CdA";
 		}
 	}
 }

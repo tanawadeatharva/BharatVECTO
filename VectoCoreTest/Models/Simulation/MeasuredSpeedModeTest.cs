@@ -212,7 +212,10 @@ namespace TUGraz.VectoCore.Tests.Models.Simulation
 				VehicleData =
 					new VehicleData {
 						VehicleCategory = VehicleCategory.RigidTruck,
-						CrossWindCorrectionCurve = CrossWindCorrectionCurve.GetNoCorrectionCurve(6.16498344.SI<SquareMeter>())
+						CrossWindCorrectionCurve =
+							new CrosswindCorrectionCdxALookup(
+								CrossWindCorrectionCurveReader.GetNoCorrectionCurve(6.16498344.SI<SquareMeter>()),
+								CrossWindCorrectionMode.NoCorrection)
 					},
 				AxleGearData = new AxleGearData { AxleGear = new GearData { Ratio = 2.3 } },
 				EngineData = new CombustionEngineData { IdleSpeed = 560.RPMtoRad(), FullLoadCurve = fullLoadCurve },
@@ -266,7 +269,10 @@ namespace TUGraz.VectoCore.Tests.Models.Simulation
 						VehicleCategory = VehicleCategory.RigidTruck,
 						WheelsInertia = 2.SI<KilogramSquareMeter>(),
 						DynamicTyreRadius = 0.85.SI<Meter>(),
-						CrossWindCorrectionCurve = CrossWindCorrectionCurve.GetNoCorrectionCurve(6.16498344.SI<SquareMeter>())
+						CrossWindCorrectionCurve =
+							new CrosswindCorrectionCdxALookup(
+								CrossWindCorrectionCurveReader.GetNoCorrectionCurve(6.16498344.SI<SquareMeter>()),
+								CrossWindCorrectionMode.NoCorrection)
 					},
 				AxleGearData = new AxleGearData { AxleGear = new GearData { Ratio = 2.3 } },
 				EngineData = new CombustionEngineData { IdleSpeed = 560.RPMtoRad(), FullLoadCurve = fullLoadCurve },
@@ -400,10 +406,39 @@ namespace TUGraz.VectoCore.Tests.Models.Simulation
 		{
 			var tbl = VectoCSVFile.Read(@"TestData/MeasuredSpeed/VairBeta.vcdb");
 
-			var vairbeta = new VAirBetaCrosswindCorrection(1.SI<SquareMeter>(), tbl);
+			var dataBus = new MockVairVechicleContainer();
 
-			Assert.AreEqual(0,
-				vairbeta.AverageAirDragPowerLoss(20.KMPHtoMeterPerSecond(), 20.KMPHtoMeterPerSecond(), 1.SI<Second>()));
+			var vairbeta = new CrosswindCorrectionVAirBeta(5.SI<SquareMeter>(),
+				CrossWindCorrectionCurveReader.ReadCdxABetaTable(tbl));
+			vairbeta.SetDataBus(dataBus);
+
+			var cycleEntry = new DrivingCycleData.DrivingCycleEntry() {
+				AirSpeedRelativeToVehicle = 20.KMPHtoMeterPerSecond(),
+				WindYawAngle = 0
+			};
+			dataBus.CycleData = new CycleData() { LeftSample = cycleEntry };
+
+			var pAvg =
+				vairbeta.AverageAirDragPowerLoss(20.KMPHtoMeterPerSecond(), 20.KMPHtoMeterPerSecond(), 1.SI<Second>()).Value();
+			Assert.AreEqual(509.259, pAvg, 1e-3);
+
+			pAvg =
+				vairbeta.AverageAirDragPowerLoss(20.KMPHtoMeterPerSecond(), 21.KMPHtoMeterPerSecond(), 1.SI<Second>()).Value();
+			Assert.AreEqual(521.990, pAvg, 1e-3);
+
+			pAvg =
+				vairbeta.AverageAirDragPowerLoss(20.KMPHtoMeterPerSecond(), 30.KMPHtoMeterPerSecond(), 1.SI<Second>()).Value();
+			Assert.AreEqual(636.574, pAvg, 1e-3);
+
+			cycleEntry.WindYawAngle = 20;
+
+			pAvg =
+				vairbeta.AverageAirDragPowerLoss(20.KMPHtoMeterPerSecond(), 20.KMPHtoMeterPerSecond(), 1.SI<Second>()).Value();
+			Assert.AreEqual(638.611, pAvg, 1e-3);
+
+			pAvg =
+				vairbeta.AverageAirDragPowerLoss(20.KMPHtoMeterPerSecond(), 30.KMPHtoMeterPerSecond(), 1.SI<Second>()).Value();
+			Assert.AreEqual(798.263, pAvg, 1e-3);
 		}
 	}
 }

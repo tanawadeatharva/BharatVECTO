@@ -18,7 +18,7 @@
 		"WheelsInertia": 216.2271,
 		"WheelsDiaEff": 0.848974,
 		"CdCorrMode": "CdofBeta",
-		"CdCorrFile": "VairBeta.vcdb",
+		"CdCorrFile": "VairBetaFull.vcdb",
 		"Retarder": {
 			"Type": "None",
 			"Ratio": 1.0,

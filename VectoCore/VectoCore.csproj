@@ -146,7 +146,8 @@
     <Compile Include="Models\Declaration\VehicleClass.cs" />
     <Compile Include="Models\Declaration\Wheels.cs" />
     <Compile Include="Models\Declaration\WHTCCorrection.cs" />
-    <Compile Include="Models\SimulationComponent\Data\CrossWindCorrectionCurve.cs" />
+    <Compile Include="Models\SimulationComponent\Data\CrosswindCorrectionCdxALookup.cs" />
+    <Compile Include="Models\SimulationComponent\Data\CrossWindCorrectionCurveReader.cs" />
     <Compile Include="Models\SimulationComponent\Data\AuxiliaryData.cs" />
     <Compile Include="Models\SimulationComponent\Data\AuxSupplyPowerReader.cs" />
     <Compile Include="Models\SimulationComponent\Data\AxleGearData.cs" />
@@ -162,7 +163,7 @@
     <Compile Include="Models\LoggingObject.cs" />
     <Compile Include="Models\SimulationComponent\Data\GearboxType.cs" />
     <Compile Include="Models\SimulationComponent\Data\ICrossWindCorrection.cs" />
-    <Compile Include="Models\SimulationComponent\Data\VAirBetaCrosswindCorrection.cs" />
+    <Compile Include="Models\SimulationComponent\Data\CrosswindCorrectionVAirBeta.cs" />
     <Compile Include="Models\SimulationComponent\IAuxiliary.cs" />
     <Compile Include="Models\SimulationComponent\IBrakes.cs" />
     <Compile Include="Models\SimulationComponent\ICombustionEngineIdleController.cs" />
