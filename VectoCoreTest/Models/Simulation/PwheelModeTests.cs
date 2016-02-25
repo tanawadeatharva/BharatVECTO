@@ -162,9 +162,9 @@ namespace TUGraz.VectoCore.Tests.Models.Simulation
 
 			Assert.IsTrue(jobContainer.Runs.All(r => r.Success), string.Concat(jobContainer.Runs.Select(r => r.ExecException)));
 
-			ResultFileHelper.TestSumFile(@"TestData\Pwheel\Results\Atego_ges.v2.vsum", @"TestData\Jobs\Pwheel.vsum");
+			ResultFileHelper.TestSumFile(@"TestData\Pwheel\Results\Pwheel.vsum", @"TestData\Pwheel\Pwheel.vsum");
 
-			ResultFileHelper.TestModFile(@"TestData\Pwheel\Results\Atego_ges_Gear2_pt1_rep1_actual.vmod",
+			ResultFileHelper.TestModFile(@"TestData\Pwheel\Results\Pwheel_Gear2_pt1_rep1_actual.vmod",
 				@"TestData\Pwheel\Pwheel_Gear2_pt1_rep1_actual.vmod");
 		}
 
@@ -190,8 +190,10 @@ namespace TUGraz.VectoCore.Tests.Models.Simulation
 
 			Assert.IsTrue(jobContainer.Runs.All(r => r.Success), string.Concat(jobContainer.Runs.Select(r => r.ExecException)));
 
-			ResultFileHelper.TestModFile(@"TestData\Pwheel\Results\Atego_HDVCO2_RD_#1_AuxStd.vmod",
-				@"TestData\Pwheel\Pwheel_ultimate_RD_#1_Pwheel_AuxStd.vmod", testRowCount: false);
+			ResultFileHelper.TestSumFile(@"TestData\Pwheel\Results\Pwheel_ultimate.vsum", @"TestData\Pwheel\Pwheel_ultimate.vsum");
+
+			ResultFileHelper.TestModFile(@"TestData\Pwheel\Results\Pwheel_ultimate_RD_#1_Pwheel_AuxStd.vmod",
+				@"TestData\Pwheel\Pwheel_ultimate_RD_#1_Pwheel_AuxStd.vmod");
 		}
 	}
 }
