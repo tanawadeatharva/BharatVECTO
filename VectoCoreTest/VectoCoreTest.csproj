@@ -904,6 +904,9 @@
     <None Include="TestData\MeasuredSpeed\VairBeta.vcdb">
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
     </None>
+    <None Include="TestData\MeasuredSpeed\VairBetaFull.vcdb">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </None>
     <None Include="TestData\MeasuredSpeed\Vehicle.vveh">
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
     </None>

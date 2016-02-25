@@ -379,7 +379,7 @@ namespace TUGraz.VectoCore.Tests.Models.Simulation
 		[TestMethod]
 		public void VcdbTest()
 		{
-			var tbl = VectoCSVFile.Read(@"TestData/MeasuredSpeed/VairBeta.vcdb");
+			var tbl = VectoCSVFile.Read(@"TestData/MeasuredSpeed/VairBetaFull.vcdb");
 
 			var dataBus = new MockVairVechicleContainer();
 			var vairbeta = new CrosswindCorrectionVAirBeta(5.SI<SquareMeter>(),
@@ -408,11 +408,17 @@ namespace TUGraz.VectoCore.Tests.Models.Simulation
 
 			pAvg =
 				vairbeta.AverageAirDragPowerLoss(20.KMPHtoMeterPerSecond(), 20.KMPHtoMeterPerSecond(), 1.SI<Second>()).Value();
-			Assert.AreEqual(638.611, pAvg, 1e-3);
+			Assert.AreEqual(829.074, pAvg, 1e-3);
 
 			pAvg =
 				vairbeta.AverageAirDragPowerLoss(20.KMPHtoMeterPerSecond(), 30.KMPHtoMeterPerSecond(), 1.SI<Second>()).Value();
-			Assert.AreEqual(798.263, pAvg, 1e-3);
+			Assert.AreEqual(1036.343, pAvg, 1e-3);
+
+			cycleEntry.WindYawAngle = -120;
+
+			pAvg =
+				vairbeta.AverageAirDragPowerLoss(20.KMPHtoMeterPerSecond(), 20.KMPHtoMeterPerSecond(), 1.SI<Second>()).Value();
+			Assert.AreEqual(-1019.5370, pAvg, 1e-3);
 		}
 	}
 }
