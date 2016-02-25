@@ -66,7 +66,7 @@ namespace TUGraz.VectoCore.Tests.Models.Simulation
                                2,120,2,1400,0.4";
 
 			var cycleFile = new MemoryStream(Encoding.UTF8.GetBytes(inputData));
-			var drivingCycle = DrivingCycleDataReader.ReadFromStream(cycleFile, CycleType.PWheel);
+			var drivingCycle = DrivingCycleDataReader.ReadFromStream(cycleFile, CycleType.PWheel, "", false);
 
 			var gearbox = new CycleGearbox(container,
 				new GearboxData {
@@ -108,7 +108,7 @@ namespace TUGraz.VectoCore.Tests.Models.Simulation
                                2,  120,     2,     1400, 0.4";
 
 			var cycleFile = new MemoryStream(Encoding.UTF8.GetBytes(inputData));
-			var drivingCycle = DrivingCycleDataReader.ReadFromStream(cycleFile, CycleType.PWheel);
+			var drivingCycle = DrivingCycleDataReader.ReadFromStream(cycleFile, CycleType.PWheel, "", false);
 
 			var fuelConsumption = new DataTable();
 			fuelConsumption.Columns.Add("");

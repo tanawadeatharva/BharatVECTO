@@ -72,6 +72,7 @@ namespace TUGraz.VectoCore.Models.SimulationComponent.Data
 		// public Kilogram ReducedMassWheels { get; private set; }
 		public string Rim { get; internal set; }
 		public double TotalRollResistanceCoefficient { get; private set; }
+		public CrossWindCorrectionMode CrossWindCorrectionMode { get; set; }
 
 		public Kilogram TotalVehicleWeight()
 		{

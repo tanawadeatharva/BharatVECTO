@@ -114,7 +114,7 @@ namespace TUGraz.VectoCore.Tests.Integration.SimulationRuns
 		public void TestWheelsAndEngine()
 		{
 			var engineData = MockSimulationDataFactory.CreateEngineDataFromFile(EngineFile);
-			var cycleData = DrivingCycleDataReader.ReadFromFile(CycleFile, CycleType.DistanceBased);
+			var cycleData = DrivingCycleDataReader.ReadFromFile(CycleFile, CycleType.DistanceBased, false);
 
 			var axleGearData = CreateAxleGearData();
 
@@ -186,7 +186,7 @@ namespace TUGraz.VectoCore.Tests.Integration.SimulationRuns
 		public void TestWheelsAndEngineLookahead()
 		{
 			var engineData = MockSimulationDataFactory.CreateEngineDataFromFile(EngineFile);
-			var cycleData = DrivingCycleDataReader.ReadFromFile(CycleFileStop, CycleType.DistanceBased);
+			var cycleData = DrivingCycleDataReader.ReadFromFile(CycleFileStop, CycleType.DistanceBased, false);
 
 			var axleGearData = CreateAxleGearData();
 

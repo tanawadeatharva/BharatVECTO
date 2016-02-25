@@ -100,6 +100,7 @@ namespace TUGraz.VectoCore.InputData.Reader.DataObjectAdaper
 				? data.AirDragAreaRigidTruck
 				: data.AirDragArea;
 
+			retVal.CrossWindCorrectionMode = data.CrossWindCorrectionMode;
 			retVal.CrossWindCorrectionCurve = GetDeclarationAirResistanceCurve(retVal.VehicleCategory, aerodynamicDragAera);
 			var axles = data.Axles;
 			if (axles.Count < mission.AxleWeightDistribution.Length) {

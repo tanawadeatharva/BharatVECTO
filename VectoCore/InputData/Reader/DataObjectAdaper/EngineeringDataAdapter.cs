@@ -58,6 +58,7 @@ namespace TUGraz.VectoCore.InputData.Reader.DataObjectAdaper
 			retVal.CurbWeigthExtra = data.CurbWeightExtra;
 			retVal.Loading = data.Loading;
 			retVal.DynamicTyreRadius = data.DynamicTyreRadius;
+			retVal.CrossWindCorrectionMode = data.CrossWindCorrectionMode;
 			switch (data.CrossWindCorrectionMode) {
 				case CrossWindCorrectionMode.NoCorrection:
 					retVal.CrossWindCorrectionCurve = CrossWindCorrectionCurve.GetNoCorrectionCurve(data.AirDragArea);

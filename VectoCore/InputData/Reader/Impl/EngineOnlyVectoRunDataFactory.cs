@@ -51,7 +51,7 @@ namespace TUGraz.VectoCore.InputData.Reader.Impl
 				var simulationRunData = new VectoRunData {
 					JobName = InputDataProvider.JobInputData().JobName,
 					EngineData = dao.CreateEngineData(InputDataProvider.EngineInputData),
-					Cycle = DrivingCycleDataReader.ReadFromDataTable(cycle.CycleData, CycleType.EngineOnly, cycle.Name),
+					Cycle = DrivingCycleDataReader.ReadFromDataTable(cycle.CycleData, CycleType.EngineOnly, cycle.Name, false),
 					IsEngineOnly = IsEngineOnly
 				};
 				yield return simulationRunData;
