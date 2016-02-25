@@ -14,6 +14,14 @@
     "Cycles": [
       "MeasuredSpeed_Gear_Rural_VairAux.vdri"
     ],
+    "Aux": [
+      {
+        "ID": "ALT",
+        "Type": "Alternator",
+        "Path": "Alternator.vaux",
+        "Technology": ""
+      }
+    ],
     "VACC": "Driver.vacc",
     "StartStop": {
       "Enabled": false,
