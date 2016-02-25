@@ -93,6 +93,7 @@
     <Compile Include="Models\SimulationComponent\GearboxPowertrainTest.cs" />
     <Compile Include="Utils\InputDataHelper.cs" />
     <Compile Include="Utils\MockSimulationDataFactory.cs" />
+    <Compile Include="Utils\MockVairVechicleContainer.cs" />
     <Compile Include="Utils\Port.cs" />
     <Compile Include="Models\SimulationComponentData\AuxiliaryTypeHelperTest.cs" />
     <Compile Include="Models\Simulation\AuxTests.cs" />

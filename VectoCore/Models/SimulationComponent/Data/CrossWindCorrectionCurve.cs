@@ -131,7 +131,7 @@ namespace TUGraz.VectoCore.Models.SimulationComponent.Data
 				averageAirDragPower = (Physics.AirDensity / 2.0 * CdA * vAverage * vAverage * vAverage).Cast<Watt>();
 			} else {
 				// compute the average force within the current simulation interval
-				// P(t) = k * CdA * v(t)^3  , v(t) = v0 + a * t  // a != 0, P_avg = 1/dt * Integral P(t)
+				// P(t) = k * CdA * v(t)^3  , v(t) = v0 + a * t  // a != 0, P_avg = 1/T * Integral P(t) dt
 				// => P_avg = (CdA * rho/2)/(4*a * dt) * (v2^4 - v1^4)
 				var acceleration = (v2 - v1) / dt;
 				averageAirDragPower =

@@ -70,13 +70,14 @@ namespace TUGraz.VectoCore.Models.SimulationComponent.Data
 			var vAir = DataBus.CycleData.LeftSample.AirSpeedRelativeToVehicle;
 			var beta = DataBus.CycleData.LeftSample.WindYawAngle;
 
+			// F_air(t) = k * CdA_korr * v_air^2   // assumption: v_air = const for the current interval
+			// P(t) = F_air(t) * v(t) , v(t) = v1 + a * t
+			// P_avg = 1/T * Integral P(t) dt
+			// P_avg = k * CdA_korr * v_air^2 * (v1 + v2) / 2
 			var airDragForce = (AirDragArea + DeltaCdA(beta)) * Physics.AirDensity / 2.0 * vAir * vAir;
 			var vAverage = (v1 + v2) / 2;
-			if (v1.IsEqual(v2)) {
-				return (airDragForce * vAverage).Cast<Watt>();
-			}
-			var acceleration = (v2 - v1) / dt;
-			return (airDragForce * (v2 * v2 - v1 * v1) / (2 * acceleration * dt)).Cast<Watt>();
+
+			return (airDragForce * vAverage).Cast<Watt>();
 		}
 
 		protected SquareMeter DeltaCdA(double beta)

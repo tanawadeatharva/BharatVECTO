@@ -381,9 +381,37 @@ namespace TUGraz.VectoCore.Tests.Models.Simulation
 		{
 			var tbl = VectoCSVFile.Read(@"TestData/MeasuredSpeed/VairBeta.vcdb");
 
-			var vairbeta = new VAirBetaCrosswindCorrection(1.SI<SquareMeter>(), tbl);
-			
-			Assert.AreEqual(0, vairbeta.AverageAirDragPowerLoss(20.KMPHtoMeterPerSecond(), 20.KMPHtoMeterPerSecond(), 1.SI<Second>()) );
+			var dataBus = new MockVairVechicleContainer();
+			var vairbeta = new VAirBetaCrosswindCorrection(5.SI<SquareMeter>(), tbl);
+			vairbeta.SetDataBus(dataBus);
+
+			var cycleEntry = new DrivingCycleData.DrivingCycleEntry() {
+				AirSpeedRelativeToVehicle = 20.KMPHtoMeterPerSecond(),
+				WindYawAngle = 0
+			};
+			dataBus.CycleData = new CycleData() { LeftSample = cycleEntry };
+
+			var pAvg =
+				vairbeta.AverageAirDragPowerLoss(20.KMPHtoMeterPerSecond(), 20.KMPHtoMeterPerSecond(), 1.SI<Second>()).Value();
+			Assert.AreEqual(509.259, pAvg, 1e-3);
+
+			pAvg =
+				vairbeta.AverageAirDragPowerLoss(20.KMPHtoMeterPerSecond(), 21.KMPHtoMeterPerSecond(), 1.SI<Second>()).Value();
+			Assert.AreEqual(521.990, pAvg, 1e-3);
+
+			pAvg =
+				vairbeta.AverageAirDragPowerLoss(20.KMPHtoMeterPerSecond(), 30.KMPHtoMeterPerSecond(), 1.SI<Second>()).Value();
+			Assert.AreEqual(636.574, pAvg, 1e-3);
+
+			cycleEntry.WindYawAngle = 20;
+
+			pAvg =
+				vairbeta.AverageAirDragPowerLoss(20.KMPHtoMeterPerSecond(), 20.KMPHtoMeterPerSecond(), 1.SI<Second>()).Value();
+			Assert.AreEqual(638.611, pAvg, 1e-3);
+
+			pAvg =
+				vairbeta.AverageAirDragPowerLoss(20.KMPHtoMeterPerSecond(), 30.KMPHtoMeterPerSecond(), 1.SI<Second>()).Value();
+			Assert.AreEqual(798.263, pAvg, 1e-3);
 		}
 	}
 }
