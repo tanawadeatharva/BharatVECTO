@@ -47,7 +47,6 @@ using TUGraz.VectoCore.Models.SimulationComponent.Impl;
 using TUGraz.VectoCore.Models.SimulationComponent.Data;
 using TUGraz.VectoCore.Models.SimulationComponent.Data.Engine;
 using TUGraz.VectoCore.Models.SimulationComponent.Data.Gearbox;
-using TUGraz.VectoCore.Tests.Integration;
 using TUGraz.VectoCore.Tests.Utils;
 
 namespace TUGraz.VectoCore.Tests.Models.Simulation
@@ -70,7 +69,15 @@ namespace TUGraz.VectoCore.Tests.Models.Simulation
 			// vair only
 			inputData = @"<t>,<v>,<grad>,<Padd>,<n>   ,<gear>,<vair_res>,<vair_beta>
 						  0  ,0  ,0     ,3.2018,595.75,0     ,0         ,0          ";
-			TestCycleRead(inputData, CycleType.MeasuredSpeedGear);
+			TestCycleRead(inputData, CycleType.MeasuredSpeedGear, crossWindRequired: true);
+
+			// vair required, but not there: error
+			inputData = @"<t>,<v>,<grad>,<Padd>,<n>   ,<gear>
+						  0  ,0  ,0     ,3.2018,595.75,0";
+			AssertHelper.Exception<VectoException>(
+				() => TestCycleRead(inputData, CycleType.MeasuredSpeedGear, crossWindRequired: true),
+				"ERROR while reading DrivingCycle Stream: Column vair_res was not found in DataRow.");
+
 
 			// no aux, no vair
 			inputData = @"<t>,<v>,<grad>,<Padd>,<n>   ,<gear>
@@ -122,7 +129,14 @@ namespace TUGraz.VectoCore.Tests.Models.Simulation
 			// vair only
 			inputData = @"<t>,<v>,<grad>,<Padd>,<vair_res>,<vair_beta>
 						  0  ,0  ,0     ,3.2018,0         ,0          ";
-			TestCycleRead(inputData, CycleType.MeasuredSpeed);
+			TestCycleRead(inputData, CycleType.MeasuredSpeed, crossWindRequired: true);
+
+			// vair required, but not there: error
+			inputData = @"<t>,<v>,<grad>,<Padd>
+						  0  ,0  ,0     ,3.2018";
+			AssertHelper.Exception<VectoException>(
+				() => TestCycleRead(inputData, CycleType.MeasuredSpeed, crossWindRequired: true),
+				"ERROR while reading DrivingCycle Stream: Column vair_res was not found in DataRow.");
 
 			// no aux, no vair
 			inputData = @"<t>,<v>,<grad>,<Padd>
@@ -158,7 +172,8 @@ namespace TUGraz.VectoCore.Tests.Models.Simulation
 		}
 
 
-		private static void TestCycleRead(string inputData, CycleType cycleType, bool autoCycle = true)
+		private static void TestCycleRead(string inputData, CycleType cycleType, bool autoCycle = true,
+			bool crossWindRequired = false)
 		{
 			var container = new VehicleContainer();
 
@@ -166,7 +181,7 @@ namespace TUGraz.VectoCore.Tests.Models.Simulation
 				var cycleTypeCalc = DrivingCycleDataReader.GetCycleType(VectoCSVFile.ReadStream(inputData.GetStream()));
 				Assert.AreEqual(cycleType, cycleTypeCalc);
 			}
-			var drivingCycle = DrivingCycleDataReader.ReadFromStream(inputData.GetStream(), cycleType, "", false);
+			var drivingCycle = DrivingCycleDataReader.ReadFromStream(inputData.GetStream(), cycleType, "", crossWindRequired);
 			Assert.AreEqual(cycleType, drivingCycle.CycleType);
 
 			var cycle = new MeasuredSpeedDrivingCycle(container, drivingCycle);
@@ -292,113 +307,92 @@ namespace TUGraz.VectoCore.Tests.Models.Simulation
 		}
 
 
-		/// <summary>
-		/// Tests if the simulation works and the modfile and sumfile are correct in MeasuredSpeed mode.
-		/// </summary>
-		/// <remarks>VECTO-181</remarks>
+		private static void RunJob(string jobFile, string modFile, string sumFile)
+		{
+			var fileWriter = new FileOutputWriter(jobFile);
+			var sumWriter = new SummaryDataContainer(fileWriter);
+			var jobContainer = new JobContainer(sumWriter);
+
+			var inputData = JSONInputDataFactory.ReadJsonJob(jobFile);
+			var runsFactory = new SimulatorFactory(ExecutionMode.Engineering, inputData, fileWriter);
+
+			jobContainer.AddRuns(runsFactory);
+			jobContainer.Execute();
+
+			jobContainer.WaitFinished();
+
+			Assert.IsTrue(jobContainer.Runs.All(r => r.Success), string.Concat(jobContainer.Runs.Select(r => r.ExecException)));
+
+			//todo mk-2016-02-25: test against actual correct mod and sum files!
+			Assert.IsTrue(File.Exists(modFile), "Mod file not found.");
+			Assert.IsTrue(File.Exists(sumFile), "Sum file not found.");
+		}
+
 		[TestMethod]
 		public void MeasuredSpeed_Run()
 		{
-			var jobFile = @"TestData\MeasuredSpeed\MeasuredSpeed.vecto";
-			var fileWriter = new FileOutputWriter(jobFile);
-			var sumWriter = new SummaryDataContainer(fileWriter);
-			var jobContainer = new JobContainer(sumWriter);
+			RunJob(@"TestData\MeasuredSpeed\MeasuredSpeed.vecto", @"TestData\MeasuredSpeed\MeasuredSpeed_MeasuredSpeed.vmod",
+				@"TestData\MeasuredSpeed\MeasuredSpeed.vsum");
+		}
 
-			var inputData = JSONInputDataFactory.ReadJsonJob(jobFile);
-			var runsFactory = new SimulatorFactory(ExecutionMode.Engineering, inputData, fileWriter);
-
-			jobContainer.AddRuns(runsFactory);
-			jobContainer.Execute();
-
-			jobContainer.WaitFinished();
-
-			Assert.IsTrue(jobContainer.Runs.All(r => r.Success), string.Concat(jobContainer.Runs.Select(r => r.ExecException)));
-
-			Assert.IsTrue(File.Exists(@"TestData\MeasuredSpeed\MeasuredSpeed_MeasuredSpeed.vmod"), "Mod file not found.");
-			Assert.IsTrue(File.Exists(@"TestData\MeasuredSpeed\MeasuredSpeed.vsum"), "Sum file not found.");
+		[TestMethod]
+		public void MeasuredSpeedAux_Run()
+		{
+			RunJob(@"TestData\MeasuredSpeed\MeasuredSpeedAux.vecto",
+				@"TestData\MeasuredSpeed\MeasuredSpeedAux_MeasuredSpeedAux.vmod",
+				@"TestData\MeasuredSpeed\MeasuredSpeedAux.vsum");
 		}
 
 
-		/// <summary>
-		/// Tests if the simulation works and the modfile and sumfile are correct in MeasuredSpeed mode.
-		/// </summary>
-		/// <remarks>VECTO-181</remarks>
 		[TestMethod]
-		public void MeasuredSpeed_Run_Gear()
+		public void MeasuredSpeedVair_Run()
 		{
-			var jobFile = @"TestData\MeasuredSpeed\MeasuredSpeedGear.vecto";
-			var fileWriter = new FileOutputWriter(jobFile);
-			var sumWriter = new SummaryDataContainer(fileWriter);
-			var jobContainer = new JobContainer(sumWriter);
-
-			var inputData = JSONInputDataFactory.ReadJsonJob(jobFile);
-			var runsFactory = new SimulatorFactory(ExecutionMode.Engineering, inputData, fileWriter);
-
-			jobContainer.AddRuns(runsFactory);
-			jobContainer.Execute();
-
-			jobContainer.WaitFinished();
-
-			Assert.IsTrue(jobContainer.Runs.All(r => r.Success), string.Concat(jobContainer.Runs.Select(r => r.ExecException)));
-
-			Assert.IsTrue(File.Exists(@"TestData\MeasuredSpeed\MeasuredSpeedGear.vsum"), "SUM file missing.");
-			Assert.IsTrue(File.Exists(@"TestData\MeasuredSpeed\MeasuredSpeedGear_MeasuredSpeed_Gear_Rural.vmod"),
-				"MOD File missing.");
-		}
-
-		/// <summary>
-		/// Tests if the simulation works and the modfile and sumfile are correct in MeasuredSpeed mode with Aux.
-		/// </summary>
-		/// <remarks>VECTO-181</remarks>
-		[TestMethod]
-		public void MeasuredSpeed_Run_Gear_Aux()
-		{
-			var jobFile = @"TestData\MeasuredSpeed\MeasuredSpeedGearAux.vecto";
-			var fileWriter = new FileOutputWriter(jobFile);
-			var sumWriter = new SummaryDataContainer(fileWriter);
-			var jobContainer = new JobContainer(sumWriter);
-
-			var inputData = JSONInputDataFactory.ReadJsonJob(jobFile);
-			var runsFactory = new SimulatorFactory(ExecutionMode.Engineering, inputData, fileWriter);
-
-			jobContainer.AddRuns(runsFactory);
-			jobContainer.Execute();
-
-			jobContainer.WaitFinished();
-
-			Assert.IsTrue(jobContainer.Runs.All(r => r.Success), string.Concat(jobContainer.Runs.Select(r => r.ExecException)));
-
-			Assert.IsTrue(File.Exists(@"TestData\MeasuredSpeed\MeasuredSpeedGearAux.vsum"), "SUM file missing.");
-			Assert.IsTrue(File.Exists(@"TestData\MeasuredSpeed\MeasuredSpeedGearAux_MeasuredSpeed_Gear_Rural_Aux.vmod"),
-				"MOD File missing.");
+			RunJob(@"TestData\MeasuredSpeed\MeasuredSpeedVair.vecto",
+				@"TestData\MeasuredSpeed\MeasuredSpeedVair_MeasuredSpeedVair.vmod",
+				@"TestData\MeasuredSpeed\MeasuredSpeedVair.vsum");
 		}
 
 
-		/// <summary>
-		/// Tests if the simulation works and the modfile and sumfile are correct in MeasuredSpeed mode with Vair & Beta
-		/// </summary>
-		/// <remarks>VECTO-181</remarks>
 		[TestMethod]
-		public void MeasuredSpeed_Run_Gear_Vair()
+		public void MeasuredSpeedVairAux_Run()
 		{
-			var jobFile = @"TestData\MeasuredSpeed\MeasuredSpeedGearVair.vecto";
-			var fileWriter = new FileOutputWriter(jobFile);
-			var sumWriter = new SummaryDataContainer(fileWriter);
-			var jobContainer = new JobContainer(sumWriter);
+			RunJob(@"TestData\MeasuredSpeed\MeasuredSpeedVairAux.vecto",
+				@"TestData\MeasuredSpeed\MeasuredSpeedVairAux_MeasuredSpeedVairAux.vmod",
+				@"TestData\MeasuredSpeed\MeasuredSpeedVairAux.vsum");
+		}
 
-			var inputData = JSONInputDataFactory.ReadJsonJob(jobFile);
-			var runsFactory = new SimulatorFactory(ExecutionMode.Engineering, inputData, fileWriter);
 
-			jobContainer.AddRuns(runsFactory);
-			jobContainer.Execute();
+		[TestMethod]
+		public void MeasuredSpeed_Gear_Run()
+		{
+			RunJob(@"TestData\MeasuredSpeed\MeasuredSpeedGear.vecto",
+				@"TestData\MeasuredSpeed\MeasuredSpeedGear_MeasuredSpeed_Gear_Rural.vmod",
+				@"TestData\MeasuredSpeed\MeasuredSpeedGear.vsum");
+		}
 
-			jobContainer.WaitFinished();
+		[TestMethod]
+		public void MeasuredSpeed_Gear_Aux_Run()
+		{
+			RunJob(@"TestData\MeasuredSpeed\MeasuredSpeedGearAux.vecto",
+				@"TestData\MeasuredSpeed\MeasuredSpeedGearAux_MeasuredSpeed_Gear_Rural_Aux.vmod",
+				@"TestData\MeasuredSpeed\MeasuredSpeedGearAux.vsum");
+		}
 
-			Assert.IsTrue(jobContainer.Runs.All(r => r.Success), string.Concat(jobContainer.Runs.Select(r => r.ExecException)));
+		[TestMethod]
+		public void MeasuredSpeed_Gear_Vair_Run()
+		{
+			RunJob(@"TestData\MeasuredSpeed\MeasuredSpeedGearVair.vecto",
+				@"TestData\MeasuredSpeed\MeasuredSpeedGearVair_MeasuredSpeed_Gear_Rural_Vair.vmod",
+				@"TestData\MeasuredSpeed\MeasuredSpeedGearVair.vsum");
+		}
 
-			Assert.IsTrue(File.Exists(@"TestData\MeasuredSpeed\MeasuredSpeedGearVair.vsum"), "SUM file missing.");
-			Assert.IsTrue(File.Exists(@"TestData\MeasuredSpeed\MeasuredSpeedGearVair_MeasuredSpeed_Gear_Rural_Vair.vmod"),
-				"MOD File missing.");
+
+		[TestMethod]
+		public void MeasuredSpeed_Gear_VairAux_Run()
+		{
+			RunJob(@"TestData\MeasuredSpeed\MeasuredSpeedGearVairAux.vecto",
+				@"TestData\MeasuredSpeed\MeasuredSpeedGearVairAux_MeasuredSpeed_Gear_Rural_VairAux.vmod",
+				@"TestData\MeasuredSpeed\MeasuredSpeedGearVairAux.vsum");
 		}
 
 		[TestMethod]
