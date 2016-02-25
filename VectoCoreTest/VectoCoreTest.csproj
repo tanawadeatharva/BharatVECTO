@@ -923,12 +923,6 @@
     <None Include="TestData\MeasuredSpeed\MeasuredSpeed_Gear_Rural_VairAux.vdri">
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
     </None>
-    <None Include="TestData\MeasuredSpeed\Results\Demo_ChassisDyno.v2.vsum">
-      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
-    </None>
-    <None Include="TestData\MeasuredSpeed\Results\Demo_TestTrackCycle.v2.vsum">
-      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
-    </None>
     <None Include="TestData\MeasuredSpeed\Results\MeasuredSpeed.vsum">
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
     </None>
