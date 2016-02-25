@@ -32,10 +32,12 @@
 using System;
 using System.Collections.Generic;
 using System.Data;
+using System.Diagnostics;
 using System.Diagnostics.Contracts;
 using System.Globalization;
 using System.IO;
 using System.Linq;
+using System.Text;
 using System.Text.RegularExpressions;
 using TUGraz.VectoCore.Exceptions;
 using TUGraz.VectoCore.Models;
@@ -71,7 +73,7 @@ namespace TUGraz.VectoCore.Utils
 		public static DataTable Read(string fileName, bool ignoreEmptyColumns = false, bool fullHeader = false)
 		{
 			try {
-				return ReadData(File.ReadAllLines(fileName), ignoreEmptyColumns, fullHeader);
+				return ReadData(File.ReadAllLines(fileName, Encoding.UTF8), ignoreEmptyColumns, fullHeader);
 			} catch (Exception e) {
 				Logger<VectoCSVFile>().Error(e);
 				throw new VectoException("File {0}: {1}", fileName, e.Message);
@@ -160,7 +162,7 @@ namespace TUGraz.VectoCore.Utils
 
 		private static string[] RemoveComments(string[] lines)
 		{
-			Contract.Requires(lines != null);
+			Debug.Assert(lines != null);
 
 			lines = lines.
 				Select(line => line.Contains('#') ? line.Substring(0, line.IndexOf(Comment)) : line).
@@ -177,7 +179,7 @@ namespace TUGraz.VectoCore.Utils
 		/// <param name="table">The Datatable.</param>
 		public static void Write(string fileName, DataTable table)
 		{
-			var stream = new StreamWriter(fileName);
+			var stream = new StreamWriter(new FileStream(fileName, FileMode.Create), Encoding.UTF8);
 			Write(stream, table);
 			stream.Close();
 		}
