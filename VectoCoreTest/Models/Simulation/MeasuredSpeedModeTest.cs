@@ -208,7 +208,11 @@ namespace TUGraz.VectoCore.Tests.Models.Simulation
 			var fullLoadCurve = EngineFullLoadCurve.Create(fullLoad);
 			var data = new VectoRunData {
 				Cycle = drivingCycle,
-				VehicleData = new VehicleData { VehicleCategory = VehicleCategory.RigidTruck },
+				VehicleData =
+					new VehicleData {
+						VehicleCategory = VehicleCategory.RigidTruck,
+						CrossWindCorrectionCurve = CrossWindCorrectionCurve.GetNoCorrectionCurve(6.16498344.SI<SquareMeter>())
+					},
 				AxleGearData = new AxleGearData { AxleGear = new GearData { Ratio = 2.3 } },
 				EngineData = new CombustionEngineData { IdleSpeed = 560.RPMtoRad(), FullLoadCurve = fullLoadCurve },
 				GearboxData = new GearboxData { Gears = new Dictionary<uint, GearData> { { 1, new GearData { Ratio = 6.2 } } } },
@@ -260,7 +264,8 @@ namespace TUGraz.VectoCore.Tests.Models.Simulation
 					new VehicleData {
 						VehicleCategory = VehicleCategory.RigidTruck,
 						WheelsInertia = 2.SI<KilogramSquareMeter>(),
-						DynamicTyreRadius = 0.85.SI<Meter>()
+						DynamicTyreRadius = 0.85.SI<Meter>(),
+						CrossWindCorrectionCurve = CrossWindCorrectionCurve.GetNoCorrectionCurve(6.16498344.SI<SquareMeter>())
 					},
 				AxleGearData = new AxleGearData { AxleGear = new GearData { Ratio = 2.3 } },
 				EngineData = new CombustionEngineData { IdleSpeed = 560.RPMtoRad(), FullLoadCurve = fullLoadCurve },
@@ -395,8 +400,9 @@ namespace TUGraz.VectoCore.Tests.Models.Simulation
 			var tbl = VectoCSVFile.Read(@"TestData/MeasuredSpeed/VairBeta.vcdb");
 
 			var vairbeta = new VAirBetaCrosswindCorrection(1.SI<SquareMeter>(), tbl);
-			
-			Assert.AreEqual(0, vairbeta.AverageAirDragPowerLoss(20.KMPHtoMeterPerSecond(), 20.KMPHtoMeterPerSecond(), 1.SI<Second>()) );
+
+			Assert.AreEqual(0,
+				vairbeta.AverageAirDragPowerLoss(20.KMPHtoMeterPerSecond(), 20.KMPHtoMeterPerSecond(), 1.SI<Second>()));
 		}
 	}
 }
