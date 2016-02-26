@@ -30,6 +30,7 @@
 */
 
 using System;
+using System.Collections;
 using System.Collections.Generic;
 using System.Diagnostics;
 using System.Diagnostics.CodeAnalysis;
@@ -1733,12 +1734,16 @@ namespace TUGraz.VectoCore.Utils
 		[DebuggerHidden]
 		public bool HasEqualUnit(SI si)
 		{
-			if (Numerator.SequenceEqual(si.Numerator) && Denominator.SequenceEqual(si.Denominator)) {
+			if (Numerator.SequenceEqualFast(si.Numerator) && Denominator.SequenceEqualFast(si.Denominator)) {
 				return true;
 			}
-			return ToBasicUnits().Denominator.OrderBy(x => x).SequenceEqual(si.ToBasicUnits().Denominator.OrderBy(x => x))
-					&& ToBasicUnits().Numerator.OrderBy(x => x).SequenceEqual(si.ToBasicUnits().Numerator.OrderBy(x => x));
+
+			var self = ToBasicUnits();
+			var other = si.ToBasicUnits();
+			return self.Denominator.OrderBy(x => x).SequenceEqualFast(other.Denominator.OrderBy(x => x))
+					&& self.Numerator.OrderBy(x => x).SequenceEqualFast(other.Numerator.OrderBy(x => x));
 		}
+
 
 		/// <summary>
 		/// Determines whether the specified <see cref="System.Object" />, is equal to this instance.

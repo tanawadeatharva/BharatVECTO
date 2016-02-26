@@ -43,6 +43,23 @@ namespace TUGraz.VectoCore.Utils
 			return self.Select(StringExtensionMethods.ToDouble);
 		}
 
+		public static bool SequenceEqualFast<T>(this IEnumerable<T> self, IEnumerable<T> other) where T: IComparable
+		{
+			return self.ToArray().SequenceEqualFast(other.ToArray());
+		}
+
+		public static bool SequenceEqualFast<T>(this T[] self, T[] other) where T : IComparable
+		{
+			if (self.Length == other.Length) {
+				for (var i = 0; i < self.Length; i++) {
+					if (self[i].CompareTo(other[i]) != 0) {
+						return false;
+					}
+				}
+			}
+			return true;
+		}
+
 		public static IList<double> ToDouble(this IEnumerable<SI> self)
 		{
 			return self.Select(x => x.Value()).ToList();
