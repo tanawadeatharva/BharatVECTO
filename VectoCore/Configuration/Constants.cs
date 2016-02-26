@@ -71,6 +71,8 @@ namespace TUGraz.VectoCore.Configuration
 			/// </summary>
 			public static readonly Second TargetTimeInterval = 0.5.SI<Second>();
 
+			public static readonly Second LowerBoundTimeInterval = 0.25.SI<Second>();
+
 			/// <summary>
 			/// simulation interval if the vehicle stands still
 			/// </summary>

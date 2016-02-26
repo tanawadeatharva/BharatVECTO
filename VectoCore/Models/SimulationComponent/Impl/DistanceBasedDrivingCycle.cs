@@ -46,6 +46,8 @@ namespace TUGraz.VectoCore.Models.SimulationComponent.Impl
 
 		protected IDrivingCycleOutPort NextComponent;
 
+		protected bool IntervalProlonged;
+
 		public DistanceBasedDrivingCycle(IVehicleContainer container, DrivingCycleData cycle) : base(container)
 		{
 			Data = cycle;
@@ -137,7 +139,22 @@ namespace TUGraz.VectoCore.Models.SimulationComponent.Impl
 
 			var nextSpeedChange = GetSpeedChangeWithinSimulationInterval(ds);
 			if (nextSpeedChange == null || ds.IsSmallerOrEqual(nextSpeedChange - PreviousState.Distance)) {
-				return DriveDistance(absTime, ds);
+				if (nextSpeedChange == null || DataBus.VehicleSpeed.IsEqual(0.SI<MeterPerSecond>())) {
+					return DriveDistance(absTime, ds);
+				}
+				var remainingDistance = nextSpeedChange - PreviousState.Distance - ds;
+				var estimatedRemainingTime = remainingDistance / DataBus.VehicleSpeed;
+				if (IntervalProlonged || remainingDistance.IsEqual(0.SI<Meter>()) ||
+					estimatedRemainingTime.IsGreater(Constants.SimulationSettings.LowerBoundTimeInterval)) {
+					return DriveDistance(absTime, ds);
+				}
+				Log.Debug("Extending distance by {0} to next sample point. ds: {1} new ds: {2}", remainingDistance, ds,
+					nextSpeedChange - PreviousState.Distance);
+				IntervalProlonged = true;
+				return new ResponseDrivingCycleDistanceExceeded {
+					Source = this,
+					MaxDistance = nextSpeedChange - PreviousState.Distance
+				};
 			}
 			// only drive until next sample point in cycle with speed change
 			Log.Debug("Limiting distance to next sample point {0}",
@@ -258,7 +275,7 @@ namespace TUGraz.VectoCore.Models.SimulationComponent.Impl
 
 		protected override void DoWriteModalResults(IModalDataContainer container)
 		{
-			container[ModalResultField.dist] = CurrentState.Distance;
+			container[ModalResultField.dist] = CurrentState.Distance; // (CurrentState.Distance + PreviousState.Distance) / 2.0;
 			container[ModalResultField.simulationDistance] = CurrentState.SimulationDistance;
 			container[ModalResultField.v_targ] = CurrentState.VehicleTargetSpeed;
 			container[ModalResultField.grad] = (Math.Tan(CurrentState.Gradient.Value()) * 100).SI<Scalar>();
@@ -273,6 +290,7 @@ namespace TUGraz.VectoCore.Models.SimulationComponent.Impl
 
 			PreviousState = CurrentState;
 			CurrentState = CurrentState.Clone();
+			IntervalProlonged = false;
 
 			if (!CycleIntervalIterator.LeftSample.StoppingTime.IsEqual(0) &&
 				CycleIntervalIterator.LeftSample.StoppingTime.IsEqual(PreviousState.WaitTime)) {
