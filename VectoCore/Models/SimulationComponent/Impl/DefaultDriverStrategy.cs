@@ -77,7 +77,7 @@ namespace TUGraz.VectoCore.Models.SimulationComponent.Impl
 					var remainingDistance = NextDrivingAction.ActionDistance - currentDistance;
 					var estimatedNextTimestep = remainingDistance / Driver.DataBus.VehicleSpeed;
 					if (remainingDistance.IsEqual(0.SI<Meter>(), Constants.SimulationSettings.DriverActionDistanceTolerance) ||
-						estimatedNextTimestep.IsSmaller(Constants.SimulationSettings.LowerBoundTimeInterval) {
+						estimatedNextTimestep.IsSmaller(Constants.SimulationSettings.LowerBoundTimeInterval)) {
 						CurrentDrivingMode = DrivingMode.DrivingModeBrake;
 						DrivingModes[CurrentDrivingMode].ResetMode();
 						Log.Debug("Switching to DrivingMode BRAKE");
