@@ -735,7 +735,7 @@ namespace TUGraz.VectoCore.Models.SimulationComponent.Impl
 				retVal.SimulationInterval = -currentSpeed / acceleration;
 				var stopDistance = currentSpeed * retVal.SimulationInterval +
 									acceleration / 2 * retVal.SimulationInterval * retVal.SimulationInterval;
-				if (stopDistance > ds) {
+				if (stopDistance.IsGreater(ds)) {
 					// just to cover everything - does not happen...
 					Log.Error(
 						"Could not find solution for computing required time interval to drive distance ds: {0}. currentSpeed: {1}, acceleration: {2}, stopDistance: {3}, distance: {4}",
