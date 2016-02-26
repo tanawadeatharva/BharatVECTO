@@ -120,7 +120,7 @@ namespace TUGraz.VectoCore.Tests.Integration
 			var cycle = SimpleDrivingCycles.ReadDeclarationCycle("Interurban");
 			var run = Truck40tPowerTrain.CreateEngineeringRun(cycle, "Truck40t_InterUrbanCycle_RefLoad.vmod",
 				7500.SI<Kilogram>(), 12900.SI<Kilogram>());
-
+			//((DistanceBasedDrivingCycle)((VehicleContainer)run.GetContainer()).Cycle).SetDriveOffDistance(33000.SI<Meter>());
 			run.Run();
 			Assert.IsTrue(run.FinishedWithoutErrors);
 		}
@@ -132,7 +132,7 @@ namespace TUGraz.VectoCore.Tests.Integration
 			var run = Truck40tPowerTrain.CreateEngineeringRun(cycle, "Truck40t_CoachCycle_RefLoad.vmod",
 				7500.SI<Kilogram>(), 12900.SI<Kilogram>());
 
-			((DistanceBasedDrivingCycle)((VehicleContainer)run.GetContainer()).Cycle).SetDriveOffDistance(152429.9.SI<Meter>());
+			//((DistanceBasedDrivingCycle)((VehicleContainer)run.GetContainer()).Cycle).SetDriveOffDistance(152429.9.SI<Meter>());
 			run.Run();
 			Assert.IsTrue(run.FinishedWithoutErrors);
 		}
