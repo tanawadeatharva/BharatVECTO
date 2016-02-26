@@ -23,7 +23,7 @@ namespace TUGraz.VectoCore.Configuration
 {
 	public static class Constants
 	{
-		public const double RPMToRad =  2 * Math.PI / 60;
+		public const double RPMToRad = 2 * Math.PI / 60;
 		public const double Kilo = 1000;
 		public const double MeterPerSecondToKMH = 3.6;
 		public const double SecondsPerHour = 3600;
@@ -88,7 +88,7 @@ namespace TUGraz.VectoCore.Configuration
 
 			//VectoMath.InclinationToAngle(0.25 / 100.0).Value();
 
-			public const int DriverSearchLoopThreshold = 100;
+			public const int DriverSearchLoopThreshold = 200;
 
 			public static readonly Watt EnginePowerSearchTolerance = 0.50.SI<Watt>(); // Watt
 

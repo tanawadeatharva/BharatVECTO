@@ -192,8 +192,9 @@ namespace TUGraz.VectoCore.Models.SimulationComponent.Impl
 				};
 			}
 
-			if (deltaFull.IsGreater(0.SI<NewtonMeter>()) &&
-				deltaDrag.IsSmaller(0.SI<NewtonMeter>())) {
+			if (
+				(deltaFull * avgEngineSpeed).IsGreater(0.SI<Watt>(), Constants.SimulationSettings.EnginePowerSearchTolerance) &&
+				(deltaDrag * avgEngineSpeed).IsSmaller(0.SI<Watt>(), Constants.SimulationSettings.EnginePowerSearchTolerance)) {
 				throw new VectoSimulationException(
 					"Unexpected condition: requested torque_out is above gearbox full-load and engine is below drag load! deltaFull: {0}, deltaDrag: {1}",
 					deltaFull, deltaDrag);
