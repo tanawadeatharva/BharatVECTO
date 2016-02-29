@@ -49,6 +49,7 @@ namespace TUGraz.VectoCore.Models.Simulation.Impl
 		private static uint _runIdCounter;
 
 		protected Second AbsTime = 0.SI<Second>();
+		// ReSharper disable once InconsistentNaming
 		protected Second dt = 1.SI<Second>();
 		protected SummaryDataContainer SumWriter { get; set; }
 		protected string JobName { get; set; }

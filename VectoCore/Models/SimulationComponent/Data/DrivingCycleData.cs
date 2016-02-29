@@ -30,6 +30,7 @@
 */
 
 using System.Collections.Generic;
+using System.Diagnostics;
 using TUGraz.VectoCore.Utils;
 
 namespace TUGraz.VectoCore.Models.SimulationComponent.Data
@@ -40,7 +41,8 @@ namespace TUGraz.VectoCore.Models.SimulationComponent.Data
 		TimeBased,
 		DistanceBased,
 		PWheel,
-		MeasuredSpeed
+		MeasuredSpeed,
+		MeasuredSpeedGear
 	}
 
 	public class DrivingCycleData : SimulationComponentData
@@ -53,6 +55,8 @@ namespace TUGraz.VectoCore.Models.SimulationComponent.Data
 
 		public CycleType CycleType { get; internal set; }
 
+		[DebuggerDisplay(
+			"s:{Distance}, t:{Time}, v:{VehicleTargetSpeed}, grad:{RoadGradient}, n:{AngularVelocity}, gear:{Gear}")]
 		public class DrivingCycleEntry
 		{
 			public DrivingCycleEntry() {}
@@ -152,6 +156,11 @@ namespace TUGraz.VectoCore.Models.SimulationComponent.Data
 			/// Power on the Wheels (only used in PWheel Mode).
 			/// </summary>
 			public Watt PWheel { get; set; }
+
+			/// <summary>
+			/// The angular velocity at the wheel. only used in PWheelCycle.
+			/// </summary>
+			public PerSecond WheelAngularVelocity;
 		}
 	}
 }

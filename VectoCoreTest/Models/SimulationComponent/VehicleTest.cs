@@ -87,9 +87,9 @@ namespace TUGraz.VectoCore.Tests.Models.SimulationComponent
 
 			var vehicleData = MockSimulationDataFactory.CreateVehicleDataFromFile(VehicleDataFileTruck);
 			//vehicleData.AerodynamicDragAera = 6.46.SI<SquareMeter>();
-			vehicleData.CrossWindCorrectionCurve =
+			vehicleData.CrossWindCorrectionCurve = new CrosswindCorrectionCdxALookup(
 				DeclarationDataAdapter.GetDeclarationAirResistanceCurve(VehicleCategory.Tractor,
-					6.46.SI<SquareMeter>());
+					6.46.SI<SquareMeter>()), CrossWindCorrectionMode.DeclarationModeCorrection);
 			var vehicle = new Vehicle(container, vehicleData);
 
 			var mockPort = new MockFvOutPort();
@@ -130,9 +130,9 @@ namespace TUGraz.VectoCore.Tests.Models.SimulationComponent
 			var container = new VehicleContainer();
 
 			var vehicleData = MockSimulationDataFactory.CreateVehicleDataFromFile(VehicleDataFileTruck);
-			vehicleData.CrossWindCorrectionCurve =
+			vehicleData.CrossWindCorrectionCurve = new CrosswindCorrectionCdxALookup(
 				DeclarationDataAdapter.GetDeclarationAirResistanceCurve(VehicleCategory.Tractor,
-					6.2985.SI<SquareMeter>());
+					6.2985.SI<SquareMeter>()), CrossWindCorrectionMode.DeclarationModeCorrection);
 
 			var vehicle = new Vehicle(container, vehicleData);
 
@@ -192,20 +192,29 @@ namespace TUGraz.VectoCore.Tests.Models.SimulationComponent
 			correctionData.Seek(0, SeekOrigin.Begin);
 
 			var crossSectionArea = 5.19.SI<SquareMeter>();
-			var cwcc = CrossWindCorrectionCurve.ReadSpeedDependentCorrectionCurveFromStream(correctionData, crossSectionArea);
+			var cwcc =
+				new CrosswindCorrectionCdxALookup(
+					CrossWindCorrectionCurveReader.ReadSpeedDependentCorrectionCurveFromStream(correctionData,
+						crossSectionArea), CrossWindCorrectionMode.SpeedDependentCorrectionFactor);
 
-			Assert.AreEqual(crossSectionArea.Value() * 1.173, cwcc.EffectiveAirDragArea(0.KMPHtoMeterPerSecond()).Value(),
+			Assert.AreEqual(crossSectionArea.Value() * 1.173,
+				cwcc.EffectiveAirDragArea(0.KMPHtoMeterPerSecond()).Value(),
 				Tolerance);
-			Assert.AreEqual(crossSectionArea.Value() * 1.173, cwcc.EffectiveAirDragArea(40.KMPHtoMeterPerSecond()).Value(),
+			Assert.AreEqual(crossSectionArea.Value() * 1.173,
+				cwcc.EffectiveAirDragArea(40.KMPHtoMeterPerSecond()).Value(),
 				Tolerance);
-			Assert.AreEqual(crossSectionArea.Value() * 1.173, cwcc.EffectiveAirDragArea(60.KMPHtoMeterPerSecond()).Value(),
+			Assert.AreEqual(crossSectionArea.Value() * 1.173,
+				cwcc.EffectiveAirDragArea(60.KMPHtoMeterPerSecond()).Value(),
 				Tolerance);
-			Assert.AreEqual(crossSectionArea.Value() * 1.109, cwcc.EffectiveAirDragArea(80.KMPHtoMeterPerSecond()).Value(),
+			Assert.AreEqual(crossSectionArea.Value() * 1.109,
+				cwcc.EffectiveAirDragArea(80.KMPHtoMeterPerSecond()).Value(),
 				Tolerance);
-			Assert.AreEqual(crossSectionArea.Value() * 1.075, cwcc.EffectiveAirDragArea(100.KMPHtoMeterPerSecond()).Value(),
+			Assert.AreEqual(crossSectionArea.Value() * 1.075,
+				cwcc.EffectiveAirDragArea(100.KMPHtoMeterPerSecond()).Value(),
 				Tolerance);
 
-			Assert.AreEqual(crossSectionArea.Value() * 1.163, cwcc.EffectiveAirDragArea(62.5.KMPHtoMeterPerSecond()).Value(),
+			Assert.AreEqual(crossSectionArea.Value() * 1.163,
+				cwcc.EffectiveAirDragArea(62.5.KMPHtoMeterPerSecond()).Value(),
 				Tolerance);
 		}
 	}

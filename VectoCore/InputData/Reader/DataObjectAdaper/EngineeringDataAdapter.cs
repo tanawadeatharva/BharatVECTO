@@ -34,6 +34,7 @@ using System.Collections.Generic;
 using System.IO;
 using System.Linq;
 using TUGraz.VectoCore.Exceptions;
+using TUGraz.VectoCore.Models;
 using TUGraz.VectoCore.Models.Declaration;
 using TUGraz.VectoCore.Models.Simulation.Data;
 using TUGraz.VectoCore.Models.SimulationComponent.Data;
@@ -57,20 +58,26 @@ namespace TUGraz.VectoCore.InputData.Reader.DataObjectAdaper
 			retVal.CurbWeigthExtra = data.CurbWeightExtra;
 			retVal.Loading = data.Loading;
 			retVal.DynamicTyreRadius = data.DynamicTyreRadius;
+			retVal.CrossWindCorrectionMode = data.CrossWindCorrectionMode;
 			switch (data.CrossWindCorrectionMode) {
 				case CrossWindCorrectionMode.NoCorrection:
-					retVal.CrossWindCorrectionCurve = CrossWindCorrectionCurve.GetNoCorrectionCurve(data.AirDragArea);
+					retVal.CrossWindCorrectionCurve =
+						new CrosswindCorrectionCdxALookup(CrossWindCorrectionCurveReader.GetNoCorrectionCurve(data.AirDragArea),
+							CrossWindCorrectionMode.NoCorrection);
 					break;
 				case CrossWindCorrectionMode.SpeedDependentCorrectionFactor:
-					retVal.CrossWindCorrectionCurve =
-						CrossWindCorrectionCurve.ReadSpeedDependentCorrectionCurve(data.CrosswindCorrectionMap,
-							data.AirDragArea);
+					retVal.CrossWindCorrectionCurve = new CrosswindCorrectionCdxALookup(
+						CrossWindCorrectionCurveReader.ReadSpeedDependentCorrectionCurve(data.CrosswindCorrectionMap,
+							data.AirDragArea), CrossWindCorrectionMode.SpeedDependentCorrectionFactor);
 					break;
 				case CrossWindCorrectionMode.VAirBetaLookupTable:
-					throw new VectoException("CrosswindCorrection mode {0} not implemented", data.CrossWindCorrectionMode);
+					retVal.CrossWindCorrectionCurve = new CrosswindCorrectionVAirBeta(data.AirDragArea,
+						CrossWindCorrectionCurveReader.ReadCdxABetaTable(data.CrosswindCorrectionMap));
+					break;
 				case CrossWindCorrectionMode.DeclarationModeCorrection:
-					retVal.CrossWindCorrectionCurve = DeclarationDataAdapter.GetDeclarationAirResistanceCurve(retVal.VehicleCategory,
-						data.AirDragArea);
+					retVal.CrossWindCorrectionCurve =
+						new CrosswindCorrectionCdxALookup(DeclarationDataAdapter.GetDeclarationAirResistanceCurve(retVal.VehicleCategory,
+							data.AirDragArea), CrossWindCorrectionMode.DeclarationModeCorrection);
 					break;
 				default:
 					throw new ArgumentOutOfRangeException();

@@ -30,6 +30,7 @@
 */
 
 using System.IO;
+using System.Linq;
 using Microsoft.VisualStudio.TestTools.UnitTesting;
 using TUGraz.VectoCore.InputData.FileIO.JSON;
 using TUGraz.VectoCore.Models.Simulation.Impl;
@@ -64,6 +65,8 @@ namespace TUGraz.VectoCore.Tests.Integration
 			jobContainer.Execute();
 
 			jobContainer.WaitFinished();
+
+			Assert.IsTrue(jobContainer.Runs.All(r => r.Success), string.Concat(jobContainer.Runs.Select(r => r.ExecException)));
 
 			Assert.IsTrue(File.Exists(@"TestData\Jobs\job-report.vsum"));
 			Assert.IsTrue(File.Exists(@"TestData\Jobs\job-report.pdf"));

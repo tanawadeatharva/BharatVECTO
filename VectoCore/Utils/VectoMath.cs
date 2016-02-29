@@ -32,9 +32,7 @@
 using System;
 using System.Collections.Generic;
 using System.Diagnostics;
-using System.Diagnostics.Contracts;
 using TUGraz.VectoCore.Exceptions;
-using TUGraz.VectoCore.Models.Declaration;
 
 namespace TUGraz.VectoCore.Utils
 {
@@ -139,14 +137,14 @@ namespace TUGraz.VectoCore.Utils
 		public static List<double> QuadraticEquationSolver(double a, double b, double c)
 		{
 			var retVal = new List<double>();
-			var D = b * b - 4 * a * c;
+			var d = b * b - 4 * a * c;
 
-			if (D < 0) {
+			if (d < 0) {
 				return retVal;
-			} else if (D > 0) {
+			} else if (d > 0) {
 				// two solutions possible
-				retVal.Add((-b + Math.Sqrt(D)) / (2 * a));
-				retVal.Add((-b - Math.Sqrt(D)) / (2 * a));
+				retVal.Add((-b + Math.Sqrt(d)) / (2 * a));
+				retVal.Add((-b - Math.Sqrt(d)) / (2 * a));
 			} else {
 				// only one solution possible
 				retVal.Add((-b / (2 * a)));
@@ -233,9 +231,7 @@ namespace TUGraz.VectoCore.Utils
 
 		private bool Equals(Point other)
 		{
-			//Contract.Requires(other != null);
-
-			return X.Equals(other.X) && Y.Equals(other.Y) && Z.Equals(other.Z);
+			return X.IsEqual(other.X) && Y.IsEqual(other.Y) && Z.IsEqual(other.Z);
 		}
 
 		public override bool Equals(object obj)
@@ -287,30 +283,37 @@ namespace TUGraz.VectoCore.Utils
 
 		public Plane(Triangle tr)
 		{
-			var ab = tr.P2 - tr.P1;
-			var ac = tr.P3 - tr.P1;
+			var abX = tr.P2.X - tr.P1.X;
+			var abY = tr.P2.Y - tr.P1.Y;
+			var abZ = tr.P2.Z - tr.P1.Z;
 
-			var cross = ab.Cross(ac);
+			var acX = tr.P3.X - tr.P1.X;
+			var acY = tr.P3.Y - tr.P1.Y;
+			var acZ = tr.P3.Z - tr.P1.Z;
 
-			X = cross.X;
-			Y = cross.Y;
-			Z = cross.Z;
-			W = tr.P1.X * cross.X + tr.P1.Y * cross.Y + tr.P1.Z * cross.Z;
+			X = abY * acZ - abZ * acY;
+			Y = abZ * acX - abX * acZ;
+			Z = abX * acY - abY * acX;
+			W = tr.P1.X * X + tr.P1.Y * Y + tr.P1.Z * Z;
 		}
 	}
 
 	[DebuggerDisplay("Triangle(({P1.X}, {P1.Y}, {P1.Z}), ({P2.X}, {P2.Y}, {P2.Z}), ({P3.X}, {P3.Y}, {P3.Z}))")]
 	public class Triangle
 	{
-		public Point P1;
-		public Point P2;
-		public Point P3;
+		public readonly Point P1;
+		public readonly Point P2;
+		public readonly Point P3;
 
 		public Triangle(Point p1, Point p2, Point p3)
 		{
 			P1 = p1;
 			P2 = p2;
 			P3 = p3;
+
+			if ((P1.X.IsEqual(P2.X) && P2.X.IsEqual(P3.X)) || (P1.Y.IsEqual(P2.Y) && P2.Y.IsEqual(P3.Y))) {
+				throw new VectoException("triangle is not extrapolatable by a plane.");
+			}
 		}
 
 		/// <summary>
@@ -355,15 +358,15 @@ namespace TUGraz.VectoCore.Utils
 			var p2X = P3.X - p.X;
 			var p2Y = P3.Y - p.Y;
 
-			var p0square = p0X * p0X + p0Y * p0Y;
-			var p1square = p1X * p1X + p1Y * p1Y;
-			var p2square = p2X * p2X + p2Y * p2Y;
+			var p0Square = p0X * p0X + p0Y * p0Y;
+			var p1Square = p1X * p1X + p1Y * p1Y;
+			var p2Square = p2X * p2X + p2Y * p2Y;
 
 			var det01 = p0X * p1Y - p1X * p0Y;
 			var det12 = p1X * p2Y - p2X * p1Y;
 			var det20 = p2X * p0Y - p0X * p2Y;
 
-			var result = p0square * det12 + p1square * det20 + p2square * det01;
+			var result = p0Square * det12 + p1Square * det20 + p2Square * det01;
 
 			return result > 0;
 		}
@@ -375,7 +378,6 @@ namespace TUGraz.VectoCore.Utils
 
 		public bool SharesVertexWith(Triangle t)
 		{
-			Contract.Requires(t != null);
 			return Contains(t.P1) || Contains(t.P2) || Contains(t.P3);
 		}
 
@@ -388,7 +390,6 @@ namespace TUGraz.VectoCore.Utils
 
 		protected bool Equals(Triangle other)
 		{
-			Contract.Requires(other != null);
 			return Equals(P1, other.P1) && Equals(P2, other.P2) && Equals(P3, other.P3);
 		}
 
@@ -424,6 +425,7 @@ namespace TUGraz.VectoCore.Utils
 	{
 		public readonly Point P1;
 		public readonly Point P2;
+
 		private Point _vector;
 
 		public Edge(Point p1, Point p2)
@@ -441,9 +443,8 @@ namespace TUGraz.VectoCore.Utils
 
 		protected bool Equals(Edge other)
 		{
-			Contract.Requires(other != null);
-			return Equals(P1, other.P1) && Equals(P2, other.P2)
-					|| Equals(P1, other.P2) && Equals(P1, other.P2);
+			return (P1.Equals(other.P1) && Equals(P2, other.P2))
+					|| (Equals(P1, other.P2) && Equals(P2, other.P1));
 		}
 
 		public override bool Equals(object obj)
@@ -459,7 +460,7 @@ namespace TUGraz.VectoCore.Utils
 
 		public override int GetHashCode()
 		{
-			return (P1.GetHashCode()) ^ (P2.GetHashCode());
+			return P1.GetHashCode() ^ P2.GetHashCode();
 		}
 
 		#endregion

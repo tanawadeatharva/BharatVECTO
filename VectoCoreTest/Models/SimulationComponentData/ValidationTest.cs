@@ -86,7 +86,7 @@ namespace TUGraz.VectoCore.Tests.Models.SimulationComponentData
 			data.FullLoadCurve.EngineData = data;
 
 			var results = data.Validate();
-			Assert.IsFalse(results.Any(), "Validation Failed: " + string.Join("; ", results.Select(r => r.ErrorMessage)));
+			Assert.IsFalse(results.Any(), "Validation Failed: " + "; ".Join(results.Select(r => r.ErrorMessage)));
 			Assert.IsTrue(data.IsValid());
 		}
 
@@ -123,7 +123,7 @@ namespace TUGraz.VectoCore.Tests.Models.SimulationComponentData
 			};
 
 			var results = data.Validate();
-			Assert.IsFalse(results.Any(), "Validation Failed: " + string.Join("; ", results.Select(r => r.ErrorMessage)));
+			Assert.IsFalse(results.Any(), "Validation Failed: " + "; ".Join(results.Select(r => r.ErrorMessage)));
 		}
 
 		/// <summary>

@@ -114,7 +114,7 @@ namespace TUGraz.VectoCore.Tests.Integration.SimulationRuns
 		public void TestWheelsAndEngine()
 		{
 			var engineData = MockSimulationDataFactory.CreateEngineDataFromFile(EngineFile);
-			var cycleData = DrivingCycleDataReader.ReadFromFile(CycleFile, CycleType.DistanceBased);
+			var cycleData = DrivingCycleDataReader.ReadFromFile(CycleFile, CycleType.DistanceBased, false);
 
 			var axleGearData = CreateAxleGearData();
 
@@ -186,7 +186,7 @@ namespace TUGraz.VectoCore.Tests.Integration.SimulationRuns
 		public void TestWheelsAndEngineLookahead()
 		{
 			var engineData = MockSimulationDataFactory.CreateEngineDataFromFile(EngineFile);
-			var cycleData = DrivingCycleDataReader.ReadFromFile(CycleFileStop, CycleType.DistanceBased);
+			var cycleData = DrivingCycleDataReader.ReadFromFile(CycleFileStop, CycleType.DistanceBased, false);
 
 			var axleGearData = CreateAxleGearData();
 
@@ -280,7 +280,9 @@ namespace TUGraz.VectoCore.Tests.Integration.SimulationRuns
 			};
 			return new VehicleData {
 				AxleConfiguration = AxleConfiguration.AxleConfig_6x2,
-				CrossWindCorrectionCurve = CrossWindCorrectionCurve.GetNoCorrectionCurve(3.2634.SI<SquareMeter>()),
+				CrossWindCorrectionCurve =
+					new CrosswindCorrectionCdxALookup(CrossWindCorrectionCurveReader.GetNoCorrectionCurve(3.2634.SI<SquareMeter>()),
+						CrossWindCorrectionMode.NoCorrection),
 				CurbWeight = 15700.SI<Kilogram>(),
 				CurbWeigthExtra = 0.SI<Kilogram>(),
 				Loading = loading,

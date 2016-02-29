@@ -29,7 +29,6 @@
 *   Martin Rexeis, rexeis@ivt.tugraz.at, IVT, Graz University of Technology
 */
 
-using System;
 using TUGraz.VectoCore.Models.Connector.Ports;
 using TUGraz.VectoCore.Models.Simulation;
 using TUGraz.VectoCore.Models.Simulation.Data;
@@ -75,8 +74,13 @@ namespace TUGraz.VectoCore.Models.SimulationComponent.Impl
 		protected override void DoWriteModalResults(IModalDataContainer container)
 		{
 			container[ModalResultField.P_ret_loss] = 0.SI<Watt>();
-			container[ModalResultField.P_retarder_in] = CurrentState.InTorque *
-														(CurrentState.InAngularVelocity + PreviousState.InAngularVelocity) / 2.0;
+
+			if (CurrentState.InAngularVelocity == null || PreviousState.InAngularVelocity == null) {
+				container[ModalResultField.P_retarder_in] = 0.SI<Watt>();
+			} else {
+				container[ModalResultField.P_retarder_in] = CurrentState.InTorque *
+															(CurrentState.InAngularVelocity + PreviousState.InAngularVelocity) / 2.0;
+			}
 		}
 
 		protected override void DoCommitSimulationStep()

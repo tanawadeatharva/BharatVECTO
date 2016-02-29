@@ -123,10 +123,9 @@ namespace TUGraz.VectoCore.Utils
 				foreach (var element in enumerable) {
 					var results = element.Validate();
 					if (results.Any()) {
-						return
-							new ValidationResult(
-								string.Format("Validation for list {1}[{0}] in {1} failed: {2}", i, validationContext.DisplayName,
-									string.Join(" ", results)));
+						return new ValidationResult(
+							string.Format("Validation for list {1}[{0}] in {1} failed: {2}", i, validationContext.DisplayName,
+								string.Concat(results)));
 					}
 					i++;
 				}
@@ -134,8 +133,7 @@ namespace TUGraz.VectoCore.Utils
 				var results = value.Validate();
 				if (results.Any()) {
 					return new ValidationResult(
-						string.Format("Validation for object {{{0}}} failed: {1}", validationContext.DisplayName,
-							string.Join(" ", results)));
+						string.Format("Validation for object {{{0}}} failed: {1}", validationContext.DisplayName, string.Concat(results)));
 				}
 			}
 

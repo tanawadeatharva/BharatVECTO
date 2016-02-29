@@ -40,6 +40,7 @@ using TUGraz.VectoCore.Models.Connector.Ports.Impl;
 using TUGraz.VectoCore.Models.Simulation;
 using TUGraz.VectoCore.Models.Simulation.Data;
 using TUGraz.VectoCore.Models.Simulation.DataBus;
+using TUGraz.VectoCore.Models.Simulation.Impl;
 using TUGraz.VectoCore.Models.SimulationComponent.Data;
 using TUGraz.VectoCore.OutputData;
 using TUGraz.VectoCore.Utils;
@@ -323,15 +324,20 @@ namespace TUGraz.VectoCore.Models.SimulationComponent.Impl
 			container[ModalResultField.Tq_drag] = CurrentState.FullDragTorque;
 
 			try {
-				var fc = ModelData.ConsumptionMap.GetFuelConsumption(CurrentState.EngineTorque, avgEngineSpeed);
+				var fc = ModelData.ConsumptionMap.GetFuelConsumption(CurrentState.EngineTorque, avgEngineSpeed,
+					allowExtrapolation: (DataBus.ExecutionMode != ExecutionMode.Declaration));
 				container[ModalResultField.FCMap] = fc;
 
 				//todo (MK, 2015-11-11): calculate aux start stop correction when start stop functionality is implemented in v3
 				var fcaux = fc;
 				container[ModalResultField.FCAUXc] = fcaux;
 				container[ModalResultField.FCWHTCc] = fcaux * ModelData.WHTCCorrectionFactor;
+
+				if (ModelData.ConsumptionMap.Extrapolated) {
+					Log.Warn("FuelMap Extrapolated: n_eng_avg: {0} Tq: {1}, FC: {2}", avgEngineSpeed, CurrentState.EngineTorque, fc);
+				}
 			} catch (VectoException ex) {
-				Log.Warn("{0} n_eng_avg: {1} Tq: {2}", ex.Message, avgEngineSpeed, CurrentState.EngineTorque);
+				Log.Warn("FuelMap: {0} n_eng_avg: {1} Tq: {2}", ex.Message, avgEngineSpeed, CurrentState.EngineTorque);
 				container[ModalResultField.FCMap] = null;
 			}
 		}
@@ -406,6 +412,7 @@ namespace TUGraz.VectoCore.Models.SimulationComponent.Impl
 
 			//public Second AbsTime { get; set; }
 
+			// ReSharper disable once InconsistentNaming
 			public Second dt { get; set; }
 
 			public PerSecond EngineSpeed { get; set; }

@@ -75,7 +75,7 @@ namespace TUGraz.VectoCore.Tests.Integration.SimulationRuns
 			var container = new VehicleContainer(modData);
 
 			var engineData = MockSimulationDataFactory.CreateEngineDataFromFile(EngineFile);
-			var cycleData = DrivingCycleDataReader.ReadFromFile(CycleFile, CycleType.DistanceBased);
+			var cycleData = DrivingCycleDataReader.ReadFromFile(CycleFile, CycleType.DistanceBased, false);
 			var axleGearData = CreateAxleGearData();
 			var gearboxData = CreateSimpleGearboxData();
 			var vehicleData = CreateVehicleData(3300.SI<Kilogram>());
@@ -134,7 +134,7 @@ namespace TUGraz.VectoCore.Tests.Integration.SimulationRuns
 			var container = new VehicleContainer(modData);
 
 			var engineData = MockSimulationDataFactory.CreateEngineDataFromFile(EngineFile);
-			var cycleData = DrivingCycleDataReader.ReadFromFile(CoachCycleFile, CycleType.DistanceBased);
+			var cycleData = DrivingCycleDataReader.ReadFromFile(CoachCycleFile, CycleType.DistanceBased, false);
 			var axleGearData = CreateAxleGearData();
 			var gearboxData = CreateGearboxData();
 			var vehicleData = CreateVehicleData(3300.SI<Kilogram>());
@@ -208,7 +208,7 @@ namespace TUGraz.VectoCore.Tests.Integration.SimulationRuns
 			var container = new VehicleContainer(modData);
 
 			var engineData = MockSimulationDataFactory.CreateEngineDataFromFile(EngineFile);
-			var cycleData = DrivingCycleDataReader.ReadFromFile(CycleFile, CycleType.DistanceBased);
+			var cycleData = DrivingCycleDataReader.ReadFromFile(CycleFile, CycleType.DistanceBased, false);
 			var axleGearData = CreateAxleGearData();
 			var gearboxData = CreateGearboxData();
 			var vehicleData = CreateVehicleData(3300.SI<Kilogram>());
@@ -385,7 +385,7 @@ namespace TUGraz.VectoCore.Tests.Integration.SimulationRuns
 			};
 			return new VehicleData {
 				AxleConfiguration = AxleConfiguration.AxleConfig_6x2,
-				CrossWindCorrectionCurve = CrossWindCorrectionCurve.GetNoCorrectionCurve(3.2634.SI<SquareMeter>()),
+				CrossWindCorrectionCurve = new CrosswindCorrectionCdxALookup(CrossWindCorrectionCurveReader.GetNoCorrectionCurve(3.2634.SI<SquareMeter>()),CrossWindCorrectionMode.NoCorrection),
 				CurbWeight = 15700.SI<Kilogram>(),
 				CurbWeigthExtra = 0.SI<Kilogram>(),
 				Loading = loading,

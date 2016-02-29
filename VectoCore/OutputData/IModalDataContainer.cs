@@ -202,7 +202,7 @@ namespace TUGraz.VectoCore.OutputData
 		{
 			var stopTime = data.GetValues<MeterPerSecond>(ModalResultField.v_act)
 				.Zip(data.SimulationIntervals(), (v, dt) => new { v, dt })
-				.Where(x => x.v < 0.1).Select(x => x.dt).Sum() ?? 0.SI<Second>();
+				.Where(x => x.v < 0.1).Sum(x => x.dt) ?? 0.SI<Second>();
 			return 100 * (stopTime / data.Duration()).Cast<Scalar>();
 		}
 
@@ -394,7 +394,7 @@ namespace TUGraz.VectoCore.OutputData
 				.Zip(simulationIntervals, (value, dt) => new { Dt = dt, Value = value * dt })
 				.Where(v => v.Value < 0).ToList();
 			if (values.Any()) {
-				return values.Select(v => v.Value).Sum() / values.Select(v => v.Dt).Sum();
+				return values.Sum(v => v.Value) / values.Sum(v => v.Dt);
 			}
 			return 0.SI<Watt>();
 		}
@@ -406,7 +406,7 @@ namespace TUGraz.VectoCore.OutputData
 				.Zip(simulationIntervals, (value, dt) => new { Dt = dt, Value = value * dt })
 				.Where(v => v.Value > 0).ToList();
 			if (values.Any()) {
-				return values.Select(v => v.Value).Sum() / values.Select(v => v.Dt).Sum();
+				return values.Sum(v => v.Value) / values.Sum(v => v.Dt);
 			}
 			return 0.SI<Watt>();
 		}

@@ -100,7 +100,6 @@
     <Reference Include="System.Runtime.Serialization" />
     <Reference Include="System.Windows.Forms" />
     <Reference Include="System.Windows.Forms.DataVisualization" />
-    <Reference Include="System.Xml.Linq" />
     <Reference Include="System.Data.DataSetExtensions" />
     <Reference Include="Microsoft.CSharp" />
     <Reference Include="System.Data" />
@@ -148,7 +147,8 @@
     <Compile Include="Models\Declaration\VehicleClass.cs" />
     <Compile Include="Models\Declaration\Wheels.cs" />
     <Compile Include="Models\Declaration\WHTCCorrection.cs" />
-    <Compile Include="Models\SimulationComponent\Data\CrossWindCorrectionCurve.cs" />
+    <Compile Include="Models\SimulationComponent\Data\CrosswindCorrectionCdxALookup.cs" />
+    <Compile Include="Models\SimulationComponent\Data\CrossWindCorrectionCurveReader.cs" />
     <Compile Include="Models\SimulationComponent\Data\AuxiliaryData.cs" />
     <Compile Include="Models\SimulationComponent\Data\AuxSupplyPowerReader.cs" />
     <Compile Include="Models\SimulationComponent\Data\AxleGearData.cs" />
@@ -163,6 +163,8 @@
     <Compile Include="Models\SimulationComponent\Data\Engine\PT1Curve.cs" />
     <Compile Include="Models\LoggingObject.cs" />
     <Compile Include="Models\SimulationComponent\Data\GearboxType.cs" />
+    <Compile Include="Models\SimulationComponent\Data\ICrossWindCorrection.cs" />
+    <Compile Include="Models\SimulationComponent\Data\CrosswindCorrectionVAirBeta.cs" />
     <Compile Include="Models\SimulationComponent\IAuxiliary.cs" />
     <Compile Include="Models\SimulationComponent\IBrakes.cs" />
     <Compile Include="Models\SimulationComponent\ICombustionEngineIdleController.cs" />
@@ -171,10 +173,12 @@
     <Compile Include="Models\SimulationComponent\IDrivingCycleInfo.cs" />
     <Compile Include="Models\SimulationComponent\IEngineAuxPort.cs" />
     <Compile Include="Models\SimulationComponent\Impl\Brakes.cs" />
+    <Compile Include="Models\SimulationComponent\Impl\CycleGearbox.cs" />
     <Compile Include="Models\SimulationComponent\Impl\DefaultDriverStrategy.cs" />
     <Compile Include="Models\SimulationComponent\Impl\DummyRetarder.cs" />
     <Compile Include="Models\SimulationComponent\Impl\EngineAuxiliary.cs" />
     <Compile Include="Models\SimulationComponent\Impl\EngineOnlyCombustionEngine.cs" />
+    <Compile Include="Models\SimulationComponent\Impl\CycleClutch.cs" />
     <Compile Include="Models\SimulationComponent\IShiftStrategy.cs" />
     <Compile Include="Models\SimulationComponent\Impl\ShiftStrategy.cs" />
     <Compile Include="Models\Simulation\DataBus\IClutchInfo.cs" />
@@ -240,7 +244,7 @@
     <Compile Include="Models\SimulationComponent\Impl\Driver.cs" />
     <Compile Include="Models\SimulationComponent\Data\DriverData.cs" />
     <Compile Include="Utils\Formulas.cs" />
-    <Compile Include="Utils\IEnumberableExtensionMethods.cs" />
+    <Compile Include="Utils\EnumberableExtensionMethods.cs" />
     <Compile Include="Utils\IntExtensionMethods.cs" />
     <Compile Include="Utils\Physics.cs" />
     <Compile Include="Utils\SearchAlgorithm.cs" />
@@ -252,7 +256,6 @@
     <Compile Include="Models\SimulationComponent\Impl\DistanceBasedDrivingCycle.cs" />
     <Compile Include="Models\SimulationComponent\Impl\TimeBasedDrivingCycle.cs" />
     <Compile Include="Models\SimulationComponent\Impl\CombustionEngine.cs" />
-    <Compile Include="Models\SimulationComponent\Impl\ManualGearbox.cs" />
     <Compile Include="Models\SimulationComponent\Impl\Gearbox.cs" />
     <Compile Include="Models\SimulationComponent\Impl\Wheels.cs" />
     <Compile Include="Models\SimulationComponent\IWheels.cs" />
