@@ -207,7 +207,7 @@ namespace TUGraz.VectoCore.Models.Simulation.Data
 		/// <summary>
 		///     [m/s2]	Vehicle acceleration.
 		/// </summary>
-		[ModalResultField(typeof(SI), caption: "acc [m/s²]")] acc,
+		[ModalResultField(typeof(SI), caption: "acc [m/s^2]")] acc,
 
 		/// <summary>
 		///     [%]	    Road gradient.
@@ -295,12 +295,12 @@ namespace TUGraz.VectoCore.Models.Simulation.Data
 		/// <summary>
 		///     [-]	    Torque converter speed ratio
 		/// </summary>
-		[ModalResultField(typeof(SI), name: "TCν")] TCv,
+		[ModalResultField(typeof(SI), name: "TCnu")] TCv,
 
 		/// <summary>
 		///     [-]	    Torque converter torque ratio
 		/// </summary>
-		[ModalResultField(typeof(SI), name: "TCµ")] TCmu,
+		[ModalResultField(typeof(SI), name: "TCmu")] TCmu,
 
 		/// <summary>
 		///     [Nm]	Torque converter output torque

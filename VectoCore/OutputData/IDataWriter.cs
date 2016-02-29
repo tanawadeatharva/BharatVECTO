@@ -31,7 +31,6 @@
 
 using System.Data;
 using System.IO;
-using TUGraz.VectoCore.Models.Simulation.Data;
 
 namespace TUGraz.VectoCore.OutputData
 {

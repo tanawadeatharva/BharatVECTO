@@ -307,7 +307,6 @@ namespace TUGraz.VectoCore.Tests.Models.Simulation
 			var runsFactory = new SimulatorFactory(ExecutionMode.Declaration, inputData, fileWriter);
 
 			jobContainer.AddRuns(runsFactory);
-			jobContainer.Execute();
 		}
 
 		[TestMethod]
@@ -322,7 +321,6 @@ namespace TUGraz.VectoCore.Tests.Models.Simulation
 			var runsFactory = new SimulatorFactory(ExecutionMode.Engineering, inputData, fileWriter);
 
 			jobContainer.AddRuns(runsFactory);
-			jobContainer.Execute();
 		}
 
 		[TestMethod]
