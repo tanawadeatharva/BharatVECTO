@@ -55,7 +55,7 @@ namespace TUGraz.VectoCore.OutputData
 		private const string TIME = "time [s]";
 		private const string DISTANCE = "distance [km]";
 		private const string SPEED = "speed [km/h]";
-		private const string ALTITUDE = "∆altitude [m]";
+		private const string ALTITUDE = "altitudeDelta [m]";
 		private const string PPOS = "Ppos [kW]";
 		private const string PNEG = "Pneg [kW]";
 		private const string FCMAP = "FC-Map [g/h]";
