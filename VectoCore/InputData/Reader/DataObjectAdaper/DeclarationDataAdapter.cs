@@ -100,7 +100,6 @@ namespace TUGraz.VectoCore.InputData.Reader.DataObjectAdaper
 				? data.AirDragAreaRigidTruck
 				: data.AirDragArea;
 
-			retVal.CrossWindCorrectionMode = data.CrossWindCorrectionMode;
 			retVal.CrossWindCorrectionCurve =
 				new CrosswindCorrectionCdxALookup(GetDeclarationAirResistanceCurve(retVal.VehicleCategory, aerodynamicDragAera),
 					CrossWindCorrectionMode.DeclarationModeCorrection);

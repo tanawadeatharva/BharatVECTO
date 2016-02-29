@@ -443,8 +443,7 @@ namespace TUGraz.VectoCore.Utils
 
 		protected bool Equals(Edge other)
 		{
-			return (P1.Equals(other.P1) && Equals(P2, other.P2))
-					|| (Equals(P1, other.P2) && Equals(P2, other.P1));
+			return (P1.Equals(other.P1) && Equals(P2, other.P2)) || (P1.Equals(other.P2) && P2.Equals(other.P1));
 		}
 
 		public override bool Equals(object obj)

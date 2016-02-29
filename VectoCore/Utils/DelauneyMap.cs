@@ -165,7 +165,7 @@ namespace TUGraz.VectoCore.Utils
 		private static double Extrapolate(double x, double y, Edge edge)
 		{
 			// shortcut if edge end points have same Z values
-			if (edge.P1.Z == edge.P2.Z) {
+			if (edge.P1.Z.IsEqual(edge.P2.Z)) {
 				return edge.P1.Z;
 			}
 
