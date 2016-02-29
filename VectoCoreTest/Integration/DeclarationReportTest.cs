@@ -66,7 +66,8 @@ namespace TUGraz.VectoCore.Tests.Integration
 
 			jobContainer.WaitFinished();
 
-			Assert.IsTrue(jobContainer.Runs.All(r => r.Success), string.Concat(jobContainer.Runs.Select(r => r.ExecException)));
+			Assert.IsTrue(jobContainer.Runs.All(r => r.Success),
+				string.Join("\n", jobContainer.Runs.Select(r => r.ExecException)));
 
 			Assert.IsTrue(File.Exists(@"TestData\Jobs\job-report.vsum"));
 			Assert.IsTrue(File.Exists(@"TestData\Jobs\job-report.pdf"));

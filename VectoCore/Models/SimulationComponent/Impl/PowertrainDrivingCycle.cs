@@ -342,6 +342,8 @@ namespace TUGraz.VectoCore.Models.SimulationComponent.Impl
 
 		public virtual IResponse Request(Second absTime, Second dt)
 		{
+			var debug = new List<dynamic>();
+
 			// cycle finished
 			if (RightSample.Current == null || LeftSample.Current == null) {
 				return new ResponseCycleFinished { AbsTime = absTime, Source = this };
@@ -362,40 +364,43 @@ namespace TUGraz.VectoCore.Models.SimulationComponent.Impl
 			var acceleration = deltaV / deltaT;
 			var gradient = LeftSample.Current.RoadGradient;
 
-			var response = NextComponent.Request(absTime, dt, acceleration, gradient);
-			if (response is ResponseGearShift) {
+			IResponse response;
+			var responseCount = 0;
+			do {
 				response = NextComponent.Request(absTime, dt, acceleration, gradient);
-			}
-
-			response.Switch()
-				.Case<ResponseUnderload>(r => {
-					DataBus.BrakePower = SearchAlgorithm.Search(DataBus.BrakePower, r.Delta, -r.Delta,
-						getYValue: result => ((ResponseDryRun)result).DeltaDragLoad,
-						evaluateFunction: x => {
-							DataBus.BrakePower = x;
-							return NextComponent.Request(absTime, dt, acceleration, gradient, true);
-						},
-						criterion: y =>
-							((ResponseDryRun)y).DeltaDragLoad.IsEqual(0.SI<Watt>(), Constants.SimulationSettings.EnginePowerSearchTolerance));
-					response = NextComponent.Request(absTime, dt, acceleration, gradient);
-				})
-				.Case<ResponseOverload>(r => {
-					acceleration = SearchAlgorithm.Search(acceleration, r.Delta,
-						Constants.SimulationSettings.OperatingPointInitialSearchIntervalAccelerating,
-						getYValue: result => ((ResponseDryRun)result).DeltaFullLoad,
-						evaluateFunction: x => NextComponent.Request(absTime, dt, x, gradient, true),
-						criterion: y => ((ResponseDryRun)y).DeltaFullLoad.Abs() < Constants.SimulationSettings.EnginePowerSearchTolerance);
-					response = NextComponent.Request(absTime, dt, acceleration, gradient);
-				})
-				.Case<ResponseSuccess>(() => { })
-				.Default(
-					r => { throw new UnexpectedResponseException("MeasuredSpeedDrivingCycle received an unexpected response.", r); });
-
-			if (!(response is ResponseSuccess)) {
-				throw new UnexpectedResponseException("MeasuredSpeedDrivingCycle received an unexpected response.", response);
-			}
+				debug.Add(response);
+				response.Switch()
+					.Case<ResponseGearShift>(() => response = NextComponent.Request(absTime, dt, acceleration, gradient))
+					.Case<ResponseUnderload>(r => {
+						DataBus.BrakePower = SearchAlgorithm.Search(DataBus.BrakePower, r.Delta, -r.Delta,
+							getYValue: result => ((ResponseDryRun)result).DeltaDragLoad,
+							evaluateFunction: x => {
+								DataBus.BrakePower = x;
+								return NextComponent.Request(absTime, dt, acceleration, gradient, true);
+							},
+							criterion: y =>
+								((ResponseDryRun)y).DeltaDragLoad.IsEqual(0.SI<Watt>(), Constants.SimulationSettings.EnginePowerSearchTolerance));
+						response = NextComponent.Request(absTime, dt, acceleration, gradient);
+					})
+					.Case<ResponseOverload>(r => {
+						acceleration = SearchAlgorithm.Search(acceleration, r.Delta,
+							Constants.SimulationSettings.OperatingPointInitialSearchIntervalAccelerating,
+							getYValue: result => ((ResponseDryRun)result).DeltaFullLoad,
+							evaluateFunction: x => NextComponent.Request(absTime, dt, x, gradient, true),
+							criterion: y => ((ResponseDryRun)y).DeltaFullLoad.Abs() < Constants.SimulationSettings.EnginePowerSearchTolerance);
+						response = NextComponent.Request(absTime, dt, acceleration, gradient);
+					})
+					.Case<ResponseFailTimeInterval>(r => { dt = r.DeltaT; })
+					.Case<ResponseSuccess>(() => { })
+					.Default(
+						r => { throw new UnexpectedResponseException("MeasuredSpeedDrivingCycle received an unexpected response.", r); });
+			} while (!(response is ResponseSuccess || response is ResponseFailTimeInterval) && (++responseCount < 10));
 
 			AbsTime = absTime + dt;
+
+			response.SimulationInterval = dt;
+			response.Acceleration = acceleration;
+			debug.Add(response);
 			return response;
 		}
 
@@ -465,7 +470,10 @@ namespace TUGraz.VectoCore.Models.SimulationComponent.Impl
 			}
 		}
 
-		protected override void DoWriteModalResults(IModalDataContainer container) {}
+		protected override void DoWriteModalResults(IModalDataContainer container)
+		{
+			container[ModalResultField.dist] = DataBus.Distance;
+		}
 
 		public bool VehicleStopped
 		{

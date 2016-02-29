@@ -30,7 +30,6 @@
 */
 
 using System;
-using System.Collections.Generic;
 using System.Diagnostics;
 using System.Linq;
 using NLog;
@@ -386,6 +385,7 @@ namespace TUGraz.VectoCore.Models.SimulationComponent.Impl
 				Case<ResponseFailTimeInterval>(r =>
 					retVal = new ResponseDrivingCycleDistanceExceeded() {
 						Source = this,
+						// ReSharper disable once AccessToModifiedClosure
 						MaxDistance = DataBus.VehicleSpeed * r.DeltaT + operatingPoint.Acceleration / 2 * r.DeltaT * r.DeltaT
 					}).
 				Default(r => { throw new UnexpectedResponseException("DrivingAction Brake: first request.", r); });
@@ -567,6 +567,12 @@ namespace TUGraz.VectoCore.Models.SimulationComponent.Impl
 							return NextComponent.Request(absTime, retVal.SimulationInterval, acc, gradient, true);
 						},
 					criterion: response => {
+						if (response is ResponseEngineSpeedTooLow) {
+							LogManager.EnableLogging();
+							Log.Debug("Got EngineSpeedTooLow during SearchOperatingPoint. Aborting!");
+							throw new VectoSimulationException("EngineSpeed too low during search.");
+						}
+
 						var r = (ResponseDryRun)response;
 						var d = actionRoll ? r.GearboxPowerRequest : (coasting ? r.DeltaDragLoad : r.DeltaFullLoad);
 						return d.IsEqual(0.SI<Watt>(), Constants.SimulationSettings.EnginePowerSearchTolerance);
@@ -662,7 +668,7 @@ namespace TUGraz.VectoCore.Models.SimulationComponent.Impl
 				Log.Error("{2}: vehicle speed is {0}, acceleration is {1}", currentSpeed.Value(), acceleration.Value(),
 					DataBus.Distance);
 				throw new VectoSimulationException(
-					"vehicle speed has to be > 0 if acceleration = 0!  v: {0}, a: {1}, distance: ", currentSpeed.Value(),
+					"vehicle speed has to be > 0 if acceleration = 0!  v: {0}, a: {1}, distance: {2}", currentSpeed.Value(),
 					acceleration.Value(), DataBus.Distance);
 			}
 
@@ -710,9 +716,8 @@ namespace TUGraz.VectoCore.Models.SimulationComponent.Impl
 		public IResponse DrivingActionHalt(Second absTime, Second dt, MeterPerSecond targetVelocity, Radian gradient)
 		{
 			if (!targetVelocity.IsEqual(0) || !DataBus.VehicleSpeed.IsEqual(0, 1e-3)) {
-				throw new NotImplementedException(string.Format(
-					"TargetVelocity or VehicleVelocity is not zero! v: {0} target: {1}", DataBus.VehicleSpeed.Value(),
-					targetVelocity.Value()));
+				throw new VectoSimulationException("TargetVelocity or VehicleVelocity is not zero! v: {0} target: {1}",
+					DataBus.VehicleSpeed.Value(), targetVelocity.Value());
 			}
 			var retVal = NextComponent.Request(absTime, dt, 0.SI<MeterPerSquareSecond>(), gradient);
 			retVal.Switch().
@@ -745,6 +750,7 @@ namespace TUGraz.VectoCore.Models.SimulationComponent.Impl
 
 		public class DriverState
 		{
+			// ReSharper disable once InconsistentNaming
 			public Second dt;
 			public MeterPerSquareSecond Acceleration;
 			public IResponse Response;

@@ -112,6 +112,7 @@ namespace TUGraz.VectoCore.Models.Connector.Ports.Impl
 	/// </summary>
 	public class ResponseFailTimeInterval : AbstractResponse
 	{
+		public ResponseFailTimeInterval() {}
 		public Second DeltaT { get; set; }
 	}
 
