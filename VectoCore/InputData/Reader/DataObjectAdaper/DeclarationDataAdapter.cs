@@ -46,7 +46,7 @@ namespace TUGraz.VectoCore.InputData.Reader.DataObjectAdaper
 {
 	public class DeclarationDataAdapter : AbstractSimulationDataAdapter
 	{
-		public DriverData CreateDriverData(IDriverInputData data)
+		public DriverData CreateDriverData(IDriverDeclarationInputData data)
 		{
 			if (!data.SavedInDeclarationMode) {
 				WarnDeclarationMode("DriverData");
@@ -81,7 +81,7 @@ namespace TUGraz.VectoCore.InputData.Reader.DataObjectAdaper
 			return retVal;
 		}
 
-		internal VehicleData CreateVehicleData(IVehicleInputData data, Mission mission, Kilogram loading)
+		internal VehicleData CreateVehicleData(IVehicleDeclarationInputData data, Mission mission, Kilogram loading)
 		{
 			if (!data.SavedInDeclarationMode) {
 				WarnDeclarationMode("VehicleData");
@@ -133,7 +133,7 @@ namespace TUGraz.VectoCore.InputData.Reader.DataObjectAdaper
 			return retVal;
 		}
 
-		internal CombustionEngineData CreateEngineData(IEngineInputData engine)
+		internal CombustionEngineData CreateEngineData(IEngineDeclarationInputData engine)
 		{
 			if (!engine.SavedInDeclarationMode) {
 				WarnDeclarationMode("EngineData");
@@ -146,7 +146,7 @@ namespace TUGraz.VectoCore.InputData.Reader.DataObjectAdaper
 			return retVal;
 		}
 
-		internal GearboxData CreateGearboxData(IGearboxInputData gearbox, CombustionEngineData engine)
+		internal GearboxData CreateGearboxData(IGearboxDeclarationInputData gearbox, CombustionEngineData engine)
 		{
 			if (!gearbox.SavedInDeclarationMode) {
 				WarnDeclarationMode("GearboxData");
@@ -199,7 +199,7 @@ namespace TUGraz.VectoCore.InputData.Reader.DataObjectAdaper
 		}
 
 
-		public IList<VectoRunData.AuxData> CreateAuxiliaryData(IAuxiliariesInputData auxInputData,
+		public IList<VectoRunData.AuxData> CreateAuxiliaryData(IAuxiliariesDeclarationInputData auxInputData,
 			MissionType mission, VehicleClass hvdClass)
 		{
 			if (!auxInputData.SavedInDeclarationMode) {
@@ -260,7 +260,7 @@ namespace TUGraz.VectoCore.InputData.Reader.DataObjectAdaper
 			Log.Warn("{0} not in Declaration Mode!", inputData);
 		}
 
-		public RetarderData CreateRetarderData(IRetarderInputData retarder, IVehicleInputData vehicle)
+		public RetarderData CreateRetarderData(IRetarderInputData retarder, IVehicleDeclarationInputData vehicle)
 		{
 			return SetCommonRetarderData(retarder, vehicle);
 		}

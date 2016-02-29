@@ -114,7 +114,7 @@ namespace TUGraz.VectoCore.Models.SimulationComponent.Data
 			}
 		}
 
-		internal AuxiliaryData(IAuxiliaryInputData data)
+		internal AuxiliaryData(IAuxiliaryEngineeringInputData data)
 		{
 			TransmissionRatio = data.TransmissionRatio;
 			EfficiencyToEngine = data.EfficiencyToEngine;

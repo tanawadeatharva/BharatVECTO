@@ -60,7 +60,7 @@ namespace TUGraz.VectoCore.InputData.FileIO.JSON
 			}
 		}
 
-		public static IVehicleInputData ReadJsonVehicle(string filename)
+		public static IVehicleEngineeringInputData ReadJsonVehicle(string filename)
 		{
 			var json = ReadFile(filename);
 			var version = ReadVersion(json);
@@ -72,7 +72,7 @@ namespace TUGraz.VectoCore.InputData.FileIO.JSON
 			}
 		}
 
-		public static IGearboxInputData ReadGearbox(string filename)
+		public static IGearboxEngineeringInputData ReadGearbox(string filename)
 		{
 			var json = ReadFile(filename);
 			var version = ReadVersion(json);
@@ -84,7 +84,7 @@ namespace TUGraz.VectoCore.InputData.FileIO.JSON
 			}
 		}
 
-		public static IEngineInputData ReadEngine(string filename)
+		public static IEngineEngineeringInputData ReadEngine(string filename)
 		{
 			var json = ReadFile(filename);
 			var version = ReadVersion(json);

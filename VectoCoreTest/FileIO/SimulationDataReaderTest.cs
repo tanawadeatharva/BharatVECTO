@@ -32,6 +32,8 @@
 using System.IO;
 using System.Linq;
 using Microsoft.VisualStudio.TestTools.UnitTesting;
+using TUGraz.VectoCore.Exceptions;
+using TUGraz.VectoCore.InputData;
 using TUGraz.VectoCore.InputData.FileIO.JSON;
 using TUGraz.VectoCore.InputData.Reader.Impl;
 using TUGraz.VectoCore.Models.Declaration;
@@ -50,7 +52,11 @@ namespace TUGraz.VectoCore.Tests.FileIO
 		public void ReadDeclarationJobFile()
 		{
 			var dataProvider = JSONInputDataFactory.ReadJsonJob(DeclarationJob);
-			var reader = new DeclarationModeVectoRunDataFactory(dataProvider, null);
+			var declarationProvider = dataProvider as IDeclarationInputDataProvider;
+			if (declarationProvider == null) {
+				throw new VectoException("Failed to cas to Engineering InputDataProvider");
+			}
+			var reader = new DeclarationModeVectoRunDataFactory(declarationProvider, null);
 			//reader.SetJobFile(DeclarationJob);
 
 			var runData = reader.NextRun().First();

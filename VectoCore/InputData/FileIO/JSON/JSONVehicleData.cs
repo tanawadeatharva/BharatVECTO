@@ -41,7 +41,7 @@ using TUGraz.VectoCore.Utils;
 
 namespace TUGraz.VectoCore.InputData.FileIO.JSON
 {
-	public class JSONVehicleDataV7 : JSONFile, IVehicleInputData, IRetarderInputData
+	public class JSONVehicleDataV7 : JSONFile, IVehicleEngineeringInputData, IRetarderInputData
 	{
 		public JSONVehicleDataV7(JObject data, string fileName) : base(data, fileName) {}
 
@@ -56,7 +56,7 @@ namespace TUGraz.VectoCore.InputData.FileIO.JSON
 			}
 		}
 
-		public virtual Kilogram CurbWeight
+		public virtual Kilogram CurbWeightChassis
 		{
 			get { return Body.GetEx<double>(JsonKeys.Vehicle_CurbWeight).SI<Kilogram>(); }
 		}
@@ -111,21 +111,28 @@ namespace TUGraz.VectoCore.InputData.FileIO.JSON
 			}
 		}
 
-		public virtual IList<IAxleInputData> Axles
+		public virtual IList<IAxleEngineeringInputData> Axles
 		{
-			get
-			{
-				return
-					Body.GetEx(JsonKeys.Vehicle_AxleConfiguration).GetEx(JsonKeys.Vehicle_AxleConfiguration_Axles).Select(
-						axle => new AxleInputData {
-							Inertia = axle.GetEx<double>(JsonKeys.Vehicle_Axles_Inertia).SI<KilogramSquareMeter>(),
-							Wheels = axle.GetEx<string>(JsonKeys.Vehicle_Axles_Wheels),
-							TwinTyres = axle.GetEx<bool>(JsonKeys.Vehicle_Axles_TwinTyres),
-							RollResistanceCoefficient = axle.GetEx<double>(JsonKeys.Vehicle_Axles_RollResistanceCoefficient),
-							TyreTestLoad = axle.GetEx<double>(JsonKeys.Vehicle_Axles_TyreTestLoad).SI<Newton>(),
-							AxleWeightShare = axle.GetEx<double>("AxleWeightShare")
-						}).Cast<IAxleInputData>().ToList();
-			}
+			get { return AxleWheels().Cast<IAxleEngineeringInputData>().ToList(); }
+		}
+
+		IList<IAxleDeclarationInputData> IVehicleDeclarationInputData.Axles
+		{
+			get { return AxleWheels().Cast<IAxleDeclarationInputData>().ToList(); }
+		}
+
+		private IEnumerable<AxleInputData> AxleWheels()
+		{
+			return
+				Body.GetEx(JsonKeys.Vehicle_AxleConfiguration).GetEx(JsonKeys.Vehicle_AxleConfiguration_Axles).Select(
+					axle => new AxleInputData {
+						Inertia = axle.GetEx<double>(JsonKeys.Vehicle_Axles_Inertia).SI<KilogramSquareMeter>(),
+						Wheels = axle.GetEx<string>(JsonKeys.Vehicle_Axles_Wheels),
+						TwinTyres = axle.GetEx<bool>(JsonKeys.Vehicle_Axles_TwinTyres),
+						RollResistanceCoefficient = axle.GetEx<double>(JsonKeys.Vehicle_Axles_RollResistanceCoefficient),
+						TyreTestLoad = axle.GetEx<double>(JsonKeys.Vehicle_Axles_TyreTestLoad).SI<Newton>(),
+						AxleWeightShare = axle.GetEx<double>("AxleWeightShare")
+					});
 		}
 
 		public virtual DataTable CrosswindCorrectionMap

@@ -65,7 +65,7 @@ namespace TUGraz.VectoCore.InputData.FileIO.JSON
 	///  }
 	/// }
 	/// </code>
-	public class JSONEngineDataV3 : JSONFile, IEngineInputData
+	public class JSONEngineDataV3 : JSONFile, IEngineEngineeringInputData
 	{
 		public JSONEngineDataV3(JObject data, string fileName) : base(data, fileName) {}
 
