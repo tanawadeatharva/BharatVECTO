@@ -68,17 +68,29 @@ namespace TUGraz.VectoCore.Models.Simulation.Impl
 			ModWriter = writer;
 			switch (mode) {
 				case ExecutionMode.Declaration:
+					var declDataProvider = dataProvider as IDeclarationInputDataProvider;
+					if (declDataProvider == null) {
+						throw new VectoException("InputDataProvider does not implement DeclarationData interface");
+					}
 					report = report ?? new PDFDeclarationReport(writer);
 					var windowsIdentity = WindowsIdentity.GetCurrent();
 					report.Creator = windowsIdentity != null ? windowsIdentity.Name : "N/A";
-					report.JobName = dataProvider.JobInputData().JobName;
-					DataReader = new DeclarationModeVectoRunDataFactory(dataProvider, report);
+					report.JobName = declDataProvider.JobInputData().JobName;
+					DataReader = new DeclarationModeVectoRunDataFactory(declDataProvider, report);
 					break;
 				case ExecutionMode.Engineering:
-					DataReader = new EngineeringModeVectoRunDataFactory(dataProvider);
+					var engDataProvider = dataProvider as IEngineeringInputDataProvider;
+					if (engDataProvider == null) {
+						throw new VectoException("InputDataProvider does not implement Engineering interface");
+					}
+					DataReader = new EngineeringModeVectoRunDataFactory(engDataProvider);
 					break;
 				case ExecutionMode.EngineOnly:
-					DataReader = new EngineOnlyVectoRunDataFactory(dataProvider);
+					var engineDataProvider = dataProvider as IEngineeringInputDataProvider;
+					if (engineDataProvider == null) {
+						throw new VectoException("InputDataProvider does not implement Engineering interface");
+					}
+					DataReader = new EngineOnlyVectoRunDataFactory(engineDataProvider);
 					break;
 				default:
 					throw new VectoException("Unkown factory mode in SimulatorFactory: {0}", mode);

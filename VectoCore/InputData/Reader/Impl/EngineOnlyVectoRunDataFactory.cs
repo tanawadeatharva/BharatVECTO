@@ -38,7 +38,7 @@ namespace TUGraz.VectoCore.InputData.Reader.Impl
 {
 	public class EngineOnlyVectoRunDataFactory : EngineeringModeVectoRunDataFactory
 	{
-		internal EngineOnlyVectoRunDataFactory(IInputDataProvider dataProvider) : base(dataProvider) {}
+		internal EngineOnlyVectoRunDataFactory(IEngineeringInputDataProvider dataProvider) : base(dataProvider) {}
 
 		public override IEnumerable<VectoRunData> NextRun()
 		{

@@ -46,7 +46,7 @@ namespace TUGraz.VectoCore.InputData.Reader.DataObjectAdaper
 {
 	public class EngineeringDataAdapter : AbstractSimulationDataAdapter
 	{
-		internal VehicleData CreateVehicleData(IVehicleInputData data)
+		internal VehicleData CreateVehicleData(IVehicleEngineeringInputData data)
 		{
 			if (data.SavedInDeclarationMode) {
 				WarnEngineeringMode("VehicleData");
@@ -95,7 +95,7 @@ namespace TUGraz.VectoCore.InputData.Reader.DataObjectAdaper
 			Log.Warn("{0} is in Declaration Mode but is used for Engineering Mode!", msg);
 		}
 
-		internal CombustionEngineData CreateEngineData(IEngineInputData engine)
+		internal CombustionEngineData CreateEngineData(IEngineEngineeringInputData engine)
 		{
 			if (engine.SavedInDeclarationMode) {
 				WarnEngineeringMode("EngineData");
@@ -108,7 +108,7 @@ namespace TUGraz.VectoCore.InputData.Reader.DataObjectAdaper
 			return retVal;
 		}
 
-		internal GearboxData CreateGearboxData(IGearboxInputData gearbox, CombustionEngineData engineData)
+		internal GearboxData CreateGearboxData(IGearboxEngineeringInputData gearbox, CombustionEngineData engineData)
 		{
 			if (gearbox.SavedInDeclarationMode) {
 				WarnEngineeringMode("GearboxData");
@@ -157,7 +157,7 @@ namespace TUGraz.VectoCore.InputData.Reader.DataObjectAdaper
 			return retVal;
 		}
 
-		public IList<VectoRunData.AuxData> CreateAuxiliaryData(IAuxiliariesInputData auxInputData)
+		public IList<VectoRunData.AuxData> CreateAuxiliaryData(IAuxiliariesEngineeringInputData auxInputData)
 		{
 			if (auxInputData.SavedInDeclarationMode) {
 				WarnEngineeringMode("AuxData");
@@ -172,7 +172,7 @@ namespace TUGraz.VectoCore.InputData.Reader.DataObjectAdaper
 			}).Concat(new VectoRunData.AuxData { ID = "", DemandType = AuxiliaryDemandType.Direct }.ToEnumerable()).ToList();
 		}
 
-		internal DriverData CreateDriverData(IDriverInputData driver)
+		internal DriverData CreateDriverData(IDriverEngineeringInputData driver)
 		{
 			if (driver.SavedInDeclarationMode) {
 				WarnEngineeringMode("DriverData");
@@ -210,7 +210,7 @@ namespace TUGraz.VectoCore.InputData.Reader.DataObjectAdaper
 		}
 
 		//=================================
-		public RetarderData CreateRetarderData(IRetarderInputData retarder, IVehicleInputData vehicle)
+		public RetarderData CreateRetarderData(IRetarderInputData retarder, IVehicleEngineeringInputData vehicle)
 		{
 			return SetCommonRetarderData(retarder, vehicle);
 		}

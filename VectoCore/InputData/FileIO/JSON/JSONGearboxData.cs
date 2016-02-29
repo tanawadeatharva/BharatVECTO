@@ -65,7 +65,7 @@ namespace TUGraz.VectoCore.InputData.FileIO.JSON
 	///		...
 	///		]
 	/// }
-	public class JSONGearboxDataV5 : JSONFile, IGearboxInputData, IAxleGearInputData, ITorqueConverterInputData
+	public class JSONGearboxDataV5 : JSONFile, IGearboxEngineeringInputData, IAxleGearInputData, ITorqueConverterInputData
 	{
 		public JSONGearboxDataV5(JObject data, string filename) : base(data, filename) {}
 
