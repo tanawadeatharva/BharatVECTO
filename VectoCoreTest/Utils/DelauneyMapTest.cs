@@ -137,21 +137,21 @@ namespace TUGraz.VectoCore.Tests.Utils
 
 			AssertHelper.Exception<ArgumentException>(() => {
 				var map1 = new DelauneyMap();
-				map1.AddPoint(0, 0, 0);
+				map1.AddPoint(1, 0, 0);
 				map1.Triangulate();
 			}, "Triangulation needs at least 3 Points. Got 1 Points.");
 
 			AssertHelper.Exception<ArgumentException>(() => {
 				var map2 = new DelauneyMap();
-				map2.AddPoint(0, 0, 0);
-				map2.AddPoint(0, 0, 0);
+				map2.AddPoint(1, 0, 0);
+				map2.AddPoint(0, 1, 0);
 				map2.Triangulate();
 			}, "Triangulation needs at least 3 Points. Got 2 Points.");
 
 			var map = new DelauneyMap();
-			map.AddPoint(0, 0, 0);
 			map.AddPoint(1, 0, 0);
 			map.AddPoint(0, 1, 0);
+			map.AddPoint(0, 0, 1);
 			map.Triangulate();
 		}
 	}

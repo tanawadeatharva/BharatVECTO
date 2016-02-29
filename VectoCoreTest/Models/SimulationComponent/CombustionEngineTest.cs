@@ -457,16 +457,6 @@ namespace TUGraz.VectoCore.Tests.Models.SimulationComponent
 			//dataWriter.Finish();
 		}
 
-		[TestMethod, Ignore]
-		public void TestWriteToFile()
-		{
-			var vehicle = new VehicleContainer();
-			var engineData = MockSimulationDataFactory.CreateEngineDataFromFile(CoachEngine);
-			var engine = new CombustionEngine(vehicle, engineData);
-
-			//engineData.WriteToFile("engineData test output.veng");
-		}
-
 		[TestMethod]
 		public void Test_EngineData()
 		{
