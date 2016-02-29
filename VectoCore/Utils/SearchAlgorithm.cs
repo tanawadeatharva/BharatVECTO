@@ -33,7 +33,6 @@ using System;
 using System.Collections.Generic;
 using System.Linq;
 using NLog;
-using NLog.Fluent;
 using TUGraz.VectoCore.Exceptions;
 
 namespace TUGraz.VectoCore.Utils
@@ -46,7 +45,7 @@ namespace TUGraz.VectoCore.Utils
 //#if DEBUG
 			var res = InterpolateLinear(x, y, interval, getYValue, evaluateFunction, criterion);
 //#else
-//			var res = SearchBinary(x, y, interval, getYValue, evaluateFunction, criterion);
+			//var res = SearchBinary(x, y, interval, getYValue, evaluateFunction, criterion);
 //#endif
 			return res;
 		}

@@ -44,7 +44,7 @@ namespace TUGraz.VectoCore.Models.Simulation.Impl
 
 		protected override IResponse DoSimulationStep()
 		{
-			dt = Constants.SimulationSettings.TargetTimeInterval;
+			dt = Constants.SimulationSettings.MeasuredSpeedTargetTimeInterval;
 
 			var debug = new List<dynamic>();
 			var loopCount = 0;

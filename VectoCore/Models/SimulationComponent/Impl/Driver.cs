@@ -30,6 +30,7 @@
 */
 
 using System;
+using System.Collections.Generic;
 using System.Diagnostics;
 using System.Linq;
 using NLog;
@@ -493,6 +494,83 @@ namespace TUGraz.VectoCore.Models.SimulationComponent.Impl
 			Log.Info("Disabling logging during search iterations");
 			LogManager.DisableLogging();
 
+			var debug = new List<dynamic>(); // only used while testing
+
+			var operatingPoint = new OperatingPoint() { SimulationDistance = ds, Acceleration = acceleration };
+			Watt origDelta = null;
+			initialResponse.Switch().
+				Case<ResponseGearShift>(r => origDelta = r.GearboxPowerRequest).
+				Case<ResponseUnderload>(r => origDelta = DataBus.ClutchClosed(absTime)
+					? r.Delta
+					: r.GearboxPowerRequest).
+				Default(r => { throw new UnexpectedResponseException("cannot use response for searching braking power!", r); });
+
+			// braking power is in the range of the exceeding delta. set searching range to 2/3 so that 
+			// the target point is approximately in the center of the second interval
+			var searchInterval = origDelta.Abs() * 2 / 3;
+
+			debug.Add(new { brakePower = 0.SI<Watt>(), searchInterval, delta = origDelta, operatingPoint });
+
+			var brakePower = searchInterval * -origDelta.Sign();
+
+			var modeBinarySearch = false;
+			var intervalFactor = 1.0;
+			var retryCount = 0;
+
+			do {
+				operatingPoint = ComputeTimeInterval(operatingPoint.Acceleration, ds);
+				DataBus.BrakePower = brakePower;
+				var response =
+					(ResponseDryRun)
+						NextComponent.Request(absTime, operatingPoint.SimulationInterval, operatingPoint.Acceleration, gradient, true);
+				var delta = DataBus.ClutchClosed(absTime) ? response.DeltaDragLoad : response.GearboxPowerRequest;
+
+				if (delta.IsEqual(0.SI<Watt>(), Constants.SimulationSettings.EnginePowerSearchTolerance)) {
+					LogManager.EnableLogging();
+					Log.Debug("found operating point in {0} iterations, delta: {1}", debug.Count, delta);
+					return operatingPoint;
+				}
+
+				debug.Add(new { brakePower, searchInterval, delta, operatingPoint });
+
+				// check if a correct searchInterval was found (when the delta changed signs, we stepped through the 0-point)
+				// from then on the searchInterval can be bisected.
+				if (origDelta.Sign() != delta.Sign()) {
+					intervalFactor = 0.5;
+					if (!modeBinarySearch) {
+						modeBinarySearch = true;
+						retryCount = 0; // again max. 100 iterations for the binary search...
+					}
+				}
+
+				searchInterval *= intervalFactor;
+				brakePower += searchInterval * -delta.Sign();
+			} while (retryCount++ < Constants.SimulationSettings.DriverSearchLoopThreshold);
+
+			LogManager.EnableLogging();
+			Log.Warn("Exceeded max iterations when searching for operating point!");
+			Log.Warn("exceeded: {0} ... {1}", ", ".Join(debug.Take(5)), ", ".Join(debug.Slice(-6)));
+			Log.Error("Failed to find operating point for breaking!");
+			throw new VectoSearchFailedException("Failed to find operating point for breaking!exceeded: {0} ... {1}",
+				", ".Join(debug.Take(5)), ", ".Join(debug.Slice(-6)));
+		}
+
+		/// <summary>
+		/// Performs a search for the required braking power such that the vehicle accelerates with the given acceleration.
+		/// Returns a new operating point (a, ds, dt) where ds may be shorter due to vehicle stopping
+		/// </summary>
+		/// <param name="absTime"></param>
+		/// <param name="ds"></param>
+		/// <param name="gradient"></param>
+		/// <param name="acceleration"></param>
+		/// <param name="initialResponse"></param>
+		/// <returns>operating point (a, ds, dt) such that the vehicle accelerates with the given acceleration.</returns>
+		private OperatingPoint SearchBrakingPowerInterpol(Second absTime, Meter ds, Radian gradient,
+			MeterPerSquareSecond acceleration, IResponse initialResponse)
+		{
+			Log.Info("Disabling logging during search iterations");
+			LogManager.DisableLogging();
+
 			var operatingPoint = ComputeTimeInterval(acceleration, ds);
 			var dt = operatingPoint.SimulationInterval;
 			Watt brakePower = null;
@@ -530,6 +608,92 @@ namespace TUGraz.VectoCore.Models.SimulationComponent.Impl
 		}
 
 		protected OperatingPoint SearchOperatingPoint(Second absTime, Meter ds, Radian gradient,
+			MeterPerSquareSecond acceleration, IResponse initialResponse, bool coasting = false)
+		{
+			Log.Info("Disabling logging during search iterations");
+			LogManager.DisableLogging();
+
+			var debug = new List<dynamic>();
+
+			var retVal = new OperatingPoint { Acceleration = acceleration, SimulationDistance = ds };
+
+			var actionRoll = !DataBus.ClutchClosed(absTime);
+
+			var searchInterval = Constants.SimulationSettings.OperatingPointInitialSearchIntervalAccelerating;
+			var intervalFactor = 1.0;
+
+			Watt origDelta = null;
+			if (actionRoll) {
+				initialResponse.Switch().
+					Case<ResponseDryRun>(r => origDelta = r.GearboxPowerRequest).
+					Case<ResponseFailTimeInterval>(r => origDelta = r.GearboxPowerRequest).
+					Default(r => { throw new UnexpectedResponseException("Unknown response type.", r); });
+			} else {
+				initialResponse.Switch().
+					Case<ResponseOverload>(r => origDelta = r.Delta). // search operating point in drive action after overload
+					Case<ResponseDryRun>(r => origDelta = coasting ? r.DeltaDragLoad : r.DeltaFullLoad).
+					Default(r => { throw new UnexpectedResponseException("Unknown response type.", r); });
+			}
+			var delta = origDelta;
+
+			var retryCount = 0;
+			do {
+				debug.Add(new { delta, acceleration = retVal.Acceleration, searchInterval });
+
+				// check if a correct searchInterval was found (when the delta changed signs, we stepped through the 0-point)
+				// from then on the searchInterval can be bisected.
+				if (origDelta.Sign() != delta.Sign()) {
+					intervalFactor = 0.5;
+				}
+
+				searchInterval *= intervalFactor;
+				retVal.Acceleration += searchInterval * -delta.Sign();
+
+				if (retVal.Acceleration < (10 * DriverData.AccelerationCurve.MaxDeceleration() - searchInterval)
+					|| retVal.Acceleration > (DriverData.AccelerationCurve.MaxAcceleration() + searchInterval)) {
+					LogManager.EnableLogging();
+					Log.Warn("Operating Point outside driver acceleration limits: a: {0}", retVal.Acceleration);
+					LogManager.DisableLogging();
+				}
+
+				var tmp = ComputeTimeInterval(retVal.Acceleration, ds);
+				retVal.SimulationInterval = tmp.SimulationInterval;
+				retVal.SimulationDistance = tmp.SimulationDistance;
+
+				var response =
+					(ResponseDryRun)NextComponent.Request(absTime, retVal.SimulationInterval, retVal.Acceleration, gradient, true);
+				delta = actionRoll ? response.GearboxPowerRequest : (coasting ? response.DeltaDragLoad : response.DeltaFullLoad);
+
+				if (response is ResponseEngineSpeedTooLow) {
+					LogManager.EnableLogging();
+					Log.Debug("Got EngineSpeedTooLow during SearchOperatingPoint. Aborting!");
+					throw new VectoSimulationException("EngineSpeed too low during search.");
+				}
+
+				if (delta.IsEqual(0.SI<Watt>(), Constants.SimulationSettings.EnginePowerSearchTolerance)) {
+					LogManager.EnableLogging();
+					Log.Debug("found operating point in {0} iterations. Engine Power req: {2}, Gearbox Power req: {3} delta: {1}",
+						debug.Count, delta, response.EnginePowerRequest, response.GearboxPowerRequest);
+					return retVal;
+				}
+			} while (retryCount++ < Constants.SimulationSettings.DriverSearchLoopThreshold);
+
+			LogManager.EnableLogging();
+			Log.Error("Exceeded max iterations when searching for operating point!");
+			Log.Error("acceleration: {0} ... {1}", ", ".Join(debug.Take(5).Select(x => x.acceleration)),
+				", ".Join(debug.Slice(-6).Select(x => x.acceleration)));
+			Log.Error("exceeded: {0} ... {1}", ", ".Join(debug.Take(5).Select(x => x.delta)),
+				", ".Join(debug.Slice(-6).Select(x => x.delta)));
+			// issue request once more for logging...
+			NextComponent.Request(absTime, retVal.SimulationInterval, retVal.Acceleration, gradient, true);
+			Log.Error("Failed to find operating point! absTime: {0}", absTime);
+			throw new VectoSearchFailedException("Failed to find operating point!  exceeded: {0} ... {1}",
+				", ".Join(debug.Take(5).Select(x => x.delta)),
+				", ".Join(debug.Slice(-6).Select(x => x.delta)));
+		}
+
+
+		protected OperatingPoint SearchOperatingPointInterpol(Second absTime, Meter ds, Radian gradient,
 			MeterPerSquareSecond acceleration, IResponse initialResponse, bool coasting = false)
 		{
 			Log.Info("Disabling logging during search iterations");

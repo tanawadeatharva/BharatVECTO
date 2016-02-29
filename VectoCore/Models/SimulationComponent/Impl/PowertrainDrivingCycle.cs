@@ -119,38 +119,41 @@ namespace TUGraz.VectoCore.Models.SimulationComponent.Impl
 
 		protected IResponse DoHandleRequest(Second absTime, Second dt, PerSecond angularVelocity)
 		{
-			var response = NextComponent.Request(absTime, dt, LeftSample.Current.Torque, angularVelocity);
+			var debug = new List<dynamic>();
 
-			if (response is ResponseGearShift) {
+			IResponse response;
+			var responseCount = 0;
+			do {
 				response = NextComponent.Request(absTime, dt, LeftSample.Current.Torque, angularVelocity);
-			}
-
-			response.Switch()
-				.Case<ResponseUnderload>(r => {
-					var torqueInterval = -r.Delta / (angularVelocity.IsEqual(0) ? 10.RPMtoRad() : angularVelocity);
-					var torque = SearchAlgorithm.Search(LeftSample.Current.Torque, r.Delta, torqueInterval,
-						getYValue: result => ((ResponseDryRun)result).DeltaDragLoad,
-						evaluateFunction: t => NextComponent.Request(absTime, dt, t, angularVelocity, true),
-						criterion: y =>
-							((ResponseDryRun)y).DeltaDragLoad.IsEqual(0.SI<Watt>(), Constants.SimulationSettings.EnginePowerSearchTolerance));
-					response = NextComponent.Request(absTime, dt, torque, angularVelocity);
-				})
-				.Case<ResponseOverload>(r => {
-					angularVelocity = SearchAlgorithm.Search(angularVelocity, r.Delta, 50.RPMtoRad(),
-						getYValue: result => ((ResponseDryRun)result).DeltaFullLoad,
-						evaluateFunction: n => NextComponent.Request(absTime, dt, LeftSample.Current.Torque, n, true),
-						criterion: y => ((ResponseDryRun)y).DeltaFullLoad.Abs() < Constants.SimulationSettings.EnginePowerSearchTolerance);
-					response = NextComponent.Request(absTime, dt, LeftSample.Current.Torque, angularVelocity);
-				})
-				.Case<ResponseSuccess>(() => { })
-				.Default(
-					r => { throw new UnexpectedResponseException("MeasuredSpeedDrivingCycle received an unexpected response.", r); });
-
-			if (!(response is ResponseSuccess)) {
-				throw new UnexpectedResponseException("MeasuredSpeedDrivingCycle received an unexpected response.", response);
-			}
+				debug.Add(response);
+				response.Switch()
+					.Case<ResponseGearShift>(
+						() => response = NextComponent.Request(absTime, dt, LeftSample.Current.Torque, angularVelocity))
+					.Case<ResponseUnderload>(r => {
+						var torqueInterval = -r.Delta / (angularVelocity.IsEqual(0) ? 10.RPMtoRad() : angularVelocity);
+						var torque = SearchAlgorithm.Search(LeftSample.Current.Torque, r.Delta, torqueInterval,
+							getYValue: result => ((ResponseDryRun)result).DeltaDragLoad,
+							evaluateFunction: t => NextComponent.Request(absTime, dt, t, angularVelocity, true),
+							criterion: y =>
+								((ResponseDryRun)y).DeltaDragLoad.IsEqual(0.SI<Watt>(), Constants.SimulationSettings.EnginePowerSearchTolerance));
+						response = NextComponent.Request(absTime, dt, torque, angularVelocity);
+					})
+					.Case<ResponseOverload>(r => {
+						angularVelocity = SearchAlgorithm.Search(angularVelocity, r.Delta, 50.RPMtoRad(),
+							getYValue: result => ((ResponseDryRun)result).DeltaFullLoad,
+							evaluateFunction: n => NextComponent.Request(absTime, dt, LeftSample.Current.Torque, n, true),
+							criterion: y => ((ResponseDryRun)y).DeltaFullLoad.Abs() < Constants.SimulationSettings.EnginePowerSearchTolerance);
+						response = NextComponent.Request(absTime, dt, LeftSample.Current.Torque, angularVelocity);
+					})
+					.Case<ResponseFailTimeInterval>(r => { dt = r.DeltaT; })
+					.Case<ResponseSuccess>(() => { })
+					.Default(
+						r => { throw new UnexpectedResponseException("PowertrainDrivingCycle received an unexpected response.", r); });
+			} while (!(response is ResponseSuccess || response is ResponseFailTimeInterval) && (++responseCount < 10));
 
 			AbsTime = absTime + dt;
+			response.SimulationInterval = dt;
+			debug.Add(response);
 			return response;
 		}
 
