@@ -31,6 +31,7 @@
 
 using System;
 using System.IO;
+using System.Linq;
 using System.Text;
 using System.Text.RegularExpressions;
 
@@ -45,25 +46,41 @@ namespace LicenceHeader
 
 		private static void Main()
 		{
+			Console.ForegroundColor = ConsoleColor.White;
+			Console.WriteLine("Updating Licence-Headers in Sourcefiles.");
+			Console.ResetColor();
+			Console.WriteLine();
+			Console.WriteLine("Search Directory: {0}", Path.GetFullPath(SolutionRootDirectory));
+			Console.WriteLine("Filter: *.cs, Excluded Dirs: \\obj, \\bin");
+			Console.WriteLine("Header-File: {0}", Path.GetFullPath("header.txt"));
+
 			var licence = File.ReadAllText("header.txt", Encoding.UTF8);
+			var re = new Regex("^.*?(?=using|namespace)", RegexOptions.Singleline);
+
+			var updatedFiles = Directory.EnumerateFiles(SolutionRootDirectory, "*.cs", SearchOption.AllDirectories)
+				.AsParallel()
+				.Where(f => !(f.Contains("\\obj\\") || f.Contains("\\bin\\")))
+				.Select(f => {
+					var content = File.ReadAllText(f, Encoding.UTF8);
+					return new { name = f, content, replacedContent = re.Replace(content, licence) };
+				})
+				.Where(f => f.content != f.replacedContent)
+				.Select(f => {
+					File.WriteAllText(f.name, f.replacedContent, Encoding.UTF8);
+					return f.name;
+				});
+
 			var count = 0;
-
-			foreach (var file in Directory.EnumerateFiles(SolutionRootDirectory, "*.cs", SearchOption.AllDirectories)) {
-				Console.WriteLine(file);
-				if (file.Contains("\\obj\\") || file.Contains("\\bin\\")) {
-					continue;
-				}
-
-				var re = new Regex("^.*?(?=using|namespace)", RegexOptions.Singleline);
-				var content = File.ReadAllText(file, Encoding.UTF8);
-				var updatedContent = re.Replace(content, licence);
-				if (updatedContent != content) {
-					File.WriteAllText(file, updatedContent, Encoding.UTF8);
-					Console.WriteLine("Updated " + file);
-					count++;
-				}
+			foreach (var f in updatedFiles) {
+				count++;
+				Console.WriteLine(f.Substring(SolutionRootDirectory.Length - 1));
 			}
+
+			Console.WriteLine();
+			Console.ForegroundColor = ConsoleColor.White;
 			Console.WriteLine("Finished. Updated {0} files.", count);
+			Console.ResetColor();
+
 			Console.ReadKey();
 		}
 	}

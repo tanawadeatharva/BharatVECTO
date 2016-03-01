@@ -29,7 +29,6 @@
 *   Martin Rexeis, rexeis@ivt.tugraz.at, IVT, Graz University of Technology
 */
 
-
 using System.Reflection;
 using System.Runtime.InteropServices;
 
