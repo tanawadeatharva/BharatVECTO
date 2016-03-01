@@ -257,12 +257,12 @@ namespace TUGraz.VectoCore.Models.Simulation.Impl
 					tmp = AddComponent(tmp, new Retarder(container, data.Retarder.LossMap, data.Retarder.Ratio));
 					break;
 				case RetarderData.RetarderType.None:
-					tmp = AddComponent(tmp, GetGearbox(container, data.GearboxData));
 					tmp = AddComponent(tmp, new DummyRetarder(container));
+					tmp = AddComponent(tmp, GetGearbox(container, data.GearboxData));
 					break;
 				case RetarderData.RetarderType.LossesIncludedInTransmission:
-					tmp = AddComponent(tmp, GetGearbox(container, data.GearboxData));
 					tmp = AddComponent(tmp, new DummyRetarder(container));
+					tmp = AddComponent(tmp, GetGearbox(container, data.GearboxData));
 					break;
 				default:
 					throw new ArgumentOutOfRangeException();
