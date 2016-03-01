@@ -106,7 +106,7 @@ namespace TUGraz.VectoCore.Tests.Integration.DriverStrategy
 		}
 
 
-		[TestMethod, Ignore]
+		[TestMethod]
 		public void Coach_Accelerate_20_60_uphill_25()
 		{
 			var cycle = SimpleDrivingCycles.CreateCycleData(SimpleDrivingCycles.CycleAccelerate_20_60_uphill_25);
@@ -225,7 +225,7 @@ namespace TUGraz.VectoCore.Tests.Integration.DriverStrategy
 				@"..\..\TestData\Integration\DriverStrategy\Vecto2.2\Coach\24t Coach_Cycle_Accelerate_0_85_downhill_5.vmod");
 		}
 
-		[TestMethod, Ignore]
+		[TestMethod]
 		public void Coach_Accelerate_0_85_uphill_25()
 		{
 			var cycle = SimpleDrivingCycles.CreateCycleData(SimpleDrivingCycles.CycleAccelerate_0_85_uphill_25);
@@ -403,7 +403,7 @@ namespace TUGraz.VectoCore.Tests.Integration.DriverStrategy
 				@"..\..\TestData\Integration\DriverStrategy\Vecto2.2\Coach\24t Coach_Cycle_Decelerate_60_20_downhill_5.vmod");
 		}
 
-		[TestMethod, Ignore]
+		[TestMethod, TestCategory("LongRunning")]
 		public void Decelerate_60_20_uphill_25()
 		{
 			var cycle = SimpleDrivingCycles.CreateCycleData(SimpleDrivingCycles.CycleDecelerate_60_20_uphill_25);
@@ -412,8 +412,8 @@ namespace TUGraz.VectoCore.Tests.Integration.DriverStrategy
 			run.Run();
 			Assert.IsTrue(run.FinishedWithoutErrors);
 
-			GraphWriter.Write("Coach_DriverStrategy_Decelerate_60_20_uphill_25.vmod",
-				@"..\..\TestData\Integration\DriverStrategy\Vecto2.2\Coach\24t Coach_Cycle_Decelerate_60_20_uphill_25.vmod");
+//			GraphWriter.Write("Coach_DriverStrategy_Decelerate_60_20_uphill_25.vmod",
+//				@"..\..\TestData\Integration\DriverStrategy\Vecto2.2\Coach\24t Coach_Cycle_Decelerate_60_20_uphill_25.vmod");
 		}
 
 		[TestMethod]
@@ -430,7 +430,7 @@ namespace TUGraz.VectoCore.Tests.Integration.DriverStrategy
 				@"..\..\TestData\Integration\DriverStrategy\Vecto2.2\Coach\24t Coach_Cycle_Decelerate_60_20_downhill_25.vmod");
 		}
 
-		[TestMethod, Ignore]
+		[TestMethod, TestCategory("LongRunning")]
 		public void Decelerate_60_20_uphill_15()
 		{
 			var cycle = SimpleDrivingCycles.CreateCycleData(SimpleDrivingCycles.CycleDecelerate_60_20_uphill_15);
@@ -496,7 +496,7 @@ namespace TUGraz.VectoCore.Tests.Integration.DriverStrategy
 				@"..\..\TestData\Integration\DriverStrategy\Vecto2.2\Coach\24t Coach_Cycle_Decelerate_80_0_downhill_5.vmod");
 		}
 
-		[TestMethod, Ignore]
+		[TestMethod, TestCategory("LongRunning")]
 		public void Decelerate_80_0_uphill_25()
 		{
 			var cycle = SimpleDrivingCycles.CreateCycleData(SimpleDrivingCycles.CycleDecelerate_80_0_uphill_25);
@@ -506,8 +506,8 @@ namespace TUGraz.VectoCore.Tests.Integration.DriverStrategy
 			run.Run();
 			Assert.IsTrue(run.FinishedWithoutErrors);
 
-			GraphWriter.Write("Coach_DriverStrategy_Decelerate_80_0_steep_uphill_25.vmod",
-				@"..\..\TestData\Integration\DriverStrategy\Vecto2.2\Coach\24t Coach_Cycle_Decelerate_80_0_steep_uphill_25.vmod");
+//			GraphWriter.Write("Coach_DriverStrategy_Decelerate_80_0_steep_uphill_25.vmod",
+//				@"..\..\TestData\Integration\DriverStrategy\Vecto2.2\Coach\24t Coach_Cycle_Decelerate_80_0_steep_uphill_25.vmod");
 		}
 
 		[TestMethod, TestCategory("LongRunning")]
@@ -537,7 +537,7 @@ namespace TUGraz.VectoCore.Tests.Integration.DriverStrategy
 				@"..\..\TestData\Integration\DriverStrategy\Vecto2.2\Coach\24t Coach_Cycle_Decelerate_80_0_uphill_3.vmod");
 		}
 
-		[TestMethod, Ignore]
+		[TestMethod, TestCategory("LongRunning")]
 		public void Decelerate_80_0_uphill_15()
 		{
 			var cycle = SimpleDrivingCycles.CreateCycleData(SimpleDrivingCycles.CycleDecelerate_80_0_uphill_15);
@@ -547,8 +547,8 @@ namespace TUGraz.VectoCore.Tests.Integration.DriverStrategy
 			run.Run();
 			Assert.IsTrue(run.FinishedWithoutErrors);
 
-			GraphWriter.Write("Coach_DriverStrategy_Decelerate_80_0_steep_uphill_15.vmod",
-				@"..\..\TestData\Integration\DriverStrategy\Vecto2.2\Coach\24t Coach_Cycle_Decelerate_80_0_steep_uphill_15.vmod");
+//			GraphWriter.Write("Coach_DriverStrategy_Decelerate_80_0_steep_uphill_15.vmod",
+//				@"..\..\TestData\Integration\DriverStrategy\Vecto2.2\Coach\24t Coach_Cycle_Decelerate_80_0_steep_uphill_15.vmod");
 		}
 
 		[TestMethod]
@@ -647,7 +647,7 @@ namespace TUGraz.VectoCore.Tests.Integration.DriverStrategy
 				@"..\..\TestData\Integration\DriverStrategy\Vecto2.2\Coach\24t Coach_Cycle_Drive_50_downhill_15.vmod");
 		}
 
-		[TestMethod, Ignore]
+		[TestMethod, TestCategory("LongRunning")]
 		public void Coach_Drive_80_uphill_25()
 		{
 			var cycle = SimpleDrivingCycles.CreateCycleData(SimpleDrivingCycles.CycleDrive_80_uphill_25);
@@ -656,8 +656,8 @@ namespace TUGraz.VectoCore.Tests.Integration.DriverStrategy
 			run.Run();
 			Assert.IsTrue(run.FinishedWithoutErrors);
 
-			GraphWriter.Write("Coach_DriverStrategy_Drive_80_uphill_25.vmod",
-				@"..\..\TestData\Integration\DriverStrategy\Vecto2.2\Coach\24t Coach_Cycle_Drive_80_uphill_25.vmod");
+//			GraphWriter.Write("Coach_DriverStrategy_Drive_80_uphill_25.vmod",
+//				@"..\..\TestData\Integration\DriverStrategy\Vecto2.2\Coach\24t Coach_Cycle_Drive_80_uphill_25.vmod");
 		}
 
 		[TestMethod]

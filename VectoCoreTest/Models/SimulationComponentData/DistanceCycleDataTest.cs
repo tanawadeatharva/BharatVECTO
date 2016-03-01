@@ -123,7 +123,7 @@ namespace TUGraz.VectoCore.Tests.Models.SimulationComponentData
 			AssertHelper.Exception<VectoException>(() => SimpleDrivingCycles.CreateCycleData(data));
 		}
 
-		[TestMethod, Ignore]
+		[TestMethod]
 		public void CycleAltitudeTest()
 		{
 			var missionType = "LongHaul";
