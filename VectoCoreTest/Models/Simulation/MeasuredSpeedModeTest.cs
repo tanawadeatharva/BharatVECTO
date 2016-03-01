@@ -356,6 +356,34 @@ namespace TUGraz.VectoCore.Tests.Models.Simulation
 				@"TestData\MeasuredSpeed\Results\MeasuredSpeedVair.vsum", @"TestData\MeasuredSpeed\MeasuredSpeedVair.vsum");
 		}
 
+		[TestMethod]
+		public void MeasuredSpeedVair_WindFromFront_Run()
+		{
+			RunJob(@"TestData\MeasuredSpeed\MeasuredSpeedVairFront.vecto",
+				@"TestData\MeasuredSpeed\Results\MeasuredSpeedVairFront_MeasuredSpeedVairFront.vmod",
+				@"TestData\MeasuredSpeed\MeasuredSpeedVairFront_MeasuredSpeedVairFront.vmod",
+				@"TestData\MeasuredSpeed\Results\MeasuredSpeedVairFront.vsum", @"TestData\MeasuredSpeed\MeasuredSpeedVairFront.vsum");
+		}
+
+		[TestMethod]
+		public void MeasuredSpeedVair_WindFromBack_Run()
+		{
+			RunJob(@"TestData\MeasuredSpeed\MeasuredSpeedVairBack.vecto",
+				@"TestData\MeasuredSpeed\Results\MeasuredSpeedVairBack_MeasuredSpeedVairBack.vmod",
+				@"TestData\MeasuredSpeed\MeasuredSpeedVairBack_MeasuredSpeedVairBack.vmod",
+				@"TestData\MeasuredSpeed\Results\MeasuredSpeedVairBack.vsum", @"TestData\MeasuredSpeed\MeasuredSpeedVairBack.vsum");
+		}
+
+		[TestMethod]
+		public void MeasuredSpeedVair_NoWind_Run()
+		{
+			RunJob(@"TestData\MeasuredSpeed\MeasuredSpeedVairNoWind.vecto",
+				@"TestData\MeasuredSpeed\Results\MeasuredSpeedVairNoWind_MeasuredSpeedVairNoWind.vmod",
+				@"TestData\MeasuredSpeed\MeasuredSpeedVairNoWind_MeasuredSpeedVairNoWind.vmod",
+				@"TestData\MeasuredSpeed\Results\MeasuredSpeedVairNoWind.vsum",
+				@"TestData\MeasuredSpeed\MeasuredSpeedVairNoWind.vsum");
+		}
+
 
 		[TestMethod]
 		public void MeasuredSpeedVairAux_Run()

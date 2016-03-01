@@ -911,6 +911,24 @@
     <None Include="TestData\MeasuredSpeed\MeasuredSpeedVairAux.vecto">
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
     </None>
+    <None Include="TestData\MeasuredSpeed\MeasuredSpeedVairBack.vdri">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </None>
+    <None Include="TestData\MeasuredSpeed\MeasuredSpeedVairBack.vecto">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </None>
+    <None Include="TestData\MeasuredSpeed\MeasuredSpeedVairFront.vdri">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </None>
+    <None Include="TestData\MeasuredSpeed\MeasuredSpeedVairFront.vecto">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </None>
+    <None Include="TestData\MeasuredSpeed\MeasuredSpeedVairNoWind.vdri">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </None>
+    <None Include="TestData\MeasuredSpeed\MeasuredSpeedVairNoWind.vecto">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </None>
     <None Include="TestData\MeasuredSpeed\MeasuredSpeed_Gear_Rural.vdri">
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
     </None>
@@ -963,6 +981,24 @@
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
     </None>
     <None Include="TestData\MeasuredSpeed\Results\MeasuredSpeedVairAux_MeasuredSpeedVairAux.vmod">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </None>
+    <None Include="TestData\MeasuredSpeed\Results\MeasuredSpeedVairBack.vsum">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </None>
+    <None Include="TestData\MeasuredSpeed\Results\MeasuredSpeedVairBack_MeasuredSpeedVairBack.vmod">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </None>
+    <None Include="TestData\MeasuredSpeed\Results\MeasuredSpeedVairFront.vsum">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </None>
+    <None Include="TestData\MeasuredSpeed\Results\MeasuredSpeedVairFront_MeasuredSpeedVairFront.vmod">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </None>
+    <None Include="TestData\MeasuredSpeed\Results\MeasuredSpeedVairNoWind.vsum">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </None>
+    <None Include="TestData\MeasuredSpeed\Results\MeasuredSpeedVairNoWind_MeasuredSpeedVairNoWind.vmod">
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
     </None>
     <None Include="TestData\MeasuredSpeed\Results\MeasuredSpeedVair_MeasuredSpeedVair.vmod">
