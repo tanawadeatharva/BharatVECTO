@@ -500,8 +500,8 @@ namespace TUGraz.VectoCore.Models.SimulationComponent.Impl
 				case BrakingPhase.Coast:
 					DriverStrategy.DriverBehavior = DrivingBehavior.Coasting;
 					response = DataBus.ClutchClosed(absTime)
-						? Driver.DrivingActionCoast(absTime, ds, targetVelocity, gradient)
-						: Driver.DrivingActionRoll(absTime, ds, targetVelocity, gradient);
+						? Driver.DrivingActionCoast(absTime, ds, VectoMath.Max(targetVelocity, DataBus.VehicleSpeed), gradient)
+						: Driver.DrivingActionRoll(absTime, ds, VectoMath.Max(targetVelocity, DataBus.VehicleSpeed), gradient);
 					response.Switch().
 						Case<ResponseUnderload>(r => {
 							// coast would decelerate more than driver's max deceleration => issue brakes to decelerate with driver's max deceleration
