@@ -378,6 +378,17 @@ namespace TUGraz.VectoCore.Models.SimulationComponent.Impl
 						}
 					});
 			} else {
+				if (DataBus.VehicleSpeed.IsSmallerOrEqual(0.SI<MeterPerSecond>())) {
+					// the clutch is disengaged, and the vehicle stopped - we can't perform a roll action. wait for the clutch to be engaged
+					var remainingShiftTime = Constants.SimulationSettings.TargetTimeInterval;
+					while (!DataBus.ClutchClosed(absTime + remainingShiftTime)) {
+						remainingShiftTime += Constants.SimulationSettings.TargetTimeInterval;
+					}
+					return new ResponseFailTimeInterval() {
+						Source = this,
+						DeltaT = remainingShiftTime,
+					};
+				}
 				response = Driver.DrivingActionRoll(absTime, ds, velocity, gradient);
 				response.Switch().
 					Case<ResponseUnderload>(r => { response = Driver.DrivingActionBrake(absTime, ds, velocity, gradient, r); })

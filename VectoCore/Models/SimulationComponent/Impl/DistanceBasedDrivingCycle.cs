@@ -206,7 +206,11 @@ namespace TUGraz.VectoCore.Models.SimulationComponent.Impl
 			CurrentState.VehicleTargetSpeed = CycleIntervalIterator.LeftSample.VehicleTargetSpeed;
 			CurrentState.Gradient = ComputeGradient(ds);
 
-			return NextComponent.Request(absTime, ds, CurrentState.VehicleTargetSpeed, CurrentState.Gradient);
+			var retVal = NextComponent.Request(absTime, ds, CurrentState.VehicleTargetSpeed, CurrentState.Gradient);
+			retVal.Switch()
+				.Case<ResponseFailTimeInterval>(
+					r => { retVal = NextComponent.Request(absTime, r.DeltaT, 0.SI<MeterPerSecond>(), CurrentState.Gradient); });
+			return retVal;
 		}
 
 		private Radian ComputeGradient(Meter ds)
