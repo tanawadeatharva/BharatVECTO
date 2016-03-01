@@ -162,38 +162,6 @@ namespace TUGraz.VectoCore.Tests.Models.Simulation
 		}
 
 		[TestMethod]
-		public void Test_TimeBased_TimeFieldMissing()
-		{
-			var container = new VehicleContainer(new MockModalDataContainer());
-
-			var cycleData = DrivingCycleDataReader.ReadFromFile(@"TestData\Cycles\Cycle time field missing.vdri",
-				CycleType.MeasuredSpeed, false);
-			var cycle = new TimeBasedDrivingCycle(container, cycleData);
-
-			var outPort = new MockDrivingCycleOutPort();
-
-			var inPort = cycle.InPort();
-			var cycleOut = cycle.OutPort();
-
-			inPort.Connect(outPort);
-
-			var absTime = 0.SI<Second>();
-			var dt = 1.SI<Second>();
-
-			while (cycleOut.Request(absTime, dt) is ResponseSuccess) {
-				Assert.AreEqual(absTime, outPort.AbsTime);
-				Assert.AreEqual(dt, outPort.Dt);
-
-				var time = absTime + dt / 2;
-				var simulationInterval = dt;
-				container.CommitSimulationStep(time, simulationInterval);
-
-				absTime += dt;
-			}
-		}
-
-
-		[TestMethod]
 		public void DrivingCycle_AutoDetect()
 		{
 			// declaration mode - distance based
