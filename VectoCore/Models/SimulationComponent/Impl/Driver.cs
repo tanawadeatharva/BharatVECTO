@@ -377,6 +377,7 @@ namespace TUGraz.VectoCore.Models.SimulationComponent.Impl
 			var response = previousResponse ??
 							NextComponent.Request(absTime, operatingPoint.SimulationInterval, operatingPoint.Acceleration, gradient);
 
+			var point = operatingPoint;
 			response.Switch().
 				Case<ResponseSuccess>(r => retVal = r).
 				Case<ResponseOverload>(r => retVal = r)
@@ -386,7 +387,7 @@ namespace TUGraz.VectoCore.Models.SimulationComponent.Impl
 				Case<ResponseFailTimeInterval>(r =>
 					retVal = new ResponseDrivingCycleDistanceExceeded() {
 						Source = this,
-						MaxDistance = DataBus.VehicleSpeed * r.DeltaT + operatingPoint.Acceleration / 2 * r.DeltaT * r.DeltaT
+						MaxDistance = DataBus.VehicleSpeed * r.DeltaT + point.Acceleration / 2 * r.DeltaT * r.DeltaT
 					}).
 				Default(r => { throw new UnexpectedResponseException("DrivingAction Brake: first request.", r); });
 
