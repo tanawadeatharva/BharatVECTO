@@ -58,7 +58,7 @@ namespace TUGraz.VectoCore.Models.SimulationComponent.Impl
 			DrivingModeBrake,
 		}
 
-		protected DrivingMode CurrentDrivingMode;
+		protected internal DrivingMode CurrentDrivingMode;
 		protected Dictionary<DrivingMode, IDriverMode> DrivingModes = new Dictionary<DrivingMode, IDriverMode>();
 
 		public DefaultDriverStrategy()
@@ -85,10 +85,12 @@ namespace TUGraz.VectoCore.Models.SimulationComponent.Impl
 			}
 			if (CurrentDrivingMode == DrivingMode.DrivingModeDrive) {
 				var currentDistance = Driver.DataBus.Distance;
-				UpdateDrivingAction(currentDistance);
+				UpdateDrivingAction(currentDistance, ds);
 				if (NextDrivingAction != null) {
-					if (currentDistance.IsEqual(NextDrivingAction.ActionDistance,
-						Constants.SimulationSettings.DriverActionDistanceTolerance)) {
+					var remainingDistance = NextDrivingAction.ActionDistance - currentDistance;
+					var estimatedNextTimestep = remainingDistance / Driver.DataBus.VehicleSpeed;
+					if (remainingDistance.IsEqual(0.SI<Meter>(), Constants.SimulationSettings.DriverActionDistanceTolerance) ||
+						estimatedNextTimestep.IsSmaller(Constants.SimulationSettings.LowerBoundTimeInterval)) {
 						CurrentDrivingMode = DrivingMode.DrivingModeBrake;
 						DrivingModes[CurrentDrivingMode].ResetMode();
 						Log.Debug("Switching to DrivingMode BRAKE");
@@ -122,9 +124,9 @@ namespace TUGraz.VectoCore.Models.SimulationComponent.Impl
 		public DrivingBehavior DriverBehavior { get; internal set; }
 
 
-		private void UpdateDrivingAction(Meter currentDistance)
+		private void UpdateDrivingAction(Meter currentDistance, Meter ds)
 		{
-			var nextAction = GetNextDrivingAction(currentDistance);
+			var nextAction = GetNextDrivingAction(currentDistance, ds);
 			if (NextDrivingAction == null) {
 				if (nextAction != null) {
 					// take the new action
@@ -170,15 +172,15 @@ namespace TUGraz.VectoCore.Models.SimulationComponent.Impl
 		}
 
 
-		protected DrivingBehaviorEntry GetNextDrivingAction(Meter minDistance)
+		protected DrivingBehaviorEntry GetNextDrivingAction(Meter minDistance, Meter ds)
 		{
 			var currentSpeed = Driver.DataBus.VehicleSpeed;
 
 			// distance until halt
 			var lookaheadDistance = Formulas.DecelerationDistance(currentSpeed, 0.SI<MeterPerSecond>(),
 				Driver.DriverData.LookAheadCoasting.Deceleration);
-
-			var lookaheadData = Driver.DataBus.LookAhead(1.2 * lookaheadDistance);
+			lookaheadDistance = VectoMath.Max(2 * ds, 1.2 * lookaheadDistance);
+			var lookaheadData = Driver.DataBus.LookAhead(lookaheadDistance);
 
 			Log.Debug("Lookahead distance: {0} @ current speed {1}", lookaheadDistance, currentSpeed);
 			var nextActions = new List<DrivingBehaviorEntry>();
@@ -190,8 +192,9 @@ namespace TUGraz.VectoCore.Models.SimulationComponent.Impl
 					if (!Driver.DriverData.LookAheadCoasting.Enabled ||
 						currentSpeed < Driver.DriverData.LookAheadCoasting.MinSpeed) {
 						var brakingDistance = Driver.ComputeDecelerationDistance(nextTargetSpeed) + BrakingSafetyMargin;
-						Log.Debug("adding 'Braking' starting at distance {0}. brakingDistance: {1}, triggerDistance: {2}",
-							entry.Distance - brakingDistance, brakingDistance, entry.Distance);
+						Log.Debug(
+							"adding 'Braking' starting at distance {0}. brakingDistance: {1}, triggerDistance: {2}, nextTargetSpeed: {3}",
+							entry.Distance - brakingDistance, brakingDistance, entry.Distance, nextTargetSpeed);
 						nextActions.Add(new DrivingBehaviorEntry {
 							Action = DrivingBehavior.Braking,
 							ActionDistance = entry.Distance - brakingDistance,
@@ -201,8 +204,9 @@ namespace TUGraz.VectoCore.Models.SimulationComponent.Impl
 					} else {
 						var coastingDistance = Formulas.DecelerationDistance(currentSpeed, nextTargetSpeed,
 							Driver.DriverData.LookAheadCoasting.Deceleration);
-						Log.Debug("adding 'Coasting' starting at distance {0}. coastingDistance: {1}, triggerDistance: {2}",
-							entry.Distance - coastingDistance, coastingDistance, entry.Distance);
+						Log.Debug(
+							"adding 'Coasting' starting at distance {0}. coastingDistance: {1}, triggerDistance: {2}, nextTargetSpeed: {3}",
+							entry.Distance - coastingDistance, coastingDistance, entry.Distance, nextTargetSpeed);
 						nextActions.Add(
 							new DrivingBehaviorEntry {
 								Action = DrivingBehavior.Coasting,
@@ -284,12 +288,17 @@ namespace TUGraz.VectoCore.Models.SimulationComponent.Impl
 			Meter newds;
 			response = CheckRequestDoesNotExceedNextAction(absTime, ds, targetVelocity, gradient, response, out newds);
 
-			if (newds.IsEqual(0, 1e-3) || ds.IsEqual(newds, 1e-3.SI<Meter>())) {
+			if (ds.IsEqual(newds, 1e-3.SI<Meter>())) {
 				return response;
 			}
-			Log.Debug("Exceeding next ActionDistance at {0}. Reducing max Distance to {1}",
+			if (newds.IsSmallerOrEqual(0, 1e-3)) {
+				newds = ds / 2.0;
+				//DriverStrategy.CurrentDrivingMode = DefaultDriverStrategy.DrivingMode.DrivingModeBrake;
+				//DriverStrategy.BrakeTrigger = DriverStrategy.NextDrivingAction;
+			}
+			Log.Debug("Exceeding next ActionDistance at {0}. Reducing max Distance from {2} to {1}",
 				DriverStrategy.NextDrivingAction.ActionDistance,
-				newds);
+				newds, ds);
 			return new ResponseDrivingCycleDistanceExceeded() {
 				Source = this,
 				MaxDistance = newds,
@@ -356,9 +365,7 @@ namespace TUGraz.VectoCore.Models.SimulationComponent.Impl
 								// overload may happen if driver limits acceleration when rolling downhill
 								response = Driver.DrivingActionBrake(absTime, ds, velocity, gradient);
 							}).
-							Case<ResponseSpeedLimitExceeded>(() => {
-								response = Driver.DrivingActionBrake(absTime, ds, velocity, gradient);
-							});
+							Case<ResponseSpeedLimitExceeded>(() => { response = Driver.DrivingActionBrake(absTime, ds, velocity, gradient); });
 					}).
 					Case<ResponseUnderload>(r => {
 						if (DriverStrategy.OverspeedAllowed(gradient, targetVelocity)) {
@@ -371,13 +378,21 @@ namespace TUGraz.VectoCore.Models.SimulationComponent.Impl
 						}
 					});
 			} else {
+				if (DataBus.VehicleSpeed.IsSmallerOrEqual(0.SI<MeterPerSecond>())) {
+					// the clutch is disengaged, and the vehicle stopped - we can't perform a roll action. wait for the clutch to be engaged
+					var remainingShiftTime = Constants.SimulationSettings.TargetTimeInterval;
+					while (!DataBus.ClutchClosed(absTime + remainingShiftTime)) {
+						remainingShiftTime += Constants.SimulationSettings.TargetTimeInterval;
+					}
+					return new ResponseFailTimeInterval() {
+						Source = this,
+						DeltaT = remainingShiftTime,
+					};
+				}
 				response = Driver.DrivingActionRoll(absTime, ds, velocity, gradient);
 				response.Switch().
-					Case<ResponseUnderload>(r => {
-						response = Driver.DrivingActionBrake(absTime, ds, velocity, gradient, r);
-					}).Case<ResponseSpeedLimitExceeded>(() => {
-						response = Driver.DrivingActionBrake(absTime, ds, velocity, gradient);
-					});
+					Case<ResponseUnderload>(r => { response = Driver.DrivingActionBrake(absTime, ds, velocity, gradient, r); })
+					.Case<ResponseSpeedLimitExceeded>(() => { response = Driver.DrivingActionBrake(absTime, ds, velocity, gradient); });
 			}
 			return response;
 		}
@@ -406,7 +421,7 @@ namespace TUGraz.VectoCore.Models.SimulationComponent.Impl
 					break;
 				case DrivingBehavior.Braking:
 					var brakingDistance = Driver.DriverData.AccelerationCurve.ComputeAccelerationDistance(v2,
-						nextAction.NextTargetSpeed);
+						nextAction.NextTargetSpeed) + DefaultDriverStrategy.BrakingSafetyMargin;
 					if ((Driver.DataBus.Distance + ds).IsSmaller(nextAction.TriggerDistance - brakingDistance)) {
 						return response;
 					}
@@ -471,7 +486,10 @@ namespace TUGraz.VectoCore.Models.SimulationComponent.Impl
 									DefaultDriverStrategy.BrakingSafetyMargin;
 				Log.Debug("breaking distance: {0}, start braking @ {1}", brakingDistance,
 					DriverStrategy.BrakeTrigger.TriggerDistance - brakingDistance);
-				if (currentDistance + Constants.SimulationSettings.DriverActionDistanceTolerance >
+				var remainingDistanceToBrake = DriverStrategy.BrakeTrigger.TriggerDistance - brakingDistance - currentDistance;
+				var estimatedTimeInterval = remainingDistanceToBrake / DataBus.VehicleSpeed;
+				if (estimatedTimeInterval.IsSmaller(Constants.SimulationSettings.LowerBoundTimeInterval) ||
+					currentDistance + Constants.SimulationSettings.DriverActionDistanceTolerance >
 					DriverStrategy.BrakeTrigger.TriggerDistance - brakingDistance) {
 					Phase = BrakingPhase.Brake;
 					Log.Debug("Switching to BRAKE Phase. currentDistance: {0}", currentDistance);
@@ -493,8 +511,8 @@ namespace TUGraz.VectoCore.Models.SimulationComponent.Impl
 				case BrakingPhase.Coast:
 					DriverStrategy.DriverBehavior = DrivingBehavior.Coasting;
 					response = DataBus.ClutchClosed(absTime)
-						? Driver.DrivingActionCoast(absTime, ds, targetVelocity, gradient)
-						: Driver.DrivingActionRoll(absTime, ds, targetVelocity, gradient);
+						? Driver.DrivingActionCoast(absTime, ds, VectoMath.Max(targetVelocity, DataBus.VehicleSpeed), gradient)
+						: Driver.DrivingActionRoll(absTime, ds, VectoMath.Max(targetVelocity, DataBus.VehicleSpeed), gradient);
 					response.Switch().
 						Case<ResponseUnderload>(r => {
 							// coast would decelerate more than driver's max deceleration => issue brakes to decelerate with driver's max deceleration
@@ -511,9 +529,7 @@ namespace TUGraz.VectoCore.Models.SimulationComponent.Impl
 							}
 							//Phase = BrakingPhase.Brake;
 						}).
-						Case<ResponseGearShift>(r => {
-							response = Driver.DrivingActionRoll(absTime, ds, targetVelocity, gradient);
-						}).
+						Case<ResponseGearShift>(r => { response = Driver.DrivingActionRoll(absTime, ds, targetVelocity, gradient); }).
 						Case<ResponseSpeedLimitExceeded>(() => {
 							response = Driver.DrivingActionBrake(absTime, ds, DataBus.VehicleSpeed,
 								gradient);
@@ -543,8 +559,14 @@ namespace TUGraz.VectoCore.Models.SimulationComponent.Impl
 								Log.Warn("Clutch is open - trying RollAction");
 								response = Driver.DrivingActionRoll(absTime, ds, targetVelocity, gradient);
 							} else {
-								Log.Warn("Clutch is open - trying AccelerateAction");
-								response = Driver.DrivingActionAccelerate(absTime, ds, targetVelocity, gradient);
+								Log.Warn("Clutch is closed - trying AccelerateAction");
+								response = Driver.DrivingActionAccelerate(absTime, ds, DriverStrategy.BrakeTrigger.NextTargetSpeed, gradient);
+								response.Switch().Case<ResponseGearShift>(
+									rs => {
+										Log.Warn("Got GearShift response, performing roll action...");
+										response = Driver.DrivingActionRoll(absTime, ds, DriverStrategy.BrakeTrigger.NextTargetSpeed, gradient);
+									}
+									);
 							}
 						});
 					break;

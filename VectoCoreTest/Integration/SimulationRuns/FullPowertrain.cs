@@ -126,7 +126,7 @@ namespace TUGraz.VectoCore.Tests.Integration.SimulationRuns
 			Assert.IsInstanceOfType(response, typeof(ResponseCycleFinished));
 		}
 
-		[TestMethod, Ignore]
+		[TestMethod, TestCategory("LongRunning")]
 		public void Test_FullPowertrain()
 		{
 			var fileWriter = new FileOutputWriter("Coach_FullPowertrain", "");
@@ -157,7 +157,7 @@ namespace TUGraz.VectoCore.Tests.Integration.SimulationRuns
 
 			cyclePort.Initialize();
 
-			gbx.Gear = 0;
+			//gbx.Gear = 0;
 
 			var absTime = 0.SI<Second>();
 			var ds = Constants.SimulationSettings.DriveOffDistance;
@@ -166,7 +166,7 @@ namespace TUGraz.VectoCore.Tests.Integration.SimulationRuns
 			container.CommitSimulationStep(absTime, response.SimulationInterval);
 			absTime += response.SimulationInterval;
 
-			gbx.Gear = 1;
+			//gbx.Gear = 1;
 			var cnt = 0;
 			while (!(response is ResponseCycleFinished) && container.Distance < 17000) {
 				Log.Info("Test New Request absTime: {0}, ds: {1}", absTime, ds);
@@ -197,7 +197,7 @@ namespace TUGraz.VectoCore.Tests.Integration.SimulationRuns
 					Default(r => Assert.Fail("Unexpected Response: {0}", r));
 			}
 			modData.Finish(VectoRun.Status.Success);
-			Assert.IsInstanceOfType(response, typeof(ResponseCycleFinished));
+			Assert.IsInstanceOfType(response, typeof(ResponseSuccess));
 		}
 
 		[TestMethod, TestCategory("LongRunning")]
@@ -385,7 +385,9 @@ namespace TUGraz.VectoCore.Tests.Integration.SimulationRuns
 			};
 			return new VehicleData {
 				AxleConfiguration = AxleConfiguration.AxleConfig_6x2,
-				CrossWindCorrectionCurve = new CrosswindCorrectionCdxALookup(CrossWindCorrectionCurveReader.GetNoCorrectionCurve(3.2634.SI<SquareMeter>()),CrossWindCorrectionMode.NoCorrection),
+				CrossWindCorrectionCurve =
+					new CrosswindCorrectionCdxALookup(CrossWindCorrectionCurveReader.GetNoCorrectionCurve(3.2634.SI<SquareMeter>()),
+						CrossWindCorrectionMode.NoCorrection),
 				CurbWeight = 15700.SI<Kilogram>(),
 				CurbWeigthExtra = 0.SI<Kilogram>(),
 				Loading = loading,

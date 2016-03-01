@@ -43,7 +43,7 @@ namespace DeclarationCycleZip
 	{
 		private static void Main(string[] args)
 		{
-			var cycleData = DrivingCycleDataReader.ReadFromFile(args[0], CycleType.DistanceBased);
+			var cycleData = DrivingCycleDataReader.ReadFromFile(args[0], CycleType.DistanceBased, false);
 
 			var table = new DataTable();
 			table.Columns.Add("<s>");
