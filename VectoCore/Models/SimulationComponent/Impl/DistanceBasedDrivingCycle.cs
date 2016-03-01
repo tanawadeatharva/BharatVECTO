@@ -224,7 +224,9 @@ namespace TUGraz.VectoCore.Models.SimulationComponent.Impl
 			if (leftSamplePoint.Distance.IsEqual(rightSamplePoint.Distance)) {
 				return leftSamplePoint.RoadGradient;
 			}
-
+			if (ds.IsEqual(0.SI<Meter>())) {
+				return leftSamplePoint.RoadGradient;
+			}
 			CurrentState.Altitude = VectoMath.Interpolate(leftSamplePoint.Distance, rightSamplePoint.Distance,
 				leftSamplePoint.Altitude, rightSamplePoint.Altitude, PreviousState.Distance + ds);
 
