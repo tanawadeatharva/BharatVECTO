@@ -30,6 +30,7 @@
 */
 
 using System;
+using System.Collections.Generic;
 using System.ComponentModel;
 using System.ComponentModel.DataAnnotations;
 using NLog;
@@ -49,6 +50,7 @@ namespace TUGraz.VectoCore.Models.Simulation.Impl
 		private static uint _runIdCounter;
 
 		protected Second AbsTime = 0.SI<Second>();
+		// ReSharper disable once InconsistentNaming
 		protected Second dt = 1.SI<Second>();
 		protected SummaryDataContainer SumWriter { get; set; }
 		protected string JobName { get; set; }
@@ -91,6 +93,8 @@ namespace TUGraz.VectoCore.Models.Simulation.Impl
 
 		public void Run(BackgroundWorker worker = null, Action<double> reportProgressAction = null)
 		{
+			var debug = new List<dynamic>();
+
 			Log.Info("VectoJob started running.");
 
 			Initialize();
@@ -98,6 +102,7 @@ namespace TUGraz.VectoCore.Models.Simulation.Impl
 				IResponse response;
 				do {
 					response = DoSimulationStep();
+					debug.Add(response);
 					if (response is ResponseSuccess) {
 						Container.CommitSimulationStep(AbsTime, dt);
 						AbsTime += dt;

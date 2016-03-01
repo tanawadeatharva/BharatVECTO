@@ -68,9 +68,6 @@ namespace TUGraz.VectoCore.Models.SimulationComponent.Data.Engine
 
 		public Watt DragLoadStationaryPower(PerSecond angularVelocity)
 		{
-			Contract.Requires(angularVelocity.HasEqualUnit(new SI().Radian.Per.Second));
-			Contract.Ensures(Contract.Result<SI>().HasEqualUnit(new SI().Watt));
-
 			return Formulas.TorqueToPower(DragLoadStationaryTorque(angularVelocity), angularVelocity);
 		}
 

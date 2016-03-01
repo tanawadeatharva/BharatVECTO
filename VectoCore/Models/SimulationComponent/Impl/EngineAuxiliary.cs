@@ -31,6 +31,7 @@
 
 using System;
 using System.Collections.Generic;
+using System.Linq;
 using TUGraz.VectoCore.Exceptions;
 using TUGraz.VectoCore.Models.Simulation;
 using TUGraz.VectoCore.Models.Simulation.Data;
@@ -46,7 +47,7 @@ namespace TUGraz.VectoCore.Models.SimulationComponent.Impl
 		public const string DirectAuxiliaryId = "";
 
 		private readonly Dictionary<string, Func<PerSecond, Watt>> _auxDict = new Dictionary<string, Func<PerSecond, Watt>>();
-		private readonly Dictionary<string, Watt> _powerDemands = new Dictionary<string, Watt>();
+		private Dictionary<string, Watt> _powerDemands = new Dictionary<string, Watt>();
 
 		public EngineAuxiliary(IVehicleContainer container) : base(container) {}
 
@@ -71,28 +72,16 @@ namespace TUGraz.VectoCore.Models.SimulationComponent.Impl
 
 		private Watt ComputePowerDemand(PerSecond engineSpeed)
 		{
-			_powerDemands.Clear();
-			var powerDemand = 0.SI<Watt>();
-
-			foreach (var kv in _auxDict) {
-				var demand = kv.Value(engineSpeed);
-				powerDemand += demand;
-				_powerDemands[kv.Key] = demand;
-			}
-			return powerDemand;
+			_powerDemands = _auxDict.ToDictionary(kv => kv.Key, kv => kv.Value(engineSpeed));
+			return _powerDemands.Values.Sum(p => p);
 		}
 
 		protected override void DoWriteModalResults(IModalDataContainer container)
 		{
-			var sum = 0.SI<Watt>();
-			foreach (var kv in _powerDemands) {
-				sum += kv.Value;
-				// todo: aux write directauxiliary somewhere to moddata .... probably Padd column??
-				if (!string.IsNullOrWhiteSpace(kv.Key)) {
-					container[kv.Key] = kv.Value;
-				}
+			foreach (var kv in _powerDemands.Where(kv => !string.IsNullOrWhiteSpace(kv.Key))) {
+				container[kv.Key] = kv.Value;
 			}
-			container[ModalResultField.P_aux] = sum;
+			container[ModalResultField.P_aux] = _powerDemands.Values.Sum(p => p);
 		}
 
 		protected override void DoCommitSimulationStep()

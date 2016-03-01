@@ -137,15 +137,10 @@ namespace TUGraz.VectoCore.Models.Simulation.Impl
 						run = new DistanceRun(builder.Build(data));
 						break;
 					case CycleType.EngineOnly:
-						run = new TimeRun(builder.Build(data));
-						break;
 					case CycleType.TimeBased:
-						run = new TimeRun(builder.Build(data));
-						break;
 					case CycleType.PWheel:
-						run = new TimeRun(builder.Build(data));
-						break;
 					case CycleType.MeasuredSpeed:
+					case CycleType.MeasuredSpeedGear:
 						run = new TimeRun(builder.Build(data));
 						break;
 					default:
@@ -155,7 +150,7 @@ namespace TUGraz.VectoCore.Models.Simulation.Impl
 				var validationErrors = run.Validate();
 				if (validationErrors.Any()) {
 					throw new VectoException("Validation of Run-Data Failed: " +
-											string.Join("; ", validationErrors.Select(r => r.ErrorMessage)));
+											"; ".Join(validationErrors.Select(r => r.ErrorMessage)));
 				}
 
 

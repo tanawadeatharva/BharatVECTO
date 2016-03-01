@@ -119,7 +119,7 @@ namespace TUGraz.VectoCore.Tests.Integration.DriverStrategy
 				@"..\..\TestData\Integration\DriverStrategy\Vecto2.2\Coach\24t Coach_Cycle_Accelerate_20_60_uphill_25.vmod");
 		}
 
-		[TestMethod, TestCategory("LongRunning")]
+		[TestMethod]
 		public void Coach_Accelerate_20_60_downhill_25()
 		{
 			var cycle = SimpleDrivingCycles.CreateCycleData(SimpleDrivingCycles.CycleAccelerate_20_60_downhill_25);
@@ -238,7 +238,7 @@ namespace TUGraz.VectoCore.Tests.Integration.DriverStrategy
 				@"..\..\TestData\Integration\DriverStrategy\Vecto2.2\Coach\24t Coach_Cycle_Accelerate_0_85_uphill_25.vmod");
 		}
 
-		[TestMethod, TestCategory("LongRunning")]
+		[TestMethod]
 		public void Coach_Accelerate_0_85_downhill_25()
 		{
 			var cycle = SimpleDrivingCycles.CreateCycleData(SimpleDrivingCycles.CycleAccelerate_0_85_downhill_25);
@@ -265,7 +265,7 @@ namespace TUGraz.VectoCore.Tests.Integration.DriverStrategy
 				@"..\..\TestData\Integration\DriverStrategy\Vecto2.2\Coach\24t Coach_Cycle_Accelerate_0_85_uphill_10.vmod");
 		}
 
-		[TestMethod, TestCategory("LongRunning")]
+		[TestMethod]
 		public void Coach_Accelerate_0_85_downhill_15()
 		{
 			var cycle = SimpleDrivingCycles.CreateCycleData(SimpleDrivingCycles.CycleAccelerate_0_85_downhill_15);
@@ -416,7 +416,7 @@ namespace TUGraz.VectoCore.Tests.Integration.DriverStrategy
 				@"..\..\TestData\Integration\DriverStrategy\Vecto2.2\Coach\24t Coach_Cycle_Decelerate_60_20_uphill_25.vmod");
 		}
 
-		[TestMethod, TestCategory("LongRunning")]
+		[TestMethod]
 		public void Coach_Decelerate_60_20_downhill_25()
 		{
 			var cycle = SimpleDrivingCycles.CreateCycleData(SimpleDrivingCycles.CycleDecelerate_60_20_downhill_25);
@@ -443,7 +443,7 @@ namespace TUGraz.VectoCore.Tests.Integration.DriverStrategy
 				@"..\..\TestData\Integration\DriverStrategy\Vecto2.2\Coach\24t Coach_Cycle_Decelerate_60_20_uphill_15.vmod");
 		}
 
-		[TestMethod, TestCategory("LongRunning")]
+		[TestMethod]
 		public void Coach_Decelerate_60_20_downhill_15()
 		{
 			var cycle = SimpleDrivingCycles.CreateCycleData(SimpleDrivingCycles.CycleDecelerate_60_20_downhill_15);
@@ -510,7 +510,7 @@ namespace TUGraz.VectoCore.Tests.Integration.DriverStrategy
 				@"..\..\TestData\Integration\DriverStrategy\Vecto2.2\Coach\24t Coach_Cycle_Decelerate_80_0_steep_uphill_25.vmod");
 		}
 
-		[TestMethod]
+		[TestMethod, TestCategory("LongRunning")]
 		public void Coach_Decelerate_80_0_downhill_25()
 		{
 			var cycle = SimpleDrivingCycles.CreateCycleData(SimpleDrivingCycles.CycleDecelerate_80_0_downhill_25);

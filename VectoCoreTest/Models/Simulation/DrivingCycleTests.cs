@@ -50,7 +50,8 @@ namespace TUGraz.VectoCore.Tests.Models.Simulation
 			var dataWriter = new MockModalDataContainer();
 			var container = new VehicleContainer(dataWriter);
 
-			var cycleData = DrivingCycleDataReader.ReadFromFile(@"TestData\Cycles\Coach Engine Only.vdri", CycleType.EngineOnly);
+			var cycleData = DrivingCycleDataReader.ReadFromFile(@"TestData\Cycles\Coach Engine Only.vdri", CycleType.EngineOnly,
+				false);
 			var cycle = new PowertrainDrivingCycle(container, cycleData);
 
 			var outPort = new MockTnOutPort();
@@ -81,7 +82,7 @@ namespace TUGraz.VectoCore.Tests.Models.Simulation
 			var container = new VehicleContainer();
 
 			var cycleData = DrivingCycleDataReader.ReadFromFile(@"TestData\Cycles\Coach Engine Only Paux_var-dt.vdri",
-				CycleType.EngineOnly);
+				CycleType.EngineOnly, false);
 			var cycle = new PowertrainDrivingCycle(container, cycleData);
 
 			var outPort = new MockTnOutPort();
@@ -141,7 +142,7 @@ namespace TUGraz.VectoCore.Tests.Models.Simulation
 			var container = new VehicleContainer();
 
 			var cycleData = DrivingCycleDataReader.ReadFromFile(@"TestData\Cycles\Coach First Cycle only.vdri",
-				CycleType.TimeBased);
+				CycleType.TimeBased, false);
 			var cycle = new TimeBasedDrivingCycle(container, cycleData);
 
 			var outPort = new MockDrivingCycleOutPort();
@@ -168,7 +169,7 @@ namespace TUGraz.VectoCore.Tests.Models.Simulation
 			var container = new VehicleContainer(new MockModalDataContainer());
 
 			var cycleData = DrivingCycleDataReader.ReadFromFile(@"TestData\Cycles\Cycle time field missing.vdri",
-				CycleType.TimeBased);
+				CycleType.TimeBased, false);
 			var cycle = new TimeBasedDrivingCycle(container, cycleData);
 
 			var outPort = new MockDrivingCycleOutPort();

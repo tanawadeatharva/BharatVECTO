@@ -1,0 +1,36 @@
+﻿{
+  "Header": {
+    "CreatedBy": "TUG ITI (59f3bd5f-1e50-474f-928a-435968d769f6)",
+    "Date": "23.11.2015 10:27:34",
+    "AppVersion": "2.2",
+    "FileVersion": 2
+  },
+  "Body": {
+    "SavedInDeclMode": false,
+    "VehicleFile": "Atego.vveh",
+    "EngineFile": "OM906.veng",
+    "GearboxFile": "G_85-6_6_7-0_17.vgbx",
+    "Cycles": [
+      "Gear2_pt1_rep1_actual.vdri"
+    ],
+    "VACC": "Truck.vacc",
+    "EngineOnlyMode": false,
+    "StartStop": {
+      "Enabled": false,
+      "MaxSpeed": 5.0,
+      "MinTime": 5.0,
+      "Delay": 0
+    },
+    "LAC": {
+      "Enabled": true,
+      "Dec": -0.5,
+      "MinSpeed": 50.0
+    },
+    "OverSpeedEcoRoll": {
+      "Mode": "Off",
+      "MinSpeed": 0.0,
+      "OverSpeed": 0.0,
+      "UnderSpeed": 0.0
+    }
+  }
+}

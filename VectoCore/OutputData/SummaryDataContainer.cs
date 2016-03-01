@@ -55,7 +55,7 @@ namespace TUGraz.VectoCore.OutputData
 		private const string TIME = "time [s]";
 		private const string DISTANCE = "distance [km]";
 		private const string SPEED = "speed [km/h]";
-		private const string ALTITUDE = "∆altitude [m]";
+		private const string ALTITUDE = "altitudeDelta [m]";
 		private const string PPOS = "Ppos [kW]";
 		private const string PNEG = "Pneg [kW]";
 		private const string FCMAP = "FC-Map [g/h]";
@@ -140,9 +140,9 @@ namespace TUGraz.VectoCore.OutputData
 			string cycleFileName)
 		{
 			var row = _table.NewRow();
-			row[JOB] = jobName;
-			row[INPUTFILE] = jobFileName;
-			row[CYCLE] = cycleFileName;
+			row[JOB] = ReplaceNotAllowedCharacters(jobName);
+			row[INPUTFILE] = ReplaceNotAllowedCharacters(jobFileName);
+			row[CYCLE] = ReplaceNotAllowedCharacters(cycleFileName);
 			row[STATUS] = data.RunStatus;
 			row[TIME] = data.Duration();
 			row[PPOS] = data.EnginePowerPositiveAverage().ConvertTo().Kilo.Watt;
@@ -163,9 +163,9 @@ namespace TUGraz.VectoCore.OutputData
 
 			var row = _table.NewRow();
 			_table.Rows.Add(row);
-			row[JOB] = jobName;
-			row[INPUTFILE] = jobFileName;
-			row[CYCLE] = cycleFileName;
+			row[JOB] = ReplaceNotAllowedCharacters(jobName);
+			row[INPUTFILE] = ReplaceNotAllowedCharacters(jobFileName);
+			row[CYCLE] = ReplaceNotAllowedCharacters(cycleFileName);
 			row[STATUS] = data.RunStatus;
 			row[TIME] = data.Duration();
 
@@ -241,6 +241,11 @@ namespace TUGraz.VectoCore.OutputData
 			row[PDEC] = data.PercentDecelerationTime();
 			row[PCRUISE] = data.PercentCruiseTime();
 			row[PSTOP] = data.PercentStopTime();
+		}
+
+		private static string ReplaceNotAllowedCharacters(string text)
+		{
+			return text.Replace('#', '_').Replace(',', '_').Replace('\n', '_').Replace('\r', '_');
 		}
 
 		[MethodImpl(MethodImplOptions.Synchronized)]

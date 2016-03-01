@@ -36,7 +36,7 @@ namespace TUGraz.VectoCore.Configuration
 {
 	public static class Constants
 	{
-		public const double RPMToRad =  2 * Math.PI / 60;
+		public const double RPMToRad = 2 * Math.PI / 60;
 		public const double Kilo = 1000;
 		public const double MeterPerSecondToKMH = 3.6;
 		public const double SecondsPerHour = 3600;
@@ -83,6 +83,13 @@ namespace TUGraz.VectoCore.Configuration
 			/// base time interval for the simulation. the distance is estimated to reach this time interval as good as possible
 			/// </summary>
 			public static readonly Second TargetTimeInterval = 0.5.SI<Second>();
+
+
+			/// <summary>
+			/// maximum time interval for the simulation in measured speed mode.
+			/// </summary>
+			public static readonly Second MeasuredSpeedTargetTimeInterval = 1.SI<Second>();
+
 
 			/// <summary>
 			/// simulation interval if the vehicle stands still

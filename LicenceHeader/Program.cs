@@ -45,10 +45,10 @@ namespace LicenceHeader
 
 		private static void Main()
 		{
-			var licence = File.ReadAllText("header.txt", Encoding.Default);
+			var licence = File.ReadAllText("header.txt", Encoding.UTF8);
 			var count = 0;
 
-			foreach (var file in Directory.GetFiles(SolutionRootDirectory, "*.cs", SearchOption.AllDirectories)) {
+			foreach (var file in Directory.EnumerateFiles(SolutionRootDirectory, "*.cs", SearchOption.AllDirectories)) {
 				Console.WriteLine(file);
 				if (file.Contains("\\obj\\") || file.Contains("\\bin\\")) {
 					continue;

@@ -165,9 +165,9 @@ namespace TUGraz.VectoCore.Tests.Models.Declaration
 		[TestMethod]
 		public void CrossWindCorrectionTest()
 		{
-			var crossWindCorrectionCurve =
+			var crossWindCorrectionCurve = new CrosswindCorrectionCdxALookup(
 				DeclarationDataAdapter.GetDeclarationAirResistanceCurve(VehicleCategory.Tractor,
-					6.46.SI<SquareMeter>());
+					6.46.SI<SquareMeter>()), CrossWindCorrectionMode.DeclarationModeCorrection);
 
 			var tmp = crossWindCorrectionCurve.EffectiveAirDragArea(0.KMPHtoMeterPerSecond());
 			Assert.AreEqual(8.12204, tmp.Value(), Tolerance);

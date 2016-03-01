@@ -29,6 +29,7 @@
 *   Martin Rexeis, rexeis@ivt.tugraz.at, IVT, Graz University of Technology
 */
 
+using System;
 using System.Diagnostics;
 using TUGraz.VectoCore.Configuration;
 using TUGraz.VectoCore.Exceptions;
@@ -186,11 +187,18 @@ namespace TUGraz.VectoCore.Models.SimulationComponent.Impl
 				Case<ResponseUnderload>().
 				Default(r => { throw new UnexpectedResponseException("Gearbox.Initialize", r); });
 
-			var fullLoadGearbox = ModelData.Gears[gear].FullLoadCurve.FullLoadStationaryTorque(inAngularVelocity) *
-								inAngularVelocity;
 			var fullLoadEngine = DataBus.EngineStationaryFullPower(inAngularVelocity);
+			Watt fullLoad;
+			if (ModelData.Gears[gear].FullLoadCurve != null) {
+				var fullLoadGearbox = ModelData.Gears[gear].FullLoadCurve.FullLoadStationaryTorque(inAngularVelocity) *
+									inAngularVelocity;
 
-			var fullLoad = VectoMath.Min(fullLoadGearbox, fullLoadEngine);
+
+				fullLoad = VectoMath.Min(fullLoadGearbox, fullLoadEngine);
+			} else {
+				fullLoad = fullLoadEngine;
+			}
+
 
 			return new ResponseDryRun {
 				Source = this,
@@ -247,9 +255,12 @@ namespace TUGraz.VectoCore.Models.SimulationComponent.Impl
 			var avgAngularVelocity = (PreviousState.OutAngularVelocity + outAngularVelocity) / 2.0;
 
 			if (dryRun) {
+				// if gearbox is disengaged the 0[W]-line is the limit for drag and full load.
 				return new ResponseDryRun {
 					Source = this,
-					GearboxPowerRequest = outTorque * avgAngularVelocity
+					GearboxPowerRequest = outTorque * avgAngularVelocity,
+					DeltaDragLoad = outTorque * avgAngularVelocity,
+					DeltaFullLoad = outTorque * avgAngularVelocity,
 				};
 			}
 
@@ -285,8 +296,6 @@ namespace TUGraz.VectoCore.Models.SimulationComponent.Impl
 
 			var response = NextComponent.Request(absTime, dt, 0.SI<NewtonMeter>(), null);
 			response.GearboxPowerRequest = outTorque * avgAngularVelocity;
-			//CurrentState.InAngularVelocity = ;
-
 			return response;
 		}
 
@@ -373,7 +382,7 @@ namespace TUGraz.VectoCore.Models.SimulationComponent.Impl
 			}
 			CurrentState.SetState(inTorque, inAngularVelocity, outTorque, outAngularVelocity);
 			CurrentState.Gear = Gear;
-			// end criticla section
+			// end critical section
 
 			var response = NextComponent.Request(absTime, dt, inTorque, inAngularVelocity);
 			response.GearboxPowerRequest = outTorque * (PreviousState.OutAngularVelocity + CurrentState.OutAngularVelocity) / 2.0;
@@ -412,7 +421,6 @@ namespace TUGraz.VectoCore.Models.SimulationComponent.Impl
 		{
 			if (!Disengaged) {
 				if (ModelData.Gears[Gear].LossMap.Extrapolated) {
-					// todo (MK, 2015-12-14): should we throw an interpolation error in EngineOnly Mode also?
 					Log.Warn("Gear {0} LossMap data was extrapolated: range for loss map is not sufficient.", Gear);
 					if (DataBus.ExecutionMode == ExecutionMode.Declaration) {
 						// todo (MK, 2016-01-07): add operating point and loss values for easier debugging

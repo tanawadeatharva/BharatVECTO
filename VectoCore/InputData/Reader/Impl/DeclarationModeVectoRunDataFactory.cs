@@ -91,7 +91,7 @@ namespace TUGraz.VectoCore.InputData.Reader.Impl
 				if (CyclesCache.ContainsKey(mission.MissionType)) {
 					cycle = CyclesCache[mission.MissionType];
 				} else {
-					cycle = DrivingCycleDataReader.ReadFromStream(mission.CycleFile, CycleType.DistanceBased);
+					cycle = DrivingCycleDataReader.ReadFromStream(mission.CycleFile, CycleType.DistanceBased, "", false);
 					CyclesCache.Add(mission.MissionType, cycle);
 				}
 				foreach (var loading in mission.Loadings) {

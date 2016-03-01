@@ -6,14 +6,17 @@ The file is needed for Vair & Beta [Cross Wind Correction](#cross-wind-correctio
 
 The file uses the VECTO CSV format [VECTO CSV format](#csv-format).
 
-Format:
-: -    Two columns
+**Format:**
+
+-    Two columns
 -    One header line
 -    At least two lines with numeric values (below file header)
 
 ***Columns:***
 
-| **Beta \[°\]**       | **cd Scaling Factor \[-\]** |
-| ---------------------------- | ---------------------- |
-| ...                          | ...                    |
-| ...                          | ...                    |
+| **Beta [°]** | **cd Scaling Factor [-]** |
+|--------------|---------------------------|
+| ...          | ...                       |
+| ...          | ...                       |
+
+

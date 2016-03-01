@@ -41,7 +41,7 @@ namespace TUGraz.VectoCore.InputData.FileIO.JSON
 		protected static JObject ReadFile(string fileName)
 		{
 			if (!File.Exists(fileName)) {
-				throw new FileNotFoundException("failed to load file", fileName);
+				throw new FileNotFoundException("failed to load file: " + fileName, fileName);
 			}
 			using (var reader = File.OpenText(fileName)) {
 				return (JObject)JToken.ReadFrom(new JsonTextReader(reader));
@@ -98,7 +98,8 @@ namespace TUGraz.VectoCore.InputData.FileIO.JSON
 
 		private static int ReadVersion(JObject json)
 		{
-			return json.GetEx(JsonKeys.JsonHeader).GetEx<int>(JsonKeys.JsonHeader_FileVersion);
+			var value = json.GetEx(JsonKeys.JsonHeader).GetEx<string>(JsonKeys.JsonHeader_FileVersion);
+			return (int)double.Parse(value.Trim('"'));
 		}
 	}
 }
