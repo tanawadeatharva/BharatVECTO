@@ -165,7 +165,7 @@ namespace TUGraz.VectoCore.Models.SimulationComponent.Impl
 				}).
 				Case<ResponseOverload>(). // do nothing, searchOperatingPoint is called later on
 				Case<ResponseUnderload>(r => {
-					// Delta is negative we are already below the Drag-load curve. activate braks
+					// Delta is negative we are already below the Drag-load curve. activate brakes
 					retVal = r; // => return, strategy should brake
 				}).
 				Case<ResponseGearShift>(r => { retVal = r; }).
@@ -377,6 +377,7 @@ namespace TUGraz.VectoCore.Models.SimulationComponent.Impl
 			var response = previousResponse ??
 							NextComponent.Request(absTime, operatingPoint.SimulationInterval, operatingPoint.Acceleration, gradient);
 
+			var point = operatingPoint;
 			response.Switch().
 				Case<ResponseSuccess>(r => retVal = r).
 				Case<ResponseOverload>(r => retVal = r)
@@ -386,8 +387,7 @@ namespace TUGraz.VectoCore.Models.SimulationComponent.Impl
 				Case<ResponseFailTimeInterval>(r =>
 					retVal = new ResponseDrivingCycleDistanceExceeded() {
 						Source = this,
-						// ReSharper disable once AccessToModifiedClosure
-						MaxDistance = DataBus.VehicleSpeed * r.DeltaT + operatingPoint.Acceleration / 2 * r.DeltaT * r.DeltaT
+						MaxDistance = DataBus.VehicleSpeed * r.DeltaT + point.Acceleration / 2 * r.DeltaT * r.DeltaT
 					}).
 				Default(r => { throw new UnexpectedResponseException("DrivingAction Brake: first request.", r); });
 
@@ -846,7 +846,7 @@ namespace TUGraz.VectoCore.Models.SimulationComponent.Impl
 				retVal.SimulationInterval = -currentSpeed / acceleration;
 				var stopDistance = currentSpeed * retVal.SimulationInterval +
 									acceleration / 2 * retVal.SimulationInterval * retVal.SimulationInterval;
-				if (stopDistance > ds) {
+				if (stopDistance.IsGreater(ds)) {
 					// just to cover everything - does not happen...
 					Log.Error(
 						"Could not find solution for computing required time interval to drive distance ds: {0}. currentSpeed: {1}, acceleration: {2}, stopDistance: {3}, distance: {4}",

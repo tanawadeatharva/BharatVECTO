@@ -76,7 +76,7 @@ namespace TUGraz.VectoCore.Tests.Models.Simulation
 			Assert.AreEqual(0.SI<NewtonMeter>(), outPort.Torque);
 		}
 
-		[TestMethod, Ignore]
+		[TestMethod]
 		public void TestEngineOnlyWithTimestamps()
 		{
 			var container = new VehicleContainer();
@@ -131,7 +131,6 @@ namespace TUGraz.VectoCore.Tests.Models.Simulation
 
 				absTime += dt;
 			}
-
 
 			// todo: test going backward in time, end of cycle
 		}
