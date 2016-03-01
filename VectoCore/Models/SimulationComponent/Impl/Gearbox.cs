@@ -186,12 +186,14 @@ namespace TUGraz.VectoCore.Models.SimulationComponent.Impl
 				Case<ResponseUnderload>().
 				Default(r => { throw new UnexpectedResponseException("Gearbox.Initialize", r); });
 
-			var fullLoadGearbox = ModelData.Gears[gear].FullLoadCurve.FullLoadStationaryTorque(inAngularVelocity) *
-								inAngularVelocity;
-			var fullLoadEngine = DataBus.EngineStationaryFullPower(inAngularVelocity);
+			var fullLoad = DataBus.EngineStationaryFullPower(inAngularVelocity);
 
-			var fullLoad = VectoMath.Min(fullLoadGearbox, fullLoadEngine);
+			if (ModelData.Gears[gear].FullLoadCurve != null) {
+				var fullLoadGearbox = ModelData.Gears[gear].FullLoadCurve.FullLoadStationaryTorque(inAngularVelocity) *
+									inAngularVelocity;
 
+				fullLoad = VectoMath.Min(fullLoadGearbox, fullLoad);
+			}
 			return new ResponseDryRun {
 				Source = this,
 				EnginePowerRequest = response.EnginePowerRequest,
