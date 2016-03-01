@@ -44,10 +44,8 @@ namespace TUGraz.VectoCore.Tests.Integration
 		public static DrivingCycleData CreateCycleData(string[] entries)
 		{
 			var cycleData = InputDataHelper.InputDataAsStream("<s>,<v>,<grad>,<stop>", entries);
-			return DrivingCycleDataReader.ReadFromStream(cycleData, CycleType.DistanceBased);
+			return DrivingCycleDataReader.ReadFromStream(cycleData, CycleType.DistanceBased, "", false);
 		}
-
-
 
 		#region Accelerate
 
@@ -685,7 +683,7 @@ namespace TUGraz.VectoCore.Tests.Integration
 		public static DrivingCycleData ReadDeclarationCycle(string missionType)
 		{
 			var cycleData = RessourceHelper.ReadStream(RessourceHelper.Namespace + "MissionCycles." + missionType + ".vdri");
-			var cycle = DrivingCycleDataReader.ReadFromStream(cycleData, CycleType.DistanceBased);
+			var cycle = DrivingCycleDataReader.ReadFromStream(cycleData, CycleType.DistanceBased, "", false);
 			return cycle;
 		}
 	}

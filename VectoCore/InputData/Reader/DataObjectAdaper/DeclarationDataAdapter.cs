@@ -100,7 +100,9 @@ namespace TUGraz.VectoCore.InputData.Reader.DataObjectAdaper
 				? data.AirDragAreaRigidTruck
 				: data.AirDragArea;
 
-			retVal.CrossWindCorrectionCurve = GetDeclarationAirResistanceCurve(retVal.VehicleCategory, aerodynamicDragAera);
+			retVal.CrossWindCorrectionCurve =
+				new CrosswindCorrectionCdxALookup(GetDeclarationAirResistanceCurve(retVal.VehicleCategory, aerodynamicDragAera),
+					CrossWindCorrectionMode.DeclarationModeCorrection);
 			var axles = data.Axles;
 			if (axles.Count < mission.AxleWeightDistribution.Length) {
 				throw new VectoException("Vehicle does not contain sufficient axles. {0} axles defined, {1} axles required",
@@ -266,12 +268,12 @@ namespace TUGraz.VectoCore.InputData.Reader.DataObjectAdaper
 		}
 
 
-		public static CrossWindCorrectionCurve GetDeclarationAirResistanceCurve(VehicleCategory vehicleCategory,
-			SquareMeter aerodynamicDragAera)
+		public static List<CrossWindCorrectionCurveReader.CrossWindCorrectionEntry> GetDeclarationAirResistanceCurve(
+			VehicleCategory vehicleCategory, SquareMeter aerodynamicDragAera)
 		{
 			var values = DeclarationData.AirDrag.Lookup(vehicleCategory);
-			var points = new List<CrossWindCorrectionCurve.CrossWindCorrectionEntry> {
-				new CrossWindCorrectionCurve.CrossWindCorrectionEntry {
+			var points = new List<CrossWindCorrectionCurveReader.CrossWindCorrectionEntry> {
+				new CrossWindCorrectionCurveReader.CrossWindCorrectionEntry {
 					Velocity = 0.SI<MeterPerSecond>(),
 					EffectiveCrossSectionArea = 0.SI<SquareMeter>()
 				}
@@ -294,14 +296,14 @@ namespace TUGraz.VectoCore.InputData.Reader.DataObjectAdaper
 //					cdASum += degreeShare * cdA * (vAir * vAir / (vVeh * vVeh)).Cast<Scalar>();
 					cdASum += degreeShare * cdA * ((vAirX * vAirX + vAirY * vAirY) / (vVeh * vVeh)).Cast<Scalar>();
 				}
-				points.Add(new CrossWindCorrectionCurve.CrossWindCorrectionEntry {
+				points.Add(new CrossWindCorrectionCurveReader.CrossWindCorrectionEntry {
 					Velocity = vVeh,
 					EffectiveCrossSectionArea = cdASum
 				});
 			}
 
 			points[0].EffectiveCrossSectionArea = points[1].EffectiveCrossSectionArea;
-			return new CrossWindCorrectionCurve(points, CrossWindCorrectionMode.DeclarationModeCorrection);
+			return points;
 		}
 
 		protected static SquareMeter ComputeDeltaCd(double beta, AirDrag.AirDragEntry values)

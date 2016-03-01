@@ -41,7 +41,7 @@ namespace TUGraz.VectoCore.Utils
 	[JsonObject(MemberSerialization.Fields)]
 	public class DelauneyMap : LoggingObject
 	{
-		internal readonly List<Point> Points = new List<Point>();
+		internal readonly ICollection<Point> Points = new HashSet<Point>();
 		private List<Triangle> _triangles = new List<Triangle>();
 		private IEnumerable<Edge> _convexHull;
 
@@ -70,24 +70,32 @@ namespace TUGraz.VectoCore.Utils
 			var superTriangle = new Triangle(new Point(max, 0), new Point(0, max), new Point(-max, -max));
 			var triangles = new List<Triangle> { superTriangle };
 
+			var pointCount = 0;
 			// iteratively add each point into the correct triangle and split up the triangle
 			foreach (var point in Points) {
 				// If the vertex lies inside a triangle, the edges of the triangle are 
 				// added to the edge buffer and the triangle is removed from list.
 				var containerTriangles = triangles.FindAll(t => t.ContainsInCircumcircle(point));
-				triangles.RemoveAll(t => t.ContainsInCircumcircle(point));
+				triangles = triangles.Except(containerTriangles).ToList();
 
 				// Remove duplicate edges. This leaves the convex hull of the edges.
 				// The edges in this convex hull are oriented counterclockwise!
-				var convexHullEdges = containerTriangles.
-					SelectMany(t => t.GetEdges()).
-					GroupBy(edge => edge).
-					Where(group => group.Count() == 1).
-					SelectMany(group => group);
+				var allEdges = containerTriangles.SelectMany(t => t.GetEdges());
+				var groupedEdges = allEdges.GroupBy(edge => edge);
+				var convexHullEdges = groupedEdges.Where(group => group.Count() == 1).Select(group => group.Key);
 
 				var newTriangles = convexHullEdges.Select(edge => new Triangle(edge.P1, edge.P2, point));
 
 				triangles.AddRange(newTriangles);
+				pointCount++;
+
+				// check invariant: m = 2n-2-k
+				// m...triangle count
+				// n...point count (pointCount +3 points on the supertriangle)
+				// k...points on convex hull (exactly 3 --> supertriangle)
+				if (triangles.Count != 2 * (pointCount + 3) - 2 - 3) {
+					throw new VectoException("Triangulation invariant violated! Triangle count and point count doesn't fit together.");
+				}
 			}
 
 			_convexHull = triangles.FindAll(t => t.SharesVertexWith(superTriangle)).
@@ -155,7 +163,7 @@ namespace TUGraz.VectoCore.Utils
 		private static double Extrapolate(double x, double y, Edge edge)
 		{
 			// shortcut if edge end points have same Z values
-			if (edge.P1.Z == edge.P2.Z) {
+			if (edge.P1.Z.IsEqual(edge.P2.Z)) {
 				return edge.P1.Z;
 			}
 
@@ -171,14 +179,6 @@ namespace TUGraz.VectoCore.Utils
 		}
 
 		public bool Extrapolated { get; set; }
-
-		public DelauneyMap CreateInvertedMap()
-		{
-			var reverted = new DelauneyMap();
-			reverted.Points.AddRange(Points.Select(p => new Point(p.X, p.Z, p.Y)));
-			reverted.Triangulate();
-			return reverted;
-		}
 
 		#region Equality members
 

@@ -66,20 +66,21 @@ namespace TUGraz.VectoCore.Tests.Models.Simulation
                                2,120,2,1400,0.4";
 
 			var cycleFile = new MemoryStream(Encoding.UTF8.GetBytes(inputData));
-			var drivingCycle = DrivingCycleDataReader.ReadFromStream(cycleFile, CycleType.PWheel);
+			var drivingCycle = DrivingCycleDataReader.ReadFromStream(cycleFile, CycleType.PWheel, "", false);
 
-			var gearbox = new Gearbox(container,
+			var gearbox = new CycleGearbox(container,
 				new GearboxData {
 					Gears = new Dictionary<uint, GearData> { { 1, new GearData { Ratio = 2.0 } }, { 2, new GearData { Ratio = 3.5 } } }
-				}, new PWheelShiftStrategy(null, container));
+				});
 
-			var cycle = new PWheelCycle(container, drivingCycle, 2.3, gearbox);
+			var cycle = new PWheelCycle(container, drivingCycle, 2.3,
+				gearbox.ModelData.Gears.ToDictionary(g => g.Key, g => g.Value.Ratio));
 
 			Assert.AreEqual(container.CycleData.LeftSample.Time, 1.SI<Second>());
 			Assert.AreEqual(container.CycleData.RightSample.Time, 2.SI<Second>());
 
-			Assert.AreEqual(1748.RPMtoRad() / (2.3 * 3.5), container.CycleData.LeftSample.AngularVelocity);
-			Assert.AreEqual(1400.RPMtoRad() / (2.3 * 3.5), container.CycleData.RightSample.AngularVelocity);
+			Assert.AreEqual(1748.RPMtoRad() / (2.3 * 3.5), container.CycleData.LeftSample.WheelAngularVelocity);
+			Assert.AreEqual(1400.RPMtoRad() / (2.3 * 3.5), container.CycleData.RightSample.WheelAngularVelocity);
 
 			Assert.AreEqual(89.SI().Kilo.Watt, container.CycleData.LeftSample.PWheel);
 			Assert.AreEqual(120.SI().Kilo.Watt, container.CycleData.RightSample.PWheel);
@@ -107,7 +108,7 @@ namespace TUGraz.VectoCore.Tests.Models.Simulation
                                2,  120,     2,     1400, 0.4";
 
 			var cycleFile = new MemoryStream(Encoding.UTF8.GetBytes(inputData));
-			var drivingCycle = DrivingCycleDataReader.ReadFromStream(cycleFile, CycleType.PWheel);
+			var drivingCycle = DrivingCycleDataReader.ReadFromStream(cycleFile, CycleType.PWheel, "", false);
 
 			var fuelConsumption = new DataTable();
 			fuelConsumption.Columns.Add("");
@@ -146,7 +147,7 @@ namespace TUGraz.VectoCore.Tests.Models.Simulation
 		[TestMethod]
 		public void Pwheel_Run_Test()
 		{
-			var jobFile = @"TestData\Jobs\Pwheel.vecto";
+			var jobFile = @"TestData\Pwheel\Pwheel.vecto";
 			var fileWriter = new FileOutputWriter(jobFile);
 			var sumWriter = new SummaryDataContainer(fileWriter);
 			var jobContainer = new JobContainer(sumWriter);
@@ -161,10 +162,10 @@ namespace TUGraz.VectoCore.Tests.Models.Simulation
 
 			Assert.IsTrue(jobContainer.Runs.All(r => r.Success), string.Concat(jobContainer.Runs.Select(r => r.ExecException)));
 
-			ResultFileHelper.TestSumFile(@"TestData\Results\Pwheel\Atego_ges.v2.vsum", @"TestData\Jobs\Pwheel.vsum");
+			ResultFileHelper.TestSumFile(@"TestData\Pwheel\Results\Pwheel.vsum", @"TestData\Pwheel\Pwheel.vsum");
 
-			ResultFileHelper.TestModFile(@"TestData\Results\Pwheel\Atego_ges_Gear2_pt1_rep1_actual.vmod",
-				@"TestData\Jobs\Pwheel_Gear2_pt1_rep1_actual.vmod");
+			ResultFileHelper.TestModFile(@"TestData\Pwheel\Results\Pwheel_Gear2_pt1_rep1_actual.vmod",
+				@"TestData\Pwheel\Pwheel_Gear2_pt1_rep1_actual.vmod");
 		}
 
 		/// <summary>
@@ -174,7 +175,7 @@ namespace TUGraz.VectoCore.Tests.Models.Simulation
 		[TestMethod]
 		public void Pwheel_ultimate_Run_Test()
 		{
-			var jobFile = @"TestData\Jobs\Pwheel_ultimate.vecto";
+			var jobFile = @"TestData\Pwheel\Pwheel_ultimate.vecto";
 			var fileWriter = new FileOutputWriter(jobFile);
 			var sumWriter = new SummaryDataContainer(fileWriter);
 			var jobContainer = new JobContainer(sumWriter);
@@ -189,8 +190,10 @@ namespace TUGraz.VectoCore.Tests.Models.Simulation
 
 			Assert.IsTrue(jobContainer.Runs.All(r => r.Success), string.Concat(jobContainer.Runs.Select(r => r.ExecException)));
 
-			ResultFileHelper.TestModFile(@"TestData\Results\P_wheel_in\Atego_HDVCO2_RD_#1_AuxStd.vmod",
-				@"TestData\Jobs\Pwheel_ultimate_RD_#1_Pwheel_AuxStd.vmod", testRowCount: false);
+			ResultFileHelper.TestSumFile(@"TestData\Pwheel\Results\Pwheel_ultimate.vsum", @"TestData\Pwheel\Pwheel_ultimate.vsum");
+
+			ResultFileHelper.TestModFile(@"TestData\Pwheel\Results\Pwheel_ultimate_RD_#1_Pwheel_AuxStd.vmod",
+				@"TestData\Pwheel\Pwheel_ultimate_RD_#1_Pwheel_AuxStd.vmod");
 		}
 	}
 }

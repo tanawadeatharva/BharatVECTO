@@ -44,15 +44,14 @@ namespace TUGraz.VectoCore.Models.SimulationComponent.Data
 		private const string AuxSupplyPowerField = "Aux_";
 
 		/// <summary>
-		/// [W]. Reads Auxiliary Supply Power (defined by Fields.AuxiliarySupplyPower-Prefix).
+		/// Reads Auxiliary Supply Power (defined by AuxSupplyPowerField-Prefix "Aux_").
 		/// </summary>
-		public static Dictionary<string, Watt> Read(DataRow row)
+		public static Dictionary<string, Watt> GetAuxiliaries(this DataRow row)
 		{
-			var auxCols = row.Table.Columns.Cast<DataColumn>().
-				Where(col => col.ColumnName.StartsWith(AuxSupplyPowerField));
-
-			return auxCols.ToDictionary(key => key.ColumnName,
-				value => row.ParseDouble(value).SI().Kilo.Watt.Cast<Watt>());
+			return row.Table.Columns.Cast<DataColumn>()
+				.Where(col => col.ColumnName.StartsWith(AuxSupplyPowerField))
+				.ToDictionary(key => AuxSupplyPowerField + key.ColumnName.Substring(AuxSupplyPowerField.Length).ToUpper(),
+					value => row.ParseDouble(value).SI().Kilo.Watt.Cast<Watt>());
 		}
 	}
 }

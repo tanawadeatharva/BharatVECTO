@@ -144,7 +144,7 @@ namespace TUGraz.VectoCore.Tests.Models.SimulationComponent
 		[TestMethod]
 		public void TestDistanceRequest()
 		{
-			var cycleData = DrivingCycleDataReader.ReadFromFile(ShortCycle, CycleType.DistanceBased);
+			var cycleData = DrivingCycleDataReader.ReadFromFile(ShortCycle, CycleType.DistanceBased, false);
 
 			var container = new VehicleContainer();
 			var cycle = new DistanceBasedDrivingCycle(container, cycleData);

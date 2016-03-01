@@ -98,7 +98,8 @@ namespace TUGraz.VectoCore.Models.SimulationComponent.Impl
 			get { return NextComponent; }
 		}
 
-		public IResponse Request(Second absTime, Second dt, NewtonMeter torque, PerSecond angularVelocity, bool dryRun = false)
+		public virtual IResponse Request(Second absTime, Second dt, NewtonMeter torque, PerSecond angularVelocity,
+			bool dryRun = false)
 		{
 			if (angularVelocity == null) {
 				Log.Debug("Invoking IdleController...");
@@ -124,7 +125,7 @@ namespace TUGraz.VectoCore.Models.SimulationComponent.Impl
 			return retVal;
 		}
 
-		public IResponse Initialize(NewtonMeter torque, PerSecond angularVelocity)
+		public virtual IResponse Initialize(NewtonMeter torque, PerSecond angularVelocity)
 		{
 			NewtonMeter torqueIn;
 			PerSecond engineSpeedIn;
@@ -141,7 +142,7 @@ namespace TUGraz.VectoCore.Models.SimulationComponent.Impl
 			NextComponent = other;
 		}
 
-		protected virtual void AddClutchLoss(NewtonMeter torque, PerSecond angularVelocity, out NewtonMeter torqueIn,
+		private void AddClutchLoss(NewtonMeter torque, PerSecond angularVelocity, out NewtonMeter torqueIn,
 			out PerSecond angularVelocityIn)
 		{
 			Log.Debug("from Wheels: torque: {0}, angularVelocity: {1}, power {2}", torque, angularVelocity,
@@ -171,24 +172,6 @@ namespace TUGraz.VectoCore.Models.SimulationComponent.Impl
 			}
 			Log.Debug("to Engine:   torque: {0}, angularVelocity: {1}, power {2}", torqueIn, angularVelocityIn,
 				Formulas.TorqueToPower(torqueIn, angularVelocityIn));
-		}
-	}
-
-	/// <summary>
-	/// Clutch without losses and slipping behaviour for PWheel driving cycle.
-	/// </summary>
-	public class PWheelClutch : Clutch
-	{
-		public PWheelClutch(IVehicleContainer container, ICombustionEngineIdleController idleController) : base(container)
-		{
-			IdleController = idleController;
-		}
-
-		protected override void AddClutchLoss(NewtonMeter torque, PerSecond angularVelocity, out NewtonMeter torqueIn,
-			out PerSecond angularVelocityIn)
-		{
-			torqueIn = torque;
-			angularVelocityIn = angularVelocity;
 		}
 	}
 }

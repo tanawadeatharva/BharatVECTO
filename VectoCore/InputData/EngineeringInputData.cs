@@ -50,11 +50,11 @@ namespace TUGraz.VectoCore.InputData
 		Meter DynamicTyreRadius { get; }
 
 		/// <summary>
-		/// P050
+		/// P050 - Cross Wind Correction Mode
 		/// cf. VECTO Input Parameters.xlsx
 		/// </summary>
 		CrossWindCorrectionMode CrossWindCorrectionMode { get; }
-
+		
 		/// <summary>
 		/// P051
 		/// P055, P056

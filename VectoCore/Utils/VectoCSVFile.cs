@@ -32,6 +32,7 @@
 using System;
 using System.Collections.Generic;
 using System.Data;
+using System.Diagnostics;
 using System.Diagnostics.Contracts;
 using System.Globalization;
 using System.IO;
@@ -72,7 +73,7 @@ namespace TUGraz.VectoCore.Utils
 		public static DataTable Read(string fileName, bool ignoreEmptyColumns = false, bool fullHeader = false)
 		{
 			try {
-				return ReadData(File.ReadAllLines(fileName), ignoreEmptyColumns, fullHeader);
+				return ReadData(File.ReadAllLines(fileName, Encoding.UTF8), ignoreEmptyColumns, fullHeader);
 			} catch (Exception e) {
 				Logger<VectoCSVFile>().Error(e);
 				throw new VectoException("File {0}: {1}", fileName, e.Message);
@@ -98,7 +99,7 @@ namespace TUGraz.VectoCore.Utils
 				return ReadData(lines.ToArray(), ignoreEmptyColumns);
 			} catch (Exception e) {
 				Logger<VectoCSVFile>().Error(e);
-				throw new VectoException("failed to read stream", e);
+				throw new VectoException("Failed to read stream: " + e.Message, e);
 			}
 		}
 
@@ -161,8 +162,6 @@ namespace TUGraz.VectoCore.Utils
 
 		private static string[] RemoveComments(string[] lines)
 		{
-			Contract.Requires(lines != null);
-
 			lines = lines.
 				Select(line => line.Contains('#') ? line.Substring(0, line.IndexOf(Comment)) : line).
 				Where(line => !string.IsNullOrEmpty(line)).
@@ -178,7 +177,7 @@ namespace TUGraz.VectoCore.Utils
 		/// <param name="table">The Datatable.</param>
 		public static void Write(string fileName, DataTable table)
 		{
-			var stream = new StreamWriter(fileName);
+			var stream = new StreamWriter(new FileStream(fileName, FileMode.Create), Encoding.UTF8);
 			Write(stream, table);
 			stream.Close();
 		}
@@ -196,7 +195,7 @@ namespace TUGraz.VectoCore.Utils
 				return;
 			}
 			var header = table.Columns.Cast<DataColumn>().Select(col => col.Caption ?? col.ColumnName);
-			writer.WriteLine(string.Join(Delimiter.ToString(), header));
+			writer.WriteLine(Delimiter.ToString().Join(header));
 
 			foreach (DataRow row in table.Rows) {
 				var row1 = row;
@@ -212,7 +211,7 @@ namespace TUGraz.VectoCore.Utils
 						: string.Format(CultureInfo.InvariantCulture, "{0}", item));
 				});
 
-				writer.WriteLine(string.Join(Delimiter.ToString(), formattedList));
+				writer.WriteLine(Delimiter.ToString().Join(formattedList));
 			}
 		}
 	}

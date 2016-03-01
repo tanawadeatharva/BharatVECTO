@@ -354,7 +354,6 @@ namespace TUGraz.VectoCore.InputData
 	}
 
 
-
 	public interface IStartStopDeclarationInputData
 	{
 		/// <summary>
@@ -363,7 +362,6 @@ namespace TUGraz.VectoCore.InputData
 		/// </summary>
 		bool Enabled { get; }
 	}
-
 
 
 	public interface IAuxiliaryDeclarationInputData
@@ -394,5 +392,4 @@ namespace TUGraz.VectoCore.InputData
 		/// </summary>
 		IList<string> TechList { get; }
 	}
-
 }

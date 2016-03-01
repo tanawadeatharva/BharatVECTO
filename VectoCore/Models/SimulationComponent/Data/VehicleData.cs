@@ -47,7 +47,7 @@ namespace TUGraz.VectoCore.Models.SimulationComponent.Data
 		public VehicleClass VehicleClass { get; internal set; }
 		//public CrossWindCorrectionMode CrossWindCorrectionMode { get; internal set; }
 
-		public CrossWindCorrectionCurve CrossWindCorrectionCurve { get; internal set; }
+		public ICrossWindCorrection CrossWindCorrectionCurve { get; internal set; }
 
 		/// <summary>
 		///     Set the properties for all axles of the vehicle
@@ -72,6 +72,7 @@ namespace TUGraz.VectoCore.Models.SimulationComponent.Data
 		// public Kilogram ReducedMassWheels { get; private set; }
 		public string Rim { get; internal set; }
 		public double TotalRollResistanceCoefficient { get; private set; }
+		public CrossWindCorrectionMode CrossWindCorrectionMode { get; set; }
 
 		public Kilogram TotalVehicleWeight()
 		{
