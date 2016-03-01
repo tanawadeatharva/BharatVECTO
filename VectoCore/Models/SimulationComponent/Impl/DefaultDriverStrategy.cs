@@ -292,9 +292,9 @@ namespace TUGraz.VectoCore.Models.SimulationComponent.Impl
 				return response;
 			}
 			if (newds.IsSmallerOrEqual(0, 1e-3)) {
-				newds = ds;
-				DriverStrategy.CurrentDrivingMode = DefaultDriverStrategy.DrivingMode.DrivingModeBrake;
-				DriverStrategy.BrakeTrigger = DriverStrategy.NextDrivingAction;
+				newds = ds / 2.0;
+				//DriverStrategy.CurrentDrivingMode = DefaultDriverStrategy.DrivingMode.DrivingModeBrake;
+				//DriverStrategy.BrakeTrigger = DriverStrategy.NextDrivingAction;
 			}
 			Log.Debug("Exceeding next ActionDistance at {0}. Reducing max Distance from {2} to {1}",
 				DriverStrategy.NextDrivingAction.ActionDistance,
