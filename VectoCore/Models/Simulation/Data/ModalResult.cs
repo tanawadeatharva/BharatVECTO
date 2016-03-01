@@ -175,19 +175,19 @@ namespace TUGraz.VectoCore.Models.Simulation.Data
 		[ModalResultField(typeof(SI), caption: "P_aux [kW]", outputFactor: 1e-3)] P_aux,
 
 		/// <summary>
-		///     [g/h]	Fuel consumption from FC map..
+		/// [g/h] Fuel consumption from FC map..
 		/// </summary>
 		[ModalResultField(typeof(SI), name: "FC-Map", caption: "FC-Map [g/h]", outputFactor: 3600 * 1000)] FCMap,
 
 		/// <summary>
-		///     [g/h]	Fuel consumption after Auxiliary-Start/Stop Correction. (Based on FC.)
+		/// [g/h] Fuel consumption after Auxiliary-Start/Stop Correction. (Based on FC.)
 		/// </summary>
-		[ModalResultField(typeof(SI), name: "FC-AUXc", caption: "FC-AUXc [g/h]", outputFactor: 3600)] FCAUXc,
+		[ModalResultField(typeof(SI), name: "FC-AUXc", caption: "FC-AUXc [g/h]", outputFactor: 3600 * 1000)] FCAUXc,
 
 		/// <summary>
-		///     [g/h]	Fuel consumption after WHTC Correction. (Based on FC-AUXc.)
+		/// [g/h] Fuel consumption after WHTC Correction. (Based on FC-AUXc.)
 		/// </summary>
-		[ModalResultField(typeof(SI), name: "FC-WHTCc", caption: "FC-WHTCc [g/h]", outputFactor: 3600)] FCWHTCc,
+		[ModalResultField(typeof(SI), name: "FC-WHTCc", caption: "FC-WHTCc [g/h]", outputFactor: 3600 * 1000)] FCWHTCc,
 
 		/// <summary>
 		///     [km]	Travelled distance.
