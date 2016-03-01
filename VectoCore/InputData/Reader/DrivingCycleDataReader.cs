@@ -45,12 +45,12 @@ namespace TUGraz.VectoCore.InputData.Reader
 	public class DrivingCycleDataReader : LoggingObject
 	{
 		/// <summary>
-		/// Gets the appropriate cycle type for a cycle in a DataTable.
+		/// Detects the appropriate cycle type for a cycle in a DataTable.
 		/// </summary>
 		/// <param name="cycleData">The cycle data.</param>
 		/// <returns></returns>
 		/// <exception cref="VectoException">CycleFile Format is unknown.</exception>
-		public static CycleType GetCycleType(DataTable cycleData)
+		public static CycleType DetectCycleType(DataTable cycleData)
 		{
 			var cols = cycleData.Columns.Cast<DataColumn>().Select(c => c.ColumnName).ToArray();
 
@@ -66,9 +66,6 @@ namespace TUGraz.VectoCore.InputData.Reader
 			if (EngineOnlyCycleDataParser.ValidateHeader(cols, false)) {
 				return CycleType.EngineOnly;
 			}
-			if (TimeBasedCycleDataParser.ValidateHeader(cols, false)) {
-				return CycleType.TimeBased;
-			}
 			if (DistanceBasedCycleDataParser.ValidateHeader(cols, false)) {
 				return CycleType.DistanceBased;
 			}
@@ -80,8 +77,6 @@ namespace TUGraz.VectoCore.InputData.Reader
 			switch (type) {
 				case CycleType.EngineOnly:
 					return new EngineOnlyCycleDataParser();
-				case CycleType.TimeBased:
-					return new TimeBasedCycleDataParser();
 				case CycleType.DistanceBased:
 					return new DistanceBasedCycleDataParser();
 				case CycleType.PWheel:
@@ -143,7 +138,7 @@ namespace TUGraz.VectoCore.InputData.Reader
 				Logger<DistanceBasedCycleDataParser>().Warn("Invalid data for DrivingCycle -- dataTable is null");
 				throw new VectoException("Invalid data for DrivingCycle -- dataTable is null");
 			}
-			return ReadFromDataTable(data, GetCycleType(data), name, crossWindRequired);
+			return ReadFromDataTable(data, DetectCycleType(data), name, crossWindRequired);
 		}
 
 		/// <summary>
@@ -389,51 +384,6 @@ namespace TUGraz.VectoCore.InputData.Reader
 					Fields.AdditionalAuxPowerDemand,
 					Fields.AirSpeedRelativeToVehicle,
 					Fields.WindYawAngle
-				};
-
-				return CheckColumns(header, allowedCols, requiredCols, throwExceptions, allowAux: true) &&
-						CheckComboColumns(header, new[] { Fields.AirSpeedRelativeToVehicle, Fields.WindYawAngle }, throwExceptions);
-			}
-		}
-
-		private class TimeBasedCycleDataParser : DistanceBasedCycleDataParser
-		{
-			public override IEnumerable<DrivingCycleData.DrivingCycleEntry> Parse(DataTable table, bool crossWindRequired)
-			{
-				ValidateHeader(table.Columns.Cast<DataColumn>().Select(col => col.ColumnName).ToArray());
-
-				var entries = table.Rows.Cast<DataRow>().Select((row, index) => new DrivingCycleData.DrivingCycleEntry {
-					Time = row.ParseDoubleOrGetDefault(Fields.Time, index).SI<Second>(),
-					VehicleTargetSpeed = row.ParseDouble(Fields.VehicleSpeed).KMPHtoMeterPerSecond(),
-					RoadGradientPercent = row.ParseDoubleOrGetDefault(Fields.RoadGradient),
-					RoadGradient = VectoMath.InclinationToAngle(row.ParseDoubleOrGetDefault(Fields.RoadGradient) / 100.0),
-					AdditionalAuxPowerDemand = row.ParseDoubleOrGetDefault(Fields.AdditionalAuxPowerDemand).SI().Kilo.Watt.Cast<Watt>(),
-					Gear = (uint)row.ParseDoubleOrGetDefault(Fields.Gear),
-					AngularVelocity = row.ParseDoubleOrGetDefault(Fields.EngineSpeed).RPMtoRad(),
-					AirSpeedRelativeToVehicle =
-						crossWindRequired ? row.ParseDouble(Fields.AirSpeedRelativeToVehicle).KMPHtoMeterPerSecond() : null,
-					WindYawAngle = crossWindRequired ? row.ParseDouble(Fields.WindYawAngle) : 0,
-					AuxiliarySupplyPower = row.GetAuxiliaries()
-				}).ToArray();
-
-				return entries;
-			}
-
-			public new static bool ValidateHeader(string[] header, bool throwExceptions = true)
-			{
-				var allowedCols = new[] {
-					Fields.Time,
-					Fields.VehicleSpeed,
-					Fields.RoadGradient,
-					Fields.EngineSpeed,
-					Fields.Gear,
-					Fields.AdditionalAuxPowerDemand,
-					Fields.AirSpeedRelativeToVehicle,
-					Fields.WindYawAngle,
-				};
-
-				var requiredCols = new[] {
-					Fields.VehicleSpeed,
 				};
 
 				return CheckColumns(header, allowedCols, requiredCols, throwExceptions, allowAux: true) &&

@@ -242,19 +242,14 @@ namespace TUGraz.VectoCore.Models.Simulation.Impl
 
 		private VehicleContainer BuildFullPowertrain(VectoRunData data)
 		{
-			var container = new VehicleContainer(_modData, _sumWriter, ExecutionMode.EngineOnly) { RunData = data };
-			IDrivingCycle cycle;
-			switch (data.Cycle.CycleType) {
-				case CycleType.DistanceBased:
-					cycle = new DistanceBasedDrivingCycle(container, data.Cycle);
-					break;
-				case CycleType.TimeBased:
-					cycle = new TimeBasedDrivingCycle(container, data.Cycle);
-					break;
-				default:
-					throw new VectoSimulationException("Powertrain Builder cannot build FullPowertrain for Cycle Type {0}",
-						data.Cycle.CycleType);
+			if (data.Cycle.CycleType != CycleType.DistanceBased) {
+				throw new VectoSimulationException("Powertrain Builder cannot build FullPowertrain for Cycle Type {0}",
+					data.Cycle.CycleType);
 			}
+
+			var container = new VehicleContainer(_modData, _sumWriter, ExecutionMode.EngineOnly) { RunData = data };
+			var cycle = new DistanceBasedDrivingCycle(container, data.Cycle);
+
 			// cycle --> driver --> vehicle --> wheels --> axleGear --> retarder --> gearBox
 			var driver = AddComponent(cycle, new Driver(container, data.DriverData, new DefaultDriverStrategy()));
 			var vehicle = AddComponent(driver, new Vehicle(container, data.VehicleData));
