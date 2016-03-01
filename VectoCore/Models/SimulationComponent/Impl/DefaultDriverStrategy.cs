@@ -58,7 +58,7 @@ namespace TUGraz.VectoCore.Models.SimulationComponent.Impl
 			DrivingModeBrake,
 		}
 
-		protected DrivingMode CurrentDrivingMode;
+		protected internal DrivingMode CurrentDrivingMode;
 		protected Dictionary<DrivingMode, IDriverMode> DrivingModes = new Dictionary<DrivingMode, IDriverMode>();
 
 		public DefaultDriverStrategy()
@@ -288,12 +288,17 @@ namespace TUGraz.VectoCore.Models.SimulationComponent.Impl
 			Meter newds;
 			response = CheckRequestDoesNotExceedNextAction(absTime, ds, targetVelocity, gradient, response, out newds);
 
-			if (newds.IsEqual(0, 1e-3) || ds.IsEqual(newds, 1e-3.SI<Meter>())) {
+			if (ds.IsEqual(newds, 1e-3.SI<Meter>())) {
 				return response;
 			}
-			Log.Debug("Exceeding next ActionDistance at {0}. Reducing max Distance to {1}",
+			if (newds.IsSmallerOrEqual(0, 1e-3)) {
+				newds = ds;
+				DriverStrategy.CurrentDrivingMode = DefaultDriverStrategy.DrivingMode.DrivingModeBrake;
+				DriverStrategy.BrakeTrigger = DriverStrategy.NextDrivingAction;
+			}
+			Log.Debug("Exceeding next ActionDistance at {0}. Reducing max Distance from {2} to {1}",
 				DriverStrategy.NextDrivingAction.ActionDistance,
-				newds);
+				newds, ds);
 			return new ResponseDrivingCycleDistanceExceeded() {
 				Source = this,
 				MaxDistance = newds,
