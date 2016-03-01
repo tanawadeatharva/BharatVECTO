@@ -306,11 +306,19 @@ namespace TUGraz.VectoCore.InputData.Reader
 			protected static bool CheckColumns(string[] header, IEnumerable<string> allowedCols, IEnumerable<string> requiredCols,
 				bool throwExceptions, bool allowAux)
 			{
+				var diff = header.GroupBy(c => c).Where(g => g.Count() > 2).SelectMany(g => g).ToList();
+				if (diff.Any()) {
+					if (throwExceptions) {
+						throw new VectoException("Column(s) defined more than once: " + ", ".Join(diff.OrderBy(x => x)));
+					}
+					return false;
+				}
+
 				if (allowAux) {
 					header = header.Where(c => !c.StartsWith(Fields.AuxiliarySupplyPower)).ToArray();
 				}
 
-				var diff = header.Except(allowedCols).ToList();
+				diff = header.Except(allowedCols).ToList();
 				if (diff.Any()) {
 					if (throwExceptions) {
 						throw new VectoException("Column(s) not allowed: " + ", ".Join(diff));
@@ -429,9 +437,10 @@ namespace TUGraz.VectoCore.InputData.Reader
 			public static bool ValidateHeader(string[] header, bool throwExceptions = true)
 			{
 				var allowedCols = new[] {
+					Fields.Time,
+					Fields.EngineSpeed,
 					Fields.EngineTorque,
 					Fields.EnginePower,
-					Fields.EngineSpeed,
 					Fields.AdditionalAuxPowerDemand
 				};
 
@@ -476,7 +485,7 @@ namespace TUGraz.VectoCore.InputData.Reader
 					PWheel = row.ParseDouble(Fields.PWheel).SI().Kilo.Watt.Cast<Watt>(),
 					Gear = (uint)row.ParseDouble(Fields.Gear),
 					AngularVelocity = row.ParseDouble(Fields.EngineSpeed).RPMtoRad(),
-					AdditionalAuxPowerDemand = row.ParseDouble(Fields.AdditionalAuxPowerDemand).SI().Kilo.Watt.Cast<Watt>(),
+					AdditionalAuxPowerDemand = row.ParseDoubleOrGetDefault(Fields.AdditionalAuxPowerDemand).SI().Kilo.Watt.Cast<Watt>(),
 				}).ToArray();
 
 				return entries;
@@ -491,7 +500,12 @@ namespace TUGraz.VectoCore.InputData.Reader
 					Fields.EngineSpeed,
 					Fields.AdditionalAuxPowerDemand
 				};
-				var requiredCols = allowedCols;
+				var requiredCols = new[] {
+					Fields.Time,
+					Fields.PWheel,
+					Fields.Gear,
+					Fields.EngineSpeed
+				};
 
 				return CheckColumns(header, allowedCols, requiredCols, throwExceptions, allowAux: false);
 			}
@@ -511,8 +525,7 @@ namespace TUGraz.VectoCore.InputData.Reader
 					Time = row.ParseDouble(Fields.Time).SI<Second>(),
 					VehicleTargetSpeed = row.ParseDouble(Fields.VehicleSpeed).KMPHtoMeterPerSecond(),
 					RoadGradient = VectoMath.InclinationToAngle(row.ParseDoubleOrGetDefault(Fields.RoadGradient) / 100.0),
-					AdditionalAuxPowerDemand = row.ParseDouble(Fields.AdditionalAuxPowerDemand).SI().Kilo.Watt.Cast<Watt>(),
-					// todo mk-2016-02-25 decide if null or 0.SI<MeterPerSecond>()?
+					AdditionalAuxPowerDemand = row.ParseDoubleOrGetDefault(Fields.AdditionalAuxPowerDemand).SI().Kilo.Watt.Cast<Watt>(),
 					AirSpeedRelativeToVehicle =
 						crossWindRequired ? row.ParseDouble(Fields.AirSpeedRelativeToVehicle).KMPHtoMeterPerSecond() : null,
 					WindYawAngle = crossWindRequired ? row.ParseDouble(Fields.WindYawAngle) : 0,
@@ -537,7 +550,6 @@ namespace TUGraz.VectoCore.InputData.Reader
 					Fields.Time,
 					Fields.VehicleSpeed,
 					Fields.RoadGradient,
-					Fields.AdditionalAuxPowerDemand,
 				};
 
 				return CheckColumns(header, allowedCols, requiredCols, throwExceptions, allowAux: true) &&
@@ -560,7 +572,7 @@ namespace TUGraz.VectoCore.InputData.Reader
 					Time = row.ParseDouble(Fields.Time).SI<Second>(),
 					VehicleTargetSpeed = row.ParseDouble(Fields.VehicleSpeed).KMPHtoMeterPerSecond(),
 					RoadGradient = VectoMath.InclinationToAngle(row.ParseDoubleOrGetDefault(Fields.RoadGradient) / 100.0),
-					AdditionalAuxPowerDemand = row.ParseDouble(Fields.AdditionalAuxPowerDemand).SI().Kilo.Watt.Cast<Watt>(),
+					AdditionalAuxPowerDemand = row.ParseDoubleOrGetDefault(Fields.AdditionalAuxPowerDemand).SI().Kilo.Watt.Cast<Watt>(),
 					AngularVelocity = row.ParseDouble(Fields.EngineSpeed).RPMtoRad(),
 					Gear = (uint)row.ParseDouble(Fields.Gear),
 					AirSpeedRelativeToVehicle =
@@ -590,7 +602,6 @@ namespace TUGraz.VectoCore.InputData.Reader
 					Fields.Time,
 					Fields.VehicleSpeed,
 					Fields.RoadGradient,
-					Fields.AdditionalAuxPowerDemand,
 					Fields.EngineSpeed,
 					Fields.Gear
 				};
