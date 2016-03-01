@@ -165,7 +165,7 @@ namespace TUGraz.VectoCore.Models.SimulationComponent.Impl
 				}).
 				Case<ResponseOverload>(). // do nothing, searchOperatingPoint is called later on
 				Case<ResponseUnderload>(r => {
-					// Delta is negative we are already below the Drag-load curve. activate braks
+					// Delta is negative we are already below the Drag-load curve. activate brakes
 					retVal = r; // => return, strategy should brake
 				}).
 				Case<ResponseGearShift>(r => { retVal = r; }).
