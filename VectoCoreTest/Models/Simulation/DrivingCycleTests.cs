@@ -131,7 +131,6 @@ namespace TUGraz.VectoCore.Tests.Models.Simulation
 				absTime += dt;
 			}
 
-
 			// todo: test going backward in time, end of cycle
 		}
 

@@ -91,6 +91,8 @@ namespace TUGraz.VectoCore.Configuration
 			public static readonly Second MeasuredSpeedTargetTimeInterval = 1.SI<Second>();
 
 
+			public static readonly Second LowerBoundTimeInterval = 0.25.SI<Second>();
+
 			/// <summary>
 			/// simulation interval if the vehicle stands still
 			/// </summary>
@@ -108,7 +110,7 @@ namespace TUGraz.VectoCore.Configuration
 
 			//VectoMath.InclinationToAngle(0.25 / 100.0).Value();
 
-			public const int DriverSearchLoopThreshold = 100;
+			public const int DriverSearchLoopThreshold = 200;
 
 			public static readonly Watt EnginePowerSearchTolerance = 0.50.SI<Watt>(); // Watt
 

@@ -35,6 +35,7 @@ using Microsoft.VisualStudio.TestTools.UnitTesting;
 using NLog;
 using TUGraz.VectoCore.InputData.FileIO.JSON;
 using TUGraz.VectoCore.Models.Simulation.Impl;
+using TUGraz.VectoCore.Models.SimulationComponent.Impl;
 using TUGraz.VectoCore.OutputData;
 using TUGraz.VectoCore.OutputData.FileIO;
 using TUGraz.VectoCore.Utils;
@@ -111,6 +112,7 @@ namespace TUGraz.VectoCore.Tests.Integration
 			var run = Truck40tPowerTrain.CreateEngineeringRun(cycle, "Truck40t_HeavyUrbanCycle_RefLoad.vmod",
 				7500.SI<Kilogram>(), 12900.SI<Kilogram>());
 
+			//((DistanceBasedDrivingCycle)((VehicleContainer)run.GetContainer()).Cycle).SetDriveOffDistance(26700.SI<Meter>());
 			run.Run();
 			Assert.IsTrue(run.FinishedWithoutErrors);
 		}
@@ -132,7 +134,7 @@ namespace TUGraz.VectoCore.Tests.Integration
 			var cycle = SimpleDrivingCycles.ReadDeclarationCycle("Interurban");
 			var run = Truck40tPowerTrain.CreateEngineeringRun(cycle, "Truck40t_InterUrbanCycle_RefLoad.vmod",
 				7500.SI<Kilogram>(), 12900.SI<Kilogram>());
-
+			//((DistanceBasedDrivingCycle)((VehicleContainer)run.GetContainer()).Cycle).SetDriveOffDistance(33000.SI<Meter>());
 			run.Run();
 			Assert.IsTrue(run.FinishedWithoutErrors);
 		}
@@ -144,6 +146,7 @@ namespace TUGraz.VectoCore.Tests.Integration
 			var run = Truck40tPowerTrain.CreateEngineeringRun(cycle, "Truck40t_CoachCycle_RefLoad.vmod",
 				7500.SI<Kilogram>(), 12900.SI<Kilogram>());
 
+			//((DistanceBasedDrivingCycle)((VehicleContainer)run.GetContainer()).Cycle).SetDriveOffDistance(152429.9.SI<Meter>());
 			run.Run();
 			Assert.IsTrue(run.FinishedWithoutErrors);
 		}
@@ -169,62 +172,62 @@ namespace TUGraz.VectoCore.Tests.Integration
 			Assert.IsTrue(jobContainer.Runs.All(r => r.Success), string.Concat(jobContainer.Runs.Select(r => r.ExecException)));
 		}
 
-		[TestMethod, Ignore]
-		public void Truck40t_RegionalDeliveryCycle_RefLoad_Declaration()
-		{
-			const string jobFile = @"c:\Users\Technik\Downloads\40t Long Haul Truck\40t_Long_Haul_Truck.vecto";
-			var inputData = JSONInputDataFactory.ReadJsonJob(jobFile);
-			var fileWriter = new FileOutputWriter(jobFile);
-			var factory = new SimulatorFactory(ExecutionMode.Declaration,
-				inputData, fileWriter) {
-					WriteModalResults = true,
-					SumData = new SummaryDataContainer(fileWriter)
-				};
-			var runs = factory.SimulationRuns().ToArray();
+		//[TestMethod]
+		//public void Truck40t_RegionalDeliveryCycle_RefLoad_Declaration()
+		//{
+		//	const string jobFile = @"c:\Users\Technik\Downloads\40t Long Haul Truck\40t_Long_Haul_Truck.vecto";
+		//	var inputData = JSONInputDataFactory.ReadJsonJob(jobFile);
+		//	var fileWriter = new FileOutputWriter(jobFile);
+		//	var factory = new SimulatorFactory(ExecutionMode.Declaration,
+		//		inputData, fileWriter) {
+		//			WriteModalResults = true,
+		//			SumData = new SummaryDataContainer(fileWriter)
+		//		};
+		//	var runs = factory.SimulationRuns().ToArray();
 
-			var run = runs[4];
-			run.Run();
+		//	var run = runs[4];
+		//	run.Run();
 
-			Assert.IsTrue(run.FinishedWithoutErrors);
-		}
+		//	Assert.IsTrue(run.FinishedWithoutErrors);
+		//}
 
-		[TestMethod, Ignore]
-		public void Truck12t_LongHaulCycle_RefLoad_Declaration()
-		{
-			const string jobFile = @"c:\Users\Technik\Downloads\12t Delivery Truck\12t Delivery Truck.vecto";
-			var inputData = JSONInputDataFactory.ReadJsonJob(jobFile);
-			var fileWriter = new FileOutputWriter(jobFile);
+		//[TestMethod]
+		//public void Truck12t_LongHaulCycle_RefLoad_Declaration()
+		//{
+		//	const string jobFile = @"c:\Users\Technik\Downloads\12t Delivery Truck\12t Delivery Truck.vecto";
+		//	var inputData = JSONInputDataFactory.ReadJsonJob(jobFile);
+		//	var fileWriter = new FileOutputWriter(jobFile);
 
-			// TODO: fails due to interpolaion failure in Gear 4
-			var factory = new SimulatorFactory(ExecutionMode.Declaration, inputData, fileWriter) {
-				WriteModalResults = true,
-				SumData = new SummaryDataContainer(fileWriter)
-			};
-			var runs = factory.SimulationRuns().ToArray();
+		//	// TODO: fails due to interpolaion failure in Gear 4
+		//	var factory = new SimulatorFactory(ExecutionMode.Declaration, inputData, fileWriter) {
+		//		WriteModalResults = true,
+		//		SumData = new SummaryDataContainer(fileWriter)
+		//	};
+		//	var runs = factory.SimulationRuns().ToArray();
 
-			var run = runs[1];
-			run.Run();
+		//	var run = runs[1];
+		//	run.Run();
 
-			Assert.IsTrue(run.FinishedWithoutErrors);
-		}
+		//	Assert.IsTrue(run.FinishedWithoutErrors);
+		//}
 
-		[TestMethod, Ignore]
-		public
-		void Truck12t_UrbanDeliveryCycle_RefLoad_Declaration()
-		{
-			var jobFile = @"c:\Users\Technik\Downloads\12t Delivery Truck\12t Delivery Truck.vecto";
-			var inputData = JSONInputDataFactory.ReadJsonJob(jobFile);
-			var fileWriter = new FileOutputWriter(jobFile);
+		//[TestMethod]
+		//public
+		//void Truck12t_UrbanDeliveryCycle_RefLoad_Declaration()
+		//{
+		//	var jobFile = @"c:\Users\Technik\Downloads\12t Delivery Truck\12t Delivery Truck.vecto";
+		//	var inputData = JSONInputDataFactory.ReadJsonJob(jobFile);
+		//	var fileWriter = new FileOutputWriter(jobFile);
 
-			// TODO: fails due to interpolaion failure in Gear 4
-			var factory = new SimulatorFactory(ExecutionMode.Declaration, inputData, fileWriter) {
-				WriteModalResults = true,
-				SumData = new SummaryDataContainer(fileWriter)
-			};
-			var runs = factory.SimulationRuns().ToArray();
-			var run = runs[7];
-			run.Run();
-			Assert.IsTrue(run.FinishedWithoutErrors);
-		}
+		//	// TODO: fails due to interpolaion failure in Gear 4
+		//	var factory = new SimulatorFactory(ExecutionMode.Declaration, inputData, fileWriter) {
+		//		WriteModalResults = true,
+		//		SumData = new SummaryDataContainer(fileWriter)
+		//	};
+		//	var runs = factory.SimulationRuns().ToArray();
+		//	var run = runs[7];
+		//	run.Run();
+		//	Assert.IsTrue(run.FinishedWithoutErrors);
+		//}
 	}
 }
