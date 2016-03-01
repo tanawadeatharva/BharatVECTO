@@ -85,7 +85,7 @@ namespace TUGraz.VectoCore.Models.SimulationComponent.Impl
 			}
 			if (CurrentDrivingMode == DrivingMode.DrivingModeDrive) {
 				var currentDistance = Driver.DataBus.Distance;
-				UpdateDrivingAction(currentDistance);
+				UpdateDrivingAction(currentDistance, ds);
 				if (NextDrivingAction != null) {
 					var remainingDistance = NextDrivingAction.ActionDistance - currentDistance;
 					var estimatedNextTimestep = remainingDistance / Driver.DataBus.VehicleSpeed;
@@ -124,9 +124,9 @@ namespace TUGraz.VectoCore.Models.SimulationComponent.Impl
 		public DrivingBehavior DriverBehavior { get; internal set; }
 
 
-		private void UpdateDrivingAction(Meter currentDistance)
+		private void UpdateDrivingAction(Meter currentDistance, Meter ds)
 		{
-			var nextAction = GetNextDrivingAction(currentDistance);
+			var nextAction = GetNextDrivingAction(currentDistance, ds);
 			if (NextDrivingAction == null) {
 				if (nextAction != null) {
 					// take the new action
@@ -172,15 +172,15 @@ namespace TUGraz.VectoCore.Models.SimulationComponent.Impl
 		}
 
 
-		protected DrivingBehaviorEntry GetNextDrivingAction(Meter minDistance)
+		protected DrivingBehaviorEntry GetNextDrivingAction(Meter minDistance, Meter ds)
 		{
 			var currentSpeed = Driver.DataBus.VehicleSpeed;
 
 			// distance until halt
 			var lookaheadDistance = Formulas.DecelerationDistance(currentSpeed, 0.SI<MeterPerSecond>(),
 				Driver.DriverData.LookAheadCoasting.Deceleration);
-
-			var lookaheadData = Driver.DataBus.LookAhead(1.2 * lookaheadDistance);
+			lookaheadDistance = VectoMath.Max(2 * ds, 1.2 * lookaheadDistance);
+			var lookaheadData = Driver.DataBus.LookAhead(lookaheadDistance);
 
 			Log.Debug("Lookahead distance: {0} @ current speed {1}", lookaheadDistance, currentSpeed);
 			var nextActions = new List<DrivingBehaviorEntry>();
@@ -192,8 +192,9 @@ namespace TUGraz.VectoCore.Models.SimulationComponent.Impl
 					if (!Driver.DriverData.LookAheadCoasting.Enabled ||
 						currentSpeed < Driver.DriverData.LookAheadCoasting.MinSpeed) {
 						var brakingDistance = Driver.ComputeDecelerationDistance(nextTargetSpeed) + BrakingSafetyMargin;
-						Log.Debug("adding 'Braking' starting at distance {0}. brakingDistance: {1}, triggerDistance: {2}",
-							entry.Distance - brakingDistance, brakingDistance, entry.Distance);
+						Log.Debug(
+							"adding 'Braking' starting at distance {0}. brakingDistance: {1}, triggerDistance: {2}, nextTargetSpeed: {3}",
+							entry.Distance - brakingDistance, brakingDistance, entry.Distance, nextTargetSpeed);
 						nextActions.Add(new DrivingBehaviorEntry {
 							Action = DrivingBehavior.Braking,
 							ActionDistance = entry.Distance - brakingDistance,
@@ -203,8 +204,9 @@ namespace TUGraz.VectoCore.Models.SimulationComponent.Impl
 					} else {
 						var coastingDistance = Formulas.DecelerationDistance(currentSpeed, nextTargetSpeed,
 							Driver.DriverData.LookAheadCoasting.Deceleration);
-						Log.Debug("adding 'Coasting' starting at distance {0}. coastingDistance: {1}, triggerDistance: {2}",
-							entry.Distance - coastingDistance, coastingDistance, entry.Distance);
+						Log.Debug(
+							"adding 'Coasting' starting at distance {0}. coastingDistance: {1}, triggerDistance: {2}, nextTargetSpeed: {3}",
+							entry.Distance - coastingDistance, coastingDistance, entry.Distance, nextTargetSpeed);
 						nextActions.Add(
 							new DrivingBehaviorEntry {
 								Action = DrivingBehavior.Coasting,
