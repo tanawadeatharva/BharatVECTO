@@ -410,7 +410,7 @@ namespace TUGraz.VectoCore.Models.SimulationComponent.Impl
 					break;
 				case DrivingBehavior.Braking:
 					var brakingDistance = Driver.DriverData.AccelerationCurve.ComputeAccelerationDistance(v2,
-						nextAction.NextTargetSpeed);
+						nextAction.NextTargetSpeed) + DefaultDriverStrategy.BrakingSafetyMargin;
 					if ((Driver.DataBus.Distance + ds).IsSmaller(nextAction.TriggerDistance - brakingDistance)) {
 						return response;
 					}
