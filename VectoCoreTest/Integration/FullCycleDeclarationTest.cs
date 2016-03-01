@@ -112,6 +112,7 @@ namespace TUGraz.VectoCore.Tests.Integration
 			var run = Truck40tPowerTrain.CreateEngineeringRun(cycle, "Truck40t_HeavyUrbanCycle_RefLoad.vmod",
 				7500.SI<Kilogram>(), 12900.SI<Kilogram>());
 
+			//((DistanceBasedDrivingCycle)((VehicleContainer)run.GetContainer()).Cycle).SetDriveOffDistance(26700.SI<Meter>());
 			run.Run();
 			Assert.IsTrue(run.FinishedWithoutErrors);
 		}
