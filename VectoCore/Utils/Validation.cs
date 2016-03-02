@@ -147,8 +147,8 @@ namespace TUGraz.VectoCore.Utils
 					var results = element.Validate();
 					if (results.Any()) {
 						return new ValidationResult(
-							string.Format("Validation for list {1}[{0}] in {1} failed: {2}", i, validationContext.DisplayName,
-								string.Concat(results)));
+							string.Format("{1}[{0}] in {1} invalid: {2}", i, validationContext.DisplayName,
+								string.Join("\n", results)));
 					}
 					i++;
 				}
@@ -156,7 +156,7 @@ namespace TUGraz.VectoCore.Utils
 				var results = value.Validate();
 				if (results.Any()) {
 					return new ValidationResult(
-						string.Format("Validation for object {{{0}}} failed: {1}", validationContext.DisplayName, string.Concat(results)));
+						string.Format("{{{0}}} invalid: {1}", validationContext.DisplayName, string.Join("\n", results)));
 				}
 			}
 
