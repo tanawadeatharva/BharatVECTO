@@ -42,7 +42,7 @@ using TUGraz.VectoCore.Utils;
 
 namespace TUGraz.VectoCore.Tests.Utils
 {
-	public class MockVairVechicleContainer : IVehicleContainer
+	public class MockVairVehicleContainer : IVehicleContainer
 	{
 		// only CycleData Lookup is set / accessed...
 

@@ -76,7 +76,7 @@ namespace TUGraz.VectoCore.Models.Simulation.Impl
 
 		private VehicleContainer BuildEngineOnly(VectoRunData data)
 		{
-			var container = new VehicleContainer(_modData, _sumWriter, ExecutionMode.EngineOnly);
+			var container = new VehicleContainer(_modData, _sumWriter, ExecutionMode.EngineOnly) { RunData = data };
 			var cycle = new PowertrainDrivingCycle(container, data.Cycle);
 
 			var directAux = new EngineAuxiliary(container);
@@ -91,7 +91,7 @@ namespace TUGraz.VectoCore.Models.Simulation.Impl
 
 		private VehicleContainer BuildPWheel(VectoRunData data)
 		{
-			var container = new VehicleContainer(_modData, _sumWriter, ExecutionMode.Engineering);
+			var container = new VehicleContainer(_modData, _sumWriter, ExecutionMode.Engineering) { RunData = data };
 
 			var gearbox = new CycleGearbox(container, data.GearboxData);
 

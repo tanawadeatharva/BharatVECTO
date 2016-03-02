@@ -48,7 +48,7 @@ namespace TUGraz.VectoCore.Models.SimulationComponent.Data
 
 		public RetarderType Type { get; internal set; }
 
-		[SIRange(0, double.MaxValue)]
+		[SIRange(double.Epsilon, double.MaxValue)]
 		public double Ratio { get; internal set; }
 	}
 }
