@@ -51,7 +51,8 @@ namespace LicenceHeader
 			Console.ResetColor();
 			Console.WriteLine();
 			Console.WriteLine("Search Directory: {0}", Path.GetFullPath(SolutionRootDirectory));
-			Console.WriteLine("Filter: *.cs, Excluded Dirs: \\obj, \\bin");
+			Console.WriteLine("Filter: *.cs");
+			Console.WriteLine("Excluded Dirs: \\obj, \\bin");
 			Console.WriteLine("Header-File: {0}", Path.GetFullPath("header.txt"));
 
 			var licence = File.ReadAllText("header.txt", Encoding.UTF8);
