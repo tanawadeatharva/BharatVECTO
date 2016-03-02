@@ -95,28 +95,19 @@ namespace TUGraz.VectoCore.InputData.FileIO.JSON
 			get { return Body.GetEx<double>(JsonKeys.Engine_Inertia).SI<KilogramSquareMeter>(); }
 		}
 
-		public virtual KilogramPerWattSecond WHTCMotorway
+		public virtual double WHTCMotorway
 		{
-			get
-			{
-				return Body.GetEx<double>(JsonKeys.Engine_WHTC_Motorway).SI().Gramm.Per.Kilo.Watt.Hour.Cast<KilogramPerWattSecond>();
-			}
+			get { return Body.GetEx<double>(JsonKeys.Engine_WHTC_Motorway); }
 		}
 
-		public virtual KilogramPerWattSecond WHTCRural
+		public virtual double WHTCRural
 		{
-			get
-			{
-				return Body.GetEx<double>(JsonKeys.Engine_WHTC_Rural).SI().Gramm.Per.Kilo.Watt.Hour.Cast<KilogramPerWattSecond>();
-			}
+			get { return Body.GetEx<double>(JsonKeys.Engine_WHTC_Rural); }
 		}
 
-		public virtual KilogramPerWattSecond WHTCUrban
+		public virtual double WHTCUrban
 		{
-			get
-			{
-				return Body.GetEx<double>(JsonKeys.Engine_WHTC_Urban).SI().Gramm.Per.Kilo.Watt.Hour.Cast<KilogramPerWattSecond>();
-			}
+			get { return Body.GetEx<double>(JsonKeys.Engine_WHTC_Urban); }
 		}
 
 		public string Vendor

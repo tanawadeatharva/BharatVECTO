@@ -29,8 +29,8 @@
 *   Martin Rexeis, rexeis@ivt.tugraz.at, IVT, Graz University of Technology
 */
 
-using System.IO;
-using Newtonsoft.Json;
+using System.ComponentModel.DataAnnotations;
+using TUGraz.VectoCore.Utils;
 
 namespace TUGraz.VectoCore.Models.SimulationComponent.Data
 {
@@ -44,10 +44,12 @@ namespace TUGraz.VectoCore.Models.SimulationComponent.Data
 			LossesIncludedInTransmission
 		}
 
+		[ValidateObject]
 		public RetarderLossMap LossMap { get; internal set; }
 
 		public RetarderType Type { get; internal set; }
 
+		[Required, SIRange(double.Epsilon, double.MaxValue)]
 		public double Ratio { get; internal set; }
 	}
 }

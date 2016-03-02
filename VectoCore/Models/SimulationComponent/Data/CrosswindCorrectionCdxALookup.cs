@@ -30,6 +30,7 @@
 */
 
 using System.Collections.Generic;
+using System.ComponentModel.DataAnnotations;
 using TUGraz.VectoCore.Models.Simulation.DataBus;
 using TUGraz.VectoCore.Utils;
 

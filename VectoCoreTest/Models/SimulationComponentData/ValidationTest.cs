@@ -77,9 +77,9 @@ namespace TUGraz.VectoCore.Tests.Models.SimulationComponentData
 				Displacement = 6374.SI().Cubic.Centi.Meter.Cast<CubicMeter>(),
 				IdleSpeed = 560.RPMtoRad(),
 				Inertia = 1.SI<KilogramSquareMeter>(),
-				WHTCUrban = 1.SI().Gramm.Per.Kilo.Watt.Hour.Cast<KilogramPerWattSecond>(),
-				WHTCRural = 1.SI().Gramm.Per.Kilo.Watt.Hour.Cast<KilogramPerWattSecond>(),
-				WHTCMotorway = 1.SI().Gramm.Per.Kilo.Watt.Hour.Cast<KilogramPerWattSecond>(),
+				WHTCUrban = 1,
+				WHTCRural = 1,
+				WHTCMotorway = 1,
 				FullLoadCurve = EngineFullLoadCurve.Create(fullLoad),
 				ConsumptionMap = FuelConsumptionMap.Create(fuelConsumption)
 			};

@@ -29,7 +29,9 @@
 *   Martin Rexeis, rexeis@ivt.tugraz.at, IVT, Graz University of Technology
 */
 
+using System;
 using System.Collections.Generic;
+using System.ComponentModel.DataAnnotations;
 using System.Runtime.Serialization;
 using TUGraz.VectoCore.Models.SimulationComponent.Data.Gearbox;
 using TUGraz.VectoCore.Utils;
@@ -46,17 +48,13 @@ namespace TUGraz.VectoCore.Models.SimulationComponent.Data
 		/// <summary>
 		/// The name of the gearbox model.
 		/// </summary>
+		[Required]
 		public string ModelName { get; internal set; }
-
-		///// <summary>
-		///// The axle gear data.
-		///// </summary>
-		//public GearData AxleGearData { get; internal set; }
 
 		/// <summary>
 		/// The gear data.
 		/// </summary>
-		public Dictionary<uint, GearData> Gears = new Dictionary<uint, GearData>();
+		[Required, ValidateObject] public Dictionary<uint, GearData> Gears = new Dictionary<uint, GearData>();
 
 		/// <summary>
 		/// Gets the type.
@@ -72,6 +70,7 @@ namespace TUGraz.VectoCore.Models.SimulationComponent.Data
 		/// <value>
 		/// The inertia.
 		/// </value>
+		[Required, SIRange(0, 10)]
 		public KilogramSquareMeter Inertia { get; internal set; }
 
 		/// <summary>
@@ -80,11 +79,13 @@ namespace TUGraz.VectoCore.Models.SimulationComponent.Data
 		/// <value>
 		/// The traction interruption.
 		/// </value>
+		[Required, SIRange(0, 5)]
 		public Second TractionInterruption { get; internal set; }
 
 		/// <summary>
 		///	[%] (0-1) The torque reserve for shift strategy (early upshift, skipgears)
 		/// </summary>
+		[Required, Range(0, 0.5)]
 		public double TorqueReserve { get; internal set; }
 
 		/// <summary>
@@ -95,6 +96,7 @@ namespace TUGraz.VectoCore.Models.SimulationComponent.Data
 		/// <summary>
 		/// Gets the minimum time between shifts.
 		/// </summary>
+		[Required, SIRange(0, 5)]
 		public Second ShiftTime { get; internal set; }
 
 		/// <summary>
@@ -105,6 +107,7 @@ namespace TUGraz.VectoCore.Models.SimulationComponent.Data
 		/// <summary>
 		/// [%] (0-1) The starting torque reserve for finding the starting gear after standstill.
 		/// </summary>
+		[Required, Range(0, 0.5)]
 		public double StartTorqueReserve { get; internal set; }
 
 		/// <summary>
@@ -113,6 +116,7 @@ namespace TUGraz.VectoCore.Models.SimulationComponent.Data
 		/// <value>
 		/// The start speed.
 		/// </value>
+		[Required, SIRange(double.Epsilon, 5)]
 		public MeterPerSecond StartSpeed { get; internal set; }
 
 		/// <summary>
@@ -121,6 +125,7 @@ namespace TUGraz.VectoCore.Models.SimulationComponent.Data
 		/// <value>
 		/// The start acceleration.
 		/// </value>
+		[Required, SIRange(double.Epsilon, 2)]
 		public MeterPerSquareSecond StartAcceleration { get; internal set; }
 
 		/// <summary>
