@@ -46,12 +46,6 @@ namespace TUGraz.VectoCore.Models.SimulationComponent.Data
 	public class GearboxData : SimulationComponentData
 	{
 		/// <summary>
-		/// The name of the gearbox model.
-		/// </summary>
-		[Required]
-		public string ModelName { get; internal set; }
-
-		/// <summary>
 		/// The gear data.
 		/// </summary>
 		[Required, ValidateObject] public Dictionary<uint, GearData> Gears = new Dictionary<uint, GearData>();

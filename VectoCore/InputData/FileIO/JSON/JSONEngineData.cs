@@ -115,7 +115,7 @@ namespace TUGraz.VectoCore.InputData.FileIO.JSON
 			get { return "N/A"; }
 		}
 
-		public string MakeAndModel
+		public string ModelName
 		{
 			get { return Body.GetEx<string>(JsonKeys.Engine_ModelName); }
 		}
