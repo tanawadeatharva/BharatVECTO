@@ -38,7 +38,7 @@ namespace TUGraz.VectoCore.Models.SimulationComponent.Data
 {
 	public class CombustionEngineData : SimulationComponentData
 	{
-		[Required, SIRange(1000 / (Constants.Kilo * Constants.Kilo), 20000 / (Constants.Kilo * Constants.Kilo))]
+		[Required, SIRange(1000 * 1E-6, 20000 * 1E-6)]
 		public CubicMeter Displacement { get; internal set; }
 
 		[Required, SIRange(400 * Constants.RPMToRad, 1000 * Constants.RPMToRad)]
@@ -47,14 +47,14 @@ namespace TUGraz.VectoCore.Models.SimulationComponent.Data
 		[Required, SIRange(0, 10)]
 		public KilogramSquareMeter Inertia { get; internal set; }
 
-		[Required, SIRange(double.Epsilon, 1000 / (Constants.Kilo * Constants.Kilo * Constants.SecondsPerHour))]
-		public KilogramPerWattSecond WHTCUrban { get; internal set; }
+		[Required, Range(0.9, 2)]
+		public double WHTCUrban { get; internal set; }
 
-		[Required, SIRange(double.Epsilon, 1000 / (Constants.Kilo * Constants.Kilo * Constants.SecondsPerHour))]
-		public KilogramPerWattSecond WHTCRural { get; internal set; }
+		[Required, Range(0.9, 2)]
+		public double WHTCRural { get; internal set; }
 
-		[Required, SIRange(double.Epsilon, 1000 / (Constants.Kilo * Constants.Kilo * Constants.SecondsPerHour))]
-		public KilogramPerWattSecond WHTCMotorway { get; internal set; }
+		[Required, Range(0.9, 2)]
+		public double WHTCMotorway { get; internal set; }
 
 		[Required, ValidateObject]
 		public FuelConsumptionMap ConsumptionMap { get; internal set; }
@@ -96,9 +96,9 @@ namespace TUGraz.VectoCore.Models.SimulationComponent.Data
 				hashCode = (hashCode * 397) ^ (Displacement != null ? Displacement.GetHashCode() : 0);
 				hashCode = (hashCode * 397) ^ (IdleSpeed != null ? IdleSpeed.GetHashCode() : 0);
 				hashCode = (hashCode * 397) ^ (Inertia != null ? Inertia.GetHashCode() : 0);
-				hashCode = (hashCode * 397) ^ (WHTCUrban != null ? WHTCUrban.GetHashCode() : 0);
-				hashCode = (hashCode * 397) ^ (WHTCRural != null ? WHTCRural.GetHashCode() : 0);
-				hashCode = (hashCode * 397) ^ (WHTCMotorway != null ? WHTCMotorway.GetHashCode() : 0);
+				hashCode = (hashCode * 397) ^ (WHTCUrban.GetHashCode());
+				hashCode = (hashCode * 397) ^ (WHTCRural.GetHashCode());
+				hashCode = (hashCode * 397) ^ (WHTCMotorway.GetHashCode());
 				hashCode = (hashCode * 397) ^ (ConsumptionMap != null ? ConsumptionMap.GetHashCode() : 0);
 				return hashCode;
 			}

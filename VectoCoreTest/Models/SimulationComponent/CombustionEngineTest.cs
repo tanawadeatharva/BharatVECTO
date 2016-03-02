@@ -462,16 +462,13 @@ namespace TUGraz.VectoCore.Tests.Models.SimulationComponent
 		{
 			var engineData = MockSimulationDataFactory.CreateEngineDataFromFile(CoachEngine);
 			var motorway = engineData.WHTCMotorway;
-			Assert.AreEqual(motorway.Value(), 0);
-			Assert.IsTrue(motorway.HasEqualUnit(new SI().Kilo.Gramm.Per.Watt.Second.ConvertTo()));
+			Assert.AreEqual(motorway, 0);
 
 			var rural = engineData.WHTCRural;
-			Assert.AreEqual(rural.Value(), 0);
-			Assert.IsTrue(rural.HasEqualUnit(new SI().Kilo.Gramm.Per.Watt.Second.ConvertTo()));
+			Assert.AreEqual(rural, 0);
 
 			var urban = engineData.WHTCUrban;
-			Assert.AreEqual(urban.Value(), 0);
-			Assert.IsTrue(urban.HasEqualUnit(new SI().Kilo.Gramm.Per.Watt.Second.ConvertTo()));
+			Assert.AreEqual(urban, 0);
 
 			var displace = engineData.Displacement;
 			Assert.AreEqual(0.01273, displace.Value());
