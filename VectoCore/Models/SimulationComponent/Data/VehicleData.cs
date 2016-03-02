@@ -35,7 +35,6 @@ using System.ComponentModel.DataAnnotations;
 using System.Linq;
 using TUGraz.VectoCore.Exceptions;
 using TUGraz.VectoCore.Models.Declaration;
-using TUGraz.VectoCore.Models.Simulation.Data;
 using TUGraz.VectoCore.Utils;
 
 namespace TUGraz.VectoCore.Models.SimulationComponent.Data
@@ -135,7 +134,7 @@ namespace TUGraz.VectoCore.Models.SimulationComponent.Data
 			WheelsInertia = wheelsInertia;
 		}
 
-		public ValidationResult ValidateVehicleData(VehicleData vehicleData, ValidationContext validationContext)
+		public static ValidationResult ValidateVehicleData(VehicleData vehicleData, ValidationContext validationContext)
 		{
 			var weightShareSum = vehicleData.AxleData.Sum(axle => axle.AxleWeightShare);
 			if (!weightShareSum.IsEqual(1.0, 1E-10)) {

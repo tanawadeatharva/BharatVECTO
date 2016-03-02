@@ -123,7 +123,7 @@ namespace TUGraz.VectoCore.Tests.Models.SimulationComponentData
 			};
 
 			var results = data.Validate();
-			Assert.IsFalse(results.Any(), "Validation Failed: " + "; ".Join(results.Select(r => r.ErrorMessage)));
+			Assert.IsTrue(results.Any(), "Validation should have failed, but succeded.");
 		}
 
 		/// <summary>
