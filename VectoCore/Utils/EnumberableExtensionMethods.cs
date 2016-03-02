@@ -135,7 +135,7 @@ namespace TUGraz.VectoCore.Utils
 
 			if (!string.IsNullOrWhiteSpace(message)) {
 				if (!skip(list[index]) || skip(list[index + 1])) {
-					LogManager.GetLogger(typeof(T).ToString()).Error(message);
+					LogManager.GetLogger(typeof(T).ToString()).Warn(message);
 				}
 			}
 

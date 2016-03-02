@@ -62,13 +62,22 @@ namespace TUGraz.VectoCore.Models.Declaration
 			if (grossVehicleMassRating < 7.5.SI<Ton>()) {
 				throw new VectoException("Gross vehicle mass must be greater than 7.5 tons");
 			}
-			var row =
-				SegmentTable.Rows.Cast<DataRow>().First(r => r.Field<string>("valid") == "1"
-															&& r.Field<string>("vehiclecategory") == vehicleCategory.ToString()
-															&& r.Field<string>("axleconf.") == axleConfiguration.GetName()
-															&& r.ParseDouble("gvw_min").SI<Ton>() < grossVehicleMassRating
-															&& r.ParseDouble("gvw_max").SI<Ton>() >= grossVehicleMassRating
+
+			DataRow row;
+			try {
+				row = SegmentTable.Rows.Cast<DataRow>().First(r => r.Field<string>("valid") == "1"
+																	&& r.Field<string>("vehiclecategory") == vehicleCategory.ToString()
+																	&& r.Field<string>("axleconf.") == axleConfiguration.GetName()
+																	&& r.ParseDouble("gvw_min").SI<Ton>() < grossVehicleMassRating
+																	&& r.ParseDouble("gvw_max").SI<Ton>() >= grossVehicleMassRating
 					);
+			} catch (InvalidOperationException e) {
+				var errorMessage = string.Format(
+					"ERROR: Could not find the declaration segment for vehicle. Category: {0}, AxleConfiguration: {1}, GrossVehicleMassRating: {2}",
+					vehicleCategory, axleConfiguration.GetName(), grossVehicleMassRating);
+				Log.Fatal(errorMessage);
+				throw new VectoException(errorMessage, e);
+			}
 			var segment = new Segment {
 				GrossVehicleWeightMin = row.ParseDouble("gvw_min").SI().Ton.Cast<Kilogram>(),
 				GrossVehicleWeightMax = row.ParseDouble("gvw_max").SI().Ton.Cast<Kilogram>(),
