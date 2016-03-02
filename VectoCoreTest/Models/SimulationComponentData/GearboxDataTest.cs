@@ -288,14 +288,6 @@ namespace TUGraz.VectoCore.Tests.Models.SimulationComponentData
 		}
 
 		[TestMethod]
-		public void TestInputOutOfRange()
-		{
-			var gbxData = MockSimulationDataFactory.CreateGearboxDataFromFile(GearboxFile, EngineFile);
-
-			Assert.Inconclusive("test another file which is not correct");
-		}
-
-		[TestMethod]
 		public void TestFullLoadCurveIntersection()
 		{
 			var engineFLDString = new[] {
