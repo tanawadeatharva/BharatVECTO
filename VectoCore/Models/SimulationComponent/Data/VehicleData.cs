@@ -31,13 +31,16 @@
 
 using System;
 using System.Collections.Generic;
+using System.ComponentModel.DataAnnotations;
 using System.Linq;
 using TUGraz.VectoCore.Exceptions;
 using TUGraz.VectoCore.Models.Declaration;
+using TUGraz.VectoCore.Models.Simulation.Data;
 using TUGraz.VectoCore.Utils;
 
 namespace TUGraz.VectoCore.Models.SimulationComponent.Data
 {
+	[CustomValidation(typeof(VehicleData), "ValidateVehicleData")]
 	public class VehicleData : SimulationComponentData
 	{
 		//public string BasePath { get; internal set; }
@@ -47,11 +50,13 @@ namespace TUGraz.VectoCore.Models.SimulationComponent.Data
 		public VehicleClass VehicleClass { get; internal set; }
 		//public CrossWindCorrectionMode CrossWindCorrectionMode { get; internal set; }
 
+		[Required, ValidateObject]
 		public ICrossWindCorrection CrossWindCorrectionCurve { get; internal set; }
 
 		/// <summary>
 		///     Set the properties for all axles of the vehicle
 		/// </summary>
+		[ValidateObject]
 		public List<Axle> AxleData
 		{
 			get { return _axleData; }
@@ -63,15 +68,30 @@ namespace TUGraz.VectoCore.Models.SimulationComponent.Data
 		}
 
 		public AxleConfiguration AxleConfiguration { get; internal set; }
+
+		[Required, SIRange(500, 40000)]
 		public Kilogram CurbWeight { get; internal set; }
+
+		[Required, SIRange(0, 40000)]
 		public Kilogram CurbWeigthExtra { get; internal set; }
+
+		[Required, SIRange(0, 40000)]
 		public Kilogram Loading { get; internal set; }
+
+		[Required, SIRange(3500, 40000)]
 		public Kilogram GrossVehicleMassRating { get; internal set; }
+
+		[Required, SIRange(0.1, 0.7)]
 		public Meter DynamicTyreRadius { get; internal set; }
+
 		public KilogramSquareMeter WheelsInertia { get; internal set; }
-		// public Kilogram ReducedMassWheels { get; private set; }
+
+
 		public string Rim { get; internal set; }
+
+		[Required, SIRange(0, 1E12)]
 		public double TotalRollResistanceCoefficient { get; private set; }
+
 		public CrossWindCorrectionMode CrossWindCorrectionMode { get; set; }
 
 		public Kilogram TotalVehicleWeight()
@@ -113,6 +133,24 @@ namespace TUGraz.VectoCore.Models.SimulationComponent.Data
 			}
 			TotalRollResistanceCoefficient = RRC;
 			WheelsInertia = wheelsInertia;
+		}
+
+		public ValidationResult ValidateVehicleData(VehicleData vehicleData, ValidationContext validationContext)
+		{
+			var weightShareSum = vehicleData.AxleData.Sum(axle => axle.AxleWeightShare);
+			if (!weightShareSum.IsEqual(1.0, 1E-10)) {
+				return new ValidationResult(
+					string.Format("Sum of axle weight share is not 1! sum: {0}, difference: {1}",
+						weightShareSum, 1 - weightShareSum));
+			}
+
+			if (vehicleData.TotalVehicleWeight() > vehicleData.GrossVehicleMassRating) {
+				return new ValidationResult(
+					string.Format("Total Vehicle Weight is greater than GrossVehicleMassRating! sum: {0},  GVM: {1}",
+						vehicleData.TotalVehicleWeight(), vehicleData.GrossVehicleMassRating));
+			}
+
+			return ValidationResult.Success;
 		}
 	}
 }

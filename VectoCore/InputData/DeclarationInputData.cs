@@ -285,19 +285,19 @@ namespace TUGraz.VectoCore.InputData
 		/// P111
 		/// cf. VECTO Input Parameters.xlsx
 		/// </summary>
-		KilogramPerWattSecond WHTCMotorway { get; }
+		double WHTCMotorway { get; }
 
 		/// <summary>
 		/// P110
 		/// cf. VECTO Input Parameters.xlsx
 		/// </summary>
-		KilogramPerWattSecond WHTCRural { get; }
+		double WHTCRural { get; }
 
 		/// <summary>
 		/// P109
 		/// cf. VECTO Input Parameters.xlsx
 		/// </summary>
-		KilogramPerWattSecond WHTCUrban { get; }
+		double WHTCUrban { get; }
 
 		/// <summary>
 		/// P067

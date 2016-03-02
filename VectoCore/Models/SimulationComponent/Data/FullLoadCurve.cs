@@ -49,6 +49,7 @@ namespace TUGraz.VectoCore.Models.SimulationComponent.Data
 		private PerSecond _ratedSpeed;
 
 		[Required, ValidateObject] internal List<FullLoadCurveEntry> FullLoadEntries;
+
 		[Required] internal LookupData<PerSecond, Second> PT1Data;
 
 		/// <summary>

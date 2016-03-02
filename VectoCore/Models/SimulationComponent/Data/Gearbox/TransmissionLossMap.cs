@@ -31,9 +31,11 @@
 
 using System;
 using System.Collections.Generic;
+using System.ComponentModel.DataAnnotations;
 using System.Data;
 using System.Linq;
 using Newtonsoft.Json;
+using TUGraz.VectoCore.Configuration;
 using TUGraz.VectoCore.Exceptions;
 using TUGraz.VectoCore.Utils;
 
@@ -41,7 +43,7 @@ namespace TUGraz.VectoCore.Models.SimulationComponent.Data.Gearbox
 {
 	public class TransmissionLossMap : LoggingObject
 	{
-		[JsonProperty] private readonly List<GearLossMapEntry> _entries;
+		[ValidateObject] private readonly List<GearLossMapEntry> _entries;
 
 		private readonly double _ratio;
 
@@ -116,10 +118,10 @@ namespace TUGraz.VectoCore.Models.SimulationComponent.Data.Gearbox
 					InputSpeed = row.ParseDouble(Fields.InputSpeed).RPMtoRad(),
 					InputTorque = row.ParseDouble(Fields.InputTorque).SI<NewtonMeter>(),
 					TorqueLoss = row.ParseDouble(Fields.TorqeLoss).SI<NewtonMeter>(),
-					Efficiency =
-						(!hasEfficiency || row[Fields.Efficiency] == DBNull.Value || row[Fields.Efficiency] != null)
-							? double.NaN
-							: row.ParseDouble(Fields.Efficiency)
+					//Efficiency =
+					//	(!hasEfficiency || row[Fields.Efficiency] == DBNull.Value || row[Fields.Efficiency] != null)
+					//		? double.NaN
+					//		: row.ParseDouble(Fields.Efficiency)
 				}).ToList();
 		}
 
@@ -131,7 +133,7 @@ namespace TUGraz.VectoCore.Models.SimulationComponent.Data.Gearbox
 					InputSpeed = row.ParseDouble(0).RPMtoRad(),
 					InputTorque = row.ParseDouble(1).SI<NewtonMeter>(),
 					TorqueLoss = row.ParseDouble(2).SI<NewtonMeter>(),
-					Efficiency = (!hasEfficiency || row[3] == DBNull.Value || row[3] != null) ? double.NaN : row.ParseDouble(3)
+					//Efficiency = (!hasEfficiency || row[3] == DBNull.Value || row[3] != null) ? double.NaN : row.ParseDouble(3)
 				}).ToList();
 		}
 
@@ -190,13 +192,16 @@ namespace TUGraz.VectoCore.Models.SimulationComponent.Data.Gearbox
 
 		public class GearLossMapEntry
 		{
+			[Required, SIRange(0, 5000 * Constants.RPMToRad)]
 			public PerSecond InputSpeed { get; set; }
 
+			[Required, SIRange(-50000, 50000)]
 			public NewtonMeter InputTorque { get; set; }
 
+			[Required, SIRange(0, double.MaxValue)]
 			public NewtonMeter TorqueLoss { get; set; }
 
-			public double Efficiency { get; set; }
+			//public double Efficiency { get; set; }
 		}
 
 		private static class Fields

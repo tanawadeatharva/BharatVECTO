@@ -31,6 +31,7 @@
 
 using System;
 using System.Collections.Generic;
+using System.ComponentModel.DataAnnotations;
 using System.Data;
 using System.Linq;
 using TUGraz.VectoCore.Exceptions;
@@ -40,7 +41,7 @@ namespace TUGraz.VectoCore.Models.SimulationComponent.Data
 {
 	public class RetarderLossMap : SimulationComponentData
 	{
-		private List<RetarderLossEntry> _entries;
+		[ValidateObject] private List<RetarderLossEntry> _entries;
 
 		public static RetarderLossMap ReadFromFile(string fileName)
 		{
@@ -144,7 +145,10 @@ namespace TUGraz.VectoCore.Models.SimulationComponent.Data
 
 		private class RetarderLossEntry
 		{
+			[Required, SIRange(0, double.MaxValue)]
 			public PerSecond RetarderSpeed { get; set; }
+
+			[Required, SIRange(0, 500)]
 			public NewtonMeter TorqueLoss { get; set; }
 		}
 
