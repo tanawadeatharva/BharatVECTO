@@ -66,7 +66,7 @@ namespace TUGraz.VectoCore.Tests.Models.Simulation
 
 			var runData = new VectoRunData { GearboxData = gearboxData, EngineData = engineData, AxleGearData = axleGearData };
 
-			var result = runData.ValidateRunData(runData, new ValidationContext(runData));
+			var result = VectoRunData.ValidateRunData(runData, new ValidationContext(runData));
 			Assert.IsTrue(ValidationResult.Success == result);
 			Assert.IsFalse(runData.IsValid());
 		}
@@ -95,7 +95,7 @@ namespace TUGraz.VectoCore.Tests.Models.Simulation
 			var engineData = MockSimulationDataFactory.CreateEngineDataFromFile(EngineFile);
 			var axleGearData = CreateAxleGearData(AxleGearLossMap);
 			var runData = new VectoRunData { GearboxData = gearboxData, EngineData = engineData, AxleGearData = axleGearData };
-			var result = runData.ValidateRunData(runData, new ValidationContext(runData));
+			var result = VectoRunData.ValidateRunData(runData, new ValidationContext(runData));
 			Assert.IsFalse(ValidationResult.Success == result);
 		}
 
@@ -108,7 +108,7 @@ namespace TUGraz.VectoCore.Tests.Models.Simulation
 			var gearboxData = CreateGearboxData(GearboxDirectLoss, GearboxIndirectLoss);
 			var engineData = MockSimulationDataFactory.CreateEngineDataFromFile(EngineFile);
 			var runData = new VectoRunData { GearboxData = gearboxData, EngineData = engineData };
-			var result = runData.ValidateRunData(runData, new ValidationContext(runData));
+			var result = VectoRunData.ValidateRunData(runData, new ValidationContext(runData));
 			Assert.IsTrue(ValidationResult.Success == result);
 			Assert.IsFalse(runData.IsValid());
 		}
@@ -123,7 +123,7 @@ namespace TUGraz.VectoCore.Tests.Models.Simulation
 			var axleGearData = CreateAxleGearData(AxleGearLossMap);
 
 			var runData = new VectoRunData { EngineData = engineData, AxleGearData = axleGearData };
-			var result = runData.ValidateRunData(runData, new ValidationContext(runData));
+			var result = VectoRunData.ValidateRunData(runData, new ValidationContext(runData));
 			Assert.IsTrue(ValidationResult.Success == result);
 			Assert.IsFalse(runData.IsValid());
 		}

@@ -29,7 +29,6 @@
 *   Martin Rexeis, rexeis@ivt.tugraz.at, IVT, Graz University of Technology
 */
 
-using System.ComponentModel.DataAnnotations;
 using TUGraz.VectoCore.Utils;
 
 namespace TUGraz.VectoCore.Models.SimulationComponent.Data
@@ -49,7 +48,7 @@ namespace TUGraz.VectoCore.Models.SimulationComponent.Data
 
 		public RetarderType Type { get; internal set; }
 
-		[Required, SIRange(double.Epsilon, double.MaxValue)]
+		[SIRange(0, double.MaxValue)]
 		public double Ratio { get; internal set; }
 	}
 }

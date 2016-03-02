@@ -1707,7 +1707,6 @@ lbFound:
 	End Sub
 
 	Private Sub VectoWorkerV3_OnProgressChanged(sender As Object, e As ProgressChangedEventArgs)
-		ToolStripProgBarOverall.Value = e.ProgressPercentage
 		Select Case e.UserState.Target
 			Case "ListBox"
 				If e.UserState.GetType().GetProperty("Link") Is Nothing Then
@@ -1717,11 +1716,15 @@ lbFound:
 				End If
 			Case "ListBoxWarning"
 				MSGtoForm(tMsgID.Warn, e.UserState.Message, "", "")
+				Return
 			Case "ListBoxError"
 				MSGtoForm(tMsgID.Err, e.UserState.Message, "", "")
+				Return
 			Case "Status"
 				Status(e.UserState.Message)
 		End Select
+
+		ToolStripProgBarOverall.Value = e.ProgressPercentage
 	End Sub
 
 	Private Sub VectoWorkerV3_OnRunWorkerCompleted(sender As Object, e As RunWorkerCompletedEventArgs)

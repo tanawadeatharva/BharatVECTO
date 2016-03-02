@@ -148,8 +148,7 @@ namespace TUGraz.VectoCore.Models.Simulation.Impl
 
 				var validationErrors = run.Validate();
 				if (validationErrors.Any()) {
-					throw new VectoException("Validation of Run-Data Failed: " +
-											"\n".Join(validationErrors.Select(r => r.ErrorMessage)));
+					throw new VectoException("Validation of Run-Data Failed: " + "\n".Join(validationErrors.Select(r => r.ErrorMessage)));
 				}
 
 

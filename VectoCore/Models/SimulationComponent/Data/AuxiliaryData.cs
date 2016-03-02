@@ -41,6 +41,7 @@ using TUGraz.VectoCore.Utils;
 
 namespace TUGraz.VectoCore.Models.SimulationComponent.Data
 {
+	[CustomValidation(typeof(AuxiliaryData), "ValidateAuxMap")]
 	public class AuxiliaryData
 	{
 		[Required, Range(double.Epsilon, 1)]
@@ -52,8 +53,7 @@ namespace TUGraz.VectoCore.Models.SimulationComponent.Data
 		[Required, Range(double.Epsilon, 1)]
 		public double EfficiencyToEngine { get; set; }
 
-		[Required, CustomValidation(typeof(AuxiliaryData), "ValidateAuxMap")] private readonly DelauneyMap _map =
-			new DelauneyMap();
+		[Required] private readonly DelauneyMap _map = new DelauneyMap();
 
 		public Watt GetPowerDemand(PerSecond nAuxiliary, Watt powerAuxOut)
 		{
@@ -160,7 +160,7 @@ namespace TUGraz.VectoCore.Models.SimulationComponent.Data
 		/// <param name="data">The data.</param>
 		/// <param name="context">The validation context.</param>
 		/// <returns></returns>
-		protected static ValidationResult ValidateAuxMap(AuxiliaryData data, ValidationContext context)
+		public static ValidationResult ValidateAuxMap(AuxiliaryData data, ValidationContext context)
 		{
 			var xValidationRules = new[] { new RangeAttribute(0, double.MaxValue) };
 			var yValidationRules = new[] { new RangeAttribute(0, 100.SI().Kilo.Watt.Value()) };

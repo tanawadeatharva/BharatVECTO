@@ -62,7 +62,7 @@ namespace TUGraz.VectoCore.Models.Simulation.Data
 		[Required, ValidateObject]
 		public IEnumerable<AuxData> Aux { get; internal set; }
 
-		[Required, ValidateObject]
+		[ValidateObject]
 		public string AccelerationLimitingFile { get; internal set; }
 
 		[Required, ValidateObject]
@@ -96,13 +96,13 @@ namespace TUGraz.VectoCore.Models.Simulation.Data
 
 			public string Technology;
 
-			[Required] public string[] TechList;
+			public string[] TechList;
 
 			[Required, SIRange(0, 100 * Constants.Kilo)] public Watt PowerDemand;
 
 			[Required] public AuxiliaryDemandType DemandType;
 
-			[Required, ValidateObject] public AuxiliaryData Data;
+			[ValidateObject] public AuxiliaryData Data;
 		}
 
 		public class StartStopData
@@ -113,7 +113,7 @@ namespace TUGraz.VectoCore.Models.Simulation.Data
 			[Required, SIRange(0, 100)] public Second Delay;
 		}
 
-		public ValidationResult ValidateRunData(VectoRunData runData, ValidationContext validationContext)
+		public static ValidationResult ValidateRunData(VectoRunData runData, ValidationContext validationContext)
 		{
 			var gearboxData = runData.GearboxData;
 			var engineData = runData.EngineData;
