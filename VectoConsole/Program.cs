@@ -38,6 +38,7 @@ using System.Reflection;
 using System.Threading;
 using NLog;
 using NLog.Config;
+using NLog.Targets;
 using TUGraz.VectoCore.Configuration;
 using TUGraz.VectoCore.InputData.FileIO.JSON;
 using TUGraz.VectoCore.Models.Simulation.Impl;
@@ -48,6 +49,8 @@ namespace VectoConsole
 {
 	internal static class Program
 	{
+		public static List<string> WarningMessages = new List<string>();
+
 		private static int _numLines;
 		private static int ProgessCounter { get; set; }
 
@@ -119,9 +122,21 @@ Examples:
 				}
 
 				var config = LogManager.Configuration;
-				//config.LoggingRules.Add(new LoggingRule("*", logLevel, config.FindTargetByName("ConsoleLogger")));
 				config.LoggingRules.Add(new LoggingRule("*", logLevel, config.FindTargetByName("LogFile")));
+
+				if (logLevel > LogLevel.Warn) {
+					var methodCallTarget = new MethodCallTarget {
+						ClassName = "VectoConsole.Program, vectocmd",
+						MethodName = "LogWarning",
+						Name = "WarningLogger"
+					};
+					methodCallTarget.Parameters.Add(new MethodCallParameter("${level}"));
+					methodCallTarget.Parameters.Add(new MethodCallParameter("${message}"));
+					config.LoggingRules.Add(new LoggingRule("*", LogLevel.Warn, methodCallTarget));
+				}
 				LogManager.Configuration = config;
+
+				// todo mk 2016-03-02: trace listener still needed?
 				Trace.Listeners.Add(new ConsoleTraceListener(true));
 
 				if (args.Contains("-V") || debugEnabled) {
@@ -140,8 +155,6 @@ Examples:
 				var timings = new Dictionary<string, double>();
 
 				// process the file list and start simulation
-				//var sumFileName = Path.Combine(Path.GetDirectoryName(fileList.First()) ?? "",
-				//	Path.GetFileNameWithoutExtension(fileList.First()) + Constants.FileExtensions.SumFile);
 				var fileWriter = new FileOutputWriter(fileList.First());
 				var sumWriter = new SummaryDataContainer(fileWriter);
 				_jobContainer = new JobContainer(sumWriter);
@@ -154,9 +167,19 @@ Examples:
 					Console.ResetColor();
 				}
 
-				Console.WriteLine(@"Reading Job Files");
 				stopWatch.Start();
-				foreach (var file in fileList.Where(f => Path.GetExtension(f) == Constants.FileExtensions.VectoJobFile)) {
+
+				var jobFiles = fileList.Where(f => Path.GetExtension(f) == Constants.FileExtensions.VectoJobFile).ToList();
+
+				if (!jobFiles.Any()) {
+					Console.ForegroundColor = ConsoleColor.Red;
+					Console.WriteLine(@"No Job files found. Please restart the application with a valid '.vecto' file.");
+					Console.ResetColor();
+					return 1;
+				}
+
+				foreach (var file in jobFiles) {
+					Console.WriteLine(@"Reading job: " + file);
 					var dataProvider = JSONInputDataFactory.ReadJsonJob(file);
 					var runsFactory = new SimulatorFactory(mode, dataProvider, fileWriter);
 
@@ -170,7 +193,6 @@ Examples:
 				Console.ForegroundColor = ConsoleColor.White;
 				Console.WriteLine(@"Detected cycles:");
 				Console.ResetColor();
-				var cycles = _jobContainer.GetCycleTypes().ToList();
 				foreach (var cycle in _jobContainer.GetCycleTypes()) {
 					Console.WriteLine(@"  {0}: {1}", cycle.Name, cycle.CycleType);
 				}
@@ -187,6 +209,9 @@ Examples:
 					Console.WriteLine(@"Debug-Output is enabled, executing simulation runs sequentially");
 				}
 				Console.ResetColor();
+				Console.WriteLine();
+
+				DisplayWarnings();
 				Console.WriteLine();
 				stopWatch.Start();
 				_jobContainer.Execute(!debugEnabled);
@@ -205,18 +230,46 @@ Examples:
 				stopWatch.Stop();
 				timings.Add("Simulation runs", stopWatch.Elapsed.TotalMilliseconds);
 
+			
 				PrintProgress(_jobContainer.GetProgress(), args.Contains("-t"));
+				
 				if (args.Contains("-t")) {
 					PrintTimings(timings);
 				}
+
+				DisplayWarnings();
 			} catch (Exception e) {
-				Console.Error.WriteLine(e.Message);
 				Console.ForegroundColor = ConsoleColor.Red;
-				Console.Error.WriteLine("Please see log-file for further details (logs/log.txt)");
+				Console.Error.WriteLine(e.Message);
 				Console.ResetColor();
+
+				Console.Error.WriteLine("Please see log-file for further details (logs/log.txt)");
+
 				Environment.ExitCode = Environment.ExitCode != 0 ? Environment.ExitCode : 1;
 			}
+			
+			Console.ReadKey();
+
 			return Environment.ExitCode;
+		}
+
+		private static void DisplayWarnings()
+		{
+			if (WarningMessages.Any()) {			
+				Console.ForegroundColor = ConsoleColor.Yellow;
+				foreach (var message in WarningMessages) {
+					Console.Error.WriteLine(message);
+				}
+				Console.ResetColor();
+			}
+			WarningMessages.Clear();
+		}
+
+		public static void LogWarning(string level, string message)
+		{
+			if (level == "Warn") {
+				WarningMessages.Add(message);
+			}
 		}
 
 		private static void ShowVersionInformation()
@@ -253,7 +306,14 @@ Examples:
 			var spinner = "/-\\|"[ProgessCounter++ % 4];
 			var bar = new string('#', (int)(sumProgress * 100.0 / 2));
 			Console.WriteLine(@"   {2}   [{1,-50}]  [{0,7:P}]", sumProgress, bar, spinner);
-			_numLines++;
+
+			if (WarningMessages.Any()){
+				Console.ForegroundColor = ConsoleColor.Yellow;
+				Console.WriteLine(@"Warnings: {0,5}", WarningMessages.Count);
+				Console.ResetColor();
+			}
+
+			_numLines +=2;
 		}
 
 		private static void PrintTimings(Dictionary<string, double> timings)

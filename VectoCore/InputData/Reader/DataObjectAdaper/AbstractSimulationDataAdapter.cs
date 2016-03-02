@@ -48,7 +48,7 @@ namespace TUGraz.VectoCore.InputData.Reader.DataObjectAdaper
 			var retVal = new VehicleData {
 				SavedInDeclarationMode = data.SavedInDeclarationMode,
 				Vendor = data.Vendor,
-				MakeAndModel = data.MakeAndModel,
+				ModelName = data.ModelName,
 				Creator = data.Creator,
 				Date = data.Date,
 				TypeId = data.TypeId,
@@ -76,7 +76,7 @@ namespace TUGraz.VectoCore.InputData.Reader.DataObjectAdaper
 			var retarder = new RetarderData {
 				SavedInDeclarationMode = data.SavedInDeclarationMode,
 				Vendor = data.Vendor,
-				MakeAndModel = data.MakeAndModel,
+				ModelName = data.ModelName,
 				Creator = data.Creator,
 				Date = data.Date,
 				TypeId = data.TypeId,
@@ -96,7 +96,7 @@ namespace TUGraz.VectoCore.InputData.Reader.DataObjectAdaper
 			var retVal = new CombustionEngineData {
 				SavedInDeclarationMode = data.SavedInDeclarationMode,
 				Vendor = data.Vendor,
-				MakeAndModel = data.MakeAndModel,
+				ModelName = data.ModelName,
 				Creator = data.Creator,
 				Date = data.Date,
 				TypeId = data.TypeId,
@@ -117,7 +117,7 @@ namespace TUGraz.VectoCore.InputData.Reader.DataObjectAdaper
 			return new GearboxData {
 				SavedInDeclarationMode = data.SavedInDeclarationMode,
 				Vendor = data.Vendor,
-				MakeAndModel = data.MakeAndModel,
+				ModelName = data.ModelName,
 				Creator = data.Creator,
 				Date = data.Date,
 				TypeId = data.TypeId,
@@ -133,7 +133,7 @@ namespace TUGraz.VectoCore.InputData.Reader.DataObjectAdaper
 			return new AxleGearData() {
 				SavedInDeclarationMode = data.SavedInDeclarationMode,
 				Vendor = data.Vendor,
-				MakeAndModel = data.MakeAndModel,
+				ModelName = data.ModelName,
 				Creator = data.Creator,
 				Date = data.Date,
 				TypeId = data.TypeId,

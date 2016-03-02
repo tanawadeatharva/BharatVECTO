@@ -13,8 +13,8 @@
     "Inertia": 2.13098,
     "FullLoadCurve": "o9061750850E4.vfld",
     "FuelMap": "om9062101120_e4e5_b7c_sl2499_20110727.vmap",
-    "WHTC-Urban": 0.0,
-    "WHTC-Rural": 0.0,
-    "WHTC-Motorway": 0.0
+    "WHTC-Urban": 1.0,
+    "WHTC-Rural": 1.0,
+    "WHTC-Motorway": 1.0
   }
 }

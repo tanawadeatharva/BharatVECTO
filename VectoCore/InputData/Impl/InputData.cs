@@ -100,7 +100,7 @@ namespace TUGraz.VectoCore.InputData.Impl
 
 		public string Vendor { get; internal set; }
 
-		public string MakeAndModel { get; internal set; }
+		public string ModelName { get; internal set; }
 
 		public string Creator { get; internal set; }
 

@@ -35,7 +35,6 @@ using System.ComponentModel.DataAnnotations;
 using System.Linq;
 using TUGraz.VectoCore.Exceptions;
 using TUGraz.VectoCore.Models.Declaration;
-using TUGraz.VectoCore.Models.Simulation.Data;
 using TUGraz.VectoCore.Utils;
 
 namespace TUGraz.VectoCore.Models.SimulationComponent.Data
@@ -122,20 +121,20 @@ namespace TUGraz.VectoCore.Models.SimulationComponent.Data
 
 			var g = Physics.GravityAccelleration;
 
-			var RRC = 0.0.SI<Scalar>();
+			var rrc = 0.0.SI<Scalar>();
 			var wheelsInertia = 0.0.SI<KilogramSquareMeter>();
 			foreach (var axle in _axleData) {
 				var nrWheels = axle.TwinTyres ? 4 : 2;
-				RRC += axle.AxleWeightShare * axle.RollResistanceCoefficient *
+				rrc += axle.AxleWeightShare * axle.RollResistanceCoefficient *
 						Math.Pow((axle.AxleWeightShare * TotalVehicleWeight() * g / axle.TyreTestLoad / nrWheels).Value(),
 							Physics.RollResistanceExponent - 1);
 				wheelsInertia += nrWheels * axle.Inertia;
 			}
-			TotalRollResistanceCoefficient = RRC;
+			TotalRollResistanceCoefficient = rrc;
 			WheelsInertia = wheelsInertia;
 		}
 
-		public ValidationResult ValidateVehicleData(VehicleData vehicleData, ValidationContext validationContext)
+		public static ValidationResult ValidateVehicleData(VehicleData vehicleData, ValidationContext validationContext)
 		{
 			var weightShareSum = vehicleData.AxleData.Sum(axle => axle.AxleWeightShare);
 			if (!weightShareSum.IsEqual(1.0, 1E-10)) {

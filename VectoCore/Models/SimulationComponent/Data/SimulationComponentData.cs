@@ -39,7 +39,7 @@ namespace TUGraz.VectoCore.Models.SimulationComponent.Data
 
 		public string Vendor { get; internal set; }
 
-		public string MakeAndModel { get; internal set; }
+		public string ModelName { get; internal set; }
 
 		public string Creator { get; internal set; }
 		public string Date { get; internal set; }

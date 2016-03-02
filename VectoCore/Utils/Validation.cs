@@ -29,6 +29,7 @@
 *   Martin Rexeis, rexeis@ivt.tugraz.at, IVT, Graz University of Technology
 */
 
+using System;
 using System.Collections;
 using System.Collections.Generic;
 using System.ComponentModel.DataAnnotations;
@@ -55,35 +56,57 @@ namespace TUGraz.VectoCore.Utils
 			var results = new List<ValidationResult>();
 			Validator.TryValidateObject(entity, new ValidationContext(entity), results, true);
 
-			foreach (
-				var p in
-					entity.GetType()
-						.GetProperties(BindingFlags.Instance | BindingFlags.Static | BindingFlags.NonPublic | BindingFlags.Public |
-										BindingFlags.FlattenHierarchy)) {
-				var attrs = p.GetCustomAttributes(typeof(ValidationAttribute)).Cast<ValidationAttribute>().ToList();
-				if (attrs.Any()) {
+			const BindingFlags flags = BindingFlags.Instance | BindingFlags.Static | BindingFlags.NonPublic | BindingFlags.Public |
+										BindingFlags.FlattenHierarchy;
+
+			var properties = entity.GetType().GetProperties(flags);
+			foreach (var p in properties) {
+				var attributes = p.GetAttributes<ValidationAttribute>(entity.GetType()).ToArray();
+				if (attributes.Any()) {
 					var val = p.GetValue(entity);
 					context.DisplayName = p.Name;
 					context.MemberName = p.Name;
-					Validator.TryValidateValue(val, context, results, attrs);
+					Validator.TryValidateValue(val, context, results, attributes);
 				}
 			}
 
-			foreach (
-				var f in
-					entity.GetType()
-						.GetFields(BindingFlags.Instance | BindingFlags.Static | BindingFlags.NonPublic | BindingFlags.Public |
-									BindingFlags.FlattenHierarchy)) {
-				var attrs = f.GetCustomAttributes(typeof(ValidationAttribute)).Cast<ValidationAttribute>().ToList();
-				if (attrs.Any()) {
+			var fields = entity.GetType().GetFields(flags);
+			foreach (var f in fields) {
+				var attributes = f.GetAttributes<ValidationAttribute>(entity.GetType()).ToArray();
+				if (attributes.Any()) {
 					var val = f.GetValue(entity);
 					context.DisplayName = f.Name;
 					context.MemberName = f.Name;
-					Validator.TryValidateValue(val, context, results, attrs);
+					Validator.TryValidateValue(val, context, results, attributes);
 				}
 			}
 
 			return results;
+		}
+
+		/// <summary>
+		/// Gets the attributes of a member for the current class, parent classes and all interfaces.
+		/// </summary>
+		/// <typeparam name="T"></typeparam>
+		/// <param name="m"></param>
+		/// <param name="obj"></param>
+		/// <returns></returns>
+		private static IEnumerable<T> GetAttributes<T>(this MemberInfo m, Type obj) where T : Attribute
+		{
+			var attributes = Enumerable.Empty<T>();
+			
+			const BindingFlags flags = BindingFlags.Instance | BindingFlags.Static | BindingFlags.NonPublic | BindingFlags.Public | BindingFlags.FlattenHierarchy;
+			var prop = obj.GetProperty(m.Name, flags);
+			if (prop != null) {
+				attributes = prop.GetCustomAttributes(typeof(T)).Cast<T>().Concat(obj.GetInterfaces().SelectMany(m.GetAttributes<T>));
+			}
+
+			var field = obj.GetField(m.Name, flags);
+			if (field != null) {
+				attributes = attributes.Concat(field.GetCustomAttributes(typeof(T)).Cast<T>().Concat(obj.GetInterfaces().SelectMany(m.GetAttributes<T>)));
+			}
+
+			return attributes;
 		}
 
 		/// <summary>
@@ -124,8 +147,8 @@ namespace TUGraz.VectoCore.Utils
 					var results = element.Validate();
 					if (results.Any()) {
 						return new ValidationResult(
-							string.Format("Validation for list {1}[{0}] in {1} failed: {2}", i, validationContext.DisplayName,
-								string.Concat(results)));
+							string.Format("{1}[{0}] in {1} invalid: {2}", i, validationContext.DisplayName,
+								string.Join("\n", results)));
 					}
 					i++;
 				}
@@ -133,7 +156,7 @@ namespace TUGraz.VectoCore.Utils
 				var results = value.Validate();
 				if (results.Any()) {
 					return new ValidationResult(
-						string.Format("Validation for object {{{0}}} failed: {1}", validationContext.DisplayName, string.Concat(results)));
+						string.Format("{{{0}}} invalid: {1}", validationContext.DisplayName, string.Join("\n", results)));
 				}
 			}
 
@@ -177,7 +200,8 @@ namespace TUGraz.VectoCore.Utils
 		/// </returns>
 		protected override ValidationResult IsValid(object value, ValidationContext validationContext)
 		{
-			return base.IsValid(((SI)value).Value(), validationContext);
+			var si = value as SI;
+			return base.IsValid(si != null ? si.Value() : value, validationContext);
 		}
 	}
 

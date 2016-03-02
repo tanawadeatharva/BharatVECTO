@@ -13,8 +13,8 @@
     "Inertia": 3.8,
     "FullLoadCurve": "24t Coach.vfld",
     "FuelMap": "24t Coach.vmap",
-    "WHTC-Urban": 0.0,
-    "WHTC-Rural": 0.0,
-    "WHTC-Motorway": 0.0
+    "WHTC-Urban": 1.0,
+    "WHTC-Rural": 1.0,
+    "WHTC-Motorway": 1.0
   }
 }

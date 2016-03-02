@@ -89,11 +89,6 @@ namespace TUGraz.VectoCore.InputData.FileIO.JSON
 
 		#region IGearboxInputData
 
-		public virtual string ModelName
-		{
-			get { return Body.GetEx<string>(JsonKeys.Gearbox_ModelName); }
-		}
-
 		public virtual GearboxType Type
 		{
 			get { return Body.GetEx<string>(JsonKeys.Gearbox_GearboxType).ParseEnum<GearboxType>(); }
@@ -225,9 +220,9 @@ namespace TUGraz.VectoCore.InputData.FileIO.JSON
 			get { return "N/A"; }
 		}
 
-		public string MakeAndModel
+		public string ModelName
 		{
-			get { return "N/A"; }
+			get { return Body.GetEx<string>(JsonKeys.Gearbox_ModelName); }
 		}
 
 		public string Creator

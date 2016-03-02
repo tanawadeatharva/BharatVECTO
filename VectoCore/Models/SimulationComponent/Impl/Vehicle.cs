@@ -166,12 +166,11 @@ namespace TUGraz.VectoCore.Models.SimulationComponent.Impl
 			container[ModalResultField.P_trac] = CurrentState.VehicleTractionForce * averageVelocity;
 			// sanity check: is the vehicle in step with the cycle?
 			if (container[ModalResultField.dist] == DBNull.Value) {
-				Log.Warn("distance field is not set!");
+				Log.Warn("Distance field is not set!");
 			} else {
 				var distance = (SI)container[ModalResultField.dist];
 				if (!distance.IsEqual(CurrentState.Distance, 1e-12.SI<Meter>())) {
-					Log.Warn("distance diverges: {0}, distance: {1}", (distance - CurrentState.Distance).Value(),
-						distance);
+					Log.Warn("Vehicle Distance diverges from Cycle by {0} [m]. Distance: {1}", (distance - CurrentState.Distance).Value(), distance);
 				}
 			}
 		}

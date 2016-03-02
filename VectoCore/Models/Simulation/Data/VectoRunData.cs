@@ -31,13 +31,11 @@
 
 using System.Collections.Generic;
 using System.ComponentModel.DataAnnotations;
-using System.Runtime.Serialization;
 using TUGraz.VectoCore.Configuration;
 using TUGraz.VectoCore.Exceptions;
 using TUGraz.VectoCore.Models.Declaration;
 using TUGraz.VectoCore.Models.SimulationComponent.Data;
 using TUGraz.VectoCore.OutputData;
-using TUGraz.VectoCore.OutputData.PDF;
 using TUGraz.VectoCore.Utils;
 
 namespace TUGraz.VectoCore.Models.Simulation.Data
@@ -45,31 +43,31 @@ namespace TUGraz.VectoCore.Models.Simulation.Data
 	[CustomValidation(typeof(VectoRunData), "ValidateRunData")]
 	public class VectoRunData : SimulationComponentData
 	{
-		[Required, ValidateObject]
+		[ValidateObject]
 		public VehicleData VehicleData { get; internal set; }
 
-		[Required, ValidateObject]
+		[ValidateObject]
 		public CombustionEngineData EngineData { get; internal set; }
 
-		[Required, ValidateObject]
+		[ValidateObject]
 		public GearboxData GearboxData { get; internal set; }
 
-		[Required, ValidateObject]
+		[ValidateObject]
 		public AxleGearData AxleGearData { get; internal set; }
 
 		[Required, ValidateObject]
 		public DrivingCycleData Cycle { get; internal set; }
 
-		[Required, ValidateObject]
+		[ValidateObject]
 		public IEnumerable<AuxData> Aux { get; internal set; }
 
-		[Required, ValidateObject]
+		[ValidateObject]
 		public string AccelerationLimitingFile { get; internal set; }
 
-		[Required, ValidateObject]
+		[ValidateObject]
 		public RetarderData Retarder { get; internal set; }
 
-		[Required, ValidateObject]
+		[ValidateObject]
 		public DriverData DriverData { get; internal set; }
 
 		public bool IsEngineOnly { get; internal set; }
@@ -77,33 +75,33 @@ namespace TUGraz.VectoCore.Models.Simulation.Data
 		[Required, MinLength(1)]
 		public string JobName { get; set; }
 
-		[Required]
 		public string ModFileSuffix { get; set; }
 
-		[Required, ValidateObject]
+		[ValidateObject]
 		public DeclarationReport Report { get; set; }
 
 		[Required, ValidateObject]
 		public LoadingType Loading { get; set; }
 
-		[Required, ValidateObject]
+		[ValidateObject]
 		public Mission Mission { get; set; }
 
 		public class AuxData
 		{
-			[Required] public string ID;
+			// ReSharper disable once InconsistentNaming
+			public string ID;
 
 			[Required] public AuxiliaryType Type;
 
 			public string Technology;
 
-			[Required] public string[] TechList;
+			public string[] TechList;
 
-			[Required, SIRange(0, 100 * Constants.Kilo)] public Watt PowerDemand;
+			[SIRange(0, 100 * Constants.Kilo)] public Watt PowerDemand;
 
 			[Required] public AuxiliaryDemandType DemandType;
 
-			[Required, ValidateObject] public AuxiliaryData Data;
+			[ValidateObject] public AuxiliaryData Data;
 		}
 
 		public class StartStopData
@@ -114,7 +112,7 @@ namespace TUGraz.VectoCore.Models.Simulation.Data
 			[Required, SIRange(0, 100)] public Second Delay;
 		}
 
-		public ValidationResult ValidateRunData(VectoRunData runData, ValidationContext validationContext)
+		public static ValidationResult ValidateRunData(VectoRunData runData, ValidationContext validationContext)
 		{
 			var gearboxData = runData.GearboxData;
 			var engineData = runData.EngineData;

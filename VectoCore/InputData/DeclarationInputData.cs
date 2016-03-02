@@ -52,7 +52,7 @@ namespace TUGraz.VectoCore.InputData
 
 		string Vendor { get; }
 
-		string MakeAndModel { get; }
+		string ModelName { get; }
 
 		string Creator { get; }
 

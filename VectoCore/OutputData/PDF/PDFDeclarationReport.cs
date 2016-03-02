@@ -91,7 +91,7 @@ namespace TUGraz.VectoCore.OutputData.PDF
 
 		protected override void DoInitializeReport(VectoRunData modelData, Segment segment)
 		{
-			EngineModel = modelData.EngineData.MakeAndModel;
+			EngineModel = modelData.EngineData.ModelName;
 			EngineStr = string.Format("{0} l, {1} kW",
 				modelData.EngineData.Displacement.ConvertTo().Cubic.Dezi.Meter.ToOutputFormat(1),
 				modelData.EngineData.FullLoadCurve.MaxPower.ConvertTo().Kilo.Watt.ToOutputFormat(0));
