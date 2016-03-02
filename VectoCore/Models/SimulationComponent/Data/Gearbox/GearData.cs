@@ -29,16 +29,23 @@
 *   Martin Rexeis, rexeis@ivt.tugraz.at, IVT, Graz University of Technology
 */
 
+using System.ComponentModel.DataAnnotations;
+using TUGraz.VectoCore.Utils;
+
 namespace TUGraz.VectoCore.Models.SimulationComponent.Data.Gearbox
 {
 	public class GearData
 	{
+		[ValidateObject]
 		public ShiftPolygon ShiftPolygon { get; internal set; }
 
+		[ValidateObject]
 		public TransmissionLossMap LossMap { get; internal set; }
 
+		[ValidateObject]
 		public FullLoadCurve FullLoadCurve { get; internal set; }
 
+		[Required, Range(double.Epsilon, 25)]
 		public double Ratio { get; internal set; }
 
 		public bool TorqueConverterActive { get; internal set; } // TODO: think about refactoring...

@@ -29,6 +29,7 @@
 *   Martin Rexeis, rexeis@ivt.tugraz.at, IVT, Graz University of Technology
 */
 
+using System.ComponentModel.DataAnnotations;
 using TUGraz.VectoCore.Models.SimulationComponent.Data;
 using TUGraz.VectoCore.Utils;
 
@@ -38,15 +39,20 @@ namespace TUGraz.VectoCore.Models.Declaration
 	{
 		public object WheelsDimension { get; internal set; }
 
+		[Required, SIRange(0, 100)]
 		public KilogramSquareMeter Inertia { get; internal set; }
 
+		[Required, SIRange(0.003, 0.015)]
 		public double RollResistanceCoefficient { get; internal set; }
 
+		[Required, SIRange(500, 100000)]
 		public Newton TyreTestLoad { get; internal set; }
 
+		[Required, SIRange(0, 1)]
 		public double AxleWeightShare { get; internal set; }
 
 		public bool TwinTyres { get; internal set; }
+
 		public AxleType AxleType { get; internal set; }
 	}
 }
