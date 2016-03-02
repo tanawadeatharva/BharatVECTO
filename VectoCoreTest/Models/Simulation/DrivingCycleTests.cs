@@ -91,47 +91,63 @@ namespace TUGraz.VectoCore.Tests.Models.Simulation
 
 			inPort.Connect(outPort);
 
-			var absTime = 10.SI<Second>();
-			var dt = 1.SI<Second>();
+			var absTime = 0.SI<Second>();
+			var dt = 5.SI<Second>();
 
 			var response = cycle.OutPort().Request(absTime, dt);
+			var timeFail = (response as ResponseFailTimeInterval);
 			Assert.IsInstanceOfType(response, typeof(ResponseFailTimeInterval));
+			// ReSharper disable once PossibleNullReferenceException
+			Assert.AreEqual(0.25.SI<Second>(), timeFail.DeltaT);
 
-			dt = 0.25.SI<Second>();
+			dt = timeFail.DeltaT;
+
 			response = cycle.OutPort().Request(absTime, dt);
 			Assert.IsInstanceOfType(response, typeof(ResponseSuccess));
 
 			container.CommitSimulationStep(absTime, dt);
 
+
 			Assert.AreEqual(absTime, outPort.AbsTime);
 			Assert.AreEqual(dt, outPort.Dt);
-			Assert.AreEqual(743.2361.RPMtoRad(), outPort.AngularVelocity);
-			Assert.AreEqual(2779.576.SI<Watt>() / 743.2361.RPMtoRad(), outPort.Torque);
+			Assert.AreEqual(600.RPMtoRad(), outPort.AngularVelocity);
+			Assert.AreEqual(0.SI<NewtonMeter>(), outPort.Torque);
 
 			// ========================
-
+			absTime += dt;
 			dt = 1.SI<Second>();
-			absTime = 500.SI<Second>();
+
 			response = cycle.OutPort().Request(absTime, dt);
 			Assert.IsInstanceOfType(response, typeof(ResponseFailTimeInterval));
 
-			dt = 0.25.SI<Second>();
+			dt = ((ResponseFailTimeInterval)response).DeltaT;
+			Assert.AreEqual(0.5.SI<Second>(), dt);
 
-			for (int i = 0; i < 2; i++) {
+			for (var i = 0; i < 100; i++) {
 				response = cycle.OutPort().Request(absTime, dt);
-				Assert.IsInstanceOfType(response, typeof(ResponseSuccess));
+				response.Switch()
+					.Case<ResponseFailTimeInterval>(r => dt = r.DeltaT)
+					.Case<ResponseSuccess>(r => {
+						container.CommitSimulationStep(absTime, dt);
+						Assert.AreEqual(absTime, outPort.AbsTime);
+						Assert.AreEqual(dt, outPort.Dt);
 
-				container.CommitSimulationStep(absTime, dt);
+						if (absTime < 5) {
+							Assert.AreEqual(600.RPMtoRad(), outPort.AngularVelocity);
+							AssertHelper.AreRelativeEqual(0.SI<NewtonMeter>(), outPort.Torque, 1e-3);
+						} else if (absTime.IsBetween(12.75, 13.25) || absTime.IsBetween(14, 15)) {
+							Assert.IsTrue(outPort.AngularVelocity > 600.RPMtoRad());
+							Assert.IsTrue(outPort.Torque < 0);
+						} else {
+							Assert.IsTrue(outPort.AngularVelocity > 600.RPMtoRad());
+							Assert.IsTrue(outPort.Torque > 0);
+						}
 
-				Assert.AreEqual(absTime, outPort.AbsTime);
-				Assert.AreEqual(dt, outPort.Dt);
-				Assert.AreEqual(1584.731.RPMtoRad(), outPort.AngularVelocity);
-				Assert.AreEqual(3380.548.SI<Watt>() / 1584.731.RPMtoRad(), outPort.Torque);
-
-				absTime += dt;
+						absTime += dt;
+						dt = 1.SI<Second>();
+					})
+					.Default(r => { throw new UnexpectedResponseException("Got an unexpected response", r); });
 			}
-
-			// todo: test going backward in time, end of cycle
 		}
 
 		[TestMethod]

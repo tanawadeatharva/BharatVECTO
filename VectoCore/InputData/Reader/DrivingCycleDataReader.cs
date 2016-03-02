@@ -405,9 +405,10 @@ namespace TUGraz.VectoCore.InputData.Reader
 			{
 				ValidateHeader(table.Columns.Cast<DataColumn>().Select(col => col.ColumnName).ToArray());
 
-				var absTime = 0.SI<Second>();
+				var absTime = 0;
 				foreach (DataRow row in table.Rows) {
 					var entry = new DrivingCycleData.DrivingCycleEntry {
+						Time = row.ParseDoubleOrGetDefault(Fields.Time, absTime).SI<Second>(),
 						AngularVelocity = row.ParseDoubleOrGetDefault(Fields.EngineSpeed).RPMtoRad(),
 						AdditionalAuxPowerDemand =
 							row.ParseDoubleOrGetDefault(Fields.AdditionalAuxPowerDemand).SI().Kilo.Watt.Cast<Watt>(),
@@ -427,8 +428,7 @@ namespace TUGraz.VectoCore.InputData.Reader
 							entry.Torque = row.ParseDouble(Fields.EnginePower).SI().Kilo.Watt.Cast<Watt>() / entry.AngularVelocity;
 						}
 					}
-					entry.Time = absTime;
-					absTime += 1.SI<Second>();
+					absTime += 1;
 
 					yield return entry;
 				}
