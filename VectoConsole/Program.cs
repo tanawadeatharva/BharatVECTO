@@ -35,13 +35,11 @@ using System.Diagnostics;
 using System.IO;
 using System.Linq;
 using System.Reflection;
-using System.Runtime.Remoting.Channels;
 using System.Threading;
 using NLog;
 using NLog.Config;
 using TUGraz.VectoCore.Configuration;
 using TUGraz.VectoCore.InputData.FileIO.JSON;
-using TUGraz.VectoCore.Models.Simulation.Data;
 using TUGraz.VectoCore.Models.Simulation.Impl;
 using TUGraz.VectoCore.OutputData;
 using TUGraz.VectoCore.OutputData.FileIO;
@@ -50,12 +48,12 @@ namespace VectoConsole
 {
 	internal static class Program
 	{
-		private static int NumLines;
+		private static int _numLines;
 		private static int ProgessCounter { get; set; }
 
-		private const string USAGE = @"Usage: vecto.exe [-h] [-v] FILE1.vecto [FILE2.vecto ...]";
+		private const string Usage = @"Usage: vecto.exe [-h] [-v] FILE1.vecto [FILE2.vecto ...]";
 
-		private const string HELP = @"
+		private const string Help = @"
 Commandline Interface for Vecto.
 
 Synopsis:
@@ -84,7 +82,7 @@ Examples:
 	vecto.exe -h
 ";
 
-		private static JobContainer jobContainer;
+		private static JobContainer _jobContainer;
 
 		private static int Main(string[] args)
 		{
@@ -92,7 +90,7 @@ Examples:
 				// on -h display help and terminate.
 				if (args.Contains("-h")) {
 					ShowVersionInformation();
-					Console.Write(HELP);
+					Console.Write(Help);
 					return 0;
 				}
 
@@ -134,7 +132,7 @@ Examples:
 
 				// if no other arguments given: display usage and terminate
 				if (!args.Any()) {
-					Console.Write(USAGE);
+					Console.Write(Usage);
 					return 1;
 				}
 
@@ -144,70 +142,75 @@ Examples:
 				// process the file list and start simulation
 				//var sumFileName = Path.Combine(Path.GetDirectoryName(fileList.First()) ?? "",
 				//	Path.GetFileNameWithoutExtension(fileList.First()) + Constants.FileExtensions.SumFile);
-				var fileWriter = new FileOutputWriter(Path.GetDirectoryName(fileList.First() ?? ""));
+				var fileWriter = new FileOutputWriter(fileList.First());
 				var sumWriter = new SummaryDataContainer(fileWriter);
-				jobContainer = new JobContainer(sumWriter);
+				_jobContainer = new JobContainer(sumWriter);
 
 				var mode = ExecutionMode.Declaration;
 				if (args.Contains("-eng")) {
 					mode = ExecutionMode.Engineering;
 					Console.ForegroundColor = ConsoleColor.White;
-					Console.WriteLine(
-						"Switching to Engineering Mode. Make sure the job-file is saved in engineering mode!");
+					Console.WriteLine(@"Switching to Engineering Mode. Make sure the job-file is saved in engineering mode!");
 					Console.ResetColor();
 				}
 
-				Console.WriteLine("Reading Job Files");
+				Console.WriteLine(@"Reading Job Files");
 				stopWatch.Start();
 				foreach (var file in fileList.Where(f => Path.GetExtension(f) == Constants.FileExtensions.VectoJobFile)) {
 					var dataProvider = JSONInputDataFactory.ReadJsonJob(file);
 					var runsFactory = new SimulatorFactory(mode, dataProvider, fileWriter);
+
 					if (args.Contains("-mod")) {
 						runsFactory.WriteModalResults = true;
 					}
-					jobContainer.AddRuns(runsFactory);
+					_jobContainer.AddRuns(runsFactory);
 				}
+
+				Console.WriteLine();
+				Console.ForegroundColor = ConsoleColor.White;
+				Console.WriteLine(@"Detected cycles:");
+				Console.ResetColor();
+				var cycles = _jobContainer.GetCycleTypes().ToList();
+				foreach (var cycle in _jobContainer.GetCycleTypes()) {
+					Console.WriteLine(@"  {0}: {1}", cycle.Name, cycle.CycleType);
+				}
+				Console.WriteLine();
+
 				stopWatch.Stop();
 				timings.Add("Reading input files", stopWatch.Elapsed.TotalMilliseconds);
 				stopWatch.Reset();
 
-				Console.WriteLine("Starting simulation runs");
+				Console.ForegroundColor = ConsoleColor.White;
+				Console.WriteLine(@"Starting simulation runs");
 				if (debugEnabled) {
-					Console.ForegroundColor = ConsoleColor.White;
-					Console.WriteLine("Debug-Output is enabled, executing simulation runs sequentially");
-					Console.ResetColor();
+					Console.ForegroundColor = ConsoleColor.Yellow;
+					Console.WriteLine(@"Debug-Output is enabled, executing simulation runs sequentially");
 				}
+				Console.ResetColor();
 				Console.WriteLine();
 				stopWatch.Start();
-				jobContainer.Execute(!debugEnabled);
+				_jobContainer.Execute(!debugEnabled);
 
-				Console.CancelKeyPress += (object sender, ConsoleCancelEventArgs e) => {
-					var isCtrlC = e.SpecialKey == ConsoleSpecialKey.ControlC;
-					var isCtrlBreak = e.SpecialKey == ConsoleSpecialKey.ControlBreak;
-
-					if (!isCtrlC) {
-						return;
+				Console.CancelKeyPress += (sender, e) => {
+					if (e.SpecialKey == ConsoleSpecialKey.ControlC) {
+						e.Cancel = true;
+						_jobContainer.CancelCurrent();
 					}
-					//Console.WriteLine("Canceling simulation!");
-					e.Cancel = true;
-					Program.jobContainer.CancelCurrent();
 				};
 
-				//var x = Console.CursorLeft;
-				while (!jobContainer.AllCompleted) {
-					PrintProgress(jobContainer.GetProgress());
+				while (!_jobContainer.AllCompleted) {
+					PrintProgress(_jobContainer.GetProgress());
 					Thread.Sleep(250);
 				}
 				stopWatch.Stop();
 				timings.Add("Simulation runs", stopWatch.Elapsed.TotalMilliseconds);
 
-				PrintProgress(jobContainer.GetProgress(), args.Contains("-t"));
+				PrintProgress(_jobContainer.GetProgress(), args.Contains("-t"));
 				if (args.Contains("-t")) {
 					PrintTimings(timings);
 				}
 			} catch (Exception e) {
 				Console.Error.WriteLine(e.Message);
-				//Trace.TraceError(e.ToString());
 				Console.ForegroundColor = ConsoleColor.Red;
 				Console.Error.WriteLine("Please see log-file for further details (logs/log.txt)");
 				Console.ResetColor();
@@ -219,15 +222,15 @@ Examples:
 		private static void ShowVersionInformation()
 		{
 			var vectodll = AssemblyName.GetAssemblyName("VectoCore.dll");
-			Console.WriteLine("VectoConsole: {0}", Assembly.GetExecutingAssembly().GetName().Version);
-			Console.WriteLine("VectoCore: {0}", vectodll.Version);
+			Console.WriteLine(@"VectoConsole: {0}", Assembly.GetExecutingAssembly().GetName().Version);
+			Console.WriteLine(@"VectoCore: {0}", vectodll.Version);
 		}
 
 		private static void PrintProgress(Dictionary<uint, JobContainer.ProgressEntry> progessData,
 			bool showTiming = true)
 		{
-			Console.SetCursorPosition(0, Console.CursorTop - NumLines);
-			NumLines = 0;
+			Console.SetCursorPosition(0, Console.CursorTop - _numLines);
+			_numLines = 0;
 			var sumProgress = 0.0;
 			foreach (var progressEntry in progessData) {
 				if (progressEntry.Value.Success) {
@@ -241,24 +244,24 @@ Examples:
 				}
 				var runName = string.Format("{0} {1} {2}", progressEntry.Value.RunName, progressEntry.Value.CycleName,
 					progressEntry.Value.RunSuffix);
-				Console.WriteLine("{0,-60} {1,8:P}{2}", runName, progressEntry.Value.Progress, timingString);
+				Console.WriteLine(@"{0,-60} {1,8:P}{2}", runName, progressEntry.Value.Progress, timingString);
 				Console.ResetColor();
 				sumProgress += progressEntry.Value.Progress;
-				NumLines++;
+				_numLines++;
 			}
-			sumProgress /= NumLines;
+			sumProgress /= _numLines;
 			var spinner = "/-\\|"[ProgessCounter++ % 4];
 			var bar = new string('#', (int)(sumProgress * 100.0 / 2));
-			Console.WriteLine(string.Format("   {2}   [{1,-50}]  [{0,7:P}]", sumProgress, bar, spinner));
-			NumLines++;
+			Console.WriteLine(@"   {2}   [{1,-50}]  [{0,7:P}]", sumProgress, bar, spinner);
+			_numLines++;
 		}
 
 		private static void PrintTimings(Dictionary<string, double> timings)
 		{
 			Console.WriteLine();
-			Console.WriteLine("---- timing information ----");
+			Console.WriteLine(@"---- timing information ----");
 			foreach (var timing in timings) {
-				Console.WriteLine("{0,-20}: {1:F2}s", timing.Key, timing.Value / 1000);
+				Console.WriteLine(@"{0,-20}: {1:F2}s", timing.Key, timing.Value / 1000);
 			}
 		}
 	}

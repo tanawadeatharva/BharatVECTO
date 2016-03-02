@@ -38,7 +38,6 @@ namespace TUGraz.VectoCore.Models.SimulationComponent.Data
 	public enum CycleType
 	{
 		EngineOnly,
-		TimeBased,
 		DistanceBased,
 		PWheel,
 		MeasuredSpeed,

@@ -64,6 +64,8 @@ namespace TUGraz.VectoCore.InputData.Reader.Impl
 
 			var vehicleInputData = InputDataProvider.VehicleInputData;
 
+			var crossWindRequired = vehicleInputData.CrossWindCorrectionMode == CrossWindCorrectionMode.VAirBetaLookupTable;
+
 			return InputDataProvider.JobInputData().Cycles.Select(cycle => new VectoRunData {
 				JobName = InputDataProvider.JobInputData().JobName,
 				EngineData = engineData,
@@ -73,9 +75,7 @@ namespace TUGraz.VectoCore.InputData.Reader.Impl
 				DriverData = driver,
 				Aux = dao.CreateAuxiliaryData(InputDataProvider.AuxiliaryInputData()),
 				Retarder = dao.CreateRetarderData(InputDataProvider.RetarderInputData, InputDataProvider.VehicleInputData),
-				Cycle =
-					DrivingCycleDataReader.ReadFromDataTable(cycle.CycleData, cycle.Name,
-						vehicleInputData.CrossWindCorrectionMode == CrossWindCorrectionMode.VAirBetaLookupTable),
+				Cycle = DrivingCycleDataReader.ReadFromDataTable(cycle.CycleData, cycle.Name, crossWindRequired),
 				IsEngineOnly = InputDataProvider.JobInputData().EngineOnlyMode
 			});
 		}

@@ -2415,12 +2415,11 @@ Example: “Gears\Gear1.vtlm” points to the “Gears” subdirectory of the Ge
 <li><strong>Engineering Mode</strong>:
 <ul>
 <li><a href="#distance-based-cycle">Target speed, distance-based</a></li>
-<li><a href="#time-based-cycle">Target speed, time-based</a></li>
-<li><a href="#measured-speed-cycle-without-gear">Measured speed</a>: Actual vehicle speed, time-based</li>
-<li><a href="#measured-speed-cycle-with-gear-and-engine-speed">Measured speed with gear</a>: Actual vehicle speed, Actual engine speed, gear, time-based</li>
-<li><a href="#pwheel-sico-mode-cycle">Pwheel (SiCo) Mode</a></li>
+<li><a href="#measured-speed-cycle-without-gear">Measured speed, time-based</a></li>
+<li><a href="#measured-speed-cycle-with-gear-and-engine-speed">Measured speed with gear, time-based</a></li>
+<li><a href="#pwheel-sico-mode-cycle">Pwheel (SiCo) Mode, time-based</a></li>
 </ul></li>
-<li><a href="#engine-only-mode-cycle">Engine Only Mode</a></li>
+<li><strong>Engine Only Mode</strong>: <a href="#engine-only-mode-cycle">Engine Only Mode, time-based</a></li>
 </ul>
 <p><strong>Important Notes:</strong></p>
 <ul>
@@ -2564,137 +2563,9 @@ Example: “Gears\Gear1.vtlm” points to the “Gears” subdirectory of the Ge
 </tbody>
 </table>
 </div>
-<div id="time-based-cycle" class="section level4">
-<h4>Time-Based Cycle</h4>
-<p>Header: <strong>&lt;t&gt;</strong>,<strong>&lt;v&gt;</strong>,<em>[&lt;grad&gt;]</em>,<strong>&lt;stop&gt;</strong>,<strong>&lt;Padd&gt;</strong> <em>[,&lt;vair_res&gt;,&lt;vair_beta&gt;][,&lt;Aux_xxx&gt;]</em></p>
-<table>
-<colgroup>
-<col width="14%"></col>
-<col width="11%"></col>
-<col width="9%"></col>
-<col width="64%"></col>
-</colgroup>
-<thead>
-<tr class="header">
-<th align="left">Identifier</th>
-<th align="left">Quantity</th>
-<th align="left">Unit</th>
-<th align="left">Description</th>
-</tr>
-</thead>
-<tbody>
-<tr class="odd">
-<td align="left"><em>&lt;t&gt;</em></td>
-<td align="left">Time</td>
-<td align="left">[s]</td>
-<td align="left">Absolute time. If this nor the distance &lt;s&gt; is defined the data will be interpreted as time-based in 1Hz.</td>
-</tr>
-<tr class="even">
-<td align="left"><strong>&lt;v&gt;</strong></td>
-<td align="left">Vehicle Speed</td>
-<td align="left">[km/h]</td>
-<td align="left">The target vehicle velocity.</td>
-</tr>
-<tr class="odd">
-<td align="left"><em>&lt;grad&gt;</em></td>
-<td align="left">Road Gradient</td>
-<td align="left">[%]</td>
-<td align="left">Optional.</td>
-</tr>
-<tr class="even">
-<td align="left"><strong>&lt;stop&gt;</strong></td>
-<td align="left">Stopping Time</td>
-<td align="left">[s]</td>
-<td align="left">Required for distance-based cycles. Not used in time based cycles. &lt;stop&gt; defines the time the vehicle spends in stop phases.</td>
-</tr>
-<tr class="odd">
-<td align="left"><strong>&lt;Padd&gt;</strong></td>
-<td align="left">Additional Aux Power Demand</td>
-<td align="left">[kW]</td>
-<td align="left">This power input will be directly added to the engine power in addition to possible other auxiliaries.</td>
-</tr>
-<tr class="even">
-<td align="left"><em>&lt;vair_res&gt;</em></td>
-<td align="left">Air speed relative to vehicle</td>
-<td align="left">[km/h]</td>
-<td align="left">Only required if <a href="#cross-wind-correction"><strong>Cross Wind Correction</strong></a> is set to <strong>Vair &amp; Beta Input</strong>.</td>
-</tr>
-<tr class="odd">
-<td align="left"><em>&lt;vair_beta&gt;</em></td>
-<td align="left">Wind Yaw Angle</td>
-<td align="left">[°]</td>
-<td align="left">Only required if <a href="#cross-wind-correction"><strong>Cross Wind Correction</strong></a> is set to <strong>Vair &amp; Beta Input</strong>.</td>
-</tr>
-<tr class="even">
-<td align="left"><em>&lt;Aux_xxx&gt;</em></td>
-<td align="left">Auxiliary Supply Power</td>
-<td align="left">[kW]</td>
-<td align="left">Supply Power input for each auxiliary defined in the <a href="#job-editor">.vecto file</a> where xxx matches the ID of the corresponding <a href="#auxiliary-dialog">Auxiliary</a>. ID’s are not case sensitive and must not contain space or special characters.</td>
-</tr>
-</tbody>
-</table>
-<p><strong>&lt;bold&gt;</strong> identifiers are required, <em>&lt;italic&gt;</em> are optional.</p>
-<p><strong>Example:</strong></p>
-<table>
-<thead>
-<tr class="header">
-<th align="left">&lt;t&gt;</th>
-<th align="left">&lt;v&gt;</th>
-<th align="left">&lt;grad&gt;</th>
-<th align="left">&lt;n&gt;</th>
-<th align="left">&lt;vair_res&gt;</th>
-<th align="left">&lt;vair_beta&gt;</th>
-<th align="left">&lt;Aux_Alt&gt;</th>
-<th align="left">&lt;Padd&gt;</th>
-</tr>
-</thead>
-<tbody>
-<tr class="odd">
-<td align="left">1</td>
-<td align="left">0</td>
-<td align="left">0</td>
-<td align="left">594</td>
-<td align="left">0</td>
-<td align="left">0</td>
-<td align="left">0.532</td>
-<td align="left">2.007686806</td>
-</tr>
-<tr class="even">
-<td align="left">2</td>
-<td align="left">0</td>
-<td align="left">0</td>
-<td align="left">602.25</td>
-<td align="left">0</td>
-<td align="left">0</td>
-<td align="left">0.588</td>
-<td align="left">3.222867975</td>
-</tr>
-<tr class="odd">
-<td align="left">3</td>
-<td align="left">0</td>
-<td align="left">0</td>
-<td align="left">600</td>
-<td align="left">0</td>
-<td align="left">0</td>
-<td align="left">0.644</td>
-<td align="left">3.215345965</td>
-</tr>
-<tr class="even">
-<td align="left">4</td>
-<td align="left">0</td>
-<td align="left">0</td>
-<td align="left">598</td>
-<td align="left">0</td>
-<td align="left">0</td>
-<td align="left">0.728</td>
-<td align="left">3.208650609</td>
-</tr>
-</tbody>
-</table>
 </div>
-</div>
-<div id="measured-speed-mode-cycle" class="section level3">
-<h3>Measured Speed Mode Cycle</h3>
+<div id="engineering-mode-measured-speed" class="section level3">
+<h3>Engineering Mode: Measured Speed</h3>
 <div id="measured-speed-cycle-without-gear" class="section level4">
 <h4>Measured Speed Cycle Without Gear</h4>
 <p>This cycle type defines the measured vehicle velocity and the road gradient. It uses the built-in shift strategy of vecto to determine the current gear and the resulting engine power. If the cross wind correction for the <a href="#vehicle-editor">Vehicle</a> is set to “Vair &amp; Beta” the columns <vair_res> and <vair_beta> are required.</p>

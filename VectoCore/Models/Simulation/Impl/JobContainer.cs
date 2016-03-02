@@ -34,9 +34,8 @@ using System.Collections.Generic;
 using System.ComponentModel;
 using System.Diagnostics;
 using System.Linq;
-using System.Linq.Expressions;
 using System.Threading;
-using TUGraz.VectoCore.Models.Simulation.Data;
+using TUGraz.VectoCore.Models.SimulationComponent.Data;
 using TUGraz.VectoCore.OutputData;
 
 namespace TUGraz.VectoCore.Models.Simulation.Impl
@@ -64,6 +63,20 @@ namespace TUGraz.VectoCore.Models.Simulation.Impl
 		{
 			_jobNumber++;
 			Runs.Add(new RunEntry { Run = run, JobContainer = this });
+		}
+
+		public struct CycleTypeDescription
+		{
+			public string Name;
+			public CycleType CycleType;
+		}
+
+		public IEnumerable<CycleTypeDescription> GetCycleTypes()
+		{
+			return Runs.Select(r => new CycleTypeDescription {
+				Name = r.Run.CycleName,
+				CycleType = r.Run.GetContainer().RunData.Cycle.CycleType
+			}).Distinct();
 		}
 
 		public void AddRuns(IEnumerable<IVectoRun> runs)
@@ -116,11 +129,11 @@ namespace TUGraz.VectoCore.Models.Simulation.Impl
 			}
 		}
 
-		private static readonly AutoResetEvent resetEvent = new AutoResetEvent(false);
+		private static readonly AutoResetEvent ResetEvent = new AutoResetEvent(false);
 
 		public void WaitFinished()
 		{
-			resetEvent.WaitOne();
+			ResetEvent.WaitOne();
 		}
 
 
@@ -133,7 +146,7 @@ namespace TUGraz.VectoCore.Models.Simulation.Impl
 			}
 			if (AllCompleted) {
 				_sumWriter.Finish();
-				resetEvent.Set();
+				ResetEvent.Set();
 			}
 		}
 
@@ -154,7 +167,7 @@ namespace TUGraz.VectoCore.Models.Simulation.Impl
 
 		public bool AllCompleted
 		{
-			get { return (Runs.Count(x => x.Done == true) == Runs.Count()); }
+			get { return Runs.All(r => r.Done); }
 		}
 
 		public class ProgressEntry

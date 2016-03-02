@@ -178,7 +178,7 @@ namespace TUGraz.VectoCore.Tests.Models.Simulation
 			var container = new VehicleContainer();
 
 			if (autoCycle) {
-				var cycleTypeCalc = DrivingCycleDataReader.GetCycleType(VectoCSVFile.ReadStream(inputData.GetStream()));
+				var cycleTypeCalc = DrivingCycleDataReader.DetectCycleType(VectoCSVFile.ReadStream(inputData.GetStream()));
 				Assert.AreEqual(cycleType, cycleTypeCalc);
 			}
 			var drivingCycle = DrivingCycleDataReader.ReadFromStream(inputData.GetStream(), cycleType, "", crossWindRequired);

@@ -425,7 +425,7 @@ namespace TUGraz.VectoCore.Tests.Integration.DriverStrategy
 		}
 
 		[TestMethod, TestCategory("LongRunning")]
-		public void Decelerate_60_20_uphill_15()
+		public void Truck_Decelerate_60_20_uphill_15()
 		{
 			var cycle = SimpleDrivingCycles.CreateCycleData(SimpleDrivingCycles.CycleDecelerate_60_20_uphill_15);
 			var run = Truck40tPowerTrain.CreateEngineeringRun(cycle,

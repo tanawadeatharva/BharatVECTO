@@ -6,11 +6,10 @@ The format is [Vecto-CSV](#csv-format) and the columns depend on the cycle type:
 - **Declaration Mode**: [Target speed, time-based, predefined!](#declaration-mode-cycle)
 - **Engineering Mode**:
 	- [Target speed, distance-based](#distance-based-cycle)
-	- [Target speed, time-based](#time-based-cycle)
-	- [Measured speed](#measured-speed-cycle-without-gear): Actual vehicle speed, time-based
-	- [Measured speed with gear](#measured-speed-cycle-with-gear-and-engine-speed): Actual vehicle speed, Actual engine speed, gear, time-based
-	- [Pwheel (SiCo) Mode](#pwheel-sico-mode-cycle)
-- [Engine Only Mode](#engine-only-mode-cycle)
+	- [Measured speed, time-based](#measured-speed-cycle-without-gear)
+	- [Measured speed with gear, time-based](#measured-speed-cycle-with-gear-and-engine-speed)
+	- [Pwheel (SiCo) Mode, time-based](#pwheel-sico-mode-cycle)
+- **Engine Only Mode**: [Engine Only Mode, time-based](#engine-only-mode-cycle)
 
 **Important Notes:**
 
@@ -63,41 +62,7 @@ Header: **\<s\>**,**\<v\>**,*[\<grad\>]*,**\<stop\>**,**\<Padd\>** *[,\<vair\_re
 
 
 
-
-
-
-####Time-Based Cycle
-
-Header: **\<t\>**,**\<v\>**,*[\<grad\>]*,**\<stop\>**,**\<Padd\>** *[,\<vair\_res\>,\<vair\_beta\>\]\[,\<Aux\_xxx\>\]*
-
-| Identifier         | Quantity                      | Unit     | Description
-| ----------         | --------                      | ------   | ------------------------------------------------
-| *\<t\>*            | Time                          | [s]      | Absolute time. If this nor the distance \<s\> is defined the data will be interpreted as time-based in 1Hz.
-| **\<v\>**          | Vehicle Speed                 | [km/h]   | The target vehicle velocity.
-| *\<grad\>*         | Road Gradient                 | [%]      | Optional.
-| **\<stop\>**       | Stopping Time                 | [s]      | Required for distance-based cycles. Not used in time based cycles. \<stop\> defines the time the vehicle spends in stop phases.
-| **\<Padd\>**       | Additional Aux Power Demand   | [kW]     | This power input will be directly added to the engine power in addition to possible other auxiliaries.
-| *\<vair_res\>*     | Air speed relative to vehicle | [km/h]   | Only required if [**Cross Wind Correction**](#cross-wind-correction) is set to **Vair & Beta Input**.
-| *\<vair_beta\>*    | Wind Yaw Angle                | [°]      | Only required if [**Cross Wind Correction**](#cross-wind-correction) is set to **Vair & Beta Input**.
-| *\<Aux_xxx\>*      | Auxiliary Supply Power        | [kW]     | Supply Power input for each auxiliary defined in the [.vecto file](#job-editor) where xxx matches the ID of the corresponding [Auxiliary](#auxiliary-dialog). ID's are not case sensitive and must not contain space or special characters.
-
-**\<bold\>** identifiers are required, *\<italic\>* are optional.
-
-**Example:**
-
-|\<t\> |\<v\>|\<grad\>|\<n\>  |\<vair_res\>|\<vair_beta\>|\<Aux_Alt\>|\<Padd\>
-| --- | -- | ----- | ------- | --------- | ---------- | -------- | --------
-|1 |0       |0           |594     | 0     | 0    |0.532     |2.007686806
-|2 |0       |0           |602.25  | 0     | 0    |0.588     |3.222867975
-|3 |0       |0           |600     | 0     | 0    |0.644     |3.215345965
-|4 |0       |0           |598     | 0     | 0    |0.728     |3.208650609
-
-
-
-
-
-
-###Measured Speed Mode Cycle
+###Engineering Mode: Measured Speed
 
 ####Measured Speed Cycle Without Gear
 This cycle type defines the measured vehicle velocity and the road gradient. It uses the built-in shift strategy of vecto to determine the current gear and the resulting engine power. If the cross wind correction for the [Vehicle](#vehicle-editor) is set to "Vair & Beta" the columns <vair_res> and <vair_beta> are required.

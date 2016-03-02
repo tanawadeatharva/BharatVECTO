@@ -29,8 +29,9 @@
 *   Martin Rexeis, rexeis@ivt.tugraz.at, IVT, Graz University of Technology
 */
 
-using System;
+using System.IO;
 using Microsoft.VisualStudio.TestTools.UnitTesting;
+using TUGraz.VectoCore.Exceptions;
 using TUGraz.VectoCore.InputData.Reader;
 using TUGraz.VectoCore.Models.Connector.Ports.Impl;
 using TUGraz.VectoCore.Models.Simulation.Impl;
@@ -90,49 +91,63 @@ namespace TUGraz.VectoCore.Tests.Models.Simulation
 
 			inPort.Connect(outPort);
 
-			var absTime = 10.SI<Second>();
-			var dt = 1.SI<Second>();
+			var absTime = 0.SI<Second>();
+			var dt = 5.SI<Second>();
 
 			var response = cycle.OutPort().Request(absTime, dt);
+			var timeFail = (response as ResponseFailTimeInterval);
 			Assert.IsInstanceOfType(response, typeof(ResponseFailTimeInterval));
+			// ReSharper disable once PossibleNullReferenceException
+			Assert.AreEqual(0.25.SI<Second>(), timeFail.DeltaT);
 
-			dt = 0.25.SI<Second>();
+			dt = timeFail.DeltaT;
+
 			response = cycle.OutPort().Request(absTime, dt);
 			Assert.IsInstanceOfType(response, typeof(ResponseSuccess));
 
-			var dataWriter = new MockModalDataContainer();
 			container.CommitSimulationStep(absTime, dt);
+
 
 			Assert.AreEqual(absTime, outPort.AbsTime);
 			Assert.AreEqual(dt, outPort.Dt);
-			Assert.AreEqual(743.2361.RPMtoRad(), outPort.AngularVelocity);
-			Assert.AreEqual(2779.576.SI<Watt>() / 743.2361.RPMtoRad(), outPort.Torque);
+			Assert.AreEqual(600.RPMtoRad(), outPort.AngularVelocity);
+			Assert.AreEqual(0.SI<NewtonMeter>(), outPort.Torque);
 
 			// ========================
-
+			absTime += dt;
 			dt = 1.SI<Second>();
-			absTime = 500.SI<Second>();
+
 			response = cycle.OutPort().Request(absTime, dt);
 			Assert.IsInstanceOfType(response, typeof(ResponseFailTimeInterval));
 
-			dt = 0.25.SI<Second>();
+			dt = ((ResponseFailTimeInterval)response).DeltaT;
+			Assert.AreEqual(0.5.SI<Second>(), dt);
 
-			for (int i = 0; i < 2; i++) {
+			for (var i = 0; i < 100; i++) {
 				response = cycle.OutPort().Request(absTime, dt);
-				Assert.IsInstanceOfType(response, typeof(ResponseSuccess));
+				response.Switch()
+					.Case<ResponseFailTimeInterval>(r => dt = r.DeltaT)
+					.Case<ResponseSuccess>(r => {
+						container.CommitSimulationStep(absTime, dt);
+						Assert.AreEqual(absTime, outPort.AbsTime);
+						Assert.AreEqual(dt, outPort.Dt);
 
-				dataWriter = new MockModalDataContainer();
-				container.CommitSimulationStep(absTime, dt);
+						if (absTime < 5) {
+							Assert.AreEqual(600.RPMtoRad(), outPort.AngularVelocity);
+							AssertHelper.AreRelativeEqual(0.SI<NewtonMeter>(), outPort.Torque, 1e-3);
+						} else if (absTime.IsBetween(12.75, 13.25) || absTime.IsBetween(14, 15)) {
+							Assert.IsTrue(outPort.AngularVelocity > 600.RPMtoRad());
+							Assert.IsTrue(outPort.Torque < 0);
+						} else {
+							Assert.IsTrue(outPort.AngularVelocity > 600.RPMtoRad());
+							Assert.IsTrue(outPort.Torque > 0);
+						}
 
-				Assert.AreEqual(absTime, outPort.AbsTime);
-				Assert.AreEqual(dt, outPort.Dt);
-				Assert.AreEqual(1584.731.RPMtoRad(), outPort.AngularVelocity);
-				Assert.AreEqual(3380.548.SI<Watt>() / 1584.731.RPMtoRad(), outPort.Torque);
-
-				absTime += dt;
+						absTime += dt;
+						dt = 1.SI<Second>();
+					})
+					.Default(r => { throw new UnexpectedResponseException("Got an unexpected response", r); });
 			}
-
-			// todo: test going backward in time, end of cycle
 		}
 
 		[TestMethod]
@@ -141,7 +156,7 @@ namespace TUGraz.VectoCore.Tests.Models.Simulation
 			var container = new VehicleContainer();
 
 			var cycleData = DrivingCycleDataReader.ReadFromFile(@"TestData\Cycles\Coach First Cycle only.vdri",
-				CycleType.TimeBased, false);
+				CycleType.MeasuredSpeed, false);
 			var cycle = new TimeBasedDrivingCycle(container, cycleData);
 
 			var outPort = new MockDrivingCycleOutPort();
@@ -163,35 +178,190 @@ namespace TUGraz.VectoCore.Tests.Models.Simulation
 		}
 
 		[TestMethod]
-		public void Test_TimeBased_TimeFieldMissing()
+		public void DrivingCycle_AutoDetect()
 		{
-			var container = new VehicleContainer(new MockModalDataContainer());
+			// declaration mode - distance based
+			TestCycleDetect("<s>,<v>,<grad>,<stop>", CycleType.DistanceBased);
+			TestCycleDetect("<s>,<<v>,>grad>,<stop>", CycleType.DistanceBased);
 
-			var cycleData = DrivingCycleDataReader.ReadFromFile(@"TestData\Cycles\Cycle time field missing.vdri",
-				CycleType.TimeBased, false);
-			var cycle = new TimeBasedDrivingCycle(container, cycleData);
+			// engineering mode - distance based
+			TestCycleDetect("<s>,<v>,<grad>,<stop>,<Padd>,<vair_res>,<vair_beta>,<Aux_ELE>,<Aux_SP>", CycleType.DistanceBased);
+			TestCycleDetect("<s>,<v>,<stop>,<Padd>,<vair_res>,<vair_beta>,<Aux_ELE>,<Aux_SP>", CycleType.DistanceBased);
+			TestCycleDetect("<s>,<v>,<grad>,<stop>,<Padd>,<Aux_ELE>,<Aux_SP>", CycleType.DistanceBased);
+			TestCycleDetect("<s>,<v>,<grad>,<stop>,<Padd>,<vair_res>,<vair_beta>", CycleType.DistanceBased);
+			TestCycleDetect("<s>,<v>,<stop>,<Padd>", CycleType.DistanceBased);
+			TestCycleDetect("s,v,stop,Padd", CycleType.DistanceBased);
+			TestCycleDetect("s,v,stop", CycleType.DistanceBased);
 
-			var outPort = new MockDrivingCycleOutPort();
+			// engineering mode - time based
+			// mk 2016-03-01: plain time based cycle does not exist anymore. replaced by measuredspeed, measuredspeed gear, engineonly and pwheel
 
-			var inPort = cycle.InPort();
-			var cycleOut = cycle.OutPort();
+			// engine only
+			TestCycleDetect("<t>,<n>,<Me>,<Padd>", CycleType.EngineOnly);
+			TestCycleDetect("<t>,<n>,<Me>", CycleType.EngineOnly);
+			TestCycleDetect("<t>,<n>,<Me>,<Pe>,<Padd>", CycleType.EngineOnly);
+			TestCycleDetect("<t>,<n>,<Pe>,<Padd>", CycleType.EngineOnly);
+			TestCycleDetect("<t>,<n>,<Pe>", CycleType.EngineOnly);
+			TestCycleDetect("<Me>,<n>,<Padd>,<t>", CycleType.EngineOnly);
+			TestCycleDetect("t,n,Me,Padd", CycleType.EngineOnly);
 
-			inPort.Connect(outPort);
+			// p_wheel
+			TestCycleDetect("<t>,<Pwheel>,<gear>,<n>,<Padd>", CycleType.PWheel);
+			TestCycleDetect("<gear>,<t>,<n>,<Padd>,<Pwheel>", CycleType.PWheel);
+			TestCycleDetect("<t>,<Pwheel>,<gear>,<n>", CycleType.PWheel);
+			TestCycleDetect("t,Pwheel,gear,n,Padd", CycleType.PWheel);
+			TestCycleDetect("Pwheel,t,gear,n,Padd", CycleType.PWheel);
 
-			var dataWriter = new MockModalDataContainer();
-			var absTime = 0.SI<Second>();
-			var dt = 1.SI<Second>();
+			// measured speed
+			TestCycleDetect("<t>,<v>,<grad>,<Padd>,<vair_res>,<vair_beta>,<Aux_ELE>,<Aux_SP>", CycleType.MeasuredSpeed);
+			TestCycleDetect("<t>,<v>,<grad>,<Padd>,<vair_res>,<vair_beta>", CycleType.MeasuredSpeed);
+			TestCycleDetect("<t>,<v>,<grad>,<Padd>", CycleType.MeasuredSpeed);
+			TestCycleDetect("<t>,<v>,<grad>,<Padd>,<Aux_ALT>,<Aux_ES>", CycleType.MeasuredSpeed);
+			TestCycleDetect("<t>,<v>,<grad>", CycleType.MeasuredSpeed);
+			TestCycleDetect("<t>,<Padd>,<grad>,<v>", CycleType.MeasuredSpeed);
+			TestCycleDetect("t,v,grad,Padd", CycleType.MeasuredSpeed);
+			TestCycleDetect("t,v,grad", CycleType.MeasuredSpeed);
 
-			while (cycleOut.Request(absTime, dt) is ResponseSuccess) {
-				Assert.AreEqual(absTime, outPort.AbsTime);
-				Assert.AreEqual(dt, outPort.Dt);
+			// measured speed with gear
+			TestCycleDetect("<t>,<v>,<grad>,<Padd>,<n>,<gear>,<vair_res>,<vair_beta>,<Aux_HVAC>,<Aux_HP>",
+				CycleType.MeasuredSpeedGear);
+			TestCycleDetect("<t>,<v>,<grad>,<Padd>,<n>,<gear>,<vair_res>,<vair_beta>", CycleType.MeasuredSpeedGear);
+			TestCycleDetect("<t>,<v>,<grad>,<Padd>,<n>,<gear>,<Aux_HVAC>,<Aux_HP>", CycleType.MeasuredSpeedGear);
+			TestCycleDetect("<t>,<v>,<grad>,<Padd>,<n>,<gear>", CycleType.MeasuredSpeedGear);
+			TestCycleDetect("<t>,<v>,<grad>,<n>,<gear>", CycleType.MeasuredSpeedGear);
+			TestCycleDetect("<n>,<Padd>,<gear>,<v>,<grad>,<t>", CycleType.MeasuredSpeedGear);
+			TestCycleDetect("t,v,grad,Padd,n,gear", CycleType.MeasuredSpeedGear);
 
-				var time = absTime + dt / 2;
-				var simulationInterval = dt;
-				container.CommitSimulationStep(time, simulationInterval);
+			// wrong cycles
+			AssertHelper.Exception<VectoException>(() => TestCycleDetect("v,grad,Padd,n,gear", CycleType.MeasuredSpeedGear));
+			AssertHelper.Exception<VectoException>(() => TestCycleDetect("<t>,<grad>", CycleType.MeasuredSpeed));
+			AssertHelper.Exception<VectoException>(() => TestCycleDetect("<t>,<Pwheel>,<n>,<Padd>", CycleType.PWheel));
+			AssertHelper.Exception<VectoException>(() => TestCycleDetect("<t>,<Pwheel>,<Pwheel>,<n>,<Padd>", CycleType.PWheel));
+			AssertHelper.Exception<VectoException>(() => TestCycleDetect("<t>,<n>,<torque>,<>,<Padd>", CycleType.EngineOnly));
+			AssertHelper.Exception<VectoException>(() => TestCycleDetect("x,y,z", CycleType.EngineOnly));
+			AssertHelper.Exception<VectoException>(() => TestCycleDetect("x", CycleType.EngineOnly));
+			AssertHelper.Exception<VectoException>(() => TestCycleDetect("", CycleType.MeasuredSpeed));
+			AssertHelper.Exception<VectoException>(
+				() =>
+					TestCycleDetect("<t>,<v>,<gear>,<Pwheel>,<s>,<grad>,<Padd>,<n>,<gear>,<vair_res>,<vair_beta>,<Aux_HVAC>,<Aux_HP>",
+						CycleType.MeasuredSpeedGear));
+		}
 
-				absTime += dt;
-			}
+
+		[TestMethod]
+		public void DrivingCycle_Read()
+		{
+			// declaration mode - distance based
+			TestCycleRead("<s>,<v>,<grad>,<stop>\n1,1,1,0", CycleType.DistanceBased, 2);
+			TestCycleRead("<s>,<v>,<grad>,<stop>\n1,0,1,1", CycleType.DistanceBased, 3);
+			AssertHelper.Exception<VectoException>(() => TestCycleRead("<s>,<v>,<grad>,<stop>\n1,1,1,1", CycleType.DistanceBased));
+			TestCycleRead("<s>,<<v>,>grad>,<stop>\n1,1,1,0", CycleType.DistanceBased, 2);
+
+			// engineering mode - distance based
+			TestCycleRead("<s>,<v>,<grad>,<stop>,<Padd>,<vair_res>,<vair_beta>,<Aux_ELE>,<Aux_SP>\n1,1,1,0,1,1,1,1,1",
+				CycleType.DistanceBased, 2);
+			TestCycleRead("<s>,<v>,<stop>,<Padd>,<vair_res>,<vair_beta>,<Aux_ELE>,<Aux_SP>\n1,1,0,1,1,1,1,1",
+				CycleType.DistanceBased, 2);
+			TestCycleRead("<s>,<v>,<grad>,<stop>,<Padd>,<Aux_ELE>,<Aux_SP>\n1,1,1,0,1,1,1", CycleType.DistanceBased, 2);
+			TestCycleRead("<s>,<v>,<grad>,<stop>,<Padd>,<vair_res>,<vair_beta>\n1,1,1,0,1,1,1", CycleType.DistanceBased, 2);
+			TestCycleRead("<s>,<v>,<stop>,<Padd>\n1,1,0,1", CycleType.DistanceBased, 2);
+			TestCycleRead("s,v,stop,Padd\n1,1,0,1", CycleType.DistanceBased, 2);
+			TestCycleRead("s,v,stop\n1,1,0", CycleType.DistanceBased, 2);
+
+			// engineering mode - time based
+			// mk 2016-03-01: plain time based cycle does not exist anymore. replaced by measuredspeed, measuredspeed gear, engineonly and pwheel
+
+			// engine only
+			TestCycleRead("<t>,<n>,<Me>,<Padd>\n1,1,1,1", CycleType.EngineOnly);
+			TestCycleRead("<t>,<n>,<Me>\n1,1,1", CycleType.EngineOnly);
+			TestCycleRead("<t>,<n>,<Me>,<Pe>,<Padd>\n1,1,1,1,1", CycleType.EngineOnly);
+			TestCycleRead("<t>,<n>,<Pe>,<Padd>\n1,1,1,1", CycleType.EngineOnly);
+			TestCycleRead("<t>,<n>,<Pe>\n1,1,1", CycleType.EngineOnly);
+			TestCycleRead("<Me>,<n>,<Padd>,<t>\n1,1,1,1", CycleType.EngineOnly);
+			TestCycleRead("t,n,Me,Padd\n1,1,1,1", CycleType.EngineOnly);
+
+			// p_wheel
+			TestCycleRead("<t>,<Pwheel>,<gear>,<n>,<Padd>\n1,1,1,1,1", CycleType.PWheel);
+			TestCycleRead("<gear>,<t>,<n>,<Padd>,<Pwheel>\n1,1,1,1,1", CycleType.PWheel);
+			TestCycleRead("<t>,<Pwheel>,<gear>,<n>\n1,1,1,1", CycleType.PWheel);
+			TestCycleRead("t,Pwheel,gear,n,Padd\n1,1,1,1,1", CycleType.PWheel);
+			TestCycleRead("Pwheel,t,gear,n,Padd\n1,1,1,1,1", CycleType.PWheel);
+
+			// measured speed
+			TestCycleRead("<t>,<v>,<grad>,<Padd>,<vair_res>,<vair_beta>,<Aux_ELE>,<Aux_SP>\n1,1,1,1,1,1,1,1",
+				CycleType.MeasuredSpeed);
+			TestCycleRead("<t>,<v>,<grad>,<Padd>,<vair_res>,<vair_beta>,<Aux_ALT>,<Aux_ES>\n1,1,1,1,1,1,1,1",
+				CycleType.MeasuredSpeed);
+			TestCycleRead("<t>,<v>,<grad>,<Padd>,<vair_res>,<vair_beta>\n1,1,1,1,1,1", CycleType.MeasuredSpeed);
+			TestCycleRead("<t>,<v>,<grad>,<Padd>\n1,1,1,1", CycleType.MeasuredSpeed);
+			TestCycleRead("<t>,<v>,<grad>,<Padd>,<Aux_ALT>,<Aux_ES>\n1,1,1,1,1,1", CycleType.MeasuredSpeed);
+			TestCycleRead("<t>,<v>,<grad>\n1,1,1", CycleType.MeasuredSpeed);
+			TestCycleRead("<t>,<Padd>,<grad>,<v>\n1,1,1,1", CycleType.MeasuredSpeed);
+			TestCycleRead("t,v,grad,Padd\n1,1,1,1", CycleType.MeasuredSpeed);
+			TestCycleRead("t,v,grad\n1,1,1", CycleType.MeasuredSpeed);
+
+			// measured speed with gear
+			TestCycleRead("<t>,<v>,<grad>,<Padd>,<n>,<gear>,<vair_res>,<vair_beta>,<Aux_HVAC>,<Aux_HP>\n1,1,1,1,1,1,1,1,1,1",
+				CycleType.MeasuredSpeedGear);
+			TestCycleRead("<t>,<v>,<grad>,<Padd>,<n>,<gear>,<vair_res>,<vair_beta>\n1,1,1,1,1,1,1,1",
+				CycleType.MeasuredSpeedGear);
+			TestCycleRead("<t>,<v>,<grad>,<Padd>,<n>,<gear>,<Aux_HVAC>,<Aux_HP>\n1,1,1,1,1,1,1,1", CycleType.MeasuredSpeedGear);
+			TestCycleRead("<t>,<v>,<grad>,<Padd>,<n>,<gear>\n1,1,1,1,1,1", CycleType.MeasuredSpeedGear);
+			TestCycleRead("<t>,<v>,<grad>,<n>,<gear>\n1,1,1,1,1", CycleType.MeasuredSpeedGear);
+			TestCycleRead("<n>,<Padd>,<gear>,<v>,<grad>,<t>\n1,1,1,1,1,1", CycleType.MeasuredSpeedGear);
+			TestCycleRead("t,v,grad,Padd,n,gear\n1,1,1,1,1,1", CycleType.MeasuredSpeedGear);
+
+			// wrong cycles
+			AssertHelper.Exception<VectoException>(
+				() => TestCycleRead("v,grad,Padd,n,gear\n1,1,1,1,1", CycleType.MeasuredSpeedGear));
+			AssertHelper.Exception<VectoException>(() => TestCycleRead("<t>,<grad>\n1,1,1,1,1,1,1,1,1", CycleType.MeasuredSpeed));
+			AssertHelper.Exception<VectoException>(
+				() => TestCycleRead("<t>,<Pwheel>,<n>,<Padd>\n1,1,1,1,1,1,1,1,1", CycleType.PWheel));
+			AssertHelper.Exception<VectoException>(
+				() => TestCycleRead("<t>,<Pwheel>,<Pwheel>,<n>,<Padd>\n1,1,1,1,1,1,1,1,1", CycleType.PWheel));
+			AssertHelper.Exception<VectoException>(
+				() => TestCycleRead("<t>,<n>,<torque>,<>,<Padd>\n1,1,1,1,1,1,1,1,1", CycleType.EngineOnly));
+			AssertHelper.Exception<VectoException>(() => TestCycleRead("x,y,z\n1,1,1,1,1,1,1,1,1", CycleType.EngineOnly));
+			AssertHelper.Exception<VectoException>(() => TestCycleRead("x\n1,1,1,1,1,1,1,1,1", CycleType.EngineOnly));
+			AssertHelper.Exception<VectoException>(() => TestCycleRead("\n1,1,1,1,1,1,1,1,1", CycleType.MeasuredSpeed));
+			AssertHelper.Exception<VectoException>(() => TestCycleRead(
+				"<t>,<v>,<gear>,<Pwheel>,<s>,<grad>,<Padd>,<n>,<gear>,<vair_res>,<vair_beta>,<Aux_HVAC>,<Aux_HP>\n1,1,1,1,1,1,1,1,1",
+				CycleType.MeasuredSpeedGear));
+		}
+
+		[TestMethod]
+		public void DrivingCycle_Read_File()
+		{
+			TestCycleDetect(File.ReadAllText(@"TestData\Cycles\Coach.vdri"), CycleType.DistanceBased);
+			TestCycleRead(File.ReadAllText(@"TestData\Cycles\Coach.vdri"), CycleType.DistanceBased, 6116);
+
+			TestCycleDetect(File.ReadAllText(@"TestData\Cycles\Engine Only1.vdri"), CycleType.EngineOnly);
+			TestCycleRead(File.ReadAllText(@"TestData\Cycles\Engine Only1.vdri"), CycleType.EngineOnly, 696);
+
+			TestCycleDetect(File.ReadAllText(@"TestData\Pwheel\RD_#1_Pwheel_AuxStd.vdri"), CycleType.PWheel);
+			TestCycleRead(File.ReadAllText(@"TestData\Pwheel\RD_#1_Pwheel_AuxStd.vdri"), CycleType.PWheel, 3917);
+
+			TestCycleDetect(File.ReadAllText(@"TestData\MeasuredSpeed\MeasuredSpeedVairAux.vdri"), CycleType.MeasuredSpeed);
+			TestCycleRead(File.ReadAllText(@"TestData\MeasuredSpeed\MeasuredSpeedVairAux.vdri"), CycleType.MeasuredSpeed, 1300);
+
+			TestCycleDetect(File.ReadAllText(@"TestData\MeasuredSpeed\MeasuredSpeed_Gear_Rural_VairAux.vdri"),
+				CycleType.MeasuredSpeedGear);
+			TestCycleRead(File.ReadAllText(@"TestData\MeasuredSpeed\MeasuredSpeed_Gear_Rural_VairAux.vdri"),
+				CycleType.MeasuredSpeedGear, 1300);
+		}
+
+
+		private static void TestCycleDetect(string inputData, CycleType cycleType)
+		{
+			var cycleTypeCalc = DrivingCycleDataReader.DetectCycleType(VectoCSVFile.ReadStream(inputData.GetStream()));
+			Assert.AreEqual(cycleType, cycleTypeCalc);
+		}
+
+		private static void TestCycleRead(string inputData, CycleType cycleType, int entryCount = 1)
+		{
+			var drivingCycle = DrivingCycleDataReader.ReadFromStream(inputData.GetStream(), cycleType, "", false);
+			Assert.AreEqual(cycleType, drivingCycle.CycleType);
+			Assert.AreEqual(entryCount, drivingCycle.Entries.Count, "Driving Cycle Entry count.");
 		}
 	}
 }

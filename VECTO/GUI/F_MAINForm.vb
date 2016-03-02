@@ -1576,23 +1576,23 @@ lbFound:
 
         For Each jobFile As String In JobFileList
             Try
-                sender.ReportProgress(0, New With {.Target = "ListBox", .Message = "Reading File " + jobFile})
+				sender.ReportProgress(0, New With {.Target = "ListBox", .Message = "Reading File " + jobFile, .Link = jobFile})
                 Dim dataProvider As IInputDataProvider = JSONInputDataFactory.ReadJsonJob(jobFile)
                 Dim runsFactory As SimulatorFactory = New SimulatorFactory(mode, dataProvider, fileWriter)
                 runsFactory.WriteModalResults = Cfg.ModOut
                 jobContainer.AddRuns(runsFactory)
-                sender.ReportProgress(0, New With {.Target = "ListBox", .Message = "Finished Reading File " + jobFile})
+				sender.ReportProgress(0, New With {.Target = "ListBox", .Message = "Finished Reading Data for job: " + jobFile})
             Catch ex As Exception
                 MsgBox(String.Format("ERROR running job {0}: {1}", jobFile, ex.Message), MsgBoxStyle.Critical)
                 sender.ReportProgress(0, New With {.Target = "ListBox", .Message = ex.Message})
             End Try
         Next
 
-        sender.ReportProgress(0, New _
-                                 With {.Target = "ListBox",
-                                 .Message =
-                                 String.Format("Starting Simulation ({0} Jobs, {1} Runs)", JobFileList.Count,
-                                               jobContainer.GetProgress().Count)})
+		For Each cycle As JobContainer.CycleTypeDescription In jobContainer.GetCycleTypes()
+			sender.ReportProgress(0, New With {.Target = "ListBox", .Message = String.Format("Detected Cycle {0}: {1}", cycle.Name, cycle.CycleType)})
+		Next
+		
+		sender.ReportProgress(0, New With {.Target = "ListBox", .Message = String.Format("Starting Simulation ({0} Jobs, {1} Runs)", JobFileList.Count, jobContainer.GetProgress().Count)})
 
         jobContainer.Execute(True)
         Dim start As DateTime = DateTime.Now()
