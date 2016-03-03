@@ -16,7 +16,6 @@
 3-functions/AccLimit.md
 3-functions/Auxiliaries.md
 3-functions/cd.md
-3-functions/EcoRoll.md
 3-functions/EngOnlyMode.md
 3-functions/StartStop.md
 3-functions/FC.md
