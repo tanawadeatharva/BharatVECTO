@@ -15,7 +15,7 @@ It is possible to control basic functions of VECTO via command line arguments (e
 
 ###Standard Mode
 
-        VECTO.exe -run \[-close\] \[file1.vecto file2.vecto ... fileN.vecto\]
+        VECTO.exe -run [-close] [file1.vecto file2.vecto ... fileN.vecto]
 
 
 Runs calculation(s) either with the provided .vecto file(s) or (if no file names are defined) with the files already loaded on start up\*. If -**close** is used then VECTO closes after calculations are done.
@@ -23,7 +23,7 @@ Runs calculation(s) either with the provided .vecto file(s) or (if no file names
 
 ###Batch Mode
 
-		VECTO.exe -run -batch \[-close\] \[file1.vecto file2.vecto ... fileN.vecto\] \[cycle1.vdri cycle2.vdri ... cycleN.vdri\]
+		VECTO.exe -run -batch [-close] [file1.vecto file2.vecto ... fileN.vecto] [cycle1.vdri cycle2.vdri ... cycleN.vdri]
 
 
 
