@@ -10,7 +10,7 @@ In the Settings dialog controls general application settings. The settings are s
 
 ###Interface Settings
 
-
+<div class="vecto22">
 Logfile Size Limit \[MB\]
 :	Whenever the [Log File](#application-files) reaches this size it will be restarted. One backup is always stored as LOG\_backup.txt.
 
@@ -20,10 +20,9 @@ File Open Command
 **Command**: The actual command.
 
 :	***Example*** *: If the command is* ***excel*** *and the file is* ***C:\\VECTO\\cycle1.vdri*** *then VECTO will run:* ***excel "C:\\VECTO\\cycle1.vdri"***
-
+</div>
 
 ###Calculation Settings
-
 
 Air Density \[kg/m³\]
 :	The Air Density is needed to calculate the air resistance together with the **Drag Coefficient** and the **Cross Sectional Area** (see [Vehicle Editor](#vehicle-editor)).
