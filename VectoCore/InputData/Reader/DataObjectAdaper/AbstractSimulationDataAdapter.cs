@@ -29,6 +29,7 @@
 *   Martin Rexeis, rexeis@ivt.tugraz.at, IVT, Graz University of Technology
 */
 
+using System;
 using System.Collections.Generic;
 using System.Linq;
 using TUGraz.VectoCore.Models;
@@ -84,10 +85,20 @@ namespace TUGraz.VectoCore.InputData.Reader.DataObjectAdaper
 				IntegrityStatus = data.IntegrityStatus,
 				Type = data.Type,
 			};
-			if (retarder.Type == RetarderData.RetarderType.Primary || retarder.Type == RetarderData.RetarderType.Secondary) {
-				retarder.LossMap = RetarderLossMap.Create(data.LossMap);
-				retarder.Ratio = vehicle.RetarderRatio;
+			switch (retarder.Type) {
+				case RetarderData.RetarderType.Primary:
+				case RetarderData.RetarderType.Secondary:
+					retarder.LossMap = RetarderLossMap.Create(data.LossMap);
+					retarder.Ratio = vehicle.RetarderRatio;
+					break;
+				case RetarderData.RetarderType.None:
+				case RetarderData.RetarderType.LossesIncludedInTransmission:
+					retarder.Ratio = 1;
+					break;
+				default:
+					throw new ArgumentOutOfRangeException("retarder.Type", "RetarderType unknown");
 			}
+
 			return retarder;
 		}
 
@@ -154,15 +165,16 @@ namespace TUGraz.VectoCore.InputData.Reader.DataObjectAdaper
 			if (gearCurve == null) {
 				return engineCurve;
 			}
-			var entries = gearCurve.FullLoadEntries.Concat(engineCurve.FullLoadEntries)
-				.OrderBy(x => x.EngineSpeed)
-				.Distinct(new FullLoadEntryEqualityComparer())
-				.Select(x => new FullLoadCurve.FullLoadCurveEntry {
-					EngineSpeed = x.EngineSpeed,
-					TorqueFullLoad =
-						VectoMath.Min(engineCurve.FullLoadStationaryTorque(x.EngineSpeed),
-							gearCurve.FullLoadStationaryTorque(x.EngineSpeed))
-				});
+			var entries =
+				gearCurve.FullLoadEntries.Concat(engineCurve.FullLoadEntries)
+					.OrderBy(x => x.EngineSpeed)
+					.Distinct(new FullLoadEntryEqualityComparer())
+					.Select(x => new FullLoadCurve.FullLoadCurveEntry {
+						EngineSpeed = x.EngineSpeed,
+						TorqueFullLoad =
+							VectoMath.Min(engineCurve.FullLoadStationaryTorque(x.EngineSpeed),
+								gearCurve.FullLoadStationaryTorque(x.EngineSpeed))
+					});
 
 			var flc = new EngineFullLoadCurve {
 				FullLoadEntries = entries.ToList(),
