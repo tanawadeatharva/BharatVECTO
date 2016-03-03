@@ -52,9 +52,14 @@ namespace DeclarationCycleZip
 			table.Columns.Add("<stop>");
 
 			var lastDistance = cycleData.Entries.First().Distance - 1.SI<Meter>();
+			DrivingCycleData.DrivingCycleEntry prevEntry = null;
 			foreach (var x in cycleData.Entries) {
 				if (x.Distance.IsEqual(lastDistance)) {
-					continue;
+					if (prevEntry != null && prevEntry.VehicleTargetSpeed.IsEqual(0.SI<MeterPerSecond>())) {
+						x.Distance = x.Distance + 1.SI<Meter>();
+					} else {
+						continue;
+					}
 				}
 				var row = table.NewRow();
 				row["<s>"] = x.Distance.Value().ToString(CultureInfo.InvariantCulture);
@@ -63,6 +68,7 @@ namespace DeclarationCycleZip
 				row["<stop>"] = x.StoppingTime.Value().ToString(CultureInfo.InvariantCulture);
 				table.Rows.Add(row);
 				lastDistance = x.Distance;
+				prevEntry = x;
 			}
 
 			VectoCSVFile.Write(Path.GetFileName(args[0]), table);
