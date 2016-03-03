@@ -204,6 +204,8 @@ namespace TUGraz.VectoCore.InputData.Reader
 					// vehicle stops. duplicate current distance entry with 0 waiting time
 					var tmp = new DrivingCycleData.DrivingCycleEntry(entry) {
 						StoppingTime = 0.SI<Second>(),
+						RoadGradient = entry.RoadGradient,
+						RoadGradientPercent = entry.RoadGradientPercent,
 						VehicleTargetSpeed = i < entries.Count - 1 ? entries[i + 1].VehicleTargetSpeed : 0.SI<MeterPerSecond>()
 					};
 					filtered.Add(tmp);
