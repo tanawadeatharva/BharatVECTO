@@ -1,19 +1,22 @@
 ##Command Line Arguments
 
+Both, Vecto 2.2 and Vecto 3.x can be started from the commandline. The usage is quite different and described below.
+
+<div class="vecto2">
+
 ![](pics/cmd.png)
 
 It is possible to control basic functions of VECTO via command line arguments (e.g. to automate calculations and results analysis using scripts).
 
 ###General Notes
 
--   The order in which the arguments are provided is free.
+-   The order in which the arguments are provided is arbitrary.
 -   If a file path includes space characters (e.g. "C:\\VECTO Test Files\\Demo.vecto") then double quotes have to be used (as in the picture above).
 -   If not the complete file path is defined (e.g. "file1.vecto" instead of "c:\\data\\file1.vecto") then VECTO expects the file in the application directory (where VECTO.exe is located).
--   In the instructions below square brackets "\[  \]" indicate optional arguments.
 
 
 
-###Standard Mode
+###Engineering/Declaration Mode
 
         VECTO.exe -run [-close] [file1.vecto file2.vecto ... fileN.vecto]
 
@@ -39,3 +42,33 @@ If the file has one of the following extensions it is opened with the associated
 
 
  *pre-loaded files: When VECTO starts it loads the file lists (.vecto, .vdri) of the last session, see [Application Files](#application-files). These files can be changes manually if VECTO is not running.
+
+</div>
+
+<div class="vecto3">
+
+![](pics/cmd3.png)
+
+The Vecto 3.x commandline tool runs completely without a graphical user interface. If multiple job-files are specified or a job-file contains multiple simulation runs (i.e., multiple cycles and/or loadings) these simulations are executed in parallel.
+
+The basic usage is as follows
+
+        vectocmd.exe [-h] [-v] FILE1.vecto [FILE2.vecto ...]
+
+###List of command line arguments
+
+- FILE1.vecto [FILE2.vecto ...]: A list of vecto-job files (with the 
+       extension: .vecto). At least one file must be given. Delimited by 
+       whitespace.
+- -t: output information about execution times
+- -mod: write mod-data in addition to sum-data
+- -eng: switch to engineering mode (implies -mod)
+- -v: Shows verbose information (errors and warnings will be displayed)
+- -vv: Shows more verbose information (infos will be displayed)
+- -vvv: Shows debug messages (slow!)
+- -vvvv: Shows all verbose information (everything, slow!)
+- -V: show version information
+- -h: Displays this help.
+
+
+</div>

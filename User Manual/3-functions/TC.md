@@ -2,8 +2,9 @@
 
 
 
-**!!! The Torque Converter Model is still in development !!!**
+**!!! The Torque Converter Model is still in development and at the moment only available in Vecto 2.2 !!!**
 
+<div class="vecto2">
 The torque converter is defined as (virtual) separate gear. While TC active: Iterative calculation of engine torque and speed based on TC characteristic. Creeping: Engine speed set to idling. Brakes engaged to absorb surplus torque.
  ![](pics/GBX-TC.svg)
 
@@ -31,3 +32,5 @@ Torque converter file is defined for the **whole gearbox**
 -   Set transmission efficiency to 1 (= 100%) because losses are covered  by the .vtcc file.
 
 ![](pics/GBX-TC-Setup-2-2.svg)
+
+</div>

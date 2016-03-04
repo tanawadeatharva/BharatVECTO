@@ -29,15 +29,11 @@
 4-command-line-arguments/cmd.md
 5-input-and-output-files/input-output.md
 5-input-and-output-files/CSV.md
-1-user-interface/VECTO-Editor.md
-1-user-interface/VEH-Editor.md
 5-input-and-output-files/VCDV.md
 5-input-and-output-files/VCDB.md
 5-input-and-output-files/VRLM.md
-1-user-interface/ENG-Editor.md
 5-input-and-output-files/VFLD.md
 5-input-and-output-files/VMAP.md
-1-user-interface/GBX-Editor.md
 5-input-and-output-files/VGBS.md
 5-input-and-output-files/VTLM.md
 5-input-and-output-files/VTCC.md

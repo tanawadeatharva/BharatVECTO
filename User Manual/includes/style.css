@@ -95,7 +95,6 @@ div.vecto2 {
   padding-left: 5px;
   margin-top: 2em;
   background: rgba(128,128,128,0.05);
-  padding-top: 5px;
 }
 div.vecto2:before {
   content: 'Note: Vecto 2.2!';
@@ -104,6 +103,8 @@ div.vecto2:before {
   padding: 5px 5px 5px 33px;
   margin-left: -8px;
   font-weight: bold;
+  display: inline-block;
+  margin-bottom: 1em;
 }
 
 
@@ -112,7 +113,6 @@ div.vecto3 {
   padding-left: 5px;
   margin-top: 2em;
   background: rgba(0,128,0,0.05);
-  padding-top: 5px;
 }
 div.vecto3:before {
   content: 'Note: Vecto 3.x!';
@@ -121,5 +121,7 @@ div.vecto3:before {
   padding: 5px 5px 5px 33px;
   margin-left: -8px;
   font-weight: bold;
+  display: inline-block;
+  margin-bottom: 1em;
 }
 
