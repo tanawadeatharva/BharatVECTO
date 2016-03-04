@@ -89,3 +89,37 @@ dt {
 	height: 100%;
 	top: 0px;
 }
+
+div.vecto2 {
+  border-left: 3px solid gray;
+  padding-left: 5px;
+  margin-top: 2em;
+  background: rgba(128,128,128,0.05);
+  padding-top: 5px;
+}
+div.vecto2:before {
+  content: 'Note: Vecto 2.2!';
+  background: gray;
+  color: white;
+  padding: 5px 5px 5px 33px;
+  margin-left: -8px;
+  font-weight: bold;
+}
+
+
+div.vecto3 {
+  border-left: 3px solid green;
+  padding-left: 5px;
+  margin-top: 2em;
+  background: rgba(0,128,0,0.05);
+  padding-top: 5px;
+}
+div.vecto3:before {
+  content: 'Note: Vecto 3.x!';
+  background: green;
+  color: white;
+  padding: 5px 5px 5px 33px;
+  margin-left: -8px;
+  font-weight: bold;
+}
+
