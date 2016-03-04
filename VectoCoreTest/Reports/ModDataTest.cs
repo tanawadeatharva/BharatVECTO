@@ -67,12 +67,16 @@ namespace TUGraz.VectoCore.Tests.Reports
 			run.Run();
 			Assert.IsTrue(run.FinishedWithoutErrors);
 
-			var skipNext = false;
+			var lastGear = 0u;
 			foreach (DataRow row in modData.Data.Rows) {
-				if (skipNext) {
+				var gear = (uint)row[(int)ModalResultField.Gear];
+				var time = (Second)row[(int)ModalResultField.time];
+
+				if ((lastGear == 0 && gear != 0) || (lastGear != 0 && gear == 0)) {
+					//skipNext = (uint)row[(int)ModalResultField.Gear] == 0;
+					lastGear = gear;
 					continue;
 				}
-				var time = (Second)row[(int)ModalResultField.time];
 				var distance = (Meter)row[(int)ModalResultField.dist];
 				var tqEngFcmap = (NewtonMeter)row[(int)ModalResultField.T_eng_fcmap];
 				var nEngFcMap = (PerSecond)row[(int)ModalResultField.n_eng_avg];
@@ -113,7 +117,7 @@ namespace TUGraz.VectoCore.Tests.Reports
 				var pClutchLoss = (Watt)row[(int)ModalResultField.P_clutch_loss];
 				var pClutchOut = (Watt)row[(int)ModalResultField.P_clutch_out];
 				var pWheelInertia = (Watt)row[(int)ModalResultField.P_wheel_inertia];
-				var gear = (uint)row[(int)ModalResultField.Gear];
+
 
 				// P_trac = P_veh_inertia + P_roll + P_air + P_slope
 				Assert.AreEqual(pTrac.Value(), (pAir + pRoll + pGrad + pVehInertia).Value(), 1E-3, "time: {0}  distance: {1}", time,
@@ -140,10 +144,9 @@ namespace TUGraz.VectoCore.Tests.Reports
 				if (gear != 0) {
 					Assert.AreEqual(pEngFcmap.Value(),
 						(pTrac + pWheelInertia + pBrakeLoss + pLossAxle + pLossRet + pLossGbx + pGbxInertia + pEngInertia + pAux +
-						pClutchLoss)
-							.Value(), 1E-3, "time: {0}  distance: {1}", time, distance);
+						pClutchLoss).Value(), 0.5, "time: {0}  distance: {1}", time, distance);
 				}
-				skipNext = gear == 0;
+				lastGear = gear;
 			}
 		}
 	}

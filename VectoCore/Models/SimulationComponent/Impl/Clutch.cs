@@ -66,23 +66,6 @@ namespace TUGraz.VectoCore.Models.SimulationComponent.Impl
 			return _clutchState;
 		}
 
-		protected override void DoWriteModalResults(IModalDataContainer container)
-		{
-			if (PreviousState.InAngularVelocity == null || CurrentState.InAngularVelocity == null) {
-				container[ModalResultField.P_clutch_out] = 0.SI<Watt>();
-				container[ModalResultField.P_clutch_loss] = 0.SI<Watt>();
-			} else {
-				var avgAngularVelocity = (PreviousState.InAngularVelocity + CurrentState.InAngularVelocity) / 2.0;
-				container[ModalResultField.P_clutch_out] = CurrentState.OutTorque * avgAngularVelocity;
-				container[ModalResultField.P_clutch_loss] = (CurrentState.InTorque - CurrentState.OutTorque) * avgAngularVelocity;
-			}
-		}
-
-		protected override void DoCommitSimulationStep()
-		{
-			AdvanceState();
-		}
-
 		public ITnInPort InPort()
 		{
 			return this;
@@ -93,9 +76,27 @@ namespace TUGraz.VectoCore.Models.SimulationComponent.Impl
 			return this;
 		}
 
+		public void Connect(ITnOutPort other)
+		{
+			NextComponent = other;
+		}
+
 		public ITnOutPort IdleControlPort
 		{
 			get { return NextComponent; }
+		}
+
+
+		public virtual IResponse Initialize(NewtonMeter torque, PerSecond angularVelocity)
+		{
+			NewtonMeter torqueIn;
+			PerSecond engineSpeedIn;
+			AddClutchLoss(torque, angularVelocity, out torqueIn, out engineSpeedIn);
+			PreviousState.SetState(torqueIn, angularVelocity, torque, angularVelocity);
+
+			var retVal = NextComponent.Initialize(torqueIn, engineSpeedIn);
+			retVal.ClutchPowerRequest = torque * angularVelocity;
+			return retVal;
 		}
 
 		public virtual IResponse Request(Second absTime, Second dt, NewtonMeter torque, PerSecond angularVelocity,
@@ -125,22 +126,27 @@ namespace TUGraz.VectoCore.Models.SimulationComponent.Impl
 			return retVal;
 		}
 
-		public virtual IResponse Initialize(NewtonMeter torque, PerSecond angularVelocity)
-		{
-			NewtonMeter torqueIn;
-			PerSecond engineSpeedIn;
-			AddClutchLoss(torque, angularVelocity, out torqueIn, out engineSpeedIn);
-			PreviousState.SetState(torqueIn, angularVelocity, torque, angularVelocity);
 
-			var retVal = NextComponent.Initialize(torqueIn, engineSpeedIn);
-			retVal.ClutchPowerRequest = torque * angularVelocity;
-			return retVal;
+		protected override void DoWriteModalResults(IModalDataContainer container)
+		{
+			if (PreviousState.InAngularVelocity == null || CurrentState.InAngularVelocity == null) {
+				container[ModalResultField.P_clutch_out] = 0.SI<Watt>();
+				container[ModalResultField.P_clutch_loss] = 0.SI<Watt>();
+			} else {
+				var avgOutAngularVelocity = (PreviousState.OutAngularVelocity + CurrentState.OutAngularVelocity) / 2.0;
+				var avgInAngularVelocity = (PreviousState.InAngularVelocity + CurrentState.InAngularVelocity) / 2.0;
+				container[ModalResultField.P_clutch_out] = CurrentState.OutTorque * avgOutAngularVelocity;
+				container[ModalResultField.P_clutch_loss] = CurrentState.InTorque * avgInAngularVelocity -
+															CurrentState.OutTorque * avgOutAngularVelocity;
+				//(CurrentState.InTorque - CurrentState.OutTorque) * avgInAngularVelocity;
+			}
 		}
 
-		public void Connect(ITnOutPort other)
+		protected override void DoCommitSimulationStep()
 		{
-			NextComponent = other;
+			AdvanceState();
 		}
+
 
 		private void AddClutchLoss(NewtonMeter torque, PerSecond angularVelocity, out NewtonMeter torqueIn,
 			out PerSecond angularVelocityIn)
@@ -156,12 +162,12 @@ namespace TUGraz.VectoCore.Models.SimulationComponent.Impl
 				torqueIn = 0.SI<NewtonMeter>();
 			} else {
 				var engineSpeedNorm = (angularVelocity - _idleSpeed) / (_ratedSpeed - _idleSpeed);
-				if (engineSpeedNorm < Constants.SimulationSettings.CluchNormSpeed) {
+				if (engineSpeedNorm < Constants.SimulationSettings.ClutchNormSpeed) {
 					_clutchState = ClutchState.ClutchSlipping;
 
 					var engineSpeed0 = VectoMath.Max(_idleSpeed, angularVelocity);
-					var clutchSpeedNorm = Constants.SimulationSettings.CluchNormSpeed /
-										((_idleSpeed + Constants.SimulationSettings.CluchNormSpeed * (_ratedSpeed - _idleSpeed)) / _ratedSpeed);
+					var clutchSpeedNorm = Constants.SimulationSettings.ClutchNormSpeed /
+										((_idleSpeed + Constants.SimulationSettings.ClutchNormSpeed * (_ratedSpeed - _idleSpeed)) / _ratedSpeed);
 					angularVelocityIn =
 						((clutchSpeedNorm * engineSpeed0 / _ratedSpeed) * (_ratedSpeed - _idleSpeed) + _idleSpeed).Radian.Cast<PerSecond>();
 
