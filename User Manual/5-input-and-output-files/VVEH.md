@@ -2,7 +2,7 @@
 
 File for the definition of a vehicle in vecto. Can be created with the [Vehicle Editor](#vehicle-editor).
 
-- File format is JSON.
+- File format is [JSON](#json).
 - Filetype ending is ".vveh"
 
 **Example:**

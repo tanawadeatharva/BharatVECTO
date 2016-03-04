@@ -2,7 +2,7 @@
 
 File for the definition of a gearbox in Vecto. Can be created with the [Gearbox Editor](#gearbox-editor).
 
-- File format is JSON.
+- File format is [JSON](#json).
 - Filetype ending is ".vgbx"
 
 **Example:**

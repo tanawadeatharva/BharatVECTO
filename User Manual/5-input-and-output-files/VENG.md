@@ -2,7 +2,7 @@
 
 File for the definition of an engine in Vecto. Can be created with the [Engine Editor](#engine-editor).
 
-- File format is JSON.
+- File format is [JSON](#json).
 - Filetype ending is ".veng"
 
 **Example:**

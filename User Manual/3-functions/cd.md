@@ -21,6 +21,6 @@ The base c~d~ x A value (see [Vehicle File](#vehicle-editor)) is corrected with 
 ###Correction using Vair & Beta Input
 
 If available the actual (measured) air speed and direction can be used. The input file (.vcdb) defines the drag coefficient scaling factor. The
-input file (.vcdb) format is described [here](#vair-beta-cross-wind-correction-input-file-.vcdb). The [driving cycle](#driving-cycle-.vdri) must include the air speed relative to the vehicle v~air~ (&lt;vair\_res&gt;) and the wind yaw angle (&lt;vair\_beta&gt;).
+input file (.vcdb) format is described [here](#vair-beta-cross-wind-correction-input-file-.vcdb). The [driving cycle](#driving-cycles) must include the air speed relative to the vehicle v~air~ (&lt;vair\_res&gt;) and the wind yaw angle (&lt;vair\_beta&gt;).
 
  ![](pics/VCDB.png)

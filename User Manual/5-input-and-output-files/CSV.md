@@ -1,17 +1,66 @@
-##CSV Format
-The following format applies to all CSV (Comma-separated values) Input Files used in VECTO:
+##CSV
+Many data files in Vecto use CSV (Comma Separated Values) as common file format. They consist of a header which defines the columns and data entries which are separated by a comma (",").
 
-|                     |                                                                                                 |    
-| --------------------|-------------------------------------------------------------------------------------------------|
-| **List Separator:** | Comma ","                                                                                       |
-| **Decimal-Mark:**   | Dot "."                                                                                         |
-| **Comments:**       | "\#" at the beginning of the comment line. Number and position of comment lines is not limited. |
-| **Header:**         | One header line (***not*** **a comment line**) at the beginning of the file.                    |
+###Definition###
 
+|                         |                                                                                                                                                                                                                                                                                                                                                                                                    |
+| ----------------------- | -------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- |
+| **Header:**             | Vecto CSV needs exactly one header line with the definition of the columns at the beginning of the file. Columns can be surrounded with "<" and ">" to mark them as identifiers (which makes them position independent) (In Vecto 3.x every column is seen as identifier, regardless of "<>"). Columns may be succeded with unit information (enclosed in "[" and "]") for documentation purposes. |
+| **Column Separator:**   | **,** (Comma. Separates the columns of a data line.)                                                                                                                                                                                                                                                                                                                                               |
+| **Decimal-Mark:**       | **.** (Dot. Splits numbers into integer part and decimal part.)                                                                                                                                                                                                                                                                                                                                    |
+| **Thousand-Separator:** | Vecto CSV does not allow a thousand-separator.                                                                                                                                                                                                                                                                                                                                                     |
+| **Comments:**           | **#** (Number sign. Declares text coming afterwards in the current line as comment.)                                                                                                                                                                                                                                                                                                               |
+| **Whitespace:**         | Whitespaces between columns will be stripped away. Therefore it is possible to align the columns for better readability, if desired.                                                                                                                                                                                                                                                               |
 
+Following files use the csv:
 
+- [Speed Dependent Cross Wind Correction Input File (.vcdv)](#speed-dependent-cross-wind-correction-input-file-.vcdv)
+- [Vair & Beta Cross Wind Correction Input File (.vcdb)](#vair-beta-cross-wind-correction-input-file-.vcdb)
+- [Retarder Loss Torque Input File (.vrlm)](#retarder-loss-torque-input-file-.vrlm)
+- [Full Load and Drag Curves (.vfld)](#full-load-and-drag-curves-.vfld)
+- [Fuel Consumption Map (.vmap)](#fuel-consumption-map-.vmap)
+- [Shift Polygons Input File (.vgbs)](#shift-polygons-input-file-.vgbs)
+- [Transmission Loss Map (.vtlm)](#transmission-loss-map-.vtlm)
+- [Torque Converter Characteristics (.vtcc)](#torque-converter-characteristics-.vtcc)
+- [Auxiliary Input File (.vaux)](#auxiliary-input-file-.vaux)
+- [Driving Cycles (.vdri)](#driving-cycles)
+- [Acceleration Limiting Input File (.vacc)](#acceleration-limiting-input-file-.vacc)
+- [Modal Results (.vmod)](#modal-results-.vmod)
+- [Summary Results (.vsum)](#summary-results-.vsum)
 
-###Exceptions
--   The main input files ([Job](#job-editor), [Vehicle](#vehicle-editor), [Engine](#engine-editor) and [Gearbox](#gearbox-editor)) use the [JSON format](http://en.wikipedia.org/wiki/JSON) ![](pics/external-icon%2012x12.png).
--   The [Auxiliary Input File (.vaux)](#auxiliary-input-file-.vaux) uses a modified format.
--   The [Driving Cycle (.vdri)](#driving-cycle-.vdri) uses keywords to identify columns and therefore the header line must follow certain specifications.
+**Notes**
+
+- The [Auxiliary Input File (.vaux)](#auxiliary-input-file-.vaux) uses a modified csv format with some special headers.
+- The main configuration input files use the [JSON format](#json):
+    - [Job](#job-editor)
+    - [Vehicle](#vehicle-editor)
+    - [Engine](#engine-editor)
+    - [Gearbox](#gearbox-editor)
+
+###Examples###
+####Acceleration Limiting File####
+~~~
+v [km/h],acc [m/s^2]     ,dec [m/s^2]
+0       ,1.01570922360353,-0.231742702878269
+5       ,1.38546581120225,-0.45346198022574
+10      ,1.34993329755465,-0.565404125020508
+15      ,1.29026714002479,-0.703434814668512
+~~~
+
+####Driving Cycle####
+~~~
+<s>,<v>,<grad>      ,<stop>,<Padd>,<Aux_ALT1>,<Aux_ALT2>,<Aux_ALT3>
+0  ,0  ,-0.020237973,2     ,6.1   ,0.25      ,0.25      ,0.25
+1  ,64 ,-0.020237973,0     ,6.1   ,0.25      ,0.25      ,0.25
+2  ,64 ,-0.020237973,0     ,6.1   ,0.25      ,0.25      ,0.25
+3  ,64 ,-0.020237973,0     ,6.1   ,0.25      ,0.25      ,0.25
+~~~
+
+####Transmission Loss Map####
+~~~
+Input Speed [rpm],Input Torque [Nm],Torque Loss [Nm]
+0                ,-2500            ,77.5
+0                ,-1500            ,62.5
+0                ,-500             ,47.5
+0                ,500              ,47.5
+~~~

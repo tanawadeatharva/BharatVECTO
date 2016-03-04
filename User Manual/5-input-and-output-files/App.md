@@ -3,8 +3,7 @@
 VECTO uses a numbers of files to save GUI settings and file lists. All files are text-based and can be changed outside of VECTO ***if VECTO is not running***.
 
 ###Settings.json
-This file is located in VECTO's **config** folder. Here all parameters of the [Settings Dialog](#settings) are saved. The file uses the [JSON format](http://en.wikipedia.org/wiki/JSON)
-![](pics/external-icon%2012x12.png).
+This file is located in VECTO's **config** folder. Here all parameters of the [Settings Dialog](#settings) are saved. The file uses the [JSON format](#json).
 
 
 ###Job / Cycle lists

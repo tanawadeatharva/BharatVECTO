@@ -6,13 +6,13 @@
 ###Description
 
 
-The Vehicle File (.vveh) defines the main vehicle/chassis parameters like axles including [RRC](#rolling-resistance-coefficient)s, air resistance and weight.
+The [Vehicle File (.vveh)](#vehicle-file) defines the main vehicle/chassis parameters like axles including [RRC](#rolling-resistance-coefficient)s, air resistance and weight.
 
 ###Relative File Paths
 
 
 It is recommended to define relative filepaths. This way the Job File and all input files can be moved without having to update the paths.
-Example: "Demo\RT1.vrlm" points to the "Demo" subdirectory of the Vehicle File's directoy.
+Example: "Demo\\RT1.vrlm" points to the "Demo" subdirectory of the Vehicle File's directoy.
 
 VECTO automatically uses relative paths if the input file (e.g. Retarder Losses File) is in the same directory as the Vehicle File. (The Vehicle File must be saved before browsing for input files.)
 
@@ -46,7 +46,7 @@ The product of Drag Coefficient [-] and Cross Sectional Area [m²] (**c~d~ x A**
 ###Axles/Wheels
 
 
-For each axle the parameters **Relative axle load, RRC~ISO~** and **F~zISO~** have to be defined in order to calculate the total [Rolling Resistance Coefficient](#rolling-resistance-coefficient). 
+For each axle the parameters **Relative axle load, RRC~ISO~** and **F~zISO~** have to be defined in order to calculate the total [Rolling Resistance Coefficient](#rolling-resistance-coefficient).
 Furthermore the **Wheels Inertia [kgm²]** has to be set per wheel for each axle. In [Declaration Mode](#declaration-mode) the inertia is defined automatically according to the selected tyres.
 Use the ![](pics/plus-circle-icon.png) and ![](pics/minus-circle-icon.png) buttons to add or remove axles form the vehicle. Doubleclick entries to edit existing axle configurations.
 
@@ -71,7 +71,7 @@ Three options are available:
 Both, primary and secondary retarders, require an [Retarder Loss Torque Input File (.vrlm)](#retarder-loss-torque-input-file-.vrlm).
 
 
-###Cross Wind Correction
+###Cross Wind Correction Options
 
 
 Four different options are available:

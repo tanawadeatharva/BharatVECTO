@@ -1,8 +1,8 @@
-## Vecto Job File
+## Job File
 
 File for the definition of an job in vecto. A job contains everything what is needed to run a simulation. Can be created with the [Job Editor](#job-editor).
 
-- File format is JSON.
+- File format is [JSON](#json).
 - Filetype ending is ".vecto"
 
 **Example:**

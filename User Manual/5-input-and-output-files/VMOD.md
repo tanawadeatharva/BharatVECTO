@@ -35,7 +35,7 @@ Modal results are only created if enabled in the [Options](#main-form) tab. One 
 | Paux            | [kW]     | Total auxiliary power demand. |
 | Pwheel          | [kW]     | Total power demand at wheel = sum of rolling, air, acceleration and road gradient resistance. |
 | Pbrake          | [kW]     | Brake power. Drag power is included in **Pe**. |
-| Paux_xxx        | [kW]     | Power demand of Auxiliary with ID xxx. See also [Aux Dialog](#auxiliary-dialog) and [Driving Cycle](#driving-cycle-.vdri). |
+| Paux_xxx        | [kW]     | Power demand of Auxiliary with ID xxx. See also [Aux Dialog](#auxiliary-dialog) and [Driving Cycle](#driving-cycles). |
 | FC-Map          | [g/h]    | Fuel consumption interpolated from FC map. |
 | FC-AUXc         | [g/h]    | Fuel consumption after [Auxiliary-Start/Stop Correction](#fuel-consumption-calculation). (Based on FC.) |
 | FC-WHTCc        | [g/h]    | Fuel consumption after [WHTC Correction](#fuel-consumption-calculation). (Based on FC-AUXc.) |

@@ -6,7 +6,7 @@
 
 ###Description
 
-The job file (.vecto) includes all informations to run a VECTO calculation. It defines the vehicle and the driving cycle(s) to be used for calculation. In summary it defines:
+The [job file (.vecto)](#job-file) includes all informations to run a VECTO calculation. It defines the vehicle and the driving cycle(s) to be used for calculation. In summary it defines:
 
 -   Filepath to the [Vehicle File (.vveh)](#vehicle-editor) which defines the not-engine/gearbox-related vehicle parameters
 -   Filepath to the [Engine File (.veng)](#engine-editor) which includes full load curve(s) and the fuel consumption map
@@ -30,7 +30,7 @@ VECTO automatically uses relative paths if the input file (e.g. Vehicle File) is
 :	Enables [Engine Only Mode](#engine-only-mode). Only the following parameters are needed for this mode:
 
 -   Filepath to the [Engine File (.veng)](#engine-editor)
--   [Driving Cycles](#driving-cycle-.vdri) including engine torque (or power) and engine speed
+-   [Driving Cycles](#driving-cycles) including engine torque (or power) and engine speed
 
 
 Filepath to the Vehicle File (.vveh)
@@ -43,7 +43,7 @@ Filepath ot the Gearbox File(.vgbx)
 :	Files can be created and edited using the [Gearbox Editor](#gearbox-editor).
 
 Auxiliaries
-:	This list contains all auxiliaries used for calculation. The auxiliaries are configured using the [Auxiliary Dialog](#auxiliary-dialog). For each auxiliary an [Auxiliary Input File (.vaux)](#auxiliary-input-file-.vaux) must be provided and the [driving cycle](#driving-cycle-.vdri) must include the corresponding supply power.
+:	This list contains all auxiliaries used for calculation. The auxiliaries are configured using the [Auxiliary Dialog](#auxiliary-dialog). For each auxiliary an [Auxiliary Input File (.vaux)](#auxiliary-input-file-.vaux) must be provided and the [driving cycle](#driving-cycles) must include the corresponding supply power.
 **Double-click** entries to edit with the [Auxiliary Dialog](#auxiliary-dialog).
 
 : ![addaux](pics/plus-circle-icon.png) Add new Auxiliary
@@ -52,7 +52,7 @@ Auxiliaries
 : See [Auxiliaries](#auxiliaries) for details.
 
 Cycles
-:	List of cycles used for calculation. The .vdri format is described [here](#driving-cycle-.vdri).
+:	List of cycles used for calculation. The .vdri format is described [here](#driving-cycles).
 **Double-click** an entry to open the file (see [File Open Command](#settings)).
 **Click** selected items to edit file paths.
 
