@@ -18,7 +18,3 @@ echo Generated outputfile: help.html
 REM pandoc -s -S --toc --toc-depth=2 -N %LIST% -o help.docx
 REM pandoc -s -S --toc --toc-depth=2 -N %LIST% -o help.pdf
 REM pandoc -s -S --toc --toc-depth=2 -N %LIST% -o help.latex
-
-
-
-pause
