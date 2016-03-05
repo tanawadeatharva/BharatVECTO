@@ -17,8 +17,12 @@ Extrapolation of fuel consumption map is possible, but only allowed in Engineeri
 
 **Example:**
 
-    Retarder Speed [1/min],Loss Torque [Nm]
-    0,10
-    100,10.02
-    200,10.08
-    300,10.18
+    engine speed [rpm], engine torque [Nm], Fuel Consumption [g/h]
+    600,-45,0,
+    600,0,767,
+    600,100,1759,
+    600,200,2890,
+    600,300,4185,
+    600,400,5404,
+    600,500,6535,
+    600,600,7578,
