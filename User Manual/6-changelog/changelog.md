@@ -1,5 +1,35 @@
 #Changelog
 
+
+**VECTO 3.0.2 (2016-03-10)**
+
+- New simulation modes:
+    + Measured Speed
+    + Measured Speed with Gear
+    + Pwheel (SiCo)
+- User Manual updated for VECTO V3.x
+- ModData Format changed for better information and clarity
+- Added validation of input values
+- Better Integration of VectoCore into GUI (Notifications and Messages)
+- Fixed some driving behaviour related bugs in VectoCore
+
+
+**VECTO 3.0.1**
+
+- TODO
+- TODO
+- TODO
+
+
+
+**VECTO 3.0**
+
+- TODO
+- TODO
+- TODO
+
+
+
 **VECTO 2.2**
 
 -    Bugfix: Error in Declaration Mode Pneumatic System aux power calculation ([kW] were interpreted as [W])
