@@ -20,7 +20,7 @@ The Gear Shift Model is based on shift curves that define the engine speed for u
 
 
 
-The shift polygons are saved in the [Shift Polygons Input File (.vgbs)](#shift-polygons-input-file-.vgbs) and have to be added to the [Gearbox File](#gearbox-editor) when not in [Declaration Mode](#declaration-mode).
+The shift polygons are saved in the [Shift Polygons Input File (.vgbs)](#shift-polygons-input-file-.vgbs) and have to be added to the [Gearbox File](#gearbox-file) when not in [Declaration Mode](#declaration-mode).
 
 
 In [Declaration Mode](#declaration-mode) the shift polygons are generated automatically based on the full load curve of each gear. If the engine's full load torque is lower than the gear's, then the engine's full load is used to prevent unreasonable shifting with small engines.
@@ -35,13 +35,13 @@ In the Gearbox File two additional parameters are defined:
 ###Gear Skipping
 
 
-Gear Skipping can be enabled in the [Gearbox File](#gearbox-editor). By default it is enabled for AMT and MT. Whenever a gear change is initiated (by crossing the up- or down-shift line) VECTO may skip one or several gears as long as the required torque reserve is provided.
+Gear Skipping can be enabled in the [Gearbox File](#gearbox-file). By default it is enabled for AMT and MT. Whenever a gear change is initiated (by crossing the up- or down-shift line) VECTO may skip one or several gears as long as the required torque reserve is provided.
 
 ![](pics/GBX-Editor-shift3.svg)
 
 
 ###Early Upshift
-Early Upshift can be enabled in the [Gearbox File](#gearbox-editor) (Allow shift-up inside polygons). By default it is enabled for AMT only. If the next higher gear provides the required torque reserve and it's rpm is still above down-shift-rpm VECTO will shift up.
+Early Upshift can be enabled in the [Gearbox File](#gearbox-file) (Allow shift-up inside polygons). By default it is enabled for AMT only. If the next higher gear provides the required torque reserve and it's rpm is still above down-shift-rpm VECTO will shift up.
 
 
 ![](pics/GBX-Editor-shift2.svg)

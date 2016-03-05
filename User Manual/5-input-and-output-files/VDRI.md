@@ -50,7 +50,7 @@ Header: **\<s>, \<v>, \<stop>***\[, \<Padd>]\[, \<grad>]\[, \<vair\_res>, \<vair
 | *grad*      | [%]    | The road gradient.                                                                                                                                                                                                                                                                    |
 | *vair_res*  | [km/h] | Air speed relative to vehicle for cross wind correction. Only required if [**Cross Wind Correction**](#cross-wind-correction) is set to **Vair & Beta Input**.                                                                                                                        |
 | *vair_beta* | [°]    | Wind Yaw Angle for cross wind correction. Only required if [**Cross Wind Correction**](#cross-wind-correction) is set to **Vair & Beta Input**.                                                                                                                                       |
-| *Aux_ID*    | [kW]   | Auxiliary Supply Power. Can be defined multiple times with different Identifiers. The supply power input for each auxiliary defined in the [.vecto file](#job-editor) with the corresponding ID. ID's are not case sensitive and must only contain letters and numbers [a-z,A-Z,0-9]. Must be >= 0 kW. |
+| *Aux_ID*    | [kW]   | Auxiliary Supply Power. Can be defined multiple times with different Identifiers. The supply power input for each auxiliary defined in the [.vecto file](#job-file) with the corresponding ID. ID's are not case sensitive and must only contain letters and numbers [a-z,A-Z,0-9]. Must be >= 0 kW. |
 
 **Example:**
 

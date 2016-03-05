@@ -9,8 +9,8 @@ $RRC = \sum_{i=1}^{n} s_{(i)} \cdot RRC_{ISO(i)} \cdot \left( \frac{s_{(i)} \cdo
 |             |        |                                                                                                                    |                            |
 |-------------|--------|--------------------------------------------------------------------------------------------------------------------|----------------------------|
 | RRC         | [-]    | Total rolling resistance coefficient used for calculation                                                          | [calculated]               |
-| s~(i)~      | [-]    | Relative axle load. Defined in the [Vehicle File](#vehicle-editor).                                                | [user input]               |
-| RRC~ISO(i)~ | [-]    | ...Tyre RRC according to ISO 28580. Defined in the [Vehicle File](#vehicle-editor).                                | [user input]               |
+| s~(i)~      | [-]    | Relative axle load. Defined in the [Vehicle File](#vehicle-file).                                                | [user input]               |
+| RRC~ISO(i)~ | [-]    | ...Tyre RRC according to ISO 28580. Defined in the [Vehicle File](#vehicle-file).                                | [user input]               |
 | m           | [kg]   | Vehicle mass plus loading.                                                                                         | [calculated]               |
 | g           | [m/s²] | Earth gravity acceleration (constant = 9.81)                                                                       | [constant model parameter] |
 | w~(i)~      | [-]    | Number of tyres (4 if Twin Tyres, else 2). Defined in the Vehicle File.                                            | [user input]               |

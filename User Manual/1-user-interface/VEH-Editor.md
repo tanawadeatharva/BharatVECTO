@@ -64,7 +64,7 @@ If available a **Retarder Torque Loss Map** can be defined here to consider idli
 ***Note: Do not use this function if the retarder's losses are already included in the Transmission Loss Maps!***
 
 Three options are available:
-: -	Included in Transmission Loss Maps: Use this if the [Transmission Loss Maps](#transmission-loss-map-.vtlm) already include retarder losses.
+: -	Included in Transmission Loss Maps: Use this if the [Transmission Loss Maps](#transmission-loss-map) already include retarder losses.
 -   Primary Retarder (before gearbox): The rpm ratio is relative to the engine speed
 -   Secondary Retarder (after gearbox): The rpm ratio is relative to the cardan shaft speed
 

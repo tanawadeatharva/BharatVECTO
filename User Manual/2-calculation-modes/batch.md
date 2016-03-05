@@ -1,5 +1,6 @@
 ##Batch Mode
 
+<div class="vecto2">
 
 In Batch Mode a list of vehicles is run with a list of driving cycles. Each vehicle defined in the Job List is calculated with each driving cycle defined in the Driving Cycle List. Note that the Driving Cycle List is only visible if Batch Mode is enabled in the Main Form / Options Tab.
 
@@ -12,3 +13,10 @@ In Batch Mode a list of vehicles is run with a list of driving cycles. Each vehi
 
 -   Modal results (.vmod) for each job file and driving cycle. One file for each vehicle/cycle combination.
 -   Average/sum results (.vsum / .vsum.json). One file in total containing results for each vehicle/cycle combination.
+
+</div>
+
+<div class="vecto3">
+VECTO V3.x doesn't support Batch mode anymore. The same functionality can be achieved by referencing every needed cycle file in the job files.
+</div>
+

@@ -20,7 +20,7 @@ Following files use the csv:
 - [Full Load and Drag Curves (.vfld)](#full-load-and-drag-curves-.vfld)
 - [Fuel Consumption Map (.vmap)](#fuel-consumption-map-.vmap)
 - [Shift Polygons Input File (.vgbs)](#shift-polygons-input-file-.vgbs)
-- [Transmission Loss Map (.vtlm)](#transmission-loss-map-.vtlm)
+- [Transmission Loss Map (.vtlm)](#transmission-loss-map)
 - [Torque Converter Characteristics (.vtcc)](#torque-converter-characteristics-.vtcc)
 - [Auxiliary Input File (.vaux)](#auxiliary-input-file-.vaux)
 - [Driving Cycles (.vdri)](#driving-cycles)
@@ -28,17 +28,12 @@ Following files use the csv:
 - [Modal Results (.vmod)](#modal-results-.vmod)
 - [Summary Results (.vsum)](#summary-results-.vsum)
 
-**Notes**
+**Notes:**
+The [Auxiliary Input File (.vaux)](#auxiliary-input-file-.vaux) uses a modified csv format with some special headers.
 
-- The [Auxiliary Input File (.vaux)](#auxiliary-input-file-.vaux) uses a modified csv format with some special headers.
-- The main configuration input files use the [JSON format](#json):
-    - [Job](#job-editor)
-    - [Vehicle](#vehicle-editor)
-    - [Engine](#engine-editor)
-    - [Gearbox](#gearbox-editor)
 
 ###Examples###
-####Acceleration Limiting File####
+####Exampl 1: Acceleration Limiting File####
 ~~~
 v [km/h],acc [m/s^2]     ,dec [m/s^2]
 0       ,1.01570922360353,-0.231742702878269
@@ -47,7 +42,7 @@ v [km/h],acc [m/s^2]     ,dec [m/s^2]
 15      ,1.29026714002479,-0.703434814668512
 ~~~
 
-####Driving Cycle####
+####Example 2: Driving Cycle####
 ~~~
 <s>,<v>,<grad>      ,<stop>,<Padd>,<Aux_ALT1>,<Aux_ALT2>,<Aux_ALT3>
 0  ,0  ,-0.020237973,2     ,6.1   ,0.25      ,0.25      ,0.25
@@ -56,7 +51,7 @@ v [km/h],acc [m/s^2]     ,dec [m/s^2]
 3  ,64 ,-0.020237973,0     ,6.1   ,0.25      ,0.25      ,0.25
 ~~~
 
-####Transmission Loss Map####
+####Example 3: Transmission Loss Map####
 ~~~
 Input Speed [rpm],Input Torque [Nm],Torque Loss [Nm]
 0                ,-2500            ,77.5

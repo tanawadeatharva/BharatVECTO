@@ -32,7 +32,7 @@ Inertia including Flywheel \[kgm²\]
 
 
 
-The [Full Load and Drag Curves (.vfld)](#full-load-and-drag-curves-.vfld) Note that gear-specific full load curves can be defined in the [Gearbox File](#gearbox-editor) to limit the maximum gearbox input torque.
+The [Full Load and Drag Curves (.vfld)](#full-load-and-drag-curves-.vfld) Note that gear-specific full load curves can be defined in the [Gearbox File](#gearbox-file) to limit the maximum gearbox input torque.
 
 The input file (.vfld) file format is described
 [here](#full-load-and-drag-curves-.vfld).

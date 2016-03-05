@@ -8,7 +8,7 @@ If enabled the engine will be turned off after the set **Activation Delay \[s\] 
 
 
 
-Parameters in [Job File](#job-editor):
+Parameters in [Job File](#job-file):
 : -   **Max speed \[km/h\]**.
 -   **Min ICE-On Time \[s\]**
 -   **Activation Delay \[s\]**

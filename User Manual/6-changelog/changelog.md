@@ -258,6 +258,11 @@
 - Updated some error messages (units)
 - Driving Cycle stop times corrected (No more zero stop times).
 
+54 matches across 9 files
+
+
+Searching 97 files for "#batch" (regex)
+
 **VECTO 1.3.1.1**
 
 -   Fixed error in power calculation (rotatory part of acceleration force)

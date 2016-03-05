@@ -1,4 +1,4 @@
-#Simulation Model
+#Simulation Models
 
 In this chapter the used component models for the simulation are described.
 

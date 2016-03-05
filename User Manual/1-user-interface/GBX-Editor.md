@@ -49,7 +49,7 @@ Use the ![add](pics/plus-circle-icon.png) and ![remove](pics/minus-circle-icon.p
 
 -   Gear **"A"** defines the ratio of the axle transmission / differential.
 -   Column **"TC"** (AT only) defines which gears are using the torque converter (lock-up clutch open).
--   Column **"Loss Map or Efficiency"** allows to define either a constant efficiency value or a [loss map (.vtlm)](#transmission-loss-map-.vtlm).
+-   Column **"Loss Map or Efficiency"** allows to define either a constant efficiency value or a [loss map (.vtlm)](#transmission-loss-map).
 -   Column **"Shift polygons"** defines the [Shift Polygons InputFile (.vgbs)](#shift-polygons-input-file-.vgbs) for each gear. Not required in [Declaration Mode](#declaration-mode). See [GearShift Model](#gear-shift-model) for details.
 -	Column **"Full Load Curves"** defines the [Full Load Curve for (.vfld)](#full-load-and-drag-curves-.vfld) each gear. It is used for torque limiting and [generic shift polygons](#gear-shift-model) in Declaration Mode. If no file is defined the engine full load curve will be used. 
 

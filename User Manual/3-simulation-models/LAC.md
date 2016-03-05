@@ -10,6 +10,6 @@ Like Overspeed, Look-Ahead Coasting is a function that aims on modelling real-li
 At the resulting deceleration start point the model calculates the
 coasting trajectory until it meets the brake deceleration trajectory. The resulting deceleration consists of a coasting phase followed by combined mechanical/engine braking. If Look-Ahead Coasting is disabled only the braking phase according to the [deceleration limit](#acceleration-limiting) will be applied.
 
-Parameters in [Job File](#job-editor):
+Parameters in [Job File](#job-file):
 : -   **Target Retardation** = a~lookahead~
 -   **Minimum speed**. Below this speed the function is disabled.

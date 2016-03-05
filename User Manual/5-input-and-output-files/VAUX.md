@@ -1,5 +1,5 @@
 ##Auxiliary Input File (.vaux)
-This file is used to configure a single auxiliary. Multiple .vaux files can be defined in the [Job File](#job-editor) via the [Auxiliary Dialog](#auxiliary-dialog). The file uses the [VECTO CSV format](#csv) with three additional parameters on top of the efficiency map.
+This file is used to configure a single auxiliary. Multiple .vaux files can be defined in the [Job File](#job-file) via the [Auxiliary Dialog](#auxiliary-dialog). The file uses the [VECTO CSV format](#csv) with three additional parameters on top of the efficiency map.
 
 See [Auxiliaries](#auxiliaries) for details on how the power demand for each auxiliary is calculated.
 

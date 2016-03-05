@@ -79,7 +79,7 @@ Acceleration Limiting
 
 ###Chart Area
 
-If a valid [Vehicle File](#vehicle-editor), [Engine File](#engine-editor) and [Gearbox File](#gearbox-editor) is loaded into the Editor the main vehicle parameters like HDV class and axle configuration are shown here. The plot shows the full load curve(s) and shift polygons. In [Declaration Mode](#declaration-mode) the **generic**  shift polygons are shown, not the ones from the Gearbox File.
+If a valid [Vehicle File](#vehicle-editor), [Engine File](#engine-file) and [Gearbox File](#gearbox-file) is loaded into the Editor the main vehicle parameters like HDV class and axle configuration are shown here. The plot shows the full load curve(s) and shift polygons. In [Declaration Mode](#declaration-mode) the **generic**  shift polygons are shown, not the ones from the Gearbox File.
 
 ###Controls
 
