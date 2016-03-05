@@ -11,7 +11,9 @@
 - ModData Format changed for better information and clarity
 - Added validation of input values
 - Better Integration of VectoCore into GUI (Notifications and Messages)
-- Fixed some driving behaviour related bugs in VectoCore
+- Fixed some driving behavior related bugs in VectoCore:
+    + When the vehicle comes to a halt during gear shift, instead of aborting the cycle, it tries to drive away again with an appropriate gear.
+- For all calculations the averaged values of the current cycle step are used.
 
 
 **VECTO 3.0.1**

@@ -17,7 +17,6 @@
 3-simulation-models/AccLimit.md
 3-simulation-models/Auxiliaries.md
 3-simulation-models/cd.md
-3-simulation-models/EngOnlyMode.md
 3-simulation-models/StartStop.md
 3-simulation-models/FC.md
 3-simulation-models/Shift.md

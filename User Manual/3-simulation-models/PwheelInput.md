@@ -13,7 +13,7 @@ Distance Correction must be disabled ([Options tab in Main Form](#options-tab)).
 
 **Example driving cycle with P~wheel~ input.**
 
-| \<t\> | \<Pwheel\> | \<Gear\> | \<n\>
+| \<t> | \<Pwheel> | \<gear> | \<n>
 |-------|------------|----------|--------
 |1      |0.0         |0         |560.0
 |2      |0.0         |0         |560.0
