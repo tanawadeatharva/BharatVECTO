@@ -195,7 +195,7 @@ namespace TUGraz.VectoCore.Models.SimulationComponent.Data.Engine
 			return retVal;
 		}
 
-		private Watt ComputeArea(PerSecond lowEngineSpeed, PerSecond highEngineSpeed)
+		protected internal Watt ComputeArea(PerSecond lowEngineSpeed, PerSecond highEngineSpeed)
 		{
 			var startSegment = FindIndex(lowEngineSpeed);
 			var endSegment = FindIndex(highEngineSpeed);
