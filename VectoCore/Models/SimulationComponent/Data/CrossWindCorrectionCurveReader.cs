@@ -179,7 +179,7 @@ namespace TUGraz.VectoCore.Models.SimulationComponent.Data
 
 		public class FieldsSpeedDependent
 		{
-			public static readonly string Velocity = "v";
+			public static readonly string Velocity = "v_veh";
 			public static readonly string Cd = "Cd";
 		}
 
