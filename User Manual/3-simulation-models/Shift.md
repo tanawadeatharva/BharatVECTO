@@ -22,8 +22,7 @@ The Gear Shift Model is based on shift curves that define the engine speed for u
 
 The shift polygons are saved in the [Shift Polygons Input File (.vgbs)](#shift-polygons-input-file-.vgbs) and have to be added to the [Gearbox File](#gearbox-file) when not in [Declaration Mode](#declaration-mode).
 
-
-In [Declaration Mode](#declaration-mode) the shift polygons are generated automatically based on the full load curve of each gear. If the engine's full load torque is lower than the gear's, then the engine's full load is used to prevent unreasonable shifting with small engines.
+In [Declaration Mode](#declaration-mode) the generic shift polygons are computed from the engine's full-load curve. If the maximum torque is limited by the gearbox, the minimum of the current gear and engine maximum torque will be used to compute the [generic shift polygons](#gear-shift-model). Note: the computation of the shift polygons uses characteristic values from the engine such as n~95h~, n~pref~, etc. which are also derived from the full-load curve.
 
 
 In the Gearbox File two additional parameters are defined:

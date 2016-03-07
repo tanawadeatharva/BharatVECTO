@@ -11,10 +11,10 @@ The [Vehicle File (.vveh)](#vehicle-file) defines the main vehicle/chassis param
 ###Relative File Paths
 
 
-It is recommended to define relative filepaths. This way the Job File and all input files can be moved without having to update the paths.
+It is recommended to use relative filepaths. This way the Job File and all input files can be moved without having to update the paths.
 Example: "Demo\\RT1.vrlm" points to the "Demo" subdirectory of the Vehicle File's directoy.
 
-VECTO automatically uses relative paths if the input file (e.g. Retarder Losses File) is in the same directory as the Vehicle File. (The Vehicle File must be saved before browsing for input files.)
+VECTO automatically uses relative paths if the input file (e.g. Retarder Losses File) is in the same directory as the Vehicle File. (*Note:* The Vehicle File must be saved before browsing for input files.)
 
 ###General vehicle parameters
 
@@ -41,13 +41,22 @@ These fields define the weight and loading of the vehicle. **Max. Loading** disp
 ###Air Resistance
 
 
-The product of Drag Coefficient [-] and Cross Sectional Area [m²] (**c~d~ x A**) and **Air Density** [kg/m³] (see [Settings](#settings)) together with the vehicle speed defines the Air Resistance. Note that the Drag Coefficient may be altered when using [**Cross Wind Correction**](#cross-wind-correction).
+The product of Drag Coefficient [-] and Cross Sectional Area [m²] (**c~d~ x A**) and **Air Density** [kg/m³] (see [Settings](#settings)) together with the vehicle speed defines the Air Resistance. Note that the Air Drag depends on the chosen [**Cross Wind Correction**](#cross-wind-correction).
 
 ###Axles/Wheels
 
 
-For each axle the parameters **Relative axle load, RRC~ISO~** and **F~zISO~** have to be defined in order to calculate the total [Rolling Resistance Coefficient](#rolling-resistance-coefficient).
-Furthermore the **Wheels Inertia [kgm²]** has to be set per wheel for each axle. In [Declaration Mode](#declaration-mode) the inertia is defined automatically according to the selected tyres.
+For each axle the parameters **Relative axle load, RRC~ISO~** and **F~zISO~** have to be given in order to calculate the total [Rolling Resistance Coefficient](#rolling-resistance-coefficient).
+Furthermore the **Wheels Inertia [kgm²]** has to be set per wheel for each axle. In [Declaration Mode](#declaration-mode) the inertia is computed based on the selected tyres and rims. The number of axles specified have to match the vehicle type (e.g., 2 axles for a 4x2 truck). 
+
+<div class="declaration">
+In [Declaration mode](#declaration-mode) only the axles of the truck have to be given. For the trailer predefined wheels and weight-shares are used.
+</div>
+
+<div class="engineering">
+In [Engineering Mode](#engineering-mode) all axles, for both  truck and trailer, have to be given.
+</div>
+
 Use the ![](pics/plus-circle-icon.png) and ![](pics/minus-circle-icon.png) buttons to add or remove axles form the vehicle. Doubleclick entries to edit existing axle configurations.
 
 Dynamic Tyre Radius [mm]
@@ -60,25 +69,27 @@ Powered axle tyres/rims
 ###Retarder Losses
 
 
-If available a **Retarder Torque Loss Map** can be defined here to consider idling losses caused by the retarder.
-***Note: Do not use this function if the retarder's losses are already included in the Transmission Loss Maps!***
+If a separate retarder is used in the vehicle a **Retarder Torque Loss Map** can be defined here to consider idling losses caused by the retarder.
 
 Three options are available:
-: -	Included in Transmission Loss Maps: Use this if the [Transmission Loss Maps](#transmission-loss-map) already include retarder losses.
+: -   No retarder
+-	Included in Transmission Loss Maps: Use this if the [Transmission Loss Maps](#transmission-loss-map) already include retarder losses.
 -   Primary Retarder (before gearbox): The rpm ratio is relative to the engine speed
 -   Secondary Retarder (after gearbox): The rpm ratio is relative to the cardan shaft speed
 
-Both, primary and secondary retarders, require an [Retarder Loss Torque Input File (.vrlm)](#retarder-loss-torque-input-file-.vrlm).
+Both, primary and secondary retarders, require an [Retarder Torque Loss Input File (.vrlm)](#retarder-loss-torque-input-file-.vrlm).
 
 
 ###Cross Wind Correction Options
 
 
 Four different options are available:
-: -  No Correction
--  Speed dependent (User-defined)
--  Speed dependent (Declaration Mode)
--  Vair & Beta Input
+: -  No Correction: The specified CdxA value is used to compute the air drag, no cross-wind correction is applied
+-  Speed dependent (User-defined): The specified CdxA value is corrected depending on the vehicle's speed.
+-  Speed dependent (Declaration Mode): A uniformly distributed cross-wind is assumed and used for correcting the air-drag depending on the vehicle's speed
+-  Vair & Beta Input: Correction mode if the actual wind speed and wind angle relative to the vehicle have been measured.
+
+In delcaration mode the 'Speed dependent (Declaration Mode)' cross-wind correction is used.
 
 Depending on the chosen mode either a [Speed Dependent Cross Wind Correction Input File (.vcdv)](#speed-dependent-cross-wind-correction-input-file-.vcdv) or a [Vair & Beta Cross Wind Correction Input File (.vcdb)](#speed-dependent-cross-wind-correction-input-file-.vcdv) must be defined. For details see [Cross Wind Correction](#cross-wind-correction).
 

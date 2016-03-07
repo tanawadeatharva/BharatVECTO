@@ -1,7 +1,7 @@
 ##Look-Ahead Coasting
 
 
-Like Overspeed, Look-Ahead Coasting is a function that aims on modelling real-life driver behaviour. It is a forward-looking function that detects forthcoming reductions in target speed in the mission profile (e.g. change of road type / speed limit, etc.) and induces an early deceleration using engine braking before applying mechanical brakes according to the [deceleration limit](#acceleration-limiting).
+Like Overspeed, Look-Ahead Coasting is a function that aims on modelling real-life driver behaviour. It is a forward-looking function that detects forthcoming reductions in target speed in the mission profile (e.g. speed limit, etc.) and induces an early deceleration using engine braking before applying mechanical brakes according to the [deceleration limit](#acceleration-limiting).
 
  The implemented approach uses a predefined target deceleration (a~lookahead~) to calculate the deceleration time for each particular target speed change.
 

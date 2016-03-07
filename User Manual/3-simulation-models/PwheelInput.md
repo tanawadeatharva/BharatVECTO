@@ -1,6 +1,6 @@
 ##P~wheel~-Input (SiCo Mode)
 
-For verification tasks it is possible to manually input the power at wheels (P~wheel~) which is normally calculated via longitudinal dynamics. In this case VECTO only calculates the losses between wheels and engine and auxiliary power demand. This mode is active as soon as P~wheel~, Gear and Engine Speed are defined in the driving cycle.
+For verification tasks it is possible to manually input the power at wheels (P~wheel~) which is normally calculated via longitudinal dynamics. In this case VECTO only calculates the losses between wheels and engine and adds auxiliary power demand. This mode is active as soon as P~wheel~, Gear and Engine Speed are defined in the driving cycle.
 
 ###Requirements
 

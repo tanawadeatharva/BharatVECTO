@@ -18,16 +18,16 @@ The [job file (.vecto)](#job-file) includes all informations to run a VECTO calc
 
 ###Relative File Paths
 
-It is recommended to define relative filepaths. This way the Job File and all input files can be moved without having to update the paths. Example: "Vehicles\\Vehicle1.vveh" points to the "Vehicles" subdirectory of the Job File's directoy.
+It is recommended to use relative filepaths. This way the Job File and all input files can be moved without having to update the paths. Example: "Vehicles\\Vehicle1.vveh" points to the "Vehicles" subdirectory of the Job File's directoy.
 
-VECTO automatically uses relative paths if the input file (e.g. Vehicle File) is in the same directory as the Job File. (The Job File must be saved before browsing for input files.)
+VECTO automatically uses relative paths if the input file (e.g. Vehicle File) is in the same directory as the Job File. (*Note:* The Job File must be saved before browsing for input files.)
 
 
 ###General Settings
 
 ![](pics/checkbox.png) Engine Only Mode
 
-:	Enables [Engine Only Mode](#engine-only-mode). Only the following parameters are needed for this mode:
+:	Enables [Engine Only Mode](#engine-only-mode) (Engineering mode only). The following parameters are needed for this mode:
 
 -   Filepath to the [Engine File (.veng)](#engine-editor)
 -   [Driving Cycles](#driving-cycles) including engine torque (or power) and engine speed

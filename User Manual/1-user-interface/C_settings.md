@@ -12,7 +12,7 @@ In the Settings dialog controls general application settings. The settings are s
 
 <div class="vecto22">
 Logfile Size Limit \[MB\]
-:	Whenever the [Log File](#application-files) reaches this size it will be restarted. One backup is always stored as LOG\_backup.txt.
+:	Whenever the [Log File](#application-files) reaches this size it will be restarted. One backup is always stored as LOG\_backup.txt. <span class="vecto3">*Note:* this setting only affects the log-file written by the graphical user interface. The log-files written in the logs subdirectory are not limited by this setting!</span>
 
 File Open Command
 :	This command will be used to open CSV Input Files like Driving Cycles (.vdri). See: [Run command![](pics/external-icon%2012x12.png)](http://en.wikipedia.org/wiki/Run_command)\

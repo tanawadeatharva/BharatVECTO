@@ -8,11 +8,10 @@ The [Engine File (.veng)](#engine-file) defines all engine-related parameters an
 
 ###Relative File Paths
 
-It is recommended to define relative filepaths. This way the Job File and all input files can be moved without having to update the paths.
-
+It is recommended to use relative filepaths. This way the Job File and all input files can be moved without having to update the paths.
 Example: "Demo\\FLD1.vfld" points to the "Demo" subdirectory of the Engine File's directory.
 
-VECTO automatically uses relative paths if the input file (e.g. FC Map) is in the same directory as the Engine File. The Engine File must be saved before browsing for input files.)
+VECTO automatically uses relative paths if the input file (e.g. FC Map) is in the same directory as the Engine File. *Note:* The Engine File must be saved before browsing for input files.)
 
 ###Main Engine Parameters
 
@@ -26,16 +25,12 @@ Displacement \[ccm\]
 :   Used in [Declaration Mode](#declaration-mode) to calculate inertia.
 
 Inertia including Flywheel \[kgm²\]
-:   Inertia for rotating parts including engine flywheel. In [Declaration Mode](#declaration-mode) the inertia is calculated automatically.
+:   Inertia for rotating parts including engine flywheel. In [Declaration Mode](#declaration-mode) the inertia is calculated automatically depending on the engine's displacement and also accounts for the clutch's inertia.
 
 ###Full Load and Drag Curves
 
 
-
-The [Full Load and Drag Curves (.vfld)](#full-load-and-drag-curves-.vfld) Note that gear-specific full load curves can be defined in the [Gearbox File](#gearbox-file) to limit the maximum gearbox input torque.
-
-The input file (.vfld) file format is described
-[here](#full-load-and-drag-curves-.vfld).
+The [Engine's Full Load and Drag Curves (.vfld)](#full-load-and-drag-curves-.vfld) limits the engine's maximum torque and drag torque respectively The full-load curve must at least cover the engine-speed range from idling speed up to the speed where the power goes down to 70% of the maximum power. The input file (.vfld) file format is described [here](#full-load-and-drag-curves-.vfld).
 
 ###Fuel Consumption Map
 

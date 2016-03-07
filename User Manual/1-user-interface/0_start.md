@@ -21,6 +21,6 @@ This User Manual consists of 4 Parts:
 - [Input and Output](#input-and-output):
     : The input and output file formats are described in this chapter.
 
-
+This user manual describes both, version 2.2 and verson 3.0.x of Vecto. Vecto 3.x is a complete rewrite of Vecto 2.2 that uses the same models and input data and also produces the same output. However, in some parts version 3.x differs from version 2.2. The according paragraphs are highlighted accordingly.
 
 

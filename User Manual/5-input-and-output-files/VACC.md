@@ -6,8 +6,8 @@ vehicle speed. The filepath has to be defined in the [Job File](#job-file). The 
 - Filetype: .vacc
 - Header: **v \[km/h], acc \[m/s^2], dec \[m/s^2]**
     + **v [km/h]**: the vehicle speed. Must be >= 0 km/h.
-    + **acc [m/s^2]**: the maximum acceleration. Must be > 0 km/h.
-    + **dec [m/s^2]**: the maximum deceleration. Must be < 0 km/h.
+    + **acc [m/s^2]**: the maximum acceleration. Must be > 0 m/s^2.
+    + **dec [m/s^2]**: the maximum deceleration. Must be < 0 m/s^2.
 - Requires at least 2 data entries
 - Data should cover the whole possible range of vehicle speeds
 

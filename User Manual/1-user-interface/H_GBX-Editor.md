@@ -14,7 +14,7 @@ The [Gearbox File (.vgbx)](#gearbox-file) defines alls gearbox-related input par
 
 ###Relative File Paths
 
-It is recommended to define relative filepaths. This way the Job File and all input files can be moved without having to update the paths. \
+It is recommended to use relative filepaths. This way the Job File and all input files can be moved without having to update the paths. \
 Example: "Gears\\Gear1.vtlm" points to the "Gears" subdirectory of the Gearbox File's directoy.
 
 VECTO automatically uses relative paths if the input file (e.g. Shift Polygons File) is in the same directory as the Gearbox File. (The Gearbox File must be saved before browsing for input files.)
@@ -36,11 +36,11 @@ Transmission Type
 
 
 Inertia \[kgm²\]
-:   Rotational inertia of the gearbox (constant for all gears).
+:   Rotational inertia of the gearbox (constant for all gears). (Engineering mode only)
 
 
 Traction Interruption \[s\]
-:   Interruption during gear shift event.
+:   Interruption during gear shift event. (Engineering mode only)
 
 
 ###Gears
@@ -48,10 +48,11 @@ Traction Interruption \[s\]
 Use the ![add](pics/plus-circle-icon.png) and ![remove](pics/minus-circle-icon.png) buttons to add or remove gears from the vehicle. Doubleclick entries to edit existing gears.
 
 -   Gear **"A"** defines the ratio of the axle transmission / differential.
--   Column **"TC"** (AT only) defines which gears are using the torque converter (lock-up clutch open).
--   Column **"Loss Map or Efficiency"** allows to define either a constant efficiency value or a [loss map (.vtlm)](#transmission-loss-map).
--   Column **"Shift polygons"** defines the [Shift Polygons InputFile (.vgbs)](#shift-polygons-input-file-.vgbs) for each gear. Not required in [Declaration Mode](#declaration-mode). See [GearShift Model](#gear-shift-model) for details.
--	Column **"Full Load Curves"** defines the [Full Load Curve for (.vfld)](#full-load-and-drag-curves-.vfld) each gear. It is used for torque limiting and [generic shift polygons](#gear-shift-model) in Declaration Mode. If no file is defined the engine full load curve will be used. 
+-    **"TC"** (AT only) defines which gears are using the torque converter (lock-up clutch open).
+-    **"Ratio"** defines the ratio between the output speed and input speed for the current gear. Must be greater than 0.
+-    **"Loss Map or Efficiency"** allows to define either a constant efficiency value or a [loss map (.vtlm)](#transmission-loss-map). <span class="vecto3">Note: in Vecto 3 it is mandatory to specify a loss map for every gear!</span>
+-    **"Shift polygons"** defines the [Shift Polygons InputFile (.vgbs)](#shift-polygons-input-file-.vgbs) for each gear. Not required in [Declaration Mode](#declaration-mode). See [GearShift Model](#gear-shift-model) for details.
+-	 **"Full Load Curves"** defines the [Full Load Curve for (.vfld)](#full-load-and-drag-curves-.vfld) each gear. It is used for torque limiting in the current gear. Note: in Declaration mode the [generic shift polygons](#gear-shift-model) are computed from the engine's full-load curve. If the maximum torque is limited by the gearbox, the minimum of the gearbox and engine maximum torque will be used to compute the [generic shift polygons](#gear-shift-model)!
 
 
 ###Gear shift parameters
@@ -69,7 +70,8 @@ Torque Reserve \[%\]
 
 
 Minimum shift time \[s\]
-:   Limits the time between two gear shifts in whole seconds. This rule will be ignored if rpms are too high or too low. Note that high values may cause high rpms during acceleration.
+:   Limits the time between two gear shifts. This rule will be ignored if rpms are too high or too low. <span class="vecto2">Vecto 2.2 uses fixed time-steps of 1 second, hence only whole seconds can be specified.</span>
+<span class="vecto3">Vecto 3 uses dynamic time-steps, hence any values greater than 0 seconds can be given.</span>
 
 
 Start Gear
@@ -85,7 +87,7 @@ The Chart Area displays the [Shift Polygons Input File(.vgbs)](#shift-polygons-i
 
 ###Torque Converter
 
-
+<div class="vecto2">
 
 The [Torque Converter Model](#torque-converter-model) is still in development.
 
@@ -123,3 +125,4 @@ be updated.
 
 
 ![Cancel](pics/Cancel.png) ***Cancel without saving***
+</div>

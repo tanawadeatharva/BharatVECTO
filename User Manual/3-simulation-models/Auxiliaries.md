@@ -43,4 +43,4 @@ For each auxiliary the power demand is calculated using the following steps:
 Each auxiliary must be defined in the [Job File](#job-file) and each [driving cycle](#driving-cycles) used with this vehicle must include supply power for each auxiliary. To link the supply power in the driving cycle to the correct auxiliary in the Job File an ID is used. The corresponding supply power is then named *"&lt;Aux\_ID&gt;"*.
 
 
-***Example:*** *The Auxiliary with the ID "ALT" (in the Job File) is linked to the supply power in the column "&lt;AUX\_ALT&gt;" in the driving cylce.*
+***Example:*** *The Auxiliary with the ID "ALT" (in the Job File) is linked to the supply power in the column "&lt;Aux\_ALT&gt;" in the driving cylce.*

@@ -23,7 +23,7 @@ Parameters in [Job File](#job-file):
 
 ###Eco-Roll
 
-
+<div class="vecto2">
 Instead of using the engine brake (with no fuel consumption) Eco-Roll shifts to Neutral, engine idling, to minimize deceleration and maximize the vehicle's roll out distance. During this phase the engine has to overcome its own idling losses and the power demand from the auxiliaries. The engine is engaged again if the speed exceeds the speed limits defined by Max. Over-/Underspeed.
 
  ![](pics/EcoRoll.svg)
@@ -34,3 +34,4 @@ Parameters in [Job File](#job-file):
 : -   **Minimum speed \[km/h\]** Below this speed the function is disabled.
 -   **Max. Overspeed \[km/h\]** (relative to target speed)
 -   **Max. Underspeed \[km/h\]** (relative to target speed)
+</div>
