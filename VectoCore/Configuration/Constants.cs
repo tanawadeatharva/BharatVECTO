@@ -70,6 +70,8 @@ namespace TUGraz.VectoCore.Configuration
 
 			public const string VectoJobFile = ".vecto";
 
+			public const string VectoXMLDeclarationFile = ".xml";
+
 			public const string EngineDataFile = ".veng";
 
 			public const string CycleFile = ".vdri";

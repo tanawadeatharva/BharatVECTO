@@ -144,6 +144,8 @@ Examples:
 				}
 
 				var fileList = args.Except(new[] { "-v", "-vv", "-vvv", "-vvvv", "-V", "-mod", "-eng", "-t" }).ToArray();
+				var jobFiles = fileList.Where(f => Path.GetExtension(f) == Constants.FileExtensions.VectoJobFile).ToList();
+				var xmlFiles = fileList.Where(f => Path.GetExtension(f) == Constants.FileExtensions.VectoXMLDeclarationFile);
 
 				// if no other arguments given: display usage and terminate
 				if (!args.Any()) {
@@ -151,6 +153,7 @@ Examples:
 					return 1;
 				}
 
+				
 				var stopWatch = new Stopwatch();
 				var timings = new Dictionary<string, double>();
 
@@ -169,8 +172,7 @@ Examples:
 
 				stopWatch.Start();
 
-				var jobFiles = fileList.Where(f => Path.GetExtension(f) == Constants.FileExtensions.VectoJobFile).ToList();
-
+				
 				if (!jobFiles.Any()) {
 					Console.ForegroundColor = ConsoleColor.Red;
 					Console.WriteLine(@"No Job files found. Please restart the application with a valid '.vecto' file.");
