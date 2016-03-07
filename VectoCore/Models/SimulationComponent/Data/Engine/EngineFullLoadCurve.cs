@@ -152,10 +152,10 @@ namespace TUGraz.VectoCore.Models.SimulationComponent.Data.Engine
 				return p1.EngineSpeed + area / d;
 			}
 
-			// non-constant torque, M(n_eng_avg) = k * n_eng_avg + d
-			// area = M(n1) * (n2 - n1) + (M(n1) + M(n2))/2 * (n2 - n1) => solve for n2
+			// non-constant torque, M(n) = k * n + d
+			// area = (M(n1) + M(n2))/2 * (n2 - n1) => solve for n2
 			var retVal = VectoMath.QuadraticEquationSolver(k.Value() / 2.0, d.Value(),
-				(k * p1.EngineSpeed * p1.EngineSpeed + 2 * p1.EngineSpeed * d).Value());
+				(-k * p1.EngineSpeed * p1.EngineSpeed / 2 - p1.EngineSpeed * d - area).Value());
 			if (retVal.Count == 0) {
 				Log.Info("No real solution found for requested area: P: {0}, p1: {1}, p2: {2}", area, p1, p2);
 			}
