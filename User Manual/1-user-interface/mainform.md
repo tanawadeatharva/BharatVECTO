@@ -79,11 +79,11 @@ In this tab the global calculation settings can be changed.
 ![cb](pics/checkbox.png) Cycle Distance Correction
 :   Toggle Cycle Distance Correction. Always ON in Declaration Mode. Cycle Distance Correction monitors the driven distance in each time step and, if necessary, adds or removes time steps in order to keep the original distance given in the driving cycle.
 :   -   If **enabled** the vehicle drives the same **distance** as given in the driving cycle
--   If ***disabled*** the vehicle travels the same **time** as given in the driving cycle (Note that distance-based cycles (see [here](#driving-cycle-.vdri)) are always converted to time-based cycles internally)
+-   If ***disabled*** the vehicle travels the same **time** as given in the driving cycle (Note that distance-based cycles (see [here](#driving-cycles)) are always converted to time-based cycles internally)
 
 
 ![cb](pics/checkbox.png) Use gears/rpm's form driving cycle
-:   If activated VECTO will use gear and/or engine speed defintions included in the driving cycle (see [here](#driving-cycle-.vdri)).
+:   If activated VECTO will use gear and/or engine speed defintions included in the driving cycle (see [here](#driving-cycles)).
 
 
 ![cb](pics/checkbox.png) Write modal results

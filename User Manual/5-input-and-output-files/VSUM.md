@@ -29,7 +29,7 @@ The .vsum file includes total / average results for each calculation run in one 
 |  Egrad | [kWh] | Total work of gradient resistance
 |  Eacc | [kWh] | Total work from accelerations (<0) / decelerations (>0) 
 |  Eaux | [kWh] | Total energy demand of auxiliaries
-|  Eaux_xxx | [kWh] | Energy demand of auxiliary with ID xxx. See also [Aux Dialog](#auxiliary-dialog) and [Driving Cycle](#driving-cycle-.vdri).
+|  Eaux_xxx | [kWh] | Energy demand of auxiliary with ID xxx. See also [Aux Dialog](#auxiliary-dialog) and [Driving Cycle](#driving-cycles).
 |  Ebrake | [kWh] | Total work dissipated in mechanical braking (sum of service brakes, retader and additional engine exhaust brakes)
 |  Etransm | [kWh] | Total work of transmission losses
 |  Eretarder | [kWh] | Total retarder losses
