@@ -115,11 +115,39 @@ namespace TUGraz.VectoCore.Tests.Models.SimulationComponentData
 			var fldCurve = EngineFullLoadCurve.ReadFromFile(CoachEngineFLD);
 			fldCurve.EngineData = new CombustionEngineData { IdleSpeed = 560.RPMtoRad() };
 			AssertHelper.AreRelativeEqual(130.691151551712.SI<PerSecond>(), fldCurve.PreferredSpeed);
+			var totalArea = fldCurve.ComputeArea(fldCurve.EngineData.IdleSpeed, fldCurve.N95hSpeed);
+			Assert.AreEqual((0.51 * totalArea).Value(),
+				fldCurve.ComputeArea(fldCurve.EngineData.IdleSpeed, fldCurve.PreferredSpeed).Value(), 1E-3);
 			AssertHelper.AreRelativeEqual(194.515816596908.SI<PerSecond>(), fldCurve.N95hSpeed);
 			AssertHelper.AreRelativeEqual(94.2463966015023.SI<PerSecond>(), fldCurve.LoSpeed);
 			AssertHelper.AreRelativeEqual(219.084329211505.SI<PerSecond>(), fldCurve.HiSpeed);
 			AssertHelper.AreRelativeEqual(2300.SI<NewtonMeter>(), fldCurve.MaxLoadTorque);
 			AssertHelper.AreRelativeEqual(-320.SI<NewtonMeter>(), fldCurve.MaxDragTorque);
+		}
+
+		[TestMethod]
+		public void TestPreferredSpeed2()
+		{
+			var fldData = new[] {
+				"560,1180,-149,0.6",
+				"600,1282,-148,0.6",
+				"800,1791,-149,0.6",
+				"1000,2300,-160,0.6",
+				"1200,2400,-179,0.6",
+				"1400,2300,-203,0.6",
+				"1600,2079,-235,0.49",
+				"1800,1857,-264,0.25",
+				"2000,1352,-301,0.25",
+				"2100,1100,-320,0.25",
+			};
+			var fldEntries = InputDataHelper.InputDataAsStream("n [U/min],Mfull [Nm],Mdrag [Nm],<PT1> [s] ", fldData);
+			var fldCurve = EngineFullLoadCurve.Create(VectoCSVFile.ReadStream(fldEntries));
+			fldCurve.EngineData = new CombustionEngineData { IdleSpeed = 560.RPMtoRad() };
+
+			var totalArea = fldCurve.ComputeArea(fldCurve.EngineData.IdleSpeed, fldCurve.N95hSpeed);
+			Assert.AreEqual((0.51 * totalArea).Value(),
+				fldCurve.ComputeArea(fldCurve.EngineData.IdleSpeed, fldCurve.PreferredSpeed).Value(), 1E-3);
+			//AssertHelper.AreRelativeEqual(130.691151551712.SI<PerSecond>(), fldCurve.PreferredSpeed);
 		}
 
 		/// <summary>
