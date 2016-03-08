@@ -36,9 +36,11 @@ using System.IO;
 using System.Linq;
 using System.Reflection;
 using System.Threading;
+using System.Xml;
 using NLog;
 using NLog.Config;
 using NLog.Targets;
+using TUGraz.VectoAPI.InputData;
 using TUGraz.VectoCore.Configuration;
 using TUGraz.VectoCore.InputData.FileIO.JSON;
 using TUGraz.VectoCore.Models.Simulation.Impl;
@@ -60,7 +62,7 @@ namespace VectoConsole
 Commandline Interface for Vecto.
 
 Synopsis:
-    vectocmd.exe [-h] [-v] FILE1.vecto [FILE2.vecto ...]
+    vectocmd.exe [-h] [-v] FILE1.(vecto|xml) [FILE2.(vecto|xml) ...]
 
 Description:
     FILE1.vecto [FILE2.vecto ...]: A list of vecto-job files (with the 
@@ -144,8 +146,12 @@ Examples:
 				}
 
 				var fileList = args.Except(new[] { "-v", "-vv", "-vvv", "-vvvv", "-V", "-mod", "-eng", "-t" }).ToArray();
-				var jobFiles = fileList.Where(f => Path.GetExtension(f) == Constants.FileExtensions.VectoJobFile).ToList();
-				var xmlFiles = fileList.Where(f => Path.GetExtension(f) == Constants.FileExtensions.VectoXMLDeclarationFile);
+				var jobFiles =
+					fileList.Where(
+						f =>
+							Path.GetExtension(f) == Constants.FileExtensions.VectoJobFile ||
+							Path.GetExtension(f) == Constants.FileExtensions.VectoXMLDeclarationFile).ToList();
+				//var xmlFiles = fileList.Where(f => );
 
 				// if no other arguments given: display usage and terminate
 				if (!args.Any()) {
@@ -153,7 +159,7 @@ Examples:
 					return 1;
 				}
 
-				
+
 				var stopWatch = new Stopwatch();
 				var timings = new Dictionary<string, double>();
 
@@ -172,7 +178,7 @@ Examples:
 
 				stopWatch.Start();
 
-				
+
 				if (!jobFiles.Any()) {
 					Console.ForegroundColor = ConsoleColor.Red;
 					Console.WriteLine(@"No Job files found. Please restart the application with a valid '.vecto' file.");
@@ -182,13 +188,23 @@ Examples:
 
 				foreach (var file in jobFiles) {
 					Console.WriteLine(@"Reading job: " + file);
-					var dataProvider = JSONInputDataFactory.ReadJsonJob(file);
-					var runsFactory = new SimulatorFactory(mode, dataProvider, fileWriter);
+					if (Path.GetExtension(file) == Constants.FileExtensions.VectoJobFile) {
+						var dataProvider = JSONInputDataFactory.ReadJsonJob(file);
+						var runsFactory = new SimulatorFactory(mode, dataProvider, fileWriter);
 
-					if (args.Contains("-mod")) {
-						runsFactory.WriteModalResults = true;
+						if (args.Contains("-mod")) {
+							runsFactory.WriteModalResults = true;
+						}
+						_jobContainer.AddRuns(runsFactory);
 					}
-					_jobContainer.AddRuns(runsFactory);
+					if (Path.GetExtension(file) == Constants.FileExtensions.VectoXMLDeclarationFile) {
+						var dataProvider = new XMLInputDataProvider(new XmlTextReader(file), true);
+						var runsFactory = new SimulatorFactory(ExecutionMode.Declaration, dataProvider, fileWriter);
+						if (args.Contains("-mod")) {
+							runsFactory.WriteModalResults = true;
+						}
+						_jobContainer.AddRuns(runsFactory);
+					}
 				}
 
 				Console.WriteLine();

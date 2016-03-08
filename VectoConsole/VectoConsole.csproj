@@ -59,6 +59,10 @@
     </Reference>
     <Reference Include="System" />
     <Reference Include="System.Core" />
+    <Reference Include="System.Xml" />
+    <Reference Include="VectoAPI">
+      <HintPath>..\..\VECTO_API\VectoAPI\bin\Release\VectoAPI.dll</HintPath>
+    </Reference>
   </ItemGroup>
   <ItemGroup>
     <Compile Include="Program.cs" />
