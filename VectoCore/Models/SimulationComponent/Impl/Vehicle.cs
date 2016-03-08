@@ -169,8 +169,14 @@ namespace TUGraz.VectoCore.Models.SimulationComponent.Impl
 				Log.Warn("Distance field is not set!");
 			} else {
 				var distance = (SI)container[ModalResultField.dist];
-				if (!distance.IsEqual(CurrentState.Distance, 1e-12.SI<Meter>())) {
-					Log.Warn("Vehicle Distance diverges from Cycle by {0} [m]. Distance: {1}", (distance - CurrentState.Distance).Value(), distance);
+#if DEBUG
+				var tolerance = 1e-12.SI<Meter>();
+#else
+				var tolerance = 1e-6.SI<Meter>();
+#endif
+				if (!distance.IsEqual(CurrentState.Distance, tolerance)) {
+					Log.Warn("Vehicle Distance diverges from Cycle by {0} [m]. Distance: {1}",
+						(distance - CurrentState.Distance).Value(), distance);
 				}
 			}
 		}
