@@ -13,7 +13,7 @@ The CO~2~ result for the actual mission profile is directly derived from the fue
 The interpolation is based on [Delaunay Triangulation ![](pics/external-icon%2012x12.png)](http://en.wikipedia.org/wiki/Delaunay_triangulation) and works as follows:
 
 1.  Triangulate the given rpm/torque/fuel points (= x,y,z)  to create a
-    network of triangles with each point of the map being part of at
+    grid of triangles with each point of the map being part of at
     least one triangle.
 2.  Find the triangle where the to-be-interpolated load point (x,y)
     is inside. If no triangle meets the criterion the calculation will
@@ -28,6 +28,7 @@ The interpolation is based on [Delaunay Triangulation ![](pics/external-icon%20
 
 ###Auxiliary - Start/Stop Correction
 
+<div class="vecto2">
 For vehicles with [Start/Stop](#engine-startstop) the fuel consumption needs to be corrected to consider the wrong auxiliary energy balance caused by engine stops because VECTO uses a constant power demand for auxiliaries for the whole mission profile. The correction consists of the following steps:
 
 1.  From all 1Hz data points of the VECTO simulation, a linear regression curve (y=k\*x+d) for fuel consumption (unit: grams per hour) over engine power (unit: kilo-watt) is calculated (see figure below).
@@ -37,7 +38,7 @@ For vehicles with [Start/Stop](#engine-startstop) the fuel consumption needs to 
 ![](pics/StartStopCorrection.svg)
 
 *Example of a linear regression between engine power and fuel consumption*
-
+</div>
 
 ###WHTC Correction
 

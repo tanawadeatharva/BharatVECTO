@@ -223,7 +223,7 @@ namespace TUGraz.VectoCore.Models.Simulation.Data
 		/// <summary>
 		///     [kW]	Gearbox losses.
 		/// </summary>
-		[ModalResultField(typeof(SI), name: "Ploss GB", caption: "P_gbx_loss GB [kW]", outputFactor: 1e-3)] P_gbx_loss,
+		[ModalResultField(typeof(SI), name: "P_gbx_loss", caption: "P_gbx_loss [kW]", outputFactor: 1e-3)] P_gbx_loss,
 
 		/// <summary>
 		///     [kW]	Losses in differential / axle transmission.
@@ -233,17 +233,17 @@ namespace TUGraz.VectoCore.Models.Simulation.Data
 		/// <summary>
 		///     [kW]	Retarder losses.
 		/// </summary>
-		[ModalResultField(typeof(SI), name: "Ploss Retarder", caption: "Ploss Retarder [kW]", outputFactor: 1e-3)] P_ret_loss,
+		[ModalResultField(typeof(SI), name: "P_ret_loss", caption: "P_ret_loss [kW]", outputFactor: 1e-3)] P_ret_loss,
 
 		/// <summary>
 		///     [kW]	Rotational acceleration power: Gearbox.
 		/// </summary>
-		[ModalResultField(typeof(SI), name: "Pa GB", caption: "Pa GB [kW]", outputFactor: 1e-3)] P_gbx_inertia,
+		[ModalResultField(typeof(SI), name: "P_gbx_inertia", caption: "P_gbx_inertia [kW]", outputFactor: 1e-3)] P_gbx_inertia,
 
 		/// <summary>
 		///     [kW]	Vehicle acceleration power.
 		/// </summary>
-		[ModalResultField(typeof(SI), name: "Pa Veh", caption: "Pa Veh [kW]", outputFactor: 1e-3)] P_veh_inertia,
+		[ModalResultField(typeof(SI), name: "P_veh_inertia", caption: "P_veh_inertia [kW]", outputFactor: 1e-3)] P_veh_inertia,
 
 		/// <summary>
 		///     [kW]	Rolling resistance power demand.

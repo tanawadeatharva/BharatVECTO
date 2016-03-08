@@ -1,20 +1,18 @@
 ##Shift Polygons Input File (.vgbs)
 
-Defines up- and down-shift curves. See [Gear Shift Model](#gear-shift-model) for details.
+Defines up- and down-shift curves. See [Gear Shift Model](#gear-shift-model) for details. The file uses the [VECTO CSV format](#csv).
+
+- Filetype: .vgbs
+- Header: **Engine Torque [Nm], Downshift rpm [1/min], Upshift rpm [1/min]**
+- Requires at least 2 data entries
 
 ![](pics/Shift.svg)
 
-###File Format
-The file uses the [VECTO CSV format](#csv-format).
+**Example:**
 
-Format:
-: -   Three columns
--   One header line
--   At least two lines with numeric values (below file header)
-  
-***Columns:***
+    Engine Torque [Nm], Downshift rpm [1/min], Upshift rpm [1/min]
+    -400,560,1289
+    759,560,1289
+    1252,742,1289
+    2372,1155,1942
 
-| **Engine Torque [Nm]** | **Downshift rpm [1/min]** | **Upshift rpm [1/min]** |
-| ---------------------- | ------------------------- | ----------------------- |
-| ...                    | ...                       | ...                     |
-| ...                    | ...                       | ...                     |

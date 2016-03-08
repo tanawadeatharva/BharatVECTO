@@ -54,13 +54,13 @@ namespace VectoConsole
 		private static int _numLines;
 		private static int ProgessCounter { get; set; }
 
-		private const string Usage = @"Usage: vecto.exe [-h] [-v] FILE1.vecto [FILE2.vecto ...]";
+		private const string Usage = @"Usage: vectocmd.exe [-h] [-v] FILE1.vecto [FILE2.vecto ...]";
 
 		private const string Help = @"
 Commandline Interface for Vecto.
 
 Synopsis:
-    vecto.exe [-h] [-v] FILE1.vecto [FILE2.vecto ...]
+    vectocmd.exe [-h] [-v] FILE1.vecto [FILE2.vecto ...]
 
 Description:
     FILE1.vecto [FILE2.vecto ...]: A list of vecto-job files (with the 
@@ -144,6 +144,8 @@ Examples:
 				}
 
 				var fileList = args.Except(new[] { "-v", "-vv", "-vvv", "-vvvv", "-V", "-mod", "-eng", "-t" }).ToArray();
+				var jobFiles = fileList.Where(f => Path.GetExtension(f) == Constants.FileExtensions.VectoJobFile).ToList();
+				var xmlFiles = fileList.Where(f => Path.GetExtension(f) == Constants.FileExtensions.VectoXMLDeclarationFile);
 
 				// if no other arguments given: display usage and terminate
 				if (!args.Any()) {
@@ -151,6 +153,7 @@ Examples:
 					return 1;
 				}
 
+				
 				var stopWatch = new Stopwatch();
 				var timings = new Dictionary<string, double>();
 
@@ -169,8 +172,7 @@ Examples:
 
 				stopWatch.Start();
 
-				var jobFiles = fileList.Where(f => Path.GetExtension(f) == Constants.FileExtensions.VectoJobFile).ToList();
-
+				
 				if (!jobFiles.Any()) {
 					Console.ForegroundColor = ConsoleColor.Red;
 					Console.WriteLine(@"No Job files found. Please restart the application with a valid '.vecto' file.");
@@ -230,9 +232,9 @@ Examples:
 				stopWatch.Stop();
 				timings.Add("Simulation runs", stopWatch.Elapsed.TotalMilliseconds);
 
-			
+
 				PrintProgress(_jobContainer.GetProgress(), args.Contains("-t"));
-				
+
 				if (args.Contains("-t")) {
 					PrintTimings(timings);
 				}
@@ -247,7 +249,7 @@ Examples:
 
 				Environment.ExitCode = Environment.ExitCode != 0 ? Environment.ExitCode : 1;
 			}
-			
+
 			Console.ReadKey();
 
 			return Environment.ExitCode;
@@ -255,7 +257,7 @@ Examples:
 
 		private static void DisplayWarnings()
 		{
-			if (WarningMessages.Any()) {			
+			if (WarningMessages.Any()) {
 				Console.ForegroundColor = ConsoleColor.Yellow;
 				foreach (var message in WarningMessages) {
 					Console.Error.WriteLine(message);
@@ -307,13 +309,13 @@ Examples:
 			var bar = new string('#', (int)(sumProgress * 100.0 / 2));
 			Console.WriteLine(@"   {2}   [{1,-50}]  [{0,7:P}]", sumProgress, bar, spinner);
 
-			if (WarningMessages.Any()){
+			if (WarningMessages.Any()) {
 				Console.ForegroundColor = ConsoleColor.Yellow;
 				Console.WriteLine(@"Warnings: {0,5}", WarningMessages.Count);
 				Console.ResetColor();
 			}
 
-			_numLines +=2;
+			_numLines += 2;
 		}
 
 		private static void PrintTimings(Dictionary<string, double> timings)

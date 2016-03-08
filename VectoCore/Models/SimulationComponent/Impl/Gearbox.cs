@@ -220,7 +220,7 @@ namespace TUGraz.VectoCore.Models.SimulationComponent.Impl
 				_shiftTime = absTime;
 			}
 			IResponse retVal;
-			if (ClutchClosed(absTime)) {
+			if (ClutchClosed(absTime) && !angularVelocity.IsEqual(0)) {
 				retVal = RequestGearEngaged(absTime, dt, torque, angularVelocity, dryRun);
 			} else {
 				retVal = RequestGearDisengaged(absTime, dt, torque, angularVelocity, dryRun);

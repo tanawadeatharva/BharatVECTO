@@ -70,6 +70,8 @@ namespace TUGraz.VectoCore.Configuration
 
 			public const string VectoJobFile = ".vecto";
 
+			public const string VectoXMLDeclarationFile = ".xml";
+
 			public const string EngineDataFile = ".veng";
 
 			public const string CycleFile = ".vdri";
@@ -114,7 +116,7 @@ namespace TUGraz.VectoCore.Configuration
 
 			public static readonly Watt EnginePowerSearchTolerance = 0.50.SI<Watt>(); // Watt
 
-			public const double CluchNormSpeed = 0.03;
+			public const double ClutchNormSpeed = 0.03;
 
 			public static readonly MeterPerSquareSecond MinimumAcceleration = 0.1.SI<MeterPerSquareSecond>();
 

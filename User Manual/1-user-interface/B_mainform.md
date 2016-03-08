@@ -10,7 +10,7 @@
 
 The Main Form is loaded when starting VECTO. Closing this form will close VECTO even if other dialogs are still open. In this form all global settings can be controlled and all other application dialogs can be opened.
 
-In order to start a calculation the [Calculation Mode](#calculation-modes) must be set and at least one [Job File (.vecto)](#job-editor) must added to the Job List. After clicking START all checked files in the Job List will be calculated.
+In order to start a simulation the [Calculation Mode](#calculation-modes) must be set and at least one [Job File (.vecto)](#job-editor) must added to the Job List. After clicking START all checked files in the Job List will be calculated. From the user interface you can either run the simulation using Vecto 2.2 or Vecto 3.x by clicking the according START button on the left side of the window.
 
 The Main Form includes three tabs as described below:
 
@@ -69,26 +69,22 @@ Driving Cycle List
 In this tab the global calculation settings can be changed.
 
 ![](pics/checkbox.png) Declaration Mode
-:   Enable or disable [Declaration Mode](#declaration-mode)
-
-
-![](pics/checkbox.png) Batch Mode
-:   If Declaration Mode is disabled VECTO can be run in [Batch Mode](#batch-mode).
-
-
-![cb](pics/checkbox.png) Cycle Distance Correction
-:   Toggle Cycle Distance Correction. Always ON in Declaration Mode. Cycle Distance Correction monitors the driven distance in each time step and, if necessary, adds or removes time steps in order to keep the original distance given in the driving cycle.
-:   -   If **enabled** the vehicle drives the same **distance** as given in the driving cycle
--   If ***disabled*** the vehicle travels the same **time** as given in the driving cycle (Note that distance-based cycles (see [here](#driving-cycle-.vdri)) are always converted to time-based cycles internally)
-
-
-![cb](pics/checkbox.png) Use gears/rpm's form driving cycle
-:   If activated VECTO will use gear and/or engine speed defintions included in the driving cycle (see [here](#driving-cycle-.vdri)).
-
+:   Select either [Declaration Mode](#declaration-mode) or [Engineering Mode](#engineering-mode)
 
 ![cb](pics/checkbox.png) Write modal results
 :   Toggle output of modal results (.vmod files). Summary files (.vsum, .vres) are always created.
 
+<div class="vecto2">
+![](pics/checkbox.png) Batch Mode
+:   If Declaration Mode is disabled VECTO can be run in [Batch Mode](#batch-mode).
+
+![cb](pics/checkbox.png) Cycle Distance Correction
+:   Toggle Cycle Distance Correction. Always ON in Declaration Mode. Cycle Distance Correction monitors the driven distance in each time step and, if necessary, adds or removes time steps in order to keep the original distance given in the driving cycle.
+:   -   If **enabled** the vehicle drives the same **distance** as given in the driving cycle
+-   If ***disabled*** the vehicle travels the same **time** as given in the driving cycle (Note that distance-based cycles (see [here](#driving-cycles)) are always converted to time-based cycles internally)
+
+![cb](pics/checkbox.png) Use gears/rpm's form driving cycle
+:   If activated VECTO will use gear and/or engine speed defintions included in the driving cycle (see [here](#driving-cycles)).
 
 ![cb](pics/checkbox.png) Shutdown system after last job
 :   If activated VECTO will shutdown the system after the last job was completed. (Can be aborted during 100 seconds before shutdown.)
@@ -96,11 +92,9 @@ In this tab the global calculation settings can be changed.
 Output Path (BATCH Mode only)
 :   Select target directory for result files (.vmod, .vres, .vsum)
 
-
-
 ![cb](pics/checkbox.png) Create Subdirectories for modal results (BATCH Mode only)
 :   If activated a subdirectory for each job file will be created inside **Output Path** for modal output.
-
+</div>
 
 ###Controls
 
@@ -149,5 +143,9 @@ Depending on the colour the following message types are displayed:
 
 Note that the [message log](#application-files) can be opened in the ![](pics/Misc-Tools-icon.png) Tools menu with **Open Log**.
 
+<div class="vecto3">
+In addition to the log messages shown in the message list, Vecto 3 writes more elaborate messages in the subdirectory logs. If multiple simulations are run in parallel (e.g., in declartion mode a vehicle is simulated on different cycles with different loadings) a separate log-file is created for every simulation run.
+</div>
+
 Statusbar
-: Displays current status and progress of running calculations. When no calculation is running the current mode is displayed (Standard, Batch or Declaration Mode).
+: Displays current status and progress of active simulations. When no simulation is executed the current mode is displayed (Standard, Batch or Declaration Mode).

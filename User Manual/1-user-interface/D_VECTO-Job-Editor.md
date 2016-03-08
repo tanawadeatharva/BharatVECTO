@@ -6,7 +6,7 @@
 
 ###Description
 
-The job file (.vecto) includes all informations to run a VECTO calculation. It defines the vehicle and the driving cycle(s) to be used for calculation. In summary it defines:
+The [job file (.vecto)](#job-file) includes all informations to run a VECTO calculation. It defines the vehicle and the driving cycle(s) to be used for calculation. In summary it defines:
 
 -   Filepath to the [Vehicle File (.vveh)](#vehicle-editor) which defines the not-engine/gearbox-related vehicle parameters
 -   Filepath to the [Engine File (.veng)](#engine-editor) which includes full load curve(s) and the fuel consumption map
@@ -18,19 +18,19 @@ The job file (.vecto) includes all informations to run a VECTO calculation. It d
 
 ###Relative File Paths
 
-It is recommended to define relative filepaths. This way the Job File and all input files can be moved without having to update the paths. Example: "Vehicles\\Vehicle1.vveh" points to the "Vehicles" subdirectory of the Job File's directoy.
+It is recommended to use relative filepaths. This way the Job File and all input files can be moved without having to update the paths. Example: "Vehicles\\Vehicle1.vveh" points to the "Vehicles" subdirectory of the Job File's directoy.
 
-VECTO automatically uses relative paths if the input file (e.g. Vehicle File) is in the same directory as the Job File. (The Job File must be saved before browsing for input files.)
+VECTO automatically uses relative paths if the input file (e.g. Vehicle File) is in the same directory as the Job File. (*Note:* The Job File must be saved before browsing for input files.)
 
 
 ###General Settings
 
 ![](pics/checkbox.png) Engine Only Mode
 
-:	Enables [Engine Only Mode](#engine-only-mode). Only the following parameters are needed for this mode:
+:	Enables [Engine Only Mode](#engine-only-mode) (Engineering mode only). The following parameters are needed for this mode:
 
 -   Filepath to the [Engine File (.veng)](#engine-editor)
--   [Driving Cycles](#driving-cycle-.vdri) including engine torque (or power) and engine speed
+-   [Driving Cycles](#driving-cycles) including engine torque (or power) and engine speed
 
 
 Filepath to the Vehicle File (.vveh)
@@ -43,7 +43,7 @@ Filepath ot the Gearbox File(.vgbx)
 :	Files can be created and edited using the [Gearbox Editor](#gearbox-editor).
 
 Auxiliaries
-:	This list contains all auxiliaries used for calculation. The auxiliaries are configured using the [Auxiliary Dialog](#auxiliary-dialog). For each auxiliary an [Auxiliary Input File (.vaux)](#auxiliary-input-file-.vaux) must be provided and the [driving cycle](#driving-cycle-.vdri) must include the corresponding supply power.
+:	This list contains all auxiliaries used for calculation. The auxiliaries are configured using the [Auxiliary Dialog](#auxiliary-dialog). For each auxiliary an [Auxiliary Input File (.vaux)](#auxiliary-input-file-.vaux) must be provided and the [driving cycle](#driving-cycles) must include the corresponding supply power.
 **Double-click** entries to edit with the [Auxiliary Dialog](#auxiliary-dialog).
 
 : ![addaux](pics/plus-circle-icon.png) Add new Auxiliary
@@ -52,7 +52,7 @@ Auxiliaries
 : See [Auxiliaries](#auxiliaries) for details.
 
 Cycles
-:	List of cycles used for calculation. The .vdri format is described [here](#driving-cycle-.vdri).
+:	List of cycles used for calculation. The .vdri format is described [here](#driving-cycles).
 **Double-click** an entry to open the file (see [File Open Command](#settings)).
 **Click** selected items to edit file paths.
 
@@ -79,7 +79,7 @@ Acceleration Limiting
 
 ###Chart Area
 
-If a valid [Vehicle File](#vehicle-editor), [Engine File](#engine-editor) and [Gearbox File](#gearbox-editor) is loaded into the Editor the main vehicle parameters like HDV class and axle configuration are shown here. The plot shows the full load curve(s) and shift polygons. In [Declaration Mode](#declaration-mode) the **generic**  shift polygons are shown, not the ones from the Gearbox File.
+If a valid [Vehicle File](#vehicle-editor), [Engine File](#engine-file) and [Gearbox File](#gearbox-file) is loaded into the Editor the main vehicle parameters like HDV class and axle configuration are shown here. The plot shows the full load curve(s) and shift polygons. In [Declaration Mode](#declaration-mode) the **generic**  shift polygons are shown, not the ones from the Gearbox File.
 
 ###Controls
 
