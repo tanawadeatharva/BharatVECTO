@@ -151,7 +151,6 @@ Examples:
 						f =>
 							Path.GetExtension(f) == Constants.FileExtensions.VectoJobFile ||
 							Path.GetExtension(f) == Constants.FileExtensions.VectoXMLDeclarationFile).ToList();
-				//var xmlFiles = fileList.Where(f => );
 
 				// if no other arguments given: display usage and terminate
 				if (!args.Any()) {
