@@ -49,11 +49,11 @@ If the file has one of the following extensions it is opened with the associated
 
 ![](pics/cmd3.png)
 
-The Vecto 3.x commandline tool runs completely without a graphical user interface. If multiple job-files are specified or a job-file contains multiple simulation runs (i.e., multiple cycles and/or loadings) these simulations are executed in parallel.
+The Vecto 3.x commandline tool runs completely without a graphical user interface. If multiple job-files are specified or a job-file contains multiple simulation runs (i.e., multiple cycles and/or loadings) these simulations are executed in parallel. Vectocmd supports both types of input files, JSON (in engineering and declaration mode) and XML (Declaration mode only).
 
 The basic usage is as follows
 
-        vectocmd.exe [-h] [-v] FILE1.vecto [FILE2.vecto ...]
+        vectocmd.exe [-h] [-v] FILE1.(vecto|xml) [FILE2.(vecto|xml) ...]
 
 ###List of command line arguments
 
