@@ -59,7 +59,7 @@ namespace TUGraz.VectoCore.Models.Declaration
 		public override Segment Lookup(VehicleCategory vehicleCategory, AxleConfiguration axleConfiguration,
 			Kilogram grossVehicleMassRating, Kilogram curbWeight)
 		{
-			if (grossVehicleMassRating < 7.5.SI<Ton>()) {
+			if (grossVehicleMassRating == null || grossVehicleMassRating < 7.5.SI<Ton>()) {
 				throw new VectoException("Gross vehicle mass must be greater than 7.5 tons");
 			}
 
