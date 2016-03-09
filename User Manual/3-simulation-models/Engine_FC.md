@@ -1,7 +1,6 @@
 ##Fuel Consumption Calculation
 
 
-
 The base FC value is interpolated from the stationary [FC map](#fuel-consumption-map-.vmap). If necessary the base value is corrected to compensate for unconsidered auxiliary energy consumption for vehicles with Start/Stop. In Declaration Mode additionally the WHTC correction is applied, see below.
 
 The CO~2~ result for the actual mission profile is directly derived from the fuel consumption using a gravimetric [CO~2~/FC factor](#settings).
@@ -39,27 +38,4 @@ For vehicles with [Start/Stop](#engine-startstop) the fuel consumption needs to 
 
 *Example of a linear regression between engine power and fuel consumption*
 </div>
-
-###WHTC Correction
-
-
-The WHTC correction aims to counter the disadvantages of using a stationary FC map. The following steps are applied in VECTO for the WHTC correction method:
-
-1.  VECTO interpolates the fuel consumption for the WHTC load cycle from the engine fuel map based on the target speed and target torque as determined based on the engine full-load curve. The results are FC values for the Urban, Rural and Motorway part.
-2.  The correction factor CF~WHTC~ is calculated using the equation below considering the current mission profile's weighting factors for each part.
-3.  The factor is multiplied to the FC values for each time step and the total FC result.
-
-
-$CF_{WHTC} = \sum_{i=1}^{3} f_i \cdot \frac{FC_{meas_i}}{FC_{calc_i}}[-]$
-
-
-where:
-
-|                   |                                                    |            |
-| ----------------- | -------------------------------------------------- | ---------- |
-| $CF_{WHTC}$          | WHTC Correction Factor                             | \[-\]      |
-| $i$                | index for each part (Urban, Rural, Motorway)       | \[-\]      |
-| $f_i$              | Weighting factor per part                          | \[-\]      |
-| $FC_{meas_i}$       | WHTC measurement result per part (input parameter) | \[g/kWh\]  |
-| $FC_{calc_i}$       | Calculated FC per part                             | \[g/kWh\]  |
 
