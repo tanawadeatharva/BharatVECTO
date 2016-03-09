@@ -1377,17 +1377,26 @@ lbDlog:
             If fileExists AndAlso validAAUXFile Then
                 mAAUX_Global.ConfigureAdvancedAuxiliaries(assembly.AssemblyName, assembly.AuxiliaryVersion, txtAdvancedAuxiliaryFile.Text, VECTOfile)
             Else
-                'Find / Create  file and configure.
-                If fbAux.CustomDialog(absoluteAuxPath, False, False, tFbExtMode.ForceExt, False, String.Empty) Then
-                    txtAdvancedAuxiliaryFile.Text = fFileWoDir(fbAux.Files(0), fPATH(VECTOfile))
-                    assembly = DirectCast(cboAdvancedAuxiliaries.SelectedItem, cAdvancedAuxiliary)
 
-                    If IO.File.Exists(mAAUX_Global.ResolveAAUXFilePath(fPATH(VECTOfile), txtAdvancedAuxiliaryFile.Text)) OrElse MsgBox("Do you want to create a new .AAUX file?", MsgBoxStyle.YesNo) = MsgBoxResult.Yes Then
-                        mAAUX_Global.ConfigureAdvancedAuxiliaries(assembly.AssemblyName, assembly.AuxiliaryVersion, txtAdvancedAuxiliaryFile.Text, VECTOfile)
+                Dim needToFindOrCreateFile As Boolean = True
+
+                While needToFindOrCreateFile
+
+                    'Find / Create  file and configure.
+                    If fbAux.CustomDialog(absoluteAuxPath, False, False, tFbExtMode.ForceExt, False, String.Empty) Then
+                        txtAdvancedAuxiliaryFile.Text = fFileWoDir(fbAux.Files(0), fPATH(VECTOfile))
+                        assembly = DirectCast(cboAdvancedAuxiliaries.SelectedItem, cAdvancedAuxiliary)
+
+                        If IO.File.Exists(mAAUX_Global.ResolveAAUXFilePath(fPATH(VECTOfile), txtAdvancedAuxiliaryFile.Text)) OrElse MsgBox("Do you want to create a new .AAUX file?", MsgBoxStyle.YesNo) = MsgBoxResult.Yes Then
+                            needToFindOrCreateFile = False
+                            mAAUX_Global.ConfigureAdvancedAuxiliaries(assembly.AssemblyName, assembly.AuxiliaryVersion, txtAdvancedAuxiliaryFile.Text, VECTOfile)
+                        End If
                     Else
-                        txtAdvancedAuxiliaryFile.Text = String.Empty
+                        needToFindOrCreateFile = False
                     End If
-                End If
+
+                End While
+
             End If
 
         Catch ex As Exception
@@ -1404,7 +1413,6 @@ lbDlog:
 
             btnBrowseAAUXFile.Enabled = False
             txtAdvancedAuxiliaryFile.Enabled = False
-            txtAdvancedAuxiliaryFile.Text = String.Empty
 
         Else
 
@@ -1412,10 +1420,6 @@ lbDlog:
             txtAdvancedAuxiliaryFile.Enabled = True
 
         End If
-
-
-
-
 
     End Sub
 

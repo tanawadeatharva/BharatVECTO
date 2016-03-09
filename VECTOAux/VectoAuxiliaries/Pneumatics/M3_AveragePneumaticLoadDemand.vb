@@ -82,14 +82,6 @@ Namespace Pneumatics
             End Get
         End Property
 
-
-
-        Private ReadOnly Property Sum5 As Single
-            Get
-
-            End Get
-        End Property
-
         Public ReadOnly Property TotalAirDemand As Single
             Get
             Return _totalAirDemand

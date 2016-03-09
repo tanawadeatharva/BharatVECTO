@@ -467,7 +467,6 @@ Public Class frmAuxiliaryConfig
         Dim result As Boolean = True
         Dim message As String = ""
 
-
         'Validate abdb -  Bus Database 
         Dim abdbFile As String = FilePathUtils.ResolveFilePath(vectoPath, txtBusDatabaseFilePath.Text)
         Dim bdb As New BusDatabase()
@@ -574,7 +573,8 @@ Public Class frmAuxiliaryConfig
 
         Dim result As DialogResult
 
-        If Not auxConfig.ConfigValuesAreTheSameAs(originalConfig) Then
+        If Not File.Exists(FilePathUtils.ResolveFilePath(vectoPath, auxFile)) OrElse
+                Not auxConfig.ConfigValuesAreTheSameAs(originalConfig) Then
 
             result = (MessageBox.Show("Would you like to save changes before closing?", "Save Changes", MessageBoxButtons.YesNoCancel, MessageBoxIcon.Question))
 
@@ -804,7 +804,7 @@ Public Class frmAuxiliaryConfig
         Dim result As Boolean
 
 
-        If Not ValidateAll Then Return False
+        If Not ValidateAll() Then Return False
 
 
         result = auxConfig.Save(FilePathUtils.ResolveFilePath(vectoPath, auxFile))
@@ -854,77 +854,24 @@ Public Class frmAuxiliaryConfig
     End Sub
     Private Sub btnAlternatorMapPath_Click(sender As Object, e As EventArgs) Handles btnAlternatorMapPath.Click
 
-
-
-        ' Dim fbAux As New cFileBrowser(True, False)
-
-
-
-        '' Dim vectoFile As String = "C:\Users\tb28\Source\Workspaces\VECTO\AuxillaryTestHarness\bin\Debug\vectopath.vecto"
-        ' Dim fname As String = fFILE(vectoFile, True)
-
-        '  fbAux.Extensions = New String() {"AALT"}
-        '  If fbAux.OpenDialog(fPATH(vectoFile)) Then
-
-        '   txtAlternatorMapPath.Text = fFileWoDir(fbAux.Files(0), fPATH(vectoFile))
-
-        ' End If
-
-        ' Validate_Electrics()
-
-        ' 'Causes Binding to fire
-        ' txtAlternatorMapPath.Focus()
-
-
-        Dim aauxFileValidated As Boolean = False
         Dim fbAux As New cFileBrowser(True, False)
         fbAux.Extensions = New String() {"AALT"}
-        Dim frm As frmCombinedAlternators
 
-        Dim suppliedAALTPath As String = String.Empty
-        Dim absoluteAALTPath As String = String.Empty
+        Dim suppliedAALTPath As String = txtAlternatorMapPath.Text
+        Dim absoluteAALTPath As String = FilePathUtils.ResolveFilePath(fPATH(vectoFile), suppliedAALTPath)
         Dim message As String = String.Empty
         Dim newFile As Boolean = False
 
+        Dim validAALTFile As Boolean = FilePathUtils.ValidateFilePath(absoluteAALTPath, ".aalt", message)
+        Dim fileExists As Boolean = File.Exists(absoluteAALTPath)
 
-        'Trim ssmPath
-        'suppliedAALTPath = txtAlternatorMapPath.Text.Trim
-
-
-        'Is Filename NOT supplied, try and obtain  it, still not supplied, then bail.
-        If (txtAlternatorMapPath.Text.Length = 0) Then
-
-            newFile = True
-
-            If fbAux.CustomDialog(vectoPath, False, False, tFbExtMode.ForceExt, False, "") Then
-                If fbAux.Files.Count = 0 Then
-                    Return
-                Else
-                    suppliedAALTPath = fbAux.Files(0)
-                End If
-            Else
-                'No file given in text box, not given in browser, so bail         
-                Return
-            End If
-
-        Else
-            suppliedAALTPath = txtAlternatorMapPath.Text
-
-        End If
-
-        'Set Absolutes.
-        absoluteAALTPath = FilePathUtils.ResolveFilePath(fPATH(VECTOfile), suppliedAALTPath)
-
-        'Is supplied filename NOT valid. bail
-        If Not FilePathUtils.ValidateFilePath(absoluteAALTPath, ".aalt", Message) Then
+        If suppliedAALTPath.Length > 0 AndAlso Not validAALTFile Then
             MessageBox.Show(message)
             Return
         End If
 
-
         'If file Exists, Check validity, else fire up a default SSM Config.
-        If File.Exists(absoluteAALTPath) Then
-            'is file valid Try ahsm - HVac Steady State Model
+        If fileExists Then
             Try
                 Dim aaltFile As String = FilePathUtils.ResolveFilePath(vectoPath, absoluteAALTPath)
                 Dim combinedAlt As ICombinedAlternator = New CombinedAlternator(aaltFile)
@@ -932,37 +879,47 @@ Public Class frmAuxiliaryConfig
                 MessageBox.Show("The supplied .AALT File was invalid, aborting.")
                 Return
             End Try
-        Else
-            newFile = True
+        End If
+
+        If Not fileExists Then
+
+            Dim needToFindOrCreateFile As Boolean = True
+            While needToFindOrCreateFile
+
+                'Find / Create  file and configure.
+                If fbAux.CustomDialog(absoluteAALTPath, False, False, tFbExtMode.ForceExt, False, String.Empty) Then
+                    txtAlternatorMapPath.Text = fFileWoDir(fbAux.Files(0), fPATH(vectoFile))
+                    suppliedAALTPath = txtAlternatorMapPath.Text
+                    absoluteAALTPath = FilePathUtils.ResolveFilePath(fPATH(vectoFile), suppliedAALTPath)
+
+                    If IO.File.Exists(absoluteAALTPath) OrElse MsgBox("Do you want to create a new .AALT file?", MsgBoxStyle.YesNo) = MsgBoxResult.Yes Then
+                        needToFindOrCreateFile = False
+                        newFile = True
+                    End If
+                Else
+                    needToFindOrCreateFile = False
+                End If
+
+            End While
 
         End If
 
+        If fileExists OrElse newFile Then
 
+            Using frm As New frmCombinedAlternators(absoluteAALTPath, New CombinedAlternatorSignals)
+                'If Dialog result is OK, then take action else bail
+                If frm.ShowDialog() = Windows.Forms.DialogResult.OK Then
+                    If suppliedAALTPath.Contains(":\") Then
+                        txtAlternatorMapPath.Text = If(suppliedAALTPath.Contains(vectoPath), suppliedAALTPath.Replace(vectoPath, ""), suppliedAALTPath)
+                    Else
+                        txtAlternatorMapPath.Text = fFileWoDir(suppliedAALTPath)
+                    End If
+                Else
+                    Return
+                End If
+            End Using
 
-        frm = New frmCombinedAlternators(absoluteAALTPath, New COmbinedAlternatorSignals)
-
-
-        'If Dialog result is OK, then take action else bail
-        If frm.ShowDialog() = Windows.Forms.DialogResult.OK Then
-
-            If suppliedAALTPath.Contains(":\") Then
-
-                txtAlternatorMapPath.Text = If(suppliedAALTPath.Contains(vectoPath), suppliedAALTPath.replace(vectoPath, ""), suppliedAALTPath)
-
-            Else
-
-                txtAlternatorMapPath.Text = fFileWoDir(suppliedAALTPath)
-
-            End If
-
-        Else
-            Return
         End If
-
-
-        frm.Dispose()
-
-
 
     End Sub
     Private Sub btnCompressorMap_Click(sender As Object, e As EventArgs) Handles btnCompressorMap.Click
@@ -1021,7 +978,6 @@ Public Class frmAuxiliaryConfig
     Private Sub btnBusDatabaseSource_Click(sender As Object, e As EventArgs) Handles btnBusDatabaseSource.Click
 
         Dim fbAux As New cFileBrowser(True, False)
-        Dim ssmMap As Hvac.HVACSteadyStateModel
         Dim message As String = String.Empty
 
 
@@ -1036,7 +992,7 @@ Public Class frmAuxiliaryConfig
 
             If Not busDB.Initialise(FilePathUtils.ResolveFilePath(vectoPath, txtBusDatabaseFilePath.Text)) Then
 
-                messagebox.Show("Unable to load")
+                MessageBox.Show("Unable to load")
 
 
             End If
@@ -1048,55 +1004,22 @@ Public Class frmAuxiliaryConfig
     End Sub
     Private Sub btnSSMBSource_Click(sender As Object, e As EventArgs) Handles btnSSMBSource.Click
 
-
-        Dim aauxFileValidated As Boolean = False
         Dim fbAux As New cFileBrowser(True, False)
         fbAux.Extensions = New String() {"AHSM"}
-        Dim frm As frmHVACTool
 
-        Dim suppliedSSMPath As String = String.Empty
-        Dim absoluteSSMPath As String = String.Empty
-        Dim absoluteBusDatabasePath As String = String.Empty
+        Dim suppliedSSMPath As String = txtSSMFilePath.Text.Trim()
+        Dim absoluteSSMPath As String = FilePathUtils.ResolveFilePath(fPATH(vectoFile), suppliedSSMPath)
+        Dim absoluteBusDatabasePath As String = FilePathUtils.ResolveFilePath(fPATH(vectoFile), Me.txtBusDatabaseFilePath.Text.Trim())
         Dim message As String = String.Empty
         Dim newFile As Boolean = False
 
+        Dim validSSMTFile As Boolean = FilePathUtils.ValidateFilePath(absoluteSSMPath, ".ahsm", message)
+        Dim fileExists As Boolean = File.Exists(absoluteSSMPath)
 
-        'Trim ssmPath
-        txtSSMFilePath.Text.Trim()
-
-
-        'Is Filename NOT supplied, try and obtain  it, still not supplied, then bail.
-        If (txtSSMFilePath.Text.Length = 0) Then
-
-            newFile = True
-
-            If fbAux.CustomDialog(vectoPath, False, False, tFbExtMode.ForceExt, False, "") Then
-                If fbAux.Files.Count = 0 Then
-                    Return
-                Else
-                    suppliedSSMPath = fbAux.Files(0)
-                End If
-            Else
-                'No file given in text box, not given in browser, so bail         
-                Return
-            End If
-
-        Else
-            suppliedSSMPath = txtSSMFilePath.Text
-
-        End If
-
-        'Set Absolutes.
-        absoluteSSMPath = FilePathUtils.ResolveFilePath(fPATH(VECTOfile), suppliedSSMPath)
-        absoluteBusDatabasePath = FilePathUtils.ResolveFilePath(fPATH(VECTOfile), Me.txtBusDatabaseFilePath.Text)
-
-
-        'Is supplied filename NOT valid. bail
-        If Not FilePathUtils.ValidateFilePath(absoluteSSMPath, ".ahsm", Message) Then
+        If suppliedSSMPath.Length > 0 AndAlso Not validSSMTFile Then
             MessageBox.Show(message)
             Return
         End If
-
 
         'If file Exists, Check validity, else fire up a default SSM Config.
         If File.Exists(absoluteSSMPath) Then
@@ -1109,50 +1032,47 @@ Public Class frmAuxiliaryConfig
                 MessageBox.Show("The supplied AHSM File was invalid, aborting.")
                 Return
             End Try
-        Else
-            newFile = True
+        End If
+
+        If Not fileExists Then
+
+            Dim needToFindOrCreateFile As Boolean = True
+            While needToFindOrCreateFile
+
+                'Find / Create  file and configure.
+                If fbAux.CustomDialog(absoluteSSMPath, False, False, tFbExtMode.ForceExt, False, String.Empty) Then
+                    txtSSMFilePath.Text = fFileWoDir(fbAux.Files(0), fPATH(vectoFile))
+                    suppliedSSMPath = txtSSMFilePath.Text
+                    absoluteSSMPath = FilePathUtils.ResolveFilePath(fPATH(vectoFile), suppliedSSMPath)
+                    If IO.File.Exists(absoluteSSMPath) OrElse MsgBox("Do you want to create a new .AHSM file?", MsgBoxStyle.YesNo) = MsgBoxResult.Yes Then
+                        needToFindOrCreateFile = False
+                        newFile = True
+                    End If
+                Else
+                    needToFindOrCreateFile = False
+                End If
+
+            End While
 
         End If
 
+        If fileExists OrElse newFile Then
 
-        'If newFile then use Defaults
-        If newFile Then
-            frm = New frmHVACTool(absoluteBusDatabasePath, absoluteSSMPath, vectoFile, True)
-
-        Else
-            frm = New frmHVACTool(absoluteBusDatabasePath, absoluteSSMPath, vectoFile)
+            Using frm As New frmHVACTool(absoluteBusDatabasePath, absoluteSSMPath, vectoFile, Not fileExists)
+                If frm.ShowDialog() = Windows.Forms.DialogResult.OK Then
+                    If suppliedSSMPath.Contains(":\") Then
+                        txtSSMFilePath.Text = If(suppliedSSMPath.Contains(vectoPath), suppliedSSMPath.Replace(vectoPath, ""), suppliedSSMPath)
+                    Else
+                        txtSSMFilePath.Text = fFileWoDir(suppliedSSMPath)
+                    End If
+                Else
+                    Return
+                End If
+            End Using
 
         End If
-
-
-
-
-        'If Dialog result is OK, then take action else bail
-        If frm.ShowDialog() = Windows.Forms.DialogResult.OK Then
-
-            If suppliedSSMPath.Contains(":\") Then
-
-                txtSSMFilePath.Text = If(suppliedSSMPath.Contains(vectoPath), suppliedSSMPath.Replace(vectoPath, ""), suppliedSSMPath)
-
-            Else
-
-                txtSSMFilePath.Text = fFileWoDir(suppliedSSMPath)
-
-            End If
-
-        Else
-            Return
-        End If
-
-
-        frm.Dispose()
-
-
 
     End Sub
-
-
-
 
 #End Region
     Private Sub chkSmartElectricals_CheckedChanged(sender As Object, e As EventArgs) Handles chkSmartElectricals.CheckedChanged
@@ -1164,30 +1084,30 @@ Public Class frmAuxiliaryConfig
 
     Private Sub btnAALTOpen_Click(sender As Object, e As EventArgs) Handles btnAALTOpen.Click
 
-        OpenFiles(fFileRepl(Me.txtAlternatorMapPath.Text, fPATH(VECTOfile)))
+        OpenFiles(fFileRepl(Me.txtAlternatorMapPath.Text, fPATH(vectoFile)))
 
     End Sub
     Private Sub btnOpenACMP_Click(sender As Object, e As EventArgs) Handles btnOpenACMP.Click
 
 
-        OpenFiles(fFileRepl(Me.txtCompressorMap.Text, fPATH(VECTOfile)))
+        OpenFiles(fFileRepl(Me.txtCompressorMap.Text, fPATH(vectoFile)))
 
     End Sub
     Private Sub btnOpenAPAC_Click(sender As Object, e As EventArgs) Handles btnOpenAPAC.Click
 
-        OpenFiles(fFileRepl(Me.txtActuationsMap.Text, fPATH(VECTOfile)))
+        OpenFiles(fFileRepl(Me.txtActuationsMap.Text, fPATH(vectoFile)))
 
     End Sub
     Private Sub btnOpenAHSM_Click(sender As Object, e As EventArgs) Handles btnOpenAHSM.Click
 
-        OpenFiles(fFileRepl(Me.txtSSMFilePath.Text, fPATH(VECTOfile)))
+        OpenFiles(fFileRepl(Me.txtSSMFilePath.Text, fPATH(vectoFile)))
 
 
     End Sub
     Private Sub btnOpenABDB_Click(sender As Object, e As EventArgs) Handles btnOpenABDB.Click
 
 
-        OpenFiles(fFileRepl(Me.txtBusDatabaseFilePath.Text, fPATH(VECTOfile)))
+        OpenFiles(fFileRepl(Me.txtBusDatabaseFilePath.Text, fPATH(vectoFile)))
 
     End Sub
 
@@ -1221,7 +1141,7 @@ Public Class frmAuxiliaryConfig
 
         If files.Length = 0 Then Exit Sub
 
-        CmFilesList = files
+        cmFilesList = files
 
         OpenWithToolStripMenuItem.Text = "Open with notepad"
 
@@ -1229,12 +1149,12 @@ Public Class frmAuxiliaryConfig
 
     End Sub
     Private Sub OpenWithToolStripMenuItem_Click(sender As System.Object, e As System.EventArgs) Handles OpenWithToolStripMenuItem.Click
-        If Not FileOpenAlt(CmFilesList(0)) Then MsgBox("Failed to open file!")
+        If Not FileOpenAlt(cmFilesList(0)) Then MsgBox("Failed to open file!")
     End Sub
     Private Sub ShowInFolderToolStripMenuItem_Click(sender As System.Object, e As System.EventArgs) Handles ShowInFolderToolStripMenuItem.Click
-        If IO.File.Exists(CmFilesList(0)) Then
+        If IO.File.Exists(cmFilesList(0)) Then
             Try
-                System.Diagnostics.Process.Start("explorer", "/select,""" & CmFilesList(0) & "")
+                System.Diagnostics.Process.Start("explorer", "/select,""" & cmFilesList(0) & "")
             Catch ex As Exception
                 MsgBox("Failed to open file!")
             End Try

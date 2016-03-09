@@ -870,7 +870,7 @@ Public Class frmHVACTool
 
         Dim row As Integer = gvTechBenefitLines.SelectedCells(0).OwningRow.Index
 
-        Dim benefitName, category, units As String
+        Dim benefitName, category As String
         benefitName = gvTechBenefitLines.Rows(row).Cells("BenefitName").Value
         category = gvTechBenefitLines.Rows(row).Cells("Category").Value
 

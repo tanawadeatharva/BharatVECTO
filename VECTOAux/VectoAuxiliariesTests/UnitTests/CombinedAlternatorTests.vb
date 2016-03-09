@@ -8,519 +8,512 @@ Imports VectoAuxiliaries.Hvac
 
 Namespace UnitTests
 
- <TestFixture()>
- Public Class CombinedAlternatorTests
-
-  private Alt1ExpectedTable2000 As new List(Of AltUserInput)
-  private Alt1ExpectedTable4000 As new List(Of AltUserInput)
-  private Alt1ExpectedTable6000 As new List(Of AltUserInput)
-  private Alt2ExpectedTable2000 As new List(Of AltUserInput)
-  private Alt2ExpectedTable4000 As new List(Of AltUserInput)
-  private Alt2ExpectedTable6000 As new List(Of AltUserInput)
-  private Alt3ExpectedTable2000 As new List(Of AltUserInput)
-  private Alt3ExpectedTable4000 As new List(Of AltUserInput)
-  private Alt3ExpectedTable6000 As new List(Of AltUserInput)
-  private Alt4ExpectedTable2000 As new List(Of AltUserInput)
-  private Alt4ExpectedTable4000 As new List(Of AltUserInput)
-  private Alt4ExpectedTable6000 As new List(Of AltUserInput)
-  Private RangeTableExpected    As New List(Of AltUserInput)
-
-
-
-  Private Const COMBINEDALT_GOODMAP = "testfiles\testCombinedAlternatorMap.aalt"
-
-
-  Sub new ()
-
-  Alt1ExpectedTable2000 = New List(Of AltUserInput)() from  {  New AltUserInput(  0,50), _
-                                                               New AltUserInput( 10,50), _
-                                                               New AltUserInput( 40,50), _
-                                                               New AltUserInput( 60,50), _
-                                                               New AltUserInput( 61,50), _
-                                                               New AltUserInput(200,50) }
-
-  Alt1ExpectedTable4000 = New List(Of AltUserInput)() from  {  New AltUserInput(  0,70), _
-                                                               New AltUserInput( 10,70), _
-                                                               New AltUserInput( 40,70), _
-                                                               New AltUserInput( 60,70), _
-                                                               New AltUserInput( 61,70), _
-                                                               New AltUserInput(200,70) }
+    <TestFixture()>
+    Public Class CombinedAlternatorTests
+
+        Private Alt1ExpectedTable2000 As New List(Of AltUserInput)
+        Private Alt1ExpectedTable4000 As New List(Of AltUserInput)
+        Private Alt1ExpectedTable6000 As New List(Of AltUserInput)
+        Private Alt2ExpectedTable2000 As New List(Of AltUserInput)
+        Private Alt2ExpectedTable4000 As New List(Of AltUserInput)
+        Private Alt2ExpectedTable6000 As New List(Of AltUserInput)
+        Private Alt3ExpectedTable2000 As New List(Of AltUserInput)
+        Private Alt3ExpectedTable4000 As New List(Of AltUserInput)
+        Private Alt3ExpectedTable6000 As New List(Of AltUserInput)
+        Private Alt4ExpectedTable2000 As New List(Of AltUserInput)
+        Private Alt4ExpectedTable4000 As New List(Of AltUserInput)
+        Private Alt4ExpectedTable6000 As New List(Of AltUserInput)
+        Private RangeTableExpected As New List(Of AltUserInput)
+
+
+
+        Private Const COMBINEDALT_GOODMAP = "testfiles\testCombinedAlternatorMap.aalt"
+
+
+        Sub New()
+
+            Alt1ExpectedTable2000 = New List(Of AltUserInput)() From {New AltUserInput(0, 50), _
+                                                                         New AltUserInput(10, 50), _
+                                                                         New AltUserInput(40, 50), _
+                                                                         New AltUserInput(60, 50), _
+                                                                         New AltUserInput(61, 50), _
+                                                                         New AltUserInput(200, 50)}
+
+            Alt1ExpectedTable4000 = New List(Of AltUserInput)() From {New AltUserInput(0, 70), _
+                                                                         New AltUserInput(10, 70), _
+                                                                         New AltUserInput(40, 70), _
+                                                                         New AltUserInput(60, 70), _
+                                                                         New AltUserInput(61, 70), _
+                                                                         New AltUserInput(200, 70)}
 
 
-  Alt1ExpectedTable6000 = New List(Of AltUserInput)() from  {  New AltUserInput(  0,60), _
-                                                               New AltUserInput( 10,60), _
-                                                               New AltUserInput( 40,60), _
-                                                               New AltUserInput( 60,60), _
-                                                               New AltUserInput( 61,60), _
-                                                               New AltUserInput(200,60) }
-
-  'ALT 2
-  Alt2ExpectedTable2000 = New List(Of AltUserInput)() from  {  New AltUserInput(  0,80), _
-                                                               New AltUserInput( 10,80), _
-                                                               New AltUserInput( 40,80), _
-                                                               New AltUserInput( 60,80), _
-                                                               New AltUserInput( 61,80), _
-                                                               New AltUserInput(200,80) }
-
-  Alt2ExpectedTable4000 = New List(Of AltUserInput)() from  {  New AltUserInput(  0,40), _
-                                                               New AltUserInput( 10,40), _
-                                                               New AltUserInput( 40,40), _
-                                                               New AltUserInput( 60,40), _
-                                                               New AltUserInput( 61,40), _
-                                                               New AltUserInput(200,40) }
-
-
-  Alt2ExpectedTable6000 = New List(Of AltUserInput)() from  {  New AltUserInput(  0,60), _
-                                                               New AltUserInput( 10,60), _
-                                                               New AltUserInput( 40,60), _
-                                                               New AltUserInput( 60,60), _
-                                                               New AltUserInput( 61,60), _
-                                                               New AltUserInput(200,60) }
-
-
-  'ALT 3
-  Alt3ExpectedTable2000 = New List(Of AltUserInput)() from  {  New AltUserInput(  0,95), _
-                                                               New AltUserInput( 10,95), _
-                                                               New AltUserInput( 40,50), _
-                                                               New AltUserInput( 60,90), _
-                                                               New AltUserInput(62.5,95), _
-                                                               New AltUserInput(200, 95) }
-
-  Alt3ExpectedTable4000 = New List(Of AltUserInput)() from  {  New AltUserInput(  0,99), _
-                                                               New AltUserInput( 10,99), _
-                                                               New AltUserInput( 40, 1), _
-                                                               New AltUserInput( 60,55), _
-                                                               New AltUserInput( 76.2962963,99), _
-                                                               New AltUserInput(200,99) }
-
-
-  Alt3ExpectedTable6000 = New List(Of AltUserInput)() from  {  New AltUserInput(  0,94), _
-                                                               New AltUserInput( 10,94), _
-                                                               New AltUserInput( 40, 86), _
-                                                               New AltUserInput( 60,13), _
-                                                               New AltUserInput( 63.5616438,0), _
-                                                               New AltUserInput(200,0) }
-
-
-  'ALT 4
-  Alt4ExpectedTable2000 = New List(Of AltUserInput)() from  {  New AltUserInput(  0,55), _
-                                                               New AltUserInput( 10,55), _
-                                                               New AltUserInput( 40,45), _
-                                                               New AltUserInput( 60,67), _
-                                                               New AltUserInput( 60,67), _
-                                                               New AltUserInput(200,67) }
+            Alt1ExpectedTable6000 = New List(Of AltUserInput)() From {New AltUserInput(0, 60), _
+                                                                         New AltUserInput(10, 60), _
+                                                                         New AltUserInput(40, 60), _
+                                                                         New AltUserInput(60, 60), _
+                                                                         New AltUserInput(61, 60), _
+                                                                         New AltUserInput(200, 60)}
 
-  Alt4ExpectedTable4000 = New List(Of AltUserInput)() from  {  New AltUserInput(  0,77), _
-                                                               New AltUserInput( 10,77), _
-                                                               New AltUserInput( 40,39), _
-                                                               New AltUserInput( 60,23), _
-                                                               New AltUserInput( 88.75,0), _
-                                                               New AltUserInput(200,0) }
+            'ALT 2
+            Alt2ExpectedTable2000 = New List(Of AltUserInput)() From {New AltUserInput(0, 80), _
+                                                                         New AltUserInput(10, 80), _
+                                                                         New AltUserInput(40, 80), _
+                                                                         New AltUserInput(60, 80), _
+                                                                         New AltUserInput(61, 80), _
+                                                                         New AltUserInput(200, 80)}
+
+            Alt2ExpectedTable4000 = New List(Of AltUserInput)() From {New AltUserInput(0, 40), _
+                                                                         New AltUserInput(10, 40), _
+                                                                         New AltUserInput(40, 40), _
+                                                                         New AltUserInput(60, 40), _
+                                                                         New AltUserInput(61, 40), _
+                                                                         New AltUserInput(200, 40)}
 
 
-  Alt4ExpectedTable6000 = New List(Of AltUserInput)() from  {  New AltUserInput(  0,34), _
-                                                               New AltUserInput( 10,34), _
-                                                               New AltUserInput( 40, 67), _
-                                                               New AltUserInput( 60,35), _
-                                                               New AltUserInput( 81.875,0), _
-                                                               New AltUserInput(200,0) }
+            Alt2ExpectedTable6000 = New List(Of AltUserInput)() From {New AltUserInput(0, 60), _
+                                                                         New AltUserInput(10, 60), _
+                                                                         New AltUserInput(40, 60), _
+                                                                         New AltUserInput(60, 60), _
+                                                                         New AltUserInput(61, 60), _
+                                                                         New AltUserInput(200, 60)}
 
 
+            'ALT 3
+            Alt3ExpectedTable2000 = New List(Of AltUserInput)() From {New AltUserInput(0, 95), _
+                                                                         New AltUserInput(10, 95), _
+                                                                         New AltUserInput(40, 50), _
+                                                                         New AltUserInput(60, 90), _
+                                                                         New AltUserInput(62.5, 95), _
+                                                                         New AltUserInput(200, 95)}
 
-  'RangeTable
-  RangeTableExpected = New List(Of AltUserInput)()   from {   New AltUserInput(-3001 , 0), _
-                                                              New AltUserInput(-3000 , 0), _
-                                                              New AltUserInput(2000  ,50), _
-                                                              New AltUserInput(4000  ,70), _
-                                                              New AltUserInput(6000  ,60), _
-                                                              New AltUserInput(18000 , 0), _
-                                                              New AltUserInput(18001 , 0) }
+            Alt3ExpectedTable4000 = New List(Of AltUserInput)() From {New AltUserInput(0, 99), _
+                                                                         New AltUserInput(10, 99), _
+                                                                         New AltUserInput(40, 1), _
+                                                                         New AltUserInput(60, 55), _
+                                                                         New AltUserInput(76.2962963, 99), _
+                                                                         New AltUserInput(200, 99)}
 
-    
 
+            Alt3ExpectedTable6000 = New List(Of AltUserInput)() From {New AltUserInput(0, 94), _
+                                                                         New AltUserInput(10, 94), _
+                                                                         New AltUserInput(40, 86), _
+                                                                         New AltUserInput(60, 13), _
+                                                                         New AltUserInput(63.5616438, 0), _
+                                                                         New AltUserInput(200, 0)}
 
 
+            'ALT 4
+            Alt4ExpectedTable2000 = New List(Of AltUserInput)() From {New AltUserInput(0, 55), _
+                                                                         New AltUserInput(10, 55), _
+                                                                         New AltUserInput(40, 45), _
+                                                                         New AltUserInput(60, 67), _
+                                                                         New AltUserInput(60, 67), _
+                                                                         New AltUserInput(200, 67)}
 
+            Alt4ExpectedTable4000 = New List(Of AltUserInput)() From {New AltUserInput(0, 77), _
+                                                                         New AltUserInput(10, 77), _
+                                                                         New AltUserInput(40, 39), _
+                                                                         New AltUserInput(60, 23), _
+                                                                         New AltUserInput(88.75, 0), _
+                                                                         New AltUserInput(200, 0)}
 
 
+            Alt4ExpectedTable6000 = New List(Of AltUserInput)() From {New AltUserInput(0, 34), _
+                                                                         New AltUserInput(10, 34), _
+                                                                         New AltUserInput(40, 67), _
+                                                                         New AltUserInput(60, 35), _
+                                                                         New AltUserInput(81.875, 0), _
+                                                                         New AltUserInput(200, 0)}
 
-  End Sub
 
-  <Test()> _
-  <TestCase(1,2,50f)> _
-  <TestCase(1,4,70)> _
-  <TestCase(1,6,60)> _
-  <TestCase(2,2,80)> _
-  <TestCase(2,4,40)> _
-  <TestCase(2,6,60)> _
-  <TestCase(3,2,55)> _
-  <TestCase(3,4,7.75f)> _
-  <TestCase(3,6,76.875f)> _
-  <TestCase(4,2,47.75f)> _
-  <TestCase(4,4,37)> _
-  <TestCase(4,6,63)> 
-  Public Sub Interpolate4Table4( alt As Integer, rpmK As integer, expected As single)
 
-   Dim interpValue As Single
+            'RangeTable
+            RangeTableExpected = New List(Of AltUserInput)() From {New AltUserInput(-3001, 0), _
+                                                                        New AltUserInput(-3000, 0), _
+                                                                        New AltUserInput(2000, 50), _
+                                                                        New AltUserInput(4000, 70), _
+                                                                        New AltUserInput(6000, 60), _
+                                                                        New AltUserInput(18000, 0), _
+                                                                        New AltUserInput(18001, 0)}
 
-   Select Case alt
 
-    Case 1
-      
-       Select Case rpmK
-          
-         Case 2
-              interpValue= Alternator.Iterpolate( Alt1ExpectedTable2000,42.5)
-         Case 4
-              interpValue= Alternator.Iterpolate( Alt1ExpectedTable4000,42.5)
-         Case 6
-              interpValue= Alternator.Iterpolate( Alt1ExpectedTable6000,42.5)
 
-       End Select
 
 
-    Case 2
 
-       Select Case rpmK
-          
-         Case 2
-              interpValue= Alternator.Iterpolate( Alt2ExpectedTable2000,42.5)
-         Case 4                                               
-              interpValue= Alternator.Iterpolate( Alt2ExpectedTable4000,42.5)
-         Case 6                                               
-              interpValue= Alternator.Iterpolate( Alt2ExpectedTable6000,42.5)
 
-       End Select
 
-    Case 3
 
-       Select Case rpmK
-          
-         Case 2
-              interpValue= Alternator.Iterpolate( Alt3ExpectedTable2000,42.5)
-         Case 4                                               
-              interpValue= Alternator.Iterpolate( Alt3ExpectedTable4000,42.5)
-         Case 6                                               
-              interpValue= Alternator.Iterpolate( Alt3ExpectedTable6000,42.5)
+        End Sub
 
-       End Select
+        <Test()> _
+        <TestCase(1, 2, 50.0F)> _
+        <TestCase(1, 4, 70)> _
+        <TestCase(1, 6, 60)> _
+        <TestCase(2, 2, 80)> _
+        <TestCase(2, 4, 40)> _
+        <TestCase(2, 6, 60)> _
+        <TestCase(3, 2, 55)> _
+        <TestCase(3, 4, 7.75F)> _
+        <TestCase(3, 6, 76.875F)> _
+        <TestCase(4, 2, 47.75F)> _
+        <TestCase(4, 4, 37)> _
+        <TestCase(4, 6, 63)>
+        Public Sub Interpolate4Table4(alt As Integer, rpmK As Integer, expected As Single)
 
-    Case 4
+            Dim interpValue As Single
 
-       Select Case rpmK
-          
-         Case 2
-              interpValue= Alternator.Iterpolate( Alt4ExpectedTable2000,42.5)
-         Case 4                                               
-              interpValue= Alternator.Iterpolate( Alt4ExpectedTable4000,42.5)
-         Case 6                                               
-              interpValue= Alternator.Iterpolate( Alt4ExpectedTable6000,42.5)
+            Select Case alt
 
-       End Select
+                Case 1
 
-   End Select
+                    Select Case rpmK
 
+                        Case 2
+                            interpValue = Alternator.Iterpolate(Alt1ExpectedTable2000, 42.5)
+                        Case 4
+                            interpValue = Alternator.Iterpolate(Alt1ExpectedTable4000, 42.5)
+                        Case 6
+                            interpValue = Alternator.Iterpolate(Alt1ExpectedTable6000, 42.5)
 
-       Assert.AreEqual( interpValue, expected)
+                    End Select
 
 
-  End Sub
+                Case 2
 
+                    Select Case rpmK
 
-  <Test()>
-  Public Sub Alt1TableConstructTest()
+                        Case 2
+                            interpValue = Alternator.Iterpolate(Alt2ExpectedTable2000, 42.5)
+                        Case 4
+                            interpValue = Alternator.Iterpolate(Alt2ExpectedTable4000, 42.5)
+                        Case 6
+                            interpValue = Alternator.Iterpolate(Alt2ExpectedTable6000, 42.5)
 
+                    End Select
 
-  'Arrange
-  Dim signals As ICombinedAlternatorSignals = New CombinedAlternatorSignals
+                Case 3
 
+                    Select Case rpmK
 
-  'Act
-  Dim alt  As new CombinedAlternator(COMBINEDALT_GOODMAP)
+                        Case 2
+                            interpValue = Alternator.Iterpolate(Alt3ExpectedTable2000, 42.5)
+                        Case 4
+                            interpValue = Alternator.Iterpolate(Alt3ExpectedTable4000, 42.5)
+                        Case 6
+                            interpValue = Alternator.Iterpolate(Alt3ExpectedTable6000, 42.5)
 
+                    End Select
 
+                Case 4
 
-   Dim idx As integer
+                    Select Case rpmK
 
-   For idx = 0 to alt.Alternators(0).InputTable2000.Count-1
-      Assert.IsTrue( alt.Alternators(0).InputTable2000(idx).IsEqual( Alt1ExpectedTable2000(idx)))
-   Next
+                        Case 2
+                            interpValue = Alternator.Iterpolate(Alt4ExpectedTable2000, 42.5)
+                        Case 4
+                            interpValue = Alternator.Iterpolate(Alt4ExpectedTable4000, 42.5)
+                        Case 6
+                            interpValue = Alternator.Iterpolate(Alt4ExpectedTable6000, 42.5)
 
-   For idx = 0 to alt.Alternators(0).InputTable4000.Count-1
-      Assert.IsTrue( alt.Alternators(0).InputTable4000(idx).IsEqual( Alt1ExpectedTable4000(idx)))
-   Next
+                    End Select
 
-   For idx = 0 to alt.Alternators(0).InputTable6000.Count-1
-      Assert.IsTrue( alt.Alternators(0).InputTable6000(idx).IsEqual( Alt1ExpectedTable6000(idx)))
-   Next
+            End Select
 
 
-  End Sub
+            Assert.AreEqual(interpValue, expected)
 
-    <Test()>
-  Public Sub Alt2TableConstructTest()
 
+        End Sub
 
 
-  'Arrange
+        <Test()>
+        Public Sub Alt1TableConstructTest()
 
-  'Act
-  Dim alt  As new CombinedAlternator(COMBINEDALT_GOODMAP)
-    
 
-   Dim idx As integer
+            'Arrange
+            Dim signals As ICombinedAlternatorSignals = New CombinedAlternatorSignals
 
-   For idx = 0 to alt.Alternators(1).InputTable2000.Count-1
-      Assert.IsTrue( alt.Alternators(1).InputTable2000(idx).IsEqual( Alt2ExpectedTable2000(idx)))
-   Next
 
-   For idx = 0 to alt.Alternators(1).InputTable4000.Count-1
-      Assert.IsTrue( alt.Alternators(1).InputTable4000(idx).IsEqual( Alt2ExpectedTable4000(idx)))
-   Next
+            'Act
+            Dim alt As New CombinedAlternator(COMBINEDALT_GOODMAP)
 
-   For idx = 0 to alt.Alternators(1).InputTable6000.Count-1
-      Assert.IsTrue( alt.Alternators(1).InputTable6000(idx).IsEqual( Alt2ExpectedTable6000(idx)))
-   Next
-                              
 
-  End Sub
-  <Test()>
-  Public Sub Alt3TableConstructTest()
 
+            Dim idx As Integer
 
-  'Arrange
-  Dim signals As ICombinedAlternatorSignals = New CombinedAlternatorSignals
+            For idx = 0 To alt.Alternators(0).InputTable2000.Count - 1
+                Assert.IsTrue(alt.Alternators(0).InputTable2000(idx).IsEqual(Alt1ExpectedTable2000(idx)))
+            Next
 
+            For idx = 0 To alt.Alternators(0).InputTable4000.Count - 1
+                Assert.IsTrue(alt.Alternators(0).InputTable4000(idx).IsEqual(Alt1ExpectedTable4000(idx)))
+            Next
 
-  'Act
-  Dim alt  As new CombinedAlternator(COMBINEDALT_GOODMAP)
-    
+            For idx = 0 To alt.Alternators(0).InputTable6000.Count - 1
+                Assert.IsTrue(alt.Alternators(0).InputTable6000(idx).IsEqual(Alt1ExpectedTable6000(idx)))
+            Next
 
-   Dim idx As integer
 
-   For idx = 0 to alt.Alternators(2).InputTable2000.Count-1
-      Assert.IsTrue( alt.Alternators(2).InputTable2000(idx).IsEqual( Alt3ExpectedTable2000(idx)))
-   Next
+        End Sub
 
-   For idx = 0 to alt.Alternators(2).InputTable4000.Count-1
-      Assert.IsTrue( alt.Alternators(2).InputTable4000(idx).IsEqual( Alt3ExpectedTable4000(idx),3))
-   Next
+        <Test()>
+        Public Sub Alt2TableConstructTest()
 
-   For idx = 0 to alt.Alternators(2).InputTable6000.Count-1
-      Assert.IsTrue( alt.Alternators(2).InputTable6000(idx).IsEqual( Alt3ExpectedTable6000(idx),3))
-   Next
-                              
 
-  End Sub
-  <Test()>
-  Public Sub Alt4TableConstructTest()
 
-  'Arrange
-  Dim signals As ICombinedAlternatorSignals = New CombinedAlternatorSignals
+            'Arrange
 
+            'Act
+            Dim alt As New CombinedAlternator(COMBINEDALT_GOODMAP)
 
-  'Act
-  Dim alt  As new CombinedAlternator(COMBINEDALT_GOODMAP)
-    
 
-   Dim idx As integer
+            Dim idx As Integer
 
-   For idx = 0 to alt.Alternators(3).InputTable2000.Count-1
-      Assert.IsTrue( alt.Alternators(3).InputTable2000(idx).IsEqual( Alt4ExpectedTable2000(idx)))
-   Next
+            For idx = 0 To alt.Alternators(1).InputTable2000.Count - 1
+                Assert.IsTrue(alt.Alternators(1).InputTable2000(idx).IsEqual(Alt2ExpectedTable2000(idx)))
+            Next
 
-   For idx = 0 to alt.Alternators(3).InputTable4000.Count-1
-      Assert.IsTrue( alt.Alternators(3).InputTable4000(idx).IsEqual( Alt4ExpectedTable4000(idx),3))
-   Next
+            For idx = 0 To alt.Alternators(1).InputTable4000.Count - 1
+                Assert.IsTrue(alt.Alternators(1).InputTable4000(idx).IsEqual(Alt2ExpectedTable4000(idx)))
+            Next
 
-   For idx = 0 to alt.Alternators(3).InputTable6000.Count-1
-      Assert.IsTrue( alt.Alternators(3).InputTable6000(idx).IsEqual( Alt4ExpectedTable6000(idx),3))
-   Next
-                              
+            For idx = 0 To alt.Alternators(1).InputTable6000.Count - 1
+                Assert.IsTrue(alt.Alternators(1).InputTable6000(idx).IsEqual(Alt2ExpectedTable6000(idx)))
+            Next
 
-  End Sub
 
+        End Sub
+        <Test()>
+        Public Sub Alt3TableConstructTest()
 
- 'testCombinedAlternatorMap
-   <Test()>
-  Public Sub InitialiseCombinedAlternatorMapFromFile()
 
+            'Arrange
+            Dim signals As ICombinedAlternatorSignals = New CombinedAlternatorSignals
 
-  'Arrange
-  Dim signals As ICombinedAlternatorSignals = New CombinedAlternatorSignals
 
+            'Act
+            Dim alt As New CombinedAlternator(COMBINEDALT_GOODMAP)
 
-  'Act
-  Dim target  As new CombinedAlternator(COMBINEDALT_GOODMAP)
 
+            Dim idx As Integer
 
+            For idx = 0 To alt.Alternators(2).InputTable2000.Count - 1
+                Assert.IsTrue(alt.Alternators(2).InputTable2000(idx).IsEqual(Alt3ExpectedTable2000(idx)))
+            Next
 
-  'Assert
+            For idx = 0 To alt.Alternators(2).InputTable4000.Count - 1
+                Assert.IsTrue(alt.Alternators(2).InputTable4000(idx).IsEqual(Alt3ExpectedTable4000(idx), 3))
+            Next
 
-  Assert.AreEqual( target.Alternators.Count,4)
+            For idx = 0 To alt.Alternators(2).InputTable6000.Count - 1
+                Assert.IsTrue(alt.Alternators(2).InputTable6000(idx).IsEqual(Alt3ExpectedTable6000(idx), 3))
+            Next
 
-              
 
-  End Sub
+        End Sub
+        <Test()>
+        Public Sub Alt4TableConstructTest()
 
-   <Test()>
-  Public Sub InitialiseCombinedAlternatorMapFromDefault()
+            'Arrange
+            Dim signals As ICombinedAlternatorSignals = New CombinedAlternatorSignals
 
 
-  'Arrange
-  Dim signals As ICombinedAlternatorSignals = New CombinedAlternatorSignals
+            'Act
+            Dim alt As New CombinedAlternator(COMBINEDALT_GOODMAP)
 
 
-  'Act
-  Dim target  As new CombinedAlternator("123.aalt")
+            Dim idx As Integer
 
+            For idx = 0 To alt.Alternators(3).InputTable2000.Count - 1
+                Assert.IsTrue(alt.Alternators(3).InputTable2000(idx).IsEqual(Alt4ExpectedTable2000(idx)))
+            Next
 
+            For idx = 0 To alt.Alternators(3).InputTable4000.Count - 1
+                Assert.IsTrue(alt.Alternators(3).InputTable4000(idx).IsEqual(Alt4ExpectedTable4000(idx), 3))
+            Next
 
-  'Assert
+            For idx = 0 To alt.Alternators(3).InputTable6000.Count - 1
+                Assert.IsTrue(alt.Alternators(3).InputTable6000(idx).IsEqual(Alt4ExpectedTable6000(idx), 3))
+            Next
 
-  Assert.AreEqual( target.Alternators.Count,4)
 
-              
+        End Sub
 
-  End Sub
 
+        'testCombinedAlternatorMap
+        <Test()>
+        Public Sub InitialiseCombinedAlternatorMapFromFile()
 
-   <Test()>
-  Public Sub AveragedEfficiency( )
 
+            'Arrange
+            Dim signals As ICombinedAlternatorSignals = New CombinedAlternatorSignals
 
- '  Dim signals As ICombinedAlternatorSignals = New CombinedAlternatorSignals() With {.CrankRPM=1750, .CurrentDemandAmps=170}
 
-   Dim ca As new CombinedAlternator("abc.aalt")
+            'Act
+            Dim target As New CombinedAlternator(COMBINEDALT_GOODMAP)
 
-   ca.Initialise()
-   
 
-   Dim actual As AlternatorMapValues = ca.GetEfficiency(1750,170)
 
-   Assert.AreEqual(0.56015625f,actual.Efficiency)
+            'Assert
 
+            Assert.AreEqual(target.Alternators.Count, 4)
 
-  End Sub
 
-  '<Test()>
-  Public Sub Performance()
 
+        End Sub
 
-   Dim ca As new CombinedAlternator("abc.aalt")
+        <Test()>
+        Public Sub InitialiseCombinedAlternatorMapFromDefault()
 
-   ca.Initialise()
-   
-   Dim startDT As DateTime =  DateTime.Now
-   Dim endDateDT As DateTime 
-   Dim crank As Single
-   Dim demand As single
-   Dim rand As New Random(50)
+            'Arrange
+            Dim signals As ICombinedAlternatorSignals = New CombinedAlternatorSignals
 
-    Dim min As Single = 0.1
-    Dim max As single = 0.1
+            'Act
+            Dim target As New CombinedAlternator("123.aalt")
 
-    For x = 1 to 500000
+            'Assert
+            Assert.AreEqual(target.Alternators.Count, 2)
 
-     'crank = rand.Next(500,3000)
-     'demand = rand.Next(1,200)
+        End Sub
 
-     crank = rand.Next(0,0)
-     demand = rand.Next(0,0)
 
-     Dim actual As AlternatorMapValues = ca.GetEfficiency(crank,demand)
+        <Test()>
+        Public Sub AveragedEfficiency()
 
-     If actual.Efficiency < min then min=actual.Efficiency
 
-     If actual.Efficiency > max then max = actual.Efficiency
+            '  Dim signals As ICombinedAlternatorSignals = New CombinedAlternatorSignals() With {.CrankRPM=1750, .CurrentDemandAmps=170}
 
-    Next 
+            Dim ca As New CombinedAlternator("abc.aalt")
 
-    endDateDT = DateTime.Now
-    
-    Dim secs As Single = (endDateDT-startDT).Seconds
+            ca.Initialise()
 
 
-  End Sub
+            Dim actual As AlternatorMapValues = ca.GetEfficiency(1750, 170)
 
+            Assert.AreEqual(0.5601562F, actual.Efficiency)
 
- <Test()>
-  Public Sub AlternatorsAreEqual()
 
+        End Sub
 
-   Dim ca As ICombinedAlternator=  new CombinedAlternator("abc.aalt")
-   Dim original as  ICombinedAlternator = new CombinedAlternator("abc.aalt")
- 
-   Assert.IsTrue( ca.IsEqualTo( original))
+        '<Test()>
+        Public Sub Performance()
 
-  End Sub
 
- <Test()>
-  Public Sub AlternatorsUnequalName()
+            Dim ca As New CombinedAlternator("abc.aalt")
 
+            ca.Initialise()
 
-   Dim ca As new CombinedAlternator("abc.aalt")
-   Dim original As new CombinedAlternator("abc.aalt")
+            Dim startDT As DateTime = DateTime.Now
+            Dim endDateDT As DateTime
+            Dim crank As Single
+            Dim demand As Single
+            Dim rand As New Random(50)
 
-   ca.Alternators(0).AlternatorName="ZCZZCZCZCZCXXXYYY"
- 
-   Assert.IsFalse(ca.IsEqualTo( original))
+            Dim min As Single = 0.1
+            Dim max As Single = 0.1
 
-  End Sub
+            For x = 1 To 500000
 
- <Test()>
-  Public Sub AlternatorsUnequalPulley()
+                'crank = rand.Next(500,3000)
+                'demand = rand.Next(1,200)
 
+                crank = rand.Next(0, 0)
+                demand = rand.Next(0, 0)
 
-   Dim ca As new CombinedAlternator("abc.aalt")
-   Dim original As new CombinedAlternator("abc.aalt")
+                Dim actual As AlternatorMapValues = ca.GetEfficiency(crank, demand)
 
-   ca.Alternators(0).PulleyRatio=9
- 
-   Assert.IsFalse(ca.IsEqualTo( original))
+                If actual.Efficiency < min Then min = actual.Efficiency
 
-  End Sub
+                If actual.Efficiency > max Then max = actual.Efficiency
 
- '<Test()>
- ' Public Sub AlternatorsUnequalEfficiency()
+            Next
 
+            endDateDT = DateTime.Now
 
- '  Dim ca As new CombinedAlternator("abc.aalt")
- '  Dim original As new CombinedAlternator("abc.aalt")
+            Dim secs As Single = (endDateDT - startDT).Seconds
 
- '  ca.Alternators(0).InputTable2000(1).Eff=0.99999
- 
- '  'Only tests efficiency values table row 1-3
- '  Assert.IsFalse(ca.IsEqualTo( original))
 
- ' End Sub
+        End Sub
 
 
-  <Test()>
-  Public Sub AlternatorsUnequalEfficiency()
+        <Test()>
+        Public Sub AlternatorsAreEqual()
 
 
-   Dim ca As new CombinedAlternator("abc.aalt")
-   Dim original As new CombinedAlternator("abc.aalt")
+            Dim ca As ICombinedAlternator = New CombinedAlternator("abc.aalt")
+            Dim original As ICombinedAlternator = New CombinedAlternator("abc.aalt")
 
-   ca.Alternators(0).InputTable2000(1).Eff=0.99999
- 
-   'Only tests efficiency values table row 1-3
-   Assert.IsFalse(ca.IsEqualTo( original))
+            Assert.IsTrue(ca.IsEqualTo(original))
 
-  End Sub
+        End Sub
 
+        <Test()>
+        Public Sub AlternatorsUnequalName()
 
 
+            Dim ca As New CombinedAlternator("abc.aalt")
+            Dim original As New CombinedAlternator("abc.aalt")
 
+            ca.Alternators(0).AlternatorName = "ZCZZCZCZCZCXXXYYY"
 
+            Assert.IsFalse(ca.IsEqualTo(original))
 
- End Class
+        End Sub
+
+        <Test()>
+        Public Sub AlternatorsUnequalPulley()
+
+
+            Dim ca As New CombinedAlternator("abc.aalt")
+            Dim original As New CombinedAlternator("abc.aalt")
+
+            ca.Alternators(0).PulleyRatio = 9
+
+            Assert.IsFalse(ca.IsEqualTo(original))
+
+        End Sub
+
+        '<Test()>
+        ' Public Sub AlternatorsUnequalEfficiency()
+
+
+        '  Dim ca As new CombinedAlternator("abc.aalt")
+        '  Dim original As new CombinedAlternator("abc.aalt")
+
+        '  ca.Alternators(0).InputTable2000(1).Eff=0.99999
+
+        '  'Only tests efficiency values table row 1-3
+        '  Assert.IsFalse(ca.IsEqualTo( original))
+
+        ' End Sub
+
+
+        <Test()>
+        Public Sub AlternatorsUnequalEfficiency()
+
+
+            Dim ca As New CombinedAlternator("abc.aalt")
+            Dim original As New CombinedAlternator("abc.aalt")
+
+            ca.Alternators(0).InputTable2000(1).Eff = 0.99999
+
+            'Only tests efficiency values table row 1-3
+            Assert.IsFalse(ca.IsEqualTo(original))
+
+        End Sub
+
+
+
+
+
+
+    End Class
 
 
 End Namespace
 
 
 
-    
+
 

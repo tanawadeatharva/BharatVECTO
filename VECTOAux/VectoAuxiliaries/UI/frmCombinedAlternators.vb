@@ -268,13 +268,6 @@ Public Class frmCombinedAlternators
 
 
     End Function
-    Private Function ValidateAll() As Boolean
-
-
-
-
-    End Function
-
 
     'Other events
     Private Sub groupBoxUserInput_Paint(sender As Object, e As Windows.Forms.PaintEventArgs) Handles grpTable2000PRM.Paint, grpTable6000PRM.Paint, grpTable4000PRM.Paint

@@ -235,7 +235,7 @@ Public Class AdvancedAuxiliaries
 
             Signals.CurrentCycleTimeInSeconds += 1
         Catch ex As Exception
-            MessageBox.Show("Exception: " + ex.Message)
+            MessageBox.Show("Exception: " + ex.Message + " Stack Trace: " + ex.StackTrace)
             Return False
         End Try
 
