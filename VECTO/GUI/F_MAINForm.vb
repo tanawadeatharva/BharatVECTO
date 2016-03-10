@@ -538,8 +538,14 @@ Imports TUGraz.VectoCore.Utils
 		'Set mode (Batch/Standard)
 		ModeUpdate()
 
+#If DEBUG Then
+		Dim LicCheck = False
+#Else
+		Dim LicCheck = True
+#End If
+
 		'License check
-		If False And Not Lic.LICcheck() Then
+		If LicCheck And Not Lic.LICcheck() Then
 			MsgBox("License File invalid!" & vbCrLf & vbCrLf & Lic.FailMsg)
 			If Lic.CreateActFile(MyAppPath & "ActivationCode.dat") Then
 				MsgBox("Activation File created.")
