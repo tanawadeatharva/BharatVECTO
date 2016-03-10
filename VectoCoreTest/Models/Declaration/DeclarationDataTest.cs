@@ -555,7 +555,7 @@ namespace TUGraz.VectoCore.Tests.Models.Declaration
 			Assert.IsTrue(!string.IsNullOrEmpty(new StreamReader(longHaulMission.CycleFile).ReadLine()));
 
 			Assert.AreEqual(0.SI<Kilogram>(), longHaulMission.MinLoad);
-			Assert.AreEqual(0.5882 * vehicleData.GrossVehicleMassRating - 2511.8.SI<Kilogram>(), longHaulMission.RefLoad);
+			Assert.AreEqual(4150, longHaulMission.RefLoad.Value());
 			Assert.AreEqual(vehicleData.GrossVehicleMassRating - longHaulMission.MassExtra - vehicleData.CurbWeight,
 				longHaulMission.MaxLoad);
 

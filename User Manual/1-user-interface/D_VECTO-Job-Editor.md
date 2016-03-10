@@ -43,7 +43,9 @@ Filepath ot the Gearbox File(.vgbx)
 :	Files can be created and edited using the [Gearbox Editor](#gearbox-editor).
 
 Auxiliaries
-:	This list contains all auxiliaries used for calculation. The auxiliaries are configured using the [Auxiliary Dialog](#auxiliary-dialog). For each auxiliary an [Auxiliary Input File (.vaux)](#auxiliary-input-file-.vaux) must be provided and the [driving cycle](#driving-cycles) must include the corresponding supply power.
+:	This list contains all auxiliaries used for calculation. The auxiliaries are configured using the [Auxiliary Dialog](#auxiliary-dialog). 
+In Declaration Mode the set of auxiliaries and their power-demand is pre-defined, depending on the vehicle category and driving cycle. 
+In Engineering Mode the set of auxiliaries can be freely defined. For each auxiliary an [Auxiliary Input File (.vaux)](#auxiliary-input-file-.vaux) must be provided and the [driving cycle](#driving-cycles) must include the corresponding supply power.
 **Double-click** entries to edit with the [Auxiliary Dialog](#auxiliary-dialog).
 
 : ![addaux](pics/plus-circle-icon.png) Add new Auxiliary

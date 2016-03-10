@@ -538,8 +538,14 @@ Imports TUGraz.VectoCore.Utils
 		'Set mode (Batch/Standard)
 		ModeUpdate()
 
+#If DEBUG Then
+		Dim LicCheck = False
+#Else
+		Dim LicCheck = True
+#End If
+
 		'License check
-		If False And Not Lic.LICcheck() Then
+		If LicCheck And Not Lic.LICcheck() Then
 			MsgBox("License File invalid!" & vbCrLf & vbCrLf & Lic.FailMsg)
 			If Lic.CreateActFile(MyAppPath & "ActivationCode.dat") Then
 				MsgBox("Activation File created.")
@@ -1374,8 +1380,12 @@ Imports TUGraz.VectoCore.Utils
 
 	Private Sub UserManualToolStripMenuItem_Click(sender As System.Object, e As System.EventArgs) _
 		Handles UserManualToolStripMenuItem.Click
-		If IO.File.Exists(MyAppPath & "User Manual\usermanual.html") Then
-			System.Diagnostics.Process.Start(MyAppPath & "User Manual\usermanual.html")
+		If IO.File.Exists(MyAppPath & "User Manual\help.html") Then
+			Dim BrowserRegistryString As String =
+					My.Computer.Registry.ClassesRoot.OpenSubKey("\http\shell\open\command\").GetValue("").ToString
+			Dim DefaultBrowserPath As String =
+					System.Text.RegularExpressions.Regex.Match(BrowserRegistryString, "(\"".*?\"")").Captures(0).ToString
+			System.Diagnostics.Process.Start(DefaultBrowserPath, Uri.EscapeDataString(MyAppPath & "User Manual\help.html"))
 		Else
 			MsgBox("User Manual not found!", MsgBoxStyle.Critical)
 		End If

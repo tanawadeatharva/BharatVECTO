@@ -212,15 +212,24 @@ namespace TUGraz.VectoCore.Models.SimulationComponent.Data
 		}
 
 		/// <summary>
-		/// Get item index for angularVelocity.
+		/// Get item index for the segment of the full-load curve where the angularVelocity lies within.
 		/// </summary>
 		protected int FindIndex(PerSecond angularVelocity)
 		{
-			int index;
-			FullLoadEntries.GetSection(x => x.EngineSpeed < angularVelocity, out index,
-				string.Format("requested rpm outside of FLD curve - extrapolating. rpm: {0}",
-					angularVelocity.ConvertTo().Rounds.Per.Minute));
-			return index + 1;
+			if (angularVelocity < FullLoadEntries.First().EngineSpeed) {
+				return 1;
+			}
+			if (angularVelocity > FullLoadEntries.Last().EngineSpeed) {
+				return FullLoadEntries.Count - 1;
+			}
+			for (var index = 1; index < FullLoadEntries.Count; index++) {
+				if (angularVelocity >= FullLoadEntries[index - 1].EngineSpeed &&
+					angularVelocity <= FullLoadEntries[index].EngineSpeed) {
+					return index;
+				}
+			}
+			throw new VectoException("angular velocity {0} exceeds full load curve: min: {1}  max: {2}", angularVelocity,
+				FullLoadEntries.First().EngineSpeed, FullLoadEntries.Last().EngineSpeed);
 		}
 
 		[DebuggerDisplay("n: {EngineSpeed}, fullTorque: {TorqueFullLoad}, dragTorque: {TorqueDrag}")]

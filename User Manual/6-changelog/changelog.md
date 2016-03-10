@@ -7,14 +7,33 @@
     + Measured Speed
     + Measured Speed with Gear
     + Pwheel (SiCo)
-- User Manual updated for VECTO V3.x
-- ModData Format changed for better information and clarity
-- Added validation of input values
-- Better Integration of VectoCore into GUI (Notifications and Messages)
-- Fixed some driving behavior related bugs in VectoCore:
+- Adaptations of powertrain components architecture
+    + Move wheels inertia from vehicle to wheels
+    + Auxiliaries no longer connected via clutch to the engine but via a separate port
+    + Engine checks overload of gearbox and engine overload
+- Fixed some driving behavior related issues in VectoCore:
     + When the vehicle comes to a halt during gear shift, instead of aborting the cycle, it tries to drive away again with an appropriate gear.
-- For all calculations the averaged values of the current cycle step are used.
-
+- [ModData Format](#modal-results-.vmod) changed for better information and clarity
+- Entries in the sum-file are sorted in the same way as in Vecto 2.2
+- In engineering mode the execution mode (distance-based, time-based measured speed, time-based measured speed with gear, engine only) are detected based on the cycle
+- Added validation of input values
+- Gravity constant set to 9.80665 (NIST standard acceleration for gravity)
+- Improved input data handling: sort input values of full-load curves (engine, gbx, retarder)
+- Better Integration of VectoCore into GUI (Notifications and Messages)
+- Speed dependent cross-wind correction (vcdv) and v_air/beta cross-wind correction (vcdb) impemented
+- For all calculations the averaged values of the current simulation step are used for interpolations in loss-maps.
+- Allow extrapolation of loss maps in engineering mode (warnings)
+- Refactoring of input data handling: separate InputDataProvider interfaces for model data
+- Refactoring of result handling: separate result container and output writer
+- New Long-Haul driving cycle included
+- User Manual updated for VECTO V3.x
+- Fix: sparse representation of declaration cycles had some missing entries
+- Bugfix: error in computation of engine's preferred speed 
+- Bugfix: wrong vehicle class lookup
+- Bugfix: duplicate entries in intersected full-load curves
+- Bugfix: retarder takes the retarder ratio into account for lossmap lookup
+- Bugfix: use unique identifier for jobs in job list
+- Bugfix: error in triagulation of fuel consumption map
 
 **VECTO 3.0.1**
 

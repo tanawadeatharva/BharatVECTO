@@ -1,4 +1,4 @@
-##Transient Full Load
+###Engine: Transient Full Load
 
 <div class="vecto2">
 VECTO uses a PT1 function to model transient torque build up using this formula:
@@ -26,3 +26,4 @@ $t_{i-1}^* = PT1 \cdot ln(\frac{1.0}{1 - \frac{P_{eng_{i - 1}}}{P_{fld\ stat}(n_
 $t_i^* = t_{i-1}^* + dt$
 
 </div>
+
