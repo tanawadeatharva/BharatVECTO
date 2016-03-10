@@ -220,7 +220,8 @@ namespace TUGraz.VectoCore.Models.SimulationComponent.Impl
 				_shiftTime = absTime;
 			}
 			IResponse retVal;
-			if (ClutchClosed(absTime) && !angularVelocity.IsEqual(0)) {
+			// TODO: MQ 2016/03/10: investigate further the effects of having the condition angularvelocity != 0
+			if (ClutchClosed(absTime) /* && !angularVelocity.IsEqual(0) */) {
 				retVal = RequestGearEngaged(absTime, dt, torque, angularVelocity, dryRun);
 			} else {
 				retVal = RequestGearDisengaged(absTime, dt, torque, angularVelocity, dryRun);
