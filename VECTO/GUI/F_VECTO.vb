@@ -16,7 +16,6 @@ Imports System.Collections.Generic
 ''' </summary>
 ''' <remarks></remarks>
 Public Class F_VECTO
-
 	Private VECTOfile As String
 	Private Changed As Boolean = False
 
@@ -35,7 +34,7 @@ Public Class F_VECTO
 	Private Sub F02_GEN_Load(ByVal sender As Object, ByVal e As System.EventArgs) Handles Me.Load
 		Dim x As Int16
 
-		n_idle = -1
+		n_idle = - 1
 		FLDfile = ""
 
 		AuxDlog = New F_VEH_AuxDlog
@@ -46,7 +45,7 @@ Public Class F_VECTO
 			Me.TabControl1.TabPages(x).Show()
 		Next
 
-		Me.LvAux.Columns(2).Width = -2
+		Me.LvAux.Columns(2).Width = - 2
 
 		'Declaration Mode
 		If Cfg.DeclMode Then
@@ -66,11 +65,11 @@ Public Class F_VECTO
 		Me.PnEcoRoll.Enabled = Not Cfg.DeclMode
 
 		Changed = False
-
 	End Sub
 
 	'Close - Check for unsaved changes
-	Private Sub F02_GEN_FormClosing(ByVal sender As Object, ByVal e As System.Windows.Forms.FormClosingEventArgs) Handles Me.FormClosing
+	Private Sub F02_GEN_FormClosing(ByVal sender As Object, ByVal e As System.Windows.Forms.FormClosingEventArgs) _
+		Handles Me.FormClosing
 		If e.CloseReason <> CloseReason.ApplicationExitCall And e.CloseReason <> CloseReason.WindowsShutDown Then
 			e.Cancel = ChangeCheckCancel()
 		End If
@@ -98,7 +97,11 @@ Public Class F_VECTO
 		Me.TbUnderSpeed.Text = cDeclaration.Underspeed
 		Me.TbVmin.Text = cDeclaration.ECvmin
 
-		If LvAux.Items.Count <> 5 OrElse (Me.LvAux.Items(0).Text <> sKey.AUX.Fan OrElse Me.LvAux.Items(1).Text <> sKey.AUX.SteerPump OrElse Me.LvAux.Items(2).Text <> sKey.AUX.HVAC OrElse Me.LvAux.Items(3).Text <> sKey.AUX.ElecSys OrElse Me.LvAux.Items(4).Text <> sKey.AUX.PneumSys) Then
+		If _
+			LvAux.Items.Count <> 5 OrElse
+			(Me.LvAux.Items(0).Text <> sKey.AUX.Fan OrElse Me.LvAux.Items(1).Text <> sKey.AUX.SteerPump OrElse
+			Me.LvAux.Items(2).Text <> sKey.AUX.HVAC OrElse Me.LvAux.Items(3).Text <> sKey.AUX.ElecSys OrElse
+			Me.LvAux.Items(4).Text <> sKey.AUX.PneumSys) Then
 			Me.LvAux.Items.Clear()
 
 			LV0 = New ListViewItem(sKey.AUX.Fan)
@@ -147,8 +150,6 @@ Public Class F_VECTO
 			Me.LvAux.Items.Add(LV0)
 
 		End If
-
-
 	End Sub
 
 
@@ -171,19 +172,23 @@ Public Class F_VECTO
 #Region "Browse Buttons"
 
 	Private Sub ButtonVEH_Click(ByVal sender As System.Object, ByVal e As System.EventArgs) Handles ButtonVEH.Click
-		If fbVEH.OpenDialog(fFileRepl(Me.TbVEH.Text, fPATH(VECTOfile))) Then Me.TbVEH.Text = fFileWoDir(fbVEH.Files(0), fPATH(VECTOfile))
+		If fbVEH.OpenDialog(fFileRepl(Me.TbVEH.Text, fPATH(VECTOfile))) Then _
+			Me.TbVEH.Text = fFileWoDir(fbVEH.Files(0), fPATH(VECTOfile))
 	End Sub
 
 	Private Sub ButtonMAP_Click(ByVal sender As System.Object, ByVal e As System.EventArgs) Handles ButtonMAP.Click
-		If fbENG.OpenDialog(fFileRepl(Me.TbENG.Text, fPATH(VECTOfile))) Then Me.TbENG.Text = fFileWoDir(fbENG.Files(0), fPATH(VECTOfile))
+		If fbENG.OpenDialog(fFileRepl(Me.TbENG.Text, fPATH(VECTOfile))) Then _
+			Me.TbENG.Text = fFileWoDir(fbENG.Files(0), fPATH(VECTOfile))
 	End Sub
 
 	Private Sub ButtonGBX_Click(ByVal sender As System.Object, ByVal e As System.EventArgs) Handles ButtonGBX.Click
-		If fbGBX.OpenDialog(fFileRepl(Me.TbGBX.Text, fPATH(VECTOfile))) Then Me.TbGBX.Text = fFileWoDir(fbGBX.Files(0), fPATH(VECTOfile))
+		If fbGBX.OpenDialog(fFileRepl(Me.TbGBX.Text, fPATH(VECTOfile))) Then _
+			Me.TbGBX.Text = fFileWoDir(fbGBX.Files(0), fPATH(VECTOfile))
 	End Sub
 
 	Private Sub BtDesMaxBr_Click_1(sender As System.Object, e As System.EventArgs) Handles BtDesMaxBr.Click
-		If fbACC.OpenDialog(fFileRepl(Me.TbDesMaxFile.Text, fPATH(VECTOfile))) Then Me.TbDesMaxFile.Text = fFileWoDir(fbACC.Files(0), fPATH(VECTOfile))
+		If fbACC.OpenDialog(fFileRepl(Me.TbDesMaxFile.Text, fPATH(VECTOfile))) Then _
+			Me.TbDesMaxFile.Text = fFileWoDir(fbACC.Files(0), fPATH(VECTOfile))
 	End Sub
 
 	Private Sub BtAccOpen_Click(sender As System.Object, e As System.EventArgs) Handles BtAccOpen.Click
@@ -218,7 +223,6 @@ Public Class F_VECTO
 		End If
 
 		If Not Trim(f) = "" Then F_VEH.openVEH(f)
-
 	End Sub
 
 	'Open Engine Editor
@@ -245,7 +249,6 @@ Public Class F_VECTO
 		End If
 
 		If Not Trim(f) = "" Then F_ENG.openENG(f)
-
 	End Sub
 
 	'Open Gearbox Editor
@@ -272,7 +275,6 @@ Public Class F_VECTO
 		End If
 
 		If Not Trim(f) = "" Then F_GBX.openGBX(f)
-
 	End Sub
 
 #End Region
@@ -311,8 +313,13 @@ Public Class F_VECTO
 
 	'Help
 	Private Sub ToolStripButton1_Click(sender As System.Object, e As System.EventArgs) Handles ToolStripButton1.Click
-		If IO.File.Exists(MyAppPath & "User Manual\GUI\GUI_Calls\VECTO.html") Then
-			System.Diagnostics.Process.Start(MyAppPath & "User Manual\GUI\GUI_Calls\VECTO.html")
+		If IO.File.Exists(MyAppPath & "User Manual\help.html") Then
+			Dim BrowserRegistryString As String =
+					My.Computer.Registry.ClassesRoot.OpenSubKey("\http\shell\open\command\").GetValue("").ToString
+			Dim DefaultBrowserPath As String =
+					System.Text.RegularExpressions.Regex.Match(BrowserRegistryString, "(\"".*?\"")").Captures(0).ToString
+			System.Diagnostics.Process.Start(DefaultBrowserPath,
+											String.Format("""{0}{1}""", MyAppPath, "User Manual\help.html#job-editor"))
 		Else
 			MsgBox("User Manual not found!", MsgBoxStyle.Critical)
 		End If
@@ -365,7 +372,7 @@ Public Class F_VECTO
 					Me.Close()
 					F_MAINForm.RbDecl.Checked = Not F_MAINForm.RbDecl.Checked
 					F_MAINForm.OpenVectoFile(file)
-				Case -1
+				Case - 1
 					Exit Sub
 				Case Else '0
 					'Continue...
@@ -450,7 +457,6 @@ Public Class F_VECTO
 		UpdatePic()
 
 		'-------------------------------------------------------------
-
 	End Sub
 
 	'Save file
@@ -536,7 +542,6 @@ Public Class F_VECTO
 		Changed = False
 
 		Return True
-
 	End Function
 
 	'New file
@@ -544,7 +549,7 @@ Public Class F_VECTO
 
 		If ChangeCheckCancel() Then Exit Sub
 
-		n_idle = -1
+		n_idle = - 1
 		FLDfile = ""
 
 		'Files
@@ -582,7 +587,6 @@ Public Class F_VECTO
 		Me.ToolStripStatusLabelGEN.Text = ""
 		Changed = False
 		UpdatePic()
-
 	End Sub
 
 
@@ -590,16 +594,20 @@ Public Class F_VECTO
 
 #Region "'Change' Events"
 
-	Private Sub TextBoxVEH_TextChanged(ByVal sender As System.Object, ByVal e As System.EventArgs) Handles TbVEH.TextChanged
-		UpdatePic()
-		Change()
-	End Sub
-	Private Sub TextBoxMAP_TextChanged(ByVal sender As System.Object, ByVal e As System.EventArgs) Handles TbENG.TextChanged
+	Private Sub TextBoxVEH_TextChanged(ByVal sender As System.Object, ByVal e As System.EventArgs) _
+		Handles TbVEH.TextChanged
 		UpdatePic()
 		Change()
 	End Sub
 
-	Private Sub TextBoxFLD_TextChanged(ByVal sender As System.Object, ByVal e As System.EventArgs) Handles TbGBX.TextChanged
+	Private Sub TextBoxMAP_TextChanged(ByVal sender As System.Object, ByVal e As System.EventArgs) _
+		Handles TbENG.TextChanged
+		UpdatePic()
+		Change()
+	End Sub
+
+	Private Sub TextBoxFLD_TextChanged(ByVal sender As System.Object, ByVal e As System.EventArgs) _
+		Handles TbGBX.TextChanged
 		UpdatePic()
 		Change()
 	End Sub
@@ -613,7 +621,8 @@ Public Class F_VECTO
 		Change()
 	End Sub
 
-	Private Sub TBSStime_TextChanged(sender As System.Object, e As System.EventArgs) Handles TbSStime.TextChanged, TbSSdelay.TextChanged
+	Private Sub TBSStime_TextChanged(sender As System.Object, e As System.EventArgs) _
+		Handles TbSStime.TextChanged, TbSSdelay.TextChanged
 		Change()
 	End Sub
 
@@ -625,7 +634,8 @@ Public Class F_VECTO
 		Change()
 	End Sub
 
-	Private Sub TbVmin_TextChanged(sender As System.Object, e As System.EventArgs) Handles TbVmin.TextChanged, TbVminLA.TextChanged
+	Private Sub TbVmin_TextChanged(sender As System.Object, e As System.EventArgs) _
+		Handles TbVmin.TextChanged, TbVminLA.TextChanged
 		Change()
 	End Sub
 
@@ -633,7 +643,8 @@ Public Class F_VECTO
 		Change()
 	End Sub
 
-	Private Sub LvCycles_AfterLabelEdit(sender As Object, e As System.Windows.Forms.LabelEditEventArgs) Handles LvCycles.AfterLabelEdit
+	Private Sub LvCycles_AfterLabelEdit(sender As Object, e As System.Windows.Forms.LabelEditEventArgs) _
+		Handles LvCycles.AfterLabelEdit
 		Change()
 	End Sub
 
@@ -667,7 +678,6 @@ Public Class F_VECTO
 			Return False
 
 		End If
-
 	End Function
 
 #End Region
@@ -680,11 +690,11 @@ Public Class F_VECTO
 
 		AuxDlog.VehPath = fPATH(VECTOfile)
 		AuxDlog.TbPath.Text = ""
-		AuxDlog.CbType.SelectedIndex = -1
+		AuxDlog.CbType.SelectedIndex = - 1
 		AuxDlog.CbType.Text = ""
 		AuxDlog.TbID.Text = ""		 '!!! Vorher Type setzen weil ID beim ändern von Type überschrieben wird !!!"
 
-lbDlog:
+		lbDlog:
 		If AuxDlog.ShowDialog = Windows.Forms.DialogResult.OK Then
 
 			ID = UCase(Trim(AuxDlog.TbID.Text))
@@ -715,7 +725,6 @@ lbDlog:
 			Change()
 
 		End If
-
 	End Sub
 
 	Private Sub ButAuxRem_Click(sender As System.Object, e As System.EventArgs) Handles ButAuxRem.Click
@@ -744,7 +753,7 @@ lbDlog:
 		SelItem = LvAux.SelectedItems(0)
 
 		AuxDlog.VehPath = fPATH(VECTOfile)
-		AuxDlog.CbType.SelectedIndex = -1
+		AuxDlog.CbType.SelectedIndex = - 1
 		AuxDlog.CbType.Text = SelItem.SubItems(1).Text
 		AuxDlog.TbID.Text = SelItem.SubItems(0).Text	'After Type-set!
 
@@ -763,7 +772,7 @@ lbDlog:
 			End If
 
 		Else
-			AuxDlog.CbTech.SelectedIndex = -1
+			AuxDlog.CbTech.SelectedIndex = - 1
 			AuxDlog.TbPath.Text = SelItem.SubItems(2).Text
 		End If
 
@@ -787,7 +796,6 @@ lbDlog:
 			Change()
 
 		End If
-
 	End Sub
 
 	Private Sub RemoveAuxItem()
@@ -815,7 +823,6 @@ lbDlog:
 		End If
 
 		Change()
-
 	End Sub
 
 #End Region
@@ -834,7 +841,8 @@ lbDlog:
 #Region "Cycle list"
 
 	Private Sub LvCycles_DoubleClick(sender As Object, e As System.EventArgs) Handles LvCycles.DoubleClick
-		If Me.LvCycles.SelectedItems.Count > 0 Then OpenFiles(fFileRepl(Me.LvCycles.SelectedItems(0).SubItems(0).Text, fPATH(VECTOfile)))
+		If Me.LvCycles.SelectedItems.Count > 0 Then _
+			OpenFiles(fFileRepl(Me.LvCycles.SelectedItems(0).SubItems(0).Text, fPATH(VECTOfile)))
 	End Sub
 
 	Private Sub LvCycles_KeyDown(sender As Object, e As System.Windows.Forms.KeyEventArgs) Handles LvCycles.KeyDown
@@ -862,7 +870,6 @@ lbDlog:
 			Change()
 
 		End If
-
 	End Sub
 
 	Private Sub BtDRIrem_Click(sender As System.Object, e As System.EventArgs) Handles BtDRIrem.Click
@@ -895,7 +902,6 @@ lbDlog:
 		End If
 
 		Change()
-
 	End Sub
 
 #End Region
@@ -922,23 +928,25 @@ lbDlog:
 		TbGBX.Enabled = OnOff
 		ButtonGBX.Enabled = OnOff
 		GrAux.Enabled = OnOff
-
 	End Sub
 
 	'Start/Stop changed 
-	Private Sub ChBStartStop_CheckedChanged_1(sender As System.Object, e As System.EventArgs) Handles ChBStartStop.CheckedChanged
+	Private Sub ChBStartStop_CheckedChanged_1(sender As System.Object, e As System.EventArgs) _
+		Handles ChBStartStop.CheckedChanged
 		Change()
 		If Not Cfg.DeclMode Then Me.PnStartStop.Enabled = Me.ChBStartStop.Checked
 	End Sub
 
 	'LAC changed
-	Private Sub CbLookAhead_CheckedChanged(sender As System.Object, e As System.EventArgs) Handles CbLookAhead.CheckedChanged
+	Private Sub CbLookAhead_CheckedChanged(sender As System.Object, e As System.EventArgs) _
+		Handles CbLookAhead.CheckedChanged
 		Change()
 		Me.PnLookAhead.Enabled = CbLookAhead.Checked
 	End Sub
 
 	'EcoRoll / Overspeed changed
-	Private Sub RdOff_CheckedChanged(sender As System.Object, e As System.EventArgs) Handles RdOff.CheckedChanged, RdOverspeed.CheckedChanged, RdEcoRoll.CheckedChanged
+	Private Sub RdOff_CheckedChanged(sender As System.Object, e As System.EventArgs) _
+		Handles RdOff.CheckedChanged, RdOverspeed.CheckedChanged, RdEcoRoll.CheckedChanged
 		Dim EcoR As Boolean
 		Dim Ovr As Boolean
 
@@ -958,7 +966,6 @@ lbDlog:
 		Me.TbVmin.Enabled = Ovr Or EcoR
 		Me.Label23.Enabled = Ovr Or EcoR
 		Me.Label21.Enabled = Ovr Or EcoR
-
 	End Sub
 
 #End Region
@@ -1074,7 +1081,7 @@ lbDlog:
 
 			End If
 
-			Me.TbEngTxt.Text = (ENG0.Displ / 1000).ToString("0.0") & " l " & pmax.ToString("#") & " kW  " & ENG0.ModelName
+			Me.TbEngTxt.Text = (ENG0.Displ/1000).ToString("0.0") & " l " & pmax.ToString("#") & " kW  " & ENG0.ModelName
 
 
 			MAP0 = New cMAP
@@ -1233,7 +1240,6 @@ lbDlog:
 
 
 		End If
-
 	End Sub
 
 
@@ -1250,14 +1256,15 @@ lbDlog:
 		OpenWithToolStripMenuItem.Text = "Open with " & Cfg.OpenCmdName
 
 		CmOpenFile.Show(Cursor.Position)
-
 	End Sub
 
-	Private Sub OpenWithToolStripMenuItem_Click(sender As System.Object, e As System.EventArgs) Handles OpenWithToolStripMenuItem.Click
+	Private Sub OpenWithToolStripMenuItem_Click(sender As System.Object, e As System.EventArgs) _
+		Handles OpenWithToolStripMenuItem.Click
 		If Not FileOpenAlt(CmFiles(0)) Then MsgBox("Failed to open file!")
 	End Sub
 
-	Private Sub ShowInFolderToolStripMenuItem_Click(sender As System.Object, e As System.EventArgs) Handles ShowInFolderToolStripMenuItem.Click
+	Private Sub ShowInFolderToolStripMenuItem_Click(sender As System.Object, e As System.EventArgs) _
+		Handles ShowInFolderToolStripMenuItem.Click
 		If IO.File.Exists(CmFiles(0)) Then
 			Try
 				System.Diagnostics.Process.Start("explorer", "/select,""" & CmFiles(0) & "")
@@ -1270,7 +1277,4 @@ lbDlog:
 	End Sub
 
 #End Region
-
-
-
 End Class

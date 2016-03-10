@@ -25,3 +25,8 @@ CF~Tot-i~ = CF~Urb~ * WF~Urb-i~ + CF~Rur~ * WF~Rur-i~ + CF~MW~ * WF~MW-i~
 | 8 	| 	Coach				| 78%	| 22%	| 0% |
 
 </div>
+
+<div class="engineering">
+In engineering mode no WHTC correction is applied by Vecto. For an arbitrary cycle the weighting factors are not known, hence the total correction factor CF~Tot~ can not be computed.
+WHTC correction can be applied manually as a post-processing step.
+</div>

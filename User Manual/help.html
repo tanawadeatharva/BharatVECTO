@@ -1420,6 +1420,9 @@ Example: “Gears\Gear1.vtlm” points to the “Gears” subdirectory of the Ge
 </tbody>
 </table>
 </div>
+<div class="engineering">
+<p>In engineering mode no WHTC correction is applied by Vecto. For an arbitrary cycle the weighting factors are not known, hence the total correction factor CF<sub>Tot</sub> can not be computed. WHTC correction can be applied manually as a post-processing step.</p>
+</div>
 </div>
 <div id="gear-shift-model" class="section level2">
 <h2>Gear Shift Model</h2>
@@ -3485,15 +3488,37 @@ Auxiliary speed [rpm], Mechanical power [kW],Supply power [kW]
 <li>Measured Speed with Gear</li>
 <li>Pwheel (SiCo)</li>
 </ul></li>
-<li>User Manual updated for VECTO V3.x</li>
-<li>ModData Format changed for better information and clarity</li>
-<li>Added validation of input values</li>
-<li>Better Integration of VectoCore into GUI (Notifications and Messages)</li>
-<li>Fixed some driving behavior related bugs in VectoCore:
+<li>Adaptations of powertrain components architecture
+<ul>
+<li>Move wheels inertia from vehicle to wheels</li>
+<li>Auxiliaries no longer connected via clutch to the engine but via a separate port</li>
+<li>Engine checks overload of gearbox and engine overload</li>
+</ul></li>
+<li>Fixed some driving behavior related issues in VectoCore:
 <ul>
 <li>When the vehicle comes to a halt during gear shift, instead of aborting the cycle, it tries to drive away again with an appropriate gear.</li>
 </ul></li>
-<li>For all calculations the averaged values of the current cycle step are used.</li>
+<li><a href="#modal-results-.vmod">ModData Format</a> changed for better information and clarity</li>
+<li>Entries in the sum-file are sorted in the same way as in Vecto 2.2</li>
+<li>In engineering mode the execution mode (distance-based, time-based measured speed, time-based measured speed with gear, engine only) are detected based on the cycle</li>
+<li>Added validation of input values</li>
+<li>Gravity constant set to 9.80665 (NIST standard acceleration for gravity)</li>
+<li>Improved input data handling: sort input values of full-load curves (engine, gbx, retarder)</li>
+<li>Better Integration of VectoCore into GUI (Notifications and Messages)</li>
+<li>Speed dependent cross-wind correction (vcdv) and v_air/beta cross-wind correction (vcdb) impemented</li>
+<li>For all calculations the averaged values of the current simulation step are used for interpolations in loss-maps.</li>
+<li>Allow extrapolation of loss maps in engineering mode (warnings)</li>
+<li>Refactoring of input data handling: separate InputDataProvider interfaces for model data</li>
+<li>Refactoring of result handling: separate result container and output writer</li>
+<li>New Long-Haul driving cycle included</li>
+<li>User Manual updated for VECTO V3.x</li>
+<li>Fix: sparse representation of declaration cycles had some missing entries</li>
+<li>Bugfix: error in computation of engine’s preferred speed</li>
+<li>Bugfix: wrong vehicle class lookup</li>
+<li>Bugfix: duplicate entries in intersected full-load curves</li>
+<li>Bugfix: retarder takes the retarder ratio into account for lossmap lookup</li>
+<li>Bugfix: use unique identifier for jobs in job list</li>
+<li>Bugfix: error in triagulation of fuel consumption map</li>
 </ul>
 <p><strong>VECTO 3.0.1</strong></p>
 <ul>
