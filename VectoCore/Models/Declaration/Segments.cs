@@ -137,14 +137,14 @@ namespace TUGraz.VectoCore.Models.Declaration
 				mission.MaxLoad = grossVehicleMassRating - mission.MassExtra - curbWeight;
 
 				var refLoadField = row.Field<string>("payload-" + missionType.ToString().ToLower());
-				mission.RefLoad = CalculateRefLoad(grossVehicleMassRating, refLoadField, missionType);
+				mission.RefLoad = CalculateRefLoad(grossVehicleMassRating, refLoadField, missionType, mission.MaxLoad);
 
 				yield return mission;
 			}
 		}
 
-		private static Kilogram CalculateRefLoad(Kilogram grossVehicleMassRating, string refLoadField,
-			MissionType missionType)
+		private static Kilogram CalculateRefLoad(Kilogram grossVehicleMassRating, string refLoadField, MissionType missionType,
+			Kilogram maxLoad)
 		{
 			const double longHaulFactor = 0.5882;
 			const double otherFactor = 0.3941;
@@ -162,7 +162,7 @@ namespace TUGraz.VectoCore.Models.Declaration
 				refLoad = refLoadField.ToDouble().SI<Kilogram>();
 			}
 
-			return VectoMath.Min(refLoad, grossVehicleMassRating);
+			return VectoMath.Min(refLoad, maxLoad);
 		}
 	}
 }
