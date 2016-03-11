@@ -70,7 +70,7 @@ Namespace UnitTests
 
             Dim actual As Single = target.AlternatorsEfficiency
 
-            Dim expected As Single = 0.6720275
+            Dim expected As Single = 0.62
 
             Assert.AreEqual(expected, actual)
 
@@ -83,7 +83,7 @@ Namespace UnitTests
             Dim target As M0_NonSmart_AlternatorsSetEfficiency = New M0_NonSmart_AlternatorsSetEfficiency(elecConsumers, alternatorMap, powernetVoltage, signals, GetSSM())
 
             Dim actual As Single
-            Dim expected As Single = 18.81821
+            Dim expected As Single = 0
 
             actual = target.GetHVACElectricalPowerDemandAmps()
 

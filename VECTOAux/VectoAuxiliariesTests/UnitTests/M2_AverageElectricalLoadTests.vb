@@ -77,7 +77,7 @@ End Function
         <Test()>
         Public Sub GetAveragePowerAtCrankTest()
             Dim target As M2_AverageElectricalLoadDemand = GetAverageElectricalDemandInstance()
-            Dim expected As Single  = 3604.51074
+            Dim expected As Single = 10914.6543
             Dim actual As Single = target.GetAveragePowerAtCrankFromElectrics()
             Assert.AreEqual(expected, actual)
         End Sub

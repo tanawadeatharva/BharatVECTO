@@ -17,7 +17,6 @@ Namespace DownstreamModules
 
     Public Class M9
         Implements IM9
-
         Private Const RPM_TO_RADS_PER_SECOND As Single = 9.55F
 
 #Region "Aggregates"

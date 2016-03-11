@@ -57,6 +57,14 @@ public class SSMToolMock
 
         Public Property GenInputs As ISSMGenInputs Implements ISSMTOOL.GenInputs
 
+            Get
+                Return New SSMGenInputs(True)
+            End Get
+            Set(value As ISSMGenInputs)
+
+            End Set
+        End Property
+
         Public Function IsEqualTo(source As ISSMTOOL) As Boolean Implements ISSMTOOL.IsEqualTo
 
         End Function
@@ -99,8 +107,8 @@ Public Class M14Tests
         Dim ip5 As Single = 3114
         Dim ip6 As Single = 3114
 
-        Dim  expectedOut1 As Single=1779.33337f
-        Dim  expectedOut2 As Single=2.13093829f
+            Dim expectedOut1 As Single = 780333.4F
+            Dim expectedOut2 As Single = 0.934531F
 
         Dim m13       As New Mock(Of IM13)
         Dim hvacSSM   As New Mock(Of ISSMTOOL)

@@ -107,7 +107,7 @@ Namespace UnitTests
                                                                          New AltUserInput(10, 55), _
                                                                          New AltUserInput(40, 45), _
                                                                          New AltUserInput(60, 67), _
-                                                                         New AltUserInput(60, 67), _
+                                                                         New AltUserInput(61, 67), _
                                                                          New AltUserInput(200, 67)}
 
             Alt4ExpectedTable4000 = New List(Of AltUserInput)() From {New AltUserInput(0, 77), _
@@ -391,7 +391,7 @@ Namespace UnitTests
 
             Dim actual As AlternatorMapValues = ca.GetEfficiency(1750, 170)
 
-            Assert.AreEqual(0.5601562F, actual.Efficiency)
+            Assert.AreEqual(0.684354842F, actual.Efficiency)
 
 
         End Sub

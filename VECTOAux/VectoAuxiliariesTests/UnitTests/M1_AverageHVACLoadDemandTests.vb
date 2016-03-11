@@ -66,7 +66,7 @@ Public Sub GetAveragePowerDemandAtCrankFromHVACMechanicsWattsTest()
 
 
    Dim target As IM1_AverageHVACLoadDemand = GETM1Instance()
-   Dim expected As Single = 1431.42224
+            Dim expected As Single = 1580.276
    dim actual as Single = target.AveragePowerDemandAtCrankFromHVACMechanicalsWatts
 
    Assert.AreEqual( expected , actual)
@@ -78,7 +78,7 @@ Public Sub AveragePowerDemandAtCrankFromHVACElectricsWattsTest()
 
 
    Dim target As IM1_AverageHVACLoadDemand = GETM1Instance()
-   Dim expected As Single  = 1118.72766
+            Dim expected As Single = 0
    dim actual as Single = target.AveragePowerDemandAtCrankFromHVACElectricsWatts
 
    Assert.AreEqual( expected , actual)
@@ -90,7 +90,7 @@ Public Sub AveragePowerDemandAtAlternatorFromHVACElectricsWattsTest()
 
 
    Dim target As IM1_AverageHVACLoadDemand = GETM1Instance()
-   Dim expected As Single = 494.918945
+            Dim expected As Single = 0
    dim actual as Single = target.AveragePowerDemandAtAlternatorFromHVACElectricsWatts
 
    Assert.AreEqual( expected , actual)

@@ -99,6 +99,12 @@ Namespace Hvac
                 returnStatus = False
             End If
 
+            Dim uniqueBuses = From b In buses Select New With {Key b.Model, b} Distinct.ToList()
+
+            If buses.Count <> uniqueBuses.Count Then
+                returnStatus = False
+            End If
+
             Return returnStatus
 
         End Function

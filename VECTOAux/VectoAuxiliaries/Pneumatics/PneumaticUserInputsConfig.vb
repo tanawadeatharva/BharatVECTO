@@ -50,7 +50,7 @@ Namespace Pneumatics
             AirSuspensionControl = "Mechanically"
             Doors = "Pneumatic"
             KneelingHeightMillimeters = 70
-            ActuationsMap = "testPneumaticActuationsMap.apac"
+            ActuationsMap = Nothing
             RetarderBrake = True
             SmartAirCompression = False
             SmartRegeneration = False

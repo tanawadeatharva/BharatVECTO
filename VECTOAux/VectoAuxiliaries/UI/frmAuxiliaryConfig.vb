@@ -509,10 +509,8 @@ Public Class frmAuxiliaryConfig
 
     Public Function ValidateAll() As Boolean
 
-        If Validate_Pneumatics() = False OrElse Validate_Electrics() = False OrElse Validate_HVAC() = False Then
-
+        If Validate_Pneumatics() = False Or Validate_Electrics() = False Or Validate_HVAC() = False Then
             Return False
-
         End If
 
         Return True
@@ -909,7 +907,7 @@ Public Class frmAuxiliaryConfig
             Using frm As New frmCombinedAlternators(absoluteAALTPath, New CombinedAlternatorSignals)
                 'If Dialog result is OK, then take action else bail
                 If frm.ShowDialog() = Windows.Forms.DialogResult.OK Then
-                    If suppliedAALTPath.Contains(":\") Then
+                    If suppliedAALTPath.Contains(":\") AndAlso Not String.IsNullOrEmpty(vectoPath) Then
                         txtAlternatorMapPath.Text = If(suppliedAALTPath.Contains(vectoPath), suppliedAALTPath.Replace(vectoPath, ""), suppliedAALTPath)
                     Else
                         txtAlternatorMapPath.Text = fFileWoDir(suppliedAALTPath)
@@ -918,6 +916,8 @@ Public Class frmAuxiliaryConfig
                     Return
                 End If
             End Using
+
+            Validate_Electrics()
 
         End If
 
@@ -994,10 +994,9 @@ Public Class frmAuxiliaryConfig
 
                 MessageBox.Show("Unable to load")
 
-
             End If
 
-
+            Validate_HVAC()
         End If
 
 
@@ -1060,7 +1059,7 @@ Public Class frmAuxiliaryConfig
 
             Using frm As New frmHVACTool(absoluteBusDatabasePath, absoluteSSMPath, vectoFile, Not fileExists)
                 If frm.ShowDialog() = Windows.Forms.DialogResult.OK Then
-                    If suppliedSSMPath.Contains(":\") Then
+                    If suppliedSSMPath.Contains(":\") AndAlso Not String.IsNullOrEmpty(vectoPath) Then
                         txtSSMFilePath.Text = If(suppliedSSMPath.Contains(vectoPath), suppliedSSMPath.Replace(vectoPath, ""), suppliedSSMPath)
                     Else
                         txtSSMFilePath.Text = fFileWoDir(suppliedSSMPath)
@@ -1069,6 +1068,8 @@ Public Class frmAuxiliaryConfig
                     Return
                 End If
             End Using
+
+            Validate_HVAC()
 
         End If
 
@@ -1528,4 +1529,7 @@ Public Class frmAuxiliaryConfig
 
     End Sub
 
+    Protected Overrides Sub Finalize()
+        MyBase.Finalize()
+    End Sub
 End Class

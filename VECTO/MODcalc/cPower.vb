@@ -1022,8 +1022,7 @@ lbCheck:
 
 
 
-lb_nOK:
-
+lb_nOK:           
 
             '************************************ Determine Engine-state ************************************
             ' nU is final here!
@@ -1067,8 +1066,6 @@ lb_nOK:
             Paux = PreExistingAuxPower + fPaux(jz, EngineSpeed)
             '*****************     ADVANCED AUXILIARIES END   ********************************************************
 
-
-
             'ICE-inertia
             If jz = 0 Then
                 PaMot = 0
@@ -1076,8 +1073,6 @@ lb_nOK:
                 'Not optimal since jz-1 to jz not the right interval
                 PaMot = fPaMot(nU, MODdata.nU(jz - 1))
             End If
-
-
 
             'Total Engine-power
             '   => Pantr
@@ -1491,7 +1486,8 @@ lb_nOK:
           advancedAuxModel.Signals.EngineStopped = false
          End If
 
-
+                mAAUX_Global.EngineDrivelineTorque = nPeToM(nU, P) - (((Paux) * 1000) / (EngineSpeed / 9.55))
+                mAAUX_Global.advancedAuxModel.Signals.EngineDrivelineTorque = mAAUX_Global.EngineDrivelineTorque
 
 
          advancedAuxModel.CycleStep(1,message)

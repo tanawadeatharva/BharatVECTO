@@ -1352,6 +1352,11 @@ lbDlog:
     'AA-TB
     Private Sub btnBrowseAAUXFile_Click(sender As Object, e As EventArgs) Handles btnBrowseAAUXFile.Click
 
+        If String.IsNullOrEmpty(VECTOfile) Then
+            MessageBox.Show("Please complete and save a valid new .vecto file before adding/configuring advanced bus auxiliaries.")
+            Return
+        End If
+
         Dim aauxFileValidated As Boolean = False
         Dim fbAux As New cFileBrowser(True, False)
         Dim message As String = String.Empty
