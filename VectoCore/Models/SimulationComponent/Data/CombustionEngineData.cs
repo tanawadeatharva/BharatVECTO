@@ -64,6 +64,13 @@ namespace TUGraz.VectoCore.Models.SimulationComponent.Data
 
 		internal double WHTCCorrectionFactor = 1;
 
+		public CombustionEngineData()
+		{
+			WHTCUrban = 1;
+			WHTCMotorway = 1;
+			WHTCRural = 1;
+		}
+
 		#region Equality Member
 
 		protected bool Equals(CombustionEngineData other)
