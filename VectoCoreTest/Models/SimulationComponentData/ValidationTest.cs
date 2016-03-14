@@ -34,11 +34,14 @@ using System.Data;
 using System.Diagnostics.CodeAnalysis;
 using System.Linq;
 using Microsoft.VisualStudio.TestTools.UnitTesting;
+using TUGraz.VectoCore.InputData.Reader.DataObjectAdaper;
+using TUGraz.VectoCore.InputData.Reader.Impl;
 using TUGraz.VectoCore.Models.Simulation.Data;
 using TUGraz.VectoCore.Models.Simulation.Impl;
 using TUGraz.VectoCore.Models.SimulationComponent.Data;
 using TUGraz.VectoCore.Models.SimulationComponent.Data.Engine;
 using TUGraz.VectoCore.Models.SimulationComponent.Data.Gearbox;
+using TUGraz.VectoCore.Tests.Utils;
 using TUGraz.VectoCore.Utils;
 
 #pragma warning disable 169
@@ -90,6 +93,80 @@ namespace TUGraz.VectoCore.Tests.Models.SimulationComponentData
 			Assert.IsTrue(data.IsValid());
 		}
 
+		[TestMethod]
+		public void Validation_CombustionEngineData_Engineering()
+		{
+			var fuelConsumption = new DataTable();
+			fuelConsumption.Columns.Add("");
+			fuelConsumption.Columns.Add("");
+			fuelConsumption.Columns.Add("");
+			fuelConsumption.Rows.Add("1", "1", "1");
+			fuelConsumption.Rows.Add("2", "2", "2");
+			fuelConsumption.Rows.Add("3", "3", "3");
+
+			var fullLoad = new DataTable();
+			fullLoad.Columns.Add("Engine speed");
+			fullLoad.Columns.Add("max torque");
+			fullLoad.Columns.Add("drag torque");
+			fullLoad.Columns.Add("PT1");
+			fullLoad.Rows.Add("3", "3", "-3", "3");
+			fullLoad.Rows.Add("3", "3", "-3", "3");
+			var data = new MockEngineDataProvider {
+				ModelName = "asdf",
+				Displacement = 6374.SI().Cubic.Centi.Meter.Cast<CubicMeter>(),
+				IdleSpeed = 560.RPMtoRad(),
+				Inertia = 1.SI<KilogramSquareMeter>(),
+				FullLoadCurve = fullLoad,
+				FuelConsumptionMap = fuelConsumption
+			};
+			var dao = new EngineeringDataAdapter();
+
+			var engineData = dao.CreateEngineData(data);
+
+			var results = engineData.Validate();
+			Assert.IsFalse(results.Any(), "Validation failed: " + "; ".Join(results.Select(r => r.ErrorMessage)));
+			Assert.IsTrue(engineData.IsValid());
+		}
+
+
+		[TestMethod]
+		public void Validation_CombustionEngineData_Declaration()
+		{
+			var fuelConsumption = new DataTable();
+			fuelConsumption.Columns.Add("");
+			fuelConsumption.Columns.Add("");
+			fuelConsumption.Columns.Add("");
+			fuelConsumption.Rows.Add("1", "1", "1");
+			fuelConsumption.Rows.Add("2", "2", "2");
+			fuelConsumption.Rows.Add("3", "3", "3");
+
+			var fullLoad = new DataTable();
+			fullLoad.Columns.Add("Engine speed");
+			fullLoad.Columns.Add("max torque");
+			fullLoad.Columns.Add("drag torque");
+			fullLoad.Columns.Add("PT1");
+			fullLoad.Rows.Add("3", "3", "-3", "3");
+			fullLoad.Rows.Add("3", "3", "-3", "3");
+			var data = new MockEngineDataProvider {
+				ModelName = "asdf",
+				Displacement = 6374.SI().Cubic.Centi.Meter.Cast<CubicMeter>(),
+				IdleSpeed = 560.RPMtoRad(),
+				Inertia = 1.SI<KilogramSquareMeter>(),
+				FullLoadCurve = fullLoad,
+				FuelConsumptionMap = fuelConsumption,
+				WHTCMotorway = 1.1,
+				WHTCRural = 1.1,
+				WHTCUrban = 1.1
+			};
+			var dao = new DeclarationDataAdapter();
+
+			var engineData = dao.CreateEngineData(data);
+
+			var results = engineData.Validate();
+			Assert.IsFalse(results.Any(), "Validation failed: " + "; ".Join(results.Select(r => r.ErrorMessage)));
+			Assert.IsTrue(engineData.IsValid());
+		}
+
 		/// <summary>
 		/// VECTO-107 Check valid range of input parameters
 		/// </summary>
@@ -111,8 +188,8 @@ namespace TUGraz.VectoCore.Tests.Models.SimulationComponentData
 
 			var axleGearData = new AxleGearData {
 				AxleGear = new GearData {
-				Ratio = 1,
-				LossMap = TransmissionLossMap.ReadFromFile(@"TestData\Components\limited.vtlm", 1, "1"),
+					Ratio = 1,
+					LossMap = TransmissionLossMap.ReadFromFile(@"TestData\Components\limited.vtlm", 1, "1"),
 				}
 			};
 
@@ -136,7 +213,8 @@ namespace TUGraz.VectoCore.Tests.Models.SimulationComponentData
 
 			// every field and property should be tested except private parent fields and properties and 
 			// (4*4+1) * 2 = 17*2= 34 - 4 private parent fields (+2 public field and property which are tested twice) = 32
-			Assert.AreEqual(32, results.Count, "Validation Error: " + string.Join("\n_eng_avg", results.Select(r => r.ErrorMessage)));
+			Assert.AreEqual(32, results.Count,
+				"Validation Error: " + string.Join("\n_eng_avg", results.Select(r => r.ErrorMessage)));
 		}
 
 
