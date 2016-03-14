@@ -142,6 +142,9 @@ namespace TUGraz.VectoCore.InputData.Reader.DataObjectAdaper
 			}
 
 			var retVal = SetCommonCombustionEngineData(engine);
+			retVal.WHTCUrban = engine.WHTCUrban;
+			retVal.WHTCMotorway = engine.WHTCMotorway;
+			retVal.WHTCRural = engine.WHTCRural;
 			retVal.Inertia = DeclarationData.Engine.EngineInertia(retVal.Displacement);
 			retVal.FullLoadCurve = EngineFullLoadCurve.Create(engine.FullLoadCurve, true);
 			retVal.FullLoadCurve.EngineData = retVal;
