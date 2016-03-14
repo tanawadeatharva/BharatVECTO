@@ -1,0 +1,20 @@
+﻿{
+  "Header": {
+    "CreatedBy": "Michael Krisper",
+    "Date": "2016-02-16T17:04:46+01:00",
+    "AppVersion": "3.0.2",
+    "FileVersion": 3
+  },
+  "Body": {
+    "SavedInDeclMode": false,
+    "ModelName": "Demo Engine",
+    "Displacement": 6000.0,
+	  "IdlingSpeed": 600.0,
+	  "Inertia": 2.8,
+    "FullLoadCurve": "FullLoadCurve.vfld",
+	  "FuelMap": "FuelConsumption.vmap",
+	  "WHTC-Urban": 1,
+    "WHTC-Rural": 1,
+    "WHTC-Motorway": 1
+  }
+}

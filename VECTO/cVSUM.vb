@@ -1,4 +1,4 @@
-' Copyright 2014 European Union.
+﻿' Copyright 2014 European Union.
 ' Licensed under the EUPL (the 'Licence');
 '
 ' * You may not use this work except in compliance with the Licence.
@@ -484,7 +484,7 @@ Class cVSUM
                     VSUMpath = Cfg.BATCHoutpath & fFILE(JobFile, False) & "_BATCH.vsum"
             End Select
         Else
-            VSUMpath = fFileWoExt(JobFile) & ".vsum"
+			VSUMpath = fFileWoExt(JobFile) & ".v2.vsum"
         End If
 
         'Open file
@@ -660,7 +660,7 @@ Class cVSUM
 
 			'Vehicle-related fields
 			AddToVSUM("\\PwheelPos", "PwheelPos", "[kW]")
-            AddToVSUM("\\Pbrake", "Pbrake", "[kW]")
+            AddToVSUM("\\Pbrake", "P_brake_loss", "[kW]")
             AddToVSUM("\\EposICE", "EposICE", "[kWh]")
             AddToVSUM("\\EnegICE", "EnegICE", "[kWh]")
             AddToVSUM("\\Eair", "Eair", "[kWh]")

@@ -1,0 +1,417 @@
+﻿/*
+* This file is part of VECTO.
+*
+* Copyright © 2012-2016 European Union
+*
+* Developed by Graz University of Technology,
+*              Institute of Internal Combustion Engines and Thermodynamics,
+*              Institute of Technical Informatics
+*
+* VECTO is licensed under the EUPL, Version 1.1 or - as soon they will be approved
+* by the European Commission - subsequent versions of the EUPL (the "Licence");
+* You may not use VECTO except in compliance with the Licence.
+* You may obtain a copy of the Licence at:
+*
+* https://joinup.ec.europa.eu/community/eupl/og_page/eupl
+*
+* Unless required by applicable law or agreed to in writing, VECTO
+* distributed under the Licence is distributed on an "AS IS" basis,
+* WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+* See the Licence for the specific language governing permissions and
+* limitations under the Licence.
+*
+* Authors:
+*   Stefan Hausberger, hausberger@ivt.tugraz.at, IVT, Graz University of Technology
+*   Christian Kreiner, christian.kreiner@tugraz.at, ITI, Graz University of Technology
+*   Michael Krisper, michael.krisper@tugraz.at, ITI, Graz University of Technology
+*   Raphael Luz, luz@ivt.tugraz.at, IVT, Graz University of Technology
+*   Markus Quaritsch, markus.quaritsch@tugraz.at, IVT, Graz University of Technology
+*   Martin Rexeis, rexeis@ivt.tugraz.at, IVT, Graz University of Technology
+*/
+
+using System;
+using System.Collections.Generic;
+using System.Linq;
+using System.Reflection;
+using Microsoft.VisualStudio.TestTools.UnitTesting;
+using NLog;
+using TUGraz.VectoCore.Configuration;
+using TUGraz.VectoCore.InputData.FileIO.JSON;
+using TUGraz.VectoCore.InputData.Reader;
+using TUGraz.VectoCore.Models.Connector.Ports;
+using TUGraz.VectoCore.Models.Connector.Ports.Impl;
+using TUGraz.VectoCore.Models.Declaration;
+using TUGraz.VectoCore.Models.Simulation.Data;
+using TUGraz.VectoCore.Models.Simulation.Impl;
+using TUGraz.VectoCore.Models.SimulationComponent.Data;
+using TUGraz.VectoCore.Models.SimulationComponent.Data.Gearbox;
+using TUGraz.VectoCore.Models.SimulationComponent.Impl;
+using TUGraz.VectoCore.OutputData;
+using TUGraz.VectoCore.OutputData.FileIO;
+using TUGraz.VectoCore.Tests.Utils;
+using TUGraz.VectoCore.Utils;
+using Wheels = TUGraz.VectoCore.Models.SimulationComponent.Impl.Wheels;
+
+namespace TUGraz.VectoCore.Tests.Integration.SimulationRuns
+{
+	[TestClass]
+	public class FullPowerTrain
+	{
+		public const string CycleFile = @"TestData\Integration\FullPowerTrain\1-Gear-Test-dist.vdri";
+		public const string CoachCycleFile = @"TestData\Integration\FullPowerTrain\Coach.vdri";
+		public const string EngineFile = @"TestData\Components\24t Coach.veng";
+		public const string AccelerationFile = @"TestData\Components\Coach.vacc";
+		public const string GearboxLossMap = @"TestData\Components\Indirect Gear.vtlm";
+		public const string AxleLossMap = @"TestData\Components\Axle.vtlm";
+		public const string GearboxShiftPolygonFile = @"TestData\Components\ShiftPolygons.vgbs";
+		public const string GearboxFullLoadCurveFile = @"TestData\Components\Gearbox.vfld";
+		private static readonly Logger Log = LogManager.GetLogger(typeof(FullPowerTrain).ToString());
+
+		[TestMethod, TestCategory("LongRunning")]
+		public void Test_FullPowertrain_SimpleGearbox()
+		{
+			var fileWriter = new FileOutputWriter("Coach_FullPowertrain_SimpleGearbox", "");
+			var modData = new ModalDataContainer("Coach_FullPowertrain_SimpleGearbox", fileWriter);
+			var container = new VehicleContainer(modData);
+
+			var engineData = MockSimulationDataFactory.CreateEngineDataFromFile(EngineFile);
+			var cycleData = DrivingCycleDataReader.ReadFromFile(CycleFile, CycleType.DistanceBased, false);
+			var axleGearData = CreateAxleGearData();
+			var gearboxData = CreateSimpleGearboxData();
+			var vehicleData = CreateVehicleData(3300.SI<Kilogram>());
+			var driverData = CreateDriverData(AccelerationFile);
+
+			var cycle = new DistanceBasedDrivingCycle(container, cycleData);
+			var cyclePort = cycle.OutPort();
+			dynamic tmp = Port.AddComponent(cycle, new Driver(container, driverData, new DefaultDriverStrategy()));
+			tmp = Port.AddComponent(tmp, new Vehicle(container, vehicleData));
+			tmp = Port.AddComponent(tmp, new Wheels(container, vehicleData.DynamicTyreRadius, vehicleData.WheelsInertia));
+			tmp = Port.AddComponent(tmp, new Brakes(container));
+			tmp = Port.AddComponent(tmp, new AxleGear(container, axleGearData));
+			var gbx = new Gearbox(container, gearboxData, new AMTShiftStrategy(gearboxData, container));
+			tmp = Port.AddComponent(tmp, gbx);
+			var engine = new CombustionEngine(container, engineData);
+			var clutch = new Clutch(container, engineData, engine.IdleController);
+			tmp = Port.AddComponent(tmp, clutch);
+			Port.AddComponent(tmp, engine);
+			engine.IdleController.RequestPort = clutch.IdleControlPort;
+
+			cyclePort.Initialize();
+
+			var absTime = 0.SI<Second>();
+			var ds = Constants.SimulationSettings.DriveOffDistance;
+			IResponse response;
+
+			var cnt = 0;
+			do {
+				response = cyclePort.Request(absTime, ds);
+				response.Switch().
+					Case<ResponseDrivingCycleDistanceExceeded>(r => ds = r.MaxDistance).
+					Case<ResponseCycleFinished>(r => { }).
+					Case<ResponseSuccess>(r => {
+						container.CommitSimulationStep(absTime, r.SimulationInterval);
+						absTime += r.SimulationInterval;
+
+						ds = container.VehicleSpeed.IsEqual(0)
+							? Constants.SimulationSettings.DriveOffDistance
+							: Constants.SimulationSettings.TargetTimeInterval * container.VehicleSpeed;
+
+						if (cnt++ % 100 == 0) {
+							modData.Finish(VectoRun.Status.Success);
+						}
+					}).
+					Default(r => Assert.Fail("Unexpected Response: {0}", r));
+			} while (!(response is ResponseCycleFinished));
+			modData.Finish(VectoRun.Status.Success);
+			Assert.IsInstanceOfType(response, typeof(ResponseCycleFinished));
+		}
+
+		[TestMethod, TestCategory("LongRunning")]
+		public void Test_FullPowertrain()
+		{
+			var fileWriter = new FileOutputWriter("Coach_FullPowertrain", "");
+			var modData = new ModalDataContainer("Coach_FullPowertrain", fileWriter);
+			var container = new VehicleContainer(modData);
+
+			var engineData = MockSimulationDataFactory.CreateEngineDataFromFile(EngineFile);
+			var cycleData = DrivingCycleDataReader.ReadFromFile(CoachCycleFile, CycleType.DistanceBased, false);
+			var axleGearData = CreateAxleGearData();
+			var gearboxData = CreateGearboxData();
+			var vehicleData = CreateVehicleData(3300.SI<Kilogram>());
+			var driverData = CreateDriverData(AccelerationFile);
+
+			var cycle = new DistanceBasedDrivingCycle(container, cycleData);
+			var cyclePort = cycle.OutPort();
+			dynamic tmp = Port.AddComponent(cycle, new Driver(container, driverData, new DefaultDriverStrategy()));
+			tmp = Port.AddComponent(tmp, new Vehicle(container, vehicleData));
+			tmp = Port.AddComponent(tmp, new Wheels(container, vehicleData.DynamicTyreRadius, vehicleData.WheelsInertia));
+			tmp = Port.AddComponent(tmp, new Brakes(container));
+			tmp = Port.AddComponent(tmp, new AxleGear(container, axleGearData));
+			var gbx = new Gearbox(container, gearboxData, new AMTShiftStrategy(gearboxData, container));
+			tmp = Port.AddComponent(tmp, gbx);
+			var engine = new CombustionEngine(container, engineData);
+			var clutch = new Clutch(container, engineData, engine.IdleController);
+			tmp = Port.AddComponent(tmp, clutch);
+			Port.AddComponent(tmp, engine);
+			engine.IdleController.RequestPort = clutch.IdleControlPort;
+
+			cyclePort.Initialize();
+
+			//gbx.Gear = 0;
+
+			var absTime = 0.SI<Second>();
+			var ds = Constants.SimulationSettings.DriveOffDistance;
+			var response = cyclePort.Request(absTime, ds);
+			Assert.IsInstanceOfType(response, typeof(ResponseSuccess));
+			container.CommitSimulationStep(absTime, response.SimulationInterval);
+			absTime += response.SimulationInterval;
+
+			//gbx.Gear = 1;
+			var cnt = 0;
+			while (!(response is ResponseCycleFinished) && container.Distance < 17000) {
+				Log.Info("Test New Request absTime: {0}, ds: {1}", absTime, ds);
+				try {
+					response = cyclePort.Request(absTime, ds);
+				} catch (Exception) {
+					modData.Finish(VectoRun.Status.Success);
+					throw;
+				}
+				Log.Info("Test Got Response: {0},", response);
+
+				response.Switch().
+					Case<ResponseDrivingCycleDistanceExceeded>(r => ds = r.MaxDistance).
+					Case<ResponseCycleFinished>(r => { }).
+					Case<ResponseGearShift>(r => { Log.Debug("Gearshift"); }).
+					Case<ResponseSuccess>(r => {
+						container.CommitSimulationStep(absTime, r.SimulationInterval);
+						absTime += r.SimulationInterval;
+
+						ds = container.VehicleSpeed.IsEqual(0)
+							? Constants.SimulationSettings.DriveOffDistance
+							: Constants.SimulationSettings.TargetTimeInterval * container.VehicleSpeed;
+
+						if (cnt++ % 100 == 0) {
+							modData.Finish(VectoRun.Status.Success);
+						}
+					}).
+					Default(r => Assert.Fail("Unexpected Response: {0}", r));
+			}
+			modData.Finish(VectoRun.Status.Success);
+			Assert.IsInstanceOfType(response, typeof(ResponseSuccess));
+		}
+
+		[TestMethod, TestCategory("LongRunning")]
+		public void Test_FullPowertrain_LowSpeed()
+		{
+			var fileWriter = new FileOutputWriter("Coach_FullPowertrain_LowSpeed", "");
+			var modData = new ModalDataContainer("Coach_FullPowertrain_LowSpeed", fileWriter);
+			var container = new VehicleContainer(modData);
+
+			var engineData = MockSimulationDataFactory.CreateEngineDataFromFile(EngineFile);
+			var cycleData = DrivingCycleDataReader.ReadFromFile(CycleFile, CycleType.DistanceBased, false);
+			var axleGearData = CreateAxleGearData();
+			var gearboxData = CreateGearboxData();
+			var vehicleData = CreateVehicleData(3300.SI<Kilogram>());
+			var driverData = CreateDriverData(AccelerationFile);
+
+			var cycle = new DistanceBasedDrivingCycle(container, cycleData);
+			var cyclePort = cycle.OutPort();
+			dynamic tmp = Port.AddComponent(cycle, new Driver(container, driverData, new DefaultDriverStrategy()));
+			tmp = Port.AddComponent(tmp, new Vehicle(container, vehicleData));
+			tmp = Port.AddComponent(tmp, new Wheels(container, vehicleData.DynamicTyreRadius, vehicleData.WheelsInertia));
+			tmp = Port.AddComponent(tmp, new Brakes(container));
+			tmp = Port.AddComponent(tmp, new AxleGear(container, axleGearData));
+			tmp = Port.AddComponent(tmp,
+				new Gearbox(container, gearboxData, new AMTShiftStrategy(gearboxData, container)));
+			var engine = new CombustionEngine(container, engineData);
+			var clutch = new Clutch(container, engineData, engine.IdleController);
+			tmp = Port.AddComponent(tmp, clutch);
+			Port.AddComponent(tmp, engine);
+			engine.IdleController.RequestPort = clutch.IdleControlPort;
+
+			cyclePort.Initialize();
+
+			//container.Gear = 0;
+			var absTime = 0.SI<Second>();
+			var ds = Constants.SimulationSettings.DriveOffDistance;
+			var response = cyclePort.Request(absTime, ds);
+			Assert.IsInstanceOfType(response, typeof(ResponseSuccess));
+			container.CommitSimulationStep(absTime, response.SimulationInterval);
+			absTime += response.SimulationInterval;
+
+			//container.Gear = 1;
+			var cnt = 0;
+			while (!(response is ResponseCycleFinished) && container.Distance < 17000) {
+				Log.Info("Test New Request absTime: {0}, ds: {1}", absTime, ds);
+				try {
+					response = cyclePort.Request(absTime, ds);
+				} catch (Exception) {
+					modData.Finish(VectoRun.Status.Success);
+					throw;
+				}
+				Log.Info("Test Got Response: {0},", response);
+
+				response.Switch().
+					Case<ResponseDrivingCycleDistanceExceeded>(r => ds = r.MaxDistance).
+					Case<ResponseCycleFinished>(r => { }).
+					Case<ResponseGearShift>(r => { Log.Debug("Gearshift"); }).
+					Case<ResponseSuccess>(r => {
+						container.CommitSimulationStep(absTime, r.SimulationInterval);
+						absTime += r.SimulationInterval;
+
+						ds = container.VehicleSpeed.IsEqual(0)
+							? Constants.SimulationSettings.DriveOffDistance
+							: Constants.SimulationSettings.TargetTimeInterval * container.VehicleSpeed;
+
+						if (cnt++ % 100 == 0) {
+							modData.Finish(VectoRun.Status.Success);
+						}
+					}).
+					Default(r => {
+						modData.Finish(VectoRun.Status.Success);
+						Assert.Fail("Unexpected Response: {0}", r);
+					});
+			}
+			modData.Finish(VectoRun.Status.Success);
+			Assert.IsInstanceOfType(response, typeof(ResponseCycleFinished));
+		}
+
+		[TestMethod, TestCategory("LongRunning")]
+		public void Test_FullPowerTrain_JobFile()
+		{
+			const string jobFile = @"TestData\job.vecto";
+			var fileWriter = new FileOutputWriter(jobFile);
+			var sumData = new SummaryDataContainer(fileWriter);
+			var jobContainer = new JobContainer(sumData);
+
+			var inputData = JSONInputDataFactory.ReadJsonJob(jobFile);
+			var factory = new SimulatorFactory(ExecutionMode.Engineering, inputData, fileWriter);
+
+			jobContainer.AddRuns(factory);
+			jobContainer.Execute();
+
+			jobContainer.WaitFinished();
+			ResultFileHelper.TestSumFile(@"TestData\Results\Integration\job.vsum", @"TestData\job.vsum");
+
+			ResultFileHelper.TestModFile(@"TestData\Results\Integration\job_1-Gear-Test-dist.vmod",
+				@"TestData\job_1-Gear-Test-dist.vmod", testRowCount: false);
+		}
+
+		// todo: add realistic FullLoadCurve
+		private static GearboxData CreateGearboxData()
+		{
+			var ratios = new[] { 6.38, 4.63, 3.44, 2.59, 1.86, 1.35, 1, 0.76 };
+
+			return new GearboxData {
+				Gears = ratios.Select((ratio, i) =>
+					Tuple.Create((uint)i,
+						new GearData {
+							FullLoadCurve = FullLoadCurve.ReadFromFile(GearboxFullLoadCurveFile),
+							LossMap =
+								TransmissionLossMap.ReadFromFile(GearboxLossMap, ratio, string.Format("Gear {0}", i)),
+							Ratio = ratio,
+							ShiftPolygon = ShiftPolygon.ReadFromFile(GearboxShiftPolygonFile)
+						}))
+					.ToDictionary(k => k.Item1 + 1, v => v.Item2),
+				ShiftTime = 2.SI<Second>(),
+				Inertia = 0.SI<KilogramSquareMeter>(),
+				TractionInterruption = 1.SI<Second>(),
+				StartSpeed = 2.SI<MeterPerSecond>(),
+				StartAcceleration = 0.6.SI<MeterPerSquareSecond>(),
+				StartTorqueReserve = 0.2,
+				TorqueReserve = 0.2
+			};
+		}
+
+		private static AxleGearData CreateAxleGearData()
+		{
+			var ratio = 3.240355;
+			return new AxleGearData {
+				AxleGear = new GearData {
+					Ratio = ratio,
+					LossMap = TransmissionLossMap.ReadFromFile(AxleLossMap, ratio, "AxleGear")
+				}
+			};
+		}
+
+		private static GearboxData CreateSimpleGearboxData()
+		{
+			var ratio = 3.44;
+			return new GearboxData {
+				Gears = new Dictionary<uint, GearData> {
+					{
+						1, new GearData {
+							FullLoadCurve = null,
+							LossMap = TransmissionLossMap.ReadFromFile(GearboxLossMap, ratio, "Gear 1"),
+							Ratio = ratio,
+							ShiftPolygon = ShiftPolygon.ReadFromFile(GearboxShiftPolygonFile)
+						}
+					}
+				},
+				Inertia = 0.SI<KilogramSquareMeter>(),
+				TractionInterruption = 0.SI<Second>(),
+				ShiftTime = 2.SI<Second>(),
+				StartSpeed = 2.SI<MeterPerSecond>(),
+				StartAcceleration = 0.6.SI<MeterPerSquareSecond>(),
+				StartTorqueReserve = 0.2,
+				TorqueReserve = 0.2
+			};
+		}
+
+		private static VehicleData CreateVehicleData(Kilogram loading)
+		{
+			var axles = new List<Axle> {
+				new Axle {
+					AxleWeightShare = 0.4375,
+					Inertia = 21.66667.SI<KilogramSquareMeter>(),
+					RollResistanceCoefficient = 0.0055,
+					TwinTyres = false,
+					TyreTestLoad = 62538.75.SI<Newton>()
+				},
+				new Axle {
+					AxleWeightShare = 0.375,
+					Inertia = 10.83333.SI<KilogramSquareMeter>(),
+					RollResistanceCoefficient = 0.0065,
+					TwinTyres = true,
+					TyreTestLoad = 52532.55.SI<Newton>()
+				},
+				new Axle {
+					AxleWeightShare = 0.1875,
+					Inertia = 21.66667.SI<KilogramSquareMeter>(),
+					RollResistanceCoefficient = 0.0055,
+					TwinTyres = false,
+					TyreTestLoad = 62538.75.SI<Newton>()
+				}
+			};
+			return new VehicleData {
+				AxleConfiguration = AxleConfiguration.AxleConfig_6x2,
+				CrossWindCorrectionCurve =
+					new CrosswindCorrectionCdxALookup(CrossWindCorrectionCurveReader.GetNoCorrectionCurve(3.2634.SI<SquareMeter>()),
+						CrossWindCorrectionMode.NoCorrection),
+				CurbWeight = 15700.SI<Kilogram>(),
+				CurbWeigthExtra = 0.SI<Kilogram>(),
+				Loading = loading,
+				DynamicTyreRadius = 0.52.SI<Meter>(),
+				AxleData = axles,
+				SavedInDeclarationMode = false
+			};
+		}
+
+		private static DriverData CreateDriverData(string accelerationFile)
+		{
+			return new DriverData {
+				AccelerationCurve = AccelerationCurveData.ReadFromFile(accelerationFile),
+				LookAheadCoasting = new DriverData.LACData {
+					Enabled = false,
+					Deceleration = -0.5.SI<MeterPerSquareSecond>()
+				},
+				OverSpeedEcoRoll = new DriverData.OverSpeedEcoRollData {
+					Mode = DriverData.DriverMode.Off
+				},
+				StartStop = new VectoRunData.StartStopData {
+					Enabled = false
+				}
+			};
+		}
+	}
+}

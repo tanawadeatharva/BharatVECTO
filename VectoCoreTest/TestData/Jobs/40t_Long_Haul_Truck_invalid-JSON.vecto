@@ -1,0 +1,70 @@
+﻿{
+  "Header": {
+    "CreatedBy": "Raphael Luz IVT TU-Graz (85407225-fc3f-48a8-acda-c84a05df6837)",
+    "Date": "29.07.2014 16:59:08",
+    "AppVersion": "2.0.4-beta",
+    "FileVersion": 2
+  },
+  "Body": {
+    "SavedInDeclMode": true,
+    "XVehicleFile": "../Components/40t_Long_Haul_Truck.vveh",
+    "XEngineFile": "../Components/40t_Long_Haul_Truck.veng",
+    "XGearboxFile": "../Components/40t_Long_Haul_Truck.vgbx",
+    "XCycles": [
+      "Long Haul",
+      "Regional Delivery"
+    ],
+    "XAux": [
+      {
+        "ID": "FAN",
+        "Type": "Fan",
+        "Path": "<NOFILE>",
+        "Technology": "Hydraulic driven - Constant displacement pump"
+      },
+      {
+        "ID": "STP",
+        "Type": "Steering pump",
+        "Path": "<NOFILE>",
+        "Technology": "Variable displacement"
+      },
+      {
+        "ID": "AC",
+        "Type": "HVAC",
+        "Path": "<NOFILE>",
+        "Technology": "Default"
+      },
+      {
+        "ID": "ES",
+        "Type": "Electric System",
+        "Path": "<NOFILE>",
+        "Technology": "Custom Technology List",
+        "TechList": []
+      },
+      {
+        "ID": "PS",
+        "Type": "Pneumatic System",
+        "Path": "<NOFILE>",
+        "Technology": "Default"
+      }
+    ],
+    "VACC": "<NO FILE>",
+    "XEngineOnlyMode": false,
+    "XStartStop": {
+      "XEnabled": false,
+      "XMaxSpeed": 5.0,
+      "XMinTime": 5.0,
+      "XDelay": 5
+    },
+    "LAC": {
+      "Enabled": true,
+      "Dec": -0.5,
+      "MinSpeed": 50.0
+    },
+    "OverSpeedEcoRoll": {
+      "Mode": "OverSpeed",
+      "XMinSpeed": 50.0,
+      "XOverSpeed": 5.0,
+      "XUnderSpeed": 5.0
+    }
+  }
+}

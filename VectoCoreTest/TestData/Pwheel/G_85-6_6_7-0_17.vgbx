@@ -1,0 +1,76 @@
+﻿{
+  "Header": {
+    "CreatedBy": "TUG ITI (59f3bd5f-1e50-474f-928a-435968d769f6)",
+    "Date": "23.11.2015 10:26:27",
+    "AppVersion": "2.2",
+    "FileVersion": 5
+  },
+  "Body": {
+    "SavedInDeclMode": false,
+    "ModelName": "G 85-6/6,7-0,73",
+    "Inertia": 0.0,
+    "TracInt": 1.0,
+    "Gears": [
+      {
+        "Ratio": 4.3,
+        "LossMap": "axle_losses_r390_80_serie_1306.vtlm"
+      },
+      {
+        "Ratio": 6.696,
+        "LossMap": "losses_g85_6_6696_0728_1401_loss_1.vtlm",
+        "TCactive": false,
+        "ShiftPolygon": "ShiftPolygons_o9061750850E4.vgbs",
+        "FullLoadCurve": "<NOFILE>"
+      },
+      {
+        "Ratio": 3.806,
+        "LossMap": "losses_g85_6_6696_0728_1401_loss_2.vtlm",
+        "TCactive": false,
+        "ShiftPolygon": "ShiftPolygons_o9061750850E4.vgbs",
+        "FullLoadCurve": "<NOFILE>"
+      },
+      {
+        "Ratio": 2.289,
+        "LossMap": "losses_g85_6_6696_0728_1401_loss_3.vtlm",
+        "TCactive": false,
+        "ShiftPolygon": "ShiftPolygons_o9061750850E4.vgbs",
+        "FullLoadCurve": "<NOFILE>"
+      },
+      {
+        "Ratio": 1.48,
+        "LossMap": "losses_g85_6_6696_0728_1401_loss_4.vtlm",
+        "TCactive": false,
+        "ShiftPolygon": "ShiftPolygons_o9061750850E4.vgbs",
+        "FullLoadCurve": "<NOFILE>"
+      },
+      {
+        "Ratio": 1.0,
+        "LossMap": "losses_g85_6_6696_0728_1401_loss_5.vtlm",
+        "TCactive": false,
+        "ShiftPolygon": "ShiftPolygons_o9061750850E4.vgbs",
+        "FullLoadCurve": "<NOFILE>"
+      },
+      {
+        "Ratio": 0.728,
+        "LossMap": "losses_g85_6_6696_0728_1401_loss_6.vtlm",
+        "TCactive": false,
+        "ShiftPolygon": "ShiftPolygons_o9061750850E4.vgbs",
+        "FullLoadCurve": "<NOFILE>"
+      }
+    ],
+    "TqReserve": 10.0,
+    "SkipGears": true,
+    "ShiftTime": 1,
+    "EaryShiftUp": false,
+    "StartTqReserve": 5.0,
+    "StartSpeed": 2.0,
+    "StartAcc": 1.0,
+    "GearboxType": "MT",
+    "TorqueConverter": {
+      "Enabled": false,
+      "File": "<NOFILE>",
+      "RefRPM": 0.0,
+      "Inertia": 0.0
+    }
+  }
+}

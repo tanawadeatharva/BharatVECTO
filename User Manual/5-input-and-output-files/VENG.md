@@ -1,0 +1,29 @@
+## Engine File
+
+File for the definition of an engine in Vecto. Can be created with the [Engine Editor](#engine-editor).
+
+- File format is [JSON](#json).
+- Filetype ending is ".veng"
+
+**Example:**
+
+    {
+      "Header": {
+        "CreatedBy": "Raphael Luz IVT TU-Graz (14fea510-e457-4bf6-860f-a9514dc327f1)",
+        "Date": "25.06.2015 11:23:22",
+        "AppVersion": "2.2 beta",
+        "FileVersion": 3
+      },
+      "Body": {
+        "SavedInDeclMode": false,
+        "ModelName": "Generic 24t Coach",
+        "Displacement": 12730.0,
+        "IdlingSpeed": 560.0,
+        "Inertia": 3.8,
+        "FullLoadCurve": "24t Coach.vfld",
+        "FuelMap": "24t Coach.vmap",
+        "WHTC-Urban": 0.0,
+        "WHTC-Rural": 0.0,
+        "WHTC-Motorway": 0.0
+      }
+    }

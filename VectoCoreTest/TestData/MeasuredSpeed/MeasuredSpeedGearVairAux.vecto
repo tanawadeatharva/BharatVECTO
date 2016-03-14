@@ -1,0 +1,44 @@
+﻿{
+  "Header": {
+    "CreatedBy": "Michael Krisper",
+    "Date": "2016-02-16T16:57:05+01:00",
+    "AppVersion": "3.0.2",
+    "FileVersion": 2
+  },
+  "Body": {
+    "SavedInDeclMode": false,
+    "EngineOnlyMode": false,
+    "VehicleFile": "VehicleVair.vveh",
+    "EngineFile": "Engine.veng",
+    "GearboxFile": "Gearbox.vgbx",
+    "Cycles": [
+      "MeasuredSpeed_Gear_Rural_VairAux.vdri"
+    ],
+    "Aux": [
+      {
+        "ID": "ALT",
+        "Type": "Alternator",
+        "Path": "Alternator.vaux",
+        "Technology": ""
+      }
+    ],
+    "VACC": "Driver.vacc",
+    "StartStop": {
+      "Enabled": false,
+      "MaxSpeed": 5.0,
+      "MinTime": 5.0,
+      "Delay": 0
+    },
+    "LAC": {
+      "Enabled": false,
+      "Dec": -0.5,
+      "MinSpeed": 50.0
+    },
+    "OverSpeedEcoRoll": {
+      "Mode": "Off",
+      "MinSpeed": 0.0,
+      "OverSpeed": 0.0,
+      "UnderSpeed": 0.0
+    }
+  }
+}
