@@ -116,9 +116,6 @@ namespace TUGraz.VectoCore.InputData.Reader.DataObjectAdaper
 				Displacement = data.Displacement,
 				IdleSpeed = data.IdleSpeed,
 				ConsumptionMap = FuelConsumptionMap.Create(data.FuelConsumptionMap),
-				WHTCUrban = data.WHTCUrban,
-				WHTCMotorway = data.WHTCMotorway,
-				WHTCRural = data.WHTCRural,
 			};
 			return retVal;
 		}
