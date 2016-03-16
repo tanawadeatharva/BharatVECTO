@@ -29,6 +29,7 @@
 *   Martin Rexeis, rexeis@ivt.tugraz.at, IVT, Graz University of Technology
 */
 
+using System;
 using System.Collections.Generic;
 using System.Linq;
 using TUGraz.VectoCore.Configuration;
@@ -289,9 +290,27 @@ namespace TUGraz.VectoCore.Models.SimulationComponent.Impl
 	/// <summary>
 	/// Driving Cycle for the Measured Speed Gear driving cycle.
 	/// </summary>
-	public class MeasuredSpeedDrivingCycle : VectoSimulationComponent, IDriverInfo, IDrivingCycleInfo,
+	public class MeasuredSpeedDrivingCycle : StatefulVectoSimulationComponent<MeasuredSpeedDrivingCycle.DrivingCycleState>,
+		IDriverInfo, IDrivingCycleInfo,
 		IDriverDemandInProvider, IDriverDemandInPort, ISimulationOutProvider, ISimulationOutPort
 	{
+		public class DrivingCycleState
+		{
+			public DrivingCycleState Clone()
+			{
+				return new DrivingCycleState {
+					Distance = Distance,
+					VehicleSpeed = VehicleSpeed,
+				};
+			}
+
+			public Meter Distance;
+			public MeterPerSecond VehicleSpeed;
+			public Meter SimulationDistance;
+			public MeterPerSquareSecond Acceleration;
+		}
+
+
 		protected DrivingCycleData Data;
 		protected IDriverDemandOutPort NextComponent;
 		private bool _isInitializing;
@@ -315,6 +334,13 @@ namespace TUGraz.VectoCore.Models.SimulationComponent.Impl
 			RightSample = Data.Entries.GetEnumerator();
 			RightSample.MoveNext();
 			RightSample.MoveNext();
+
+			var first = LeftSample.Current;
+			PreviousState = new DrivingCycleState {
+				Distance = 0.SI<Meter>(),
+				VehicleSpeed = first.VehicleTargetSpeed,
+			};
+			CurrentState = PreviousState.Clone();
 		}
 
 		#region IDriverDemandInProvider
@@ -404,6 +430,12 @@ namespace TUGraz.VectoCore.Models.SimulationComponent.Impl
 			response.SimulationInterval = dt;
 			response.Acceleration = acceleration;
 			debug.Add(response);
+
+			CurrentState.SimulationDistance = acceleration / 2 * dt * dt + PreviousState.VehicleSpeed * dt;
+			CurrentState.Distance = CurrentState.SimulationDistance + PreviousState.Distance;
+			CurrentState.VehicleSpeed = acceleration * dt + PreviousState.VehicleSpeed;
+			CurrentState.Acceleration = acceleration;
+
 			return response;
 		}
 
@@ -456,6 +488,9 @@ namespace TUGraz.VectoCore.Models.SimulationComponent.Impl
 				RightSample.MoveNext();
 				LeftSample.MoveNext();
 			}
+
+			PreviousState = CurrentState;
+			CurrentState = CurrentState.Clone();
 		}
 
 		#endregion
@@ -475,7 +510,12 @@ namespace TUGraz.VectoCore.Models.SimulationComponent.Impl
 
 		protected override void DoWriteModalResults(IModalDataContainer container)
 		{
-			container[ModalResultField.dist] = DataBus.Distance;
+			container[ModalResultField.dist] = CurrentState.Distance;
+			container[ModalResultField.simulationDistance] = CurrentState.SimulationDistance;
+			container[ModalResultField.v_targ] = CurrentState.VehicleSpeed;
+			container[ModalResultField.grad] = LeftSample.Current.RoadGradientPercent.SI();
+			container[ModalResultField.altitude] = LeftSample.Current.Altitude;
+			container[ModalResultField.acc] = CurrentState.Acceleration;
 		}
 
 		public bool VehicleStopped
