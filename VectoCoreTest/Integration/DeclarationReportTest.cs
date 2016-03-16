@@ -31,6 +31,7 @@
 
 using System.IO;
 using System.Linq;
+using iTextSharp.text.pdf;
 using Microsoft.VisualStudio.TestTools.UnitTesting;
 using TUGraz.VectoCore.InputData.FileIO.JSON;
 using TUGraz.VectoCore.Models.Simulation.Impl;
@@ -71,6 +72,8 @@ namespace TUGraz.VectoCore.Tests.Integration
 
 			Assert.IsTrue(File.Exists(@"TestData\Jobs\job-report.vsum"));
 			Assert.IsTrue(File.Exists(@"TestData\Jobs\job-report.pdf"));
+			var pdf = new PdfReader(@"TestData\Jobs\job-report.pdf");
+			Assert.AreEqual(4, pdf.NumberOfPages);
 		}
 	}
 }
