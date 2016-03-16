@@ -264,6 +264,8 @@ namespace TUGraz.VectoCore.OutputData.PDF
 			var writer = PdfWriter.GetInstance(document, reportWriter);
 
 			document.Open();
+			titlePage.Position = 0;
+			document.Add(Image.GetInstance(writer.GetImportedPage(new PdfReader(titlePage), 1)));
 
 			foreach (var cyclePage in pages) {
 				cyclePage.Position = 0;
