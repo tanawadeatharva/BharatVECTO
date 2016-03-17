@@ -568,16 +568,12 @@ Imports TUGraz.VectoCore.Utils
 		DeclOnOff()
 
 		'Init Log Writer for Listening to VectoCore Nlog
-		Dim config As LoggingConfiguration = LogManager.Configuration
-
-		Dim methodCallTarget As MethodCallTarget = New MethodCallTarget()
-		methodCallTarget.ClassName = "VECTO.F_MAINForm, vecto"
-		methodCallTarget.MethodName = "LogMessage"
-		methodCallTarget.Name = "WarningLogger"
-		methodCallTarget.Parameters.Add(New MethodCallParameter("${level}"))
-		methodCallTarget.Parameters.Add(New MethodCallParameter("${message}"))
-		config.LoggingRules.Add(New LoggingRule("*", LogLevel.Warn, methodCallTarget))
-		LogManager.Configuration = config
+		Dim target As MethodCallTarget = New MethodCallTarget()
+		target.ClassName = Me.GetType().AssemblyQualifiedName
+		target.MethodName = "LogMessage"
+		target.Parameters.Add(New MethodCallParameter("${level}"))
+		target.Parameters.Add(New MethodCallParameter("${message}"))
+		SimpleConfigurator.ConfigureForTargetLogging(target, LogLevel.Warn)
 	End Sub
 
 	Public Shared Sub LogMessage(level As String, message As String)
