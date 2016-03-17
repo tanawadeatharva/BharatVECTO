@@ -335,10 +335,12 @@ namespace TUGraz.VectoCore.Models.SimulationComponent.Impl
 				container[ModalResultField.FCWHTCc] = fcaux * ModelData.WHTCCorrectionFactor;
 
 				if (ModelData.ConsumptionMap.Extrapolated) {
-					Log.Warn("FuelMap Extrapolated: n_eng_avg: {0} Tq: {1}, FC: {2}", avgEngineSpeed, CurrentState.EngineTorque, fc);
+					Log.Warn("FuelMap Extrapolated: n_eng_avg: {0} Tq: {1}, FC: {2}", avgEngineSpeed.ConvertTo().Rounds.Per.Minute,
+						CurrentState.EngineTorque, fc);
 				}
 			} catch (VectoException ex) {
-				Log.Warn("FuelMap: {0} n_eng_avg: {1} Tq: {2}", ex.Message, avgEngineSpeed, CurrentState.EngineTorque);
+				Log.Warn("FuelMap: {0} n_eng_avg: {1} Tq: {2}", ex.Message, avgEngineSpeed.ConvertTo().Rounds.Per.Minute,
+					CurrentState.EngineTorque);
 				container[ModalResultField.FCMap] = null;
 			}
 		}
