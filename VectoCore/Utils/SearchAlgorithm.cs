@@ -84,7 +84,8 @@ namespace TUGraz.VectoCore.Utils
 
 				var result = evaluateFunction(x);
 				if (criterion(result)) {
-					log.Debug("InterpolateLinear found an operating point after {0} function calls.", iterationCount);
+					LogManager.EnableLogging();
+					log.Debug("SearchBinary found an operating point after {0} function calls.", iterationCount);
 					return x;
 				}
 				y = getYValue(result);
@@ -103,7 +104,6 @@ namespace TUGraz.VectoCore.Utils
 			Func<T, object> evaluateFunction, Func<object, bool> criterion) where T : SIBase<T>
 		{
 			var log = LogManager.GetLogger(typeof(SearchAlgorithm).FullName);
-			LogManager.DisableLogging();
 			var debug = new List<dynamic> { new { x = x1, y = y1 } };
 
 			var x2 = x1 + interval;
@@ -121,7 +121,6 @@ namespace TUGraz.VectoCore.Utils
 
 				x1 = x2;
 				x2 = (-d / k).Cast<T>();
-
 				result = evaluateFunction(x2);
 				if (criterion(result)) {
 					log.Debug("InterpolateLinear found an operating point after {0} function calls.", iterationCount);
@@ -131,7 +130,6 @@ namespace TUGraz.VectoCore.Utils
 				y1 = y2;
 			}
 
-			LogManager.EnableLogging();
 			log.Debug("InterpolateLinear could not find an operating point.");
 			log.Error("Exceeded max iterations when searching for operating point!");
 			log.Error("debug: {0} ... {1}", ", ".Join(debug.Take(5)), ", ".Join(debug.Slice(-6)));
