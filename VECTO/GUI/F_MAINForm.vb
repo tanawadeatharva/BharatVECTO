@@ -566,17 +566,9 @@ Imports TUGraz.VectoCore.Utils
 		End If
 
 		DeclOnOff()
-
-		'Init Log Writer for Listening to VectoCore Nlog
-		Dim target As MethodCallTarget = New MethodCallTarget()
-		target.ClassName = Me.GetType().AssemblyQualifiedName
-		target.MethodName = "LogMessage"
-		target.Parameters.Add(New MethodCallParameter("${level}"))
-		target.Parameters.Add(New MethodCallParameter("${message}"))
-		SimpleConfigurator.ConfigureForTargetLogging(target, LogLevel.Warn)
 	End Sub
 
-	Public Shared Sub LogMessage(level As String, message As String)
+	Public Shared Sub LogMethod(level As String, message As String)
 		Try
 			If level = "Warn" Then
 				VECTOworkerV3.ReportProgress(100, New With {.Target = "ListBoxWarning", .Message = message})
