@@ -29,7 +29,6 @@
 *   Martin Rexeis, rexeis@ivt.tugraz.at, IVT, Graz University of Technology
 */
 
-using System.IO;
 using System.Data;
 using System.Linq;
 using TUGraz.VectoCore.Utils;
@@ -48,6 +47,10 @@ using TUGraz.VectoCore.Models.SimulationComponent.Data;
 using TUGraz.VectoCore.Models.SimulationComponent.Data.Engine;
 using TUGraz.VectoCore.Models.SimulationComponent.Data.Gearbox;
 using TUGraz.VectoCore.Tests.Utils;
+
+// ReSharper disable UnusedVariable
+
+// ReSharper disable AccessToModifiedClosure
 
 namespace TUGraz.VectoCore.Tests.Models.Simulation
 {

@@ -1682,29 +1682,47 @@ Imports TUGraz.VectoCore.Utils
 									String.Format("Duration: {0:0}s, Current Progress: {1:P} ({2})", duration, sumProgress/progress.Count,
 												String.Join(", ", progress.Select(Function(pair) String.Format("{0,4:P}", pair.Value.Progress))))})
 
-			For Each p As KeyValuePair(Of UInteger, JobContainer.ProgressEntry) In progress
-				If p.Value.Done And Not doneProcesses.Contains(p.Key) Then
-					Dim modFilename As String = fileWriter.GetModDataFileName(p.Value.RunName, p.Value.CycleName, p.Value.RunSuffix)
-					Dim runName As String = String.Format("{0} {1} {2}", p.Value.RunName, p.Value.CycleName, p.Value.RunSuffix)
-					sender.ReportProgress(0, New With {.Target = "ListBox", .Message = String.Format("Finished Run {0}", runName)})
-					If Not p.Value.Error Is Nothing Then
-						sender.ReportProgress(0,
-											New _
-												With {.Target = "ListBoxError", .Message = String.Format("ERROR {0}: {1}", runName, p.Value.Error.Message),
-												.Link = modFilename})
-					End If
-					'If Not Cfg.DeclMode Then
+			For Each p As KeyValuePair(Of UInteger, JobContainer.ProgressEntry) In _
+				progress.Where(Function(proc) proc.Value.Done And Not doneProcesses.Contains(proc.Key))
+				Dim modFilename As String = fileWriter.GetModDataFileName(p.Value.RunName, p.Value.CycleName, p.Value.RunSuffix)
+				Dim runName As String = String.Format("{0} {1} {2}", p.Value.RunName, p.Value.CycleName, p.Value.RunSuffix)
+				sender.ReportProgress(0, New With {.Target = "ListBox", .Message = String.Format("Finished Run {0}", runName)})
+				If Not p.Value.Error Is Nothing Then
 					sender.ReportProgress(0,
 										New _
-											With {.Target = "ListBox",
-											.Message = String.Format("Run {0}: Modal Results written to {1}", runName, modFilename), .Link = modFilename})
-					'End If
-
-					doneProcesses.Add(p.Key)
+											With {.Target = "ListBoxError", .Message = String.Format("ERROR {0}: {1}", runName, p.Value.Error.Message),
+											.Link = modFilename})
 				End If
+				'If Not Cfg.DeclMode Then
+				sender.ReportProgress(0, New With {.Target = "ListBox",
+										.Message = String.Format("Run {0}: Modal Results written to {1}", runName, modFilename), .Link = modFilename})
+				'End If
+
+				doneProcesses.Add(p.Key)
 			Next
 			Thread.Sleep(250)
 		End While
+
+		For Each p As KeyValuePair(Of UInteger, JobContainer.ProgressEntry) In _
+			jobContainer.GetProgress().Where(Function(proc) Not doneProcesses.Contains(proc.Key))
+			Dim modFilename As String = fileWriter.GetModDataFileName(p.Value.RunName, p.Value.CycleName, p.Value.RunSuffix)
+			Dim runName As String = String.Format("{0} {1} {2}", p.Value.RunName, p.Value.CycleName, p.Value.RunSuffix)
+			sender.ReportProgress(0, New With {.Target = "ListBox", .Message = String.Format("Finished Run {0}", runName)})
+			If Not p.Value.Error Is Nothing Then
+				sender.ReportProgress(0,
+									New _
+										With {.Target = "ListBoxError", .Message = String.Format("ERROR {0}: {1}", runName, p.Value.Error.Message),
+										.Link = modFilename})
+			End If
+			'If Not Cfg.DeclMode Then
+			sender.ReportProgress(0,
+								New _
+									With {.Target = "ListBox",
+									.Message = String.Format("Run {0}: Modal Results written to {1}", runName, modFilename), .Link = modFilename})
+			'End If
+
+			doneProcesses.Add(p.Key)
+		Next
 
 		Dim sumFilename As String = fileWriter.GetSumFileName()
 		If File.Exists(sumFilename) Then
