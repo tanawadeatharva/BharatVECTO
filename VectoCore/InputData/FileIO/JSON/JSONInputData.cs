@@ -369,8 +369,8 @@ namespace TUGraz.VectoCore.InputData.FileIO.JSON
 								RessourceHelper.ReadStream(RessourceHelper.Namespace + "MissionCycles." + cycle.Value<string>() + ".vdri");
 							cycleData = VectoCSVFile.ReadStream(cycleDataRes);
 						} catch {
-							// todo: log?
-							cycleData = null;
+							Log.Debug("Driving Cycle could not be read: " + cycleFile);
+							throw new VectoException("Driving Cycle could not be read: " + cycleFile);
 						}
 					}
 					retVal.Add(new CycleInputData() {
