@@ -34,8 +34,6 @@ For vehicles with [Start/Stop](#engine-startstop) the fuel consumption needs to 
 2.  From the difference between the energy consumed by the auxiliaries in the simulation with Start/Stop function and the target value (unit kilowatt-hours), a cycle average change in mechanical power “ΔPe” (unit kilowatt) of the internal combustion engine is calculated (using an average alternator efficiency and the cycle time with running engine).
 3.  The correction of the fuel consumption is performed for all 1Hz time steps using: ΔFC (unit: grams per hour) = ΔPe \* k where k = gradient in the regression. If the engine is running in motoring conditions ΔFC is set to zero.
 
-![](pics/StartStopCorrection.svg)
-
-*Example of a linear regression between engine power and fuel consumption*
+![Example of a linear regression between engine power and fuel consumption](pics/StartStopCorrection.svg)
 </div>
 

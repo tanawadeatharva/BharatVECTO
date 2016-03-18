@@ -22,31 +22,17 @@ In VectoCMD V3.x the default mode is Declaration Mode.
 -   Sum results (.vsum). One file for each invocation of VECTO.
 
 
-###Options###
-The option depends on the driving cycle and cannot be chosen explicitely. For more information see [Driving Cycles](#driving-cycles).
+###Options
+The Driving Cycle determines the simulation method in engineering mode. The option depends directly on the driving cycle input and cannot be set explicitely. For more information about the formats see [Driving Cycles](#driving-cycles).
 
-###Target Speed
-
-This option is the a target vehicle speed distance based cycle (like in Declaration Mode). With this option experiments can be made by the manufacturer.
-
-###Measured Speed
-
-See [Measured speed, time-based cycle](#engineering-mode-measured-speed-time-based-cycle).
-
-
-
-###Measured Speed with Gear
-
-See [Measured speed with gear, time-based cycle](#engineering-mode-measured-speed-with-gear-time-based-cycle).
-
-
-
-###Pwheel (SiCo)
-
-In Pwheel mode the measured power at the wheels is given, and the simulation takes that as input.
-
-For more information see [P~wheel~-Input (SiCo Mode)](#pwheel-input-sico-mode).
-
+* [Target speed, distance-based](#engineering-mode-target-speed-distance-based-cycle)
+:   This option is the a target vehicle speed distance based cycle (like in Declaration Mode). With this option experiments can be made by the manufacturer.
+* [Measured speed, time-based](#engineering-mode-measured-speed-time-based-cycle)
+:   Driving Mode where the actual speed from measurements is simulated.
+* [Measured speed with gear, time-based](#engineering-mode-measured-speed-with-gear-time-based-cycle)
+:   Driving Mode where the actual speed from measurements is simulated. Also defines the chosen gear.
+* [Pwheel (SiCo) Mode, time-based](#engineering-mode-pwheel-sico-time-based)
+:   In Pwheel mode the measured power at the wheels is given, and the simulation takes that as input.
 
 
 
