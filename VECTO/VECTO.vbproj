@@ -798,6 +798,39 @@
     <None Include="..\Generic Vehicles\Engineering Mode\24t Coach\testPneumaticActuationsMap.APAC" >
       <Link>Release Files\Generic Vehicles\Engineering Mode\24t Coach\testPneumaticActuationsMap.APAC</Link>
     </None>
+    <None Include="..\AAUXData\testPneumaticActuationsMap.APAC" >
+      <Link>Release Files\AAUXData\testPneumaticActuationsMap.APAC</Link>
+    </None>
+    <None Include="..\AAUXData\testHVACssm.AHSM" >
+      <Link>Release Files\AAUXData\testHVACssm.AHSM</Link>
+    </None>
+    <None Include="..\AAUXData\testCombAlternatorMap_4Alt.AALT" >
+      <Link>Release Files\AAUXData\testCombAlternatorMap_4Alt.AALT</Link>
+    </None>
+    <None Include="..\AAUXData\testCombAlternatorMap_1Alt.AALT" >
+      <Link>Release Files\AAUXData\testCombAlternatorMap_1Alt.AALT</Link>
+    </None>
+    <None Include="..\AAUXData\DefaultClimatic.aenv" >
+      <Link>Release Files\AAUXData\DefaultClimatic.aenv</Link>
+    </None>
+    <None Include="..\AAUXData\DEFAULT_2-Cylinder_2-Stage_398ccm.ACMP" >
+      <Link>Release Files\AAUXData\DEFAULT_2-Cylinder_2-Stage_398ccm.ACMP</Link>
+    </None>
+    <None Include="..\AAUXData\DEFAULT_3-Cylinder_2-Stage_598ccm.ACMP" >
+      <Link>Release Files\AAUXData\DEFAULT_3-Cylinder_2-Stage_598ccm.ACMP</Link>
+    </None>
+    <None Include="..\AAUXData\DEFAULT_2-Cylinder_1-Stage_650ccm.ACMP" >
+      <Link>Release Files\AAUXData\DEFAULT_2-Cylinder_1-Stage_650ccm.ACMP</Link>
+    </None>
+    <None Include="..\AAUXData\BusDatabase.abdb" >
+      <Link>Release Files\AAUXData\BusDatabase.abdb</Link>
+    </None>
+    <None Include="..\AAUXData\BusDatabase.abdb" >
+      <Link>Release Files\AAUXData\BusDatabase.abdb</Link>
+    </None>
+    <None Include="..\AAUXData\AdvAuxTest.aaux" >
+      <Link>Release Files\AAUXData\AdvAuxTest.aaux</Link>
+    </None>
     <None Include="..\User Manual\AAux\BusAux_Schematic_V10.pptx" >
       <Link>Release Files\User Manual\AAux\BusAux_Schematic_V10.pptx</Link>
     </None>
@@ -1458,7 +1491,8 @@
   <PropertyGroup>
     <PostBuildEvent>ROBOCOPY "$(ProjectDir)..\Generic Vehicles" "$(TargetDir)Generic Vehicles" /E
 ROBOCOPY "$(ProjectDir)..\User Manual" "$(TargetDir)User Manual" /E
-ROBOCOPY "$(ProjectDir)..\Declaration" "$(TargetDir)Declaration" /E</PostBuildEvent>
+ROBOCOPY "$(ProjectDir)..\Declaration" "$(TargetDir)Declaration" /E
+ROBOCOPY "$(ProjectDir)..\AAUXData" "$(TargetDir)AAUXData" /E</PostBuildEvent>
   </PropertyGroup>
   <!-- To modify your build process, add your task inside one of the targets below and uncomment it.
        Other similar extension points exist, see Microsoft.Common.targets.
