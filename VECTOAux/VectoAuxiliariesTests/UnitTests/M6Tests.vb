@@ -50,10 +50,10 @@ End Sub
 
 
 'Test Cases Supplied by Mike Preston.
-<Test()> _
-<TestCase(100,100,100,100,20,20,40,100,100,100,.100f,-.550f,false,   0,0,   0, 20,   0,100,20,200,0)> _
-<TestCase(100,100,100,100,20,20,40,100,100,100,100,-550,true ,   1,1,  100,38.7999992f, 100,100,38.7999992f,200,1)> _
-Public Sub MikesConditionsTest( M1_1 As Single, _
+        <Test()> _
+        <TestCase(100, 100, 100, 100, 20, 20, 40, 100, 100, 100, 0.1F, -0.55F, False, 0, 0, 0, 20, 0, 100, 20, 200, 0)> _
+        <TestCase(100, 100, 100, 100, 20, 20, 40, 100, 100, 100, 100, -550, True, 0, 0, 0, 20, 0, 100, 20, 200, 0)> _
+        Public Sub MikesConditionsTest(M1_1 As Single, _
                                 M1_2 As Single, _
                                 M2_1 As Single, _
                                 M3_1 As Single, _
@@ -67,7 +67,7 @@ Public Sub MikesConditionsTest( M1_1 As Single, _
                                 EDP As Single, _
                                 SM As Boolean, _
                                 OUT1 As Single, _
-                                OUT2 As single, _
+                                OUT2 As Single, _
                                 OUT3 As Single, _
                                 OUT4 As Single, _
                                 OUT5 As Single, _
@@ -77,49 +77,49 @@ Public Sub MikesConditionsTest( M1_1 As Single, _
                                 OUT9 As Single)
 
 
-                 dim  M1 = New M1_Mock()
-                 dim  M2 = New M2_Mock()
-                 dim  M3 = New M3_Mock()
-                 dim  M4 = New M4_Mock()
-                 dim  M5 = New M5_Mock()
+            Dim M1 = New M1_Mock()
+            Dim M2 = New M2_Mock()
+            Dim M3 = New M3_Mock()
+            Dim M4 = New M4_Mock()
+            Dim M5 = New M5_Mock()
 
-                 Dim signals As New Signals()
-
-
-                 M1._AveragePowerDemandAtCrankFromHVACMechanicalsWatts= M1_1
-                 M1._AveragePowerDemandAtCrankFromHVACElectricsWatts=M1_2
-                 M2._GetAveragePowerAtCrankFromElectrics=M2_1
-                 M3._GetAveragePowerDemandAtCrankFromPneumatics= M3_1     
-                 M4._PowerCompressorOff=M4_1
-                 M4._PowerDifference=M4_2
-                 M4._PowerCompressorOn=M4_3
-                 M5._AlternatorsGenerationPowerAtCrankTractionOnWatts=M5_1
-                 M5._AlternatorsGenerationPowerAtCrankOverrunWatts=M5_2
-                 
-                 
-
-                 signals.EngineMotoringPower= EMP
-                 signals.PreExistingAuxPower=AUX
-                 signals.EngineDrivelinePower=EDP
-                 signals.SmartElectrics=SM
+            Dim signals As New Signals()
 
 
-                 Dim target As New M6(M1,M2,M3,M4,M5,Signals)
-
-                 Assert.AreEqual(OUT1,target.OverrunFlag)
-                 Assert.AreEqual(OUT2,target.SmartElecAndPneumaticsCompressorFlag)
-                 Assert.AreEqual(OUT3,target.SmartElecAndPneumaticAltPowerGenAtCrank)
-                 Assert.AreEqual(OUT4,target.SmartElecAndPneumaticAirCompPowerGenAtCrank)
-                 Assert.AreEqual(OUT5,target.SmartElecOnlyAltPowerGenAtCrank)
-                 Assert.AreEqual(OUT6,target.AveragePowerDemandAtCrankFromPneumatics)
-                 Assert.AreEqual(OUT7,target.SmartElecAndPneumaticAirCompPowerGenAtCrank)
-                 Assert.AreEqual(OUT8,target.AvgPowerDemandAtCrankFromElectricsIncHVAC)
-                 Assert.AreEqual(OUT9,target.SmartPneumaticsOnlyCompressorFlag)
+            M1._AveragePowerDemandAtCrankFromHVACMechanicalsWatts = M1_1
+            M1._AveragePowerDemandAtCrankFromHVACElectricsWatts = M1_2
+            M2._GetAveragePowerAtCrankFromElectrics = M2_1
+            M3._GetAveragePowerDemandAtCrankFromPneumatics = M3_1
+            M4._PowerCompressorOff = M4_1
+            M4._PowerDifference = M4_2
+            M4._PowerCompressorOn = M4_3
+            M5._AlternatorsGenerationPowerAtCrankTractionOnWatts = M5_1
+            M5._AlternatorsGenerationPowerAtCrankOverrunWatts = M5_2
 
 
 
+            signals.EngineMotoringPower = EMP
+            signals.PreExistingAuxPower = AUX
+            signals.EngineDrivelinePower = EDP
+            signals.SmartElectrics = SM
 
-End Sub
+
+            Dim target As New M6(M1, M2, M3, M4, M5, signals)
+
+            Assert.AreEqual(OUT1, target.OverrunFlag)
+            Assert.AreEqual(OUT2, target.SmartElecAndPneumaticsCompressorFlag)
+            Assert.AreEqual(OUT3, target.SmartElecAndPneumaticAltPowerGenAtCrank)
+            Assert.AreEqual(OUT4, target.SmartElecAndPneumaticAirCompPowerGenAtCrank)
+            Assert.AreEqual(OUT5, target.SmartElecOnlyAltPowerGenAtCrank)
+            Assert.AreEqual(OUT6, target.AveragePowerDemandAtCrankFromPneumatics)
+            Assert.AreEqual(OUT7, target.SmartElecAndPneumaticAirCompPowerGenAtCrank)
+            Assert.AreEqual(OUT8, target.AvgPowerDemandAtCrankFromElectricsIncHVAC)
+            Assert.AreEqual(OUT9, target.SmartPneumaticsOnlyCompressorFlag)
+
+
+
+
+        End Sub
 
 
 End Class

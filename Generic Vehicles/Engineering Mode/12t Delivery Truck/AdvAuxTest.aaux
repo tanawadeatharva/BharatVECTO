@@ -11,7 +11,7 @@
   "ElectricalUserInputsConfig": {
     "$type": "VectoAuxiliaries.Electrics.ElectricsUserInputsConfig, BusAuxiliaries",
     "PowerNetVoltage": 28.3,
-    "AlternatorMap": "testCombAlternatorMap_1Alt.AALT",
+    "AlternatorMap": "",
     "AlternatorGearEfficiency": 0.92,
     "ElectricalConsumers": {
       "$type": "VectoAuxiliaries.Electrics.ElectricalConsumerList, BusAuxiliaries",
@@ -98,7 +98,7 @@
           "$type": "VectoAuxiliaries.Electrics.ElectricalConsumer, BusAuxiliaries",
           "BaseVehicle": false,
           "Category": "Vehicle basic equipment",
-          "ConsumerName": "Interior lights City/ Intercity + Doorlights [1/m]",
+          "ConsumerName": "Interior lights City/ Intercity + Doorlights [Should be 1/m]",
           "NominalConsumptionAmps": 1.0,
           "NumberInActualVehicle": 12,
           "PhaseIdle_TractionOn": 0.7,
@@ -109,7 +109,7 @@
           "$type": "VectoAuxiliaries.Electrics.ElectricalConsumer, BusAuxiliaries",
           "BaseVehicle": false,
           "Category": "Vehicle basic equipment",
-          "ConsumerName": "LED Interior lights ceiling city/ontercity + door [1/m]",
+          "ConsumerName": "LED Interior lights ceiling city/Intercity + door [Should be 1/m]",
           "NominalConsumptionAmps": 0.6,
           "NumberInActualVehicle": 0,
           "PhaseIdle_TractionOn": 0.7,
@@ -131,7 +131,7 @@
           "$type": "VectoAuxiliaries.Electrics.ElectricalConsumer, BusAuxiliaries",
           "BaseVehicle": false,
           "Category": "Vehicle basic equipment",
-          "ConsumerName": "LED Interior lights ceiling Tourism + LED reading [1/m]",
+          "ConsumerName": "LED Interior lights ceiling Tourism + LED reading [Should be 1/m]",
           "NominalConsumptionAmps": 0.66,
           "NumberInActualVehicle": 0,
           "PhaseIdle_TractionOn": 0.7,
@@ -240,6 +240,7 @@
       ]
     },
     "DoorActuationTimeSecond": 4,
+    "StoredEnergyEfficiency": 0.935,
     "ResultCardIdle": {
       "$type": "VectoAuxiliaries.Electrics.ResultCard, BusAuxiliaries",
       "Results": []
@@ -258,15 +259,15 @@
     "$type": "VectoAuxiliaries.Pneumatics.PneumaticUserInputsConfig, BusAuxiliaries",
     "CompressorMap": "DEFAULT_2-Cylinder_1-Stage_650ccm.ACMP",
     "CompressorGearRatio": 1.0,
-    "CompressorGearEfficiency": 0.8,
+    "CompressorGearEfficiency": 0.97,
     "AdBlueDosing": "Pneumatic",
-    "AirSuspensionControl": "Electrically",
+    "AirSuspensionControl": "Mechanically",
     "Doors": "Pneumatic",
-    "KneelingHeightMillimeters": 80.0,
+    "KneelingHeightMillimeters": 70.0,
     "ActuationsMap": "testPneumaticActuationsMap.APAC",
     "RetarderBrake": true,
-    "SmartAirCompression": true,
-    "SmartRegeneration": true
+    "SmartAirCompression": false,
+    "SmartRegeneration": false
   },
   "PneumaticAuxillariesConfig": {
     "$type": "VectoAuxiliaries.Pneumatics.PneumaticsAuxilliariesConfig, BusAuxiliaries",
@@ -285,7 +286,7 @@
   },
   "HvacUserInputsConfig": {
     "$type": "VectoAuxiliaries.Hvac.HVACUserInputsConfig, BusAuxiliaries",
-    "SSMFilePath": "testHVACssm.AHSM",
+    "SSMFilePath": "",
     "BusDatabasePath": "BusDatabase.abdb",
     "SSMDisabled": false
   },
@@ -307,6 +308,10 @@
     "EngineStopped": false,
     "DeclarationMode": false,
     "WHTC": 1.0,
-    "EngineIdleSpeed": 0.0
+    "EngineIdleSpeed": 0.0,
+    "PneumaticOverrunUtilisation": 0.0,
+    "StoredEnergyEfficiency": 0.0,
+    "RunningCalc": false,
+    "Internal_Engine_Power": 0.0
   }
 }

@@ -17,11 +17,11 @@ Namespace UnitTests
         '<TestCase(50,	60,	70,	TRUE,	TRUE ,100, 1,False,	 72287.5f , 86.57185629f )> _
 
         <Test()> _
-        <TestCase(50, 60, 70, False, False, 100, 1, False, 60.0F, 86.57185F)> _
-        <TestCase(50, 60, 70, False, True, 100, 1, False, 50.0F, 86.55988F)> _
-        <TestCase(50, 60, 70, True, False, 100, 1, False, 70.0F, 86.58383F)> _
-        <TestCase(50, 60, 70, True, True, 100, 1, False, 60.0F, 86.57185F)> _
-        <TestCase(50, 60, 70, True, True, 100, 2, True, 120.0F, 173.1437F)> _
+        <TestCase(50, 60, 70, False, False, 100, 1, False, 60.0F)> _
+        <TestCase(50, 60, 70, False, True, 100, 1, False, 110.0F)> _
+        <TestCase(50, 60, 70, True, False, 100, 1, False, 0.0F)> _
+        <TestCase(50, 60, 70, True, True, 100, 1, False, 110.0F)> _
+        <TestCase(50, 60, 70, True, True, 100, 2, True, 220.0F)> _
         Public Sub InputOutputValues(IP1 As Single,
                               IP2 As Single,
                               IP3 As Single,
@@ -30,8 +30,7 @@ Namespace UnitTests
                               IP6 As Single,
                               IP7 As Single,
                               IP8 As Boolean,
-                              OUT1 As Single,
-                              OUT2 As Single)
+                              OUT1 As Single)
 
             'Arrange
             Dim m10 As New Mock(Of IM10)

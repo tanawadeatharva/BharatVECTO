@@ -597,8 +597,9 @@ Public Class frmAuxiliaryConfig
 
 
             End Select
-
-
+        Else
+            Me.DialogResult = Windows.Forms.DialogResult.Cancel
+            e.Cancel = False
         End If
 
 
@@ -801,9 +802,11 @@ Public Class frmAuxiliaryConfig
 
         Dim result As Boolean
 
-
-        If Not ValidateAll() Then Return False
-
+        If Not ValidateAll() Then
+            If (MessageBox.Show("There are invalid values. Do you want so save anyway?", "Save Changes", MessageBoxButtons.YesNo, MessageBoxIcon.Question) = DialogResult.No) Then
+                Return False
+            End If
+        End If
 
         result = auxConfig.Save(FilePathUtils.ResolveFilePath(vectoPath, auxFile))
 

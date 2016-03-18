@@ -29,6 +29,8 @@ Public Sub InputOutputValues( IP2  As single,
  Dim sgnlsMock   As New Mock(Of ISignals)
 
 
+            sgnlsMock.Setup(Function(x) x.StoredEnergyEfficiency).Returns(0.935)
+
 m11Mock.Setup( Function(x) x.TotalCycleFuelConsumptionZeroElectricalLoad)          .Returns( IP2 )
 m11Mock.Setup( Function(x) x.SmartElectricalTotalCycleEletricalEnergyGenerated)    .Returns( IP3 )
 m11Mock.Setup( Function(x) x.TotalCycleFuelConsumptionSmartElectricalLoad)         .Returns( IP4 )
