@@ -79,7 +79,7 @@ Header: **\<t>, \<v>***\[, \<grad>]\[, \<Padd>]\[, \<vair\_res>, \<vair\_beta>\]
 
 **Example:**
 
-| \<t> [m] | \<v> [km/h] | \<grad> [%] | \<Padd> [kW] |
+| \<t> [s] | \<v> [km/h] | \<grad> [%] | \<Padd> [kW] |
 | -------- | ----------- | ----------- | ------------ |
 |        0 |           0 |        2.95 |          1.5 |
 |        1 |         0.6 |        2.97 |          1.3 |
@@ -107,7 +107,7 @@ Header: **\<t>, \<v>, \<n>, \<gear>***\[, \<grad>]\[, \<Padd>]\[, \<vair\_res>, 
 
 **Example:**
 
-| \<t> [m] | \<v> [km/h] | \<n> [rpm] | \<gear> [-] | \<grad> [%] | \<Padd> [kW] |
+| \<t> [s] | \<v> [km/h] | \<n> [rpm] | \<gear> [-] | \<grad> [%] | \<Padd> [kW] |
 | -------- | ----------- | ---------- | ----------- | ----------- | ------------ |
 |        0 |           0 |        600 |           0 |        2.95 |          1.5 |
 |        1 |         0.6 |        950 |           3 |        2.97 |          1.3 |
@@ -129,7 +129,7 @@ Header: **\<t>, \<Pwheel>, \<gear>, \<n>***\[, \<Padd>]*
 
 **Example:**
 
-| \<t> [m] | \<Pwheel> [kW] | \<gear> [-] | \<n> [rpm] | \<Padd> [kW] |
+| \<t> [s] | \<Pwheel> [kW] | \<gear> [-] | \<n> [rpm] | \<Padd> [kW] |
 | -------- | -------------- | ----------- | ---------- | ------------ |
 |        0 |              0 |           0 |        600 |          1.5 |
 |        1 |          4.003 |           3 |        950 |          1.3 |
@@ -152,13 +152,13 @@ Header: **\<t>, \<n>, (\<Pe>|\<Me>)***\[, \<Padd>]*
 
 **Example:**
 
-| \<t> [m] | \<n> [rpm] | \<Pe> [kW] | \<Padd> [kW] |
+| \<t> [s] | \<n> [rpm] | \<Pe> [kW] | \<Padd> [kW] |
 | -------- | ---------- | ---------- | ------------ |
 |        0 |        600 |          0 |          1.5 |
 |        1 |        950 |       25.3 |          1.3 |
 |        2 |       1200 |     65.344 |          1.3 |
 |        3 |       1400 |      110.1 |          1.3 |
 
-<div class="vecto2">
-To explicitly define *motoring operation* use the **\<DRAG>** keyword as power demand (column \<Pe> or \<Me>). VECTO v2 replaces the keyword with the corresponding motoring torque/power from the drag curve during calculation (see [Full Load and Drag Curve File](#full-load-and-drag-curves-.vfld)).
+<div class="vecto2"
+>To explicitly define *motoring operation* use the **\<DRAG>** keyword as power demand (column \<Pe> or \<Me>). VECTO v2 replaces the keyword with the corresponding motoring torque/power from the drag curve during calculation (see [Full Load and Drag Curve File](#full-load-and-drag-curves-.vfld)).
 </div>

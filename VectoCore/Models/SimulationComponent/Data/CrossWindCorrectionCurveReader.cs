@@ -165,9 +165,9 @@ namespace TUGraz.VectoCore.Models.SimulationComponent.Data
 
 		private static class FieldsCdxABeta
 		{
-			public const string Beta = "Beta";
+			public const string Beta = "beta";
 
-			public const string DeltaCdxA = "Delta CdA";
+			public const string DeltaCdxA = "delta CdA";
 		}
 
 
