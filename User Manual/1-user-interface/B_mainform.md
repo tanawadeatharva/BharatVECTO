@@ -15,7 +15,7 @@ In order to start a simulation the [Calculation Mode](#calculation-modes) must b
 The Main Form includes three tabs as described below:
 
 * Job Files Tab
-* Driving Cycles Tab (only if [Batch Mode](#batch-mode) is enabled)
+* Driving Cycles Tab (only if [Batch Mode](#batch-mode-1) is enabled)
 * Options Tab
 
 
