@@ -125,9 +125,14 @@ namespace TUGraz.VectoCore.Models.SimulationComponent.Data
 			var wheelsInertia = 0.0.SI<KilogramSquareMeter>();
 			foreach (var axle in _axleData) {
 				var nrWheels = axle.TwinTyres ? 4 : 2;
+				var baseValue = (axle.AxleWeightShare * TotalVehicleWeight() * g / axle.TyreTestLoad / nrWheels).Value();
+				if (baseValue == 0) {
+					throw new VectoSimulationException(
+						"Axle Roll Resistance Coefficient could not be calculated. One of the values is 0: AxleWeightShare: {0}, TotalVehicleWeight: {1}, TyreTestLoad: {2}, nrWheels: {3}",
+						axle.AxleWeightShare, TotalVehicleWeight(), axle.TyreTestLoad, nrWheels);
+				}
 				rrc += axle.AxleWeightShare * axle.RollResistanceCoefficient *
-						Math.Pow((axle.AxleWeightShare * TotalVehicleWeight() * g / axle.TyreTestLoad / nrWheels).Value(),
-							Physics.RollResistanceExponent - 1);
+						Math.Pow(baseValue, Physics.RollResistanceExponent - 1);
 				wheelsInertia += nrWheels * axle.Inertia;
 			}
 			TotalRollResistanceCoefficient = rrc;
