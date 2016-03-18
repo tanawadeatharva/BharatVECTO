@@ -3,7 +3,7 @@
 <head>
 <meta http-equiv=Content-Type content="text/html; charset=windows-1252">
 <meta name=Generator content="Microsoft Word 15 (filtered)">
-<title>Auxiliary Input File</title>
+<title>Advanced Auxiliary Input File</title>
 <style>
 <!--
  /* Font Definitions */
@@ -151,9 +151,9 @@ values, which can also be loaded via the Steady State Model File (.AHSM)</p>
 
 </div>
 
-<p class=MsoNormal>Note that the cycle file name used must respect this syntax
-to be correctly associated with the pneumatic actuations map (.apac), otherwise
-the number of actuations will be set at 0 by default: </p>
+<p class=MsoNormal>Note that the cycle file name used should ideally respect
+the following syntax to be correctly associated with the pneumatic actuations
+map (.apac), otherwise the number of actuations will be set at 0 by default: </p>
 
 <p class=MsoListParagraph style='text-indent:-18.0pt'><span style='font-family:
 Symbol'>·</span><span style='font-size:7.0pt'>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
@@ -164,6 +164,14 @@ style='color:red'>X</span>” = “Urban”, “Heavy urban”, “Suburban”, or
 <p class=MsoListParagraph style='text-indent:-18.0pt'><span style='font-family:
 Symbol'>·</span><span style='font-size:7.0pt'>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
 </span>&nbsp;“AnyOtherText_Coach.vdri” </p>
+
+<p class=MsoNormal>&nbsp;</p>
+
+<p class=MsoNormal>Some flexibility in syntax is allowable (the model looks for
+‘Bus’, ‘Coach’, ‘Urban’, etc. in the file name), meaning that the standard
+default cycles are fully/correctly supported. However, for newly created cycles
+(i.e. for use in Engineering Mode) it is recommended to follow the above
+convention to guarantee correct functionality.</p>
 
 <p class=MsoNormal><br>
 <b><span style='font-size:18.0pt'>File Format</span></b></p>
@@ -290,15 +298,16 @@ module in VECTO include:</p>
   none;border-bottom:solid windowtext 1.0pt;border-right:solid windowtext 1.0pt;
   padding:0cm 5.4pt 0cm 5.4pt'>
   <p class=MsoNormal style='margin-top:1.0pt;margin-right:0cm;margin-bottom:
-  3.0pt;margin-left:0cm'>CSV</p>
+  3.0pt;margin-left:0cm'>JSON</p>
   </td>
   <td width=624 valign=top style='width:467.8pt;border-top:none;border-left:
   none;border-bottom:solid windowtext 1.0pt;border-right:solid windowtext 1.0pt;
   padding:0cm 5.4pt 0cm 5.4pt'>
   <p class=MsoNormal style='margin-top:1.0pt;margin-right:0cm;margin-bottom:
-  3.0pt;margin-left:0cm'>HVAC Steady State Values: Stores the HVAC (Heating,
-  Ventilation and Air Conditioning) Steady State Model results, and also the
-  Excel Configuration which resulted in the final result.</p>
+  3.0pt;margin-left:0cm'>Stores Steady State Model results, and also the
+  configuration which resulted in the final result. UI to calculate various
+  heat/cool/ventilate properties resulting in Electrical and Mechanical Power
+  as well as cooling based on environmental conditions.</p>
   </td>
  </tr>
  <tr>
@@ -319,6 +328,26 @@ module in VECTO include:</p>
   <p class=MsoNormal style='margin-top:1.0pt;margin-right:0cm;margin-bottom:
   3.0pt;margin-left:0cm'>Bus Parameter Database: Contains a list of the default
   parameters for different buses.</p>
+  </td>
+ </tr>
+ <tr>
+  <td width=136 valign=top style='width:102.15pt;border:solid windowtext 1.0pt;
+  border-top:none;padding:0cm 5.4pt 0cm 5.4pt'>
+  <p class=MsoNormal style='margin-top:1.0pt;margin-right:0cm;margin-bottom:
+  3.0pt;margin-left:0cm'>.AENV</p>
+  </td>
+  <td width=118 valign=top style='width:88.8pt;border-top:none;border-left:
+  none;border-bottom:solid windowtext 1.0pt;border-right:solid windowtext 1.0pt;
+  padding:0cm 5.4pt 0cm 5.4pt'>
+  <p class=MsoNormal style='margin-top:1.0pt;margin-right:0cm;margin-bottom:
+  3.0pt;margin-left:0cm'>CSV</p>
+  </td>
+  <td width=624 valign=top style='width:467.8pt;border-top:none;border-left:
+  none;border-bottom:solid windowtext 1.0pt;border-right:solid windowtext 1.0pt;
+  padding:0cm 5.4pt 0cm 5.4pt'>
+  <p class=MsoNormal style='margin-top:1.0pt;margin-right:0cm;margin-bottom:
+  3.0pt;margin-left:0cm'>Stores a number of environmental conditions to be used
+  by HVAC model when in batch-mode.</p>
   </td>
  </tr>
 </table>
