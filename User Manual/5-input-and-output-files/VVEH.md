@@ -5,60 +5,61 @@ File for the definition of a vehicle in vecto. Can be created with the [Vehicle 
 - File format is [JSON](#json).
 - Filetype ending is ".vveh"
 
+Refers to other files:
+
+* [Cross Wind Correction (VCDV, VCDB)](#cross-wind-correction)
+* [Retarder Loss Map (VRLM)](#retarder-loss-torque-input-file-.vrlm)
+
+
 **Example:**
 
-    {
-      "Header": {
-        "CreatedBy": "Raphael Luz IVT TU-Graz (14fea510-e457-4bf6-860f-a9514dc327f1)",
-        "Date": "02.07.2015 13:55:46",
-        "AppVersion": "2.2 beta-2",
-        "FileVersion": 7
-      },
-      "Body": {
-        "SavedInDeclMode": false,
-        "VehCat": "Coach",
-        "CurbWeight": 15700.0,
-        "CurbWeightExtra": 0.0,
-        "Loading": 3300.0,
-        "MassMax": 24.0,
-        "CdA": 3.2634,
-        "rdyn": 520.0,
-        "Rim": "-",
-        "CdCorrMode": "CdOfVeng",
-        "CdCorrFile": "24t Coach.vcdv",
-        "Retarder": {
-          "Type": "Secondary",
-          "Ratio": 1.0,
-          "File": "Retarder.vrlm"
+~~~json
+{
+  "Header": {
+    "CreatedBy": "Michael Krisper (Graz University of Technology)",
+    "Date": "2016-03-18T14:42:45+01:00",
+    "AppVersion": "3.0.2",
+    "FileVersion": 7
+  },
+  "Body": {
+    "SavedInDeclMode": false,
+    "VehCat": "RigidTruck",
+    "CurbWeight": 6000.0,
+    "CurbWeightExtra": 0.0,
+    "Loading": 0.0,
+    "MassMax": 11.9,
+    "CdA": 4.5,
+    "rdyn": 450,
+    "Rim": "15° DC Rims",
+    "CdCorrMode": "CdOfVeng",
+    "CdCorrFile": "CrossWindCorrection.vcdv",
+    "Retarder": {
+      "Type": "Secondary",
+      "Ratio": 1.0,
+      "File": "Retarder.vrlm"
+    },
+    "AxleConfig": {
+      "Type": "4x2",
+      "Axles": [
+        {
+          "Inertia": 6.0,
+          "Wheels": "245/70 R19.5",
+          "AxleWeightShare": 0.0,
+          "TwinTyres": false,
+          "RRCISO": 0.008343465,
+          "FzISO": 20800.0
         },
-        "AxleConfig": {
-          "Type": "6x2",
-          "Axles": [
-            {
-              "Inertia": 21.66667,
-              "Wheels": "-",
-              "AxleWeightShare": 0.4375,
-              "TwinTyres": false,
-              "RRCISO": 0.0055,
-              "FzISO": 62538.75
-            },
-            {
-              "Inertia": 10.83333,
-              "Wheels": "-",
-              "AxleWeightShare": 0.375,
-              "TwinTyres": true,
-              "RRCISO": 0.0065,
-              "FzISO": 52532.55
-            },
-            {
-              "Inertia": 21.66667,
-              "Wheels": "-",
-              "AxleWeightShare": 0.1875,
-              "TwinTyres": false,
-              "RRCISO": 0.0055,
-              "FzISO": 62538.75
-            }
-          ]
+        {
+          "Inertia": 6.0,
+          "Wheels": "245/70 R19.5",
+          "AxleWeightShare": 0.0,
+          "TwinTyres": true,
+          "RRCISO": 0.00943769,
+          "FzISO": 20800.0
         }
-      }
+      ]
     }
+  }
+}
+~~~
+

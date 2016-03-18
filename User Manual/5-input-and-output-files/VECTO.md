@@ -5,61 +5,75 @@ File for the definition of an job in vecto. A job contains everything what is ne
 - File format is [JSON](#json).
 - Filetype ending is ".vecto"
 
+Refers to other files:
+
+* [Vehicle (VVEH)](#vehicle-file)
+* [Engine (VENG)](#engine-file)
+* [Gearbox (VGBX)](#gearbox-file)
+* [Driving Cycle (VDRI)](#driving-cycles)
+* [Auxiliary Input File (VAUX)](#auxiliary-input-file-.vaux)
+* [Acceleration Limiting (VACC)](#acceleration-limiting-input-file-.vacc)
+
+
 **Example:**
 
-    {
-      "Header": {
-        "CreatedBy": " ()",
-        "Date": "3/4/2015 2:09:13 PM",
-        "AppVersion": "2.0.4-beta3",
-        "FileVersion": 2
+~~~json
+{
+  "Header": {
+    "CreatedBy": "Michael Krisper (Graz University of Technology)",
+    "Date": "2016-03-18T14:37:05+01:00",
+    "AppVersion": "3.0.2",
+    "FileVersion": 2
+  },
+  "Body": {
+    "SavedInDeclMode": false,
+    "VehicleFile": "Vehicle.vveh",
+    "EngineFile": "Engine.veng",
+    "GearboxFile": "Gearbox.vgbx",
+    "Cycles": [
+      "DrivingCycle_Rural.vdri",
+      "DrivingCycle_Urban.vdri"
+    ],
+    "Aux": [
+      {
+        "ID": "ALT",
+        "Type": "Alternator",
+        "Path": "Alternator.vaux",
+        "Technology": ""
       },
-      "Body": {
-        "SavedInDeclMode": false,
-        "VehicleFile": "24t Coach.vveh",
-        "EngineFile": "24t Coach.veng",
-        "GearboxFile": "24t Coach.vgbx",
-        "Cycles": [
-          "LOT2_rural Engine Only.vdri"
-        ],
-        "Aux": [
-          {
-            "ID": "ALT1",
-            "Type": "Alternator",
-            "Path": "24t_Coach_ALT.vaux",
-            "Technology": ""
-          },
-          {
-            "ID": "ALT2",
-            "Type": "Alternator",
-            "Path": "24t_Coach_ALT.vaux",
-            "Technology": ""
-          },
-          {
-            "ID": "ALT3",
-            "Type": "Alternator",
-            "Path": "24t_Coach_ALT.vaux",
-            "Technology": ""
-          }
-        ],
-        "VACC": "Coach.vacc",
-        "EngineOnlyMode": true,
-        "StartStop": {
-          "Enabled": false,
-          "MaxSpeed": 5.0,
-          "MinTime": 0.0,
-          "Delay": 0
-        },
-        "LAC": {
-          "Enabled": true,
-          "Dec": -0.5,
-          "MinSpeed": 50.0
-        },
-        "OverSpeedEcoRoll": {
-          "Mode": "OverSpeed",
-          "MinSpeed": 70.0,
-          "OverSpeed": 5.0,
-          "UnderSpeed": 5.0
-        }
+      {
+        "ID": "PN",
+        "Type": "PneumaticSystem",
+        "Path": "Pneumatic System.vaux",
+        "Technology": ""
+      },
+      {
+        "ID": "HVAC",
+        "Type": "HVAC",
+        "Path": "AirCondition.vaux",
+        "Technology": ""
       }
+    ],
+    "VACC": "Driver.vacc",
+    "EngineOnlyMode": true,
+    "StartStop": {
+      "Enabled": false,
+      "MaxSpeed": 5.0,
+      "MinTime": 0.0,
+      "Delay": 0
+    },
+    "LAC": {
+      "Enabled": true,
+      "Dec": -0.5,
+      "MinSpeed": 50.0
+    },
+    "OverSpeedEcoRoll": {
+      "Mode": "OverSpeed",
+      "MinSpeed": 70.0,
+      "OverSpeed": 5.0,
+      "UnderSpeed": 5.0
     }
+  }
+}
+~~~
+
