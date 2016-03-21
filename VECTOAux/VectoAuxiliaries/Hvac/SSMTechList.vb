@@ -1,4 +1,5 @@
-﻿Imports System.IO
+﻿Imports System.Globalization
+Imports System.IO
 
 Namespace Hvac
 
@@ -98,15 +99,15 @@ Public Class SSMTechList
                                     elements(2),
                                     elements(0),
                                     elements(1),
-                                    elements(3),
-                                    elements(4),
-                                    elements(5),
-                                    elements(6),
-                                    elements(7),
-                                    elements(8),
-                                    elements(9),
-                                    elements(10),
-                                    elements(11),
+									Double.Parse(elements(3), CultureInfo.InvariantCulture),
+									Double.Parse(elements(4), CultureInfo.InvariantCulture),
+									Double.Parse(elements(5), CultureInfo.InvariantCulture),
+									Double.Parse(elements(6), CultureInfo.InvariantCulture),
+									Double.Parse(elements(7), CultureInfo.InvariantCulture),
+									Double.Parse(elements(8), CultureInfo.InvariantCulture),
+									Double.Parse(elements(9), CultureInfo.InvariantCulture),
+									Double.Parse(elements(10), CultureInfo.InvariantCulture),
+									Double.Parse(elements(11), CultureInfo.InvariantCulture),
                                     elements(12),
                                     elements(13),
                                     elements(14),

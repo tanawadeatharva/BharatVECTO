@@ -8,8 +8,9 @@
 '   WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
 '
 ' See the LICENSE.txt for the specific language governing permissions and limitations.
-Imports System.Text
+Imports System.Globalization
 Imports System.IO
+Imports System.Text
 
 Namespace Electrics
 
@@ -313,8 +314,9 @@ Implements IAlternatorMap
                             'add values to map
 
                             'Create AlternatorKey
-                            Dim newPoint as MapPoint = New  MapPoint(elements(0),elements(1),elements(2))
-
+							Dim newPoint As MapPoint = New MapPoint(Single.Parse(elements(0), CultureInfo.InvariantCulture),
+													 Single.Parse(elements(1), CultureInfo.InvariantCulture),
+													 Single.Parse(elements(2), CultureInfo.InvariantCulture))
                             _map.Add(newPoint)
 
                         Else
