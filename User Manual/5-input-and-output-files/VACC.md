@@ -13,16 +13,16 @@ vehicle speed. The filepath has to be defined in the [Job File](#job-file). The 
 
 **Example Data:**
 
-    v [km/h], acc [m/s^2]      , dec [m/s^2]
-    0       , 1.01570922360353, -0.231742702878269
-    5       , 1.38546581120225, -0.45346198022574
-    10      , 1.34993329755465, -0.565404125020508
-    15      , 1.29026714002479, -0.703434814668512
-    ...
+~~~
+v [km/h],acc [m/s^2],dec [m/s^2]
+0       ,1          ,-1
+25      ,1          ,-1
+50      ,0.6        ,-1
+60      ,0.5        ,-0.5
+120     ,0.5        ,-0.5
+~~~
 
 
-**Example Graph:**
+**Example Graph: **
 
-![](pics/AccLimit.png)
-
-
+![The graph shows the acceleration and deceleration limits depending on the current vehicle speed.](pics/AccLimit.png)
