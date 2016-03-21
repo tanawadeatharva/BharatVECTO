@@ -328,6 +328,8 @@ Examples:
 				Console.ForegroundColor = ConsoleColor.Yellow;
 				Console.WriteLine(@"Warnings: {0,5}", WarningMessages.Count);
 				Console.ResetColor();
+			} else {
+				Console.WriteLine("");
 			}
 
 			_numLines += 2;
