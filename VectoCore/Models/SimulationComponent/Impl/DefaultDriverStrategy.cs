@@ -544,7 +544,8 @@ namespace TUGraz.VectoCore.Models.SimulationComponent.Impl
 					Log.Debug("Phase: BRAKE. breaking distance: {0} start braking @ {1}", brakingDistance,
 						DriverStrategy.BrakeTrigger.TriggerDistance - brakingDistance);
 					if (DriverStrategy.BrakeTrigger.TriggerDistance - brakingDistance < currentDistance) {
-						Log.Warn("Expected Braking Deceleration could not be reached!");
+						Log.Warn("Expected Braking Deceleration could not be reached! {0}",
+							DriverStrategy.BrakeTrigger.TriggerDistance - brakingDistance - currentDistance);
 					}
 					var targetDistance = DataBus.VehicleSpeed < Constants.SimulationSettings.MinVelocityForCoast
 						? DriverStrategy.BrakeTrigger.TriggerDistance
