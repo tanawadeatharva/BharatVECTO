@@ -62,10 +62,10 @@ In Vecto 3.0.2 the structure of the modal data output has been revised and re-st
 | Gear				|	[-]		|	Gear. "0" = clutch opened / neutral |
 | n_eng_avg			|	[1/min]	|	Average engine speed in the current simulation interval. Used for interpolation of the engine's fuel consumption |
 | T_eng_fcmap		|	[Nm]	|	Engine torque used for interpolation of the engine's fuel consumption. T_eng_fcmap is the sum of torque demand on the output shaft, torque demand of the auxiliaries, and engine's inertia torque |
-| Tq_full			|	[Nm]	|	Engine's transient maximum torque (see [transient full load](l#transient-full-load)) |
+| Tq_full			|	[Nm]	|	Engine's transient maximum torque (see [transient full load](#engine-transient-full-load)) |
 | Tq_drag			|	[Nm]	|	Engine's drag torque, interpolated from the full-load curve |
 | P_eng_fcmap		|	[kW]	|	Total power the engine has to provide, computed from n_eng_avg and T_eng_fcmap |
-| P_eng_full		|	[kW]	|	Engine's transient maximum power  (see [transient full load](l#transient-full-load)) |
+| P_eng_full		|	[kW]	|	Engine's transient maximum power  (see [transient full load](#engine-transient-full-load)) |
 | P_eng_drag		|	[kW]	|	Engine's drag power |
 | P_eng_inertia		|	[kW]	|	Power loss/gain due to the engine's inertia |
 | P_eng_out			|	[kW]	|	Power provided at the engine's output shaft |

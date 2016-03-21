@@ -100,11 +100,11 @@ div.vecto2:before {
   content: 'Note: Vecto 2.2!';
   background: gray;
   color: white;
-  padding: 5px 5px 5px 33px;
+  padding: 5px 5px 5px 5px;
   margin-left: -8px;
   font-weight: bold;
   display: inline-block;
-  margin-bottom: 1em;
+  font-size: smaller;
 }
 
 
@@ -118,10 +118,14 @@ div.vecto3:before {
   content: 'Note: Vecto 3.x!';
   background: green;
   color: white;
-  padding: 5px 5px 5px 33px;
+  padding: 5px 5px 5px 5px;
   margin-left: -8px;
   font-weight: bold;
   display: inline-block;
-  margin-bottom: 1em;
+  font-size: smaller;
 }
 
+pre {
+  padding: 2px;
+  border: 1px solid #EEEEEE;
+}

@@ -28,12 +28,16 @@
 - New Long-Haul driving cycle included
 - User Manual updated for VECTO V3.x
 - Fix: sparse representation of declaration cycles had some missing entries
-- Bugfix: error in computation of engine's preferred speed 
+- Bugfix: error in computation of engine's preferred speed
 - Bugfix: wrong vehicle class lookup
 - Bugfix: duplicate entries in intersected full-load curves
 - Bugfix: retarder takes the retarder ratio into account for lossmap lookup
 - Bugfix: use unique identifier for jobs in job list
 - Bugfix: error in triagulation of fuel consumption map
+- Bugfix: better error message roll resistance calculation could not be calculated
+- Bugfix: measured speed now calculates distance correctly
+- Bugfix: measured speed fills missing moddata columns (acc, dist, grad)
+- Bugfix: better error message when driving cycle is missing.
 
 **VECTO 3.0.1**
 
