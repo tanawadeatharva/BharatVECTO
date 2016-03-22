@@ -11,7 +11,7 @@
   "ElectricalUserInputsConfig": {
     "$type": "VectoAuxiliaries.Electrics.ElectricsUserInputsConfig, BusAuxiliaries",
     "PowerNetVoltage": 28.3,
-    "AlternatorMap": "",
+    "AlternatorMap": "Default_2Alt.AALT",
     "AlternatorGearEfficiency": 0.92,
     "ElectricalConsumers": {
       "$type": "VectoAuxiliaries.Electrics.ElectricalConsumerList, BusAuxiliaries",
@@ -264,7 +264,7 @@
     "AirSuspensionControl": "Mechanically",
     "Doors": "Pneumatic",
     "KneelingHeightMillimeters": 70.0,
-    "ActuationsMap": "testPneumaticActuationsMap.APAC",
+    "ActuationsMap": "testPneumaticActuationsMap.apac",
     "RetarderBrake": true,
     "SmartAirCompression": false,
     "SmartRegeneration": false
@@ -286,7 +286,7 @@
   },
   "HvacUserInputsConfig": {
     "$type": "VectoAuxiliaries.Hvac.HVACUserInputsConfig, BusAuxiliaries",
-    "SSMFilePath": "",
+    "SSMFilePath": "testHVACssm.AHSM",
     "BusDatabasePath": "BusDatabase.abdb",
     "SSMDisabled": false
   },
@@ -311,7 +311,6 @@
     "EngineIdleSpeed": 0.0,
     "PneumaticOverrunUtilisation": 0.0,
     "StoredEnergyEfficiency": 0.0,
-    "RunningCalc": false,
-    "Internal_Engine_Power": 0.0
+    "RunningCalc": false
   }
 }
