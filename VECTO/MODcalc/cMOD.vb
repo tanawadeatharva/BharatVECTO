@@ -40,6 +40,43 @@ Public Class cMOD
 	Public Pclutch As List(Of Single)
 	Public Grad As List(Of Single)
 
+    'AA-TB
+    'ADVANCED AUXILIARIES - DIAGNOSTIC OUTPUT
+    public AA_NonSmartAlternatorsEfficiency                       As List(Of single? )
+    public AA_SmartIdleCurrent_Amps                               As List(Of single? )
+    public AA_SmartIdleAlternatorsEfficiency                      As List(Of single? )
+    public AA_SmartTractionCurrent_Amps                           As List(Of single? )
+    public AA_SmartTractionAlternatorEfficiency                   As List(Of single? )
+    public AA_SmartOverrunCurrent_Amps                            As List(Of single? )
+    public AA_SmartOverrunAlternatorEfficiency                    As List(Of single? )
+    public AA_CompressorFlowRate_LitrePerSec                      As List(Of single? )
+    public AA_OverrunFlag                                         As List(Of integer?)
+    public AA_EngineIdleFlag                                      As List(Of integer?)
+    public AA_CompressorFlag                                      As List(Of integer?)
+    public AA_TotalCycleFC_Grams        As List(Of single? )
+    public AA_TotalCycleFC_Litres       As List(Of single? )
+    Public AA_AveragePowerDemandCrankHVACMechanicals As List(Of Single?)
+    Public AA_AveragePowerDemandCrankHVACElectricals As List(Of Single?)
+    Public AA_AveragePowerDemandCrankElectrics As List(Of Single?)
+    Public AA_AveragePowerDemandCrankPneumatics As List(Of Single?)
+    Public AA_TotalCycleFuelConsumptionCompressorOff As List(Of Single?)
+    Public AA_TotalCycleFuelConsumptionCompressorOn As List(Of Single?)
+
+    'TODO:DIAGNOSTICS (D) REMOVE WHEN TESTED
+    'public  AA_D_M12_P1X                            as list( of single  )
+    'public  AA_D_M12_P1Y                            as list( of single  )
+    'public  AA_D_M12_P2X                            as list( of single  )
+    'public  AA_D_M12_P2Y                            as list( of single  )
+    'public  AA_D_M12_P3X                            as list( of single  )
+    'public  AA_D_M12_P3Y                            as list( of single  )
+    'public  AA_D_M12_XTAIN                          as list( of single  )
+    'public  AA_D_M12_INTERP1                        as list( of single  )
+    'public  AA_D_M12_INTERP2                        as list( of single  )
+
+
+    '***********************************************************
+
+
 	Public EngState As List(Of tEngState)
 
 	'Vehicle
@@ -75,6 +112,41 @@ Public Class cMOD
 		Px = New cPower
 		Vh = New cVh
 		CylceKin = New cCycleKin
+
+
+        'AA-TB
+        AA_NonSmartAlternatorsEfficiency                    = new  List(Of  single? )
+        AA_SmartIdleCurrent_Amps                            = new  List(Of  single? )
+        AA_SmartIdleAlternatorsEfficiency                   = new  List(Of  single? )
+        AA_SmartTractionCurrent_Amps                        = new  List(Of  single? )
+        AA_SmartTractionAlternatorEfficiency                = new  List(Of  single? )
+        AA_SmartOverrunCurrent_Amps                         = new  List(Of  single? )
+        AA_SmartOverrunAlternatorEfficiency                 = new  List(Of  single? )
+        AA_CompressorFlowRate_LitrePerSec                   = new  List(Of  single? )
+        AA_OverrunFlag                                      = new  List(Of integer? )
+        AA_EngineIdleFlag                                   = new  List(Of integer? )
+        AA_CompressorFlag                                   = new  List(Of integer? )
+        AA_TotalCycleFC_Grams                               = new  List(Of  single? )
+        AA_TotalCycleFC_Litres                              = new  List(Of  single? )
+        AA_AveragePowerDemandCrankHVACMechanicals = New List(Of Single?)
+        AA_AveragePowerDemandCrankHVACElectricals = New List(Of Single?)
+        AA_AveragePowerDemandCrankElectrics = New List(Of Single?)
+        AA_AveragePowerDemandCrankPneumatics = New List(Of Single?)
+        AA_TotalCycleFuelConsumptionCompressorOff = New List(Of Single?)
+        AA_TotalCycleFuelConsumptionCompressorOn = New List(Of Single?)
+
+        'TODO REMOVE WHEN TESTING COMPLETE
+        'AA_D_M12_P1X                                         = new List(Of single )
+        'AA_D_M12_P1Y                                         = new List(Of single )
+        'AA_D_M12_P2X                                         = new List(Of single )
+        'AA_D_M12_P2Y                                         = new List(Of single )
+        'AA_D_M12_P3X                                         = new List(Of single )
+        'AA_D_M12_P3Y                                         = new List(Of single )
+        'AA_D_M12_XTAIN                                       = new List(Of single )
+        'AA_D_M12_INTERP1                                     = new List(Of single )
+        'AA_D_M12_INTERP2                                     = new List(Of single )
+
+        '*************************************************************************
 
 		Proll = New List(Of Single)
 		Psum = New List(Of Single)
@@ -550,6 +622,42 @@ Public Class cMOD
 				HeaderList.Add(New String() {"Paux_" & StrKey, "kW"})
 			Next
 
+            'AA-TB
+            'Advanced Auxiliaries
+            s.Append(",AA_NonSmartAlternatorsEfficiency [Fraction]")             
+            s.Append(",AA_SmartIdleCurrent_Amps [Amps]   ")              
+            s.Append(",AA_SmartIdleAlternatorsEfficiency  [Fraction]")                  
+            s.Append(",AA_SmartTractionCurrent_Amps  [Amps]")                     
+            s.Append(",AA_SmartTractionAlternatorEfficiency [Fraction]")               
+            s.Append(",AA_SmartOverrunCurrent_Amps [Amps]")                      
+            s.Append(",AA_SmartOverrunAlternatorEfficiency  [Fraction]")               
+            s.Append(",AA_CompressorFlowRate_LitrePerSec [Ni L/S]")                  
+            s.Append(",AA_OverrunFlag [Integer 0/1]")                                   
+            s.Append(",AA_EngineIdleFlag [Integer 0/1]")                                     
+            s.Append(",AA_CompressorFlag [Integer 0/1]")                                    
+            s.Append(",AA_TotalCycleFC_Grams")  
+            s.Append(",AA_TotalCycleFC_Litres")
+            s.Append(",AA_AveragePowerDemandCrankHVACMechanicals")
+            s.Append(",AA_AveragePowerDemandCrankHVACElectricals")
+            s.Append(",AA_AveragePowerDemandCrankElectrics")
+            s.Append(",AA_AveragePowerDemandCrankPneumatics")
+            s.Append(",AA_TotalCycleFuelConsumptionCompressorOff")
+            s.Append(",AA_TotalCycleFuelConsumptionCompressorOn")
+
+            'TODO:
+            'DIAGNOSTICS REMOVE WHEN TESTED
+            's.Append(",AA_D_M12_P1X      [Single]")
+            's.Append(",AA_D_M12_P1Y      [Single]")
+            's.Append(",AA_D_M12_P2X      [Single]")
+            's.Append(",AA_D_M12_P2Y      [Single]")
+            's.Append(",AA_D_M12_P3X      [Single]")
+            's.Append(",AA_D_M12_P3Y      [Single]")
+            's.Append(",AA_D_M12_XTAIN    [Single]")
+            's.Append(",AA_D_M12_INTERP1  [Single]")
+            's.Append(",AA_D_M12_INTERP2  [Single]")
+
+
+
 		End If
 
 		HeaderList.Add(New String() {"FC-Map", "g/h"})
@@ -739,7 +847,44 @@ Public Class cMOD
 					Next
 
 				End If
+                    'AA-TB
+                    'Advanced Auxiliaries
+                      s.Append(Sepp & if(vecto_global.VEC.AuxiliaryAssembly<>"CLASSIC",AA_NonSmartAlternatorsEfficiency(t).ToString(),""))           
+                      s.Append(Sepp & if(vecto_global.VEC.AuxiliaryAssembly<>"CLASSIC",AA_SmartIdleCurrent_Amps(t).ToString(),""))              
+                      s.Append(Sepp & if(vecto_global.VEC.AuxiliaryAssembly<>"CLASSIC",AA_SmartIdleAlternatorsEfficiency(t).ToString(),""))                  
+                      s.Append(Sepp & if(vecto_global.VEC.AuxiliaryAssembly<>"CLASSIC",AA_SmartTractionCurrent_Amps(t).ToString(),""))                     
+                      s.Append(Sepp & if(vecto_global.VEC.AuxiliaryAssembly<>"CLASSIC",AA_SmartTractionAlternatorEfficiency(t).ToString(),""))               
+                      s.Append(Sepp & if(vecto_global.VEC.AuxiliaryAssembly<>"CLASSIC",AA_SmartOverrunCurrent_Amps(t).ToString(),""))                      
+                      s.Append(Sepp & if(vecto_global.VEC.AuxiliaryAssembly<>"CLASSIC",AA_SmartOverrunAlternatorEfficiency(t).ToString(),""))               
+                      s.Append(Sepp & if(vecto_global.VEC.AuxiliaryAssembly<>"CLASSIC",AA_CompressorFlowRate_LitrePerSec(t).ToString(),""))                  
+                      s.Append(Sepp & if(vecto_global.VEC.AuxiliaryAssembly<>"CLASSIC",AA_OverrunFlag(t).ToString(),""))                                   
+                      s.Append(Sepp & if(vecto_global.VEC.AuxiliaryAssembly<>"CLASSIC",AA_EngineIdleFlag(t).ToString(),""))                                     
+                      s.Append(Sepp & if(vecto_global.VEC.AuxiliaryAssembly<>"CLASSIC",AA_CompressorFlag(t).ToString(),""))                                    
+                      s.Append(Sepp & if(vecto_global.VEC.AuxiliaryAssembly<>"CLASSIC",AA_TotalCycleFC_Grams(t).ToString(),""))  
+                      s.Append(Sepp & if(vecto_global.VEC.AuxiliaryAssembly<>"CLASSIC",AA_TotalCycleFC_Litres(t).ToString(),""))
+                    s.Append(Sepp & If(VECTO_Global.VEC.AuxiliaryAssembly <> "CLASSIC", AA_AveragePowerDemandCrankHVACMechanicals(t).ToString(), ""))
+                    s.Append(Sepp & If(VECTO_Global.VEC.AuxiliaryAssembly <> "CLASSIC", AA_AveragePowerDemandCrankHVACElectricals(t).ToString(), ""))
+                    s.Append(Sepp & If(VECTO_Global.VEC.AuxiliaryAssembly <> "CLASSIC", AA_AveragePowerDemandCrankElectrics(t).ToString(), ""))
+                    s.Append(Sepp & If(VECTO_Global.VEC.AuxiliaryAssembly <> "CLASSIC", AA_AveragePowerDemandCrankPneumatics(t).ToString(), ""))
+                    s.Append(Sepp & If(VECTO_Global.VEC.AuxiliaryAssembly <> "CLASSIC", AA_TotalCycleFuelConsumptionCompressorOff(t).ToString(), ""))
+                    s.Append(Sepp & If(VECTO_Global.VEC.AuxiliaryAssembly <> "CLASSIC", AA_TotalCycleFuelConsumptionCompressorOn(t).ToString(), ""))
 
+                      'TODO:REMOVE WHEN TESTED
+                      'DIAGNOSTICS
+                      's.Append(Sepp & if(vecto_global.VEC.AuxiliaryAssembly<>"CLASSIC", AA_D_M12_P1X      (t).toString(),""))
+                      's.Append(Sepp & if(vecto_global.VEC.AuxiliaryAssembly<>"CLASSIC", AA_D_M12_P1Y      (t).toString(),""))
+                      's.Append(Sepp & if(vecto_global.VEC.AuxiliaryAssembly<>"CLASSIC", AA_D_M12_P2X      (t).toString(),""))
+                      's.Append(Sepp & if(vecto_global.VEC.AuxiliaryAssembly<>"CLASSIC", AA_D_M12_P2Y      (t).toString(),""))
+                      's.Append(Sepp & if(vecto_global.VEC.AuxiliaryAssembly<>"CLASSIC", AA_D_M12_P3X      (t).toString(),""))
+                      's.Append(Sepp & if(vecto_global.VEC.AuxiliaryAssembly<>"CLASSIC", AA_D_M12_P3Y      (t).toString(),""))
+                      's.Append(Sepp & if(vecto_global.VEC.AuxiliaryAssembly<>"CLASSIC", AA_D_M12_XTAIN    (t).toString(),""))
+                      's.Append(Sepp & if(vecto_global.VEC.AuxiliaryAssembly<>"CLASSIC", AA_D_M12_INTERP1  (t).toString(),""))
+                      's.Append(Sepp & if(vecto_global.VEC.AuxiliaryAssembly<>"CLASSIC", AA_D_M12_INTERP2  (t).toString(),""))
+
+
+
+                 end if
+                                                                                 
 				'FC
 				If .lFC(t) > -0.0001 Then
 					s.Append(Sepp & .lFC(t))
