@@ -539,9 +539,9 @@ Imports TUGraz.VectoCore.Utils
 		ModeUpdate()
 
 #If DEBUG Then
-		Dim LicCheck = False
+		Const LicCheck As Boolean = False
 #Else
-		Dim LicCheck = True
+		Const LicCheck as Boolean = True
 #End If
 
 		'License check
