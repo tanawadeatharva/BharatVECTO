@@ -2,163 +2,154 @@
 Imports System.Text
 
 Namespace Hvac
+	Public Class BusDatabase
+		Implements IBusDatabase
 
+		Private buses As New List(Of IBus)
+		Private selectListBuses As New List(Of IBus)
 
-    Public Class BusDatabase
-        Implements IBusDatabase
+		Public Function AddBus(bus As IBus) As Boolean Implements IBusDatabase.AddBus
 
-        Private buses As New List(Of IBus)
-        Private selectListBuses As New List(Of IBus)
+			Dim result As Boolean = True
 
-        Public Function AddBus(bus As IBus) As Boolean Implements IBusDatabase.AddBus
+			Try
+				buses.Add(bus)
+			Catch ex As Exception
+				result = False
+			End Try
 
-            Dim result As Boolean = True
+			Return result
+		End Function
 
-            Try
-                buses.Add(bus)
-            Catch ex As Exception
-                result = False
-            End Try
+		Public Function GetBuses(busModel As String, Optional AsSelectList As Boolean = False) As List(Of IBus) _
+			Implements IBusDatabase.GetBuses
 
-            Return result
-        End Function
+			If AsSelectList Then
+				selectListBuses = New List(Of IBus)
+				selectListBuses = buses.Where(Function(v) v.Model = "" OrElse v.Model.ToLower.Contains(busModel.ToLower)).ToList()
+				selectListBuses.Insert(0, New Bus(0, "<Select>", "low floor", "gas", 1, 1, 1, 2, False))
+				Return selectListBuses
 
-        Public Function GetBuses(busModel As String, Optional AsSelectList As Boolean = False) As List(Of IBus) Implements IBusDatabase.GetBuses
+			Else
 
-            If AsSelectList Then
-                selectListBuses = New List(Of IBus)
-                selectListBuses = buses.Where(Function(v) v.Model = "" OrElse v.Model.ToLower.Contains(busModel.ToLower)).ToList()
-                selectListBuses.Insert(0, New Bus(0, "<Select>", "low floor", "gas", 1, 1, 1, 2, False))
-                Return selectListBuses
+				Return buses.Where(Function(v) v.Model = "" OrElse v.Model.ToLower.Contains(busModel.ToLower)).ToList()
 
-            Else
+			End If
+		End Function
 
-                Return buses.Where(Function(v) v.Model = "" OrElse v.Model.ToLower.Contains(busModel.ToLower)).ToList()
+		Public Function Initialise(filepath As String) As Boolean Implements IBusDatabase.Initialise
 
-            End If
+			Dim returnStatus As Boolean = True
 
-        End Function
+			If File.Exists(filepath) Then
+				Using sr As StreamReader = New StreamReader(filepath)
+					'get array og lines fron csv
+					Dim lines() As String = sr.ReadToEnd().Split(CType(Environment.NewLine, Char()),
+																StringSplitOptions.RemoveEmptyEntries)
 
-        Public Function Initialise(filepath As String) As Boolean Implements IBusDatabase.Initialise
+					'Must have at least 2 entries in map to make it usable [dont forget the header row]
+					If (lines.Count() < 2) Then
+						Return False
+					End If
 
-            Dim returnStatus As Boolean = True
+					Dim firstline As Boolean = True
 
-            If File.Exists(filepath) Then
-                Using sr As StreamReader = New StreamReader(filepath)
-                    'get array og lines fron csv
-                    Dim lines() As String = sr.ReadToEnd().Split(CType(Environment.NewLine, Char()), StringSplitOptions.RemoveEmptyEntries)
+					Dim id As Integer = 1
 
-                    'Must have at least 2 entries in map to make it usable [dont forget the header row]
-                    If (lines.Count() < 2) Then
-                        Return False
-                    End If
+					For Each line As String In lines
+						If Not firstline Then
 
-                    Dim firstline As Boolean = True
+							'split the line
+							Dim elements() As String = line.Split(New Char() {","}, StringSplitOptions.RemoveEmptyEntries)
+							'7 or 8 entries per line required
+							If (elements.Length <> 7 AndAlso elements.Length <> 8) Then
+								Throw New ArgumentException("Incorrect number of values in csv file")
+							End If
 
-                    Dim id As Integer = 1
+							'Bus
+							Try
+								Dim bus As New Bus(id,
+													elements(0),
+													elements(1),
+													elements(2),
+													elements(3),
+													elements(4),
+													elements(5),
+													elements(6),
+													If(elements.Length = 8, Boolean.Parse(elements(7)), False))
 
-                    For Each line As String In lines
-                        If Not firstline Then
+								buses.Add(bus)
 
-                            'split the line
-                            Dim elements() As String = line.Split(New Char() {","}, StringSplitOptions.RemoveEmptyEntries)
-                            '7 or 8 entries per line required
-                            If (elements.Length <> 7 AndAlso elements.Length <> 8) Then
-                                Throw New ArgumentException("Incorrect number of values in csv file")
-                            End If
+							Catch ex As Exception
 
-                            'Bus
-                            Try
-                                Dim bus As New Bus(id, _
-                                                   elements(0), _
-                                                   elements(1), _
-                                                   elements(2), _
-                                                   elements(3), _
-                                                   elements(4), _
-                                                   elements(5), _
-                                                   elements(6), _
-                                                   If(elements.Length = 8, Boolean.Parse(elements(7)), False))
+								'Indicate problems
+								returnStatus = False
 
-                                buses.Add(bus)
+							End Try
 
-                            Catch ex As Exception
+							id = id + 1
+						Else
+							firstline = False
+						End If
+					Next line
+				End Using
 
-                                'Indicate problems
-                                returnStatus = False
+			Else
+				returnStatus = False
+			End If
 
-                            End Try
+			Dim uniqueBuses As Object = From b In buses Select New With {Key b.Model, b} Distinct.ToList()
 
-                            id = id + 1
-                        Else
-                            firstline = False
-                        End If
-                    Next line
-                End Using
+			If buses.Count <> uniqueBuses.Count Then
+				returnStatus = False
+			End If
 
-            Else
-                returnStatus = False
-            End If
+			Return returnStatus
+		End Function
 
-            Dim uniqueBuses = From b In buses Select New With {Key b.Model, b} Distinct.ToList()
+		Public Function UpdateBus(id As Integer, bus As IBus) As Boolean Implements IBusDatabase.UpdateBus
 
-            If buses.Count <> uniqueBuses.Count Then
-                returnStatus = False
-            End If
+			Dim result As Boolean = True
 
-            Return returnStatus
+			Try
 
-        End Function
+				Dim existingBus As IBus = buses.Single(Function(b) b.Id = id)
 
-        Public Function UpdateBus(id As Integer, bus As IBus) As Boolean Implements IBusDatabase.UpdateBus
+				existingBus.Model = bus.Model
+				existingBus.RegisteredPassengers = bus.RegisteredPassengers
+				existingBus.FloorType = bus.FloorType
+				existingBus.LengthInMetres = bus.LengthInMetres
+				existingBus.WidthInMetres = bus.WidthInMetres
+				existingBus.HeightInMetres = bus.HeightInMetres
+				existingBus.IsDoubleDecker = bus.IsDoubleDecker
 
-            Dim result As Boolean = True
+			Catch ex As Exception
+				result = False
+			End Try
 
-            Try
+			Return result
+		End Function
 
-                Dim existingBus As IBus = buses.Single(Function(b) b.Id = id)
+		Public Function Save(filepath As String) As Boolean Implements IBusDatabase.Save
 
-                existingBus.Model = bus.Model
-                existingBus.RegisteredPassengers = bus.RegisteredPassengers
-                existingBus.FloorType = bus.FloorType
-                existingBus.LengthInMetres = bus.LengthInMetres
-                existingBus.WidthInMetres = bus.WidthInMetres
-                existingBus.HeightInMetres = bus.HeightInMetres
-                existingBus.IsDoubleDecker = bus.IsDoubleDecker
+			Dim result As Boolean = True
+			Dim output As New StringBuilder
 
-            Catch ex As Exception
-                result = False
-            End Try
+			Try
+				output.AppendLine("Bus Model,Type,engine Type,length in m,wide in m,height in m,registered passengers,double decker")
 
-            Return result
+				For Each bus As IBus In buses
+					output.AppendLine(bus.ToString())
+				Next
 
-        End Function
+				File.WriteAllText(filepath, output.ToString())
+			Catch ex As Exception
+				result = False
+			End Try
 
-        Public Function Save(filepath As String) As Boolean Implements IBusDatabase.Save
-
-            Dim result As Boolean = True
-            Dim output As New StringBuilder
-
-            Try
-                output.AppendLine("Bus Model,Type,engine Type,length in m,wide in m,height in m,registered passengers,double decker")
-
-                For Each bus As IBus In buses
-                    output.AppendLine(bus.ToString())
-                Next
-
-                File.WriteAllText(filepath, output.ToString())
-            Catch ex As Exception
-                result = False
-            End Try
-
-            Return result
-
-        End Function
-
-    End Class
-
-
-
+			Return result
+		End Function
+	End Class
 End Namespace
-
 
 

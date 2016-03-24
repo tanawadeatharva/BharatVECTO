@@ -56,7 +56,7 @@
     <Reference Include="DocumentFormat.OpenXml, Version=2.5.5631.0, Culture=neutral, PublicKeyToken=31bf3856ad364e35, processorArchitecture=MSIL" />
     <Reference Include="Microsoft.VisualStudio.QualityTools.UnitTestFramework, Version=10.0.0.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a, processorArchitecture=MSIL" />
     <Reference Include="Moq">
-      <HintPath>..\..\packages\Moq.4.2.1409.1722\lib\net40\Moq.dll</HintPath>
+      <HintPath>..\..\packages\Moq.4.2.1510.2205\lib\net40\Moq.dll</HintPath>
     </Reference>
     <Reference Include="Newtonsoft.Json, Version=6.0.0.0, Culture=neutral, PublicKeyToken=30ad4fe6b2a6aeed, processorArchitecture=MSIL">
       <SpecificVersion>False</SpecificVersion>
@@ -99,6 +99,8 @@
     <Import Include="Microsoft.VisualStudio.TestTools.UnitTesting" />
   </ItemGroup>
   <ItemGroup>
+    <Compile Include="Mocks\AlternatorMapMock.vb" />
+    <Compile Include="Mocks\CompressorMapMock.vb" />
     <Compile Include="UnitTests\AuxiliaryEnvironmentComparisonTests.vb" />
     <Compile Include="Mocks\M1_Mock.vb" />
     <Compile Include="Mocks\M2_Mock.vb" />
@@ -135,8 +137,6 @@
     <Compile Include="UnitTests\M2_AverageElectricalLoadTests.vb" />
     <Compile Include="UnitTests\CompressorMapTests.vb" />
     <Compile Include="UnitTests\ElectricalConsumerTests.vb" />
-    <Compile Include="Mocks\AlternatorMapMock.vb" />
-    <Compile Include="Mocks\CompressorMapMock.vb" />
     <Compile Include="Mocks\ElectricalConsumerMock.vb" />
     <Compile Include="My Project\AssemblyInfo.vb" />
     <Compile Include="My Project\Application.Designer.vb">
@@ -323,17 +323,17 @@
     </Content>
   </ItemGroup>
   <ItemGroup>
+    <Folder Include="IntegrationTests\" />
+  </ItemGroup>
+  <ItemGroup>
     <ProjectReference Include="..\..\AdvancedAuxiliaryInterfaces\AdvancedAuxiliaryInterfaces.vbproj">
       <Project>{b4b9bd2f-fd8f-4bb8-82fa-e2154d2c7fbd}</Project>
       <Name>AdvancedAuxiliaryInterfaces</Name>
     </ProjectReference>
     <ProjectReference Include="..\VectoAuxiliaries\VectoAuxiliaries.vbproj">
-      <Project>{FDEEE460-0B8A-4EF6-8D9E-72F203A50F65}</Project>
+      <Project>{fdeee460-0b8a-4ef6-8d9e-72f203a50f65}</Project>
       <Name>VectoAuxiliaries</Name>
     </ProjectReference>
-  </ItemGroup>
-  <ItemGroup>
-    <Folder Include="IntegrationTests\" />
   </ItemGroup>
   <Choose>
     <When Condition="'$(VisualStudioVersion)' == '10.0' And '$(IsCodedUITest)' == 'True'">
