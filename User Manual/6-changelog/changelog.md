@@ -1,7 +1,9 @@
 #Changelog
 
 
-**VECTO 3.0.2 (2016-03-10)**
+**VECTO 3.0.2**
+
+***Build 434 (2016-03-10)***
 
 - New simulation modes:
     + Measured Speed
@@ -34,10 +36,17 @@
 - Bugfix: retarder takes the retarder ratio into account for lossmap lookup
 - Bugfix: use unique identifier for jobs in job list
 - Bugfix: error in triagulation of fuel consumption map
+
+***Build 448 (2016-03-24)***
+
+- Bugfix: set WHTC factors to a valid default value in engineering mode
+- Bugfix: first page of declaration report was missing
+- fixed inconsistencies in user manual
 - Bugfix: better error message roll resistance calculation could not be calculated
 - Bugfix: measured speed now calculates distance correctly
 - Bugfix: measured speed fills missing moddata columns (acc, dist, grad)
 - Bugfix: better error message when driving cycle is missing.
+- Bugfix: vectocmd errormsg when writing progress
 
 **VECTO 3.0.1**
 
