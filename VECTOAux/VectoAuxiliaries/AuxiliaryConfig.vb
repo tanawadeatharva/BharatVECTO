@@ -20,372 +20,418 @@ Imports VectoAuxiliaries
 
 <Serializable()>
 Public Class AuxiliaryConfig
-    Implements IAuxiliaryConfig
+	Implements IAuxiliaryConfig
 
-    'Vecto
-    Public Property VectoInputs As IVectoInputs Implements IAuxiliaryConfig.VectoInputs
+	'Vecto
+	Public Property VectoInputs As IVectoInputs Implements IAuxiliaryConfig.VectoInputs
 
-    'Electrical
-    Public Property ElectricalUserInputsConfig As IElectricsUserInputsConfig Implements IAuxiliaryConfig.ElectricalUserInputsConfig
+	'Electrical
+	Public Property ElectricalUserInputsConfig As IElectricsUserInputsConfig _
+		Implements IAuxiliaryConfig.ElectricalUserInputsConfig
 
-    'Pneumatics
-    Public Property PneumaticUserInputsConfig As IPneumaticUserInputsConfig Implements IAuxiliaryConfig.PneumaticUserInputsConfig
-    Public Property PneumaticAuxillariesConfig As IPneumaticsAuxilliariesConfig Implements IAuxiliaryConfig.PneumaticAuxillariesConfig
+	'Pneumatics
+	Public Property PneumaticUserInputsConfig As IPneumaticUserInputsConfig _
+		Implements IAuxiliaryConfig.PneumaticUserInputsConfig
 
-    'Hvac
-    Public Property HvacUserInputsConfig As IHVACUserInputsConfig Implements IAuxiliaryConfig.HvacUserInputsConfig
+	Public Property PneumaticAuxillariesConfig As IPneumaticsAuxilliariesConfig _
+		Implements IAuxiliaryConfig.PneumaticAuxillariesConfig
 
-    'Vecto Signals
-    Public Property Signals As ISignals
+	'Hvac
+	Public Property HvacUserInputsConfig As IHVACUserInputsConfig Implements IAuxiliaryConfig.HvacUserInputsConfig
 
-    'Constructors
-    Sub New()
+	'Vecto Signals
+	Public Property Signals As ISignals
 
-        Call Me.New("EMPTY")
+	'Constructors
+	Sub New()
 
-    End Sub
+		Call Me.New("EMPTY")
+	End Sub
 
-    Public Sub New(auxConfigFile As String)
+	Public Sub New(auxConfigFile As String)
 
-        'Special Condition
-        If auxConfigFile = "EMPTY" Then
-            ElectricalUserInputsConfig = New ElectricsUserInputsConfig() With {.PowerNetVoltage = 28.3}
-            ElectricalUserInputsConfig.ElectricalConsumers = New ElectricalConsumerList(28.3, 0.096, False)
-            ElectricalUserInputsConfig.ResultCardIdle = New ResultCard(New List(Of SmartResult))
-            ElectricalUserInputsConfig.ResultCardOverrun = New ResultCard(New List(Of SmartResult))
-            ElectricalUserInputsConfig.ResultCardTraction = New ResultCard(New List(Of SmartResult))
-            PneumaticAuxillariesConfig = New PneumaticsAuxilliariesConfig(False)
-            PneumaticUserInputsConfig = New PneumaticUserInputsConfig(False)
-            HvacUserInputsConfig = New HVACUserInputsConfig(String.Empty, String.Empty, False)
-            Exit Sub
+		'Special Condition
+		If auxConfigFile = "EMPTY" Then
+			ElectricalUserInputsConfig = New ElectricsUserInputsConfig() With {.PowerNetVoltage = 28.3}
+			ElectricalUserInputsConfig.ElectricalConsumers = New ElectricalConsumerList(28.3, 0.096, False)
+			ElectricalUserInputsConfig.ResultCardIdle = New ResultCard(New List(Of SmartResult))
+			ElectricalUserInputsConfig.ResultCardOverrun = New ResultCard(New List(Of SmartResult))
+			ElectricalUserInputsConfig.ResultCardTraction = New ResultCard(New List(Of SmartResult))
+			PneumaticAuxillariesConfig = New PneumaticsAuxilliariesConfig(False)
+			PneumaticUserInputsConfig = New PneumaticUserInputsConfig(False)
+			HvacUserInputsConfig = New HVACUserInputsConfig(String.Empty, String.Empty, False)
+			Exit Sub
 
-        End If
+		End If
 
-        If auxConfigFile Is Nothing OrElse auxConfigFile.Trim().Length = 0 OrElse Not FILE.Exists(auxConfigFile) Then
+		If auxConfigFile Is Nothing OrElse auxConfigFile.Trim().Length = 0 OrElse Not FILE.Exists(auxConfigFile) Then
 
-            setdefaults()
+			setdefaults()
 
-        Else
+		Else
 
-            setDefaults()
+			setDefaults()
 
-            If Not Load(auxConfigFile) Then
-                MessageBox.Show(String.Format("Unable to load file  {0}", auxConfigFile))
-            End If
+			If Not Load(auxConfigFile) Then
+				MessageBox.Show(String.Format("Unable to load file  {0}", auxConfigFile))
+			End If
 
-        End If
+		End If
+	End Sub
 
-    End Sub
+	'Set Default Values
+	Private Sub setDefaults()
 
-    'Set Default Values
-    Private Sub setDefaults()
+		VectoInputs = New VectoInputs With {.Cycle = "Urban", .VehicleWeightKG = 16500, .PowerNetVoltage = 28.3}
+		Signals = New Signals With {.EngineSpeed = 2000, .TotalCycleTimeSeconds = 3114, .ClutchEngaged = False}
 
-        VectoInputs = New VectoInputs With {.Cycle = "Urban", .VehicleWeightKG = 16500, .PowerNetVoltage = 28.3, .FuelMap = "testFuelGoodMap.vmap"}
-        Signals = New Signals With {.EngineSpeed = 2000, .TotalCycleTimeSeconds = 3114, .ClutchEngaged = False}
+		'Pneumatics set deault values
+		PneumaticUserInputsConfig = New PneumaticUserInputsConfig(True)
+		PneumaticAuxillariesConfig = New PneumaticsAuxilliariesConfig(True)
 
-        'Pneumatics set deault values
-        PneumaticUserInputsConfig = New PneumaticUserInputsConfig(True)
-        PneumaticAuxillariesConfig = New PneumaticsAuxilliariesConfig(True)
+		'Electrical set deault values
+		ElectricalUserInputsConfig = New ElectricsUserInputsConfig(True, VectoInputs)
+		ElectricalUserInputsConfig.ElectricalConsumers = New ElectricalConsumerList(28.3, 0.096, True)
 
-        'Electrical set deault values
-        ElectricalUserInputsConfig = New ElectricsUserInputsConfig(True, VectoInputs)
-        ElectricalUserInputsConfig.ElectricalConsumers = New ElectricalConsumerList(28.3, 0.096, True)
+		'HVAC set deault values
+		HvacUserInputsConfig = New HVACUserInputsConfig(String.Empty, String.Empty, False)
+	End Sub
 
-        'HVAC set deault values
-        HvacUserInputsConfig = New HVACUserInputsConfig(String.Empty, String.Empty, False)
+	Private Function GetDoorActuationTimeFraction() As Single
 
-    End Sub
+		Dim actuationsMap As PneumaticActuationsMAP = New PneumaticActuationsMAP(PneumaticUserInputsConfig.ActuationsMap)
+		Dim actuationsKey As ActuationsKey = New ActuationsKey("Park brake + 2 doors", VectoInputs.Cycle)
 
-    Private Function GetDoorActuationTimeFraction() As Single
+		Dim numActuations As Single = actuationsMap.GetNumActuations(actuationsKey)
+		Dim secondsPerActuation As Single = ElectricalUserInputsConfig.DoorActuationTimeSecond
 
-        Dim actuationsMap As PneumaticActuationsMAP = New PneumaticActuationsMAP(PneumaticUserInputsConfig.ActuationsMap)
-        Dim actuationsKey As ActuationsKey = New ActuationsKey("Park brake + 2 doors", VectoInputs.Cycle)
+		Dim doorDutyCycleFraction As Single = (numActuations * secondsPerActuation) / Signals.TotalCycleTimeSeconds
 
-        Dim numActuations As Single = actuationsMap.GetNumActuations(actuationsKey)
-        Dim secondsPerActuation As Single = ElectricalUserInputsConfig.DoorActuationTimeSecond
-
-        Dim doorDutyCycleFraction As Single = (numActuations * secondsPerActuation) / Signals.TotalCycleTimeSeconds
-
-        Return doorDutyCycleFraction
-
-    End Function
+		Return doorDutyCycleFraction
+	End Function
 
 #Region "Comparison"
 
-    Private Function CompareElectricalConfiguration(other As AuxiliaryConfig) As Boolean
+	Private Function CompareElectricalConfiguration(other As AuxiliaryConfig) As Boolean
 
-        'AlternatorGearEfficiency
-        If Me.ElectricalUserInputsConfig.AlternatorGearEfficiency <> other.ElectricalUserInputsConfig.AlternatorGearEfficiency Then Return False
+		'AlternatorGearEfficiency
+		If Me.ElectricalUserInputsConfig.AlternatorGearEfficiency <> other.ElectricalUserInputsConfig.AlternatorGearEfficiency _
+			Then Return False
 
-        'AlternatorMap
-        If Me.ElectricalUserInputsConfig.AlternatorMap <> other.ElectricalUserInputsConfig.AlternatorMap Then Return False
+		'AlternatorMap
+		If Me.ElectricalUserInputsConfig.AlternatorMap <> other.ElectricalUserInputsConfig.AlternatorMap Then Return False
 
-        'DoorActuationTimeSecond
-        If Me.ElectricalUserInputsConfig.DoorActuationTimeSecond <> other.ElectricalUserInputsConfig.DoorActuationTimeSecond Then Return False
-
-
-        'Consumer list
-        If Me.ElectricalUserInputsConfig.ElectricalConsumers.Items.Count <> other.ElectricalUserInputsConfig.ElectricalConsumers.Items.count Then Return False
-        Dim i As Integer
-        For i = 0 To Me.ElectricalUserInputsConfig.ElectricalConsumers.Items.Count - 1
-            Dim thisConsumer, otherConsumer As IElectricalConsumer
-            thisConsumer = Me.ElectricalUserInputsConfig.ElectricalConsumers.Items(i)
-            otherConsumer = other.ElectricalUserInputsConfig.ElectricalConsumers.Items(i)
-
-            If thisConsumer.AvgConsumptionAmps <> otherConsumer.AvgConsumptionAmps OrElse _
-                thisConsumer.BaseVehicle <> otherConsumer.BaseVehicle OrElse _
-                thisConsumer.Category <> otherConsumer.Category OrElse _
-                thisConsumer.ConsumerName <> otherConsumer.ConsumerName OrElse _
-                thisConsumer.NominalConsumptionAmps <> otherConsumer.NominalConsumptionAmps OrElse _
-                thisConsumer.NumberInActualVehicle <> otherConsumer.NumberInActualVehicle OrElse _
-                thisConsumer.PhaseIdle_TractionOn <> otherConsumer.PhaseIdle_TractionOn OrElse _
-                thisConsumer.TotalAvgConsumptionInWatts <> otherConsumer.TotalAvgConsumptionInWatts OrElse _
-                thisConsumer.TotalAvgConumptionAmps <> otherConsumer.TotalAvgConumptionAmps Then Return False
-
-        Next
-
-        'PowerNetVoltage
-        If Me.ElectricalUserInputsConfig.PowerNetVoltage <> other.ElectricalUserInputsConfig.PowerNetVoltage Then Return False
-
-        'ResultCardIdle
-        If Me.ElectricalUserInputsConfig.ResultCardIdle.Results.count <> other.ElectricalUserInputsConfig.ResultCardIdle.Results.Count Then Return False
-        For i = 0 To Me.ElectricalUserInputsConfig.ResultCardIdle.Results.Count - 1
-            If Me.ElectricalUserInputsConfig.ResultCardIdle.Results(i).Amps <> other.ElectricalUserInputsConfig.ResultCardIdle.Results(i).Amps OrElse _
-                Me.ElectricalUserInputsConfig.ResultCardIdle.Results(i).SmartAmps <> other.ElectricalUserInputsConfig.ResultCardIdle.Results(i).SmartAmps Then Return False
-        Next
-
-        'ResultCardOverrun
-        If Me.ElectricalUserInputsConfig.ResultCardOverrun.Results.count <> other.ElectricalUserInputsConfig.ResultCardOverrun.Results.Count Then Return False
-        For i = 0 To Me.ElectricalUserInputsConfig.ResultCardOverrun.Results.Count - 1
-            If Me.ElectricalUserInputsConfig.ResultCardOverrun.Results(i).Amps <> other.ElectricalUserInputsConfig.ResultCardOverrun.Results(i).Amps OrElse _
-                Me.ElectricalUserInputsConfig.ResultCardOverrun.Results(i).SmartAmps <> other.ElectricalUserInputsConfig.ResultCardOverrun.Results(i).SmartAmps Then Return False
-        Next
+		'DoorActuationTimeSecond
+		If Me.ElectricalUserInputsConfig.DoorActuationTimeSecond <> other.ElectricalUserInputsConfig.DoorActuationTimeSecond _
+			Then Return False
 
 
-        'ResultCardTraction
-        If Me.ElectricalUserInputsConfig.ResultCardTraction.Results.count <> other.ElectricalUserInputsConfig.ResultCardTraction.Results.Count Then Return False
-        For i = 0 To Me.ElectricalUserInputsConfig.ResultCardTraction.Results.Count - 1
-            If Me.ElectricalUserInputsConfig.ResultCardTraction.Results(i).Amps <> other.ElectricalUserInputsConfig.ResultCardTraction.Results(i).Amps OrElse _
-                Me.ElectricalUserInputsConfig.ResultCardTraction.Results(i).SmartAmps <> other.ElectricalUserInputsConfig.ResultCardTraction.Results(i).SmartAmps Then Return False
-        Next
+		'Consumer list
+		If _
+			Me.ElectricalUserInputsConfig.ElectricalConsumers.Items.Count <>
+			other.ElectricalUserInputsConfig.ElectricalConsumers.Items.count Then Return False
+		Dim i As Integer
+		For i = 0 To Me.ElectricalUserInputsConfig.ElectricalConsumers.Items.Count - 1
+			Dim thisConsumer, otherConsumer As IElectricalConsumer
+			thisConsumer = Me.ElectricalUserInputsConfig.ElectricalConsumers.Items(i)
+			otherConsumer = other.ElectricalUserInputsConfig.ElectricalConsumers.Items(i)
 
-        'SmartElectrical
-        If Me.ElectricalUserInputsConfig.SmartElectrical <> other.ElectricalUserInputsConfig.SmartElectrical Then Return False
+			If thisConsumer.AvgConsumptionAmps <> otherConsumer.AvgConsumptionAmps OrElse
+				thisConsumer.BaseVehicle <> otherConsumer.BaseVehicle OrElse
+				thisConsumer.Category <> otherConsumer.Category OrElse
+				thisConsumer.ConsumerName <> otherConsumer.ConsumerName OrElse
+				thisConsumer.NominalConsumptionAmps <> otherConsumer.NominalConsumptionAmps OrElse
+				thisConsumer.NumberInActualVehicle <> otherConsumer.NumberInActualVehicle OrElse
+				thisConsumer.PhaseIdle_TractionOn <> otherConsumer.PhaseIdle_TractionOn OrElse
+				thisConsumer.TotalAvgConsumptionInWatts <> otherConsumer.TotalAvgConsumptionInWatts OrElse
+				thisConsumer.TotalAvgConumptionAmps <> otherConsumer.TotalAvgConumptionAmps Then Return False
+
+		Next
+
+		'PowerNetVoltage
+		If Me.ElectricalUserInputsConfig.PowerNetVoltage <> other.ElectricalUserInputsConfig.PowerNetVoltage Then Return False
+
+		'ResultCardIdle
+		If _
+			Me.ElectricalUserInputsConfig.ResultCardIdle.Results.count <>
+			other.ElectricalUserInputsConfig.ResultCardIdle.Results.Count Then Return False
+		For i = 0 To Me.ElectricalUserInputsConfig.ResultCardIdle.Results.Count - 1
+			If _
+				Me.ElectricalUserInputsConfig.ResultCardIdle.Results(i).Amps <>
+				other.ElectricalUserInputsConfig.ResultCardIdle.Results(i).Amps OrElse
+				Me.ElectricalUserInputsConfig.ResultCardIdle.Results(i).SmartAmps <>
+				other.ElectricalUserInputsConfig.ResultCardIdle.Results(i).SmartAmps Then Return False
+		Next
+
+		'ResultCardOverrun
+		If _
+			Me.ElectricalUserInputsConfig.ResultCardOverrun.Results.count <>
+			other.ElectricalUserInputsConfig.ResultCardOverrun.Results.Count Then Return False
+		For i = 0 To Me.ElectricalUserInputsConfig.ResultCardOverrun.Results.Count - 1
+			If _
+				Me.ElectricalUserInputsConfig.ResultCardOverrun.Results(i).Amps <>
+				other.ElectricalUserInputsConfig.ResultCardOverrun.Results(i).Amps OrElse
+				Me.ElectricalUserInputsConfig.ResultCardOverrun.Results(i).SmartAmps <>
+				other.ElectricalUserInputsConfig.ResultCardOverrun.Results(i).SmartAmps Then Return False
+		Next
 
 
-        Return True
+		'ResultCardTraction
+		If _
+			Me.ElectricalUserInputsConfig.ResultCardTraction.Results.count <>
+			other.ElectricalUserInputsConfig.ResultCardTraction.Results.Count Then Return False
+		For i = 0 To Me.ElectricalUserInputsConfig.ResultCardTraction.Results.Count - 1
+			If _
+				Me.ElectricalUserInputsConfig.ResultCardTraction.Results(i).Amps <>
+				other.ElectricalUserInputsConfig.ResultCardTraction.Results(i).Amps OrElse
+				Me.ElectricalUserInputsConfig.ResultCardTraction.Results(i).SmartAmps <>
+				other.ElectricalUserInputsConfig.ResultCardTraction.Results(i).SmartAmps Then Return False
+		Next
+
+		'SmartElectrical
+		If Me.ElectricalUserInputsConfig.SmartElectrical <> other.ElectricalUserInputsConfig.SmartElectrical Then Return False
 
 
-    End Function
-    Private Function ComparePneumaticAuxiliariesConfig(other As AuxiliaryConfig) As Boolean
+		Return True
+	End Function
 
-        If Me.PneumaticAuxillariesConfig.AdBlueNIperMinute <> other.PneumaticAuxillariesConfig.AdBlueNIperMinute Then Return False
-        If Me.PneumaticAuxillariesConfig.AirControlledSuspensionNIperMinute <> other.PneumaticAuxillariesConfig.AirControlledSuspensionNIperMinute Then Return False
-        If Me.PneumaticAuxillariesConfig.BrakingNoRetarderNIperKG <> other.PneumaticAuxillariesConfig.BrakingNoRetarderNIperKG Then Return False
-        If Me.PneumaticAuxillariesConfig.BrakingWithRetarderNIperKG <> other.PneumaticAuxillariesConfig.BrakingWithRetarderNIperKG Then Return False
-        If Me.PneumaticAuxillariesConfig.BreakingPerKneelingNIperKGinMM <> other.PneumaticAuxillariesConfig.BreakingPerKneelingNIperKGinMM Then Return False
-        If Me.PneumaticAuxillariesConfig.DeadVolBlowOutsPerLitresperHour <> other.PneumaticAuxillariesConfig.DeadVolBlowOutsPerLitresperHour Then Return False
-        If Me.PneumaticAuxillariesConfig.DeadVolumeLitres <> other.PneumaticAuxillariesConfig.DeadVolumeLitres Then Return False
-        If Me.PneumaticAuxillariesConfig.NonSmartRegenFractionTotalAirDemand <> other.PneumaticAuxillariesConfig.NonSmartRegenFractionTotalAirDemand Then Return False
-        If Me.PneumaticAuxillariesConfig.PerDoorOpeningNI <> other.PneumaticAuxillariesConfig.PerDoorOpeningNI Then Return False
-        If Me.PneumaticAuxillariesConfig.PerStopBrakeActuationNIperKG <> other.PneumaticAuxillariesConfig.PerStopBrakeActuationNIperKG Then Return False
-        If Me.PneumaticAuxillariesConfig.SmartRegenFractionTotalAirDemand <> other.PneumaticAuxillariesConfig.SmartRegenFractionTotalAirDemand Then Return False
-        If Me.PneumaticAuxillariesConfig.OverrunUtilisationForCompressionFraction <> other.PneumaticAuxillariesConfig.OverrunUtilisationForCompressionFraction Then Return False
+	Private Function ComparePneumaticAuxiliariesConfig(other As AuxiliaryConfig) As Boolean
 
-        Return True
+		If Me.PneumaticAuxillariesConfig.AdBlueNIperMinute <> other.PneumaticAuxillariesConfig.AdBlueNIperMinute Then _
+			Return False
+		If _
+			Me.PneumaticAuxillariesConfig.AirControlledSuspensionNIperMinute <>
+			other.PneumaticAuxillariesConfig.AirControlledSuspensionNIperMinute Then Return False
+		If Me.PneumaticAuxillariesConfig.BrakingNoRetarderNIperKG <> other.PneumaticAuxillariesConfig.BrakingNoRetarderNIperKG _
+			Then Return False
+		If _
+			Me.PneumaticAuxillariesConfig.BrakingWithRetarderNIperKG <>
+			other.PneumaticAuxillariesConfig.BrakingWithRetarderNIperKG Then Return False
+		If _
+			Me.PneumaticAuxillariesConfig.BreakingPerKneelingNIperKGinMM <>
+			other.PneumaticAuxillariesConfig.BreakingPerKneelingNIperKGinMM Then Return False
+		If _
+			Me.PneumaticAuxillariesConfig.DeadVolBlowOutsPerLitresperHour <>
+			other.PneumaticAuxillariesConfig.DeadVolBlowOutsPerLitresperHour Then Return False
+		If Me.PneumaticAuxillariesConfig.DeadVolumeLitres <> other.PneumaticAuxillariesConfig.DeadVolumeLitres Then _
+			Return False
+		If _
+			Me.PneumaticAuxillariesConfig.NonSmartRegenFractionTotalAirDemand <>
+			other.PneumaticAuxillariesConfig.NonSmartRegenFractionTotalAirDemand Then Return False
+		If Me.PneumaticAuxillariesConfig.PerDoorOpeningNI <> other.PneumaticAuxillariesConfig.PerDoorOpeningNI Then _
+			Return False
+		If _
+			Me.PneumaticAuxillariesConfig.PerStopBrakeActuationNIperKG <>
+			other.PneumaticAuxillariesConfig.PerStopBrakeActuationNIperKG Then Return False
+		If _
+			Me.PneumaticAuxillariesConfig.SmartRegenFractionTotalAirDemand <>
+			other.PneumaticAuxillariesConfig.SmartRegenFractionTotalAirDemand Then Return False
+		If _
+			Me.PneumaticAuxillariesConfig.OverrunUtilisationForCompressionFraction <>
+			other.PneumaticAuxillariesConfig.OverrunUtilisationForCompressionFraction Then Return False
 
-    End Function
-    Private Function ComparePneumaticUserConfig(other As AuxiliaryConfig) As Boolean
+		Return True
+	End Function
 
-        If Me.PneumaticUserInputsConfig.ActuationsMap <> other.PneumaticUserInputsConfig.ActuationsMap Then Return False
-        If Me.PneumaticUserInputsConfig.AdBlueDosing <> other.PneumaticUserInputsConfig.AdBlueDosing Then Return False
-        If Me.PneumaticUserInputsConfig.AirSuspensionControl <> other.PneumaticUserInputsConfig.AirSuspensionControl Then Return False
-        If Me.PneumaticUserInputsConfig.CompressorGearEfficiency <> other.PneumaticUserInputsConfig.CompressorGearEfficiency Then Return False
-        If Me.PneumaticUserInputsConfig.CompressorGearRatio <> other.PneumaticUserInputsConfig.CompressorGearRatio Then Return False
-        If Me.PneumaticUserInputsConfig.CompressorMap <> other.PneumaticUserInputsConfig.CompressorMap Then Return False
-        If Me.PneumaticUserInputsConfig.Doors <> other.PneumaticUserInputsConfig.Doors Then Return False
-        If Me.PneumaticUserInputsConfig.KneelingHeightMillimeters <> other.PneumaticUserInputsConfig.KneelingHeightMillimeters Then Return False
-        If Me.PneumaticUserInputsConfig.RetarderBrake <> other.PneumaticUserInputsConfig.RetarderBrake Then Return False
-        If Me.PneumaticUserInputsConfig.SmartAirCompression <> other.PneumaticUserInputsConfig.SmartAirCompression Then Return False
-        If Me.PneumaticUserInputsConfig.SmartRegeneration <> other.PneumaticUserInputsConfig.SmartRegeneration Then Return False
+	Private Function ComparePneumaticUserConfig(other As AuxiliaryConfig) As Boolean
 
-        Return True
+		If Me.PneumaticUserInputsConfig.ActuationsMap <> other.PneumaticUserInputsConfig.ActuationsMap Then Return False
+		If Me.PneumaticUserInputsConfig.AdBlueDosing <> other.PneumaticUserInputsConfig.AdBlueDosing Then Return False
+		If Me.PneumaticUserInputsConfig.AirSuspensionControl <> other.PneumaticUserInputsConfig.AirSuspensionControl Then _
+			Return False
+		If Me.PneumaticUserInputsConfig.CompressorGearEfficiency <> other.PneumaticUserInputsConfig.CompressorGearEfficiency _
+			Then Return False
+		If Me.PneumaticUserInputsConfig.CompressorGearRatio <> other.PneumaticUserInputsConfig.CompressorGearRatio Then _
+			Return False
+		If Me.PneumaticUserInputsConfig.CompressorMap <> other.PneumaticUserInputsConfig.CompressorMap Then Return False
+		If Me.PneumaticUserInputsConfig.Doors <> other.PneumaticUserInputsConfig.Doors Then Return False
+		If Me.PneumaticUserInputsConfig.KneelingHeightMillimeters <> other.PneumaticUserInputsConfig.KneelingHeightMillimeters _
+			Then Return False
+		If Me.PneumaticUserInputsConfig.RetarderBrake <> other.PneumaticUserInputsConfig.RetarderBrake Then Return False
+		If Me.PneumaticUserInputsConfig.SmartAirCompression <> other.PneumaticUserInputsConfig.SmartAirCompression Then _
+			Return False
+		If Me.PneumaticUserInputsConfig.SmartRegeneration <> other.PneumaticUserInputsConfig.SmartRegeneration Then _
+			Return False
 
-    End Function
-    Private Function CompareHVACConfig(other As AuxiliaryConfig) As Boolean Implements IAuxiliaryConfig.ConfigValuesAreTheSameAs
+		Return True
+	End Function
 
-        If Me.HvacUserInputsConfig.SSMFilePath <> other.HvacUserInputsConfig.SSMFilePath Then Return False
-        If Me.HvacUserInputsConfig.BusDatabasePath <> other.HvacUserInputsConfig.BusDatabasePath Then Return False
-        If Me.HvacUserInputsConfig.SSMDisabled <> other.HvacUserInputsConfig.SSMDisabled Then Return False
+	Private Function CompareHVACConfig(other As AuxiliaryConfig) As Boolean _
+		Implements IAuxiliaryConfig.ConfigValuesAreTheSameAs
 
-        Return True
+		If Me.HvacUserInputsConfig.SSMFilePath <> other.HvacUserInputsConfig.SSMFilePath Then Return False
+		If Me.HvacUserInputsConfig.BusDatabasePath <> other.HvacUserInputsConfig.BusDatabasePath Then Return False
+		If Me.HvacUserInputsConfig.SSMDisabled <> other.HvacUserInputsConfig.SSMDisabled Then Return False
 
-    End Function
+		Return True
+	End Function
 
-    Public Function ConfigValuesAreTheSameAs(other As AuxiliaryConfig) As Boolean
+	Public Function ConfigValuesAreTheSameAs(other As AuxiliaryConfig) As Boolean
 
-        If Not CompareElectricalConfiguration(other) Then Return False
-        If Not ComparePneumaticAuxiliariesConfig(other) Then Return False
-        If Not ComparePneumaticUserConfig(other) Then Return False
-        If Not CompareHVACConfig(other) Then Return False
+		If Not CompareElectricalConfiguration(other) Then Return False
+		If Not ComparePneumaticAuxiliariesConfig(other) Then Return False
+		If Not ComparePneumaticUserConfig(other) Then Return False
+		If Not CompareHVACConfig(other) Then Return False
 
-        Return True
-
-    End Function
+		Return True
+	End Function
 
 
 #End Region
 
 #Region "Persistance"
 
-    'Persistance Functions
-    Public Function Save(auxFile As String) As Boolean Implements IAuxiliaryConfig.Save
+	'Persistance Functions
+	Public Function Save(auxFile As String) As Boolean Implements IAuxiliaryConfig.Save
 
-        Dim returnValue As Boolean = True
-        Dim settings As JsonSerializerSettings = New JsonSerializerSettings()
-        settings.TypeNameHandling = TypeNameHandling.Objects
+		Dim returnValue As Boolean = True
+		Dim settings As JsonSerializerSettings = New JsonSerializerSettings()
+		settings.TypeNameHandling = TypeNameHandling.Objects
 
-        'JSON METHOD
-        Try
+		'JSON METHOD
+		Try
 
-            Dim output As String = JsonConvert.SerializeObject(Me, Formatting.Indented, settings)
+			Dim output As String = JsonConvert.SerializeObject(Me, Formatting.Indented, settings)
 
-            File.WriteAllText(auxFile, output)
+			File.WriteAllText(auxFile, output)
 
-        Catch ex As Exception
+		Catch ex As Exception
 
-            returnValue = False
+			returnValue = False
 
-        End Try
+		End Try
 
-        Return returnValue
+		Return returnValue
+	End Function
 
-    End Function
-    Public Function Load(auxFile As String) As Boolean Implements IAuxiliaryConfig.Load
+	Public Function Load(auxFile As String) As Boolean Implements IAuxiliaryConfig.Load
 
-        Dim returnValue As Boolean = True
-        Dim settings As JsonSerializerSettings = New JsonSerializerSettings()
-        Dim tmpAux As AuxiliaryConfig
+		Dim returnValue As Boolean = True
+		Dim settings As JsonSerializerSettings = New JsonSerializerSettings()
+		Dim tmpAux As AuxiliaryConfig
 
-        settings.TypeNameHandling = TypeNameHandling.Objects
+		settings.TypeNameHandling = TypeNameHandling.Objects
 
-        'JSON METHOD
-        Try
+		'JSON METHOD
+		Try
 
-            Dim output As String = File.ReadAllText(auxFile)
+			Dim output As String = File.ReadAllText(auxFile)
 
 
-            tmpAux = JsonConvert.DeserializeObject(Of AuxiliaryConfig)(output, settings)
+			tmpAux = JsonConvert.DeserializeObject(Of AuxiliaryConfig)(output, settings)
 
-            'This is where we Assume values of loaded( Deserialized ) object.
-            AssumeValuesOfOther(tmpAux)
+			'This is where we Assume values of loaded( Deserialized ) object.
+			AssumeValuesOfOther(tmpAux)
 
-        Catch ex As Exception
+		Catch ex As Exception
 
-            returnValue = False
-        End Try
+			returnValue = False
+		End Try
 
-        Return returnValue
+		Return returnValue
+	End Function
 
-    End Function
+	'Persistance Helpers
+	Public Sub AssumeValuesOfOther(other As AuxiliaryConfig)
 
-    'Persistance Helpers
-    Public Sub AssumeValuesOfOther(other As AuxiliaryConfig)
+		CloneElectricaConfiguration(other)
+		ClonePneumaticsAuxiliariesConfig(other)
+		ClonePneumaticsUserInputsConfig(other)
+		CloneHVAC(other)
+	End Sub
 
-        CloneElectricaConfiguration(other)
-        ClonePneumaticsAuxiliariesConfig(other)
-        ClonePneumaticsUserInputsConfig(other)
-        CloneHVAC(other)
+	Private Sub CloneElectricaConfiguration(other As AuxiliaryConfig)
 
-    End Sub
-    Private Sub CloneElectricaConfiguration(other As AuxiliaryConfig)
+		'AlternatorGearEfficiency
+		Me.ElectricalUserInputsConfig.AlternatorGearEfficiency = other.ElectricalUserInputsConfig.AlternatorGearEfficiency
+		'AlternatorMap
+		Me.ElectricalUserInputsConfig.AlternatorMap = other.ElectricalUserInputsConfig.AlternatorMap
+		'DoorActuationTimeSecond
+		Me.ElectricalUserInputsConfig.DoorActuationTimeSecond = other.ElectricalUserInputsConfig.DoorActuationTimeSecond
 
-        'AlternatorGearEfficiency
-        Me.ElectricalUserInputsConfig.AlternatorGearEfficiency = other.ElectricalUserInputsConfig.AlternatorGearEfficiency
-        'AlternatorMap
-        Me.ElectricalUserInputsConfig.AlternatorMap = other.ElectricalUserInputsConfig.AlternatorMap
-        'DoorActuationTimeSecond
-        Me.ElectricalUserInputsConfig.DoorActuationTimeSecond = other.ElectricalUserInputsConfig.DoorActuationTimeSecond
+		'Electrical Consumer list
+		Me.ElectricalUserInputsConfig.ElectricalConsumers.Items.Clear()
+		For Each otherConsumer As IElectricalConsumer In other.ElectricalUserInputsConfig.ElectricalConsumers.Items
 
-        'Electrical Consumer list
-        Me.ElectricalUserInputsConfig.ElectricalConsumers.Items.Clear()
-        For Each otherConsumer As IElectricalConsumer In other.ElectricalUserInputsConfig.ElectricalConsumers.Items
+			Dim newConsumer As ElectricalConsumer = New ElectricalConsumer(otherConsumer.BaseVehicle,
+																			otherConsumer.Category,
+																			otherConsumer.ConsumerName,
+																			otherConsumer.NominalConsumptionAmps,
+																			otherConsumer.PhaseIdle_TractionOn,
+																			otherConsumer.PowerNetVoltage,
+																			otherConsumer.NumberInActualVehicle,
+																			otherConsumer.info)
 
-            Dim newConsumer As ElectricalConsumer = New ElectricalConsumer(otherConsumer.BaseVehicle, _
-                                                                            otherConsumer.Category, _
-                                                                            otherConsumer.ConsumerName, _
-                                                                            otherConsumer.NominalConsumptionAmps, _
-                                                                            otherConsumer.PhaseIdle_TractionOn, _
-                                                                            otherConsumer.PowerNetVoltage, _
-                                                                            otherConsumer.NumberInActualVehicle,
-                                                                            otherConsumer.info)
+			Me.ElectricalUserInputsConfig.ElectricalConsumers.Items.Add(newConsumer)
 
-            Me.ElectricalUserInputsConfig.ElectricalConsumers.Items.Add(newConsumer)
+		Next
 
-        Next
+		'PowerNetVoltage
+		Me.ElectricalUserInputsConfig.PowerNetVoltage = other.ElectricalUserInputsConfig.PowerNetVoltage
+		'ResultCardIdle
+		Me.ElectricalUserInputsConfig.ResultCardIdle.Results.Clear()
+		For Each result As SmartResult In other.ElectricalUserInputsConfig.ResultCardIdle.Results
+			Me.ElectricalUserInputsConfig.ResultCardIdle.Results.Add(New SmartResult(result.Amps, result.SmartAmps))
+		Next
+		'ResultCardOverrun
+		Me.ElectricalUserInputsConfig.ResultCardOverrun.Results.Clear()
+		For Each result As SmartResult In other.ElectricalUserInputsConfig.ResultCardOverrun.Results
+			Me.ElectricalUserInputsConfig.ResultCardOverrun.Results.Add(New SmartResult(result.Amps, result.SmartAmps))
+		Next
+		'ResultCardTraction
+		Me.ElectricalUserInputsConfig.ResultCardTraction.Results.Clear()
+		For Each result As SmartResult In other.ElectricalUserInputsConfig.ResultCardTraction.Results
+			Me.ElectricalUserInputsConfig.ResultCardTraction.Results.Add(New SmartResult(result.Amps, result.SmartAmps))
+		Next
+		'SmartElectrical
+		Me.ElectricalUserInputsConfig.SmartElectrical = other.ElectricalUserInputsConfig.SmartElectrical
+	End Sub
 
-        'PowerNetVoltage
-        Me.ElectricalUserInputsConfig.PowerNetVoltage = other.ElectricalUserInputsConfig.PowerNetVoltage
-        'ResultCardIdle
-        Me.ElectricalUserInputsConfig.ResultCardIdle.Results.Clear()
-        For Each result As SmartResult In other.ElectricalUserInputsConfig.ResultCardIdle.Results
-            Me.ElectricalUserInputsConfig.ResultCardIdle.Results.Add(New SmartResult(result.Amps, result.SmartAmps))
-        Next
-        'ResultCardOverrun
-        Me.ElectricalUserInputsConfig.ResultCardOverrun.Results.Clear()
-        For Each result As SmartResult In other.ElectricalUserInputsConfig.ResultCardOverrun.Results
-            Me.ElectricalUserInputsConfig.ResultCardOverrun.Results.Add(New SmartResult(result.Amps, result.SmartAmps))
-        Next
-        'ResultCardTraction
-        Me.ElectricalUserInputsConfig.ResultCardTraction.Results.Clear()
-        For Each result As SmartResult In other.ElectricalUserInputsConfig.ResultCardTraction.Results
-            Me.ElectricalUserInputsConfig.ResultCardTraction.Results.Add(New SmartResult(result.Amps, result.SmartAmps))
-        Next
-        'SmartElectrical
-        Me.ElectricalUserInputsConfig.SmartElectrical = other.ElectricalUserInputsConfig.SmartElectrical
+	Private Sub ClonePneumaticsAuxiliariesConfig(other As AuxiliaryConfig)
 
-    End Sub
-    Private Sub ClonePneumaticsAuxiliariesConfig(other As AuxiliaryConfig)
+		Me.PneumaticAuxillariesConfig.AdBlueNIperMinute = other.PneumaticAuxillariesConfig.AdBlueNIperMinute
+		Me.PneumaticAuxillariesConfig.AirControlledSuspensionNIperMinute =
+			other.PneumaticAuxillariesConfig.AirControlledSuspensionNIperMinute
+		Me.PneumaticAuxillariesConfig.BrakingNoRetarderNIperKG = other.PneumaticAuxillariesConfig.BrakingNoRetarderNIperKG
+		Me.PneumaticAuxillariesConfig.BrakingWithRetarderNIperKG = other.PneumaticAuxillariesConfig.BrakingWithRetarderNIperKG
+		Me.PneumaticAuxillariesConfig.BreakingPerKneelingNIperKGinMM =
+			other.PneumaticAuxillariesConfig.BreakingPerKneelingNIperKGinMM
+		Me.PneumaticAuxillariesConfig.DeadVolBlowOutsPerLitresperHour =
+			other.PneumaticAuxillariesConfig.DeadVolBlowOutsPerLitresperHour
+		Me.PneumaticAuxillariesConfig.DeadVolumeLitres = other.PneumaticAuxillariesConfig.DeadVolumeLitres
+		Me.PneumaticAuxillariesConfig.NonSmartRegenFractionTotalAirDemand =
+			other.PneumaticAuxillariesConfig.NonSmartRegenFractionTotalAirDemand
+		Me.PneumaticAuxillariesConfig.PerDoorOpeningNI = other.PneumaticAuxillariesConfig.PerDoorOpeningNI
+		Me.PneumaticAuxillariesConfig.PerStopBrakeActuationNIperKG =
+			other.PneumaticAuxillariesConfig.PerStopBrakeActuationNIperKG
+		Me.PneumaticAuxillariesConfig.SmartRegenFractionTotalAirDemand =
+			other.PneumaticAuxillariesConfig.SmartRegenFractionTotalAirDemand
+		Me.PneumaticAuxillariesConfig.OverrunUtilisationForCompressionFraction =
+			other.PneumaticAuxillariesConfig.OverrunUtilisationForCompressionFraction
+	End Sub
 
-        Me.PneumaticAuxillariesConfig.AdBlueNIperMinute = other.PneumaticAuxillariesConfig.AdBlueNIperMinute
-        Me.PneumaticAuxillariesConfig.AirControlledSuspensionNIperMinute = other.PneumaticAuxillariesConfig.AirControlledSuspensionNIperMinute
-        Me.PneumaticAuxillariesConfig.BrakingNoRetarderNIperKG = other.PneumaticAuxillariesConfig.BrakingNoRetarderNIperKG
-        Me.PneumaticAuxillariesConfig.BrakingWithRetarderNIperKG = other.PneumaticAuxillariesConfig.BrakingWithRetarderNIperKG
-        Me.PneumaticAuxillariesConfig.BreakingPerKneelingNIperKGinMM = other.PneumaticAuxillariesConfig.BreakingPerKneelingNIperKGinMM
-        Me.PneumaticAuxillariesConfig.DeadVolBlowOutsPerLitresperHour = other.PneumaticAuxillariesConfig.DeadVolBlowOutsPerLitresperHour
-        Me.PneumaticAuxillariesConfig.DeadVolumeLitres = other.PneumaticAuxillariesConfig.DeadVolumeLitres
-        Me.PneumaticAuxillariesConfig.NonSmartRegenFractionTotalAirDemand = other.PneumaticAuxillariesConfig.NonSmartRegenFractionTotalAirDemand
-        Me.PneumaticAuxillariesConfig.PerDoorOpeningNI = other.PneumaticAuxillariesConfig.PerDoorOpeningNI
-        Me.PneumaticAuxillariesConfig.PerStopBrakeActuationNIperKG = other.PneumaticAuxillariesConfig.PerStopBrakeActuationNIperKG
-        Me.PneumaticAuxillariesConfig.SmartRegenFractionTotalAirDemand = other.PneumaticAuxillariesConfig.SmartRegenFractionTotalAirDemand
-        Me.PneumaticAuxillariesConfig.OverrunUtilisationForCompressionFraction = other.PneumaticAuxillariesConfig.OverrunUtilisationForCompressionFraction
+	Private Sub ClonePneumaticsUserInputsConfig(other As AuxiliaryConfig)
 
-    End Sub
-    Private Sub ClonePneumaticsUserInputsConfig(other As AuxiliaryConfig)
+		Me.PneumaticUserInputsConfig.ActuationsMap = other.PneumaticUserInputsConfig.ActuationsMap
+		Me.PneumaticUserInputsConfig.AdBlueDosing = other.PneumaticUserInputsConfig.AdBlueDosing
+		Me.PneumaticUserInputsConfig.AirSuspensionControl = other.PneumaticUserInputsConfig.AirSuspensionControl
+		Me.PneumaticUserInputsConfig.CompressorGearEfficiency = other.PneumaticUserInputsConfig.CompressorGearEfficiency
+		Me.PneumaticUserInputsConfig.CompressorGearRatio = other.PneumaticUserInputsConfig.CompressorGearRatio
+		Me.PneumaticUserInputsConfig.CompressorMap = other.PneumaticUserInputsConfig.CompressorMap
+		Me.PneumaticUserInputsConfig.Doors = other.PneumaticUserInputsConfig.Doors
+		Me.PneumaticUserInputsConfig.KneelingHeightMillimeters = other.PneumaticUserInputsConfig.KneelingHeightMillimeters
+		Me.PneumaticUserInputsConfig.RetarderBrake = other.PneumaticUserInputsConfig.RetarderBrake
+		Me.PneumaticUserInputsConfig.SmartAirCompression = other.PneumaticUserInputsConfig.SmartAirCompression
+		Me.PneumaticUserInputsConfig.SmartRegeneration = other.PneumaticUserInputsConfig.SmartRegeneration
+	End Sub
 
-        Me.PneumaticUserInputsConfig.ActuationsMap = other.PneumaticUserInputsConfig.ActuationsMap
-        Me.PneumaticUserInputsConfig.AdBlueDosing = other.PneumaticUserInputsConfig.AdBlueDosing
-        Me.PneumaticUserInputsConfig.AirSuspensionControl = other.PneumaticUserInputsConfig.AirSuspensionControl
-        Me.PneumaticUserInputsConfig.CompressorGearEfficiency = other.PneumaticUserInputsConfig.CompressorGearEfficiency
-        Me.PneumaticUserInputsConfig.CompressorGearRatio = other.PneumaticUserInputsConfig.CompressorGearRatio
-        Me.PneumaticUserInputsConfig.CompressorMap = other.PneumaticUserInputsConfig.CompressorMap
-        Me.PneumaticUserInputsConfig.Doors = other.PneumaticUserInputsConfig.Doors
-        Me.PneumaticUserInputsConfig.KneelingHeightMillimeters = other.PneumaticUserInputsConfig.KneelingHeightMillimeters
-        Me.PneumaticUserInputsConfig.RetarderBrake = other.PneumaticUserInputsConfig.RetarderBrake
-        Me.PneumaticUserInputsConfig.SmartAirCompression = other.PneumaticUserInputsConfig.SmartAirCompression
-        Me.PneumaticUserInputsConfig.SmartRegeneration = other.PneumaticUserInputsConfig.SmartRegeneration
+	Private Sub CloneHVAC(other As AuxiliaryConfig)
 
-    End Sub
-    Private Sub CloneHVAC(other As AuxiliaryConfig)
-
-        Me.HvacUserInputsConfig.SSMFilePath = other.HvacUserInputsConfig.SSMFilePath
-        Me.HvacUserInputsConfig.BusDatabasePath = other.HvacUserInputsConfig.BusDatabasePath
-        Me.HvacUserInputsConfig.SSMDisabled = other.HvacUserInputsConfig.SSMDisabled
-
-    End Sub
+		Me.HvacUserInputsConfig.SSMFilePath = other.HvacUserInputsConfig.SSMFilePath
+		Me.HvacUserInputsConfig.BusDatabasePath = other.HvacUserInputsConfig.BusDatabasePath
+		Me.HvacUserInputsConfig.SSMDisabled = other.HvacUserInputsConfig.SSMDisabled
+	End Sub
 
 #End Region
-
-
 End Class
 
