@@ -30,7 +30,7 @@ Inherits IAuxiliaryEvent
   ''' </summary>
   ''' <param name="stepTimeInSeconds">Single : Mutiplies the values to be aggregated by number of seconds</param>
   ''' <remarks></remarks>
-   Sub CycleStep( Optional stepTimeInSeconds As Single = nothing)
+		Sub CycleStep(Optional stepTimeInSeconds As Single = 0.0)
 
    ''' <summary>
  ''' Litres Of Air: Compressor On Continually (L)

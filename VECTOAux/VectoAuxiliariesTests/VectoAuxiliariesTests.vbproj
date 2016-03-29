@@ -101,6 +101,7 @@
   <ItemGroup>
     <Compile Include="Mocks\AlternatorMapMock.vb" />
     <Compile Include="Mocks\CompressorMapMock.vb" />
+    <Compile Include="Mocks\MockFuel50PC.vb" />
     <Compile Include="UnitTests\AuxiliaryEnvironmentComparisonTests.vb" />
     <Compile Include="Mocks\M1_Mock.vb" />
     <Compile Include="Mocks\M2_Mock.vb" />
@@ -109,11 +110,9 @@
     <Compile Include="Mocks\M5_Mock.vb" />
     <Compile Include="Mocks\M6_Mock.vb" />
     <Compile Include="Mocks\M7_Mock.vb" />
-    <Compile Include="Mocks\MockFuel50PC.vb" />
     <Compile Include="UnitTests\BusDatabaseTests.vb" />
     <Compile Include="UnitTests\CombinedAlternatorTests.vb" />
     <Compile Include="UnitTests\FilePathUtilityTests.vb" />
-    <Compile Include="UnitTests\FuelMapTests.vb" />
     <Compile Include="UnitTests\HVACSSMMapTests.vb" />
     <Compile Include="UnitTests\M0_5_SmartAlternatorSetEfficiencyTests.vb" />
     <Compile Include="UnitTests\M0_NonSmart_AlternatorsSetEfficiencyTests.vb" />
