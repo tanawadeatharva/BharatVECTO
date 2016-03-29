@@ -23,493 +23,520 @@ Imports System.Windows.Forms
 ''' </summary>
 ''' <remarks></remarks>
 Public Class AdvancedAuxiliaries
-    Implements IAdvancedAuxiliaries
+	Implements IAdvancedAuxiliaries
 
-    Private auxConfig As AuxiliaryConfig
+	Private auxConfig As AuxiliaryConfig
 
-    'Supporting classes which may generate event messages
-    Private WithEvents compressorMap As ICompressorMap
+	'Supporting classes which may generate event messages
+	Private WithEvents compressorMap As ICompressorMap
 
-    Private WithEvents ssmTool As SSMTOOL
-    Private WithEvents ssmToolModule14 As SSMTOOL
+	Private WithEvents ssmTool As SSMTOOL
+	Private WithEvents ssmToolModule14 As SSMTOOL
 
-    Private WithEvents alternatorMap As IAlternatorMap
-    Private WithEvents actuationsMap As IPneumaticActuationsMAP
-    Private WithEvents fuelMap As IFUELMAP
+	Private WithEvents alternatorMap As IAlternatorMap
+	Private WithEvents actuationsMap As IPneumaticActuationsMAP
+	Private fuelMap As IFuelConsumptionMap
 
-    'Classes which compose the model.
-    Private WithEvents M0 As IM0_NonSmart_AlternatorsSetEfficiency
-    Private WithEvents M05 As IM0_5_SmartAlternatorSetEfficiency
-    Private WithEvents M1 As IM1_AverageHVACLoadDemand
-    Private WithEvents M2 As IM2_AverageElectricalLoadDemand
-    Private WithEvents M3 As IM3_AveragePneumaticLoadDemand
-    Private WithEvents M4 As IM4_AirCompressor
-    Private WithEvents M5 As IM5_SmartAlternatorSetGeneration
-    Private WithEvents M6 As IM6
-    Private WithEvents M7 As IM7
-    Private WithEvents M8 As IM8
-    Private WithEvents M9 As IM9
-    Private WithEvents M10 As IM10
-    Private WithEvents M11 As IM11
-    Private WithEvents M12 As IM12
-    Private WithEvents M13 As IM13
-    Private WithEvents M14 As IM14
+	'Classes which compose the model.
+	Private WithEvents M0 As IM0_NonSmart_AlternatorsSetEfficiency
+	Private WithEvents M05 As IM0_5_SmartAlternatorSetEfficiency
+	Private WithEvents M1 As IM1_AverageHVACLoadDemand
+	Private WithEvents M2 As IM2_AverageElectricalLoadDemand
+	Private WithEvents M3 As IM3_AveragePneumaticLoadDemand
+	Private WithEvents M4 As IM4_AirCompressor
+	Private WithEvents M5 As IM5_SmartAlternatorSetGeneration
+	Private WithEvents M6 As IM6
+	Private WithEvents M7 As IM7
+	Private WithEvents M8 As IM8
+	Private WithEvents M9 As IM9
+	Private WithEvents M10 As IM10
+	Private WithEvents M11 As IM11
+	Private WithEvents M12 As IM12
+	Private WithEvents M13 As IM13
+	Private WithEvents M14 As IM14
 
-    Private vectoDirectory As String
+	Private vectoDirectory As String
 
-    Private hvacConstants As HVACConstants
+	Private hvacConstants As HVACConstants
 
-    'Event Handler top level bubble.
-    Public Sub VectoEventHandler(ByRef sender As Object, message As String, messageType As AdvancedAuxiliaryMessageType) Handles compressorMap.AuxiliaryEvent, alternatorMap.AuxiliaryEvent, ssmTool.Message, ssmToolModule14.Message
+	'Event Handler top level bubble.
+	Public Sub VectoEventHandler(ByRef sender As Object, message As String, messageType As AdvancedAuxiliaryMessageType) _
+		Handles CompressorMap.AuxiliaryEvent, AlternatorMap.AuxiliaryEvent, SSMTOOL.Message, ssmToolModule14.Message
 
-        If Signals.AuxiliaryEventReportingLevel <= messageType Then
+		If Signals.AuxiliaryEventReportingLevel <= messageType Then
 
-            RaiseEvent AuxiliaryEvent(sender, message, messageType)
+			RaiseEvent AuxiliaryEvent(sender, message, messageType)
 
-        End If
+		End If
+	End Sub
 
-    End Sub
+	'Constructor
+	Public Sub New()
 
-    'Constructor
-    Public Sub New()
+		VectoInputs = New VectoInputs()
+		Signals = New Signals()
+	End Sub
 
-        VectoInputs = New VectoInputs()
-        Signals = New Signals()
+	'Initialise Model
+	Public Sub Initialise(IAuxPath As String, vectoFilePath As String)
 
-    End Sub
+		Dim auxPath As String
+		vectoDirectory = fPATH(vectoFilePath)
 
-    'Initialise Model
-    Public Sub Initialise(IAuxPath As String, vectoFilePath As String)
+		auxPath = FilePathUtils.ResolveFilePath(vectoDirectory, IAuxPath)
 
-        Dim auxPath As String
-        vectoDirectory = fPATH(vectoFilePath)
+		hvacConstants = New HVACConstants(VectoInputs.FuelDensity)
 
-        auxPath = FilePathUtils.ResolveFilePath(vectoDirectory, IAuxPath)
+		Signals.CurrentCycleTimeInSeconds = 0
+		auxConfig = New AuxiliaryConfig(auxPath)
 
-        hvacConstants = New HVACConstants(VectoInputs.FuelDensity)
+		'Pass some signals from config to Signals. ( These are stored in the configuration but shared in the signal distribution around modules )
+		Signals.SmartElectrics = auxConfig.ElectricalUserInputsConfig.SmartElectrical
+		Signals.StoredEnergyEfficiency = auxConfig.ElectricalUserInputsConfig.StoredEnergyEfficiency
+		Signals.SmartPneumatics = auxConfig.PneumaticUserInputsConfig.SmartAirCompression
+		Signals.PneumaticOverrunUtilisation = auxConfig.PneumaticAuxillariesConfig.OverrunUtilisationForCompressionFraction
 
-        Signals.CurrentCycleTimeInSeconds = 0
-        auxConfig = New AuxiliaryConfig(auxPath)
+		alternatorMap = New CombinedAlternator(
+			FilePathUtils.ResolveFilePath(vectoDirectory, auxConfig.ElectricalUserInputsConfig.AlternatorMap), Signals)
 
-        'Pass some signals from config to Signals. ( These are stored in the configuration but shared in the signal distribution around modules )
-        Signals.SmartElectrics = auxConfig.ElectricalUserInputsConfig.SmartElectrical
-        Signals.StoredEnergyEfficiency = auxConfig.ElectricalUserInputsConfig.StoredEnergyEfficiency
-        Signals.SmartPneumatics = auxConfig.PneumaticUserInputsConfig.SmartAirCompression
-        Signals.PneumaticOverrunUtilisation = auxConfig.PneumaticAuxillariesConfig.OverrunUtilisationForCompressionFraction
+		actuationsMap = New PneumaticActuationsMAP(FilePathUtils.ResolveFilePath(vectoDirectory,
+																				auxConfig.PneumaticUserInputsConfig.ActuationsMap))
 
-        alternatorMap = New CombinedAlternator(FilePathUtils.ResolveFilePath(vectoDirectory, auxConfig.ElectricalUserInputsConfig.AlternatorMap), Signals)
+		compressorMap = New CompressorMap(FilePathUtils.ResolveFilePath(vectoDirectory,
+																		auxConfig.PneumaticUserInputsConfig.CompressorMap))
+		compressorMap.Initialise()
 
-        actuationsMap = New PneumaticActuationsMAP(FilePathUtils.ResolveFilePath(vectoDirectory, auxConfig.PneumaticUserInputsConfig.ActuationsMap))
+		'fuelMap = New cMAP()
+		'fuelMap.FilePath = FilePathUtils.ResolveFilePath(vectoDirectory, VectoInputs.FuelMap)
+		'If Not fuelMap.ReadFile() Then
+		'    MessageBox.Show("Unable to read fuel map, aborting.")
+		'    Return
+		'End If
+		'fuelMap.Triangulate()
+		fuelMap = VectoInputs.FuelMap
 
-        compressorMap = New CompressorMap(FilePathUtils.ResolveFilePath(vectoDirectory, auxConfig.PneumaticUserInputsConfig.CompressorMap))
-        compressorMap.Initialise()
+		auxConfig.ElectricalUserInputsConfig.ElectricalConsumers.DoorDutyCycleFraction = GetDoorActuationTimeFraction()
 
-        fuelMap = New cMAP()
-        fuelMap.FilePath = FilePathUtils.ResolveFilePath(vectoDirectory, VectoInputs.FuelMap)
-        If Not fuelMap.ReadFile() Then
-            MessageBox.Show("Unable to read fuel map, aborting.")
-            Return
-        End If
-        fuelMap.Triangulate()
+		'SSM HVAC
+		Dim ssmPath As String = FilePathUtils.ResolveFilePath(vectoDirectory, auxConfig.HvacUserInputsConfig.SSMFilePath)
+		Dim BusDatabase As String = FilePathUtils.ResolveFilePath(vectoDirectory,
+																auxConfig.HvacUserInputsConfig.BusDatabasePath)
+		ssmTool = New SSMTOOL(ssmPath, hvacConstants, auxConfig.HvacUserInputsConfig.SSMDisabled)
 
-
-        auxConfig.ElectricalUserInputsConfig.ElectricalConsumers.DoorDutyCycleFraction = GetDoorActuationTimeFraction()
-
-        'SSM HVAC
-        Dim ssmPath As String = FilePathUtils.ResolveFilePath(vectoDirectory, auxConfig.HvacUserInputsConfig.SSMFilePath)
-        Dim BusDatabase As String = FilePathUtils.ResolveFilePath(vectoDirectory, auxConfig.HvacUserInputsConfig.BusDatabasePath)
-        ssmTool = New SSMTOOL(ssmPath, hvacConstants, auxConfig.HvacUserInputsConfig.SSMDisabled)
-
-        'This duplicate SSM is being created for use in M14 as its properties will be dynamically changed at that point
-        'to honour EngineWaste Heat Usage in Fueling calculations.
-        ssmToolModule14 = New SSMTOOL(ssmPath, hvacConstants, auxConfig.HvacUserInputsConfig.SSMDisabled)
-
-
-        If (ssmTool.Load(ssmPath) = False OrElse ssmToolModule14.Load(ssmPath) = False) Then
-
-            Throw New Exception(String.Format("Unable to load the ssmTOOL with file {0}", ssmPath))
-
-        End If
+		'This duplicate SSM is being created for use in M14 as its properties will be dynamically changed at that point
+		'to honour EngineWaste Heat Usage in Fueling calculations.
+		ssmToolModule14 = New SSMTOOL(ssmPath, hvacConstants, auxConfig.HvacUserInputsConfig.SSMDisabled)
 
 
-        M0 = New M0_NonSmart_AlternatorsSetEfficiency(auxConfig.ElectricalUserInputsConfig.ElectricalConsumers,
-                                                        alternatorMap,
-                                                        auxConfig.ElectricalUserInputsConfig.PowerNetVoltage,
-                                                        Signals,
-                                                        ssmTool)
+		If (ssmTool.Load(ssmPath) = False OrElse ssmToolModule14.Load(ssmPath) = False) Then
+
+			Throw New Exception(String.Format("Unable to load the ssmTOOL with file {0}", ssmPath))
+
+		End If
 
 
-        M05 = New M0_5_SmartAlternatorSetEfficiency(M0,
-                                                    auxConfig.ElectricalUserInputsConfig.ElectricalConsumers,
-                                                    alternatorMap,
-                                                    auxConfig.ElectricalUserInputsConfig.ResultCardIdle,
-                                                    auxConfig.ElectricalUserInputsConfig.ResultCardTraction,
-                                                    auxConfig.ElectricalUserInputsConfig.ResultCardOverrun, Signals)
+		M0 = New M0_NonSmart_AlternatorsSetEfficiency(auxConfig.ElectricalUserInputsConfig.ElectricalConsumers,
+													alternatorMap,
+													auxConfig.ElectricalUserInputsConfig.PowerNetVoltage,
+													Signals,
+													ssmTool)
 
 
-        M1 = New M1_AverageHVACLoadDemand(M0,
-                                        auxConfig.ElectricalUserInputsConfig.AlternatorGearEfficiency,
-                                        auxConfig.PneumaticUserInputsConfig.CompressorGearEfficiency,
-                                        auxConfig.ElectricalUserInputsConfig.PowerNetVoltage,
-                                        Signals,
-                                        ssmTOOL)
+		M05 = New M0_5_SmartAlternatorSetEfficiency(M0,
+													auxConfig.ElectricalUserInputsConfig.ElectricalConsumers,
+													alternatorMap,
+													auxConfig.ElectricalUserInputsConfig.ResultCardIdle,
+													auxConfig.ElectricalUserInputsConfig.ResultCardTraction,
+													auxConfig.ElectricalUserInputsConfig.ResultCardOverrun, Signals)
 
 
-        M2 = New M2_AverageElectricalLoadDemand(auxConfig.ElectricalUserInputsConfig.ElectricalConsumers,
-                                                M0,
-                                                auxConfig.ElectricalUserInputsConfig.AlternatorGearEfficiency,
-                                                auxConfig.ElectricalUserInputsConfig.PowerNetVoltage, Signals)
+		M1 = New M1_AverageHVACLoadDemand(M0,
+										auxConfig.ElectricalUserInputsConfig.AlternatorGearEfficiency,
+										auxConfig.PneumaticUserInputsConfig.CompressorGearEfficiency,
+										auxConfig.ElectricalUserInputsConfig.PowerNetVoltage,
+										Signals,
+										ssmTOOL)
 
 
-
-        M3 = New M3_AveragePneumaticLoadDemand(auxConfig.PneumaticUserInputsConfig,
-                auxConfig.PneumaticAuxillariesConfig,
-                actuationsMap,
-                compressorMap,
-                VectoInputs.VehicleWeightKG,
-                VectoInputs.Cycle,
-                Signals)
-
-        M4 = New M4_AirCompressor(compressorMap, auxConfig.PneumaticUserInputsConfig.CompressorGearRatio, auxConfig.PneumaticUserInputsConfig.CompressorGearEfficiency, Signals)
-        M5 = New M5__SmartAlternatorSetGeneration(M05, auxConfig.ElectricalUserInputsConfig.PowerNetVoltage, auxConfig.ElectricalUserInputsConfig.AlternatorGearEfficiency)
-        M6 = New M6(M1, M2, M3, M4, M5, Signals)
-        M7 = New M7(M5, M6, Signals)
-        M8 = New M8(M1, M6, M7, Signals)
-        M9 = New M9(M1, M4, M6, M8, fuelMap, auxConfig.PneumaticAuxillariesConfig, Signals)
-        M10 = New M10(M3, M9, Signals)
-        M11 = New M11(M1, M3, M6, M8, fuelMap, Signals)
-        M12 = New M12(M10, M11, Signals)
-        M13 = New M13(M10, M11, M12, Signals)
-        M14 = New M14(M13, ssmToolModule14, hvacConstants, Signals)
+		M2 = New M2_AverageElectricalLoadDemand(auxConfig.ElectricalUserInputsConfig.ElectricalConsumers,
+												M0,
+												auxConfig.ElectricalUserInputsConfig.AlternatorGearEfficiency,
+												auxConfig.ElectricalUserInputsConfig.PowerNetVoltage, Signals)
 
 
-    End Sub
+		M3 = New M3_AveragePneumaticLoadDemand(auxConfig.PneumaticUserInputsConfig,
+												auxConfig.PneumaticAuxillariesConfig,
+												actuationsMap,
+												compressorMap,
+												VectoInputs.VehicleWeightKG,
+												VectoInputs.Cycle,
+												Signals)
+
+		M4 = New M4_AirCompressor(compressorMap, auxConfig.PneumaticUserInputsConfig.CompressorGearRatio,
+								auxConfig.PneumaticUserInputsConfig.CompressorGearEfficiency, Signals)
+		M5 = New M5__SmartAlternatorSetGeneration(M05, auxConfig.ElectricalUserInputsConfig.PowerNetVoltage,
+												auxConfig.ElectricalUserInputsConfig.AlternatorGearEfficiency)
+		M6 = New M6(M1, M2, M3, M4, M5, Signals)
+		M7 = New M7(M5, M6, Signals)
+		M8 = New M8(M1, M6, M7, Signals)
+		M9 = New M9(M1, M4, M6, M8, fuelMap, auxConfig.PneumaticAuxillariesConfig, Signals)
+		M10 = New M10(M3, M9, Signals)
+		M11 = New M11(M1, M3, M6, M8, fuelMap, Signals)
+		M12 = New M12(M10, M11, Signals)
+		M13 = New M13(M10, M11, M12, Signals)
+		M14 = New M14(M13, ssmToolModule14, hvacConstants, Signals)
+	End Sub
 
 #Region "Interface implementation"
 
-    Public Property Signals As ISignals Implements IAdvancedAuxiliaries.Signals
-    Public Property VectoInputs As IVectoInputs Implements IAdvancedAuxiliaries.VectoInputs
+	Public Property Signals As ISignals Implements IAdvancedAuxiliaries.Signals
+	Public Property VectoInputs As IVectoInputs Implements IAdvancedAuxiliaries.VectoInputs
 
-    Public Event AuxiliaryEvent(ByRef sender As Object, message As String, messageType As AdvancedAuxiliaryMessageType) Implements IAdvancedAuxiliaries.AuxiliaryEvent
+	Public Event AuxiliaryEvent(ByRef sender As Object, message As String, messageType As AdvancedAuxiliaryMessageType) _
+		Implements IAdvancedAuxiliaries.AuxiliaryEvent
 
-    Public Function Configure(filePath As String, vectoFilePath As String) As Boolean Implements VectoAuxiliaries.IAdvancedAuxiliaries.Configure
+	Public Function Configure(filePath As String, vectoFilePath As String) As Boolean _
+		Implements VectoAuxiliaries.IAdvancedAuxiliaries.Configure
 
-        Try
+		Try
 
-            Dim frmAuxiliaryConfig As New frmAuxiliaryConfig(filePath, vectoFilePath)
+			Dim frmAuxiliaryConfig As New frmAuxiliaryConfig(filePath, vectoFilePath)
 
-            frmAuxiliaryConfig.Show()
+			frmAuxiliaryConfig.Show()
 
-            If frmAuxiliaryConfig.DialogResult <> DialogResult.OK Then
+			If frmAuxiliaryConfig.DialogResult <> DialogResult.OK Then
 
-                Return True
+				Return True
 
-            Else
+			Else
 
-                Return False
+				Return False
 
-            End If
-
-
-        Catch ex As Exception
-
-            Return False
-
-            Return False
-
-        End Try
+			End If
 
 
-        Return True
+		Catch ex As Exception
 
-    End Function
+			Return False
 
-    Public Function CycleStep(seconds As Integer, ByRef message As String) As Boolean Implements VectoAuxiliaries.IAdvancedAuxiliaries.CycleStep
+			Return False
 
-
-        Try
-
-            M9.CycleStep(seconds)
-            M10.CycleStep(seconds)
-            M11.CycleStep(seconds)
-
-            Signals.CurrentCycleTimeInSeconds += 1
-        Catch ex As Exception
-            MessageBox.Show("Exception: " + ex.Message + " Stack Trace: " + ex.StackTrace)
-            Return False
-        End Try
+		End Try
 
 
+		Return True
+	End Function
 
-        Return True
-
-    End Function
-
-    Public ReadOnly Property Running As Boolean Implements VectoAuxiliaries.IAdvancedAuxiliaries.Running
-        Get
-            Throw New NotImplementedException
-        End Get
-    End Property
-
-    Public Function RunStart(ByVal auxFilePath As String, ByVal vectoFilePath As String, ByRef message As String) As Boolean Implements VectoAuxiliaries.IAdvancedAuxiliaries.RunStart
-
-        Try
-
-            Initialise(auxFilePath, vectoFilePath)
-
-        Catch ex As Exception
-
-            Return False
-
-        End Try
-
-        Return True
-
-    End Function
-
-    Public Function RunStop(ByRef message As String) As Boolean Implements VectoAuxiliaries.IAdvancedAuxiliaries.RunStop
-        Throw New NotImplementedException
-    End Function
-
-    Public ReadOnly Property TotalFuelGRAMS As Single Implements VectoAuxiliaries.IAdvancedAuxiliaries.TotalFuelGRAMS
-        Get
-            If Not M13 Is Nothing Then
-
-                Return M14.TotalCycleFCGrams
-
-            Else
-
-                Return 0
-
-            End If
+	Public Function CycleStep(seconds As Integer, ByRef message As String) As Boolean _
+		Implements VectoAuxiliaries.IAdvancedAuxiliaries.CycleStep
 
 
-        End Get
-    End Property
+		Try
 
-    Public ReadOnly Property TotalFuelLITRES As Single Implements VectoAuxiliaries.IAdvancedAuxiliaries.TotalFuelLITRES
-        Get
-            If Not M14 Is Nothing Then
+			M9.CycleStep(seconds)
+			M10.CycleStep(seconds)
+			M11.CycleStep(seconds)
 
-                Return M14.TotalCycleFCLitres
+			Signals.CurrentCycleTimeInSeconds += 1
+		Catch ex As Exception
+			MessageBox.Show("Exception: " + ex.Message + " Stack Trace: " + ex.StackTrace)
+			Return False
+		End Try
 
-            Else
 
-                Return 0
+		Return True
+	End Function
 
-            End If
-        End Get
-    End Property
+	Public ReadOnly Property Running As Boolean Implements VectoAuxiliaries.IAdvancedAuxiliaries.Running
+		Get
+			Throw New NotImplementedException
+		End Get
+	End Property
 
-    Public ReadOnly Property AuxiliaryName As String Implements VectoAuxiliaries.IAdvancedAuxiliaries.AuxiliaryName
-        Get
-            Return "BusAuxiliaries"
-        End Get
-    End Property
+	Public Function RunStart(ByVal auxFilePath As String, ByVal vectoFilePath As String) As Boolean _
+		Implements VectoAuxiliaries.IAdvancedAuxiliaries.RunStart
 
-    Public ReadOnly Property AuxiliaryVersion As String Implements VectoAuxiliaries.IAdvancedAuxiliaries.AuxiliaryVersion
-        Get
-            Return "Version 1.0 Beta"
-        End Get
-    End Property
+		Try
+
+			Initialise(auxFilePath, vectoFilePath)
+
+		Catch ex As Exception
+
+			Return False
+
+		End Try
+
+		Return True
+	End Function
+
+	Public Function RunStop(ByRef message As String) As Boolean Implements VectoAuxiliaries.IAdvancedAuxiliaries.RunStop
+		Throw New NotImplementedException
+	End Function
+
+	Public ReadOnly Property TotalFuelGRAMS As Single Implements VectoAuxiliaries.IAdvancedAuxiliaries.TotalFuelGRAMS
+		Get
+			If Not M13 Is Nothing Then
+
+				Return M14.TotalCycleFCGrams
+
+			Else
+
+				Return 0
+
+			End If
+		End Get
+	End Property
+
+	Public ReadOnly Property TotalFuelLITRES As Single Implements VectoAuxiliaries.IAdvancedAuxiliaries.TotalFuelLITRES
+		Get
+			If Not M14 Is Nothing Then
+
+				Return M14.TotalCycleFCLitres
+
+			Else
+
+				Return 0
+
+			End If
+		End Get
+	End Property
+
+	Public ReadOnly Property AuxiliaryName As String Implements VectoAuxiliaries.IAdvancedAuxiliaries.AuxiliaryName
+		Get
+			Return "BusAuxiliaries"
+		End Get
+	End Property
+
+	Public ReadOnly Property AuxiliaryVersion As String Implements VectoAuxiliaries.IAdvancedAuxiliaries.AuxiliaryVersion
+		Get
+			Return "Version 1.0 Beta"
+		End Get
+	End Property
 
 
 #End Region
 
-    'Helpers
-    Private Function GetDoorActuationTimeFraction() As Single
+	'Helpers
+	Private Function GetDoorActuationTimeFraction() As Single
 
-        Dim actuationsMap As PneumaticActuationsMAP = New PneumaticActuationsMAP(FilePathUtils.ResolveFilePath(vectoDirectory, auxConfig.PneumaticUserInputsConfig.ActuationsMap))
-        Dim actuationsKey As ActuationsKey = New ActuationsKey("Park brake + 2 doors", VectoInputs.Cycle)
+		Dim actuationsMap As PneumaticActuationsMAP = New PneumaticActuationsMAP(FilePathUtils.ResolveFilePath(vectoDirectory,
+																												auxConfig.PneumaticUserInputsConfig.ActuationsMap))
+		Dim actuationsKey As ActuationsKey = New ActuationsKey("Park brake + 2 doors", VectoInputs.Cycle)
 
-        Dim numActuations As Single = actuationsMap.GetNumActuations(actuationsKey)
-        Dim secondsPerActuation As Single = auxConfig.ElectricalUserInputsConfig.DoorActuationTimeSecond
+		Dim numActuations As Single = actuationsMap.GetNumActuations(actuationsKey)
+		Dim secondsPerActuation As Single = auxConfig.ElectricalUserInputsConfig.DoorActuationTimeSecond
 
-        Dim doorDutyCycleFraction As Single = (numActuations * secondsPerActuation) / Signals.TotalCycleTimeSeconds
+		Dim doorDutyCycleFraction As Single = (numActuations * secondsPerActuation) / Signals.TotalCycleTimeSeconds
 
-        Return doorDutyCycleFraction
+		Return doorDutyCycleFraction
+	End Function
 
-    End Function
-
-    Public Function ValidateAAUXFile(filePath As String, ByRef message As String) As Boolean Implements IAdvancedAuxiliaries.ValidateAAUXFile
-
-
-        Dim validResult As Boolean = FilePathUtils.ValidateFilePath(filePath, ".aaux", message)
-
-        If Not validResult Then Return False
+	Public Function ValidateAAUXFile(filePath As String, ByRef message As String) As Boolean _
+		Implements IAdvancedAuxiliaries.ValidateAAUXFile
 
 
-        Return True
+		Dim validResult As Boolean = FilePathUtils.ValidateFilePath(filePath, ".aaux", message)
 
-    End Function
-
-    'Diagnostics outputs for testing purposes in Vecto.
-    'Eventually this can be removed or rendered non effective to reduce calculation load on the model.
-    Public ReadOnly Property AA_NonSmartAlternatorsEfficiency As Single? Implements IAdvancedAuxiliaries.AA_NonSmartAlternatorsEfficiency
-        Get
-            Return M0.AlternatorsEfficiency
-        End Get
-    End Property
-
-    Public ReadOnly Property AA_SmartIdleCurrent_Amps As Single? Implements IAdvancedAuxiliaries.AA_SmartIdleCurrent_Amps
-        Get
-            Return M05.SmartIdleCurrent
-        End Get
-    End Property
-
-    Public ReadOnly Property AA_SmartIdleAlternatorsEfficiency As Single? Implements IAdvancedAuxiliaries.AA_SmartIdleAlternatorsEfficiency
-        Get
-            Return M05.AlternatorsEfficiencyIdleResultCard
-        End Get
-    End Property
-
-    Public ReadOnly Property AA_SmartTractionCurrent_Amps As Single? Implements IAdvancedAuxiliaries.AA_SmartTractionCurrent_Amps
-        Get
-            Return M05.SmartTractionCurrent
-        End Get
-    End Property
-
-    Public ReadOnly Property AA_SmartTractionAlternatorEfficiency As Single? Implements IAdvancedAuxiliaries.AA_SmartTractionAlternatorEfficiency
-        Get
-            Return M05.AlternatorsEfficiencyTractionOnResultCard
-        End Get
-    End Property
-
-    Public ReadOnly Property AA_SmartOverrunCurrent_Amps As Single? Implements IAdvancedAuxiliaries.AA_SmartOverrunCurrent_Amps
-        Get
-            Return M05.SmartOverrunCurrent
-        End Get
-    End Property
-
-    Public ReadOnly Property AA_SmartOverrunAlternatorEfficiency As Single? Implements IAdvancedAuxiliaries.AA_SmartOverrunAlternatorEfficiency
-        Get
-            Return M05.AlternatorsEfficiencyOverrunResultCard
-        End Get
-    End Property
-
-    Public ReadOnly Property AA_CompressorFlowRate_LitrePerSec As Single? Implements IAdvancedAuxiliaries.AA_CompressorFlowRate_LitrePerSec
-        Get
-            Return M4.GetFlowRate
-        End Get
-    End Property
-
-    Public ReadOnly Property AA_OverrunFlag As Integer? Implements IAdvancedAuxiliaries.AA_OverrunFlag
-        Get
-            Return M6.OverrunFlag
-        End Get
-    End Property
-
-    Public ReadOnly Property AA_EngineIdleFlag As Integer? Implements IAdvancedAuxiliaries.AA_EngineIdleFlag
-        Get
-
-            Return If(signals.EngineSpeed <= _signals.EngineIdleSpeed AndAlso (Not signals.ClutchEngaged OrElse signals.InNeutral), 1, 0)
-
-        End Get
-    End Property
-
-    Public ReadOnly Property AA_CompressorFlag As Integer? Implements IAdvancedAuxiliaries.AA_CompressorFlag
-        Get
-            Return M8.CompressorFlag
-        End Get
-    End Property
-
-    Public ReadOnly Property AA_TotalCycleFC_Grams As Single? Implements IAdvancedAuxiliaries.AA_TotalCycleFC_Grams
-        Get
-            Return M14.TotalCycleFCGrams
-        End Get
-    End Property
-
-    Public ReadOnly Property AA_TotalCycleFC_Litres As Single? Implements IAdvancedAuxiliaries.AA_TotalCycleFC_Litres
-        Get
-            Return M14.TotalCycleFCLitres
-        End Get
-    End Property
-
-    Public ReadOnly Property AuxiliaryPowerAtCrankWatts As Single Implements IAdvancedAuxiliaries.AuxiliaryPowerAtCrankWatts
-        Get
-            Return M8.AuxPowerAtCrankFromElectricalHVACAndPneumaticsAncillaries
-        End Get
-    End Property
-
-    Public ReadOnly Property AA_AveragePowerDemandCrankHVACMechanicals As Single? Implements IAdvancedAuxiliaries.AA_AveragePowerDemandCrankHVACMechanicals
-        Get
-            Return M1.AveragePowerDemandAtCrankFromHVACMechanicalsWatts()
-        End Get
-    End Property
-    Public ReadOnly Property AA_AveragePowerDemandCrankHVACElectricals As Single? Implements IAdvancedAuxiliaries.AA_AveragePowerDemandCrankHVACElectricals
-        Get
-            Return M1.AveragePowerDemandAtCrankFromHVACElectricsWatts()
-        End Get
-    End Property
-    Public ReadOnly Property AA_AveragePowerDemandCrankElectrics As Single? Implements IAdvancedAuxiliaries.AA_AveragePowerDemandCrankElectrics
-        Get
-            Return M2.GetAveragePowerAtCrankFromElectrics()
-        End Get
-    End Property
-    Public ReadOnly Property AA_AveragePowerDemandCrankPneumatics As Single? Implements IAdvancedAuxiliaries.AA_AveragePowerDemandCrankPneumatics
-        Get
-            Return M3.GetAveragePowerDemandAtCrankFromPneumatics()
-        End Get
-    End Property
-    Public ReadOnly Property AA_TotalCycleFuelConsumptionCompressorOff As Single? Implements IAdvancedAuxiliaries.AA_TotalCycleFuelConsumptionCompressorOff
-        Get
-            Return M9.TotalCycleFuelConsumptionCompressorOffContinuously
-        End Get
-    End Property
-    Public ReadOnly Property AA_TotalCycleFuelConsumptionCompressorOn As Single? Implements IAdvancedAuxiliaries.AA_TotalCycleFuelConsumptionCompressorOn
-        Get
-            Return M9.TotalCycleFuelConsumptionCompressorOnContinuously
-        End Get
-    End Property
+		If Not validResult Then Return False
 
 
-    'TODO:REMOVE WHEN TESTING IS COMPLETE
-    'PURE DIAGNOSTICS SHOULD ONLY BE USED IN  MOD FOR ENGINEERING TESTS
+		Return True
+	End Function
 
-    Public ReadOnly Property AA_D_M10_INTERP1 As Single Implements IAdvancedAuxiliaries.AA_D_M12_INTERP1
-        Get
-            Return M12.INTRP1
-        End Get
-    End Property
-    Public ReadOnly Property AA_D_M10_INTERP2 As Single Implements IAdvancedAuxiliaries.AA_D_M12_INTERP2
-        Get
-            Return M12.INTRP2
-        End Get
-    End Property
-    Public ReadOnly Property AA_D_M12_P1X As Single Implements IAdvancedAuxiliaries.AA_D_M12_P1X
-        Get
-            Return M12.P1X
-        End Get
-    End Property
-    Public ReadOnly Property AA_D_M12_P1Y As Single Implements IAdvancedAuxiliaries.AA_D_M12_P1Y
-        Get
-            Return M12.P1Y
-        End Get
-    End Property
-    Public ReadOnly Property AA_D_M12_P2X As Single Implements IAdvancedAuxiliaries.AA_D_M12_P2X
-        Get
-            Return M12.P2X
-        End Get
-    End Property
-    Public ReadOnly Property AA_D_M12_P2Y As Single Implements IAdvancedAuxiliaries.AA_D_M12_P2Y
-        Get
-            Return M12.P2Y
-        End Get
-    End Property
-    Public ReadOnly Property AA_D_M12_P3X As Single Implements IAdvancedAuxiliaries.AA_D_M12_P3X
-        Get
-            Return M12.P3X
-        End Get
-    End Property
-    Public ReadOnly Property AA_D_M12_P3Y As Single Implements IAdvancedAuxiliaries.AA_D_M12_P3Y
-        Get
-            Return M12.P3Y
-        End Get
-    End Property
-    Public ReadOnly Property AA_D_M12_XTAIN As Single Implements IAdvancedAuxiliaries.AA_D_M12_XTAIN
-        Get
-            Return M12.XTAIN
-        End Get
-    End Property
+	'Diagnostics outputs for testing purposes in Vecto.
+	'Eventually this can be removed or rendered non effective to reduce calculation load on the model.
+	Public ReadOnly Property AA_NonSmartAlternatorsEfficiency As Single? _
+		Implements IAdvancedAuxiliaries.AA_NonSmartAlternatorsEfficiency
+		Get
+			Return M0.AlternatorsEfficiency
+		End Get
+	End Property
 
+	Public ReadOnly Property AA_SmartIdleCurrent_Amps As Single? Implements IAdvancedAuxiliaries.AA_SmartIdleCurrent_Amps
+		Get
+			Return M05.SmartIdleCurrent
+		End Get
+	End Property
+
+	Public ReadOnly Property AA_SmartIdleAlternatorsEfficiency As Single? _
+		Implements IAdvancedAuxiliaries.AA_SmartIdleAlternatorsEfficiency
+		Get
+			Return M05.AlternatorsEfficiencyIdleResultCard
+		End Get
+	End Property
+
+	Public ReadOnly Property AA_SmartTractionCurrent_Amps As Single? _
+		Implements IAdvancedAuxiliaries.AA_SmartTractionCurrent_Amps
+		Get
+			Return M05.SmartTractionCurrent
+		End Get
+	End Property
+
+	Public ReadOnly Property AA_SmartTractionAlternatorEfficiency As Single? _
+		Implements IAdvancedAuxiliaries.AA_SmartTractionAlternatorEfficiency
+		Get
+			Return M05.AlternatorsEfficiencyTractionOnResultCard
+		End Get
+	End Property
+
+	Public ReadOnly Property AA_SmartOverrunCurrent_Amps As Single? _
+		Implements IAdvancedAuxiliaries.AA_SmartOverrunCurrent_Amps
+		Get
+			Return M05.SmartOverrunCurrent
+		End Get
+	End Property
+
+	Public ReadOnly Property AA_SmartOverrunAlternatorEfficiency As Single? _
+		Implements IAdvancedAuxiliaries.AA_SmartOverrunAlternatorEfficiency
+		Get
+			Return M05.AlternatorsEfficiencyOverrunResultCard
+		End Get
+	End Property
+
+	Public ReadOnly Property AA_CompressorFlowRate_LitrePerSec As Single? _
+		Implements IAdvancedAuxiliaries.AA_CompressorFlowRate_LitrePerSec
+		Get
+			Return M4.GetFlowRate
+		End Get
+	End Property
+
+	Public ReadOnly Property AA_OverrunFlag As Integer? Implements IAdvancedAuxiliaries.AA_OverrunFlag
+		Get
+			Return M6.OverrunFlag
+		End Get
+	End Property
+
+	Public ReadOnly Property AA_EngineIdleFlag As Integer? Implements IAdvancedAuxiliaries.AA_EngineIdleFlag
+		Get
+
+			Return _
+				If _
+					(signals.EngineSpeed <= _signals.EngineIdleSpeed AndAlso (Not signals.ClutchEngaged OrElse signals.InNeutral), 1, 0)
+		End Get
+	End Property
+
+	Public ReadOnly Property AA_CompressorFlag As Integer? Implements IAdvancedAuxiliaries.AA_CompressorFlag
+		Get
+			Return M8.CompressorFlag
+		End Get
+	End Property
+
+	Public ReadOnly Property AA_TotalCycleFC_Grams As Single? Implements IAdvancedAuxiliaries.AA_TotalCycleFC_Grams
+		Get
+			Return M14.TotalCycleFCGrams
+		End Get
+	End Property
+
+	Public ReadOnly Property AA_TotalCycleFC_Litres As Single? Implements IAdvancedAuxiliaries.AA_TotalCycleFC_Litres
+		Get
+			Return M14.TotalCycleFCLitres
+		End Get
+	End Property
+
+	Public ReadOnly Property AuxiliaryPowerAtCrankWatts As Single _
+		Implements IAdvancedAuxiliaries.AuxiliaryPowerAtCrankWatts
+		Get
+			Return M8.AuxPowerAtCrankFromElectricalHVACAndPneumaticsAncillaries
+		End Get
+	End Property
+
+	Public ReadOnly Property AA_AveragePowerDemandCrankHVACMechanicals As Single? _
+		Implements IAdvancedAuxiliaries.AA_AveragePowerDemandCrankHVACMechanicals
+		Get
+			Return M1.AveragePowerDemandAtCrankFromHVACMechanicalsWatts()
+		End Get
+	End Property
+
+	Public ReadOnly Property AA_AveragePowerDemandCrankHVACElectricals As Single? _
+		Implements IAdvancedAuxiliaries.AA_AveragePowerDemandCrankHVACElectricals
+		Get
+			Return M1.AveragePowerDemandAtCrankFromHVACElectricsWatts()
+		End Get
+	End Property
+
+	Public ReadOnly Property AA_AveragePowerDemandCrankElectrics As Single? _
+		Implements IAdvancedAuxiliaries.AA_AveragePowerDemandCrankElectrics
+		Get
+			Return M2.GetAveragePowerAtCrankFromElectrics()
+		End Get
+	End Property
+
+	Public ReadOnly Property AA_AveragePowerDemandCrankPneumatics As Single? _
+		Implements IAdvancedAuxiliaries.AA_AveragePowerDemandCrankPneumatics
+		Get
+			Return M3.GetAveragePowerDemandAtCrankFromPneumatics()
+		End Get
+	End Property
+
+	Public ReadOnly Property AA_TotalCycleFuelConsumptionCompressorOff As Single? _
+		Implements IAdvancedAuxiliaries.AA_TotalCycleFuelConsumptionCompressorOff
+		Get
+			Return M9.TotalCycleFuelConsumptionCompressorOffContinuously
+		End Get
+	End Property
+
+	Public ReadOnly Property AA_TotalCycleFuelConsumptionCompressorOn As Single? _
+		Implements IAdvancedAuxiliaries.AA_TotalCycleFuelConsumptionCompressorOn
+		Get
+			Return M9.TotalCycleFuelConsumptionCompressorOnContinuously
+		End Get
+	End Property
+
+
+	'TODO:REMOVE WHEN TESTING IS COMPLETE
+	'PURE DIAGNOSTICS SHOULD ONLY BE USED IN  MOD FOR ENGINEERING TESTS
+
+	Public ReadOnly Property AA_D_M10_INTERP1 As Single Implements IAdvancedAuxiliaries.AA_D_M12_INTERP1
+		Get
+			Return M12.INTRP1
+		End Get
+	End Property
+
+	Public ReadOnly Property AA_D_M10_INTERP2 As Single Implements IAdvancedAuxiliaries.AA_D_M12_INTERP2
+		Get
+			Return M12.INTRP2
+		End Get
+	End Property
+
+	Public ReadOnly Property AA_D_M12_P1X As Single Implements IAdvancedAuxiliaries.AA_D_M12_P1X
+		Get
+			Return M12.P1X
+		End Get
+	End Property
+
+	Public ReadOnly Property AA_D_M12_P1Y As Single Implements IAdvancedAuxiliaries.AA_D_M12_P1Y
+		Get
+			Return M12.P1Y
+		End Get
+	End Property
+
+	Public ReadOnly Property AA_D_M12_P2X As Single Implements IAdvancedAuxiliaries.AA_D_M12_P2X
+		Get
+			Return M12.P2X
+		End Get
+	End Property
+
+	Public ReadOnly Property AA_D_M12_P2Y As Single Implements IAdvancedAuxiliaries.AA_D_M12_P2Y
+		Get
+			Return M12.P2Y
+		End Get
+	End Property
+
+	Public ReadOnly Property AA_D_M12_P3X As Single Implements IAdvancedAuxiliaries.AA_D_M12_P3X
+		Get
+			Return M12.P3X
+		End Get
+	End Property
+
+	Public ReadOnly Property AA_D_M12_P3Y As Single Implements IAdvancedAuxiliaries.AA_D_M12_P3Y
+		Get
+			Return M12.P3Y
+		End Get
+	End Property
+
+	Public ReadOnly Property AA_D_M12_XTAIN As Single Implements IAdvancedAuxiliaries.AA_D_M12_XTAIN
+		Get
+			Return M12.XTAIN
+		End Get
+	End Property
 End Class

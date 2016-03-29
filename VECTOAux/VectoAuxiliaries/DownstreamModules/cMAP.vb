@@ -11,188 +11,181 @@
 Imports System.Collections.Generic
 
 Public Class cMAP
-Implements IFUELMAP
+	Implements IFuelConsumptionMap
 
-    Private LnU As List(Of Single)
-    Private LTq As List(Of Single)
-    Private lFC As List(Of Single)
+	Private LnU As List(Of Single)
+	Private LTq As List(Of Single)
+	Private lFC As List(Of Single)
 
-    Private sFilePath As String
-    Private iMapDim As Integer
+	Private sFilePath As String
+	Private iMapDim As Integer
 
-    Private FuelMap As cDelaunayMap
+	Private FuelMap As cDelaunayMap
 
-    Private Sub ResetMe()
-        lFC = Nothing
-        LTq = Nothing
-        LnU = Nothing
-        iMapDim = -1
-        FuelMap = New cDelaunayMap
-    End Sub
+	Private Sub ResetMe()
+		lFC = Nothing
+		LTq = Nothing
+		LnU = Nothing
+		iMapDim = -1
+		FuelMap = New cDelaunayMap
+	End Sub
 
-    Public Function ReadFile(Optional ByVal ShowMsg As Boolean = True) As Boolean Implements IFUELMAP.ReadFile
-        Dim file As cFile_V3
-        Dim line As String()
-        Dim nU As Double
-        Dim MsgSrc As String
-
-
-        MsgSrc = "Main/ReadInp/MAP"
-
-        'Reset
-        ResetMe()
-
-        'Stop if there's no file
-        If sFilePath = "" OrElse Not IO.File.Exists(sFilePath) Then
-            'If ShowMsg Then WorkerMsg(tMsgID.Err, "Map file not found! (" & sFilePath & ")", MsgSrc)
-            Return False
-        End If
-
-        'Open file
-        file = New cFile_V3
-        If Not file.OpenRead(sFilePath) Then
-            file = Nothing
-           'TODO:WORKERMESSAGE If ShowMsg Then WorkerMsg(tMsgID.Err, "Failed to open file (" & sFilePath & ") !", MsgSrc)
-            Return False
-        End If
-
-        'Skip Header
-        file.ReadLine()
-
-        'Initi Lists (before version check so ReadOldFormat works)
-        lFC = New System.Collections.Generic.List(Of Single)
-        LTq = New System.Collections.Generic.List(Of Single)
-        LnU = New System.Collections.Generic.List(Of Single)
-
-        Try
-            Do While Not file.EndOfFile
-
-                'Line read
-                line = file.ReadLine
-
-                'Line counter up (was reset in ResetMe)
-                iMapDim += 1
-
-                'Revolutions
-                nU = CDbl(line(0))
-
-                LnU.Add(nU)
-
-                'Power
-                LTq.Add(line(1))
-
-                'FC
-                'Check sign
-                If CSng(line(2)) < 0 Then
-                    file.Close()
-                    'TODO:WORKERMESSAGEIf ShowMsg Then WorkerMsg(tMsgID.Err, "FC < 0 in map at " & nU & " [1/min], " & line(1) & " [Nm]", MsgSrc)
-                    Return False
-                End If
-
-                lFC.Add(CSng(line(2)))
+	Public Function ReadFile(Optional ByVal ShowMsg As Boolean = True) As Boolean
+		Dim file As cFile_V3
+		Dim line As String()
+		Dim nU As Double
+		Dim MsgSrc As String
 
 
-            Loop
-        Catch ex As Exception
+		MsgSrc = "Main/ReadInp/MAP"
 
-           'TODO:WORKERMESSAGE If ShowMsg Then WorkerMsg(tMsgID.Err, "Error during file read! Line number " & iMapDim + 1 & " (" & sFilePath & ")", MsgSrc, sFilePath)
-            GoTo lbEr
+		'Reset
+		ResetMe()
 
-        End Try
+		'Stop if there's no file
+		If sFilePath = "" OrElse Not IO.File.Exists(sFilePath) Then
+			'If ShowMsg Then WorkerMsg(tMsgID.Err, "Map file not found! (" & sFilePath & ")", MsgSrc)
+			Return False
+		End If
 
-        'Close file
-        file.Close()
+		'Open file
+		file = New cFile_V3
+		If Not file.OpenRead(sFilePath) Then
+			file = Nothing
+			'TODO:WORKERMESSAGE If ShowMsg Then WorkerMsg(tMsgID.Err, "Failed to open file (" & sFilePath & ") !", MsgSrc)
+			Return False
+		End If
 
-        file = Nothing
+		'Skip Header
+		file.ReadLine()
 
-        Return True
+		'Initi Lists (before version check so ReadOldFormat works)
+		lFC = New System.Collections.Generic.List(Of Single)
+		LTq = New System.Collections.Generic.List(Of Single)
+		LnU = New System.Collections.Generic.List(Of Single)
+
+		Try
+			Do While Not file.EndOfFile
+
+				'Line read
+				line = file.ReadLine
+
+				'Line counter up (was reset in ResetMe)
+				iMapDim += 1
+
+				'Revolutions
+				nU = CDbl(line(0))
+
+				LnU.Add(nU)
+
+				'Power
+				LTq.Add(line(1))
+
+				'FC
+				'Check sign
+				If CSng(line(2)) < 0 Then
+					file.Close()
+					'TODO:WORKERMESSAGEIf ShowMsg Then WorkerMsg(tMsgID.Err, "FC < 0 in map at " & nU & " [1/min], " & line(1) & " [Nm]", MsgSrc)
+					Return False
+				End If
+
+				lFC.Add(CSng(line(2)))
 
 
-        'ERROR-label for clean Abort
+			Loop
+		Catch ex As Exception
+
+			'TODO:WORKERMESSAGE If ShowMsg Then WorkerMsg(tMsgID.Err, "Error during file read! Line number " & iMapDim + 1 & " (" & sFilePath & ")", MsgSrc, sFilePath)
+			GoTo lbEr
+
+		End Try
+
+		'Close file
+		file.Close()
+
+		file = Nothing
+
+		Return True
+
+
+		'ERROR-label for clean Abort
 lbEr:
-        file.Close()
-        file = Nothing
+		file.Close()
+		file = Nothing
 
-        Return False
+		Return False
+	End Function
 
-    End Function
+	Public Function Triangulate() As Boolean
+		Dim i As Integer
 
-    Public Function Triangulate() As Boolean Implements IFUELMAP.Triangulate
-        Dim i As Integer
+		Dim MsgSrc As String
 
-        Dim MsgSrc As String
+		MsgSrc = "MAP/Norm"
 
-        MsgSrc = "MAP/Norm"
+		'FC Delauney
+		For i = 0 To iMapDim
+			FuelMap.AddPoints(LnU(i), LTq(i), lFC(i))
+		Next
 
-        'FC Delauney
-        For i = 0 To iMapDim
-            FuelMap.AddPoints(LnU(i), LTq(i), lFC(i))
-        Next
-
-        Return FuelMap.Triangulate()
-
-    End Function
+		Return FuelMap.Triangulate()
+	End Function
 
 
-    Public Function fFCdelaunay_Intp(ByVal nU As Single, ByVal Tq As Single) As Single Implements IFUELMAP.fFCdelaunay_Intp
-        Dim val As Single
+	Public Function fFCdelaunay_Intp(ByVal nU As Single, ByVal Tq As Single) As Single
+		Dim val As Single
 
-        val = FuelMap.Intpol(nU, Tq)
+		val = FuelMap.Intpol(nU, Tq)
 
-        If FuelMap.ExtrapolError Then
-            'TODO:WORKERMESSAGE WorkerMsg(tMsgID.Err, "Cannot extrapolate FC map! n= " & nU.ToString("0.0") & " [1/min], Me= " & Tq.ToString("0.0") & " [Nm]", "MAP/FC_Intp")
-            Return -10000
-        Else
-            Return val
-        End If
-
-    End Function
+		If FuelMap.ExtrapolError Then
+			'TODO:WORKERMESSAGE WorkerMsg(tMsgID.Err, "Cannot extrapolate FC map! n= " & nU.ToString("0.0") & " [1/min], Me= " & Tq.ToString("0.0") & " [Nm]", "MAP/FC_Intp")
+			Return -10000
+		Else
+			Return val
+		End If
+	End Function
 
 #Region "Properties"
 
-    Public Property FilePath() As String  Implements IFUELMAP.FilePath
-        Get
-            Return sFilePath
-        End Get
-        Set(ByVal value As String)
-            sFilePath = value
-        End Set
-    End Property
+	Public Property FilePath() As String
+		Get
+			Return sFilePath
+		End Get
+		Set(ByVal value As String)
+			sFilePath = value
+		End Set
+	End Property
 
-    Public ReadOnly Property MapDim As Integer Implements IFUELMAP.MapDim
-        Get
-            Return iMapDim
-        End Get
-    End Property
+	Public ReadOnly Property MapDim As Integer
+		Get
+			Return iMapDim
+		End Get
+	End Property
 
-    Public ReadOnly Property Tq As List(Of Single) Implements IFUELMAP.Tq
-        Get
-            Return LTq
-        End Get
-    End Property
+	Public ReadOnly Property Tq As List(Of Single)
+		Get
+			Return LTq
+		End Get
+	End Property
 
-    Public ReadOnly Property FC As List(Of Single) Implements IFUELMAP.FC
-        Get
-            Return lFC
-        End Get
-    End Property
+	Public ReadOnly Property FC As List(Of Single)
+		Get
+			Return lFC
+		End Get
+	End Property
 
-    Public ReadOnly Property nU As List(Of Single) Implements IFUELMAP.nU
-        Get
-            Return LnU
-        End Get
-    End Property
+	Public ReadOnly Property nU As List(Of Single)
+		Get
+			Return LnU
+		End Get
+	End Property
 
 #End Region
 
-
-
+	Public Function GetFuelConsumption(torque As Double, angularVelocity As Double) As Double _
+		Implements IFuelConsumptionMap.GetFuelConsumption
+		Return fFCdelaunay_Intp(angularVelocity, torque)
+	End Function
 End Class
-
-
-
-
-
-
 
 

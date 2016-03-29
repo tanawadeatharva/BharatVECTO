@@ -10,41 +10,43 @@
 ' See the LICENSE.txt for the specific language governing permissions and limitations.
 
 Public Interface IVectoInputs
+	''' <summary>
+	''' Vehicle Mass (KG)
+	''' </summary>
+	''' <value></value>
+	''' <returns></returns>
+	''' <remarks></remarks>
+	Property VehicleWeightKG As Single
 
-   ''' <summary>
-   ''' Vehicle Mass (KG)
-   ''' </summary>
-   ''' <value></value>
-   ''' <returns></returns>
-   ''' <remarks></remarks>
-   Property VehicleWeightKG As Single
-   ''' <summary>
-   ''' Cycle ( Urban, Interurban etc )
-   ''' </summary>
-   ''' <value></value>
-   ''' <returns></returns>
-   ''' <remarks></remarks>
-   Property Cycle           As String
-   ''' <summary>
-   ''' PowerNet Voltage (V) Volts available on the bus by Batteries
-   ''' </summary>
-   ''' <value></value>
-   ''' <returns></returns>
-   ''' <remarks></remarks>
-   Property PowerNetVoltage As Single
-   ''' <summary>
-   ''' Fuel Map Used in Vecto.
-   ''' </summary>
-   ''' <value></value>
-   ''' <returns></returns>
-   ''' <remarks></remarks>
-    Property FuelMap As String
-    ''' <summary>
-    ''' Fuel density used in Vecto.
-    ''' </summary>
-    ''' <value></value>
-    ''' <returns></returns>
-    ''' <remarks></remarks>
-    Property FuelDensity As String
+	''' <summary>
+	''' Cycle ( Urban, Interurban etc )
+	''' </summary>
+	''' <value></value>
+	''' <returns></returns>
+	''' <remarks></remarks>
+	Property Cycle As String
 
+	''' <summary>
+	''' PowerNet Voltage (V) Volts available on the bus by Batteries
+	''' </summary>
+	''' <value></value>
+	''' <returns></returns>
+	''' <remarks></remarks>
+	Property PowerNetVoltage As Single
+
+	''' <summary>
+	''' Fuel Map Used in Vecto.
+	''' </summary>
+	''' <value></value>
+	''' <returns></returns>
+	''' <remarks></remarks>
+	Property FuelMap As IFuelConsumptionMap
+
+	''' <summary>
+	''' Fuel density used in Vecto.
+	''' </summary>
+	''' <value></value>
+	''' <returns></returns>
+	''' <remarks></remarks>
+	Property FuelDensity As Double
 End Interface
