@@ -11,44 +11,46 @@
 
 
 Public Class VectoInputs
+	Implements IVectoInputs
 
-Implements IVectoInputs
-   
-    ''' <summary>
-    ''' Name of the Cycle ( Urban, Interurban etc )
-    ''' </summary>
-    ''' <value></value>
-    ''' <returns></returns>
-    ''' <remarks></remarks>
-    Public Property Cycle As String Implements IVectoInputs.Cycle
-    ''' <summary>
-    ''' Vehicle Mass (KG)
-    ''' </summary>
-    ''' <value></value>
-    ''' <returns></returns>
-    ''' <remarks></remarks>
-    Public Property VehicleWeightKG As Single Implements IVectoInputs.VehicleWeightKG
-    ''' <summary>
-    ''' Powernet Voltage (V)
-    ''' </summary>
-    ''' <value></value>
-    ''' <returns></returns>
-    ''' <remarks>This is the power voltage available in the bus - usually 26.3 Volts</remarks>
-    Public Property PowerNetVoltage As Single Implements IVectoInputs.PowerNetVoltage
-    ''' <summary>
-    ''' Fuel Map Same One as used in Vecto.
-    ''' </summary>
-    ''' <value></value>
-    ''' <returns></returns>
-    ''' <remarks></remarks>
-    Public Property FuelMap As String Implements IVectoInputs.FuelMap
-    ''' <summary>
-    ''' Fuel Density as used in Vecto.
-    ''' </summary>
-    ''' <value></value>
-    ''' <returns></returns>
-    ''' <remarks></remarks>
-    Public Property FuelDensity As String Implements IVectoInputs.FuelDensity
+	''' <summary>
+	''' Name of the Cycle ( Urban, Interurban etc )
+	''' </summary>
+	''' <value></value>
+	''' <returns></returns>
+	''' <remarks></remarks>
+	Public Property Cycle As String Implements IVectoInputs.Cycle
 
+	''' <summary>
+	''' Vehicle Mass (KG)
+	''' </summary>
+	''' <value></value>
+	''' <returns></returns>
+	''' <remarks></remarks>
+	Public Property VehicleWeightKG As Single Implements IVectoInputs.VehicleWeightKG
+
+	''' <summary>
+	''' Powernet Voltage (V)
+	''' </summary>
+	''' <value></value>
+	''' <returns></returns>
+	''' <remarks>This is the power voltage available in the bus - usually 26.3 Volts</remarks>
+	Public Property PowerNetVoltage As Single Implements IVectoInputs.PowerNetVoltage
+
+	''' <summary>
+	''' Fuel Map Same One as used in Vecto.
+	''' </summary>
+	''' <value></value>
+	''' <returns></returns>
+	''' <remarks></remarks>
+	Public Property FuelMap As IFuelConsumptionMap Implements IVectoInputs.FuelMap
+
+	''' <summary>
+	''' Fuel Density as used in Vecto.
+	''' </summary>
+	''' <value></value>
+	''' <returns></returns>
+	''' <remarks></remarks>
+	Public Property FuelDensity As Double Implements IVectoInputs.FuelDensity
 End Class
 
