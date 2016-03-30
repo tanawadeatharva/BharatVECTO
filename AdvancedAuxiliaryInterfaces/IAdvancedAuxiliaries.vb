@@ -121,7 +121,7 @@ Public Interface IAdvancedAuxiliaries
 	''' <param name="message"></param>
 	''' <returns></returns>
 	''' <remarks></remarks>
-	Function CycleStep(seconds As Integer, ByRef message As String) As Boolean
+	Function CycleStep(seconds As Double, ByRef message As String) As Boolean
 
 	''' <summary>
 	''' Initialises AAUX Environment ( Begin Processs )

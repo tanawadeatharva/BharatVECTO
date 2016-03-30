@@ -227,7 +227,7 @@ Public Class AdvancedAuxiliaries
 		Return True
 	End Function
 
-	Public Function CycleStep(seconds As Integer, ByRef message As String) As Boolean _
+	Public Function CycleStep(seconds As Double, ByRef message As String) As Boolean _
 		Implements VectoAuxiliaries.IAdvancedAuxiliaries.CycleStep
 
 
