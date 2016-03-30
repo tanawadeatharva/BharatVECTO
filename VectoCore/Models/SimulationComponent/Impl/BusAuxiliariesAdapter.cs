@@ -99,13 +99,18 @@ namespace TUGraz.VectoCore.Models.SimulationComponent.Impl
 			container[ModalResultField.P_aux] = CurrentState.PowerDemand;
 
 			container[ModalResultField.AA_NonSmartAlternatorsEfficiency] = Auxiliaries.AA_NonSmartAlternatorsEfficiency;
-			container[ModalResultField.AA_SmartIdleCurrent_Amps] = Auxiliaries.AA_SmartIdleCurrent_Amps == null
-				? 0.SI<Ampere>()
-				: Auxiliaries.AA_SmartIdleCurrent_Amps.Value.SI<Ampere>();
+			if (Auxiliaries.AA_SmartIdleCurrent_Amps != null) {
+				container[ModalResultField.AA_SmartIdleCurrent_Amps] = Auxiliaries.AA_SmartIdleCurrent_Amps.Value.SI<Ampere>();
+			}
 			container[ModalResultField.AA_SmartIdleAlternatorsEfficiency] = Auxiliaries.AA_SmartIdleAlternatorsEfficiency;
-			container[ModalResultField.AA_SmartTractionCurrent_Amps] = Auxiliaries.AA_SmartTractionCurrent_Amps;
+			if (Auxiliaries.AA_SmartTractionCurrent_Amps != null) {
+				container[ModalResultField.AA_SmartTractionCurrent_Amps] =
+					Auxiliaries.AA_SmartTractionCurrent_Amps.Value.SI<Ampere>();
+			}
 			container[ModalResultField.AA_SmartTractionAlternatorEfficiency] = Auxiliaries.AA_SmartTractionAlternatorEfficiency;
-			container[ModalResultField.AA_SmartOverrunCurrent_Amps] = Auxiliaries.AA_SmartOverrunCurrent_Amps;
+			if (Auxiliaries.AA_SmartOverrunCurrent_Amps != null) {
+				container[ModalResultField.AA_SmartOverrunCurrent_Amps] = Auxiliaries.AA_SmartOverrunCurrent_Amps.Value.SI<Ampere>();
+			}
 			container[ModalResultField.AA_SmartOverrunAlternatorEfficiency] = Auxiliaries.AA_SmartOverrunAlternatorEfficiency;
 			container[ModalResultField.AA_CompressorFlowRate_LitrePerSec] = Auxiliaries.AA_CompressorFlowRate_LitrePerSec;
 			container[ModalResultField.AA_OverrunFlag] = Auxiliaries.AA_OverrunFlag;
