@@ -317,7 +317,28 @@ namespace TUGraz.VectoCore.Models.Simulation.Data
 		/// </summary>
 		[ModalResultField(typeof(SI))] altitude,
 
-		[ModalResultField(typeof(SI), name: "ds [m]")] simulationDistance
+		[ModalResultField(typeof(SI), name: "ds [m]")] simulationDistance,
+
+
+		[ModalResultField(typeof(double), name: "AA_NonSmartAlternatorsEfficiency [%]")] AA_NonSmartAlternatorsEfficiency,
+		[ModalResultField(typeof(SI), name: "AA_SmartIdleCurrent_Amps [A]")] AA_SmartIdleCurrent_Amps,
+		[ModalResultField(typeof(double), name: "AA_SmartIdleAlternatorsEfficiency [%]")] AA_SmartIdleAlternatorsEfficiency,
+		[ModalResultField(typeof(SI), name: "AA_SmartTractionCurrent_Amps [A]")] AA_SmartTractionCurrent_Amps,
+		[ModalResultField(typeof(double), name: "AA_SmartTractionAlternatorEfficiency [%]")] AA_SmartTractionAlternatorEfficiency,
+		[ModalResultField(typeof(SI), name: "AA_SmartOverrunCurrent_Amps [A]")] AA_SmartOverrunCurrent_Amps,
+		[ModalResultField(typeof(double), name: "AA_SmartOverrunAlternatorEfficiency [%]")] AA_SmartOverrunAlternatorEfficiency,
+		[ModalResultField(typeof(SI), name: "AA_CompressorFlowRate_LitrePerSec [Ni L/s]")] AA_CompressorFlowRate_LitrePerSec,
+		[ModalResultField(typeof(bool), name: "AA_OverrunFlag [bool]")] AA_OverrunFlag,
+		[ModalResultField(typeof(bool), name: "AA_EngineIdleFlag [bool]")] AA_EngineIdleFlag,
+		[ModalResultField(typeof(bool), name: "AA_CompressorFlag [bool]")] AA_CompressorFlag,
+		[ModalResultField(typeof(SI), name: "AA_TotalCycleFC_Grams [g]")] AA_TotalCycleFC_Grams,
+		[ModalResultField(typeof(SI), name: "AA_TotalCycleFC_Litres [l]")] AA_TotalCycleFC_Litres,
+		[ModalResultField(typeof(SI), name: "AA_AveragePowerDemandCrankHVACMechanicals [W]")] AA_AveragePowerDemandCrankHVACMechanicals,
+		[ModalResultField(typeof(SI), name: "AA_AveragePowerDemandCrankHVACElectricals [W]")] AA_AveragePowerDemandCrankHVACElectricals,
+		[ModalResultField(typeof(SI), name: "AA_AveragePowerDemandCrankElectrics [W]")] AA_AveragePowerDemandCrankElectrics,
+		[ModalResultField(typeof(SI), name: "AA_AveragePowerDemandCrankPneumatics [W]")] AA_AveragePowerDemandCrankPneumatics,
+		[ModalResultField(typeof(SI), name: "AA_TotalCycleFuelConsumptionCompressorOff [g]")] AA_TotalCycleFuelConsumptionCompressorOff,
+		[ModalResultField(typeof(SI), name: "AA_TotalCycleFuelConsumptionCompressorOn [g]")] AA_TotalCycleFuelConsumptionCompressorOn,
 	}
 
 
