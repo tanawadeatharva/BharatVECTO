@@ -88,7 +88,7 @@ namespace TUGraz.VectoCore.Tests.Models.Simulation
 
 			aux.Initialize(torque, speed);
 			for (var i = 0; i < 11; i++) {
-				aux.PowerDemand(t, dt, torque, speed);
+				aux.PowerDemand(t, dt, torque, torque, speed);
 				modData[ModalResultField.dist] = i.SI<Meter>();
 				modData[ModalResultField.P_eng_out] = 0.SI<Watt>();
 				modData[ModalResultField.acc] = 0.SI<MeterPerSquareSecond>();
@@ -123,19 +123,19 @@ namespace TUGraz.VectoCore.Tests.Models.Simulation
 			var t = 0.SI<Second>();
 
 			aux.Initialize(torque, speed);
-			var auxDemand = aux.PowerDemand(t, t, torque, speed);
+			var auxDemand = aux.PowerDemand(t, t, torque, torque, speed);
 			AssertHelper.AreRelativeEqual(constPower / speed, auxDemand);
 
 			speed = 2358.RPMtoRad();
 			torque = 1500.SI<NewtonMeter>();
 			aux.Initialize(torque, speed);
-			auxDemand = aux.PowerDemand(t, t, torque, speed);
+			auxDemand = aux.PowerDemand(t, t, torque, torque, speed);
 			AssertHelper.AreRelativeEqual(constPower / speed, auxDemand);
 
 			speed = 1500.RPMtoRad();
 			torque = 1500.SI<NewtonMeter>();
 			aux.Initialize(torque, speed);
-			auxDemand = aux.PowerDemand(t, t, torque, speed);
+			auxDemand = aux.PowerDemand(t, t, torque, torque, speed);
 			AssertHelper.AreRelativeEqual(constPower / speed, auxDemand);
 		}
 
@@ -144,7 +144,8 @@ namespace TUGraz.VectoCore.Tests.Models.Simulation
 		{
 			var dataWriter = new MockModalDataContainer();
 			var container = new VehicleContainer(dataWriter);
-			var data = DrivingCycleDataReader.ReadFromFile(@"TestData\Cycles\Coach time based short.vdri", CycleType.MeasuredSpeed, false);
+			var data = DrivingCycleDataReader.ReadFromFile(@"TestData\Cycles\Coach time based short.vdri",
+				CycleType.MeasuredSpeed, false);
 			var cycle = new MockDrivingCycle(container, data);
 
 			var aux = new EngineAuxiliary(container);
@@ -159,7 +160,7 @@ namespace TUGraz.VectoCore.Tests.Models.Simulation
 			var expected = new[] { 6100, 3100, 2300, 4500, 6100 };
 			foreach (var e in expected) {
 				aux.Initialize(torque, speed);
-				var auxDemand = aux.PowerDemand(t, t, torque, speed);
+				var auxDemand = aux.PowerDemand(t, t, torque, torque, speed);
 
 				AssertHelper.AreRelativeEqual((e.SI<Watt>() / speed).Value(), auxDemand.Value());
 				cycle.CommitSimulationStep(null);
@@ -174,7 +175,8 @@ namespace TUGraz.VectoCore.Tests.Models.Simulation
 			dataWriter.AddAuxiliary("CONSTANT");
 
 			var container = new VehicleContainer(dataWriter);
-			var data = DrivingCycleDataReader.ReadFromFile(@"TestData\Cycles\Coach time based short.vdri", CycleType.MeasuredSpeed, false);
+			var data = DrivingCycleDataReader.ReadFromFile(@"TestData\Cycles\Coach time based short.vdri",
+				CycleType.MeasuredSpeed, false);
 			// cycle ALT1 is set to values to equal the first few fixed points in the auxiliary file.
 			// ALT1.aux file: nAuxiliary speed 2358: 0, 0.38, 0.49, 0.64, ...
 			// ALT1 in cycle file: 0, 0.3724 (=0.38*0.96), 0.4802 (=0.49*0.96), 0.6272 (0.64*0.96), ...
@@ -215,7 +217,7 @@ namespace TUGraz.VectoCore.Tests.Models.Simulation
 
 			foreach (var e in expected) {
 				aux.Initialize(torque, speed);
-				var auxDemand = aux.PowerDemand(t, t, torque, speed);
+				var auxDemand = aux.PowerDemand(t, t, torque, torque, speed);
 
 				AssertHelper.AreRelativeEqual((e.SI<Watt>() / speed).Value(), auxDemand.Value());
 
@@ -231,7 +233,8 @@ namespace TUGraz.VectoCore.Tests.Models.Simulation
 			dataWriter.AddAuxiliary(auxId);
 
 			var container = new VehicleContainer(dataWriter);
-			var data = DrivingCycleDataReader.ReadFromFile(@"TestData\Cycles\Coach time based short.vdri", CycleType.MeasuredSpeed, false);
+			var data = DrivingCycleDataReader.ReadFromFile(@"TestData\Cycles\Coach time based short.vdri",
+				CycleType.MeasuredSpeed, false);
 			// cycle ALT1 is set to values to equal the first few fixed points in the auxiliary file.
 			// ALT1.aux file: nAuxiliary speed 2358: 0, 0.38, 0.49, 0.64, ...
 			// ALT1 in cycle file: 0, 0.3724 (=0.38*0.96), 0.4802 (=0.49*0.96), 0.6272 (0.64*0.96), ...
@@ -268,7 +271,7 @@ namespace TUGraz.VectoCore.Tests.Models.Simulation
 
 			foreach (var e in expected) {
 				aux.Initialize(torque, speed);
-				var auxDemand = aux.PowerDemand(t, t, torque, speed);
+				var auxDemand = aux.PowerDemand(t, t, torque, torque, speed);
 
 				AssertHelper.AreRelativeEqual((e.SI<Watt>() / speed).Value(), auxDemand);
 
@@ -280,7 +283,8 @@ namespace TUGraz.VectoCore.Tests.Models.Simulation
 		public void AuxColumnMissing()
 		{
 			var container = new VehicleContainer();
-			var data = DrivingCycleDataReader.ReadFromFile(@"TestData\Cycles\Coach time based short.vdri", CycleType.MeasuredSpeed, false);
+			var data = DrivingCycleDataReader.ReadFromFile(@"TestData\Cycles\Coach time based short.vdri",
+				CycleType.MeasuredSpeed, false);
 			var cycle = new MockDrivingCycle(container, data);
 
 			var aux = new EngineAuxiliary(container);
