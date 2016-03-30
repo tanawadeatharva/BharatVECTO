@@ -56,7 +56,8 @@ namespace TUGraz.VectoCore.Models.SimulationComponent.Impl
 			return this;
 		}
 
-		public NewtonMeter PowerDemand(Second absTime, Second dt, NewtonMeter torque, PerSecond angularSpeed,
+		public NewtonMeter PowerDemand(Second absTime, Second dt, NewtonMeter torquePowerTrain, NewtonMeter torqueEngine,
+			PerSecond angularSpeed,
 			bool dryRun = false)
 		{
 			CurrentState.AngularSpeed = angularSpeed;
