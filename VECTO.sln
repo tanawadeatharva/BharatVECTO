@@ -15,8 +15,6 @@ Project("{F184B08F-C81C-45F6-A57F-5ABD9991F28F}") = "VectoAuxiliariesTests", "VE
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "VectoCoreTest", "VectoCoreTest\VectoCoreTest.csproj", "{6A27F93E-4A58-48F6-B00B-3908C5D3D5A2}"
 EndProject
-Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Solution Items", "Solution Items", "{DF50B0A7-5651-4568-9FB9-8768882CFFDB}"
-EndProject
 Project("{888888A0-9F3D-457C-B088-3A5042F75D52}") = "DeclarationConverter", "DeclarationConverter\DeclarationConverter.pyproj", "{E23B3A9B-62E7-4476-849E-EEF1C3804A2F}"
 EndProject
 Project("{F184B08F-C81C-45F6-A57F-5ABD9991F28F}") = "AdvancedAuxiliaryInterfaces", "AdvancedAuxiliaryInterfaces\AdvancedAuxiliaryInterfaces.vbproj", "{B4B9BD2F-FD8F-4BB8-82FA-E2154D2C7FBD}"
