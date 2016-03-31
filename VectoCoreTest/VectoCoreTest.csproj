@@ -77,6 +77,7 @@
     <Compile Include="FileIO\JsonTest.cs" />
     <Compile Include="FileIO\SimulationDataReaderTest.cs" />
     <Compile Include="GraphProgram.cs" />
+    <Compile Include="Integration\BusAuxiliaries\AuxDemandTest.cs" />
     <Compile Include="Integration\CoachPowerTrain.cs" />
     <Compile Include="Integration\DriverStrategy\DriverStrategyTestCoach.cs" />
     <Compile Include="Integration\DriverStrategy\DriverStrategyTestTruck.cs" />
@@ -399,6 +400,45 @@
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
     </None>
     <None Include="TestData\Generic Vehicles\Engineering Mode\24t Coach\ShiftPolygons.vgbs">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </None>
+    <None Include="TestData\Integration\BusAuxiliaries\24t Coach.vfld">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </None>
+    <None Include="TestData\Integration\BusAuxiliaries\24t Coach.vmap">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </None>
+    <None Include="TestData\Integration\BusAuxiliaries\AdvAuxTest.aaux">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </None>
+    <None Include="TestData\Integration\BusAuxiliaries\BusDatabase.abdb">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </None>
+    <None Include="TestData\Integration\BusAuxiliaries\DEFAULT_1-Cylinder_1-Stage_393ccm.ACMP">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </None>
+    <None Include="TestData\Integration\BusAuxiliaries\DEFAULT_2-Cylinder_1-Stage_650ccm.ACMP">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </None>
+    <None Include="TestData\Integration\BusAuxiliaries\DEFAULT_2-Cylinder_2-Stage_398ccm.ACMP">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </None>
+    <None Include="TestData\Integration\BusAuxiliaries\DEFAULT_3-Cylinder_2-Stage_598ccm.ACMP">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </None>
+    <None Include="TestData\Integration\BusAuxiliaries\testCombAlternatorMap_1Alt.AALT">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </None>
+    <None Include="TestData\Integration\BusAuxiliaries\testCombAlternatorMap_4Alt.AALT">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </None>
+    <None Include="TestData\Integration\BusAuxiliaries\testFuelGoodMap.vmap">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </None>
+    <None Include="TestData\Integration\BusAuxiliaries\testHVACssm.AHSM">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </None>
+    <None Include="TestData\Integration\BusAuxiliaries\testPneumaticActuationsMap.APAC">
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
     </None>
     <None Include="TestData\Integration\DeclarationMode\40t Truck\40t_Long_Haul_Truck.pdf" />
