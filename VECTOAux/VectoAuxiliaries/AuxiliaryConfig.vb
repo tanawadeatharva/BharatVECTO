@@ -322,14 +322,16 @@ Public Class AuxiliaryConfig
 
 			'This is where we Assume values of loaded( Deserialized ) object.
 			AssumeValuesOfOther(tmpAux)
-			Dim tmp As cMAP = New cMAP
-			tmp.FilePath = Path.Combine(Path.GetDirectoryName(auxFile), tmpAux.VectoInputs.FuelMapFile)
-			If Not tmp.ReadFile() Then
-				MessageBox.Show("Unable to read fuel map, aborting.")
-				Return False
+			If Not tmpAux.VectoInputs.FuelMapFile Is Nothing Then
+				Dim tmp As cMAP = New cMAP
+				tmp.FilePath = Path.Combine(Path.GetDirectoryName(auxFile), tmpAux.VectoInputs.FuelMapFile)
+				If Not tmp.ReadFile() Then
+					MessageBox.Show("Unable to read fuel map, aborting.")
+					Return False
+				End If
+				tmp.Triangulate()
+				VectoInputs.FuelMap = tmp
 			End If
-			tmp.Triangulate()
-			VectoInputs.FuelMap = tmp
 		Catch ex As Exception
 
 			returnValue = False
