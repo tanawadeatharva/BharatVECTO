@@ -59,8 +59,8 @@ Namespace UnitTests
 
 			Assert.AreEqual(target.LitresOfAirCompressorOnContinually, AG1)
 			Assert.AreEqual(target.LitresOfAirCompressorOnOnlyInOverrun, AG2)
-			Assert.AreEqual(target.TotalCycleFuelConsumptionCompressorOnContinuously, CType(Math.Round(AG3, 7), Single))
-			Assert.AreEqual(target.TotalCycleFuelConsumptionCompressorOffContinuously, AG4)
+			Assert.AreEqual(target.TotalCycleFuelConsumptionCompressorOnContinuously, AG3, 0.000001)
+			Assert.AreEqual(target.TotalCycleFuelConsumptionCompressorOffContinuously, AG4, 0.000001)
 		End Sub
 
 

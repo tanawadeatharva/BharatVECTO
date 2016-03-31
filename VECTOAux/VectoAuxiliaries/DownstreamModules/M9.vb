@@ -16,18 +16,18 @@ Imports VectoAuxiliaries.Hvac
 Namespace DownstreamModules
 	Public Class M9
 		Implements IM9
-		Private Const RPM_TO_RADS_PER_SECOND As Single = 9.55F
+		Private Const RPM_TO_RADS_PER_SECOND As Single = 60 / (2 * Math.PI)	 '9.55F
 
 #Region "Aggregates"
 
 		'AG1
-		Private _LitresOfAirCompressorOnContinuallyAggregate As Single
+		Private _LitresOfAirCompressorOnContinuallyAggregate As Double
 		'AG2
-		Private _LitresOfAirCompressorOnOnlyInOverrunAggregate As Single
+		Private _LitresOfAirCompressorOnOnlyInOverrunAggregate As Double
 		'AG3
-		Private _TotalCycleFuelConsumptionCompressorOffContinuouslyAggregate As Single
+		Private _TotalCycleFuelConsumptionCompressorOffContinuouslyAggregate As Double
 		'AG4
-		Private _TotalCycleFuelConsumptionCompressorOnContinuouslyAggregate As Single
+		Private _TotalCycleFuelConsumptionCompressorOnContinuouslyAggregate As Double
 
 #End Region
 
@@ -173,8 +173,7 @@ Namespace DownstreamModules
 
 		Private ReadOnly Property S13 As Single
 			Get
-				Return (Signals.ClutchEngaged *
-				Not (Signals.InNeutral)) * S9
+				Return If(Signals.ClutchEngaged AndAlso Not (Signals.InNeutral), S9, 0)
 			End Get
 		End Property
 
@@ -200,7 +199,7 @@ Namespace DownstreamModules
 			_TotalCycleFuelConsumptionCompressorOnContinuouslyAggregate = 0
 		End Sub
 
-		Public Sub CycleStep(Optional stepTimeInSeconds As Single = 0.0) Implements IM9.CycleStep
+		Public Sub CycleStep(Optional stepTimeInSeconds As Double = 0.0) Implements IM9.CycleStep
 
 			If Signals.EngineStopped Then Return
 

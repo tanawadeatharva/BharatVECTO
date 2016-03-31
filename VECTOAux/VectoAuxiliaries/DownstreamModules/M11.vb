@@ -21,13 +21,13 @@ Namespace DownstreamModules
 
 #Region "Private Aggregates"
 		'Private Aggregations
-		Private AG1 As Single
-		Private AG2 As Single
-		Private AG3 As Single
-		Private AG4 As Single
-		Private AG5 As Single
-		Private AG6 As Single
-		Private AG7 As Single
+		Private AG1 As Double
+		Private AG2 As Double
+		Private AG3 As Double
+		Private AG4 As Double
+		Private AG5 As Double
+		Private AG6 As Double
+		Private AG7 As Double
 
 #End Region
 
@@ -205,22 +205,22 @@ Namespace DownstreamModules
 		End Sub
 
 		'Add to Aggregates dependent on cycle step time.
-		Sub CycleStep(Optional stepTimeInSeconds As Single = 0.0) Implements IM11.CycleStep
+		Sub CycleStep(Optional stepTimeInSeconds As Double = 0.0) Implements IM11.CycleStep
 
 			'S/S Insensitive
-			AG3 += (stepTimeInSeconds * m6.AvgPowerDemandAtCrankFromElectricsIncHVAC)
+			AG3 += (stepTimeInSeconds * M6.AvgPowerDemandAtCrankFromElectricsIncHVAC)
 
 
-			If Signals.EngineStopped Then Return
+			If signals.EngineStopped Then Return
 
 			'S/S Sensitive
-			AG1 += (stepTimeInSeconds * sum1 * SW1)
+			AG1 += (stepTimeInSeconds * Sum1 * SW1)
 			AG2 += (stepTimeInSeconds * M8.SmartElectricalAlternatorPowerGenAtCrank * SW1)
 
-			AG6 += (stepTimeInSeconds * m6.AvgPowerDemandAtCrankFromElectricsIncHVAC * SW1)
+			AG6 += (stepTimeInSeconds * M6.AvgPowerDemandAtCrankFromElectricsIncHVAC * SW1)
 
 			'These need to be divided by 3600 as the Fuel Map output is in Grams/Second.
-			AG4 += (stepTimeInSeconds * sum7 / 3600 * SW1)
+			AG4 += (stepTimeInSeconds * Sum7 / 3600 * SW1)
 			AG5 += (stepTimeInSeconds * Sum8 / 3600 * SW1)
 			AG7 += (stepTimeInSeconds * Sum12 / 3600 * SW1)
 		End Sub
