@@ -1,4 +1,5 @@
 ﻿using System;
+using System.IO;
 using TUGraz.VectoCore.Configuration;
 using TUGraz.VectoCore.Models.Simulation;
 using TUGraz.VectoCore.Models.Simulation.Data;
@@ -22,16 +23,20 @@ namespace TUGraz.VectoCore.Models.SimulationComponent.Impl
 			//	mAAUX_Global.advancedAuxModel.Signals.DeclarationMode = Cfg.DeclMode
 			//	mAAUX_Global.advancedAuxModel.Signals.WHTC = Declaration.WHTCcorrFactor
 
+			var tmpAux = new AdvancedAuxiliaries();
+
 			// 'Set Statics
-			Auxiliaries.VectoInputs.Cycle = DetermineCycle(cycleName);
-			Auxiliaries.VectoInputs.VehicleWeightKG = (float)vehicleWeight.Value();
-			Auxiliaries.VectoInputs.FuelMap = new FuelConsumptionAdapter() { FcMap = fcMap };
-			Auxiliaries.VectoInputs.FuelDensity = Physics.FuelDensity.Value();
+			tmpAux.VectoInputs.Cycle = DetermineCycle(cycleName);
+			tmpAux.VectoInputs.VehicleWeightKG = (float)vehicleWeight.Value();
+			tmpAux.VectoInputs.FuelMap = new FuelConsumptionAdapter() { FcMap = fcMap };
+			tmpAux.VectoInputs.FuelDensity = Physics.FuelDensity.Value();
 
 			//'Set Signals
-			Auxiliaries.Signals.TotalCycleTimeSeconds = 3600; // TODO MQ: get cycle time somehow!
-			Auxiliaries.Signals.EngineIdleSpeed = (float)engineIdleSpeed.Value();
-			Auxiliaries.RunStart(aauxFile, "");
+			tmpAux.Signals.TotalCycleTimeSeconds = 15000; // TODO MQ: get cycle time somehow!
+			tmpAux.Signals.EngineIdleSpeed = (float)engineIdleSpeed.Value();
+			tmpAux.Initialise(Path.GetFileName(aauxFile), Path.GetDirectoryName(Path.GetFullPath(aauxFile)) + @"\");
+
+			Auxiliaries = tmpAux;
 		}
 
 		private static string DetermineCycle(string cycleName)
@@ -77,13 +82,12 @@ namespace TUGraz.VectoCore.Models.SimulationComponent.Impl
 		{
 			PreviousState.AngularSpeed = angularSpeed;
 			PreviousState.PowerDemand = GetBusAuxPowerDemand(0.SI<Second>(), 1.SI<Second>(), torque, torque, angularSpeed);
-			return CurrentState.PowerDemand / angularSpeed;
+			return PreviousState.PowerDemand / angularSpeed;
 		}
 
 
 		public NewtonMeter PowerDemand(Second absTime, Second dt, NewtonMeter torquePowerTrain, NewtonMeter torqueEngine,
-			PerSecond angularSpeed,
-			bool dryRun = false)
+			PerSecond angularSpeed, bool dryRun = false)
 		{
 			CurrentState.AngularSpeed = angularSpeed;
 
@@ -143,15 +147,15 @@ namespace TUGraz.VectoCore.Models.SimulationComponent.Impl
 			PerSecond angularSpeed)
 		{
 			Auxiliaries.Signals.ClutchEngaged = DataBus.ClutchClosed(absTime);
-			Auxiliaries.Signals.EngineDrivelinePower = (float)(torquePowerTrain * angularSpeed).Value();
+			Auxiliaries.Signals.EngineDrivelinePower = (float)(torquePowerTrain * angularSpeed / 1000).Value();
 			Auxiliaries.Signals.EngineDrivelineTorque = (float)torquePowerTrain.Value();
-			Auxiliaries.Signals.EngineMotoringPower = (float)DataBus.EngineDragPower(angularSpeed).Value();
+			Auxiliaries.Signals.EngineMotoringPower = - (float)DataBus.EngineDragPower(angularSpeed).Value()/ 1000;
 			Auxiliaries.Signals.EngineSpeed = (int)(angularSpeed.Value() / Constants.RPMToRad);
 			Auxiliaries.Signals.PreExistingAuxPower = 0; //mAAUX_Global.PreExistingAuxPower;
 			Auxiliaries.Signals.Idle = DataBus.VehicleStopped;
 			Auxiliaries.Signals.InNeutral = DataBus.Gear == 0;
 			Auxiliaries.Signals.RunningCalc = true;
-			Auxiliaries.Signals.Internal_Engine_Power = (float)(torqueEngine * angularSpeed).Value();
+			Auxiliaries.Signals.Internal_Engine_Power = (float)(torqueEngine * angularSpeed/1000).Value();
 			//mAAUX_Global.Internal_Engine_Power;
 			//'Power coming out of Advanced Model is in Watts.
 

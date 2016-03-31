@@ -52,7 +52,9 @@ namespace TUGraz.VectoCore.Models.SimulationComponent.Impl
 		public Vehicle(IVehicleContainer container, VehicleData modelData) : base(container)
 		{
 			ModelData = modelData;
-			modelData.CrossWindCorrectionCurve.SetDataBus(container);
+			if (modelData.CrossWindCorrectionCurve != null) {
+				modelData.CrossWindCorrectionCurve.SetDataBus(container);
+			}
 		}
 
 		public IResponse Initialize(MeterPerSecond vehicleSpeed, Radian roadGradient)
