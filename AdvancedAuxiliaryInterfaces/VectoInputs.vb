@@ -8,7 +8,7 @@
 '   WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
 '
 ' See the LICENSE.txt for the specific language governing permissions and limitations.
-
+Imports Newtonsoft.Json
 
 Public Class VectoInputs
 	Implements IVectoInputs
@@ -43,7 +43,11 @@ Public Class VectoInputs
 	''' <value></value>
 	''' <returns></returns>
 	''' <remarks></remarks>
+	<JsonIgnore>
 	Public Property FuelMap As IFuelConsumptionMap Implements IVectoInputs.FuelMap
+
+	<JsonProperty("FuelMap")>
+	Public Property FuelMapFile As String Implements IVectoInputs.FuelMapFile
 
 	''' <summary>
 	''' Fuel Density as used in Vecto.

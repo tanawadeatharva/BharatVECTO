@@ -129,7 +129,7 @@ Public Class AuxiliaryConfig
 		'Consumer list
 		If _
 			Me.ElectricalUserInputsConfig.ElectricalConsumers.Items.Count <>
-			other.ElectricalUserInputsConfig.ElectricalConsumers.Items.count Then Return False
+			other.ElectricalUserInputsConfig.ElectricalConsumers.Items.Count Then Return False
 		Dim i As Integer
 		For i = 0 To Me.ElectricalUserInputsConfig.ElectricalConsumers.Items.Count - 1
 			Dim thisConsumer, otherConsumer As IElectricalConsumer
@@ -153,7 +153,7 @@ Public Class AuxiliaryConfig
 
 		'ResultCardIdle
 		If _
-			Me.ElectricalUserInputsConfig.ResultCardIdle.Results.count <>
+			Me.ElectricalUserInputsConfig.ResultCardIdle.Results.Count <>
 			other.ElectricalUserInputsConfig.ResultCardIdle.Results.Count Then Return False
 		For i = 0 To Me.ElectricalUserInputsConfig.ResultCardIdle.Results.Count - 1
 			If _
@@ -165,7 +165,7 @@ Public Class AuxiliaryConfig
 
 		'ResultCardOverrun
 		If _
-			Me.ElectricalUserInputsConfig.ResultCardOverrun.Results.count <>
+			Me.ElectricalUserInputsConfig.ResultCardOverrun.Results.Count <>
 			other.ElectricalUserInputsConfig.ResultCardOverrun.Results.Count Then Return False
 		For i = 0 To Me.ElectricalUserInputsConfig.ResultCardOverrun.Results.Count - 1
 			If _
@@ -178,7 +178,7 @@ Public Class AuxiliaryConfig
 
 		'ResultCardTraction
 		If _
-			Me.ElectricalUserInputsConfig.ResultCardTraction.Results.count <>
+			Me.ElectricalUserInputsConfig.ResultCardTraction.Results.Count <>
 			other.ElectricalUserInputsConfig.ResultCardTraction.Results.Count Then Return False
 		For i = 0 To Me.ElectricalUserInputsConfig.ResultCardTraction.Results.Count - 1
 			If _
@@ -322,7 +322,14 @@ Public Class AuxiliaryConfig
 
 			'This is where we Assume values of loaded( Deserialized ) object.
 			AssumeValuesOfOther(tmpAux)
-
+			Dim tmp As cMAP = New cMAP
+			tmp.FilePath = Path.Combine(Path.GetDirectoryName(auxFile), tmpAux.VectoInputs.FuelMapFile)
+			If Not tmp.ReadFile() Then
+				MessageBox.Show("Unable to read fuel map, aborting.")
+				Return False
+			End If
+			tmp.Triangulate()
+			VectoInputs.FuelMap = tmp
 		Catch ex As Exception
 
 			returnValue = False
@@ -360,7 +367,7 @@ Public Class AuxiliaryConfig
 																			otherConsumer.PhaseIdle_TractionOn,
 																			otherConsumer.PowerNetVoltage,
 																			otherConsumer.NumberInActualVehicle,
-																			otherConsumer.info)
+																			otherConsumer.Info)
 
 			Me.ElectricalUserInputsConfig.ElectricalConsumers.Items.Add(newConsumer)
 

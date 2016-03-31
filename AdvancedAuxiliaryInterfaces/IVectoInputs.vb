@@ -42,6 +42,8 @@ Public Interface IVectoInputs
 	''' <remarks></remarks>
 	Property FuelMap As IFuelConsumptionMap
 
+	Property FuelMapFile As String
+
 	''' <summary>
 	''' Fuel density used in Vecto.
 	''' </summary>
