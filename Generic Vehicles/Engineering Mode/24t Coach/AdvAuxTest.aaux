@@ -6,7 +6,7 @@
     "VehicleWeightKG": 16500.0,
     "PowerNetVoltage": 28.3,
     "FuelMap": "testFuelGoodMap.vmap",
-    "FuelDensity": null
+    "FuelDensity": 0.852
   },
   "ElectricalUserInputsConfig": {
     "$type": "VectoAuxiliaries.Electrics.ElectricsUserInputsConfig, BusAuxiliaries",
