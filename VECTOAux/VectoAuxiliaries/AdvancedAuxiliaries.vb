@@ -230,14 +230,12 @@ Public Class AdvancedAuxiliaries
 	Public Function CycleStep(seconds As Double, ByRef message As String) As Boolean _
 		Implements VectoAuxiliaries.IAdvancedAuxiliaries.CycleStep
 
-
 		Try
-
 			M9.CycleStep(seconds)
 			M10.CycleStep(seconds)
 			M11.CycleStep(seconds)
 
-			Signals.CurrentCycleTimeInSeconds += 1
+			Signals.CurrentCycleTimeInSeconds += seconds
 		Catch ex As Exception
 			MessageBox.Show("Exception: " + ex.Message + " Stack Trace: " + ex.StackTrace)
 			Return False

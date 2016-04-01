@@ -19,7 +19,7 @@ Namespace DownstreamModules
 		Implements IM10
 
 		'Aggregators
-		Private _AverageAirConsumedPerSecondLitre As Double
+		Private _AverageAirConsumedLitre As Double
 
 		'Diagnostics
 		Private x1, y1, x2, y2, x3, y3, xTA, interp1, interp2 As Single
@@ -108,7 +108,7 @@ Namespace DownstreamModules
 			y3 = m9.TotalCycleFuelConsumptionCompressorOffContinuously
 
 
-			xTA = _AverageAirConsumedPerSecondLitre	 'm3.AverageAirConsumedPerSecondLitre
+			xTA = _AverageAirConsumedLitre	 'm3.AverageAirConsumedPerSecondLitre
 
 
 			Select Case interpType
@@ -120,7 +120,7 @@ Namespace DownstreamModules
 
 					'Smart Pneumatics ( OUT 2 )
 				Case InterpolationType.SmartPneumtaics
-					ReturnValue = y3 + (((y1 - y3) / (x1 - x3)) * (xTA - x3))
+					returnValue = y3 + (((y1 - y3) / (x1 - x3)) * (xTA - x3))
 					interp2 = returnValue
 
 
@@ -171,8 +171,8 @@ Namespace DownstreamModules
 
 		Public Sub CycleStep(Optional stepTimeInSeconds As Double = 0.0) Implements IM10.CycleStep
 
-			_AverageAirConsumedPerSecondLitre +=
-				If(Single.IsNaN(m3.AverageAirConsumedPerSecondLitre), 0, m3.AverageAirConsumedPerSecondLitre)
+			_AverageAirConsumedLitre +=
+				If(Single.IsNaN(m3.AverageAirConsumedPerSecondLitre), 0, m3.AverageAirConsumedPerSecondLitre * stepTimeInSeconds)
 		End Sub
 	End Class
 End Namespace
