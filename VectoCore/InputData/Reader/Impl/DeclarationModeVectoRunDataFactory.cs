@@ -44,7 +44,9 @@ namespace TUGraz.VectoCore.InputData.Reader.Impl
 {
 	public class DeclarationModeVectoRunDataFactory : LoggingObject, IVectoRunDataFactory
 	{
-		protected static Dictionary<MissionType, DrivingCycleData> CyclesCache =
+		private static readonly object CyclesCacheLock = new object();
+
+		private static readonly Dictionary<MissionType, DrivingCycleData> CyclesCache =
 			new Dictionary<MissionType, DrivingCycleData>();
 
 		protected IDeclarationInputDataProvider InputDataProvider;
@@ -88,11 +90,13 @@ namespace TUGraz.VectoCore.InputData.Reader.Impl
 
 			foreach (var mission in segment.Missions) {
 				DrivingCycleData cycle;
-				if (CyclesCache.ContainsKey(mission.MissionType)) {
-					cycle = CyclesCache[mission.MissionType];
-				} else {
-					cycle = DrivingCycleDataReader.ReadFromStream(mission.CycleFile, CycleType.DistanceBased, "", false);
-					CyclesCache.Add(mission.MissionType, cycle);
+				lock (CyclesCacheLock) {
+					if (CyclesCache.ContainsKey(mission.MissionType)) {
+						cycle = CyclesCache[mission.MissionType];
+					} else {
+						cycle = DrivingCycleDataReader.ReadFromStream(mission.CycleFile, CycleType.DistanceBased, "", false);
+						CyclesCache.Add(mission.MissionType, cycle);
+					}
 				}
 				foreach (var loading in mission.Loadings) {
 					var simulationRunData = new VectoRunData {
