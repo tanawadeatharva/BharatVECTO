@@ -1,4 +1,6 @@
-﻿using NUnit.Framework;
+﻿using Microsoft.VisualStudio.TestTools.UnitTesting;
+using NUnit.Framework;
+using TUGraz.VectoCore.Models.Simulation.Data;
 using TUGraz.VectoCore.Models.Simulation.Impl;
 using TUGraz.VectoCore.Models.SimulationComponent.Data;
 using TUGraz.VectoCore.Models.SimulationComponent.Data.Engine;
@@ -44,10 +46,80 @@ namespace TUGraz.VectoCore.Tests.Integration.BusAuxiliaries
 			var engineSpeed = engineSpeedRpm.RPMtoRad();
 			busAux.Initialize(engineDrivelinePower / engineSpeed, engineSpeed);
 
-			var power = busAux.PowerDemand(0.SI<Second>(), 1.SI<Second>(), engineDrivelinePower / engineSpeed,
+			var torque = busAux.PowerDemand(0.SI<Second>(), 1.SI<Second>(), engineDrivelinePower / engineSpeed,
 				(internalPower * 1000).SI<Watt>() / engineSpeed, engineSpeed);
 
-			Assert.AreEqual(expectedPowerDemand, (power * engineSpeed).Value(), 1e-4);
+			Assert.AreEqual(expectedPowerDemand, (torque * engineSpeed).Value(), 1e-4);
+		}
+
+		[Test]
+		public void AuxFCConsumptionTest()
+		{
+			var driveLinePower = 148;
+			var engineSpeedRpm = 1256;
+			var internalPower = 148;
+
+
+			var auxFilePath = @"TestData\Integration\BusAuxiliaries\AdvAuxTest.aaux";
+			var engineFLDFilePath = @"TestData\Integration\BusAuxiliaries\24t Coach.vfld";
+			var engineFCMapFilePath = @"TestData\Integration\BusAuxiliaries\24t Coach.vmap";
+
+			var vehicle = new VehicleContainer();
+			var fcMap = FuelConsumptionMap.ReadFromFile(engineFCMapFilePath);
+			var fld = EngineFullLoadCurve.ReadFromFile(engineFLDFilePath);
+			var modelData = new CombustionEngineData() {
+				ConsumptionMap = fcMap,
+				FullLoadCurve = fld,
+				IdleSpeed = 560.SI<PerSecond>()
+			};
+
+			var engine = new CombustionEngine(vehicle, modelData);
+			//new Vehicle(vehicle, new VehicleData());
+			var driver = new MockDriver(vehicle) { VehicleStopped = false };
+			var gbx = new MockGearbox(vehicle) { Gear = 1 };
+
+			var busAux = new BusAuxiliariesAdapter(vehicle, auxFilePath, "Coach", 12000.SI<Kilogram>(),
+				fcMap, modelData.IdleSpeed);
+
+
+			var engineDrivelinePower = (driveLinePower * 1000).SI<Watt>();
+			var engineSpeed = engineSpeedRpm.RPMtoRad();
+			busAux.Initialize(engineDrivelinePower / engineSpeed, engineSpeed);
+
+			var modalData = new MockModalDataContainer();
+
+			for (int i = 0; i < 10; i++) {
+				var torque = busAux.PowerDemand(0.SI<Second>(), 1.SI<Second>(), engineDrivelinePower / engineSpeed,
+					(internalPower * 1000).SI<Watt>() / engineSpeed, engineSpeed);
+				Assert.AreEqual(4537.96826, (torque * engineSpeed).Value(), 1e-3);
+				busAux.CommitSimulationStep(modalData);
+			}
+
+			Assert.AreEqual(78.4127, ((SI)modalData[ModalResultField.AA_TotalCycleFC_Grams]).Value(), 0.0001);
+
+			engineDrivelinePower = -15000.SI<Watt>();
+			internalPower = -50;
+
+			for (int i = 0; i < 10; i++) {
+				var torque = busAux.PowerDemand(0.SI<Second>(), 1.SI<Second>(), engineDrivelinePower / engineSpeed,
+					(internalPower * 1000).SI<Watt>() / engineSpeed, engineSpeed);
+				Assert.AreEqual(7405.0791, (torque * engineSpeed).Value(), 1e-3);
+				busAux.CommitSimulationStep(modalData);
+			}
+
+			Assert.AreEqual(81.0836, ((SI)modalData[ModalResultField.AA_TotalCycleFC_Grams]).Value(), 0.0001);
+
+			engineDrivelinePower = (driveLinePower * 1000).SI<Watt>();
+			internalPower = 148;
+
+			for (int i = 0; i < 10; i++) {
+				var torque = busAux.PowerDemand(0.SI<Second>(), 1.SI<Second>(), engineDrivelinePower / engineSpeed,
+					(internalPower * 1000).SI<Watt>() / engineSpeed, engineSpeed);
+				Assert.AreEqual(4537.96826, (torque * engineSpeed).Value(), 1e-3);
+				busAux.CommitSimulationStep(modalData);
+			}
+
+			Assert.AreEqual(160.08049, ((SI)modalData[ModalResultField.AA_TotalCycleFC_Grams]).Value(), 0.0001);
 		}
 	}
 }
