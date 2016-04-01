@@ -14,7 +14,7 @@ Namespace UnitTests
 		Private Const GOODTechListEMPTYLIST As String = "TestFiles\testSSMTechBenefitsEMPTYLIST.csv"
 
 		'Helpers
-		Private Function AddDefaultTechLine(source As ISSMTOOL)
+		Private Sub AddDefaultTechLine(source As ISSMTOOL)
 
 			Dim src As SSMTOOL = DirectCast(source, SSMTOOL)
 
@@ -45,7 +45,7 @@ Namespace UnitTests
 			Dim feedback As String = String.Empty
 
 			Assert.IsTrue(src.TechList.Add(newItem, feedback))
-		End Function
+		End Sub
 
 		'SSMGenInputTests
 		<Test()> _
