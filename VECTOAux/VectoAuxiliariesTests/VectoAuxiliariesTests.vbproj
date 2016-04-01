@@ -182,7 +182,6 @@
     <Content Include="3rdParty\DocumentFormat.OpenXml.xml" />
     <Content Include="3rdParty\SpreadsheetLight.dll" />
     <Content Include="3rdParty\SpreadsheetLight.xml" />
-    <Content Include="IntegrationTests\AuxPowerDemandTest.cs" />
     <Content Include="TestFiles\testPneumaticActuationsMap_GOODMAP.apac">
       <CopyToOutputDirectory>Always</CopyToOutputDirectory>
     </Content>
