@@ -414,6 +414,9 @@
     <None Include="TestData\Integration\BusAuxiliaries\BusDatabase.abdb">
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
     </None>
+    <None Include="TestData\Integration\BusAuxiliaries\DefaultClimatic.aenv">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </None>
     <None Include="TestData\Integration\BusAuxiliaries\DEFAULT_1-Cylinder_1-Stage_393ccm.ACMP">
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
     </None>

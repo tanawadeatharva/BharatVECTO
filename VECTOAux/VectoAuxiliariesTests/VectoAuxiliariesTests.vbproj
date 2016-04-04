@@ -317,6 +317,9 @@
     <None Include="TestFiles\Integration\AdvAuxTest.aaux">
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
     </None>
+    <None Include="TestFiles\Integration\DefaultClimatic.aenv">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </None>
     <None Include="TestFiles\Integration\DEFAULT_1-Cylinder_1-Stage_393ccm.ACMP">
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
     </None>

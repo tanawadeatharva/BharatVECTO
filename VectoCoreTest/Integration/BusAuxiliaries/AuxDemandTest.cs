@@ -15,9 +15,10 @@ namespace TUGraz.VectoCore.Tests.Integration.BusAuxiliaries
 	public class AuxDemandTest
 	{
 		[Test]
-		[TestCase(1256, 148, 148, 4537.96826F)]
-		[TestCase(1256, -15, -50, 7405.0791)]
-		public void AuxDemandtest(double engineSpeedRpm, double driveLinePower, double internalPower,
+		[TestCase(12000, 1256, 148, 148, 6087.0317)]
+		[TestCase(12000, 1256, -15, -50, 8954.1435)]
+		[TestCase(15700, 1319, -35.79263, -144.0441, 9093.9511)]
+		public void AuxDemandtest(double vehicleWeight, double engineSpeedRpm, double driveLinePower, double internalPower,
 			double expectedPowerDemand)
 		{
 			var auxFilePath = @"TestData\Integration\BusAuxiliaries\AdvAuxTest.aaux";
@@ -38,7 +39,7 @@ namespace TUGraz.VectoCore.Tests.Integration.BusAuxiliaries
 			var driver = new MockDriver(vehicle) { VehicleStopped = false };
 			var gbx = new MockGearbox(vehicle) { Gear = 1 };
 
-			var busAux = new BusAuxiliariesAdapter(vehicle, auxFilePath, "Coach", 12000.SI<Kilogram>(),
+			var busAux = new BusAuxiliariesAdapter(vehicle, auxFilePath, "Coach", vehicleWeight.SI<Kilogram>(),
 				fcMap, modelData.IdleSpeed);
 
 
@@ -91,11 +92,11 @@ namespace TUGraz.VectoCore.Tests.Integration.BusAuxiliaries
 			for (int i = 0; i < 10; i++) {
 				var torque = busAux.PowerDemand(0.SI<Second>(), 1.SI<Second>(), engineDrivelinePower / engineSpeed,
 					(internalPower * 1000).SI<Watt>() / engineSpeed, engineSpeed);
-				Assert.AreEqual(4537.96826, (torque * engineSpeed).Value(), 1e-3);
+				Assert.AreEqual(6087.0317, (torque * engineSpeed).Value(), 1e-3);
 				busAux.CommitSimulationStep(modalData);
 			}
 
-			Assert.AreEqual(78.4127, ((SI)modalData[ModalResultField.AA_TotalCycleFC_Grams]).Value(), 0.0001);
+			Assert.AreEqual(79.303, ((SI)modalData[ModalResultField.AA_TotalCycleFC_Grams]).Value(), 0.0001);
 
 			engineDrivelinePower = -15000.SI<Watt>();
 			internalPower = -50;
@@ -103,11 +104,11 @@ namespace TUGraz.VectoCore.Tests.Integration.BusAuxiliaries
 			for (int i = 0; i < 10; i++) {
 				var torque = busAux.PowerDemand(0.SI<Second>(), 1.SI<Second>(), engineDrivelinePower / engineSpeed,
 					(internalPower * 1000).SI<Watt>() / engineSpeed, engineSpeed);
-				Assert.AreEqual(7405.0791, (torque * engineSpeed).Value(), 1e-3);
+				Assert.AreEqual(8954.1435, (torque * engineSpeed).Value(), 1e-3);
 				busAux.CommitSimulationStep(modalData);
 			}
 
-			Assert.AreEqual(81.0836, ((SI)modalData[ModalResultField.AA_TotalCycleFC_Grams]).Value(), 0.0001);
+			Assert.AreEqual(82.5783, ((SI)modalData[ModalResultField.AA_TotalCycleFC_Grams]).Value(), 0.0001);
 
 			engineDrivelinePower = (driveLinePower * 1000).SI<Watt>();
 			internalPower = 148;
@@ -115,11 +116,11 @@ namespace TUGraz.VectoCore.Tests.Integration.BusAuxiliaries
 			for (int i = 0; i < 10; i++) {
 				var torque = busAux.PowerDemand(0.SI<Second>(), 1.SI<Second>(), engineDrivelinePower / engineSpeed,
 					(internalPower * 1000).SI<Watt>() / engineSpeed, engineSpeed);
-				Assert.AreEqual(4537.96826, (torque * engineSpeed).Value(), 1e-3);
+				Assert.AreEqual(6087.0317, (torque * engineSpeed).Value(), 1e-3);
 				busAux.CommitSimulationStep(modalData);
 			}
 
-			Assert.AreEqual(160.08049, ((SI)modalData[ModalResultField.AA_TotalCycleFC_Grams]).Value(), 0.0001);
+			Assert.AreEqual(162.4655, ((SI)modalData[ModalResultField.AA_TotalCycleFC_Grams]).Value(), 0.0001);
 		}
 	}
 }

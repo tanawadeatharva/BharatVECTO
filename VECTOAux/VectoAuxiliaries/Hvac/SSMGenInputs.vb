@@ -252,10 +252,10 @@ Namespace Hvac
             Get
                 Return _EC_EnviromentalConditions_BatchFile
             End Get
-            Set(value As String)
-                _EC_EnvironmentalConditionsMap = New EnvironmentalConditionsMap(value, _vectoDir)
-                _EC_EnviromentalConditions_BatchFile = value
-            End Set
+			Set(value As String)
+				_EC_EnvironmentalConditionsMap = New EnvironmentalConditionsMap(value, _vectoDir)
+				_EC_EnviromentalConditions_BatchFile = value
+			End Set
         End Property
 
         Public Property EC_EnviromentalConditions_BatchEnabled As Boolean Implements ISSMGenInputs.EC_EnviromentalConditions_BatchEnabled
