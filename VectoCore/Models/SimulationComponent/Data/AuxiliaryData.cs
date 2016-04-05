@@ -207,4 +207,13 @@ namespace TUGraz.VectoCore.Models.SimulationComponent.Data
 			return ValidationResult.Success;
 		}
 	}
+
+	public class AdvancedAuxData
+	{
+		public AuxiliaryModel AuxiliaryAssembly;
+
+		public string AdvancedAuxiliaryFilePath;
+
+		public string AuxiliaryVersion;
+	}
 }
