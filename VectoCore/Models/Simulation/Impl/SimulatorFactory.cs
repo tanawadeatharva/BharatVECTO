@@ -123,7 +123,9 @@ namespace TUGraz.VectoCore.Models.Simulation.Impl
 							if (d.Report != null) {
 								d.Report.AddResult(d.Loading, d.Mission, writer);
 							}
-						}, _mode);
+						}, _mode) {
+							WriteAdvancedAux = data.AdvancedAux.AuxiliaryAssembly == AuxiliaryModel.Advanced
+						};
 				modContainer.WriteModalResults = WriteModalResults;
 				var current = i++;
 				var builder = new PowertrainBuilder(modContainer, (writer, mass, loading) =>

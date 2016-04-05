@@ -56,6 +56,8 @@ namespace TUGraz.VectoCore.OutputData
 
 		public VectoRun.Status RunStatus { get; protected set; }
 
+		public bool WriteAdvancedAux { get; set; }
+
 		public ModalDataContainer(string runName, IModalDataWriter writer,
 			ExecutionMode mode = ExecutionMode.Engineering)
 			: this(runName, "", "", writer, _ => { }, mode) {}
@@ -80,6 +82,7 @@ namespace TUGraz.VectoCore.OutputData
 			Data = new ModalResults();
 			Auxiliaries = new Dictionary<string, DataColumn>();
 			CurrentRow = Data.NewRow();
+			WriteAdvancedAux = false;
 		}
 
 		public bool HasTorqueConverter { get; set; }
@@ -154,6 +157,29 @@ namespace TUGraz.VectoCore.OutputData
 						ModalResultField.TC_n_Out
 					});
 				}
+			}
+			if (_mode != ExecutionMode.EngineOnly && WriteAdvancedAux) {
+				dataColumns.AddRange(new[] {
+					ModalResultField.AA_NonSmartAlternatorsEfficiency,
+					ModalResultField.AA_SmartIdleCurrent_Amps,
+					ModalResultField.AA_SmartIdleAlternatorsEfficiency,
+					ModalResultField.AA_SmartTractionCurrent_Amps,
+					ModalResultField.AA_SmartTractionAlternatorEfficiency,
+					ModalResultField.AA_SmartOverrunCurrent_Amps,
+					ModalResultField.AA_SmartOverrunAlternatorEfficiency,
+					ModalResultField.AA_CompressorFlowRate_LitrePerSec,
+					ModalResultField.AA_OverrunFlag,
+					ModalResultField.AA_EngineIdleFlag,
+					ModalResultField.AA_CompressorFlag,
+					ModalResultField.AA_TotalCycleFC_Grams,
+					ModalResultField.AA_TotalCycleFC_Litres,
+					ModalResultField.AA_AveragePowerDemandCrankHVACMechanicals,
+					ModalResultField.AA_AveragePowerDemandCrankHVACElectricals,
+					ModalResultField.AA_AveragePowerDemandCrankElectrics,
+					ModalResultField.AA_AveragePowerDemandCrankPneumatics,
+					ModalResultField.AA_TotalCycleFuelConsumptionCompressorOff,
+					ModalResultField.AA_TotalCycleFuelConsumptionCompressorOn,
+				});
 			}
 
 			var strCols = dataColumns.Select(x => x.GetName())
