@@ -11,7 +11,7 @@ using VectoAuxiliaries;
 namespace TUGraz.VectoCore.Models.SimulationComponent.Impl
 {
 	public class BusAuxiliariesAdapter : StatefulVectoSimulationComponent<BusAuxiliariesAdapter.BusAuxState>,
-		IEngineAuxPort
+		IEngineAuxInProvider, IEngineAuxPort
 	{
 		protected IAdvancedAuxiliaries Auxiliaries;
 		private readonly FuelConsumptionAdapter _fcMapAdapter;
@@ -78,6 +78,11 @@ namespace TUGraz.VectoCore.Models.SimulationComponent.Impl
 
 			//	Return "Urban"
 			//End Function
+		}
+
+		public IEngineAuxPort Port()
+		{
+			return this;
 		}
 
 		public NewtonMeter Initialize(NewtonMeter torque, PerSecond angularSpeed)
