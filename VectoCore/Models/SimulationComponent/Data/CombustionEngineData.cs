@@ -71,6 +71,21 @@ namespace TUGraz.VectoCore.Models.SimulationComponent.Data
 			WHTCRural = 1;
 		}
 
+		public CombustionEngineData Copy()
+		{
+			return new CombustionEngineData {
+				Displacement = Displacement,
+				IdleSpeed = IdleSpeed,
+				Inertia = Inertia,
+				WHTCUrban = WHTCUrban,
+				WHTCRural = WHTCRural,
+				WHTCMotorway = WHTCMotorway,
+				ConsumptionMap = ConsumptionMap,
+				FullLoadCurve = FullLoadCurve,
+				WHTCCorrectionFactor = WHTCCorrectionFactor,
+			};
+		}
+
 		#region Equality Member
 
 		protected bool Equals(CombustionEngineData other)
