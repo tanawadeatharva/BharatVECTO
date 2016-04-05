@@ -176,9 +176,9 @@ namespace TUGraz.VectoCore.InputData.FileIO.JSON
 
 		#region AdvancedAuxiliaries
 
-		public string AuxiliaryAssembly
+		public AuxiliaryModel AuxiliaryAssembly
 		{
-			get { return Body["AuxiliaryAssembly"] != null ? Body["AuxiliaryAssembly"].Value<string>() : "<CLASSIC>"; }
+			get { return AuxiliaryModelHelper.Parse(Body["AuxiliaryAssembly"] == null ? "" : Body["AuxiliaryAssembly"].ToString()); }
 		}
 
 		public string AuxiliaryVersion

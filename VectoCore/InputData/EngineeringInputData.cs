@@ -94,7 +94,7 @@ namespace TUGraz.VectoCore.InputData
 		DataTable CrosswindCorrectionMap { get; }
 
 		// Advanced Auxiliaries
-		string AuxiliaryAssembly { get; }
+		AuxiliaryModel AuxiliaryAssembly { get; }
 
 		string AuxiliaryVersion { get; }
 
