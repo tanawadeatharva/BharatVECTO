@@ -35,7 +35,7 @@ namespace TUGraz.VectoCore.Models.SimulationComponent.Impl
 
 			//'Set Signals
 			tmpAux.Signals.TotalCycleTimeSeconds = 15000; // TODO MQ: get cycle time somehow!
-			tmpAux.Signals.EngineIdleSpeed = (float)engineIdleSpeed.Value();
+			tmpAux.Signals.EngineIdleSpeed = (float)(engineIdleSpeed.Value() / Constants.RPMToRad);
 			tmpAux.Initialise(Path.GetFileName(aauxFile), Path.GetDirectoryName(Path.GetFullPath(aauxFile)) + @"\");
 
 			Auxiliaries = tmpAux;
