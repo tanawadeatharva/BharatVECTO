@@ -3,6 +3,7 @@ using System.IO;
 using TUGraz.VectoCore.Configuration;
 using TUGraz.VectoCore.Models.Simulation;
 using TUGraz.VectoCore.Models.Simulation.Data;
+using TUGraz.VectoCore.Models.Simulation.DataBus;
 using TUGraz.VectoCore.Models.SimulationComponent.Data.Engine;
 using TUGraz.VectoCore.OutputData;
 using TUGraz.VectoCore.Utils;
@@ -180,13 +181,24 @@ namespace TUGraz.VectoCore.Models.SimulationComponent.Impl
 			Auxiliaries.Signals.ClutchEngaged = DataBus.ClutchClosed(absTime);
 			Auxiliaries.Signals.EngineDrivelinePower = (float)(torquePowerTrain * angularSpeed / 1000).Value();
 			Auxiliaries.Signals.EngineDrivelineTorque = (float)torquePowerTrain.Value();
+			if (DataBus.DrivingBehavior == DrivingBehavior.Coasting) {
+				// make sure smart aux are _not_ enabled for now
+				// set internal_engine_power to 0 so there is no excessive power for smart aux
+				Auxiliaries.Signals.Internal_Engine_Power = 0;
+				// if smart aux should be on during coasting use the following line
+				// set internal_engine_power to a large value (*10) so that there's excessive power for smart aux (alreadin during search operating point)
+				//(float)DataBus.EngineDragPower(angularSpeed).Value() / 100;
+			} else {
+				Auxiliaries.Signals.Internal_Engine_Power =
+					(float)((torqueEngine * angularSpeed - DataBus.BrakePower) / 1000).Value();
+			}
 			Auxiliaries.Signals.EngineMotoringPower = -(float)DataBus.EngineDragPower(angularSpeed).Value() / 1000;
 			Auxiliaries.Signals.EngineSpeed = (int)(angularSpeed.Value() / Constants.RPMToRad);
 			Auxiliaries.Signals.PreExistingAuxPower = 0; //mAAUX_Global.PreExistingAuxPower;
 			Auxiliaries.Signals.Idle = DataBus.VehicleStopped;
 			Auxiliaries.Signals.InNeutral = DataBus.Gear == 0;
 			Auxiliaries.Signals.RunningCalc = true;
-			Auxiliaries.Signals.Internal_Engine_Power = (float)(torqueEngine * angularSpeed / 1000).Value();
+
 			//mAAUX_Global.Internal_Engine_Power;
 			//'Power coming out of Advanced Model is in Watts.
 
