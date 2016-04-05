@@ -37,7 +37,7 @@ Namespace IntegrationTests
 			aux.Signals.ClutchEngaged = True
 			aux.Signals.EngineDrivelinePower = driveLinePower 'kW
 			aux.Signals.EngineSpeed = engineSpeed 'rpm
-			aux.Signals.EngineDrivelineTorque = driveLinePower * 1000 / (1256 * 2 * Math.PI / 60)
+			aux.Signals.EngineDrivelineTorque = driveLinePower * 1000 / (engineSpeed * 2 * Math.PI / 60)
 			aux.Signals.EngineMotoringPower = 24 'kW - has to be positive
 
 			aux.Signals.PreExistingAuxPower = 6.1

@@ -78,6 +78,8 @@
     <Compile Include="FileIO\SimulationDataReaderTest.cs" />
     <Compile Include="GraphProgram.cs" />
     <Compile Include="Integration\BusAuxiliaries\AuxDemandTest.cs" />
+    <Compile Include="Integration\BusAuxiliaries\SimpleCycleTest.cs" />
+    <Compile Include="Integration\CoachAdvancedAuxPowertrain.cs" />
     <Compile Include="Integration\CoachPowerTrain.cs" />
     <Compile Include="Integration\DriverStrategy\DriverStrategyTestCoach.cs" />
     <Compile Include="Integration\DriverStrategy\DriverStrategyTestTruck.cs" />
