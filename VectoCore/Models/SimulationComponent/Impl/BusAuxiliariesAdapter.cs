@@ -98,7 +98,7 @@ namespace TUGraz.VectoCore.Models.SimulationComponent.Impl
 		{
 			CurrentState.AngularSpeed = angularSpeed;
 			CurrentState.dt = dt;
-			CurrentState.PowerDemand = GetBusAuxPowerDemand(absTime, dt, torquePowerTrain, torqueEngine, angularSpeed);
+			CurrentState.PowerDemand = GetBusAuxPowerDemand(absTime, dt, torquePowerTrain, torqueEngine, angularSpeed, dryRun);
 
 			var avgAngularSpeed = (CurrentState.AngularSpeed + PreviousState.AngularSpeed) / 2.0;
 			return CurrentState.PowerDemand / avgAngularSpeed;
@@ -173,7 +173,7 @@ namespace TUGraz.VectoCore.Models.SimulationComponent.Impl
 
 
 		private Watt GetBusAuxPowerDemand(Second absTime, Second dt, NewtonMeter torquePowerTrain, NewtonMeter torqueEngine,
-			PerSecond angularSpeed)
+			PerSecond angularSpeed, bool dryRun = false)
 		{
 			_fcMapAdapter.AllowExtrapolation = true;
 
