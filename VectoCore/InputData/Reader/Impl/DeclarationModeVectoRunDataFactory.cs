@@ -69,7 +69,6 @@ namespace TUGraz.VectoCore.InputData.Reader.Impl
 			driverdata.AccelerationCurve = AccelerationCurveData.ReadFromStream(segment.AccelerationFile);
 
 			var engineData = dao.CreateEngineData(InputDataProvider.EngineInputData);
-
 			var gearboxData = dao.CreateGearboxData(InputDataProvider.GearboxInputData, engineData);
 			var axlegearData = dao.CreateAxleGearData(InputDataProvider.AxleGearInputData);
 			var retarderData = dao.CreateRetarderData(InputDataProvider.RetarderInputData, InputDataProvider.VehicleInputData);
@@ -102,7 +101,7 @@ namespace TUGraz.VectoCore.InputData.Reader.Impl
 					var simulationRunData = new VectoRunData {
 						Loading = loading.Key,
 						VehicleData = dao.CreateVehicleData(InputDataProvider.VehicleInputData, mission, loading.Value),
-						EngineData = engineData,
+						EngineData = engineData.Copy(),
 						GearboxData = gearboxData,
 						AxleGearData = axlegearData,
 						Aux = dao.CreateAuxiliaryData(InputDataProvider.AuxiliaryInputData(), mission.MissionType,
