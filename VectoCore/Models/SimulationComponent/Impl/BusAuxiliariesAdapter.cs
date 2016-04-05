@@ -14,6 +14,7 @@ namespace TUGraz.VectoCore.Models.SimulationComponent.Impl
 		IEngineAuxPort
 	{
 		protected IAdvancedAuxiliaries Auxiliaries;
+		private readonly FuelConsumptionAdapter _fcMapAdapter;
 
 
 		public BusAuxiliariesAdapter(IVehicleContainer container, string aauxFile, string cycleName, Kilogram vehicleWeight,
@@ -28,7 +29,8 @@ namespace TUGraz.VectoCore.Models.SimulationComponent.Impl
 			// 'Set Statics
 			tmpAux.VectoInputs.Cycle = DetermineCycle(cycleName);
 			tmpAux.VectoInputs.VehicleWeightKG = (float)vehicleWeight.Value();
-			tmpAux.VectoInputs.FuelMap = new FuelConsumptionAdapter() { FcMap = fcMap };
+			_fcMapAdapter = new FuelConsumptionAdapter() { FcMap = fcMap };
+			tmpAux.VectoInputs.FuelMap = _fcMapAdapter;
 			tmpAux.VectoInputs.FuelDensity = Physics.FuelDensity.Value();
 
 			//'Set Signals
@@ -100,6 +102,7 @@ namespace TUGraz.VectoCore.Models.SimulationComponent.Impl
 
 		protected override void DoWriteModalResults(IModalDataContainer container)
 		{
+			_fcMapAdapter.AllowExtrapolation = true;
 			// cycleStep has to be called here and not in DoCommit, write is called before Commit!
 			var message = String.Empty;
 			Auxiliaries.CycleStep(CurrentState.dt.Value(), ref message);
@@ -167,6 +170,8 @@ namespace TUGraz.VectoCore.Models.SimulationComponent.Impl
 		private Watt GetBusAuxPowerDemand(Second absTime, Second dt, NewtonMeter torquePowerTrain, NewtonMeter torqueEngine,
 			PerSecond angularSpeed)
 		{
+			_fcMapAdapter.AllowExtrapolation = true;
+
 			Auxiliaries.Signals.ClutchEngaged = DataBus.ClutchClosed(absTime);
 			Auxiliaries.Signals.EngineDrivelinePower = (float)(torquePowerTrain * angularSpeed / 1000).Value();
 			Auxiliaries.Signals.EngineDrivelineTorque = (float)torquePowerTrain.Value();
@@ -187,9 +192,12 @@ namespace TUGraz.VectoCore.Models.SimulationComponent.Impl
 		{
 			protected internal FuelConsumptionMap FcMap;
 
+			public bool AllowExtrapolation { get; set; }
+
 			public double GetFuelConsumption(double torque, double angularVelocity)
 			{
-				return FcMap.GetFuelConsumption(torque.SI<NewtonMeter>(), angularVelocity.RPMtoRad()).Value() * 1000 * 3600;
+				return FcMap.GetFuelConsumption(torque.SI<NewtonMeter>(), angularVelocity.RPMtoRad(), AllowExtrapolation).Value() *
+						1000 * 3600;
 			}
 		}
 
