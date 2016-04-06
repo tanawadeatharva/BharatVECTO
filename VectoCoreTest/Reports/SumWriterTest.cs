@@ -71,7 +71,7 @@ namespace TUGraz.VectoCore.Tests.Reports
 				modData.CommitSimulationStep();
 			}
 
-			sumWriter.WriteFullPowertrain(modData, "testSumCalc", "--", "--", 0.SI<Kilogram>(), 0.SI<Kilogram>());
+			sumWriter.Write(false, modData, "testSumCalc", "--", "--", 0.SI<Kilogram>(), 0.SI<Kilogram>());
 
 			modData.Finish(VectoRun.Status.Success);
 			sumWriter.Finish();
@@ -123,7 +123,7 @@ namespace TUGraz.VectoCore.Tests.Reports
 				modData.CommitSimulationStep();
 			}
 
-			sumWriter.WriteFullPowertrain(modData, "testSumCalc", "--", "--", 0.SI<Kilogram>(), 0.SI<Kilogram>());
+			sumWriter.Write(false, modData, "testSumCalc", "--", "--", 0.SI<Kilogram>(), 0.SI<Kilogram>());
 
 			modData.Finish(VectoRun.Status.Success);
 			sumWriter.Finish();

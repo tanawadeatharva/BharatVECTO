@@ -39,7 +39,6 @@ The .vsum file includes total / average results for each calculation run in one 
 | a             | [m/s²]                        | Average acceleration                                                                                                         |
 | a_pos         | [m/s²]                        | Average acceleration in acceleration phases \*                                                                               |
 | a_neg         | [m/s²]                        | Average deceleration in deceleration phases \*                                                                               |
-| Acc.Noise     | [m/s²]                        | Acceleration noise                                                                                                           |
 | pAcc          | [%]                           | Time share of acceleration phases \*                                                                                         |
 | pDec          | [%]                           | Time share of deceleration phases \*                                                                                         |
 | pCruise       | [%]                           | Time share of cruise phases \*                                                                                               |
