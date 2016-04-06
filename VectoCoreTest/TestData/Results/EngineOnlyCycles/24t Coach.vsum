@@ -1,4 +1,4 @@
-﻿Job [-],Input File [-],Cycle [-],Status,time [s],Ppos [kW],Pneg [kW],FC-Map [g/h],FC-AUXc [g/h],FC-WHTCc [g/h]
-1,24t Coach.vecto,Engine Only1.vdri,Success,3951,29.5999634846317,-1.63579455196953,ERROR,-,-
-1,24t Coach.vecto,Engine Only2.vdri,Success,3951,29.5999634846317,-1.63579455196953,ERROR,-,-
-1,24t Coach.vecto,Engine Only3.vdri,Success,3951,29.5999634846317,-1.63579455196953,ERROR,-,-
+﻿Job [-],Input File [-],Cycle [-],Status,time [s],distance [km],speed [km/h],altitudeDelta [m],Ppos [kW],Pneg [kW],FC-Map [g/h],FC-Map [g/km],FC-AUXc [g/h],FC-AUXc [g/km],FC-WHTCc [g/h],FC-WHTCc [g/km],PwheelPos [kW],P_brake_loss [kW],EposICE [kWh],EnegICE [kWh],Eair [kWh],Eroll [kWh],Egrad [kWh],Eacc [kWh],Eaux [kWh],Ebrake [kWh],Etransm [kWh],Eretarder [kWh],Mass [kg],Loading [kg],a [m/s^2],a_pos [m/s^2],a_neg [m/s^2],pAcc [%],pDec [%],pCruise [%],pStop [%],Etorqueconv [kWh],CO2 [g/km],CO2 [g/tkm],FC-Final [g/km],FC-Final [l/100km],FC-Final [l/100tkm]
+0-0,24t Coach EngineOnly,Engine Only1.vdri,Success,695.0000,,,,38.9315,-7.5017,8071.4665,,8071.4665,,8071.4665,,,,,,,,,,,,,,,,,,,,,,,,,,,,
+0-1,24t Coach EngineOnly,Engine Only2.vdri,Success,1006.0000,,,,39.1365,-8.6307,8394.1675,,8394.1675,,8394.1675,,,,,,,,,,,,,,,,,,,,,,,,,,,,
+0-2,24t Coach EngineOnly,Engine Only3.vdri,Success,166.0000,,,,29.2320,-7.4365,6477.3762,,6477.3762,,6477.3762,,,,,,,,,,,,,,,,,,,,,,,,,,,,
