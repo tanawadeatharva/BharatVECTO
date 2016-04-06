@@ -92,7 +92,7 @@ Namespace IntegrationTests
 			aux.Signals.RunningCalc = True
 			aux.Signals.Internal_Engine_Power = internalPower	'kW
 
-			Dim msg As String
+			Dim msg As String = String.Empty
 			For i As Integer = 0 To 9
 				Assert.AreEqual(6087.0317, aux.AuxiliaryPowerAtCrankWatts, 0.001)
 				aux.CycleStep(1, msg)
