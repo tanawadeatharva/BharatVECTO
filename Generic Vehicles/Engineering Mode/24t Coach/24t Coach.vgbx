@@ -6,6 +6,7 @@
     "FileVersion": 5
   },
   "Body": {
+    "SavedInDeclMode": false,
     "ModelName": "Generic 24t Coach",
     "Inertia": 0.0,
     "TracInt": 1.0,
@@ -82,7 +83,6 @@
     "TorqueConverter": {
       "Enabled": false,
       "File": "<NOFILE>",
-      "RefRPM": 0.0
       "RefRPM": 0.0,
       "Inertia": 0.0
     }

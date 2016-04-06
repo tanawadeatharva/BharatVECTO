@@ -1,8 +1,8 @@
 ﻿{
   "Header": {
-    "CreatedBy": "John.Norris@ricardo-aea.com, Rasa.Narkeviciute@ricardo-aea.com, Scott.Hanchett@ricardo-aea.com, Dana.Nurse@ricardo-aea.com, pascal.revereault@ricardo.com, james.baxter@ricardo.com (51e9f02e-c88f-4c25-9798-3f807530e154)",
-    "Date": "20/07/2015 11:57:09",
-    "AppVersion": "2.0.4-beta",
+    "CreatedBy": " ()",
+    "Date": "06.04.2016 15:08:33",
+    "AppVersion": "2.2",
     "FileVersion": 2
   },
   "Body": {
@@ -16,7 +16,7 @@
     "AuxiliaryAssembly": "BusAuxiliaries",
     "AuxiliaryVersion": "Version 1.0 Beta",
     "AdvancedAuxiliaryFilePath": "AdvAuxTest.aaux",
-    "VACC": "Coach.vacc",
+    "VACC": "Truck.vacc",
     "EngineOnlyMode": false,
     "StartStop": {
       "Enabled": false,

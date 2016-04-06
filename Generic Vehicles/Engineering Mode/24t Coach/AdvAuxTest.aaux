@@ -5,8 +5,8 @@
     "Cycle": "Urban",
     "VehicleWeightKG": 16500.0,
     "PowerNetVoltage": 28.3,
-    "FuelMap": "testFuelGoodMap.vmap",
-    "FuelDensity": 0.852
+    "FuelMap": null,
+    "FuelDensity": 0.0
   },
   "ElectricalUserInputsConfig": {
     "$type": "VectoAuxiliaries.Electrics.ElectricsUserInputsConfig, BusAuxiliaries",
@@ -240,6 +240,7 @@
       ]
     },
     "DoorActuationTimeSecond": 4,
+    "StoredEnergyEfficiency": 0.935,
     "ResultCardIdle": {
       "$type": "VectoAuxiliaries.Electrics.ResultCard, BusAuxiliaries",
       "Results": []
@@ -299,7 +300,7 @@
     "SmartElectrics": false,
     "SmartPneumatics": false,
     "TotalCycleTimeSeconds": 3114,
-    "CurrentCycleTimeInSeconds": 0,
+    "CurrentCycleTimeInSeconds": 0.0,
     "PreExistingAuxPower": 0.0,
     "Idle": false,
     "InNeutral": false,
@@ -307,6 +308,10 @@
     "EngineStopped": false,
     "DeclarationMode": false,
     "WHTC": 1.0,
-    "EngineIdleSpeed": 0.0
+    "EngineIdleSpeed": 0.0,
+    "PneumaticOverrunUtilisation": 0.0,
+    "StoredEnergyEfficiency": 0.0,
+    "RunningCalc": false,
+    "Internal_Engine_Power": 0.0
   }
 }
