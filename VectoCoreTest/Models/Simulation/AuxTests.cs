@@ -29,8 +29,6 @@
 *   Martin Rexeis, rexeis@ivt.tugraz.at, IVT, Graz University of Technology
 */
 
-using System.Configuration;
-using System.Linq;
 using TUGraz.VectoCore.Utils;
 using TUGraz.VectoCore.Exceptions;
 using TUGraz.VectoCore.Tests.Utils;
@@ -52,6 +50,7 @@ namespace TUGraz.VectoCore.Tests.Models.Simulation
 	{
 		[TestMethod]
 		public void AuxWriteModFileSumFile()
+
 		{
 			var fileWriter = new FileOutputWriter("AuxWriteModFileSumFile", "");
 			var modData = new ModalDataContainer("AuxWriteModFileSumFile", fileWriter);
@@ -63,7 +62,7 @@ namespace TUGraz.VectoCore.Tests.Models.Simulation
 
 			var sumWriter = new SummaryDataContainer(fileWriter);
 			var container = new VehicleContainer(modData,
-				(writer, mass, loading) => sumWriter.Write(false, modData, "", "", "", null, null));
+				(writer, mass, loading) => sumWriter.Write(modData, "", "", "", null, null));
 			var data = DrivingCycleDataReader.ReadFromFile(@"TestData\Cycles\LongHaul_short.vdri", CycleType.DistanceBased, false);
 			var mockcycle = new MockDrivingCycle(container, data);
 

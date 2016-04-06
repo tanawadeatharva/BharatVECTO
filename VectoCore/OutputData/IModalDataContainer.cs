@@ -365,24 +365,18 @@ namespace TUGraz.VectoCore.OutputData
 			return data.TimeIntegral<Kilogram>(ModalResultField.FCFinal) * Physics.CO2PerFuelWeight / distance;
 		}
 
-		public static SI FuelConsumptionLiterPer100Kilometer(this IModalDataContainer data)
+		public static KilogramPerSecond FCMapPerSecond(this IModalDataContainer data)
 		{
-			var fcVolumePerMeter = data.FuelConsumptionPerMeter() / Physics.FuelDensity;
-			return fcVolumePerMeter.ConvertTo().Cubic.Dezi.Meter * 100.SI().Kilo.Meter;
+			return data.TimeIntegral<Kilogram>(ModalResultField.FCMap) / data.Duration();
 		}
 
-		public static KilogramPerSecond FuelConsumptionPerSecond(this IModalDataContainer data)
-		{
-			return data.TimeIntegral<Kilogram>(ModalResultField.FCFinal) / data.Duration();
-		}
-
-		public static KilogramPerMeter FuelConsumptionPerMeter(this IModalDataContainer data)
+		public static KilogramPerMeter FCMapPerMeter(this IModalDataContainer data)
 		{
 			var distance = data.Distance();
 			if (distance == null || distance.IsEqual(0)) {
 				return null;
 			}
-			return data.TimeIntegral<Kilogram>(ModalResultField.FCFinal) / distance;
+			return data.TimeIntegral<Kilogram>(ModalResultField.FCMap) / distance;
 		}
 
 		public static Watt EnginePowerNegativeAverage(this IModalDataContainer data)

@@ -60,7 +60,6 @@ namespace TUGraz.VectoCore.Tests.Integration
 			bool overspeed = false)
 		{
 			var container = CreatePowerTrain(cycleData, modFileName.Replace(".vmod", ""), overspeed);
-
 			return new DistanceRun(container);
 		}
 

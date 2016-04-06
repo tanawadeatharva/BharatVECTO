@@ -113,7 +113,6 @@ namespace TUGraz.VectoCore.OutputData.PDF
 			var reader = new PdfReader(inputStream);
 			var stamper = new PdfStamper(reader, stream);
 
-
 			var pdfFields = stamper.AcroFields;
 			pdfFields.SetField("version", System.Reflection.Assembly.GetExecutingAssembly().GetName().Version.ToString());
 			pdfFields.SetField("Job", JobName);
@@ -130,7 +129,6 @@ namespace TUGraz.VectoCore.OutputData.PDF
 			pdfFields.SetField("GbxM", GearboxModel);
 			pdfFields.SetField("PageNr", string.Format("Page {0} of {1}", 1, missions.Count + 1));
 
-
 			var i = 1;
 			foreach (var results in missions.Values.OrderBy(m => m.Mission.MissionType)) {
 				pdfFields.SetField("Mission" + i, results.Mission.MissionType.ToString());
@@ -140,7 +138,7 @@ namespace TUGraz.VectoCore.OutputData.PDF
 				pdfFields.SetField("Loading" + i, results.Mission.RefLoad.ConvertTo().Ton.ToOutputFormat(1) + " t");
 				pdfFields.SetField("Speed" + i, data.Speed().ConvertTo().Kilo.Meter.Per.Hour.ToOutputFormat(1) + " km/h");
 
-				var fcLiterPer100Km = data.FuelConsumptionLiterPer100Kilometer();
+				var fcLiterPer100Km = data.FuelConsumptionFinalLiterPer100Kilometer();
 				pdfFields.SetField("FC" + i, fcLiterPer100Km.ToOutputFormat(1));
 
 				var loadingTon = results.Mission.RefLoad.ConvertTo().Ton;
@@ -205,7 +203,6 @@ namespace TUGraz.VectoCore.OutputData.PDF
 			pdfFields.SetField("PageNr", string.Format("Page {0} of {1}", currentPageNr, pageCount));
 			pdfFields.SetField("Mission", results.Mission.MissionType.ToString());
 
-
 			foreach (var pair in results.ModData) {
 				var loadingType = pair.Key;
 				var data = pair.Value;
@@ -216,11 +213,10 @@ namespace TUGraz.VectoCore.OutputData.PDF
 				pdfFields.SetField("Load" + loadAppendix, loadingTon.ToOutputFormat(1) + " t");
 				pdfFields.SetField("Speed" + loadAppendix, data.Speed().ConvertTo().Kilo.Meter.Per.Hour.ToOutputFormat(1));
 
-				var fcLiterPer100Km = data.FuelConsumptionLiterPer100Kilometer();
+				var fcLiterPer100Km = data.FuelConsumptionFinalLiterPer100Kilometer();
 				pdfFields.SetField("FCkm" + loadAppendix, fcLiterPer100Km.ToOutputFormat(1));
 				pdfFields.SetField("FCtkm" + loadAppendix,
 					loadingTon.IsEqual(0) ? "-" : (fcLiterPer100Km / loadingTon).ToOutputFormat(1));
-
 
 				var co2GrammPerKm = data.CO2PerMeter().ConvertTo().Gramm.Per.Kilo.Meter;
 				pdfFields.SetField("CO2km" + loadAppendix, co2GrammPerKm.ToOutputFormat(1));

@@ -29,7 +29,6 @@
 *   Martin Rexeis, rexeis@ivt.tugraz.at, IVT, Graz University of Technology
 */
 
-using System.Linq;
 using Microsoft.VisualStudio.TestTools.UnitTesting;
 using TUGraz.VectoCore.Models.Simulation.Data;
 using TUGraz.VectoCore.Models.Simulation.Impl;
@@ -48,7 +47,7 @@ namespace TUGraz.VectoCore.Tests.Reports
 			var writer = new FileOutputWriter("testsumcalc_fixed", "");
 			var sumWriter = new SummaryDataContainer(writer);
 
-			var modData = new ModalDataContainer("testsumcalc_fixed", writer); //("testsumcalc_fixed.vmod");
+			var modData = new ModalDataContainer("testsumcalc_fixed", writer);
 			modData.AddAuxiliary("FAN");
 
 			for (var i = 0; i < 500; i++) {
@@ -71,7 +70,7 @@ namespace TUGraz.VectoCore.Tests.Reports
 				modData.CommitSimulationStep();
 			}
 
-			sumWriter.Write(false, modData, "testSumCalc", "--", "--", 0.SI<Kilogram>(), 0.SI<Kilogram>());
+			sumWriter.Write(modData, "testSumCalc", "--", "--", 0.SI<Kilogram>(), 0.SI<Kilogram>());
 
 			modData.Finish(VectoRun.Status.Success);
 			sumWriter.Finish();
@@ -107,23 +106,23 @@ namespace TUGraz.VectoCore.Tests.Reports
 			{ 1000.SI<Watt>(), 1500.SI<Watt>(), 2000.SI<Watt>(), 2500.SI<Watt>(), 3000.SI<Watt>() };
 
 			for (var i = 0; i < 500; i++) {
-				modData[ModalResultField.simulationInterval] = timeSteps[i % timeSteps.Count()];
+				modData[ModalResultField.simulationInterval] = timeSteps[i % timeSteps.Length];
 				modData[ModalResultField.time] = i.SI<Second>();
 				modData[ModalResultField.dist] = i.SI<Meter>();
-				modData["FAN"] = powerDemand[i % powerDemand.Count()];
-				modData[ModalResultField.P_air] = powerDemand[i % powerDemand.Count()];
-				modData[ModalResultField.P_roll] = powerDemand[i % powerDemand.Count()];
-				modData[ModalResultField.P_slope] = powerDemand[i % powerDemand.Count()];
-				modData[ModalResultField.P_aux] = powerDemand[i % powerDemand.Count()];
-				modData[ModalResultField.P_brake_loss] = powerDemand[i % powerDemand.Count()];
+				modData["FAN"] = powerDemand[i % powerDemand.Length];
+				modData[ModalResultField.P_air] = powerDemand[i % powerDemand.Length];
+				modData[ModalResultField.P_roll] = powerDemand[i % powerDemand.Length];
+				modData[ModalResultField.P_slope] = powerDemand[i % powerDemand.Length];
+				modData[ModalResultField.P_aux] = powerDemand[i % powerDemand.Length];
+				modData[ModalResultField.P_brake_loss] = powerDemand[i % powerDemand.Length];
 
 				modData[ModalResultField.altitude] = 0.SI<Meter>();
 				modData[ModalResultField.acc] = 0.SI<MeterPerSquareSecond>();
-				modData[ModalResultField.P_eng_out] = (i % 2 == 0 ? 1 : -1) * powerDemand[i % powerDemand.Count()];
+				modData[ModalResultField.P_eng_out] = (i % 2 == 0 ? 1 : -1) * powerDemand[i % powerDemand.Length];
 				modData.CommitSimulationStep();
 			}
 
-			sumWriter.Write(false, modData, "testSumCalc", "--", "--", 0.SI<Kilogram>(), 0.SI<Kilogram>());
+			sumWriter.Write(modData, "testSumCalc", "--", "--", 0.SI<Kilogram>(), 0.SI<Kilogram>());
 
 			modData.Finish(VectoRun.Status.Success);
 			sumWriter.Finish();
