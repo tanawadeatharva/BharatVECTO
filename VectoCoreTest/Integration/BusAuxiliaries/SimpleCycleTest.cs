@@ -31,7 +31,10 @@
 
 using Microsoft.VisualStudio.TestTools.UnitTesting;
 using NLog;
+using TUGraz.VectoCore.Models.Simulation.Impl;
+using TUGraz.VectoCore.Models.SimulationComponent.Impl;
 using TUGraz.VectoCore.Tests.Utils;
+using TUGraz.VectoCore.Utils;
 
 namespace TUGraz.VectoCore.Tests.Integration.BusAuxiliaries
 {
@@ -1104,5 +1107,24 @@ namespace TUGraz.VectoCore.Tests.Integration.BusAuxiliaries
 		//}
 
 		//#endregion
+
+
+		[TestMethod, TestCategory("CycleTest")]
+		public void Coach_AAUX_Accelerate_0_40_downhill_1_overspeed()
+		{
+			var cycle = SimpleDrivingCycles.ReadDeclarationCycle("Coach");
+			var run = CoachAdvancedAuxPowertrain.CreateEngineeringRun(cycle,
+				"Coach_AAUX_CoachCycle.vmod", true);
+
+			//((DistanceBasedDrivingCycle)((VehicleContainer)run.GetContainer()).Cycle).SetDriveOffDistance(123613.SI<Meter>());
+
+			run.Run();
+			Assert.IsTrue(run.FinishedWithoutErrors);
+
+			//GraphWriter.Write("Coach_AAUX_Accelerate_0_40_downhill_1-overspeed.vmod",
+			//	@"..\..\TestData\Integration\BusAuxiliaries\Vecto2.0_Overspeed\24t Coach_AAUX_Cycle_Accelerate_0_40_downhill_1.vmod");
+		}
+
+		//@"E:\QUAM\Workspace\VECTO_quam\Generic Vehicles\Engineering Mode\24t Coach\24t Coach_AAux.vecto"
 	}
 }

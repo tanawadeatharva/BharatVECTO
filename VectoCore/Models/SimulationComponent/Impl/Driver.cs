@@ -635,10 +635,10 @@ namespace TUGraz.VectoCore.Models.SimulationComponent.Impl
 					Default(r => { throw new UnexpectedResponseException("Unknown response type.", r); });
 			}
 			var delta = origDelta;
-
+			var auxPower = initialResponse.AuxiliariesPowerDemand;
 			var retryCount = 0;
 			do {
-				debug.Add(new { delta, acceleration = retVal.Acceleration, searchInterval });
+				debug.Add(new { delta, acceleration = retVal.Acceleration, searchInterval, auxPower });
 
 				// check if a correct searchInterval was found (when the delta changed signs, we stepped through the 0-point)
 				// from then on the searchInterval can be bisected.
@@ -663,7 +663,7 @@ namespace TUGraz.VectoCore.Models.SimulationComponent.Impl
 				var response =
 					(ResponseDryRun)NextComponent.Request(absTime, retVal.SimulationInterval, retVal.Acceleration, gradient, true);
 				delta = actionRoll ? response.GearboxPowerRequest : (coasting ? response.DeltaDragLoad : response.DeltaFullLoad);
-
+				auxPower = response.AuxiliariesPowerDemand;
 				if (response is ResponseEngineSpeedTooLow) {
 					LogManager.EnableLogging();
 					Log.Debug("Got EngineSpeedTooLow during SearchOperatingPoint. Aborting!");
