@@ -124,7 +124,7 @@ namespace TUGraz.VectoCore.Models.Simulation.Impl
 								d.Report.AddResult(d.Loading, d.Mission, writer);
 							}
 						}, _mode) {
-							WriteAdvancedAux = data.AdvancedAux.AuxiliaryAssembly == AuxiliaryModel.Advanced
+							WriteAdvancedAux = data.AdvancedAux != null && data.AdvancedAux.AuxiliaryAssembly == AuxiliaryModel.Advanced
 						};
 				modContainer.WriteModalResults = WriteModalResults;
 				var current = i++;
