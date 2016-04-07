@@ -102,7 +102,7 @@ namespace TUGraz.VectoCore.Tests.Models.Simulation
 
 			ResultFileHelper.TestModFile(@"TestData\Results\EngineOnlyCycles\40t_Long_Haul_Truck_Long_Haul_Empty Loading.vmod",
 				@"AuxWriteModFileSumFile.vmod", testColumns);
-			ResultFileHelper.TestSumFile(@"TestData\Results\EngineOnlyCycles\40t_Long_Haul_Truck.vsum",
+			ResultFileHelper.TestSumFile(@"TestData\Results\EngineOnlyCycles\AuxWriteModFileSumFile.vsum",
 				@"AuxWriteModFileSumFile.vsum");
 		}
 

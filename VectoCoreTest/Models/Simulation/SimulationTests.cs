@@ -71,7 +71,7 @@ namespace TUGraz.VectoCore.Tests.Models.Simulation
 
 		private class MockSumWriter : SummaryDataContainer
 		{
-			public override void Write(IModalDataContainer data, string jobFileName, string jobName,
+			public override void Write(IModalDataContainer modData, string jobFileName, string jobName,
 				string cycleFileName, Kilogram vehicleMass, Kilogram vehicleLoading) {}
 
 			public override void Finish() {}

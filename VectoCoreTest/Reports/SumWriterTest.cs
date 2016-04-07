@@ -78,12 +78,12 @@ namespace TUGraz.VectoCore.Tests.Reports
 			var sumData = VectoCSVFile.Read("testsumcalc_fixed.vsum", false, true);
 
 			// 3kW * 500s => to kWh
-			Assert.AreEqual(500.0 * 3000.0 / 1000 / 3600, sumData.Rows[0].ParseDouble("Eair [kWh]"), 1e-3);
-			Assert.AreEqual(500.0 * 3000.0 / 1000 / 3600, sumData.Rows[0].ParseDouble("Eaux_FAN [kWh]"), 1e-3);
-			Assert.AreEqual(500.0 * 3000.0 / 1000 / 3600, sumData.Rows[0].ParseDouble("Eroll [kWh]"), 1e-3);
-			Assert.AreEqual(500.0 * 3000.0 / 1000 / 3600, sumData.Rows[0].ParseDouble("Egrad [kWh]"), 1e-3);
-			Assert.AreEqual(500.0 * 3000.0 / 1000 / 3600, sumData.Rows[0].ParseDouble("Eaux [kWh]"), 1e-3);
-			Assert.AreEqual(500.0 * 3000.0 / 1000 / 3600, sumData.Rows[0].ParseDouble("Ebrake [kWh]"), 1e-3);
+			Assert.AreEqual(500.0 * 3000.0 / 1000 / 3600, sumData.Rows[0].ParseDouble("E_air [kWh]"), 1e-3);
+			Assert.AreEqual(500.0 * 3000.0 / 1000 / 3600, sumData.Rows[0].ParseDouble("E_aux_FAN [kWh]"), 1e-3);
+			Assert.AreEqual(500.0 * 3000.0 / 1000 / 3600, sumData.Rows[0].ParseDouble("E_roll [kWh]"), 1e-3);
+			Assert.AreEqual(500.0 * 3000.0 / 1000 / 3600, sumData.Rows[0].ParseDouble("E_grad [kWh]"), 1e-3);
+			Assert.AreEqual(500.0 * 3000.0 / 1000 / 3600, sumData.Rows[0].ParseDouble("E_aux_sum [kWh]"), 1e-3);
+			Assert.AreEqual(500.0 * 3000.0 / 1000 / 3600, sumData.Rows[0].ParseDouble("E_brake [kWh]"), 1e-3);
 
 			// 500s * 1e-4 kg/s = 0.05kg  => 0.05kg / 499s => to g/h
 			Assert.AreEqual((500.0 * 1e-4) * 1000 * 3600 / 499.0, sumData.Rows[0].ParseDouble("FC-Map [g/h]"), 1e-3);
@@ -130,12 +130,12 @@ namespace TUGraz.VectoCore.Tests.Reports
 			var sumData = VectoCSVFile.Read("testsumcalc_var.vsum", false, true);
 
 			// sum(dt * p) => to kWh
-			Assert.AreEqual(0.934722222, sumData.Rows[0].ParseDouble("Eair [kWh]"), 1e-3);
-			Assert.AreEqual(0.934722222, sumData.Rows[0].ParseDouble("Eaux_FAN [kWh]"), 1e-3);
-			Assert.AreEqual(0.934722222, sumData.Rows[0].ParseDouble("Eroll [kWh]"), 1e-3);
-			Assert.AreEqual(0.934722222, sumData.Rows[0].ParseDouble("Egrad [kWh]"), 1e-3);
-			Assert.AreEqual(0.934722222, sumData.Rows[0].ParseDouble("Eaux [kWh]"), 1e-3);
-			Assert.AreEqual(0.934722222, sumData.Rows[0].ParseDouble("Ebrake [kWh]"), 1e-3);
+			Assert.AreEqual(0.934722222, sumData.Rows[0].ParseDouble("E_air [kWh]"), 1e-3);
+			Assert.AreEqual(0.934722222, sumData.Rows[0].ParseDouble("E_aux_FAN [kWh]"), 1e-3);
+			Assert.AreEqual(0.934722222, sumData.Rows[0].ParseDouble("E_roll [kWh]"), 1e-3);
+			Assert.AreEqual(0.934722222, sumData.Rows[0].ParseDouble("E_grad [kWh]"), 1e-3);
+			Assert.AreEqual(0.934722222, sumData.Rows[0].ParseDouble("E_aux_sum [kWh]"), 1e-3);
+			Assert.AreEqual(0.934722222, sumData.Rows[0].ParseDouble("E_brake [kWh]"), 1e-3);
 		}
 	}
 }

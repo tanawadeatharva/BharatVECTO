@@ -3301,9 +3301,9 @@ Auxiliary speed [rpm],Mechanical power [kW],Supply power [kW]
 <p><strong><em>Quantities:</em></strong></p>
 <table>
 <colgroup>
-<col width="9%"></col>
-<col width="18%"></col>
-<col width="72%"></col>
+<col width="6%"></col>
+<col width="10%"></col>
+<col width="83%"></col>
 </colgroup>
 <thead>
 <tr class="header">
@@ -3316,17 +3316,27 @@ Auxiliary speed [rpm],Mechanical power [kW],Supply power [kW]
 <tr class="odd">
 <td align="left">Job</td>
 <td align="left">[-]</td>
-<td align="left">Job number in the format “x-y” (where x = file number and y = cycle number)</td>
+<td align="left">Job number in the format “X-Y” (with X as filenumber, and Y as cycle number)</td>
 </tr>
 <tr class="even">
 <td align="left">Input File</td>
 <td align="left">[-]</td>
-<td align="left">Name of the input file</td>
+<td align="left">Name of the input job file (.vecto)</td>
 </tr>
 <tr class="odd">
 <td align="left">Cycle</td>
 <td align="left">[-]</td>
-<td align="left">Name of the cycle file</td>
+<td align="left">Name of the cycle file (or cycle name in declaration mode)</td>
+</tr>
+<tr class="even">
+<td align="left">Mass</td>
+<td align="left">[kg]</td>
+<td align="left">Vehicle mass (<strong>Curb Weight Vehicle</strong> + <strong>Curb Weight Extra Trailer/Body</strong>, see <a href="#vehicle-editor">Vehicle Editor</a>)</td>
+</tr>
+<tr class="odd">
+<td align="left">Loading</td>
+<td align="left">[kg]</td>
+<td align="left">Vehicle loading (see <a href="#vehicle-editor">Vehicle Editor</a>)</td>
 </tr>
 <tr class="even">
 <td align="left">Status</td>
@@ -3354,183 +3364,152 @@ Auxiliary speed [rpm],Mechanical power [kW],Supply power [kW]
 <td align="left">Altitude difference between start and end of cycle</td>
 </tr>
 <tr class="odd">
-<td align="left">Ppos</td>
-<td align="left">[kW]</td>
-<td align="left">Average positive engine power</td>
-</tr>
-<tr class="even">
-<td align="left">PwheelPos</td>
-<td align="left">[kW]</td>
-<td align="left">Average positive wheel power</td>
-</tr>
-<tr class="odd">
-<td align="left">Pneg</td>
-<td align="left">[kW]</td>
-<td align="left">Average negative engine power</td>
-</tr>
-<tr class="even">
-<td align="left">FC-Final</td>
-<td align="left">[g/km], [l/100km], [l/100tkm]</td>
-<td align="left">Average fuel consumption. Final value after all corrections.</td>
-</tr>
-<tr class="odd">
 <td align="left">FC-Map</td>
 <td align="left">[g/h], [g/km]</td>
-<td align="left">Fuel consumption interpolated from <a href="#fuel-consumption-calculation">Fuel Map</a>.</td>
+<td align="left">Average fuel consumption before all corrections, interpolated from <a href="#fuel-consumption-calculation">Fuel Map</a>, based on torque and engine speed.</td>
 </tr>
 <tr class="even">
 <td align="left">FC-AUXc</td>
 <td align="left">[g/h], [g/km]</td>
-<td align="left">Fuel consumption after <a href="#fuel-consumption-calculation">Auxiliary-Start/Stop Correction</a>. (Based on FC-Map.)</td>
+<td align="left">Average fuel consumption after <a href="#fuel-consumption-calculation">Auxiliary-Start/Stop Correction</a> (Based on FC-Map)</td>
 </tr>
 <tr class="odd">
 <td align="left">FC-WHTCc</td>
 <td align="left">[g/h], [g/km]</td>
-<td align="left">Fuel consumption after <a href="#fuel-consumption-calculation">WHTC Correction</a>. (Based on FC-AUXc.)</td>
+<td align="left">Average fuel consumption after <a href="#fuel-consumption-calculation">WHTC Correction</a> (Based on FC-AUXc)</td>
+</tr>
+<tr class="even">
+<td align="left">FC-AAUX</td>
+<td align="left">[g/h], [g/km]</td>
+<td align="left">Average fuel consumption after Smart Auxiliary Correction (<em>still in development</em>) (Based on FC-WHTCc)</td>
+</tr>
+<tr class="odd">
+<td align="left">FC-Final</td>
+<td align="left">[g/h], [g/km], [l/100km], [l/100tkm]</td>
+<td align="left">Final average fuel consumption after ALL corrections. Value for calculation of CO<sub>2</sub> value. Output for [l/100tkm] is empty when Loading = 0[kg].</td>
 </tr>
 <tr class="even">
 <td align="left">CO2</td>
 <td align="left">[g/km], [g/tkm]</td>
-<td align="left">Average CO<sub>2</sub> emissions.</td>
+<td align="left">Average CO<sub>2</sub> emissions (based on FC-Final value). Output for [l/100tkm] is empty when Loading = 0[kg].</td>
 </tr>
 <tr class="odd">
-<td align="left">Pbrake</td>
+<td align="left">P_wheel_in_pos</td>
 <td align="left">[kW]</td>
-<td align="left">Average brake power (not including engine drag)</td>
+<td align="left">Average positive power at the wheels</td>
 </tr>
 <tr class="even">
-<td align="left">EposICE</td>
-<td align="left">[kWh]</td>
-<td align="left">Total positive engine work</td>
+<td align="left">P_brake_loss</td>
+<td align="left">[kW]</td>
+<td align="left">Average brake power losses (not including engine drag)</td>
 </tr>
 <tr class="odd">
-<td align="left">EnegICE</td>
-<td align="left">[kWh]</td>
-<td align="left">Total negative engine work (engine brake)</td>
+<td align="left">P_eng_out_pos</td>
+<td align="left">[kW]</td>
+<td align="left">Average positive engine power (all non-negative values averaged over the whole cycle duration)</td>
 </tr>
 <tr class="even">
-<td align="left">Eair</td>
+<td align="left">P_eng_out_neg</td>
+<td align="left">[kW]</td>
+<td align="left">Average negative engine power (all non-positive values averaged over the whole cycle duration)</td>
+</tr>
+<tr class="odd">
+<td align="left">E_aux_xxx</td>
+<td align="left">[kWh]</td>
+<td align="left">Total energy demand of auxiliary with ID xxx. See also <a href="#auxiliary-dialog">Aux Dialog</a> and <a href="#driving-cycles">Driving Cycle</a>. In Declaration Mode the following auxiliaries always exists: E_aux_FAN (Fan), E_aux_PS (Pneumatic System), E_aux_STP (Steering Pump), E_aux_ES (Electrical System), E_aux_AC (Air Condition)</td>
+</tr>
+<tr class="even">
+<td align="left">E_aux_sum</td>
+<td align="left">[kWh]</td>
+<td align="left">Total energy demand of all auxiliaries</td>
+</tr>
+<tr class="odd">
+<td align="left">E_air</td>
 <td align="left">[kWh]</td>
 <td align="left">Total work of air resistance</td>
 </tr>
-<tr class="odd">
-<td align="left">Eroll</td>
+<tr class="even">
+<td align="left">E_roll</td>
 <td align="left">[kWh]</td>
 <td align="left">Total work of rolling resistance</td>
 </tr>
-<tr class="even">
-<td align="left">Egrad</td>
+<tr class="odd">
+<td align="left">E_grad</td>
 <td align="left">[kWh]</td>
 <td align="left">Total work of gradient resistance</td>
 </tr>
-<tr class="odd">
-<td align="left">Eacc</td>
-<td align="left">[kWh]</td>
-<td align="left">Total work from accelerations (&lt;0) / decelerations (&gt;0)</td>
-</tr>
 <tr class="even">
-<td align="left">Eaux</td>
+<td align="left">E_inertia</td>
 <td align="left">[kWh]</td>
-<td align="left">Total energy demand of auxiliaries</td>
+<td align="left">Total work of gearbox and engine inertia</td>
 </tr>
 <tr class="odd">
-<td align="left">Eaux_xxx</td>
-<td align="left">[kWh]</td>
-<td align="left">Energy demand of auxiliary with ID xxx. See also <a href="#auxiliary-dialog">Aux Dialog</a> and <a href="#driving-cycles">Driving Cycle</a>.</td>
-</tr>
-<tr class="even">
-<td align="left">Ebrake</td>
+<td align="left">E_brake</td>
 <td align="left">[kWh]</td>
 <td align="left">Total work dissipated in mechanical braking (sum of service brakes, retader and additional engine exhaust brakes)</td>
 </tr>
-<tr class="odd">
-<td align="left">Etransm</td>
-<td align="left">[kWh]</td>
-<td align="left">Total work of transmission losses</td>
-</tr>
 <tr class="even">
-<td align="left">Eretarder</td>
+<td align="left">E_gbx_axl_loss</td>
 <td align="left">[kWh]</td>
-<td align="left">Total retarder losses</td>
+<td align="left">Total transmission energy losses at gearbox and axlegear</td>
 </tr>
 <tr class="odd">
-<td align="left">Etorqueconv</td>
+<td align="left">E_ret_loss</td>
 <td align="left">[kWh]</td>
-<td align="left">Total torque converter losses</td>
+<td align="left">Total retarder energy loss</td>
 </tr>
 <tr class="even">
-<td align="left">Mass</td>
-<td align="left">[kg]</td>
-<td align="left">Vehicle mass (equals <strong>Curb Weight Vehicle</strong> plus <strong>Curb Weight Extra Trailer/Body</strong>, see <a href="#vehicle-editor">Vehicle Editor</a>)</td>
+<td align="left">E_tc_loss</td>
+<td align="left">[kWh]</td>
+<td align="left">Total torque converter energy loss</td>
 </tr>
 <tr class="odd">
-<td align="left">Loading</td>
-<td align="left">[kg]</td>
-<td align="left">Vehicle loading (see <a href="#vehicle-editor">Vehicle Editor</a>)</td>
+<td align="left">E_eng_out_pos</td>
+<td align="left">[kWh]</td>
+<td align="left">Total positive engine work</td>
 </tr>
 <tr class="even">
+<td align="left">E_eng_out_neg</td>
+<td align="left">[kWh]</td>
+<td align="left">Total negative engine work (engine drag)</td>
+</tr>
+<tr class="odd">
 <td align="left">a</td>
-<td align="left">[m/s²]</td>
+<td align="left">[m/s<sup>2</sup>]</td>
 <td align="left">Average acceleration</td>
 </tr>
-<tr class="odd">
+<tr class="even">
 <td align="left">a_pos</td>
-<td align="left">[m/s²]</td>
-<td align="left">Average acceleration in acceleration phases *</td>
+<td align="left">[m/s<sup>2</sup>]</td>
+<td align="left">Average acceleration in acceleration phases (a<sub>3s</sub> &gt; 0.125 [m/s<sup>2</sup>], a<sub>3s</sub> = 3-seconds-averaged acceleration)</td>
 </tr>
-<tr class="even">
+<tr class="odd">
 <td align="left">a_neg</td>
-<td align="left">[m/s²]</td>
-<td align="left">Average deceleration in deceleration phases *</td>
-</tr>
-<tr class="odd">
-<td align="left">Acc.Noise</td>
-<td align="left">[m/s²]</td>
-<td align="left">Acceleration noise</td>
+<td align="left">[m/s<sup>2</sup>]</td>
+<td align="left">Average deceleration in deceleration phases (a<sub>3s</sub> &lt; 0.125 [m/s<sup>2</sup>], a<sub>3s</sub> = 3-seconds-averaged acceleration)</td>
 </tr>
 <tr class="even">
-<td align="left">pAcc</td>
+<td align="left">AccelerationTimeShare</td>
 <td align="left">[%]</td>
-<td align="left">Time share of acceleration phases *</td>
+<td align="left">Time share of acceleration phases (a<sub>3s</sub> &gt; 0.125 [m/s<sup>2</sup>], a<sub>3s</sub> = 3-seconds-averaged acceleration)</td>
 </tr>
 <tr class="odd">
-<td align="left">pDec</td>
+<td align="left">DecelerationTimeShare</td>
 <td align="left">[%]</td>
-<td align="left">Time share of deceleration phases *</td>
+<td align="left">Time share of deceleration phases (a<sub>3s</sub> &lt; 0.125 [m/s<sup>2</sup>], a<sub>3s</sub> = 3-seconds-averaged acceleration)</td>
 </tr>
 <tr class="even">
-<td align="left">pCruise</td>
+<td align="left">CruiseTimeShare</td>
 <td align="left">[%]</td>
-<td align="left">Time share of cruise phases *</td>
+<td align="left">Time share of cruise phases (-0.125 ≤ a<sub>3s</sub> ≤ 0.125 [m/s<sup>2</sup>])</td>
 </tr>
 <tr class="odd">
-<td align="left">pStop</td>
+<td align="left">StopTimeShare</td>
 <td align="left">[%]</td>
-<td align="left">Time share of stop phases *</td>
+<td align="left">Time share of stop phases (v &lt; 0.1 [m/s])</td>
 </tr>
 </tbody>
 </table>
-<dl>
-<dt>*Definition of phases:</dt>
-<dd>Acceleration Phase: a<sub>3s</sub> &gt; 0.125 [m/s<sup>2</sup>]
-</dd>
-<dd>Deceleration Phase: a<sub>3s</sub> &lt; -0.125 [m/s<sup>2</sup>]
-</dd>
-<dd>Cruise Phase: -0.125 ≤ a<sub>3s</sub> ≤ 0.125 [m/s<sup>2</sup>]
-</dd>
-<dd>Stop Phase: v &lt; 0.1 [m/s]
-</dd>
-</dl>
-<p><em>a<sub>3s</sub> = 3-seconds-averaged acceleration</em></p>
-<dl>
-<dt>Definition of work (E…):</dt>
-<dd>sign &gt; 0: positive work applied to the vehicle (e.g. from engine, from kinetic energy)
-</dd>
-<dd>sign &lt; 0: losses
-</dd>
-<dd>The sum of EposICE, EnegICE, Eair, Eroll, Egrad, Eacc, Eaux, Ebrake, Etransm and Eretarder is zero (besides small rounding error for long driving cycles)
-</dd>
-</dl>
 </div>
 <div id="application-files" class="section level2">
 <h2>Application Files</h2>
@@ -3904,7 +3883,7 @@ Auxiliary speed [rpm],Mechanical power [kW],Supply power [kW]
 </div>
 <div id="FOOTER">
 <a target="mainframe" href="mailto:vecto@jrc.ec.europa.eu">Contact</a>
-<a style="text-align:right; float:right" href="javascript:$('div').show().not('.vecto2').not('.vecto3').css({'padding-left':'0px'}).filter('#CONTENT,#TOC,#HEADER,#FOOTER,#MathJax_Message').hide();">Print View</a>
+<span style="text-align:right; float:right">Print View: <a href="javascript:$('div').show().not('.vecto2').not('.vecto3').css({'padding-left':'0px'}).filter('#CONTENT,#TOC,#HEADER,#FOOTER,#MathJax_Message').hide();">All</a>, <a href="javascript:$('div').not('.vecto2').not('.vecto3').css({'padding-left':'0px'}).filter('#TOC,#HEADER,#FOOTER,#MathJax_Message').hide();$('#CONTENT').css({'display':'inline'});">Current</a>
 </div>
 </body>
 </html>

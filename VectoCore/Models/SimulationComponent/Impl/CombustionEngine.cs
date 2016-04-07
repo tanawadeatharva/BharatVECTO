@@ -332,11 +332,13 @@ namespace TUGraz.VectoCore.Models.SimulationComponent.Impl
 				var fcAux = fc;
 
 				var fcWHTC = fcAux * ModelData.WHTCCorrectionFactor;
-				var fcFinal = fcWHTC;
+				var fcAAUX = fcWHTC;
+				var fcFinal = fcAAUX;
 
 				container[ModalResultField.FCMap] = fc;
 				container[ModalResultField.FCAUXc] = fcAux;
 				container[ModalResultField.FCWHTCc] = fcWHTC;
+				container[ModalResultField.FCAAUX] = fcAAUX;
 				container[ModalResultField.FCFinal] = fcFinal;
 
 				if (ModelData.ConsumptionMap.Extrapolated) {
@@ -349,6 +351,7 @@ namespace TUGraz.VectoCore.Models.SimulationComponent.Impl
 				container[ModalResultField.FCMap] = null;
 				container[ModalResultField.FCAUXc] = null;
 				container[ModalResultField.FCWHTCc] = null;
+				container[ModalResultField.FCAAUX] = null;
 				container[ModalResultField.FCFinal] = null;
 			}
 		}
