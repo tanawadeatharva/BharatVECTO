@@ -78,6 +78,7 @@
     <Compile Include="FileIO\SimulationDataReaderTest.cs" />
     <Compile Include="GraphProgram.cs" />
     <Compile Include="Integration\BusAuxiliaries\AuxDemandTest.cs" />
+    <Compile Include="Integration\BusAuxiliaries\BusAdapterTest.cs" />
     <Compile Include="Integration\BusAuxiliaries\SimpleCycleTest.cs" />
     <Compile Include="Integration\CoachAdvancedAuxPowertrain.cs" />
     <Compile Include="Integration\CoachPowerTrain.cs" />
@@ -101,6 +102,7 @@
     <Compile Include="Integration\Truck40tPowerTrain.cs" />
     <Compile Include="Models\SimulationComponent\GearboxPowertrainTest.cs" />
     <Compile Include="Utils\InputDataHelper.cs" />
+    <Compile Include="Utils\MockBrakes.cs" />
     <Compile Include="Utils\MockEngineDataProvider.cs" />
     <Compile Include="Utils\MockSimulationDataFactory.cs" />
     <Compile Include="Utils\MockVairVehicleContainer.cs" />

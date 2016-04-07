@@ -1,6 +1,7 @@
 ﻿using Microsoft.VisualStudio.TestTools.UnitTesting;
 using NUnit.Framework;
 using TUGraz.VectoCore.Models.Simulation.Data;
+using TUGraz.VectoCore.Models.Simulation.DataBus;
 using TUGraz.VectoCore.Models.Simulation.Impl;
 using TUGraz.VectoCore.Models.SimulationComponent.Data;
 using TUGraz.VectoCore.Models.SimulationComponent.Data.Engine;
@@ -21,26 +22,8 @@ namespace TUGraz.VectoCore.Tests.Integration.BusAuxiliaries
 		public void AuxDemandtest(double vehicleWeight, double engineSpeedRpm, double driveLinePower, double internalPower,
 			double expectedPowerDemand)
 		{
-			var auxFilePath = @"TestData\Integration\BusAuxiliaries\AdvAuxTest.aaux";
-			var engineFLDFilePath = @"TestData\Integration\BusAuxiliaries\24t Coach.vfld";
-			var engineFCMapFilePath = @"TestData\Integration\BusAuxiliaries\24t Coach.vmap";
-
-			var vehicle = new VehicleContainer();
-			var fcMap = FuelConsumptionMap.ReadFromFile(engineFCMapFilePath);
-			var fld = EngineFullLoadCurve.ReadFromFile(engineFLDFilePath);
-			var modelData = new CombustionEngineData() {
-				ConsumptionMap = fcMap,
-				FullLoadCurve = fld,
-				IdleSpeed = 560.SI<PerSecond>()
-			};
-
-			var engine = new CombustionEngine(vehicle, modelData);
-			//new Vehicle(vehicle, new VehicleData());
-			var driver = new MockDriver(vehicle) { VehicleStopped = false };
-			var gbx = new MockGearbox(vehicle) { Gear = 1 };
-
-			var busAux = new BusAuxiliariesAdapter(vehicle, auxFilePath, "Coach", vehicleWeight.SI<Kilogram>(),
-				fcMap, modelData.IdleSpeed);
+			MockDriver driver;
+			var busAux = CreateBusAuxAdapterForTesting(vehicleWeight, out driver);
 
 
 			var engineDrivelinePower = (driveLinePower * 1000).SI<Watt>();
@@ -53,6 +36,7 @@ namespace TUGraz.VectoCore.Tests.Integration.BusAuxiliaries
 			Assert.AreEqual(expectedPowerDemand, (torque * engineSpeed).Value(), 1e-4);
 		}
 
+
 		[Test]
 		public void AuxFCConsumptionTest()
 		{
@@ -60,28 +44,8 @@ namespace TUGraz.VectoCore.Tests.Integration.BusAuxiliaries
 			var engineSpeedRpm = 1256;
 			var internalPower = 148;
 
-
-			var auxFilePath = @"TestData\Integration\BusAuxiliaries\AdvAuxTest.aaux";
-			var engineFLDFilePath = @"TestData\Integration\BusAuxiliaries\24t Coach.vfld";
-			var engineFCMapFilePath = @"TestData\Integration\BusAuxiliaries\24t Coach.vmap";
-
-			var vehicle = new VehicleContainer();
-			var fcMap = FuelConsumptionMap.ReadFromFile(engineFCMapFilePath);
-			var fld = EngineFullLoadCurve.ReadFromFile(engineFLDFilePath);
-			var modelData = new CombustionEngineData() {
-				ConsumptionMap = fcMap,
-				FullLoadCurve = fld,
-				IdleSpeed = 560.SI<PerSecond>()
-			};
-
-			var engine = new CombustionEngine(vehicle, modelData);
-			//new Vehicle(vehicle, new VehicleData());
-			var driver = new MockDriver(vehicle) { VehicleStopped = false };
-			var gbx = new MockGearbox(vehicle) { Gear = 1 };
-
-			var busAux = new BusAuxiliariesAdapter(vehicle, auxFilePath, "Coach", 12000.SI<Kilogram>(),
-				fcMap, modelData.IdleSpeed);
-
+			MockDriver driver;
+			var busAux = CreateBusAuxAdapterForTesting(12000, out driver);
 
 			var engineDrivelinePower = (driveLinePower * 1000).SI<Watt>();
 			var engineSpeed = engineSpeedRpm.RPMtoRad();
@@ -121,6 +85,32 @@ namespace TUGraz.VectoCore.Tests.Integration.BusAuxiliaries
 			}
 
 			Assert.AreEqual(162.4655, ((SI)modalData[ModalResultField.AA_TotalCycleFC_Grams]).Value(), 0.0001);
+		}
+
+
+		public static BusAuxiliariesAdapter CreateBusAuxAdapterForTesting(double vehicleWeight, out MockDriver driver)
+		{
+			var auxFilePath = @"TestData\Integration\BusAuxiliaries\AdvAuxTest.aaux";
+			var engineFLDFilePath = @"TestData\Integration\BusAuxiliaries\24t Coach.vfld";
+			var engineFCMapFilePath = @"TestData\Integration\BusAuxiliaries\24t Coach.vmap";
+
+			var vehicle = new VehicleContainer();
+			var fcMap = FuelConsumptionMap.ReadFromFile(engineFCMapFilePath);
+			var fld = EngineFullLoadCurve.ReadFromFile(engineFLDFilePath);
+			var modelData = new CombustionEngineData() {
+				ConsumptionMap = fcMap,
+				FullLoadCurve = fld,
+				IdleSpeed = 560.SI<PerSecond>()
+			};
+
+			var engine = new CombustionEngine(vehicle, modelData);
+			//new Vehicle(vehicle, new VehicleData());
+			driver = new MockDriver(vehicle) { VehicleStopped = false, DrivingBehavior = DrivingBehavior.Braking };
+			var gbx = new MockGearbox(vehicle) { Gear = 1 };
+			var brakes = new MockBrakes(vehicle);
+			var busAux = new BusAuxiliariesAdapter(vehicle, auxFilePath, "Coach", vehicleWeight.SI<Kilogram>(),
+				fcMap, modelData.IdleSpeed);
+			return busAux;
 		}
 	}
 }

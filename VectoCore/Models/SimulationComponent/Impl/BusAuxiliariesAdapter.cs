@@ -181,6 +181,8 @@ namespace TUGraz.VectoCore.Models.SimulationComponent.Impl
 			Auxiliaries.Signals.ClutchEngaged = DataBus.ClutchClosed(absTime);
 			Auxiliaries.Signals.EngineDrivelinePower = (float)(torquePowerTrain * angularSpeed / 1000).Value();
 			Auxiliaries.Signals.EngineDrivelineTorque = (float)torquePowerTrain.Value();
+			Auxiliaries.Signals.Internal_Engine_Power =
+				(float)((torqueEngine * angularSpeed - DataBus.BrakePower) / 1000).Value();
 			if (DataBus.DrivingBehavior == DrivingBehavior.Coasting) {
 				// make sure smart aux are _not_ enabled for now
 				// set internal_engine_power a little bit lower so there is no excessive power for smart aux
