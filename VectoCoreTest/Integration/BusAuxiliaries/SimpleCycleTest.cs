@@ -397,18 +397,18 @@ namespace TUGraz.VectoCore.Tests.Integration.BusAuxiliaries
 				@"..\..\TestData\Integration\BusAuxiliaries\Vecto2.0\24t Coach_AAUX_Cycle_Decelerate_60_20_downhill_5.vmod");
 		}
 
-		[TestMethod, TestCategory("ComparisonAAUX"), TestCategory("LongRunning")]
-		public void Decelerate_60_20_uphill_25()
-		{
-			var cycle = SimpleDrivingCycles.CreateCycleData(SimpleDrivingCycles.CycleDecelerate_60_20_uphill_25);
-			var run = CoachAdvancedAuxPowertrain.CreateEngineeringRun(cycle, "Coach_AAUX_Decelerate_60_20_uphill_25.vmod");
+		//[TestMethod, TestCategory("ComparisonAAUX"), TestCategory("LongRunning")]
+		//public void Decelerate_60_20_uphill_25()
+		//{
+		//	var cycle = SimpleDrivingCycles.CreateCycleData(SimpleDrivingCycles.CycleDecelerate_60_20_uphill_25);
+		//	var run = CoachAdvancedAuxPowertrain.CreateEngineeringRun(cycle, "Coach_AAUX_Decelerate_60_20_uphill_25.vmod");
 
-			run.Run();
-			Assert.IsTrue(run.FinishedWithoutErrors);
+		//	run.Run();
+		//	Assert.IsTrue(run.FinishedWithoutErrors);
 
-			GraphWriter.Write("Coach_AAUX_Decelerate_60_20_uphill_25.vmod",
-				@"..\..\TestData\Integration\BusAuxiliaries\Vecto2.0\24t Coach_AAUX_Cycle_Decelerate_60_20_uphill_25.vmod");
-		}
+		//	GraphWriter.Write("Coach_AAUX_Decelerate_60_20_uphill_25.vmod",
+		//		@"..\..\TestData\Integration\BusAuxiliaries\Vecto2.0\24t Coach_AAUX_Cycle_Decelerate_60_20_uphill_25.vmod");
+		//}
 
 		[TestMethod, TestCategory("ComparisonAAUX")]
 		public void Coach_AAUX_Decelerate_60_20_downhill_25()
@@ -490,19 +490,19 @@ namespace TUGraz.VectoCore.Tests.Integration.BusAuxiliaries
 				@"..\..\TestData\Integration\BusAuxiliaries\Vecto2.0\24t Coach_AAUX_Cycle_Decelerate_80_0_downhill_5.vmod");
 		}
 
-		[TestMethod, TestCategory("ComparisonAAUX"), TestCategory("LongRunning")]
-		public void Decelerate_80_0_uphill_25()
-		{
-			var cycle = SimpleDrivingCycles.CreateCycleData(SimpleDrivingCycles.CycleDecelerate_80_0_uphill_25);
-			var run = CoachAdvancedAuxPowertrain.CreateEngineeringRun(cycle,
-				"Coach_AAUX_Decelerate_80_0_steep_uphill_25.vmod");
+		//[TestMethod, TestCategory("ComparisonAAUX"), TestCategory("LongRunning")]
+		//public void Decelerate_80_0_uphill_25()
+		//{
+		//	var cycle = SimpleDrivingCycles.CreateCycleData(SimpleDrivingCycles.CycleDecelerate_80_0_uphill_25);
+		//	var run = CoachAdvancedAuxPowertrain.CreateEngineeringRun(cycle,
+		//		"Coach_AAUX_Decelerate_80_0_steep_uphill_25.vmod");
 
-			run.Run();
-			Assert.IsTrue(run.FinishedWithoutErrors);
+		//	run.Run();
+		//	Assert.IsTrue(run.FinishedWithoutErrors);
 
-			GraphWriter.Write("Coach_AAUX_Decelerate_80_0_steep_uphill_25.vmod",
-				@"..\..\TestData\Integration\BusAuxiliaries\Vecto2.0\24t Coach_AAUX_Cycle_Decelerate_80_0_steep_uphill_25.vmod");
-		}
+		//	GraphWriter.Write("Coach_AAUX_Decelerate_80_0_steep_uphill_25.vmod",
+		//		@"..\..\TestData\Integration\BusAuxiliaries\Vecto2.0\24t Coach_AAUX_Cycle_Decelerate_80_0_steep_uphill_25.vmod");
+		//}
 
 		[TestMethod, TestCategory("ComparisonAAUX"), TestCategory("LongRunning")]
 		public void Coach_AAUX_Decelerate_80_0_downhill_25()
@@ -531,19 +531,19 @@ namespace TUGraz.VectoCore.Tests.Integration.BusAuxiliaries
 		//		@"..\..\TestData\Integration\BusAuxiliaripublic void Coach_es\Vecto2.0\24t Coach_AAUX_Cycle_Decelerate_80_0_uphill_3.vmod");
 		//}
 
-		[TestMethod, TestCategory("ComparisonAAUX"), TestCategory("LongRunning")]
-		public void Decelerate_80_0_uphill_15()
-		{
-			var cycle = SimpleDrivingCycles.CreateCycleData(SimpleDrivingCycles.CycleDecelerate_80_0_uphill_15);
-			var run = CoachAdvancedAuxPowertrain.CreateEngineeringRun(cycle,
-				"Coach_AAUX_Decelerate_80_0_steep_uphill_15.vmod");
+		//[TestMethod, TestCategory("ComparisonAAUX"), TestCategory("LongRunning")]
+		//public void Decelerate_80_0_uphill_15()
+		//{
+		//	var cycle = SimpleDrivingCycles.CreateCycleData(SimpleDrivingCycles.CycleDecelerate_80_0_uphill_15);
+		//	var run = CoachAdvancedAuxPowertrain.CreateEngineeringRun(cycle,
+		//		"Coach_AAUX_Decelerate_80_0_steep_uphill_15.vmod");
 
-			run.Run();
-			Assert.IsTrue(run.FinishedWithoutErrors);
+		//	run.Run();
+		//	Assert.IsTrue(run.FinishedWithoutErrors);
 
-			GraphWriter.Write("Coach_AAUX_Decelerate_80_0_steep_uphill_15.vmod",
-				@"..\..\TestData\Integration\BusAuxiliaries\Vecto2.0\24t Coach_AAUX_Cycle_Decelerate_80_0_steep_uphill_15.vmod");
-		}
+		//	GraphWriter.Write("Coach_AAUX_Decelerate_80_0_steep_uphill_15.vmod",
+		//		@"..\..\TestData\Integration\BusAuxiliaries\Vecto2.0\24t Coach_AAUX_Cycle_Decelerate_80_0_steep_uphill_15.vmod");
+		//}
 
 		[TestMethod, TestCategory("ComparisonAAUX")]
 		public void Coach_AAUX_Decelerate_80_0_downhill_15()
