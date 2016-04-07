@@ -190,8 +190,12 @@ namespace TUGraz.VectoCore.Models.SimulationComponent.Impl
 				// set internal_engine_power to a large value (*10) so that there's excessive power for smart aux (alreadin during search operating point)
 				//(float)DataBus.EngineDragPower(angularSpeed).Value() / 100;
 			} else {
-				Auxiliaries.Signals.Internal_Engine_Power =
-					(float)((torqueEngine * angularSpeed - DataBus.BrakePower) / 1000).Value();
+				if (DataBus.DrivingBehavior != DrivingBehavior.Braking) {
+					Auxiliaries.Signals.Internal_Engine_Power = 0;
+					//(float)((0.9 * torqueEngine * angularSpeed - DataBus.BrakePower) / 1000).Value();
+				} else {
+					// smart aux should be on during braking
+				}
 			}
 			Auxiliaries.Signals.EngineMotoringPower = -(float)DataBus.EngineDragPower(angularSpeed).Value() / 1000;
 			Auxiliaries.Signals.EngineSpeed = (int)(angularSpeed.Value() / Constants.RPMToRad);
