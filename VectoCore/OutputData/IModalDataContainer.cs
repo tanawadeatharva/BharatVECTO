@@ -79,7 +79,6 @@ namespace TUGraz.VectoCore.OutputData
 
 		VectoRun.Status RunStatus { get; }
 
-
 		/// <summary>
 		/// Finishes the writing of the DataWriter.
 		/// </summary>
@@ -90,7 +89,6 @@ namespace TUGraz.VectoCore.OutputData
 		IEnumerable<T> GetValues<T>(ModalResultField key);
 
 		IEnumerable<T> GetValues<T>(DataColumn col);
-
 
 		Dictionary<string, DataColumn> Auxiliaries { get; set; }
 
@@ -344,7 +342,7 @@ namespace TUGraz.VectoCore.OutputData
 			if (distance == null || distance.IsEqual(0)) {
 				return null;
 			}
-			return data.TimeIntegral<Kilogram>(ModalResultField.FCWHTCc) / distance;
+			return data.TimeIntegral<Kilogram>(ModalResultField.FCFinal) / distance;
 		}
 
 		public static SI FuelConsumptionFinalLiterPer100Kilometer(this IModalDataContainer data)
@@ -364,7 +362,7 @@ namespace TUGraz.VectoCore.OutputData
 			if (distance == null || distance.IsEqual(0)) {
 				return null;
 			}
-			return data.TimeIntegral<Kilogram>(ModalResultField.FCMap) * Physics.CO2PerFuelWeight / distance;
+			return data.TimeIntegral<Kilogram>(ModalResultField.FCFinal) * Physics.CO2PerFuelWeight / distance;
 		}
 
 		public static SI FuelConsumptionLiterPer100Kilometer(this IModalDataContainer data)
@@ -375,7 +373,7 @@ namespace TUGraz.VectoCore.OutputData
 
 		public static KilogramPerSecond FuelConsumptionPerSecond(this IModalDataContainer data)
 		{
-			return data.TimeIntegral<Kilogram>(ModalResultField.FCMap) / data.Duration();
+			return data.TimeIntegral<Kilogram>(ModalResultField.FCFinal) / data.Duration();
 		}
 
 		public static KilogramPerMeter FuelConsumptionPerMeter(this IModalDataContainer data)
@@ -384,7 +382,7 @@ namespace TUGraz.VectoCore.OutputData
 			if (distance == null || distance.IsEqual(0)) {
 				return null;
 			}
-			return data.TimeIntegral<Kilogram>(ModalResultField.FCMap) / distance;
+			return data.TimeIntegral<Kilogram>(ModalResultField.FCFinal) / distance;
 		}
 
 		public static Watt EnginePowerNegativeAverage(this IModalDataContainer data)
@@ -427,7 +425,6 @@ namespace TUGraz.VectoCore.OutputData
 			return data.GetValues<Watt>(auxCol).Zip(simulationIntervals, (value, dt) => value * dt).Sum().Cast<WattSecond>();
 		}
 
-
 		private static T TimeIntegral<T>(this IModalDataContainer data, ModalResultField field, Func<SI, bool> filter = null)
 			where T : SIBase<T>
 		{
@@ -456,7 +453,6 @@ namespace TUGraz.VectoCore.OutputData
 				}
 			}
 		}
-
 
 		/// <summary>
 		/// Calculates the average acceleration for whole seconds.

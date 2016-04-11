@@ -327,12 +327,17 @@ namespace TUGraz.VectoCore.Models.SimulationComponent.Impl
 			try {
 				var fc = ModelData.ConsumptionMap.GetFuelConsumption(CurrentState.EngineTorque, avgEngineSpeed,
 					allowExtrapolation: (DataBus.ExecutionMode != ExecutionMode.Declaration));
-				container[ModalResultField.FCMap] = fc;
 
 				//todo (MK, 2015-11-11): calculate aux start stop correction when start stop functionality is implemented in v3
-				var fcaux = fc;
-				container[ModalResultField.FCAUXc] = fcaux;
-				container[ModalResultField.FCWHTCc] = fcaux * ModelData.WHTCCorrectionFactor;
+				var fcAux = fc;
+
+				var fcWHTC = fcAux * ModelData.WHTCCorrectionFactor;
+				var fcFinal = fcWHTC;
+
+				container[ModalResultField.FCMap] = fc;
+				container[ModalResultField.FCAUXc] = fcAux;
+				container[ModalResultField.FCWHTCc] = fcWHTC;
+				container[ModalResultField.FCFinal] = fcFinal;
 
 				if (ModelData.ConsumptionMap.Extrapolated) {
 					Log.Warn("FuelMap Extrapolated: n_eng_avg: {0} Tq: {1}, FC: {2}", avgEngineSpeed.ConvertTo().Rounds.Per.Minute,
@@ -342,6 +347,9 @@ namespace TUGraz.VectoCore.Models.SimulationComponent.Impl
 				Log.Warn("FuelMap: {0} n_eng_avg: {1} Tq: {2}", ex.Message, avgEngineSpeed.ConvertTo().Rounds.Per.Minute,
 					CurrentState.EngineTorque);
 				container[ModalResultField.FCMap] = null;
+				container[ModalResultField.FCAUXc] = null;
+				container[ModalResultField.FCWHTCc] = null;
+				container[ModalResultField.FCFinal] = null;
 			}
 		}
 
@@ -442,10 +450,8 @@ namespace TUGraz.VectoCore.Models.SimulationComponent.Impl
 
 			public NewtonMeter FullDragTorque { get; set; }
 
-
 			// ReSharper disable once InconsistentNaming
 		}
-
 
 		protected class CombustionEngineIdleController : LoggingObject, ICombustionEngineIdleController
 		{
@@ -503,7 +509,6 @@ namespace TUGraz.VectoCore.Models.SimulationComponent.Impl
 					return retVal;
 				}
 
-
 				nextAngularSpeed = prevEngineSpeed + deltaAngularSpeed;
 				if (nextAngularSpeed < Engine.ModelData.IdleSpeed) {
 					nextAngularSpeed = Engine.ModelData.IdleSpeed;
@@ -540,7 +545,6 @@ namespace TUGraz.VectoCore.Models.SimulationComponent.Impl
 				var retryCount = 0;
 				do {
 					nextAngularSpeed -= searchInterval * delta.Sign();
-
 
 					var response = (ResponseDryRun)RequestPort.Request(absTime, dt, torque, nextAngularSpeed, true);
 					delta = response.DeltaDragLoad;

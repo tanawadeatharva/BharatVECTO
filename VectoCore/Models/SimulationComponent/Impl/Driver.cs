@@ -392,6 +392,9 @@ namespace TUGraz.VectoCore.Models.SimulationComponent.Impl
 				Default(r => { throw new UnexpectedResponseException("DrivingAction Brake: first request.", r); });
 
 			if (retVal != null) {
+				CurrentState.Acceleration = operatingPoint.Acceleration;
+				CurrentState.dt = operatingPoint.SimulationInterval;
+				CurrentState.Response = retVal;
 				retVal.Acceleration = operatingPoint.Acceleration;
 				retVal.SimulationInterval = operatingPoint.SimulationInterval;
 				return retVal;
