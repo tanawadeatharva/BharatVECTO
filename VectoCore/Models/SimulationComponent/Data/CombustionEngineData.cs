@@ -29,6 +29,7 @@
 *   Martin Rexeis, rexeis@ivt.tugraz.at, IVT, Graz University of Technology
 */
 
+using System.Collections.Generic;
 using System.ComponentModel.DataAnnotations;
 using TUGraz.VectoCore.Configuration;
 using TUGraz.VectoCore.Models.SimulationComponent.Data.Engine;
@@ -69,6 +70,21 @@ namespace TUGraz.VectoCore.Models.SimulationComponent.Data
 			WHTCUrban = 1;
 			WHTCMotorway = 1;
 			WHTCRural = 1;
+		}
+
+		public CombustionEngineData Copy()
+		{
+			return new CombustionEngineData {
+				Displacement = Displacement,
+				IdleSpeed = IdleSpeed,
+				Inertia = Inertia,
+				WHTCUrban = WHTCUrban,
+				WHTCRural = WHTCRural,
+				WHTCMotorway = WHTCMotorway,
+				ConsumptionMap = ConsumptionMap,
+				FullLoadCurve = FullLoadCurve,
+				WHTCCorrectionFactor = WHTCCorrectionFactor,
+			};
 		}
 
 		#region Equality Member

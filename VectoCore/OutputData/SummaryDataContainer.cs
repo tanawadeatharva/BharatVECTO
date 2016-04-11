@@ -29,13 +29,10 @@
 *   Martin Rexeis, rexeis@ivt.tugraz.at, IVT, Graz University of Technology
 */
 
-using System.Collections.Generic;
 using System.Data;
-using System.IO;
 using System.Linq;
 using System.Runtime.CompilerServices;
 using TUGraz.VectoCore.Models;
-using TUGraz.VectoCore.Models.Simulation.Data;
 using TUGraz.VectoCore.Utils;
 
 namespace TUGraz.VectoCore.OutputData
@@ -52,56 +49,63 @@ namespace TUGraz.VectoCore.OutputData
 		private const string INPUTFILE = "Input File [-]";
 		private const string CYCLE = "Cycle [-]";
 		private const string STATUS = "Status";
+		private const string MASS = "Mass [kg]";
+		private const string LOADING = "Loading [kg]";
 		private const string TIME = "time [s]";
 		private const string DISTANCE = "distance [km]";
 		private const string SPEED = "speed [km/h]";
-		private const string ALTITUDE = "altitudeDelta [m]";
-		private const string PPOS = "Ppos [kW]";
-		private const string PNEG = "Pneg [kW]";
-		private const string FCMAP = "FC-Map [g/h]";
-		private const string FCMAPKM = "FC-Map [g/km]";
-		private const string FCAUXC = "FC-AUXc [g/h]";
-		private const string FCAUXCKM = "FC-AUXc [g/km]";
-		private const string FCWHTCC = "FC-WHTCc [g/h]";
-		private const string FCWHTCCKM = "FC-WHTCc [g/km]";
-		private const string PWHEELPOS = "PwheelPos [kW]";
-		private const string PBRAKE = "P_brake_loss [kW]";
-		private const string EPOSICE = "EposICE [kWh]";
-		private const string ENEGICE = "EnegICE [kWh]";
-		private const string EAIR = "Eair [kWh]";
-		private const string EROLL = "Eroll [kWh]";
-		private const string EGRAD = "Egrad [kWh]";
-		private const string EACC = "Eacc [kWh]";
-		private const string EAUX = "Eaux [kWh]";
-		private const string EBRAKE = "Ebrake [kWh]";
-		private const string ETRANSM = "Etransm [kWh]";
-		private const string ERETARDER = "Eretarder [kWh]";
-		private const string MASS = "Mass [kg]";
-		private const string LOADING = "Loading [kg]";
-		private const string ACCELERATIONS = "a [m/s^2]";
-		private const string APOS = "a_pos [m/s^2]";
-		private const string ANEG = "a_neg [m/s^2]";
-		private const string PACC = "pAcc [%]";
-		private const string PDEC = "pDec [%]";
-		private const string PCRUISE = "pCruise [%]";
-		private const string PSTOP = "pStop [%]";
-		private const string ETORQUECONV = "Etorqueconv [kWh]";
-		private const string CO2KM = "CO2 [g/km]";
-		private const string CO2TKM = "CO2 [g/tkm]";
-		private const string FCFINAL = "FC-Final [g/km]";
+		private const string ALTITUDE_DELTA = "altitudeDelta [m]";
+
+		private const string FCMAP_H = "FC-Map [g/h]";
+		private const string FCMAP_KM = "FC-Map [g/km]";
+		private const string FCAUXC_H = "FC-AUXc [g/h]";
+		private const string FCAUXC_KM = "FC-AUXc [g/km]";
+		private const string FCWHTCC_H = "FC-WHTCc [g/h]";
+		private const string FCWHTCC_KM = "FC-WHTCc [g/km]";
+		private const string FCAAUX_H = "FC-AAUX [g/h]";
+		private const string FCAAUX_KM = "FC-AAUX [g/km]";
+
+		private const string FCFINAL_H = "FC-Final [g/h]";
+		private const string FCFINAL_KM = "FC-Final [g/km]";
 		private const string FCFINAL_LITERPER100KM = "FC-Final [l/100km]";
 		private const string FCFINAL_LITERPER100TKM = "FC-Final [l/100tkm]";
-		private const string ACCNOISE = "Acc.Noise [m/s^2]";
+
+		private const string CO2_KM = "CO2 [g/km]";
+		private const string CO2_TKM = "CO2 [g/tkm]";
+
+		private const string P_WHEEL_POS = "P_wheel_in_pos [kW]";
+		private const string P_BRAKE_LOSS = "P_brake_loss [kW]";
+		private const string P_ENG_POS = "P_eng_out_pos [kW]";
+		private const string P_ENG_NEG = "P_eng_out_neg [kW]";
+
+		private const string E_AUX_FORMAT = "E_aux_{0} [kWh]";
+		private const string E_AUX = "E_aux_sum [kWh]";
+
+		private const string E_AIR = "E_air [kWh]";
+		private const string E_ROLL = "E_roll [kWh]";
+		private const string E_GRAD = "E_grad [kWh]";
+		private const string E_INERTIA = "E_inertia [kWh]";
+		private const string E_BRAKE = "E_brake [kWh]";
+		private const string E_GBX_AXL_LOSS = "E_gbx_axl_loss [kWh]";
+		private const string E_RET_LOSS = "E_ret_loss [kWh]";
+		private const string E_TC_LOSS = "E_tc_loss [kWh]";
+		private const string E_ENG_POS = "E_eng_out_pos [kWh]";
+		private const string E_ENG_NEG = "E_eng_out_neg [kWh]";
+
+		private const string ACC = "a [m/s^2]";
+		private const string ACC_POS = "a_pos [m/s^2]";
+		private const string ACC_NEG = "a_neg [m/s^2]";
+
+		private const string ACC_TIMESHARE = "AccelerationTimeShare [%]";
+		private const string DEC_TIMESHARE = "DecelerationTimeShare [%]";
+		private const string CRUISE_TIMESHARE = "CruiseTimeShare [%]";
+		private const string STOP_TIMESHARE = "StopTimeShare [%]";
 		// ReSharper restore InconsistentNaming
 
 		private readonly DataTable _table;
 		private readonly ISummaryWriter _sumWriter;
-		private bool _engineOnly = true;
 
 		protected SummaryDataContainer() {}
-
-
-		private readonly IList<string> _auxColumns = new List<string>();
 
 		/// <summary>
 		/// Initializes a new instance of the <see cref="SummaryDataContainer"/> class.
@@ -118,174 +122,137 @@ namespace TUGraz.VectoCore.OutputData
 			_table.Columns.Add(STATUS, typeof(string));
 
 			_table.Columns.AddRange(new[] {
-				TIME, DISTANCE, SPEED, ALTITUDE, PPOS, PNEG, FCMAP, FCMAPKM, FCAUXC, FCAUXCKM, FCWHTCC, FCWHTCCKM, PWHEELPOS, PBRAKE,
-				EPOSICE, ENEGICE, EAIR, EROLL, EGRAD, EACC, EAUX, EBRAKE, ETRANSM, ERETARDER, MASS, LOADING, ACCELERATIONS, APOS,
-				ANEG, PACC, PDEC, PCRUISE, PSTOP, ETORQUECONV, CO2KM, CO2TKM, FCFINAL, FCFINAL_LITERPER100KM, FCFINAL_LITERPER100TKM,
-				ACCNOISE
+				MASS, LOADING, TIME, DISTANCE, SPEED, ALTITUDE_DELTA, FCMAP_H, FCMAP_KM, FCAUXC_H, FCAUXC_KM, FCWHTCC_H, FCWHTCC_KM,
+				FCAAUX_H, FCAAUX_KM, FCFINAL_H, FCFINAL_KM, FCFINAL_LITERPER100KM, FCFINAL_LITERPER100TKM, CO2_KM, CO2_TKM,
+				P_WHEEL_POS, P_BRAKE_LOSS, P_ENG_POS, P_ENG_NEG, E_AUX, E_AIR, E_ROLL, E_GRAD, E_INERTIA, E_BRAKE, E_GBX_AXL_LOSS,
+				E_RET_LOSS, E_TC_LOSS, E_ENG_POS, E_ENG_NEG, ACC, ACC_POS, ACC_NEG, ACC_TIMESHARE, DEC_TIMESHARE, CRUISE_TIMESHARE,
+				STOP_TIMESHARE
 			}.Select(x => new DataColumn(x, typeof(SI))).ToArray());
 		}
 
-		public virtual void Write(bool isEngineOnly, IModalDataContainer data, string jobFileName, string jobName,
-			string cycleFileName, Kilogram vehicleMass, Kilogram vehicleLoading)
+		/// <summary>
+		/// Finishes the summary data container (writes the data to the sumWriter).
+		/// </summary>
+		public virtual void Finish()
 		{
-			if (isEngineOnly) {
-				WriteEngineOnly(data, jobFileName, jobName, cycleFileName);
-			} else {
-				WriteFullPowertrain(data, jobFileName, jobName, cycleFileName, vehicleMass, vehicleLoading);
+			if (_sumWriter != null) {
+				_sumWriter.WriteSumData(new DataView(_table, "", JOB, DataViewRowState.CurrentRows).ToTable());
 			}
 		}
 
-
-		protected internal void WriteEngineOnly(IModalDataContainer data, string jobFileName, string jobName,
-			string cycleFileName)
+		/// <summary>
+		/// Writes the result of one run into the summary data container.
+		/// </summary>
+		[MethodImpl(MethodImplOptions.Synchronized)]
+		public virtual void Write(IModalDataContainer modData, string jobFileName, string jobName, string cycleFileName,
+			Kilogram vehicleMass, Kilogram vehicleLoading)
 		{
 			var row = _table.NewRow();
+			_table.Rows.Add(row);
+
 			row[JOB] = ReplaceNotAllowedCharacters(jobName);
 			row[INPUTFILE] = ReplaceNotAllowedCharacters(jobFileName);
 			row[CYCLE] = ReplaceNotAllowedCharacters(cycleFileName);
-			row[STATUS] = data.RunStatus;
-			row[TIME] = data.Duration();
-			row[PPOS] = data.EnginePowerPositiveAverage().ConvertTo().Kilo.Watt;
-			row[PNEG] = data.EnginePowerNegativeAverage().ConvertTo().Kilo.Watt;
-			row[FCMAP] = data.FuelConsumptionPerSecond().ConvertTo().Gramm.Per.Hour;
-			row[FCAUXC] = data.FuelConsumptionAuxStartStopCorrectedPerSecond().ConvertTo().Gramm.Per.Hour;
-			row[FCWHTCC] = data.FuelConsumptionWHTCCorrectedPerSecond().ConvertTo().Gramm.Per.Hour;
-			WriteAuxiliaries(data, row);
+			row[STATUS] = modData.RunStatus;
 
-			_table.Rows.Add(row);
-		}
+			row[MASS] = vehicleMass;
+			row[LOADING] = vehicleLoading;
 
+			row[TIME] = modData.Duration();
 
-		protected internal void WriteFullPowertrain(IModalDataContainer data, string jobFileName, string jobName,
-			string cycleFileName, Kilogram vehicleMass, Kilogram vehicleLoading)
-		{
-			_engineOnly = false;
-
-			var row = _table.NewRow();
-			_table.Rows.Add(row);
-			row[JOB] = ReplaceNotAllowedCharacters(jobName);
-			row[INPUTFILE] = ReplaceNotAllowedCharacters(jobFileName);
-			row[CYCLE] = ReplaceNotAllowedCharacters(cycleFileName);
-			row[STATUS] = data.RunStatus;
-			row[TIME] = data.Duration();
-
-			var distance = data.Distance();
+			var distance = modData.Distance();
 			if (distance != null) {
 				row[DISTANCE] = distance.ConvertTo().Kilo.Meter;
 			}
 
-			var speed = data.Speed();
+			var speed = modData.Speed();
 			if (speed != null) {
 				row[SPEED] = speed.ConvertTo().Kilo.Meter.Per.Hour;
 			}
 
-			row[ALTITUDE] = data.AltitudeDelta();
-			row[PPOS] = data.EnginePowerPositiveAverage().ConvertTo().Kilo.Watt;
-			row[PNEG] = data.EnginePowerNegativeAverage().ConvertTo().Kilo.Watt;
+			row[ALTITUDE_DELTA] = modData.AltitudeDelta();
 
-			var fcfinal = data.FuelConsumptionFinal();
-			if (fcfinal != null) {
-				row[FCFINAL] = fcfinal.ConvertTo().Gramm.Per.Kilo.Meter;
+			row[FCMAP_H] = modData.FCMapPerSecond().ConvertTo().Gramm.Per.Hour;
+			var fcMapPerMeter = modData.FCMapPerMeter();
+			if (fcMapPerMeter != null) {
+				row[FCMAP_KM] = fcMapPerMeter.ConvertTo().Gramm.Per.Kilo.Meter;
 			}
-			row[FCFINAL_LITERPER100KM] = data.FuelConsumptionFinalLiterPer100Kilometer();
-			if (vehicleLoading != null && !vehicleLoading.IsEqual(0)) {
-				row[FCFINAL_LITERPER100TKM] = data.FuelConsumptionFinalLiterPer100Kilometer() / vehicleLoading.ConvertTo().Ton;
-			}
-			row[FCMAP] = data.FuelConsumptionPerSecond().ConvertTo().Gramm.Per.Hour;
 
-
-			var fuelConsumptionPerMeter = data.FuelConsumptionPerMeter();
-			if (fuelConsumptionPerMeter != null) {
-				row[FCMAPKM] = fuelConsumptionPerMeter.ConvertTo().Gramm.Per.Kilo.Meter;
-			}
-			row[FCAUXC] = data.FuelConsumptionAuxStartStopCorrectedPerSecond().ConvertTo().Gramm.Per.Hour;
-			var fuelConsumptionAuxStartStopCorrected = data.FuelConsumptionAuxStartStopCorrected();
+			row[FCAUXC_H] = modData.FuelConsumptionAuxStartStopPerSecond().ConvertTo().Gramm.Per.Hour;
+			var fuelConsumptionAuxStartStopCorrected = modData.FuelConsumptionAuxStartStop();
 			if (fuelConsumptionAuxStartStopCorrected != null) {
-				row[FCAUXCKM] = fuelConsumptionAuxStartStopCorrected.ConvertTo().Gramm.Per.Kilo.Meter;
-			}
-			row[FCWHTCC] = data.FuelConsumptionWHTCCorrectedPerSecond().ConvertTo().Gramm.Per.Hour;
-			var fuelConsumptionWHTCCorrected = data.FuelConsumptionWHTCCorrected();
-			if (fuelConsumptionWHTCCorrected != null) {
-				row[FCWHTCCKM] = fuelConsumptionWHTCCorrected.ConvertTo().Gramm.Per.Kilo.Meter;
+				row[FCAUXC_KM] = fuelConsumptionAuxStartStopCorrected.ConvertTo().Gramm.Per.Kilo.Meter;
 			}
 
-			var kilogramPerMeter = data.CO2PerMeter();
+			row[FCWHTCC_H] = modData.FuelConsumptionWHTCPerSecond().ConvertTo().Gramm.Per.Hour;
+			var fuelConsumptionWHTCCorrected = modData.FuelConsumptionWHTC();
+			if (fuelConsumptionWHTCCorrected != null) {
+				row[FCWHTCC_KM] = fuelConsumptionWHTCCorrected.ConvertTo().Gramm.Per.Kilo.Meter;
+			}
+
+			row[FCAAUX_H] = modData.FuelConsumptionAAUXPerSecond().ConvertTo().Gramm.Per.Hour;
+			var fuelConsumptionAAUX = modData.FuelConsumptionAAUX();
+			if (fuelConsumptionAAUX != null) {
+				row[FCAAUX_KM] = fuelConsumptionAAUX.ConvertTo().Gramm.Per.Kilo.Meter;
+			}
+
+			row[FCFINAL_H] = modData.FuelConsumptionFinalPerSecond().ConvertTo().Gramm.Per.Hour;
+			var fcfinal = modData.FuelConsumptionFinal();
+			if (fcfinal != null) {
+				row[FCFINAL_KM] = fcfinal.ConvertTo().Gramm.Per.Kilo.Meter;
+			}
+			row[FCFINAL_LITERPER100KM] = modData.FuelConsumptionFinalLiterPer100Kilometer();
+			if (vehicleLoading != null && !vehicleLoading.IsEqual(0)) {
+				row[FCFINAL_LITERPER100TKM] = modData.FuelConsumptionFinalLiterPer100Kilometer() / vehicleLoading.ConvertTo().Ton;
+			}
+
+			var kilogramPerMeter = modData.CO2PerMeter();
 			if (kilogramPerMeter != null) {
-				row[CO2KM] = kilogramPerMeter.ConvertTo().Gramm.Per.Kilo.Meter;
+				row[CO2_KM] = kilogramPerMeter.ConvertTo().Gramm.Per.Kilo.Meter;
 				if (vehicleLoading != null && !vehicleLoading.IsEqual(0)) {
-					row[CO2TKM] = kilogramPerMeter.ConvertTo().Gramm.Per.Kilo.Meter / vehicleLoading.ConvertTo().Ton;
+					row[CO2_TKM] = kilogramPerMeter.ConvertTo().Gramm.Per.Kilo.Meter / vehicleLoading.ConvertTo().Ton;
 				}
 			}
 
-			row[PWHEELPOS] = data.PowerWheelPositive().ConvertTo().Kilo.Watt;
-			row[PBRAKE] = data.PowerBrake().ConvertTo().Kilo.Watt;
-			row[EPOSICE] = data.EngineWorkPositive().ConvertTo().Kilo.Watt.Hour;
-			row[ENEGICE] = data.EngineWorkNegative().ConvertTo().Kilo.Watt.Hour;
-			row[EAIR] = data.WorkAirResistance().ConvertTo().Kilo.Watt.Hour;
-			row[EROLL] = data.WorkRollingResistance().ConvertTo().Kilo.Watt.Hour;
-			row[EGRAD] = data.WorkRoadGradientResistance().ConvertTo().Kilo.Watt.Hour;
-			row[EACC] = data.PowerAccelerations().ConvertTo().Kilo.Watt.Hour;
-			row[EAUX] = data.WorkAuxiliaries().ConvertTo().Kilo.Watt.Hour;
-			WriteAuxiliaries(data, row);
-			row[EBRAKE] = data.WorkTotalMechanicalBrake().ConvertTo().Kilo.Watt.Hour;
-			row[ETRANSM] = data.WorkTransmission().ConvertTo().Kilo.Watt.Hour;
-			row[ERETARDER] = data.WorkRetarder().ConvertTo().Kilo.Watt.Hour;
-			row[ETORQUECONV] = data.WorkTorqueConverter().ConvertTo().Kilo.Watt.Hour;
-			row[MASS] = vehicleMass;
-			row[LOADING] = vehicleLoading;
-			row[ACCELERATIONS] = data.AccelerationAverage();
-			row[APOS] = data.AccelerationsPositive3SecondAverage();
-			row[ANEG] = data.AverageAccelerations3SecondNegative();
-			row[ACCNOISE] = data.AccelerationNoise();
-			row[PACC] = data.PercentAccelerationTime();
-			row[PDEC] = data.PercentDecelerationTime();
-			row[PCRUISE] = data.PercentCruiseTime();
-			row[PSTOP] = data.PercentStopTime();
+			row[P_WHEEL_POS] = modData.PowerWheelPositive().ConvertTo().Kilo.Watt;
+			row[P_BRAKE_LOSS] = modData.PowerBrake().ConvertTo().Kilo.Watt;
+			row[P_ENG_POS] = modData.EnginePowerPositiveAverage().ConvertTo().Kilo.Watt;
+			row[P_ENG_NEG] = modData.EnginePowerNegativeAverage().ConvertTo().Kilo.Watt;
+
+			foreach (var aux in modData.Auxiliaries) {
+				var colName = string.Format(E_AUX_FORMAT, aux.Key);
+				if (!_table.Columns.Contains(colName)) {
+					var col = _table.Columns.Add(colName, typeof(SI));
+					// move the new column to correct position
+					col.SetOrdinal(_table.Columns[E_AUX].Ordinal);
+				}
+				row[colName] = modData.AuxiliaryWork(aux.Value).ConvertTo().Kilo.Watt.Hour;
+			}
+			row[E_AUX] = modData.WorkAuxiliaries().ConvertTo().Kilo.Watt.Hour;
+
+			row[E_AIR] = modData.WorkAirResistance().ConvertTo().Kilo.Watt.Hour;
+			row[E_ROLL] = modData.WorkRollingResistance().ConvertTo().Kilo.Watt.Hour;
+			row[E_GRAD] = modData.WorkRoadGradientResistance().ConvertTo().Kilo.Watt.Hour;
+			row[E_INERTIA] = modData.PowerAccelerations().ConvertTo().Kilo.Watt.Hour;
+			row[E_BRAKE] = modData.WorkTotalMechanicalBrake().ConvertTo().Kilo.Watt.Hour;
+			row[E_GBX_AXL_LOSS] = modData.WorkTransmission().ConvertTo().Kilo.Watt.Hour;
+			row[E_RET_LOSS] = modData.WorkRetarder().ConvertTo().Kilo.Watt.Hour;
+			row[E_TC_LOSS] = modData.WorkTorqueConverter().ConvertTo().Kilo.Watt.Hour;
+			row[E_ENG_POS] = modData.EngineWorkPositive().ConvertTo().Kilo.Watt.Hour;
+			row[E_ENG_NEG] = modData.EngineWorkNegative().ConvertTo().Kilo.Watt.Hour;
+
+			row[ACC] = modData.AccelerationAverage();
+			row[ACC_POS] = modData.AccelerationsPositive();
+			row[ACC_NEG] = modData.AccelerationsNegative();
+			row[ACC_TIMESHARE] = modData.AccelerationTimeShare();
+			row[DEC_TIMESHARE] = modData.DecelerationTimeShare();
+			row[CRUISE_TIMESHARE] = modData.CruiseTimeShare();
+			row[STOP_TIMESHARE] = modData.StopTimeShare();
 		}
 
 		private static string ReplaceNotAllowedCharacters(string text)
 		{
 			return text.Replace('#', '_').Replace(',', '_').Replace('\n', '_').Replace('\r', '_');
-		}
-
-		[MethodImpl(MethodImplOptions.Synchronized)]
-		private void WriteAuxiliaries(IModalDataContainer data, DataRow row)
-		{
-			foreach (var aux in data.Auxiliaries) {
-				var colName = "Eaux_" + aux.Key + " [kWh]";
-				if (!_table.Columns.Contains(colName)) {
-					_table.Columns.Add(colName, typeof(SI));
-					_auxColumns.Add(colName);
-				}
-
-				row[colName] = data.AuxiliaryWork(aux.Value).ConvertTo().Kilo.Watt.Hour;
-			}
-		}
-
-		public virtual void Finish()
-		{
-			var dataColumns = new List<string>();
-
-			if (_engineOnly) {
-				dataColumns.AddRange(new[] { JOB, INPUTFILE, CYCLE, STATUS, TIME, PPOS, PNEG, FCMAP, FCAUXC, FCWHTCC });
-			} else {
-				dataColumns.AddRange(new[] { JOB, INPUTFILE, CYCLE, STATUS, TIME, DISTANCE, SPEED, ALTITUDE });
-
-				dataColumns.AddRange(_auxColumns);
-
-				dataColumns.AddRange(new[] {
-					PPOS, PNEG, FCMAP, FCMAPKM, FCAUXC, FCAUXCKM, FCWHTCC, FCWHTCCKM, CO2KM, CO2TKM, FCFINAL, FCFINAL_LITERPER100KM,
-					FCFINAL_LITERPER100TKM, PWHEELPOS, PBRAKE, EPOSICE, ENEGICE, EAIR, EROLL, EGRAD, EACC, EAUX, EBRAKE, ETRANSM,
-					ERETARDER, ETORQUECONV, MASS, LOADING, ACCELERATIONS, APOS, ANEG, ACCNOISE, PACC, PDEC, PCRUISE, PSTOP
-				});
-			}
-
-			var sortedAndFilteredTable = new DataView(_table, "", JOB, DataViewRowState.CurrentRows).ToTable(false,
-				dataColumns.ToArray());
-
-			if (_sumWriter != null) {
-				_sumWriter.WriteSumData(sortedAndFilteredTable);
-			}
 		}
 	}
 }

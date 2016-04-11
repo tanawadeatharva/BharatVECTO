@@ -50,7 +50,6 @@ namespace TUGraz.VectoCore.Models.Simulation.Data
 			public const string ShowUnit = "showUnit";
 		}
 
-
 		public ModalResults()
 		{
 			foreach (var value in EnumHelper.GetValues<ModalResultField>()) {
@@ -190,6 +189,16 @@ namespace TUGraz.VectoCore.Models.Simulation.Data
 		[ModalResultField(typeof(SI), name: "FC-WHTCc", caption: "FC-WHTCc [g/h]", outputFactor: 3600 * 1000)] FCWHTCc,
 
 		/// <summary>
+		/// [g/h] Fuel consumption after smart auxiliary correction.
+		/// </summary>
+		[ModalResultField(typeof(SI), name: "FC-AAUX", caption: "FC-AAUX [g/h]", outputFactor: 3600 * 1000)] FCAAUX,
+
+		/// <summary>
+		/// [g/h] Fuel consumption after WHTC Correction. (Based on FC-AUXc.)
+		/// </summary>
+		[ModalResultField(typeof(SI), name: "FC-Final", caption: "FC-Final [g/h]", outputFactor: 3600 * 1000)] FCFinal,
+
+		/// <summary>
 		///     [km]	Travelled distance.
 		/// </summary>
 		[ModalResultField(typeof(SI), caption: "dist [m]")] dist,
@@ -286,7 +295,6 @@ namespace TUGraz.VectoCore.Models.Simulation.Data
 
 		[ModalResultField(typeof(SI), caption: "P_eng_fcmap [kW]", outputFactor: 1e-3)] P_eng_fcmap,
 
-
 		/// <summary>
 		///     [kW]	Power demand of Auxiliary with ID xxx. See also Aux Dialog and Driving Cycle.
 		/// </summary>
@@ -319,7 +327,6 @@ namespace TUGraz.VectoCore.Models.Simulation.Data
 
 		[ModalResultField(typeof(SI), name: "ds [m]")] simulationDistance
 	}
-
 
 	[AttributeUsage(AttributeTargets.Field)]
 	public class ModalResultFieldAttribute : Attribute

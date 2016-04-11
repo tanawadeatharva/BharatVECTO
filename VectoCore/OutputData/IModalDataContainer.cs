@@ -79,7 +79,6 @@ namespace TUGraz.VectoCore.OutputData
 
 		VectoRun.Status RunStatus { get; }
 
-
 		/// <summary>
 		/// Finishes the writing of the DataWriter.
 		/// </summary>
@@ -90,7 +89,6 @@ namespace TUGraz.VectoCore.OutputData
 		IEnumerable<T> GetValues<T>(ModalResultField key);
 
 		IEnumerable<T> GetValues<T>(DataColumn col);
-
 
 		Dictionary<string, DataColumn> Auxiliaries { get; set; }
 
@@ -140,7 +138,7 @@ namespace TUGraz.VectoCore.OutputData
 			return self ?? defaultValue;
 		}
 
-		public static MeterPerSquareSecond AccelerationsPositive3SecondAverage(this IModalDataContainer data)
+		public static MeterPerSquareSecond AccelerationsPositive(this IModalDataContainer data)
 		{
 			try {
 				var acceleration3SecondAverage = AccelerationPer3Seconds(data);
@@ -150,18 +148,7 @@ namespace TUGraz.VectoCore.OutputData
 			}
 		}
 
-		public static MeterPerSquareSecond AccelerationNoise(this IModalDataContainer data)
-		{
-			var avg = data.AccelerationAverage();
-			var accelerationAverages = AccelerationPerSecond(data).ToList();
-			if (accelerationAverages.Any()) {
-				var sqareAvg = accelerationAverages.Select(x => (x - avg) * (x - avg)).Sum() / accelerationAverages.Count;
-				return sqareAvg.Sqrt().Cast<MeterPerSquareSecond>();
-			}
-			return null;
-		}
-
-		public static MeterPerSquareSecond AverageAccelerations3SecondNegative(this IModalDataContainer data)
+		public static MeterPerSquareSecond AccelerationsNegative(this IModalDataContainer data)
 		{
 			var acceleration3SecondAverage = AccelerationPer3Seconds(data).ToList();
 			if (acceleration3SecondAverage.Any()) {
@@ -170,7 +157,7 @@ namespace TUGraz.VectoCore.OutputData
 			return null;
 		}
 
-		public static Scalar PercentAccelerationTime(this IModalDataContainer data)
+		public static Scalar AccelerationTimeShare(this IModalDataContainer data)
 		{
 			var acceleration3SecondAverage = AccelerationPer3Seconds(data).ToList();
 			if (acceleration3SecondAverage.Any()) {
@@ -179,7 +166,7 @@ namespace TUGraz.VectoCore.OutputData
 			return null;
 		}
 
-		public static Scalar PercentDecelerationTime(this IModalDataContainer data)
+		public static Scalar DecelerationTimeShare(this IModalDataContainer data)
 		{
 			var acceleration3SecondAverage = AccelerationPer3Seconds(data).ToList();
 			if (acceleration3SecondAverage.Any()) {
@@ -188,7 +175,7 @@ namespace TUGraz.VectoCore.OutputData
 			return null;
 		}
 
-		public static Scalar PercentCruiseTime(this IModalDataContainer data)
+		public static Scalar CruiseTimeShare(this IModalDataContainer data)
 		{
 			var acceleration3SecondAverage = AccelerationPer3Seconds(data).ToList();
 			if (acceleration3SecondAverage.Any()) {
@@ -198,7 +185,7 @@ namespace TUGraz.VectoCore.OutputData
 			return null;
 		}
 
-		public static Scalar PercentStopTime(this IModalDataContainer data)
+		public static Scalar StopTimeShare(this IModalDataContainer data)
 		{
 			var stopTime = data.GetValues<MeterPerSecond>(ModalResultField.v_act)
 				.Zip(data.SimulationIntervals(), (v, dt) => new { v, dt })
@@ -310,7 +297,7 @@ namespace TUGraz.VectoCore.OutputData
 			return data.TimeIntegral<WattSecond>(ModalResultField.P_wheel_in, x => x > 0) / data.Duration();
 		}
 
-		public static KilogramPerMeter FuelConsumptionWHTCCorrected(this IModalDataContainer data)
+		public static KilogramPerMeter FuelConsumptionWHTC(this IModalDataContainer data)
 		{
 			var distance = data.Distance();
 			if (distance == null || distance.IsEqual(0)) {
@@ -319,12 +306,12 @@ namespace TUGraz.VectoCore.OutputData
 			return data.TimeIntegral<Kilogram>(ModalResultField.FCWHTCc) / distance;
 		}
 
-		public static KilogramPerSecond FuelConsumptionWHTCCorrectedPerSecond(this IModalDataContainer data)
+		public static KilogramPerSecond FuelConsumptionWHTCPerSecond(this IModalDataContainer data)
 		{
 			return data.TimeIntegral<Kilogram>(ModalResultField.FCWHTCc) / data.Duration();
 		}
 
-		public static KilogramPerMeter FuelConsumptionAuxStartStopCorrected(this IModalDataContainer data)
+		public static KilogramPerMeter FuelConsumptionAuxStartStop(this IModalDataContainer data)
 		{
 			var distance = data.Distance();
 			if (distance == null || distance.IsEqual(0)) {
@@ -333,9 +320,28 @@ namespace TUGraz.VectoCore.OutputData
 			return data.TimeIntegral<Kilogram>(ModalResultField.FCAUXc) / distance;
 		}
 
-		public static KilogramPerSecond FuelConsumptionAuxStartStopCorrectedPerSecond(this IModalDataContainer data)
+		public static KilogramPerSecond FuelConsumptionAAUXPerSecond(this IModalDataContainer data)
+		{
+			return data.TimeIntegral<Kilogram>(ModalResultField.FCAAUX) / data.Duration();
+		}
+
+		public static KilogramPerMeter FuelConsumptionAAUX(this IModalDataContainer data)
+		{
+			var distance = data.Distance();
+			if (distance == null || distance.IsEqual(0)) {
+				return null;
+			}
+			return data.TimeIntegral<Kilogram>(ModalResultField.FCAAUX) / distance;
+		}
+
+		public static KilogramPerSecond FuelConsumptionAuxStartStopPerSecond(this IModalDataContainer data)
 		{
 			return data.TimeIntegral<Kilogram>(ModalResultField.FCAUXc) / data.Duration();
+		}
+
+		public static KilogramPerSecond FuelConsumptionFinalPerSecond(this IModalDataContainer data)
+		{
+			return data.TimeIntegral<Kilogram>(ModalResultField.FCFinal) / data.Duration();
 		}
 
 		public static KilogramPerMeter FuelConsumptionFinal(this IModalDataContainer data)
@@ -344,7 +350,7 @@ namespace TUGraz.VectoCore.OutputData
 			if (distance == null || distance.IsEqual(0)) {
 				return null;
 			}
-			return data.TimeIntegral<Kilogram>(ModalResultField.FCWHTCc) / distance;
+			return data.TimeIntegral<Kilogram>(ModalResultField.FCFinal) / distance;
 		}
 
 		public static SI FuelConsumptionFinalLiterPer100Kilometer(this IModalDataContainer data)
@@ -364,21 +370,15 @@ namespace TUGraz.VectoCore.OutputData
 			if (distance == null || distance.IsEqual(0)) {
 				return null;
 			}
-			return data.TimeIntegral<Kilogram>(ModalResultField.FCMap) * Physics.CO2PerFuelWeight / distance;
+			return data.TimeIntegral<Kilogram>(ModalResultField.FCFinal) * Physics.CO2PerFuelWeight / distance;
 		}
 
-		public static SI FuelConsumptionLiterPer100Kilometer(this IModalDataContainer data)
-		{
-			var fcVolumePerMeter = data.FuelConsumptionPerMeter() / Physics.FuelDensity;
-			return fcVolumePerMeter.ConvertTo().Cubic.Dezi.Meter * 100.SI().Kilo.Meter;
-		}
-
-		public static KilogramPerSecond FuelConsumptionPerSecond(this IModalDataContainer data)
+		public static KilogramPerSecond FCMapPerSecond(this IModalDataContainer data)
 		{
 			return data.TimeIntegral<Kilogram>(ModalResultField.FCMap) / data.Duration();
 		}
 
-		public static KilogramPerMeter FuelConsumptionPerMeter(this IModalDataContainer data)
+		public static KilogramPerMeter FCMapPerMeter(this IModalDataContainer data)
 		{
 			var distance = data.Distance();
 			if (distance == null || distance.IsEqual(0)) {
@@ -427,7 +427,6 @@ namespace TUGraz.VectoCore.OutputData
 			return data.GetValues<Watt>(auxCol).Zip(simulationIntervals, (value, dt) => value * dt).Sum().Cast<WattSecond>();
 		}
 
-
 		private static T TimeIntegral<T>(this IModalDataContainer data, ModalResultField field, Func<SI, bool> filter = null)
 			where T : SIBase<T>
 		{
@@ -456,7 +455,6 @@ namespace TUGraz.VectoCore.OutputData
 				}
 			}
 		}
-
 
 		/// <summary>
 		/// Calculates the average acceleration for whole seconds.
