@@ -33,7 +33,8 @@ using System;
 using System.Collections.Generic;
 using System.Data;
 using System.Linq;
-using TUGraz.VectoCore.Exceptions;
+using TUGraz.VectoCommon.Exceptions;
+using TUGraz.VectoCommon.Utils;
 using TUGraz.VectoCore.Models.Declaration;
 using TUGraz.VectoCore.Utils;
 

@@ -31,10 +31,10 @@
 
 using System.Collections.Generic;
 using System.Data;
-using TUGraz.VectoCore.Models.SimulationComponent.Data;
-using TUGraz.VectoCore.Utils;
+using TUGraz.VectoCommon.Models;
+using TUGraz.VectoCommon.Utils;
 
-namespace TUGraz.VectoCore.InputData
+namespace TUGraz.VectoCommon.InputData
 {
 	public interface IEngineeringJobInputData : IDeclarationJobInputData
 	{

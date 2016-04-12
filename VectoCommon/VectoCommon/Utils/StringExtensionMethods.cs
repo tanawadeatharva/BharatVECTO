@@ -29,37 +29,40 @@
 *   Martin Rexeis, rexeis@ivt.tugraz.at, IVT, Graz University of Technology
 */
 
-using System;
-using JetBrains.Annotations;
-using TUGraz.VectoCore.Models.Connector.Ports;
+using System.Collections.Generic;
+using System.Globalization;
+using System.IO;
+using System.Linq;
+using System.Text;
 
-namespace TUGraz.VectoCore.Exceptions
+namespace TUGraz.VectoCommon.Utils
 {
-	public class VectoSimulationException : VectoException
+	public static class StringExtensionMethods
 	{
-		public VectoSimulationException(string msg) : base(msg) {}
-		public VectoSimulationException(string msg, Exception inner) : base(msg, inner) {}
-
-		[StringFormatMethod("message")]
-		public VectoSimulationException(string message, params object[] args) : base(message, args) {}
-
-		//[StringFormatMethod("message")]
-		public VectoSimulationException(string message, Exception inner, params object[] args) : base(message, inner, args) {}
-	}
-
-	public class UnexpectedResponseException : VectoSimulationException
-	{
-		public IResponse Response;
-
-		public UnexpectedResponseException(string message, IResponse resp)
-			: base(message + Environment.NewLine + "{0}", resp)
+		public static string Join<T>(this string s, IEnumerable<T> values)
 		{
-			Response = resp;
+			return string.Join(s, values);
 		}
-	}
 
-	public class VectoSearchFailedException : VectoException
-	{
-		public VectoSearchFailedException(string message, params object[] args) : base(message, args) {}
+		public static double ToDouble(this string self)
+		{
+			return double.Parse(self, CultureInfo.InvariantCulture);
+		}
+
+		public static double IndulgentParse(this string self)
+		{
+			return double.Parse(new string(self.Trim().TakeWhile(c => char.IsDigit(c) || c == '.').ToArray()),
+				CultureInfo.InvariantCulture);
+		}
+
+		public static Stream GetStream(this string self)
+		{
+			return new MemoryStream(Encoding.UTF8.GetBytes(self));
+		}
+
+		public static string RemoveWhitespace(this string self)
+		{
+			return string.Concat(self.Split());
+		}
 	}
 }

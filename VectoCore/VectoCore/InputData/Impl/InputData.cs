@@ -31,10 +31,14 @@
 
 using System.Collections.Generic;
 using System.Data;
+using TUGraz.VectoCommon.InputData;
+using TUGraz.VectoCommon.Models;
+using TUGraz.VectoCommon.Utils;
 using TUGraz.VectoCore.InputData;
 using TUGraz.VectoCore.Models.Declaration;
 using TUGraz.VectoCore.Models.SimulationComponent.Data;
 using TUGraz.VectoCore.Utils;
+using DriverData = TUGraz.VectoCore.Models.SimulationComponent.Data.DriverData;
 
 namespace TUGraz.VectoCore.InputData.Impl
 {
@@ -67,7 +71,7 @@ namespace TUGraz.VectoCore.InputData.Impl
 
 	public class OverSpeedEcoRollInputData : IOverSpeedEcoRollEngineeringInputData
 	{
-		public DriverData.DriverMode Mode { get; internal set; }
+		public DriverMode Mode { get; internal set; }
 
 		public MeterPerSecond MinSpeed { get; internal set; }
 

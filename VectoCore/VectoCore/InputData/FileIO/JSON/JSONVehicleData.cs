@@ -34,6 +34,9 @@ using System.Collections.Generic;
 using System.Data;
 using System.Linq;
 using Newtonsoft.Json.Linq;
+using TUGraz.VectoCommon.InputData;
+using TUGraz.VectoCommon.Models;
+using TUGraz.VectoCommon.Utils;
 using TUGraz.VectoCore.InputData.Impl;
 using TUGraz.VectoCore.Models.Declaration;
 using TUGraz.VectoCore.Models.SimulationComponent.Data;
@@ -150,13 +153,13 @@ namespace TUGraz.VectoCore.InputData.FileIO.JSON
 
 		#region IRetarderInputData
 
-		public virtual RetarderData.RetarderType Type
+		public virtual RetarderType Type
 		{
 			get
 			{
 				return
-					(RetarderData.RetarderType)
-						Enum.Parse(typeof(RetarderData.RetarderType),
+					(RetarderType)
+						Enum.Parse(typeof(RetarderType),
 							Body.GetEx(JsonKeys.Vehicle_Retarder).GetEx<string>(JsonKeys.Vehicle_Retarder_Type), true);
 			}
 		}

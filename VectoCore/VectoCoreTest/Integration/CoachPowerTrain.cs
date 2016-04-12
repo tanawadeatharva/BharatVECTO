@@ -32,6 +32,8 @@
 using System;
 using System.Collections.Generic;
 using System.Linq;
+using TUGraz.VectoCommon.Models;
+using TUGraz.VectoCommon.Utils;
 using TUGraz.VectoCore.Models.Declaration;
 using TUGraz.VectoCore.Models.Simulation.Data;
 using TUGraz.VectoCore.Models.Simulation.Impl;
@@ -195,12 +197,12 @@ namespace TUGraz.VectoCore.Tests.Integration
 				},
 				OverSpeedEcoRoll = overspeed
 					? new DriverData.OverSpeedEcoRollData {
-						Mode = DriverData.DriverMode.Overspeed,
+						Mode = DriverMode.Overspeed,
 						MinSpeed = 50.KMPHtoMeterPerSecond(),
 						OverSpeed = 5.KMPHtoMeterPerSecond()
 					}
 					: new DriverData.OverSpeedEcoRollData {
-						Mode = DriverData.DriverMode.Off
+						Mode = DriverMode.Off
 					},
 				StartStop = new VectoRunData.StartStopData {
 					Enabled = false

@@ -31,6 +31,9 @@
 
 using System.Collections.Generic;
 using System.Linq;
+using TUGraz.VectoCommon.InputData;
+using TUGraz.VectoCommon.Models;
+using TUGraz.VectoCommon.Utils;
 using TUGraz.VectoCore.InputData.Reader.DataObjectAdaper;
 using TUGraz.VectoCore.Models;
 using TUGraz.VectoCore.Models.Declaration;

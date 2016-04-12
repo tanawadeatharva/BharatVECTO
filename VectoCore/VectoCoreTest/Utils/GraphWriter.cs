@@ -43,6 +43,7 @@ using System.Text.RegularExpressions;
 using System.Windows.Forms.DataVisualization.Charting;
 using Microsoft.VisualStudio.TestTools.UnitTesting;
 using NLog;
+using TUGraz.VectoCommon.Utils;
 using TUGraz.VectoCore.Models.Simulation.Data;
 using TUGraz.VectoCore.Utils;
 using Point = System.Drawing.Point;

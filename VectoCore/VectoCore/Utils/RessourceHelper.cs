@@ -31,7 +31,7 @@
 
 using System.IO;
 using System.Reflection;
-using TUGraz.VectoCore.Exceptions;
+using TUGraz.VectoCommon.Exceptions;
 
 namespace TUGraz.VectoCore.Utils
 {

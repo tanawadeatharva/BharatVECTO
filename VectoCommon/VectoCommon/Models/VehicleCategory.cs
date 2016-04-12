@@ -29,39 +29,14 @@
 *   Martin Rexeis, rexeis@ivt.tugraz.at, IVT, Graz University of Technology
 */
 
-using TUGraz.VectoCore.Utils;
-
-namespace TUGraz.VectoCore.Models.Connector.Ports
+namespace TUGraz.VectoCommon.Models
 {
-	/// <summary>
-	/// Defines an interface for a Response.
-	/// </summary>
-	public interface IResponse
+	public enum VehicleCategory
 	{
-		Second SimulationInterval { get; set; }
-
-		MeterPerSquareSecond Acceleration { get; set; }
-
-		Meter SimulationDistance { get; set; }
-
-		Watt EnginePowerRequest { get; set; }
-
-		Watt AuxiliariesPowerDemand { get; set; }
-
-		Watt ClutchPowerRequest { get; set; }
-
-		Watt GearboxPowerRequest { get; set; }
-
-		Watt AxlegearPowerRequest { get; set; }
-
-		Watt WheelsPowerRequest { get; set; }
-
-		Watt VehiclePowerRequest { get; set; }
-
-		Watt BrakePower { get; set; }
-
-		PerSecond EngineSpeed { get; set; }
-
-		Second AbsTime { get; set; }
+		RigidTruck,
+		Tractor,
+		CityBus,
+		InterurbanBus,
+		Coach
 	}
 }

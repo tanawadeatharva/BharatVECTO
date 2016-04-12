@@ -32,6 +32,8 @@
 using System.Collections.Generic;
 using System.Linq;
 using Microsoft.VisualStudio.TestTools.UnitTesting;
+using TUGraz.VectoCommon.Models;
+using TUGraz.VectoCommon.Utils;
 using TUGraz.VectoCore.Configuration;
 using TUGraz.VectoCore.Models.Connector.Ports;
 using TUGraz.VectoCore.Models.Connector.Ports.Impl;
@@ -408,7 +410,7 @@ namespace TUGraz.VectoCore.Tests.Models.SimulationComponent
 					Deceleration = -0.5.SI<MeterPerSquareSecond>()
 				},
 				OverSpeedEcoRoll = new DriverData.OverSpeedEcoRollData {
-					Mode = DriverData.DriverMode.Off
+					Mode = DriverMode.Off
 				},
 				StartStop = new VectoRunData.StartStopData {
 					Enabled = false

@@ -30,28 +30,25 @@
 */
 
 using System;
-using System.Collections;
 using System.Collections.Generic;
 using System.Diagnostics;
 using System.Diagnostics.CodeAnalysis;
-using System.Diagnostics.Contracts;
 using System.Globalization;
 using System.Linq;
 using System.Linq.Expressions;
 using System.Reflection;
 using System.Runtime.CompilerServices;
-using System.Runtime.Serialization;
-using Newtonsoft.Json;
-using TUGraz.VectoCore.Exceptions;
+using TUGraz.VectoCommon.Exceptions;
+using TUGraz.VectoCore.Utils;
 
-namespace TUGraz.VectoCore.Utils
+namespace TUGraz.VectoCommon.Utils
 {
 	/// <summary>
 	/// SI Class for Scalar Values. Converts implicitely to double and is only castable if the SI value has no units.
 	/// </summary>
 	public class Scalar : SIBase<Scalar>
 	{
-		[JsonConstructor, DebuggerHidden]
+		[DebuggerHidden]
 		private Scalar(double val) : base(new SI(val)) {}
 
 		public static implicit operator double(Scalar self)
@@ -119,7 +116,7 @@ namespace TUGraz.VectoCore.Utils
 	/// </summary>
 	public class Newton : SIBase<Newton>
 	{
-		[JsonConstructor, DebuggerHidden]
+		[DebuggerHidden]
 		private Newton(double val) : base(val)
 		{
 			Numerator = new[] { Unit.N };
@@ -157,7 +154,7 @@ namespace TUGraz.VectoCore.Utils
 	/// </summary>
 	public class Radian : SIBase<Radian>
 	{
-		[JsonConstructor, DebuggerHidden]
+		[DebuggerHidden]
 		private Radian(double val) : base(val) {}
 	}
 
@@ -166,7 +163,7 @@ namespace TUGraz.VectoCore.Utils
 	/// </summary>
 	public class PerSquareSecond : SIBase<PerSquareSecond>
 	{
-		[JsonConstructor, DebuggerHidden]
+		[DebuggerHidden]
 		private PerSquareSecond(double val) : base(val)
 		{
 			Denominator = new[] { Unit.s, Unit.s };
@@ -185,7 +182,7 @@ namespace TUGraz.VectoCore.Utils
 	/// </summary>
 	public class MeterPerSquareSecond : SIBase<MeterPerSquareSecond>
 	{
-		[JsonConstructor, DebuggerHidden]
+		[DebuggerHidden]
 		protected MeterPerSquareSecond(double val) : base(val)
 		{
 			Numerator = new[] { Unit.m };
@@ -208,7 +205,7 @@ namespace TUGraz.VectoCore.Utils
 	/// </summary>
 	public class Second : SIBase<Second>
 	{
-		[JsonConstructor, DebuggerHidden]
+		[DebuggerHidden]
 		private Second(double val) : base(val)
 		{
 			Numerator = new[] { Unit.s };
@@ -220,7 +217,7 @@ namespace TUGraz.VectoCore.Utils
 	/// </summary>
 	public class Meter : SIBase<Meter>
 	{
-		[JsonConstructor, DebuggerHidden]
+		[DebuggerHidden]
 		protected Meter(double val) : base(val)
 		{
 			Numerator = new[] { Unit.m };
@@ -250,7 +247,7 @@ namespace TUGraz.VectoCore.Utils
 
 	public class KilogramPerMeter : SIBase<KilogramPerMeter>
 	{
-		[JsonConstructor, DebuggerHidden]
+		[DebuggerHidden]
 		protected KilogramPerMeter(double val)
 			: base(val)
 		{
@@ -264,7 +261,7 @@ namespace TUGraz.VectoCore.Utils
 	/// </summary>
 	public class Kilogram : SIBase<Kilogram>
 	{
-		[JsonConstructor, DebuggerHidden]
+		[DebuggerHidden]
 		protected Kilogram(double val) : base(val)
 		{
 			Numerator = new[] { Unit.k, Unit.g };
@@ -294,7 +291,7 @@ namespace TUGraz.VectoCore.Utils
 	/// </summary>
 	public class KilogramPerSecond : SIBase<KilogramPerSecond>
 	{
-		[JsonConstructor, DebuggerHidden]
+		[DebuggerHidden]
 		protected KilogramPerSecond(double val) : base(new SI(val).Kilo.Gramm.Per.Second) {}
 
 		[DebuggerHidden]
@@ -310,7 +307,7 @@ namespace TUGraz.VectoCore.Utils
 	/// </summary>
 	public class Ton : SIBase<Ton>
 	{
-		[JsonConstructor, DebuggerHidden]
+		[DebuggerHidden]
 		protected Ton(double val) : base(val * 1000.0)
 		{
 			Numerator = new[] { Unit.k, Unit.g };
@@ -322,7 +319,7 @@ namespace TUGraz.VectoCore.Utils
 	/// </summary>
 	public class SquareMeter : SIBase<SquareMeter>
 	{
-		[JsonConstructor, DebuggerHidden]
+		[DebuggerHidden]
 		private SquareMeter(double val) : base(val)
 		{
 			Numerator = new[] { Unit.m, Unit.m };
@@ -334,7 +331,7 @@ namespace TUGraz.VectoCore.Utils
 	/// </summary>
 	public class CubicMeter : SIBase<CubicMeter>
 	{
-		[JsonConstructor, DebuggerHidden]
+		[DebuggerHidden]
 		private CubicMeter(double val) : base(val)
 		{
 			Numerator = new[] { Unit.m, Unit.m, Unit.m };
@@ -346,7 +343,7 @@ namespace TUGraz.VectoCore.Utils
 	/// </summary>
 	public class KilogramSquareMeter : SIBase<KilogramSquareMeter>
 	{
-		[JsonConstructor, DebuggerHidden]
+		[DebuggerHidden]
 		protected KilogramSquareMeter(double val) : base(val)
 		{
 			Numerator = new[] { Unit.k, Unit.g, Unit.m, Unit.m };
@@ -364,7 +361,7 @@ namespace TUGraz.VectoCore.Utils
 	/// </summary>
 	public class KilogramPerWattSecond : SIBase<KilogramPerWattSecond>
 	{
-		[JsonConstructor, DebuggerHidden]
+		[DebuggerHidden]
 		protected KilogramPerWattSecond(double val) : base(val)
 		{
 			Numerator = new[] { Unit.k, Unit.g };
@@ -374,7 +371,7 @@ namespace TUGraz.VectoCore.Utils
 
 	public class WattSecond : SIBase<WattSecond>
 	{
-		[JsonConstructor, DebuggerHidden]
+		[DebuggerHidden]
 		protected WattSecond(double val) : base(val)
 		{
 			Numerator = new[] { Unit.W, Unit.s };
@@ -393,7 +390,7 @@ namespace TUGraz.VectoCore.Utils
 	/// </summary>
 	public class Watt : SIBase<Watt>
 	{
-		[JsonConstructor, DebuggerHidden]
+		[DebuggerHidden]
 		private Watt(double val) : base(val)
 		{
 			Numerator = new[] { Unit.W };
@@ -446,7 +443,7 @@ namespace TUGraz.VectoCore.Utils
 	[DebuggerDisplay("rad/s: {this} | rpm: {ConvertTo().Rounds.Per.Minute}")]
 	public class PerSecond : SIBase<PerSecond>
 	{
-		[JsonConstructor, DebuggerHidden]
+		[DebuggerHidden]
 		private PerSecond(double val) : base(val)
 		{
 			Denominator = new[] { Unit.s };
@@ -459,7 +456,7 @@ namespace TUGraz.VectoCore.Utils
 	[DebuggerDisplay("{this} | {ConvertTo().Kilo.Meter.Per.Hour}")]
 	public class MeterPerSecond : SIBase<MeterPerSecond>
 	{
-		[JsonConstructor, DebuggerHidden]
+		[DebuggerHidden]
 		private MeterPerSecond(double val) : base(val)
 		{
 			Numerator = new[] { Unit.m };
@@ -518,7 +515,7 @@ namespace TUGraz.VectoCore.Utils
 	[DebuggerDisplay("rad/s: {this} | rpm: {ConvertTo().Rounds.Per.Minute}")]
 	public class RoundsPerMinute : SIBase<RoundsPerMinute>
 	{
-		[JsonConstructor, DebuggerHidden]
+		[DebuggerHidden]
 		private RoundsPerMinute(double val) : base(new SI(val).Rounds.Per.Minute) {}
 	}
 
@@ -527,7 +524,7 @@ namespace TUGraz.VectoCore.Utils
 	/// </summary>
 	public class NewtonMeter : SIBase<NewtonMeter>
 	{
-		[JsonConstructor, DebuggerHidden]
+		[DebuggerHidden]
 		private NewtonMeter(double val) : base(val)
 		{
 			Numerator = new[] { Unit.N, Unit.m };
@@ -795,40 +792,39 @@ namespace TUGraz.VectoCore.Utils
 	/// <remarks>
 	/// Usage: new SI(1.0).Newton.Meter, new SI(2.3).Rounds.Per.Minute
 	/// </remarks>
-	[DataContract]
 	public class SI : IComparable
 	{
 		/// <summary>
 		/// The basic scalar value of the SI.
 		/// </summary>
-		[DataMember] protected readonly double Val;
+		 protected readonly double Val;
 
 		/// <summary>
 		/// The denominator of the SI.
 		/// </summary>
-		[DataMember] protected Unit[] Denominator;
+		 protected Unit[] Denominator;
 
 		/// <summary>
 		/// The numerator of the SI.
 		/// </summary>
-		[DataMember] protected Unit[] Numerator;
+		 protected Unit[] Numerator;
 
 		/// <summary>
 		/// The current exponent for conversion operations (Square, Cubic, Linear, e.g. new SI(3).Square.Meter).
 		/// Can be reseted with Reset, Per, Cast.
 		/// </summary>
-		[DataMember] protected readonly int Exponent;
+		 protected readonly int Exponent;
 
 		/// <summary>
 		/// A flag indicating if the current SI is in reciprocal mode (used in the <see cref="Per"/> method for reciprocal units: e.g. new SI(2).Meter.Per.Second) ==> [m/s]
 		/// Can be reseted with Reset, Per, Cast.
 		/// </summary>
-		[DataMember] protected readonly bool Reciproc;
+		 protected readonly bool Reciproc;
 
 		/// <summary>
 		/// A flag indicating if the current SI is in reverse mode (used for conversions: e.g. new SI(2).Rounds.Per.Minute.ConverTo.Radian.Per.Second ==> [rpm/min] => [rad/s]).
 		/// </summary>
-		[DataMember] protected readonly bool Reverse;
+		 protected readonly bool Reverse;
 
 
 		/// <summary>

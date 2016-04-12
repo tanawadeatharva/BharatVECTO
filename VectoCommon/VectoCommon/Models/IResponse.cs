@@ -29,14 +29,39 @@
 *   Martin Rexeis, rexeis@ivt.tugraz.at, IVT, Graz University of Technology
 */
 
-namespace TUGraz.VectoCore.InputData
+using TUGraz.VectoCommon.Utils;
+
+namespace TUGraz.VectoCommon.Models
 {
-	public enum IntegrityStatus
+	/// <summary>
+	/// Defines an interface for a Response.
+	/// </summary>
+	public interface IResponse
 	{
-		Unknown,
-		NoDigestProvided,
-		NotChecked,
-		DigestValid,
-		DigestInvalid
+		Second SimulationInterval { get; set; }
+
+		MeterPerSquareSecond Acceleration { get; set; }
+
+		Meter SimulationDistance { get; set; }
+
+		Watt EnginePowerRequest { get; set; }
+
+		Watt AuxiliariesPowerDemand { get; set; }
+
+		Watt ClutchPowerRequest { get; set; }
+
+		Watt GearboxPowerRequest { get; set; }
+
+		Watt AxlegearPowerRequest { get; set; }
+
+		Watt WheelsPowerRequest { get; set; }
+
+		Watt VehiclePowerRequest { get; set; }
+
+		Watt BrakePower { get; set; }
+
+		PerSecond EngineSpeed { get; set; }
+
+		Second AbsTime { get; set; }
 	}
 }

@@ -29,11 +29,9 @@
 *   Martin Rexeis, rexeis@ivt.tugraz.at, IVT, Graz University of Technology
 */
 
-using System;
-using TUGraz.VectoCore.Utils;
-using TUGraz.VectoCore.Models.SimulationComponent.Data;
+using TUGraz.VectoCommon.Utils;
 
-namespace TUGraz.VectoCore.Models.Declaration
+namespace TUGraz.VectoCommon.Models
 {
 	public enum AxleConfiguration
 	{

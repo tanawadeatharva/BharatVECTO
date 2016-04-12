@@ -31,7 +31,7 @@
 
 using System;
 using Microsoft.VisualStudio.TestTools.UnitTesting;
-using TUGraz.VectoCore.Exceptions;
+using TUGraz.VectoCommon.Exceptions;
 
 namespace TUGraz.VectoCore.Tests.Exceptions
 {

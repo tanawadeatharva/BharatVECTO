@@ -34,7 +34,7 @@ using System.IO;
 using JetBrains.Annotations;
 using NLog;
 
-namespace TUGraz.VectoCore.Exceptions
+namespace TUGraz.VectoCommon.Exceptions
 {
 	public class VectoException : Exception
 	{
@@ -48,14 +48,14 @@ namespace TUGraz.VectoCore.Exceptions
 			LogManager.Flush();
 		}
 
-		[StringFormatMethod("message")]
+		//[StringFormatMethod("message")]
 		public VectoException(string message, params object[] args)
 			: base(string.Format(message, args))
 		{
 			LogManager.Flush();
 		}
 
-		[StringFormatMethod("message")]
+		//[StringFormatMethod("message")]
 		protected VectoException(string message, Exception inner, params object[] args)
 			: base(string.Format(message, args), inner)
 		{

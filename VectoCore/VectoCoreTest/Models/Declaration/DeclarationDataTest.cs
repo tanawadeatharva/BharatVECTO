@@ -34,12 +34,14 @@ using System.Collections.Generic;
 using System.IO;
 using System.Linq;
 using Microsoft.VisualStudio.TestTools.UnitTesting;
-using TUGraz.VectoCore.Exceptions;
+using TUGraz.VectoCommon.Exceptions;
+using TUGraz.VectoCommon.Utils;
 using TUGraz.VectoCore.InputData.Reader.DataObjectAdaper;
 using TUGraz.VectoCore.Models.Declaration;
 using TUGraz.VectoCore.Models.SimulationComponent.Data;
 using TUGraz.VectoCore.Tests.Utils;
 using TUGraz.VectoCore.Utils;
+using CrossWindCorrectionMode = TUGraz.VectoCommon.Models.CrossWindCorrectionMode;
 
 namespace TUGraz.VectoCore.Tests.Models.Declaration
 {
@@ -145,14 +147,14 @@ namespace TUGraz.VectoCore.Tests.Models.Declaration
 				Assert.AreEqual(kv.Value, airDrag.Lookup(kv.Key));
 			}
 
-			var expectedCat = new Dictionary<VehicleCategory, AirDrag.AirDragEntry> {
+			var expectedCat = new Dictionary<VectoCommon.Models.VehicleCategory, AirDrag.AirDragEntry> {
 				{
-					VehicleCategory.RigidTruck, new AirDrag.AirDragEntry { A1 = 0.013526, A2 = 0.017746, A3 = -0.000666 }
+					VectoCommon.Models.VehicleCategory.RigidTruck, new AirDrag.AirDragEntry { A1 = 0.013526, A2 = 0.017746, A3 = -0.000666 }
 				},
-				{ VehicleCategory.Tractor, new AirDrag.AirDragEntry { A1 = 0.034767, A2 = 0.039367, A3 = -0.001897 } },
-				{ VehicleCategory.CityBus, new AirDrag.AirDragEntry { A1 = -0.000794, A2 = 0.02109, A3 = -0.00109 } },
-				{ VehicleCategory.Coach, new AirDrag.AirDragEntry { A1 = -0.000794, A2 = 0.02109, A3 = -0.00109 } }, {
-					VehicleCategory.InterurbanBus,
+				{ VectoCommon.Models.VehicleCategory.Tractor, new AirDrag.AirDragEntry { A1 = 0.034767, A2 = 0.039367, A3 = -0.001897 } },
+				{ VectoCommon.Models.VehicleCategory.CityBus, new AirDrag.AirDragEntry { A1 = -0.000794, A2 = 0.02109, A3 = -0.00109 } },
+				{ VectoCommon.Models.VehicleCategory.Coach, new AirDrag.AirDragEntry { A1 = -0.000794, A2 = 0.02109, A3 = -0.00109 } }, {
+					VectoCommon.Models.VehicleCategory.InterurbanBus,
 					new AirDrag.AirDragEntry { A1 = -0.000794, A2 = 0.02109, A3 = -0.00109 }
 				}
 			};
@@ -166,7 +168,7 @@ namespace TUGraz.VectoCore.Tests.Models.Declaration
 		public void CrossWindCorrectionTest()
 		{
 			var crossWindCorrectionCurve = new CrosswindCorrectionCdxALookup(
-				DeclarationDataAdapter.GetDeclarationAirResistanceCurve(VehicleCategory.Tractor,
+				DeclarationDataAdapter.GetDeclarationAirResistanceCurve(VectoCommon.Models.VehicleCategory.Tractor,
 					6.46.SI<SquareMeter>()), CrossWindCorrectionMode.DeclarationModeCorrection);
 
 			var tmp = crossWindCorrectionCurve.EffectiveAirDragArea(0.KMPHtoMeterPerSecond());
@@ -467,55 +469,55 @@ namespace TUGraz.VectoCore.Tests.Models.Declaration
 		public void SegmentLookupTest()
 		{
 			AssertHelper.Exception<VectoException>(
-				() => DeclarationData.Segments.Lookup(VehicleCategory.RigidTruck, AxleConfiguration.AxleConfig_4x2,
+				() => DeclarationData.Segments.Lookup(VectoCommon.Models.VehicleCategory.RigidTruck, VectoCommon.Models.AxleConfiguration.AxleConfig_4x2,
 					1000.SI<Kilogram>(), 0.SI<Kilogram>()), "Gross vehicle mass must be greater than 7.5 tons");
 
-			var segment = DeclarationData.Segments.Lookup(VehicleCategory.RigidTruck, AxleConfiguration.AxleConfig_4x2,
+			var segment = DeclarationData.Segments.Lookup(VectoCommon.Models.VehicleCategory.RigidTruck, VectoCommon.Models.AxleConfiguration.AxleConfig_4x2,
 				10000.SI<Kilogram>(), 0.SI<Kilogram>());
 			Assert.AreEqual(VehicleClass.Class1, segment.VehicleClass);
 
-			segment = DeclarationData.Segments.Lookup(VehicleCategory.Tractor, AxleConfiguration.AxleConfig_4x2,
+			segment = DeclarationData.Segments.Lookup(VectoCommon.Models.VehicleCategory.Tractor, VectoCommon.Models.AxleConfiguration.AxleConfig_4x2,
 				10000.SI<Kilogram>(), 0.SI<Kilogram>());
 			Assert.AreEqual(VehicleClass.Class1, segment.VehicleClass);
 
-			segment = DeclarationData.Segments.Lookup(VehicleCategory.RigidTruck, AxleConfiguration.AxleConfig_4x2,
+			segment = DeclarationData.Segments.Lookup(VectoCommon.Models.VehicleCategory.RigidTruck, VectoCommon.Models.AxleConfiguration.AxleConfig_4x2,
 				12000.SI<Kilogram>(), 0.SI<Kilogram>());
 			Assert.AreEqual(VehicleClass.Class2, segment.VehicleClass);
 
-			segment = DeclarationData.Segments.Lookup(VehicleCategory.Tractor, AxleConfiguration.AxleConfig_4x2,
+			segment = DeclarationData.Segments.Lookup(VectoCommon.Models.VehicleCategory.Tractor, VectoCommon.Models.AxleConfiguration.AxleConfig_4x2,
 				12000.SI<Kilogram>(), 0.SI<Kilogram>());
 			Assert.AreEqual(VehicleClass.Class2, segment.VehicleClass);
 
-			segment = DeclarationData.Segments.Lookup(VehicleCategory.RigidTruck, AxleConfiguration.AxleConfig_4x2,
+			segment = DeclarationData.Segments.Lookup(VectoCommon.Models.VehicleCategory.RigidTruck, VectoCommon.Models.AxleConfiguration.AxleConfig_4x2,
 				16000.SI<Kilogram>(), 0.SI<Kilogram>());
 			Assert.AreEqual(VehicleClass.Class3, segment.VehicleClass);
 
-			segment = DeclarationData.Segments.Lookup(VehicleCategory.Tractor, AxleConfiguration.AxleConfig_4x2,
+			segment = DeclarationData.Segments.Lookup(VectoCommon.Models.VehicleCategory.Tractor, VectoCommon.Models.AxleConfiguration.AxleConfig_4x2,
 				16000.SI<Kilogram>(), 0.SI<Kilogram>());
 			Assert.AreEqual(VehicleClass.Class3, segment.VehicleClass);
 
-			segment = DeclarationData.Segments.Lookup(VehicleCategory.RigidTruck, AxleConfiguration.AxleConfig_4x2,
+			segment = DeclarationData.Segments.Lookup(VectoCommon.Models.VehicleCategory.RigidTruck, VectoCommon.Models.AxleConfiguration.AxleConfig_4x2,
 				16001.SI<Kilogram>(), 0.SI<Kilogram>());
 			Assert.AreEqual(VehicleClass.Class4, segment.VehicleClass);
 
-			segment = DeclarationData.Segments.Lookup(VehicleCategory.Tractor, AxleConfiguration.AxleConfig_4x2,
+			segment = DeclarationData.Segments.Lookup(VectoCommon.Models.VehicleCategory.Tractor, VectoCommon.Models.AxleConfiguration.AxleConfig_4x2,
 				16001.SI<Kilogram>(), 0.SI<Kilogram>());
 			Assert.AreEqual(VehicleClass.Class5, segment.VehicleClass);
 
 
-			segment = DeclarationData.Segments.Lookup(VehicleCategory.RigidTruck, AxleConfiguration.AxleConfig_6x2,
+			segment = DeclarationData.Segments.Lookup(VectoCommon.Models.VehicleCategory.RigidTruck, VectoCommon.Models.AxleConfiguration.AxleConfig_6x2,
 				7500.SI<Kilogram>(), 0.SI<Kilogram>());
 			Assert.AreEqual(VehicleClass.Class9, segment.VehicleClass);
 
-			segment = DeclarationData.Segments.Lookup(VehicleCategory.Tractor, AxleConfiguration.AxleConfig_6x2,
+			segment = DeclarationData.Segments.Lookup(VectoCommon.Models.VehicleCategory.Tractor, VectoCommon.Models.AxleConfiguration.AxleConfig_6x2,
 				7500.SI<Kilogram>(), 0.SI<Kilogram>());
 			Assert.AreEqual(VehicleClass.Class10, segment.VehicleClass);
 
-			segment = DeclarationData.Segments.Lookup(VehicleCategory.RigidTruck, AxleConfiguration.AxleConfig_6x2,
+			segment = DeclarationData.Segments.Lookup(VectoCommon.Models.VehicleCategory.RigidTruck, VectoCommon.Models.AxleConfiguration.AxleConfig_6x2,
 				40000.SI<Kilogram>(), 0.SI<Kilogram>());
 			Assert.AreEqual(VehicleClass.Class9, segment.VehicleClass);
 
-			segment = DeclarationData.Segments.Lookup(VehicleCategory.Tractor, AxleConfiguration.AxleConfig_6x2,
+			segment = DeclarationData.Segments.Lookup(VectoCommon.Models.VehicleCategory.Tractor, VectoCommon.Models.AxleConfiguration.AxleConfig_6x2,
 				40000.SI<Kilogram>(), 0.SI<Kilogram>());
 			Assert.AreEqual(VehicleClass.Class10, segment.VehicleClass);
 		}
@@ -525,8 +527,8 @@ namespace TUGraz.VectoCore.Tests.Models.Declaration
 		{
 			//mock vehicleData
 			var vehicleData = new {
-				VehicleCategory = VehicleCategory.RigidTruck,
-				AxleConfiguration = AxleConfiguration.AxleConfig_4x2,
+				VehicleCategory = VectoCommon.Models.VehicleCategory.RigidTruck,
+				AxleConfiguration = VectoCommon.Models.AxleConfiguration.AxleConfig_4x2,
 				GrossVehicleMassRating = 11900.SI<Kilogram>(),
 				CurbWeight = 5850.SI<Kilogram>()
 			};

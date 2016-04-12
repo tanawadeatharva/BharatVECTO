@@ -29,41 +29,46 @@
 *   Martin Rexeis, rexeis@ivt.tugraz.at, IVT, Graz University of Technology
 */
 
-using System;
-using System.Collections.Generic;
-using System.Globalization;
-using System.IO;
-using System.Linq;
-using System.Text;
-
-namespace TUGraz.VectoCore.Utils
+namespace TUGraz.VectoCommon.InputData
 {
-	public static class StringExtensionMethods
+	public interface IInputDataProvider {}
+
+	public interface IDeclarationInputDataProvider : IInputDataProvider
 	{
-		public static string Join<T>(this string s, IEnumerable<T> values)
-		{
-			return string.Join(s, values);
-		}
+		IDeclarationJobInputData JobInputData();
 
-		public static double ToDouble(this string self)
-		{
-			return double.Parse(self, CultureInfo.InvariantCulture);
-		}
+		IVehicleDeclarationInputData VehicleInputData { get; }
 
-		public static double IndulgentParse(this string self)
-		{
-			return double.Parse(new string(self.Trim().TakeWhile(c => char.IsDigit(c) || c == '.').ToArray()),
-				CultureInfo.InvariantCulture);
-		}
+		IGearboxDeclarationInputData GearboxInputData { get; }
 
-		public static Stream GetStream(this string self)
-		{
-			return new MemoryStream(Encoding.UTF8.GetBytes(self));
-		}
+		IAxleGearInputData AxleGearInputData { get; }
 
-		public static string RemoveWhitespace(this string self)
-		{
-			return string.Concat(self.Split());
-		}
+		IEngineDeclarationInputData EngineInputData { get; }
+
+		IAuxiliariesDeclarationInputData AuxiliaryInputData();
+
+		IRetarderInputData RetarderInputData { get; }
+
+		IDriverDeclarationInputData DriverInputData { get; }
+	}
+
+
+	public interface IEngineeringInputDataProvider : IInputDataProvider
+	{
+		IEngineeringJobInputData JobInputData();
+
+		IVehicleEngineeringInputData VehicleInputData { get; }
+
+		IGearboxEngineeringInputData GearboxInputData { get; }
+
+		IAxleGearInputData AxleGearInputData { get; }
+
+		IEngineEngineeringInputData EngineInputData { get; }
+
+		IAuxiliariesEngineeringInputData AuxiliaryInputData();
+
+		IRetarderInputData RetarderInputData { get; }
+
+		IDriverEngineeringInputData DriverInputData { get; }
 	}
 }

@@ -29,6 +29,7 @@
 *   Martin Rexeis, rexeis@ivt.tugraz.at, IVT, Graz University of Technology
 */
 
+using TUGraz.VectoCommon.InputData;
 using TUGraz.VectoCore.InputData;
 
 namespace TUGraz.VectoCore.Models.SimulationComponent.Data

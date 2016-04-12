@@ -32,7 +32,8 @@
 using System;
 using System.Collections.Generic;
 using System.Diagnostics;
-using TUGraz.VectoCore.Exceptions;
+using TUGraz.VectoCommon.Exceptions;
+using TUGraz.VectoCommon.Utils;
 
 namespace TUGraz.VectoCore.Utils
 {

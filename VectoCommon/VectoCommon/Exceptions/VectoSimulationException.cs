@@ -30,64 +30,36 @@
 */
 
 using System;
-using System.Diagnostics;
+using TUGraz.VectoCommon.Models;
+using JetBrains.Annotations;
 
-namespace TUGraz.VectoCore.Utils
+namespace TUGraz.VectoCommon.Exceptions
 {
-	public static class IntExtensionMethods
+	public class VectoSimulationException : VectoException
 	{
-		/// <summary>
-		/// Converts the value from rounds per minute to the SI Unit PerSecond
-		/// </summary>
-		/// <param name="d"></param>
-		/// <returns></returns>
-		[DebuggerHidden]
-		public static PerSecond RPMtoRad(this int d)
-		{
-			return (d * 2.0 * Math.PI / 60.0).SI<PerSecond>();
-		}
+		public VectoSimulationException(string msg) : base(msg) {}
+		public VectoSimulationException(string msg, Exception inner) : base(msg, inner) {}
 
-		[DebuggerHidden]
-		public static MeterPerSecond KMPHtoMeterPerSecond(this int d)
-		{
-			return (d / 3.6).SI<MeterPerSecond>();
-		}
+		//[StringFormatMethod("message")]
+		public VectoSimulationException(string message, params object[] args) : base(message, args) {}
 
+		//[StringFormatMethod("message")]
+		public VectoSimulationException(string message, Exception inner, params object[] args) : base(message, inner, args) {}
+	}
 
-		/// <summary>
-		/// Gets the unit-less SI representation of the number.
-		/// </summary>
-		[DebuggerHidden]
-		public static SI SI(this int value)
-		{
-			return new SI(value);
-		}
+	public class UnexpectedResponseException : VectoSimulationException
+	{
+		public IResponse Response;
 
-		/// <summary>
-		/// Gets the special SI class of the number.
-		/// </summary>
-		/// <param name="d"></param>
-		/// <returns></returns>
-		[DebuggerHidden]
-		public static T SI<T>(this int d) where T : SIBase<T>
+		public UnexpectedResponseException(string message, IResponse resp)
+			: base(message + Environment.NewLine + "{0}", resp)
 		{
-			return SIBase<T>.Create(d);
+			Response = resp;
 		}
+	}
 
-		public static double ToRadian(this int self)
-		{
-			return self * Math.PI / 180.0;
-		}
-
-		/// <summary>
-		/// Modulo functions which also works on negative Numbers (not like the built-in %-operator which just returns the remainder).
-		/// </summary>
-		/// <param name="a"></param>
-		/// <param name="b"></param>
-		/// <returns></returns>
-		public static int Mod(this int a, int b)
-		{
-			return (a %= b) < 0 ? a + b : a;
-		}
+	public class VectoSearchFailedException : VectoException
+	{
+		public VectoSearchFailedException(string message, params object[] args) : base(message, args) {}
 	}
 }

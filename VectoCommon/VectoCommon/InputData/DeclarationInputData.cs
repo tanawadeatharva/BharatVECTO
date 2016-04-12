@@ -31,11 +31,10 @@
 
 using System.Collections.Generic;
 using System.Data;
-using TUGraz.VectoCore.Models.Declaration;
-using TUGraz.VectoCore.Models.SimulationComponent.Data;
-using TUGraz.VectoCore.Utils;
+using TUGraz.VectoCommon.Models;
+using TUGraz.VectoCommon.Utils;
 
-namespace TUGraz.VectoCore.InputData
+namespace TUGraz.VectoCommon.InputData
 {
 	public interface IDeclarationJobInputData
 	{
@@ -132,7 +131,7 @@ namespace TUGraz.VectoCore.InputData
 		/// P052  
 		/// cf. VECTO Input Parameters.xlsx
 		/// </summary>
-		RetarderData.RetarderType Type { get; }
+		RetarderType Type { get; }
 
 		/// <summary>
 		/// P054
@@ -350,7 +349,7 @@ namespace TUGraz.VectoCore.InputData
 		/// P015
 		/// cf. VECTO Input Parameters.xlsx
 		/// </summary>
-		DriverData.DriverMode Mode { get; }
+		DriverMode Mode { get; }
 	}
 
 

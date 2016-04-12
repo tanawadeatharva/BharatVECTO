@@ -29,49 +29,14 @@
 *   Martin Rexeis, rexeis@ivt.tugraz.at, IVT, Graz University of Technology
 */
 
-using System.Collections.Generic;
-using System.Deployment.Internal;
-
-namespace TUGraz.VectoCore.InputData
+namespace TUGraz.VectoCommon.InputData
 {
-	public interface IInputDataProvider {}
-
-	public interface IDeclarationInputDataProvider : IInputDataProvider
+	public enum IntegrityStatus
 	{
-		IDeclarationJobInputData JobInputData();
-
-		IVehicleDeclarationInputData VehicleInputData { get; }
-
-		IGearboxDeclarationInputData GearboxInputData { get; }
-
-		IAxleGearInputData AxleGearInputData { get; }
-
-		IEngineDeclarationInputData EngineInputData { get; }
-
-		IAuxiliariesDeclarationInputData AuxiliaryInputData();
-
-		IRetarderInputData RetarderInputData { get; }
-
-		IDriverDeclarationInputData DriverInputData { get; }
-	}
-
-
-	public interface IEngineeringInputDataProvider : IInputDataProvider
-	{
-		IEngineeringJobInputData JobInputData();
-
-		IVehicleEngineeringInputData VehicleInputData { get; }
-
-		IGearboxEngineeringInputData GearboxInputData { get; }
-
-		IAxleGearInputData AxleGearInputData { get; }
-
-		IEngineEngineeringInputData EngineInputData { get; }
-
-		IAuxiliariesEngineeringInputData AuxiliaryInputData();
-
-		IRetarderInputData RetarderInputData { get; }
-
-		IDriverEngineeringInputData DriverInputData { get; }
+		Unknown,
+		NoDigestProvided,
+		NotChecked,
+		DigestValid,
+		DigestInvalid
 	}
 }

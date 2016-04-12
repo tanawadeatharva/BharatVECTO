@@ -30,21 +30,64 @@
 */
 
 using System;
-using System.Collections.Generic;
-using System.Linq;
+using System.Diagnostics;
 
-namespace TUGraz.VectoCore.Utils
+namespace TUGraz.VectoCommon.Utils
 {
-	public static class EnumHelper
+	public static class IntExtensionMethods
 	{
-		public static T ParseEnum<T>(this string s, bool ignoreCase = true)
+		/// <summary>
+		/// Converts the value from rounds per minute to the SI Unit PerSecond
+		/// </summary>
+		/// <param name="d"></param>
+		/// <returns></returns>
+		[DebuggerHidden]
+		public static PerSecond RPMtoRad(this int d)
 		{
-			return (T)Enum.Parse(typeof(T), s.RemoveWhitespace(), ignoreCase);
+			return (d * 2.0 * Math.PI / 60.0).SI<PerSecond>();
 		}
 
-		public static IEnumerable<T> GetValues<T>()
+		[DebuggerHidden]
+		public static MeterPerSecond KMPHtoMeterPerSecond(this int d)
 		{
-			return Enum.GetValues(typeof(T)).Cast<T>();
+			return (d / 3.6).SI<MeterPerSecond>();
+		}
+
+
+		/// <summary>
+		/// Gets the unit-less SI representation of the number.
+		/// </summary>
+		[DebuggerHidden]
+		public static SI SI(this int value)
+		{
+			return new SI(value);
+		}
+
+		/// <summary>
+		/// Gets the special SI class of the number.
+		/// </summary>
+		/// <param name="d"></param>
+		/// <returns></returns>
+		[DebuggerHidden]
+		public static T SI<T>(this int d) where T : SIBase<T>
+		{
+			return SIBase<T>.Create(d);
+		}
+
+		public static double ToRadian(this int self)
+		{
+			return self * Math.PI / 180.0;
+		}
+
+		/// <summary>
+		/// Modulo functions which also works on negative Numbers (not like the built-in %-operator which just returns the remainder).
+		/// </summary>
+		/// <param name="a"></param>
+		/// <param name="b"></param>
+		/// <returns></returns>
+		public static int Mod(this int a, int b)
+		{
+			return (a %= b) < 0 ? a + b : a;
 		}
 	}
 }

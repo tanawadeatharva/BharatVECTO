@@ -32,7 +32,8 @@
 using System.IO;
 using Newtonsoft.Json;
 using Newtonsoft.Json.Linq;
-using TUGraz.VectoCore.Exceptions;
+using TUGraz.VectoCommon.Exceptions;
+using TUGraz.VectoCommon.InputData;
 
 namespace TUGraz.VectoCore.InputData.FileIO.JSON
 {

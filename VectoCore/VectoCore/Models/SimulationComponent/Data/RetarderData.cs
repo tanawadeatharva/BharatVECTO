@@ -29,20 +29,13 @@
 *   Martin Rexeis, rexeis@ivt.tugraz.at, IVT, Graz University of Technology
 */
 
+using TUGraz.VectoCommon.Models;
 using TUGraz.VectoCore.Utils;
 
 namespace TUGraz.VectoCore.Models.SimulationComponent.Data
 {
 	public class RetarderData : SimulationComponentData
 	{
-		public enum RetarderType
-		{
-			None,
-			Primary,
-			Secondary,
-			LossesIncludedInTransmission
-		}
-
 		[ValidateObject]
 		public RetarderLossMap LossMap { get; internal set; }
 

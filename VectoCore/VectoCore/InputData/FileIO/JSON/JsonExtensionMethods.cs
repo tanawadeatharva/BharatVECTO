@@ -30,7 +30,7 @@
 */
 
 using Newtonsoft.Json.Linq;
-using TUGraz.VectoCore.Exceptions;
+using TUGraz.VectoCommon.Exceptions;
 
 namespace TUGraz.VectoCore.InputData.FileIO.JSON
 {

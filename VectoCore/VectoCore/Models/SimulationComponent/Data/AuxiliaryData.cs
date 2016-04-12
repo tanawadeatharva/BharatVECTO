@@ -35,32 +35,16 @@ using System.Data;
 using System.IO;
 using System.Linq;
 using System.Text;
-using TUGraz.VectoCore.Exceptions;
+using TUGraz.VectoCommon.Exceptions;
+using TUGraz.VectoCommon.InputData;
+using TUGraz.VectoCommon.Models;
+using TUGraz.VectoCommon.Utils;
 using TUGraz.VectoCore.InputData;
 using TUGraz.VectoCore.Utils;
 
 namespace TUGraz.VectoCore.Models.SimulationComponent.Data
 {
-	public enum AuxiliaryModel
-	{
-		Classic,
-		Advanced
-	}
 
-	public class AuxiliaryModelHelper
-	{
-		public static AuxiliaryModel Parse(string auxAssemblyStr)
-		{
-			if (string.IsNullOrEmpty(auxAssemblyStr)) {
-				return AuxiliaryModel.Classic;
-			}
-			switch (auxAssemblyStr) {
-				case "BusAuxiliaries":
-					return AuxiliaryModel.Advanced;
-			}
-			return AuxiliaryModel.Classic;
-		}
-	}
 
 	[CustomValidation(typeof(AuxiliaryData), "ValidateAuxMap")]
 	public class AuxiliaryData

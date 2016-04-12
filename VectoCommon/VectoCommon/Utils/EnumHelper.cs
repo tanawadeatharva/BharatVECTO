@@ -30,37 +30,21 @@
 */
 
 using System;
-using NLog;
+using System.Collections.Generic;
+using System.Linq;
 
-namespace TUGraz.VectoCore.Models.SimulationComponent.Data
+namespace TUGraz.VectoCommon.Utils
 {
-	public enum CrossWindCorrectionMode
+	public static class EnumHelper
 	{
-		NoCorrection,
-		SpeedDependentCorrectionFactor,
-		VAirBetaLookupTable,
-		DeclarationModeCorrection
-	}
-
-	public static class CrossWindCorrectionModeHelper
-	{
-		public static CrossWindCorrectionMode Parse(string correctionMode)
+		public static T ParseEnum<T>(this string s, bool ignoreCase = true)
 		{
-			if (correctionMode.Equals("CdofVEng", StringComparison.OrdinalIgnoreCase)) {
-				return CrossWindCorrectionMode.SpeedDependentCorrectionFactor;
-			}
-			if (correctionMode.Equals("CdofVdecl", StringComparison.OrdinalIgnoreCase)) {
-				return CrossWindCorrectionMode.DeclarationModeCorrection;
-			}
-			if (correctionMode.Equals("CdofBeta", StringComparison.OrdinalIgnoreCase)) {
-				return CrossWindCorrectionMode.VAirBetaLookupTable;
-			}
-			if (correctionMode.Equals("Off", StringComparison.OrdinalIgnoreCase)) {
-				return CrossWindCorrectionMode.NoCorrection;
-			}
-			LogManager.GetLogger(typeof(CrossWindCorrectionModeHelper).ToString())
-				.Warn("Invalid Crosswind correction Mode given. Ignoring Crosswind Correction!");
-			return CrossWindCorrectionMode.NoCorrection;
+			return (T)Enum.Parse(typeof(T), s.RemoveWhitespace(), ignoreCase);
+		}
+
+		public static IEnumerable<T> GetValues<T>()
+		{
+			return Enum.GetValues(typeof(T)).Cast<T>();
 		}
 	}
 }

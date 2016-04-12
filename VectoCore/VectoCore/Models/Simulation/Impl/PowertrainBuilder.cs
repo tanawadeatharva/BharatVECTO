@@ -32,7 +32,8 @@
 using System;
 using System.Diagnostics;
 using System.Linq;
-using TUGraz.VectoCore.Exceptions;
+using TUGraz.VectoCommon.Exceptions;
+using TUGraz.VectoCommon.Models;
 using TUGraz.VectoCore.Models.Connector.Ports;
 using TUGraz.VectoCore.Models.Simulation.Data;
 using TUGraz.VectoCore.Models.SimulationComponent;
@@ -101,19 +102,19 @@ namespace TUGraz.VectoCore.Models.Simulation.Impl
 			var tmp = AddComponent(cycle, new AxleGear(container, data.AxleGearData));
 
 			switch (data.Retarder.Type) {
-				case RetarderData.RetarderType.Primary:
+				case RetarderType.Primary:
 					tmp = AddComponent(tmp, new Retarder(container, data.Retarder.LossMap, data.Retarder.Ratio));
 					tmp = AddComponent(tmp, gearbox);
 					break;
-				case RetarderData.RetarderType.Secondary:
+				case RetarderType.Secondary:
 					tmp = AddComponent(tmp, gearbox);
 					tmp = AddComponent(tmp, new Retarder(container, data.Retarder.LossMap, data.Retarder.Ratio));
 					break;
-				case RetarderData.RetarderType.None:
+				case RetarderType.None:
 					tmp = AddComponent(tmp, new DummyRetarder(container));
 					tmp = AddComponent(tmp, gearbox);
 					break;
-				case RetarderData.RetarderType.LossesIncludedInTransmission:
+				case RetarderType.LossesIncludedInTransmission:
 					tmp = AddComponent(tmp, new DummyRetarder(container));
 					tmp = AddComponent(tmp, gearbox);
 					break;
@@ -149,19 +150,19 @@ namespace TUGraz.VectoCore.Models.Simulation.Impl
 			var tmp = AddComponent(brakes, new AxleGear(container, data.AxleGearData));
 
 			switch (data.Retarder.Type) {
-				case RetarderData.RetarderType.Primary:
+				case RetarderType.Primary:
 					tmp = AddComponent(tmp, new Retarder(container, data.Retarder.LossMap, data.Retarder.Ratio));
 					tmp = AddComponent(tmp, GetGearbox(container, data.GearboxData));
 					break;
-				case RetarderData.RetarderType.Secondary:
+				case RetarderType.Secondary:
 					tmp = AddComponent(tmp, GetGearbox(container, data.GearboxData));
 					tmp = AddComponent(tmp, new Retarder(container, data.Retarder.LossMap, data.Retarder.Ratio));
 					break;
-				case RetarderData.RetarderType.None:
+				case RetarderType.None:
 					tmp = AddComponent(tmp, new DummyRetarder(container));
 					tmp = AddComponent(tmp, GetGearbox(container, data.GearboxData));
 					break;
-				case RetarderData.RetarderType.LossesIncludedInTransmission:
+				case RetarderType.LossesIncludedInTransmission:
 					tmp = AddComponent(tmp, new DummyRetarder(container));
 					tmp = AddComponent(tmp, GetGearbox(container, data.GearboxData));
 					break;
@@ -203,19 +204,19 @@ namespace TUGraz.VectoCore.Models.Simulation.Impl
 			var gearbox = new CycleGearbox(container, data.GearboxData);
 
 			switch (data.Retarder.Type) {
-				case RetarderData.RetarderType.Primary:
+				case RetarderType.Primary:
 					tmp = AddComponent(tmp, new Retarder(container, data.Retarder.LossMap, data.Retarder.Ratio));
 					tmp = AddComponent(tmp, gearbox);
 					break;
-				case RetarderData.RetarderType.Secondary:
+				case RetarderType.Secondary:
 					tmp = AddComponent(tmp, gearbox);
 					tmp = AddComponent(tmp, new Retarder(container, data.Retarder.LossMap, data.Retarder.Ratio));
 					break;
-				case RetarderData.RetarderType.None:
+				case RetarderType.None:
 					tmp = AddComponent(tmp, new DummyRetarder(container));
 					tmp = AddComponent(tmp, gearbox);
 					break;
-				case RetarderData.RetarderType.LossesIncludedInTransmission:
+				case RetarderType.LossesIncludedInTransmission:
 					tmp = AddComponent(tmp, new DummyRetarder(container));
 					tmp = AddComponent(tmp, gearbox);
 					break;
@@ -259,19 +260,19 @@ namespace TUGraz.VectoCore.Models.Simulation.Impl
 			var tmp = AddComponent(brakes, new AxleGear(container, data.AxleGearData));
 
 			switch (data.Retarder.Type) {
-				case RetarderData.RetarderType.Primary:
+				case RetarderType.Primary:
 					tmp = AddComponent(tmp, new Retarder(container, data.Retarder.LossMap, data.Retarder.Ratio));
 					tmp = AddComponent(tmp, GetGearbox(container, data.GearboxData));
 					break;
-				case RetarderData.RetarderType.Secondary:
+				case RetarderType.Secondary:
 					tmp = AddComponent(tmp, GetGearbox(container, data.GearboxData));
 					tmp = AddComponent(tmp, new Retarder(container, data.Retarder.LossMap, data.Retarder.Ratio));
 					break;
-				case RetarderData.RetarderType.None:
+				case RetarderType.None:
 					tmp = AddComponent(tmp, new DummyRetarder(container));
 					tmp = AddComponent(tmp, GetGearbox(container, data.GearboxData));
 					break;
-				case RetarderData.RetarderType.LossesIncludedInTransmission:
+				case RetarderType.LossesIncludedInTransmission:
 					tmp = AddComponent(tmp, new DummyRetarder(container));
 					tmp = AddComponent(tmp, GetGearbox(container, data.GearboxData));
 					break;

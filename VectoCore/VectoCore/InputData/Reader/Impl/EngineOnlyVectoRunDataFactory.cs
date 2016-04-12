@@ -30,6 +30,7 @@
 */
 
 using System.Collections.Generic;
+using TUGraz.VectoCommon.InputData;
 using TUGraz.VectoCore.InputData.Reader.DataObjectAdaper;
 using TUGraz.VectoCore.Models.Simulation.Data;
 using TUGraz.VectoCore.Models.SimulationComponent.Data;

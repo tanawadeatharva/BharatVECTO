@@ -29,22 +29,14 @@
 *   Martin Rexeis, rexeis@ivt.tugraz.at, IVT, Graz University of Technology
 */
 
-using System;
+using TUGraz.VectoCommon.Models;
+using TUGraz.VectoCommon.Utils;
 using TUGraz.VectoCore.Models.Simulation.Data;
-using TUGraz.VectoCore.Utils;
 
 namespace TUGraz.VectoCore.Models.SimulationComponent.Data
 {
 	public class DriverData
 	{
-		public enum DriverMode
-		{
-			Off,
-			Overspeed,
-			EcoRoll,
-		}
-
-
 		public VectoRunData.StartStopData StartStop;
 		public OverSpeedEcoRollData OverSpeedEcoRoll;
 		public LACData LookAheadCoasting;

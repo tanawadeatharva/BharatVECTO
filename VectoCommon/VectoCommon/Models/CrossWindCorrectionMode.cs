@@ -29,60 +29,38 @@
 *   Martin Rexeis, rexeis@ivt.tugraz.at, IVT, Graz University of Technology
 */
 
-using System.Diagnostics.CodeAnalysis;
-using TUGraz.VectoCore.Utils;
+using System;
+using NLog;
 
-namespace TUGraz.VectoCore.Models.SimulationComponent.Data
+namespace TUGraz.VectoCommon.Models
 {
-	[SuppressMessage("ReSharper", "InconsistentNaming")]
-	public enum GearboxType
+	public enum CrossWindCorrectionMode
 	{
-		MT, // Manual Transmission
-		AMT, // Automated Manual Transmission
-		AT, // Automatic Transmission
-		Custom,
-		DrivingCycle
+		NoCorrection,
+		SpeedDependentCorrectionFactor,
+		VAirBetaLookupTable,
+		DeclarationModeCorrection
 	}
 
-	public static class GearBoxTypeExtension
+	public static class CrossWindCorrectionModeHelper
 	{
-		public static bool EarlyShiftGears(this GearboxType type)
+		public static CrossWindCorrectionMode Parse(string correctionMode)
 		{
-			switch (type) {
-				case GearboxType.MT:
-					return false;
-				case GearboxType.AMT:
-					return true;
-				case GearboxType.AT:
-					return false;
+			if (correctionMode.Equals("CdofVEng", StringComparison.OrdinalIgnoreCase)) {
+				return CrossWindCorrectionMode.SpeedDependentCorrectionFactor;
 			}
-			return false;
-		}
-
-		public static bool SkipGears(this GearboxType type)
-		{
-			switch (type) {
-				case GearboxType.MT:
-					return true;
-				case GearboxType.AMT:
-					return true;
-				case GearboxType.AT:
-					return false;
+			if (correctionMode.Equals("CdofVdecl", StringComparison.OrdinalIgnoreCase)) {
+				return CrossWindCorrectionMode.DeclarationModeCorrection;
 			}
-			return false;
-		}
-
-		public static Second TractionInterruption(this GearboxType type)
-		{
-			switch (type) {
-				case GearboxType.MT:
-					return 2.SI<Second>();
-				case GearboxType.AMT:
-					return 1.SI<Second>();
-				case GearboxType.AT:
-					return 0.8.SI<Second>();
+			if (correctionMode.Equals("CdofBeta", StringComparison.OrdinalIgnoreCase)) {
+				return CrossWindCorrectionMode.VAirBetaLookupTable;
 			}
-			return 0.SI<Second>();
+			if (correctionMode.Equals("Off", StringComparison.OrdinalIgnoreCase)) {
+				return CrossWindCorrectionMode.NoCorrection;
+			}
+			LogManager.GetLogger(typeof(CrossWindCorrectionModeHelper).ToString())
+				.Warn("Invalid Crosswind correction Mode given. Ignoring Crosswind Correction!");
+			return CrossWindCorrectionMode.NoCorrection;
 		}
 	}
 }

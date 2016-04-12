@@ -32,6 +32,9 @@
 using System;
 using System.Collections.Generic;
 using System.Linq;
+using TUGraz.VectoCommon.InputData;
+using TUGraz.VectoCommon.Models;
+using TUGraz.VectoCommon.Utils;
 using TUGraz.VectoCore.Models;
 using TUGraz.VectoCore.Models.SimulationComponent.Data;
 using TUGraz.VectoCore.Models.SimulationComponent.Data.Engine;
@@ -86,13 +89,13 @@ namespace TUGraz.VectoCore.InputData.Reader.DataObjectAdaper
 				Type = data.Type,
 			};
 			switch (retarder.Type) {
-				case RetarderData.RetarderType.Primary:
-				case RetarderData.RetarderType.Secondary:
+				case RetarderType.Primary:
+				case RetarderType.Secondary:
 					retarder.LossMap = RetarderLossMap.Create(data.LossMap);
 					retarder.Ratio = vehicle.RetarderRatio;
 					break;
-				case RetarderData.RetarderType.None:
-				case RetarderData.RetarderType.LossesIncludedInTransmission:
+				case RetarderType.None:
+				case RetarderType.LossesIncludedInTransmission:
 					retarder.Ratio = 1;
 					break;
 				default:

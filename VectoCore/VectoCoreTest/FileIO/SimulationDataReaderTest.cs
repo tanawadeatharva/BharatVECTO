@@ -32,7 +32,10 @@
 using System.IO;
 using System.Linq;
 using Microsoft.VisualStudio.TestTools.UnitTesting;
-using TUGraz.VectoCore.Exceptions;
+using TUGraz.VectoCommon.Exceptions;
+using TUGraz.VectoCommon.InputData;
+using TUGraz.VectoCommon.Models;
+using TUGraz.VectoCommon.Utils;
 using TUGraz.VectoCore.InputData;
 using TUGraz.VectoCore.InputData.FileIO.JSON;
 using TUGraz.VectoCore.InputData.Reader.Impl;
@@ -80,7 +83,7 @@ namespace TUGraz.VectoCore.Tests.FileIO
 			Assert.AreEqual(DeclarationData.Driver.LookAhead.Deceleration.Value(),
 				runData.DriverData.LookAheadCoasting.Deceleration.Value(), Tolerance);
 
-			Assert.AreNotEqual(DriverData.DriverMode.Off, runData.DriverData.OverSpeedEcoRoll.Mode);
+			Assert.AreNotEqual(DriverMode.Off, runData.DriverData.OverSpeedEcoRoll.Mode);
 			Assert.AreEqual(DeclarationData.Driver.OverSpeedEcoRoll.MinSpeed.Value(),
 				runData.DriverData.OverSpeedEcoRoll.MinSpeed.Value(), Tolerance);
 			Assert.AreEqual(DeclarationData.Driver.OverSpeedEcoRoll.OverSpeed.Value(),

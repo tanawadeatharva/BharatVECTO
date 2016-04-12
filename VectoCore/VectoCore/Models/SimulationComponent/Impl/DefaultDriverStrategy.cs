@@ -35,14 +35,16 @@ using System.Diagnostics;
 using System.Linq;
 using System.Runtime.InteropServices.WindowsRuntime;
 using NLog.Fluent;
+using TUGraz.VectoCommon.Models;
+using TUGraz.VectoCommon.Utils;
 using TUGraz.VectoCore.Configuration;
-using TUGraz.VectoCore.Exceptions;
 using TUGraz.VectoCore.Models.Connector.Ports;
 using TUGraz.VectoCore.Models.Connector.Ports.Impl;
 using TUGraz.VectoCore.Models.Declaration;
 using TUGraz.VectoCore.Models.Simulation.DataBus;
 using TUGraz.VectoCore.Models.SimulationComponent.Data;
 using TUGraz.VectoCore.Utils;
+using DriverData = TUGraz.VectoCore.Models.SimulationComponent.Data.DriverData;
 
 namespace TUGraz.VectoCore.Models.SimulationComponent.Impl
 {
@@ -223,7 +225,7 @@ namespace TUGraz.VectoCore.Models.SimulationComponent.Impl
 
 		public bool OverspeedAllowed(Radian gradient, MeterPerSecond velocity)
 		{
-			return Driver.DriverData.OverSpeedEcoRoll.Mode == DriverData.DriverMode.Overspeed &&
+			return Driver.DriverData.OverSpeedEcoRoll.Mode == DriverMode.Overspeed &&
 					gradient < 0 && velocity > Driver.DriverData.OverSpeedEcoRoll.MinSpeed;
 		}
 	}

@@ -33,7 +33,8 @@ using System;
 using System.ComponentModel;
 using System.Data;
 using System.Reflection;
-using TUGraz.VectoCore.Exceptions;
+using TUGraz.VectoCommon.Exceptions;
+using TUGraz.VectoCommon.Utils;
 using TUGraz.VectoCore.Utils;
 
 // ReSharper disable InconsistentNaming
