@@ -338,11 +338,11 @@
     <Service Include="{508349B6-6B84-4DF5-91F0-309BEEBAD82D}" />
   </ItemGroup>
   <ItemGroup>
-    <ProjectReference Include="..\AdvancedAuxiliaryInterfaces\AdvancedAuxiliaryInterfaces.vbproj">
+    <ProjectReference Include="..\..\VectoCommon\AdvancedAuxiliaryInterfaces\AdvancedAuxiliaryInterfaces.vbproj">
       <Project>{b4b9bd2f-fd8f-4bb8-82fa-e2154d2c7fbd}</Project>
       <Name>AdvancedAuxiliaryInterfaces</Name>
     </ProjectReference>
-    <ProjectReference Include="..\VECTOAux\VectoAuxiliaries\VectoAuxiliaries.vbproj">
+    <ProjectReference Include="..\..\VECTOAux\VectoAuxiliaries\VectoAuxiliaries.vbproj">
       <Project>{fdeee460-0b8a-4ef6-8d9e-72f203a50f65}</Project>
       <Name>VectoAuxiliaries</Name>
     </ProjectReference>

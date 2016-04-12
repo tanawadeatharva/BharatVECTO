@@ -48,7 +48,7 @@
     <None Include="App.config" />
   </ItemGroup>
   <ItemGroup>
-    <ProjectReference Include="..\VectoCore\VectoCore.csproj">
+    <ProjectReference Include="..\..\VectoCore\VectoCore\VectoCore.csproj">
       <Project>{CD36938A-ADD9-4C65-96DA-B397CDEEA90A}</Project>
       <Name>VectoCore</Name>
     </ProjectReference>

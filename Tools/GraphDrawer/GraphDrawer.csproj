@@ -51,7 +51,7 @@
     <None Include="App.config" />
   </ItemGroup>
   <ItemGroup>
-    <ProjectReference Include="..\VectoCoreTest\VectoCoreTest.csproj">
+    <ProjectReference Include="..\..\VectoCore\VectoCoreTest\VectoCoreTest.csproj">
       <Project>{6A27F93E-4A58-48F6-B00B-3908C5D3D5A2}</Project>
       <Name>VectoCoreTest</Name>
     </ProjectReference>

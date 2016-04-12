@@ -386,7 +386,7 @@
   </ItemGroup>
   <ItemGroup />
   <ItemGroup>
-    <ProjectReference Include="..\..\AdvancedAuxiliaryInterfaces\AdvancedAuxiliaryInterfaces.vbproj">
+    <ProjectReference Include="..\..\VectoCommon\AdvancedAuxiliaryInterfaces\AdvancedAuxiliaryInterfaces.vbproj">
       <Project>{b4b9bd2f-fd8f-4bb8-82fa-e2154d2c7fbd}</Project>
       <Name>AdvancedAuxiliaryInterfaces</Name>
     </ProjectReference>

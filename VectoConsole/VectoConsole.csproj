@@ -110,7 +110,7 @@
     </None>
   </ItemGroup>
   <ItemGroup>
-    <ProjectReference Include="..\VectoCore\VectoCore.csproj">
+    <ProjectReference Include="..\VectoCore\VectoCore\VectoCore.csproj">
       <Project>{cd36938a-add9-4c65-96da-b397cdeea90a}</Project>
       <Name>VectoCore</Name>
     </ProjectReference>
