@@ -127,6 +127,11 @@ namespace TUGraz.VectoCore.Models.Simulation.Impl
 			return Engine.EngineStationaryFullPower(angularSpeed);
 		}
 
+		public Watt EngineDragPower(PerSecond angularSpeed)
+		{
+			return Engine.EngineDragPower(angularSpeed);
+		}
+
 		public PerSecond EngineIdleSpeed
 		{
 			get { return Engine.EngineIdleSpeed; }

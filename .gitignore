@@ -158,6 +158,7 @@ sql/
 *.Cache
 ClientBin/
 [Ss]tyle[Cc]op.*
+~
 ~$*
 *~
 *.dbmdl
@@ -188,5 +189,4 @@ UpgradeLog*.htm
 
 # Microsoft Fakes
 FakesAssemblies/
-VectoCoreTest/TestData/EngineOnly/Test1/Test1_results.vmod.csv
 *.orig

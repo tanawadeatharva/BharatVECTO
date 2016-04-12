@@ -85,13 +85,20 @@ namespace TUGraz.VectoCore.InputData
 		/// cf. VECTO Input Parameters.xlsx
 		/// </summary>
 		CrossWindCorrectionMode CrossWindCorrectionMode { get; }
-		
+
 		/// <summary>
 		/// P051
 		/// P055, P056
 		/// cf. VECTO Input Parameters.xlsx
 		/// </summary>
 		DataTable CrosswindCorrectionMap { get; }
+
+		// Advanced Auxiliaries
+		AuxiliaryModel AuxiliaryAssembly { get; }
+
+		string AuxiliaryVersion { get; }
+
+		string AdvancedAuxiliaryFilePath { get; }
 	}
 
 

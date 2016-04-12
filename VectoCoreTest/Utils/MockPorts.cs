@@ -79,9 +79,9 @@ namespace TUGraz.VectoCore.Tests.Utils
 		public IResponse Initialize(NewtonMeter torque, PerSecond angularVelocity)
 		{
 			return new ResponseSuccess {
-				Source = this, 
-				EnginePowerRequest = torque * angularVelocity, 
-				ClutchPowerRequest = torque * angularVelocity, 
+				Source = this,
+				EnginePowerRequest = torque * angularVelocity,
+				ClutchPowerRequest = torque * angularVelocity,
 			};
 		}
 
@@ -101,6 +101,11 @@ namespace TUGraz.VectoCore.Tests.Utils
 		public Watt EngineStationaryFullPower(PerSecond angularSpeed)
 		{
 			return 2300.SI<NewtonMeter>() * angularSpeed;
+		}
+
+		public Watt EngineDragPower(PerSecond angularSpeed)
+		{
+			return -1000.SI<NewtonMeter>() * angularSpeed;
 		}
 
 		public PerSecond EngineIdleSpeed

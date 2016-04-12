@@ -173,6 +173,7 @@
     <Compile Include="Models\SimulationComponent\IDrivingCycleInfo.cs" />
     <Compile Include="Models\SimulationComponent\IEngineAuxPort.cs" />
     <Compile Include="Models\SimulationComponent\Impl\Brakes.cs" />
+    <Compile Include="Models\SimulationComponent\Impl\BusAuxiliariesAdapter.cs" />
     <Compile Include="Models\SimulationComponent\Impl\CycleGearbox.cs" />
     <Compile Include="Models\SimulationComponent\Impl\DefaultDriverStrategy.cs" />
     <Compile Include="Models\SimulationComponent\Impl\DummyRetarder.cs" />
@@ -336,7 +337,16 @@
   <ItemGroup>
     <Service Include="{508349B6-6B84-4DF5-91F0-309BEEBAD82D}" />
   </ItemGroup>
-  <ItemGroup />
+  <ItemGroup>
+    <ProjectReference Include="..\AdvancedAuxiliaryInterfaces\AdvancedAuxiliaryInterfaces.vbproj">
+      <Project>{b4b9bd2f-fd8f-4bb8-82fa-e2154d2c7fbd}</Project>
+      <Name>AdvancedAuxiliaryInterfaces</Name>
+    </ProjectReference>
+    <ProjectReference Include="..\VECTOAux\VectoAuxiliaries\VectoAuxiliaries.vbproj">
+      <Project>{fdeee460-0b8a-4ef6-8d9e-72f203a50f65}</Project>
+      <Name>VectoAuxiliaries</Name>
+    </ProjectReference>
+  </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
   <PropertyGroup>
     <PreBuildEvent>if $(ConfigurationName) == Release  forfiles /p "$(ProjectDir)." /m "*.tt" /s /c "cmd /c echo Transforming @path &amp;&amp; \"%25CommonProgramFiles(x86)%25\Microsoft Shared\TextTemplating\12.0\TextTransform.exe\" @file"</PreBuildEvent>

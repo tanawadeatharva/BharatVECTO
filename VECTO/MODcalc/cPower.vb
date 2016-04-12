@@ -80,10 +80,33 @@ Public Class cPower
 		Dim dist As New List(Of Double)
 		Dim LastnU As Single = 0
 
+		'AA-TB
+		'*************************************************************************
+		'Informs Power Calculation to aggregate fuel or not if in Advanced mode.
+		mAAUX_Global.RunningCalc = False
+		'Cycle Time in Seconds, set this in AAUX_GLOBAL.
+		mAAUX_Global.CycleTimeInSeconds = MODdata.tDim
+		'*************************************************************************
+
 		Dim MsgSrc As String
-
-
 		MsgSrc = "Power/PreRun"
+
+
+		'AA-TB
+		'Try and Initialise the Advanced Aux Model if selected.
+		If VEC.AuxiliaryAssembly <> "CLASSIC" Then
+			WorkerMsg(tMsgID.Normal, "Initialising Advanced Auxiliaries Model", MsgSrc)
+			If mAAUX_Global.InitialiseAdvancedAuxModel(VEC.AdvancedAuxiliaryFilePath) Then
+				'Setting Mode / WHTC  for fueling in model.
+				mAAUX_Global.advancedAuxModel.Signals.DeclarationMode = Cfg.DeclMode
+				mAAUX_Global.advancedAuxModel.Signals.WHTC = Declaration.WHTCcorrFactor
+				WorkerMsg(tMsgID.Normal, "Successfully Initialised Advanced Auxiliaries", MsgSrc)
+			Else
+				WorkerMsg(tMsgID.Err, "FAILED to Initialised Advanced Auxiliaries", MsgSrc)
+				Return False
+			End If
+		End If
+
 
 		'Check Input
 		If VEC.LookAheadOn AndAlso VEC.a_lookahead >= 0 Then
@@ -221,6 +244,67 @@ Public Class cPower
 				PaMot = fPaMot(nU, LastnU)
 			End If
 
+			'AA-TB - ( RAFAEL )
+			'********************* ADVANCED AUXILIARIES  START  *****************************
+
+			'Dim ClutchEngaged As Boolean
+			'Dim EngineDrivelinePower As Single
+			'Dim EngineDrivelineTorque As Single
+			'Dim EngineMotoringPower As Single
+			'Dim EngineSpeed As Integer
+			'Dim PreExistingAuxPower As Single
+			'Dim Idle As Boolean
+			'Dim InNeutral As Boolean
+
+
+			'Calculate powertrain losses => power at clutch
+			If Pplus Or Pminus Then
+				PlossGB = fPlossGB(Pwheel, Vact, Gear, True)
+				PlossDiff = fPlossDiff(Pwheel, Vact, True)
+				PlossRt = fPlossRt(Vact, Gear)
+				PaGetr = fPaG(Vact, aact)
+				Pkup = Pwheel + PlossGB + PlossDiff + PaGetr + PlossRt
+			Else
+				Pkup = 0
+			End If
+
+			'Clutch closed/engaged = True
+			mAAUX_Global.ClutchEngaged = (Gear > 0)
+
+			mAAUX_Global.Idle = (Gear = 0 And Not Pplus And Not Pminus)
+
+			mAAUX_Global.InNeutral = (Gear = 0)
+
+			'Driveline Power = required power at clutch = power at wheels plus powertrain losses
+			'[kW]
+			mAAUX_Global.EngineDrivelinePower = Pkup
+
+			'[1/min]
+			mAAUX_Global.EngineSpeed = nU
+
+			'[Nm] (using Power => Torque conversion)
+			mAAUX_Global.EngineDrivelineTorque = nPeToM(EngineSpeed, EngineDrivelinePower)
+
+			'Motoring power (< 0 !!!)
+			'[kW]
+			'*** NOTE THIS IS MULTIPLIED BY - to get a positive value
+			mAAUX_Global.EngineMotoringPower = -GBX.FLD(Gear).Pdrag(EngineSpeed)
+
+			'Additional aux power from driving cycle (optional user input)
+			'[kW]
+			mAAUX_Global.PreExistingAuxPower = MODdata.Vh.Padd(t)
+
+			'Total aux power
+			'[kW]
+			Paux = PreExistingAuxPower + fPaux(t, EngineSpeed)
+
+			'Internal Engine Power (Pclutch plus Aux plus Inertia)
+			P = Pkup + Paux + PaMot
+
+			'AA-TB/RL**************    ADVANCED AUXILIARIES  END   ***************************
+
+			'AA-TB REMOVED
+			' Paux = fPaux(i, nU)
 
 			'Calculate powertrain losses => power at clutch
 			If Pplus Or Pminus Then
@@ -440,10 +524,13 @@ Public Class cPower
 
 		Loop Until i = 0
 
+
 		Return True
 	End Function
 
 	Public Function Calc() As Boolean
+
+		Dim message As String = String.Empty
 
 		Dim i As Integer
 		Dim M As Single
@@ -493,6 +580,12 @@ Public Class cPower
 		Dim MsgSrc As String
 
 		MsgSrc = "Power/Calc"
+
+
+		'AA-TB
+		'Informs Power Calculation to aggregate fuel or not if in Advanced mode.
+		mAAUX_Global.RunningCalc = True
+
 
 		'Abort if no speed given
 		If Not DRI.Vvorg And Not (DRI.PwheelVorg And DRI.Nvorg And DRI.Gvorg) Then
@@ -790,6 +883,7 @@ lbGschw:
 			' Important checks
 lbCheck:
 
+			'Reduce : |@@| If before?(vor) Gear-shift is detected that Clutch does not Lock, then Downshift at too low Revolutions:
 			'Falls vor Gangwahl festgestellt wurde, dass nicht KupplSchleif, dann bei zu niedriger Drehzahl runterschalten: |@@| If before?(vor) Gear-shift is detected that Clutch does not Lock, then Downshift at too low Revolutions:
 			If Not GBX.TCon Then
 				If Clutch = tEngClutch.Closed Then
@@ -961,10 +1055,60 @@ lbCheck:
 
 lb_nOK:
 
-
 			'************************************ Determine Engine-state ************************************
 			' nU is final here!
 
+			''Determine Aux power demand (from VEH and DRI)
+			'Paux = fPaux(jz, Math.Max(nU, ENG.Nidle))
+
+
+			'AA-TB -  ( RAFAEL )
+			'************************  ADVANCED AUXILIARIES STARTS **********************************************
+			'Clutch closed/engaged = True
+			'Note: Slipping clutch is also considered enganged.
+			mAAUX_Global.ClutchEngaged = (Clutch <> tEngClutch.Opened)
+
+			'Note: Vehicles with Start/Stop will stop engine at vehicle stop => EngState0 = tEngState.Stopped
+			mAAUX_Global.Idle = (EngState0 = tEngState.Idle)
+
+			mAAUX_Global.InNeutral = (Gear = 0)
+
+			'Driveline Power = required power at clutch = power at wheels plus powertrain losses
+			'[kW]
+			mAAUX_Global.EngineDrivelinePower = Pclutch
+
+			'[1/min]
+			mAAUX_Global.EngineSpeed = nU
+
+			'[Nm] (using Power => Torque conversion)
+			mAAUX_Global.EngineDrivelineTorque = nPeToM(EngineSpeed, EngineDrivelinePower)
+
+			'Motoring power (< 0 !!!)
+			'[kW]
+			'** NOTE THIS IS MULTIPLIED BY - to get a positive value.
+			mAAUX_Global.EngineMotoringPower = -GBX.FLD(Gear).Pdrag(EngineSpeed)
+
+			'Additional aux power from driving cycle (optional user input)
+			'[kW]
+			mAAUX_Global.PreExistingAuxPower = MODdata.Vh.Padd(jz)
+
+			'Total aux power
+			'[kW]
+			Paux = PreExistingAuxPower + fPaux(jz, EngineSpeed)
+			'*****************     ADVANCED AUXILIARIES END   ********************************************************
+
+			'ICE-inertia
+			If jz = 0 Then
+				PaMot = 0
+			Else
+				'Not optimal since jz-1 to jz not the right interval
+				PaMot = fPaMot(nU, MODdata.nU(jz - 1))
+			End If
+
+			'Total Engine-power
+			'   => Pantr
+			'   => P
+			'   => Pkup
 			'Power at clutch
 			Select Case Clutch
 				Case tEngClutch.Opened
@@ -1103,7 +1247,14 @@ lb_nOK:
 
 				If P < Pmin Then P = Pmin
 
+				'AA-TB
+				mAAUX_Global.Internal_Engine_Power = P
+
 			Else
+
+				'AA-TB
+				mAAUX_Global.Internal_Engine_Power = P
+
 				If EngState0 = tEngState.Load Then
 					Pbrake = 0
 					If GBX.TCon And GBX.IsTCgear(Gear) Then Pbrake = GBX.TC_PeBrake
@@ -1391,7 +1542,74 @@ lb_nOK:
 
 			LastGear = Gear
 
+			'AA-TB
+			'Aggregate Fuel On Last Known Signals.
+			If Not mAAUX_Global.advancedAuxModel Is Nothing Then
+
+				'EngineState ( used for start stop fueling adjustment )
+
+				If EngState0 = tEngState.Stopped Then
+					advancedAuxModel.Signals.EngineStopped = True
+				Else
+					advancedAuxModel.Signals.EngineStopped = False
+				End If
+
+				mAAUX_Global.EngineDrivelineTorque = nPeToM(nU, P) - (((Paux) * 1000) / (EngineSpeed / 9.55))
+				mAAUX_Global.advancedAuxModel.Signals.EngineDrivelineTorque = mAAUX_Global.EngineDrivelineTorque
+
+
+				advancedAuxModel.CycleStep(1, message)
+
+
+				Try
+
+					'Add Mod Data
+					ModData.AA_NonSmartAlternatorsEfficiency.Add(advancedAuxModel.AA_NonSmartAlternatorsEfficiency)
+					ModData.AA_SmartIdleCurrent_Amps.Add(advancedAuxModel.AA_SmartIdleCurrent_Amps)
+					ModData.AA_SmartIdleAlternatorsEfficiency.Add(advancedAuxModel.AA_SmartIdleAlternatorsEfficiency)
+					ModData.AA_SmartTractionCurrent_Amps.Add(advancedAuxModel.AA_SmartTractionCurrent_Amps)
+					ModData.AA_SmartTractionAlternatorEfficiency.Add(advancedAuxModel.AA_SmartTractionAlternatorEfficiency)
+					ModData.AA_SmartOverrunCurrent_Amps.Add(advancedAuxModel.AA_SmartOverrunCurrent_Amps)
+					ModData.AA_SmartOverrunAlternatorEfficiency.Add(advancedAuxModel.AA_SmartOverrunAlternatorEfficiency)
+					ModData.AA_CompressorFlowRate_LitrePerSec.Add(advancedAuxModel.AA_CompressorFlowRate_LitrePerSec)
+					ModData.AA_OverrunFlag.Add(advancedAuxModel.AA_OverrunFlag)
+					ModData.AA_EngineIdleFlag.Add(advancedAuxModel.AA_EngineIdleFlag)
+					ModData.AA_CompressorFlag.Add(advancedAuxModel.AA_CompressorFlag)
+					ModData.AA_TotalCycleFC_Grams.Add(advancedAuxModel.AA_TotalCycleFC_Grams)
+					ModData.AA_TotalCycleFC_Litres.Add(advancedAuxModel.AA_TotalCycleFC_Litres)
+
+					MODdata.AA_AveragePowerDemandCrankHVACMechanicals.Add(advancedAuxModel.AA_AveragePowerDemandCrankHVACMechanicals)
+					MODdata.AA_AveragePowerDemandCrankHVACElectricals.Add(advancedAuxModel.AA_AveragePowerDemandCrankHVACElectricals)
+					MODdata.AA_AveragePowerDemandCrankElectrics.Add(advancedAuxModel.AA_AveragePowerDemandCrankElectrics)
+					MODdata.AA_AveragePowerDemandCrankPneumatics.Add(advancedAuxModel.AA_AveragePowerDemandCrankPneumatics)
+					MODdata.AA_TotalCycleFuelConsumptionCompressorOff.Add(advancedAuxModel.AA_TotalCycleFuelConsumptionCompressorOff)
+					MODdata.AA_TotalCycleFuelConsumptionCompressorOn.Add(advancedAuxModel.AA_TotalCycleFuelConsumptionCompressorOn)
+
+
+					'TODO:DIAGNOSTICS - REMOVE WHEN TESTED
+					'ModData.AA_D_M12_P1X                                      .Add( advancedAuxModel.AA_D_M12_P1X)
+					'ModData.AA_D_M12_P1Y                                      .Add( advancedAuxModel.AA_D_M12_P1Y)
+					'ModData.AA_D_M12_P2X                                      .Add( advancedAuxModel.AA_D_M12_P2X)
+					'ModData.AA_D_M12_P2Y                                      .Add( advancedAuxModel.AA_D_M12_P2Y)
+					'ModData.AA_D_M12_P3X                                      .Add( advancedAuxModel.AA_D_M12_P3X)
+					'ModData.AA_D_M12_P3Y                                      .Add( advancedAuxModel.AA_D_M12_P3Y)
+					'ModData.AA_D_M12_XTAIN                                    .Add( advancedAuxModel.AA_D_M12_XTAIN)
+					'ModData.AA_D_M12_INTERP1                                  .Add( advancedAuxModel.AA_D_M12_INTERP1)
+					'ModData.AA_D_M12_INTERP2                                  .Add( advancedAuxModel.AA_D_M12_INTERP2)
+
+
+				Catch ex As Exception
+
+					Dim dummy As Single = 0
+
+
+				End Try
+
+
+			End If
+
 		Loop Until jz >= MODdata.tDim
+
 
 		'***********************************************************************************************
 		'***********************************    Time loop END ***********************************
@@ -1466,7 +1684,7 @@ lb_nOK:
 			'Reset the second-by-second Errors
 			MODdata.ModErrors.ResetAll()
 
-			'OLD and wrong because not time shifted: P_mr(jz) = 0.001 * (I_mot * 0.0109662 * (n(jz) * nnrom) * nnrom * (n_eng_avg(jz) - n_eng_avg(jz - 1))) 
+			'OLD and wrong because not time shifted: P_mr(jz) = 0.001 * (I_mot * 0.0109662 * (n(jz) * nnrom) * nnrom * (n(jz) - n(jz - 1))) 
 			If t > 0 And t < t1 Then
 				Pmr = 0.001 *
 					(ENG.I_mot * (2 * Math.PI / 60) ^ 2 * ((MODdata.nU(t + 1) + MODdata.nU(t - 1)) / 2) * 0.5 * (MODdata.nU(t + 1) - MODdata.nU(t - 1)))
@@ -1661,6 +1879,7 @@ lb_nOK:
 	Private Function fCoastingSpeed(ByVal t As Integer, ByVal s As Double, ByVal Gear As Integer, ByVal v As Single,
 									ByVal a As Single, Optional ByVal v0 As Single? = Nothing) As Single
 
+
 		Dim vstep As Double
 		Dim vSign As Integer
 		Dim Pe As Single
@@ -1670,7 +1889,6 @@ lb_nOK:
 		Dim nU As Single
 		Dim Pdrag As Single
 		Dim Grad As Single
-
 
 		vstep = 5
 		nU = fnU(v, Gear, False)
@@ -1684,6 +1902,38 @@ lb_nOK:
 		Pe = Pwheel + fPlossGB(Pwheel, v, Gear, True) + fPlossDiff(Pwheel, v, True) + fPaG(v, a) + fPlossRt(v, Gear) +
 			fPaux(t, nU) + fPaMotSimple(t, Gear, v, a)
 
+
+		'AA-TB
+		'Recalculate for Advanced Auxiliaries.
+
+		mAAUX_Global.ClutchEngaged = (Gear > 0)
+
+		mAAUX_Global.Idle = (Gear = 0 And Not Pplus And Not Pminus)
+
+		mAAUX_Global.InNeutral = (Gear = 0)
+
+		'Driveline Power = required power at clutch = power at wheels plus powertrain losses
+		'[kW]
+		'**** THIS IS NOT CORRECT< BUT NO PKU Variable is available at this point ****
+		mAAUX_Global.EngineDrivelinePower = Pwheel + fPlossGB(Pwheel, v, Gear, True) + fPlossDiff(Pwheel, v, True) +
+											fPaG(v, a) + fPlossRt(v, Gear)
+
+		'[1/min]
+		mAAUX_Global.EngineSpeed = nU
+
+		'[Nm] (using Power => Torque conversion)
+		mAAUX_Global.EngineDrivelineTorque = nPeToM(EngineSpeed, EngineDrivelinePower)
+
+		'Motoring power (< 0 !!!)
+		'[kW]
+		'** MULTIPLIED BY - TO GET POSITIVE VALUE
+		mAAUX_Global.EngineMotoringPower = -GBX.FLD(Gear).Pdrag(EngineSpeed)
+
+		'Additional aux power from driving cycle (optional user input)
+		'[kW]
+		mAAUX_Global.PreExistingAuxPower = MODdata.Vh.Padd(t)
+
+
 		Diff = Math.Abs(Pdrag - Pe)
 
 		If Diff > 0.0001 Then
@@ -1694,13 +1944,13 @@ lb_nOK:
 
 		LastDiff = Diff + 10 * 0.0001
 
-		Do While Diff > 0.0001 'And Math.Abs(LastDiff - Diff) > eps
+		Do While Diff > 0.00001	'And Math.Abs(LastDiff - Diff) > eps
 
 			If LastDiff < Diff Or v + vSign * vstep <= 0.0001 Then
 				vSign *= -1
 				vstep *= 0.5
 
-				If vstep < 0.00001 Then Exit Do
+				If vstep < 0.001 Then Exit Do
 
 			End If
 
@@ -1718,6 +1968,37 @@ lb_nOK:
 			LastDiff = Diff
 
 			Pwheel = fPwheel(t, v, a, Grad)
+
+			'AA-TB
+			'Recalculate for Advanced Auxiliaries.
+
+			mAAUX_Global.ClutchEngaged = (Gear > 0)
+
+			mAAUX_Global.Idle = (Gear = 0 And Not Pplus And Not Pminus)
+
+			mAAUX_Global.InNeutral = (Gear = 0)
+
+			'Driveline Power = required power at clutch = power at wheels plus powertrain losses
+			'[kW]
+			'**** RL-7/1/15 ****
+			mAAUX_Global.EngineDrivelinePower = Pwheel + fPlossGB(Pwheel, v, Gear, True) + fPlossDiff(Pwheel, v, True) +
+												fPaG(v, a) + fPlossRt(v, Gear)
+
+			'[1/min]
+			mAAUX_Global.EngineSpeed = nU
+
+			'[Nm] (using Power => Torque conversion)
+			mAAUX_Global.EngineDrivelineTorque = nPeToM(EngineSpeed, EngineDrivelinePower)
+
+			'Motoring power (< 0 !!!)
+			'[kW]
+			'** MULTIPLIED BY - TO GET POSITIVE VALUE
+			mAAUX_Global.EngineMotoringPower = -GBX.FLD(Gear).Pdrag(EngineSpeed)
+
+			'Additional aux power from driving cycle (optional user input)
+			'[kW]
+			mAAUX_Global.PreExistingAuxPower = MODdata.Vh.Padd(t)
+
 			Pe = Pwheel + fPlossGB(Pwheel, v, Gear, True) + fPlossDiff(Pwheel, v, True) + fPaG(v, a) + fPlossRt(v, Gear) +
 				fPaux(t, nU) + fPaMotSimple(t, Gear, v, a)
 
@@ -1958,11 +2239,11 @@ lb_nOK:
 		End If
 
 
-
 		'Upshift
 		If LastGear < GBX.GearCount Then
 
-			TqNext = Math.Min(nPeToM(fnU(Vact, LastGear + 1, False), fPeGearMod(LastGear + 1, t, Grad)), GBX.FLD(LastGear + 1).Tq(fnU(Vact, LastGear + 1, False)))
+			TqNext = Math.Min(nPeToM(fnU(Vact, LastGear + 1, False), fPeGearMod(LastGear + 1, t, Grad)),
+							GBX.FLD(LastGear + 1).Tq(fnU(Vact, LastGear + 1, False)))
 			nUup = GBX.Shiftpolygons(LastGear).fGSnUup(TqNext)
 
 			TCaccmin = Math.Min(DEV.TCaccmin, MODdata.Vh.a(t))
@@ -1988,14 +2269,14 @@ lb_nOK:
 
 					If DEV.TCshiftModeNew Then
 						If _
-						 fnUout(Vact, LastGear + 1) > Math.Min(700, iRatio * (GBX.FLD(LastGear).N80h - 150)) AndAlso
-						 GBX.FLD(LastGear + 1).Pfull(nU * iRatio) >= fPeGearMod(LastGear + 1, t, MODdata.Vh.V(t), TCaccmin, Grad) Then
+							fnUout(Vact, LastGear + 1) > Math.Min(700, iRatio * (GBX.FLD(LastGear).N80h - 150)) AndAlso
+							GBX.FLD(LastGear + 1).Pfull(nU * iRatio) >= fPeGearMod(LastGear + 1, t, MODdata.Vh.V(t), TCaccmin, Grad) Then
 							Return LastGear + 1
 						End If
 					Else
 						If _
-						fnUout(Vact, LastGear + 1) > Math.Min(700, iRatio * (GBX.FLD(LastGear).N80h - 150)) AndAlso
-						GBX.FLD(LastGear + 1).Pfull(nU * iRatio) > 0.7 * GBX.FLD(LastGear).Pfull(nU) Then
+							fnUout(Vact, LastGear + 1) > Math.Min(700, iRatio * (GBX.FLD(LastGear).N80h - 150)) AndAlso
+							GBX.FLD(LastGear + 1).Pfull(nU * iRatio) > 0.7 * GBX.FLD(LastGear).Pfull(nU) Then
 							Return LastGear + 1
 						End If
 					End If
@@ -2011,7 +2292,8 @@ lb_nOK:
 		If LastGear > 0 Then
 
 			'Up/Downshift rpms
-			TqCurrent = Math.Min(nPeToM(fnU(Vact, LastGear, False), fPeGearMod(LastGear, t, Grad)), GBX.FLD(LastGear).Tq(fnU(Vact, LastGear, False)))
+			TqCurrent = Math.Min(nPeToM(fnU(Vact, LastGear, False), fPeGearMod(LastGear, t, Grad)),
+								GBX.FLD(LastGear).Tq(fnU(Vact, LastGear, False)))
 			nUdown = GBX.Shiftpolygons(LastGear).fGSnUdown(TqCurrent)
 
 			If MinusGearTC Then
@@ -2024,7 +2306,6 @@ lb_nOK:
 				End If
 			End If
 		End If
-
 
 
 		Return LastGear
@@ -2071,12 +2352,13 @@ lb_nOK:
 		RpmTooHigh = ((nU - ENG.Nidle) / (ENG.Nrated - ENG.Nidle) >= 1.2)
 
 		'No gear change 3s after last one -except rpm out of range
-		If Not (RpmTooHigh Or RpmTooLow) AndAlso t - LastGearChange <= GBX.gs_ShiftTime And t > GBX.gs_ShiftTime - 1 Then Return LastGear
+		If Not (RpmTooHigh Or RpmTooLow) AndAlso t - LastGearChange <= GBX.gs_ShiftTime And t > GBX.gs_ShiftTime - 1 Then _
+			Return LastGear
 
 		'During start (clutch slipping) no gear shift
 		If LastClutch = tEngClutch.Slipping And VehState0 = tVehState.Acc Then Return LastGear
 
-		
+
 		If Not (RpmTooHigh Or RpmTooLow) Then
 
 			'Current rpm with previous gear
@@ -2401,7 +2683,6 @@ lb10:
 		End Select
 
 		Return CSng((CdA * Cfg.AirDensity / 2 * ((vair) ^ 2)) * v * 0.001)
-
 	End Function
 
 	'--------Vehicle Acceleration-capability(Beschleunigungsleistung) --------
@@ -2428,8 +2709,66 @@ lb10:
 	End Function
 
 	'----------------Auxillaries(Nebenaggregate) ----------------
+
+	'NOTES TO SELF FOR MONDAY
+
+	'IF WE HANDLE THE MODEL HERE, THEN WE NEED TO DISCRIMINATE IF TO SINGLE STEP OR NOT BECAUSE WE DONT NEED IT IN PREP
+
+	'ALSO NEED TO GET VEHICLE MASS AND OTHER THINGS WHEN WE GENERATE THE auxModel in AAUX GLOBAL, DONT HAVE THEM YET
+
+	'ENSURE WE ARE ALSO CREATING THIS MODEL IN CYCLE OR AT LEAST CHECK TO SEE IF WE NEED TO, PERHAPS NOT AS POWER
+	'CALCS ARE DONE DURING PRE AND ONLY STEPPED IN CYCLE SO IT MAY BE OK.
+
+
+	'AA-TB-IMPLEMENT
+
 	Public Function fPaux(ByVal t As Integer, ByVal nU As Single) As Single
-		Return CSng(MODdata.Vh.Padd(t) + VEC.PauxSum(t, nU))
+
+		'AA-TB ( RAFAEL )
+		'This function descriminates between Advanced and Auxiliaries and if in Advanced only calculate the
+		'Fuel during Calc as we conly create the AdvancedAuxiliaries object at the beginning of Pre-Run and do
+		'Not Re-Create it again for Calc, simply turn on Aggregation using Cycle step.
+		'
+		'If not in Advanced mode ( CLASSIC ), then use the original formulae.
+		Dim message As String = String.Empty
+		Dim power As Single
+
+		If VECTO_Global.VEC.AuxiliaryAssembly = "CLASSIC" Then
+
+			Return CSng(VEC.PauxSum(t, nU))
+
+		Else
+
+			Try
+
+				mAAUX_Global.advancedAuxModel.Signals.ClutchEngaged = mAAUX_Global.ClutchEngaged
+				mAAUX_Global.advancedAuxModel.Signals.EngineDrivelinePower = mAAUX_Global.EngineDrivelinePower
+				mAAUX_Global.advancedAuxModel.Signals.EngineDrivelineTorque = mAAUX_Global.EngineDrivelineTorque
+				mAAUX_Global.advancedAuxModel.Signals.EngineMotoringPower = mAAUX_Global.EngineMotoringPower
+				mAAUX_Global.advancedAuxModel.Signals.EngineSpeed = mAAUX_Global.EngineSpeed
+				mAAUX_Global.advancedAuxModel.Signals.PreExistingAuxPower = mAAUX_Global.PreExistingAuxPower
+				mAAUX_Global.advancedAuxModel.Signals.Idle = mAAUX_Global.Idle
+				mAAUX_Global.advancedAuxModel.Signals.InNeutral = mAAUX_Global.InNeutral
+				mAAUX_Global.advancedAuxModel.Signals.RunningCalc = mAAUX_Global.RunningCalc
+				mAAUX_Global.advancedAuxModel.Signals.Internal_Engine_Power = mAAUX_Global.Internal_Engine_Power
+
+				'Power coming out of Advanced Model is in Watts.
+				power = (advancedAuxModel.AuxiliaryPowerAtCrankWatts / 1000)
+
+				'Glenn: Comment the previous line and uncomment the next line to include the classic auxilaries power togeher with the advanced auxiliary power.
+				'power = VEC.PauxSum(t, nU) + (advancedAuxModel.AuxiliaryPowerAtCrankWatts / 1000)
+
+			Catch ex As Exception
+
+				'EXIT THIS IS A FAILURE
+				WorkerMsg(tMsgID.Err, "Error in Advanced Power Calc :" & ex.Message, "paux")
+				Return False
+
+			End Try
+
+			Return power
+
+		End If
 	End Function
 
 	'-------------------Transmission(Getriebe)-------------------

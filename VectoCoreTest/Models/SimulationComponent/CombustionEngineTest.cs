@@ -557,46 +557,13 @@ namespace TUGraz.VectoCore.Tests.Models.SimulationComponent
 			var torque = 345000.SI<Watt>() / angularVelocity;
 
 			var response = requestPort.Initialize(torque, angularVelocity);
-			Assert.IsInstanceOfType
-				(
-					response
-					, typeof(
-						ResponseSuccess
-						));
+			Assert.IsInstanceOfType(response, typeof(ResponseSuccess));
 
-			response
-				=
-				requestPort.Request
-					(
-						absTime
-						,
-						dt
-						,
-						torque
-						,
-						angularVelocity
-					);
-			Assert.IsInstanceOfType
-				(
-					response
-					, typeof(
-						ResponseSuccess
-						));
-			Assert.AreEqual
-				(350000,
-					response.EnginePowerRequest.Value
-						(),
-					Tolerance
-				);
-			container.CommitSimulationStep
-				(
-					absTime
-					,
-					dt
-				);
-			absTime
-				+=
-				dt;
+			response = requestPort.Request(absTime, dt, torque, angularVelocity);
+			Assert.IsInstanceOfType(response, typeof(ResponseSuccess));
+			Assert.AreEqual(350000, response.EnginePowerRequest.Value(), Tolerance);
+			container.CommitSimulationStep(absTime, dt);
+			absTime += dt;
 
 			var engineSpeed = new[] {
 				1680.RPMtoRad(), 1680.RPMtoRad(), 1424.880146.RPMtoRad(), 1201.792344.RPMtoRad(), 998.69122.RPMtoRad(),
@@ -613,11 +580,7 @@ namespace TUGraz.VectoCore.Tests.Models.SimulationComponent
 			};
 
 			var engSpeedResults = new List<dynamic>();
-			for (
-				var i = 0;
-				i < engineSpeed.Length;
-				i 
-					++) {
+			for (var i = 0; i < engineSpeed.Length; i ++) {
 				torque = 0.SI<NewtonMeter>();
 
 				response = requestPort.Request(absTime, dt, torque, null);

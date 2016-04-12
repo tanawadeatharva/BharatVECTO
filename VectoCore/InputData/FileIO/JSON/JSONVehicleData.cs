@@ -140,6 +140,7 @@ namespace TUGraz.VectoCore.InputData.FileIO.JSON
 			get { return ReadTableData(Body.GetEx<string>("CdCorrFile"), "CrosswindCorrection File"); }
 		}
 
+
 		public virtual double RetarderRatio
 		{
 			get { return Body.GetEx(JsonKeys.Vehicle_Retarder).GetEx<double>(JsonKeys.Vehicle_Retarder_Ratio); }
@@ -169,6 +170,25 @@ namespace TUGraz.VectoCore.InputData.FileIO.JSON
 					ReadTableData(Body.GetEx(JsonKeys.Vehicle_Retarder).GetEx<string>(JsonKeys.Vehicle_Retarder_LossMapFile),
 						"LossMap");
 			}
+		}
+
+		#endregion
+
+		#region AdvancedAuxiliaries
+
+		public AuxiliaryModel AuxiliaryAssembly
+		{
+			get { return AuxiliaryModelHelper.Parse(Body["AuxiliaryAssembly"] == null ? "" : Body["AuxiliaryAssembly"].ToString()); }
+		}
+
+		public string AuxiliaryVersion
+		{
+			get { return Body["AuxiliaryVersion"] != null ? Body["AuxiliaryVersion"].Value<string>() : "<CLASSIC>"; }
+		}
+
+		public string AdvancedAuxiliaryFilePath
+		{
+			get { return Body["AdvancedAuxiliaryFilePath"] != null ? Body["AdvancedAuxiliaryFilePath"].Value<string>() : ""; }
 		}
 
 		#endregion

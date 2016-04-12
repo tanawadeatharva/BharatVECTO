@@ -585,6 +585,14 @@ namespace TUGraz.VectoCore.Utils
 		}
 	}
 
+	public class Ampere : SIBase<Ampere>
+	{
+		private Ampere(double val) : base(new SI(val).Ampere)
+		{
+			Numerator = new[] { Unit.Ampere };
+		}
+	}
+
 
 	/// <summary>
 	/// Base Class for all special SI Classes. Not intended to be used directly.
@@ -841,7 +849,8 @@ namespace TUGraz.VectoCore.Utils
 			d,
 			h,
 			milli,
-			t
+			t,
+			Ampere
 		}
 
 		/// <summary>
@@ -1283,6 +1292,11 @@ namespace TUGraz.VectoCore.Utils
 		public SI Kilo
 		{
 			[DebuggerHidden] get { return new SI(this, 1000.0, Unit.k); }
+		}
+
+		public SI Ampere
+		{
+			[DebuggerHidden] get { return new SI(this, 1.0, Unit.Ampere); }
 		}
 
 		/// <summary>

@@ -41,6 +41,27 @@ using TUGraz.VectoCore.Utils;
 
 namespace TUGraz.VectoCore.Models.SimulationComponent.Data
 {
+	public enum AuxiliaryModel
+	{
+		Classic,
+		Advanced
+	}
+
+	public class AuxiliaryModelHelper
+	{
+		public static AuxiliaryModel Parse(string auxAssemblyStr)
+		{
+			if (string.IsNullOrEmpty(auxAssemblyStr)) {
+				return AuxiliaryModel.Classic;
+			}
+			switch (auxAssemblyStr) {
+				case "BusAuxiliaries":
+					return AuxiliaryModel.Advanced;
+			}
+			return AuxiliaryModel.Classic;
+		}
+	}
+
 	[CustomValidation(typeof(AuxiliaryData), "ValidateAuxMap")]
 	public class AuxiliaryData
 	{
@@ -185,5 +206,14 @@ namespace TUGraz.VectoCore.Models.SimulationComponent.Data
 			}
 			return ValidationResult.Success;
 		}
+	}
+
+	public class AdvancedAuxData
+	{
+		public AuxiliaryModel AuxiliaryAssembly;
+
+		public string AdvancedAuxiliaryFilePath;
+
+		public string AuxiliaryVersion;
 	}
 }

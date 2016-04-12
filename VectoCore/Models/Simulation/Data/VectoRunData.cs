@@ -61,6 +61,8 @@ namespace TUGraz.VectoCore.Models.Simulation.Data
 		[ValidateObject]
 		public IEnumerable<AuxData> Aux { get; internal set; }
 
+		public AdvancedAuxData AdvancedAux { get; internal set; }
+
 		[ValidateObject]
 		public string AccelerationLimitingFile { get; internal set; }
 
