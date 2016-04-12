@@ -835,9 +835,6 @@
     <None Include="..\AAUXData\BusDatabase.abdb">
       <Link>Release Files\AAUXData\BusDatabase.abdb</Link>
     </None>
-    <None Include="..\AAUXData\BusDatabase.abdb">
-      <Link>Release Files\AAUXData\BusDatabase.abdb</Link>
-    </None>
     <None Include="..\AAUXData\AdvAuxTest.aaux">
       <Link>Release Files\AAUXData\AdvAuxTest.aaux</Link>
     </None>
