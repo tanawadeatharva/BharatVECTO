@@ -32,6 +32,7 @@
 using System;
 using TUGraz.VectoCommon.Exceptions;
 using TUGraz.VectoCommon.Models;
+using TUGraz.VectoCommon.Utils;
 using TUGraz.VectoCore.Configuration;
 using TUGraz.VectoCore.Models.Connector.Ports;
 using TUGraz.VectoCore.Models.Connector.Ports.Impl;
@@ -53,6 +54,7 @@ namespace TUGraz.VectoCore.Models.Simulation.Impl
 			var loopCount = 0;
 			IResponse response;
 			do {
+				Container.BrakePower = 0.SI<Watt>();
 				response = CyclePort.Request(AbsTime, ds);
 				response.Switch().
 					Case<ResponseSuccess>(r => { dt = r.SimulationInterval; }).
