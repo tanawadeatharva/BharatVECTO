@@ -104,6 +104,11 @@ namespace TUGraz.VectoCore.Models.SimulationComponent.Impl
 			return ModelData.FullLoadCurve.FullLoadStationaryTorque(angularSpeed) * angularSpeed;
 		}
 
+		public Watt EngineDragPower(PerSecond angularSpeed)
+		{
+			return ModelData.FullLoadCurve.DragLoadStationaryPower(angularSpeed);
+		}
+
 		public PerSecond EngineIdleSpeed
 		{
 			get { return ModelData.IdleSpeed; }
@@ -171,7 +176,7 @@ namespace TUGraz.VectoCore.Models.SimulationComponent.Impl
 
 			var auxTorqueDemand = EngineAux == null
 				? 0.SI<NewtonMeter>()
-				: EngineAux.PowerDemand(absTime, dt, CurrentState.EngineTorqueOut, angularVelocity, dryRun);
+				: EngineAux.PowerDemand(absTime, dt, CurrentState.EngineTorqueOut, CurrentState.EngineTorqueOut + CurrentState.InertiaTorqueLoss, angularVelocity, dryRun);
 			// compute the torque the engine has to provide. powertrain + aux + its own inertia
 			var totalTorqueDemand = torqueOut + auxTorqueDemand + CurrentState.InertiaTorqueLoss;
 

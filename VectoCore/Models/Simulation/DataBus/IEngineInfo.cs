@@ -45,6 +45,8 @@ namespace TUGraz.VectoCore.Models.Simulation.DataBus
 
 		Watt EngineStationaryFullPower(PerSecond angularSpeed);
 
+		Watt EngineDragPower(PerSecond angularSpeed);
+
 		PerSecond EngineIdleSpeed { get; }
 
 

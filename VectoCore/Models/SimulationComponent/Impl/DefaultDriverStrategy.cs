@@ -343,6 +343,7 @@ namespace TUGraz.VectoCore.Models.SimulationComponent.Impl
 		{
 			IResponse response = null;
 
+			DriverStrategy.DriverBehavior = DrivingBehavior.Driving;
 			var velocity = targetVelocity;
 			if (DriverStrategy.OverspeedAllowed(gradient, targetVelocity)) {
 				velocity += DriverData.OverSpeedEcoRoll.OverSpeed;

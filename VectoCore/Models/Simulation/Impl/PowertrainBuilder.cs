@@ -291,11 +291,22 @@ namespace TUGraz.VectoCore.Models.Simulation.Impl
 			// connect aux --> engine
 			if (data.Aux != null) {
 				engine.Connect(CreateAuxiliaries(data, container).Port());
+			} else {
+				if (data.AdvancedAux.AuxiliaryAssembly == AuxiliaryModel.Advanced) {
+					engine.Connect(CreateBusAuxiliaries(data, container).Port());
+				}
 			}
 
 			engine.IdleController.RequestPort = clutch.IdleControlPort;
 
 			return container;
+		}
+
+		private IEngineAuxInProvider CreateBusAuxiliaries(VectoRunData data, VehicleContainer container)
+		{
+			var busAux = new BusAuxiliariesAdapter(container, data.AdvancedAux.AdvancedAuxiliaryFilePath, data.Cycle.Name,
+				data.VehicleData.TotalVehicleWeight(), data.EngineData.ConsumptionMap, data.EngineData.IdleSpeed);
+			return busAux;
 		}
 
 		private EngineAuxiliary CreateAuxiliaries(VectoRunData data, IVehicleContainer container)

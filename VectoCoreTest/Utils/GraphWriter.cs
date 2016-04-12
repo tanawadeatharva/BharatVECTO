@@ -77,7 +77,7 @@ namespace TUGraz.VectoCore.Tests.Utils
 
 			var modDataV3 = VectoCSVFile.Read(fileNameV3);
 			if (!File.Exists(fileNameV22)) {
-				LogManager.GetCurrentClassLogger().Error("Modfile V2.2 not found: " + fileNameV22);
+				LogManager.GetCurrentClassLogger().Error("Modfile V2.x not found: " + fileNameV22);
 				//Write(fileNameV3);
 				//return;
 			}
@@ -89,7 +89,7 @@ namespace TUGraz.VectoCore.Tests.Utils
 
 			var yfields = new[] {
 				ModalResultField.v_act, ModalResultField.acc, ModalResultField.n_eng_avg, ModalResultField.Gear,
-				ModalResultField.P_eng_out, ModalResultField.T_eng_fcmap, ModalResultField.FCMap
+				ModalResultField.P_eng_out, ModalResultField.P_aux, ModalResultField.AA_TotalCycleFC_Grams
 			};
 
 			var titleHeight = (50 * 100.0f) / (_diagramSize.Height * yfields.Count());
@@ -148,7 +148,7 @@ namespace TUGraz.VectoCore.Tests.Utils
 
 					if (fileNameV22 != null) {
 						var y2 = LoadData(modDataV22, TranslateFieldname(yfield));
-						var series2 = CreateSeries(string.Format("Vecto 2.2 - {0}", yfield), legend, chartArea, chart,
+						var series2 = CreateSeries(string.Format("Vecto 2.0+AUX - {0}", yfield), legend, chartArea, chart,
 							Color.Red, x2,
 							y2);
 					}
@@ -176,6 +176,10 @@ namespace TUGraz.VectoCore.Tests.Utils
 					return "Pe_eng";
 				case ModalResultField.T_eng_fcmap:
 					return "Tq_eng";
+				case ModalResultField.P_aux:
+					return "Paux";
+				//case ModalResultField.AA_TotalCycleFC_Grams:
+				//	return "AA_TotalCycleFC_Grams []";
 				default:
 					return modalResultField.GetName();
 			}

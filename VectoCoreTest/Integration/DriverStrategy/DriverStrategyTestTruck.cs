@@ -47,7 +47,7 @@ namespace TUGraz.VectoCore.Tests.Integration.DriverStrategy
 
 		#region Accelerate
 
-		[TestMethod]
+		[TestMethod, TestCategory("ComparisonV2")]
 		public void Truck_Accelerate_20_60_level()
 		{
 			var cycle = SimpleDrivingCycles.CreateCycleData(SimpleDrivingCycles.CycleAccelerate_20_60_Level);
@@ -60,7 +60,7 @@ namespace TUGraz.VectoCore.Tests.Integration.DriverStrategy
 				@"..\..\TestData\Integration\DriverStrategy\Vecto2.2\40t Truck\40t_Long_Haul_Truck_Cycle_Accelerate_20_60_level.vmod");
 		}
 
-		[TestMethod]
+		[TestMethod, TestCategory("ComparisonV2")]
 		public void Truck_Accelerate_20_60_uphill_5()
 		{
 			var cycle = SimpleDrivingCycles.CreateCycleData(SimpleDrivingCycles.CycleAccelerate_20_60_uphilll_5);
@@ -75,7 +75,7 @@ namespace TUGraz.VectoCore.Tests.Integration.DriverStrategy
 		}
 
 
-		[TestMethod]
+		[TestMethod, TestCategory("ComparisonV2")]
 		public void Truck_Accelerate_20_60_downhill_5()
 		{
 			var cycle = SimpleDrivingCycles.CreateCycleData(SimpleDrivingCycles.CycleAccelerate_20_60_downhill_5);
@@ -90,7 +90,7 @@ namespace TUGraz.VectoCore.Tests.Integration.DriverStrategy
 		}
 
 
-		[TestMethod, TestCategory("LongRunning")]
+		[TestMethod, TestCategory("ComparisonV2"), TestCategory("LongRunning")]
 		public void Truck_Accelerate_20_60_uphill_25()
 		{
 			var cycle = SimpleDrivingCycles.CreateCycleData(SimpleDrivingCycles.CycleAccelerate_20_60_uphill_25);
@@ -104,7 +104,7 @@ namespace TUGraz.VectoCore.Tests.Integration.DriverStrategy
 				@"..\..\TestData\Integration\DriverStrategy\Vecto2.2\40t Truck\40t_Long_Haul_Truck_Cycle_Accelerate_20_60_uphill_25.vmod");
 		}
 
-		[TestMethod, TestCategory("LongRunning")]
+		[TestMethod, TestCategory("ComparisonV2"), TestCategory("LongRunning")]
 		public void Truck_Accelerate_20_60_downhill_25()
 		{
 			var cycle = SimpleDrivingCycles.CreateCycleData(SimpleDrivingCycles.CycleAccelerate_20_60_downhill_25);
@@ -118,7 +118,7 @@ namespace TUGraz.VectoCore.Tests.Integration.DriverStrategy
 				@"..\..\TestData\Integration\DriverStrategy\Vecto2.2\40t Truck\40t_Long_Haul_Truck_Cycle_Accelerate_20_60_downhill_25.vmod");
 		}
 
-		[TestMethod, TestCategory("LongRunning")]
+		[TestMethod, TestCategory("ComparisonV2"), TestCategory("LongRunning")]
 		public void Truck_Accelerate_20_60_uphill_15()
 		{
 			var cycle = SimpleDrivingCycles.CreateCycleData(SimpleDrivingCycles.CycleAccelerate_20_60_uphill_15);
@@ -132,7 +132,7 @@ namespace TUGraz.VectoCore.Tests.Integration.DriverStrategy
 				@"..\..\TestData\Integration\DriverStrategy\Vecto2.2\40t Truck\40t_Long_Haul_Truck_Cycle_Accelerate_20_60_uphill_15.vmod");
 		}
 
-		[TestMethod]
+		[TestMethod, TestCategory("ComparisonV2")]
 		public void Truck_Accelerate_20_60_downhill_15()
 		{
 			var cycle = SimpleDrivingCycles.CreateCycleData(SimpleDrivingCycles.CycleAccelerate_20_60_downhill_15);
@@ -146,7 +146,7 @@ namespace TUGraz.VectoCore.Tests.Integration.DriverStrategy
 				@"..\..\TestData\Integration\DriverStrategy\Vecto2.2\40t Truck\40t_Long_Haul_Truck_Cycle_Accelerate_20_60_downhill_15.vmod");
 		}
 
-		[TestMethod]
+		[TestMethod, TestCategory("ComparisonV2")]
 		public void Truck_Accelerate_0_85_level()
 		{
 			var cycle = SimpleDrivingCycles.CreateCycleData(SimpleDrivingCycles.CycleAccelerate_0_85_level);
@@ -159,7 +159,7 @@ namespace TUGraz.VectoCore.Tests.Integration.DriverStrategy
 				@"..\..\TestData\Integration\DriverStrategy\Vecto2.2\40t Truck\40t_Long_Haul_Truck_Cycle_Accelerate_0_85_level.vmod");
 		}
 
-		[TestMethod]
+		[TestMethod, TestCategory("ComparisonV2")]
 		public void Truck_Accelerate_0_85_uphill_1()
 		{
 			var cycle = SimpleDrivingCycles.CreateCycleData(SimpleDrivingCycles.CycleAccelerate_0_85_uphill_1);
@@ -173,7 +173,7 @@ namespace TUGraz.VectoCore.Tests.Integration.DriverStrategy
 				@"..\..\TestData\Integration\DriverStrategy\Vecto2.2\40t Truck\40t_Long_Haul_Truck_Cycle_Accelerate_0_85_uphill_1.vmod");
 		}
 
-		[TestMethod]
+		[TestMethod, TestCategory("ComparisonV2")]
 		public void Truck_Accelerate_0_85_uphill_2()
 		{
 			var cycle = SimpleDrivingCycles.CreateCycleData(SimpleDrivingCycles.CycleAccelerate_0_85_uphill_2);
@@ -187,7 +187,7 @@ namespace TUGraz.VectoCore.Tests.Integration.DriverStrategy
 				@"..\..\TestData\Integration\DriverStrategy\Vecto2.2\40t Truck\40t_Long_Haul_Truck_Cycle_Accelerate_0_85_uphill_2.vmod");
 		}
 
-		[TestMethod]
+		[TestMethod, TestCategory("ComparisonV2")]
 		public void Truck_Accelerate_0_85_uphill_5()
 		{
 			var cycle = SimpleDrivingCycles.CreateCycleData(SimpleDrivingCycles.CycleAccelerate_0_85_uphill_5);
@@ -201,7 +201,7 @@ namespace TUGraz.VectoCore.Tests.Integration.DriverStrategy
 				@"..\..\TestData\Integration\DriverStrategy\Vecto2.2\40t Truck\40t_Long_Haul_Truck_Cycle_Accelerate_0_85_uphill_5.vmod");
 		}
 
-		[TestMethod]
+		[TestMethod, TestCategory("ComparisonV2")]
 		public void Truck_Accelerate_0_85_downhill_5()
 		{
 			var cycle = SimpleDrivingCycles.CreateCycleData(SimpleDrivingCycles.CycleAccelerate_0_85_downhill_5);
@@ -211,7 +211,7 @@ namespace TUGraz.VectoCore.Tests.Integration.DriverStrategy
 				@"..\..\TestData\Integration\DriverStrategy\Vecto2.2\40t Truck\40t_Long_Haul_Truck_Cycle_Accelerate_0_85_downhill_5.vmod");
 		}
 
-		[TestMethod, TestCategory("LongRunning")]
+		[TestMethod, TestCategory("ComparisonV2"), TestCategory("LongRunning")]
 		public void Truck_Accelerate_0_85_uphill_25()
 		{
 			var cycle = SimpleDrivingCycles.CreateCycleData(SimpleDrivingCycles.CycleAccelerate_0_85_uphill_25);
@@ -225,7 +225,7 @@ namespace TUGraz.VectoCore.Tests.Integration.DriverStrategy
 				@"..\..\TestData\Integration\DriverStrategy\Vecto2.2\40t Truck\40t_Long_Haul_Truck_Cycle_Accelerate_0_85_uphill_25.vmod");
 		}
 
-		[TestMethod, TestCategory("LongRunning")]
+		[TestMethod, TestCategory("ComparisonV2"), TestCategory("LongRunning")]
 		public void Truck_Accelerate_0_85_downhill_25()
 		{
 			var cycle = SimpleDrivingCycles.CreateCycleData(SimpleDrivingCycles.CycleAccelerate_0_85_downhill_25);
@@ -239,7 +239,7 @@ namespace TUGraz.VectoCore.Tests.Integration.DriverStrategy
 				@"..\..\TestData\Integration\DriverStrategy\Vecto2.2\40t Truck\40t_Long_Haul_Truck_Cycle_Accelerate_0_85_downhill_25.vmod");
 		}
 
-		[TestMethod]
+		[TestMethod, TestCategory("ComparisonV2")]
 		public void Truck_Accelerate_0_85_uphill_10()
 		{
 			var cycle = SimpleDrivingCycles.CreateCycleData(SimpleDrivingCycles.CycleAccelerate_0_85_uphill_10);
@@ -253,7 +253,7 @@ namespace TUGraz.VectoCore.Tests.Integration.DriverStrategy
 				@"..\..\TestData\Integration\DriverStrategy\Vecto2.2\40t Truck\40t_Long_Haul_Truck_Cycle_Accelerate_0_85_uphill_10.vmod");
 		}
 
-		[TestMethod]
+		[TestMethod, TestCategory("ComparisonV2")]
 		public void Truck_Accelerate_0_85_downhill_15()
 		{
 			var cycle = SimpleDrivingCycles.CreateCycleData(SimpleDrivingCycles.CycleAccelerate_0_85_downhill_15);
@@ -267,7 +267,7 @@ namespace TUGraz.VectoCore.Tests.Integration.DriverStrategy
 				@"..\..\TestData\Integration\DriverStrategy\Vecto2.2\40t Truck\40t_Long_Haul_Truck_Cycle_Accelerate_0_85_downhill_15.vmod");
 		}
 
-		[TestMethod]
+		[TestMethod, TestCategory("ComparisonV2")]
 		public void Truck_Accelerate_stop_0_85_level()
 		{
 			var cycle = SimpleDrivingCycles.CreateCycleData(SimpleDrivingCycles.CycleAccelerate_stop_0_85_level);
@@ -282,7 +282,7 @@ namespace TUGraz.VectoCore.Tests.Integration.DriverStrategy
 		}
 
 
-		[TestMethod]
+		[TestMethod, TestCategory("ComparisonV2")]
 		public void Truck_Accelerate_20_22_uphill_5()
 		{
 			var cycle = SimpleDrivingCycles.CreateCycleData(SimpleDrivingCycles.CycleAccelerate_20_22_uphill_5);
@@ -300,7 +300,7 @@ namespace TUGraz.VectoCore.Tests.Integration.DriverStrategy
 
 		#region Decelerate
 
-		[TestMethod]
+		[TestMethod, TestCategory("ComparisonV2")]
 		public void Truck_Decelerate_22_20_downhill_5()
 		{
 			var cycle = SimpleDrivingCycles.CreateCycleData(SimpleDrivingCycles.CycleDecelerate_22_20_downhill_5);
@@ -314,7 +314,7 @@ namespace TUGraz.VectoCore.Tests.Integration.DriverStrategy
 				@"..\..\TestData\Integration\DriverStrategy\Vecto2.2\40t Truck\40t_Long_Haul_Truck_Cycle_Decelerate_22_20_downhill_5.vmod");
 		}
 
-		[TestMethod]
+		[TestMethod, TestCategory("ComparisonV2")]
 		public void Truck_Decelerate_60_20_level()
 		{
 			var cycle = SimpleDrivingCycles.CreateCycleData(SimpleDrivingCycles.CycleDecelerate_60_20_level);
@@ -327,7 +327,7 @@ namespace TUGraz.VectoCore.Tests.Integration.DriverStrategy
 				@"..\..\TestData\Integration\DriverStrategy\Vecto2.2\40t Truck\40t_Long_Haul_Truck_Cycle_Decelerate_60_20_level.vmod");
 		}
 
-		[TestMethod]
+		[TestMethod, TestCategory("ComparisonV2")]
 		public void Truck_Decelerate_45_0_level()
 		{
 			var cycle = SimpleDrivingCycles.CreateCycleData(SimpleDrivingCycles.CycleDecelerate_45_0_level);
@@ -340,7 +340,7 @@ namespace TUGraz.VectoCore.Tests.Integration.DriverStrategy
 				@"..\..\TestData\Integration\DriverStrategy\Vecto2.2\40t Truck\40t_Long_Haul_Truck_Cycle_Decelerate_45_0_level.vmod");
 		}
 
-		[TestMethod]
+		[TestMethod, TestCategory("ComparisonV2")]
 		public void Truck_Decelerate_45_0_uphill_5()
 		{
 			var cycle = SimpleDrivingCycles.CreateCycleData(SimpleDrivingCycles.CycleDecelerate_45_0_uphill_5);
@@ -354,7 +354,7 @@ namespace TUGraz.VectoCore.Tests.Integration.DriverStrategy
 				@"..\..\TestData\Integration\DriverStrategy\Vecto2.2\40t Truck\40t_Long_Haul_Truck_Cycle_Decelerate_45_0_uphill_5.vmod");
 		}
 
-		[TestMethod]
+		[TestMethod, TestCategory("ComparisonV2")]
 		public void Truck_Decelerate_45_0_downhill_5()
 		{
 			var cycle = SimpleDrivingCycles.CreateCycleData(SimpleDrivingCycles.CycleDecelerate_45_0_downhill_5);
@@ -368,7 +368,7 @@ namespace TUGraz.VectoCore.Tests.Integration.DriverStrategy
 				@"..\..\TestData\Integration\DriverStrategy\Vecto2.2\40t Truck\40t_Long_Haul_Truck_Cycle_Decelerate_45_0_downhill_5.vmod");
 		}
 
-		[TestMethod]
+		[TestMethod, TestCategory("ComparisonV2")]
 		public void Truck_Decelerate_60_20_uphill_5()
 		{
 			var cycle = SimpleDrivingCycles.CreateCycleData(SimpleDrivingCycles.CycleDecelerate_60_20_uphill_5);
@@ -382,7 +382,7 @@ namespace TUGraz.VectoCore.Tests.Integration.DriverStrategy
 				@"..\..\TestData\Integration\DriverStrategy\Vecto2.2\40t Truck\40t_Long_Haul_Truck_Cycle_Decelerate_60_20_uphill_5.vmod");
 		}
 
-		[TestMethod]
+		[TestMethod, TestCategory("ComparisonV2")]
 		public void Truck_Decelerate_60_20_downhill_5()
 		{
 			var cycle = SimpleDrivingCycles.CreateCycleData(SimpleDrivingCycles.CycleDecelerate_60_20_downhill_5);
@@ -396,7 +396,7 @@ namespace TUGraz.VectoCore.Tests.Integration.DriverStrategy
 				@"..\..\TestData\Integration\DriverStrategy\Vecto2.2\40t Truck\40t_Long_Haul_Truck_Cycle_Decelerate_60_20_downhill_5.vmod");
 		}
 
-		[TestMethod, TestCategory("LongRunning")]
+		[TestMethod, TestCategory("ComparisonV2"), TestCategory("LongRunning")]
 		public void Decelerate_60_20_uphill_25()
 		{
 			var cycle = SimpleDrivingCycles.CreateCycleData(SimpleDrivingCycles.CycleDecelerate_60_20_uphill_25);
@@ -410,7 +410,7 @@ namespace TUGraz.VectoCore.Tests.Integration.DriverStrategy
 //				@"..\..\TestData\Integration\DriverStrategy\Vecto2.2\40t Truck\40t_Long_Haul_Truck_Cycle_Decelerate_60_20_uphill_25.vmod");
 		}
 
-		[TestMethod]
+		[TestMethod, TestCategory("ComparisonV2")]
 		public void Truck_Decelerate_60_20_downhill_25()
 		{
 			var cycle = SimpleDrivingCycles.CreateCycleData(SimpleDrivingCycles.CycleDecelerate_60_20_downhill_25);
@@ -424,7 +424,7 @@ namespace TUGraz.VectoCore.Tests.Integration.DriverStrategy
 				@"..\..\TestData\Integration\DriverStrategy\Vecto2.2\40t Truck\40t_Long_Haul_Truck_Cycle_Decelerate_60_20_downhill_25.vmod");
 		}
 
-		[TestMethod, TestCategory("LongRunning")]
+		[TestMethod, TestCategory("ComparisonV2"), TestCategory("LongRunning")]
 		public void Truck_Decelerate_60_20_uphill_15()
 		{
 			var cycle = SimpleDrivingCycles.CreateCycleData(SimpleDrivingCycles.CycleDecelerate_60_20_uphill_15);
@@ -438,7 +438,7 @@ namespace TUGraz.VectoCore.Tests.Integration.DriverStrategy
 				@"..\..\TestData\Integration\DriverStrategy\Vecto2.2\40t Truck\40t_Long_Haul_Truck_Cycle_Decelerate_60_20_uphill_15.vmod");
 		}
 
-		[TestMethod]
+		[TestMethod, TestCategory("ComparisonV2")]
 		public void Truck_Decelerate_60_20_downhill_15()
 		{
 			var cycle = SimpleDrivingCycles.CreateCycleData(SimpleDrivingCycles.CycleDecelerate_60_20_downhill_15);
@@ -452,7 +452,7 @@ namespace TUGraz.VectoCore.Tests.Integration.DriverStrategy
 				@"..\..\TestData\Integration\DriverStrategy\Vecto2.2\40t Truck\40t_Long_Haul_Truck_Cycle_Decelerate_60_20_downhill_15.vmod");
 		}
 
-		[TestMethod]
+		[TestMethod, TestCategory("ComparisonV2")]
 		public void Truck_Decelerate_80_0_level()
 		{
 			var cycle = SimpleDrivingCycles.CreateCycleData(SimpleDrivingCycles.CycleDecelerate_80_0_level);
@@ -465,7 +465,7 @@ namespace TUGraz.VectoCore.Tests.Integration.DriverStrategy
 				@"..\..\TestData\Integration\DriverStrategy\Vecto2.2\40t Truck\40t_Long_Haul_Truck_Cycle_Decelerate_80_0_level.vmod");
 		}
 
-		[TestMethod]
+		[TestMethod, TestCategory("ComparisonV2")]
 		public void Truck_Decelerate_80_0_uphill_3()
 		{
 			var cycle = SimpleDrivingCycles.CreateCycleData(SimpleDrivingCycles.CycleDecelerate_80_0_uphill_3);
@@ -479,7 +479,7 @@ namespace TUGraz.VectoCore.Tests.Integration.DriverStrategy
 				@"..\..\TestData\Integration\DriverStrategy\Vecto2.2\40t Truck\40t_Long_Haul_Truck_Cycle_Decelerate_80_0_uphill_3.vmod");
 		}
 
-		[TestMethod]
+		[TestMethod, TestCategory("ComparisonV2")]
 		public void Truck_Decelerate_80_0_SlopeChangeDuringCoast()
 		{
 			var data = new[] {
@@ -497,7 +497,7 @@ namespace TUGraz.VectoCore.Tests.Integration.DriverStrategy
 			Assert.IsTrue(run.FinishedWithoutErrors);
 		}
 
-		[TestMethod]
+		[TestMethod, TestCategory("ComparisonV2")]
 		public void Truck_Decelerate_80_0_uphill_5()
 		{
 			var cycle = SimpleDrivingCycles.CreateCycleData(SimpleDrivingCycles.CycleDecelerate_80_0_uphill_5);
@@ -511,7 +511,7 @@ namespace TUGraz.VectoCore.Tests.Integration.DriverStrategy
 			//	@"..\..\TestData\Integration\DriverStrategy\Vecto2.2\40t Truck\40t_Long_Haul_Truck_Cycle_Decelerate_80_0_uphill_5.vmod");
 		}
 
-		[TestMethod]
+		[TestMethod, TestCategory("ComparisonV2")]
 		public void Truck_Decelerate_80_0_downhill_5()
 		{
 			var cycle = SimpleDrivingCycles.CreateCycleData(SimpleDrivingCycles.CycleDecelerate_80_0_downhill_5);
@@ -525,7 +525,7 @@ namespace TUGraz.VectoCore.Tests.Integration.DriverStrategy
 				@"..\..\TestData\Integration\DriverStrategy\Vecto2.2\40t Truck\40t_Long_Haul_Truck_Cycle_Decelerate_80_0_downhill_5.vmod");
 		}
 
-		[TestMethod, TestCategory("LongRunning")]
+		[TestMethod, TestCategory("ComparisonV2"), TestCategory("LongRunning")]
 		public void Decelerate_80_0_uphill_25()
 		{
 			var cycle = SimpleDrivingCycles.CreateCycleData(SimpleDrivingCycles.CycleDecelerate_80_0_uphill_25);
@@ -539,7 +539,7 @@ namespace TUGraz.VectoCore.Tests.Integration.DriverStrategy
 //				@"..\..\TestData\Integration\DriverStrategy\Vecto2.2\40t Truck\40t_Long_Haul_Truck_Cycle_Decelerate_80_0_steep_uphill_25.vmod");
 		}
 
-		[TestMethod]
+		[TestMethod, TestCategory("ComparisonV2")]
 		public void Truck_Decelerate_80_0_downhill_25()
 		{
 			var cycle = SimpleDrivingCycles.CreateCycleData(SimpleDrivingCycles.CycleDecelerate_80_0_downhill_25);
@@ -553,7 +553,7 @@ namespace TUGraz.VectoCore.Tests.Integration.DriverStrategy
 				@"..\..\TestData\Integration\DriverStrategy\Vecto2.2\40t Truck\40t_Long_Haul_Truck_Cycle_Decelerate_80_0_downhill_25.vmod");
 		}
 
-		[TestMethod, TestCategory("LongRunning")]
+		[TestMethod, TestCategory("ComparisonV2"), TestCategory("LongRunning")]
 		public void Decelerate_80_0_uphill_15()
 		{
 			var cycle = SimpleDrivingCycles.CreateCycleData(SimpleDrivingCycles.CycleDecelerate_80_0_uphill_15);
@@ -567,7 +567,7 @@ namespace TUGraz.VectoCore.Tests.Integration.DriverStrategy
 //				@"..\..\TestData\Integration\DriverStrategy\Vecto2.2\40t Truck\40t_Long_Haul_Truck_Cycle_Decelerate_80_0_steep_uphill_15.vmod");
 		}
 
-		[TestMethod]
+		[TestMethod, TestCategory("ComparisonV2")]
 		public void Truck_Decelerate_80_0_downhill_15()
 		{
 			var cycle = SimpleDrivingCycles.CreateCycleData(SimpleDrivingCycles.CycleDecelerate_80_0_downhill_15);
@@ -581,7 +581,7 @@ namespace TUGraz.VectoCore.Tests.Integration.DriverStrategy
 				@"..\..\TestData\Integration\DriverStrategy\Vecto2.2\40t Truck\40t_Long_Haul_Truck_Cycle_Decelerate_80_0_downhill_15.vmod");
 		}
 
-		[TestMethod]
+		[TestMethod, TestCategory("ComparisonV2")]
 		public void Truck_Decelerate_20_0_downhill_2()
 		{
 			var cycleData = new[] {
@@ -601,7 +601,7 @@ namespace TUGraz.VectoCore.Tests.Integration.DriverStrategy
 			//	@"..\..\TestData\Integration\DriverStrategy\Vecto2.2\40t Truck\40t_Long_Haul_Truck_Cycle_Decelerate_20_0_downhill_2_RefLoad.vmod");
 		}
 
-		[TestMethod]
+		[TestMethod, TestCategory("ComparisonV2")]
 		public void Truck_Decelerate_55_43_0_downhill_RefLoad()
 		{
 			var cycleData = new[] {
@@ -624,7 +624,7 @@ namespace TUGraz.VectoCore.Tests.Integration.DriverStrategy
 
 		#region Drive
 
-		[TestMethod]
+		[TestMethod, TestCategory("ComparisonV2")]
 		public void Truck_Drive_80_level()
 		{
 			var cycle = SimpleDrivingCycles.CreateCycleData(SimpleDrivingCycles.CycleDrive_80_level);
@@ -637,7 +637,7 @@ namespace TUGraz.VectoCore.Tests.Integration.DriverStrategy
 				@"..\..\TestData\Integration\DriverStrategy\Vecto2.2\40t Truck\40t_Long_Haul_Truck_Cycle_Drive_80_level.vmod");
 		}
 
-		[TestMethod]
+		[TestMethod, TestCategory("ComparisonV2")]
 		public void Truck_Drive_80_uphill_5()
 		{
 			var cycle = SimpleDrivingCycles.CreateCycleData(SimpleDrivingCycles.CycleDrive_80_uphill_5);
@@ -650,7 +650,7 @@ namespace TUGraz.VectoCore.Tests.Integration.DriverStrategy
 				@"..\..\TestData\Integration\DriverStrategy\Vecto2.2\40t Truck\40t_Long_Haul_Truck_Cycle_Drive_80_uphill_5.vmod");
 		}
 
-		[TestMethod]
+		[TestMethod, TestCategory("ComparisonV2")]
 		public void Truck_Drive_80_downhill_5()
 		{
 			var cycle = SimpleDrivingCycles.CreateCycleData(SimpleDrivingCycles.CycleDrive_80_downhill_5);
@@ -663,7 +663,7 @@ namespace TUGraz.VectoCore.Tests.Integration.DriverStrategy
 				@"..\..\TestData\Integration\DriverStrategy\Vecto2.2\40t Truck\40t_Long_Haul_Truck_Cycle_Drive_80_downhill_5.vmod");
 		}
 
-		[TestMethod]
+		[TestMethod, TestCategory("ComparisonV2")]
 		public void Truck_Drive_20_downhill_15()
 		{
 			var cycle = SimpleDrivingCycles.CreateCycleData(SimpleDrivingCycles.CycleDrive_20_downhill_15);
@@ -676,7 +676,7 @@ namespace TUGraz.VectoCore.Tests.Integration.DriverStrategy
 				@"..\..\TestData\Integration\DriverStrategy\Vecto2.2\40t Truck\40t_Long_Haul_Truck_Cycle_Drive_20_downhill_15.vmod");
 		}
 
-		[TestMethod]
+		[TestMethod, TestCategory("ComparisonV2")]
 		public void Truck_Drive_30_downhill_15()
 		{
 			var cycle = SimpleDrivingCycles.CreateCycleData(SimpleDrivingCycles.CycleDrive_30_downhill_15);
@@ -689,7 +689,7 @@ namespace TUGraz.VectoCore.Tests.Integration.DriverStrategy
 				@"..\..\TestData\Integration\DriverStrategy\Vecto2.2\40t Truck\40t_Long_Haul_Truck_Cycle_Drive_30_downhill_15.vmod");
 		}
 
-		[TestMethod]
+		[TestMethod, TestCategory("ComparisonV2")]
 		public void Truck_Drive_50_downhill_15()
 		{
 			var cycle = SimpleDrivingCycles.CreateCycleData(SimpleDrivingCycles.CycleDrive_50_downhill_15);
@@ -702,7 +702,7 @@ namespace TUGraz.VectoCore.Tests.Integration.DriverStrategy
 				@"..\..\TestData\Integration\DriverStrategy\Vecto2.2\40t Truck\40t_Long_Haul_Truck_Cycle_Drive_50_downhill_15.vmod");
 		}
 
-		[TestMethod, TestCategory("LongRunning")]
+		[TestMethod, TestCategory("ComparisonV2"), TestCategory("LongRunning")]
 		public void Truck_Drive_80_uphill_25()
 		{
 			var cycle = SimpleDrivingCycles.CreateCycleData(SimpleDrivingCycles.CycleDrive_80_uphill_25);
@@ -715,7 +715,7 @@ namespace TUGraz.VectoCore.Tests.Integration.DriverStrategy
 //				@"..\..\TestData\Integration\DriverStrategy\Vecto2.2\40t Truck\40t_Long_Haul_Truck_Cycle_Drive_80_uphill_25.vmod");
 		}
 
-		[TestMethod]
+		[TestMethod, TestCategory("ComparisonV2")]
 		public void Truck_Drive_80_downhill_15()
 		{
 			var cycle = SimpleDrivingCycles.CreateCycleData(SimpleDrivingCycles.CycleDrive_80_downhill_15);
@@ -728,7 +728,7 @@ namespace TUGraz.VectoCore.Tests.Integration.DriverStrategy
 				@"..\..\TestData\Integration\DriverStrategy\Vecto2.2\40t Truck\40t_Long_Haul_Truck_Cycle_Drive_80_downhill_15.vmod");
 		}
 
-		[TestMethod]
+		[TestMethod, TestCategory("ComparisonV2")]
 		public void Truck_Drive_80_uphill_15()
 		{
 			var cycle = SimpleDrivingCycles.CreateCycleData(SimpleDrivingCycles.CycleDrive_80_uphill_15);
@@ -741,7 +741,7 @@ namespace TUGraz.VectoCore.Tests.Integration.DriverStrategy
 				@"..\..\TestData\Integration\DriverStrategy\Vecto2.2\40t Truck\40t_Long_Haul_Truck_Cycle_Drive_80_uphill_15.vmod");
 		}
 
-		[TestMethod]
+		[TestMethod, TestCategory("ComparisonV2")]
 		public void Truck_Drive_10_level()
 		{
 			var cycle = SimpleDrivingCycles.CreateCycleData(SimpleDrivingCycles.CycleDrive_10_level);
@@ -754,7 +754,7 @@ namespace TUGraz.VectoCore.Tests.Integration.DriverStrategy
 				@"..\..\TestData\Integration\DriverStrategy\Vecto2.2\40t Truck\40t_Long_Haul_Truck_Cycle_Drive_10_level.vmod");
 		}
 
-		[TestMethod]
+		[TestMethod, TestCategory("ComparisonV2")]
 		public void Truck_Drive_10_uphill_5()
 		{
 			var cycle = SimpleDrivingCycles.CreateCycleData(SimpleDrivingCycles.CycleDrive_10_uphill_5);
@@ -767,7 +767,7 @@ namespace TUGraz.VectoCore.Tests.Integration.DriverStrategy
 				@"..\..\TestData\Integration\DriverStrategy\Vecto2.2\40t Truck\40t_Long_Haul_Truck_Cycle_Drive_10_uphill_5.vmod");
 		}
 
-		[TestMethod]
+		[TestMethod, TestCategory("ComparisonV2")]
 		public void Truck_Drive_10_downhill_5()
 		{
 			var cycle = SimpleDrivingCycles.CreateCycleData(SimpleDrivingCycles.CycleDrive_10_downhill_5);
@@ -780,7 +780,7 @@ namespace TUGraz.VectoCore.Tests.Integration.DriverStrategy
 				@"..\..\TestData\Integration\DriverStrategy\Vecto2.2\40t Truck\40t_Long_Haul_Truck_Cycle_Drive_10_downhill_5.vmod");
 		}
 
-		[TestMethod]
+		[TestMethod, TestCategory("ComparisonV2")]
 		public void Truck_Drive_10_downhill_25()
 		{
 			var cycle = SimpleDrivingCycles.CreateCycleData(SimpleDrivingCycles.CycleDrive_10_downhill_25);
@@ -793,7 +793,7 @@ namespace TUGraz.VectoCore.Tests.Integration.DriverStrategy
 				@"..\..\TestData\Integration\DriverStrategy\Vecto2.2\40t Truck\40t_Long_Haul_Truck_Cycle_Drive_10_downhill_25.vmod");
 		}
 
-		[TestMethod]
+		[TestMethod, TestCategory("ComparisonV2")]
 		public void Truck_Drive_10_uphill_25()
 		{
 			var cycle = SimpleDrivingCycles.CreateCycleData(SimpleDrivingCycles.CycleDrive_10_uphill_25);
@@ -806,7 +806,7 @@ namespace TUGraz.VectoCore.Tests.Integration.DriverStrategy
 				@"..\..\TestData\Integration\DriverStrategy\Vecto2.2\40t Truck\40t_Long_Haul_Truck_Cycle_Drive_10_uphill_25.vmod");
 		}
 
-		[TestMethod]
+		[TestMethod, TestCategory("ComparisonV2")]
 		public void Truck_Drive_10_downhill_15()
 		{
 			var cycle = SimpleDrivingCycles.CreateCycleData(SimpleDrivingCycles.CycleDrive_10_downhill_15);
@@ -819,7 +819,7 @@ namespace TUGraz.VectoCore.Tests.Integration.DriverStrategy
 				@"..\..\TestData\Integration\DriverStrategy\Vecto2.2\40t Truck\40t_Long_Haul_Truck_Cycle_Drive_10_downhill_15.vmod");
 		}
 
-		[TestMethod]
+		[TestMethod, TestCategory("ComparisonV2")]
 		public void Truck_Drive_10_uphill_15()
 		{
 			var cycle = SimpleDrivingCycles.CreateCycleData(SimpleDrivingCycles.CycleDrive_10_uphill_15);
@@ -836,7 +836,7 @@ namespace TUGraz.VectoCore.Tests.Integration.DriverStrategy
 
 		#region Slope
 
-		[TestMethod]
+		[TestMethod, TestCategory("ComparisonV2")]
 		public void Truck_Drive_80_Increasing_Slope()
 		{
 			var cycle = SimpleDrivingCycles.CreateCycleData(SimpleDrivingCycles.CycleDrive_80_Increasing_Slope);
@@ -849,7 +849,7 @@ namespace TUGraz.VectoCore.Tests.Integration.DriverStrategy
 				@"..\..\TestData\Integration\DriverStrategy\Vecto2.2\40t Truck\40t_Long_Haul_Truck_Cycle_Drive_80_Increasing_Slope.vmod");
 		}
 
-		[TestMethod]
+		[TestMethod, TestCategory("ComparisonV2")]
 		public void Truck_Drive_50_Increasing_Slope()
 		{
 			var cycle = SimpleDrivingCycles.CreateCycleData(SimpleDrivingCycles.CycleDrive_50_Increasing_Slope);
@@ -862,7 +862,7 @@ namespace TUGraz.VectoCore.Tests.Integration.DriverStrategy
 				@"..\..\TestData\Integration\DriverStrategy\Vecto2.2\40t Truck\40t_Long_Haul_Truck_Cycle_Drive_50_Increasing_Slope.vmod");
 		}
 
-		[TestMethod]
+		[TestMethod, TestCategory("ComparisonV2")]
 		public void Truck_Drive_30_Increasing_Slope()
 		{
 			var cycle = SimpleDrivingCycles.CreateCycleData(SimpleDrivingCycles.CycleDrive_30_Increasing_Slope);
@@ -875,7 +875,7 @@ namespace TUGraz.VectoCore.Tests.Integration.DriverStrategy
 				@"..\..\TestData\Integration\DriverStrategy\Vecto2.2\40t Truck\40t_Long_Haul_Truck_Cycle_Drive_30_Increasing_Slope.vmod");
 		}
 
-		[TestMethod]
+		[TestMethod, TestCategory("ComparisonV2")]
 		public void Truck_Drive_80_Decreasing_Slope()
 		{
 			var cycle = SimpleDrivingCycles.CreateCycleData(SimpleDrivingCycles.CycleDrive_80_Decreasing_Slope);
@@ -888,7 +888,7 @@ namespace TUGraz.VectoCore.Tests.Integration.DriverStrategy
 				@"..\..\TestData\Integration\DriverStrategy\Vecto2.2\40t Truck\40t_Long_Haul_Truck_Cycle_Drive_80_Decreasing_Slope.vmod");
 		}
 
-		[TestMethod]
+		[TestMethod, TestCategory("ComparisonV2")]
 		public void Truck_Drive_50_Decreasing_Slope()
 		{
 			var cycle = SimpleDrivingCycles.CreateCycleData(SimpleDrivingCycles.CycleDrive_50_Decreasing_Slope);
@@ -901,7 +901,7 @@ namespace TUGraz.VectoCore.Tests.Integration.DriverStrategy
 				@"..\..\TestData\Integration\DriverStrategy\Vecto2.2\40t Truck\40t_Long_Haul_Truck_Cycle_Drive_50_Decreasing_Slope.vmod");
 		}
 
-		[TestMethod]
+		[TestMethod, TestCategory("ComparisonV2")]
 		public void Truck_Drive_30_Decreasing_Slope()
 		{
 			var cycle = SimpleDrivingCycles.CreateCycleData(SimpleDrivingCycles.CycleDrive_30_Decreasing_Slope);
@@ -914,7 +914,7 @@ namespace TUGraz.VectoCore.Tests.Integration.DriverStrategy
 				@"..\..\TestData\Integration\DriverStrategy\Vecto2.2\40t Truck\40t_Long_Haul_Truck_Cycle_Drive_30_Decreasing_Slope.vmod");
 		}
 
-		[TestMethod]
+		[TestMethod, TestCategory("ComparisonV2")]
 		public void Truck_Drive_80_Dec_Increasing_Slope()
 		{
 			var cycle = SimpleDrivingCycles.CreateCycleData(SimpleDrivingCycles.CycleDrive_80_Dec_Increasing_Slope);
@@ -927,7 +927,7 @@ namespace TUGraz.VectoCore.Tests.Integration.DriverStrategy
 				@"..\..\TestData\Integration\DriverStrategy\Vecto2.2\40t Truck\40t_Long_Haul_Truck_Cycle_Drive_80_Dec_Increasing_Slope.vmod");
 		}
 
-		[TestMethod]
+		[TestMethod, TestCategory("ComparisonV2")]
 		public void Truck_Drive_50_Dec_Increasing_Slope()
 		{
 			var cycle = SimpleDrivingCycles.CreateCycleData(SimpleDrivingCycles.CycleDrive_50_Dec_Increasing_Slope);
@@ -941,7 +941,7 @@ namespace TUGraz.VectoCore.Tests.Integration.DriverStrategy
 		}
 
 
-		[TestMethod]
+		[TestMethod, TestCategory("ComparisonV2")]
 		public void Truck_Drive_30_Dec_Increasing_Slope()
 		{
 			var cycle = SimpleDrivingCycles.CreateCycleData(SimpleDrivingCycles.CycleDrive_30_Dec_Increasing_Slope);
@@ -958,7 +958,7 @@ namespace TUGraz.VectoCore.Tests.Integration.DriverStrategy
 
 		#region Misc
 
-		[TestMethod]
+		[TestMethod, TestCategory("ComparisonV2")]
 		public void Truck_DecelerateWhileBrake_80_0_level()
 		{
 			var cycle = SimpleDrivingCycles.CreateCycleData(SimpleDrivingCycles.CycleDecelerateWhileBrake_80_0_level);
@@ -972,7 +972,7 @@ namespace TUGraz.VectoCore.Tests.Integration.DriverStrategy
 				@"..\..\TestData\Integration\DriverStrategy\Vecto2.2\40t Truck\40t_Long_Haul_Truck_Cycle_DecelerateWhileBrake_80_0_level.vmod");
 		}
 
-		[TestMethod]
+		[TestMethod, TestCategory("ComparisonV2")]
 		public void Truck_AccelerateWhileBrake_80_0_level()
 		{
 			var cycle = SimpleDrivingCycles.CreateCycleData(SimpleDrivingCycles.CycleAccelerateWhileBrake_80_0_level);
@@ -986,7 +986,7 @@ namespace TUGraz.VectoCore.Tests.Integration.DriverStrategy
 				@"..\..\TestData\Integration\DriverStrategy\Vecto2.2\40t Truck\40t_Long_Haul_Truck_Cycle_AccelerateWhileBrake_80_0_level.vmod");
 		}
 
-		[TestMethod]
+		[TestMethod, TestCategory("ComparisonV2")]
 		public void Truck_AccelerateAtBrake_80_0_level()
 		{
 			var cycle = SimpleDrivingCycles.CreateCycleData(SimpleDrivingCycles.CycleAccelerateAtBrake_80_0_level);
@@ -1000,7 +1000,7 @@ namespace TUGraz.VectoCore.Tests.Integration.DriverStrategy
 				@"..\..\TestData\Integration\DriverStrategy\Vecto2.2\40t Truck\40t_Long_Haul_Truck_Cycle_AccelerateAtBrake_80_0_level.vmod");
 		}
 
-		[TestMethod]
+		[TestMethod, TestCategory("ComparisonV2")]
 		public void Truck_AccelerateBeforeBrake_80_0_level()
 		{
 			var cycle = SimpleDrivingCycles.CreateCycleData(SimpleDrivingCycles.CycleAccelerateBeforeBrake_80_0_level);
@@ -1014,7 +1014,7 @@ namespace TUGraz.VectoCore.Tests.Integration.DriverStrategy
 				@"..\..\TestData\Integration\DriverStrategy\Vecto2.2\40t Truck\40t_Long_Haul_Truck_Cycle_AccelerateBeforeBrake_80_0_level.vmod");
 		}
 
-		[TestMethod]
+		[TestMethod, TestCategory("ComparisonV2")]
 		public void Truck_Drive_stop_85_stop_85_level()
 		{
 			var cycle = SimpleDrivingCycles.CreateCycleData(SimpleDrivingCycles.CycleDrive_stop_85_stop_85_level);
@@ -1028,7 +1028,7 @@ namespace TUGraz.VectoCore.Tests.Integration.DriverStrategy
 				@"..\..\TestData\Integration\DriverStrategy\Vecto2.2\40t Truck\40t_Long_Haul_Truck_Cycle_Drive_stop_85_stop_85_level.vmod");
 		}
 
-		[TestMethod]
+		[TestMethod, TestCategory("ComparisonV2")]
 		public void Truck_Accelerate_48_52_beforeStop_lefel()
 		{
 			var data = new[] {
@@ -1053,7 +1053,7 @@ namespace TUGraz.VectoCore.Tests.Integration.DriverStrategy
 
 		#region AccelerateOverspeed
 
-		[TestMethod]
+		[TestMethod, TestCategory("ComparisonV2")]
 		public void Truck_Accelerate_0_85_downhill_5_overspeed()
 		{
 			var cycle = SimpleDrivingCycles.CreateCycleData(SimpleDrivingCycles.CycleAccelerate_0_85_downhill_5);
@@ -1067,7 +1067,7 @@ namespace TUGraz.VectoCore.Tests.Integration.DriverStrategy
 				@"..\..\TestData\Integration\DriverStrategy\Vecto2.2\40t Truck_Overspeed\40t_Long_Haul_Truck_Cycle_Accelerate_0_85_downhill_5.vmod");
 		}
 
-		[TestMethod]
+		[TestMethod, TestCategory("ComparisonV2")]
 		public void Truck_Accelerate_0_85_downhill_3_overspeed()
 		{
 			var cycle = SimpleDrivingCycles.CreateCycleData(SimpleDrivingCycles.CycleAccelerate_0_85_downhill_3);
@@ -1082,7 +1082,7 @@ namespace TUGraz.VectoCore.Tests.Integration.DriverStrategy
 		}
 
 
-		[TestMethod]
+		[TestMethod, TestCategory("ComparisonV2")]
 		public void Truck_Accelerate_0_85_downhill_1_overspeed()
 		{
 			var cycle = SimpleDrivingCycles.CreateCycleData(SimpleDrivingCycles.CycleAccelerate_0_85_downhill_1);
@@ -1097,7 +1097,7 @@ namespace TUGraz.VectoCore.Tests.Integration.DriverStrategy
 		}
 
 
-		[TestMethod]
+		[TestMethod, TestCategory("ComparisonV2")]
 		public void Truck_Accelerate_0_60_downhill_5_overspeed()
 		{
 			var cycle = SimpleDrivingCycles.CreateCycleData(SimpleDrivingCycles.CycleAccelerate_0_60_downhill_5);
@@ -1111,7 +1111,7 @@ namespace TUGraz.VectoCore.Tests.Integration.DriverStrategy
 				@"..\..\TestData\Integration\DriverStrategy\Vecto2.2\40t Truck_Overspeed\40t_Long_Haul_Truck_Cycle_Accelerate_0_60_downhill_5.vmod");
 		}
 
-		[TestMethod]
+		[TestMethod, TestCategory("ComparisonV2")]
 		public void Truck_Accelerate_0_60_downhill_3_overspeed()
 		{
 			var cycle = SimpleDrivingCycles.CreateCycleData(SimpleDrivingCycles.CycleAccelerate_0_60_downhill_3);
@@ -1126,7 +1126,7 @@ namespace TUGraz.VectoCore.Tests.Integration.DriverStrategy
 		}
 
 
-		[TestMethod]
+		[TestMethod, TestCategory("ComparisonV2")]
 		public void Truck_Accelerate_0_60_downhill_1_overspeed()
 		{
 			var cycle = SimpleDrivingCycles.CreateCycleData(SimpleDrivingCycles.CycleAccelerate_0_60_downhill_1);
@@ -1141,7 +1141,7 @@ namespace TUGraz.VectoCore.Tests.Integration.DriverStrategy
 		}
 
 
-		[TestMethod]
+		[TestMethod, TestCategory("ComparisonV2")]
 		public void Truck_Accelerate_0_40_downhill_5_overspeed()
 		{
 			var cycle = SimpleDrivingCycles.CreateCycleData(SimpleDrivingCycles.CycleAccelerate_0_40_downhill_5);
@@ -1155,7 +1155,7 @@ namespace TUGraz.VectoCore.Tests.Integration.DriverStrategy
 				@"..\..\TestData\Integration\DriverStrategy\Vecto2.2\40t Truck_Overspeed\40t_Long_Haul_Truck_Cycle_Accelerate_0_40_downhill_5.vmod");
 		}
 
-		[TestMethod]
+		[TestMethod, TestCategory("ComparisonV2")]
 		public void Truck_Accelerate_0_40_downhill_3_overspeed()
 		{
 			var cycle = SimpleDrivingCycles.CreateCycleData(SimpleDrivingCycles.CycleAccelerate_0_40_downhill_3);
@@ -1170,7 +1170,7 @@ namespace TUGraz.VectoCore.Tests.Integration.DriverStrategy
 		}
 
 
-		[TestMethod]
+		[TestMethod, TestCategory("ComparisonV2")]
 		public void Truck_Accelerate_0_40_downhill_1_overspeed()
 		{
 			var cycle = SimpleDrivingCycles.CreateCycleData(SimpleDrivingCycles.CycleAccelerate_0_40_downhill_1);
@@ -1184,7 +1184,7 @@ namespace TUGraz.VectoCore.Tests.Integration.DriverStrategy
 				@"..\..\TestData\Integration\DriverStrategy\Vecto2.2\40t Truck_Overspeed\40t_Long_Haul_Truck_Cycle_Accelerate_0_40_downhill_1.vmod");
 		}
 
-		[TestMethod]
+		[TestMethod, TestCategory("ComparisonV2")]
 		public void Truck_Accelerate_Decelerate_Downhill_overspeed()
 		{
 			var cycleData = new[] {
@@ -1204,7 +1204,7 @@ namespace TUGraz.VectoCore.Tests.Integration.DriverStrategy
 			Assert.IsTrue(run.FinishedWithoutErrors);
 		}
 
-		[TestMethod]
+		[TestMethod, TestCategory("ComparisonV2")]
 		public void Truck_SlopeChangeBeforeStop()
 		{
 			var cycleData = new[] {
@@ -1221,7 +1221,7 @@ namespace TUGraz.VectoCore.Tests.Integration.DriverStrategy
 			Assert.IsTrue(run.FinishedWithoutErrors);
 		}
 
-		[TestMethod]
+		[TestMethod, TestCategory("ComparisonV2")]
 		public void Truck_FrequentSlopeChanges()
 		{
 			var cycleData = new[] {

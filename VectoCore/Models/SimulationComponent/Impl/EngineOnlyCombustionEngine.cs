@@ -57,13 +57,15 @@ namespace TUGraz.VectoCore.Models.SimulationComponent.Impl
 
 			var avgEngineSpeed = (PreviousState.EngineSpeed + CurrentState.EngineSpeed) / 2.0;
 
-			var auxTorqueDemand = EngineAux == null
-				? 0.SI<NewtonMeter>()
-				: EngineAux.PowerDemand(absTime, dt, CurrentState.EngineTorqueOut, angularVelocity, dryRun);
-
 			CurrentState.InertiaTorqueLoss =
 				Formulas.InertiaPower(angularVelocity, PreviousState.EngineSpeed, ModelData.Inertia, dt) /
 				avgEngineSpeed;
+
+			var auxTorqueDemand = EngineAux == null
+				? 0.SI<NewtonMeter>()
+				: EngineAux.PowerDemand(absTime, dt, CurrentState.EngineTorqueOut,
+					CurrentState.EngineTorqueOut + CurrentState.InertiaTorqueLoss, angularVelocity, dryRun);
+
 			var totalTorqueDemand = CurrentState.EngineTorqueOut + auxTorqueDemand + CurrentState.InertiaTorqueLoss;
 			CurrentState.EngineTorque = totalTorqueDemand;
 

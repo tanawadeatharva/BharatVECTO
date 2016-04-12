@@ -1,0 +1,10 @@
+.
+./.git
+./.gitignore
+./.hgignore
+./.hgtags
+./.project
+./AdvancedAuxiliaryInterfaces
+./AdvancedAuxiliaryInterfaces/AdvancedAuxiliaryInterfaces.vbproj
+./AdvancedAuxiliaryInterfaces/bin
+./AdvancedAuxiliaryInterfaces/bin/Debug

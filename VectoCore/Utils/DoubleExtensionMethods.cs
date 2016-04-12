@@ -82,7 +82,7 @@ namespace TUGraz.VectoCore.Utils
 			var ratio = expected.IsEqual(0, toleranceFactor) ? Math.Abs(actual) : Math.Abs(actual / expected - 1);
 			return ratio < toleranceFactor;
 		}
-		
+
 		/// <summary>
 		/// Determines whether the specified other is smaller within tolerance.
 		/// </summary>
@@ -189,6 +189,15 @@ namespace TUGraz.VectoCore.Utils
 		public static IEnumerable<T> SI<T>(this IEnumerable<double> self) where T : SIBase<T>
 		{
 			return self.Select(x => x.SI<T>());
+		}
+	}
+
+	public static class FloatExtensionMethods
+	{
+		[DebuggerHidden]
+		public static T SI<T>(this float value) where T : SIBase<T>
+		{
+			return SIBase<T>.Create(value);
 		}
 	}
 }

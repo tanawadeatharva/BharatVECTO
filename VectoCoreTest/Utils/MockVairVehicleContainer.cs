@@ -57,6 +57,11 @@ namespace TUGraz.VectoCore.Tests.Utils
 			throw new System.NotImplementedException();
 		}
 
+		public Watt EngineDragPower(PerSecond angularSpeed)
+		{
+			throw new System.NotImplementedException();
+		}
+
 		public PerSecond EngineIdleSpeed { get; private set; }
 		public PerSecond EngineRatedSpeed { get; private set; }
 		public MeterPerSecond VehicleSpeed { get; private set; }

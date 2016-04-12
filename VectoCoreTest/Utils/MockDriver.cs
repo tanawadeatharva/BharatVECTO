@@ -48,7 +48,10 @@ namespace TUGraz.VectoCore.Tests.Utils
 
 		public RequestData LastRequest;
 
-		public MockDriver(IVehicleContainer container) : base(container) {}
+		public MockDriver(IVehicleContainer container) : base(container)
+		{
+			DrivingBehavior = DrivingBehavior.Accelerating;
+		}
 
 		protected override void DoWriteModalResults(IModalDataContainer container) {}
 
@@ -116,9 +119,6 @@ namespace TUGraz.VectoCore.Tests.Utils
 
 		public bool VehicleStopped { get; set; }
 
-		public DrivingBehavior DrivingBehavior
-		{
-			get { return DrivingBehavior.Accelerating; }
-		}
+		public DrivingBehavior DrivingBehavior { get; set; }
 	}
 }
