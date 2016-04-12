@@ -1,0 +1,230 @@
+﻿/*
+* This file is part of VECTO.
+*
+* Copyright © 2012-2016 European Union
+*
+* Developed by Graz University of Technology,
+*              Institute of Internal Combustion Engines and Thermodynamics,
+*              Institute of Technical Informatics
+*
+* VECTO is licensed under the EUPL, Version 1.1 or - as soon they will be approved
+* by the European Commission - subsequent versions of the EUPL (the "Licence");
+* You may not use VECTO except in compliance with the Licence.
+* You may obtain a copy of the Licence at:
+*
+* https://joinup.ec.europa.eu/community/eupl/og_page/eupl
+*
+* Unless required by applicable law or agreed to in writing, VECTO
+* distributed under the Licence is distributed on an "AS IS" basis,
+* WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+* See the Licence for the specific language governing permissions and
+* limitations under the Licence.
+*
+* Authors:
+*   Stefan Hausberger, hausberger@ivt.tugraz.at, IVT, Graz University of Technology
+*   Christian Kreiner, christian.kreiner@tugraz.at, ITI, Graz University of Technology
+*   Michael Krisper, michael.krisper@tugraz.at, ITI, Graz University of Technology
+*   Raphael Luz, luz@ivt.tugraz.at, IVT, Graz University of Technology
+*   Markus Quaritsch, markus.quaritsch@tugraz.at, IVT, Graz University of Technology
+*   Martin Rexeis, rexeis@ivt.tugraz.at, IVT, Graz University of Technology
+*/
+
+using System;
+using System.Collections;
+using System.Collections.Generic;
+using System.ComponentModel.DataAnnotations;
+using System.IO;
+using System.Linq;
+using System.Reflection;
+using TUGraz.VectoCommon.Utils;
+
+namespace TUGraz.VectoCore.Utils
+{
+	/// <summary>
+	/// Helper Class for doing the Validation
+	/// </summary>
+	public static class ValidationHelper
+	{
+		/// <summary>
+		/// Validates the specified entity and all its properties recursively. (Extension Method)
+		/// </summary>
+		/// <typeparam name="T"></typeparam>
+		/// <param name="entity">The entity.</param>
+		/// <returns>Null, if the validation was successfull. Otherwise a list of ValidationResults with the ErrorMessages.</returns>
+		public static IList<ValidationResult> Validate<T>(this T entity)
+		{
+			var context = new ValidationContext(entity);
+			var results = new List<ValidationResult>();
+			Validator.TryValidateObject(entity, new ValidationContext(entity), results, true);
+
+			const BindingFlags flags = BindingFlags.Instance | BindingFlags.Static | BindingFlags.NonPublic | BindingFlags.Public |
+										BindingFlags.FlattenHierarchy;
+
+			var properties = entity.GetType().GetProperties(flags);
+			foreach (var p in properties) {
+				var attributes = p.GetAttributes<ValidationAttribute>(entity.GetType()).ToArray();
+				if (attributes.Any()) {
+					var val = p.GetValue(entity);
+					context.DisplayName = p.Name;
+					context.MemberName = p.Name;
+					Validator.TryValidateValue(val, context, results, attributes);
+				}
+			}
+
+			var fields = entity.GetType().GetFields(flags);
+			foreach (var f in fields) {
+				var attributes = f.GetAttributes<ValidationAttribute>(entity.GetType()).ToArray();
+				if (attributes.Any()) {
+					var val = f.GetValue(entity);
+					context.DisplayName = f.Name;
+					context.MemberName = f.Name;
+					Validator.TryValidateValue(val, context, results, attributes);
+				}
+			}
+
+			return results;
+		}
+
+		/// <summary>
+		/// Gets the attributes of a member for the current class, parent classes and all interfaces.
+		/// </summary>
+		/// <typeparam name="T"></typeparam>
+		/// <param name="m"></param>
+		/// <param name="obj"></param>
+		/// <returns></returns>
+		private static IEnumerable<T> GetAttributes<T>(this MemberInfo m, Type obj) where T : Attribute
+		{
+			var attributes = Enumerable.Empty<T>();
+			
+			const BindingFlags flags = BindingFlags.Instance | BindingFlags.Static | BindingFlags.NonPublic | BindingFlags.Public | BindingFlags.FlattenHierarchy;
+			var prop = obj.GetProperty(m.Name, flags);
+			if (prop != null) {
+				attributes = prop.GetCustomAttributes(typeof(T)).Cast<T>().Concat(obj.GetInterfaces().SelectMany(m.GetAttributes<T>));
+			}
+
+			var field = obj.GetField(m.Name, flags);
+			if (field != null) {
+				attributes = attributes.Concat(field.GetCustomAttributes(typeof(T)).Cast<T>().Concat(obj.GetInterfaces().SelectMany(m.GetAttributes<T>)));
+			}
+
+			return attributes;
+		}
+
+		/// <summary>
+		/// Determines whether this instance is valid. (Extension Method)
+		/// </summary>
+		/// <typeparam name="T"></typeparam>
+		/// <param name="entity">The entity.</param>
+		/// <returns></returns>
+		public static bool IsValid<T>(this T entity)
+		{
+			return Validator.TryValidateObject(entity, new ValidationContext(entity), null, true);
+		}
+	}
+
+	/// <summary>
+	/// Determines that the attributed object should be validated recursively.
+	/// </summary>
+	public class ValidateObjectAttribute : ValidationAttribute
+	{
+		/// <summary>
+		/// Validates an object recursively (all elements if its a list, or all fields and properties if its an object).
+		/// </summary>
+		/// <param name="value">The value to validate.</param>
+		/// <param name="validationContext">The context information about the validation operation.</param>
+		/// <returns>
+		/// ValidationResult.Success if the validation was successfull. Otherwise the joined ErrorMessages are returned.
+		/// </returns>
+		protected override ValidationResult IsValid(object value, ValidationContext validationContext)
+		{
+			if (value == null) {
+				return ValidationResult.Success;
+			}
+
+			var enumerable = value as IEnumerable;
+			if (enumerable != null) {
+				var i = 0;
+				foreach (var element in enumerable) {
+					var results = element.Validate();
+					if (results.Any()) {
+						return new ValidationResult(
+							string.Format("{1}[{0}] in {1} invalid: {2}", i, validationContext.DisplayName,
+								string.Join("\n", results)));
+					}
+					i++;
+				}
+			} else {
+				var results = value.Validate();
+				if (results.Any()) {
+					return new ValidationResult(
+						string.Format("{{{0}}} invalid: {1}", validationContext.DisplayName, string.Join("\n", results)));
+				}
+			}
+
+			return ValidationResult.Success;
+		}
+	}
+
+	/// <summary>
+	/// Attribute which validates the Min-Max Range of an SI Object.
+	/// </summary>
+	public class SIRangeAttribute : RangeAttribute
+	{
+		/// <summary>
+		/// Checks the Min-Max Range of SI Objects.
+		/// </summary>
+		/// <param name="minimum">The minimum.</param>
+		/// <param name="maximum">The maximum.</param>
+		public SIRangeAttribute(int minimum, int maximum) : base(minimum, maximum) {}
+
+		/// <summary>
+		/// Checks the Min-Max Range of SI Objects.
+		/// </summary>
+		/// <param name="minimum">The minimum.</param>
+		/// <param name="maximum">The maximum.</param>
+		public SIRangeAttribute(double minimum, double maximum) : base(minimum, maximum) {}
+
+		/// <summary>
+		/// Checks the Min-Max Range of SI Objects.
+		/// </summary>
+		/// <param name="minimum">The minimum.</param>
+		/// <param name="maximum">The maximum.</param>
+		public SIRangeAttribute(SI minimum, SI maximum) : base(minimum.Value(), maximum.Value()) {}
+
+		/// <summary>
+		/// Validates that an SI Object is inside the min-max range.
+		/// </summary>
+		/// <param name="value">The value to validate.</param>
+		/// <param name="validationContext">The context information about the validation operation.</param>
+		/// <returns>
+		/// ValidationResult.Success if the validation was successfull, otherwise an Instance of ValidationResult with the ErrorMessage.
+		/// </returns>
+		protected override ValidationResult IsValid(object value, ValidationContext validationContext)
+		{
+			var si = value as SI;
+			return base.IsValid(si != null ? si.Value() : value, validationContext);
+		}
+	}
+
+	/// <summary>
+	/// Attribute which validates a Path.
+	/// </summary>
+	public class PathAttribute : ValidationAttribute
+	{
+		/// <summary>
+		/// Validates that a path actually exists.
+		/// </summary>
+		/// <param name="value">The value to validate.</param>
+		/// <param name="validationContext">The context information about the validation operation.</param>
+		/// <returns>
+		/// ValidationResult.Success if the validation was successfull, otherwise an Instance of ValidationResult with the ErrorMessage.
+		/// </returns>
+		protected override ValidationResult IsValid(object value, ValidationContext validationContext)
+		{
+			if (!File.Exists((string)value)) {
+				return new ValidationResult("File not found: " + (string)value);
+			}
+			return ValidationResult.Success;
+		}
+	}
+}

@@ -1,0 +1,143 @@
+﻿/*
+* This file is part of VECTO.
+*
+* Copyright © 2012-2016 European Union
+*
+* Developed by Graz University of Technology,
+*              Institute of Internal Combustion Engines and Thermodynamics,
+*              Institute of Technical Informatics
+*
+* VECTO is licensed under the EUPL, Version 1.1 or - as soon they will be approved
+* by the European Commission - subsequent versions of the EUPL (the "Licence");
+* You may not use VECTO except in compliance with the Licence.
+* You may obtain a copy of the Licence at:
+*
+* https://joinup.ec.europa.eu/community/eupl/og_page/eupl
+*
+* Unless required by applicable law or agreed to in writing, VECTO
+* distributed under the Licence is distributed on an "AS IS" basis,
+* WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+* See the Licence for the specific language governing permissions and
+* limitations under the Licence.
+*
+* Authors:
+*   Stefan Hausberger, hausberger@ivt.tugraz.at, IVT, Graz University of Technology
+*   Christian Kreiner, christian.kreiner@tugraz.at, ITI, Graz University of Technology
+*   Michael Krisper, michael.krisper@tugraz.at, ITI, Graz University of Technology
+*   Raphael Luz, luz@ivt.tugraz.at, IVT, Graz University of Technology
+*   Markus Quaritsch, markus.quaritsch@tugraz.at, IVT, Graz University of Technology
+*   Martin Rexeis, rexeis@ivt.tugraz.at, IVT, Graz University of Technology
+*/
+
+using System;
+using TUGraz.VectoCommon.Utils;
+using TUGraz.VectoCore.Utils;
+
+namespace TUGraz.VectoCore.Configuration
+{
+	public static class Constants
+	{
+		public const double RPMToRad = 2 * Math.PI / 60;
+		public const double Kilo = 1000;
+		public const double MeterPerSecondToKMH = 3.6;
+		public const double SecondsPerHour = 3600;
+
+		public static class Auxiliaries
+		{
+			public static class IDs
+			{
+				public const string Fan = "FAN";
+				public const string SteeringPump = "STP";
+				public const string ElectricSystem = "ES";
+				public const string HeatingVentilationAirCondition = "AC";
+				public const string PneumaticSystem = "PS";
+			}
+
+			public static class Names
+			{
+				public const string Fan = "Fan";
+				public const string SteeringPump = "Steering pump";
+				public const string ElectricSystem = "Electric System";
+				public const string HeatingVentilationAirCondition = "HVAC";
+				public const string PneumaticSystem = "Pneumatic System";
+			}
+		}
+
+		public static class FileExtensions
+		{
+			public const string ModDataFile = ".vmod";
+
+			public const string SumFile = ".vsum";
+
+			public const string VectoJobFile = ".vecto";
+
+			public const string VectoXMLDeclarationFile = ".xml";
+
+			public const string EngineDataFile = ".veng";
+
+			public const string CycleFile = ".vdri";
+
+			public const string DriverAccelerationCurve = ".vacc";
+		}
+
+		public static class SimulationSettings
+		{
+			/// <summary>
+			/// base time interval for the simulation. the distance is estimated to reach this time interval as good as possible
+			/// </summary>
+			public static readonly Second TargetTimeInterval = 0.5.SI<Second>();
+
+
+			/// <summary>
+			/// maximum time interval for the simulation in measured speed mode.
+			/// </summary>
+			public static readonly Second MeasuredSpeedTargetTimeInterval = 1.SI<Second>();
+
+
+			public static readonly Second LowerBoundTimeInterval = 0.25.SI<Second>();
+
+			/// <summary>
+			/// simulation interval if the vehicle stands still
+			/// </summary>
+			public static readonly Meter DriveOffDistance = 1.SI<Meter>();
+
+			public static readonly Meter BrakeNextTargetDistance = 5.SI<Meter>();
+
+			public static readonly MeterPerSecond MinVelocityForCoast = 5.KMPHtoMeterPerSecond();
+
+			/// <summary>
+			/// threshold for changes in the road gradient. changes below this threshold will be considered to be equal for filtering out the driving cycle.
+			/// altitude computation is done before filtering! 
+			/// </summary>
+			public static readonly Radian DrivingCycleRoadGradientTolerance = 1E-12.SI<Radian>();
+
+			//VectoMath.InclinationToAngle(0.25 / 100.0).Value();
+
+			public const int DriverSearchLoopThreshold = 200;
+
+			public static readonly Watt EnginePowerSearchTolerance = 0.50.SI<Watt>(); // Watt
+
+			public const double ClutchNormSpeed = 0.03;
+
+			public static readonly MeterPerSquareSecond MinimumAcceleration = 0.1.SI<MeterPerSquareSecond>();
+
+			public static Meter DriverActionDistanceTolerance = 0.25.SI<Meter>();
+
+			public static MeterPerSecond VehicleSpeedHaltTolerance = 1e-3.SI<MeterPerSecond>();
+
+			/// <summary>
+			/// The initial search interval for the operating point search in the driver.
+			/// </summary>
+			public static readonly MeterPerSquareSecond OperatingPointInitialSearchIntervalAccelerating =
+				0.1.SI<MeterPerSquareSecond>();
+
+			public static readonly PerSecond EngineIdlingSearchInterval = 10.SI<PerSecond>();
+
+			public const int EngineSearchLoopThreshold = 100;
+
+			public const int MaximumIterationCountForSimulationStep = 30;
+
+			public static readonly MeterPerSecond VehicleStopClutchDisengageSpeed = 10.KMPHtoMeterPerSecond();
+		}
+	}
+}

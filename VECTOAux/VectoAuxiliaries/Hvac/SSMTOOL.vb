@@ -95,7 +95,7 @@ Namespace Hvac
             For Each line As TechListBenefitLine In DirectCast(from, SSMTOOL).TechList.TechLines
 
                 Dim newLine As New TechListBenefitLine(Me.GenInputs)
-                newLine.InjectFrom()
+				newLine.InjectFrom()
                 newLine.InjectFrom(line)
                 TechList.Add(newLine, feedback)
 
