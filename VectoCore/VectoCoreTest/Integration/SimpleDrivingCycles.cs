@@ -30,7 +30,6 @@
 */
 
 using System.Diagnostics.CodeAnalysis;
-using System.IO;
 using TUGraz.VectoCore.InputData.Reader;
 using TUGraz.VectoCore.Models.SimulationComponent.Data;
 using TUGraz.VectoCore.Tests.Utils;

@@ -35,13 +35,10 @@ using TUGraz.VectoCommon.InputData;
 using TUGraz.VectoCommon.Models;
 using TUGraz.VectoCommon.Utils;
 using TUGraz.VectoCore.InputData.Reader.DataObjectAdaper;
-using TUGraz.VectoCore.Models;
 using TUGraz.VectoCore.Models.Declaration;
 using TUGraz.VectoCore.Models.Simulation.Data;
 using TUGraz.VectoCore.Models.SimulationComponent.Data;
 using TUGraz.VectoCore.OutputData;
-using TUGraz.VectoCore.OutputData.PDF;
-using TUGraz.VectoCore.Utils;
 
 namespace TUGraz.VectoCore.InputData.Reader.Impl
 {

@@ -29,7 +29,6 @@
 *   Martin Rexeis, rexeis@ivt.tugraz.at, IVT, Graz University of Technology
 */
 
-using System.Linq;
 using Microsoft.VisualStudio.TestTools.UnitTesting;
 using TUGraz.VectoCommon.Exceptions;
 using TUGraz.VectoCommon.Models;
@@ -41,7 +40,6 @@ using TUGraz.VectoCore.Models.SimulationComponent.Data;
 using TUGraz.VectoCore.Models.SimulationComponent.Impl;
 using TUGraz.VectoCore.Tests.Integration;
 using TUGraz.VectoCore.Tests.Utils;
-using TUGraz.VectoCore.Utils;
 
 namespace TUGraz.VectoCore.Tests.Models.SimulationComponent
 {

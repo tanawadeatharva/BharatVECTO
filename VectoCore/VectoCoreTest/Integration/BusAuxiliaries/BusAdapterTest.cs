@@ -1,9 +1,7 @@
-﻿using Microsoft.VisualStudio.TestTools.UnitTesting;
-using NUnit.Framework;
+﻿using NUnit.Framework;
 using TUGraz.VectoCommon.Utils;
 using TUGraz.VectoCore.Models.Simulation.DataBus;
 using TUGraz.VectoCore.Tests.Utils;
-using TUGraz.VectoCore.Utils;
 using Assert = Microsoft.VisualStudio.TestTools.UnitTesting.Assert;
 
 namespace TUGraz.VectoCore.Tests.Integration.BusAuxiliaries

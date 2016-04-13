@@ -30,7 +30,6 @@
 */
 
 using System;
-using NLog;
 
 namespace TUGraz.VectoCommon.Models
 {

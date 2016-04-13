@@ -31,7 +31,6 @@
 
 using System;
 using TUGraz.VectoCommon.Utils;
-using TUGraz.VectoCore.Utils;
 
 namespace TUGraz.VectoCore.Configuration
 {

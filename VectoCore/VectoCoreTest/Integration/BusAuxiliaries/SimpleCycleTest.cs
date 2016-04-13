@@ -31,10 +31,7 @@
 
 using Microsoft.VisualStudio.TestTools.UnitTesting;
 using NLog;
-using TUGraz.VectoCore.Models.Simulation.Impl;
-using TUGraz.VectoCore.Models.SimulationComponent.Impl;
 using TUGraz.VectoCore.Tests.Utils;
-using TUGraz.VectoCore.Utils;
 
 namespace TUGraz.VectoCore.Tests.Integration.BusAuxiliaries
 {

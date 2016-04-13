@@ -35,7 +35,6 @@ using System.Globalization;
 using System.Linq;
 using TUGraz.VectoCommon.Utils;
 using TUGraz.VectoCore.Configuration;
-using TUGraz.VectoCore.Utils;
 
 namespace TUGraz.VectoCore.Models.SimulationComponent.Data
 {

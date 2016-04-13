@@ -32,13 +32,10 @@
 using System.Data;
 using Microsoft.VisualStudio.TestTools.UnitTesting;
 using TUGraz.VectoCommon.Utils;
-using TUGraz.VectoCore.InputData.Reader.Impl;
 using TUGraz.VectoCore.Models.Simulation.Data;
-using TUGraz.VectoCore.Models.SimulationComponent.Data.Engine;
 using TUGraz.VectoCore.OutputData;
 using TUGraz.VectoCore.Tests.Integration;
 using TUGraz.VectoCore.Tests.Utils;
-using TUGraz.VectoCore.Utils;
 
 namespace TUGraz.VectoCore.Tests.Reports
 {
@@ -61,7 +58,6 @@ namespace TUGraz.VectoCore.Tests.Reports
 			var run = Truck40tPowerTrain.CreateEngineeringRun(cycle, "Truck_ModDataIntegrity.vmod");
 
 			var engineData = MockSimulationDataFactory.CreateEngineDataFromFile(Truck40tPowerTrain.EngineFile);
-
 
 			var modData = (ModalDataContainer)run.GetContainer().ModalData;
 
@@ -93,14 +89,12 @@ namespace TUGraz.VectoCore.Tests.Reports
 				Assert.AreEqual(pEngFcmap.Value(), (tqEngFcmap * nEngFcMap).Value(), 1E-3, "time: {0}  distance: {1}", time,
 					distance);
 
-
 				var pWheelIn = (Watt)row[(int)ModalResultField.P_wheel_in];
 				var pAir = (Watt)row[(int)ModalResultField.P_air];
 				var pRoll = (Watt)row[(int)ModalResultField.P_roll];
 				var pGrad = (Watt)row[(int)ModalResultField.P_slope];
 				var pVehInertia = (Watt)row[(int)ModalResultField.P_veh_inertia];
 				var pTrac = (Watt)row[(int)ModalResultField.P_trac];
-
 
 				// Pe_﻿eng = P﻿_wheel + P_loss﻿gearbox + P_loss﻿axle + P_loss﻿retarder + P_a﻿gbx + Pa_﻿eng + P_aux - P_brake_loss
 				var pEngOut = (Watt)row[(int)ModalResultField.P_eng_out];
@@ -118,7 +112,6 @@ namespace TUGraz.VectoCore.Tests.Reports
 				var pClutchLoss = (Watt)row[(int)ModalResultField.P_clutch_loss];
 				var pClutchOut = (Watt)row[(int)ModalResultField.P_clutch_out];
 				var pWheelInertia = (Watt)row[(int)ModalResultField.P_wheel_inertia];
-
 
 				// P_trac = P_veh_inertia + P_roll + P_air + P_slope
 				Assert.AreEqual(pTrac.Value(), (pAir + pRoll + pGrad + pVehInertia).Value(), 1E-3, "time: {0}  distance: {1}", time,

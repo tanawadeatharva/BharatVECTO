@@ -34,7 +34,6 @@ using System.Diagnostics;
 using System.Globalization;
 using Microsoft.VisualStudio.TestTools.UnitTesting;
 using TUGraz.VectoCommon.Utils;
-using TUGraz.VectoCore.Utils;
 
 namespace TUGraz.VectoCore.Tests.Utils
 {

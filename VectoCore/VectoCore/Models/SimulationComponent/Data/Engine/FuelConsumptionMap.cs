@@ -30,10 +30,8 @@
 */
 
 using System;
-using System.Collections.Generic;
 using System.ComponentModel.DataAnnotations;
 using System.Data;
-using System.Diagnostics.Contracts;
 using System.Linq;
 using TUGraz.VectoCommon.Exceptions;
 using TUGraz.VectoCommon.Utils;

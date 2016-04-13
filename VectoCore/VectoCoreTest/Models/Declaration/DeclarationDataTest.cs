@@ -40,7 +40,6 @@ using TUGraz.VectoCore.InputData.Reader.DataObjectAdaper;
 using TUGraz.VectoCore.Models.Declaration;
 using TUGraz.VectoCore.Models.SimulationComponent.Data;
 using TUGraz.VectoCore.Tests.Utils;
-using TUGraz.VectoCore.Utils;
 using CrossWindCorrectionMode = TUGraz.VectoCommon.Models.CrossWindCorrectionMode;
 
 namespace TUGraz.VectoCore.Tests.Models.Declaration

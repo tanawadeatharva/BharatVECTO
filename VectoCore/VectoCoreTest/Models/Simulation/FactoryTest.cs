@@ -33,13 +33,10 @@ using System.Linq;
 using Microsoft.VisualStudio.TestTools.UnitTesting;
 using TUGraz.VectoCommon.Models;
 using TUGraz.VectoCommon.Utils;
-using TUGraz.VectoCore.Configuration;
 using TUGraz.VectoCore.InputData.FileIO.JSON;
-using TUGraz.VectoCore.Models.Simulation.Data;
 using TUGraz.VectoCore.Models.Simulation.Impl;
 using TUGraz.VectoCore.Models.SimulationComponent.Impl;
 using TUGraz.VectoCore.OutputData.FileIO;
-using TUGraz.VectoCore.Utils;
 
 namespace TUGraz.VectoCore.Tests.Models.Simulation
 {

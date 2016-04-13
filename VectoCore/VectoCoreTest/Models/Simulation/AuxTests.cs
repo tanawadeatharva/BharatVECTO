@@ -29,7 +29,6 @@
 *   Martin Rexeis, rexeis@ivt.tugraz.at, IVT, Graz University of Technology
 */
 
-using TUGraz.VectoCore.Utils;
 using TUGraz.VectoCore.Tests.Utils;
 using TUGraz.VectoCore.Models.Declaration;
 using TUGraz.VectoCore.Models.Simulation.Data;

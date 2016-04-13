@@ -33,7 +33,6 @@ using System.IO;
 using System.Text;
 using System.Data;
 using System.Linq;
-using TUGraz.VectoCore.Utils;
 using System.Collections.Generic;
 using TUGraz.VectoCore.OutputData;
 using TUGraz.VectoCore.Tests.Utils;

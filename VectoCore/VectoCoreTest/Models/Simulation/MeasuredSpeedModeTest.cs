@@ -36,7 +36,6 @@ using System.Collections.Generic;
 using TUGraz.VectoCore.OutputData;
 using TUGraz.VectoCore.InputData.Reader;
 using TUGraz.VectoCore.OutputData.FileIO;
-using TUGraz.VectoCore.Models.Declaration;
 using TUGraz.VectoCore.InputData.FileIO.JSON;
 using TUGraz.VectoCore.Models.Simulation.Data;
 using TUGraz.VectoCore.Models.Simulation.Impl;

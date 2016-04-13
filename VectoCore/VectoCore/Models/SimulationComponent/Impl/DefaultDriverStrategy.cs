@@ -33,15 +33,11 @@ using System;
 using System.Collections.Generic;
 using System.Diagnostics;
 using System.Linq;
-using System.Runtime.InteropServices.WindowsRuntime;
 using TUGraz.VectoCommon.Models;
 using TUGraz.VectoCommon.Utils;
 using TUGraz.VectoCore.Configuration;
-using TUGraz.VectoCore.Models.Connector.Ports;
 using TUGraz.VectoCore.Models.Connector.Ports.Impl;
-using TUGraz.VectoCore.Models.Declaration;
 using TUGraz.VectoCore.Models.Simulation.DataBus;
-using TUGraz.VectoCore.Models.SimulationComponent.Data;
 using TUGraz.VectoCore.Utils;
 using DriverData = TUGraz.VectoCore.Models.SimulationComponent.Data.DriverData;
 

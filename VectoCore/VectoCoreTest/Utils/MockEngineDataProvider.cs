@@ -32,8 +32,6 @@
 using System.Data;
 using TUGraz.VectoCommon.InputData;
 using TUGraz.VectoCommon.Utils;
-using TUGraz.VectoCore.InputData;
-using TUGraz.VectoCore.Utils;
 
 namespace TUGraz.VectoCore.Tests.Utils
 {

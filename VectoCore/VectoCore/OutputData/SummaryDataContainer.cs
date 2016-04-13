@@ -34,8 +34,6 @@ using System.Linq;
 using System.Runtime.CompilerServices;
 using TUGraz.VectoCommon.Models;
 using TUGraz.VectoCommon.Utils;
-using TUGraz.VectoCore.Models;
-using TUGraz.VectoCore.Utils;
 
 namespace TUGraz.VectoCore.OutputData
 {

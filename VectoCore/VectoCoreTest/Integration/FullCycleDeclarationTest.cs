@@ -36,10 +36,8 @@ using TUGraz.VectoCommon.Models;
 using TUGraz.VectoCommon.Utils;
 using TUGraz.VectoCore.InputData.FileIO.JSON;
 using TUGraz.VectoCore.Models.Simulation.Impl;
-using TUGraz.VectoCore.Models.SimulationComponent.Impl;
 using TUGraz.VectoCore.OutputData;
 using TUGraz.VectoCore.OutputData.FileIO;
-using TUGraz.VectoCore.Utils;
 
 namespace TUGraz.VectoCore.Tests.Integration
 {

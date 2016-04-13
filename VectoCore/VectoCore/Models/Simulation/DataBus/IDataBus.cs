@@ -30,7 +30,6 @@
 */
 
 using TUGraz.VectoCommon.Models;
-using TUGraz.VectoCore.Models.Simulation.Impl;
 using TUGraz.VectoCore.Models.SimulationComponent;
 
 namespace TUGraz.VectoCore.Models.Simulation.DataBus

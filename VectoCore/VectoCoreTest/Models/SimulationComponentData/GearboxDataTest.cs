@@ -40,7 +40,6 @@ using TUGraz.VectoCore.InputData.Reader.DataObjectAdaper;
 using TUGraz.VectoCore.Models.SimulationComponent.Data;
 using TUGraz.VectoCore.Models.SimulationComponent.Data.Engine;
 using TUGraz.VectoCore.Models.SimulationComponent.Data.Gearbox;
-using TUGraz.VectoCore.Tests.Integration;
 using TUGraz.VectoCore.Tests.Utils;
 using TUGraz.VectoCore.Utils;
 

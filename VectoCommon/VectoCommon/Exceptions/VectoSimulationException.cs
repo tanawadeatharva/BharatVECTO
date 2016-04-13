@@ -31,7 +31,6 @@
 
 using System;
 using TUGraz.VectoCommon.Models;
-using JetBrains.Annotations;
 
 namespace TUGraz.VectoCommon.Exceptions
 {
