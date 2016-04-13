@@ -544,7 +544,9 @@ namespace TUGraz.VectoCore.Models.SimulationComponent.Impl
 							}
 							//Phase = BrakingPhase.Brake;
 						}).
-						Case<ResponseGearShift>(r => { response = Driver.DrivingActionRoll(absTime, ds, targetVelocity, gradient); }).
+						Case<ResponseGearShift>(r => { response = Driver.DrivingActionRoll(absTime, ds, targetVelocity, gradient); });
+					// handle the SpeedLimitExceeded Response separately in case it occurs in one of the requests in the second try
+					response.Switch().
 						Case<ResponseSpeedLimitExceeded>(() => {
 							response = Driver.DrivingActionBrake(absTime, ds, DataBus.VehicleSpeed,
 								gradient);
