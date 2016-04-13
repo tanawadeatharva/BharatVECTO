@@ -450,14 +450,26 @@ namespace TUGraz.VectoCore.Models.SimulationComponent.Impl
 		}
 
 		protected BrakingPhase Phase;
+		protected bool RetryDistanceExceeded = false;
 
 		protected override IResponse DoHandleRequest(Second absTime, Meter ds, MeterPerSecond targetVelocity, Radian gradient)
 		{
 			IResponse response = null;
 			if (DataBus.VehicleSpeed <= DriverStrategy.BrakeTrigger.NextTargetSpeed) {
-				response = DataBus.ClutchClosed(absTime)
-					? Driver.DrivingActionAccelerate(absTime, ds, DriverStrategy.BrakeTrigger.NextTargetSpeed, gradient)
-					: Driver.DrivingActionRoll(absTime, ds, DriverStrategy.BrakeTrigger.NextTargetSpeed, gradient);
+				if (DataBus.ClutchClosed(absTime)) {
+					if (DataBus.VehicleSpeed.IsGreater(0.SI<MeterPerSecond>())) {
+						response = Driver.DrivingActionAccelerate(absTime, ds, DriverStrategy.BrakeTrigger.NextTargetSpeed, gradient);
+					} else {
+						if (RetryDistanceExceeded) {
+							response = Driver.DrivingActionAccelerate(absTime, ds, targetVelocity, gradient);
+						} else {
+							RetryDistanceExceeded = true;
+							return new ResponseDrivingCycleDistanceExceeded() { MaxDistance = ds / 2 };
+						}
+					}
+				} else {
+					response = Driver.DrivingActionRoll(absTime, ds, DriverStrategy.BrakeTrigger.NextTargetSpeed, gradient);
+				}
 				response.Switch().
 					Case<ResponseGearShift>(() => {
 						response = Driver.DrivingActionRoll(absTime, ds, targetVelocity, gradient);
@@ -609,6 +621,7 @@ namespace TUGraz.VectoCore.Models.SimulationComponent.Impl
 
 		public override void ResetMode()
 		{
+			RetryDistanceExceeded = false;
 			Phase = BrakingPhase.Coast;
 		}
 	}
