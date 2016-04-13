@@ -367,13 +367,15 @@ namespace TUGraz.VectoCore.Models.SimulationComponent.Impl
 			}
 			if (targetDistance != null && targetDistance > DataBus.Distance) {
 				var tmp = ComputeAcceleration(targetDistance - DataBus.Distance, nextTargetSpeed);
-				operatingPoint = ComputeTimeInterval(tmp.Acceleration, ds);
-				if (!ds.IsEqual(operatingPoint.SimulationDistance)) {
-					Log.Error(
-						"Unexpected Condition: Distance has been adjusted from {0} to {1}, currentVelocity: {2} acceleration: {3}, targetVelocity: {4}",
-						operatingPoint.SimulationDistance, ds, DataBus.VehicleSpeed, operatingPoint.Acceleration, nextTargetSpeed);
-					throw new VectoSimulationException("Simulation distance unexpectedly adjusted! {0} -> {1}", ds,
-						operatingPoint.SimulationDistance);
+				if (tmp.Acceleration.IsGreater(operatingPoint.Acceleration)) {
+					operatingPoint = ComputeTimeInterval(tmp.Acceleration, ds);
+					if (!ds.IsEqual(operatingPoint.SimulationDistance)) {
+						Log.Error(
+							"Unexpected Condition: Distance has been adjusted from {0} to {1}, currentVelocity: {2} acceleration: {3}, targetVelocity: {4}",
+							operatingPoint.SimulationDistance, ds, DataBus.VehicleSpeed, operatingPoint.Acceleration, nextTargetSpeed);
+						throw new VectoSimulationException("Simulation distance unexpectedly adjusted! {0} -> {1}", ds,
+							operatingPoint.SimulationDistance);
+					}
 				}
 			}
 
