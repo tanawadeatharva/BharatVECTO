@@ -74,7 +74,6 @@ namespace TUGraz.VectoCore.Tests.Integration.BusAuxiliaries
 				@"..\..\TestData\Integration\BusAuxiliaries\Vecto2.0\24t Coach_AAUX_Cycle_Accelerate_20_60_uphill_5.vmod");
 		}
 
-
 		[TestMethod, TestCategory("ComparisonAAUX")]
 		public void Coach_AAUX_Accelerate_20_60_downhill_5()
 		{
@@ -88,7 +87,6 @@ namespace TUGraz.VectoCore.Tests.Integration.BusAuxiliaries
 			GraphWriter.Write("Coach_AAUX_Accelerate_20_60_downhill_5.vmod",
 				@"..\..\TestData\Integration\BusAuxiliaries\Vecto2.0\24t Coach_AAUX_Cycle_Accelerate_20_60_downhill_5.vmod");
 		}
-
 
 		[TestMethod, TestCategory("ComparisonAAUX")]
 		public void Coach_AAUX_Accelerate_20_60_uphill_25()
@@ -281,7 +279,6 @@ namespace TUGraz.VectoCore.Tests.Integration.BusAuxiliaries
 			GraphWriter.Write("Coach_AAUX_Accelerate_stop_0_85_level.vmod",
 				@"..\..\TestData\Integration\BusAuxiliaries\Vecto2.0\24t Coach_AAUX_Cycle_Accelerate_stop_0_85_level.vmod");
 		}
-
 
 		[TestMethod, TestCategory("ComparisonAAUX")]
 		public void Coach_AAUX_Accelerate_20_22_uphill_5()
@@ -880,7 +877,6 @@ namespace TUGraz.VectoCore.Tests.Integration.BusAuxiliaries
 				@"..\..\TestData\Integration\BusAuxiliaries\Vecto2.0\24t Coach_AAUX_Cycle_Drive_50_Dec_Increasing_Slope.vmod");
 		}
 
-
 		[TestMethod, TestCategory("ComparisonAAUX")]
 		public void Coach_AAUX_Drive_30_Dec_Increasing_Slope()
 		{
@@ -1000,7 +996,6 @@ namespace TUGraz.VectoCore.Tests.Integration.BusAuxiliaries
 		//		@"..\..\TestData\Integration\BusAuxiliaries\Vecto2.0_Overspeed\24t Coach_AAUX_Cycle_Accelerate_0_85_downhill_3.vmod");
 		//}
 
-
 		//[TestMethod, TestCategory("ComparisonAAUX")]
 		//public void Coach_AAUX_Accelerate_0_85_downhill_1_overspeed()
 		//{
@@ -1014,7 +1009,6 @@ namespace TUGraz.VectoCore.Tests.Integration.BusAuxiliaries
 		//	GraphWriter.Write("Coach_AAUX_Accelerate_0_85_downhill_1-overspeed.vmod",
 		//		@"..\..\TestData\Integration\BusAuxiliaries\Vecto2.0_Overspeed\24t Coach_AAUX_Cycle_Accelerate_0_85_downhill_1.vmod");
 		//}
-
 
 		//[TestMethod, TestCategory("ComparisonAAUX")]
 		//public void Coach_AAUX_Accelerate_0_60_downhill_5_overspeed()
@@ -1044,7 +1038,6 @@ namespace TUGraz.VectoCore.Tests.Integration.BusAuxiliaries
 		//		@"..\..\TestData\Integration\BusAuxiliaries\Vecto2.0_Overspeed\24t Coach_AAUX_Cycle_Accelerate_0_60_downhill_3.vmod");
 		//}
 
-
 		//[TestMethod, TestCategory("ComparisonAAUX")]
 		//public void Coach_AAUX_Accelerate_0_60_downhill_1_overspeed()
 		//{
@@ -1058,7 +1051,6 @@ namespace TUGraz.VectoCore.Tests.Integration.BusAuxiliaries
 		//	GraphWriter.Write("Coach_AAUX_Accelerate_0_60_downhill_1-overspeed.vmod",
 		//		@"..\..\TestData\Integration\BusAuxiliaries\Vecto2.0_Overspeed\24t Coach_AAUX_Cycle_Accelerate_0_60_downhill_1.vmod");
 		//}
-
 
 		//[TestMethod, TestCategory("ComparisonAAUX")]
 		//public void Coach_AAUX_Accelerate_0_40_downhill_5_overspeed()
@@ -1088,7 +1080,6 @@ namespace TUGraz.VectoCore.Tests.Integration.BusAuxiliaries
 		//		@"..\..\TestData\Integration\BusAuxiliaries\Vecto2.0_Overspeed\24t Coach_AAUX_Cycle_Accelerate_0_40_downhill_3.vmod");
 		//}
 
-
 		//[TestMethod, TestCategory("ComparisonAAUX")]
 		//public void Coach_AAUX_Accelerate_0_40_downhill_1_overspeed()
 		//{
@@ -1104,7 +1095,6 @@ namespace TUGraz.VectoCore.Tests.Integration.BusAuxiliaries
 		//}
 
 		//#endregion
-
 
 		[TestMethod, TestCategory("CycleTest")]
 		public void Coach_AAUX_Accelerate_0_40_downhill_1_overspeed()
