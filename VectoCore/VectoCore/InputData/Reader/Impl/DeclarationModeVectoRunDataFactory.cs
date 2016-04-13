@@ -112,7 +112,7 @@ namespace TUGraz.VectoCore.InputData.Reader.Impl
 						Cycle = cycle,
 						Retarder = retarderData,
 						DriverData = driverdata,
-						IsEngineOnly = false,
+						ExecutionMode = ExecutionMode.Declaration,
 						JobName = InputDataProvider.JobInputData().JobName,
 						ModFileSuffix = loading.Key.ToString(),
 						Report = Report,

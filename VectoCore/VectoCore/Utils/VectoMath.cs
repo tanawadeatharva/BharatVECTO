@@ -40,7 +40,7 @@ namespace TUGraz.VectoCore.Utils
 	/// <summary>
 	/// Provides helper methods for mathematical functions.
 	/// </summary>
-	public class VectoMath
+	public static class VectoMath
 	{
 		/// <summary>
 		/// Linearly interpolates a value between two points.
@@ -105,7 +105,7 @@ namespace TUGraz.VectoCore.Utils
 			return c1.CompareTo(c2) >= 0 ? c1 : c2;
 		}
 
-		public static T Limit<T>(T value, T lowerBound, T upperBound) where T : IComparable
+		public static T Limit<T>(this T value, T lowerBound, T upperBound) where T : IComparable
 		{
 			if (lowerBound.CompareTo(upperBound) > 0) {
 				throw new VectoException("VectoMath.Limit: lowerBound must not be greater than upperBound");

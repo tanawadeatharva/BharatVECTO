@@ -31,6 +31,7 @@
 
 using System.Linq;
 using Microsoft.VisualStudio.TestTools.UnitTesting;
+using TUGraz.VectoCommon.Models;
 using TUGraz.VectoCommon.Utils;
 using TUGraz.VectoCore.InputData.FileIO.JSON;
 using TUGraz.VectoCore.Models.Simulation;
@@ -77,7 +78,6 @@ namespace TUGraz.VectoCore.Tests.Models.Simulation
 
 			public override void Finish() {}
 		}
-
 
 		[TestMethod]
 		public void TestEngineOnly_SimulatorRun()

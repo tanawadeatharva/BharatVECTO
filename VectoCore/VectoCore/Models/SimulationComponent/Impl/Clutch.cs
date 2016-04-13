@@ -170,8 +170,7 @@ namespace TUGraz.VectoCore.Models.SimulationComponent.Impl
 					var engineSpeed0 = VectoMath.Max(_idleSpeed, angularVelocity);
 					var clutchSpeedNorm = Constants.SimulationSettings.ClutchNormSpeed /
 										((_idleSpeed + Constants.SimulationSettings.ClutchNormSpeed * (_ratedSpeed - _idleSpeed)) / _ratedSpeed);
-					angularVelocityIn =
-						((clutchSpeedNorm * engineSpeed0 / _ratedSpeed) * (_ratedSpeed - _idleSpeed) + _idleSpeed).Radian.Cast<PerSecond>();
+					angularVelocityIn = (clutchSpeedNorm * engineSpeed0 / _ratedSpeed) * (_ratedSpeed - _idleSpeed) + _idleSpeed;
 
 					torqueIn = (torque * angularVelocity) / ClutchEff / angularVelocityIn;
 				} else {

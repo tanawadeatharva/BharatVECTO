@@ -33,6 +33,7 @@ using System;
 using System.Runtime.InteropServices;
 using Microsoft.VisualStudio.TestTools.UnitTesting;
 using TUGraz.VectoCommon.Exceptions;
+using TUGraz.VectoCommon.Models;
 using TUGraz.VectoCommon.Utils;
 using TUGraz.VectoCore.Models.Simulation.Impl;
 using TUGraz.VectoCore.Models.SimulationComponent.Data;
@@ -52,7 +53,7 @@ namespace TUGraz.VectoCore.Tests.Models.SimulationComponent
 		[TestMethod]
 		public void RetarderBasicTest()
 		{
-			var vehicle = new VehicleContainer();
+			var vehicle = new VehicleContainer(ExecutionMode.Declaration);
 			var retarderData = RetarderLossMap.ReadFromFile(RetarderLossMapFile);
 			var retarder = new Retarder(vehicle, retarderData, 1.0);
 
@@ -89,7 +90,7 @@ namespace TUGraz.VectoCore.Tests.Models.SimulationComponent
 		[TestMethod]
 		public void RetarderRatioTest()
 		{
-			var vehicle = new VehicleContainer(null, null, ExecutionMode.Engineering);
+			var vehicle = new VehicleContainer(ExecutionMode.Engineering, null, null);
 			var retarderData = RetarderLossMap.ReadFromFile(RetarderLossMapFile);
 			var retarder = new Retarder(vehicle, retarderData, 2.0);
 
@@ -127,7 +128,7 @@ namespace TUGraz.VectoCore.Tests.Models.SimulationComponent
 		public void RetarderDeclarationTest()
 		{
 			var retarderData = RetarderLossMap.ReadFromFile(RetarderLossMapFile);
-			var declVehicle = new VehicleContainer(null, null, ExecutionMode.Declaration);
+			var declVehicle = new VehicleContainer(ExecutionMode.Declaration, null, null);
 			var retarder = new Retarder(declVehicle, retarderData, 2.0);
 			var nextRequest = new MockTnOutPort();
 
@@ -156,7 +157,7 @@ namespace TUGraz.VectoCore.Tests.Models.SimulationComponent
 			var retarderTbl =
 				VectoCSVFile.ReadStream(InputDataHelper.InputDataAsStream("Retarder Speed [rpm],Loss Torque [Nm]",
 					retarderEntries));
-			var vehicle = new VehicleContainer(null, null, ExecutionMode.Engineering);
+			var vehicle = new VehicleContainer(ExecutionMode.Engineering, null, null);
 			var retarderData = RetarderLossMap.Create(retarderTbl);
 			var retarder = new Retarder(vehicle, retarderData, 2.0);
 

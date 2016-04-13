@@ -137,15 +137,14 @@ namespace TUGraz.VectoCore.Models.SimulationComponent.Impl
 						var torque = SearchAlgorithm.Search(LeftSample.Current.Torque, r.Delta, torqueInterval,
 							getYValue: result => ((ResponseDryRun)result).DeltaDragLoad,
 							evaluateFunction: t => NextComponent.Request(absTime, dt, t, angularVelocity, true),
-							criterion: y =>
-								((ResponseDryRun)y).DeltaDragLoad.IsEqual(0.SI<Watt>(), Constants.SimulationSettings.EnginePowerSearchTolerance));
+							criterion: y => ((ResponseDryRun)y).DeltaDragLoad.Value());
 						response = NextComponent.Request(absTime, dt, torque, angularVelocity);
 					})
 					.Case<ResponseOverload>(r => {
 						angularVelocity = SearchAlgorithm.Search(angularVelocity, r.Delta, 50.RPMtoRad(),
 							getYValue: result => ((ResponseDryRun)result).DeltaFullLoad,
 							evaluateFunction: n => NextComponent.Request(absTime, dt, LeftSample.Current.Torque, n, true),
-							criterion: y => ((ResponseDryRun)y).DeltaFullLoad.Abs() < Constants.SimulationSettings.EnginePowerSearchTolerance);
+							criterion: y => ((ResponseDryRun)y).DeltaFullLoad.Value());
 						response = NextComponent.Request(absTime, dt, LeftSample.Current.Torque, angularVelocity);
 					})
 					.Case<ResponseFailTimeInterval>(r => { dt = r.DeltaT; })
@@ -293,8 +292,8 @@ namespace TUGraz.VectoCore.Models.SimulationComponent.Impl
 	/// Driving Cycle for the Measured Speed Gear driving cycle.
 	/// </summary>
 	public class MeasuredSpeedDrivingCycle : StatefulVectoSimulationComponent<MeasuredSpeedDrivingCycle.DrivingCycleState>,
-		IDriverInfo, IDrivingCycleInfo,
-		IDriverDemandInProvider, IDriverDemandInPort, ISimulationOutProvider, ISimulationOutPort
+		IDriverInfo, IDrivingCycleInfo, IMileageCounter, IDriverDemandInProvider, IDriverDemandInPort, ISimulationOutProvider,
+		ISimulationOutPort
 	{
 		public class DrivingCycleState
 		{
@@ -410,7 +409,10 @@ namespace TUGraz.VectoCore.Models.SimulationComponent.Impl
 								return NextComponent.Request(absTime, dt, acceleration, gradient, true);
 							},
 							criterion: y =>
-								((ResponseDryRun)y).DeltaDragLoad.IsEqual(0.SI<Watt>(), Constants.SimulationSettings.EnginePowerSearchTolerance));
+								((ResponseDryRun)y).DeltaDragLoad.Value());
+						Log.Info(
+							"Found operating point for braking. absTime: {0}, dt: {1}, acceleration: {2}, gradient: {3}, BrakePower: {4}",
+							absTime, dt, acceleration, gradient, DataBus.BrakePower);
 						response = NextComponent.Request(absTime, dt, acceleration, gradient);
 					})
 					.Case<ResponseOverload>(r => {
@@ -418,7 +420,11 @@ namespace TUGraz.VectoCore.Models.SimulationComponent.Impl
 							Constants.SimulationSettings.OperatingPointInitialSearchIntervalAccelerating,
 							getYValue: result => ((ResponseDryRun)result).DeltaFullLoad,
 							evaluateFunction: x => NextComponent.Request(absTime, dt, x, gradient, true),
-							criterion: y => ((ResponseDryRun)y).DeltaFullLoad.Abs() < Constants.SimulationSettings.EnginePowerSearchTolerance);
+							criterion:
+								y => ((ResponseDryRun)y).DeltaFullLoad.Value());
+						Log.Info(
+							"Found operating point for driver acceleration. absTime: {0}, dt: {1}, acceleration: {2}, gradient: {3}", absTime,
+							dt, acceleration, gradient);
 						response = NextComponent.Request(absTime, dt, acceleration, gradient);
 					})
 					.Case<ResponseFailTimeInterval>(r => { dt = r.DeltaT; })
@@ -449,8 +455,7 @@ namespace TUGraz.VectoCore.Models.SimulationComponent.Impl
 
 			_isInitializing = true;
 
-			IResponse response;
-			response = NextComponent.Initialize(first.VehicleTargetSpeed, first.RoadGradient);
+			var response = NextComponent.Initialize(first.VehicleTargetSpeed, first.RoadGradient);
 			if (!(response is ResponseSuccess)) {
 				throw new UnexpectedResponseException("Couldn't find start gear.", response);
 			}
@@ -528,6 +533,11 @@ namespace TUGraz.VectoCore.Models.SimulationComponent.Impl
 		public DrivingBehavior DrivingBehavior
 		{
 			get { return DrivingBehavior.Driving; }
+		}
+
+		public Meter Distance
+		{
+			get { return CurrentState.Distance; }
 		}
 	}
 }

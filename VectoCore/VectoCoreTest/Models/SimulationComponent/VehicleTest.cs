@@ -55,7 +55,7 @@ namespace TUGraz.VectoCore.Tests.Models.SimulationComponent
 		[TestMethod]
 		public void VehiclePortTest()
 		{
-			var container = new VehicleContainer();
+			var container = new VehicleContainer(ExecutionMode.Engineering);
 
 			//var reader = new EngineeringModeSimulationDataReader();
 			var vehicleData = MockSimulationDataFactory.CreateVehicleDataFromFile(VehicleDataFileCoach);
@@ -85,7 +85,7 @@ namespace TUGraz.VectoCore.Tests.Models.SimulationComponent
 		[TestMethod]
 		public void VehicleAirResistanceTest()
 		{
-			var container = new VehicleContainer();
+			var container = new VehicleContainer(ExecutionMode.Declaration);
 
 			var vehicleData = MockSimulationDataFactory.CreateVehicleDataFromFile(VehicleDataFileTruck);
 			//vehicleData.AerodynamicDragAera = 6.46.SI<SquareMeter>();
@@ -102,7 +102,6 @@ namespace TUGraz.VectoCore.Tests.Models.SimulationComponent
 			var dt = 0.5.SI<Second>();
 			var vehicleSpeed = 60.KMPHtoMeterPerSecond();
 			vehicle.Initialize(vehicleSpeed, 0.SI<Radian>());
-
 
 			var avgForce = vehicle.AirDragResistance(vehicleSpeed, 0.SI<MeterPerSquareSecond>(), dt);
 			Assert.AreEqual(1340.12357, avgForce.Value(), Tolerance);
@@ -129,7 +128,7 @@ namespace TUGraz.VectoCore.Tests.Models.SimulationComponent
 		[TestMethod]
 		public void VehicleAirDragPowerLossDeclarationTest()
 		{
-			var container = new VehicleContainer();
+			var container = new VehicleContainer(ExecutionMode.Declaration);
 
 			var vehicleData = MockSimulationDataFactory.CreateVehicleDataFromFile(VehicleDataFileTruck);
 			vehicleData.CrossWindCorrectionCurve = new CrosswindCorrectionCdxALookup(

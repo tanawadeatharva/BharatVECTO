@@ -35,8 +35,8 @@ using System.Data;
 using System.IO;
 using System.Linq;
 using System.Reflection;
-using System.Windows.Forms.VisualStyles;
 using Microsoft.VisualStudio.TestTools.UnitTesting;
+using TUGraz.VectoCommon.Models;
 using TUGraz.VectoCommon.Utils;
 using TUGraz.VectoCore.Configuration;
 using TUGraz.VectoCore.Models.Connector.Ports;
@@ -69,7 +69,7 @@ namespace TUGraz.VectoCore.Tests.Models.SimulationComponent
 		[TestMethod]
 		public void TestEngineHasOutPort()
 		{
-			var vehicle = new VehicleContainer();
+			var vehicle = new VehicleContainer(ExecutionMode.EngineOnly);
 			var engineData = MockSimulationDataFactory.CreateEngineDataFromFile(CoachEngine);
 			var engine = new CombustionEngine(vehicle, engineData);
 
@@ -80,7 +80,7 @@ namespace TUGraz.VectoCore.Tests.Models.SimulationComponent
 		[TestMethod]
 		public void TestOutPortRequestNotFailing()
 		{
-			var vehicle = new VehicleContainer();
+			var vehicle = new VehicleContainer(ExecutionMode.EngineOnly);
 			var engineData = MockSimulationDataFactory.CreateEngineDataFromFile(CoachEngine);
 			var engine = new CombustionEngine(vehicle, engineData);
 
@@ -98,7 +98,7 @@ namespace TUGraz.VectoCore.Tests.Models.SimulationComponent
 		[TestMethod]
 		public void TestSimpleModalData()
 		{
-			var vehicle = new VehicleContainer();
+			var vehicle = new VehicleContainer(ExecutionMode.Engineering);
 			var engineData = MockSimulationDataFactory.CreateEngineDataFromFile(CoachEngine);
 			var engine = new CombustionEngine(vehicle, engineData);
 			var port = engine.OutPort();
@@ -141,7 +141,6 @@ namespace TUGraz.VectoCore.Tests.Models.SimulationComponent
 			port.Request(absTime, dt, Formulas.PowerToTorque(7984.56.SI<Watt>(), engineSpeed), engineSpeed);
 			engine.CommitSimulationStep(dataWriter);
 
-
 			Assert.AreEqual(7108.32, ((SI)dataWriter[ModalResultField.P_eng_inertia]).Value(), 0.001);
 			dataWriter.CommitSimulationStep(absTime, dt);
 			absTime += dt;
@@ -156,16 +155,13 @@ namespace TUGraz.VectoCore.Tests.Models.SimulationComponent
 			dataWriter.Data.WriteToFile(@"test1.csv");
 		}
 
-
 		[TestMethod]
 		[DataSource("Microsoft.VisualStudio.TestTools.DataSource.CSV", "|DataDirectory|\\TestData\\EngineFullLoadJumps.csv",
 			"EngineFullLoadJumps#csv", DataAccessMethod.Sequential)]
 		public void TestEngineOnlyEngineFullLoadJump()
 		{
-			var vehicleContainer = new VehicleContainer();
-			var engineData =
-				MockSimulationDataFactory.CreateEngineDataFromFile(
-					TestContext.DataRow["EngineFile"].ToString());
+			var vehicleContainer = new VehicleContainer(ExecutionMode.Engineering);
+			var engineData = MockSimulationDataFactory.CreateEngineDataFromFile(TestContext.DataRow["EngineFile"].ToString());
 			var engine = new EngineOnlyCombustionEngine(vehicleContainer, engineData);
 
 			var expectedResults = VectoCSVFile.Read(TestContext.DataRow["ResultFile"].ToString());
@@ -215,10 +211,8 @@ namespace TUGraz.VectoCore.Tests.Models.SimulationComponent
 			"EngineFullLoadJumps#csv", DataAccessMethod.Sequential)]
 		public void TestEngineFullLoadJump()
 		{
-			var vehicleContainer = new VehicleContainer();
-			var engineData =
-				MockSimulationDataFactory.CreateEngineDataFromFile(
-					TestContext.DataRow["EngineFile"].ToString());
+			var vehicleContainer = new VehicleContainer(ExecutionMode.Engineering);
+			var engineData = MockSimulationDataFactory.CreateEngineDataFromFile(TestContext.DataRow["EngineFile"].ToString());
 			var engine = new CombustionEngine(vehicleContainer, engineData);
 
 			var expectedResults = VectoCSVFile.Read(TestContext.DataRow["ResultFile"].ToString());
@@ -264,194 +258,82 @@ namespace TUGraz.VectoCore.Tests.Models.SimulationComponent
 		}
 
 		[TestMethod]
-		public
-		void EngineIdleJump()
+		public void EngineIdleJump()
 		{
-			var container = new VehicleContainer();
+			var container = new VehicleContainer(ExecutionMode.Engineering);
 			var gearbox = new MockGearbox(container);
 			var engineData = MockSimulationDataFactory.CreateEngineDataFromFile(CoachEngine);
 
 			var engine = new CombustionEngine(container, engineData);
 			var clutch = new Clutch(container, engineData, engine.IdleController);
 
-			var driver = new MockDriver(container);
+			// ReSharper disable once ObjectCreationAsStatement
+			new MockDriver(container);
 
 			var aux = new EngineAuxiliary(container);
-			aux.AddConstant
-				("", 5000.
-					SI<Watt>
-					());
+			aux.AddConstant("", 5000.SI<Watt>());
 
-			gearbox.Gear
-				= 1;
+			gearbox.Gear = 1;
 
 			//gearbox.InPort().Connect(engine.OutPort());
-			gearbox.InPort
-				().
-				Connect(clutch.OutPort()
-				);
-			clutch.InPort
-				().
-				Connect(engine.OutPort()
-				);
-			engine.Connect
-				(
-					aux.Port
-						());
-			engine.IdleController.RequestPort
-				=
-				clutch.IdleControlPort;
+			gearbox.InPort().Connect(clutch.OutPort());
+			clutch.InPort().Connect(engine.OutPort());
+			engine.Connect(aux.Port());
+			engine.IdleController.RequestPort = clutch.IdleControlPort;
 
-//			var expectedResults = VectoCSVFile.Read(TestContext.DataRow["ResultFile"].ToString());
+			//			var expectedResults = VectoCSVFile.Read(TestContext.DataRow["ResultFile"].ToString());
 
 			var requestPort = gearbox.OutPort();
 
 			//vehicleContainer.DataWriter = new ModalDataWriter("engine_idle_test.csv");
 			var dataWriter = new MockModalDataContainer();
-			container.ModData
-				=
-				dataWriter;
+			container.ModData = dataWriter;
 
 			var torque = 1200.SI<NewtonMeter>();
 			var angularVelocity = 800.RPMtoRad();
 
 			// initialize engine...
 
-			gearbox.Initialize
-				(
-					torque
-					,
-					angularVelocity
-				);
+			gearbox.Initialize(torque, angularVelocity);
 
 			var absTime = 0.SI<Second>();
 			var dt = Constants.SimulationSettings.TargetTimeInterval;
 
 			var response = requestPort.Request(absTime, dt, torque, angularVelocity);
 
-			Assert.IsInstanceOfType
-				(
-					response
-					, typeof(
-						ResponseSuccess
-						));
-			container.CommitSimulationStep
-				(
-					absTime
-					,
-					dt
-				);
+			Assert.IsInstanceOfType(response, typeof(ResponseSuccess));
+			container.CommitSimulationStep(absTime, dt);
 			var row = dataWriter.Data.Rows.Cast<DataRow>().Last();
-			Assert.AreEqual
-				(100530.96491487339.
-					SI<Watt>
-					().
-					Value()
-				, ((
-					SI
-					)
-					row[ModalResultField.P_eng_out.GetName()
-						]).
-					Value()
-				);
-			Assert.AreEqual
-				(105530.96491487339.
-					SI<Watt>
-					().
-					Value()
-				, ((
-					SI
-					)
-					row[ModalResultField.P_eng_fcmap.GetName()
-						]).
-					Value()
-				);
-			Assert.AreEqual
-				(5000.
-					SI<Watt>
-					(),
-					row[ModalResultField.P_aux.GetName()
-						]);
-			Assert.AreEqual
-				(800.
-					RPMtoRad()
-				,
-					row[ModalResultField.n_eng_avg.GetName()
-						]);
+			Assert.AreEqual(100530.96491487339.SI<Watt>().Value(), ((SI)row[ModalResultField.P_eng_out.GetName()]).Value());
+			Assert.AreEqual(105530.96491487339.SI<Watt>().Value(), ((SI)row[ModalResultField.P_eng_fcmap.GetName()]).Value());
+			Assert.AreEqual(5000.SI<Watt>(), row[ModalResultField.P_aux.GetName()]);
+			Assert.AreEqual(800.RPMtoRad(), row[ModalResultField.n_eng_avg.GetName()]);
 
-			absTime
-				+=
-				dt;
+			absTime += dt;
 
 			// actual test...
 
-			gearbox.Gear
-				= 0;
-			torque
-				= 0.
-					SI<NewtonMeter>
-					();
+			gearbox.Gear = 0;
+			torque = 0.SI<NewtonMeter>();
 
-			response
-				=
-				gearbox.Request
-					(
-						absTime
-						,
-						dt
-						,
-						torque
-						,
-						angularVelocity
-					);
+			response = gearbox.Request(absTime, dt, torque, angularVelocity);
 
-			Assert.IsInstanceOfType
-				(
-					response
-					, typeof(
-						ResponseSuccess
-						));
-			container.CommitSimulationStep
-				(
-					absTime
-					,
-					dt
-				);
-			row
-				=
-				dataWriter.Data.Rows.Cast<DataRow>
-					().
-					Last();
+			Assert.IsInstanceOfType(response, typeof(ResponseSuccess));
+			container.CommitSimulationStep(absTime, dt);
+			row = dataWriter.Data.Rows.Cast<DataRow>().Last();
 
-			Assert.AreEqual
-				(0.
-					SI<Watt>
-					(),
-					row[ModalResultField.P_eng_out.GetName()
-						]);
-			Assert.AreEqual
-				(5000.
-					SI<Watt>
-					(),
-					row[ModalResultField.P_aux.GetName()
-						]);
-			Assert.AreEqual
-				(800.
-					RPMtoRad()
-				,
-					row[ModalResultField.n_eng_avg.GetName()
-						]);
+			Assert.AreEqual(0.SI<Watt>(), row[ModalResultField.P_eng_out.GetName()]);
+			Assert.AreEqual(5000.SI<Watt>(), row[ModalResultField.P_aux.GetName()]);
+			Assert.AreEqual(800.RPMtoRad(), row[ModalResultField.n_eng_avg.GetName()]);
 		}
 
 		[TestMethod]
-		public
-		void EngineIdleControllerTestCoach()
+		public void EngineIdleControllerTestCoach()
 		{
 			VehicleContainer container;
 			CombustionEngine engine;
 			ITnOutPort requestPort;
 			VehicleContainer(CoachEngine, out container, out engine, out requestPort);
-
 
 			var absTime = 0.SI<Second>();
 			var dt = Constants.SimulationSettings.TargetTimeInterval;
@@ -460,55 +342,18 @@ namespace TUGraz.VectoCore.Tests.Models.SimulationComponent
 			var torque = 100000.SI<Watt>() / angularVelocity;
 
 			var response = requestPort.Initialize(torque, angularVelocity);
-			Assert.IsInstanceOfType
-				(
-					response
-					, typeof(
-						ResponseSuccess
-						));
+			Assert.IsInstanceOfType(response, typeof(ResponseSuccess));
 
-			response
-				=
-				requestPort.Request
-					(
-						absTime
-						,
-						dt
-						,
-						torque
-						,
-						angularVelocity
-					);
-			Assert.IsInstanceOfType
-				(
-					response
-					, typeof(
-						ResponseSuccess
-						));
-			Assert.AreEqual
-				(105000,
-					response.EnginePowerRequest.Value
-						(),
-					Tolerance
-				);
-			container.CommitSimulationStep
-				(
-					absTime
-					,
-					dt
-				);
-			absTime
-				+=
-				dt;
+			response = requestPort.Request(absTime, dt, torque, angularVelocity);
+			Assert.IsInstanceOfType(response, typeof(ResponseSuccess));
+			Assert.AreEqual(105000, response.EnginePowerRequest.Value(), Tolerance);
+			container.CommitSimulationStep(absTime, dt);
+			absTime += dt;
 
 			var engineSpeed = new[] { 800.RPMtoRad(), 800.RPMtoRad(), 560.RPMtoRad(), 560.RPMtoRad() };
 			var enginePower = new[] { 5000.SI<Watt>(), 5000.SI<Watt>(), -8601.6308.SI<Watt>(), 5000.SI<Watt>() };
 
-			for (
-				var i = 0;
-				i < engineSpeed.Length;
-				i 
-					++) {
+			for (var i = 0; i < engineSpeed.Length; i++) {
 				torque = 0.SI<NewtonMeter>();
 
 				response = requestPort.Request(absTime, dt, torque, null);
@@ -521,27 +366,25 @@ namespace TUGraz.VectoCore.Tests.Models.SimulationComponent
 			}
 		}
 
-
-/*
- * VECTO 2.2
-| time [s] | P_eng_out [kW] | n_eng_avg [1/min] | T_eng_fcmap [Nm] | Gear [-] |
-| 59.5     | 349.981     | 1679.281  | 1990.181    | 8        |
-| 60.5     | 5           | 1679.281  | 28.43269    | 0        |
-| 61.5     | -19.47213   | 1397.271  | -133.0774   | 0        |
-| 62.5     | -18.11888   | 1064.296  | -162.5699   | 0        |
-| 63.5     | -11.11163   | 714.1923  | -148.571    | 0        |
-| 64.5     | -0.5416708  | 560       | -9.236741   | 0        |
-| 65.5     | 5           | 560       | 85.26157    | 0        |
-| 66.5     | 5           | 560       | 85.26157    | 0        |
-| 67.5     | 5           | 560       | 85.26157    | 0        |
-| 68.5     | 5           | 560       | 85.26157    | 0        |
-| 69.5     | 5           | 560       | 85.26157    | 0        |
-| 70.5     | 308.729     | 1284.139  | 2295.815    | 9        |
-		*/
+		/*
+		 * VECTO 2.2
+		| time [s] | P_eng_out [kW] | n_eng_avg [1/min] | T_eng_fcmap [Nm] | Gear [-] |
+		| 59.5     | 349.981     | 1679.281  | 1990.181    | 8        |
+		| 60.5     | 5           | 1679.281  | 28.43269    | 0        |
+		| 61.5     | -19.47213   | 1397.271  | -133.0774   | 0        |
+		| 62.5     | -18.11888   | 1064.296  | -162.5699   | 0        |
+		| 63.5     | -11.11163   | 714.1923  | -148.571    | 0        |
+		| 64.5     | -0.5416708  | 560       | -9.236741   | 0        |
+		| 65.5     | 5           | 560       | 85.26157    | 0        |
+		| 66.5     | 5           | 560       | 85.26157    | 0        |
+		| 67.5     | 5           | 560       | 85.26157    | 0        |
+		| 68.5     | 5           | 560       | 85.26157    | 0        |
+		| 69.5     | 5           | 560       | 85.26157    | 0        |
+		| 70.5     | 308.729     | 1284.139  | 2295.815    | 9        |
+				*/
 
 		[TestMethod]
-		public
-		void EngineIdleControllerTestTruck()
+		public void EngineIdleControllerTestTruck()
 		{
 			VehicleContainer container;
 			CombustionEngine engine;
@@ -581,7 +424,7 @@ namespace TUGraz.VectoCore.Tests.Models.SimulationComponent
 			};
 
 			var engSpeedResults = new List<dynamic>();
-			for (var i = 0; i < engineSpeed.Length; i ++) {
+			for (var i = 0; i < engineSpeed.Length; i++) {
 				torque = 0.SI<NewtonMeter>();
 
 				response = requestPort.Request(absTime, dt, torque, null);
@@ -589,11 +432,7 @@ namespace TUGraz.VectoCore.Tests.Models.SimulationComponent
 
 				container.CommitSimulationStep(absTime, dt);
 
-				engSpeedResults.Add(new {
-					absTime,
-					engine.PreviousState.EngineSpeed,
-					engine.PreviousState.EnginePower
-				});
+				engSpeedResults.Add(new { absTime, engine.PreviousState.EngineSpeed, engine.PreviousState.EnginePower });
 				Assert.AreEqual(engineSpeed[i].Value(), engine.PreviousState.EngineSpeed.Value(), Tolerance);
 				Assert.AreEqual(enginePower[i].Value(), engine.PreviousState.EnginePower.Value(), Tolerance);
 
@@ -603,8 +442,7 @@ namespace TUGraz.VectoCore.Tests.Models.SimulationComponent
 		}
 
 		[TestMethod]
-		public
-		void EngineIdleControllerTest2Truck()
+		public void EngineIdleControllerTest2Truck()
 		{
 			VehicleContainer container;
 			CombustionEngine engine;
@@ -623,82 +461,37 @@ namespace TUGraz.VectoCore.Tests.Models.SimulationComponent
 						angularVelocity;
 
 			var response = requestPort.Initialize(torque, angularVelocity);
-			Assert.IsInstanceOfType
-				(
-					response
-					, typeof(
-						ResponseSuccess
-						));
+			Assert.IsInstanceOfType(response, typeof(ResponseSuccess));
 
-			response
-				=
-				requestPort.Request
-					(
-						absTime
-						,
-						dt
-						,
-						torque
-						,
-						angularVelocity
-					);
-			Assert.IsInstanceOfType
-				(
-					response
-					, typeof(
-						ResponseSuccess
-						));
-			Assert.AreEqual
-				(-14829.79713,
-					response.EnginePowerRequest.Value
-						(),
-					Tolerance
-				);
-			container.CommitSimulationStep
-				(
-					absTime
-					,
-					dt
-				);
-			absTime
-				+=
-				dt;
+			response = requestPort.Request(absTime, dt, torque, angularVelocity);
+			Assert.IsInstanceOfType(response, typeof(ResponseSuccess));
+			Assert.AreEqual(-14829.79713, response.EnginePowerRequest.Value(), Tolerance);
+			container.CommitSimulationStep(absTime, dt);
+			absTime += dt;
 
-			var engineSpeed = new PerSecond[] {
+			var engineSpeed = new[] {
 				1680.RPMtoRad(), 1680.RPMtoRad(), 1467.014.RPMtoRad(), 1272.8658.RPMtoRad(), 1090.989.RPMtoRad(),
 				915.3533.RPMtoRad(), 738.599.RPMtoRad(), 560.RPMtoRad(), 560.RPMtoRad(), 560.RPMtoRad(), 560.RPMtoRad(),
 				560.RPMtoRad(), 560.RPMtoRad(), 560.RPMtoRad(), 560.RPMtoRad(), 560.RPMtoRad(), 560.RPMtoRad(), 560.RPMtoRad(),
 				560.RPMtoRad()
 			};
 
-			var enginePower = new Watt[] {
-				5000.SI<Watt>(), 5000.SI<Watt>(), -32832.8834.SI<Watt>(), -25025.1308.SI<Watt>(), -19267.0360.SI<Watt>(),
-				-14890.1962.SI<Watt>(), -11500.7991.SI<Watt>(), -8091.0577.SI<Watt>(), 5000.SI<Watt>(), 5000.SI<Watt>(),
-				5000.SI<Watt>(), 5000.SI<Watt>(), 5000.SI<Watt>(), 5000.SI<Watt>(), 5000.SI<Watt>(), 5000.SI<Watt>(),
-				5000.SI<Watt>(), 5000.SI<Watt>(), 5000.SI<Watt>(), 5000.SI<Watt>()
-			};
+			//var enginePower = new[] {
+			//	5000.SI<Watt>(), 5000.SI<Watt>(), -32832.8834.SI<Watt>(), -25025.1308.SI<Watt>(), -19267.0360.SI<Watt>(),
+			//	-14890.1962.SI<Watt>(), -11500.7991.SI<Watt>(), -8091.0577.SI<Watt>(), 5000.SI<Watt>(), 5000.SI<Watt>(),
+			//	5000.SI<Watt>(), 5000.SI<Watt>(), 5000.SI<Watt>(), 5000.SI<Watt>(), 5000.SI<Watt>(), 5000.SI<Watt>(),
+			//	5000.SI<Watt>(), 5000.SI<Watt>(), 5000.SI<Watt>(), 5000.SI<Watt>()
+			//};
 
 			var engSpeedResults = new List<dynamic>();
-			torque
-				= 0.
-					SI<NewtonMeter>
-					();
-			for (
-				var i = 0;
-				i < engineSpeed.Count
-					();
-				i 
-					++) {
+			torque = 0.SI<NewtonMeter>();
+			for (var i = 0; i < engineSpeed.Length; i++) {
 				response = requestPort.Request(absTime, dt, torque, null);
 				Assert.IsInstanceOfType(response, typeof(ResponseSuccess));
 
 				container.CommitSimulationStep(absTime, dt);
 
-				engSpeedResults.Add(new {
-					absTime,
-					engine.PreviousState.EngineSpeed,
-					engine.PreviousState.EnginePower
-				});
+				engSpeedResults.Add(new { absTime, engine.PreviousState.EngineSpeed, engine.PreviousState.EnginePower });
 				//Assert.AreEqual(engineSpeed[i].Value(), engine.PreviousState.EngineSpeed.Value(), Tolerance);
 				//Assert.AreEqual(enginePower[i].Value(), engine.PreviousState.EnginePower.Value(), Tolerance);
 
@@ -708,125 +501,62 @@ namespace TUGraz.VectoCore.Tests.Models.SimulationComponent
 		}
 
 		[TestMethod]
-		public
-		void Test_EngineData()
+		public void Test_EngineData()
 		{
 			var engineData = MockSimulationDataFactory.CreateEngineDataFromFile(CoachEngine);
 			var motorway = engineData.WHTCMotorway;
-			Assert.AreEqual
-				(
-					motorway
-					, 1);
+			Assert.AreEqual(motorway, 1);
 
 			var rural = engineData.WHTCRural;
-			Assert.AreEqual
-				(
-					rural
-					, 1);
+			Assert.AreEqual(rural, 1);
 
 			var urban = engineData.WHTCUrban;
-			Assert.AreEqual
-				(
-					urban
-					, 1);
+			Assert.AreEqual(urban, 1);
 
 			var displace = engineData.Displacement;
-			Assert.AreEqual
-				(0.01273,
-					displace.Value
-						());
-			Assert.IsTrue
-				(
-					displace.HasEqualUnit
-						(
-							new SI()
-								.
-								Cubic.Meter
-						));
+			Assert.AreEqual(0.01273, displace.Value());
+			Assert.IsTrue(displace.HasEqualUnit(new SI().Cubic.Meter));
 
 			var inert = engineData.Inertia;
-			Assert.AreEqual
-				(3.8,
-					inert.Value
-						(), 0.00001);
-			Assert.IsTrue
-				(
-					inert.HasEqualUnit
-						(
-							new SI()
-								.
-								Kilo.Gramm.Square.Meter
-						));
+			Assert.AreEqual(3.8, inert.Value(), 0.00001);
+			Assert.IsTrue(inert.HasEqualUnit(new SI().Kilo.Gramm.Square.Meter));
 
 			var idle = engineData.IdleSpeed;
-			Assert.AreEqual
-				(58.6430628670095,
-					idle.Value
-						(), 0.000001);
-			Assert.IsTrue
-				(
-					idle.HasEqualUnit
-						(0.
-							SI<PerSecond>
-							()));
+			Assert.AreEqual(58.6430628670095, idle.Value(), 0.000001);
+			Assert.IsTrue(idle.HasEqualUnit(0.SI<PerSecond>()));
 		}
 
-
-		private static
-			void VehicleContainer(string engineFile, out VehicleContainer container, out CombustionEngine engine,
-				out ITnOutPort requestPort)
+		private static void VehicleContainer(string engineFile, out VehicleContainer container, out CombustionEngine engine,
+			out ITnOutPort requestPort)
 		{
-			container
-				=
-				new VehicleContainer();
+			container = new VehicleContainer(ExecutionMode.Engineering);
 			var gearbox = new MockGearbox(container);
 			var engineData = MockSimulationDataFactory.CreateEngineDataFromFile(engineFile);
 
-			engine
-				=
-				new CombustionEngine(container, engineData);
+			engine = new CombustionEngine(container, engineData);
 			var clutch = new Clutch(container, engineData, engine.IdleController);
 
-			var driver = new MockDriver(container);
+			// ReSharper disable once ObjectCreationAsStatement
+			new MockDriver(container);
 
 			var aux = new EngineAuxiliary(container);
-			aux.AddConstant
-				("", 5000.
-					SI<Watt>
-					());
+			aux.AddConstant("", 5000.SI<Watt>());
 
-			gearbox.Gear
-				= 1;
+			gearbox.Gear = 1;
 
 			//gearbox.InPort().Connect(engine.OutPort());
-			gearbox.InPort
-				().
-				Connect(clutch.OutPort()
-				);
-			clutch.InPort
-				().
-				Connect(engine.OutPort()
-				);
-			engine.Connect
-				(
-					aux.Port
-						());
+			gearbox.InPort().Connect(clutch.OutPort());
+			clutch.InPort().Connect(engine.OutPort());
+			engine.Connect(aux.Port());
 
 			// has to be done after connecting components!
-			engine.IdleController.RequestPort
-				=
-				clutch.IdleControlPort;
+			engine.IdleController.RequestPort = clutch.IdleControlPort;
 
-			requestPort
-				=
-				gearbox.OutPort
-					();
+			requestPort = gearbox.OutPort();
 
 			//vehicleContainer.DataWriter = new ModalDataWriter("engine_idle_test.csv");
 			var dataWriter = new MockModalDataContainer();
-			container.ModData
-				=
-				dataWriter;
+			container.ModData = dataWriter;
 		}
 	}
 }

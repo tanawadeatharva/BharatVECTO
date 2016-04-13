@@ -214,8 +214,8 @@ namespace TUGraz.VectoCore.Models.SimulationComponent.Impl
 			}
 
 			if (
-				(deltaFull * avgEngineSpeed).IsGreater(0.SI<Watt>(), Constants.SimulationSettings.EnginePowerSearchTolerance) &&
-				(deltaDrag * avgEngineSpeed).IsSmaller(0.SI<Watt>(), Constants.SimulationSettings.EnginePowerSearchTolerance)) {
+				(deltaFull * avgEngineSpeed).IsGreater(0.SI<Watt>(), Constants.SimulationSettings.LineSearchTolerance) &&
+				(deltaDrag * avgEngineSpeed).IsSmaller(0.SI<Watt>(), Constants.SimulationSettings.LineSearchTolerance)) {
 				throw new VectoSimulationException(
 					"Unexpected condition: requested torque_out is above gearbox full-load and engine is below drag load! deltaFull: {0}, deltaDrag: {1}",
 					deltaFull, deltaDrag);
@@ -232,7 +232,7 @@ namespace TUGraz.VectoCore.Models.SimulationComponent.Impl
 			CurrentState.EnginePower = CurrentState.EngineTorque * avgEngineSpeed;
 
 			if (torqueOut.IsGreater(0.SI<NewtonMeter>()) &&
-				(deltaFull * avgEngineSpeed).IsGreater(0.SI<Watt>(), Constants.SimulationSettings.EnginePowerSearchTolerance)) {
+				(deltaFull * avgEngineSpeed).IsGreater(0.SI<Watt>(), Constants.SimulationSettings.LineSearchTolerance)) {
 				Log.Debug("requested engine power exceeds fullload power: delta: {0}", deltaFull);
 				return new ResponseOverload {
 					AbsTime = absTime,
@@ -245,7 +245,7 @@ namespace TUGraz.VectoCore.Models.SimulationComponent.Impl
 			}
 
 			if (torqueOut.IsSmaller(0.SI<NewtonMeter>()) &&
-				(deltaDrag * avgEngineSpeed).IsSmaller(0.SI<Watt>(), Constants.SimulationSettings.EnginePowerSearchTolerance)) {
+				(deltaDrag * avgEngineSpeed).IsSmaller(0.SI<Watt>(), Constants.SimulationSettings.LineSearchTolerance)) {
 				Log.Debug("requested engine power is below drag power: delta: {0}", deltaDrag);
 				return new ResponseUnderload {
 					AbsTime = absTime,
@@ -423,7 +423,7 @@ namespace TUGraz.VectoCore.Models.SimulationComponent.Impl
 
 		protected bool IsFullLoad(Watt requestedPower, Watt maxPower)
 		{
-			var testValue = (requestedPower / maxPower).Cast<Scalar>() - 1.0;
+			var testValue = requestedPower / maxPower - 1.0;
 			return testValue.Abs() < FullLoadMargin;
 		}
 
@@ -511,7 +511,7 @@ namespace TUGraz.VectoCore.Models.SimulationComponent.Impl
 
 				var deltaEnginePower = nextEnginePower - (auxDemandResponse.AuxiliariesPowerDemand ?? 0.SI<Watt>());
 				var deltaTorque = deltaEnginePower / prevEngineSpeed;
-				var deltaAngularSpeed = (deltaTorque / Engine.ModelData.Inertia * dt).Cast<PerSecond>();
+				var deltaAngularSpeed = deltaTorque / Engine.ModelData.Inertia * dt;
 
 				var nextAngularSpeed = prevEngineSpeed;
 				if (deltaAngularSpeed > 0) {
@@ -528,60 +528,18 @@ namespace TUGraz.VectoCore.Models.SimulationComponent.Impl
 				retVal.Switch().
 					Case<ResponseSuccess>().
 					Case<ResponseUnderload>(r => {
-						retVal = RequestPort.Request(absTime, dt, torque, nextAngularSpeed);
-						retVal = SearchIdlingSpeed(absTime, dt, torque, nextAngularSpeed, r);
+						var angularSpeed = SearchAlgorithm.Search(nextAngularSpeed, r.Delta,
+							Constants.SimulationSettings.EngineIdlingSearchInterval,
+							getYValue: result => ((ResponseDryRun)result).DeltaDragLoad,
+							evaluateFunction: n => RequestPort.Request(absTime, dt, torque, n, true),
+							criterion: result => ((ResponseDryRun)result).DeltaDragLoad.Value());
+						Log.Debug("Found operating point for idling. absTime: {0}, dt: {1}, torque: {2}, angularSpeed: {3}", absTime, dt,
+							torque, angularSpeed);
+						retVal = RequestPort.Request(absTime, dt, torque, angularSpeed);
 					}).
 					Default(r => { throw new UnexpectedResponseException("searching Idling point", r); });
 
 				return retVal;
-			}
-
-			private IResponse SearchIdlingSpeed(Second absTime, Second dt, NewtonMeter torque, PerSecond angularSpeed,
-				ResponseUnderload responseUnderload)
-			{
-				Log.Info("Disabling logging during search idling speed");
-				LogManager.DisableLogging();
-
-				var searchInterval = Constants.SimulationSettings.EngineIdlingSearchInterval;
-				var intervalFactor = 1.0;
-
-				var debug = new List<dynamic>();
-
-				var origDelta = responseUnderload.Delta;
-				var delta = origDelta;
-				var nextAngularSpeed = angularSpeed;
-
-				debug.Add(new { engineSpeed = angularSpeed, searchInterval, delta });
-				var retryCount = 0;
-				do {
-					nextAngularSpeed -= searchInterval * delta.Sign();
-
-					var response = (ResponseDryRun)RequestPort.Request(absTime, dt, torque, nextAngularSpeed, true);
-					delta = response.DeltaDragLoad;
-					debug.Add(new { engineSpeed = nextAngularSpeed, searchInterval, delta });
-					if (delta.IsEqual(0.SI<Watt>(), Constants.SimulationSettings.EnginePowerSearchTolerance)) {
-						LogManager.EnableLogging();
-						Log.Debug("found operating point in {0} iterations. engine speed: {1}, delta: {2}", retryCount, nextAngularSpeed,
-							delta);
-						return RequestPort.Request(absTime, dt, torque, nextAngularSpeed);
-					}
-
-					if (origDelta.Sign() != delta.Sign()) {
-						intervalFactor = 0.5;
-					}
-					searchInterval *= intervalFactor;
-				} while (retryCount++ < Constants.SimulationSettings.EngineSearchLoopThreshold);
-
-				LogManager.EnableLogging();
-				Log.Warn("Exceeded max iterations when searching for idling point!");
-				Log.Warn("acceleration: {0} ... {1}", ", ".Join(debug.Take(5).Select(x => x.acceleration)),
-					", ".Join(debug.Slice(-6).Select(x => x.acceleration)));
-				Log.Warn("exceeded: {0} ... {1}", ", ".Join(debug.Take(5).Select(x => x.delta)),
-					", ".Join(debug.Slice(-6).Select(x => x.delta)));
-				Log.Error("Failed to find operating point! absTime: {0}", absTime);
-				throw new VectoSimulationException("Failed to find operating point!  exceeded: {0} ... {1}",
-					", ".Join(debug.Take(5).Select(x => x.delta)),
-					", ".Join(debug.Slice(-6).Select(x => x.delta)));
 			}
 
 			public IResponse Initialize(NewtonMeter torque, PerSecond angularVelocity)

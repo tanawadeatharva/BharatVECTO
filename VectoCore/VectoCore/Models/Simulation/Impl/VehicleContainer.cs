@@ -33,6 +33,7 @@ using System.Collections.Generic;
 using System.Collections.ObjectModel;
 using System.Diagnostics;
 using TUGraz.VectoCommon.Exceptions;
+using TUGraz.VectoCommon.Models;
 using TUGraz.VectoCommon.Utils;
 using TUGraz.VectoCore.Models.Connector.Ports;
 using TUGraz.VectoCore.Models.Simulation.Data;
@@ -169,8 +170,8 @@ namespace TUGraz.VectoCore.Models.Simulation.Impl
 
 		#endregion
 
-		public VehicleContainer(IModalDataContainer modData = null, WriteSumData writeSumData = null,
-			ExecutionMode executionMode = ExecutionMode.Declaration)
+		public VehicleContainer(ExecutionMode executionMode, IModalDataContainer modData = null,
+			WriteSumData writeSumData = null)
 		{
 			ModData = modData;
 			WriteSumData = writeSumData ?? delegate { };

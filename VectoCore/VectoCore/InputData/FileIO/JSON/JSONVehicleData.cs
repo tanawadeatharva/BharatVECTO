@@ -71,7 +71,7 @@ namespace TUGraz.VectoCore.InputData.FileIO.JSON
 
 		public virtual Kilogram GrossVehicleMassRating
 		{
-			get { return Body.GetEx<double>(JsonKeys.Vehicle_GrossVehicleMassRating).SI<Ton>().Cast<Kilogram>(); }
+			get { return Body.GetEx<double>(JsonKeys.Vehicle_GrossVehicleMassRating).SI().Ton.Cast<Kilogram>(); }
 		}
 
 		public virtual Kilogram Loading

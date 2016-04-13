@@ -73,7 +73,7 @@ namespace TUGraz.VectoCore.Models.Declaration
 			var pt1 = VectoMath.Interpolate(_entries[index - 1].Key, _entries[index].Key, _entries[index - 1].Value,
 				_entries[index].Value, key);
 			if (pt1 < 0) {
-				throw new VectoException("The calculated value must not be smaller than 0. Value: " + pt1);
+				throw new VectoException("The calculated pt1 value must not be smaller than 0. Value: " + pt1);
 			}
 			return pt1;
 		}

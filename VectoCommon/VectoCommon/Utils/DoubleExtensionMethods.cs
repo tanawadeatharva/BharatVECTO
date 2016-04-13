@@ -51,7 +51,6 @@ namespace TUGraz.VectoCommon.Utils
 		/// </summary>
 		public const double ToleranceFactor = 1e-6;
 
-
 		/// <summary>
 		/// Determines whether the specified other is equal within tolerance.
 		/// </summary>
@@ -153,7 +152,24 @@ namespace TUGraz.VectoCommon.Utils
 			return SI<PerSecond>(self * 2 * Math.PI / 60.0);
 		}
 
+		/// <summary>
+		/// Converts the value from rounds per minute to the SI Unit PerSecond
+		/// </summary>
+		/// <param name="self"></param>
+		/// <returns></returns>
+		[DebuggerHidden]
+		public static PerSecond RPMtoRad(this int self)
+		{
+			return SI<PerSecond>(self * 2.0 * Math.PI / 60.0);
+		}
+
 		public static MeterPerSecond KMPHtoMeterPerSecond(this double self)
+		{
+			return SI<MeterPerSecond>(self / 3.6);
+		}
+
+		[DebuggerHidden]
+		public static MeterPerSecond KMPHtoMeterPerSecond(this int self)
 		{
 			return SI<MeterPerSecond>(self / 3.6);
 		}
@@ -167,7 +183,6 @@ namespace TUGraz.VectoCommon.Utils
 		{
 			return self * 180.0 / Math.PI;
 		}
-
 
 		/// <summary>
 		/// Creates an SI object for the number (unit-less: [-]).

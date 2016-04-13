@@ -37,24 +37,6 @@ namespace TUGraz.VectoCommon.Utils
 	public static class IntExtensionMethods
 	{
 		/// <summary>
-		/// Converts the value from rounds per minute to the SI Unit PerSecond
-		/// </summary>
-		/// <param name="d"></param>
-		/// <returns></returns>
-		[DebuggerHidden]
-		public static PerSecond RPMtoRad(this int d)
-		{
-			return (d * 2.0 * Math.PI / 60.0).SI<PerSecond>();
-		}
-
-		[DebuggerHidden]
-		public static MeterPerSecond KMPHtoMeterPerSecond(this int d)
-		{
-			return (d / 3.6).SI<MeterPerSecond>();
-		}
-
-
-		/// <summary>
 		/// Gets the unit-less SI representation of the number.
 		/// </summary>
 		[DebuggerHidden]

@@ -64,7 +64,7 @@ namespace TUGraz.VectoCore.Tests.FileIO
 
 			var runData = reader.NextRun().First();
 
-			Assert.AreEqual(false, runData.IsEngineOnly);
+			Assert.AreEqual(ExecutionMode.Declaration, runData.ExecutionMode);
 
 			Assert.AreEqual(Path.GetFileNameWithoutExtension(DeclarationJob), runData.JobName);
 			Assert.AreEqual(5850, runData.VehicleData.CurbWeight.Value());

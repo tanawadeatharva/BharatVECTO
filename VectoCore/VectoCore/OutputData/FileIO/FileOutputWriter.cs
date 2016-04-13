@@ -33,6 +33,7 @@ using System;
 using System.Data;
 using System.IO;
 using System.Text;
+using TUGraz.VectoCommon.Models;
 using TUGraz.VectoCore.Configuration;
 using TUGraz.VectoCore.Models;
 using TUGraz.VectoCore.Models.Simulation.Data;

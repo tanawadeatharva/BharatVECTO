@@ -35,9 +35,6 @@ using System.Runtime.CompilerServices;
 using TUGraz.VectoCore.Models.Declaration;
 using TUGraz.VectoCore.Models.Simulation.Data;
 using TUGraz.VectoCore.Models.SimulationComponent.Data;
-using Font = System.Drawing.Font;
-using Image = iTextSharp.text.Image;
-using Rectangle = System.Drawing.Rectangle;
 
 namespace TUGraz.VectoCore.OutputData
 {
@@ -65,8 +62,7 @@ namespace TUGraz.VectoCore.OutputData
 		/// <summary>
 		/// Dictionary of MissionTypes and their corresponding results.
 		/// </summary>
-		protected readonly Dictionary<MissionType, ResultContainer> _missions =
-			new Dictionary<MissionType, DeclarationReport.ResultContainer>();
+		protected readonly Dictionary<MissionType, ResultContainer> Missions = new Dictionary<MissionType, ResultContainer>();
 
 		/// <summary>
 		/// The full load curve.
@@ -103,16 +99,16 @@ namespace TUGraz.VectoCore.OutputData
 		[MethodImpl(MethodImplOptions.Synchronized)]
 		public void AddResult(LoadingType loadingType, Mission mission, IModalDataContainer modData)
 		{
-			if (!_missions.ContainsKey(mission.MissionType)) {
-				_missions[mission.MissionType] = new DeclarationReport.ResultContainer {
+			if (!Missions.ContainsKey(mission.MissionType)) {
+				Missions[mission.MissionType] = new ResultContainer {
 					Mission = mission,
 					ModData = new Dictionary<LoadingType, IModalDataContainer>()
 				};
 			}
-			_missions[mission.MissionType].ModData[loadingType] = modData;
+			Missions[mission.MissionType].ModData[loadingType] = modData;
 
 
-			if (ResultCount == _missions.Sum(v => v.Value.ModData.Count)) {
+			if (ResultCount == Missions.Sum(v => v.Value.ModData.Count)) {
 				DoWriteReport();
 			}
 		}

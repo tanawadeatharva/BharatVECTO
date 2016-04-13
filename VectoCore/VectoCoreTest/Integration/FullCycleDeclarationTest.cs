@@ -32,7 +32,7 @@
 using System.IO;
 using System.Linq;
 using Microsoft.VisualStudio.TestTools.UnitTesting;
-using NLog;
+using TUGraz.VectoCommon.Models;
 using TUGraz.VectoCommon.Utils;
 using TUGraz.VectoCore.InputData.FileIO.JSON;
 using TUGraz.VectoCore.Models.Simulation.Impl;
@@ -46,11 +46,13 @@ namespace TUGraz.VectoCore.Tests.Integration
 	[TestClass]
 	public class FullCycleDeclarationTest
 	{
-		public const string TruckDeclarationJob =
+		public const string LongHaulTruckDeclarationJob =
 			@"TestData\Integration\DeclarationMode\40t Truck\40t_Long_Haul_Truck.vecto";
 
+		public const string DeliveryTruckDeclarationJob =
+			@"TestData\Integration\DeclarationMode\12t Truck\12t Delivery Truck.vecto";
 
-		[TestMethod, TestCategory("LongRunning")]
+		[TestMethod]
 		public void Truck40t_LongHaulCycle_RefLoad()
 		{
 			var cycle = SimpleDrivingCycles.ReadDeclarationCycle("LongHaul");
@@ -61,7 +63,7 @@ namespace TUGraz.VectoCore.Tests.Integration
 			Assert.IsTrue(run.FinishedWithoutErrors);
 		}
 
-		[TestMethod, TestCategory("LongRunning")]
+		[TestMethod]
 		public void Truck40t_RegionalDeliveryCycle_RefLoad()
 		{
 			var cycle = SimpleDrivingCycles.ReadDeclarationCycle("RegionalDelivery");
@@ -72,8 +74,7 @@ namespace TUGraz.VectoCore.Tests.Integration
 			Assert.IsTrue(run.FinishedWithoutErrors);
 		}
 
-
-		[TestMethod, TestCategory("LongRunning")]
+		[TestMethod]
 		public void Truck40t_UrbanDeliveryCycle_RefLoad()
 		{
 			var cycle = SimpleDrivingCycles.ReadDeclarationCycle("UrbanDelivery");
@@ -84,7 +85,7 @@ namespace TUGraz.VectoCore.Tests.Integration
 			Assert.IsTrue(run.FinishedWithoutErrors);
 		}
 
-		[TestMethod, TestCategory("LongRunning")]
+		[TestMethod]
 		public void Truck40t_MunicipalCycle_RefLoad()
 		{
 			var cycle = SimpleDrivingCycles.ReadDeclarationCycle("MunicipalUtility");
@@ -95,7 +96,7 @@ namespace TUGraz.VectoCore.Tests.Integration
 			Assert.IsTrue(run.FinishedWithoutErrors);
 		}
 
-		[TestMethod, TestCategory("LongRunning")]
+		[TestMethod]
 		public void Truck40t_ConstructionCycle_RefLoad()
 		{
 			var cycle = SimpleDrivingCycles.ReadDeclarationCycle("Construction");
@@ -106,7 +107,7 @@ namespace TUGraz.VectoCore.Tests.Integration
 			Assert.IsTrue(run.FinishedWithoutErrors);
 		}
 
-		[TestMethod, TestCategory("LongRunning")]
+		[TestMethod]
 		public void Truck40t_HeavyUrbanCycle_RefLoad()
 		{
 			var cycle = SimpleDrivingCycles.ReadDeclarationCycle("HeavyUrban");
@@ -118,7 +119,7 @@ namespace TUGraz.VectoCore.Tests.Integration
 			Assert.IsTrue(run.FinishedWithoutErrors);
 		}
 
-		[TestMethod, TestCategory("LongRunning")]
+		[TestMethod]
 		public void Truck40t_SubUrbanCycle_RefLoad()
 		{
 			var cycle = SimpleDrivingCycles.ReadDeclarationCycle("Suburban");
@@ -153,13 +154,11 @@ namespace TUGraz.VectoCore.Tests.Integration
 		}
 
 		[TestMethod, TestCategory("LongRunning")]
-		public void Truck40tDeclarationTest()
+		public void Truck40t_DeclarationTest()
 		{
-			LogManager.DisableLogging();
-
-			var inputData = JSONInputDataFactory.ReadJsonJob(TruckDeclarationJob);
-			var fileWriter = new FileOutputWriter(Path.GetFileNameWithoutExtension(TruckDeclarationJob),
-				Path.GetDirectoryName(TruckDeclarationJob));
+			var inputData = JSONInputDataFactory.ReadJsonJob(LongHaulTruckDeclarationJob);
+			var fileWriter = new FileOutputWriter(Path.GetFileNameWithoutExtension(LongHaulTruckDeclarationJob),
+				Path.GetDirectoryName(LongHaulTruckDeclarationJob));
 			var factory = new SimulatorFactory(ExecutionMode.Declaration, inputData, fileWriter) {
 				WriteModalResults = true
 			};
@@ -173,6 +172,25 @@ namespace TUGraz.VectoCore.Tests.Integration
 			Assert.IsTrue(jobContainer.Runs.All(r => r.Success), string.Concat(jobContainer.Runs.Select(r => r.ExecException)));
 		}
 
+		[TestMethod, TestCategory("LongRunning")]
+		public void Truck12t_DeclarationTest()
+		{
+			var inputData = JSONInputDataFactory.ReadJsonJob(DeliveryTruckDeclarationJob);
+			var fileWriter = new FileOutputWriter(Path.GetFileNameWithoutExtension(DeliveryTruckDeclarationJob),
+				Path.GetDirectoryName(DeliveryTruckDeclarationJob));
+			var factory = new SimulatorFactory(ExecutionMode.Declaration, inputData, fileWriter) {
+				WriteModalResults = true
+			};
+			var sumData = new SummaryDataContainer(fileWriter);
+			var jobContainer = new JobContainer(sumData);
+			jobContainer.AddRuns(factory);
+
+			jobContainer.Execute();
+			jobContainer.WaitFinished();
+
+			Assert.IsTrue(jobContainer.Runs.All(r => r.Success), string.Concat(jobContainer.Runs.Select(r => r.ExecException)));
+		}
+		
 		//[TestMethod]
 		//public void Truck40t_RegionalDeliveryCycle_RefLoad_Declaration()
 		//{

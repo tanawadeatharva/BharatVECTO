@@ -59,7 +59,7 @@ namespace TUGraz.VectoCore.Models.Simulation.Impl
 
 		public VehicleContainer Build(VectoRunData data)
 		{
-			if (data.IsEngineOnly) {
+			if (data.ExecutionMode == ExecutionMode.EngineOnly) {
 				return BuildEngineOnly(data);
 			}
 			if (data.Cycle.CycleType == CycleType.PWheel) {
@@ -77,7 +77,7 @@ namespace TUGraz.VectoCore.Models.Simulation.Impl
 
 		private VehicleContainer BuildEngineOnly(VectoRunData data)
 		{
-			var container = new VehicleContainer(_modData, _sumWriter, ExecutionMode.EngineOnly) { RunData = data };
+			var container = new VehicleContainer(ExecutionMode.EngineOnly, _modData, _sumWriter) { RunData = data };
 			var cycle = new PowertrainDrivingCycle(container, data.Cycle);
 
 			var directAux = new EngineAuxiliary(container);
@@ -92,7 +92,7 @@ namespace TUGraz.VectoCore.Models.Simulation.Impl
 
 		private VehicleContainer BuildPWheel(VectoRunData data)
 		{
-			var container = new VehicleContainer(_modData, _sumWriter, ExecutionMode.Engineering) { RunData = data };
+			var container = new VehicleContainer(ExecutionMode.Engineering, _modData, _sumWriter) { RunData = data };
 
 			var gearbox = new CycleGearbox(container, data.GearboxData);
 
@@ -141,7 +141,7 @@ namespace TUGraz.VectoCore.Models.Simulation.Impl
 		{
 			Debug.Assert(data.Cycle.CycleType == CycleType.MeasuredSpeed, "CycleType must be MeasuredSpeed.");
 
-			var container = new VehicleContainer(_modData, _sumWriter, ExecutionMode.Engineering) { RunData = data };
+			var container = new VehicleContainer(ExecutionMode.Engineering, _modData, _sumWriter) { RunData = data };
 			var cycle = new MeasuredSpeedDrivingCycle(container, data.Cycle);
 			var vehicle = AddComponent(cycle, new Vehicle(container, data.VehicleData));
 			var wheels = AddComponent(vehicle,
@@ -193,7 +193,7 @@ namespace TUGraz.VectoCore.Models.Simulation.Impl
 		{
 			Debug.Assert(data.Cycle.CycleType == CycleType.MeasuredSpeedGear, "CycleType must be MeasuredSpeed with Gear.");
 
-			var container = new VehicleContainer(_modData, _sumWriter, ExecutionMode.Engineering) { RunData = data };
+			var container = new VehicleContainer(ExecutionMode.Engineering, _modData, _sumWriter) { RunData = data };
 			var cycle = new MeasuredSpeedDrivingCycle(container, data.Cycle);
 			var vehicle = AddComponent(cycle, new Vehicle(container, data.VehicleData));
 			var wheels = AddComponent(vehicle,
@@ -248,7 +248,7 @@ namespace TUGraz.VectoCore.Models.Simulation.Impl
 					data.Cycle.CycleType);
 			}
 
-			var container = new VehicleContainer(_modData, _sumWriter, ExecutionMode.EngineOnly) { RunData = data };
+			var container = new VehicleContainer(data.ExecutionMode, _modData, _sumWriter) { RunData = data };
 			var cycle = new DistanceBasedDrivingCycle(container, data.Cycle);
 
 			// cycle --> driver --> vehicle --> wheels --> axleGear --> retarder --> gearBox

@@ -34,7 +34,6 @@ using System.Collections.Generic;
 using System.Diagnostics;
 using System.Linq;
 using System.Runtime.InteropServices.WindowsRuntime;
-using NLog.Fluent;
 using TUGraz.VectoCommon.Models;
 using TUGraz.VectoCommon.Utils;
 using TUGraz.VectoCore.Configuration;
@@ -298,9 +297,10 @@ namespace TUGraz.VectoCore.Models.SimulationComponent.Impl
 				//DriverStrategy.CurrentDrivingMode = DefaultDriverStrategy.DrivingMode.DrivingModeBrake;
 				//DriverStrategy.BrakeTrigger = DriverStrategy.NextDrivingAction;
 			}
+
+
 			Log.Debug("Exceeding next ActionDistance at {0}. Reducing max Distance from {2} to {1}",
-				DriverStrategy.NextDrivingAction.ActionDistance,
-				newds, ds);
+				DriverStrategy.NextDrivingAction.ActionDistance, newds, ds);
 			return new ResponseDrivingCycleDistanceExceeded() {
 				Source = this,
 				MaxDistance = newds,

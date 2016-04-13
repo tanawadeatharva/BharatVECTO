@@ -1,5 +1,6 @@
 ﻿using Microsoft.VisualStudio.TestTools.UnitTesting;
 using NUnit.Framework;
+using TUGraz.VectoCommon.Models;
 using TUGraz.VectoCommon.Utils;
 using TUGraz.VectoCore.Models.Simulation.Data;
 using TUGraz.VectoCore.Models.Simulation.DataBus;
@@ -26,7 +27,6 @@ namespace TUGraz.VectoCore.Tests.Integration.BusAuxiliaries
 			MockDriver driver;
 			var busAux = CreateBusAuxAdapterForTesting(vehicleWeight, out driver);
 
-
 			var engineDrivelinePower = (driveLinePower * 1000).SI<Watt>();
 			var engineSpeed = engineSpeedRpm.RPMtoRad();
 			busAux.Initialize(engineDrivelinePower / engineSpeed, engineSpeed);
@@ -36,7 +36,6 @@ namespace TUGraz.VectoCore.Tests.Integration.BusAuxiliaries
 
 			Assert.AreEqual(expectedPowerDemand, (torque * engineSpeed).Value(), 1e-4);
 		}
-
 
 		[Test]
 		public void AuxFCConsumptionTest()
@@ -88,14 +87,13 @@ namespace TUGraz.VectoCore.Tests.Integration.BusAuxiliaries
 			Assert.AreEqual(162.4655, ((SI)modalData[ModalResultField.AA_TotalCycleFC_Grams]).Value(), 0.0001);
 		}
 
-
 		public static BusAuxiliariesAdapter CreateBusAuxAdapterForTesting(double vehicleWeight, out MockDriver driver)
 		{
 			var auxFilePath = @"TestData\Integration\BusAuxiliaries\AdvAuxTest.aaux";
 			var engineFLDFilePath = @"TestData\Integration\BusAuxiliaries\24t Coach.vfld";
 			var engineFCMapFilePath = @"TestData\Integration\BusAuxiliaries\24t Coach.vmap";
 
-			var vehicle = new VehicleContainer();
+			var vehicle = new VehicleContainer(ExecutionMode.Engineering);
 			var fcMap = FuelConsumptionMap.ReadFromFile(engineFCMapFilePath);
 			var fld = EngineFullLoadCurve.ReadFromFile(engineFLDFilePath);
 			var modelData = new CombustionEngineData() {

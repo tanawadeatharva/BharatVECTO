@@ -36,6 +36,7 @@ using TUGraz.VectoCommon.Models;
 using TUGraz.VectoCommon.Utils;
 using TUGraz.VectoCore.Configuration;
 using TUGraz.VectoCore.Models.Declaration;
+using TUGraz.VectoCore.Models.Simulation.Impl;
 using TUGraz.VectoCore.Models.SimulationComponent.Data;
 using TUGraz.VectoCore.OutputData;
 using TUGraz.VectoCore.Utils;
@@ -75,7 +76,7 @@ namespace TUGraz.VectoCore.Models.Simulation.Data
 		[ValidateObject]
 		public DriverData DriverData { get; internal set; }
 
-		public bool IsEngineOnly { get; internal set; }
+		public ExecutionMode ExecutionMode { get; internal set; }
 
 		[Required, MinLength(1)]
 		public string JobName { get; set; }

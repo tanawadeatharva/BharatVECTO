@@ -32,6 +32,7 @@
 using System.IO;
 using Microsoft.VisualStudio.TestTools.UnitTesting;
 using TUGraz.VectoCommon.Exceptions;
+using TUGraz.VectoCommon.Models;
 using TUGraz.VectoCommon.Utils;
 using TUGraz.VectoCore.InputData.Reader;
 using TUGraz.VectoCore.Models.Connector.Ports.Impl;
@@ -50,7 +51,7 @@ namespace TUGraz.VectoCore.Tests.Models.Simulation
 		public void TestEngineOnly()
 		{
 			var dataWriter = new MockModalDataContainer();
-			var container = new VehicleContainer(dataWriter);
+			var container = new VehicleContainer(ExecutionMode.EngineOnly, dataWriter);
 
 			var cycleData = DrivingCycleDataReader.ReadFromFile(@"TestData\Cycles\Coach Engine Only.vdri", CycleType.EngineOnly,
 				false);
@@ -81,7 +82,7 @@ namespace TUGraz.VectoCore.Tests.Models.Simulation
 		[TestMethod]
 		public void TestEngineOnlyWithTimestamps()
 		{
-			var container = new VehicleContainer();
+			var container = new VehicleContainer(ExecutionMode.EngineOnly);
 
 			var cycleData = DrivingCycleDataReader.ReadFromFile(@"TestData\Cycles\Coach Engine Only Paux_var-dt.vdri",
 				CycleType.EngineOnly, false);
@@ -107,7 +108,6 @@ namespace TUGraz.VectoCore.Tests.Models.Simulation
 			Assert.IsInstanceOfType(response, typeof(ResponseSuccess));
 
 			container.CommitSimulationStep(absTime, dt);
-
 
 			Assert.AreEqual(absTime, outPort.AbsTime);
 			Assert.AreEqual(dt, outPort.Dt);
@@ -154,7 +154,7 @@ namespace TUGraz.VectoCore.Tests.Models.Simulation
 		[TestMethod]
 		public void Test_TimeBased_FirstCycle()
 		{
-			var container = new VehicleContainer();
+			var container = new VehicleContainer(ExecutionMode.Engineering);
 
 			var cycleData = DrivingCycleDataReader.ReadFromFile(@"TestData\Cycles\Coach First Cycle only.vdri",
 				CycleType.MeasuredSpeed, false);
@@ -247,7 +247,6 @@ namespace TUGraz.VectoCore.Tests.Models.Simulation
 					TestCycleDetect("<t>,<v>,<gear>,<Pwheel>,<s>,<grad>,<Padd>,<n>,<gear>,<vair_res>,<vair_beta>,<Aux_HVAC>,<Aux_HP>",
 						CycleType.MeasuredSpeedGear));
 		}
-
 
 		[TestMethod]
 		public void DrivingCycle_Read()
@@ -350,7 +349,6 @@ namespace TUGraz.VectoCore.Tests.Models.Simulation
 			TestCycleRead(File.ReadAllText(@"TestData\MeasuredSpeed\MeasuredSpeed_Gear_Rural_VairAux.vdri"),
 				CycleType.MeasuredSpeedGear, 1300);
 		}
-
 
 		private static void TestCycleDetect(string inputData, CycleType cycleType)
 		{

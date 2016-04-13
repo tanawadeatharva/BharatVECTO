@@ -220,7 +220,7 @@ namespace TUGraz.VectoCore.Models.SimulationComponent.Impl
 					var response = Gearbox.Initialize(gear, outTorque, outEngineSpeed);
 
 					var fullLoadPower = response.EnginePowerRequest - response.DeltaFullLoad;
-					var reserve = 1 - (response.EnginePowerRequest / fullLoadPower).Cast<Scalar>();
+					var reserve = 1 - response.EnginePowerRequest / fullLoadPower;
 					var inTorque = response.ClutchPowerRequest / inAngularSpeed;
 
 					// if in shift curve and above idle speed and torque reserve is provided.
@@ -236,7 +236,7 @@ namespace TUGraz.VectoCore.Models.SimulationComponent.Impl
 
 					var inAngularSpeed = outEngineSpeed * Data.Gears[gear].Ratio;
 					var fullLoadPower = response.EnginePowerRequest - response.DeltaFullLoad;
-					var reserve = 1 - (response.EnginePowerRequest / fullLoadPower).Cast<Scalar>();
+					var reserve = 1 - response.EnginePowerRequest / fullLoadPower;
 					var inTorque = response.ClutchPowerRequest / inAngularSpeed;
 
 					// if in shift curve and torque reserve is provided: return the current gear
@@ -340,7 +340,7 @@ namespace TUGraz.VectoCore.Models.SimulationComponent.Impl
 					// otherwise take
 					if (!IsBelowDownShiftCurve(tryNextGear, inTorque, inAngularVelocity)) {
 						var fullLoadPower = response.EnginePowerRequest - response.DeltaFullLoad;
-						var reserve = 1 - (response.EnginePowerRequest / fullLoadPower).Cast<Scalar>();
+						var reserve = 1 - response.EnginePowerRequest / fullLoadPower;
 
 						if (reserve >= Data.TorqueReserve) {
 							NextGear = tryNextGear;

@@ -271,7 +271,7 @@ namespace TUGraz.VectoCore.Models.SimulationComponent.Impl
 				};
 			}
 
-			if ((outTorque * avgAngularVelocity).IsGreater(0.SI<Watt>(), Constants.SimulationSettings.EnginePowerSearchTolerance)) {
+			if ((outTorque * avgAngularVelocity).IsGreater(0.SI<Watt>(), Constants.SimulationSettings.LineSearchTolerance)) {
 				return new ResponseOverload {
 					Source = this,
 					Delta = outTorque * avgAngularVelocity,
@@ -279,7 +279,7 @@ namespace TUGraz.VectoCore.Models.SimulationComponent.Impl
 				};
 			}
 
-			if ((outTorque * avgAngularVelocity).IsSmaller(0.SI<Watt>(), Constants.SimulationSettings.EnginePowerSearchTolerance)) {
+			if ((outTorque * avgAngularVelocity).IsSmaller(0.SI<Watt>(), Constants.SimulationSettings.LineSearchTolerance)) {
 				return new ResponseUnderload {
 					Source = this,
 					Delta = outTorque * avgAngularVelocity,
@@ -334,7 +334,7 @@ namespace TUGraz.VectoCore.Models.SimulationComponent.Impl
 					_shiftTime = absTime + dt;
 					_strategy.Disengage(absTime, dt, outTorque, outAngularVelocity);
 					Log.Debug("EngineSpeed is below IdleSpeed, Gearbox disengage!");
-					return new ResponseEngineSpeedTooLow() { Source = this, GearboxPowerRequest = outTorque * outAngularVelocity };
+					return new ResponseEngineSpeedTooLow { Source = this, GearboxPowerRequest = outTorque * outAngularVelocity };
 				}
 				var dryRunResponse = NextComponent.Request(absTime, dt, inTorque, inAngularVelocity, true);
 				dryRunResponse.GearboxPowerRequest = outTorque * (PreviousState.OutAngularVelocity + outAngularVelocity) / 2.0;
@@ -418,11 +418,15 @@ namespace TUGraz.VectoCore.Models.SimulationComponent.Impl
 		{
 			if (!Disengaged) {
 				if (ModelData.Gears[Gear].LossMap.Extrapolated) {
-					Log.Warn("Gear {0} LossMap data was extrapolated: range for loss map is not sufficient.", Gear);
+					Log.Warn(
+						"Gear {0} LossMap data was extrapolated: range for loss map is not sufficient: n:{1}, torque:{2}, ratio:{3}",
+						Gear, CurrentState.OutAngularVelocity.ConvertTo().Rounds.Per.Minute, CurrentState.OutTorque,
+						ModelData.Gears[Gear].Ratio);
 					if (DataBus.ExecutionMode == ExecutionMode.Declaration) {
-						// todo (MK, 2016-01-07): add operating point and loss values for easier debugging
 						throw new VectoException(
-							"Gear {0} LossMap data was extrapolated in Declaration Mode: range for loss map is not sufficient.", Gear);
+							"Gear {0} LossMap data was extrapolated in Declaration Mode: range for loss map is not sufficient: n:{1}, torque:{2}, ratio:{3}",
+							Gear, CurrentState.OutAngularVelocity.ConvertTo().Rounds.Per.Minute, CurrentState.OutTorque,
+							ModelData.Gears[Gear].Ratio);
 					}
 				}
 			}

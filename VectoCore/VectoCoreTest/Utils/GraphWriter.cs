@@ -31,22 +31,15 @@
 
 using System;
 using System.Collections.Generic;
-using System.Collections.Specialized;
 using System.Data;
 using System.IO;
 using System.Drawing;
-using System.Drawing.Text;
 using System.Linq;
-using System.Net;
-using System.Security.Cryptography.X509Certificates;
-using System.Text.RegularExpressions;
 using System.Windows.Forms.DataVisualization.Charting;
-using Microsoft.VisualStudio.TestTools.UnitTesting;
-using NLog;
+using TUGraz.VectoCommon.Models;
 using TUGraz.VectoCommon.Utils;
 using TUGraz.VectoCore.Models.Simulation.Data;
 using TUGraz.VectoCore.Utils;
-using Point = System.Drawing.Point;
 
 namespace TUGraz.VectoCore.Tests.Utils
 {
@@ -78,7 +71,7 @@ namespace TUGraz.VectoCore.Tests.Utils
 
 			var modDataV3 = VectoCSVFile.Read(fileNameV3);
 			if (!File.Exists(fileNameV22)) {
-				LogManager.GetCurrentClassLogger().Error("Modfile V2.x not found: " + fileNameV22);
+				LogManager.GetLogger(typeof(GraphWriter).FullName).Error("Modfile V2.2 not found: " + fileNameV22);
 				//Write(fileNameV3);
 				//return;
 			}
@@ -90,7 +83,7 @@ namespace TUGraz.VectoCore.Tests.Utils
 
 			var yfields = new[] {
 				ModalResultField.v_act, ModalResultField.acc, ModalResultField.n_eng_avg, ModalResultField.Gear,
-				ModalResultField.P_eng_out, ModalResultField.P_aux, ModalResultField.AA_TotalCycleFC_Grams
+				ModalResultField.P_eng_out, ModalResultField.P_aux //, ModalResultField.AA_TotalCycleFC_Grams
 			};
 
 			var titleHeight = (50 * 100.0f) / (_diagramSize.Height * yfields.Count());
@@ -100,7 +93,7 @@ namespace TUGraz.VectoCore.Tests.Utils
 					xfield.GetName());
 
 				var x = LoadData(modDataV3, xfield.GetName());
-				var x2 = new double[] { double.NegativeInfinity };
+				var x2 = new[] { double.NegativeInfinity };
 				if (fileNameV22 != null && modDataV22 != null) {
 					x2 = LoadData(modDataV22, xfield.GetName());
 				}
@@ -109,11 +102,9 @@ namespace TUGraz.VectoCore.Tests.Utils
 				var minX = (int)(Math.Floor(Math.Max(x.Min(), x2.Min()) / 10.0) * 10.0);
 				var chart = new Chart { Size = plotSize };
 
-
 				for (var i = 0; i < yfields.Length; i++) {
 					var yfield = yfields[i];
 					var y = LoadData(modDataV3, yfield.GetName());
-
 
 					var chartArea = AddChartArea(chart, yfield.ToString(), xfield.GetCaption(), maxX, minX,
 						yfield.GetCaption(), yfield == ModalResultField.Gear);
@@ -202,7 +193,6 @@ namespace TUGraz.VectoCore.Tests.Utils
 				return s >= start && s <= end;
 			});
 
-
 			if (!File.Exists(fileNameV22)) {
 				//LogManager.GetCurrentClassLogger().Error("Modfile V2.2 not found: " + fileNameV22);
 				//Write(fileNameV3);
@@ -252,11 +242,9 @@ namespace TUGraz.VectoCore.Tests.Utils
 			var minX = (int)(Math.Floor(Math.Max(x.Min(), x2.Min()) / 10.0) * 10.0);
 			var chart = new Chart { Size = plotSize };
 
-
 			for (var i = 0; i < yfields.Length; i++) {
 				var yfield = yfields[i];
 				var y = LoadData(modDataV3, yfield.GetName());
-
 
 				var chartArea = AddChartArea(chart, yfield.ToString(), xfield.GetCaption(), maxX, minX,
 					yfield.GetCaption(), yfield == ModalResultField.Gear);
@@ -286,7 +274,6 @@ namespace TUGraz.VectoCore.Tests.Utils
 					seriesGrad.YAxisType = AxisType.Secondary;
 				}
 
-
 				var series1 = CreateSeries(string.Format("Vecto 3 - {0}", yfield), legend, chartArea, chart,
 					Color.Blue, x, y);
 
@@ -311,7 +298,6 @@ namespace TUGraz.VectoCore.Tests.Utils
 			return true;
 		}
 
-
 		private static void AddTitle(Chart chart, string titleText, string dockToChartArea)
 		{
 			var title = new Title();
@@ -326,11 +312,10 @@ namespace TUGraz.VectoCore.Tests.Utils
 		{
 			return modDataV3.Rows.Cast<DataRow>()
 				.Select(v => v.Field<string>(field).Length == 0
-					? Double.NaN
+					? double.NaN
 					: v.Field<string>(field).ToDouble())
 				.ToArray();
 		}
-
 
 		private static void AlignChart(Chart chart, string chartToAlign, string chartToAlignWith)
 		{

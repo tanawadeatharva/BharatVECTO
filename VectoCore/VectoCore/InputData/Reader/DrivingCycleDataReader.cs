@@ -35,6 +35,7 @@ using System.Data;
 using System.IO;
 using System.Linq;
 using TUGraz.VectoCommon.Exceptions;
+using TUGraz.VectoCommon.Models;
 using TUGraz.VectoCommon.Utils;
 using TUGraz.VectoCore.Configuration;
 using TUGraz.VectoCore.Models;
@@ -168,7 +169,6 @@ namespace TUGraz.VectoCore.InputData.Reader
 			};
 			return cycle;
 		}
-
 
 		private static List<DrivingCycleData.DrivingCycleEntry> FilterDrivingCycleEntries(
 			List<DrivingCycleData.DrivingCycleEntry> entries)
@@ -559,7 +559,6 @@ namespace TUGraz.VectoCore.InputData.Reader
 						CheckComboColumns(header, new[] { Fields.AirSpeedRelativeToVehicle, Fields.WindYawAngle }, throwExceptions);
 			}
 		}
-
 
 		/// <summary>
 		/// Parser for Measured Speed Mode Option 2.

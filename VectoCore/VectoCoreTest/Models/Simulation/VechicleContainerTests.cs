@@ -30,6 +30,7 @@
 */
 
 using Microsoft.VisualStudio.TestTools.UnitTesting;
+using TUGraz.VectoCommon.Models;
 using TUGraz.VectoCore.Models.Simulation.Impl;
 using TUGraz.VectoCore.Models.SimulationComponent.Impl;
 using TUGraz.VectoCore.Tests.Utils;
@@ -44,7 +45,7 @@ namespace TUGraz.VectoCore.Tests.Models.Simulation
 		[TestMethod]
 		public void VechicleContainerHasEngine()
 		{
-			var vehicle = new VehicleContainer();
+			var vehicle = new VehicleContainer(ExecutionMode.EngineOnly);
 			var engineData = MockSimulationDataFactory.CreateEngineDataFromFile(EngineFile);
 			var engine = new CombustionEngine(vehicle, engineData);
 

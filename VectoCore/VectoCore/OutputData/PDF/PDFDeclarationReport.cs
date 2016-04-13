@@ -58,22 +58,27 @@ namespace TUGraz.VectoCore.OutputData.PDF
 		/// <summary>
 		/// The engine model string from engine file.
 		/// </summary>
-		public string EngineModel { get; set; }
+		public string EngineModel;
 
 		/// <summary>
 		/// The engine description (displacement and max power)
 		/// </summary>
-		public string EngineStr { get; set; }
+		public string EngineStr;
 
 		/// <summary>
 		/// The gearbox model string from gearbox file.
 		/// </summary>
-		public string GearboxModel { get; set; }
+		public string GearboxModel;
 
 		/// <summary>
 		/// The gearbox description (gear-count and gear type)
 		/// </summary>
-		public string GearboxStr { get; set; }
+		public string GearboxStr;
+
+		/// <summary>
+		/// The date of the report. For all pages the same.
+		/// </summary>
+		public string ReportDate;
 
 		public PDFDeclarationReport(IReportWriter writer)
 		{
@@ -85,8 +90,9 @@ namespace TUGraz.VectoCore.OutputData.PDF
 		/// </summary>
 		protected internal override void DoWriteReport()
 		{
-			var titlePage = CreateTitlePage(_missions);
-			var cyclePages = _missions.OrderBy(m => m.Key).Select((m, i) => CreateCyclePage(m.Value, i + 2, _missions.Count + 1));
+			ReportDate = DateTime.Now.ToString(CultureInfo.InvariantCulture);
+			var titlePage = CreateTitlePage(Missions);
+			var cyclePages = Missions.OrderBy(m => m.Key).Select((m, i) => CreateCyclePage(m.Value, i + 2, Missions.Count + 1));
 
 			MergeDocuments(titlePage, cyclePages, _writer.WriterStream(ReportType.DeclarationReportPdf));
 		}
@@ -107,7 +113,7 @@ namespace TUGraz.VectoCore.OutputData.PDF
 		/// </summary>
 		/// <param name="missions">The missions.</param>
 		/// <returns>the out stream of the pdf stamper with the title page.</returns>
-		private Stream CreateTitlePage(Dictionary<MissionType, DeclarationReport.ResultContainer> missions)
+		private Stream CreateTitlePage(Dictionary<MissionType, ResultContainer> missions)
 		{
 			var stream = new MemoryStream();
 			var resourceName = string.Format("{0}Report.title{1}CyclesTemplate.pdf", RessourceHelper.Namespace, missions.Count);
@@ -118,7 +124,7 @@ namespace TUGraz.VectoCore.OutputData.PDF
 			var pdfFields = stamper.AcroFields;
 			pdfFields.SetField("version", System.Reflection.Assembly.GetExecutingAssembly().GetName().Version.ToString());
 			pdfFields.SetField("Job", JobName);
-			pdfFields.SetField("Date", DateTime.Now.ToString(CultureInfo.InvariantCulture));
+			pdfFields.SetField("Date", ReportDate);
 			pdfFields.SetField("Created", Creator);
 			pdfFields.SetField("Config",
 				string.Format(CultureInfo.InvariantCulture, "{0}t {1} {2}",
@@ -186,7 +192,7 @@ namespace TUGraz.VectoCore.OutputData.PDF
 		/// <param name="currentPageNr">The current page nr.</param>
 		/// <param name="pageCount">The page count.</param>
 		/// <returns>the out stream of the pdfstamper for a single cycle page</returns>
-		private Stream CreateCyclePage(DeclarationReport.ResultContainer results, int currentPageNr, int pageCount)
+		private Stream CreateCyclePage(ResultContainer results, int currentPageNr, int pageCount)
 		{
 			var stream = new MemoryStream();
 
@@ -196,7 +202,7 @@ namespace TUGraz.VectoCore.OutputData.PDF
 			var pdfFields = stamper.AcroFields;
 			pdfFields.SetField("version", System.Reflection.Assembly.GetExecutingAssembly().GetName().Version.ToString());
 			pdfFields.SetField("Job", JobName);
-			pdfFields.SetField("Date", DateTime.Now.ToString(CultureInfo.InvariantCulture));
+			pdfFields.SetField("Date", ReportDate);
 			pdfFields.SetField("Created", Creator);
 			pdfFields.SetField("Config",
 				string.Format("{0}t {1} {2}", Segment.GrossVehicleMassRating.ConvertTo().Ton.ToOutputFormat(1),
@@ -278,7 +284,7 @@ namespace TUGraz.VectoCore.OutputData.PDF
 		/// </summary>
 		/// <param name="missions">The missions.</param>
 		/// <returns></returns>
-		private static Bitmap DrawCo2MissionsChart(Dictionary<MissionType, DeclarationReport.ResultContainer> missions)
+		private static Bitmap DrawCo2MissionsChart(Dictionary<MissionType, ResultContainer> missions)
 		{
 			var co2Chart = new Chart { Width = 1500, Height = 700 };
 			co2Chart.Legends.Add(new Legend("main") {
@@ -333,7 +339,7 @@ namespace TUGraz.VectoCore.OutputData.PDF
 		/// </summary>
 		/// <param name="missions">The missions.</param>
 		/// <returns></returns>
-		private static Bitmap DrawCo2SpeedChart(Dictionary<MissionType, DeclarationReport.ResultContainer> missions)
+		private static Bitmap DrawCo2SpeedChart(Dictionary<MissionType, ResultContainer> missions)
 		{
 			var co2SpeedChart = new Chart { Width = 1500, Height = 700 };
 			co2SpeedChart.Legends.Add(new Legend("main") {
@@ -399,7 +405,7 @@ namespace TUGraz.VectoCore.OutputData.PDF
 		/// </summary>
 		/// <param name="results">The results.</param>
 		/// <returns></returns>
-		private static Bitmap DrawCycleChart(DeclarationReport.ResultContainer results)
+		private static Bitmap DrawCycleChart(ResultContainer results)
 		{
 			var missionCycleChart = new Chart { Width = 2000, Height = 400 };
 			missionCycleChart.Legends.Add(new Legend("main") {

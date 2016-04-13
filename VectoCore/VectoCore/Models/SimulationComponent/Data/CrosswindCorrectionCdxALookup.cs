@@ -57,18 +57,17 @@ namespace TUGraz.VectoCore.Models.SimulationComponent.Data
 		public Watt AverageAirDragPowerLoss(MeterPerSecond v1, MeterPerSecond v2, Second dt)
 		{
 			var vAverage = (v1 + v2) / 2;
-			var CdA = EffectiveAirDragArea(vAverage);
+			var cdA = EffectiveAirDragArea(vAverage);
 			Watt averageAirDragPower;
 			if (v1.IsEqual(v2)) {
-				averageAirDragPower = (Physics.AirDensity / 2.0 * CdA * vAverage * vAverage * vAverage).Cast<Watt>();
+				averageAirDragPower = (Physics.AirDensity / 2.0 * cdA * vAverage * vAverage * vAverage).Cast<Watt>();
 			} else {
 				// compute the average force within the current simulation interval
 				// P(t) = k * CdA * v(t)^3  , v(t) = v0 + a * t  // a != 0, P_avg = 1/T * Integral P(t) dt
 				// => P_avg = (CdA * rho/2)/(4*a * dt) * (v2^4 - v1^4)
 				var acceleration = (v2 - v1) / dt;
 				averageAirDragPower =
-					(Physics.AirDensity / 2.0 * CdA * (v2 * v2 * v2 * v2 - v1 * v1 * v1 * v1) / (4 * acceleration * dt))
-						.Cast<Watt>();
+					(Physics.AirDensity / 2.0 * cdA * (v2 * v2 * v2 * v2 - v1 * v1 * v1 * v1) / (4 * acceleration * dt)).Cast<Watt>();
 			}
 			return averageAirDragPower;
 		}

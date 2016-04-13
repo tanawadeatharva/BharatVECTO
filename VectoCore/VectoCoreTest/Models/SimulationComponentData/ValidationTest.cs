@@ -34,6 +34,7 @@ using System.Data;
 using System.Diagnostics.CodeAnalysis;
 using System.Linq;
 using Microsoft.VisualStudio.TestTools.UnitTesting;
+using TUGraz.VectoCommon.Models;
 using TUGraz.VectoCommon.Utils;
 using TUGraz.VectoCore.InputData.Reader.DataObjectAdaper;
 using TUGraz.VectoCore.InputData.Reader.Impl;
@@ -129,7 +130,6 @@ namespace TUGraz.VectoCore.Tests.Models.SimulationComponentData
 			Assert.IsTrue(engineData.IsValid());
 		}
 
-
 		[TestMethod]
 		public void Validation_CombustionEngineData_Declaration()
 		{
@@ -174,7 +174,7 @@ namespace TUGraz.VectoCore.Tests.Models.SimulationComponentData
 		[TestMethod]
 		public void Validation_VectoRun()
 		{
-			var container = new VehicleContainer();
+			var container = new VehicleContainer(ExecutionMode.Declaration);
 			var data = new DistanceRun(container);
 			var engineData = new CombustionEngineData {
 				FullLoadCurve = EngineFullLoadCurve.ReadFromFile(@"TestData\Components\12t Delivery Truck.vfld"),
@@ -218,12 +218,10 @@ namespace TUGraz.VectoCore.Tests.Models.SimulationComponentData
 				"Validation Error: " + string.Join("\n_eng_avg", results.Select(r => r.ErrorMessage)));
 		}
 
-
 		public class DeepDataObject
 		{
 			[Required, Range(41, 42)] protected int public_field = 5;
 		}
-
 
 		public abstract class ParentDataObject
 		{

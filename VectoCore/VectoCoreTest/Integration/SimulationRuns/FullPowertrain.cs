@@ -32,15 +32,12 @@
 using System;
 using System.Collections.Generic;
 using System.Linq;
-using System.Reflection;
 using Microsoft.VisualStudio.TestTools.UnitTesting;
-using NLog;
 using TUGraz.VectoCommon.Models;
 using TUGraz.VectoCommon.Utils;
 using TUGraz.VectoCore.Configuration;
 using TUGraz.VectoCore.InputData.FileIO.JSON;
 using TUGraz.VectoCore.InputData.Reader;
-using TUGraz.VectoCore.Models.Connector.Ports;
 using TUGraz.VectoCore.Models.Connector.Ports.Impl;
 using TUGraz.VectoCore.Models.Declaration;
 using TUGraz.VectoCore.Models.Simulation.Data;
@@ -67,14 +64,14 @@ namespace TUGraz.VectoCore.Tests.Integration.SimulationRuns
 		public const string AxleLossMap = @"TestData\Components\Axle.vtlm";
 		public const string GearboxShiftPolygonFile = @"TestData\Components\ShiftPolygons.vgbs";
 		public const string GearboxFullLoadCurveFile = @"TestData\Components\Gearbox.vfld";
-		private static readonly Logger Log = LogManager.GetLogger(typeof(FullPowerTrain).ToString());
+		private static readonly LoggingObject Log = LogManager.GetLogger(typeof(FullPowerTrain).ToString());
 
 		[TestMethod, TestCategory("LongRunning")]
 		public void Test_FullPowertrain_SimpleGearbox()
 		{
 			var fileWriter = new FileOutputWriter("Coach_FullPowertrain_SimpleGearbox", "");
 			var modData = new ModalDataContainer("Coach_FullPowertrain_SimpleGearbox", fileWriter);
-			var container = new VehicleContainer(modData);
+			var container = new VehicleContainer(ExecutionMode.Engineering, modData);
 
 			var engineData = MockSimulationDataFactory.CreateEngineDataFromFile(EngineFile);
 			var cycleData = DrivingCycleDataReader.ReadFromFile(CycleFile, CycleType.DistanceBased, false);
@@ -128,12 +125,12 @@ namespace TUGraz.VectoCore.Tests.Integration.SimulationRuns
 			Assert.IsInstanceOfType(response, typeof(ResponseCycleFinished));
 		}
 
-		[TestMethod, TestCategory("LongRunning")]
+		[TestMethod]
 		public void Test_FullPowertrain()
 		{
 			var fileWriter = new FileOutputWriter("Coach_FullPowertrain", "");
 			var modData = new ModalDataContainer("Coach_FullPowertrain", fileWriter);
-			var container = new VehicleContainer(modData);
+			var container = new VehicleContainer(ExecutionMode.Engineering, modData);
 
 			var engineData = MockSimulationDataFactory.CreateEngineDataFromFile(EngineFile);
 			var cycleData = DrivingCycleDataReader.ReadFromFile(CoachCycleFile, CycleType.DistanceBased, false);
@@ -207,7 +204,7 @@ namespace TUGraz.VectoCore.Tests.Integration.SimulationRuns
 		{
 			var fileWriter = new FileOutputWriter("Coach_FullPowertrain_LowSpeed", "");
 			var modData = new ModalDataContainer("Coach_FullPowertrain_LowSpeed", fileWriter);
-			var container = new VehicleContainer(modData);
+			var container = new VehicleContainer(ExecutionMode.Engineering, modData);
 
 			var engineData = MockSimulationDataFactory.CreateEngineDataFromFile(EngineFile);
 			var cycleData = DrivingCycleDataReader.ReadFromFile(CycleFile, CycleType.DistanceBased, false);
@@ -278,7 +275,7 @@ namespace TUGraz.VectoCore.Tests.Integration.SimulationRuns
 			Assert.IsInstanceOfType(response, typeof(ResponseCycleFinished));
 		}
 
-		[TestMethod, TestCategory("LongRunning")]
+		[TestMethod]
 		public void Test_FullPowerTrain_JobFile()
 		{
 			const string jobFile = @"TestData\job.vecto";

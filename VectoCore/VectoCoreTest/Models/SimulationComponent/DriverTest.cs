@@ -70,7 +70,7 @@ namespace TUGraz.VectoCore.Tests.Models.SimulationComponent
 
 			var fileWriter = new FileOutputWriter("Coach_MinimalPowertrain_Coasting", "");
 			var modData = new ModalDataContainer("Coach_MinimalPowertrain_Coasting", fileWriter);
-			var vehicleContainer = new VehicleContainer(modData);
+			var vehicleContainer = new VehicleContainer(ExecutionMode.Engineering, modData);
 
 			var driver = new Driver(vehicleContainer, driverData, new DefaultDriverStrategy());
 			var engine = new CombustionEngine(vehicleContainer, engineData);
@@ -100,7 +100,7 @@ namespace TUGraz.VectoCore.Tests.Models.SimulationComponent
 			Assert.AreEqual(4.9812, vehicleContainer.VehicleSpeed.Value(), Tolerance);
 			Assert.AreEqual(0.2004, response.SimulationInterval.Value(), Tolerance);
 			Assert.AreEqual(engine.PreviousState.FullDragTorque.Value(), engine.PreviousState.EngineTorque.Value(),
-				Constants.SimulationSettings.EnginePowerSearchTolerance.Value());
+				Constants.SimulationSettings.LineSearchTolerance);
 
 			while (vehicleContainer.VehicleSpeed > 1) {
 				response = driver.DrivingActionCoast(absTime, 1.SI<Meter>(), velocity, 0.SI<Radian>());
@@ -125,7 +125,7 @@ namespace TUGraz.VectoCore.Tests.Models.SimulationComponent
 
 			var fileWriter = new FileOutputWriter("Coach_MinimalPowertrain_Coasting", "");
 			var modData = new ModalDataContainer("Coach_MinimalPowertrain_Coasting", fileWriter);
-			var vehicleContainer = new VehicleContainer(modData);
+			var vehicleContainer = new VehicleContainer(ExecutionMode.Engineering, modData);
 
 			var driver = new Driver(vehicleContainer, driverData, new DefaultDriverStrategy());
 			var engine = new CombustionEngine(vehicleContainer, engineData);
@@ -158,7 +158,7 @@ namespace TUGraz.VectoCore.Tests.Models.SimulationComponent
 			Assert.AreEqual(4.9812, vehicleContainer.VehicleSpeed.Value(), Tolerance);
 			Assert.AreEqual(0.2004, response.SimulationInterval.Value(), Tolerance);
 			Assert.AreEqual(engine.PreviousState.FullDragTorque.Value(), engine.PreviousState.EngineTorque.Value(),
-				Constants.SimulationSettings.EnginePowerSearchTolerance.Value());
+				Constants.SimulationSettings.LineSearchTolerance);
 
 			while (vehicleContainer.VehicleSpeed > 1) {
 				response = driver.DrivingActionCoast(absTime, 1.SI<Meter>(), velocity, gradient);
@@ -183,7 +183,7 @@ namespace TUGraz.VectoCore.Tests.Models.SimulationComponent
 
 			var fileWriter = new FileOutputWriter("Coach_MinimalPowertrain", "");
 			var modData = new ModalDataContainer("Coach_MinimalPowertrain", fileWriter);
-			var vehicleContainer = new VehicleContainer(modData);
+			var vehicleContainer = new VehicleContainer(ExecutionMode.Engineering, modData);
 
 			var cycle = new MockDrivingCycle(vehicleContainer, null);
 
@@ -227,14 +227,13 @@ namespace TUGraz.VectoCore.Tests.Models.SimulationComponent
 		[TestMethod]
 		public void DriverAccelerationTest()
 		{
-			var vehicleContainer = new VehicleContainer();
+			var vehicleContainer = new VehicleContainer(ExecutionMode.Engineering);
 			var vehicle = new MockVehicle(vehicleContainer);
 
 			var driverData = MockSimulationDataFactory.CreateDriverDataFromFile(JobFile);
 			var driver = new Driver(vehicleContainer, driverData, new DefaultDriverStrategy());
 
 			var cycle = new MockDrivingCycle(vehicleContainer, null);
-
 
 			driver.Connect(vehicle.OutPort());
 
@@ -255,7 +254,6 @@ namespace TUGraz.VectoCore.Tests.Models.SimulationComponent
 				1.403234648, 0.553054094, 0.405255346, 0.33653593, 0.294559444, 0.26555781, 0.243971311, 0.22711761,
 				0.213554656
 			};
-
 
 			// accelerate from 0 to just below the target velocity and test derived simulation intervals & accelerations
 			for (var i = 0; i < accelerations.Length; i++) {
@@ -285,7 +283,6 @@ namespace TUGraz.VectoCore.Tests.Models.SimulationComponent
 
 			Assert.AreEqual(targetVelocity.Value(), vehicle.MyVehicleSpeed.Value(), Tolerance);
 
-
 			// vehicle has reached target velocity, no further acceleration necessary...
 
 			response = driver.OutPort().Request(absTime, ds, targetVelocity, gradient);
@@ -298,14 +295,13 @@ namespace TUGraz.VectoCore.Tests.Models.SimulationComponent
 		[TestMethod]
 		public void DriverDecelerationTest()
 		{
-			var vehicleContainer = new VehicleContainer();
+			var vehicleContainer = new VehicleContainer(ExecutionMode.Engineering);
 			var vehicle = new MockVehicle(vehicleContainer);
 
 			var driverData = MockSimulationDataFactory.CreateDriverDataFromFile(JobFile);
 			var driver = new Driver(vehicleContainer, driverData, new DefaultDriverStrategy());
 
 			var cycle = new MockDrivingCycle(vehicleContainer, null);
-
 
 			driver.Connect(vehicle.OutPort());
 
@@ -332,7 +328,6 @@ namespace TUGraz.VectoCore.Tests.Models.SimulationComponent
 				0.590388012,
 				0.724477573, 1.00152602
 			};
-
 
 			// accelerate from 0 to just below the target velocity and test derived simulation intervals & accelerations
 			for (var i = 0; i < accelerations.Length; i++) {

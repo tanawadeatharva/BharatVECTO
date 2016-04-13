@@ -47,6 +47,16 @@ namespace TUGraz.VectoCommon.Exceptions
 		public VectoSimulationException(string message, Exception inner, params object[] args) : base(message, inner, args) {}
 	}
 
+	public class VectoEngineSpeedTooLowException : VectoSimulationException
+	{
+		public VectoEngineSpeedTooLowException(string msg) : base(msg) {}
+		public VectoEngineSpeedTooLowException(string msg, Exception inner) : base(msg, inner) {}
+		public VectoEngineSpeedTooLowException(string message, params object[] args) : base(message, args) {}
+
+		public VectoEngineSpeedTooLowException(string message, Exception inner, params object[] args)
+			: base(message, inner, args) {}
+	}
+
 	public class UnexpectedResponseException : VectoSimulationException
 	{
 		public IResponse Response;

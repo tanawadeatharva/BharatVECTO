@@ -32,10 +32,11 @@
 using System;
 using System.Collections.Generic;
 using System.Linq;
+using System.Threading;
 using Newtonsoft.Json;
 using TUGraz.VectoCommon.Exceptions;
+using TUGraz.VectoCommon.Models;
 using TUGraz.VectoCommon.Utils;
-using TUGraz.VectoCore.Models;
 
 namespace TUGraz.VectoCore.Utils
 {
@@ -44,7 +45,15 @@ namespace TUGraz.VectoCore.Utils
 	{
 		internal readonly ICollection<Point> Points = new HashSet<Point>();
 		private List<Triangle> _triangles = new List<Triangle>();
-		private IEnumerable<Edge> _convexHull;
+		private Edge[] _convexHull;
+
+		private readonly ThreadLocal<bool> _extrapolated = new ThreadLocal<bool>();
+
+		public bool Extrapolated
+		{
+			get { return _extrapolated.Value; }
+			set { _extrapolated.Value = value; }
+		}
 
 		public void AddPoint(double x, double y, double z)
 		{
@@ -95,13 +104,14 @@ namespace TUGraz.VectoCore.Utils
 				// n...point count (pointCount +3 points on the supertriangle)
 				// k...points on convex hull (exactly 3 --> supertriangle)
 				if (triangles.Count != 2 * (pointCount + 3) - 2 - 3) {
-					throw new VectoException("Triangulation invariant violated! Triangle count and point count doesn't fit together.");
+					throw new VectoException(
+						"Delauney-Triangulation invariant violated! Triangle count and point count doesn't fit together.");
 				}
 			}
 
 			_convexHull = triangles.FindAll(t => t.SharesVertexWith(superTriangle)).
 				SelectMany(t => t.GetEdges()).
-				Where(e => !(superTriangle.Contains(e.P1) || superTriangle.Contains(e.P2)));
+				Where(e => !(superTriangle.Contains(e.P1) || superTriangle.Contains(e.P2))).ToArray();
 
 			_triangles = triangles.FindAll(t => !t.SharesVertexWith(superTriangle));
 		}
@@ -178,8 +188,6 @@ namespace TUGraz.VectoCore.Utils
 			var z = edge.P1.Z + edge.Vector.Z * (AP.Dot(AB) / AB.Dot(AB));
 			return z;
 		}
-
-		public bool Extrapolated { get; set; }
 
 		#region Equality members
 

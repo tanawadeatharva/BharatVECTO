@@ -115,7 +115,15 @@ namespace TUGraz.VectoCore.Configuration
 
 			public const int DriverSearchLoopThreshold = 200;
 
-			public static readonly Watt EnginePowerSearchTolerance = 0.50.SI<Watt>(); // Watt
+			/// <summary>
+			/// Tolerance for searching operating point with line search.
+			/// </summary>
+			public const double LineSearchTolerance = 0.5;
+
+			/// <summary>
+			/// Tolerance for searching operating point with interpolating search.
+			/// </summary>
+			public const double InterpolateSearchTolerance = 1e-3;
 
 			public const double ClutchNormSpeed = 0.03;
 

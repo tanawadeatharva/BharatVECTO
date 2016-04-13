@@ -108,7 +108,6 @@ namespace TUGraz.VectoCore.Tests.Models.SimulationComponentData
 				TestContext.DataRow["TestName"].ToString());
 		}
 
-
 		[TestMethod]
 		public void TestLossMap_IN_10_CONST_Interpolation_Extrapolation()
 		{
@@ -196,7 +195,6 @@ namespace TUGraz.VectoCore.Tests.Models.SimulationComponentData
 			AssertHelper.AreRelativeEqual(-30, map.GetOutTorque(50.RPMtoRad(), -20.SI<NewtonMeter>(), true));
 			AssertHelper.AreRelativeEqual(40, map.GetOutTorque(120.RPMtoRad(), 50.SI<NewtonMeter>(), true));
 		}
-
 
 		[TestMethod]
 		public void TestLossMap_IN_Interpolation_Extrapolation()

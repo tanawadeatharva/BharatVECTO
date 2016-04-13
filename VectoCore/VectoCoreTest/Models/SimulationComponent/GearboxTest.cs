@@ -33,6 +33,7 @@ using System;
 using System.Linq;
 using Microsoft.VisualStudio.TestTools.UnitTesting;
 using TUGraz.VectoCommon.Exceptions;
+using TUGraz.VectoCommon.Models;
 using TUGraz.VectoCommon.Utils;
 using TUGraz.VectoCore.Models.Connector.Ports.Impl;
 using TUGraz.VectoCore.Models.Simulation.Impl;
@@ -61,7 +62,6 @@ namespace TUGraz.VectoCore.Tests.Models.SimulationComponent
 		public const string GearboxShiftPolygonFile = @"TestData\Components\ShiftPolygons.vgbs";
 		public const string GearboxFullLoadCurveFile = @"TestData\Components\Gearbox.vfld";
 
-
 		public TestContext TestContext { get; set; }
 
 		private static GearboxData CreateGearboxData()
@@ -85,11 +85,10 @@ namespace TUGraz.VectoCore.Tests.Models.SimulationComponent
 			};
 		}
 
-
 		[TestMethod]
 		public void AxleGearTest()
 		{
-			var vehicle = new VehicleContainer();
+			var vehicle = new VehicleContainer(ExecutionMode.Engineering);
 			var axleGearData = MockSimulationDataFactory.CreateAxleGearDataFromFile(GearboxDataFile);
 			var axleGear = new AxleGear(vehicle, axleGearData);
 
@@ -101,7 +100,6 @@ namespace TUGraz.VectoCore.Tests.Models.SimulationComponent
 
 			var rdyn = 520;
 			var speed = 20.320;
-
 
 			var angSpeed = SpeedToAngularSpeed(speed, rdyn);
 			var PvD = 279698.4.SI<Watt>();
@@ -135,7 +133,7 @@ namespace TUGraz.VectoCore.Tests.Models.SimulationComponent
 		public void Gearbox_LossMapInterpolation()
 		{
 			var gearboxData = MockSimulationDataFactory.CreateGearboxDataFromFile(GearboxDataFile, EngineDataFile);
-			var container = new VehicleContainer();
+			var container = new VehicleContainer(ExecutionMode.Engineering);
 			var gearbox = new Gearbox(container, gearboxData, new AMTShiftStrategy(gearboxData, container));
 			var driver = new MockDriver(container);
 			var port = new MockTnOutPort();
@@ -156,7 +154,6 @@ namespace TUGraz.VectoCore.Tests.Models.SimulationComponent
 			AssertHelper.AreRelativeEqual(n, port.AngularVelocity);
 			AssertHelper.AreRelativeEqual(2654.06.SI<NewtonMeter>(), port.Torque);
 
-
 			absTime += dt;
 			t = -1300.SI<NewtonMeter>();
 			n = 1000.RPMtoRad();
@@ -173,7 +170,7 @@ namespace TUGraz.VectoCore.Tests.Models.SimulationComponent
 		public void Gearbox_LossMapExtrapolation_Declaration()
 		{
 			var gearboxData = MockSimulationDataFactory.CreateGearboxDataFromFile(GearboxDataFile, EngineDataFile);
-			var container = new VehicleContainer();
+			var container = new VehicleContainer(ExecutionMode.Declaration);
 			var gearbox = new Gearbox(container, gearboxData, new AMTShiftStrategy(gearboxData, container));
 			var driver = new MockDriver(container);
 			var port = new MockTnOutPort();
@@ -247,7 +244,7 @@ namespace TUGraz.VectoCore.Tests.Models.SimulationComponent
 		public void Gearbox_LossMapExtrapolation_DryRun()
 		{
 			var gearboxData = MockSimulationDataFactory.CreateGearboxDataFromFile(GearboxDataFile, EngineDataFile);
-			var container = new VehicleContainer();
+			var container = new VehicleContainer(ExecutionMode.Engineering);
 			var gearbox = new Gearbox(container, gearboxData, new AMTShiftStrategy(gearboxData, container));
 			var driver = new MockDriver(container);
 			var port = new MockTnOutPort();
@@ -276,7 +273,6 @@ namespace TUGraz.VectoCore.Tests.Models.SimulationComponent
 			Assert.AreEqual(n, port.AngularVelocity);
 			Assert.AreEqual(-2464.82.SI<NewtonMeter>(), port.Torque);
 
-
 			t = -1000.SI<NewtonMeter>();
 			n = 1000.RPMtoRad();
 			response = gearbox.OutPort().Request(absTime, dt, t * ratio, n / ratio);
@@ -292,11 +288,10 @@ namespace TUGraz.VectoCore.Tests.Models.SimulationComponent
 			gearbox.CommitSimulationStep(modData);
 		}
 
-
 		[TestMethod]
 		public void Gearbox_IntersectFullLoadCurves()
 		{
-			var container = new VehicleContainer();
+			var container = new VehicleContainer(ExecutionMode.Engineering);
 			var gearboxData = MockSimulationDataFactory.CreateGearboxDataFromFile(GearboxDataFile, EngineDataFile);
 			var gearbox = new Gearbox(container, gearboxData, new AMTShiftStrategy(gearboxData, container));
 			var driver = new MockDriver(container);
@@ -342,7 +337,7 @@ namespace TUGraz.VectoCore.Tests.Models.SimulationComponent
 		[TestMethod]
 		public void Gearbox_Request()
 		{
-			var container = new VehicleContainer();
+			var container = new VehicleContainer(ExecutionMode.Engineering);
 			var gearboxData = CreateGearboxData();
 			var gearbox = new Gearbox(container, gearboxData, new AMTShiftStrategy(gearboxData, container));
 
@@ -401,11 +396,10 @@ namespace TUGraz.VectoCore.Tests.Models.SimulationComponent
 			}
 		}
 
-
 		[TestMethod]
 		public void Gearbox_ShiftDown()
 		{
-			var container = new VehicleContainer();
+			var container = new VehicleContainer(ExecutionMode.Engineering);
 			var gearboxData = MockSimulationDataFactory.CreateGearboxDataFromFile(GearboxDataFile, EngineDataFile);
 			var gearbox = new Gearbox(container, gearboxData, new AMTShiftStrategy(gearboxData, container));
 
@@ -457,7 +451,7 @@ namespace TUGraz.VectoCore.Tests.Models.SimulationComponent
 		[TestMethod]
 		public void Gearbox_ShiftUp()
 		{
-			var container = new VehicleContainer();
+			var container = new VehicleContainer(ExecutionMode.Engineering);
 			var gearboxData = MockSimulationDataFactory.CreateGearboxDataFromFile(GearboxDataFile, EngineDataFile);
 			var gearbox = new Gearbox(container, gearboxData, new AMTShiftStrategy(gearboxData, container));
 			var driver = new MockDriver(container);

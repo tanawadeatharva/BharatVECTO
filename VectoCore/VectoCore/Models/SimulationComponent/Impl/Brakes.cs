@@ -36,6 +36,7 @@ using TUGraz.VectoCommon.Utils;
 using TUGraz.VectoCore.Models.Connector.Ports;
 using TUGraz.VectoCore.Models.Simulation;
 using TUGraz.VectoCore.Models.Simulation.Data;
+using TUGraz.VectoCore.Models.Simulation.DataBus;
 using TUGraz.VectoCore.OutputData;
 using TUGraz.VectoCore.Utils;
 
@@ -72,7 +73,21 @@ namespace TUGraz.VectoCore.Models.SimulationComponent.Impl
 				} else {
 					brakeTorque = BrakePower / avgAngularSpeed;
 				}
+			} else {
+				// check if we want to stand still in the current interval.
+				// problem: angularVelocity is 0 at the end of the interval: if we don't check for this, the clutch will be slipping and burns up the whole torque.
+				//          but this could lead to extrapolation of loss maps (in axlegear and gear).
+				// solution: we check here if the angularVelocity is 0 the first time and brake away all the torque if it is.
+				//           afterwards the vehicle is standing and other mechanisms take over (Driver.DriveTimeInterval)
+				if (DataBus.DrivingBehavior == DrivingBehavior.Braking && !PreviousState.OutAngularVelocity.IsEqual(0) &&
+					angularVelocity.IsEqual(0)) {
+					brakeTorque = -torque;
+					if (!dryRun) {
+						BrakePower = brakeTorque.Abs() * avgAngularSpeed;
+					}
+				}
 			}
+
 			if (!dryRun && BrakePower < 0) {
 				throw new VectoSimulationException("Negative Braking Power is not allowed!");
 			}
@@ -105,12 +120,9 @@ namespace TUGraz.VectoCore.Models.SimulationComponent.Impl
 													(PreviousState.InAngularVelocity + CurrentState.InAngularVelocity) / 2.0;
 		}
 
-		protected override
-			void DoCommitSimulationStep()
+		protected override void DoCommitSimulationStep()
 		{
-			BrakePower = 0.
-				SI<Watt>
-				();
+			BrakePower = 0.SI<Watt>();
 			AdvanceState();
 		}
 	}
