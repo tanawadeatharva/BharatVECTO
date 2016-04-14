@@ -449,8 +449,8 @@ namespace TUGraz.VectoCore.Tests.Integration.DriverStrategy
 			run.Run();
 			Assert.IsTrue(run.FinishedWithoutErrors);
 
-			GraphWriter.Write("Coach_DriverStrategy_Decelerate_60_20_uphill_15.vmod",
-				@"..\..\TestData\Integration\DriverStrategy\Vecto2.2\Coach\24t Coach_Cycle_Decelerate_60_20_uphill_15.vmod");
+			//GraphWriter.Write("Coach_DriverStrategy_Decelerate_60_20_uphill_15.vmod",
+			//	@"..\..\TestData\Integration\DriverStrategy\Vecto2.2\Coach\24t Coach_Cycle_Decelerate_60_20_uphill_15.vmod");
 		}
 
 		[TestMethod, TestCategory("ComparisonV2")]
