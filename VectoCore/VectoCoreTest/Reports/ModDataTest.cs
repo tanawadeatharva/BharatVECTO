@@ -30,6 +30,7 @@
 */
 
 using System.Data;
+using System.Linq;
 using Microsoft.VisualStudio.TestTools.UnitTesting;
 using TUGraz.VectoCommon.Utils;
 using TUGraz.VectoCore.InputData.Reader.Impl;
@@ -70,6 +71,9 @@ namespace TUGraz.VectoCore.Tests.Reports
 
 			var lastGear = 0u;
 			foreach (DataRow row in modData.Data.Rows) {
+				if (cycle.Entries.Last().Distance.IsEqual(((Meter)row[(int)ModalResultField.dist]))) {
+					continue;
+				}
 				var gear = (uint)row[(int)ModalResultField.Gear];
 				var time = (Second)row[(int)ModalResultField.time];
 
