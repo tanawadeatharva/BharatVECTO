@@ -291,8 +291,8 @@ namespace TUGraz.VectoCore.Tests.Integration
 		public static readonly string[] CycleDecelerate_60_20_uphill_15 = {
 			// <s>,<v>,<grad>,<stop>
 			"  0,  60, 15,     0",
-			"1000,  0, 15,     0",
-			"1100,  0, 0,     0"
+			"1000, 20, 15,     0",
+			"1100, 20, 0,     0"
 		};
 
 		public static readonly string[] CycleDecelerate_60_20_downhill_15 = {
@@ -332,7 +332,7 @@ namespace TUGraz.VectoCore.Tests.Integration
 		public static readonly string[] CycleDecelerate_80_0_uphill_25 = {
 			// <s>,<v>,<grad>,<stop>
 			"   0,  80, 25,    0",
-			"1000,  0,  25,    2"
+			" 500,  0,  25,    2"
 		};
 
 		public static readonly string[] CycleDecelerate_80_0_downhill_25 = {

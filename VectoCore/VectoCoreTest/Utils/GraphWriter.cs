@@ -60,6 +60,15 @@ namespace TUGraz.VectoCore.Tests.Utils
 		private static readonly Font AxisTitleFont = new Font("Verdana", 12);
 		private static readonly Font LegendFont = new Font("Verdana", 14);
 
+		public static string Series2Label { get; set; }
+
+		public static string Series1Label { get; set; }
+
+		public static ModalResultField[] Yfields { get; set; }
+
+		public static ModalResultField[] Xfields { get; set; }
+
+
 		public static void Enabled()
 		{
 			_enabled = true;
@@ -86,16 +95,10 @@ namespace TUGraz.VectoCore.Tests.Utils
 			if (fileNameV22 != null) {
 				modDataV22 = VectoCSVFile.Read(fileNameV22);
 			}
-			var xfields = new[] { ModalResultField.time, ModalResultField.dist };
 
-			var yfields = new[] {
-				ModalResultField.v_act, ModalResultField.acc, ModalResultField.n_eng_avg, ModalResultField.Gear,
-				ModalResultField.P_eng_out, ModalResultField.P_aux, ModalResultField.AA_TotalCycleFC_Grams
-			};
+			var titleHeight = (50 * 100.0f) / (_diagramSize.Height * Yfields.Count());
 
-			var titleHeight = (50 * 100.0f) / (_diagramSize.Height * yfields.Count());
-
-			foreach (var xfield in xfields) {
+			foreach (var xfield in Xfields) {
 				var fileName = string.Format("{0}_{1}.png", Path.GetFileNameWithoutExtension(fileNameV3),
 					xfield.GetName());
 
@@ -104,14 +107,14 @@ namespace TUGraz.VectoCore.Tests.Utils
 				if (fileNameV22 != null && modDataV22 != null) {
 					x2 = LoadData(modDataV22, xfield.GetName());
 				}
-				var plotSize = new Size(_diagramSize.Width, _diagramSize.Height * yfields.Count());
+				var plotSize = new Size(_diagramSize.Width, _diagramSize.Height * Yfields.Count());
 				var maxX = (int)(Math.Ceiling(Math.Max(x.Max(), x2.Max()) * 1.01 / 10.0) * 10.0);
 				var minX = (int)(Math.Floor(Math.Max(x.Min(), x2.Min()) / 10.0) * 10.0);
 				var chart = new Chart { Size = plotSize };
 
 
-				for (var i = 0; i < yfields.Length; i++) {
-					var yfield = yfields[i];
+				for (var i = 0; i < Yfields.Length; i++) {
+					var yfield = Yfields[i];
 					var y = LoadData(modDataV3, yfield.GetName());
 
 
@@ -144,29 +147,30 @@ namespace TUGraz.VectoCore.Tests.Utils
 						seriesGrad.YAxisType = AxisType.Secondary;
 					}
 
-					var series1 = CreateSeries(string.Format("Vecto 3 - {0}", yfield), legend, chartArea, chart,
+					var series1 = CreateSeries(string.Format("{1} - {0}", yfield, Series1Label), legend, chartArea, chart,
 						Color.Blue, x, y);
 
 					if (fileNameV22 != null) {
 						var y2 = LoadData(modDataV22, TranslateFieldname(yfield));
-						var series2 = CreateSeries(string.Format("Vecto 2.0+AUX - {0}", yfield), legend, chartArea, chart,
+						var series2 = CreateSeries(string.Format("{1} - {0}", yfield, Series2Label), legend, chartArea, chart,
 							Color.Red, x2,
 							y2);
 					}
 
-					PositionChartArea(chartArea, titleHeight, i, yfields.Count());
+					PositionChartArea(chartArea, titleHeight, i, Yfields.Count());
 
 					if (i > 0) {
-						AlignChart(chart, yfield.ToString(), yfields[0].ToString());
+						AlignChart(chart, yfield.ToString(), Yfields[0].ToString());
 					}
 				}
 
-				AddTitle(chart, Path.GetFileNameWithoutExtension(fileName), yfields[0].ToString());
+				AddTitle(chart, Path.GetFileNameWithoutExtension(fileName), Yfields[0].ToString());
 
 				chart.Invalidate();
 				chart.SaveImage(fileName, ChartImageFormat.Png);
 			}
 		}
+
 
 		private static string TranslateFieldname(ModalResultField modalResultField)
 		{

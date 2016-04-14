@@ -31,6 +31,7 @@
 
 using Microsoft.VisualStudio.TestTools.UnitTesting;
 using NLog;
+using TUGraz.VectoCore.Models.Simulation.Data;
 using TUGraz.VectoCore.Models.Simulation.Impl;
 using TUGraz.VectoCore.Models.SimulationComponent.Impl;
 using TUGraz.VectoCore.Tests.Utils;
@@ -46,6 +47,16 @@ namespace TUGraz.VectoCore.Tests.Integration.BusAuxiliaries
 		{
 			LogManager.DisableLogging();
 			//GraphWriter.Disable();
+
+			GraphWriter.Xfields = new[] { ModalResultField.time, ModalResultField.dist };
+
+			GraphWriter.Yfields = new[] {
+				ModalResultField.v_act, ModalResultField.acc, ModalResultField.n_eng_avg, ModalResultField.Gear,
+				ModalResultField.P_eng_out, ModalResultField.P_aux, ModalResultField.AA_TotalCycleFC_Grams
+			};
+
+			GraphWriter.Series1Label = "Vecto 3";
+			GraphWriter.Series2Label = "Vecto 2.0+AUX";
 		}
 
 		#region Accelerate
