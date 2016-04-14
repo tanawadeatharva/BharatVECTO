@@ -366,7 +366,7 @@ namespace TUGraz.VectoCore.Models.SimulationComponent.Impl
 				}
 			}
 			if (targetDistance != null && targetDistance > DataBus.Distance) {
-				var tmp = ComputeAcceleration(targetDistance - DataBus.Distance, nextTargetSpeed);
+				var tmp = ComputeAcceleration(targetDistance - DataBus.Distance, nextTargetSpeed, false);
 				if (tmp.Acceleration.IsGreater(operatingPoint.Acceleration)) {
 					operatingPoint = ComputeTimeInterval(tmp.Acceleration, ds);
 					if (!ds.IsEqual(operatingPoint.SimulationDistance)) {
@@ -769,9 +769,10 @@ namespace TUGraz.VectoCore.Models.SimulationComponent.Impl
 		/// - compute the time interval required to drive the given distance with the computed acceleration
 		/// computed acceleration and time interval are stored in CurrentState!
 		/// </summary>
-		/// <param name="ds"></param>
-		/// <param name="targetVelocity"></param>
-		public OperatingPoint ComputeAcceleration(Meter ds, MeterPerSecond targetVelocity)
+		/// <param name="ds">distance to reach the next target speed</param>
+		/// <param name="targetVelocity">next vehicle speed to decelerate to</param>
+		/// <param name="limitByDriverModel">if set to false the required acceleration will be computed, regardless of the driver's acceleration curve</param>
+		public OperatingPoint ComputeAcceleration(Meter ds, MeterPerSecond targetVelocity, bool limitByDriverModel = true)
 		{
 			var currentSpeed = DataBus.VehicleSpeed;
 			var retVal = new OperatingPoint() { SimulationDistance = ds };
@@ -779,6 +780,11 @@ namespace TUGraz.VectoCore.Models.SimulationComponent.Impl
 			var requiredAverageSpeed = (targetVelocity + currentSpeed) / 2.0;
 			var requiredAcceleration =
 				(((targetVelocity - currentSpeed) * requiredAverageSpeed) / ds).Cast<MeterPerSquareSecond>();
+
+			if (!limitByDriverModel) {
+				return ComputeTimeInterval(requiredAcceleration, ds);
+			}
+
 			var maxAcceleration = DriverData.AccelerationCurve.Lookup(currentSpeed);
 
 			if (requiredAcceleration > maxAcceleration.Acceleration) {
