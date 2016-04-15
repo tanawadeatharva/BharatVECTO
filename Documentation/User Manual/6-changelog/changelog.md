@@ -48,6 +48,12 @@
 - Bugfix: better error message when driving cycle is missing.
 - Bugfix: vectocmd errormsg when writing progress
 
+***Build 466 (2016-04-11)***
+
+- Bugfix: calculation of CO2 consumption based on FC-Final (instead of FC-map)
+- Bugfix: acceleration in .vmod was 0 in certain cases (error in output)
+- Bugfix: syncronized access to cycle cache (declaration)
+
 **VECTO 3.0.1**
 
 - TODO
