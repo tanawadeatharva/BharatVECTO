@@ -96,7 +96,7 @@ namespace TUGraz.VectoCore.Tests.Utils
 				acceleration = acceleration,
 				gradient = gradient
 			};
-			return new ResponseSuccess();
+			return new ResponseSuccess() { Source = this};
 		}
 
 		public IResponse Initialize(MeterPerSecond vehicleSpeed, Radian roadGradient)

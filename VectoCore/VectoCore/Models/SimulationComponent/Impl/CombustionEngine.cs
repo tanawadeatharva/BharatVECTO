@@ -258,7 +258,8 @@ namespace TUGraz.VectoCore.Models.SimulationComponent.Impl
 			return new ResponseSuccess {
 				EnginePowerRequest = totalTorqueDemand * avgEngineSpeed,
 				AuxiliariesPowerDemand = auxTorqueDemand * avgEngineSpeed,
-				EngineSpeed = angularVelocity
+				EngineSpeed = angularVelocity,
+				Source = this
 			};
 		}
 

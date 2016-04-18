@@ -91,7 +91,7 @@ namespace TUGraz.VectoCore.Models.SimulationComponent.Impl
 			// = requestedEnginePower; //todo + _currentState.EnginePowerLoss;
 			CurrentState.EngineTorque = CurrentState.EnginePower / CurrentState.EngineSpeed;
 
-			return new ResponseSuccess();
+			return new ResponseSuccess() { Source = this }; 
 		}
 
 		protected NewtonMeter LimitEnginePower(NewtonMeter requestedEngineTorque, PerSecond avgEngineSpeed, Second AbsTime)

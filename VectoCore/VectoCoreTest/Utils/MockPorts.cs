@@ -133,7 +133,7 @@ namespace TUGraz.VectoCore.Tests.Utils
 			Velocity = targetVelocity;
 			Gradient = gradient;
 			Log.Debug("Request: absTime: {0}, ds: {1}, velocity: {2}, gradient: {3}", absTime, ds, targetVelocity, gradient);
-			return new ResponseSuccess();
+			return new ResponseSuccess() { Source = this};
 		}
 
 		public IResponse Request(Second absTime, Second dt, MeterPerSecond targetVelocity, Radian gradient)
@@ -143,7 +143,7 @@ namespace TUGraz.VectoCore.Tests.Utils
 			Velocity = targetVelocity;
 			Gradient = gradient;
 			Log.Debug("Request: absTime: {0}, ds: {1}, velocity: {2}, gradient: {3}", absTime, dt, targetVelocity, gradient);
-			return new ResponseSuccess();
+			return new ResponseSuccess() { Source = this };
 		}
 
 		public IResponse Initialize(MeterPerSecond vehicleSpeed, Radian roadGradient)
@@ -172,12 +172,12 @@ namespace TUGraz.VectoCore.Tests.Utils
 			Force = force;
 			Velocity = velocity;
 			Log.Debug("Request: abstime: {0}, dt: {1}, force: {2}, velocity: {3}", absTime, dt, force, velocity);
-			return new ResponseSuccess();
+			return new ResponseSuccess() { Source = this };
 		}
 
 		public IResponse Initialize(Newton vehicleForce, MeterPerSecond vehicleSpeed)
 		{
-			return new ResponseSuccess();
+			return new ResponseSuccess() { Source = this };
 		}
 	}
 }
