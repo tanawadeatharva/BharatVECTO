@@ -121,7 +121,7 @@ namespace TUGraz.VectoCore.Models.SimulationComponent.Impl
 
 		protected IResponse DoHandleRequest(Second absTime, Second dt, PerSecond angularVelocity)
 		{
-			var debug = new List<dynamic>();
+			var debug = new DebugData();
 
 			IResponse response;
 			var responseCount = 0;
@@ -371,7 +371,7 @@ namespace TUGraz.VectoCore.Models.SimulationComponent.Impl
 
 		public virtual IResponse Request(Second absTime, Second dt)
 		{
-			var debug = new List<dynamic>();
+			var debug = new DebugData();
 
 			// cycle finished
 			if (RightSample.Current == null || LeftSample.Current == null) {

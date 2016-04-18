@@ -30,8 +30,6 @@
 */
 
 using System;
-using System.Collections.Generic;
-using System.Linq;
 using TUGraz.VectoCore.Configuration;
 using TUGraz.VectoCommon.Exceptions;
 using TUGraz.VectoCommon.Models;
@@ -93,7 +91,8 @@ namespace TUGraz.VectoCore.Utils
 
 			var intervalFactor = 1.0;
 			var origY = y;
-			var debug = new List<dynamic> { new { x, y } };
+			var debug = new DebugData();
+			debug.Add(new { x, y });
 			log.Debug("Log Disabled during Search LineSearch.");
 			LogManager.DisableLogging();
 			try {
@@ -124,9 +123,8 @@ namespace TUGraz.VectoCore.Utils
 			iterationCount += 100;
 			log.Debug("LineSearch could not find an operating point.");
 			log.Error("Exceeded max iterations when searching for operating point!");
-			log.Error("debug: {0} ... {1}", ", ".Join(debug.Take(5)), ", ".Join(debug.Slice(-6)));
-			throw new VectoSearchFailedException("Failed to find operating point! points: {0} ... {1}", ", ".Join(debug.Take(5)),
-				", ".Join(debug.Slice(-6)));
+			log.Error("debug: {0}", debug);
+			throw new VectoSearchFailedException("Failed to find operating point! points: {0}", debug);
 		}
 
 		/// <summary>
@@ -137,7 +135,8 @@ namespace TUGraz.VectoCore.Utils
 			Func<T, object> evaluateFunction, Func<object, double> criterion, ref int iterationCount) where T : SIBase<T>
 		{
 			var log = LogManager.GetLogger(typeof(SearchAlgorithm).FullName);
-			var debug = new List<dynamic> { new { x = x1, y = y1 } };
+			var debug = new DebugData(); 
+			debug.Add(new { x = x1, y = y1 } );
 			log.Debug("Log Disabled during Search InterpolateLinear.");
 			LogManager.DisableLogging();
 			try {
@@ -191,9 +190,8 @@ namespace TUGraz.VectoCore.Utils
 			iterationCount += 30;
 			log.Debug("InterpolateLinear could not find an operating point.");
 			log.Error("Exceeded max iterations when searching for operating point!");
-			log.Error("debug: {0} ... {1}", ", ".Join(debug.Take(5)), ", ".Join(debug.Slice(-6)));
-			throw new VectoSearchFailedException("Failed to find operating point! points: {0} ... {1}", ", ".Join(debug.Take(5)),
-				", ".Join(debug.Slice(-6)));
+			log.Error("debug: {0}", debug);
+			throw new VectoSearchFailedException("Failed to find operating point! points: {0}", debug);
 		}
 	}
 }

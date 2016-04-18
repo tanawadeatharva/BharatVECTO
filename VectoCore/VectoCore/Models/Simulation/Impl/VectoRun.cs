@@ -30,7 +30,6 @@
 */
 
 using System;
-using System.Collections.Generic;
 using System.ComponentModel;
 using System.ComponentModel.DataAnnotations;
 using TUGraz.VectoCommon.Exceptions;
@@ -94,8 +93,8 @@ namespace TUGraz.VectoCore.Models.Simulation.Impl
 
 		public void Run(BackgroundWorker worker = null, Action<double> reportProgressAction = null)
 		{
-			var debug = new List<dynamic>();
-
+			var debug = new DebugData();
+			
 			Log.Info("VectoJob started running.");
 
 			Initialize();
