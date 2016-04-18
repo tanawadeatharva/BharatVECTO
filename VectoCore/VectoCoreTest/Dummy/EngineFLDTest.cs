@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Diagnostics;
+using System.IO;
 using Microsoft.VisualStudio.TestTools.UnitTesting;
 using TUGraz.VectoCommon.Utils;
 using TUGraz.VectoCore.Models.SimulationComponent.Data.Engine;
@@ -14,6 +15,9 @@ namespace TUGraz.VectoCore.Tests.Dummy
 		{
 			var engineFile1 = @"TestData\Components\40t_Long_Haul_Truck.vfld";
 			var engineFile2 = @"E:\QUAM\Downloads\EngineFLD\Map_375c_BB1390_modTUG_R49_375c_BB1386.vfld";
+
+			if (!File.Exists(engineFile2))
+				Assert.Inconclusive("Confidential File not found. Test cannot run without file.");
 
 			var map1 = EngineFullLoadCurve.ReadFromFile(engineFile1, true);
 			var map2 = EngineFullLoadCurve.ReadFromFile(engineFile2, true);
@@ -41,6 +45,9 @@ namespace TUGraz.VectoCore.Tests.Dummy
 		public void LookupTest()
 		{
 			var engineFile2 = @"E:\QUAM\Downloads\EngineFLD\Map_375c_BB1390_modTUG_R49_375c_BB1386.vfld";
+
+			if (!File.Exists(engineFile2))
+				Assert.Inconclusive("Confidential File not found. Test cannot run without file.");
 
 			var map = EngineFullLoadCurve.ReadFromFile(engineFile2, true);
 
