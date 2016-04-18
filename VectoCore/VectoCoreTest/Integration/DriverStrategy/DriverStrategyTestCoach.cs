@@ -30,6 +30,7 @@
 */
 
 using Microsoft.VisualStudio.TestTools.UnitTesting;
+using TUGraz.VectoCore.Models.Simulation.Data;
 using TUGraz.VectoCore.Tests.Utils;
 
 namespace TUGraz.VectoCore.Tests.Integration.DriverStrategy
@@ -37,7 +38,23 @@ namespace TUGraz.VectoCore.Tests.Integration.DriverStrategy
 	[TestClass]
 	public class DriverStrategyTestCoach
 	{
-		[TestMethod]
+		[TestInitialize]
+		public void DisableLogging()
+		{
+			//LogManager.DisableLogging();
+			//GraphWriter.Disable();
+
+			GraphWriter.Xfields = new[] { ModalResultField.time, ModalResultField.dist };
+
+			GraphWriter.Yfields = new[] {
+				ModalResultField.v_act, ModalResultField.acc, ModalResultField.n_eng_avg, ModalResultField.Gear,
+				ModalResultField.P_eng_out, ModalResultField.T_eng_fcmap, ModalResultField.FCMap
+			};
+			GraphWriter.Series1Label = "Vecto 3";
+			GraphWriter.Series2Label = "Vecto 2.2";
+		}
+
+		[TestMethod, TestCategory("ComparisonV2")]
 		public void TestGraph()
 		{
 			var imgV3 = @"TestData\Results\Integration\Coach_DriverStrategy_Drive_50_slope_dec-inc.vmod";
@@ -428,8 +445,8 @@ namespace TUGraz.VectoCore.Tests.Integration.DriverStrategy
 			run.Run();
 			Assert.IsTrue(run.FinishedWithoutErrors);
 
-			GraphWriter.Write("Coach_DriverStrategy_Decelerate_60_20_uphill_15.vmod",
-				@"..\..\TestData\Integration\DriverStrategy\Vecto2.2\Coach\24t Coach_Cycle_Decelerate_60_20_uphill_15.vmod");
+			//GraphWriter.Write("Coach_DriverStrategy_Decelerate_60_20_uphill_15.vmod",
+			//	@"..\..\TestData\Integration\DriverStrategy\Vecto2.2\Coach\24t Coach_Cycle_Decelerate_60_20_uphill_15.vmod");
 		}
 
 		[TestMethod, TestCategory("ComparisonV2")]
@@ -555,7 +572,7 @@ namespace TUGraz.VectoCore.Tests.Integration.DriverStrategy
 		}
 
 		#endregion
-
+		
 		#region Drive
 
 		[TestMethod, TestCategory("ComparisonV2")]

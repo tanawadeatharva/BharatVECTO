@@ -211,7 +211,10 @@ namespace TUGraz.VectoCore.Models.SimulationComponent.Impl
 			var retVal = NextComponent.Request(absTime, ds, CurrentState.VehicleTargetSpeed, CurrentState.Gradient);
 			retVal.Switch()
 				.Case<ResponseFailTimeInterval>(
-					r => { retVal = NextComponent.Request(absTime, r.DeltaT, 0.SI<MeterPerSecond>(), CurrentState.Gradient); });
+					r => {
+						retVal = NextComponent.Request(absTime, r.DeltaT, 0.SI<MeterPerSecond>(), CurrentState.Gradient);
+						retVal = NextComponent.Request(absTime, ds, CurrentState.VehicleTargetSpeed, CurrentState.Gradient);
+					});
 			return retVal;
 		}
 

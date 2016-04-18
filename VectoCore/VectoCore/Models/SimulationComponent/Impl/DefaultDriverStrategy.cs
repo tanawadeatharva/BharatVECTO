@@ -446,14 +446,26 @@ namespace TUGraz.VectoCore.Models.SimulationComponent.Impl
 		}
 
 		protected BrakingPhase Phase;
+		protected bool RetryDistanceExceeded = false;
 
 		protected override IResponse DoHandleRequest(Second absTime, Meter ds, MeterPerSecond targetVelocity, Radian gradient)
 		{
 			IResponse response = null;
 			if (DataBus.VehicleSpeed <= DriverStrategy.BrakeTrigger.NextTargetSpeed) {
-				response = DataBus.ClutchClosed(absTime)
-					? Driver.DrivingActionAccelerate(absTime, ds, DriverStrategy.BrakeTrigger.NextTargetSpeed, gradient)
-					: Driver.DrivingActionRoll(absTime, ds, DriverStrategy.BrakeTrigger.NextTargetSpeed, gradient);
+				if (DataBus.ClutchClosed(absTime)) {
+					if (DataBus.VehicleSpeed.IsGreater(0.SI<MeterPerSecond>())) {
+						response = Driver.DrivingActionAccelerate(absTime, ds, DriverStrategy.BrakeTrigger.NextTargetSpeed, gradient);
+					} else {
+						if (RetryDistanceExceeded) {
+							response = Driver.DrivingActionAccelerate(absTime, ds, targetVelocity, gradient);
+						} else {
+							RetryDistanceExceeded = true;
+							return new ResponseDrivingCycleDistanceExceeded() { MaxDistance = ds / 2 };
+						}
+					}
+				} else {
+					response = Driver.DrivingActionRoll(absTime, ds, DriverStrategy.BrakeTrigger.NextTargetSpeed, gradient);
+				}
 				response.Switch().
 					Case<ResponseGearShift>(() => {
 						response = Driver.DrivingActionRoll(absTime, ds, targetVelocity, gradient);
@@ -528,7 +540,9 @@ namespace TUGraz.VectoCore.Models.SimulationComponent.Impl
 							}
 							//Phase = BrakingPhase.Brake;
 						}).
-						Case<ResponseGearShift>(r => { response = Driver.DrivingActionRoll(absTime, ds, targetVelocity, gradient); }).
+						Case<ResponseGearShift>(r => { response = Driver.DrivingActionRoll(absTime, ds, targetVelocity, gradient); });
+					// handle the SpeedLimitExceeded Response separately in case it occurs in one of the requests in the second try
+					response.Switch().
 						Case<ResponseSpeedLimitExceeded>(() => {
 							response = Driver.DrivingActionBrake(absTime, ds, DataBus.VehicleSpeed,
 								gradient);
@@ -549,6 +563,9 @@ namespace TUGraz.VectoCore.Models.SimulationComponent.Impl
 					var targetDistance = DataBus.VehicleSpeed < Constants.SimulationSettings.MinVelocityForCoast
 						? DriverStrategy.BrakeTrigger.TriggerDistance
 						: null;
+					if (targetDistance == null && DriverStrategy.BrakeTrigger.NextTargetSpeed.IsEqual(0.SI<MeterPerSecond>())) {
+						targetDistance = DriverStrategy.BrakeTrigger.TriggerDistance - DefaultDriverStrategy.BrakingSafetyMargin;
+					}
 					DriverStrategy.DriverBehavior = DrivingBehavior.Braking;
 					response = Driver.DrivingActionBrake(absTime, ds, DriverStrategy.BrakeTrigger.NextTargetSpeed,
 						gradient, targetDistance: targetDistance);
@@ -602,6 +619,7 @@ namespace TUGraz.VectoCore.Models.SimulationComponent.Impl
 
 		public override void ResetMode()
 		{
+			RetryDistanceExceeded = false;
 			Phase = BrakingPhase.Coast;
 		}
 	}
