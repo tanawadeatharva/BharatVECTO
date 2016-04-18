@@ -66,7 +66,7 @@ namespace TUGraz.VectoCore.Models.SimulationComponent.Impl
 		/// <summary>
 		/// Time when a gearbox shift engages a new gear (shift is finished). Is set when shifting is needed.
 		/// </summary>
-		private Second _shiftTime = 0.SI<Second>();
+		private Second _engageTime = 0.SI<Second>();
 
 		/// <summary>
 		/// True if gearbox is disengaged (no gear is set).
@@ -75,7 +75,7 @@ namespace TUGraz.VectoCore.Models.SimulationComponent.Impl
 
 		public bool ClutchClosed(Second absTime)
 		{
-			return _shiftTime.IsSmallerOrEqual(absTime);
+			return _engageTime.IsSmallerOrEqual(absTime);
 		}
 
 		public Gearbox(IVehicleContainer container, GearboxData gearboxModelData, IShiftStrategy strategy) : base(container)
@@ -138,7 +138,7 @@ namespace TUGraz.VectoCore.Models.SimulationComponent.Impl
 			var dt = Constants.SimulationSettings.TargetTimeInterval;
 
 			// MK 2016-02-10: SI doesn't allow inifinity anymore -- therefore simply a very negative value is used.
-			_shiftTime = -1e10.SI<Second>(); //double.NegativeInfinity.SI<Second>();
+			_engageTime = -1e10.SI<Second>(); //double.NegativeInfinity.SI<Second>();
 
 			if (Disengaged) {
 				Gear = _strategy.InitGear(absTime, dt, outTorque, outAngularVelocity);
@@ -217,7 +217,7 @@ namespace TUGraz.VectoCore.Models.SimulationComponent.Impl
 		{
 			Log.Debug("Gearbox Power Request: torque: {0}, angularVelocity: {1}", torque, angularVelocity);
 			if (DataBus.VehicleStopped) {
-				_shiftTime = absTime;
+				_engageTime = absTime;
 			}
 			IResponse retVal;
 			// TODO: MQ 2016/03/10: investigate further the effects of having the condition angularvelocity != 0
@@ -259,12 +259,12 @@ namespace TUGraz.VectoCore.Models.SimulationComponent.Impl
 				};
 			}
 
-			var shiftTimeExceeded = absTime.IsSmaller(_shiftTime) &&
-									_shiftTime.IsSmaller(absTime + dt, ModelData.TractionInterruption / 20.0); // allow 5% tolerance of shift time
+			var shiftTimeExceeded = absTime.IsSmaller(_engageTime) &&
+									_engageTime.IsSmaller(absTime + dt, ModelData.TractionInterruption / 20.0); // allow 5% tolerance of shift time
 			if (shiftTimeExceeded) {
 				return new ResponseFailTimeInterval {
 					Source = this,
-					DeltaT = _shiftTime - absTime,
+					DeltaT = _engageTime - absTime,
 					GearboxPowerRequest = outTorque * (PreviousState.OutAngularVelocity + outAngularVelocity) / 2.0
 				};
 			}
@@ -319,17 +319,16 @@ namespace TUGraz.VectoCore.Models.SimulationComponent.Impl
 			}
 
 			var avgOutAngularVelocity = (PreviousState.OutAngularVelocity + outAngularVelocity) / 2.0;
-			var torqueLoss = ModelData.Gears[Gear].LossMap.GetTorqueLoss(avgOutAngularVelocity, outTorque);
-			var inTorque = outTorque / ModelData.Gears[Gear].Ratio + torqueLoss;
+			var inTorqueLoss = ModelData.Gears[Gear].LossMap.GetTorqueLoss(avgOutAngularVelocity, outTorque);
+			var inTorque = outTorque / ModelData.Gears[Gear].Ratio + inTorqueLoss;
 
 			var inAngularVelocity = outAngularVelocity * ModelData.Gears[Gear].Ratio;
 
 			if (dryRun) {
 				if ((DataBus.DrivingBehavior == DrivingBehavior.Braking || DataBus.DrivingBehavior == DrivingBehavior.Coasting) &&
-					inAngularVelocity < DataBus.EngineIdleSpeed &&
-					DataBus.VehicleSpeed < Constants.SimulationSettings.VehicleStopClutchDisengageSpeed) {
+					inAngularVelocity < DataBus.EngineIdleSpeed && DataBus.VehicleSpeed < Constants.SimulationSettings.VehicleStopClutchDisengageSpeed) {
 					Disengaged = true;
-					_shiftTime = absTime + dt;
+					_engageTime = absTime + dt;
 					_strategy.Disengage(absTime, dt, outTorque, outAngularVelocity);
 					Log.Debug("EngineSpeed is below IdleSpeed, Gearbox disengage!");
 					return new ResponseEngineSpeedTooLow { Source = this, GearboxPowerRequest = outTorque * outAngularVelocity };
@@ -343,13 +342,13 @@ namespace TUGraz.VectoCore.Models.SimulationComponent.Impl
 
 			if (shiftAllowed) {
 				var shiftRequired = _strategy.ShiftRequired(absTime, dt, outTorque, outAngularVelocity, inTorque, inAngularVelocity,
-					Gear, _shiftTime + ModelData.TractionInterruption);
+					Gear, _engageTime + ModelData.TractionInterruption);
 
 				if (shiftRequired) {
-					_shiftTime = absTime + ModelData.TractionInterruption;
+					_engageTime = absTime + ModelData.TractionInterruption;
 
-					Log.Debug("Gearbox is shifting. absTime: {0}, dt: {1}, shiftTime: {2}, out: ({3}, {4}), in: ({5}, {6})", absTime,
-						dt, _shiftTime, outTorque, outAngularVelocity, inTorque, inAngularVelocity);
+					Log.Debug("Gearbox is shifting. absTime: {0}, dt: {1}, interuptionTime: {2}, out: ({3}, {4}), in: ({5}, {6})", absTime,
+						dt, _engageTime, outTorque, outAngularVelocity, inTorque, inAngularVelocity);
 
 					Disengaged = true;
 					_strategy.Disengage(absTime, dt, outTorque, outAngularVelocity);
