@@ -89,7 +89,6 @@ namespace TUGraz.VectoCore.OutputData
 		/// </summary>
 		public int ResultCount { get; set; }
 
-
 		/// <summary>
 		/// Adds the result of one run for the specific mission and loading. If all runs finished (given by the resultCount) the report will be written.
 		/// </summary>
@@ -107,9 +106,11 @@ namespace TUGraz.VectoCore.OutputData
 			}
 			Missions[mission.MissionType].ModData[loadingType] = modData;
 
-
 			if (ResultCount == Missions.Sum(v => v.Value.ModData.Count)) {
 				DoWriteReport();
+				Missions.Clear();
+				Flc = null;
+				Segment = null;
 			}
 		}
 
