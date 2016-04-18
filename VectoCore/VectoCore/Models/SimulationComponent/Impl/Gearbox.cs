@@ -342,7 +342,7 @@ namespace TUGraz.VectoCore.Models.SimulationComponent.Impl
 
 			if (shiftAllowed) {
 				var shiftRequired = _strategy.ShiftRequired(absTime, dt, outTorque, outAngularVelocity, inTorque, inAngularVelocity,
-					Gear, _engageTime + ModelData.TractionInterruption);
+					Gear, _engageTime);
 
 				if (shiftRequired) {
 					_engageTime = absTime + ModelData.TractionInterruption;
