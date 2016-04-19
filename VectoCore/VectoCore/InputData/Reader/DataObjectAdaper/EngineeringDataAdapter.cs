@@ -36,6 +36,7 @@ using System.Linq;
 using TUGraz.VectoCommon.Exceptions;
 using TUGraz.VectoCommon.InputData;
 using TUGraz.VectoCommon.Models;
+using TUGraz.VectoCommon.Utils;
 using TUGraz.VectoCore.Models;
 using TUGraz.VectoCore.Models.Declaration;
 using TUGraz.VectoCore.Models.Simulation.Data;
@@ -118,7 +119,8 @@ namespace TUGraz.VectoCore.InputData.Reader.DataObjectAdaper
 			return retVal;
 		}
 
-		internal GearboxData CreateGearboxData(IGearboxEngineeringInputData gearbox, CombustionEngineData engineData)
+		internal GearboxData CreateGearboxData(IGearboxEngineeringInputData gearbox, CombustionEngineData engineData,
+			double axlegearRatio, Meter dynamicTyreRadius)
 		{
 			if (gearbox.SavedInDeclarationMode) {
 				WarnEngineeringMode("GearboxData");
@@ -154,7 +156,7 @@ namespace TUGraz.VectoCore.InputData.Reader.DataObjectAdaper
 				var fullLoadCurve = IntersectFullLoadCurves(engineData.FullLoadCurve, gearFullLoad);
 				var shiftPolygon = gear.ShiftPolygon != null
 					? ShiftPolygon.Create(gear.ShiftPolygon)
-					: DeclarationData.Gearbox.ComputeShiftPolygon(fullLoadCurve, engineData.IdleSpeed);
+					: DeclarationData.Gearbox.ComputeShiftPolygon(i, fullLoadCurve, gears, engineData, axlegearRatio, dynamicTyreRadius);
 
 				return new KeyValuePair<uint, GearData>((uint)(i + 1), new GearData {
 					LossMap = lossMap,

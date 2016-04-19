@@ -71,9 +71,11 @@ namespace TUGraz.VectoCore.InputData.Reader.Impl
 			var driverdata = dao.CreateDriverData(InputDataProvider.DriverInputData);
 			driverdata.AccelerationCurve = AccelerationCurveData.ReadFromStream(segment.AccelerationFile);
 
+			var tempVehicle = dao.CreateVehicleData(InputDataProvider.VehicleInputData, segment.Missions.First(), segment.Missions.First().Loadings.First().Value);
 			var engineData = dao.CreateEngineData(InputDataProvider.EngineInputData);
-			var gearboxData = dao.CreateGearboxData(InputDataProvider.GearboxInputData, engineData);
 			var axlegearData = dao.CreateAxleGearData(InputDataProvider.AxleGearInputData);
+			var gearboxData = dao.CreateGearboxData(InputDataProvider.GearboxInputData, engineData, axlegearData.AxleGear.Ratio,
+				tempVehicle.DynamicTyreRadius);
 			var retarderData = dao.CreateRetarderData(InputDataProvider.RetarderInputData, InputDataProvider.VehicleInputData);
 
 			if (Report != null) {
