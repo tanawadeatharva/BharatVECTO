@@ -55,11 +55,11 @@ namespace TUGraz.VectoCore.Tests.Utils
 			if (declarationMode) {
 				var dao = new DeclarationDataAdapter();
 				var engineData = dao.CreateEngineData(engineInput);
-				return dao.CreateGearboxData(gearboxInput, engineData, 1.0, 0.5.SI<Meter>());
+				return dao.CreateGearboxData(gearboxInput, engineData, ((IAxleGearInputData)gearboxInput).Ratio, 0.5.SI<Meter>());
 			} else {
 				var dao = new EngineeringDataAdapter();
 				var engineData = dao.CreateEngineData(engineInput);
-				return dao.CreateGearboxData(gearboxInput, engineData, 1.0, 0.5.SI<Meter>());
+				return dao.CreateGearboxData(gearboxInput, engineData, ((IAxleGearInputData)gearboxInput).Ratio, 0.5.SI<Meter>());
 			}
 		}
 

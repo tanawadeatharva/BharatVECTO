@@ -272,19 +272,19 @@ namespace TUGraz.VectoCore.Tests.Models.Declaration
 			var expectedDownshift = new[] {
 				// Gear 1
 				new[] {
-					new Point(64.50736915, 0),
+					new Point(64.50736915, -352),
 					new Point(64.50736915, 970.37),
 					new Point(121.059, 2530),
 				},
 				// Gear 2
 				new[] {
-					new Point(64.50736915, 0),
+					new Point(64.50736915, -352),
 					new Point(64.50736915, 970.37),
 					new Point(121.059, 2530),
 				},
 				// Gear 3
 				new[] {
-					new Point(64.50736915, 0),
+					new Point(64.50736915, -352),
 					new Point(64.50736915, 970.37),
 					new Point(121.059, 2530),
 				},
@@ -292,23 +292,22 @@ namespace TUGraz.VectoCore.Tests.Models.Declaration
 			var expectedUpshift = new[] {
 				// Gear 1
 				new[] {
-					new Point(136.9338946, 0),
-					new Point(136.9338946, 1419.679281),
-					new Point(154.645394, 1766.853864),
+					new Point(136.9338946, -352),
+					new Point(136.9338946, 1492.7289),
 					new Point(203.9530637, 2530),
 				},
 				// Gear 2
 				new[] {
-					new Point(136.9338946, 0),
-					new Point(136.9338946, 1419.679281),
-					new Point(162.34804, 1917.838528),
+					new Point(136.9338946, -352),
+					new Point(136.9338946, 1518.81917),
 					new Point(201.3375424, 2530),
 				},
 				// Gear 3
 				new[] {
-					new Point(136.9338946, 0),
-					new Point(136.9338946, 1419.679281),
-					new Point(192.102071, 2501.066),
+					new Point(136.9338946, -352),
+					new Point(136.9338946, 1538.9278),
+					new Point(153.606666, 1893.19273),
+					new Point(192.102071, 2530),
 				},
 			};
 
@@ -326,12 +325,12 @@ namespace TUGraz.VectoCore.Tests.Models.Declaration
 			for (var i = 0; i < Math.Min(gearboxData.Gears.Count, expectedDownshift.Length); i++) {
 				foreach (var tuple in expectedDownshift[i].Zip(shiftPolygons[i].Downshift, Tuple.Create)) {
 					Assert.AreEqual(tuple.Item1.X, tuple.Item2.AngularSpeed.Value(), 1e-3, "gear: {0} entry: {1}", i, tuple);
-					Assert.AreEqual(tuple.Item1.Y, tuple.Item2.Torque.Value(), 1e-3, "gear: {0} entry: {1}", i, tuple);
+					Assert.AreEqual(tuple.Item1.Y, tuple.Item2.Torque.Value(), 1e-3, "gear: {0} entry: {1}", i + 1, tuple);
 				}
 
 				foreach (var tuple in expectedUpshift[i].Zip(shiftPolygons[i].Upshift, Tuple.Create)) {
 					Assert.AreEqual(tuple.Item1.X, tuple.Item2.AngularSpeed.Value(), 1e-3, "gear: {0} entry: {1}", i, tuple);
-					Assert.AreEqual(tuple.Item1.Y, tuple.Item2.Torque.Value(), 1e-3, "gear: {0} entry: {1}", i, tuple);
+					Assert.AreEqual(tuple.Item1.Y, tuple.Item2.Torque.Value(), 1e-3, "gear: {0} entry: {1}", i + 1, tuple);
 				}
 			}
 

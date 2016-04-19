@@ -100,8 +100,8 @@ namespace TUGraz.VectoCore.Tests.FileIO
 
 			Assert.AreEqual(3.7890, runData.EngineData.Inertia.Value());
 
-			var downshiftSpeeds = new[] { 600, 600, 1310.6673 };
-			var downshiftTorque = new[] { 0, 266.85346, 899 };
+			var downshiftSpeeds = new[] { 660, 660, 1681.4261 };
+			var downshiftTorque = new[] { -163.9, 257.7076, 988.9 };
 
 			Assert.AreEqual(downshiftSpeeds.Length, runData.GearboxData.Gears[1].ShiftPolygon.Downshift.Count);
 			for (var i = 0; i < downshiftSpeeds.Length; i++) {
@@ -110,8 +110,8 @@ namespace TUGraz.VectoCore.Tests.FileIO
 				Assert.AreEqual(downshiftTorque[i], runData.GearboxData.Gears[1].ShiftPolygon.Downshift[i].Torque.Value(), Tolerance);
 			}
 
-			var upshiftSpeed = new[] { 1531.230044, 1531.230044, 2420.505793661 };
-			var upshiftTorque = new[] { 0, 459.8588, 899 };
+			var upshiftSpeed = new[] { 1891.2419, 1891.2419, 5798.4116 };
+			var upshiftTorque = new[] { -163.9, 245.3663, 988.9 };
 
 			Assert.AreEqual(upshiftSpeed.Length, runData.GearboxData.Gears[1].ShiftPolygon.Downshift.Count);
 			for (var i = 0; i < downshiftSpeeds.Length; i++) {
