@@ -1630,7 +1630,12 @@ Imports TUGraz.VectoCore.Utils
 			Try
 				sender.ReportProgress(0, New With {.Target = "ListBox", .Message = "Reading File " + jobFile, .Link = jobFile})
 				Dim dataProvider As IInputDataProvider = JSONInputDataFactory.ReadJsonJob(jobFile)
-				Dim runsFactory As SimulatorFactory = New SimulatorFactory(mode, dataProvider, fileWriter)
+				Dim runsFactory As SimulatorFactory
+				If mode = ExecutionMode.Engineering And DirectCast(dataProvider, IEngineeringInputDataProvider).JobInputData().EngineOnlyMode Then
+					runsFactory = New SimulatorFactory(ExecutionMode.EngineOnly, dataProvider, fileWriter)
+				Else
+					runsFactory = New SimulatorFactory(mode, dataProvider, fileWriter)
+				End If
 				runsFactory.WriteModalResults = Cfg.ModOut
 				jobContainer.AddRuns(runsFactory)
 				sender.ReportProgress(0, New With {.Target = "ListBox", .Message = "Finished Reading Data for job: " + jobFile})

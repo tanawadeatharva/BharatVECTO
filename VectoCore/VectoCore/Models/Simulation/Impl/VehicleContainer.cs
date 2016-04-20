@@ -209,7 +209,7 @@ namespace TUGraz.VectoCore.Models.Simulation.Impl
 
 		public void CommitSimulationStep(Second time, Second simulationInterval)
 		{
-			Log.Info("VehicleContainer committing simulation. time: {0}, dist: {1}, speed: {2}", time, Distance, VehicleSpeed);
+			Log.Info("VehicleContainer committing simulation. time: {0}, dist: {1}, speed: {2}", time, ExecutionMode==ExecutionMode.EngineOnly ? null : Distance, VehicleSpeed);
 			foreach (var component in Components) {
 				component.CommitSimulationStep(ModData);
 			}
