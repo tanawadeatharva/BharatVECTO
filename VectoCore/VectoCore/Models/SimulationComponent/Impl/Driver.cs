@@ -358,9 +358,9 @@ namespace TUGraz.VectoCore.Models.SimulationComponent.Impl
 				var nextAcceleration = DriverData.AccelerationCurve.Lookup(v2).Deceleration;
 				var tmp = ComputeTimeInterval(VectoMath.Min(operatingPoint.Acceleration, nextAcceleration),
 					operatingPoint.SimulationDistance);
-				if (operatingPoint.SimulationDistance.Equals(tmp.SimulationDistance)) {
-					// only decelerate more of the simulation interval is not modified
-					// i.e., braking to the next sample point
+				if (!operatingPoint.Acceleration.IsEqual(nextAcceleration) && operatingPoint.SimulationDistance.IsEqual(tmp.SimulationDistance)) {
+					// only adjust operating point if the acceleration is different but the simulation distance is not modified
+					// i.e., braking to the next sample point (but a little bit slower)
 					Log.Debug("adjusting acceleration from {0} to {1}", operatingPoint.Acceleration, tmp.Acceleration);
 					operatingPoint = tmp;
 					// ComputeTimeInterval((operatingPoint.Acceleration + tmp.Acceleration) / 2, operatingPoint.SimulationDistance);
@@ -369,15 +369,15 @@ namespace TUGraz.VectoCore.Models.SimulationComponent.Impl
 			if (targetDistance != null && targetDistance > DataBus.Distance) {
 				var tmp = ComputeAcceleration(targetDistance - DataBus.Distance, nextTargetSpeed, false);
 				if (tmp.Acceleration.IsGreater(operatingPoint.Acceleration)) {
-				operatingPoint = ComputeTimeInterval(tmp.Acceleration, ds);
-				if (!ds.IsEqual(operatingPoint.SimulationDistance)) {
-					Log.Error(
-						"Unexpected Condition: Distance has been adjusted from {0} to {1}, currentVelocity: {2} acceleration: {3}, targetVelocity: {4}",
-						operatingPoint.SimulationDistance, ds, DataBus.VehicleSpeed, operatingPoint.Acceleration, nextTargetSpeed);
-					throw new VectoSimulationException("Simulation distance unexpectedly adjusted! {0} -> {1}", ds,
-						operatingPoint.SimulationDistance);
+					operatingPoint = ComputeTimeInterval(tmp.Acceleration, ds);
+					if (!ds.IsEqual(operatingPoint.SimulationDistance)) {
+						Log.Error(
+							"Unexpected Condition: Distance has been adjusted from {0} to {1}, currentVelocity: {2} acceleration: {3}, targetVelocity: {4}",
+							operatingPoint.SimulationDistance, ds, DataBus.VehicleSpeed, operatingPoint.Acceleration, nextTargetSpeed);
+						throw new VectoSimulationException("Simulation distance unexpectedly adjusted! {0} -> {1}", ds,
+							operatingPoint.SimulationDistance);
+					}
 				}
-			}
 			}
 
 			var response = previousResponse ??
@@ -501,7 +501,7 @@ namespace TUGraz.VectoCore.Models.SimulationComponent.Impl
 			MeterPerSquareSecond acceleration, IResponse initialResponse)
 		{
 			var operatingPoint = new OperatingPoint { SimulationDistance = ds, Acceleration = acceleration };
-				operatingPoint = ComputeTimeInterval(operatingPoint.Acceleration, ds);
+			operatingPoint = ComputeTimeInterval(operatingPoint.Acceleration, ds);
 			Watt deltaPower = null;
 			initialResponse.Switch().
 				Case<ResponseGearShift>(r => {
@@ -734,11 +734,12 @@ namespace TUGraz.VectoCore.Models.SimulationComponent.Impl
 		public IResponse DrivingActionHalt(Second absTime, Second dt, MeterPerSecond targetVelocity, Radian gradient)
 		{
 			if (!targetVelocity.IsEqual(0) || !DataBus.VehicleSpeed.IsEqual(0, 1e-3)) {
-				throw new VectoSimulationException(
-					"TargetVelocity ({0}) and VehicleVelocity ({1}) must be zero when vehicle is halting!", targetVelocity,
-					DataBus.VehicleSpeed);
+				Log.Error("TargetVelocity ({0}) and VehicleVelocity ({1}) must be zero when vehicle is halting!", targetVelocity, DataBus.VehicleSpeed);
+				throw new VectoSimulationException("TargetVelocity ({0}) and VehicleVelocity ({1}) must be zero when vehicle is halting!", targetVelocity, DataBus.VehicleSpeed);
 			}
+
 			var retVal = NextComponent.Request(absTime, dt, 0.SI<MeterPerSquareSecond>(), gradient);
+
 			retVal.Switch().
 				Case<ResponseGearShift>(
 					r => { retVal = NextComponent.Request(absTime, dt, 0.SI<MeterPerSquareSecond>(), gradient); });
