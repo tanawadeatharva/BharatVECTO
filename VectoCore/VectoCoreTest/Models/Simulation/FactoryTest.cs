@@ -72,26 +72,32 @@ namespace TUGraz.VectoCore.Tests.Models.Simulation
 
 			// -- shiftpolygon downshift 
 
-			Assert.AreEqual(600.RPMtoRad().Value(), gearbox.ModelData.Gears[1].ShiftPolygon.Downshift[0].AngularSpeed.Value(), 0.0001);
-			Assert.AreEqual(0.0, gearbox.ModelData.Gears[1].ShiftPolygon.Downshift[0].Torque.Value(), 0.0001);
+			Assert.AreEqual(660.RPMtoRad().Value(), gearbox.ModelData.Gears[1].ShiftPolygon.Downshift[0].AngularSpeed.Value(),
+				0.0001);
+			Assert.AreEqual(-163.9, gearbox.ModelData.Gears[1].ShiftPolygon.Downshift[0].Torque.Value(), 0.0001);
 
-			Assert.AreEqual(600.RPMtoRad().Value(), gearbox.ModelData.Gears[1].ShiftPolygon.Downshift[1].AngularSpeed.Value(), 0.0001);
-			Assert.AreEqual(266.8277, gearbox.ModelData.Gears[1].ShiftPolygon.Downshift[1].Torque.Value(), 0.1);
+			Assert.AreEqual(660.RPMtoRad().Value(), gearbox.ModelData.Gears[1].ShiftPolygon.Downshift[1].AngularSpeed.Value(),
+				0.0001);
+			Assert.AreEqual(257.7076, gearbox.ModelData.Gears[1].ShiftPolygon.Downshift[1].Torque.Value(), 0.1);
 
-			Assert.AreEqual(1310.7646.RPMtoRad().Value(), gearbox.ModelData.Gears[1].ShiftPolygon.Downshift[2].AngularSpeed.Value(),
+			Assert.AreEqual(1681.4261.RPMtoRad().Value(),
+				gearbox.ModelData.Gears[1].ShiftPolygon.Downshift[2].AngularSpeed.Value(),
 				0.1);
-			Assert.AreEqual(899, gearbox.ModelData.Gears[1].ShiftPolygon.Downshift[2].Torque.Value(), 0.0001);
+			Assert.AreEqual(988.9, gearbox.ModelData.Gears[1].ShiftPolygon.Downshift[2].Torque.Value(), 0.0001);
 
 			// -- shiftpolygon upshift
 
-			Assert.AreEqual(1531.5293.RPMtoRad().Value(), gearbox.ModelData.Gears[1].ShiftPolygon.Upshift[0].AngularSpeed.Value(), 0.1);
-			Assert.AreEqual(0, gearbox.ModelData.Gears[1].ShiftPolygon.Upshift[0].Torque.Value(), 0.0001);
+			Assert.AreEqual(1891.2419.RPMtoRad().Value(), gearbox.ModelData.Gears[1].ShiftPolygon.Upshift[0].AngularSpeed.Value(),
+				0.1);
+			Assert.AreEqual(-163.9, gearbox.ModelData.Gears[1].ShiftPolygon.Upshift[0].Torque.Value(), 0.0001);
 
-			Assert.AreEqual(1531.5293.RPMtoRad().Value(), gearbox.ModelData.Gears[1].ShiftPolygon.Upshift[1].AngularSpeed.Value(), 0.1);
-			Assert.AreEqual(459.881, gearbox.ModelData.Gears[1].ShiftPolygon.Upshift[1].Torque.Value(), 0.1);
+			Assert.AreEqual(1891.2419.RPMtoRad().Value(), gearbox.ModelData.Gears[1].ShiftPolygon.Upshift[1].AngularSpeed.Value(),
+				0.1);
+			Assert.AreEqual(245.3663, gearbox.ModelData.Gears[1].ShiftPolygon.Upshift[1].Torque.Value(), 0.1);
 
-			Assert.AreEqual(2421.RPMtoRad().Value(), gearbox.ModelData.Gears[1].ShiftPolygon.Upshift[2].AngularSpeed.Value(), 0.1);
-			Assert.AreEqual(899, gearbox.ModelData.Gears[1].ShiftPolygon.Upshift[2].Torque.Value(), 0.1);
+			Assert.AreEqual(5798.4116.RPMtoRad().Value(), gearbox.ModelData.Gears[1].ShiftPolygon.Upshift[2].AngularSpeed.Value(),
+				0.1);
+			Assert.AreEqual(988.9, gearbox.ModelData.Gears[1].ShiftPolygon.Upshift[2].Torque.Value(), 0.1);
 		}
 
 		[TestMethod]

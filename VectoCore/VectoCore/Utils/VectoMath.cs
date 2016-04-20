@@ -80,6 +80,10 @@ namespace TUGraz.VectoCore.Utils
 			return ((xint - x1) * (y2 - y1) / (x2 - x1) + y1);
 		}
 
+		public static double Interpolate(Point p1, Point p2, double x)
+		{
+			return Interpolate(p1.X, p2.X, p1.Y, p2.Y, x);
+		}
 
 		/// <summary>
 		/// Returns the absolute value.
@@ -151,6 +155,36 @@ namespace TUGraz.VectoCore.Utils
 				retVal.Add((-b / (2 * a)));
 			}
 			return retVal;
+		}
+
+		public static Point Intersect(Edge line1, Edge line2)
+		{
+			var s10X = line1.P2.X - line1.P1.X;
+			var s10Y = line1.P2.Y - line1.P1.Y;
+			var s32X = line2.P2.X - line2.P1.X;
+			var s32Y = line2.P2.Y - line2.P1.Y;
+
+			var denom = s10X * s32Y - s32X * s10Y;
+			if (denom.IsEqual(0)) {
+				return null;
+			}
+
+			var s02X = line1.P1.X - line2.P1.X;
+			var s02Y = line1.P1.Y - line2.P1.Y;
+			var sNumer = s10X * s02Y - s10Y * s02X;
+			if ((sNumer < 0) == (denom > 0)) {
+				return null;
+			}
+			var tNumer = s32X * s02Y - s32Y * s02X;
+			if ((tNumer < 0) == (denom > 0)) {
+				return null;
+			}
+			if (((sNumer > denom) == (denom > 0)) || ((tNumer > denom) == (denom > 0))) {
+				return null;
+			}
+			var t = tNumer / denom;
+
+			return new Point(line1.P1.X + (t * s10X), line1.P1.Y + t * s10Y);
 		}
 	}
 
@@ -440,6 +474,16 @@ namespace TUGraz.VectoCore.Utils
 			get { return _vector ?? (_vector = P2 - P1); }
 		}
 
+		public double SlopeXY
+		{
+			get { return Vector.Y / Vector.X; }
+		}
+
+		public double OffsetXY
+		{
+			get { return P2.Y - SlopeXY * P2.X; }
+		}
+
 		#region Equality members
 
 		protected bool Equals(Edge other)
@@ -464,5 +508,15 @@ namespace TUGraz.VectoCore.Utils
 		}
 
 		#endregion
+
+		public static Edge Create(Point arg1, Point arg2)
+		{
+			return new Edge(arg1, arg2);
+		}
+
+		public bool ContainsXY(Point point)
+		{
+			return (SlopeXY * point.X + (P1.Y - SlopeXY * P1.X) - point.Y).IsEqual(0, 1E-9);
+		}
 	}
 }

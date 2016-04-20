@@ -155,7 +155,8 @@ namespace TUGraz.VectoCore.InputData.Reader.DataObjectAdaper
 			return retVal;
 		}
 
-		internal GearboxData CreateGearboxData(IGearboxDeclarationInputData gearbox, CombustionEngineData engine)
+		internal GearboxData CreateGearboxData(IGearboxDeclarationInputData gearbox, CombustionEngineData engine,
+			double axlegearRatio, Meter dynamicTyreRadius)
 		{
 			if (!gearbox.SavedInDeclarationMode) {
 				WarnDeclarationMode("GearboxData");
@@ -194,7 +195,9 @@ namespace TUGraz.VectoCore.InputData.Reader.DataObjectAdaper
 					: FullLoadCurve.Create(gear.FullLoadCurve, true);
 
 				var fullLoadCurve = IntersectFullLoadCurves(engine.FullLoadCurve, gearFullLoad);
-				var shiftPolygon = DeclarationData.Gearbox.ComputeShiftPolygon(fullLoadCurve, engine.IdleSpeed);
+				var shiftPolygon = DeclarationData.Gearbox.ComputeShiftPolygon(i, fullLoadCurve, gears, engine, axlegearRatio,
+					dynamicTyreRadius);
+
 				return new KeyValuePair<uint, GearData>((uint)i + 1,
 					new GearData {
 						LossMap = gearLossMap,
@@ -206,7 +209,6 @@ namespace TUGraz.VectoCore.InputData.Reader.DataObjectAdaper
 			}).ToDictionary(kv => kv.Key, kv => kv.Value);
 			return retVal;
 		}
-
 
 		public IList<VectoRunData.AuxData> CreateAuxiliaryData(IAuxiliariesDeclarationInputData auxInputData,
 			MissionType mission, VehicleClass hvdClass)

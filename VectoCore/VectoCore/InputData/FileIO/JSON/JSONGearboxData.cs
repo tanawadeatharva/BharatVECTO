@@ -33,6 +33,7 @@ using System.Collections.Generic;
 using System.Data;
 using System.Linq;
 using Newtonsoft.Json.Linq;
+using TUGraz.VectoCommon.Exceptions;
 using TUGraz.VectoCommon.InputData;
 using TUGraz.VectoCommon.Models;
 using TUGraz.VectoCommon.Utils;
@@ -74,15 +75,26 @@ namespace TUGraz.VectoCore.InputData.FileIO.JSON
 
 		public virtual double Ratio
 		{
-			get { return Body.GetEx(JsonKeys.Gearbox_Gears)[0].GetEx<double>(JsonKeys.Gearbox_Gear_Ratio); }
+			get
+			{
+				var gears = Body.GetEx(JsonKeys.Gearbox_Gears);
+				if (!gears.Any()) {
+					throw new VectoSimulationException("At least one Gear-Entry must be defined in Gearbox!");
+				}
+				return gears[0].GetEx<double>(JsonKeys.Gearbox_Gear_Ratio);
+			}
 		}
 
 		public DataTable LossMap
 		{
 			get
 			{
+				var gears = Body.GetEx(JsonKeys.Gearbox_Gears);
+				if (!gears.Any()) {
+					throw new VectoSimulationException("At least one Gear-Entry must be defined in Gearbox!");
+				}
 				return ReadTableData(
-					Body.GetEx(JsonKeys.Gearbox_Gears)[0].GetEx<string>(JsonKeys.Gearbox_Gear_LossMapFile), "AxleGear");
+					gears[0].GetEx<string>(JsonKeys.Gearbox_Gear_LossMapFile), "AxleGear");
 			}
 		}
 

@@ -84,8 +84,8 @@ namespace TUGraz.VectoCore.Tests.Models.SimulationComponentData
 			var rdyn = double.Parse(TestContext.DataRow["rDyn"].ToString(), CultureInfo.InvariantCulture);
 			var speed = double.Parse(TestContext.DataRow["v"].ToString(), CultureInfo.InvariantCulture);
 
-			var gbxData = MockSimulationDataFactory.CreateGearboxDataFromFile(TestContext.DataRow["GearboxDataFile"].ToString(),
-				EngineFile);
+			//var gbxData = MockSimulationDataFactory.CreateGearboxDataFromFile(TestContext.DataRow["GearboxDataFile"].ToString(),
+			//	EngineFile);
 			var axleData = MockSimulationDataFactory.CreateAxleGearDataFromFile(TestContext.DataRow["GearboxDataFile"].ToString());
 
 			var PvD = double.Parse(TestContext.DataRow["PowerGbxOut"].ToString(), CultureInfo.InvariantCulture).SI<Watt>();
