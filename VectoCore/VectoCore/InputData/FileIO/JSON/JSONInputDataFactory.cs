@@ -39,7 +39,7 @@ namespace TUGraz.VectoCore.InputData.FileIO.JSON
 {
 	public class JSONInputDataFactory
 	{
-		protected static JObject ReadFile(string fileName)
+		protected internal static JObject ReadFile(string fileName)
 		{
 			if (!File.Exists(fileName)) {
 				throw new FileNotFoundException("failed to load file: " + fileName, fileName);

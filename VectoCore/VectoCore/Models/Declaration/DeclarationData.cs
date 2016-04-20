@@ -31,6 +31,13 @@
 
 using System;
 using System.Collections.Generic;
+using System.Diagnostics;
+using System.Linq;
+using System.Net.NetworkInformation;
+using iTextSharp.text.pdf;
+using iTextSharp.text.pdf.interfaces;
+using TUGraz.VectoCommon.Exceptions;
+using TUGraz.VectoCommon.InputData;
 using TUGraz.VectoCommon.Models;
 using TUGraz.VectoCommon.Utils;
 using TUGraz.VectoCore.Configuration;
@@ -218,39 +225,192 @@ namespace TUGraz.VectoCore.Models.Declaration
 			public const double StartAcceleration = 0.6;
 			public const double Inertia = 0;
 
+			public static readonly MeterPerSecond TruckMaxAllowedSpeed = 85.KMPHtoMeterPerSecond();
+			public static double ShiftPolygonRPMMargin = 7;
+			private static double ShiftPolygonEngineFldMargin = 0.98;
+
 			public const double MinTimeBetweenGearshifts = 2;
 
-
-			internal static ShiftPolygon ComputeShiftPolygon(EngineFullLoadCurve fullLoadCurve, PerSecond engineIdleSpeed)
+			/// <summary>
+			/// computes the shift polygons for a single gear according to the whitebook 2016
+			/// </summary>
+			/// <param name="gear">index of the gear to compute the shift polygons for</param>
+			/// <param name="fullLoadCurve">engine full load curve, potentially limited by the gearbox</param>
+			/// <param name="gears">list of gears</param>
+			/// <param name="engine">engine data</param>
+			/// <param name="axlegearRatio"></param>
+			/// <param name="dynamicTyreRadius"></param>
+			/// <returns></returns>
+			public static ShiftPolygon ComputeShiftPolygon(int gear, FullLoadCurve fullLoadCurve,
+				IList<ITransmissionInputData> gears, CombustionEngineData engine, double axlegearRatio, Meter dynamicTyreRadius)
 			{
-				var maxTorque = fullLoadCurve.MaxLoadTorque;
+				var engineSpeed85kmhLastGear = ComputeEngineSpeed85kmh(gears[gears.Count - 1], axlegearRatio, dynamicTyreRadius,
+					engine);
+				var engineSpeed85kmhSecondToLastGear = ComputeEngineSpeed85kmh(gears[gears.Count - 2], axlegearRatio,
+					dynamicTyreRadius, engine);
 
-				var entriesDown = new List<ShiftPolygon.ShiftPolygonEntry>();
-				var entriesUp = new List<ShiftPolygon.ShiftPolygonEntry>();
+				var maxDragTorque = engine.FullLoadCurve.MaxDragTorque * 1.1;
 
-				entriesDown.Add(new ShiftPolygon.ShiftPolygonEntry {
-					AngularSpeed = engineIdleSpeed,
-					Torque = 0.SI<NewtonMeter>()
-				});
+				var p1 = new Point(engine.IdleSpeed.Value() / 2, 0);
+				var p2 = new Point(engine.IdleSpeed.Value() * 1.1, 0);
+				var p3 = new Point(engineSpeed85kmhLastGear.Value() * 0.9,
+					fullLoadCurve.FullLoadStationaryTorque(engineSpeed85kmhLastGear * 0.9).Value());
 
-				var tq1 = maxTorque * engineIdleSpeed / (fullLoadCurve.PreferredSpeed + fullLoadCurve.LoSpeed - engineIdleSpeed);
-				entriesDown.Add(new ShiftPolygon.ShiftPolygonEntry { AngularSpeed = engineIdleSpeed, Torque = tq1 });
+				var p4 =
+					new Point((engineSpeed85kmhLastGear + (engineSpeed85kmhSecondToLastGear - engineSpeed85kmhLastGear) / 3).Value(), 0);
+				var p5 = new Point(fullLoadCurve.RatedSpeed.Value() * 0.95, fullLoadCurve.MaxTorque.Value());
 
-				var speed1 = (fullLoadCurve.PreferredSpeed + fullLoadCurve.LoSpeed) / 2;
-				entriesDown.Add(new ShiftPolygon.ShiftPolygonEntry { AngularSpeed = speed1, Torque = maxTorque });
+				var p6 = new Point(p2.X, VectoMath.Interpolate(p1, p3, p2.X));
+				var p7 = new Point(p4.X, VectoMath.Interpolate(p2, p5, p4.X));
+
+				var fldMargin = ShiftPolygonFldMargin(fullLoadCurve.FullLoadEntries, engineSpeed85kmhLastGear * 0.9);
+				var downshiftCorr = MoveDownshiftBelowFld(Edge.Create(p6, p3), fldMargin, 1.1 * fullLoadCurve.MaxTorque);
+				var downShift =
+					new[] { p2, downshiftCorr.P1, downshiftCorr.P2 }.Select(
+						point => new ShiftPolygon.ShiftPolygonEntry() {
+							AngularSpeed = point.X.SI<PerSecond>(),
+							Torque = point.Y.SI<NewtonMeter>()
+						}).ToList();
+
+				downShift[0].Torque = maxDragTorque;
+
+				var upShift = new List<ShiftPolygon.ShiftPolygonEntry>();
+				if (gear >= gears.Count - 1) {
+					return new ShiftPolygon(downShift, upShift);
+				}
+
+				var gearRatio = gears[gear].Ratio / gears[gear + 1].Ratio;
+				var rpmMarginFactor = 1 + DeclarationData.Gearbox.ShiftPolygonRPMMargin / 100.0;
+
+				var p2p = new Point(p2.X * gearRatio * rpmMarginFactor, p2.Y / gearRatio);
+				var p3p = new Point(p3.X * gearRatio * rpmMarginFactor, p3.Y / gearRatio);
+				var p6p = new Point(p6.X * gearRatio * rpmMarginFactor, p6.Y / gearRatio);
+				var edgeP6pP3p = new Edge(p6p, p3p);
+				var p3pExt = new Point((1.1 * p5.Y - edgeP6pP3p.OffsetXY) / edgeP6pP3p.SlopeXY, 1.1 * p5.Y);
+
+				upShift = IntersectShiftPolygon(new[] { p4, p7, p5 }.ToList(), new[] { p2p, p6p, p3pExt }.ToList())
+					.Select(point => new ShiftPolygon.ShiftPolygonEntry() {
+						AngularSpeed = point.X.SI<PerSecond>(),
+						Torque = point.Y.SI<NewtonMeter>()
+					}).ToList();
+				upShift[0].Torque = maxDragTorque;
+				return new ShiftPolygon(downShift, upShift);
+			}
+
+			/// <summary>
+			/// ensures the original downshift line is below the (already reduced) full-load curve
+			/// </summary>
+			/// <param name="shiftLine">second part of the shift polygon (slope)</param>
+			/// <param name="fldMargin">reduced full-load curve</param>
+			/// <param name="maxTorque">max torque</param>
+			/// <returns>returns a corrected shift polygon segment (slope) that is below the full load curve and reaches given maxTorque. the returned segment has the same slope</returns>
+			internal static Edge MoveDownshiftBelowFld(Edge shiftLine, IEnumerable<Point> fldMargin, NewtonMeter maxTorque)
+			{
+				var slope = shiftLine.SlopeXY;
+				var d = shiftLine.P2.Y - slope * shiftLine.P2.X;
+
+				d = fldMargin.Select(point => point.Y - slope * point.X).Concat(new[] { d }).Min();
+				var p6Corr = new Point(shiftLine.P1.X, shiftLine.P1.X * slope + d);
+				var p3Corr = new Point((maxTorque.Value() - d) / slope, maxTorque.Value());
+				return Edge.Create(p6Corr, p3Corr);
+			}
+
+			/// <summary>
+			/// reduce the torque of the full load curve up to the given rpms
+			/// </summary>
+			/// <param name="fullLoadCurve"></param>
+			/// <param name="rpmLimit"></param>
+			/// <returns></returns>
+			internal static IEnumerable<Point> ShiftPolygonFldMargin(List<FullLoadCurve.FullLoadCurveEntry> fullLoadCurve,
+				PerSecond rpmLimit)
+			{
+				return
+					fullLoadCurve.TakeWhile(fldEntry => fldEntry.EngineSpeed < rpmLimit)
+						.Select(
+							fldEntry =>
+								new Point(fldEntry.EngineSpeed.Value(), fldEntry.TorqueFullLoad.Value() * ShiftPolygonEngineFldMargin))
+						.ToList();
+			}
 
 
-				entriesUp.Add(new ShiftPolygon.ShiftPolygonEntry {
-					AngularSpeed = fullLoadCurve.PreferredSpeed,
-					Torque = 0.SI<NewtonMeter>()
-				});
+			internal static PerSecond ComputeEngineSpeed85kmh(ITransmissionInputData gear, double axleRatio,
+				Meter dynamicTyreRadius, CombustionEngineData engine)
+			{
+				var engineSpeed = TruckMaxAllowedSpeed / dynamicTyreRadius * axleRatio * gear.Ratio;
+				if (engineSpeed < engine.IdleSpeed) {
+					throw new VectoException("engine speed at velocity {0} in gear {1} is below engine's idle speed! {2}",
+						DeclarationData.Gearbox.TruckMaxAllowedSpeed, gear.Gear, engineSpeed);
+				}
+				if (engineSpeed > engine.FullLoadCurve.FullLoadEntries.Last().EngineSpeed) {
+					throw new VectoException("engine speed at velocity {0} in gear {1} is above engine's max speed! {2}",
+						DeclarationData.Gearbox.TruckMaxAllowedSpeed, gear.Gear, engineSpeed);
+				}
+				return engineSpeed;
+			}
 
-				tq1 = maxTorque * (fullLoadCurve.PreferredSpeed - engineIdleSpeed) / (fullLoadCurve.N95hSpeed - engineIdleSpeed);
-				entriesUp.Add(new ShiftPolygon.ShiftPolygonEntry { AngularSpeed = fullLoadCurve.PreferredSpeed, Torque = tq1 });
 
-				entriesUp.Add(new ShiftPolygon.ShiftPolygonEntry { AngularSpeed = fullLoadCurve.N95hSpeed, Torque = maxTorque });
+			internal static List<Point> IntersectShiftPolygon(List<Point> orig, List<Point> transformedDownshift)
+			{
+				var intersections = new List<Point>();
+				// compute all intersection points between both line segments
+				foreach (var origLine in orig.Pairwise(Edge.Create)) {
+					foreach (var transformedLine in transformedDownshift.Pairwise(Edge.Create)) {
+						var isect = VectoMath.Intersect(origLine, transformedLine);
+						if (isect != null) {
+							intersections.Add(isect);
+						}
+					}
+				}
 
-				return new ShiftPolygon(entriesDown, entriesUp);
+				// add all points (i.e. intersecting points and both line segments) to a single list
+				var pointSet = new List<Point>(orig);
+				pointSet.AddRange(transformedDownshift);
+				pointSet.AddRange(intersections);
+				pointSet.AddRange(ProjectPointsToLineSegments(orig, transformedDownshift));
+				pointSet.AddRange(ProjectPointsToLineSegments(transformedDownshift, orig));
+
+				// line sweeping from max_X to 0: select point with lowest Y coordinate, abort if a point has Y = 0
+				var shiftPolygon = new List<Point>();
+				foreach (var xCoord in pointSet.Select(pt => pt.X).Distinct().OrderBy(x => x).Reverse()) {
+					var coord = xCoord;
+					var xPoints = pointSet.Where(pt => pt.X.IsEqual(coord) && !pt.Y.IsEqual(0)).ToList();
+					shiftPolygon.Add(xPoints.MinBy(pt => pt.Y));
+					var tmp = pointSet.Where(pt => pt.X.IsEqual(coord)).Where(pt => pt.Y.IsEqual(0)).ToList();
+					if (!tmp.Any()) {
+						continue;
+					}
+					shiftPolygon.Add(tmp.First());
+					break;
+				}
+
+				// find and remove colinear points
+				var toRemove = new List<Point>();
+				for (var i = 0; i < shiftPolygon.Count - 2; i++) {
+					var edge = new Edge(shiftPolygon[i], shiftPolygon[i + 2]);
+					if (edge.ContainsXY(shiftPolygon[i + 1])) {
+						toRemove.Add(shiftPolygon[i + 1]);
+					}
+				}
+				foreach (var point in toRemove) {
+					shiftPolygon.Remove(point);
+				}
+
+				// order points first by x coordinate and the by Y coordinate ASC
+				return shiftPolygon.OrderBy(pt => pt.X).ThenBy(pt => pt.Y).ToList();
+			}
+
+			private static List<Point> ProjectPointsToLineSegments(List<Point> lineSegments, List<Point> points)
+			{
+				var pointSet = new List<Point>();
+				foreach (var segment in lineSegments.Pairwise(Edge.Create)) {
+					if (segment.P1.X.IsEqual(segment.P2.X)) {
+						continue;
+					}
+					var k = segment.SlopeXY;
+					var d = segment.P1.Y - segment.P1.X * k;
+					pointSet.AddRange(points.Select(point => new Point(point.X, point.X * k + d)));
+				}
+				return pointSet;
 			}
 		}
 

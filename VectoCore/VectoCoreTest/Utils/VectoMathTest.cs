@@ -29,16 +29,19 @@
 *   Martin Rexeis, rexeis@ivt.tugraz.at, IVT, Graz University of Technology
 */
 
+using System;
 using Microsoft.VisualStudio.TestTools.UnitTesting;
+using NUnit.Framework;
 using TUGraz.VectoCommon.Utils;
 using TUGraz.VectoCore.Utils;
+using Assert = Microsoft.VisualStudio.TestTools.UnitTesting.Assert;
 
 namespace TUGraz.VectoCore.Tests.Utils
 {
-	[TestClass]
+	[TestFixture]
 	public class VectoMathTest
 	{
-		[TestMethod]
+		[Test]
 		public void VectoMath_Min()
 		{
 			var smaller = 0.SI();
@@ -65,6 +68,27 @@ namespace TUGraz.VectoCore.Tests.Utils
 
 			Assert.AreEqual(positiveWatt, VectoMath.Abs(negativeWatt));
 			Assert.AreEqual(positiveWatt, VectoMath.Abs(positiveWatt));
+		}
+
+
+		[TestCase(0, -1, 0, 1, -1, 0, 1, 0, 0, 0),
+		TestCase(0, 0, 10, 0, 0, 5, 10, 5, double.NaN, double.NaN),
+		TestCase(0, 0, 0, 10, 5, 0, 10, 5, double.NaN, double.NaN),
+		TestCase(0, 0, 1, 1, 1, 0, 0, 1, 0.5, 0.5)]
+		public void IntersectionTest(double p0x, double p0y, double p1x, double p1y, double p2x, double p2y, double p3x,
+			double p3y, double isx, double isy)
+		{
+			var line1 = new Edge(new Point(p0x, p0y), new Point(p1x, p1y));
+			var line2 = new Edge(new Point(p2x, p2y), new Point(p3x, p3y));
+
+			var intersect = VectoMath.Intersect(line1, line2);
+			if (intersect != null) {
+				Assert.AreEqual(isx, intersect.X);
+				Assert.AreEqual(isy, intersect.Y);
+			} else {
+				Assert.IsTrue(double.IsNaN(isx));
+				Assert.IsTrue(double.IsNaN(isy));
+			}
 		}
 	}
 }
