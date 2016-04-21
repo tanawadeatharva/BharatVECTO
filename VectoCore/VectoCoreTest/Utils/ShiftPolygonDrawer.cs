@@ -1,4 +1,5 @@
 ﻿using System;
+using System.Collections;
 using System.Collections.Generic;
 using System.Drawing;
 using System.Linq;
@@ -8,6 +9,7 @@ using TUGraz.VectoCommon.Utils;
 using TUGraz.VectoCore.Configuration;
 using TUGraz.VectoCore.Models.SimulationComponent.Data.Engine;
 using TUGraz.VectoCore.Models.SimulationComponent.Data.Gearbox;
+using Point = TUGraz.VectoCore.Utils.Point;
 
 namespace TUGraz.VectoCore.Tests.Utils
 {
@@ -17,10 +19,11 @@ namespace TUGraz.VectoCore.Tests.Utils
 		private static readonly Font AxisTitleFont = new Font("Verdana", 12);
 		private static readonly Font LegendFont = new Font("Verdana", 14);
 
-		private static Size _diagramSize = new Size(800, 800);
+		private static Size _diagramSize = new Size(1000, 800);
 
 		public static void DrawShiftPolygons(string title, EngineFullLoadCurve engineFld, List<ShiftPolygon> polygons,
-			string imageFileName, PerSecond speed85kmh)
+			string imageFileName, PerSecond speed85kmh, List<List<Point>> upshiftOrig = null,
+			List<List<Point>> downshiftTransformed = null)
 		{
 			var numRows = Math.Ceiling(polygons.Count / 4.0);
 			var numCols = Math.Ceiling(polygons.Count / numRows);
@@ -30,15 +33,27 @@ namespace TUGraz.VectoCore.Tests.Utils
 			};
 			var maxX = engineFld.FullLoadEntries.Last().EngineSpeed.Value() / Constants.RPMToRad * 1.1;
 
-			var i = 1;
+			var i = 0;
 			foreach (var shiftPolygon in polygons) {
 				var chartArea = AddChartArea(chart, "Gear " + (i + 1), "Engine Speed", "Torque", 0, maxX);
 
+				PlotPower(engineFld, chartArea, chart, "engine power " + i);
 				PlotFLD(engineFld, speed85kmh, chartArea, chart, "Engine Full Load " + i);
+
+				if (upshiftOrig != null && i < upshiftOrig.Count) {
+					PlotShiftLine("UpshiftOrig " + i, chartArea, chart, Color.Gray,
+						upshiftOrig[i].Select(pt => pt.X / Constants.RPMToRad).ToList(), upshiftOrig[i].Select(pt => pt.Y).ToList(), true);
+				}
+				if (downshiftTransformed != null && i < downshiftTransformed.Count) {
+					PlotShiftLine("DownTransformed " + i, chartArea, chart, Color.BlueViolet,
+						downshiftTransformed[i].Select(pt => pt.X / Constants.RPMToRad).ToList(),
+						downshiftTransformed[i].Select(pt => pt.Y).ToList(), true);
+				}
 
 				PlotShiftPolygon(i, shiftPolygon, chartArea, chart);
 
 				PositionChartArea(chartArea, 5, i, polygons.Count);
+
 
 				i++;
 			}
@@ -46,6 +61,34 @@ namespace TUGraz.VectoCore.Tests.Utils
 			AddTitle(chart, title);
 			chart.Invalidate();
 			chart.SaveImage(imageFileName, ChartImageFormat.Png);
+		}
+
+		private static void PlotPower(EngineFullLoadCurve engineFld, ChartArea chartArea, Chart chart, string name)
+		{
+			var series = new Series {
+				Name = name,
+				ChartType = SeriesChartType.Line,
+				Color = Color.DarkGoldenrod,
+				BorderWidth = 2,
+				//Legend = legend.Name,
+				IsVisibleInLegend = true,
+				ChartArea = chartArea.Name,
+				//YAxisType = AxisType.Secondary
+			};
+			series.BorderDashStyle = ChartDashStyle.Dash;
+			series.BorderWidth = 1;
+
+			var x = new List<double>();
+			var y = new List<double>();
+			for (var i = engineFld.FullLoadEntries.First().EngineSpeed;
+				i < engineFld.FullLoadEntries.Last().EngineSpeed;
+				i += 5.RPMtoRad()) {
+				x.Add(i.Value() / Constants.RPMToRad);
+				y.Add(engineFld.FullLoadStationaryPower(i).Value() / 1000);
+			}
+
+			chart.Series.Add(series);
+			chart.Series[series.Name].Points.DataBindXY(x, y);
 		}
 
 		private static void AddTitle(Chart chart, string titleText)
@@ -66,49 +109,52 @@ namespace TUGraz.VectoCore.Tests.Utils
 			chartArea.Position.Auto = false;
 			chartArea.Position.Width = (float)((100.0f) / numCols);
 			chartArea.Position.Height = (float)((100.0f - titleHeight) / numRows);
-			chartArea.Position.X = (float)(((i - 1) % numCols) * 100.0f / numCols);
-			chartArea.Position.Y = (float)(titleHeight + (int)((i - 1) / numCols) * (100 - titleHeight) / numRows);
+			chartArea.Position.X = (float)(((i) % numCols) * 100.0f / numCols);
+			chartArea.Position.Y = (float)(titleHeight + (int)((i) / numCols) * (100 - titleHeight) / numRows);
 		}
 
 		private static void PlotShiftPolygon(int gear, ShiftPolygon shiftPolygon, ChartArea chartArea, Chart chart)
 		{
-			var seriesDown = new Series {
-				Name = "DownShift " + gear,
-				ChartType = SeriesChartType.Line,
-				Color = Color.DarkRed,
-				BorderWidth = 2,
-				//Legend = legend.Name,
-				IsVisibleInLegend = true,
-				ChartArea = chartArea.Name,
-			};
-			chart.Series.Add(seriesDown);
 			var x = new List<double>();
 			var y = new List<double>();
 			foreach (var entry in shiftPolygon.Downshift) {
 				x.Add(entry.AngularSpeed.Value() / Constants.RPMToRad);
 				y.Add(entry.Torque.Value());
 			}
-			chart.Series[seriesDown.Name].Points.DataBindXY(x, y);
+			PlotShiftLine("DownShift " + gear, chartArea, chart, Color.DarkRed, x, y);
 
-			var seriesUp = new Series {
-				Name = "UpShift " + gear,
-				ChartType = SeriesChartType.Line,
-				Color = Color.DarkRed,
-				BorderWidth = 2,
-				//Legend = legend.Name,
-				IsVisibleInLegend = true,
-				ChartArea = chartArea.Name,
-			};
-			chart.Series.Add(seriesUp);
+
 			var xUp = new List<double>();
 			var yUp = new List<double>();
 			foreach (var entry in shiftPolygon.Upshift) {
 				xUp.Add(entry.AngularSpeed.Value() / Constants.RPMToRad);
 				yUp.Add(entry.Torque.Value());
 			}
-			chart.Series[seriesUp.Name].Points.DataBindXY(xUp, yUp);
+			PlotShiftLine("UpShift " + gear, chartArea, chart, Color.DarkRed, xUp, yUp);
+
 
 			//return series;
+		}
+
+		private static void PlotShiftLine(string name, ChartArea chartArea, Chart chart, Color color, List<double> x,
+			List<double> y, bool dashed = false)
+		{
+			var series = new Series {
+				Name = name,
+				ChartType = SeriesChartType.Line,
+				Color = color,
+				BorderWidth = 2,
+				//Legend = legend.Name,
+				IsVisibleInLegend = true,
+				ChartArea = chartArea.Name,
+			};
+			if (dashed) {
+				series.BorderDashStyle = ChartDashStyle.Dash;
+				series.BorderWidth = 1;
+			}
+
+			chart.Series.Add(series);
+			chart.Series[series.Name].Points.DataBindXY(x, y);
 		}
 
 		private static void PlotFLD(EngineFullLoadCurve engineFld, PerSecond speed85kmh, ChartArea chartArea, Chart chart,
