@@ -246,24 +246,28 @@ namespace TUGraz.VectoCore.Models.Declaration
 			{
 				var engineSpeed85kmhLastGear = ComputeEngineSpeed85kmh(gears[gears.Count - 1], axlegearRatio, dynamicTyreRadius,
 					engine);
-				var engineSpeed85kmhSecondToLastGear = ComputeEngineSpeed85kmh(gears[gears.Count - 2], axlegearRatio,
-					dynamicTyreRadius, engine);
+				//var engineSpeed85kmhSecondToLastGear = ComputeEngineSpeed85kmh(gears[gears.Count - 2], axlegearRatio,
+				//	dynamicTyreRadius, engine);
+
+				var nVHigh = VectoMath.Min(engineSpeed85kmhLastGear, engine.FullLoadCurve.RatedSpeed);
+
+				var diffRatio = gears[gears.Count - 2].Ratio / gears[gears.Count - 1].Ratio - 1;
 
 				var maxDragTorque = engine.FullLoadCurve.MaxDragTorque * 1.1;
 
 				var p1 = new Point(engine.IdleSpeed.Value() / 2, 0);
 				var p2 = new Point(engine.IdleSpeed.Value() * 1.1, 0);
-				var p3 = new Point(engineSpeed85kmhLastGear.Value() * 0.9,
-					fullLoadCurve.FullLoadStationaryTorque(engineSpeed85kmhLastGear * 0.9).Value());
+				var p3 = new Point(nVHigh.Value() * 0.9,
+					engine.FullLoadCurve.FullLoadStationaryTorque(nVHigh * 0.9).Value());
 
 				var p4 =
-					new Point((engineSpeed85kmhLastGear + (engineSpeed85kmhSecondToLastGear - engineSpeed85kmhLastGear) / 3).Value(), 0);
-				var p5 = new Point(engine.FullLoadCurve.N95hSpeed.Value(), fullLoadCurve.MaxTorque.Value());
+					new Point((nVHigh * (1 + diffRatio / 3)).Value(), 0);
+				var p5 = new Point(engine.FullLoadCurve.N95hSpeed.Value(), engine.FullLoadCurve.MaxTorque.Value());
 
 				var p6 = new Point(p2.X, VectoMath.Interpolate(p1, p3, p2.X));
 				var p7 = new Point(p4.X, VectoMath.Interpolate(p2, p5, p4.X));
 
-				var fldMargin = ShiftPolygonFldMargin(fullLoadCurve.FullLoadEntries, engineSpeed85kmhLastGear * 0.9);
+				var fldMargin = ShiftPolygonFldMargin(fullLoadCurve.FullLoadEntries, nVHigh * 0.95);
 				var downshiftCorr = MoveDownshiftBelowFld(Edge.Create(p6, p3), fldMargin, 1.1 * fullLoadCurve.MaxTorque);
 
 				var downShift = new List<ShiftPolygon.ShiftPolygonEntry>();
