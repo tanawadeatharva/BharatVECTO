@@ -218,6 +218,37 @@ namespace TUGraz.VectoCore.Tests.Models.SimulationComponentData
 				"Validation Error: " + string.Join("\n_eng_avg", results.Select(r => r.ErrorMessage)));
 		}
 
+		/// <summary>
+		/// VECTO-249: check upshift is above downshift
+		/// </summary>
+		[TestMethod]
+		public void ShiftPolygonValidationTest()
+		{
+			var vgbs = new[] {
+				"-116,600,1508						",
+				"0,600,1508							",
+				"293,600,1508						",
+				"494,806,1508						",
+				"956,1278,2355						",
+			};
+
+			var shiftPolygon =
+				ShiftPolygon.Create(
+					VectoCSVFile.ReadStream(
+						InputDataHelper.InputDataAsStream("engine torque,downshift rpm [rpm],upshift rpm [rpm]	", vgbs)));
+
+			var results = shiftPolygon.Validate();
+			Assert.IsFalse(results.Any());
+
+			shiftPolygon =
+				ShiftPolygon.Create(
+					VectoCSVFile.ReadStream(
+						InputDataHelper.InputDataAsStream("engine torque,upshift rpm [rpm], downshift rpm [rpm]	", vgbs)));
+
+			results = shiftPolygon.Validate();
+			Assert.IsTrue(results.Any());
+		}
+
 
 		public class DeepDataObject
 		{
