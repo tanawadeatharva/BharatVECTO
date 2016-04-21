@@ -265,15 +265,18 @@ namespace TUGraz.VectoCore.Models.Declaration
 
 				var fldMargin = ShiftPolygonFldMargin(fullLoadCurve.FullLoadEntries, engineSpeed85kmhLastGear * 0.9);
 				var downshiftCorr = MoveDownshiftBelowFld(Edge.Create(p6, p3), fldMargin, 1.1 * fullLoadCurve.MaxTorque);
-				var downShift =
-					new[] { p2, downshiftCorr.P1, downshiftCorr.P2 }.Select(
-						point => new ShiftPolygon.ShiftPolygonEntry() {
-							AngularSpeed = point.X.SI<PerSecond>(),
-							Torque = point.Y.SI<NewtonMeter>()
-						}).ToList();
 
-				downShift[0].Torque = maxDragTorque;
+				var downShift = new List<ShiftPolygon.ShiftPolygonEntry>();
+				if (gear > 0) {
+					downShift =
+						new[] { p2, downshiftCorr.P1, downshiftCorr.P2 }.Select(
+							point => new ShiftPolygon.ShiftPolygonEntry() {
+								AngularSpeed = point.X.SI<PerSecond>(),
+								Torque = point.Y.SI<NewtonMeter>()
+							}).ToList();
 
+					downShift[0].Torque = maxDragTorque;
+				}
 				var upShift = new List<ShiftPolygon.ShiftPolygonEntry>();
 				if (gear >= gears.Count - 1) {
 					return new ShiftPolygon(downShift, upShift);
