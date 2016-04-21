@@ -74,18 +74,19 @@ namespace TUGraz.VectoCore.Tests.Models.Simulation
 
 			// -- shiftpolygon downshift 
 
-			Assert.AreEqual(660.RPMtoRad().Value(), gearbox.ModelData.Gears[1].ShiftPolygon.Downshift[0].AngularSpeed.Value(),
+			// no downshift curve in first gear!
+			Assert.AreEqual(660.RPMtoRad().Value(), gearbox.ModelData.Gears[2].ShiftPolygon.Downshift[0].AngularSpeed.Value(),
 				0.0001);
-			Assert.AreEqual(-163.9, gearbox.ModelData.Gears[1].ShiftPolygon.Downshift[0].Torque.Value(), 0.0001);
+			Assert.AreEqual(-163.9, gearbox.ModelData.Gears[2].ShiftPolygon.Downshift[0].Torque.Value(), 0.0001);
 
-			Assert.AreEqual(660.RPMtoRad().Value(), gearbox.ModelData.Gears[1].ShiftPolygon.Downshift[1].AngularSpeed.Value(),
+			Assert.AreEqual(660.RPMtoRad().Value(), gearbox.ModelData.Gears[2].ShiftPolygon.Downshift[1].AngularSpeed.Value(),
 				0.0001);
-			Assert.AreEqual(257.7076, gearbox.ModelData.Gears[1].ShiftPolygon.Downshift[1].Torque.Value(), 0.1);
+			Assert.AreEqual(257.7076, gearbox.ModelData.Gears[2].ShiftPolygon.Downshift[1].Torque.Value(), 0.1);
 
 			Assert.AreEqual(1681.4261.RPMtoRad().Value(),
-				gearbox.ModelData.Gears[1].ShiftPolygon.Downshift[2].AngularSpeed.Value(),
+				gearbox.ModelData.Gears[2].ShiftPolygon.Downshift[2].AngularSpeed.Value(),
 				0.1);
-			Assert.AreEqual(988.9, gearbox.ModelData.Gears[1].ShiftPolygon.Downshift[2].Torque.Value(), 0.0001);
+			Assert.AreEqual(988.9, gearbox.ModelData.Gears[2].ShiftPolygon.Downshift[2].Torque.Value(), 0.0001);
 
 			// -- shiftpolygon upshift
 
