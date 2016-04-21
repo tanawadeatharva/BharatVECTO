@@ -258,7 +258,7 @@ namespace TUGraz.VectoCore.Models.Declaration
 
 				var p4 =
 					new Point((engineSpeed85kmhLastGear + (engineSpeed85kmhSecondToLastGear - engineSpeed85kmhLastGear) / 3).Value(), 0);
-				var p5 = new Point(fullLoadCurve.RatedSpeed.Value() * 0.95, fullLoadCurve.MaxTorque.Value());
+				var p5 = new Point(engine.FullLoadCurve.N95hSpeed.Value(), fullLoadCurve.MaxTorque.Value());
 
 				var p6 = new Point(p2.X, VectoMath.Interpolate(p1, p3, p2.X));
 				var p7 = new Point(p4.X, VectoMath.Interpolate(p2, p5, p4.X));
@@ -337,14 +337,14 @@ namespace TUGraz.VectoCore.Models.Declaration
 				Meter dynamicTyreRadius, CombustionEngineData engine)
 			{
 				var engineSpeed = TruckMaxAllowedSpeed / dynamicTyreRadius * axleRatio * gear.Ratio;
-				if (engineSpeed < engine.IdleSpeed) {
-					throw new VectoException("engine speed at velocity {0} in gear {1} is below engine's idle speed! {2}",
-						DeclarationData.Gearbox.TruckMaxAllowedSpeed, gear.Gear, engineSpeed);
-				}
-				if (engineSpeed > engine.FullLoadCurve.FullLoadEntries.Last().EngineSpeed) {
-					throw new VectoException("engine speed at velocity {0} in gear {1} is above engine's max speed! {2}",
-						DeclarationData.Gearbox.TruckMaxAllowedSpeed, gear.Gear, engineSpeed);
-				}
+				//if (engineSpeed < engine.IdleSpeed) {
+				//	throw new VectoException("engine speed at velocity {0} in gear {1} is below engine's idle speed! {2}",
+				//		DeclarationData.Gearbox.TruckMaxAllowedSpeed, gear.Gear, engineSpeed);
+				//}
+				//if (engineSpeed > engine.FullLoadCurve.FullLoadEntries.Last().EngineSpeed) {
+				//	throw new VectoException("engine speed at velocity {0} in gear {1} is above engine's max speed! {2}",
+				//		DeclarationData.Gearbox.TruckMaxAllowedSpeed, gear.Gear, engineSpeed);
+				//}
 				return engineSpeed;
 			}
 
