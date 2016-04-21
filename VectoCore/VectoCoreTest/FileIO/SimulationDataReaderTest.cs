@@ -100,8 +100,8 @@ namespace TUGraz.VectoCore.Tests.FileIO
 
 			Assert.AreEqual(3.7890, runData.EngineData.Inertia.Value());
 
-			var downshiftSpeeds = new[] { 660, 660, 1681.4261 };
-			var downshiftTorque = new[] { -163.9, 257.7076, 988.9 };
+			var downshiftSpeeds = new[] { 660, 660, 1750.70139 };
+			var downshiftTorque = new[] { -163.9, 208.116856, 988.9 };
 
 			Assert.AreEqual(downshiftSpeeds.Length, runData.GearboxData.Gears[2].ShiftPolygon.Downshift.Count);
 			for (var i = 0; i < downshiftSpeeds.Length; i++) {
