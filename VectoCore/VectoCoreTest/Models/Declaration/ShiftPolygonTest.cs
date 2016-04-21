@@ -2,6 +2,7 @@
 using System.Collections.Generic;
 using System.Diagnostics;
 using System.Drawing;
+using System.IO;
 using System.Linq;
 using Microsoft.VisualStudio.TestTools.UnitTesting;
 using NUnit.Framework;
@@ -12,6 +13,7 @@ using TUGraz.VectoCore.Models.Declaration;
 using TUGraz.VectoCore.Models.SimulationComponent.Data;
 using TUGraz.VectoCore.Models.SimulationComponent.Data.Engine;
 using TUGraz.VectoCore.Models.SimulationComponent.Data.Gearbox;
+using TUGraz.VectoCore.Tests.Utils;
 using TUGraz.VectoCore.Utils;
 using Assert = Microsoft.VisualStudio.TestTools.UnitTesting.Assert;
 using Point = TUGraz.VectoCore.Utils.Point;
@@ -317,7 +319,7 @@ namespace TUGraz.VectoCore.Tests.Models.Declaration
 			var gearboxData = new JSONGearboxDataV5(JSONInputDataFactory.ReadFile(gearboxFile), gearboxFile);
 
 			var shiftPolygons = new List<ShiftPolygon>();
-			for (var i = 1; i <= gearboxData.Gears.Count; i++) {
+			for (var i = 0; i < gearboxData.Gears.Count; i++) {
 				shiftPolygons.Add(DeclarationData.Gearbox.ComputeShiftPolygon(i, engineData.FullLoadCurve, gearboxData.Gears,
 					engineData, axlegearRatio, rdyn));
 			}
@@ -360,5 +362,60 @@ namespace TUGraz.VectoCore.Tests.Models.Declaration
 		//			engineData, axlegearRatio, rdyn));
 		//	}
 		//}
+	}
+
+	[TestFixture]
+	public class ShiftPolygonComparison
+	{
+		const string BasePath = @"E:\QUAM\Workspace\Daten_INTERN\Testfahrzeuge\";
+
+		[
+			TestCase(@"class2_12t_baseline\175kW_Diesel_example.vfld", @"class2_12t_baseline\delivery_12t_example.vgbx", 0.421,
+				4.18, 600),
+			TestCase(@"class2_12t_iaxle_long\175kW_Diesel_example.vfld", @"class2_12t_iaxle_long\delivery_12t_example.vgbx",
+				0.421, 2.85, 600),
+			TestCase(@"class2_12t_iaxle_short\175kW_Diesel_example.vfld", @"class2_12t_iaxle_short\delivery_12t_example.vgbx",
+				0.421, 5.33, 600),
+			TestCase(@"class2_12t_Pmax_high\220kW_Diesel_example.vfld", @"class2_12t_Pmax_high\delivery_12t_example_220kW.vgbx",
+				0.421, 4.18, 600),
+			TestCase(@"class2_12t_Pmax_low\130kW_Diesel_example.vfld", @"class2_12t_Pmax_low\delivery_12t_example.vgbx", 0.421,
+				4.18, 600),
+			TestCase(@"class5_40t_baseline\12L-324kW.vfld", @"class5_40t_baseline\tractor_12gear_example.vgbx", 0.421, 2.64, 600),
+			TestCase(@"class5_40t_iaxle_long\12L-324kW.vfld", @"class5_40t_iaxle_long\tractor_12gear_example.vgbx", 0.421, 2.31,
+				600),
+			TestCase(@"class5_40t_iaxle_short\12L-324kW.vfld", @"class5_40t_iaxle_short\tractor_12gear_example.vgbx", 0.421, 3.71,
+				600),
+			TestCase(@"class5_40t_Pmax_high\13-9-L-375kW.vfld", @"class5_40t_Pmax_high\tractor_12gear_example.vgbx", 0.421,
+				2.64, 600),
+			TestCase(@"class5_40t_Pmax_low\9-6-L_260kW.vfld", @"class5_40t_Pmax_low\tractor_12gear_example.vgbx", 0.421, 2.64,
+				600),
+		]
+		public void ComputeShiftPolygon(string engineFldFile, string gearboxFile, double rdyn, double axlegearRatio,
+			double idlingSpeed)
+		{
+			var engineData = new CombustionEngineData() {
+				IdleSpeed = idlingSpeed.RPMtoRad(),
+				FullLoadCurve = EngineFullLoadCurve.ReadFromFile(Path.Combine(BasePath, engineFldFile), true)
+			};
+			engineData.FullLoadCurve.EngineData = engineData;
+
+			var gearboxData = new JSONGearboxDataV5(JSONInputDataFactory.ReadFile(Path.Combine(BasePath, gearboxFile)),
+				Path.Combine(BasePath, gearboxFile));
+
+			var shiftPolygons = new List<ShiftPolygon>();
+			for (var i = 0; i < gearboxData.Gears.Count; i++) {
+				shiftPolygons.Add(
+					DeclarationData.Gearbox.ComputeShiftPolygon(i, engineData.FullLoadCurve, gearboxData.Gears,
+						engineData, axlegearRatio, rdyn.SI<Meter>())
+					);
+			}
+
+			var imageFile = Path.GetDirectoryName(gearboxFile) + "_" + Path.GetFileNameWithoutExtension(gearboxFile) + "_" +
+							Path.GetFileNameWithoutExtension(engineFldFile) +
+							".png";
+			ShiftPolygonDrawer.DrawShiftPolygons(Path.GetDirectoryName(gearboxFile), engineData.FullLoadCurve, shiftPolygons,
+				imageFile,
+				DeclarationData.Gearbox.TruckMaxAllowedSpeed / rdyn.SI<Meter>() * axlegearRatio * gearboxData.Gears.Last().Ratio);
+		}
 	}
 }
