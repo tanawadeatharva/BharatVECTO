@@ -33,6 +33,8 @@ namespace TUGraz.VectoCore.Tests.Utils
 			};
 			var maxX = engineFld.FullLoadEntries.Last().EngineSpeed.Value() / Constants.RPMToRad * 1.1;
 
+			AddLegend(chart);
+
 			var i = 0;
 			foreach (var shiftPolygon in polygons) {
 				var chartArea = AddChartArea(chart, "Gear " + (i + 1), "Engine Speed", "Torque", 0, maxX);
@@ -52,7 +54,7 @@ namespace TUGraz.VectoCore.Tests.Utils
 
 				PlotShiftPolygon(i, shiftPolygon, chartArea, chart);
 
-				PositionChartArea(chartArea, 5, i, polygons.Count);
+				PositionChartArea(chartArea, 5, i, polygons.Count, 7);
 
 
 				i++;
@@ -71,7 +73,7 @@ namespace TUGraz.VectoCore.Tests.Utils
 				Color = Color.DarkGoldenrod,
 				BorderWidth = 2,
 				//Legend = legend.Name,
-				IsVisibleInLegend = true,
+				IsVisibleInLegend = false,
 				ChartArea = chartArea.Name,
 				//YAxisType = AxisType.Secondary
 			};
@@ -102,7 +104,7 @@ namespace TUGraz.VectoCore.Tests.Utils
 			chart.Titles.Add(title);
 		}
 
-		private static void PositionChartArea(ChartArea chartArea, float titleHeight, int i, int count)
+		private static void PositionChartArea(ChartArea chartArea, float titleHeight, int i, int count, float legendHeight)
 		{
 			var numRows = Math.Ceiling(count / 4.0);
 			var numCols = Math.Ceiling(count / numRows);
@@ -110,7 +112,7 @@ namespace TUGraz.VectoCore.Tests.Utils
 			chartArea.Position.Width = (float)((100.0f) / numCols);
 			chartArea.Position.Height = (float)((100.0f - titleHeight) / numRows);
 			chartArea.Position.X = (float)(((i) % numCols) * 100.0f / numCols);
-			chartArea.Position.Y = (float)(titleHeight + (int)((i) / numCols) * (100 - titleHeight) / numRows);
+			chartArea.Position.Y = (float)(titleHeight + (int)((i) / numCols) * (100 - titleHeight - legendHeight) / numRows);
 		}
 
 		private static void PlotShiftPolygon(int gear, ShiftPolygon shiftPolygon, ChartArea chartArea, Chart chart)
@@ -145,7 +147,7 @@ namespace TUGraz.VectoCore.Tests.Utils
 				Color = color,
 				BorderWidth = 2,
 				//Legend = legend.Name,
-				IsVisibleInLegend = true,
+				IsVisibleInLegend = false,
 				ChartArea = chartArea.Name,
 			};
 			if (dashed) {
@@ -164,64 +166,36 @@ namespace TUGraz.VectoCore.Tests.Utils
 
 			PlotDragLoad(engineFld, chartArea, chart, name);
 
-			PlotNPref(engineFld, chartArea, chart, name);
+			PlotEngineSpeedLine(engineFld, chartArea, chart, "nPref " + name, Color.DeepSkyBlue,
+				engineFld.PreferredSpeed.Value() / Constants.RPMToRad);
 
-			PlotN95h(engineFld, chartArea, chart, name);
+			PlotEngineSpeedLine(engineFld, chartArea, chart, "n95h " + name, Color.Red,
+				engineFld.N95hSpeed.Value() / Constants.RPMToRad);
 
-			PlotN85kmh(engineFld, speed85kmh, chartArea, chart, name);
+			PlotEngineSpeedLine(engineFld, chartArea, chart, "n85kmh " + name, Color.LimeGreen,
+				speed85kmh.Value() / Constants.RPMToRad);
+
+			PlotEngineSpeedLine(engineFld, chartArea, chart, "nPmax " + name, Color.Coral,
+				engineFld.RatedSpeed.Value() / Constants.RPMToRad);
 		}
 
-		private static void PlotN85kmh(EngineFullLoadCurve engineFld, PerSecond speed85kmh, ChartArea chartArea, Chart chart,
-			string name)
-		{
-			var series85kmh = new Series {
-				Name = "85kmh-" + name,
-				ChartType = SeriesChartType.Line,
-				Color = Color.LimeGreen,
-				BorderWidth = 2,
-				//Legend = legend.Name,
-				IsVisibleInLegend = true,
-				ChartArea = chartArea.Name,
-			};
-			chart.Series.Add(series85kmh);
-			var x85kmh = new[] { speed85kmh.Value() / Constants.RPMToRad, speed85kmh.Value() / Constants.RPMToRad }.ToList();
-			var y85kmh = new[] { engineFld.MaxDragTorque.Value(), engineFld.MaxLoadTorque.Value() }.ToList();
-			chart.Series[series85kmh.Name].Points.DataBindXY(x85kmh, y85kmh);
-		}
 
-		private static void PlotN95h(EngineFullLoadCurve engineFld, ChartArea chartArea, Chart chart, string name)
-		{
-			var seriesN95h = new Series {
-				Name = "N95h-" + name,
-				ChartType = SeriesChartType.Line,
-				Color = Color.Red,
-				BorderWidth = 2,
-				//Legend = legend.Name,
-				IsVisibleInLegend = true,
-				ChartArea = chartArea.Name,
-			};
-			chart.Series.Add(seriesN95h);
-			var x95h =
-				new[] { engineFld.N95hSpeed.Value() / Constants.RPMToRad, engineFld.N95hSpeed.Value() / Constants.RPMToRad }.ToList();
-			var y95h = new[] { engineFld.MaxDragTorque.Value(), engineFld.MaxLoadTorque.Value() }.ToList();
-			chart.Series[seriesN95h.Name].Points.DataBindXY(x95h, y95h);
-		}
-
-		private static void PlotNPref(EngineFullLoadCurve engineFld, ChartArea chartArea, Chart chart, string name)
+		private static void PlotEngineSpeedLine(EngineFullLoadCurve engineFld, ChartArea chartArea, Chart chart, string name,
+			Color color, double n)
 		{
 			var seriesNpref = new Series {
-				Name = "NPref-" + name,
+				Name = name,
 				ChartType = SeriesChartType.Line,
-				Color = Color.DeepSkyBlue,
+				Color = color,
 				BorderWidth = 2,
 				//Legend = legend.Name,
-				IsVisibleInLegend = true,
+				IsVisibleInLegend = false,
 				ChartArea = chartArea.Name,
 			};
 			chart.Series.Add(seriesNpref);
 			var xpref =
 				new[]
-				{ engineFld.PreferredSpeed.Value() / Constants.RPMToRad, engineFld.PreferredSpeed.Value() / Constants.RPMToRad }
+				{ n, n }
 					.ToList();
 			var ypref = new[] { engineFld.MaxDragTorque.Value(), engineFld.MaxLoadTorque.Value() }.ToList();
 			chart.Series[seriesNpref.Name].Points.DataBindXY(xpref, ypref);
@@ -235,7 +209,7 @@ namespace TUGraz.VectoCore.Tests.Utils
 				Color = Color.DarkBlue,
 				BorderWidth = 2,
 				//Legend = legend.Name,
-				IsVisibleInLegend = true,
+				IsVisibleInLegend = false,
 				ChartArea = chartArea.Name,
 			};
 			chart.Series.Add(seriesDrag);
@@ -256,7 +230,7 @@ namespace TUGraz.VectoCore.Tests.Utils
 				Color = Color.DarkBlue,
 				BorderWidth = 2,
 				//Legend = legend.Name,
-				IsVisibleInLegend = true,
+				IsVisibleInLegend = false,
 				ChartArea = chartArea.Name,
 			};
 			chart.Series.Add(series);
@@ -303,6 +277,91 @@ namespace TUGraz.VectoCore.Tests.Utils
 
 			chart.ChartAreas.Add(chartArea);
 			return chartArea;
+		}
+
+		private static void AddLegend(Chart chart)
+		{
+			var legend = new Legend()
+			{
+				Docking = Docking.Bottom,
+				Alignment = StringAlignment.Center,
+				IsDockedInsideChartArea = false,
+				Font = LegendFont,
+				//Title = "Legend",
+			};
+			legend.CustomItems.Add(new LegendItem()
+			{
+				Color = Color.DarkBlue,
+				Name = "Engine Full Load Curve",
+				MarkerStyle = MarkerStyle.None,
+				ImageStyle = LegendImageStyle.Line,
+				BorderWidth = 3,
+			});
+			legend.CustomItems.Add(new LegendItem()
+			{
+				Color = Color.DarkRed,
+				Name = "Upshift / Downshift",
+				MarkerStyle = MarkerStyle.None,
+				ImageStyle = LegendImageStyle.Line,
+				BorderWidth = 3,
+			});
+			legend.CustomItems.Add(new LegendItem()
+			{
+				Color = Color.DeepSkyBlue,
+				Name = "n_pref",
+				MarkerStyle = MarkerStyle.None,
+				ImageStyle = LegendImageStyle.Line,
+				BorderWidth = 3,
+			});
+			legend.CustomItems.Add(new LegendItem()
+			{
+				Color = Color.Coral,
+				Name = "n_Pmax",
+				MarkerStyle = MarkerStyle.None,
+				ImageStyle = LegendImageStyle.Line,
+				BorderWidth = 3,
+			});
+			legend.CustomItems.Add(new LegendItem()
+			{
+				Color = Color.Red,
+				Name = "n_95h",
+				MarkerStyle = MarkerStyle.None,
+				ImageStyle = LegendImageStyle.Line,
+				BorderWidth = 3,
+			});
+			legend.CustomItems.Add(new LegendItem()
+			{
+				Color = Color.LimeGreen,
+				Name = "n_85km/h",
+				MarkerStyle = MarkerStyle.None,
+				ImageStyle = LegendImageStyle.Line,
+				BorderWidth = 3,
+			});
+			legend.CustomItems.Add(new LegendItem()
+			{
+				Color = Color.BlueViolet,
+				Name = "Downshift next gear",
+				MarkerStyle = MarkerStyle.None,
+				ImageStyle = LegendImageStyle.Line,
+				BorderWidth = 3,
+			});
+			legend.CustomItems.Add(new LegendItem()
+			{
+				Color = Color.Gray,
+				Name = "Upshift orig.",
+				MarkerStyle = MarkerStyle.None,
+				ImageStyle = LegendImageStyle.Line,
+				BorderWidth = 3,
+			});
+			legend.CustomItems.Add(new LegendItem()
+			{
+				Color = Color.DarkGoldenrod,
+				Name = "P",
+				MarkerStyle = MarkerStyle.None,
+				ImageStyle = LegendImageStyle.Line,
+				BorderWidth = 3,
+			});
+			chart.Legends.Add(legend);
 		}
 	}
 }
