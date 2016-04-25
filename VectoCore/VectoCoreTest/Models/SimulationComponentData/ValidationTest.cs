@@ -35,6 +35,7 @@ using System.Diagnostics.CodeAnalysis;
 using System.Linq;
 using Microsoft.VisualStudio.TestTools.UnitTesting;
 using TUGraz.VectoCommon.Utils;
+using TUGraz.VectoCore.InputData.Reader;
 using TUGraz.VectoCore.InputData.Reader.DataObjectAdaper;
 using TUGraz.VectoCore.InputData.Reader.Impl;
 using TUGraz.VectoCore.Models.Simulation.Data;
@@ -233,7 +234,7 @@ namespace TUGraz.VectoCore.Tests.Models.SimulationComponentData
 			};
 
 			var shiftPolygon =
-				ShiftPolygon.Create(
+				ShiftPolygonReader.Create(
 					VectoCSVFile.ReadStream(
 						InputDataHelper.InputDataAsStream("engine torque,downshift rpm [rpm],upshift rpm [rpm]	", vgbs)));
 
@@ -241,7 +242,7 @@ namespace TUGraz.VectoCore.Tests.Models.SimulationComponentData
 			Assert.IsFalse(results.Any());
 
 			shiftPolygon =
-				ShiftPolygon.Create(
+				ShiftPolygonReader.Create(
 					VectoCSVFile.ReadStream(
 						InputDataHelper.InputDataAsStream("engine torque,upshift rpm [rpm], downshift rpm [rpm]	", vgbs)));
 

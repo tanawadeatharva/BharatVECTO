@@ -33,6 +33,7 @@ using System;
 using System.ComponentModel.DataAnnotations;
 using System.Linq;
 using Microsoft.VisualStudio.TestTools.UnitTesting;
+using TUGraz.VectoCore.InputData.Reader;
 using TUGraz.VectoCore.Models.Simulation.Data;
 using TUGraz.VectoCore.Models.SimulationComponent.Data;
 using TUGraz.VectoCore.Models.SimulationComponent.Data.Gearbox;
@@ -140,7 +141,7 @@ namespace TUGraz.VectoCore.Tests.Models.Simulation
 							LossMap = TransmissionLossMap.ReadFromFile(ratio != 1.0 ? directlossMap : indirectLossMap, ratio,
 								string.Format("Gear {0}", i)),
 							Ratio = ratio,
-							ShiftPolygon = ShiftPolygon.ReadFromFile(ShiftPolygonFile)
+							ShiftPolygon = ShiftPolygonReader.ReadFromFile(ShiftPolygonFile)
 						}))
 					.ToDictionary(k => k.Item1 + 1, v => v.Item2)
 			};

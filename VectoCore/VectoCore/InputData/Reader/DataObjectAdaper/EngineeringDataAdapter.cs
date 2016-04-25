@@ -155,7 +155,7 @@ namespace TUGraz.VectoCore.InputData.Reader.DataObjectAdaper
 					: null;
 				var fullLoadCurve = IntersectFullLoadCurves(engineData.FullLoadCurve, gearFullLoad);
 				var shiftPolygon = gear.ShiftPolygon != null
-					? ShiftPolygon.Create(gear.ShiftPolygon)
+					? ShiftPolygonReader.Create(gear.ShiftPolygon)
 					: DeclarationData.Gearbox.ComputeShiftPolygon(i, fullLoadCurve, gears, engineData, axlegearRatio, dynamicTyreRadius);
 
 				return new KeyValuePair<uint, GearData>((uint)(i + 1), new GearData {

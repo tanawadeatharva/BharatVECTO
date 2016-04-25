@@ -118,10 +118,12 @@
     <Compile Include="InputData\Reader\DataObjectAdaper\DeclarationDataAdapter.cs" />
     <Compile Include="InputData\Reader\DataObjectAdaper\EngineeringDataAdapter.cs" />
     <Compile Include="InputData\Reader\DrivingCycleDataReader.cs" />
+    <Compile Include="InputData\Reader\FullLoadCurveReader.cs" />
     <Compile Include="InputData\Reader\Impl\AbstractVectoRunDataFactory.cs" />
     <Compile Include="InputData\Reader\Impl\DeclarationModeVectoRunDataFactory.cs" />
     <Compile Include="InputData\Reader\Impl\EngineeringModeVectoRunDataFactory.cs" />
     <Compile Include="InputData\Reader\Impl\EngineOnlyVectoRunDataFactory.cs" />
+    <Compile Include="InputData\Reader\ShiftPolygonReader.cs" />
     <Compile Include="Models\Connector\Ports\IDriverDemandPort.cs" />
     <Compile Include="Models\Connector\Ports\IDrivingCyclePort.cs" />
     <Compile Include="Models\Connector\Ports\Impl\Response.cs" />

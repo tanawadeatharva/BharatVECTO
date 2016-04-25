@@ -34,6 +34,7 @@ using System.Collections.Generic;
 using System.Linq;
 using TUGraz.VectoCommon.Models;
 using TUGraz.VectoCommon.Utils;
+using TUGraz.VectoCore.InputData.Reader;
 using TUGraz.VectoCore.Models.Declaration;
 using TUGraz.VectoCore.Models.Simulation.Data;
 using TUGraz.VectoCore.Models.Simulation.Impl;
@@ -128,7 +129,7 @@ namespace TUGraz.VectoCore.Tests.Integration
 							LossMap = TransmissionLossMap.ReadFromFile(ratio != 1.0 ? GearboxIndirectLoss : GearboxDirectLoss, ratio,
 								string.Format("Gear {0}", i)),
 							Ratio = ratio,
-							ShiftPolygon = ShiftPolygon.ReadFromFile(ShiftPolygonFile)
+							ShiftPolygon = ShiftPolygonReader.ReadFromFile(ShiftPolygonFile)
 						}))
 					.ToDictionary(k => k.Item1 + 1, v => v.Item2),
 				ShiftTime = 2.SI<Second>(),
@@ -199,7 +200,9 @@ namespace TUGraz.VectoCore.Tests.Integration
 				AxleConfiguration = AxleConfiguration.AxleConfig_4x2,
 				//AerodynamicDragAera = 6.2985.SI<SquareMeter>(),
 				//CrossWindCorrectionMode = CrossWindCorrectionMode.NoCorrection,
-				CrossWindCorrectionCurve = new CrosswindCorrectionCdxALookup(CrossWindCorrectionCurveReader.GetNoCorrectionCurve(6.2985.SI<SquareMeter>()),CrossWindCorrectionMode.NoCorrection),
+				CrossWindCorrectionCurve =
+					new CrosswindCorrectionCdxALookup(CrossWindCorrectionCurveReader.GetNoCorrectionCurve(6.2985.SI<SquareMeter>()),
+						CrossWindCorrectionMode.NoCorrection),
 				CurbWeight = 7100.SI<Kilogram>(),
 				CurbWeigthExtra = massExtra,
 				Loading = loading,

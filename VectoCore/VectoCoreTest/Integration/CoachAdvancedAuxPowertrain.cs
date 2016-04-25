@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using System.Linq;
 using TUGraz.VectoCommon.Models;
 using TUGraz.VectoCommon.Utils;
+using TUGraz.VectoCore.InputData.Reader;
 using TUGraz.VectoCore.Models.Declaration;
 using TUGraz.VectoCore.Models.Simulation.Data;
 using TUGraz.VectoCore.Models.Simulation.Impl;
@@ -92,7 +93,7 @@ namespace TUGraz.VectoCore.Tests.Integration
 								: TransmissionLossMap.ReadFromFile(GearboxDirectLoss, ratio,
 									string.Format("Gear {0}", i)),
 							Ratio = ratio,
-							ShiftPolygon = ShiftPolygon.ReadFromFile(GearboxShiftPolygonFile)
+							ShiftPolygon = ShiftPolygonReader.ReadFromFile(GearboxShiftPolygonFile)
 						}))
 					.ToDictionary(k => k.Item1 + 1, v => v.Item2),
 				ShiftTime = 2.SI<Second>(),
