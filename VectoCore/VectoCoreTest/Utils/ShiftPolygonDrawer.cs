@@ -281,80 +281,70 @@ namespace TUGraz.VectoCore.Tests.Utils
 
 		private static void AddLegend(Chart chart)
 		{
-			var legend = new Legend()
-			{
+			var legend = new Legend() {
 				Docking = Docking.Bottom,
 				Alignment = StringAlignment.Center,
 				IsDockedInsideChartArea = false,
 				Font = LegendFont,
 				//Title = "Legend",
 			};
-			legend.CustomItems.Add(new LegendItem()
-			{
+			legend.CustomItems.Add(new LegendItem() {
 				Color = Color.DarkBlue,
 				Name = "Engine Full Load Curve",
 				MarkerStyle = MarkerStyle.None,
 				ImageStyle = LegendImageStyle.Line,
 				BorderWidth = 3,
 			});
-			legend.CustomItems.Add(new LegendItem()
-			{
+			legend.CustomItems.Add(new LegendItem() {
 				Color = Color.DarkRed,
 				Name = "Upshift / Downshift",
 				MarkerStyle = MarkerStyle.None,
 				ImageStyle = LegendImageStyle.Line,
 				BorderWidth = 3,
 			});
-			legend.CustomItems.Add(new LegendItem()
-			{
+			legend.CustomItems.Add(new LegendItem() {
 				Color = Color.DeepSkyBlue,
 				Name = "n_pref",
 				MarkerStyle = MarkerStyle.None,
 				ImageStyle = LegendImageStyle.Line,
 				BorderWidth = 3,
 			});
-			legend.CustomItems.Add(new LegendItem()
-			{
+			legend.CustomItems.Add(new LegendItem() {
 				Color = Color.Coral,
 				Name = "n_Pmax",
 				MarkerStyle = MarkerStyle.None,
 				ImageStyle = LegendImageStyle.Line,
 				BorderWidth = 3,
 			});
-			legend.CustomItems.Add(new LegendItem()
-			{
+			legend.CustomItems.Add(new LegendItem() {
 				Color = Color.Red,
 				Name = "n_95h",
 				MarkerStyle = MarkerStyle.None,
 				ImageStyle = LegendImageStyle.Line,
 				BorderWidth = 3,
 			});
-			legend.CustomItems.Add(new LegendItem()
-			{
+			legend.CustomItems.Add(new LegendItem() {
 				Color = Color.LimeGreen,
 				Name = "n_85km/h",
 				MarkerStyle = MarkerStyle.None,
 				ImageStyle = LegendImageStyle.Line,
 				BorderWidth = 3,
 			});
-			legend.CustomItems.Add(new LegendItem()
-			{
+			legend.CustomItems.Add(new LegendItem() {
 				Color = Color.BlueViolet,
 				Name = "Downshift next gear",
 				MarkerStyle = MarkerStyle.None,
 				ImageStyle = LegendImageStyle.Line,
 				BorderWidth = 3,
 			});
-			legend.CustomItems.Add(new LegendItem()
-			{
+			legend.CustomItems.Add(new LegendItem() {
 				Color = Color.Gray,
 				Name = "Upshift orig.",
 				MarkerStyle = MarkerStyle.None,
 				ImageStyle = LegendImageStyle.Line,
 				BorderWidth = 3,
 			});
-			legend.CustomItems.Add(new LegendItem()
-			{
+			legend.CustomItems.Add(new LegendItem() {
 				Color = Color.DarkGoldenrod,
 				Name = "P",
 				MarkerStyle = MarkerStyle.None,
