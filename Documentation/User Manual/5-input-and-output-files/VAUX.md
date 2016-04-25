@@ -5,7 +5,7 @@ See [Auxiliaries](#auxiliaries) for details on how the power demand for each aux
 
 - Filetype: .vaux
 - Multiple Header must exist in the following sequence:
-    - **Transmission ration to engine rpm \[-\]**: Speed ratio between auxiliary and engine. Followed by just one value line.
+    - **Transmission ratio to engine rpm \[-\]**: Speed ratio between auxiliary and engine. Followed by just one value line.
     - **Efficiency to engine \[-\]**: Efficiency of auxiliary (belt/gear) drive. Followed by just one value line.
     - **Efficiency auxiliary to supply \[-\]**: Consumer efficiency. Followed by just one value line.
     - **Auxiliary speed [rpm], Mechanical power [kW], Supply power [kW]**
@@ -15,7 +15,7 @@ See [Auxiliaries](#auxiliaries) for details on how the power demand for each aux
 **Example:**
 
 ~~~
-Transmission ration to engine rpm [-]
+Transmission ratio to engine rpm [-]
 4.078
 Efficiency to engine [-]
 0.96
