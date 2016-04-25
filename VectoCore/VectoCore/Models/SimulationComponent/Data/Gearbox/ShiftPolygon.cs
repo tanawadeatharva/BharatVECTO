@@ -32,6 +32,7 @@
 using System;
 using System.Collections.Generic;
 using System.Collections.ObjectModel;
+using System.ComponentModel.DataAnnotations;
 using System.Data;
 using System.Diagnostics;
 using System.Linq;
@@ -41,6 +42,7 @@ using TUGraz.VectoCore.Utils;
 
 namespace TUGraz.VectoCore.Models.SimulationComponent.Data.Gearbox
 {
+	[CustomValidation(typeof(ShiftPolygon), "ValidateShiftPolygon")]
 	public class ShiftPolygon : SimulationComponentData
 	{
 		private readonly List<ShiftPolygonEntry> _upShiftPolygon;
@@ -99,6 +101,46 @@ namespace TUGraz.VectoCore.Models.SimulationComponent.Data.Gearbox
 			get { return _downShiftPolygon.AsReadOnly(); }
 		}
 
+		/// <summary>
+		/// Tests if current power request is on the left side of the shiftpolygon segment
+		/// </summary>
+		/// <param name="angularSpeed">The angular speed.</param>
+		/// <param name="torque">The torque.</param>
+		/// <param name="segment">Edge of the shift polygon</param>
+		/// <returns><c>true</c> if current power request is on the left side of the shiftpolygon segment; otherwise, <c>false</c>.</returns>
+		/// <remarks>Computes a simplified cross product for the vectors: from--X, from--to and checks
+		/// if the z-component is positive (which means that X was on the right side of from--to).</remarks>
+		public static bool IsLeftOf(PerSecond angularSpeed, NewtonMeter torque,
+			Tuple<ShiftPolygonEntry, ShiftPolygonEntry> segment)
+		{
+			var abX = segment.Item2.AngularSpeed - segment.Item1.AngularSpeed;
+			var abY = segment.Item2.Torque - segment.Item1.Torque;
+			var acX = angularSpeed - segment.Item1.AngularSpeed;
+			var acY = torque - segment.Item1.Torque;
+			var z = abX * acY - abY * acX;
+			return z.IsGreater(0);
+		}
+
+		/// <summary>
+		/// Tests if current power request is on the left side of the shiftpolygon segment
+		/// </summary>
+		/// <param name="angularSpeed">The angular speed.</param>
+		/// <param name="torque">The torque.</param>
+		/// <param name="segment">Edge of the shift polygon</param>
+		/// <returns><c>true</c> if current power request is on the left side of the shiftpolygon segment; otherwise, <c>false</c>.</returns>
+		/// <remarks>Computes a simplified cross product for the vectors: from--X, from--to and checks
+		/// if the z-component is negative (which means that X was on the left side of from--to).</remarks>
+		public static bool IsRightOf(PerSecond angularSpeed, NewtonMeter torque,
+			Tuple<ShiftPolygonEntry, ShiftPolygonEntry> segment)
+		{
+			var abX = segment.Item2.AngularSpeed - segment.Item1.AngularSpeed;
+			var abY = segment.Item2.Torque - segment.Item1.Torque;
+			var acX = angularSpeed - segment.Item1.AngularSpeed;
+			var acY = torque - segment.Item1.Torque;
+			var z = abX * acY - abY * acX;
+			return z.IsSmaller(0);
+		}
+
 		private static bool HeaderIsValid(DataColumnCollection columns)
 		{
 			return columns.Contains(Fields.Torque) && columns.Contains(Fields.AngularSpeedUp) &&
@@ -122,6 +164,16 @@ namespace TUGraz.VectoCore.Models.SimulationComponent.Data.Gearbox
 						Torque = row.ParseDouble(0).SI<NewtonMeter>(),
 						AngularSpeed = row.ParseDouble(column).RPMtoRad(),
 					}).ToList();
+		}
+
+		public static ValidationResult ValidateShiftPolygon(ShiftPolygon shiftPolygon, ValidationContext validationContext)
+		{
+			return shiftPolygon.Downshift.Pairwise(Tuple.Create)
+				.Any(
+					downshiftLine =>
+						shiftPolygon.Upshift.Any(upshiftEntry => IsLeftOf(upshiftEntry.AngularSpeed, upshiftEntry.Torque, downshiftLine)))
+				? new ValidationResult("upshift line has to be right of the downshift line!")
+				: ValidationResult.Success;
 		}
 
 		private static class Fields

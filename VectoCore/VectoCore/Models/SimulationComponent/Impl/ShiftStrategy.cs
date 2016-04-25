@@ -83,7 +83,7 @@ namespace TUGraz.VectoCore.Models.SimulationComponent.Impl
 				return false;
 			}
 
-			return IsLeftOf(inEngineSpeed, inTorque, downSection.Item1, downSection.Item2);
+			return ShiftPolygon.IsLeftOf(inEngineSpeed, inTorque, downSection);
 		}
 
 		/// <summary>
@@ -105,49 +105,7 @@ namespace TUGraz.VectoCore.Models.SimulationComponent.Impl
 				return true;
 			}
 
-			return IsRightOf(inEngineSpeed, inTorque, upSection.Item1, upSection.Item2);
-		}
-
-		/// <summary>
-		/// Tests if current power request is on the left side of the shiftpolygon segment
-		/// </summary>
-		/// <param name="angularSpeed">The angular speed.</param>
-		/// <param name="torque">The torque.</param>
-		/// <param name="from">From.</param>
-		/// <param name="to">To.</param>
-		/// <returns><c>true</c> if current power request is on the left side of the shiftpolygon segment; otherwise, <c>false</c>.</returns>
-		/// <remarks>Computes a simplified cross product for the vectors: from--X, from--to and checks
-		/// if the z-component is positive (which means that X was on the right side of from--to).</remarks>
-		private static bool IsLeftOf(PerSecond angularSpeed, NewtonMeter torque, ShiftPolygon.ShiftPolygonEntry from,
-			ShiftPolygon.ShiftPolygonEntry to)
-		{
-			var abX = to.AngularSpeed - from.AngularSpeed;
-			var abY = to.Torque - from.Torque;
-			var acX = angularSpeed - from.AngularSpeed;
-			var acY = torque - from.Torque;
-			var z = abX * acY - abY * acX;
-			return z.IsGreater(0);
-		}
-
-		/// <summary>
-		/// Tests if current power request is on the left side of the shiftpolygon segment
-		/// </summary>
-		/// <param name="angularSpeed">The angular speed.</param>
-		/// <param name="torque">The torque.</param>
-		/// <param name="from">From.</param>
-		/// <param name="to">To.</param>
-		/// <returns><c>true</c> if current power request is on the left side of the shiftpolygon segment; otherwise, <c>false</c>.</returns>
-		/// <remarks>Computes a simplified cross product for the vectors: from--X, from--to and checks
-		/// if the z-component is negative (which means that X was on the left side of from--to).</remarks>
-		private static bool IsRightOf(PerSecond angularSpeed, NewtonMeter torque, ShiftPolygon.ShiftPolygonEntry from,
-			ShiftPolygon.ShiftPolygonEntry to)
-		{
-			var abX = to.AngularSpeed - from.AngularSpeed;
-			var abY = to.Torque - from.Torque;
-			var acX = angularSpeed - from.AngularSpeed;
-			var acY = torque - from.Torque;
-			var z = abX * acY - abY * acX;
-			return z.IsSmaller(0);
+			return ShiftPolygon.IsRightOf(inEngineSpeed, inTorque, upSection);
 		}
 	}
 

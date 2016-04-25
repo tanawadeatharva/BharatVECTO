@@ -129,6 +129,7 @@ namespace TUGraz.VectoCore.Tests.Models.SimulationComponentData
 			Assert.IsTrue(engineData.IsValid());
 		}
 
+
 		[TestMethod]
 		public void Validation_CombustionEngineData_Declaration()
 		{
@@ -173,7 +174,7 @@ namespace TUGraz.VectoCore.Tests.Models.SimulationComponentData
 		[TestMethod]
 		public void Validation_VectoRun()
 		{
-			var container = new VehicleContainer(ExecutionMode.Declaration);
+			var container = new VehicleContainer(ExecutionMode.Engineering);
 			var data = new DistanceRun(container);
 			var engineData = new CombustionEngineData {
 				FullLoadCurve = EngineFullLoadCurve.ReadFromFile(@"TestData\Components\12t Delivery Truck.vfld"),
@@ -217,15 +218,49 @@ namespace TUGraz.VectoCore.Tests.Models.SimulationComponentData
 				"Validation Error: " + string.Join("\n_eng_avg", results.Select(r => r.ErrorMessage)));
 		}
 
+		/// <summary>
+		/// VECTO-249: check upshift is above downshift
+		/// </summary>
+		[TestMethod]
+		public void ShiftPolygonValidationTest()
+		{
+			var vgbs = new[] {
+				"-116,600,1508						",
+				"0,600,1508							",
+				"293,600,1508						",
+				"494,806,1508						",
+				"956,1278,2355						",
+			};
+
+			var shiftPolygon =
+				ShiftPolygon.Create(
+					VectoCSVFile.ReadStream(
+						InputDataHelper.InputDataAsStream("engine torque,downshift rpm [rpm],upshift rpm [rpm]	", vgbs)));
+
+			var results = shiftPolygon.Validate();
+			Assert.IsFalse(results.Any());
+
+			shiftPolygon =
+				ShiftPolygon.Create(
+					VectoCSVFile.ReadStream(
+						InputDataHelper.InputDataAsStream("engine torque,upshift rpm [rpm], downshift rpm [rpm]	", vgbs)));
+
+			results = shiftPolygon.Validate();
+			Assert.IsTrue(results.Any());
+		}
+
+
 		public class DeepDataObject
 		{
 			[Required, Range(41, 42)] protected int public_field = 5;
 		}
 
+
 		public abstract class ParentDataObject
 		{
 			#region 4 parent instance fields
 
+			// ReSharper disable once NotAccessedField.Local
 			[Required, Range(1, 2)] private int private_parent_field = 7;
 			[Required, Range(3, 4)] protected int protected_parent_field = 7;
 			[Required, Range(5, 6)] internal int internal_parent_field = 7;
@@ -314,6 +349,7 @@ namespace TUGraz.VectoCore.Tests.Models.SimulationComponentData
 		{
 			#region 4 instance fields
 
+			// ReSharper disable once NotAccessedField.Local
 			[Required, Range(1, 2)] private int private_field = 7;
 			[Required, Range(3, 4)] protected int protected_field = 7;
 			[Required, Range(5, 6)] internal int internal_field = 7;

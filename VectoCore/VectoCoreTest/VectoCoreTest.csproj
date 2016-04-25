@@ -145,6 +145,7 @@
       <DependentUpon>Settings.settings</DependentUpon>
     </Compile>
     <Compile Include="Utils\MockGearbox.cs" />
+    <Compile Include="Utils\ShiftPolygonDrawer.cs" />
     <Compile Include="Utils\SITest.cs" />
     <Compile Include="Utils\DelauneyMapTest.cs" />
     <Compile Include="Utils\MockModalDataContainer.cs" />
