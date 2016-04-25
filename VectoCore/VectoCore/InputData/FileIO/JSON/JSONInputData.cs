@@ -91,14 +91,12 @@ namespace TUGraz.VectoCore.InputData.FileIO.JSON
 				try {
 					return VectoCSVFile.Read(Path.Combine(BasePath, filename), true);
 				} catch (Exception e) {
-					if (required) {
-						throw new VectoException(string.Format("Invalid {0}: {1}", tableType, filename), e);
-					}
 					Log.Warn("Failed to read file {0} {1}", Path.Combine(BasePath, filename), tableType);
+					throw new VectoException(string.Format("Failed to read file for {0}: {1}", tableType, filename), e);
 				}
 			}
 			if (required) {
-				throw new VectoException("Invalid {0}: {1}", tableType, filename);
+				throw new VectoException("Invalid filename for {0}: {1}", tableType, filename);
 			}
 			return null;
 		}
@@ -469,19 +467,18 @@ namespace TUGraz.VectoCore.InputData.FileIO.JSON
 				if (acceleration == null || EmptyOrInvalidFileName(acceleration.Value<string>())) {
 					throw new VectoException("AccelerationCurve (VACC) required");
 				}
-				var accelerationData = ReadTableData(acceleration.Value<string>(), "DriverAccelerationCurve", false);
-				if (accelerationData != null) {
-					return accelerationData;
-				}
 				try {
-					var cycleDataRes =
-						RessourceHelper.ReadStream(RessourceHelper.Namespace + "VACC." + acceleration.Value<string>() +
-													Constants.FileExtensions.DriverAccelerationCurve);
-					accelerationData = VectoCSVFile.ReadStream(cycleDataRes);
-				} catch (Exception e) {
-					throw new VectoException("Failed to read Driver Acceleration Curve", e);
+					return ReadTableData(acceleration.Value<string>(), "DriverAccelerationCurve", false);
+				} catch (VectoException e) {
+					Log.Warn("Could not find file for acceleration curve. Trying lookup in declaration data.");
+					try {
+						var cycleDataRes = RessourceHelper.ReadStream(RessourceHelper.Namespace + "VACC." + acceleration.Value<string>() +
+																	Constants.FileExtensions.DriverAccelerationCurve);
+						return VectoCSVFile.ReadStream(cycleDataRes);
+					} catch (Exception) {
+						throw new VectoException("Failed to read Driver Acceleration Curve: " + e.Message, e);
+					}
 				}
-				return accelerationData;
 			}
 		}
 
