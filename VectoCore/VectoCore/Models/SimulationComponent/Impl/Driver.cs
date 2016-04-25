@@ -491,11 +491,6 @@ namespace TUGraz.VectoCore.Models.SimulationComponent.Impl
 		/// Performs a search for the required braking power such that the vehicle accelerates with the given acceleration.
 		/// Returns a new operating point (a, ds, dt) where ds may be shorter due to vehicle stopping
 		/// </summary>
-		/// <param name="absTime"></param>
-		/// <param name="ds"></param>
-		/// <param name="gradient"></param>
-		/// <param name="acceleration"></param>
-		/// <param name="initialResponse"></param>
 		/// <returns>operating point (a, ds, dt) such that the vehicle accelerates with the given acceleration.</returns>
 		private OperatingPoint SearchBrakingPower(Second absTime, Meter ds, Radian gradient,
 			MeterPerSquareSecond acceleration, IResponse initialResponse)
