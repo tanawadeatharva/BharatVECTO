@@ -562,10 +562,15 @@ namespace TUGraz.VectoCore.Models.SimulationComponent.Impl
 					},
 					evaluateFunction:
 						acc => {
-							var tmp = ComputeTimeInterval(acc, ds);
-							retVal.SimulationInterval = tmp.SimulationInterval;
-							retVal.SimulationDistance = tmp.SimulationDistance;
-							return NextComponent.Request(absTime, tmp.SimulationInterval, acc, gradient, true);
+							// calculate new time interval only when vehiclespeed and acceleration are != 0
+							// else: use same timeinterval as before.
+							if (!(acc.IsEqual(0) && DataBus.VehicleSpeed.IsEqual(0))) {
+								var tmp = ComputeTimeInterval(acc, ds);
+								retVal.Acceleration = tmp.Acceleration;
+								retVal.SimulationInterval = tmp.SimulationInterval;
+								retVal.SimulationDistance = tmp.SimulationDistance;
+							}
+							return NextComponent.Request(absTime, retVal.SimulationInterval, acc, gradient, true);
 						},
 					criterion: response => {
 						if (response is ResponseEngineSpeedTooLow) {
