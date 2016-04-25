@@ -112,7 +112,7 @@ namespace TUGraz.VectoCore.Utils
 		public static T Limit<T>(this T value, T lowerBound, T upperBound) where T : IComparable
 		{
 			if (lowerBound.CompareTo(upperBound) > 0) {
-				throw new VectoException("VectoMath.Limit: lowerBound must not be greater than upperBound");
+				throw new VectoException("VectoMath.Limit: lowerBound must not be greater than upperBound. lowerBound: {0}, upperBound: {1}", lowerBound, upperBound);
 			}
 
 			if (value.CompareTo(upperBound) > 0) {

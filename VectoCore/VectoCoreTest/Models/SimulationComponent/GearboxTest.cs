@@ -152,7 +152,7 @@ namespace TUGraz.VectoCore.Tests.Models.SimulationComponent
 			AssertHelper.AreRelativeEqual(absTime, port.AbsTime);
 			AssertHelper.AreRelativeEqual(dt, port.Dt);
 			AssertHelper.AreRelativeEqual(n, port.AngularVelocity);
-			AssertHelper.AreRelativeEqual(2654.06.SI<NewtonMeter>(), port.Torque);
+			AssertHelper.AreRelativeEqual(2658.10267.SI<NewtonMeter>(), port.Torque);
 
 			absTime += dt;
 			t = -1300.SI<NewtonMeter>();
@@ -163,7 +163,7 @@ namespace TUGraz.VectoCore.Tests.Models.SimulationComponent
 			AssertHelper.AreRelativeEqual(absTime, port.AbsTime);
 			AssertHelper.AreRelativeEqual(dt, port.Dt);
 			AssertHelper.AreRelativeEqual(n, port.AngularVelocity);
-			AssertHelper.AreRelativeEqual(-1264.82.SI<NewtonMeter>(), port.Torque);
+			AssertHelper.AreRelativeEqual(-1272.4030255.SI<NewtonMeter>(), port.Torque);
 		}
 
 		[TestMethod]
@@ -196,7 +196,7 @@ namespace TUGraz.VectoCore.Tests.Models.SimulationComponent
 			Assert.AreEqual(absTime, port.AbsTime);
 			Assert.AreEqual(dt, port.Dt);
 			Assert.AreEqual(n, port.AngularVelocity);
-			Assert.AreEqual(-2264.82.SI<NewtonMeter>(), port.Torque);
+			AssertHelper.AreRelativeEqual(-2272.3774.SI<NewtonMeter>(), port.Torque);
 
 			var modData = new MockModalDataContainer();
 			Assert.IsTrue(gearbox.ModelData.Gears[gearbox.Gear].LossMap.Extrapolated);
@@ -233,7 +233,7 @@ namespace TUGraz.VectoCore.Tests.Models.SimulationComponent
 			Assert.AreEqual(absTime, port.AbsTime);
 			Assert.AreEqual(dt, port.Dt);
 			Assert.AreEqual(n, port.AngularVelocity);
-			Assert.AreEqual(-2464.82.SI<NewtonMeter>(), port.Torque);
+			AssertHelper.AreRelativeEqual(-2472.3723.SI<NewtonMeter>(), port.Torque);
 
 			var modData = new MockModalDataContainer();
 			Assert.IsTrue(gearbox.ModelData.Gears[gearbox.Gear].LossMap.Extrapolated);
@@ -271,7 +271,7 @@ namespace TUGraz.VectoCore.Tests.Models.SimulationComponent
 			Assert.AreEqual(absTime, port.AbsTime);
 			Assert.AreEqual(dt, port.Dt);
 			Assert.AreEqual(n, port.AngularVelocity);
-			Assert.AreEqual(-2464.82.SI<NewtonMeter>(), port.Torque);
+			AssertHelper.AreRelativeEqual(-2472.3723.SI<NewtonMeter>(), port.Torque);
 
 			t = -1000.SI<NewtonMeter>();
 			n = 1000.RPMtoRad();
@@ -282,7 +282,7 @@ namespace TUGraz.VectoCore.Tests.Models.SimulationComponent
 			Assert.AreEqual(absTime, port.AbsTime);
 			Assert.AreEqual(dt, port.Dt);
 			Assert.AreEqual(n, port.AngularVelocity);
-			AssertHelper.AreRelativeEqual(-973.15585.SI<NewtonMeter>(), port.Torque);
+			AssertHelper.AreRelativeEqual(-972.95098.SI<NewtonMeter>(), port.Torque);
 
 			var modData = new MockModalDataContainer();
 			gearbox.CommitSimulationStep(modData);

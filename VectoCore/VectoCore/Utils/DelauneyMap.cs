@@ -31,19 +31,16 @@
 
 using System;
 using System.Collections.Generic;
+using System.Diagnostics;
 using System.Drawing;
-using System.Drawing.Imaging;
-using System.Globalization;
 using System.IO;
 using System.Linq;
-using System.Net;
 using System.Threading;
 using System.Windows.Forms.DataVisualization.Charting;
 using Newtonsoft.Json;
 using TUGraz.VectoCommon.Exceptions;
 using TUGraz.VectoCommon.Models;
 using TUGraz.VectoCommon.Utils;
-using TUGraz.VectoCore.Models.Declaration;
 
 namespace TUGraz.VectoCore.Utils
 {
@@ -91,17 +88,17 @@ namespace TUGraz.VectoCore.Utils
 
 			var points = Points.ToArray();
 
-			//var xmin = points.Min(p => p.X) - 1;
-			//var xmax = points.Max(p => p.X) + 1;
-			//var ymin = points.Min(p => p.Y) - 1;
-			//var ymax = points.Max(p => p.Y) + 1;
+			var xmin = points.Min(p => p.X);
+			var xmax = points.Max(p => p.X);
+			var ymin = points.Min(p => p.Y);
+			var ymax = points.Max(p => p.Y);
 
 			// iteratively add each point into the correct triangle and split up the triangle
-			for (var i = 0; i < points.Length; i++) {
-				var point = points[i];
+			foreach (var point in points) {
 				// If the vertex lies inside the circumcircle of a triangle, the edges of this triangle are 
 				// added to the edge buffer and the triangle is removed from list.
-				var containerTriangles = triangles.FindAll(t => t.ContainsInCircumcircle(point));
+				var point1 = point;
+				var containerTriangles = triangles.FindAll(t => t.ContainsInCircumcircle(point1));
 				triangles = triangles.Except(containerTriangles).ToList();
 				
 				// Remove duplicate edges. This leaves the convex hull of the edges.
@@ -113,8 +110,9 @@ namespace TUGraz.VectoCore.Utils
 				var newTriangles = convexHullEdges.Select(edge => new Triangle(edge.P1, edge.P2, point)).ToList();
 
 				triangles.AddRange(newTriangles);
+				//DrawGraph(pointCount, triangles, superTriangle, xmin, xmax, ymin, ymax, point);
 				pointCount++;
-
+				
 				// check invariant: m = 2n-2-k
 				// m...triangle count
 				// n...point count (pointCount +3 points on the supertriangle)
@@ -123,9 +121,9 @@ namespace TUGraz.VectoCore.Utils
 					throw new VectoException(
 						"Delauney-Triangulation invariant violated! Triangle count and point count doesn't fit together.");
 				}
-				//if (superTriangle.GetHashCode() == -540272836)
-				//	DrawGraph(i, triangles, superTriangle, xmin, xmax, ymin, ymax);
 			}
+
+			//DrawGraph(pointCount, triangles, superTriangle, xmin, xmax, ymin, ymax);
 
 			_convexHull = triangles.FindAll(t => t.SharesVertexWith(superTriangle)).
 				SelectMany(t => t.GetEdges()).
@@ -134,18 +132,22 @@ namespace TUGraz.VectoCore.Utils
 			_triangles = triangles.FindAll(t => !t.SharesVertexWith(superTriangle));
 		}
 
-		private void DrawGraph(int i, List<Triangle> triangles, Triangle superTriangle, double xmin, double xmax, double ymin, double ymax)
+		/// <summary>
+		/// Draws the delauney map (except supertriangle).
+		/// </summary>
+		private void DrawGraph(int i, List<Triangle> triangles, Triangle superTriangle, double xmin, double xmax, double ymin, double ymax, Point lastPoint = null)
 		{
-			using (var chart = new Chart { Width = 1500, Height = 700 }) { 
+			using (var chart = new Chart { Width = 1000, Height = 1000 }) {
 				chart.ChartAreas.Add(new ChartArea("main") {
-					AxisX = new Axis { Minimum = xmin, Maximum = xmax},
-					AxisY = new Axis { Minimum = ymin, Maximum = ymax }
+					AxisX = new Axis { Minimum = Math.Min(xmin, ymin), Maximum = Math.Max(xmax,ymax) },
+					AxisY = new Axis { Minimum = Math.Min(xmin, ymin), Maximum = Math.Max(xmax,ymax) }
 				});
 
 				foreach (var tr in triangles) {
 					if (tr.SharesVertexWith(superTriangle))
 						continue;
-					var series = new Series {ChartType = SeriesChartType.FastLine};
+
+					var series = new Series { ChartType = SeriesChartType.FastLine, Color = lastPoint != null && tr.Contains(lastPoint)? Color.Red : Color.Blue };
 					series.Points.AddXY(tr.P1.X, tr.P1.Y);
 					series.Points.AddXY(tr.P2.X, tr.P2.Y);
 					series.Points.AddXY(tr.P3.X, tr.P3.Y);
@@ -153,9 +155,18 @@ namespace TUGraz.VectoCore.Utils
 					chart.Series.Add(series);
 				}
 
-				chart.Invalidate();
-				Directory.CreateDirectory(string.Format("delauney\\{0}", superTriangle.GetHashCode()));
-				chart.SaveImage(string.Format("delauney\\{0}\\{1}.png", superTriangle.GetHashCode(), i), ChartImageFormat.Png);
+				if (lastPoint != null) {
+					var series = new Series{ ChartType = SeriesChartType.Point, Color = Color.Red, MarkerSize = 5, MarkerStyle = MarkerStyle.Circle};
+					series.Points.AddXY(lastPoint.X, lastPoint.Y);
+					chart.Series.Add(series);
+				}
+
+				var frame = new StackFrame(2);
+				var method = frame.GetMethod();
+				var type = method.DeclaringType.Name;
+				var methodName = method.Name;
+				Directory.CreateDirectory("delauney");
+				chart.SaveImage(string.Format("delauney\\{0}_{1}_{2}_{3}.png", type, methodName, superTriangle.GetHashCode(), i), ChartImageFormat.Png);
 			}
 		}
 
