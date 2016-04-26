@@ -36,6 +36,7 @@ using System.Diagnostics.Contracts;
 using System.Dynamic;
 using System.Linq;
 using TUGraz.VectoCommon.Utils;
+using TUGraz.VectoCore.InputData.Reader;
 using TUGraz.VectoCore.Utils;
 
 namespace TUGraz.VectoCore.Models.SimulationComponent.Data.Engine
@@ -52,13 +53,13 @@ namespace TUGraz.VectoCore.Models.SimulationComponent.Data.Engine
 
 		public static EngineFullLoadCurve ReadFromFile(string fileName, bool declarationMode = false)
 		{
-			var curve = FullLoadCurve.ReadFromFile(fileName, declarationMode, true);
+			var curve = FullLoadCurveReader.ReadFromFile(fileName, declarationMode, true);
 			return new EngineFullLoadCurve { FullLoadEntries = curve.FullLoadEntries, PT1Data = curve.PT1Data };
 		}
 
 		public static EngineFullLoadCurve Create(DataTable data, bool declarationMode = false)
 		{
-			var curve = FullLoadCurve.Create(data, declarationMode, true);
+			var curve = FullLoadCurveReader.Create(data, declarationMode, true);
 			return new EngineFullLoadCurve() { FullLoadEntries = curve.FullLoadEntries, PT1Data = curve.PT1Data };
 		}
 

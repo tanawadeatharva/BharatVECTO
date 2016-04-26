@@ -37,6 +37,7 @@ using TUGraz.VectoCommon.Exceptions;
 using TUGraz.VectoCommon.InputData;
 using TUGraz.VectoCommon.Models;
 using TUGraz.VectoCommon.Utils;
+using TUGraz.VectoCore.InputData.FileIO.JSON;
 using TUGraz.VectoCore.Models;
 using TUGraz.VectoCore.Models.Declaration;
 using TUGraz.VectoCore.Models.Simulation.Data;
@@ -151,7 +152,7 @@ namespace TUGraz.VectoCore.InputData.Reader.DataObjectAdaper
 			retVal.Gears = gears.Select((gear, i) => {
 				var lossMap = TransmissionLossMap.Create(gear.LossMap, gear.Ratio, string.Format("Gear {0}", i + 1));
 				var gearFullLoad = gear.FullLoadCurve != null
-					? FullLoadCurve.Create(gear.FullLoadCurve)
+					? FullLoadCurveReader.Create(gear.FullLoadCurve)
 					: null;
 				var fullLoadCurve = IntersectFullLoadCurves(engineData.FullLoadCurve, gearFullLoad);
 				var shiftPolygon = gear.ShiftPolygon != null

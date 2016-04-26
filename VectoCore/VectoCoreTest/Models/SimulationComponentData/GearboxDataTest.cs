@@ -36,6 +36,7 @@ using Microsoft.VisualStudio.TestTools.UnitTesting;
 using TUGraz.VectoCommon.Exceptions;
 using TUGraz.VectoCommon.Models;
 using TUGraz.VectoCommon.Utils;
+using TUGraz.VectoCore.InputData.Reader;
 using TUGraz.VectoCore.InputData.Reader.DataObjectAdaper;
 using TUGraz.VectoCore.Models.SimulationComponent.Data;
 using TUGraz.VectoCore.Models.SimulationComponent.Data.Engine;
@@ -313,7 +314,7 @@ namespace TUGraz.VectoCore.Tests.Models.SimulationComponentData
 			var engineFLD = EngineFullLoadCurve.Create(dataEng, true);
 
 			var dataGbx = VectoCSVFile.ReadStream(InputDataHelper.InputDataAsStream("n [U/min],Mfull [Nm]", gbxFLDString));
-			var gbxFLD = FullLoadCurve.Create(dataGbx, true);
+			var gbxFLD = FullLoadCurveReader.Create(dataGbx, true);
 
 			var fullLoadCurve = AbstractSimulationDataAdapter.IntersectFullLoadCurves(engineFLD, gbxFLD);
 
@@ -336,7 +337,7 @@ namespace TUGraz.VectoCore.Tests.Models.SimulationComponentData
 			};
 
 			var dataGbx = VectoCSVFile.ReadStream(InputDataHelper.InputDataAsStream("n [U/min],Mfull [Nm]", gbxFLDString));
-			var gbxFLD = FullLoadCurve.Create(dataGbx, true);
+			var gbxFLD = FullLoadCurveReader.Create(dataGbx, true);
 
 			var maxTorque = gbxFLD.FullLoadStationaryTorque(800.RPMtoRad());
 			Assert.AreEqual(750, maxTorque.Value());
