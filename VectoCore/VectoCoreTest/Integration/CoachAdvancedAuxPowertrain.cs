@@ -85,7 +85,7 @@ namespace TUGraz.VectoCore.Tests.Integration
 				Gears = ratios.Select((ratio, i) =>
 					Tuple.Create((uint)i,
 						new GearData {
-							FullLoadCurve = FullLoadCurve.ReadFromFile(GearboxFullLoadCurveFile),
+							FullLoadCurve = FullLoadCurveReader.ReadFromFile(GearboxFullLoadCurveFile),
 							LossMap = ratio.IsEqual(1)
 								? TransmissionLossMap.ReadFromFile(GearboxIndirectLoss, ratio, string.Format("Gear {0}", i))
 								: TransmissionLossMap.ReadFromFile(GearboxDirectLoss, ratio, string.Format("Gear {0}", i)),
