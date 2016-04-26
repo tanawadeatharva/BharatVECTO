@@ -1,9 +1,7 @@
-﻿using Microsoft.VisualStudio.TestTools.UnitTesting;
-using NUnit.Framework;
+﻿using NUnit.Framework;
 using TUGraz.VectoCommon.Utils;
 using TUGraz.VectoCore.Models.Simulation.DataBus;
 using TUGraz.VectoCore.Tests.Utils;
-using TUGraz.VectoCore.Utils;
 using Assert = Microsoft.VisualStudio.TestTools.UnitTesting.Assert;
 
 namespace TUGraz.VectoCore.Tests.Integration.BusAuxiliaries
@@ -88,7 +86,7 @@ namespace TUGraz.VectoCore.Tests.Integration.BusAuxiliaries
 			var torque = busAux.PowerDemand(0.SI<Second>(), 1.SI<Second>(), engineDrivelinePower / engineSpeed,
 				(internalPower * 1000).SI<Watt>() / engineSpeed, engineSpeed);
 
-			Assert.AreEqual(expectedPowerDemand, (torque * engineSpeed).Value(), 1e-4);
+			Assert.AreEqual(expectedPowerDemand, (torque * engineSpeed).Value(), 1e-3);
 		}
 	}
 }

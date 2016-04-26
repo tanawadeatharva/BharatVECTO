@@ -1,4 +1,4 @@
-﻿n [U/min],Mfull [Nm],Mdrag [Nm],<PT1> [s]
+﻿engine speed [rpm], full load torque [Nm], motoring torque [Nm], PT1 [s]
 560,1180,-149,0.6
 600,1282,-148,0.6
 799.9999999,1791,-149,0.6

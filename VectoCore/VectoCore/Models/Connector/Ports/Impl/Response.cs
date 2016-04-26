@@ -32,7 +32,6 @@
 using System.Linq;
 using TUGraz.VectoCommon.Models;
 using TUGraz.VectoCommon.Utils;
-using TUGraz.VectoCore.Utils;
 
 namespace TUGraz.VectoCore.Models.Connector.Ports.Impl
 {
@@ -82,7 +81,10 @@ namespace TUGraz.VectoCore.Models.Connector.Ports.Impl
 	/// <summary>
 	/// Response when a request was successful.
 	/// </summary>
-	public class ResponseSuccess : AbstractResponse {}
+	public class ResponseSuccess : AbstractResponse
+	{
+		public ResponseSuccess() {}
+	}
 
 	/// <summary>
 	/// Response when the request resulted in an engine or gearbox overload. 

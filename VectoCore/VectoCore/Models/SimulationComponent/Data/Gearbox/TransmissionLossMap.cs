@@ -33,9 +33,10 @@ using System;
 using System.Collections.Generic;
 using System.ComponentModel.DataAnnotations;
 using System.Data;
+using System.Diagnostics;
 using System.Linq;
-using Newtonsoft.Json;
 using TUGraz.VectoCommon.Exceptions;
+using TUGraz.VectoCommon.Models;
 using TUGraz.VectoCommon.Utils;
 using TUGraz.VectoCore.Configuration;
 using TUGraz.VectoCore.Utils;
@@ -146,10 +147,8 @@ namespace TUGraz.VectoCore.Models.SimulationComponent.Data.Gearbox
 			_lossMap = new DelauneyMap();
 			_invertedLossMap = new DelauneyMap();
 			foreach (var entry in _entries) {
-				var outTorque = (entry.InputTorque - entry.TorqueLoss) * _ratio;
-				var outSpeed = entry.InputSpeed.Value() / _ratio;
-				_lossMap.AddPoint(outSpeed, outTorque.Value(), entry.TorqueLoss.Value());
-				_invertedLossMap.AddPoint(entry.InputSpeed.Value(), entry.InputTorque.Value(), entry.TorqueLoss.Value());
+				_lossMap.AddPoint(entry.InputSpeed.ConvertTo().Rounds.Per.Minute.Value(), (entry.InputTorque - entry.TorqueLoss).Value(), entry.TorqueLoss.Value());
+				_invertedLossMap.AddPoint(entry.InputSpeed.ConvertTo().Rounds.Per.Minute.Value(), entry.InputTorque.Value(), entry.TorqueLoss.Value());
 			}
 
 			_lossMap.Triangulate();
@@ -165,7 +164,7 @@ namespace TUGraz.VectoCore.Models.SimulationComponent.Data.Gearbox
 		/// <returns>Torque loss as seen on input side (towards the engine).</returns>
 		public NewtonMeter GetTorqueLoss(PerSecond outAngularVelocity, NewtonMeter outTorque)
 		{
-			var torqueLoss = _lossMap.Interpolate(outAngularVelocity.Value(), outTorque.Value(), true).SI<NewtonMeter>();
+			var torqueLoss = _lossMap.Interpolate(outAngularVelocity.ConvertTo().Rounds.Per.Minute.Value() * _ratio, outTorque.Value() / _ratio, true).SI<NewtonMeter>();
 
 			Log.Debug("GearboxLoss {0}: {1}, outAngularVelocity: {2}, outTorque: {3}", GearName, torqueLoss,
 				outAngularVelocity, outTorque);
@@ -182,7 +181,7 @@ namespace TUGraz.VectoCore.Models.SimulationComponent.Data.Gearbox
 		public NewtonMeter GetOutTorque(PerSecond inAngularVelocity, NewtonMeter inTorque, bool allowExtrapolation = false)
 		{
 			var torqueLoss =
-				_invertedLossMap.Interpolate(inAngularVelocity.Value(), inTorque.Value(), allowExtrapolation).SI<NewtonMeter>();
+				_invertedLossMap.Interpolate(inAngularVelocity.ConvertTo().Rounds.Per.Minute.Value(), inTorque.Value(), allowExtrapolation).SI<NewtonMeter>();
 			return (inTorque - torqueLoss) / _ratio;
 		}
 
@@ -191,9 +190,10 @@ namespace TUGraz.VectoCore.Models.SimulationComponent.Data.Gearbox
 			get { return _entries[i]; }
 		}
 
+		[DebuggerDisplay("GearLossMapEntry({InputSpeed}, {InputTorque}, {TorqueLoss})")]
 		public class GearLossMapEntry
 		{
-			[Required, SIRange(0, 5000 * Constants.RPMToRad)]
+			[Required, SIRange(0, 5000)]
 			public PerSecond InputSpeed { get; set; }
 
 			[Required, SIRange(-50000, 50000)]

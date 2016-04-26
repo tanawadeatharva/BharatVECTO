@@ -175,16 +175,16 @@ namespace TUGraz.VectoCore.InputData.Reader.DataObjectAdaper
 					"At least one Gear-Entry must be defined in Gearbox!");
 			}
 
-			retVal.Inertia = DeclarationData.Gearbox.Inertia.SI<KilogramSquareMeter>();
+			retVal.Inertia = DeclarationData.Gearbox.Inertia;
 			retVal.TractionInterruption = retVal.Type.TractionInterruption();
 			retVal.SkipGears = retVal.Type.SkipGears();
 			retVal.EarlyShiftUp = retVal.Type.EarlyShiftGears();
 
 			retVal.TorqueReserve = DeclarationData.Gearbox.TorqueReserve;
 			retVal.StartTorqueReserve = DeclarationData.Gearbox.TorqueReserveStart;
-			retVal.ShiftTime = DeclarationData.Gearbox.MinTimeBetweenGearshifts.SI<Second>();
-			retVal.StartSpeed = DeclarationData.Gearbox.StartSpeed.SI<MeterPerSecond>();
-			retVal.StartAcceleration = DeclarationData.Gearbox.StartAcceleration.SI<MeterPerSquareSecond>();
+			retVal.ShiftTime = DeclarationData.Gearbox.MinTimeBetweenGearshifts;
+			retVal.StartSpeed = DeclarationData.Gearbox.StartSpeed;
+			retVal.StartAcceleration = DeclarationData.Gearbox.StartAcceleration;
 
 			retVal.HasTorqueConverter = false;
 
@@ -192,7 +192,7 @@ namespace TUGraz.VectoCore.InputData.Reader.DataObjectAdaper
 				var gearLossMap = TransmissionLossMap.Create(gear.LossMap, gear.Ratio, string.Format("Gear {0}", i + 1));
 				var gearFullLoad = gear.FullLoadCurve == null
 					? engine.FullLoadCurve
-					: FullLoadCurve.Create(gear.FullLoadCurve, true);
+					: FullLoadCurveReader.Create(gear.FullLoadCurve, true);
 
 				var fullLoadCurve = IntersectFullLoadCurves(engine.FullLoadCurve, gearFullLoad);
 				var shiftPolygon = DeclarationData.Gearbox.ComputeShiftPolygon(i, fullLoadCurve, gears, engine, axlegearRatio,

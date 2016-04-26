@@ -31,11 +31,16 @@
 
 using System;
 using System.Collections.Generic;
+using System.Diagnostics;
+using System.Drawing;
+using System.IO;
 using System.Linq;
+using System.Threading;
+using System.Windows.Forms.DataVisualization.Charting;
 using Newtonsoft.Json;
 using TUGraz.VectoCommon.Exceptions;
+using TUGraz.VectoCommon.Models;
 using TUGraz.VectoCommon.Utils;
-using TUGraz.VectoCore.Models;
 
 namespace TUGraz.VectoCore.Utils
 {
@@ -44,7 +49,15 @@ namespace TUGraz.VectoCore.Utils
 	{
 		internal readonly ICollection<Point> Points = new HashSet<Point>();
 		private List<Triangle> _triangles = new List<Triangle>();
-		private IEnumerable<Edge> _convexHull;
+		private Edge[] _convexHull;
+
+		private readonly ThreadLocal<bool> _extrapolated = new ThreadLocal<bool>();
+
+		public bool Extrapolated
+		{
+			get { return _extrapolated.Value; }
+			set { _extrapolated.Value = value; }
+		}
 
 		public void AddPoint(double x, double y, double z)
 		{
@@ -70,40 +83,91 @@ namespace TUGraz.VectoCore.Utils
 			var max = Points.Max(point => Math.Max(Math.Abs(point.X), Math.Abs(point.Y))) * superTriangleScalingFactor;
 			var superTriangle = new Triangle(new Point(max, 0), new Point(0, max), new Point(-max, -max));
 			var triangles = new List<Triangle> { superTriangle };
-
+			
 			var pointCount = 0;
-			// iteratively add each point into the correct triangle and split up the triangle
-			foreach (var point in Points) {
-				// If the vertex lies inside a triangle, the edges of the triangle are 
-				// added to the edge buffer and the triangle is removed from list.
-				var containerTriangles = triangles.FindAll(t => t.ContainsInCircumcircle(point));
-				triangles = triangles.Except(containerTriangles).ToList();
 
+			var points = Points.ToArray();
+
+			var xmin = points.Min(p => p.X);
+			var xmax = points.Max(p => p.X);
+			var ymin = points.Min(p => p.Y);
+			var ymax = points.Max(p => p.Y);
+
+			// iteratively add each point into the correct triangle and split up the triangle
+			foreach (var point in points) {
+				// If the vertex lies inside the circumcircle of a triangle, the edges of this triangle are 
+				// added to the edge buffer and the triangle is removed from list.
+				var point1 = point;
+				var containerTriangles = triangles.FindAll(t => t.ContainsInCircumcircle(point1));
+				triangles = triangles.Except(containerTriangles).ToList();
+				
 				// Remove duplicate edges. This leaves the convex hull of the edges.
 				// The edges in this convex hull are oriented counterclockwise!
-				var allEdges = containerTriangles.SelectMany(t => t.GetEdges());
-				var groupedEdges = allEdges.GroupBy(edge => edge);
-				var convexHullEdges = groupedEdges.Where(group => group.Count() == 1).Select(group => group.Key);
+				var allEdges = containerTriangles.SelectMany(t => t.GetEdges()).ToList();
+				var groupedEdges = allEdges.GroupBy(edge => edge).ToList();
+				var convexHullEdges = groupedEdges.Where(group => group.Count() == 1).Select(group => group.Key).ToList();
 
-				var newTriangles = convexHullEdges.Select(edge => new Triangle(edge.P1, edge.P2, point));
+				var newTriangles = convexHullEdges.Select(edge => new Triangle(edge.P1, edge.P2, point)).ToList();
 
 				triangles.AddRange(newTriangles);
+				//DrawGraph(pointCount, triangles, superTriangle, xmin, xmax, ymin, ymax, point);
 				pointCount++;
-
+				
 				// check invariant: m = 2n-2-k
 				// m...triangle count
 				// n...point count (pointCount +3 points on the supertriangle)
 				// k...points on convex hull (exactly 3 --> supertriangle)
 				if (triangles.Count != 2 * (pointCount + 3) - 2 - 3) {
-					throw new VectoException("Triangulation invariant violated! Triangle count and point count doesn't fit together.");
+					throw new VectoException(
+						"Delauney-Triangulation invariant violated! Triangle count and point count doesn't fit together.");
 				}
 			}
 
+			//DrawGraph(pointCount, triangles, superTriangle, xmin, xmax, ymin, ymax);
+
 			_convexHull = triangles.FindAll(t => t.SharesVertexWith(superTriangle)).
 				SelectMany(t => t.GetEdges()).
-				Where(e => !(superTriangle.Contains(e.P1) || superTriangle.Contains(e.P2)));
+				Where(e => !(superTriangle.Contains(e.P1) || superTriangle.Contains(e.P2))).ToArray();
 
 			_triangles = triangles.FindAll(t => !t.SharesVertexWith(superTriangle));
+		}
+
+		/// <summary>
+		/// Draws the delauney map (except supertriangle).
+		/// </summary>
+		private void DrawGraph(int i, List<Triangle> triangles, Triangle superTriangle, double xmin, double xmax, double ymin, double ymax, Point lastPoint = null)
+		{
+			using (var chart = new Chart { Width = 1000, Height = 1000 }) {
+				chart.ChartAreas.Add(new ChartArea("main") {
+					AxisX = new Axis { Minimum = Math.Min(xmin, ymin), Maximum = Math.Max(xmax,ymax) },
+					AxisY = new Axis { Minimum = Math.Min(xmin, ymin), Maximum = Math.Max(xmax,ymax) }
+				});
+
+				foreach (var tr in triangles) {
+					if (tr.SharesVertexWith(superTriangle))
+						continue;
+
+					var series = new Series { ChartType = SeriesChartType.FastLine, Color = lastPoint != null && tr.Contains(lastPoint)? Color.Red : Color.Blue };
+					series.Points.AddXY(tr.P1.X, tr.P1.Y);
+					series.Points.AddXY(tr.P2.X, tr.P2.Y);
+					series.Points.AddXY(tr.P3.X, tr.P3.Y);
+					series.Points.AddXY(tr.P1.X, tr.P1.Y);
+					chart.Series.Add(series);
+				}
+
+				if (lastPoint != null) {
+					var series = new Series{ ChartType = SeriesChartType.Point, Color = Color.Red, MarkerSize = 5, MarkerStyle = MarkerStyle.Circle};
+					series.Points.AddXY(lastPoint.X, lastPoint.Y);
+					chart.Series.Add(series);
+				}
+
+				var frame = new StackFrame(2);
+				var method = frame.GetMethod();
+				var type = method.DeclaringType.Name;
+				var methodName = method.Name;
+				Directory.CreateDirectory("delauney");
+				chart.SaveImage(string.Format("delauney\\{0}_{1}_{2}_{3}.png", type, methodName, superTriangle.GetHashCode(), i), ChartImageFormat.Png);
+			}
 		}
 
 		public double Interpolate(double x, double y, bool allowExtrapolation = false)
@@ -178,8 +242,6 @@ namespace TUGraz.VectoCore.Utils
 			var z = edge.P1.Z + edge.Vector.Z * (AP.Dot(AB) / AB.Dot(AB));
 			return z;
 		}
-
-		public bool Extrapolated { get; set; }
 
 		#region Equality members
 

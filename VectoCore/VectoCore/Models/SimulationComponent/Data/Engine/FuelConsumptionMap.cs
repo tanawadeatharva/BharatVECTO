@@ -30,10 +30,8 @@
 */
 
 using System;
-using System.Collections.Generic;
 using System.ComponentModel.DataAnnotations;
 using System.Data;
-using System.Diagnostics.Contracts;
 using System.Linq;
 using TUGraz.VectoCommon.Exceptions;
 using TUGraz.VectoCommon.Utils;
@@ -44,9 +42,6 @@ namespace TUGraz.VectoCore.Models.SimulationComponent.Data.Engine
 {
 	public class FuelConsumptionMap : SimulationComponentData
 	{
-		[Required, ValidateObject] private readonly IList<FuelConsumptionEntry> _entries =
-			new List<FuelConsumptionEntry>();
-
 		[Required, ValidateObject] private readonly DelauneyMap _fuelMap = new DelauneyMap();
 
 
@@ -82,12 +77,6 @@ namespace TUGraz.VectoCore.Models.SimulationComponent.Data.Engine
 				try {
 					var entry = headerValid ? CreateFromColumNames(row) : CreateFromColumnIndizes(row);
 
-					if (entry.FuelConsumption < 0) {
-						throw new ArgumentOutOfRangeException("FuelConsumption", "FuelConsumption < 0 not allowed.");
-					}
-
-					fuelConsumptionMap._entries.Add(entry);
-
 					// Delauney map works only as expected, when the angularVelocity is in rpm.
 					fuelConsumptionMap._fuelMap.AddPoint(entry.Torque.Value(),
 						headerValid ? row.ParseDouble(Fields.EngineSpeed) : row.ParseDouble(0),
@@ -109,25 +98,25 @@ namespace TUGraz.VectoCore.Models.SimulationComponent.Data.Engine
 
 		private static FuelConsumptionEntry CreateFromColumnIndizes(DataRow row)
 		{
-			return new FuelConsumptionEntry {
-				EngineSpeed = row.ParseDouble(0).RPMtoRad(),
-				Torque = row.ParseDouble(1).SI<NewtonMeter>(),
-				FuelConsumption =
+			return new FuelConsumptionEntry(
+				engineSpeed: row.ParseDouble(0).RPMtoRad(),
+				torque: row.ParseDouble(1).SI<NewtonMeter>(),
+				fuelConsumption:
 					row.ParseDouble(2).SI().Gramm.Per.Hour.ConvertTo().Kilo.Gramm.Per.Second.Cast<KilogramPerSecond>()
-			};
+				);
 		}
 
 		private static FuelConsumptionEntry CreateFromColumNames(DataRow row)
 		{
-			return new FuelConsumptionEntry {
-				EngineSpeed = row.ParseDouble(Fields.EngineSpeed).SI().Rounds.Per.Minute.Cast<PerSecond>(),
-				Torque = row.ParseDouble(Fields.Torque).SI<NewtonMeter>(),
-				FuelConsumption =
+			return new FuelConsumptionEntry(
+				engineSpeed: row.ParseDouble(Fields.EngineSpeed).SI().Rounds.Per.Minute.Cast<PerSecond>(),
+				torque: row.ParseDouble(Fields.Torque).SI<NewtonMeter>(),
+				fuelConsumption:
 					row.ParseDouble(Fields.FuelConsumption)
 						.SI()
 						.Gramm.Per.Hour.ConvertTo()
 						.Kilo.Gramm.Per.Second.Cast<KilogramPerSecond>()
-			};
+				);
 		}
 
 		/// <summary>
@@ -173,6 +162,13 @@ namespace TUGraz.VectoCore.Models.SimulationComponent.Data.Engine
 
 			#region Equality members
 
+			public FuelConsumptionEntry(PerSecond engineSpeed, NewtonMeter torque, KilogramPerSecond fuelConsumption)
+			{
+				EngineSpeed = engineSpeed;
+				Torque = torque;
+				FuelConsumption = fuelConsumption;
+			}
+
 			private bool Equals(FuelConsumptionEntry other)
 			{
 				return EngineSpeed.Equals(other.EngineSpeed) && Torque.Equals(other.Torque) &&
@@ -210,7 +206,7 @@ namespace TUGraz.VectoCore.Models.SimulationComponent.Data.Engine
 
 		protected bool Equals(FuelConsumptionMap other)
 		{
-			return _entries.SequenceEqual(other._entries) && Equals(_fuelMap, other._fuelMap);
+			return Equals(_fuelMap, other._fuelMap);
 		}
 
 		public override bool Equals(object obj)
@@ -229,10 +225,7 @@ namespace TUGraz.VectoCore.Models.SimulationComponent.Data.Engine
 
 		public override int GetHashCode()
 		{
-			unchecked {
-				return ((_entries != null ? _entries.GetHashCode() : 0) * 397) ^
-						(_fuelMap != null ? _fuelMap.GetHashCode() : 0);
-			}
+			return _fuelMap != null ? _fuelMap.GetHashCode() : 0;
 		}
 
 		#endregion

@@ -35,9 +35,7 @@ using System.Runtime.CompilerServices;
 using TUGraz.VectoCommon.InputData;
 using TUGraz.VectoCommon.Models;
 using TUGraz.VectoCore.InputData.Reader.DataObjectAdaper;
-using TUGraz.VectoCore.Models;
 using TUGraz.VectoCore.Models.Simulation.Data;
-using TUGraz.VectoCore.Models.SimulationComponent.Data;
 using DriverData = TUGraz.VectoCore.Models.SimulationComponent.Data.DriverData;
 
 [assembly: InternalsVisibleTo("VectoCoreTest")]
@@ -84,7 +82,7 @@ namespace TUGraz.VectoCore.InputData.Reader.Impl
 				AdvancedAux = dao.CreateAdvancedAuxData(InputDataProvider.VehicleInputData),
 				Retarder = dao.CreateRetarderData(InputDataProvider.RetarderInputData, InputDataProvider.VehicleInputData),
 				Cycle = DrivingCycleDataReader.ReadFromDataTable(cycle.CycleData, cycle.Name, crossWindRequired),
-				IsEngineOnly = InputDataProvider.JobInputData().EngineOnlyMode
+				ExecutionMode = ExecutionMode.Engineering
 			});
 		}
 	}

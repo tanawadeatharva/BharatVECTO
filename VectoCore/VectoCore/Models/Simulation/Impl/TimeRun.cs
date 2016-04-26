@@ -29,11 +29,9 @@
 *   Martin Rexeis, rexeis@ivt.tugraz.at, IVT, Graz University of Technology
 */
 
-using System.Collections.Generic;
 using TUGraz.VectoCommon.Exceptions;
 using TUGraz.VectoCommon.Models;
 using TUGraz.VectoCore.Configuration;
-using TUGraz.VectoCore.Models.Connector.Ports;
 using TUGraz.VectoCore.Models.Connector.Ports.Impl;
 using TUGraz.VectoCore.Utils;
 
@@ -47,7 +45,7 @@ namespace TUGraz.VectoCore.Models.Simulation.Impl
 		{
 			dt = Constants.SimulationSettings.MeasuredSpeedTargetTimeInterval;
 
-			var debug = new List<dynamic>();
+			var debug = new DebugData();
 			var loopCount = 0;
 			IResponse response;
 			do {

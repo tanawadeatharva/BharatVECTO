@@ -35,7 +35,6 @@ using System.Linq;
 using TUGraz.VectoCommon.InputData;
 using TUGraz.VectoCommon.Models;
 using TUGraz.VectoCommon.Utils;
-using TUGraz.VectoCore.Models;
 using TUGraz.VectoCore.Models.SimulationComponent.Data;
 using TUGraz.VectoCore.Models.SimulationComponent.Data.Engine;
 using TUGraz.VectoCore.Models.SimulationComponent.Data.Gearbox;
@@ -165,6 +164,7 @@ namespace TUGraz.VectoCore.InputData.Reader.DataObjectAdaper
 			if (gearCurve == null) {
 				return engineCurve;
 			}
+			// TODO MK-2016-04-18: also combine the curves at the intersection-points of line segments!
 			var entries =
 				gearCurve.FullLoadEntries.Concat(engineCurve.FullLoadEntries)
 					.OrderBy(x => x.EngineSpeed)

@@ -40,7 +40,7 @@ namespace TUGraz.VectoCore.Utils
 	/// <summary>
 	/// Provides helper methods for mathematical functions.
 	/// </summary>
-	public class VectoMath
+	public static class VectoMath
 	{
 		/// <summary>
 		/// Linearly interpolates a value between two points.
@@ -109,10 +109,10 @@ namespace TUGraz.VectoCore.Utils
 			return c1.CompareTo(c2) >= 0 ? c1 : c2;
 		}
 
-		public static T Limit<T>(T value, T lowerBound, T upperBound) where T : IComparable
+		public static T Limit<T>(this T value, T lowerBound, T upperBound) where T : IComparable
 		{
 			if (lowerBound.CompareTo(upperBound) > 0) {
-				throw new VectoException("VectoMath.Limit: lowerBound must not be greater than upperBound");
+				throw new VectoException("VectoMath.Limit: lowerBound must not be greater than upperBound. lowerBound: {0}, upperBound: {1}", lowerBound, upperBound);
 			}
 
 			if (value.CompareTo(upperBound) > 0) {
@@ -402,8 +402,18 @@ namespace TUGraz.VectoCore.Utils
 			var det20 = p2X * p0Y - p0X * p2Y;
 
 			var result = p0Square * det12 + p1Square * det20 + p2Square * det01;
-
 			return result > 0;
+
+			//double[,] m = { { P1.X - p.X, P1.Y - p.Y, (P1.X * P1.X - p.X*p.X) + (P1.Y * P1.Y - p.Y*p.Y) }, 
+			//				{ P2.X - p.X, P2.Y - p.Y, (P2.X * P2.X - p.X*p.X) + (P2.Y * P2.Y - p.Y*p.Y) }, 
+			//				{ P3.X - p.X, P3.Y - p.Y, (P3.X * P3.X - p.X*p.X) + (P3.Y * P3.Y - p.Y*p.Y) } };
+			//var det = m[0, 0] * m[1, 1] * m[2, 2]
+			//		+ m[0, 1] * m[1, 2] * m[2, 0]
+			//		+ m[0, 2] * m[1, 0] * m[2, 1]
+			//		- m[0, 0] * m[1, 2] * m[2, 1]
+			//		- m[0, 1] * m[1, 0] * m[2, 2]
+			//		- m[0, 2] * m[1, 1] * m[2, 0];
+			//return det > 0;
 		}
 
 		public bool Contains(Point p)

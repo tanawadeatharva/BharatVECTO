@@ -38,9 +38,6 @@ using TUGraz.VectoCommon.InputData;
 using TUGraz.VectoCommon.Models;
 using TUGraz.VectoCommon.Utils;
 using TUGraz.VectoCore.InputData.Impl;
-using TUGraz.VectoCore.Models.Declaration;
-using TUGraz.VectoCore.Models.SimulationComponent.Data;
-using TUGraz.VectoCore.Utils;
 
 namespace TUGraz.VectoCore.InputData.FileIO.JSON
 {
@@ -71,7 +68,7 @@ namespace TUGraz.VectoCore.InputData.FileIO.JSON
 
 		public virtual Kilogram GrossVehicleMassRating
 		{
-			get { return Body.GetEx<double>(JsonKeys.Vehicle_GrossVehicleMassRating).SI<Ton>().Cast<Kilogram>(); }
+			get { return Body.GetEx<double>(JsonKeys.Vehicle_GrossVehicleMassRating).SI().Ton.Cast<Kilogram>(); }
 		}
 
 		public virtual Kilogram Loading

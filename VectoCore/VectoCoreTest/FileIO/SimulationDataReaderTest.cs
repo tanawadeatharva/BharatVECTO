@@ -36,12 +36,9 @@ using TUGraz.VectoCommon.Exceptions;
 using TUGraz.VectoCommon.InputData;
 using TUGraz.VectoCommon.Models;
 using TUGraz.VectoCommon.Utils;
-using TUGraz.VectoCore.InputData;
 using TUGraz.VectoCore.InputData.FileIO.JSON;
 using TUGraz.VectoCore.InputData.Reader.Impl;
 using TUGraz.VectoCore.Models.Declaration;
-using TUGraz.VectoCore.Models.SimulationComponent.Data;
-using TUGraz.VectoCore.Utils;
 
 namespace TUGraz.VectoCore.Tests.FileIO
 {
@@ -64,7 +61,7 @@ namespace TUGraz.VectoCore.Tests.FileIO
 
 			var runData = reader.NextRun().First();
 
-			Assert.AreEqual(false, runData.IsEngineOnly);
+			Assert.AreEqual(ExecutionMode.Declaration, runData.ExecutionMode);
 
 			Assert.AreEqual(Path.GetFileNameWithoutExtension(DeclarationJob), runData.JobName);
 			Assert.AreEqual(5850, runData.VehicleData.CurbWeight.Value());

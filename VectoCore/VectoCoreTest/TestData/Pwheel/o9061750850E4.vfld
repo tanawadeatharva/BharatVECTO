@@ -1,4 +1,4 @@
-engine speed [1/min],full load torque [Nm],motoring torque [Nm],PT1 time constant [s]
+engine speed [1/min],full load torque [Nm],motoring torque [Nm],PT1 [s]
 600.000000,555.000000,-87.376064,0.216667
 800.000000,715.000000,-75.200711,0.433333
 900.000000,785.000000,-69.113034,0.541667

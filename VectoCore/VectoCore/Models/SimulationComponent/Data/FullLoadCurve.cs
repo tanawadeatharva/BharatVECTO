@@ -52,6 +52,8 @@ namespace TUGraz.VectoCore.Models.SimulationComponent.Data
 
 		[Required, ValidateObject] internal List<FullLoadCurveEntry> FullLoadEntries;
 
+		private SortedList<PerSecond, int> _quickLookup;
+
 		[Required] internal LookupData<PerSecond, Second> PT1Data;
 
 		/// <summary>
@@ -91,7 +93,7 @@ namespace TUGraz.VectoCore.Models.SimulationComponent.Data
 			return VectoMath.Interpolate(FullLoadEntries[idx - 1].EngineSpeed, FullLoadEntries[idx].EngineSpeed,
 				FullLoadEntries[idx - 1].TorqueDrag, FullLoadEntries[idx].TorqueDrag,
 				angularVelocity);
-		}
+			}
 
 		private NewtonMeter FindMaxTorque()
 		{
@@ -159,7 +161,22 @@ namespace TUGraz.VectoCore.Models.SimulationComponent.Data
 			if (angularVelocity > FullLoadEntries.Last().EngineSpeed) {
 				return FullLoadEntries.Count - 1;
 			}
-			for (var index = 1; index < FullLoadEntries.Count; index++) {
+
+			if (_quickLookup == null) {
+				_quickLookup = new SortedList<PerSecond, int>();
+				var i = 10;
+				for (; i < FullLoadEntries.Count; i += 10) {
+					_quickLookup.Add(FullLoadEntries[i].EngineSpeed, Math.Max(1, i - 10));
+				}
+				_quickLookup.Add(FullLoadEntries.Last().EngineSpeed + 0.1.SI<PerSecond>(), Math.Max(1, i - 10));
+			}
+			var start = 1;
+			foreach (var lookup in _quickLookup.Where(lookup => angularVelocity < lookup.Key)) {
+				start = lookup.Value;
+				break;
+			}
+
+			for (var index = start; index < FullLoadEntries.Count; index++) {
 				if (angularVelocity >= FullLoadEntries[index - 1].EngineSpeed &&
 					angularVelocity <= FullLoadEntries[index].EngineSpeed) {
 					return index;

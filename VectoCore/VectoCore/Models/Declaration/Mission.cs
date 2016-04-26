@@ -32,7 +32,6 @@
 using System.Collections.Generic;
 using System.IO;
 using TUGraz.VectoCommon.Utils;
-using TUGraz.VectoCore.Utils;
 
 namespace TUGraz.VectoCore.Models.Declaration
 {

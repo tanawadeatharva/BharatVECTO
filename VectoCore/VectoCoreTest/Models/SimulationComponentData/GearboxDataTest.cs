@@ -36,11 +36,11 @@ using Microsoft.VisualStudio.TestTools.UnitTesting;
 using TUGraz.VectoCommon.Exceptions;
 using TUGraz.VectoCommon.Models;
 using TUGraz.VectoCommon.Utils;
+using TUGraz.VectoCore.InputData.Reader;
 using TUGraz.VectoCore.InputData.Reader.DataObjectAdaper;
 using TUGraz.VectoCore.Models.SimulationComponent.Data;
 using TUGraz.VectoCore.Models.SimulationComponent.Data.Engine;
 using TUGraz.VectoCore.Models.SimulationComponent.Data.Gearbox;
-using TUGraz.VectoCore.Tests.Integration;
 using TUGraz.VectoCore.Tests.Utils;
 using TUGraz.VectoCore.Utils;
 
@@ -107,7 +107,6 @@ namespace TUGraz.VectoCore.Tests.Models.SimulationComponentData
 				loss.Value(), 0.1,
 				TestContext.DataRow["TestName"].ToString());
 		}
-
 
 		[TestMethod]
 		public void TestLossMap_IN_10_CONST_Interpolation_Extrapolation()
@@ -196,7 +195,6 @@ namespace TUGraz.VectoCore.Tests.Models.SimulationComponentData
 			AssertHelper.AreRelativeEqual(-30, map.GetOutTorque(50.RPMtoRad(), -20.SI<NewtonMeter>(), true));
 			AssertHelper.AreRelativeEqual(40, map.GetOutTorque(120.RPMtoRad(), 50.SI<NewtonMeter>(), true));
 		}
-
 
 		[TestMethod]
 		public void TestLossMap_IN_Interpolation_Extrapolation()
@@ -313,7 +311,7 @@ namespace TUGraz.VectoCore.Tests.Models.SimulationComponentData
 			var engineFLD = EngineFullLoadCurve.Create(dataEng, true);
 
 			var dataGbx = VectoCSVFile.ReadStream(InputDataHelper.InputDataAsStream("n [U/min],Mfull [Nm]", gbxFLDString));
-			var gbxFLD = FullLoadCurve.Create(dataGbx, true);
+			var gbxFLD = FullLoadCurveReader.Create(dataGbx, true);
 
 			var fullLoadCurve = AbstractSimulationDataAdapter.IntersectFullLoadCurves(engineFLD, gbxFLD);
 
@@ -336,7 +334,7 @@ namespace TUGraz.VectoCore.Tests.Models.SimulationComponentData
 			};
 
 			var dataGbx = VectoCSVFile.ReadStream(InputDataHelper.InputDataAsStream("n [U/min],Mfull [Nm]", gbxFLDString));
-			var gbxFLD = FullLoadCurve.Create(dataGbx, true);
+			var gbxFLD = FullLoadCurveReader.Create(dataGbx, true);
 
 			var maxTorque = gbxFLD.FullLoadStationaryTorque(800.RPMtoRad());
 			Assert.AreEqual(750, maxTorque.Value());

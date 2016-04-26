@@ -31,11 +31,13 @@
 
 using System;
 using System.IO;
-using JetBrains.Annotations;
-using NLog;
+using TUGraz.VectoCommon.Models;
 
 namespace TUGraz.VectoCommon.Exceptions
 {
+	/// <summary>
+	/// Base Exception for all Exception in VECTO.
+	/// </summary>
 	public class VectoException : Exception
 	{
 		public VectoException(string message) : base(message)
@@ -48,14 +50,12 @@ namespace TUGraz.VectoCommon.Exceptions
 			LogManager.Flush();
 		}
 
-		//[StringFormatMethod("message")]
 		public VectoException(string message, params object[] args)
 			: base(string.Format(message, args))
 		{
 			LogManager.Flush();
 		}
 
-		//[StringFormatMethod("message")]
 		protected VectoException(string message, Exception inner, params object[] args)
 			: base(string.Format(message, args), inner)
 		{
@@ -63,13 +63,18 @@ namespace TUGraz.VectoCommon.Exceptions
 		}
 	}
 
+	/// <summary>
+	/// Exception when an Input/Output related error occured.
+	/// </summary>
 	public abstract class FileIOException : VectoException
 	{
 		protected FileIOException(string message) : base(message) {}
 		protected FileIOException(string message, Exception inner) : base(message, inner) {}
 	}
 
-
+	/// <summary>
+	/// Exception when the file format is invalid or a file was not found.
+	/// </summary>
 	public class InvalidFileFormatException : FileIOException
 	{
 		public InvalidFileFormatException(string message) : base(message) {}
@@ -77,9 +82,8 @@ namespace TUGraz.VectoCommon.Exceptions
 		public InvalidFileFormatException(string message, Exception inner) : base(message) {}
 	}
 
-
 	/// <summary>
-	///     Exception which gets thrown when the version of a file is not supported.
+	/// Exception which gets thrown when the version of a file is not supported.
 	/// </summary>
 	public class UnsupportedFileVersionException : FileIOException
 	{
@@ -92,7 +96,7 @@ namespace TUGraz.VectoCommon.Exceptions
 	}
 
 	/// <summary>
-	///     Exception which gets thrown when an error occurred during read of a vecto csv-file.
+	/// Exception which gets thrown when an error occurred during read of a vecto csv-file.
 	/// </summary>
 	public class CSVReadException : FileIOException
 	{

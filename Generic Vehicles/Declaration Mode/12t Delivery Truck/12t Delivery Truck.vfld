@@ -1,4 +1,4 @@
-n in rpm,M_max in Nm,M_min in Nm,PT1 in s
+engine speed, full load torque, motoring torque, PT1
 600,586,-44,0.60
 800,755,-54,0.60
 1000,883,-62,0.60

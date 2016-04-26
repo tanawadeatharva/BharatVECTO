@@ -31,7 +31,6 @@
 
 using System;
 using System.Collections.Generic;
-using System.IO;
 using System.Linq;
 using TUGraz.VectoCommon.Exceptions;
 using TUGraz.VectoCommon.InputData;
@@ -44,7 +43,6 @@ using TUGraz.VectoCore.Models.SimulationComponent.Data;
 using TUGraz.VectoCore.Models.SimulationComponent.Data.Engine;
 using TUGraz.VectoCore.Models.SimulationComponent.Data.Gearbox;
 using TUGraz.VectoCore.OutputData;
-using TUGraz.VectoCore.Utils;
 using DriverData = TUGraz.VectoCore.Models.SimulationComponent.Data.DriverData;
 
 namespace TUGraz.VectoCore.InputData.Reader.DataObjectAdaper
@@ -86,7 +84,6 @@ namespace TUGraz.VectoCore.InputData.Reader.DataObjectAdaper
 				default:
 					throw new ArgumentOutOfRangeException();
 			}
-
 
 			var axles = data.Axles;
 			retVal.AxleData = axles.Select(axle => new Axle {
@@ -151,7 +148,7 @@ namespace TUGraz.VectoCore.InputData.Reader.DataObjectAdaper
 			retVal.Gears = gears.Select((gear, i) => {
 				var lossMap = TransmissionLossMap.Create(gear.LossMap, gear.Ratio, string.Format("Gear {0}", i + 1));
 				var gearFullLoad = gear.FullLoadCurve != null
-					? FullLoadCurve.Create(gear.FullLoadCurve)
+					? FullLoadCurveReader.Create(gear.FullLoadCurve)
 					: null;
 				var fullLoadCurve = IntersectFullLoadCurves(engineData.FullLoadCurve, gearFullLoad);
 				var shiftPolygon = gear.ShiftPolygon != null
