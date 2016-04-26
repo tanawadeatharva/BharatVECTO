@@ -189,6 +189,7 @@ Examples:
 					Console.WriteLine(@"Reading job: " + file);
 					if (Path.GetExtension(file) == Constants.FileExtensions.VectoJobFile) {
 						var dataProvider = JSONInputDataFactory.ReadJsonJob(file);
+						fileWriter = new FileOutputWriter(file);
 						var runsFactory = new SimulatorFactory(mode, dataProvider, fileWriter);
 
 						if (args.Contains("-mod")) {
@@ -296,7 +297,7 @@ Examples:
 			Console.WriteLine(@"VectoCore: {0}", vectodll.Version);
 		}
 
-		private static void PrintProgress(Dictionary<uint, JobContainer.ProgressEntry> progessData,
+		private static void PrintProgress(Dictionary<int, JobContainer.ProgressEntry> progessData,
 			bool showTiming = true)
 		{
 			Console.SetCursorPosition(0, Console.CursorTop - _numLines);

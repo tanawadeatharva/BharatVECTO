@@ -157,8 +157,7 @@ namespace TUGraz.VectoCore.Tests.Integration
 			LogManager.DisableLogging();
 
 			var inputData = JSONInputDataFactory.ReadJsonJob(TruckDeclarationJob);
-			var fileWriter = new FileOutputWriter(Path.GetFileNameWithoutExtension(TruckDeclarationJob),
-				Path.GetDirectoryName(TruckDeclarationJob));
+			var fileWriter = new FileOutputWriter(TruckDeclarationJob);
 			var factory = new SimulatorFactory(ExecutionMode.Declaration, inputData, fileWriter) {
 				WriteModalResults = true
 			};

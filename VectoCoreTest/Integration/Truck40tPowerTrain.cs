@@ -79,7 +79,7 @@ namespace TUGraz.VectoCore.Tests.Integration
 			Kilogram massExtra,
 			Kilogram loading, bool overspeed = false)
 		{
-			var fileWriter = new FileOutputWriter(modFileName, "");
+			var fileWriter = new FileOutputWriter(modFileName);
 			var modData = new ModalDataContainer(modFileName, fileWriter);
 			var container = new VehicleContainer(modData, executionMode: ExecutionMode.Engineering);
 

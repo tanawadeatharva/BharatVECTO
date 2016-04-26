@@ -32,44 +32,32 @@
 using System;
 using System.Data;
 using System.IO;
-using System.Text;
 using TUGraz.VectoCore.Configuration;
 using TUGraz.VectoCore.Models;
-using TUGraz.VectoCore.Models.Simulation.Data;
 using TUGraz.VectoCore.Utils;
 
 namespace TUGraz.VectoCore.OutputData.FileIO
 {
-	public class SummaryFileWriter : LoggingObject, ISummaryWriter
-	{
-		public readonly string SumFileName;
 
-		public SummaryFileWriter(string jobName)
-		{
-			SumFileName = Path.ChangeExtension(jobName, Constants.FileExtensions.SumFile);
-		}
-
-		public void WriteSumData(DataTable data)
-		{
-			VectoCSVFile.Write(SumFileName, data);
-		}
-	}
-	
 	public class FileOutputWriter : LoggingObject, IOutputDataWriter
 	{
-		private readonly string JobFile;
+		private readonly string _jobFile;
 
-		private string BasePath { get { return Path.GetDirectoryName(JobFile); } }
-		private string ModFileName { get { return Path.GetDirectoryName(JobFile); } }
-		private string PDFReportName { get { return Path.ChangeExtension(JobFile, Constants.FileExtensions.PDFReport); } }
-
+		private string BasePath { get { return Path.GetDirectoryName(_jobFile); } }
+		public string PDFReportName { get { return Path.ChangeExtension(_jobFile, Constants.FileExtensions.PDFReport); } }
+		public string SumFileName { get { return Path.ChangeExtension(_jobFile, Constants.FileExtensions.SumFile); } }
 		/// <summary>
 		/// 
 		/// </summary>
 		/// <param name="jobFile">full path of the json job-file. jobName and basePath are extracted</param>
 		public FileOutputWriter(string jobFile)
 		{
-			JobFile = jobFile;
+			_jobFile = jobFile;
+		}
+
+		public void WriteSumData(DataTable data)
+		{
+			VectoCSVFile.Write(_jobFile, data);
 		}
 		
 		public string GetModDataFileName(string runName, string cycleName, string runSuffix)

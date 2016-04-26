@@ -82,10 +82,9 @@ Imports TUGraz.VectoCore.Utils
 
 	Private CbDeclLock As Boolean = False
 
-
 #Region "SLEEP Control - Prevent sleep while VECTO is running"
 
-	Private Declare Function SetThreadExecutionState Lib "kernel32"(ByVal esFlags As Long) As Long
+	Private Declare Function SetThreadExecutionState Lib "kernel32" (ByVal esFlags As Long) As Long
 
 	Private Sub AllowSleepOFF()
 #If Not PLATFORM = "x86" Then
@@ -201,13 +200,13 @@ Imports TUGraz.VectoCore.Utils
 
 		'If more than 100 calculations, ask whether to write by-second results
 		If _
-			Cfg.BatchMode And ((Me.LvGEN.CheckedItems.Count)*(Me.LvDRI.CheckedItems.Count) > 100) And
+			Cfg.BatchMode And ((Me.LvGEN.CheckedItems.Count) * (Me.LvDRI.CheckedItems.Count) > 100) And
 			Me.ChBoxModOut.Checked _
 			Then
 			Select Case _
 				MsgBox(
 					"You are about to run Batch Mode with " &
-					(Me.LvGEN.CheckedItems.Count)*(Me.LvDRI.CheckedItems.Count) &
+					(Me.LvGEN.CheckedItems.Count) * (Me.LvDRI.CheckedItems.Count) &
 					" calculations!" & ChrW(10) & "Do you still want to write modal results?", MsgBoxStyle.YesNoCancel)
 				Case MsgBoxResult.No
 					Me.ChBoxModOut.Checked = False
@@ -289,7 +288,7 @@ Imports TUGraz.VectoCore.Utils
 		JobFileList.Clear()
 		CheckedItems.Clear()
 
-		x = - 1
+		x = -1
 		For Each LV0 In Me.LvGEN.CheckedItems
 			x += 1
 			LV0.SubItems(1).Text = ""
@@ -517,9 +516,9 @@ Imports TUGraz.VectoCore.Utils
 		LoadOptions()
 
 		'Resize columns ... after Loading the @file-lists
-		Me.LvGEN.Columns(1).Width = - 2
-		Me.LvDRI.Columns(1).Width = - 2
-		Me.LvMsg.Columns(2).Width = - 2
+		Me.LvGEN.Columns(1).Width = -2
+		Me.LvDRI.Columns(1).Width = -2
+		Me.LvMsg.Columns(2).Width = -2
 
 		'Initialize BackgroundWorker
 		VECTOworker = Me.BackgroundWorker1
@@ -911,7 +910,7 @@ Imports TUGraz.VectoCore.Utils
 
 		lastindx = LvGEN.SelectedIndices(LvGEN.SelectedItems.Count - 1)
 
-		For i = UBound(SelIx) To 0 Step - 1
+		For i = UBound(SelIx) To 0 Step -1
 			LvGEN.Items.RemoveAt(SelIx(i))
 		Next
 
@@ -971,7 +970,7 @@ Imports TUGraz.VectoCore.Utils
 		Dim p As Int16
 		Dim f As Int16
 		Dim fList As String()
-		Dim fListDim As Int16 = - 1
+		Dim fListDim As Int16 = -1
 		Dim ListViewItem0 As ListViewItem
 
 		'If VECTO runs: Cancel operation (because Mode-change during calculation is not very clever)
@@ -1026,7 +1025,7 @@ Imports TUGraz.VectoCore.Utils
 			ListViewItem0.Selected = True
 			Me.LvGEN.Items.Add(ListViewItem0)
 			ListViewItem0.EnsureVisible()
-			lbFound:
+lbFound:
 		Next
 
 		Me.LvGEN.EndUpdate()
@@ -1191,7 +1190,7 @@ Imports TUGraz.VectoCore.Utils
 
 		lastindx = LvDRI.SelectedIndices(LvDRI.SelectedItems.Count - 1)
 
-		For i = UBound(SelIx) To 0 Step - 1
+		For i = UBound(SelIx) To 0 Step -1
 			LvDRI.Items.RemoveAt(SelIx(i))
 		Next
 
@@ -1249,7 +1248,7 @@ Imports TUGraz.VectoCore.Utils
 			ListViewItem0.SubItems.Add(" ")
 			ListViewItem0.Checked = True
 			Me.LvDRI.Items.Add(ListViewItem0)
-			lbFound:
+lbFound:
 		Next
 
 		Me.LvDRI.EndUpdate()
@@ -1606,7 +1605,7 @@ Imports TUGraz.VectoCore.Utils
 	Private Sub VectoWorkerV3_OnDoWork(sender As BackgroundWorker, e As DoWorkEventArgs)
 		AllowSleepOFF()
 
-		Dim sumFileWriter As SummaryFileWriter = New SummaryFileWriter(JobFileList(0))
+		Dim sumFileWriter As FileOutputWriter = New FileOutputWriter(JobFileList(0))
 		Dim sumWriter As SummaryDataContainer = New SummaryDataContainer(sumFileWriter)
 		Dim jobContainer As JobContainer = New JobContainer(sumWriter)
 
@@ -1620,81 +1619,88 @@ Imports TUGraz.VectoCore.Utils
 			Physics.CO2PerFuelWeight = Cfg.CO2perFC
 		End If
 
+		'dictionary of run-identifiers to fileWriters (used for output directory of modfile)
 		Dim fileWriters As Dictionary(Of Integer, FileOutputWriter) = New Dictionary(Of Integer, FileOutputWriter)
 
-		Dim finishedProcesses As List(Of Integer) = New List(Of Integer)
-
+		'list of finished runs
+		Dim finishedRuns As List(Of Integer) = New List(Of Integer)
+		
 		For Each jobFile As String In JobFileList
 			Try
 				sender.ReportProgress(0, New With {.Target = "ListBox", .Message = "Reading File " + jobFile, .Link = jobFile})
+
 				Dim dataProvider As IInputDataProvider = JSONInputDataFactory.ReadJsonJob(jobFile)
 				Dim fileWriter As FileOutputWriter = New FileOutputWriter(jobFile)
+
 				Dim runsFactory As SimulatorFactory = New SimulatorFactory(mode, dataProvider, fileWriter)
 				runsFactory.WriteModalResults = Cfg.ModOut
+
 				For Each runId As Integer In jobContainer.AddRuns(runsFactory)
 					fileWriters.Add(runId, fileWriter)
 				Next
 
 				sender.ReportProgress(0, New With {.Target = "ListBox", .Message = "Finished Reading Data for job: " + jobFile})
+
 			Catch ex As Exception
 				MsgBox(String.Format("ERROR running job {0}: {1}", jobFile, ex.Message), MsgBoxStyle.Critical)
 				sender.ReportProgress(0, New With {.Target = "ListBoxError", .Message = ex.Message})
 			End Try
 		Next
 
+		'print detected cycles
 		For Each cycle As JobContainer.CycleTypeDescription In jobContainer.GetCycleTypes()
-			sender.ReportProgress(0,
-								New With {.Target = "ListBox", .Message = String.Format("Detected Cycle {0}: {1}", cycle.Name, cycle.CycleType)})
+			sender.ReportProgress(0, New With {.Target = "ListBox", .Message = String.Format("Detected Cycle {0}: {1}", cycle.Name, cycle.CycleType)})
 		Next
 
 		sender.ReportProgress(0, New With {.Target = "ListBox", .Message = String.Format("Starting Simulation ({0} Jobs, {1} Runs)", JobFileList.Count, jobContainer.GetProgress().Count)})
 
 		jobContainer.Execute(True)
+
 		Dim start As DateTime = DateTime.Now()
 
 		While Not jobContainer.AllCompleted
+			'cancel the job if thread is interrupted (button "Stop" clicked)
 			If sender.CancellationPending Then
 				jobContainer.Cancel()
 				Return
 			End If
 
 			Dim progress As Dictionary(Of Integer, JobContainer.ProgressEntry) = jobContainer.GetProgress()
-
 			Dim sumProgress As Double = progress.Sum(Function(pair) pair.Value.Progress)
 			Dim duration As Double = (DateTime.Now() - start).TotalSeconds
 
 			sender.ReportProgress(Int((sumProgress * 100.0) / progress.Count), New With {.Target = "Status",
 																						 .Message = String.Format("Duration: {0:0}s, Current Progress: {1:P} ({2})", duration, sumProgress / progress.Count, String.Join(", ", progress.Select(Function(pair) String.Format("{0,4:P}", pair.Value.Progress))))})
 
-			For Each p As KeyValuePair(Of Integer, JobContainer.ProgressEntry) In _
-				progress.Where(Function(proc) proc.Value.Done And Not finishedProcesses.Contains(proc.Key))
-				Dim modFilename As String = fileWriters(p.Key).GetModDataFileName(p.Value.RunName, p.Value.CycleName, p.Value.RunSuffix)
-				Dim runName As String = String.Format("{0} {1} {2}", p.Value.RunName, p.Value.CycleName, p.Value.RunSuffix)
-				sender.ReportProgress(0, New With {.Target = "ListBox", .Message = String.Format("Finished Run {0}", runName)})
-				If Not p.Value.Error Is Nothing Then
-					sender.ReportProgress(0, New With {.Target = "ListBoxError", .Message = String.Format("ERROR {0}: {1}", runName, p.Value.Error.Message), .Link = modFilename})
-				End If
-				'If Not Cfg.DeclMode Then
-				sender.ReportProgress(0, New With {.Target = "ListBox", .Message = String.Format("Run {0}: Modal Results written to {1}", runName, modFilename), .Link = modFilename})
-				'End If
-
-				finishedProcesses.Add(p.Key)
-			Next
-			Thread.Sleep(250)
+			Dim justFinished As Dictionary(Of Integer, JobContainer.ProgressEntry) = progress.Where(Function(proc) proc.Value.Done AndAlso Not finishedRuns.Contains(proc.Key)).ToDictionary(Function(pair) pair.Key, Function(pair) pair.Value)
+			PrintRuns(justFinished, fileWriters)
+			finishedRuns.AddRange(justFinished.Select(Function(pair) pair.Key))
+			Thread.Sleep(100)
 		End While
+		
+		Dim remainingRuns As Dictionary(Of Integer, JobContainer.ProgressEntry) = jobContainer.GetProgress().Where(Function(proc) proc.Value.Done AndAlso Not finishedRuns.Contains(proc.Key)).ToDictionary(Function(pair) pair.Key, Function(pair) pair.Value)
+		PrintRuns(remainingRuns, fileWriters)
 
-		For Each p As KeyValuePair(Of Integer, JobContainer.ProgressEntry) In jobContainer.GetProgress().Where(Function(proc) Not finishedProcesses.Contains(proc.Key))
-			Dim modFilename As String = fileWriters(p.Key).GetModDataFileName(p.Value.RunName, p.Value.CycleName, p.Value.RunSuffix)
-			Dim runName As String = String.Format("{0} {1} {2}", p.Value.RunName, p.Value.CycleName, p.Value.RunSuffix)
-			sender.ReportProgress(0, New With {.Target = "ListBox", .Message = String.Format("Finished Run {0}", runName)})
-			If Not p.Value.Error Is Nothing Then
-				sender.ReportProgress(0, New With {.Target = "ListBoxError", .Message = String.Format("ERROR {0}: {1}", runName, p.Value.Error.Message), .Link = modFilename})
+		finishedRuns.Clear()
+		fileWriters.Clear()
+
+		For Each progressEntry As KeyValuePair(Of Integer, JobContainer.ProgressEntry) In jobContainer.GetProgress()
+			sender.ReportProgress(100, New With {.Target = "ListBox",
+												 .Message = String.Format("{0,-60} {1,8:P} {2,10:F2}s - {3}",
+																		  String.Format("{0} {1} {2}", progressEntry.Value.RunName, progressEntry.Value.CycleName, progressEntry.Value.RunSuffix),
+																		  progressEntry.Value.Progress, progressEntry.Value.ExecTime / 1000.0,
+																		  IIf(progressEntry.Value.Success, "Success", "Aborted"))})
+			If (Not progressEntry.Value.Success) Then
+				sender.ReportProgress(100, New With {.Target = "ListBox", .Message = progressEntry.Value.Error.Message})
 			End If
-			'If Not Cfg.DeclMode Then
-			sender.ReportProgress(0, New With {.Target = "ListBox", .Message = String.Format("Run {0}: Modal Results written to {1}", runName, modFilename), .Link = modFilename})
-			'End If
 
-			finishedProcesses.Add(p.Key)
+		Next
+
+		For Each job As String In JobFileList
+			Dim report As String = New FileOutputWriter(job).PDFReportName
+			If File.Exists(report) Then
+				sender.ReportProgress(100, New With {.Target = "ListBox", .Message = String.Format("Job Report '{0}' written to {1}", Path.GetFileName(job), report), .Link = report})
+			End If
 		Next
 
 		If File.Exists(sumFileWriter.SumFileName) Then
@@ -1702,33 +1708,26 @@ Imports TUGraz.VectoCore.Utils
 												 .Message = String.Format("Sum File written to {0}", sumFileWriter.SumFileName),
 												 .Link = sumFileWriter.SumFileName})
 		End If
-		If Cfg.DeclMode Then
-			For Each job As String In JobFileList
-				Dim report As String = Path.Combine(Path.GetDirectoryName(job), Path.GetFileNameWithoutExtension(job) + ".pdf")
 
-				If File.Exists(report) Then
-					sender.ReportProgress(100,
-										New With {.Target = "ListBox", .Message = String.Format("PDF Report written to {0}", report), .Link = report})
-				End If
-			Next
-		End If
+		sender.ReportProgress(100, New With {.Target = "ListBox", .Message = String.Format("Simulation Finished in {0:0}s", (DateTime.Now() - start).TotalSeconds)})
+	End Sub
 
-		For Each progressEntry As KeyValuePair(Of Integer, JobContainer.ProgressEntry) In jobContainer.GetProgress()
-			Dim runName As String = String.Format("{0} {1} {2}", progressEntry.Value.RunName, progressEntry.Value.CycleName,
-												progressEntry.Value.RunSuffix)
-			sender.ReportProgress(100,
-								New _
-									With {.Target = "ListBox",
-									.Message = String.Format("{0,-60} {1,8:P} {2,10:F2}s - {3}", runName, progressEntry.Value.Progress,
-															progressEntry.Value.ExecTime / 1000.0,
-															IIf(progressEntry.Value.Success, "Success", "Aborted"))})
-			If (Not progressEntry.Value.Success) Then
-				sender.ReportProgress(100, New With {.Target = "ListBox", .Message = progressEntry.Value.Error.Message})
+
+	Private Shared Sub PrintRuns(progress As Dictionary(Of Integer, JobContainer.ProgressEntry), fileWriters As Dictionary(Of Integer, FileOutputWriter))
+		For Each p As KeyValuePair(Of Integer, JobContainer.ProgressEntry) In progress
+			Dim modFilename As String = fileWriters(p.Key).GetModDataFileName(p.Value.RunName, p.Value.CycleName, p.Value.RunSuffix)
+			Dim runName As String = String.Format("{0} {1} {2}", p.Value.RunName, p.Value.CycleName, p.Value.RunSuffix)
+
+			If Not p.Value.Error Is Nothing Then
+				VECTOworkerV3.ReportProgress(0, New With {.Target = "ListBoxError", .Message = String.Format("Finished Run {0} with ERROR: {1}", runName, p.Value.Error.Message), .Link = modFilename})
+			Else
+				VECTOworkerV3.ReportProgress(0, New With {.Target = "ListBox", .Message = String.Format("Finished Run {0} successfully.", runName)})
 			End If
 
+			If (File.Exists(modFilename)) Then
+				VECTOworkerV3.ReportProgress(0, New With {.Target = "ListBox", .Message = String.Format("Run {0}: Modal Results written to {1}", runName, modFilename), .Link = modFilename})
+			End If
 		Next
-
-		sender.ReportProgress(100, New With {.Target = "ListBox", .Message = "Simulation Finished"})
 	End Sub
 
 	Private Sub VectoWorkerV3_OnProgressChanged(sender As Object, e As ProgressChangedEventArgs)
