@@ -1622,7 +1622,7 @@ Imports TUGraz.VectoCore.Utils
 
 		Dim fileWriters As Dictionary(Of Integer, FileOutputWriter) = New Dictionary(Of Integer, FileOutputWriter)
 
-		Dim doneProcesses As List(Of Integer) = New List(Of Integer)
+		Dim finishedProcesses As List(Of Integer) = New List(Of Integer)
 
 		For Each jobFile As String In JobFileList
 			Try
@@ -1664,10 +1664,10 @@ Imports TUGraz.VectoCore.Utils
 			Dim duration As Double = (DateTime.Now() - start).TotalSeconds
 
 			sender.ReportProgress(Int((sumProgress * 100.0) / progress.Count), New With {.Target = "Status",
-																						 .Message = String.Format("Duration: {0:0}s, Current Progress: {1:P} ({2})", duration, sumProgress / progress.Count,String.Join(", ", progress.Select(Function(pair) String.Format("{0,4:P}", pair.Value.Progress))))})
+																						 .Message = String.Format("Duration: {0:0}s, Current Progress: {1:P} ({2})", duration, sumProgress / progress.Count, String.Join(", ", progress.Select(Function(pair) String.Format("{0,4:P}", pair.Value.Progress))))})
 
 			For Each p As KeyValuePair(Of Integer, JobContainer.ProgressEntry) In _
-				progress.Where(Function(proc) proc.Value.Done And Not doneProcesses.Contains(proc.Key))
+				progress.Where(Function(proc) proc.Value.Done And Not finishedProcesses.Contains(proc.Key))
 				Dim modFilename As String = fileWriters(p.Key).GetModDataFileName(p.Value.RunName, p.Value.CycleName, p.Value.RunSuffix)
 				Dim runName As String = String.Format("{0} {1} {2}", p.Value.RunName, p.Value.CycleName, p.Value.RunSuffix)
 				sender.ReportProgress(0, New With {.Target = "ListBox", .Message = String.Format("Finished Run {0}", runName)})
@@ -1678,12 +1678,12 @@ Imports TUGraz.VectoCore.Utils
 				sender.ReportProgress(0, New With {.Target = "ListBox", .Message = String.Format("Run {0}: Modal Results written to {1}", runName, modFilename), .Link = modFilename})
 				'End If
 
-				doneProcesses.Add(p.Key)
+				finishedProcesses.Add(p.Key)
 			Next
 			Thread.Sleep(250)
 		End While
 
-		For Each p As KeyValuePair(Of Integer, JobContainer.ProgressEntry) In jobContainer.GetProgress().Where(Function(proc) Not doneProcesses.Contains(proc.Key))
+		For Each p As KeyValuePair(Of Integer, JobContainer.ProgressEntry) In jobContainer.GetProgress().Where(Function(proc) Not finishedProcesses.Contains(proc.Key))
 			Dim modFilename As String = fileWriters(p.Key).GetModDataFileName(p.Value.RunName, p.Value.CycleName, p.Value.RunSuffix)
 			Dim runName As String = String.Format("{0} {1} {2}", p.Value.RunName, p.Value.CycleName, p.Value.RunSuffix)
 			sender.ReportProgress(0, New With {.Target = "ListBox", .Message = String.Format("Finished Run {0}", runName)})
@@ -1694,7 +1694,7 @@ Imports TUGraz.VectoCore.Utils
 			sender.ReportProgress(0, New With {.Target = "ListBox", .Message = String.Format("Run {0}: Modal Results written to {1}", runName, modFilename), .Link = modFilename})
 			'End If
 
-			doneProcesses.Add(p.Key)
+			finishedProcesses.Add(p.Key)
 		Next
 
 		If File.Exists(sumFileWriter.SumFileName) Then
