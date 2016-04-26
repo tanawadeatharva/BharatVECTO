@@ -61,7 +61,7 @@ namespace TUGraz.VectoCore.Models.Simulation.Impl
 
 		public void AddRun(IVectoRun run)
 		{
-			_jobNumber++;
+			Interlocked.Increment(ref _jobNumber);
 			Runs.Add(new RunEntry { Run = run, JobContainer = this });
 		}
 
@@ -73,26 +73,25 @@ namespace TUGraz.VectoCore.Models.Simulation.Impl
 
 		public IEnumerable<CycleTypeDescription> GetCycleTypes()
 		{
-			return Runs.Select(r => new CycleTypeDescription {
-				Name = r.Run.CycleName,
-				CycleType = r.Run.GetContainer().RunData.Cycle.CycleType
-			}).Distinct();
+			return Runs.Select(r => new CycleTypeDescription {Name = r.Run.CycleName,CycleType = r.Run.GetContainer().RunData.Cycle.CycleType}).Distinct();
 		}
 
-		public void AddRuns(IEnumerable<IVectoRun> runs)
+		public IEnumerable<int> AddRuns(IEnumerable<IVectoRun> runs)
 		{
-			_jobNumber++;
-			//Runs.AddRange(runs);
+			Interlocked.Increment(ref _jobNumber);
+
 			foreach (var run in runs) {
-				Runs.Add(new RunEntry { Run = run, JobContainer = this });
+				var entry = new RunEntry { Run = run, JobContainer = this };
+				Runs.Add(entry);
+				yield return entry.Run.RunIdentifier;
 			}
 		}
 
-		public void AddRuns(SimulatorFactory factory)
+		public IEnumerable<int> AddRuns(SimulatorFactory factory)
 		{
 			factory.SumData = _sumWriter;
 			factory.JobNumber = _jobNumber++;
-			AddRuns(factory.SimulationRuns());
+			return AddRuns(factory.SimulationRuns());
 		}
 
 		/// <summary>
@@ -150,7 +149,7 @@ namespace TUGraz.VectoCore.Models.Simulation.Impl
 			}
 		}
 
-		public Dictionary<uint, ProgressEntry> GetProgress()
+		public Dictionary<int, ProgressEntry> GetProgress()
 		{
 			return Runs.ToDictionary(jobEntry => jobEntry.Run.RunIdentifier, entry => new ProgressEntry {
 				RunName = entry.Run.RunName,

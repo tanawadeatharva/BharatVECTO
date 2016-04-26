@@ -34,7 +34,7 @@ using System.IO;
 
 namespace TUGraz.VectoCore.OutputData
 {
-	public interface IOutputDataWriter : IModalDataWriter, ISummaryWriter, IReportWriter {}
+	public interface IOutputDataWriter : IModalDataWriter, IReportWriter {}
 
 	public interface IModalDataWriter
 	{
@@ -49,7 +49,7 @@ namespace TUGraz.VectoCore.OutputData
 
 	public interface IReportWriter
 	{
-		Stream WriterStream(ReportType type);
+		Stream WriteStream(ReportType type);
 	}
 
 	public enum ReportType
