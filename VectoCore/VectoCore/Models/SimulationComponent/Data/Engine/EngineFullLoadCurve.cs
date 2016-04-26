@@ -29,11 +29,8 @@
 *   Martin Rexeis, rexeis@ivt.tugraz.at, IVT, Graz University of Technology
 */
 
-using System;
 using System.Collections.Generic;
 using System.Data;
-using System.Diagnostics.Contracts;
-using System.Dynamic;
 using System.Linq;
 using TUGraz.VectoCommon.Utils;
 using TUGraz.VectoCore.InputData.Reader;

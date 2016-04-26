@@ -30,7 +30,6 @@
 */
 
 using Microsoft.VisualStudio.TestTools.UnitTesting;
-using TUGraz.VectoCore.Models.Declaration;
 
 namespace TUGraz.VectoCore.Tests.Models.SimulationComponentData
 {

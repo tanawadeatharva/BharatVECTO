@@ -347,6 +347,9 @@ namespace TUGraz.VectoCore.Tests.Models.Declaration
 			var engineFldFile = @"E:\QUAM\Downloads\EngineFLD\Map_375c_BB1390_modTUG_R49_375c_BB1386.vfld";
 			var gearboxFile = @"TestData\Components\40t_Long_Haul_Truck.vgbx";
 
+			if (!File.Exists(engineFldFile))
+				Assert.Inconclusive("Confidential File not found. Test cannot run without file.");
+
 			var rdyn = 0.4882675.SI<Meter>();
 			var axlegearRatio = 2.59;
 
@@ -382,7 +385,7 @@ namespace TUGraz.VectoCore.Tests.Models.Declaration
 	public class ShiftPolygonComparison
 	{
 		const string BasePath = @"E:\QUAM\Workspace\Daten_INTERN\Testfahrzeuge\";
-
+		
 		[
 			TestCase(@"class2_12t_baseline\175kW_Diesel_example.vfld", @"class2_12t_baseline\delivery_12t_example.vgbx", 0.421,
 				4.18, 600),
@@ -407,6 +410,9 @@ namespace TUGraz.VectoCore.Tests.Models.Declaration
 		public void ComputeShiftPolygon(string engineFldFile, string gearboxFile, double rdyn, double axlegearRatio,
 			double idlingSpeed)
 		{
+			if (!Directory.Exists(BasePath))
+				NUnit.Framework.Assert.Ignore("Confidential File not found. Test cannot run without file.");
+			
 			var engineData = new CombustionEngineData() {
 				IdleSpeed = idlingSpeed.RPMtoRad(),
 				FullLoadCurve = EngineFullLoadCurve.ReadFromFile(Path.Combine(BasePath, engineFldFile), true)

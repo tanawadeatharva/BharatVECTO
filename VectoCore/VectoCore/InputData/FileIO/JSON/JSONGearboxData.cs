@@ -38,8 +38,6 @@ using TUGraz.VectoCommon.InputData;
 using TUGraz.VectoCommon.Models;
 using TUGraz.VectoCommon.Utils;
 using TUGraz.VectoCore.InputData.Impl;
-using TUGraz.VectoCore.Models.SimulationComponent.Data;
-using TUGraz.VectoCore.Utils;
 
 namespace TUGraz.VectoCore.InputData.FileIO.JSON
 {
@@ -124,25 +122,20 @@ namespace TUGraz.VectoCore.InputData.FileIO.JSON
 		{
 			get
 			{
-				var i = 0;
-				return (from gear in Body.GetEx(JsonKeys.Gearbox_Gears)
-					where i++ != 0
-					let lossMap =
-						ReadTableData(gear.GetEx<string>(JsonKeys.Gearbox_Gear_LossMapFile), string.Format("Gear {0} LossMap", i))
-					let fullLoadCurve =
-						ReadTableData(gear.GetEx<string>(JsonKeys.Gearbox_Gear_FullLoadCurveFile),
-							string.Format("Gear {0} FLD", i), false)
-					let shiftPolygon =
-						ReadTableData(gear.GetEx<string>(JsonKeys.Gearbox_Gear_ShiftPolygonFile),
-							string.Format("Gear {0} shiftPolygon", i), false)
-					select new TransmissionInputData() {
-						Gear = i,
-						Ratio = gear.GetEx<double>(JsonKeys.Gearbox_Gear_Ratio),
-						FullLoadCurve = fullLoadCurve,
-						LossMap = lossMap,
-						ShiftPolygon = shiftPolygon,
-						TorqueConverterActive = gear.GetEx<bool>(JsonKeys.Gearbox_Gear_TCactive)
-					}).Cast<ITransmissionInputData>().ToList();
+				var resultGears = new List<ITransmissionInputData>();
+				var gears = Body.GetEx(JsonKeys.Gearbox_Gears);
+				for (var i = 1; i < gears.Count(); i++) {
+					var gear = gears[i];
+					var inputData = new TransmissionInputData {
+							Gear = i,
+							Ratio = gear.GetEx<double>(JsonKeys.Gearbox_Gear_Ratio),
+							FullLoadCurve = ReadTableData(gear.GetEx<string>(JsonKeys.Gearbox_Gear_FullLoadCurveFile), string.Format("Gear {0} FLD", i), false),
+							LossMap = ReadTableData(gear.GetEx<string>(JsonKeys.Gearbox_Gear_LossMapFile), string.Format("Gear {0} LossMap", i)),
+							ShiftPolygon = ReadTableData(gear.GetEx<string>(JsonKeys.Gearbox_Gear_ShiftPolygonFile), string.Format("Gear {0} shiftPolygon", i), false),
+							TorqueConverterActive = gear.GetEx<bool>(JsonKeys.Gearbox_Gear_TCactive)};
+					resultGears.Add(inputData);
+				}
+				return resultGears;
 			}
 		}
 

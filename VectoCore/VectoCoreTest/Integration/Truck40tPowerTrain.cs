@@ -44,7 +44,6 @@ using TUGraz.VectoCore.Models.SimulationComponent.Impl;
 using TUGraz.VectoCore.OutputData;
 using TUGraz.VectoCore.OutputData.FileIO;
 using TUGraz.VectoCore.Tests.Utils;
-using TUGraz.VectoCore.Utils;
 using Wheels = TUGraz.VectoCore.Models.SimulationComponent.Impl.Wheels;
 
 namespace TUGraz.VectoCore.Tests.Integration
@@ -84,7 +83,7 @@ namespace TUGraz.VectoCore.Tests.Integration
 		{
 			var fileWriter = new FileOutputWriter(modFileName, "");
 			var modData = new ModalDataContainer(modFileName, fileWriter);
-			var container = new VehicleContainer(modData, executionMode: ExecutionMode.Engineering);
+			var container = new VehicleContainer(executionMode: ExecutionMode.Engineering, modData: modData);
 
 			var engineData = MockSimulationDataFactory.CreateEngineDataFromFile(EngineFile);
 			var axleGearData = CreateAxleGearData();

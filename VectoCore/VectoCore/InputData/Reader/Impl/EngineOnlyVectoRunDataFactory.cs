@@ -31,6 +31,7 @@
 
 using System.Collections.Generic;
 using TUGraz.VectoCommon.InputData;
+using TUGraz.VectoCommon.Models;
 using TUGraz.VectoCore.InputData.Reader.DataObjectAdaper;
 using TUGraz.VectoCore.Models.Simulation.Data;
 using TUGraz.VectoCore.Models.SimulationComponent.Data;
@@ -53,15 +54,10 @@ namespace TUGraz.VectoCore.InputData.Reader.Impl
 					JobName = InputDataProvider.JobInputData().JobName,
 					EngineData = dao.CreateEngineData(InputDataProvider.EngineInputData),
 					Cycle = DrivingCycleDataReader.ReadFromDataTable(cycle.CycleData, CycleType.EngineOnly, cycle.Name, false),
-					IsEngineOnly = IsEngineOnly
+					ExecutionMode = ExecutionMode.EngineOnly
 				};
 				yield return simulationRunData;
 			}
-		}
-
-		public bool IsEngineOnly
-		{
-			get { return true; }
 		}
 	}
 }

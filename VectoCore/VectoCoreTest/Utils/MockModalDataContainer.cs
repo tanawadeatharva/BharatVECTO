@@ -36,7 +36,6 @@ using TUGraz.VectoCommon.Utils;
 using TUGraz.VectoCore.Models.Simulation.Data;
 using TUGraz.VectoCore.Models.Simulation.Impl;
 using TUGraz.VectoCore.OutputData;
-using TUGraz.VectoCore.Utils;
 
 namespace TUGraz.VectoCore.Tests.Utils
 {

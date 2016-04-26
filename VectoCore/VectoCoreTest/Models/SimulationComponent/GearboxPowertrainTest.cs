@@ -34,7 +34,6 @@ using TUGraz.VectoCommon.Utils;
 using TUGraz.VectoCore.Models.Connector.Ports.Impl;
 using TUGraz.VectoCore.Tests.Integration;
 using TUGraz.VectoCore.Tests.Utils;
-using TUGraz.VectoCore.Utils;
 
 namespace TUGraz.VectoCore.Tests.Models.SimulationComponent
 {

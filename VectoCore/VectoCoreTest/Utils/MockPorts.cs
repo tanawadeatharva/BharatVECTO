@@ -30,21 +30,17 @@
 */
 
 using System;
-using System.Diagnostics;
-using NLog;
 using TUGraz.VectoCommon.Models;
 using TUGraz.VectoCommon.Utils;
-using TUGraz.VectoCore.Models;
 using TUGraz.VectoCore.Models.Connector.Ports;
 using TUGraz.VectoCore.Models.Connector.Ports.Impl;
 using TUGraz.VectoCore.Models.Simulation.DataBus;
-using TUGraz.VectoCore.Utils;
 
 namespace TUGraz.VectoCore.Tests.Utils
 {
 	public class MockTnOutPort : ITnOutPort, IEngineInfo
 	{
-		protected static readonly Logger Log = LogManager.GetCurrentClassLogger();
+		protected static readonly LoggingObject Log = LogManager.GetLogger(typeof(MockTnOutPort).FullName);
 
 		public Second AbsTime;
 		public Second Dt;
@@ -57,7 +53,7 @@ namespace TUGraz.VectoCore.Tests.Utils
 			Dt = dt;
 			Torque = torque;
 			AngularVelocity = angularVelocity;
-			Log.Debug("Request: absTime: {0}, dt: {1}, torque: {3}, angularVelocity: {4}", absTime, dt, torque, angularVelocity);
+			Log.Debug("Request: absTime: {0}, dt: {1}, torque: {2}, angularVelocity: {3}", absTime, dt, torque, angularVelocity);
 
 			if (dryRun) {
 				return new ResponseDryRun {
@@ -137,7 +133,7 @@ namespace TUGraz.VectoCore.Tests.Utils
 			Velocity = targetVelocity;
 			Gradient = gradient;
 			Log.Debug("Request: absTime: {0}, ds: {1}, velocity: {2}, gradient: {3}", absTime, ds, targetVelocity, gradient);
-			return new ResponseSuccess();
+			return new ResponseSuccess() { Source = this};
 		}
 
 		public IResponse Request(Second absTime, Second dt, MeterPerSecond targetVelocity, Radian gradient)
@@ -147,7 +143,7 @@ namespace TUGraz.VectoCore.Tests.Utils
 			Velocity = targetVelocity;
 			Gradient = gradient;
 			Log.Debug("Request: absTime: {0}, ds: {1}, velocity: {2}, gradient: {3}", absTime, dt, targetVelocity, gradient);
-			return new ResponseSuccess();
+			return new ResponseSuccess() { Source = this };
 		}
 
 		public IResponse Initialize(MeterPerSecond vehicleSpeed, Radian roadGradient)
@@ -176,12 +172,12 @@ namespace TUGraz.VectoCore.Tests.Utils
 			Force = force;
 			Velocity = velocity;
 			Log.Debug("Request: abstime: {0}, dt: {1}, force: {2}, velocity: {3}", absTime, dt, force, velocity);
-			return new ResponseSuccess();
+			return new ResponseSuccess() { Source = this };
 		}
 
 		public IResponse Initialize(Newton vehicleForce, MeterPerSecond vehicleSpeed)
 		{
-			return new ResponseSuccess();
+			return new ResponseSuccess() { Source = this };
 		}
 	}
 }

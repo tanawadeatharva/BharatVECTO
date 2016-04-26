@@ -30,7 +30,6 @@
 */
 
 using System.Diagnostics.CodeAnalysis;
-using System.IO;
 using TUGraz.VectoCore.InputData.Reader;
 using TUGraz.VectoCore.Models.SimulationComponent.Data;
 using TUGraz.VectoCore.Tests.Utils;
@@ -345,6 +344,12 @@ namespace TUGraz.VectoCore.Tests.Integration
 			// <s>,<v>,<grad>,<stop>
 			"   0,  80, 15,    0",
 			"1000,  0,  15,    0"
+		};
+
+		public static readonly string[] CycleDecelerate_80_0_uphill_20 = {
+			// <s>,<v>,<grad>,<stop>
+			"   0,  80, 20,    0",
+			"1000,  0,  20,    0"
 		};
 
 		public static readonly string[] CycleDecelerate_80_0_downhill_15 = {

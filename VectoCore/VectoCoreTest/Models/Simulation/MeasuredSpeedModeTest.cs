@@ -36,7 +36,6 @@ using System.Collections.Generic;
 using TUGraz.VectoCore.OutputData;
 using TUGraz.VectoCore.InputData.Reader;
 using TUGraz.VectoCore.OutputData.FileIO;
-using TUGraz.VectoCore.Models.Declaration;
 using TUGraz.VectoCore.InputData.FileIO.JSON;
 using TUGraz.VectoCore.Models.Simulation.Data;
 using TUGraz.VectoCore.Models.Simulation.Impl;
@@ -67,8 +66,8 @@ namespace TUGraz.VectoCore.Tests.Models.Simulation
 		public void MeasuredSpeed_ReadCycle_Gear()
 		{
 			// all data
-			string inputData = @"<t>,<v>,<grad>,<Padd>,<n>   ,<gear>,<vair_res>,<vair_beta>,<Aux_Alt>
-								 0  ,0  ,0     ,3.2018,595.75,0     ,0         ,0          ,0.504";
+			var inputData = @"<t>,<v>,<grad>,<Padd>,<n>   ,<gear>,<vair_res>,<vair_beta>,<Aux_Alt>
+				  			  0  ,0  ,0     ,3.2018,595.75,0     ,0         ,0          ,0.504";
 			TestCycleRead(inputData, CycleType.MeasuredSpeedGear);
 
 			// vair only
@@ -82,7 +81,6 @@ namespace TUGraz.VectoCore.Tests.Models.Simulation
 			AssertHelper.Exception<VectoException>(
 				() => TestCycleRead(inputData, CycleType.MeasuredSpeedGear, crossWindRequired: true),
 				"ERROR while reading DrivingCycle Stream: Column vair_res was not found in DataRow.");
-
 
 			// no aux, no vair
 			inputData = @"<t>,<v>,<grad>,<Padd>,<n>   ,<gear>
@@ -116,7 +114,7 @@ namespace TUGraz.VectoCore.Tests.Models.Simulation
 			inputData = @"<t>,<grad>,<Padd>,<n>,<gear>
 						  0  ,0";
 			AssertHelper.Exception<VectoException>(() => TestCycleRead(inputData, CycleType.MeasuredSpeedGear),
-				"Failed to read stream: Line 0: The number of values is not correct.");
+				"Failed to read stream: Line 1: The number of values is not correct. Expected 5 Columns, Got 2 Columns");
 		}
 
 		/// <summary>
@@ -173,14 +171,13 @@ namespace TUGraz.VectoCore.Tests.Models.Simulation
 			inputData = @"<t>,<v>,<grad>,<Padd>,<vair_res>,<vair_beta>,<Aux_Alt>
 						  0  ,0";
 			AssertHelper.Exception<VectoException>(() => TestCycleRead(inputData, CycleType.MeasuredSpeed),
-				"Failed to read stream: Line 0: The number of values is not correct.");
+				"Failed to read stream: Line 1: The number of values is not correct. Expected 7 Columns, Got 2 Columns");
 		}
-
 
 		private static void TestCycleRead(string inputData, CycleType cycleType, bool autoCycle = true,
 			bool crossWindRequired = false)
 		{
-			var container = new VehicleContainer();
+			var container = new VehicleContainer(ExecutionMode.Engineering);
 
 			if (autoCycle) {
 				var cycleTypeCalc = DrivingCycleDataReader.DetectCycleType(VectoCSVFile.ReadStream(inputData.GetStream()));
@@ -191,7 +188,6 @@ namespace TUGraz.VectoCore.Tests.Models.Simulation
 
 			var cycle = new MeasuredSpeedDrivingCycle(container, drivingCycle);
 		}
-
 
 		/// <summary>
 		/// Tests if the powertrain can be created in MeasuredSpeed mode.
@@ -247,7 +243,6 @@ namespace TUGraz.VectoCore.Tests.Models.Simulation
 			var builder = new PowertrainBuilder(null);
 			builder.Build(data);
 		}
-
 
 		/// <summary>
 		/// Tests if the powertrain can be created in MeasuredSpeed mode.
@@ -311,7 +306,6 @@ namespace TUGraz.VectoCore.Tests.Models.Simulation
 			var jobContainer = builder.Build(data);
 		}
 
-
 		private static void RunJob(string jobFile, string expectedModFile, string actualModFile, string expectedSumFile,
 			string actualSumFile)
 		{
@@ -351,7 +345,6 @@ namespace TUGraz.VectoCore.Tests.Models.Simulation
 				@"TestData\MeasuredSpeed\Results\MeasuredSpeedAux.vsum", @"TestData\MeasuredSpeed\MeasuredSpeedAux.vsum");
 		}
 
-
 		[TestMethod]
 		public void MeasuredSpeedVair_Run()
 		{
@@ -389,7 +382,6 @@ namespace TUGraz.VectoCore.Tests.Models.Simulation
 				@"TestData\MeasuredSpeed\MeasuredSpeedVairNoWind.vsum");
 		}
 
-
 		[TestMethod]
 		public void MeasuredSpeedVairAux_Run()
 		{
@@ -398,7 +390,6 @@ namespace TUGraz.VectoCore.Tests.Models.Simulation
 				@"TestData\MeasuredSpeed\MeasuredSpeedVairAux_MeasuredSpeedVairAux.vmod",
 				@"TestData\MeasuredSpeed\Results\MeasuredSpeedVairAux.vsum", @"TestData\MeasuredSpeed\MeasuredSpeedVairAux.vsum");
 		}
-
 
 		[TestMethod]
 		public void MeasuredSpeed_Gear_Run()
@@ -426,7 +417,6 @@ namespace TUGraz.VectoCore.Tests.Models.Simulation
 				@"TestData\MeasuredSpeed\MeasuredSpeedGearVair_MeasuredSpeed_Gear_Rural_Vair.vmod",
 				@"TestData\MeasuredSpeed\Results\MeasuredSpeedGearVair.vsum", @"TestData\MeasuredSpeed\MeasuredSpeedGearVair.vsum");
 		}
-
 
 		[TestMethod]
 		public void MeasuredSpeed_Gear_VairAux_Run()

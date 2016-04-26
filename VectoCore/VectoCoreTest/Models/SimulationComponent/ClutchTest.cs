@@ -29,15 +29,12 @@
 *   Martin Rexeis, rexeis@ivt.tugraz.at, IVT, Graz University of Technology
 */
 
-using System;
 using Microsoft.VisualStudio.TestTools.UnitTesting;
+using TUGraz.VectoCommon.Models;
 using TUGraz.VectoCommon.Utils;
-using TUGraz.VectoCore.Models.Connector.Ports;
 using TUGraz.VectoCore.Models.Simulation.Impl;
-using TUGraz.VectoCore.Models.SimulationComponent.Data;
 using TUGraz.VectoCore.Models.SimulationComponent.Impl;
 using TUGraz.VectoCore.Tests.Utils;
-using TUGraz.VectoCore.Utils;
 
 namespace TUGraz.VectoCore.Tests.Models.SimulationComponent
 {
@@ -49,7 +46,7 @@ namespace TUGraz.VectoCore.Tests.Models.SimulationComponent
 		[TestMethod]
 		public void TestClutch()
 		{
-			var container = new VehicleContainer();
+			var container = new VehicleContainer(ExecutionMode.Engineering);
 			var engineData = MockSimulationDataFactory.CreateEngineDataFromFile(CoachEngine);
 			var gearbox = new MockGearbox(container);
 

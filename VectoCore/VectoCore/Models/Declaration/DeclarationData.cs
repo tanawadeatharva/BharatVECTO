@@ -45,7 +45,6 @@ using TUGraz.VectoCore.Models.SimulationComponent.Data;
 using TUGraz.VectoCore.Models.SimulationComponent.Data.Engine;
 using TUGraz.VectoCore.Models.SimulationComponent.Data.Gearbox;
 using TUGraz.VectoCore.Utils;
-using DriverData = TUGraz.VectoCore.Models.SimulationComponent.Data.DriverData;
 
 namespace TUGraz.VectoCore.Models.Declaration
 {
@@ -93,11 +92,16 @@ namespace TUGraz.VectoCore.Models.Declaration
 		public static Meter DynamicTyreRadius(string wheels, string rims)
 		{
 			var wheelsEntry = Wheels.Lookup(wheels.RemoveWhitespace());
+			try {
 			var rimsEntry = Rims.Lookup(rims);
 
 			var correction = wheelsEntry.SizeClass != "a" ? rimsEntry.F_b : rimsEntry.F_a;
 
 			return wheelsEntry.DynamicTyreRadius * correction / (2 * Math.PI);
+			} catch (KeyNotFoundException) {
+				throw new VectoException(
+					"Calculating Dynamic Tyre Radius not possible: Declaration Lookup could not find Key '{0}' for rim.", rims);
+		}
 		}
 
 		public static Fan Fan
@@ -143,7 +147,6 @@ namespace TUGraz.VectoCore.Models.Declaration
 		{
 			return 1;
 		}
-
 
 		private static DeclarationData Instance()
 		{
@@ -213,7 +216,7 @@ namespace TUGraz.VectoCore.Models.Declaration
 			public static KilogramSquareMeter EngineInertia(SI displacement)
 			{
 				// VB Code:    Return 1.3 + 0.41 + 0.27 * (Displ / 1000)
-				return (ClutchInertia + EngineBaseInertia + EngineDisplacementInertia * displacement).Cast<KilogramSquareMeter>();
+				return ClutchInertia + EngineBaseInertia + EngineDisplacementInertia * displacement;
 			}
 		}
 
@@ -221,15 +224,15 @@ namespace TUGraz.VectoCore.Models.Declaration
 		{
 			public const double TorqueReserve = 0.2;
 			public const double TorqueReserveStart = 0.2;
-			public const double StartSpeed = 2;
-			public const double StartAcceleration = 0.6;
-			public const double Inertia = 0;
+			public static readonly MeterPerSecond StartSpeed = 2.SI<MeterPerSecond>();
+			public static readonly MeterPerSquareSecond StartAcceleration = 0.6.SI<MeterPerSquareSecond>();
+			public static readonly KilogramSquareMeter Inertia = 0.SI<KilogramSquareMeter>();
 
 			public static readonly MeterPerSecond TruckMaxAllowedSpeed = 85.KMPHtoMeterPerSecond();
 			public static double ShiftPolygonRPMMargin = 7;
 			private static double ShiftPolygonEngineFldMargin = 0.98;
 
-			public const double MinTimeBetweenGearshifts = 2;
+			public static readonly Second MinTimeBetweenGearshifts = 2.SI<Second>();
 
 			/// <summary>
 			/// computes the shift polygons for a single gear according to the whitebook 2016

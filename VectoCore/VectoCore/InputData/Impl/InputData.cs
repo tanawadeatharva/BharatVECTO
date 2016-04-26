@@ -34,11 +34,6 @@ using System.Data;
 using TUGraz.VectoCommon.InputData;
 using TUGraz.VectoCommon.Models;
 using TUGraz.VectoCommon.Utils;
-using TUGraz.VectoCore.InputData;
-using TUGraz.VectoCore.Models.Declaration;
-using TUGraz.VectoCore.Models.SimulationComponent.Data;
-using TUGraz.VectoCore.Utils;
-using DriverData = TUGraz.VectoCore.Models.SimulationComponent.Data.DriverData;
 
 namespace TUGraz.VectoCore.InputData.Impl
 {

@@ -29,13 +29,13 @@
 *   Martin Rexeis, rexeis@ivt.tugraz.at, IVT, Graz University of Technology
 */
 
-using TUGraz.VectoCore.Utils;
 using TUGraz.VectoCore.Tests.Utils;
 using TUGraz.VectoCore.Models.Declaration;
 using TUGraz.VectoCore.Models.Simulation.Data;
 using TUGraz.VectoCore.Models.Simulation.Impl;
 using Microsoft.VisualStudio.TestTools.UnitTesting;
 using TUGraz.VectoCommon.Exceptions;
+using TUGraz.VectoCommon.Models;
 using TUGraz.VectoCommon.Utils;
 using TUGraz.VectoCore.InputData.FileIO.JSON;
 using TUGraz.VectoCore.InputData.Reader;
@@ -43,6 +43,8 @@ using TUGraz.VectoCore.Models.SimulationComponent.Data;
 using TUGraz.VectoCore.Models.SimulationComponent.Impl;
 using TUGraz.VectoCore.OutputData;
 using TUGraz.VectoCore.OutputData.FileIO;
+
+// ReSharper disable ObjectCreationAsStatement
 
 namespace TUGraz.VectoCore.Tests.Models.Simulation
 {
@@ -62,10 +64,10 @@ namespace TUGraz.VectoCore.Tests.Models.Simulation
 			modData.AddAuxiliary("AC");
 
 			var sumWriter = new SummaryDataContainer(fileWriter);
-			var container = new VehicleContainer(modData,
+			var container = new VehicleContainer(ExecutionMode.Declaration, modData,
 				(writer, mass, loading) => sumWriter.Write(modData, "", "", "", null, null));
 			var data = DrivingCycleDataReader.ReadFromFile(@"TestData\Cycles\LongHaul_short.vdri", CycleType.DistanceBased, false);
-			var mockcycle = new MockDrivingCycle(container, data);
+			new MockDrivingCycle(container, data);
 
 			var aux = new EngineAuxiliary(container);
 
@@ -111,7 +113,7 @@ namespace TUGraz.VectoCore.Tests.Models.Simulation
 		public void AuxConstant()
 		{
 			var dataWriter = new MockModalDataContainer();
-			var container = new VehicleContainer(dataWriter);
+			var container = new VehicleContainer(ExecutionMode.Engineering, dataWriter);
 			//var port = new MockTnOutPort();
 			var aux = new EngineAuxiliary(container);
 
@@ -143,7 +145,7 @@ namespace TUGraz.VectoCore.Tests.Models.Simulation
 		public void AuxDirect()
 		{
 			var dataWriter = new MockModalDataContainer();
-			var container = new VehicleContainer(dataWriter);
+			var container = new VehicleContainer(ExecutionMode.Engineering, dataWriter);
 			var data = DrivingCycleDataReader.ReadFromFile(@"TestData\Cycles\Coach time based short.vdri",
 				CycleType.MeasuredSpeed, false);
 			var cycle = new MockDrivingCycle(container, data);
@@ -174,7 +176,7 @@ namespace TUGraz.VectoCore.Tests.Models.Simulation
 			dataWriter.AddAuxiliary("ALT1");
 			dataWriter.AddAuxiliary("CONSTANT");
 
-			var container = new VehicleContainer(dataWriter);
+			var container = new VehicleContainer(ExecutionMode.Engineering, dataWriter);
 			var data = DrivingCycleDataReader.ReadFromFile(@"TestData\Cycles\Coach time based short.vdri",
 				CycleType.MeasuredSpeed, false);
 			// cycle ALT1 is set to values to equal the first few fixed points in the auxiliary file.
@@ -232,7 +234,7 @@ namespace TUGraz.VectoCore.Tests.Models.Simulation
 			var dataWriter = new MockModalDataContainer();
 			dataWriter.AddAuxiliary(auxId);
 
-			var container = new VehicleContainer(dataWriter);
+			var container = new VehicleContainer(ExecutionMode.Engineering, dataWriter);
 			var data = DrivingCycleDataReader.ReadFromFile(@"TestData\Cycles\Coach time based short.vdri",
 				CycleType.MeasuredSpeed, false);
 			// cycle ALT1 is set to values to equal the first few fixed points in the auxiliary file.
@@ -240,7 +242,7 @@ namespace TUGraz.VectoCore.Tests.Models.Simulation
 			// ALT1 in cycle file: 0, 0.3724 (=0.38*0.96), 0.4802 (=0.49*0.96), 0.6272 (0.64*0.96), ...
 
 			var cycle = new MockDrivingCycle(container, data);
-			var port = new MockTnOutPort();
+			new MockTnOutPort();
 
 			var aux = new EngineAuxiliary(container);
 
@@ -282,10 +284,10 @@ namespace TUGraz.VectoCore.Tests.Models.Simulation
 		[TestMethod]
 		public void AuxColumnMissing()
 		{
-			var container = new VehicleContainer();
+			var container = new VehicleContainer(ExecutionMode.Engineering);
 			var data = DrivingCycleDataReader.ReadFromFile(@"TestData\Cycles\Coach time based short.vdri",
 				CycleType.MeasuredSpeed, false);
-			var cycle = new MockDrivingCycle(container, data);
+			new MockDrivingCycle(container, data);
 
 			var aux = new EngineAuxiliary(container);
 			AssertHelper.Exception<VectoException>(() => aux.AddMapping("NONEXISTING_AUX", null),

@@ -30,7 +30,7 @@
 */
 
 using TUGraz.VectoCommon.InputData;
-using TUGraz.VectoCore.InputData;
+using TUGraz.VectoCommon.Models;
 
 namespace TUGraz.VectoCore.Models.SimulationComponent.Data
 {

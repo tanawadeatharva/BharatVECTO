@@ -43,6 +43,7 @@ Imports NLog
 Imports NLog.Config
 Imports NLog.Targets
 Imports TUGraz.VectoCommon.InputData
+Imports TUGraz.VectoCommon.Models
 Imports TUGraz.VectoCommon.Utils
 Imports TUGraz.VectoCore.OutputData
 Imports TUGraz.VectoCore.OutputData.FileIO

@@ -13,7 +13,6 @@ using TUGraz.VectoCore.Models.SimulationComponent.Impl;
 using TUGraz.VectoCore.OutputData;
 using TUGraz.VectoCore.OutputData.FileIO;
 using TUGraz.VectoCore.Tests.Utils;
-using TUGraz.VectoCore.Utils;
 using Wheels = TUGraz.VectoCore.Models.SimulationComponent.Impl.Wheels;
 
 namespace TUGraz.VectoCore.Tests.Integration
@@ -43,7 +42,7 @@ namespace TUGraz.VectoCore.Tests.Integration
 		{
 			var fileWriter = new FileOutputWriter(modFileName, "");
 			var modData = new ModalDataContainer(modFileName, fileWriter) { WriteAdvancedAux = true };
-			var container = new VehicleContainer(modData, null, ExecutionMode.Engineering);
+			var container = new VehicleContainer(ExecutionMode.Engineering, modData);
 
 			var engineData = MockSimulationDataFactory.CreateEngineDataFromFile(EngineFile);
 			var axleGearData = CreateAxleGearData();
@@ -87,11 +86,9 @@ namespace TUGraz.VectoCore.Tests.Integration
 					Tuple.Create((uint)i,
 						new GearData {
 							FullLoadCurve = FullLoadCurveReader.ReadFromFile(GearboxFullLoadCurveFile),
-							LossMap = (ratio != 1.0)
-								? TransmissionLossMap.ReadFromFile(GearboxIndirectLoss, ratio,
-									string.Format("Gear {0}", i))
-								: TransmissionLossMap.ReadFromFile(GearboxDirectLoss, ratio,
-									string.Format("Gear {0}", i)),
+							LossMap = ratio.IsEqual(1)
+								? TransmissionLossMap.ReadFromFile(GearboxIndirectLoss, ratio, string.Format("Gear {0}", i))
+								: TransmissionLossMap.ReadFromFile(GearboxDirectLoss, ratio, string.Format("Gear {0}", i)),
 							Ratio = ratio,
 							ShiftPolygon = ShiftPolygonReader.ReadFromFile(GearboxShiftPolygonFile)
 						}))

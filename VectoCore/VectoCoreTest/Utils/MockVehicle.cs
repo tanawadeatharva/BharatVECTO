@@ -35,11 +35,9 @@ using TUGraz.VectoCommon.Utils;
 using TUGraz.VectoCore.Models.Connector.Ports;
 using TUGraz.VectoCore.Models.Connector.Ports.Impl;
 using TUGraz.VectoCore.Models.Simulation;
-using TUGraz.VectoCore.Models.Simulation.Data;
 using TUGraz.VectoCore.Models.Simulation.DataBus;
 using TUGraz.VectoCore.Models.SimulationComponent;
 using TUGraz.VectoCore.OutputData;
-using TUGraz.VectoCore.Utils;
 
 namespace TUGraz.VectoCore.Tests.Utils
 {
@@ -98,7 +96,7 @@ namespace TUGraz.VectoCore.Tests.Utils
 				acceleration = acceleration,
 				gradient = gradient
 			};
-			return new ResponseSuccess();
+			return new ResponseSuccess() { Source = this};
 		}
 
 		public IResponse Initialize(MeterPerSecond vehicleSpeed, Radian roadGradient)

@@ -49,13 +49,6 @@ using TUGraz.VectoCore.Utils;
 
 namespace TUGraz.VectoCore.Models.Simulation.Impl
 {
-	public enum ExecutionMode
-	{
-		Engineering,
-		Declaration,
-		EngineOnly,
-	}
-
 	public class SimulatorFactory : LoggingObject
 	{
 		private static int _jobNumberCounter;

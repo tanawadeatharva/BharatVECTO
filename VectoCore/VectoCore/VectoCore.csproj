@@ -82,9 +82,6 @@
     <Reference Include="itextsharp">
       <HintPath>..\..\packages\iTextSharp.5.5.9\lib\itextsharp.dll</HintPath>
     </Reference>
-    <Reference Include="JetBrains.Annotations">
-      <HintPath>..\..\packages\JetBrains.Annotations.10.1.4\lib\net20\JetBrains.Annotations.dll</HintPath>
-    </Reference>
     <Reference Include="Newtonsoft.Json, Version=4.5.0.0, Culture=neutral, PublicKeyToken=30ad4fe6b2a6aeed, processorArchitecture=MSIL">
       <SpecificVersion>False</SpecificVersion>
       <HintPath>..\..\packages\Newtonsoft.Json.8.0.3\lib\net45\Newtonsoft.Json.dll</HintPath>
@@ -156,7 +153,6 @@
     <Compile Include="Models\Declaration\MissionType.cs" />
     <Compile Include="Models\SimulationComponent\Data\DriverData.cs" />
     <Compile Include="Models\SimulationComponent\Data\Engine\PT1Curve.cs" />
-    <Compile Include="Models\LoggingObject.cs" />
     <Compile Include="Models\SimulationComponent\Data\ICrossWindCorrection.cs" />
     <Compile Include="Models\SimulationComponent\Data\CrosswindCorrectionVAirBeta.cs" />
     <Compile Include="Models\SimulationComponent\IAuxiliary.cs" />
@@ -183,7 +179,7 @@
     <Compile Include="Models\SimulationComponent\Data\FullLoadCurve.cs" />
     <Compile Include="Models\Simulation\DataBus\IMileageCounter.cs" />
     <Compile Include="Models\Simulation\DataBus\IRoadLookAhead.cs" />
-    <Compile Include="Models\Simulation\Data\VectoJobData.cs" />
+    <Compile Include="Utils\DebugData.cs" />
     <Compile Include="Models\Simulation\Impl\DistanceRun.cs" />
     <Compile Include="Models\Simulation\Impl\PowertrainBuilder.cs" />
     <Compile Include="Models\Simulation\Impl\TimeRun.cs" />

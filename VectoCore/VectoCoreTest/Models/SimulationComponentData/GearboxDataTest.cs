@@ -41,7 +41,6 @@ using TUGraz.VectoCore.InputData.Reader.DataObjectAdaper;
 using TUGraz.VectoCore.Models.SimulationComponent.Data;
 using TUGraz.VectoCore.Models.SimulationComponent.Data.Engine;
 using TUGraz.VectoCore.Models.SimulationComponent.Data.Gearbox;
-using TUGraz.VectoCore.Tests.Integration;
 using TUGraz.VectoCore.Tests.Utils;
 using TUGraz.VectoCore.Utils;
 
@@ -108,7 +107,6 @@ namespace TUGraz.VectoCore.Tests.Models.SimulationComponentData
 				loss.Value(), 0.1,
 				TestContext.DataRow["TestName"].ToString());
 		}
-
 
 		[TestMethod]
 		public void TestLossMap_IN_10_CONST_Interpolation_Extrapolation()
@@ -197,7 +195,6 @@ namespace TUGraz.VectoCore.Tests.Models.SimulationComponentData
 			AssertHelper.AreRelativeEqual(-30, map.GetOutTorque(50.RPMtoRad(), -20.SI<NewtonMeter>(), true));
 			AssertHelper.AreRelativeEqual(40, map.GetOutTorque(120.RPMtoRad(), 50.SI<NewtonMeter>(), true));
 		}
-
 
 		[TestMethod]
 		public void TestLossMap_IN_Interpolation_Extrapolation()

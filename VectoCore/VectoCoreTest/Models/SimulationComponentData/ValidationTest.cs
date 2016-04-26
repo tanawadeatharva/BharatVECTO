@@ -34,10 +34,10 @@ using System.Data;
 using System.Diagnostics.CodeAnalysis;
 using System.Linq;
 using Microsoft.VisualStudio.TestTools.UnitTesting;
+using TUGraz.VectoCommon.Models;
 using TUGraz.VectoCommon.Utils;
 using TUGraz.VectoCore.InputData.Reader;
 using TUGraz.VectoCore.InputData.Reader.DataObjectAdaper;
-using TUGraz.VectoCore.InputData.Reader.Impl;
 using TUGraz.VectoCore.Models.Simulation.Data;
 using TUGraz.VectoCore.Models.Simulation.Impl;
 using TUGraz.VectoCore.Models.SimulationComponent.Data;
@@ -175,7 +175,7 @@ namespace TUGraz.VectoCore.Tests.Models.SimulationComponentData
 		[TestMethod]
 		public void Validation_VectoRun()
 		{
-			var container = new VehicleContainer();
+			var container = new VehicleContainer(ExecutionMode.Engineering);
 			var data = new DistanceRun(container);
 			var engineData = new CombustionEngineData {
 				FullLoadCurve = EngineFullLoadCurve.ReadFromFile(@"TestData\Components\12t Delivery Truck.vfld"),
@@ -261,6 +261,7 @@ namespace TUGraz.VectoCore.Tests.Models.SimulationComponentData
 		{
 			#region 4 parent instance fields
 
+			// ReSharper disable once NotAccessedField.Local
 			[Required, Range(1, 2)] private int private_parent_field = 7;
 			[Required, Range(3, 4)] protected int protected_parent_field = 7;
 			[Required, Range(5, 6)] internal int internal_parent_field = 7;
@@ -349,6 +350,7 @@ namespace TUGraz.VectoCore.Tests.Models.SimulationComponentData
 		{
 			#region 4 instance fields
 
+			// ReSharper disable once NotAccessedField.Local
 			[Required, Range(1, 2)] private int private_field = 7;
 			[Required, Range(3, 4)] protected int protected_field = 7;
 			[Required, Range(5, 6)] internal int internal_field = 7;

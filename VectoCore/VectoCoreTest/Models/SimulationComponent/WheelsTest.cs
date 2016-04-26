@@ -29,14 +29,13 @@
 *   Martin Rexeis, rexeis@ivt.tugraz.at, IVT, Graz University of Technology
 */
 
-using System;
 using Microsoft.VisualStudio.TestTools.UnitTesting;
+using TUGraz.VectoCommon.Models;
 using TUGraz.VectoCommon.Utils;
 using TUGraz.VectoCore.Models.Simulation.Impl;
 using TUGraz.VectoCore.Models.SimulationComponent;
 using TUGraz.VectoCore.Models.SimulationComponent.Impl;
 using TUGraz.VectoCore.Tests.Utils;
-using TUGraz.VectoCore.Utils;
 
 namespace TUGraz.VectoCore.Tests.Models.SimulationComponent
 {
@@ -48,7 +47,7 @@ namespace TUGraz.VectoCore.Tests.Models.SimulationComponent
 		[TestMethod]
 		public void WheelsRequestTest()
 		{
-			var container = new VehicleContainer();
+			var container = new VehicleContainer(ExecutionMode.Engineering);
 			//var reader = new EngineeringModeSimulationDataReader();
 			var vehicleData = MockSimulationDataFactory.CreateVehicleDataFromFile(VehicleDataFile);
 

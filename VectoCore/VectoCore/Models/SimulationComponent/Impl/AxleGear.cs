@@ -35,7 +35,6 @@ using TUGraz.VectoCommon.Utils;
 using TUGraz.VectoCore.Models.Connector.Ports;
 using TUGraz.VectoCore.Models.Simulation;
 using TUGraz.VectoCore.Models.Simulation.Data;
-using TUGraz.VectoCore.Models.Simulation.Impl;
 using TUGraz.VectoCore.Models.SimulationComponent.Data;
 using TUGraz.VectoCore.OutputData;
 
@@ -109,11 +108,13 @@ namespace TUGraz.VectoCore.Models.SimulationComponent.Impl
 		protected override void DoCommitSimulationStep()
 		{
 			if (ModelData.AxleGear.LossMap.Extrapolated) {
-				// todo (MK, 2015-12-14): should we throw an interpolation error in EngineOnly Mode also?
+				Log.Warn("AxleGear LossMap data was extrapolated: range for loss map is not sufficient: n:{0}, torque:{1}",
+					CurrentState.OutAngularVelocity.ConvertTo().Rounds.Per.Minute, CurrentState.OutTorque);
+
 				if (DataBus.ExecutionMode == ExecutionMode.Declaration) {
-					throw new VectoException("AxleGear LossMap data was extrapolated: range for loss map is not sufficient.");
-				} else {
-					Log.Warn("AxleGear LossMap data was extrapolated.");
+					throw new VectoException(
+						"AxleGear LossMap data was extrapolated in Declaration Mode: range for loss map is not sufficient: n:{0}, torque:{1}",
+						CurrentState.OutAngularVelocity.ConvertTo().Rounds.Per.Minute, CurrentState.OutTorque);
 				}
 			}
 			AdvanceState();

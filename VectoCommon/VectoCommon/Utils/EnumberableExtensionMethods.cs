@@ -32,10 +32,9 @@
 using System;
 using System.Collections.Generic;
 using System.Linq;
-using NLog;
-using TUGraz.VectoCommon.Utils;
+using TUGraz.VectoCommon.Models;
 
-namespace TUGraz.VectoCore.Utils
+namespace TUGraz.VectoCommon.Utils
 {
 	public static class EnumberableExtensionMethods
 	{
@@ -51,15 +50,20 @@ namespace TUGraz.VectoCore.Utils
 
 		public static bool SequenceEqualFast<T>(this T[] self, T[] other) where T : IComparable
 		{
-			if (self.Length == other.Length) {
-				for (var i = 0; i < self.Length; i++) {
-					if (self[i].CompareTo(other[i]) != 0) {
-						return false;
-					}
-				}
+			if (self.Equals(other)) {
 				return true;
 			}
-			return false;
+
+			if (self.Length != other.Length) {
+				return false;
+			}
+
+			for (var i = 0; i < self.Length; i++) {
+				if (self[i].CompareTo(other[i]) != 0) {
+					return self.OrderBy(x => x).SequenceEqual(other.OrderBy(x => x));
+				}
+			}
+			return true;
 		}
 
 		public static IList<double> ToDouble(this IEnumerable<SI> self)

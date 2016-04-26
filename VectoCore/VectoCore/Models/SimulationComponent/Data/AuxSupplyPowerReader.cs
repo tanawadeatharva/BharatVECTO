@@ -31,9 +31,10 @@
 
 using System.Collections.Generic;
 using System.Data;
+using System.Globalization;
 using System.Linq;
 using TUGraz.VectoCommon.Utils;
-using TUGraz.VectoCore.Utils;
+using TUGraz.VectoCore.Configuration;
 
 namespace TUGraz.VectoCore.Models.SimulationComponent.Data
 {
@@ -42,17 +43,18 @@ namespace TUGraz.VectoCore.Models.SimulationComponent.Data
 	/// </summary>
 	public static class AuxSupplyPowerReader
 	{
-		private const string AuxSupplyPowerField = "Aux_";
-
 		/// <summary>
 		/// Reads Auxiliary Supply Power (defined by AuxSupplyPowerField-Prefix "Aux_").
 		/// </summary>
 		public static Dictionary<string, Watt> GetAuxiliaries(this DataRow row)
 		{
 			return row.Table.Columns.Cast<DataColumn>()
-				.Where(col => col.ColumnName.StartsWith(AuxSupplyPowerField))
-				.ToDictionary(key => AuxSupplyPowerField + key.ColumnName.Substring(AuxSupplyPowerField.Length).ToUpper(),
-					value => row.ParseDouble(value).SI().Kilo.Watt.Cast<Watt>());
+				.Where(col => {
+					var s = col.ColumnName;
+					return s[0] == 'A' && s[1] == 'u' && s[2] == 'x' && s[3] == '_';
+				})
+				.ToDictionary(col => "Aux_" + col.ColumnName.Substring(4).ToUpper(),
+					col => SIBase<Watt>.Create(double.Parse(row.Field<string>(col), CultureInfo.InvariantCulture) * Constants.Kilo));
 		}
 	}
 }
