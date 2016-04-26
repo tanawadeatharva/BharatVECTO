@@ -228,12 +228,12 @@ namespace TUGraz.VectoCore.InputData.Reader.DataObjectAdaper
 			return SetCommonRetarderData(retarder, vehicle);
 		}
 
-		public AdvancedAuxData CreateAdvancedAuxData(IVehicleEngineeringInputData vehicleInputData)
+		public AdvancedAuxData CreateAdvancedAuxData(IAuxiliariesEngineeringInputData auxInputData)
 		{
 			return new AdvancedAuxData() {
-				AdvancedAuxiliaryFilePath = vehicleInputData.AdvancedAuxiliaryFilePath,
-				AuxiliaryAssembly = vehicleInputData.AuxiliaryAssembly,
-				AuxiliaryVersion = vehicleInputData.AuxiliaryVersion
+				AdvancedAuxiliaryFilePath = auxInputData.AdvancedAuxiliaryFilePath,
+				AuxiliaryAssembly = auxInputData.AuxiliaryAssembly,
+				AuxiliaryVersion = auxInputData.AuxiliaryVersion
 			};
 		}
 	}

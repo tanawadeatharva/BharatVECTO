@@ -525,5 +525,32 @@ namespace TUGraz.VectoCore.InputData.FileIO.JSON
 			}
 			return retVal;
 		}
+
+		#region AdvancedAuxiliaries
+
+		public AuxiliaryModel AuxiliaryAssembly
+		{
+			get
+			{
+				return AuxiliaryModelHelper.Parse(Body["AuxiliaryAssembly"] == null ? "" : Body["AuxiliaryAssembly"].ToString());
+			}
+		}
+
+		public string AuxiliaryVersion
+		{
+			get { return Body["AuxiliaryVersion"] != null ? Body["AuxiliaryVersion"].Value<string>() : "<CLASSIC>"; }
+		}
+
+		public string AdvancedAuxiliaryFilePath
+		{
+			get
+			{
+				return Body["AdvancedAuxiliaryFilePath"] != null
+					? Path.Combine(Path.GetFullPath(BasePath), Body["AdvancedAuxiliaryFilePath"].Value<string>())
+					: "";
+			}
+		}
+
+		#endregion
 	}
 }

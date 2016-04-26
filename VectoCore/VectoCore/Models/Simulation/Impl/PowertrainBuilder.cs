@@ -290,11 +290,11 @@ namespace TUGraz.VectoCore.Models.Simulation.Impl
 			AddComponent(tmp, engine);
 
 			// connect aux --> engine
-			if (data.Aux != null) {
-				engine.Connect(CreateAuxiliaries(data, container).Port());
+			if (data.AdvancedAux != null && data.AdvancedAux.AuxiliaryAssembly == AuxiliaryModel.Advanced) {
+				engine.Connect(CreateBusAuxiliaries(data, container).Port());
 			} else {
-				if (data.AdvancedAux.AuxiliaryAssembly == AuxiliaryModel.Advanced) {
-					engine.Connect(CreateBusAuxiliaries(data, container).Port());
+				if (data.Aux != null) {
+					engine.Connect(CreateAuxiliaries(data, container).Port());
 				}
 			}
 
