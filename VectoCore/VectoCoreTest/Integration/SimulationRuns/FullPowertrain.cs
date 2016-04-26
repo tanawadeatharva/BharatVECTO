@@ -309,7 +309,7 @@ namespace TUGraz.VectoCore.Tests.Integration.SimulationRuns
 							LossMap =
 								TransmissionLossMap.ReadFromFile(GearboxLossMap, ratio, string.Format("Gear {0}", i)),
 							Ratio = ratio,
-							ShiftPolygon = ShiftPolygon.ReadFromFile(GearboxShiftPolygonFile)
+							ShiftPolygon = ShiftPolygonReader.ReadFromFile(GearboxShiftPolygonFile)
 						}))
 					.ToDictionary(k => k.Item1 + 1, v => v.Item2),
 				ShiftTime = 2.SI<Second>(),
@@ -343,7 +343,7 @@ namespace TUGraz.VectoCore.Tests.Integration.SimulationRuns
 							FullLoadCurve = null,
 							LossMap = TransmissionLossMap.ReadFromFile(GearboxLossMap, ratio, "Gear 1"),
 							Ratio = ratio,
-							ShiftPolygon = ShiftPolygon.ReadFromFile(GearboxShiftPolygonFile)
+							ShiftPolygon = ShiftPolygonReader.ReadFromFile(GearboxShiftPolygonFile)
 						}
 					}
 				},
