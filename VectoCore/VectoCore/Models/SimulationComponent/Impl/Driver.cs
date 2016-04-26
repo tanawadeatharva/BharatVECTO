@@ -195,7 +195,7 @@ namespace TUGraz.VectoCore.Models.SimulationComponent.Impl
 					Case<ResponseOverload>(() => {
 						// deceleration is limited by driver model, operating point moves above full load (e.g., steep uphill)
 						// the vehicle/driver can't achieve an acceleration higher than deceleration curve, try again with higher deceleration
-						Log.Warn(
+						Log.Info(
 							"Operating point with limited acceleration resulted in an overload! trying again with original acceleration {0}",
 							nextOperatingPoint.Acceleration);
 						retVal = NextComponent.Request(absTime, nextOperatingPoint.SimulationInterval, nextOperatingPoint.Acceleration,
@@ -588,7 +588,7 @@ namespace TUGraz.VectoCore.Models.SimulationComponent.Impl
 				if (
 					!retVal.Acceleration.IsBetween(DriverData.AccelerationCurve.MaxDeceleration(),
 						DriverData.AccelerationCurve.MaxAcceleration())) {
-					Log.Warn("Operating Point outside driver acceleration limits: a: {0}", retVal.Acceleration);
+					Log.Info("Operating Point outside driver acceleration limits: a: {0}", retVal.Acceleration);
 				}
 
 				return ComputeTimeInterval(retVal.Acceleration, retVal.SimulationDistance);

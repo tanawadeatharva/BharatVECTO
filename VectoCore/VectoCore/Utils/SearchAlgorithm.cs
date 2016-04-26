@@ -72,7 +72,7 @@ namespace TUGraz.VectoCore.Utils
 				result = InterpolateLinear(x, y, interval, getYValue, evaluateFunction, criterion, ref iterationCount);
 			} catch (VectoException ex) {
 				var log = LogManager.GetLogger(typeof(SearchAlgorithm).FullName);
-				log.Warn("Falling back to LineSearch. InterpolationSearch failed: " + ex.Message);
+				log.Debug("Falling back to LineSearch. InterpolationSearch failed: " + ex.Message);
 				result = LineSearch(x, y, interval, getYValue, evaluateFunction, criterion, ref iterationCount);
 			}
 			return result;

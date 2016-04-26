@@ -557,7 +557,7 @@ namespace TUGraz.VectoCore.Models.SimulationComponent.Impl
 					Log.Debug("Phase: BRAKE. breaking distance: {0} start braking @ {1}", brakingDistance,
 						DriverStrategy.BrakeTrigger.TriggerDistance - brakingDistance);
 					if (DriverStrategy.BrakeTrigger.TriggerDistance - brakingDistance < currentDistance) {
-						Log.Warn("Expected Braking Deceleration could not be reached! {0}",
+						Log.Info("Expected Braking Deceleration could not be reached! {0}",
 							DriverStrategy.BrakeTrigger.TriggerDistance - brakingDistance - currentDistance);
 					}
 					var targetDistance = DataBus.VehicleSpeed < Constants.SimulationSettings.MinVelocityForCoast
@@ -571,16 +571,16 @@ namespace TUGraz.VectoCore.Models.SimulationComponent.Impl
 						gradient, targetDistance: targetDistance);
 					response.Switch().
 						Case<ResponseOverload>(r => {
-							Log.Warn("Got OverloadResponse during brake action - desired deceleration could not be reached! response: {0}", r);
+							Log.Info("Got OverloadResponse during brake action - desired deceleration could not be reached! response: {0}", r);
 							if (!DataBus.ClutchClosed(absTime)) {
-								Log.Warn("Clutch is open - trying RollAction");
+								Log.Info("Clutch is open - trying RollAction");
 								response = Driver.DrivingActionRoll(absTime, ds, targetVelocity, gradient);
 							} else {
-								Log.Warn("Clutch is closed - trying AccelerateAction");
+								Log.Info("Clutch is closed - trying AccelerateAction");
 								response = Driver.DrivingActionAccelerate(absTime, ds, DriverStrategy.BrakeTrigger.NextTargetSpeed, gradient);
 								response.Switch().Case<ResponseGearShift>(
 									rs => {
-										Log.Warn("Got GearShift response, performing roll action...");
+										Log.Info("Got GearShift response, performing roll action...");
 										response = Driver.DrivingActionRoll(absTime, ds, DriverStrategy.BrakeTrigger.NextTargetSpeed, gradient);
 									}
 									);

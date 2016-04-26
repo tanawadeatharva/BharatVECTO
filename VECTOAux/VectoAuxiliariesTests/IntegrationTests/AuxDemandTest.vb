@@ -48,7 +48,7 @@ Namespace IntegrationTests
 
 			Dim power As Single = aux.AuxiliaryPowerAtCrankWatts
 
-			Assert.AreEqual(expectedPowerDemand, power, 0.0001)
+			Assert.AreEqual(expectedPowerDemand, power, 0.001)
 		End Sub
 
 		<Test>
