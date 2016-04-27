@@ -199,15 +199,15 @@ Examples:
 						}
 						_jobContainer.AddRuns(runsFactory);
 					}
-					//if (Path.GetExtension(file) == Constants.FileExtensions.VectoXMLDeclarationFile) {
-					//	var dataProvider = new XMLInputDataProvider(new XmlTextReader(file), true);
-					//  fileWriter = new FileOutputWriter(file);
-					//	var runsFactory = new SimulatorFactory(ExecutionMode.Declaration, dataProvider, fileWriter);
-					//	if (args.Contains("-mod")) {
-					//		runsFactory.WriteModalResults = true;
-					//	}
-					//	_jobContainer.AddRuns(runsFactory);
-					//}
+					if (Path.GetExtension(file) == Constants.FileExtensions.VectoXMLDeclarationFile) {
+						var dataProvider = new XMLInputDataProvider(new XmlTextReader(file), true);
+						fileWriter = new FileOutputWriter(file);
+						var runsFactory = new SimulatorFactory(ExecutionMode.Declaration, dataProvider, fileWriter);
+						if (args.Contains("-mod")) {
+							runsFactory.WriteModalResults = true;
+						}
+						_jobContainer.AddRuns(runsFactory);
+					}
 				}
 
 				Console.WriteLine();
