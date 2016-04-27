@@ -76,16 +76,23 @@ namespace TUGraz.VectoCore.Models.Simulation.Impl
 			return Runs.Select(r => new CycleTypeDescription {Name = r.Run.CycleName,CycleType = r.Run.GetContainer().RunData.Cycle.CycleType}).Distinct();
 		}
 
-		public IEnumerable<int> AddRuns(SimulatorFactory factory)
+		/// <summary>
+		/// Adds the runs from the factory to the job container.
+		/// </summary>
+		/// <returns>A List of Run-Identifiers (unique), int</returns>
+		public List<int> AddRuns(SimulatorFactory factory)
 		{
+			var runIDs = new List<int>();
+			
 			factory.SumData = _sumWriter;
 			factory.JobNumber = Interlocked.Increment(ref _jobNumber);
 
 			foreach (var run in factory.SimulationRuns()) {
 				var entry = new RunEntry { Run = run, JobContainer = this };
 				Runs.Add(entry);
-				yield return entry.Run.RunIdentifier;
+				runIDs.Add(entry.Run.RunIdentifier);
 			}
+			return runIDs;
 		}
 
 		/// <summary>
