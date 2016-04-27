@@ -155,8 +155,7 @@ namespace TUGraz.VectoCore.Tests.Integration
 		public void Truck40t_DeclarationTest()
 		{
 			var inputData = JSONInputDataFactory.ReadJsonJob(LongHaulTruckDeclarationJob);
-			var fileWriter = new FileOutputWriter(Path.GetFileNameWithoutExtension(LongHaulTruckDeclarationJob),
-				Path.GetDirectoryName(LongHaulTruckDeclarationJob));
+			var fileWriter = new FileOutputWriter(LongHaulTruckDeclarationJob);
 			var factory = new SimulatorFactory(ExecutionMode.Declaration, inputData, fileWriter) {
 				WriteModalResults = true
 			};
@@ -174,8 +173,7 @@ namespace TUGraz.VectoCore.Tests.Integration
 		public void Truck12t_DeclarationTest()
 		{
 			var inputData = JSONInputDataFactory.ReadJsonJob(DeliveryTruckDeclarationJob);
-			var fileWriter = new FileOutputWriter(Path.GetFileNameWithoutExtension(DeliveryTruckDeclarationJob),
-				Path.GetDirectoryName(DeliveryTruckDeclarationJob));
+			var fileWriter = new FileOutputWriter(DeliveryTruckDeclarationJob);
 			var factory = new SimulatorFactory(ExecutionMode.Declaration, inputData, fileWriter) {
 				WriteModalResults = true
 			};

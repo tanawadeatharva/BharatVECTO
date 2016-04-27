@@ -49,7 +49,7 @@ namespace TUGraz.VectoCore.OutputData
 
 	public interface IReportWriter
 	{
-		Stream WriterStream(ReportType type);
+		Stream WriteStream(ReportType type);
 	}
 
 	public enum ReportType

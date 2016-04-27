@@ -68,7 +68,7 @@ namespace TUGraz.VectoCore.Tests.Integration
 		public static VehicleContainer CreatePowerTrain(DrivingCycleData cycleData, string modFileName,
 			bool overspeed = false)
 		{
-			var fileWriter = new FileOutputWriter(modFileName, "");
+			var fileWriter = new FileOutputWriter(modFileName);
 			var modData = new ModalDataContainer(modFileName, fileWriter);
 			var container = new VehicleContainer(ExecutionMode.Engineering, modData, null);
 

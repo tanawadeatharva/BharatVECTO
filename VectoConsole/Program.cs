@@ -41,11 +41,13 @@ using NLog;
 using NLog.Config;
 using NLog.Targets;
 using TUGraz.VectoAPI.InputData;
+using TUGraz.VectoCommon.Models;
 using TUGraz.VectoCore.Configuration;
 using TUGraz.VectoCore.InputData.FileIO.JSON;
 using TUGraz.VectoCore.Models.Simulation.Impl;
 using TUGraz.VectoCore.OutputData;
 using TUGraz.VectoCore.OutputData.FileIO;
+using LogManager = NLog.LogManager;
 
 namespace VectoConsole
 {
@@ -189,6 +191,7 @@ Examples:
 					Console.WriteLine(@"Reading job: " + file);
 					if (Path.GetExtension(file) == Constants.FileExtensions.VectoJobFile) {
 						var dataProvider = JSONInputDataFactory.ReadJsonJob(file);
+						fileWriter = new FileOutputWriter(file);
 						var runsFactory = new SimulatorFactory(mode, dataProvider, fileWriter);
 
 						if (args.Contains("-mod")) {
@@ -198,6 +201,7 @@ Examples:
 					}
 					if (Path.GetExtension(file) == Constants.FileExtensions.VectoXMLDeclarationFile) {
 						var dataProvider = new XMLInputDataProvider(new XmlTextReader(file), true);
+						fileWriter = new FileOutputWriter(file);
 						var runsFactory = new SimulatorFactory(ExecutionMode.Declaration, dataProvider, fileWriter);
 						if (args.Contains("-mod")) {
 							runsFactory.WriteModalResults = true;
@@ -242,7 +246,7 @@ Examples:
 
 				while (!_jobContainer.AllCompleted) {
 					PrintProgress(_jobContainer.GetProgress());
-					Thread.Sleep(250);
+					Thread.Sleep(100);
 				}
 				stopWatch.Stop();
 				timings.Add("Simulation runs", stopWatch.Elapsed.TotalMilliseconds);
@@ -296,7 +300,7 @@ Examples:
 			Console.WriteLine(@"VectoCore: {0}", vectodll.Version);
 		}
 
-		private static void PrintProgress(Dictionary<uint, JobContainer.ProgressEntry> progessData,
+		private static void PrintProgress(Dictionary<int, JobContainer.ProgressEntry> progessData,
 			bool showTiming = true)
 		{
 			Console.SetCursorPosition(0, Console.CursorTop - _numLines);

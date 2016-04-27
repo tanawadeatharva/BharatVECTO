@@ -55,7 +55,7 @@ namespace TUGraz.VectoCore.Tests.Models.Simulation
 		public void AuxWriteModFileSumFile()
 
 		{
-			var fileWriter = new FileOutputWriter("AuxWriteModFileSumFile", "");
+			var fileWriter = new FileOutputWriter("AuxWriteModFileSumFile");
 			var modData = new ModalDataContainer("AuxWriteModFileSumFile", fileWriter);
 			modData.AddAuxiliary("FAN");
 			modData.AddAuxiliary("PS");
@@ -304,7 +304,7 @@ namespace TUGraz.VectoCore.Tests.Models.Simulation
 		[TestMethod]
 		public void AuxReadJobFileDeclarationMode()
 		{
-			var fileWriter = new FileOutputWriter("AuxReadJobFileDeclarationMode", "");
+			var fileWriter = new FileOutputWriter("AuxReadJobFileDeclarationMode");
 			var sumData = new SummaryDataContainer(fileWriter);
 			var jobContainer = new JobContainer(sumData);
 
@@ -318,7 +318,7 @@ namespace TUGraz.VectoCore.Tests.Models.Simulation
 		[TestMethod]
 		public void AuxReadJobFileEngineeringMode()
 		{
-			var fileWriter = new FileOutputWriter("AuxReadJobFileEngineeringMode", "");
+			var fileWriter = new FileOutputWriter("AuxReadJobFileEngineeringMode");
 			var sumData = new SummaryDataContainer(fileWriter);
 			var jobContainer = new JobContainer(sumData);
 
@@ -332,7 +332,7 @@ namespace TUGraz.VectoCore.Tests.Models.Simulation
 		[TestMethod]
 		public void AuxDeclarationWrongConfiguration()
 		{
-			var fileWriter = new FileOutputWriter("AuxReadJobFileDeclarationMode", "");
+			var fileWriter = new FileOutputWriter("AuxReadJobFileDeclarationMode");
 			var sumData = new SummaryDataContainer(fileWriter);
 			var jobContainer = new JobContainer(sumData);
 
