@@ -1699,7 +1699,7 @@ lbFound:
 		For Each job As String In JobFileList
 			Dim report As String = New FileOutputWriter(job).PDFReportName
 			If File.Exists(report) Then
-				sender.ReportProgress(100, New With {.Target = "ListBox", .Message = String.Format("Job Report '{0}' written to {1}", Path.GetFileName(job), report), .Link = report})
+				sender.ReportProgress(100, New With {.Target = "ListBox", .Message = String.Format("PDF-Report for '{0}' written to {1}", Path.GetFileName(job), report), .Link = report})
 			End If
 		Next
 
