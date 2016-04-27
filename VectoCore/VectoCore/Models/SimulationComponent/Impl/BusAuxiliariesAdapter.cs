@@ -194,8 +194,8 @@ namespace TUGraz.VectoCore.Models.SimulationComponent.Impl
 					// smart aux should be on during braking
 				}
 			}
-			Auxiliaries.Signals.EngineMotoringPower = -(float)DataBus.EngineDragPower(angularSpeed).Value() / 1000;
-			Auxiliaries.Signals.EngineSpeed = (int)(angularSpeed.Value() / Constants.RPMToRad);
+			Auxiliaries.Signals.EngineMotoringPower = (float)(-DataBus.EngineDragPower(angularSpeed).Value() / 1000);
+			Auxiliaries.Signals.EngineSpeed = angularSpeed.Value() / Constants.RPMToRad;
 			Auxiliaries.Signals.PreExistingAuxPower = 0; //mAAUX_Global.PreExistingAuxPower;
 			Auxiliaries.Signals.Idle = DataBus.VehicleStopped;
 			Auxiliaries.Signals.InNeutral = DataBus.Gear == 0;

@@ -7,7 +7,7 @@ Module mAAUX_Global
 	Public EngineDrivelinePower As Single
 	Public EngineDrivelineTorque As Single
 	Public EngineMotoringPower As Single
-	Public EngineSpeed As Integer
+	Public EngineSpeed As Single
 	Public PreExistingAuxPower As Single
 	Public Idle As Boolean
 	Public InNeutral As Boolean
