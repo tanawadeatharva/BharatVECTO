@@ -70,7 +70,7 @@ namespace TUGraz.VectoCore.Tests.Integration.SimulationRuns
 		[TestMethod, TestCategory("LongRunning")]
 		public void Test_FullPowertrain_SimpleGearbox()
 		{
-			var fileWriter = new FileOutputWriter("Coach_FullPowertrain_SimpleGearbox", "");
+			var fileWriter = new FileOutputWriter("Coach_FullPowertrain_SimpleGearbox");
 			var modData = new ModalDataContainer("Coach_FullPowertrain_SimpleGearbox", fileWriter);
 			var container = new VehicleContainer(modData);
 
@@ -129,7 +129,7 @@ namespace TUGraz.VectoCore.Tests.Integration.SimulationRuns
 		[TestMethod, TestCategory("LongRunning")]
 		public void Test_FullPowertrain()
 		{
-			var fileWriter = new FileOutputWriter("Coach_FullPowertrain", "");
+			var fileWriter = new FileOutputWriter("Coach_FullPowertrain");
 			var modData = new ModalDataContainer("Coach_FullPowertrain", fileWriter);
 			var container = new VehicleContainer(modData);
 
@@ -203,7 +203,7 @@ namespace TUGraz.VectoCore.Tests.Integration.SimulationRuns
 		[TestMethod, TestCategory("LongRunning")]
 		public void Test_FullPowertrain_LowSpeed()
 		{
-			var fileWriter = new FileOutputWriter("Coach_FullPowertrain_LowSpeed", "");
+			var fileWriter = new FileOutputWriter("Coach_FullPowertrain_LowSpeed");
 			var modData = new ModalDataContainer("Coach_FullPowertrain_LowSpeed", fileWriter);
 			var container = new VehicleContainer(modData);
 

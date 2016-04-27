@@ -86,7 +86,7 @@ namespace TUGraz.VectoCore.OutputData.PDF
 			var titlePage = CreateTitlePage(_missions);
 			var cyclePages = _missions.OrderBy(m => m.Key).Select((m, i) => CreateCyclePage(m.Value, i + 2, _missions.Count + 1));
 
-			MergeDocuments(titlePage, cyclePages, _writer.WriterStream(ReportType.DeclarationReportPdf));
+			MergeDocuments(titlePage, cyclePages, _writer.WriteStream(ReportType.DeclarationReportPdf));
 		}
 
 		protected override void DoInitializeReport(VectoRunData modelData, Segment segment)

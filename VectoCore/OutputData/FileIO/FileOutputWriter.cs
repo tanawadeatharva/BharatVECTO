@@ -32,37 +32,34 @@
 using System;
 using System.Data;
 using System.IO;
-using System.Text;
 using TUGraz.VectoCore.Configuration;
 using TUGraz.VectoCore.Models;
-using TUGraz.VectoCore.Models.Simulation.Data;
 using TUGraz.VectoCore.Utils;
 
 namespace TUGraz.VectoCore.OutputData.FileIO
 {
+
 	public class FileOutputWriter : LoggingObject, IOutputDataWriter
 	{
-		private readonly string _basePath;
-		private readonly string _jobName;
+		private readonly string _jobFile;
 
+		private string BasePath { get { return Path.GetDirectoryName(_jobFile); } }
+		public string PDFReportName { get { return Path.ChangeExtension(_jobFile, Constants.FileExtensions.PDFReport); } }
+		public string SumFileName { get { return Path.ChangeExtension(_jobFile, Constants.FileExtensions.SumFile); } }
 		/// <summary>
 		/// 
 		/// </summary>
-		/// <param name="jobFile">full path of the json job-file. jobName and basePath are extracted</param>
+		/// <param name="jobFile">full path of the json job-file. jobName and basePath are extracted.</param>
 		public FileOutputWriter(string jobFile)
-			: this(Path.GetFileNameWithoutExtension(jobFile), Path.GetDirectoryName(jobFile)) {}
-
-		/// <summary>
-		/// 
-		/// </summary>
-		/// <param name="jobName">Name of the job, used for the filename of the sum-file</param>
-		/// <param name="basePath">path where to store the sum-file and report</param>
-		public FileOutputWriter(string jobName, string basePath)
 		{
-			_jobName = jobName;
-			_basePath = basePath;
+			_jobFile = jobFile;
 		}
 
+		public void WriteSumData(DataTable data)
+		{
+			VectoCSVFile.Write(SumFileName, data);
+		}
+		
 		public string GetModDataFileName(string runName, string cycleName, string runSuffix)
 		{
 			string modFileName;
@@ -72,7 +69,7 @@ namespace TUGraz.VectoCore.OutputData.FileIO
 				modFileName = string.Format("{0}{1}", runName, Constants.FileExtensions.ModDataFile);
 			}
 
-			return Path.Combine(_basePath, modFileName);
+			return Path.Combine(BasePath, modFileName);
 		}
 
 		public void WriteModData(string runName, string cycleName, string runSuffix, DataTable modData)
@@ -80,22 +77,11 @@ namespace TUGraz.VectoCore.OutputData.FileIO
 			VectoCSVFile.Write(GetModDataFileName(runName, cycleName, runSuffix), modData);
 		}
 
-		public string GetSumFileName()
-		{
-			return Path.Combine(_basePath, Path.GetFileNameWithoutExtension(_jobName) + Constants.FileExtensions.SumFile);
-		}
-
-		public void WriteSumData(DataTable data)
-		{
-			VectoCSVFile.Write(GetSumFileName(), data);
-		}
-
-
-		public Stream WriterStream(ReportType type)
+		public Stream WriteStream(ReportType type)
 		{
 			switch (type) {
 				case ReportType.DeclarationReportPdf:
-					return new FileStream(Path.Combine(_basePath, _jobName + ".pdf"), FileMode.Create);
+					return new FileStream(PDFReportName, FileMode.Create);
 				default:
 					throw new ArgumentOutOfRangeException("type");
 			}

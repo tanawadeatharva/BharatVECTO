@@ -34,14 +34,13 @@ using System.IO;
 
 namespace TUGraz.VectoCore.OutputData
 {
-	public interface IOutputDataWriter : IModalDataWriter, ISummaryWriter, IReportWriter {}
+	public interface IOutputDataWriter : IModalDataWriter, IReportWriter, ISummaryWriter {}
 
 	public interface IModalDataWriter
 	{
 		void WriteModData(string runName, string cycleName, string runSuffix, DataTable modData);
 	}
-
-
+	
 	public interface ISummaryWriter
 	{
 		void WriteSumData(DataTable sortedAndFilteredTable);
@@ -49,7 +48,7 @@ namespace TUGraz.VectoCore.OutputData
 
 	public interface IReportWriter
 	{
-		Stream WriterStream(ReportType type);
+		Stream WriteStream(ReportType type);
 	}
 
 	public enum ReportType

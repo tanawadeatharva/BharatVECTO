@@ -71,7 +71,7 @@ namespace TUGraz.VectoCore.Tests.Integration.SimulationRuns
 
 			var driverData = CreateDriverData(AccelerationFile);
 
-			var fileWriter = new FileOutputWriter("Coach_MinimalPowertrainOverload", "");
+			var fileWriter = new FileOutputWriter("Coach_MinimalPowertrainOverload");
 			var modData = new ModalDataContainer("Coach_MinimalPowertrainOverload", fileWriter); //new TestModalDataWriter();
 			var vehicleContainer = new VehicleContainer(modData);
 
@@ -122,7 +122,7 @@ namespace TUGraz.VectoCore.Tests.Integration.SimulationRuns
 
 			var driverData = CreateDriverData(AccelerationFile);
 
-			var fileWriter = new FileOutputWriter("Coach_MinimalPowertrain", "");
+			var fileWriter = new FileOutputWriter("Coach_MinimalPowertrain");
 			var modData = new ModalDataContainer("Coach_MinimalPowertrain", fileWriter); //new TestModalDataWriter();
 			var vehicleContainer = new VehicleContainer(modData);
 
