@@ -49,7 +49,7 @@ namespace TUGraz.VectoCore.OutputData.FileIO
 		/// <summary>
 		/// 
 		/// </summary>
-		/// <param name="jobFile">full path of the json job-file. jobName and basePath are extracted</param>
+		/// <param name="jobFile">full path of the json job-file. jobName and basePath are extracted.</param>
 		public FileOutputWriter(string jobFile)
 		{
 			_jobFile = jobFile;
@@ -57,7 +57,7 @@ namespace TUGraz.VectoCore.OutputData.FileIO
 
 		public void WriteSumData(DataTable data)
 		{
-			VectoCSVFile.Write(_jobFile, data);
+			VectoCSVFile.Write(SumFileName, data);
 		}
 		
 		public string GetModDataFileName(string runName, string cycleName, string runSuffix)
