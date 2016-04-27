@@ -45,7 +45,7 @@ namespace TUGraz.VectoCore.Tests.Reports
 		[TestMethod]
 		public void TestSumCalcFixedTime()
 		{
-			var writer = new FileOutputWriter("testsumcalc_fixed", "");
+			var writer = new FileOutputWriter("testsumcalc_fixed");
 			var sumWriter = new SummaryDataContainer(writer);
 
 			var modData = new ModalDataContainer("testsumcalc_fixed", writer);
@@ -95,7 +95,7 @@ namespace TUGraz.VectoCore.Tests.Reports
 		[TestMethod]
 		public void TestSumCalcVariableTime()
 		{
-			var writer = new FileOutputWriter("testsumcalc_var", "");
+			var writer = new FileOutputWriter("testsumcalc_var");
 			var sumWriter = new SummaryDataContainer(writer);
 
 			var modData = new ModalDataContainer("testsumcalc_var", writer);

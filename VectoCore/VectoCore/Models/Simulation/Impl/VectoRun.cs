@@ -32,6 +32,7 @@
 using System;
 using System.ComponentModel;
 using System.ComponentModel.DataAnnotations;
+using System.Threading;
 using TUGraz.VectoCommon.Exceptions;
 using TUGraz.VectoCommon.Models;
 using TUGraz.VectoCommon.Utils;
@@ -47,7 +48,7 @@ namespace TUGraz.VectoCore.Models.Simulation.Impl
 	/// </summary>
 	public abstract class VectoRun : LoggingObject, IVectoRun
 	{
-		private static uint _runIdCounter;
+		private static int _runIdCounter;
 
 		protected Second AbsTime = 0.SI<Second>();
 		// ReSharper disable once InconsistentNaming
@@ -60,7 +61,7 @@ namespace TUGraz.VectoCore.Models.Simulation.Impl
 		protected IVehicleContainer Container { get; set; }
 
 		public bool FinishedWithoutErrors { get; protected set; }
-		public uint RunIdentifier { get; protected set; }
+		public int RunIdentifier { get; protected set; }
 
 		public string RunName
 		{
@@ -80,7 +81,7 @@ namespace TUGraz.VectoCore.Models.Simulation.Impl
 		protected VectoRun(IVehicleContainer container)
 		{
 			Container = container;
-			RunIdentifier = _runIdCounter++;
+			RunIdentifier = Interlocked.Increment(ref _runIdCounter);
 			Container.RunStatus = Status.Pending;
 			CyclePort = container.GetCycleOutPort();
 		}

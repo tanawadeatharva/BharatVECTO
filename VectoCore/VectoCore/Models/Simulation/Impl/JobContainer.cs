@@ -62,7 +62,7 @@ namespace TUGraz.VectoCore.Models.Simulation.Impl
 
 		public void AddRun(IVectoRun run)
 		{
-			_jobNumber++;
+			Interlocked.Increment(ref _jobNumber);
 			Runs.Add(new RunEntry { Run = run, JobContainer = this });
 		}
 
@@ -80,20 +80,23 @@ namespace TUGraz.VectoCore.Models.Simulation.Impl
 			}).Distinct();
 		}
 
-		public void AddRuns(IEnumerable<IVectoRun> runs)
+		/// <summary>
+		/// Adds the runs from the factory to the job container.
+		/// </summary>
+		/// <returns>A List of Run-Identifiers (unique), int</returns>
+		public List<int> AddRuns(SimulatorFactory factory)
 		{
-			_jobNumber++;
-			//Runs.AddRange(runs);
-			foreach (var run in runs) {
-				Runs.Add(new RunEntry { Run = run, JobContainer = this });
-			}
-		}
+			var runIDs = new List<int>();
 
-		public void AddRuns(SimulatorFactory factory)
-		{
 			factory.SumData = _sumWriter;
-			factory.JobNumber = _jobNumber++;
-			AddRuns(factory.SimulationRuns());
+			factory.JobNumber = Interlocked.Increment(ref _jobNumber);
+
+			foreach (var run in factory.SimulationRuns()) {
+				var entry = new RunEntry { Run = run, JobContainer = this };
+				Runs.Add(entry);
+				runIDs.Add(entry.Run.RunIdentifier);
+			}
+			return runIDs;
 		}
 
 		/// <summary>
@@ -151,7 +154,7 @@ namespace TUGraz.VectoCore.Models.Simulation.Impl
 			}
 		}
 
-		public Dictionary<uint, ProgressEntry> GetProgress()
+		public Dictionary<int, ProgressEntry> GetProgress()
 		{
 			return Runs.ToDictionary(jobEntry => jobEntry.Run.RunIdentifier, entry => new ProgressEntry {
 				RunName = entry.Run.RunName,
