@@ -202,6 +202,7 @@
     </Compile>
     <Compile Include="Utils\DataTableExtensionMethods.cs" />
     <Compile Include="Utils\DateTimeFallbackDeserializer.cs" />
+    <Compile Include="Utils\IterationStatistics.cs" />
     <Compile Include="Utils\RessourceHelper.cs" />
     <Compile Include="Models\Declaration\Segment.cs" />
     <Compile Include="Models\Declaration\Axle.cs" />

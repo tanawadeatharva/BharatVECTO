@@ -144,6 +144,8 @@ namespace TUGraz.VectoCore.Models.SimulationComponent.Impl
 
 		IResponse ITnOutPort.Request(Second absTime, Second dt, NewtonMeter torque, PerSecond angularVelocity, bool dryRun)
 		{
+			IterationStatistics.Increment(this, "Requests");
+
 			Log.Debug("Engine Powertrain Power Request: torque: {0}, angularVelocity: {1}, power: {2}", torque, angularVelocity,
 				torque * angularVelocity);
 
