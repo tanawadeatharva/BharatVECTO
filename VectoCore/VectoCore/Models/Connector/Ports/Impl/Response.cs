@@ -32,6 +32,7 @@
 using System.Linq;
 using TUGraz.VectoCommon.Models;
 using TUGraz.VectoCommon.Utils;
+using TUGraz.VectoCore.Models.SimulationComponent.Impl;
 
 namespace TUGraz.VectoCore.Models.Connector.Ports.Impl
 {
@@ -60,6 +61,8 @@ namespace TUGraz.VectoCore.Models.Connector.Ports.Impl
 		public Watt BrakePower { get; set; }
 
 		public Second AbsTime { get; set; }
+
+		public Driver.OperatingPoint OperatingPoint { get; set; }
 
 		public PerSecond EngineSpeed { get; set; }
 
