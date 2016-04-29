@@ -119,7 +119,7 @@ namespace TUGraz.VectoCore.Utils
 			log.Debug("Log Disabled during Search LineSearch.");
 			LogManager.DisableLogging();
 			try {
-				for (var count = 1; count < 100; count++) {
+				for (var count = 1; count < 100; count++, iterationCount++) {
 					if (origY.Sign() != y.Sign()) {
 						intervalFactor = 0.5;
 					}
@@ -132,7 +132,7 @@ namespace TUGraz.VectoCore.Utils
 					if (criterion(result).IsEqual(0, Constants.SimulationSettings.LineSearchTolerance)) {
 						LogManager.EnableLogging();
 						log.Debug("LineSearch found an operating point after {0} function calls.", count);
-						iterationCount += count;
+						//iterationCount += count;
 						LogManager.DisableLogging();
 						return x;
 					}
@@ -148,7 +148,7 @@ namespace TUGraz.VectoCore.Utils
 				LogManager.EnableLogging();
 			}
 
-			iterationCount += 100;
+			//iterationCount += 100;
 			log.Debug("LineSearch could not find an operating point.");
 			log.Error("Exceeded max iterations when searching for operating point!");
 			log.Error("debug: {0}", debug);
@@ -181,7 +181,7 @@ namespace TUGraz.VectoCore.Utils
 					return x2;
 				}
 
-				for (var count = 2; count < 30; count++) {
+				for (var count = 2; count < 30; count++, iterationCount++) {
 					var y2 = getYValue(result);
 					debug.Add(new { x = x2, y = y2, delta = criterion(result), result });
 
@@ -198,7 +198,7 @@ namespace TUGraz.VectoCore.Utils
 						LogManager.EnableLogging();
 						log.Debug("InterpolateLinear could not get more exact. Aborting after {0} function calls.", count);
 						LogManager.DisableLogging();
-						iterationCount += count;
+						//iterationCount += count;
 						return x2;
 					}
 
@@ -208,7 +208,7 @@ namespace TUGraz.VectoCore.Utils
 						LogManager.EnableLogging();
 						log.Debug("InterpolateLinear found an operating point after {0} function calls.", count);
 						LogManager.DisableLogging();
-						iterationCount += count;
+						//iterationCount += count;
 						return x2;
 					}
 					if (abortCriterion != null && abortCriterion(result, iterationCount)) {
@@ -223,7 +223,7 @@ namespace TUGraz.VectoCore.Utils
 				LogManager.EnableLogging();
 			}
 
-			iterationCount += 30;
+			//iterationCount += 30;
 			log.Debug("InterpolateLinear could not find an operating point.");
 			log.Error("Exceeded max iterations when searching for operating point!");
 			log.Error("debug: {0}", debug);
