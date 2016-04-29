@@ -153,7 +153,7 @@ namespace TUGraz.VectoCore.Utils
 			log.Error("Exceeded max iterations when searching for operating point!");
 			log.Error("debug: {0}", debug);
 
-			WriteSerach(debug, "LineSearch.csv");
+			//WriteSerach(debug, "LineSearch.csv");
 			throw new VectoSearchFailedException("Failed to find operating point! points: {0}", debug);
 		}
 
@@ -228,7 +228,7 @@ namespace TUGraz.VectoCore.Utils
 			log.Error("Exceeded max iterations when searching for operating point!");
 			log.Error("debug: {0}", debug);
 
-			WriteSerach(debug, "InterpolateSearch.csv");
+			//WriteSerach(debug, "InterpolateSearch.csv");
 			throw new VectoSearchFailedException("Failed to find operating point! points: {0}", debug);
 		}
 
@@ -251,9 +251,9 @@ namespace TUGraz.VectoCore.Utils
 				row["x"] = entry.x.Value();
 				row["y"] = entry.y.Value();
 				row["delta"] = entry.delta;
-				row["AuxPower"] = response.AuxiliariesPowerDemand.Value();
-				row["engineSpeed"] = response.EngineSpeed.Value();
-				row["enginePower"] = response.EnginePowerRequest.Value();
+				row["AuxPower"] = response.AuxiliariesPowerDemand == null ? -1 : response.AuxiliariesPowerDemand.Value();
+				row["engineSpeed"] = response.EngineSpeed == null ? -1 : response.EngineSpeed.Value();
+				row["enginePower"] = response.EnginePowerRequest == null ? -1 : response.EnginePowerRequest.Value();
 
 				table.Rows.Add(row);
 			}
