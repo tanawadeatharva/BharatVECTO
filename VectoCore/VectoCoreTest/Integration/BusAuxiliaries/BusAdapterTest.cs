@@ -1,7 +1,11 @@
-﻿using NUnit.Framework;
+﻿using System.Data;
+using NUnit.Framework;
 using TUGraz.VectoCommon.Utils;
+using TUGraz.VectoCore.Configuration;
 using TUGraz.VectoCore.Models.Simulation.DataBus;
+using TUGraz.VectoCore.Models.SimulationComponent.Data;
 using TUGraz.VectoCore.Tests.Utils;
+using TUGraz.VectoCore.Utils;
 using Assert = Microsoft.VisualStudio.TestTools.UnitTesting.Assert;
 
 namespace TUGraz.VectoCore.Tests.Integration.BusAuxiliaries
@@ -10,12 +14,12 @@ namespace TUGraz.VectoCore.Tests.Integration.BusAuxiliaries
 	public class BusAdapterTest
 	{
 		[Test]
-		[TestCase(12000, 1256, 148, 148, 6087.0317)]
-		[TestCase(12000, 1256, -48, -148, 6087.0317)]
-		[TestCase(12000, 1256, 48, -148, 6087.0317)]
-		[TestCase(12000, 800, 148, 148, 6377.2026)]
-		[TestCase(12000, 800, -48, -148, 6377.2026)]
-		[TestCase(12000, 800, 48, -148, 6377.2026)]
+		[TestCase(12000, 1256, 148, 148, 6086.9321)]
+		[TestCase(12000, 1256, -48, -148, 6086.9321)]
+		[TestCase(12000, 1256, 48, -148, 6086.9321)]
+		[TestCase(12000, 800, 148, 148, 6377.0923)]
+		[TestCase(12000, 800, -48, -148, 6377.0923)]
+		[TestCase(12000, 800, 48, -148, 6377.0923)]
 		public void TestNoSmartAuxDuringDrive(double vehicleWeight, double engineSpeedRpm, double driveLinePower,
 			double internalPower, double expectedPowerDemand)
 		{
@@ -35,16 +39,16 @@ namespace TUGraz.VectoCore.Tests.Integration.BusAuxiliaries
 		}
 
 		[Test]
-		[TestCase(12000, 1256, 148, 148, 6087.0317)]
-		[TestCase(12000, 1256, -28, -27, 6087.0317)]
-		[TestCase(12000, 1256, -28, -29, 6087.0317)]
-		[TestCase(12000, 1256, -128, -28, 6087.0317)]
-		[TestCase(12000, 1256, 28, -28, 6087.0317)]
-		[TestCase(12000, 800, 148, 148, 6377.2026)]
-		[TestCase(12000, 800, -14, -13, 6377.2026)]
-		[TestCase(12000, 800, -14, -15, 6377.2026)]
-		[TestCase(12000, 800, -35, -14, 6377.2026)]
-		[TestCase(12000, 800, 35, -14, 6377.2026)]
+		[TestCase(12000, 1256, 148, 148, 6086.9321)]
+		[TestCase(12000, 1256, -28, -27, 6086.9321)]
+		[TestCase(12000, 1256, -28, -29, 6086.9321)]
+		[TestCase(12000, 1256, -128, -28, 6086.9321)]
+		[TestCase(12000, 1256, 28, -28, 6086.9321)]
+		[TestCase(12000, 800, 148, 148, 6377.0923)]
+		[TestCase(12000, 800, -14, -13, 6377.0923)]
+		[TestCase(12000, 800, -14, -15, 6377.0923)]
+		[TestCase(12000, 800, -35, -14, 6377.0923)]
+		[TestCase(12000, 800, 35, -14, 6377.0923)]
 		public void TestNoSmartAuxDuringCoasting(double vehicleWeight, double engineSpeedRpm, double driveLinePower,
 			double internalPower, double expectedPowerDemand)
 		{
@@ -67,10 +71,10 @@ namespace TUGraz.VectoCore.Tests.Integration.BusAuxiliaries
 		}
 
 		[Test]
-		[TestCase(12000, 1256, -48, -148, 8954.14355)]
-		[TestCase(12000, 1256, 48, -148, 8954.14355)]
-		[TestCase(12000, 800, -48, -148, 8281.51367)]
-		[TestCase(12000, 800, 48, -148, 8281.51367)]
+		[TestCase(12000, 1256, -48, -148, 8954.1396)]
+		[TestCase(12000, 1256, 48, -148, 8954.1396)]
+		[TestCase(12000, 800, -48, -148, 8281.5088)]
+		[TestCase(12000, 800, 48, -148, 8281.5088)]
 		public void TestSmartAuxDuringBrake(double vehicleWeight, double engineSpeedRpm, double driveLinePower,
 			double internalPower, double expectedPowerDemand)
 		{
@@ -88,5 +92,52 @@ namespace TUGraz.VectoCore.Tests.Integration.BusAuxiliaries
 
 			Assert.AreEqual(expectedPowerDemand, (torque * engineSpeed).Value(), 1e-3);
 		}
+
+
+		[Test,
+		TestCase(19000)]
+		public void AuxDemandContinuityTest(double vehicleWeight)
+		{
+			MockDriver driver;
+			var busAux = AuxDemandTest.CreateBusAuxAdapterForTesting(vehicleWeight, out driver);
+
+			driver.DrivingBehavior = DrivingBehavior.Driving;
+
+			//var engineSpeedRpm = 1375.1014;
+
+			var table = new DataTable();
+			table.Columns.Add("engineSpeed", typeof(double));
+			table.Columns.Add("auxPowerDemand", typeof(double));
+
+			for (var engineSpeedRpm = 1370.0; engineSpeedRpm < 1380; engineSpeedRpm += 1e-3) {
+				var driveLinePower = 2200.0;
+				var internalPower = driveLinePower + 43;
+
+				var engineDrivelinePower = driveLinePower.SI<Watt>();
+				var engineSpeed = engineSpeedRpm.RPMtoRad();
+				busAux.Initialize(engineDrivelinePower / engineSpeed, engineSpeed);
+
+				var torque = busAux.PowerDemand(0.SI<Second>(), 1.SI<Second>(), engineDrivelinePower / engineSpeed,
+					(internalPower).SI<Watt>() / engineSpeed, engineSpeed);
+
+				var row = table.NewRow();
+				row["engineSpeed"] = engineSpeed.Value() / Constants.RPMToRad;
+				row["auxPowerDemand"] = (torque * engineSpeed).Value();
+				table.Rows.Add(row);
+			}
+			var pt1 = new Point((double)(table.Rows[0]["engineSpeed"]), (double)(table.Rows[0]["auxPowerDemand"]));
+			var pt2 = new Point((double)(table.Rows[table.Rows.Count - 1]["engineSpeed"]),
+				(double)(table.Rows[table.Rows.Count - 1]["auxPowerDemand"]));
+			var edge = new Edge(pt1, pt2);
+			var slope = edge.SlopeXY;
+			var offset = edge.OffsetXY;
+			foreach (DataRow row in table.Rows) {
+				var expected = (double)row["engineSpeed"] * slope + offset;
+				Assert.AreEqual(expected, (double)row["auxPowerDemand"], 0.1);
+			}
+
+			//VectoCSVFile.Write("auxPowerDemand_EngineSpeed.csv", table);
+		}
+
 	}
 }
