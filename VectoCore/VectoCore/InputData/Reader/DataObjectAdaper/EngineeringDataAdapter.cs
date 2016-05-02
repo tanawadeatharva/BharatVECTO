@@ -177,7 +177,7 @@ namespace TUGraz.VectoCore.InputData.Reader.DataObjectAdaper
 				Technology = a.Technology,
 				TechList = a.TechList.DefaultIfNull(Enumerable.Empty<string>()).ToArray(),
 				DemandType = AuxiliaryDemandType.Mapping,
-				Data = new AuxiliaryData(a) //AuxiliaryData.Create(a.DemandMap)
+				Data = new AuxiliaryData(a, a.ID) //AuxiliaryData.Create(a.DemandMap)
 			}).Concat(new VectoRunData.AuxData { ID = "", DemandType = AuxiliaryDemandType.Direct }.ToEnumerable()).ToList();
 		}
 

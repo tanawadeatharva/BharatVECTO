@@ -42,7 +42,7 @@ namespace TUGraz.VectoCore.Models.SimulationComponent.Data.Engine
 {
 	public class FuelConsumptionMap : SimulationComponentData
 	{
-		[Required, ValidateObject] private readonly DelauneyMap _fuelMap = new DelauneyMap();
+		[Required, ValidateObject] private readonly DelauneyMap _fuelMap = new DelauneyMap("FuelConsumptionMap");
 
 
 		private FuelConsumptionMap() {}
