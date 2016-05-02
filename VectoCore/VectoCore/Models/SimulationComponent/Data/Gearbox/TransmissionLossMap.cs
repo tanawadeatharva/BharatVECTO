@@ -144,11 +144,13 @@ namespace TUGraz.VectoCore.Models.SimulationComponent.Data.Gearbox
 			GearName = gearName;
 			_ratio = gearRatio;
 			_entries = entries;
-			_lossMap = new DelauneyMap();
-			_invertedLossMap = new DelauneyMap();
+			_lossMap = new DelauneyMap("TransmissionLossMap " + GearName);
+			_invertedLossMap = new DelauneyMap("TransmissionLossMapInv. " + GearName);
 			foreach (var entry in _entries) {
-				_lossMap.AddPoint(entry.InputSpeed.ConvertTo().Rounds.Per.Minute.Value(), (entry.InputTorque - entry.TorqueLoss).Value(), entry.TorqueLoss.Value());
-				_invertedLossMap.AddPoint(entry.InputSpeed.ConvertTo().Rounds.Per.Minute.Value(), entry.InputTorque.Value(), entry.TorqueLoss.Value());
+				_lossMap.AddPoint(entry.InputSpeed.ConvertTo().Rounds.Per.Minute.Value(),
+					(entry.InputTorque - entry.TorqueLoss).Value(), entry.TorqueLoss.Value());
+				_invertedLossMap.AddPoint(entry.InputSpeed.ConvertTo().Rounds.Per.Minute.Value(), entry.InputTorque.Value(),
+					entry.TorqueLoss.Value());
 			}
 
 			_lossMap.Triangulate();
@@ -164,7 +166,9 @@ namespace TUGraz.VectoCore.Models.SimulationComponent.Data.Gearbox
 		/// <returns>Torque loss as seen on input side (towards the engine).</returns>
 		public NewtonMeter GetTorqueLoss(PerSecond outAngularVelocity, NewtonMeter outTorque)
 		{
-			var torqueLoss = _lossMap.Interpolate(outAngularVelocity.ConvertTo().Rounds.Per.Minute.Value() * _ratio, outTorque.Value() / _ratio, true).SI<NewtonMeter>();
+			var torqueLoss =
+				_lossMap.Interpolate(outAngularVelocity.ConvertTo().Rounds.Per.Minute.Value() * _ratio, outTorque.Value() / _ratio,
+					true).SI<NewtonMeter>();
 
 			Log.Debug("GearboxLoss {0}: {1}, outAngularVelocity: {2}, outTorque: {3}", GearName, torqueLoss,
 				outAngularVelocity, outTorque);
@@ -181,7 +185,8 @@ namespace TUGraz.VectoCore.Models.SimulationComponent.Data.Gearbox
 		public NewtonMeter GetOutTorque(PerSecond inAngularVelocity, NewtonMeter inTorque, bool allowExtrapolation = false)
 		{
 			var torqueLoss =
-				_invertedLossMap.Interpolate(inAngularVelocity.ConvertTo().Rounds.Per.Minute.Value(), inTorque.Value(), allowExtrapolation).SI<NewtonMeter>();
+				_invertedLossMap.Interpolate(inAngularVelocity.ConvertTo().Rounds.Per.Minute.Value(), inTorque.Value(),
+					allowExtrapolation).SI<NewtonMeter>();
 			return (inTorque - torqueLoss) / _ratio;
 		}
 

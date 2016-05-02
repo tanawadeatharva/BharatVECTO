@@ -42,7 +42,7 @@ namespace TUGraz.VectoCore.Tests.Utils
 		[TestMethod]
 		public void Test_Simple_DelauneyMap()
 		{
-			var map = new DelauneyMap();
+			var map = new DelauneyMap("TEST");
 			map.AddPoint(0, 0, 0);
 			map.AddPoint(1, 0, 0);
 			map.AddPoint(0, 1, 0);
@@ -57,7 +57,7 @@ namespace TUGraz.VectoCore.Tests.Utils
 		[TestMethod]
 		public void Test_DelauneyMapTriangle()
 		{
-			var map = new DelauneyMap();
+			var map = new DelauneyMap("TEST");
 			map.AddPoint(0, 0, 0);
 			map.AddPoint(1, 0, 1);
 			map.AddPoint(0, 1, 2);
@@ -82,15 +82,15 @@ namespace TUGraz.VectoCore.Tests.Utils
 			AssertHelper.AreRelativeEqual(1.5, map.Interpolate(0, 0.75));
 
 			// extrapolation (should fail)
-			AssertHelper.Exception<VectoException>(() => map.Interpolate(1, 1), "Interpolation failed. x: 1, y: 1");
-			AssertHelper.Exception<VectoException>(() => map.Interpolate(-1, -1), "Interpolation failed. x: -1, y: -1");
-			AssertHelper.Exception<VectoException>(() => map.Interpolate(1, -1), "Interpolation failed. x: 1, y: -1");
-			AssertHelper.Exception<VectoException>(() => map.Interpolate(-1, 1), "Interpolation failed. x: -1, y: 1");
+			AssertHelper.Exception<VectoException>(() => map.Interpolate(1, 1), "TEST: Interpolation failed. x: 1, y: 1");
+			AssertHelper.Exception<VectoException>(() => map.Interpolate(-1, -1), "TEST: Interpolation failed. x: -1, y: -1");
+			AssertHelper.Exception<VectoException>(() => map.Interpolate(1, -1), "TEST: Interpolation failed. x: 1, y: -1");
+			AssertHelper.Exception<VectoException>(() => map.Interpolate(-1, 1), "TEST: Interpolation failed. x: -1, y: 1");
 		}
 
 		public void Test_DelauneyMapPlane()
 		{
-			var map = new DelauneyMap();
+			var map = new DelauneyMap("TEST");
 			map.AddPoint(0, 0, 0);
 			map.AddPoint(1, 0, 1);
 			map.AddPoint(0, 1, 2);
@@ -132,27 +132,42 @@ namespace TUGraz.VectoCore.Tests.Utils
 		[TestMethod]
 		public void Test_Delauney_LessThan3Points()
 		{
-			AssertHelper.Exception<ArgumentException>(() => new DelauneyMap().Triangulate(),
-				"Triangulation needs at least 3 Points. Got 0 Points.");
+			AssertHelper.Exception<ArgumentException>(() => new DelauneyMap("TEST").Triangulate(),
+				"TEST: Triangulation needs at least 3 Points. Got 0 Points.");
 
 			AssertHelper.Exception<ArgumentException>(() => {
-				var map1 = new DelauneyMap();
+				var map1 = new DelauneyMap("TEST");
 				map1.AddPoint(1, 0, 0);
 				map1.Triangulate();
-			}, "Triangulation needs at least 3 Points. Got 1 Points.");
+			}, "TEST: Triangulation needs at least 3 Points. Got 1 Points.");
 
 			AssertHelper.Exception<ArgumentException>(() => {
-				var map2 = new DelauneyMap();
+				var map2 = new DelauneyMap("TEST");
 				map2.AddPoint(1, 0, 0);
 				map2.AddPoint(0, 1, 0);
 				map2.Triangulate();
-			}, "Triangulation needs at least 3 Points. Got 2 Points.");
+			}, "TEST: Triangulation needs at least 3 Points. Got 2 Points.");
 
-			var map = new DelauneyMap();
+			var map = new DelauneyMap("TEST");
 			map.AddPoint(1, 0, 0);
 			map.AddPoint(0, 1, 0);
 			map.AddPoint(0, 0, 1);
 			map.Triangulate();
+		}
+
+		[TestMethod]
+		public void Test_Delauney_DuplicatePoints()
+		{
+			var map = new DelauneyMap("TEST");
+			map.AddPoint(0, 0, 0);
+			map.AddPoint(1, 0, 1);
+			map.AddPoint(1, 1, 3);
+			map.AddPoint(0, 1, 2);
+			map.AddPoint(1, 1, 5);
+
+
+			AssertHelper.Exception<VectoException>(() => { map.Triangulate(); },
+				"TEST: Input Data for Delauney map contains duplicates!\n1 / 1");
 		}
 	}
 }
