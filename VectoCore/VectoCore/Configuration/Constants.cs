@@ -64,6 +64,7 @@ namespace TUGraz.VectoCore.Configuration
 
 		public static class FileExtensions
 		{
+			public const string PDFReport = ".pdf";
 			public const string ModDataFile = ".vmod";
 
 			public const string SumFile = ".vsum";

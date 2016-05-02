@@ -47,7 +47,7 @@ namespace TUGraz.VectoCore.Models.Simulation
 		/// <summary>
 		/// unique identifier of a single run
 		/// </summary>
-		uint RunIdentifier { get; }
+		int RunIdentifier { get; }
 
 		string RunName { get; }
 		string CycleName { get; }

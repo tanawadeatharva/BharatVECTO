@@ -53,6 +53,13 @@ namespace TUGraz.VectoCore.Utils
 
 		private readonly ThreadLocal<bool> _extrapolated = new ThreadLocal<bool>();
 
+		private readonly string _mapName;
+
+		public DelauneyMap(string name)
+		{
+			_mapName = name;
+		}
+
 		public bool Extrapolated
 		{
 			get { return _extrapolated.Value; }
@@ -74,8 +81,11 @@ namespace TUGraz.VectoCore.Utils
 		public void Triangulate()
 		{
 			if (Points.Count < 3) {
-				throw new ArgumentException(string.Format("Triangulation needs at least 3 Points. Got {0} Points.", Points.Count));
+				throw new ArgumentException(string.Format("{0}: Triangulation needs at least 3 Points. Got {1} Points.", _mapName,
+					Points.Count));
 			}
+
+			SanitycheckInputPoints();
 
 			// The "supertriangle" encompasses all triangulation points.
 			// This is just a helper triangle which initializes the algorithm and will be removed later.
@@ -83,7 +93,7 @@ namespace TUGraz.VectoCore.Utils
 			var max = Points.Max(point => Math.Max(Math.Abs(point.X), Math.Abs(point.Y))) * superTriangleScalingFactor;
 			var superTriangle = new Triangle(new Point(max, 0), new Point(0, max), new Point(-max, -max));
 			var triangles = new List<Triangle> { superTriangle };
-			
+
 			var pointCount = 0;
 
 			var points = Points.ToArray();
@@ -100,7 +110,7 @@ namespace TUGraz.VectoCore.Utils
 				var point1 = point;
 				var containerTriangles = triangles.FindAll(t => t.ContainsInCircumcircle(point1));
 				triangles = triangles.Except(containerTriangles).ToList();
-				
+
 				// Remove duplicate edges. This leaves the convex hull of the edges.
 				// The edges in this convex hull are oriented counterclockwise!
 				var allEdges = containerTriangles.SelectMany(t => t.GetEdges()).ToList();
@@ -131,6 +141,20 @@ namespace TUGraz.VectoCore.Utils
 
 			_triangles = triangles.FindAll(t => !t.SharesVertexWith(superTriangle));
 		}
+
+		private void SanitycheckInputPoints()
+		{
+			var duplicates = Points.GroupBy(pt => new { pt.X, pt.Y }, x => x).Where(g => g.Count() > 1).ToList();
+
+			foreach (var duplicate in duplicates) {
+				Log.Error("{0}: Input Point appears twice: x: {1}, y: {2}", duplicate.Key.X, duplicate.Key.Y);
+			}
+			if (duplicates.Any()) {
+				throw new VectoException("{0}: Input Data for Delauney map contains duplicates! \n{1}", _mapName,
+					string.Join("\n", duplicates.Select(pt => string.Format("{0} / {1}", pt.Key.X, pt.Key.Y))));
+			}
+		}
+
 
 		/// <summary>
 		/// Draws the delauney map (except supertriangle).
@@ -163,10 +187,11 @@ namespace TUGraz.VectoCore.Utils
 
 				var frame = new StackFrame(2);
 				var method = frame.GetMethod();
-				var type = method.DeclaringType.Name;
-				var methodName = method.Name;
+				var type = string.Join("", method.DeclaringType.Name.Split(Path.GetInvalidFileNameChars()));
+				var methodName = string.Join("", method.Name.Split(Path.GetInvalidFileNameChars()));
 				Directory.CreateDirectory("delauney");
-				chart.SaveImage(string.Format("delauney\\{0}_{1}_{2}_{3}.png", type, methodName, superTriangle.GetHashCode(), i), ChartImageFormat.Png);
+				chart.SaveImage(string.Format("delauney\\{0}_{1}_{2}_{3}.png", type, methodName, superTriangle.GetHashCode(), i),
+					ChartImageFormat.Png);
 			}
 		}
 
@@ -182,7 +207,7 @@ namespace TUGraz.VectoCore.Utils
 			}
 
 			if (!allowExtrapolation) {
-				throw new VectoException("Interpolation failed. x: {0}, y: {1}", x, y);
+				throw new VectoException("{2}: Interpolation failed. x: {0}, y: {1}", x, y, _mapName);
 			}
 
 			Extrapolated = true;

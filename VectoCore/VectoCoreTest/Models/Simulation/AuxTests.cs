@@ -55,7 +55,7 @@ namespace TUGraz.VectoCore.Tests.Models.Simulation
 		public void AuxWriteModFileSumFile()
 
 		{
-			var fileWriter = new FileOutputWriter("AuxWriteModFileSumFile", "");
+			var fileWriter = new FileOutputWriter("AuxWriteModFileSumFile");
 			var modData = new ModalDataContainer("AuxWriteModFileSumFile", fileWriter);
 			modData.AddAuxiliary("FAN");
 			modData.AddAuxiliary("PS");
@@ -187,7 +187,7 @@ namespace TUGraz.VectoCore.Tests.Models.Simulation
 
 			var aux = new EngineAuxiliary(container);
 
-			var auxData = AuxiliaryData.ReadFromFile(@"TestData\Components\24t_Coach_ALT.vaux");
+			var auxData = AuxiliaryData.ReadFromFile(@"TestData\Components\24t_Coach_ALT.vaux", "ALT");
 			// ratio = 4.078
 			// efficiency_engine = 0.96
 			// efficiency_supply = 0.98
@@ -246,7 +246,7 @@ namespace TUGraz.VectoCore.Tests.Models.Simulation
 
 			var aux = new EngineAuxiliary(container);
 
-			var auxData = AuxiliaryData.ReadFromFile(@"TestData\Components\24t_Coach_ALT.vaux");
+			var auxData = AuxiliaryData.ReadFromFile(@"TestData\Components\24t_Coach_ALT.vaux", "ALT");
 			// ratio = 4.078
 			// efficiency_engine = 0.96
 			// efficiency_supply = 0.98
@@ -297,14 +297,14 @@ namespace TUGraz.VectoCore.Tests.Models.Simulation
 		[TestMethod]
 		public void AuxFileMissing()
 		{
-			AssertHelper.Exception<VectoException>(() => AuxiliaryData.ReadFromFile(@"NOT_EXISTING_AUX_FILE.vaux"),
+			AssertHelper.Exception<VectoException>(() => AuxiliaryData.ReadFromFile(@"NOT_EXISTING_AUX_FILE.vaux", "N.A."),
 				"Auxiliary file not found: NOT_EXISTING_AUX_FILE.vaux");
 		}
 
 		[TestMethod]
 		public void AuxReadJobFileDeclarationMode()
 		{
-			var fileWriter = new FileOutputWriter("AuxReadJobFileDeclarationMode", "");
+			var fileWriter = new FileOutputWriter("AuxReadJobFileDeclarationMode");
 			var sumData = new SummaryDataContainer(fileWriter);
 			var jobContainer = new JobContainer(sumData);
 
@@ -318,7 +318,7 @@ namespace TUGraz.VectoCore.Tests.Models.Simulation
 		[TestMethod]
 		public void AuxReadJobFileEngineeringMode()
 		{
-			var fileWriter = new FileOutputWriter("AuxReadJobFileEngineeringMode", "");
+			var fileWriter = new FileOutputWriter("AuxReadJobFileEngineeringMode");
 			var sumData = new SummaryDataContainer(fileWriter);
 			var jobContainer = new JobContainer(sumData);
 
@@ -332,7 +332,7 @@ namespace TUGraz.VectoCore.Tests.Models.Simulation
 		[TestMethod]
 		public void AuxDeclarationWrongConfiguration()
 		{
-			var fileWriter = new FileOutputWriter("AuxReadJobFileDeclarationMode", "");
+			var fileWriter = new FileOutputWriter("AuxReadJobFileDeclarationMode");
 			var sumData = new SummaryDataContainer(fileWriter);
 			var jobContainer = new JobContainer(sumData);
 
