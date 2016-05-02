@@ -167,7 +167,7 @@ namespace TUGraz.VectoCore.Tests.Utils
 
 
 			AssertHelper.Exception<VectoException>(() => { map.Triangulate(); },
-				"TEST: Input Data for Delauney map contains duplicates!\n1 / 1");
+				"TEST: Input Data for Delauney map contains duplicates! \n1 / 1");
 		}
 	}
 }
