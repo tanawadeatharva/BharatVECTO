@@ -28,20 +28,20 @@ Namespace Pneumatics
         ''' <remarks>Single</remarks>
 		Function GetFlowRate(ByVal rpm As Double) As Single
 
-        ''' <summary>
-        ''' Returns mechanical power at rpm when compressor is on
-        ''' </summary>
-        ''' <param name="rpm">compressor rotation speed</param>
-        ''' <returns></returns>
-        ''' <remarks>Single</remarks>
+		''' <summary>
+		''' Returns mechanical power at rpm when compressor is on
+		''' </summary>
+		''' <param name="rpm">compressor rotation speed</param>
+		''' <returns></returns>
+		''' <remarks>Single</remarks>
 		Function GetPowerCompressorOn(ByVal rpm As Double) As Single
 
-        ''' <summary>
-        ''' Returns mechanical power at rpm when compressor is off
-        ''' </summary>
-        ''' <param name="rpm">compressor rotation speed</param>
-        ''' <returns></returns>
-        ''' <remarks>Single</remarks>
+		''' <summary>
+		''' Returns mechanical power at rpm when compressor is off
+		''' </summary>
+		''' <param name="rpm">compressor rotation speed</param>
+		''' <returns></returns>
+		''' <remarks>Single</remarks>
 		Function GetPowerCompressorOff(ByVal rpm As Double) As Single
 
         'Returns Average Power Demand Per Compressor Unit FlowRate
