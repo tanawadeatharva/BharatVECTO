@@ -77,6 +77,8 @@ namespace TUGraz.VectoCore.Utils
 				throw new ArgumentException(string.Format("Triangulation needs at least 3 Points. Got {0} Points.", Points.Count));
 			}
 
+			SanitycheckInputPoints();
+
 			// The "supertriangle" encompasses all triangulation points.
 			// This is just a helper triangle which initializes the algorithm and will be removed later.
 			const int superTriangleScalingFactor = 10;
@@ -131,6 +133,20 @@ namespace TUGraz.VectoCore.Utils
 
 			_triangles = triangles.FindAll(t => !t.SharesVertexWith(superTriangle));
 		}
+
+		private void SanitycheckInputPoints()
+		{
+			var duplicates = Points.GroupBy(pt => new { pt.X, pt.Y }, x => x).Where(g => g.Count() > 1).ToList();
+
+			foreach (var duplicate in duplicates) {
+				Log.Error("{0}: Input Point appears twice: x: {1}, y: {2}", duplicate.Key.X, duplicate.Key.Y);
+			}
+			if (duplicates.Any()) {
+				throw new VectoException("{0}: Input Data for Delauney map contains duplicates! \n{1}", _mapName,
+					string.Join("\n", duplicates.Select(pt => string.Format("{0} / {1}", pt.Key.X, pt.Key.Y))));
+			}
+		}
+
 
 		/// <summary>
 		/// Draws the delauney map (except supertriangle).
