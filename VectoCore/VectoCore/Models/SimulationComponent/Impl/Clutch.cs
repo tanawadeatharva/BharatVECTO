@@ -35,6 +35,7 @@ using TUGraz.VectoCore.Configuration;
 using TUGraz.VectoCore.Models.Connector.Ports;
 using TUGraz.VectoCore.Models.Simulation;
 using TUGraz.VectoCore.Models.Simulation.Data;
+using TUGraz.VectoCore.Models.Simulation.DataBus;
 using TUGraz.VectoCore.Models.SimulationComponent.Data;
 using TUGraz.VectoCore.OutputData;
 using TUGraz.VectoCore.Utils;
@@ -158,7 +159,7 @@ namespace TUGraz.VectoCore.Models.SimulationComponent.Impl
 			torqueIn = torque;
 			angularVelocityIn = angularVelocity;
 
-			if (DataBus.VehicleStopped) {
+			if (DataBus.DriverBehavior == DrivingBehavior.Halted /*DataBus.VehicleStopped*/) {
 				_clutchState = ClutchState.ClutchOpened;
 				angularVelocityIn = _idleSpeed;
 				torqueIn = 0.SI<NewtonMeter>();

@@ -26,7 +26,7 @@ namespace TUGraz.VectoCore.Tests.Integration.BusAuxiliaries
 			MockDriver driver;
 			var busAux = AuxDemandTest.CreateBusAuxAdapterForTesting(vehicleWeight, out driver);
 
-			driver.DrivingBehavior = DrivingBehavior.Driving;
+			driver.DriverBehavior = DrivingBehavior.Driving;
 
 			var engineDrivelinePower = (driveLinePower * 1000).SI<Watt>();
 			var engineSpeed = engineSpeedRpm.RPMtoRad();
@@ -58,7 +58,7 @@ namespace TUGraz.VectoCore.Tests.Integration.BusAuxiliaries
 			MockDriver driver;
 			var busAux = AuxDemandTest.CreateBusAuxAdapterForTesting(vehicleWeight, out driver);
 
-			driver.DrivingBehavior = DrivingBehavior.Coasting;
+			driver.DriverBehavior = DrivingBehavior.Coasting;
 
 			var engineDrivelinePower = (driveLinePower * 1000).SI<Watt>();
 			var engineSpeed = engineSpeedRpm.RPMtoRad();
@@ -81,7 +81,7 @@ namespace TUGraz.VectoCore.Tests.Integration.BusAuxiliaries
 			MockDriver driver;
 			var busAux = AuxDemandTest.CreateBusAuxAdapterForTesting(vehicleWeight, out driver);
 
-			driver.DrivingBehavior = DrivingBehavior.Braking;
+			driver.DriverBehavior = DrivingBehavior.Braking;
 
 			var engineDrivelinePower = (driveLinePower * 1000).SI<Watt>();
 			var engineSpeed = engineSpeedRpm.RPMtoRad();
@@ -101,7 +101,7 @@ namespace TUGraz.VectoCore.Tests.Integration.BusAuxiliaries
 			MockDriver driver;
 			var busAux = AuxDemandTest.CreateBusAuxAdapterForTesting(vehicleWeight, out driver);
 
-			driver.DrivingBehavior = DrivingBehavior.Driving;
+			driver.DriverBehavior = DrivingBehavior.Driving;
 
 			//var engineSpeedRpm = 1375.1014;
 

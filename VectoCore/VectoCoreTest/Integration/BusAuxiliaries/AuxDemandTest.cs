@@ -102,9 +102,10 @@ namespace TUGraz.VectoCore.Tests.Integration.BusAuxiliaries
 
 			var engine = new CombustionEngine(vehicle, modelData);
 			//new Vehicle(vehicle, new VehicleData());
-			driver = new MockDriver(vehicle) { VehicleStopped = false, DrivingBehavior = DrivingBehavior.Braking };
+			driver = new MockDriver(vehicle) { VehicleStopped = false, DriverBehavior = DrivingBehavior.Braking };
 			var gbx = new MockGearbox(vehicle) { Gear = 1 };
 			var brakes = new MockBrakes(vehicle);
+			var veh = new MockVehicle(vehicle) { MyVehicleSpeed = 50.KMPHtoMeterPerSecond() };
 			var busAux = new BusAuxiliariesAdapter(vehicle, auxFilePath, "Coach", vehicleWeight.SI<Kilogram>(),
 				fcMap, modelData.IdleSpeed);
 			return busAux;
