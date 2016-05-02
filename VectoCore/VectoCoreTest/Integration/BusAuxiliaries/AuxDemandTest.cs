@@ -16,9 +16,9 @@ namespace TUGraz.VectoCore.Tests.Integration.BusAuxiliaries
 	public class AuxDemandTest
 	{
 		[Test]
-		[TestCase(12000, 1256, 148, 148, 6087.0317)]
-		[TestCase(12000, 1256, -15, -50, 8954.1435)]
-		[TestCase(15700, 1319, -35.79263, -144.0441, 9093.9511)]
+		[TestCase(12000, 1256, 148, 148, 6086.9321)]
+		[TestCase(12000, 1256, -15, -50, 8954.1396)]
+		[TestCase(15700, 1319, -35.79263, -144.0441, 9093.9473)]
 		public void AuxDemandtest(double vehicleWeight, double engineSpeedRpm, double driveLinePower, double internalPower,
 			double expectedPowerDemand)
 		{
@@ -54,7 +54,7 @@ namespace TUGraz.VectoCore.Tests.Integration.BusAuxiliaries
 			for (int i = 0; i < 10; i++) {
 				var torque = busAux.PowerDemand(0.SI<Second>(), 1.SI<Second>(), engineDrivelinePower / engineSpeed,
 					(internalPower * 1000).SI<Watt>() / engineSpeed, engineSpeed);
-				Assert.AreEqual(6087.0317, (torque * engineSpeed).Value(), 1e-3);
+				Assert.AreEqual(6086.9321, (torque * engineSpeed).Value(), 1e-3);
 				busAux.CommitSimulationStep(modalData);
 			}
 
@@ -66,7 +66,7 @@ namespace TUGraz.VectoCore.Tests.Integration.BusAuxiliaries
 			for (int i = 0; i < 10; i++) {
 				var torque = busAux.PowerDemand(0.SI<Second>(), 1.SI<Second>(), engineDrivelinePower / engineSpeed,
 					(internalPower * 1000).SI<Watt>() / engineSpeed, engineSpeed);
-				Assert.AreEqual(8954.1435, (torque * engineSpeed).Value(), 1e-3);
+				Assert.AreEqual(8954.1396, (torque * engineSpeed).Value(), 1e-3);
 				busAux.CommitSimulationStep(modalData);
 			}
 
@@ -78,11 +78,11 @@ namespace TUGraz.VectoCore.Tests.Integration.BusAuxiliaries
 			for (int i = 0; i < 10; i++) {
 				var torque = busAux.PowerDemand(0.SI<Second>(), 1.SI<Second>(), engineDrivelinePower / engineSpeed,
 					(internalPower * 1000).SI<Watt>() / engineSpeed, engineSpeed);
-				Assert.AreEqual(6087.0317, (torque * engineSpeed).Value(), 1e-3);
+				Assert.AreEqual(6086.9321, (torque * engineSpeed).Value(), 1e-3);
 				busAux.CommitSimulationStep(modalData);
 			}
 
-			Assert.AreEqual(162.4655, ((SI)modalData[ModalResultField.AA_TotalCycleFC_Grams]).Value(), 0.0001);
+			Assert.AreEqual(162.4654, ((SI)modalData[ModalResultField.AA_TotalCycleFC_Grams]).Value(), 0.0001);
 		}
 
 		public static BusAuxiliariesAdapter CreateBusAuxAdapterForTesting(double vehicleWeight, out MockDriver driver)
@@ -102,9 +102,10 @@ namespace TUGraz.VectoCore.Tests.Integration.BusAuxiliaries
 
 			var engine = new CombustionEngine(vehicle, modelData);
 			//new Vehicle(vehicle, new VehicleData());
-			driver = new MockDriver(vehicle) { VehicleStopped = false, DrivingBehavior = DrivingBehavior.Braking };
+			driver = new MockDriver(vehicle) { VehicleStopped = false, DriverBehavior = DrivingBehavior.Braking };
 			var gbx = new MockGearbox(vehicle) { Gear = 1 };
 			var brakes = new MockBrakes(vehicle);
+			var veh = new MockVehicle(vehicle) { MyVehicleSpeed = 50.KMPHtoMeterPerSecond() };
 			var busAux = new BusAuxiliariesAdapter(vehicle, auxFilePath, "Coach", vehicleWeight.SI<Kilogram>(),
 				fcMap, modelData.IdleSpeed);
 			return busAux;

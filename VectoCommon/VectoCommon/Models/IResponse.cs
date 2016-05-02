@@ -30,6 +30,7 @@
 */
 
 using TUGraz.VectoCommon.Utils;
+using TUGraz.VectoCore.Models.SimulationComponent.Impl;
 
 namespace TUGraz.VectoCommon.Models
 {
@@ -63,5 +64,7 @@ namespace TUGraz.VectoCommon.Models
 		PerSecond EngineSpeed { get; set; }
 
 		Second AbsTime { get; set; }
+
+		Driver.OperatingPoint OperatingPoint { get; set; }
 	}
 }

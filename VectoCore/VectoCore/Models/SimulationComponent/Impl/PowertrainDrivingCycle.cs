@@ -279,7 +279,7 @@ namespace TUGraz.VectoCore.Models.SimulationComponent.Impl
 		/// <summary>
 		/// Always Driving.
 		/// </summary>
-		public DrivingBehavior DrivingBehavior
+		public DrivingBehavior DriverBehavior
 		{
 			get { return DrivingBehavior.Driving; }
 		}
@@ -529,7 +529,7 @@ namespace TUGraz.VectoCore.Models.SimulationComponent.Impl
 			get { return !_isInitializing && LeftSample.Current.VehicleTargetSpeed.IsEqual(0); }
 		}
 
-		public DrivingBehavior DrivingBehavior
+		public DrivingBehavior DriverBehavior
 		{
 			get { return DrivingBehavior.Driving; }
 		}

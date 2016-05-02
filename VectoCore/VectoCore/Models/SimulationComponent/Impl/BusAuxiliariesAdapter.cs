@@ -1,5 +1,6 @@
 ﻿using System;
 using System.IO;
+using System.Windows.Forms.VisualStyles;
 using TUGraz.VectoCommon.Utils;
 using TUGraz.VectoCore.Configuration;
 using TUGraz.VectoCore.Models.Simulation;
@@ -29,57 +30,50 @@ namespace TUGraz.VectoCore.Models.SimulationComponent.Impl
 			var tmpAux = new AdvancedAuxiliaries();
 
 			// 'Set Statics
-			tmpAux.VectoInputs.Cycle = DetermineCycle(cycleName);
+			tmpAux.VectoInputs.Cycle = DetermineCycle(cycleName, tmpAux.Signals);
 			tmpAux.VectoInputs.VehicleWeightKG = (float)vehicleWeight.Value();
 			_fcMapAdapter = new FuelConsumptionAdapter() { FcMap = fcMap };
 			tmpAux.VectoInputs.FuelMap = _fcMapAdapter;
 			tmpAux.VectoInputs.FuelDensity = Physics.FuelDensity.Value();
 
 			//'Set Signals
-			tmpAux.Signals.TotalCycleTimeSeconds = 15000; // TODO MQ: get cycle time somehow!
 			tmpAux.Signals.EngineIdleSpeed = (float)(engineIdleSpeed.Value() / Constants.RPMToRad);
 			tmpAux.Initialise(Path.GetFileName(aauxFile), Path.GetDirectoryName(Path.GetFullPath(aauxFile)) + @"\");
 
 			Auxiliaries = tmpAux;
 		}
 
-		private static string DetermineCycle(string cycleName)
+		private static string DetermineCycle(string cycleName, ISignals aauxsignals)
 		{
-			return "Coach";
-			//			Public Function DetermineCycleNameFromCurrentFile() As String
+			var cycle = cycleName.ToLower();
 
-			//	'Get DriveFile without path and without extension
-			//	Dim driveFile As String = fFILE(CurrentCycleFile, False)
-
-			//	Select Case (True)
-
-			//		'DJN - update to make contains test case insensitive
-			//		Case driveFile.ToLower().Contains("heavy_urban") AndAlso driveFile.ToLower().Contains("bus")
-			//			Return "Heavy urban"
-
-			//		Case driveFile.ToLower().Contains("suburban") AndAlso driveFile.ToLower().Contains("bus")
-			//			Return "Suburban"
-
-			//		Case driveFile.ToLower().Contains("urban") AndAlso driveFile.ToLower().Contains("bus")
-			//			Return "Urban"
-
-			//		Case driveFile.ToLower().Contains("interurban") AndAlso driveFile.ToLower().Contains("bus")
-			//			Return "Interurban"
-
-			//		Case driveFile.ToLower().Contains("coach")
-			//			Return "Coach"
-
-			//		Case Else
-			//			WorkerMsg(tMsgID.Warn,
-			//					String.Format("UnServiced Cycle Name '{0}' in Pneumatics Actuations Map 0 Actuations returned", driveFile),
-			//					"Advanced Auxiliaries")
-			//			Return "UnknownCycleName"
-
-			//	End Select
-
-
-			//	Return "Urban"
-			//End Function
+			// cycle time is hard coded based on previous simulations
+			if (cycle.Contains("bus")) {
+				if (cycle.Contains("heavy_urban")) {
+					aauxsignals.TotalCycleTimeSeconds = 8912;
+					return "Heavy urban";
+				}
+				if (cycle.Contains("suburban")) {
+					aauxsignals.TotalCycleTimeSeconds = 3283;
+					return "Suburban";
+				}
+				if (cycle.Contains("urban")) {
+					aauxsignals.TotalCycleTimeSeconds = 8149;
+					return "Urban";
+				}
+				if (cycle.Contains("interurban")) {
+					aauxsignals.TotalCycleTimeSeconds = 12962;
+					return "Interurban";
+				}
+			}
+			if (cycle.Contains("coach")) {
+				aauxsignals.TotalCycleTimeSeconds = 15086;
+				return "Coach";
+			}
+			Logger<BusAuxiliariesAdapter>()
+				.Warn("UnServiced Cycle Name '{0}' in Pneumatics Actuations Map 0 Actuations returned", cycleName);
+			aauxsignals.TotalCycleTimeSeconds = 1;
+			return "UnknownCycleName";
 		}
 
 		public IEngineAuxPort Port()
@@ -184,7 +178,7 @@ namespace TUGraz.VectoCore.Models.SimulationComponent.Impl
 			Auxiliaries.Signals.EngineDrivelineTorque = (float)torquePowerTrain.Value();
 			Auxiliaries.Signals.Internal_Engine_Power =
 				(float)((torqueEngine * angularSpeed - DataBus.BrakePower) / 1000).Value();
-			if (DataBus.DrivingBehavior == DrivingBehavior.Coasting) {
+			if (DataBus.DriverBehavior == DrivingBehavior.Coasting) {
 				// make sure smart aux are _not_ enabled for now
 				// set internal_engine_power a little bit lower so there is no excessive power for smart aux
 				Auxiliaries.Signals.Internal_Engine_Power =
@@ -193,15 +187,15 @@ namespace TUGraz.VectoCore.Models.SimulationComponent.Impl
 				// set internal_engine_power to a large value (*10) so that there's excessive power for smart aux (alreadin during search operating point)
 				//(float)DataBus.EngineDragPower(angularSpeed).Value() / 100;
 			} else {
-				if (DataBus.DrivingBehavior != DrivingBehavior.Braking) {
+				if (DataBus.DriverBehavior != DrivingBehavior.Braking) {
 					Auxiliaries.Signals.Internal_Engine_Power = 0;
 					//(float)((0.9 * torqueEngine * angularSpeed - DataBus.BrakePower) / 1000).Value();
 				} else {
 					// smart aux should be on during braking
 				}
 			}
-			Auxiliaries.Signals.EngineMotoringPower = -(float)DataBus.EngineDragPower(angularSpeed).Value() / 1000;
-			Auxiliaries.Signals.EngineSpeed = (int)(angularSpeed.Value() / Constants.RPMToRad);
+			Auxiliaries.Signals.EngineMotoringPower = (float)(-DataBus.EngineDragPower(angularSpeed).Value() / 1000);
+			Auxiliaries.Signals.EngineSpeed = angularSpeed.Value() / Constants.RPMToRad;
 			Auxiliaries.Signals.PreExistingAuxPower = 0; //mAAUX_Global.PreExistingAuxPower;
 			Auxiliaries.Signals.Idle = DataBus.VehicleStopped;
 			Auxiliaries.Signals.InNeutral = DataBus.Gear == 0;

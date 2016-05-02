@@ -56,6 +56,7 @@ namespace TUGraz.VectoCore.Models.SimulationComponent.Impl
 		}
 
 		protected internal DrivingMode CurrentDrivingMode;
+
 		protected Dictionary<DrivingMode, IDriverMode> DrivingModes = new Dictionary<DrivingMode, IDriverMode>();
 
 		public DefaultDriverStrategy()
@@ -112,13 +113,10 @@ namespace TUGraz.VectoCore.Models.SimulationComponent.Impl
 
 		public IResponse Request(Second absTime, Second dt, MeterPerSecond targetVelocity, Radian gradient)
 		{
-			DriverBehavior = DrivingBehavior.Halted;
+			Driver.DriverBehavior = DrivingBehavior.Halted;
 			CurrentDrivingMode = DrivingMode.DrivingModeDrive;
 			return Driver.DrivingActionHalt(absTime, dt, targetVelocity, gradient);
 		}
-
-
-		public DrivingBehavior DriverBehavior { get; internal set; }
 
 
 		private void UpdateDrivingAction(Meter currentDistance, Meter ds)
@@ -341,7 +339,7 @@ namespace TUGraz.VectoCore.Models.SimulationComponent.Impl
 		{
 			IResponse response = null;
 
-			DriverStrategy.DriverBehavior = DrivingBehavior.Driving;
+			Driver.DriverBehavior = DrivingBehavior.Driving;
 			var velocity = targetVelocity;
 			if (DriverStrategy.OverspeedAllowed(gradient, targetVelocity)) {
 				velocity += DriverData.OverSpeedEcoRoll.OverSpeed;
@@ -520,7 +518,7 @@ namespace TUGraz.VectoCore.Models.SimulationComponent.Impl
 			}
 			switch (Phase) {
 				case BrakingPhase.Coast:
-					DriverStrategy.DriverBehavior = DrivingBehavior.Coasting;
+					Driver.DriverBehavior = DrivingBehavior.Coasting;
 					response = DataBus.ClutchClosed(absTime)
 						? Driver.DrivingActionCoast(absTime, ds, VectoMath.Max(targetVelocity, DataBus.VehicleSpeed), gradient)
 						: Driver.DrivingActionRoll(absTime, ds, VectoMath.Max(targetVelocity, DataBus.VehicleSpeed), gradient);
@@ -539,6 +537,13 @@ namespace TUGraz.VectoCore.Models.SimulationComponent.Impl
 								response = Driver.DrivingActionRoll(absTime, ds, targetVelocity, gradient);
 							}
 							//Phase = BrakingPhase.Brake;
+						}).
+						Case<ResponseDrivingCycleDistanceExceeded>(r => {
+							if (!ds.IsEqual(r.MaxDistance)) {
+								// distance has been reduced due to vehicle stop in coast/roll action => use brake action to get exactly to the stop-distance
+								// TODO: what if no gear is enaged (and we need driveline power to get to the stop-distance?
+								response = Driver.DrivingActionBrake(absTime, ds, DriverStrategy.BrakeTrigger.NextTargetSpeed, gradient);
+							}
 						}).
 						Case<ResponseGearShift>(r => { response = Driver.DrivingActionRoll(absTime, ds, targetVelocity, gradient); });
 					// handle the SpeedLimitExceeded Response separately in case it occurs in one of the requests in the second try
@@ -566,7 +571,7 @@ namespace TUGraz.VectoCore.Models.SimulationComponent.Impl
 					if (targetDistance == null && DriverStrategy.BrakeTrigger.NextTargetSpeed.IsEqual(0.SI<MeterPerSecond>())) {
 						targetDistance = DriverStrategy.BrakeTrigger.TriggerDistance - DefaultDriverStrategy.BrakingSafetyMargin;
 					}
-					DriverStrategy.DriverBehavior = DrivingBehavior.Braking;
+					Driver.DriverBehavior = DrivingBehavior.Braking;
 					response = Driver.DrivingActionBrake(absTime, ds, DriverStrategy.BrakeTrigger.NextTargetSpeed,
 						gradient, targetDistance: targetDistance);
 					response.Switch().

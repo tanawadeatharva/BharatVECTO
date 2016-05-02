@@ -325,7 +325,7 @@ namespace TUGraz.VectoCore.Models.SimulationComponent.Impl
 			var inAngularVelocity = outAngularVelocity * ModelData.Gears[Gear].Ratio;
 
 			if (dryRun) {
-				if ((DataBus.DrivingBehavior == DrivingBehavior.Braking || DataBus.DrivingBehavior == DrivingBehavior.Coasting) &&
+				if ((DataBus.DriverBehavior == DrivingBehavior.Braking || DataBus.DriverBehavior == DrivingBehavior.Coasting) &&
 					inAngularVelocity < DataBus.EngineIdleSpeed && DataBus.VehicleSpeed < Constants.SimulationSettings.VehicleStopClutchDisengageSpeed) {
 					Disengaged = true;
 					_engageTime = absTime + dt;

@@ -21,7 +21,7 @@ Public Class Signals
 	Public Property EngineDrivelinePower As Single Implements ISignals.EngineDrivelinePower
 	Public Property EngineDrivelineTorque As Single Implements ISignals.EngineDrivelineTorque
 	Public Property EngineMotoringPower As Single Implements ISignals.EngineMotoringPower
-	Public Property EngineSpeed As Integer Implements ISignals.EngineSpeed
+	Public Property EngineSpeed As Double Implements ISignals.EngineSpeed
 
 	Public Property SmartElectrics As Boolean Implements ISignals.SmartElectrics
 		Get

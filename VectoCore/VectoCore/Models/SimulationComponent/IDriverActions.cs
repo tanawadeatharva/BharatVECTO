@@ -126,5 +126,7 @@ namespace TUGraz.VectoCore.Models.SimulationComponent
 		IDataBus DataBus { get; }
 
 		DriverData DriverData { get; }
+
+		DrivingBehavior DriverBehavior { set; }
 	}
 }

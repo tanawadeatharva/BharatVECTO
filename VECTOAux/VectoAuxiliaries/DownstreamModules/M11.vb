@@ -116,7 +116,7 @@ Namespace DownstreamModules
 		Private ReadOnly Property Sum10 As Single
 			Get
 
-				Return M6.AvgPowerDemandAtCrankFromElectricsIncHVAC \ Sum0(signals.EngineSpeed)
+				Return M6.AvgPowerDemandAtCrankFromElectricsIncHVAC / Sum0(signals.EngineSpeed)
 			End Get
 		End Property
 

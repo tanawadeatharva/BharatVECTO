@@ -39,8 +39,6 @@ namespace TUGraz.VectoCore.Models.SimulationComponent
 	{
 		IDriverActions Driver { get; set; }
 
-		DrivingBehavior DriverBehavior { get; }
-
 		IResponse Request(Second absTime, Meter ds, MeterPerSecond targetVelocity, Radian gradient);
 
 		IResponse Request(Second absTime, Second dt, MeterPerSecond targetVelocity, Radian gradient);

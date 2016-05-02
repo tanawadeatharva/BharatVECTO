@@ -19,15 +19,15 @@ Namespace Mocks
 			End If
 		End Function
 
-		Public Function GetFlowRate(ByVal rpm As Integer) As Single Implements ICompressorMap.GetFlowRate
+		Public Function GetFlowRate(ByVal rpm As Double) As Single Implements ICompressorMap.GetFlowRate
 			Return 2.0
 		End Function
 
-		Public Function GetPowerCompressorOn(ByVal rpm As Integer) As Single Implements ICompressorMap.GetPowerCompressorOn
+		Public Function GetPowerCompressorOn(ByVal rpm As Double) As Single Implements ICompressorMap.GetPowerCompressorOn
 			Return 8.0
 		End Function
 
-		Public Function GetPowerCompressorOff(ByVal rpm As Integer) As Single Implements ICompressorMap.GetPowerCompressorOff
+		Public Function GetPowerCompressorOff(ByVal rpm As Double) As Single Implements ICompressorMap.GetPowerCompressorOff
 			Return 5.0
 		End Function
 

@@ -174,7 +174,8 @@ namespace TUGraz.VectoCore.Models.SimulationComponent.Impl
 
 			var auxTorqueDemand = EngineAux == null
 				? 0.SI<NewtonMeter>()
-				: EngineAux.PowerDemand(absTime, dt, CurrentState.EngineTorqueOut, CurrentState.EngineTorqueOut + CurrentState.InertiaTorqueLoss, angularVelocity, dryRun);
+				: EngineAux.PowerDemand(absTime, dt, CurrentState.EngineTorqueOut,
+					CurrentState.EngineTorqueOut + CurrentState.InertiaTorqueLoss, angularVelocity, dryRun);
 			// compute the torque the engine has to provide. powertrain + aux + its own inertia
 			var totalTorqueDemand = torqueOut + auxTorqueDemand + CurrentState.InertiaTorqueLoss;
 
@@ -212,7 +213,8 @@ namespace TUGraz.VectoCore.Models.SimulationComponent.Impl
 			if (
 				(deltaFull * avgEngineSpeed).IsGreater(0.SI<Watt>(), Constants.SimulationSettings.LineSearchTolerance) &&
 				(deltaDrag * avgEngineSpeed).IsSmaller(0.SI<Watt>(), Constants.SimulationSettings.LineSearchTolerance)) {
-				throw new VectoSimulationException(
+				//throw new VectoSimulationException(
+				Log.Error(
 					"Unexpected condition: requested torque_out is above gearbox full-load and engine is below drag load! deltaFull: {0}, deltaDrag: {1}",
 					deltaFull, deltaDrag);
 			}

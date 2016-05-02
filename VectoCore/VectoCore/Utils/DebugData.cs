@@ -5,26 +5,26 @@ namespace TUGraz.VectoCore.Utils
 {
 	public class DebugData
 	{
-		private readonly List<dynamic> _data;
+		internal readonly List<dynamic> Data;
 
 		public DebugData()
 		{
-			#if DEBUG
-				_data = new List<dynamic>();
-			#endif
+#if DEBUG
+			Data = new List<dynamic>();
+#endif
 		}
 
 		[Conditional("DEBUG")]
 		public void Add(dynamic value)
 		{
-			_data.Add(value);
+			Data.Add(value);
 		}
 
 		public override string ToString()
 		{
-			#if DEBUG
-				return string.Join("\n", _data);
-			#else
+#if DEBUG
+			return string.Join("\n", Data);
+#else
 				return "-";
 			#endif
 		}

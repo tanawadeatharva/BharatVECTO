@@ -68,6 +68,11 @@ namespace TUGraz.VectoCore.Tests.Utils
 			get { return MyVehicleSpeed; }
 		}
 
+		public bool VehicleStopped
+		{
+			get { return MyVehicleSpeed.IsEqual(0.SI<MeterPerSecond>(), 0.01.SI<MeterPerSecond>()); }
+		}
+
 		public Kilogram VehicleMass
 		{
 			get { return 7500.SI<Kilogram>(); }
@@ -96,7 +101,7 @@ namespace TUGraz.VectoCore.Tests.Utils
 				acceleration = acceleration,
 				gradient = gradient
 			};
-			return new ResponseSuccess() { Source = this};
+			return new ResponseSuccess() { Source = this };
 		}
 
 		public IResponse Initialize(MeterPerSecond vehicleSpeed, Radian roadGradient)

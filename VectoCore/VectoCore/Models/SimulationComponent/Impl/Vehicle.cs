@@ -132,6 +132,11 @@ namespace TUGraz.VectoCore.Models.SimulationComponent.Impl
 			get { return PreviousState.Velocity; }
 		}
 
+		public bool VehicleStopped
+		{
+			get { return PreviousState.Velocity.IsEqual(0.SI<MeterPerSecond>(), 0.01.SI<MeterPerSecond>()); }
+		}
+
 		public Kilogram VehicleMass
 		{
 			get { return ModelData.TotalCurbWeight(); }

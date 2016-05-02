@@ -90,7 +90,7 @@ namespace TUGraz.VectoCore.Tests.Utils
 		}
 
 		public bool VehicleStopped { get; private set; }
-		public DrivingBehavior DrivingBehavior { get; private set; }
+		public DrivingBehavior DriverBehavior { get; private set; }
 		public CycleData CycleData { get; set; }
 		public ExecutionMode ExecutionMode { get; set; }
 		public IModalDataContainer ModalData { get; private set; }
