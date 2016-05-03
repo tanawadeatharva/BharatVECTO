@@ -43,7 +43,11 @@ namespace TUGraz.VectoCore.Tests.Integration.DriverStrategy
 		public void DisableLogging()
 		{
 			//LogManager.DisableLogging();
-			//GraphWriter.Disable();
+#if TRACE
+			GraphWriter.Enabled();
+#else
+			GraphWriter.Disable();
+#endif
 
 			GraphWriter.Xfields = new[] { ModalResultField.time, ModalResultField.dist };
 

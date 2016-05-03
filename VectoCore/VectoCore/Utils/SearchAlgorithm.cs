@@ -89,7 +89,7 @@ namespace TUGraz.VectoCore.Utils
 		{
 			T result;
 			try {
-				result = InterpolateLinear(x, y, interval, getYValue, evaluateFunction, criterion, abortCriterion,
+				result = InterpolateSearch(x, y, interval, getYValue, evaluateFunction, criterion, abortCriterion,
 					ref iterationCount);
 			} catch (VectoException ex) {
 				var log = LogManager.GetLogger(typeof(SearchAlgorithm).FullName);
@@ -114,7 +114,7 @@ namespace TUGraz.VectoCore.Utils
 			var origY = y;
 			var debug = new DebugData();
 			debug.Add(new { x, y });
-			log.Debug("Log Disabled during Search LineSearch.");
+			log.Debug("Log Disabled during LineSearch.");
 			LogManager.DisableLogging();
 			try {
 				for (var count = 1; count < 100; count++, iterationCount++) {
@@ -151,7 +151,7 @@ namespace TUGraz.VectoCore.Utils
 			log.Error("Exceeded max iterations when searching for operating point!");
 			log.Error("debug: {0}", debug);
 
-			//WriteSerach(debug, "LineSearch.csv");
+			//WriteSearch(debug, "LineSearch.csv");
 			throw new VectoSearchFailedException("Failed to find operating point! points: {0}", debug);
 		}
 
@@ -159,21 +159,21 @@ namespace TUGraz.VectoCore.Utils
 		/// Interpolating Search algorithm.
 		/// Calculates linear equation of 2 points and jumps directly to root-point.
 		/// </summary>
-		private static T InterpolateLinear<T>(T x1, SI y1, T interval, Func<object, SI> getYValue,
+		private static T InterpolateSearch<T>(T x1, SI y1, T interval, Func<object, SI> getYValue,
 			Func<T, object> evaluateFunction, Func<object, double> criterion, Func<object, int, bool> abortCriterion,
 			ref int iterationCount) where T : SIBase<T>
 		{
 			var log = LogManager.GetLogger(typeof(SearchAlgorithm).FullName);
 			var debug = new DebugData();
 			debug.Add(new { x = x1, y = y1 });
-			log.Debug("Log Disabled during Search InterpolateLinear.");
+			log.Debug("Log Disabled during InterpolateSearch.");
 			LogManager.DisableLogging();
 			try {
 				var x2 = x1 + interval;
 				var result = evaluateFunction(x2);
 				if (criterion(result).IsEqual(0, Constants.SimulationSettings.InterpolateSearchTolerance)) {
 					LogManager.EnableLogging();
-					log.Debug("InterpolateLinear found an operating point after 1 function call.");
+					log.Debug("InterpolateSearch found an operating point after 1 function call.");
 					LogManager.DisableLogging();
 					iterationCount++;
 					return x2;
@@ -194,7 +194,7 @@ namespace TUGraz.VectoCore.Utils
 						}
 						debug.Add(new { x = x2, y = getYValue(result), delta = criterion(result), result });
 						LogManager.EnableLogging();
-						log.Debug("InterpolateLinear could not get more exact. Aborting after {0} function calls.", count);
+						log.Debug("InterpolateSearch could not get more exact. Aborting after {0} function calls.", count);
 						LogManager.DisableLogging();
 						//iterationCount += count;
 						return x2;
@@ -204,7 +204,7 @@ namespace TUGraz.VectoCore.Utils
 					if (criterion(result).IsEqual(0, Constants.SimulationSettings.InterpolateSearchTolerance)) {
 						debug.Add(new { x = x2, y = getYValue(result), delta = criterion(result), result });
 						LogManager.EnableLogging();
-						log.Debug("InterpolateLinear found an operating point after {0} function calls.", count);
+						log.Debug("InterpolateSearch found an operating point after {0} function calls.", count);
 						LogManager.DisableLogging();
 						//iterationCount += count;
 						return x2;
@@ -222,15 +222,15 @@ namespace TUGraz.VectoCore.Utils
 			}
 
 			//iterationCount += 30;
-			log.Debug("InterpolateLinear could not find an operating point.");
+			log.Debug("InterpolateSearch could not find an operating point.");
 			log.Error("Exceeded max iterations when searching for operating point!");
 			log.Error("debug: {0}", debug);
 
-			//WriteSerach(debug, "InterpolateSearch.csv");
+			//WriteSearch(debug, "InterpolateSearch.csv");
 			throw new VectoSearchFailedException("Failed to find operating point! points: {0}", debug);
 		}
 
-		private static void WriteSerach(DebugData debug, string filename)
+		private static void WriteSearch(DebugData debug, string filename)
 		{
 			var table = new DataTable();
 			table.Columns.Add("x", typeof(double));
