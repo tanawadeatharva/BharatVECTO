@@ -94,36 +94,24 @@ namespace TUGraz.VectoCore.Utils
 				row["StepDuration"] = entry.Duration.TotalMilliseconds;
 
 				if (entry.Values.ContainsKey("DistanceRun")) {
-					row["Distance"] = entry.Values["DistanceRun"].ContainsKey("Distance") ? entry.Values["DistanceRun"]["Distance"] : 0;
-					row["Time"] = entry.Values["DistanceRun"].ContainsKey("Time") ? entry.Values["DistanceRun"]["Time"] : 0;
-					row["StepIterationCount"] = entry.Values["DistanceRun"].ContainsKey("Iterations")
-						? entry.Values["DistanceRun"]["Iterations"]
-						: 0;
+					row["Distance"] = entry.Values["DistanceRun"].GetValueOrNull("Distance");
+					row["Time"] = entry.Values["DistanceRun"].GetValueOrNull("Time");
+					row["StepIterationCount"] = entry.Values["DistanceRun"].GetValueOrNull("Iterations");
 				}
 				if (entry.Values.ContainsKey("Driver")) {
-					row["NumDriverRequests"] = entry.Values["Driver"].ContainsKey("Requests") ? entry.Values["Driver"]["Requests"] : 0;
-					row["NumAccelActions"] = entry.Values["Driver"].ContainsKey("Accelerate")
-						? entry.Values["Driver"]["Accelerate"]
-						: 0;
-					row["NumBrakeActions"] = entry.Values["Driver"].ContainsKey("Brake") ? entry.Values["Driver"]["Brake"] : 0;
-					row["NumCoastActions"] = entry.Values["Driver"].ContainsKey("Coast") ? entry.Values["Driver"]["Coast"] : 0;
-					row["NumRollActions"] = entry.Values["Driver"].ContainsKey("Roll") ? entry.Values["Driver"]["Roll"] : 0;
-					row["SearchOPIterations"] = entry.Values["Driver"].ContainsKey("SearchOperatingPoint")
-						? entry.Values["Driver"]["SearchOperatingPoint"]
-						: 0;
-					row["SearchBrakeIterations"] = entry.Values["Driver"].ContainsKey("SearchBrakingPower")
-						? entry.Values["Driver"]["SearchBrakingPower"]
-						: 0;
+					row["NumDriverRequests"] = entry.Values["Driver"].GetValueOrNull("Requests");
+					row["NumAccelActions"] = entry.Values["Driver"].GetValueOrNull("Accelerate");
+					row["NumBrakeActions"] = entry.Values["Driver"].GetValueOrNull("Brake");
+					row["NumCoastActions"] = entry.Values["Driver"].GetValueOrNull("Coast");
+					row["NumRollActions"] = entry.Values["Driver"].GetValueOrNull("Roll");
+					row["SearchOPIterations"] = entry.Values["Driver"].GetValueOrNull("SearchOperatingPoint");
+					row["SearchBrakeIterations"] = entry.Values["Driver"].GetValueOrNull("SearchBrakingPower");
 				}
 				if (entry.Values.ContainsKey("Gearbox")) {
-					row["NumGearboxRequests"] = entry.Values["Gearbox"].ContainsKey("Requests")
-						? entry.Values["Gearbox"]["Requests"]
-						: 0;
+					row["NumGearboxRequests"] = entry.Values["Gearbox"].GetValueOrNull("Requests");
 				}
 				if (entry.Values.ContainsKey("CombustionEngine")) {
-					row["NumEngineRequests"] = entry.Values["CombustionEngine"].ContainsKey("Requests")
-						? entry.Values["CombustionEngine"]["Requests"]
-						: 0;
+					row["NumEngineRequests"] = entry.Values["CombustionEngine"].GetValueOrNull("Requests");
 				}
 				table.Rows.Add(row);
 			}

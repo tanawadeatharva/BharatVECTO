@@ -85,7 +85,8 @@ namespace TUGraz.VectoCore.Utils
 		///     abortCriterion: result => true/false
 		/// </code>
 		/// </summary>
-		public static T Search<T>(T x, SI y, T interval, Func<object, SI> getYValue,Func<T, object> evaluateFunction, Func<object, double> criterion, Func<object, int, bool> abortCriterion,ref int iterationCount) where T : SIBase<T>
+		public static T Search<T>(T x, SI y, T interval, Func<object, SI> getYValue, Func<T, object> evaluateFunction,
+			Func<object, double> criterion, Func<object, int, bool> abortCriterion, ref int iterationCount) where T : SIBase<T>
 		{
 			T result;
 			try {
@@ -206,7 +207,6 @@ namespace TUGraz.VectoCore.Utils
 						LogManager.EnableLogging();
 						log.Debug("InterpolateSearch found an operating point after {0} function calls.", count);
 						LogManager.DisableLogging();
-						//iterationCount += count;
 						return x2;
 					}
 					if (abortCriterion != null && abortCriterion(result, iterationCount)) {
@@ -221,7 +221,6 @@ namespace TUGraz.VectoCore.Utils
 				LogManager.EnableLogging();
 			}
 
-			//iterationCount += 30;
 			log.Debug("InterpolateSearch could not find an operating point.");
 			log.Error("Exceeded max iterations when searching for operating point!");
 			log.Error("debug: {0}", debug);
