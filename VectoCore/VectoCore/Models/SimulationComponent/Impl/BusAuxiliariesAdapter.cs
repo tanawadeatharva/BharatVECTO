@@ -57,13 +57,13 @@ namespace TUGraz.VectoCore.Models.SimulationComponent.Impl
 					aauxsignals.TotalCycleTimeSeconds = 3283;
 					return "Suburban";
 				}
-				if (cycle.Contains("urban")) {
-					aauxsignals.TotalCycleTimeSeconds = 8149;
-					return "Urban";
-				}
 				if (cycle.Contains("interurban")) {
 					aauxsignals.TotalCycleTimeSeconds = 12962;
 					return "Interurban";
+				}
+				if (cycle.Contains("urban")) {
+					aauxsignals.TotalCycleTimeSeconds = 8149;
+					return "Urban";
 				}
 			}
 			if (cycle.Contains("coach")) {
