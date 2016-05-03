@@ -57,8 +57,9 @@ namespace TUGraz.VectoCore.Utils
 			var results = new List<ValidationResult>();
 			Validator.TryValidateObject(entity, new ValidationContext(entity), results, true);
 
-			const BindingFlags flags = BindingFlags.Instance | BindingFlags.Static | BindingFlags.NonPublic | BindingFlags.Public |
-										BindingFlags.FlattenHierarchy;
+			const BindingFlags flags =
+				BindingFlags.Instance | BindingFlags.Static | BindingFlags.NonPublic | BindingFlags.Public |
+				BindingFlags.FlattenHierarchy;
 
 			var properties = entity.GetType().GetProperties(flags);
 			foreach (var p in properties) {
@@ -95,16 +96,22 @@ namespace TUGraz.VectoCore.Utils
 		private static IEnumerable<T> GetAttributes<T>(this MemberInfo m, Type obj) where T : Attribute
 		{
 			var attributes = Enumerable.Empty<T>();
-			
-			const BindingFlags flags = BindingFlags.Instance | BindingFlags.Static | BindingFlags.NonPublic | BindingFlags.Public | BindingFlags.FlattenHierarchy;
+
+			const BindingFlags flags =
+				BindingFlags.Instance | BindingFlags.Static | BindingFlags.NonPublic | BindingFlags.Public |
+				BindingFlags.FlattenHierarchy;
 			var prop = obj.GetProperty(m.Name, flags);
 			if (prop != null) {
-				attributes = prop.GetCustomAttributes(typeof(T)).Cast<T>().Concat(obj.GetInterfaces().SelectMany(m.GetAttributes<T>));
+				attributes = prop.GetCustomAttributes(typeof(T))
+					.Cast<T>()
+					.Concat(obj.GetInterfaces().SelectMany(m.GetAttributes<T>));
 			}
 
 			var field = obj.GetField(m.Name, flags);
 			if (field != null) {
-				attributes = attributes.Concat(field.GetCustomAttributes(typeof(T)).Cast<T>().Concat(obj.GetInterfaces().SelectMany(m.GetAttributes<T>)));
+				attributes =
+					attributes.Concat(
+						field.GetCustomAttributes(typeof(T)).Cast<T>().Concat(obj.GetInterfaces().SelectMany(m.GetAttributes<T>)));
 			}
 
 			return attributes;
@@ -155,10 +162,14 @@ namespace TUGraz.VectoCore.Utils
 				}
 			} else {
 				var results = value.Validate();
-				if (results.Any()) {
-					return new ValidationResult(
-						string.Format("{{{0}}} invalid: {1}", validationContext.DisplayName, string.Join("\n", results)));
+				if (!results.Any()) {
+					return ValidationResult.Success;
 				}
+				if (validationContext.MemberName == "Container" || validationContext.MemberName == "RunData") {
+					return new ValidationResult(string.Join("\n", results));
+				}
+				return new ValidationResult(
+					string.Format("{{{0}}} invalid: {1}", validationContext.DisplayName, string.Join("\n", results)));
 			}
 
 			return ValidationResult.Success;
