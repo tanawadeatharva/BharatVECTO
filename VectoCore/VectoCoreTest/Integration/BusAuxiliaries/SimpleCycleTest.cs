@@ -42,11 +42,11 @@ namespace TUGraz.VectoCore.Tests.Integration.BusAuxiliaries
 	public class SimpleCycleTest
 	{
 		[TestInitialize]
-		public void DisableLogging()
+		public void Init()
 		{
 			LogManager.DisableLogging();
 #if TRACE
-			GraphWriter.Enabled();
+			GraphWriter.Enable();
 #else
 			GraphWriter.Disable();
 #endif

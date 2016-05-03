@@ -44,7 +44,7 @@ namespace TUGraz.VectoCore.Tests.Integration.DriverStrategy
 		{
 			//LogManager.DisableLogging();
 #if TRACE
-			GraphWriter.Enabled();
+			GraphWriter.Enable();
 #else
 			GraphWriter.Disable();
 #endif
