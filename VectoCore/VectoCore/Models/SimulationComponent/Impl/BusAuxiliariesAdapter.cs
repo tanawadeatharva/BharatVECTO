@@ -57,13 +57,13 @@ namespace TUGraz.VectoCore.Models.SimulationComponent.Impl
 					aauxsignals.TotalCycleTimeSeconds = 3283;
 					return "Suburban";
 				}
-				if (cycle.Contains("urban")) {
-					aauxsignals.TotalCycleTimeSeconds = 8149;
-					return "Urban";
-				}
 				if (cycle.Contains("interurban")) {
 					aauxsignals.TotalCycleTimeSeconds = 12962;
 					return "Interurban";
+				}
+				if (cycle.Contains("urban")) {
+					aauxsignals.TotalCycleTimeSeconds = 8149;
+					return "Urban";
 				}
 			}
 			if (cycle.Contains("coach")) {
@@ -182,7 +182,7 @@ namespace TUGraz.VectoCore.Models.SimulationComponent.Impl
 				// make sure smart aux are _not_ enabled for now
 				// set internal_engine_power a little bit lower so there is no excessive power for smart aux
 				Auxiliaries.Signals.Internal_Engine_Power =
-					(float)((0.9 * torqueEngine * angularSpeed - DataBus.BrakePower) / 1000).Value();
+					(float)((0.9 * torqueEngine * angularSpeed /*- DataBus.BrakePower*/) / 1000).Value();
 				// if smart aux should be on during coasting use the following line
 				// set internal_engine_power to a large value (*10) so that there's excessive power for smart aux (alreadin during search operating point)
 				//(float)DataBus.EngineDragPower(angularSpeed).Value() / 100;

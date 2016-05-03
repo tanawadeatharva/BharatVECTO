@@ -55,7 +55,7 @@ namespace TUGraz.VectoCore.Models.SimulationComponent.Data
 		[Required, Range(double.Epsilon, 1)]
 		public double EfficiencyToEngine { get; set; }
 
-		[Required] private readonly DelauneyMap _map;
+		[Required] private readonly DelaunayMap _map;
 
 		public Watt GetPowerDemand(PerSecond nAuxiliary, Watt powerAuxOut)
 		{
@@ -92,7 +92,7 @@ namespace TUGraz.VectoCore.Models.SimulationComponent.Data
 			}
 		}
 
-		private static void FillFromColumnIndizes(DataTable table, DelauneyMap map)
+		private static void FillFromColumnIndizes(DataTable table, DelaunayMap map)
 		{
 			var data = table.Rows.Cast<DataRow>().Select(row => new {
 				AuxiliarySpeed = row.ParseDouble(0).RPMtoRad(),
@@ -104,7 +104,7 @@ namespace TUGraz.VectoCore.Models.SimulationComponent.Data
 			}
 		}
 
-		private static void FillFromColumnNames(DataTable table, DelauneyMap map)
+		private static void FillFromColumnNames(DataTable table, DelaunayMap map)
 		{
 			var data = table.Rows.Cast<DataRow>().Select(row => new {
 				AuxiliarySpeed = row.ParseDouble(Fields.AuxSpeed).RPMtoRad(),
@@ -118,12 +118,12 @@ namespace TUGraz.VectoCore.Models.SimulationComponent.Data
 
 		internal AuxiliaryData(string id)
 		{
-			_map = new DelauneyMap(id);
+			_map = new DelaunayMap(id);
 		}
 
 		internal AuxiliaryData(IAuxiliaryEngineeringInputData data, string id)
 		{
-			_map = new DelauneyMap("AuxiliaryData " + id);
+			_map = new DelaunayMap("AuxiliaryData " + id);
 			TransmissionRatio = data.TransmissionRatio;
 			EfficiencyToEngine = data.EfficiencyToEngine;
 			EfficiencyToSupply = data.EfficiencyToSupply;

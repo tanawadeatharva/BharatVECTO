@@ -45,7 +45,7 @@ using TUGraz.VectoCommon.Utils;
 namespace TUGraz.VectoCore.Utils
 {
 	[JsonObject(MemberSerialization.Fields)]
-	public class DelauneyMap : LoggingObject
+	public class DelaunayMap : LoggingObject
 	{
 		internal readonly ICollection<Point> Points = new HashSet<Point>();
 		private List<Triangle> _triangles = new List<Triangle>();
@@ -55,7 +55,7 @@ namespace TUGraz.VectoCore.Utils
 
 		private readonly string _mapName;
 
-		public DelauneyMap(string name)
+		public DelaunayMap(string name)
 		{
 			_mapName = name;
 		}
@@ -122,18 +122,18 @@ namespace TUGraz.VectoCore.Utils
 				triangles.AddRange(newTriangles);
 				//DrawGraph(pointCount, triangles, superTriangle, xmin, xmax, ymin, ymax, point);
 				pointCount++;
-				
+
 				// check invariant: m = 2n-2-k
 				// m...triangle count
 				// n...point count (pointCount +3 points on the supertriangle)
 				// k...points on convex hull (exactly 3 --> supertriangle)
 				if (triangles.Count != 2 * (pointCount + 3) - 2 - 3) {
 					throw new VectoException(
-						"Delauney-Triangulation invariant violated! Triangle count and point count doesn't fit together.");
+						"Delaunay-Triangulation invariant violated! Triangle count and point count doesn't fit together.");
 				}
 			}
 
-			//DrawGraph(pointCount, triangles, superTriangle, xmin, xmax, ymin, ymax);
+			DrawGraph(pointCount, triangles, superTriangle, xmin, xmax, ymin, ymax);
 
 			_convexHull = triangles.FindAll(t => t.SharesVertexWith(superTriangle)).
 				SelectMany(t => t.GetEdges()).
@@ -150,28 +150,33 @@ namespace TUGraz.VectoCore.Utils
 				Log.Error("{0}: Input Point appears twice: x: {1}, y: {2}", duplicate.Key.X, duplicate.Key.Y);
 			}
 			if (duplicates.Any()) {
-				throw new VectoException("{0}: Input Data for Delauney map contains duplicates! \n{1}", _mapName,
+				throw new VectoException("{0}: Input Data for Delaunay map contains duplicates! \n{1}", _mapName,
 					string.Join("\n", duplicates.Select(pt => string.Format("{0} / {1}", pt.Key.X, pt.Key.Y))));
 			}
 		}
 
 
 		/// <summary>
-		/// Draws the delauney map (except supertriangle).
+		/// Draws the delaunay map (except supertriangle).
 		/// </summary>
-		private void DrawGraph(int i, List<Triangle> triangles, Triangle superTriangle, double xmin, double xmax, double ymin, double ymax, Point lastPoint = null)
+		private void DrawGraph(int i, List<Triangle> triangles, Triangle superTriangle, double xmin, double xmax, double ymin,
+			double ymax, Point lastPoint = null)
 		{
 			using (var chart = new Chart { Width = 1000, Height = 1000 }) {
 				chart.ChartAreas.Add(new ChartArea("main") {
-					AxisX = new Axis { Minimum = Math.Min(xmin, ymin), Maximum = Math.Max(xmax,ymax) },
-					AxisY = new Axis { Minimum = Math.Min(xmin, ymin), Maximum = Math.Max(xmax,ymax) }
+					AxisX = new Axis { Minimum = Math.Min(xmin, xmin), Maximum = Math.Max(xmax, xmax) },
+					AxisY = new Axis { Minimum = Math.Min(ymin, ymin), Maximum = Math.Max(ymax, ymax) }
 				});
 
 				foreach (var tr in triangles) {
-					if (tr.SharesVertexWith(superTriangle))
+					if (tr.SharesVertexWith(superTriangle)) {
 						continue;
+					}
 
-					var series = new Series { ChartType = SeriesChartType.FastLine, Color = lastPoint != null && tr.Contains(lastPoint)? Color.Red : Color.Blue };
+					var series = new Series {
+						ChartType = SeriesChartType.FastLine,
+						Color = lastPoint != null && tr.Contains(lastPoint) ? Color.Red : Color.Blue
+					};
 					series.Points.AddXY(tr.P1.X, tr.P1.Y);
 					series.Points.AddXY(tr.P2.X, tr.P2.Y);
 					series.Points.AddXY(tr.P3.X, tr.P3.Y);
@@ -180,7 +185,12 @@ namespace TUGraz.VectoCore.Utils
 				}
 
 				if (lastPoint != null) {
-					var series = new Series{ ChartType = SeriesChartType.Point, Color = Color.Red, MarkerSize = 5, MarkerStyle = MarkerStyle.Circle};
+					var series = new Series {
+						ChartType = SeriesChartType.Point,
+						Color = Color.Red,
+						MarkerSize = 5,
+						MarkerStyle = MarkerStyle.Circle
+					};
 					series.Points.AddXY(lastPoint.X, lastPoint.Y);
 					chart.Series.Add(series);
 				}
@@ -189,8 +199,8 @@ namespace TUGraz.VectoCore.Utils
 				var method = frame.GetMethod();
 				var type = string.Join("", method.DeclaringType.Name.Split(Path.GetInvalidFileNameChars()));
 				var methodName = string.Join("", method.Name.Split(Path.GetInvalidFileNameChars()));
-				Directory.CreateDirectory("delauney");
-				chart.SaveImage(string.Format("delauney\\{0}_{1}_{2}_{3}.png", type, methodName, superTriangle.GetHashCode(), i),
+				Directory.CreateDirectory("delaunay");
+				chart.SaveImage(string.Format("delaunay\\{0}_{1}_{2}_{3}.png", type, methodName, superTriangle.GetHashCode(), i),
 					ChartImageFormat.Png);
 			}
 		}
@@ -270,7 +280,7 @@ namespace TUGraz.VectoCore.Utils
 
 		#region Equality members
 
-		protected bool Equals(DelauneyMap other)
+		protected bool Equals(DelaunayMap other)
 		{
 			return Points.SequenceEqual(other.Points) && _triangles.SequenceEqual(other._triangles);
 		}
@@ -286,7 +296,7 @@ namespace TUGraz.VectoCore.Utils
 			if (obj.GetType() != GetType()) {
 				return false;
 			}
-			return Equals((DelauneyMap)obj);
+			return Equals((DelaunayMap)obj);
 		}
 
 		public override int GetHashCode()

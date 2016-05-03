@@ -52,12 +52,12 @@ namespace TUGraz.VectoCore.Models.SimulationComponent.Data.Gearbox
 		/// <summary>
 		/// The Loss map. [X=Output EngineSpeed, Y=Output Torque] => Z=Torque Loss
 		/// </summary>
-		private readonly DelauneyMap _lossMap;
+		private readonly DelaunayMap _lossMap;
 
 		/// <summary>
 		/// The inverted loss map for range sanity checks. [X=Input EngineSpeed, Y=Input Torque] => Z=Output Torque
 		/// </summary>
-		private readonly DelauneyMap _invertedLossMap;
+		private readonly DelaunayMap _invertedLossMap;
 
 		/// <summary>
 		/// True if the last access to GetInTorque was an extrapolation.
@@ -144,8 +144,8 @@ namespace TUGraz.VectoCore.Models.SimulationComponent.Data.Gearbox
 			GearName = gearName;
 			_ratio = gearRatio;
 			_entries = entries;
-			_lossMap = new DelauneyMap("TransmissionLossMap " + GearName);
-			_invertedLossMap = new DelauneyMap("TransmissionLossMapInv. " + GearName);
+			_lossMap = new DelaunayMap("TransmissionLossMap " + GearName);
+			_invertedLossMap = new DelaunayMap("TransmissionLossMapInv. " + GearName);
 			foreach (var entry in _entries) {
 				_lossMap.AddPoint(entry.InputSpeed.ConvertTo().Rounds.Per.Minute.Value(),
 					(entry.InputTorque - entry.TorqueLoss).Value(), entry.TorqueLoss.Value());
