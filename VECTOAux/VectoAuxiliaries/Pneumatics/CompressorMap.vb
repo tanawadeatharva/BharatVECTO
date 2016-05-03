@@ -108,7 +108,7 @@ Namespace Pneumatics
 		''' <param name="rpm">compressor rotation speed</param>
 		''' <returns></returns>
 		''' <remarks>Single</remarks>
-		Public Function GetFlowRate(ByVal rpm As Integer) As Single Implements ICompressorMap.GetFlowRate
+		Public Function GetFlowRate(ByVal rpm As Double) As Single Implements ICompressorMap.GetFlowRate
 			Dim val As CompressorMapValues = InterpolatedTuple(rpm)
 			Return val.FlowRate
 		End Function
@@ -119,7 +119,7 @@ Namespace Pneumatics
 		''' <param name="rpm">compressor rotation speed</param>
 		''' <returns></returns>
 		''' <remarks>Single</remarks>
-		Public Function GetPowerCompressorOn(ByVal rpm As Integer) As Single Implements ICompressorMap.GetPowerCompressorOn
+		Public Function GetPowerCompressorOn(ByVal rpm As Double) As Single Implements ICompressorMap.GetPowerCompressorOn
 			Dim val As CompressorMapValues = InterpolatedTuple(rpm)
 			Return val.PowerCompressorOn
 		End Function
@@ -130,7 +130,7 @@ Namespace Pneumatics
 		''' <param name="rpm">compressor rotation speed</param>
 		''' <returns></returns>
 		''' <remarks>Single</remarks>
-		Public Function GetPowerCompressorOff(ByVal rpm As Integer) As Single Implements ICompressorMap.GetPowerCompressorOff
+		Public Function GetPowerCompressorOff(ByVal rpm As Double) As Single Implements ICompressorMap.GetPowerCompressorOff
 			Dim val As CompressorMapValues = InterpolatedTuple(rpm)
 			Return val.PowerCompressorOff
 		End Function
@@ -140,7 +140,7 @@ Namespace Pneumatics
 		''' </summary>
 		''' <returns>CompressorMapValues</returns>
 		''' <remarks>Throws exception if rpm are outside map</remarks>
-		Private Function InterpolatedTuple(ByVal rpm As Integer) As CompressorMapValues
+		Private Function InterpolatedTuple(ByVal rpm As Double) As CompressorMapValues
 			'check the rpm is within the map
 			Dim min As Integer = map.Keys.Min()
 			Dim max As Integer = map.Keys.Max()

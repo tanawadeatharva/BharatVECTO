@@ -42,8 +42,6 @@ namespace TUGraz.VectoCore.Models.Simulation.DataBus
 
 	public interface IDriverInfo
 	{
-		bool VehicleStopped { get; }
-
-		DrivingBehavior DrivingBehavior { get; }
+		DrivingBehavior DriverBehavior { get; }
 	}
 }

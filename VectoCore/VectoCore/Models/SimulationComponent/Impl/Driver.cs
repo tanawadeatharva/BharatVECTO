@@ -87,13 +87,13 @@ namespace TUGraz.VectoCore.Models.SimulationComponent.Impl
 					"LookAhead Coasting Deceleration is lower than Driver's min. Deceleration. Coasting may start too late. Lookahead dec.: {0}, Driver min. deceleration: {1}",
 					DriverData.LookAheadCoasting.Deceleration, DriverData.AccelerationCurve.MinDeceleration());
 			}
-			VehicleStopped = vehicleSpeed.IsEqual(0);
+			DriverBehavior = vehicleSpeed.IsEqual(0) ? DrivingBehavior.Halted : DrivingBehavior.Driving;
 			return NextComponent.Initialize(vehicleSpeed, roadGradient);
 		}
 
 		public IResponse Initialize(MeterPerSecond vehicleSpeed, Radian roadGradient, MeterPerSquareSecond startAcceleration)
 		{
-			VehicleStopped = vehicleSpeed.IsEqual(0);
+			DriverBehavior = vehicleSpeed.IsEqual(0) ? DrivingBehavior.Halted : DrivingBehavior.Driving;
 			var retVal = NextComponent.Initialize(vehicleSpeed, roadGradient, startAcceleration);
 
 			return retVal;
@@ -103,13 +103,10 @@ namespace TUGraz.VectoCore.Models.SimulationComponent.Impl
 		public IResponse Request(Second absTime, Meter ds, MeterPerSecond targetVelocity, Radian gradient)
 		{
 			IterationStatistics.Increment(this, "Requests");
-
-
-			VehicleStopped = false;
 			Log.Debug("==== DRIVER Request (distance) ====");
 			Log.Debug(
 				"Request: absTime: {0},  ds: {1}, targetVelocity: {2}, gradient: {3} | distance: {4}, velocity: {5}, vehicle stopped: {6}",
-				absTime, ds, targetVelocity, gradient, DataBus.Distance, DataBus.VehicleSpeed, VehicleStopped);
+				absTime, ds, targetVelocity, gradient, DataBus.Distance, DataBus.VehicleSpeed, DataBus.VehicleStopped);
 
 			var retVal = DriverStrategy.Request(absTime, ds, targetVelocity, gradient);
 			//DoHandleRequest(absTime, ds, targetVelocity, gradient);
@@ -125,12 +122,10 @@ namespace TUGraz.VectoCore.Models.SimulationComponent.Impl
 		public IResponse Request(Second absTime, Second dt, MeterPerSecond targetVelocity, Radian gradient)
 		{
 			IterationStatistics.Increment(this, "Requests");
-
-			VehicleStopped = true;
 			Log.Debug("==== DRIVER Request (time) ====");
 			Log.Debug(
 				"Request: absTime: {0},  dt: {1}, targetVelocity: {2}, gradient: {3} | distance: {4}, velocity: {5} gear: {6}: vehicle stopped: {7}",
-				absTime, dt, targetVelocity, gradient, DataBus.Distance, DataBus.VehicleSpeed, DataBus.Gear, VehicleStopped);
+				absTime, dt, targetVelocity, gradient, DataBus.Distance, DataBus.VehicleSpeed, DataBus.Gear, DataBus.VehicleStopped);
 
 			var retVal = DriverStrategy.Request(absTime, dt, targetVelocity, gradient);
 
@@ -537,7 +532,8 @@ namespace TUGraz.VectoCore.Models.SimulationComponent.Impl
 						var response = (ResponseDryRun)result;
 						var delta = DataBus.ClutchClosed(absTime) ? response.DeltaDragLoad : response.GearboxPowerRequest;
 						return delta.Value();
-					}, 
+					},
+					abortCriterion: null,
 					iterationCount: ref iterations);
 
 				IterationStatistics.Increment(this, "SearchBrakingPower", iterations);
@@ -569,9 +565,8 @@ namespace TUGraz.VectoCore.Models.SimulationComponent.Impl
 					Default(r => { throw new UnexpectedResponseException("Unknown response type.", r); });
 			}
 			var delta = origDelta;
-
+			var iterations = 0;
 			try {
-				var iterations = 0;
 				retVal.Acceleration = SearchAlgorithm.Search(acceleration, delta,
 					Constants.SimulationSettings.OperatingPointInitialSearchIntervalAccelerating,
 					getYValue: response => {
@@ -588,7 +583,9 @@ namespace TUGraz.VectoCore.Models.SimulationComponent.Impl
 								retVal.SimulationInterval = tmp.SimulationInterval;
 								retVal.SimulationDistance = tmp.SimulationDistance;
 							}
-							return NextComponent.Request(absTime, retVal.SimulationInterval, acc, gradient, true);
+							var response = NextComponent.Request(absTime, retVal.SimulationInterval, acc, gradient, true);
+							response.OperatingPoint = retVal;
+							return response;
 						},
 					criterion: response => {
 						if (response is ResponseEngineSpeedTooLow) {
@@ -602,21 +599,31 @@ namespace TUGraz.VectoCore.Models.SimulationComponent.Impl
 						delta = actionRoll ? r.GearboxPowerRequest : (coasting ? r.DeltaDragLoad : r.DeltaFullLoad);
 						return delta.Value();
 					},
+					abortCriterion:
+						(response, cnt) => {
+							var r = (ResponseDryRun)response;
+							if (r == null) {
+								return false;
+							}
+
+							return coasting && !ds.IsEqual(r.OperatingPoint.SimulationDistance);
+						},
 					iterationCount: ref iterations);
-
-				if (
-					!retVal.Acceleration.IsBetween(DriverData.AccelerationCurve.MaxDeceleration(),
-						DriverData.AccelerationCurve.MaxAcceleration())) {
-					Log.Info("Operating Point outside driver acceleration limits: a: {0}", retVal.Acceleration);
-				}
-				
-				IterationStatistics.Increment(this, "SearchOperatingPoint", iterations);
-
-				return ComputeTimeInterval(retVal.Acceleration, retVal.SimulationDistance);
+			} catch (VectoSearchAbortedException) {
+				// search aborted, try to go ahead with the last acceleration
 			} catch (Exception) {
 				Log.Error("Failed to find operating point! absTime: {0}", absTime);
 				throw;
 			}
+
+			if (!retVal.Acceleration.IsBetween(DriverData.AccelerationCurve.MaxDeceleration(),
+						DriverData.AccelerationCurve.MaxAcceleration())) {
+					Log.Info("Operating Point outside driver acceleration limits: a: {0}", retVal.Acceleration);
+				}
+
+				IterationStatistics.Increment(this, "SearchOperatingPoint", iterations);
+
+				return ComputeTimeInterval(retVal.Acceleration, retVal.SimulationDistance);
 		}
 
 		/// <summary>
@@ -755,8 +762,11 @@ namespace TUGraz.VectoCore.Models.SimulationComponent.Impl
 		public IResponse DrivingActionHalt(Second absTime, Second dt, MeterPerSecond targetVelocity, Radian gradient)
 		{
 			if (!targetVelocity.IsEqual(0) || !DataBus.VehicleSpeed.IsEqual(0, 1e-3)) {
-				Log.Error("TargetVelocity ({0}) and VehicleVelocity ({1}) must be zero when vehicle is halting!", targetVelocity, DataBus.VehicleSpeed);
-				throw new VectoSimulationException("TargetVelocity ({0}) and VehicleVelocity ({1}) must be zero when vehicle is halting!", targetVelocity, DataBus.VehicleSpeed);
+				Log.Error("TargetVelocity ({0}) and VehicleVelocity ({1}) must be zero when vehicle is halting!", targetVelocity,
+					DataBus.VehicleSpeed);
+				throw new VectoSimulationException(
+					"TargetVelocity ({0}) and VehicleVelocity ({1}) must be zero when vehicle is halting!", targetVelocity,
+					DataBus.VehicleSpeed);
 			}
 
 			var retVal = NextComponent.Request(absTime, dt, 0.SI<MeterPerSquareSecond>(), gradient);
@@ -797,19 +807,6 @@ namespace TUGraz.VectoCore.Models.SimulationComponent.Impl
 			public IResponse Response;
 		}
 
-		[DebuggerDisplay("a: {Acceleration}, dt: {SimulationInterval}, ds: {SimulationDistance}")]
-		public struct OperatingPoint
-		{
-			public MeterPerSquareSecond Acceleration;
-			public Meter SimulationDistance;
-			public Second SimulationInterval;
-
-			public override string ToString()
-			{
-				return string.Format("a: {0}, dt: {1}, ds: {2}", Acceleration, SimulationInterval, SimulationDistance);
-			}
-		}
-
 		[Flags]
 		protected enum LimitationMode
 		{
@@ -819,16 +816,13 @@ namespace TUGraz.VectoCore.Models.SimulationComponent.Impl
 			LimitDecelerationLookahead = 0x4
 		}
 
-		public DrivingBehavior DriverBehavior
-		{
-			get { return DriverStrategy.DriverBehavior; }
-		}
+		public DrivingBehavior DriverBehavior { get; set; }
 
-		public bool VehicleStopped { get; protected set; }
+		//public bool VehicleStopped { get; protected set; }
 
-		public DrivingBehavior DrivingBehavior
-		{
-			get { return DriverStrategy.DriverBehavior; }
-		}
+		//public DrivingBehavior DrivingBehavior
+		//{
+		//	get { return DriverStrategy.DriverBehavior; }
+		//}
 	}
 }

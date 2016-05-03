@@ -92,13 +92,6 @@ namespace TUGraz.VectoCommon.InputData
 		/// cf. VECTO Input Parameters.xlsx
 		/// </summary>
 		DataTable CrosswindCorrectionMap { get; }
-
-		// Advanced Auxiliaries
-		AuxiliaryModel AuxiliaryAssembly { get; }
-
-		string AuxiliaryVersion { get; }
-
-		string AdvancedAuxiliaryFilePath { get; }
 	}
 
 
@@ -196,6 +189,13 @@ namespace TUGraz.VectoCommon.InputData
 	public interface IAuxiliariesEngineeringInputData : IAuxiliariesDeclarationInputData
 	{
 		new IList<IAuxiliaryEngineeringInputData> Auxiliaries { get; }
+
+		// Advanced Auxiliaries
+		AuxiliaryModel AuxiliaryAssembly { get; }
+
+		string AuxiliaryVersion { get; }
+
+		string AdvancedAuxiliaryFilePath { get; }
 	}
 
 

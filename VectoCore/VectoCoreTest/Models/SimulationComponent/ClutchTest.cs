@@ -32,6 +32,7 @@
 using Microsoft.VisualStudio.TestTools.UnitTesting;
 using TUGraz.VectoCommon.Models;
 using TUGraz.VectoCommon.Utils;
+using TUGraz.VectoCore.Models.Simulation.DataBus;
 using TUGraz.VectoCore.Models.Simulation.Impl;
 using TUGraz.VectoCore.Models.SimulationComponent.Impl;
 using TUGraz.VectoCore.Tests.Utils;
@@ -73,14 +74,15 @@ namespace TUGraz.VectoCore.Tests.Models.SimulationComponent
 			Assert.AreEqual(62.119969, outPort.AngularVelocity.Value(), 0.001);
 
 			//Test - Clutch opened
-			driver.VehicleStopped = true;
+			driver.DriverBehavior = DrivingBehavior.Halted; // = true;
+
 			clutchOutPort.Request(0.SI<Second>(), 0.SI<Second>(), 100.SI<NewtonMeter>(), 30.SI<PerSecond>());
 
 			Assert.AreEqual(0, outPort.Torque.Value(), 0.001);
 			Assert.AreEqual(engineData.IdleSpeed.Value(), outPort.AngularVelocity.Value(), 0.001);
 
 			//Test - Clutch closed
-			driver.VehicleStopped = false;
+			driver.DriverBehavior = DrivingBehavior.Driving; // = false;
 			clutchOutPort.Request(0.SI<Second>(), 0.SI<Second>(), 100.SI<NewtonMeter>(), 80.SI<PerSecond>());
 
 			Assert.AreEqual(100.0, outPort.Torque.Value(), 0.001);

@@ -43,8 +43,6 @@ using TUGraz.VectoCore.Utils;
 
 namespace TUGraz.VectoCore.Models.SimulationComponent.Data
 {
-
-
 	[CustomValidation(typeof(AuxiliaryData), "ValidateAuxMap")]
 	public class AuxiliaryData
 	{
@@ -57,16 +55,16 @@ namespace TUGraz.VectoCore.Models.SimulationComponent.Data
 		[Required, Range(double.Epsilon, 1)]
 		public double EfficiencyToEngine { get; set; }
 
-		[Required] private readonly DelauneyMap _map = new DelauneyMap();
+		[Required] private readonly DelauneyMap _map;
 
 		public Watt GetPowerDemand(PerSecond nAuxiliary, Watt powerAuxOut)
 		{
 			return _map.Interpolate(nAuxiliary.Value(), powerAuxOut.Value()).SI<Watt>();
 		}
 
-		public static AuxiliaryData ReadFromFile(string fileName)
+		public static AuxiliaryData ReadFromFile(string fileName, string id)
 		{
-			var auxData = new AuxiliaryData();
+			var auxData = new AuxiliaryData(id);
 
 			try {
 				var stream = new StreamReader(fileName);
@@ -118,8 +116,14 @@ namespace TUGraz.VectoCore.Models.SimulationComponent.Data
 			}
 		}
 
-		internal AuxiliaryData(IAuxiliaryEngineeringInputData data)
+		internal AuxiliaryData(string id)
 		{
+			_map = new DelauneyMap(id);
+		}
+
+		internal AuxiliaryData(IAuxiliaryEngineeringInputData data, string id)
+		{
+			_map = new DelauneyMap("AuxiliaryData " + id);
 			TransmissionRatio = data.TransmissionRatio;
 			EfficiencyToEngine = data.EfficiencyToEngine;
 			EfficiencyToSupply = data.EfficiencyToSupply;
@@ -132,7 +136,6 @@ namespace TUGraz.VectoCore.Models.SimulationComponent.Data
 			_map.Triangulate();
 		}
 
-		private AuxiliaryData() {}
 
 		private static bool HeaderIsValid(DataColumnCollection columns)
 		{

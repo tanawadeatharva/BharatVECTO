@@ -71,4 +71,9 @@ namespace TUGraz.VectoCommon.Exceptions
 	{
 		public VectoSearchFailedException(string message, params object[] args) : base(message, args) {}
 	}
+
+	public class VectoSearchAbortedException : VectoException
+	{
+		public VectoSearchAbortedException(string message, params object[] args) : base(message, args) { }
+	}
 }

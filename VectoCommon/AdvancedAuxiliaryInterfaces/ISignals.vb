@@ -56,7 +56,7 @@ Public Interface ISignals
 	''' <value></value>
 	''' <returns></returns>
 	''' <remarks>RPM in old money - Vecto Input</remarks>
-	Property EngineSpeed As Integer
+	Property EngineSpeed As Double
 
 	''' <summary>
 	''' Smart Pneumatics

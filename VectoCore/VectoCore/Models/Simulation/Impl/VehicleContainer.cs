@@ -210,7 +210,8 @@ namespace TUGraz.VectoCore.Models.Simulation.Impl
 
 		public void CommitSimulationStep(Second time, Second simulationInterval)
 		{
-			Log.Info("VehicleContainer committing simulation. time: {0}, dist: {1}, speed: {2}", time, ExecutionMode==ExecutionMode.EngineOnly ? null : Distance, VehicleSpeed);
+			Log.Info("VehicleContainer committing simulation. time: {0}, dist: {1}, speed: {2}", time,
+				ExecutionMode == ExecutionMode.EngineOnly ? null : Distance, VehicleSpeed);
 			foreach (var component in Components) {
 				component.CommitSimulationStep(ModData);
 			}
@@ -278,12 +279,12 @@ namespace TUGraz.VectoCore.Models.Simulation.Impl
 
 		public bool VehicleStopped
 		{
-			get { return Driver.VehicleStopped; }
+			get { return Vehicle.VehicleStopped; }
 		}
 
-		public DrivingBehavior DrivingBehavior
+		public DrivingBehavior DriverBehavior
 		{
-			get { return Driver.DrivingBehavior; }
+			get { return Driver.DriverBehavior; }
 		}
 
 		public Meter CycleStartDistance

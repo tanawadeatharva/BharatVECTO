@@ -76,6 +76,21 @@ namespace TUGraz.VectoCommon.Models
 
 		private readonly Logger _log;
 
+		public LoggingObject()
+		{
+			_log = NLog.LogManager.GetLogger(GetType().FullName);
+		}
+
+		public LoggingObject(string fullName)
+		{
+			_log = NLog.LogManager.GetLogger(fullName);
+		}
+
+		public static LoggingObject Logger<T>()
+		{
+			return new LoggingObject(typeof(T).ToString());
+		}
+
 		/// <summary>
 		/// Fatal > Error > Warn > Info > Debug > Trace
 		/// </summary>
@@ -181,21 +196,6 @@ namespace TUGraz.VectoCommon.Models
 		protected LoggingObject Log
 		{
 			get { return this; }
-		}
-
-		public LoggingObject()
-		{
-			_log = NLog.LogManager.GetLogger(GetType().FullName);
-		}
-
-		public LoggingObject(string fullName)
-		{
-			_log = NLog.LogManager.GetLogger(fullName);
-		}
-
-		public static LoggingObject Logger<T>()
-		{
-			return new LoggingObject(typeof(T).ToString());
 		}
 	}
 }

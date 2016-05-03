@@ -36,6 +36,7 @@ using TUGraz.VectoCommon.Exceptions;
 using TUGraz.VectoCommon.InputData;
 using TUGraz.VectoCommon.Models;
 using TUGraz.VectoCommon.Utils;
+using TUGraz.VectoCore.InputData.FileIO.JSON;
 using TUGraz.VectoCore.Models;
 using TUGraz.VectoCore.Models.Declaration;
 using TUGraz.VectoCore.Models.Simulation.Data;
@@ -177,7 +178,7 @@ namespace TUGraz.VectoCore.InputData.Reader.DataObjectAdaper
 				Technology = a.Technology,
 				TechList = a.TechList.DefaultIfNull(Enumerable.Empty<string>()).ToArray(),
 				DemandType = AuxiliaryDemandType.Mapping,
-				Data = new AuxiliaryData(a) //AuxiliaryData.Create(a.DemandMap)
+				Data = new AuxiliaryData(a, a.ID) //AuxiliaryData.Create(a.DemandMap)
 			}).Concat(new VectoRunData.AuxData { ID = "", DemandType = AuxiliaryDemandType.Direct }.ToEnumerable()).ToList();
 		}
 
@@ -224,12 +225,12 @@ namespace TUGraz.VectoCore.InputData.Reader.DataObjectAdaper
 			return SetCommonRetarderData(retarder, vehicle);
 		}
 
-		public AdvancedAuxData CreateAdvancedAuxData(IVehicleEngineeringInputData vehicleInputData)
+		public AdvancedAuxData CreateAdvancedAuxData(IAuxiliariesEngineeringInputData auxInputData)
 		{
 			return new AdvancedAuxData() {
-				AdvancedAuxiliaryFilePath = vehicleInputData.AdvancedAuxiliaryFilePath,
-				AuxiliaryAssembly = vehicleInputData.AuxiliaryAssembly,
-				AuxiliaryVersion = vehicleInputData.AuxiliaryVersion
+				AdvancedAuxiliaryFilePath = auxInputData.AdvancedAuxiliaryFilePath,
+				AuxiliaryAssembly = auxInputData.AuxiliaryAssembly,
+				AuxiliaryVersion = auxInputData.AuxiliaryVersion
 			};
 		}
 	}

@@ -44,6 +44,8 @@ namespace TUGraz.VectoCore.Models.Simulation.DataBus
 		/// <value></value>
 		MeterPerSecond VehicleSpeed { get; }
 
+		bool VehicleStopped { get; }
+
 		Kilogram VehicleMass { get; }
 
 		Kilogram VehicleLoading { get; }

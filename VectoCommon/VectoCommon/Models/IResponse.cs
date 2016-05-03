@@ -63,5 +63,7 @@ namespace TUGraz.VectoCommon.Models
 		PerSecond EngineSpeed { get; set; }
 
 		Second AbsTime { get; set; }
+
+		OperatingPoint OperatingPoint { get; set; }
 	}
 }
