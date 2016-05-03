@@ -128,6 +128,7 @@ namespace TUGraz.VectoCore.Utils
 					x += interval * -y.Sign();
 
 					var result = evaluateFunction(x);
+					y = getYValue(result);
 					debug.Add(new { x, y, delta = criterion(result), result });
 					if (criterion(result).IsEqual(0, Constants.SimulationSettings.LineSearchTolerance)) {
 						LogManager.EnableLogging();
@@ -142,7 +143,6 @@ namespace TUGraz.VectoCore.Utils
 						LogManager.DisableLogging();
 						throw new VectoSearchAbortedException("LineSearch");
 					}
-					y = getYValue(result);
 				}
 			} finally {
 				LogManager.EnableLogging();
