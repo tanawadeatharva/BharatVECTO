@@ -262,7 +262,7 @@
     <Compile Include="Utils\Validation.cs" />
     <Compile Include="Utils\VectoCSVFile.cs" />
     <Compile Include="Utils\VectoMath.cs" />
-    <Compile Include="Utils\DelauneyMap.cs" />
+    <Compile Include="Utils\DelaunayMap.cs" />
   </ItemGroup>
   <ItemGroup>
     <None Include="app.config" />
