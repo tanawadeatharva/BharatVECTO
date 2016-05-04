@@ -31,7 +31,10 @@
 
 using System;
 using System.Data;
+using System.Diagnostics;
+using System.IO;
 using System.Linq;
+using System.Threading;
 using TUGraz.VectoCore.Configuration;
 using TUGraz.VectoCommon.Exceptions;
 using TUGraz.VectoCommon.Models;
@@ -92,7 +95,8 @@ namespace TUGraz.VectoCore.Utils
 			try {
 				result = InterpolateSearch(x, y, interval, getYValue, evaluateFunction, criterion, abortCriterion,
 					ref iterationCount);
-			} catch (VectoException ex) {
+			}
+			catch (VectoException ex) {
 				var log = LogManager.GetLogger(typeof(SearchAlgorithm).FullName);
 				log.Debug("Falling back to LineSearch. InterpolationSearch failed: " + ex.Message);
 				result = LineSearch(x, y, interval, getYValue, evaluateFunction, criterion, abortCriterion, ref iterationCount);
@@ -125,7 +129,6 @@ namespace TUGraz.VectoCore.Utils
 
 					interval *= intervalFactor;
 					x += interval * -y.Sign();
-
 					var result = evaluateFunction(x);
 					y = getYValue(result);
 					debug.Add(new { x, y, delta = criterion(result), result });
@@ -134,6 +137,7 @@ namespace TUGraz.VectoCore.Utils
 						log.Debug("LineSearch found an operating point after {0} function calls.", count);
 						//iterationCount += count;
 						LogManager.DisableLogging();
+						AppendDebug(debug);
 						return x;
 					}
 					if (abortCriterion != null && abortCriterion(result, iterationCount)) {
@@ -152,8 +156,30 @@ namespace TUGraz.VectoCore.Utils
 			log.Error("Exceeded max iterations when searching for operating point!");
 			log.Error("debug: {0}", debug);
 
-			//WriteSearch(debug, "LineSearch.csv");
+			WriteSearch(debug, "LineSearch.csv");
 			throw new VectoSearchFailedException("Failed to find operating point! points: {0}", debug);
+		}
+
+		[Conditional("TRACE")]
+		private static void AppendDebug(DebugData debug)
+		{
+			var xmin = debug.Data.Min(d => d.x).Value();
+			var xmax = debug.Data.Max(d => d.x).Value();
+			var ymin = debug.Data.Min(d => d.y).Value();
+			var ymax = debug.Data.Max(d => d.y).Value();
+			
+			var rand = new Random().Next();
+			using (var f = new StreamWriter(File.Open("LineSearch-" + Thread.CurrentThread.ManagedThreadId + "-statistics.csv", FileMode.Append))) {
+				foreach (var d in debug.Data) {
+					f.WriteLine(string.Format("{0}, {1}, {2}, {3}, {4}, {5}, {6}", 
+						rand, 
+						(d.x.Value()-xmin)/(xmax-xmin), 
+						(d.y.Value()-ymin)/(ymax-ymin), 
+						d.x.Value()/Math.Max(Math.Abs(xmax),Math.Abs(xmin)), 
+						d.y.Value()/Math.Max(Math.Abs(ymax),Math.Abs(ymin)), 
+						d.x, d.y));
+				}
+			}
 		}
 
 		/// <summary>
@@ -175,6 +201,7 @@ namespace TUGraz.VectoCore.Utils
 				if (criterion(result).IsEqual(0, Constants.SimulationSettings.InterpolateSearchTolerance)) {
 					LogManager.EnableLogging();
 					log.Debug("InterpolateSearch found an operating point after 1 function call.");
+					AppendDebug(debug);
 					LogManager.DisableLogging();
 					iterationCount++;
 					return x2;
@@ -197,6 +224,7 @@ namespace TUGraz.VectoCore.Utils
 						LogManager.EnableLogging();
 						log.Debug("InterpolateSearch could not get more exact. Aborting after {0} function calls.", count);
 						LogManager.DisableLogging();
+						AppendDebug(debug);
 						//iterationCount += count;
 						return x2;
 					}
@@ -207,6 +235,7 @@ namespace TUGraz.VectoCore.Utils
 						LogManager.EnableLogging();
 						log.Debug("InterpolateSearch found an operating point after {0} function calls.", count);
 						LogManager.DisableLogging();
+						AppendDebug(debug);
 						return x2;
 					}
 					if (abortCriterion != null && abortCriterion(result, iterationCount)) {
@@ -225,10 +254,11 @@ namespace TUGraz.VectoCore.Utils
 			log.Error("Exceeded max iterations when searching for operating point!");
 			log.Error("debug: {0}", debug);
 
-			//WriteSearch(debug, "InterpolateSearch.csv");
+			WriteSearch(debug, "InterpolateSearch.csv");
 			throw new VectoSearchFailedException("Failed to find operating point! points: {0}", debug);
 		}
 
+		[Conditional("TRACE")]
 		private static void WriteSearch(DebugData debug, string filename)
 		{
 			var table = new DataTable();
