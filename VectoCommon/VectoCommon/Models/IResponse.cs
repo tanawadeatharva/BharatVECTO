@@ -30,7 +30,6 @@
 */
 
 using TUGraz.VectoCommon.Utils;
-using TUGraz.VectoCore.Models.SimulationComponent.Impl;
 
 namespace TUGraz.VectoCommon.Models
 {
@@ -65,6 +64,6 @@ namespace TUGraz.VectoCommon.Models
 
 		Second AbsTime { get; set; }
 
-		Driver.OperatingPoint OperatingPoint { get; set; }
+		OperatingPoint OperatingPoint { get; set; }
 	}
 }

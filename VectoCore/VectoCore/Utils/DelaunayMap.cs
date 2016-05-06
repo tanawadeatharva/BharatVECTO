@@ -159,7 +159,8 @@ namespace TUGraz.VectoCore.Utils
 		/// <summary>
 		/// Draws the delaunay map (except supertriangle).
 		/// </summary>
-		private void DrawGraph(int i, List<Triangle> triangles, Triangle superTriangle, double xmin, double xmax, double ymin,
+		[Conditional("TRACE")]
+		private static void DrawGraph(int i, List<Triangle> triangles, Triangle superTriangle, double xmin, double xmax, double ymin,
 			double ymax, Point lastPoint = null)
 		{
 			using (var chart = new Chart { Width = 1000, Height = 1000 }) {

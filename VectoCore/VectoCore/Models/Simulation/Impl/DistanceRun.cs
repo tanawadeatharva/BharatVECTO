@@ -44,6 +44,8 @@ namespace TUGraz.VectoCore.Models.Simulation.Impl
 
 		protected override IResponse DoSimulationStep()
 		{
+			IterationStatistics.StartIteration();
+
 			// estimate distance to be traveled within the next TargetTimeInterval
 			var ds = Container.VehicleSpeed.IsEqual(0)
 				? Constants.SimulationSettings.DriveOffDistance
@@ -52,6 +54,8 @@ namespace TUGraz.VectoCore.Models.Simulation.Impl
 			var loopCount = 0;
 			IResponse response;
 			do {
+				IterationStatistics.Increment(this, "Iterations");
+
 				Container.BrakePower = 0.SI<Watt>();
 				response = CyclePort.Request(AbsTime, ds);
 				response.Switch().
@@ -72,6 +76,9 @@ namespace TUGraz.VectoCore.Models.Simulation.Impl
 				}
 			} while (!(response is ResponseSuccess || response is ResponseCycleFinished));
 
+			IterationStatistics.Increment(this, "Distance", Container.Distance.Value());
+			IterationStatistics.Increment(this, "Time", AbsTime.Value());
+			IterationStatistics.FinishIteration(AbsTime);
 			return response;
 		}
 

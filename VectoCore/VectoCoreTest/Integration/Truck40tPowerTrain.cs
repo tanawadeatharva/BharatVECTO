@@ -83,7 +83,7 @@ namespace TUGraz.VectoCore.Tests.Integration
 		{
 			var fileWriter = new FileOutputWriter(modFileName);
 			var modData = new ModalDataContainer(modFileName, fileWriter);
-			var container = new VehicleContainer(executionMode: ExecutionMode.Engineering, modData: modData);
+			var container = new VehicleContainer(executionMode: ExecutionMode.Engineering, modData: modData) { RunData = new VectoRunData{ JobName = modFileName, Cycle = cycleData}};
 
 			var engineData = MockSimulationDataFactory.CreateEngineDataFromFile(EngineFile);
 			var axleGearData = CreateAxleGearData();

@@ -145,6 +145,9 @@ namespace TUGraz.VectoCore.Models.Simulation.Impl
 			}
 			Container.RunStatus = Status.Success;
 			Container.FinishSimulation();
+
+			IterationStatistics.FinishSimulation(RunName + CycleName + RunSuffix + RunIdentifier);
+
 			Log.Info("VectoJob finished.");
 		}
 
