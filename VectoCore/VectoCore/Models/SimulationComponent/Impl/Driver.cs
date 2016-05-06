@@ -214,6 +214,7 @@ namespace TUGraz.VectoCore.Models.SimulationComponent.Impl
 
 			retVal.Acceleration = operatingPoint.Acceleration;
 			retVal.SimulationInterval = operatingPoint.SimulationInterval;
+			retVal.OperatingPoint = operatingPoint;
 
 			return retVal;
 		}
@@ -293,7 +294,8 @@ namespace TUGraz.VectoCore.Models.SimulationComponent.Impl
 					Source = this,
 					MaxDistance = searchedOperatingPoint.SimulationDistance,
 					Acceleration = searchedOperatingPoint.Acceleration,
-					SimulationInterval = searchedOperatingPoint.SimulationInterval
+					SimulationInterval = searchedOperatingPoint.SimulationInterval,
+					OperatingPoint = searchedOperatingPoint
 				};
 				return CurrentState.Response;
 			}
@@ -316,6 +318,7 @@ namespace TUGraz.VectoCore.Models.SimulationComponent.Impl
 
 			response.SimulationInterval = limitedOperatingPoint.SimulationInterval;
 			response.Acceleration = limitedOperatingPoint.Acceleration;
+			response.OperatingPoint = limitedOperatingPoint;
 
 			response.Switch().
 				Case<ResponseSuccess>().
@@ -403,6 +406,7 @@ namespace TUGraz.VectoCore.Models.SimulationComponent.Impl
 				CurrentState.Response = retVal;
 				retVal.Acceleration = operatingPoint.Acceleration;
 				retVal.SimulationInterval = operatingPoint.SimulationInterval;
+				retVal.OperatingPoint = operatingPoint;
 				return retVal;
 			}
 
@@ -445,6 +449,7 @@ namespace TUGraz.VectoCore.Models.SimulationComponent.Impl
 			CurrentState.Response = retVal;
 			retVal.Acceleration = operatingPoint.Acceleration;
 			retVal.SimulationInterval = operatingPoint.SimulationInterval;
+			retVal.OperatingPoint = operatingPoint;
 
 			return retVal;
 		}
