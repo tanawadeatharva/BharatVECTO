@@ -1,7 +1,7 @@
 ﻿{
   "Header": {
     "CreatedBy": " ()",
-    "Date": "06.04.2016 15:08:33",
+    "Date": "03.05.2016 08:08:42",
     "AppVersion": "2.2",
     "FileVersion": 2
   },
@@ -11,6 +11,10 @@
     "EngineFile": "24t Coach.veng",
     "GearboxFile": "24t Coach.vgbx",
     "Cycles": [
+      "Interurban_Bus.vdri",
+      "Citybus_Heavy_Urban.vdri",
+      "Citybus_Suburban.vdri",
+      "Citybus_Urban.vdri",
       "Coach.vdri"
     ],
     "AuxiliaryAssembly": "BusAuxiliaries",

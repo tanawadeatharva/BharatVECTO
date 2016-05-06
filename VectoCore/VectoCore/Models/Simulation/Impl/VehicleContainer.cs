@@ -29,9 +29,11 @@
 *   Martin Rexeis, rexeis@ivt.tugraz.at, IVT, Graz University of Technology
 */
 
+using System;
 using System.Collections.Generic;
 using System.Collections.ObjectModel;
 using System.Diagnostics;
+using System.Linq;
 using TUGraz.VectoCommon.Exceptions;
 using TUGraz.VectoCommon.Models;
 using TUGraz.VectoCommon.Utils;
@@ -47,7 +49,9 @@ namespace TUGraz.VectoCore.Models.Simulation.Impl
 {
 	public class VehicleContainer : LoggingObject, IVehicleContainer
 	{
-		internal readonly IList<VectoSimulationComponent> Components = new List<VectoSimulationComponent>();
+		internal readonly IList<Tuple<VectoSimulationComponent, int>> Components =
+			new List<Tuple<VectoSimulationComponent, int>>();
+
 		internal IEngineInfo Engine;
 		internal IGearboxInfo Gearbox;
 		internal IVehicleInfo Vehicle;
@@ -192,19 +196,33 @@ namespace TUGraz.VectoCore.Models.Simulation.Impl
 
 		public virtual void AddComponent(VectoSimulationComponent component)
 		{
-			Components.Add(component);
+			var commitPriority = 0;
 
 			component.Switch()
-				.If<IEngineInfo>(c => Engine = c)
+				.If<IEngineInfo>(c => {
+					Engine = c;
+					commitPriority = 2;
+				})
 				.If<IDriverInfo>(c => Driver = c)
-				.If<IGearboxInfo>(c => Gearbox = c)
-				.If<IVehicleInfo>(c => Vehicle = c)
+				.If<IGearboxInfo>(c => {
+					Gearbox = c;
+					commitPriority = 4;
+				})
+				.If<IVehicleInfo>(c => {
+					Vehicle = c;
+					commitPriority = 5;
+				})
 				.If<ISimulationOutPort>(c => Cycle = c)
 				.If<IMileageCounter>(c => MilageCounter = c)
 				.If<IBrakes>(c => Brakes = c)
 				.If<IRoadLookAhead>(c => Road = c)
 				.If<IClutchInfo>(c => Clutch = c)
-				.If<IDrivingCycleInfo>(c => DrivingCycle = c);
+				.If<IDrivingCycleInfo>(c => {
+					DrivingCycle = c;
+					commitPriority = 3;
+				});
+
+			Components.Add(Tuple.Create(component, commitPriority));
 		}
 
 
@@ -212,7 +230,8 @@ namespace TUGraz.VectoCore.Models.Simulation.Impl
 		{
 			Log.Info("VehicleContainer committing simulation. time: {0}, dist: {1}, speed: {2}", time,
 				ExecutionMode == ExecutionMode.EngineOnly ? null : Distance, VehicleSpeed);
-			foreach (var component in Components) {
+
+			foreach (var component in Components.OrderBy(x => x.Item2).Reverse().Select(x => x.Item1)) {
 				component.CommitSimulationStep(ModData);
 			}
 
@@ -237,7 +256,7 @@ namespace TUGraz.VectoCore.Models.Simulation.Impl
 
 		public IReadOnlyCollection<VectoSimulationComponent> SimulationComponents()
 		{
-			return new ReadOnlyCollection<VectoSimulationComponent>(Components);
+			return new ReadOnlyCollection<VectoSimulationComponent>(Components.Select(x => x.Item1).ToList());
 		}
 
 		public Meter Distance

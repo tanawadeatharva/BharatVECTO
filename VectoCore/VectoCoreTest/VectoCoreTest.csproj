@@ -484,6 +484,9 @@
     <None Include="TestData\Integration\DeclarationMode\12t Truck\12t Delivery Truck.vveh">
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
     </None>
+    <None Include="TestData\Integration\DeclarationMode\12t Truck\12t Delivery Truck_8gear.vecto">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </None>
     <None Include="TestData\Integration\DeclarationMode\12t Truck\12t Delivery Truck_LongHaulEmptyLoading.vmod">
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
     </None>
@@ -512,6 +515,9 @@
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
     </None>
     <None Include="TestData\Integration\DeclarationMode\12t Truck\Axle.vtlm">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </None>
+    <None Include="TestData\Integration\DeclarationMode\12t Truck\Decl_8spd.vgbx">
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
     </None>
     <None Include="TestData\Integration\DeclarationMode\12t Truck\Direct Gear.vtlm">

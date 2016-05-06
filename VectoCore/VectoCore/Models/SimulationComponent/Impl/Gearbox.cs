@@ -138,7 +138,7 @@ namespace TUGraz.VectoCore.Models.SimulationComponent.Impl
 			var dt = Constants.SimulationSettings.TargetTimeInterval;
 
 			// MK 2016-02-10: SI doesn't allow inifinity anymore -- therefore simply a very negative value is used.
-			_engageTime = -1e10.SI<Second>(); //double.NegativeInfinity.SI<Second>();
+			_engageTime = -double.MaxValue.SI<Second>(); //double.NegativeInfinity.SI<Second>();
 
 			if (Disengaged) {
 				Gear = _strategy.InitGear(absTime, dt, outTorque, outAngularVelocity);
@@ -329,7 +329,8 @@ namespace TUGraz.VectoCore.Models.SimulationComponent.Impl
 
 			if (dryRun) {
 				if ((DataBus.DriverBehavior == DrivingBehavior.Braking || DataBus.DriverBehavior == DrivingBehavior.Coasting) &&
-					inAngularVelocity < DataBus.EngineIdleSpeed && DataBus.VehicleSpeed < Constants.SimulationSettings.VehicleStopClutchDisengageSpeed) {
+					inAngularVelocity < DataBus.EngineIdleSpeed &&
+					DataBus.VehicleSpeed < Constants.SimulationSettings.VehicleStopClutchDisengageSpeed) {
 					Disengaged = true;
 					_engageTime = absTime + dt;
 					_strategy.Disengage(absTime, dt, outTorque, outAngularVelocity);
@@ -350,7 +351,8 @@ namespace TUGraz.VectoCore.Models.SimulationComponent.Impl
 				if (shiftRequired) {
 					_engageTime = absTime + ModelData.TractionInterruption;
 
-					Log.Debug("Gearbox is shifting. absTime: {0}, dt: {1}, interuptionTime: {2}, out: ({3}, {4}), in: ({5}, {6})", absTime,
+					Log.Debug("Gearbox is shifting. absTime: {0}, dt: {1}, interuptionTime: {2}, out: ({3}, {4}), in: ({5}, {6})",
+						absTime,
 						dt, _engageTime, outTorque, outAngularVelocity, inTorque, inAngularVelocity);
 
 					Disengaged = true;
@@ -430,7 +432,10 @@ namespace TUGraz.VectoCore.Models.SimulationComponent.Impl
 					}
 				}
 			}
-
+			if (DataBus.VehicleStopped) {
+				Disengaged = false;
+				_engageTime = -double.MaxValue.SI<Second>();
+			}
 			AdvanceState();
 		}
 

@@ -133,7 +133,7 @@ namespace TUGraz.VectoCore.Utils
 				}
 			}
 
-			DrawGraph(pointCount, triangles, superTriangle, xmin, xmax, ymin, ymax);
+			//DrawGraph(pointCount, triangles, superTriangle, xmin, xmax, ymin, ymax);
 
 			_convexHull = triangles.FindAll(t => t.SharesVertexWith(superTriangle)).
 				SelectMany(t => t.GetEdges()).
