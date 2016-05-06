@@ -50,6 +50,9 @@ namespace TUGraz.VectoCore.Tests.Integration
 		public const string DeliveryTruckDeclarationJob =
 			@"TestData\Integration\DeclarationMode\12t Truck\12t Delivery Truck.vecto";
 
+		public const string DeliveryTruck8GearDeclarationJob =
+			@"TestData\Integration\DeclarationMode\12t Truck\12t Delivery Truck_8gear.vecto";
+
 		[TestMethod]
 		public void Truck40t_LongHaulCycle_RefLoad()
 		{
@@ -180,6 +183,28 @@ namespace TUGraz.VectoCore.Tests.Integration
 			var sumData = new SummaryDataContainer(fileWriter);
 			var jobContainer = new JobContainer(sumData);
 			jobContainer.AddRuns(factory);
+
+			jobContainer.Execute();
+			jobContainer.WaitFinished();
+
+			Assert.IsTrue(jobContainer.Runs.All(r => r.Success), string.Concat(jobContainer.Runs.Select(r => r.ExecException)));
+		}
+
+		[TestMethod, TestCategory("LongRunning")]
+		public void Truck12t8Gear_DeclarationTest()
+		{
+			var inputData = JSONInputDataFactory.ReadJsonJob(DeliveryTruck8GearDeclarationJob);
+			var fileWriter = new FileOutputWriter(DeliveryTruck8GearDeclarationJob);
+			var factory = new SimulatorFactory(ExecutionMode.Declaration, inputData, fileWriter) {
+				WriteModalResults = true
+			};
+			var sumData = new SummaryDataContainer(fileWriter);
+			var jobContainer = new JobContainer(sumData);
+			jobContainer.AddRuns(factory);
+
+			var runs = jobContainer.Runs;
+
+			//runs[8].Run.Run();
 
 			jobContainer.Execute();
 			jobContainer.WaitFinished();
