@@ -278,11 +278,11 @@ namespace TUGraz.VectoCore.Models.SimulationComponent.Impl
 			OperatingPoint searchedOperatingPoint;
 			try {
 				searchedOperatingPoint = SearchOperatingPoint(absTime, requestedOperatingPoint.SimulationDistance, gradient,
-					requestedOperatingPoint.Acceleration, initialResponse, coasting: true);
+					requestedOperatingPoint.Acceleration, initialResponse, coastingOrRoll: true);
 			} catch (VectoEngineSpeedTooLowException) {
 				// in case of an exception during search the engine-speed got too low - gear disengaged --> try again with disengaged gear.
 				searchedOperatingPoint = SearchOperatingPoint(absTime, requestedOperatingPoint.SimulationDistance, gradient,
-					requestedOperatingPoint.Acceleration, initialResponse, coasting: true);
+					requestedOperatingPoint.Acceleration, initialResponse, coastingOrRoll: true);
 			}
 
 			if (!ds.IsEqual(searchedOperatingPoint.SimulationDistance)) {
@@ -533,7 +533,7 @@ namespace TUGraz.VectoCore.Models.SimulationComponent.Impl
 		}
 
 		protected OperatingPoint SearchOperatingPoint(Second absTime, Meter ds, Radian gradient,
-			MeterPerSquareSecond acceleration, IResponse initialResponse, bool coasting = false)
+			MeterPerSquareSecond acceleration, IResponse initialResponse, bool coastingOrRoll = false)
 		{
 			var retVal = new OperatingPoint { Acceleration = acceleration, SimulationDistance = ds };
 
@@ -548,7 +548,7 @@ namespace TUGraz.VectoCore.Models.SimulationComponent.Impl
 			} else {
 				initialResponse.Switch().
 					Case<ResponseOverload>(r => origDelta = r.Delta). // search operating point in drive action after overload
-					Case<ResponseDryRun>(r => origDelta = coasting ? r.DeltaDragLoad : r.DeltaFullLoad).
+					Case<ResponseDryRun>(r => origDelta = coastingOrRoll ? r.DeltaDragLoad : r.DeltaFullLoad).
 					Default(r => { throw new UnexpectedResponseException("Unknown response type.", r); });
 			}
 			var delta = origDelta;
@@ -558,7 +558,7 @@ namespace TUGraz.VectoCore.Models.SimulationComponent.Impl
 					Constants.SimulationSettings.OperatingPointInitialSearchIntervalAccelerating,
 					getYValue: response => {
 						var r = (ResponseDryRun)response;
-						return actionRoll ? r.GearboxPowerRequest : (coasting ? r.DeltaDragLoad : r.DeltaFullLoad);
+						return actionRoll ? r.GearboxPowerRequest : (coastingOrRoll ? r.DeltaDragLoad : r.DeltaFullLoad);
 					},
 					evaluateFunction:
 						acc => {
@@ -583,7 +583,7 @@ namespace TUGraz.VectoCore.Models.SimulationComponent.Impl
 						}
 
 						var r = (ResponseDryRun)response;
-						delta = actionRoll ? r.GearboxPowerRequest : (coasting ? r.DeltaDragLoad : r.DeltaFullLoad);
+						delta = actionRoll ? r.GearboxPowerRequest : (coastingOrRoll ? r.DeltaDragLoad : r.DeltaFullLoad);
 						return delta.Value();
 					},
 					abortCriterion:
