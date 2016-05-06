@@ -77,7 +77,7 @@ namespace TUGraz.VectoCore.Models.SimulationComponent.Impl
 				//          but this could lead to extrapolation of loss maps (in axlegear and gear).
 				// solution: we check here if the angularVelocity is 0 the first time and brake away all the torque if it is.
 				//           afterwards the vehicle is standing and other mechanisms take over (Driver.DriveTimeInterval)
-				if (DataBus.DriverBehavior == DrivingBehavior.Braking && !PreviousState.OutAngularVelocity.IsEqual(0) &&
+				if (DataBus.ClutchClosed(absTime) && DataBus.DriverBehavior == DrivingBehavior.Braking && !PreviousState.OutAngularVelocity.IsEqual(0) &&
 					angularVelocity.IsEqual(0)) {
 					brakeTorque = -torque;
 					if (!dryRun) {
