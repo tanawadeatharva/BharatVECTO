@@ -593,7 +593,7 @@ namespace TUGraz.VectoCore.Models.SimulationComponent.Impl
 								return false;
 							}
 
-							return coasting && !ds.IsEqual(r.OperatingPoint.SimulationDistance);
+							return !actionRoll && !ds.IsEqual(r.OperatingPoint.SimulationDistance);
 						});
 			} catch (VectoSearchAbortedException) {
 				// search aborted, try to go ahead with the last acceleration
@@ -745,7 +745,7 @@ namespace TUGraz.VectoCore.Models.SimulationComponent.Impl
 		/// <returns></returns>
 		public IResponse DrivingActionHalt(Second absTime, Second dt, MeterPerSecond targetVelocity, Radian gradient)
 		{
-			if (!targetVelocity.IsEqual(0) || !DataBus.VehicleSpeed.IsEqual(0, 1e-3)) {
+			if (!targetVelocity.IsEqual(0) || !DataBus.VehicleStopped) {
 				Log.Error("TargetVelocity ({0}) and VehicleVelocity ({1}) must be zero when vehicle is halting!", targetVelocity,
 					DataBus.VehicleSpeed);
 				throw new VectoSimulationException(
