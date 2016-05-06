@@ -15,43 +15,46 @@
       "Regional Delivery",
       "Urban Delivery"
     ],
+    "AuxiliaryAssembly": "CLASSIC",
+    "AuxiliaryVersion": "CLASSIC",
+    "AdvancedAuxiliaryFilePath": "",
     "Aux": [
       {
         "ID": "FAN",
         "Type": "Fan",
         "Path": "<NOFILE>",
-        "Technology": "Belt driven or driven via transm. - Discrete step clutch"
+        "Technology": "Crankshaft mounted - Discrete step clutch"
       },
       {
         "ID": "STP",
         "Type": "Steering pump",
         "Path": "<NOFILE>",
-        "Technology": "Variable displacement"
+        "Technology": "Fixed displacement"
       },
       {
         "ID": "AC",
         "Type": "HVAC",
         "Path": "<NOFILE>",
-        "Technology": "Default"
+        "Technology": ""
       },
       {
         "ID": "ES",
         "Type": "Electric System",
         "Path": "<NOFILE>",
-        "Technology": "Custom Technology List",
+        "Technology": "",
         "TechList": []
       },
       {
         "ID": "PS",
         "Type": "Pneumatic System",
         "Path": "<NOFILE>",
-        "Technology": "Default"
+        "Technology": ""
       }
     ],
     "VACC": "<NOFILE>",
     "EngineOnlyMode": false,
     "StartStop": {
-      "Enabled": false,
+      "Enabled": true,
       "MaxSpeed": 5.0,
       "MinTime": 5.0,
       "Delay": 5

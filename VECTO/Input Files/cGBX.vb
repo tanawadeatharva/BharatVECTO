@@ -528,6 +528,38 @@ Public Class cGBX
 				'nIn
 				nUin = nUout / nu
 
+
+            'AA-TB
+            'Recalculate for Advanced Auxiliaries.
+
+            mAAUX_Global.ClutchEngaged = (Gear > 0)
+
+            mAAUX_Global.Idle = False'(Gear = 0 And Not Pplus And Not Pminus)
+
+            mAAUX_Global.InNeutral = (Gear = 0)
+
+            'Driveline Power = required power at clutch = power at wheels plus powertrain losses
+            '[kW]
+            '**** RL 7-7-15 ****
+            mAAUX_Global.EngineDrivelinePower = PeOut
+
+            '[1/min]
+            mAAUX_Global.EngineSpeed = nU
+
+            '[Nm] (using Power => Torque conversion)
+            mAAUX_Global.EngineDrivelineTorque = nPeToM(EngineSpeed, EngineDrivelinePower)
+
+            'Motoring power (< 0 !!!)
+            '[kW]
+            '** MULTIPLIED BY - TO GET POSITIVE VALUE
+            mAAUX_Global.EngineMotoringPower = - FLD(Gear).Pdrag(EngineSpeed)
+
+            'Additional aux power from driving cycle (optional user input)
+            '[kW]
+            mAAUX_Global.PreExistingAuxPower = MODdata.Vh.Padd(t)
+
+
+
 				'MinMax
 				Paux = MODdata.Px.fPaux(t, Math.Max(nUin, ENG.Nidle))
 				If LastnU Is Nothing Then
