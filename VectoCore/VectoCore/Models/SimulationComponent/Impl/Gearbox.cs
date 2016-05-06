@@ -215,10 +215,13 @@ namespace TUGraz.VectoCore.Models.SimulationComponent.Impl
 		/// </returns>
 		public IResponse Request(Second absTime, Second dt, NewtonMeter torque, PerSecond angularVelocity, bool dryRun)
 		{
+			IterationStatistics.Increment(this, "Requests");
+
 			Log.Debug("Gearbox Power Request: torque: {0}, angularVelocity: {1}", torque, angularVelocity);
 			if (DataBus.VehicleStopped) {
 				_engageTime = absTime;
 			}
+			
 			IResponse retVal;
 			// TODO: MQ 2016/03/10: investigate further the effects of having the condition angularvelocity != 0
 			if (ClutchClosed(absTime) /* && !angularVelocity.IsEqual(0) */) {

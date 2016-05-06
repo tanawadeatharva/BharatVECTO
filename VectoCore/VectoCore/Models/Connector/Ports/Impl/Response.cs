@@ -62,7 +62,7 @@ namespace TUGraz.VectoCore.Models.Connector.Ports.Impl
 
 		public Second AbsTime { get; set; }
 
-		public Driver.OperatingPoint OperatingPoint { get; set; }
+		public OperatingPoint OperatingPoint { get; set; }
 
 		public PerSecond EngineSpeed { get; set; }
 

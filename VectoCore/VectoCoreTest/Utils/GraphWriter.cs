@@ -62,7 +62,7 @@ namespace TUGraz.VectoCore.Tests.Utils
 		public static ModalResultField[] Xfields { get; set; }
 
 
-		public static void Enabled()
+		public static void Enable()
 		{
 			_enabled = true;
 		}
