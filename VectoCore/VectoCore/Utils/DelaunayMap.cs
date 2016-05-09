@@ -37,15 +37,13 @@ using System.IO;
 using System.Linq;
 using System.Threading;
 using System.Windows.Forms.DataVisualization.Charting;
-using Newtonsoft.Json;
 using TUGraz.VectoCommon.Exceptions;
 using TUGraz.VectoCommon.Models;
 using TUGraz.VectoCommon.Utils;
 
 namespace TUGraz.VectoCore.Utils
 {
-	[JsonObject(MemberSerialization.Fields)]
-	public class DelaunayMap : LoggingObject
+	public sealed class DelaunayMap : LoggingObject, IDisposable
 	{
 		internal readonly ICollection<Point> Points = new HashSet<Point>();
 		private List<Triangle> _triangles = new List<Triangle>();
@@ -281,7 +279,7 @@ namespace TUGraz.VectoCore.Utils
 
 		#region Equality members
 
-		protected bool Equals(DelaunayMap other)
+		private bool Equals(DelaunayMap other)
 		{
 			return Points.SequenceEqual(other.Points) && _triangles.SequenceEqual(other._triangles);
 		}
@@ -306,6 +304,11 @@ namespace TUGraz.VectoCore.Utils
 				return ((Points != null ? Points.GetHashCode() : 0) * 397) ^
 						(_triangles != null ? _triangles.GetHashCode() : 0);
 			}
+		}
+
+		public void Dispose()
+		{
+			_extrapolated.Dispose();
 		}
 
 		#endregion

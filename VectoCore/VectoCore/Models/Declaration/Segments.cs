@@ -40,7 +40,7 @@ using TUGraz.VectoCore.Utils;
 
 namespace TUGraz.VectoCore.Models.Declaration
 {
-	public class Segments : LookupData<VehicleCategory, AxleConfiguration, Kilogram, Kilogram, Segment>
+	public sealed class Segments : LookupData<VehicleCategory, AxleConfiguration, Kilogram, Kilogram, Segment>
 	{
 		public Segments()
 		{

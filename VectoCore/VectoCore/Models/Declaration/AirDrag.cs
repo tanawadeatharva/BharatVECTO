@@ -37,9 +37,9 @@ using TUGraz.VectoCore.Utils;
 
 namespace TUGraz.VectoCore.Models.Declaration
 {
-	public class AirDrag : LookupData<string, AirDrag.AirDragEntry>
+	public sealed class AirDrag : LookupData<string, AirDrag.AirDragEntry>
 	{
-		protected const string ResourceId = "TUGraz.VectoCore.Resources.Declaration.VCDV.parameters.csv";
+		private const string ResourceId = "TUGraz.VectoCore.Resources.Declaration.VCDV.parameters.csv";
 
 		public AirDrag()
 		{

@@ -38,15 +38,14 @@ using TUGraz.VectoCore.Utils;
 
 namespace TUGraz.VectoCore.Models.Declaration
 {
-	public class Fan : LookupData<MissionType, string, Watt>
+	public sealed class Fan : LookupData<MissionType, string, Watt>
 	{
+		private const string ResourceId = "TUGraz.VectoCore.Resources.Declaration.VAUX.Fan-Tech.csv";
+		private const string DefaultTechnology = "Crankshaft mounted - Electronically controlled visco clutch (Default)";
+		
 		private readonly Dictionary<Tuple<MissionType, string>, Watt> _data =
 			new Dictionary<Tuple<MissionType, string>, Watt>();
-
-		private const string DefaultTechnology = "Crankshaft mounted - Electronically controlled visco clutch (Default)";
-
-		protected const string ResourceId = "TUGraz.VectoCore.Resources.Declaration.VAUX.Fan-Tech.csv";
-
+		
 		public Fan()
 		{
 			ParseData(ReadCsvResource(ResourceId));

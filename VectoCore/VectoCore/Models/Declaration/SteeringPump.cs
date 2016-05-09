@@ -39,15 +39,13 @@ using TUGraz.VectoCore.Utils;
 
 namespace TUGraz.VectoCore.Models.Declaration
 {
-	public class SteeringPump : LookupData<MissionType, VehicleClass, string, Watt>
+	public sealed class SteeringPump : LookupData<MissionType, VehicleClass, string, Watt>
 	{
+		private const string ResourceId = "TUGraz.VectoCore.Resources.Declaration.VAUX.SP-Table.csv";
 		private readonly SteeringPumpTechnologies _technologies = new SteeringPumpTechnologies();
-
 		private readonly Dictionary<Tuple<MissionType, VehicleClass>, Watt[]> _data =
 			new Dictionary<Tuple<MissionType, VehicleClass>, Watt[]>();
-
-		private const string ResourceId = "TUGraz.VectoCore.Resources.Declaration.VAUX.SP-Table.csv";
-
+		
 		public SteeringPump()
 		{
 			ParseData(ReadCsvResource(ResourceId));
@@ -87,7 +85,7 @@ namespace TUGraz.VectoCore.Models.Declaration
 			}
 		}
 
-		private class SteeringPumpTechnologies : LookupData<string, double[]>
+		private sealed class SteeringPumpTechnologies : LookupData<string, double[]>
 		{
 			private const string ResourceId = "TUGraz.VectoCore.Resources.Declaration.VAUX.SP-Tech.csv";
 
