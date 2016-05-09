@@ -29,7 +29,11 @@
 *   Martin Rexeis, rexeis@ivt.tugraz.at, IVT, Graz University of Technology
 */
 
+using System.Collections.Generic;
 using Microsoft.VisualStudio.TestTools.UnitTesting;
+using NLog;
+using NLog.Config;
+using NLog.Targets;
 using TUGraz.VectoCommon.Exceptions;
 using TUGraz.VectoCommon.Utils;
 using TUGraz.VectoCore.Models.Simulation.Data;
@@ -46,6 +50,8 @@ namespace TUGraz.VectoCore.Tests.Models.SimulationComponentData
 	{
 		private const string CoachEngineFLD = @"TestData\Components\24t Coach.vfld";
 		private const double Tolerance = 0.0001;
+
+		public static List<string> LogList = new List<string>();
 
 		[TestMethod]
 		public void TestFullLoadStaticTorque()
@@ -159,13 +165,28 @@ namespace TUGraz.VectoCore.Tests.Models.SimulationComponentData
 		}
 
 		/// <summary>
-		///     [VECTO-78]
+		/// [VECTO-78]
 		/// </summary>
 		[TestMethod]
 		public void Test_FileRead_HeaderColumnsNotNamedCorrectly()
 		{
+			LogList.Clear();
+			var target = new MethodCallTarget {
+				ClassName = typeof(FullLoadCurveTest).AssemblyQualifiedName,
+				MethodName = "LogMethod_Test_FileRead_HeaderColumnsNotNamedCorrectly"
+			};
+			target.Parameters.Add(new MethodCallParameter("${level}"));
+			target.Parameters.Add(new MethodCallParameter("${message}"));
+			SimpleConfigurator.ConfigureForTargetLogging(target, LogLevel.Debug);
 			EngineFullLoadCurve.ReadFromFile(@"TestData\Components\FullLoadCurve wrong header.vfld");
-			//todo: check log file: ensure header warning was written!
+			Assert.IsTrue(LogList.Contains(@"FullLoadCurve: Header Line is not valid. Expected: 'engine speed, full load torque, motoring torque', Got: 'n, Mfull, Mdrag, PT1'. Falling back to column index."));
+			LogList.Clear();
+		}
+
+		public static void LogMethod_Test_FileRead_HeaderColumnsNotNamedCorrectly(string level, string message)
+		{
+			if (level == "Warn")
+				LogList.Add(message);
 		}
 
 		/// <summary>
@@ -216,7 +237,7 @@ namespace TUGraz.VectoCore.Tests.Models.SimulationComponentData
 		}
 
 		/// <summary>
-		///		[VECTO-190]
+		///     [VECTO-190]
 		/// </summary>
 		[TestMethod]
 		public void TestSortingFullLoadEntries()
