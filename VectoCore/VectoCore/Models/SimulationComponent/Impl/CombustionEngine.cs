@@ -337,7 +337,7 @@ namespace TUGraz.VectoCore.Models.SimulationComponent.Impl
 				var fc = ModelData.ConsumptionMap.GetFuelConsumption(CurrentState.EngineTorque, avgEngineSpeed,
 					allowExtrapolation: (DataBus.ExecutionMode != ExecutionMode.Declaration));
 
-				//todo (MK, 2015-11-11): calculate aux start stop correction when start stop functionality is implemented in v3
+				//TODO mk-2015-11-11: calculate aux start stop correction
 				var fcAux = fc;
 
 				var fcWHTC = fcAux * ModelData.WHTCCorrectionFactor;

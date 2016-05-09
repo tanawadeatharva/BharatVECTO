@@ -164,7 +164,7 @@ namespace TUGraz.VectoCore.InputData.Reader.DataObjectAdaper
 			if (gearCurve == null) {
 				return engineCurve;
 			}
-			// TODO MK-2016-04-18: also combine the curves at the intersection-points of line segments!
+			// TODO mk-2016-04-18: also combine the curves at the intersection-points of line segments!
 			var entries =
 				gearCurve.FullLoadEntries.Concat(engineCurve.FullLoadEntries)
 					.OrderBy(x => x.EngineSpeed)

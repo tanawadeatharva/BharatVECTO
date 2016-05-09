@@ -185,7 +185,7 @@ namespace TUGraz.VectoCore.InputData.FileIO.JSON
 
 		public virtual bool Enabled
 		{
-			get { return false; // TODO @@@
+			get { return false; // TODO mk-2016-05-09: JSON ITorqueConverterInputData.Enabled always true --> as soon as TC is implemented, set to correct value!
 			}
 		}
 

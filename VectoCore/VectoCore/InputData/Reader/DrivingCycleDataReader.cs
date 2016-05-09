@@ -538,7 +538,6 @@ namespace TUGraz.VectoCore.InputData.Reader
 
 			public static bool ValidateHeader(string[] header, bool throwExceptions = true)
 			{
-				//todo mk-2016-02-15: check if vair_res, and vair_beta only when needed
 				var allowedCols = new[] {
 					Fields.Time,
 					Fields.VehicleSpeed,
@@ -586,7 +585,6 @@ namespace TUGraz.VectoCore.InputData.Reader
 
 			public static bool ValidateHeader(string[] header, bool throwExceptions = true)
 			{
-				//todo mk-2016-02-15: check if vair_res, and vair_beta only when needed
 				var allowedCols = new[] {
 					Fields.Time,
 					Fields.VehicleSpeed,

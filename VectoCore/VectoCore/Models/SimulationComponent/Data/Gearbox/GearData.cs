@@ -48,7 +48,7 @@ namespace TUGraz.VectoCore.Models.SimulationComponent.Data.Gearbox
 		[Required, Range(double.Epsilon, 25)]
 		public double Ratio { get; internal set; }
 
-		public bool TorqueConverterActive { get; internal set; } // TODO: think about refactoring...
+		public bool TorqueConverterActive { get; internal set; } // TODO mk-2016-05-09: Refactor TorqueConverterActive Flag when implementing Torque Converter
 
 		// public double AverageEfficiency { get; internal set; }
 	}
