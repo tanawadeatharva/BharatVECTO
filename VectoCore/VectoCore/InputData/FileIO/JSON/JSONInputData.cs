@@ -265,6 +265,7 @@ namespace TUGraz.VectoCore.InputData.FileIO.JSON
 
 		public virtual IVehicleEngineeringInputData VehicleInputData
 		{
+			[System.Diagnostics.CodeAnalysis.SuppressMessage("Microsoft.Design", "CA1065:DoNotRaiseExceptionsInUnexpectedLocations")]
 			get
 			{
 				if (VehicleData == null) {
@@ -276,6 +277,7 @@ namespace TUGraz.VectoCore.InputData.FileIO.JSON
 
 		public virtual IGearboxEngineeringInputData GearboxInputData
 		{
+			[System.Diagnostics.CodeAnalysis.SuppressMessage("Microsoft.Design", "CA1065:DoNotRaiseExceptionsInUnexpectedLocations")]
 			get
 			{
 				if (Gearbox == null) {
@@ -287,6 +289,7 @@ namespace TUGraz.VectoCore.InputData.FileIO.JSON
 
 		public virtual IAxleGearInputData AxleGearInputData
 		{
+			[System.Diagnostics.CodeAnalysis.SuppressMessage("Microsoft.Design", "CA1065:DoNotRaiseExceptionsInUnexpectedLocations")]
 			get
 			{
 				if (AxleGear == null) {
@@ -303,6 +306,7 @@ namespace TUGraz.VectoCore.InputData.FileIO.JSON
 
 		public virtual IEngineEngineeringInputData EngineInputData
 		{
+			[System.Diagnostics.CodeAnalysis.SuppressMessage("Microsoft.Design", "CA1065:DoNotRaiseExceptionsInUnexpectedLocations")]
 			get
 			{
 				if (Engine == null) {
@@ -329,6 +333,7 @@ namespace TUGraz.VectoCore.InputData.FileIO.JSON
 
 		public virtual IRetarderInputData RetarderInputData
 		{
+			[System.Diagnostics.CodeAnalysis.SuppressMessage("Microsoft.Design", "CA1065:DoNotRaiseExceptionsInUnexpectedLocations")]
 			get
 			{
 				if (Retarder == null) {
@@ -354,6 +359,7 @@ namespace TUGraz.VectoCore.InputData.FileIO.JSON
 
 		public virtual IList<ICycleData> Cycles
 		{
+			[System.Diagnostics.CodeAnalysis.SuppressMessage("Microsoft.Design", "CA1065:DoNotRaiseExceptionsInUnexpectedLocations")]
 			get
 			{
 				var retVal = new List<ICycleData>();
@@ -461,6 +467,7 @@ namespace TUGraz.VectoCore.InputData.FileIO.JSON
 
 		public virtual DataTable AccelerationCurve
 		{
+			[System.Diagnostics.CodeAnalysis.SuppressMessage("Microsoft.Design", "CA1065:DoNotRaiseExceptionsInUnexpectedLocations")]
 			get
 			{
 				var acceleration = Body[JsonKeys.DriverData_AccelerationCurve];

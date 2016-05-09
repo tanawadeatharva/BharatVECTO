@@ -32,7 +32,6 @@
 using System;
 using System.Collections.Generic;
 using System.Collections.ObjectModel;
-using System.Diagnostics;
 using System.Linq;
 using TUGraz.VectoCommon.Exceptions;
 using TUGraz.VectoCommon.Models;
@@ -75,6 +74,7 @@ namespace TUGraz.VectoCore.Models.Simulation.Impl
 
 		public uint Gear
 		{
+			[System.Diagnostics.CodeAnalysis.SuppressMessage("Microsoft.Design", "CA1065:DoNotRaiseExceptionsInUnexpectedLocations")]
 			get
 			{
 				if (Gearbox == null) {
@@ -84,9 +84,9 @@ namespace TUGraz.VectoCore.Models.Simulation.Impl
 			}
 		}
 
-		[DebuggerHidden]
 		public MeterPerSecond StartSpeed
 		{
+			[System.Diagnostics.CodeAnalysis.SuppressMessage("Microsoft.Design", "CA1065:DoNotRaiseExceptionsInUnexpectedLocations")]
 			get
 			{
 				if (Gearbox == null) {
@@ -96,9 +96,9 @@ namespace TUGraz.VectoCore.Models.Simulation.Impl
 			}
 		}
 
-		[DebuggerHidden]
 		public MeterPerSquareSecond StartAcceleration
 		{
+			[System.Diagnostics.CodeAnalysis.SuppressMessage("Microsoft.Design", "CA1065:DoNotRaiseExceptionsInUnexpectedLocations")]
 			get
 			{
 				if (Gearbox == null) {
@@ -119,6 +119,7 @@ namespace TUGraz.VectoCore.Models.Simulation.Impl
 
 		public PerSecond EngineSpeed
 		{
+			[System.Diagnostics.CodeAnalysis.SuppressMessage("Microsoft.Design", "CA1065:DoNotRaiseExceptionsInUnexpectedLocations")]
 			get
 			{
 				if (Engine == null) {

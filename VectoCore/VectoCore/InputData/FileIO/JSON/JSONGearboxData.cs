@@ -75,6 +75,7 @@ namespace TUGraz.VectoCore.InputData.FileIO.JSON
 
 		public virtual double Ratio
 		{
+			[System.Diagnostics.CodeAnalysis.SuppressMessage("Microsoft.Design", "CA1065:DoNotRaiseExceptionsInUnexpectedLocations")]
 			get
 			{
 				var gears = Body.GetEx(JsonKeys.Gearbox_Gears);
@@ -87,6 +88,7 @@ namespace TUGraz.VectoCore.InputData.FileIO.JSON
 
 		public DataTable LossMap
 		{
+			[System.Diagnostics.CodeAnalysis.SuppressMessage("Microsoft.Design", "CA1065:DoNotRaiseExceptionsInUnexpectedLocations")]
 			get
 			{
 				var gears = Body.GetEx(JsonKeys.Gearbox_Gears);
