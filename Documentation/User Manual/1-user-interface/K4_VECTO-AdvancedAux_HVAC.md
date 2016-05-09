@@ -202,7 +202,9 @@ The following table provides a summary of the default values that are populated 
 
 **Notes: **
 
-* Default parameter values for Technology List from ACEA TF5 proposal
+ \* Default parameter values for Technology List from ACEA TF5 proposal
+
+![](pics/TechnologyListDefaults.jpg)
 
 ** Tinted Window: G-Factor/g-value (= "solar factor" = "total solar energy transmittance")   according ISO 9050. ISO 9050 defines wind speed at the outside surface of 14 km/h.
 

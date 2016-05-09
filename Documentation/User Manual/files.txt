@@ -49,6 +49,11 @@
 5-input-and-output-files/VTLM.md
 5-input-and-output-files/VTCC.md
 5-input-and-output-files/VAUX.md
+5-input-and-output-files/AAUX.md
+5-input-and-output-files/AALT.md
+5-input-and-output-files/ACMP.md
+5-input-and-output-files/APAC.md
+5-input-and-output-files/AENV.md
 5-input-and-output-files/VDRI.md
 5-input-and-output-files/VACC.md
 5-input-and-output-files/VMOD.md
