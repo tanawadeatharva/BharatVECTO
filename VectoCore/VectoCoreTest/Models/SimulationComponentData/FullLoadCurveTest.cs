@@ -179,7 +179,7 @@ namespace TUGraz.VectoCore.Tests.Models.SimulationComponentData
 			target.Parameters.Add(new MethodCallParameter("${message}"));
 			SimpleConfigurator.ConfigureForTargetLogging(target, LogLevel.Debug);
 			EngineFullLoadCurve.ReadFromFile(@"TestData\Components\FullLoadCurve wrong header.vfld");
-			Assert.IsTrue(LogList.Contains(@"FullLoadCurve: Header Line is not valid. Expected: 'engine speed, full load torque, motoring torque', Got: 'n, Mfull, Mdrag, PT1'. Falling back to column index."));
+			Assert.IsTrue(LogList.Contains("FullLoadCurve: Header Line is not valid. Expected: \'engine speed, full load torque, motoring torque\', Got: \'n, Mfull, Mdrag, PT1\'. Falling back to column index."));
 			LogList.Clear();
 		}
 

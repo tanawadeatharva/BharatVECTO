@@ -58,13 +58,14 @@ namespace TUGraz.VectoCore.Tests.Models.SimulationComponentData
 		[TestMethod]
 		public void TestGearboxDataReadTest()
 		{
+			var axleData = MockSimulationDataFactory.CreateAxleGearDataFromFile(GearboxFile);
+			Assert.AreEqual(3.240355, axleData.AxleGear.Ratio, 0.0001);
+			
 			var gbxData = MockSimulationDataFactory.CreateGearboxDataFromFile(GearboxFile, EngineFile, false);
-
 			Assert.AreEqual(GearboxType.AMT, gbxData.Type);
 			Assert.AreEqual(1.0, gbxData.TractionInterruption.Value(), 0.0001);
 			Assert.AreEqual(8, gbxData.Gears.Count);
-
-			// Todo: Assert.AreEqual(3.240355, gbxData.AxleGearData.Ratio, 0.0001);
+			
 			Assert.AreEqual(1.0, gbxData.Gears[7].Ratio, 0.0001);
 
 			Assert.AreEqual(-400, gbxData.Gears[1].ShiftPolygon.Downshift[0].Torque.Value(), 0.0001);
