@@ -32,5 +32,14 @@ $(function(){
     });
 
 
+/* hide some items from TOC */
+
+$("#TOC li a[href='#electrical-auxiliaries-editor']").parent().hide()
+$("#TOC li a[href='#combined-alternator-map-file-.aalt']").parent().hide()
+$("#TOC li a[href='#pneumatic-auxiliaries-editor']").parent().hide()
+$("#TOC li a[href='#hvac-auxiliaries-editor']").parent().hide()
+/*-------------------------*/
+
+    $("td[align=left").filter(function() {return $(this).text().indexOf("Locked default")===0 || $(this).text().indexOf("Locked Calc") === 0; }).addClass("aaux_locked")
 });
 </script>

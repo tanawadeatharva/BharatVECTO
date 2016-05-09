@@ -129,3 +129,9 @@ pre {
   padding: 2px;
   border: 1px solid #EEEEEE;
 }
+
+
+.aaux_locked { 
+  background: gray;
+  color: white;
+ }
