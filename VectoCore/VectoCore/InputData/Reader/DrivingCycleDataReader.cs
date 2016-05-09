@@ -271,7 +271,6 @@ namespace TUGraz.VectoCore.InputData.Reader
 			return true;
 		}
 
-		// todo MK-2016-01-19: move fields to resource file
 		private static class Fields
 		{
 			public const string PWheel = "Pwheel";

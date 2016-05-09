@@ -197,7 +197,6 @@ namespace TUGraz.VectoCore.Tests.Models.SimulationComponent
 				modalData[ModalResultField.time] = t;
 				modalData[ModalResultField.simulationInterval] = dt;
 				engine.CommitSimulationStep(modalData);
-				// todo: compare results...
 				Assert.AreEqual(expectedResults.Rows[i].ParseDouble(0), t.Value(), 0.001, "Time");
 				Assert.AreEqual(expectedResults.Rows[i].ParseDouble(1), ((SI)modalData[ModalResultField.P_eng_full]).Value(), 0.1,
 					string.Format("Load in timestep {0}", t));
@@ -248,7 +247,6 @@ namespace TUGraz.VectoCore.Tests.Models.SimulationComponent
 				modalData[ModalResultField.time] = t;
 				modalData[ModalResultField.simulationInterval] = dt;
 				engine.CommitSimulationStep(modalData);
-				// todo: compare results...
 				Assert.AreEqual(expectedResults.Rows[i].ParseDouble(0), t.Value(), 0.001, "Time");
 				Assert.AreEqual(expectedResults.Rows[i].ParseDouble(1), ((SI)modalData[ModalResultField.P_eng_full]).Value(), 0.1,
 					string.Format("Load in timestep {0}", t));
