@@ -44,7 +44,7 @@
     <DebugSymbols>true</DebugSymbols>
     <DebugType>full</DebugType>
     <DefineDebug>true</DefineDebug>
-    <DefineTrace>true</DefineTrace>
+    <DefineTrace>false</DefineTrace>
     <OutputPath>bin\Debug\</OutputPath>
     <DocumentationFile>VECTO.xml</DocumentationFile>
     <NoWarn>41999,42016,42017,42018,42019,42032,42036</NoWarn>
@@ -56,8 +56,8 @@
   <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Release|AnyCPU' ">
     <DebugType>None</DebugType>
     <DefineDebug>false</DefineDebug>
-    <DefineTrace>true</DefineTrace>
-    <Optimize>false</Optimize>
+    <DefineTrace>false</DefineTrace>
+    <Optimize>true</Optimize>
     <OutputPath>bin\Release\</OutputPath>
     <DocumentationFile>VECTO.xml</DocumentationFile>
     <NoWarn>41999,42016,42017,42018,42019,42032,42036</NoWarn>

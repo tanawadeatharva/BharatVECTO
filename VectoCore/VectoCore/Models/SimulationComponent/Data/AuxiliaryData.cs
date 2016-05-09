@@ -29,6 +29,7 @@
 *   Martin Rexeis, rexeis@ivt.tugraz.at, IVT, Graz University of Technology
 */
 
+using System;
 using System.Collections.Generic;
 using System.ComponentModel.DataAnnotations;
 using System.Data;
@@ -44,7 +45,7 @@ using TUGraz.VectoCore.Utils;
 namespace TUGraz.VectoCore.Models.SimulationComponent.Data
 {
 	[CustomValidation(typeof(AuxiliaryData), "ValidateAuxMap")]
-	public class AuxiliaryData
+	public sealed class AuxiliaryData: IDisposable
 	{
 		[Required, Range(double.Epsilon, 1)]
 		public double EfficiencyToSupply { get; set; }
@@ -191,6 +192,11 @@ namespace TUGraz.VectoCore.Models.SimulationComponent.Data
 				}
 			}
 			return ValidationResult.Success;
+		}
+
+		public void Dispose()
+		{
+			_map.Dispose();
 		}
 	}
 

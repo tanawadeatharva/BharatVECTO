@@ -36,19 +36,18 @@ using TUGraz.VectoCore.Utils;
 
 namespace TUGraz.VectoCore.Models.Declaration
 {
-	public class TorqueConverter : LookupData<double, TorqueConverter.TorqueConverterEntry>
+	public sealed class TorqueConverter : LookupData<double, TorqueConverter.TorqueConverterEntry>
 	{
-		protected const string ResourceId = "TUGraz.VectoCore.Resources.Declaration.DefaultTC.vtcc";
-
-
+		private const string ResourceId = "TUGraz.VectoCore.Resources.Declaration.DefaultTC.vtcc";
+		
 		public TorqueConverter()
 		{
 			ParseData(ReadCsvResource(ResourceId));
 		}
 
 
-		[Obsolete("Default Lookup not availabel. Use LookupMu or LookupTorque instead.", true)]
-		protected new TorqueConverterEntry Lookup(double key)
+		[Obsolete("Default Lookup not available. Use LookupMu or LookupTorque instead.", true)]
+		private new TorqueConverterEntry Lookup(double key)
 		{
 			throw new InvalidOperationException(
 				"Default Lookup not available. Use TorqueConverter.LookupMu() or TorqueConverter.LookupTorque() instead.");

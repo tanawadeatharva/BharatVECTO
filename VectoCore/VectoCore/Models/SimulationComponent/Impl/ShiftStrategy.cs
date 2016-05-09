@@ -122,8 +122,6 @@ namespace TUGraz.VectoCore.Models.SimulationComponent.Impl
 		public AMTShiftStrategy(GearboxData data, IDataBus dataBus) : base(data, dataBus)
 		{
 			PreviousGear = 1;
-
-			// todo: move to settings
 			Data.EarlyShiftUp = true;
 			Data.SkipGears = true;
 		}
@@ -324,62 +322,6 @@ namespace TUGraz.VectoCore.Models.SimulationComponent.Impl
 		{
 			Data.EarlyShiftUp = false;
 			Data.SkipGears = true;
-		}
-	}
-
-	// TODO Implement ATShiftStrategy
-	public class ATShiftStrategy : ShiftStrategy
-	{
-		public ATShiftStrategy(GearboxData data, IDataBus bus) : base(data, bus) {}
-
-		public override uint Engage(Second absTime, Second dt, NewtonMeter outTorque, PerSecond outEngineSpeed)
-		{
-			throw new NotImplementedException();
-		}
-
-		public override void Disengage(Second absTime, Second dt, NewtonMeter outTorque, PerSecond outEngineSpeed)
-		{
-			throw new NotImplementedException();
-		}
-
-		public override bool ShiftRequired(Second absTime, Second dt, NewtonMeter outTorque, PerSecond outAngularVelocity,
-			NewtonMeter inTorque,
-			PerSecond inAngularSpeed, uint gear, Second lastShiftTime)
-		{
-			throw new NotImplementedException();
-		}
-
-		public override uint InitGear(Second absTime, Second dt, NewtonMeter outTorque, PerSecond outEngineSpeed)
-		{
-			throw new NotImplementedException();
-		}
-	}
-
-	// TODO Implement CustomShiftStrategy
-	public class CustomShiftStrategy : ShiftStrategy
-	{
-		public CustomShiftStrategy(GearboxData data, IDataBus dataBus) : base(data, dataBus) {}
-
-		public override bool ShiftRequired(Second absTime, Second dt, NewtonMeter outTorque, PerSecond outAngularVelocity,
-			NewtonMeter inTorque,
-			PerSecond inAngularSpeed, uint gear, Second lastShiftTime)
-		{
-			throw new NotImplementedException();
-		}
-
-		public override uint InitGear(Second absTime, Second dt, NewtonMeter outTorque, PerSecond outEngineSpeed)
-		{
-			throw new NotImplementedException();
-		}
-
-		public override uint Engage(Second absTime, Second dt, NewtonMeter outTorque, PerSecond outEngineSpeed)
-		{
-			throw new NotImplementedException();
-		}
-
-		public override void Disengage(Second absTime, Second dt, NewtonMeter outTorque, PerSecond outEngineSpeed)
-		{
-			throw new NotImplementedException();
 		}
 	}
 }

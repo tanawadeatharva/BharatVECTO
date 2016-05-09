@@ -152,33 +152,6 @@ namespace TUGraz.VectoCore.Tests.Models.Simulation
 		}
 
 		[TestMethod]
-		public void Test_TimeBased_FirstCycle()
-		{
-			var container = new VehicleContainer(ExecutionMode.Engineering);
-
-			var cycleData = DrivingCycleDataReader.ReadFromFile(@"TestData\Cycles\Coach First Cycle only.vdri",
-				CycleType.MeasuredSpeed, false);
-			var cycle = new TimeBasedDrivingCycle(container, cycleData);
-
-			var outPort = new MockDrivingCycleOutPort();
-
-			var inPort = cycle.InPort();
-			var cycleOut = cycle.OutPort();
-
-			inPort.Connect(outPort);
-
-			var absTime = 0.SI<Second>();
-			var dt = 1.SI<Second>();
-
-			var response = cycleOut.Request(absTime, dt);
-			Assert.IsInstanceOfType(response, typeof(ResponseSuccess));
-
-			Assert.AreEqual(absTime, outPort.AbsTime);
-			Assert.AreEqual(0.SI<MeterPerSecond>(), outPort.Velocity);
-			AssertHelper.AreRelativeEqual(-0.000202379727237.SI<Radian>(), outPort.Gradient);
-		}
-
-		[TestMethod]
 		public void DrivingCycle_AutoDetect()
 		{
 			// declaration mode - distance based

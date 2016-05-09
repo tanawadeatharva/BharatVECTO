@@ -37,15 +37,13 @@ using System.IO;
 using System.Linq;
 using System.Threading;
 using System.Windows.Forms.DataVisualization.Charting;
-using Newtonsoft.Json;
 using TUGraz.VectoCommon.Exceptions;
 using TUGraz.VectoCommon.Models;
 using TUGraz.VectoCommon.Utils;
 
 namespace TUGraz.VectoCore.Utils
 {
-	[JsonObject(MemberSerialization.Fields)]
-	public class DelaunayMap : LoggingObject
+	public sealed class DelaunayMap : LoggingObject, IDisposable
 	{
 		internal readonly ICollection<Point> Points = new HashSet<Point>();
 		private List<Triangle> _triangles = new List<Triangle>();
@@ -98,11 +96,6 @@ namespace TUGraz.VectoCore.Utils
 
 			var points = Points.ToArray();
 
-			var xmin = points.Min(p => p.X);
-			var xmax = points.Max(p => p.X);
-			var ymin = points.Min(p => p.Y);
-			var ymax = points.Max(p => p.Y);
-
 			// iteratively add each point into the correct triangle and split up the triangle
 			foreach (var point in points) {
 				// If the vertex lies inside the circumcircle of a triangle, the edges of this triangle are 
@@ -133,7 +126,7 @@ namespace TUGraz.VectoCore.Utils
 				}
 			}
 
-			//DrawGraph(pointCount, triangles, superTriangle, xmin, xmax, ymin, ymax);
+			DrawGraph(pointCount, triangles, superTriangle, points);
 
 			_convexHull = triangles.FindAll(t => t.SharesVertexWith(superTriangle)).
 				SelectMany(t => t.GetEdges()).
@@ -160,9 +153,13 @@ namespace TUGraz.VectoCore.Utils
 		/// Draws the delaunay map (except supertriangle).
 		/// </summary>
 		[Conditional("TRACE")]
-		private static void DrawGraph(int i, List<Triangle> triangles, Triangle superTriangle, double xmin, double xmax, double ymin,
-			double ymax, Point lastPoint = null)
+		private static void DrawGraph(int i, List<Triangle> triangles, Triangle superTriangle, Point[] points, Point lastPoint = null)
 		{
+			var xmin = points.Min(p => p.X);
+			var xmax = points.Max(p => p.X);
+			var ymin = points.Min(p => p.Y);
+			var ymax = points.Max(p => p.Y);
+			
 			using (var chart = new Chart { Width = 1000, Height = 1000 }) {
 				chart.ChartAreas.Add(new ChartArea("main") {
 					AxisX = new Axis { Minimum = Math.Min(xmin, xmin), Maximum = Math.Max(xmax, xmax) },
@@ -198,6 +195,7 @@ namespace TUGraz.VectoCore.Utils
 
 				var frame = new StackFrame(2);
 				var method = frame.GetMethod();
+				System.Diagnostics.Debug.Assert(method.DeclaringType != null, "method.DeclaringType != null");
 				var type = string.Join("", method.DeclaringType.Name.Split(Path.GetInvalidFileNameChars()));
 				var methodName = string.Join("", method.Name.Split(Path.GetInvalidFileNameChars()));
 				Directory.CreateDirectory("delaunay");
@@ -269,19 +267,19 @@ namespace TUGraz.VectoCore.Utils
 			}
 
 			// 2d vector of the edge:  A--->B
-			var AB = new Point(edge.Vector.X, edge.Vector.Y);
+			var ab = new Point(edge.Vector.X, edge.Vector.Y);
 
 			// 2d vector of the point: A---->P
-			var AP = new Point(x - edge.P1.X, y - edge.P1.Y);
+			var ap = new Point(x - edge.P1.X, y - edge.P1.Y);
 
 			// projection of point (x,y) onto the edge
-			var z = edge.P1.Z + edge.Vector.Z * (AP.Dot(AB) / AB.Dot(AB));
+			var z = edge.P1.Z + edge.Vector.Z * (ap.Dot(ab) / ab.Dot(ab));
 			return z;
 		}
 
 		#region Equality members
 
-		protected bool Equals(DelaunayMap other)
+		private bool Equals(DelaunayMap other)
 		{
 			return Points.SequenceEqual(other.Points) && _triangles.SequenceEqual(other._triangles);
 		}
@@ -306,6 +304,11 @@ namespace TUGraz.VectoCore.Utils
 				return ((Points != null ? Points.GetHashCode() : 0) * 397) ^
 						(_triangles != null ? _triangles.GetHashCode() : 0);
 			}
+		}
+
+		public void Dispose()
+		{
+			_extrapolated.Dispose();
 		}
 
 		#endregion

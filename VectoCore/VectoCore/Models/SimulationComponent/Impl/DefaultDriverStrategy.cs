@@ -541,7 +541,7 @@ namespace TUGraz.VectoCore.Models.SimulationComponent.Impl
 						Case<ResponseDrivingCycleDistanceExceeded>(r => {
 							if (!ds.IsEqual(r.MaxDistance)) {
 								// distance has been reduced due to vehicle stop in coast/roll action => use brake action to get exactly to the stop-distance
-								// TODO: what if no gear is enaged (and we need driveline power to get to the stop-distance?
+								// TODO what if no gear is enaged (and we need driveline power to get to the stop-distance?
 								response = Driver.DrivingActionBrake(absTime, ds, DriverStrategy.BrakeTrigger.NextTargetSpeed, gradient);
 							}
 						}).

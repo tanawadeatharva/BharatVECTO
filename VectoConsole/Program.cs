@@ -140,9 +140,6 @@ Examples:
 				}
 				LogManager.Configuration = config;
 
-				// todo mk 2016-03-02: trace listener still needed?
-				Trace.Listeners.Add(new ConsoleTraceListener(true));
-
 				if (args.Contains("-V") || debugEnabled) {
 					ShowVersionInformation();
 				}

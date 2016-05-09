@@ -31,6 +31,7 @@
 
 using System;
 using System.IO;
+using System.Runtime.Serialization;
 using TUGraz.VectoCommon.Models;
 
 namespace TUGraz.VectoCommon.Exceptions
@@ -38,8 +39,11 @@ namespace TUGraz.VectoCommon.Exceptions
 	/// <summary>
 	/// Base Exception for all Exception in VECTO.
 	/// </summary>
+	[Serializable]
 	public class VectoException : Exception
 	{
+		protected VectoException(SerializationInfo info, StreamingContext context) : base(info, context) {}
+
 		public VectoException(string message) : base(message)
 		{
 			LogManager.Flush();
@@ -66,6 +70,7 @@ namespace TUGraz.VectoCommon.Exceptions
 	/// <summary>
 	/// Exception when an Input/Output related error occured.
 	/// </summary>
+	[Serializable]
 	public abstract class FileIOException : VectoException
 	{
 		protected FileIOException(string message) : base(message) {}
@@ -75,6 +80,7 @@ namespace TUGraz.VectoCommon.Exceptions
 	/// <summary>
 	/// Exception when the file format is invalid or a file was not found.
 	/// </summary>
+	[Serializable]
 	public class InvalidFileFormatException : FileIOException
 	{
 		public InvalidFileFormatException(string message) : base(message) {}
@@ -85,6 +91,7 @@ namespace TUGraz.VectoCommon.Exceptions
 	/// <summary>
 	/// Exception which gets thrown when the version of a file is not supported.
 	/// </summary>
+	[Serializable]
 	public class UnsupportedFileVersionException : FileIOException
 	{
 		public UnsupportedFileVersionException(string message) : base(message) {}
@@ -98,6 +105,7 @@ namespace TUGraz.VectoCommon.Exceptions
 	/// <summary>
 	/// Exception which gets thrown when an error occurred during read of a vecto csv-file.
 	/// </summary>
+	[Serializable]
 	public class CSVReadException : FileIOException
 	{
 		public CSVReadException(string message) : base(message) {}

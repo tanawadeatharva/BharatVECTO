@@ -92,9 +92,10 @@ namespace TUGraz.VectoCore.InputData.Impl
 
 	public class AxleInputData : IAxleEngineeringInputData
 	{
+		[System.Diagnostics.CodeAnalysis.SuppressMessage("Microsoft.Design", "CA1065:DoNotRaiseExceptionsInUnexpectedLocations")]
 		public bool SavedInDeclarationMode
 		{
-			get { throw new System.NotImplementedException(); }
+			get {throw new System.NotImplementedException(); }
 		}
 
 		public string Vendor { get; internal set; }
