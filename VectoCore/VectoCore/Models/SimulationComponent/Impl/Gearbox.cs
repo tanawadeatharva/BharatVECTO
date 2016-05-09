@@ -393,7 +393,7 @@ namespace TUGraz.VectoCore.Models.SimulationComponent.Impl
 
 		#region ITnInPort
 
-		void ITnInPort.Connect(ITnOutPort other)
+		public void Connect(ITnOutPort other)
 		{
 			NextComponent = other;
 		}

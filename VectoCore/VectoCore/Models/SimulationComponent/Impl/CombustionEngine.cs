@@ -92,7 +92,7 @@ namespace TUGraz.VectoCore.Models.SimulationComponent.Impl
 
 		#region IEngineCockpit
 
-		PerSecond IEngineInfo.EngineSpeed
+		public PerSecond EngineSpeed
 		{
 			get { return PreviousState.EngineSpeed; }
 		}
@@ -142,7 +142,7 @@ namespace TUGraz.VectoCore.Models.SimulationComponent.Impl
 
 		#region ITnOutPort
 
-		IResponse ITnOutPort.Request(Second absTime, Second dt, NewtonMeter torque, PerSecond angularVelocity, bool dryRun)
+		public IResponse Request(Second absTime, Second dt, NewtonMeter torque, PerSecond angularVelocity, bool dryRun)
 		{
 			IterationStatistics.Increment(this, "Requests");
 
