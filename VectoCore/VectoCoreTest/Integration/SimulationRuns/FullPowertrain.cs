@@ -304,7 +304,7 @@ namespace TUGraz.VectoCore.Tests.Integration.SimulationRuns
 				Gears = ratios.Select((ratio, i) =>
 					Tuple.Create((uint)i,
 						new GearData {
-							// TODO mk-2016-05-09: add realistic FullLoadCurve for gearbox
+							// TODO mk-2016-05-09: add realistic FullLoadCurve for gearbox - gearbox will have only 1 constant value as full load
 							FullLoadCurve = FullLoadCurveReader.ReadFromFile(GearboxFullLoadCurveFile),
 							LossMap = TransmissionLossMap.ReadFromFile(GearboxLossMap, ratio, string.Format("Gear {0}", i)),
 							Ratio = ratio,
