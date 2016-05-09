@@ -182,7 +182,7 @@ namespace TUGraz.VectoCore.Models.SimulationComponent.Impl
 
 		#region ITnInPort
 
-		void ITnInPort.Connect(ITnOutPort other)
+		public void Connect(ITnOutPort other)
 		{
 			NextComponent = other;
 		}
@@ -479,7 +479,7 @@ namespace TUGraz.VectoCore.Models.SimulationComponent.Impl
 
 		#region IDriverDemandInPort
 
-		void IDriverDemandInPort.Connect(IDriverDemandOutPort other)
+		public void Connect(IDriverDemandOutPort other)
 		{
 			NextComponent = other;
 		}

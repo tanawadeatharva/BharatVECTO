@@ -271,7 +271,6 @@ namespace TUGraz.VectoCore.InputData.Reader
 			return true;
 		}
 
-		// todo MK-2016-01-19: move fields to resource file
 		private static class Fields
 		{
 			public const string PWheel = "Pwheel";
@@ -539,7 +538,6 @@ namespace TUGraz.VectoCore.InputData.Reader
 
 			public static bool ValidateHeader(string[] header, bool throwExceptions = true)
 			{
-				//todo mk-2016-02-15: check if vair_res, and vair_beta only when needed
 				var allowedCols = new[] {
 					Fields.Time,
 					Fields.VehicleSpeed,
@@ -587,7 +585,6 @@ namespace TUGraz.VectoCore.InputData.Reader
 
 			public static bool ValidateHeader(string[] header, bool throwExceptions = true)
 			{
-				//todo mk-2016-02-15: check if vair_res, and vair_beta only when needed
 				var allowedCols = new[] {
 					Fields.Time,
 					Fields.VehicleSpeed,

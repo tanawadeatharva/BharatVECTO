@@ -233,7 +233,7 @@ namespace TUGraz.VectoCore.OutputData
 
 		public static WattSecond WorkTorqueConverter(this IModalDataContainer data)
 		{
-			//TODO (MK, 2015-11-10): return torque converter work - this was currently not possible because torque converter is not implemented.
+			//TODO mk-2015-11-10: return torque converter work when TorqueConverter is implemented
 			return 0.SI<WattSecond>();
 		}
 

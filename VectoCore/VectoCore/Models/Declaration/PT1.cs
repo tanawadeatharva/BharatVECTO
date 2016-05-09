@@ -38,12 +38,11 @@ using TUGraz.VectoCore.Utils;
 
 namespace TUGraz.VectoCore.Models.Declaration
 {
-	public class PT1 : LookupData<PerSecond, Second>
+	public sealed class PT1 : LookupData<PerSecond, Second>
 	{
+		private const string ResourceId = "TUGraz.VectoCore.Resources.Declaration.PT1.csv";
 		private List<KeyValuePair<PerSecond, Second>> _entries;
-
-		protected const string ResourceId = "TUGraz.VectoCore.Resources.Declaration.PT1.csv";
-
+		
 		public PT1()
 		{
 			ParseData(ReadCsvResource(ResourceId));

@@ -29,6 +29,7 @@
 *   Martin Rexeis, rexeis@ivt.tugraz.at, IVT, Graz University of Technology
 */
 
+using System;
 using System.Data;
 using System.Linq;
 using System.Runtime.CompilerServices;
@@ -42,7 +43,7 @@ namespace TUGraz.VectoCore.OutputData
 	/// <summary>
 	/// Class for the sum file in vecto.
 	/// </summary>
-	public class SummaryDataContainer : LoggingObject
+	public class SummaryDataContainer : LoggingObject, IDisposable
 	{
 		// ReSharper disable InconsistentNaming
 		private const string JOB = "Job [-]";
@@ -253,6 +254,18 @@ namespace TUGraz.VectoCore.OutputData
 		private static string ReplaceNotAllowedCharacters(string text)
 		{
 			return text.Replace('#', '_').Replace(',', '_').Replace('\n', '_').Replace('\r', '_');
+		}
+
+		public void Dispose()
+		{
+			Dispose(true);
+			GC.SuppressFinalize(this);
+		}
+
+		protected virtual void Dispose(bool disposing)
+		{
+			if (disposing)
+				_table.Dispose();
 		}
 	}
 }

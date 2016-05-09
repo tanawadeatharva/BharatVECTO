@@ -223,7 +223,7 @@ namespace TUGraz.VectoCore.Models.SimulationComponent.Impl
 			}
 			
 			IResponse retVal;
-			// TODO: MQ 2016/03/10: investigate further the effects of having the condition angularvelocity != 0
+			// TODO MQ 2016/03/10: investigate further the effects of having the condition angularvelocity != 0
 			if (ClutchClosed(absTime) /* && !angularVelocity.IsEqual(0) */) {
 				retVal = RequestGearEngaged(absTime, dt, torque, angularVelocity, dryRun);
 			} else {
@@ -393,7 +393,7 @@ namespace TUGraz.VectoCore.Models.SimulationComponent.Impl
 
 		#region ITnInPort
 
-		void ITnInPort.Connect(ITnOutPort other)
+		public void Connect(ITnOutPort other)
 		{
 			NextComponent = other;
 		}

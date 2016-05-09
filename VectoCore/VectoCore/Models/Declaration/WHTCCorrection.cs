@@ -38,13 +38,12 @@ using TUGraz.VectoCore.Utils;
 
 namespace TUGraz.VectoCore.Models.Declaration
 {
-	public class WHTCCorrection : LookupData<MissionType, double, double, double, double>
+	public sealed class WHTCCorrection : LookupData<MissionType, double, double, double, double>
 	{
+		private const string ResourceId = "TUGraz.VectoCore.Resources.Declaration.WHTC-Weighting-Factors.csv";
 		private readonly Dictionary<MissionType, WHTCCorrectionEntry> _data =
 			new Dictionary<MissionType, WHTCCorrectionEntry>();
-
-		protected const string ResourceId = "TUGraz.VectoCore.Resources.Declaration.WHTC-Weighting-Factors.csv";
-
+		
 		public WHTCCorrection()
 		{
 			ParseData(ReadCsvResource(ResourceId));

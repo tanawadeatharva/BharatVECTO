@@ -75,6 +75,7 @@ namespace TUGraz.VectoCore.InputData.FileIO.JSON
 
 		public virtual double Ratio
 		{
+			[System.Diagnostics.CodeAnalysis.SuppressMessage("Microsoft.Design", "CA1065:DoNotRaiseExceptionsInUnexpectedLocations")]
 			get
 			{
 				var gears = Body.GetEx(JsonKeys.Gearbox_Gears);
@@ -87,6 +88,7 @@ namespace TUGraz.VectoCore.InputData.FileIO.JSON
 
 		public DataTable LossMap
 		{
+			[System.Diagnostics.CodeAnalysis.SuppressMessage("Microsoft.Design", "CA1065:DoNotRaiseExceptionsInUnexpectedLocations")]
 			get
 			{
 				var gears = Body.GetEx(JsonKeys.Gearbox_Gears);
@@ -185,7 +187,7 @@ namespace TUGraz.VectoCore.InputData.FileIO.JSON
 
 		public virtual bool Enabled
 		{
-			get { return false; // TODO @@@
+			get { return false; // TODO mk-2016-05-09: JSON ITorqueConverterInputData.Enabled always true --> as soon as TC is implemented, set to correct value!
 			}
 		}
 
