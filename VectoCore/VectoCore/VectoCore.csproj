@@ -240,7 +240,6 @@
     <Compile Include="Models\SimulationComponent\IGearbox.cs" />
     <Compile Include="Models\Connector\Ports\ISimulationPort.cs" />
     <Compile Include="Models\SimulationComponent\Impl\DistanceBasedDrivingCycle.cs" />
-    <Compile Include="Models\SimulationComponent\Impl\TimeBasedDrivingCycle.cs" />
     <Compile Include="Models\SimulationComponent\Impl\CombustionEngine.cs" />
     <Compile Include="Models\SimulationComponent\Impl\Gearbox.cs" />
     <Compile Include="Models\SimulationComponent\Impl\Wheels.cs" />
