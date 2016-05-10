@@ -56,7 +56,8 @@ namespace TUGraz.VectoCore.Models.Simulation.Impl
 
 		private readonly ExecutionMode _mode;
 
-		public SimulatorFactory(ExecutionMode mode, IInputDataProvider dataProvider, IOutputDataWriter writer)
+		public SimulatorFactory(ExecutionMode mode, IInputDataProvider dataProvider, IOutputDataWriter writer,
+			DeclarationReport declarationReport = null)
 		{
 			Log.Fatal("########## VectoCore Version {0} ##########", Assembly.GetExecutingAssembly().GetName().Version);
 			JobNumber = Interlocked.Increment(ref _jobNumberCounter);
@@ -69,7 +70,7 @@ namespace TUGraz.VectoCore.Models.Simulation.Impl
 					if (declDataProvider == null) {
 						throw new VectoException("InputDataProvider does not implement DeclarationData interface");
 					}
-					var report = new PDFDeclarationReport(writer);
+					var report = declarationReport ?? new PDFDeclarationReport(writer);
 					var windowsIdentity = WindowsIdentity.GetCurrent();
 					report.Creator = windowsIdentity != null ? windowsIdentity.Name : "N/A";
 					report.JobName = declDataProvider.JobInputData().JobName;
@@ -147,7 +148,8 @@ namespace TUGraz.VectoCore.Models.Simulation.Impl
 
 				var validationErrors = run.Validate();
 				if (validationErrors.Any()) {
-					throw new VectoException("Validation of Run-Data Failed: " + "\n".Join(validationErrors.Select(r => r.ErrorMessage)));
+					throw new VectoException("Validation of Run-Data Failed: " +
+											"\n".Join(validationErrors.Select(r => r.ErrorMessage)));
 				}
 
 
