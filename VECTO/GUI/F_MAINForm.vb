@@ -85,10 +85,9 @@ Imports TUGraz.VectoCore.Utils
 
 	Private CbDeclLock As Boolean = False
 
-
 #Region "SLEEP Control - Prevent sleep while VECTO is running"
 
-	Private Declare Function SetThreadExecutionState Lib "kernel32"(ByVal esFlags As Long) As Long
+	Private Declare Function SetThreadExecutionState Lib "kernel32" (ByVal esFlags As Long) As Long
 
 	Private Sub AllowSleepOFF()
 #If Not PLATFORM = "x86" Then
@@ -204,13 +203,13 @@ Imports TUGraz.VectoCore.Utils
 
 		'If more than 100 calculations, ask whether to write by-second results
 		If _
-			Cfg.BatchMode And ((Me.LvGEN.CheckedItems.Count)*(Me.LvDRI.CheckedItems.Count) > 100) And
+			Cfg.BatchMode And ((Me.LvGEN.CheckedItems.Count) * (Me.LvDRI.CheckedItems.Count) > 100) And
 			Me.ChBoxModOut.Checked _
 			Then
 			Select Case _
 				MsgBox(
 					"You are about to run Batch Mode with " &
-					(Me.LvGEN.CheckedItems.Count)*(Me.LvDRI.CheckedItems.Count) &
+					(Me.LvGEN.CheckedItems.Count) * (Me.LvDRI.CheckedItems.Count) &
 					" calculations!" & ChrW(10) & "Do you still want to write modal results?", MsgBoxStyle.YesNoCancel)
 				Case MsgBoxResult.No
 					Me.ChBoxModOut.Checked = False
@@ -292,7 +291,7 @@ Imports TUGraz.VectoCore.Utils
 		JobFileList.Clear()
 		CheckedItems.Clear()
 
-		x = - 1
+		x = -1
 		For Each LV0 In Me.LvGEN.CheckedItems
 			x += 1
 			LV0.SubItems(1).Text = ""
@@ -520,9 +519,9 @@ Imports TUGraz.VectoCore.Utils
 		LoadOptions()
 
 		'Resize columns ... after Loading the @file-lists
-		Me.LvGEN.Columns(1).Width = - 2
-		Me.LvDRI.Columns(1).Width = - 2
-		Me.LvMsg.Columns(2).Width = - 2
+		Me.LvGEN.Columns(1).Width = -2
+		Me.LvDRI.Columns(1).Width = -2
+		Me.LvMsg.Columns(2).Width = -2
 
 		'Initialize BackgroundWorker
 		VECTOworker = Me.BackgroundWorker1
@@ -914,7 +913,7 @@ Imports TUGraz.VectoCore.Utils
 
 		lastindx = LvGEN.SelectedIndices(LvGEN.SelectedItems.Count - 1)
 
-		For i = UBound(SelIx) To 0 Step - 1
+		For i = UBound(SelIx) To 0 Step -1
 			LvGEN.Items.RemoveAt(SelIx(i))
 		Next
 
@@ -974,7 +973,7 @@ Imports TUGraz.VectoCore.Utils
 		Dim p As Int16
 		Dim f As Int16
 		Dim fList As String()
-		Dim fListDim As Int16 = - 1
+		Dim fListDim As Int16 = -1
 		Dim ListViewItem0 As ListViewItem
 
 		'If VECTO runs: Cancel operation (because Mode-change during calculation is not very clever)
@@ -1029,7 +1028,7 @@ Imports TUGraz.VectoCore.Utils
 			ListViewItem0.Selected = True
 			Me.LvGEN.Items.Add(ListViewItem0)
 			ListViewItem0.EnsureVisible()
-			lbFound:
+lbFound:
 		Next
 
 		Me.LvGEN.EndUpdate()
@@ -1194,7 +1193,7 @@ Imports TUGraz.VectoCore.Utils
 
 		lastindx = LvDRI.SelectedIndices(LvDRI.SelectedItems.Count - 1)
 
-		For i = UBound(SelIx) To 0 Step - 1
+		For i = UBound(SelIx) To 0 Step -1
 			LvDRI.Items.RemoveAt(SelIx(i))
 		Next
 
@@ -1252,7 +1251,7 @@ Imports TUGraz.VectoCore.Utils
 			ListViewItem0.SubItems.Add(" ")
 			ListViewItem0.Checked = True
 			Me.LvDRI.Items.Add(ListViewItem0)
-			lbFound:
+lbFound:
 		Next
 
 		Me.LvDRI.EndUpdate()
@@ -1628,7 +1627,7 @@ Imports TUGraz.VectoCore.Utils
 
 		'list of finished runs
 		Dim finishedRuns As List(Of Integer) = New List(Of Integer)
-
+		
 		For Each jobFile As String In JobFileList
 			Try
 				sender.ReportProgress(0, New With {.Target = "ListBox", .Message = "Reading File " + jobFile, .Link = jobFile})
@@ -1681,7 +1680,7 @@ Imports TUGraz.VectoCore.Utils
 			finishedRuns.AddRange(justFinished.Select(Function(pair) pair.Key))
 			Thread.Sleep(100)
 		End While
-
+		
 		Dim remainingRuns As Dictionary(Of Integer, JobContainer.ProgressEntry) = jobContainer.GetProgress().Where(Function(proc) proc.Value.Done AndAlso Not finishedRuns.Contains(proc.Key)).ToDictionary(Function(pair) pair.Key, Function(pair) pair.Value)
 		PrintRuns(remainingRuns, fileWriters)
 

@@ -44,6 +44,7 @@ using TUGraz.VectoCore.InputData;
 using TUGraz.VectoCore.InputData.Reader.Impl;
 using TUGraz.VectoCore.Models.SimulationComponent.Data;
 using TUGraz.VectoCore.OutputData;
+using TUGraz.VectoCore.OutputData.FileIO;
 using TUGraz.VectoCore.OutputData.PDF;
 using TUGraz.VectoCore.Utils;
 
@@ -56,19 +57,20 @@ namespace TUGraz.VectoCore.Models.Simulation.Impl
 		private readonly ExecutionMode _mode;
 
 		public SimulatorFactory(ExecutionMode mode, IInputDataProvider dataProvider, IOutputDataWriter writer,
-			DeclarationReport report = null)
+			DeclarationReport declarationReport = null)
 		{
 			Log.Info("########## VectoCore Version {0} ##########", Assembly.GetExecutingAssembly().GetName().Version);
 			JobNumber = Interlocked.Increment(ref _jobNumberCounter);
 			_mode = mode;
 			ModWriter = writer;
+
 			switch (mode) {
 				case ExecutionMode.Declaration:
 					var declDataProvider = dataProvider as IDeclarationInputDataProvider;
 					if (declDataProvider == null) {
 						throw new VectoException("InputDataProvider does not implement DeclarationData interface");
 					}
-					report = report ?? new PDFDeclarationReport(writer);
+					var report = declarationReport ?? new PDFDeclarationReport(writer);
 					var windowsIdentity = WindowsIdentity.GetCurrent();
 					report.Creator = windowsIdentity != null ? windowsIdentity.Name : "N/A";
 					report.JobName = declDataProvider.JobInputData().JobName;

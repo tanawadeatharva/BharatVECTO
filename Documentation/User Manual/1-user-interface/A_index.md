@@ -7,6 +7,7 @@ When VECTO starts the [Main Form](#main-form) is loaded. Closing this form will 
 -   [Settings](#settings)
 -	[Job Editor](#job-editor)
 -   [Aux Dialog](#auxiliary-dialog)
+-   [Advanced Auxiliary Dialog](#advanced-auxiliary-dialog)
 -	[Vehicle Editor](#vehicle-editor)
 -	[Engine Editor](#engine-editor)
 -	[Gearbox Editor](#gearbox-editor)
