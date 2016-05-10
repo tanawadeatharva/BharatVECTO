@@ -58,7 +58,7 @@ namespace TUGraz.VectoCore.Models.Simulation.Impl
 		public SimulatorFactory(ExecutionMode mode, IInputDataProvider dataProvider, IOutputDataWriter writer,
 			DeclarationReport report = null)
 		{
-			Log.Fatal("########## VectoCore Version {0} ##########", Assembly.GetExecutingAssembly().GetName().Version);
+			Log.Info("########## VectoCore Version {0} ##########", Assembly.GetExecutingAssembly().GetName().Version);
 			JobNumber = Interlocked.Increment(ref _jobNumberCounter);
 			_mode = mode;
 			ModWriter = writer;
@@ -98,7 +98,6 @@ namespace TUGraz.VectoCore.Models.Simulation.Impl
 		public SummaryDataContainer SumData { get; set; }
 
 		public IOutputDataWriter ModWriter { get; private set; }
-
 
 		public int JobNumber { get; set; }
 
@@ -146,9 +145,9 @@ namespace TUGraz.VectoCore.Models.Simulation.Impl
 
 				var validationErrors = run.Validate();
 				if (validationErrors.Any()) {
-					throw new VectoException("Validation of Run-Data Failed: " + "\n".Join(validationErrors.Select(r => r.ErrorMessage)));
+					throw new VectoException("Validation of Run-Data Failed: " +
+											"\n".Join(validationErrors.Select(r => r.ErrorMessage)));
 				}
-
 
 				yield return run;
 			}
