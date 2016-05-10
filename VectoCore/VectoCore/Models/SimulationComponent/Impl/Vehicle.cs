@@ -173,6 +173,7 @@ namespace TUGraz.VectoCore.Models.SimulationComponent.Impl
 			container[ModalResultField.P_air] = CurrentState.AirDragResistance * averageVelocity;
 			container[ModalResultField.P_slope] = CurrentState.SlopeResistance * averageVelocity;
 			container[ModalResultField.P_trac] = CurrentState.VehicleTractionForce * averageVelocity;
+
 			// sanity check: is the vehicle in step with the cycle?
 			if (container[ModalResultField.dist] == DBNull.Value) {
 				Log.Warn("Distance field is not set!");
