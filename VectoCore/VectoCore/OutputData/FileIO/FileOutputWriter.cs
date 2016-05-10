@@ -38,6 +38,7 @@ using TUGraz.VectoCore.Utils;
 
 namespace TUGraz.VectoCore.OutputData.FileIO
 {
+
 	public class FileOutputWriter : LoggingObject, IOutputDataWriter
 	{
 		private readonly string _jobFile;

@@ -48,8 +48,8 @@ namespace TUGraz.VectoCore.Models.Simulation.Impl
 {
 	public class VehicleContainer : LoggingObject, IVehicleContainer
 	{
-		internal readonly IList<Tuple<VectoSimulationComponent, int>> Components =
-			new List<Tuple<VectoSimulationComponent, int>>();
+		private List<Tuple<int, VectoSimulationComponent>> _components =
+			new List<Tuple<int, VectoSimulationComponent>>();
 
 		internal IEngineInfo Engine;
 		internal IGearboxInfo Gearbox;
@@ -74,7 +74,8 @@ namespace TUGraz.VectoCore.Models.Simulation.Impl
 
 		public uint Gear
 		{
-			[System.Diagnostics.CodeAnalysis.SuppressMessage("Microsoft.Design", "CA1065:DoNotRaiseExceptionsInUnexpectedLocations")]
+			[System.Diagnostics.CodeAnalysis.SuppressMessage("Microsoft.Design",
+				"CA1065:DoNotRaiseExceptionsInUnexpectedLocations")]
 			get
 			{
 				if (Gearbox == null) {
@@ -86,7 +87,8 @@ namespace TUGraz.VectoCore.Models.Simulation.Impl
 
 		public MeterPerSecond StartSpeed
 		{
-			[System.Diagnostics.CodeAnalysis.SuppressMessage("Microsoft.Design", "CA1065:DoNotRaiseExceptionsInUnexpectedLocations")]
+			[System.Diagnostics.CodeAnalysis.SuppressMessage("Microsoft.Design",
+				"CA1065:DoNotRaiseExceptionsInUnexpectedLocations")]
 			get
 			{
 				if (Gearbox == null) {
@@ -98,7 +100,8 @@ namespace TUGraz.VectoCore.Models.Simulation.Impl
 
 		public MeterPerSquareSecond StartAcceleration
 		{
-			[System.Diagnostics.CodeAnalysis.SuppressMessage("Microsoft.Design", "CA1065:DoNotRaiseExceptionsInUnexpectedLocations")]
+			[System.Diagnostics.CodeAnalysis.SuppressMessage("Microsoft.Design",
+				"CA1065:DoNotRaiseExceptionsInUnexpectedLocations")]
 			get
 			{
 				if (Gearbox == null) {
@@ -119,7 +122,8 @@ namespace TUGraz.VectoCore.Models.Simulation.Impl
 
 		public PerSecond EngineSpeed
 		{
-			[System.Diagnostics.CodeAnalysis.SuppressMessage("Microsoft.Design", "CA1065:DoNotRaiseExceptionsInUnexpectedLocations")]
+			[System.Diagnostics.CodeAnalysis.SuppressMessage("Microsoft.Design",
+				"CA1065:DoNotRaiseExceptionsInUnexpectedLocations")]
 			get
 			{
 				if (Engine == null) {
@@ -220,10 +224,11 @@ namespace TUGraz.VectoCore.Models.Simulation.Impl
 				.If<IClutchInfo>(c => Clutch = c)
 				.If<IDrivingCycleInfo>(c => {
 					DrivingCycle = c;
-					commitPriority = 3;
+					commitPriority = 6;
 				});
 
-			Components.Add(Tuple.Create(component, commitPriority));
+			_components.Add(Tuple.Create(commitPriority, component));
+			_components = _components.OrderBy(x => x.Item1).Reverse().ToList();
 		}
 
 
@@ -232,8 +237,8 @@ namespace TUGraz.VectoCore.Models.Simulation.Impl
 			Log.Info("VehicleContainer committing simulation. time: {0}, dist: {1}, speed: {2}", time,
 				ExecutionMode == ExecutionMode.EngineOnly ? null : Distance, VehicleSpeed);
 
-			foreach (var component in Components.OrderBy(x => x.Item2).Reverse().Select(x => x.Item1)) {
-				component.CommitSimulationStep(ModData);
+			foreach (var component in _components) {
+				component.Item2.CommitSimulationStep(ModData);
 			}
 
 			if (ModData != null) {
@@ -257,7 +262,7 @@ namespace TUGraz.VectoCore.Models.Simulation.Impl
 
 		public IReadOnlyCollection<VectoSimulationComponent> SimulationComponents()
 		{
-			return new ReadOnlyCollection<VectoSimulationComponent>(Components.Select(x => x.Item1).ToList());
+			return new ReadOnlyCollection<VectoSimulationComponent>(_components.Select(x => x.Item2).ToList());
 		}
 
 		public Meter Distance

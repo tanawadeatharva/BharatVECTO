@@ -1,0 +1,90 @@
+﻿{
+  "Header": {
+    "CreatedBy": " ()",
+    "Date": "03.05.2016 17:05:58",
+    "AppVersion": "2.2",
+    "FileVersion": 5
+  },
+  "Body": {
+    "SavedInDeclMode": true,
+    "ModelName": "Decl_8spd",
+    "Inertia": 0.0,
+    "TracInt": 2.0,
+    "Gears": [
+      {
+        "Ratio": 4.3,
+        "LossMap": "Axle.vtlm"
+      },
+      {
+        "Ratio": 9.3,
+        "LossMap": "Indirect Gear.vtlm",
+        "TCactive": false,
+        "ShiftPolygon": "-",
+        "FullLoadCurve": "<NOFILE>"
+      },
+      {
+        "Ratio": 5.84,
+        "LossMap": "Indirect Gear.vtlm",
+        "TCactive": false,
+        "ShiftPolygon": "-",
+        "FullLoadCurve": "<NOFILE>"
+      },
+      {
+        "Ratio": 3.67,
+        "LossMap": "Indirect Gear.vtlm",
+        "TCactive": false,
+        "ShiftPolygon": "-",
+        "FullLoadCurve": "<NOFILE>"
+      },
+      {
+        "Ratio": 2.31,
+        "LossMap": "Indirect Gear.vtlm",
+        "TCactive": false,
+        "ShiftPolygon": "-",
+        "FullLoadCurve": "<NOFILE>"
+      },
+      {
+        "Ratio": 1.59,
+        "LossMap": "Indirect Gear.vtlm",
+        "TCactive": false,
+        "ShiftPolygon": "-",
+        "FullLoadCurve": "<NOFILE>"
+      },
+      {
+        "Ratio": 1.25,
+        "LossMap": "Indirect Gear.vtlm",
+        "TCactive": false,
+        "ShiftPolygon": "-",
+        "FullLoadCurve": "<NOFILE>"
+      },
+      {
+        "Ratio": 1.0,
+        "LossMap": "Direct Gear.vtlm",
+        "TCactive": false,
+        "ShiftPolygon": "-",
+        "FullLoadCurve": "<NOFILE>"
+      },
+      {
+        "Ratio": 0.79,
+        "LossMap": "Indirect Gear.vtlm",
+        "TCactive": false,
+        "ShiftPolygon": "-",
+        "FullLoadCurve": "<NOFILE>"
+      }
+    ],
+    "TqReserve": 20.0,
+    "SkipGears": true,
+    "ShiftTime": 3,
+    "EaryShiftUp": false,
+    "StartTqReserve": 20.0,
+    "StartSpeed": 2.0,
+    "StartAcc": 0.6,
+    "GearboxType": "MT",
+    "TorqueConverter": {
+      "Enabled": false,
+      "File": "<NOFILE>",
+      "RefRPM": 0.0,
+      "Inertia": 0.0
+    }
+  }
+}
