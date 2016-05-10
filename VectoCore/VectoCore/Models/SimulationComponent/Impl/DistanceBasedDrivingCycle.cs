@@ -298,17 +298,6 @@ namespace TUGraz.VectoCore.Models.SimulationComponent.Impl
 
 		protected override void DoWriteModalResults(IModalDataContainer container)
 		{
-			// sanity check: is the vehicle in step with the cycle?
-			if (container[ModalResultField.dist] == DBNull.Value) {
-				Log.Warn("Distance field is not set!");
-			} else {
-				var distance = (SI)container[ModalResultField.dist];
-				if (!distance.IsEqual(CurrentState.Distance)) {
-					Log.Warn("Vehicle Distance diverges from Cycle by {0} [m]. Distance: {1}",
-						(distance - CurrentState.Distance).Value(), distance);
-				}
-			}
-
 			container[ModalResultField.dist] = CurrentState.Distance; // (CurrentState.Distance + PreviousState.Distance) / 2.0;
 			container[ModalResultField.simulationDistance] = CurrentState.SimulationDistance;
 			container[ModalResultField.v_targ] = CurrentState.VehicleTargetSpeed;
