@@ -38,13 +38,12 @@ using TUGraz.VectoCore.Utils;
 
 namespace TUGraz.VectoCore.Models.Declaration
 {
-	public class HeatingVentilationAirConditioning : LookupData<MissionType, VehicleClass, Watt>
+	public sealed class HeatingVentilationAirConditioning : LookupData<MissionType, VehicleClass, Watt>
 	{
+		private const string ResourceId = "TUGraz.VectoCore.Resources.Declaration.VAUX.HVAC-Table.csv";
 		private readonly Dictionary<Tuple<MissionType, VehicleClass>, Watt> _data =
 			new Dictionary<Tuple<MissionType, VehicleClass>, Watt>();
-
-		protected const string ResourceId = "TUGraz.VectoCore.Resources.Declaration.VAUX.HVAC-Table.csv";
-
+		
 		public HeatingVentilationAirConditioning()
 		{
 			ParseData(ReadCsvResource(ResourceId));

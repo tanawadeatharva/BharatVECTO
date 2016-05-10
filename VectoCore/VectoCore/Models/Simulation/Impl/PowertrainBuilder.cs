@@ -345,12 +345,6 @@ namespace TUGraz.VectoCore.Models.Simulation.Impl
 				case GearboxType.MT:
 					strategy = new MTShiftStrategy(data, container);
 					break;
-				case GearboxType.AT:
-					strategy = new ATShiftStrategy(data, container);
-					break;
-				case GearboxType.Custom:
-					strategy = new CustomShiftStrategy(data, container);
-					break;
 				default:
 					throw new VectoSimulationException("Unknown Gearbox Type: {0}", data.Type);
 			}

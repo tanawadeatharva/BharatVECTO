@@ -30,10 +30,12 @@
 */
 
 using System;
+using System.Runtime.Serialization;
 using TUGraz.VectoCommon.Models;
 
 namespace TUGraz.VectoCommon.Exceptions
 {
+	[Serializable]
 	public class VectoSimulationException : VectoException
 	{
 		public VectoSimulationException(string msg) : base(msg) {}
@@ -44,8 +46,11 @@ namespace TUGraz.VectoCommon.Exceptions
 
 		//[StringFormatMethod("message")]
 		public VectoSimulationException(string message, Exception inner, params object[] args) : base(message, inner, args) {}
+
+		protected VectoSimulationException(SerializationInfo info, StreamingContext context) : base(info, context) { }
 	}
 
+	[Serializable]
 	public class VectoEngineSpeedTooLowException : VectoSimulationException
 	{
 		public VectoEngineSpeedTooLowException(string msg) : base(msg) {}
@@ -56,8 +61,20 @@ namespace TUGraz.VectoCommon.Exceptions
 			: base(message, inner, args) {}
 	}
 
+	[Serializable]
 	public class UnexpectedResponseException : VectoSimulationException
 	{
+		public override void GetObjectData(SerializationInfo info, StreamingContext context)
+		{
+			base.GetObjectData(info, context);
+			info.AddValue("Response", Response);
+		}
+
+		protected UnexpectedResponseException(SerializationInfo info, StreamingContext context) : base(info, context)
+		{
+			Response = (IResponse)info.GetValue("Response", typeof(IResponse));
+		}
+
 		public IResponse Response;
 
 		public UnexpectedResponseException(string message, IResponse resp)
@@ -67,11 +84,13 @@ namespace TUGraz.VectoCommon.Exceptions
 		}
 	}
 
+	[Serializable]
 	public class VectoSearchFailedException : VectoException
 	{
 		public VectoSearchFailedException(string message, params object[] args) : base(message, args) {}
 	}
 
+	[Serializable]
 	public class VectoSearchAbortedException : VectoException
 	{
 		public VectoSearchAbortedException(string message, params object[] args) : base(message, args) { }

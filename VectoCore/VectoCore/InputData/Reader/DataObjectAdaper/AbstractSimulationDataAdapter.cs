@@ -98,6 +98,8 @@ namespace TUGraz.VectoCore.InputData.Reader.DataObjectAdaper
 					retarder.Ratio = 1;
 					break;
 				default:
+					// ReSharper disable once NotResolvedInText
+					// ReSharper disable once LocalizableElement
 					throw new ArgumentOutOfRangeException("retarder.Type", "RetarderType unknown");
 			}
 
@@ -164,7 +166,7 @@ namespace TUGraz.VectoCore.InputData.Reader.DataObjectAdaper
 			if (gearCurve == null) {
 				return engineCurve;
 			}
-			// TODO MK-2016-04-18: also combine the curves at the intersection-points of line segments!
+			// TODO mk-2016-04-18: refactor when new gearbox full load is implemented: gearbox will then only have 1 constant value as full load.
 			var entries =
 				gearCurve.FullLoadEntries.Concat(engineCurve.FullLoadEntries)
 					.OrderBy(x => x.EngineSpeed)

@@ -38,12 +38,11 @@ using System.Linq;
 using TUGraz.VectoCommon.Exceptions;
 using TUGraz.VectoCommon.Models;
 using TUGraz.VectoCommon.Utils;
-using TUGraz.VectoCore.Configuration;
 using TUGraz.VectoCore.Utils;
 
 namespace TUGraz.VectoCore.Models.SimulationComponent.Data.Gearbox
 {
-	public class TransmissionLossMap : LoggingObject
+	public sealed class TransmissionLossMap : LoggingObject, IDisposable
 	{
 		[ValidateObject] private readonly List<GearLossMapEntry> _entries;
 
@@ -67,7 +66,7 @@ namespace TUGraz.VectoCore.Models.SimulationComponent.Data.Gearbox
 			get { return _lossMap.Extrapolated; }
 		}
 
-		public string GearName { get; protected set; }
+		public string GearName { get; private set; }
 
 
 		public static TransmissionLossMap ReadFromFile(string fileName, double gearRatio, string gearName)
@@ -223,6 +222,12 @@ namespace TUGraz.VectoCore.Models.SimulationComponent.Data.Gearbox
 
 			/// <summary>[-]</summary>
 			public const string Efficiency = "Eff";
+		}
+
+		public void Dispose()
+		{
+			_lossMap.Dispose();
+			_invertedLossMap.Dispose();
 		}
 	}
 }

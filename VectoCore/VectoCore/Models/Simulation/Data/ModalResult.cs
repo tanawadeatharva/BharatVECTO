@@ -33,6 +33,7 @@ using System;
 using System.ComponentModel;
 using System.Data;
 using System.Reflection;
+using System.Runtime.Serialization;
 using TUGraz.VectoCommon.Exceptions;
 using TUGraz.VectoCommon.Utils;
 using TUGraz.VectoCore.Utils;
@@ -42,6 +43,7 @@ using TUGraz.VectoCore.Utils;
 namespace TUGraz.VectoCore.Models.Simulation.Data
 {
 	[DesignerCategory("")] // Full qualified attribute needed to disable design view in VisualStudio
+	[Serializable]
 	public class ModalResults : DataTable
 	{
 		public static class ExtendedPropertyNames
@@ -50,6 +52,8 @@ namespace TUGraz.VectoCore.Models.Simulation.Data
 			public const string OutputFactor = "outputFactor";
 			public const string ShowUnit = "showUnit";
 		}
+
+		protected ModalResults(SerializationInfo info, StreamingContext context) : base(info, context){}
 
 		public ModalResults()
 		{

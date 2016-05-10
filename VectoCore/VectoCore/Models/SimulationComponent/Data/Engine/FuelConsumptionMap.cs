@@ -40,11 +40,10 @@ using TUGraz.VectoCore.Utils;
 
 namespace TUGraz.VectoCore.Models.SimulationComponent.Data.Engine
 {
-	public class FuelConsumptionMap : SimulationComponentData
+	public class FuelConsumptionMap : SimulationComponentData, IDisposable
 	{
 		[Required, ValidateObject] private readonly DelaunayMap _fuelMap = new DelaunayMap("FuelConsumptionMap");
-
-
+		
 		private FuelConsumptionMap() {}
 
 		public static FuelConsumptionMap ReadFromFile(string fileName)
@@ -226,6 +225,18 @@ namespace TUGraz.VectoCore.Models.SimulationComponent.Data.Engine
 		public override int GetHashCode()
 		{
 			return _fuelMap != null ? _fuelMap.GetHashCode() : 0;
+		}
+
+		public void Dispose()
+		{
+			Dispose(true);
+			GC.SuppressFinalize(this);
+		}
+
+		protected virtual void Dispose(bool disposing)
+		{
+			if (disposing)
+				_fuelMap.Dispose();
 		}
 
 		#endregion

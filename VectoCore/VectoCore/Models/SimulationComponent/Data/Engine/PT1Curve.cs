@@ -40,7 +40,7 @@ using TUGraz.VectoCore.Utils;
 
 namespace TUGraz.VectoCore.Models.SimulationComponent.Data.Engine
 {
-	public class PT1Curve : LookupData<PerSecond, Second>
+	public sealed class PT1Curve : LookupData<PerSecond, Second>
 	{
 		private List<KeyValuePair<PerSecond, Second>> _entries;
 
@@ -54,12 +54,12 @@ namespace TUGraz.VectoCore.Models.SimulationComponent.Data.Engine
 			return new PT1Curve(data);
 		}
 
-		protected PT1Curve(DataTable data)
+		private PT1Curve(DataTable data)
 		{
 			ParseData(data);
 		}
 
-		protected PT1Curve(string file)
+		private PT1Curve(string file)
 		{
 			DataTable data;
 			try {
@@ -100,7 +100,7 @@ namespace TUGraz.VectoCore.Models.SimulationComponent.Data.Engine
 			}
 		}
 
-		protected bool HeaderIsValid(DataColumnCollection columns)
+		private bool HeaderIsValid(DataColumnCollection columns)
 		{
 			return columns.Contains(Fields.EngineSpeed) && columns.Contains(Fields.PT1);
 		}

@@ -296,18 +296,17 @@ namespace TUGraz.VectoCore.Tests.Integration.SimulationRuns
 				@"TestData\job_1-Gear-Test-dist.vmod", testRowCount: false);
 		}
 
-		// todo: add realistic FullLoadCurve
 		private static GearboxData CreateGearboxData()
 		{
 			var ratios = new[] { 6.38, 4.63, 3.44, 2.59, 1.86, 1.35, 1, 0.76 };
-
+			
 			return new GearboxData {
 				Gears = ratios.Select((ratio, i) =>
 					Tuple.Create((uint)i,
 						new GearData {
+							// TODO mk-2016-05-09: add realistic FullLoadCurve for gearbox - gearbox will have only 1 constant value as full load
 							FullLoadCurve = FullLoadCurveReader.ReadFromFile(GearboxFullLoadCurveFile),
-							LossMap =
-								TransmissionLossMap.ReadFromFile(GearboxLossMap, ratio, string.Format("Gear {0}", i)),
+							LossMap = TransmissionLossMap.ReadFromFile(GearboxLossMap, ratio, string.Format("Gear {0}", i)),
 							Ratio = ratio,
 							ShiftPolygon = ShiftPolygonReader.ReadFromFile(GearboxShiftPolygonFile)
 						}))

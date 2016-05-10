@@ -187,7 +187,7 @@ namespace TUGraz.VectoCore.Models.Simulation.Impl
 			public string RunSuffix;
 		}
 
-		internal class RunEntry : LoggingObject
+		internal class RunEntry : LoggingObject, IDisposable
 		{
 			public IVectoRun Run;
 			public JobContainer JobContainer;
@@ -243,6 +243,11 @@ namespace TUGraz.VectoCore.Models.Simulation.Impl
 				if (e.Error != null) {
 					ExecException = e.Error;
 				}
+			}
+
+			public void Dispose()
+			{
+				_worker.Dispose();
 			}
 		}
 	}
