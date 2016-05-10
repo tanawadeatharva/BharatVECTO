@@ -49,9 +49,9 @@ namespace TUGraz.VectoCore.Models.Declaration
 						"LAC Decision Factor File for Vdrop must consist of at least two lines with numeric values (below file header)");
 				}
 
-				if (table.Columns.Contains("v_target") && table.Columns.Contains("decision factor")) {
+				if (table.Columns.Contains("v_target") && table.Columns.Contains("decision_factor")) {
 					Data = table.Rows.Cast<DataRow>()
-						.ToDictionary(r => r.ParseDouble("v_drop").KMPHtoMeterPerSecond(), r => r.ParseDouble("decision factor"));
+						.ToDictionary(r => r.ParseDouble("v_drop").KMPHtoMeterPerSecond(), r => r.ParseDouble("decision_factor"));
 				} else {
 					Data = table.Rows.Cast<DataRow>()
 						.ToDictionary(r => r.ParseDouble(0).KMPHtoMeterPerSecond(), r => r.ParseDouble(1));
@@ -86,7 +86,7 @@ namespace TUGraz.VectoCore.Models.Declaration
 						"LAC Decision Factor File for Vtarget must consist of at least two lines with numeric values (below file header)");
 				}
 
-				if (table.Columns.Contains("v_target") && table.Columns.Contains("decision factor")) {
+				if (table.Columns.Contains("v_target") && table.Columns.Contains("decision_factor")) {
 					Data = table.Rows.Cast<DataRow>()
 						.ToDictionary(r => r.ParseDouble("v_target").KMPHtoMeterPerSecond(), r => r.ParseDouble("decision_factor"));
 				} else {

@@ -95,6 +95,7 @@
     <Compile Include="Models\SimulationComponentData\ValidationTest.cs" />
     <Compile Include="Models\Simulation\FactoryTest.cs" />
     <Compile Include="Models\Simulation\LossMapRangeValidationTest.cs" />
+    <Compile Include="Models\Simulation\LACDecisionFactorTest.cs" />
     <Compile Include="Reports\ModDataTest.cs" />
     <Compile Include="Models\Simulation\MeasuredSpeedModeTest.cs" />
     <Compile Include="Models\Simulation\PwheelModeTests.cs" />
@@ -1331,7 +1332,6 @@
   </ItemGroup>
   <ItemGroup>
     <Folder Include="Integration\FullPowertrain\" />
-    <Folder Include="Models\DeclarationData\" />
   </ItemGroup>
   <Choose>
     <When Condition="'$(VisualStudioVersion)' == '10.0' And '$(IsCodedUITest)' == 'True'">
