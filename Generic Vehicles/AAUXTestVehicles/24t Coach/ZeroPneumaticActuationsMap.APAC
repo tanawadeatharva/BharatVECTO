@@ -1,0 +1,19 @@
+﻿ConsumerName, CycleName, Actuations
+Brakes,Heavy urban,0
+Brakes,Urban,0
+Brakes,Suburban,0
+Brakes,Interurban,0
+Brakes,Coach,0
+Brakes,UnknownCycleName,0
+Park brake + 2 doors,Heavy urban,0
+Park brake + 2 doors,Urban,0
+Park brake + 2 doors,Suburban,0
+Park brake + 2 doors,Interurban,0
+Park brake + 2 doors,Coach,0
+Park brake + 2 doors,UnknownCycleName,0
+Kneeling,Heavy urban,0
+Kneeling,Urban,0
+Kneeling,Suburban,0
+Kneeling,Interurban,0
+Kneeling,Coach,0
+Kneeling,UnknownCycleName,0

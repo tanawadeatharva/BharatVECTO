@@ -1,0 +1,94 @@
+﻿/*
+* This file is part of VECTO.
+*
+* Copyright © 2012-2016 European Union
+*
+* Developed by Graz University of Technology,
+*              Institute of Internal Combustion Engines and Thermodynamics,
+*              Institute of Technical Informatics
+*
+* VECTO is licensed under the EUPL, Version 1.1 or - as soon they will be approved
+* by the European Commission - subsequent versions of the EUPL (the "Licence");
+* You may not use VECTO except in compliance with the Licence.
+* You may obtain a copy of the Licence at:
+*
+* https://joinup.ec.europa.eu/community/eupl/og_page/eupl
+*
+* Unless required by applicable law or agreed to in writing, VECTO
+* distributed under the Licence is distributed on an "AS IS" basis,
+* WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+* See the Licence for the specific language governing permissions and
+* limitations under the Licence.
+*
+* Authors:
+*   Stefan Hausberger, hausberger@ivt.tugraz.at, IVT, Graz University of Technology
+*   Christian Kreiner, christian.kreiner@tugraz.at, ITI, Graz University of Technology
+*   Michael Krisper, michael.krisper@tugraz.at, ITI, Graz University of Technology
+*   Raphael Luz, luz@ivt.tugraz.at, IVT, Graz University of Technology
+*   Markus Quaritsch, markus.quaritsch@tugraz.at, IVT, Graz University of Technology
+*   Martin Rexeis, rexeis@ivt.tugraz.at, IVT, Graz University of Technology
+*/
+
+using System;
+using Microsoft.VisualStudio.TestTools.UnitTesting;
+using NUnit.Framework;
+using TUGraz.VectoCommon.Utils;
+using TUGraz.VectoCore.Utils;
+using Assert = Microsoft.VisualStudio.TestTools.UnitTesting.Assert;
+
+namespace TUGraz.VectoCore.Tests.Utils
+{
+	[TestFixture]
+	public class VectoMathTest
+	{
+		[Test]
+		public void VectoMath_Min()
+		{
+			var smaller = 0.SI();
+			var bigger = 5.SI();
+			var negative = -1 * 10.SI();
+			var positive = 10.SI();
+			Assert.AreEqual(smaller, VectoMath.Min(smaller, bigger));
+
+			Assert.AreEqual(bigger, VectoMath.Max(smaller, bigger));
+
+			Assert.AreEqual(positive, VectoMath.Abs(negative));
+			Assert.AreEqual(positive, VectoMath.Abs(positive));
+
+
+			var smallerWatt = 0.SI<Watt>();
+			var biggerWatt = 5.SI<Watt>();
+			var negativeWatt = -10.SI<Watt>();
+			var positiveWatt = 10.SI<Watt>();
+			Assert.AreEqual(smallerWatt, VectoMath.Min(smallerWatt, biggerWatt));
+			Assert.AreEqual(smallerWatt, VectoMath.Min(biggerWatt, smallerWatt));
+
+			Assert.AreEqual(biggerWatt, VectoMath.Max(smallerWatt, biggerWatt));
+
+
+			Assert.AreEqual(positiveWatt, VectoMath.Abs(negativeWatt));
+			Assert.AreEqual(positiveWatt, VectoMath.Abs(positiveWatt));
+		}
+
+
+		[TestCase(0, -1, 0, 1, -1, 0, 1, 0, 0, 0),
+		TestCase(0, 0, 10, 0, 0, 5, 10, 5, double.NaN, double.NaN),
+		TestCase(0, 0, 0, 10, 5, 0, 10, 5, double.NaN, double.NaN),
+		TestCase(0, 0, 1, 1, 1, 0, 0, 1, 0.5, 0.5)]
+		public void IntersectionTest(double p0x, double p0y, double p1x, double p1y, double p2x, double p2y, double p3x,
+			double p3y, double isx, double isy)
+		{
+			var line1 = new Edge(new Point(p0x, p0y), new Point(p1x, p1y));
+			var line2 = new Edge(new Point(p2x, p2y), new Point(p3x, p3y));
+
+			var intersect = VectoMath.Intersect(line1, line2);
+			if (intersect != null) {
+				Assert.AreEqual(isx, intersect.X);
+				Assert.AreEqual(isy, intersect.Y);
+			} else {
+				Assert.IsTrue(double.IsNaN(isx));
+				Assert.IsTrue(double.IsNaN(isy));
+			}
+		}
+	}
+}
