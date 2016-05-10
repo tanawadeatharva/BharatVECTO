@@ -48,8 +48,8 @@ namespace TUGraz.VectoCore.Models.Simulation.Impl
 {
 	public class VehicleContainer : LoggingObject, IVehicleContainer
 	{
-		internal readonly SortedList<int, VectoSimulationComponent> Components =
-			new SortedList<int, VectoSimulationComponent>();
+		private List<Tuple<int, VectoSimulationComponent>> _components =
+			new List<Tuple<int, VectoSimulationComponent>>();
 
 		internal IEngineInfo Engine;
 		internal IGearboxInfo Gearbox;
@@ -227,7 +227,8 @@ namespace TUGraz.VectoCore.Models.Simulation.Impl
 					commitPriority = 3;
 				});
 
-			Components.Add(-commitPriority, component);
+			_components.Add(Tuple.Create(commitPriority, component));
+			_components = _components.OrderBy(x => x.Item1).Reverse().ToList();
 		}
 
 
@@ -236,8 +237,8 @@ namespace TUGraz.VectoCore.Models.Simulation.Impl
 			Log.Info("VehicleContainer committing simulation. time: {0}, dist: {1}, speed: {2}", time,
 				ExecutionMode == ExecutionMode.EngineOnly ? null : Distance, VehicleSpeed);
 
-			foreach (var component in Components) {
-				component.Value.CommitSimulationStep(ModData);
+			foreach (var component in _components) {
+				component.Item2.CommitSimulationStep(ModData);
 			}
 
 			if (ModData != null) {
@@ -261,7 +262,7 @@ namespace TUGraz.VectoCore.Models.Simulation.Impl
 
 		public IReadOnlyCollection<VectoSimulationComponent> SimulationComponents()
 		{
-			return new ReadOnlyCollection<VectoSimulationComponent>(Components.Select(x => x.Value).ToList());
+			return new ReadOnlyCollection<VectoSimulationComponent>(_components.Select(x => x.Item2).ToList());
 		}
 
 		public Meter Distance
