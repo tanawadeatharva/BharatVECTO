@@ -42,7 +42,7 @@ namespace LicenceHeader
 	/// </summary>
 	internal class Program
 	{
-		private const string SolutionRootDirectory = @"..\\..\\..";
+		private const string SolutionRootDirectory = @"..\..\..\..";
 
 		private static void Main()
 		{
