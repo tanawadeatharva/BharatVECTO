@@ -8,6 +8,7 @@ $(function(){
         $("#CONTENT").html(element.html());
         $("#CONTENT > a").click(OnClick);
         $("#CONTENT").show();
+        window.scrollTo(0, 0);
     };
     
 
