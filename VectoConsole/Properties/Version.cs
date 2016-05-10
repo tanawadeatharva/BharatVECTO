@@ -11,7 +11,7 @@
 * by the European Commission - subsequent versions of the EUPL (the "Licence");
 * You may not use VECTO except in compliance with the Licence.
 * You may obtain a copy of the Licence at:
-*
+*	
 * https://joinup.ec.europa.eu/community/eupl/og_page/eupl
 *
 * Unless required by applicable law or agreed to in writing, VECTO

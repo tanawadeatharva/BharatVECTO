@@ -224,7 +224,7 @@ namespace TUGraz.VectoCore.Models.Simulation.Impl
 				.If<IClutchInfo>(c => Clutch = c)
 				.If<IDrivingCycleInfo>(c => {
 					DrivingCycle = c;
-					commitPriority = 3;
+					commitPriority = 6;
 				});
 
 			_components.Add(Tuple.Create(commitPriority, component));
