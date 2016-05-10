@@ -130,6 +130,7 @@
     <Compile Include="Models\Declaration\AirDrag.cs" />
     <Compile Include="Models\Declaration\Fan.cs" />
     <Compile Include="Models\Declaration\HVAC.cs" />
+    <Compile Include="Models\Declaration\LACDecisionFactor.cs" />
     <Compile Include="Models\Declaration\PneumaticSystem.cs" />
     <Compile Include="Models\Declaration\PT1.cs" />
     <Compile Include="Models\Declaration\Rims.cs" />
@@ -306,6 +307,8 @@
       <Generator>TextTemplatingFileGenerator</Generator>
       <LastGenOutput>Version.cs</LastGenOutput>
     </None>
+    <EmbeddedResource Include="Resources\Declaration\LAC-DF-Vdrop.csv" />
+    <EmbeddedResource Include="Resources\Declaration\LAC-DF-Vtarget.csv" />
   </ItemGroup>
   <ItemGroup>
     <EmbeddedResource Include="Resources\Declaration\Report\4x2r.png" />
