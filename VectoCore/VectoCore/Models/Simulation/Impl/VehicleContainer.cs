@@ -227,7 +227,7 @@ namespace TUGraz.VectoCore.Models.Simulation.Impl
 					commitPriority = 3;
 				});
 
-			Components.Add(commitPriority, component);
+			Components.Add(-commitPriority, component);
 		}
 
 
