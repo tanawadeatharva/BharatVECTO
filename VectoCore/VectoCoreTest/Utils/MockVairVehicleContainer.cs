@@ -51,7 +51,14 @@ namespace TUGraz.VectoCore.Tests.Utils
 		public MeterPerSecond StartSpeed { get; private set; }
 		public MeterPerSquareSecond StartAcceleration { get; private set; }
 		public FullLoadCurve GearFullLoadCurve { get; private set; }
+
+		public Watt GearboxLoss(PerSecond inAngularVelocity, NewtonMeter inTorque)
+		{
+			throw new System.NotImplementedException();
+		}
+
 		public PerSecond EngineSpeed { get; private set; }
+		public NewtonMeter EngineTorque { get; private set; }
 
 		public Watt EngineStationaryFullPower(PerSecond angularSpeed)
 		{
@@ -69,6 +76,17 @@ namespace TUGraz.VectoCore.Tests.Utils
 		public Kilogram VehicleMass { get; private set; }
 		public Kilogram VehicleLoading { get; private set; }
 		public Kilogram TotalMass { get; private set; }
+
+		public Newton AirDragResistance(MeterPerSecond previousVelocity, MeterPerSquareSecond acceleration, Second dt)
+		{
+			throw new System.NotImplementedException();
+		}
+
+		public Newton RollingResistance(Radian gradient)
+		{
+			throw new System.NotImplementedException();
+		}
+
 		public Meter Distance { get; private set; }
 
 		public bool ClutchClosed(Second absTime)

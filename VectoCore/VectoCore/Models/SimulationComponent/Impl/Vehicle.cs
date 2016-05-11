@@ -191,7 +191,7 @@ namespace TUGraz.VectoCore.Models.SimulationComponent.Impl
 			AdvanceState();
 		}
 
-		protected internal Newton RollingResistance(Radian gradient)
+		public Newton RollingResistance(Radian gradient)
 		{
 			var weight = ModelData.TotalVehicleWeight();
 			var gravity = Physics.GravityAccelleration;
@@ -216,8 +216,7 @@ namespace TUGraz.VectoCore.Models.SimulationComponent.Impl
 			return retVal;
 		}
 
-		protected internal Newton AirDragResistance(MeterPerSecond previousVelocity, MeterPerSquareSecond acceleration,
-			Second dt)
+		public Newton AirDragResistance(MeterPerSecond previousVelocity, MeterPerSquareSecond acceleration, Second dt)
 		{
 			var vAverage = previousVelocity + acceleration * dt / 2;
 			if (vAverage.IsEqual(0)) {

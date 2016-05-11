@@ -97,6 +97,11 @@ namespace TUGraz.VectoCore.Models.SimulationComponent.Impl
 			get { return PreviousState.EngineSpeed; }
 		}
 
+		public NewtonMeter EngineTorque
+		{
+			get { return PreviousState.EngineTorque; }
+		}
+
 		public Watt EngineStationaryFullPower(PerSecond angularSpeed)
 		{
 			return ModelData.FullLoadCurve.FullLoadStationaryTorque(angularSpeed) * angularSpeed;

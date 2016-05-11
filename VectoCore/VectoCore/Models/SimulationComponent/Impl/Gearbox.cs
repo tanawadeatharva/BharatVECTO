@@ -128,6 +128,14 @@ namespace TUGraz.VectoCore.Models.SimulationComponent.Impl
 			get { return Gear == 0 ? null : ModelData.Gears[Gear].FullLoadCurve; }
 		}
 
+		public Watt GearboxLoss(PerSecond inAngularVelocity, NewtonMeter inTorque)
+		{
+			var outTorque = ModelData.Gears[Gear].LossMap.GetOutTorque(inAngularVelocity, inTorque, true);
+			var torqueLoss = inTorque - outTorque * ModelData.Gears[Gear].Ratio;
+
+			return torqueLoss * inAngularVelocity;
+		}
+
 		#endregion
 
 		#region ITnOutPort
@@ -221,7 +229,7 @@ namespace TUGraz.VectoCore.Models.SimulationComponent.Impl
 			if (DataBus.VehicleStopped) {
 				_engageTime = absTime;
 			}
-			
+
 			IResponse retVal;
 			// TODO MQ 2016/03/10: investigate further the effects of having the condition angularvelocity != 0
 			if (ClutchClosed(absTime) /* && !angularVelocity.IsEqual(0) */) {

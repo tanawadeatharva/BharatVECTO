@@ -116,6 +116,11 @@ namespace TUGraz.VectoCore.Models.Simulation.Impl
 			get { return Gearbox != null ? Gearbox.GearFullLoadCurve : null; }
 		}
 
+		public Watt GearboxLoss(PerSecond inAngularVelocity, NewtonMeter inTorque)
+		{
+			return Gearbox.GearboxLoss(inAngularVelocity, inTorque);
+		}
+
 		#endregion
 
 		#region IEngineCockpit
@@ -131,6 +136,11 @@ namespace TUGraz.VectoCore.Models.Simulation.Impl
 				}
 				return Engine.EngineSpeed;
 			}
+		}
+
+		public NewtonMeter EngineTorque
+		{
+			get { return Engine.EngineTorque; }
 		}
 
 		public Watt EngineStationaryFullPower(PerSecond angularSpeed)
@@ -175,6 +185,16 @@ namespace TUGraz.VectoCore.Models.Simulation.Impl
 		public Kilogram TotalMass
 		{
 			get { return Vehicle != null ? Vehicle.TotalMass : 0.SI<Kilogram>(); }
+		}
+
+		public Newton AirDragResistance(MeterPerSecond previousVelocity, MeterPerSquareSecond acceleration, Second dt)
+		{
+			return Vehicle.AirDragResistance(previousVelocity, acceleration, dt);
+		}
+
+		public Newton RollingResistance(Radian gradient)
+		{
+			return Vehicle.RollingResistance(gradient);
 		}
 
 		#endregion
@@ -230,7 +250,6 @@ namespace TUGraz.VectoCore.Models.Simulation.Impl
 			_components.Add(Tuple.Create(commitPriority, component));
 			_components = _components.OrderBy(x => x.Item1).Reverse().ToList();
 		}
-
 
 		public void CommitSimulationStep(Second time, Second simulationInterval)
 		{
