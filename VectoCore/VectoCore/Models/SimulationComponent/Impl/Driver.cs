@@ -30,6 +30,7 @@
 */
 
 using System;
+using System.Collections.Generic;
 using System.Diagnostics;
 using System.Linq;
 using iTextSharp.text.pdf;
@@ -57,6 +58,8 @@ namespace TUGraz.VectoCore.Models.SimulationComponent.Impl
 		public DriverData DriverData { get; protected set; }
 
 		protected IDriverStrategy DriverStrategy;
+		private Dictionary<string, object> _coastData = new Dictionary<string, object>(20);
+		private string CurrentAction = "";
 
 		//public MeterPerSquareSecond LookaheadDeceleration { get; protected set; }
 
@@ -108,7 +111,8 @@ namespace TUGraz.VectoCore.Models.SimulationComponent.Impl
 				absTime, ds, targetVelocity, gradient, DataBus.Distance, DataBus.VehicleSpeed, DataBus.VehicleStopped);
 
 			var retVal = DriverStrategy.Request(absTime, ds, targetVelocity, gradient);
-			//DoHandleRequest(absTime, ds, targetVelocity, gradient);
+
+			_coastData = ((DefaultDriverStrategy)DriverStrategy).LookAheadCoasting(ds);
 
 			CurrentState.Response = retVal;
 			retVal.SimulationInterval = CurrentState.dt;
@@ -153,7 +157,7 @@ namespace TUGraz.VectoCore.Models.SimulationComponent.Impl
 			IResponse previousResponse = null)
 		{
 			IterationStatistics.Increment(this, "Accelerate");
-
+			CurrentAction = "Accelerate";
 			Log.Debug("DrivingAction Accelerate");
 			var operatingPoint = ComputeAcceleration(ds, targetVelocity);
 
@@ -233,6 +237,7 @@ namespace TUGraz.VectoCore.Models.SimulationComponent.Impl
 		public IResponse DrivingActionCoast(Second absTime, Meter ds, MeterPerSecond maxVelocity, Radian gradient)
 		{
 			IterationStatistics.Increment(this, "Coast");
+			CurrentAction = "Coast";
 			Log.Debug("DrivingAction Coast");
 
 			return CoastOrRollAction(absTime, ds, maxVelocity, gradient, false);
@@ -248,6 +253,7 @@ namespace TUGraz.VectoCore.Models.SimulationComponent.Impl
 		/// <returns></returns>
 		public IResponse DrivingActionRoll(Second absTime, Meter ds, MeterPerSecond maxVelocity, Radian gradient)
 		{
+			CurrentAction = "Roll";
 			IterationStatistics.Increment(this, "Roll");
 
 			Log.Debug("DrivingAction Roll");
@@ -353,7 +359,7 @@ namespace TUGraz.VectoCore.Models.SimulationComponent.Impl
 			IResponse previousResponse = null, Meter targetDistance = null)
 		{
 			IterationStatistics.Increment(this, "Brake");
-
+			CurrentAction = "Brake";
 			Log.Debug("DrivingAction Brake");
 
 			IResponse retVal = null;
@@ -761,6 +767,7 @@ namespace TUGraz.VectoCore.Models.SimulationComponent.Impl
 		/// <returns></returns>
 		public IResponse DrivingActionHalt(Second absTime, Second dt, MeterPerSecond targetVelocity, Radian gradient)
 		{
+			CurrentAction = "Halt";
 			if (!targetVelocity.IsEqual(0) || !DataBus.VehicleStopped) {
 				Log.Error("TargetVelocity ({0}) and VehicleVelocity ({1}) must be zero when vehicle is halting!", targetVelocity,
 					DataBus.VehicleSpeed);
@@ -787,6 +794,15 @@ namespace TUGraz.VectoCore.Models.SimulationComponent.Impl
 		protected override void DoWriteModalResults(IModalDataContainer container)
 		{
 			container[ModalResultField.acc] = CurrentState.Acceleration;
+
+			//todo mk-2016-05-11: remove additional columns in moddata after testing of LAC finished
+			foreach (var kv in _coastData) {
+				container.SetDataValue(kv.Key, kv.Value);
+			}
+			container.SetDataValue("Alt", DataBus.CycleData.LeftSample.Altitude.Value());
+			container.SetDataValue("DrivingMode", ((DefaultDriverStrategy)DriverStrategy).CurrentDrivingMode);
+			container.SetDataValue("Action", CurrentAction);
+			_coastData.Clear();
 		}
 
 		protected override void DoCommitSimulationStep()
@@ -809,18 +825,10 @@ namespace TUGraz.VectoCore.Models.SimulationComponent.Impl
 		protected enum LimitationMode
 		{
 			NoLimitation = 0x0,
-			//LimitAccelerationDriver = 0x1,
 			LimitDecelerationDriver = 0x2,
 			LimitDecelerationLookahead = 0x4
 		}
 
 		public DrivingBehavior DriverBehavior { get; set; }
-
-		//public bool VehicleStopped { get; protected set; }
-
-		//public DrivingBehavior DrivingBehavior
-		//{
-		//	get { return DriverStrategy.DriverBehavior; }
-		//}
 	}
 }

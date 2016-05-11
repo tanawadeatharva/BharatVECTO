@@ -33,6 +33,7 @@ using System;
 using System.Collections.Generic;
 using System.Diagnostics;
 using System.Linq;
+using System.Windows.Markup;
 using TUGraz.VectoCommon.Models;
 using TUGraz.VectoCommon.Utils;
 using TUGraz.VectoCore.Configuration;
@@ -40,6 +41,7 @@ using TUGraz.VectoCore.InputData.Impl;
 using TUGraz.VectoCore.Models.Connector.Ports.Impl;
 using TUGraz.VectoCore.Models.Declaration;
 using TUGraz.VectoCore.Models.Simulation.DataBus;
+using TUGraz.VectoCore.Models.SimulationComponent.Data;
 using TUGraz.VectoCore.OutputData;
 using TUGraz.VectoCore.Utils;
 using DriverData = TUGraz.VectoCore.Models.SimulationComponent.Data.DriverData;
@@ -119,65 +121,99 @@ namespace TUGraz.VectoCore.Models.SimulationComponent.Impl
 		/// <summary>
 		/// Checks if Look Ahead Coasting triggers
 		/// </summary>
-		private bool CheckLookAheadCoasting(Meter ds)
+		public Dictionary<string, object> LookAheadCoasting(Meter ds)
 		{
-			// (1) & (2) : x_decelerationpoint - d_prev <= x_veh < x_decelerationpoint
-			var d_prev = 10 * Driver.DataBus.VehicleSpeed.ConvertTo().Kilo.Meter.Per.Hour.Value();
-			var lookAheadData = Driver.DataBus.LookAhead(d_prev.SI<Meter>());
+			var dict = new Dictionary<string, object>();
 
-			// only deceleration points!
+			// (1) & (2) : x_decelerationpoint - d_prev <= x_veh < x_decelerationpoint
 			var v_veh = Driver.DataBus.VehicleSpeed;
-			var decelerationLookAhead = lookAheadData.Where(e => e.VehicleTargetSpeed <= v_veh);
+			var d_prev = 10 * Driver.DataBus.VehicleSpeed.ConvertTo().Kilo.Meter.Per.Hour.Value();
+			var lookaheadData = Driver.DataBus.LookAhead(d_prev.SI<Meter>());
+			var nextActions = new SortedDictionary<Meter, DrivingCycleData.DrivingCycleEntry>();
+			foreach (var entry in lookaheadData.Where(e => e.VehicleTargetSpeed <= v_veh)) {
+				var nextTargetSpeed = entry.VehicleTargetSpeed;
+				if (nextTargetSpeed < Driver.DataBus.VehicleSpeed) {
+					var coastingDistance = Formulas.DecelerationDistance(Driver.DataBus.VehicleSpeed, nextTargetSpeed,
+						Driver.DriverData.LookAheadCoasting.Deceleration);
+					nextActions.Add(entry.Distance - coastingDistance, entry);
+				}
+			}
+
+			var dec = nextActions.FirstOrDefault().Value;
 
 			// (4) v_veh < v_max_deceleration * 0.98
-			foreach (var dec in decelerationLookAhead) {
+			if (dec != null) {
 				var x_dec = dec.Distance;
+				dict["x_dec"] = x_dec.Value();
+
 				var x_delta = x_dec - Driver.DataBus.Distance;
+				dict["x_delta"] = x_delta.Value();
+
 				var v_target = dec.VehicleTargetSpeed;
-				var retVal = new OperatingPoint { SimulationDistance = x_dec };
+				dict["v_target"] = v_target.Value();
 
 				var x_max_deceleration = Driver.ComputeDecelerationDistance(v_target);
-				var coastingPossible = x_delta < x_max_deceleration * 0.98;
+				dict["x_max_deceleration"] = x_max_deceleration.Value();
+				var coastingPossible = x_delta >= x_max_deceleration * 0.98;
+				dict["CoastingAllowed"] = coastingPossible ? 1 : 0;
 
 				// 3. CDP > DF_coasting
 				if (coastingPossible) {
 					var m = Driver.DataBus.VehicleMass;
 					var g = Physics.GravityAccelleration;
 					var h_target = dec.Altitude;
+					dict["h_target"] = h_target.Value();
 
 					// todo mk-2016-05-11 left or right sample of cycle data?
 					var h_vehicle = Driver.DataBus.CycleData.LeftSample.Altitude;
+					dict["h_vehicle"] = h_vehicle.Value();
 
 					var E_kin_veh = m * v_veh * v_veh / 2;
 					var E_kin_target = m * v_target * v_target / 2;
 					var E_pot_target = m * g * h_target;
 					var E_pot_veh = m * g * h_vehicle;
+					dict["E_kin_veh"] = E_kin_veh.Value();
+					dict["E_kin_target"] = E_kin_target.Value();
+					dict["E_pot_target"] = E_pot_target.Value();
+					dict["E_pot_veh"] = E_pot_veh.Value();
 
-					var delta_E_deceleration = (E_kin_veh + E_pot_veh) - (E_kin_target + E_pot_target);
+					var delta_E = (E_kin_veh + E_pot_veh) - (E_kin_target + E_pot_target);
+					dict["delta_E"] = delta_E.Value();
 
-					var f_dec_average = delta_E_deceleration / x_delta;
+					var F_dec_average = delta_E / x_delta;
+					dict["F_dec_average"] = F_dec_average.Value();
 
 					var avgVelocity = (v_veh + v_target) / 2;
 					var acc = (v_target - v_veh) * (avgVelocity / ds);
 					var F_air = Driver.DataBus.AirDragResistance(v_veh, acc, ds / v_veh);
-					var F_roll = Driver.DataBus.RollingResistance(Driver.DataBus.CycleData.LeftSample.RoadGradient);
+					dict["F_air"] = F_air.Value();
 
-					var P_enginedrag = Driver.DataBus.EngineDragPower(Driver.DataBus.EngineSpeed);
-					var P_loss_gb = Driver.DataBus.GearboxLoss(Driver.DataBus.EngineSpeed, Driver.DataBus.EngineTorque);
+					var F_roll = Driver.DataBus.RollingResistance(Driver.DataBus.CycleData.LeftSample.RoadGradient);
+					dict["F_roll"] = F_roll.Value();
+
+					var F_enginedrag = Driver.DataBus.EngineDragPower(Driver.DataBus.EngineSpeed) / v_veh;
+					dict["F_enginedrag"] = F_enginedrag.Value();
+
+					var F_loss_gb = Driver.DataBus.GearboxLoss(Driver.DataBus.EngineSpeed, Driver.DataBus.EngineTorque) / v_veh;
+					dict["F_loss_gb"] = F_loss_gb.Value();
 
 					// todo mk-2016-05-11 calculate ra loss
-					var P_loss_ra = 0.SI<Watt>();
+					var F_loss_ra = 0.SI<Newton>();
+					dict["F_loss_ra"] = F_loss_ra.Value();
 
-					var f_coasting = F_air + F_roll + (P_enginedrag + P_loss_gb + P_loss_ra) / v_veh;
+					var F_coasting = F_air + F_roll + F_enginedrag + F_loss_gb + F_loss_ra;
+					dict["F_coasting"] = F_coasting.Value();
 
-					var CDP = f_dec_average / f_coasting;
+					var CDP = F_dec_average / F_coasting;
+					dict["CDP"] = CDP.Value();
+
 					var DF_coasting = LACDecisionFactor.Lookup(v_target, v_veh - v_target);
+					dict["DF_coasting"] = DF_coasting;
 
-					return CDP > DF_coasting;
+					dict["EnableCoasting"] = CDP > DF_coasting ? 1 : 0;
 				}
 			}
-
-			return false;
+			return dict;
 		}
 
 		public IResponse Request(Second absTime, Second dt, MeterPerSecond targetVelocity, Radian gradient)
