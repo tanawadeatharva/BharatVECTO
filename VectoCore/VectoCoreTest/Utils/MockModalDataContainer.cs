@@ -78,7 +78,6 @@ namespace TUGraz.VectoCore.Tests.Utils
 			get { return VectoRun.Status.Success; }
 		}
 
-
 		public void Finish(VectoRun.Status runStatus) {}
 
 		public bool WriteModalResults { get; set; }
@@ -94,6 +93,11 @@ namespace TUGraz.VectoCore.Tests.Utils
 		}
 
 		public Dictionary<string, DataColumn> Auxiliaries { get; set; }
+
+		public void SetDataValue(string fieldName, object value)
+		{
+			throw new System.NotImplementedException();
+		}
 
 		public void AddAuxiliary(string id)
 		{

@@ -93,6 +93,8 @@ namespace TUGraz.VectoCore.OutputData
 
 		Dictionary<string, DataColumn> Auxiliaries { get; set; }
 
+		void SetDataValue(string fieldName, object value);
+
 		void AddAuxiliary(string id);
 	}
 

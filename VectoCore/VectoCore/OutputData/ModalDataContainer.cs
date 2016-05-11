@@ -33,6 +33,7 @@ using System;
 using System.Collections.Generic;
 using System.Data;
 using System.Linq;
+using System.Runtime.CompilerServices;
 using TUGraz.VectoCommon.Models;
 using TUGraz.VectoCommon.Utils;
 using TUGraz.VectoCore.Models.Simulation.Data;
@@ -49,6 +50,7 @@ namespace TUGraz.VectoCore.OutputData
 		//private readonly VectoRunData _runData;
 
 		private readonly IModalDataWriter _writer;
+		private readonly List<string> _additionalColumns = new List<string>();
 		public string RunName { get; private set; }
 		public string CycleName { get; private set; }
 		public string RunSuffix { get; private set; }
@@ -184,11 +186,11 @@ namespace TUGraz.VectoCore.OutputData
 			}
 
 			var strCols = dataColumns.Select(x => x.GetName())
-				.Concat((Auxiliaries.Values.Select(c => c.ColumnName)))
-				.Concat(new[] { ModalResultField.FCMap, ModalResultField.FCAUXc, ModalResultField.FCWHTCc }.Select(x => x.GetName()));
+				.Concat(Auxiliaries.Values.Select(c => c.ColumnName))
+				.Concat(new[] { ModalResultField.FCMap, ModalResultField.FCAUXc, ModalResultField.FCWHTCc }.Select(x => x.GetName()))
+				.Concat(_additionalColumns);
 
 			if (_mode != ExecutionMode.Declaration || WriteModalResults) {
-				//VectoCSVFile.Write(_modWriter, new DataView(Data).ToTable(false, strCols.ToArray()));
 				_writer.WriteModData(RunName, CycleName, RunSuffix,
 					new DataView(Data).ToTable(false, strCols.ToArray()));
 			}
@@ -220,6 +222,15 @@ namespace TUGraz.VectoCore.OutputData
 			set { CurrentRow[Auxiliaries[auxId]] = value; }
 		}
 
+		[MethodImpl(MethodImplOptions.Synchronized)]
+		public void SetDataValue(string fieldName, object value)
+		{
+			if (!Data.Columns.Contains(fieldName)) {
+				_additionalColumns.Add(fieldName);
+				Data.Columns.Add(fieldName);
+			}
+			CurrentRow[fieldName] = value;
+		}
 
 		public Dictionary<string, DataColumn> Auxiliaries { get; set; }
 
