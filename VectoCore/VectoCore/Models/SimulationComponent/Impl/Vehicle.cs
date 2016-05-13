@@ -222,16 +222,16 @@ namespace TUGraz.VectoCore.Models.SimulationComponent.Impl
 			if (vAverage.IsEqual(0)) {
 				return 0.SI<Newton>();
 			}
-			var result = ComputeAirDragPowerLoss(previousVelocity, previousVelocity + acceleration * dt, dt) /
+			var result = ComputeAirDragPowerLoss(previousVelocity, previousVelocity + acceleration * dt) /
 						vAverage;
 
 			Log.Debug("AirDragResistance: {0}", result);
 			return result;
 		}
 
-		private Watt ComputeAirDragPowerLoss(MeterPerSecond v1, MeterPerSecond v2, Second dt)
+		private Watt ComputeAirDragPowerLoss(MeterPerSecond v1, MeterPerSecond v2)
 		{
-			return ModelData.CrossWindCorrectionCurve.AverageAirDragPowerLoss(v1, v2, dt);
+			return ModelData.CrossWindCorrectionCurve.AverageAirDragPowerLoss(v1, v2);
 		}
 
 		public class VehicleState
