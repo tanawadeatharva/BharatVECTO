@@ -350,7 +350,7 @@ namespace TUGraz.VectoCore.Models.SimulationComponent.Impl
 				if (cycleIterator.RightSample.VehicleTargetSpeed.IsEqual(velocity)) {
 					continue;
 				}
-				retVal.Add(cycleIterator.RightSample);
+				retVal.Add(cycleIterator.RightSample); // TODO: MQ 2016-05-13: use clone if iterator here?
 				velocity = cycleIterator.RightSample.VehicleTargetSpeed;
 			} while (cycleIterator.MoveNext() && cycleIterator.RightSample.Distance < PreviousState.Distance + lookaheadDistance);
 			if (retVal.Count > 0) {
@@ -376,6 +376,11 @@ namespace TUGraz.VectoCore.Models.SimulationComponent.Impl
 					RightSample = CycleIntervalIterator.RightSample
 				};
 			}
+		}
+
+		public Meter Altitude
+		{
+			get { return CurrentState.Altitude; }
 		}
 
 		internal void SetDriveOffDistance(Meter startDistance)

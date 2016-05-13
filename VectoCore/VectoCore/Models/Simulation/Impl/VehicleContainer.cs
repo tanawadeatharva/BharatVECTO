@@ -343,5 +343,10 @@ namespace TUGraz.VectoCore.Models.Simulation.Impl
 		{
 			get { return DrivingCycle.CycleData; }
 		}
+
+		public Meter Altitude
+		{
+			get { return DrivingCycle.Altitude; }
+		}
 	}
 }

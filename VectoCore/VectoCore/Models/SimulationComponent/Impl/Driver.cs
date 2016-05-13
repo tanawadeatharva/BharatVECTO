@@ -799,7 +799,7 @@ namespace TUGraz.VectoCore.Models.SimulationComponent.Impl
 			foreach (var kv in _coastData) {
 				container.SetDataValue(kv.Key, kv.Value);
 			}
-			container.SetDataValue("Alt", DataBus.CycleData.LeftSample.Altitude.Value());
+			container.SetDataValue("Alt", DataBus.Altitude.Value());
 			container.SetDataValue("DrivingMode", ((DefaultDriverStrategy)DriverStrategy).CurrentDrivingMode);
 			container.SetDataValue("Action", CurrentAction);
 			_coastData.Clear();

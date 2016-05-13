@@ -29,6 +29,7 @@
 *   Martin Rexeis, rexeis@ivt.tugraz.at, IVT, Graz University of Technology
 */
 
+using TUGraz.VectoCommon.Utils;
 using TUGraz.VectoCore.Models.SimulationComponent.Data;
 
 namespace TUGraz.VectoCore.Models.SimulationComponent
@@ -43,5 +44,7 @@ namespace TUGraz.VectoCore.Models.SimulationComponent
 		/// Returns the data samples for the current position in the cycle.
 		/// </summary>
 		CycleData CycleData { get; }
+
+		Meter Altitude { get; }
 	}
 }

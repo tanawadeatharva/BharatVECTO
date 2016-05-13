@@ -74,6 +74,11 @@ namespace TUGraz.VectoCore.Tests.Utils
 			}
 		}
 
+		public Meter Altitude
+		{
+			get { return 0.SI<Meter>(); }
+		}
+
 		protected override void DoWriteModalResults(IModalDataContainer container)
 		{
 			container[ModalResultField.dist] = 0.SI<Meter>();

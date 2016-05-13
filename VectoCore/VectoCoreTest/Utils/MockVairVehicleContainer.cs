@@ -110,6 +110,7 @@ namespace TUGraz.VectoCore.Tests.Utils
 		public bool VehicleStopped { get; private set; }
 		public DrivingBehavior DriverBehavior { get; private set; }
 		public CycleData CycleData { get; set; }
+		public Meter Altitude { get; set; }
 		public ExecutionMode ExecutionMode { get; set; }
 		public IModalDataContainer ModalData { get; private set; }
 		public VectoRunData RunData { get; private set; }

@@ -215,6 +215,11 @@ namespace TUGraz.VectoCore.Models.SimulationComponent.Impl
 				};
 			}
 		}
+
+		public Meter Altitude
+		{
+			get { return 0.SI<Meter>(); }
+		}
 	}
 
 	/// <summary>
@@ -512,6 +517,11 @@ namespace TUGraz.VectoCore.Models.SimulationComponent.Impl
 					RightSample = RightSample.Current,
 				};
 			}
+		}
+
+		public Meter Altitude
+		{
+			get { return LeftSample.Current.Altitude; }
 		}
 
 		protected override void DoWriteModalResults(IModalDataContainer container)
