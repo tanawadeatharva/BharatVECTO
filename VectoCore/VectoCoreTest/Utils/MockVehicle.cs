@@ -88,7 +88,7 @@ namespace TUGraz.VectoCore.Tests.Utils
 			get { return VehicleMass; }
 		}
 
-		public Newton AirDragResistance(MeterPerSecond previousVelocity, MeterPerSquareSecond acceleration, Second dt)
+		public Newton AirDragResistance(MeterPerSecond previousVelocity, MeterPerSecond nextVelocity)
 		{
 			throw new NotImplementedException();
 		}

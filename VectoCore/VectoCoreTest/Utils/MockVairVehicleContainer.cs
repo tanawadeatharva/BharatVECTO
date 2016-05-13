@@ -77,7 +77,7 @@ namespace TUGraz.VectoCore.Tests.Utils
 		public Kilogram VehicleLoading { get; private set; }
 		public Kilogram TotalMass { get; private set; }
 
-		public Newton AirDragResistance(MeterPerSecond previousVelocity, MeterPerSquareSecond acceleration, Second dt)
+		public Newton AirDragResistance(MeterPerSecond previousVelocity, MeterPerSecond nextVelocity)
 		{
 			throw new System.NotImplementedException();
 		}

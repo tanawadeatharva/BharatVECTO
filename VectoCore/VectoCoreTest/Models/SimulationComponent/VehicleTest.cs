@@ -109,8 +109,8 @@ namespace TUGraz.VectoCore.Tests.Models.SimulationComponent
 
 			vehicle.Initialize(vehicleSpeed.KMPHtoMeterPerSecond(), 0.SI<Radian>());
 
-			var avgForce = vehicle.AirDragResistance(vehicleSpeed.KMPHtoMeterPerSecond(), acceleration.SI<MeterPerSquareSecond>(),
-				dt.SI<Second>());
+			var nextSpeed = vehicleSpeed.KMPHtoMeterPerSecond() + acceleration.SI<MeterPerSquareSecond>() * dt.SI<Second>();
+			var avgForce = vehicle.AirDragResistance(vehicleSpeed.KMPHtoMeterPerSecond(), nextSpeed);
 			Assert.AreEqual(expected, avgForce.Value(), Tolerance);
 		}
 

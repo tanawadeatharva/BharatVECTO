@@ -187,9 +187,9 @@ namespace TUGraz.VectoCore.Models.Simulation.Impl
 			get { return Vehicle != null ? Vehicle.TotalMass : 0.SI<Kilogram>(); }
 		}
 
-		public Newton AirDragResistance(MeterPerSecond previousVelocity, MeterPerSquareSecond acceleration, Second dt)
+		public Newton AirDragResistance(MeterPerSecond previousVelocity, MeterPerSecond nextVelocity)
 		{
-			return Vehicle.AirDragResistance(previousVelocity, acceleration, dt);
+			return Vehicle.AirDragResistance(previousVelocity, nextVelocity);
 		}
 
 		public Newton RollingResistance(Radian gradient)
