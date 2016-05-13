@@ -32,6 +32,7 @@
 using System;
 using System.IO;
 using Microsoft.VisualStudio.TestTools.UnitTesting;
+using NUnit.Framework;
 using TUGraz.VectoCommon.Models;
 using TUGraz.VectoCommon.Utils;
 using TUGraz.VectoCore.InputData.Reader.DataObjectAdaper;
@@ -41,17 +42,18 @@ using TUGraz.VectoCore.Models.SimulationComponent.Data;
 using TUGraz.VectoCore.Models.SimulationComponent.Impl;
 using TUGraz.VectoCore.Tests.Utils;
 using TUGraz.VectoCore.Utils;
+using Assert = Microsoft.VisualStudio.TestTools.UnitTesting.Assert;
 
 namespace TUGraz.VectoCore.Tests.Models.SimulationComponent
 {
-	[TestClass]
+	[TestFixture]
 	public class VehicleTest
 	{
 		private const string VehicleDataFileCoach = @"TestData\Components\24t Coach.vveh";
 		private const string VehicleDataFileTruck = @"TestData\Components\40t_Long_Haul_Truck.vveh";
 		public static readonly double Tolerance = 0.001;
 
-		[TestMethod]
+		[Test]
 		public void VehiclePortTest()
 		{
 			var container = new VehicleContainer(ExecutionMode.Engineering);
@@ -81,8 +83,15 @@ namespace TUGraz.VectoCore.Tests.Models.SimulationComponent
 			Assert.AreEqual(16.954303841, mockPort.Velocity.Value(), 0.0001);
 		}
 
-		[TestMethod]
-		public void VehicleAirResistanceTest()
+		[Test,
+		TestCase(0, 0, 0.5, 0),
+		TestCase(0, 1, 0.5, 0.603055),
+		TestCase(60, 0, 0.5, 1340.12357),
+		TestCase(60, 1, 0.5, 1375.63226),
+		TestCase(60, 0.5, 0.5, 1357.76658),
+		TestCase(72, 0.5, 0.5, 1861.2734),
+		TestCase(72, 1, 3, 2101.63000)]
+		public void VehicleAirResistanceTest(double vehicleSpeed, double acceleration, double dt, double expected)
 		{
 			var container = new VehicleContainer(ExecutionMode.Declaration);
 
@@ -98,33 +107,14 @@ namespace TUGraz.VectoCore.Tests.Models.SimulationComponent
 
 			// ====================
 
-			var dt = 0.5.SI<Second>();
-			var vehicleSpeed = 60.KMPHtoMeterPerSecond();
-			vehicle.Initialize(vehicleSpeed, 0.SI<Radian>());
+			vehicle.Initialize(vehicleSpeed.KMPHtoMeterPerSecond(), 0.SI<Radian>());
 
-			var avgForce = vehicle.AirDragResistance(vehicleSpeed, 0.SI<MeterPerSquareSecond>(), dt);
-			Assert.AreEqual(1340.12357, avgForce.Value(), Tolerance);
-
-			avgForce = vehicle.AirDragResistance(vehicleSpeed, 1.SI<MeterPerSquareSecond>(), dt);
-			Assert.AreEqual(1375.63226, avgForce.Value(), Tolerance);
-
-			avgForce = vehicle.AirDragResistance(vehicleSpeed, 0.5.SI<MeterPerSquareSecond>(), dt);
-			Assert.AreEqual(1357.76658, avgForce.Value(), Tolerance);
-
-			// - - - - - - 
-			vehicleSpeed = 72.KMPHtoMeterPerSecond();
-			vehicle.Initialize(vehicleSpeed, 0.SI<Radian>());
-
-			avgForce = vehicle.AirDragResistance(vehicleSpeed, 0.5.SI<MeterPerSquareSecond>(), dt);
-			Assert.AreEqual(1861.2734, avgForce.Value(), Tolerance);
-
-			dt = 3.SI<Second>();
-
-			avgForce = vehicle.AirDragResistance(vehicleSpeed, 1.SI<MeterPerSquareSecond>(), dt);
-			Assert.AreEqual(2101.63000, avgForce.Value(), Tolerance);
+			var avgForce = vehicle.AirDragResistance(vehicleSpeed.KMPHtoMeterPerSecond(), acceleration.SI<MeterPerSquareSecond>(),
+				dt.SI<Second>());
+			Assert.AreEqual(expected, avgForce.Value(), Tolerance);
 		}
 
-		[TestMethod]
+		[Test]
 		public void VehicleAirDragPowerLossDeclarationTest()
 		{
 			var container = new VehicleContainer(ExecutionMode.Declaration);
@@ -156,8 +146,15 @@ namespace TUGraz.VectoCore.Tests.Models.SimulationComponent
 			Assert.AreEqual(49735.26379, ((SI)writer[ModalResultField.P_air]).Value(), 0.1);
 		}
 
-		[TestMethod]
-		public void VehicleAirDragSpeedDependentTest()
+		[Test,
+		TestCase(5.19, 0, 1.173),
+		TestCase(5.19, 40, 1.173),
+		TestCase(5.19, 60, 1.173),
+		TestCase(5.19, 80, 1.109),
+		TestCase(5.19, 100, 1.075),
+		TestCase(5.19, 62.5, 1.163),
+		]
+		public void VehicleAirDragSpeedDependentTest(double crossSectionArea, double velocity, double expectedFactor)
 		{
 			var data = new[] {
 				"v_veh in km/h,Cd factor in -",
@@ -191,30 +188,13 @@ namespace TUGraz.VectoCore.Tests.Models.SimulationComponent
 			writer.Flush();
 			correctionData.Seek(0, SeekOrigin.Begin);
 
-			var crossSectionArea = 5.19.SI<SquareMeter>();
 			var cwcc =
 				new CrosswindCorrectionCdxALookup(
 					CrossWindCorrectionCurveReader.ReadSpeedDependentCorrectionCurveFromStream(correctionData,
-						crossSectionArea), CrossWindCorrectionMode.SpeedDependentCorrectionFactor);
+						crossSectionArea.SI<SquareMeter>()), CrossWindCorrectionMode.SpeedDependentCorrectionFactor);
 
-			Assert.AreEqual(crossSectionArea.Value() * 1.173,
-				cwcc.EffectiveAirDragArea(0.KMPHtoMeterPerSecond()).Value(),
-				Tolerance);
-			Assert.AreEqual(crossSectionArea.Value() * 1.173,
-				cwcc.EffectiveAirDragArea(40.KMPHtoMeterPerSecond()).Value(),
-				Tolerance);
-			Assert.AreEqual(crossSectionArea.Value() * 1.173,
-				cwcc.EffectiveAirDragArea(60.KMPHtoMeterPerSecond()).Value(),
-				Tolerance);
-			Assert.AreEqual(crossSectionArea.Value() * 1.109,
-				cwcc.EffectiveAirDragArea(80.KMPHtoMeterPerSecond()).Value(),
-				Tolerance);
-			Assert.AreEqual(crossSectionArea.Value() * 1.075,
-				cwcc.EffectiveAirDragArea(100.KMPHtoMeterPerSecond()).Value(),
-				Tolerance);
-
-			Assert.AreEqual(crossSectionArea.Value() * 1.163,
-				cwcc.EffectiveAirDragArea(62.5.KMPHtoMeterPerSecond()).Value(),
+			Assert.AreEqual(crossSectionArea * expectedFactor,
+				cwcc.EffectiveAirDragArea(velocity.KMPHtoMeterPerSecond()).Value(),
 				Tolerance);
 		}
 	}
