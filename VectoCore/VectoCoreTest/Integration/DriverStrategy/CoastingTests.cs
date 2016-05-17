@@ -1,4 +1,5 @@
 ﻿using System;
+using System.Globalization;
 using Microsoft.VisualStudio.TestTools.UnitTesting;
 using NUnit.Framework;
 using TUGraz.VectoCommon.Utils;
@@ -49,9 +50,9 @@ namespace TUGraz.VectoCore.Tests.Integration.DriverStrategy
 
 			var cycle = new[] {
 				// <s>,<v>,<grad>,<stop>
-				string.Format("  0,  {0}, {2},  0", v1, v2, slope),
-				string.Format("1000, {1}, {2},  0", v1, v2, slope),
-				string.Format("1100, {1},   0,  0", v1, v2, slope)
+				string.Format(CultureInfo.InvariantCulture, "  0,  {0}, {2},  0", v1, v2, slope),
+				string.Format(CultureInfo.InvariantCulture, "1000, {1}, {2},  0", v1, v2, slope),
+				string.Format(CultureInfo.InvariantCulture, "1100, {1},   0,  0", v1, v2, slope)
 			};
 			System.IO.Directory.CreateDirectory(string.Format(@"Coast_{0}_{1}", v1, v2, slope));
 			var slopePrefix = "";
