@@ -380,7 +380,7 @@ namespace TUGraz.VectoCore.Models.SimulationComponent.Impl
 
 		public Meter Altitude
 		{
-			get { return CurrentState.Altitude; }
+			get { return PreviousState.Altitude; }
 		}
 
 		internal void SetDriveOffDistance(Meter startDistance)
