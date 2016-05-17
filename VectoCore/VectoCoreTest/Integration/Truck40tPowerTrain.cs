@@ -31,6 +31,7 @@
 
 using System;
 using System.Collections.Generic;
+using System.IO;
 using System.Linq;
 using TUGraz.VectoCommon.Models;
 using TUGraz.VectoCommon.Utils;
@@ -78,12 +79,13 @@ namespace TUGraz.VectoCore.Tests.Integration
 		}
 
 		public static VehicleContainer CreatePowerTrain(DrivingCycleData cycleData, string modFileName,
-			Kilogram massExtra,
-			Kilogram loading, bool overspeed = false)
+			Kilogram massExtra, Kilogram loading, bool overspeed = false)
 		{
 			var fileWriter = new FileOutputWriter(modFileName);
-			var modData = new ModalDataContainer(modFileName, fileWriter);
-			var container = new VehicleContainer(executionMode: ExecutionMode.Engineering, modData: modData) { RunData = new VectoRunData{ JobName = modFileName, Cycle = cycleData}};
+			var modData = new ModalDataContainer(Path.GetFileName(modFileName), fileWriter);
+			var container = new VehicleContainer(executionMode: ExecutionMode.Engineering, modData: modData) {
+				RunData = new VectoRunData { JobName = modFileName, Cycle = cycleData }
+			};
 
 			var engineData = MockSimulationDataFactory.CreateEngineDataFromFile(EngineFile);
 			var axleGearData = CreateAxleGearData();

@@ -85,6 +85,7 @@
     <Compile Include="Integration\BusAuxiliaries\SimpleCycleTest.cs" />
     <Compile Include="Integration\CoachAdvancedAuxPowertrain.cs" />
     <Compile Include="Integration\CoachPowerTrain.cs" />
+    <Compile Include="Integration\DriverStrategy\CoastingTests.cs" />
     <Compile Include="Integration\DriverStrategy\DriverStrategyTestCoach.cs" />
     <Compile Include="Integration\DriverStrategy\DriverStrategyTestTruck.cs" />
     <Compile Include="Integration\FullCycleDeclarationTest.cs">
