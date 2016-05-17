@@ -61,6 +61,8 @@ namespace TUGraz.VectoCore.Tests.Utils
 
 		public static ModalResultField[] Xfields { get; set; }
 
+		public static bool PlotDrivingMode = false;
+
 
 		public static void Enable()
 		{
@@ -135,8 +137,36 @@ namespace TUGraz.VectoCore.Tests.Utils
 						chartArea.AxisY2.RoundAxisValues();
 						chartArea.AxisY2.Interval = Math.Round(max / 5);
 
+						if (modDataV3.Columns.Contains("Alt")) {
+							var alt = LoadData(modDataV3, "Alt");
+							var seriesAlt = CreateSeries("Altitude", legend, chartArea, chart, Color.Brown, x, alt);
+							seriesAlt.YAxisType = AxisType.Secondary;
+						}
 						var seriesGrad = CreateSeries("Gradient", legend, chartArea, chart, Color.Coral, x, grad);
 						seriesGrad.YAxisType = AxisType.Secondary;
+					}
+					if (PlotDrivingMode && yfield == Yfields.First()) {
+						if (modDataV3.Columns.Contains("Action")) {
+							var actionMapping = new Dictionary<string, double> {
+								{ "Accelerate", 2 - 3 },
+								{ "Coast", 1 - 3 },
+								{ "Roll", 0 - 3 },
+								{ "Brake", -1 - 3 }
+							};
+							var action = LoadDataMapped(modDataV3, "Action", actionMapping);
+							var seriesAction = CreateSeries("Driving Action", legend, chartArea, chart, Color.Magenta, x, action);
+							//seriesAction.YAxisType = AxisType.Secondary;
+						}
+
+						if (modDataV3.Columns.Contains("DrivingMode")) {
+							var modeMapping = new Dictionary<string, double> {
+								{ "DrivingModeDrive", -1 },
+								{ "DrivingModeBrake", -6 },
+							};
+							var mode = LoadDataMapped(modDataV3, "DrivingMode", modeMapping);
+							var seriesAction = CreateSeries("Driving Mode", legend, chartArea, chart, Color.Maroon, x, mode);
+							//seriesAction.YAxisType = AxisType;
+						}
 					}
 
 					var series1 = CreateSeries(string.Format("{1} - {0}", yfield, Series1Label), legend, chartArea, chart,
@@ -159,7 +189,7 @@ namespace TUGraz.VectoCore.Tests.Utils
 				AddTitle(chart, Path.GetFileNameWithoutExtension(fileName), Yfields[0].ToString());
 
 				chart.Invalidate();
-				chart.SaveImage(fileName, ChartImageFormat.Png);
+				chart.SaveImage(Path.Combine(Path.GetDirectoryName(fileNameV3) ?? "", fileName), ChartImageFormat.Png);
 			}
 		}
 
@@ -320,6 +350,13 @@ namespace TUGraz.VectoCore.Tests.Utils
 					? double.NaN
 					: v.Field<string>(field).ToDouble())
 				.ToArray();
+		}
+
+		private static double[] LoadDataMapped(DataTable modDataV3, string field, Dictionary<string, double> mapping)
+		{
+			return (from x in modDataV3.Rows.Cast<DataRow>()
+				let val = x.Field<string>(field)
+				select mapping.ContainsKey(val) ? mapping[val] : double.NaN).ToArray();
 		}
 
 		private static void AlignChart(Chart chart, string chartToAlign, string chartToAlignWith)
