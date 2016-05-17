@@ -477,8 +477,11 @@ namespace TUGraz.VectoCore.Models.SimulationComponent.Impl
 				Driver.DataBus.VehicleSpeed * Driver.DataBus.VehicleSpeed / 2 / Driver.DriverData.LookAheadCoasting.Deceleration -
 				(nextAction.TriggerDistance - Driver.DataBus.Distance)).Value());
 			dtList.Sort();
+			if (!dtList.Any(x => x > 0)) {
+				return null;
+			}
 			var dt = dtList.First(x => x > 0).SI<Second>();
-			var newds = Driver.DataBus.VehicleSpeed * dt + retVal.Acceleration / 2 * dt * dt;
+			var newds = Driver.DataBus.VehicleSpeed * dt + (retVal.Acceleration / 2 * dt * dt);
 			return newds;
 		}
 	}
@@ -566,7 +569,7 @@ namespace TUGraz.VectoCore.Models.SimulationComponent.Impl
 						Constants.SimulationSettings.DriverActionDistanceTolerance)) {
 						return response;
 					}
-					newds = EstimateAccelerationDistanceBeforeBrake(response, nextAction);
+					newds = EstimateAccelerationDistanceBeforeBrake(response, nextAction) ?? ds;
 					break;
 				case DrivingBehavior.Braking:
 					var brakingDistance = Driver.DriverData.AccelerationCurve.ComputeAccelerationDistance(v2,
