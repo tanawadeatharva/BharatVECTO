@@ -322,12 +322,13 @@ namespace TUGraz.VectoCore.Models.SimulationComponent.Impl
 			return nextActions.Count == 0 ? null : nextActions.OrderBy(x => x.ActionDistance).First();
 		}
 
-		protected virtual Meter ComputeCoastingDistance(MeterPerSecond currentSpeed, MeterPerSecond nextTargetSpeed)
+        protected virtual Meter ComputeCoastingDistance(MeterPerSecond currentSpeed, DrivingCycleData.DrivingCycleEntry actionEntry)
 		{
-			return Formulas.DecelerationDistance(currentSpeed, nextTargetSpeed,
+			return Formulas.DecelerationDistance(currentSpeed, actionEntry.VehicleTargetSpeed,
 				Driver.DriverData.LookAheadCoasting.Deceleration);
 		}
 
+#if NEW_COASTING
 		protected virtual Meter ComputeCoastingDistance(MeterPerSecond v_veh, DrivingCycleData.DrivingCycleEntry actionEntry)
 		{
 			var v_target = OverspeedAllowed(actionEntry.RoadGradient, actionEntry.VehicleTargetSpeed)
@@ -369,7 +370,7 @@ namespace TUGraz.VectoCore.Models.SimulationComponent.Impl
 
 			return delta_x;
 		}
-
+#endif
 
 		public bool OverspeedAllowed(Radian gradient, MeterPerSecond velocity)
 		{
