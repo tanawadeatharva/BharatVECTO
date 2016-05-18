@@ -274,10 +274,12 @@ namespace TUGraz.VectoCore.Models.SimulationComponent.Impl
 			var currentSpeed = Driver.DataBus.VehicleSpeed;
 
 			// distance until halt
-			//var lookaheadDistance = Formulas.DecelerationDistance(currentSpeed, 0.SI<MeterPerSecond>(),
-			//	Driver.DriverData.LookAheadCoasting.Deceleration);
-			var lookaheadDistance = (currentSpeed.Value() * 3.6 * 10).SI<Meter>();
-
+#if NEW_COASTING
+   			var lookaheadDistance = (currentSpeed.Value() * 3.6 * 10).SI<Meter>();
+#else
+            var lookaheadDistance = Formulas.DecelerationDistance(currentSpeed, 0.SI<MeterPerSecond>(),
+                Driver.DriverData.LookAheadCoasting.Deceleration);
+#endif
 			lookaheadDistance = VectoMath.Max(2 * ds, 1.2 * lookaheadDistance);
 			var lookaheadData = Driver.DataBus.LookAhead(lookaheadDistance);
 
@@ -289,9 +291,14 @@ namespace TUGraz.VectoCore.Models.SimulationComponent.Impl
 					: entry.VehicleTargetSpeed;
 				if (nextTargetSpeed < currentSpeed) {
 					var coastingDistance = ComputeCoastingDistance(currentSpeed, entry);
-					if ( /*!Driver.DriverData.LookAheadCoasting.Enabled ||
-						currentSpeed < Driver.DriverData.LookAheadCoasting.MinSpeed || */
-						coastingDistance < 0) {
+#if NEW_COASTING
+                    if (coastingDistance < 0) {
+#else
+                    if ( !Driver.DriverData.LookAheadCoasting.Enabled ||
+						currentSpeed < Driver.DriverData.LookAheadCoasting.MinSpeed || 
+                        coastingDistance < 0)
+                    {
+#endif
 						var brakingDistance = Driver.ComputeDecelerationDistance(nextTargetSpeed) + BrakingSafetyMargin;
 						Log.Debug(
 							"adding 'Braking' starting at distance {0}. brakingDistance: {1}, triggerDistance: {2}, nextTargetSpeed: {3}",
@@ -324,11 +331,7 @@ namespace TUGraz.VectoCore.Models.SimulationComponent.Impl
 			return nextActions.Count == 0 ? null : nextActions.OrderBy(x => x.ActionDistance).First();
 		}
 
-        protected virtual Meter ComputeCoastingDistance(MeterPerSecond currentSpeed, DrivingCycleData.DrivingCycleEntry actionEntry)
-		{
-			return Formulas.DecelerationDistance(currentSpeed, actionEntry.VehicleTargetSpeed,
-				Driver.DriverData.LookAheadCoasting.Deceleration);
-		}
+
 
 #if NEW_COASTING
 		protected virtual Meter ComputeCoastingDistance(MeterPerSecond v_veh, DrivingCycleData.DrivingCycleEntry actionEntry)
@@ -372,6 +375,12 @@ namespace TUGraz.VectoCore.Models.SimulationComponent.Impl
 
 			return delta_x;
 		}
+#else
+        protected virtual Meter ComputeCoastingDistance(MeterPerSecond currentSpeed, DrivingCycleData.DrivingCycleEntry actionEntry)
+        {
+            return Formulas.DecelerationDistance(currentSpeed, actionEntry.VehicleTargetSpeed,
+                Driver.DriverData.LookAheadCoasting.Deceleration);
+        }
 #endif
 
 		public bool OverspeedAllowed(Radian gradient, MeterPerSecond velocity)
