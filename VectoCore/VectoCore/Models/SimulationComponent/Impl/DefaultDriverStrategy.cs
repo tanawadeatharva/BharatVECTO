@@ -274,8 +274,10 @@ namespace TUGraz.VectoCore.Models.SimulationComponent.Impl
 			var currentSpeed = Driver.DataBus.VehicleSpeed;
 
 			// distance until halt
-			var lookaheadDistance = Formulas.DecelerationDistance(currentSpeed, 0.SI<MeterPerSecond>(),
-				Driver.DriverData.LookAheadCoasting.Deceleration);
+			//var lookaheadDistance = Formulas.DecelerationDistance(currentSpeed, 0.SI<MeterPerSecond>(),
+			//	Driver.DriverData.LookAheadCoasting.Deceleration);
+			var lookaheadDistance = (currentSpeed.Value() * 3.6 * 10).SI<Meter>();
+
 			lookaheadDistance = VectoMath.Max(2 * ds, 1.2 * lookaheadDistance);
 			var lookaheadData = Driver.DataBus.LookAhead(lookaheadDistance);
 
@@ -287,8 +289,8 @@ namespace TUGraz.VectoCore.Models.SimulationComponent.Impl
 					: entry.VehicleTargetSpeed;
 				if (nextTargetSpeed < currentSpeed) {
 					var coastingDistance = ComputeCoastingDistance(currentSpeed, entry);
-					if (!Driver.DriverData.LookAheadCoasting.Enabled ||
-						currentSpeed < Driver.DriverData.LookAheadCoasting.MinSpeed ||
+					if ( /*!Driver.DriverData.LookAheadCoasting.Enabled ||
+						currentSpeed < Driver.DriverData.LookAheadCoasting.MinSpeed || */
 						coastingDistance < 0) {
 						var brakingDistance = Driver.ComputeDecelerationDistance(nextTargetSpeed) + BrakingSafetyMargin;
 						Log.Debug(

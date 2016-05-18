@@ -43,6 +43,11 @@ namespace TUGraz.VectoCore.Tests.Integration.DriverStrategy
 		TestCase(60, 35, 5.3),
 		TestCase(50, 47.5, -2.1),
 		TestCase(65, 62.5, -0.8),
+		TestCase(60, 50, 5.6),
+		TestCase(80, 40, 4.0),
+		TestCase(65, 60, 4.7),
+		TestCase(70, 62.5, 4.6),
+		TestCase(75, 65, 4.5),
 		]
 		public void Truck_Coasting_Test(double v1, double v2, double slope)
 		{
