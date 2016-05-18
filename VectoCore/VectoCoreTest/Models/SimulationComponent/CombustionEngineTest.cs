@@ -35,7 +35,7 @@ using System.Data;
 using System.IO;
 using System.Linq;
 using System.Reflection;
-using Microsoft.VisualStudio.TestTools.UnitTesting;
+using NUnit.Framework;
 using TUGraz.VectoCommon.Models;
 using TUGraz.VectoCommon.Utils;
 using TUGraz.VectoCore.Configuration;
@@ -47,9 +47,14 @@ using TUGraz.VectoCore.Models.SimulationComponent.Impl;
 using TUGraz.VectoCore.Tests.Utils;
 using TUGraz.VectoCore.Utils;
 
+// ReSharper disable UnusedVariable
+// ReSharper disable NotAccessedVariable
+// ReSharper disable CollectionNeverQueried.Local
+// ReSharper disable RedundantAssignment
+
 namespace TUGraz.VectoCore.Tests.Models.SimulationComponent
 {
-	[TestClass]
+	[TestFixture]
 	public class CombustionEngineTest
 	{
 		protected double Tolerance = 1E-3;
@@ -58,15 +63,13 @@ namespace TUGraz.VectoCore.Tests.Models.SimulationComponent
 
 		private const string TruckEngine = @"TestData\Components\40t_Long_Haul_Truck.veng";
 
-		public TestContext TestContext { get; set; }
-
-		[ClassInitialize]
+		[TestCase]
 		public static void ClassInitialize(TestContext ctx)
 		{
 			AppDomain.CurrentDomain.SetData("DataDirectory", Path.GetDirectoryName(Assembly.GetExecutingAssembly().Location));
 		}
 
-		[TestMethod]
+		[TestCase]
 		public void TestEngineHasOutPort()
 		{
 			var vehicle = new VehicleContainer(ExecutionMode.EngineOnly);
@@ -77,7 +80,7 @@ namespace TUGraz.VectoCore.Tests.Models.SimulationComponent
 			Assert.IsNotNull(port);
 		}
 
-		[TestMethod]
+		[TestCase]
 		public void TestOutPortRequestNotFailing()
 		{
 			var vehicle = new VehicleContainer(ExecutionMode.EngineOnly);
@@ -95,7 +98,7 @@ namespace TUGraz.VectoCore.Tests.Models.SimulationComponent
 			port.Request(absTime, dt, torque, engineSpeed);
 		}
 
-		[TestMethod]
+		[TestCase]
 		public void TestSimpleModalData()
 		{
 			var vehicle = new VehicleContainer(ExecutionMode.Engineering);
@@ -155,25 +158,31 @@ namespace TUGraz.VectoCore.Tests.Models.SimulationComponent
 			dataWriter.Data.WriteToFile(@"test1.csv");
 		}
 
-		[TestMethod]
-		[DataSource("Microsoft.VisualStudio.TestTools.DataSource.CSV", "|DataDirectory|\\TestData\\EngineFullLoadJumps.csv",
-			"EngineFullLoadJumps#csv", DataAccessMethod.Sequential)]
-		public void TestEngineOnlyEngineFullLoadJump()
+		[TestCase("Test1Hz", @"TestData\Components\24t Coach.veng", 1000, 50, 50,
+			@"TestData\Results\EngineFullLoadJumps\EngineFLJ_1000rpm_1Hz.csv")]
+		[TestCase("Test10Hz", @"TestData\Components\24t Coach.veng", 1000, 50, 50,
+			@"TestData\Results\EngineFullLoadJumps\EngineFLJ_1000rpm_10Hz.csv")]
+		[TestCase("TestvarHz", @"TestData\Components\24t Coach.veng", 1000, 50, 50,
+			@"TestData\Results\EngineFullLoadJumps\EngineFLJ_1000rpm_varHz.csv")]
+		[TestCase("Test10Hz", @"TestData\Components\24t Coach_IncPT1.veng", 1000, 50, 50,
+			@"TestData\Results\EngineFullLoadJumps\EngineFLJ_1000rpm_10Hz_IncPT1.csv")]
+		public void TestEngineOnlyEngineFullLoadJump(string testName, string engineFile, double rpm, double initialIdleLoad,
+			double finalIdleLoad, string resultFile)
 		{
 			var vehicleContainer = new VehicleContainer(ExecutionMode.Engineering);
-			var engineData = MockSimulationDataFactory.CreateEngineDataFromFile(TestContext.DataRow["EngineFile"].ToString());
+			var engineData = MockSimulationDataFactory.CreateEngineDataFromFile(engineFile);
 			var engine = new EngineOnlyCombustionEngine(vehicleContainer, engineData);
 
-			var expectedResults = VectoCSVFile.Read(TestContext.DataRow["ResultFile"].ToString());
+			var expectedResults = VectoCSVFile.Read(resultFile);
 
 			var requestPort = engine.OutPort();
 
 			//var modalData = new ModalDataWriter(string.Format("load_jump_{0}.csv", TestContext.DataRow["TestName"].ToString()));
 			var modalData = new MockModalDataContainer();
 
-			var idlePower = double.Parse(TestContext.DataRow["initialIdleLoad"].ToString()).SI<Watt>();
+			var idlePower = initialIdleLoad.SI<Watt>();
 
-			var angularSpeed = double.Parse(TestContext.DataRow["rpm"].ToString()).RPMtoRad();
+			var angularSpeed = rpm.RPMtoRad();
 
 			var t = 0.SI<Second>();
 			var dt = 0.1.SI<Second>();
@@ -187,7 +196,7 @@ namespace TUGraz.VectoCore.Tests.Models.SimulationComponent
 			// dt = TimeSpan.FromSeconds(double.Parse(TestContext.DataRow["dt"].ToString(), CultureInfo.InvariantCulture));
 			// dt = TimeSpan.FromSeconds(expectedResults.Rows[i].ParseDouble(0)) - t;
 			var engineLoadPower = engineData.FullLoadCurve.FullLoadStationaryPower(angularSpeed);
-			idlePower = double.Parse(TestContext.DataRow["finalIdleLoad"].ToString()).SI<Watt>();
+			idlePower = finalIdleLoad.SI<Watt>();
 			for (; t < 25; t += dt, i++) {
 				dt = (expectedResults.Rows[i + 1].ParseDouble(0) - expectedResults.Rows[i].ParseDouble(0)).SI<Second>();
 				if (t >= 10.SI<Second>()) {
@@ -205,25 +214,31 @@ namespace TUGraz.VectoCore.Tests.Models.SimulationComponent
 			modalData.Finish(VectoRun.Status.Success);
 		}
 
-		[TestMethod]
-		[DataSource("Microsoft.VisualStudio.TestTools.DataSource.CSV", "|DataDirectory|\\TestData\\EngineFullLoadJumps.csv",
-			"EngineFullLoadJumps#csv", DataAccessMethod.Sequential)]
-		public void TestEngineFullLoadJump()
+		[TestCase("Test1Hz", @"TestData\Components\24t Coach.veng", 1000, 50, 50,
+			@"TestData\Results\EngineFullLoadJumps\EngineFLJ_1000rpm_1Hz.csv")]
+		[TestCase("Test10Hz", @"TestData\Components\24t Coach.veng", 1000, 50, 50,
+			@"TestData\Results\EngineFullLoadJumps\EngineFLJ_1000rpm_10Hz.csv")]
+		[TestCase("TestvarHz", @"TestData\Components\24t Coach.veng", 1000, 50, 50,
+			@"TestData\Results\EngineFullLoadJumps\EngineFLJ_1000rpm_varHz.csv")]
+		[TestCase("Test10Hz", @"TestData\Components\24t Coach_IncPT1.veng", 1000, 50, 50,
+			@"TestData\Results\EngineFullLoadJumps\EngineFLJ_1000rpm_10Hz_IncPT1.csv")]
+		public void TestEngineFullLoadJump(string testName, string engineFile, double rpm, double initialIdleLoad,
+			double finalIdleLoad, string resultFile)
 		{
 			var vehicleContainer = new VehicleContainer(ExecutionMode.Engineering);
-			var engineData = MockSimulationDataFactory.CreateEngineDataFromFile(TestContext.DataRow["EngineFile"].ToString());
+			var engineData = MockSimulationDataFactory.CreateEngineDataFromFile(engineFile);
 			var engine = new CombustionEngine(vehicleContainer, engineData);
 
-			var expectedResults = VectoCSVFile.Read(TestContext.DataRow["ResultFile"].ToString());
+			var expectedResults = VectoCSVFile.Read(resultFile);
 
 			var requestPort = engine.OutPort();
 
-			//var modalData = new ModalDataWriter(string.Format("load_jump_{0}.csv", TestContext.DataRow["TestName"].ToString()));
+			//var modalData = new ModalDataWriter(string.Format("load_jump_{0}.csv", TestName));
 			var modalData = new MockModalDataContainer();
 
-			var idlePower = double.Parse(TestContext.DataRow["initialIdleLoad"].ToString()).SI<Watt>();
+			var idlePower = initialIdleLoad.SI<Watt>();
 
-			var angularSpeed = double.Parse(TestContext.DataRow["rpm"].ToString()).RPMtoRad();
+			var angularSpeed = rpm.RPMtoRad();
 
 			var t = 0.SI<Second>();
 			var dt = 0.1.SI<Second>();
@@ -237,7 +252,7 @@ namespace TUGraz.VectoCore.Tests.Models.SimulationComponent
 			// dt = TimeSpan.FromSeconds(double.Parse(TestContext.DataRow["dt"].ToString(), CultureInfo.InvariantCulture));
 			// dt = TimeSpan.FromSeconds(expectedResults.Rows[i].ParseDouble(0)) - t;
 			var engineLoadPower = engineData.FullLoadCurve.FullLoadStationaryPower(angularSpeed);
-			idlePower = double.Parse(TestContext.DataRow["finalIdleLoad"].ToString()).SI<Watt>();
+			idlePower = finalIdleLoad.SI<Watt>();
 			for (; t < 25; t += dt, i++) {
 				dt = (expectedResults.Rows[i + 1].ParseDouble(0) - expectedResults.Rows[i].ParseDouble(0)).SI<Second>();
 				if (t >= 10.SI<Second>()) {
@@ -255,7 +270,7 @@ namespace TUGraz.VectoCore.Tests.Models.SimulationComponent
 			modalData.Finish(VectoRun.Status.Success);
 		}
 
-		[TestMethod]
+		[TestCase]
 		public void EngineIdleJump()
 		{
 			var container = new VehicleContainer(ExecutionMode.Engineering);
@@ -265,8 +280,7 @@ namespace TUGraz.VectoCore.Tests.Models.SimulationComponent
 			var engine = new CombustionEngine(container, engineData);
 			var clutch = new Clutch(container, engineData, engine.IdleController);
 
-			// ReSharper disable once ObjectCreationAsStatement
-			new MockDriver(container);
+			var d = new MockDriver(container);
 
 			var aux = new EngineAuxiliary(container);
 			aux.AddConstant("", 5000.SI<Watt>());
@@ -297,9 +311,8 @@ namespace TUGraz.VectoCore.Tests.Models.SimulationComponent
 			var absTime = 0.SI<Second>();
 			var dt = Constants.SimulationSettings.TargetTimeInterval;
 
-			var response = requestPort.Request(absTime, dt, torque, angularVelocity);
+			var response = (ResponseSuccess)requestPort.Request(absTime, dt, torque, angularVelocity);
 
-			Assert.IsInstanceOfType(response, typeof(ResponseSuccess));
 			container.CommitSimulationStep(absTime, dt);
 			var row = dataWriter.Data.Rows.Cast<DataRow>().Last();
 			Assert.AreEqual(100530.96491487339.SI<Watt>().Value(), ((SI)row[ModalResultField.P_eng_out.GetName()]).Value());
@@ -314,9 +327,8 @@ namespace TUGraz.VectoCore.Tests.Models.SimulationComponent
 			gearbox.Gear = 0;
 			torque = 0.SI<NewtonMeter>();
 
-			response = gearbox.Request(absTime, dt, torque, angularVelocity);
+			response = (ResponseSuccess)gearbox.Request(absTime, dt, torque, angularVelocity);
 
-			Assert.IsInstanceOfType(response, typeof(ResponseSuccess));
 			container.CommitSimulationStep(absTime, dt);
 			row = dataWriter.Data.Rows.Cast<DataRow>().Last();
 
@@ -325,7 +337,7 @@ namespace TUGraz.VectoCore.Tests.Models.SimulationComponent
 			Assert.AreEqual(800.RPMtoRad(), row[ModalResultField.n_eng_avg.GetName()]);
 		}
 
-		[TestMethod]
+		[TestCase]
 		public void EngineIdleControllerTestCoach()
 		{
 			VehicleContainer container;
@@ -339,11 +351,9 @@ namespace TUGraz.VectoCore.Tests.Models.SimulationComponent
 			var angularVelocity = 800.RPMtoRad();
 			var torque = 100000.SI<Watt>() / angularVelocity;
 
-			var response = requestPort.Initialize(torque, angularVelocity);
-			Assert.IsInstanceOfType(response, typeof(ResponseSuccess));
+			var response = (ResponseSuccess)requestPort.Initialize(torque, angularVelocity);
 
-			response = requestPort.Request(absTime, dt, torque, angularVelocity);
-			Assert.IsInstanceOfType(response, typeof(ResponseSuccess));
+			response = (ResponseSuccess)requestPort.Request(absTime, dt, torque, angularVelocity);
 			Assert.AreEqual(105000, response.EnginePowerRequest.Value(), Tolerance);
 			container.CommitSimulationStep(absTime, dt);
 			absTime += dt;
@@ -354,11 +364,10 @@ namespace TUGraz.VectoCore.Tests.Models.SimulationComponent
 			for (var i = 0; i < engineSpeed.Length; i++) {
 				torque = 0.SI<NewtonMeter>();
 
-				response = requestPort.Request(absTime, dt, torque, null);
+				response = (ResponseSuccess)requestPort.Request(absTime, dt, torque, null);
 				container.CommitSimulationStep(absTime, dt);
 				absTime += dt;
 
-				Assert.IsInstanceOfType(response, typeof(ResponseSuccess));
 				Assert.AreEqual(engineSpeed[i].Value(), engine.PreviousState.EngineSpeed.Value(), Tolerance, "i: {0}", i);
 				Assert.AreEqual(enginePower[i].Value(), engine.PreviousState.EnginePower.Value(), Tolerance, "i: {0}", i);
 			}
@@ -381,7 +390,7 @@ namespace TUGraz.VectoCore.Tests.Models.SimulationComponent
 		| 70.5     | 308.729     | 1284.139  | 2295.815    | 9        |
 				*/
 
-		[TestMethod]
+		[TestCase]
 		public void EngineIdleControllerTestTruck()
 		{
 			VehicleContainer container;
@@ -398,11 +407,9 @@ namespace TUGraz.VectoCore.Tests.Models.SimulationComponent
 			var angularVelocity = 1680.RPMtoRad();
 			var torque = 345000.SI<Watt>() / angularVelocity;
 
-			var response = requestPort.Initialize(torque, angularVelocity);
-			Assert.IsInstanceOfType(response, typeof(ResponseSuccess));
+			var response = (ResponseSuccess)requestPort.Initialize(torque, angularVelocity);
 
-			response = requestPort.Request(absTime, dt, torque, angularVelocity);
-			Assert.IsInstanceOfType(response, typeof(ResponseSuccess));
+			response = (ResponseSuccess)requestPort.Request(absTime, dt, torque, angularVelocity);
 			Assert.AreEqual(350000, response.EnginePowerRequest.Value(), Tolerance);
 			container.CommitSimulationStep(absTime, dt);
 			absTime += dt;
@@ -425,8 +432,7 @@ namespace TUGraz.VectoCore.Tests.Models.SimulationComponent
 			for (var i = 0; i < engineSpeed.Length; i++) {
 				torque = 0.SI<NewtonMeter>();
 
-				response = requestPort.Request(absTime, dt, torque, null);
-				Assert.IsInstanceOfType(response, typeof(ResponseSuccess));
+				response = (ResponseSuccess)requestPort.Request(absTime, dt, torque, null);
 
 				container.CommitSimulationStep(absTime, dt);
 
@@ -439,7 +445,7 @@ namespace TUGraz.VectoCore.Tests.Models.SimulationComponent
 			//dataWriter.Finish();
 		}
 
-		[TestMethod]
+		[TestCase]
 		public void EngineIdleControllerTest2Truck()
 		{
 			VehicleContainer container;
@@ -458,11 +464,9 @@ namespace TUGraz.VectoCore.Tests.Models.SimulationComponent
 			var torque = (engine.ModelData.FullLoadCurve.DragLoadStationaryPower(angularVelocity) - 5000.SI<Watt>()) /
 						angularVelocity;
 
-			var response = requestPort.Initialize(torque, angularVelocity);
-			Assert.IsInstanceOfType(response, typeof(ResponseSuccess));
+			var response = (ResponseSuccess)requestPort.Initialize(torque, angularVelocity);
 
-			response = requestPort.Request(absTime, dt, torque, angularVelocity);
-			Assert.IsInstanceOfType(response, typeof(ResponseSuccess));
+			response = (ResponseSuccess)requestPort.Request(absTime, dt, torque, angularVelocity);
 			Assert.AreEqual(-14829.79713, response.EnginePowerRequest.Value(), Tolerance);
 			container.CommitSimulationStep(absTime, dt);
 			absTime += dt;
@@ -484,8 +488,7 @@ namespace TUGraz.VectoCore.Tests.Models.SimulationComponent
 			var engSpeedResults = new List<dynamic>();
 			torque = 0.SI<NewtonMeter>();
 			for (var i = 0; i < engineSpeed.Length; i++) {
-				response = requestPort.Request(absTime, dt, torque, null);
-				Assert.IsInstanceOfType(response, typeof(ResponseSuccess));
+				response = (ResponseSuccess)requestPort.Request(absTime, dt, torque, null);
 
 				container.CommitSimulationStep(absTime, dt);
 
@@ -498,7 +501,7 @@ namespace TUGraz.VectoCore.Tests.Models.SimulationComponent
 			//dataWriter.Finish();
 		}
 
-		[TestMethod]
+		[TestCase]
 		public void Test_EngineData()
 		{
 			var engineData = MockSimulationDataFactory.CreateEngineDataFromFile(CoachEngine);
@@ -534,8 +537,7 @@ namespace TUGraz.VectoCore.Tests.Models.SimulationComponent
 			engine = new CombustionEngine(container, engineData);
 			var clutch = new Clutch(container, engineData, engine.IdleController);
 
-			// ReSharper disable once ObjectCreationAsStatement
-			new MockDriver(container);
+			var d = new MockDriver(container);
 
 			var aux = new EngineAuxiliary(container);
 			aux.AddConstant("", 5000.SI<Watt>());
