@@ -31,7 +31,6 @@ namespace TUGraz.VectoCore.Tests.Integration.DriverStrategy
 			GraphWriter.Series1Label = "Vecto 3";
 		}
 
-
 		[Test,
 		TestCase(60, 20, 0),
 		TestCase(60, 20, 0.6),
@@ -51,7 +50,7 @@ namespace TUGraz.VectoCore.Tests.Integration.DriverStrategy
 				// <s>,<v>,<grad>,<stop>
 				string.Format("  0,  {0}, {2},  0", v1, v2, slope),
 				string.Format("1000, {1}, {2},  0", v1, v2, slope),
-				string.Format("1100, {1},   0,  0", v1, v2, slope)
+				string.Format("1100, {1}, {2},  0", v1, v2, slope)
 			};
 			System.IO.Directory.CreateDirectory(string.Format(@"Coast_{0}_{1}", v1, v2, slope));
 			var slopePrefix = "";
