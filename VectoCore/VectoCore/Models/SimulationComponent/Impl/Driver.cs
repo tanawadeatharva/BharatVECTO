@@ -320,7 +320,7 @@ namespace TUGraz.VectoCore.Models.SimulationComponent.Impl
 
 			// compute speed at the end of the simulation interval. if it exceeds the limit -> return
 			var v2 = DataBus.VehicleSpeed + limitedOperatingPoint.Acceleration * limitedOperatingPoint.SimulationInterval;
-			if (v2 > maxVelocity) {
+			if (v2 > maxVelocity && limitedOperatingPoint.Acceleration.IsGreaterOrEqual(0.SI<MeterPerSquareSecond>())) {
 				Log.Debug("vehicle's velocity would exceed given max speed. v2: {0}, max speed: {1}", v2, maxVelocity);
 				return new ResponseSpeedLimitExceeded() { Source = this };
 			}
