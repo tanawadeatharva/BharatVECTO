@@ -237,7 +237,7 @@ namespace TUGraz.VectoCore.Models.SimulationComponent.Impl
 			CurrentState.EngineTorque = VectoMath.Limit(totalTorqueDemand, minTorque, maxTorque);
 			CurrentState.EnginePower = CurrentState.EngineTorque * avgEngineSpeed;
 
-			if (torqueOut.IsGreater(0.SI<NewtonMeter>()) &&
+			if (totalTorqueDemand.IsGreater(0.SI<NewtonMeter>()) &&
 				(deltaFull * avgEngineSpeed).IsGreater(0.SI<Watt>(), Constants.SimulationSettings.LineSearchTolerance)) {
 				Log.Debug("requested engine power exceeds fullload power: delta: {0}", deltaFull);
 				return new ResponseOverload {
@@ -250,7 +250,7 @@ namespace TUGraz.VectoCore.Models.SimulationComponent.Impl
 				};
 			}
 
-			if (torqueOut.IsSmaller(0.SI<NewtonMeter>()) &&
+			if (totalTorqueDemand.IsSmaller(0.SI<NewtonMeter>()) &&
 				(deltaDrag * avgEngineSpeed).IsSmaller(0.SI<Watt>(), Constants.SimulationSettings.LineSearchTolerance)) {
 				Log.Debug("requested engine power is below drag power: delta: {0}", deltaDrag);
 				return new ResponseUnderload {

@@ -1,4 +1,5 @@
 ﻿using System;
+using System.Globalization;
 using NUnit.Framework;
 using TUGraz.VectoCommon.Utils;
 using TUGraz.VectoCore.Models.Simulation.Data;
@@ -40,6 +41,11 @@ namespace TUGraz.VectoCore.Tests.Integration.DriverStrategy
 		TestCase(60, 35, 5.3),
 		TestCase(50, 47.5, -2.1),
 		TestCase(65, 62.5, -0.8),
+		TestCase(60, 50, 5.6),
+		TestCase(80, 40, 4.0),
+		TestCase(65, 60, 4.7),
+		TestCase(70, 62.5, 4.6),
+		TestCase(75, 65, 4.5),
 		]
 		public void Truck_Coasting_Test(double v1, double v2, double slope)
 		{
@@ -47,9 +53,9 @@ namespace TUGraz.VectoCore.Tests.Integration.DriverStrategy
 
 			var cycle = new[] {
 				// <s>,<v>,<grad>,<stop>
-				string.Format("  0,  {0}, {2},  0", v1, v2, slope),
-				string.Format("1000, {1}, {2},  0", v1, v2, slope),
-				string.Format("1100, {1}, {2},  0", v1, v2, slope)
+				string.Format(CultureInfo.InvariantCulture, "  0,  {0}, {2},  0", v1, v2, slope),
+				string.Format(CultureInfo.InvariantCulture, "1000, {1}, {2},  0", v1, v2, slope),
+				string.Format(CultureInfo.InvariantCulture, "1100, {1},   0,  0", v1, v2, slope)
 			};
 			System.IO.Directory.CreateDirectory(string.Format(@"Coast_{0}_{1}", v1, v2, slope));
 			var slopePrefix = "";

@@ -32,6 +32,7 @@
 using System;
 using System.Collections.Generic;
 using System.Data;
+using System.Globalization;
 using System.Linq;
 using System.Runtime.CompilerServices;
 using TUGraz.VectoCommon.Models;
@@ -229,7 +230,11 @@ namespace TUGraz.VectoCore.OutputData
 				_additionalColumns.Add(fieldName);
 				Data.Columns.Add(fieldName);
 			}
-			CurrentRow[fieldName] = value;
+            if (value is double) {
+                CurrentRow[fieldName] = string.Format(CultureInfo.InvariantCulture, "{0}", value); 
+            } else {			
+                CurrentRow[fieldName] = value;
+            }
 		}
 
 		public Dictionary<string, DataColumn> Auxiliaries { get; set; }
