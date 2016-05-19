@@ -29,12 +29,9 @@
 *   Martin Rexeis, rexeis@ivt.tugraz.at, IVT, Graz University of Technology
 */
 
-using System;
 using System.Collections.Generic;
 using System.Data;
-using System.IO;
 using System.Linq;
-using System.Reflection;
 using NUnit.Framework;
 using TUGraz.VectoCommon.Models;
 using TUGraz.VectoCommon.Utils;
@@ -62,12 +59,6 @@ namespace TUGraz.VectoCore.Tests.Models.SimulationComponent
 		private const string CoachEngine = @"TestData\Components\24t Coach.veng";
 
 		private const string TruckEngine = @"TestData\Components\40t_Long_Haul_Truck.veng";
-
-		[TestCase]
-		public static void ClassInitialize(TestContext ctx)
-		{
-			AppDomain.CurrentDomain.SetData("DataDirectory", Path.GetDirectoryName(Assembly.GetExecutingAssembly().Location));
-		}
 
 		[TestCase]
 		public void TestEngineHasOutPort()
