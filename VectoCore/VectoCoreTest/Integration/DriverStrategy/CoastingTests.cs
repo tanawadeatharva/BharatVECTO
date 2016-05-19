@@ -1,5 +1,4 @@
 ﻿using System;
-using Microsoft.VisualStudio.TestTools.UnitTesting;
 using NUnit.Framework;
 using TUGraz.VectoCommon.Utils;
 using TUGraz.VectoCore.Models.Simulation.Data;
@@ -68,7 +67,7 @@ namespace TUGraz.VectoCore.Tests.Integration.DriverStrategy
 			GraphWriter.Write(modFile);
 		}
 
-		[Test,
+		[Ignore, Test,
 		TestCase(40),
 		TestCase(45),
 		TestCase(50),
