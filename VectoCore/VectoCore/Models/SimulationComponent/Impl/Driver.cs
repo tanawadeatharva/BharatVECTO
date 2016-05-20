@@ -57,7 +57,7 @@ namespace TUGraz.VectoCore.Models.SimulationComponent.Impl
 
 		protected IDriverStrategy DriverStrategy;
 		private Dictionary<string, object> _coastData = new Dictionary<string, object>(20);
-		private string _currentAction = "";
+		public string CurrentAction = "";
 
 		//public MeterPerSquareSecond LookaheadDeceleration { get; protected set; }
 
@@ -155,7 +155,7 @@ namespace TUGraz.VectoCore.Models.SimulationComponent.Impl
 			IResponse previousResponse = null)
 		{
 			IterationStatistics.Increment(this, "Accelerate");
-			_currentAction = "Accelerate";
+			CurrentAction = "Accelerate";
 			Log.Debug("DrivingAction Accelerate");
 			var operatingPoint = ComputeAcceleration(ds, targetVelocity);
 
@@ -235,7 +235,7 @@ namespace TUGraz.VectoCore.Models.SimulationComponent.Impl
 		public IResponse DrivingActionCoast(Second absTime, Meter ds, MeterPerSecond maxVelocity, Radian gradient)
 		{
 			IterationStatistics.Increment(this, "Coast");
-			_currentAction = "Coast";
+			CurrentAction = "Coast";
 			Log.Debug("DrivingAction Coast");
 
 			return CoastOrRollAction(absTime, ds, maxVelocity, gradient, false);
@@ -251,7 +251,7 @@ namespace TUGraz.VectoCore.Models.SimulationComponent.Impl
 		/// <returns></returns>
 		public IResponse DrivingActionRoll(Second absTime, Meter ds, MeterPerSecond maxVelocity, Radian gradient)
 		{
-			_currentAction = "Roll";
+			CurrentAction = "Roll";
 			IterationStatistics.Increment(this, "Roll");
 
 			Log.Debug("DrivingAction Roll");
@@ -357,7 +357,7 @@ namespace TUGraz.VectoCore.Models.SimulationComponent.Impl
 			IResponse previousResponse = null, Meter targetDistance = null)
 		{
 			IterationStatistics.Increment(this, "Brake");
-			_currentAction = "Brake";
+			CurrentAction = "Brake";
 			Log.Debug("DrivingAction Brake");
 
 			IResponse retVal = null;
@@ -765,7 +765,7 @@ namespace TUGraz.VectoCore.Models.SimulationComponent.Impl
 		/// <returns></returns>
 		public IResponse DrivingActionHalt(Second absTime, Second dt, MeterPerSecond targetVelocity, Radian gradient)
 		{
-			_currentAction = "Halt";
+			CurrentAction = "Halt";
 			if (!targetVelocity.IsEqual(0) || !DataBus.VehicleStopped) {
 				Log.Error("TargetVelocity ({0}) and VehicleVelocity ({1}) must be zero when vehicle is halting!", targetVelocity,
 					DataBus.VehicleSpeed);

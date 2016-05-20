@@ -279,13 +279,16 @@ namespace TUGraz.VectoCore.Models.SimulationComponent.Impl
 				CycleIntervalIterator.LeftSample.RoadGradient);
 		}
 
+		/// <summary>
+		/// Progress of the distance in the driving cycle.
+		/// </summary>
 		public double Progress
 		{
 			get
 			{
 				return _data.Entries.Count > 0
-					? ((CurrentState.Distance - _data.Entries.First().Distance) /
-						(_data.Entries.Last().Distance - _data.Entries.First().Distance)).Value()
+					? (CurrentState.Distance.Value() - _data.Entries.First().Distance.Value()) /
+					(_data.Entries.Last().Distance.Value() - _data.Entries.First().Distance.Value())
 					: 0;
 			}
 		}
