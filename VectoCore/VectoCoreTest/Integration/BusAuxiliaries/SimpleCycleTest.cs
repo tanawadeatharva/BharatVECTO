@@ -60,20 +60,31 @@ namespace TUGraz.VectoCore.Tests.Integration.BusAuxiliaries
 			GraphWriter.Series2Label = "Vecto 2.0_aux";
 		}
 
+		private static string GetSlopeString(double slope)
+		{
+			var slopeStr = slope > 0
+				? Math.Abs(slope).ToString("uphill_#")
+				: slope < 0
+					? Math.Abs(slope).ToString("downhill_#")
+					: "level";
+			return slopeStr;
+		}
+
 		[Category("ComparisonAAUX"),
+		TestCase(0, 20, -5), TestCase(0, 20, 0),
 		TestCase(0, 40, 25), TestCase(0, 40, 20), TestCase(0, 40, 15),
 		TestCase(0, 40, 10), TestCase(0, 40, 5), TestCase(0, 40, 1),
-		TestCase(0, 40, 0),
+		TestCase(0, 40, 0), TestCase(0, 40, -3),
 		TestCase(0, 40, -1), TestCase(0, 40, -5), TestCase(0, 40, -10),
 		TestCase(0, 40, -15), TestCase(0, 40, -20), TestCase(0, 40, -25),
 		TestCase(0, 60, 25), TestCase(0, 60, 20), TestCase(0, 60, 15),
 		TestCase(0, 60, 10), TestCase(0, 60, 5), TestCase(0, 60, 1),
-		TestCase(0, 60, 0),
+		TestCase(0, 60, 0), TestCase(0, 60, -3),
 		TestCase(0, 60, -1), TestCase(0, 60, -5), TestCase(0, 60, -10),
 		TestCase(0, 60, -15), TestCase(0, 60, -20), TestCase(0, 60, -25),
 		TestCase(0, 85, 25), TestCase(0, 85, 20), TestCase(0, 85, 15),
 		TestCase(0, 85, 10), TestCase(0, 85, 5), TestCase(0, 85, 1),
-		TestCase(0, 85, 0),
+		TestCase(0, 85, 0), TestCase(0, 85, -3), TestCase(0, 85, 2),
 		TestCase(0, 85, -1), TestCase(0, 85, -5), TestCase(0, 85, -10),
 		TestCase(0, 85, -15), TestCase(0, 85, -20), TestCase(0, 85, -25),
 		TestCase(20, 40, 25), TestCase(20, 40, 20), TestCase(20, 40, 15),
@@ -98,12 +109,11 @@ namespace TUGraz.VectoCore.Tests.Integration.BusAuxiliaries
 			var cycle = string.Format(CultureInfo.InvariantCulture, "0, {0}, {1}, {2}\n1000, {3}, {4}, {5}", v1, slope,
 				v1.IsEqual(0) ? 2 : 0, v2, slope, v2.IsEqual(0) ? 2 : 0);
 
-			var slopeStr = slope > 0 ? "uhpill" : slope < 0 ? "downhill" : "level";
-			var modFileName = string.Format(CultureInfo.InvariantCulture, @"Coach_{0}_{1}_{3}_{2}.vmod", v1, v2, Math.Abs(slope),
-				slopeStr);
+			var slopeStr = GetSlopeString(slope);
+			var modFileName = string.Format(CultureInfo.InvariantCulture, @"Coach_{0}_{1}_{2}.vmod", v1, v2, slopeStr);
 
-			Coach_Special(cycle, modFileName,
-				string.Format(CultureInfo.InvariantCulture, "24t Coach_AAUX_Cycle_Accelerate_{0}_{1}_{2}.vmod", v1, v2, slopeStr));
+			Coach_BusAuxiliaries(cycle, modFileName,
+				string.Format(CultureInfo.InvariantCulture, "24t Coach_AAux_Cycle_Accelerate_{0}_{1}_{2}.vmod", v1, v2, slopeStr));
 		}
 
 		[Category("ComparisonAAUX"),
@@ -122,21 +132,8 @@ namespace TUGraz.VectoCore.Tests.Integration.BusAuxiliaries
 		TestCase(85, 0, 0),
 		TestCase(85, 0, -1), TestCase(85, 0, -5), TestCase(85, 0, -10),
 		TestCase(85, 0, -15), TestCase(85, 0, -20), TestCase(85, 0, -25),
-		TestCase(40, 20, 25), TestCase(40, 20, 20), TestCase(40, 20, 15),
-		TestCase(40, 20, 10), TestCase(40, 20, 5), TestCase(40, 20, 1),
-		TestCase(40, 20, 0),
-		TestCase(40, 20, -1), TestCase(40, 20, -5), TestCase(40, 20, -10),
-		TestCase(40, 20, -15), TestCase(40, 20, -20), TestCase(40, 20, -25),
-		TestCase(60, 20, 25), TestCase(60, 20, 20), TestCase(60, 20, 15),
-		TestCase(60, 20, 10), TestCase(60, 20, 5), TestCase(60, 20, 1),
-		TestCase(60, 20, 0),
-		TestCase(60, 20, -1), TestCase(60, 20, -5), TestCase(60, 20, -10),
-		TestCase(60, 20, -15), TestCase(60, 20, -20), TestCase(60, 20, -25),
-		TestCase(85, 20, 25), TestCase(85, 20, 20), TestCase(85, 20, 15),
-		TestCase(85, 20, 10), TestCase(85, 20, 5), TestCase(85, 20, 1),
-		TestCase(85, 20, 0),
-		TestCase(85, 20, -1), TestCase(85, 20, -5), TestCase(85, 20, -10),
-		TestCase(85, 20, -15), TestCase(85, 20, -20), TestCase(85, 20, -25),
+		TestCase(80, 0, 3), TestCase(80, 0, 5), TestCase(80, 0, 15),
+		TestCase(80, 0, 5), TestCase(80, 0, 15), TestCase(80, 0, 25),
 		TestCase(22, 20, -5),
 		]
 		public void Coach_Decelerate(double v1, double v2, double slope)
@@ -144,12 +141,11 @@ namespace TUGraz.VectoCore.Tests.Integration.BusAuxiliaries
 			var cycle = string.Format(CultureInfo.InvariantCulture, "0, {0}, {1}, {2}\n1000, {3}, {4}, {5}", v1, slope,
 				v1.IsEqual(0) ? 2 : 0, v2, slope, v2.IsEqual(0) ? 2 : 0);
 
-			var slopeStr = slope > 0 ? "uhpill" : slope < 0 ? "downhill" : "level";
-			var modFileName = string.Format(CultureInfo.InvariantCulture, @"Coach_{0}_{1}_{3}_{2}.vmod", v1, v2, Math.Abs(slope),
-				slopeStr);
+			var slopeStr = GetSlopeString(slope);
+			var modFileName = string.Format(CultureInfo.InvariantCulture, @"Coach_{0}_{1}_{2}.vmod", v1, v2, slopeStr);
 
-			Coach_Special(cycle, modFileName,
-				string.Format(CultureInfo.InvariantCulture, "24t Coach_AAUX_Cycle_Decelerate_{0}_{1}_{2}.vmod", v1, v2, slopeStr));
+			Coach_BusAuxiliaries(cycle, modFileName,
+				string.Format(CultureInfo.InvariantCulture, "24t Coach_AAux_Cycle_Decelerate_{0}_{1}_{2}.vmod", v1, v2, slopeStr));
 		}
 
 		[Category("ComparisonAAUX"),
@@ -199,46 +195,45 @@ namespace TUGraz.VectoCore.Tests.Integration.BusAuxiliaries
 			var cycle = string.Format(CultureInfo.InvariantCulture, "0, {0}, {1}, {2}\n1000, {3}, {4}, {5}", v1, slope,
 				v1.IsEqual(0) ? 2 : 0, v2, slope, v2.IsEqual(0) ? 2 : 0);
 
-			var slopeStr = slope > 0 ? "uhpill" : slope < 0 ? "downhill" : "level";
-			var modFileName = string.Format(CultureInfo.InvariantCulture, @"Coach_{0}_{1}_{3}_{2}.vmod", v1, v2, Math.Abs(slope),
-				slopeStr);
+			var slopeStr = GetSlopeString(slope);
+			var modFileName = string.Format(CultureInfo.InvariantCulture, @"Coach_{0}_{1}_{2}.vmod", v1, v2, slopeStr);
 
-			Coach_Special(cycle, modFileName,
-				string.Format(CultureInfo.InvariantCulture, "24t Coach_AAUX_Cycle_Drive_{0}_{1}_{2}.vmod", v1, v2, slopeStr));
+			Coach_BusAuxiliaries(cycle, modFileName,
+				string.Format(CultureInfo.InvariantCulture, "24t Coach_AAux_Cycle_Drive_{0}_{1}_{2}.vmod", v1, v2, slopeStr));
 		}
 
 		[Category("ComparisonAAUX"),
 		TestCase(SimpleDrivingCycles.CycleDrive_80_Increasing_Slope,
-			"Coach_AAUX_Drive_80_slope_inc.vmod", "24t Coach_AAUX_Cycle_Drive_80_Increasing_Slope.vmod"),
+			"Coach_AAux_Drive_80_slope_inc.vmod", "24t Coach_AAux_Cycle_Drive_80_Increasing_Slope.vmod"),
 		TestCase(SimpleDrivingCycles.CycleDrive_50_Increasing_Slope,
-			"Coach_AAUX_Drive_50_slope_inc.vmod", "24t Coach_AAUX_Cycle_Drive_50_Increasing_Slope.vmod"),
+			"Coach_AAux_Drive_50_slope_inc.vmod", "24t Coach_AAux_Cycle_Drive_50_Increasing_Slope.vmod"),
 		TestCase(SimpleDrivingCycles.CycleDrive_30_Increasing_Slope,
-			"Coach_AAUX_Drive_30_slope_inc.vmod", "24t Coach_AAUX_Cycle_Drive_30_Increasing_Slope.vmod"),
+			"Coach_AAux_Drive_30_slope_inc.vmod", "24t Coach_AAux_Cycle_Drive_30_Increasing_Slope.vmod"),
 		TestCase(SimpleDrivingCycles.CycleDrive_80_Decreasing_Slope,
-			"Coach_AAUX_Drive_80_slope_dec.vmod", "24t Coach_AAUX_Cycle_Drive_80_Decreasing_Slope.vmod"),
+			"Coach_AAux_Drive_80_slope_dec.vmod", "24t Coach_AAux_Cycle_Drive_80_Decreasing_Slope.vmod"),
 		TestCase(SimpleDrivingCycles.CycleDrive_50_Decreasing_Slope,
-			"Coach_AAUX_Drive_50_slope_dec.vmod", "24t Coach_AAUX_Cycle_Drive_50_Decreasing_Slope.vmod"),
+			"Coach_AAux_Drive_50_slope_dec.vmod", "24t Coach_AAux_Cycle_Drive_50_Decreasing_Slope.vmod"),
 		TestCase(SimpleDrivingCycles.CycleDrive_30_Decreasing_Slope,
-			"Coach_AAUX_Drive_30_slope_dec.vmod", "24t Coach_AAUX_Cycle_Drive_30_Decreasing_Slope.vmod"),
+			"Coach_AAux_Drive_30_slope_dec.vmod", "24t Coach_AAux_Cycle_Drive_30_Decreasing_Slope.vmod"),
 		TestCase(SimpleDrivingCycles.CycleDrive_80_Dec_Increasing_Slope,
-			"Coach_AAUX_Drive_80_slope_dec-inc.vmod", "24t Coach_AAUX_Cycle_Drive_80_Dec_Increasing_Slope.vmod"),
+			"Coach_AAux_Drive_80_slope_dec-inc.vmod", "24t Coach_AAux_Cycle_Drive_80_Dec_Increasing_Slope.vmod"),
 		TestCase(SimpleDrivingCycles.CycleDrive_50_Dec_Increasing_Slope,
-			"Coach_AAUX_Drive_50_slope_dec-inc.vmod", "24t Coach_AAUX_Cycle_Drive_50_Dec_Increasing_Slope.vmod"),
+			"Coach_AAux_Drive_50_slope_dec-inc.vmod", "24t Coach_AAux_Cycle_Drive_50_Dec_Increasing_Slope.vmod"),
 		TestCase(SimpleDrivingCycles.CycleDrive_30_Dec_Increasing_Slope,
-			"Coach_AAUX_Drive_30_slope_dec-inc.vmod", "24t Coach_AAUX_Cycle_Drive_30_Dec_Increasing_Slope.vmod"),
+			"Coach_AAux_Drive_30_slope_dec-inc.vmod", "24t Coach_AAux_Cycle_Drive_30_Dec_Increasing_Slope.vmod"),
 		TestCase(SimpleDrivingCycles.CycleDecelerateWhileBrake_80_0_level,
-			"Coach_AAUX_DecelerateWhileBrake_80_0_level.vmod", "24t Coach_AAUX_Cycle_DecelerateWhileBrake_80_0_level.vmod"),
+			"Coach_AAux_DecelerateWhileBrake_80_0_level.vmod", "24t Coach_AAux_Cycle_DecelerateWhileBrake_80_0_level.vmod"),
 		TestCase(SimpleDrivingCycles.CycleAccelerateWhileBrake_80_0_level,
-			"Coach_AAUX_AccelerateWhileBrake_80_0_level.vmod", "24t Coach_AAUX_Cycle_AccelerateWhileBrake_80_0_level.vmod"),
+			"Coach_AAux_AccelerateWhileBrake_80_0_level.vmod", "24t Coach_AAux_Cycle_AccelerateWhileBrake_80_0_level.vmod"),
 		TestCase(SimpleDrivingCycles.CycleAccelerateAtBrake_80_0_level,
-			"Coach_AAUX_AccelerateAtBrake_80_0_level.vmod", "24t Coach_AAUX_Cycle_AccelerateAtBrake_80_0_level.vmod"),
+			"Coach_AAux_AccelerateAtBrake_80_0_level.vmod", "24t Coach_AAux_Cycle_AccelerateAtBrake_80_0_level.vmod"),
 		TestCase(SimpleDrivingCycles.CycleAccelerateBeforeBrake_80_0_level,
-			"Coach_AAUX_AccelerateBeforeBrake_80_0_level.vmod", "24t Coach_AAUX_Cycle_AccelerateBeforeBrake_80_0_level.vmod"
+			"Coach_AAux_AccelerateBeforeBrake_80_0_level.vmod", "24t Coach_AAux_Cycle_AccelerateBeforeBrake_80_0_level.vmod"
 			),
 		TestCase(SimpleDrivingCycles.CycleDrive_stop_85_stop_85_level,
-			"Coach_AAUX_Drive_stop_85_stop_85_level.vmod", "24t Coach_AAUX_Cycle_Drive_stop_85_stop_85_level.vmod"),
+			"Coach_AAux_Drive_stop_85_stop_85_level.vmod", "24t Coach_AAux_Cycle_Drive_stop_85_stop_85_level.vmod"),
 		]
-		public void Coach_Special(string cycleData, string modFileName, string compareFileName)
+		public void Coach_BusAuxiliaries(string cycleData, string modFileName, string compareFileName)
 		{
 			var cycle = SimpleDrivingCycles.CreateCycleData(cycleData);
 			var run = CoachAdvancedAuxPowertrain.CreateEngineeringRun(cycle, modFileName);
