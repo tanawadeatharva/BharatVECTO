@@ -29,9 +29,11 @@
 *   Martin Rexeis, rexeis@ivt.tugraz.at, IVT, Graz University of Technology
 */
 
+using System.Data;
 using Microsoft.VisualStudio.TestTools.UnitTesting;
 using TUGraz.VectoCommon.Utils;
 using TUGraz.VectoCore.Models.Simulation.Data;
+using TUGraz.VectoCore.OutputData;
 using TUGraz.VectoCore.Tests.Utils;
 
 namespace TUGraz.VectoCore.Tests.Integration.DriverStrategy
@@ -1254,5 +1256,34 @@ namespace TUGraz.VectoCore.Tests.Integration.DriverStrategy
 		}
 
 		#endregion
+
+		[TestMethod]
+		public void Truck_Decelerate_stepwise()
+		{
+			var cycleData = new[] {
+				// <s>,<v>,<grad>,<stop>
+				"   0,  53, -2.6,  0",
+				" 200,  53, -2,  0",
+				" 328,  45, -2,  0",
+				" 400,  38, -1.6,  0",
+				" 544,  19, -1.6,  0",
+				" 642,   0, -0.2,  4"
+			};
+			var cycle = SimpleDrivingCycles.CreateCycleData(cycleData);
+			var run = Truck40tPowerTrain.CreateEngineeringRun(cycle,
+				"Truck_Decelerate_stepwise_RefLoad.vmod",
+				7500.SI<Kilogram>(), 12900.SI<Kilogram>());
+
+			run.Run();
+
+			Assert.IsTrue(run.FinishedWithoutErrors);
+
+			var modData = (ModalDataContainer)run.GetContainer().ModalData;
+			foreach (DataRow row in modData.Data.Rows) {
+				Assert.IsTrue((SI)(row[(int)ModalResultField.v_act]) <= (SI)(row[(int)ModalResultField.v_targ]),
+					"distance: {0} v_act: {1}, v_targ: {2}",
+					row[(int)ModalResultField.dist], row[(int)ModalResultField.v_act], row[(int)ModalResultField.v_targ]);
+			}
+		}
 	}
 }
