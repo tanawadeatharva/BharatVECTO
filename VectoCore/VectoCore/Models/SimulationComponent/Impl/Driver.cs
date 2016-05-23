@@ -30,7 +30,6 @@
 */
 
 using System;
-using System.Collections.Generic;
 using System.Linq;
 using TUGraz.VectoCommon.Exceptions;
 using TUGraz.VectoCommon.Models;
@@ -38,9 +37,9 @@ using TUGraz.VectoCommon.Utils;
 using TUGraz.VectoCore.Configuration;
 using TUGraz.VectoCore.Models.Connector.Ports;
 using TUGraz.VectoCore.Models.Connector.Ports.Impl;
+using TUGraz.VectoCore.Models.Simulation;
 using TUGraz.VectoCore.Models.Simulation.Data;
 using TUGraz.VectoCore.Models.Simulation.DataBus;
-using TUGraz.VectoCore.Models.Simulation.Impl;
 using TUGraz.VectoCore.OutputData;
 using TUGraz.VectoCore.Utils;
 using DriverData = TUGraz.VectoCore.Models.SimulationComponent.Data.DriverData;
@@ -56,18 +55,13 @@ namespace TUGraz.VectoCore.Models.SimulationComponent.Impl
 		public DriverData DriverData { get; protected set; }
 
 		protected IDriverStrategy DriverStrategy;
-		private Dictionary<string, object> _coastData = new Dictionary<string, object>(20);
 		public string CurrentAction = "";
 
-		//public MeterPerSquareSecond LookaheadDeceleration { get; protected set; }
-
-		public Driver(VehicleContainer container, DriverData driverData, IDriverStrategy strategy) : base(container)
+		public Driver(IVehicleContainer container, DriverData driverData, IDriverStrategy strategy) : base(container)
 		{
 			DriverData = driverData;
 			DriverStrategy = strategy;
 			strategy.Driver = this;
-
-			//LookaheadDeceleration = DeclarationData.Driver.LookAhead.Deceleration;
 		}
 
 		public IDriverDemandInPort InPort()
@@ -109,8 +103,6 @@ namespace TUGraz.VectoCore.Models.SimulationComponent.Impl
 				absTime, ds, targetVelocity, gradient, DataBus.Distance, DataBus.VehicleSpeed, DataBus.VehicleStopped);
 
 			var retVal = DriverStrategy.Request(absTime, ds, targetVelocity, gradient);
-
-			_coastData = ((DefaultDriverStrategy)DriverStrategy).LookAheadCoasting(ds);
 
 			CurrentState.Response = retVal;
 			retVal.SimulationInterval = CurrentState.dt;

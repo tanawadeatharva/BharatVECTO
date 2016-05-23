@@ -5,7 +5,6 @@ using TUGraz.VectoCommon.Utils;
 using TUGraz.VectoCore.Models.Simulation.Data;
 using TUGraz.VectoCore.Tests.Integration;
 using TUGraz.VectoCore.Tests.Utils;
-using Assert = Microsoft.VisualStudio.TestTools.UnitTesting.Assert;
 
 namespace TUGraz.VectoCore.ModelbasedTests.DriverStrategy
 {
@@ -16,11 +15,11 @@ namespace TUGraz.VectoCore.ModelbasedTests.DriverStrategy
 		public void DisableLogging()
 		{
 			//LogManager.DisableLogging();
-//#if TRACE
+#if TRACE
 			GraphWriter.Enable();
-//#else
-//			GraphWriter.Disable();
-//#endif
+#else
+			GraphWriter.Disable();
+#endif
 
 			GraphWriter.Xfields = new[] { ModalResultField.dist };
 

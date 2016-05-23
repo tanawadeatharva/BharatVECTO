@@ -57,6 +57,7 @@
   </Choose>
   <ItemGroup>
     <Compile Include="DriverStrategy\CoastingTests.cs" />
+    <Compile Include="DriverStrategy\SimpleCycles.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
   </ItemGroup>
   <ItemGroup>
