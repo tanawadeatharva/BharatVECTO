@@ -104,7 +104,7 @@ namespace TUGraz.VectoCore.Tests.Integration.BusAuxiliaries
 		TestCase(20, 85, -15), TestCase(20, 85, -20), TestCase(20, 85, -25),
 		TestCase(20, 22, 5),
 		]
-		public void Coach_Accelerate(double v1, double v2, double slope)
+		public void Coach_Accelerate_AAux(double v1, double v2, double slope)
 		{
 			var cycle = string.Format(CultureInfo.InvariantCulture, "0, {0}, {1}, {2}\n1000, {3}, {4}, {5}", v1, slope,
 				v1.IsEqual(0) ? 2 : 0, v2, slope, v2.IsEqual(0) ? 2 : 0);
@@ -136,7 +136,7 @@ namespace TUGraz.VectoCore.Tests.Integration.BusAuxiliaries
 		TestCase(80, 0, 5), TestCase(80, 0, 15), TestCase(80, 0, 25),
 		TestCase(22, 20, -5),
 		]
-		public void Coach_Decelerate(double v1, double v2, double slope)
+		public void Coach_Decelerate_AAux(double v1, double v2, double slope)
 		{
 			var cycle = string.Format(CultureInfo.InvariantCulture, "0, {0}, {1}, {2}\n1000, {3}, {4}, {5}", v1, slope,
 				v1.IsEqual(0) ? 2 : 0, v2, slope, v2.IsEqual(0) ? 2 : 0);
@@ -190,7 +190,7 @@ namespace TUGraz.VectoCore.Tests.Integration.BusAuxiliaries
 		TestCase(85, 85, -1), TestCase(85, 85, -5), TestCase(85, 85, -10),
 		TestCase(85, 85, -15), TestCase(85, 85, -20), TestCase(85, 85, -25),
 		]
-		public void Coach_Drive(double v1, double v2, double slope)
+		public void Coach_Drive_AAux(double v1, double v2, double slope)
 		{
 			var cycle = string.Format(CultureInfo.InvariantCulture, "0, {0}, {1}, {2}\n1000, {3}, {4}, {5}", v1, slope,
 				v1.IsEqual(0) ? 2 : 0, v2, slope, v2.IsEqual(0) ? 2 : 0);

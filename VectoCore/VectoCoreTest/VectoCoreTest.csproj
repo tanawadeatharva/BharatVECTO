@@ -86,8 +86,7 @@
     <Compile Include="Integration\CoachAdvancedAuxPowertrain.cs" />
     <Compile Include="Integration\CoachPowerTrain.cs" />
     <Compile Include="Integration\DriverStrategy\CoastingTests.cs" />
-    <Compile Include="Integration\DriverStrategy\DriverStrategyTestCoach.cs" />
-    <Compile Include="Integration\DriverStrategy\DriverStrategyTestTruck.cs" />
+    <Compile Include="Integration\DriverStrategy\SimpleCycles.cs" />
     <Compile Include="Integration\FullCycleDeclarationTest.cs">
       <SubType>Code</SubType>
     </Compile>
@@ -1300,6 +1299,12 @@
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
     </None>
     <None Include="TestData\Results\Integration\24t Coach_Cycle_Drive_50_Dec_Increasing_Slope.vmod">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </None>
+    <None Include="TestData\Results\Integration\40t_Long_Haul_Truck_Cycle_Drive_50_Dec_Increasing_Slope_v22.vmod">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </None>
+    <None Include="TestData\Results\Integration\40t_Long_Haul_Truck_Cycle_Drive_50_Dec_Increasing_Slope_v3.vmod">
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
     </None>
     <None Include="TestData\Results\Integration\Coach_DriverStrategy_Drive_50_slope_dec-inc.vmod">
