@@ -78,6 +78,7 @@ namespace TUGraz.VectoCore.Tests.Integration.DriverStrategy
 		}
 
 		[Category("ComparisonV2"),
+		TestCase(0, 20, -5), TestCase(0, 20, 0),
 		TestCase(0, 40, 25), TestCase(0, 40, 20), TestCase(0, 40, 15),
 		TestCase(0, 40, 10), TestCase(0, 40, 5), TestCase(0, 40, 1),
 		TestCase(0, 40, 0),
@@ -90,7 +91,7 @@ namespace TUGraz.VectoCore.Tests.Integration.DriverStrategy
 		TestCase(0, 60, -15), TestCase(0, 60, -20), TestCase(0, 60, -25),
 		TestCase(0, 85, 25), TestCase(0, 85, 20), TestCase(0, 85, 15),
 		TestCase(0, 85, 10), TestCase(0, 85, 5), TestCase(0, 85, 1),
-		TestCase(0, 85, 0),
+		TestCase(0, 85, 0), TestCase(0, 85, 2),
 		TestCase(0, 85, -1), TestCase(0, 85, -5), TestCase(0, 85, -10),
 		TestCase(0, 85, -15), TestCase(0, 85, -20), TestCase(0, 85, -25),
 		TestCase(20, 40, 25), TestCase(20, 40, 20), TestCase(20, 40, 15),
@@ -115,9 +116,8 @@ namespace TUGraz.VectoCore.Tests.Integration.DriverStrategy
 			var cycle = string.Format(CultureInfo.InvariantCulture, "0, {0}, {1}, {2}\n1000, {3}, {4}, {5}", v1, slope,
 				v1.IsEqual(0) ? 2 : 0, v2, slope, v2.IsEqual(0) ? 2 : 0);
 
-			var slopeStr = slope > 0 ? "uhpill" : slope < 0 ? "downhill" : "level";
-			var modFileName = string.Format(CultureInfo.InvariantCulture, @"Coach_{0}_{1}_{3}_{2}.vmod", v1, v2, Math.Abs(slope),
-				slopeStr);
+			var slopeStr = GetSlopeString(slope);
+			var modFileName = string.Format(CultureInfo.InvariantCulture, @"Coach_{0}_{1}_{2}.vmod", v1, v2, slopeStr);
 
 			Coach_Special(cycle, modFileName,
 				string.Format(CultureInfo.InvariantCulture, "24t Coach_Cycle_Accelerate_{0}_{1}_{2}.vmod", v1, v2, slopeStr));
@@ -144,6 +144,9 @@ namespace TUGraz.VectoCore.Tests.Integration.DriverStrategy
 		TestCase(40, 20, 0),
 		TestCase(40, 20, -1), TestCase(40, 20, -5), TestCase(40, 20, -10),
 		TestCase(40, 20, -15), TestCase(40, 20, -20), TestCase(40, 20, -25),
+		TestCase(45, 0, -5),
+		TestCase(45, 0, 0),
+		TestCase(45, 0, 5),
 		TestCase(60, 20, 25), TestCase(60, 20, 20), TestCase(60, 20, 15),
 		TestCase(60, 20, 10), TestCase(60, 20, 5), TestCase(60, 20, 1),
 		TestCase(60, 20, 0),
@@ -161,9 +164,8 @@ namespace TUGraz.VectoCore.Tests.Integration.DriverStrategy
 			var cycle = string.Format(CultureInfo.InvariantCulture, "0, {0}, {1}, {2}\n1000, {3}, {4}, {5}", v1, slope,
 				v1.IsEqual(0) ? 2 : 0, v2, slope, v2.IsEqual(0) ? 2 : 0);
 
-			var slopeStr = slope > 0 ? "uhpill" : slope < 0 ? "downhill" : "level";
-			var modFileName = string.Format(CultureInfo.InvariantCulture, @"Coach_{0}_{1}_{3}_{2}.vmod", v1, v2, Math.Abs(slope),
-				slopeStr);
+			var slopeStr = GetSlopeString(slope);
+			var modFileName = string.Format(CultureInfo.InvariantCulture, @"Coach_{0}_{1}_{2}.vmod", v1, v2, slopeStr);
 
 			Coach_Special(cycle, modFileName,
 				string.Format(CultureInfo.InvariantCulture, "24t Coach_Cycle_Decelerate_{0}_{1}_{2}.vmod", v1, v2, slopeStr));
@@ -216,9 +218,8 @@ namespace TUGraz.VectoCore.Tests.Integration.DriverStrategy
 			var cycle = string.Format(CultureInfo.InvariantCulture, "0, {0}, {1}, {2}\n1000, {3}, {4}, {5}", v1, slope,
 				v1.IsEqual(0) ? 2 : 0, v2, slope, v2.IsEqual(0) ? 2 : 0);
 
-			var slopeStr = slope > 0 ? "uhpill" : slope < 0 ? "downhill" : "level";
-			var modFileName = string.Format(CultureInfo.InvariantCulture, @"Coach_{0}_{1}_{3}_{2}.vmod", v1, v2, Math.Abs(slope),
-				slopeStr);
+			var slopeStr = GetSlopeString(slope);
+			var modFileName = string.Format(CultureInfo.InvariantCulture, @"Coach_{0}_{1}_{2}.vmod", v1, v2, slopeStr);
 
 			Coach_Special(cycle, modFileName,
 				string.Format(CultureInfo.InvariantCulture, "24t Coach_Cycle_Drive_{0}_{1}_{2}.vmod", v1, v2, slopeStr));
@@ -227,17 +228,17 @@ namespace TUGraz.VectoCore.Tests.Integration.DriverStrategy
 		[Category("ComparisonV2"),
 		TestCase(0, 40, 25), TestCase(0, 40, 20), TestCase(0, 40, 15),
 		TestCase(0, 40, 10), TestCase(0, 40, 5), TestCase(0, 40, 1),
-		TestCase(0, 40, 0),
+		TestCase(0, 40, 0), TestCase(0, 40, -3),
 		TestCase(0, 40, -1), TestCase(0, 40, -5), TestCase(0, 40, -10),
 		TestCase(0, 40, -15), TestCase(0, 40, -20), TestCase(0, 40, -25),
 		TestCase(0, 60, 25), TestCase(0, 60, 20), TestCase(0, 60, 15),
 		TestCase(0, 60, 10), TestCase(0, 60, 5), TestCase(0, 60, 1),
-		TestCase(0, 60, 0),
+		TestCase(0, 60, 0), TestCase(0, 60, -3),
 		TestCase(0, 60, -1), TestCase(0, 60, -5), TestCase(0, 60, -10),
 		TestCase(0, 60, -15), TestCase(0, 60, -20), TestCase(0, 60, -25),
 		TestCase(0, 85, 25), TestCase(0, 85, 20), TestCase(0, 85, 15),
 		TestCase(0, 85, 10), TestCase(0, 85, 5), TestCase(0, 85, 1),
-		TestCase(0, 85, 0),
+		TestCase(0, 85, 0), TestCase(0, 85, -3),
 		TestCase(0, 85, -1), TestCase(0, 85, -5), TestCase(0, 85, -10),
 		TestCase(0, 85, -15), TestCase(0, 85, -20), TestCase(0, 85, -25),
 		TestCase(20, 40, 25), TestCase(20, 40, 20), TestCase(20, 40, 15),
@@ -262,9 +263,8 @@ namespace TUGraz.VectoCore.Tests.Integration.DriverStrategy
 			var cycle = string.Format(CultureInfo.InvariantCulture, "0, {0}, {1}, {2}\n1000, {3}, {4}, {5}", v1, slope,
 				v1.IsEqual(0) ? 2 : 0, v2, slope, v2.IsEqual(0) ? 2 : 0);
 
-			var slopeStr = slope > 0 ? "uhpill" : slope < 0 ? "downhill" : "level";
-			var modFileName = string.Format(CultureInfo.InvariantCulture, @"Coach_{0}_{1}_{3}_{2}.vmod", v1, v2, Math.Abs(slope),
-				slopeStr);
+			var slopeStr = GetSlopeString(slope);
+			var modFileName = string.Format(CultureInfo.InvariantCulture, @"Coach_{0}_{1}_{2}.vmod", v1, v2, slopeStr);
 
 			Coach_Special_Overspeed(cycle, modFileName,
 				string.Format(CultureInfo.InvariantCulture, "24t Coach_Cycle_Accelerate_{0}_{1}_{2}.vmod", v1, v2, slopeStr));
@@ -308,12 +308,21 @@ namespace TUGraz.VectoCore.Tests.Integration.DriverStrategy
 			var cycle = string.Format(CultureInfo.InvariantCulture, "0, {0}, {1}, {2}\n1000, {3}, {4}, {5}", v1, slope,
 				v1.IsEqual(0) ? 2 : 0, v2, slope, v2.IsEqual(0) ? 2 : 0);
 
-			var slopeStr = slope > 0 ? "uhpill" : slope < 0 ? "downhill" : "level";
-			var modFileName = string.Format(CultureInfo.InvariantCulture, @"Coach_{0}_{1}_{3}_{2}.vmod", v1, v2, Math.Abs(slope),
-				slopeStr);
+			var slopeStr = GetSlopeString(slope);
+			var modFileName = string.Format(CultureInfo.InvariantCulture, @"Coach_{0}_{1}_{2}.vmod", v1, v2, slopeStr);
 
 			Coach_Special_Overspeed(cycle, modFileName,
 				string.Format(CultureInfo.InvariantCulture, "24t Coach_Cycle_Decelerate_{0}_{1}_{2}.vmod", v1, v2, slopeStr));
+		}
+
+		private static string GetSlopeString(double slope)
+		{
+			var slopeStr = slope > 0
+				? Math.Abs(slope).ToString("uphill_#")
+				: slope < 0
+					? Math.Abs(slope).ToString("downhill_#")
+					: "level";
+			return slopeStr;
 		}
 
 		[Category("ComparisonV2"),
@@ -363,9 +372,8 @@ namespace TUGraz.VectoCore.Tests.Integration.DriverStrategy
 			var cycle = string.Format(CultureInfo.InvariantCulture, "0, {0}, {1}, {2}\n1000, {3}, {4}, {5}", v1, slope,
 				v1.IsEqual(0) ? 2 : 0, v2, slope, v2.IsEqual(0) ? 2 : 0);
 
-			var slopeStr = slope > 0 ? "uhpill" : slope < 0 ? "downhill" : "level";
-			var modFileName = string.Format(CultureInfo.InvariantCulture, @"Coach_{0}_{1}_{3}_{2}.vmod", v1, v2, Math.Abs(slope),
-				slopeStr);
+			var slopeStr = GetSlopeString(slope);
+			var modFileName = string.Format(CultureInfo.InvariantCulture, @"Coach_{0}_{1}_{2}.vmod", v1, v2, slopeStr);
 
 			Coach_Special_Overspeed(cycle, modFileName,
 				string.Format(CultureInfo.InvariantCulture, "24t Coach_Cycle_Drive_{0}_{1}_{2}.vmod", v1, v2, slopeStr));

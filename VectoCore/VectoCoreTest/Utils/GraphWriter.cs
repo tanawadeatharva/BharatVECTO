@@ -41,6 +41,8 @@ using TUGraz.VectoCommon.Utils;
 using TUGraz.VectoCore.Models.Simulation.Data;
 using TUGraz.VectoCore.Utils;
 
+// ReSharper disable UnusedVariable
+
 namespace TUGraz.VectoCore.Tests.Utils
 {
 	public static class GraphWriter
@@ -86,11 +88,10 @@ namespace TUGraz.VectoCore.Tests.Utils
 				//return;
 			}
 			DataTable modDataV22 = null;
-			if (fileNameV22 != null) {
+			if (!string.IsNullOrWhiteSpace(fileNameV22) && File.Exists(fileNameV22))
 				modDataV22 = VectoCSVFile.Read(fileNameV22);
-			}
 
-			var titleHeight = (50 * 100.0f) / (_diagramSize.Height * Yfields.Count());
+			var titleHeight = (50 * 100.0f) / (_diagramSize.Height * Yfields.Length);
 
 			foreach (var xfield in Xfields) {
 				var fileName = string.Format("{0}_{1}.png", Path.GetFileNameWithoutExtension(fileNameV3),
@@ -101,7 +102,7 @@ namespace TUGraz.VectoCore.Tests.Utils
 				if (fileNameV22 != null && modDataV22 != null) {
 					x2 = LoadData(modDataV22, xfield.GetName());
 				}
-				var plotSize = new Size(_diagramSize.Width, _diagramSize.Height * Yfields.Count());
+				var plotSize = new Size(_diagramSize.Width, _diagramSize.Height * Yfields.Length);
 				var maxX = (int)(Math.Ceiling(Math.Max(x.Max(), x2.Max()) * 1.01 / 10.0) * 10.0);
 				var minX = (int)(Math.Floor(Math.Max(x.Min(), x2.Min()) / 10.0) * 10.0);
 				var chart = new Chart { Size = plotSize };
@@ -177,7 +178,7 @@ namespace TUGraz.VectoCore.Tests.Utils
 							y2);
 					}
 
-					PositionChartArea(chartArea, titleHeight, i, Yfields.Count());
+					PositionChartArea(chartArea, titleHeight, i, Yfields.Length);
 
 					if (i > 0) {
 						AlignChart(chart, yfield.ToString(), Yfields[0].ToString());
@@ -220,7 +221,7 @@ namespace TUGraz.VectoCore.Tests.Utils
 			//    RowFilter = string.Format(@"dist > {0} AND dist < {1}", start, end)
 			//};
 			//var modDataV3 = modDataV3View.ToTable();
-			var modDataV3tmp = modDataV3Iput.AsEnumerable().Where(row => {
+			var modDataV3Tmp = modDataV3Iput.AsEnumerable().Where(row => {
 				var s = row.ParseDouble("dist");
 				return s >= start && s <= end;
 			});
@@ -236,20 +237,20 @@ namespace TUGraz.VectoCore.Tests.Utils
 				//var modDataV22View = new DataView(modDataV22Input) {
 				//    RowFilter = string.Format(@"dist > {0} AND dist < {1}", start, end)
 				//};
-				var modDataV22tmp = modDataV22Input.AsEnumerable().Where(row => {
+				var modDataV22Tmp = modDataV22Input.AsEnumerable().Where(row => {
 					var s = row.ParseDouble("dist");
 					return s >= start && s <= end;
 				});
-				if (!(modDataV3tmp.Any() || modDataV22tmp.Any())) {
+				if (!(modDataV3Tmp.Any() || modDataV22Tmp.Any())) {
 					return false;
 				}
-				modDataV22 = modDataV22tmp.CopyToDataTable();
+				modDataV22 = modDataV22Tmp.CopyToDataTable();
 			} else {
-				if (!modDataV3tmp.Any()) {
+				if (!modDataV3Tmp.Any()) {
 					return false;
 				}
 			}
-			var modDataV3 = modDataV3tmp.CopyToDataTable();
+			var modDataV3 = modDataV3Tmp.CopyToDataTable();
 
 			//var xfields = new[] { ModalResultField.dist };
 			var xfield = ModalResultField.dist;
@@ -258,18 +259,18 @@ namespace TUGraz.VectoCore.Tests.Utils
 				ModalResultField.P_eng_out, ModalResultField.T_eng_fcmap, ModalResultField.FCMap
 			};
 
-			var titleHeight = (50 * 100.0f) / (_diagramSize.Height * yfields.Count());
+			var titleHeight = (50 * 100.0f) / (_diagramSize.Height * yfields.Length);
 
 			//foreach (var xfield in xfields) {
 			var fileName = string.Format("{0}_{1}-{2:D3}_{3:D3}.png", Path.GetFileNameWithoutExtension(fileNameV3),
 				xfield.GetName(), (int)(start / 1000), (int)(end / 1000));
 
 			var x = LoadData(modDataV3, xfield.GetName());
-			var x2 = new double[] { double.NegativeInfinity };
+			var x2 = new[] { double.NegativeInfinity };
 			if (fileNameV22 != null && modDataV22 != null) {
 				x2 = LoadData(modDataV22, xfield.GetName());
 			}
-			var plotSize = new Size(_diagramSize.Width, _diagramSize.Height * yfields.Count());
+			var plotSize = new Size(_diagramSize.Width, _diagramSize.Height * yfields.Length);
 			var maxX = (int)(Math.Ceiling(Math.Max(x.Max(), x2.Max()) * 1.01 / 10.0) * 10.0);
 			var minX = (int)(Math.Floor(Math.Max(x.Min(), x2.Min()) / 10.0) * 10.0);
 			var chart = new Chart { Size = plotSize };
@@ -315,7 +316,7 @@ namespace TUGraz.VectoCore.Tests.Utils
 						Color.Red, x2, y2);
 				}
 
-				PositionChartArea(chartArea, titleHeight, i, yfields.Count());
+				PositionChartArea(chartArea, titleHeight, i, yfields.Length);
 
 				if (i > 0) {
 					AlignChart(chart, yfield.ToString(), yfields[0].ToString());
@@ -332,11 +333,12 @@ namespace TUGraz.VectoCore.Tests.Utils
 
 		private static void AddTitle(Chart chart, string titleText, string dockToChartArea)
 		{
-			var title = new Title();
-			title.Text = titleText;
-			title.DockedToChartArea = dockToChartArea;
-			title.IsDockedInsideChartArea = false;
-			title.Font = new Font("Verdana", 18, FontStyle.Bold);
+			var title = new Title {
+				Text = titleText,
+				DockedToChartArea = dockToChartArea,
+				IsDockedInsideChartArea = false,
+				Font = new Font("Verdana", 18, FontStyle.Bold)
+			};
 			chart.Titles.Add(title);
 		}
 
@@ -410,7 +412,7 @@ namespace TUGraz.VectoCore.Tests.Utils
 
 		private static Legend CreateLegend(Chart chart, string dockToChartArea)
 		{
-			var legend = new Legend(dockToChartArea.ToString()) {
+			var legend = new Legend(dockToChartArea) {
 				Docking = Docking.Right,
 				IsDockedInsideChartArea = false,
 				DockedToChartArea = dockToChartArea,
