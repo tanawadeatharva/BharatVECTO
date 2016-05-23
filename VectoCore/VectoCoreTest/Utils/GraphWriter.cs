@@ -63,7 +63,6 @@ namespace TUGraz.VectoCore.Tests.Utils
 
 		public static bool PlotDrivingMode = false;
 
-
 		public static void Enable()
 		{
 			_enabled = true;
@@ -106,7 +105,6 @@ namespace TUGraz.VectoCore.Tests.Utils
 				var maxX = (int)(Math.Ceiling(Math.Max(x.Max(), x2.Max()) * 1.01 / 10.0) * 10.0);
 				var minX = (int)(Math.Floor(Math.Max(x.Min(), x2.Min()) / 10.0) * 10.0);
 				var chart = new Chart { Size = plotSize };
-
 
 				for (var i = 0; i < Yfields.Length; i++) {
 					var yfield = Yfields[i];
@@ -172,7 +170,7 @@ namespace TUGraz.VectoCore.Tests.Utils
 					var series1 = CreateSeries(string.Format("{1} - {0}", yfield, Series1Label), legend, chartArea, chart,
 						Color.Blue, x, y);
 
-					if (fileNameV22 != null) {
+					if (modDataV22 != null) {
 						var y2 = LoadData(modDataV22, TranslateFieldname(yfield));
 						var series2 = CreateSeries(string.Format("{1} - {0}", yfield, Series2Label), legend, chartArea, chart,
 							Color.Red, x2,
@@ -192,7 +190,6 @@ namespace TUGraz.VectoCore.Tests.Utils
 				chart.SaveImage(Path.Combine(Path.GetDirectoryName(fileNameV3) ?? "", fileName), ChartImageFormat.Png);
 			}
 		}
-
 
 		private static string TranslateFieldname(ModalResultField modalResultField)
 		{
