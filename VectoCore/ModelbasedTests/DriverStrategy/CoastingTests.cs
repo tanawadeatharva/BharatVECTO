@@ -3,10 +3,11 @@ using System.Globalization;
 using NUnit.Framework;
 using TUGraz.VectoCommon.Utils;
 using TUGraz.VectoCore.Models.Simulation.Data;
+using TUGraz.VectoCore.Tests.Integration;
 using TUGraz.VectoCore.Tests.Utils;
 using Assert = Microsoft.VisualStudio.TestTools.UnitTesting.Assert;
 
-namespace TUGraz.VectoCore.Tests.Integration.DriverStrategy
+namespace TUGraz.VectoCore.ModelbasedTests.DriverStrategy
 {
 	[TestFixture]
 	public class CoastingTests
