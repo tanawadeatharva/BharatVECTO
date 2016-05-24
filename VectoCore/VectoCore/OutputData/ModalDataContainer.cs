@@ -39,6 +39,7 @@ using TUGraz.VectoCommon.Models;
 using TUGraz.VectoCommon.Utils;
 using TUGraz.VectoCore.Models.Simulation.Data;
 using TUGraz.VectoCore.Models.Simulation.Impl;
+using TUGraz.VectoCore.Utils;
 
 namespace TUGraz.VectoCore.OutputData
 {
@@ -265,8 +266,88 @@ namespace TUGraz.VectoCore.OutputData
 		{
 			public ModalResults Filter(ModalResults data)
 			{
-				//todo mk-2016-05-24: implement 1Hz filter
-				return data;
+				var absTime = 0.SI<Second>();
+				var results = new ModalResults();
+				var remainingDt = 0.SI<Second>();
+
+				object[] remainingRow = null;
+
+				foreach (DataRow row in data.Rows) {
+					var currentDt = row.Field<Second>((int)ModalResultField.simulationInterval);
+
+					// if remaining + current >= 1: split current row and add remaining row.
+					// 1) take full remaining row
+					// 2) split current row on difference to next full second
+					// 3) continue with remaining time on current row
+					if (remainingDt > 0 && remainingDt + currentDt >= 1) {
+						var diffDt = 1.SI<Second>() - remainingDt;
+						var r = results.NewRow();
+						r.ItemArray = AddRow(remainingRow, MultiplyRow(row.ItemArray, diffDt));
+						absTime += diffDt;
+						r[(int)ModalResultField.simulationInterval] = absTime;
+						results.Rows.Add(r);
+						currentDt = VectoMath.Min(currentDt - remainingDt - 1.SI<Second>(), 0.SI<Second>());
+					}
+
+					// split current Row until dt < 1
+					while (currentDt >= 1) {
+						currentDt = currentDt - 1.SI<Second>();
+						var r = results.NewRow();
+						r.ItemArray = row.ItemArray;
+						absTime += 1.SI<Second>();
+						r[(int)ModalResultField.simulationInterval] = absTime;
+						results.Rows.Add(r);
+					}
+
+					// normalize rest of the remaining row if dt > 0 for summation of next row
+					if (currentDt > 0) {
+						if (remainingDt > 0)
+							remainingRow = AddRow(remainingRow, MultiplyRow(row.ItemArray, currentDt));
+						else
+							remainingRow = MultiplyRow(row.ItemArray, currentDt);
+						remainingDt += currentDt;
+						absTime += remainingDt;
+					} else {
+						remainingRow = null;
+						remainingDt = 0.SI<Second>();
+					}
+				}
+
+				// if last row was not enough to full second: take last row as whole second
+				if (remainingDt >= 0) {
+					var r = results.NewRow();
+					r.ItemArray = remainingRow;
+					r[(int)ModalResultField.simulationInterval] = 1.SI<Second>();
+					results.Rows.Add(r);
+				}
+
+				return results;
+			}
+
+			private static object[] MultiplyRow(IEnumerable<object> row, Second dt)
+			{
+				return row.Select(val => {
+					val.Switch()
+						.Case<SI>(si => val = si * dt.Value())
+						.Case<int>(i => val = i * dt.Value())
+						.Case<double>(d => val = d * dt.Value())
+						.Case<float>(f => val = f * dt.Value())
+						.Case<uint>(ui => val = ui * dt.Value());
+					return val;
+				}).ToArray();
+			}
+
+			private static object[] AddRow(IEnumerable<object> row, IEnumerable<object> addRow)
+			{
+				return row.ZipAll(addRow, (val, addVal) => {
+					val.Switch()
+						.Case<SI>(si => val = si + (SI)addVal)
+						.Case<int>(i => val = i + (int)addVal)
+						.Case<double>(d => val = d + (double)addVal)
+						.Case<float>(f => val = f + (float)addVal)
+						.Case<uint>(ui => val = ui + (uint)addVal);
+					return val;
+				}).ToArray();
 			}
 
 			public string ID
