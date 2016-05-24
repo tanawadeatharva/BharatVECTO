@@ -38,14 +38,25 @@ using TUGraz.VectoCore.Utils;
 
 namespace TUGraz.VectoCore.OutputData.FileIO
 {
-
 	public class FileOutputWriter : LoggingObject, IOutputDataWriter
 	{
 		private readonly string _jobFile;
 
-		private string BasePath { get { return Path.GetDirectoryName(_jobFile); } }
-		public string PDFReportName { get { return Path.ChangeExtension(_jobFile, Constants.FileExtensions.PDFReport); } }
-		public string SumFileName { get { return Path.ChangeExtension(_jobFile, Constants.FileExtensions.SumFile); } }
+		private string BasePath
+		{
+			get { return Path.GetDirectoryName(_jobFile); }
+		}
+
+		public string PDFReportName
+		{
+			get { return Path.ChangeExtension(_jobFile, Constants.FileExtensions.PDFReport); }
+		}
+
+		public string SumFileName
+		{
+			get { return Path.ChangeExtension(_jobFile, Constants.FileExtensions.SumFile); }
+		}
+
 		/// <summary>
 		/// 
 		/// </summary>
@@ -59,7 +70,7 @@ namespace TUGraz.VectoCore.OutputData.FileIO
 		{
 			VectoCSVFile.Write(SumFileName, data);
 		}
-		
+
 		public string GetModDataFileName(string runName, string cycleName, string runSuffix)
 		{
 			string modFileName;

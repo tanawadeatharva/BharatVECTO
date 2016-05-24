@@ -45,6 +45,7 @@ namespace TUGraz.VectoCore.OutputData
 	public class ModalDataContainer : IModalDataContainer
 	{
 		private readonly ExecutionMode _mode;
+		private readonly IModalDataFilter[] _filters;
 		private readonly Action<ModalDataContainer> _addReportResult;
 		internal ModalResults Data { get; set; }
 		private DataRow CurrentRow { get; set; }
@@ -62,16 +63,15 @@ namespace TUGraz.VectoCore.OutputData
 
 		public bool WriteAdvancedAux { get; set; }
 
-		public ModalDataContainer(string runName, IModalDataWriter writer,
-			ExecutionMode mode = ExecutionMode.Engineering)
+		public ModalDataContainer(string runName, IModalDataWriter writer, ExecutionMode mode)
 			: this(runName, "", "", writer, _ => { }, mode) {}
 
 		public ModalDataContainer(VectoRunData runData, IModalDataWriter writer, Action<ModalDataContainer> addReportResult,
-			ExecutionMode mode = ExecutionMode.Engineering)
-			: this(runData.JobName, runData.Cycle.Name, runData.ModFileSuffix, writer, addReportResult, mode) {}
+			ExecutionMode mode, params IModalDataFilter[] filter)
+			: this(runData.JobName, runData.Cycle.Name, runData.ModFileSuffix, writer, addReportResult, mode, filter) {}
 
 		protected ModalDataContainer(string runName, string cycleName, string runSuffix, IModalDataWriter writer,
-			Action<ModalDataContainer> addReportResult, ExecutionMode mode)
+			Action<ModalDataContainer> addReportResult, ExecutionMode mode, params IModalDataFilter[] filters)
 
 		{
 			HasTorqueConverter = false;
@@ -81,6 +81,7 @@ namespace TUGraz.VectoCore.OutputData
 			_writer = writer;
 
 			_mode = mode;
+			_filters = filters;
 			_addReportResult = addReportResult;
 
 			Data = new ModalResults();
@@ -192,8 +193,12 @@ namespace TUGraz.VectoCore.OutputData
 				.Concat(_additionalColumns);
 
 			if (_mode != ExecutionMode.Declaration || WriteModalResults) {
-				_writer.WriteModData(RunName, CycleName, RunSuffix,
-					new DataView(Data).ToTable(false, strCols.ToArray()));
+				var filteredData = Data;
+				foreach (var filter in _filters) {
+					RunSuffix += "_" + filter.ID;
+					filteredData = filter.Filter(filteredData);
+				}
+				_writer.WriteModData(RunName, CycleName, RunSuffix, new DataView(filteredData).ToTable(false, strCols.ToArray()));
 			}
 
 			if (_mode == ExecutionMode.Declaration) {
@@ -230,11 +235,11 @@ namespace TUGraz.VectoCore.OutputData
 				_additionalColumns.Add(fieldName);
 				Data.Columns.Add(fieldName);
 			}
-            if (value is double) {
-                CurrentRow[fieldName] = string.Format(CultureInfo.InvariantCulture, "{0}", value); 
-            } else {			
-                CurrentRow[fieldName] = value;
-            }
+			if (value is double) {
+				CurrentRow[fieldName] = string.Format(CultureInfo.InvariantCulture, "{0}", value);
+			} else {
+				CurrentRow[fieldName] = value;
+			}
 		}
 
 		public Dictionary<string, DataColumn> Auxiliaries { get; set; }
@@ -253,6 +258,20 @@ namespace TUGraz.VectoCore.OutputData
 
 					Auxiliaries[id] = col;
 				}
+			}
+		}
+
+		public class ModalData1HzFilter : IModalDataFilter
+		{
+			public ModalResults Filter(ModalResults data)
+			{
+				//todo mk-2016-05-24: implement 1Hz filter
+				return data;
+			}
+
+			public string ID
+			{
+				get { return "1Hz"; }
 			}
 		}
 	}

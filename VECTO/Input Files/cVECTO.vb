@@ -165,7 +165,7 @@ Public Class cVECTO
         Dim AuxEntryKV As KeyValuePair(Of String, cAuxEntry)
         'Dim s As String
         Dim sb As cSubPath
-        Dim JSON As New cJSON
+        Dim JSON As New JSON
         Dim ls As List(Of Object)
         Dim dic As Dictionary(Of String, Object)
         Dim dic0 As Dictionary(Of String, Object)
@@ -272,7 +272,7 @@ Public Class cVECTO
         Dim AuxID As String
         Dim MsgSrc As String
         Dim SubPath As cSubPath
-        Dim JSON As New cJSON
+        Dim JSON As New JSON
         Dim str As String
         Dim dic As Object
 

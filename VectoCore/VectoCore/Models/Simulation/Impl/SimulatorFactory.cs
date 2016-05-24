@@ -44,7 +44,6 @@ using TUGraz.VectoCore.InputData;
 using TUGraz.VectoCore.InputData.Reader.Impl;
 using TUGraz.VectoCore.Models.SimulationComponent.Data;
 using TUGraz.VectoCore.OutputData;
-using TUGraz.VectoCore.OutputData.FileIO;
 using TUGraz.VectoCore.OutputData.PDF;
 using TUGraz.VectoCore.Utils;
 
@@ -72,7 +71,7 @@ namespace TUGraz.VectoCore.Models.Simulation.Impl
 					}
 					var report = declarationReport ?? new PDFDeclarationReport(writer);
 					var windowsIdentity = WindowsIdentity.GetCurrent();
-					report.Creator = windowsIdentity != null ? windowsIdentity.Name : "N/A";
+					report.Creator = windowsIdentity.Name;
 					report.JobName = declDataProvider.JobInputData().JobName;
 					DataReader = new DeclarationModeVectoRunDataFactory(declDataProvider, report);
 					break;
@@ -104,6 +103,7 @@ namespace TUGraz.VectoCore.Models.Simulation.Impl
 		public int JobNumber { get; set; }
 
 		public bool WriteModalResults { get; set; }
+		public bool ModalResults1Hz { get; set; }
 
 		/// <summary>
 		/// Creates powertrain and initializes it with the component's data.
@@ -112,18 +112,24 @@ namespace TUGraz.VectoCore.Models.Simulation.Impl
 		public IEnumerable<IVectoRun> SimulationRuns()
 		{
 			var i = 0;
+			var modDataFilter = ModalResults1Hz
+				? new IModalDataFilter[] { new ModalDataContainer.ModalData1HzFilter() }
+				: new IModalDataFilter[0];
+
 			foreach (var data in DataReader.NextRun()) {
 				var d = data;
 				IModalDataContainer modContainer =
 					new ModalDataContainer(data, ModWriter,
-						writer => {
+						addReportResult: writer => {
 							if (d.Report != null) {
 								d.Report.AddResult(d.Loading, d.Mission, writer);
 							}
-						}, _mode) {
-							WriteAdvancedAux = data.AdvancedAux != null && data.AdvancedAux.AuxiliaryAssembly == AuxiliaryModel.Advanced
+						},
+						mode: _mode,
+						filter: modDataFilter) {
+							WriteAdvancedAux = data.AdvancedAux != null && data.AdvancedAux.AuxiliaryAssembly == AuxiliaryModel.Advanced,
+							WriteModalResults = WriteModalResults
 						};
-				modContainer.WriteModalResults = WriteModalResults;
 				var current = i++;
 				var builder = new PowertrainBuilder(modContainer, (writer, mass, loading) =>
 					SumData.Write(modContainer, d.JobName, string.Format("{0}-{1}", JobNumber, current),

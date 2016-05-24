@@ -74,6 +74,7 @@ Partial Class F_MAINForm
 		Me.GrBoxSTD = New System.Windows.Forms.GroupBox()
 		Me.ChBoxAutoSD = New System.Windows.Forms.CheckBox()
 		Me.PanelOptAllg = New System.Windows.Forms.Panel()
+		Me.ChBoxMod1Hz = New System.Windows.Forms.CheckBox()
 		Me.ChBoxModOut = New System.Windows.Forms.CheckBox()
 		Me.GroupBox1 = New System.Windows.Forms.GroupBox()
 		Me.RbDev = New System.Windows.Forms.RadioButton()
@@ -588,20 +589,31 @@ Partial Class F_MAINForm
 		'
 		'PanelOptAllg
 		'
+		Me.PanelOptAllg.Controls.Add(Me.ChBoxMod1Hz)
 		Me.PanelOptAllg.Controls.Add(Me.ChBoxModOut)
 		Me.PanelOptAllg.Controls.Add(Me.GroupBox1)
 		Me.PanelOptAllg.Controls.Add(Me.PnDeclOpt)
 		Me.PanelOptAllg.Location = New System.Drawing.Point(6, 6)
 		Me.PanelOptAllg.Name = "PanelOptAllg"
-		Me.PanelOptAllg.Size = New System.Drawing.Size(358, 212)
+		Me.PanelOptAllg.Size = New System.Drawing.Size(519, 212)
 		Me.PanelOptAllg.TabIndex = 0
+		'
+		'ChBoxMod1Hz
+		'
+		Me.ChBoxMod1Hz.AutoSize = True
+		Me.ChBoxMod1Hz.Location = New System.Drawing.Point(9, 182)
+		Me.ChBoxMod1Hz.Name = "ChBoxMod1Hz"
+		Me.ChBoxMod1Hz.Size = New System.Drawing.Size(121, 17)
+		Me.ChBoxMod1Hz.TabIndex = 16
+		Me.ChBoxMod1Hz.Text = "Modal results in 1Hz"
+		Me.ChBoxMod1Hz.UseVisualStyleBackColor = True
 		'
 		'ChBoxModOut
 		'
 		Me.ChBoxModOut.AutoSize = True
 		Me.ChBoxModOut.Checked = True
 		Me.ChBoxModOut.CheckState = System.Windows.Forms.CheckState.Checked
-		Me.ChBoxModOut.Location = New System.Drawing.Point(9, 180)
+		Me.ChBoxModOut.Location = New System.Drawing.Point(9, 159)
 		Me.ChBoxModOut.Name = "ChBoxModOut"
 		Me.ChBoxModOut.Size = New System.Drawing.Size(115, 17)
 		Me.ChBoxModOut.TabIndex = 0
@@ -649,7 +661,7 @@ Partial Class F_MAINForm
 		Me.PnDeclOpt.Controls.Add(Me.ChBoxUseGears)
 		Me.PnDeclOpt.Location = New System.Drawing.Point(3, 81)
 		Me.PnDeclOpt.Name = "PnDeclOpt"
-		Me.PnDeclOpt.Size = New System.Drawing.Size(202, 93)
+		Me.PnDeclOpt.Size = New System.Drawing.Size(202, 72)
 		Me.PnDeclOpt.TabIndex = 13
 		'
 		'CbBatch
@@ -665,7 +677,7 @@ Partial Class F_MAINForm
 		'ChBoxCyclDistCor
 		'
 		Me.ChBoxCyclDistCor.AutoSize = True
-		Me.ChBoxCyclDistCor.Location = New System.Drawing.Point(6, 41)
+		Me.ChBoxCyclDistCor.Location = New System.Drawing.Point(6, 26)
 		Me.ChBoxCyclDistCor.Name = "ChBoxCyclDistCor"
 		Me.ChBoxCyclDistCor.Size = New System.Drawing.Size(148, 17)
 		Me.ChBoxCyclDistCor.TabIndex = 0
@@ -675,7 +687,7 @@ Partial Class F_MAINForm
 		'ChBoxUseGears
 		'
 		Me.ChBoxUseGears.AutoSize = True
-		Me.ChBoxUseGears.Location = New System.Drawing.Point(6, 64)
+		Me.ChBoxUseGears.Location = New System.Drawing.Point(6, 49)
 		Me.ChBoxUseGears.Name = "ChBoxUseGears"
 		Me.ChBoxUseGears.Size = New System.Drawing.Size(188, 17)
 		Me.ChBoxUseGears.TabIndex = 0
@@ -1167,5 +1179,6 @@ Partial Class F_MAINForm
 	Friend WithEvents Label1 As System.Windows.Forms.Label
 	Friend WithEvents ReportBugViaCITnetToolStripMenuItem As System.Windows.Forms.ToolStripMenuItem
 	Friend WithEvents btStartV3 As System.Windows.Forms.Button
+	Friend WithEvents ChBoxMod1Hz As System.Windows.Forms.CheckBox
 
 End Class

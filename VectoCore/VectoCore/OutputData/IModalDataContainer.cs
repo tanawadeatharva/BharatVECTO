@@ -40,6 +40,12 @@ using TUGraz.VectoCore.Utils;
 
 namespace TUGraz.VectoCore.OutputData
 {
+	public interface IModalDataFilter
+	{
+		ModalResults Filter(ModalResults data);
+		string ID { get; }
+	}
+
 	public interface IModalDataContainer
 	{
 		/// <summary>

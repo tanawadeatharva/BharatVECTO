@@ -1,4 +1,4 @@
-' Copyright 2014 European Union.
+﻿' Copyright 2014 European Union.
 ' Licensed under the EUPL (the 'Licence');
 '
 ' * You may not use this work except in compliance with the Licence.
@@ -103,13 +103,13 @@ Namespace My
             DEV = New cDEV
             Declaration = New cDeclaration
 
-            Cfg = New cConfig   'ACHTUNG: cConfig.New löst cConfig.SetDefault aus welches sKey benötigt dehalb muss sKey schon vorher initialisiert werden!!
+            Cfg = New Configuration   'ACHTUNG: Configuration.New löst Configuration.SetDefault aus welches sKey benötigt dehalb muss sKey schon vorher initialisiert werden!!
             Cfg.FilePath = MyConfPath & "settings.json"
 
             ProgBarCtrl = New cProgBarCtrl
 
             'Config
-            Cfg.ConfigLOAD()
+            Cfg.Load()
 
             'Restart log if log file too large
             LogFile.SizeCheck()

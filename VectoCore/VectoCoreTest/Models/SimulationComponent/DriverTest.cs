@@ -69,7 +69,7 @@ namespace TUGraz.VectoCore.Tests.Models.SimulationComponent
 			var driverData = CreateDriverData();
 
 			var fileWriter = new FileOutputWriter("Coach_MinimalPowertrain_Coasting");
-			var modData = new ModalDataContainer("Coach_MinimalPowertrain_Coasting", fileWriter);
+			var modData = new ModalDataContainer("Coach_MinimalPowertrain_Coasting", fileWriter, ExecutionMode.Engineering);
 			var vehicleContainer = new VehicleContainer(ExecutionMode.Engineering, modData);
 
 			var driver = new Driver(vehicleContainer, driverData, new DefaultDriverStrategy());
@@ -124,7 +124,7 @@ namespace TUGraz.VectoCore.Tests.Models.SimulationComponent
 			var driverData = CreateDriverData();
 
 			var fileWriter = new FileOutputWriter("Coach_MinimalPowertrain_Coasting");
-			var modData = new ModalDataContainer("Coach_MinimalPowertrain_Coasting", fileWriter);
+			var modData = new ModalDataContainer("Coach_MinimalPowertrain_Coasting", fileWriter, ExecutionMode.Engineering);
 			var vehicleContainer = new VehicleContainer(ExecutionMode.Engineering, modData);
 
 			var driver = new Driver(vehicleContainer, driverData, new DefaultDriverStrategy());
@@ -182,7 +182,7 @@ namespace TUGraz.VectoCore.Tests.Models.SimulationComponent
 			var driverData = CreateDriverData();
 
 			var fileWriter = new FileOutputWriter("Coach_MinimalPowertrain");
-			var modData = new ModalDataContainer("Coach_MinimalPowertrain", fileWriter);
+			var modData = new ModalDataContainer("Coach_MinimalPowertrain", fileWriter, ExecutionMode.Engineering);
 			var vehicleContainer = new VehicleContainer(ExecutionMode.Engineering, modData);
 
 			var cycle = new MockDrivingCycle(vehicleContainer, null);
@@ -386,7 +386,9 @@ namespace TUGraz.VectoCore.Tests.Models.SimulationComponent
 			};
 			return new VehicleData {
 				AxleConfiguration = AxleConfiguration.AxleConfig_4x2,
-				CrossWindCorrectionCurve = new CrosswindCorrectionCdxALookup(CrossWindCorrectionCurveReader.GetNoCorrectionCurve(3.2634.SI<SquareMeter>()), CrossWindCorrectionMode.NoCorrection),
+				CrossWindCorrectionCurve =
+					new CrosswindCorrectionCdxALookup(CrossWindCorrectionCurveReader.GetNoCorrectionCurve(3.2634.SI<SquareMeter>()),
+						CrossWindCorrectionMode.NoCorrection),
 				CurbWeight = 15700.SI<Kilogram>(),
 				CurbWeigthExtra = 0.SI<Kilogram>(),
 				Loading = loading,
