@@ -96,7 +96,7 @@ namespace TUGraz.VectoCore.Configuration
 			/// <summary>
 			/// The lower time bound before braking is initiated.
 			/// </summary>
-			public static readonly Second LowerBoundTimeInterval = 0.2.SI<Second>();
+			public static readonly Second LowerBoundTimeInterval = 0.25.SI<Second>();
 
 			/// <summary>
 			/// simulation interval if the vehicle stands still
