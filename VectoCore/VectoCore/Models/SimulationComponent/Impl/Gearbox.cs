@@ -237,7 +237,7 @@ namespace TUGraz.VectoCore.Models.SimulationComponent.Impl
 								(DataBus.EngineRatedSpeed - DataBus.EngineIdleSpeed);
 			if (DataBus.DriverBehavior == DrivingBehavior.Braking && DataBus.BrakePower.IsGreater(0.SI<Watt>()) &&
 				engineSpeedNorm < Constants.SimulationSettings.ClutchClosingSpeedNorm &&
-				DataBus.VehicleSpeed.IsSmaller(15.KMPHtoMeterPerSecond())) {
+				DataBus.VehicleSpeed.IsSmaller(Constants.SimulationSettings.ClutchDisengageWhenHaltingSpeed)) {
 				_engageTime = absTime + dt;
 				Disengaged = true;
 				return RequestGearDisengaged(absTime, dt, torque, angularVelocity, dryRun);

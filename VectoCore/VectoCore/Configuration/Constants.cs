@@ -128,6 +128,7 @@ namespace TUGraz.VectoCore.Configuration
 			public const double InterpolateSearchTolerance = 1e-3;
 
 			public const double ClutchClosingSpeedNorm = 0.03;
+			public static readonly MeterPerSecond ClutchDisengageWhenHaltingSpeed = 15.KMPHtoMeterPerSecond();
 
 			public static readonly MeterPerSquareSecond MinimumAcceleration = 0.1.SI<MeterPerSquareSecond>();
 
