@@ -350,8 +350,22 @@ namespace TUGraz.VectoCore.Models.SimulationComponent.Impl
 				if (cycleIterator.RightSample.VehicleTargetSpeed.IsEqual(velocity)) {
 					continue;
 				}
-				retVal.Add(cycleIterator.RightSample); // TODO: MQ 2016-05-13: use clone if iterator here?
+				var lookaheadEntry = retVal.Find(x => x.Distance == cycleIterator.RightSample.Distance);
+				if (lookaheadEntry != null) {
+					// an entry may occur twice when vehicle stops (one entry with v=0 and the other with drive on after stop)
+					// only use the one with min. speed
+					if (cycleIterator.RightSample.VehicleTargetSpeed < lookaheadEntry.VehicleTargetSpeed) {
+						retVal.Remove(lookaheadEntry);
+						retVal.Add(cycleIterator.RightSample); // TODO: MQ 2016-05-13: use clone of iterator here?
+					}
+				} else {
+					retVal.Add(cycleIterator.RightSample); // TODO: MQ 2016-05-13: use clone of iterator here?
+				}
 				velocity = cycleIterator.RightSample.VehicleTargetSpeed;
+				if (velocity.IsEqual(0.KMPHtoMeterPerSecond())) {
+					// do not look beyond vehicle stop
+					break;
+				}
 			} while (cycleIterator.MoveNext() && cycleIterator.RightSample.Distance < PreviousState.Distance + lookaheadDistance);
 			if (retVal.Count > 0) {
 				retVal = retVal.Where(x => x.Distance <= PreviousState.Distance + lookaheadDistance).ToList();
