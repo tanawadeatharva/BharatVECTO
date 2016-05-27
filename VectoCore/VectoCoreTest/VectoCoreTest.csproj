@@ -85,7 +85,6 @@
     <Compile Include="Integration\BusAuxiliaries\SimpleCycleTest.cs" />
     <Compile Include="Integration\CoachAdvancedAuxPowertrain.cs" />
     <Compile Include="Integration\CoachPowerTrain.cs" />
-    <Compile Include="Integration\DriverStrategy\CoastingTests.cs" />
     <Compile Include="Integration\DriverStrategy\DriverStrategyTestCoach.cs" />
     <Compile Include="Integration\DriverStrategy\DriverStrategyTestTruck.cs" />
     <Compile Include="Integration\FullCycleDeclarationTest.cs">
@@ -110,6 +109,7 @@
     <Compile Include="Utils\InputDataHelper.cs" />
     <Compile Include="Utils\MockBrakes.cs" />
     <Compile Include="Utils\MockEngineDataProvider.cs" />
+    <Compile Include="Utils\MockIdleController.cs" />
     <Compile Include="Utils\MockSimulationDataFactory.cs" />
     <Compile Include="Utils\MockVairVehicleContainer.cs" />
     <Compile Include="Utils\Port.cs" />

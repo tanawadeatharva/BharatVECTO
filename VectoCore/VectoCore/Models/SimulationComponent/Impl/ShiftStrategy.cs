@@ -198,7 +198,7 @@ namespace TUGraz.VectoCore.Models.SimulationComponent.Impl
 					if (!IsBelowDownShiftCurve(gear, inTorque, inAngularSpeed) && !IsAboveUpShiftCurve(gear, inTorque, inAngularSpeed) &&
 						reserve >= Data.StartTorqueReserve) {
 						if ((inAngularSpeed - DataBus.EngineIdleSpeed) / (DataBus.EngineRatedSpeed - DataBus.EngineIdleSpeed) <
-							Constants.SimulationSettings.ClutchNormSpeed && gear > 1) {
+							Constants.SimulationSettings.ClutchClosingSpeedNorm && gear > 1) {
 							gear--;
 						}
 
@@ -306,7 +306,7 @@ namespace TUGraz.VectoCore.Models.SimulationComponent.Impl
 
 			if ((Data.Gears[NextGear].Ratio * outAngularVelocity - DataBus.EngineIdleSpeed) /
 				(DataBus.EngineRatedSpeed - DataBus.EngineIdleSpeed) <
-				Constants.SimulationSettings.ClutchNormSpeed && NextGear > 1) {
+				Constants.SimulationSettings.ClutchClosingSpeedNorm && NextGear > 1) {
 				NextGear--;
 			}
 

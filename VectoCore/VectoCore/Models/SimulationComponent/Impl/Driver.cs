@@ -58,7 +58,6 @@ namespace TUGraz.VectoCore.Models.SimulationComponent.Impl
 		public DriverData DriverData { get; protected set; }
 
 		protected IDriverStrategy DriverStrategy;
-		private Dictionary<string, object> _coastData = new Dictionary<string, object>(20);
 		private string CurrentAction = "";
 
 		//public MeterPerSquareSecond LookaheadDeceleration { get; protected set; }
@@ -84,11 +83,6 @@ namespace TUGraz.VectoCore.Models.SimulationComponent.Impl
 
 		public IResponse Initialize(MeterPerSecond vehicleSpeed, Radian roadGradient)
 		{
-			if (DriverData.LookAheadCoasting.Deceleration < DriverData.AccelerationCurve.MinDeceleration()) {
-				Log.Warn(
-					"LookAhead Coasting Deceleration is lower than Driver's min. Deceleration. Coasting may start too late. Lookahead dec.: {0}, Driver min. deceleration: {1}",
-					DriverData.LookAheadCoasting.Deceleration, DriverData.AccelerationCurve.MinDeceleration());
-			}
 			DriverBehavior = vehicleSpeed.IsEqual(0) ? DrivingBehavior.Halted : DrivingBehavior.Driving;
 			return NextComponent.Initialize(vehicleSpeed, roadGradient);
 		}
@@ -111,8 +105,6 @@ namespace TUGraz.VectoCore.Models.SimulationComponent.Impl
 				absTime, ds, targetVelocity, gradient, DataBus.Distance, DataBus.VehicleSpeed, DataBus.VehicleStopped);
 
 			var retVal = DriverStrategy.Request(absTime, ds, targetVelocity, gradient);
-
-			_coastData = ((DefaultDriverStrategy)DriverStrategy).LookAheadCoasting(ds);
 
 			CurrentState.Response = retVal;
 			retVal.SimulationInterval = CurrentState.dt;
@@ -316,7 +308,7 @@ namespace TUGraz.VectoCore.Models.SimulationComponent.Impl
 				searchedOperatingPoint.Acceleration, rollAction ? "ROLL" : "COAST");
 
 			var limitedOperatingPoint = LimitAccelerationByDriverModel(searchedOperatingPoint,
-				rollAction ? LimitationMode.NoLimitation : LimitationMode.LimitDecelerationLookahead);
+				rollAction ? LimitationMode.NoLimitation : LimitationMode.LimitDecelerationDriver);
 
 			// compute speed at the end of the simulation interval. if it exceeds the limit -> return
 			var v2 = DataBus.VehicleSpeed + limitedOperatingPoint.Acceleration * limitedOperatingPoint.SimulationInterval;
@@ -480,11 +472,11 @@ namespace TUGraz.VectoCore.Models.SimulationComponent.Impl
 		{
 			var limitApplied = false;
 			var originalAcceleration = operatingPoint.Acceleration;
-			if (((limits & LimitationMode.LimitDecelerationLookahead) != 0) &&
-				operatingPoint.Acceleration < DriverData.LookAheadCoasting.Deceleration) {
-				operatingPoint.Acceleration = DriverData.LookAheadCoasting.Deceleration;
-				limitApplied = true;
-			}
+			//if (((limits & LimitationMode.LimitDecelerationLookahead) != 0) &&
+			//	operatingPoint.Acceleration < DriverData.LookAheadCoasting.Deceleration) {
+			//	operatingPoint.Acceleration = DriverData.LookAheadCoasting.Deceleration;
+			//	limitApplied = true;
+			//}
 			var accelerationLimits = DriverData.AccelerationCurve.Lookup(DataBus.VehicleSpeed);
 			if (operatingPoint.Acceleration > accelerationLimits.Acceleration) {
 				operatingPoint.Acceleration = accelerationLimits.Acceleration;
@@ -796,13 +788,11 @@ namespace TUGraz.VectoCore.Models.SimulationComponent.Impl
 			container[ModalResultField.acc] = CurrentState.Acceleration;
 
 			//todo mk-2016-05-11: remove additional columns in moddata after testing of LAC finished
-			foreach (var kv in _coastData) {
-				container.SetDataValue(kv.Key, kv.Value);
-			}
+#if DEBUG
 			container.SetDataValue("Alt", DataBus.Altitude.Value());
 			container.SetDataValue("DrivingMode", ((DefaultDriverStrategy)DriverStrategy).CurrentDrivingMode);
 			container.SetDataValue("Action", CurrentAction);
-			_coastData.Clear();
+#endif
 		}
 
 		protected override void DoCommitSimulationStep()
@@ -826,7 +816,7 @@ namespace TUGraz.VectoCore.Models.SimulationComponent.Impl
 		{
 			NoLimitation = 0x0,
 			LimitDecelerationDriver = 0x2,
-			LimitDecelerationLookahead = 0x4
+			//LimitDecelerationLookahead = 0x4
 		}
 
 		public DrivingBehavior DriverBehavior { get; set; }

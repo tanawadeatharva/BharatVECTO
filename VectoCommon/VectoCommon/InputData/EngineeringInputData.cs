@@ -270,8 +270,7 @@ namespace TUGraz.VectoCommon.InputData
 		/// P020
 		/// cf. VECTO Input Parameters.xlsx
 		/// </summary>
-		MeterPerSquareSecond Deceleration { get; }
-
+		//MeterPerSquareSecond Deceleration { get; }
 		/// <summary>
 		/// P021
 		/// cf. VECTO Input Parameters.xlsx
