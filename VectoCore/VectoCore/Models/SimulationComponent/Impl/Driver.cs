@@ -58,7 +58,9 @@ namespace TUGraz.VectoCore.Models.SimulationComponent.Impl
 		public DriverData DriverData { get; protected set; }
 
 		protected IDriverStrategy DriverStrategy;
-		private string CurrentAction = "";
+#pragma warning disable 414
+		private string _currentAction = "";
+#pragma warning restore 414
 
 		//public MeterPerSquareSecond LookaheadDeceleration { get; protected set; }
 
@@ -149,7 +151,7 @@ namespace TUGraz.VectoCore.Models.SimulationComponent.Impl
 			IResponse previousResponse = null)
 		{
 			IterationStatistics.Increment(this, "Accelerate");
-			CurrentAction = "Accelerate";
+			_currentAction = "Accelerate";
 			Log.Debug("DrivingAction Accelerate");
 			var operatingPoint = ComputeAcceleration(ds, targetVelocity);
 
@@ -229,7 +231,7 @@ namespace TUGraz.VectoCore.Models.SimulationComponent.Impl
 		public IResponse DrivingActionCoast(Second absTime, Meter ds, MeterPerSecond maxVelocity, Radian gradient)
 		{
 			IterationStatistics.Increment(this, "Coast");
-			CurrentAction = "Coast";
+			_currentAction = "Coast";
 			Log.Debug("DrivingAction Coast");
 
 			return CoastOrRollAction(absTime, ds, maxVelocity, gradient, false);
@@ -245,7 +247,7 @@ namespace TUGraz.VectoCore.Models.SimulationComponent.Impl
 		/// <returns></returns>
 		public IResponse DrivingActionRoll(Second absTime, Meter ds, MeterPerSecond maxVelocity, Radian gradient)
 		{
-			CurrentAction = "Roll";
+			_currentAction = "Roll";
 			IterationStatistics.Increment(this, "Roll");
 
 			Log.Debug("DrivingAction Roll");
@@ -351,7 +353,7 @@ namespace TUGraz.VectoCore.Models.SimulationComponent.Impl
 			IResponse previousResponse = null, Meter targetDistance = null)
 		{
 			IterationStatistics.Increment(this, "Brake");
-			CurrentAction = "Brake";
+			_currentAction = "Brake";
 			Log.Debug("DrivingAction Brake");
 
 			IResponse retVal = null;
@@ -708,7 +710,7 @@ namespace TUGraz.VectoCore.Models.SimulationComponent.Impl
 		/// <returns></returns>
 		public IResponse DrivingActionHalt(Second absTime, Second dt, MeterPerSecond targetVelocity, Radian gradient)
 		{
-			CurrentAction = "Halt";
+			_currentAction = "Halt";
 			if (!targetVelocity.IsEqual(0) || !DataBus.VehicleStopped) {
 				Log.Error("TargetVelocity ({0}) and VehicleVelocity ({1}) must be zero when vehicle is halting!", targetVelocity,
 					DataBus.VehicleSpeed);
@@ -738,9 +740,9 @@ namespace TUGraz.VectoCore.Models.SimulationComponent.Impl
 
 			//todo mk-2016-05-11: remove additional columns in moddata after testing of LAC finished
 #if DEBUG
-			container.SetDataValue("Alt", DataBus.Altitude.Value());
-			container.SetDataValue("DrivingMode", ((DefaultDriverStrategy)DriverStrategy).CurrentDrivingMode);
-			container.SetDataValue("Action", CurrentAction);
+			//container.SetDataValue("Alt", DataBus.Altitude.Value());
+			//container.SetDataValue("DrivingMode", ((DefaultDriverStrategy)DriverStrategy).CurrentDrivingMode);
+			//container.SetDataValue("Action", CurrentAction);
 #endif
 		}
 
