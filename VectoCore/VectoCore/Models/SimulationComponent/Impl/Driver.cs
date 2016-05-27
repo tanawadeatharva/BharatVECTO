@@ -596,7 +596,7 @@ namespace TUGraz.VectoCore.Models.SimulationComponent.Impl
 							LogManager.EnableLogging();
 							Log.Debug("Got EngineSpeedTooLow during SearchOperatingPoint. Aborting!");
 							LogManager.DisableLogging();
-							throw new VectoEngineSpeedTooLowException("EngineSpeed too low during search.");
+							//throw new VectoEngineSpeedTooLowException("EngineSpeed too low during search.");
 						}
 
 						var r = (ResponseDryRun)response;
