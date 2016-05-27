@@ -229,6 +229,19 @@ namespace TUGraz.VectoCore.Models.SimulationComponent.Impl
 			if (DataBus.VehicleStopped) {
 				_engageTime = absTime;
 			}
+			if (DataBus.DriverBehavior == DrivingBehavior.Halted) {
+				_engageTime = absTime + dt;
+			}
+
+			var engineSpeedNorm = (angularVelocity - DataBus.EngineIdleSpeed) /
+								(DataBus.EngineRatedSpeed - DataBus.EngineIdleSpeed);
+			if (DataBus.DriverBehavior == DrivingBehavior.Braking && DataBus.BrakePower.IsGreater(0.SI<Watt>()) &&
+				engineSpeedNorm < Constants.SimulationSettings.ClutchClosingSpeedNorm &&
+				DataBus.VehicleSpeed.IsSmaller(15.KMPHtoMeterPerSecond())) {
+				_engageTime = absTime + dt;
+				Disengaged = true;
+				return RequestGearDisengaged(absTime, dt, torque, angularVelocity, dryRun);
+			}
 
 			IResponse retVal;
 			// TODO MQ 2016/03/10: investigate further the effects of having the condition angularvelocity != 0
