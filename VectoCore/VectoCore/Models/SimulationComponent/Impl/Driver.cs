@@ -695,58 +695,7 @@ namespace TUGraz.VectoCore.Models.SimulationComponent.Impl
 		/// <returns>Operating point (a, ds, dt)</returns>
 		private OperatingPoint ComputeTimeInterval(MeterPerSquareSecond acceleration, Meter ds)
 		{
-			if (!(ds > 0)) {
-				throw new VectoSimulationException("ds has to be greater than 0! ds: {0}", ds);
-			}
-			var currentSpeed = DataBus.VehicleSpeed;
-			var retVal = new OperatingPoint() { Acceleration = acceleration, SimulationDistance = ds };
-			if (acceleration.IsEqual(0)) {
-				if (currentSpeed > 0) {
-					retVal.SimulationInterval = ds / currentSpeed;
-					return retVal;
-				}
-				Log.Error("{2}: vehicle speed is {0}, acceleration is {1}", currentSpeed.Value(), acceleration.Value(),
-					DataBus.Distance);
-				throw new VectoSimulationException(
-					"vehicle speed has to be > 0 if acceleration = 0!  v: {0}, a: {1}, distance: {2}", currentSpeed.Value(),
-					acceleration.Value(), DataBus.Distance);
-			}
-
-			// we need to accelerate / decelerate. solve quadratic equation...
-			// ds = acceleration / 2 * dt^2 + currentSpeed * dt   => solve for dt
-			var solutions = VectoMath.QuadraticEquationSolver(acceleration.Value() / 2.0, currentSpeed.Value(),
-				-ds.Value());
-
-			if (solutions.Count == 0) {
-				// no real-valued solutions: acceleration is so negative that vehicle stops already before the required distance can be reached.
-				// adapt ds to the halting-point.
-				// t = v / a
-				var dt = currentSpeed / -acceleration;
-
-				// s = a/2*t^2 + v*t
-				var stopDistance = acceleration / 2 * dt * dt + currentSpeed * dt;
-
-				if (stopDistance.IsGreater(ds)) {
-					// just to cover everything - does not happen...
-					Log.Error(
-						"Could not find solution for computing required time interval to drive distance ds: {0}. currentSpeed: {1}, acceleration: {2}, stopDistance: {3}, distance: {4}",
-						ds, currentSpeed, acceleration, stopDistance, DataBus.Distance);
-					throw new VectoSimulationException("Could not find solution for time-interval!  ds: {0}, stopDistance: {1}", ds,
-						stopDistance);
-				}
-
-				Log.Info(
-					"Adjusted distance when computing time interval: currentSpeed: {0}, acceleration: {1}, distance: {2} -> {3}, timeInterval: {4}",
-					currentSpeed, acceleration, stopDistance, stopDistance, dt);
-
-				retVal.SimulationInterval = dt;
-				retVal.SimulationDistance = stopDistance;
-				return retVal;
-			}
-			// if there are 2 positive solutions (i.e. when decelerating), take the smaller time interval
-			// (the second solution means that you reach negative speed)
-			retVal.SimulationInterval = solutions.Where(x => x >= 0).Min().SI<Second>();
-			return retVal;
+			return VectoMath.ComputeTimeInterval(DataBus.VehicleSpeed, acceleration, DataBus.Distance, ds);
 		}
 
 		/// <summary>

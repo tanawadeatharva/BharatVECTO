@@ -446,6 +446,14 @@ namespace TUGraz.VectoCore.Models.SimulationComponent.Impl
 				//DriverStrategy.BrakeTrigger = DriverStrategy.NextDrivingAction;
 			}
 
+			var newOperatingPoint = VectoMath.ComputeTimeInterval(DataBus.VehicleSpeed, response.Acceleration, DataBus.Distance, ds);
+			if (newOperatingPoint.SimulationInterval.IsSmaller(Constants.SimulationSettings.LowerBoundTimeInterval)) {
+				// the next time interval will be too short, this may lead to issues with inertia etc. 
+				// instead of accelerating, drive at constant speed.
+				response = DoHandleRequest(absTime, ds, Driver.DataBus.VehicleSpeed, gradient);
+				return response;
+			}
+
 			Log.Debug("Exceeding next ActionDistance at {0}. Reducing max Distance from {2} to {1}",
 				DriverStrategy.NextDrivingAction.ActionDistance, newds, ds);
 			return new ResponseDrivingCycleDistanceExceeded() {
