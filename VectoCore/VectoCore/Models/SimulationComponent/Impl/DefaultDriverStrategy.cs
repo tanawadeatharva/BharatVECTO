@@ -30,9 +30,6 @@
 */
 
 
-#define NEW_COASTING
-
-
 using System;
 using System.Collections.Generic;
 using System.Diagnostics;
@@ -280,12 +277,7 @@ namespace TUGraz.VectoCore.Models.SimulationComponent.Impl
 			var currentSpeed = Driver.DataBus.VehicleSpeed;
 
 			// distance until halt
-#if NEW_COASTING
 			var lookaheadDistance = (currentSpeed.Value() * 3.6 * 10).SI<Meter>();
-#else
-            var lookaheadDistance = Formulas.DecelerationDistance(currentSpeed, 0.SI<MeterPerSecond>(),
-                Driver.DriverData.LookAheadCoasting.Deceleration);
-#endif
 			lookaheadDistance = VectoMath.Max(2 * ds, 1.2 * lookaheadDistance);
 			var lookaheadData = Driver.DataBus.LookAhead(lookaheadDistance);
 
@@ -299,14 +291,8 @@ namespace TUGraz.VectoCore.Models.SimulationComponent.Impl
 					var action = DrivingBehavior.Braking;
 					var coastingDistance = ComputeCoastingDistance(currentSpeed, entry);
 					var brakingDistance = Driver.ComputeDecelerationDistance(nextTargetSpeed) + BrakingSafetyMargin;
-#if NEW_COASTING
+
 					if (coastingDistance < 0) {
-#else
-                    if ( !Driver.DriverData.LookAheadCoasting.Enabled ||
-						currentSpeed < Driver.DriverData.LookAheadCoasting.MinSpeed || 
-                        coastingDistance < 0)
-                    {
-#endif
 						Log.Debug(
 							"adding 'Braking' starting at distance {0}. brakingDistance: {1}, triggerDistance: {2}, nextTargetSpeed: {3}",
 							entry.Distance - brakingDistance, brakingDistance, entry.Distance, nextTargetSpeed);
@@ -331,17 +317,19 @@ namespace TUGraz.VectoCore.Models.SimulationComponent.Impl
 			if (!nextActions.Any()) {
 				return null;
 			}
-			if (!nextActions.Any(x => x.ActionDistance > minDistance)) {
-				return nextActions.OrderBy(x => x.TriggerDistance).First();
+			var nextBrakingAction = nextActions.OrderBy(x => x.BrakingStartDistance).First();
+			var nextCoastingAction = nextActions.OrderBy(x => x.CoastingStartDistance).First();
+			if (nextBrakingAction.TriggerDistance.IsEqual(nextCoastingAction.TriggerDistance)) {
+				// its the same trigger, use it
+				return nextCoastingAction;
 			}
 
-			var retVal = nextActions.OrderBy(x => x.SelectActionDistance(minDistance)).First();
-			return retVal;
+			// MQ: 27.5.2016 remark: one could set the coasting distance to the closest coasting distance as found above to start coasting a little bit earlier.
+			return nextBrakingAction;
 		}
 
-
-#if NEW_COASTING
-		protected virtual Meter ComputeCoastingDistance(MeterPerSecond v_veh, DrivingCycleData.DrivingCycleEntry actionEntry)
+		protected internal virtual Meter ComputeCoastingDistance(MeterPerSecond v_veh,
+			DrivingCycleData.DrivingCycleEntry actionEntry)
 		{
 			var v_target = OverspeedAllowed(actionEntry.RoadGradient, actionEntry.VehicleTargetSpeed)
 				? actionEntry.VehicleTargetSpeed + Driver.DriverData.OverSpeedEcoRoll.OverSpeed
@@ -382,13 +370,7 @@ namespace TUGraz.VectoCore.Models.SimulationComponent.Impl
 
 			return delta_x;
 		}
-#else
-        protected virtual Meter ComputeCoastingDistance(MeterPerSecond currentSpeed, DrivingCycleData.DrivingCycleEntry actionEntry)
-        {
-            return Formulas.DecelerationDistance(currentSpeed, actionEntry.VehicleTargetSpeed,
-                Driver.DriverData.LookAheadCoasting.Deceleration);
-        }
-#endif
+
 
 		public bool OverspeedAllowed(Radian gradient, MeterPerSecond velocity)
 		{
@@ -577,26 +559,32 @@ namespace TUGraz.VectoCore.Models.SimulationComponent.Impl
 				return response;
 			}
 			var v2 = Driver.DataBus.VehicleSpeed + response.Acceleration * response.SimulationInterval;
+			var brakingDistance = Driver.DriverData.AccelerationCurve.ComputeAccelerationDistance(v2,
+				nextAction.NextTargetSpeed) + DefaultDriverStrategy.BrakingSafetyMargin;
 			switch (DriverStrategy.NextDrivingAction.Action) {
 				case DrivingBehavior.Coasting:
-					var coastingDistance = Formulas.DecelerationDistance(v2, nextAction.NextTargetSpeed,
-						Driver.DriverData.LookAheadCoasting.Deceleration);
-
+					var coastingDistance = DriverStrategy.ComputeCoastingDistance(v2, nextAction.CycleEntry);
+					var nextActionDistance = coastingDistance;
+					var safetyFactor = 4.0;
+					if (brakingDistance > coastingDistance) {
+						nextActionDistance = brakingDistance;
+						safetyFactor = 0.5;
+					}
 					// if the distance at the end of the simulation interval is smaller than the new ActionDistance
 					// we are safe - go ahead...
-					if ((Driver.DataBus.Distance + ds).IsSmallerOrEqual(nextAction.TriggerDistance - coastingDistance,
-						Constants.SimulationSettings.DriverActionDistanceTolerance)) {
+					if ((Driver.DataBus.Distance + ds).IsSmallerOrEqual(nextAction.TriggerDistance - nextActionDistance,
+						Constants.SimulationSettings.DriverActionDistanceTolerance * safetyFactor) &&
+						(Driver.DataBus.Distance + ds).IsSmallerOrEqual(nextAction.TriggerDistance - brakingDistance)) {
 						return response;
 					}
-					newds = EstimateAccelerationDistanceBeforeBrake(response, nextAction) ?? ds;
+					newds = ds / 2; //EstimateAccelerationDistanceBeforeBrake(response, nextAction) ?? ds;
 					break;
 				case DrivingBehavior.Braking:
-					var brakingDistance = Driver.DriverData.AccelerationCurve.ComputeAccelerationDistance(v2,
-						nextAction.NextTargetSpeed) + DefaultDriverStrategy.BrakingSafetyMargin;
 					if ((Driver.DataBus.Distance + ds).IsSmaller(nextAction.TriggerDistance - brakingDistance)) {
 						return response;
 					}
-					newds = (nextAction.TriggerDistance - brakingDistance) - Driver.DataBus.Distance;
+					newds = (nextAction.TriggerDistance - brakingDistance) - Driver.DataBus.Distance -
+							Constants.SimulationSettings.DriverActionDistanceTolerance / 2;
 					break;
 				default:
 					return response;
@@ -788,7 +776,8 @@ namespace TUGraz.VectoCore.Models.SimulationComponent.Impl
 					if ((Driver.DataBus.Distance + ds).IsSmaller(nextAction.TriggerDistance - brakingDistance)) {
 						return response;
 					}
-					newds = (nextAction.TriggerDistance - brakingDistance) - Driver.DataBus.Distance;
+					newds = (nextAction.TriggerDistance - brakingDistance) - Driver.DataBus.Distance -
+							Constants.SimulationSettings.DriverActionDistanceTolerance / 2;
 					break;
 				default:
 					return response;
