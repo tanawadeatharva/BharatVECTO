@@ -329,7 +329,7 @@ Public Class CombinedAlternator
                             End If
                             'add values to map
 
-                            map.Add(New CombinedAlternatorMapRow(elements(0), CType(elements(1), Single), CType(elements(2), Single), CType(elements(3), Single), CType(elements(4), Single)))
+							map.Add(New CombinedAlternatorMapRow(elements(0), CType(elements(1), Single), CType(elements(2), Single), CType(elements(3), Single), CType(elements(4), Single)))
 
                         Else
                             firstline = False
