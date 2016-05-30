@@ -9,6 +9,7 @@
 '
 ' See the LICENSE.txt for the specific language governing permissions and limitations.
 
+Imports System.Globalization
 Imports System.IO
 
 Namespace Pneumatics
@@ -78,7 +79,7 @@ Namespace Pneumatics
 							'Should throw exception if ConsumerName or CycleName are empty.
 							newKey = New ActuationsKey(elements(0).ToString(), elements(1).ToString())
 
-							map.Add(newKey, CType(elements(2), Single))
+							map.Add(newKey, Single.Parse(elements(2), CultureInfo.InvariantCulture))
 
 						Else
 							firstline = False
