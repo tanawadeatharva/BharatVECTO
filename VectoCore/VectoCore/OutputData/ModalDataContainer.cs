@@ -284,9 +284,11 @@ namespace TUGraz.VectoCore.OutputData
 						var r = results.NewRow();
 						r.ItemArray = AddRow(remainingRow, MultiplyRow(row.ItemArray, diffDt));
 						absTime += diffDt;
-						r[(int)ModalResultField.simulationInterval] = absTime;
+						r[(int)ModalResultField.time] = absTime;
+						r[(int)ModalResultField.simulationInterval] = 1.SI<Second>();
 						results.Rows.Add(r);
-						currentDt = VectoMath.Min(currentDt - remainingDt - 1.SI<Second>(), 0.SI<Second>());
+						currentDt = VectoMath.Max(remainingDt + currentDt - 1.SI<Second>(), 0.SI<Second>());
+						remainingDt = 0.SI<Second>();
 					}
 
 					// split current Row until dt < 1
@@ -295,7 +297,8 @@ namespace TUGraz.VectoCore.OutputData
 						var r = results.NewRow();
 						r.ItemArray = row.ItemArray;
 						absTime += 1.SI<Second>();
-						r[(int)ModalResultField.simulationInterval] = absTime;
+						r[(int)ModalResultField.time] = absTime;
+						r[(int)ModalResultField.simulationInterval] = 1.SI<Second>();
 						results.Rows.Add(r);
 					}
 
@@ -306,7 +309,7 @@ namespace TUGraz.VectoCore.OutputData
 						else
 							remainingRow = MultiplyRow(row.ItemArray, currentDt);
 						remainingDt += currentDt;
-						absTime += remainingDt;
+						absTime += currentDt;
 					} else {
 						remainingRow = null;
 						remainingDt = 0.SI<Second>();
@@ -316,7 +319,8 @@ namespace TUGraz.VectoCore.OutputData
 				// if last row was not enough to full second: take last row as whole second
 				if (remainingDt >= 0) {
 					var r = results.NewRow();
-					r.ItemArray = remainingRow;
+					r.ItemArray = MultiplyRow(remainingRow, 1 / remainingDt);
+					r[(int)ModalResultField.time] = VectoMath.Ceiling(absTime);
 					r[(int)ModalResultField.simulationInterval] = 1.SI<Second>();
 					results.Rows.Add(r);
 				}
@@ -324,15 +328,17 @@ namespace TUGraz.VectoCore.OutputData
 				return results;
 			}
 
-			private static object[] MultiplyRow(IEnumerable<object> row, Second dt)
+			private static object[] MultiplyRow(IEnumerable<object> row, SI dt)
 			{
 				return row.Select(val => {
-					val.Switch()
-						.Case<SI>(si => val = si * dt.Value())
-						.Case<int>(i => val = i * dt.Value())
-						.Case<double>(d => val = d * dt.Value())
-						.Case<float>(f => val = f * dt.Value())
-						.Case<uint>(ui => val = ui * dt.Value());
+					if (val is SI) {
+						val = (val as SI) * dt.Value();
+					} else
+						val.Switch()
+							.Case<int>(i => val = i * dt.Value())
+							.Case<double>(d => val = d * dt.Value())
+							.Case<float>(f => val = f * dt.Value())
+							.Case<uint>(ui => val = ui * dt.Value());
 					return val;
 				}).ToArray();
 			}
