@@ -108,6 +108,7 @@
     <Compile Include="Utils\InputDataHelper.cs" />
     <Compile Include="Utils\MockBrakes.cs" />
     <Compile Include="Utils\MockEngineDataProvider.cs" />
+    <Compile Include="Utils\MockIdleController.cs" />
     <Compile Include="Utils\MockSimulationDataFactory.cs" />
     <Compile Include="Utils\MockVairVehicleContainer.cs" />
     <Compile Include="Utils\Port.cs" />

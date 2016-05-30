@@ -58,7 +58,7 @@ namespace TUGraz.VectoCore.Models.SimulationComponent.Data
 		public class LACData
 		{
 			public bool Enabled;
-			public MeterPerSquareSecond Deceleration;
+			//public MeterPerSquareSecond Deceleration;
 			public MeterPerSecond MinSpeed;
 		}
 	}

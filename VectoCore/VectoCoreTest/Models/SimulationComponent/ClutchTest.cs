@@ -29,29 +29,48 @@
 *   Martin Rexeis, rexeis@ivt.tugraz.at, IVT, Graz University of Technology
 */
 
+using System.Data;
 using Microsoft.VisualStudio.TestTools.UnitTesting;
+using NUnit.Framework;
+using Org.BouncyCastle.Asn1.Esf;
 using TUGraz.VectoCommon.Models;
 using TUGraz.VectoCommon.Utils;
 using TUGraz.VectoCore.Models.Simulation.DataBus;
 using TUGraz.VectoCore.Models.Simulation.Impl;
+using TUGraz.VectoCore.Models.SimulationComponent;
 using TUGraz.VectoCore.Models.SimulationComponent.Impl;
+using TUGraz.VectoCore.OutputData;
 using TUGraz.VectoCore.Tests.Utils;
+using TUGraz.VectoCore.Utils;
+using Assert = Microsoft.VisualStudio.TestTools.UnitTesting.Assert;
 
 namespace TUGraz.VectoCore.Tests.Models.SimulationComponent
 {
-	[TestClass]
+	[TestFixture]
 	public class ClutchTest
 	{
 		private const string CoachEngine = @"TestData\Components\24t Coach.veng";
 
-		[TestMethod]
-		public void TestClutch()
+		[Test,
+		// clutch slipping
+		TestCase(DrivingBehavior.Driving, 100, 0, 0, 62.119969),
+		TestCase(DrivingBehavior.Driving, 100, 30, 48.293649, 62.119969),
+		// clutch opened
+		TestCase(DrivingBehavior.Halted, 100, 30, 0, 58.643062),
+		// clutch closed
+		TestCase(DrivingBehavior.Driving, 100, 80, 100, 80),
+		TestCase(DrivingBehavior.Braking, 100, 80, 100, 80),
+			// clutch opened due to braking
+			//TestCase(DrivingBehavior.Braking, 0, 55, null, null),
+		]
+		public void TestClutch(DrivingBehavior drivingBehavior, double torque, double angularSpeed, double expectedTorque,
+			double expectedEngineSpeed)
 		{
 			var container = new VehicleContainer(ExecutionMode.Engineering);
 			var engineData = MockSimulationDataFactory.CreateEngineDataFromFile(CoachEngine);
 			var gearbox = new MockGearbox(container);
-
-			var clutch = new Clutch(container, engineData, null);
+			var idleController = new MockIdleController();
+			var clutch = new Clutch(container, engineData, idleController);
 
 			var inPort = clutch.InPort();
 			var outPort = new MockTnOutPort();
@@ -62,31 +81,103 @@ namespace TUGraz.VectoCore.Tests.Models.SimulationComponent
 
 			var driver = new MockDriver(container);
 
-			//Test - Clutch slipping
-			clutchOutPort.Request(0.SI<Second>(), 0.SI<Second>(), 100.SI<NewtonMeter>(), 0.SI<PerSecond>());
+			driver.DriverBehavior = drivingBehavior;
 
-			Assert.AreEqual(0, outPort.Torque.Value(), 0.001);
-			Assert.AreEqual(62.119969, outPort.AngularVelocity.Value(), 0.001);
+			clutchOutPort.Request(0.SI<Second>(), 0.SI<Second>(), torque.SI<NewtonMeter>(), angularSpeed.SI<PerSecond>());
 
-			clutchOutPort.Request(0.SI<Second>(), 0.SI<Second>(), 100.SI<NewtonMeter>(), 30.SI<PerSecond>());
+			Assert.AreEqual(expectedTorque, outPort.Torque.Value(), 0.001);
+			Assert.AreEqual(expectedEngineSpeed, outPort.AngularVelocity.Value(), 0.001);
+		}
 
-			Assert.AreEqual(48.293649, outPort.Torque.Value(), 0.001);
-			Assert.AreEqual(62.119969, outPort.AngularVelocity.Value(), 0.001);
+		//[Test] // this test is just to make sure the clutch characteristic has no unsteadiness
+		public void ClutchContinuityTest()
+		{
+			var container = new VehicleContainer(ExecutionMode.Engineering);
+			var engineData = MockSimulationDataFactory.CreateEngineDataFromFile(CoachEngine);
+			var gearbox = new MockGearbox(container);
+			var engine = new MockEngine(container);
+			var idleController = new MockIdleController();
+			var clutch = new Clutch(container, engineData, idleController);
 
-			//Test - Clutch opened
-			driver.DriverBehavior = DrivingBehavior.Halted; // = true;
+			var inPort = clutch.InPort();
+			var outPort = new MockTnOutPort();
 
-			clutchOutPort.Request(0.SI<Second>(), 0.SI<Second>(), 100.SI<NewtonMeter>(), 30.SI<PerSecond>());
+			inPort.Connect(outPort);
 
-			Assert.AreEqual(0, outPort.Torque.Value(), 0.001);
-			Assert.AreEqual(engineData.IdleSpeed.Value(), outPort.AngularVelocity.Value(), 0.001);
+			var clutchOutPort = clutch.OutPort();
 
-			//Test - Clutch closed
-			driver.DriverBehavior = DrivingBehavior.Driving; // = false;
-			clutchOutPort.Request(0.SI<Second>(), 0.SI<Second>(), 100.SI<NewtonMeter>(), 80.SI<PerSecond>());
+			var driver = new MockDriver(container);
 
-			Assert.AreEqual(100.0, outPort.Torque.Value(), 0.001);
-			Assert.AreEqual(80.0, outPort.AngularVelocity.Value(), 0.001);
+			var mass = 15E3.SI<Kilogram>();
+			var rDyn = 0.5.SI<Meter>();
+			var ds = 1.SI<Meter>();
+			var ratio = 15.0;
+
+			var data = new DataTable();
+			data.Columns.Add("a", typeof(double));
+			data.Columns.Add("n_out", typeof(double));
+			data.Columns.Add("tq_out", typeof(double));
+			data.Columns.Add("n_in", typeof(double));
+			data.Columns.Add("tq_in", typeof(double));
+			data.Columns.Add("P_out", typeof(double));
+			data.Columns.Add("P_in", typeof(double));
+
+			var step = 0.001;
+			engine.EngineSpeed = 595.RPMtoRad();
+
+			var dt = 1.SI<Second>(); // VectoMath.Sqrt<Second>(2 * ds / accel);
+
+			for (var a = -3.0; a < 3; a += step) {
+				var accel = a.SI<MeterPerSquareSecond>();
+
+				var tq = mass * accel * rDyn / ratio;
+				var angularVelocity = (accel * dt / rDyn * ratio).Cast<PerSecond>();
+
+				clutchOutPort.Request(0.SI<Second>(), 0.SI<Second>(), tq, angularVelocity);
+
+				var row = data.NewRow();
+				row["a"] = a;
+				row["n_out"] = angularVelocity.Value();
+				row["tq_out"] = tq.Value();
+				row["n_in"] = outPort.AngularVelocity.Value();
+				row["tq_in"] = outPort.Torque.Value();
+				row["P_out"] = (angularVelocity * tq).Value();
+				row["P_in"] = (outPort.AngularVelocity * outPort.Torque).Value();
+				data.Rows.Add(row);
+			}
+
+			VectoCSVFile.Write("clutch.csv", data);
+		}
+	}
+
+	public class MockEngine : VectoSimulationComponent, IEngineInfo
+	{
+		public MockEngine(VehicleContainer container) : base(container) {}
+
+		public PerSecond EngineSpeed { get; set; }
+		public NewtonMeter EngineTorque { get; set; }
+
+		public Watt EngineStationaryFullPower(PerSecond angularSpeed)
+		{
+			throw new System.NotImplementedException();
+		}
+
+		public Watt EngineDragPower(PerSecond angularSpeed)
+		{
+			throw new System.NotImplementedException();
+		}
+
+		public PerSecond EngineIdleSpeed { get; set; }
+		public PerSecond EngineRatedSpeed { get; set; }
+
+		protected override void DoWriteModalResults(IModalDataContainer container)
+		{
+			throw new System.NotImplementedException();
+		}
+
+		protected override void DoCommitSimulationStep()
+		{
+			throw new System.NotImplementedException();
 		}
 	}
 }

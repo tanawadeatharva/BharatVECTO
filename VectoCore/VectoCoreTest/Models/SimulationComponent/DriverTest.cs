@@ -71,6 +71,7 @@ namespace TUGraz.VectoCore.Tests.Models.SimulationComponent
 			var fileWriter = new FileOutputWriter("Coach_MinimalPowertrain_Coasting");
 			var modData = new ModalDataContainer("Coach_MinimalPowertrain_Coasting", fileWriter, ExecutionMode.Engineering);
 			var vehicleContainer = new VehicleContainer(ExecutionMode.Engineering, modData);
+			var mockCycle = new MockDrivingCycle(vehicleContainer, null);
 
 			var driver = new Driver(vehicleContainer, driverData, new DefaultDriverStrategy());
 			var engine = new CombustionEngine(vehicleContainer, engineData);
@@ -126,6 +127,7 @@ namespace TUGraz.VectoCore.Tests.Models.SimulationComponent
 			var fileWriter = new FileOutputWriter("Coach_MinimalPowertrain_Coasting");
 			var modData = new ModalDataContainer("Coach_MinimalPowertrain_Coasting", fileWriter, ExecutionMode.Engineering);
 			var vehicleContainer = new VehicleContainer(ExecutionMode.Engineering, modData);
+			var mockCycle = new MockDrivingCycle(vehicleContainer, null);
 
 			var driver = new Driver(vehicleContainer, driverData, new DefaultDriverStrategy());
 			var engine = new CombustionEngine(vehicleContainer, engineData);
@@ -404,7 +406,7 @@ namespace TUGraz.VectoCore.Tests.Models.SimulationComponent
 				AccelerationCurve = AccelerationCurveData.ReadFromFile(AccelerationFile),
 				LookAheadCoasting = new DriverData.LACData {
 					Enabled = false,
-					Deceleration = -0.5.SI<MeterPerSquareSecond>()
+					//Deceleration = -0.5.SI<MeterPerSquareSecond>()
 				},
 				OverSpeedEcoRoll = new DriverData.OverSpeedEcoRollData {
 					Mode = DriverMode.Off

@@ -166,6 +166,10 @@ namespace TUGraz.VectoCore.Tests.Integration
 			var jobContainer = new JobContainer(sumData);
 			jobContainer.AddRuns(factory);
 
+			//var i = 2;
+			//jobContainer.Runs[i].Run.Run();
+			//Assert.IsTrue(jobContainer.Runs[i].Run.FinishedWithoutErrors);
+
 			jobContainer.Execute();
 			jobContainer.WaitFinished();
 
@@ -184,9 +188,19 @@ namespace TUGraz.VectoCore.Tests.Integration
 			var jobContainer = new JobContainer(sumData);
 			jobContainer.AddRuns(factory);
 
+			//var i = 7;
+			//jobContainer.Runs[i].Run.Run();
+			//Assert.IsTrue(jobContainer.Runs[i].Run.FinishedWithoutErrors);
+
+			//var i = 0;
+			//foreach (var runEntry in jobContainer.Runs) {
+			//	runEntry.Run.Run();
+			//	Assert.IsTrue(runEntry.Run.FinishedWithoutErrors, "run {0} failed", i);
+			//	i++;
+			//}
+
 			jobContainer.Execute();
 			jobContainer.WaitFinished();
-
 			Assert.IsTrue(jobContainer.Runs.All(r => r.Success), string.Concat(jobContainer.Runs.Select(r => r.ExecException)));
 		}
 
@@ -202,7 +216,7 @@ namespace TUGraz.VectoCore.Tests.Integration
 			var jobContainer = new JobContainer(sumData);
 			jobContainer.AddRuns(factory);
 
-			var runs = jobContainer.Runs;
+			//var runs = jobContainer.Runs;
 
 			//runs[8].Run.Run();
 

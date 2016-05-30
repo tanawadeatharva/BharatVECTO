@@ -406,21 +406,23 @@ namespace TUGraz.VectoCore.Tests.Models.SimulationComponent
 			absTime += dt;
 
 			var engineSpeed = new[] {
-				1680.RPMtoRad(), 1680.RPMtoRad(), 1424.880146.RPMtoRad(), 1201.792344.RPMtoRad(), 998.69122.RPMtoRad(),
-				805.9864149.RPMtoRad(), 612.5100267.RPMtoRad(), 560.RPMtoRad(), 560.RPMtoRad(), 560.RPMtoRad(), 560.RPMtoRad(),
+				1680.RPMtoRad(), 1680.RPMtoRad(), 1439.5775.RPMtoRad(), 1225.5367.RPMtoRad(), 1026.6697.RPMtoRad(),
+				834.1941.RPMtoRad(), 641.1360.RPMtoRad(), 560.RPMtoRad(), 560.RPMtoRad(), 560.RPMtoRad(), 560.RPMtoRad(),
 				560.RPMtoRad(), 560.RPMtoRad(), 560.RPMtoRad(), 560.RPMtoRad(), 560.RPMtoRad(), 560.RPMtoRad(), 560.RPMtoRad(),
-				560.RPMtoRad()
+				560.RPMtoRad(), 560.RPMtoRad()
 			};
 
 			var enginePower = new[] {
-				5000.SI<Watt>(), 5000.SI<Watt>(), -36967.1249.SI<Watt>(), -26488.7680.SI<Watt>(), -19531.9403.SI<Watt>(),
-				-14611.2765.SI<Watt>(), -10490.8989.SI<Watt>(), 1524.8368.SI<Watt>(), 5000.SI<Watt>(), 5000.SI<Watt>(),
+				5000.SI<Watt>(), 5000.SI<Watt>(), -37334.1589.SI<Watt>(), -27198.2777.SI<Watt>(), -20280.7550.SI<Watt>(),
+				-15216.7221.SI<Watt>(), -11076.6656.SI<Watt>(), -500.7991.SI<Watt>(), 5000.SI<Watt>(), 5000.SI<Watt>(),
 				5000.SI<Watt>(), 5000.SI<Watt>(), 5000.SI<Watt>(), 5000.SI<Watt>(), 5000.SI<Watt>(), 5000.SI<Watt>(),
 				5000.SI<Watt>(), 5000.SI<Watt>(), 5000.SI<Watt>(), 5000.SI<Watt>()
 			};
 
+			var fld = engine.ModelData.FullLoadCurve;
+
 			var engSpeedResults = new List<dynamic>();
-			for (var i = 0; i < engineSpeed.Length; i++) {
+			for (var i = 0; i < 20; i++) {
 				torque = 0.SI<NewtonMeter>();
 
 				response = (ResponseSuccess)requestPort.Request(absTime, dt, torque, null);

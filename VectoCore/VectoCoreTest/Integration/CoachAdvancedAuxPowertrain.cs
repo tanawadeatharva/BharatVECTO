@@ -196,7 +196,7 @@ namespace TUGraz.VectoCore.Tests.Integration
 				LookAheadCoasting = new DriverData.LACData {
 					Enabled = true,
 					MinSpeed = 50.KMPHtoMeterPerSecond(),
-					Deceleration = -0.5.SI<MeterPerSquareSecond>()
+					//Deceleration = -0.5.SI<MeterPerSquareSecond>()
 				},
 				OverSpeedEcoRoll = overspeed
 					? new DriverData.OverSpeedEcoRollData {

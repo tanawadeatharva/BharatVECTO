@@ -31,6 +31,7 @@
 
 using System;
 using System.Data;
+using System.Globalization;
 using NUnit.Framework;
 using TUGraz.VectoCommon.Exceptions;
 using TUGraz.VectoCommon.Models;
@@ -41,6 +42,8 @@ using TUGraz.VectoCore.Models.SimulationComponent.Data.Engine;
 using TUGraz.VectoCore.Models.SimulationComponent.Data.Gearbox;
 using TUGraz.VectoCore.Tests.Utils;
 using TUGraz.VectoCore.Utils;
+using Assert = Microsoft.VisualStudio.TestTools.UnitTesting.Assert;
+using TestContext = Microsoft.VisualStudio.TestTools.UnitTesting.TestContext;
 
 namespace TUGraz.VectoCore.Tests.Models.SimulationComponentData
 {
@@ -68,9 +71,9 @@ namespace TUGraz.VectoCore.Tests.Models.SimulationComponentData
 			Assert.AreEqual(560.RPMtoRad().Value(), gbxData.Gears[1].ShiftPolygon.Downshift[0].AngularSpeed.Value(), 0.0001);
 			Assert.AreEqual(1289.RPMtoRad().Value(), gbxData.Gears[1].ShiftPolygon.Upshift[0].AngularSpeed.Value(), 0.0001);
 
-			Assert.AreEqual(200.RPMtoRad().Value(), gbxData.Gears[1].LossMap[15].InputSpeed.Value(), 0.0001);
-			Assert.AreEqual(-350, gbxData.Gears[1].LossMap[15].InputTorque.Value(), 0.0001);
-			Assert.AreEqual(13.072, gbxData.Gears[1].LossMap[15].TorqueLoss.Value(), 0.0001);
+			Assert.AreEqual(200.RPMtoRad().Value(), gbxData.Gears[1].LossMap[26].InputSpeed.Value(), 0.0001);
+			Assert.AreEqual(-350, gbxData.Gears[1].LossMap[35].InputTorque.Value(), 0.0001);
+			Assert.AreEqual(13.072, gbxData.Gears[1].LossMap[35].TorqueLoss.Value(), 0.0001);
 		}
 
 		[TestCase("Test1", @"TestData\Components\24t Coach.vgbx", 520, 20.320, "A", 279698.4, 9401.44062)]
