@@ -1327,11 +1327,6 @@
     </None>
   </ItemGroup>
   <ItemGroup>
-    <None Include="TestData\AxleGearLossInterpolation.csv">
-      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
-    </None>
-  </ItemGroup>
-  <ItemGroup>
     <Folder Include="Integration\FullPowertrain\" />
   </ItemGroup>
   <Choose>
