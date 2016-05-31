@@ -31,15 +31,23 @@
 
 using System;
 using System.Collections.Generic;
+using TUGraz.VectoCommon.Utils;
 
 namespace TUGraz.VectoCore.Utils
 {
 	internal static class DictionaryExtensionMethods
 	{
-		public static object GetValueOrNull<TKey, TValue>(this IDictionary<TKey, TValue> dictionary,TKey key)
+		public static object GetValueOrNull<TKey, TValue>(this IDictionary<TKey, TValue> dictionary, TKey key)
 		{
 			TValue value;
 			return dictionary.TryGetValue(key, out value) ? (object)value : DBNull.Value;
+		}
+
+		public static TValue GetValueOrZero<TKey, TValue>(this IDictionary<TKey, TValue> dictionary, TKey key)
+			where TValue : SIBase<TValue>
+		{
+			TValue value;
+			return dictionary.TryGetValue(key, out value) ? value : 0.SI<TValue>();
 		}
 	}
 }

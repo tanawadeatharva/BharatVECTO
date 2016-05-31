@@ -53,7 +53,7 @@ namespace TUGraz.VectoCore.Models.Simulation.Data
 			public const string ShowUnit = "showUnit";
 		}
 
-		protected ModalResults(SerializationInfo info, StreamingContext context) : base(info, context){}
+		protected ModalResults(SerializationInfo info, StreamingContext context) : base(info, context) {}
 
 		public ModalResults()
 		{
@@ -331,7 +331,6 @@ namespace TUGraz.VectoCore.Models.Simulation.Data
 		[ModalResultField(typeof(SI))] altitude,
 
 		[ModalResultField(typeof(SI), name: "ds [m]")] simulationDistance,
-
 
 		[ModalResultField(typeof(double), caption: "AA_NonSmartAlternatorsEfficiency [%]")] AA_NonSmartAlternatorsEfficiency,
 		[ModalResultField(typeof(SI), caption: "AA_SmartIdleCurrent_Amps [A]")] AA_SmartIdleCurrent_Amps,

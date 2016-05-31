@@ -271,27 +271,31 @@ namespace TUGraz.VectoCore.OutputData
 				var remainingDt = 0.SI<Second>();
 
 				object[] remainingRow = null;
+				var gearsList = new Dictionary<object, Second>(3);
 
 				foreach (DataRow row in data.Rows) {
 					var currentDt = row.Field<Second>((int)ModalResultField.simulationInterval);
 
-					// if remaining + current >= 1: split current row and add remaining row.
-					// 1) take full remaining row
-					// 2) split current row on difference to next full second
-					// 3) continue with remaining time on current row
+					// if current + remaining time >= 1 second: take remaining row and split up currentRow to fill up 1 second.
 					if (remainingDt > 0 && remainingDt + currentDt >= 1) {
 						var diffDt = 1.SI<Second>() - remainingDt;
 						var r = results.NewRow();
+
+						var gear = row[(int)ModalResultField.Gear];
+						gearsList[gear] = gearsList.GetValueOrZero(gear) + diffDt;
+
 						r.ItemArray = AddRow(remainingRow, MultiplyRow(row.ItemArray, diffDt));
 						absTime += diffDt;
 						r[(int)ModalResultField.time] = absTime;
 						r[(int)ModalResultField.simulationInterval] = 1.SI<Second>();
+						r[(int)ModalResultField.Gear] = gearsList.MaxBy(kv => kv.Value).Key;
+						gearsList.Clear();
 						results.Rows.Add(r);
 						currentDt = VectoMath.Max(remainingDt + currentDt - 1.SI<Second>(), 0.SI<Second>());
 						remainingDt = 0.SI<Second>();
 					}
 
-					// split current Row until dt < 1
+					// if current row still longer than 1 second: split it to 1 second slices until it is < 1 second
 					while (currentDt >= 1) {
 						currentDt = currentDt - 1.SI<Second>();
 						var r = results.NewRow();
@@ -302,49 +306,55 @@ namespace TUGraz.VectoCore.OutputData
 						results.Rows.Add(r);
 					}
 
-					// normalize rest of the remaining row if dt > 0 for summation of next row
+					// if the there still is something left in current row: add the weighted values to remainder-buffer
 					if (currentDt > 0) {
-						if (remainingDt > 0)
-							remainingRow = AddRow(remainingRow, MultiplyRow(row.ItemArray, currentDt));
-						else
-							remainingRow = MultiplyRow(row.ItemArray, currentDt);
+						var gear = row[(int)ModalResultField.Gear];
+						gearsList[gear] = gearsList.GetValueOrZero(gear) + currentDt;
+
+						remainingRow = AddRow(remainingRow, MultiplyRow(row.ItemArray, currentDt));
 						remainingDt += currentDt;
 						absTime += currentDt;
 					} else {
 						remainingRow = null;
 						remainingDt = 0.SI<Second>();
+						gearsList.Clear();
 					}
 				}
 
 				// if last row was not enough to full second: take last row as whole second
-				if (remainingDt >= 0) {
+				if (remainingDt > 0) {
 					var r = results.NewRow();
-					r.ItemArray = MultiplyRow(remainingRow, 1 / remainingDt);
+					r.ItemArray = remainingRow;
 					r[(int)ModalResultField.time] = VectoMath.Ceiling(absTime);
 					r[(int)ModalResultField.simulationInterval] = 1.SI<Second>();
+					r[(int)ModalResultField.Gear] = gearsList.MaxBy(kv => kv.Value).Key;
 					results.Rows.Add(r);
 				}
 
 				return results;
 			}
 
-			private static object[] MultiplyRow(IEnumerable<object> row, SI dt)
+			private static IEnumerable<object> MultiplyRow(IEnumerable<object> row, SI dt)
 			{
 				return row.Select(val => {
-					if (val is SI) {
-						val = (val as SI) * dt.Value();
-					} else
-						val.Switch()
-							.Case<int>(i => val = i * dt.Value())
-							.Case<double>(d => val = d * dt.Value())
-							.Case<float>(f => val = f * dt.Value())
-							.Case<uint>(ui => val = ui * dt.Value());
+					val.Switch()
+						.Case<SI>(si => val = si * dt.Value())
+						.Case<int>(i => val = i * dt.Value())
+						.Case<double>(d => val = d * dt.Value())
+						.Case<float>(f => val = f * dt.Value())
+						.Case<uint>(ui => val = ui * dt.Value());
 					return val;
-				}).ToArray();
+				});
 			}
 
 			private static object[] AddRow(IEnumerable<object> row, IEnumerable<object> addRow)
 			{
+				if (row == null) {
+					return addRow.ToArray();
+				}
+				if (addRow == null) {
+					return row.ToArray();
+				}
 				return row.ZipAll(addRow, (val, addVal) => {
 					val.Switch()
 						.Case<SI>(si => val = si + (SI)addVal)
