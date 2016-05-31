@@ -267,7 +267,8 @@ namespace TUGraz.VectoCore.OutputData
 			public ModalResults Filter(ModalResults data)
 			{
 				var absTime = 0.SI<Second>();
-				var results = new ModalResults();
+				var results = (ModalResults)data.Clone();
+
 				var remainingDt = 0.SI<Second>();
 
 				object[] remainingRow = null;
