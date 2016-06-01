@@ -132,8 +132,7 @@ namespace TUGraz.VectoCore.Tests.Integration.BusAuxiliaries
 		TestCase(85, 0, 0),
 		TestCase(85, 0, -1), TestCase(85, 0, -5), TestCase(85, 0, -10),
 		TestCase(85, 0, -15), TestCase(85, 0, -20), TestCase(85, 0, -25),
-		TestCase(80, 0, 3), TestCase(80, 0, 5), TestCase(80, 0, 15),
-		TestCase(80, 0, 5), TestCase(80, 0, 15), TestCase(80, 0, 25),
+		TestCase(80, 0, 3), TestCase(80, 0, 5), TestCase(80, 0, 15), TestCase(80, 0, 25),
 		TestCase(22, 20, -5),
 		]
 		public void Coach_Decelerate_AAux(double v1, double v2, double slope)

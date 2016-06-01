@@ -196,7 +196,6 @@ namespace TUGraz.VectoCore.Tests.Models.Declaration
 		[Test,
 		// fixed points
 		TestCase(150, 1.000, 1.000, 0.00),
-		TestCase(150, 1.005, 1.000, 0.00),
 		TestCase(150, 1.100, 1.000, -40.34),
 		TestCase(150, 1.222, 1.000, -80.34),
 		TestCase(150, 1.375, 1.000, -136.11),
