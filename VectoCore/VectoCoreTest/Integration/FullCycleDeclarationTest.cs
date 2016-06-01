@@ -255,7 +255,7 @@ namespace TUGraz.VectoCore.Tests.Integration
 				modFile1Hz.Rows.Cast<DataRow>()
 					.Select(r => r.ParseDoubleOrGetDefault(ModalResultField.FCWHTCc.GetShortCaption()))
 					.Sum();
-			AssertHelper.AreRelativeEqual(sumFuelConsumption, sumFuelConsumption1Hz, "Fuel Consumption is not equal", 1e-5);
+			AssertHelper.AreRelativeEqual(sumFuelConsumption, sumFuelConsumption1Hz, "Fuel Consumption is not equal", 1e-4);
 		}
 
 		[TestMethod, TestCategory("LongRunning")]
