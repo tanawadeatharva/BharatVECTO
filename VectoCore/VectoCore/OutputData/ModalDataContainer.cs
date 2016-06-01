@@ -267,6 +267,7 @@ namespace TUGraz.VectoCore.OutputData
 			public ModalResults Filter(ModalResults data)
 			{
 				var absTime = 0.SI<Second>();
+				var distance = 0.SI<Meter>();
 				var results = (ModalResults)data.Clone();
 
 				var remainingDt = 0.SI<Second>();
@@ -276,6 +277,8 @@ namespace TUGraz.VectoCore.OutputData
 
 				foreach (DataRow row in data.Rows) {
 					var currentDt = row.Field<Second>((int)ModalResultField.simulationInterval);
+					distance = row.Field<Meter>((int)ModalResultField.dist);
+					var v_act = (MeterPerSecond)row[(int)ModalResultField.v_act];
 
 					// if current + remaining time >= 1 second: take remaining row and split up currentRow to fill up 1 second.
 					if (remainingDt > 0 && remainingDt + currentDt >= 1) {
@@ -285,25 +288,36 @@ namespace TUGraz.VectoCore.OutputData
 						var gear = row[(int)ModalResultField.Gear];
 						gearsList[gear] = gearsList.GetValueOrZero(gear) + diffDt;
 
+						distance += diffDt * v_act + diffDt * diffDt * (MeterPerSquareSecond)row[(int)ModalResultField.acc] / 2;
+						v_act += diffDt * (MeterPerSquareSecond)row[(int)ModalResultField.acc];
 						r.ItemArray = AddRow(remainingRow, MultiplyRow(row.ItemArray, diffDt));
 						absTime += diffDt;
+
 						r[(int)ModalResultField.time] = absTime;
 						r[(int)ModalResultField.simulationInterval] = 1.SI<Second>();
 						r[(int)ModalResultField.Gear] = gearsList.MaxBy(kv => kv.Value).Key;
+						r[(int)ModalResultField.dist] = distance;
+
 						gearsList.Clear();
 						results.Rows.Add(r);
-						currentDt = VectoMath.Max(remainingDt + currentDt - 1.SI<Second>(), 0.SI<Second>());
+						currentDt -= diffDt;
 						remainingDt = 0.SI<Second>();
+						remainingRow = null;
 					}
 
 					// if current row still longer than 1 second: split it to 1 second slices until it is < 1 second
 					while (currentDt >= 1) {
 						currentDt = currentDt - 1.SI<Second>();
+						var dt = 1.SI<Second>();
 						var r = results.NewRow();
 						r.ItemArray = row.ItemArray;
-						absTime += 1.SI<Second>();
+						absTime += dt;
+						distance += dt * v_act + dt * dt * (MeterPerSquareSecond)row[(int)ModalResultField.acc] / 2;
+						v_act += dt * (MeterPerSquareSecond)row[(int)ModalResultField.acc];
+
 						r[(int)ModalResultField.time] = absTime;
-						r[(int)ModalResultField.simulationInterval] = 1.SI<Second>();
+						r[(int)ModalResultField.simulationInterval] = dt;
+						r[(int)ModalResultField.dist] = distance;
 						results.Rows.Add(r);
 					}
 
@@ -312,6 +326,7 @@ namespace TUGraz.VectoCore.OutputData
 						var gear = row[(int)ModalResultField.Gear];
 						gearsList[gear] = gearsList.GetValueOrZero(gear) + currentDt;
 
+						distance += currentDt * v_act + currentDt * currentDt * (MeterPerSquareSecond)row[(int)ModalResultField.acc] / 2;
 						remainingRow = AddRow(remainingRow, MultiplyRow(row.ItemArray, currentDt));
 						remainingDt += currentDt;
 						absTime += currentDt;
@@ -329,6 +344,7 @@ namespace TUGraz.VectoCore.OutputData
 					r[(int)ModalResultField.time] = VectoMath.Ceiling(absTime);
 					r[(int)ModalResultField.simulationInterval] = 1.SI<Second>();
 					r[(int)ModalResultField.Gear] = gearsList.MaxBy(kv => kv.Value).Key;
+					r[(int)ModalResultField.dist] = distance;
 					results.Rows.Add(r);
 				}
 
@@ -338,12 +354,15 @@ namespace TUGraz.VectoCore.OutputData
 			private static IEnumerable<object> MultiplyRow(IEnumerable<object> row, SI dt)
 			{
 				return row.Select(val => {
-					val.Switch()
-						.Case<SI>(si => val = si * dt.Value())
-						.Case<int>(i => val = i * dt.Value())
-						.Case<double>(d => val = d * dt.Value())
-						.Case<float>(f => val = f * dt.Value())
-						.Case<uint>(ui => val = ui * dt.Value());
+					if (val is SI)
+						val = (SI)val * dt.Value();
+					else {
+						val.Switch()
+							.Case<int>(i => val = i * dt.Value())
+							.Case<double>(d => val = d * dt.Value())
+							.Case<float>(f => val = f * dt.Value())
+							.Case<uint>(ui => val = ui * dt.Value());
+					}
 					return val;
 				});
 			}
@@ -356,13 +375,20 @@ namespace TUGraz.VectoCore.OutputData
 				if (addRow == null) {
 					return row.ToArray();
 				}
+
 				return row.ZipAll(addRow, (val, addVal) => {
-					val.Switch()
-						.Case<SI>(si => val = si + (SI)addVal)
-						.Case<int>(i => val = i + (int)addVal)
-						.Case<double>(d => val = d + (double)addVal)
-						.Case<float>(f => val = f + (float)addVal)
-						.Case<uint>(ui => val = ui + (uint)addVal);
+					if (val is SI || addVal is SI) {
+						if (DBNull.Value == val)
+							val = addVal;
+						else if (DBNull.Value != addVal)
+							val = (SI)val + (SI)addVal;
+					} else {
+						val.Switch()
+							.Case<int>(i => val = i + (int)addVal)
+							.Case<double>(d => val = d + (double)addVal)
+							.Case<float>(f => val = f + (float)addVal)
+							.Case<uint>(ui => val = ui + (uint)addVal);
+					}
 					return val;
 				}).ToArray();
 			}

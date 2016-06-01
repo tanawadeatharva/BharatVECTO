@@ -34,6 +34,7 @@ using System.ComponentModel;
 using System.Data;
 using System.Reflection;
 using System.Runtime.Serialization;
+using System.Text.RegularExpressions;
 using TUGraz.VectoCommon.Exceptions;
 using TUGraz.VectoCommon.Utils;
 using TUGraz.VectoCore.Utils;
@@ -385,6 +386,12 @@ namespace TUGraz.VectoCore.Models.Simulation.Data
 		public static string GetCaption(this ModalResultField field)
 		{
 			return GetAttribute(field).Caption ?? GetAttribute(field).Name ?? field.ToString();
+		}
+
+		public static string GetShortCaption(this ModalResultField field)
+		{
+			var caption = GetCaption(field);
+			return Regex.Replace(caption, @"\[.*?\]|\<|\>", "").Trim();
 		}
 
 		public static ModalResultFieldAttribute GetAttribute(this ModalResultField field)
