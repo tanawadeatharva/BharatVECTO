@@ -248,45 +248,45 @@ namespace TUGraz.VectoCommon.Utils
 		private KilogramPerMeter(double val) : base(val, NumeratorDefault, DenominatorDefault) {}
 	}
 
-	/// <summary>
-	/// SI Class for Gram
-	/// </summary>
-	public class Gram : SIBase<Gram>
-	{
-		private static readonly Unit[] NumeratorDefault = { Unit.g };
+	///// <summary>
+	///// SI Class for Gram
+	///// </summary>
+	//public class Gram : SIBase<Gram>
+	//{
+	//	private static readonly Unit[] NumeratorDefault = { Unit.g };
 
-		[DebuggerHidden]
-		private Gram(double val) : base(val, NumeratorDefault) {}
-	}
+	//	[DebuggerHidden]
+	//	private Gram(double val) : base(val, NumeratorDefault) {}
+	//}
 
 
-	public class GramPerSecond : SIBase<GramPerSecond>
-	{
-		private static readonly Unit[] NumeratorDefault = { Unit.g };
-		private static readonly Unit[] DenominatorDefault = { Unit.s };
+	//public class GramPerSecond : SIBase<GramPerSecond>
+	//{
+	//	private static readonly Unit[] NumeratorDefault = { Unit.g };
+	//	private static readonly Unit[] DenominatorDefault = { Unit.s };
 
-		private GramPerSecond(double val) : base(val, NumeratorDefault, DenominatorDefault) {}
+	//	private GramPerSecond(double val) : base(val, NumeratorDefault, DenominatorDefault) { }
 
-		public static Gram operator *(GramPerSecond gps, Second s)
-		{
-			return SIBase<Gram>.Create(gps.Val * s.Value());
-		}
-	}
+	//	public static Gram operator *(GramPerSecond gps, Second s)
+	//	{
+	//		return SIBase<Gram>.Create(gps.Val * s.Value());
+	//	}
+	//}
 
-	public class GramPerLiter : SIBase<GramPerLiter>
-	{
-		private static readonly Unit[] NumeratorDefault = { Unit.g };
-		private static readonly Unit[] DenominatorDefault = { Unit.liter };
+	//public class GramPerLiter : SIBase<GramPerLiter>
+	//{
+	//	private static readonly Unit[] NumeratorDefault = { Unit.g };
+	//	private static readonly Unit[] DenominatorDefault = { Unit.liter };
 
-		private GramPerLiter(double val) : base(val, NumeratorDefault, DenominatorDefault) {}
-	}
+	//	private GramPerLiter(double val) : base(val, NumeratorDefault, DenominatorDefault) {}
+	//}
 
-	public class LiterPerHour : SIBase<LiterPerHour>
+	public class LiterPerSecond : SIBase<LiterPerSecond>
 	{
 		private static readonly Unit[] NumeratorDefault = { Unit.liter };
-		private static readonly Unit[] DenominatorDefault = { Unit.h };
+		private static readonly Unit[] DenominatorDefault = { Unit.s };
 
-		private LiterPerHour(double val) : base(val, NumeratorDefault, DenominatorDefault) {}
+		private LiterPerSecond(double val) : base(val, NumeratorDefault, DenominatorDefault) {}
 	}
 
 	/// <summary>
@@ -539,10 +539,10 @@ namespace TUGraz.VectoCommon.Utils
 
 		private JoulePerGram(double val) : base(val, NumeratorDefault, DenominatorDefault) {}
 
-		public static Joule operator *(Gram gram, JoulePerGram jpg)
-		{
-			return SIBase<Joule>.Create(gram.Value() * jpg.Val);
-		}
+		//public static Joule operator *(Gram gram, JoulePerGram jpg)
+		//{
+		//	return SIBase<Joule>.Create(gram.Value() * jpg.Val);
+		//}
 	}
 
 
@@ -1002,8 +1002,7 @@ namespace TUGraz.VectoCommon.Utils
 			milli,
 			t,
 			Ampere,
-			NI // norm liter
-			,
+			NI, // norm liter
 			liter,
 			Volt
 		}
@@ -1345,6 +1344,12 @@ namespace TUGraz.VectoCommon.Utils
 		public SI Gramm
 		{
 			[DebuggerHidden] get { return new SI(new SI(this, toUnit: Unit.k), 0.001, Unit.g, Unit.g); }
+		}
+
+		[DebuggerHidden]
+		public SI Liter
+		{
+			[DebuggerHidden] get { return new SI(this, fromUnit: Unit.liter, toUnit: Unit.liter); }
 		}
 
 		/// <summary>
