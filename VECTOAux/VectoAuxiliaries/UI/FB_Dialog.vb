@@ -74,8 +74,8 @@ Public Class FB_Dialog
 
 	'Resized ListView Format
 	Private Sub Resized()
-		Me.ListViewFolder.Columns(0).Width = -2
-		Me.ListViewFiles.Columns(0).Width = -2
+		Me.ListViewFolder.Columns(0).Width = - 2
+		Me.ListViewFiles.Columns(0).Width = - 2
 	End Sub
 
 	'SplitterMoved
@@ -120,7 +120,7 @@ Public Class FB_Dialog
 				If Microsoft.VisualBasic.Left(Me.TextBoxPath.Text, 1) = "<" And Me.ListViewFiles.SelectedItems.Count > 0 Then
 					'Multiple files selected
 					ReDim MyFiles(Me.ListViewFiles.SelectedItems.Count - 1)
-					x = -1
+					x = - 1
 					For Each lv0 As ListViewItem In Me.ListViewFiles.Items
 						If lv0.Selected Then
 							x += 1
@@ -132,7 +132,7 @@ Public Class FB_Dialog
 					'Single File
 					path = Trim(Me.TextBoxPath.Text)
 					'Primary extension (eg for bForceExt)
-					Ext = Trim(Me.ComboBoxExt.Text.Split(",")(0))
+					Ext = Trim(Me.ComboBoxExt.Text.Split(","c)(0))
 					'If file without path then append path
 					If Microsoft.VisualBasic.Mid(path, 2, 1) <> ":" Then path = MyFolder & path
 					'If instead of File a Folder is entered: Switch to Folder and Abort
@@ -336,7 +336,7 @@ Public Class FB_Dialog
 
 	'Initialize
 	Private Sub Init()
-		Dim x As Int16
+		Dim x As Integer
 		Dim line As String
 		Dim f As System.IO.StreamReader
 
@@ -371,7 +371,7 @@ Public Class FB_Dialog
 			Next
 			If IO.File.Exists(FB_FilHisDir & MyID & ".txt") Then
 				f = New System.IO.StreamReader(FB_FilHisDir & MyID & ".txt")
-				x = -1
+				x = - 1
 				Do While Not f.EndOfStream And x < 9
 					x += 1
 					line = f.ReadLine
@@ -389,7 +389,7 @@ Public Class FB_Dialog
 			ExtListMulti = New ArrayList
 			For x = 0 To UBound(MyExt)
 				ExtListMulti.Add(MyExt(x))
-				For Each line In MyExt(x).Split(",")
+				For Each line In MyExt(x).Split(","c)
 					ExtListSingle.Add(Trim(line))
 				Next
 			Next
@@ -404,13 +404,13 @@ Public Class FB_Dialog
 
 	Private Sub GlobalInit()
 		Dim drive As String
-		Dim x As Int16
+		Dim x As Integer
 
 		Dim f As System.IO.StreamReader
 
 		'Create Drive List
 		ReDim FB_Drives(UBound(IO.Directory.GetLogicalDrives()))
-		x = -1
+		x = - 1
 		For Each drive In IO.Directory.GetLogicalDrives()
 			x += 1
 			FB_Drives(x) = Microsoft.VisualBasic.Left(drive, 2)
@@ -422,7 +422,7 @@ Public Class FB_Dialog
 		Next
 		If IO.File.Exists(FB_FilHisDir & "Directories.txt") Then
 			f = New System.IO.StreamReader(FB_FilHisDir & "Directories.txt")
-			x = -1
+			x = - 1
 			Do While Not f.EndOfStream And x < 19
 				x += 1
 				FB_FolderHistory(x) = f.ReadLine()
@@ -564,7 +564,7 @@ Public Class FB_Dialog
 		NoItem = (ItemCount = 0)
 		If Not NoItem Then
 			If Me.ListViewFolder.SelectedItems.Count = 0 Then
-				SelIndex = -1
+				SelIndex = - 1
 			Else
 				SelIndex = Me.ListViewFolder.SelectedIndices(0)
 			End If
@@ -586,7 +586,7 @@ Public Class FB_Dialog
 				End If
 			Case Keys.Down
 				If Not NoItem And SelIndex < ItemCount - 1 Then
-					If Not SelIndex = -1 Then Me.ListViewFolder.Items(SelIndex).Selected = False
+					If Not SelIndex = - 1 Then Me.ListViewFolder.Items(SelIndex).Selected = False
 					Me.ListViewFolder.Items(SelIndex + 1).Selected = True
 					Me.ListViewFolder.Items(SelIndex + 1).EnsureVisible()
 				End If
@@ -611,7 +611,7 @@ Public Class FB_Dialog
 		NoItem = (ItemCount = 0)
 		If Not NoItem Then
 			If Me.ListViewFiles.SelectedItems.Count = 0 Then
-				SelIndex = -1
+				SelIndex = - 1
 			Else
 				SelIndex = Me.ListViewFiles.SelectedIndices(0)
 			End If
@@ -634,7 +634,7 @@ Public Class FB_Dialog
 				End If
 			Case Keys.Down
 				If Not NoItem And SelIndex < ItemCount - 1 Then
-					If Not SelIndex = -1 Then Me.ListViewFiles.Items(SelIndex).Selected = False
+					If Not SelIndex = - 1 Then Me.ListViewFiles.Items(SelIndex).Selected = False
 					Me.ListViewFiles.Items(SelIndex + 1).Selected = True
 					Me.ListViewFiles.Items(SelIndex + 1).EnsureVisible()
 				End If
@@ -703,7 +703,7 @@ Public Class FB_Dialog
 			favdlog = New FB_FavDlog
 			If favdlog.ShowDialog = Windows.Forms.DialogResult.OK Then
 				For x = 10 To 19
-					path = favdlog.ListBox1.Items(x - 10)
+					path = CType(favdlog.ListBox1.Items(x - 10), String)
 					If path = NoFavString Then
 						FB_FolderHistory(x) = EmptyText
 					Else
@@ -756,7 +756,7 @@ Public Class FB_Dialog
 		For x = 0 To 8
 			If UCase(Me.ContextMenuHisFile.Items(x).Text.ToString) = UCase(path) Then Exit For
 		Next
-		For y = x To 1 Step -1
+		For y = x To 1 Step - 1
 			Me.ContextMenuHisFile.Items(y).Text = Me.ContextMenuHisFile.Items(y - 1).Text
 		Next
 		Me.ContextMenuHisFile.Items(0).Text = path
@@ -771,7 +771,7 @@ Public Class FB_Dialog
 			If UCase(Me.ContextMenuHisFolder.Items(x).Text.ToString) = UCase(path) Then Exit For
 		Next
 
-		For y = x To 1 Step -1
+		For y = x To 1 Step - 1
 			Me.ContextMenuHisFolder.Items(y).Text = Me.ContextMenuHisFolder.Items(y - 1).Text
 		Next
 
@@ -791,7 +791,7 @@ Public Class FB_Dialog
 		For x = 0 To 8
 			If UCase(FB_FolderHistory(x)) = UCase(path) Then Exit For
 		Next
-		For y = x To 1 Step -1
+		For y = x To 1 Step - 1
 			FB_FolderHistory(y) = FB_FolderHistory(y - 1)
 		Next
 		FB_FolderHistory(0) = path
@@ -876,7 +876,7 @@ Public Class FB_Dialog
 		If Trim(Me.ComboBoxExt.Text.ToString) = "" Then
 			ExtStr = New String() {"*"}
 		Else
-			ExtStr = Me.ComboBoxExt.Text.ToString.Split(",")
+			ExtStr = Me.ComboBoxExt.Text.ToString.Split(","c)
 		End If
 
 		'Delete File-List
@@ -890,7 +890,7 @@ Public Class FB_Dialog
 			Dim di As New IO.DirectoryInfo(MyFolder)
 			Dim aryFi As IO.FileInfo()
 			Dim fi As IO.FileInfo
-			x = -1
+			x = - 1
 			For Each SearchExt In ExtStr
 				SearchPat = "*" & Trim(SearchFile) & "*." & Trim(SearchExt)
 				aryFi = di.GetFiles(SearchPat)
@@ -919,7 +919,7 @@ Public Class FB_Dialog
 		If Me.ListViewFiles.SelectedItems.Count = 1 Then
 			file0 = Me.ListViewFiles.SelectedItems(0).Text
 			file = file0
-lb1:
+			lb1:
 			file = InputBox("New Filename", "Rename " & file0, file)
 			If file <> "" Then
 				If IO.File.Exists(MyFolder & file) Then
@@ -963,7 +963,7 @@ lb1:
 	Private Sub ButtonNewDir_Click(ByVal sender As System.Object, ByVal e As System.EventArgs) Handles ButtonNewDir.Click
 		Dim f As String
 		f = "New Folder"
-lb10:
+		lb10:
 		f = InputBox("Create New Folder", "New Folder", f)
 		If f <> "" Then
 			If IO.Directory.Exists(MyFolder & f) Then
@@ -985,9 +985,9 @@ lb10:
 
 
 	Private Function fPATH(ByVal Pfad As String) As String
-		Dim x As Int16
+		Dim x As Integer
 		x = Pfad.LastIndexOf("\")
-		If x = -1 Then
+		If x = - 1 Then
 			Return Microsoft.VisualBasic.Left(Pfad, 0)
 		Else
 			Return Microsoft.VisualBasic.Left(Pfad, x + 1)

@@ -8,28 +8,25 @@
 '   WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
 '
 ' See the LICENSE.txt for the specific language governing permissions and limitations.
+Imports TUGraz.VectoCommon.Utils
 
 Namespace Electrics
- 
+	Public Interface IAlternatorMap
+		Inherits IAuxiliaryEvent
 
-    Public Interface IAlternatorMap
-     Inherits IAuxiliaryEvent
-        ''' <summary>
-        ''' Initialise the map from supplied csv data
-        ''' </summary>
-        ''' <returns>Boolean - true if map is created successfully</returns>
-        ''' <remarks></remarks>
-        Function Initialise() As Boolean
+		''' <summary>
+		''' Initialise the map from supplied csv data
+		''' </summary>
+		''' <returns>Boolean - true if map is created successfully</returns>
+		''' <remarks></remarks>
+		Function Initialise() As Boolean
 
-        ''' <summary>
-        ''' Returns the alternator efficiency at given rpm
-        ''' </summary>
-        ''' <param name="rpm">alternator rotation speed</param>
-        ''' <returns>Single</returns>
-        ''' <remarks></remarks>
-        Function GetEfficiency(ByVal rpm As single, ByVal amps As single) As AlternatorMapValues
-
-    End Interface
-
-
+		''' <summary>
+		''' Returns the alternator efficiency at given rpm
+		''' </summary>
+		''' <param name="rpm">alternator rotation speed</param>
+		''' <returns>Single</returns>
+		''' <remarks></remarks>
+		Function GetEfficiency(ByVal rpm As Double, ByVal amps As Ampere) As AlternatorMapValues
+	End Interface
 End Namespace

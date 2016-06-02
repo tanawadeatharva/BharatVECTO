@@ -9,174 +9,191 @@
 '
 ' See the LICENSE.txt for the specific language governing permissions and limitations.
 
+Imports TUGraz.VectoCommon.Utils
 Imports VectoAuxiliaries.Electrics
 Imports VectoAuxiliaries.Pneumatics
 Imports VectoAuxiliaries.Hvac
 
 Namespace DownstreamModules
+	Public Class M12
+		Implements IM12
 
-    Public Class M12
-        Implements IM12
+		Private Class Point
+			Public X As Joule
+			Public Y As Gram
+		End Class
 
+		Private M11 As IM11
+		Private M10 As IM10
+		Private Signals As ISignals
+		Private _P1X As Joule
+		Private _P1Y As Gram
+		Private _P2X As Joule
+		Private _P2Y As Gram
+		Private _P3X As Joule
+		Private _P3Y As Gram
+		Private _XT As Joule
+		Private _INTERP1 As Gram
+		Private _INTERP2 As Gram
 
-        Private Class Point
+		Private Sub setPoints()
 
-            Public X As Single
-            Public Y As Single
+			_P1X = 0.SI(Of Joule)()
+			_P1Y = M11.TotalCycleFuelConsumptionZeroElectricalLoad
+			_P2X = M11.SmartElectricalTotalCycleEletricalEnergyGenerated
+			_P2Y = M11.TotalCycleFuelConsumptionSmartElectricalLoad
+			_P3X = M11.StopStartSensitiveTotalCycleElectricalDemand
+			_P3Y = M10.AverageLoadsFuelConsumptionInterpolatedForPneumatics
+			_XT = M11.TotalCycleElectricalDemand
+		End Sub
 
-        End Class
+		'Interpolation 
+		Private Function Sum1() As Gram
 
-        Private M11 As IM11
-        Private M10 As IM10
-        Private Signals As ISignals
-        Private _P1X, _P1Y, _P2X, _P2Y, _P3X, _P3Y, _XT, _INTERP1, _INTERP2 As Single
+			Dim P1 As Point = New Point With {.X = 0.SI(Of Joule)(), .Y = M11.TotalCycleFuelConsumptionZeroElectricalLoad}
+			Dim P2 As Point = New Point _
+					With {.X = M11.SmartElectricalTotalCycleEletricalEnergyGenerated * Signals.StoredEnergyEfficiency,
+					.Y = M11.TotalCycleFuelConsumptionSmartElectricalLoad}
 
-        Private Sub setPoints()
+			Dim IP5x As Joule = M11.TotalCycleElectricalDemand
+			Dim IP5y As Gram
 
-            _P1X = 0
-            _P1Y = M11.TotalCycleFuelConsumptionZeroElectricalLoad
-            _P2X = M11.SmartElectricalTotalCycleEletricalEnergyGenerated
-            _P2Y = M11.TotalCycleFuelConsumptionSmartElectricalLoad
-            _P3X = M11.StopStartSensitiveTotalCycleElectricalDemand
-            _P3Y = M10.AverageLoadsFuelConsumptionInterpolatedForPneumatics
-            _XT = M11.TotalCycleElectricalDemand
+			Dim TanTeta As SI = (P2.Y - P1.Y) / (P2.X - P1.X)
 
+			IP5y = P1.Y + (TanTeta * IP5x)
 
+			_INTERP1 = IP5y
 
+			setPoints()
 
-        End Sub
+			Return If(Double.IsNaN(IP5y.Value()), 0.SI(Of Gram), IP5y)
+		End Function
 
-        'Interpolation 
-        Private Function Sum1() As Single
+		Private Function Sum2() As Gram
 
-            Dim P1 As Point = New Point With {.X = 0, .Y = M11.TotalCycleFuelConsumptionZeroElectricalLoad}
-            Dim P2 As Point = New Point With {.X = M11.SmartElectricalTotalCycleEletricalEnergyGenerated * Signals.StoredEnergyEfficiency, .Y = M11.TotalCycleFuelConsumptionSmartElectricalLoad}
+			Dim P1 As Point = New Point With {.X = 0.SI(Of Joule)(), .Y = M11.TotalCycleFuelConsumptionZeroElectricalLoad}
+			Dim P3 As Point = New Point _
+					With {.X = M11.StopStartSensitiveTotalCycleElectricalDemand,
+					.Y = M10.AverageLoadsFuelConsumptionInterpolatedForPneumatics}
 
-            Dim IP5x As Single = M11.TotalCycleElectricalDemand
-            Dim IP5y As Single = 0
+			Dim IP5x As Joule = M11.TotalCycleElectricalDemand
+			Dim IP5y As Gram
 
-            Dim TanTeta As Single = (P2.Y - P1.Y) / (P2.X - P1.X)
+			Dim TanTeta As Double = (P3.Y - P1.Y).Value() / (P3.X - P1.X).Value()
 
-            IP5y = P1.Y + (TanTeta * IP5x)
+			IP5y = P1.Y + (TanTeta * IP5x.Value()).SI(Of Gram)()
 
-            _INTERP1 = IP5Y
+			_INTERP2 = IP5y
 
-            setPoints()
+			Return If(Double.IsNaN(IP5y.Value()), 0.SI(Of Gram), IP5y)
+		End Function
 
-            Return If(Single.IsNaN(IP5Y), 0, IP5y)
+		'Constructor
+		Public Sub New(m10 As IM10, m11 As IM11, signals As ISignals)
 
-        End Function
-        Private Function Sum2() As Single
+			Me.M10 = m10
+			Me.M11 = m11
+			Me.Signals = signals
+		End Sub
 
-            Dim P1 As Point = New Point With {.X = 0, .Y = M11.TotalCycleFuelConsumptionZeroElectricalLoad}
-            Dim P3 As Point = New Point With {.X = M11.StopStartSensitiveTotalCycleElectricalDemand, .Y = M10.AverageLoadsFuelConsumptionInterpolatedForPneumatics}
+		'Main Class Outputs
+		Public ReadOnly Property FuelconsumptionwithsmartElectricsandAveragePneumaticPowerDemand As Gram _
+			Implements IM12.FuelconsumptionwithsmartElectricsandAveragePneumaticPowerDemand
+			Get
 
-            Dim IP5x As Single = M11.TotalCycleElectricalDemand
-            Dim IP5y As Single = 0
+				'SCHM 3_2
+				Dim interp1 As Gram = Sum1()
 
-            Dim TanTeta As Single = (P3.Y - P1.Y) / (P3.X - P1.X)
+				interp1 =
+					If _
+						(Not Double.IsNaN(interp1.Value()) AndAlso M11.StopStartSensitiveTotalCycleElectricalDemand > 0, interp1,
+						M11.TotalCycleFuelConsumptionZeroElectricalLoad)
+				Return interp1
+			End Get
+		End Property
 
-            IP5y = P1.Y + (TanTeta * IP5x)
+		Public ReadOnly Property BaseFuelConsumptionWithTrueAuxiliaryLoads As Gram _
+			Implements IM12.BaseFuelConsumptionWithTrueAuxiliaryLoads
+			Get
 
-            _INTERP2 = IP5y
+				'SCM 3_02
+				Dim interp2 As Gram = Sum2()
 
-            Return If(Single.IsNaN(IP5Y), 0, IP5y)
+				interp2 =
+					If _
+						(Not Double.IsNaN(interp2.Value()) AndAlso M11.StopStartSensitiveTotalCycleElectricalDemand > 0, interp2,
+						M10.AverageLoadsFuelConsumptionInterpolatedForPneumatics)
+				Return interp2
+			End Get
+		End Property
 
-        End Function
+		Public ReadOnly Property StopStartCorrection As Double Implements IM12.StopStartCorrection
+			Get
 
-        'Constructor
-        Public Sub New(m10 As IM10, m11 As IM11, signals As ISignals)
+				Dim _stopStartCorrection As Scalar = BaseFuelConsumptionWithTrueAuxiliaryLoads() /
+													If _
+														(M10.AverageLoadsFuelConsumptionInterpolatedForPneumatics > 0,
+														M10.AverageLoadsFuelConsumptionInterpolatedForPneumatics, 1.SI(Of Gram))
 
-            Me.M10 = m10
-            Me.M11 = m11
-            Me.Signals = signals
+				Return If(_stopStartCorrection > 0, _stopStartCorrection.Value(), 1)
+			End Get
+		End Property
 
-        End Sub
+		'Diagnostics Signal Exposure only. Does not materially affect class operation.
+		Public ReadOnly Property INTRP1 As Gram Implements IM12.INTRP1
+			Get
+				Return _INTERP1
+			End Get
+		End Property
 
-        'Main Class Outputs
-        Public ReadOnly Property FuelconsumptionwithsmartElectricsandAveragePneumaticPowerDemand As Single Implements IM12.FuelconsumptionwithsmartElectricsandAveragePneumaticPowerDemand
-            Get
+		Public ReadOnly Property INTRP2 As Gram Implements IM12.INTRP2
+			Get
+				Return _INTERP2
+			End Get
+		End Property
 
-                'SCHM 3_2
-                Dim interp1 As Single = Sum1
+		Public ReadOnly Property P1X As Joule Implements IM12.P1X
+			Get
+				Return _P1X
+			End Get
+		End Property
 
-                interp1 = If(Not Single.IsNaN(interp1) AndAlso M11.StopStartSensitiveTotalCycleElectricalDemand > 0, interp1, M11.TotalCycleFuelConsumptionZeroElectricalLoad)
-                Return interp1
+		Public ReadOnly Property P1Y As Gram Implements IM12.P1Y
+			Get
+				Return _P1Y
+			End Get
+		End Property
 
-            End Get
+		Public ReadOnly Property P2X As Joule Implements IM12.P2X
+			Get
+				Return _P2X
+			End Get
+		End Property
 
-        End Property
-        Public ReadOnly Property BaseFuelConsumptionWithTrueAuxiliaryLoads As Single Implements IM12.BaseFuelConsumptionWithTrueAuxiliaryLoads
-            Get
+		Public ReadOnly Property P2Y As Gram Implements IM12.P2Y
+			Get
+				Return _P2Y
+			End Get
+		End Property
 
-                'SCM 3_02
-                Dim interp2 As Single = Sum2()
+		Public ReadOnly Property P3X As Joule Implements IM12.P3X
+			Get
+				Return _P3X
+			End Get
+		End Property
 
-                interp2 = If(Not Single.IsNaN(interp2) AndAlso M11.StopStartSensitiveTotalCycleElectricalDemand > 0, interp2, M10.AverageLoadsFuelConsumptionInterpolatedForPneumatics)
-                Return interp2
+		Public ReadOnly Property P3Y As Gram Implements IM12.P3Y
+			Get
+				Return _P3Y
+			End Get
+		End Property
 
-            End Get
-        End Property
-        Public ReadOnly Property StopStartCorrection As Single Implements IM12.StopStartCorrection
-            Get
-
-                Dim _stopStartCorrection As Single = BaseFuelConsumptionWithTrueAuxiliaryLoads / If(M10.AverageLoadsFuelConsumptionInterpolatedForPneumatics > 0, M10.AverageLoadsFuelConsumptionInterpolatedForPneumatics, 1)
-
-                Return If(_stopStartCorrection > 0, _stopStartCorrection, 1)
-
-            End Get
-        End Property
-
-        'Diagnostics Signal Exposure only. Does not materially affect class operation.
-        Public ReadOnly Property INTRP1 As Single Implements IM12.INTRP1
-            Get
-                Return _INTERP1
-            End Get
-        End Property
-        Public ReadOnly Property INTRP2 As Single Implements IM12.INTRP2
-            Get
-                Return _INTERP2
-            End Get
-        End Property
-        Public ReadOnly Property P1X As Single Implements IM12.P1X
-            Get
-                Return _P1X
-            End Get
-        End Property
-        Public ReadOnly Property P1Y As Single Implements IM12.P1Y
-            Get
-                Return _p1Y
-            End Get
-        End Property
-        Public ReadOnly Property P2X As Single Implements IM12.P2X
-            Get
-                Return _P2X
-            End Get
-        End Property
-        Public ReadOnly Property P2Y As Single Implements IM12.P2Y
-            Get
-                Return _P2Y
-            End Get
-        End Property
-        Public ReadOnly Property P3X As Single Implements IM12.P3X
-            Get
-                Return _P3X
-            End Get
-        End Property
-        Public ReadOnly Property P3Y As Single Implements IM12.P3Y
-            Get
-                Return _P3Y
-            End Get
-        End Property
-        Public ReadOnly Property XTAIN As Single Implements IM12.XTAIN
-            Get
-                Return _XT
-            End Get
-        End Property
-
-    End Class
-
+		Public ReadOnly Property XTAIN As Joule Implements IM12.XTAIN
+			Get
+				Return _XT
+			End Get
+		End Property
+	End Class
 End Namespace
-
 
 

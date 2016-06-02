@@ -10,18 +10,16 @@
 ' See the LICENSE.txt for the specific language governing permissions and limitations.
 
 Public Interface IPneumaticsAuxilliariesConfig
-
-Property OverrunUtilisationForCompressionFraction As Single
-Property BrakingWithRetarderNIperKG As Single
-Property BrakingNoRetarderNIperKG As Single
-Property BreakingPerKneelingNIperKGinMM As Single
-Property PerDoorOpeningNI As Single
-Property PerStopBrakeActuationNIperKG As Single
-Property AirControlledSuspensionNIperMinute As Single
-Property AdBlueNIperMinute As Single
-Property NonSmartRegenFractionTotalAirDemand As Single
-Property SmartRegenFractionTotalAirDemand As Single
-Property DeadVolumeLitres As Single
-Property DeadVolBlowOutsPerLitresperHour As Single
-
+	Property OverrunUtilisationForCompressionFraction As Double
+	Property BrakingWithRetarderNIperKG As Double
+	Property BrakingNoRetarderNIperKG As Double
+	Property BreakingPerKneelingNIperKGinMM As Double
+	Property PerDoorOpeningNI As Double
+	Property PerStopBrakeActuationNIperKG As Double
+	Property AirControlledSuspensionNIperMinute As Double
+	Property AdBlueNIperMinute As Double
+	Property NonSmartRegenFractionTotalAirDemand As Double
+	Property SmartRegenFractionTotalAirDemand As Double
+	Property DeadVolumeLitres As Double
+	Property DeadVolBlowOutsPerLitresperHour As Double
 End Interface

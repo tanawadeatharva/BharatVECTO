@@ -9,69 +9,60 @@
 '
 ' See the LICENSE.txt for the specific language governing permissions and limitations.
 
+Imports TUGraz.VectoCommon.Utils
 Imports VectoAuxiliaries.Electrics
 Imports VectoAuxiliaries.Pneumatics
 Imports VectoAuxiliaries.Hvac
 
 Namespace DownstreamModules
+	Public Interface IM9
+		Inherits IAuxiliaryEvent
 
-  Public Interface IM9
-Inherits IAuxiliaryEvent
+		''' <summary>
+		''' Clears aggregated values ( Sets them to zero )
+		''' </summary>
+		''' <remarks></remarks>
+		Sub ClearAggregates()
 
+		''' <summary>
+		''' Increments all aggregated outputs
+		''' </summary>
+		''' <param name="stepTimeInSeconds">Single : Mutiplies the values to be aggregated by number of seconds</param>
+		''' <remarks></remarks>
+		Sub CycleStep(stepTimeInSeconds As Second)
 
-   ''' <summary>
-  ''' Clears aggregated values ( Sets them to zero )
-  ''' </summary>
-  ''' <remarks></remarks>
-   Sub ClearAggregates() 
+		''' <summary>
+		''' Litres Of Air: Compressor On Continually (L)
+		''' </summary>
+		''' <value></value>
+		''' <returns></returns>
+		''' <remarks>Start/Stop Sensitive</remarks>
+		ReadOnly Property LitresOfAirCompressorOnContinually As NormLiter
 
-   ''' <summary>
-  ''' Increments all aggregated outputs
-  ''' </summary>
-  ''' <param name="stepTimeInSeconds">Single : Mutiplies the values to be aggregated by number of seconds</param>
-  ''' <remarks></remarks>
-		Sub CycleStep(Optional stepTimeInSeconds As Double = 0.0)
+		''' <summary>
+		''' Litres Of Air Compressor On Only In Overrun (L)
+		''' </summary>
+		''' <value></value>
+		''' <returns></returns>
+		''' <remarks></remarks>
+		ReadOnly Property LitresOfAirCompressorOnOnlyInOverrun As NormLiter
 
-   ''' <summary>
- ''' Litres Of Air: Compressor On Continually (L)
- ''' </summary>
- ''' <value></value>
- ''' <returns></returns>
- ''' <remarks>Start/Stop Sensitive</remarks>
-   ReadOnly Property LitresOfAirCompressorOnContinually                 As Single
+		''' <summary>
+		''' Total Cycle Fuel Consumption Compressor *On* Continuously (G)
+		''' </summary>
+		''' <value></value>
+		''' <returns></returns>
+		''' <remarks></remarks>
+		ReadOnly Property TotalCycleFuelConsumptionCompressorOnContinuously As Gram
 
-   ''' <summary>
- ''' Litres Of Air Compressor On Only In Overrun (L)
- ''' </summary>
- ''' <value></value>
- ''' <returns></returns>
- ''' <remarks></remarks>
-   ReadOnly Property LitresOfAirCompressorOnOnlyInOverrun               As Single 
-
-   ''' <summary>
- ''' Total Cycle Fuel Consumption Compressor *On* Continuously (G)
- ''' </summary>
- ''' <value></value>
- ''' <returns></returns>
- ''' <remarks></remarks>
-   Readonly property TotalCycleFuelConsumptionCompressorOnContinuously  As single
-
-   ''' <summary>
- ''' Total Cycle Fuel Consumption Compressor *OFF* Continuously (G)
- ''' </summary>
- ''' <value></value>
- ''' <returns></returns>
- ''' <remarks></remarks>
-   Readonly property TotalCycleFuelConsumptionCompressorOffContinuously As single
-
-
-End Interface
-
+		''' <summary>
+		''' Total Cycle Fuel Consumption Compressor *OFF* Continuously (G)
+		''' </summary>
+		''' <value></value>
+		''' <returns></returns>
+		''' <remarks></remarks>
+		ReadOnly Property TotalCycleFuelConsumptionCompressorOffContinuously As Gram
+	End Interface
 End Namespace
-
-
-
-
-
 
 

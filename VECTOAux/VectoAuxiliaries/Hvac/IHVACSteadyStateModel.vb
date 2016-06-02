@@ -10,43 +10,40 @@
 ' See the LICENSE.txt for the specific language governing permissions and limitations.
 
 Namespace Hvac
+	Public Interface IHVACSteadyStateModel
+		''' <summary>
+		''' Initialised Values From Map
+		''' </summary>
+		''' <param name="filePath"></param>
+		''' <param name="message"></param>
+		''' <returns>True if successfull, and False if not.</returns>
+		''' <remarks></remarks>
+		Function SetValuesFromMap(byval filePath As String, ByRef message As string) As Boolean
 
-  Public Interface IHVACSteadyStateModel
-   
-   
-   ''' <summary>
-''' Initialised Values From Map
-''' </summary>
-''' <param name="filePath"></param>
-''' <param name="message"></param>
-''' <returns>True if successfull, and False if not.</returns>
-''' <remarks></remarks>
-   Function SetValuesFromMap( byval filePath As String , ByRef message As string) As Boolean   
-   
-   ''' <summary>
-''' HVAC Mechanical Load Power  (W)
-''' </summary>
-''' <value></value>
-''' <returns></returns>
-''' <remarks></remarks>
-   Property HVACMechanicalLoadPowerWatts As Single
-   ''' <summary>
-''' HVAC Electrical Load Power (W)
-''' </summary>
-''' <value></value>
-''' <returns></returns>
-''' <remarks></remarks>
-   Property HVACElectricalLoadPowerWatts As Single
-   ''' <summary>
-''' HVAC Fuelling (L/H)
-''' </summary>
-''' <value></value>
-''' <returns>Liters per hour</returns>
-''' <remarks></remarks>
-   Property HVACFuellingLitresPerHour As single
+		''' <summary>
+		''' HVAC Mechanical Load Power  (W)
+		''' </summary>
+		''' <value></value>
+		''' <returns></returns>
+		''' <remarks></remarks>
+		Property HVACMechanicalLoadPowerWatts As Single
 
-End Interface
+		''' <summary>
+		''' HVAC Electrical Load Power (W)
+		''' </summary>
+		''' <value></value>
+		''' <returns></returns>
+		''' <remarks></remarks>
+		Property HVACElectricalLoadPowerWatts As Single
 
+		''' <summary>
+		''' HVAC Fuelling (L/H)
+		''' </summary>
+		''' <value></value>
+		''' <returns>Liters per hour</returns>
+		''' <remarks></remarks>
+		Property HVACFuellingLitresPerHour As single
+	End Interface
 End Namespace
 
 

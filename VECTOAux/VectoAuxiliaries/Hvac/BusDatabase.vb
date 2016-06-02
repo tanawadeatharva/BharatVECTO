@@ -1,4 +1,5 @@
-﻿Imports System.IO
+﻿Imports System.Globalization
+Imports System.IO
 Imports System.Text
 
 Namespace Hvac
@@ -60,7 +61,7 @@ Namespace Hvac
 						If Not firstline Then
 
 							'split the line
-							Dim elements() As String = line.Split(New Char() {","}, StringSplitOptions.RemoveEmptyEntries)
+							Dim elements() As String = line.Split(New Char() {","c}, StringSplitOptions.RemoveEmptyEntries)
 							'7 or 8 entries per line required
 							If (elements.Length <> 7 AndAlso elements.Length <> 8) Then
 								Throw New ArgumentException("Incorrect number of values in csv file")
@@ -72,10 +73,10 @@ Namespace Hvac
 													elements(0),
 													elements(1),
 													elements(2),
-													elements(3),
-													elements(4),
-													elements(5),
-													elements(6),
+													Double.Parse(elements(3), CultureInfo.InvariantCulture),
+													Double.Parse(elements(4), CultureInfo.InvariantCulture),
+													Double.Parse(elements(5), CultureInfo.InvariantCulture),
+													Integer.Parse(elements(6), CultureInfo.InvariantCulture),
 													If(elements.Length = 8, Boolean.Parse(elements(7)), False))
 
 								buses.Add(bus)
@@ -98,9 +99,9 @@ Namespace Hvac
 				returnStatus = False
 			End If
 
-			Dim uniqueBuses As Object = From b In buses Select New With {Key b.Model, b} Distinct.ToList()
+			Dim uniqueBuses As Integer = (From b In buses Select New With {Key b.Model, b} Distinct).Count()
 
-			If buses.Count <> uniqueBuses.Count Then
+			If buses.Count <> uniqueBuses Then
 				returnStatus = False
 			End If
 

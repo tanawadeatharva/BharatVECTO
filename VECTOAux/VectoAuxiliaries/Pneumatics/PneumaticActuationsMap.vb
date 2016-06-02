@@ -45,7 +45,7 @@ Namespace Pneumatics
 		Public Function Initialise() As Boolean Implements IPneumaticActuationsMAP.Initialise
 
 			Dim newKey As ActuationsKey
-			Dim numActuations As Single
+			Dim numActuations As Integer
 
 			If File.Exists(filePath) Then
 				Using sr As StreamReader = New StreamReader(filePath)
@@ -64,7 +64,7 @@ Namespace Pneumatics
 					For Each line As String In lines
 						If Not firstline Then
 							'split the line
-							Dim elements() As String = line.Split(New Char() {","}, StringSplitOptions.RemoveEmptyEntries)
+							Dim elements() As String = line.Split(New Char() {","c}, StringSplitOptions.RemoveEmptyEntries)
 							'3 entries per line required
 							If (elements.Length <> 3) Then _
 								Throw New ArgumentException("Pneumatic Actuations Map has Incorrect number of values in file")
@@ -79,7 +79,7 @@ Namespace Pneumatics
 							'Should throw exception if ConsumerName or CycleName are empty.
 							newKey = New ActuationsKey(elements(0).ToString(), elements(1).ToString())
 
-							map.Add(newKey, Single.Parse(elements(2), CultureInfo.InvariantCulture))
+							map.Add(newKey, Integer.Parse(elements(2), CultureInfo.InvariantCulture))
 
 						Else
 							firstline = False

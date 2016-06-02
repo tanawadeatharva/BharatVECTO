@@ -1,14 +1,10 @@
-﻿Namespace Hvac
+﻿Imports TUGraz.VectoCommon.Utils
 
-
-    Public Interface IHVACConstants
-
-        ReadOnly Property DieselGCVJperGram As Single
-        ReadOnly Property FuelDensity As Single
-
-    End Interface
-
-
+Namespace Hvac
+	Public Interface IHVACConstants
+		ReadOnly Property DieselGCVJperGram As Double
+		ReadOnly Property FuelDensity As Double
+	End Interface
 End Namespace
 
 

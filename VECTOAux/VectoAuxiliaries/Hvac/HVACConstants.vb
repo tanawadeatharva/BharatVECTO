@@ -8,37 +8,34 @@
 '   WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
 '
 ' See the LICENSE.txt for the specific language governing permissions and limitations.
+Imports TUGraz.VectoCommon.Utils
 
 Namespace Hvac
+	Public Class HVACConstants
+		Implements IHVACConstants
 
-   Public Class HVACConstants
-    Implements  IHVACConstants
+		Private _fuelDensity As Double
 
-        Private _fuelDensity As Single
+		Public Sub New()
+			_fuelDensity = 0.832
+		End Sub
 
-        Public Sub New()
-            _fuelDensity = 0.832
-        End Sub
+		Public Sub New(fuelDensitySingle As Double)
+			_fuelDensity = fuelDensitySingle
+		End Sub
 
-        Public Sub New(fuelDensitySingle As Single)
-            _fuelDensity = fuelDensitySingle
-        End Sub
+		Public ReadOnly Property DieselGCVJperGram As Double Implements IHVACConstants.DieselGCVJperGram
+			Get
+				Return 44800
+			End Get
+		End Property
 
-        Public ReadOnly Property DieselGCVJperGram As Single Implements IHVACConstants.DieselGCVJperGram
-            Get
-                Return 44800
-            End Get
-        End Property
-
-        Public ReadOnly Property FuelDensity As Single Implements IHVACConstants.FuelDensity
-            Get
-                Return _fuelDensity
-            End Get
-        End Property
-
-    End Class
-
+		Public ReadOnly Property FuelDensity As Double Implements IHVACConstants.FuelDensity
+			Get
+				Return _fuelDensity
+			End Get
+		End Property
+	End Class
 End Namespace
-
 
 

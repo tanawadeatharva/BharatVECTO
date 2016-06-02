@@ -1,18 +1,13 @@
 ﻿
+Imports TUGraz.VectoCommon.Utils
 Imports VectoAuxiliaries.Electrics
 Imports VectoAuxiliaries.Pneumatics
 Imports VectoAuxiliaries.Hvac
 
 Namespace DownstreamModules
+	Public Interface IM14
+		ReadOnly Property TotalCycleFCGrams As Gram
 
-Public Interface IM14
-
-   Readonly property TotalCycleFCGrams as single
-
-   ReadOnly Property TotalCycleFCLitres As single
-
-
-
-End Interface
-
+		ReadOnly Property TotalCycleFCLitres As Liter
+	End Interface
 End Namespace

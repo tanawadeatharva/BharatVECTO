@@ -8,18 +8,19 @@
 '   WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
 '
 ' See the LICENSE.txt for the specific language governing permissions and limitations.
+Imports TUGraz.VectoCommon.Utils
 
 Namespace Pneumatics
 	Public Class M4_AirCompressor
 		Implements IM4_AirCompressor
 
-		Private Const MinRatio As Single = 1
-		Private Const MaxRatio As Single = 10
-		Private Const MinEff As Single = 0
-		Private Const MaxEff As Single = 1
+		Private Const MinRatio As Double = 1
+		Private Const MaxRatio As Double = 10
+		Private Const MinEff As Double = 0
+		Private Const MaxEff As Double = 1
 
-		Private _pulleyGearRatio As Single
-		Private _pulleyGearEfficiency As Single
+		Private _pulleyGearRatio As Double
+		Private _pulleyGearEfficiency As Double
 		Private _map As ICompressorMap
 		Private _signals As ISignals
 
@@ -30,15 +31,15 @@ Namespace Pneumatics
 		''' <value></value>
 		''' <returns></returns>
 		''' <remarks></remarks>
-		Public Property PulleyGearRatio() As Single Implements IM4_AirCompressor.PulleyGearRatio
+		Public Property PulleyGearRatio() As Double Implements IM4_AirCompressor.PulleyGearRatio
 			Get
 				Return _pulleyGearRatio
 			End Get
-			Set(value As Single)
+			Set(value As Double)
 				If (value < MinRatio OrElse value > MaxRatio) Then
 					Throw _
-						New ArgumentOutOfRangeException(
-							String.Format("Invalid value, should be in the range {0} to {1}", MinRatio, MaxRatio), value)
+						New ArgumentOutOfRangeException("pulleyGearRatio", value,
+														String.Format("Invalid value, should be in the range {0} to {1}", MinRatio, MaxRatio))
 				Else
 					_pulleyGearRatio = value
 				End If
@@ -51,15 +52,16 @@ Namespace Pneumatics
 		''' <value></value>
 		''' <returns></returns>
 		''' <remarks></remarks>
-		Public Property PulleyGearEfficiency() As Single Implements IM4_AirCompressor.PulleyGearEfficiency
+		Public Property PulleyGearEfficiency() As Double Implements IM4_AirCompressor.PulleyGearEfficiency
 			Get
 				Return _pulleyGearEfficiency
 			End Get
-			Set(value As Single)
+			Set(value As Double)
 				If (value < MinEff OrElse value > MaxEff) Then
 					Throw _
-						New ArgumentOutOfRangeException(String.Format("Invalid value, should be in the range {0} to {1}", MinEff, MaxEff),
-														value)
+						New ArgumentOutOfRangeException("pulleyGearEfficiency", value,
+														String.Format("Invalid value, should be in the range {0} to {1}", MinEff, MaxEff)
+														)
 				Else
 					_pulleyGearEfficiency = value
 				End If
@@ -74,7 +76,7 @@ Namespace Pneumatics
 		''' <param name="pulleyGearRatio">Ratio of Pulley/Gear</param>
 		''' <param name="pulleyGearEfficiency">Efficiency of Pulley/Gear</param>
 		''' <remarks></remarks>
-		Public Sub New(ByVal map As ICompressorMap, ByRef pulleyGearRatio As Single, ByRef pulleyGearEfficiency As Single,
+		Public Sub New(ByVal map As ICompressorMap, ByRef pulleyGearRatio As Double, ByRef pulleyGearEfficiency As Double,
 						signals As ISignals)
 
 			_map = map
@@ -108,8 +110,8 @@ Namespace Pneumatics
 		''' </summary>
 		''' <returns></returns>
 		''' <remarks></remarks>
-		Public Function GetFlowRate() As Single Implements IM4_AirCompressor.GetFlowRate
-			Dim compressorRpm As Single = _signals.EngineSpeed * PulleyGearRatio
+		Public Function GetFlowRate() As NormLiterPerSecond Implements IM4_AirCompressor.GetFlowRate
+			Dim compressorRpm As Double = _signals.EngineSpeed * PulleyGearRatio
 
 			''Flow Rate in the map is Litres/min so divide by 60 to get Units per second.
 			Return _map.GetFlowRate(compressorRpm) / 60
@@ -120,7 +122,7 @@ Namespace Pneumatics
 		''' </summary>
 		''' <returns></returns>
 		''' <remarks></remarks>
-		Public Function GetPowerCompressorOff() As Single Implements IM4_AirCompressor.GetPowerCompressorOff
+		Public Function GetPowerCompressorOff() As Watt Implements IM4_AirCompressor.GetPowerCompressorOff
 			Return GetCompressorPower(False)
 		End Function
 
@@ -129,7 +131,7 @@ Namespace Pneumatics
 		''' </summary>
 		''' <returns></returns>
 		''' <remarks></remarks>
-		Public Function GetPowerCompressorOn() As Single Implements IM4_AirCompressor.GetPowerCompressorOn
+		Public Function GetPowerCompressorOn() As Watt Implements IM4_AirCompressor.GetPowerCompressorOn
 			Return GetCompressorPower(True)
 		End Function
 
@@ -138,9 +140,9 @@ Namespace Pneumatics
 		''' </summary>
 		''' <returns></returns>
 		''' <remarks></remarks>
-		Public Function GetPowerDifference() As Single Implements IM4_AirCompressor.GetPowerDifference
-			Dim powerOn As Single = GetPowerCompressorOn()
-			Dim powerOff As Single = GetPowerCompressorOff()
+		Public Function GetPowerDifference() As Watt Implements IM4_AirCompressor.GetPowerDifference
+			Dim powerOn As Watt = GetPowerCompressorOn()
+			Dim powerOff As Watt = GetPowerCompressorOff()
 			Return powerOn - powerOff
 		End Function
 
@@ -150,8 +152,8 @@ Namespace Pneumatics
 		''' <param name="compressorOn">Is compressor on</param>
 		''' <returns></returns>
 		''' <remarks></remarks>
-		Private Function GetCompressorPower(ByVal compressorOn As Boolean) As Single
-			Dim compressorRpm As Single = _signals.EngineSpeed * PulleyGearRatio
+		Private Function GetCompressorPower(ByVal compressorOn As Boolean) As Watt
+			Dim compressorRpm As Double = _signals.EngineSpeed * PulleyGearRatio
 			If compressorOn Then
 				Return _map.GetPowerCompressorOn(compressorRpm)
 			Else
@@ -164,10 +166,10 @@ Namespace Pneumatics
 		''' </summary>
 		''' <returns></returns>
 		''' <remarks></remarks>
-		Public Function GetAveragePowerDemandPerCompressorUnitFlowRate() As Single _
+		Public Function GetAveragePowerDemandPerCompressorUnitFlowRate() As SI _
 			Implements IM4_AirCompressor.GetAveragePowerDemandPerCompressorUnitFlowRate
 
-			Return _map.GetAveragePowerDemandPerCompressorUnitFlowRate()
+			Return _map.GetAveragePowerDemandPerCompressorUnitFlowRate().SI()
 		End Function
 	End Class
 End Namespace

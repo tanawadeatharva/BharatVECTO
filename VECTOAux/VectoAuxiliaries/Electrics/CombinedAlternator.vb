@@ -11,6 +11,7 @@ Imports DocumentFormat.OpenXml.Spreadsheet
 Imports Newtonsoft.Json
 Imports VectoAuxiliaries
 Imports System.Globalization
+Imports TUGraz.VectoCommon.Utils
 
 
 Namespace Electrics
@@ -26,11 +27,11 @@ Namespace Electrics
 		Private AverageAlternatorsEfficiency As AlternatorMapValues
 
 		'Interface Implementation
-		Public Function GetEfficiency(ByVal CrankRPM As Single, ByVal Amps As Single) As AlternatorMapValues _
+		Public Function GetEfficiency(ByVal CrankRPM As Double, ByVal Amps As Ampere) As AlternatorMapValues _
 			Implements IAlternatorMap.GetEfficiency
 
 			altSignals.CrankRPM = CrankRPM
-			altSignals.CurrentDemandAmps = Amps / Alternators.Count
+			altSignals.CurrentDemandAmps = (Amps.Value() / Alternators.Count).SI(Of Ampere)()
 
 			Dim alternatorMapValues As AlternatorMapValues = Nothing
 
@@ -100,8 +101,8 @@ Namespace Electrics
 			End If
 
 			' Calculate alternators average which is used only in the pre-run
-			Dim efficiencySum As Single
-			Dim efficiencyAverage As Single
+			Dim efficiencySum As Double
+			Dim efficiencyAverage As Double
 
 			For Each alt As IAlternator In Alternators
 				efficiencySum += alt.InputTable2000.ElementAt(1).Eff
@@ -237,7 +238,8 @@ Namespace Electrics
 			Dim returnValue As Boolean = True
 			Dim sb As New StringBuilder()
 			Dim row As Integer = 0
-			Dim amps, eff As Single
+			Dim amps As Double
+			Dim eff As Double
 
 			'write headers  
 			sb.AppendLine("[AlternatorName],[RPM],[Amps],[Efficiency],[PulleyRatio]")
@@ -427,7 +429,7 @@ Namespace Electrics
 				If other.Alternators.Where(Function(f) f.AlternatorName = alt.AlternatorName).Count() <> 1 Then Return False
 
 				'get the alternator to compare and compare it.
-				If Not alt.IsEqualTo(other.Alternators.first(Function(f) f.AlternatorName = alt.AlternatorName)) Then Return False
+				If Not alt.IsEqualTo(other.Alternators.First(Function(f) f.AlternatorName = alt.AlternatorName)) Then Return False
 
 			Next
 
