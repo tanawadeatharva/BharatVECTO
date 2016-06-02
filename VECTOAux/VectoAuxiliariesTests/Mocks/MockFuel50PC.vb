@@ -3,20 +3,21 @@ Imports VectoAuxiliaries.Pneumatics
 Imports VectoAuxiliaries.Hvac
 Imports VectoAuxiliaries.DownstreamModules
 Imports NUnit.Framework
+Imports TUGraz.VectoCommon.Utils
 Imports VectoAuxiliaries
 
-public class MockFuel50PC
+Public Class MockFuel50PC
 	Implements IFuelConsumptionMap
 
-	Public Function fFCdelaunay_Intp(nU As Single, Tq As Single) As Single
+	Public Function fFCdelaunay_Intp(nU As Double, Tq As Double) As Double
 
 		Return (nU + Tq) * 0.5
 	End Function
 
 
-	Public Function GetFuelConsumption(torque As Double, angularVelocity As Double) As Double _
+	Public Function GetFuelConsumption(torque As NewtonMeter, angularVelocity As Double) As GramPerSecond _
 		Implements IFuelConsumptionMap.GetFuelConsumption
-		Return fFCdelaunay_Intp(angularVelocity, torque)
+		Return (fFCdelaunay_Intp(angularVelocity, torque.Value()) / 3600).SI(Of GramPerSecond)()
 	End Function
 End Class
 
