@@ -137,60 +137,60 @@ namespace TUGraz.VectoCore.Models.SimulationComponent.Impl
 			_fcMapAdapter.AllowExtrapolation = true;
 			// cycleStep has to be called here and not in DoCommit, write is called before Commit!
 			var message = String.Empty;
-			Auxiliaries.CycleStep(CurrentState.dt.Value(), ref message);
+			Auxiliaries.CycleStep(CurrentState.dt, ref message);
 			Log.Warn(message);
 
 			container[ModalResultField.P_aux] = CurrentState.PowerDemand;
 
 			container[ModalResultField.AA_NonSmartAlternatorsEfficiency] = Auxiliaries.AA_NonSmartAlternatorsEfficiency;
 			if (Auxiliaries.AA_SmartIdleCurrent_Amps != null) {
-				container[ModalResultField.AA_SmartIdleCurrent_Amps] = Auxiliaries.AA_SmartIdleCurrent_Amps.Value.SI<Ampere>();
+				container[ModalResultField.AA_SmartIdleCurrent_Amps] = Auxiliaries.AA_SmartIdleCurrent_Amps;
 			}
 			container[ModalResultField.AA_SmartIdleAlternatorsEfficiency] = Auxiliaries.AA_SmartIdleAlternatorsEfficiency;
 			if (Auxiliaries.AA_SmartTractionCurrent_Amps != null) {
 				container[ModalResultField.AA_SmartTractionCurrent_Amps] =
-					Auxiliaries.AA_SmartTractionCurrent_Amps.Value.SI<Ampere>();
+					Auxiliaries.AA_SmartTractionCurrent_Amps;
 			}
 			container[ModalResultField.AA_SmartTractionAlternatorEfficiency] = Auxiliaries.AA_SmartTractionAlternatorEfficiency;
 			if (Auxiliaries.AA_SmartOverrunCurrent_Amps != null) {
-				container[ModalResultField.AA_SmartOverrunCurrent_Amps] = Auxiliaries.AA_SmartOverrunCurrent_Amps.Value.SI<Ampere>();
+				container[ModalResultField.AA_SmartOverrunCurrent_Amps] = Auxiliaries.AA_SmartOverrunCurrent_Amps;
 			}
 			container[ModalResultField.AA_SmartOverrunAlternatorEfficiency] = Auxiliaries.AA_SmartOverrunAlternatorEfficiency;
 			if (Auxiliaries.AA_CompressorFlowRate_LitrePerSec != null) {
 				container[ModalResultField.AA_CompressorFlowRate_LitrePerSec] =
-					new SI(Auxiliaries.AA_CompressorFlowRate_LitrePerSec.Value);
+					Auxiliaries.AA_CompressorFlowRate_LitrePerSec;
 			}
 			container[ModalResultField.AA_OverrunFlag] = Auxiliaries.AA_OverrunFlag;
 			container[ModalResultField.AA_EngineIdleFlag] = Auxiliaries.AA_EngineIdleFlag;
 			container[ModalResultField.AA_CompressorFlag] = Auxiliaries.AA_CompressorFlag;
 			if (Auxiliaries.AA_TotalCycleFC_Grams != null) {
-				container[ModalResultField.AA_TotalCycleFC_Grams] = new SI(Auxiliaries.AA_TotalCycleFC_Grams.Value);
+				container[ModalResultField.AA_TotalCycleFC_Grams] = Auxiliaries.AA_TotalCycleFC_Grams;
 			}
 			if (Auxiliaries.AA_TotalCycleFC_Litres != null) {
-				container[ModalResultField.AA_TotalCycleFC_Litres] = new SI(Auxiliaries.AA_TotalCycleFC_Litres.Value);
+				container[ModalResultField.AA_TotalCycleFC_Litres] = Auxiliaries.AA_TotalCycleFC_Litres;
 			}
 			if (Auxiliaries.AA_AveragePowerDemandCrankHVACMechanicals != null) {
 				container[ModalResultField.AA_AveragePowerDemandCrankHVACMechanicals] =
-					new SI(Auxiliaries.AA_AveragePowerDemandCrankHVACMechanicals.Value);
+					Auxiliaries.AA_AveragePowerDemandCrankHVACMechanicals;
 			}
 			if (Auxiliaries.AA_AveragePowerDemandCrankHVACElectricals != null) {
 				container[ModalResultField.AA_AveragePowerDemandCrankHVACElectricals] =
-					new SI(Auxiliaries.AA_AveragePowerDemandCrankHVACElectricals.Value);
+					Auxiliaries.AA_AveragePowerDemandCrankHVACElectricals;
 			}
 			if (Auxiliaries.AA_AveragePowerDemandCrankElectrics != null) {
 				container[ModalResultField.AA_AveragePowerDemandCrankElectrics] =
-					new SI(Auxiliaries.AA_AveragePowerDemandCrankElectrics.Value);
+					Auxiliaries.AA_AveragePowerDemandCrankElectrics;
 			}
 			if (Auxiliaries.AA_AveragePowerDemandCrankPneumatics != null) {
 				container[ModalResultField.AA_AveragePowerDemandCrankPneumatics] =
-					new SI(Auxiliaries.AA_AveragePowerDemandCrankPneumatics.Value);
+					Auxiliaries.AA_AveragePowerDemandCrankPneumatics;
 			}
 			if (Auxiliaries.AA_TotalCycleFuelConsumptionCompressorOff != null) {
 				container[ModalResultField.AA_TotalCycleFuelConsumptionCompressorOff] =
-					new SI(Auxiliaries.AA_TotalCycleFuelConsumptionCompressorOff.Value);
+					Auxiliaries.AA_TotalCycleFuelConsumptionCompressorOff;
 			}
 			container[ModalResultField.AA_TotalCycleFuelConsumptionCompressorOn] =
-				new SI(Auxiliaries.AA_TotalCycleFuelConsumptionCompressorOn.Value);
+				Auxiliaries.AA_TotalCycleFuelConsumptionCompressorOn;
 		}
 
 		protected override void DoCommitSimulationStep()
@@ -235,7 +235,7 @@ namespace TUGraz.VectoCore.Models.SimulationComponent.Impl
 			//mAAUX_Global.Internal_Engine_Power;
 			//'Power coming out of Advanced Model is in Watts.
 
-			return ((double)Auxiliaries.AuxiliaryPowerAtCrankWatts).SI<Watt>();
+			return Auxiliaries.AuxiliaryPowerAtCrankWatts;
 		}
 
 		protected class FuelConsumptionAdapter : IFuelConsumptionMap
@@ -244,10 +244,10 @@ namespace TUGraz.VectoCore.Models.SimulationComponent.Impl
 
 			public bool AllowExtrapolation { get; set; }
 
-			public double GetFuelConsumption(double torque, double angularVelocity)
+			public GramPerSecond GetFuelConsumption(NewtonMeter torque, double angularVelocity)
 			{
-				return FcMap.GetFuelConsumption(torque.SI<NewtonMeter>(), angularVelocity.RPMtoRad(), AllowExtrapolation).Value() *
-						1000 * 3600;
+				return (FcMap.GetFuelConsumption(torque, angularVelocity.RPMtoRad(), AllowExtrapolation).Value() *
+						1000 * 3600).SI<GramPerSecond>();
 			}
 		}
 

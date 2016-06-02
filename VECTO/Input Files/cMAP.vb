@@ -9,6 +9,7 @@
 '
 ' See the LICENSE.txt for the specific language governing permissions and limitations.
 Imports System.Collections.Generic
+Imports TUGraz.VectoCommon.Utils
 Imports VectoAuxiliaries
 
 Public Class cMAP
@@ -187,9 +188,9 @@ lbEr:
 
 #End Region
 
-	Public Function GetFuelConsumption(torque As Double, angularVelocity As Double) As Double _
+	Public Function GetFuelConsumption(torque As NewtonMeter, angularVelocity As Double) As GramPerSecond _
 		Implements IFuelConsumptionMap.GetFuelConsumption
-		Return fFCdelaunay_Intp(angularVelocity, torque)
+		Return (fFCdelaunay_Intp(angularVelocity, torque.Value()) / 3600).SI(Of GramPerSecond)()
 	End Function
 End Class
 

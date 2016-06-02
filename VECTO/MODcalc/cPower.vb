@@ -9,6 +9,7 @@
 '
 ' See the LICENSE.txt for the specific language governing permissions and limitations.
 Imports System.Collections.Generic
+Imports TUGraz.VectoCommon.Utils
 
 Public Class cPower
 	Private ClutchNorm As Single	'Normalized clutch speed
@@ -1558,32 +1559,36 @@ lb_nOK:
 				mAAUX_Global.advancedAuxModel.Signals.EngineDrivelineTorque = mAAUX_Global.EngineDrivelineTorque
 
 
-				advancedAuxModel.CycleStep(1, message)
+				advancedAuxModel.CycleStep(1.SI(Of Second), message)
 
 
 				Try
 
 					'Add Mod Data
-					ModData.AA_NonSmartAlternatorsEfficiency.Add(advancedAuxModel.AA_NonSmartAlternatorsEfficiency)
-					ModData.AA_SmartIdleCurrent_Amps.Add(advancedAuxModel.AA_SmartIdleCurrent_Amps)
-					ModData.AA_SmartIdleAlternatorsEfficiency.Add(advancedAuxModel.AA_SmartIdleAlternatorsEfficiency)
-					ModData.AA_SmartTractionCurrent_Amps.Add(advancedAuxModel.AA_SmartTractionCurrent_Amps)
-					ModData.AA_SmartTractionAlternatorEfficiency.Add(advancedAuxModel.AA_SmartTractionAlternatorEfficiency)
-					ModData.AA_SmartOverrunCurrent_Amps.Add(advancedAuxModel.AA_SmartOverrunCurrent_Amps)
-					ModData.AA_SmartOverrunAlternatorEfficiency.Add(advancedAuxModel.AA_SmartOverrunAlternatorEfficiency)
-					ModData.AA_CompressorFlowRate_LitrePerSec.Add(advancedAuxModel.AA_CompressorFlowRate_LitrePerSec)
-					ModData.AA_OverrunFlag.Add(advancedAuxModel.AA_OverrunFlag)
-					ModData.AA_EngineIdleFlag.Add(advancedAuxModel.AA_EngineIdleFlag)
-					ModData.AA_CompressorFlag.Add(advancedAuxModel.AA_CompressorFlag)
-					ModData.AA_TotalCycleFC_Grams.Add(advancedAuxModel.AA_TotalCycleFC_Grams)
-					ModData.AA_TotalCycleFC_Litres.Add(advancedAuxModel.AA_TotalCycleFC_Litres)
+					MODdata.AA_NonSmartAlternatorsEfficiency.Add(advancedAuxModel.AA_NonSmartAlternatorsEfficiency())
+					MODdata.AA_SmartIdleCurrent_Amps.Add(advancedAuxModel.AA_SmartIdleCurrent_Amps().Value())
+					MODdata.AA_SmartIdleAlternatorsEfficiency.Add(advancedAuxModel.AA_SmartIdleAlternatorsEfficiency())
+					MODdata.AA_SmartTractionCurrent_Amps.Add(advancedAuxModel.AA_SmartTractionCurrent_Amps().Value())
+					MODdata.AA_SmartTractionAlternatorEfficiency.Add(advancedAuxModel.AA_SmartTractionAlternatorEfficiency())
+					MODdata.AA_SmartOverrunCurrent_Amps.Add(advancedAuxModel.AA_SmartOverrunCurrent_Amps().Value())
+					MODdata.AA_SmartOverrunAlternatorEfficiency.Add(advancedAuxModel.AA_SmartOverrunAlternatorEfficiency())
+					MODdata.AA_CompressorFlowRate_LitrePerSec.Add(advancedAuxModel.AA_CompressorFlowRate_LitrePerSec().Value())
+					MODdata.AA_OverrunFlag.Add(advancedAuxModel.AA_OverrunFlag())
+					MODdata.AA_EngineIdleFlag.Add(advancedAuxModel.AA_EngineIdleFlag)
+					MODdata.AA_CompressorFlag.Add(advancedAuxModel.AA_CompressorFlag())
+					MODdata.AA_TotalCycleFC_Grams.Add(advancedAuxModel.AA_TotalCycleFC_Grams().Value())
+					MODdata.AA_TotalCycleFC_Litres.Add(advancedAuxModel.AA_TotalCycleFC_Litres().Value())
 
-					MODdata.AA_AveragePowerDemandCrankHVACMechanicals.Add(advancedAuxModel.AA_AveragePowerDemandCrankHVACMechanicals)
-					MODdata.AA_AveragePowerDemandCrankHVACElectricals.Add(advancedAuxModel.AA_AveragePowerDemandCrankHVACElectricals)
-					MODdata.AA_AveragePowerDemandCrankElectrics.Add(advancedAuxModel.AA_AveragePowerDemandCrankElectrics)
-					MODdata.AA_AveragePowerDemandCrankPneumatics.Add(advancedAuxModel.AA_AveragePowerDemandCrankPneumatics)
-					MODdata.AA_TotalCycleFuelConsumptionCompressorOff.Add(advancedAuxModel.AA_TotalCycleFuelConsumptionCompressorOff)
-					MODdata.AA_TotalCycleFuelConsumptionCompressorOn.Add(advancedAuxModel.AA_TotalCycleFuelConsumptionCompressorOn)
+					MODdata.AA_AveragePowerDemandCrankHVACMechanicals.Add(
+						advancedAuxModel.AA_AveragePowerDemandCrankHVACMechanicals().Value())
+					MODdata.AA_AveragePowerDemandCrankHVACElectricals.Add(
+						advancedAuxModel.AA_AveragePowerDemandCrankHVACElectricals().Value())
+					MODdata.AA_AveragePowerDemandCrankElectrics.Add(advancedAuxModel.AA_AveragePowerDemandCrankElectrics().Value())
+					MODdata.AA_AveragePowerDemandCrankPneumatics.Add(advancedAuxModel.AA_AveragePowerDemandCrankPneumatics().Value())
+					MODdata.AA_TotalCycleFuelConsumptionCompressorOff.Add(
+						advancedAuxModel.AA_TotalCycleFuelConsumptionCompressorOff().Value())
+					MODdata.AA_TotalCycleFuelConsumptionCompressorOn.Add(
+						advancedAuxModel.AA_TotalCycleFuelConsumptionCompressorOn().Value())
 
 
 					'TODO:DIAGNOSTICS - REMOVE WHEN TESTED
@@ -2753,7 +2758,7 @@ lb10:
 				mAAUX_Global.advancedAuxModel.Signals.Internal_Engine_Power = mAAUX_Global.Internal_Engine_Power
 
 				'Power coming out of Advanced Model is in Watts.
-				power = (advancedAuxModel.AuxiliaryPowerAtCrankWatts / 1000)
+				power = (advancedAuxModel.AuxiliaryPowerAtCrankWatts().Value() / 1000)
 
 				'Glenn: Comment the previous line and uncomment the next line to include the classic auxilaries power togeher with the advanced auxiliary power.
 				'power = VEC.PauxSum(t, nU) + (advancedAuxModel.AuxiliaryPowerAtCrankWatts / 1000)
