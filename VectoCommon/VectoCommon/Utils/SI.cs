@@ -249,6 +249,47 @@ namespace TUGraz.VectoCommon.Utils
 	}
 
 	/// <summary>
+	/// SI Class for Gram
+	/// </summary>
+	public class Gram : SIBase<Gram>
+	{
+		private static readonly Unit[] NumeratorDefault = { Unit.g };
+
+		[DebuggerHidden]
+		private Gram(double val) : base(val, NumeratorDefault) {}
+	}
+
+
+	public class GramPerSecond : SIBase<GramPerSecond>
+	{
+		private static readonly Unit[] NumeratorDefault = { Unit.g };
+		private static readonly Unit[] DenominatorDefault = { Unit.s };
+
+		private GramPerSecond(double val) : base(val, NumeratorDefault, DenominatorDefault) {}
+
+		public static Gram operator *(GramPerSecond gps, Second s)
+		{
+			return SIBase<Gram>.Create(gps.Val * s.Value());
+		}
+	}
+
+	public class GramPerLiter : SIBase<GramPerLiter>
+	{
+		private static readonly Unit[] NumeratorDefault = { Unit.g };
+		private static readonly Unit[] DenominatorDefault = { Unit.liter };
+
+		private GramPerLiter(double val) : base(val, NumeratorDefault, DenominatorDefault) {}
+	}
+
+	public class LiterPerHour : SIBase<LiterPerHour>
+	{
+		private static readonly Unit[] NumeratorDefault = { Unit.liter };
+		private static readonly Unit[] DenominatorDefault = { Unit.h };
+
+		private LiterPerHour(double val) : base(val, NumeratorDefault, DenominatorDefault) {}
+	}
+
+	/// <summary>
 	/// SI Class for Kilogram [kg].
 	/// </summary>
 	public class Kilogram : SIBase<Kilogram>
@@ -274,6 +315,53 @@ namespace TUGraz.VectoCommon.Utils
 		public static Newton operator *(Kilogram kg, MeterPerSquareSecond m)
 		{
 			return SIBase<Newton>.Create(kg.Val * m.Value());
+		}
+	}
+
+
+	public class Liter : SIBase<Liter>
+	{
+		private static readonly Unit[] NumeratorDefault = { Unit.liter };
+
+		[DebuggerHidden]
+		private Liter(double val) : base(val, NumeratorDefault) {}
+	}
+
+	/// <summary>
+	/// 
+	/// </summary>
+	public class NormLiter : SIBase<NormLiter>
+	{
+		private static readonly Unit[] NumeratorDefault = { Unit.NI };
+
+		[DebuggerHidden]
+		private NormLiter(double val) : base(val, NumeratorDefault) {}
+
+		public static NormLiterPerSecond operator /(NormLiter nl, Second s)
+		{
+			return SIBase<NormLiterPerSecond>.Create(nl.Val / s.Value());
+		}
+	}
+
+	/// <summary>
+	/// 
+	/// </summary>
+	public class NormLiterPerSecond : SIBase<NormLiterPerSecond>
+	{
+		private static readonly Unit[] NumeratorDefault = { Unit.NI };
+		private static readonly Unit[] DenominatorDefault = { Unit.s };
+
+		[DebuggerHidden]
+		private NormLiterPerSecond(double val) : base(val, NumeratorDefault, DenominatorDefault) {}
+
+		public static NormLiter operator *(NormLiterPerSecond nips, Second s)
+		{
+			return SIBase<NormLiter>.Create(nips.Val * s.Value());
+		}
+
+		public static NormLiterPerSecond operator *(NormLiterPerSecond nps, double val)
+		{
+			return Create(nps.Val * val);
 		}
 	}
 
@@ -413,7 +501,50 @@ namespace TUGraz.VectoCommon.Utils
 		{
 			return SIBase<WattSecond>.Create(watt.Val * second.Value());
 		}
+
+		[DebuggerHidden]
+		public static Watt operator *(Watt watt, double val)
+		{
+			return Create(watt.Val * val);
+		}
 	}
+
+	public class Joule : SIBase<Joule>
+	{
+		private static readonly Unit[] NumeratorDefault = { Unit.W, Unit.s };
+
+		[DebuggerHidden]
+		private Joule(double val) : base(val, NumeratorDefault) {}
+
+		public static implicit operator Joule(WattSecond self)
+		{
+			return Create(self.Value());
+		}
+
+		public static Joule operator +(Joule joule, WattSecond ws)
+		{
+			return Create(joule.Val + ws.Value());
+		}
+
+		public static Watt operator /(Joule joule, Second s)
+		{
+			return SIBase<Watt>.Create(joule.Val / s.Value());
+		}
+	}
+
+	public class JoulePerGram : SIBase<JoulePerGram>
+	{
+		private static readonly Unit[] NumeratorDefault = { Unit.W, Unit.s };
+		private static readonly Unit[] DenominatorDefault = { Unit.g };
+
+		private JoulePerGram(double val) : base(val, NumeratorDefault, DenominatorDefault) {}
+
+		public static Joule operator *(Gram gram, JoulePerGram jpg)
+		{
+			return SIBase<Joule>.Create(gram.Value() * jpg.Val);
+		}
+	}
+
 
 	/// <summary>
 	/// SI Class for one per second [1/s].
@@ -553,10 +684,52 @@ namespace TUGraz.VectoCommon.Utils
 		private NewtonMeterSecond(double val) : base(val, NumeratorDefault) {}
 	}
 
+	/// <summary>
+	/// 
+	/// </summary>
 	public class Ampere : SIBase<Ampere>
 	{
 		private static readonly Unit[] NumeratorDefault = { Unit.Ampere };
 		private Ampere(double val) : base(val, NumeratorDefault) {}
+
+		public static Watt operator *(Ampere ampere, Volt volt)
+		{
+			return SIBase<Watt>.Create(volt.Value() * ampere.Val);
+		}
+
+		public static Ampere operator *(Ampere ampere, double val)
+		{
+			return Create(ampere.Val * val);
+		}
+
+		public static Volt operator /(Watt watt, Ampere ampere)
+		{
+			return SIBase<Volt>.Create(watt.Value() / ampere.Value());
+		}
+
+		public static Watt operator /(Volt volt, Ampere ampere)
+		{
+			return SIBase<Watt>.Create(volt.Value() * ampere.Value());
+		}
+	}
+
+	/// <summary>
+	/// 
+	/// </summary>
+	public class Volt : SIBase<Volt>
+	{
+		private static readonly Unit[] NumeratorDefault = { Unit.Volt };
+		private Volt(double val) : base(val, NumeratorDefault) {}
+
+		public static Watt operator *(Volt volt, Ampere ampere)
+		{
+			return SIBase<Watt>.Create(volt.Val * ampere.Value());
+		}
+
+		public static Ampere operator /(Watt watt, Volt volt)
+		{
+			return SIBase<Ampere>.Create(watt.Value() / volt.Value());
+		}
 	}
 
 	/// <summary>
@@ -828,7 +1001,11 @@ namespace TUGraz.VectoCommon.Utils
 			h,
 			milli,
 			t,
-			Ampere
+			Ampere,
+			NI // norm liter
+			,
+			liter,
+			Volt
 		}
 
 		/// <summary>
