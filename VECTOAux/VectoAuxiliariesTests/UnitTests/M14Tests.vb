@@ -100,8 +100,8 @@ Namespace UnitTests
 			Dim ip1 As Double = 1000.0
 			Dim ip5 As Double = 3114
 
-			Dim expectedOut1 As Double = 780333.4
-			Dim expectedOut2 As Double = 0.934531
+			Dim expectedOut1 As Double = 1799.3334	' 780333.4
+			Dim expectedOut2 As Double = 2.13093
 
 			Dim m13 As New Mock(Of IM13)
 			Dim hvacSSM As New Mock(Of ISSMTOOL)
