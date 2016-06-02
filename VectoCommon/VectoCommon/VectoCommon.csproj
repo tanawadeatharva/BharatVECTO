@@ -66,6 +66,7 @@
     <Compile Include="Utils\IntExtensionMethods.cs" />
     <Compile Include="Utils\SI.cs" />
     <Compile Include="Utils\StringExtensionMethods.cs" />
+    <Compile Include="Utils\VectoMath.cs" />
   </ItemGroup>
   <ItemGroup>
     <None Include="packages.config" />
