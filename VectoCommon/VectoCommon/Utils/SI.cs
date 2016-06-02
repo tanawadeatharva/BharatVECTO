@@ -872,15 +872,8 @@ namespace TUGraz.VectoCommon.Utils
 			Reverse = reverse;
 			Exponent = exponent;
 
-			var tmpNumerator = numerator.ToList();
 			var tmpDenominator = denominator.ToList();
-
-			foreach (var v in tmpDenominator.ToArray().Where(v => tmpNumerator.Contains(v))) {
-				tmpNumerator.Remove(v);
-				tmpDenominator.Remove(v);
-			}
-
-			Numerator = tmpNumerator.ToArray();
+			Numerator = numerator.Where(n => !tmpDenominator.Remove(n)).ToArray();
 			Denominator = tmpDenominator.ToArray();
 
 			if (double.IsNaN(Val)) {

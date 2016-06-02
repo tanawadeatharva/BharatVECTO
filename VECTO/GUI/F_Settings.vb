@@ -57,7 +57,7 @@ Public Class F_Settings
 		Cfg.CO2perFC = CSng(Me.TbCO2toFC.Text)
 		'----------------------------------------------------
 
-		Cfg.ConfigSAVE()
+		Cfg.Save()
 
 		Me.Close()
 	End Sub

@@ -1,4 +1,4 @@
-' Copyright 2014 European Union.
+﻿' Copyright 2014 European Union.
 ' Licensed under the EUPL (the 'Licence');
 '
 ' * You may not use this work except in compliance with the Licence.
@@ -187,7 +187,7 @@ End Property
     ''' <returns>True if successful.</returns>
     ''' <remarks></remarks>
     Public Function SaveFile() As Boolean
-        Dim JSON As New cJSON
+        Dim JSON As New JSON
         Dim dic As Dictionary(Of String, Object)
 
         'Header
@@ -234,7 +234,7 @@ End Property
     ''' <remarks></remarks>
     Public Function ReadFile(Optional ByVal ShowMsg As Boolean = True) As Boolean
         Dim MsgSrc As String
-        Dim JSON As New cJSON
+        Dim JSON As New JSON
 
         MsgSrc = "ENG/ReadFile"
 

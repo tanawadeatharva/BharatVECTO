@@ -58,6 +58,7 @@ namespace TUGraz.VectoCore.Utils
 	/// </remarks>
 	public class VectoCSVFile : LoggingObject
 	{
+		private static readonly Regex HeaderFilter = new Regex(@"\[.*?\]|\<|\>", RegexOptions.Compiled);
 		private const char Delimiter = ',';
 		private const char Comment = '#';
 
@@ -162,9 +163,7 @@ namespace TUGraz.VectoCore.Utils
 		private static IEnumerable<string> GetColumns(string line, bool fullHeader = false)
 		{
 			if (!fullHeader) {
-				line = Regex.Replace(line, @"\[.*?\]", "");
-				line = line.Replace("<", "");
-				line = line.Replace(">", "");
+				line = HeaderFilter.Replace(line, "");
 			}
 			return line.Split(Delimiter).Select(col => col.Trim());
 		}

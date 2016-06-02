@@ -43,6 +43,6 @@ namespace TUGraz.VectoCore.Models.SimulationComponent.Data
 
 		CrossWindCorrectionMode CorrectionMode { get; }
 
-		Watt AverageAirDragPowerLoss(MeterPerSecond v1, MeterPerSecond v2, Second dt);
+		Watt AverageAirDragPowerLoss(MeterPerSecond v1, MeterPerSecond v2);
 	}
 }

@@ -36,6 +36,7 @@ using System.Drawing;
 using System.IO;
 using System.Linq;
 using System.Threading;
+using System.Threading.Tasks;
 using System.Windows.Forms.DataVisualization.Charting;
 using TUGraz.VectoCommon.Exceptions;
 using TUGraz.VectoCommon.Models;
@@ -100,19 +101,22 @@ namespace TUGraz.VectoCore.Utils
 			foreach (var point in points) {
 				// If the vertex lies inside the circumcircle of a triangle, the edges of this triangle are 
 				// added to the edge buffer and the triangle is removed from list.
-				var point1 = point;
-				var containerTriangles = triangles.FindAll(t => t.ContainsInCircumcircle(point1));
-				triangles = triangles.Except(containerTriangles).ToList();
-
 				// Remove duplicate edges. This leaves the convex hull of the edges.
 				// The edges in this convex hull are oriented counterclockwise!
-				var allEdges = containerTriangles.SelectMany(t => t.GetEdges()).ToList();
-				var groupedEdges = allEdges.GroupBy(edge => edge).ToList();
-				var convexHullEdges = groupedEdges.Where(group => group.Count() == 1).Select(group => group.Key).ToList();
 
-				var newTriangles = convexHullEdges.Select(edge => new Triangle(edge.P1, edge.P2, point)).ToList();
+				var newTriangles = triangles.Select((t, i) => Tuple.Create(i, t, t.ContainsInCircumcircle(point)))
+					.Where(t => t.Item3)
+					.Reverse()
+					.SelectMany(t => {
+						triangles.RemoveAt(t.Item1);
+						return t.Item2.GetEdges();
+					})
+					.GroupBy(edge => edge)
+					.Where(group => group.Count() == 1)
+					.Select(group => new Triangle(group.Key.P1, group.Key.P2, point)).ToList();
 
 				triangles.AddRange(newTriangles);
+
 				//DrawGraph(pointCount, triangles, superTriangle, xmin, xmax, ymin, ymax, point);
 				pointCount++;
 
@@ -148,18 +152,18 @@ namespace TUGraz.VectoCore.Utils
 			}
 		}
 
-
 		/// <summary>
 		/// Draws the delaunay map (except supertriangle).
 		/// </summary>
 		[Conditional("TRACE")]
-		private static void DrawGraph(int i, List<Triangle> triangles, Triangle superTriangle, Point[] points, Point lastPoint = null)
+		private static void DrawGraph(int i, List<Triangle> triangles, Triangle superTriangle, Point[] points,
+			Point lastPoint = null)
 		{
 			var xmin = points.Min(p => p.X);
 			var xmax = points.Max(p => p.X);
 			var ymin = points.Min(p => p.Y);
 			var ymax = points.Max(p => p.Y);
-			
+
 			using (var chart = new Chart { Width = 1000, Height = 1000 }) {
 				chart.ChartAreas.Add(new ChartArea("main") {
 					AxisX = new Axis { Minimum = Math.Min(xmin, xmin), Maximum = Math.Max(xmax, xmax) },

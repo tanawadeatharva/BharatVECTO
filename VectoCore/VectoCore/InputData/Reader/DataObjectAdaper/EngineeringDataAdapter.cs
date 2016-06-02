@@ -195,7 +195,7 @@ namespace TUGraz.VectoCore.InputData.Reader.DataObjectAdaper
 
 			var lookAheadData = new DriverData.LACData {
 				Enabled = driver.Lookahead.Enabled,
-				Deceleration = driver.Lookahead.Deceleration,
+				//Deceleration = driver.Lookahead.Deceleration,
 				MinSpeed = driver.Lookahead.MinSpeed,
 			};
 			var overspeedData = new DriverData.OverSpeedEcoRollData {

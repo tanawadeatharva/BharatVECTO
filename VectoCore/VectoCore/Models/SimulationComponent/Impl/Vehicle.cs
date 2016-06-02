@@ -66,8 +66,7 @@ namespace TUGraz.VectoCore.Models.SimulationComponent.Impl
 				Velocity = vehicleSpeed,
 				RollingResistance = RollingResistance(roadGradient),
 				SlopeResistance = SlopeResistance(roadGradient),
-				AirDragResistance = AirDragResistance(vehicleSpeed, 0.SI<MeterPerSquareSecond>(),
-					Constants.SimulationSettings.TargetTimeInterval),
+				AirDragResistance = AirDragResistance(vehicleSpeed, vehicleSpeed),
 			};
 			PreviousState.VehicleTractionForce = PreviousState.RollingResistance
 												+ PreviousState.AirDragResistance
@@ -81,7 +80,9 @@ namespace TUGraz.VectoCore.Models.SimulationComponent.Impl
 			//CurrentState.Velocity = vehicleSpeed + startAcceleration * Constants.SimulationSettings.TargetTimeInterval;
 			var vehicleAccelerationForce = DriverAcceleration(startAcceleration)
 											+ RollingResistance(roadGradient)
-											+ AirDragResistance(vehicleSpeed, startAcceleration, Constants.SimulationSettings.TargetTimeInterval)
+											+
+											AirDragResistance(vehicleSpeed,
+												vehicleSpeed + startAcceleration * Constants.SimulationSettings.TargetTimeInterval)
 											+ SlopeResistance(roadGradient);
 
 			var retVal = NextComponent.Initialize(vehicleAccelerationForce, vehicleSpeed);
@@ -103,7 +104,7 @@ namespace TUGraz.VectoCore.Models.SimulationComponent.Impl
 
 			CurrentState.DriverAcceleration = DriverAcceleration(acceleration);
 			CurrentState.RollingResistance = RollingResistance(gradient);
-			CurrentState.AirDragResistance = AirDragResistance(PreviousState.Velocity, acceleration, dt);
+			CurrentState.AirDragResistance = AirDragResistance(PreviousState.Velocity, CurrentState.Velocity);
 			CurrentState.SlopeResistance = SlopeResistance(gradient);
 
 			// DriverAcceleration = vehicleTractionForce - RollingResistance - AirDragResistance - SlopeResistance
@@ -191,7 +192,7 @@ namespace TUGraz.VectoCore.Models.SimulationComponent.Impl
 			AdvanceState();
 		}
 
-		protected internal Newton RollingResistance(Radian gradient)
+		public Newton RollingResistance(Radian gradient)
 		{
 			var weight = ModelData.TotalVehicleWeight();
 			var gravity = Physics.GravityAccelleration;
@@ -216,23 +217,26 @@ namespace TUGraz.VectoCore.Models.SimulationComponent.Impl
 			return retVal;
 		}
 
-		protected internal Newton AirDragResistance(MeterPerSecond previousVelocity, MeterPerSquareSecond acceleration,
-			Second dt)
+		public Newton AirDragResistance(MeterPerSecond previousVelocity, MeterPerSecond nextVelocity)
 		{
-			var vAverage = previousVelocity + acceleration * dt / 2;
+			var vAverage = (previousVelocity + nextVelocity) / 2;
 			if (vAverage.IsEqual(0)) {
 				return 0.SI<Newton>();
 			}
-			var result = ComputeAirDragPowerLoss(previousVelocity, previousVelocity + acceleration * dt, dt) /
-						vAverage;
+			var result = ComputeAirDragPowerLoss(previousVelocity, nextVelocity) / vAverage;
 
 			Log.Debug("AirDragResistance: {0}", result);
 			return result;
 		}
 
-		private Watt ComputeAirDragPowerLoss(MeterPerSecond v1, MeterPerSecond v2, Second dt)
+		//public Newton AirDragResistance(MeterPerSecond previousVelocity, MeterPerSquareSecond acceleration, Second dt)
+		//{
+		//	return AirDragResistance(previousVelocity, previousVelocity + acceleration * dt);
+		//}
+
+		private Watt ComputeAirDragPowerLoss(MeterPerSecond v1, MeterPerSecond v2)
 		{
-			return ModelData.CrossWindCorrectionCurve.AverageAirDragPowerLoss(v1, v2, dt);
+			return ModelData.CrossWindCorrectionCurve.AverageAirDragPowerLoss(v1, v2);
 		}
 
 		public class VehicleState

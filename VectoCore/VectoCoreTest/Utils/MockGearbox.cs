@@ -74,6 +74,10 @@ namespace TUGraz.VectoCore.Tests.Utils
 			get { return null; }
 		}
 
+		public Watt GearboxLoss(PerSecond inAngularVelocity, NewtonMeter inTorque)
+		{
+			return 0.SI<Watt>();
+		}
 
 		public void Connect(ITnOutPort other)
 		{
@@ -98,7 +102,6 @@ namespace TUGraz.VectoCore.Tests.Utils
 			}
 			throw new NotImplementedException();
 		}
-
 
 		protected override void DoWriteModalResults(IModalDataContainer container)
 		{

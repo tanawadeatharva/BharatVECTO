@@ -22,7 +22,7 @@ Class cVSUM
     Private VSUMentryList As List(Of String)     'Wird benötigt weil Dictionary nicht sortiert ist
                                                  'Needed because Dictionary is not sorted
 
-    Private vsumJSON As cJSON
+    Private vsumJSON As JSON
     Private ResList As List(Of Dictionary(Of String, Object))
 
 
@@ -523,7 +523,7 @@ Class cVSUM
         End Try
 
         'JSON
-        vsumJSON = New cJSON
+        vsumJSON = New JSON
 
         dic = New Dictionary(Of String, Object)
         dic.Add("CreatedBy", Lic.LicString & " (" & Lic.GUID & ")")
