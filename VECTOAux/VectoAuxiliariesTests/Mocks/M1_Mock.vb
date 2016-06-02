@@ -12,7 +12,7 @@ Public Class M1_Mock
 	Public _AveragePowerDemandAtAlternatorFromHVACElectricsWatts As Watt
 	Public _AveragePowerDemandAtCrankFromHVACElectricsWatts As Watt
 	Public _AveragePowerDemandAtCrankFromHVACMechanicalsWatts As Watt
-	Public _HVACFuelingLitresPerHour As LiterPerHour
+	Public _HVACFuelingLitresPerHour As LiterPerSecond
 
 	Public Function AveragePowerDemandAtAlternatorFromHVACElectricsWatts() As Watt _
 		Implements IM1_AverageHVACLoadDemand.AveragePowerDemandAtAlternatorFromHVACElectricsWatts
@@ -29,7 +29,7 @@ Public Class M1_Mock
 		Return _AveragePowerDemandAtCrankFromHVACMechanicalsWatts
 	End Function
 
-	Public Function HVACFuelingLitresPerHour() As LiterPerHour _
+	Public Function HVACFuelingLitresPerHour() As LiterPerSecond _
 		Implements IM1_AverageHVACLoadDemand.HVACFuelingLitresPerHour
 		Return _HVACFuelingLitresPerHour
 	End Function
@@ -48,7 +48,8 @@ Public Class M1_Mock
 			AveragePowerDemandAtAlternatorFromHVACElectricsWatts.SI(Of Watt)()
 		_AveragePowerDemandAtCrankFromHVACElectricsWatts = AveragePowerDemandAtCrankFromHVACElectricsWatts.SI(Of Watt)()
 		_AveragePowerDemandAtCrankFromHVACMechanicalsWatts = AveragePowerDemandAtCrankFromHVACMechanicalsWatts.SI(Of Watt)()
-		_HVACFuelingLitresPerHour = HVACFuelingLitresPerHour.SI(Of LiterPerHour)()
+		_HVACFuelingLitresPerHour = HVACFuelingLitresPerHour.SI().Liter.Per.Hour.Cast(Of LiterPerSecond)() _
+		'(Of LiterPerHour)()
 	End Sub
 End Class
 

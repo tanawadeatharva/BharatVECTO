@@ -25,14 +25,14 @@ Public Interface IAdvancedAuxiliaries
 
 	'Diagnostic Only - Remove when beta over.
 	ReadOnly Property AA_D_M12_P1X As Joule
-	ReadOnly Property AA_D_M12_P1Y As Gram
+	ReadOnly Property AA_D_M12_P1Y As Kilogram
 	ReadOnly Property AA_D_M12_P2X As Joule
-	ReadOnly Property AA_D_M12_P2Y As Gram
+	ReadOnly Property AA_D_M12_P2Y As Kilogram
 	ReadOnly Property AA_D_M12_P3X As Joule
-	ReadOnly Property AA_D_M12_P3Y As Gram
+	ReadOnly Property AA_D_M12_P3Y As Kilogram
 	ReadOnly Property AA_D_M12_XTAIN As Joule
-	ReadOnly Property AA_D_M12_INTERP1 As Gram
-	ReadOnly Property AA_D_M12_INTERP2 As Gram
+	ReadOnly Property AA_D_M12_INTERP1 As Kilogram
+	ReadOnly Property AA_D_M12_INTERP2 As Kilogram
 
 	'Additional Permenent Monitoring Signals - Required by engineering
 	ReadOnly Property AA_NonSmartAlternatorsEfficiency As Double
@@ -46,14 +46,14 @@ Public Interface IAdvancedAuxiliaries
 	ReadOnly Property AA_OverrunFlag As Boolean
 	ReadOnly Property AA_EngineIdleFlag As Integer?
 	ReadOnly Property AA_CompressorFlag As Boolean
-	ReadOnly Property AA_TotalCycleFC_Grams As Gram
+	ReadOnly Property AA_TotalCycleFC_Grams As Kilogram
 	ReadOnly Property AA_TotalCycleFC_Litres As Liter
 	ReadOnly Property AA_AveragePowerDemandCrankHVACMechanicals As Watt
 	ReadOnly Property AA_AveragePowerDemandCrankHVACElectricals As Watt
 	ReadOnly Property AA_AveragePowerDemandCrankElectrics As Watt
 	ReadOnly Property AA_AveragePowerDemandCrankPneumatics As Watt
-	ReadOnly Property AA_TotalCycleFuelConsumptionCompressorOff As Gram
-	ReadOnly Property AA_TotalCycleFuelConsumptionCompressorOn As Gram
+	ReadOnly Property AA_TotalCycleFuelConsumptionCompressorOff As Kilogram
+	ReadOnly Property AA_TotalCycleFuelConsumptionCompressorOn As Kilogram
 
 	''' <summary>
 	''' Total Cycle Fuel In Grams
@@ -61,7 +61,7 @@ Public Interface IAdvancedAuxiliaries
 	''' <value></value>
 	''' <returns></returns>
 	''' <remarks></remarks>
-	ReadOnly Property TotalFuelGRAMS As Gram
+	ReadOnly Property TotalFuelGRAMS As Kilogram
 
 	''' <summary>
 	''' Total Cycle Fuel in Litres

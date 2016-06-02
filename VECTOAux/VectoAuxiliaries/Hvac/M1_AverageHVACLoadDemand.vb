@@ -26,7 +26,7 @@ Namespace Hvac
 
 		Private _ElectricalPowerW As Watt
 		Private _MechanicalPowerW As Watt
-		Private _FuelingLPerH As LiterPerHour
+		Private _FuelingLPerH As LiterPerSecond
 
 
 		'Constructor
@@ -67,7 +67,7 @@ Namespace Hvac
 
 			_ElectricalPowerW = ssm.ElectricalWAdjusted.SI(Of Watt)()
 			_MechanicalPowerW = ssm.MechanicalWBaseAdjusted.SI(Of Watt)()
-			_FuelingLPerH = ssm.FuelPerHBaseAdjusted.SI(Of LiterPerHour)()
+			_FuelingLPerH = ssm.FuelPerHBaseAdjusted.SI().Liter.Per.Hour.Cast(Of LiterPerSecond)() ' SI(Of LiterPerHour)()
 		End Sub
 
 		'Public Methods - Implementation
@@ -89,7 +89,7 @@ Namespace Hvac
 			Return _ElectricalPowerW * (1 / _m0.AlternatorsEfficiency() / _alternatorGearEfficiency)
 		End Function
 
-		Public Function HVACFuelingLitresPerHour() As LiterPerHour _
+		Public Function HVACFuelingLitresPerHour() As LiterPerSecond _
 			Implements IM1_AverageHVACLoadDemand.HVACFuelingLitresPerHour
 
 			Return _FuelingLPerH

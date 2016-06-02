@@ -97,9 +97,8 @@ Namespace UnitTests
 		Public Sub ValuesTest()
 
 			'Arrange
-			Dim ip1 As Single = 1000.0F
-			Dim ip5 As Single = 3114
-			Dim ip6 As Single = 3114
+			Dim ip1 As Double = 1000.0
+			Dim ip5 As Double = 3114
 
 			Dim expectedOut1 As Double = 780333.4
 			Dim expectedOut2 As Double = 0.934531
@@ -111,7 +110,7 @@ Namespace UnitTests
 			Dim constants As IHVACConstants = New HVACConstants(835)
 
 			'Moq' Arrangements
-			m13.Setup(Function(x) x.WHTCTotalCycleFuelConsumptionGrams).Returns(ip1.SI(Of Gram))
+			m13.Setup(Function(x) x.WHTCTotalCycleFuelConsumptionGrams).Returns((ip1 / 1000).SI(Of Kilogram))
 			signals.Setup(Function(x) x.CurrentCycleTimeInSeconds).Returns(ip5)
 
 
@@ -119,7 +118,7 @@ Namespace UnitTests
 			Dim m14 As New M14(m13.Object, ssmMock, constants, signals.Object)
 
 			'Assert
-			Assert.AreEqual(expectedOut1, m14.TotalCycleFCGrams.Value(), 0.1)
+			Assert.AreEqual(expectedOut1.SI().Gramm.Value(), m14.TotalCycleFCGrams.Value(), 0.1)
 			Assert.AreEqual(expectedOut2, m14.TotalCycleFCLitres.Value(), 0.00001)
 		End Sub
 	End Class

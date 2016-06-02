@@ -60,8 +60,8 @@ Namespace UnitTests
 
 			Assert.AreEqual(target.LitresOfAirCompressorOnContinually.Value(), AG1, 0.000001)
 			Assert.AreEqual(target.LitresOfAirCompressorOnOnlyInOverrun.Value(), AG2, 0.000001)
-			Assert.AreEqual(target.TotalCycleFuelConsumptionCompressorOnContinuously.Value(), AG3, 0.000001)
-			Assert.AreEqual(target.TotalCycleFuelConsumptionCompressorOffContinuously.Value(), AG4, 0.000001)
+			Assert.AreEqual(target.TotalCycleFuelConsumptionCompressorOnContinuously.Value(), AG3.SI().Gramm.Value(), 0.000001)
+			Assert.AreEqual(target.TotalCycleFuelConsumptionCompressorOffContinuously.Value(), AG4.SI().Gramm.Value(), 0.000001)
 		End Sub
 
 
@@ -91,7 +91,8 @@ Namespace UnitTests
 			Dim sgnlsMock As New Mock(Of ISignals)
 			Dim psac As New Mock(Of IPneumaticsAuxilliariesConfig)
 
-			fMapMock.Setup(Function(x) x.GetFuelConsumption(1.SI(Of NewtonMeter), 1)).Returns(-1.SI(Of GramPerSecond)())
+			fMapMock.Setup(Function(x) x.GetFuelConsumption(1.SI(Of NewtonMeter), 1)).Returns(
+				(-1 / 1000).SI(Of KilogramPerSecond)())
 			m6Mock.Setup(Function(x) x.AvgPowerDemandAtCrankFromElectricsIncHVAC).Returns(IP1.SI(Of Watt))
 			m1Mock.Setup(Function(x) x.AveragePowerDemandAtCrankFromHVACMechanicalsWatts).Returns(IP2.SI(Of Watt))
 			m4Mock.Setup(Function(x) x.GetPowerCompressorOn).Returns(IP3.SI(Of Watt))

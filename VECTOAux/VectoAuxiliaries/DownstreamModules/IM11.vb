@@ -46,7 +46,7 @@ Namespace DownstreamModules
 		''' <value></value>
 		''' <returns></returns>
 		''' <remarks></remarks>
-		ReadOnly Property TotalCycleFuelConsumptionSmartElectricalLoad As Gram
+		ReadOnly Property TotalCycleFuelConsumptionSmartElectricalLoad As Kilogram
 
 		''' <summary>
 		''' Total Cycle Fuel Consumption: Zero Electrical Load (g)
@@ -54,7 +54,7 @@ Namespace DownstreamModules
 		''' <value></value>
 		''' <returns></returns>
 		''' <remarks></remarks>
-		ReadOnly Property TotalCycleFuelConsumptionZeroElectricalLoad As Gram
+		ReadOnly Property TotalCycleFuelConsumptionZeroElectricalLoad As Kilogram
 
 		''' <summary>
 		''' Stop Start Sensitive: Total Cycle Electrical Demand (J)
@@ -70,7 +70,7 @@ Namespace DownstreamModules
 		''' <value></value>
 		''' <returns></returns>
 		''' <remarks></remarks>
-		ReadOnly Property TotalCycleFuelConsuptionAverageLoads As Gram
+		ReadOnly Property TotalCycleFuelConsuptionAverageLoads As Kilogram
 
 		''' <summary>
 		''' Clears aggregated values ( Sets them to zero ).

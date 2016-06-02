@@ -30,7 +30,7 @@ Namespace DownstreamModules
 		'Staging Calculations
 		Private ReadOnly Property S1 As Joule
 			Get
-				Return (m13.WHTCTotalCycleFuelConsumptionGrams.Value * constants.DieselGCVJperGram).SI(Of Joule)()
+				Return (m13.WHTCTotalCycleFuelConsumptionGrams.Value * constants.DieselGCVJperGram * 1000).SI(Of Joule)()
 			End Get
 		End Property
 
@@ -46,25 +46,28 @@ Namespace DownstreamModules
 			End Get
 		End Property
 
-		Private ReadOnly Property S4 As Double 'kW
+		Private ReadOnly Property S4 As Watt 'kW
 			Get
-				Return (S3 / signals.CurrentCycleTimeInSeconds.SI(Of Second)()).Value() / 1000.0
+				Return (S3 / signals.CurrentCycleTimeInSeconds.SI(Of Second)())
 			End Get
 		End Property
 
-		Private ReadOnly Property S5 As Double ' hour
+		Private ReadOnly Property S5 As Second ' hour
 			Get
-				Return signals.CurrentCycleTimeInSeconds / 3600
+				Return signals.CurrentCycleTimeInSeconds.SI(Of Second)()  ' / 3600
 			End Get
 		End Property
 
-		Private ReadOnly Property S6 As Gram
+		Private ReadOnly Property S6 As Kilogram
 			Get
-				Return (S5 * ssm.FuelPerHBaseAsjusted(S4) * (constants.FuelDensity * 1000)).SI(Of Gram)()
+				'Return (S5.Value() * ssm.FuelPerHBaseAsjusted(S4.Value() / 1000) / 3600 * (constants.FuelDensity)).SI(Of Kilogram)()
+				Return _
+					(S5 * ssm.FuelPerHBaseAsjusted(S4.Value() / 1000).SI().Liter.Per.Hour * constants.FuelDensity.SI().Gramm.Per.Liter).
+						Cast(Of Kilogram)()
 			End Get
 		End Property
 
-		Private ReadOnly Property S7 As Gram
+		Private ReadOnly Property S7 As Kilogram
 			Get
 				Return m13.WHTCTotalCycleFuelConsumptionGrams + S6
 			End Get
@@ -72,11 +75,11 @@ Namespace DownstreamModules
 
 		Private ReadOnly Property S8 As Liter
 			Get
-				Return (S7.Value() / (constants.FuelDensity * 1000)).SI(Of Liter)()
+				Return (S7 / (constants.FuelDensity.SI().Gramm.Per.Liter)).Cast(Of Liter)()
 			End Get
 		End Property
 
-		Public ReadOnly Property TotalCycleFCGrams As Gram Implements IM14.TotalCycleFCGrams
+		Public ReadOnly Property TotalCycleFCGrams As Kilogram Implements IM14.TotalCycleFCGrams
 			Get
 				Return S7
 			End Get

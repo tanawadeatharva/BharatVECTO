@@ -25,10 +25,10 @@ Namespace DownstreamModules
 		Private AG1 As Joule
 		Private AG2 As Joule
 		Private AG3 As Joule
-		Private AG4 As Gram
-		Private AG5 As Gram
+		Private AG4 As Kilogram
+		Private AG5 As Kilogram
 		Private AG6 As Joule
-		Private AG7 As Gram
+		Private AG7 As Kilogram
 
 #End Region
 
@@ -89,22 +89,22 @@ Namespace DownstreamModules
 			End Get
 		End Property
 
-		Private ReadOnly Property Sum7 As GramPerSecond
+		Private ReadOnly Property Sum7 As KilogramPerSecond
 			Get
 
 				'SCM 3_02
-				Dim intrp1 As GramPerSecond = fmap.GetFuelConsumption(Sum6, signals.EngineSpeed)
-				intrp1 = If(Not Double.IsNaN(intrp1.Value()) AndAlso intrp1 > 0, intrp1, 0.SI(Of GramPerSecond))
+				Dim intrp1 As KilogramPerSecond = fmap.GetFuelConsumption(Sum6, signals.EngineSpeed)
+				intrp1 = If(Not Double.IsNaN(intrp1.Value()) AndAlso intrp1 > 0, intrp1, 0.SI(Of KilogramPerSecond))
 				Return intrp1
 			End Get
 		End Property
 
-		Private ReadOnly Property Sum8 As GramPerSecond
+		Private ReadOnly Property Sum8 As KilogramPerSecond
 			Get
 
 				'SCHM 3_2
-				Dim intrp2 As GramPerSecond = fmap.GetFuelConsumption(Sum5, signals.EngineSpeed)
-				intrp2 = If(Not Double.IsNaN(intrp2.Value()) AndAlso intrp2 > 0, intrp2, 0.SI(Of GramPerSecond))
+				Dim intrp2 As KilogramPerSecond = fmap.GetFuelConsumption(Sum5, signals.EngineSpeed)
+				intrp2 = If(Not Double.IsNaN(intrp2.Value()) AndAlso intrp2 > 0, intrp2, 0.SI(Of KilogramPerSecond))
 				Return intrp2
 			End Get
 		End Property
@@ -132,12 +132,12 @@ Namespace DownstreamModules
 			End Get
 		End Property
 
-		Private ReadOnly Property Sum12 As GramPerSecond
+		Private ReadOnly Property Sum12 As KilogramPerSecond
 			Get
 
 				'SCHM 3_2
-				Dim intrp3 As GramPerSecond = fmap.GetFuelConsumption(Sum11, signals.EngineSpeed)
-				intrp3 = If(Not Double.IsNaN(intrp3.Value()) AndAlso intrp3 > 0, intrp3, 0.SI(Of GramPerSecond))
+				Dim intrp3 As KilogramPerSecond = fmap.GetFuelConsumption(Sum11, signals.EngineSpeed)
+				intrp3 = If(Not Double.IsNaN(intrp3.Value()) AndAlso intrp3 > 0, intrp3, 0.SI(Of KilogramPerSecond))
 				Return intrp3
 			End Get
 		End Property
@@ -163,14 +163,14 @@ Namespace DownstreamModules
 			End Get
 		End Property
 		'OUT4
-		Public ReadOnly Property TotalCycleFuelConsumptionSmartElectricalLoad As Gram _
+		Public ReadOnly Property TotalCycleFuelConsumptionSmartElectricalLoad As Kilogram _
 			Implements IM11.TotalCycleFuelConsumptionSmartElectricalLoad
 			Get
 				Return AG4
 			End Get
 		End Property
 		'OUT5
-		Public ReadOnly Property TotalCycleFuelConsumptionZeroElectricalLoad As Gram _
+		Public ReadOnly Property TotalCycleFuelConsumptionZeroElectricalLoad As Kilogram _
 			Implements IM11.TotalCycleFuelConsumptionZeroElectricalLoad
 			Get
 				Return AG5
@@ -184,7 +184,7 @@ Namespace DownstreamModules
 			End Get
 		End Property
 		'OUT7
-		Public ReadOnly Property TotalCycleFuelConsuptionAverageLoads As Gram _
+		Public ReadOnly Property TotalCycleFuelConsuptionAverageLoads As Kilogram _
 			Implements IM11.TotalCycleFuelConsuptionAverageLoads
 			Get
 				Return AG7
@@ -203,10 +203,10 @@ Namespace DownstreamModules
 			AG1 = 0.SI(Of Joule)()
 			AG2 = 0.SI(Of Joule)()
 			AG3 = 0.SI(Of Joule)()
-			AG4 = 0.SI(Of Gram)()
-			AG5 = 0.SI(Of Gram)()
+			AG4 = 0.SI(Of Kilogram)()
+			AG5 = 0.SI(Of Kilogram)()
 			AG6 = 0.SI(Of Joule)()
-			AG7 = 0.SI(Of Gram)()
+			AG7 = 0.SI(Of Kilogram)()
 		End Sub
 
 		'Add to Aggregates dependent on cycle step time.
@@ -228,7 +228,7 @@ Namespace DownstreamModules
 				'MQ: No longer needed - already per Second 'These need to be divided by 3600 as the Fuel Map output is in Grams/Second.
 				AG4 += (Sum7 * stepTimeInSeconds)  '/ 3600
 				AG5 += (Sum8 * stepTimeInSeconds) ' / 3600
-				AG7 += (Sum12 * stepTimeInSeconds)			 '/ 3600
+				AG7 += (Sum12 * stepTimeInSeconds)				 '/ 3600
 			End If
 		End Sub
 

@@ -25,7 +25,7 @@ Namespace Electrics
 
 		Private _ElectricalPowerW As Watt
 		Private _MechanicalPowerW As Watt
-		Private _FuelingLPerH As LiterPerHour
+		Private _FuelingLPerH As LiterPerSecond
 
 		'Constructor
 		Public Sub New(electricalConsumers As IElectricalConsumerList, alternatorEfficiencyMap As IAlternatorMap,
@@ -45,7 +45,7 @@ Namespace Electrics
 
 			_ElectricalPowerW = ssmHvac.ElectricalWAdjusted.SI(Of Watt)()
 			_MechanicalPowerW = ssmHvac.MechanicalWBaseAdjusted.SI(Of Watt)()
-			_FuelingLPerH = ssmHvac.FuelPerHBaseAdjusted.SI(Of LiterPerHour)()
+			_FuelingLPerH = ssmHvac.FuelPerHBaseAdjusted.SI(Of LiterPerSecond)()
 		End Sub
 
 		'Public class outputs (Properties)

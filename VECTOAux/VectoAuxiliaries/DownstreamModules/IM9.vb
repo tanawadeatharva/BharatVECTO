@@ -53,7 +53,7 @@ Namespace DownstreamModules
 		''' <value></value>
 		''' <returns></returns>
 		''' <remarks></remarks>
-		ReadOnly Property TotalCycleFuelConsumptionCompressorOnContinuously As Gram
+		ReadOnly Property TotalCycleFuelConsumptionCompressorOnContinuously As Kilogram
 
 		''' <summary>
 		''' Total Cycle Fuel Consumption Compressor *OFF* Continuously (G)
@@ -61,7 +61,7 @@ Namespace DownstreamModules
 		''' <value></value>
 		''' <returns></returns>
 		''' <remarks></remarks>
-		ReadOnly Property TotalCycleFuelConsumptionCompressorOffContinuously As Gram
+		ReadOnly Property TotalCycleFuelConsumptionCompressorOffContinuously As Kilogram
 	End Interface
 End Namespace
 

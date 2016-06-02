@@ -23,7 +23,7 @@ Namespace DownstreamModules
 		''' <value></value>
 		''' <returns></returns>
 		''' <remarks>WHTC and Start Stop Adjusted</remarks>
-		ReadOnly Property WHTCTotalCycleFuelConsumptionGrams As Gram
+		ReadOnly Property WHTCTotalCycleFuelConsumptionGrams As Kilogram
 	End Interface
 End Namespace
 

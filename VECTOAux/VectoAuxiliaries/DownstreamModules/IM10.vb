@@ -18,23 +18,23 @@ Imports VectoAuxiliaries.DownstreamModules
 Namespace DownstreamModules
 	Public Interface IM10
 		'AverageLoadsFuelConsumptionInterpolatedForPneumatics
-		ReadOnly Property AverageLoadsFuelConsumptionInterpolatedForPneumatics As Gram
+		ReadOnly Property AverageLoadsFuelConsumptionInterpolatedForPneumatics As Kilogram
 
 		'Interpolated FC between points 2-3-1 Representing smart Pneumatics = Fuel consumption with smart Pneumatics and average electrical  power demand
-		ReadOnly Property FuelConsumptionSmartPneumaticsAndAverageElectricalPowerDemand As Gram
+		ReadOnly Property FuelConsumptionSmartPneumaticsAndAverageElectricalPowerDemand As Kilogram
 
 		Sub CycleStep(stepTimeInSeconds As Second)
 
 		'Added for diagnostic inspection purposes only, does not materially affect the class function.
 		ReadOnly Property P1X As NormLiter
-		ReadOnly Property P1Y As Gram
+		ReadOnly Property P1Y As Kilogram
 		ReadOnly Property P2X As NormLiter
-		ReadOnly Property P2Y As Gram
+		ReadOnly Property P2Y As Kilogram
 		ReadOnly Property P3X As NormLiter
-		ReadOnly Property P3Y As Gram
+		ReadOnly Property P3Y As Kilogram
 		ReadOnly Property XTAIN As NormLiter
-		ReadOnly Property INTRP1 As Gram
-		ReadOnly Property INTRP2 As Gram
+		ReadOnly Property INTRP1 As Kilogram
+		ReadOnly Property INTRP2 As Kilogram
 	End Interface
 End Namespace
 

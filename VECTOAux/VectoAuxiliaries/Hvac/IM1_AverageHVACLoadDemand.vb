@@ -38,7 +38,7 @@ Namespace Hvac
 		''' </summary>
 		''' <returns>Litres Per Hour</returns>
 		''' <remarks></remarks>
-		Function HVACFuelingLitresPerHour() As LiterPerHour
+		Function HVACFuelingLitresPerHour() As LiterPerSecond
 	End Interface
 End Namespace
 

@@ -272,12 +272,12 @@ Public Class AdvancedAuxiliaries
 		Throw New NotImplementedException
 	End Function
 
-	Public ReadOnly Property TotalFuelGRAMS As Gram Implements VectoAuxiliaries.IAdvancedAuxiliaries.TotalFuelGRAMS
+	Public ReadOnly Property TotalFuelGRAMS As Kilogram Implements VectoAuxiliaries.IAdvancedAuxiliaries.TotalFuelGRAMS
 		Get
 			If Not M13 Is Nothing Then
 				Return M14.TotalCycleFCGrams
 			Else
-				Return 0.SI(Of Gram)()
+				Return 0.SI(Of Kilogram)()
 			End If
 		End Get
 	End Property
@@ -412,7 +412,7 @@ Public Class AdvancedAuxiliaries
 		End Get
 	End Property
 
-	Public ReadOnly Property AA_TotalCycleFC_Grams As Gram Implements IAdvancedAuxiliaries.AA_TotalCycleFC_Grams
+	Public ReadOnly Property AA_TotalCycleFC_Grams As Kilogram Implements IAdvancedAuxiliaries.AA_TotalCycleFC_Grams
 		Get
 			Return M14.TotalCycleFCGrams
 		End Get
@@ -459,14 +459,14 @@ Public Class AdvancedAuxiliaries
 		End Get
 	End Property
 
-	Public ReadOnly Property AA_TotalCycleFuelConsumptionCompressorOff As Gram _
+	Public ReadOnly Property AA_TotalCycleFuelConsumptionCompressorOff As Kilogram _
 		Implements IAdvancedAuxiliaries.AA_TotalCycleFuelConsumptionCompressorOff
 		Get
 			Return M9.TotalCycleFuelConsumptionCompressorOffContinuously
 		End Get
 	End Property
 
-	Public ReadOnly Property AA_TotalCycleFuelConsumptionCompressorOn As Gram _
+	Public ReadOnly Property AA_TotalCycleFuelConsumptionCompressorOn As Kilogram _
 		Implements IAdvancedAuxiliaries.AA_TotalCycleFuelConsumptionCompressorOn
 		Get
 			Return M9.TotalCycleFuelConsumptionCompressorOnContinuously
@@ -477,13 +477,13 @@ Public Class AdvancedAuxiliaries
 	'TODO:REMOVE WHEN TESTING IS COMPLETE
 	'PURE DIAGNOSTICS SHOULD ONLY BE USED IN  MOD FOR ENGINEERING TESTS
 
-	Public ReadOnly Property AA_D_M12_INTERP1 As Gram Implements IAdvancedAuxiliaries.AA_D_M12_INTERP1
+	Public ReadOnly Property AA_D_M12_INTERP1 As Kilogram Implements IAdvancedAuxiliaries.AA_D_M12_INTERP1
 		Get
 			Return M12.INTRP1()
 		End Get
 	End Property
 
-	Public ReadOnly Property AA_D_M12_INTERP2 As Gram Implements IAdvancedAuxiliaries.AA_D_M12_INTERP2
+	Public ReadOnly Property AA_D_M12_INTERP2 As Kilogram Implements IAdvancedAuxiliaries.AA_D_M12_INTERP2
 		Get
 			Return M12.INTRP2()
 		End Get
@@ -495,7 +495,7 @@ Public Class AdvancedAuxiliaries
 		End Get
 	End Property
 
-	Public ReadOnly Property AA_D_M12_P1Y As Gram Implements IAdvancedAuxiliaries.AA_D_M12_P1Y
+	Public ReadOnly Property AA_D_M12_P1Y As Kilogram Implements IAdvancedAuxiliaries.AA_D_M12_P1Y
 		Get
 			Return M12.P1Y()
 		End Get
@@ -507,7 +507,7 @@ Public Class AdvancedAuxiliaries
 		End Get
 	End Property
 
-	Public ReadOnly Property AA_D_M12_P2Y As Gram Implements IAdvancedAuxiliaries.AA_D_M12_P2Y
+	Public ReadOnly Property AA_D_M12_P2Y As Kilogram Implements IAdvancedAuxiliaries.AA_D_M12_P2Y
 		Get
 			Return M12.P2Y()
 		End Get
@@ -519,7 +519,7 @@ Public Class AdvancedAuxiliaries
 		End Get
 	End Property
 
-	Public ReadOnly Property AA_D_M12_P3Y As Gram Implements IAdvancedAuxiliaries.AA_D_M12_P3Y
+	Public ReadOnly Property AA_D_M12_P3Y As Kilogram Implements IAdvancedAuxiliaries.AA_D_M12_P3Y
 		Get
 			Return M12.P3Y()
 		End Get

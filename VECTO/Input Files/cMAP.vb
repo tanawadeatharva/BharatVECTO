@@ -188,9 +188,10 @@ lbEr:
 
 #End Region
 
-	Public Function GetFuelConsumption(torque As NewtonMeter, angularVelocity As Double) As GramPerSecond _
+	Public Function GetFuelConsumption(torque As NewtonMeter, angularVelocity As Double) As KilogramPerSecond _
 		Implements IFuelConsumptionMap.GetFuelConsumption
-		Return (fFCdelaunay_Intp(angularVelocity, torque.Value()) / 3600).SI(Of GramPerSecond)()
+		'MQ: TODO: check units!
+		Return (fFCdelaunay_Intp(angularVelocity, torque.Value()) / 3600).SI(Of KilogramPerSecond)()
 	End Function
 End Class
 

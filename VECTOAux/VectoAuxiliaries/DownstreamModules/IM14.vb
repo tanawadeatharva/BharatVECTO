@@ -6,7 +6,7 @@ Imports VectoAuxiliaries.Hvac
 
 Namespace DownstreamModules
 	Public Interface IM14
-		ReadOnly Property TotalCycleFCGrams As Gram
+		ReadOnly Property TotalCycleFCGrams As Kilogram
 
 		ReadOnly Property TotalCycleFCLitres As Liter
 	End Interface

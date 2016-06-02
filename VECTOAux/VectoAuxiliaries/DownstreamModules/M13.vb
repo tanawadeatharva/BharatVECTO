@@ -25,74 +25,74 @@ Namespace DownstreamModules
 
 		'Internal Staging Calculations
 
-		Private ReadOnly Property Sum1 As Gram
+		Private ReadOnly Property Sum1 As Kilogram
 			Get
 				Return m11.TotalCycleFuelConsuptionAverageLoads * m12.StopStartCorrection
 			End Get
 		End Property
 
-		Private ReadOnly Property Sum2 As Gram
+		Private ReadOnly Property Sum2 As Kilogram
 			Get
 				Return m10.AverageLoadsFuelConsumptionInterpolatedForPneumatics * m12.StopStartCorrection
 			End Get
 		End Property
 
-		Private ReadOnly Property Sum3 As Gram
+		Private ReadOnly Property Sum3 As Kilogram
 			Get
 				Return m10.FuelConsumptionSmartPneumaticsAndAverageElectricalPowerDemand * m12.StopStartCorrection
 			End Get
 		End Property
 
-		Private ReadOnly Property Sum4 As Gram
+		Private ReadOnly Property Sum4 As Kilogram
 			Get
 				Return -m12.FuelconsumptionwithsmartElectricsandAveragePneumaticPowerDemand() + Sum1
 			End Get
 		End Property
 
-		Private ReadOnly Property Sum5 As Gram
+		Private ReadOnly Property Sum5 As Kilogram
 			Get
 				Return Sum2 - Sum3
 			End Get
 		End Property
 
-		Private ReadOnly Property Sum6 As Gram
+		Private ReadOnly Property Sum6 As Kilogram
 			Get
 				Return m12.BaseFuelConsumptionWithTrueAuxiliaryLoads() - Sum4
 			End Get
 		End Property
 
-		Private ReadOnly Property Sum7 As Gram
+		Private ReadOnly Property Sum7 As Kilogram
 			Get
 				Return m12.BaseFuelConsumptionWithTrueAuxiliaryLoads() - Sum5
 			End Get
 		End Property
 
-		Private ReadOnly Property Sum8 As Gram
+		Private ReadOnly Property Sum8 As Kilogram
 			Get
 				Return -Sum4 + Sum7
 			End Get
 		End Property
 
-		Private ReadOnly Property Sum9 As Gram
+		Private ReadOnly Property Sum9 As Kilogram
 			Get
 				Return SW4 * SW3
 			End Get
 		End Property
 
 		'Internal Staging Switches
-		Private ReadOnly Property SW1 As Gram
+		Private ReadOnly Property SW1 As Kilogram
 			Get
 				Return If(signals.SmartPneumatics, Sum8, Sum6)
 			End Get
 		End Property
 
-		Private ReadOnly Property SW2 As Gram
+		Private ReadOnly Property SW2 As Kilogram
 			Get
 				Return If(signals.SmartPneumatics, Sum3, m12.BaseFuelConsumptionWithTrueAuxiliaryLoads())
 			End Get
 		End Property
 
-		Private ReadOnly Property SW3 As Gram
+		Private ReadOnly Property SW3 As Kilogram
 			Get
 				Return If(signals.SmartElectrics, SW1, SW2)
 			End Get
@@ -114,7 +114,7 @@ Namespace DownstreamModules
 		End Sub
 
 		'Public class outputs
-		Public ReadOnly Property WHTCTotalCycleFuelConsumptionGrams As Gram _
+		Public ReadOnly Property WHTCTotalCycleFuelConsumptionGrams As Kilogram _
 			Implements IM13.WHTCTotalCycleFuelConsumptionGrams
 			Get
 				Return Sum9

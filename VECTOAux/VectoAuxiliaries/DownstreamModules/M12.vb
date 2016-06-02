@@ -20,21 +20,21 @@ Namespace DownstreamModules
 
 		Private Class Point
 			Public X As Joule
-			Public Y As Gram
+			Public Y As Kilogram
 		End Class
 
 		Private M11 As IM11
 		Private M10 As IM10
 		Private Signals As ISignals
 		Private _P1X As Joule
-		Private _P1Y As Gram
+		Private _P1Y As Kilogram
 		Private _P2X As Joule
-		Private _P2Y As Gram
+		Private _P2Y As Kilogram
 		Private _P3X As Joule
-		Private _P3Y As Gram
+		Private _P3Y As Kilogram
 		Private _XT As Joule
-		Private _INTERP1 As Gram
-		Private _INTERP2 As Gram
+		Private _INTERP1 As Kilogram
+		Private _INTERP2 As Kilogram
 
 		Private Sub setPoints()
 
@@ -48,7 +48,7 @@ Namespace DownstreamModules
 		End Sub
 
 		'Interpolation 
-		Private Function Sum1() As Gram
+		Private Function Sum1() As Kilogram
 
 			Dim P1 As Point = New Point With {.X = 0.SI(Of Joule)(), .Y = M11.TotalCycleFuelConsumptionZeroElectricalLoad}
 			Dim P2 As Point = New Point _
@@ -56,7 +56,7 @@ Namespace DownstreamModules
 					.Y = M11.TotalCycleFuelConsumptionSmartElectricalLoad}
 
 			Dim IP5x As Joule = M11.TotalCycleElectricalDemand
-			Dim IP5y As Gram
+			Dim IP5y As Kilogram
 
 			Dim TanTeta As SI = (P2.Y - P1.Y) / (P2.X - P1.X)
 
@@ -66,10 +66,10 @@ Namespace DownstreamModules
 
 			setPoints()
 
-			Return If(Double.IsNaN(IP5y.Value()), 0.SI(Of Gram), IP5y)
+			Return If(Double.IsNaN(IP5y.Value()), 0.SI(Of Kilogram), IP5y)
 		End Function
 
-		Private Function Sum2() As Gram
+		Private Function Sum2() As Kilogram
 
 			Dim P1 As Point = New Point With {.X = 0.SI(Of Joule)(), .Y = M11.TotalCycleFuelConsumptionZeroElectricalLoad}
 			Dim P3 As Point = New Point _
@@ -77,15 +77,15 @@ Namespace DownstreamModules
 					.Y = M10.AverageLoadsFuelConsumptionInterpolatedForPneumatics}
 
 			Dim IP5x As Joule = M11.TotalCycleElectricalDemand
-			Dim IP5y As Gram
+			Dim IP5y As Kilogram
 
 			Dim TanTeta As Double = (P3.Y - P1.Y).Value() / (P3.X - P1.X).Value()
 
-			IP5y = P1.Y + (TanTeta * IP5x.Value()).SI(Of Gram)()
+			IP5y = P1.Y + (TanTeta * IP5x.Value()).SI(Of Kilogram)()
 
 			_INTERP2 = IP5y
 
-			Return If(Double.IsNaN(IP5y.Value()), 0.SI(Of Gram), IP5y)
+			Return If(Double.IsNaN(IP5y.Value()), 0.SI(Of Kilogram), IP5y)
 		End Function
 
 		'Constructor
@@ -97,12 +97,12 @@ Namespace DownstreamModules
 		End Sub
 
 		'Main Class Outputs
-		Public ReadOnly Property FuelconsumptionwithsmartElectricsandAveragePneumaticPowerDemand As Gram _
+		Public ReadOnly Property FuelconsumptionwithsmartElectricsandAveragePneumaticPowerDemand As Kilogram _
 			Implements IM12.FuelconsumptionwithsmartElectricsandAveragePneumaticPowerDemand
 			Get
 
 				'SCHM 3_2
-				Dim interp1 As Gram = Sum1()
+				Dim interp1 As Kilogram = Sum1()
 
 				interp1 =
 					If _
@@ -112,12 +112,12 @@ Namespace DownstreamModules
 			End Get
 		End Property
 
-		Public ReadOnly Property BaseFuelConsumptionWithTrueAuxiliaryLoads As Gram _
+		Public ReadOnly Property BaseFuelConsumptionWithTrueAuxiliaryLoads As Kilogram _
 			Implements IM12.BaseFuelConsumptionWithTrueAuxiliaryLoads
 			Get
 
 				'SCM 3_02
-				Dim interp2 As Gram = Sum2()
+				Dim interp2 As Kilogram = Sum2()
 
 				interp2 =
 					If _
@@ -133,20 +133,20 @@ Namespace DownstreamModules
 				Dim _stopStartCorrection As Scalar = BaseFuelConsumptionWithTrueAuxiliaryLoads() /
 													If _
 														(M10.AverageLoadsFuelConsumptionInterpolatedForPneumatics > 0,
-														M10.AverageLoadsFuelConsumptionInterpolatedForPneumatics, 1.SI(Of Gram))
+														M10.AverageLoadsFuelConsumptionInterpolatedForPneumatics, 1.SI(Of Kilogram))
 
 				Return If(_stopStartCorrection > 0, _stopStartCorrection.Value(), 1)
 			End Get
 		End Property
 
 		'Diagnostics Signal Exposure only. Does not materially affect class operation.
-		Public ReadOnly Property INTRP1 As Gram Implements IM12.INTRP1
+		Public ReadOnly Property INTRP1 As Kilogram Implements IM12.INTRP1
 			Get
 				Return _INTERP1
 			End Get
 		End Property
 
-		Public ReadOnly Property INTRP2 As Gram Implements IM12.INTRP2
+		Public ReadOnly Property INTRP2 As Kilogram Implements IM12.INTRP2
 			Get
 				Return _INTERP2
 			End Get
@@ -158,7 +158,7 @@ Namespace DownstreamModules
 			End Get
 		End Property
 
-		Public ReadOnly Property P1Y As Gram Implements IM12.P1Y
+		Public ReadOnly Property P1Y As Kilogram Implements IM12.P1Y
 			Get
 				Return _P1Y
 			End Get
@@ -170,7 +170,7 @@ Namespace DownstreamModules
 			End Get
 		End Property
 
-		Public ReadOnly Property P2Y As Gram Implements IM12.P2Y
+		Public ReadOnly Property P2Y As Kilogram Implements IM12.P2Y
 			Get
 				Return _P2Y
 			End Get
@@ -182,7 +182,7 @@ Namespace DownstreamModules
 			End Get
 		End Property
 
-		Public ReadOnly Property P3Y As Gram Implements IM12.P3Y
+		Public ReadOnly Property P3Y As Kilogram Implements IM12.P3Y
 			Get
 				Return _P3Y
 			End Get

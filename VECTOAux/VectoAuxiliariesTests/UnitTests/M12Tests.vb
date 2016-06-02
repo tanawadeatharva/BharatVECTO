@@ -31,19 +31,20 @@ Namespace UnitTests
 
 			sgnlsMock.Setup(Function(x) x.StoredEnergyEfficiency).Returns(0.935)
 
-			m11Mock.Setup(Function(x) x.TotalCycleFuelConsumptionZeroElectricalLoad).Returns(IP2.SI(Of Gram))
+			m11Mock.Setup(Function(x) x.TotalCycleFuelConsumptionZeroElectricalLoad).Returns((IP2 / 1000).SI(Of Kilogram))
 			m11Mock.Setup(Function(x) x.SmartElectricalTotalCycleEletricalEnergyGenerated).Returns(IP3.SI(Of Joule))
-			m11Mock.Setup(Function(x) x.TotalCycleFuelConsumptionSmartElectricalLoad).Returns(IP4.SI(Of Gram))
+			m11Mock.Setup(Function(x) x.TotalCycleFuelConsumptionSmartElectricalLoad).Returns((IP4 / 1000).SI(Of Kilogram))
 			m11Mock.Setup(Function(x) x.TotalCycleElectricalDemand).Returns(IP5.SI(Of Joule))
 			m11Mock.Setup(Function(x) x.StopStartSensitiveTotalCycleElectricalDemand).Returns(IP6.SI(Of Joule))
-			M10Mock.Setup(Function(x) x.AverageLoadsFuelConsumptionInterpolatedForPneumatics).Returns(IP7.SI(Of Gram))
+			M10Mock.Setup(Function(x) x.AverageLoadsFuelConsumptionInterpolatedForPneumatics).Returns((IP7 / 1000).SI(Of Kilogram))
 
 			'Act
 			Dim target = New M12(M10Mock.Object, m11Mock.Object, sgnlsMock.Object)
 
 			'Assert
-			Assert.AreEqual(target.FuelconsumptionwithsmartElectricsandAveragePneumaticPowerDemand().Value(), OUT1, 0.001)
-			Assert.AreEqual(target.BaseFuelConsumptionWithTrueAuxiliaryLoads().Value(), OUT2, 0.001)
+			Assert.AreEqual(target.FuelconsumptionwithsmartElectricsandAveragePneumaticPowerDemand().Value(),
+							OUT1.SI().Gramm.Value(), 0.001)
+			Assert.AreEqual(target.BaseFuelConsumptionWithTrueAuxiliaryLoads().Value(), OUT2.SI().Gramm.Value(), 0.001)
 		End Sub
 	End Class
 End Namespace

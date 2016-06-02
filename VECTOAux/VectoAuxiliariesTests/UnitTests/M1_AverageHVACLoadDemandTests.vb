@@ -31,7 +31,7 @@ Namespace UnitTests
 			ssm.Load(_SSMMAP)
 
 			m0 = New M0_NonSmart_AlternatorsSetEfficiency(New ElectricalConsumerList(powernetVoltage, 0.096, True),
-														alternatorMap,powernetVoltage.SI(Of Volt), signals, ssm)
+														alternatorMap, powernetVoltage.SI(Of Volt), signals, ssm)
 		End Sub
 
 		Private Function GETM1Instance() As IM1_AverageHVACLoadDemand
@@ -95,7 +95,7 @@ Namespace UnitTests
 
 			Dim target As IM1_AverageHVACLoadDemand = GETM1Instance()
 			Dim expected As Single = 0
-			Dim actual As LiterPerHour = target.HVACFuelingLitresPerHour()
+			Dim actual As LiterPerSecond = target.HVACFuelingLitresPerHour()
 
 			Assert.AreEqual(expected, actual.Value(), 0.001)
 		End Sub

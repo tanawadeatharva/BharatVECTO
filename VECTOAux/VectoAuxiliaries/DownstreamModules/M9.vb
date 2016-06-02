@@ -26,9 +26,9 @@ Namespace DownstreamModules
 		'AG2
 		Private _LitresOfAirCompressorOnOnlyInOverrunAggregate As NormLiter
 		'AG3
-		Private _TotalCycleFuelConsumptionCompressorOffContinuouslyAggregate As Gram
+		Private _TotalCycleFuelConsumptionCompressorOffContinuouslyAggregate As Kilogram
 		'AG4
-		Private _TotalCycleFuelConsumptionCompressorOnContinuouslyAggregate As Gram
+		Private _TotalCycleFuelConsumptionCompressorOnContinuouslyAggregate As Kilogram
 
 #End Region
 
@@ -61,14 +61,14 @@ Namespace DownstreamModules
 			End Get
 		End Property
 		'OUT 3
-		Public ReadOnly Property TotalCycleFuelConsumptionCompressorOffContinuously As Gram _
+		Public ReadOnly Property TotalCycleFuelConsumptionCompressorOffContinuously As Kilogram _
 			Implements IM9.TotalCycleFuelConsumptionCompressorOffContinuously
 			Get
 				Return _TotalCycleFuelConsumptionCompressorOffContinuouslyAggregate
 			End Get
 		End Property
 		'OUT 4
-		Public ReadOnly Property TotalCycleFuelConsumptionCompressorOnContinuously As Gram _
+		Public ReadOnly Property TotalCycleFuelConsumptionCompressorOnContinuously As Kilogram _
 			Implements IM9.TotalCycleFuelConsumptionCompressorOnContinuously
 			Get
 				Return _TotalCycleFuelConsumptionCompressorOnContinuouslyAggregate
@@ -151,22 +151,22 @@ Namespace DownstreamModules
 			End Get
 		End Property
 
-		Private ReadOnly Property S11 As GramPerSecond
+		Private ReadOnly Property S11 As KilogramPerSecond
 			Get
 				'SCHM 3_02
-				Dim int1 As GramPerSecond = FMAP.GetFuelConsumption(S7, Signals.EngineSpeed)
-				int1 = If(int1 > 0 AndAlso Not Double.IsNaN(int1.Value()), int1, 0.SI(Of GramPerSecond))
+				Dim int1 As KilogramPerSecond = FMAP.GetFuelConsumption(S7, Signals.EngineSpeed)
+				int1 = If(int1 > 0 AndAlso Not Double.IsNaN(int1.Value()), int1, 0.SI(Of KilogramPerSecond))
 
 				Return int1
 			End Get
 		End Property
 
-		Private ReadOnly Property S12 As GramPerSecond
+		Private ReadOnly Property S12 As KilogramPerSecond
 			Get
 
 				'SCHM 3_02
-				Dim int2 As GramPerSecond = FMAP.GetFuelConsumption(S8, Signals.EngineSpeed)
-				int2 = If(int2 > 0 AndAlso Not Double.IsNaN(int2.Value()), int2, 0.SI(Of GramPerSecond))
+				Dim int2 As KilogramPerSecond = FMAP.GetFuelConsumption(S8, Signals.EngineSpeed)
+				int2 = If(int2 > 0 AndAlso Not Double.IsNaN(int2.Value()), int2, 0.SI(Of KilogramPerSecond))
 
 				Return int2
 			End Get
@@ -198,8 +198,8 @@ Namespace DownstreamModules
 
 			_LitresOfAirCompressorOnContinuallyAggregate = SIBase(Of NormLiter).Create(0)
 			_LitresOfAirCompressorOnOnlyInOverrunAggregate = SIBase(Of NormLiter).Create(0)
-			_TotalCycleFuelConsumptionCompressorOffContinuouslyAggregate = SIBase(Of Gram).Create(0)
-			_TotalCycleFuelConsumptionCompressorOnContinuouslyAggregate = SIBase(Of Gram).Create(0)
+			_TotalCycleFuelConsumptionCompressorOffContinuouslyAggregate = SIBase(Of Kilogram).Create(0)
+			_TotalCycleFuelConsumptionCompressorOnContinuouslyAggregate = SIBase(Of Kilogram).Create(0)
 		End Sub
 
 		Public Sub CycleStep(stepTimeInSeconds As Second) Implements IM9.CycleStep

@@ -18,7 +18,7 @@ Namespace DownstreamModules
 		''' <value></value>
 		''' <returns></returns>
 		''' <remarks></remarks>
-		ReadOnly Property FuelconsumptionwithsmartElectricsandAveragePneumaticPowerDemand As Gram
+		ReadOnly Property FuelconsumptionwithsmartElectricsandAveragePneumaticPowerDemand As Kilogram
 
 		''' <summary>
 		''' Base Fuel Consumption With Average Auxiliary Loads
@@ -26,7 +26,7 @@ Namespace DownstreamModules
 		''' <value></value>
 		''' <returns></returns>
 		''' <remarks></remarks>
-		ReadOnly Property BaseFuelConsumptionWithTrueAuxiliaryLoads As Gram
+		ReadOnly Property BaseFuelConsumptionWithTrueAuxiliaryLoads As Kilogram
 
 		''' <summary>
 		''' Stop Start Correction
@@ -39,14 +39,14 @@ Namespace DownstreamModules
 
 		'Diagnostic Signals Only For Testing - No Material interference with operation of class.
 		ReadOnly Property P1X As Joule
-		ReadOnly Property P1Y As Gram
+		ReadOnly Property P1Y As Kilogram
 		ReadOnly Property P2X As Joule
-		ReadOnly Property P2Y As Gram
+		ReadOnly Property P2Y As Kilogram
 		ReadOnly Property P3X As Joule
-		ReadOnly Property P3Y As Gram
+		ReadOnly Property P3Y As Kilogram
 		ReadOnly Property XTAIN As Joule
-		ReadOnly Property INTRP1 As Gram
-		ReadOnly Property INTRP2 As Gram
+		ReadOnly Property INTRP1 As Kilogram
+		ReadOnly Property INTRP2 As Kilogram
 	End Interface
 End Namespace
 
