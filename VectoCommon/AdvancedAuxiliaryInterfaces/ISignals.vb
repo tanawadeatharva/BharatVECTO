@@ -16,7 +16,7 @@ Public Interface ISignals
 	''' <value></value>
 	''' <returns></returns>
 	''' <remarks>Vecto Input</remarks>
-	Property PreExistingAuxPower As Single
+	Property PreExistingAuxPower As Double
 
 	''' <summary>
 	''' Engine Motoring Power (KW)
@@ -24,7 +24,7 @@ Public Interface ISignals
 	''' <value></value>
 	''' <returns></returns>
 	''' <remarks>Vecto Input</remarks>
-	Property EngineMotoringPower As Single
+	Property EngineMotoringPower As Double
 
 	''' <summary>
 	''' Engine Driveline Power (KW)
@@ -32,7 +32,7 @@ Public Interface ISignals
 	''' <value></value>
 	''' <returns></returns>
 	''' <remarks></remarks>
-	Property EngineDrivelinePower As Single
+	Property EngineDrivelinePower As Double
 
 	''' <summary>
 	''' Smart Electrics
@@ -88,7 +88,7 @@ Public Interface ISignals
 	''' <value></value>
 	''' <returns></returns>
 	''' <remarks>Vecto Input</remarks>
-	Property EngineDrivelineTorque As Single
+	Property EngineDrivelineTorque As Double
 
 	''' <summary>
 	''' Engine Idle
@@ -128,7 +128,7 @@ Public Interface ISignals
 	''' <value></value>
 	''' <returns></returns>
 	''' <remarks>'Vecto Input</remarks>
-	Property WHTC As Single
+	Property WHTC As Double
 
 	''' <summary>
 	''' Declaration Mode
@@ -144,7 +144,7 @@ Public Interface ISignals
 	''' <value></value>
 	''' <returns></returns>
 	''' <remarks></remarks>
-	Property EngineIdleSpeed As Single
+	Property EngineIdleSpeed As Double
 
 	''' <summary>
 	''' Pneumatic Overrun Utilisation
@@ -152,7 +152,7 @@ Public Interface ISignals
 	''' <value></value>
 	''' <returns></returns>
 	''' <remarks></remarks>
-	Property PneumaticOverrunUtilisation As Single
+	Property PneumaticOverrunUtilisation As Double
 
 	''' <summary>
 	''' Stored Energy Efficiency
@@ -160,7 +160,7 @@ Public Interface ISignals
 	''' <value></value>
 	''' <returns></returns>
 	''' <remarks></remarks>
-	Property StoredEnergyEfficiency As Single
+	Property StoredEnergyEfficiency As Double
 
 	''' <summary>
 	''' Running Calc
