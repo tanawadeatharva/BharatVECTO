@@ -116,7 +116,7 @@ namespace TUGraz.VectoCore.Tests.Models.SimulationComponent
 			Assert.AreEqual(11u, container.Gear);
 			Assert.IsInstanceOfType(retVal, typeof(ResponseSuccess));
 
-			AssertHelper.AreRelativeEqual(1530.263.RPMtoRad(), container.EngineSpeed, 0.001);
+			AssertHelper.AreRelativeEqual(1530.263.RPMtoRad(), container.EngineSpeed, toleranceFactor: 1e-3);
 
 			var absTime = 0.SI<Second>();
 			var ds = 1.SI<Meter>();

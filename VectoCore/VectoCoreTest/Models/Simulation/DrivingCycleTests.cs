@@ -135,7 +135,7 @@ namespace TUGraz.VectoCore.Tests.Models.Simulation
 
 						if (absTime < 5) {
 							Assert.AreEqual(600.RPMtoRad(), outPort.AngularVelocity);
-							AssertHelper.AreRelativeEqual(0.SI<NewtonMeter>(), outPort.Torque, 1e-3);
+							AssertHelper.AreRelativeEqual(0.SI<NewtonMeter>(), outPort.Torque, toleranceFactor: 1e-3);
 						} else if (absTime.IsBetween(12.75, 13.25) || absTime.IsBetween(14, 15)) {
 							Assert.IsTrue(outPort.AngularVelocity > 600.RPMtoRad());
 							Assert.IsTrue(outPort.Torque < 0);

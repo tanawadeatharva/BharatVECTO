@@ -56,8 +56,8 @@ namespace TUGraz.VectoCore.Tests.Utils
 		}
 
 		[DebuggerHidden]
-		public static void AreRelativeEqual(SI expected, SI actual,
-			double toleranceFactor = DoubleExtensionMethods.ToleranceFactor, string message = null)
+		public static void AreRelativeEqual(SI expected, SI actual, string message = null,
+			double toleranceFactor = DoubleExtensionMethods.ToleranceFactor)
 		{
 			Assert.IsTrue(actual.HasEqualUnit(expected),
 				string.Format("Wrong SI Units: expected: {0}, actual: {1}", expected.ToBasicUnits(), actual.ToBasicUnits()));
