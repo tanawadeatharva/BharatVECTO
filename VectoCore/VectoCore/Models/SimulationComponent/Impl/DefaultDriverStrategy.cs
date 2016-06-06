@@ -453,7 +453,6 @@ namespace TUGraz.VectoCore.Models.SimulationComponent.Impl
 				response = DoHandleRequest(absTime, ds, Driver.DataBus.VehicleSpeed, gradient);
 				return response;
 			}
-
 			Log.Debug("Exceeding next ActionDistance at {0}. Reducing max Distance from {2} to {1}",
 				DriverStrategy.NextDrivingAction.ActionDistance, newds, ds);
 			return new ResponseDrivingCycleDistanceExceeded() {
@@ -494,15 +493,6 @@ namespace TUGraz.VectoCore.Models.SimulationComponent.Impl
 					response = Driver.DrivingActionAccelerate(absTime, ds, targetVelocity, gradient);
 				}
 				response.Switch().
-					Case<ResponseGearShift>(() => {
-						response = Driver.DrivingActionRoll(absTime, ds, velocity, gradient);
-						response.Switch().
-							Case<ResponseUnderload>(() => {
-								// overload may happen if driver limits acceleration when rolling downhill
-								response = Driver.DrivingActionBrake(absTime, ds, velocity, gradient);
-							}).
-							Case<ResponseSpeedLimitExceeded>(() => { response = Driver.DrivingActionBrake(absTime, ds, velocity, gradient); });
-					}).
 					Case<ResponseUnderload>(r => {
 						if (DriverStrategy.OverspeedAllowed(gradient, targetVelocity)) {
 							response = Driver.DrivingActionCoast(absTime, ds, velocity, gradient);
@@ -512,6 +502,17 @@ namespace TUGraz.VectoCore.Models.SimulationComponent.Impl
 						} else {
 							response = Driver.DrivingActionBrake(absTime, ds, velocity, gradient);
 						}
+					});
+
+				response.Switch().
+					Case<ResponseGearShift>(r => {
+						response = Driver.DrivingActionRoll(absTime, ds, velocity, gradient);
+						response.Switch().
+							Case<ResponseUnderload>(() => {
+								// overload may happen if driver limits acceleration when rolling downhill
+								response = Driver.DrivingActionBrake(absTime, ds, velocity, gradient);
+							}).
+							Case<ResponseSpeedLimitExceeded>(() => { response = Driver.DrivingActionBrake(absTime, ds, velocity, gradient); });
 					});
 			} else {
 				if (DataBus.VehicleSpeed.IsSmallerOrEqual(0.SI<MeterPerSecond>())) {
