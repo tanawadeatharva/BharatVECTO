@@ -63,7 +63,7 @@ Module mAAUX_Global
 					advancedAuxModel.VectoInputs.Cycle = DetermineCycleNameFromCurrentFile()
 					advancedAuxModel.VectoInputs.VehicleWeightKG = VEH.Mass.SI(Of Kilogram)()
 					advancedAuxModel.VectoInputs.FuelMap = fuelMap 'ENG.FuelMapFullPath
-					advancedAuxModel.VectoInputs.FuelDensity = CType(Cfg.FuelDens, Double).SI().Kilo.Gramm.Per.Liter
+					advancedAuxModel.VectoInputs.FuelDensity = CType(Cfg.FuelDens * 1000, Double).SI(Of KilogramPerCubicMeter)()
 
 					'Set Signals
 					advancedAuxModel.Signals.TotalCycleTimeSeconds = CycleTimeInSeconds

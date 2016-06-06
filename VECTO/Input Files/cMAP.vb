@@ -192,7 +192,8 @@ lbEr:
 	Public Function GetFuelConsumption(torque As NewtonMeter, angularVelocity As PerSecond) As KilogramPerSecond _
 		Implements IFuelConsumptionMap.GetFuelConsumption
 		'MQ: TODO: check units!
-		Return (fFCdelaunay_Intp(angularVelocity.Value() / Constants.RPMToRad, torque.Value()) / 3600).SI(Of KilogramPerSecond)()
+		Return _
+			(fFCdelaunay_Intp(angularVelocity.Value() / Constants.RPMToRad, torque.Value()) / 3600 / 1000).SI(Of KilogramPerSecond)()
 	End Function
 End Class
 
