@@ -35,7 +35,6 @@ using TUGraz.VectoCommon.Utils;
 using TUGraz.VectoCore.Models.Simulation.DataBus;
 using TUGraz.VectoCore.Utils;
 
-
 namespace TUGraz.VectoCore.Models.SimulationComponent.Data
 {
 	public class CrosswindCorrectionCdxALookup : LoggingObject, ICrossWindCorrection
@@ -73,7 +72,8 @@ namespace TUGraz.VectoCore.Models.SimulationComponent.Data
 				//Log.Error(_data.CrossWindCorrectionMode == CrossWindCorrectionMode.VAirBetaLookupTable
 				//    ? string.Format("CdExtrapol β = {0}", x)
 				//    : string.Format("CdExtrapol v = {0}", x));
-				Log.Error("CdExtrapol v = {0}", x);
+				Log.Error("CrossWindCorrection Extrapolation: v = {0} (max = {1})", x.ConvertTo().Kilo.Meter.Per.Hour,
+					p.Item2.Velocity.ConvertTo().Kilo.Meter.Per.Hour);
 			}
 
 			return VectoMath.Interpolate(p.Item1.Velocity, p.Item2.Velocity,
