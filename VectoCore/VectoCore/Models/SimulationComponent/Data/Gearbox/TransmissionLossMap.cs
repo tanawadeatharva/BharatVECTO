@@ -64,6 +64,7 @@ namespace TUGraz.VectoCore.Models.SimulationComponent.Data.Gearbox
 		public bool Extrapolated
 		{
 			get { return _lossMap.Extrapolated; }
+			set { _lossMap.Extrapolated = value; }
 		}
 
 		public string GearName { get; private set; }

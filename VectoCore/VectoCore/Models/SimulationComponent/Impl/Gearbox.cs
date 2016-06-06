@@ -448,6 +448,7 @@ namespace TUGraz.VectoCore.Models.SimulationComponent.Impl
 				Disengaged = false;
 				_engageTime = -double.MaxValue.SI<Second>();
 			}
+			ModelData.Gears[Gear].LossMap.Extrapolated = false;
 			AdvanceState();
 		}
 
