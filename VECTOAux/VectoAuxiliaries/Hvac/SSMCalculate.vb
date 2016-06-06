@@ -712,7 +712,8 @@ Namespace Hvac
 
 			Dim FuelLPerHBaseCurrentResult As Double =
 					(Math.Min(Math.Abs(BaseHeatingW_FuelFiredHeating / 1000), genInputs.AH_FuelFiredHeaterkW) /
-					genInputs.BC_AuxHeaterEfficiency) * (1 / (genInputs.BC_GCVDieselOrHeatingOil * ssmTOOL.HVACConstants.FuelDensity))
+					genInputs.BC_AuxHeaterEfficiency) *
+					(1 / (genInputs.BC_GCVDieselOrHeatingOil * ssmTOOL.HVACConstants.FuelDensityAsGramPerLiter))
 
 			Return FuelLPerHBaseCurrentResult * Weight
 		End Function
@@ -783,7 +784,8 @@ Namespace Hvac
 			End If
 
 			Dim FuelLPerHBaseAdjusted As Double = Math.Min(result, genInputs.AH_FuelFiredHeaterkW) /
-												genInputs.BC_AuxHeaterEfficiency * (1 / (genInputs.BC_GCVDieselOrHeatingOil * ssmTOOL.HVACConstants.FuelDensity))
+												genInputs.BC_AuxHeaterEfficiency *
+												(1 / (genInputs.BC_GCVDieselOrHeatingOil * ssmTOOL.HVACConstants.FuelDensityAsGramPerLiter))
 
 			Return FuelLPerHBaseAdjusted * Weight
 		End Function

@@ -84,7 +84,7 @@ Public Class AuxiliaryConfig
 	'Set Default Values
 	Private Sub setDefaults()
 
-		Dim tmp As VectoInputs = New VectoInputs With {.Cycle = "Urban", .VehicleWeightKG = 16500, .PowerNetVoltage = 28.3}
+		Dim tmp As VectoInputs = New VectoInputs With {.Cycle = "Urban", .VehicleWeightKG = 16500.SI(Of Kilogram)(), .PowerNetVoltage = 28.3.SI(Of Volt)()}
 		VectoInputs = tmp
 		Signals = New Signals With {.EngineSpeed = 2000, .TotalCycleTimeSeconds = 3114, .ClutchEngaged = False}
 

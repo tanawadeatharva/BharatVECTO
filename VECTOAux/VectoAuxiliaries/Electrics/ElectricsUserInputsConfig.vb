@@ -9,6 +9,7 @@
 '
 ' See the LICENSE.txt for the specific language governing permissions and limitations.
 
+Imports TUGraz.VectoCommon.Utils
 Imports VectoAuxiliaries.Electrics
 
 Namespace Electrics
@@ -41,7 +42,7 @@ Namespace Electrics
 			DoorActuationTimeSecond = 4
 			StoredEnergyEfficiency = 0.935
 			AlternatorGearEfficiency = 0.92
-			PowerNetVoltage = vectoInputs.PowerNetVoltage
+			PowerNetVoltage = vectoInputs.PowerNetVoltage.Value()
 			ResultCardIdle = New ResultCard(New List(Of SmartResult))
 			ResultCardOverrun = New ResultCard(New List(Of SmartResult))
 			ResultCardTraction = New ResultCard(New List(Of SmartResult))

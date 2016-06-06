@@ -62,10 +62,10 @@ namespace TUGraz.VectoCore.Models.SimulationComponent.Impl
 
 			// 'Set Statics
 			tmpAux.VectoInputs.Cycle = DetermineCycle(cycleName, tmpAux.Signals);
-			tmpAux.VectoInputs.VehicleWeightKG = (float)vehicleWeight.Value();
+			tmpAux.VectoInputs.VehicleWeightKG = vehicleWeight;
 			_fcMapAdapter = new FuelConsumptionAdapter() { FcMap = fcMap };
 			tmpAux.VectoInputs.FuelMap = _fcMapAdapter;
-			tmpAux.VectoInputs.FuelDensity = Physics.FuelDensity.Value();
+			tmpAux.VectoInputs.FuelDensity = Physics.FuelDensity;
 
 			//'Set Signals
 			tmpAux.Signals.EngineIdleSpeed = (float)(engineIdleSpeed.Value() / Constants.RPMToRad);

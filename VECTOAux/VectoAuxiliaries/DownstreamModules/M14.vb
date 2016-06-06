@@ -30,7 +30,7 @@ Namespace DownstreamModules
 		'Staging Calculations
 		Private ReadOnly Property S1 As Joule
 			Get
-				Return (m13.WHTCTotalCycleFuelConsumptionGrams.Value * constants.DieselGCVJperGram * 1000).SI(Of Joule)()
+				Return m13.WHTCTotalCycleFuelConsumptionGrams * constants.DieselGCVJperGram
 			End Get
 		End Property
 
@@ -62,7 +62,7 @@ Namespace DownstreamModules
 			Get
 				'Return (S5.Value() * ssm.FuelPerHBaseAsjusted(S4.Value() / 1000) / 3600 * (constants.FuelDensity)).SI(Of Kilogram)()
 				Return _
-					(S5 * ssm.FuelPerHBaseAsjusted(S4.Value() / 1000).SI().Liter.Per.Hour * constants.FuelDensity.SI().Gramm.Per.Liter).
+					(S5 * ssm.FuelPerHBaseAsjusted(S4.Value() / 1000).SI().Liter.Per.Hour * constants.FuelDensity).
 						Cast(Of Kilogram)()
 			End Get
 		End Property
@@ -75,7 +75,7 @@ Namespace DownstreamModules
 
 		Private ReadOnly Property S8 As Liter
 			Get
-				Return (S7 / (constants.FuelDensity.SI().Gramm.Per.Liter)).Cast(Of Liter)()
+				Return (S7 / (constants.FuelDensity)).Cast(Of Liter)()
 			End Get
 		End Property
 
@@ -92,3 +92,4 @@ Namespace DownstreamModules
 		End Property
 	End Class
 End Namespace
+

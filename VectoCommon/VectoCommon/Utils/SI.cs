@@ -424,6 +424,34 @@ namespace TUGraz.VectoCommon.Utils
 	}
 
 	/// <summary>
+	/// SI Class for Kilogram Square Meter [kgm^2].
+	/// </summary>
+	public class KilogramPerCubicMeter : SIBase<KilogramPerCubicMeter>
+	{
+		private static readonly Unit[] NumeratorDefault = { Unit.k, Unit.g };
+		private static readonly Unit[] DenominatorDefault = { Unit.m, Unit.m, Unit.m };
+
+		[DebuggerHidden]
+		private KilogramPerCubicMeter(double value) : base(value, NumeratorDefault, DenominatorDefault) {}
+
+		[DebuggerHidden]
+		public static Kilogram operator *(KilogramPerCubicMeter kilogramPerCubicMeter, CubicMeter cubicMeter)
+		{
+			return SIBase<Kilogram>.Create(kilogramPerCubicMeter.Val * cubicMeter.Value());
+		}
+
+		public static Kilogram operator *(KilogramPerCubicMeter kilogramPerCubicMeter, Liter liter)
+		{
+			return SIBase<Kilogram>.Create(kilogramPerCubicMeter.Val * liter.Value() / 1000);
+		}
+
+		public static CubicMeter operator /(Kilogram kg, KilogramPerCubicMeter kgm3)
+		{
+			return SIBase<CubicMeter>.Create(kg.Value() / kgm3.Val);
+		}
+	}
+
+	/// <summary>
 	/// SI Class for Kilogramm per watt second [kg/Ws].
 	/// </summary>
 	public class KilogramPerWattSecond : SIBase<KilogramPerWattSecond>
@@ -532,17 +560,17 @@ namespace TUGraz.VectoCommon.Utils
 		}
 	}
 
-	public class JoulePerGram : SIBase<JoulePerGram>
+	public class JoulePerKilogramm : SIBase<JoulePerKilogramm>
 	{
-		private static readonly Unit[] NumeratorDefault = { Unit.W, Unit.s };
-		private static readonly Unit[] DenominatorDefault = { Unit.g };
+		private static readonly Unit[] NumeratorDefault = { Unit.J };
+		private static readonly Unit[] DenominatorDefault = { Unit.k, Unit.g };
 
-		private JoulePerGram(double val) : base(val, NumeratorDefault, DenominatorDefault) {}
+		private JoulePerKilogramm(double val) : base(val, NumeratorDefault, DenominatorDefault) {}
 
-		//public static Joule operator *(Gram gram, JoulePerGram jpg)
-		//{
-		//	return SIBase<Joule>.Create(gram.Value() * jpg.Val);
-		//}
+		public static Joule operator *(Kilogram kg, JoulePerKilogramm jpg)
+		{
+			return SIBase<Joule>.Create(kg.Value() * jpg.Val);
+		}
 	}
 
 
@@ -1001,6 +1029,7 @@ namespace TUGraz.VectoCommon.Utils
 			h,
 			milli,
 			t,
+			J,
 			Ampere,
 			NI, // norm liter
 			liter,
@@ -1165,12 +1194,13 @@ namespace TUGraz.VectoCommon.Utils
 		/// Casts the SI Unit to the concrete unit type (if the units allow such an cast).
 		/// </summary>
 		/// <typeparam name="T">the specialized SI unit. e.g. Watt, NewtonMeter, Second</typeparam>
-		[DebuggerHidden]
+		//[DebuggerHidden]
 		public T Cast<T>() where T : SIBase<T>
 		{
-			var t = SIBase<T>.Create(Val);
-			if (!HasEqualUnit(t)) {
-				throw new VectoException("SI Unit Conversion failed: From {0} to {1}", this, t);
+			var si = ToBasicUnits();
+			var t = SIBase<T>.Create(si.Val);
+			if (!si.HasEqualUnit(t)) {
+				throw new VectoException("SI Unit Conversion failed: From {0} to {1}", si, t);
 			}
 			return t;
 		}
@@ -1221,6 +1251,20 @@ namespace TUGraz.VectoCommon.Utils
 					factor *= 1000;
 					numerator.Add(Unit.k);
 					numerator.Add(Unit.g);
+					break;
+				case Unit.J:
+					numerator.Add(Unit.k);
+					numerator.Add(Unit.g);
+					numerator.Add(Unit.m);
+					numerator.Add(Unit.m);
+					denominator.Add(Unit.s);
+					denominator.Add(Unit.s);
+					break;
+				case Unit.liter:
+					factor /= 1000;
+					numerator.Add(Unit.m);
+					numerator.Add(Unit.m);
+					numerator.Add(Unit.m);
 					break;
 				case Unit.min:
 					factor *= 60;
@@ -1349,7 +1393,13 @@ namespace TUGraz.VectoCommon.Utils
 		[DebuggerHidden]
 		public SI Liter
 		{
-			[DebuggerHidden] get { return new SI(this, fromUnit: Unit.liter, toUnit: Unit.liter); }
+			[DebuggerHidden] get { return new SI(this, fromUnit: Unit.liter, factor: 0.1, toUnit: Unit.m, exponent: 3); }
+		}
+
+		[DebuggerHidden]
+		public SI Joule
+		{
+			[DebuggerHidden] get { return new SI(this, fromUnit: Unit.J, toUnit: Unit.J); }
 		}
 
 		/// <summary>

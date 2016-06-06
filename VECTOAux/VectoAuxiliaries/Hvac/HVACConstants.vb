@@ -14,25 +14,31 @@ Namespace Hvac
 	Public Class HVACConstants
 		Implements IHVACConstants
 
-		Private _fuelDensity As Double
+		Private _fuelDensity As KilogramPerCubicMeter
 
 		Public Sub New()
-			_fuelDensity = 0.832
+			_fuelDensity = 835.SI(Of KilogramPerCubicMeter)()
 		End Sub
 
-		Public Sub New(fuelDensitySingle As Double)
+		Public Sub New(fuelDensitySingle As KilogramPerCubicMeter)
 			_fuelDensity = fuelDensitySingle
 		End Sub
 
-		Public ReadOnly Property DieselGCVJperGram As Double Implements IHVACConstants.DieselGCVJperGram
+		Public ReadOnly Property DieselGCVJperGram As JoulePerKilogramm Implements IHVACConstants.DieselGCVJperGram
 			Get
-				Return 44800
+				Return 44800.SI().Joule.Per.Gramm.Cast(Of JoulePerKilogramm)()
 			End Get
 		End Property
 
-		Public ReadOnly Property FuelDensity As Double Implements IHVACConstants.FuelDensity
+		Public ReadOnly Property FuelDensity As KilogramPerCubicMeter Implements IHVACConstants.FuelDensity
 			Get
 				Return _fuelDensity
+			End Get
+		End Property
+
+		Public ReadOnly Property FuelDensityAsGramPerLiter As Double Implements IHVACConstants.FuelDensityAsGramPerLiter
+			Get
+				Return _fuelDensity.Value() * 1000
 			End Get
 		End Property
 	End Class

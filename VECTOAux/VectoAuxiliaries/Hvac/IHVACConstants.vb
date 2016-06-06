@@ -8,7 +8,7 @@ Namespace Hvac
 		''' <value></value>
 		''' <returns></returns>
 		''' <remarks></remarks>
-		ReadOnly Property DieselGCVJperGram As Double
+		ReadOnly Property DieselGCVJperGram As JoulePerKilogramm
 
 		''' <summary>
 		''' 835  [g/l]
@@ -16,7 +16,9 @@ Namespace Hvac
 		''' <value></value>
 		''' <returns></returns>
 		''' <remarks></remarks>
-		ReadOnly Property FuelDensity As Double
+		ReadOnly Property FuelDensity As KilogramPerCubicMeter
+
+		ReadOnly Property FuelDensityAsGramPerLiter As Double
 	End Interface
 End Namespace
 

@@ -169,7 +169,7 @@ Public Class AdvancedAuxiliaries
 												auxConfig.PneumaticAuxillariesConfig,
 												actuationsMap,
 												compressorMap,
-												VectoInputs.VehicleWeightKG.SI(Of Kilogram),
+												VectoInputs.VehicleWeightKG,
 												VectoInputs.Cycle,
 												Signals)
 

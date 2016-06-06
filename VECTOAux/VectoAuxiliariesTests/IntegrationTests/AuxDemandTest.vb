@@ -19,8 +19,8 @@ Namespace IntegrationTests
 			Dim aux As AdvancedAuxiliaries = New AdvancedAuxiliaries
 
 			aux.VectoInputs.Cycle = "Coach"
-			aux.VectoInputs.VehicleWeightKG = vehicleWeight
-			aux.VectoInputs.FuelDensity = 0.832
+			aux.VectoInputs.VehicleWeightKG = vehicleWeight.SI(Of Kilogram)()
+			aux.VectoInputs.FuelDensity = 0.832.SI().Kilo.Gramm.Per.Liter.Cast(Of KilogramPerCubicMeter)()
 			Dim fuelMap As cMAP = New cMAP()
 			fuelMap.FilePath = engineFCMapFilePath
 			fuelMap.ReadFile(False)
@@ -65,8 +65,8 @@ Namespace IntegrationTests
 			Dim aux As AdvancedAuxiliaries = New AdvancedAuxiliaries
 
 			aux.VectoInputs.Cycle = "Coach"
-			aux.VectoInputs.VehicleWeightKG = 12000
-			aux.VectoInputs.FuelDensity = 0.832
+			aux.VectoInputs.VehicleWeightKG = 12000.SI(Of Kilogram)()
+			aux.VectoInputs.FuelDensity = 0.832.SI().Kilo.Gramm.Per.Liter.Cast(Of KilogramPerCubicMeter)()
 			Dim fuelMap As cMAP = New cMAP()
 			fuelMap.FilePath = engineFCMapFilePath
 			fuelMap.ReadFile(False)
