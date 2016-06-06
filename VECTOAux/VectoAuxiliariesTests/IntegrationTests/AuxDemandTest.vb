@@ -30,21 +30,21 @@ Namespace IntegrationTests
 
 
 			aux.Signals.TotalCycleTimeSeconds = 15000
-			aux.Signals.EngineIdleSpeed = 560
+			aux.Signals.EngineIdleSpeed = 560.RPMtoRad()
 
 			aux.Initialise(Path.GetFileName(auxFilePath), Path.GetDirectoryName(Path.GetFullPath(auxFilePath)) + "\")
 
 			aux.Signals.ClutchEngaged = True
-			aux.Signals.EngineDrivelinePower = driveLinePower 'kW
-			aux.Signals.EngineSpeed = engineSpeed 'rpm
-			aux.Signals.EngineDrivelineTorque = driveLinePower * 1000 / (engineSpeed * 2 * Math.PI / 60)
-			aux.Signals.EngineMotoringPower = 24 'kW - has to be positive
+			aux.Signals.EngineDrivelinePower = (driveLinePower * 1000).SI(Of Watt)()  'kW
+			aux.Signals.EngineSpeed = engineSpeed.RPMtoRad() 'rpm
+			aux.Signals.EngineDrivelineTorque = (driveLinePower * 1000).SI(Of Watt)() / (engineSpeed.RPMtoRad())
+			aux.Signals.EngineMotoringPower = (24 * 1000).SI(Of Watt)()	  'kW - has to be positive
 
-			aux.Signals.PreExistingAuxPower = 6.1
+			aux.Signals.PreExistingAuxPower = (6.1 * 1000).SI(Of Watt)()
 			aux.Signals.Idle = False
 			aux.Signals.InNeutral = False
 			aux.Signals.RunningCalc = True
-			aux.Signals.Internal_Engine_Power = internalPower	'kW
+			aux.Signals.InternalEnginePower = (internalPower * 1000).SI(Of Watt)()		'kW
 
 			Dim power As Watt = aux.AuxiliaryPowerAtCrankWatts()
 
@@ -76,21 +76,21 @@ Namespace IntegrationTests
 
 
 			aux.Signals.TotalCycleTimeSeconds = 15000
-			aux.Signals.EngineIdleSpeed = 560
+			aux.Signals.EngineIdleSpeed = 560.RPMtoRad()
 
 			aux.Initialise(Path.GetFileName(auxFilePath), Path.GetDirectoryName(Path.GetFullPath(auxFilePath)) + "\")
 
 			aux.Signals.ClutchEngaged = True
-			aux.Signals.EngineDrivelinePower = driveLinePower 'kW
-			aux.Signals.EngineSpeed = engineSpeed 'rpm
-			aux.Signals.EngineDrivelineTorque = driveLinePower * 1000 / (1256 * 2 * Math.PI / 60)
-			aux.Signals.EngineMotoringPower = 24 'kW - has to be positive
+			aux.Signals.EngineDrivelinePower = (driveLinePower * 1000).SI(Of Watt)() 'kW
+			aux.Signals.EngineSpeed = engineSpeed.RPMtoRad() 'rpm
+			aux.Signals.EngineDrivelineTorque = (driveLinePower * 1000).SI(Of Watt)() / (1256.RPMtoRad())
+			aux.Signals.EngineMotoringPower = (24 * 1000).SI(Of Watt)()	 'kW - has to be positive
 
-			aux.Signals.PreExistingAuxPower = 0
+			aux.Signals.PreExistingAuxPower = 0.SI(Of Watt)()
 			aux.Signals.Idle = False
 			aux.Signals.InNeutral = False
 			aux.Signals.RunningCalc = True
-			aux.Signals.Internal_Engine_Power = internalPower	'kW
+			aux.Signals.InternalEnginePower = (internalPower * 1000).SI(Of Watt)()	   'kW
 
 			Dim msg As String = String.Empty
 			For i As Integer = 0 To 9
@@ -101,9 +101,9 @@ Namespace IntegrationTests
 
 			Assert.AreEqual(79.303.SI().Gramm.Value(), aux.AA_TotalCycleFC_Grams().Value(), 0.0001)
 
-			aux.Signals.EngineDrivelinePower = -15
-			aux.Signals.EngineDrivelineTorque = aux.Signals.EngineDrivelinePower * 1000 / (1256 * 2 * Math.PI / 60)
-			aux.Signals.Internal_Engine_Power = -50
+			aux.Signals.EngineDrivelinePower = (-15 * 1000).SI(Of Watt)()
+			aux.Signals.EngineDrivelineTorque = aux.Signals.EngineDrivelinePower / (1256.RPMtoRad())
+			aux.Signals.InternalEnginePower = (-50 * 1000).SI(Of Watt)()
 
 			For i As Integer = 0 To 9
 				Assert.AreEqual(8954.1435, aux.AuxiliaryPowerAtCrankWatts().Value(), 0.001)
@@ -113,9 +113,9 @@ Namespace IntegrationTests
 
 			Assert.AreEqual(82.5783.SI().Gramm.Value(), aux.AA_TotalCycleFC_Grams().Value(), 0.0001)
 
-			aux.Signals.EngineDrivelinePower = driveLinePower
-			aux.Signals.EngineDrivelineTorque = aux.Signals.EngineDrivelinePower * 1000 / (1256 * 2 * Math.PI / 60)
-			aux.Signals.Internal_Engine_Power = internalPower
+			aux.Signals.EngineDrivelinePower = (driveLinePower * 1000).SI(Of Watt)()
+			aux.Signals.EngineDrivelineTorque = aux.Signals.EngineDrivelinePower / (1256.RPMtoRad())
+			aux.Signals.InternalEnginePower = (internalPower * 1000).SI(Of Watt)()	   'kW
 
 			For i As Integer = 0 To 9
 				Assert.AreEqual(6087.0317, aux.AuxiliaryPowerAtCrankWatts().Value(), 0.001)

@@ -41,6 +41,7 @@ Public Class AuxiliaryConfig
 	Public Property HvacUserInputsConfig As IHVACUserInputsConfig Implements IAuxiliaryConfig.HvacUserInputsConfig
 
 	'Vecto Signals
+	<JsonIgnore>
 	Public Property Signals As ISignals
 
 	'Constructors
@@ -84,9 +85,10 @@ Public Class AuxiliaryConfig
 	'Set Default Values
 	Private Sub setDefaults()
 
-		Dim tmp As VectoInputs = New VectoInputs With {.Cycle = "Urban", .VehicleWeightKG = 16500.SI(Of Kilogram)(), .PowerNetVoltage = 28.3.SI(Of Volt)()}
+		Dim tmp As VectoInputs = New VectoInputs _
+				With {.Cycle = "Urban", .VehicleWeightKG = 16500.SI(Of Kilogram)(), .PowerNetVoltage = 28.3.SI(Of Volt)()}
 		VectoInputs = tmp
-		Signals = New Signals With {.EngineSpeed = 2000, .TotalCycleTimeSeconds = 3114, .ClutchEngaged = False}
+		Signals = New Signals With {.EngineSpeed = 2000.RPMtoRad(), .TotalCycleTimeSeconds = 3114, .ClutchEngaged = False}
 
 		'Pneumatics set deault values
 		PneumaticUserInputsConfig = New PneumaticUserInputsConfig(True)

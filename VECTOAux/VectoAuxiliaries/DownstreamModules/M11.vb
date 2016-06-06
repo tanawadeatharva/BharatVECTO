@@ -45,11 +45,11 @@ Namespace DownstreamModules
 
 
 		'Staging Calculations
-		Private Function Sum0(ByVal rpm As Double) As PerSecond
+		Private Function Sum0(ByVal rpm As PerSecond) As PerSecond
 
-			If rpm < 1 Then rpm = 1
+			If rpm < 1 Then rpm = 1.RPMtoRad()
 
-			Return rpm.RPMtoRad()	' / RPM_to_RadiansPerSecond
+			Return rpm	' / RPM_to_RadiansPerSecond
 		End Function
 
 		Private ReadOnly Property Sum1 As Watt
@@ -113,8 +113,8 @@ Namespace DownstreamModules
 			Get
 
 				Return _
-					signals.EngineDrivelineTorque.SI(Of NewtonMeter)() +
-					((signals.PreExistingAuxPower * 1000).SI(Of Watt)() / Sum0(signals.EngineSpeed))
+					signals.EngineDrivelineTorque +
+					(signals.PreExistingAuxPower / Sum0(signals.EngineSpeed))
 			End Get
 		End Property
 
@@ -228,7 +228,7 @@ Namespace DownstreamModules
 				'MQ: No longer needed - already per Second 'These need to be divided by 3600 as the Fuel Map output is in Grams/Second.
 				AG4 += (Sum7 * stepTimeInSeconds)  '/ 3600
 				AG5 += (Sum8 * stepTimeInSeconds) ' / 3600
-				AG7 += (Sum12 * stepTimeInSeconds)				 '/ 3600
+				AG7 += (Sum12 * stepTimeInSeconds)				   '/ 3600
 			End If
 		End Sub
 

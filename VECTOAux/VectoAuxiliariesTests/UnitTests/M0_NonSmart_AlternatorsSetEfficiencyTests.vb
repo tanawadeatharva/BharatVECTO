@@ -32,7 +32,7 @@ Namespace UnitTests
 
 		Public Sub New()
 
-			signals.EngineSpeed = 2000
+			signals.EngineSpeed = 2000.RPMtoRad()
 
 			'Setup consumers and HVAC ( 1 Consumer in Test Category )
 			elecConsumers = CType(New ElectricalConsumerList(0.096, 26.3), IElectricalConsumerList)

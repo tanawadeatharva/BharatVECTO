@@ -73,6 +73,8 @@ Namespace UnitTests
 			M6._OverrunFlag = IP4
 			Signals.ClutchEngaged = IP5
 			Signals.InNeutral = IP6
+			Signals.EngineSpeed = 0.RPMtoRad()
+			Signals.EngineIdleSpeed = 0.RPMtoRad()
 			M6._SmartElecAndPneumaticAltPowerGenAtCrank = IP7.SI(Of Watt)()
 			M6._SmartElecAndPneumaticAirCompPowerGenAtCrank = IP8.SI(Of Watt)()
 			M6._SmartElecOnlyAltPowerGenAtCrank = IP9.SI(Of Watt)()

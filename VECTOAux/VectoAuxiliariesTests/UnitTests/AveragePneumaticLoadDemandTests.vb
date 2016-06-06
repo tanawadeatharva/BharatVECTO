@@ -47,7 +47,7 @@ Namespace UnitTests
 
 			_Signals.TotalCycleTimeSeconds = 3114
 
-			_Signals.EngineSpeed = 3000
+			_Signals.EngineSpeed = 3000.RPMtoRad()
 		End Sub
 
 

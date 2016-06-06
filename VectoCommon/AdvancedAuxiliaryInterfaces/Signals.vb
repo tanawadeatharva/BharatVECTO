@@ -8,7 +8,7 @@
 '   WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
 '
 ' See the LICENSE.txt for the specific language governing permissions and limitations.
-
+Imports TUGraz.VectoCommon.Utils
 
 Public Class Signals
 	Implements ISignals
@@ -18,10 +18,10 @@ Public Class Signals
 	Private _smartElectrics As Boolean
 
 	Public Property ClutchEngaged As Boolean Implements ISignals.ClutchEngaged
-	Public Property EngineDrivelinePower As Double Implements ISignals.EngineDrivelinePower
-	Public Property EngineDrivelineTorque As Double Implements ISignals.EngineDrivelineTorque
-	Public Property EngineMotoringPower As Double Implements ISignals.EngineMotoringPower
-	Public Property EngineSpeed As Double Implements ISignals.EngineSpeed
+	Public Property EngineDrivelinePower As Watt Implements ISignals.EngineDrivelinePower
+	Public Property EngineDrivelineTorque As NewtonMeter Implements ISignals.EngineDrivelineTorque
+	Public Property EngineMotoringPower As Watt Implements ISignals.EngineMotoringPower
+	Public Property EngineSpeed As PerSecond Implements ISignals.EngineSpeed
 
 	Public Property SmartElectrics As Boolean Implements ISignals.SmartElectrics
 		Get
@@ -35,7 +35,7 @@ Public Class Signals
 	Public Property SmartPneumatics As Boolean Implements ISignals.SmartPneumatics
 	Public Property TotalCycleTimeSeconds As Integer Implements ISignals.TotalCycleTimeSeconds
 	Public Property CurrentCycleTimeInSeconds As Double Implements ISignals.CurrentCycleTimeInSeconds
-	Public Property PreExistingAuxPower As Double Implements ISignals.PreExistingAuxPower
+	Public Property PreExistingAuxPower As Watt Implements ISignals.PreExistingAuxPower
 	Public Property Idle As Boolean Implements ISignals.Idle
 	Public Property InNeutral As Boolean Implements ISignals.InNeutral
 
@@ -54,11 +54,11 @@ Public Class Signals
 		End Get
 	End Property
 
-	Public Property EngineIdleSpeed As Double Implements ISignals.EngineIdleSpeed
+	Public Property EngineIdleSpeed As PerSecond Implements ISignals.EngineIdleSpeed
 	Public Property PneumaticOverrunUtilisation As Double Implements ISignals.PneumaticOverrunUtilisation
 	Public Property StoredEnergyEfficiency As Double Implements ISignals.StoredEnergyEfficiency
 	Public Property RunningCalc As Boolean Implements ISignals.RunningCalc
-	Public Property Internal_Engine_Power As Single Implements ISignals.Internal_Engine_Power
+	Public Property InternalEnginePower As Watt Implements ISignals.InternalEnginePower
 End Class
 
 

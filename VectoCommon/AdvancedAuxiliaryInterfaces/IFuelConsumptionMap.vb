@@ -8,5 +8,5 @@ Public Interface IFuelConsumptionMap
 	''' <param name="angularVelocity"></param>
 	''' <returns></returns>
 	''' <remarks></remarks>
-	Function GetFuelConsumption(torque As NewtonMeter, angularVelocity As Double) As KilogramPerSecond
+	Function GetFuelConsumption(torque As NewtonMeter, angularVelocity As PerSecond) As KilogramPerSecond
 End Interface

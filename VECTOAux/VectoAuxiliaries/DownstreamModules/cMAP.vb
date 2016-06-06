@@ -184,10 +184,10 @@ lbEr:
 
 #End Region
 
-	Public Function GetFuelConsumption(torque As NewtonMeter, angularVelocity As Double) As KilogramPerSecond _
+	Public Function GetFuelConsumption(torque As NewtonMeter, angularVelocity As PerSecond) As KilogramPerSecond _
 		Implements IFuelConsumptionMap.GetFuelConsumption
 		Return _
-			(fFCdelaunay_Intp(CType(angularVelocity, Single), CType(torque.Value(), Single)) / 3600.0 / 1000.0).SI(Of KilogramPerSecond)()
+			(fFCdelaunay_Intp(CType(angularVelocity.AsRPM, Single), CType(torque.Value(), Single)) / 3600.0 / 1000.0).SI(Of KilogramPerSecond)()
 	End Function
 End Class
 

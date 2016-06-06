@@ -26,8 +26,7 @@ Namespace UnitTests
 
 
 		Public Sub New()
-
-			_signals.EngineSpeed = 100
+			_signals.EngineSpeed = 100.RPMtoRad()
 		End Sub
 
 
@@ -52,7 +51,7 @@ Namespace UnitTests
 		<Test()>
 		Public Sub CreateNewJustPathTest()
 			Dim map As ICompressorMap = GetNonFailingCompressorMapMock()
-			_signals.EngineSpeed = 100
+			_signals.EngineSpeed = 100.RPMtoRad()
 			Dim target As M4_AirCompressor = New M4_AirCompressor(map, 2, 0.8, _signals)
 			Assert.IsNotNull(target)
 		End Sub
@@ -68,7 +67,7 @@ Namespace UnitTests
 		<Test()>
 		Public Sub InitialiseTest()
 			Dim map As ICompressorMap = GetNonFailingCompressorMapMock()
-			_signals.EngineSpeed = 100
+			_signals.EngineSpeed = 100.RPMtoRad()
 			Dim target As M4_AirCompressor = New M4_AirCompressor(map, 2, 0.8, _signals)
 			Assert.IsTrue(target.Initialise())
 		End Sub
@@ -76,7 +75,7 @@ Namespace UnitTests
 		<Test(), ExpectedException("System.ArgumentException")>
 		Public Sub InitialiseInvalidMapTest()
 			Dim map As ICompressorMap = GetFailingCompressorMapMock()
-			_signals.EngineSpeed = 100
+			_signals.EngineSpeed = 100.RPMtoRad()
 			Dim target As M4_AirCompressor = New M4_AirCompressor(map, 2, 0.8, _signals)
 			target.Initialise()
 		End Sub

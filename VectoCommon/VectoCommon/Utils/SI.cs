@@ -584,6 +584,11 @@ namespace TUGraz.VectoCommon.Utils
 
 		[DebuggerHidden]
 		private PerSecond(double val) : base(val, new Unit[0], DenominatorDefault) {}
+
+		public double AsRPM
+		{
+			get { return Val * 60 / (2 * Math.PI); }
+		}
 	}
 
 	/// <summary>

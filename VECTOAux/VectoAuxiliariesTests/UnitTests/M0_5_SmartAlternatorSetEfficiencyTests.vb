@@ -43,7 +43,7 @@ Namespace UnitTests
 			alternatoMap.Initialise()
 
 			Dim signals = New Signals()
-			signals.EngineSpeed = 2000
+			signals.EngineSpeed = 2000.RPMtoRad()
 
 			Dim m0 As New M0_NonSmart_AlternatorsSetEfficiency(elecConsumers, alternatoMap, 26.3.SI(Of Volt), signals, ssm)
 
@@ -57,7 +57,7 @@ Namespace UnitTests
 			Dim overrunResult As New ResultCard(readings)
 
 
-			signals.EngineSpeed = 2000
+			signals.EngineSpeed = 2000.RPMtoRad()
 			target = New M0_5_SmartAlternatorSetEfficiency(m0, elecConsumers, alternatoMap, idleResult, tractionResult,
 															overrunResult, signals)
 		End Sub

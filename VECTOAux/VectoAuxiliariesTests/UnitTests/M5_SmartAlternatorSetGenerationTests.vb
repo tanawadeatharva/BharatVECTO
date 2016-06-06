@@ -40,7 +40,7 @@ Namespace UnitTests
 
 		Private Sub Initialise()
 
-			_signals.EngineSpeed = 2000
+			_signals.EngineSpeed = 2000.RPMtoRad()
 
 			Dim elecConsumers As New ElectricalConsumerList(_powerNetVoltage, 0.096, True)
 
@@ -61,7 +61,7 @@ Namespace UnitTests
 			Dim overrunResult As New ResultCard(readings)
 
 			Dim signals As ISignals = New Signals
-			signals.EngineSpeed = 2000
+			signals.EngineSpeed = 2000.RPMtoRad()
 
 			_m05 = New M0_5_SmartAlternatorSetEfficiency(m0, elecConsumers, alternatoMap, idleResult, tractionResult,
 														overrunResult, signals)

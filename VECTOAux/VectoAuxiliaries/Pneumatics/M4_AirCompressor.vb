@@ -111,7 +111,7 @@ Namespace Pneumatics
 		''' <returns></returns>
 		''' <remarks></remarks>
 		Public Function GetFlowRate() As NormLiterPerSecond Implements IM4_AirCompressor.GetFlowRate
-			Dim compressorRpm As Double = _signals.EngineSpeed * PulleyGearRatio
+			Dim compressorRpm As Double = _signals.EngineSpeed.AsRPM * PulleyGearRatio
 
 			''Flow Rate in the map is Litres/min so divide by 60 to get Units per second.
 			Return _map.GetFlowRate(compressorRpm) / 60
@@ -153,7 +153,7 @@ Namespace Pneumatics
 		''' <returns></returns>
 		''' <remarks></remarks>
 		Private Function GetCompressorPower(ByVal compressorOn As Boolean) As Watt
-			Dim compressorRpm As Double = _signals.EngineSpeed * PulleyGearRatio
+			Dim compressorRpm As Double = _signals.EngineSpeed.AsRPM * PulleyGearRatio
 			If compressorOn Then
 				Return _map.GetPowerCompressorOn(compressorRpm)
 			Else

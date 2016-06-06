@@ -71,7 +71,7 @@ Namespace Electrics
 		Public ReadOnly Property AlternatorsEfficiencyIdleResultCard() As Double _
 			Implements IM0_5_SmartAlternatorSetEfficiency.AlternatorsEfficiencyIdleResultCard
 			Get
-				Return _alternatorMap.GetEfficiency(_signals.EngineSpeed, SmartIdleCurrent()).Efficiency
+				Return _alternatorMap.GetEfficiency(_signals.EngineSpeed.AsRPM, SmartIdleCurrent()).Efficiency
 			End Get
 		End Property
 
@@ -85,7 +85,7 @@ Namespace Electrics
 		Public ReadOnly Property AlternatorsEfficiencyTractionOnResultCard() As Double _
 			Implements IM0_5_SmartAlternatorSetEfficiency.AlternatorsEfficiencyTractionOnResultCard
 			Get
-				Return _alternatorMap.GetEfficiency(CType(_signals.EngineSpeed, Single), SmartTractionCurrent()).Efficiency
+				Return _alternatorMap.GetEfficiency(CType(_signals.EngineSpeed.AsRPM, Single), SmartTractionCurrent()).Efficiency
 			End Get
 		End Property
 
@@ -99,7 +99,7 @@ Namespace Electrics
 		Public ReadOnly Property AlternatorsEfficiencyOverrunResultCard() As Double _
 			Implements IM0_5_SmartAlternatorSetEfficiency.AlternatorsEfficiencyOverrunResultCard
 			Get
-				Return _alternatorMap.GetEfficiency(CType(_signals.EngineSpeed, Single), SmartOverrunCurrent()).Efficiency
+				Return _alternatorMap.GetEfficiency(CType(_signals.EngineSpeed.AsRPM, Single), SmartOverrunCurrent()).Efficiency
 			End Get
 		End Property
 

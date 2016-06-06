@@ -78,11 +78,11 @@ Namespace DownstreamModules
 #End Region
 
 		'Staging Calculations
-		Private Function S0(ByVal rpm As Double) As PerSecond
+		Private Function S0(ByVal rpm As PerSecond) As PerSecond
 
-			If rpm < 1 Then rpm = 1
+			If rpm < 1 Then rpm = 1.RPMtoRad()
 
-			Return rpm.RPMtoRad()  ' / RPM_TO_RADS_PER_SECOND
+			Return rpm	' / RPM_TO_RADS_PER_SECOND
 		End Function
 
 		Private ReadOnly Property S1 As Watt
@@ -180,10 +180,9 @@ Namespace DownstreamModules
 
 		Private ReadOnly Property S14 As NewtonMeter
 			Get
-
 				Return _
-					SIBase(Of NewtonMeter).Create(Signals.EngineDrivelineTorque) +
-					(SIBase(Of Watt).Create(Signals.PreExistingAuxPower * 1000) / S0(Signals.EngineSpeed))
+					Signals.EngineDrivelineTorque +
+					Signals.PreExistingAuxPower / S0(Signals.EngineSpeed)
 			End Get
 		End Property
 

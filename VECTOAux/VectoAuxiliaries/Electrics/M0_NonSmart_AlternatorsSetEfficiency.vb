@@ -57,7 +57,7 @@ Namespace Electrics
 				Dim baseCurrentDemandAmps As Ampere = _electricalConsumersList.GetTotalAverageDemandAmps(False) _
 				' ElectricConstants.StoredEnergyEfficiency
 				Dim totalDemandAmps As Ampere = baseCurrentDemandAmps + GetHVACElectricalPowerDemandAmps
-				Return _alternatorEfficiencyMap.GetEfficiency(_signals.EngineSpeed, totalDemandAmps).Efficiency
+				Return _alternatorEfficiencyMap.GetEfficiency(_signals.EngineSpeed.AsRPM, totalDemandAmps).Efficiency
 			End Get
 		End Property
 

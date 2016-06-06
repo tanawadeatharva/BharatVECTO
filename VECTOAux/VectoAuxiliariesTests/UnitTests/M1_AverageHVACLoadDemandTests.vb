@@ -13,7 +13,7 @@ Namespace UnitTests
 		Private Const _SSMMAP As String = "TestFiles\ssm.Ahsm"
 		Private Const _BusDatabase As String = "TestFiles\BusDatabase.abdb"
 
-		Private signals As ISignals = New Signals With {.EngineSpeed = 2000}
+		Private signals As ISignals = New Signals With {.EngineSpeed = 2000.RPMtoRad()}
 		Private powernetVoltage As Double = 26.3
 		Private ssm As ISSMTOOL = New SSMTOOL(_SSMMAP, New HVACConstants())
 

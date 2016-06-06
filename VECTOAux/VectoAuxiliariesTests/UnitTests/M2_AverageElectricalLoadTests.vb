@@ -33,7 +33,7 @@ Namespace UnitTests
 
 		Private Function GetAverageElectricalDemandInstance() As M2_AverageElectricalLoadDemand
 
-			signals.EngineSpeed = 2000
+			signals.EngineSpeed = 2000.RPMtoRad()
 
 
 			Dim consumers As IElectricalConsumerList = CType(New ElectricalConsumerList(26.3, 0.096, True), 

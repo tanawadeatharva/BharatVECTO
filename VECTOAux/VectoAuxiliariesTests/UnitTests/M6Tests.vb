@@ -30,9 +30,9 @@ Namespace UnitTests
 
 		Public Sub New()
 
-			Signals.EngineMotoringPower = 100
-			Signals.EngineDrivelinePower = 150
-			Signals.PreExistingAuxPower = 30
+			Signals.EngineMotoringPower = 100000.SI(Of Watt)()
+			Signals.EngineDrivelinePower = 150000.SI(Of Watt)()
+			Signals.PreExistingAuxPower = 30000.SI(Of Watt)()
 		End Sub
 
 		<Test()>
@@ -46,8 +46,12 @@ Namespace UnitTests
 
 		'Test Cases Supplied by Mike Preston.
 		<Test()> _
-		<TestCase(100, 100, 100, 100, 20, 20, 40, 100, 100, 100, 0.1F, -0.55, False, False, False, 0, 20, 0, 100, 20, 200, False)> _
-		<TestCase(100, 100, 100, 100, 20, 20, 40, 100, 100, 100, 100, -550, True, False, False, 0, 20, 0, 100, 20, 200, False)>
+		<
+			TestCase _
+				(100, 100, 100, 100, 20, 20, 40, 100, 100, 100, 0.1F, -0.55, False, False, False, 0, 20, 0, 100, 20, 200, False)> _
+		<
+			TestCase _
+				(100, 100, 100, 100, 20, 20, 40, 100, 100, 100, 100, -550, True, False, False, 0, 20, 0, 100, 20, 200, False)>
 		Public Sub MikesConditionsTest(M1_1 As Double,
 										M1_2 As Double,
 										M2_1 As Double,
@@ -92,9 +96,10 @@ Namespace UnitTests
 			M5._AlternatorsGenerationPowerAtCrankOverrunWatts = M5_2.SI(Of Watt)()
 
 
-			signals.EngineMotoringPower = EMP
-			signals.PreExistingAuxPower = AUX
-			signals.EngineDrivelinePower = EDP
+			signals.EngineMotoringPower = (EMP * 1000).SI(Of Watt)()
+			signals.InternalEnginePower = 0.SI(Of Watt)()
+			signals.PreExistingAuxPower = (AUX * 1000).SI(Of Watt)()
+			signals.EngineDrivelinePower = (EDP * 1000).SI(Of Watt)()
 			signals.SmartElectrics = SM
 
 

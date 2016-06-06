@@ -1556,7 +1556,8 @@ lb_nOK:
 				End If
 
 				mAAUX_Global.EngineDrivelineTorque = nPeToM(nU, P) - (((Paux) * 1000) / (EngineSpeed / 9.55))
-				mAAUX_Global.advancedAuxModel.Signals.EngineDrivelineTorque = mAAUX_Global.EngineDrivelineTorque
+				mAAUX_Global.advancedAuxModel.Signals.EngineDrivelineTorque =
+					mAAUX_Global.EngineDrivelineTorque.SI(Of NewtonMeter)()
 
 
 				advancedAuxModel.CycleStep(1.SI(Of Second), message)
@@ -2747,15 +2748,16 @@ lb10:
 			Try
 
 				mAAUX_Global.advancedAuxModel.Signals.ClutchEngaged = mAAUX_Global.ClutchEngaged
-				mAAUX_Global.advancedAuxModel.Signals.EngineDrivelinePower = mAAUX_Global.EngineDrivelinePower
-				mAAUX_Global.advancedAuxModel.Signals.EngineDrivelineTorque = mAAUX_Global.EngineDrivelineTorque
-				mAAUX_Global.advancedAuxModel.Signals.EngineMotoringPower = mAAUX_Global.EngineMotoringPower
-				mAAUX_Global.advancedAuxModel.Signals.EngineSpeed = mAAUX_Global.EngineSpeed
-				mAAUX_Global.advancedAuxModel.Signals.PreExistingAuxPower = mAAUX_Global.PreExistingAuxPower
+				mAAUX_Global.advancedAuxModel.Signals.EngineDrivelinePower = (mAAUX_Global.EngineDrivelinePower * 1000).SI(Of Watt)()
+				mAAUX_Global.advancedAuxModel.Signals.EngineDrivelineTorque =
+					mAAUX_Global.EngineDrivelineTorque.SI(Of NewtonMeter)()
+				mAAUX_Global.advancedAuxModel.Signals.EngineMotoringPower = (mAAUX_Global.EngineMotoringPower * 1000).SI(Of Watt)()
+				mAAUX_Global.advancedAuxModel.Signals.EngineSpeed = mAAUX_Global.EngineSpeed.RPMtoRad()
+				mAAUX_Global.advancedAuxModel.Signals.PreExistingAuxPower = (mAAUX_Global.PreExistingAuxPower * 1000).SI(Of Watt)()
 				mAAUX_Global.advancedAuxModel.Signals.Idle = mAAUX_Global.Idle
 				mAAUX_Global.advancedAuxModel.Signals.InNeutral = mAAUX_Global.InNeutral
 				mAAUX_Global.advancedAuxModel.Signals.RunningCalc = mAAUX_Global.RunningCalc
-				mAAUX_Global.advancedAuxModel.Signals.Internal_Engine_Power = mAAUX_Global.Internal_Engine_Power
+				mAAUX_Global.advancedAuxModel.Signals.InternalEnginePower = (mAAUX_Global.Internal_Engine_Power * 1000).SI(Of Watt)()
 
 				'Power coming out of Advanced Model is in Watts.
 				power = (advancedAuxModel.AuxiliaryPowerAtCrankWatts().Value() / 1000)

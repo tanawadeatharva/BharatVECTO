@@ -44,10 +44,11 @@ Namespace UnitTests
 			m6Mock.Setup(Function(x) x.OverrunFlag).Returns(IP1)
 			m8Mock.Setup(Function(x) x.SmartElectricalAlternatorPowerGenAtCrank).Returns(IP2.SI(Of Watt))
 			m6Mock.Setup(Function(x) x.AvgPowerDemandAtCrankFromElectricsIncHVAC).Returns(IP3.SI(Of Watt))
-			sgnlsMock.Setup(Function(x) x.EngineDrivelineTorque).Returns(IP4)
+			sgnlsMock.Setup(Function(x) x.EngineDrivelineTorque).Returns(IP4.SI(Of NewtonMeter))
+			sgnlsMock.Setup(Function(x) x.PreExistingAuxPower).Returns(0.SI(Of Watt))
 			m3Mock.Setup(Function(x) x.GetAveragePowerDemandAtCrankFromPneumatics).Returns(IP5.SI(Of Watt))
 			m1Mock.Setup(Function(x) x.AveragePowerDemandAtCrankFromHVACMechanicalsWatts).Returns(IP6.SI(Of Watt))
-			sgnlsMock.Setup(Function(x) x.EngineSpeed).Returns(IP7)
+			sgnlsMock.Setup(Function(x) x.EngineSpeed).Returns(IP7.RPMtoRad())
 			sgnlsMock.Setup(Function(x) x.EngineStopped).Returns(IP8)
 
 
@@ -100,10 +101,10 @@ Namespace UnitTests
 			m6Mock.Setup(Function(x) x.OverrunFlag).Returns(IP1)
 			m8Mock.Setup(Function(x) x.SmartElectricalAlternatorPowerGenAtCrank).Returns(IP2.SI(Of Watt))
 			m6Mock.Setup(Function(x) x.AvgPowerDemandAtCrankFromElectricsIncHVAC).Returns(IP3.SI(Of Watt))
-			sgnlsMock.Setup(Function(x) x.EngineDrivelineTorque).Returns(IP4)
+			sgnlsMock.Setup(Function(x) x.EngineDrivelineTorque).Returns(IP4.SI(Of NewtonMeter))
 			m3Mock.Setup(Function(x) x.GetAveragePowerDemandAtCrankFromPneumatics).Returns(IP5.SI(Of Watt))
 			m1Mock.Setup(Function(x) x.AveragePowerDemandAtCrankFromHVACMechanicalsWatts).Returns(IP6.SI(Of Watt))
-			sgnlsMock.Setup(Function(x) x.EngineSpeed).Returns(IP7)
+			sgnlsMock.Setup(Function(x) x.EngineSpeed).Returns(IP7.RPMtoRad())
 			sgnlsMock.Setup(Function(x) x.EngineStopped).Returns(IP8)
 
 

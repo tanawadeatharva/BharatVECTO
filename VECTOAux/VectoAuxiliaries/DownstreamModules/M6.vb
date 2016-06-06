@@ -166,9 +166,8 @@ Namespace DownstreamModules
 
 		Public ReadOnly Property Sum3 As Watt
 			Get
-
-				Return (_signals.EngineMotoringPower * 1000).SI(Of Watt)() +
-						(_signals.Internal_Engine_Power * 1000).SI(Of Watt)() +
+				Return (_signals.EngineMotoringPower) +
+						(_signals.InternalEnginePower) +
 						Sum2
 			End Get
 		End Property

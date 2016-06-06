@@ -45,7 +45,7 @@ Namespace Pneumatics
 				Return _
 					Sum2 +
 					_pneumaticsCompressorFlowRateMap.GetPowerCompressorOff(
-						_signals.EngineSpeed * _pneumaticUserInputsConfig.CompressorGearRatio)
+						_signals.EngineSpeed.AsRPM * _pneumaticUserInputsConfig.CompressorGearRatio)
 			End Get
 		End Property
 
@@ -64,7 +64,8 @@ Namespace Pneumatics
 		Private ReadOnly Property Sum6 As NormLiterPerSecond
 			Get
 				Return _
-					_pneumaticsCompressorFlowRateMap.GetFlowRate(_signals.EngineSpeed * _pneumaticUserInputsConfig.CompressorGearRatio) /
+					_pneumaticsCompressorFlowRateMap.GetFlowRate(
+						_signals.EngineSpeed.AsRPM * _pneumaticUserInputsConfig.CompressorGearRatio) /
 					60
 			End Get
 		End Property
@@ -74,10 +75,10 @@ Namespace Pneumatics
 
 				Dim pon As Watt =
 						_pneumaticsCompressorFlowRateMap.GetPowerCompressorOn(
-							_signals.EngineSpeed * _pneumaticUserInputsConfig.CompressorGearRatio)
+							_signals.EngineSpeed.AsRPM * _pneumaticUserInputsConfig.CompressorGearRatio)
 				Dim poff As Watt =
 						_pneumaticsCompressorFlowRateMap.GetPowerCompressorOff(
-							_signals.EngineSpeed * _pneumaticUserInputsConfig.CompressorGearRatio)
+							_signals.EngineSpeed.AsRPM * _pneumaticUserInputsConfig.CompressorGearRatio)
 				Dim diff As Watt = pon - poff
 				Return diff
 			End Get
