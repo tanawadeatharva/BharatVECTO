@@ -1,4 +1,4 @@
-' Copyright 2014 European Union.
+﻿' Copyright 2014 European Union.
 ' Licensed under the EUPL (the 'Licence');
 '
 ' * You may not use this work except in compliance with the Licence.
@@ -146,7 +146,7 @@ Public Class cGBX
 
 	Public Function SaveFile() As Boolean
 		Dim i As Integer
-		Dim JSON As New cJSON
+		Dim JSON As New JSON
 		Dim dic As Dictionary(Of String, Object)
 		Dim dic0 As Dictionary(Of String, Object)
 		Dim ls As List(Of Object)
@@ -215,7 +215,7 @@ Public Class cGBX
 	Public Function ReadFile(Optional ByVal ShowMsg As Boolean = True) As Boolean
 		Dim i As Integer
 		Dim MsgSrc As String
-		Dim JSON As New cJSON
+		Dim JSON As New JSON
 		Dim dic As Object
 
 		MsgSrc = "GBX/ReadFile"

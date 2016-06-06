@@ -31,10 +31,10 @@
 
 using System;
 using System.Collections.Generic;
-using System.ComponentModel;
 using System.Diagnostics;
 using System.Linq;
 using System.Threading;
+using System.Threading.Tasks;
 using TUGraz.VectoCommon.Models;
 using TUGraz.VectoCore.Models.SimulationComponent.Data;
 using TUGraz.VectoCore.OutputData;
@@ -74,7 +74,10 @@ namespace TUGraz.VectoCore.Models.Simulation.Impl
 
 		public IEnumerable<CycleTypeDescription> GetCycleTypes()
 		{
-			return Runs.Select(r => new CycleTypeDescription {Name = r.Run.CycleName,CycleType = r.Run.GetContainer().RunData.Cycle.CycleType}).Distinct();
+			return
+				Runs.Select(
+					r => new CycleTypeDescription { Name = r.Run.CycleName, CycleType = r.Run.GetContainer().RunData.Cycle.CycleType })
+					.Distinct();
 		}
 
 		/// <summary>
@@ -84,7 +87,7 @@ namespace TUGraz.VectoCore.Models.Simulation.Impl
 		public List<int> AddRuns(SimulatorFactory factory)
 		{
 			var runIDs = new List<int>();
-			
+
 			factory.SumData = _sumWriter;
 			factory.JobNumber = Interlocked.Increment(ref _jobNumber);
 
@@ -137,7 +140,6 @@ namespace TUGraz.VectoCore.Models.Simulation.Impl
 			ResetEvent.WaitOne();
 		}
 
-
 		private void JobCompleted()
 		{
 			var next = Runs.FirstOrDefault(x => x.Started == false);
@@ -153,17 +155,19 @@ namespace TUGraz.VectoCore.Models.Simulation.Impl
 
 		public Dictionary<int, ProgressEntry> GetProgress()
 		{
-			return Runs.ToDictionary(jobEntry => jobEntry.Run.RunIdentifier, entry => new ProgressEntry {
-				RunName = entry.Run.RunName,
-				CycleName = entry.Run.CycleName,
-				RunSuffix = entry.Run.RunSuffix,
-				Progress = entry.Progress,
-				Done = entry.Done,
-				ExecTime = entry.ExecTime,
-				Success = entry.Success,
-				Canceled = entry.Canceled,
-				Error = entry.ExecException
-			});
+			return Runs.ToDictionary(
+				r => r.Run.RunIdentifier,
+				r => new ProgressEntry {
+					RunName = r.Run.RunName,
+					CycleName = r.Run.CycleName,
+					RunSuffix = r.Run.RunSuffix,
+					Progress = r.Run.Progress,
+					Done = r.Done,
+					ExecTime = r.ExecTime,
+					Success = r.Success,
+					Canceled = r.Canceled,
+					Error = r.ExecException
+				});
 		}
 
 		public bool AllCompleted
@@ -184,7 +188,7 @@ namespace TUGraz.VectoCore.Models.Simulation.Impl
 			public string RunSuffix;
 		}
 
-		internal class RunEntry : LoggingObject, IDisposable
+		internal class RunEntry : LoggingObject
 		{
 			public IVectoRun Run;
 			public JobContainer JobContainer;
@@ -196,55 +200,27 @@ namespace TUGraz.VectoCore.Models.Simulation.Impl
 			public double ExecTime;
 			public Exception ExecException;
 
-			private readonly BackgroundWorker _worker = new BackgroundWorker();
-
-			public RunEntry()
-			{
-				_worker.DoWork += OnDoWork;
-				_worker.RunWorkerCompleted += OnRunWorkerCompleted;
-				_worker.WorkerSupportsCancellation = true;
-			}
-
 			public void RunWorkerAsync()
 			{
-				_worker.RunWorkerAsync();
+				Task.Run(() => {
+					var stopWatch = Stopwatch.StartNew();
+					try {
+						Run.Run();
+					} catch (Exception ex) {
+						Log.Error(ex, "Error during simulation run!");
+						ExecException = ex;
+					}
+					stopWatch.Stop();
+					Success = Run.FinishedWithoutErrors;
+					Done = true;
+					ExecTime = stopWatch.Elapsed.TotalMilliseconds;
+					JobContainer.JobCompleted();
+				});
 			}
 
 			public void CancelAsync()
 			{
-				_worker.CancelAsync();
-			}
-
-			private void OnDoWork(object sender, DoWorkEventArgs e)
-			{
-				var stopWatch = Stopwatch.StartNew();
-				try {
-					Run.Run(_worker, x => Progress = x);
-				} catch (Exception ex) {
-					Log.Error(ex, "Error during simulation run!");
-					ExecException = ex;
-				}
-				if (_worker.CancellationPending) {
-					e.Cancel = true;
-					Canceled = true;
-				}
-				stopWatch.Stop();
-				Success = Run.FinishedWithoutErrors;
-				Done = true;
-				ExecTime = stopWatch.Elapsed.TotalMilliseconds;
-				JobContainer.JobCompleted();
-			}
-
-			private void OnRunWorkerCompleted(object sender, RunWorkerCompletedEventArgs e)
-			{
-				if (e.Error != null) {
-					ExecException = e.Error;
-				}
-			}
-
-			public void Dispose()
-			{
-				_worker.Dispose();
+				Run.Cancel();
 			}
 		}
 	}

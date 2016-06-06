@@ -124,7 +124,6 @@ namespace TUGraz.VectoCore.Tests.Integration.BusAuxiliaries
 			Assert.AreEqual(expectedPowerDemand, (torque * engineSpeed).Value(), 1e-3);
 		}
 
-
 		[Test,
 		TestCase(19000)]
 		public void AuxDemandContinuityTest(double vehicleWeight)

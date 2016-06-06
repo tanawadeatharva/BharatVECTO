@@ -279,13 +279,16 @@ namespace TUGraz.VectoCore.Models.SimulationComponent.Impl
 				CycleIntervalIterator.LeftSample.RoadGradient);
 		}
 
+		/// <summary>
+		/// Progress of the distance in the driving cycle.
+		/// </summary>
 		public double Progress
 		{
 			get
 			{
 				return _data.Entries.Count > 0
-					? ((CurrentState.Distance - _data.Entries.First().Distance) /
-						(_data.Entries.Last().Distance - _data.Entries.First().Distance)).Value()
+					? (CurrentState.Distance.Value() - _data.Entries.First().Distance.Value()) /
+					(_data.Entries.Last().Distance.Value() - _data.Entries.First().Distance.Value())
 					: 0;
 			}
 		}
@@ -350,8 +353,22 @@ namespace TUGraz.VectoCore.Models.SimulationComponent.Impl
 				if (cycleIterator.RightSample.VehicleTargetSpeed.IsEqual(velocity)) {
 					continue;
 				}
-				retVal.Add(cycleIterator.RightSample);
+				var lookaheadEntry = retVal.Find(x => x.Distance == cycleIterator.RightSample.Distance);
+				if (lookaheadEntry != null) {
+					// an entry may occur twice when vehicle stops (one entry with v=0 and the other with drive on after stop)
+					// only use the one with min. speed
+					if (cycleIterator.RightSample.VehicleTargetSpeed < lookaheadEntry.VehicleTargetSpeed) {
+						retVal.Remove(lookaheadEntry);
+						retVal.Add(cycleIterator.RightSample); // TODO: MQ 2016-05-13: use clone of iterator here?
+					}
+				} else {
+					retVal.Add(cycleIterator.RightSample); // TODO: MQ 2016-05-13: use clone of iterator here?
+				}
 				velocity = cycleIterator.RightSample.VehicleTargetSpeed;
+				if (velocity.IsEqual(0.KMPHtoMeterPerSecond())) {
+					// do not look beyond vehicle stop
+					break;
+				}
 			} while (cycleIterator.MoveNext() && cycleIterator.RightSample.Distance < PreviousState.Distance + lookaheadDistance);
 			if (retVal.Count > 0) {
 				retVal = retVal.Where(x => x.Distance <= PreviousState.Distance + lookaheadDistance).ToList();
@@ -376,6 +393,11 @@ namespace TUGraz.VectoCore.Models.SimulationComponent.Impl
 					RightSample = CycleIntervalIterator.RightSample
 				};
 			}
+		}
+
+		public Meter Altitude
+		{
+			get { return PreviousState.Altitude; }
 		}
 
 		internal void SetDriveOffDistance(Meter startDistance)

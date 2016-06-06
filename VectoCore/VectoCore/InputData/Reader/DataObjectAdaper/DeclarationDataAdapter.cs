@@ -57,7 +57,7 @@ namespace TUGraz.VectoCore.InputData.Reader.DataObjectAdaper
 			}
 			var lookAheadData = new DriverData.LACData {
 				Enabled = DeclarationData.Driver.LookAhead.Enabled,
-				Deceleration = DeclarationData.Driver.LookAhead.Deceleration,
+				//Deceleration = DeclarationData.Driver.LookAhead.Deceleration,
 				MinSpeed = DeclarationData.Driver.LookAhead.MinimumSpeed
 			};
 			var overspeedData = new DriverData.OverSpeedEcoRollData {
@@ -191,7 +191,7 @@ namespace TUGraz.VectoCore.InputData.Reader.DataObjectAdaper
 			retVal.Gears = gears.Select((gear, i) => {
 				var gearLossMap = TransmissionLossMap.Create(gear.LossMap, gear.Ratio, string.Format("Gear {0}", i + 1));
 				var gearFullLoad = gear.FullLoadCurve == null
-					? engine.FullLoadCurve
+					? null
 					: FullLoadCurveReader.Create(gear.FullLoadCurve, true);
 
 				var fullLoadCurve = IntersectFullLoadCurves(engine.FullLoadCurve, gearFullLoad);
@@ -265,7 +265,6 @@ namespace TUGraz.VectoCore.InputData.Reader.DataObjectAdaper
 			return retVal;
 		}
 
-
 		private void WarnDeclarationMode(string inputData)
 		{
 			Log.Warn("{0} not in Declaration Mode!", inputData);
@@ -275,7 +274,6 @@ namespace TUGraz.VectoCore.InputData.Reader.DataObjectAdaper
 		{
 			return SetCommonRetarderData(retarder, vehicle);
 		}
-
 
 		public static List<CrossWindCorrectionCurveReader.CrossWindCorrectionEntry> GetDeclarationAirResistanceCurve(
 			VehicleCategory vehicleCategory, SquareMeter aerodynamicDragAera)

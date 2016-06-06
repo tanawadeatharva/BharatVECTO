@@ -32,7 +32,9 @@
 using System;
 using System.Collections.Generic;
 using System.Diagnostics;
+using System.Linq;
 using TUGraz.VectoCommon.Exceptions;
+using TUGraz.VectoCommon.Models;
 using TUGraz.VectoCommon.Utils;
 
 namespace TUGraz.VectoCore.Utils
@@ -56,20 +58,23 @@ namespace TUGraz.VectoCore.Utils
 		public static TResult Interpolate<T, TResult>(T x1, T x2, TResult y1, TResult y2, T xint) where T : SI
 			where TResult : SIBase<TResult>
 		{
-			return ((xint - x1) * (y2 - y1) / (x2 - x1) + y1).Cast<TResult>();
+			return Interpolate(x1.Value(), x2.Value(), y1.Value(), y2.Value(), xint.Value()).SI<TResult>();
 		}
 
-
-		public static double Interpolate<T>(T x1, T x2, double y1, double y2, T xint)
-			where T : SI
+		public static double Interpolate<T>(T x1, T x2, double y1, double y2, T xint) where T : SI
 		{
-			return (((xint - x1) * (y2 - y1) / (x2 - x1)).Cast<Scalar>() + y1).Value();
+			return Interpolate(x1.Value(), x2.Value(), y1, y2, xint.Value());
 		}
 
 		public static TResult Interpolate<TResult>(double x1, double x2, TResult y1, TResult y2, double xint)
 			where TResult : SIBase<TResult>
 		{
-			return ((xint - x1) * (y2 - y1) / (x2 - x1) + y1).Cast<TResult>();
+			return Interpolate(x1, x2, y1.Value(), y2.Value(), xint).SI<TResult>();
+		}
+
+		public static double Interpolate(Point p1, Point p2, double x)
+		{
+			return Interpolate(p1.X, p2.X, p1.Y, p2.Y, x);
 		}
 
 		/// <summary>
@@ -77,12 +82,7 @@ namespace TUGraz.VectoCore.Utils
 		/// </summary>
 		public static double Interpolate(double x1, double x2, double y1, double y2, double xint)
 		{
-			return ((xint - x1) * (y2 - y1) / (x2 - x1) + y1);
-		}
-
-		public static double Interpolate(Point p1, Point p2, double x)
-		{
-			return Interpolate(p1.X, p2.X, p1.Y, p2.Y, x);
+			return (xint - x1) * (y2 - y1) / (x2 - x1) + y1;
 		}
 
 		/// <summary>
@@ -112,7 +112,9 @@ namespace TUGraz.VectoCore.Utils
 		public static T Limit<T>(this T value, T lowerBound, T upperBound) where T : IComparable
 		{
 			if (lowerBound.CompareTo(upperBound) > 0) {
-				throw new VectoException("VectoMath.Limit: lowerBound must not be greater than upperBound. lowerBound: {0}, upperBound: {1}", lowerBound, upperBound);
+				throw new VectoException(
+					"VectoMath.Limit: lowerBound must not be greater than upperBound. lowerBound: {0}, upperBound: {1}", lowerBound,
+					upperBound);
 			}
 
 			if (value.CompareTo(upperBound) > 0) {
@@ -185,6 +187,78 @@ namespace TUGraz.VectoCore.Utils
 			var t = tNumer / denom;
 
 			return new Point(line1.P1.X + (t * s10X), line1.P1.Y + t * s10Y);
+		}
+
+		/// <summary>
+		/// Computes the time interval for driving the given distance ds with the vehicle's current speed and the given acceleration.
+		/// If the distance ds can not be reached (i.e., the vehicle would halt before ds is reached) then the distance parameter is adjusted.
+		/// Returns a new operating point (a, ds, dt)
+		/// </summary>
+		/// <param name="currentSpeed">vehicle's current speed at the beginning of the simulation interval</param>
+		/// <param name="acceleration">vehicle's acceleration</param>
+		/// <param name="distance">absolute distance at the beginning of the simulation interval (can be 0)</param>
+		/// <param name="ds">distance to drive in the current simulation interval</param>
+		/// <returns>Operating point (a, ds, dt)</returns>
+		public static OperatingPoint ComputeTimeInterval(MeterPerSecond currentSpeed, MeterPerSquareSecond acceleration,
+			Meter distance, Meter ds)
+		{
+			if (!(ds > 0)) {
+				throw new VectoSimulationException("ds has to be greater than 0! ds: {0}", ds);
+			}
+
+			var retVal = new OperatingPoint() { Acceleration = acceleration, SimulationDistance = ds };
+			if (acceleration.IsEqual(0)) {
+				if (currentSpeed > 0) {
+					retVal.SimulationInterval = ds / currentSpeed;
+					return retVal;
+				}
+				//Log.Error("{2}: vehicle speed is {0}, acceleration is {1}", currentSpeed.Value(), acceleration.Value(),
+				//	distance);
+				throw new VectoSimulationException(
+					"vehicle speed has to be > 0 if acceleration = 0!  v: {0}, a: {1}, distance: {2}", currentSpeed.Value(),
+					acceleration.Value(), distance);
+			}
+
+			// we need to accelerate / decelerate. solve quadratic equation...
+			// ds = acceleration / 2 * dt^2 + currentSpeed * dt   => solve for dt
+			var solutions = VectoMath.QuadraticEquationSolver(acceleration.Value() / 2.0, currentSpeed.Value(),
+				-ds.Value());
+
+			if (solutions.Count == 0) {
+				// no real-valued solutions: acceleration is so negative that vehicle stops already before the required distance can be reached.
+				// adapt ds to the halting-point.
+				// t = v / a
+				var dt = currentSpeed / -acceleration;
+
+				// s = a/2*t^2 + v*t
+				var stopDistance = acceleration / 2 * dt * dt + currentSpeed * dt;
+
+				if (stopDistance.IsGreater(ds)) {
+					// just to cover everything - does not happen...
+					//Log.Error(
+					//	"Could not find solution for computing required time interval to drive distance ds: {0}. currentSpeed: {1}, acceleration: {2}, stopDistance: {3}, distance: {4}",
+					//	ds, currentSpeed, acceleration, stopDistance,distance);
+					throw new VectoSimulationException("Could not find solution for time-interval!  ds: {0}, stopDistance: {1}", ds,
+						stopDistance);
+				}
+
+				//LoggingObject.Logger<>().Info(
+				//	"Adjusted distance when computing time interval: currentSpeed: {0}, acceleration: {1}, distance: {2} -> {3}, timeInterval: {4}",
+				//	currentSpeed, acceleration, stopDistance, stopDistance, dt);
+
+				retVal.SimulationInterval = dt;
+				retVal.SimulationDistance = stopDistance;
+				return retVal;
+			}
+			// if there are 2 positive solutions (i.e. when decelerating), take the smaller time interval
+			// (the second solution means that you reach negative speed)
+			retVal.SimulationInterval = solutions.Where(x => x >= 0).Min().SI<Second>();
+			return retVal;
+		}
+
+		public static T Ceiling<T>(T si) where T : SIBase<T>
+		{
+			return Math.Ceiling(si.Value()).SI<T>();
 		}
 	}
 

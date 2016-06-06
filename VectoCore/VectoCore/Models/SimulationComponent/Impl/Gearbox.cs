@@ -128,6 +128,14 @@ namespace TUGraz.VectoCore.Models.SimulationComponent.Impl
 			get { return Gear == 0 ? null : ModelData.Gears[Gear].FullLoadCurve; }
 		}
 
+		public Watt GearboxLoss(PerSecond inAngularVelocity, NewtonMeter inTorque)
+		{
+			var outTorque = ModelData.Gears[Gear].LossMap.GetOutTorque(inAngularVelocity, inTorque, true);
+			var torqueLoss = inTorque - outTorque * ModelData.Gears[Gear].Ratio;
+
+			return torqueLoss * inAngularVelocity;
+		}
+
 		#endregion
 
 		#region ITnOutPort
@@ -221,7 +229,20 @@ namespace TUGraz.VectoCore.Models.SimulationComponent.Impl
 			if (DataBus.VehicleStopped) {
 				_engageTime = absTime;
 			}
-			
+			if (DataBus.DriverBehavior == DrivingBehavior.Halted) {
+				_engageTime = absTime + dt;
+			}
+
+			var engineSpeedNorm = (angularVelocity - DataBus.EngineIdleSpeed) /
+								(DataBus.EngineRatedSpeed - DataBus.EngineIdleSpeed);
+			if (DataBus.DriverBehavior == DrivingBehavior.Braking && DataBus.BrakePower.IsGreater(0.SI<Watt>()) &&
+				engineSpeedNorm < Constants.SimulationSettings.ClutchClosingSpeedNorm &&
+				DataBus.VehicleSpeed.IsSmaller(Constants.SimulationSettings.ClutchDisengageWhenHaltingSpeed)) {
+				_engageTime = absTime + dt;
+				Disengaged = true;
+				return RequestGearDisengaged(absTime, dt, torque, angularVelocity, dryRun);
+			}
+
 			IResponse retVal;
 			// TODO MQ 2016/03/10: investigate further the effects of having the condition angularvelocity != 0
 			if (ClutchClosed(absTime) /* && !angularVelocity.IsEqual(0) */) {
@@ -328,15 +349,6 @@ namespace TUGraz.VectoCore.Models.SimulationComponent.Impl
 			var inAngularVelocity = outAngularVelocity * ModelData.Gears[Gear].Ratio;
 
 			if (dryRun) {
-				if ((DataBus.DriverBehavior == DrivingBehavior.Braking || DataBus.DriverBehavior == DrivingBehavior.Coasting) &&
-					inAngularVelocity < DataBus.EngineIdleSpeed &&
-					DataBus.VehicleSpeed < Constants.SimulationSettings.VehicleStopClutchDisengageSpeed) {
-					Disengaged = true;
-					_engageTime = absTime + dt;
-					_strategy.Disengage(absTime, dt, outTorque, outAngularVelocity);
-					Log.Debug("EngineSpeed is below IdleSpeed, Gearbox disengage!");
-					return new ResponseEngineSpeedTooLow { Source = this, GearboxPowerRequest = outTorque * outAngularVelocity };
-				}
 				var dryRunResponse = NextComponent.Request(absTime, dt, inTorque, inAngularVelocity, true);
 				dryRunResponse.GearboxPowerRequest = outTorque * (PreviousState.OutAngularVelocity + outAngularVelocity) / 2.0;
 				return dryRunResponse;
@@ -427,7 +439,7 @@ namespace TUGraz.VectoCore.Models.SimulationComponent.Impl
 					if (DataBus.ExecutionMode == ExecutionMode.Declaration) {
 						throw new VectoException(
 							"Gear {0} LossMap data was extrapolated in Declaration Mode: range for loss map is not sufficient: n:{1}, torque:{2}, ratio:{3}",
-							Gear, CurrentState.OutAngularVelocity.ConvertTo().Rounds.Per.Minute, CurrentState.OutTorque,
+							Gear, CurrentState.InAngularVelocity.ConvertTo().Rounds.Per.Minute, CurrentState.InTorque,
 							ModelData.Gears[Gear].Ratio);
 					}
 				}

@@ -1,4 +1,4 @@
-' Copyright 2014 European Union.
+﻿' Copyright 2014 European Union.
 ' Licensed under the EUPL (the 'Licence');
 '
 ' * You may not use this work except in compliance with the Licence.
@@ -144,7 +144,7 @@ Public Class cVEH
     Public Function ReadFile(Optional ByVal ShowMsg As Boolean = True) As Boolean
         Dim Itemp As Single
         Dim a0 As cAxle
-        Dim JSON As New cJSON
+        Dim JSON As New JSON
         Dim dic As Object
 
         Dim MsgSrc As String
@@ -267,7 +267,7 @@ Public Class cVEH
         Dim dic0 As Dictionary(Of String, Object)
         Dim ls As List(Of Dictionary(Of String, Object))
         Dim a0 As cAxle
-        Dim JSON As New cJSON
+        Dim JSON As New JSON
 
 
         'Header

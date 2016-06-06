@@ -95,15 +95,13 @@ namespace TUGraz.VectoCore.Utils
 			try {
 				result = InterpolateSearch(x, y, interval, getYValue, evaluateFunction, criterion, abortCriterion,
 					ref iterationCount);
-			}
-			catch (VectoException ex) {
+			} catch (VectoException ex) {
 				var log = LogManager.GetLogger(typeof(SearchAlgorithm).FullName);
 				log.Debug("Falling back to LineSearch. InterpolationSearch failed: " + ex.Message);
 				result = LineSearch(x, y, interval, getYValue, evaluateFunction, criterion, abortCriterion, ref iterationCount);
 			}
 			return result;
 		}
-
 
 		/// <summary>
 		/// Line Search Algorithm. 
@@ -167,16 +165,16 @@ namespace TUGraz.VectoCore.Utils
 			var xmax = debug.Data.Max(d => d.x).Value();
 			var ymin = debug.Data.Min(d => d.y).Value();
 			var ymax = debug.Data.Max(d => d.y).Value();
-			
+
 			var rand = new Random().Next();
 			using (var f = new StreamWriter(File.Open("LineSearch-" + Thread.CurrentThread.ManagedThreadId + "-statistics.csv", FileMode.Append))) {
 				foreach (var d in debug.Data) {
-					f.WriteLine(string.Format("{0}, {1}, {2}, {3}, {4}, {5}, {6}", 
-						rand, 
-						(d.x.Value()-xmin)/(xmax-xmin), 
-						(d.y.Value()-ymin)/(ymax-ymin), 
-						d.x.Value()/Math.Max(Math.Abs(xmax),Math.Abs(xmin)), 
-						d.y.Value()/Math.Max(Math.Abs(ymax),Math.Abs(ymin)), 
+					f.WriteLine(string.Format("{0}, {1}, {2}, {3}, {4}, {5}, {6}",
+						rand,
+						(d.x.Value() - xmin) / (xmax - xmin),
+						(d.y.Value() - ymin) / (ymax - ymin),
+						d.x.Value() / Math.Max(Math.Abs(xmax), Math.Abs(xmin)),
+						d.y.Value() / Math.Max(Math.Abs(ymax), Math.Abs(ymin)),
 						d.x, d.y));
 				}
 			}
@@ -186,36 +184,41 @@ namespace TUGraz.VectoCore.Utils
 		/// Interpolating Search algorithm.
 		/// Calculates linear equation of 2 points and jumps directly to root-point.
 		/// </summary>
-		private static T InterpolateSearch<T>(T x1, SI y1, T interval, Func<object, SI> getYValue,
+		private static T InterpolateSearch<T>(T x1SI, SI y1SI, T intervalSI, Func<object, SI> getYValue,
 			Func<T, object> evaluateFunction, Func<object, double> criterion, Func<object, int, bool> abortCriterion,
 			ref int iterationCount) where T : SIBase<T>
 		{
+			var x1 = x1SI.Value();
+			var interval = intervalSI.Value();
+			var y1 = y1SI.Value();
+
 			var log = LogManager.GetLogger(typeof(SearchAlgorithm).FullName);
 			var debug = new DebugData();
 			debug.Add(new { x = x1, y = y1 });
 			log.Debug("Log Disabled during InterpolateSearch.");
 			LogManager.DisableLogging();
+
 			try {
 				var x2 = x1 + interval;
-				var result = evaluateFunction(x2);
+				var result = evaluateFunction(x2.SI<T>());
 				if (criterion(result).IsEqual(0, Constants.SimulationSettings.InterpolateSearchTolerance)) {
 					LogManager.EnableLogging();
 					log.Debug("InterpolateSearch found an operating point after 1 function call.");
 					AppendDebug(debug);
 					LogManager.DisableLogging();
 					iterationCount++;
-					return x2;
+					return x2.SI<T>();
 				}
 
 				for (var count = 2; count < 30; count++, iterationCount++) {
-					var y2 = getYValue(result);
+					var y2 = getYValue(result).Value();
 					debug.Add(new { x = x2, y = y2, delta = criterion(result), result });
 
 					try {
 						var k = (y2 - y1) / (x2 - x1);
 						var d = y2 - k * x2;
 						x1 = x2;
-						x2 = (-d / k).Cast<T>();
+						x2 = -d / k;
 					} catch (VectoException ex) {
 						if (!(ex.InnerException is DivideByZeroException)) {
 							throw;
@@ -226,17 +229,17 @@ namespace TUGraz.VectoCore.Utils
 						LogManager.DisableLogging();
 						AppendDebug(debug);
 						//iterationCount += count;
-						return x2;
+						return x2.SI<T>();
 					}
 
-					result = evaluateFunction(x2);
+					result = evaluateFunction(x2.SI<T>());
 					if (criterion(result).IsEqual(0, Constants.SimulationSettings.InterpolateSearchTolerance)) {
 						debug.Add(new { x = x2, y = getYValue(result), delta = criterion(result), result });
 						LogManager.EnableLogging();
 						log.Debug("InterpolateSearch found an operating point after {0} function calls.", count);
 						LogManager.DisableLogging();
 						AppendDebug(debug);
-						return x2;
+						return x2.SI<T>();
 					}
 					if (abortCriterion != null && abortCriterion(result, iterationCount)) {
 						LogManager.EnableLogging();

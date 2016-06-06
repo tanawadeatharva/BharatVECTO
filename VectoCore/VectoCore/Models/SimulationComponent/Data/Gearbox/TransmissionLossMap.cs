@@ -68,7 +68,6 @@ namespace TUGraz.VectoCore.Models.SimulationComponent.Data.Gearbox
 
 		public string GearName { get; private set; }
 
-
 		public static TransmissionLossMap ReadFromFile(string fileName, double gearRatio, string gearName)
 		{
 			try {
@@ -156,7 +155,6 @@ namespace TUGraz.VectoCore.Models.SimulationComponent.Data.Gearbox
 			_invertedLossMap.Triangulate();
 		}
 
-
 		/// <summary>
 		///	Computes the torque loss (input side) given by the output gearbox speed and the output-torque.
 		/// </summary>
@@ -175,12 +173,12 @@ namespace TUGraz.VectoCore.Models.SimulationComponent.Data.Gearbox
 		}
 
 		///  <summary>
-		/// 	Computes the OUTPUT torque given by the input engineSpeed and the output torque.
+		/// 	Computes the OUTPUT torque given by the input engineSpeed and the input torque.
 		///  </summary>
 		///  <param name="inAngularVelocity">Angular speed at input side.</param>
-		///  <param name="inTorque">Torque at output side (as requested by the previous componend towards the wheels).</param>
+		///  <param name="inTorque">Torque at input side.</param>
 		/// <param name="allowExtrapolation"></param>
-		/// <returns>Torque needed at input side (towards the engine).</returns>
+		/// <returns>Torque needed at output side (towards the wheels).</returns>
 		public NewtonMeter GetOutTorque(PerSecond inAngularVelocity, NewtonMeter inTorque, bool allowExtrapolation = false)
 		{
 			var torqueLoss =

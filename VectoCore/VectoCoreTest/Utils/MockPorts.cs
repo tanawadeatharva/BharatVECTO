@@ -96,6 +96,11 @@ namespace TUGraz.VectoCore.Tests.Utils
 			get { return AngularVelocity; }
 		}
 
+		public NewtonMeter EngineTorque
+		{
+			get { return Torque; }
+		}
+
 		public Watt EngineStationaryFullPower(PerSecond angularSpeed)
 		{
 			return 2300.SI<NewtonMeter>() * angularSpeed;
@@ -133,7 +138,7 @@ namespace TUGraz.VectoCore.Tests.Utils
 			Velocity = targetVelocity;
 			Gradient = gradient;
 			Log.Debug("Request: absTime: {0}, ds: {1}, velocity: {2}, gradient: {3}", absTime, ds, targetVelocity, gradient);
-			return new ResponseSuccess() { Source = this};
+			return new ResponseSuccess() { Source = this };
 		}
 
 		public IResponse Request(Second absTime, Second dt, MeterPerSecond targetVelocity, Radian gradient)
@@ -163,7 +168,6 @@ namespace TUGraz.VectoCore.Tests.Utils
 		public Second Dt { get; set; }
 		public Newton Force { get; set; }
 		public MeterPerSecond Velocity { get; set; }
-
 
 		public IResponse Request(Second absTime, Second dt, Newton force, MeterPerSecond velocity, bool dryRun = false)
 		{

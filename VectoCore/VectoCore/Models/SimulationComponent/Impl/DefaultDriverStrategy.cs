@@ -29,17 +29,24 @@
 *   Martin Rexeis, rexeis@ivt.tugraz.at, IVT, Graz University of Technology
 */
 
+
 using System;
 using System.Collections.Generic;
 using System.Diagnostics;
 using System.Linq;
+using System.Windows.Markup;
 using TUGraz.VectoCommon.Models;
 using TUGraz.VectoCommon.Utils;
 using TUGraz.VectoCore.Configuration;
+using TUGraz.VectoCore.InputData.Impl;
 using TUGraz.VectoCore.Models.Connector.Ports.Impl;
+using TUGraz.VectoCore.Models.Declaration;
 using TUGraz.VectoCore.Models.Simulation.DataBus;
+using TUGraz.VectoCore.Models.SimulationComponent.Data;
+using TUGraz.VectoCore.OutputData;
 using TUGraz.VectoCore.Utils;
 using DriverData = TUGraz.VectoCore.Models.SimulationComponent.Data.DriverData;
+
 
 namespace TUGraz.VectoCore.Models.SimulationComponent.Impl
 {
@@ -70,7 +77,6 @@ namespace TUGraz.VectoCore.Models.SimulationComponent.Impl
 
 		protected internal DrivingBehaviorEntry BrakeTrigger { get; set; }
 
-
 		public IResponse Request(Second absTime, Meter ds, MeterPerSecond targetVelocity, Radian gradient)
 		{
 			if (CurrentDrivingMode == DrivingMode.DrivingModeBrake) {
@@ -83,6 +89,9 @@ namespace TUGraz.VectoCore.Models.SimulationComponent.Impl
 			}
 			if (CurrentDrivingMode == DrivingMode.DrivingModeDrive) {
 				var currentDistance = Driver.DataBus.Distance;
+
+				//var coasting = LookAheadCoasting(ds);
+
 				UpdateDrivingAction(currentDistance, ds);
 				if (NextDrivingAction != null) {
 					var remainingDistance = NextDrivingAction.ActionDistance - currentDistance;
@@ -111,13 +120,109 @@ namespace TUGraz.VectoCore.Models.SimulationComponent.Impl
 			return retVal;
 		}
 
+		///// <summary>
+		///// Checks if Look Ahead Coasting triggers
+		///// </summary>
+		//public Dictionary<string, object> LookAheadCoasting(Meter ds)
+		//{
+		//	var dict = new Dictionary<string, object>();
+
+		//	// (1) & (2) : x_decelerationpoint - d_prev <= x_veh < x_decelerationpoint
+		//	var v_veh = Driver.DataBus.CycleData.LeftSample.VehicleTargetSpeed; //Driver.DataBus.VehicleSpeed;
+		//	var d_prev = 10 * Driver.DataBus.VehicleSpeed.ConvertTo().Kilo.Meter.Per.Hour.Value();
+		//	var lookaheadData = Driver.DataBus.LookAhead(d_prev.SI<Meter>());
+		//	var nextActions = new SortedDictionary<Meter, DrivingCycleData.DrivingCycleEntry>();
+		//	foreach (var entry in lookaheadData.Where(e => e.VehicleTargetSpeed <= v_veh)) {
+		//		var nextTargetSpeed = entry.VehicleTargetSpeed;
+		//		if (nextTargetSpeed < Driver.DataBus.VehicleSpeed) {
+		//			var coastingDistance = Formulas.DecelerationDistance(Driver.DataBus.VehicleSpeed, nextTargetSpeed,
+		//				Driver.DriverData.LookAheadCoasting.Deceleration);
+		//			nextActions.Add(entry.Distance - coastingDistance, entry);
+		//		}
+		//	}
+
+		//	var dec = nextActions.FirstOrDefault().Value;
+
+		//	// (4) v_veh < v_max_deceleration * 0.98
+		//	if (dec != null) {
+		//		var x_dec = dec.Distance;
+		//		dict["x_dec"] = x_dec.Value();
+
+		//		var x_delta = x_dec - Driver.DataBus.Distance;
+		//		dict["x_delta"] = x_delta.Value();
+
+		//		var v_target = dec.VehicleTargetSpeed;
+		//		dict["v_target"] = v_target.Value();
+
+		//		var x_max_deceleration = Driver.ComputeDecelerationDistance(v_target);
+		//		dict["x_max_deceleration"] = x_max_deceleration.Value();
+		//		var coastingPossible = x_delta >= x_max_deceleration * 0.98;
+		//		dict["CoastingAllowed"] = coastingPossible ? 1 : 0;
+
+		//		// 3. CDP > DF_coasting
+		//		if (coastingPossible) {
+		//			var m = Driver.DataBus.TotalMass;
+		//			var g = Physics.GravityAccelleration;
+		//			var h_target = dec.Altitude;
+		//			dict["h_target"] = h_target.Value();
+
+		//			var h_vehicle = Driver.DataBus.Altitude;
+		//			dict["h_vehicle"] = h_vehicle.Value();
+
+		//			var E_kin_veh = m * v_veh * v_veh / 2;
+		//			var E_kin_target = m * v_target * v_target / 2;
+		//			var E_pot_target = m * g * h_target;
+		//			var E_pot_veh = m * g * h_vehicle;
+		//			dict["E_kin_veh"] = E_kin_veh.Value();
+		//			dict["E_kin_target"] = E_kin_target.Value();
+		//			dict["E_pot_target"] = E_pot_target.Value();
+		//			dict["E_pot_veh"] = E_pot_veh.Value();
+
+		//			var delta_E = (E_kin_veh + E_pot_veh) - (E_kin_target + E_pot_target);
+		//			dict["delta_E"] = delta_E.Value();
+
+		//			var F_dec_average = delta_E / x_delta;
+		//			dict["F_dec_average"] = F_dec_average.Value();
+
+		//			//var avgVelocity = (v_veh + v_target) / 2;
+		//			//var acc = (v_target - v_veh) * (avgVelocity / x_delta);
+		//			var F_air = Driver.DataBus.AirDragResistance(v_veh, v_target);
+		//			dict["F_air"] = F_air.Value();
+
+		//			var F_roll = Driver.DataBus.RollingResistance(((h_target - h_vehicle) / x_delta).Value().SI<Radian>());
+		//			dict["F_roll"] = F_roll.Value();
+
+		//			var F_enginedrag = Driver.DataBus.EngineDragPower(Driver.DataBus.EngineSpeed) / v_veh;
+		//			dict["F_enginedrag"] = F_enginedrag.Value();
+
+		//			var F_loss_gb = Driver.DataBus.GearboxLoss(Driver.DataBus.EngineSpeed, Driver.DataBus.EngineTorque) / v_veh;
+		//			dict["F_loss_gb"] = F_loss_gb.Value();
+
+		//			// todo mk-2016-05-11 calculate ra loss
+		//			var F_loss_ra = 0.SI<Newton>();
+		//			dict["F_loss_ra"] = F_loss_ra.Value();
+
+		//			var F_coasting = F_enginedrag - F_air - F_roll - F_loss_gb - F_loss_ra;
+		//			dict["F_coasting"] = F_coasting.Value();
+
+		//			var CDP = F_dec_average / -F_coasting;
+		//			dict["CDP"] = CDP.Value();
+
+		//			var DF_coasting = LACDecisionFactor.Lookup(v_target, v_veh - v_target);
+		//			dict["DF_coasting"] = DF_coasting;
+
+		//			dict["EnableCoasting"] = CDP > DF_coasting ? 1 : 0;
+		//		}
+		//	}
+		//	return dict;
+		//}
+
 		public IResponse Request(Second absTime, Second dt, MeterPerSecond targetVelocity, Radian gradient)
 		{
 			Driver.DriverBehavior = DrivingBehavior.Halted;
 			CurrentDrivingMode = DrivingMode.DrivingModeDrive;
 			return Driver.DrivingActionHalt(absTime, dt, targetVelocity, gradient);
 		}
-
 
 		private void UpdateDrivingAction(Meter currentDistance, Meter ds)
 		{
@@ -130,16 +235,17 @@ namespace TUGraz.VectoCore.Models.SimulationComponent.Impl
 			} else {
 				// update action distance for current 'next action'
 				if (Driver.DataBus.VehicleSpeed > NextDrivingAction.NextTargetSpeed) {
+					var brakingDistance = Driver.ComputeDecelerationDistance(NextDrivingAction.NextTargetSpeed) + BrakingSafetyMargin;
 					switch (NextDrivingAction.Action) {
 						case DrivingBehavior.Coasting:
-							var coastingDistance = Formulas.DecelerationDistance(Driver.DataBus.VehicleSpeed,
-								NextDrivingAction.NextTargetSpeed,
-								Driver.DriverData.LookAheadCoasting.Deceleration);
-							NextDrivingAction.ActionDistance = NextDrivingAction.TriggerDistance - coastingDistance;
+							//var coastingDistance = ComputeCoastingDistance(Driver.DataBus.VehicleSpeed, NextDrivingAction.NextTargetSpeed);
+							var coastingDistance = ComputeCoastingDistance(Driver.DataBus.VehicleSpeed, NextDrivingAction.CycleEntry);
+							NextDrivingAction.CoastingStartDistance = NextDrivingAction.TriggerDistance - coastingDistance;
+							NextDrivingAction.BrakingStartDistance = NextDrivingAction.TriggerDistance - brakingDistance;
 							break;
 						case DrivingBehavior.Braking:
-							var brakingDistance = Driver.ComputeDecelerationDistance(NextDrivingAction.NextTargetSpeed) + BrakingSafetyMargin;
-							NextDrivingAction.ActionDistance = NextDrivingAction.TriggerDistance - brakingDistance;
+							NextDrivingAction.BrakingStartDistance = NextDrivingAction.TriggerDistance - brakingDistance;
+							NextDrivingAction.CoastingStartDistance = double.MaxValue.SI<Meter>();
 							break;
 						default:
 							throw new ArgumentOutOfRangeException();
@@ -166,14 +272,12 @@ namespace TUGraz.VectoCore.Models.SimulationComponent.Impl
 			Log.Debug("Next Driving Action: {0}", NextDrivingAction);
 		}
 
-
 		protected DrivingBehaviorEntry GetNextDrivingAction(Meter minDistance, Meter ds)
 		{
 			var currentSpeed = Driver.DataBus.VehicleSpeed;
 
 			// distance until halt
-			var lookaheadDistance = Formulas.DecelerationDistance(currentSpeed, 0.SI<MeterPerSecond>(),
-				Driver.DriverData.LookAheadCoasting.Deceleration);
+			var lookaheadDistance = (currentSpeed.Value() * 3.6 * 10).SI<Meter>();
 			lookaheadDistance = VectoMath.Max(2 * ds, 1.2 * lookaheadDistance);
 			var lookaheadData = Driver.DataBus.LookAhead(lookaheadDistance);
 
@@ -184,37 +288,89 @@ namespace TUGraz.VectoCore.Models.SimulationComponent.Impl
 					? entry.VehicleTargetSpeed + Driver.DriverData.OverSpeedEcoRoll.OverSpeed
 					: entry.VehicleTargetSpeed;
 				if (nextTargetSpeed < currentSpeed) {
-					if (!Driver.DriverData.LookAheadCoasting.Enabled ||
-						currentSpeed < Driver.DriverData.LookAheadCoasting.MinSpeed) {
-						var brakingDistance = Driver.ComputeDecelerationDistance(nextTargetSpeed) + BrakingSafetyMargin;
+					var action = DrivingBehavior.Braking;
+					var coastingDistance = ComputeCoastingDistance(currentSpeed, entry);
+					var brakingDistance = Driver.ComputeDecelerationDistance(nextTargetSpeed) + BrakingSafetyMargin;
+
+					if (coastingDistance < 0) {
 						Log.Debug(
 							"adding 'Braking' starting at distance {0}. brakingDistance: {1}, triggerDistance: {2}, nextTargetSpeed: {3}",
 							entry.Distance - brakingDistance, brakingDistance, entry.Distance, nextTargetSpeed);
-						nextActions.Add(new DrivingBehaviorEntry {
-							Action = DrivingBehavior.Braking,
-							ActionDistance = entry.Distance - brakingDistance,
-							TriggerDistance = entry.Distance,
-							NextTargetSpeed = nextTargetSpeed
-						});
 					} else {
-						var coastingDistance = Formulas.DecelerationDistance(currentSpeed, nextTargetSpeed,
-							Driver.DriverData.LookAheadCoasting.Deceleration);
+						//var coastingDistance = ComputeCoastingDistance(currentSpeed, nextTargetSpeed);
+						action = DrivingBehavior.Coasting;
 						Log.Debug(
 							"adding 'Coasting' starting at distance {0}. coastingDistance: {1}, triggerDistance: {2}, nextTargetSpeed: {3}",
 							entry.Distance - coastingDistance, coastingDistance, entry.Distance, nextTargetSpeed);
-						nextActions.Add(
-							new DrivingBehaviorEntry {
-								Action = DrivingBehavior.Coasting,
-								ActionDistance = entry.Distance - coastingDistance,
-								TriggerDistance = entry.Distance,
-								NextTargetSpeed = nextTargetSpeed
-							});
 					}
+					nextActions.Add(
+						new DrivingBehaviorEntry {
+							Action = action,
+							CoastingStartDistance = entry.Distance - coastingDistance,
+							BrakingStartDistance = entry.Distance - brakingDistance,
+							TriggerDistance = entry.Distance,
+							NextTargetSpeed = nextTargetSpeed,
+							CycleEntry = entry,
+						});
 				}
 			}
+			if (!nextActions.Any()) {
+				return null;
+			}
+			var nextBrakingAction = nextActions.OrderBy(x => x.BrakingStartDistance).First();
+			var nextCoastingAction = nextActions.OrderBy(x => x.CoastingStartDistance).First();
+			if (nextBrakingAction.TriggerDistance.IsEqual(nextCoastingAction.TriggerDistance)) {
+				// its the same trigger, use it
+				return nextCoastingAction;
+			}
 
-			return nextActions.Count == 0 ? null : nextActions.OrderBy(x => x.ActionDistance).First();
+			// MQ: 27.5.2016 remark: one could set the coasting distance to the closest coasting distance as found above to start coasting a little bit earlier.
+			return nextBrakingAction;
 		}
+
+		protected internal virtual Meter ComputeCoastingDistance(MeterPerSecond v_veh,
+			DrivingCycleData.DrivingCycleEntry actionEntry)
+		{
+			var v_target = OverspeedAllowed(actionEntry.RoadGradient, actionEntry.VehicleTargetSpeed)
+				? actionEntry.VehicleTargetSpeed + Driver.DriverData.OverSpeedEcoRoll.OverSpeed
+				: actionEntry.VehicleTargetSpeed;
+
+			var m = Driver.DataBus.TotalMass;
+			var g = Physics.GravityAccelleration;
+			var h_target = actionEntry.Altitude; //dec.Altitude;
+
+			var h_vehicle = Driver.DataBus.Altitude;
+
+			var E_kin_veh = m * v_veh * v_veh / 2;
+			var E_kin_target = m * v_target * v_target / 2;
+			var E_pot_target = m * g * h_target;
+			var E_pot_veh = m * g * h_vehicle;
+
+			var delta_E = (E_kin_veh + E_pot_veh) - (E_kin_target + E_pot_target);
+
+			//var F_dec_average = delta_E / x_delta;
+
+			var F_air = Driver.DataBus.AirDragResistance(v_veh, v_target);
+			var F_roll =
+				Driver.DataBus.RollingResistance(
+					((h_target - h_vehicle) / (actionEntry.Distance - Driver.DataBus.Distance)).Value().SI<Radian>());
+			var F_enginedrag = Driver.DataBus.EngineDragPower(Driver.DataBus.EngineSpeed) / v_veh;
+			var F_loss_gb = Driver.DataBus.GearboxLoss(Driver.DataBus.EngineSpeed, Driver.DataBus.EngineTorque) / v_veh;
+
+			// todo mk-2016-05-11 calculate ra loss
+			var F_loss_ra = 0.SI<Newton>();
+
+			var F_coasting = F_air + F_roll + F_loss_gb + F_loss_ra - F_enginedrag;
+
+			//var CDP = F_dec_average / -F_coasting;
+
+			var DF_coasting = LACDecisionFactor.Lookup(v_target, v_veh - v_target);
+
+			var delta_x = (delta_E / (DF_coasting * F_coasting)).Cast<Meter>();
+
+			return delta_x;
+		}
+
 
 		public bool OverspeedAllowed(Radian gradient, MeterPerSecond velocity)
 		{
@@ -224,7 +380,6 @@ namespace TUGraz.VectoCore.Models.SimulationComponent.Impl
 	}
 
 	//=====================================
-
 
 	public interface IDriverMode
 	{
@@ -266,7 +421,6 @@ namespace TUGraz.VectoCore.Models.SimulationComponent.Impl
 				return response;
 			}
 
-
 			// if we accelerate in the current simulation interval the ActionDistance of the next action
 			// changes and we might pass the ActionDistance - check again...
 			if (response.Acceleration <= 0) {
@@ -292,7 +446,13 @@ namespace TUGraz.VectoCore.Models.SimulationComponent.Impl
 				//DriverStrategy.BrakeTrigger = DriverStrategy.NextDrivingAction;
 			}
 
-
+			var newOperatingPoint = VectoMath.ComputeTimeInterval(DataBus.VehicleSpeed, response.Acceleration, DataBus.Distance, ds);
+			if (newOperatingPoint.SimulationInterval.IsSmaller(Constants.SimulationSettings.LowerBoundTimeInterval)) {
+				// the next time interval will be too short, this may lead to issues with inertia etc. 
+				// instead of accelerating, drive at constant speed.
+				response = DoHandleRequest(absTime, ds, Driver.DataBus.VehicleSpeed, gradient);
+				return response;
+			}
 			Log.Debug("Exceeding next ActionDistance at {0}. Reducing max Distance from {2} to {1}",
 				DriverStrategy.NextDrivingAction.ActionDistance, newds, ds);
 			return new ResponseDrivingCycleDistanceExceeded() {
@@ -307,28 +467,6 @@ namespace TUGraz.VectoCore.Models.SimulationComponent.Impl
 			MeterPerSecond targetVelocity, Radian gradient, IResponse response, out Meter newSimulationDistance);
 
 		public abstract void ResetMode();
-
-		protected Meter EstimateAccelerationDistanceBeforeBrake(IResponse retVal, DrivingBehaviorEntry nextAction)
-		{
-			// estimate the distance to drive when accelerating with the current acceleration (taken from retVal) and then 
-			// coasting with the dirver's LookaheadDeceleration. 
-			// TriggerDistance - CurrentDistance = s_accelerate + s_lookahead
-			// s_coast(dt) = - (currentSpeed + a * dt + nextTargetSpeed) * (nextTargetSpeed - (currentSpeed + a * dt))  / (2 * a_lookahead)
-			// s_acc(dt) = currentSpeed * dt + a / 2 * dt^2
-			// => solve for dt, compute ds = currentSpeed * dt + a / 2 * dt^2
-			var dtList = VectoMath.QuadraticEquationSolver(
-				(retVal.Acceleration / 2 -
-				retVal.Acceleration * retVal.Acceleration / 2 / Driver.DriverData.LookAheadCoasting.Deceleration).Value(),
-				(Driver.DataBus.VehicleSpeed -
-				Driver.DataBus.VehicleSpeed * retVal.Acceleration / Driver.DriverData.LookAheadCoasting.Deceleration).Value(),
-				(nextAction.NextTargetSpeed * nextAction.NextTargetSpeed / 2 / Driver.DriverData.LookAheadCoasting.Deceleration -
-				Driver.DataBus.VehicleSpeed * Driver.DataBus.VehicleSpeed / 2 / Driver.DriverData.LookAheadCoasting.Deceleration -
-				(nextAction.TriggerDistance - Driver.DataBus.Distance)).Value());
-			dtList.Sort();
-			var dt = dtList.First(x => x > 0).SI<Second>();
-			var newds = Driver.DataBus.VehicleSpeed * dt + retVal.Acceleration / 2 * dt * dt;
-			return newds;
-		}
 	}
 
 	//=====================================
@@ -355,15 +493,6 @@ namespace TUGraz.VectoCore.Models.SimulationComponent.Impl
 					response = Driver.DrivingActionAccelerate(absTime, ds, targetVelocity, gradient);
 				}
 				response.Switch().
-					Case<ResponseGearShift>(() => {
-						response = Driver.DrivingActionRoll(absTime, ds, velocity, gradient);
-						response.Switch().
-							Case<ResponseUnderload>(() => {
-								// overload may happen if driver limits acceleration when rolling downhill
-								response = Driver.DrivingActionBrake(absTime, ds, velocity, gradient);
-							}).
-							Case<ResponseSpeedLimitExceeded>(() => { response = Driver.DrivingActionBrake(absTime, ds, velocity, gradient); });
-					}).
 					Case<ResponseUnderload>(r => {
 						if (DriverStrategy.OverspeedAllowed(gradient, targetVelocity)) {
 							response = Driver.DrivingActionCoast(absTime, ds, velocity, gradient);
@@ -373,6 +502,17 @@ namespace TUGraz.VectoCore.Models.SimulationComponent.Impl
 						} else {
 							response = Driver.DrivingActionBrake(absTime, ds, velocity, gradient);
 						}
+					});
+
+				response.Switch().
+					Case<ResponseGearShift>(r => {
+						response = Driver.DrivingActionRoll(absTime, ds, velocity, gradient);
+						response.Switch().
+							Case<ResponseUnderload>(() => {
+								// overload may happen if driver limits acceleration when rolling downhill
+								response = Driver.DrivingActionBrake(absTime, ds, velocity, gradient);
+							}).
+							Case<ResponseSpeedLimitExceeded>(() => { response = Driver.DrivingActionBrake(absTime, ds, velocity, gradient); });
 					});
 			} else {
 				if (DataBus.VehicleSpeed.IsSmallerOrEqual(0.SI<MeterPerSecond>())) {
@@ -403,26 +543,32 @@ namespace TUGraz.VectoCore.Models.SimulationComponent.Impl
 				return response;
 			}
 			var v2 = Driver.DataBus.VehicleSpeed + response.Acceleration * response.SimulationInterval;
+			var brakingDistance = Driver.DriverData.AccelerationCurve.ComputeAccelerationDistance(v2,
+				nextAction.NextTargetSpeed) + DefaultDriverStrategy.BrakingSafetyMargin;
 			switch (DriverStrategy.NextDrivingAction.Action) {
 				case DrivingBehavior.Coasting:
-					var coastingDistance = Formulas.DecelerationDistance(v2, nextAction.NextTargetSpeed,
-						Driver.DriverData.LookAheadCoasting.Deceleration);
-
+					var coastingDistance = DriverStrategy.ComputeCoastingDistance(v2, nextAction.CycleEntry);
+					var nextActionDistance = coastingDistance;
+					var safetyFactor = 4.0;
+					if (brakingDistance > coastingDistance) {
+						nextActionDistance = brakingDistance;
+						safetyFactor = 0.5;
+					}
 					// if the distance at the end of the simulation interval is smaller than the new ActionDistance
 					// we are safe - go ahead...
-					if ((Driver.DataBus.Distance + ds).IsSmallerOrEqual(nextAction.TriggerDistance - coastingDistance,
-						Constants.SimulationSettings.DriverActionDistanceTolerance)) {
+					if ((Driver.DataBus.Distance + ds).IsSmallerOrEqual(nextAction.TriggerDistance - nextActionDistance,
+						Constants.SimulationSettings.DriverActionDistanceTolerance * safetyFactor) &&
+						(Driver.DataBus.Distance + ds).IsSmallerOrEqual(nextAction.TriggerDistance - brakingDistance)) {
 						return response;
 					}
-					newds = EstimateAccelerationDistanceBeforeBrake(response, nextAction);
+					newds = ds / 2; //EstimateAccelerationDistanceBeforeBrake(response, nextAction) ?? ds;
 					break;
 				case DrivingBehavior.Braking:
-					var brakingDistance = Driver.DriverData.AccelerationCurve.ComputeAccelerationDistance(v2,
-						nextAction.NextTargetSpeed) + DefaultDriverStrategy.BrakingSafetyMargin;
 					if ((Driver.DataBus.Distance + ds).IsSmaller(nextAction.TriggerDistance - brakingDistance)) {
 						return response;
 					}
-					newds = (nextAction.TriggerDistance - brakingDistance) - Driver.DataBus.Distance;
+					newds = (nextAction.TriggerDistance - brakingDistance) - Driver.DataBus.Distance -
+							Constants.SimulationSettings.DriverActionDistanceTolerance / 2;
 					break;
 				default:
 					return response;
@@ -614,7 +760,8 @@ namespace TUGraz.VectoCore.Models.SimulationComponent.Impl
 					if ((Driver.DataBus.Distance + ds).IsSmaller(nextAction.TriggerDistance - brakingDistance)) {
 						return response;
 					}
-					newds = (nextAction.TriggerDistance - brakingDistance) - Driver.DataBus.Distance;
+					newds = (nextAction.TriggerDistance - brakingDistance) - Driver.DataBus.Distance -
+							Constants.SimulationSettings.DriverActionDistanceTolerance / 2;
 					break;
 				default:
 					return response;
@@ -637,7 +784,27 @@ namespace TUGraz.VectoCore.Models.SimulationComponent.Impl
 		public DrivingBehavior Action;
 		public MeterPerSecond NextTargetSpeed;
 		public Meter TriggerDistance;
-		public Meter ActionDistance;
+
+		public Meter ActionDistance
+		{
+			get
+			{
+				return VectoMath.Min(CoastingStartDistance ?? double.MaxValue.SI<Meter>(),
+					BrakingStartDistance ?? double.MaxValue.SI<Meter>());
+			}
+		}
+
+		public Meter SelectActionDistance(Meter minDistance)
+		{
+			return
+				new[] { BrakingStartDistance, CoastingStartDistance }.OrderBy(x => x.Value()).First(x => x >= minDistance);
+		}
+
+		public Meter CoastingStartDistance { get; set; }
+
+		public Meter BrakingStartDistance { get; set; }
+
+		public DrivingCycleData.DrivingCycleEntry CycleEntry;
 
 		public bool HasEqualTrigger(DrivingBehaviorEntry other)
 		{
@@ -646,8 +813,8 @@ namespace TUGraz.VectoCore.Models.SimulationComponent.Impl
 
 		public override string ToString()
 		{
-			return string.Format("action: {0} @ {1}. trigger: {2} targetSpeed: {3}", Action, ActionDistance, TriggerDistance,
-				NextTargetSpeed);
+			return string.Format("action: {0} @ {1} / {2}. trigger: {3} targetSpeed: {4}", Action, CoastingStartDistance,
+				BrakingStartDistance, TriggerDistance, NextTargetSpeed);
 		}
 	}
 }

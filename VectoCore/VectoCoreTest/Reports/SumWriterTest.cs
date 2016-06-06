@@ -30,6 +30,7 @@
 */
 
 using Microsoft.VisualStudio.TestTools.UnitTesting;
+using TUGraz.VectoCommon.Models;
 using TUGraz.VectoCommon.Utils;
 using TUGraz.VectoCore.Models.Simulation.Data;
 using TUGraz.VectoCore.Models.Simulation.Impl;
@@ -48,7 +49,7 @@ namespace TUGraz.VectoCore.Tests.Reports
 			var writer = new FileOutputWriter("testsumcalc_fixed");
 			var sumWriter = new SummaryDataContainer(writer);
 
-			var modData = new ModalDataContainer("testsumcalc_fixed", writer);
+			var modData = new ModalDataContainer("testsumcalc_fixed", writer, ExecutionMode.Engineering);
 			modData.AddAuxiliary("FAN");
 
 			for (var i = 0; i < 500; i++) {
@@ -98,7 +99,7 @@ namespace TUGraz.VectoCore.Tests.Reports
 			var writer = new FileOutputWriter("testsumcalc_var");
 			var sumWriter = new SummaryDataContainer(writer);
 
-			var modData = new ModalDataContainer("testsumcalc_var", writer);
+			var modData = new ModalDataContainer("testsumcalc_var", writer, ExecutionMode.Engineering);
 			modData.AddAuxiliary("FAN");
 
 			var timeSteps = new[]

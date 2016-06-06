@@ -31,6 +31,7 @@
 
 using System;
 using System.Collections.Generic;
+using System.IO;
 using System.Linq;
 using TUGraz.VectoCommon.Models;
 using TUGraz.VectoCommon.Utils;
@@ -78,12 +79,13 @@ namespace TUGraz.VectoCore.Tests.Integration
 		}
 
 		public static VehicleContainer CreatePowerTrain(DrivingCycleData cycleData, string modFileName,
-			Kilogram massExtra,
-			Kilogram loading, bool overspeed = false)
+			Kilogram massExtra, Kilogram loading, bool overspeed = false)
 		{
 			var fileWriter = new FileOutputWriter(modFileName);
-			var modData = new ModalDataContainer(modFileName, fileWriter);
-			var container = new VehicleContainer(executionMode: ExecutionMode.Engineering, modData: modData) { RunData = new VectoRunData{ JobName = modFileName, Cycle = cycleData}};
+			var modData = new ModalDataContainer(Path.GetFileName(modFileName), fileWriter, ExecutionMode.Engineering);
+			var container = new VehicleContainer(ExecutionMode.Engineering, modData) {
+				RunData = new VectoRunData { JobName = modFileName, Cycle = cycleData }
+			};
 
 			var engineData = MockSimulationDataFactory.CreateEngineDataFromFile(EngineFile);
 			var axleGearData = CreateAxleGearData();
@@ -109,7 +111,6 @@ namespace TUGraz.VectoCore.Tests.Integration
 			aux.AddConstant("", 0.SI<Watt>());
 			engine.Connect(aux.Port());
 
-
 			Port.AddComponent(tmp, engine);
 			engine.IdleController.RequestPort = clutch.IdleControlPort;
 
@@ -125,7 +126,7 @@ namespace TUGraz.VectoCore.Tests.Integration
 					Tuple.Create((uint)i,
 						new GearData {
 							FullLoadCurve = FullLoadCurveReader.ReadFromFile(GearboxFullLoadCurveFile),
-							LossMap = TransmissionLossMap.ReadFromFile(ratio != 1.0 ? GearboxIndirectLoss : GearboxDirectLoss, ratio,
+							LossMap = TransmissionLossMap.ReadFromFile(ratio.IsEqual(1) ? GearboxIndirectLoss : GearboxDirectLoss, ratio,
 								string.Format("Gear {0}", i)),
 							Ratio = ratio,
 							ShiftPolygon = ShiftPolygonReader.ReadFromFile(ShiftPolygonFile)
@@ -212,13 +213,13 @@ namespace TUGraz.VectoCore.Tests.Integration
 		}
 
 		private static DriverData CreateDriverData(string accelerationFile, bool overspeed = false)
-		{
+		{	
 			return new DriverData {
 				AccelerationCurve = AccelerationCurveData.ReadFromFile(accelerationFile),
 				LookAheadCoasting = new DriverData.LACData {
 					Enabled = true,
 					MinSpeed = 50.KMPHtoMeterPerSecond(),
-					Deceleration = -0.5.SI<MeterPerSquareSecond>(),
+					//Deceleration = -0.5.SI<MeterPerSquareSecond>(),
 				},
 				OverSpeedEcoRoll = overspeed
 					? new DriverData.OverSpeedEcoRollData() {
