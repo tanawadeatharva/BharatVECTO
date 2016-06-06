@@ -38,7 +38,6 @@ using TUGraz.VectoCore.Models.Connector.Ports;
 using TUGraz.VectoCore.Models.Connector.Ports.Impl;
 using TUGraz.VectoCore.Models.Simulation;
 using TUGraz.VectoCore.Models.Simulation.Data;
-using TUGraz.VectoCore.Models.Simulation.DataBus;
 using TUGraz.VectoCore.Models.SimulationComponent.Data;
 using TUGraz.VectoCore.OutputData;
 using TUGraz.VectoCore.Utils;
@@ -339,8 +338,7 @@ namespace TUGraz.VectoCore.Models.SimulationComponent.Impl
 			container[ModalResultField.Tq_drag] = CurrentState.FullDragTorque;
 
 			try {
-				var fc = ModelData.ConsumptionMap.GetFuelConsumption(CurrentState.EngineTorque, avgEngineSpeed,
-					allowExtrapolation: (DataBus.ExecutionMode != ExecutionMode.Declaration));
+				var fc = ModelData.ConsumptionMap.GetFuelConsumption(CurrentState.EngineTorque, avgEngineSpeed);
 
 				//TODO mk-2015-11-11: calculate aux start stop correction
 				var fcAux = fc;
@@ -354,19 +352,10 @@ namespace TUGraz.VectoCore.Models.SimulationComponent.Impl
 				container[ModalResultField.FCWHTCc] = fcWHTC;
 				container[ModalResultField.FCAAUX] = fcAAUX;
 				container[ModalResultField.FCFinal] = fcFinal;
-
-				if (ModelData.ConsumptionMap.Extrapolated) {
-					Log.Warn("FuelMap Extrapolated: n_eng_avg: {0} Tq: {1}, FC: {2}", avgEngineSpeed.ConvertTo().Rounds.Per.Minute,
-						CurrentState.EngineTorque, fc);
-				}
-			} catch (VectoException ex) {
-				Log.Warn("FuelMap: {0} n_eng_avg: {1} Tq: {2}", ex.Message, avgEngineSpeed.ConvertTo().Rounds.Per.Minute,
+			} catch (Exception) {
+				Log.Error("FuelMap Extrapolated: n_eng_avg: {0} Tq: {1}", avgEngineSpeed.ConvertTo().Rounds.Per.Minute,
 					CurrentState.EngineTorque);
-				container[ModalResultField.FCMap] = null;
-				container[ModalResultField.FCAUXc] = null;
-				container[ModalResultField.FCWHTCc] = null;
-				container[ModalResultField.FCAAUX] = null;
-				container[ModalResultField.FCFinal] = null;
+				throw;
 			}
 		}
 
