@@ -70,11 +70,11 @@ namespace TUGraz.VectoCore.ModelbasedTests.DriverStrategy
 			return slopeStr;
 		}
 
-		[
-			TestCase(0, 80), TestCase(80, 0), TestCase(80, 80),
-			TestCase(0, 60), TestCase(60, 0), TestCase(60, 60),
-			TestCase(0, 40), TestCase(40, 0), TestCase(40, 40),
-			TestCase(0, 20), TestCase(20, 0), TestCase(20, 20),
+		[Category("LongRunning"),
+		TestCase(0, 80), TestCase(80, 0), TestCase(80, 80),
+		TestCase(0, 60), TestCase(60, 0), TestCase(60, 60),
+		TestCase(0, 40), TestCase(40, 0), TestCase(40, 40),
+		TestCase(0, 20), TestCase(20, 0), TestCase(20, 20),
 		]
 		public void Truck_AllSlopes(double v1, double v2)
 		{
@@ -100,11 +100,11 @@ namespace TUGraz.VectoCore.ModelbasedTests.DriverStrategy
 			}
 		}
 
-		[
-			TestCase(0, 80), TestCase(80, 0), TestCase(80, 80),
-			TestCase(0, 60), TestCase(60, 0), TestCase(60, 60),
-			TestCase(0, 40), TestCase(40, 0), TestCase(40, 40),
-			TestCase(0, 20), TestCase(20, 0), TestCase(20, 20),
+		[Category("LongRunning"),
+		TestCase(0, 80), TestCase(80, 0), TestCase(80, 80),
+		TestCase(0, 60), TestCase(60, 0), TestCase(60, 60),
+		TestCase(0, 40), TestCase(40, 0), TestCase(40, 40),
+		TestCase(0, 20), TestCase(20, 0), TestCase(20, 20),
 		]
 		public void Coach_AllSlopes(double v1, double v2)
 		{
