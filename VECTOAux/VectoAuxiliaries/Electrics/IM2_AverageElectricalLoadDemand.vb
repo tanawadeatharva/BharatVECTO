@@ -8,16 +8,13 @@
 '   WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
 '
 ' See the LICENSE.txt for the specific language governing permissions and limitations.
+Imports TUGraz.VectoCommon.Utils
 
 Namespace Electrics
-
-  Public Interface IM2_AverageElectricalLoadDemand
-
-    Function GetAveragePowerDemandAtAlternator() As Single
-    Function GetAveragePowerAtCrankFromElectrics() As Single
-
-End Interface
-
+	Public Interface IM2_AverageElectricalLoadDemand
+		Function GetAveragePowerDemandAtAlternator() As Watt
+		Function GetAveragePowerAtCrankFromElectrics() As Watt
+	End Interface
 End Namespace
 
 

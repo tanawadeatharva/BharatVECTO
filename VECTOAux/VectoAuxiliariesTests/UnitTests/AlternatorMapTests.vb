@@ -1,5 +1,6 @@
 ﻿Imports VectoAuxiliaries.Electrics
 Imports NUnit.Framework
+Imports TUGraz.VectoCommon.Utils
 Imports VectoAuxiliaries
 
 
@@ -31,7 +32,7 @@ Namespace UnitTests
 
 			Dim map As IAlternatorMap = GetInitialisedMap()
 			Dim target As IAlternatorMap = GetInitialisedMap()
-			Dim actual As Single = map.GetEfficiency(rpm, amps).Efficiency
+			Dim actual As Single = map.GetEfficiency(rpm, amps.SI(Of Ampere)).Efficiency
 			Assert.AreEqual(expected, actual)
 		End Sub
 
@@ -44,7 +45,7 @@ Namespace UnitTests
 			Dim map As IAlternatorMap = GetInitialisedMap()
 			Dim target As IAlternatorMap = GetInitialisedMap()
 
-			Dim actual As Single = map.GetEfficiency(rpm, amps).Efficiency
+			Dim actual As Single = map.GetEfficiency(rpm, amps.SI(Of Ampere)).Efficiency
 
 			Assert.AreEqual(expected, actual)
 		End Sub
@@ -58,7 +59,7 @@ Namespace UnitTests
 			Dim map As IAlternatorMap = GetInitialisedMap()
 			Dim target As IAlternatorMap = GetInitialisedMap()
 
-			Dim actual As Single = map.GetEfficiency(rpm, amps).Efficiency
+			Dim actual As Single = map.GetEfficiency(rpm, amps.SI(Of Ampere)).Efficiency
 
 			Assert.AreEqual(expected, actual)
 		End Sub
@@ -95,7 +96,7 @@ Namespace UnitTests
 			Dim map As IAlternatorMap = GetInitialisedMap()
 			Dim target As IAlternatorMap = GetInitialisedMap()
 
-			Dim actual As Single = map.GetEfficiency(rpm, amps).Efficiency
+			Dim actual As Single = map.GetEfficiency(rpm, amps.SI(Of Ampere)).Efficiency
 
 			Assert.AreEqual(expected, CType(Math.Round(actual, 6), Single))
 		End Sub

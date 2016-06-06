@@ -9,6 +9,7 @@
 '
 ' See the LICENSE.txt for the specific language governing permissions and limitations.
 
+Imports TUGraz.VectoCommon.Utils
 Imports VectoAuxiliaries.Electrics
 Imports VectoAuxiliaries.Pneumatics
 Imports VectoAuxiliaries.Hvac
@@ -17,23 +18,23 @@ Imports VectoAuxiliaries.DownstreamModules
 Namespace DownstreamModules
 	Public Interface IM10
 		'AverageLoadsFuelConsumptionInterpolatedForPneumatics
-		ReadOnly Property AverageLoadsFuelConsumptionInterpolatedForPneumatics As Single
+		ReadOnly Property AverageLoadsFuelConsumptionInterpolatedForPneumatics As Kilogram
 
 		'Interpolated FC between points 2-3-1 Representing smart Pneumatics = Fuel consumption with smart Pneumatics and average electrical  power demand
-		ReadOnly Property FuelConsumptionSmartPneumaticsAndAverageElectricalPowerDemand As Single
+		ReadOnly Property FuelConsumptionSmartPneumaticsAndAverageElectricalPowerDemand As Kilogram
 
-		Sub CycleStep(Optional stepTimeInSeconds As Double = 0.0)
+		Sub CycleStep(stepTimeInSeconds As Second)
 
 		'Added for diagnostic inspection purposes only, does not materially affect the class function.
-		ReadOnly Property P1X As Single
-		ReadOnly Property P1Y As Single
-		ReadOnly Property P2X As Single
-		ReadOnly Property P2Y As Single
-		ReadOnly Property P3X As Single
-		ReadOnly Property P3Y As Single
-		ReadOnly Property XTAIN As Single
-		ReadOnly Property INTRP1 As Single
-		ReadOnly Property INTRP2 As Single
+		ReadOnly Property P1X As NormLiter
+		ReadOnly Property P1Y As Kilogram
+		ReadOnly Property P2X As NormLiter
+		ReadOnly Property P2Y As Kilogram
+		ReadOnly Property P3X As NormLiter
+		ReadOnly Property P3Y As Kilogram
+		ReadOnly Property XTAIN As NormLiter
+		ReadOnly Property INTRP1 As Kilogram
+		ReadOnly Property INTRP2 As Kilogram
 	End Interface
 End Namespace
 

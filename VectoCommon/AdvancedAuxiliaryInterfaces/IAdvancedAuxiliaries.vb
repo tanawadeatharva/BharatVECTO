@@ -8,6 +8,7 @@
 '   WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
 '
 ' See the LICENSE.txt for the specific language governing permissions and limitations.
+Imports TUGraz.VectoCommon.Utils
 
 Public Interface IAdvancedAuxiliaries
 	' Inherits IAuxiliaryEvent
@@ -23,36 +24,36 @@ Public Interface IAdvancedAuxiliaries
 
 
 	'Diagnostic Only - Remove when beta over.
-	ReadOnly Property AA_D_M12_P1X As Single
-	ReadOnly Property AA_D_M12_P1Y As Single
-	ReadOnly Property AA_D_M12_P2X As Single
-	ReadOnly Property AA_D_M12_P2Y As Single
-	ReadOnly Property AA_D_M12_P3X As Single
-	ReadOnly Property AA_D_M12_P3Y As Single
-	ReadOnly Property AA_D_M12_XTAIN As Single
-	ReadOnly Property AA_D_M12_INTERP1 As Single
-	ReadOnly Property AA_D_M12_INTERP2 As Single
+	ReadOnly Property AA_D_M12_P1X As Joule
+	ReadOnly Property AA_D_M12_P1Y As Kilogram
+	ReadOnly Property AA_D_M12_P2X As Joule
+	ReadOnly Property AA_D_M12_P2Y As Kilogram
+	ReadOnly Property AA_D_M12_P3X As Joule
+	ReadOnly Property AA_D_M12_P3Y As Kilogram
+	ReadOnly Property AA_D_M12_XTAIN As Joule
+	ReadOnly Property AA_D_M12_INTERP1 As Kilogram
+	ReadOnly Property AA_D_M12_INTERP2 As Kilogram
 
 	'Additional Permenent Monitoring Signals - Required by engineering
-	ReadOnly Property AA_NonSmartAlternatorsEfficiency As Single?
-	ReadOnly Property AA_SmartIdleCurrent_Amps As Single?
-	ReadOnly Property AA_SmartIdleAlternatorsEfficiency As Single?
-	ReadOnly Property AA_SmartTractionCurrent_Amps As Single?
-	ReadOnly Property AA_SmartTractionAlternatorEfficiency As Single?
-	ReadOnly Property AA_SmartOverrunCurrent_Amps As Single?
-	ReadOnly Property AA_SmartOverrunAlternatorEfficiency As Single?
-	ReadOnly Property AA_CompressorFlowRate_LitrePerSec As Single?
-	ReadOnly Property AA_OverrunFlag As Integer?
+	ReadOnly Property AA_NonSmartAlternatorsEfficiency As Double
+	ReadOnly Property AA_SmartIdleCurrent_Amps As Ampere
+	ReadOnly Property AA_SmartIdleAlternatorsEfficiency As Double
+	ReadOnly Property AA_SmartTractionCurrent_Amps As Ampere
+	ReadOnly Property AA_SmartTractionAlternatorEfficiency As Double
+	ReadOnly Property AA_SmartOverrunCurrent_Amps As Ampere
+	ReadOnly Property AA_SmartOverrunAlternatorEfficiency As Double
+	ReadOnly Property AA_CompressorFlowRate_LitrePerSec As NormLiterPerSecond
+	ReadOnly Property AA_OverrunFlag As Boolean
 	ReadOnly Property AA_EngineIdleFlag As Integer?
-	ReadOnly Property AA_CompressorFlag As Integer?
-	ReadOnly Property AA_TotalCycleFC_Grams As Single?
-	ReadOnly Property AA_TotalCycleFC_Litres As Single?
-	ReadOnly Property AA_AveragePowerDemandCrankHVACMechanicals As Single?
-	ReadOnly Property AA_AveragePowerDemandCrankHVACElectricals As Single?
-	ReadOnly Property AA_AveragePowerDemandCrankElectrics As Single?
-	ReadOnly Property AA_AveragePowerDemandCrankPneumatics As Single?
-	ReadOnly Property AA_TotalCycleFuelConsumptionCompressorOff As Single?
-	ReadOnly Property AA_TotalCycleFuelConsumptionCompressorOn As Single?
+	ReadOnly Property AA_CompressorFlag As Boolean
+	ReadOnly Property AA_TotalCycleFC_Grams As Kilogram
+	ReadOnly Property AA_TotalCycleFC_Litres As Liter
+	ReadOnly Property AA_AveragePowerDemandCrankHVACMechanicals As Watt
+	ReadOnly Property AA_AveragePowerDemandCrankHVACElectricals As Watt
+	ReadOnly Property AA_AveragePowerDemandCrankElectrics As Watt
+	ReadOnly Property AA_AveragePowerDemandCrankPneumatics As Watt
+	ReadOnly Property AA_TotalCycleFuelConsumptionCompressorOff As Kilogram
+	ReadOnly Property AA_TotalCycleFuelConsumptionCompressorOn As Kilogram
 
 	''' <summary>
 	''' Total Cycle Fuel In Grams
@@ -60,7 +61,7 @@ Public Interface IAdvancedAuxiliaries
 	''' <value></value>
 	''' <returns></returns>
 	''' <remarks></remarks>
-	ReadOnly Property TotalFuelGRAMS As Single
+	ReadOnly Property TotalFuelGRAMS As Kilogram
 
 	''' <summary>
 	''' Total Cycle Fuel in Litres
@@ -68,7 +69,7 @@ Public Interface IAdvancedAuxiliaries
 	''' <value></value>
 	''' <returns></returns>
 	''' <remarks></remarks>
-	ReadOnly Property TotalFuelLITRES As Single
+	ReadOnly Property TotalFuelLITRES As Liter
 
 	''' <summary>
 	''' Total Power Demans At Crank From Auxuliaries (W)
@@ -76,7 +77,7 @@ Public Interface IAdvancedAuxiliaries
 	''' <value></value>
 	''' <returns></returns>
 	''' <remarks></remarks>
-	ReadOnly Property AuxiliaryPowerAtCrankWatts As Single
+	ReadOnly Property AuxiliaryPowerAtCrankWatts As Watt
 
 
 	''' <summary>
@@ -121,7 +122,7 @@ Public Interface IAdvancedAuxiliaries
 	''' <param name="message"></param>
 	''' <returns></returns>
 	''' <remarks></remarks>
-	Function CycleStep(seconds As Double, ByRef message As String) As Boolean
+	Function CycleStep(seconds As Second, ByRef message As String) As Boolean
 
 	''' <summary>
 	''' Initialises AAUX Environment ( Begin Processs )

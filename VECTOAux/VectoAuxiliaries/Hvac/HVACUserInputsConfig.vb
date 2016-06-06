@@ -14,28 +14,23 @@ Imports VectoAuxiliaries.Electrics
 Imports VectoAuxiliaries.Pneumatics
 
 Namespace Hvac
+	Public Class HVACUserInputsConfig
+		Implements IHVACUserInputsConfig
 
-    Public Class HVACUserInputsConfig
-        Implements IHVACUserInputsConfig
+		'Constructor
+		Public Sub New(ssmFilePath As String, busDatabasePath As String, isDisabled As Boolean)
 
-        'Constructor
-        Public Sub New(ssmFilePath As String, busDatabasePath As String, isDisabled As Boolean)
+			Me.SSMFilePath = ssmFilePath
+			Me.BusDatabasePath = busDatabasePath
+			Me.SSMDisabled = isDisabled
+		End Sub
 
-            Me.SSMFilePath = ssmFilePath
-            Me.BusDatabasePath = busDatabasePath
-            Me.SSMDisabled = isDisabled
+		Public Property SSMFilePath As String Implements IHVACUserInputsConfig.SSMFilePath
 
-        End Sub
+		Public Property BusDatabasePath As String Implements IHVACUserInputsConfig.BusDatabasePath
 
-        Public Property SSMFilePath As String Implements IHVACUserInputsConfig.SSMFilePath
-
-        Public Property BusDatabasePath As String Implements IHVACUserInputsConfig.BusDatabasePath
-
-        Public Property SSMDisabled As Boolean Implements IHVACUserInputsConfig.SSMDisabled
-
-    End Class
-
+		Public Property SSMDisabled As Boolean Implements IHVACUserInputsConfig.SSMDisabled
+	End Class
 End Namespace
-
 
 

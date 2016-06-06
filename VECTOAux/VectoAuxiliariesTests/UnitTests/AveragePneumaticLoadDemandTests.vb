@@ -1,6 +1,7 @@
 ﻿
 Imports VectoAuxiliaries.Pneumatics
 Imports NUnit.Framework
+Imports TUGraz.VectoCommon.Utils
 Imports VectoAuxiliariesTests.Mocks
 Imports VectoAuxiliaries
 
@@ -46,7 +47,7 @@ Namespace UnitTests
 
 			_Signals.TotalCycleTimeSeconds = 3114
 
-			_Signals.EngineSpeed = 3000
+			_Signals.EngineSpeed = 3000.RPMtoRad()
 		End Sub
 
 
@@ -67,8 +68,8 @@ Namespace UnitTests
 			psCompressorMap.Initialise()
 			Dim _
 				target As _
-					New M3_AveragePneumaticLoadDemand(psUserInputsConfig, psAuxConfig, psActuationsMap, psCompressorMap, _vehicleMassKG,
-													"Urban", _signals)
+					New M3_AveragePneumaticLoadDemand(psUserInputsConfig, psAuxConfig, psActuationsMap, psCompressorMap,
+													_vehicleMassKG.SI(Of Kilogram), "Urban", _Signals)
 
 
 			Assert.IsNotNull(target)
@@ -88,12 +89,12 @@ Namespace UnitTests
 			Dim _
 				target As _
 					New M3_AveragePneumaticLoadDemand(_defaultInputConfig, psAuxConfig, psActuationsMap, psCompressorMap,
-													_vehicleMassKG, "Urban", _signals)
+													_vehicleMassKG.SI(Of Kilogram), "Urban", _Signals)
 
-			Dim expected As Single = 7947.684
-			Dim actual As Single = target.TotalAirDemand()
+			Dim expected As Double = 7947.684
+			Dim actual As NormLiter = target.TotalAirDemand()
 
-			Assert.AreEqual(expected, actual)
+			Assert.AreEqual(expected, actual.Value(), 0.000001)
 		End Sub
 
 		<Test()>
@@ -110,12 +111,12 @@ Namespace UnitTests
 			Dim _
 				target As _
 					New M3_AveragePneumaticLoadDemand(_defaultInputConfig, psAuxConfig, psActuationsMap, psCompressorMap,
-													_vehicleMassKG, "Urban", _signals)
+													_vehicleMassKG.SI(Of Kilogram), "Urban", _Signals)
 
 			Dim expected As Single = 5832.091
-			Dim actual As Single = target.GetAveragePowerDemandAtCrankFromPneumatics()
+			Dim actual As Watt = target.GetAveragePowerDemandAtCrankFromPneumatics()
 
-			Assert.AreEqual(expected, actual, 0.001)
+			Assert.AreEqual(expected, actual.Value(), 0.001)
 		End Sub
 
 
@@ -135,12 +136,11 @@ Namespace UnitTests
 			Dim _
 				target As _
 					New M3_AveragePneumaticLoadDemand(_defaultInputConfig, psAuxConfig, psActuationsMap, psCompressorMap,
-													_vehicleMassKG, "Urban", _signals)
+													_vehicleMassKG.SI(Of Kilogram), "Urban", _Signals)
 
 			Dim expected As Single = 5832.091
-			Dim actual As Single = target.GetAveragePowerDemandAtCrankFromPneumatics()
 
-			Assert.AreEqual(expected, actual, 0.001)
+			Assert.AreEqual(expected, target.GetAveragePowerDemandAtCrankFromPneumatics().Value(), 0.001)
 		End Sub
 
 		<Test()>
@@ -157,12 +157,11 @@ Namespace UnitTests
 			Dim _
 				target As _
 					New M3_AveragePneumaticLoadDemand(_defaultInputConfig, psAuxConfig, psActuationsMap, psCompressorMap,
-													_vehicleMassKG, "Urban", _signals)
+													_vehicleMassKG.SI(Of Kilogram), "Urban", _Signals)
 
-			Dim expected As Single = Math.Round(7947.55127 / _Signals.TotalCycleTimeSeconds, 4)
-			Dim actual As Single = Math.Round(target.AverageAirConsumedPerSecondLitre(), 4)
+			Dim expected As Single = 7947.55127 / _Signals.TotalCycleTimeSeconds
 
-			Assert.AreEqual(expected, actual)
+			Assert.AreEqual(expected, target.AverageAirConsumedPerSecondLitre().Value(), 0.001)
 		End Sub
 
 		'SmartRegeneration = False
@@ -182,12 +181,11 @@ Namespace UnitTests
 			Dim _
 				target As _
 					New M3_AveragePneumaticLoadDemand(_defaultInputConfig, psAuxConfig, psActuationsMap, psCompressorMap,
-													_vehicleMassKG, "Urban", _Signals)
+													_vehicleMassKG.SI(Of Kilogram), "Urban", _Signals)
 
-			Dim expected As Single = Math.Round(8863.378 / _Signals.TotalCycleTimeSeconds, 4)
-			Dim actual As Single = Math.Round(target.AverageAirConsumedPerSecondLitre(), 4)
+			Dim expected As Double = 8863.378 / _Signals.TotalCycleTimeSeconds
 
-			Assert.AreEqual(expected, actual)
+			Assert.AreEqual(expected, target.AverageAirConsumedPerSecondLitre().Value(), 0.001)
 		End Sub
 
 		'RetarderBrake = False
@@ -207,13 +205,12 @@ Namespace UnitTests
 			Dim _
 				target As _
 					New M3_AveragePneumaticLoadDemand(_defaultInputConfig, psAuxConfig, psActuationsMap, psCompressorMap,
-													_vehicleMassKG, "Urban", _Signals)
+													_vehicleMassKG.SI(Of Kilogram), "Urban", _Signals)
 
-			Dim expected As Single = Math.Round(8541.45 / _Signals.TotalCycleTimeSeconds, 4)
+			Dim expected As Double = 8541.45 / _Signals.TotalCycleTimeSeconds
 
-			Dim actual As Single = Math.Round(target.AverageAirConsumedPerSecondLitre(), 4)
 
-			Assert.AreEqual(expected, actual)
+			Assert.AreEqual(expected, target.AverageAirConsumedPerSecondLitre().Value(), 0.001)
 		End Sub
 
 		'KneelingHeightMilimeters = 100
@@ -233,13 +230,11 @@ Namespace UnitTests
 			Dim _
 				target As _
 					New M3_AveragePneumaticLoadDemand(_defaultInputConfig, psAuxConfig, psActuationsMap, psCompressorMap,
-													_vehicleMassKG, "Urban", _Signals)
+													_vehicleMassKG.SI(Of Kilogram), "Urban", _Signals)
 
-			Dim expected As Single = 8557.524 / _Signals.TotalCycleTimeSeconds
+			Dim expected As Double = 8557.524 / _Signals.TotalCycleTimeSeconds
 
-			Dim actual As Single = Math.Round(target.AverageAirConsumedPerSecondLitre(), 8)
-
-			Assert.AreEqual(expected, actual)
+			Assert.AreEqual(expected, target.AverageAirConsumedPerSecondLitre().Value(), 0.001)
 		End Sub
 
 		'AirSuspensionControl = "mechanically"
@@ -259,13 +254,11 @@ Namespace UnitTests
 			Dim _
 				target As _
 					New M3_AveragePneumaticLoadDemand(_defaultInputConfig, psAuxConfig, psActuationsMap, psCompressorMap,
-													_vehicleMassKG, "Urban", _Signals)
+													_vehicleMassKG.SI(Of Kilogram), "Urban", _Signals)
 
-			Dim expected As Single = 7947.68457 / _Signals.TotalCycleTimeSeconds
+			Dim expected As Double = 7947.68457 / _Signals.TotalCycleTimeSeconds
 
-			Dim actual As Single = Math.Round(target.AverageAirConsumedPerSecondLitre(), 6)
-
-			Assert.AreEqual(expected, actual)
+			Assert.AreEqual(expected, target.AverageAirConsumedPerSecondLitre().Value(), 0.001)
 		End Sub
 
 		'AdBlueDosing = "electric"
@@ -285,13 +278,11 @@ Namespace UnitTests
 			Dim _
 				target As _
 					New M3_AveragePneumaticLoadDemand(_defaultInputConfig, psAuxConfig, psActuationsMap, psCompressorMap,
-													_vehicleMassKG, "Urban", _Signals)
+													_vehicleMassKG.SI(Of Kilogram), "Urban", _Signals)
 
-			Dim expected As Single = 7947.68457 / _Signals.TotalCycleTimeSeconds
+			Dim expected As Double = 7947.68457 / _Signals.TotalCycleTimeSeconds
 
-			Dim actual As Single = Math.Round(target.AverageAirConsumedPerSecondLitre(), 6)
-
-			Assert.AreEqual(expected, actual)
+			Assert.AreEqual(expected, target.AverageAirConsumedPerSecondLitre().Value(), 0.001)
 		End Sub
 
 		'Doors = "Electric"
@@ -311,13 +302,11 @@ Namespace UnitTests
 			Dim _
 				target As _
 					New M3_AveragePneumaticLoadDemand(_defaultInputConfig, psAuxConfig, psActuationsMap, psCompressorMap,
-													_vehicleMassKG, "Urban", _Signals)
+													_vehicleMassKG.SI(Of Kilogram), "Urban", _Signals)
 
-			Dim expected As Single = 6880.88428 / _Signals.TotalCycleTimeSeconds
+			Dim expected As Double = 6880.88428 / _Signals.TotalCycleTimeSeconds
 
-			Dim actual As Single = Math.Round(target.AverageAirConsumedPerSecondLitre(), 6)
-
-			Assert.AreEqual(expected, actual)
+			Assert.AreEqual(expected, target.AverageAirConsumedPerSecondLitre().Value(), 0.001)
 		End Sub
 	End Class
 End Namespace

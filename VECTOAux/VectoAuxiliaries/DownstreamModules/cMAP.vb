@@ -9,6 +9,8 @@
 '
 ' See the LICENSE.txt for the specific language governing permissions and limitations.
 Imports System.Collections.Generic
+Imports System.Globalization
+Imports TUGraz.VectoCommon.Utils
 
 Public Class cMAP
 	Implements IFuelConsumptionMap
@@ -33,7 +35,7 @@ Public Class cMAP
 	Public Function ReadFile(Optional ByVal ShowMsg As Boolean = True) As Boolean
 		Dim file As cFile_V3
 		Dim line As String()
-		Dim nU As Double
+		Dim nU As Single
 		Dim MsgSrc As String
 
 
@@ -74,12 +76,12 @@ Public Class cMAP
 				iMapDim += 1
 
 				'Revolutions
-				nU = CDbl(line(0))
+				nU = Single.Parse(line(0), CultureInfo.InvariantCulture)
 
 				LnU.Add(nU)
 
 				'Power
-				LTq.Add(line(1))
+				LTq.Add(Single.Parse(line(1), CultureInfo.InvariantCulture))
 
 				'FC
 				'Check sign
@@ -135,7 +137,7 @@ lbEr:
 	Public Function fFCdelaunay_Intp(ByVal nU As Single, ByVal Tq As Single) As Single
 		Dim val As Single
 
-		val = FuelMap.Intpol(nU, Tq)
+		val = CType(FuelMap.Intpol(nU, Tq), Single)
 
 		If FuelMap.ExtrapolError Then
 			'TODO:WORKERMESSAGE WorkerMsg(tMsgID.Err, "Cannot extrapolate FC map! n= " & nU.ToString("0.0") & " [1/min], Me= " & Tq.ToString("0.0") & " [Nm]", "MAP/FC_Intp")
@@ -182,9 +184,10 @@ lbEr:
 
 #End Region
 
-	Public Function GetFuelConsumption(torque As Double, angularVelocity As Double) As Double _
+	Public Function GetFuelConsumption(torque As NewtonMeter, angularVelocity As PerSecond) As KilogramPerSecond _
 		Implements IFuelConsumptionMap.GetFuelConsumption
-		Return fFCdelaunay_Intp(angularVelocity, torque)
+		Return _
+			(fFCdelaunay_Intp(CType(angularVelocity.AsRPM, Single), CType(torque.Value(), Single)) / 3600.0 / 1000.0).SI(Of KilogramPerSecond)()
 	End Function
 End Class
 

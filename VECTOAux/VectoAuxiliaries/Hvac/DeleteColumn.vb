@@ -2,35 +2,21 @@
 
 
 Public Class DeleteColumn
-  Inherits DataGridViewButtonColumn
+	Inherits DataGridViewButtonColumn
 
+	Public Sub new()
 
-
-   Public  Sub new()
-
-     MyBase.New()
-     Me.CellTemplate = New DeleteCell()
-
-   End Sub
-
-
-
-
+		MyBase.New()
+		Me.CellTemplate = New DeleteCell()
+	End Sub
 End Class
 
 Public Class DeleteAlternatorColumn
-  Inherits DataGridViewButtonColumn
+	Inherits DataGridViewButtonColumn
 
+	Public Sub new()
 
-
-   Public  Sub new()
-
-     MyBase.New()
-     Me.CellTemplate = New DeleteAlternatorCell()
-
-   End Sub
-
-
-
-
+		MyBase.New()
+		Me.CellTemplate = New DeleteAlternatorCell()
+	End Sub
 End Class

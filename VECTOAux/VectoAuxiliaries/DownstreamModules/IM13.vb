@@ -10,26 +10,21 @@
 ' See the LICENSE.txt for the specific language governing permissions and limitations.
 
 
+Imports TUGraz.VectoCommon.Utils
 Imports VectoAuxiliaries.Electrics
 Imports VectoAuxiliaries.Pneumatics
 Imports VectoAuxiliaries.Hvac
 
 Namespace DownstreamModules
-
-  Public Interface IM13
-  
-    ''' <summary>
-    ''' Total Cycle Fuel Consumption Grams
-    ''' </summary>
-    ''' <value></value>
-    ''' <returns></returns>
-    ''' <remarks>WHTC and Start Stop Adjusted</remarks>
-    ReadOnly Property WHTCTotalCycleFuelConsumptionGrams As Single
-
-  
-  End Interface
-
-
+	Public Interface IM13
+		''' <summary>
+		''' Total Cycle Fuel Consumption Grams
+		''' </summary>
+		''' <value></value>
+		''' <returns></returns>
+		''' <remarks>WHTC and Start Stop Adjusted</remarks>
+		ReadOnly Property WHTCTotalCycleFuelConsumptionGrams As Kilogram
+	End Interface
 End Namespace
 
 

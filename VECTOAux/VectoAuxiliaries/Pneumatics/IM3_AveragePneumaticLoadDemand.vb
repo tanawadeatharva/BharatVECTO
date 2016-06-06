@@ -8,20 +8,14 @@
 '   WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
 '
 ' See the LICENSE.txt for the specific language governing permissions and limitations.
-
+Imports TUGraz.VectoCommon.Utils
 
 Namespace Pneumatics
+	Public Interface IM3_AveragePneumaticLoadDemand
+		Function GetAveragePowerDemandAtCrankFromPneumatics() As Watt
 
-Public Interface IM3_AveragePneumaticLoadDemand
-
-  Function GetAveragePowerDemandAtCrankFromPneumatics() As Single
-  Function AverageAirConsumedPerSecondLitre() As Single
-
-
-End Interface
-
-
-
+		Function AverageAirConsumedPerSecondLitre() As NormLiterPerSecond
+	End Interface
 End Namespace
 
 

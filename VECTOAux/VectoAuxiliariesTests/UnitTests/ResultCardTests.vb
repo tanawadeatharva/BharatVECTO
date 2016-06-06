@@ -1,202 +1,178 @@
 ﻿Imports NUnit.Framework
+Imports TUGraz.VectoCommon.Utils
 Imports VectoAuxiliaries.Electrics
 
 <TestFixture()>
 Public Class ResultCardTests
+	Private results As New List(Of SmartResult)
+	Private unorderedResults As New List(Of SmartResult)
 
-Private results As New List(Of SmartResult)
-Private unorderedResults As New List(of SmartResult)
+	Private resultCard As ResultCard
+	Private unorderedResultCard As ResultCard
 
-Private resultCard As ResultCard
-Private unorderedResultCard As ResultCard
 
+	Public Sub New()
 
-Public Sub New()
+		results.Add(New SmartResult(20, 18))
+		results.Add(New SmartResult(30, 27))
+		results.Add(New SmartResult(40, 36))
+		results.Add(New SmartResult(50, 45))
 
-results.Add(new SmartResult(20, 18))
-results.Add(new SmartResult(30, 27))
-results.Add(new SmartResult(40, 36))
-results.Add(new SmartResult(50, 45))
+		unorderedResults.Add(New SmartResult(40, 36))
+		unorderedResults.Add(New SmartResult(30, 27))
+		unorderedResults.Add(New SmartResult(50, 45))
+		unorderedResults.Add(New SmartResult(20, 18))
 
-unorderedResults.Add(new SmartResult(40, 36))
-unorderedResults.Add(new SmartResult(30, 27))
-unorderedResults.Add(new SmartResult(50, 45))
-unorderedResults.Add(new SmartResult(20, 18))
+		'results.Add(60, 54)
 
-'results.Add(60, 54)
+		resultCard = New ResultCard(results)
 
-resultCard = New ResultCard(results)
+		unorderedResultCard = New ResultCard(unorderedResults)
+	End Sub
 
-unorderedResultCard = New ResultCard( unorderedResults)
 
+	<Test()>
+	Public Sub CreateNewResultsOKTest()
 
+		Dim target As New ResultCard(results)
 
-End Sub
+		Assert.IsNotNull(target)
+	End Sub
 
+	<Test()>
+	<ExpectedException("System.ArgumentException")>
+	Public Sub CreateNewBanResultsNullTest()
 
-<Test()>
-Public Sub CreateNewResultsOKTest()
+		Dim target As New ResultCard(Nothing)
 
- Dim target As New ResultCard(results)
+		Assert.IsNotNull(target)
+	End Sub
 
- Assert.IsNotNull(target)
 
-End Sub
+	<Test()>
+	Public Sub GetBotomBoundryValueTest()
 
-<Test()>
-<ExpectedException("System.ArgumentException")>
-Public Sub CreateNewBanResultsNullTest()
+		Dim expected As Single = 18
+		Dim actual As Ampere = resultCard.GetSmartCurrentResult(20.SI(Of Ampere))
 
- Dim target As New ResultCard(Nothing)
+		Assert.AreEqual(expected, actual.Value(), 0.001)
+	End Sub
 
- Assert.IsNotNull(target)
 
-End Sub
+	<Test()>
+	Public Sub UnorderedGetBotomBoundryValueTest()
 
+		Dim expected As Single = 18
+		Dim actual As Ampere = unorderedResultCard.GetSmartCurrentResult(20.SI(Of Ampere))
 
+		Assert.AreEqual(expected, actual.Value(), 0.001)
+	End Sub
 
 
-<Test()>
-Public Sub GetBotomBoundryValueTest()
+	<Test()>
+	Public Sub GetCentreBoundayValueTest()
 
-Dim expected As Single = 18
-Dim actual As Single = resultCard.GetSmartCurrentResult(20)
+		Dim expected As Single = 36
+		Dim actual As Ampere = resultCard.GetSmartCurrentResult(40.SI(Of Ampere))
 
-Assert.AreEqual(expected, actual)
+		Assert.AreEqual(expected, actual.Value(), 0.001)
+	End Sub
 
-End Sub
 
+	<Test()>
+	Public Sub UnorderedGetCentreBoundayValueTest()
 
-<Test()>
-Public Sub UnorderedGetBotomBoundryValueTest()
+		Dim expected As Single = 36
+		Dim actual As Ampere = unorderedResultCard.GetSmartCurrentResult(40.SI(Of Ampere))
 
-Dim expected As Single = 18
-Dim actual As Single = unorderedResultCard.GetSmartCurrentResult(20)
+		Assert.AreEqual(expected, actual.Value(), 0.001)
+	End Sub
 
-Assert.AreEqual(expected, actual)
 
-End Sub
+	<Test()>
+	Public Sub GetTopBoundaryValueTest()
 
+		Dim expected As Single = 45
+		Dim actual As Ampere = resultCard.GetSmartCurrentResult(50.SI(Of Ampere))
 
-<Test()>
-Public Sub GetCentreBoundayValueTest()
+		Assert.AreEqual(expected, actual.Value(), 0.001)
+	End Sub
 
-Dim expected As Single = 36
-Dim actual As Single = resultCard.GetSmartCurrentResult(40)
+	<Test()>
+	Public Sub UnorderedGetTopBoundaryValueTest()
 
-Assert.AreEqual(expected, actual)
+		Dim expected As Single = 45
+		Dim actual As Ampere = unorderedResultCard.GetSmartCurrentResult(50.SI(Of Ampere))
 
+		Assert.AreEqual(expected, actual.Value(), 0.001)
+	End Sub
 
-End Sub
 
+	<Test()>
+	Public Sub GetInterpolatedValue35AmpsTest()
 
-<Test()>
-Public Sub UnorderedGetCentreBoundayValueTest()
+		Dim expected As Single = 31.5
+		Dim actual As Ampere = resultCard.GetSmartCurrentResult(35.SI(Of Ampere))
 
-Dim expected As Single = 36
-Dim actual As Single = unorderedResultCard.GetSmartCurrentResult(40)
+		Assert.AreEqual(expected, actual.Value(), 0.001)
+	End Sub
 
-Assert.AreEqual(expected, actual)
 
+	<Test()>
+	Public Sub UnorderedGetInterpolatedValue35AmpsTest()
 
-End Sub
+		Dim expected As Single = 31.5
+		Dim actual As Ampere = unorderedResultCard.GetSmartCurrentResult(35.SI(Of Ampere))
 
+		Assert.AreEqual(expected, actual.Value(), 0.001)
+	End Sub
 
-<Test()>
-Public Sub GetTopBoundaryValueTest()
+	<Test()>
+	Public Sub GetExtrapolatedValue60AmpsTest()
 
-Dim expected As Single = 45
-Dim actual As Single = resultCard.GetSmartCurrentResult(50)
+		Dim expected As Single = 54
+		Dim actual As Ampere = resultCard.GetSmartCurrentResult(60.SI(Of Ampere))
 
-Assert.AreEqual(expected, actual)
+		Assert.AreEqual(expected, actual.Value(), 0.001)
+	End Sub
 
-End Sub
+	<Test()>
+	Public Sub UnorderedGetExtrapolatedValue60AmpsTest()
 
-<Test()>
-Public Sub UnorderedGetTopBoundaryValueTest()
+		Dim expected As Single = 54
+		Dim actual As Ampere = unorderedResultCard.GetSmartCurrentResult(60.SI(Of Ampere))
 
-Dim expected As Single = 45
-Dim actual As Single = unorderedResultCard.GetSmartCurrentResult(50)
+		Assert.AreEqual(expected, actual.Value(), 0.001)
+	End Sub
 
-Assert.AreEqual(expected, actual)
+	<Test()>
+	Public Sub GetExtrapolatedValue10AmpsTest()
 
-End Sub
+		Dim expected As Single = 9
+		Dim actual As Ampere = resultCard.GetSmartCurrentResult(10.SI(Of Ampere))
 
+		Assert.AreEqual(expected, actual.Value(), 0.001)
+	End Sub
 
-<Test()>
-Public Sub GetInterpolatedValue35AmpsTest()
+	<Test()>
+	Public Sub UnorderedGetExtrapolatedValue10AmpsTest()
 
-Dim expected As Single = 31.5
-Dim actual As Single = resultCard.GetSmartCurrentResult(35)
+		Dim expected As Single = 9
+		Dim actual As Ampere = unorderedResultCard.GetSmartCurrentResult(10.SI(Of Ampere))
 
-Assert.AreEqual(expected, actual)
+		Assert.AreEqual(expected, actual.Value(), 0.001)
+	End Sub
 
-End Sub
 
+	<Test()>
+	Public Sub EmptyOrInsufficientResultsTest()
 
-<Test()>
-Public Sub UnorderedGetInterpolatedValue35AmpsTest()
+		Dim resultSet As New List(Of SmartResult)
 
-Dim expected As Single = 31.5
-Dim actual As Single = unorderedResultCard.GetSmartCurrentResult(35)
+		Dim expected As Single = 10
+		Dim actual As Ampere = (New ResultCard(resultSet)).GetSmartCurrentResult(10.SI(Of Ampere))
 
-Assert.AreEqual(expected, actual)
-
-End Sub
-
-<Test()>
-Public Sub GetExtrapolatedValue60AmpsTest()
-
-Dim expected As Single = 54
-Dim actual As Single = resultCard.GetSmartCurrentResult(60)
-
-Assert.AreEqual(expected, actual)
-
-End Sub
-
-<Test()>
-Public Sub UnorderedGetExtrapolatedValue60AmpsTest()
-
-Dim expected As Single = 54
-Dim actual As Single = unorderedResultCard.GetSmartCurrentResult(60)
-
-Assert.AreEqual(expected, actual)
-
-End Sub
-
-<Test()>
-Public Sub GetExtrapolatedValue10AmpsTest()
-
-Dim expected As Single = 9
-Dim actual As Single = resultCard.GetSmartCurrentResult(10)
-
-Assert.AreEqual(expected, actual)
-
-End Sub
-
-<Test()>
-Public Sub UnorderedGetExtrapolatedValue10AmpsTest()
-
-Dim expected As Single = 9
-Dim actual As Single = unorderedResultCard.GetSmartCurrentResult(10)
-
-Assert.AreEqual(expected, actual)
-
-End Sub
-
-
-<Test()>
-Public Sub EmptyOrInsufficientResultsTest()
-
-Dim resultSet As new List(Of SmartResult)
-
-Dim expected As Single = 10
-Dim actual As Single = (New ResultCard(resultSet)).GetSmartCurrentResult(10)
-
-Assert.AreEqual(expected, actual)
-
-End Sub
-
-
+		Assert.AreEqual(expected, actual.Value(), 0.001)
+	End Sub
 End Class
 
