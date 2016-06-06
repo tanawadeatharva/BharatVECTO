@@ -90,7 +90,6 @@ Namespace Pneumatics
 
 			Else
 				Throw New ArgumentException(String.Format(" Pneumatic Acutations map '{0}' supplied  does not exist", filePath))
-				Return False
 			End If
 
 			'If we get here then all should be well and we can return a True value of success.

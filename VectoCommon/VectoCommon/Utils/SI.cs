@@ -316,6 +316,11 @@ namespace TUGraz.VectoCommon.Utils
 		{
 			return SIBase<Newton>.Create(kg.Val * m.Value());
 		}
+
+		public static Liter operator /(Kilogram kilogram, KilogramPerCubicMeter kilogramPerCubicMeter)
+		{
+			return SIBase<Liter>.Create(kilogram.Value() / kilogramPerCubicMeter.Value() * 1000);
+		}
 	}
 
 
@@ -325,6 +330,11 @@ namespace TUGraz.VectoCommon.Utils
 
 		[DebuggerHidden]
 		private Liter(double val) : base(val, NumeratorDefault) {}
+
+		public static Kilogram operator *(Liter liter, KilogramPerCubicMeter kilogramPerCubicMeter)
+		{
+			return SIBase<Kilogram>.Create(liter.Val / 1000 * kilogramPerCubicMeter.Value());
+		}
 	}
 
 	/// <summary>
@@ -445,10 +455,10 @@ namespace TUGraz.VectoCommon.Utils
 			return SIBase<Kilogram>.Create(kilogramPerCubicMeter.Val * liter.Value() / 1000);
 		}
 
-		public static CubicMeter operator /(Kilogram kg, KilogramPerCubicMeter kgm3)
-		{
-			return SIBase<CubicMeter>.Create(kg.Value() / kgm3.Val);
-		}
+		//public static CubicMeter operator /(Kilogram kg, KilogramPerCubicMeter kgm3)
+		//{
+		//	return SIBase<CubicMeter>.Create(kg.Value() / kgm3.Val);
+		//}
 	}
 
 	/// <summary>
@@ -1265,12 +1275,6 @@ namespace TUGraz.VectoCommon.Utils
 					denominator.Add(Unit.s);
 					denominator.Add(Unit.s);
 					break;
-				case Unit.liter:
-					factor /= 1000;
-					numerator.Add(Unit.m);
-					numerator.Add(Unit.m);
-					numerator.Add(Unit.m);
-					break;
 				case Unit.min:
 					factor *= 60;
 					numerator.Add(Unit.s);
@@ -1398,7 +1402,7 @@ namespace TUGraz.VectoCommon.Utils
 		[DebuggerHidden]
 		public SI Liter
 		{
-			[DebuggerHidden] get { return new SI(this, fromUnit: Unit.liter, factor: 0.1, toUnit: Unit.m, exponent: 3); }
+			[DebuggerHidden] get { return new SI(this, fromUnit: Unit.liter, toUnit: Unit.liter); }
 		}
 
 		[DebuggerHidden]

@@ -54,7 +54,7 @@ Imports TUGraz.VectoCore.Utils
 ''' </summary>
 ''' <remarks></remarks>
 
-	Public Class F_MAINForm
+Public Class F_MAINForm
 	Private JobListView As cFileListView
 	Private CycleListView As cFileListView
 
@@ -1617,8 +1617,8 @@ lbFound:
 			mode = ExecutionMode.Declaration
 		Else
 			mode = ExecutionMode.Engineering
-			Physics.FuelDensity = New SI(Cfg.FuelDens).Kilo.Gramm.Per.Cubic.Dezi.Meter
-			Physics.AirDensity = New SI(Cfg.AirDensity).Kilo.Gramm.Per.Cubic.Meter
+			Physics.FuelDensity = New SI(Cfg.FuelDens).Kilo.Gramm.Per.Cubic.Dezi.Meter.Cast(Of KilogramPerCubicMeter)()
+			Physics.AirDensity = New SI(Cfg.AirDensity).Kilo.Gramm.Per.Cubic.Meter.Cast(Of KilogramPerCubicMeter)()
 			Physics.CO2PerFuelWeight = Cfg.CO2perFC
 		End If
 
@@ -1627,7 +1627,7 @@ lbFound:
 
 		'list of finished runs
 		Dim finishedRuns As List(Of Integer) = New List(Of Integer)
-		
+
 		For Each jobFile As String In JobFileList
 			Try
 				sender.ReportProgress(0, New With {.Target = "ListBox", .Message = "Reading File " + jobFile, .Link = jobFile})
@@ -1652,10 +1652,15 @@ lbFound:
 
 		'print detected cycles
 		For Each cycle As JobContainer.CycleTypeDescription In jobContainer.GetCycleTypes()
-			sender.ReportProgress(0, New With {.Target = "ListBox", .Message = String.Format("Detected Cycle {0}: {1}", cycle.Name, cycle.CycleType)})
+			sender.ReportProgress(0,
+								New With {.Target = "ListBox", .Message = String.Format("Detected Cycle {0}: {1}", cycle.Name, cycle.CycleType)})
 		Next
 
-		sender.ReportProgress(0, New With {.Target = "ListBox", .Message = String.Format("Starting Simulation ({0} Jobs, {1} Runs)", JobFileList.Count, jobContainer.GetProgress().Count)})
+		sender.ReportProgress(0,
+							New _
+								With {.Target = "ListBox",
+								.Message =
+								String.Format("Starting Simulation ({0} Jobs, {1} Runs)", JobFileList.Count, jobContainer.GetProgress().Count)})
 
 		jobContainer.Execute(True)
 
@@ -1673,15 +1678,21 @@ lbFound:
 			Dim duration As Double = (DateTime.Now() - start).TotalSeconds
 
 			sender.ReportProgress(Int((sumProgress * 100.0) / progress.Count), New With {.Target = "Status",
-																						 .Message = String.Format("Duration: {0:0}s, Current Progress: {1:P} ({2})", duration, sumProgress / progress.Count, String.Join(", ", progress.Select(Function(pair) String.Format("{0,4:P}", pair.Value.Progress))))})
+									.Message =
+									String.Format("Duration: {0:0}s, Current Progress: {1:P} ({2})", duration, sumProgress / progress.Count,
+												String.Join(", ", progress.Select(Function(pair) String.Format("{0,4:P}", pair.Value.Progress))))})
 
-			Dim justFinished As Dictionary(Of Integer, JobContainer.ProgressEntry) = progress.Where(Function(proc) proc.Value.Done AndAlso Not finishedRuns.Contains(proc.Key)).ToDictionary(Function(pair) pair.Key, Function(pair) pair.Value)
+			Dim justFinished As Dictionary(Of Integer, JobContainer.ProgressEntry) =
+					progress.Where(Function(proc) proc.Value.Done AndAlso Not finishedRuns.Contains(proc.Key)).ToDictionary(
+						Function(pair) pair.Key, Function(pair) pair.Value)
 			PrintRuns(justFinished, fileWriters)
 			finishedRuns.AddRange(justFinished.Select(Function(pair) pair.Key))
 			Thread.Sleep(100)
 		End While
-		
-		Dim remainingRuns As Dictionary(Of Integer, JobContainer.ProgressEntry) = jobContainer.GetProgress().Where(Function(proc) proc.Value.Done AndAlso Not finishedRuns.Contains(proc.Key)).ToDictionary(Function(pair) pair.Key, Function(pair) pair.Value)
+
+		Dim remainingRuns As Dictionary(Of Integer, JobContainer.ProgressEntry) =
+				jobContainer.GetProgress().Where(Function(proc) proc.Value.Done AndAlso Not finishedRuns.Contains(proc.Key)).
+				ToDictionary(Function(pair) pair.Key, Function(pair) pair.Value)
 		PrintRuns(remainingRuns, fileWriters)
 
 		finishedRuns.Clear()
@@ -1689,10 +1700,11 @@ lbFound:
 
 		For Each progressEntry As KeyValuePair(Of Integer, JobContainer.ProgressEntry) In jobContainer.GetProgress()
 			sender.ReportProgress(100, New With {.Target = "ListBox",
-												 .Message = String.Format("{0,-60} {1,8:P} {2,10:F2}s - {3}",
-																		  String.Format("{0} {1} {2}", progressEntry.Value.RunName, progressEntry.Value.CycleName, progressEntry.Value.RunSuffix),
-																		  progressEntry.Value.Progress, progressEntry.Value.ExecTime / 1000.0,
-																		  IIf(progressEntry.Value.Success, "Success", "Aborted"))})
+									.Message = String.Format("{0,-60} {1,8:P} {2,10:F2}s - {3}",
+															String.Format("{0} {1} {2}", progressEntry.Value.RunName, progressEntry.Value.CycleName,
+																		progressEntry.Value.RunSuffix),
+															progressEntry.Value.Progress, progressEntry.Value.ExecTime / 1000.0,
+															IIf(progressEntry.Value.Success, "Success", "Aborted"))})
 			If (Not progressEntry.Value.Success) Then
 				sender.ReportProgress(100, New With {.Target = "ListBox", .Message = progressEntry.Value.Error.Message})
 			End If
@@ -1702,33 +1714,51 @@ lbFound:
 		For Each job As String In JobFileList
 			Dim report As String = New FileOutputWriter(job).PDFReportName
 			If File.Exists(report) Then
-				sender.ReportProgress(100, New With {.Target = "ListBox", .Message = String.Format("PDF-Report for '{0}' written to {1}", Path.GetFileName(job), report), .Link = report})
+				sender.ReportProgress(100,
+									New _
+										With {.Target = "ListBox",
+										.Message = String.Format("PDF-Report for '{0}' written to {1}", Path.GetFileName(job), report), .Link = report
+										})
 			End If
 		Next
 
 		If File.Exists(sumFileWriter.SumFileName) Then
 			sender.ReportProgress(100, New With {.Target = "ListBox",
-												 .Message = String.Format("Sum File written to {0}", sumFileWriter.SumFileName),
-												 .Link = sumFileWriter.SumFileName})
+									.Message = String.Format("Sum File written to {0}", sumFileWriter.SumFileName),
+									.Link = sumFileWriter.SumFileName})
 		End If
 
-		sender.ReportProgress(100, New With {.Target = "ListBox", .Message = String.Format("Simulation Finished in {0:0}s", (DateTime.Now() - start).TotalSeconds)})
+		sender.ReportProgress(100,
+							New _
+								With {.Target = "ListBox",
+								.Message = String.Format("Simulation Finished in {0:0}s", (DateTime.Now() - start).TotalSeconds)})
 	End Sub
 
 
-	Private Shared Sub PrintRuns(progress As Dictionary(Of Integer, JobContainer.ProgressEntry), fileWriters As Dictionary(Of Integer, FileOutputWriter))
+	Private Shared Sub PrintRuns(progress As Dictionary(Of Integer, JobContainer.ProgressEntry),
+								fileWriters As Dictionary(Of Integer, FileOutputWriter))
 		For Each p As KeyValuePair(Of Integer, JobContainer.ProgressEntry) In progress
-			Dim modFilename As String = fileWriters(p.Key).GetModDataFileName(p.Value.RunName, p.Value.CycleName, p.Value.RunSuffix)
+			Dim modFilename As String = fileWriters(p.Key).GetModDataFileName(p.Value.RunName, p.Value.CycleName,
+																			p.Value.RunSuffix)
 			Dim runName As String = String.Format("{0} {1} {2}", p.Value.RunName, p.Value.CycleName, p.Value.RunSuffix)
 
 			If Not p.Value.Error Is Nothing Then
-				VECTOworkerV3.ReportProgress(0, New With {.Target = "ListBoxError", .Message = String.Format("Finished Run {0} with ERROR: {1}", runName, p.Value.Error.Message), .Link = modFilename})
+				VECTOworkerV3.ReportProgress(0,
+											New _
+												With {.Target = "ListBoxError",
+												.Message = String.Format("Finished Run {0} with ERROR: {1}", runName, p.Value.Error.Message),
+												.Link = modFilename})
 			Else
-				VECTOworkerV3.ReportProgress(0, New With {.Target = "ListBox", .Message = String.Format("Finished Run {0} successfully.", runName)})
+				VECTOworkerV3.ReportProgress(0,
+											New With {.Target = "ListBox", .Message = String.Format("Finished Run {0} successfully.", runName)})
 			End If
 
 			If (File.Exists(modFilename)) Then
-				VECTOworkerV3.ReportProgress(0, New With {.Target = "ListBox", .Message = String.Format("Run {0}: Modal Results written to {1}", runName, modFilename), .Link = modFilename})
+				VECTOworkerV3.ReportProgress(0,
+											New _
+												With {.Target = "ListBox",
+												.Message = String.Format("Run {0}: Modal Results written to {1}", runName, modFilename), .Link = modFilename
+												})
 			End If
 		Next
 	End Sub
@@ -2043,9 +2073,9 @@ lbFound:
 
 			Me.ToolStripProgBarJob.Value = .ProgJobInt
 
-			If .ProgOverallStartInt > - 1 Then
+			If .ProgOverallStartInt > -1 Then
 				Me.ToolStripProgBarOverall.Value =
-					CInt(.ProgOverallStartInt + (.PgroOverallEndInt - .ProgOverallStartInt)*.ProgJobInt/100)
+					CInt(.ProgOverallStartInt + (.PgroOverallEndInt - .ProgOverallStartInt) * .ProgJobInt / 100)
 			End If
 
 		End With
@@ -2061,7 +2091,7 @@ lbFound:
 		Me.ChBoxCyclDistCor.Checked = Cfg.DistCorr
 		Me.ChBoxUseGears.Checked = Cfg.GnUfromCycle
 		Me.ChBoxModOut.Checked = Cfg.ModOut
-		CbBOmode.SelectedIndex = - 1
+		CbBOmode.SelectedIndex = -1
 		Select Case UCase(Cfg.BATCHoutpath)
 			Case sKey.JobPath
 				CbBOmode.SelectedIndex = 0
@@ -2137,7 +2167,7 @@ lbFound:
 
 		Me.LvDEVoptions.Items.Clear()
 
-		i = - 1
+		i = -1
 		For Each Config0 In DEV.Options
 			i += 1
 
@@ -2200,7 +2230,7 @@ lbFound:
 
 				CmDEV.Items.Clear()
 
-				i = - 1
+				i = -1
 				For Each str In Config0.Modes
 					i += 1
 					CmDEV.Items.Add("(" & i & ") " & str)
@@ -2529,7 +2559,7 @@ lbFound:
 					MyForm.LvMsg.Items.Insert(RowLim - 4, Space(ColLim - 30) & "         " & Space(10) & "*|       |*")
 			End Select
 			Exit Sub
-			LbRace:
+LbRace:
 
 			PRbAlt = Not PRbAlt
 
@@ -2557,17 +2587,17 @@ lbFound:
 					sAbort()
 					Exit Sub
 				End If
-				Scr += 5*DiffLvl
+				Scr += 5 * DiffLvl
 			End If
 
 			Scr += DiffLvl
 			DiffC += 1
 
 			'Erhöhe Schwierigkeitsgrad
-			If DiffC = (DiffLvl + 3)*4 Then
+			If DiffC = (DiffLvl + 3) * 4 Then
 				DiffC = 0
 				DiffLvl += 1
-				If DiffLvl > 2 And DiffLvl < 7 Then MyForm.TmProgSec.Interval = 300 - (DiffLvl)*30
+				If DiffLvl > 2 And DiffLvl < 7 Then MyForm.TmProgSec.Interval = 300 - (DiffLvl) * 30
 				Scr += 100
 				Select Case DiffLvl
 					Case 3
@@ -2651,10 +2681,10 @@ lbFound:
 			Ctrls(RowLim + 1) = 0
 			CtrlC += 1
 			If CtrlC < CtrlCL Then Exit Sub
-			Select Case CInt(Int((CtrlRnd*Rnd()) + 1))
+			Select Case CInt(Int((CtrlRnd * Rnd()) + 1))
 				Case 1, 2
 					CtrlC = 0
-					x = CInt(Int((7*Rnd()) + 1))
+					x = CInt(Int((7 * Rnd()) + 1))
 					Ctrls(RowLim + 1) = x
 				Case Else
 			End Select
@@ -2698,7 +2728,7 @@ lbFound:
 				s = s.Insert(Ctrls(RowLim + 1) + 1, "X")
 			End If
 			Select Case xPanel - Pnls(RowLim)
-				Case - 1
+				Case -1
 					s = Replace(s, "|", "\")
 				Case 1
 					s = Replace(s, "|", "/")
@@ -2710,15 +2740,15 @@ lbFound:
 			PnDirC += 1
 			If PnDirC < PnDirCL Then GoTo Lb1
 			PnDirC = 0
-			Select Case CInt(Int((PnDirRnd*Rnd()) + 1))
+			Select Case CInt(Int((PnDirRnd * Rnd()) + 1))
 				Case 1
 					PnDir = 1
 				Case 2
-					PnDir = - 1
+					PnDir = -1
 				Case Else
 					PnDir = 0
 			End Select
-			Lb1:
+Lb1:
 			xPanel += PnDir
 			If xPanel > ColLim Then
 				xPanel = ColLim
@@ -2769,7 +2799,7 @@ lbFound:
 			Dim builder As StringBuilder = New StringBuilder()
 			For Each selectedItem As ListViewItem In LvMsg.SelectedItems
 				builder.AppendLine(String.Join(", ",
-												selectedItem.SubItems.Cast (Of ListViewItem.ListViewSubItem).Select(
+												selectedItem.SubItems.Cast(Of ListViewItem.ListViewSubItem).Select(
 													Function(item) item.Text)))
 			Next
 			Clipboard.SetText(builder.ToString())

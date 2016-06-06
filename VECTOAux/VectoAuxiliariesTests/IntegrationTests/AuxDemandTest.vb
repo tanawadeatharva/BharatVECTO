@@ -20,7 +20,7 @@ Namespace IntegrationTests
 
 			aux.VectoInputs.Cycle = "Coach"
 			aux.VectoInputs.VehicleWeightKG = vehicleWeight.SI(Of Kilogram)()
-			aux.VectoInputs.FuelDensity = 0.832.SI().Kilo.Gramm.Per.Liter.Cast(Of KilogramPerCubicMeter)()
+			aux.VectoInputs.FuelDensity = 832.SI(Of KilogramPerCubicMeter)()
 			Dim fuelMap As cMAP = New cMAP()
 			fuelMap.FilePath = engineFCMapFilePath
 			fuelMap.ReadFile(False)
@@ -38,13 +38,13 @@ Namespace IntegrationTests
 			aux.Signals.EngineDrivelinePower = (driveLinePower * 1000).SI(Of Watt)()  'kW
 			aux.Signals.EngineSpeed = engineSpeed.RPMtoRad() 'rpm
 			aux.Signals.EngineDrivelineTorque = (driveLinePower * 1000).SI(Of Watt)() / (engineSpeed.RPMtoRad())
-			aux.Signals.EngineMotoringPower = (24 * 1000).SI(Of Watt)()	  'kW - has to be positive
+			aux.Signals.EngineMotoringPower = (24 * 1000).SI(Of Watt)()		'kW - has to be positive
 
 			aux.Signals.PreExistingAuxPower = (6.1 * 1000).SI(Of Watt)()
 			aux.Signals.Idle = False
 			aux.Signals.InNeutral = False
 			aux.Signals.RunningCalc = True
-			aux.Signals.InternalEnginePower = (internalPower * 1000).SI(Of Watt)()		'kW
+			aux.Signals.InternalEnginePower = (internalPower * 1000).SI(Of Watt)()		  'kW
 
 			Dim power As Watt = aux.AuxiliaryPowerAtCrankWatts()
 
@@ -66,7 +66,7 @@ Namespace IntegrationTests
 
 			aux.VectoInputs.Cycle = "Coach"
 			aux.VectoInputs.VehicleWeightKG = 12000.SI(Of Kilogram)()
-			aux.VectoInputs.FuelDensity = 0.832.SI().Kilo.Gramm.Per.Liter.Cast(Of KilogramPerCubicMeter)()
+			aux.VectoInputs.FuelDensity = 832.SI(Of KilogramPerCubicMeter)()
 			Dim fuelMap As cMAP = New cMAP()
 			fuelMap.FilePath = engineFCMapFilePath
 			fuelMap.ReadFile(False)
@@ -84,13 +84,13 @@ Namespace IntegrationTests
 			aux.Signals.EngineDrivelinePower = (driveLinePower * 1000).SI(Of Watt)() 'kW
 			aux.Signals.EngineSpeed = engineSpeed.RPMtoRad() 'rpm
 			aux.Signals.EngineDrivelineTorque = (driveLinePower * 1000).SI(Of Watt)() / (1256.RPMtoRad())
-			aux.Signals.EngineMotoringPower = (24 * 1000).SI(Of Watt)()	 'kW - has to be positive
+			aux.Signals.EngineMotoringPower = (24 * 1000).SI(Of Watt)()	   'kW - has to be positive
 
 			aux.Signals.PreExistingAuxPower = 0.SI(Of Watt)()
 			aux.Signals.Idle = False
 			aux.Signals.InNeutral = False
 			aux.Signals.RunningCalc = True
-			aux.Signals.InternalEnginePower = (internalPower * 1000).SI(Of Watt)()	   'kW
+			aux.Signals.InternalEnginePower = (internalPower * 1000).SI(Of Watt)()		 'kW
 
 			Dim msg As String = String.Empty
 			For i As Integer = 0 To 9
@@ -115,7 +115,7 @@ Namespace IntegrationTests
 
 			aux.Signals.EngineDrivelinePower = (driveLinePower * 1000).SI(Of Watt)()
 			aux.Signals.EngineDrivelineTorque = aux.Signals.EngineDrivelinePower / (1256.RPMtoRad())
-			aux.Signals.InternalEnginePower = (internalPower * 1000).SI(Of Watt)()	   'kW
+			aux.Signals.InternalEnginePower = (internalPower * 1000).SI(Of Watt)()		 'kW
 
 			For i As Integer = 0 To 9
 				Assert.AreEqual(6087.0317, aux.AuxiliaryPowerAtCrankWatts().Value(), 0.001)
