@@ -153,6 +153,16 @@ namespace TUGraz.VectoCommon.Utils
 		}
 
 		/// <summary>
+		/// Converts the double-value from RPM (rounds per minute) to the SI Unit PerSecond.
+		/// </summary>
+		/// <param name="self"></param>
+		/// <returns></returns>
+		public static PerSecond RPMtoRad(this float self)
+		{
+			return SI<PerSecond>(self * 2 * Math.PI / 60.0);
+		}
+
+		/// <summary>
 		/// Converts the value from rounds per minute to the SI Unit PerSecond
 		/// </summary>
 		/// <param name="self"></param>

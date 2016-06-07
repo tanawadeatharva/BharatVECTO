@@ -66,7 +66,7 @@ namespace TUGraz.VectoCore.Tests.Integration.BusAuxiliaries
 			var torque = busAux.PowerDemand(0.SI<Second>(), 1.SI<Second>(), engineDrivelinePower / engineSpeed,
 				(internalPower * 1000).SI<Watt>() / engineSpeed, engineSpeed);
 
-			Assert.AreEqual(expectedPowerDemand, (torque * engineSpeed).Value(), 1e-3);
+			Assert.AreEqual(expectedPowerDemand, (torque * engineSpeed).Value(), 1e-2);
 		}
 
 		[Test]
@@ -98,7 +98,7 @@ namespace TUGraz.VectoCore.Tests.Integration.BusAuxiliaries
 			var torque = busAux.PowerDemand(0.SI<Second>(), 1.SI<Second>(), engineDrivelinePower / engineSpeed,
 				(internalPower * 1000).SI<Watt>() / engineSpeed, engineSpeed);
 
-			Assert.AreEqual(expectedPowerDemand, (torque * engineSpeed).Value(), 1e-3);
+			Assert.AreEqual(expectedPowerDemand, (torque * engineSpeed).Value(), 1e-2);
 		}
 
 		[Test]

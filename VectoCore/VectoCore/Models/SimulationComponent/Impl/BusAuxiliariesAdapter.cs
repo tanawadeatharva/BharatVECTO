@@ -62,13 +62,13 @@ namespace TUGraz.VectoCore.Models.SimulationComponent.Impl
 
 			// 'Set Statics
 			tmpAux.VectoInputs.Cycle = DetermineCycle(cycleName, tmpAux.Signals);
-			tmpAux.VectoInputs.VehicleWeightKG = (float)vehicleWeight.Value();
+			tmpAux.VectoInputs.VehicleWeightKG = vehicleWeight;
 			_fcMapAdapter = new FuelConsumptionAdapter() { FcMap = fcMap };
 			tmpAux.VectoInputs.FuelMap = _fcMapAdapter;
-			tmpAux.VectoInputs.FuelDensity = Physics.FuelDensity.Value();
+			tmpAux.VectoInputs.FuelDensity = Physics.FuelDensity;
 
 			//'Set Signals
-			tmpAux.Signals.EngineIdleSpeed = (float)(engineIdleSpeed.Value() / Constants.RPMToRad);
+			tmpAux.Signals.EngineIdleSpeed = engineIdleSpeed;
 			tmpAux.Initialise(Path.GetFileName(aauxFile), Path.GetDirectoryName(Path.GetFullPath(aauxFile)) + @"\");
 
 			Auxiliaries = tmpAux;
@@ -137,60 +137,60 @@ namespace TUGraz.VectoCore.Models.SimulationComponent.Impl
 			_fcMapAdapter.AllowExtrapolation = true;
 			// cycleStep has to be called here and not in DoCommit, write is called before Commit!
 			var message = String.Empty;
-			Auxiliaries.CycleStep(CurrentState.dt.Value(), ref message);
+			Auxiliaries.CycleStep(CurrentState.dt, ref message);
 			Log.Warn(message);
 
 			container[ModalResultField.P_aux] = CurrentState.PowerDemand;
 
 			container[ModalResultField.AA_NonSmartAlternatorsEfficiency] = Auxiliaries.AA_NonSmartAlternatorsEfficiency;
 			if (Auxiliaries.AA_SmartIdleCurrent_Amps != null) {
-				container[ModalResultField.AA_SmartIdleCurrent_Amps] = Auxiliaries.AA_SmartIdleCurrent_Amps.Value.SI<Ampere>();
+				container[ModalResultField.AA_SmartIdleCurrent_Amps] = Auxiliaries.AA_SmartIdleCurrent_Amps;
 			}
 			container[ModalResultField.AA_SmartIdleAlternatorsEfficiency] = Auxiliaries.AA_SmartIdleAlternatorsEfficiency;
 			if (Auxiliaries.AA_SmartTractionCurrent_Amps != null) {
 				container[ModalResultField.AA_SmartTractionCurrent_Amps] =
-					Auxiliaries.AA_SmartTractionCurrent_Amps.Value.SI<Ampere>();
+					Auxiliaries.AA_SmartTractionCurrent_Amps;
 			}
 			container[ModalResultField.AA_SmartTractionAlternatorEfficiency] = Auxiliaries.AA_SmartTractionAlternatorEfficiency;
 			if (Auxiliaries.AA_SmartOverrunCurrent_Amps != null) {
-				container[ModalResultField.AA_SmartOverrunCurrent_Amps] = Auxiliaries.AA_SmartOverrunCurrent_Amps.Value.SI<Ampere>();
+				container[ModalResultField.AA_SmartOverrunCurrent_Amps] = Auxiliaries.AA_SmartOverrunCurrent_Amps;
 			}
 			container[ModalResultField.AA_SmartOverrunAlternatorEfficiency] = Auxiliaries.AA_SmartOverrunAlternatorEfficiency;
 			if (Auxiliaries.AA_CompressorFlowRate_LitrePerSec != null) {
 				container[ModalResultField.AA_CompressorFlowRate_LitrePerSec] =
-					new SI(Auxiliaries.AA_CompressorFlowRate_LitrePerSec.Value);
+					Auxiliaries.AA_CompressorFlowRate_LitrePerSec;
 			}
 			container[ModalResultField.AA_OverrunFlag] = Auxiliaries.AA_OverrunFlag;
 			container[ModalResultField.AA_EngineIdleFlag] = Auxiliaries.AA_EngineIdleFlag;
 			container[ModalResultField.AA_CompressorFlag] = Auxiliaries.AA_CompressorFlag;
 			if (Auxiliaries.AA_TotalCycleFC_Grams != null) {
-				container[ModalResultField.AA_TotalCycleFC_Grams] = new SI(Auxiliaries.AA_TotalCycleFC_Grams.Value);
+				container[ModalResultField.AA_TotalCycleFC_Grams] = Auxiliaries.AA_TotalCycleFC_Grams;
 			}
 			if (Auxiliaries.AA_TotalCycleFC_Litres != null) {
-				container[ModalResultField.AA_TotalCycleFC_Litres] = new SI(Auxiliaries.AA_TotalCycleFC_Litres.Value);
+				container[ModalResultField.AA_TotalCycleFC_Litres] = Auxiliaries.AA_TotalCycleFC_Litres;
 			}
 			if (Auxiliaries.AA_AveragePowerDemandCrankHVACMechanicals != null) {
 				container[ModalResultField.AA_AveragePowerDemandCrankHVACMechanicals] =
-					new SI(Auxiliaries.AA_AveragePowerDemandCrankHVACMechanicals.Value);
+					Auxiliaries.AA_AveragePowerDemandCrankHVACMechanicals;
 			}
 			if (Auxiliaries.AA_AveragePowerDemandCrankHVACElectricals != null) {
 				container[ModalResultField.AA_AveragePowerDemandCrankHVACElectricals] =
-					new SI(Auxiliaries.AA_AveragePowerDemandCrankHVACElectricals.Value);
+					Auxiliaries.AA_AveragePowerDemandCrankHVACElectricals;
 			}
 			if (Auxiliaries.AA_AveragePowerDemandCrankElectrics != null) {
 				container[ModalResultField.AA_AveragePowerDemandCrankElectrics] =
-					new SI(Auxiliaries.AA_AveragePowerDemandCrankElectrics.Value);
+					Auxiliaries.AA_AveragePowerDemandCrankElectrics;
 			}
 			if (Auxiliaries.AA_AveragePowerDemandCrankPneumatics != null) {
 				container[ModalResultField.AA_AveragePowerDemandCrankPneumatics] =
-					new SI(Auxiliaries.AA_AveragePowerDemandCrankPneumatics.Value);
+					Auxiliaries.AA_AveragePowerDemandCrankPneumatics;
 			}
 			if (Auxiliaries.AA_TotalCycleFuelConsumptionCompressorOff != null) {
 				container[ModalResultField.AA_TotalCycleFuelConsumptionCompressorOff] =
-					new SI(Auxiliaries.AA_TotalCycleFuelConsumptionCompressorOff.Value);
+					Auxiliaries.AA_TotalCycleFuelConsumptionCompressorOff;
 			}
 			container[ModalResultField.AA_TotalCycleFuelConsumptionCompressorOn] =
-				new SI(Auxiliaries.AA_TotalCycleFuelConsumptionCompressorOn.Value);
+				Auxiliaries.AA_TotalCycleFuelConsumptionCompressorOn;
 		}
 
 		protected override void DoCommitSimulationStep()
@@ -205,29 +205,27 @@ namespace TUGraz.VectoCore.Models.SimulationComponent.Impl
 			_fcMapAdapter.AllowExtrapolation = true;
 
 			Auxiliaries.Signals.ClutchEngaged = DataBus.ClutchClosed(absTime);
-			Auxiliaries.Signals.EngineDrivelinePower = (float)(torquePowerTrain * angularSpeed / 1000).Value();
-			Auxiliaries.Signals.EngineDrivelineTorque = (float)torquePowerTrain.Value();
-			Auxiliaries.Signals.Internal_Engine_Power =
-				(float)((torqueEngine * angularSpeed - DataBus.BrakePower) / 1000).Value();
+			Auxiliaries.Signals.EngineDrivelinePower = torquePowerTrain * angularSpeed;
+			Auxiliaries.Signals.EngineDrivelineTorque = torquePowerTrain;
+			Auxiliaries.Signals.InternalEnginePower = torqueEngine * angularSpeed - DataBus.BrakePower;
 			if (DataBus.DriverBehavior == DrivingBehavior.Coasting) {
 				// make sure smart aux are _not_ enabled for now
 				// set internal_engine_power a little bit lower so there is no excessive power for smart aux
-				Auxiliaries.Signals.Internal_Engine_Power =
-					(float)((0.9 * torqueEngine * angularSpeed /*- DataBus.BrakePower*/) / 1000).Value();
+				Auxiliaries.Signals.InternalEnginePower = 0.9 * torqueEngine * angularSpeed /*- DataBus.BrakePower*/;
 				// if smart aux should be on during coasting use the following line
 				// set internal_engine_power to a large value (*10) so that there's excessive power for smart aux (alreadin during search operating point)
 				//(float)DataBus.EngineDragPower(angularSpeed).Value() / 100;
 			} else {
 				if (DataBus.DriverBehavior != DrivingBehavior.Braking) {
-					Auxiliaries.Signals.Internal_Engine_Power = 0;
+					Auxiliaries.Signals.InternalEnginePower = 0.SI<Watt>();
 					//(float)((0.9 * torqueEngine * angularSpeed - DataBus.BrakePower) / 1000).Value();
 				} else {
 					// smart aux should be on during braking
 				}
 			}
-			Auxiliaries.Signals.EngineMotoringPower = (float)(-DataBus.EngineDragPower(angularSpeed).Value() / 1000);
-			Auxiliaries.Signals.EngineSpeed = angularSpeed.Value() / Constants.RPMToRad;
-			Auxiliaries.Signals.PreExistingAuxPower = 0; //mAAUX_Global.PreExistingAuxPower;
+			Auxiliaries.Signals.EngineMotoringPower = -DataBus.EngineDragPower(angularSpeed);
+			Auxiliaries.Signals.EngineSpeed = angularSpeed;
+			Auxiliaries.Signals.PreExistingAuxPower = 0.SI<Watt>(); //mAAUX_Global.PreExistingAuxPower;
 			Auxiliaries.Signals.Idle = DataBus.VehicleStopped;
 			Auxiliaries.Signals.InNeutral = DataBus.Gear == 0;
 			Auxiliaries.Signals.RunningCalc = true;
@@ -235,7 +233,7 @@ namespace TUGraz.VectoCore.Models.SimulationComponent.Impl
 			//mAAUX_Global.Internal_Engine_Power;
 			//'Power coming out of Advanced Model is in Watts.
 
-			return ((double)Auxiliaries.AuxiliaryPowerAtCrankWatts).SI<Watt>();
+			return Auxiliaries.AuxiliaryPowerAtCrankWatts;
 		}
 
 		protected class FuelConsumptionAdapter : IFuelConsumptionMap
@@ -244,10 +242,9 @@ namespace TUGraz.VectoCore.Models.SimulationComponent.Impl
 
 			public bool AllowExtrapolation { get; set; }
 
-			public double GetFuelConsumption(double torque, double angularVelocity)
+			public KilogramPerSecond GetFuelConsumption(NewtonMeter torque, PerSecond angularVelocity)
 			{
-				return FcMap.GetFuelConsumption(torque.SI<NewtonMeter>(), angularVelocity.RPMtoRad(), AllowExtrapolation).Value() *
-						1000 * 3600;
+				return FcMap.GetFuelConsumption(torque, angularVelocity, AllowExtrapolation);
 			}
 		}
 

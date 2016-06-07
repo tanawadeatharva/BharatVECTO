@@ -10,6 +10,7 @@
 ' See the LICENSE.txt for the specific language governing permissions and limitations.
 
 
+Imports TUGraz.VectoCommon.Utils
 Imports VectoAuxiliaries.Electrics
 Imports VectoAuxiliaries.Pneumatics
 Imports VectoAuxiliaries.Hvac
@@ -30,100 +31,100 @@ Namespace DownstreamModules
 #Region "Internal Sums and Switches"
 
 		'Internal Staged Sums and Switches
-		Private ReadOnly Property Sum1 As Single
+		Private ReadOnly Property Sum1 As Watt
 			Get
 				Return _
-					_m7.SmartElectricalAndPneumaticAuxAltPowerGenAtCrank + _m7.SmartElectricalAndPneumaticAuxAirCompPowerGenAtCrank
+					_m7.SmartElectricalAndPneumaticAuxAltPowerGenAtCrank() + _m7.SmartElectricalAndPneumaticAuxAirCompPowerGenAtCrank()
 			End Get
 		End Property
 
-		Private ReadOnly Property Sum2 As Single
+		Private ReadOnly Property Sum2 As Watt
 			Get
-				Return _m7.SmartElectricalOnlyAuxAltPowerGenAtCrank + _m6.AveragePowerDemandAtCrankFromPneumatics
+				Return _m7.SmartElectricalOnlyAuxAltPowerGenAtCrank() + _m6.AveragePowerDemandAtCrankFromPneumatics
 			End Get
 		End Property
 
-		Private ReadOnly Property Sum3 As Single
+		Private ReadOnly Property Sum3 As Watt
 			Get
 				Return _m7.SmartPneumaticOnlyAuxAirCompPowerGenAtCrank + _m6.AvgPowerDemandAtCrankFromElectricsIncHVAC
 			End Get
 		End Property
 
-		Private ReadOnly Property Sum4 As Single
+		Private ReadOnly Property Sum4 As Watt
 			Get
 				Return _m6.AvgPowerDemandAtCrankFromElectricsIncHVAC + _m6.AveragePowerDemandAtCrankFromPneumatics
 			End Get
 		End Property
 
-		Private ReadOnly Property Sum5 As Single
+		Private ReadOnly Property Sum5 As Watt
 			Get
 				Return _m1.AveragePowerDemandAtCrankFromHVACMechanicalsWatts + SW5
 			End Get
 		End Property
 
-		Private ReadOnly Property Sum6 As Single
+		Private ReadOnly Property Sum6 As Watt
 			Get
-				Return Sum5 * SW6
+				Return If(SW6, Sum5, SIBase(Of Watt).Create(0))
 			End Get
 		End Property
 
-		Private ReadOnly Property SW1 As Single
+		Private ReadOnly Property SW1 As Watt
 			Get
 				Return If(_signals.SmartPneumatics, Sum1, Sum2)
 			End Get
 		End Property
 
-		Private ReadOnly Property SW2 As Single
+		Private ReadOnly Property SW2 As Watt
 			Get
 				Return If(_signals.SmartPneumatics, Sum3, Sum4)
 			End Get
 		End Property
 
-		Private ReadOnly Property SW3 As Single
+		Private ReadOnly Property SW3 As Watt
 			Get
 				Return _
 					If _
-						(_signals.SmartPneumatics, _m7.SmartElectricalAndPneumaticAuxAltPowerGenAtCrank,
-						_m7.SmartElectricalOnlyAuxAltPowerGenAtCrank)
+						(_signals.SmartPneumatics, _m7.SmartElectricalAndPneumaticAuxAltPowerGenAtCrank(),
+						_m7.SmartElectricalOnlyAuxAltPowerGenAtCrank())
 			End Get
 		End Property
 
-		Private ReadOnly Property SW4 As Integer
+		Private ReadOnly Property SW4 As Boolean
 			Get
 				Return If(_signals.SmartElectrics, _m6.SmartElecAndPneumaticsCompressorFlag, _m6.SmartPneumaticsOnlyCompressorFlag)
 			End Get
 		End Property
 
-		Private ReadOnly Property SW5 As Single
+		Private ReadOnly Property SW5 As Watt
 			Get
 				Return If(_signals.SmartElectrics, SW1, SW2)
 			End Get
 		End Property
 
-		Private ReadOnly Property SW6 As Single
+		Private ReadOnly Property SW6 As Boolean
 			Get
-				Return If(_signals.EngineStopped, 0, 1)
+				Return Not _signals.EngineStopped
 			End Get
 		End Property
 
 #End Region
 
 		'OUT1
-		Public ReadOnly Property AuxPowerAtCrankFromElectricalHVACAndPneumaticsAncillaries As Single _
+		Public ReadOnly Property AuxPowerAtCrankFromElectricalHVACAndPneumaticsAncillaries As Watt _
 			Implements IM8.AuxPowerAtCrankFromElectricalHVACAndPneumaticsAncillaries
 			Get
 				Return Sum6
 			End Get
 		End Property
 		'OUT2
-		Public ReadOnly Property SmartElectricalAlternatorPowerGenAtCrank As Single _
+		Public ReadOnly Property SmartElectricalAlternatorPowerGenAtCrank As Watt _
 			Implements IM8.SmartElectricalAlternatorPowerGenAtCrank
 			Get
 				Return SW3
 			End Get
 		End Property
 		'OUT3
-		Public ReadOnly Property CompressorFlag As Integer Implements IM8.CompressorFlag
+		Public ReadOnly Property CompressorFlag As Boolean Implements IM8.CompressorFlag
 			Get
 				Return SW4
 			End Get

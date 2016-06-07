@@ -8,33 +8,31 @@
 '   WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
 '
 ' See the LICENSE.txt for the specific language governing permissions and limitations.
-
+Imports TUGraz.VectoCommon.Utils
 
 Namespace Electrics
+	Public Interface IM5_SmartAlternatorSetGeneration
+		''' <summary>
+		''' Alternators Generation Power At Crank Idle (W)
+		''' </summary>
+		''' <returns></returns>
+		''' <remarks></remarks>
+		Function AlternatorsGenerationPowerAtCrankIdleWatts() As Watt
 
-  Public Interface IM5_SmartAlternatorSetGeneration
+		''' <summary>
+		''' Alternators Generation Power At Crank Traction On  (W)
+		''' </summary>
+		''' <returns></returns>
+		''' <remarks></remarks>
+		Function AlternatorsGenerationPowerAtCrankTractionOnWatts() As Watt
 
-    ''' <summary>
-  ''' Alternators Generation Power At Crank Idle (W)
-  ''' </summary>
-  ''' <returns></returns>
-  ''' <remarks></remarks>
-    Function  AlternatorsGenerationPowerAtCrankIdleWatts() As Single
-    ''' <summary>
-  ''' Alternators Generation Power At Crank Traction On  (W)
-  ''' </summary>
-  ''' <returns></returns>
-  ''' <remarks></remarks>
-    Function  AlternatorsGenerationPowerAtCrankTractionOnWatts() As Single
-    ''' <summary>
-  ''' Alternators Generation Power At Crank Overrun  (W)
-  ''' </summary>
-  ''' <returns></returns>
-  ''' <remarks></remarks>
-    Function  AlternatorsGenerationPowerAtCrankOverrunWatts() As Single 
-
-End Interface
-
+		''' <summary>
+		''' Alternators Generation Power At Crank Overrun  (W)
+		''' </summary>
+		''' <returns></returns>
+		''' <remarks></remarks>
+		Function AlternatorsGenerationPowerAtCrankOverrunWatts() As Watt
+	End Interface
 End Namespace
 
 

@@ -44,12 +44,12 @@ namespace TUGraz.VectoCore.Utils
 		/// <summary>
 		/// Density of air.
 		/// </summary>
-		public static SI AirDensity = 1.188.SI().Kilo.Gramm.Per.Cubic.Meter;
+		public static KilogramPerCubicMeter AirDensity = 1.188.SI<KilogramPerCubicMeter>();
 
 		/// <summary>
 		/// Density of fuel.
 		/// </summary>
-		public static SI FuelDensity = 0.832.SI().Kilo.Gramm.Per.Cubic.Dezi.Meter;
+		public static KilogramPerCubicMeter FuelDensity = 832.SI<KilogramPerCubicMeter>();
 
 		public static readonly double RollResistanceExponent = 0.9;
 

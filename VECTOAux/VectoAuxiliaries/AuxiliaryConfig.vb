@@ -16,6 +16,7 @@ Imports System.IO
 Imports VectoAuxiliaries.DownstreamModules
 Imports System.Windows.Forms
 Imports Newtonsoft.Json
+Imports TUGraz.VectoCommon.Utils
 Imports VectoAuxiliaries
 
 <Serializable()>
@@ -40,6 +41,7 @@ Public Class AuxiliaryConfig
 	Public Property HvacUserInputsConfig As IHVACUserInputsConfig Implements IAuxiliaryConfig.HvacUserInputsConfig
 
 	'Vecto Signals
+	<JsonIgnore>
 	Public Property Signals As ISignals
 
 	'Constructors
@@ -53,7 +55,8 @@ Public Class AuxiliaryConfig
 		'Special Condition
 		If auxConfigFile = "EMPTY" Then
 			ElectricalUserInputsConfig = New ElectricsUserInputsConfig() With {.PowerNetVoltage = 28.3}
-			ElectricalUserInputsConfig.ElectricalConsumers = New ElectricalConsumerList(28.3, 0.096, False)
+			ElectricalUserInputsConfig.ElectricalConsumers = New ElectricalConsumerList(28.3, 0.096,
+																						False)
 			ElectricalUserInputsConfig.ResultCardIdle = New ResultCard(New List(Of SmartResult))
 			ElectricalUserInputsConfig.ResultCardOverrun = New ResultCard(New List(Of SmartResult))
 			ElectricalUserInputsConfig.ResultCardTraction = New ResultCard(New List(Of SmartResult))
@@ -64,9 +67,9 @@ Public Class AuxiliaryConfig
 
 		End If
 
-		If auxConfigFile Is Nothing OrElse auxConfigFile.Trim().Length = 0 OrElse Not FILE.Exists(auxConfigFile) Then
+		If auxConfigFile Is Nothing OrElse auxConfigFile.Trim().Length = 0 OrElse Not File.Exists(auxConfigFile) Then
 
-			setdefaults()
+			setDefaults()
 
 		Else
 
@@ -82,15 +85,17 @@ Public Class AuxiliaryConfig
 	'Set Default Values
 	Private Sub setDefaults()
 
-		VectoInputs = New VectoInputs With {.Cycle = "Urban", .VehicleWeightKG = 16500, .PowerNetVoltage = 28.3}
-		Signals = New Signals With {.EngineSpeed = 2000, .TotalCycleTimeSeconds = 3114, .ClutchEngaged = False}
+		Dim tmp As VectoInputs = New VectoInputs _
+				With {.Cycle = "Urban", .VehicleWeightKG = 16500.SI(Of Kilogram)(), .PowerNetVoltage = 28.3.SI(Of Volt)()}
+		VectoInputs = tmp
+		Signals = New Signals With {.EngineSpeed = 2000.RPMtoRad(), .TotalCycleTimeSeconds = 3114, .ClutchEngaged = False}
 
 		'Pneumatics set deault values
 		PneumaticUserInputsConfig = New PneumaticUserInputsConfig(True)
 		PneumaticAuxillariesConfig = New PneumaticsAuxilliariesConfig(True)
 
 		'Electrical set deault values
-		ElectricalUserInputsConfig = New ElectricsUserInputsConfig(True, VectoInputs)
+		ElectricalUserInputsConfig = New ElectricsUserInputsConfig(True, tmp)
 		ElectricalUserInputsConfig.ElectricalConsumers = New ElectricalConsumerList(28.3, 0.096, True)
 
 		'HVAC set deault values

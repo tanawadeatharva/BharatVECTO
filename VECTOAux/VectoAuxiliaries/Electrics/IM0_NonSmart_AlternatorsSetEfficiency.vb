@@ -8,30 +8,26 @@
 '   WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
 '
 ' See the LICENSE.txt for the specific language governing permissions and limitations.
+Imports TUGraz.VectoCommon.Utils
 
 Namespace Electrics
+	Public Interface IM0_NonSmart_AlternatorsSetEfficiency
+		''' <summary>
+		''' Gets HVAC Electrical Power Demand (A)
+		''' </summary>
+		''' <value></value>
+		''' <returns></returns>
+		''' <remarks></remarks>
+		ReadOnly Property GetHVACElectricalPowerDemandAmps() As Ampere
 
-  Public Interface IM0_NonSmart_AlternatorsSetEfficiency
-
-     ''' <summary>
-     ''' Gets HVAC Electrical Power Demand (A)
-     ''' </summary>
-     ''' <value></value>
-     ''' <returns></returns>
-     ''' <remarks></remarks>
-     Readonly Property  GetHVACElectricalPowerDemandAmps() As Single
-     ''' <summary>
-     ''' Gets Alternator Efficiency (0-1)
-     ''' </summary>
-     ''' <value></value>
-     ''' <returns></returns>
-     ''' <remarks></remarks>
-     Readonly Property  AlternatorsEfficiency() As Single
-
-
-End Interface
-
+		''' <summary>
+		''' Gets Alternator Efficiency (0-1)
+		''' </summary>
+		''' <value></value>
+		''' <returns></returns>
+		''' <remarks></remarks>
+		ReadOnly Property AlternatorsEfficiency() As Double
+	End Interface
 End Namespace
-
 
 

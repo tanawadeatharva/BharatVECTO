@@ -8,58 +8,58 @@
 '   WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
 '
 ' See the LICENSE.txt for the specific language governing permissions and limitations.
-
+Imports TUGraz.VectoCommon.Utils
 
 Namespace Electrics
+	Public Interface IM0_5_SmartAlternatorSetEfficiency
+		''' <summary>
+		''' Smart Idle Current (A)
+		''' </summary>
+		''' <value></value>
+		''' <returns></returns>
+		''' <remarks></remarks>
+		ReadOnly Property SmartIdleCurrent() As Ampere
 
-   Public Interface IM0_5_SmartAlternatorSetEfficiency
+		''' <summary>
+		''' Alternators Efficiency In Idle ( Fraction )
+		''' </summary>
+		''' <value></value>
+		''' <returns></returns>
+		''' <remarks></remarks>
+		ReadOnly Property AlternatorsEfficiencyIdleResultCard() As Double
 
-     ''' <summary>
-     ''' Smart Idle Current (A)
-     ''' </summary>
-     ''' <value></value>
-     ''' <returns></returns>
-     ''' <remarks></remarks>
-     Readonly Property SmartIdleCurrent() As single
-     ''' <summary>
-     ''' Alternators Efficiency In Idle ( Fraction )
-     ''' </summary>
-     ''' <value></value>
-     ''' <returns></returns>
-     ''' <remarks></remarks>
-     Readonly Property AlternatorsEfficiencyIdleResultCard( ) As single
-     ''' <summary>
-     ''' Smart Traction Current (A)
-     ''' </summary>
-     ''' <value></value>
-     ''' <returns></returns>
-     ''' <remarks></remarks>
-     Readonly Property SmartTractionCurrent As Single
-     ''' <summary>
-     ''' Alternators Efficiency In Traction ( Fraction )
-     ''' </summary>
-     ''' <value></value>
-     ''' <returns></returns>
-     ''' <remarks></remarks>
-     Readonly Property AlternatorsEfficiencyTractionOnResultCard() As Single
-     ''' <summary>
-     ''' Smart Overrrun Current (A)
-     ''' </summary>
-     ''' <value></value>
-     ''' <returns></returns>
-     ''' <remarks></remarks>
-     Readonly Property SmartOverrunCurrent As Single
-     ''' <summary>
-     ''' Alternators Efficiency In Overrun ( Fraction )
-     ''' </summary>
-     ''' <value></value>
-     ''' <returns></returns>
-     ''' <remarks></remarks>
-     Readonly Property AlternatorsEfficiencyOverrunResultCard() As single
+		''' <summary>
+		''' Smart Traction Current (A)
+		''' </summary>
+		''' <value></value>
+		''' <returns></returns>
+		''' <remarks></remarks>
+		ReadOnly Property SmartTractionCurrent As Ampere
 
-End Interface
+		''' <summary>
+		''' Alternators Efficiency In Traction ( Fraction )
+		''' </summary>
+		''' <value></value>
+		''' <returns></returns>
+		''' <remarks></remarks>
+		ReadOnly Property AlternatorsEfficiencyTractionOnResultCard() As Double
 
+		''' <summary>
+		''' Smart Overrrun Current (A)
+		''' </summary>
+		''' <value></value>
+		''' <returns></returns>
+		''' <remarks></remarks>
+		ReadOnly Property SmartOverrunCurrent As Ampere
+
+		''' <summary>
+		''' Alternators Efficiency In Overrun ( Fraction )
+		''' </summary>
+		''' <value></value>
+		''' <returns></returns>
+		''' <remarks></remarks>
+		ReadOnly Property AlternatorsEfficiencyOverrunResultCard() As Double
+	End Interface
 End Namespace
-
 
 
