@@ -129,8 +129,9 @@ namespace TUGraz.VectoCore.Utils
 				}
 			}
 
+#if TRACE
 			DrawGraph(pointCount, triangles, superTriangle, points);
-
+#endif
 			_convexHull = triangles.FindAll(t => t.SharesVertexWith(superTriangle)).
 				SelectMany(t => t.GetEdges()).
 				Where(e => !(superTriangle.Contains(e.P1) || superTriangle.Contains(e.P2))).ToArray();
@@ -151,17 +152,23 @@ namespace TUGraz.VectoCore.Utils
 			}
 		}
 
+		public void DrawGraph()
+		{
+			const int max = 100000;
+			var superTriangle = new Triangle(new Point(max, 0), new Point(0, max), new Point(-max, -max));
+			DrawGraph(0, _triangles, superTriangle, Points.ToArray());
+		}
+
 		/// <summary>
 		/// Draws the delaunay map (except supertriangle).
 		/// </summary>
-		[Conditional("TRACE")]
 		private static void DrawGraph(int i, List<Triangle> triangles, Triangle superTriangle, Point[] points,
 			Point lastPoint = null)
 		{
-			var xmin = points.Min(p => p.X);
-			var xmax = points.Max(p => p.X);
-			var ymin = points.Min(p => p.Y);
-			var ymax = points.Max(p => p.Y);
+			var xmin = Math.Min(points.Min(p => p.X), lastPoint != null ? lastPoint.X : double.NaN);
+			var xmax = Math.Max(points.Max(p => p.X), lastPoint != null ? lastPoint.X : double.NaN);
+			var ymin = Math.Min(points.Min(p => p.Y), lastPoint != null ? lastPoint.Y : double.NaN);
+			var ymax = Math.Max(points.Max(p => p.Y), lastPoint != null ? lastPoint.Y : double.NaN);
 
 			using (var chart = new Chart { Width = 1000, Height = 1000 }) {
 				chart.ChartAreas.Add(new ChartArea("main") {

@@ -67,6 +67,11 @@ namespace TUGraz.VectoCore.Models.SimulationComponent.Data.Gearbox
 			set { _lossMap.Extrapolated = value; }
 		}
 
+		public void DrawGraph()
+		{
+			_lossMap.DrawGraph();
+		}
+
 		public string GearName { get; private set; }
 
 		public static TransmissionLossMap ReadFromFile(string fileName, double gearRatio, string gearName)
