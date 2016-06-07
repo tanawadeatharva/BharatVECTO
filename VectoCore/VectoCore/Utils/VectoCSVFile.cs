@@ -133,7 +133,7 @@ namespace TUGraz.VectoCore.Utils
 			do {
 				var line = lines.Current;
 
-				var cells = line.Split(Delimiter);
+				var cells = line.Split(Delimiter).Select(s => s.Trim()).ToArray();
 				if (!ignoreEmptyColumns && cells.Length != table.Columns.Count) {
 					throw new CSVReadException(
 						string.Format("Line {0}: The number of values is not correct. Expected {1} Columns, Got {2} Columns", i,
