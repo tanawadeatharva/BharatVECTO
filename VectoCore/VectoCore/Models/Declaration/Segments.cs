@@ -67,12 +67,20 @@ namespace TUGraz.VectoCore.Models.Declaration
 
 			DataRow row;
 			try {
-				row = SegmentTable.Rows.Cast<DataRow>().First(r => r.Field<string>("valid") == "1"
-																	&& r.Field<string>("vehiclecategory") == vehicleCategory.ToString()
-																	&& r.Field<string>("axleconf.") == axleConfiguration.GetName()
-																	&& r.ParseDouble("gvw_min").SI().Ton < grossVehicleMassRating
-																	&& r.ParseDouble("gvw_max").SI().Ton >= grossVehicleMassRating
-					);
+				row = SegmentTable.Rows.Cast<DataRow>().First(r => {
+					var isValid = r.Field<string>("valid");
+					var category = r.Field<string>("vehiclecategory");
+					var axleConf = r.Field<string>("axleconf.");
+					var massMin = r.ParseDouble("gvw_min").SI().Ton;
+					var massMax = r.ParseDouble("gvw_max").SI().Ton;
+					return isValid == "1"
+							&& category == vehicleCategory.ToString()
+							&& axleConf == axleConfiguration.GetName()
+						// MK 2016-06-07: normally the next condition should be "mass > massMin", except for 7.5t where is should be ">="
+						// in any case ">=" is also correct, because the segment table is sorted by weight.
+							&& grossVehicleMassRating >= massMin
+							&& grossVehicleMassRating <= massMax;
+				});
 			} catch (InvalidOperationException e) {
 				var errorMessage = string.Format(
 					"ERROR: Could not find the declaration segment for vehicle. Category: {0}, AxleConfiguration: {1}, GrossVehicleMassRating: {2}",
