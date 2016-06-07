@@ -429,6 +429,7 @@ namespace TUGraz.VectoCore.Models.SimulationComponent.Impl
 
 			retVal.Switch().
 				Case<ResponseSuccess>().
+				Case<ResponseGearShift>().
 				Case<ResponseFailTimeInterval>(r =>
 					retVal = new ResponseDrivingCycleDistanceExceeded() {
 						Source = this,

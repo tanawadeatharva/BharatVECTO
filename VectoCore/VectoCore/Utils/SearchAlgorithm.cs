@@ -116,7 +116,7 @@ namespace TUGraz.VectoCore.Utils
 			var intervalFactor = 1.0;
 			var origY = y;
 			var debug = new DebugData();
-			debug.Add(new { x, y });
+			debug.Add(new { x = x.Value(), y = y.Value() });
 			log.Debug("Log Disabled during LineSearch.");
 			LogManager.DisableLogging();
 			try {
@@ -129,7 +129,7 @@ namespace TUGraz.VectoCore.Utils
 					x += interval * -y.Sign();
 					var result = evaluateFunction(x);
 					y = getYValue(result);
-					debug.Add(new { x, y, delta = criterion(result), result });
+					debug.Add(new { x = x.Value(), y = y.Value(), delta = criterion(result), result });
 					if (criterion(result).IsEqual(0, Constants.SimulationSettings.LineSearchTolerance)) {
 						LogManager.EnableLogging();
 						log.Debug("LineSearch found an operating point after {0} function calls.", count);
@@ -161,20 +161,23 @@ namespace TUGraz.VectoCore.Utils
 		[Conditional("TRACE")]
 		private static void AppendDebug(DebugData debug)
 		{
-			var xmin = debug.Data.Min(d => d.x).Value();
-			var xmax = debug.Data.Max(d => d.x).Value();
-			var ymin = debug.Data.Min(d => d.y).Value();
-			var ymax = debug.Data.Max(d => d.y).Value();
+			var xmin = debug.Data.Min(d => d.x);
+			var xmax = debug.Data.Max(d => d.x);
+			var ymin = debug.Data.Min(d => d.y);
+			var ymax = debug.Data.Max(d => d.y);
 
 			var rand = new Random().Next();
-			using (var f = new StreamWriter(File.Open("LineSearch-" + Thread.CurrentThread.ManagedThreadId + "-statistics.csv", FileMode.Append))) {
+			using (
+				var f =
+					new StreamWriter(File.Open("LineSearch-" + Thread.CurrentThread.ManagedThreadId + "-statistics.csv",
+						FileMode.Append))) {
 				foreach (var d in debug.Data) {
 					f.WriteLine(string.Format("{0}, {1}, {2}, {3}, {4}, {5}, {6}",
 						rand,
-						(d.x.Value() - xmin) / (xmax - xmin),
-						(d.y.Value() - ymin) / (ymax - ymin),
-						d.x.Value() / Math.Max(Math.Abs(xmax), Math.Abs(xmin)),
-						d.y.Value() / Math.Max(Math.Abs(ymax), Math.Abs(ymin)),
+						(d.x - xmin) / (xmax - xmin),
+						(d.y - ymin) / (ymax - ymin),
+						d.x / Math.Max(Math.Abs(xmax), Math.Abs(xmin)),
+						d.y / Math.Max(Math.Abs(ymax), Math.Abs(ymin)),
 						d.x, d.y));
 				}
 			}
@@ -223,7 +226,7 @@ namespace TUGraz.VectoCore.Utils
 						if (!(ex.InnerException is DivideByZeroException)) {
 							throw;
 						}
-						debug.Add(new { x = x2, y = getYValue(result), delta = criterion(result), result });
+						debug.Add(new { x = x2, y = getYValue(result).Value(), delta = criterion(result), result });
 						LogManager.EnableLogging();
 						log.Debug("InterpolateSearch could not get more exact. Aborting after {0} function calls.", count);
 						LogManager.DisableLogging();
@@ -234,7 +237,7 @@ namespace TUGraz.VectoCore.Utils
 
 					result = evaluateFunction(x2.SI<T>());
 					if (criterion(result).IsEqual(0, Constants.SimulationSettings.InterpolateSearchTolerance)) {
-						debug.Add(new { x = x2, y = getYValue(result), delta = criterion(result), result });
+						debug.Add(new { x = x2, y = getYValue(result).Value(), delta = criterion(result), result });
 						LogManager.EnableLogging();
 						log.Debug("InterpolateSearch found an operating point after {0} function calls.", count);
 						LogManager.DisableLogging();

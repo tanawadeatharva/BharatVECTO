@@ -274,12 +274,11 @@ namespace TUGraz.VectoCore.OutputData
 
 				object[] remainingRow = null;
 				var gearsList = new Dictionary<object, Second>(3);
-				var v_act = 0.SI<MeterPerSecond>();
+				var v_act = data.Rows.Cast<DataRow>().First().Field<MeterPerSecond>((int)ModalResultField.v_act);
 
 				foreach (DataRow row in data.Rows) {
 					var currentDt = row.Field<Second>((int)ModalResultField.simulationInterval);
 					distance = row.Field<Meter>((int)ModalResultField.dist);
-					v_act = (MeterPerSecond)row[(int)ModalResultField.v_act];
 
 					// if current + remaining time >= 1 second: take remaining row and split up currentRow to fill up 1 second.
 					if (remainingDt > 0 && remainingDt + currentDt >= 1) {
