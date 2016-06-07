@@ -1619,7 +1619,7 @@ lbFound:
 			Physics.AirDensity = New SI(Cfg.AirDensity).Kilo.Gramm.Per.Cubic.Meter.Cast(Of KilogramPerCubicMeter)()
 			Physics.CO2PerFuelWeight = Cfg.CO2perFC
 		End If
-		
+
 		'dictionary of run-identifiers to fileWriters (used for output directory of modfile)
 		Dim fileWriters As Dictionary(Of Integer, FileOutputWriter) = New Dictionary(Of Integer, FileOutputWriter)
 
@@ -1658,7 +1658,7 @@ lbFound:
 		sender.ReportProgress(0,
 							New _
 								With {.Target = "ListBox",
-								.Message =
+								.Message = _
 								String.Format("Starting Simulation ({0} Jobs, {1} Runs)", JobFileList.Count, jobContainer.GetProgress().Count)})
 
 		jobContainer.Execute(True)
@@ -1677,7 +1677,7 @@ lbFound:
 			Dim duration As Double = (DateTime.Now() - start).TotalSeconds
 
 			sender.ReportProgress(Int((sumProgress * 100.0) / progress.Count), New With {.Target = "Status",
-									.Message =
+									.Message = _
 									String.Format("Duration: {0:0}s, Current Progress: {1:P} ({2})", duration, sumProgress / progress.Count,
 												String.Join(", ", progress.Select(Function(pair) String.Format("{0,4:P}", pair.Value.Progress))))})
 
@@ -1737,8 +1737,9 @@ lbFound:
 	Private Shared Sub PrintRuns(progress As Dictionary(Of Integer, JobContainer.ProgressEntry),
 								fileWriters As Dictionary(Of Integer, FileOutputWriter))
 		For Each p As KeyValuePair(Of Integer, JobContainer.ProgressEntry) In progress
-			Dim modFilename As String = fileWriters(p.Key).GetModDataFileName(p.Value.RunName, p.Value.CycleName, p.Value.RunSuffix + IIf(Cfg.Mod1Hz, "_1Hz", ""))
-																			p.Value.RunSuffix)
+			Dim modFilename As String = fileWriters(p.Key).GetModDataFileName(p.Value.RunName, p.Value.CycleName,
+																			p.Value.RunSuffix + IIf(Cfg.Mod1Hz, "_1Hz", ""))
+
 			Dim runName As String = String.Format("{0} {1} {2}", p.Value.RunName, p.Value.CycleName, p.Value.RunSuffix)
 
 			If Not p.Value.Error Is Nothing Then
