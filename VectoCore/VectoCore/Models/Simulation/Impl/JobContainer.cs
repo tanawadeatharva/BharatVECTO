@@ -51,6 +51,9 @@ namespace TUGraz.VectoCore.Models.Simulation.Impl
 
 		private static int _jobNumber;
 
+		private readonly AutoResetEvent _resetEvent = new AutoResetEvent(false);
+
+
 		/// <summary>
 		/// Initializes a new empty instance of the <see cref="JobContainer"/> class.
 		/// </summary>
@@ -74,7 +77,10 @@ namespace TUGraz.VectoCore.Models.Simulation.Impl
 
 		public IEnumerable<CycleTypeDescription> GetCycleTypes()
 		{
-			return Runs.Select(r => new CycleTypeDescription {Name = r.Run.CycleName,CycleType = r.Run.GetContainer().RunData.Cycle.CycleType}).Distinct();
+			return
+				Runs.Select(
+					r => new CycleTypeDescription { Name = r.Run.CycleName, CycleType = r.Run.GetContainer().RunData.Cycle.CycleType })
+					.Distinct();
 		}
 
 		/// <summary>
@@ -84,7 +90,7 @@ namespace TUGraz.VectoCore.Models.Simulation.Impl
 		public List<int> AddRuns(SimulatorFactory factory)
 		{
 			var runIDs = new List<int>();
-			
+
 			factory.SumData = _sumWriter;
 			factory.JobNumber = Interlocked.Increment(ref _jobNumber);
 
@@ -130,11 +136,10 @@ namespace TUGraz.VectoCore.Models.Simulation.Impl
 			}
 		}
 
-		private static readonly AutoResetEvent ResetEvent = new AutoResetEvent(false);
 
 		public void WaitFinished()
 		{
-			ResetEvent.WaitOne();
+			_resetEvent.WaitOne();
 		}
 
 
@@ -147,7 +152,7 @@ namespace TUGraz.VectoCore.Models.Simulation.Impl
 			}
 			if (AllCompleted) {
 				_sumWriter.Finish();
-				ResetEvent.Set();
+				_resetEvent.Set();
 			}
 		}
 
