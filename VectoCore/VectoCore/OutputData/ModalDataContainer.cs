@@ -39,12 +39,14 @@ using TUGraz.VectoCommon.Models;
 using TUGraz.VectoCommon.Utils;
 using TUGraz.VectoCore.Models.Simulation.Data;
 using TUGraz.VectoCore.Models.Simulation.Impl;
+using TUGraz.VectoCore.Utils;
 
 namespace TUGraz.VectoCore.OutputData
 {
 	public class ModalDataContainer : IModalDataContainer
 	{
 		private readonly ExecutionMode _mode;
+		private readonly IModalDataFilter[] _filters;
 		private readonly Action<ModalDataContainer> _addReportResult;
 		internal ModalResults Data { get; set; }
 		private DataRow CurrentRow { get; set; }
@@ -62,16 +64,15 @@ namespace TUGraz.VectoCore.OutputData
 
 		public bool WriteAdvancedAux { get; set; }
 
-		public ModalDataContainer(string runName, IModalDataWriter writer,
-			ExecutionMode mode = ExecutionMode.Engineering)
+		public ModalDataContainer(string runName, IModalDataWriter writer, ExecutionMode mode)
 			: this(runName, "", "", writer, _ => { }, mode) {}
 
 		public ModalDataContainer(VectoRunData runData, IModalDataWriter writer, Action<ModalDataContainer> addReportResult,
-			ExecutionMode mode = ExecutionMode.Engineering)
-			: this(runData.JobName, runData.Cycle.Name, runData.ModFileSuffix, writer, addReportResult, mode) {}
+			ExecutionMode mode, params IModalDataFilter[] filter)
+			: this(runData.JobName, runData.Cycle.Name, runData.ModFileSuffix, writer, addReportResult, mode, filter) {}
 
 		protected ModalDataContainer(string runName, string cycleName, string runSuffix, IModalDataWriter writer,
-			Action<ModalDataContainer> addReportResult, ExecutionMode mode)
+			Action<ModalDataContainer> addReportResult, ExecutionMode mode, params IModalDataFilter[] filters)
 
 		{
 			HasTorqueConverter = false;
@@ -81,6 +82,7 @@ namespace TUGraz.VectoCore.OutputData
 			_writer = writer;
 
 			_mode = mode;
+			_filters = filters;
 			_addReportResult = addReportResult;
 
 			Data = new ModalResults();
@@ -192,8 +194,12 @@ namespace TUGraz.VectoCore.OutputData
 				.Concat(_additionalColumns);
 
 			if (_mode != ExecutionMode.Declaration || WriteModalResults) {
-				_writer.WriteModData(RunName, CycleName, RunSuffix,
-					new DataView(Data).ToTable(false, strCols.ToArray()));
+				var filteredData = Data;
+				foreach (var filter in _filters) {
+					RunSuffix += "_" + filter.ID;
+					filteredData = filter.Filter(filteredData);
+				}
+				_writer.WriteModData(RunName, CycleName, RunSuffix, new DataView(filteredData).ToTable(false, strCols.ToArray()));
 			}
 
 			if (_mode == ExecutionMode.Declaration) {
@@ -230,11 +236,11 @@ namespace TUGraz.VectoCore.OutputData
 				_additionalColumns.Add(fieldName);
 				Data.Columns.Add(fieldName);
 			}
-            if (value is double) {
-                CurrentRow[fieldName] = string.Format(CultureInfo.InvariantCulture, "{0}", value); 
-            } else {			
-                CurrentRow[fieldName] = value;
-            }
+			if (value is double) {
+				CurrentRow[fieldName] = string.Format(CultureInfo.InvariantCulture, "{0}", value);
+			} else {
+				CurrentRow[fieldName] = value;
+			}
 		}
 
 		public Dictionary<string, DataColumn> Auxiliaries { get; set; }
@@ -253,6 +259,154 @@ namespace TUGraz.VectoCore.OutputData
 
 					Auxiliaries[id] = col;
 				}
+			}
+		}
+
+		public class ModalData1HzFilter : IModalDataFilter
+		{
+			public ModalResults Filter(ModalResults data)
+			{
+				var absTime = 0.SI<Second>();
+				var distance = 0.SI<Meter>();
+				var results = (ModalResults)data.Clone();
+
+				var remainingDt = 0.SI<Second>();
+
+				object[] remainingRow = null;
+				var gearsList = new Dictionary<object, Second>(3);
+				var v_act = data.Rows.Cast<DataRow>().First().Field<MeterPerSecond>((int)ModalResultField.v_act);
+
+				foreach (DataRow row in data.Rows) {
+					var currentDt = row.Field<Second>((int)ModalResultField.simulationInterval);
+					distance = row.Field<Meter>((int)ModalResultField.dist);
+
+					// if current + remaining time >= 1 second: take remaining row and split up currentRow to fill up 1 second.
+					if (remainingDt > 0 && remainingDt + currentDt >= 1) {
+						var diffDt = 1.SI<Second>() - remainingDt;
+						var r = results.NewRow();
+
+						var gear = row[(int)ModalResultField.Gear];
+						gearsList[gear] = gearsList.GetValueOrZero(gear) + diffDt;
+
+						distance += diffDt * v_act + diffDt * diffDt * (MeterPerSquareSecond)row[(int)ModalResultField.acc] / 2;
+						v_act += diffDt * (MeterPerSquareSecond)row[(int)ModalResultField.acc];
+						r.ItemArray = AddRow(remainingRow, MultiplyRow(row.ItemArray, diffDt));
+						absTime += diffDt;
+
+						r[(int)ModalResultField.time] = absTime;
+						r[(int)ModalResultField.simulationInterval] = 1.SI<Second>();
+						r[(int)ModalResultField.Gear] = gearsList.MaxBy(kv => kv.Value).Key;
+						r[(int)ModalResultField.dist] = distance;
+						r[(int)ModalResultField.v_act] = v_act;
+
+						gearsList.Clear();
+						results.Rows.Add(r);
+						currentDt -= diffDt;
+						remainingDt = 0.SI<Second>();
+						remainingRow = null;
+					}
+
+					// if current row still longer than 1 second: split it to 1 second slices until it is < 1 second
+					while (currentDt >= 1) {
+						currentDt = currentDt - 1.SI<Second>();
+						var dt = 1.SI<Second>();
+						var r = results.NewRow();
+						r.ItemArray = row.ItemArray;
+						absTime += dt;
+						distance += dt * v_act + dt * dt * (MeterPerSquareSecond)row[(int)ModalResultField.acc] / 2;
+						v_act += dt * (MeterPerSquareSecond)row[(int)ModalResultField.acc];
+
+						r[(int)ModalResultField.time] = absTime;
+						r[(int)ModalResultField.simulationInterval] = dt;
+						r[(int)ModalResultField.dist] = distance;
+						r[(int)ModalResultField.v_act] = v_act;
+						results.Rows.Add(r);
+					}
+
+					// if the there still is something left in current row: add the weighted values to remainder-buffer
+					if (currentDt > 0) {
+						var gear = row[(int)ModalResultField.Gear];
+						gearsList[gear] = gearsList.GetValueOrZero(gear) + currentDt;
+
+						distance += currentDt * v_act + currentDt * currentDt * (MeterPerSquareSecond)row[(int)ModalResultField.acc] / 2;
+						v_act += currentDt * (MeterPerSquareSecond)row[(int)ModalResultField.acc];
+						remainingRow = AddRow(remainingRow, MultiplyRow(row.ItemArray, currentDt));
+						remainingDt += currentDt;
+						absTime += currentDt;
+					} else {
+						remainingRow = null;
+						remainingDt = 0.SI<Second>();
+						gearsList.Clear();
+					}
+				}
+
+				// if last row was not enough to full second: take last row as whole second
+
+				if (remainingDt > 0) {
+					var last = data.Rows.Cast<DataRow>().Last();
+					var r = results.NewRow();
+
+					r.ItemArray = MultiplyRow(remainingRow, 1 / remainingDt).ToArray();
+					distance += remainingDt * v_act +
+								remainingDt * remainingDt * (MeterPerSquareSecond)last[(int)ModalResultField.acc] / 2;
+					v_act += remainingDt * (MeterPerSquareSecond)last[(int)ModalResultField.acc];
+
+					r[(int)ModalResultField.time] = VectoMath.Ceiling(absTime);
+					r[(int)ModalResultField.simulationInterval] = 1.SI<Second>();
+					r[(int)ModalResultField.Gear] = gearsList.MaxBy(kv => kv.Value).Key;
+					r[(int)ModalResultField.dist] = distance;
+					r[(int)ModalResultField.v_act] = v_act;
+					results.Rows.Add(r);
+				}
+
+				return results;
+			}
+
+			private static IEnumerable<object> MultiplyRow(IEnumerable<object> row, SI dt)
+			{
+				return row.Select(val => {
+					if (val is SI)
+						val = (SI)val * dt.Value();
+					else {
+						val.Switch()
+							.Case<int>(i => val = i * dt.Value())
+							.Case<double>(d => val = d * dt.Value())
+							.Case<float>(f => val = f * dt.Value())
+							.Case<uint>(ui => val = ui * dt.Value());
+					}
+					return val;
+				});
+			}
+
+			private static object[] AddRow(IEnumerable<object> row, IEnumerable<object> addRow)
+			{
+				if (row == null) {
+					return addRow.ToArray();
+				}
+				if (addRow == null) {
+					return row.ToArray();
+				}
+
+				return row.ZipAll(addRow, (val, addVal) => {
+					if (val is SI || addVal is SI) {
+						if (DBNull.Value == val)
+							val = addVal;
+						else if (DBNull.Value != addVal)
+							val = (SI)val + (SI)addVal;
+					} else {
+						val.Switch()
+							.Case<int>(i => val = i + (int)addVal)
+							.Case<double>(d => val = d + (double)addVal)
+							.Case<float>(f => val = f + (float)addVal)
+							.Case<uint>(ui => val = ui + (uint)addVal);
+					}
+					return val;
+				}).ToArray();
+			}
+
+			public string ID
+			{
+				get { return "1Hz"; }
 			}
 		}
 	}

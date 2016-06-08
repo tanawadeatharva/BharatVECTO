@@ -70,8 +70,10 @@ namespace TUGraz.VectoCore.Tests.Integration
 			bool overspeed = false)
 		{
 			var fileWriter = new FileOutputWriter(modFileName);
-			var modData = new ModalDataContainer(modFileName, fileWriter);
-			var container = new VehicleContainer(ExecutionMode.Engineering, modData, null) { RunData = new VectoRunData{JobName = modFileName, Cycle = cycleData }};
+			var modData = new ModalDataContainer(modFileName, fileWriter, ExecutionMode.Engineering);
+			var container = new VehicleContainer(ExecutionMode.Engineering, modData, null) {
+				RunData = new VectoRunData { JobName = modFileName, Cycle = cycleData }
+			};
 
 			var engineData = MockSimulationDataFactory.CreateEngineDataFromFile(EngineFile);
 			var axleGearData = CreateAxleGearData();

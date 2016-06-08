@@ -32,14 +32,12 @@
 using System;
 using System.Data;
 using System.Globalization;
-using Microsoft.VisualStudio.TestTools.UnitTesting;
 using NUnit.Framework;
 using TUGraz.VectoCommon.Exceptions;
 using TUGraz.VectoCommon.Models;
 using TUGraz.VectoCommon.Utils;
 using TUGraz.VectoCore.InputData.Reader;
 using TUGraz.VectoCore.InputData.Reader.DataObjectAdaper;
-using TUGraz.VectoCore.Models.SimulationComponent.Data;
 using TUGraz.VectoCore.Models.SimulationComponent.Data.Engine;
 using TUGraz.VectoCore.Models.SimulationComponent.Data.Gearbox;
 using TUGraz.VectoCore.Tests.Utils;
@@ -49,16 +47,14 @@ using TestContext = Microsoft.VisualStudio.TestTools.UnitTesting.TestContext;
 
 namespace TUGraz.VectoCore.Tests.Models.SimulationComponentData
 {
-	[TestClass]
+	[TestFixture]
 	public class GearboxDataTest
 	{
-		public TestContext TestContext { get; set; }
-
 		protected const string GearboxFile = @"Testdata\Components\24t Coach.vgbx";
 
 		protected const string EngineFile = @"TestData\Components\24t Coach.veng";
 
-		[TestMethod]
+		[TestCase]
 		public void TestGearboxDataReadTest()
 		{
 			var axleData = MockSimulationDataFactory.CreateAxleGearDataFromFile(GearboxFile);
@@ -80,43 +76,48 @@ namespace TUGraz.VectoCore.Tests.Models.SimulationComponentData
 			Assert.AreEqual(13.072, gbxData.Gears[1].LossMap[35].TorqueLoss.Value(), 0.0001);
 		}
 
-		[Test,
-		TestCase(@"TestData\Components\24t Coach.vgbx", 520, 20.320, 279698.4, 9401.44062),
-		TestCase(@"TestData\Components\24t Coach.vgbx", 520, 0.5858335, 17173.5, 409.773677587509),
-		TestCase(@"TestData\Components\24t Coach.vgbx", 520, 0.3996113, 292.5253, 118.282541632652),
-		TestCase(@"TestData\Components\24t Coach.vgbx", 520, 5.327739, 57431.12, 2222.78785705566),
-		TestCase(@"TestData\Components\24t Coach.vgbx", 520, 5.661779, 73563.93, 2553.00283432007),
-		TestCase(@"TestData\Components\24t Coach.vgbx", 520, 14.15156, 212829.5, 6822.16882705688),
-		TestCase(@"TestData\Components\24t Coach.vgbx", 520, 14.55574, 15225.52, 4308.41207504272),
-		TestCase(@"TestData\Components\24t Coach.vgbx", 520, 4.601774, -1240.225, 1362.09738254547),
-		TestCase(@"TestData\Components\24t Coach.vgbx", 520, 3.934339, -698.5989, 1164.5405292511)]
-		public void TestInterpolation(string gbxFile, double rdyn, double speed, double PvD, double expectedGbxLoss)
+		[TestCase("Test1", @"TestData\Components\24t Coach.vgbx", 520, 20.320, "A", 279698.4, 9401.44062)]
+		[TestCase("Test2", @"TestData\Components\24t Coach.vgbx", 520, 0.5858335, "A", 17173.5, 409.773677587509)]
+		[TestCase("Test3", @"TestData\Components\24t Coach.vgbx", 520, 0.3996113, "A", 292.5253, 118.282541632652)]
+		[TestCase("Test4", @"TestData\Components\24t Coach.vgbx", 520, 5.327739, "A", 57431.12, 2222.78785705566)]
+		[TestCase("Test5", @"TestData\Components\24t Coach.vgbx", 520, 5.661779, "A", 73563.93, 2553.00283432007)]
+		[TestCase("Test6", @"TestData\Components\24t Coach.vgbx", 520, 14.15156, "A", 212829.5, 6822.16882705688)]
+		[TestCase("Test7", @"TestData\Components\24t Coach.vgbx", 520, 14.55574, "A", 15225.52, 4308.41207504272)]
+		[TestCase("Test8", @"TestData\Components\24t Coach.vgbx", 520, 4.601774, "A", -1240.225, 1362.09738254547)]
+		[TestCase("Test9", @"TestData\Components\24t Coach.vgbx", 520, 3.934339, "A", -698.5989, 1164.5405292511)]
+		public void TestInterpolation(string testName, string gearboxDataFile, double rDyn, double v, string gear,
+			double powerGbxOut, double gbxPowerLoss)
 		{
-			var axleData = MockSimulationDataFactory.CreateAxleGearDataFromFile(gbxFile);
+			var rdyn = rDyn;
 
-			var torqueToWheels = Formulas.PowerToTorque(PvD.SI<Watt>(), SpeedToAngularSpeed(speed, rdyn));
+			var angSpeed = (60 * v / (2 * rdyn * Math.PI / 1000)).RPMtoRad();
 
-			var angSpeed = SpeedToAngularSpeed(speed, rdyn);
+			var axleData = MockSimulationDataFactory.CreateAxleGearDataFromFile(gearboxDataFile);
 
+			var pvD = powerGbxOut.SI<Watt>();
 
-			var torqueFromEngine = torqueToWheels / axleData.AxleGear.Ratio;
-			torqueFromEngine += axleData.AxleGear.LossMap.GetTorqueLoss(angSpeed, torqueToWheels);
+			var torqueToWheels = Formulas.PowerToTorque(pvD, angSpeed);
+			var torqueFromEngine = 0.SI<NewtonMeter>();
 
+			if (gear == "A") {
+				torqueFromEngine = torqueToWheels / axleData.AxleGear.Ratio;
+				torqueFromEngine += axleData.AxleGear.LossMap.GetTorqueLoss(angSpeed, torqueToWheels);
+			}
 
 			var powerEngine = Formulas.TorqueToPower(torqueFromEngine, angSpeed * axleData.AxleGear.Ratio);
-			var loss = powerEngine - PvD.SI<Watt>();
+			var loss = powerEngine - pvD;
 
-			Assert.AreEqual(expectedGbxLoss, loss.Value(), 0.1);
+			Assert.AreEqual(gbxPowerLoss, loss.Value(), 0.1, testName);
 		}
 
-		[Test]
+		[TestCase]
 		public void TestLossMap_IN_10_CONST_Interpolation_Extrapolation()
 		{
 			var data = new DataTable();
 			data.Columns.Add("");
 			data.Columns.Add("");
 			data.Columns.Add("");
-			data.Rows.Add("0", "0", "10"); //         (0,100):10 --  (100,150):10
+			data.Rows.Add("0", "0", "10"); //         (0,100):10 --  (100,100):10
 			data.Rows.Add("0", "100", "10"); //        |      \          |
 			data.Rows.Add("100", "0", "10"); //        |       \         |
 			data.Rows.Add("100", "100", "10"); //    (0,0):10  ----- (100,10):10
@@ -153,14 +154,14 @@ namespace TUGraz.VectoCore.Tests.Models.SimulationComponentData
 			AssertHelper.AreRelativeEqual(10, map.GetTorqueLoss(120.RPMtoRad(), 50.SI<NewtonMeter>()));
 		}
 
-		[Test]
+		[TestCase]
 		public void TestLossMap_OUT_10_CONST_Interpolation_Extrapolation()
 		{
 			var data = new DataTable();
 			data.Columns.Add("");
 			data.Columns.Add("");
 			data.Columns.Add("");
-			data.Rows.Add("0", "0", "10"); //         (0,100):10 --  (100,150):10
+			data.Rows.Add("0", "0", "10"); //         (0,100):10 --  (100,100):10
 			data.Rows.Add("0", "100", "10"); //        |      \          |
 			data.Rows.Add("100", "0", "10"); //        |       \         |
 			data.Rows.Add("100", "100", "10"); //    (0,0):10  ----- (100,10):10
@@ -197,14 +198,14 @@ namespace TUGraz.VectoCore.Tests.Models.SimulationComponentData
 			AssertHelper.AreRelativeEqual(40, map.GetOutTorque(120.RPMtoRad(), 50.SI<NewtonMeter>(), true));
 		}
 
-		[Test]
+		[TestCase]
 		public void TestLossMap_IN_Interpolation_Extrapolation()
 		{
 			var data = new DataTable();
 			data.Columns.Add("");
 			data.Columns.Add("");
 			data.Columns.Add("");
-			data.Rows.Add("0", "0", "0"); //         (0,100):10 --  (100,150):40
+			data.Rows.Add("0", "0", "0"); //         (0,110):10 --  (100,140):40
 			data.Rows.Add("0", "110", "10"); //        |      \         |
 			data.Rows.Add("100", "10", "10"); //        |       \       |
 			data.Rows.Add("100", "140", "40"); //    (0,0):0 ----- (100,10):10
@@ -241,7 +242,7 @@ namespace TUGraz.VectoCore.Tests.Models.SimulationComponentData
 			AssertHelper.AreRelativeEqual(25, map.GetTorqueLoss(120.RPMtoRad(), 50.SI<NewtonMeter>()));
 		}
 
-		[Test]
+		[TestCase]
 		public void TestLossMap_OUT_Interpolation_Extrapolation()
 		{
 			var data = new DataTable();
@@ -288,10 +289,10 @@ namespace TUGraz.VectoCore.Tests.Models.SimulationComponentData
 			AssertHelper.Exception<VectoException>(() => { map.GetOutTorque(120.RPMtoRad(), 50.SI<NewtonMeter>()); });
 		}
 
-		[Test]
+		[TestCase]
 		public void TestFullLoadCurveIntersection()
 		{
-			var engineFLDString = new[] {
+			var engineFldString = new[] {
 				"560, 1180, -149",
 				"600, 1282, -148",
 				"800, 1791, -149",
@@ -303,18 +304,18 @@ namespace TUGraz.VectoCore.Tests.Models.SimulationComponentData
 				"2000, 1352, -301",
 				"2100, 1100, -320",
 			};
-			var gbxFLDString = new[] {
+			var gbxFldString = new[] {
 				"560, 2500",
 				"2100, 2500"
 			};
 			var dataEng =
-				VectoCSVFile.ReadStream(InputDataHelper.InputDataAsStream("n [U/min],Mfull [Nm],Mdrag [Nm]", engineFLDString));
-			var engineFLD = EngineFullLoadCurve.Create(dataEng, true);
+				VectoCSVFile.ReadStream(InputDataHelper.InputDataAsStream("n [U/min],Mfull [Nm],Mdrag [Nm]", engineFldString));
+			var engineFld = EngineFullLoadCurve.Create(dataEng, true);
 
-			var dataGbx = VectoCSVFile.ReadStream(InputDataHelper.InputDataAsStream("n [U/min],Mfull [Nm]", gbxFLDString));
-			var gbxFLD = FullLoadCurveReader.Create(dataGbx, true);
+			var dataGbx = VectoCSVFile.ReadStream(InputDataHelper.InputDataAsStream("n [U/min],Mfull [Nm]", gbxFldString));
+			var gbxFld = FullLoadCurveReader.Create(dataGbx, true);
 
-			var fullLoadCurve = AbstractSimulationDataAdapter.IntersectFullLoadCurves(engineFLD, gbxFLD);
+			var fullLoadCurve = AbstractSimulationDataAdapter.IntersectFullLoadCurves(engineFld, gbxFld);
 
 			Assert.AreEqual(10, fullLoadCurve.FullLoadEntries.Count);
 
@@ -325,25 +326,20 @@ namespace TUGraz.VectoCore.Tests.Models.SimulationComponentData
 		/// <summary>
 		///		VECTO-190
 		/// </summary>
-		[Test]
+		[TestCase]
 		public void TestFullLoadSorting()
 		{
-			var gbxFLDString = new[] {
+			var gbxFldString = new[] {
 				"600, 1000",
 				"2400, 2000",
 				"1000, 500"
 			};
 
-			var dataGbx = VectoCSVFile.ReadStream(InputDataHelper.InputDataAsStream("n [U/min],Mfull [Nm]", gbxFLDString));
-			var gbxFLD = FullLoadCurveReader.Create(dataGbx, true);
+			var dataGbx = VectoCSVFile.ReadStream(InputDataHelper.InputDataAsStream("n [U/min],Mfull [Nm]", gbxFldString));
+			var gbxFld = FullLoadCurveReader.Create(dataGbx, true);
 
-			var maxTorque = gbxFLD.FullLoadStationaryTorque(800.RPMtoRad());
+			var maxTorque = gbxFld.FullLoadStationaryTorque(800.RPMtoRad());
 			Assert.AreEqual(750, maxTorque.Value());
-		}
-
-		protected PerSecond SpeedToAngularSpeed(double v, double r)
-		{
-			return ((60 * v) / (2 * r * Math.PI / 1000)).RPMtoRad();
 		}
 	}
 }

@@ -2,137 +2,122 @@
 Imports VectoAuxiliaries.Hvac
 Imports VectoAuxiliaries
 Imports NUnit.Framework
+Imports TUGraz.VectoCommon.Utils
 
 Namespace UnitTests
+	<TestFixture()>
+	Public Class M0_5_SmartAlternatorSetEfficiencyTests
+		Private target As M0_5_SmartAlternatorSetEfficiency
+		Private signals = New Signals
 
-<TestFixture()>
-Public Class M0_5_SmartAlternatorSetEfficiencyTests
+		Public Sub New()
 
-Private target As M0_5_SmartAlternatorSetEfficiency
-Private signals  = New Signals
-
-Public Sub new()
-
-Initialise()
-
-End Sub
+			Initialise()
+		End Sub
 
 
-Private Function GetSSM() As ISSMTOOL
+		Private Function GetSSM() As ISSMTOOL
 
 
-  Const _SSMMAP As String = "TestFiles\ssm.Ahsm
+			Const _SSMMAP As String = "TestFiles\ssm.Ahsm"
 			'Const _BusDatabase As String ="TestFiles\BusDatabase.abdb
 
-            Dim ssm As ISSMTOOL = New SSMTOOL(_SSMMAP, New HVACConstants())
+			Dim ssm As ISSMTOOL = New SSMTOOL(_SSMMAP, New HVACConstants())
 
 
-  ssm.Load( _SSMMAP)
+			ssm.Load(_SSMMAP)
 
 
-   Return ssm
+			Return ssm
+		End Function
+
+		Private Sub Initialise()
 
 
-End Function
+			Dim ssm As ISSMTOOL = GetSSM()
+			Dim elecConsumers As New ElectricalConsumerList(26.3, 0.096, True)
 
-Private sub Initialise()
+			'Dim  hvacMap As New HVACMap("testFiles\TestHvacMap.csv")
+			'hvacMap.Initialise()
+			Dim alternatoMap As New AlternatorMap("testFiles\testAlternatormap.aalt")
+			alternatoMap.Initialise()
 
+			Dim signals = New Signals()
+			signals.EngineSpeed = 2000.RPMtoRad()
 
-Dim ssm As ISSMTOOL = GetSSM()
-Dim elecConsumers As New ElectricalConsumerList(26.3,0.096,True)
+			Dim m0 As New M0_NonSmart_AlternatorsSetEfficiency(elecConsumers, alternatoMap, 26.3.SI(Of Volt), signals, ssm)
 
-'Dim  hvacMap As New HVACMap("testFiles\TestHvacMap.csv")
-'hvacMap.Initialise()
-Dim alternatoMap As New AlternatorMap("testFiles\testAlternatormap.aalt")
-alternatoMap.Initialise()
+			'Results Cards
+			Dim readings = New List(Of SmartResult)
+			readings.Add(New SmartResult(10, 8))
+			readings.Add(New SmartResult(70, 63))
 
-Dim signals = New Signals()
-signals.EngineSpeed=2000
-
-Dim m0 As New M0_NonSmart_AlternatorsSetEfficiency(elecConsumers,alternatoMap,26.3,signals,ssm)
-
-'Results Cards
-Dim readings = new List(of SmartResult)
-readings.Add(new SmartResult(10,8))
-readings.Add(New SmartResult(70,63))
-
-Dim idleResult As New ResultCard(readings)
-Dim tractionResult As New ResultCard(readings)
-Dim overrunResult As New ResultCard(readings)
+			Dim idleResult As New ResultCard(readings)
+			Dim tractionResult As New ResultCard(readings)
+			Dim overrunResult As New ResultCard(readings)
 
 
-  signals.EngineSpeed=2000
-  target = New M0_5_SmartAlternatorSetEfficiency(m0,elecConsumers,alternatoMap,idleResult,tractionResult,overrunResult, signals)
+			signals.EngineSpeed = 2000.RPMtoRad()
+			target = New M0_5_SmartAlternatorSetEfficiency(m0, elecConsumers, alternatoMap, idleResult, tractionResult,
+															overrunResult, signals)
+		End Sub
 
-End Sub
+		<Test()>
+		Public Sub CreateNewTest()
+			Initialise()
+			Assert.IsNotNull(target)
+		End Sub
 
-<Test()> _
-Public Sub CreateNewTest()
-   Initialise()
-   Assert.IsNotNull( target)
-End Sub
+		<Test()>
+		Public Sub SmartIdleCurrentTest()
+			Initialise()
+			Assert.IsNotNull(target)
+		End Sub
 
-<Test()> _
-Public Sub SmartIdleCurrentTest()
-   Initialise()
-   Assert.IsNotNull( target)
-End Sub
+		<Test()>
+		Public Sub SmartTractionCurrentTest()
+			Initialise()
+			Assert.IsNotNull(target)
+		End Sub
 
-<Test()> _
-Public Sub SmartTractionCurrentTest()
-   Initialise()
-   Assert.IsNotNull( target)
-End Sub
+		<Test()>
+		Public Sub SmartOverrunCurrentTest()
+			Initialise()
+			Assert.IsNotNull(target)
+		End Sub
 
-<Test()> _
-Public Sub SmartOverrunCurrentTest()
-   Initialise()
-   Assert.IsNotNull( target)
-End Sub
+		<Test()>
+		Public Sub AlternatorsEfficiencyIdle2000rpmTest()
+			Initialise()
 
-<Test()> _
-Public Sub AlternatorsEfficiencyIdle2000rpmTest()
-   Initialise()
+			Dim expected As Double = 0.6308339
+			Dim actual As Double = target.AlternatorsEfficiencyIdleResultCard()
 
-            Dim expected As Single = 0.6308339
-   Dim actual As Single = target.AlternatorsEfficiencyIdleResultCard()
-
-   Assert.AreEqual(expected, actual)
-   
-
-End Sub
+			Assert.AreEqual(expected, actual, 0.000001)
+		End Sub
 
 
-<Test()> _
-Public Sub AlternatorsEfficiencyTraction2000rpmTest()
-   Initialise()
+		<Test()>
+		Public Sub AlternatorsEfficiencyTraction2000rpmTest()
+			Initialise()
 
-            Dim expected As Single = 0.6308339
-   Dim actual As Single = target.AlternatorsEfficiencyTractionOnResultCard()
+			Dim expected As Double = 0.6308339
+			Dim actual As Double = target.AlternatorsEfficiencyTractionOnResultCard()
 
-   Assert.AreEqual(expected, actual)
-
-End Sub
-
-
-<Test()> _
-Public Sub AlternatorsEfficiencyOverrun2000rpmTest()
-   Initialise()
-
-            Dim expected As Single = 0.6308339
-   Dim actual As Single = target.AlternatorsEfficiencyOverrunResultCard()
-
-   Assert.AreEqual(expected, actual)
-
-End Sub
+			Assert.AreEqual(expected, actual, 0.000001)
+		End Sub
 
 
+		<Test()>
+		Public Sub AlternatorsEfficiencyOverrun2000rpmTest()
+			Initialise()
 
-End Class
+			Dim expected As Double = 0.6308339
+			Dim actual As Double = target.AlternatorsEfficiencyOverrunResultCard()
 
-
+			Assert.AreEqual(expected, actual, 0.000001)
+		End Sub
+	End Class
 End Namespace
-
-
 
 

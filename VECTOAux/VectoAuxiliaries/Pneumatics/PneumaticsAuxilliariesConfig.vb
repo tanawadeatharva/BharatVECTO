@@ -10,52 +10,62 @@
 ' See the LICENSE.txt for the specific language governing permissions and limitations.
 
 Namespace Pneumatics
+	Public Class PneumaticsAuxilliariesConfig
+		Implements IPneumaticsAuxilliariesConfig
 
-Public Class PneumaticsAuxilliariesConfig
-Implements IPneumaticsAuxilliariesConfig
+		Public Property AdBlueNIperMinute As Double Implements IPneumaticsAuxilliariesConfig.AdBlueNIperMinute
 
+		Public Property AirControlledSuspensionNIperMinute As Double _
+			Implements IPneumaticsAuxilliariesConfig.AirControlledSuspensionNIperMinute
 
-        Public Property AdBlueNIperMinute As Single Implements IPneumaticsAuxilliariesConfig.AdBlueNIperMinute
-        Public Property AirControlledSuspensionNIperMinute As Single Implements IPneumaticsAuxilliariesConfig.AirControlledSuspensionNIperMinute
-        Public Property BrakingNoRetarderNIperKG As Single Implements IPneumaticsAuxilliariesConfig.BrakingNoRetarderNIperKG
-        Public Property BrakingWithRetarderNIperKG As Single Implements IPneumaticsAuxilliariesConfig.BrakingWithRetarderNIperKG
-        Public Property BreakingPerKneelingNIperKGinMM As Single Implements IPneumaticsAuxilliariesConfig.BreakingPerKneelingNIperKGinMM
-        Public Property DeadVolBlowOutsPerLitresperHour As Single Implements IPneumaticsAuxilliariesConfig.DeadVolBlowOutsPerLitresperHour
-        Public Property DeadVolumeLitres As Single Implements IPneumaticsAuxilliariesConfig.DeadVolumeLitres
-        Public Property NonSmartRegenFractionTotalAirDemand As Single Implements IPneumaticsAuxilliariesConfig.NonSmartRegenFractionTotalAirDemand
-        Public Property OverrunUtilisationForCompressionFraction As Single Implements IPneumaticsAuxilliariesConfig.OverrunUtilisationForCompressionFraction
-        Public Property PerDoorOpeningNI As Single Implements IPneumaticsAuxilliariesConfig.PerDoorOpeningNI
-        Public Property PerStopBrakeActuationNIperKG As Single Implements IPneumaticsAuxilliariesConfig.PerStopBrakeActuationNIperKG
-        Public Property SmartRegenFractionTotalAirDemand As Single Implements IPneumaticsAuxilliariesConfig.SmartRegenFractionTotalAirDemand
+		Public Property BrakingNoRetarderNIperKG As Double Implements IPneumaticsAuxilliariesConfig.BrakingNoRetarderNIperKG
 
+		Public Property BrakingWithRetarderNIperKG As Double _
+			Implements IPneumaticsAuxilliariesConfig.BrakingWithRetarderNIperKG
 
-        Public Sub New(Optional setToDefaults As Boolean = False)
+		Public Property BreakingPerKneelingNIperKGinMM As Double _
+			Implements IPneumaticsAuxilliariesConfig.BreakingPerKneelingNIperKGinMM
 
-            If setToDefaults Then SetDefaults()
+		Public Property DeadVolBlowOutsPerLitresperHour As Double _
+			Implements IPneumaticsAuxilliariesConfig.DeadVolBlowOutsPerLitresperHour
 
-        End Sub
+		Public Property DeadVolumeLitres As Double Implements IPneumaticsAuxilliariesConfig.DeadVolumeLitres
 
-        Public Sub SetDefaults()
-            AdBlueNIperMinute = 21.25
-            AirControlledSuspensionNIperMinute = 15
-            BrakingNoRetarderNIperKG = 0.00081
-            BrakingWithRetarderNIperKG = 0.0006
-            BreakingPerKneelingNIperKGinMM = 0.000066
-            DeadVolBlowOutsPerLitresperHour = 24
-            DeadVolumeLitres = 30
-            NonSmartRegenFractionTotalAirDemand = 0.26
-            OverrunUtilisationForCompressionFraction = 0.97
-            PerDoorOpeningNI = 12.7
-            PerStopBrakeActuationNIperKG = 0.00064
-            SmartRegenFractionTotalAirDemand = 0.12
-        End Sub
+		Public Property NonSmartRegenFractionTotalAirDemand As Double _
+			Implements IPneumaticsAuxilliariesConfig.NonSmartRegenFractionTotalAirDemand
+
+		Public Property OverrunUtilisationForCompressionFraction As Double _
+			Implements IPneumaticsAuxilliariesConfig.OverrunUtilisationForCompressionFraction
+
+		Public Property PerDoorOpeningNI As Double Implements IPneumaticsAuxilliariesConfig.PerDoorOpeningNI
+
+		Public Property PerStopBrakeActuationNIperKG As Double _
+			Implements IPneumaticsAuxilliariesConfig.PerStopBrakeActuationNIperKG
+
+		Public Property SmartRegenFractionTotalAirDemand As Double _
+			Implements IPneumaticsAuxilliariesConfig.SmartRegenFractionTotalAirDemand
 
 
-End Class
+		Public Sub New(Optional setToDefaults As Boolean = False)
 
+			If setToDefaults Then SetDefaults()
+		End Sub
 
-
+		Public Sub SetDefaults()
+			AdBlueNIperMinute = 21.25
+			AirControlledSuspensionNIperMinute = 15
+			BrakingNoRetarderNIperKG = 0.00081
+			BrakingWithRetarderNIperKG = 0.0006
+			BreakingPerKneelingNIperKGinMM = 0.000066
+			DeadVolBlowOutsPerLitresperHour = 24
+			DeadVolumeLitres = 30
+			NonSmartRegenFractionTotalAirDemand = 0.26
+			OverrunUtilisationForCompressionFraction = 0.97
+			PerDoorOpeningNI = 12.7
+			PerStopBrakeActuationNIperKG = 0.00064
+			SmartRegenFractionTotalAirDemand = 0.12
+		End Sub
+	End Class
 End Namespace
-
 
 

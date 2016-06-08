@@ -67,6 +67,8 @@ namespace TUGraz.VectoCore.Tests.Models.Simulation
 			var job = CreateRun(actual);
 			job.Run();
 
+			Assert.IsTrue(job.FinishedWithoutErrors);
+
 			ResultFileHelper.TestModFile(expected, actual);
 		}
 
@@ -86,10 +88,14 @@ namespace TUGraz.VectoCore.Tests.Models.Simulation
 
 			var run = CreateRun(actual);
 
-			var sim = new JobContainer(new MockSumWriter());
-			sim.AddRun(run);
-			sim.Execute();
-			sim.WaitFinished();
+			var jobContainer = new JobContainer(new MockSumWriter());
+			jobContainer.AddRun(run);
+			jobContainer.Execute();
+			jobContainer.WaitFinished();
+
+			foreach (var r in jobContainer.Runs) {
+				Assert.IsTrue(r.Run.FinishedWithoutErrors, string.Format("{0}", r.ExecException));
+			}
 
 			ResultFileHelper.TestModFile(expected, actual);
 		}
@@ -123,6 +129,10 @@ namespace TUGraz.VectoCore.Tests.Models.Simulation
 			jobContainer.Execute();
 
 			jobContainer.WaitFinished();
+
+			foreach (var run in jobContainer.Runs) {
+				Assert.IsTrue(run.Run.FinishedWithoutErrors, string.Format("{0}", run.ExecException));
+			}
 
 			ResultFileHelper.TestSumFile(@"TestData\Results\EngineOnlyCycles\24t Coach.vsum",
 				@"TestData\Jobs\24t Coach EngineOnly.vsum");

@@ -10,51 +10,44 @@
 ' See the LICENSE.txt for the specific language governing permissions and limitations.
 
 Namespace Electrics
+	Public Class SmartResult
+		Implements IComparable(Of SmartResult)
 
-   Public Class SmartResult
-Implements IComparable(Of SmartResult)
+		Public Property Amps As Double
+		Public Property SmartAmps As Double
 
-   
-   Public Property Amps As Single
-   Public Property SmartAmps As Single
-   
-   'Constructors
-   Public Sub new ()
-     'An empty constructor is requried. Do not remove.
-   End Sub 
-   Public Sub new( amps As Single , smartAmps As single)
+		'Constructors
+		Public Sub new()
+			'An empty constructor is requried. Do not remove.
+		End Sub
 
-      Me.Amps = amps
-      Me.SmartAmps = smartAmps
+		Public Sub New(amps As Double, smartAmps As Double)
 
-    End Sub
-   
-   'Comparison
-   Public Function CompareTo(other As SmartResult) As Integer Implements IComparable(Of SmartResult).CompareTo
+			Me.Amps = amps
+			Me.SmartAmps = smartAmps
+		End Sub
 
-      If other.Amps> Me.Amps then   return -1
-      If other.Amps=Me.Amps then Return 0  
-      
-      Return 1
+		'Comparison
+		Public Function CompareTo(other As SmartResult) As Integer Implements IComparable(Of SmartResult).CompareTo
 
-    End Function
+			If other.Amps > Me.Amps then return - 1
+			If other.Amps = Me.Amps then Return 0
 
-   'Comparison Overrides
-   Public Overrides Function Equals(obj As Object) As Boolean
-            
-     Dim other as SmartResult = Ctype( Obj, SmartResult )
+			Return 1
+		End Function
 
-     Return Me.Amps=other.Amps
+		'Comparison Overrides
+		Public Overrides Function Equals(obj As Object) As Boolean
 
-    End Function
-   Public Overrides Function GetHashCode() As Integer
-     Return 0
-   End Function
+			Dim other as SmartResult = Ctype(Obj, SmartResult)
 
+			Return Me.Amps = other.Amps
+		End Function
 
-End Class
-
+		Public Overrides Function GetHashCode() As Integer
+			Return 0
+		End Function
+	End Class
 End Namespace
-
 
 

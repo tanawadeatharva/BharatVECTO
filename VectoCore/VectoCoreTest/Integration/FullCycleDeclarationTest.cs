@@ -29,15 +29,21 @@
 *   Martin Rexeis, rexeis@ivt.tugraz.at, IVT, Graz University of Technology
 */
 
+using System;
+using System.Data;
 using System.IO;
 using System.Linq;
+using System.Windows.Forms.DataVisualization.Charting;
 using Microsoft.VisualStudio.TestTools.UnitTesting;
 using TUGraz.VectoCommon.Models;
 using TUGraz.VectoCommon.Utils;
 using TUGraz.VectoCore.InputData.FileIO.JSON;
+using TUGraz.VectoCore.Models.Simulation.Data;
 using TUGraz.VectoCore.Models.Simulation.Impl;
 using TUGraz.VectoCore.OutputData;
 using TUGraz.VectoCore.OutputData.FileIO;
+using TUGraz.VectoCore.Tests.Utils;
+using TUGraz.VectoCore.Utils;
 
 namespace TUGraz.VectoCore.Tests.Integration
 {
@@ -174,6 +180,99 @@ namespace TUGraz.VectoCore.Tests.Integration
 			jobContainer.WaitFinished();
 
 			Assert.IsTrue(jobContainer.Runs.All(r => r.Success), string.Concat(jobContainer.Runs.Select(r => r.ExecException)));
+		}
+
+		[TestMethod, TestCategory("LongRunning")]
+		public void Truck40t_Mod1Hz_Test()
+		{
+			var modFileName = "40t_Long_Haul_Truck_RegionalDeliveryFullLoading.vmod";
+			var modFileName1Hz = "40t_Long_Haul_Truck_RegionalDeliveryFullLoading_1Hz.vmod";
+
+			if (File.Exists(modFileName))
+				File.Delete(modFileName);
+
+			if (File.Exists(modFileName1Hz))
+				File.Delete(modFileName1Hz);
+
+			var inputData = JSONInputDataFactory.ReadJsonJob(LongHaulTruckDeclarationJob);
+			var fileWriter = new FileOutputWriter("Truck40t_Mod1Hz_Test.vecto");
+			var factory = new SimulatorFactory(ExecutionMode.Declaration, inputData, fileWriter) {
+				WriteModalResults = true,
+				ModalResults1Hz = false
+			};
+			var factory1Hz = new SimulatorFactory(ExecutionMode.Declaration, inputData, fileWriter) {
+				WriteModalResults = true,
+				ModalResults1Hz = true
+			};
+			var sumData = new SummaryDataContainer(fileWriter);
+			var jobContainer = new JobContainer(sumData);
+			jobContainer.AddRuns(factory);
+
+			var i = 5;
+			jobContainer.Runs[i].Run.Run();
+			Assert.IsTrue(jobContainer.Runs[i].Run.FinishedWithoutErrors,
+				string.Format("{0}", jobContainer.Runs[i].ExecException));
+
+			jobContainer = new JobContainer(sumData);
+			jobContainer.AddRuns(factory1Hz);
+
+			jobContainer.Runs[i].Run.Run();
+			Assert.IsTrue(jobContainer.Runs[i].Run.FinishedWithoutErrors,
+				string.Format("{0}", jobContainer.Runs[i].ExecException));
+
+			var modFile = VectoCSVFile.Read(modFileName);
+			var modFile1Hz = VectoCSVFile.Read(modFileName1Hz);
+
+			// test if line count matches the second count
+			var maxSeconds =
+				(int)Math.Ceiling(modFile.Rows.Cast<DataRow>().Last().ParseDouble(ModalResultField.time.GetShortCaption()));
+			var lineCount1Hz = modFile1Hz.Rows.Count;
+
+			Assert.IsTrue(lineCount1Hz == maxSeconds);
+
+			// test max distance
+			var maxDistance = modFile.Rows.Cast<DataRow>().Last().ParseDouble(ModalResultField.dist.GetShortCaption());
+			var maxDistance1Hz = modFile1Hz.Rows.Cast<DataRow>().Last().ParseDouble(ModalResultField.dist.GetShortCaption());
+			AssertHelper.AreRelativeEqual(maxDistance, maxDistance1Hz);
+
+			// test if interval in 1Hz always is 1
+			Assert.IsTrue(
+				modFile1Hz.Rows.Cast<DataRow>()
+					.All(r => r.ParseDouble(ModalResultField.simulationInterval.GetShortCaption()).IsEqual(1)),
+				"dt must always be 1 second");
+
+			// test if absTime in 1Hz always is a whole number and consecutive
+			Assert.IsTrue(
+				modFile1Hz.Rows.Cast<DataRow>()
+					.Select((r, index) => r.ParseDouble(ModalResultField.time.GetName()).IsEqual(index + 1))
+					.All(p => p), "time must be whole numbers and consecutive");
+
+			// test sum of fuel consumption
+			var sumFuelConsumption = modFile.Rows.Cast<DataRow>().Select(r =>
+				r.ParseDoubleOrGetDefault(ModalResultField.FCWHTCc.GetShortCaption()) *
+				r.ParseDouble(ModalResultField.simulationInterval.GetShortCaption())).Sum();
+			var sumFuelConsumption1Hz =
+				modFile1Hz.Rows.Cast<DataRow>()
+					.Select(r => r.ParseDoubleOrGetDefault(ModalResultField.FCWHTCc.GetShortCaption()))
+					.Sum();
+			AssertHelper.AreRelativeEqual(sumFuelConsumption, sumFuelConsumption1Hz, "Fuel Consumption is not equal", 1e-4);
+
+			// test speed not negative
+			Assert.IsTrue(
+				modFile1Hz.Rows.Cast<DataRow>()
+					.All(r => r.ParseDouble(ModalResultField.v_act.GetShortCaption()).IsGreaterOrEqual(0)),
+				"v_act must not be negative.");
+
+			// test fuel consumption not negative
+			Assert.IsTrue(
+				modFile1Hz.Rows.Cast<DataRow>()
+					.All(r => r.ParseDouble(ModalResultField.FCWHTCc.GetShortCaption()).IsGreaterOrEqual(0)),
+				"fuel consumption must not be negative.");
+
+			// last v_act entry must be the same as original
+			var v_act = modFile.Rows.Cast<DataRow>().Last().ParseDouble((int)ModalResultField.v_act).SI<MeterPerSecond>();
+			var v_act1Hz = modFile1Hz.Rows.Cast<DataRow>().Last().ParseDouble((int)ModalResultField.v_act).SI<MeterPerSecond>();
+			AssertHelper.AreRelativeEqual(v_act, v_act1Hz, "end velocity is not equal", 1e-4);
 		}
 
 		[TestMethod, TestCategory("LongRunning")]

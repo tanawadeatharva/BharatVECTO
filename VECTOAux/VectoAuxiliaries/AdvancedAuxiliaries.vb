@@ -15,6 +15,7 @@ Imports VectoAuxiliaries.Pneumatics
 Imports VectoAuxiliaries.Hvac
 Imports VectoAuxiliaries.DownstreamModules
 Imports System.Windows.Forms
+Imports TUGraz.VectoCommon.Utils
 
 
 ''' <summary>
@@ -61,7 +62,7 @@ Public Class AdvancedAuxiliaries
 
 	'Event Handler top level bubble.
 	Public Sub VectoEventHandler(ByRef sender As Object, message As String, messageType As AdvancedAuxiliaryMessageType) _
-		Handles CompressorMap.AuxiliaryEvent, AlternatorMap.AuxiliaryEvent, SSMTOOL.Message, ssmToolModule14.Message
+		Handles compressorMap.AuxiliaryEvent, alternatorMap.AuxiliaryEvent, ssmTool.Message, ssmToolModule14.Message
 
 		If Signals.AuxiliaryEventReportingLevel <= messageType Then
 
@@ -137,31 +138,31 @@ Public Class AdvancedAuxiliaries
 
 		M0 = New M0_NonSmart_AlternatorsSetEfficiency(auxConfig.ElectricalUserInputsConfig.ElectricalConsumers,
 													alternatorMap,
-													auxConfig.ElectricalUserInputsConfig.PowerNetVoltage,
+													auxConfig.ElectricalUserInputsConfig.PowerNetVoltage.SI(Of Volt),
 													Signals,
 													ssmTool)
 
 
-		M05 = New M0_5_SmartAlternatorSetEfficiency(M0,
-													auxConfig.ElectricalUserInputsConfig.ElectricalConsumers,
-													alternatorMap,
-													auxConfig.ElectricalUserInputsConfig.ResultCardIdle,
-													auxConfig.ElectricalUserInputsConfig.ResultCardTraction,
-													auxConfig.ElectricalUserInputsConfig.ResultCardOverrun, Signals)
-
+		Dim M05tmp As M0_5_SmartAlternatorSetEfficiency = New M0_5_SmartAlternatorSetEfficiency(M0,
+																								auxConfig.ElectricalUserInputsConfig.ElectricalConsumers,
+																								alternatorMap,
+																								auxConfig.ElectricalUserInputsConfig.ResultCardIdle,
+																								auxConfig.ElectricalUserInputsConfig.ResultCardTraction,
+																								auxConfig.ElectricalUserInputsConfig.ResultCardOverrun, Signals)
+		M05 = M05tmp
 
 		M1 = New M1_AverageHVACLoadDemand(M0,
 										auxConfig.ElectricalUserInputsConfig.AlternatorGearEfficiency,
 										auxConfig.PneumaticUserInputsConfig.CompressorGearEfficiency,
-										auxConfig.ElectricalUserInputsConfig.PowerNetVoltage,
+										auxConfig.ElectricalUserInputsConfig.PowerNetVoltage.SI(Of Volt),
 										Signals,
-										ssmTOOL)
+										ssmTool)
 
 
 		M2 = New M2_AverageElectricalLoadDemand(auxConfig.ElectricalUserInputsConfig.ElectricalConsumers,
 												M0,
 												auxConfig.ElectricalUserInputsConfig.AlternatorGearEfficiency,
-												auxConfig.ElectricalUserInputsConfig.PowerNetVoltage, Signals)
+												auxConfig.ElectricalUserInputsConfig.PowerNetVoltage.SI(Of Volt), Signals)
 
 
 		M3 = New M3_AveragePneumaticLoadDemand(auxConfig.PneumaticUserInputsConfig,
@@ -174,7 +175,7 @@ Public Class AdvancedAuxiliaries
 
 		M4 = New M4_AirCompressor(compressorMap, auxConfig.PneumaticUserInputsConfig.CompressorGearRatio,
 								auxConfig.PneumaticUserInputsConfig.CompressorGearEfficiency, Signals)
-		M5 = New M5__SmartAlternatorSetGeneration(M05, auxConfig.ElectricalUserInputsConfig.PowerNetVoltage,
+		M5 = New M5__SmartAlternatorSetGeneration(M05tmp, auxConfig.ElectricalUserInputsConfig.PowerNetVoltage.SI(Of Volt),
 												auxConfig.ElectricalUserInputsConfig.AlternatorGearEfficiency)
 		M6 = New M6(M1, M2, M3, M4, M5, Signals)
 		M7 = New M7(M5, M6, Signals)
@@ -227,7 +228,7 @@ Public Class AdvancedAuxiliaries
 		Return True
 	End Function
 
-	Public Function CycleStep(seconds As Double, ByRef message As String) As Boolean _
+	Public Function CycleStep(seconds As Second, ByRef message As String) As Boolean _
 		Implements VectoAuxiliaries.IAdvancedAuxiliaries.CycleStep
 
 		Try
@@ -235,7 +236,7 @@ Public Class AdvancedAuxiliaries
 			M10.CycleStep(seconds)
 			M11.CycleStep(seconds)
 
-			Signals.CurrentCycleTimeInSeconds += seconds
+			Signals.CurrentCycleTimeInSeconds += seconds.Value()
 		Catch ex As Exception
 			MessageBox.Show("Exception: " + ex.Message + " Stack Trace: " + ex.StackTrace)
 			Return False
@@ -271,30 +272,22 @@ Public Class AdvancedAuxiliaries
 		Throw New NotImplementedException
 	End Function
 
-	Public ReadOnly Property TotalFuelGRAMS As Single Implements VectoAuxiliaries.IAdvancedAuxiliaries.TotalFuelGRAMS
+	Public ReadOnly Property TotalFuelGRAMS As Kilogram Implements VectoAuxiliaries.IAdvancedAuxiliaries.TotalFuelGRAMS
 		Get
 			If Not M13 Is Nothing Then
-
 				Return M14.TotalCycleFCGrams
-
 			Else
-
-				Return 0
-
+				Return 0.SI(Of Kilogram)()
 			End If
 		End Get
 	End Property
 
-	Public ReadOnly Property TotalFuelLITRES As Single Implements VectoAuxiliaries.IAdvancedAuxiliaries.TotalFuelLITRES
+	Public ReadOnly Property TotalFuelLITRES As Liter Implements VectoAuxiliaries.IAdvancedAuxiliaries.TotalFuelLITRES
 		Get
 			If Not M14 Is Nothing Then
-
 				Return M14.TotalCycleFCLitres
-
 			Else
-
-				Return 0
-
+				Return 0.SI(Of Liter)()
 			End If
 		End Get
 	End Property
@@ -343,62 +336,62 @@ Public Class AdvancedAuxiliaries
 
 	'Diagnostics outputs for testing purposes in Vecto.
 	'Eventually this can be removed or rendered non effective to reduce calculation load on the model.
-	Public ReadOnly Property AA_NonSmartAlternatorsEfficiency As Single? _
+	Public ReadOnly Property AA_NonSmartAlternatorsEfficiency As Double _
 		Implements IAdvancedAuxiliaries.AA_NonSmartAlternatorsEfficiency
 		Get
 			Return M0.AlternatorsEfficiency
 		End Get
 	End Property
 
-	Public ReadOnly Property AA_SmartIdleCurrent_Amps As Single? Implements IAdvancedAuxiliaries.AA_SmartIdleCurrent_Amps
+	Public ReadOnly Property AA_SmartIdleCurrent_Amps As Ampere Implements IAdvancedAuxiliaries.AA_SmartIdleCurrent_Amps
 		Get
 			Return M05.SmartIdleCurrent
 		End Get
 	End Property
 
-	Public ReadOnly Property AA_SmartIdleAlternatorsEfficiency As Single? _
+	Public ReadOnly Property AA_SmartIdleAlternatorsEfficiency As Double _
 		Implements IAdvancedAuxiliaries.AA_SmartIdleAlternatorsEfficiency
 		Get
 			Return M05.AlternatorsEfficiencyIdleResultCard
 		End Get
 	End Property
 
-	Public ReadOnly Property AA_SmartTractionCurrent_Amps As Single? _
+	Public ReadOnly Property AA_SmartTractionCurrent_Amps As Ampere _
 		Implements IAdvancedAuxiliaries.AA_SmartTractionCurrent_Amps
 		Get
 			Return M05.SmartTractionCurrent
 		End Get
 	End Property
 
-	Public ReadOnly Property AA_SmartTractionAlternatorEfficiency As Single? _
+	Public ReadOnly Property AA_SmartTractionAlternatorEfficiency As Double _
 		Implements IAdvancedAuxiliaries.AA_SmartTractionAlternatorEfficiency
 		Get
 			Return M05.AlternatorsEfficiencyTractionOnResultCard
 		End Get
 	End Property
 
-	Public ReadOnly Property AA_SmartOverrunCurrent_Amps As Single? _
+	Public ReadOnly Property AA_SmartOverrunCurrent_Amps As Ampere _
 		Implements IAdvancedAuxiliaries.AA_SmartOverrunCurrent_Amps
 		Get
 			Return M05.SmartOverrunCurrent
 		End Get
 	End Property
 
-	Public ReadOnly Property AA_SmartOverrunAlternatorEfficiency As Single? _
+	Public ReadOnly Property AA_SmartOverrunAlternatorEfficiency As Double _
 		Implements IAdvancedAuxiliaries.AA_SmartOverrunAlternatorEfficiency
 		Get
 			Return M05.AlternatorsEfficiencyOverrunResultCard
 		End Get
 	End Property
 
-	Public ReadOnly Property AA_CompressorFlowRate_LitrePerSec As Single? _
+	Public ReadOnly Property AA_CompressorFlowRate_LitrePerSec As NormLiterPerSecond _
 		Implements IAdvancedAuxiliaries.AA_CompressorFlowRate_LitrePerSec
 		Get
 			Return M4.GetFlowRate
 		End Get
 	End Property
 
-	Public ReadOnly Property AA_OverrunFlag As Integer? Implements IAdvancedAuxiliaries.AA_OverrunFlag
+	Public ReadOnly Property AA_OverrunFlag As Boolean Implements IAdvancedAuxiliaries.AA_OverrunFlag
 		Get
 			Return M6.OverrunFlag
 		End Get
@@ -409,71 +402,71 @@ Public Class AdvancedAuxiliaries
 
 			Return _
 				If _
-					(signals.EngineSpeed <= _signals.EngineIdleSpeed AndAlso (Not signals.ClutchEngaged OrElse signals.InNeutral), 1, 0)
+					(Signals.EngineSpeed <= _Signals.EngineIdleSpeed AndAlso (Not Signals.ClutchEngaged OrElse Signals.InNeutral), 1, 0)
 		End Get
 	End Property
 
-	Public ReadOnly Property AA_CompressorFlag As Integer? Implements IAdvancedAuxiliaries.AA_CompressorFlag
+	Public ReadOnly Property AA_CompressorFlag As Boolean Implements IAdvancedAuxiliaries.AA_CompressorFlag
 		Get
 			Return M8.CompressorFlag
 		End Get
 	End Property
 
-	Public ReadOnly Property AA_TotalCycleFC_Grams As Single? Implements IAdvancedAuxiliaries.AA_TotalCycleFC_Grams
+	Public ReadOnly Property AA_TotalCycleFC_Grams As Kilogram Implements IAdvancedAuxiliaries.AA_TotalCycleFC_Grams
 		Get
 			Return M14.TotalCycleFCGrams
 		End Get
 	End Property
 
-	Public ReadOnly Property AA_TotalCycleFC_Litres As Single? Implements IAdvancedAuxiliaries.AA_TotalCycleFC_Litres
+	Public ReadOnly Property AA_TotalCycleFC_Litres As Liter Implements IAdvancedAuxiliaries.AA_TotalCycleFC_Litres
 		Get
 			Return M14.TotalCycleFCLitres
 		End Get
 	End Property
 
-	Public ReadOnly Property AuxiliaryPowerAtCrankWatts As Single _
+	Public ReadOnly Property AuxiliaryPowerAtCrankWatts As Watt _
 		Implements IAdvancedAuxiliaries.AuxiliaryPowerAtCrankWatts
 		Get
 			Return M8.AuxPowerAtCrankFromElectricalHVACAndPneumaticsAncillaries
 		End Get
 	End Property
 
-	Public ReadOnly Property AA_AveragePowerDemandCrankHVACMechanicals As Single? _
+	Public ReadOnly Property AA_AveragePowerDemandCrankHVACMechanicals As Watt _
 		Implements IAdvancedAuxiliaries.AA_AveragePowerDemandCrankHVACMechanicals
 		Get
 			Return M1.AveragePowerDemandAtCrankFromHVACMechanicalsWatts()
 		End Get
 	End Property
 
-	Public ReadOnly Property AA_AveragePowerDemandCrankHVACElectricals As Single? _
+	Public ReadOnly Property AA_AveragePowerDemandCrankHVACElectricals As Watt _
 		Implements IAdvancedAuxiliaries.AA_AveragePowerDemandCrankHVACElectricals
 		Get
 			Return M1.AveragePowerDemandAtCrankFromHVACElectricsWatts()
 		End Get
 	End Property
 
-	Public ReadOnly Property AA_AveragePowerDemandCrankElectrics As Single? _
+	Public ReadOnly Property AA_AveragePowerDemandCrankElectrics As Watt _
 		Implements IAdvancedAuxiliaries.AA_AveragePowerDemandCrankElectrics
 		Get
 			Return M2.GetAveragePowerAtCrankFromElectrics()
 		End Get
 	End Property
 
-	Public ReadOnly Property AA_AveragePowerDemandCrankPneumatics As Single? _
+	Public ReadOnly Property AA_AveragePowerDemandCrankPneumatics As Watt _
 		Implements IAdvancedAuxiliaries.AA_AveragePowerDemandCrankPneumatics
 		Get
 			Return M3.GetAveragePowerDemandAtCrankFromPneumatics()
 		End Get
 	End Property
 
-	Public ReadOnly Property AA_TotalCycleFuelConsumptionCompressorOff As Single? _
+	Public ReadOnly Property AA_TotalCycleFuelConsumptionCompressorOff As Kilogram _
 		Implements IAdvancedAuxiliaries.AA_TotalCycleFuelConsumptionCompressorOff
 		Get
 			Return M9.TotalCycleFuelConsumptionCompressorOffContinuously
 		End Get
 	End Property
 
-	Public ReadOnly Property AA_TotalCycleFuelConsumptionCompressorOn As Single? _
+	Public ReadOnly Property AA_TotalCycleFuelConsumptionCompressorOn As Kilogram _
 		Implements IAdvancedAuxiliaries.AA_TotalCycleFuelConsumptionCompressorOn
 		Get
 			Return M9.TotalCycleFuelConsumptionCompressorOnContinuously
@@ -484,57 +477,57 @@ Public Class AdvancedAuxiliaries
 	'TODO:REMOVE WHEN TESTING IS COMPLETE
 	'PURE DIAGNOSTICS SHOULD ONLY BE USED IN  MOD FOR ENGINEERING TESTS
 
-	Public ReadOnly Property AA_D_M10_INTERP1 As Single Implements IAdvancedAuxiliaries.AA_D_M12_INTERP1
+	Public ReadOnly Property AA_D_M12_INTERP1 As Kilogram Implements IAdvancedAuxiliaries.AA_D_M12_INTERP1
 		Get
-			Return M12.INTRP1
+			Return M12.INTRP1()
 		End Get
 	End Property
 
-	Public ReadOnly Property AA_D_M10_INTERP2 As Single Implements IAdvancedAuxiliaries.AA_D_M12_INTERP2
+	Public ReadOnly Property AA_D_M12_INTERP2 As Kilogram Implements IAdvancedAuxiliaries.AA_D_M12_INTERP2
 		Get
-			Return M12.INTRP2
+			Return M12.INTRP2()
 		End Get
 	End Property
 
-	Public ReadOnly Property AA_D_M12_P1X As Single Implements IAdvancedAuxiliaries.AA_D_M12_P1X
+	Public ReadOnly Property AA_D_M12_P1X As Joule Implements IAdvancedAuxiliaries.AA_D_M12_P1X
 		Get
-			Return M12.P1X
+			Return M12.P1X()
 		End Get
 	End Property
 
-	Public ReadOnly Property AA_D_M12_P1Y As Single Implements IAdvancedAuxiliaries.AA_D_M12_P1Y
+	Public ReadOnly Property AA_D_M12_P1Y As Kilogram Implements IAdvancedAuxiliaries.AA_D_M12_P1Y
 		Get
-			Return M12.P1Y
+			Return M12.P1Y()
 		End Get
 	End Property
 
-	Public ReadOnly Property AA_D_M12_P2X As Single Implements IAdvancedAuxiliaries.AA_D_M12_P2X
+	Public ReadOnly Property AA_D_M12_P2X As Joule Implements IAdvancedAuxiliaries.AA_D_M12_P2X
 		Get
-			Return M12.P2X
+			Return M12.P2X()
 		End Get
 	End Property
 
-	Public ReadOnly Property AA_D_M12_P2Y As Single Implements IAdvancedAuxiliaries.AA_D_M12_P2Y
+	Public ReadOnly Property AA_D_M12_P2Y As Kilogram Implements IAdvancedAuxiliaries.AA_D_M12_P2Y
 		Get
-			Return M12.P2Y
+			Return M12.P2Y()
 		End Get
 	End Property
 
-	Public ReadOnly Property AA_D_M12_P3X As Single Implements IAdvancedAuxiliaries.AA_D_M12_P3X
+	Public ReadOnly Property AA_D_M12_P3X As Joule Implements IAdvancedAuxiliaries.AA_D_M12_P3X
 		Get
-			Return M12.P3X
+			Return M12.P3X()
 		End Get
 	End Property
 
-	Public ReadOnly Property AA_D_M12_P3Y As Single Implements IAdvancedAuxiliaries.AA_D_M12_P3Y
+	Public ReadOnly Property AA_D_M12_P3Y As Kilogram Implements IAdvancedAuxiliaries.AA_D_M12_P3Y
 		Get
-			Return M12.P3Y
+			Return M12.P3Y()
 		End Get
 	End Property
 
-	Public ReadOnly Property AA_D_M12_XTAIN As Single Implements IAdvancedAuxiliaries.AA_D_M12_XTAIN
+	Public ReadOnly Property AA_D_M12_XTAIN As Joule Implements IAdvancedAuxiliaries.AA_D_M12_XTAIN
 		Get
-			Return M12.XTAIN
+			Return M12.XTAIN()
 		End Get
 	End Property
 End Class

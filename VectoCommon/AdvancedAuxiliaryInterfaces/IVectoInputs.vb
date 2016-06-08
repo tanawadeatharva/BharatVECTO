@@ -8,6 +8,7 @@
 '   WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
 '
 ' See the LICENSE.txt for the specific language governing permissions and limitations.
+Imports TUGraz.VectoCommon.Utils
 
 Public Interface IVectoInputs
 	''' <summary>
@@ -16,7 +17,7 @@ Public Interface IVectoInputs
 	''' <value></value>
 	''' <returns></returns>
 	''' <remarks></remarks>
-	Property VehicleWeightKG As Single
+	Property VehicleWeightKG As Kilogram
 
 	''' <summary>
 	''' Cycle ( Urban, Interurban etc )
@@ -32,7 +33,7 @@ Public Interface IVectoInputs
 	''' <value></value>
 	''' <returns></returns>
 	''' <remarks></remarks>
-	Property PowerNetVoltage As Single
+	Property PowerNetVoltage As Volt
 
 	''' <summary>
 	''' Fuel Map Used in Vecto.
@@ -50,5 +51,5 @@ Public Interface IVectoInputs
 	''' <value></value>
 	''' <returns></returns>
 	''' <remarks></remarks>
-	Property FuelDensity As Double
+	Property FuelDensity As KilogramPerCubicMeter
 End Interface

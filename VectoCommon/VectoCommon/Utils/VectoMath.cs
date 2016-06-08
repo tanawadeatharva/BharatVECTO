@@ -58,20 +58,23 @@ namespace TUGraz.VectoCore.Utils
 		public static TResult Interpolate<T, TResult>(T x1, T x2, TResult y1, TResult y2, T xint) where T : SI
 			where TResult : SIBase<TResult>
 		{
-			return ((xint - x1) * (y2 - y1) / (x2 - x1) + y1).Cast<TResult>();
+			return Interpolate(x1.Value(), x2.Value(), y1.Value(), y2.Value(), xint.Value()).SI<TResult>();
 		}
 
-
-		public static double Interpolate<T>(T x1, T x2, double y1, double y2, T xint)
-			where T : SI
+		public static double Interpolate<T>(T x1, T x2, double y1, double y2, T xint) where T : SI
 		{
-			return (((xint - x1) * (y2 - y1) / (x2 - x1)).Cast<Scalar>() + y1).Value();
+			return Interpolate(x1.Value(), x2.Value(), y1, y2, xint.Value());
 		}
 
 		public static TResult Interpolate<TResult>(double x1, double x2, TResult y1, TResult y2, double xint)
 			where TResult : SIBase<TResult>
 		{
-			return ((xint - x1) * (y2 - y1) / (x2 - x1) + y1).Cast<TResult>();
+			return Interpolate(x1, x2, y1.Value(), y2.Value(), xint).SI<TResult>();
+		}
+
+		public static double Interpolate(Point p1, Point p2, double x)
+		{
+			return Interpolate(p1.X, p2.X, p1.Y, p2.Y, x);
 		}
 
 		/// <summary>
@@ -79,12 +82,7 @@ namespace TUGraz.VectoCore.Utils
 		/// </summary>
 		public static double Interpolate(double x1, double x2, double y1, double y2, double xint)
 		{
-			return ((xint - x1) * (y2 - y1) / (x2 - x1) + y1);
-		}
-
-		public static double Interpolate(Point p1, Point p2, double x)
-		{
-			return Interpolate(p1.X, p2.X, p1.Y, p2.Y, x);
+			return (xint - x1) * (y2 - y1) / (x2 - x1) + y1;
 		}
 
 		/// <summary>
@@ -256,6 +254,11 @@ namespace TUGraz.VectoCore.Utils
 			// (the second solution means that you reach negative speed)
 			retVal.SimulationInterval = solutions.Where(x => x >= 0).Min().SI<Second>();
 			return retVal;
+		}
+
+		public static T Ceiling<T>(T si) where T : SIBase<T>
+		{
+			return Math.Ceiling(si.Value()).SI<T>();
 		}
 	}
 

@@ -189,6 +189,26 @@ namespace TUGraz.VectoCommon.Utils
 			}
 		}
 
+		public static TSource MaxBy<TSource>(this IEnumerable<TSource> source,
+			Func<TSource, IComparable> projectionToComparable)
+		{
+			using (var e = source.GetEnumerator()) {
+				if (!e.MoveNext()) {
+					throw new InvalidOperationException("Sequence is empty.");
+				}
+				var max = e.Current;
+				var maxProjection = projectionToComparable(e.Current);
+
+				while (e.MoveNext()) {
+					var currentProjection = projectionToComparable(e.Current);
+					if (currentProjection.CompareTo(maxProjection) > 0) {
+						max = e.Current;
+						maxProjection = currentProjection;
+					}
+				}
+				return max;
+			}
+		}
 
 		public static IEnumerable<TResult> Pairwise<TSource, TResult>(this IEnumerable<TSource> source,
 			Func<TSource, TSource, TResult> resultSelector)

@@ -9,7 +9,9 @@
 '
 ' See the LICENSE.txt for the specific language governing permissions and limitations.
 
+Imports System.Globalization
 Imports System.IO
+Imports TUGraz.VectoCommon.Utils
 
 Namespace Pneumatics
 	''' <summary>
@@ -21,7 +23,7 @@ Namespace Pneumatics
 					IAuxiliaryEvent
 
 		Private ReadOnly filePath As String
-		Private _averagePowerDemandPerCompressorUnitFlowRateLitresperSec As Single
+		Private _averagePowerDemandPerCompressorUnitFlowRateLitresperSec As Double
 		Private _MapBoundariesExceeded As Boolean
 
 		''' <summary>
@@ -35,7 +37,7 @@ Namespace Pneumatics
 		Private map As Dictionary(Of Integer, CompressorMapValues)
 
 		'Returns the AveragePowerDemand  per unit flow rate in seconds.
-		Public Function AveragePowerDemandPerCompressorUnitFlowRate() As Single _
+		Public Function GetAveragePowerDemandPerCompressorUnitFlowRate() As Double _
 			Implements ICompressorMap.GetAveragePowerDemandPerCompressorUnitFlowRate
 
 			Return _averagePowerDemandPerCompressorUnitFlowRateLitresperSec
@@ -72,11 +74,18 @@ Namespace Pneumatics
 					For Each line As String In lines
 						If Not firstline Then
 							'split the line
-							Dim elements() As String = line.Split(New Char() {","}, StringSplitOptions.RemoveEmptyEntries)
+							Dim elements() As String = line.Split(New Char() {","c}, StringSplitOptions.RemoveEmptyEntries)
 							'4 entries per line required
 							If (elements.Length <> 4) Then Throw New ArgumentException("Incorrect number of values in csv file")
 							'add values to map
-							map.Add(elements(0), New CompressorMapValues(elements(1), elements(2), elements(3)))
+							Try
+								map.Add(Integer.Parse(elements(0)),
+										New CompressorMapValues(Double.Parse(elements(1), CultureInfo.InvariantCulture).SI(Of NormLiterPerSecond),
+																Double.Parse(elements(2), CultureInfo.InvariantCulture).SI(Of Watt),
+																Double.Parse(elements(3), CultureInfo.InvariantCulture).SI(Of Watt)))
+							Catch fe As FormatException
+								Throw New InvalidCastException(String.Format("Compresor Map: line '{0}", line), fe)
+							End Try
 						Else
 							firstline = False
 						End If
@@ -85,9 +94,10 @@ Namespace Pneumatics
 
 				'*********************************************************************
 				'Calculate the Average Power Demand Per Compressor Unit FlowRate / per second.
-				Dim powerDividedByFlowRateSum As Single = 0
+				Dim powerDividedByFlowRateSum As Double = 0
 				For Each speed As KeyValuePair(Of Integer, CompressorMapValues) In map
-					powerDividedByFlowRateSum += (speed.Value.PowerCompressorOn - speed.Value.PowerCompressorOff) / speed.Value.FlowRate
+					powerDividedByFlowRateSum += (speed.Value.PowerCompressorOn - speed.Value.PowerCompressorOff).Value() /
+												speed.Value.FlowRate.Value()
 				Next
 
 				'Map in Litres Per Minute, so * 60 to get per second, calculated only once at initialisation.
@@ -108,7 +118,7 @@ Namespace Pneumatics
 		''' <param name="rpm">compressor rotation speed</param>
 		''' <returns></returns>
 		''' <remarks>Single</remarks>
-		Public Function GetFlowRate(ByVal rpm As Double) As Single Implements ICompressorMap.GetFlowRate
+		Public Function GetFlowRate(ByVal rpm As Double) As NormLiterPerSecond Implements ICompressorMap.GetFlowRate
 			Dim val As CompressorMapValues = InterpolatedTuple(rpm)
 			Return val.FlowRate
 		End Function
@@ -119,7 +129,7 @@ Namespace Pneumatics
 		''' <param name="rpm">compressor rotation speed</param>
 		''' <returns></returns>
 		''' <remarks>Single</remarks>
-		Public Function GetPowerCompressorOn(ByVal rpm As Double) As Single Implements ICompressorMap.GetPowerCompressorOn
+		Public Function GetPowerCompressorOn(ByVal rpm As Double) As Watt Implements ICompressorMap.GetPowerCompressorOn
 			Dim val As CompressorMapValues = InterpolatedTuple(rpm)
 			Return val.PowerCompressorOn
 		End Function
@@ -130,7 +140,7 @@ Namespace Pneumatics
 		''' <param name="rpm">compressor rotation speed</param>
 		''' <returns></returns>
 		''' <remarks>Single</remarks>
-		Public Function GetPowerCompressorOff(ByVal rpm As Double) As Single Implements ICompressorMap.GetPowerCompressorOff
+		Public Function GetPowerCompressorOff(ByVal rpm As Double) As Watt Implements ICompressorMap.GetPowerCompressorOff
 			Dim val As CompressorMapValues = InterpolatedTuple(rpm)
 			Return val.PowerCompressorOff
 		End Function
@@ -160,8 +170,9 @@ Namespace Pneumatics
 			End If
 
 			'If supplied rpm is a key, we can just return the appropriate tuple
-			If map.ContainsKey(rpm) Then
-				Return map(rpm)
+			Dim intRpm As Integer = CType(rpm, Integer)
+			If rpm.IsEqual(intRpm) AndAlso map.ContainsKey(intRpm) Then
+				Return map(intRpm)
 			End If
 
 			'Not a key value, interpolate
@@ -170,20 +181,20 @@ Namespace Pneumatics
 			Dim post As KeyValuePair(Of Integer, CompressorMapValues) = (From m In map Where m.Key > rpm Select m).First()
 
 			'get the delta values for rpm and the map values
-			Dim dRpm As Integer = post.Key - pre.Key
-			Dim dFlowRate As Single = post.Value.FlowRate - pre.Value.FlowRate
-			Dim dPowerOn As Single = post.Value.PowerCompressorOn - pre.Value.PowerCompressorOn
-			Dim dPowerOff As Single = post.Value.PowerCompressorOff - pre.Value.PowerCompressorOff
+			Dim dRpm As Double = post.Key - pre.Key
+			Dim dFlowRate As NormLiterPerSecond = post.Value.FlowRate - pre.Value.FlowRate
+			Dim dPowerOn As Watt = post.Value.PowerCompressorOn - pre.Value.PowerCompressorOn
+			Dim dPowerOff As Watt = post.Value.PowerCompressorOff - pre.Value.PowerCompressorOff
 
 			'calculate the slopes
-			Dim flowSlope As Single = dFlowRate / dRpm
-			Dim powerOnSlope As Single = dPowerOn / dRpm
-			Dim powerOffSlope As Single = dPowerOff / dRpm
+			Dim flowSlope As Double = dFlowRate.Value() / dRpm
+			Dim powerOnSlope As Double = dPowerOn.Value() / dRpm
+			Dim powerOffSlope As Double = dPowerOff.Value() / dRpm
 
 			'calculate the new values
-			Dim flowRate As Single = ((rpm - pre.Key) * flowSlope) + pre.Value.FlowRate
-			Dim powerCompressorOn As Single = ((rpm - pre.Key) * powerOnSlope) + pre.Value.PowerCompressorOn
-			Dim powerCompressorOff As Single = ((rpm - pre.Key) * powerOffSlope) + pre.Value.PowerCompressorOff
+			Dim flowRate As NormLiterPerSecond = (((rpm - pre.Key) * flowSlope).SI(Of NormLiterPerSecond)() + pre.Value.FlowRate)
+			Dim powerCompressorOn As Watt = (((rpm - pre.Key) * powerOnSlope).SI(Of Watt)() + pre.Value.PowerCompressorOn)
+			Dim powerCompressorOff As Watt = (((rpm - pre.Key) * powerOffSlope).SI(Of Watt)() + pre.Value.PowerCompressorOff)
 
 			'Build and return a new CompressorMapValues instance
 			Return New CompressorMapValues(flowRate, powerCompressorOn, powerCompressorOff)
@@ -203,19 +214,19 @@ Namespace Pneumatics
 			''' Compressor flowrate
 			''' </summary>
 			''' <remarks></remarks>
-			Public ReadOnly FlowRate As Single
+			Public ReadOnly FlowRate As NormLiterPerSecond
 
 			''' <summary>
 			''' Power, compressor on
 			''' </summary>
 			''' <remarks></remarks>
-			Public ReadOnly PowerCompressorOn As Single
+			Public ReadOnly PowerCompressorOn As Watt
 
 			''' <summary>
 			''' Power compressor off
 			''' </summary>
 			''' <remarks></remarks>
-			Public ReadOnly PowerCompressorOff As Single
+			Public ReadOnly PowerCompressorOff As Watt
 
 			''' <summary>
 			''' Creates a new instance of CompressorMapValues
@@ -224,7 +235,8 @@ Namespace Pneumatics
 			''' <param name="powerCompressorOn">power - compressor on</param>
 			''' <param name="powerCompressorOff">power - compressor off</param>
 			''' <remarks></remarks>
-			Public Sub New(ByVal flowRate As Single, ByVal powerCompressorOn As Single, ByVal powerCompressorOff As Single)
+			Public Sub New(ByVal flowRate As NormLiterPerSecond, ByVal powerCompressorOn As Watt,
+							ByVal powerCompressorOff As Watt)
 				Me.FlowRate = flowRate
 				Me.PowerCompressorOn = powerCompressorOn
 				Me.PowerCompressorOff = powerCompressorOff

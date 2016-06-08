@@ -265,7 +265,6 @@ namespace TUGraz.VectoCore.InputData.Reader.DataObjectAdaper
 			return retVal;
 		}
 
-
 		private void WarnDeclarationMode(string inputData)
 		{
 			Log.Warn("{0} not in Declaration Mode!", inputData);
@@ -275,7 +274,6 @@ namespace TUGraz.VectoCore.InputData.Reader.DataObjectAdaper
 		{
 			return SetCommonRetarderData(retarder, vehicle);
 		}
-
 
 		public static List<CrossWindCorrectionCurveReader.CrossWindCorrectionEntry> GetDeclarationAirResistanceCurve(
 			VehicleCategory vehicleCategory, SquareMeter aerodynamicDragAera)

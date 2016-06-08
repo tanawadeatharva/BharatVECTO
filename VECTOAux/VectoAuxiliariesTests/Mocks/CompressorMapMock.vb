@@ -1,4 +1,5 @@
-﻿Imports VectoAuxiliaries
+﻿Imports TUGraz.VectoCommon.Utils
+Imports VectoAuxiliaries
 Imports VectoAuxiliaries.Pneumatics
 
 Namespace Mocks
@@ -19,20 +20,20 @@ Namespace Mocks
 			End If
 		End Function
 
-		Public Function GetFlowRate(ByVal rpm As Double) As Single Implements ICompressorMap.GetFlowRate
-			Return 2.0
+		Public Function GetFlowRate(ByVal rpm As Double) As NormLiterPerSecond Implements ICompressorMap.GetFlowRate
+			Return 2.0.SI(Of NormLiterPerSecond)()
 		End Function
 
-		Public Function GetPowerCompressorOn(ByVal rpm As Double) As Single Implements ICompressorMap.GetPowerCompressorOn
-			Return 8.0
+		Public Function GetPowerCompressorOn(ByVal rpm As Double) As Watt Implements ICompressorMap.GetPowerCompressorOn
+			Return 8.0.SI(Of Watt)()
 		End Function
 
-		Public Function GetPowerCompressorOff(ByVal rpm As Double) As Single Implements ICompressorMap.GetPowerCompressorOff
-			Return 5.0
+		Public Function GetPowerCompressorOff(ByVal rpm As Double) As Watt Implements ICompressorMap.GetPowerCompressorOff
+			Return 5.0.SI(Of Watt)()
 		End Function
 
 
-		Public Function GetAveragePowerDemandPerCompressorUnitFlowRate() As Single _
+		Public Function GetAveragePowerDemandPerCompressorUnitFlowRate() As Double _
 			Implements ICompressorMap.GetAveragePowerDemandPerCompressorUnitFlowRate
 
 			Return 0.01

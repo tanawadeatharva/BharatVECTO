@@ -5,57 +5,48 @@ Imports VectoAuxiliaries.DownstreamModules
 Imports NUnit.Framework
 Imports VectoAuxiliaries
 Imports Moq
+Imports TUGraz.VectoCommon.Utils
 
 Namespace UnitTests
-<TestFixture()> _
-Public Class M12Tests
+	<TestFixture()>
+	Public Class M12Tests
+		<Test()> _
+		<TestCase(2, 8, 6, 5, 8, 6, 4.67379665, 4.5)>
+		Public Sub InputOutputValues(IP2 As Double,
+									IP3 As Double,
+									IP4 As Double,
+									IP5 As Double,
+									IP6 As Double,
+									IP7 As Double,
+									OUT1 As Double,
+									OUT2 As Double
+									)
 
-<Test()> _
-<TestCase(2,8,6,5,8,6,4.67379665f,4.5f)> _
-Public Sub InputOutputValues( IP2  As single, 
-                              IP3  As single,
-                              IP4  As single, 
-                              IP5  As single, 
-                              IP6  As Single,
-                              IP7  As Single,
-                              OUT1 As single,
-                              OUT2 As single
-                              )
+			'Arrange
+			Dim M10Mock As New Mock(Of IM10)
+			Dim m11Mock As New Mock(Of IM11)
 
-'Arrange
- Dim M10Mock     As New Mock(Of IM10)
- Dim m11Mock     As New Mock(Of IM11)
-
- Dim sgnlsMock   As New Mock(Of ISignals)
-
-
-            sgnlsMock.Setup(Function(x) x.StoredEnergyEfficiency).Returns(0.935)
-
-m11Mock.Setup( Function(x) x.TotalCycleFuelConsumptionZeroElectricalLoad)          .Returns( IP2 )
-m11Mock.Setup( Function(x) x.SmartElectricalTotalCycleEletricalEnergyGenerated)    .Returns( IP3 )
-m11Mock.Setup( Function(x) x.TotalCycleFuelConsumptionSmartElectricalLoad)         .Returns( IP4 )
-m11Mock.Setup( Function(x) x.TotalCycleElectricalDemand)                           .Returns( IP5 )
-m11Mock.Setup( Function(x) x.StopStartSensitiveTotalCycleElectricalDemand)         .Returns( IP6 )
-M10Mock.Setup( Function(x) x.AverageLoadsFuelConsumptionInterpolatedForPneumatics) .Returns( IP7 )
-
- 'Act
-  Dim target  = New M12(M10Mock.Object, m11Mock.Object ,sgnlsMock.Object )
-        
- 'Assert
- Assert.AreEqual( target.FuelconsumptionwithsmartElectricsandAveragePneumaticPowerDemand, OUT1 )
- Assert.AreEqual( target.BaseFuelConsumptionWithTrueAuxiliaryLoads,                    OUT2 )
-
-End Sub
+			Dim sgnlsMock As New Mock(Of ISignals)
 
 
+			sgnlsMock.Setup(Function(x) x.StoredEnergyEfficiency).Returns(0.935)
 
+			m11Mock.Setup(Function(x) x.TotalCycleFuelConsumptionZeroElectricalLoad).Returns((IP2 / 1000).SI(Of Kilogram))
+			m11Mock.Setup(Function(x) x.SmartElectricalTotalCycleEletricalEnergyGenerated).Returns(IP3.SI(Of Joule))
+			m11Mock.Setup(Function(x) x.TotalCycleFuelConsumptionSmartElectricalLoad).Returns((IP4 / 1000).SI(Of Kilogram))
+			m11Mock.Setup(Function(x) x.TotalCycleElectricalDemand).Returns(IP5.SI(Of Joule))
+			m11Mock.Setup(Function(x) x.StopStartSensitiveTotalCycleElectricalDemand).Returns(IP6.SI(Of Joule))
+			M10Mock.Setup(Function(x) x.AverageLoadsFuelConsumptionInterpolatedForPneumatics).Returns((IP7 / 1000).SI(Of Kilogram))
 
+			'Act
+			Dim target = New M12(M10Mock.Object, m11Mock.Object, sgnlsMock.Object)
 
-End Class
-
-
-
+			'Assert
+			Assert.AreEqual(target.FuelconsumptionwithsmartElectricsandAveragePneumaticPowerDemand().Value(),
+							OUT1.SI().Gramm.Value(), 0.001)
+			Assert.AreEqual(target.BaseFuelConsumptionWithTrueAuxiliaryLoads().Value(), OUT2.SI().Gramm.Value(), 0.001)
+		End Sub
+	End Class
 End Namespace
-
 
 

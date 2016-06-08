@@ -10,24 +10,22 @@
 ' See the LICENSE.txt for the specific language governing permissions and limitations.
 
 Imports System.ComponentModel
+Imports TUGraz.VectoCommon.Utils
 
 Namespace Electrics
+	Public Interface IElectricalConsumer
+		Inherits INotifyPropertyChanged
 
-    Public Interface IElectricalConsumer
-        Inherits INotifyPropertyChanged
-
-        Property Category As String
-        Property ConsumerName As String
-        Property BaseVehicle As Boolean
-        Property NominalConsumptionAmps As Single
-        Property PhaseIdle_TractionOn As Single
-        Property NumberInActualVehicle As Integer
-        Property PowerNetVoltage As Single
-        Property AvgConsumptionAmps As Single
-        Property Info As String
-        Function TotalAvgConumptionAmps(Optional PhaseIdle_TractionOnBasedOnCycle As Single = Nothing) As Single
-        Function TotalAvgConsumptionInWatts(Optional PhaseIdle_TractionOnBasedOnCycle As Single = 0.0) As Single
-
-    End Interface
-
+		Property Category As String
+		Property ConsumerName As String
+		Property BaseVehicle As Boolean
+		Property NominalConsumptionAmps As Double
+		Property PhaseIdle_TractionOn As Double
+		Property NumberInActualVehicle As Integer
+		Property PowerNetVoltage As Double
+		Property AvgConsumptionAmps As Double
+		Property Info As String
+		Function TotalAvgConumptionAmps(Optional PhaseIdle_TractionOnBasedOnCycle As Double = Nothing) As Ampere
+		Function TotalAvgConsumptionInWatts(Optional PhaseIdle_TractionOnBasedOnCycle As Double = 0.0) As Watt
+	End Interface
 End Namespace

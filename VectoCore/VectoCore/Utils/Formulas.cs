@@ -62,7 +62,7 @@ namespace TUGraz.VectoCore.Utils
 				throw new VectoException("v2 must not be greater than v1 v1: {0} v2: {1}", v1.Value(), v2.Value());
 			}
 
-			return ((v2 - v1) * (v1 + v2) / deceleration / 2.0).Cast<Meter>();
+			return ((v2.Value() - v1.Value()) * (v1.Value() + v2.Value()) / deceleration.Value() / 2.0).SI<Meter>();
 		}
 
 		/// <summary>
@@ -79,21 +79,20 @@ namespace TUGraz.VectoCore.Utils
 		public static Watt InertiaPower(PerSecond currentOmega, PerSecond previousOmega, KilogramSquareMeter inertia,
 			Second dt)
 		{
-			var deltaOmega = currentOmega - previousOmega;
-			
-			var alpha = deltaOmega / dt;
-			var torque = inertia * alpha;
+			var deltaOmega = currentOmega.Value() - previousOmega.Value();
 
-			var avgOmega = (currentOmega + previousOmega) / 2;
-			return (torque * avgOmega).Cast<Watt>();
+			var alpha = deltaOmega / dt.Value();
+			var torque = inertia.Value() * alpha;
+
+			var avgOmega = (currentOmega.Value() + previousOmega.Value()) / 2;
+			return (torque * avgOmega).SI<Watt>();
 		}
-
 
 		public static Watt InertiaPower(PerSecond omega, PerSquareSecond alpha, KilogramSquareMeter inertia, Second dt)
 		{
-			var torque = inertia * alpha;
-			var power = torque * (omega + alpha / 2 * dt);
-			return power;
+			var torque = inertia.Value() * alpha.Value();
+			var power = torque * (omega.Value() + alpha.Value() / 2 * dt.Value());
+			return power.SI<Watt>();
 		}
 	}
 }

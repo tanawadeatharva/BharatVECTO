@@ -73,6 +73,7 @@ Description:
 
     -t: output information about execution times
     -mod: write mod-data in addition to sum-data
+    -1Hz: convert mod-data to 1Hz resolution
     -eng: switch to engineering mode (implies -mod)
     -v: Shows verbose information (errors and warnings will be displayed)
 	-vv: Shows more verbose information (infos will be displayed)
@@ -80,7 +81,7 @@ Description:
 	-vvvv: Shows all verbose information (everything, slow!)
     -V: show version information
     -h: Displays this help.
-
+	
 Examples:
     vecto.exe ""12t Delivery Truck.vecto"" 40t_Long_Haul_Truck.vecto
     vecto.exe 24tCoach.vecto 40t_Long_Haul_Truck.vecto
@@ -144,7 +145,7 @@ Examples:
 					ShowVersionInformation();
 				}
 
-				var fileList = args.Except(new[] { "-v", "-vv", "-vvv", "-vvvv", "-V", "-mod", "-eng", "-t" }).ToArray();
+				var fileList = args.Except(new[] { "-v", "-vv", "-vvv", "-vvvv", "-V", "-mod", "-eng", "-t", "-1Hz" }).ToArray();
 				var jobFiles =
 					fileList.Where(
 						f =>
@@ -156,7 +157,6 @@ Examples:
 					Console.Write(Usage);
 					return 1;
 				}
-
 
 				var stopWatch = new Stopwatch();
 				var timings = new Dictionary<string, double>();
@@ -176,7 +176,6 @@ Examples:
 
 				stopWatch.Start();
 
-
 				if (!jobFiles.Any()) {
 					Console.ForegroundColor = ConsoleColor.Red;
 					Console.WriteLine(@"No Job files found. Please restart the application with a valid '.vecto' file.");
@@ -189,11 +188,11 @@ Examples:
 					if (Path.GetExtension(file) == Constants.FileExtensions.VectoJobFile) {
 						var dataProvider = JSONInputDataFactory.ReadJsonJob(file);
 						fileWriter = new FileOutputWriter(file);
-						var runsFactory = new SimulatorFactory(mode, dataProvider, fileWriter);
+						var runsFactory = new SimulatorFactory(mode, dataProvider, fileWriter) {
+							ModalResults1Hz = args.Contains("-1Hz"),
+							WriteModalResults = args.Contains("-mod")
+						};
 
-						if (args.Contains("-mod")) {
-							runsFactory.WriteModalResults = true;
-						}
 						_jobContainer.AddRuns(runsFactory);
 					}
 					if (Path.GetExtension(file) == Constants.FileExtensions.VectoXMLDeclarationFile) {
@@ -247,7 +246,6 @@ Examples:
 				}
 				stopWatch.Stop();
 				timings.Add("Simulation runs", stopWatch.Elapsed.TotalMilliseconds);
-
 
 				PrintProgress(_jobContainer.GetProgress(), args.Contains("-t"));
 

@@ -50,7 +50,7 @@ namespace TUGraz.VectoCore.Models.SimulationComponent.Data
 					EffectiveCrossSectionArea = aerodynamicDragArea
 				},
 				new CrossWindCorrectionEntry {
-					Velocity = 100.KMPHtoMeterPerSecond(),
+					Velocity = 150.KMPHtoMeterPerSecond(),
 					EffectiveCrossSectionArea = aerodynamicDragArea
 				}
 			}.ToList();
@@ -90,7 +90,6 @@ namespace TUGraz.VectoCore.Models.SimulationComponent.Data
 			Logger<CrossWindCorrectionCurveReader>().Warn("VAir/Beta Crosswind Correction header Line is not valid");
 			return ParseCdxABetaFromColumnIndices(betaTable);
 		}
-
 
 		protected static List<CrossWindCorrectionEntry> ParseSpeedDependent(DataTable data,
 			SquareMeter aerodynamicDragArea)
@@ -171,7 +170,6 @@ namespace TUGraz.VectoCore.Models.SimulationComponent.Data
 
 			public const string DeltaCdxA = "delta CdA";
 		}
-
 
 		public class AirDragBetaEntry
 		{

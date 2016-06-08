@@ -33,7 +33,6 @@ using System;
 using System.Collections.Generic;
 using System.IO;
 using System.Linq;
-using Microsoft.VisualStudio.TestTools.UnitTesting;
 using NUnit.Framework;
 using TUGraz.VectoCommon.Exceptions;
 using TUGraz.VectoCommon.Models;
@@ -197,7 +196,6 @@ namespace TUGraz.VectoCore.Tests.Models.Declaration
 		[Test,
 		// fixed points
 		TestCase(150, 1.000, 1.000, 0.00),
-		TestCase(150, 1.005, 1.000, 0.00),
 		TestCase(150, 1.100, 1.000, -40.34),
 		TestCase(150, 1.222, 1.000, -80.34),
 		TestCase(150, 1.375, 1.000, -136.11),
@@ -307,7 +305,6 @@ namespace TUGraz.VectoCore.Tests.Models.Declaration
 		{
 			var fan = DeclarationData.Fan;
 
-			const string defaultFan = "Crankshaft mounted - Electronically controlled visco clutch (Default)";
 			var defaultExpected = new[] { 618, 671, 516, 566, 1037, 0, 0, 0, 0, 0 };
 
 			for (var i = 0; i < Missions.Length; i++) {
@@ -417,29 +414,65 @@ namespace TUGraz.VectoCore.Tests.Models.Declaration
 			}
 		}
 
-		[Test]
-		public void SegmentLookupTestOutOfRange()
+		[
+			TestCase(0),
+			TestCase(1000),
+			TestCase(3500),
+			TestCase(7499)
+		]
+		public void SegmentWeightOutOfRange4X2(double weight)
 		{
-			AssertHelper.Exception<VectoException>(
-				() =>
-					DeclarationData.Segments.Lookup(VehicleCategory.RigidTruck,
-						AxleConfiguration.AxleConfig_4x2,
-						1000.SI<Kilogram>(), 0.SI<Kilogram>()), "Gross vehicle mass must be greater than 7.5 tons");
+			AssertHelper.Exception<VectoException>(() =>
+				DeclarationData.Segments.Lookup(
+					VehicleCategory.RigidTruck,
+					AxleConfiguration.AxleConfig_4x2,
+					weight.SI<Kilogram>(),
+					0.SI<Kilogram>()),
+				"Gross vehicle mass must be greater than 7.5 tons");
+		}
+
+		[
+			TestCase(0),
+			TestCase(1000),
+			TestCase(3500),
+			TestCase(7499)
+		]
+		public void SegmentWeightOutOfRange4X4(double weight)
+		{
+			AssertHelper.Exception<VectoException>(() =>
+				DeclarationData.Segments.Lookup(
+					VehicleCategory.RigidTruck,
+					AxleConfiguration.AxleConfig_4x4,
+					weight.SI<Kilogram>(),
+					0.SI<Kilogram>()),
+				"Gross vehicle mass must be greater than 7.5 tons");
 		}
 
 		[Test,
+		TestCase(VehicleCategory.RigidTruck, AxleConfiguration.AxleConfig_4x2, 7500, 0, VehicleClass.Class1),
+		TestCase(VehicleCategory.Tractor, AxleConfiguration.AxleConfig_4x2, 7500, 0, VehicleClass.Class1),
 		TestCase(VehicleCategory.RigidTruck, AxleConfiguration.AxleConfig_4x2, 10000, 0, VehicleClass.Class1),
 		TestCase(VehicleCategory.Tractor, AxleConfiguration.AxleConfig_4x2, 10000, 0, VehicleClass.Class1),
+		TestCase(VehicleCategory.RigidTruck, AxleConfiguration.AxleConfig_4x2, 10001, 0, VehicleClass.Class2),
+		TestCase(VehicleCategory.Tractor, AxleConfiguration.AxleConfig_4x2, 10001, 0, VehicleClass.Class2),
 		TestCase(VehicleCategory.RigidTruck, AxleConfiguration.AxleConfig_4x2, 12000, 0, VehicleClass.Class2),
 		TestCase(VehicleCategory.Tractor, AxleConfiguration.AxleConfig_4x2, 12000, 0, VehicleClass.Class2),
+		TestCase(VehicleCategory.RigidTruck, AxleConfiguration.AxleConfig_4x2, 12001, 0, VehicleClass.Class3),
+		TestCase(VehicleCategory.Tractor, AxleConfiguration.AxleConfig_4x2, 12001, 0, VehicleClass.Class3),
 		TestCase(VehicleCategory.RigidTruck, AxleConfiguration.AxleConfig_4x2, 16000, 0, VehicleClass.Class3),
 		TestCase(VehicleCategory.Tractor, AxleConfiguration.AxleConfig_4x2, 16000, 0, VehicleClass.Class3),
 		TestCase(VehicleCategory.RigidTruck, AxleConfiguration.AxleConfig_4x2, 16001, 0, VehicleClass.Class4),
+		TestCase(VehicleCategory.RigidTruck, AxleConfiguration.AxleConfig_4x2, 99000, 0, VehicleClass.Class4),
 		TestCase(VehicleCategory.Tractor, AxleConfiguration.AxleConfig_4x2, 16001, 0, VehicleClass.Class5),
+		TestCase(VehicleCategory.Tractor, AxleConfiguration.AxleConfig_4x2, 99000, 0, VehicleClass.Class5),
 		TestCase(VehicleCategory.RigidTruck, AxleConfiguration.AxleConfig_6x2, 7500, 0, VehicleClass.Class9),
-		TestCase(VehicleCategory.Tractor, AxleConfiguration.AxleConfig_6x2, 7500, 0, VehicleClass.Class10),
+		TestCase(VehicleCategory.RigidTruck, AxleConfiguration.AxleConfig_6x2, 16000, 0, VehicleClass.Class9),
 		TestCase(VehicleCategory.RigidTruck, AxleConfiguration.AxleConfig_6x2, 40000, 0, VehicleClass.Class9),
+		TestCase(VehicleCategory.RigidTruck, AxleConfiguration.AxleConfig_6x2, 99000, 0, VehicleClass.Class9),
+		TestCase(VehicleCategory.Tractor, AxleConfiguration.AxleConfig_6x2, 7500, 0, VehicleClass.Class10),
+		TestCase(VehicleCategory.Tractor, AxleConfiguration.AxleConfig_6x2, 16000, 0, VehicleClass.Class10),
 		TestCase(VehicleCategory.Tractor, AxleConfiguration.AxleConfig_6x2, 40000, 0, VehicleClass.Class10),
+		TestCase(VehicleCategory.Tractor, AxleConfiguration.AxleConfig_6x2, 99000, 0, VehicleClass.Class10),
 		]
 		public void SegmentLookupTest(VehicleCategory category, AxleConfiguration axleConfiguration, double grossWeight,
 			double curbWeight, VehicleClass expectedClass)
@@ -462,7 +495,6 @@ namespace TUGraz.VectoCore.Tests.Models.Declaration
 
 			var segment = DeclarationData.Segments.Lookup(vehicleData.VehicleCategory, vehicleData.AxleConfiguration,
 				vehicleData.GrossVehicleMassRating, vehicleData.CurbWeight);
-
 
 			Assert.AreEqual(VehicleClass.Class2, segment.VehicleClass);
 

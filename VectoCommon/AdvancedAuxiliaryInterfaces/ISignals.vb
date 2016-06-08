@@ -8,6 +8,7 @@
 '   WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
 '
 ' See the LICENSE.txt for the specific language governing permissions and limitations.
+Imports TUGraz.VectoCommon.Utils
 
 Public Interface ISignals
 	''' <summary>
@@ -16,7 +17,7 @@ Public Interface ISignals
 	''' <value></value>
 	''' <returns></returns>
 	''' <remarks>Vecto Input</remarks>
-	Property PreExistingAuxPower As Single
+	Property PreExistingAuxPower As Watt
 
 	''' <summary>
 	''' Engine Motoring Power (KW)
@@ -24,7 +25,7 @@ Public Interface ISignals
 	''' <value></value>
 	''' <returns></returns>
 	''' <remarks>Vecto Input</remarks>
-	Property EngineMotoringPower As Single
+	Property EngineMotoringPower As Watt
 
 	''' <summary>
 	''' Engine Driveline Power (KW)
@@ -32,7 +33,7 @@ Public Interface ISignals
 	''' <value></value>
 	''' <returns></returns>
 	''' <remarks></remarks>
-	Property EngineDrivelinePower As Single
+	Property EngineDrivelinePower As Watt
 
 	''' <summary>
 	''' Smart Electrics
@@ -55,8 +56,8 @@ Public Interface ISignals
 	''' </summary>
 	''' <value></value>
 	''' <returns></returns>
-	''' <remarks>RPM in old money - Vecto Input</remarks>
-	Property EngineSpeed As Double
+	''' 
+	Property EngineSpeed As PerSecond
 
 	''' <summary>
 	''' Smart Pneumatics
@@ -88,7 +89,7 @@ Public Interface ISignals
 	''' <value></value>
 	''' <returns></returns>
 	''' <remarks>Vecto Input</remarks>
-	Property EngineDrivelineTorque As Single
+	Property EngineDrivelineTorque As NewtonMeter
 
 	''' <summary>
 	''' Engine Idle
@@ -128,7 +129,7 @@ Public Interface ISignals
 	''' <value></value>
 	''' <returns></returns>
 	''' <remarks>'Vecto Input</remarks>
-	Property WHTC As Single
+	Property WHTC As Double
 
 	''' <summary>
 	''' Declaration Mode
@@ -144,7 +145,7 @@ Public Interface ISignals
 	''' <value></value>
 	''' <returns></returns>
 	''' <remarks></remarks>
-	Property EngineIdleSpeed As Single
+	Property EngineIdleSpeed As PerSecond
 
 	''' <summary>
 	''' Pneumatic Overrun Utilisation
@@ -152,7 +153,7 @@ Public Interface ISignals
 	''' <value></value>
 	''' <returns></returns>
 	''' <remarks></remarks>
-	Property PneumaticOverrunUtilisation As Single
+	Property PneumaticOverrunUtilisation As Double
 
 	''' <summary>
 	''' Stored Energy Efficiency
@@ -160,7 +161,7 @@ Public Interface ISignals
 	''' <value></value>
 	''' <returns></returns>
 	''' <remarks></remarks>
-	Property StoredEnergyEfficiency As Single
+	Property StoredEnergyEfficiency As Double
 
 	''' <summary>
 	''' Running Calc
@@ -176,5 +177,5 @@ Public Interface ISignals
 	''' <value></value>
 	''' <returns></returns>
 	''' <remarks></remarks>
-	Property Internal_Engine_Power As Single
+	Property InternalEnginePower As Watt
 End Interface

@@ -222,7 +222,7 @@
     <Compile Include="Input Files\cAuxEntryPS.vb" />
     <Compile Include="Input Files\cENG.vb" />
     <Compile Include="Input Files\cGBX.vb" />
-    <Compile Include="cConfig.vb" />
+    <Compile Include="Configuration.vb" />
     <Compile Include="cDelaunayMap.vb" />
     <Compile Include="cDEV.vb" />
     <Compile Include="File Browser\cFileBrowser.vb" />

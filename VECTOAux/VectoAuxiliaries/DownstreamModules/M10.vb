@@ -9,6 +9,8 @@
 '
 ' See the LICENSE.txt for the specific language governing permissions and limitations.
 
+Imports TUGraz.VectoCommon.Utils
+Imports TUGraz.VectoCore.Utils
 Imports VectoAuxiliaries.Electrics
 Imports VectoAuxiliaries.Pneumatics
 Imports VectoAuxiliaries.Hvac
@@ -19,60 +21,68 @@ Namespace DownstreamModules
 		Implements IM10
 
 		'Aggregators
-		Private _AverageAirConsumedLitre As Double
+		Private _AverageAirConsumedLitre As NormLiter
 
 		'Diagnostics
-		Private x1, y1, x2, y2, x3, y3, xTA, interp1, interp2 As Single
+		Private x1 As NormLiter
+		Private y1 As Kilogram
+		Private x2 As NormLiter
+		Private y2 As Kilogram
+		Private x3 As NormLiter
+		Private y3 As Kilogram
+		Private xTA As NormLiter
+		Private interp1 As Kilogram
+		Private interp2 As Kilogram
 
-		Public ReadOnly Property P1X As Single Implements IM10.P1X
+		Public ReadOnly Property P1X As NormLiter Implements IM10.P1X
 			Get
 				Return x1
 			End Get
 		End Property
 
-		Public ReadOnly Property P1Y As Single Implements IM10.P1Y
+		Public ReadOnly Property P1Y As Kilogram Implements IM10.P1Y
 			Get
 				Return y1
 			End Get
 		End Property
 
-		Public ReadOnly Property P2X As Single Implements IM10.P2X
+		Public ReadOnly Property P2X As NormLiter Implements IM10.P2X
 			Get
 				Return x2
 			End Get
 		End Property
 
-		Public ReadOnly Property P2Y As Single Implements IM10.P2Y
+		Public ReadOnly Property P2Y As Kilogram Implements IM10.P2Y
 			Get
 				Return y2
 			End Get
 		End Property
 
-		Public ReadOnly Property P3X As Single Implements IM10.P3X
+		Public ReadOnly Property P3X As NormLiter Implements IM10.P3X
 			Get
 				Return x3
 			End Get
 		End Property
 
-		Public ReadOnly Property P3Y As Single Implements IM10.P3Y
+		Public ReadOnly Property P3Y As Kilogram Implements IM10.P3Y
 			Get
 				Return y3
 			End Get
 		End Property
 
-		Public ReadOnly Property XTAIN As Single Implements IM10.XTAIN
+		Public ReadOnly Property XTAIN As NormLiter Implements IM10.XTAIN
 			Get
 				Return xTA
 			End Get
 		End Property
 
-		Public ReadOnly Property INTRP1 As Single Implements IM10.INTRP1
+		Public ReadOnly Property INTRP1 As Kilogram Implements IM10.INTRP1
 			Get
 				Return interp1
 			End Get
 		End Property
 
-		Public ReadOnly Property INTRP2 As Single Implements IM10.INTRP2
+		Public ReadOnly Property INTRP2 As Kilogram Implements IM10.INTRP2
 			Get
 				Return interp2
 			End Get
@@ -95,14 +105,14 @@ Namespace DownstreamModules
 			SmartPneumtaics
 		End Enum
 
-		Private Function Interpolate(interpType As InterpolationType) As Single
+		Private Function Interpolate(interpType As InterpolationType) As Kilogram
 
-			Dim returnValue As Single
+			Dim returnValue As Kilogram = 0.SI(Of Kilogram)()
 			' Dim x1,y1,x2,y2,x3,y3, xTA As Single
 
 			x1 = m9.LitresOfAirCompressorOnContinually
 			y1 = m9.TotalCycleFuelConsumptionCompressorOnContinuously
-			x2 = 0
+			x2 = 0.SI(Of NormLiter)()
 			y2 = m9.TotalCycleFuelConsumptionCompressorOffContinuously
 			x3 = m9.LitresOfAirCompressorOnOnlyInOverrun
 			y3 = m9.TotalCycleFuelConsumptionCompressorOffContinuously
@@ -115,15 +125,15 @@ Namespace DownstreamModules
 
 				'Non-Smart Pneumatics ( OUT 1 )
 				Case InterpolationType.NonSmartPneumtaics
-					returnValue = y2 + (((y1 - y2) * xTA) / x1)
+					'returnValue = (y2 + (((y1 - y2) * xTA) / x1))
+					returnValue = VectoMath.Interpolate(x1, x2, y1, y2, xTA)
 					interp1 = returnValue
 
 					'Smart Pneumatics ( OUT 2 )
 				Case InterpolationType.SmartPneumtaics
-					returnValue = y3 + (((y1 - y3) / (x1 - x3)) * (xTA - x3))
+					'returnValue = (y3 + (((y1 - y3) / (x1 - x3)) * (xTA - x3)))
+					returnValue = VectoMath.Interpolate(x1, x3, y1, y3, xTA)
 					interp2 = returnValue
-
-
 			End Select
 
 
@@ -134,23 +144,23 @@ Namespace DownstreamModules
 
 #Region "Public Properties"
 
-		Public ReadOnly Property AverageLoadsFuelConsumptionInterpolatedForPneumatics As Single _
+		Public ReadOnly Property AverageLoadsFuelConsumptionInterpolatedForPneumatics As Kilogram _
 			Implements IM10.AverageLoadsFuelConsumptionInterpolatedForPneumatics
 			Get
 
 				'SCHM 3_02
-				Dim intrp1 As Single = Interpolate(InterpolationType.NonSmartPneumtaics)
+				Dim intrp1 As Kilogram = Interpolate(InterpolationType.NonSmartPneumtaics)
 				'intrp1 = If(Not Single.IsNaN(intrp1), intrp1, 0)
 				Return intrp1
 			End Get
 		End Property
 
-		Public ReadOnly Property FuelConsumptionSmartPneumaticsAndAverageElectricalPowerDemand As Single _
+		Public ReadOnly Property FuelConsumptionSmartPneumaticsAndAverageElectricalPowerDemand As Kilogram _
 			Implements IM10.FuelConsumptionSmartPneumaticsAndAverageElectricalPowerDemand
 			Get
 
 				'SCHM 3_02
-				Dim intrp2 As Single = Interpolate(InterpolationType.SmartPneumtaics)
+				Dim intrp2 As Kilogram = Interpolate(InterpolationType.SmartPneumtaics)
 				'intrp2 = If(Not Single.IsNaN(intrp2), intrp2, 0)
 				Return intrp2
 			End Get
@@ -165,14 +175,17 @@ Namespace DownstreamModules
 			Me.m3 = m3
 			Me.m9 = m9
 			Me.signals = signals
+			_AverageAirConsumedLitre = 0.SI(Of NormLiter)()
 		End Sub
 
 #End Region
 
-		Public Sub CycleStep(Optional stepTimeInSeconds As Double = 0.0) Implements IM10.CycleStep
+		Public Sub CycleStep(stepTimeInSeconds As Second) Implements IM10.CycleStep
 
 			_AverageAirConsumedLitre +=
-				If(Single.IsNaN(m3.AverageAirConsumedPerSecondLitre), 0, m3.AverageAirConsumedPerSecondLitre * stepTimeInSeconds)
+				If _
+					(Double.IsNaN(m3.AverageAirConsumedPerSecondLitre.Value()), 0.SI(Of NormLiter),
+					m3.AverageAirConsumedPerSecondLitre * stepTimeInSeconds)
 		End Sub
 	End Class
 End Namespace

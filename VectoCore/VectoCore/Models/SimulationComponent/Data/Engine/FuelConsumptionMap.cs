@@ -43,7 +43,7 @@ namespace TUGraz.VectoCore.Models.SimulationComponent.Data.Engine
 	public class FuelConsumptionMap : SimulationComponentData, IDisposable
 	{
 		[Required, ValidateObject] private readonly DelaunayMap _fuelMap = new DelaunayMap("FuelConsumptionMap");
-		
+
 		private FuelConsumptionMap() {}
 
 		public static FuelConsumptionMap ReadFromFile(string fileName)
@@ -126,7 +126,7 @@ namespace TUGraz.VectoCore.Models.SimulationComponent.Data.Engine
 		{
 			// delaunay map needs is initialised with rpm, therefore the angularVelocity has to be converted.
 			return
-				_fuelMap.Interpolate(torque.Value(), angularVelocity.ConvertTo().Rounds.Per.Minute.Value(), allowExtrapolation)
+				_fuelMap.Interpolate(torque.Value(), angularVelocity.AsRPM, allowExtrapolation)
 					.SI().Kilo.Gramm.Per.Second.Cast<KilogramPerSecond>();
 		}
 
@@ -235,8 +235,9 @@ namespace TUGraz.VectoCore.Models.SimulationComponent.Data.Engine
 
 		protected virtual void Dispose(bool disposing)
 		{
-			if (disposing)
+			if (disposing) {
 				_fuelMap.Dispose();
+			}
 		}
 
 		#endregion
