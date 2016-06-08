@@ -414,29 +414,65 @@ namespace TUGraz.VectoCore.Tests.Models.Declaration
 			}
 		}
 
-		[Test]
-		public void SegmentLookupTestOutOfRange()
+		[
+			TestCase(0),
+			TestCase(1000),
+			TestCase(3500),
+			TestCase(7499)
+		]
+		public void SegmentWeightOutOfRange4X2(double weight)
 		{
-			AssertHelper.Exception<VectoException>(
-				() =>
-					DeclarationData.Segments.Lookup(VehicleCategory.RigidTruck,
-						AxleConfiguration.AxleConfig_4x2,
-						1000.SI<Kilogram>(), 0.SI<Kilogram>()), "Gross vehicle mass must be greater than 7.5 tons");
+			AssertHelper.Exception<VectoException>(() =>
+				DeclarationData.Segments.Lookup(
+					VehicleCategory.RigidTruck,
+					AxleConfiguration.AxleConfig_4x2,
+					weight.SI<Kilogram>(),
+					0.SI<Kilogram>()),
+				"Gross vehicle mass must be greater than 7.5 tons");
+		}
+
+		[
+			TestCase(0),
+			TestCase(1000),
+			TestCase(3500),
+			TestCase(7499)
+		]
+		public void SegmentWeightOutOfRange4X4(double weight)
+		{
+			AssertHelper.Exception<VectoException>(() =>
+				DeclarationData.Segments.Lookup(
+					VehicleCategory.RigidTruck,
+					AxleConfiguration.AxleConfig_4x4,
+					weight.SI<Kilogram>(),
+					0.SI<Kilogram>()),
+				"Gross vehicle mass must be greater than 7.5 tons");
 		}
 
 		[Test,
+		TestCase(VehicleCategory.RigidTruck, AxleConfiguration.AxleConfig_4x2, 7500, 0, VehicleClass.Class1),
+		TestCase(VehicleCategory.Tractor, AxleConfiguration.AxleConfig_4x2, 7500, 0, VehicleClass.Class1),
 		TestCase(VehicleCategory.RigidTruck, AxleConfiguration.AxleConfig_4x2, 10000, 0, VehicleClass.Class1),
 		TestCase(VehicleCategory.Tractor, AxleConfiguration.AxleConfig_4x2, 10000, 0, VehicleClass.Class1),
+		TestCase(VehicleCategory.RigidTruck, AxleConfiguration.AxleConfig_4x2, 10001, 0, VehicleClass.Class2),
+		TestCase(VehicleCategory.Tractor, AxleConfiguration.AxleConfig_4x2, 10001, 0, VehicleClass.Class2),
 		TestCase(VehicleCategory.RigidTruck, AxleConfiguration.AxleConfig_4x2, 12000, 0, VehicleClass.Class2),
 		TestCase(VehicleCategory.Tractor, AxleConfiguration.AxleConfig_4x2, 12000, 0, VehicleClass.Class2),
+		TestCase(VehicleCategory.RigidTruck, AxleConfiguration.AxleConfig_4x2, 12001, 0, VehicleClass.Class3),
+		TestCase(VehicleCategory.Tractor, AxleConfiguration.AxleConfig_4x2, 12001, 0, VehicleClass.Class3),
 		TestCase(VehicleCategory.RigidTruck, AxleConfiguration.AxleConfig_4x2, 16000, 0, VehicleClass.Class3),
 		TestCase(VehicleCategory.Tractor, AxleConfiguration.AxleConfig_4x2, 16000, 0, VehicleClass.Class3),
 		TestCase(VehicleCategory.RigidTruck, AxleConfiguration.AxleConfig_4x2, 16001, 0, VehicleClass.Class4),
+		TestCase(VehicleCategory.RigidTruck, AxleConfiguration.AxleConfig_4x2, 99000, 0, VehicleClass.Class4),
 		TestCase(VehicleCategory.Tractor, AxleConfiguration.AxleConfig_4x2, 16001, 0, VehicleClass.Class5),
+		TestCase(VehicleCategory.Tractor, AxleConfiguration.AxleConfig_4x2, 99000, 0, VehicleClass.Class5),
 		TestCase(VehicleCategory.RigidTruck, AxleConfiguration.AxleConfig_6x2, 7500, 0, VehicleClass.Class9),
-		TestCase(VehicleCategory.Tractor, AxleConfiguration.AxleConfig_6x2, 7500, 0, VehicleClass.Class10),
+		TestCase(VehicleCategory.RigidTruck, AxleConfiguration.AxleConfig_6x2, 16000, 0, VehicleClass.Class9),
 		TestCase(VehicleCategory.RigidTruck, AxleConfiguration.AxleConfig_6x2, 40000, 0, VehicleClass.Class9),
+		TestCase(VehicleCategory.RigidTruck, AxleConfiguration.AxleConfig_6x2, 99000, 0, VehicleClass.Class9),
+		TestCase(VehicleCategory.Tractor, AxleConfiguration.AxleConfig_6x2, 7500, 0, VehicleClass.Class10),
+		TestCase(VehicleCategory.Tractor, AxleConfiguration.AxleConfig_6x2, 16000, 0, VehicleClass.Class10),
 		TestCase(VehicleCategory.Tractor, AxleConfiguration.AxleConfig_6x2, 40000, 0, VehicleClass.Class10),
+		TestCase(VehicleCategory.Tractor, AxleConfiguration.AxleConfig_6x2, 99000, 0, VehicleClass.Class10),
 		]
 		public void SegmentLookupTest(VehicleCategory category, AxleConfiguration axleConfiguration, double grossWeight,
 			double curbWeight, VehicleClass expectedClass)
