@@ -111,6 +111,9 @@ Public Class F_VECTO
 		Me.TbSSdelay.Text = cDeclaration.SSdelay
 		Me.TbAlookahead.Text = cDeclaration.LACa
 		Me.TbVminLA.Text = cDeclaration.LACvmin
+		tbLacPreviewFactor.Text = "10"
+		tbLacDfTargetSpeedFile.Text = ""
+		tbLacDfVelocityDropFile.Text = ""
 
 		Me.TbOverspeed.Text = cDeclaration.Overspeed
 		Me.TbUnderSpeed.Text = cDeclaration.Underspeed
@@ -471,7 +474,12 @@ Public Class F_VECTO
 		Me.CbLookAhead.Checked = VEC0.LookAheadOn
 		Me.TbAlookahead.Text = CStr(VEC0.a_lookahead)
 		Me.TbVminLA.Text = CStr(VEC0.vMinLA)
+		tbLacPreviewFactor.Text = CStr(VEC0.LacPreviewFactor)
+		tbDfCoastingOffset.Text = CStr(VEC0.LacDfOffset)
+		tbDfCoastingScale.Text = CStr(VEC0.LacDfScale)
 
+		tbLacDfTargetSpeedFile.Text = VEC0.LacDfTargetSpeedFile
+		tbLacDfVelocityDropFile.Text = VEC0.LacDfVelocityDropFile
 
 		'-------------------------------------------------------------
 
@@ -592,7 +600,11 @@ Public Class F_VECTO
 		VEC0.a_lookahead = CSng(fTextboxToNumString(Me.TbAlookahead.Text))
 		VEC0.vMinLA = CSng(fTextboxToNumString(Me.TbVminLA.Text))
 
-
+		VEC0.LacPreviewFactor = CSng(fTextboxToNumString(tbLacPreviewFactor.Text))
+		VEC0.LacDfOffset = CSng(fTextboxToNumString(tbDfCoastingOffset.Text))
+		VEC0.LacDfScale = CSng(fTextboxToNumString(tbDfCoastingScale.Text))
+		VEC0.LacDfTargetSpeedFile = tbLacDfTargetSpeedFile.Text
+		VEC0.LacDfVelocityDropFile = tbLacDfVelocityDropFile.Text
 		'------------------------------------------------------------
 
 		'SAVE
@@ -647,6 +659,11 @@ Public Class F_VECTO
 		Me.TbUnderSpeed.Text = ""
 		Me.TbVmin.Text = ""
 		Me.TbVminLA.Text = "50"
+		tbLacPreviewFactor.Text = "10"
+		tbDfCoastingOffset.Text = "2.5"
+		tbDfCoastingScale.Text = "1.5"
+		tbLacDfTargetSpeedFile.Text = ""
+		tbLacDfVelocityDropFile.Text = ""
 
 		'---------------------------------------------------
 
@@ -707,11 +724,11 @@ Public Class F_VECTO
 	End Sub
 
 	Private Sub TbVmin_TextChanged(sender As System.Object, e As System.EventArgs) _
-		Handles TbVmin.TextChanged, TbVminLA.TextChanged
+		Handles TbVmin.TextChanged
 		Change()
 	End Sub
 
-	Private Sub TbAlookahead_TextChanged(sender As System.Object, e As System.EventArgs) Handles TbAlookahead.TextChanged
+	Private Sub TbAlookahead_TextChanged(sender As System.Object, e As System.EventArgs)
 		Change()
 	End Sub
 
@@ -1463,5 +1480,15 @@ lbDlog:
 	Private Sub btnAAUXOpen_Click(sender As Object, e As EventArgs) Handles btnAAUXOpen.Click
 
 		OpenFiles(fFileRepl(Me.txtAdvancedAuxiliaryFile.Text, fPATH(VECTOfile)))
+	End Sub
+
+	Private Sub Button1_Click(sender As Object, e As EventArgs) Handles btnDfTargetSpeed.Click
+		If fbDfTargetSpeed.OpenDialog(fFileRepl(Me.tbLacDfTargetSpeedFile.Text, fPATH(VECTOfile))) Then _
+			Me.tbLacDfTargetSpeedFile.Text = fFileWoDir(fbDfTargetSpeed.Files(0), fPATH(VECTOfile))
+	End Sub
+
+	Private Sub btnDfVelocityDrop_Click(sender As Object, e As EventArgs) Handles btnDfVelocityDrop.Click
+		If fbDfVelocityDrop.OpenDialog(fFileRepl(Me.tbLacDfVelocityDropFile.Text, fPATH(VECTOfile))) Then _
+			Me.tbLacDfVelocityDropFile.Text = fFileWoDir(fbDfVelocityDrop.Files(0), fPATH(VECTOfile))
 	End Sub
 End Class

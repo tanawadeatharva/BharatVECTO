@@ -138,6 +138,10 @@ Public Class F_MAINForm
 		fbTLM = New cFileBrowser("vtlm")
 		fbTCC = New cFileBrowser("vtcc")
 		fbCDx = New cFileBrowser("vcdx")
+		fbDfVelocityDrop = New cFileBrowser("DfVelocityDrop")
+		fbDfTargetSpeed = New cFileBrowser("DfTargetSpeed")
+		fbDfVelocityDrop.Extensions = New String() {"csv"}
+		fbDfTargetSpeed.Extensions = New String() {"csv"}
 
 		fbVMOD = New cFileBrowser("vmod")
 
