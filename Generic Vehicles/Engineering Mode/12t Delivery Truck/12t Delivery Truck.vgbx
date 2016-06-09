@@ -1,9 +1,9 @@
 ﻿{
   "Header": {
-    "CreatedBy": "Terry Burns (cdfbee63-58c9-44d5-a649-9903ea7eb6b5)",
-    "Date": "13/01/2015 08:55:19",
-    "AppVersion": "2.0.4-beta",
-    "FileVersion": 4
+    "CreatedBy": " ()",
+    "Date": "6/8/2016 4:11:06 PM",
+    "AppVersion": "2.2",
+    "FileVersion": 5
   },
   "Body": {
     "SavedInDeclMode": false,
@@ -19,37 +19,43 @@
         "Ratio": 6.75,
         "LossMap": "Indirect Gear.vtlm",
         "TCactive": false,
-        "ShiftPolygon": "-"
+        "ShiftPolygon": "-",
+        "FullLoadCurve": "<NOFILE>"
       },
       {
         "Ratio": 3.6,
         "LossMap": "Indirect Gear.vtlm",
         "TCactive": false,
-        "ShiftPolygon": "-"
+        "ShiftPolygon": "-",
+        "FullLoadCurve": "<NOFILE>"
       },
       {
         "Ratio": 2.13,
         "LossMap": "Indirect Gear.vtlm",
         "TCactive": false,
-        "ShiftPolygon": "-"
+        "ShiftPolygon": "-",
+        "FullLoadCurve": "<NOFILE>"
       },
       {
         "Ratio": 1.39,
         "LossMap": "Indirect Gear.vtlm",
         "TCactive": false,
-        "ShiftPolygon": "-"
+        "ShiftPolygon": "-",
+        "FullLoadCurve": "<NOFILE>"
       },
       {
         "Ratio": 1.0,
         "LossMap": "Direct Gear.vtlm",
         "TCactive": false,
-        "ShiftPolygon": "-"
+        "ShiftPolygon": "-",
+        "FullLoadCurve": "<NOFILE>"
       },
       {
         "Ratio": 0.78,
         "LossMap": "Indirect Gear.vtlm",
         "TCactive": false,
-        "ShiftPolygon": "-"
+        "ShiftPolygon": "-",
+        "FullLoadCurve": "<NOFILE>"
       }
     ],
     "TqReserve": 20.0,

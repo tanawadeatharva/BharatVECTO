@@ -1,19 +1,17 @@
 ﻿{
   "Header": {
     "CreatedBy": " ()",
-    "Date": "6/9/2016 1:55:56 PM",
+    "Date": "6/9/2016 2:57:01 PM",
     "AppVersion": "2.2",
     "FileVersion": 2
   },
   "Body": {
     "SavedInDeclMode": false,
-    "VehicleFile": "12t Delivery Truck.vveh",
-    "EngineFile": "12t Delivery Truck.veng",
-    "GearboxFile": "12t Delivery Truck.vgbx",
+    "VehicleFile": "40t_Long_Haul_Truck.vveh",
+    "EngineFile": "40t_Long_Haul_Truck.veng",
+    "GearboxFile": "40t_Long_Haul_Truck.vgbx",
     "Cycles": [
-      "Long_Haul.vdri",
-      "Regional_Delivery.vdri",
-      "Urban_Delivery.vdri"
+      "LongHaul"
     ],
     "AuxiliaryAssembly": "CLASSIC",
     "AuxiliaryVersion": "CLASSIC",
@@ -21,7 +19,7 @@
     "VACC": "Truck.vacc",
     "EngineOnlyMode": false,
     "StartStop": {
-      "Enabled": true,
+      "Enabled": false,
       "MaxSpeed": 5.0,
       "MinTime": 5.0,
       "Delay": 5
@@ -30,11 +28,11 @@
       "Enabled": true,
       "Dec": -0.5,
       "MinSpeed": 50.0,
-      "PreviewDistanceFactor": 5.0,
-      "DF_offset": 3.5,
-      "DF_scaling": 2.5,
-      "DF_targetSpeedLookup": "LAC-DF-Vtarget.csv",
-      "Df_velocityDropLookup": "LAC-DF-Vdrop.csv"
+      "PreviewDistanceFactor": 10.0,
+      "DF_offset": 4.0,
+      "DF_scaling": 3.0,
+      "DF_targetSpeedLookup": "",
+      "Df_velocityDropLookup": ""
     },
     "OverSpeedEcoRoll": {
       "Mode": "OverSpeed",
