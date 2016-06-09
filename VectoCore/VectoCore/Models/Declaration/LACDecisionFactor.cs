@@ -6,11 +6,21 @@ using TUGraz.VectoCore.Utils;
 
 namespace TUGraz.VectoCore.Models.Declaration
 {
-	public static class LACDecisionFactor
+	public class LACDecisionFactor
 	{
-		private static readonly DecisionFactor LAC = new DecisionFactor();
+		private readonly DecisionFactor LAC;
 
-		public static double Lookup(MeterPerSecond targetVelocity, MeterPerSecond velocityDrop)
+		public LACDecisionFactor()
+		{
+			LAC = new DecisionFactor();
+		}
+
+		public LACDecisionFactor(double offset, double scaling, DataTable vTargetLookup, DataTable vDropLookup)
+		{
+			LAC = new DecisionFactor(offset, scaling, vTargetLookup, vDropLookup);
+		}
+
+		public double Lookup(MeterPerSecond targetVelocity, MeterPerSecond velocityDrop)
 		{
 			return LAC.Lookup(targetVelocity, velocityDrop);
 		}
@@ -20,13 +30,32 @@ namespace TUGraz.VectoCore.Models.Declaration
 		/// </summary>
 		private sealed class DecisionFactor : LookupData<MeterPerSecond, MeterPerSecond, double>
 		{
-			private readonly LACDecisionFactorVTarget _vTarget = new LACDecisionFactorVTarget();
-			private readonly LACDecisionFactorVdrop _vDrop = new LACDecisionFactorVdrop();
+			private readonly LACDecisionFactorVTarget _vTarget;
+			private readonly LACDecisionFactorVdrop _vDrop;
+			private readonly double _offset;
+			private readonly double _scaling;
+
+			public DecisionFactor(double offset, double scaling, DataTable vTargetLookup, DataTable vDropLookup)
+			{
+				_offset = offset;
+				_scaling = scaling;
+				_vTarget = new LACDecisionFactorVTarget(vTargetLookup);
+				_vDrop = new LACDecisionFactorVdrop(vDropLookup);
+			}
+
+			public DecisionFactor()
+			{
+				_offset = 2.5;
+				_scaling = 1.5;
+				_vTarget = new LACDecisionFactorVTarget();
+				_vDrop = new LACDecisionFactorVdrop();
+			}
+
 
 			public override double Lookup(MeterPerSecond targetVelocity, MeterPerSecond velocityDrop)
 			{
 				// normalize values inverse from [0 .. 1] to [2.5 .. 1]
-				return 2.5 - 1.5 * _vTarget.Lookup(targetVelocity) * _vDrop.Lookup(velocityDrop);
+				return _offset - _scaling * _vTarget.Lookup(targetVelocity) * _vDrop.Lookup(velocityDrop);
 			}
 
 			protected override void ParseData(DataTable table) {}
@@ -38,6 +67,11 @@ namespace TUGraz.VectoCore.Models.Declaration
 				public LACDecisionFactorVdrop()
 				{
 					ParseData(ReadCsvResource(ResourceId));
+				}
+
+				public LACDecisionFactorVdrop(DataTable vDrop)
+				{
+					ParseData(vDrop ?? ReadCsvResource(ResourceId));
 				}
 
 				public override double Lookup(MeterPerSecond targetVelocity)
@@ -75,6 +109,11 @@ namespace TUGraz.VectoCore.Models.Declaration
 				public LACDecisionFactorVTarget()
 				{
 					ParseData(ReadCsvResource(ResourceId));
+				}
+
+				public LACDecisionFactorVTarget(DataTable vTargetLookup)
+				{
+					ParseData(vTargetLookup ?? ReadCsvResource(ResourceId));
 				}
 
 				public override double Lookup(MeterPerSecond targetVelocity)

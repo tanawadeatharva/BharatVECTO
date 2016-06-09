@@ -62,6 +62,12 @@ namespace TUGraz.VectoCore.InputData.Impl
 		public MeterPerSquareSecond Deceleration { get; internal set; }
 
 		public MeterPerSecond MinSpeed { get; internal set; }
+
+		public double CoastingDecisionFactorOffset { get; internal set; }
+		public double CoastingDecisionFactorScaling { get; internal set; }
+		public double LookaheadDistanceFactor { get; internal set; }
+		public DataTable CoastingDecisionFactorTargetSpeedLookup { get; internal set; }
+		public DataTable CoastingDecisionFactorVelocityDropLookup { get; internal set; }
 	}
 
 	public class OverSpeedEcoRollInputData : IOverSpeedEcoRollEngineeringInputData
@@ -92,10 +98,11 @@ namespace TUGraz.VectoCore.InputData.Impl
 
 	public class AxleInputData : IAxleEngineeringInputData
 	{
-		[System.Diagnostics.CodeAnalysis.SuppressMessage("Microsoft.Design", "CA1065:DoNotRaiseExceptionsInUnexpectedLocations")]
+		[System.Diagnostics.CodeAnalysis.SuppressMessage("Microsoft.Design",
+			"CA1065:DoNotRaiseExceptionsInUnexpectedLocations")]
 		public bool SavedInDeclarationMode
 		{
-			get {throw new System.NotImplementedException(); }
+			get { throw new System.NotImplementedException(); }
 		}
 
 		public string Vendor { get; internal set; }

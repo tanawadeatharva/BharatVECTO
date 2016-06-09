@@ -277,8 +277,10 @@ namespace TUGraz.VectoCore.Models.SimulationComponent.Impl
 			var currentSpeed = Driver.DataBus.VehicleSpeed;
 
 			// distance until halt
-			var lookaheadDistance = (currentSpeed.Value() * 3.6 * 10).SI<Meter>();
-			lookaheadDistance = VectoMath.Max(2 * ds, 1.2 * lookaheadDistance);
+			var lookaheadDistance =
+				(currentSpeed.Value() * 3.6 * Driver.DriverData.LookAheadCoasting.LookAheadDistanceFactor).SI<Meter>();
+			var stopDistance = Driver.ComputeDecelerationDistance(0.SI<MeterPerSecond>());
+			lookaheadDistance = VectoMath.Max(2 * ds, lookaheadDistance, 1.2 * stopDistance);
 			var lookaheadData = Driver.DataBus.LookAhead(lookaheadDistance);
 
 			Log.Debug("Lookahead distance: {0} @ current speed {1}", lookaheadDistance, currentSpeed);
@@ -364,7 +366,7 @@ namespace TUGraz.VectoCore.Models.SimulationComponent.Impl
 
 			//var CDP = F_dec_average / -F_coasting;
 
-			var DF_coasting = LACDecisionFactor.Lookup(v_target, v_veh - v_target);
+			var DF_coasting = Driver.DriverData.LookAheadCoasting.LookAheadDecisionFactor.Lookup(v_target, v_veh - v_target);
 
 			var delta_x = (delta_E / (DF_coasting * F_coasting)).Cast<Meter>();
 
@@ -446,7 +448,8 @@ namespace TUGraz.VectoCore.Models.SimulationComponent.Impl
 				//DriverStrategy.BrakeTrigger = DriverStrategy.NextDrivingAction;
 			}
 
-			var newOperatingPoint = VectoMath.ComputeTimeInterval(DataBus.VehicleSpeed, response.Acceleration, DataBus.Distance, ds);
+			var newOperatingPoint = VectoMath.ComputeTimeInterval(DataBus.VehicleSpeed, response.Acceleration, DataBus.Distance,
+				ds);
 			if (newOperatingPoint.SimulationInterval.IsSmaller(Constants.SimulationSettings.LowerBoundTimeInterval)) {
 				// the next time interval will be too short, this may lead to issues with inertia etc. 
 				// instead of accelerating, drive at constant speed.

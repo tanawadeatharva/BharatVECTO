@@ -265,7 +265,8 @@ namespace TUGraz.VectoCore.InputData.FileIO.JSON
 
 		public virtual IVehicleEngineeringInputData VehicleInputData
 		{
-			[System.Diagnostics.CodeAnalysis.SuppressMessage("Microsoft.Design", "CA1065:DoNotRaiseExceptionsInUnexpectedLocations")]
+			[System.Diagnostics.CodeAnalysis.SuppressMessage("Microsoft.Design",
+				"CA1065:DoNotRaiseExceptionsInUnexpectedLocations")]
 			get
 			{
 				if (VehicleData == null) {
@@ -277,7 +278,8 @@ namespace TUGraz.VectoCore.InputData.FileIO.JSON
 
 		public virtual IGearboxEngineeringInputData GearboxInputData
 		{
-			[System.Diagnostics.CodeAnalysis.SuppressMessage("Microsoft.Design", "CA1065:DoNotRaiseExceptionsInUnexpectedLocations")]
+			[System.Diagnostics.CodeAnalysis.SuppressMessage("Microsoft.Design",
+				"CA1065:DoNotRaiseExceptionsInUnexpectedLocations")]
 			get
 			{
 				if (Gearbox == null) {
@@ -289,7 +291,8 @@ namespace TUGraz.VectoCore.InputData.FileIO.JSON
 
 		public virtual IAxleGearInputData AxleGearInputData
 		{
-			[System.Diagnostics.CodeAnalysis.SuppressMessage("Microsoft.Design", "CA1065:DoNotRaiseExceptionsInUnexpectedLocations")]
+			[System.Diagnostics.CodeAnalysis.SuppressMessage("Microsoft.Design",
+				"CA1065:DoNotRaiseExceptionsInUnexpectedLocations")]
 			get
 			{
 				if (AxleGear == null) {
@@ -306,7 +309,8 @@ namespace TUGraz.VectoCore.InputData.FileIO.JSON
 
 		public virtual IEngineEngineeringInputData EngineInputData
 		{
-			[System.Diagnostics.CodeAnalysis.SuppressMessage("Microsoft.Design", "CA1065:DoNotRaiseExceptionsInUnexpectedLocations")]
+			[System.Diagnostics.CodeAnalysis.SuppressMessage("Microsoft.Design",
+				"CA1065:DoNotRaiseExceptionsInUnexpectedLocations")]
 			get
 			{
 				if (Engine == null) {
@@ -333,7 +337,8 @@ namespace TUGraz.VectoCore.InputData.FileIO.JSON
 
 		public virtual IRetarderInputData RetarderInputData
 		{
-			[System.Diagnostics.CodeAnalysis.SuppressMessage("Microsoft.Design", "CA1065:DoNotRaiseExceptionsInUnexpectedLocations")]
+			[System.Diagnostics.CodeAnalysis.SuppressMessage("Microsoft.Design",
+				"CA1065:DoNotRaiseExceptionsInUnexpectedLocations")]
 			get
 			{
 				if (Retarder == null) {
@@ -359,7 +364,8 @@ namespace TUGraz.VectoCore.InputData.FileIO.JSON
 
 		public virtual IList<ICycleData> Cycles
 		{
-			[System.Diagnostics.CodeAnalysis.SuppressMessage("Microsoft.Design", "CA1065:DoNotRaiseExceptionsInUnexpectedLocations")]
+			[System.Diagnostics.CodeAnalysis.SuppressMessage("Microsoft.Design",
+				"CA1065:DoNotRaiseExceptionsInUnexpectedLocations")]
 			get
 			{
 				var retVal = new List<ICycleData>();
@@ -441,6 +447,14 @@ namespace TUGraz.VectoCore.InputData.FileIO.JSON
 					Enabled = lac.GetEx<bool>(JsonKeys.DriverData_Lookahead_Enabled),
 					Deceleration = lac.GetEx<double>(JsonKeys.DriverData_Lookahead_Deceleration).SI<MeterPerSquareSecond>(),
 					MinSpeed = lac.GetEx<double>(JsonKeys.DriverData_Lookahead_MinSpeed).KMPHtoMeterPerSecond(),
+					LookaheadDistanceFactor = lac.GetEx<double>("PreviewDistanceFactor"),
+					CoastingDecisionFactorOffset = lac.GetEx<double>("DF_offset"),
+					CoastingDecisionFactorScaling = lac.GetEx<double>("DF_scaling"),
+					CoastingDecisionFactorTargetSpeedLookup =
+						ReadTableData(lac.GetEx<string>("DF_targetSpeedLookup"), "Lookahead Coasting Decisionfactor - Target speed", false),
+					CoastingDecisionFactorVelocityDropLookup = ReadTableData(lac.GetEx<string>("Df_velocityDropLookup"),
+						"Lookahead Coasting Decisionfactor - Velocity drop",
+						false)
 				};
 			}
 		}
@@ -467,7 +481,8 @@ namespace TUGraz.VectoCore.InputData.FileIO.JSON
 
 		public virtual DataTable AccelerationCurve
 		{
-			[System.Diagnostics.CodeAnalysis.SuppressMessage("Microsoft.Design", "CA1065:DoNotRaiseExceptionsInUnexpectedLocations")]
+			[System.Diagnostics.CodeAnalysis.SuppressMessage("Microsoft.Design",
+				"CA1065:DoNotRaiseExceptionsInUnexpectedLocations")]
 			get
 			{
 				var acceleration = Body[JsonKeys.DriverData_AccelerationCurve];
