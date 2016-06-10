@@ -377,14 +377,15 @@ namespace TUGraz.VectoCore.Tests.Models.Declaration
 		{
 			//var engineFldFile = @"E:\QUAM\Downloads\EngineFLD\Map_375c_BB1390_modTUG_R49_375c_BB1386.vfld";
 			var engineFldFile = @"E:\QUAM\tmp\scania_fullload_shiftpolygon-test.csv";
-			var gearboxFile = @"TestData\Components\40t_Long_Haul_Truck.vgbx";
+			var gearboxFile = @"E:\QUAM\Downloads\TUG_dev_gbx\TUG_dev\GRS905R.vgbx";
+			//@"TestData\Components\40t_Long_Haul_Truck.vgbx";
 
 			if (!File.Exists(engineFldFile)) {
 				Assert.Inconclusive("Confidential File not found. Test cannot run without file.");
 			}
 
 			var rdyn = 0.4882675.SI<Meter>();
-			var axlegearRatio = 2.31; // 3.71; //2.59;
+			var axlegearRatio = 3.71; //2.31; // 3.71; //2.59;
 
 			var engineData = new CombustionEngineData() {
 				IdleSpeed = 509.RPMtoRad(),

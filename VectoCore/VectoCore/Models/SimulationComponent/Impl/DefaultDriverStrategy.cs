@@ -330,47 +330,39 @@ namespace TUGraz.VectoCore.Models.SimulationComponent.Impl
 			return nextBrakingAction;
 		}
 
-		protected internal virtual Meter ComputeCoastingDistance(MeterPerSecond v_veh,
+		protected internal virtual Meter ComputeCoastingDistance(MeterPerSecond vehicleSpeed,
 			DrivingCycleData.DrivingCycleEntry actionEntry)
 		{
-			var v_target = OverspeedAllowed(actionEntry.RoadGradient, actionEntry.VehicleTargetSpeed)
+			var targetSpeed = OverspeedAllowed(actionEntry.RoadGradient, actionEntry.VehicleTargetSpeed)
 				? actionEntry.VehicleTargetSpeed + Driver.DriverData.OverSpeedEcoRoll.OverSpeed
 				: actionEntry.VehicleTargetSpeed;
 
-			var m = Driver.DataBus.TotalMass;
-			var g = Physics.GravityAccelleration;
-			var h_target = actionEntry.Altitude; //dec.Altitude;
+			var vehicleMass = Driver.DataBus.TotalMass;
+			var targetAltitude = actionEntry.Altitude; //dec.Altitude;
 
-			var h_vehicle = Driver.DataBus.Altitude;
+			var vehicleAltitude = Driver.DataBus.Altitude;
 
-			var E_kin_veh = m * v_veh * v_veh / 2;
-			var E_kin_target = m * v_target * v_target / 2;
-			var E_pot_target = m * g * h_target;
-			var E_pot_veh = m * g * h_vehicle;
+			var targetEnergy = vehicleMass * Physics.GravityAccelleration * targetAltitude +
+								vehicleMass * targetSpeed * targetSpeed / 2;
+			var vehicleEnergy = vehicleMass * Physics.GravityAccelleration * vehicleAltitude +
+								vehicleMass * vehicleSpeed * vehicleSpeed / 2;
 
-			var delta_E = (E_kin_veh + E_pot_veh) - (E_kin_target + E_pot_target);
+			var energyDifference = vehicleEnergy - targetEnergy;
 
-			//var F_dec_average = delta_E / x_delta;
+			var airDragForce = Driver.DataBus.AirDragResistance(vehicleSpeed, targetSpeed);
+			var rollResistanceForce = Driver.DataBus.RollingResistance(
+				((targetAltitude - vehicleAltitude) / (actionEntry.Distance - Driver.DataBus.Distance)).Value().SI<Radian>());
+			var engineDragLoss = Driver.DataBus.EngineDragPower(Driver.DataBus.EngineSpeed);
+			var gearboxLoss = Driver.DataBus.GearboxLoss();
+			var axleLoss = Driver.DataBus.AxlegearLoss();
 
-			var F_air = Driver.DataBus.AirDragResistance(v_veh, v_target);
-			var F_roll =
-				Driver.DataBus.RollingResistance(
-					((h_target - h_vehicle) / (actionEntry.Distance - Driver.DataBus.Distance)).Value().SI<Radian>());
-			var F_enginedrag = Driver.DataBus.EngineDragPower(Driver.DataBus.EngineSpeed) / v_veh;
-			var F_loss_gb = Driver.DataBus.GearboxLoss(Driver.DataBus.EngineSpeed, Driver.DataBus.EngineTorque) / v_veh;
+			var coastingResistanceForce = airDragForce + rollResistanceForce +
+										(gearboxLoss + axleLoss - engineDragLoss) / vehicleSpeed;
 
-			// todo mk-2016-05-11 calculate ra loss
-			var F_loss_ra = 0.SI<Newton>();
-
-			var F_coasting = F_air + F_roll + F_loss_gb + F_loss_ra - F_enginedrag;
-
-			//var CDP = F_dec_average / -F_coasting;
-
-			var DF_coasting = Driver.DriverData.LookAheadCoasting.LookAheadDecisionFactor.Lookup(v_target, v_veh - v_target);
-
-			var delta_x = (delta_E / (DF_coasting * F_coasting)).Cast<Meter>();
-
-			return delta_x;
+			var coastingDecisionFactor = Driver.DriverData.LookAheadCoasting.LookAheadDecisionFactor.Lookup(targetSpeed,
+				vehicleSpeed - targetSpeed);
+			var coastingDistance = (energyDifference / (coastingDecisionFactor * coastingResistanceForce)).Cast<Meter>();
+			return coastingDistance;
 		}
 
 

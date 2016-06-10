@@ -40,7 +40,7 @@ using TUGraz.VectoCore.OutputData;
 
 namespace TUGraz.VectoCore.Models.SimulationComponent.Impl
 {
-	public class AxleGear : StatefulVectoSimulationComponent<SimpleComponentState>, IPowerTrainComponent, ITnInPort,
+	public class AxleGear : StatefulVectoSimulationComponent<AxleGear.AxlegearState>, IAxlegear, ITnInPort,
 		ITnOutPort
 	{
 		protected ITnOutPort NextComponent;
@@ -79,6 +79,7 @@ namespace TUGraz.VectoCore.Models.SimulationComponent.Impl
 			var inTorque = torque / ModelData.AxleGear.Ratio + torqueLoss;
 
 			CurrentState.SetState(inTorque, inAngularVelocity, torque, angularVelocity);
+			CurrentState.TransmissionTorqueLoss = torqueLoss;
 
 			var retVal = NextComponent.Request(absTime, dt, inTorque, inAngularVelocity, dryRun);
 
@@ -118,6 +119,16 @@ namespace TUGraz.VectoCore.Models.SimulationComponent.Impl
 				}
 			}
 			AdvanceState();
+		}
+
+		public Watt AxlegearLoss()
+		{
+			return (PreviousState.TransmissionTorqueLoss) * PreviousState.InAngularVelocity;
+		}
+
+		public class AxlegearState : SimpleComponentState
+		{
+			public NewtonMeter TransmissionTorqueLoss = 0.SI<NewtonMeter>();
 		}
 	}
 }

@@ -53,6 +53,7 @@ namespace TUGraz.VectoCore.Models.Simulation.Impl
 
 		internal IEngineInfo Engine;
 		internal IGearboxInfo Gearbox;
+		internal IAxlegearInfo Axlegear;
 		internal IVehicleInfo Vehicle;
 		internal IBrakes Brakes;
 		internal IDriverInfo Driver;
@@ -116,9 +117,9 @@ namespace TUGraz.VectoCore.Models.Simulation.Impl
 			get { return Gearbox != null ? Gearbox.GearFullLoadCurve : null; }
 		}
 
-		public Watt GearboxLoss(PerSecond inAngularVelocity, NewtonMeter inTorque)
+		public Watt GearboxLoss()
 		{
-			return Gearbox.GearboxLoss(inAngularVelocity, inTorque);
+			return Gearbox.GearboxLoss();
 		}
 
 		#endregion
@@ -233,6 +234,7 @@ namespace TUGraz.VectoCore.Models.Simulation.Impl
 					Gearbox = c;
 					commitPriority = 4;
 				})
+				.If<IAxlegearInfo>(c => Axlegear = c)
 				.If<IVehicleInfo>(c => {
 					Vehicle = c;
 					commitPriority = 5;
@@ -347,6 +349,11 @@ namespace TUGraz.VectoCore.Models.Simulation.Impl
 		public Meter Altitude
 		{
 			get { return DrivingCycle.Altitude; }
+		}
+
+		public Watt AxlegearLoss()
+		{
+			return Axlegear.AxlegearLoss();
 		}
 	}
 }

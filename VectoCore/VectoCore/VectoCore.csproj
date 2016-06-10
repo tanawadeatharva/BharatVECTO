@@ -162,6 +162,7 @@
     <Compile Include="Models\SimulationComponent\Data\ICrossWindCorrection.cs" />
     <Compile Include="Models\SimulationComponent\Data\CrosswindCorrectionVAirBeta.cs" />
     <Compile Include="Models\SimulationComponent\IAuxiliary.cs" />
+    <Compile Include="Models\SimulationComponent\IAxlegear.cs" />
     <Compile Include="Models\SimulationComponent\IBrakes.cs" />
     <Compile Include="Models\SimulationComponent\ICombustionEngineIdleController.cs" />
     <Compile Include="Models\SimulationComponent\IDriverActions.cs" />
@@ -178,6 +179,7 @@
     <Compile Include="Models\SimulationComponent\Impl\CycleClutch.cs" />
     <Compile Include="Models\SimulationComponent\IShiftStrategy.cs" />
     <Compile Include="Models\SimulationComponent\Impl\ShiftStrategy.cs" />
+    <Compile Include="Models\Simulation\DataBus\IAxlegearInfo.cs" />
     <Compile Include="Models\Simulation\DataBus\IClutchInfo.cs" />
     <Compile Include="Models\Simulation\DataBus\IDriverInfo.cs" />
     <Compile Include="Models\Simulation\Data\AuxiliaryDemandType.cs" />

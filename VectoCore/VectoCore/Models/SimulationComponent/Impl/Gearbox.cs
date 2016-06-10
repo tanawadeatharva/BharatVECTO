@@ -128,12 +128,14 @@ namespace TUGraz.VectoCore.Models.SimulationComponent.Impl
 			get { return Gear == 0 ? null : ModelData.Gears[Gear].FullLoadCurve; }
 		}
 
-		public Watt GearboxLoss(PerSecond inAngularVelocity, NewtonMeter inTorque)
+		public Watt GearboxLoss()
 		{
-			var outTorque = ModelData.Gears[Gear].LossMap.GetOutTorque(inAngularVelocity, inTorque, true);
-			var torqueLoss = inTorque - outTorque * ModelData.Gears[Gear].Ratio;
+			//var outTorque = ModelData.Gears[Gear].LossMap.GetOutTorque(inAngularVelocity, inTorque, true);
+			//var torqueLoss = inTorque - outTorque * ModelData.Gears[Gear].Ratio;
 
-			return torqueLoss * inAngularVelocity;
+			//return torqueLoss * inAngularVelocity;
+			return (PreviousState.TransmissionTorqueLoss +
+					PreviousState.InertiaTorqueLossOut / ModelData.Gears[PreviousState.Gear].Ratio) * PreviousState.InAngularVelocity;
 		}
 
 		#endregion

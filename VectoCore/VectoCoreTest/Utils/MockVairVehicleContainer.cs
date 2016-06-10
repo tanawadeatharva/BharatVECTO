@@ -52,7 +52,7 @@ namespace TUGraz.VectoCore.Tests.Utils
 		public MeterPerSquareSecond StartAcceleration { get; private set; }
 		public FullLoadCurve GearFullLoadCurve { get; private set; }
 
-		public Watt GearboxLoss(PerSecond inAngularVelocity, NewtonMeter inTorque)
+		public Watt GearboxLoss()
 		{
 			throw new System.NotImplementedException();
 		}
@@ -133,6 +133,11 @@ namespace TUGraz.VectoCore.Tests.Utils
 		}
 
 		public void FinishSimulation()
+		{
+			throw new System.NotImplementedException();
+		}
+
+		public Watt AxlegearLoss()
 		{
 			throw new System.NotImplementedException();
 		}

@@ -51,6 +51,6 @@ namespace TUGraz.VectoCore.Models.Simulation.DataBus
 
 		FullLoadCurve GearFullLoadCurve { get; }
 
-		Watt GearboxLoss(PerSecond inAngularVelocity, NewtonMeter inTorque);
+		Watt GearboxLoss();
 	}
 }
