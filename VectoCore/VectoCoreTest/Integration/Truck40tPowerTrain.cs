@@ -213,12 +213,12 @@ namespace TUGraz.VectoCore.Tests.Integration
 		}
 
 		private static DriverData CreateDriverData(string accelerationFile, bool overspeed = false)
-		{	
+		{
 			return new DriverData {
 				AccelerationCurve = AccelerationCurveData.ReadFromFile(accelerationFile),
 				LookAheadCoasting = new DriverData.LACData {
 					Enabled = true,
-					MinSpeed = 50.KMPHtoMeterPerSecond(),
+					//MinSpeed = 50.KMPHtoMeterPerSecond(),
 					//Deceleration = -0.5.SI<MeterPerSquareSecond>(),
 				},
 				OverSpeedEcoRoll = overspeed

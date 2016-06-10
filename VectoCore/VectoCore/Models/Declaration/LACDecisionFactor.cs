@@ -45,8 +45,8 @@ namespace TUGraz.VectoCore.Models.Declaration
 
 			public DecisionFactor()
 			{
-				_offset = 2.5;
-				_scaling = 1.5;
+				_offset = DeclarationData.Driver.LookAhead.DecisionFactorCoastingOffset;
+				_scaling = DeclarationData.Driver.LookAhead.DecisionFactorCoastingScaling;
 				_vTarget = new LACDecisionFactorVTarget();
 				_vDrop = new LACDecisionFactorVdrop();
 			}
