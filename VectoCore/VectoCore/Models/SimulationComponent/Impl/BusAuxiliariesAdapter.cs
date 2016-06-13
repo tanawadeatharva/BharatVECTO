@@ -50,6 +50,7 @@ namespace TUGraz.VectoCore.Models.SimulationComponent.Impl
 		protected IAdvancedAuxiliaries Auxiliaries;
 		private readonly FuelConsumptionAdapter _fcMapAdapter;
 
+
 		public BusAuxiliariesAdapter(IVehicleContainer container, string aauxFile, string cycleName, Kilogram vehicleWeight,
 			FuelConsumptionMap fcMap,
 			PerSecond engineIdleSpeed) : base(container)
@@ -118,6 +119,7 @@ namespace TUGraz.VectoCore.Models.SimulationComponent.Impl
 			return PreviousState.PowerDemand / angularSpeed;
 		}
 
+
 		public NewtonMeter PowerDemand(Second absTime, Second dt, NewtonMeter torquePowerTrain, NewtonMeter torqueEngine,
 			PerSecond angularSpeed, bool dryRun = false)
 		{
@@ -129,8 +131,10 @@ namespace TUGraz.VectoCore.Models.SimulationComponent.Impl
 			return CurrentState.PowerDemand / avgAngularSpeed;
 		}
 
+
 		protected override void DoWriteModalResults(IModalDataContainer container)
 		{
+			_fcMapAdapter.AllowExtrapolation = true;
 			// cycleStep has to be called here and not in DoCommit, write is called before Commit!
 			var message = String.Empty;
 			Auxiliaries.CycleStep(CurrentState.dt, ref message);
@@ -194,9 +198,12 @@ namespace TUGraz.VectoCore.Models.SimulationComponent.Impl
 			AdvanceState();
 		}
 
+
 		private Watt GetBusAuxPowerDemand(Second absTime, Second dt, NewtonMeter torquePowerTrain, NewtonMeter torqueEngine,
 			PerSecond angularSpeed, bool dryRun = false)
 		{
+			_fcMapAdapter.AllowExtrapolation = true;
+
 			Auxiliaries.Signals.ClutchEngaged = DataBus.ClutchClosed(absTime);
 			Auxiliaries.Signals.EngineDrivelinePower = torquePowerTrain * angularSpeed;
 			Auxiliaries.Signals.EngineDrivelineTorque = torquePowerTrain;
@@ -237,7 +244,7 @@ namespace TUGraz.VectoCore.Models.SimulationComponent.Impl
 
 			public KilogramPerSecond GetFuelConsumption(NewtonMeter torque, PerSecond angularVelocity)
 			{
-				return FcMap.GetFuelConsumption(torque, angularVelocity);
+				return FcMap.GetFuelConsumption(torque, angularVelocity, AllowExtrapolation);
 			}
 		}
 

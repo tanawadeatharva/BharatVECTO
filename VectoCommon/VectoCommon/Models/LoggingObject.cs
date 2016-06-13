@@ -33,7 +33,6 @@ using System;
 using System.Diagnostics;
 using System.Threading;
 using NLog;
-using NLog.Filters;
 
 namespace TUGraz.VectoCommon.Models
 {
