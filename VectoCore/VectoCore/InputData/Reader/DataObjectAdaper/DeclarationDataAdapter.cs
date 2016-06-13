@@ -278,6 +278,13 @@ namespace TUGraz.VectoCore.InputData.Reader.DataObjectAdaper
 		public static List<CrossWindCorrectionCurveReader.CrossWindCorrectionEntry> GetDeclarationAirResistanceCurve(
 			VehicleCategory vehicleCategory, SquareMeter aerodynamicDragAera)
 		{
+			const int startSpeed = 60;
+			const int maxSpeed = 130;
+			const int speedStep = 5;
+
+			const int maxAlpha = 180;
+			const int alphaStep = 10;
+
 			var values = DeclarationData.AirDrag.Lookup(vehicleCategory);
 			var points = new List<CrossWindCorrectionCurveReader.CrossWindCorrectionEntry> {
 				new CrossWindCorrectionCurveReader.CrossWindCorrectionEntry {
@@ -285,22 +292,24 @@ namespace TUGraz.VectoCore.InputData.Reader.DataObjectAdaper
 					EffectiveCrossSectionArea = 0.SI<SquareMeter>()
 				}
 			};
-			for (var speed = 60; speed <= 100; speed += 5) {
+
+			for (var speed = startSpeed; speed <= maxSpeed; speed += speedStep) {
 				var vVeh = speed.KMPHtoMeterPerSecond();
 				var cdASum = 0.0.SI<SquareMeter>();
-				for (var alpha = 0; alpha <= 180; alpha += 10) {
+
+				for (var alpha = 0; alpha <= maxAlpha; alpha += alphaStep) {
 					var vWindX = Physics.BaseWindSpeed * Math.Cos(alpha.ToRadian());
 					var vWindY = Physics.BaseWindSpeed * Math.Sin(alpha.ToRadian());
 					var vAirX = vVeh + vWindX;
 					var vAirY = vWindY;
-//					var vAir = VectoMath.Sqrt<MeterPerSecond>(vAirX * vAirX + vAirY * vAirY);
 					var beta = Math.Atan((vAirY / vAirX).Value()).ToDegree();
 					var deltaCdA = ComputeDeltaCd(beta, values);
 					var cdA = aerodynamicDragAera + deltaCdA;
 
-					var degreeShare = ((alpha != 0 && alpha != 180) ? 10.0 / 180.0 : 5.0 / 180.0);
+					var degreeShare = (double)alphaStep / maxAlpha;
+					if (alpha == 0 || alpha == maxAlpha)
+						degreeShare /= 2;
 
-//					cdASum += degreeShare * cdA * (vAir * vAir / (vVeh * vVeh)).Cast<Scalar>();
 					cdASum += degreeShare * cdA * ((vAirX * vAirX + vAirY * vAirY) / (vVeh * vVeh)).Cast<Scalar>();
 				}
 				points.Add(new CrossWindCorrectionCurveReader.CrossWindCorrectionEntry {

@@ -50,7 +50,7 @@ namespace TUGraz.VectoCore.Models.SimulationComponent.Data
 					EffectiveCrossSectionArea = aerodynamicDragArea
 				},
 				new CrossWindCorrectionEntry {
-					Velocity = 150.KMPHtoMeterPerSecond(),
+					Velocity = 130.KMPHtoMeterPerSecond(),
 					EffectiveCrossSectionArea = aerodynamicDragArea
 				}
 			}.ToList();
@@ -91,8 +91,7 @@ namespace TUGraz.VectoCore.Models.SimulationComponent.Data
 			return ParseCdxABetaFromColumnIndices(betaTable);
 		}
 
-		protected static List<CrossWindCorrectionEntry> ParseSpeedDependent(DataTable data,
-			SquareMeter aerodynamicDragArea)
+		protected static List<CrossWindCorrectionEntry> ParseSpeedDependent(DataTable data, SquareMeter aerodynamicDragArea)
 		{
 			if (data.Columns.Count != 2) {
 				throw new VectoException("Crosswind correction file must consist of 2 columns.");
@@ -112,8 +111,7 @@ namespace TUGraz.VectoCore.Models.SimulationComponent.Data
 			return ParseSpeedDependentFromColumnIndizes(data, aerodynamicDragArea);
 		}
 
-		protected static List<CrossWindCorrectionCurveReader.CrossWindCorrectionEntry> ParseSpeedDependentFromColumnIndizes(
-			DataTable data,
+		protected static List<CrossWindCorrectionEntry> ParseSpeedDependentFromColumnIndizes(DataTable data,
 			SquareMeter aerodynamicDragArea)
 		{
 			return (from DataRow row in data.Rows
@@ -123,8 +121,7 @@ namespace TUGraz.VectoCore.Models.SimulationComponent.Data
 				}).ToList();
 		}
 
-		protected static List<CrossWindCorrectionCurveReader.CrossWindCorrectionEntry> ParseSpeedDependentFromColumnNames(
-			DataTable data,
+		protected static List<CrossWindCorrectionEntry> ParseSpeedDependentFromColumnNames(DataTable data,
 			SquareMeter aerodynamicDragArea)
 		{
 			return (from DataRow row in data.Rows

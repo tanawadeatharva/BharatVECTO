@@ -30,6 +30,7 @@
 */
 
 using System.Collections.Generic;
+using TUGraz.VectoCommon.Exceptions;
 using TUGraz.VectoCommon.Models;
 using TUGraz.VectoCommon.Utils;
 using TUGraz.VectoCore.Models.Simulation.DataBus;
@@ -68,11 +69,8 @@ namespace TUGraz.VectoCore.Models.SimulationComponent.Data
 		{
 			var p = Entries.GetSection(c => c.Velocity < x);
 
-			if (x < p.Item1.Velocity || p.Item2.Velocity < x) {
-				//Log.Error(_data.CrossWindCorrectionMode == CrossWindCorrectionMode.VAirBetaLookupTable
-				//    ? string.Format("CdExtrapol β = {0}", x)
-				//    : string.Format("CdExtrapol v = {0}", x));
-				Log.Error("CrossWindCorrection Extrapolation: v = {0} (max = {1})", x.ConvertTo().Kilo.Meter.Per.Hour,
+			if (!x.IsBetween(p.Item1.Velocity, p.Item2.Velocity)) {
+				throw new VectoException("CrossWindCorrection Extrapolation: v = {0} (max = {1})", x.ConvertTo().Kilo.Meter.Per.Hour,
 					p.Item2.Velocity.ConvertTo().Kilo.Meter.Per.Hour);
 			}
 
