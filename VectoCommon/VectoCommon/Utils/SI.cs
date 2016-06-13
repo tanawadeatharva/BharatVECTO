@@ -259,7 +259,6 @@ namespace TUGraz.VectoCommon.Utils
 	//	private Gram(double val) : base(val, NumeratorDefault) {}
 	//}
 
-
 	//public class GramPerSecond : SIBase<GramPerSecond>
 	//{
 	//	private static readonly Unit[] NumeratorDefault = { Unit.g };
@@ -322,7 +321,6 @@ namespace TUGraz.VectoCommon.Utils
 			return SIBase<Liter>.Create(kilogram.Value() / kilogramPerCubicMeter.Value() * 1000);
 		}
 	}
-
 
 	public class Liter : SIBase<Liter>
 	{
@@ -583,7 +581,6 @@ namespace TUGraz.VectoCommon.Utils
 		}
 	}
 
-
 	/// <summary>
 	/// SI Class for one per second [1/s].
 	/// </summary>
@@ -782,6 +779,8 @@ namespace TUGraz.VectoCommon.Utils
 	/// <typeparam name="T"></typeparam>
 	public abstract class SIBase<T> : SI where T : SIBase<T>
 	{
+		static T _zeroPrototype;
+
 		static SIBase()
 		{
 			var bindingFlags = BindingFlags.NonPublic | BindingFlags.Instance;
@@ -789,6 +788,7 @@ namespace TUGraz.VectoCommon.Utils
 			var parameter = Expression.Parameter(typeof(double));
 			var lambda = Expression.Lambda<Func<double, T>>(Expression.New(constructorInfo, parameter), parameter);
 			Constructor = lambda.Compile();
+			_zeroPrototype = Constructor(0);
 		}
 
 		/// <summary>
@@ -802,6 +802,9 @@ namespace TUGraz.VectoCommon.Utils
 		/// <param name="val">The value of the SI object.</param>
 		public static T Create(double val)
 		{
+			if (val == 0)
+				return _zeroPrototype;
+
 			return Constructor(val);
 		}
 
