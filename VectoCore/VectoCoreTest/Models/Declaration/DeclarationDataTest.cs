@@ -173,14 +173,18 @@ namespace TUGraz.VectoCore.Tests.Models.Declaration
 			}
 		}
 
-		[Test,
-		TestCase(VehicleCategory.Tractor, 6.46, 0, 8.12204),
-		TestCase(VehicleCategory.Tractor, 6.46, 60, 8.12204),
-		TestCase(VehicleCategory.Tractor, 6.46, 75, 7.67058),
-		TestCase(VehicleCategory.Tractor, 6.46, 100, 7.23735),
-		TestCase(VehicleCategory.Tractor, 6.46, 52.1234, 8.12196),
-		TestCase(VehicleCategory.Tractor, 6.46, 73.5432, 7.70815),
-		TestCase(VehicleCategory.Tractor, 6.46, 92.8765, 7.33443),
+		[
+			TestCase(VehicleCategory.Tractor, 6.46, 0, 8.12204),
+			TestCase(VehicleCategory.Tractor, 6.46, 60, 8.12204),
+			TestCase(VehicleCategory.Tractor, 6.46, 75, 7.67058),
+			TestCase(VehicleCategory.Tractor, 6.46, 100, 7.23735),
+			TestCase(VehicleCategory.Tractor, 6.46, 52.1234, 8.12196),
+			TestCase(VehicleCategory.Tractor, 6.46, 73.5432, 7.70815),
+			TestCase(VehicleCategory.Tractor, 6.46, 92.8765, 7.33443),
+			TestCase(VehicleCategory.Tractor, 6.46, 103, 7.2025564),
+			TestCase(VehicleCategory.Tractor, 6.46, 105, 7.17936),
+			TestCase(VehicleCategory.Tractor, 6.46, 115, 7.08174),
+			TestCase(VehicleCategory.Tractor, 6.46, 130, 6.96979),
 		]
 		public void CrossWindCorrectionTest(VehicleCategory vehicleCategory, double crossSectionArea, double kmph,
 			double expected)
@@ -191,6 +195,20 @@ namespace TUGraz.VectoCore.Tests.Models.Declaration
 
 			var tmp = crossWindCorrectionCurve.EffectiveAirDragArea(kmph.KMPHtoMeterPerSecond());
 			Assert.AreEqual(expected, tmp.Value(), Tolerance);
+		}
+
+		[
+			TestCase(VehicleCategory.Tractor, 6.46, -0.1),
+			TestCase(VehicleCategory.Tractor, 6.46, 130.1),
+		]
+		public void CrossWindCorrectionExceptionTest(VehicleCategory vehicleCategory, double crossSectionArea, double kmph)
+		{
+			var crossWindCorrectionCurve = new CrosswindCorrectionCdxALookup(
+				DeclarationDataAdapter.GetDeclarationAirResistanceCurve(vehicleCategory, crossSectionArea.SI<SquareMeter>()),
+				CrossWindCorrectionMode.DeclarationModeCorrection);
+
+			AssertHelper.Exception<VectoException>(() =>
+				crossWindCorrectionCurve.EffectiveAirDragArea(kmph.KMPHtoMeterPerSecond()));
 		}
 
 		[Test,
