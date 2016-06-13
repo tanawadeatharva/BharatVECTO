@@ -181,6 +181,7 @@ namespace TUGraz.VectoCore.Tests.Models.Declaration
 			TestCase(VehicleCategory.Tractor, 6.46, 52.1234, 8.12196),
 			TestCase(VehicleCategory.Tractor, 6.46, 73.5432, 7.70815),
 			TestCase(VehicleCategory.Tractor, 6.46, 92.8765, 7.33443),
+			TestCase(VehicleCategory.Tractor, 6.46, 100.449, 7.2321466),
 			TestCase(VehicleCategory.Tractor, 6.46, 103, 7.2025564),
 			TestCase(VehicleCategory.Tractor, 6.46, 105, 7.17936),
 			TestCase(VehicleCategory.Tractor, 6.46, 115, 7.08174),
