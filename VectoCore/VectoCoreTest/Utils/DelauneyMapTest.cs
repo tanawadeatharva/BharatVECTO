@@ -82,10 +82,10 @@ namespace TUGraz.VectoCore.Tests.Utils
 			AssertHelper.AreRelativeEqual(1.5, map.Interpolate(0, 0.75).Value);
 
 			// extrapolation (should fail)
-			AssertHelper.Exception<VectoException>(() => map.Interpolate(1, 1), "TEST: Interpolation failed. x: 1, y: 1");
-			AssertHelper.Exception<VectoException>(() => map.Interpolate(-1, -1), "TEST: Interpolation failed. x: -1, y: -1");
-			AssertHelper.Exception<VectoException>(() => map.Interpolate(1, -1), "TEST: Interpolation failed. x: 1, y: -1");
-			AssertHelper.Exception<VectoException>(() => map.Interpolate(-1, 1), "TEST: Interpolation failed. x: -1, y: 1");
+			Assert.IsNull(map.Interpolate(1, 1));
+			Assert.IsNull(map.Interpolate(-1, -1));
+			Assert.IsNull(map.Interpolate(1, -1));
+			Assert.IsNull(map.Interpolate(-1, 1));
 		}
 
 		public void Test_DelaunayMapPlane()

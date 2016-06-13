@@ -29,11 +29,11 @@
 *   Martin Rexeis, rexeis@ivt.tugraz.at, IVT, Graz University of Technology
 */
 
+using System.Collections.Generic;
 using System.Globalization;
 using System.IO;
 using System.Linq;
 using Microsoft.VisualStudio.TestTools.UnitTesting;
-using TUGraz.VectoCommon.Exceptions;
 using TUGraz.VectoCommon.Utils;
 using TUGraz.VectoCore.Models.SimulationComponent.Data.Engine;
 
@@ -60,19 +60,13 @@ namespace TUGraz.VectoCore.Tests.Models.SimulationComponentData
 			AssertMapValuesEqual(lines, map);
 		}
 
-		private static void AssertMapValuesEqual(string[] lines, FuelConsumptionMap map)
+		private static void AssertMapValuesEqual(IReadOnlyList<string> lines, FuelConsumptionMap map)
 		{
-			for (var i = 1; i < lines.Count(); i++) {
+			for (var i = 1; i < lines.Count; i++) {
 				var entry = lines[i].Split(',').Select(x => double.Parse(x, CultureInfo.InvariantCulture)).ToArray();
-				try {
-					Assert.AreEqual(entry[2].SI().Gramm.Per.Hour.ConvertTo().Kilo.Gramm.Per.Second.Value(),
-						map.GetFuelConsumption(entry[1].SI<NewtonMeter>(), entry[0].RPMtoRad()).Value(),
-						Tolerance,
-						string.Format("Line: {0}, n_eng_avg={1}, T={2}", (i + 2), entry[0].SI().Rounds.Per.Minute, entry[1]));
-				} catch (VectoException ex) {
-					throw new VectoException(string.Format("Row {0}: Error in ConsumptionMap n_eng_avg={1}, T={2}: {3}",
-						i + 2, entry[0], entry[1], ex.Message));
-				}
+
+				Assert.AreEqual(entry[2].SI().Gramm.Per.Hour.ConvertTo().Kilo.Gramm.Per.Second.Value(),
+					map.GetFuelConsumption(entry[1].SI<NewtonMeter>(), entry[0].RPMtoRad(), true).Value(), Tolerance);
 			}
 		}
 	}

@@ -194,8 +194,10 @@ namespace TUGraz.VectoCore.Models.SimulationComponent.Data.Gearbox
 		{
 			var torqueLoss = _invertedLossMap.Interpolate(inAngularVelocity.ConvertTo().Rounds.Per.Minute.Value(),
 				inTorque.Value());
+			if (torqueLoss.HasValue)
+				return (inTorque - torqueLoss.Value.SI<NewtonMeter>()) / _ratio;
 
-			if (!torqueLoss.HasValue && allowExtrapolation) {
+			if (allowExtrapolation) {
 				torqueLoss = _invertedLossMap.Extrapolate(inAngularVelocity.ConvertTo().Rounds.Per.Minute.Value(), inTorque.Value());
 				return (inTorque - torqueLoss.Value.SI<NewtonMeter>()) / _ratio;
 			}
