@@ -210,7 +210,8 @@ namespace TUGraz.VectoCore.Utils
 		/// </summary>
 		/// <param name="x"></param>
 		/// <param name="y"></param>
-		/// <returns>a double value if interpolation is successfull, null if interpolation is not sucessfull.</returns>
+		/// <returns>a value if interpolation is successfull, 
+		///          null if interpolation has failed.</returns>
 		public double? Interpolate(double x, double y)
 		{
 			var tr = _triangles.Find(triangle => triangle.IsInside(x, y, exact: true)) ??
@@ -288,36 +289,5 @@ namespace TUGraz.VectoCore.Utils
 			var z = edge.P1.Z + edge.Vector.Z * (ap.Dot(ab) / ab.Dot(ab));
 			return z;
 		}
-
-		#region Equality members
-
-		private bool Equals(DelaunayMap other)
-		{
-			return Points.SequenceEqual(other.Points) && _triangles.SequenceEqual(other._triangles);
-		}
-
-		public override bool Equals(object obj)
-		{
-			if (ReferenceEquals(null, obj)) {
-				return false;
-			}
-			if (ReferenceEquals(this, obj)) {
-				return true;
-			}
-			if (obj.GetType() != GetType()) {
-				return false;
-			}
-			return Equals((DelaunayMap)obj);
-		}
-
-		public override int GetHashCode()
-		{
-			unchecked {
-				return ((Points != null ? Points.GetHashCode() : 0) * 397) ^
-						(_triangles != null ? _triangles.GetHashCode() : 0);
-			}
-		}
-
-		#endregion
 	}
 }
