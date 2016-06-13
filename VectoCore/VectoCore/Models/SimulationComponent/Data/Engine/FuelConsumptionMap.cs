@@ -32,6 +32,7 @@
 using System;
 using System.ComponentModel.DataAnnotations;
 using System.Data;
+using System.Diagnostics.CodeAnalysis;
 using System.Linq;
 using TUGraz.VectoCommon.Exceptions;
 using TUGraz.VectoCommon.Utils;
@@ -40,7 +41,7 @@ using TUGraz.VectoCore.Utils;
 
 namespace TUGraz.VectoCore.Models.SimulationComponent.Data.Engine
 {
-	public class FuelConsumptionMap : SimulationComponentData, IDisposable
+	public class FuelConsumptionMap : SimulationComponentData
 	{
 		[Required, ValidateObject] private readonly DelaunayMap _fuelMap = new DelaunayMap("FuelConsumptionMap");
 
@@ -54,11 +55,6 @@ namespace TUGraz.VectoCore.Models.SimulationComponent.Data.Engine
 			} catch (Exception e) {
 				throw new VectoException(string.Format("File {0}: {1}", fileName, e.Message), e);
 			}
-		}
-
-		public bool Extrapolated
-		{
-			get { return _fuelMap.Extrapolated; }
 		}
 
 		public static FuelConsumptionMap Create(DataTable data)
@@ -121,13 +117,15 @@ namespace TUGraz.VectoCore.Models.SimulationComponent.Data.Engine
 		/// <summary>
 		/// Calculates the fuel consumption based on the given fuel map, the angularVelocity and the torque.
 		/// </summary>
-		public KilogramPerSecond GetFuelConsumption(NewtonMeter torque, PerSecond angularVelocity,
-			bool allowExtrapolation = false)
+		public KilogramPerSecond GetFuelConsumption(NewtonMeter torque, PerSecond angularVelocity)
 		{
 			// delaunay map needs is initialised with rpm, therefore the angularVelocity has to be converted.
-			return
-				_fuelMap.Interpolate(torque.Value(), angularVelocity.AsRPM, allowExtrapolation)
-					.SI().Kilo.Gramm.Per.Second.Cast<KilogramPerSecond>();
+			var value = _fuelMap.Interpolate(torque.Value(), angularVelocity.AsRPM);
+			if (value.HasValue)
+				return value.Value.SI().Kilo.Gramm.Per.Second.Cast<KilogramPerSecond>();
+
+			throw new VectoException("FuelConsumptionMap: Interpolation failed. torque: {0}, n: {1}", torque.Value(),
+				angularVelocity.AsRPM);
 		}
 
 		private static class Fields
@@ -148,6 +146,7 @@ namespace TUGraz.VectoCore.Models.SimulationComponent.Data.Engine
 			public const string FuelConsumption = "fuel consumption";
 		}
 
+		[SuppressMessage("ReSharper", "MemberCanBePrivate.Local")]
 		private class FuelConsumptionEntry
 		{
 			[Required, SIRange(0, 5000 * Constants.RPMToRad)]
@@ -225,19 +224,6 @@ namespace TUGraz.VectoCore.Models.SimulationComponent.Data.Engine
 		public override int GetHashCode()
 		{
 			return _fuelMap != null ? _fuelMap.GetHashCode() : 0;
-		}
-
-		public void Dispose()
-		{
-			Dispose(true);
-			GC.SuppressFinalize(this);
-		}
-
-		protected virtual void Dispose(bool disposing)
-		{
-			if (disposing) {
-				_fuelMap.Dispose();
-			}
 		}
 
 		#endregion
