@@ -42,12 +42,7 @@ using TUGraz.VectoCore.Utils;
 
 namespace TUGraz.VectoCore.Models.SimulationComponent.Impl
 {
-	public class AxleGearState : SimpleComponentState
-	{
-		public TransmissionLossMap.LossMapResult TorqueLossResult;
-	}
-
-	public class AxleGear : StatefulVectoSimulationComponent<AxleGearState>, IPowerTrainComponent, ITnInPort,
+	public class AxleGear : StatefulVectoSimulationComponent<AxleGear.AxleGearState>, IPowerTrainComponent, ITnInPort,
 		ITnOutPort
 	{
 		protected ITnOutPort NextComponent;
@@ -127,6 +122,11 @@ namespace TUGraz.VectoCore.Models.SimulationComponent.Impl
 				}
 			}
 			AdvanceState();
+		}
+
+		public class AxleGearState : SimpleComponentState
+		{
+			public TransmissionLossMap.LossMapResult TorqueLossResult;
 		}
 	}
 }
