@@ -35,7 +35,6 @@ using System.Diagnostics;
 using System.Drawing;
 using System.IO;
 using System.Linq;
-using System.Threading;
 using System.Windows.Forms.DataVisualization.Charting;
 using TUGraz.VectoCommon.Exceptions;
 using TUGraz.VectoCommon.Models;
@@ -43,25 +42,17 @@ using TUGraz.VectoCommon.Utils;
 
 namespace TUGraz.VectoCore.Utils
 {
-	public sealed class DelaunayMap : LoggingObject, IDisposable
+	public sealed class DelaunayMap : LoggingObject
 	{
 		internal readonly ICollection<Point> Points = new HashSet<Point>();
 		private List<Triangle> _triangles = new List<Triangle>();
 		private Edge[] _convexHull;
-
-		private readonly ThreadLocal<bool> _extrapolated = new ThreadLocal<bool>();
 
 		private readonly string _mapName;
 
 		public DelaunayMap(string name)
 		{
 			_mapName = name;
-		}
-
-		public bool Extrapolated
-		{
-			get { return _extrapolated.Value; }
-			set { _extrapolated.Value = value; }
 		}
 
 		public void AddPoint(double x, double y, double z)
@@ -162,7 +153,7 @@ namespace TUGraz.VectoCore.Utils
 		/// <summary>
 		/// Draws the delaunay map (except supertriangle).
 		/// </summary>
-		private static void DrawGraph(int i, List<Triangle> triangles, Triangle superTriangle, Point[] points,
+		private static void DrawGraph(int i, IEnumerable<Triangle> triangles, Triangle superTriangle, Point[] points,
 			Point lastPoint = null)
 		{
 			var xmin = Math.Min(points.Min(p => p.X), lastPoint != null ? lastPoint.X : double.NaN);
@@ -214,22 +205,34 @@ namespace TUGraz.VectoCore.Utils
 			}
 		}
 
-		public double Interpolate(double x, double y, bool allowExtrapolation = false)
+		/// <summary>
+		/// Interpolates the value of an point in the delaunay map.
+		/// </summary>
+		/// <param name="x"></param>
+		/// <param name="y"></param>
+		/// <returns>a value if interpolation is successfull, 
+		///          null if interpolation has failed.</returns>
+		public double? Interpolate(double x, double y)
 		{
 			var tr = _triangles.Find(triangle => triangle.IsInside(x, y, exact: true)) ??
 					_triangles.Find(triangle => triangle.IsInside(x, y, exact: false));
 
 			if (tr != null) {
-				Extrapolated = false;
 				var plane = new Plane(tr);
 				return (plane.W - plane.X * x - plane.Y * y) / plane.Z;
 			}
 
-			if (!allowExtrapolation) {
-				throw new VectoException("{2}: Interpolation failed. x: {0}, y: {1}", x, y, _mapName);
-			}
+			return null;
+		}
 
-			Extrapolated = true;
+		/// <summary>
+		/// Extrapolates the value of an point on the edges of a delaunay map.
+		/// </summary>
+		/// <param name="x"></param>
+		/// <param name="y"></param>
+		/// <returns></returns>
+		public double Extrapolate(double x, double y)
+		{
 			var point = new Point(x, y);
 
 			// get nearest point on convex hull
@@ -242,7 +245,7 @@ namespace TUGraz.VectoCore.Utils
 			// (p1)--edge1-->(nearestPoint)
 			var edge1 = _convexHull.First(e => e.P2.Equals(nearestPoint));
 			if (point.IsLeftOf(new Edge(nearestPoint, edge1.Vector.Perpendicular() + nearestPoint))) {
-				return Extrapolate(x, y, edge1);
+				return ExtrapolateOnEdge(x, y, edge1);
 			}
 
 			// test if point is on right side of the perpendicular vector of edge2 in the nearest point
@@ -252,7 +255,7 @@ namespace TUGraz.VectoCore.Utils
 			// (nearestPoint)--edge2-->(p2)
 			var edge2 = _convexHull.First(e => e.P1.Equals(nearestPoint));
 			if (!point.IsLeftOf(new Edge(nearestPoint, edge2.Vector.Perpendicular() + nearestPoint))) {
-				return Extrapolate(x, y, edge2);
+				return ExtrapolateOnEdge(x, y, edge2);
 			}
 
 			// if point is right of perpendicular vector of edge1 and left of perpendicular vector of edge2: take the nearest point z-value
@@ -269,7 +272,7 @@ namespace TUGraz.VectoCore.Utils
 		/// <param name="y"></param>
 		/// <param name="edge"></param>
 		/// <returns></returns>
-		private static double Extrapolate(double x, double y, Edge edge)
+		private static double ExtrapolateOnEdge(double x, double y, Edge edge)
 		{
 			// shortcut if edge end points have same Z values
 			if (edge.P1.Z.IsEqual(edge.P2.Z)) {
@@ -286,41 +289,5 @@ namespace TUGraz.VectoCore.Utils
 			var z = edge.P1.Z + edge.Vector.Z * (ap.Dot(ab) / ab.Dot(ab));
 			return z;
 		}
-
-		#region Equality members
-
-		private bool Equals(DelaunayMap other)
-		{
-			return Points.SequenceEqual(other.Points) && _triangles.SequenceEqual(other._triangles);
-		}
-
-		public override bool Equals(object obj)
-		{
-			if (ReferenceEquals(null, obj)) {
-				return false;
-			}
-			if (ReferenceEquals(this, obj)) {
-				return true;
-			}
-			if (obj.GetType() != GetType()) {
-				return false;
-			}
-			return Equals((DelaunayMap)obj);
-		}
-
-		public override int GetHashCode()
-		{
-			unchecked {
-				return ((Points != null ? Points.GetHashCode() : 0) * 397) ^
-						(_triangles != null ? _triangles.GetHashCode() : 0);
-			}
-		}
-
-		public void Dispose()
-		{
-			_extrapolated.Dispose();
-		}
-
-		#endregion
 	}
 }

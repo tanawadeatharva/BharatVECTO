@@ -337,26 +337,20 @@ namespace TUGraz.VectoCore.Models.SimulationComponent.Impl
 			container[ModalResultField.Tq_full] = CurrentState.DynamicFullLoadTorque;
 			container[ModalResultField.Tq_drag] = CurrentState.FullDragTorque;
 
-			try {
-				var fc = ModelData.ConsumptionMap.GetFuelConsumption(CurrentState.EngineTorque, avgEngineSpeed);
+			var fc = ModelData.ConsumptionMap.GetFuelConsumption(CurrentState.EngineTorque, avgEngineSpeed);
 
-				//TODO mk-2015-11-11: calculate aux start stop correction
-				var fcAux = fc;
+			//TODO mk-2015-11-11: calculate aux start stop correction
+			var fcAux = fc;
 
-				var fcWHTC = fcAux * ModelData.WHTCCorrectionFactor;
-				var fcAAUX = fcWHTC;
-				var fcFinal = fcAAUX;
+			var fcWHTC = fcAux * ModelData.WHTCCorrectionFactor;
+			var fcAAUX = fcWHTC;
+			var fcFinal = fcAAUX;
 
-				container[ModalResultField.FCMap] = fc;
-				container[ModalResultField.FCAUXc] = fcAux;
-				container[ModalResultField.FCWHTCc] = fcWHTC;
-				container[ModalResultField.FCAAUX] = fcAAUX;
-				container[ModalResultField.FCFinal] = fcFinal;
-			} catch (Exception) {
-				Log.Error("FuelMap Extrapolated: n_eng_avg: {0} Tq: {1}", avgEngineSpeed.ConvertTo().Rounds.Per.Minute,
-					CurrentState.EngineTorque);
-				throw;
-			}
+			container[ModalResultField.FCMap] = fc;
+			container[ModalResultField.FCAUXc] = fcAux;
+			container[ModalResultField.FCWHTCc] = fcWHTC;
+			container[ModalResultField.FCAAUX] = fcAAUX;
+			container[ModalResultField.FCFinal] = fcFinal;
 		}
 
 		protected override void DoCommitSimulationStep()
