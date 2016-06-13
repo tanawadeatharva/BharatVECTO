@@ -70,7 +70,7 @@ namespace TUGraz.VectoCore.Models.SimulationComponent.Impl
 
 		protected readonly Watt StationaryIdleFullLoadPower;
 
-		internal readonly CombustionEngineData ModelData;
+		[ValidateObject] internal readonly CombustionEngineData ModelData;
 
 		protected IEngineAuxPort EngineAux;
 

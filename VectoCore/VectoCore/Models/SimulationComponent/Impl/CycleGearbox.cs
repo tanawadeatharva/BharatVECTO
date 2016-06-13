@@ -56,7 +56,7 @@ namespace TUGraz.VectoCore.Models.SimulationComponent.Impl
 		/// <summary>
 		/// The data and settings for the gearbox.
 		/// </summary>
-		internal readonly GearboxData ModelData;
+		[ValidateObject] internal readonly GearboxData ModelData;
 
 		public bool ClutchClosed(Second absTime)
 		{

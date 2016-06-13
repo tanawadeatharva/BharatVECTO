@@ -47,7 +47,7 @@ namespace TUGraz.VectoCore.Models.SimulationComponent.Impl
 		IDriverDemandOutPort
 	{
 		//private readonly CrossWindCorrectionCurve _airResistanceCurve;
-		internal readonly VehicleData ModelData;
+		[ValidateObject] internal readonly VehicleData ModelData;
 
 		protected IFvOutPort NextComponent;
 
