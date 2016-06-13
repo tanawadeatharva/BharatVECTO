@@ -139,7 +139,7 @@ namespace TUGraz.VectoCommon.Utils
 		/// <returns></returns>
 		public static bool IsPositive(this double self, double tolerance = Tolerance)
 		{
-			return self.IsGreaterOrEqual(0.0, tolerance);
+			return self >= -tolerance;
 		}
 
 		/// <summary>
