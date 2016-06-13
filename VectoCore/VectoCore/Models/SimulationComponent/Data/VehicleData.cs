@@ -44,15 +44,13 @@ namespace TUGraz.VectoCore.Models.SimulationComponent.Data
 	[CustomValidation(typeof(VehicleData), "ValidateVehicleData")]
 	public class VehicleData : SimulationComponentData
 	{
-		//public string BasePath { get; internal set; }
-		private List<Axle> _axleData;
-
 		public VehicleCategory VehicleCategory { get; internal set; }
 		public VehicleClass VehicleClass { get; internal set; }
-		//public CrossWindCorrectionMode CrossWindCorrectionMode { get; internal set; }
 
 		[Required, ValidateObject]
 		public ICrossWindCorrection CrossWindCorrectionCurve { get; internal set; }
+
+		private List<Axle> _axleData;
 
 		/// <summary>
 		///     Set the properties for all axles of the vehicle

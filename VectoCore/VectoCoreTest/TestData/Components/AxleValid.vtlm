@@ -1,0 +1,6 @@
+Input Speed [rpm],Input Torque [Nm],Torque Loss [Nm],Eff [-]
+0,0,0
+0,-100000,100
+0,100000,100
+5000,-100000,100
+5000,100000,100

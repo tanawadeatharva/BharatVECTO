@@ -204,7 +204,7 @@ namespace TUGraz.VectoCore.Models.SimulationComponent.Data.Gearbox
 			[Required, SIRange(0, 5000)]
 			public PerSecond InputSpeed { get; set; }
 
-			[Required, SIRange(-50000, 50000)]
+			[Required, SIRange(-100000, 100000)]
 			public NewtonMeter InputTorque { get; set; }
 
 			[Required, SIRange(0, double.MaxValue)]

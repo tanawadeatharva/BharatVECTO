@@ -68,7 +68,8 @@ namespace TUGraz.VectoCore.Tests.Models.SimulationComponent
 		public const string GearboxShiftPolygonFile = @"TestData\Components\ShiftPolygons.vgbs";
 		public const string GearboxFullLoadCurveFile = @"TestData\Components\Gearbox.vfld";
 
-		public TestContext TestContext { get; set; }
+		public const string AxleGearValidRangeDataFile = @"TestData\Components\AxleGearValidRange.vgbx";
+		public const string AxleGearInvalidRangeDataFile = @"TestData\Components\AxleGearInvalidRange.vgbx";
 
 		private static GearboxData CreateGearboxData()
 		{
@@ -124,6 +125,24 @@ namespace TUGraz.VectoCore.Tests.Models.SimulationComponent
 				"AngularVelocity Engine Side");
 		}
 
+		[TestCase]
+		public void AxleGearValidRangeTest()
+		{
+			var vehicle = new VehicleContainer(ExecutionMode.Engineering);
+			var axleGearData = MockSimulationDataFactory.CreateAxleGearDataFromFile(AxleGearValidRangeDataFile);
+			var axleGear = new AxleGear(vehicle, axleGearData);
+			Assert.AreEqual(0, axleGear.Validate().Count);
+		}
+
+		[TestCase]
+		public void AxleGearInvalidRangeTest()
+		{
+			var vehicle = new VehicleContainer(ExecutionMode.Engineering);
+			var axleGearData = MockSimulationDataFactory.CreateAxleGearDataFromFile(AxleGearInvalidRangeDataFile);
+			var axleGear = new AxleGear(vehicle, axleGearData);
+			var errors = axleGear.Validate();
+			Assert.AreEqual(1, errors.Count);
+		}
 
 		[Test,
 		TestCase(@"TestData\Components\24t Coach LessThanTwoGears.vgbx")]
@@ -359,7 +378,6 @@ namespace TUGraz.VectoCore.Tests.Models.SimulationComponent
 			var ratios = new[] { 0.0, 6.38, 4.63, 3.44, 2.59, 1.86, 1.35, 1, 0.76 };
 			// the first element 0.0 is just a placeholder for axlegear, not used in this test
 
-
 			var absTime = 0.SI<Second>();
 			var dt = 2.SI<Second>();
 
@@ -369,7 +387,6 @@ namespace TUGraz.VectoCore.Tests.Models.SimulationComponent
 
 			var torque = (expectedT - expectedLoss) * ratios[gear];
 			var angularVelocity = expectedN / ratios[gear];
-
 
 			gearbox.OutPort().Initialize(torque, angularVelocity);
 			gearbox.Gear = (uint)gear;
@@ -383,7 +400,6 @@ namespace TUGraz.VectoCore.Tests.Models.SimulationComponent
 				AssertHelper.AreRelativeEqual(expectedT, port.Torque, toleranceFactor: 1e-5);
 			}
 		}
-
 
 		[Test,
 		TestCase(8, 7, 1500, 750, typeof(ResponseGearShift)),
@@ -410,12 +426,10 @@ namespace TUGraz.VectoCore.Tests.Models.SimulationComponent
 			var ratios = new[] { 0.0, 6.38, 4.63, 3.44, 2.59, 1.86, 1.35, 1, 0.76 };
 			// the first element 0.0 is just a placeholder for axlegear, not used in this test
 
-
 			var absTime = 0.SI<Second>();
 			var dt = 2.SI<Second>();
 
 			gearbox.OutPort().Initialize(1.SI<NewtonMeter>(), 1.SI<PerSecond>());
-
 
 			var expectedT = t.SI<NewtonMeter>();
 			var expectedN = n.RPMtoRad();
