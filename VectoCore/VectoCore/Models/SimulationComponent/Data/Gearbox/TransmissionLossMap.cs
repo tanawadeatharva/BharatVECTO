@@ -75,6 +75,13 @@ namespace TUGraz.VectoCore.Models.SimulationComponent.Data.Gearbox
 			}
 		}
 
+		/// <summary>
+		/// Create a TransmissionLoss Map from a DataTable.
+		/// </summary>
+		/// <param name="data"></param>
+		/// <param name="gearRatio"></param>
+		/// <param name="gearName"></param>
+		/// <returns></returns>
 		public static TransmissionLossMap Create(DataTable data, double gearRatio, string gearName)
 		{
 			if (data.Columns.Count < 3) {
@@ -99,6 +106,29 @@ namespace TUGraz.VectoCore.Models.SimulationComponent.Data.Gearbox
 			}
 
 			return new TransmissionLossMap(entries, gearRatio, gearName);
+		}
+
+		/// <summary>
+		/// Create a DataTable from an efficiency value.
+		/// </summary>
+		/// <param name="efficiency"></param>
+		/// <param name="gearRatio"></param>
+		/// <param name="gearName"></param>
+		/// <returns></returns>
+		public static DataTable CreateDataTableFromEfficiency(double efficiency)
+		{
+			var table = new DataTable();
+			table.Columns.Add("Input Speed");
+			table.Columns.Add("Input Torque");
+			table.Columns.Add("Torque Loss");
+			table.Rows.Add(new[] { -1e5, -1e5, (1 - efficiency) * 1e5 });
+			table.Rows.Add(new[] { 1e5, -1e5, (1 - efficiency) * 1e5 });
+			table.Rows.Add(new[] { 0, 1e5, 0 });
+			table.Rows.Add(new[] { 0, -1e5, 0 });
+			table.Rows.Add(new[] { 1e5, 1e5, (1 - efficiency) * 1e5 });
+			table.Rows.Add(new[] { -1e5, 1e5, (1 - efficiency) * 1e5 });
+
+			return table;
 		}
 
 		private static bool HeaderIsValid(DataColumnCollection columns)
