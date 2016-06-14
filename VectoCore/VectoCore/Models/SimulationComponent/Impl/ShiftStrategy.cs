@@ -137,8 +137,8 @@ namespace TUGraz.VectoCore.Models.SimulationComponent.Impl
 		//                  =  inAngularSpeed >= 1.2*RatedSpeed - 0.2*IdleSpeed
 		private bool SpeedTooHighForEngine(uint gear, PerSecond outAngularSpeed)
 		{
-			return (outAngularSpeed * Data.Gears[gear].Ratio).IsGreaterOrEqual(1.2 * DataBus.EngineRatedSpeed -
-																				0.2 * DataBus.EngineIdleSpeed);
+			return
+				(outAngularSpeed * Data.Gears[gear].Ratio).IsGreaterOrEqual(DataBus.EngineN95hSpeed);
 		}
 
 

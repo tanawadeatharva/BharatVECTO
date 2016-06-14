@@ -402,7 +402,7 @@ namespace TUGraz.VectoCore.Tests.Models.SimulationComponent
 			var gearbox = new Gearbox(container, gearboxData, new AMTShiftStrategy(gearboxData, container));
 
 			var driver = new MockDriver(container);
-			var port = new MockTnOutPort();
+			var port = new MockTnOutPort() { EngineN95hSpeed = 2000.RPMtoRad() };
 			gearbox.InPort().Connect(port);
 			var vehicle = new MockVehicle(container) { MyVehicleSpeed = 10.SI<MeterPerSecond>() };
 			container.Engine = port;
@@ -442,15 +442,17 @@ namespace TUGraz.VectoCore.Tests.Models.SimulationComponent
 		TestCase(2, 3, 1000, 1400, typeof(ResponseGearShift)),
 		TestCase(1, 2, 1000, 1400, typeof(ResponseGearShift)),
 		TestCase(8, 8, 1000, 1400, typeof(ResponseSuccess)),
-		TestCase(1, 8, 200, 9000, typeof(ResponseGearShift)),]
-		public void Gearbox_ShiftUp(int gear, int newGear, double t, double n, Type responseType)
+		TestCase(1, 6, 200, 9000, typeof(ResponseGearShift)),]
+		public void Gearbox_ShiftUp(int gear, int newGear, double tq, double n, Type responseType)
 		{
 			var container = new VehicleContainer(ExecutionMode.Engineering);
 			var gearboxData = MockSimulationDataFactory.CreateGearboxDataFromFile(GearboxDataFile, EngineDataFile);
 			var gearbox = new Gearbox(container, gearboxData, new AMTShiftStrategy(gearboxData, container));
+
 			var driver = new MockDriver(container);
 			var vehicle = new MockVehicle(container) { MyVehicleSpeed = 10.SI<MeterPerSecond>() };
-			var port = new MockTnOutPort();
+			var port = new MockTnOutPort() { EngineN95hSpeed = 2000.RPMtoRad() };
+			;
 			container.Engine = port;
 			gearbox.InPort().Connect(port);
 
@@ -464,7 +466,7 @@ namespace TUGraz.VectoCore.Tests.Models.SimulationComponent
 
 			absTime += dt;
 
-			var expectedT = t.SI<NewtonMeter>();
+			var expectedT = tq.SI<NewtonMeter>();
 			var expectedN = n.RPMtoRad();
 
 			var torque = expectedT * ratios[gear];

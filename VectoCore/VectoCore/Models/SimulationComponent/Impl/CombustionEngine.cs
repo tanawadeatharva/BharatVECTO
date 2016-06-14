@@ -121,6 +121,11 @@ namespace TUGraz.VectoCore.Models.SimulationComponent.Impl
 			get { return ModelData.FullLoadCurve.RatedSpeed; }
 		}
 
+		public PerSecond EngineN95hSpeed
+		{
+			get { return ModelData.FullLoadCurve.N95hSpeed; }
+		}
+
 		public ICombustionEngineIdleController IdleController
 		{
 			get { return EngineIdleController ?? (EngineIdleController = new CombustionEngineIdleController(this)); }
