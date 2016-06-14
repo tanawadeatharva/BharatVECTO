@@ -197,6 +197,8 @@ namespace TUGraz.VectoCore.Tests.Integration
 					Enabled = true,
 					//MinSpeed = 50.KMPHtoMeterPerSecond(),
 					//Deceleration = -0.5.SI<MeterPerSquareSecond>()
+					LookAheadDistanceFactor = DeclarationData.Driver.LookAhead.LookAheadDistanceFactor,
+					LookAheadDecisionFactor = new LACDecisionFactor()
 				},
 				OverSpeedEcoRoll = overspeed
 					? new DriverData.OverSpeedEcoRollData {
