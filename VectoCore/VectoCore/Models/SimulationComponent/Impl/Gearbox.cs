@@ -73,6 +73,10 @@ namespace TUGraz.VectoCore.Models.SimulationComponent.Impl
 		/// </summary>
 		protected internal bool Disengaged = true;
 
+		public Second LastUpshift { get; private set; }
+
+		public Second LastDownshift { get; private set; }
+
 		public bool ClutchClosed(Second absTime)
 		{
 			return _engageTime.IsSmallerOrEqual(absTime);
@@ -83,6 +87,9 @@ namespace TUGraz.VectoCore.Models.SimulationComponent.Impl
 			ModelData = gearboxModelData;
 			_strategy = strategy;
 			_strategy.Gearbox = this;
+
+			LastDownshift = -double.MaxValue.SI<Second>();
+			LastUpshift = -double.MaxValue.SI<Second>();
 		}
 
 		#region ITnInProvider
@@ -333,14 +340,24 @@ namespace TUGraz.VectoCore.Models.SimulationComponent.Impl
 			bool dryRun)
 		{
 			// Set a Gear if no gear was set and engineSpeed is not zero
+			//if (!Disengaged && DataBus.VehicleStopped && !outAngularVelocity.IsEqual(0))
+			//{
+			//	Gear = _strategy.InitGear(absTime, dt, outTorque, outAngularVelocity);
+			//}
 			if (Disengaged && !outAngularVelocity.IsEqual(0)) {
 				Disengaged = false;
+				var lastGear = Gear;
 				if (DataBus.VehicleStopped) {
 					Gear = _strategy.InitGear(absTime, dt, outTorque, outAngularVelocity);
 				} else {
 					Gear = _strategy.Engage(absTime, dt, outTorque, outAngularVelocity);
 				}
-
+				if (Gear > lastGear) {
+					LastUpshift = absTime;
+				}
+				if (Gear < lastGear) {
+					LastDownshift = absTime;
+				}
 				Log.Debug("Gearbox engaged gear {0}", Gear);
 			}
 
