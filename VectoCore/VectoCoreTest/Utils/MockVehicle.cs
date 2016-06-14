@@ -98,6 +98,11 @@ namespace TUGraz.VectoCore.Tests.Utils
 			throw new NotImplementedException();
 		}
 
+		public Newton SlopeResistance(Radian gradient)
+		{
+			throw new NotImplementedException();
+		}
+
 		public void Connect(IFvOutPort other)
 		{
 			NextComponent = other;

@@ -41,7 +41,7 @@ using TUGraz.VectoCore.OutputData;
 
 namespace TUGraz.VectoCore.Tests.Utils
 {
-	public class MockDrivingCycle : VectoSimulationComponent, IDrivingCycleInfo, IRoadLookAhead
+	public class MockDrivingCycle : VectoSimulationComponent, IDrivingCycleInfo
 	{
 		private readonly IEnumerator<DrivingCycleData.DrivingCycleEntry> _left;
 		private readonly IEnumerator<DrivingCycleData.DrivingCycleEntry> _right;
@@ -72,6 +72,11 @@ namespace TUGraz.VectoCore.Tests.Utils
 					RightSample = _right.Current
 				};
 			}
+		}
+
+		public DrivingCycleData.DrivingCycleEntry CycleLookAhead(Meter distance)
+		{
+			throw new System.NotImplementedException();
 		}
 
 		public Meter Altitude

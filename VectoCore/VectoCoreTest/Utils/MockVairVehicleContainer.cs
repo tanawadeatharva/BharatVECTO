@@ -72,6 +72,7 @@ namespace TUGraz.VectoCore.Tests.Utils
 
 		public PerSecond EngineIdleSpeed { get; private set; }
 		public PerSecond EngineRatedSpeed { get; private set; }
+		public PerSecond EngineN95hSpeed { get; private set; }
 		public MeterPerSecond VehicleSpeed { get; private set; }
 		public Kilogram VehicleMass { get; private set; }
 		public Kilogram VehicleLoading { get; private set; }
@@ -83,6 +84,11 @@ namespace TUGraz.VectoCore.Tests.Utils
 		}
 
 		public Newton RollingResistance(Radian gradient)
+		{
+			throw new System.NotImplementedException();
+		}
+
+		public Newton SlopeResistance(Radian gradient)
 		{
 			throw new System.NotImplementedException();
 		}

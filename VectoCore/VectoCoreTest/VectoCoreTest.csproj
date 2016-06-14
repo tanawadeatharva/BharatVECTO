@@ -90,6 +90,7 @@
       <SubType>Code</SubType>
     </Compile>
     <Compile Include="Integration\DeclarationReportTest.cs" />
+    <Compile Include="Integration\ShiftStrategy\ShiftStrategyTest.cs" />
     <Compile Include="Models\Declaration\ShiftPolygonTest.cs" />
     <Compile Include="Models\SimulationComponentData\ValidationTest.cs" />
     <Compile Include="Models\Simulation\FactoryTest.cs" />
