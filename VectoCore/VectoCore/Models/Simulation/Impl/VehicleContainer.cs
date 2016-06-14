@@ -360,5 +360,10 @@ namespace TUGraz.VectoCore.Models.Simulation.Impl
 		{
 			return Axlegear.AxlegearLoss();
 		}
+
+		public Kilogram ReducedMassWheels
+		{
+			get { return Wheels.ReducedMassWheels; }
+		}
 	}
 }
