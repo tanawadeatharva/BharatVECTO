@@ -210,7 +210,7 @@ namespace TUGraz.VectoCore.Models.SimulationComponent.Impl
 			return retVal;
 		}
 
-		protected internal Newton SlopeResistance(Radian gradient)
+		public Newton SlopeResistance(Radian gradient)
 		{
 			var retVal = ModelData.TotalVehicleWeight() * Physics.GravityAccelleration * Math.Sin(gradient.Value());
 			Log.Debug("SlopeResistance: {0}", retVal);

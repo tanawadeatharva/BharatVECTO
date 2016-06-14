@@ -216,9 +216,31 @@ namespace TUGraz.VectoCore.Models.SimulationComponent.Impl
 			}
 		}
 
+		public DrivingCycleData.DrivingCycleEntry CycleLookAhead(Meter distance)
+		{
+			return new DrivingCycleData.DrivingCycleEntry() {
+				Altitude = 0.SI<Meter>()
+			};
+		}
+
 		public Meter Altitude
 		{
 			get { return 0.SI<Meter>(); }
+		}
+
+		public Meter CycleStartDistance
+		{
+			get { return 0.SI<Meter>(); }
+		}
+
+		public IReadOnlyList<DrivingCycleData.DrivingCycleEntry> LookAhead(Meter lookaheadDistance)
+		{
+			throw new System.NotImplementedException();
+		}
+
+		public IReadOnlyList<DrivingCycleData.DrivingCycleEntry> LookAhead(Second time)
+		{
+			throw new System.NotImplementedException();
 		}
 	}
 
@@ -519,9 +541,30 @@ namespace TUGraz.VectoCore.Models.SimulationComponent.Impl
 			}
 		}
 
+		public DrivingCycleData.DrivingCycleEntry CycleLookAhead(Meter distance)
+		{
+			return new DrivingCycleData.DrivingCycleEntry(RightSample.Current);
+			//throw new System.NotImplementedException();
+		}
+
 		public Meter Altitude
 		{
 			get { return LeftSample.Current.Altitude; }
+		}
+
+		public Meter CycleStartDistance
+		{
+			get { return 0.SI<Meter>(); }
+		}
+
+		public IReadOnlyList<DrivingCycleData.DrivingCycleEntry> LookAhead(Meter lookaheadDistance)
+		{
+			throw new System.NotImplementedException();
+		}
+
+		public IReadOnlyList<DrivingCycleData.DrivingCycleEntry> LookAhead(Second time)
+		{
+			throw new System.NotImplementedException();
 		}
 
 		protected override void DoWriteModalResults(IModalDataContainer container)

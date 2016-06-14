@@ -110,6 +110,12 @@ namespace TUGraz.VectoCore.Tests.Utils
 		public bool VehicleStopped { get; private set; }
 		public DrivingBehavior DriverBehavior { get; private set; }
 		public CycleData CycleData { get; set; }
+
+		public DrivingCycleData.DrivingCycleEntry CycleLookAhead(Meter distance)
+		{
+			throw new System.NotImplementedException();
+		}
+
 		public Meter Altitude { get; set; }
 		public ExecutionMode ExecutionMode { get; set; }
 		public IModalDataContainer ModalData { get; private set; }
@@ -141,5 +147,7 @@ namespace TUGraz.VectoCore.Tests.Utils
 		{
 			throw new System.NotImplementedException();
 		}
+
+		public Kilogram ReducedMassWheels { get; private set; }
 	}
 }

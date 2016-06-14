@@ -56,6 +56,7 @@ namespace TUGraz.VectoCore.Models.Simulation.Impl
 		internal IAxlegearInfo Axlegear;
 		internal IVehicleInfo Vehicle;
 		internal IBrakes Brakes;
+		internal IWheelsInfo Wheels;
 		internal IDriverInfo Driver;
 
 		internal IMileageCounter MilageCounter;
@@ -64,11 +65,10 @@ namespace TUGraz.VectoCore.Models.Simulation.Impl
 
 		internal IDrivingCycleInfo DrivingCycle;
 
-		internal IRoadLookAhead Road;
-
 		internal ISimulationOutPort Cycle;
 
 		internal IModalDataContainer ModData;
+
 		internal WriteSumData WriteSumData;
 
 		#region IGearCockpit
@@ -203,6 +203,11 @@ namespace TUGraz.VectoCore.Models.Simulation.Impl
 			return Vehicle.RollingResistance(gradient);
 		}
 
+		public Newton SlopeResistance(Radian gradient)
+		{
+			return Vehicle.SlopeResistance(gradient);
+		}
+
 		#endregion
 
 		public VehicleContainer(ExecutionMode executionMode, IModalDataContainer modData = null,
@@ -240,6 +245,7 @@ namespace TUGraz.VectoCore.Models.Simulation.Impl
 					commitPriority = 4;
 				})
 				.If<IAxlegearInfo>(c => Axlegear = c)
+				.If<IWheelsInfo>(c => Wheels = c)
 				.If<IVehicleInfo>(c => {
 					Vehicle = c;
 					commitPriority = 5;
@@ -247,7 +253,6 @@ namespace TUGraz.VectoCore.Models.Simulation.Impl
 				.If<ISimulationOutPort>(c => Cycle = c)
 				.If<IMileageCounter>(c => MilageCounter = c)
 				.If<IBrakes>(c => Brakes = c)
-				.If<IRoadLookAhead>(c => Road = c)
 				.If<IClutchInfo>(c => Clutch = c)
 				.If<IDrivingCycleInfo>(c => {
 					DrivingCycle = c;
@@ -305,12 +310,12 @@ namespace TUGraz.VectoCore.Models.Simulation.Impl
 
 		public IReadOnlyList<DrivingCycleData.DrivingCycleEntry> LookAhead(Meter lookaheadDistance)
 		{
-			return Road.LookAhead(lookaheadDistance);
+			return DrivingCycle.LookAhead(lookaheadDistance);
 		}
 
 		public IReadOnlyList<DrivingCycleData.DrivingCycleEntry> LookAhead(Second time)
 		{
-			return Road.LookAhead(time);
+			return DrivingCycle.LookAhead(time);
 		}
 
 		public Watt BrakePower
@@ -340,7 +345,7 @@ namespace TUGraz.VectoCore.Models.Simulation.Impl
 
 		public Meter CycleStartDistance
 		{
-			get { return Road == null ? 0.SI<Meter>() : Road.CycleStartDistance; }
+			get { return DrivingCycle == null ? 0.SI<Meter>() : DrivingCycle.CycleStartDistance; }
 		}
 
 		public VectoRunData RunData { get; set; }
@@ -349,6 +354,11 @@ namespace TUGraz.VectoCore.Models.Simulation.Impl
 		public CycleData CycleData
 		{
 			get { return DrivingCycle.CycleData; }
+		}
+
+		public DrivingCycleData.DrivingCycleEntry CycleLookAhead(Meter distance)
+		{
+			return DrivingCycle.CycleLookAhead(distance);
 		}
 
 		public Meter Altitude
