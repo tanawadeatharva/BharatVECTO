@@ -337,7 +337,7 @@ namespace TUGraz.VectoCore.Models.SimulationComponent.Impl
 				? actionEntry.VehicleTargetSpeed + Driver.DriverData.OverSpeedEcoRoll.OverSpeed
 				: actionEntry.VehicleTargetSpeed;
 
-			var vehicleMass = Driver.DataBus.TotalMass;
+			var vehicleMass = Driver.DataBus.TotalMass + Driver.DataBus.ReducedMassWheels;
 			var targetAltitude = actionEntry.Altitude; //dec.Altitude;
 
 			var vehicleAltitude = Driver.DataBus.Altitude;
