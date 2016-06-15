@@ -7,19 +7,17 @@
   },
   "Body": {
     "SavedInDeclMode": false,
-    "VehicleFile": "12t Delivery Truck.vveh",
-    "EngineFile": "12t Delivery Truck.veng",
-    "GearboxFile": "12t Delivery Truck.vgbx",
+    "VehicleFile": "../Components/12t Delivery Truck.vveh",
+    "EngineFile": "../Components/12t Delivery Truck.veng",
+    "GearboxFile": "../Components/12t Delivery Truck Efficiency.vgbx",
     "Cycles": [
-      "Long_Haul.vdri",
-      "Regional_Delivery.vdri",
-      "Urban_Delivery.vdri"
+      "../Cycles/Regional_Delivery.vdri",
     ],
     "AuxiliaryAssembly": "CLASSIC",
     "AuxiliaryVersion": "CLASSIC",
     "AdvancedAuxiliaryFilePath": "",
     "Aux": [],
-    "VACC": "Truck.vacc",
+    "VACC": "../Components/Truck.vacc",
     "EngineOnlyMode": false,
     "StartStop": {
       "Enabled": true,

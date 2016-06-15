@@ -72,14 +72,6 @@ namespace TUGraz.VectoCore.Tests.Models.Simulation
 			ResultFileHelper.TestModFile(expected, actual);
 		}
 
-		private class MockSumWriter : SummaryDataContainer
-		{
-			public override void Write(IModalDataContainer modData, string jobFileName, string jobName,
-				string cycleFileName, Kilogram vehicleMass, Kilogram vehicleLoading) {}
-
-			public override void Finish() {}
-		}
-
 		[TestMethod]
 		public void TestEngineOnly_SimulatorRun()
 		{
