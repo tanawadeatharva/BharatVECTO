@@ -29,11 +29,9 @@
 *   Martin Rexeis, rexeis@ivt.tugraz.at, IVT, Graz University of Technology
 */
 
-using System;
 using System.Data;
 using System.IO;
 using System.Linq;
-using System.Windows.Forms.DataVisualization.Charting;
 using Microsoft.VisualStudio.TestTools.UnitTesting;
 using TUGraz.VectoCommon.Models;
 using TUGraz.VectoCommon.Utils;
@@ -271,9 +269,9 @@ namespace TUGraz.VectoCore.Tests.Integration
 				"fuel consumption must not be negative.");
 
 			// last v_act entry must be the same as original
-			var v_act = modFile.Rows.Cast<DataRow>().Last().ParseDouble((int)ModalResultField.v_act).SI<MeterPerSecond>();
-			var v_act1Hz = modFile1Hz.Rows.Cast<DataRow>().Last().ParseDouble((int)ModalResultField.v_act).SI<MeterPerSecond>();
-			AssertHelper.AreRelativeEqual(v_act, v_act1Hz, "end velocity is not equal", 1e-4);
+			var vAct = modFile.Rows.Cast<DataRow>().Last().ParseDouble((int)ModalResultField.v_act).SI<MeterPerSecond>();
+			var vAct1Hz = modFile1Hz.Rows.Cast<DataRow>().Last().ParseDouble((int)ModalResultField.v_act).SI<MeterPerSecond>();
+			AssertHelper.AreRelativeEqual(vAct, vAct1Hz, "end velocity is not equal", 1e-4);
 		}
 
 		[TestMethod, TestCategory("LongRunning")]
