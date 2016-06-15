@@ -352,6 +352,17 @@ namespace TUGraz.VectoCore.Models.SimulationComponent.Impl
 
 			var inAngularVelocity = outAngularVelocity * ModelData.Gears[Gear].Ratio;
 
+			NewtonMeter inertiaTorqueLossOut;
+			if (!inAngularVelocity.IsEqual(0)) {
+				// MQ 19.2.2016: check! inertia is related to output side, torque loss accounts to input side
+				inertiaTorqueLossOut =
+					Formulas.InertiaPower(outAngularVelocity, PreviousState.OutAngularVelocity, ModelData.Inertia, dt) /
+					avgOutAngularVelocity;
+				inTorque += CurrentState.InertiaTorqueLossOut / ModelData.Gears[Gear].Ratio;
+			} else {
+				inertiaTorqueLossOut = 0.SI<NewtonMeter>();
+			}
+
 			if (dryRun) {
 				var dryRunResponse = NextComponent.Request(absTime, dt, inTorque, inAngularVelocity, true);
 				dryRunResponse.GearboxPowerRequest = outTorque * (PreviousState.OutAngularVelocity + outAngularVelocity) / 2.0;
@@ -385,16 +396,9 @@ namespace TUGraz.VectoCore.Models.SimulationComponent.Impl
 
 			// this code has to be _after_ the check for a potential gear-shift!
 			// (the above block issues dry-run requests and thus may update the CurrentState!)
-			CurrentState.TransmissionTorqueLoss = inTorque - (outTorque / ModelData.Gears[Gear].Ratio);
-			if (!inAngularVelocity.IsEqual(0)) {
-				// MQ 19.2.2016: check! inertia is related to output side, torque loss accounts to input side
-				CurrentState.InertiaTorqueLossOut =
-					Formulas.InertiaPower(outAngularVelocity, PreviousState.OutAngularVelocity, ModelData.Inertia, dt) /
-					avgOutAngularVelocity;
-				inTorque += CurrentState.InertiaTorqueLossOut / ModelData.Gears[Gear].Ratio;
-			} else {
-				CurrentState.InertiaTorqueLossOut = 0.SI<NewtonMeter>();
-			}
+			// begin critical section
+			CurrentState.TransmissionTorqueLoss = inTorque - outTorque / ModelData.Gears[Gear].Ratio;
+			CurrentState.InertiaTorqueLossOut = inertiaTorqueLossOut;
 			CurrentState.TorqueLossResult = inTorqueLossResult;
 			CurrentState.SetState(inTorque, inAngularVelocity, outTorque, outAngularVelocity);
 			CurrentState.Gear = Gear;
