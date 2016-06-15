@@ -278,7 +278,7 @@ namespace TUGraz.VectoCore.Tests.Models.SimulationComponent
 			var dt = 2.SI<Second>();
 			var t = torque.SI<NewtonMeter>();
 			var n = inAngularSpeed.RPMtoRad();
-			var response = (ResponseDryRun)gearbox.OutPort().Request(absTime, dt, t * ratio, n / ratio, dryRun: true);
+			var response = (ResponseSuccess)gearbox.OutPort().Request(absTime, dt, t * ratio, n / ratio);
 
 			Assert.AreEqual(absTime, port.AbsTime);
 			Assert.AreEqual(dt, port.Dt);
