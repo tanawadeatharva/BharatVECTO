@@ -352,18 +352,13 @@ namespace TUGraz.VectoCore.Models.SimulationComponent.Impl
 
 			var inAngularVelocity = outAngularVelocity * ModelData.Gears[Gear].Ratio;
 
-			NewtonMeter inertiaTorqueLossOut;
-			if (!inAngularVelocity.IsEqual(0)) {
-				// MQ 19.2.2016: check! inertia is related to output side, torque loss accounts to input side
-				inertiaTorqueLossOut =
-					Formulas.InertiaPower(outAngularVelocity, PreviousState.OutAngularVelocity, ModelData.Inertia, dt) /
-					avgOutAngularVelocity;
-				inTorque += CurrentState.InertiaTorqueLossOut / ModelData.Gears[Gear].Ratio;
-			} else {
-				inertiaTorqueLossOut = 0.SI<NewtonMeter>();
-			}
-
 			if (dryRun) {
+				CurrentState.InertiaTorqueLossOut = !inAngularVelocity.IsEqual(0)
+					? Formulas.InertiaPower(outAngularVelocity, PreviousState.OutAngularVelocity, ModelData.Inertia, dt) /
+					avgOutAngularVelocity
+					: 0.SI<NewtonMeter>();
+				inTorque += CurrentState.InertiaTorqueLossOut / ModelData.Gears[Gear].Ratio;
+
 				var dryRunResponse = NextComponent.Request(absTime, dt, inTorque, inAngularVelocity, true);
 				dryRunResponse.GearboxPowerRequest = outTorque * (PreviousState.OutAngularVelocity + outAngularVelocity) / 2.0;
 				return dryRunResponse;
@@ -398,7 +393,14 @@ namespace TUGraz.VectoCore.Models.SimulationComponent.Impl
 			// (the above block issues dry-run requests and thus may update the CurrentState!)
 			// begin critical section
 			CurrentState.TransmissionTorqueLoss = inTorque - outTorque / ModelData.Gears[Gear].Ratio;
-			CurrentState.InertiaTorqueLossOut = inertiaTorqueLossOut;
+			// MQ 19.2.2016: check! inertia is related to output side, torque loss accounts to input side
+			CurrentState.InertiaTorqueLossOut = !inAngularVelocity.IsEqual(0)
+				? Formulas.InertiaPower(outAngularVelocity, PreviousState.OutAngularVelocity, ModelData.Inertia, dt) /
+				avgOutAngularVelocity
+				: 0.SI<NewtonMeter>();
+			inTorque += CurrentState.InertiaTorqueLossOut / ModelData.Gears[Gear].Ratio;
+
+			CurrentState.TransmissionTorqueLoss = inTorque - outTorque / ModelData.Gears[Gear].Ratio;
 			CurrentState.TorqueLossResult = inTorqueLossResult;
 			CurrentState.SetState(inTorque, inAngularVelocity, outTorque, outAngularVelocity);
 			CurrentState.Gear = Gear;
