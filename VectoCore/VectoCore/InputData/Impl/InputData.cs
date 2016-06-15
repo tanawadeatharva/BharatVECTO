@@ -83,6 +83,8 @@ namespace TUGraz.VectoCore.InputData.Impl
 
 		public DataTable LossMap { get; internal set; }
 
+		public double Efficiency { get; internal set; }
+
 		public DataTable FullLoadCurve { get; internal set; }
 
 		public DataTable ShiftPolygon { get; internal set; }
@@ -92,10 +94,11 @@ namespace TUGraz.VectoCore.InputData.Impl
 
 	public class AxleInputData : IAxleEngineeringInputData
 	{
-		[System.Diagnostics.CodeAnalysis.SuppressMessage("Microsoft.Design", "CA1065:DoNotRaiseExceptionsInUnexpectedLocations")]
+		[System.Diagnostics.CodeAnalysis.SuppressMessage("Microsoft.Design",
+			"CA1065:DoNotRaiseExceptionsInUnexpectedLocations")]
 		public bool SavedInDeclarationMode
 		{
-			get {throw new System.NotImplementedException(); }
+			get { throw new System.NotImplementedException(); }
 		}
 
 		public string Vendor { get; internal set; }

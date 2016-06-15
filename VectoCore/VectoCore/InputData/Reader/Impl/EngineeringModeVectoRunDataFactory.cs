@@ -66,9 +66,9 @@ namespace TUGraz.VectoCore.InputData.Reader.Impl
 			var tempVehicle = dao.CreateVehicleData(InputDataProvider.VehicleInputData);
 
 			var vehicleInputData = InputDataProvider.VehicleInputData;
-			var axlegearData = dao.CreateAxleGearData(InputDataProvider.AxleGearInputData);
+			var axlegearData = dao.CreateAxleGearData(InputDataProvider.AxleGearInputData, useEfficiencyFallback: true);
 			var gearboxData = dao.CreateGearboxData(InputDataProvider.GearboxInputData, engineData, axlegearData.AxleGear.Ratio,
-				tempVehicle.DynamicTyreRadius);
+				tempVehicle.DynamicTyreRadius, useEfficiencyFallback: true);
 			var crossWindRequired = vehicleInputData.CrossWindCorrectionMode == CrossWindCorrectionMode.VAirBetaLookupTable;
 
 			return InputDataProvider.JobInputData().Cycles.Select(cycle => new VectoRunData {
