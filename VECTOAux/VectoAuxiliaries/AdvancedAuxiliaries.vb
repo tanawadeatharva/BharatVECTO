@@ -271,7 +271,7 @@ Public Class AdvancedAuxiliaries
 		Throw New NotImplementedException
 	End Function
 
-	Public ReadOnly Property TotalFuelGRAMS As Single Implements VectoAuxiliaries.IAdvancedAuxiliaries.TotalFuelGRAMS
+	Public ReadOnly Property TotalFuelGRAMS As Double Implements VectoAuxiliaries.IAdvancedAuxiliaries.TotalFuelGRAMS
 		Get
 			If Not M13 Is Nothing Then
 

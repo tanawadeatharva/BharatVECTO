@@ -32,6 +32,7 @@
 using System;
 using System.IO;
 using System.Windows.Forms.VisualStyles;
+using TUGraz.VectoCommon.Models;
 using TUGraz.VectoCommon.Utils;
 using TUGraz.VectoCore.Configuration;
 using TUGraz.VectoCore.Models.Simulation;
@@ -44,20 +45,25 @@ using VectoAuxiliaries;
 
 namespace TUGraz.VectoCore.Models.SimulationComponent.Impl
 {
-	public class BusAuxiliariesAdapter : StatefulVectoSimulationComponent<BusAuxiliariesAdapter.BusAuxState>,
-		IEngineAuxInProvider, IEngineAuxPort
+	public class BusAuxiliariesAdapter : LoggingObject, IEngineAuxInProvider, IEngineAuxPort
 	{
+		protected IDataBus DataBus;
+		protected internal BusAuxState CurrentState;
+		protected internal BusAuxState PreviousState;
+
 		protected IAdvancedAuxiliaries Auxiliaries;
 		private readonly FuelConsumptionAdapter _fcMapAdapter;
 
 
-		public BusAuxiliariesAdapter(IVehicleContainer container, string aauxFile, string cycleName, Kilogram vehicleWeight,
-			FuelConsumptionMap fcMap,
-			PerSecond engineIdleSpeed) : base(container)
+		public BusAuxiliariesAdapter(IDataBus container, string aauxFile, string cycleName, Kilogram vehicleWeight,
+			FuelConsumptionMap fcMap, PerSecond engineIdleSpeed)
 		{
 			//	mAAUX_Global.advancedAuxModel.Signals.DeclarationMode = Cfg.DeclMode
 			//	mAAUX_Global.advancedAuxModel.Signals.WHTC = Declaration.WHTCcorrFactor
+			CurrentState = new BusAuxState();
+			PreviousState = new BusAuxState();
 
+			DataBus = container;
 			var tmpAux = new AdvancedAuxiliaries();
 
 			// 'Set Statics
@@ -114,6 +120,7 @@ namespace TUGraz.VectoCore.Models.SimulationComponent.Impl
 
 		public NewtonMeter Initialize(NewtonMeter torque, PerSecond angularSpeed)
 		{
+			PreviousState.TotalFuelConsumption = 0.SI<Kilogram>();
 			PreviousState.AngularSpeed = angularSpeed;
 			PreviousState.PowerDemand = GetBusAuxPowerDemand(0.SI<Second>(), 1.SI<Second>(), torque, torque, angularSpeed);
 			return PreviousState.PowerDemand / angularSpeed;
@@ -132,7 +139,7 @@ namespace TUGraz.VectoCore.Models.SimulationComponent.Impl
 		}
 
 
-		protected override void DoWriteModalResults(IModalDataContainer container)
+		protected internal void DoWriteModalResults(IModalDataContainer container)
 		{
 			_fcMapAdapter.AllowExtrapolation = true;
 			// cycleStep has to be called here and not in DoCommit, write is called before Commit!
@@ -140,6 +147,7 @@ namespace TUGraz.VectoCore.Models.SimulationComponent.Impl
 			Auxiliaries.CycleStep(CurrentState.dt.Value(), ref message);
 			Log.Warn(message);
 
+			CurrentState.TotalFuelConsumption = Auxiliaries.TotalFuelGRAMS.SI().Gramm.Cast<Kilogram>();
 			container[ModalResultField.P_aux] = CurrentState.PowerDemand;
 
 			container[ModalResultField.AA_NonSmartAlternatorsEfficiency] = Auxiliaries.AA_NonSmartAlternatorsEfficiency;
@@ -193,11 +201,16 @@ namespace TUGraz.VectoCore.Models.SimulationComponent.Impl
 				new SI(Auxiliaries.AA_TotalCycleFuelConsumptionCompressorOn.Value);
 		}
 
-		protected override void DoCommitSimulationStep()
+		protected internal void DoCommitSimulationStep()
 		{
-			AdvanceState();
+			PreviousState = CurrentState;
+			CurrentState = new BusAuxState();
 		}
 
+		protected internal KilogramPerSecond AAuxFuelConsumption
+		{
+			get { return (CurrentState.TotalFuelConsumption - PreviousState.TotalFuelConsumption) / CurrentState.dt; }
+		}
 
 		private Watt GetBusAuxPowerDemand(Second absTime, Second dt, NewtonMeter torquePowerTrain, NewtonMeter torqueEngine,
 			PerSecond angularSpeed, bool dryRun = false)
@@ -256,6 +269,7 @@ namespace TUGraz.VectoCore.Models.SimulationComponent.Impl
 			public Second dt;
 			public PerSecond AngularSpeed;
 			public Watt PowerDemand;
+			public Kilogram TotalFuelConsumption;
 		}
 	}
 }
