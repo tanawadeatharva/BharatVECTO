@@ -153,6 +153,7 @@
     <Compile Include="Utils\DelauneyMapTest.cs" />
     <Compile Include="Utils\MockModalDataContainer.cs" />
     <Compile Include="Utils\DoubleExtensionMethodTest.cs" />
+    <Compile Include="Utils\VectoCSVTest.cs" />
     <Compile Include="Utils\VectoMathTest.cs" />
   </ItemGroup>
   <ItemGroup>
