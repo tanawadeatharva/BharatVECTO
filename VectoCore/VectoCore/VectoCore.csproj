@@ -187,7 +187,6 @@
     <Compile Include="Models\SimulationComponent\Data\AuxiliaryType.cs" />
     <Compile Include="Models\SimulationComponent\Data\FullLoadCurve.cs" />
     <Compile Include="Models\Simulation\DataBus\IMileageCounter.cs" />
-    <Compile Include="Models\Simulation\DataBus\IRoadLookAhead.cs" />
     <Compile Include="Utils\DebugData.cs" />
     <Compile Include="Models\Simulation\Impl\DistanceRun.cs" />
     <Compile Include="Models\Simulation\Impl\PowertrainBuilder.cs" />
