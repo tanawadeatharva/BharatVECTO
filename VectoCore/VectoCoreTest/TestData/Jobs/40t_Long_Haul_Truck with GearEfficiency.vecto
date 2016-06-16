@@ -9,7 +9,7 @@
     "SavedInDeclMode": true,
     "VehicleFile": "../Components/40t_Long_Haul_Truck.vveh",
     "EngineFile": "../Components/40t_Long_Haul_Truck.veng",
-    "GearboxFile": "../Components/40t_Long_Haul_Truck Efficiency.vgbx",
+    "GearboxFile": "../Components/40t_Long_Haul_Truck GearEfficiency.vgbx",
     "Cycles": [
       "Long Haul",
       "Regional Delivery"

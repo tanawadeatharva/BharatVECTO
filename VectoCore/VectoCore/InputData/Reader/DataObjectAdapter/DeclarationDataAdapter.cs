@@ -191,6 +191,8 @@ namespace TUGraz.VectoCore.InputData.Reader.DataObjectAdaper
 			TransmissionLossMap gearLossMap;
 			retVal.Gears = gears.Select((gear, i) => {
 				try {
+					if (gear.LossMap == null)
+						throw new InvalidFileFormatException(string.Format("LossMap for Gear {0} is missing.", i + 1));
 					gearLossMap = TransmissionLossMap.Create(gear.LossMap, gear.Ratio, string.Format("Gear {0}", i + 1));
 				} catch (InvalidFileFormatException) {
 					if (useEfficiencyFallback) {

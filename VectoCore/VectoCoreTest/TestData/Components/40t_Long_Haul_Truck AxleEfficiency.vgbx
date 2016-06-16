@@ -17,7 +17,7 @@
       },
       {
         "Ratio": 14.93,
-        "Efficiency": "0.98",
+        "LossMap": "Indirect Gear.vtlm",
         "TCactive": false,
         "ShiftPolygon": "-",
         "FullLoadCurve": "<NOFILE>"

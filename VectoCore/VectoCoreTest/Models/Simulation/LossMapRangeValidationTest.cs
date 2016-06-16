@@ -233,9 +233,22 @@ namespace TUGraz.VectoCore.Tests.Models.Simulation
 		/// VECTO-230
 		/// </summary>
 		[TestMethod]
-		public void CreateJobWithLossMapEfficiency_Declaration()
+		public void CreateJobWith_Axle_LossMapEfficiency_Declaration()
 		{
-			var dataProvider = JSONInputDataFactory.ReadJsonJob(@"TestData\Jobs\40t_Long_Haul_Truck with Efficiency.vecto");
+			var dataProvider = JSONInputDataFactory.ReadJsonJob(@"TestData\Jobs\40t_Long_Haul_Truck with AxleEfficiency.vecto");
+			var runsFactory = new SimulatorFactory(ExecutionMode.Declaration, dataProvider, null);
+			var jobContainer = new JobContainer(null);
+
+			AssertHelper.Exception<InvalidFileFormatException>(() => jobContainer.AddRuns(runsFactory));
+		}
+
+		/// <summary>
+		/// VECTO-230
+		/// </summary>
+		[TestMethod]
+		public void CreateJobWith_Gear_LossMapEfficiency_Declaration()
+		{
+			var dataProvider = JSONInputDataFactory.ReadJsonJob(@"TestData\Jobs\40t_Long_Haul_Truck with GearEfficiency.vecto");
 			var runsFactory = new SimulatorFactory(ExecutionMode.Declaration, dataProvider, null);
 			var jobContainer = new JobContainer(null);
 
