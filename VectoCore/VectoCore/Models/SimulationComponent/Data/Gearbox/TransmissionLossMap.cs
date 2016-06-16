@@ -38,6 +38,7 @@ using System.Linq;
 using TUGraz.VectoCommon.Exceptions;
 using TUGraz.VectoCommon.Models;
 using TUGraz.VectoCommon.Utils;
+using TUGraz.VectoCore.Configuration;
 using TUGraz.VectoCore.Utils;
 
 namespace TUGraz.VectoCore.Models.SimulationComponent.Data.Gearbox
@@ -234,7 +235,7 @@ namespace TUGraz.VectoCore.Models.SimulationComponent.Data.Gearbox
 		[DebuggerDisplay("GearLossMapEntry({InputSpeed}, {InputTorque}, {TorqueLoss})")]
 		public class GearLossMapEntry
 		{
-			[Required, SIRange(0, 5000)]
+			[Required, SIRange(0, 5000 * Constants.RPMToRad)]
 			public PerSecond InputSpeed { get; set; }
 
 			[Required, SIRange(-100000, 100000)]
