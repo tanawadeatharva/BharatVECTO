@@ -73,6 +73,8 @@ namespace TUGraz.VectoCore.Models.SimulationComponent.Impl
 			RightSample = Data.Entries.GetEnumerator();
 			RightSample.MoveNext();
 			RightSample.MoveNext();
+
+			AbsTime = 0.SI<Second>();
 		}
 
 		#region ITnInProvider
@@ -499,7 +501,7 @@ namespace TUGraz.VectoCore.Models.SimulationComponent.Impl
 
 		public double Progress
 		{
-			get { return AbsTime.Value() / Data.Entries.Last().Time.Value(); }
+			get { return AbsTime == null ? 0 : AbsTime.Value() / Data.Entries.Last().Time.Value(); }
 		}
 
 		#endregion
