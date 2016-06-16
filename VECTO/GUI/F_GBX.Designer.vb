@@ -276,13 +276,13 @@ Partial Class F_GBX
 		'
 		'ColumnHeader3
 		'
-		Me.ColumnHeader3.Text = "Loss Map or Efficiency [-]"
-		Me.ColumnHeader3.Width = 137
+		Me.ColumnHeader3.Text = "Loss Map or Efficiency"
+		Me.ColumnHeader3.Width = 122
 		'
 		'ColumnHeader5
 		'
 		Me.ColumnHeader5.Text = "Shift Polygons"
-		Me.ColumnHeader5.Width = 97
+		Me.ColumnHeader5.Width = 88
 		'
 		'ColumnHeader6
 		'

@@ -32,7 +32,6 @@
 using TUGraz.VectoCommon.Exceptions;
 using TUGraz.VectoCommon.InputData;
 using TUGraz.VectoCommon.Utils;
-using TUGraz.VectoCore.InputData;
 using TUGraz.VectoCore.InputData.FileIO.JSON;
 using TUGraz.VectoCore.InputData.Reader.DataObjectAdaper;
 using TUGraz.VectoCore.Models.SimulationComponent.Data;
@@ -55,11 +54,13 @@ namespace TUGraz.VectoCore.Tests.Utils
 			if (declarationMode) {
 				var dao = new DeclarationDataAdapter();
 				var engineData = dao.CreateEngineData(engineInput);
-				return dao.CreateGearboxData(gearboxInput, engineData, ((IAxleGearInputData)gearboxInput).Ratio, 0.5.SI<Meter>());
+				return dao.CreateGearboxData(gearboxInput, engineData, ((IAxleGearInputData)gearboxInput).Ratio, 0.5.SI<Meter>(),
+					false);
 			} else {
 				var dao = new EngineeringDataAdapter();
 				var engineData = dao.CreateEngineData(engineInput);
-				return dao.CreateGearboxData(gearboxInput, engineData, ((IAxleGearInputData)gearboxInput).Ratio, 0.5.SI<Meter>());
+				return dao.CreateGearboxData(gearboxInput, engineData, ((IAxleGearInputData)gearboxInput).Ratio, 0.5.SI<Meter>(),
+					false);
 			}
 		}
 
@@ -67,7 +68,7 @@ namespace TUGraz.VectoCore.Tests.Utils
 		{
 			var dao = new DeclarationDataAdapter();
 			var axleGearInput = JSONInputDataFactory.ReadGearbox(axleGearFile);
-			return dao.CreateAxleGearData((IAxleGearInputData)axleGearInput);
+			return dao.CreateAxleGearData((IAxleGearInputData)axleGearInput, false);
 		}
 
 		public static CombustionEngineData CreateEngineDataFromFile(string engineFile)

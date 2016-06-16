@@ -28,7 +28,7 @@
         {
           "Inertia": 6.0,
           "Wheels": "245/70 R19.5",
-          "AxleWeightShare": 0.0,
+          "AxleWeightShare": 0.5,
           "TwinTyres": false,
           "RRCISO": 0.008343465,
           "FzISO": 20800.0
@@ -36,7 +36,7 @@
         {
           "Inertia": 6.0,
           "Wheels": "245/70 R19.5",
-          "AxleWeightShare": 0.0,
+          "AxleWeightShare": 0.5,
           "TwinTyres": true,
           "RRCISO": 0.00943769,
           "FzISO": 20800.0

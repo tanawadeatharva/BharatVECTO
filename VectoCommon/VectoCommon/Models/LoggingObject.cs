@@ -30,7 +30,6 @@
 */
 
 using System;
-using System.Diagnostics;
 using System.Threading;
 using NLog;
 
@@ -93,7 +92,6 @@ namespace TUGraz.VectoCommon.Models
 		/// <summary>
 		/// Fatal > Error > Warn > Info > Debug > Trace
 		/// </summary>
-		[Conditional("DEBUG")]
 		public void Debug(string message, params object[] args)
 		{
 			if (LogEnabled) {
@@ -104,7 +102,6 @@ namespace TUGraz.VectoCommon.Models
 		/// <summary>
 		/// Fatal > Error > Warn > Info > Debug > Trace
 		/// </summary>
-		[Conditional("DEBUG")]
 		public void Debug(Exception e, string message = null, params object[] args)
 		{
 			if (LogEnabled) {

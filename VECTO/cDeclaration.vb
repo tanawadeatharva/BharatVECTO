@@ -12,7 +12,6 @@
 Imports System.Collections.Generic
 Imports iTextSharp.text.pdf
 Imports System.IO
-Imports System.Linq
 Imports iTextSharp.text
 
 Public Class cDeclaration
@@ -52,7 +51,6 @@ Public Class cDeclaration
 	Private lPT1nU As List(Of Single)
 	Private lPT1 As List(Of Single)
 	Private PT1dim As Integer
-
 
 	Public WHTCcorrFactor As Single
 
@@ -176,7 +174,6 @@ Public Class cDeclaration
 		Missions.Add(mc0.MissionID, mc0)
 		SegmentTable.MissionList.Add(mc0.MissionID)
 
-
 		mc0 = New cMission
 		mc0.MissionID = tMission.Suburban
 		mc0.NameStr = "Suburban"
@@ -190,7 +187,6 @@ Public Class cDeclaration
 		mc0.CyclePath = MyDeclPath & "MissionCycles\Interurban_Bus.vdri"
 		Missions.Add(mc0.MissionID, mc0)
 		SegmentTable.MissionList.Add(mc0.MissionID)
-
 
 		mc0 = New cMission
 		mc0.MissionID = tMission.Coach
@@ -399,9 +395,7 @@ Public Class cDeclaration
 
 		'Aux - Fan
 		AuxFanPower = New Dictionary(Of String, Dictionary(Of tMission, Single))
-
 		Try
-
 			If Not file.OpenRead(MyDeclPath & "VAUX\Fan-Tech.csv") Then
 				GUImsg(tMsgID.Err, "Failed to load Declaration Config (Fan aux config)!")
 				Return False
@@ -409,112 +403,75 @@ Public Class cDeclaration
 
 			'Skip Header
 			file.ReadLine()
-
 			at0 = New List(Of String)
-
 			Do While Not file.EndOfFile
-
 				line = file.ReadLine
-
 				at0.Add(line(0))
-
 				AuxPower0 = New Dictionary(Of tMission, Single)
-
 				i = 0
 				For Each mt0 In SegmentTable.MissionList
 					i += 1
 					AuxPower0.Add(mt0, line(i))
 				Next
-
 				AuxFanPower.Add(line(0), AuxPower0)
 			Loop
-
 			AuxTechs.Add(tAux.Fan, at0)
-
 			file.Close()
-
 		Catch ex As Exception
 			file.Close()
 			GUImsg(tMsgID.Err, "Failed to load Declaration Config (Fan aux config)!" & ex.Message)
 			Return False
 		End Try
 
-
 		'Aux - Steering Pump
 		AuxSteerPumpPower = New Dictionary(Of String, Dictionary(Of tMission, Single()))
 		AuxSteepPumpFactors = New Dictionary(Of String, Single())
-
 		Try
-
 			If Not file.OpenRead(MyDeclPath & "VAUX\SP-Tech.csv") Then
 				GUImsg(tMsgID.Err, "Failed to load Declaration Config (Steering pump config)!")
 				Return False
 			End If
-
 			'Skip Header
 			file.ReadLine()
-
 			at0 = New List(Of String)
-
 			Do While Not file.EndOfFile
-
 				line = file.ReadLine
-
 				at0.Add(line(0))
-
 				AuxSteepPumpFactors.Add(line(0), New Single() {CSng(line(1)), CSng(line(2)), CSng(line(3)), CSng(line(4))})
-
 			Loop
-
 			file.Close()
-
 			If Not file.OpenRead(MyDeclPath & "VAUX\SP-Table.csv") Then
 				GUImsg(tMsgID.Err, "Failed to load Declaration Config (Steering pump config)!")
 				Return False
 			End If
-
 			'Skip Header
 			file.ReadLine()
-
 			Do While Not file.EndOfFile
-
 				line = file.ReadLine
-
 				STEpower0 = New Dictionary(Of tMission, Single())
-
 				i = 0
 				For Each mt0 In SegmentTable.MissionList
 					i += 1
-
 					If line(i) = "0" Then
 						STEpower0.Add(mt0, New Single() {0})
 					Else
 						stl = line(i).Split("/")
 						STEpower0.Add(mt0, New Single() {CSng(stl(0)), CSng(stl(1)), CSng(stl(2)), CSng(stl(3))})
 					End If
-
 				Next
-
 				AuxSteerPumpPower.Add(line(0), STEpower0)
-
 			Loop
-
 			AuxTechs.Add(tAux.SteerPump, at0)
-
 			file.Close()
-
 		Catch ex As Exception
 			file.Close()
 			GUImsg(tMsgID.Err, "Failed to load Declaration Config (Steering pump config)!" & ex.Message)
 			Return False
 		End Try
 
-
 		'Aux - HVAC
 		AuxHVACPower = New Dictionary(Of String, Dictionary(Of tMission, Single))
-
 		Try
-
 			If Not file.OpenRead(MyDeclPath & "VAUX\HVAC-Table.csv") Then
 				GUImsg(tMsgID.Err, "Failed to load Declaration Config (HVAC config)!")
 				Return False
@@ -522,23 +479,16 @@ Public Class cDeclaration
 
 			'Skip Header
 			file.ReadLine()
-
 			Do While Not file.EndOfFile
-
 				line = file.ReadLine
-
 				AuxPower0 = New Dictionary(Of tMission, Single)
-
 				i = 0
 				For Each mt0 In SegmentTable.MissionList
 					i += 1
 					AuxPower0.Add(mt0, line(i))
 				Next
-
 				AuxHVACPower.Add(line(0), AuxPower0)
-
 			Loop
-
 		Catch ex As Exception
 			file.Close()
 			GUImsg(tMsgID.Err, "Failed to load Declaration Config (HVAC config)!" & ex.Message)
@@ -549,13 +499,10 @@ Public Class cDeclaration
 		at0.Add("Default")
 		AuxTechs.Add(tAux.HVAC, at0)
 
-
 		'Aux - Electric System
 		AuxESbase = New Dictionary(Of tMission, Single)
 		AuxESpower = New Dictionary(Of String, Dictionary(Of tMission, Single))
-
 		Try
-
 			If Not file.OpenRead(MyDeclPath & "VAUX\ES-Tech.csv") Then
 				GUImsg(tMsgID.Err, "Failed to load Declaration Config (Electric system config)!")
 				Return False
@@ -563,37 +510,28 @@ Public Class cDeclaration
 
 			'Skip Header
 			file.ReadLine()
-
 			First = True
 			Do While Not file.EndOfFile
-
 				line = file.ReadLine
-
 				AuxPower0 = New Dictionary(Of tMission, Single)
-
 				i = 0
 				For Each mt0 In SegmentTable.MissionList
 					i += 1
 					AuxPower0.Add(mt0, line(i))
 				Next
-
 				If First Then
 					AuxESbase = AuxPower0
 					First = False
 				Else
 					AuxESpower.Add(line(0), AuxPower0)
 				End If
-
 			Loop
-
 			file.Close()
-
 		Catch ex As Exception
 			file.Close()
 			GUImsg(tMsgID.Err, "Failed to load Declaration Config (Electric system config)!" & ex.Message)
 			Return False
 		End Try
-
 		at0 = New List(Of String)
 		at0.Add("Custom Technology List")
 		AuxTechs.Add(tAux.ElectricSys, at0)
@@ -601,9 +539,7 @@ Public Class cDeclaration
 
 		'Aux - Pneumatic System
 		AuxPSpower = New Dictionary(Of String, Dictionary(Of tMission, Single))
-
 		Try
-
 			If Not file.OpenRead(MyDeclPath & "VAUX\PS-Table.csv") Then
 				GUImsg(tMsgID.Err, "Failed to load Declaration Config (Pneumatic system config)!")
 				Return False
@@ -611,23 +547,16 @@ Public Class cDeclaration
 
 			'Skip Header
 			file.ReadLine()
-
 			Do While Not file.EndOfFile
-
 				line = file.ReadLine
-
 				AuxPower0 = New Dictionary(Of tMission, Single)
-
 				i = 0
 				For Each mt0 In SegmentTable.MissionList
 					i += 1
 					AuxPower0.Add(mt0, line(i))
 				Next
-
 				AuxPSpower.Add(line(0), AuxPower0)
-
 			Loop
-
 		Catch ex As Exception
 			file.Close()
 			GUImsg(tMsgID.Err, "Failed to load Declaration Config (Pneumatic system config)!" & ex.Message)
@@ -637,7 +566,6 @@ Public Class cDeclaration
 		at0 = New List(Of String)
 		at0.Add("Default")
 		AuxTechs.Add(tAux.PneumSys, at0)
-
 
 		'Default PT1 values
 		lPT1nU = New List(Of Single)
@@ -1590,8 +1518,6 @@ Public Class cReport
 
 				End With
 			Next
-
-
 
 
 			'Add Images

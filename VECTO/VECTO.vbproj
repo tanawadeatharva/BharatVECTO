@@ -247,10 +247,10 @@
     <Compile Include="Input Files\cDRI.vb" />
     <Compile Include="Input Files\cVECTO.vb" />
     <Compile Include="Input Files\cVEH.vb" />
-    <Compile Include="GUI\F_GBX_GearDlog.Designer.vb">
-      <DependentUpon>F_GBX_GearDlog.vb</DependentUpon>
+    <Compile Include="GUI\GearboxGearDialog.Designer.vb">
+      <DependentUpon>GearboxGearDialog.vb</DependentUpon>
     </Compile>
-    <Compile Include="GUI\F_GBX_GearDlog.vb">
+    <Compile Include="GUI\GearboxGearDialog.vb">
       <SubType>Form</SubType>
     </Compile>
     <Compile Include="Input Files\cSubPath.vb" />
@@ -378,8 +378,8 @@
     <EmbeddedResource Include="GUI\F_VEH_Axle.resx">
       <DependentUpon>F_VEH_Axle.vb</DependentUpon>
     </EmbeddedResource>
-    <EmbeddedResource Include="GUI\F_GBX_GearDlog.resx">
-      <DependentUpon>F_GBX_GearDlog.vb</DependentUpon>
+    <EmbeddedResource Include="GUI\GearboxGearDialog.resx">
+      <DependentUpon>GearboxGearDialog.vb</DependentUpon>
     </EmbeddedResource>
     <EmbeddedResource Include="My Project\Resources.resx">
       <Generator>VbMyResourcesResXFileCodeGenerator</Generator>

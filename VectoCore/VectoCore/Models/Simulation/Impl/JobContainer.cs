@@ -51,9 +51,6 @@ namespace TUGraz.VectoCore.Models.Simulation.Impl
 
 		private static int _jobNumber;
 
-		private readonly AutoResetEvent _resetEvent = new AutoResetEvent(false);
-
-
 		/// <summary>
 		/// Initializes a new empty instance of the <see cref="JobContainer"/> class.
 		/// </summary>
@@ -108,17 +105,16 @@ namespace TUGraz.VectoCore.Models.Simulation.Impl
 		public void Execute(bool multithreaded = true)
 		{
 			Log.Info("VectoRun started running. Executing Runs.");
-
-			foreach (var job in Runs) {
-				if (multithreaded) {
-					job.Started = true;
-					job.RunWorkerAsync();
+			if (multithreaded) {
+				Runs.ForEach(r => r.RunWorkerAsync());
+			} else {
+				var first = new Task(() => { });
+				var task = first;
+				foreach (var run in Runs) {
+					var r = run;
+					task = task.ContinueWith(t => r.RunWorkerAsync().Wait(), TaskContinuationOptions.OnlyOnRanToCompletion);
 				}
-			}
-			if (!multithreaded) {
-				var entry = Runs.First();
-				entry.Started = true;
-				entry.RunWorkerAsync();
+				first.Start();
 			}
 		}
 
@@ -127,6 +123,7 @@ namespace TUGraz.VectoCore.Models.Simulation.Impl
 			foreach (var job in Runs) {
 				job.CancelAsync();
 			}
+			WaitFinished();
 		}
 
 		public void CancelCurrent()
@@ -136,23 +133,25 @@ namespace TUGraz.VectoCore.Models.Simulation.Impl
 			}
 		}
 
-
 		public void WaitFinished()
 		{
-			_resetEvent.WaitOne();
+			try {
+				Task.WaitAll(Runs.Select(r => r.RunTask).ToArray());
+			} catch (Exception) {
+				// ignored
+			}
 		}
 
 		private void JobCompleted()
 		{
-			var next = Runs.FirstOrDefault(x => x.Started == false);
-			if (next != null) {
-				next.Started = true;
-				next.RunWorkerAsync();
-			}
 			if (AllCompleted) {
 				_sumWriter.Finish();
-				_resetEvent.Set();
 			}
+		}
+
+		public bool AllCompleted
+		{
+			get { return Runs.All(r => r.Done); }
 		}
 
 		public Dictionary<int, ProgressEntry> GetProgress()
@@ -170,11 +169,6 @@ namespace TUGraz.VectoCore.Models.Simulation.Impl
 					Canceled = r.Canceled,
 					Error = r.ExecException
 				});
-		}
-
-		public bool AllCompleted
-		{
-			get { return Runs.All(r => r.Done); }
 		}
 
 		public class ProgressEntry
@@ -201,10 +195,12 @@ namespace TUGraz.VectoCore.Models.Simulation.Impl
 			public bool Canceled;
 			public double ExecTime;
 			public Exception ExecException;
+			public Task RunTask;
 
-			public void RunWorkerAsync()
+			public RunEntry()
 			{
-				Task.Run(() => {
+				RunTask = new Task(() => {
+					Started = true;
 					var stopWatch = Stopwatch.StartNew();
 					try {
 						Run.Run();
@@ -220,9 +216,16 @@ namespace TUGraz.VectoCore.Models.Simulation.Impl
 				});
 			}
 
+			public Task RunWorkerAsync()
+			{
+				RunTask.Start();
+				return RunTask;
+			}
+
 			public void CancelAsync()
 			{
 				Run.Cancel();
+				Canceled = true;
 			}
 		}
 	}

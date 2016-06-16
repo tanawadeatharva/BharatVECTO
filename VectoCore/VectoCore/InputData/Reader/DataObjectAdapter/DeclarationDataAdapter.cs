@@ -156,7 +156,7 @@ namespace TUGraz.VectoCore.InputData.Reader.DataObjectAdaper
 		}
 
 		internal GearboxData CreateGearboxData(IGearboxDeclarationInputData gearbox, CombustionEngineData engine,
-			double axlegearRatio, Meter dynamicTyreRadius)
+			double axlegearRatio, Meter dynamicTyreRadius, bool useEfficiencyFallback)
 		{
 			if (!gearbox.SavedInDeclarationMode) {
 				WarnDeclarationMode("GearboxData");
@@ -188,8 +188,19 @@ namespace TUGraz.VectoCore.InputData.Reader.DataObjectAdaper
 
 			retVal.HasTorqueConverter = false;
 
+			TransmissionLossMap gearLossMap;
 			retVal.Gears = gears.Select((gear, i) => {
-				var gearLossMap = TransmissionLossMap.Create(gear.LossMap, gear.Ratio, string.Format("Gear {0}", i + 1));
+				try {
+					if (gear.LossMap == null)
+						throw new InvalidFileFormatException(string.Format("LossMap for Gear {0} is missing.", i + 1));
+					gearLossMap = TransmissionLossMap.Create(gear.LossMap, gear.Ratio, string.Format("Gear {0}", i + 1));
+				} catch (InvalidFileFormatException) {
+					if (useEfficiencyFallback) {
+						gearLossMap = TransmissionLossMap.Create(gear.Efficiency, gear.Ratio, string.Format("Gear {0}", i + 1));
+					} else {
+						throw;
+					}
+				}
 				var gearFullLoad = gear.FullLoadCurve == null
 					? null
 					: FullLoadCurveReader.Create(gear.FullLoadCurve, true);

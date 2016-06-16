@@ -229,7 +229,6 @@ namespace TUGraz.VectoCore.Tests.Models.Declaration
 		TestCase(150, 1.0525, 1.0, -20.17),
 		TestCase(150, 1.161, 1.0, -60.34),
 		TestCase(150, 1.2985, 1.0, -108.225),
-		TestCase(150, 1.2985, 1.0, -108.225),
 		TestCase(150, 1.473, 1.0, -176.315),
 		TestCase(150, 1.702, 1.0, -275.855),
 		TestCase(150, 2.0165, 1.0, -431.98),

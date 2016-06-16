@@ -50,7 +50,5 @@ namespace TUGraz.VectoCore.Models.SimulationComponent.Data.Gearbox
 
 		// TODO mk-2016-05-09: Refactor TorqueConverterActive Flag when implementing Torque Converter
 		public bool TorqueConverterActive { get; internal set; }
-
-		// public double AverageEfficiency { get; internal set; }
 	}
 }
