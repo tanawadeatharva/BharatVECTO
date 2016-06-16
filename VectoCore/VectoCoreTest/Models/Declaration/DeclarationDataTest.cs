@@ -124,11 +124,41 @@ namespace TUGraz.VectoCore.Tests.Models.Declaration
 				var urban = r.NextDouble() * 2;
 				var rural = r.NextDouble() * 2;
 				var motorway = r.NextDouble() * 2;
-				var whtcValue = whtc.Lookup(Missions[i], urban, rural, motorway);
+				var whtcValue = whtc.Lookup(Missions[i], rural: rural, urban: urban, motorway: motorway);
 				Assert.AreEqual(urban * factors.urban[i] + rural * factors.rural[i] + motorway * factors.motorway[i],
 					whtcValue);
 			}
 		}
+
+		[TestMethod]
+		public void WHTCLookupTestLongHaul()
+		{
+			var expected = 1.015501;
+
+			var rural = 1.0265;
+			var urban = 1.0948;
+			var motorway = 1.0057;
+
+			var lookup = DeclarationData.WHTCCorrection.Lookup(MissionType.LongHaul, rural: rural, urban: urban,
+				motorway: motorway);
+			Assert.AreEqual(expected, lookup, 1e-8);
+		}
+
+
+		[TestMethod]
+		public void WHTCLookupTestRegionalDelivery()
+		{
+			var expected = 1.02708700;
+
+			var rural = 1.0265;
+			var urban = 1.0948;
+			var motorway = 1.0057;
+
+			var lookup = DeclarationData.WHTCCorrection.Lookup(MissionType.RegionalDelivery, rural: rural, urban: urban,
+				motorway: motorway);
+			Assert.AreEqual(expected, lookup, 1e-8);
+		}
+
 
 		[TestMethod]
 		public void AirDragTest()
