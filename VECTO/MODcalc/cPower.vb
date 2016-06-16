@@ -296,7 +296,7 @@ Public Class cPower
 
 			'Total aux power
 			'[kW]
-			Paux = PreExistingAuxPower + fPaux(t, EngineSpeed)
+			Paux = fPaux(t, EngineSpeed)
 
 			'Internal Engine Power (Pclutch plus Aux plus Inertia)
 			P = Pkup + Paux + PaMot
@@ -1094,7 +1094,7 @@ lb_nOK:
 
 			'Total aux power
 			'[kW]
-			Paux = PreExistingAuxPower + fPaux(jz, EngineSpeed)
+			Paux = fPaux(jz, EngineSpeed)
 			'*****************     ADVANCED AUXILIARIES END   ********************************************************
 
 			'ICE-inertia
@@ -2735,7 +2735,7 @@ lb10:
 
 		If VECTO_Global.VEC.AuxiliaryAssembly = "CLASSIC" Then
 
-			Return CSng(VEC.PauxSum(t, nU))
+			Return CSng(MODdata.Vh.Padd(t) + VEC.PauxSum(t, nU))
 
 		Else
 
@@ -2753,7 +2753,7 @@ lb10:
 				mAAUX_Global.advancedAuxModel.Signals.Internal_Engine_Power = mAAUX_Global.Internal_Engine_Power
 
 				'Power coming out of Advanced Model is in Watts.
-				power = (advancedAuxModel.AuxiliaryPowerAtCrankWatts / 1000)
+				power = PreExistingAuxPower + (advancedAuxModel.AuxiliaryPowerAtCrankWatts / 1000)
 
 				'Glenn: Comment the previous line and uncomment the next line to include the classic auxilaries power togeher with the advanced auxiliary power.
 				'power = VEC.PauxSum(t, nU) + (advancedAuxModel.AuxiliaryPowerAtCrankWatts / 1000)
