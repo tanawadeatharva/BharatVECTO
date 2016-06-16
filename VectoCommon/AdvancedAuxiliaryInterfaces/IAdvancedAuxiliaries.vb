@@ -60,7 +60,7 @@ Public Interface IAdvancedAuxiliaries
 	''' <value></value>
 	''' <returns></returns>
 	''' <remarks></remarks>
-	ReadOnly Property TotalFuelGRAMS As Single
+	ReadOnly Property TotalFuelGRAMS As Double
 
 	''' <summary>
 	''' Total Cycle Fuel in Litres

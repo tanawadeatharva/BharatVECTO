@@ -342,6 +342,11 @@ namespace TUGraz.VectoCore.Models.SimulationComponent.Impl
 
 				var fcWHTC = fcAux * ModelData.WHTCCorrectionFactor;
 				var fcAAUX = fcWHTC;
+				var advancedAux = EngineAux as BusAuxiliariesAdapter;
+				if (advancedAux != null) {
+					advancedAux.DoWriteModalResults(container);
+					fcAAUX = advancedAux.AAuxFuelConsumption;
+				}
 				var fcFinal = fcAAUX;
 
 				container[ModalResultField.FCMap] = fc;
@@ -368,6 +373,10 @@ namespace TUGraz.VectoCore.Models.SimulationComponent.Impl
 		protected override void DoCommitSimulationStep()
 		{
 			AdvanceState();
+			var advancedAux = EngineAux as BusAuxiliariesAdapter;
+			if (advancedAux != null) {
+				advancedAux.DoCommitSimulationStep();
+			}
 		}
 
 		#endregion
