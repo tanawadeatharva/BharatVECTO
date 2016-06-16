@@ -221,7 +221,7 @@ namespace TUGraz.VectoCore.Models.SimulationComponent.Impl
 			if (DataBus.VehicleStopped) {
 				_engageTime = absTime;
 			}
-			
+
 			IResponse retVal;
 			// TODO MQ 2016/03/10: investigate further the effects of having the condition angularvelocity != 0
 			if (ClutchClosed(absTime) /* && !angularVelocity.IsEqual(0) */) {
@@ -337,7 +337,10 @@ namespace TUGraz.VectoCore.Models.SimulationComponent.Impl
 					Log.Debug("EngineSpeed is below IdleSpeed, Gearbox disengage!");
 					return new ResponseEngineSpeedTooLow { Source = this, GearboxPowerRequest = outTorque * outAngularVelocity };
 				}
-				var dryRunResponse = NextComponent.Request(absTime, dt, inTorque, inAngularVelocity, true);
+				var inertiaTorqueLossIn =
+					Formulas.InertiaPower(outAngularVelocity, PreviousState.OutAngularVelocity, ModelData.Inertia, dt) /
+					avgOutAngularVelocity / ModelData.Gears[Gear].Ratio;
+				var dryRunResponse = NextComponent.Request(absTime, dt, inTorque + inertiaTorqueLossIn, inAngularVelocity, true);
 				dryRunResponse.GearboxPowerRequest = outTorque * (PreviousState.OutAngularVelocity + outAngularVelocity) / 2.0;
 				return dryRunResponse;
 			}
