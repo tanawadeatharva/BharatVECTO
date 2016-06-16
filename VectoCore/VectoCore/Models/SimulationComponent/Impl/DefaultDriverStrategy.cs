@@ -272,11 +272,10 @@ namespace TUGraz.VectoCore.Models.SimulationComponent.Impl
 			Log.Debug("Next Driving Action: {0}", NextDrivingAction);
 		}
 
-		protected DrivingBehaviorEntry GetNextDrivingAction(Meter minDistance, Meter ds)
+		protected internal DrivingBehaviorEntry GetNextDrivingAction(Meter minDistance, Meter ds)
 		{
 			var currentSpeed = Driver.DataBus.VehicleSpeed;
 
-			// distance until halt
 			var lookaheadDistance =
 				(currentSpeed.Value() * 3.6 * Driver.DriverData.LookAheadCoasting.LookAheadDistanceFactor).SI<Meter>();
 			var stopDistance = Driver.ComputeDecelerationDistance(0.SI<MeterPerSecond>());
@@ -632,6 +631,11 @@ namespace TUGraz.VectoCore.Models.SimulationComponent.Impl
 			var currentDistance = DataBus.Distance;
 
 			if (Phase == BrakingPhase.Coast) {
+				var nextBrakeAction = DriverStrategy.GetNextDrivingAction(DataBus.Distance, ds);
+				if (nextBrakeAction != null && !DriverStrategy.BrakeTrigger.TriggerDistance.IsEqual(nextBrakeAction.TriggerDistance) &&
+					nextBrakeAction.BrakingStartDistance.IsSmaller( DriverStrategy.BrakeTrigger.BrakingStartDistance)) {
+					DriverStrategy.BrakeTrigger = nextBrakeAction;
+				}
 				var brakingDistance = Driver.ComputeDecelerationDistance(DriverStrategy.BrakeTrigger.NextTargetSpeed) +
 									DefaultDriverStrategy.BrakingSafetyMargin;
 				Log.Debug("breaking distance: {0}, start braking @ {1}", brakingDistance,
