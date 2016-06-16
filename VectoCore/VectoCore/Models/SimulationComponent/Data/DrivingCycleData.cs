@@ -29,6 +29,7 @@
 *   Martin Rexeis, rexeis@ivt.tugraz.at, IVT, Graz University of Technology
 */
 
+using System;
 using System.Collections.Generic;
 using System.Diagnostics;
 using TUGraz.VectoCommon.Utils;
@@ -101,7 +102,10 @@ namespace TUGraz.VectoCore.Models.SimulationComponent.Data
 			/// <summary>
 			/// [%] Optional.
 			/// </summary>
-			public double RoadGradientPercent { get; set; }
+			public Scalar RoadGradientPercent
+			{
+				get { return (Math.Tan(RoadGradient.Value()) * 100).SI<Scalar>(); }
+			}
 
 			/// <summary>
 			/// relative altitude of the driving cycle over distance

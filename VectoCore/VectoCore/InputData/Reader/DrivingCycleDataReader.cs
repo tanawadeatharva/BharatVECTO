@@ -205,7 +205,6 @@ namespace TUGraz.VectoCore.InputData.Reader
 					var tmp = new DrivingCycleData.DrivingCycleEntry(entry) {
 						StoppingTime = 0.SI<Second>(),
 						RoadGradient = entry.RoadGradient,
-						RoadGradientPercent = entry.RoadGradientPercent,
 						VehicleTargetSpeed = i < entries.Count - 1 ? entries[i + 1].VehicleTargetSpeed : 0.SI<MeterPerSecond>()
 					};
 					filtered.Add(tmp);
@@ -362,7 +361,6 @@ namespace TUGraz.VectoCore.InputData.Reader
 				return table.Rows.Cast<DataRow>().Select(row => new DrivingCycleData.DrivingCycleEntry {
 					Distance = row.ParseDouble(Fields.Distance).SI<Meter>(),
 					VehicleTargetSpeed = row.ParseDouble(Fields.VehicleSpeed).KMPHtoMeterPerSecond(),
-					RoadGradientPercent = row.ParseDoubleOrGetDefault(Fields.RoadGradient),
 					RoadGradient = VectoMath.InclinationToAngle(row.ParseDoubleOrGetDefault(Fields.RoadGradient) / 100.0),
 					StoppingTime = row.ParseDouble(Fields.StoppingTime).SI<Second>(),
 					AdditionalAuxPowerDemand = row.ParseDoubleOrGetDefault(Fields.AdditionalAuxPowerDemand).SI().Kilo.Watt.Cast<Watt>(),
