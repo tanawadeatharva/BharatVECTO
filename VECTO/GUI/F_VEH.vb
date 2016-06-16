@@ -434,11 +434,13 @@ Public Class F_VEH
 
 		VEH0.VehCat = CType(Me.CbCat.SelectedIndex, tVehCat)
 
+		Dim axleShareCheck As Double
 		For Each LV0 In LvRRC.Items
 
 			a0 = New cVEH.cAxle
 
 			a0.Share = fTextboxToNumString(LV0.SubItems(1).Text)
+			axleShareCheck += a0.Share
 			a0.TwinTire = (LV0.SubItems(2).Text = "yes")
 			a0.RRC = fTextboxToNumString(LV0.SubItems(3).Text)
 			a0.FzISO = fTextboxToNumString(LV0.SubItems(4).Text)
@@ -448,6 +450,11 @@ Public Class F_VEH
 			VEH0.Axles.Add(a0)
 
 		Next
+
+		If Math.Abs(axleShareCheck - 1) > 0.000001 Then
+			MsgBox("Relative axle loads must sum up to 1.0. Current value: " & axleShareCheck, MsgBoxStyle.Critical)
+			Return False
+		End If
 
 		VEH0.MassMax = CSng(fTextboxToNumString(Me.TbMassMass.Text))
 		VEH0.MassExtra = CSng(fTextboxToNumString(Me.TbMassExtra.Text))

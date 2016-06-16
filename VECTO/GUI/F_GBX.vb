@@ -18,7 +18,7 @@ Public Class F_GBX
 	Private GbxFile As String = ""
 	Public AutoSendTo As Boolean = False
 	Public JobDir As String = ""
-	Private GearDia As F_GBX_GearDlog
+	Private GearDia As GearboxGearDialog
 
 	Private Init As Boolean = False
 
@@ -35,7 +35,7 @@ Public Class F_GBX
 	Private Sub F_GBX_Load(sender As Object, e As System.EventArgs) Handles Me.Load
 
 		Init = False
-		GearDia = New F_GBX_GearDlog
+		GearDia = New GearboxGearDialog
 
 		Me.PnInertiaTI.Enabled = Not Cfg.DeclMode
 		Me.GrGearShift.Enabled = Not Cfg.DeclMode
@@ -537,6 +537,12 @@ Public Class F_GBX
 				GearDia.TbFld.Text = ""
 			End If
 
+			If LvGears.SelectedItems(0).Index = 0 Then
+				GearDia.BtPrevious.Enabled = False
+			Else
+				GearDia.BtPrevious.Enabled = True
+			End If
+
 			If GearDia.ShowDialog = Windows.Forms.DialogResult.OK Then
 
 				If GearDia.ChIsTCgear.Checked Then
@@ -559,17 +565,21 @@ Public Class F_GBX
 
 			Else
 
-				If Me.LvGears.SelectedItems(0).SubItems(2).Text = "" Then RemoveGear(True)
+				If LvGears.SelectedItems(0).SubItems(2).Text = "" Then RemoveGear(True)
 
 			End If
 
 			If GearDia.NextGear Then
-				If Me.LvGears.Items.Count - 1 = Me.LvGears.SelectedIndices(0) Then AddGear()
+				If LvGears.Items.Count - 1 = LvGears.SelectedIndices(0) Then AddGear()
 
-				Me.LvGears.Items(Me.LvGears.SelectedIndices(0) + 1).Selected = True
+				LvGears.Items(LvGears.SelectedIndices(0) + 1).Selected = True
 			End If
 
-		Loop Until Not GearDia.NextGear
+			If GearDia.PreviousGear AndAlso LvGears.SelectedIndices(0) > 0 Then
+				LvGears.Items(LvGears.SelectedIndices(0) - 1).Selected = True
+			End If
+
+		Loop Until Not (GearDia.NextGear OrElse GearDia.PreviousGear)
 	End Sub
 
 	'Add Gear
