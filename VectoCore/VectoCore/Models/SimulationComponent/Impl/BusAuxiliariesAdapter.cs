@@ -147,7 +147,7 @@ namespace TUGraz.VectoCore.Models.SimulationComponent.Impl
 			Auxiliaries.CycleStep(CurrentState.dt, ref message);
 			Log.Warn(message);
 
-			CurrentState.TotalFuelConsumption = Auxiliaries.TotalFuelGRAMS.SI().Gramm.Cast<Kilogram>();
+			CurrentState.TotalFuelConsumption = Auxiliaries.TotalFuelGRAMS;
 			container[ModalResultField.P_aux] = CurrentState.PowerDemand;
 
 			container[ModalResultField.AA_NonSmartAlternatorsEfficiency] = Auxiliaries.AA_NonSmartAlternatorsEfficiency;

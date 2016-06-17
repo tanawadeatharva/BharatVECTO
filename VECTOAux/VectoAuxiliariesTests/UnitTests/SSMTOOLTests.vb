@@ -525,10 +525,12 @@ Namespace UnitTests
 		Public Sub SaveAndRetreiveTest()
 
 			Const filePath As String = "SSMTOOLTestSaveRetreive.json"
+			Dim success As Boolean
 
 			Dim target As SSMTOOL = New SSMTOOL(filePath, New HVACConstants(), False, True)
 
-			target.Save(filePath)
+			success = target.Save(filePath)
+			Assert.IsTrue(success)
 
 			'change something
 			target.GenInputs.BP_BusLength = 202.202
@@ -536,7 +538,8 @@ Namespace UnitTests
 			Assert.AreEqual(target.GenInputs.BP_BusLength, 202.202)
 
 			'Retreive
-			target.Load(filePath)
+			success = target.Load(filePath)
+			Assert.IsTrue(success)
 
 			Assert.AreEqual(target.GenInputs.BP_BusLength, 10.655)
 		End Sub

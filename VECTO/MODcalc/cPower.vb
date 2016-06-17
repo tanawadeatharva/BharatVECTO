@@ -2760,7 +2760,7 @@ lb10:
 				mAAUX_Global.advancedAuxModel.Signals.InternalEnginePower = (mAAUX_Global.Internal_Engine_Power * 1000).SI(Of Watt)()
 
 				'Power coming out of Advanced Model is in Watts.
-				power = PreExistingAuxPower + (advancedAuxModel.AuxiliaryPowerAtCrankWatts / 1000)
+				power = PreExistingAuxPower + (advancedAuxModel.AuxiliaryPowerAtCrankWatts.Value() / 1000)
 
 				'Glenn: Comment the previous line and uncomment the next line to include the classic auxilaries power togeher with the advanced auxiliary power.
 				'power = VEC.PauxSum(t, nU) + (advancedAuxModel.AuxiliaryPowerAtCrankWatts / 1000)

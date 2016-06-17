@@ -195,7 +195,13 @@
     <None Include="TestData\Components\12t Delivery Truck Efficiency.vgbx">
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
     </None>
-    <None Include="TestData\Components\40t_Long_Haul_Truck Efficiency.vgbx">
+    <None Include="TestData\Components\24t Coach_smallLossMap.vgbx">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </None>
+    <None Include="TestData\Components\40t_Long_Haul_Truck AxleEfficiency.vgbx">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </None>
+    <None Include="TestData\Components\40t_Long_Haul_Truck GearEfficiency.vgbx">
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
     </None>
     <None Include="TestData\Components\AxleInvalid.vtlm">
@@ -923,7 +929,10 @@
     <None Include="TestData\Jobs\24t Coach Efficiency.vecto">
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
     </None>
-    <None Include="TestData\Jobs\40t_Long_Haul_Truck with Efficiency.vecto">
+    <None Include="TestData\Jobs\40t_Long_Haul_Truck with AxleEfficiency.vecto">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </None>
+    <None Include="TestData\Jobs\40t_Long_Haul_Truck with GearEfficiency.vecto">
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
     </None>
     <None Include="TestData\Jobs\40t_Long_Haul_Truck_wrong_AUX.vecto">
