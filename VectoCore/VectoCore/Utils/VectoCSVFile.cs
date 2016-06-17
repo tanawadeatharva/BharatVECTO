@@ -101,8 +101,9 @@ namespace TUGraz.VectoCore.Utils
 		private static IEnumerable<string> ReadLines(Stream stream)
 		{
 			using (var reader = new StreamReader(stream, Encoding.UTF8)) {
-				while (!reader.EndOfStream)
+				while (!reader.EndOfStream) {
 					yield return reader.ReadLine();
+				}
 			}
 		}
 
@@ -154,7 +155,9 @@ namespace TUGraz.VectoCore.Utils
 			foreach (var col in columns) {
 				table.Columns.Add(col);
 			}
-
+			if (lines.Current == null) {
+				return table;
+			}
 			// read data into table
 			var i = 0;
 			do {
@@ -187,8 +190,9 @@ namespace TUGraz.VectoCore.Utils
 		/// <param name="table">The Datatable.</param>
 		public static void Write(string fileName, DataTable table)
 		{
-			using (var sw = new StreamWriter(new FileStream(fileName, FileMode.Create), Encoding.UTF8))
+			using (var sw = new StreamWriter(new FileStream(fileName, FileMode.Create), Encoding.UTF8)) {
 				Write(sw, table);
+			}
 		}
 
 		/// <summary>
