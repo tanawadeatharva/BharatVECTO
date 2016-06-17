@@ -10,6 +10,7 @@
 ' See the LICENSE.txt for the specific language governing permissions and limitations.
 
 Imports System.Collections.Generic
+Imports System.Linq
 
 Public Class F_Graph
 	Private Filepath As String
@@ -52,7 +53,7 @@ Public Class F_Graph
 
 	Public Sub LoadNewFile(ByVal Path As String)
 		Dim lv0 As ListViewItem
-		Dim i As Integer
+		Dim i As Integer = 0
 
 		Clear()
 
@@ -60,13 +61,16 @@ Public Class F_Graph
 
 		LoadFile()
 
-		For i = 2 To 3
-			lv0 = New ListViewItem
-			lv0.Text = Channels(i).Name
-			lv0.SubItems.Add("Left")
-			lv0.Tag = i
-			lv0.Checked = True
-			Me.ListView1.Items.Add(lv0)
+		For Each channel As cChannel In Channels
+			If (channel.Name = "v_act [km/h]" OrElse channel.Name = "v_targ [km/h]") Then
+				lv0 = New ListViewItem
+				lv0.Text = channel.Name
+				lv0.SubItems.Add("Left")
+				lv0.Tag = i
+				lv0.Checked = True
+				Me.ListView1.Items.Add(lv0)
+			End If
+			i += 1
 		Next
 	End Sub
 
@@ -110,15 +114,16 @@ Public Class F_Graph
 				file.Close()
 
 				l0 = Channels(0).Values
-				TimeList = New List(Of Single)
-				For i = 0 To l0.Count - 1
-					TimeList.Add(CSng(l0(i)))
-				Next
+				TimeList = Nothing
+				DistList = Nothing
 
-				l0 = Channels(1).Values
-				DistList = New List(Of Single)
-				For i = 0 To l0.Count - 1
-					DistList.Add(CSng(l0(i)))
+				For Each channel As cChannel In Channels
+					If (channel.Name = "time [s]" AndAlso TimeList Is Nothing) Then
+						TimeList = channel.Values.Select(Function(x) CSng(x)).ToList()
+					End If
+					If (channel.Name = "dist [m]" AndAlso DistList Is Nothing) Then
+						DistList = channel.Values.Select(Function(x) CSng(x)).ToList()
+					End If
 				Next
 
 				SetxMax0()
@@ -301,17 +306,17 @@ Public Class F_Graph
 		Dim xya(3) As Single
 		Dim i As Int16
 
-		Interv0 = (xMax - xMin)/10
+		Interv0 = (xMax - xMin) / 10
 
 		Grx = 20
-		Do While 10^Grx > Interv0
+		Do While 10 ^ Grx > Interv0
 			Grx = Grx - 1
 		Loop
 
-		xyd(0) = 1*10^Grx
-		xyd(1) = 2.5*10^Grx
-		xyd(2) = 5*10^Grx
-		xyd(3) = 10*10^Grx
+		xyd(0) = 1 * 10 ^ Grx
+		xyd(1) = 2.5 * 10 ^ Grx
+		xyd(2) = 5 * 10 ^ Grx
+		xyd(3) = 10 * 10 ^ Grx
 		For i = 0 To 3
 			xya(i) = Math.Abs(Interv0 - xyd(i))
 		Next
@@ -498,13 +503,13 @@ Public Class F_Graph
 	Private Sub BtZoomIn_Click(sender As System.Object, e As System.EventArgs) Handles BtZoomIn.Click
 		Dim d As Single
 
-		d = (xMax - xMin)/10
+		d = (xMax - xMin) / 10
 
-		xMin += 2*0.5*d
-		xMax -= 2*(1 - 0.5)*d
+		xMin += 2 * 0.5 * d
+		xMax -= 2 * (1 - 0.5) * d
 
 		If xMin > 1000 Then
-			xMin = Math.Round(xMin/100, 0)*100
+			xMin = Math.Round(xMin / 100, 0) * 100
 		Else
 			xMin = Math.Round(xMin, 0)
 		End If
@@ -516,13 +521,13 @@ Public Class F_Graph
 	Private Sub BtZoomOut_Click(sender As System.Object, e As System.EventArgs) Handles BtZoomOut.Click
 		Dim d As Single
 
-		d = (xMax - xMin)/10
+		d = (xMax - xMin) / 10
 
-		xMin -= 2*0.5*d
-		xMax += 2*(1 - 0.5)*d
+		xMin -= 2 * 0.5 * d
+		xMax += 2 * (1 - 0.5) * d
 
 		If xMin > 1000 Then
-			xMin = Math.Round(xMin/100, 0)*100
+			xMin = Math.Round(xMin / 100, 0) * 100
 		Else
 			xMin = Math.Round(xMin, 0)
 		End If
@@ -536,12 +541,12 @@ Public Class F_Graph
 
 		If xMin <= 0 Then Exit Sub
 
-		d = (xMax - xMin)/3
+		d = (xMax - xMin) / 3
 		xMin -= d
 		xMax -= d
 
 		If xMin > 1000 Then
-			xMin = Math.Round(xMin/100, 0)*100
+			xMin = Math.Round(xMin / 100, 0) * 100
 		Else
 			xMin = Math.Round(xMin, 0)
 		End If
@@ -555,12 +560,12 @@ Public Class F_Graph
 
 		If xMax >= xMax0 Then Exit Sub
 
-		d = (xMax - xMin)/3
+		d = (xMax - xMin) / 3
 		xMin += d
 		xMax += d
 
 		If xMin > 1000 Then
-			xMin = Math.Round(xMin/100, 0)*100
+			xMin = Math.Round(xMin / 100, 0) * 100
 		Else
 			xMin = Math.Round(xMin, 0)
 		End If

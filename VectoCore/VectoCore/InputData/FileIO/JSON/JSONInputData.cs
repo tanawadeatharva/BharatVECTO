@@ -209,31 +209,22 @@ namespace TUGraz.VectoCore.InputData.FileIO.JSON
 				if (!EmptyOrInvalidFileName(gearboxFile)) {
 					Gearbox = JSONInputDataFactory.ReadGearbox(Path.Combine(BasePath, gearboxFile));
 				}
-			} catch (Exception e) {
-				throw new VectoException("Failed to read Gearbox file.", e);
-			}
-			try {
+
 				var axleGear = Gearbox as IAxleGearInputData;
 				if (axleGear != null) {
 					AxleGear = axleGear;
 				}
-			} catch (Exception e) {
-				throw new VectoException("Failed to read AxleGear file.", e);
-			}
-			try {
+
 				Engine = JSONInputDataFactory.ReadEngine(
 					Path.Combine(BasePath, Body.GetEx(JsonKeys.Vehicle_EngineFile).Value<string>()));
-			} catch (Exception e) {
-				throw new VectoException("Failed to read Engine file.", e);
-			}
-			try {
+
 				var vehicleFile = Body.GetEx(JsonKeys.Vehicle_VehicleFile).Value<string>();
 				if (!EmptyOrInvalidFileName(vehicleFile)) {
 					VehicleData = JSONInputDataFactory.ReadJsonVehicle(
 						Path.Combine(BasePath, vehicleFile));
 				}
 			} catch (Exception e) {
-				throw new VectoException("Failed to read Vehicle file.", e);
+				throw new VectoException("Failed to read input data: {0}", e, e.Message);
 			}
 			var retarder = VehicleData as IRetarderInputData;
 			if (retarder != null) {
@@ -265,7 +256,8 @@ namespace TUGraz.VectoCore.InputData.FileIO.JSON
 
 		public virtual IVehicleEngineeringInputData VehicleInputData
 		{
-			[System.Diagnostics.CodeAnalysis.SuppressMessage("Microsoft.Design", "CA1065:DoNotRaiseExceptionsInUnexpectedLocations")]
+			[System.Diagnostics.CodeAnalysis.SuppressMessage("Microsoft.Design",
+				"CA1065:DoNotRaiseExceptionsInUnexpectedLocations")]
 			get
 			{
 				if (VehicleData == null) {
@@ -277,7 +269,8 @@ namespace TUGraz.VectoCore.InputData.FileIO.JSON
 
 		public virtual IGearboxEngineeringInputData GearboxInputData
 		{
-			[System.Diagnostics.CodeAnalysis.SuppressMessage("Microsoft.Design", "CA1065:DoNotRaiseExceptionsInUnexpectedLocations")]
+			[System.Diagnostics.CodeAnalysis.SuppressMessage("Microsoft.Design",
+				"CA1065:DoNotRaiseExceptionsInUnexpectedLocations")]
 			get
 			{
 				if (Gearbox == null) {
@@ -289,7 +282,8 @@ namespace TUGraz.VectoCore.InputData.FileIO.JSON
 
 		public virtual IAxleGearInputData AxleGearInputData
 		{
-			[System.Diagnostics.CodeAnalysis.SuppressMessage("Microsoft.Design", "CA1065:DoNotRaiseExceptionsInUnexpectedLocations")]
+			[System.Diagnostics.CodeAnalysis.SuppressMessage("Microsoft.Design",
+				"CA1065:DoNotRaiseExceptionsInUnexpectedLocations")]
 			get
 			{
 				if (AxleGear == null) {
@@ -306,7 +300,8 @@ namespace TUGraz.VectoCore.InputData.FileIO.JSON
 
 		public virtual IEngineEngineeringInputData EngineInputData
 		{
-			[System.Diagnostics.CodeAnalysis.SuppressMessage("Microsoft.Design", "CA1065:DoNotRaiseExceptionsInUnexpectedLocations")]
+			[System.Diagnostics.CodeAnalysis.SuppressMessage("Microsoft.Design",
+				"CA1065:DoNotRaiseExceptionsInUnexpectedLocations")]
 			get
 			{
 				if (Engine == null) {
@@ -333,7 +328,8 @@ namespace TUGraz.VectoCore.InputData.FileIO.JSON
 
 		public virtual IRetarderInputData RetarderInputData
 		{
-			[System.Diagnostics.CodeAnalysis.SuppressMessage("Microsoft.Design", "CA1065:DoNotRaiseExceptionsInUnexpectedLocations")]
+			[System.Diagnostics.CodeAnalysis.SuppressMessage("Microsoft.Design",
+				"CA1065:DoNotRaiseExceptionsInUnexpectedLocations")]
 			get
 			{
 				if (Retarder == null) {
@@ -359,7 +355,8 @@ namespace TUGraz.VectoCore.InputData.FileIO.JSON
 
 		public virtual IList<ICycleData> Cycles
 		{
-			[System.Diagnostics.CodeAnalysis.SuppressMessage("Microsoft.Design", "CA1065:DoNotRaiseExceptionsInUnexpectedLocations")]
+			[System.Diagnostics.CodeAnalysis.SuppressMessage("Microsoft.Design",
+				"CA1065:DoNotRaiseExceptionsInUnexpectedLocations")]
 			get
 			{
 				var retVal = new List<ICycleData>();
@@ -467,7 +464,8 @@ namespace TUGraz.VectoCore.InputData.FileIO.JSON
 
 		public virtual DataTable AccelerationCurve
 		{
-			[System.Diagnostics.CodeAnalysis.SuppressMessage("Microsoft.Design", "CA1065:DoNotRaiseExceptionsInUnexpectedLocations")]
+			[System.Diagnostics.CodeAnalysis.SuppressMessage("Microsoft.Design",
+				"CA1065:DoNotRaiseExceptionsInUnexpectedLocations")]
 			get
 			{
 				var acceleration = Body[JsonKeys.DriverData_AccelerationCurve];

@@ -1,5 +1,7 @@
-Input Speed [rpm],Input Torque [Nm],Torque Loss [Nm],Eff [-]
-0,-2500,77.5
+Input Speed [rpm],Input Torque [Nm],Torque Loss [Nm] # this is a comment
+# rpm, Nm, Nm
+# this is a comment
+0,-2500,77.5  # this is a comment
 0,-1500,62.5
 0,-500,47.5
 0,500,47.5
@@ -7,6 +9,7 @@ Input Speed [rpm],Input Torque [Nm],Torque Loss [Nm],Eff [-]
 0,2500,77.5
 0,3500,92.5
 0,4500,107.5
+# this is a comment
 0,5500,122.5
 0,6500,137.5
 0,7500,152.5
