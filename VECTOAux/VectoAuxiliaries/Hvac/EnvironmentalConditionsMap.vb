@@ -1,80 +1,80 @@
-﻿Imports System.IO
+﻿Imports System.Globalization
+Imports System.IO
 
 Namespace Hvac
+	Public Class EnvironmentalConditionsMap
+		Implements IEnvironmentalConditionsMap
 
-    Public Class EnvironmentalConditionsMap
-        Implements IEnvironmentalConditionsMap
+		Private filePath As String
+		Private vectoDirectory As String
 
-        Private filePath As String
-        Private vectoDirectory As String
+		Private _map As New List(Of IEnvironmentalCondition)
 
-        Private _map As New List(Of IEnvironmentalCondition)
+		Public Sub New(filepath As String, vectoDirectory As String)
 
-        Public Sub New(filepath As String, vectoDirectory As String)
+			Me.filePath = filepath
+			Me.vectoDirectory = vectoDirectory
 
-            Me.filePath = filepath
-            Me.vectoDirectory = vectoDirectory
+			Initialise()
+		End Sub
 
-            Initialise()
+		Public Function Initialise() As Boolean Implements IEnvironmentalConditionsMap.Initialise
 
-        End Sub
+			If (Not String.IsNullOrWhiteSpace(filePath)) Then
 
-        Public Function Initialise() As Boolean Implements IEnvironmentalConditionsMap.Initialise
+				filePath = FilePathUtils.ResolveFilePath(vectoDirectory, filePath)
 
-            If (Not String.IsNullOrWhiteSpace(filePath)) Then
+				If File.Exists(filePath) Then
+					Using sr As StreamReader = New StreamReader(filePath)
 
-                filePath = FilePathUtils.ResolveFilePath(vectoDirectory, filePath)
+						'get array og lines fron csv
+						Dim lines() As String = sr.ReadToEnd().Split(CType(Environment.NewLine, Char()),
+																	StringSplitOptions.RemoveEmptyEntries)
 
-                If File.Exists(filePath) Then
-                    Using sr As StreamReader = New StreamReader(filePath)
+						'Must have at least 1 entries to make it usable [dont forget the header row]
+						If (lines.Count() < 2) Then
+							Return False
+						End If
 
-                        'get array og lines fron csv
-                        Dim lines() As String = sr.ReadToEnd().Split(CType(Environment.NewLine, Char()), StringSplitOptions.RemoveEmptyEntries)
+						Dim firstline As Boolean = True
 
-                        'Must have at least 1 entries to make it usable [dont forget the header row]
-                        If (lines.Count() < 2) Then
-                            Return False
-                        End If
+						For Each line As String In lines
+							If Not firstline Then
 
-                        Dim firstline As Boolean = True
+								'split the line
+								Dim elements() As String = line.Split(New Char() {","}, StringSplitOptions.RemoveEmptyEntries)
 
-                        For Each line As String In lines
-                            If Not firstline Then
+								'3 entries per line required
+								If (elements.Length <> 4) Then
+									Return False
+								End If
 
-                                'split the line
-                                Dim elements() As String = line.Split(New Char() {","}, StringSplitOptions.RemoveEmptyEntries)
+								'Add environment condition
+								Dim newCondition As EnvironmentalCondition = New EnvironmentalCondition(
+									Double.Parse(elements(1), CultureInfo.InvariantCulture),
+									Double.Parse(elements(2), CultureInfo.InvariantCulture),
+									Double.Parse(elements(3), CultureInfo.InvariantCulture))
 
-                                '3 entries per line required
-                                If (elements.Length <> 4) Then
-                                    Return False
-                                End If
+								_map.Add(newCondition)
 
-                                'Add environment condition
-                                Dim newCondition As EnvironmentalCondition = New EnvironmentalCondition(elements(1), elements(2), elements(3))
+							Else
+								firstline = False
+							End If
+						Next line
+					End Using
 
-                                _map.Add(newCondition)
+				Else
+					Return False
+				End If
+			End If
 
-                            Else
-                                firstline = False
-                            End If
-                        Next line
-                    End Using
+			Return True
+		End Function
 
-                Else
-                    Return False
-                End If
-            End If
+		Public Function GetEnvironmentalConditions() As List(Of IEnvironmentalCondition) _
+			Implements IEnvironmentalConditionsMap.GetEnvironmentalConditions
 
-            Return True
-
-        End Function
-
-        Public Function GetEnvironmentalConditions() As List(Of IEnvironmentalCondition) Implements IEnvironmentalConditionsMap.GetEnvironmentalConditions
-
-            Return _map
-
-        End Function
-
-    End Class
-
+			Return _map
+		End Function
+	End Class
 End Namespace
