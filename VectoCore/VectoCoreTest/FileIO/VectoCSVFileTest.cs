@@ -2,7 +2,9 @@
 using System.IO;
 using System.Linq;
 using NUnit.Framework;
+using TUGraz.VectoCommon.Exceptions;
 using TUGraz.VectoCommon.Utils;
+using TUGraz.VectoCore.Tests.Utils;
 using TUGraz.VectoCore.Utils;
 
 namespace TUGraz.VectoCore.Tests.FileIO
@@ -62,6 +64,23 @@ namespace TUGraz.VectoCore.Tests.FileIO
 		}
 
 		[Test]
+		public void VectoCSVFile_ReadStream_No_Content()
+		{
+			var stream = "a,b,c".GetStream();
+			var table = VectoCSVFile.ReadStream(stream);
+
+			Assert.AreEqual(3, table.Columns.Count);
+			Assert.IsTrue(new[] { "a", "b", "c" }.SequenceEqual(table.Columns.Cast<DataColumn>().Select(c => c.ColumnName)));
+			Assert.AreEqual(0, table.Rows.Count);
+		}
+
+		[Test]
+		public void VectoCSVFile_ReadStream_Empty()
+		{
+			AssertHelper.Exception<VectoException>(() => VectoCSVFile.ReadStream("".GetStream()));
+		}
+
+		[Test]
 		public void VectoCSVFile_ReadStream_Comments()
 		{
 			var stream = @"#a,b,c
@@ -107,7 +126,7 @@ namespace TUGraz.VectoCore.Tests.FileIO
 			table.Columns.Add("a");
 			table.Columns.Add("b");
 			var row = table.NewRow();
-			row.ItemArray = new[] { "1", "2" };
+			row.ItemArray = new object[] { "1", "2" };
 			table.Rows.Add(row);
 
 			using (var stream = new MemoryStream()) {
