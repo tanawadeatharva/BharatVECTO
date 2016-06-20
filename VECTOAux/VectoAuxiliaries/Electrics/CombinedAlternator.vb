@@ -14,429 +14,426 @@ Imports System.Globalization
 
 
 Namespace Electrics
+	Public Class CombinedAlternator
+		Implements IAlternatorMap, ICombinedAlternator
 
-Public Class CombinedAlternator
-        Implements IAlternatorMap, ICombinedAlternator
+		Private map As New List(Of ICombinedAlternatorMapRow)
+		Public Property Alternators As New List(Of IAlternator) Implements ICombinedAlternator.Alternators
+		Private OriginalAlternators As New List(Of IAlternator)
+		Private FilePath As String
+		Private altSignals As ICombinedAlternatorSignals
+		Private Signals As ISignals
+		Private AverageAlternatorsEfficiency As AlternatorMapValues
 
-        Private map As New List(Of ICombinedAlternatorMapRow)
-        Public Property Alternators As New List(Of IAlternator) Implements ICombinedAlternator.Alternators
-        Private OriginalAlternators As New List(Of IAlternator)
-        Private FilePath As String
-        Private altSignals As ICombinedAlternatorSignals
-        Private Signals As ISignals
-        Private AverageAlternatorsEfficiency As AlternatorMapValues
+		'Interface Implementation
+		Public Function GetEfficiency(ByVal CrankRPM As Single, ByVal Amps As Single) As AlternatorMapValues _
+			Implements IAlternatorMap.GetEfficiency
 
-        'Interface Implementation
-        Public Function GetEfficiency(ByVal CrankRPM As Single, ByVal Amps As Single) As AlternatorMapValues Implements IAlternatorMap.GetEfficiency
+			altSignals.CrankRPM = CrankRPM
+			altSignals.CurrentDemandAmps = Amps / Alternators.Count
 
-            altSignals.CrankRPM = CrankRPM
-            altSignals.CurrentDemandAmps = Amps / Alternators.Count
+			Dim alternatorMapValues As AlternatorMapValues = Nothing
 
-            Dim alternatorMapValues As AlternatorMapValues = Nothing
+			If Signals Is Nothing OrElse Signals.RunningCalc Then
+				'If running calc cycle get efficiency from interpolation function
+				alternatorMapValues = New AlternatorMapValues(Convert.ToSingle(Alternators.Average(Function(a) a.Efficiency) / 100))
+			Else
+				'If running Pre calc cycle get an average of inputs
+				alternatorMapValues = AverageAlternatorsEfficiency
+			End If
 
-            If Signals Is Nothing OrElse Signals.RunningCalc Then
-                'If running calc cycle get efficiency from interpolation function
-                alternatorMapValues = New AlternatorMapValues(Convert.ToSingle(Alternators.Average(Function(a) a.Efficiency) / 100))
-            Else
-                'If running Pre calc cycle get an average of inputs
-                alternatorMapValues = AverageAlternatorsEfficiency
-            End If
+			If alternatorMapValues.Efficiency <= 0 Then
+				alternatorMapValues = New AlternatorMapValues(0.01)
+			End If
 
-            If alternatorMapValues.Efficiency <= 0 Then
-                alternatorMapValues = New AlternatorMapValues(0.01)
-            End If
+			Return alternatorMapValues
+		End Function
 
-            Return alternatorMapValues
+		Public Function Initialise() As Boolean Implements IAlternatorMap.Initialise
 
-        End Function
-        Public Function Initialise() As Boolean Implements IAlternatorMap.Initialise
+			'From the map we construct this CombinedAlternator object and original CombinedAlternator Object
 
-            'From the map we construct this CombinedAlternator object and original CombinedAlternator Object
+			Alternators.Clear()
+			OriginalAlternators.Clear()
 
-            Alternators.Clear()
-            OriginalAlternators.Clear()
 
+			For Each alt As IEnumerable(Of ICombinedAlternatorMapRow) In map.GroupBy(Function(g) g.AlternatorName)
 
-            For Each alt As IEnumerable(Of ICombinedAlternatorMapRow) In map.GroupBy(Function(g) g.AlternatorName)
+				Dim altName As String = alt.First().AlternatorName
+				Dim pulleyRatio As Single = alt.First().PulleyRatio
 
-                Dim altName As String = alt.First().AlternatorName
-                Dim pulleyRatio As Single = alt.First().PulleyRatio
 
+				Dim alternator As IAlternator = New Alternator(altSignals, alt.ToList())
 
-                Dim alternator As IAlternator = New Alternator(altSignals, alt.ToList())
+				Alternators.Add(alternator)
 
-                Alternators.Add(alternator)
 
+			Next
 
-            Next
+			Return True
+		End Function
 
-            Return True
+		'Constructors
+		Public Sub New(filePath As String, Optional signals As ISignals = Nothing)
 
-        End Function
+			Dim feedback As String = String.Empty
+			Me.Signals = signals
 
-        'Constructors
-        Public Sub New(filePath As String, Optional signals As ISignals = Nothing)
+			If Not FilePathUtils.ValidateFilePath(filePath, ".aalt", feedback) Then
+				Throw New ArgumentException(String.Format("Combined Alternator requires a valid .AALT filename. : {0}", feedback))
+			Else
+				Me.FilePath = filePath
+			End If
 
-            Dim feedback As String = String.Empty
-            Me.Signals = signals
 
-            If Not FilePathUtils.ValidateFilePath(filePath, ".aalt", feedback) Then
-                Throw New ArgumentException(String.Format("Combined Alternator requires a valid .AALT filename. : {0}", feedback))
-            Else
-                Me.FilePath = filePath
-            End If
+			Me.altSignals = New CombinedAlternatorSignals()
 
 
-            Me.altSignals = New CombinedAlternatorSignals()
+			'IF file exists then read it otherwise create a default.
 
+			If File.Exists(filePath) AndAlso InitialiseMap(filePath) Then
+				Initialise()
+			Else
+				'Create Default Map
+				CreateDefaultMap()
+				Initialise()
+			End If
 
-            'IF file exists then read it otherwise create a default.
+			' Calculate alternators average which is used only in the pre-run
+			Dim efficiencySum As Single
+			Dim efficiencyAverage As Single
 
-            If File.Exists(filePath) AndAlso InitialiseMap(filePath) Then
-                Initialise()
-            Else
-                'Create Default Map
-                CreateDefaultMap()
-                Initialise()
-            End If
+			For Each alt As IAlternator In Alternators
+				efficiencySum += alt.InputTable2000.ElementAt(1).Eff
+				efficiencySum += alt.InputTable2000.ElementAt(2).Eff
+				efficiencySum += alt.InputTable2000.ElementAt(3).Eff
 
-            ' Calculate alternators average which is used only in the pre-run
-            Dim efficiencySum As Single
-            Dim efficiencyAverage As Single
+				efficiencySum += alt.InputTable4000.ElementAt(1).Eff
+				efficiencySum += alt.InputTable4000.ElementAt(2).Eff
+				efficiencySum += alt.InputTable4000.ElementAt(3).Eff
 
-            For Each alt As IAlternator In Alternators
-                efficiencySum += alt.InputTable2000.ElementAt(1).Eff
-                efficiencySum += alt.InputTable2000.ElementAt(2).Eff
-                efficiencySum += alt.InputTable2000.ElementAt(3).Eff
+				efficiencySum += alt.InputTable6000.ElementAt(1).Eff
+				efficiencySum += alt.InputTable6000.ElementAt(2).Eff
+				efficiencySum += alt.InputTable6000.ElementAt(3).Eff
+			Next
 
-                efficiencySum += alt.InputTable4000.ElementAt(1).Eff
-                efficiencySum += alt.InputTable4000.ElementAt(2).Eff
-                efficiencySum += alt.InputTable4000.ElementAt(3).Eff
+			efficiencyAverage = efficiencySum / (Alternators.Count * 9)
+			AverageAlternatorsEfficiency = New AlternatorMapValues(efficiencyAverage / 100)
+		End Sub
 
-                efficiencySum += alt.InputTable6000.ElementAt(1).Eff
-                efficiencySum += alt.InputTable6000.ElementAt(2).Eff
-                efficiencySum += alt.InputTable6000.ElementAt(3).Eff
-            Next
+		'Helpers
+		Private Sub CreateDefaultMap()
 
-            efficiencyAverage = efficiencySum / (Alternators.Count * 9)
-            AverageAlternatorsEfficiency = New AlternatorMapValues(efficiencyAverage / 100)
+			map.Clear()
 
-        End Sub
+			map.Add(New CombinedAlternatorMapRow("Alt1", 2000, 10, 62, 3.6))
+			map.Add(New CombinedAlternatorMapRow("Alt1", 2000, 27, 70, 3.6))
+			map.Add(New CombinedAlternatorMapRow("Alt1", 2000, 53, 30, 3.6))
 
-        'Helpers
-        Private Sub CreateDefaultMap()
+			map.Add(New CombinedAlternatorMapRow("Alt1", 4000, 10, 64, 3.6))
+			map.Add(New CombinedAlternatorMapRow("Alt1", 4000, 63, 74, 3.6))
+			map.Add(New CombinedAlternatorMapRow("Alt1", 4000, 125, 68, 3.6))
 
-            map.Clear()
+			map.Add(New CombinedAlternatorMapRow("Alt1", 6000, 10, 53, 3.6))
+			map.Add(New CombinedAlternatorMapRow("Alt1", 6000, 68, 70, 3.6))
+			map.Add(New CombinedAlternatorMapRow("Alt1", 6000, 136, 62, 3.6))
 
-            map.Add(New CombinedAlternatorMapRow("Alt1", 2000, 10, 62, 3.6))
-            map.Add(New CombinedAlternatorMapRow("Alt1", 2000, 27, 70, 3.6))
-            map.Add(New CombinedAlternatorMapRow("Alt1", 2000, 53, 30, 3.6))
+			map.Add(New CombinedAlternatorMapRow("Alt2", 2000, 10, 62, 3))
+			map.Add(New CombinedAlternatorMapRow("Alt2", 2000, 27, 70, 3))
+			map.Add(New CombinedAlternatorMapRow("Alt2", 2000, 53, 30, 3))
 
-            map.Add(New CombinedAlternatorMapRow("Alt1", 4000, 10, 64, 3.6))
-            map.Add(New CombinedAlternatorMapRow("Alt1", 4000, 63, 74, 3.6))
-            map.Add(New CombinedAlternatorMapRow("Alt1", 4000, 125, 68, 3.6))
+			map.Add(New CombinedAlternatorMapRow("Alt2", 4000, 10, 64, 3))
+			map.Add(New CombinedAlternatorMapRow("Alt2", 4000, 63, 74, 3))
+			map.Add(New CombinedAlternatorMapRow("Alt2", 4000, 125, 68, 3))
 
-            map.Add(New CombinedAlternatorMapRow("Alt1", 6000, 10, 53, 3.6))
-            map.Add(New CombinedAlternatorMapRow("Alt1", 6000, 68, 70, 3.6))
-            map.Add(New CombinedAlternatorMapRow("Alt1", 6000, 136, 62, 3.6))
+			map.Add(New CombinedAlternatorMapRow("Alt2", 6000, 10, 53, 3))
+			map.Add(New CombinedAlternatorMapRow("Alt2", 6000, 68, 70, 3))
+			map.Add(New CombinedAlternatorMapRow("Alt2", 6000, 136, 62, 3))
+		End Sub
 
-            map.Add(New CombinedAlternatorMapRow("Alt2", 2000, 10, 62, 3))
-            map.Add(New CombinedAlternatorMapRow("Alt2", 2000, 27, 70, 3))
-            map.Add(New CombinedAlternatorMapRow("Alt2", 2000, 53, 30, 3))
+		'Grid Management
+		Private Function AddNewAlternator(list As List(Of ICombinedAlternatorMapRow), ByRef feeback As String) As Boolean
 
-            map.Add(New CombinedAlternatorMapRow("Alt2", 4000, 10, 64, 3))
-            map.Add(New CombinedAlternatorMapRow("Alt2", 4000, 63, 74, 3))
-            map.Add(New CombinedAlternatorMapRow("Alt2", 4000, 125, 68, 3))
+			Dim returnValue As Boolean = True
 
-            map.Add(New CombinedAlternatorMapRow("Alt2", 6000, 10, 53, 3))
-            map.Add(New CombinedAlternatorMapRow("Alt2", 6000, 68, 70, 3))
-            map.Add(New CombinedAlternatorMapRow("Alt2", 6000, 136, 62, 3))
+			Dim altName As String = list.First().AlternatorName
+			Dim pulleyRatio As Single = list.First().PulleyRatio
 
+			'Check alt does not already exist in list
+			If Alternators.Where(Function(w) w.AlternatorName = altName).Count > 0 Then
+				feeback = "This alternator already exists in in the list, operation not completed."
+				Return False
+			End If
 
-        End Sub
+			Dim alternator As IAlternator = New Alternator(altSignals, list.ToList())
 
-        'Grid Management
-        Private Function AddNewAlternator(list As List(Of ICombinedAlternatorMapRow), ByRef feeback As String) As Boolean
+			Alternators.Add(alternator)
 
-            Dim returnValue As Boolean = True
 
-            Dim altName As String = list.First().AlternatorName
-            Dim pulleyRatio As Single = list.First().PulleyRatio
+			Return returnValue
+		End Function
 
-            'Check alt does not already exist in list
-            If Alternators.Where(Function(w) w.AlternatorName = altName).Count > 0 Then
-                feeback = "This alternator already exists in in the list, operation not completed."
-                Return False
-            End If
+		Public Function AddAlternator(rows As List(Of ICombinedAlternatorMapRow), ByRef feedback As String) As Boolean
 
-            Dim alternator As IAlternator = New Alternator(altSignals, list.ToList())
+			If Not AddNewAlternator(rows, feedback) Then
+				feedback = String.Format("Unable to add new alternator : {0}", feedback)
+				Return False
+			End If
 
-            Alternators.Add(alternator)
+			Return True
+		End Function
 
+		Public Function DeleteAlternator(alternatorName As String, ByRef feedback As String, CountValidation As Boolean) _
+			As Boolean
 
-            Return returnValue
+			'Is this the last alternator, if so deny the user the right to remove it.
+			If CountValidation AndAlso Alternators.Count < 2 Then
+				feedback = "There must be at least one alternator remaining, operation aborted."
+				Return False
+			End If
 
-        End Function
-        Public Function AddAlternator(rows As List(Of ICombinedAlternatorMapRow), ByRef feedback As String) As Boolean
+			If Alternators.Where(Function(w) w.AlternatorName = alternatorName).Count = 0 Then
+				feedback = "This alternator does not exist"
+				Return False
+			End If
 
-            If Not AddNewAlternator(rows, feedback) Then
-                feedback = String.Format("Unable to add new alternator : {0}", feedback)
-                Return False
-            End If
+			Dim altToRemove As IAlternator = Alternators.First(Function(w) w.AlternatorName = alternatorName)
+			Dim numAlternators As Integer = Alternators.Count
 
-            Return True
+			Alternators.Remove(altToRemove)
 
-        End Function
-        Public Function DeleteAlternator(alternatorName As String, ByRef feedback As String, CountValidation As Boolean) As Boolean
+			If Alternators.Count = numAlternators - 1 Then
+				Return True
+			Else
+				feedback = String.Format("The alternator {0} could not be removed : {1}", alternatorName, feedback)
+				Return False
+			End If
+		End Function
+		'Public Function UpdateAlternator( gridIndex As Integer, rows As List(Of ICombinedAlternatorMapRow),  ByRef feedback As String) As Boolean
 
-            'Is this the last alternator, if so deny the user the right to remove it.
-            If CountValidation AndAlso Alternators.Count < 2 Then
-                feedback = "There must be at least one alternator remaining, operation aborted."
-                Return False
-            End If
+		'      Dim altName As String = rows.First.AlternatorName
+		'      Dim altToUpd As IAlternator = Alternators.First(Function(w) w.AlternatorName = altName)
 
-            If Alternators.Where(Function(w) w.AlternatorName = alternatorName).Count = 0 Then
-                feedback = "This alternator does not exist"
-                Return False
-            End If
+		'      If Not DeleteAlternator(altName, feedback) Then
+		'         feedback = feedback
+		'         Return False
 
-            Dim altToRemove As IAlternator = Alternators.First(Function(w) w.AlternatorName = alternatorName)
-            Dim numAlternators As Integer = Alternators.Count
+		'      End If
 
-            Alternators.Remove(altToRemove)
+		'      'Re.create alternator.
 
-            If Alternators.Count = numAlternators - 1 Then
-                Return True
-            Else
-                feedback = String.Format("The alternator {0} could not be removed : {1}", alternatorName, feedback)
-                Return False
-            End If
+		'      Dim replacementAlt As New Alternator(altSignals, rows)
+		'      Alternators.Add(replacementAlt)
 
-        End Function
-        'Public Function UpdateAlternator( gridIndex As Integer, rows As List(Of ICombinedAlternatorMapRow),  ByRef feedback As String) As Boolean
+		'      Return True
 
-        '      Dim altName As String = rows.First.AlternatorName
-        '      Dim altToUpd As IAlternator = Alternators.First(Function(w) w.AlternatorName = altName)
 
-        '      If Not DeleteAlternator(altName, feedback) Then
-        '         feedback = feedback
-        '         Return False
+		'End Function
 
-        '      End If
+		'Persistance Functions
+		Public Function Save(aaltPath As String) As Boolean
 
-        '      'Re.create alternator.
 
-        '      Dim replacementAlt As New Alternator(altSignals, rows)
-        '      Alternators.Add(replacementAlt)
+			Dim returnValue As Boolean = True
+			Dim sb As New StringBuilder()
+			Dim row As Integer = 0
+			Dim amps, eff As Single
 
-        '      Return True
+			'write headers  
+			sb.AppendLine("[AlternatorName],[RPM],[Amps],[Efficiency],[PulleyRatio]")
 
+			'write details
+			For Each alt As IAlternator In Alternators.OrderBy(Function(o) o.AlternatorName)
 
-        'End Function
 
-        'Persistance Functions
-        Public Function Save(aaltPath As String) As Boolean
+				'2000 - IE Alt1,2000,10,50,3
+				For row = 1 To 3
+					amps = alt.InputTable2000(row).Amps
+					eff = alt.InputTable2000(row).Eff
+					sb.Append(
+						alt.AlternatorName + ",2000," + amps.ToString("0.000") + "," + eff.ToString("0.000") + "," +
+						alt.PulleyRatio.ToString("0.000"))
+					sb.AppendLine("")
+				Next
 
+				'4000 - IE Alt1,2000,10,50,3
+				For row = 1 To 3
+					amps = alt.InputTable4000(row).Amps
+					eff = alt.InputTable4000(row).Eff
+					sb.Append(
+						alt.AlternatorName + ",4000," + amps.ToString("0.000") + "," + eff.ToString("0.000") + "," +
+						alt.PulleyRatio.ToString("0.000"))
+					sb.AppendLine("")
+				Next
 
-            Dim returnValue As Boolean = True
-            Dim sb As New StringBuilder()
-            Dim row As Integer = 0
-            Dim amps, eff As Single
+				'6000 - IE Alt1,2000,10,50,3
+				For row = 1 To 3
+					amps = alt.InputTable6000(row).Amps
+					eff = alt.InputTable6000(row).Eff
+					sb.Append(
+						alt.AlternatorName + ",6000," + amps.ToString("0.000") + "," + eff.ToString("0.000") + "," +
+						alt.PulleyRatio.ToString("0.000"))
+					sb.AppendLine("")
+				Next
 
-            'write headers  
-            sb.AppendLine("[AlternatorName],[RPM],[Amps],[Efficiency],[PulleyRatio]")
 
-            'write details
-            For Each alt As IAlternator In Alternators.OrderBy(Function(o) o.AlternatorName)
+			Next
 
+			'Add Model Source
+			sb.AppendLine("[MODELSOURCE]")
+			sb.Append(Me.ToString())
 
-                '2000 - IE Alt1,2000,10,50,3
-                For row = 1 To 3
-                    amps = alt.InputTable2000(row).Amps : eff = alt.InputTable2000(row).Eff
-                    sb.Append(alt.AlternatorName + ",2000," + amps.ToString("0.000") + "," + eff.ToString("0.000") + "," + alt.PulleyRatio.ToString("0.000"))
-                    sb.AppendLine("")
-                Next
+			' Write the stream cotnents to a new file named "AllTxtFiles.txt" 
+			Using outfile As New StreamWriter(aaltPath)
+				outfile.Write(sb.ToString())
+			End Using
 
-                '4000 - IE Alt1,2000,10,50,3
-                For row = 1 To 3
-                    amps = alt.InputTable4000(row).Amps : eff = alt.InputTable4000(row).Eff
-                    sb.Append(alt.AlternatorName + ",4000," + amps.ToString("0.000") + "," + eff.ToString("0.000") + "," + alt.PulleyRatio.ToString("0.000"))
-                    sb.AppendLine("")
-                Next
+			Return returnValue
+		End Function
 
-                '6000 - IE Alt1,2000,10,50,3
-                For row = 1 To 3
-                    amps = alt.InputTable6000(row).Amps : eff = alt.InputTable6000(row).Eff
-                    sb.Append(alt.AlternatorName + ",6000," + amps.ToString("0.000") + "," + eff.ToString("0.000") + "," + alt.PulleyRatio.ToString("0.000"))
-                    sb.AppendLine("")
-                Next
+		Private Function Load() As Boolean
 
+			If Not InitialiseMap(FilePath) Then Return False
 
-            Next
 
-            'Add Model Source
-            sb.AppendLine("[MODELSOURCE]")
-            sb.Append(Me.ToString())
+			Return True
+		End Function
 
-            ' Write the stream cotnents to a new file named "AllTxtFiles.txt" 
-            Using outfile As New StreamWriter(aaltPath)
-                outfile.Write(sb.ToString())
-            End Using
+		'Initialises the map, only valid when loadingUI for first time in edit mode or always in operational mode.
+		Private Function InitialiseMap(filePath As String) As Boolean
 
-            Return returnValue
+			Dim returnValue As Boolean = False
+			Dim elements As String()
 
-        End Function
-        Private Function Load() As Boolean
+			If File.Exists(filePath) Then
+				Using sr As StreamReader = New StreamReader(filePath)
+					'get array og lines fron csv
+					Dim lines() As String = sr.ReadToEnd().Split(CType(Environment.NewLine, Char()),
+																StringSplitOptions.RemoveEmptyEntries)
 
-            If Not InitialiseMap(FilePath) Then Return False
+					'Must have at least 2 entries in map to make it usable [dont forget the header row]
+					If (lines.Count() < 10) Then
+						Throw New ArgumentException("Insufficient rows in csv to build a usable map")
+					End If
 
+					map = New List(Of ICombinedAlternatorMapRow)
 
-            Return True
+					Dim firstline As Boolean = True
 
-        End Function
+					For Each line As String In lines
+						If Not firstline Then
 
-        'Initialises the map, only valid when loadingUI for first time in edit mode or always in operational mode.
-        Private Function InitialiseMap(filePath As String) As Boolean
+							'Advanced Alternator Source Check.
+							If line.Contains("[MODELSOURCE") Then Exit For
 
-            Dim returnValue As Boolean = False
-            Dim elements As String()
+							'split the line
+							elements = line.Split(New Char() {","c}, StringSplitOptions.RemoveEmptyEntries)
+							'3 entries per line required
+							If (elements.Length <> 5) Then
+								Throw New ArgumentException("Incorrect number of values in csv file")
+							End If
+							'add values to map
 
-            If File.Exists(filePath) Then
-                Using sr As StreamReader = New StreamReader(filePath)
-                    'get array og lines fron csv
-                    Dim lines() As String = sr.ReadToEnd().Split(CType(Environment.NewLine, Char()), StringSplitOptions.RemoveEmptyEntries)
+							map.Add(New CombinedAlternatorMapRow(elements(0), Single.Parse(elements(1), CultureInfo.InvariantCulture),
+																Single.Parse(elements(2), CultureInfo.InvariantCulture),
+																Single.Parse(elements(3), CultureInfo.InvariantCulture),
+																Single.Parse(elements(4), CultureInfo.InvariantCulture)))
 
-                    'Must have at least 2 entries in map to make it usable [dont forget the header row]
-                    If (lines.Count() < 10) Then
-                        Throw New ArgumentException("Insufficient rows in csv to build a usable map")
-                    End If
+						Else
+							firstline = False
+						End If
+					Next line
+				End Using
+				Return True
+			Else
+				Throw New ArgumentException("Supplied input file does not exist")
+			End If
 
-                    map = New List(Of ICombinedAlternatorMapRow)
+			Return returnValue
+		End Function
 
-                    Dim firstline As Boolean = True
+		'Can be used to send messages to Vecto.
+		Public Event AuxiliaryEvent(ByRef sender As Object, message As String, messageType As AdvancedAuxiliaryMessageType) _
+			Implements IAuxiliaryEvent.AuxiliaryEvent
 
-                    For Each line As String In lines
-                        If Not firstline Then
+		'This is used to generate a diagnostics output which enables the user to 
+		'Determine if they beleive the resulting map is what is expected
+		'Basically it is a check against the model/Spreadsheet
+		Public Overrides Function ToString() As String
 
-                            'Advanced Alternator Source Check.
-                            If line.Contains("[MODELSOURCE") Then Exit For
+			Dim sb As New StringBuilder()
+			Dim a1, a2, a3, e1, e2, e3 As String
 
-                            'split the line
-                            elements = line.Split(New Char() {","c}, StringSplitOptions.RemoveEmptyEntries)
-                            '3 entries per line required
-                            If (elements.Length <> 5) Then
-                                Throw New ArgumentException("Incorrect number of values in csv file")
-                            End If
-                            'add values to map
 
-                            map.Add(New CombinedAlternatorMapRow(elements(0), CType(elements(1), Single), CType(elements(2), Single), CType(elements(3), Single), CType(elements(4), Single)))
+			For Each alt As Alternator In Alternators.OrderBy(Function(o) o.AlternatorName)
+				sb.AppendLine("")
+				sb.AppendFormat("** {0} ** , PulleyRatio {1}", alt.AlternatorName, alt.PulleyRatio)
+				sb.AppendLine("")
+				sb.AppendLine("******************************************************************")
+				sb.AppendLine("")
 
-                        Else
-                            firstline = False
-                        End If
-                    Next line
-                End Using
-                Return True
-            Else
-                Throw New ArgumentException("Supplied input file does not exist")
-            End If
+				Dim i As Integer = 1
+				sb.AppendLine("Table 1 (2000)" + vbTab + "Table 2 (4000)" + vbTab + "Table 3 (6000)")
+				sb.AppendLine("Amps" + vbTab + "Eff" + vbTab + "Amps" + vbTab + "Eff" + vbTab + "Amps" + vbTab + "Eff" + vbTab)
+				sb.AppendLine("")
+				For i = 1 To 3
 
-            Return returnValue
+					a1 = alt.InputTable2000(i).Amps.ToString("0")
+					e1 = alt.InputTable2000(i).Eff.ToString("0.000")
+					a2 = alt.InputTable4000(i).Amps.ToString("0")
+					e2 = alt.InputTable4000(i).Eff.ToString("0.000")
+					a3 = alt.InputTable6000(i).Amps.ToString("0")
+					e3 = alt.InputTable6000(i).Eff.ToString("0.000")
+					sb.AppendLine(a1 + vbTab + e1 + vbTab + a2 + vbTab + e2 + vbTab + a3 + vbTab + e3 + vbTab)
 
+				Next
 
-        End Function
 
-        'Can be used to send messages to Vecto.
-        Public Event AuxiliaryEvent(ByRef sender As Object, message As String, messageType As AdvancedAuxiliaryMessageType) Implements IAuxiliaryEvent.AuxiliaryEvent
+			Next
 
-        'This is used to generate a diagnostics output which enables the user to 
-        'Determine if they beleive the resulting map is what is expected
-        'Basically it is a check against the model/Spreadsheet
-        Public Overrides Function ToString() As String
+			'sb.AppendLine("")
+			'sb.AppendLine("********* COMBINED EFFICIENCY VALUES **************")
+			'sb.AppendLine("")
+			'sb.AppendLine(vbTab + "RPM VALUES")
+			'sb.AppendLine("AMPS" + vbTab + "500" + vbTab + "1500" + vbTab + "2500" + vbTab + "3500" + vbTab + "4500" + vbTab + "5500" + vbTab + "6500" + vbTab + "7500")
+			'For a As Single = 1 To Alternators.Count * 50
 
-            Dim sb As New StringBuilder()
-            Dim a1, a2, a3, e1, e2, e3 As String
+			'    sb.Append(a.ToString("0") + vbTab)
+			'    For Each r As Single In {500, 1500, 2500, 3500, 4500, 5500, 6500, 7500}
 
+			'        Dim eff As Single = GetEfficiency(r, a).Efficiency
 
-            For Each alt As Alternator In Alternators.OrderBy(Function(o) o.AlternatorName)
-                sb.AppendLine("")
-                sb.AppendFormat("** {0} ** , PulleyRatio {1}", alt.AlternatorName, alt.PulleyRatio)
-                sb.AppendLine("")
-                sb.AppendLine("******************************************************************")
-                sb.AppendLine("")
+			'        sb.Append(eff.ToString("0.000") + vbTab)
 
-                Dim i As Integer = 1
-                sb.AppendLine("Table 1 (2000)" + vbTab + "Table 2 (4000)" + vbTab + "Table 3 (6000)")
-                sb.AppendLine("Amps" + vbTab + "Eff" + vbTab + "Amps" + vbTab + "Eff" + vbTab + "Amps" + vbTab + "Eff" + vbTab)
-                sb.AppendLine("")
-                For i = 1 To 3
+			'    Next
+			'    sb.AppendLine("")
 
-                    a1 = alt.InputTable2000(i).Amps.ToString("0")
-                    e1 = alt.InputTable2000(i).Eff.ToString("0.000")
-                    a2 = alt.InputTable4000(i).Amps.ToString("0")
-                    e2 = alt.InputTable4000(i).Eff.ToString("0.000")
-                    a3 = alt.InputTable6000(i).Amps.ToString("0")
-                    e3 = alt.InputTable6000(i).Eff.ToString("0.000")
-                    sb.AppendLine(a1 + vbTab + e1 + vbTab + a2 + vbTab + e2 + vbTab + a3 + vbTab + e3 + vbTab)
+			'Next
 
-                Next
 
+			Return sb.ToString()
+		End Function
 
-            Next
 
-            'sb.AppendLine("")
-            'sb.AppendLine("********* COMBINED EFFICIENCY VALUES **************")
-            'sb.AppendLine("")
-            'sb.AppendLine(vbTab + "RPM VALUES")
-            'sb.AppendLine("AMPS" + vbTab + "500" + vbTab + "1500" + vbTab + "2500" + vbTab + "3500" + vbTab + "4500" + vbTab + "5500" + vbTab + "6500" + vbTab + "7500")
-            'For a As Single = 1 To Alternators.Count * 50
+		'Equality
+		Public Function IsEqualTo(other As ICombinedAlternator) As Boolean Implements ICombinedAlternator.IsEqualTo
 
-            '    sb.Append(a.ToString("0") + vbTab)
-            '    For Each r As Single In {500, 1500, 2500, 3500, 4500, 5500, 6500, 7500}
+			'Count Check.
+			If Me.Alternators.Count <> other.Alternators.Count Then Return False
 
-            '        Dim eff As Single = GetEfficiency(r, a).Efficiency
+			For Each alt As IAlternator In Me.Alternators
 
-            '        sb.Append(eff.ToString("0.000") + vbTab)
+				'Can we find the same alternatorName in other
+				If other.Alternators.Where(Function(f) f.AlternatorName = alt.AlternatorName).Count() <> 1 Then Return False
 
-            '    Next
-            '    sb.AppendLine("")
+				'get the alternator to compare and compare it.
+				If Not alt.IsEqualTo(other.Alternators.first(Function(f) f.AlternatorName = alt.AlternatorName)) Then Return False
 
-            'Next
+			Next
 
-
-
-
-            Return sb.ToString()
-
-        End Function
-
-
-        'Equality
-        Public Function IsEqualTo(other As ICombinedAlternator) As Boolean Implements ICombinedAlternator.IsEqualTo
-
-            'Count Check.
-            If Me.Alternators.Count <> other.Alternators.Count Then Return False
-
-            For Each alt As IAlternator In Me.Alternators
-
-                'Can we find the same alternatorName in other
-                If other.Alternators.Where(Function(f) f.AlternatorName = alt.AlternatorName).Count() <> 1 Then Return False
-
-                'get the alternator to compare and compare it.
-                If Not alt.IsEqualTo(other.Alternators.first(Function(f) f.AlternatorName = alt.AlternatorName)) Then Return False
-
-            Next
-
-            Return True
-
-        End Function
-
-
-
-    End Class
-
-
+			Return True
+		End Function
+	End Class
 End Namespace
-
 
 

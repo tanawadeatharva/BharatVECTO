@@ -9,6 +9,7 @@
 '
 ' See the LICENSE.txt for the specific language governing permissions and limitations.
 
+Imports System.Globalization
 Imports System.IO
 
 Namespace Pneumatics
@@ -76,7 +77,10 @@ Namespace Pneumatics
 							'4 entries per line required
 							If (elements.Length <> 4) Then Throw New ArgumentException("Incorrect number of values in csv file")
 							'add values to map
-							map.Add(elements(0), New CompressorMapValues(elements(1), elements(2), elements(3)))
+							map.Add(Integer.Parse(elements(0)),
+									New CompressorMapValues(Single.Parse(elements(1), CultureInfo.InvariantCulture),
+															Single.Parse(elements(2), CultureInfo.InvariantCulture),
+															Single.Parse(elements(3), CultureInfo.InvariantCulture)))
 						Else
 							firstline = False
 						End If
