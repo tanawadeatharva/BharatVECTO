@@ -29,6 +29,7 @@
 *   Martin Rexeis, rexeis@ivt.tugraz.at, IVT, Graz University of Technology
 */
 
+using System;
 using System.Collections.Generic;
 using System.Linq;
 using TUGraz.VectoCommon.Exceptions;
@@ -527,7 +528,7 @@ namespace TUGraz.VectoCore.Models.SimulationComponent.Impl
 			container[ModalResultField.dist] = CurrentState.Distance;
 			container[ModalResultField.simulationDistance] = CurrentState.SimulationDistance;
 			container[ModalResultField.v_targ] = CurrentState.VehicleSpeed;
-			container[ModalResultField.grad] = LeftSample.Current.RoadGradientPercent.SI();
+			container[ModalResultField.grad] = LeftSample.Current.RoadGradientPercent;
 			container[ModalResultField.altitude] = LeftSample.Current.Altitude;
 			container[ModalResultField.acc] = CurrentState.Acceleration;
 		}

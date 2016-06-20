@@ -12,868 +12,848 @@
 Imports System.Collections.Generic
 
 Public Class cVECTO
+	Private Const FormatVersion As Short = 2
+	Private FileVersion As Short
 
-    Private Const FormatVersion As Short = 2
-    Private FileVersion As Short
-
-    'AA-TB
-    'STORES THE Type and version of the chosen or default Auxiliary Type ( Classic/Original or other )
-    public AuxiliaryAssembly As String
-    public AuxiliaryVersion As String
-    Public AdvancedAuxiliaryFilePath As String
-    
-
-    Private sFilePath As String
-
-    Private MyPath As String
-
-    'Input parameters
-    Private stPathVEH As cSubPath
-    Private stPathENG As cSubPath
-    Private stPathGBX As cSubPath
-
-    Private boStartStop As Boolean
-    Private siStStV As Single
-    Private siStStT As Single
-    Public StStDelay As Integer
-
-    Private stDesMaxFile As cSubPath
-    Private laDesV As List(Of Single)
-    Private laDesMax As List(Of Single)
-    Private laDesMin As List(Of Single)
-    Private DesMaxDim As Integer
-
-    Public AuxPaths As Dictionary(Of String, cAuxEntry)
-    Public AuxRefs As Dictionary(Of String, cAux)          'Alle Nebenverbraucher die in der Veh-Datei UND im Zyklus definiert sind
-    Public AuxDef As Boolean                               'True wenn ein oder mehrere Nebenverbraucher definiert sind
-    Public EStechs As List(Of String)
-
-    Public CycleFiles As List(Of cSubPath)
-
-    Public EngOnly As Boolean
-
-    Public a_lookahead As Single
-    Public vMin As Single
-    Public vMinLA As Single
-    Public LookAheadOn As Boolean
-    Public OverSpeedOn As Boolean
-    Public OverSpeed As Single
-    Public UnderSpeed As Single
-    Public EcoRollOn As Boolean
-
-    Private MyFileList As List(Of String)
-
-    Public SavedInDeclMode As Boolean
+	'AA-TB
+	'STORES THE Type and version of the chosen or default Auxiliary Type ( Classic/Original or other )
+	Public AuxiliaryAssembly As String
+	Public AuxiliaryVersion As String
+	Public AdvancedAuxiliaryFilePath As String
 
 
-    Public Class cAuxEntry
-        Public Type As String
-        Public Path As cSubPath
-        Public TechStr As String = ""
+	Private sFilePath As String
 
-        Public Sub New()
-            Path = New cSubPath
-        End Sub
+	Private MyPath As String
 
-    End Class
+	'Input parameters
+	Private stPathVEH As cSubPath
+	Private stPathENG As cSubPath
+	Private stPathGBX As cSubPath
 
-    Public Function CreateFileList() As Boolean
-        Dim Aux0 As cAuxEntry
-        Dim sb As cSubPath
-        Dim str As String
+	Private boStartStop As Boolean
+	Private siStStV As Single
+	Private siStStT As Single
+	Public StStDelay As Integer
 
-        MyFileList = New List(Of String)
+	Private stDesMaxFile As cSubPath
+	Private laDesV As List(Of Single)
+	Private laDesMax As List(Of Single)
+	Private laDesMin As List(Of Single)
+	Private DesMaxDim As Integer
 
-        '.vecto
-        MyFileList.Add(Me.sFilePath)
+	Public AuxPaths As Dictionary(Of String, cAuxEntry)
+	Public AuxRefs As Dictionary(Of String, cAux) _
+	'Alle Nebenverbraucher die in der Veh-Datei UND im Zyklus definiert sind
+	Public AuxDef As Boolean							   'True wenn ein oder mehrere Nebenverbraucher definiert sind
+	Public EStechs As List(Of String)
 
-        'Veh
-        If Not Me.EngOnly Then
-            MyFileList.Add(Me.PathVEH)
+	Public CycleFiles As List(Of cSubPath)
 
-            If Not VEH.CreateFileList Then Return False
-            For Each str In VEH.FileList
-                MyFileList.Add(str)
-            Next
-        End If
+	Public EngOnly As Boolean
 
-        'Eng
-        MyFileList.Add(Me.PathENG)
+	Public a_lookahead As Single
+	Public vMin As Single
+	Public vMinLA As Single
+	Public LookAheadOn As Boolean
+	Public OverSpeedOn As Boolean
+	Public OverSpeed As Single
+	Public UnderSpeed As Single
+	Public EcoRollOn As Boolean
 
-        If Not ENG.CreateFileList Then Return False
-        For Each str In ENG.FileList
-            MyFileList.Add(str)
-        Next
+	Private MyFileList As List(Of String)
 
-        If Not Me.EngOnly Then
-
-            'Gbx
-            MyFileList.Add(Me.PathGBX)
-
-            If Not GBX.CreateFileList Then Return False
-            For Each str In GBX.FileList
-                MyFileList.Add(str)
-            Next
-
-            'Aux
-            If AuxDef And Not Cfg.DeclMode Then
-                For Each Aux0 In Me.AuxPaths.Values
-                    MyFileList.Add(Aux0.Path.FullPath)
-                Next
-            End If
-
-            '.vacc
-            MyFileList.Add(Me.stDesMaxFile.FullPath)
-
-        End If
-
-        'Cycles
-        For Each sb In Me.CycleFiles
-            MyFileList.Add(sb.FullPath)
-        Next
+	Public SavedInDeclMode As Boolean
 
 
-        Return True
+	Public Class cAuxEntry
+		Public Type As String
+		Public Path As cSubPath
+		Public TechStr As String = ""
 
-    End Function
+		Public Sub New()
+			Path = New cSubPath
+		End Sub
+	End Class
 
-    Public Sub New()
+	Public Function CreateFileList() As Boolean
+		Dim Aux0 As cAuxEntry
+		Dim sb As cSubPath
+		Dim str As String
 
-        MyPath = ""
-        sFilePath = ""
+		MyFileList = New List(Of String)
 
-        stPathVEH = New cSubPath
-        stPathENG = New cSubPath
-        stPathGBX = New cSubPath
+		'.vecto
+		MyFileList.Add(Me.sFilePath)
 
-        stDesMaxFile = New cSubPath
+		'Veh
+		If Not Me.EngOnly Then
+			MyFileList.Add(Me.PathVEH)
 
-        laDesV = New List(Of Single)
-        laDesMax = New List(Of Single)
-        laDesMin = New List(Of Single)
+			If Not VEH.CreateFileList Then Return False
+			For Each str In VEH.FileList
+				MyFileList.Add(str)
+			Next
+		End If
 
-        AuxPaths = New Dictionary(Of String, cAuxEntry)
-        AuxRefs = New Dictionary(Of String, cAux)
-        AuxDef = False
-        EStechs = New List(Of String)
+		'Eng
+		MyFileList.Add(Me.PathENG)
 
-        CycleFiles = New List(Of cSubPath)
+		If Not ENG.CreateFileList Then Return False
+		For Each str In ENG.FileList
+			MyFileList.Add(str)
+		Next
 
-    End Sub
+		If Not Me.EngOnly Then
 
-    Public Function SaveFile() As Boolean
-        Dim AuxEntryKV As KeyValuePair(Of String, cAuxEntry)
-        'Dim s As String
-        Dim sb As cSubPath
+			'Gbx
+			MyFileList.Add(Me.PathGBX)
+
+			If Not GBX.CreateFileList Then Return False
+			For Each str In GBX.FileList
+				MyFileList.Add(str)
+			Next
+
+			'Aux
+			If AuxDef And Not Cfg.DeclMode Then
+				For Each Aux0 In Me.AuxPaths.Values
+					MyFileList.Add(Aux0.Path.FullPath)
+				Next
+			End If
+
+			'.vacc
+			MyFileList.Add(Me.stDesMaxFile.FullPath)
+
+		End If
+
+		'Cycles
+		For Each sb In Me.CycleFiles
+			MyFileList.Add(sb.FullPath)
+		Next
+
+
+		Return True
+	End Function
+
+	Public Sub New()
+
+		MyPath = ""
+		sFilePath = ""
+
+		stPathVEH = New cSubPath
+		stPathENG = New cSubPath
+		stPathGBX = New cSubPath
+
+		stDesMaxFile = New cSubPath
+
+		laDesV = New List(Of Single)
+		laDesMax = New List(Of Single)
+		laDesMin = New List(Of Single)
+
+		AuxPaths = New Dictionary(Of String, cAuxEntry)
+		AuxRefs = New Dictionary(Of String, cAux)
+		AuxDef = False
+		EStechs = New List(Of String)
+
+		CycleFiles = New List(Of cSubPath)
+	End Sub
+
+	Public Function SaveFile() As Boolean
+		Dim AuxEntryKV As KeyValuePair(Of String, cAuxEntry)
+		'Dim s As String
+		Dim sb As cSubPath
         Dim JSON As New JSON
-        Dim ls As List(Of Object)
-        Dim dic As Dictionary(Of String, Object)
-        Dim dic0 As Dictionary(Of String, Object)
+		Dim ls As List(Of Object)
+		Dim dic As Dictionary(Of String, Object)
+		Dim dic0 As Dictionary(Of String, Object)
 
-        'Header
-        dic = New Dictionary(Of String, Object)
-        dic.Add("CreatedBy", Lic.LicString & " (" & Lic.GUID & ")")
-        dic.Add("Date", Now.ToString)
-        dic.Add("AppVersion", VECTOvers)
-        dic.Add("FileVersion", FormatVersion)
-        JSON.Content.Add("Header", dic)
+		'Header
+		dic = New Dictionary(Of String, Object)
+		dic.Add("CreatedBy", Lic.LicString & " (" & Lic.GUID & ")")
+		dic.Add("Date", Now.ToString)
+		dic.Add("AppVersion", VECTOvers)
+		dic.Add("FileVersion", FormatVersion)
+		JSON.Content.Add("Header", dic)
 
-        'Body
-        dic0 = New Dictionary(Of String, Object)
+		'Body
+		dic0 = New Dictionary(Of String, Object)
 
-        dic0.Add("SavedInDeclMode", Cfg.DeclMode)
-        SavedInDeclMode = Cfg.DeclMode
+		dic0.Add("SavedInDeclMode", Cfg.DeclMode)
+		SavedInDeclMode = Cfg.DeclMode
 
-        'Main Files
-        dic0.Add("VehicleFile", stPathVEH.PathOrDummy)
-        dic0.Add("EngineFile", stPathENG.PathOrDummy)
-        dic0.Add("GearboxFile", stPathGBX.PathOrDummy)
+		'Main Files
+		dic0.Add("VehicleFile", stPathVEH.PathOrDummy)
+		dic0.Add("EngineFile", stPathENG.PathOrDummy)
+		dic0.Add("GearboxFile", stPathGBX.PathOrDummy)
 
-        'Cycles
-        If CycleFiles.Count > 0 Then
-            ls = New List(Of Object)
-            For Each sb In CycleFiles
-                ls.Add(sb.PathOrDummy)
-            Next
-            dic0.Add("Cycles", ls)
-        End If
+		'Cycles
+		If CycleFiles.Count > 0 Then
+			ls = New List(Of Object)
+			For Each sb In CycleFiles
+				ls.Add(sb.PathOrDummy)
+			Next
+			dic0.Add("Cycles", ls)
+		End If
 
-        'AA-TB
-        'ADVANCED AUXILIARIES 
-        dic0.Add("AuxiliaryAssembly",AuxiliaryAssembly)
-        dic0.Add("AuxiliaryVersion",AuxiliaryVersion)
-        dic0.Add("AdvancedAuxiliaryFilePath",AdvancedAuxiliaryFilePath)
+		'AA-TB
+		'ADVANCED AUXILIARIES 
+		dic0.Add("AuxiliaryAssembly", AuxiliaryAssembly)
+		dic0.Add("AuxiliaryVersion", AuxiliaryVersion)
+		dic0.Add("AdvancedAuxiliaryFilePath", AdvancedAuxiliaryFilePath)
 
-        'Aux
-        If AuxPaths.Count > 0 Then
-            ls = New List(Of Object)
-            For Each AuxEntryKV In AuxPaths
-                dic = New Dictionary(Of String, Object)
-                dic.Add("ID", Trim(UCase(AuxEntryKV.Key)))
-                dic.Add("Type", AuxEntryKV.Value.Type)
-                dic.Add("Path", AuxEntryKV.Value.Path.PathOrDummy)
-                dic.Add("Technology", AuxEntryKV.Value.TechStr)
+		'Aux
+		If AuxPaths.Count > 0 Then
+			ls = New List(Of Object)
+			For Each AuxEntryKV In AuxPaths
+				dic = New Dictionary(Of String, Object)
+				dic.Add("ID", Trim(UCase(AuxEntryKV.Key)))
+				dic.Add("Type", AuxEntryKV.Value.Type)
+				dic.Add("Path", AuxEntryKV.Value.Path.PathOrDummy)
+				dic.Add("Technology", AuxEntryKV.Value.TechStr)
 
-                If AuxEntryKV.Key = sKey.AUX.ElecSys Then
-                    dic.Add("TechList", EStechs)
-                End If
+				If AuxEntryKV.Key = sKey.AUX.ElecSys Then
+					dic.Add("TechList", EStechs)
+				End If
 
-                ls.Add(dic)
-            Next
-            dic0.Add("Aux", ls)
-        End If
+				ls.Add(dic)
+			Next
+			dic0.Add("Aux", ls)
+		End If
 
-        'VACC
-        dic0.Add("VACC", stDesMaxFile.PathOrDummy)
+		'VACC
+		dic0.Add("VACC", stDesMaxFile.PathOrDummy)
 
-        'EngineOnlyMode
-        dic0.Add("EngineOnlyMode", EngOnly)
+		'EngineOnlyMode
+		dic0.Add("EngineOnlyMode", EngOnly)
 
-        'Start Stop
-        dic = New Dictionary(Of String, Object)
-        dic.Add("Enabled", boStartStop)
-        dic.Add("MaxSpeed", siStStV)
-        dic.Add("MinTime", siStStT)
-        dic.Add("Delay", StStDelay)
-        dic0.Add("StartStop", dic)
+		'Start Stop
+		dic = New Dictionary(Of String, Object)
+		dic.Add("Enabled", boStartStop)
+		dic.Add("MaxSpeed", siStStV)
+		dic.Add("MinTime", siStStT)
+		dic.Add("Delay", StStDelay)
+		dic0.Add("StartStop", dic)
 
-        'LAC
-        dic = New Dictionary(Of String, Object)
-        dic.Add("Enabled", LookAheadOn)
-        dic.Add("Dec", a_lookahead)
-        dic.Add("MinSpeed", vMinLA)
-        dic0.Add("LAC", dic)
+		'LAC
+		dic = New Dictionary(Of String, Object)
+		dic.Add("Enabled", LookAheadOn)
+		dic.Add("Dec", a_lookahead)
+		dic.Add("MinSpeed", vMinLA)
+		dic0.Add("LAC", dic)
 
-        'Overspeed / EcoRoll
-        dic = New Dictionary(Of String, Object)
-        If EcoRollOn Then
-            dic.Add("Mode", "EcoRoll")
-        ElseIf OverSpeedOn Then
-            dic.Add("Mode", "OverSpeed")
-        Else
-            dic.Add("Mode", "Off")
-        End If
-        dic.Add("MinSpeed", vMin)
-        dic.Add("OverSpeed", OverSpeed)
-        dic.Add("UnderSpeed", UnderSpeed)
-        dic0.Add("OverSpeedEcoRoll", dic)
+		'Overspeed / EcoRoll
+		dic = New Dictionary(Of String, Object)
+		If EcoRollOn Then
+			dic.Add("Mode", "EcoRoll")
+		ElseIf OverSpeedOn Then
+			dic.Add("Mode", "OverSpeed")
+		Else
+			dic.Add("Mode", "Off")
+		End If
+		dic.Add("MinSpeed", vMin)
+		dic.Add("OverSpeed", OverSpeed)
+		dic.Add("UnderSpeed", UnderSpeed)
+		dic0.Add("OverSpeedEcoRoll", dic)
 
-        '
+		'
 
 
-        JSON.Content.Add("Body", dic0)
+		JSON.Content.Add("Body", dic0)
 
-        Return JSON.WriteFile(sFilePath)
+		Return JSON.WriteFile(sFilePath)
+	End Function
 
-    End Function
-
-    Public Function ReadFile() As Boolean
-        Dim AuxEntry As cAuxEntry
-        Dim AuxID As String
-        Dim MsgSrc As String
-        Dim SubPath As cSubPath
+	Public Function ReadFile() As Boolean
+		Dim AuxEntry As cAuxEntry
+		Dim AuxID As String
+		Dim MsgSrc As String
+		Dim SubPath As cSubPath
         Dim JSON As New JSON
-        Dim str As String
-        Dim dic As Object
+		Dim str As String
+		Dim dic As Object
 
 
-        
+		MsgSrc = "Main/ReadInp/GEN"
 
+		SetDefault()
 
-        MsgSrc = "Main/ReadInp/GEN"
+		If Not JSON.ReadFile(sFilePath) Then Return False
 
-        SetDefault()
+		Try
 
-        If Not JSON.ReadFile(sFilePath) Then Return False
+			FileVersion = JSON.Content("Header")("FileVersion")
 
-        Try
+			If FileVersion > 1 Then
+				SavedInDeclMode = JSON.Content("Body")("SavedInDeclMode")
+			Else
+				SavedInDeclMode = Cfg.DeclMode
+			End If
 
-            FileVersion = JSON.Content("Header")("FileVersion")
+			If Not JSON.Content("Body")("VehicleFile") Is Nothing Then _
+				stPathVEH.Init(MyPath, JSON.Content("Body")("VehicleFile"))
 
-            If FileVersion > 1 Then
-                SavedInDeclMode = JSON.Content("Body")("SavedInDeclMode")
-            Else
-                SavedInDeclMode = Cfg.DeclMode
-            End If
+			stPathENG.Init(MyPath, JSON.Content("Body")("EngineFile"))
 
-            If Not JSON.Content("Body")("VehicleFile") Is Nothing Then stPathVEH.Init(MyPath, JSON.Content("Body")("VehicleFile"))
+			If Not JSON.Content("Body")("GearboxFile") Is Nothing Then _
+				stPathGBX.Init(MyPath, JSON.Content("Body")("GearboxFile"))
 
-            stPathENG.Init(MyPath, JSON.Content("Body")("EngineFile"))
+			If Not JSON.Content("Body")("Cycles") Is Nothing Then
+				For Each str In JSON.Content("Body")("Cycles")
+					SubPath = New cSubPath
+					SubPath.Init(MyPath, str)
+					CycleFiles.Add(SubPath)
+				Next
+			End If
 
-            If Not JSON.Content("Body")("GearboxFile") Is Nothing Then stPathGBX.Init(MyPath, JSON.Content("Body")("GearboxFile"))
+			'AA-TB
+			'ADVANCED AUXILIARIES 
+			If Not JSON.Content("Body")("AuxiliaryAssembly") Is Nothing AndAlso
+				Not JSON.Content("Body")("AuxiliaryVersion") Is Nothing Then
 
-            If Not JSON.Content("Body")("Cycles") Is Nothing Then
-                For Each str In JSON.Content("Body")("Cycles")
-                    SubPath = New cSubPath
-                    SubPath.Init(MyPath, str)
-                    CycleFiles.Add(SubPath)
-                Next
-            End If
+				AuxiliaryAssembly = JSON.Content("Body")("AuxiliaryAssembly").ToString()
+				AuxiliaryVersion = JSON.Content("Body")("AuxiliaryVersion").ToString()
 
-            'AA-TB
-            'ADVANCED AUXILIARIES 
-            If  Not JSON.Content("Body")("AuxiliaryAssembly") is Nothing  AndAlso 
-                NOT JSON.Content("Body")("AuxiliaryVersion") is nothing   
+			End If
+			If Not JSON.Content("Body")("AdvancedAuxiliaryFilePath") Is Nothing Then
+				AdvancedAuxiliaryFilePath = JSON.Content("Body")("AdvancedAuxiliaryFilePath").ToString()
+			End If
 
-              AuxiliaryAssembly =  JSON.Content("Body")("AuxiliaryAssembly").ToString()
-              AuxiliaryVersion  =  JSON.Content("Body")("AuxiliaryVersion").ToString()
 
-            End If
-            If  NOT JSON.Content("Body")("AdvancedAuxiliaryFilePath") is nothing then 
-               AdvancedAuxiliaryFilePath =   JSON.Content("Body")("AdvancedAuxiliaryFilePath").ToString()
-            end if
+			If Not JSON.Content("Body")("Aux") Is Nothing Then
+				For Each dic In JSON.Content("Body")("Aux")
 
+					AuxID = UCase(Trim(dic("ID").ToString))
 
+					If AuxPaths.ContainsKey(AuxID) Then
+						WorkerMsg(tMsgID.Err, "Multiple definitions of the same auxiliary type (" & AuxID & ")!", MsgSrc)
+						Return False
+					End If
 
-            If Not JSON.Content("Body")("Aux") Is Nothing Then
-                For Each dic In JSON.Content("Body")("Aux")
+					AuxEntry = New cAuxEntry
 
-                    AuxID = UCase(Trim(dic("ID").ToString))
+					AuxEntry.Type = dic("Type")
+					AuxEntry.Path.Init(MyPath, dic("Path"))
 
-                    If AuxPaths.ContainsKey(AuxID) Then
-                        WorkerMsg(tMsgID.Err, "Multiple definitions of the same auxiliary type (" & AuxID & ")!", MsgSrc)
-                        Return False
-                    End If
+					If Not dic("Technology") Is Nothing Then AuxEntry.TechStr = dic("Technology")
 
-                    AuxEntry = New cAuxEntry
+					AuxPaths.Add(AuxID, AuxEntry)
 
-                    AuxEntry.Type = dic("Type")
-                    AuxEntry.Path.Init(MyPath, dic("Path"))
+					AuxDef = True
 
-                    If Not dic("Technology") Is Nothing Then AuxEntry.TechStr = dic("Technology")
+					If AuxID = sKey.AUX.ElecSys Then
+						If Not dic("TechList") Is Nothing Then
+							For Each str In dic("TechList")
+								EStechs.Add(str)
+							Next
+						End If
+					End If
 
-                    AuxPaths.Add(AuxID, AuxEntry)
+				Next
+			End If
 
-                    AuxDef = True
+			If Not JSON.Content("Body")("VACC") Is Nothing Then stDesMaxFile.Init(MyPath, JSON.Content("Body")("VACC"))
 
-                    If AuxID = sKey.AUX.ElecSys Then
-                        If Not dic("TechList") Is Nothing Then
-                            For Each str In dic("TechList")
-                                EStechs.Add(str)
-                            Next
-                        End If
-                    End If
+			EngOnly = JSON.Content("Body")("EngineOnlyMode")
 
-                Next
-            End If
+			If Not JSON.Content("Body")("StartStop") Is Nothing Then
+				dic = JSON.Content("Body")("StartStop")
+				boStartStop = dic("Enabled")
+				siStStV = dic("MaxSpeed")
+				siStStT = dic("MinTime")
+				StStDelay = dic("Delay")
+			Else
+				boStartStop = False
+			End If
 
-            If Not JSON.Content("Body")("VACC") Is Nothing Then stDesMaxFile.Init(MyPath, JSON.Content("Body")("VACC"))
+			If Not JSON.Content("Body")("LAC") Is Nothing Then
+				dic = JSON.Content("Body")("LAC")
+				LookAheadOn = dic("Enabled")
+				a_lookahead = dic("Dec")
+				vMinLA = dic("MinSpeed")
+			Else
+				LookAheadOn = False
+			End If
 
-            EngOnly = JSON.Content("Body")("EngineOnlyMode")
+			If Not JSON.Content("Body")("OverSpeedEcoRoll") Is Nothing Then
 
-            If Not JSON.Content("Body")("StartStop") Is Nothing Then
-                dic = JSON.Content("Body")("StartStop")
-                boStartStop = dic("Enabled")
-                siStStV = dic("MaxSpeed")
-                siStStT = dic("MinTime")
-                StStDelay = dic("Delay")
-            Else
-                boStartStop = False
-            End If
+				dic = JSON.Content("Body")("OverSpeedEcoRoll")
 
-            If Not JSON.Content("Body")("LAC") Is Nothing Then
-                dic = JSON.Content("Body")("LAC")
-                LookAheadOn = dic("Enabled")
-                a_lookahead = dic("Dec")
-                vMinLA = dic("MinSpeed")
-            Else
-                LookAheadOn = False
-            End If
+				Select Case UCase(dic("Mode").ToString).Trim
+					Case "ECOROLL"
+						OverSpeedOn = False
+						EcoRollOn = True
 
-            If Not JSON.Content("Body")("OverSpeedEcoRoll") Is Nothing Then
+					Case "OVERSPEED"
+						OverSpeedOn = True
+						EcoRollOn = False
 
-                dic = JSON.Content("Body")("OverSpeedEcoRoll")
+					Case "OFF"
+						OverSpeedOn = False
+						EcoRollOn = False
 
-                Select Case UCase(dic("Mode").ToString).Trim
-                    Case "ECOROLL"
-                        OverSpeedOn = False
-                        EcoRollOn = True
+					Case Else
+						WorkerMsg(tMsgID.Err, "Value '" & dic("Mode") & "' is not valid for OverSpeedEcoRoll/Mode!", MsgSrc)
+						Return False
+				End Select
 
-                    Case "OVERSPEED"
-                        OverSpeedOn = True
-                        EcoRollOn = False
+				vMin = dic("MinSpeed")
+				OverSpeed = dic("OverSpeed")
+				If Not dic("UnderSpeed") Is Nothing Then UnderSpeed = dic("UnderSpeed")
 
-                    Case "OFF"
-                        OverSpeedOn = False
-                        EcoRollOn = False
+			Else
+				OverSpeedOn = False
+				EcoRollOn = False
+			End If
 
-                    Case Else
-                        WorkerMsg(tMsgID.Err, "Value '" & dic("Mode") & "' is not valid for OverSpeedEcoRoll/Mode!", MsgSrc)
-                        Return False
-                End Select
 
-                vMin = dic("MinSpeed")
-                OverSpeed = dic("OverSpeed")
-                If Not dic("UnderSpeed") Is Nothing Then UnderSpeed = dic("UnderSpeed")
+		Catch ex As Exception
+			WorkerMsg(tMsgID.Err, "Failed to read VECTO file! " & ex.Message, MsgSrc)
+			Return False
+		End Try
 
-            Else
-                OverSpeedOn = False
-                EcoRollOn = False
-            End If
 
+		Return True
+	End Function
 
+	Private Sub SetDefault()
 
+		AuxiliaryAssembly = "CLASSIC"
+		AuxiliaryVersion = "CLASSIC"
+		AdvancedAuxiliaryFilePath = String.Empty
 
 
-        Catch ex As Exception
-            WorkerMsg(tMsgID.Err, "Failed to read VECTO file! " & ex.Message, MsgSrc)
-            Return False
-        End Try
+		boStartStop = False
+		siStStV = 5
+		siStStT = 5
+		StStDelay = 0
+		FileVersion = 0
 
+		stPathVEH.Clear()
+		stPathENG.Clear()
+		CycleFiles.Clear()
+		stPathGBX.Clear()
 
-        Return True
+		stDesMaxFile.Clear()
+		laDesV.Clear()
+		laDesMax.Clear()
+		laDesMin.Clear()
+		DesMaxDim = -1
 
+		AuxPaths.Clear()
+		AuxRefs.Clear()
+		AuxDef = False
+		EStechs.Clear()
 
-    End Function
+		EngOnly = False
 
-    Private Sub SetDefault()
+		a_lookahead = 0
+		vMin = 0
+		LookAheadOn = True
+		OverSpeedOn = False
+		EcoRollOn = False
+		OverSpeed = 0
+		UnderSpeed = 0
+		vMinLA = 0
 
-        AuxiliaryAssembly ="CLASSIC"
-        AuxiliaryVersion ="CLASSIC"
-        AdvancedAuxiliaryFilePath=String.Empty
+		SavedInDeclMode = False
+	End Sub
 
+	Public Function DeclInit() As Boolean
 
-        boStartStop = False
-        siStStV = 5
-        siStStT = 5
-        StStDelay = 0
-        FileVersion = 0
+		Dim cl As List(Of String)
+		Dim s As String
+		Dim SubPath As cSubPath
+		Dim MsgSrc As String
 
-        stPathVEH.Clear()
-        stPathENG.Clear()
-        CycleFiles.Clear()
-        stPathGBX.Clear()
+		MsgSrc = "VECTO/DeclInit"
 
-        stDesMaxFile.Clear()
-        laDesV.Clear()
-        laDesMax.Clear()
-        laDesMin.Clear()
-        DesMaxDim = -1
+		EngOnly = False
 
-        AuxPaths.Clear()
-        AuxRefs.Clear()
-        AuxDef = False
-        EStechs.Clear()
+		CycleFiles.Clear()
 
-        EngOnly = False
+		cl = Declaration.SegRef.GetCycles
 
-        a_lookahead = 0
-        vMin = 0
-        LookAheadOn = True
-        OverSpeedOn = False
-        EcoRollOn = False
-        OverSpeed = 0
-        UnderSpeed = 0
-        vMinLA = 0
+		For Each s In cl
+			SubPath = New cSubPath
+			SubPath.Init(MyPath, s)
+			CycleFiles.Add(SubPath)
+		Next
 
-        SavedInDeclMode = False
+		stDesMaxFile.Init(MyPath, Declaration.SegRef.VACCfile)
 
-    End Sub
+		siStStV = cDeclaration.SSspeed
+		siStStT = cDeclaration.SStime
+		StStDelay = cDeclaration.SSdelay
 
-    Public Function DeclInit() As Boolean
+		If Not EcoRollOn Then OverSpeedOn = True
 
-        Dim cl As List(Of String)
-        Dim s As String
-        Dim SubPath As cSubPath
-        Dim MsgSrc As String
+		OverSpeed = cDeclaration.Overspeed
+		UnderSpeed = cDeclaration.Underspeed
+		vMin = cDeclaration.ECvmin
 
-        MsgSrc = "VECTO/DeclInit"
+		LookAheadOn = True
+		a_lookahead = cDeclaration.LACa
+		vMinLA = cDeclaration.LACvmin
 
-        EngOnly = False
+		'No need to check Aux (AuxDef). Will be checked in cDeclaration.CalcInitLoad
 
-        CycleFiles.Clear()
+		Return True
+	End Function
 
-        cl = Declaration.SegRef.GetCycles
+	'This Sub reads those Input-files that do not have their own class, etc.
+	Public Function Init() As Boolean
+		Dim file As cFile_V3
+		Dim line As String()
 
-        For Each s In cl
-            SubPath = New cSubPath
-            SubPath.Init(MyPath, s)
-            CycleFiles.Add(SubPath)
-        Next
+		Dim MsgSrc As String
 
-        stDesMaxFile.Init(MyPath, Declaration.SegRef.VACCfile)
+		MsgSrc = "VECTO/Init"
 
-        siStStV = cDeclaration.SSspeed
-        siStStT = cDeclaration.SStime
-        StStDelay = cDeclaration.SSdelay
+		If Not EngOnly Then
 
-        If Not EcoRollOn Then OverSpeedOn = True
+			file = New cFile_V3
 
-        OverSpeed = cDeclaration.Overspeed
-        UnderSpeed = cDeclaration.Underspeed
-        vMin = cDeclaration.ECvmin
+			If Not file.OpenRead(stDesMaxFile.FullPath) Then
+				WorkerMsg(tMsgID.Err, "Can't read .vacc file (" & stDesMaxFile.FullPath & ")", MsgSrc)
+				Return False
+			End If
 
-        LookAheadOn = True
-        a_lookahead = cDeclaration.LACa
-        vMinLA = cDeclaration.LACvmin
+			'Skip Header
+			file.ReadLine()
 
-        'No need to check Aux (AuxDef). Will be checked in cDeclaration.CalcInitLoad
+			laDesV.Clear()
+			laDesMax.Clear()
+			laDesMin.Clear()
+			DesMaxDim = -1
+			Try
 
-        Return True
+				Do While Not file.EndOfFile
 
-    End Function
+					DesMaxDim += 1
 
-    'This Sub reads those Input-files that do not have their own class, etc.
-    Public Function Init() As Boolean
-        Dim file As cFile_V3
-        Dim line As String()
+					line = file.ReadLine
 
-        Dim MsgSrc As String
+					laDesV.Add(CSng(line(0)) / 3.6)	  'km/h => m/s !!!!
+					laDesMax.Add(CSng(line(1)))
+					laDesMin.Add(CSng(line(2)))
 
-        MsgSrc = "VECTO/Init"
+				Loop
 
-        If Not EngOnly Then
+			Catch ex As Exception
 
-            file = New cFile_V3
+				file.Close()
+				WorkerMsg(tMsgID.Err, "Error in .vacc file. " & ex.Message & " (" & stDesMaxFile.FullPath & ")", MsgSrc,
+						stDesMaxFile.FullPath)
+				Return False
 
-            If Not file.OpenRead(stDesMaxFile.FullPath) Then
-                WorkerMsg(tMsgID.Err, "Can't read .vacc file (" & stDesMaxFile.FullPath & ")", MsgSrc)
-                Return False
-            End If
+			End Try
 
-            'Skip Header
-            file.ReadLine()
+			file.Close()
 
-            laDesV.Clear()
-            laDesMax.Clear()
-            laDesMin.Clear()
-            DesMaxDim = -1
-            Try
+		End If
 
-                Do While Not file.EndOfFile
-
-                    DesMaxDim += 1
-
-                    line = file.ReadLine
-
-                    laDesV.Add(CSng(line(0)) / 3.6)   'km/h => m/s !!!!
-                    laDesMax.Add(CSng(line(1)))
-                    laDesMin.Add(CSng(line(2)))
-
-                Loop
-
-            Catch ex As Exception
-
-                file.Close()
-                WorkerMsg(tMsgID.Err, "Error in .vacc file. " & ex.Message & " (" & stDesMaxFile.FullPath & ")", MsgSrc, stDesMaxFile.FullPath)
-                Return False
-
-            End Try
-
-            file.Close()
-
-        End If
-
-        Return True
-
-    End Function
+		Return True
+	End Function
 
 #Region "Aux"
 
-    Public Function AuxInit() As Boolean
+	Public Function AuxInit() As Boolean
 
-        Dim Aux0 As cAux
-        Dim AuxPathKV As KeyValuePair(Of String, cAuxEntry)
-        Dim DRIauxcheck As New Dictionary(Of String, Boolean)
-        Dim AuxID As String
+		Dim Aux0 As cAux
+		Dim AuxPathKV As KeyValuePair(Of String, cAuxEntry)
+		Dim DRIauxcheck As New Dictionary(Of String, Boolean)
+		Dim AuxID As String
 
-        Dim MsgSrc As String
+		Dim MsgSrc As String
 
-        MsgSrc = "VEH/AuxInit"
+		MsgSrc = "VEH/AuxInit"
 
-        AuxRefs = New Dictionary(Of String, cAux)
+		AuxRefs = New Dictionary(Of String, cAux)
 
-        If Cfg.DeclMode Then
+		If Cfg.DeclMode Then
 
-            For Each AuxPathKV In AuxPaths
-                AuxRefs.Add(AuxPathKV.Key, Nothing)
-            Next
+			For Each AuxPathKV In AuxPaths
+				AuxRefs.Add(AuxPathKV.Key, Nothing)
+			Next
 
-            Return True
+			Return True
 
-        End If
-
-
-        If DRI.AuxDef Xor AuxDef Then
-
-            If AuxDef Then
-                WorkerMsg(tMsgID.Err, "No auxiliary input defined in driving cycle!", MsgSrc)
-                Return False
-            Else
-                WorkerMsg(tMsgID.Warn, "No auxiliary defined in vehicle file! Psupply input will be ignored!", MsgSrc)
-                Return True
-            End If
-
-        End If
-
-        If Not (DRI.AuxDef Or AuxDef) Then Return True
+		End If
 
 
-        For Each AuxID In DRI.AuxComponents.Keys
-            DRIauxcheck.Add(AuxID, False)
-        Next
+		If DRI.AuxDef Xor AuxDef Then
 
-        For Each AuxPathKV In AuxPaths
+			If AuxDef Then
+				WorkerMsg(tMsgID.Err, "No auxiliary input defined in driving cycle!", MsgSrc)
+				Return False
+			Else
+				WorkerMsg(tMsgID.Warn, "No auxiliary defined in vehicle file! Psupply input will be ignored!", MsgSrc)
+				Return True
+			End If
 
-            MsgSrc = "VEH/AuxInit/" & AuxPathKV.Key
+		End If
 
-            If Not DRI.AuxComponents.ContainsKey(AuxPathKV.Key) Then
-                WorkerMsg(tMsgID.Err, "No Psupply input defined in driving cycle for auxiliary '" & AuxPathKV.Key & "'!", MsgSrc)
-                Return False
-            End If
+		If Not (DRI.AuxDef Or AuxDef) Then Return True
 
-            Aux0 = New cAux
-            Aux0.Filepath = AuxPathKV.Value.Path.FullPath
 
-            If Not Aux0.Readfile Then
-                'Notificationin ReadFile()
-                Return False
-            End If
+		For Each AuxID In DRI.AuxComponents.Keys
+			DRIauxcheck.Add(AuxID, False)
+		Next
 
-            AuxRefs.Add(AuxPathKV.Key, Aux0)
+		For Each AuxPathKV In AuxPaths
 
-            DRIauxcheck(AuxPathKV.Key) = True
+			MsgSrc = "VEH/AuxInit/" & AuxPathKV.Key
 
-        Next
+			If Not DRI.AuxComponents.ContainsKey(AuxPathKV.Key) Then
+				WorkerMsg(tMsgID.Err, "No Psupply input defined in driving cycle for auxiliary '" & AuxPathKV.Key & "'!", MsgSrc)
+				Return False
+			End If
 
-        MsgSrc = "VEH/AuxInit"
+			Aux0 = New cAux
+			Aux0.Filepath = AuxPathKV.Value.Path.FullPath
 
-        For Each AuxID In DRI.AuxComponents.Keys
-            If Not DRIauxcheck(AuxID) Then WorkerMsg(tMsgID.Warn, "Auxiliary '" & AuxID & "' not found! Psupply input will be ignored!", MsgSrc)
-        Next
+			If Not Aux0.Readfile Then
+				'Notificationin ReadFile()
+				Return False
+			End If
 
-        Return True
+			AuxRefs.Add(AuxPathKV.Key, Aux0)
 
-    End Function
+			DRIauxcheck(AuxPathKV.Key) = True
 
-    Public Function Paux(ByVal AuxID As String, ByVal t As Integer, ByVal nU As Single) As Single
-        Dim Psupply As Single
-        Dim Px As Single
-        Dim Aux0 As cAux
+		Next
 
-        Dim MsgSrc As String
+		MsgSrc = "VEH/AuxInit"
 
-        MsgSrc = "VEH/Paux"
+		For Each AuxID In DRI.AuxComponents.Keys
+			If Not DRIauxcheck(AuxID) Then _
+				WorkerMsg(tMsgID.Warn, "Auxiliary '" & AuxID & "' not found! Psupply input will be ignored!", MsgSrc)
+		Next
 
-        If Cfg.DeclMode Then Return Declaration.AuxPower(AuxID)
+		Return True
+	End Function
 
-        If AuxDef Then
+	Public Function Paux(ByVal AuxID As String, ByVal t As Integer, ByVal nU As Single) As Single
+		Dim Psupply As Single
+		Dim Px As Single
+		Dim Aux0 As cAux
 
-            Aux0 = AuxRefs(AuxID)
+		Dim MsgSrc As String
 
-            Psupply = DRI.AuxComponents(AuxID)(t)
+		MsgSrc = "VEH/Paux"
 
-            If Psupply < 0 Then GoTo lbAuxError
+		If Cfg.DeclMode Then Return Declaration.AuxPower(AuxID)
 
-            Px = Aux0.Paux(nU, Psupply)
+		If AuxDef Then
 
-            If Px < 0 Then GoTo lbAuxError
+			Aux0 = AuxRefs(AuxID)
 
-            Return Px
+			Psupply = DRI.AuxComponents(AuxID)(t)
 
-        Else
+			If Psupply < 0 Then GoTo lbAuxError
 
-            Return 0
+			Px = Aux0.Paux(nU, Psupply)
 
-        End If
+			If Px < 0 Then GoTo lbAuxError
+
+			Return Px
+
+		Else
+
+			Return 0
+
+		End If
 
 
 lbAuxError:
-        MODdata.ModErrors.AuxNegative = AuxID
-        Return 0
+		MODdata.ModErrors.AuxNegative = AuxID
+		Return 0
+	End Function
 
+	Public Function PauxSum(ByVal t As Integer, ByVal nU As Single) As Single
+		Dim sum As Single
+		Dim AuxID As String
 
-    End Function
+		Dim MsgSrc As String
 
-    Public Function PauxSum(ByVal t As Integer, ByVal nU As Single) As Single
-        Dim sum As Single
-        Dim AuxID As String
+		MsgSrc = "VEH/Paux"
 
-        Dim MsgSrc As String
+		If AuxDef Then
 
-        MsgSrc = "VEH/Paux"
+			sum = 0
 
-        If AuxDef Then
+			For Each AuxID In AuxRefs.Keys
 
-            sum = 0
+				sum += Paux(AuxID, t, nU)
 
-            For Each AuxID In AuxRefs.Keys
+			Next
 
-                sum += Paux(AuxID, t, nU)
+			Return sum
 
-            Next
+		Else
 
-            Return sum
+			Return 0
 
-        Else
-
-            Return 0
-
-        End If
-
-    End Function
+		End If
+	End Function
 
 #End Region
 
 
 #Region "Properties"
 
-    Public ReadOnly Property FileList As List(Of String)
-        Get
-            Return MyFileList
-        End Get
-    End Property
+	Public ReadOnly Property FileList As List(Of String)
+		Get
+			Return MyFileList
+		End Get
+	End Property
 
 
-    Public Property FilePath() As String
-        Get
-            Return sFilePath
-        End Get
-        Set(ByVal value As String)
-            sFilePath = value
-            If sFilePath = "" Then
-                MyPath = ""
-            Else
-                MyPath = IO.Path.GetDirectoryName(sFilePath) & "\"
-            End If
-        End Set
-    End Property
+	Public Property FilePath() As String
+		Get
+			Return sFilePath
+		End Get
+		Set(ByVal value As String)
+			sFilePath = value
+			If sFilePath = "" Then
+				MyPath = ""
+			Else
+				MyPath = IO.Path.GetDirectoryName(sFilePath) & "\"
+			End If
+		End Set
+	End Property
 
 
-    Public Property PathVEH(Optional ByVal Original As Boolean = False) As String
-        Get
-            If Original Then
-                Return stPathVEH.OriginalPath
-            Else
-                Return stPathVEH.FullPath
-            End If
-        End Get
-        Set(ByVal value As String)
-            stPathVEH.Init(MyPath, value)
-        End Set
-    End Property
+	Public Property PathVEH(Optional ByVal Original As Boolean = False) As String
+		Get
+			If Original Then
+				Return stPathVEH.OriginalPath
+			Else
+				Return stPathVEH.FullPath
+			End If
+		End Get
+		Set(ByVal value As String)
+			stPathVEH.Init(MyPath, value)
+		End Set
+	End Property
 
-    Public Property PathENG(Optional ByVal Original As Boolean = False) As String
-        Get
-            If Original Then
-                Return stPathENG.OriginalPath
-            Else
-                Return stPathENG.FullPath
-            End If
-        End Get
-        Set(ByVal value As String)
-            stPathENG.Init(MyPath, value)
-        End Set
-    End Property
+	Public Property PathENG(Optional ByVal Original As Boolean = False) As String
+		Get
+			If Original Then
+				Return stPathENG.OriginalPath
+			Else
+				Return stPathENG.FullPath
+			End If
+		End Get
+		Set(ByVal value As String)
+			stPathENG.Init(MyPath, value)
+		End Set
+	End Property
 
-    Public Property PathGBX(Optional ByVal Original As Boolean = False) As String
-        Get
-            If Original Then
-                Return stPathGBX.OriginalPath
-            Else
-                Return stPathGBX.FullPath
-            End If
-        End Get
-        Set(ByVal value As String)
-            stPathGBX.Init(MyPath, value)
-        End Set
-    End Property
+	Public Property PathGBX(Optional ByVal Original As Boolean = False) As String
+		Get
+			If Original Then
+				Return stPathGBX.OriginalPath
+			Else
+				Return stPathGBX.FullPath
+			End If
+		End Get
+		Set(ByVal value As String)
+			stPathGBX.Init(MyPath, value)
+		End Set
+	End Property
 
 
-    Public Property StartStop() As Boolean
-        Get
-            Return boStartStop
-        End Get
-        Set(ByVal value As Boolean)
-            boStartStop = value
-        End Set
-    End Property
+	Public Property StartStop() As Boolean
+		Get
+			Return boStartStop
+		End Get
+		Set(ByVal value As Boolean)
+			boStartStop = value
+		End Set
+	End Property
 
-    Public Property StStV() As Single
-        Get
-            Return siStStV
-        End Get
-        Set(ByVal value As Single)
-            siStStV = value
-        End Set
-    End Property
+	Public Property StStV() As Single
+		Get
+			Return siStStV
+		End Get
+		Set(ByVal value As Single)
+			siStStV = value
+		End Set
+	End Property
 
-    Public Property StStT() As Single
-        Get
-            Return siStStT
-        End Get
-        Set(ByVal value As Single)
-            siStStT = value
-        End Set
-    End Property
+	Public Property StStT() As Single
+		Get
+			Return siStStT
+		End Get
+		Set(ByVal value As Single)
+			siStStT = value
+		End Set
+	End Property
 
-    Public Property DesMaxFile(Optional ByVal Original As Boolean = False) As String
-        Get
-            If Original Then
-                Return stDesMaxFile.OriginalPath
-            Else
-                Return stDesMaxFile.FullPath
-            End If
-        End Get
-        Set(ByVal value As String)
-            stDesMaxFile.Init(MyPath, value)
-        End Set
-    End Property
+	Public Property DesMaxFile(Optional ByVal Original As Boolean = False) As String
+		Get
+			If Original Then
+				Return stDesMaxFile.OriginalPath
+			Else
+				Return stDesMaxFile.FullPath
+			End If
+		End Get
+		Set(ByVal value As String)
+			stDesMaxFile.Init(MyPath, value)
+		End Set
+	End Property
 
 #End Region
 
-    Public Function aDesMax(ByVal v As Single) As Single
-        Dim i As Int32
+	Public Function aDesMax(ByVal v As Single) As Single
+		Dim i As Int32
 
-        'Extrapolation for x < x(1)
-        If laDesV(0) >= v Then
-            If laDesV(0) > v Then MODdata.ModErrors.DesMaxExtr = "v= " & v * 3.6 & "[km/h]"
-            i = 1
-            GoTo lbInt
-        End If
+		'Extrapolation for x < x(1)
+		If laDesV(0) >= v Then
+			If laDesV(0) > v Then MODdata.ModErrors.DesMaxExtr = "v= " & v * 3.6 & "[km/h]"
+			i = 1
+			GoTo lbInt
+		End If
 
-        i = 0
-        Do While laDesV(i) < v And i < DesMaxDim
-            i += 1
-        Loop
+		i = 0
+		Do While laDesV(i) < v And i < DesMaxDim
+			i += 1
+		Loop
 
-        'Extrapolation for x > x(imax)
-        If laDesV(i) < v Then
-            MODdata.ModErrors.DesMaxExtr = "v= " & v * 3.6 & "[km/h]"
-        End If
-
-lbInt:
-        'Interpolation
-        Return (v - laDesV(i - 1)) * (laDesMax(i) - laDesMax(i - 1)) / (laDesV(i) - laDesV(i - 1)) + laDesMax(i - 1)
-
-    End Function
-
-    Public Function aDesMin(ByVal v As Single) As Single
-        Dim i As Int32
-
-        'Extrapolation for x < x(1)
-        If laDesV(0) >= v Then
-            If laDesV(0) > v Then MODdata.ModErrors.DesMaxExtr = "v= " & v * 3.6 & "[km/h]"
-            i = 1
-            GoTo lbInt
-        End If
-
-        i = 0
-        Do While laDesV(i) < v And i < DesMaxDim
-            i += 1
-        Loop
-
-        'Extrapolation for x > x(imax)
-        If laDesV(i) < v Then
-            MODdata.ModErrors.DesMaxExtr = "v= " & v * 3.6 & "[km/h]"
-        End If
+		'Extrapolation for x > x(imax)
+		If laDesV(i) < v Then
+			MODdata.ModErrors.DesMaxExtr = "v= " & v * 3.6 & "[km/h]"
+		End If
 
 lbInt:
-        'Interpolation
-        Return (v - laDesV(i - 1)) * (laDesMin(i) - laDesMin(i - 1)) / (laDesV(i) - laDesV(i - 1)) + laDesMin(i - 1)
+		'Interpolation
+		Return (v - laDesV(i - 1)) * (laDesMax(i) - laDesMax(i - 1)) / (laDesV(i) - laDesV(i - 1)) + laDesMax(i - 1)
+	End Function
 
-    End Function
+	Public Function aDesMin(ByVal v As Single) As Single
+		Dim i As Int32
 
+		'Extrapolation for x < x(1)
+		If laDesV(0) >= v Then
+			If laDesV(0) > v Then MODdata.ModErrors.DesMaxExtr = "v= " & v * 3.6 & "[km/h]"
+			i = 1
+			GoTo lbInt
+		End If
 
+		i = 0
+		Do While laDesV(i) < v And i < DesMaxDim
+			i += 1
+		Loop
+
+		'Extrapolation for x > x(imax)
+		If laDesV(i) < v Then
+			MODdata.ModErrors.DesMaxExtr = "v= " & v * 3.6 & "[km/h]"
+		End If
+
+lbInt:
+		'Interpolation
+		Return (v - laDesV(i - 1)) * (laDesMin(i) - laDesMin(i - 1)) / (laDesV(i) - laDesV(i - 1)) + laDesMin(i - 1)
+	End Function
 End Class
 

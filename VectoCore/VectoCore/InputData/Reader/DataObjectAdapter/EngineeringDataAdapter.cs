@@ -176,12 +176,17 @@ namespace TUGraz.VectoCore.InputData.Reader.DataObjectAdaper
 				WarnEngineeringMode("AuxData");
 			}
 
-			return auxInputData.Auxiliaries.Select(a => new VectoRunData.AuxData {
-				ID = a.ID,
-				Technology = a.Technology,
-				TechList = a.TechList.DefaultIfNull(Enumerable.Empty<string>()).ToArray(),
-				DemandType = AuxiliaryDemandType.Mapping,
-				Data = new AuxiliaryData(a, a.ID) //AuxiliaryData.Create(a.DemandMap)
+			return auxInputData.Auxiliaries.Select(a => {
+				if (a.DemandMap == null) {
+					throw new VectoSimulationException("Demand Map for auxiliary {0} {1} required", a.ID, a.Technology);
+				}
+				return new VectoRunData.AuxData {
+					ID = a.ID,
+					Technology = a.Technology,
+					TechList = a.TechList.DefaultIfNull(Enumerable.Empty<string>()).ToArray(),
+					DemandType = AuxiliaryDemandType.Mapping,
+					Data = new AuxiliaryData(a, a.ID) //AuxiliaryData.Create(a.DemandMap)
+				};
 			}).Concat(new VectoRunData.AuxData { ID = "", DemandType = AuxiliaryDemandType.Direct }.ToEnumerable()).ToList();
 		}
 

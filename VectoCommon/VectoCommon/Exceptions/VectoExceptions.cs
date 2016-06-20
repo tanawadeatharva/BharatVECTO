@@ -60,7 +60,7 @@ namespace TUGraz.VectoCommon.Exceptions
 			LogManager.Flush();
 		}
 
-		protected VectoException(string message, Exception inner, params object[] args)
+		public VectoException(string message, Exception inner, params object[] args)
 			: base(string.Format(message, args), inner)
 		{
 			LogManager.Flush();

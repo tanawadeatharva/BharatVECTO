@@ -1,7 +1,7 @@
 ﻿{
   "Header": {
     "CreatedBy": " ()",
-    "Date": "15.06.2016 14:59:16",
+    "Date": "17.06.2016 08:12:45",
     "AppVersion": "2.2",
     "FileVersion": 2
   },
@@ -18,7 +18,6 @@
     "AuxiliaryAssembly": "CLASSIC",
     "AuxiliaryVersion": "CLASSIC",
     "AdvancedAuxiliaryFilePath": "",
-    "Aux": [],
     "VACC": "Truck.vacc",
     "EngineOnlyMode": false,
     "StartStop": {
