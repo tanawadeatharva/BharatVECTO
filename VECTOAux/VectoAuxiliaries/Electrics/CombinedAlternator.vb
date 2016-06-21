@@ -48,6 +48,7 @@ Namespace Electrics
 			End If
 
 			Return alternatorMapValues
+
 		End Function
 
 		Public Function Initialise() As Boolean Implements IAlternatorMap.Initialise
