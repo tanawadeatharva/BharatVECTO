@@ -42,6 +42,7 @@ using TUGraz.VectoCore.Models.SimulationComponent.Data.Engine;
 using TUGraz.VectoCore.OutputData;
 using TUGraz.VectoCore.Utils;
 using VectoAuxiliaries;
+using VectoAuxiliaries.Pneumatics;
 
 namespace TUGraz.VectoCore.Models.SimulationComponent.Impl
 {
@@ -66,9 +67,15 @@ namespace TUGraz.VectoCore.Models.SimulationComponent.Impl
 			DataBus = container;
 			var tmpAux = new AdvancedAuxiliaries();
 
+			//var actuationsMap = new PneumaticActuationsMAP();
+
+
 			// 'Set Statics
-			tmpAux.VectoInputs.Cycle = DetermineCycle(cycleName, tmpAux.Signals);
+			tmpAux.VectoInputs.Cycle = DetermineCycle(cycleName);
 			tmpAux.VectoInputs.VehicleWeightKG = vehicleWeight;
+			// tmpAux.Signals.TotalCycleTimeSeconds =
+			//	tmpAux.actuationsMap.GetNumActuations(new ActuationsKey("CycleTime", tmpAux.VectoInputs.Cycle));
+
 			_fcMapAdapter = new FuelConsumptionAdapter() { FcMap = fcMap };
 			tmpAux.VectoInputs.FuelMap = _fcMapAdapter;
 			tmpAux.VectoInputs.FuelDensity = Physics.FuelDensity;
@@ -77,40 +84,40 @@ namespace TUGraz.VectoCore.Models.SimulationComponent.Impl
 			tmpAux.Signals.EngineIdleSpeed = engineIdleSpeed;
 			tmpAux.Initialise(Path.GetFileName(aauxFile), Path.GetDirectoryName(Path.GetFullPath(aauxFile)) + @"\");
 
+			tmpAux.Signals.TotalCycleTimeSeconds =
+				tmpAux.actuationsMap.GetNumActuations(new ActuationsKey("CycleTime", tmpAux.VectoInputs.Cycle));
+
+			// call initialize again _after_ setting the cycle time to get the correct consumtions
+			tmpAux.Initialise(Path.GetFileName(aauxFile), Path.GetDirectoryName(Path.GetFullPath(aauxFile)) + @"\");
+
+
 			Auxiliaries = tmpAux;
 		}
 
-		private static string DetermineCycle(string cycleName, ISignals aauxsignals)
+		private static string DetermineCycle(string cycleName)
 		{
 			var cycle = cycleName.ToLower();
 
-			// cycle time is hard coded based on previous simulations
 			if (cycle.Contains("bus")) {
 				if (cycle.Contains("heavy_urban")) {
-					aauxsignals.TotalCycleTimeSeconds = 8912;
 					return "Heavy urban";
 				}
 				if (cycle.Contains("suburban")) {
-					aauxsignals.TotalCycleTimeSeconds = 3283;
 					return "Suburban";
 				}
 				if (cycle.Contains("interurban")) {
-					aauxsignals.TotalCycleTimeSeconds = 12962;
 					return "Interurban";
 				}
 				if (cycle.Contains("urban")) {
-					aauxsignals.TotalCycleTimeSeconds = 8149;
 					return "Urban";
 				}
 			}
 			if (cycle.Contains("coach")) {
-				aauxsignals.TotalCycleTimeSeconds = 15086;
 				return "Coach";
 			}
 			Logger<BusAuxiliariesAdapter>()
 				.Warn("UnServiced Cycle Name '{0}' in Pneumatics Actuations Map 0 Actuations returned", cycleName);
-			aauxsignals.TotalCycleTimeSeconds = 1;
-			return "UnknownCycleName";
+			return cycle;
 		}
 
 		public IEngineAuxPort Port()
