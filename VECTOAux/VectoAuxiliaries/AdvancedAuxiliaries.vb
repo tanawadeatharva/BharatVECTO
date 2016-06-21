@@ -9,6 +9,7 @@
 '
 ' See the LICENSE.txt for the specific language governing permissions and limitations.
 
+Imports System.Runtime.CompilerServices
 Imports VectoAuxiliaries
 Imports VectoAuxiliaries.Electrics
 Imports VectoAuxiliaries.Pneumatics
@@ -22,10 +23,12 @@ Imports System.Windows.Forms
 ''' This class represents slide number 17 titled Calculations of Cycle FC accounting for Smart Auxiliaries.
 ''' </summary>
 ''' <remarks></remarks>
+<Assembly: InternalsVisibleTo("VectoCore")> 
+
 Public Class AdvancedAuxiliaries
 	Implements IAdvancedAuxiliaries
 
-	Private auxConfig As AuxiliaryConfig
+	Protected Friend auxConfig As AuxiliaryConfig
 
 	'Supporting classes which may generate event messages
 	Private WithEvents compressorMap As ICompressorMap
@@ -34,7 +37,7 @@ Public Class AdvancedAuxiliaries
 	Private WithEvents ssmToolModule14 As SSMTOOL
 
 	Private WithEvents alternatorMap As IAlternatorMap
-	Private WithEvents actuationsMap As IPneumaticActuationsMAP
+	Protected Friend WithEvents actuationsMap As IPneumaticActuationsMAP
 	Private fuelMap As IFuelConsumptionMap
 
 	'Classes which compose the model.
@@ -61,7 +64,7 @@ Public Class AdvancedAuxiliaries
 
 	'Event Handler top level bubble.
 	Public Sub VectoEventHandler(ByRef sender As Object, message As String, messageType As AdvancedAuxiliaryMessageType) _
-		Handles CompressorMap.AuxiliaryEvent, AlternatorMap.AuxiliaryEvent, SSMTOOL.Message, ssmToolModule14.Message
+		Handles compressorMap.AuxiliaryEvent, alternatorMap.AuxiliaryEvent, ssmTool.Message, ssmToolModule14.Message
 
 		If Signals.AuxiliaryEventReportingLevel <= messageType Then
 
@@ -155,7 +158,7 @@ Public Class AdvancedAuxiliaries
 										auxConfig.PneumaticUserInputsConfig.CompressorGearEfficiency,
 										auxConfig.ElectricalUserInputsConfig.PowerNetVoltage,
 										Signals,
-										ssmTOOL)
+										ssmTool)
 
 
 		M2 = New M2_AverageElectricalLoadDemand(auxConfig.ElectricalUserInputsConfig.ElectricalConsumers,
@@ -409,7 +412,7 @@ Public Class AdvancedAuxiliaries
 
 			Return _
 				If _
-					(signals.EngineSpeed <= _signals.EngineIdleSpeed AndAlso (Not signals.ClutchEngaged OrElse signals.InNeutral), 1, 0)
+					(Signals.EngineSpeed <= _Signals.EngineIdleSpeed AndAlso (Not Signals.ClutchEngaged OrElse Signals.InNeutral), 1, 0)
 		End Get
 	End Property
 
