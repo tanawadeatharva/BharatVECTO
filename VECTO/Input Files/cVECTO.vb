@@ -544,7 +544,7 @@ Public Class cVECTO
 
 					line = file.ReadLine
 
-					laDesV.Add(CSng(line(0)) / 3.6)						  'km/h => m/s !!!!
+					laDesV.Add(CSng(line(0)) / 3.6)	  'km/h => m/s !!!!
 					laDesMax.Add(CSng(line(1)))
 					laDesMin.Add(CSng(line(2)))
 

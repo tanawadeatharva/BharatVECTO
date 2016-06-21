@@ -190,8 +190,11 @@ namespace TUGraz.VectoCore.OutputData
 
 			var strCols = dataColumns.Select(x => x.GetName())
 				.Concat(Auxiliaries.Values.Select(c => c.ColumnName))
-				.Concat(new[] { ModalResultField.FCMap, ModalResultField.FCAUXc, ModalResultField.FCWHTCc }.Select(x => x.GetName()))
-				.Concat(_additionalColumns);
+				.Concat(
+					new[] {
+						ModalResultField.FCMap, ModalResultField.FCAUXc, ModalResultField.FCWHTCc, ModalResultField.FCAAUX,
+						ModalResultField.FCFinal
+					}.Select(x => x.GetName()));
 
 			if (_mode != ExecutionMode.Declaration || WriteModalResults) {
 				var filteredData = Data;

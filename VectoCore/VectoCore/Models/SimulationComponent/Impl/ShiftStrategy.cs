@@ -84,7 +84,8 @@ namespace TUGraz.VectoCore.Models.SimulationComponent.Impl
 			var airDragLoss = DataBus.AirDragResistance(vehicleSpeed, vehicleSpeed) * DataBus.VehicleSpeed;
 			var rollResistanceLoss = DataBus.RollingResistance(avgSlope) * DataBus.VehicleSpeed;
 			var gearboxLoss = Gearbox.ModelData.Gears[gear].LossMap.GetTorqueLoss(gbxAngularVelocityOut,
-				maxEnginePower / nextEngineSpeed * Gearbox.ModelData.Gears[gear].Ratio) * nextEngineSpeed; //DataBus.GearboxLoss();
+				maxEnginePower / nextEngineSpeed * Gearbox.ModelData.Gears[gear].Ratio).Value * nextEngineSpeed;
+				//DataBus.GearboxLoss();
 			var slopeLoss = DataBus.SlopeResistance(avgSlope) * DataBus.VehicleSpeed;
 			var axleLoss = DataBus.AxlegearLoss();
 

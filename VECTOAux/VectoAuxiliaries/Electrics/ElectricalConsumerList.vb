@@ -208,6 +208,7 @@ Namespace Electrics
 			End If
 		End Sub
 
+
 		Public Function GetTotalAverageDemandAmps(excludeOnBase As Boolean) As Ampere _
 			Implements Electrics.IElectricalConsumerList.GetTotalAverageDemandAmps
 

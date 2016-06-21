@@ -29,6 +29,7 @@
 *   Martin Rexeis, rexeis@ivt.tugraz.at, IVT, Graz University of Technology
 */
 
+using System;
 using System.Collections.Generic;
 using System.Linq;
 using TUGraz.VectoCommon.Exceptions;
@@ -288,7 +289,6 @@ namespace TUGraz.VectoCore.Models.SimulationComponent.Impl
 			return DoHandleRequest(absTime, dt, LeftSample.Current.WheelAngularVelocity);
 		}
 
-
 		protected override void DoWriteModalResults(IModalDataContainer container)
 		{
 			container[ModalResultField.P_wheel_in] = LeftSample.Current.PWheel;
@@ -338,7 +338,6 @@ namespace TUGraz.VectoCore.Models.SimulationComponent.Impl
 			public Meter SimulationDistance;
 			public MeterPerSquareSecond Acceleration;
 		}
-
 
 		protected DrivingCycleData Data;
 		protected IDriverDemandOutPort NextComponent;
@@ -456,7 +455,7 @@ namespace TUGraz.VectoCore.Models.SimulationComponent.Impl
 						response = NextComponent.Request(absTime, dt, acceleration, gradient);
 					})
 					.Case<ResponseFailTimeInterval>(r => { dt = r.DeltaT; })
-					.Case<ResponseSuccess>(() => { })
+					.Case<ResponseSuccess>()
 					.Default(
 						r => { throw new UnexpectedResponseException("MeasuredSpeedDrivingCycle received an unexpected response.", r); });
 			} while (!(response is ResponseSuccess || response is ResponseFailTimeInterval) && (++responseCount < 10));
@@ -574,7 +573,7 @@ namespace TUGraz.VectoCore.Models.SimulationComponent.Impl
 			container[ModalResultField.dist] = CurrentState.Distance;
 			container[ModalResultField.simulationDistance] = CurrentState.SimulationDistance;
 			container[ModalResultField.v_targ] = CurrentState.VehicleSpeed;
-			container[ModalResultField.grad] = LeftSample.Current.RoadGradientPercent.SI();
+			container[ModalResultField.grad] = LeftSample.Current.RoadGradientPercent;
 			container[ModalResultField.altitude] = LeftSample.Current.Altitude;
 			container[ModalResultField.acc] = CurrentState.Acceleration;
 		}

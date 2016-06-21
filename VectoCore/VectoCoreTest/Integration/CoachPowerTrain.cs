@@ -60,14 +60,14 @@ namespace TUGraz.VectoCore.Tests.Integration
 		public const string GearboxFullLoadCurveFile = @"TestData\Components\Gearbox.vfld";
 
 		public static VectoRun CreateEngineeringRun(DrivingCycleData cycleData, string modFileName,
-			bool overspeed = false)
+			bool overspeed = false, KilogramSquareMeter gearBoxInertia = null)
 		{
-			var container = CreatePowerTrain(cycleData, Path.GetFileNameWithoutExtension(modFileName), overspeed);
+			var container = CreatePowerTrain(cycleData, Path.GetFileNameWithoutExtension(modFileName), overspeed, gearBoxInertia);
 			return new DistanceRun(container);
 		}
 
 		public static VehicleContainer CreatePowerTrain(DrivingCycleData cycleData, string modFileName,
-			bool overspeed = false)
+			bool overspeed = false, KilogramSquareMeter gearBoxInertia = null)
 		{
 			var fileWriter = new FileOutputWriter(modFileName);
 			var modData = new ModalDataContainer(modFileName, fileWriter, ExecutionMode.Engineering);
@@ -78,6 +78,9 @@ namespace TUGraz.VectoCore.Tests.Integration
 			var engineData = MockSimulationDataFactory.CreateEngineDataFromFile(EngineFile);
 			var axleGearData = CreateAxleGearData();
 			var gearboxData = CreateGearboxData();
+			if (gearBoxInertia != null)
+				gearboxData.Inertia = gearBoxInertia;
+
 			var vehicleData = CreateVehicleData(3300.SI<Kilogram>());
 			//var retarder = new RetarderData { Type = RetarderData.RetarderType.None };
 			var driverData = CreateDriverData(AccelerationFile, overspeed);

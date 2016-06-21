@@ -210,31 +210,22 @@ namespace TUGraz.VectoCore.InputData.FileIO.JSON
 				if (!EmptyOrInvalidFileName(gearboxFile)) {
 					Gearbox = JSONInputDataFactory.ReadGearbox(Path.Combine(BasePath, gearboxFile));
 				}
-			} catch (Exception e) {
-				throw new VectoException("Failed to read Gearbox file.", e);
-			}
-			try {
+
 				var axleGear = Gearbox as IAxleGearInputData;
 				if (axleGear != null) {
 					AxleGear = axleGear;
 				}
-			} catch (Exception e) {
-				throw new VectoException("Failed to read AxleGear file.", e);
-			}
-			try {
+
 				Engine = JSONInputDataFactory.ReadEngine(
 					Path.Combine(BasePath, Body.GetEx(JsonKeys.Vehicle_EngineFile).Value<string>()));
-			} catch (Exception e) {
-				throw new VectoException("Failed to read Engine file.", e);
-			}
-			try {
+
 				var vehicleFile = Body.GetEx(JsonKeys.Vehicle_VehicleFile).Value<string>();
 				if (!EmptyOrInvalidFileName(vehicleFile)) {
 					VehicleData = JSONInputDataFactory.ReadJsonVehicle(
 						Path.Combine(BasePath, vehicleFile));
 				}
 			} catch (Exception e) {
-				throw new VectoException("Failed to read Vehicle file.", e);
+				throw new VectoException("Failed to read input data: {0}", e, e.Message);
 			}
 			var retarder = VehicleData as IRetarderInputData;
 			if (retarder != null) {

@@ -62,7 +62,7 @@ namespace TUGraz.VectoCore.Models.Declaration
 			NormalizeTable(table);
 			foreach (MissionType mission in Enum.GetValues(typeof(MissionType))) {
 				var values = table.Columns[mission.ToString().ToLower()].Values<string>().ToDouble().ToArray();
-				_data[mission] = new WHTCCorrectionEntry { Rural = values[0], Urban = values[1], Motorway = values[2] };
+				_data[mission] = new WHTCCorrectionEntry { Urban = values[0], Rural = values[1], Motorway = values[2] };
 			}
 		}
 

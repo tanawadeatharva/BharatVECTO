@@ -36,8 +36,6 @@ using TUGraz.VectoCommon.Exceptions;
 using TUGraz.VectoCommon.InputData;
 using TUGraz.VectoCommon.Models;
 using TUGraz.VectoCommon.Utils;
-using TUGraz.VectoCore.InputData.FileIO.JSON;
-using TUGraz.VectoCore.Models;
 using TUGraz.VectoCore.Models.Declaration;
 using TUGraz.VectoCore.Models.Simulation.Data;
 using TUGraz.VectoCore.Models.SimulationComponent.Data;
@@ -118,7 +116,7 @@ namespace TUGraz.VectoCore.InputData.Reader.DataObjectAdaper
 		}
 
 		internal GearboxData CreateGearboxData(IGearboxEngineeringInputData gearbox, CombustionEngineData engineData,
-			double axlegearRatio, Meter dynamicTyreRadius)
+			double axlegearRatio, Meter dynamicTyreRadius, bool useEfficiencyFallback)
 		{
 			if (gearbox.SavedInDeclarationMode) {
 				WarnEngineeringMode("GearboxData");
@@ -144,10 +142,15 @@ namespace TUGraz.VectoCore.InputData.Reader.DataObjectAdaper
 
 			retVal.HasTorqueConverter = gearbox.TorqueConverter.Enabled;
 
-			//var engineFullLoadCurve = (engineData != null) ? engineData.FullLoadCurve : null;
-
 			retVal.Gears = gears.Select((gear, i) => {
-				var lossMap = TransmissionLossMap.Create(gear.LossMap, gear.Ratio, string.Format("Gear {0}", i + 1));
+				TransmissionLossMap lossMap;
+				if (gear.LossMap != null)
+					lossMap = TransmissionLossMap.Create(gear.LossMap, gear.Ratio, string.Format("Gear {0}", i + 1));
+				else if (useEfficiencyFallback)
+					lossMap = TransmissionLossMap.Create(gear.Efficiency, gear.Ratio, string.Format("Gear {0}", i + 1));
+				else {
+					throw new InvalidFileFormatException("Gear {0} LossMap or Efficiency missing.", i + 1);
+				}
 				var gearFullLoad = gear.FullLoadCurve != null
 					? FullLoadCurveReader.Create(gear.FullLoadCurve)
 					: null;
@@ -173,12 +176,17 @@ namespace TUGraz.VectoCore.InputData.Reader.DataObjectAdaper
 				WarnEngineeringMode("AuxData");
 			}
 
-			return auxInputData.Auxiliaries.Select(a => new VectoRunData.AuxData {
-				ID = a.ID,
-				Technology = a.Technology,
-				TechList = a.TechList.DefaultIfNull(Enumerable.Empty<string>()).ToArray(),
-				DemandType = AuxiliaryDemandType.Mapping,
-				Data = new AuxiliaryData(a, a.ID) //AuxiliaryData.Create(a.DemandMap)
+			return auxInputData.Auxiliaries.Select(a => {
+				if (a.DemandMap == null) {
+					throw new VectoSimulationException("Demand Map for auxiliary {0} {1} required", a.ID, a.Technology);
+				}
+				return new VectoRunData.AuxData {
+					ID = a.ID,
+					Technology = a.Technology,
+					TechList = a.TechList.DefaultIfNull(Enumerable.Empty<string>()).ToArray(),
+					DemandType = AuxiliaryDemandType.Mapping,
+					Data = new AuxiliaryData(a, a.ID) //AuxiliaryData.Create(a.DemandMap)
+				};
 			}).Concat(new VectoRunData.AuxData { ID = "", DemandType = AuxiliaryDemandType.Direct }.ToEnumerable()).ToList();
 		}
 

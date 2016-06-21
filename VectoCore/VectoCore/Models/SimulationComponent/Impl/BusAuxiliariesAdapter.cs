@@ -32,6 +32,7 @@
 using System;
 using System.IO;
 using System.Windows.Forms.VisualStyles;
+using TUGraz.VectoCommon.Models;
 using TUGraz.VectoCommon.Utils;
 using TUGraz.VectoCore.Configuration;
 using TUGraz.VectoCore.Models.Simulation;
@@ -41,28 +42,40 @@ using TUGraz.VectoCore.Models.SimulationComponent.Data.Engine;
 using TUGraz.VectoCore.OutputData;
 using TUGraz.VectoCore.Utils;
 using VectoAuxiliaries;
+using VectoAuxiliaries.Pneumatics;
 
 namespace TUGraz.VectoCore.Models.SimulationComponent.Impl
 {
-	public class BusAuxiliariesAdapter : StatefulVectoSimulationComponent<BusAuxiliariesAdapter.BusAuxState>,
-		IEngineAuxInProvider, IEngineAuxPort
+	public class BusAuxiliariesAdapter : LoggingObject, IEngineAuxInProvider, IEngineAuxPort
 	{
+		protected IDataBus DataBus;
+		protected internal BusAuxState CurrentState;
+		protected internal BusAuxState PreviousState;
+
 		protected IAdvancedAuxiliaries Auxiliaries;
 		private readonly FuelConsumptionAdapter _fcMapAdapter;
 
 
-		public BusAuxiliariesAdapter(IVehicleContainer container, string aauxFile, string cycleName, Kilogram vehicleWeight,
-			FuelConsumptionMap fcMap,
-			PerSecond engineIdleSpeed) : base(container)
+		public BusAuxiliariesAdapter(IDataBus container, string aauxFile, string cycleName, Kilogram vehicleWeight,
+			FuelConsumptionMap fcMap, PerSecond engineIdleSpeed)
 		{
 			//	mAAUX_Global.advancedAuxModel.Signals.DeclarationMode = Cfg.DeclMode
 			//	mAAUX_Global.advancedAuxModel.Signals.WHTC = Declaration.WHTCcorrFactor
+			CurrentState = new BusAuxState();
+			PreviousState = new BusAuxState();
 
+			DataBus = container;
 			var tmpAux = new AdvancedAuxiliaries();
 
+			//var actuationsMap = new PneumaticActuationsMAP();
+
+
 			// 'Set Statics
-			tmpAux.VectoInputs.Cycle = DetermineCycle(cycleName, tmpAux.Signals);
+			tmpAux.VectoInputs.Cycle = DetermineCycle(cycleName);
 			tmpAux.VectoInputs.VehicleWeightKG = vehicleWeight;
+			// tmpAux.Signals.TotalCycleTimeSeconds =
+			//	tmpAux.actuationsMap.GetNumActuations(new ActuationsKey("CycleTime", tmpAux.VectoInputs.Cycle));
+
 			_fcMapAdapter = new FuelConsumptionAdapter() { FcMap = fcMap };
 			tmpAux.VectoInputs.FuelMap = _fcMapAdapter;
 			tmpAux.VectoInputs.FuelDensity = Physics.FuelDensity;
@@ -71,40 +84,40 @@ namespace TUGraz.VectoCore.Models.SimulationComponent.Impl
 			tmpAux.Signals.EngineIdleSpeed = engineIdleSpeed;
 			tmpAux.Initialise(Path.GetFileName(aauxFile), Path.GetDirectoryName(Path.GetFullPath(aauxFile)) + @"\");
 
+			tmpAux.Signals.TotalCycleTimeSeconds =
+				tmpAux.actuationsMap.GetNumActuations(new ActuationsKey("CycleTime", tmpAux.VectoInputs.Cycle));
+
+			// call initialize again _after_ setting the cycle time to get the correct consumtions
+			tmpAux.Initialise(Path.GetFileName(aauxFile), Path.GetDirectoryName(Path.GetFullPath(aauxFile)) + @"\");
+
+
 			Auxiliaries = tmpAux;
 		}
 
-		private static string DetermineCycle(string cycleName, ISignals aauxsignals)
+		private static string DetermineCycle(string cycleName)
 		{
 			var cycle = cycleName.ToLower();
 
-			// cycle time is hard coded based on previous simulations
 			if (cycle.Contains("bus")) {
 				if (cycle.Contains("heavy_urban")) {
-					aauxsignals.TotalCycleTimeSeconds = 8912;
 					return "Heavy urban";
 				}
 				if (cycle.Contains("suburban")) {
-					aauxsignals.TotalCycleTimeSeconds = 3283;
 					return "Suburban";
 				}
 				if (cycle.Contains("interurban")) {
-					aauxsignals.TotalCycleTimeSeconds = 12962;
 					return "Interurban";
 				}
 				if (cycle.Contains("urban")) {
-					aauxsignals.TotalCycleTimeSeconds = 8149;
 					return "Urban";
 				}
 			}
 			if (cycle.Contains("coach")) {
-				aauxsignals.TotalCycleTimeSeconds = 15086;
 				return "Coach";
 			}
 			Logger<BusAuxiliariesAdapter>()
 				.Warn("UnServiced Cycle Name '{0}' in Pneumatics Actuations Map 0 Actuations returned", cycleName);
-			aauxsignals.TotalCycleTimeSeconds = 1;
-			return "UnknownCycleName";
+			return cycle;
 		}
 
 		public IEngineAuxPort Port()
@@ -114,6 +127,7 @@ namespace TUGraz.VectoCore.Models.SimulationComponent.Impl
 
 		public NewtonMeter Initialize(NewtonMeter torque, PerSecond angularSpeed)
 		{
+			PreviousState.TotalFuelConsumption = 0.SI<Kilogram>();
 			PreviousState.AngularSpeed = angularSpeed;
 			PreviousState.PowerDemand = GetBusAuxPowerDemand(0.SI<Second>(), 1.SI<Second>(), torque, torque, angularSpeed);
 			return PreviousState.PowerDemand / angularSpeed;
@@ -132,7 +146,7 @@ namespace TUGraz.VectoCore.Models.SimulationComponent.Impl
 		}
 
 
-		protected override void DoWriteModalResults(IModalDataContainer container)
+		protected internal void DoWriteModalResults(IModalDataContainer container)
 		{
 			_fcMapAdapter.AllowExtrapolation = true;
 			// cycleStep has to be called here and not in DoCommit, write is called before Commit!
@@ -140,6 +154,7 @@ namespace TUGraz.VectoCore.Models.SimulationComponent.Impl
 			Auxiliaries.CycleStep(CurrentState.dt, ref message);
 			Log.Warn(message);
 
+			CurrentState.TotalFuelConsumption = Auxiliaries.TotalFuelGRAMS;
 			container[ModalResultField.P_aux] = CurrentState.PowerDemand;
 
 			container[ModalResultField.AA_NonSmartAlternatorsEfficiency] = Auxiliaries.AA_NonSmartAlternatorsEfficiency;
@@ -193,11 +208,16 @@ namespace TUGraz.VectoCore.Models.SimulationComponent.Impl
 				Auxiliaries.AA_TotalCycleFuelConsumptionCompressorOn;
 		}
 
-		protected override void DoCommitSimulationStep()
+		protected internal void DoCommitSimulationStep()
 		{
-			AdvanceState();
+			PreviousState = CurrentState;
+			CurrentState = new BusAuxState();
 		}
 
+		protected internal KilogramPerSecond AAuxFuelConsumption
+		{
+			get { return (CurrentState.TotalFuelConsumption - PreviousState.TotalFuelConsumption) / CurrentState.dt; }
+		}
 
 		private Watt GetBusAuxPowerDemand(Second absTime, Second dt, NewtonMeter torquePowerTrain, NewtonMeter torqueEngine,
 			PerSecond angularSpeed, bool dryRun = false)
@@ -253,6 +273,7 @@ namespace TUGraz.VectoCore.Models.SimulationComponent.Impl
 			public Second dt;
 			public PerSecond AngularSpeed;
 			public Watt PowerDemand;
+			public Kilogram TotalFuelConsumption;
 		}
 	}
 }

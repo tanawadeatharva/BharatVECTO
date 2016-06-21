@@ -206,6 +206,9 @@
 	<data name="Gearbox_Gear_LossMapFile" xml:space="preserve">
     <value>LossMap</value>
   </data>
+	<data name="Gearbox_Gear_Efficiency" xml:space="preserve">
+    <value>Efficiency</value>
+  </data>
 	<data name="Gearbox_ModelName" xml:space="preserve">
     <value>ModelName</value>
   </data>

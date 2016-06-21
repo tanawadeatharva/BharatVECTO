@@ -73,7 +73,6 @@ namespace TUGraz.VectoCore.Models.SimulationComponent
 		protected abstract void DoCommitSimulationStep();
 	}
 
-
 	public abstract class StatefulVectoSimulationComponent<TStateType> : VectoSimulationComponent where TStateType : new()
 	{
 		protected internal TStateType CurrentState;

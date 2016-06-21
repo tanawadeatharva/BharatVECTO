@@ -89,6 +89,8 @@ namespace TUGraz.VectoCore.InputData.Impl
 
 		public DataTable LossMap { get; internal set; }
 
+		public double Efficiency { get; internal set; }
+
 		public DataTable FullLoadCurve { get; internal set; }
 
 		public DataTable ShiftPolygon { get; internal set; }

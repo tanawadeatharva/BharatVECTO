@@ -1,7 +1,7 @@
 ﻿{
   "Header": {
     "CreatedBy": " ()",
-    "Date": "6/8/2016 4:14:06 PM",
+    "Date": "17.06.2016 07:50:47",
     "AppVersion": "2.2",
     "FileVersion": 7
   },
@@ -15,7 +15,7 @@
     "CdA": 5.28,
     "rdyn": 406.9297,
     "Rim": "15° DC Rims",
-    "CdCorrMode": "CdOfVdecl",
+    "CdCorrMode": "Off",
     "CdCorrFile": "12t Delivery Truck.vcdv",
     "Retarder": {
       "Type": "None",

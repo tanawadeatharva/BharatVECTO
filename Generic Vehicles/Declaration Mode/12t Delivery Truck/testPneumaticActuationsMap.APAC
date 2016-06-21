@@ -17,3 +17,9 @@ Kneeling,Suburban,6
 Kneeling,Interurban,0
 Kneeling,Coach,0
 Kneeling,UnknownCycleName,0
+CycleTime,Heavy urban,8912
+CycleTime,Urban,8149
+CycleTime,Suburban,3283
+CycleTime,Interurban,12962
+CycleTime,Coach,15086
+CycleTime,UnknownCycleName,3600

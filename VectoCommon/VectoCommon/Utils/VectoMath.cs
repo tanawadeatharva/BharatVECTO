@@ -439,6 +439,12 @@ namespace TUGraz.VectoCore.Utils
 		/// <returns></returns>
 		public bool IsInside(double x, double y, bool exact)
 		{
+			if ((P1.Y < y && P2.Y < y && P3.Y < y)
+				|| (P1.X < x && P2.X < x && P3.X < x)
+				|| (P1.X > x && P2.X > x && P3.X > x)
+				|| (P1.Y > y && P2.Y > y && P3.Y > y))
+				return false;
+
 			var v0X = P3.X - P1.X;
 			var v0Y = P3.Y - P1.Y;
 			var v1X = P2.X - P1.X;

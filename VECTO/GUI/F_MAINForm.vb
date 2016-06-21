@@ -1789,7 +1789,6 @@ lbFound:
 	End Sub
 
 	Private Sub VectoWorkerV3_OnRunWorkerCompleted(sender As Object, e As RunWorkerCompletedEventArgs)
-		Dim Result As tCalcResult
 
 		'Progbar reset
 		ToolStripProgBarOverall.Visible = False
@@ -1798,8 +1797,6 @@ lbFound:
 		ProgSecStop()
 
 		LvGEN.SelectedIndices.Clear()
-
-		Result = e.Result
 
 		'ShutDown when Unexpected Error
 		If e.Error IsNot Nothing Then

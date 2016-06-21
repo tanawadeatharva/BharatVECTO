@@ -32,6 +32,7 @@
 using System;
 using System.Collections.Generic;
 using System.Linq;
+using TUGraz.VectoCommon.Exceptions;
 using TUGraz.VectoCommon.InputData;
 using TUGraz.VectoCommon.Models;
 using TUGraz.VectoCommon.Utils;
@@ -139,10 +140,20 @@ namespace TUGraz.VectoCore.InputData.Reader.DataObjectAdaper
 			};
 		}
 
-		internal AxleGearData CreateAxleGearData(IAxleGearInputData data)
+		internal AxleGearData CreateAxleGearData(IAxleGearInputData data, bool useEfficiencyFallback)
 		{
-			var axleLossMap = TransmissionLossMap.Create(data.LossMap, data.Ratio, "AxleGear");
-			return new AxleGearData() {
+			TransmissionLossMap axleLossMap;
+			try {
+				axleLossMap = TransmissionLossMap.Create(data.LossMap, data.Ratio, "AxleGear");
+			} catch (InvalidFileFormatException) {
+				if (useEfficiencyFallback)
+					axleLossMap = TransmissionLossMap.Create(data.Efficiency, data.Ratio, "AxleGear");
+				else {
+					throw;
+				}
+			}
+
+			return new AxleGearData {
 				SavedInDeclarationMode = data.SavedInDeclarationMode,
 				Vendor = data.Vendor,
 				ModelName = data.ModelName,
@@ -151,7 +162,7 @@ namespace TUGraz.VectoCore.InputData.Reader.DataObjectAdaper
 				TypeId = data.TypeId,
 				DigestValue = data.DigestValue,
 				IntegrityStatus = data.IntegrityStatus,
-				AxleGear = new GearData() { LossMap = axleLossMap, Ratio = data.Ratio, TorqueConverterActive = false }
+				AxleGear = new GearData { LossMap = axleLossMap, Ratio = data.Ratio, TorqueConverterActive = false }
 			};
 		}
 

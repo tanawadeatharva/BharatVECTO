@@ -1,12 +1,16 @@
-### BUILD
+# BUILD
+
 Before compiling you need to add references to:
+
 - vectolic.dll
 - itextsharp.dll
 - Newtonsoft.Json.dll
 
 
-### EXECUTE
-The following directories/files must be provided in the application folder (e.g. ..\bin\Release):
+# EXECUTE
+
+The following directories/files must be provided in the application folder (e.g. `..\bin\Release`):
+
 - User Manual
 - Declaration
 - User Manual\Release Notes.pdf (provided with the VECTO release)
@@ -16,8 +20,9 @@ The following directories/files must be provided in the application folder (e.g.
 - license.dat (provided by EC/JRC)
 
 
-### RELEASE
+# RELEASE
 Checklist to build a new release:
+
 - Make  zip-folder named with the "Semantic-version", ie: 2014_15_5-VECTO-2.0.1-beta1.
 - Copy into it:
     - executable (`.EXE`) (from bin/Debug when pre/beta release)
@@ -32,8 +37,8 @@ Checklist to build a new release:
 - ZIP the folder.
 - Upload into CITNet's SVN:
     https://webgate.ec.europa.eu/CITnet/svn/VECTO/trunk/Share/
-  and link from: 
-    https://webgate.ec.europa.eu/CITnet/confluence/display/VECTO/Releases    
+  and link from:
+    https://webgate.ec.europa.eu/CITnet/confluence/display/VECTO/Releases
 - Make licenses and update private pages
 - Tag repos.
 - Announce in VECTO-58

@@ -60,7 +60,8 @@ namespace TUGraz.VectoCore.Tests.FileIO
 			var json = (JObject)JToken.ReadFrom(new JsonTextReader(File.OpenText(TestJobFile)));
 			((JObject)json["Body"]).Property("EngineFile").Remove();
 
-			AssertHelper.Exception<VectoException>(() => new JSONInputDataV2(json, TestJobFile), "Failed to read Engine file.");
+			AssertHelper.Exception<VectoException>(() => new JSONInputDataV2(json, TestJobFile),
+				"Failed to read input data: Key EngineFile not found");
 		}
 
 		[TestMethod]
@@ -69,7 +70,8 @@ namespace TUGraz.VectoCore.Tests.FileIO
 			var json = (JObject)JToken.ReadFrom(new JsonTextReader(File.OpenText(TestJobFile)));
 			((JObject)json["Body"]).Property("GearboxFile").Remove();
 
-			AssertHelper.Exception<VectoException>(() => new JSONInputDataV2(json, TestJobFile), "Failed to read Gearbox file.");
+			AssertHelper.Exception<VectoException>(() => new JSONInputDataV2(json, TestJobFile),
+				"Failed to read input data: Key GearboxFile not found");
 		}
 
 		[TestMethod]
@@ -78,7 +80,8 @@ namespace TUGraz.VectoCore.Tests.FileIO
 			var json = (JObject)JToken.ReadFrom(new JsonTextReader(File.OpenText(TestJobFile)));
 			((JObject)json["Body"]).Property("VehicleFile").Remove();
 
-			AssertHelper.Exception<VectoException>(() => new JSONInputDataV2(json, TestJobFile), "Failed to read Vehicle file.");
+			AssertHelper.Exception<VectoException>(() => new JSONInputDataV2(json, TestJobFile),
+				"Failed to read input data: Key VehicleFile not found");
 		}
 
 		[TestMethod]

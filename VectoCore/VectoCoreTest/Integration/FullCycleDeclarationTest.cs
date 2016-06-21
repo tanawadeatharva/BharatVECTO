@@ -29,11 +29,9 @@
 *   Martin Rexeis, rexeis@ivt.tugraz.at, IVT, Graz University of Technology
 */
 
-using System;
 using System.Data;
 using System.IO;
 using System.Linq;
-using System.Windows.Forms.DataVisualization.Charting;
 using Microsoft.VisualStudio.TestTools.UnitTesting;
 using TUGraz.VectoCommon.Models;
 using TUGraz.VectoCommon.Utils;
@@ -224,11 +222,12 @@ namespace TUGraz.VectoCore.Tests.Integration
 			var modFile1Hz = VectoCSVFile.Read(modFileName1Hz);
 
 			// test if line count matches the second count
-			var maxSeconds =
-				(int)Math.Ceiling(modFile.Rows.Cast<DataRow>().Last().ParseDouble(ModalResultField.time.GetShortCaption()));
+			var maxSeconds = modFile.Rows.Cast<DataRow>().Last().ParseDouble(ModalResultField.time.GetShortCaption());
 			var lineCount1Hz = modFile1Hz.Rows.Count;
 
-			Assert.IsTrue(lineCount1Hz == maxSeconds);
+			AssertHelper.AreRelativeEqual(lineCount1Hz, maxSeconds,
+				string.Format("LineCount must equal max seconds. Lines={0}, MaxSeconds={1}", lineCount1Hz,
+					maxSeconds), 1);
 
 			// test max distance
 			var maxDistance = modFile.Rows.Cast<DataRow>().Last().ParseDouble(ModalResultField.dist.GetShortCaption());
@@ -270,9 +269,9 @@ namespace TUGraz.VectoCore.Tests.Integration
 				"fuel consumption must not be negative.");
 
 			// last v_act entry must be the same as original
-			var v_act = modFile.Rows.Cast<DataRow>().Last().ParseDouble((int)ModalResultField.v_act).SI<MeterPerSecond>();
-			var v_act1Hz = modFile1Hz.Rows.Cast<DataRow>().Last().ParseDouble((int)ModalResultField.v_act).SI<MeterPerSecond>();
-			AssertHelper.AreRelativeEqual(v_act, v_act1Hz, "end velocity is not equal", 1e-4);
+			var vAct = modFile.Rows.Cast<DataRow>().Last().ParseDouble((int)ModalResultField.v_act).SI<MeterPerSecond>();
+			var vAct1Hz = modFile1Hz.Rows.Cast<DataRow>().Last().ParseDouble((int)ModalResultField.v_act).SI<MeterPerSecond>();
+			AssertHelper.AreRelativeEqual(vAct, vAct1Hz, "end velocity is not equal", 1e-4);
 		}
 
 		[TestMethod, TestCategory("LongRunning")]

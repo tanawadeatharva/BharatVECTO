@@ -28,7 +28,7 @@ Partial Class F_VECTO
 		Me.GrCycles = New System.Windows.Forms.GroupBox()
 		Me.Label2 = New System.Windows.Forms.Label()
 		Me.LvCycles = New System.Windows.Forms.ListView()
-		Me.ColumnHeader1 = CType(New System.Windows.Forms.ColumnHeader(),System.Windows.Forms.ColumnHeader)
+		Me.ColumnHeader1 = CType(New System.Windows.Forms.ColumnHeader(), System.Windows.Forms.ColumnHeader)
 		Me.BtDRIrem = New System.Windows.Forms.Button()
 		Me.BtDRIadd = New System.Windows.Forms.Button()
 		Me.GrAux = New System.Windows.Forms.GroupBox()
@@ -41,9 +41,9 @@ Partial Class F_VECTO
 		Me.lbAdvancedAuxiliaries = New System.Windows.Forms.Label()
 		Me.Label32 = New System.Windows.Forms.Label()
 		Me.LvAux = New System.Windows.Forms.ListView()
-		Me.ColumnHeader4 = CType(New System.Windows.Forms.ColumnHeader(),System.Windows.Forms.ColumnHeader)
-		Me.ColumnHeader5 = CType(New System.Windows.Forms.ColumnHeader(),System.Windows.Forms.ColumnHeader)
-		Me.ColumnHeader6 = CType(New System.Windows.Forms.ColumnHeader(),System.Windows.Forms.ColumnHeader)
+		Me.ColumnHeader4 = CType(New System.Windows.Forms.ColumnHeader(), System.Windows.Forms.ColumnHeader)
+		Me.ColumnHeader5 = CType(New System.Windows.Forms.ColumnHeader(), System.Windows.Forms.ColumnHeader)
+		Me.ColumnHeader6 = CType(New System.Windows.Forms.ColumnHeader(), System.Windows.Forms.ColumnHeader)
 		Me.ButAuxRem = New System.Windows.Forms.Button()
 		Me.ButAuxAdd = New System.Windows.Forms.Button()
 		Me.TbGBX = New System.Windows.Forms.TextBox()
@@ -63,6 +63,11 @@ Partial Class F_VECTO
 		Me.BtAccOpen = New System.Windows.Forms.Button()
 		Me.GrLAC = New System.Windows.Forms.GroupBox()
 		Me.GroupBox2 = New System.Windows.Forms.GroupBox()
+		Me.Label12 = New System.Windows.Forms.Label()
+		Me.tbDfCoastingScale = New System.Windows.Forms.TextBox()
+		Me.Label11 = New System.Windows.Forms.Label()
+		Me.tbDfCoastingOffset = New System.Windows.Forms.TextBox()
+		Me.Label10 = New System.Windows.Forms.Label()
 		Me.Label5 = New System.Windows.Forms.Label()
 		Me.Label3 = New System.Windows.Forms.Label()
 		Me.tbLacDfVelocityDropFile = New System.Windows.Forms.TextBox()
@@ -132,11 +137,6 @@ Partial Class F_VECTO
 		Me.TbGbxTxt = New System.Windows.Forms.TextBox()
 		Me.TbMass = New System.Windows.Forms.TextBox()
 		Me.ToolTip1 = New System.Windows.Forms.ToolTip(Me.components)
-		Me.Label10 = New System.Windows.Forms.Label()
-		Me.tbDfCoastingOffset = New System.Windows.Forms.TextBox()
-		Me.Label11 = New System.Windows.Forms.Label()
-		Me.tbDfCoastingScale = New System.Windows.Forms.TextBox()
-		Me.Label12 = New System.Windows.Forms.Label()
 		Me.TabPgGen.SuspendLayout()
 		Me.GrCycles.SuspendLayout()
 		Me.GrAux.SuspendLayout()
@@ -189,9 +189,9 @@ Partial Class F_VECTO
 		Me.GrCycles.Controls.Add(Me.LvCycles)
 		Me.GrCycles.Controls.Add(Me.BtDRIrem)
 		Me.GrCycles.Controls.Add(Me.BtDRIadd)
-		Me.GrCycles.Location = New System.Drawing.Point(7, 271)
+		Me.GrCycles.Location = New System.Drawing.Point(7, 314)
 		Me.GrCycles.Name = "GrCycles"
-		Me.GrCycles.Size = New System.Drawing.Size(515, 208)
+		Me.GrCycles.Size = New System.Drawing.Size(515, 184)
 		Me.GrCycles.TabIndex = 10
 		Me.GrCycles.TabStop = False
 		Me.GrCycles.Text = "Cycles"
@@ -200,7 +200,7 @@ Partial Class F_VECTO
 		'
 		Me.Label2.Anchor = CType((System.Windows.Forms.AnchorStyles.Top Or System.Windows.Forms.AnchorStyles.Right), System.Windows.Forms.AnchorStyles)
 		Me.Label2.AutoSize = True
-		Me.Label2.Location = New System.Drawing.Point(387, 188)
+		Me.Label2.Location = New System.Drawing.Point(386, 159)
 		Me.Label2.Name = "Label2"
 		Me.Label2.Size = New System.Drawing.Size(122, 13)
 		Me.Label2.TabIndex = 3
@@ -234,7 +234,7 @@ Partial Class F_VECTO
 		'
 		Me.BtDRIrem.Anchor = CType((System.Windows.Forms.AnchorStyles.Bottom Or System.Windows.Forms.AnchorStyles.Left), System.Windows.Forms.AnchorStyles)
 		Me.BtDRIrem.Image = Global.VECTO.My.Resources.Resources.minus_circle_icon
-		Me.BtDRIrem.Location = New System.Drawing.Point(41, 156)
+		Me.BtDRIrem.Location = New System.Drawing.Point(41, 154)
 		Me.BtDRIrem.Name = "BtDRIrem"
 		Me.BtDRIrem.Size = New System.Drawing.Size(29, 23)
 		Me.BtDRIrem.TabIndex = 2
@@ -244,7 +244,7 @@ Partial Class F_VECTO
 		'
 		Me.BtDRIadd.Anchor = CType((System.Windows.Forms.AnchorStyles.Bottom Or System.Windows.Forms.AnchorStyles.Left), System.Windows.Forms.AnchorStyles)
 		Me.BtDRIadd.Image = Global.VECTO.My.Resources.Resources.plus_circle_icon
-		Me.BtDRIadd.Location = New System.Drawing.Point(6, 156)
+		Me.BtDRIadd.Location = New System.Drawing.Point(6, 154)
 		Me.BtDRIadd.Name = "BtDRIadd"
 		Me.BtDRIadd.Size = New System.Drawing.Size(29, 23)
 		Me.BtDRIadd.TabIndex = 1
@@ -268,7 +268,7 @@ Partial Class F_VECTO
 		Me.GrAux.Controls.Add(Me.ButAuxAdd)
 		Me.GrAux.Location = New System.Drawing.Point(6, 87)
 		Me.GrAux.Name = "GrAux"
-		Me.GrAux.Size = New System.Drawing.Size(515, 260)
+		Me.GrAux.Size = New System.Drawing.Size(515, 223)
 		Me.GrAux.TabIndex = 9
 		Me.GrAux.TabStop = False
 		Me.GrAux.Text = "Auxiliaries"
@@ -340,7 +340,7 @@ Partial Class F_VECTO
 		'
 		Me.Label32.Anchor = CType((System.Windows.Forms.AnchorStyles.Top Or System.Windows.Forms.AnchorStyles.Right), System.Windows.Forms.AnchorStyles)
 		Me.Label32.AutoSize = True
-		Me.Label32.Location = New System.Drawing.Point(369, 200)
+		Me.Label32.Location = New System.Drawing.Point(370, 200)
 		Me.Label32.Name = "Label32"
 		Me.Label32.Size = New System.Drawing.Size(139, 13)
 		Me.Label32.TabIndex = 3
@@ -589,6 +589,47 @@ Partial Class F_VECTO
 		Me.GroupBox2.TabIndex = 3
 		Me.GroupBox2.TabStop = False
 		Me.GroupBox2.Text = "Coasting Parameters WB2016   (v3 only)"
+		'
+		'Label12
+		'
+		Me.Label12.AutoSize = True
+		Me.Label12.Location = New System.Drawing.Point(272, 102)
+		Me.Label12.Name = "Label12"
+		Me.Label12.Size = New System.Drawing.Size(130, 13)
+		Me.Label12.TabIndex = 17
+		Me.Label12.Text = "* DF_vTarget * DF_vDrop"
+		'
+		'tbDfCoastingScale
+		'
+		Me.tbDfCoastingScale.Location = New System.Drawing.Point(229, 99)
+		Me.tbDfCoastingScale.Name = "tbDfCoastingScale"
+		Me.tbDfCoastingScale.Size = New System.Drawing.Size(37, 20)
+		Me.tbDfCoastingScale.TabIndex = 16
+		'
+		'Label11
+		'
+		Me.Label11.AutoSize = True
+		Me.Label11.Location = New System.Drawing.Point(212, 101)
+		Me.Label11.Name = "Label11"
+		Me.Label11.Size = New System.Drawing.Size(13, 13)
+		Me.Label11.TabIndex = 15
+		Me.Label11.Text = "- "
+		'
+		'tbDfCoastingOffset
+		'
+		Me.tbDfCoastingOffset.Location = New System.Drawing.Point(168, 99)
+		Me.tbDfCoastingOffset.Name = "tbDfCoastingOffset"
+		Me.tbDfCoastingOffset.Size = New System.Drawing.Size(37, 20)
+		Me.tbDfCoastingOffset.TabIndex = 14
+		'
+		'Label10
+		'
+		Me.Label10.AutoSize = True
+		Me.Label10.Location = New System.Drawing.Point(82, 102)
+		Me.Label10.Name = "Label10"
+		Me.Label10.Size = New System.Drawing.Size(79, 13)
+		Me.Label10.TabIndex = 12
+		Me.Label10.Text = "DF_coasting = "
 		'
 		'Label5
 		'
@@ -1215,47 +1256,6 @@ Partial Class F_VECTO
 		Me.TbMass.ReadOnly = True
 		Me.TbMass.Size = New System.Drawing.Size(50, 20)
 		Me.TbMass.TabIndex = 3
-		'
-		'Label10
-		'
-		Me.Label10.AutoSize = True
-		Me.Label10.Location = New System.Drawing.Point(82, 102)
-		Me.Label10.Name = "Label10"
-		Me.Label10.Size = New System.Drawing.Size(79, 13)
-		Me.Label10.TabIndex = 12
-		Me.Label10.Text = "DF_coasting = "
-		'
-		'tbDfCoastingOffset
-		'
-		Me.tbDfCoastingOffset.Location = New System.Drawing.Point(168, 99)
-		Me.tbDfCoastingOffset.Name = "tbDfCoastingOffset"
-		Me.tbDfCoastingOffset.Size = New System.Drawing.Size(37, 20)
-		Me.tbDfCoastingOffset.TabIndex = 14
-		'
-		'Label11
-		'
-		Me.Label11.AutoSize = True
-		Me.Label11.Location = New System.Drawing.Point(212, 101)
-		Me.Label11.Name = "Label11"
-		Me.Label11.Size = New System.Drawing.Size(13, 13)
-		Me.Label11.TabIndex = 15
-		Me.Label11.Text = "- "
-		'
-		'tbDfCoastingScale
-		'
-		Me.tbDfCoastingScale.Location = New System.Drawing.Point(229, 99)
-		Me.tbDfCoastingScale.Name = "tbDfCoastingScale"
-		Me.tbDfCoastingScale.Size = New System.Drawing.Size(37, 20)
-		Me.tbDfCoastingScale.TabIndex = 16
-		'
-		'Label12
-		'
-		Me.Label12.AutoSize = True
-		Me.Label12.Location = New System.Drawing.Point(272, 102)
-		Me.Label12.Name = "Label12"
-		Me.Label12.Size = New System.Drawing.Size(130, 13)
-		Me.Label12.TabIndex = 17
-		Me.Label12.Text = "* DF_vTarget * DF_vDrop"
 		'
 		'F_VECTO
 		'

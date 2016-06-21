@@ -29,10 +29,12 @@
 *   Martin Rexeis, rexeis@ivt.tugraz.at, IVT, Graz University of Technology
 */
 
+using System.Diagnostics.CodeAnalysis;
 using TUGraz.VectoCommon.Utils;
 
 namespace TUGraz.VectoCommon.Models
 {
+	[SuppressMessage("ReSharper", "InconsistentNaming")]
 	public enum AxleConfiguration
 	{
 		AxleConfig_4x2,

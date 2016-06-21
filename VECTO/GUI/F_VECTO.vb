@@ -18,7 +18,7 @@ Imports VectoAuxiliaries
 ''' </summary>
 ''' <remarks></remarks>
 Public Class F_VECTO
-	Private VECTOfile As String
+	Public VECTOfile As String
 	Private Changed As Boolean = False
 
 	Private pgDriver As TabPage
@@ -1270,7 +1270,7 @@ lbDlog:
 							s.BorderWidth = 2
 							s.Color = Color.DarkRed
 							s.Name = "Upshift curve"
-							MyChart.Series.Add(s)
+							' MyChart.Series.Add(s) 'MQ 2016-06-20: do not plot shift lines in engine dialog
 
 							s = New System.Windows.Forms.DataVisualization.Charting.Series
 							s.Points.DataBindXY(ldown, lM)
@@ -1278,7 +1278,7 @@ lbDlog:
 							s.BorderWidth = 2
 							s.Color = Color.DarkRed
 							s.Name = "Downshift curve"
-							MyChart.Series.Add(s)
+							'MyChart.Series.Add(s) 'MQ 2016-06-20:do not plot shift lines in engine dialog
 
 							OkCount += 1
 

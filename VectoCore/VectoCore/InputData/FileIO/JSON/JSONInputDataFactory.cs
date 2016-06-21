@@ -37,6 +37,7 @@ using TUGraz.VectoCommon.InputData;
 
 namespace TUGraz.VectoCore.InputData.FileIO.JSON
 {
+	// ReSharper disable once InconsistentNaming
 	public class JSONInputDataFactory
 	{
 		protected internal static JObject ReadFile(string fileName)
