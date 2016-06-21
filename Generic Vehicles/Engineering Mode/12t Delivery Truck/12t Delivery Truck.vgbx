@@ -1,7 +1,7 @@
 ﻿{
   "Header": {
     "CreatedBy": " ()",
-    "Date": "17.06.2016 08:12:24",
+    "Date": "6/20/2016 1:49:34 PM",
     "AppVersion": "2.2",
     "FileVersion": 5
   },
@@ -19,42 +19,42 @@
         "Ratio": 6.75,
         "LossMap": "Indirect Gear.vtlm",
         "TCactive": false,
-        "ShiftPolygon": "ShiftPolygons.vgbs",
+        "ShiftPolygon": "<NOFILE>",
         "FullLoadCurve": "<NOFILE>"
       },
       {
         "Ratio": 3.6,
         "LossMap": "Indirect Gear.vtlm",
         "TCactive": false,
-        "ShiftPolygon": "ShiftPolygons.vgbs",
+        "ShiftPolygon": "<NOFILE>",
         "FullLoadCurve": "<NOFILE>"
       },
       {
         "Ratio": 2.13,
         "LossMap": "Indirect Gear.vtlm",
         "TCactive": false,
-        "ShiftPolygon": "ShiftPolygons.vgbs",
+        "ShiftPolygon": "<NOFILE>",
         "FullLoadCurve": "<NOFILE>"
       },
       {
         "Ratio": 1.39,
         "LossMap": "Indirect Gear.vtlm",
         "TCactive": false,
-        "ShiftPolygon": "ShiftPolygons.vgbs",
+        "ShiftPolygon": "<NOFILE>",
         "FullLoadCurve": "<NOFILE>"
       },
       {
         "Ratio": 1.0,
         "LossMap": "Direct Gear.vtlm",
         "TCactive": false,
-        "ShiftPolygon": "ShiftPolygons.vgbs",
+        "ShiftPolygon": "<NOFILE>",
         "FullLoadCurve": "<NOFILE>"
       },
       {
         "Ratio": 0.78,
         "LossMap": "Indirect Gear.vtlm",
         "TCactive": false,
-        "ShiftPolygon": "ShiftPolygons.vgbs",
+        "ShiftPolygon": "<NOFILE>",
         "FullLoadCurve": "<NOFILE>"
       }
     ],
