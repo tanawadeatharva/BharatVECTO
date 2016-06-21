@@ -802,7 +802,7 @@ Public Class F_GBX
 
 		Dim vectoJob As cVECTO = New cVECTO() With {.FilePath = F_VECTO.VECTOfile}
 		Dim vectoOk As Boolean = vectoJob.ReadFile()
-		Dim vehicle As cVEH = New cVEH() With {.FilePath = vectoJob.PathVEH(True)}
+		Dim vehicle As cVEH = New cVEH() With {.FilePath = vectoJob.PathVEH(False)}
 		Dim vehicleOk As Boolean = vehicle.ReadFile(False)
 
 		'Fld
