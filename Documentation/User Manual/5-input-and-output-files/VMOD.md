@@ -88,7 +88,22 @@ In Vecto 3.0.2 the structure of the modal data output has been revised and re-st
 | P_air				|	[kW]	|	Power loss due to air drag |
 | P_roll			|	[kW]	|	Rolling resistance power loss |
 | P_veh_inertia		|	[kW]	|	Power loss due to the vehicle's inertia |
+| AA_NonSmartAlternatorsEfficiency     | [Fraction]  | Non-Smart Alternators Efficiency, Advance Auxiliaries Module |
+| AA_SmartIdleCurrent_Amps             | [Amps]      | Smart Idle Current in Amps, Advance Auxiliaries Module |
+| AA_SmartIdleAlternatorsEfficiency    | [Fraction]  | Smart Idle Alternators Efficiency, Advance Auxiliaries Module |
+| AA_SmartTractionCurrent_Amps         | [Amps]      | Smart Traction Current in Amps, Advance Auxiliaries Module |
+| AA_SmartTractionAlternatorEfficiency | [Fraction]  | Smart Traction Alternator Efficiency, Advance Auxiliaries Module |
+| AA_SmartOverrunCurrent_Amps          | [Amps]      | Smart Overrun Current in Amps, Advance Auxiliaries Module |
+| AA_SmartOverrunAlternatorEfficiency  | [Fraction]  | Smart Overrun Alternator Efficiency, Advance Auxiliaries Module  |
+| AA_CompressorFlowRate_LitrePerSec    | [Ni L/S]    | Compressor Flow Rate in litres per second, Advance Auxiliaries Module |
+| AA_OverrunFlag                       | [Bool [0/1] | Overrun Flag (yes/no), Advance Auxiliaries Module |
+| AA_EngineIdleFlag                    | [Bool [0/1] | Engine Idle Flag (yes/no), Advance Auxiliaries Module |
+| AA_CompressorFlag                    | [Bool [0/1] | Compressor Flag (off/on), Advance Auxiliaries Module |
+| AA_TotalCycleFC_Grams                | [Grams]     | Total Cycle Fuel Consumption in grams, Advance Auxiliaries Module |
+| AA_TotalCycleFC_Litres               | [Litres]    | Total Cycle Fuel Consumption in litres, Advance Auxiliaries Module |
 | FC-Map			|	[g/h]	|	Fuel consumption interpolated from FC map. |
 | FC-AUXc			|	[g/h]	|	Fuel consumption after [Auxiliary-Start/Stop Correction](#fuel-consumption-calculation) (based on FC) |
 | FC-WHTCc			|	[g/h]	|	Fuel consumption after [WHTC Correction](#fuel-consumption-calculation) (based on FC-AUXc) |
+| FC-AAUX			|	[g/h]	|	Fuel consumption computed by the AAUX module considering smart auxiliaries |
+| FC-Final			|	[g/h]	|	Final fuel consumption value after all applicable corrections |
 </div>

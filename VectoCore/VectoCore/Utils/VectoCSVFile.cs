@@ -156,8 +156,8 @@ namespace TUGraz.VectoCore.Utils
 				table.Columns.Add(col);
 			}
 			if (lines.Current == null) {
+			if (lines.Current == null) {
 				return table;
-			}
 			// read data into table
 			var i = 0;
 			do {
