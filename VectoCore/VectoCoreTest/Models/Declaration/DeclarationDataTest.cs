@@ -149,7 +149,6 @@ namespace TUGraz.VectoCore.Tests.Models.Declaration
 			Assert.AreEqual(expected, lookup, 1e-8);
 		}
 
-
 		[TestMethod]
 		public void WHTCLookupTestRegionalDelivery()
 		{
@@ -163,7 +162,6 @@ namespace TUGraz.VectoCore.Tests.Models.Declaration
 				motorway: motorway);
 			Assert.AreEqual(expected, lookup, 1e-8);
 		}
-
 
 		[Test]
 		public void AirDragTest()
@@ -635,6 +633,12 @@ namespace TUGraz.VectoCore.Tests.Models.Declaration
 			// EXTRAPOLATE 
 			EqualAcceleration(data, -20, 1, -1);
 			EqualAcceleration(data, 140, 0.5, -0.5);
+		}
+
+		[Test]
+		public void Declaration_Class2_WeightTest()
+		{
+			Assert.Fail();
 		}
 	}
 }

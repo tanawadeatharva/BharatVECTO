@@ -147,32 +147,18 @@ namespace TUGraz.VectoCore.Models.Declaration
 				mission.MaxLoad = grossVehicleMassRating - mission.MassExtra - curbWeight;
 
 				var refLoadField = row.Field<string>("payload-" + missionType.ToString().ToLower());
-				mission.RefLoad = CalculateRefLoad(grossVehicleMassRating, refLoadField, missionType, mission.MaxLoad);
+				if (refLoadField == "R(pc)")
+					mission.RefLoad = VectoMath.Min(DeclarationData.PayloadForGVW(grossVehicleMassRating, missionType), mission.MaxLoad);
+				else if (refLoadField == "R(pc)+T") {
+					// R(pc) + Trailer 3.4t + Loading Trailer 5.3t
+					mission.RefLoad = VectoMath.Min(DeclarationData.PayloadForGVW(grossVehicleMassRating, missionType), mission.MaxLoad);
+					mission.RefLoad += 3400.SI<Kilogram>() + 5300.SI<Kilogram>();
+				} else {
+					mission.RefLoad = VectoMath.Min(refLoadField.ToDouble().SI<Kilogram>(), mission.MaxLoad);
+				}
 
 				yield return mission;
 			}
-		}
-
-		private static Kilogram CalculateRefLoad(Kilogram grossVehicleMassRating, string refLoadField, MissionType missionType,
-			Kilogram maxLoad)
-		{
-			const double longHaulFactor = 0.5882;
-			const double otherFactor = 0.3941;
-			var longHaulWeightDeduction = 2511.8.SI<Kilogram>();
-			var otherWeightDeduction = 1705.9.SI<Kilogram>();
-
-			Kilogram refLoad;
-			if (refLoadField == "f") {
-				if (missionType == MissionType.LongHaul) {
-					refLoad = longHaulFactor * grossVehicleMassRating - longHaulWeightDeduction;
-				} else {
-					refLoad = otherFactor * grossVehicleMassRating - otherWeightDeduction;
-				}
-			} else {
-				refLoad = refLoadField.ToDouble().SI<Kilogram>();
-			}
-
-			return VectoMath.Min(refLoad, maxLoad);
 		}
 	}
 }

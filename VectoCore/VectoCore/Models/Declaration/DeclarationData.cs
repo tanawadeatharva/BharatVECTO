@@ -89,6 +89,20 @@ namespace TUGraz.VectoCore.Models.Declaration
 			get { return Instance()._electricSystem ?? (Instance()._electricSystem = new ElectricSystem()); }
 		}
 
+		/// <summary>
+		/// Formula for calculating the payload for a given gross vehicle weight.
+		/// (so called "pc-formula", Whitebook Apr 2016, Part 1, p.187)
+		/// </summary>
+		public static Kilogram PayloadForGVW(Kilogram grossVehicleWeight, MissionType missionType)
+		{
+			var gvw = new[] { 7.5.SI().Ton.Cast<Kilogram>(), 16.SI().Ton.Cast<Kilogram>() };
+			var payload50 = new[] { 1.25.SI().Ton.Cast<Kilogram>(), 4.6.SI().Ton.Cast<Kilogram>() };
+			var payload75 = new[] { 1.9.SI().Ton.Cast<Kilogram>(), 6.9.SI().Ton.Cast<Kilogram>() };
+			var payload = missionType == MissionType.LongHaul ? payload75 : payload50;
+
+			return VectoMath.Interpolate(gvw[0], gvw[1], payload[0], payload[1], grossVehicleWeight);
+		}
+
 		public static Meter DynamicTyreRadius(string wheels, string rims)
 		{
 			var wheelsEntry = Wheels.Lookup(wheels.RemoveWhitespace());
@@ -342,7 +356,6 @@ namespace TUGraz.VectoCore.Models.Declaration
 						.ToList();
 			}
 
-
 			internal static PerSecond ComputeEngineSpeed85kmh(ITransmissionInputData gear, double axleRatio,
 				Meter dynamicTyreRadius, CombustionEngineData engine)
 			{
@@ -357,7 +370,6 @@ namespace TUGraz.VectoCore.Models.Declaration
 				//}
 				return engineSpeed;
 			}
-
 
 			internal static List<Point> IntersectShiftPolygon(List<Point> orig, List<Point> transformedDownshift)
 			{
