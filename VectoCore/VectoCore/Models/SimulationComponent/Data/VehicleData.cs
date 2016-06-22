@@ -80,6 +80,9 @@ namespace TUGraz.VectoCore.Models.SimulationComponent.Data
 		[Required, SIRange(3500, 40000)]
 		public Kilogram GrossVehicleMassRating { get; internal set; }
 
+		[Required, SIRange(0, 40000)]
+		public Kilogram TrailerGrossVehicleMassRating { get; internal set; }
+
 		[Required, SIRange(0.1, 0.7)]
 		public Meter DynamicTyreRadius { get; internal set; }
 
@@ -147,10 +150,11 @@ namespace TUGraz.VectoCore.Models.SimulationComponent.Data
 						weightShareSum, 1 - weightShareSum));
 			}
 
-			if (vehicleData.TotalVehicleWeight() > vehicleData.GrossVehicleMassRating) {
+			var gvwTotal = vehicleData.GrossVehicleMassRating + vehicleData.TrailerGrossVehicleMassRating;
+			if (vehicleData.TotalVehicleWeight() > gvwTotal) {
 				return new ValidationResult(
 					string.Format("Total Vehicle Weight is greater than GrossVehicleMassRating! sum: {0},  GVM: {1}",
-						vehicleData.TotalVehicleWeight(), vehicleData.GrossVehicleMassRating));
+						vehicleData.TotalVehicleWeight(), gvwTotal));
 			}
 
 			return ValidationResult.Success;

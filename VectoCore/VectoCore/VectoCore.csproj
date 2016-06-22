@@ -139,6 +139,7 @@
     <Compile Include="Models\Declaration\PT1.cs" />
     <Compile Include="Models\Declaration\Rims.cs" />
     <Compile Include="Models\Declaration\Segments.cs" />
+    <Compile Include="Models\Declaration\StandardWeigths.cs" />
     <Compile Include="Models\Declaration\SteeringPump.cs" />
     <Compile Include="Models\Declaration\TorqueConverter.cs" />
     <Compile Include="Models\Declaration\VehicleClass.cs" />
@@ -312,6 +313,7 @@
     </None>
     <EmbeddedResource Include="Resources\Declaration\LAC-DF-Vdrop.csv" />
     <EmbeddedResource Include="Resources\Declaration\LAC-DF-Vtarget.csv" />
+    <EmbeddedResource Include="Resources\Declaration\StandardWeights.csv" />
   </ItemGroup>
   <ItemGroup>
     <EmbeddedResource Include="Resources\Declaration\Report\4x2r.png" />

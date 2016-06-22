@@ -50,7 +50,6 @@ namespace TUGraz.VectoCore.Models.Declaration
 		}
 	}
 
-
 	public class Mission
 	{
 		public MissionType MissionType { get; set; }
@@ -59,6 +58,7 @@ namespace TUGraz.VectoCore.Models.Declaration
 		public double[] TrailerAxleWeightDistribution { get; set; }
 
 		public Kilogram MassExtra { get; set; }
+		public Kilogram TrailerGrossVehicleMassRating { get; set; }
 
 		public Kilogram MinLoad { get; set; }
 		public Kilogram RefLoad { get; set; }

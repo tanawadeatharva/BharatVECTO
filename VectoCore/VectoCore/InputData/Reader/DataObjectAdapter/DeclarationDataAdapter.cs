@@ -94,7 +94,7 @@ namespace TUGraz.VectoCore.InputData.Reader.DataObjectAdaper
 			var retVal = SetCommonVehicleData(data);
 
 			retVal.GrossVehicleMassRating = data.GrossVehicleMassRating;
-
+			retVal.TrailerGrossVehicleMassRating = mission.TrailerGrossVehicleMassRating;
 			retVal.CurbWeigthExtra = mission.MassExtra;
 			retVal.Loading = loading;
 			retVal.DynamicTyreRadius =

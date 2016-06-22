@@ -31,18 +31,13 @@
 
 using System;
 using System.Collections.Generic;
-using System.Diagnostics;
 using System.Linq;
-using System.Net.NetworkInformation;
-using iTextSharp.text.pdf;
-using iTextSharp.text.pdf.interfaces;
 using TUGraz.VectoCommon.Exceptions;
 using TUGraz.VectoCommon.InputData;
 using TUGraz.VectoCommon.Models;
 using TUGraz.VectoCommon.Utils;
 using TUGraz.VectoCore.Configuration;
 using TUGraz.VectoCore.Models.SimulationComponent.Data;
-using TUGraz.VectoCore.Models.SimulationComponent.Data.Engine;
 using TUGraz.VectoCore.Models.SimulationComponent.Data.Gearbox;
 using TUGraz.VectoCore.Utils;
 
@@ -63,6 +58,7 @@ namespace TUGraz.VectoCore.Models.Declaration
 		private WHTCCorrection _whtcCorrection;
 		private AirDrag _airDrag;
 		private TorqueConverter _torqueConverter;
+		private StandardWeigths _standardWeigths;
 
 		public static Wheels Wheels
 		{
@@ -130,6 +126,11 @@ namespace TUGraz.VectoCore.Models.Declaration
 				return Instance()._heatingVentilationAirConditioning ??
 						(Instance()._heatingVentilationAirConditioning = new HeatingVentilationAirConditioning());
 			}
+		}
+
+		public static StandardWeigths StandardWeights
+		{
+			get { return Instance()._standardWeigths ?? (Instance()._standardWeigths = new StandardWeigths()); }
 		}
 
 		public static PneumaticSystem PneumaticSystem

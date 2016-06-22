@@ -1646,6 +1646,7 @@ lbFound:
 			Catch ex As Exception
 				MsgBox(String.Format("ERROR running job {0}: {1}", jobFile, ex.Message), MsgBoxStyle.Critical)
 				sender.ReportProgress(0, New With {.Target = "ListBoxError", .Message = ex.Message})
+				Return
 			End Try
 		Next
 

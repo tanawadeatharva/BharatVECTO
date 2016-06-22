@@ -95,20 +95,21 @@ namespace TUGraz.VectoCore.Models.Declaration
 				AxleConfiguration = axleConfiguration,
 				VehicleClass = VehicleClassHelper.Parse(row.Field<string>("hdvclass")),
 				AccelerationFile = RessourceHelper.ReadStream(RessourceHelper.Namespace + "VACC." + row.Field<string>(".vaccfile")),
-				Missions = CreateMissions(grossVehicleMassRating, curbWeight, row).ToArray(),
+				Missions = CreateMissions(ref grossVehicleMassRating, curbWeight, row),
 				GrossVehicleMassRating = grossVehicleMassRating
 			};
 
 			return segment;
 		}
 
-		private static IEnumerable<Mission> CreateMissions(Kilogram grossVehicleMassRating, Kilogram curbWeight, DataRow row)
+		private static Mission[] CreateMissions(ref Kilogram grossVehicleWeight, Kilogram curbWeight, DataRow row)
 		{
 			var trailerOnlyInLongHaul = row.Field<string>("vehiclecategory") == VehicleCategory.RigidTruck.ToString() &&
-										row.Field<string>("traileraxles-longhaul") != "-" &&
-										row.Field<string>("traileraxles-other") == "-";
+										!string.IsNullOrWhiteSpace(row.Field<string>("traileraxles-longhaul")) &&
+										string.IsNullOrWhiteSpace(row.Field<string>("traileraxles-other"));
 
 			var missionTypes = Enum.GetValues(typeof(MissionType)).Cast<MissionType>();
+			var missions = new List<Mission>();
 			foreach (var missionType in missionTypes.Where(m => row.Field<string>(m.ToString()) == "1")) {
 				string vcdvField;
 				string axleField;
@@ -137,28 +138,42 @@ namespace TUGraz.VectoCore.Models.Declaration
 				var count = 0;
 				var weightPercent = 0.0;
 
-				if (trailerAxles[0] != "-") {
+				if (!string.IsNullOrWhiteSpace(trailerAxles[0])) {
 					count = int.Parse(trailerAxles[1]);
 					weightPercent = trailerAxles[0].ToDouble();
 				}
-				mission.TrailerAxleWeightDistribution = Enumerable.Repeat(weightPercent / count / 100.0, count).ToArray();
-
+				mission.TrailerAxleWeightDistribution = (weightPercent / 100.0 / count).Repeat(count).ToArray();
+				mission.TrailerGrossVehicleMassRating = 0.SI<Kilogram>();
 				mission.MinLoad = 0.SI<Kilogram>();
-				mission.MaxLoad = grossVehicleMassRating - mission.MassExtra - curbWeight;
+				mission.MaxLoad = grossVehicleWeight - curbWeight - mission.MassExtra;
 
 				var refLoadField = row.Field<string>("payload-" + missionType.ToString().ToLower());
-				if (refLoadField == "R(pc)")
-					mission.RefLoad = VectoMath.Min(DeclarationData.PayloadForGVW(grossVehicleMassRating, missionType), mission.MaxLoad);
-				else if (refLoadField == "R(pc)+T") {
-					// R(pc) + Trailer 3.4t + Loading Trailer 5.3t
-					mission.RefLoad = VectoMath.Min(DeclarationData.PayloadForGVW(grossVehicleMassRating, missionType), mission.MaxLoad);
-					mission.RefLoad += 3400.SI<Kilogram>() + 5300.SI<Kilogram>();
-				} else {
-					mission.RefLoad = VectoMath.Min(refLoadField.ToDouble().SI<Kilogram>(), mission.MaxLoad);
-				}
+				switch (refLoadField) {
+					case "pc(R)":
+						mission.RefLoad = VectoMath.Min(DeclarationData.PayloadForGVW(grossVehicleWeight, missionType), mission.MaxLoad);
+						break;
+					case "pc(R)+T":
+						// VECTO-262
+						var trailerCurbWeight = DeclarationData.StandardWeights.Lookup(row.Field<string>("Trailer")).CurbWeight;
+						mission.TrailerGrossVehicleMassRating =
+							DeclarationData.StandardWeights.Lookup(row.Field<string>("Trailer")).GrossVehicleWeight;
+						mission.MaxLoad += mission.TrailerGrossVehicleMassRating - trailerCurbWeight;
 
-				yield return mission;
+						// mass extra doesn't need to be changed: trailer curb weight already included in segment table!
+						//mission.MassExtra += trailerCurbWeight;
+
+						var payload = DeclarationData.PayloadForGVW(grossVehicleWeight, missionType) +
+									(mission.TrailerGrossVehicleMassRating - trailerCurbWeight) * 3 / 4;
+
+						mission.RefLoad = VectoMath.Min(payload, mission.MaxLoad);
+						break;
+					default:
+						mission.RefLoad = VectoMath.Min(refLoadField.ToDouble().SI<Kilogram>(), mission.MaxLoad);
+						break;
+				}
+				missions.Add(mission);
 			}
+			return missions.ToArray();
 		}
 	}
 }
