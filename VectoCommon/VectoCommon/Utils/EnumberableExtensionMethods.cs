@@ -225,5 +225,10 @@ namespace TUGraz.VectoCommon.Utils
 				}
 			}
 		}
+
+		public static IEnumerable<T> Repeat<T>(this T element, int count)
+		{
+			return Enumerable.Repeat(element, count);
+		}
 	}
 }
