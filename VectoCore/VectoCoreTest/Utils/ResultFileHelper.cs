@@ -35,6 +35,7 @@ using System.IO;
 using System.Linq;
 using Microsoft.VisualStudio.TestTools.UnitTesting;
 using TUGraz.VectoCommon.Utils;
+using TUGraz.VectoCore.Models.Simulation.Data;
 using TUGraz.VectoCore.Utils;
 
 namespace TUGraz.VectoCore.Tests.Utils
@@ -57,6 +58,15 @@ namespace TUGraz.VectoCore.Tests.Utils
 
 				var expected = VectoCSVFile.Read(result.expectedFile);
 				var actual = VectoCSVFile.Read(result.actualFile);
+
+				Assert.IsTrue(
+					actual.Rows.Cast<DataRow>()
+						.All(r => r.ParseDouble(ModalResultField.v_act.GetShortCaption()).IsGreaterOrEqual(0)),
+					"v_act must not be negative.");
+				Assert.IsTrue(
+					actual.Rows.Cast<DataRow>()
+						.All(r => r.ParseDouble(ModalResultField.v_targ.GetShortCaption()).IsGreaterOrEqual(0)),
+					"v_targ must not be negative.");
 
 				if (testRowcount) {
 					Assert.AreEqual(expected.Rows.Count, actual.Rows.Count,
