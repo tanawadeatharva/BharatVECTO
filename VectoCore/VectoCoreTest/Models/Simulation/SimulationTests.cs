@@ -62,21 +62,21 @@ namespace TUGraz.VectoCore.Tests.Models.Simulation
 		public void TestEngineOnly_JobRun()
 		{
 			var actual = @"TestData\Jobs\EngineOnlyJob_Coach Engine Only short.vmod";
-			var expected = @"TestData\Results\EngineOnlyCycles\24tCoach_EngineOnly short.vmod";
+			var expected = @"TestData\Results\EngineOnlyCycles\EngineOnlyJob_Coach Engine Only short.vmod";
 
 			var job = CreateRun(actual);
 			job.Run();
 
 			Assert.IsTrue(job.FinishedWithoutErrors);
 
-			ResultFileHelper.TestModFile(expected, actual);
+			ResultFileHelper.TestModFile(expected, actual, testVelocity: false);
 		}
 
 		[TestMethod]
 		public void TestEngineOnly_SimulatorRun()
 		{
 			var actual = @"TestData\Jobs\EngineOnlyJob_Coach Engine Only short.vmod";
-			var expected = @"TestData\Results\EngineOnlyCycles\24tCoach_EngineOnly short.vmod";
+			var expected = @"TestData\Results\EngineOnlyCycles\EngineOnlyJob_Coach Engine Only short.vmod";
 
 			var run = CreateRun(actual);
 
@@ -89,7 +89,7 @@ namespace TUGraz.VectoCore.Tests.Models.Simulation
 				Assert.IsTrue(r.Run.FinishedWithoutErrors, string.Format("{0}", r.ExecException));
 			}
 
-			ResultFileHelper.TestModFile(expected, actual);
+			ResultFileHelper.TestModFile(expected, actual, testVelocity: false);
 		}
 
 		public IVectoRun CreateRun(string resultFileName)
@@ -130,14 +130,14 @@ namespace TUGraz.VectoCore.Tests.Models.Simulation
 				@"TestData\Jobs\24t Coach EngineOnly.vsum");
 
 			ResultFileHelper.TestModFiles(new[] {
-				@"TestData\Results\EngineOnlyCycles\24t Coach_Engine Only1.vmod",
-				@"TestData\Results\EngineOnlyCycles\24t Coach_Engine Only2.vmod",
-				@"TestData\Results\EngineOnlyCycles\24t Coach_Engine Only3.vmod"
+				@"TestData\Results\EngineOnlyCycles\24t Coach EngineOnly_Engine Only1.vmod",
+				@"TestData\Results\EngineOnlyCycles\24t Coach EngineOnly_Engine Only2.vmod",
+				@"TestData\Results\EngineOnlyCycles\24t Coach EngineOnly_Engine Only3.vmod"
 			}, new[] {
 				@"TestData\Jobs\24t Coach EngineOnly_Engine Only1.vmod",
 				@"TestData\Jobs\24t Coach EngineOnly_Engine Only2.vmod",
 				@"TestData\Jobs\24t Coach EngineOnly_Engine Only3.vmod"
-			})
+			}, testVelocity: false)
 				;
 		}
 	}
