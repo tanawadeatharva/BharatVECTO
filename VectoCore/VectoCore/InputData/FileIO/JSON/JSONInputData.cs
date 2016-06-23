@@ -531,6 +531,9 @@ namespace TUGraz.VectoCore.InputData.FileIO.JSON
 					Type = aux.GetEx<string>("Type"),
 					Technology = aux.GetEx<string>("Technology")
 				};
+				if (aux["TechList"] != null) {
+					auxData.TechList = aux["TechList"].Select(x => x.ToString()).ToList(); //  .Select(x => x.ToString).ToArray();
+				}
 				var auxFile = aux["Path"];
 				retVal.Add(auxData);
 
