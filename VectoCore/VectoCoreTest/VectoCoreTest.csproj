@@ -1288,6 +1288,15 @@
     <None Include="TestData\Results\EngineFullLoadJumps\EngineFLJ_1000rpm_10Hz_IncPT1.csv">
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
     </None>
+    <None Include="TestData\Results\EngineOnlyCycles\24t Coach EngineOnly_Engine Only1.vmod">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </None>
+    <None Include="TestData\Results\EngineOnlyCycles\24t Coach EngineOnly_Engine Only2.vmod">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </None>
+    <None Include="TestData\Results\EngineOnlyCycles\24t Coach EngineOnly_Engine Only3.vmod">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </None>
     <None Include="TestData\Results\EngineOnlyCycles\40t_Long_Haul_Truck.vsum">
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
     </None>
@@ -1315,15 +1324,6 @@
     <None Include="TestData\Results\EngineOnlyCycles\24t Coach.vsum.json">
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
     </None>
-    <None Include="TestData\Results\EngineOnlyCycles\24t Coach_Engine Only1.vmod">
-      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
-    </None>
-    <None Include="TestData\Results\EngineOnlyCycles\24t Coach_Engine Only2.vmod">
-      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
-    </None>
-    <None Include="TestData\Results\EngineOnlyCycles\24t Coach_Engine Only3.vmod">
-      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
-    </None>
     <None Include="TestData\Cycles\Engine Only1.vdri">
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
     </None>
@@ -1333,13 +1333,13 @@
     <None Include="TestData\Cycles\Engine Only3.vdri">
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
     </None>
-    <None Include="TestData\Results\EngineOnlyCycles\24tCoach_EngineOnly short.vmod">
-      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
-    </None>
     <None Include="TestData\Results\EngineOnlyCycles\24tCoach_EngineOnlyPaux.vmod">
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
     </None>
     <None Include="TestData\Results\EngineOnlyCycles\AuxWriteModFileSumFile.vsum">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </None>
+    <None Include="TestData\Results\EngineOnlyCycles\EngineOnlyJob_Coach Engine Only short.vmod">
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
     </None>
     <None Include="TestData\Results\Integration\24t Coach_Cycle_Drive_50_Dec_Increasing_Slope.vmod">
