@@ -420,6 +420,9 @@ namespace TUGraz.VectoCore.Models.SimulationComponent.Impl
 			var deltaT = RightSample.Current.Time - LeftSample.Current.Time;
 			var acceleration = deltaV / deltaT;
 			var gradient = LeftSample.Current.RoadGradient;
+			DriverBehavior = acceleration < 0
+				? DriverBehavior = DrivingBehavior.Braking
+				: DriverBehavior = DrivingBehavior.Driving;
 
 			IResponse response;
 			var responseCount = 0;
@@ -430,13 +433,16 @@ namespace TUGraz.VectoCore.Models.SimulationComponent.Impl
 					.Case<ResponseGearShift>(() => response = NextComponent.Request(absTime, dt, acceleration, gradient))
 					.Case<ResponseUnderload>(r => {
 						DataBus.BrakePower = SearchAlgorithm.Search(DataBus.BrakePower, r.Delta, -r.Delta,
-							getYValue: result => ((ResponseDryRun)result).DeltaDragLoad,
+							getYValue: result => RightSample.Current.Gear == 0
+								? ((ResponseDryRun)result).GearboxPowerRequest
+								: ((ResponseDryRun)result).DeltaDragLoad,
 							evaluateFunction: x => {
 								DataBus.BrakePower = x;
 								return NextComponent.Request(absTime, dt, acceleration, gradient, true);
 							},
-							criterion: y =>
-								((ResponseDryRun)y).DeltaDragLoad.Value());
+							criterion: y => RightSample.Current.Gear == 0
+								? ((ResponseDryRun)y).GearboxPowerRequest.Value()
+								: ((ResponseDryRun)y).DeltaDragLoad.Value());
 						Log.Info(
 							"Found operating point for braking. absTime: {0}, dt: {1}, acceleration: {2}, gradient: {3}, BrakePower: {4}",
 							absTime, dt, acceleration, gradient, DataBus.BrakePower);
@@ -450,7 +456,8 @@ namespace TUGraz.VectoCore.Models.SimulationComponent.Impl
 							criterion:
 								y => ((ResponseDryRun)y).DeltaFullLoad.Value());
 						Log.Info(
-							"Found operating point for driver acceleration. absTime: {0}, dt: {1}, acceleration: {2}, gradient: {3}", absTime,
+							"Found operating point for driver acceleration. absTime: {0}, dt: {1}, acceleration: {2}, gradient: {3}",
+							absTime,
 							dt, acceleration, gradient);
 						response = NextComponent.Request(absTime, dt, acceleration, gradient);
 					})
@@ -572,7 +579,7 @@ namespace TUGraz.VectoCore.Models.SimulationComponent.Impl
 		{
 			container[ModalResultField.dist] = CurrentState.Distance;
 			container[ModalResultField.simulationDistance] = CurrentState.SimulationDistance;
-			container[ModalResultField.v_targ] = CurrentState.VehicleSpeed;
+			container[ModalResultField.v_targ] = LeftSample.Current.VehicleTargetSpeed;
 			container[ModalResultField.grad] = LeftSample.Current.RoadGradientPercent;
 			container[ModalResultField.altitude] = LeftSample.Current.Altitude;
 			container[ModalResultField.acc] = CurrentState.Acceleration;
@@ -583,10 +590,7 @@ namespace TUGraz.VectoCore.Models.SimulationComponent.Impl
 			get { return !_isInitializing && LeftSample.Current.VehicleTargetSpeed.IsEqual(0); }
 		}
 
-		public DrivingBehavior DriverBehavior
-		{
-			get { return DrivingBehavior.Driving; }
-		}
+		public DrivingBehavior DriverBehavior { get; internal set; }
 
 		public Meter Distance
 		{
