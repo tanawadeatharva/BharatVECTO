@@ -35,6 +35,7 @@ using System.Diagnostics;
 using System.IO;
 using System.Linq;
 using System.Threading;
+using System.Windows.Forms;
 using TUGraz.VectoCore.Configuration;
 using TUGraz.VectoCommon.Exceptions;
 using TUGraz.VectoCommon.Models;
@@ -217,22 +218,20 @@ namespace TUGraz.VectoCore.Utils
 					var y2 = getYValue(result).Value();
 					debug.Add(new { x = x2, y = y2, delta = criterion(result), result });
 
-					try {
-						var k = (y2 - y1) / (x2 - x1);
-						var d = y2 - k * x2;
-						x1 = x2;
-						x2 = -d / k;
-					} catch (VectoException ex) {
-						if (!(ex.InnerException is DivideByZeroException)) {
-							throw;
-						}
+					var k = (y2 - y1) / (x2 - x1);
+					var d = y2 - k * x2;
+					x1 = x2;
+					x2 = -d / k;
+					if (double.IsInfinity(x2) || double.IsNaN(x2)) {
 						debug.Add(new { x = x2, y = getYValue(result).Value(), delta = criterion(result), result });
 						LogManager.EnableLogging();
 						log.Debug("InterpolateSearch could not get more exact. Aborting after {0} function calls.", count);
 						LogManager.DisableLogging();
 						AppendDebug(debug);
 						//iterationCount += count;
-						return x2.SI<T>();
+						
+						//return x1.SI<T>();
+						throw new VectoSearchAbortedException("InterpolateLinearSearch");
 					}
 
 					result = evaluateFunction(x2.SI<T>());
