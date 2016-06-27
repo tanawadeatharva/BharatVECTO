@@ -89,7 +89,7 @@ namespace TUGraz.VectoCore.Models.SimulationComponent.Impl
 
 			var accelerationPower = maxEnginePower - gearboxLoss - axleLoss - airDragLoss - rollResistanceLoss - slopeLoss;
 
-			var acceleration = accelerationPower / DataBus.VehicleSpeed / (DataBus.VehicleMass + DataBus.ReducedMassWheels);
+			var acceleration = accelerationPower / DataBus.VehicleSpeed / (DataBus.TotalMass + DataBus.ReducedMassWheels);
 
 			return acceleration.Cast<MeterPerSquareSecond>();
 		}
