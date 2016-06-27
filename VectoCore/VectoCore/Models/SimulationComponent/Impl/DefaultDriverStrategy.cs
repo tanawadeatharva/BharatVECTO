@@ -631,15 +631,18 @@ namespace TUGraz.VectoCore.Models.SimulationComponent.Impl
 			var currentDistance = DataBus.Distance;
 
 			if (Phase == BrakingPhase.Coast) {
+				var brakingDistance = Driver.ComputeDecelerationDistance(DriverStrategy.BrakeTrigger.NextTargetSpeed) +
+									DefaultDriverStrategy.BrakingSafetyMargin;
+				DriverStrategy.BrakeTrigger.BrakingStartDistance = DriverStrategy.BrakeTrigger.TriggerDistance - brakingDistance;
+
 				var nextBrakeAction = DriverStrategy.GetNextDrivingAction(DataBus.Distance, ds);
 				if (nextBrakeAction != null && !DriverStrategy.BrakeTrigger.TriggerDistance.IsEqual(nextBrakeAction.TriggerDistance) &&
 					nextBrakeAction.BrakingStartDistance.IsSmaller( DriverStrategy.BrakeTrigger.BrakingStartDistance)) {
 					DriverStrategy.BrakeTrigger = nextBrakeAction;
+					Log.Debug("setting brake trigger to new trigger: trigger distance: {0}, start braking @ {1}", nextBrakeAction.TriggerDistance, nextBrakeAction.BrakingStartDistance);
 				}
-				var brakingDistance = Driver.ComputeDecelerationDistance(DriverStrategy.BrakeTrigger.NextTargetSpeed) +
-									DefaultDriverStrategy.BrakingSafetyMargin;
-				Log.Debug("breaking distance: {0}, start braking @ {1}", brakingDistance,
-					DriverStrategy.BrakeTrigger.TriggerDistance - brakingDistance);
+				
+				Log.Debug("start braking @ {0}", DriverStrategy.BrakeTrigger.TriggerDistance - brakingDistance);
 				var remainingDistanceToBrake = DriverStrategy.BrakeTrigger.TriggerDistance - brakingDistance - currentDistance;
 				var estimatedTimeInterval = remainingDistanceToBrake / DataBus.VehicleSpeed;
 				if (estimatedTimeInterval.IsSmaller(Constants.SimulationSettings.LowerBoundTimeInterval) ||
