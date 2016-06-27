@@ -75,7 +75,7 @@ Public Class cGBX
 	Private MyFileList As List(Of String)
 	Public SavedInDeclMode As Boolean
 	Public UpshiftMinAcceleration As Single
-	Public DownshiftAfterUpshift As String
+	Public DownshiftAfterUpshift As Single
 	Public UpshiftAfterDownshift As Single
 
 
