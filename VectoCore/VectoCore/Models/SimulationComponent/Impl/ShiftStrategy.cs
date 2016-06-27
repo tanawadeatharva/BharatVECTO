@@ -33,6 +33,7 @@ using System;
 using System.Drawing.Design;
 using TUGraz.VectoCommon.Exceptions;
 using TUGraz.VectoCommon.Utils;
+using TUGraz.VectoCore.Configuration;
 using TUGraz.VectoCore.Models.Simulation.DataBus;
 using TUGraz.VectoCore.Models.SimulationComponent.Data;
 using TUGraz.VectoCore.Models.SimulationComponent.Data.Gearbox;
@@ -77,7 +78,8 @@ namespace TUGraz.VectoCore.Models.SimulationComponent.Impl
 			var maxEnginePower = DataBus.EngineStationaryFullPower(nextEngineSpeed);
 
 			var avgSlope =
-				((DataBus.CycleLookAhead(100.SI<Meter>()).Altitude - DataBus.Altitude) / 100.SI<Meter>()).Value().SI<Radian>();
+				((DataBus.CycleLookAhead(Constants.SimulationSettings.GearboxLookaheadForAccelerationEstimation).Altitude -
+				DataBus.Altitude) / Constants.SimulationSettings.GearboxLookaheadForAccelerationEstimation).Value().SI<Radian>();
 
 			var airDragLoss = DataBus.AirDragResistance(vehicleSpeed, vehicleSpeed) * DataBus.VehicleSpeed;
 			var rollResistanceLoss = DataBus.RollingResistance(avgSlope) * DataBus.VehicleSpeed;
