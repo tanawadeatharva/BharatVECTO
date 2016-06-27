@@ -401,12 +401,12 @@ namespace TUGraz.VectoCore.Models.SimulationComponent.Impl
 			var myIterator = CycleIntervalIterator.Clone();
 
 			if (absDistance > _data.Entries.Last().Distance) {
-				return InterpolateCycleEntry(absDistance, _data.Entries.Last());
+				return ExtrapolateCycleEntry(absDistance, _data.Entries.Last());
 			}
 			while (myIterator.RightSample.Distance < absDistance) {
 				myIterator.MoveNext();
 			}
-			;
+			
 			return InterpolateCycleEntry(absDistance, myIterator.RightSample);
 		}
 
@@ -417,6 +417,22 @@ namespace TUGraz.VectoCore.Models.SimulationComponent.Impl
 				Distance = absDistance,
 				Altitude = VectoMath.Interpolate(CurrentState.Distance, lookahead.Distance, CurrentState.Altitude,
 					lookahead.Altitude, absDistance)
+			};
+
+			retVal.RoadGradient =
+				((retVal.Altitude - CurrentState.Altitude) / (absDistance - CurrentState.Distance)).Value().SI<Radian>();
+
+			return retVal;
+		}
+
+		private DrivingCycleData.DrivingCycleEntry ExtrapolateCycleEntry(Meter absDistance,
+			DrivingCycleData.DrivingCycleEntry lookahead)
+		{
+			var retVal = new DrivingCycleData.DrivingCycleEntry(lookahead)
+			{
+				Distance = absDistance,
+				Altitude = lookahead.Altitude + lookahead.RoadGradient * (absDistance - lookahead.Distance),
+				//VectoMath.Interpolate(CurrentState.Distance, lookahead.Distance, CurrentState.Altitude,lookahead.Altitude, absDistance)
 			};
 
 			retVal.RoadGradient =
