@@ -9,6 +9,17 @@
 '
 ' See the LICENSE.txt for the specific language governing permissions and limitations.
 Imports System.Collections.Generic
+Imports System.Globalization
+Imports System.Linq
+Imports TUGraz.VectoCommon.InputData
+Imports TUGraz.VectoCommon.Utils
+Imports TUGraz.VectoCore.Configuration
+Imports TUGraz.VectoCore.InputData.Impl
+Imports TUGraz.VectoCore.InputData.Reader.DataObjectAdaper
+Imports TUGraz.VectoCore.Models.Declaration
+Imports TUGraz.VectoCore.Models.SimulationComponent.Data
+Imports TUGraz.VectoCore.Models.SimulationComponent.Data.Engine
+Imports TUGraz.VectoCore.Models.SimulationComponent.Data.Gearbox
 
 ''' <summary>
 ''' Gearbox Editor
@@ -206,7 +217,7 @@ Public Class F_GBX
 					Me.Close()
 					F_MAINForm.RbDecl.Checked = Not F_MAINForm.RbDecl.Checked
 					F_MAINForm.OpenVectoFile(file)
-				Case - 1
+				Case -1
 					Exit Sub
 				Case Else '0
 					'Continue...
@@ -799,8 +810,13 @@ Public Class F_GBX
 			MyChart.Series.Add(s)
 		End If
 
+		Dim vectoJob As cVECTO = New cVECTO() With {.FilePath = F_VECTO.VECTOfile}
+		Dim vectoOk As Boolean = vectoJob.ReadFile()
+		Dim vehicle As cVEH = New cVEH() With {.FilePath = vectoJob.PathVEH(False)}
+		Dim vehicleOk As Boolean = vehicle.ReadFile(False)
+
 		'Fld
-		If fldOK Then
+		If fldOK AndAlso vectoOk AndAlso vehicleOk Then
 
 			s = New System.Windows.Forms.DataVisualization.Charting.Series
 			s.Points.DataBindXY(FLD0.LnU, FLD0.LTq)
@@ -815,9 +831,20 @@ Public Class F_GBX
 
 					Shiftpoly = New cGBX.cShiftPolygon("", 0)
 					Shiftpoly.SetGenericShiftPoly(FLD0, F_VECTO.n_idle)
+					'Dim fullLoadCurve As FullLoadCurve = ConvertToFullLoadCurve(FLD0.LnU, FLD0.LTq)
+					Dim gears As IList(Of ITransmissionInputData) = ConvertToGears(LvGears.Items)
+					Dim engine As CombustionEngineData = ConvertToEngineData(FLD0, F_VECTO.n_idle)
+					Dim shiftLines As ShiftPolygon = DeclarationData.Gearbox.ComputeShiftPolygon(Gear - 1, engine.FullLoadCurve, gears,
+																								engine,
+																								Double.Parse(LvGears.Items(0).SubItems(2).Text, CultureInfo.InvariantCulture),
+																								(vehicle.rdyn / 1000.0).SI(Of Meter))
 
 					s = New System.Windows.Forms.DataVisualization.Charting.Series
-					s.Points.DataBindXY(Shiftpoly.gs_nUup, Shiftpoly.gs_TqUp)
+
+					's.Points.DataBindXY(Shiftpoly.gs_nUup, Shiftpoly.gs_TqUp)
+					s.Points.DataBindXY(
+						shiftLines.Upshift.Select(Function(pt) pt.AngularSpeed.Value() / Constants.RPMToRad).ToList(),
+						shiftLines.Upshift.Select(Function(pt) pt.Torque.Value()).ToList())
 					s.ChartType = DataVisualization.Charting.SeriesChartType.FastLine
 					s.BorderWidth = 2
 					s.Color = Color.DarkRed
@@ -826,7 +853,10 @@ Public Class F_GBX
 					MyChart.Series.Add(s)
 
 					s = New System.Windows.Forms.DataVisualization.Charting.Series
-					s.Points.DataBindXY(Shiftpoly.gs_nUdown, Shiftpoly.gs_TqDown)
+					's.Points.DataBindXY(Shiftpoly.gs_nUdown, Shiftpoly.gs_TqDown)
+					s.Points.DataBindXY(
+						shiftLines.Downshift.Select(Function(pt) pt.AngularSpeed.Value() / Constants.RPMToRad).ToList(),
+						shiftLines.Downshift.Select(Function(pt) pt.Torque.Value()).ToList())
 					s.ChartType = DataVisualization.Charting.SeriesChartType.FastLine
 					s.BorderWidth = 2
 					s.Color = Color.DarkRed
@@ -872,6 +902,38 @@ Public Class F_GBX
 
 		Me.PicBox.Image = img
 	End Sub
+
+	Private Function ConvertToEngineData(fld As cFLD, nIdle As Single) As CombustionEngineData
+
+		Dim retVal As CombustionEngineData = New CombustionEngineData()
+		retVal.FullLoadCurve = New EngineFullLoadCurve()
+		retVal.FullLoadCurve.FullLoadEntries = New List(Of FullLoadCurve.FullLoadCurveEntry)
+		For i As Integer = 0 To fld.LnU.Count - 1
+			retVal.FullLoadCurve.FullLoadEntries.Add(
+				New FullLoadCurve.FullLoadCurveEntry() _
+														With {.EngineSpeed = CType(fld.LnU(i), Double).RPMtoRad(),
+														.TorqueFullLoad = CType(fld.LTq(i), Double).SI(Of NewtonMeter)(),
+														.TorqueDrag = CType(fld.LTqDrag(i), Double).SI(Of NewtonMeter)()})
+		Next
+
+		retVal.IdleSpeed = CType(nIdle, Double).RPMtoRad()
+		Return retVal
+	End Function
+
+	Private Function ConvertToGears(gbx As ListView.ListViewItemCollection) As IList(Of ITransmissionInputData)
+		Dim retVal As List(Of ITransmissionInputData) = New List(Of ITransmissionInputData)
+		Dim value As Double
+
+		For i As Integer = 1 To gbx.Count - 1
+			If gbx(i).SubItems(2).Text <> "" AndAlso Double.TryParse(gbx(i).SubItems(2).Text, value) Then
+				retVal.Add(
+					New TransmissionInputData() _
+							With {.Ratio = Double.Parse(value, CultureInfo.InvariantCulture)})
+
+			End If
+		Next
+		Return retVal
+	End Function
 
 
 #Region "Torque Converter"

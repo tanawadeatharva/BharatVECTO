@@ -1,5 +1,34 @@
 #Changelog
 
+**VECTO 3.0.3**
+
+***Build 537 (2016-06-21)***
+
+- Main Updates
+    + Support for Advanced Auxiliaries (Ricardo) in Vecto 3.0.3 and Vecto 2.2
+    + Performance improvements
+    + Gearshift polygons according to WB 2016
+    + Revision of SUM-data file, changed order of columns, changed column headers
+- Bugfixes
+    + Delaunay Maps: additional check for duplicate input points
+    + Creation of PDF Report when running multiple jobs at once
+    + Sanity checks for gear shift lines
+    + Improvements DriverStrategy: handling special cases
+
+***Build 495 (2016-05-10)***
+
+- Main Updates
+    + Support for Advanced Auxiliaries (Ricardo) in Vecto 3.0.3 and Vecto 2.2
+    + Performance improvements
+    + Gearshift polygons according to WB 2016
+    + Revision of SUM-data file, changed order of columns, changed column headers
+- Bugfixes
+    + Delaunay Maps: additional check for duplicate input points
+    + Creation of PDF Report when running multiple jobs at once
+    + Sanity checks for gear shift lines
+    + Improvements DriverStrategy: handling special cases
+
+
 
 **VECTO 3.0.2**
 

@@ -43,5 +43,6 @@ using System.Runtime.InteropServices;
 [assembly: ComVisible(false)]
 [assembly: Guid("b843f4c2-660b-4a3e-a336-c1f9c20aa993")]
 [assembly: System.Runtime.CompilerServices.InternalsVisibleTo("VectoAPI")]
+[assembly: System.Runtime.CompilerServices.InternalsVisibleTo("VECTO")]
 [assembly: System.Runtime.CompilerServices.InternalsVisibleTo("VectoCoreTest")]
 [assembly: System.Runtime.CompilerServices.InternalsVisibleTo("VectoAPITest")]
