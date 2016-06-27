@@ -169,6 +169,7 @@
     <Compile Include="Models\SimulationComponent\IDriverStrategy.cs" />
     <Compile Include="Models\SimulationComponent\IDrivingCycleInfo.cs" />
     <Compile Include="Models\SimulationComponent\IEngineAuxPort.cs" />
+    <Compile Include="Models\SimulationComponent\Impl\AMTShiftStrategy.cs" />
     <Compile Include="Models\SimulationComponent\Impl\Brakes.cs" />
     <Compile Include="Models\SimulationComponent\Impl\BusAuxiliariesAdapter.cs" />
     <Compile Include="Models\SimulationComponent\Impl\CycleGearbox.cs" />
@@ -177,6 +178,7 @@
     <Compile Include="Models\SimulationComponent\Impl\EngineAuxiliary.cs" />
     <Compile Include="Models\SimulationComponent\Impl\EngineOnlyCombustionEngine.cs" />
     <Compile Include="Models\SimulationComponent\Impl\CycleClutch.cs" />
+    <Compile Include="Models\SimulationComponent\Impl\MTShiftStrategy.cs" />
     <Compile Include="Models\SimulationComponent\IShiftStrategy.cs" />
     <Compile Include="Models\SimulationComponent\Impl\ShiftStrategy.cs" />
     <Compile Include="Models\Simulation\DataBus\IAxlegearInfo.cs" />

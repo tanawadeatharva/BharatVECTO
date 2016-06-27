@@ -76,7 +76,10 @@ namespace TUGraz.VectoCore.Tests.Utils
 
 		public DrivingCycleData.DrivingCycleEntry CycleLookAhead(Meter distance)
 		{
-			throw new System.NotImplementedException();
+			return new DrivingCycleData.DrivingCycleEntry() {
+				RoadGradient = 0.SI<Radian>(),
+				Altitude = 0.SI<Meter>()
+			};
 		}
 
 		public Meter Altitude
