@@ -76,6 +76,12 @@ Public Class cDeclaration
 
 	Private VCDVvehClassParam As Dictionary(Of String, List(Of Single))
 
+	Public Const UpshiftAfterDownshiftDelay As Single = 10
+
+	Public Const DownshiftAfterUpshiftDelay As Single = 10
+
+	Public Const UpshiftMinAcceleration As Single = 0.1
+
 	Public Function VCDVparamPerCat(ByVal VehCat As tVehCat) As List(Of Single)
 		Select Case VehCat
 			Case tVehCat.Citybus, tVehCat.Coach, tVehCat.InterurbanBus
