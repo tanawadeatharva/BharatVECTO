@@ -167,6 +167,10 @@ namespace TUGraz.VectoCore.InputData.Reader.DataObjectAdaper
 					TorqueConverterActive = gear.TorqueConverterActive
 				});
 			}).ToDictionary(kv => kv.Key, kv => kv.Value);
+
+			retVal.DownshiftAfterUpshiftDelay = gearbox.DownshiftAferUpshiftDelay;
+			retVal.UpshiftAfterDownshiftDelay = gearbox.UpshiftAfterDownshiftDelay;
+			retVal.UpshiftMinAcceleration = gearbox.UpshiftMinAcceleration;
 			return retVal;
 		}
 

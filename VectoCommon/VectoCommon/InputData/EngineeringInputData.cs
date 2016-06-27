@@ -174,6 +174,10 @@ namespace TUGraz.VectoCommon.InputData
 		/// cf. VECTO Input Parameters.xlsx
 		/// </summary>
 		ITorqueConverterInputData TorqueConverter { get; }
+
+		Second DownshiftAferUpshiftDelay { get; }
+		Second UpshiftAfterDownshiftDelay { get; }
+		MeterPerSquareSecond UpshiftMinAcceleration { get; }
 	}
 
 	public interface IEngineEngineeringInputData : IEngineDeclarationInputData
