@@ -44,3 +44,15 @@ Early Upshift can be enabled in the [Gearbox File](#gearbox-file) (Allow shift-u
 
 
 ![](pics/GBX-Editor-shift2.svg)
+
+
+###Generic shift conditions (extra conditions)
+
+- Only allow upshifts if the vehicle is not decelerating **and** the calculated (estimated) acceleration in the next gear is higher than a certain value (default: 0.1 m/s²)
+- Do not allow downshifts with less time than a certain amount after an upshift (default 10 s)
+- Do not allow upshifts with less time than a certain amount after an downshift (default 10 s)
+
+Parameters in [Gearbox File](#gearbox-file):
+: - **DownshiftAferUpshiftDelay**
+- **UpshiftAfterDownshiftDelay**
+- **UpshiftMinAcceleration**
