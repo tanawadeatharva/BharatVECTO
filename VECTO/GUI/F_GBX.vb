@@ -29,7 +29,7 @@ Public Class F_GBX
 	Private GbxFile As String = ""
 	Public AutoSendTo As Boolean = False
 	Public JobDir As String = ""
-	Private GearDia As F_GBX_GearDlog
+	Private GearDia As GearboxGearDialog
 
 	Private Init As Boolean = False
 
@@ -46,7 +46,7 @@ Public Class F_GBX
 	Private Sub F_GBX_Load(sender As Object, e As System.EventArgs) Handles Me.Load
 
 		Init = False
-		GearDia = New F_GBX_GearDlog
+		GearDia = New GearboxGearDialog
 
 		Me.PnInertiaTI.Enabled = Not Cfg.DeclMode
 		Me.GrGearShift.Enabled = Not Cfg.DeclMode
@@ -86,6 +86,10 @@ Public Class F_GBX
 		Me.TbTqResvStart.Text = cDeclaration.TqResvStart
 		Me.TbStartSpeed.Text = cDeclaration.StartSpeed
 		Me.TbStartAcc.Text = cDeclaration.StartAcc
+
+		tbUpshiftMinAcceleration.Text = cDeclaration.UpshiftMinAcceleration
+		tbDownshiftAfterUpshift.Text = cDeclaration.DownshiftAfterUpshiftDelay
+		tbUpshiftAfterDownshift.Text = cDeclaration.UpshiftAfterDownshiftDelay
 
 		For Each lv0 In Me.LvGears.Items
 			lv0.SubItems(4).Text = "-"
@@ -269,6 +273,10 @@ Public Class F_GBX
 		Me.TbTCrefrpm.Text = GBX0.TCrefrpm
 		Me.TbTCinertia.Text = GBX0.TCinertia
 
+		tbUpshiftMinAcceleration.Text = GBX0.UpshiftMinAcceleration
+		tbDownshiftAfterUpshift.Text = GBX0.DownshiftAfterUpshift
+		tbUpshiftAfterDownshift.Text = GBX0.UpshiftAfterDownshift
+
 		If CType(GBX0.gs_Type, Integer) <= Me.CbGStype.Items.Count - 1 Then
 			Me.CbGStype.SelectedIndex = CType(GBX0.gs_Type, Integer)
 		Else
@@ -339,6 +347,10 @@ Public Class F_GBX
 		GBX0.TCfile = Me.TbTCfile.Text
 		GBX0.TCrefrpm = fTextboxToNumString(Me.TbTCrefrpm.Text)
 		GBX0.TCinertia = fTextboxToNumString(Me.TbTCinertia.Text)
+
+		GBX0.DownshiftAfterUpshift = fTextboxToNumString(tbDownshiftAfterUpshift.Text)
+		GBX0.UpshiftAfterDownshift = fTextboxToNumString(tbUpshiftAfterDownshift.Text)
+		GBX0.UpshiftMinAcceleration = fTextboxToNumString(tbUpshiftMinAcceleration.Text)
 
 		If Not GBX0.SaveFile Then
 			MsgBox("Cannot safe to " & file, MsgBoxStyle.Critical)
@@ -548,6 +560,12 @@ Public Class F_GBX
 				GearDia.TbFld.Text = ""
 			End If
 
+			If LvGears.SelectedItems(0).Index = 0 Then
+				GearDia.BtPrevious.Enabled = False
+			Else
+				GearDia.BtPrevious.Enabled = True
+			End If
+
 			If GearDia.ShowDialog = Windows.Forms.DialogResult.OK Then
 
 				If GearDia.ChIsTCgear.Checked Then
@@ -570,17 +588,21 @@ Public Class F_GBX
 
 			Else
 
-				If Me.LvGears.SelectedItems(0).SubItems(2).Text = "" Then RemoveGear(True)
+				If LvGears.SelectedItems(0).SubItems(2).Text = "" Then RemoveGear(True)
 
 			End If
 
 			If GearDia.NextGear Then
-				If Me.LvGears.Items.Count - 1 = Me.LvGears.SelectedIndices(0) Then AddGear()
+				If LvGears.Items.Count - 1 = LvGears.SelectedIndices(0) Then AddGear()
 
-				Me.LvGears.Items(Me.LvGears.SelectedIndices(0) + 1).Selected = True
+				LvGears.Items(LvGears.SelectedIndices(0) + 1).Selected = True
 			End If
 
-		Loop Until Not GearDia.NextGear
+			If GearDia.PreviousGear AndAlso LvGears.SelectedIndices(0) > 0 Then
+				LvGears.Items(LvGears.SelectedIndices(0) - 1).Selected = True
+			End If
+
+		Loop Until Not (GearDia.NextGear OrElse GearDia.PreviousGear)
 	End Sub
 
 	'Add Gear
@@ -970,4 +992,15 @@ Public Class F_GBX
 
 
 #End Region
+
+	Private Sub GroupBox1_Enter(sender As Object, e As EventArgs) Handles GroupBox1.Enter
+	End Sub
+
+	Public Sub New()
+
+		' Dieser Aufruf ist für den Designer erforderlich.
+		InitializeComponent()
+
+		' Fügen Sie Initialisierungen nach dem InitializeComponent()-Aufruf hinzu.
+	End Sub
 End Class

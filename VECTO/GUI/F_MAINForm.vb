@@ -30,18 +30,17 @@
 '
 
 Imports System.Collections.Generic
+Imports System.Collections.ObjectModel
 Imports System.ComponentModel
+Imports System.Globalization
 Imports System.IO
 Imports System.Linq
 Imports System.Reflection
 Imports TUGraz.VectoCore.Models.Simulation.Impl
-Imports TUGraz.VectoCore.InputData
 Imports TUGraz.VectoCore.InputData.FileIO.JSON
 Imports System.Text
+Imports System.Text.RegularExpressions
 Imports System.Threading
-Imports NLog
-Imports NLog.Config
-Imports NLog.Targets
 Imports TUGraz.VectoCommon.InputData
 Imports TUGraz.VectoCommon.Models
 Imports TUGraz.VectoCommon.Utils
@@ -54,7 +53,7 @@ Imports TUGraz.VectoCore.Utils
 ''' </summary>
 ''' <remarks></remarks>
 
-	Public Class F_MAINForm
+Public Class F_MAINForm
 	Private JobListView As cFileListView
 	Private CycleListView As cFileListView
 
@@ -87,7 +86,7 @@ Imports TUGraz.VectoCore.Utils
 
 #Region "SLEEP Control - Prevent sleep while VECTO is running"
 
-	Private Declare Function SetThreadExecutionState Lib "kernel32" (ByVal esFlags As Long) As Long
+	Private Declare Function SetThreadExecutionState Lib "kernel32" (esFlags As Long) As Long
 
 	Private Sub AllowSleepOFF()
 #If Not PLATFORM = "x86" Then
@@ -117,7 +116,7 @@ Imports TUGraz.VectoCore.Utils
 	Private Sub FB_Initialize()
 		FB_Init = False
 		Try
-			VECTO_Global.COREvers = Assembly.LoadFrom("VectoCore.dll").GetName().Version.ToString()
+			COREvers = Assembly.LoadFrom("VectoCore.dll").GetName().Version.ToString()
 		Catch ex As Exception
 			LogFile.WriteToLog(tMsgID.Err, ex.StackTrace)
 		End Try
@@ -139,6 +138,10 @@ Imports TUGraz.VectoCore.Utils
 		fbTLM = New cFileBrowser("vtlm")
 		fbTCC = New cFileBrowser("vtcc")
 		fbCDx = New cFileBrowser("vcdx")
+		fbDfVelocityDrop = New cFileBrowser("DfVelocityDrop")
+		fbDfTargetSpeed = New cFileBrowser("DfTargetSpeed")
+		fbDfVelocityDrop.Extensions = New String() {"csv"}
+		fbDfTargetSpeed.Extensions = New String() {"csv"}
 
 		fbVMOD = New cFileBrowser("vmod")
 
@@ -199,20 +202,20 @@ Imports TUGraz.VectoCore.Utils
 		End If
 
 		'Delete GENlist-Selection
-		Me.LvGEN.SelectedItems.Clear()
+		LvGEN.SelectedItems.Clear()
 
 		'If more than 100 calculations, ask whether to write by-second results
 		If _
-			Cfg.BatchMode And ((Me.LvGEN.CheckedItems.Count) * (Me.LvDRI.CheckedItems.Count) > 100) And
-			Me.ChBoxModOut.Checked _
+			Cfg.BatchMode And ((LvGEN.CheckedItems.Count) * (LvDRI.CheckedItems.Count) > 100) And
+			ChBoxModOut.Checked _
 			Then
 			Select Case _
 				MsgBox(
 					"You are about to run Batch Mode with " &
-					(Me.LvGEN.CheckedItems.Count) * (Me.LvDRI.CheckedItems.Count) &
+					(LvGEN.CheckedItems.Count) * (LvDRI.CheckedItems.Count) &
 					" calculations!" & ChrW(10) & "Do you still want to write modal results?", MsgBoxStyle.YesNoCancel)
 				Case MsgBoxResult.No
-					Me.ChBoxModOut.Checked = False
+					ChBoxModOut.Checked = False
 				Case MsgBoxResult.Cancel
 					GUImsg(tMsgID.Normal, "Aborted by User")
 					Exit Sub
@@ -254,32 +257,32 @@ Imports TUGraz.VectoCore.Utils
 	End Sub
 
 	'Lock certain GUI elements while VECTO is running
-	Private Sub LockGUI(ByVal Lock As Boolean)
+	Private Sub LockGUI(Lock As Boolean)
 		GUIlocked = Lock
 
-		Me.PanelOptAllg.Enabled = Not Lock
-		Me.GrBoxSTD.Enabled = Not Lock
-		Me.GrBoxBATCH.Enabled = Not Lock
+		PanelOptAllg.Enabled = Not Lock
+		GrBoxSTD.Enabled = Not Lock
+		GrBoxBATCH.Enabled = Not Lock
 
-		Me.BtGENup.Enabled = Not Lock
-		Me.BtGENdown.Enabled = Not Lock
-		Me.ButtonGENadd.Enabled = Not Lock
-		Me.ButtonGENremove.Enabled = Not Lock
-		Me.LvGEN.LabelEdit = Not Lock
-		Me.ChBoxAllGEN.Enabled = Not Lock
+		BtGENup.Enabled = Not Lock
+		BtGENdown.Enabled = Not Lock
+		ButtonGENadd.Enabled = Not Lock
+		ButtonGENremove.Enabled = Not Lock
+		LvGEN.LabelEdit = Not Lock
+		ChBoxAllGEN.Enabled = Not Lock
 
-		Me.BtDRIup.Enabled = Not Lock
-		Me.BtDRIdown.Enabled = Not Lock
-		Me.ButtonDRIadd.Enabled = Not Lock
-		Me.ButtonDRIremove.Enabled = Not Lock
-		Me.LvDRI.LabelEdit = Not Lock
-		Me.ChBoxAllDRI.Enabled = Not Lock
+		BtDRIup.Enabled = Not Lock
+		BtDRIdown.Enabled = Not Lock
+		ButtonDRIadd.Enabled = Not Lock
+		ButtonDRIremove.Enabled = Not Lock
+		LvDRI.LabelEdit = Not Lock
+		ChBoxAllDRI.Enabled = Not Lock
 
 		Button1.Enabled = Not Lock
 		btStartV3.Enabled = Not Lock
 
 		If DEV.Enabled Then
-			Me.LvDEVoptions.Enabled = Not Lock
+			LvDEVoptions.Enabled = Not Lock
 		End If
 	End Sub
 
@@ -292,7 +295,7 @@ Imports TUGraz.VectoCore.Utils
 		CheckedItems.Clear()
 
 		x = -1
-		For Each LV0 In Me.LvGEN.CheckedItems
+		For Each LV0 In LvGEN.CheckedItems
 			x += 1
 			LV0.SubItems(1).Text = ""
 			CheckedItems.Add(LV0)
@@ -308,14 +311,14 @@ Imports TUGraz.VectoCore.Utils
 		JobCycleList.Clear()
 
 		If Cfg.BatchMode Then
-			For Each LV0 In Me.LvDRI.CheckedItems
+			For Each LV0 In LvDRI.CheckedItems
 				JobCycleList.Add(fFileRepl(LV0.SubItems(0).Text))
 			Next
 		End If
 	End Sub
 
 	'Job Launcher
-	Private Sub Job_Launcher(ByVal ProgOverallEnabled As Boolean)
+	Private Sub Job_Launcher(ProgOverallEnabled As Boolean)
 
 		If VECTOworker.IsBusy Then Exit Sub
 
@@ -323,7 +326,7 @@ Imports TUGraz.VectoCore.Utils
 		SetOptions()
 
 		'Save Config
-		Cfg.ConfigSAVE()
+		Cfg.Save()
 
 		If DEV.Enabled Then DEV.SaveToFile()
 
@@ -335,14 +338,14 @@ Imports TUGraz.VectoCore.Utils
 
 		'Button switch
 		Button1.Enabled = True
-		Me.Button1.Text = "STOP"
-		Me.Button1.Image = My.Resources.Stop_icon
+		Button1.Text = "STOP"
+		Button1.Image = My.Resources.Stop_icon
 
 		'ProgBars start
 		If ProgOverallEnabled Then
-			Me.ToolStripProgBarOverall.Value = 0
-			Me.ToolStripProgBarOverall.Style = ProgressBarStyle.Marquee
-			Me.ToolStripProgBarOverall.Visible = True
+			ToolStripProgBarOverall.Value = 0
+			ToolStripProgBarOverall.Style = ProgressBarStyle.Marquee
+			ToolStripProgBarOverall.Visible = True
 		End If
 
 		ProgBarCtrl.ProgJobInt = 0
@@ -354,9 +357,9 @@ Imports TUGraz.VectoCore.Utils
 
 	'Abort Job
 	Private Sub JobAbort()
-		Me.Button1.Enabled = False
-		Me.Button1.Text = "Aborting..."
-		Me.Button1.Image = My.Resources.Play_icon_gray
+		Button1.Enabled = False
+		Button1.Text = "Aborting..."
+		Button1.Image = My.Resources.Play_icon_gray
 		VECTOworker.CancelAsync()
 	End Sub
 
@@ -364,7 +367,7 @@ Imports TUGraz.VectoCore.Utils
 #Region "BackgroundWorker Events"
 
 	'DoWork - Start Calculations
-	Private Sub BackgroundWorker1_DoWork(ByVal sender As Object, ByVal e As System.ComponentModel.DoWorkEventArgs) _
+	Private Sub BackgroundWorker1_DoWork(sender As Object, e As DoWorkEventArgs) _
 		Handles BackgroundWorker1.DoWork
 
 		'Prevent SLEEP
@@ -372,7 +375,7 @@ Imports TUGraz.VectoCore.Utils
 
 		If SetCulture Then
 			Try
-				System.Threading.Thread.CurrentThread.CurrentCulture = New System.Globalization.CultureInfo("en-US")
+				Thread.CurrentThread.CurrentCulture = New CultureInfo("en-US")
 			Catch ex As Exception
 				GUImsg(tMsgID.Err, "Failed to set thread culture 'en-US'! Check system decimal- and group- separators!")
 			End Try
@@ -382,8 +385,8 @@ Imports TUGraz.VectoCore.Utils
 	End Sub
 
 	'Progress Report - Progressbar, Messages, etc.
-	Private Sub BackgroundWorker1_ProgressChanged(ByVal sender As Object,
-												ByVal e As System.ComponentModel.ProgressChangedEventArgs) _
+	Private Sub BackgroundWorker1_ProgressChanged(sender As Object,
+												e As ProgressChangedEventArgs) _
 		Handles BackgroundWorker1.ProgressChanged
 		Dim x As cWorkProg
 		x = e.UserState
@@ -396,7 +399,7 @@ Imports TUGraz.VectoCore.Utils
 				Status(e.UserState.Msg)
 
 			Case tWorkMsgType.ProgBars
-				Me.ToolStripProgBarOverall.Value = e.ProgressPercentage
+				ToolStripProgBarOverall.Value = e.ProgressPercentage
 				ProgSecStart()
 
 			Case tWorkMsgType.JobStatus
@@ -405,12 +408,12 @@ Imports TUGraz.VectoCore.Utils
 
 			Case tWorkMsgType.CycleStatus
 				Try
-					Me.LvDRI.CheckedItems(x.FileIndex).SubItems(1).Text = x.Msg
+					LvDRI.CheckedItems(x.FileIndex).SubItems(1).Text = x.Msg
 				Catch ex As Exception
 				End Try
 
 			Case tWorkMsgType.InitProgBar
-				Me.ToolStripProgBarOverall.Style = ProgressBarStyle.Continuous
+				ToolStripProgBarOverall.Style = ProgressBarStyle.Continuous
 
 			Case Else ' tWorkMsgType.Abort
 				JobAbort()
@@ -419,20 +422,20 @@ Imports TUGraz.VectoCore.Utils
 	End Sub
 
 	'Work completed
-	Private Sub BackgroundWorker1_RunWorkerCompleted(ByVal sender As Object,
-													ByVal e As System.ComponentModel.RunWorkerCompletedEventArgs) _
+	Private Sub BackgroundWorker1_RunWorkerCompleted(sender As Object,
+													e As RunWorkerCompletedEventArgs) _
 		Handles BackgroundWorker1.RunWorkerCompleted
 
 		Dim Result As tCalcResult
 
 		'Progbar reset
-		Me.ToolStripProgBarOverall.Visible = False
-		Me.ToolStripProgBarOverall.Style = ProgressBarStyle.Continuous
-		Me.ToolStripProgBarOverall.Value = 0
+		ToolStripProgBarOverall.Visible = False
+		ToolStripProgBarOverall.Style = ProgressBarStyle.Continuous
+		ToolStripProgBarOverall.Value = 0
 		ProgSecStop()
 
 		'So ListView-Item Colors (Warning = Yellow, etc..) are correctly visible
-		Me.LvGEN.SelectedIndices.Clear()
+		LvGEN.SelectedIndices.Clear()
 
 		Result = e.Result
 
@@ -441,25 +444,25 @@ Imports TUGraz.VectoCore.Utils
 			MsgBox("An Unexpected Error occurred!" & ChrW(10) & ChrW(10) &
 					e.Error.Message.ToString, MsgBoxStyle.Critical, "Unexpected Error")
 			LogFile.WriteToLog(tMsgID.Err, ">>>Unexpected Error:" & e.Error.ToString())
-			Me.Close()
+			Close()
 		End If
 
 		'Options enable / GUI reset
 		LockGUI(False)
-		Me.Button1.Text = "START V2.2"
-		Me.Button1.Image = My.Resources.Play_icon
+		Button1.Text = "START V2.2"
+		Button1.Image = My.Resources.Play_icon
 		Status(LastModeName & " Mode")
 
 		'Command Line Shutdown
-		If ComLineShutDown Then Me.Close()
+		If ComLineShutDown Then Close()
 
 		'Auto Shutdown
-		If Me.ChBoxAutoSD.Checked Then
-			Me.ChBoxAutoSD.Checked = False
+		If ChBoxAutoSD.Checked Then
+			ChBoxAutoSD.Checked = False
 			If Not Result = tCalcResult.Abort Then
 				If F_ShutDown.ShutDown Then
 					GUImsg(tMsgID.Warn, "Shutting down...")
-					Me.Close()
+					Close()
 				End If
 			End If
 		End If
@@ -475,7 +478,7 @@ Imports TUGraz.VectoCore.Utils
 #Region "Form Init/Close"
 
 	'Initialise
-	Private Sub Form1_Load(ByVal sender As Object, ByVal e As System.EventArgs) Handles Me.Load
+	Private Sub Form1_Load(sender As Object, e As EventArgs) Handles Me.Load
 		Dim x As Integer
 
 		GUIlocked = False
@@ -488,15 +491,15 @@ Imports TUGraz.VectoCore.Utils
 		CheckedItems = New List(Of ListViewItem)
 
 		'Load Tabs properly (otherwise problem with ListViews)
-		For x = 0 To Me.TabControl1.TabCount - 1
-			Me.TabControl1.TabPages(x).Show()
+		For x = 0 To TabControl1.TabCount - 1
+			TabControl1.TabPages(x).Show()
 		Next
 
 		CycleTabPageVisible = True
-		CycleTabPage = Me.TabPageDRI
+		CycleTabPage = TabPageDRI
 
-		DEVpage = Me.TabPageDEV
-		'Me.TabControl1.Controls.Remove(DEVpage)
+		DEVpage = TabPageDEV
+		'TabControl1.Controls.Remove(DEVpage)
 
 		LastModeName = ""
 
@@ -504,14 +507,14 @@ Imports TUGraz.VectoCore.Utils
 
 		FB_Initialize()
 
-		Me.Text = "VECTO " & VECTOvers & " / VectoCore " & COREvers
+		Text = "VECTO " & VECTOvers & " / VectoCore " & COREvers
 
 
 		'FileLists
 		JobListView = New cFileListView(MyConfPath & "joblist.txt")
-		JobListView.LVbox = Me.LvGEN
+		JobListView.LVbox = LvGEN
 		CycleListView = New cFileListView(MyConfPath & "cyclelist.txt")
-		CycleListView.LVbox = Me.LvDRI
+		CycleListView.LVbox = LvDRI
 
 		JobListView.LoadList()
 
@@ -519,12 +522,12 @@ Imports TUGraz.VectoCore.Utils
 		LoadOptions()
 
 		'Resize columns ... after Loading the @file-lists
-		Me.LvGEN.Columns(1).Width = -2
-		Me.LvDRI.Columns(1).Width = -2
-		Me.LvMsg.Columns(2).Width = -2
+		LvGEN.Columns(1).Width = -2
+		LvDRI.Columns(1).Width = -2
+		LvMsg.Columns(2).Width = -2
 
 		'Initialize BackgroundWorker
-		VECTOworker = Me.BackgroundWorker1
+		VECTOworker = BackgroundWorker1
 		VECTOworker.WorkerReportsProgress = True
 		VECTOworker.WorkerSupportsCancellation = True
 
@@ -554,7 +557,7 @@ Imports TUGraz.VectoCore.Utils
 			Else
 				MsgBox("Failed to create Activation File! Is Directory Read-Only?")
 			End If
-			Me.Close()
+			Close()
 		Else
 			GUImsg(tMsgID.Normal, "License File validated.")
 			If Lic.TimeWarn Then GUImsg(tMsgID.Warn, "License expiring date (y/m/d): " & Lic.ExpTime)
@@ -587,11 +590,11 @@ Imports TUGraz.VectoCore.Utils
 	Private Sub DeclOnOff()
 
 		If Cfg.DeclMode Then
-			Me.Text = "VECTO " & VECTOvers & " / VectoCore " & COREvers & " - Declaration Mode"
-			Me.CbBatch.Checked = False
+			Text = "VECTO " & VECTOvers & " / VectoCore " & COREvers & " - Declaration Mode"
+			CbBatch.Checked = False
 			Cfg.DeclInit()
 		Else
-			Me.Text = "VECTO " & VECTOvers & " / VectoCore " & COREvers
+			Text = "VECTO " & VECTOvers & " / VectoCore " & COREvers
 		End If
 
 		If Cfg.DeclMode Then
@@ -606,31 +609,31 @@ Imports TUGraz.VectoCore.Utils
 
 		If DEV.Enabled Then
 			If Not Cfg.DeclMode Then
-				If Not Me.TabControl1.TabPages.Contains(DEVpage) Then _
-					Me.TabControl1.TabPages.Insert(Me.TabControl1.TabPages.Count, DEVpage)
+				If Not TabControl1.TabPages.Contains(DEVpage) Then _
+					TabControl1.TabPages.Insert(TabControl1.TabPages.Count, DEVpage)
 				LoadDEVconfigs()
 			Else
-				If Me.TabControl1.TabPages.Contains(DEVpage) Then Me.TabControl1.Controls.Remove(DEVpage)
+				If TabControl1.TabPages.Contains(DEVpage) Then TabControl1.Controls.Remove(DEVpage)
 				DEV.SetDefault()
 			End If
 		End If
 
 		Status(LastModeName & " Mode")
 
-		Me.LoadOptions()
+		LoadOptions()
 
-		Me.LbDecl.Visible = Cfg.DeclMode
+		LbDecl.Visible = Cfg.DeclMode
 
-		Me.PnDeclOpt.Enabled = Not Cfg.DeclMode
+		PnDeclOpt.Enabled = Not Cfg.DeclMode
 	End Sub
 
 	'Shown Event (Form-Load finished) ... here StartUp Forms are loaded (DEV, GEN/ADV- Editor ..)
-	Private Sub F01_MAINForm_Shown(ByVal sender As Object, ByVal e As System.EventArgs) Handles Me.Shown
+	Private Sub F01_MAINForm_Shown(sender As Object, e As EventArgs) Handles Me.Shown
 		Dim fwelcome As F_Welcome
 
 		'DEV Form
 		'If DEV.Enabled And Not Cfg.DeclMode Then
-		'	Me.TabControl1.TabPages.Insert(Me.TabControl1.TabPages.Count, DEVpage)
+		'	TabControl1.TabPages.Insert(TabControl1.TabPages.Count, DEVpage)
 		'End If
 
 		'VECTO Init
@@ -649,7 +652,7 @@ Imports TUGraz.VectoCore.Utils
 	End Sub
 
 	'Open file
-	Private Sub CmdLineCtrl(ByVal ComLineArgs As System.Collections.ObjectModel.ReadOnlyCollection(Of String))
+	Private Sub CmdLineCtrl(ComLineArgs As ReadOnlyCollection(Of String))
 		Dim bBATCH As Boolean
 		Dim bRUN As Boolean
 		Dim x As Object
@@ -686,7 +689,7 @@ Imports TUGraz.VectoCore.Utils
 
 		'Mode switch and load Driving Cycles
 		If bBATCH Then
-			Me.CbBatch.Checked = True
+			CbBatch.Checked = True
 
 			If driFiles.Count > 0 Then
 				LvDRI.Items.Clear()
@@ -694,7 +697,7 @@ Imports TUGraz.VectoCore.Utils
 			End If
 
 		Else
-			Me.CbBatch.Checked = False
+			CbBatch.Checked = False
 		End If
 
 		'Load Vecto files or open editor (if only one file)
@@ -716,8 +719,7 @@ Imports TUGraz.VectoCore.Utils
 	End Sub
 
 	'Close
-	Private Sub F01_MAINForm_FormClosing(ByVal sender As Object, ByVal e As System.Windows.Forms.FormClosingEventArgs) _
-		Handles Me.FormClosing
+	Private Sub F01_MAINForm_FormClosing(sender As Object, e As FormClosingEventArgs) Handles Me.FormClosing
 
 		'Save File-Lists
 		SaveFileLists()
@@ -727,7 +729,7 @@ Imports TUGraz.VectoCore.Utils
 
 		'Config save
 		SetOptions()
-		Cfg.ConfigSAVE()
+		Cfg.Save()
 		If DEV.Enabled Then DEV.SaveToFile()
 
 		'File browser instances close
@@ -737,7 +739,7 @@ Imports TUGraz.VectoCore.Utils
 #End Region
 
 	'Open file - Job, vehicle, engine, gearbox or signature file
-	Public Sub OpenVectoFile(ByVal File As String)
+	Public Sub OpenVectoFile(File As String)
 
 		If Not IO.File.Exists(File) Then
 
@@ -789,30 +791,30 @@ Imports TUGraz.VectoCore.Utils
 
 #Region "Events"
 
-	Private Sub ButtonGENremove_Click(ByVal sender As System.Object, ByVal e As System.EventArgs) _
+	Private Sub ButtonGENremove_Click(sender As Object, e As EventArgs) _
 		Handles ButtonGENremove.Click
 		RemoveJobFile()
 	End Sub
 
-	Private Sub ButtonGENadd_Click(ByVal sender As System.Object, ByVal e As System.EventArgs) _
+	Private Sub ButtonGENadd_Click(sender As Object, e As EventArgs) _
 		Handles ButtonGENadd.Click
 		AddJobFile()
 	End Sub
 
-	Private Sub ButtonGENoptions_Click(ByVal sender As System.Object, ByVal e As System.EventArgs) _
+	Private Sub ButtonGENoptions_Click(sender As Object, e As EventArgs) _
 		Handles ButtonGENopt.Click
-		ConMenTarget = Me.LvGEN
+		ConMenTarget = LvGEN
 		ConMenTarJob = True
 
 		'Locked functions show/hide
-		Me.LoadListToolStripMenuItem.Enabled = Not GUIlocked
-		Me.LoadDefaultListToolStripMenuItem.Enabled = Not GUIlocked
-		Me.ClearListToolStripMenuItem.Enabled = Not GUIlocked
+		LoadListToolStripMenuItem.Enabled = Not GUIlocked
+		LoadDefaultListToolStripMenuItem.Enabled = Not GUIlocked
+		ClearListToolStripMenuItem.Enabled = Not GUIlocked
 
-		Me.ConMenFilelist.Show(Control.MousePosition)
+		ConMenFilelist.Show(MousePosition)
 	End Sub
 
-	Private Sub ListViewGEN_KeyDown(ByVal sender As Object, ByVal e As System.Windows.Forms.KeyEventArgs) _
+	Private Sub ListViewGEN_KeyDown(sender As Object, e As KeyEventArgs) _
 		Handles LvGEN.KeyDown
 		Select Case e.KeyCode
 			Case Keys.Delete, Keys.Back
@@ -822,14 +824,14 @@ Imports TUGraz.VectoCore.Utils
 		End Select
 	End Sub
 
-	Private Sub ListViewGEN_DoubleClick(ByVal sender As Object, ByVal e As System.EventArgs) Handles LvGEN.DoubleClick
-		If Me.LvGEN.SelectedItems.Count > 0 Then
-			Me.LvGEN.SelectedItems(0).Checked = Not Me.LvGEN.SelectedItems(0).Checked
+	Private Sub ListViewGEN_DoubleClick(sender As Object, e As EventArgs) Handles LvGEN.DoubleClick
+		If LvGEN.SelectedItems.Count > 0 Then
+			LvGEN.SelectedItems(0).Checked = Not LvGEN.SelectedItems(0).Checked
 			OpenJobFile()
 		End If
 	End Sub
 
-	Private Sub LvGEN_ItemChecked(sender As Object, e As System.Windows.Forms.ItemCheckedEventArgs) _
+	Private Sub LvGEN_ItemChecked(sender As Object, e As ItemCheckedEventArgs) _
 		Handles LvGEN.ItemChecked
 
 		If e.Item.Checked Then
@@ -842,50 +844,50 @@ Imports TUGraz.VectoCore.Utils
 		UpdateJobTabText()
 	End Sub
 
-	Private Sub ChBoxAllGEN_CheckedChanged(ByVal sender As System.Object, ByVal e As System.EventArgs) _
+	Private Sub ChBoxAllGEN_CheckedChanged(sender As Object, e As EventArgs) _
 		Handles ChBoxAllGEN.CheckedChanged
 
-		If GENcheckAllLock And Me.ChBoxAllGEN.CheckState = CheckState.Indeterminate Then Exit Sub
+		If GENcheckAllLock And ChBoxAllGEN.CheckState = CheckState.Indeterminate Then Exit Sub
 
-		CheckAllGEN(Me.ChBoxAllGEN.Checked)
+		CheckAllGEN(ChBoxAllGEN.Checked)
 	End Sub
 
-	Private Sub CheckAllGEN(ByVal Check As Boolean)
+	Private Sub CheckAllGEN(Check As Boolean)
 		Dim x As ListViewItem
 
 		CheckLock = True
-		Me.LvGEN.BeginUpdate()
+		LvGEN.BeginUpdate()
 
-		For Each x In Me.LvGEN.Items
+		For Each x In LvGEN.Items
 			x.Checked = Check
 		Next
 
-		Me.LvGEN.EndUpdate()
+		LvGEN.EndUpdate()
 		CheckLock = False
 
-		GENchecked = Me.LvGEN.CheckedItems.Count
+		GENchecked = LvGEN.CheckedItems.Count
 		UpdateJobTabText()
 	End Sub
 
-	Private Sub ListGEN_DragEnter(ByVal sender As Object, ByVal e As System.Windows.Forms.DragEventArgs) _
+	Private Sub ListGEN_DragEnter(sender As Object, e As DragEventArgs) _
 		Handles LvGEN.DragEnter
 		If (e.Data.GetDataPresent(DataFormats.FileDrop)) Then
 			e.Effect = DragDropEffects.Copy
 		End If
 	End Sub
 
-	Private Sub ListGEN_DragDrop(ByVal sender As Object, ByVal e As System.Windows.Forms.DragEventArgs) _
+	Private Sub ListGEN_DragDrop(sender As Object, e As DragEventArgs) _
 		Handles LvGEN.DragDrop
 		Dim f As String()
 		f = CType(e.Data.GetData(DataFormats.FileDrop), Array)
 		AddToJobListView(f)
 	End Sub
 
-	Private Sub BtGENup_Click(sender As System.Object, e As System.EventArgs) Handles BtGENup.Click
+	Private Sub BtGENup_Click(sender As Object, e As EventArgs) Handles BtGENup.Click
 		MoveItem(LvGEN, True)
 	End Sub
 
-	Private Sub BtGENdown_Click(sender As System.Object, e As System.EventArgs) Handles BtGENdown.Click
+	Private Sub BtGENdown_Click(sender As Object, e As EventArgs) Handles BtGENdown.Click
 		MoveItem(LvGEN, False)
 	End Sub
 
@@ -897,9 +899,9 @@ Imports TUGraz.VectoCore.Utils
 		Dim SelIx() As Integer
 		Dim i As Integer
 
-		If Me.LvGEN.SelectedItems.Count < 1 Then
-			If Me.LvGEN.Items.Count = 1 Then
-				Me.LvGEN.Items(0).Selected = True
+		If LvGEN.SelectedItems.Count < 1 Then
+			If LvGEN.Items.Count = 1 Then
+				LvGEN.Items(0).Selected = True
 			Else
 				Exit Sub
 			End If
@@ -950,17 +952,17 @@ Imports TUGraz.VectoCore.Utils
 	Private Sub OpenJobFile()
 		Dim f As String
 
-		If Me.LvGEN.SelectedItems.Count < 1 Then
-			If Me.LvGEN.Items.Count = 1 Then
-				Me.LvGEN.Items(0).Selected = True
+		If LvGEN.SelectedItems.Count < 1 Then
+			If LvGEN.Items.Count = 1 Then
+				LvGEN.Items(0).Selected = True
 			Else
 				Exit Sub
 			End If
 		End If
 
-		f = Me.LvGEN.SelectedItems(0).SubItems(0).Text
+		f = LvGEN.SelectedItems(0).SubItems(0).Text
 		f = fFileRepl(f)
-		If Not IO.File.Exists(f) Then
+		If Not File.Exists(f) Then
 			MsgBox(f & " not found!")
 		Else
 			OpenVECTOeditor(f)
@@ -968,7 +970,7 @@ Imports TUGraz.VectoCore.Utils
 	End Sub
 
 	'Add File to job listview (multiple files)
-	Private Sub AddToJobListView(ByVal Path As String(), Optional ByVal Txt As String = " ")
+	Private Sub AddToJobListView(Path As String(), Optional ByVal Txt As String = " ")
 		Dim pDim As Int16
 		Dim p As Int16
 		Dim f As Int16
@@ -983,16 +985,16 @@ Imports TUGraz.VectoCore.Utils
 		ReDim fList(0)	   'um Nullverweisausnahme-Warnung zu verhindern
 
 		'******************************************* Begin Update '*******************************************
-		Me.LvGEN.BeginUpdate()
+		LvGEN.BeginUpdate()
 		CheckLock = True
 
-		Me.LvGEN.SelectedIndices.Clear()
+		LvGEN.SelectedIndices.Clear()
 
 		If pDim = 0 Then
-			fListDim = Me.LvGEN.Items.Count - 1
+			fListDim = LvGEN.Items.Count - 1
 			ReDim fList(fListDim)
 			For f = 0 To fListDim
-				fList(f) = fFileRepl(Me.LvGEN.Items(f).SubItems(0).Text)
+				fList(f) = fFileRepl(LvGEN.Items(f).SubItems(0).Text)
 			Next
 		End If
 
@@ -1006,14 +1008,14 @@ Imports TUGraz.VectoCore.Utils
 					If UCase(Path(p)) = UCase(fList(f)) Then
 
 						'Status reset
-						Me.LvGEN.Items(f).SubItems(1).Text = Txt
-						Me.LvGEN.Items(f).BackColor = Color.FromKnownColor(KnownColor.Window)
-						Me.LvGEN.Items(f).ForeColor = Color.FromKnownColor(KnownColor.WindowText)
+						LvGEN.Items(f).SubItems(1).Text = Txt
+						LvGEN.Items(f).BackColor = Color.FromKnownColor(KnownColor.Window)
+						LvGEN.Items(f).ForeColor = Color.FromKnownColor(KnownColor.WindowText)
 
 						'Element auswählen und anhaken |@@| Element selection and hook
-						Me.LvGEN.Items(f).Selected = True
-						Me.LvGEN.Items(f).Checked = True
-						Me.LvGEN.Items(f).EnsureVisible()
+						LvGEN.Items(f).Selected = True
+						LvGEN.Items(f).Checked = True
+						LvGEN.Items(f).EnsureVisible()
 
 						GoTo lbFound
 					End If
@@ -1026,22 +1028,22 @@ Imports TUGraz.VectoCore.Utils
 			ListViewItem0.SubItems.Add(" ")
 			ListViewItem0.Checked = True
 			ListViewItem0.Selected = True
-			Me.LvGEN.Items.Add(ListViewItem0)
+			LvGEN.Items.Add(ListViewItem0)
 			ListViewItem0.EnsureVisible()
 lbFound:
 		Next
 
-		Me.LvGEN.EndUpdate()
+		LvGEN.EndUpdate()
 		CheckLock = False
 		'******************************************* End Update '*******************************************
 
 		'Number update
-		GENchecked = Me.LvGEN.CheckedItems.Count
+		GENchecked = LvGEN.CheckedItems.Count
 		UpdateJobTabText()
 	End Sub
 
 	'Add File to job listview (single file)
-	Public Sub AddToJobListView(ByVal Path As String, Optional ByVal Txt As String = " ")
+	Public Sub AddToJobListView(Path As String, Optional ByVal Txt As String = " ")
 		Dim p(0) As String
 		p(0) = Path
 		AddToJobListView(p, Txt)
@@ -1050,19 +1052,19 @@ lbFound:
 	'Update job files counter in tab titel
 	Private Sub UpdateJobTabText()
 		Dim c As Integer
-		c = Me.LvGEN.Items.Count
+		c = LvGEN.Items.Count
 
-		Me.TabPageGEN.Text = "Job Files ( " & GENchecked & " / " & c & " )"
-		'Me.TabPageGEN.Text = "Job Files (" & c & ")"
+		TabPageGEN.Text = "Job Files ( " & GENchecked & " / " & c & " )"
+		'TabPageGEN.Text = "Job Files (" & c & ")"
 
 		GENcheckAllLock = True
 
 		If GENchecked = 0 Then
-			Me.ChBoxAllGEN.CheckState = CheckState.Unchecked
+			ChBoxAllGEN.CheckState = CheckState.Unchecked
 		ElseIf GENchecked = c Then
-			Me.ChBoxAllGEN.CheckState = CheckState.Checked
+			ChBoxAllGEN.CheckState = CheckState.Checked
 		Else
-			Me.ChBoxAllGEN.CheckState = CheckState.Indeterminate
+			ChBoxAllGEN.CheckState = CheckState.Indeterminate
 		End If
 
 		GENcheckAllLock = False
@@ -1075,24 +1077,24 @@ lbFound:
 
 #Region "Events"
 
-	Private Sub ButtonDRIadd_Click(ByVal sender As System.Object, ByVal e As System.EventArgs) _
+	Private Sub ButtonDRIadd_Click(sender As Object, e As EventArgs) _
 		Handles ButtonDRIadd.Click
 		AddCycle()
 	End Sub
 
-	Private Sub ButtonDRIremove_Click(ByVal sender As System.Object, ByVal e As System.EventArgs) _
+	Private Sub ButtonDRIremove_Click(sender As Object, e As EventArgs) _
 		Handles ButtonDRIremove.Click
 		RemoveCycle()
 	End Sub
 
-	Private Sub ButtonDRIoptions_Click(ByVal sender As System.Object, ByVal e As System.EventArgs) _
+	Private Sub ButtonDRIoptions_Click(sender As Object, e As EventArgs) _
 		Handles ButtonDRIedit.Click
-		ConMenTarget = Me.LvDRI
+		ConMenTarget = LvDRI
 		ConMenTarJob = False
-		Me.ConMenFilelist.Show(Control.MousePosition)
+		ConMenFilelist.Show(MousePosition)
 	End Sub
 
-	Private Sub LvDRI_ItemChecked(sender As Object, e As System.Windows.Forms.ItemCheckedEventArgs) _
+	Private Sub LvDRI_ItemChecked(sender As Object, e As ItemCheckedEventArgs) _
 		Handles LvDRI.ItemChecked
 
 		If e.Item.Checked Then
@@ -1105,39 +1107,39 @@ lbFound:
 		UpdateCycleTabText()
 	End Sub
 
-	Private Sub ChBoxAllDRI_CheckedChanged(ByVal sender As System.Object, ByVal e As System.EventArgs) _
+	Private Sub ChBoxAllDRI_CheckedChanged(sender As Object, e As EventArgs) _
 		Handles ChBoxAllDRI.CheckedChanged
 		Dim Check As Boolean
 		Dim x As ListViewItem
 
-		If DRIcheckAllLock Or Me.ChBoxAllDRI.CheckState = CheckState.Indeterminate Then Exit Sub
+		If DRIcheckAllLock Or ChBoxAllDRI.CheckState = CheckState.Indeterminate Then Exit Sub
 
-		Check = Me.ChBoxAllDRI.Checked
+		Check = ChBoxAllDRI.Checked
 
 		CheckLock = True
-		Me.LvDRI.BeginUpdate()
+		LvDRI.BeginUpdate()
 
-		For Each x In Me.LvDRI.Items
+		For Each x In LvDRI.Items
 			x.Checked = Check
 		Next
 
-		Me.LvDRI.EndUpdate()
+		LvDRI.EndUpdate()
 		CheckLock = False
 
-		DRIchecked = Me.LvDRI.CheckedItems.Count
+		DRIchecked = LvDRI.CheckedItems.Count
 		UpdateCycleTabText()
 	End Sub
 
-	Private Sub ListViewDRI_DoubleClick(ByVal sender As Object, ByVal e As System.EventArgs) Handles LvDRI.DoubleClick
-		If Me.LvDRI.SelectedItems.Count > 0 Then
-			Me.LvDRI.SelectedItems(0).Checked = Not Me.LvDRI.SelectedItems(0).Checked
+	Private Sub ListViewDRI_DoubleClick(sender As Object, e As EventArgs) Handles LvDRI.DoubleClick
+		If LvDRI.SelectedItems.Count > 0 Then
+			LvDRI.SelectedItems(0).Checked = Not LvDRI.SelectedItems(0).Checked
 			OpenCycle()
 		Else
 			AddCycle()
 		End If
 	End Sub
 
-	Private Sub ListViewDRI_KeyDown(ByVal sender As Object, ByVal e As System.Windows.Forms.KeyEventArgs) _
+	Private Sub ListViewDRI_KeyDown(sender As Object, e As KeyEventArgs) _
 		Handles LvDRI.KeyDown
 		Select Case e.KeyCode
 			Case Keys.Delete, Keys.Back
@@ -1148,12 +1150,12 @@ lbFound:
 	End Sub
 
 	'Drag n' Drop
-	Private Sub ListDRI_DragEnter(ByVal sender As Object, ByVal e As System.Windows.Forms.DragEventArgs) _
+	Private Sub ListDRI_DragEnter(sender As Object, e As DragEventArgs) _
 		Handles LvDRI.DragEnter
 		If (e.Data.GetDataPresent(DataFormats.FileDrop)) Then e.Effect = DragDropEffects.Copy
 	End Sub
 
-	Private Sub ListDRI_DragDrop(ByVal sender As Object, ByVal e As System.Windows.Forms.DragEventArgs) _
+	Private Sub ListDRI_DragDrop(sender As Object, e As DragEventArgs) _
 		Handles LvDRI.DragDrop
 		Dim f As String()
 		f = CType(e.Data.GetData(DataFormats.FileDrop), Array)
@@ -1161,11 +1163,11 @@ lbFound:
 		If LvDRI.Items.Count > 0 Then LvDRI.Items(LvDRI.Items.Count - 1).Selected = True
 	End Sub
 
-	Private Sub BtDRIup_Click(sender As System.Object, e As System.EventArgs) Handles BtDRIup.Click
+	Private Sub BtDRIup_Click(sender As Object, e As EventArgs) Handles BtDRIup.Click
 		MoveItem(LvDRI, True)
 	End Sub
 
-	Private Sub BtDRIdown_Click(sender As System.Object, e As System.EventArgs) Handles BtDRIdown.Click
+	Private Sub BtDRIdown_Click(sender As Object, e As EventArgs) Handles BtDRIdown.Click
 		MoveItem(LvDRI, False)
 	End Sub
 
@@ -1177,9 +1179,9 @@ lbFound:
 		Dim SelIx() As Integer
 		Dim i As Integer
 
-		If Me.LvDRI.SelectedItems.Count < 1 Then
-			If Me.LvDRI.Items.Count = 1 Then
-				Me.LvDRI.Items(0).Selected = True
+		If LvDRI.SelectedItems.Count < 1 Then
+			If LvDRI.Items.Count = 1 Then
+				LvDRI.Items(0).Selected = True
 			Else
 				Exit Sub
 			End If
@@ -1221,49 +1223,49 @@ lbFound:
 	'Open cycle in list
 	Private Sub OpenCycle()
 
-		If Me.LvDRI.SelectedItems.Count < 1 Then
-			If Me.LvDRI.Items.Count = 1 Then
-				Me.LvDRI.Items(0).Selected = True
+		If LvDRI.SelectedItems.Count < 1 Then
+			If LvDRI.Items.Count = 1 Then
+				LvDRI.Items(0).Selected = True
 			Else
 				Exit Sub
 			End If
 		End If
 
-		OpenFiles(fFileRepl(Me.LvDRI.SelectedItems(0).SubItems(0).Text))
+		OpenFiles(fFileRepl(LvDRI.SelectedItems(0).SubItems(0).Text))
 	End Sub
 
 	'Add File to cycle listview (multiple files)
-	Private Sub AddToCycleListView(ByVal Path As String())
+	Private Sub AddToCycleListView(Path As String())
 		Dim pDim As Int16
 		Dim p As Int16
 		Dim ListViewItem0 As ListViewItem
 
 		pDim = UBound(Path)
 
-		Me.LvDRI.BeginUpdate()
+		LvDRI.BeginUpdate()
 		CheckLock = True
 
 		'Mode switch if necessary
-		If Not Me.CbBatch.Checked Then Me.CbBatch.Checked = True
+		If Not CbBatch.Checked Then CbBatch.Checked = True
 
 		For p = 0 To pDim
 			ListViewItem0 = New ListViewItem(Path(p))	'fFileWD(Path(p)))
 			ListViewItem0.SubItems.Add(" ")
 			ListViewItem0.Checked = True
-			Me.LvDRI.Items.Add(ListViewItem0)
+			LvDRI.Items.Add(ListViewItem0)
 lbFound:
 		Next
 
-		Me.LvDRI.EndUpdate()
+		LvDRI.EndUpdate()
 		CheckLock = False
 
 		'Number update
-		DRIchecked = Me.LvDRI.CheckedItems.Count
+		DRIchecked = LvDRI.CheckedItems.Count
 		UpdateCycleTabText()
 	End Sub
 
 	'Add File to cycle listview (single file)
-	Private Sub AddToCycleListView(ByVal Path As String)
+	Private Sub AddToCycleListView(Path As String)
 		Dim p(0) As String
 		p(0) = Path
 		AddToCycleListView(p)
@@ -1272,19 +1274,19 @@ lbFound:
 	'Update cycle files counter in tab titel
 	Private Sub UpdateCycleTabText()
 		Dim c As Integer
-		c = Me.LvDRI.Items.Count
+		c = LvDRI.Items.Count
 
-		Me.TabPageDRI.Text = "Driving Cycles ( " & DRIchecked & " / " & c & " )"
-		'Me.TabPageDRI.Text = "Driving Cycles (" & c & ")"
+		TabPageDRI.Text = "Driving Cycles ( " & DRIchecked & " / " & c & " )"
+		'TabPageDRI.Text = "Driving Cycles (" & c & ")"
 
 		DRIcheckAllLock = True
 
 		If DRIchecked = 0 Then
-			Me.ChBoxAllDRI.CheckState = CheckState.Unchecked
+			ChBoxAllDRI.CheckState = CheckState.Unchecked
 		ElseIf DRIchecked = c Then
-			Me.ChBoxAllDRI.CheckState = CheckState.Checked
+			ChBoxAllDRI.CheckState = CheckState.Checked
 		Else
-			Me.ChBoxAllDRI.CheckState = CheckState.Indeterminate
+			ChBoxAllDRI.CheckState = CheckState.Indeterminate
 		End If
 
 		DRIcheckAllLock = False
@@ -1295,24 +1297,24 @@ lbFound:
 #Region "Toolstrip"
 
 	'New Job file
-	Private Sub ToolStripBtNew_Click(sender As System.Object, e As System.EventArgs) Handles ToolStripBtNew.Click
+	Private Sub ToolStripBtNew_Click(sender As Object, e As EventArgs) Handles ToolStripBtNew.Click
 		OpenVECTOeditor("<New>")
 	End Sub
 
 	'Open input file
-	Private Sub ToolStripBtOpen_Click(sender As System.Object, e As System.EventArgs) Handles ToolStripBtOpen.Click
+	Private Sub ToolStripBtOpen_Click(sender As Object, e As EventArgs) Handles ToolStripBtOpen.Click
 
 		If fbVECTO.OpenDialog("", False, "vecto,vveh,vgbx,veng,vsig") Then
 			OpenVectoFile(fbVECTO.Files(0))
 		End If
 	End Sub
 
-	Private Sub GENEditorToolStripMenuItem1_Click(sender As System.Object, e As System.EventArgs) _
+	Private Sub GENEditorToolStripMenuItem1_Click(sender As Object, e As EventArgs) _
 		Handles GENEditorToolStripMenuItem1.Click
 		OpenVECTOeditor("<New>")
 	End Sub
 
-	Private Sub VEHEditorToolStripMenuItem_Click(sender As System.Object, e As System.EventArgs) _
+	Private Sub VEHEditorToolStripMenuItem_Click(sender As Object, e As EventArgs) _
 		Handles VEHEditorToolStripMenuItem.Click
 		If Not F_VEH.Visible Then
 			F_VEH.Show()
@@ -1322,7 +1324,7 @@ lbFound:
 		End If
 	End Sub
 
-	Private Sub EngineEditorToolStripMenuItem_Click(sender As System.Object, e As System.EventArgs) _
+	Private Sub EngineEditorToolStripMenuItem_Click(sender As Object, e As EventArgs) _
 		Handles EngineEditorToolStripMenuItem.Click
 		If Not F_ENG.Visible Then
 			F_ENG.Show()
@@ -1332,7 +1334,7 @@ lbFound:
 		End If
 	End Sub
 
-	Private Sub GearboxEditorToolStripMenuItem_Click(sender As System.Object, e As System.EventArgs) _
+	Private Sub GearboxEditorToolStripMenuItem_Click(sender As Object, e As EventArgs) _
 		Handles GearboxEditorToolStripMenuItem.Click
 		If Not F_GBX.Visible Then
 			F_GBX.Show()
@@ -1342,13 +1344,13 @@ lbFound:
 		End If
 	End Sub
 
-	Private Sub GraphToolStripMenuItem_Click(sender As System.Object, e As System.EventArgs) _
+	Private Sub GraphToolStripMenuItem_Click(sender As Object, e As EventArgs) _
 		Handles GraphToolStripMenuItem.Click
 		Dim FGraph As New F_Graph
 		FGraph.Show()
 	End Sub
 
-	Private Sub SignOrVerifyFilesToolStripMenuItem_Click(sender As System.Object, e As System.EventArgs) _
+	Private Sub SignOrVerifyFilesToolStripMenuItem_Click(sender As Object, e As EventArgs) _
 		Handles SignOrVerifyFilesToolStripMenuItem.Click
 		If Not F_FileSign.Visible Then
 			F_FileSign.Show()
@@ -1358,33 +1360,33 @@ lbFound:
 		End If
 	End Sub
 
-	Private Sub OpenLogToolStripMenuItem_Click(sender As System.Object, e As System.EventArgs) _
+	Private Sub OpenLogToolStripMenuItem_Click(sender As Object, e As EventArgs) _
 		Handles OpenLogToolStripMenuItem.Click
-		System.Diagnostics.Process.Start(MyAppPath & "log.txt")
+		Process.Start(MyAppPath & "log.txt")
 	End Sub
 
-	Private Sub SettingsToolStripMenuItem_Click(sender As System.Object, e As System.EventArgs) _
+	Private Sub SettingsToolStripMenuItem_Click(sender As Object, e As EventArgs) _
 		Handles SettingsToolStripMenuItem.Click
 		F_Settings.ShowDialog()
 	End Sub
 
-	Private Sub UserManualToolStripMenuItem_Click(sender As System.Object, e As System.EventArgs) _
+	Private Sub UserManualToolStripMenuItem_Click(sender As Object, e As EventArgs) _
 		Handles UserManualToolStripMenuItem.Click
-		If IO.File.Exists(MyAppPath & "User Manual\help.html") Then
+		If File.Exists(MyAppPath & "User Manual\help.html") Then
 			Dim BrowserRegistryString As String =
 					My.Computer.Registry.ClassesRoot.OpenSubKey("\http\shell\open\command\").GetValue("").ToString
 			Dim DefaultBrowserPath As String =
-					System.Text.RegularExpressions.Regex.Match(BrowserRegistryString, "(\"".*?\"")").Captures(0).ToString
-			System.Diagnostics.Process.Start(DefaultBrowserPath, Uri.EscapeDataString(MyAppPath & "User Manual\help.html"))
+					Regex.Match(BrowserRegistryString, "(\"".*?\"")").Captures(0).ToString
+			Process.Start(DefaultBrowserPath, Uri.EscapeDataString(MyAppPath & "User Manual\help.html"))
 		Else
 			MsgBox("User Manual not found!", MsgBoxStyle.Critical)
 		End If
 	End Sub
 
-	Private Sub UpdateNotesToolStripMenuItem_Click(sender As System.Object, e As System.EventArgs) _
+	Private Sub UpdateNotesToolStripMenuItem_Click(sender As Object, e As EventArgs) _
 		Handles UpdateNotesToolStripMenuItem.Click
-		If IO.File.Exists(MyAppPath & "User Manual\Release Notes.pdf") Then
-			System.Diagnostics.Process.Start(MyAppPath & "User Manual\Release Notes.pdf")
+		If File.Exists(MyAppPath & "User Manual\Release Notes.pdf") Then
+			Process.Start(MyAppPath & "User Manual\Release Notes.pdf")
 		Else
 			MsgBox("Release Notes not found!", MsgBoxStyle.Critical)
 		End If
@@ -1395,7 +1397,7 @@ lbFound:
 		F_JIRA.ShowDialog()
 	End Sub
 
-	Private Sub CreateActivationFileToolStripMenuItem_Click(sender As System.Object, e As System.EventArgs) _
+	Private Sub CreateActivationFileToolStripMenuItem_Click(sender As Object, e As EventArgs) _
 		Handles CreateActivationFileToolStripMenuItem.Click
 		If MsgBox("Create Activation File ?", MsgBoxStyle.YesNo) = MsgBoxResult.Yes Then
 			If Lic.CreateActFile(MyAppPath & "ActivationCode.dat") Then
@@ -1407,7 +1409,7 @@ lbFound:
 		End If
 	End Sub
 
-	Private Sub AboutVECTOToolStripMenuItem1_Click(sender As System.Object, e As System.EventArgs) _
+	Private Sub AboutVECTOToolStripMenuItem1_Click(sender As Object, e As EventArgs) _
 		Handles AboutVECTOToolStripMenuItem1.Click
 		F_AboutBox.ShowDialog()
 	End Sub
@@ -1416,7 +1418,7 @@ lbFound:
 #End Region
 
 	'Move job/cycle file up or down in list view
-	Private Sub MoveItem(ByRef ListV As ListView, ByVal MoveUp As Boolean)
+	Private Sub MoveItem(ByRef ListV As ListView, MoveUp As Boolean)
 		Dim x As Int32
 		Dim y As Int32
 		Dim y1 As Int32
@@ -1470,7 +1472,7 @@ lbFound:
 #Region "job/cycle file List - Context Menu"
 
 	'Save List
-	Private Sub SaveListToolStripMenuItem_Click(ByVal sender As System.Object, ByVal e As System.EventArgs) _
+	Private Sub SaveListToolStripMenuItem_Click(sender As Object, e As EventArgs) _
 		Handles SaveListToolStripMenuItem.Click
 		If fbFileLists.SaveDialog("") Then
 			If ConMenTarJob Then
@@ -1482,7 +1484,7 @@ lbFound:
 	End Sub
 
 	'Load List
-	Private Sub LoadListToolStripMenuItem_Click(ByVal sender As System.Object, ByVal e As System.EventArgs) _
+	Private Sub LoadListToolStripMenuItem_Click(sender As Object, e As EventArgs) _
 		Handles LoadListToolStripMenuItem.Click
 
 		If GUIlocked Then Exit Sub
@@ -1491,13 +1493,13 @@ lbFound:
 
 			If ConMenTarJob Then 'GEN
 				JobListView.LoadList(fbFileLists.Files(0))
-				GENchecked = Me.LvGEN.CheckedItems.Count
+				GENchecked = LvGEN.CheckedItems.Count
 				UpdateJobTabText()
 			Else 'DRI
 				'Mode toggle 
-				If Not Me.CbBatch.Checked Then Me.CbBatch.Checked = True
+				If Not CbBatch.Checked Then CbBatch.Checked = True
 				CycleListView.LoadList(fbFileLists.Files(0))
-				DRIchecked = Me.LvDRI.CheckedItems.Count
+				DRIchecked = LvDRI.CheckedItems.Count
 				UpdateCycleTabText()
 			End If
 
@@ -1505,7 +1507,7 @@ lbFound:
 	End Sub
 
 	'Load Default List
-	Private Sub LoadDefaultListToolStripMenuItem_Click(ByVal sender As System.Object, ByVal e As System.EventArgs) _
+	Private Sub LoadDefaultListToolStripMenuItem_Click(sender As Object, e As EventArgs) _
 		Handles LoadDefaultListToolStripMenuItem.Click
 
 		If GUIlocked Then Exit Sub
@@ -1514,17 +1516,17 @@ lbFound:
 
 			JobListView.LoadList()
 
-			GENchecked = Me.LvGEN.CheckedItems.Count
+			GENchecked = LvGEN.CheckedItems.Count
 			UpdateJobTabText()
 		Else
 			CycleListView.LoadList()
-			DRIchecked = Me.LvDRI.CheckedItems.Count
+			DRIchecked = LvDRI.CheckedItems.Count
 			UpdateCycleTabText()
 		End If
 	End Sub
 
 	'Clear List
-	Private Sub ClearListToolStripMenuItem_Click(ByVal sender As System.Object, ByVal e As System.EventArgs) _
+	Private Sub ClearListToolStripMenuItem_Click(sender As Object, e As EventArgs) _
 		Handles ClearListToolStripMenuItem.Click
 		'Dim ListViewItem0 As ListViewItem
 		'For Each ListViewItem0 In ConMenTarget.SelectedItems
@@ -1534,10 +1536,10 @@ lbFound:
 
 		ConMenTarget.Items.Clear()
 		If ConMenTarJob Then
-			GENchecked = Me.LvGEN.CheckedItems.Count
+			GENchecked = LvGEN.CheckedItems.Count
 			UpdateJobTabText()
 		Else
-			DRIchecked = Me.LvDRI.CheckedItems.Count
+			DRIchecked = LvDRI.CheckedItems.Count
 			UpdateCycleTabText()
 		End If
 	End Sub
@@ -1545,7 +1547,7 @@ lbFound:
 #End Region
 
 	'VECTO Start button - Calls VECTO_Launcher or aborts calculation
-	Private Sub Button1_Click(ByVal sender As System.Object, ByVal e As System.EventArgs) Handles Button1.Click
+	Private Sub Button1_Click(sender As Object, e As EventArgs) Handles Button1.Click
 
 		'VECTO Start/Stop
 		If VECTOworker.IsBusy Then
@@ -1584,7 +1586,7 @@ lbFound:
 			JobFileList.AddRange(From listViewItem In LvGEN.CheckedItems Select fFileRepl(listViewItem.SubItems(0).Text))
 
 			SetOptions()
-			Cfg.ConfigSAVE()
+			Cfg.Save()
 			ClearMSG()
 
 			LockGUI(True)
@@ -1617,8 +1619,8 @@ lbFound:
 			mode = ExecutionMode.Declaration
 		Else
 			mode = ExecutionMode.Engineering
-			Physics.FuelDensity = New SI(Cfg.FuelDens).Kilo.Gramm.Per.Cubic.Dezi.Meter
-			Physics.AirDensity = New SI(Cfg.AirDensity).Kilo.Gramm.Per.Cubic.Meter
+			Physics.FuelDensity = New SI(Cfg.FuelDens).Kilo.Gramm.Per.Cubic.Dezi.Meter.Cast(Of KilogramPerCubicMeter)()
+			Physics.AirDensity = New SI(Cfg.AirDensity).Kilo.Gramm.Per.Cubic.Meter.Cast(Of KilogramPerCubicMeter)()
 			Physics.CO2PerFuelWeight = Cfg.CO2perFC
 		End If
 
@@ -1627,7 +1629,7 @@ lbFound:
 
 		'list of finished runs
 		Dim finishedRuns As List(Of Integer) = New List(Of Integer)
-		
+
 		For Each jobFile As String In JobFileList
 			Try
 				sender.ReportProgress(0, New With {.Target = "ListBox", .Message = "Reading File " + jobFile, .Link = jobFile})
@@ -1637,6 +1639,7 @@ lbFound:
 
 				Dim runsFactory As SimulatorFactory = New SimulatorFactory(mode, dataProvider, fileWriter)
 				runsFactory.WriteModalResults = Cfg.ModOut
+				runsFactory.ModalResults1Hz = Cfg.Mod1Hz
 
 				For Each runId As Integer In jobContainer.AddRuns(runsFactory)
 					fileWriters.Add(runId, fileWriter)
@@ -1652,10 +1655,15 @@ lbFound:
 
 		'print detected cycles
 		For Each cycle As JobContainer.CycleTypeDescription In jobContainer.GetCycleTypes()
-			sender.ReportProgress(0, New With {.Target = "ListBox", .Message = String.Format("Detected Cycle {0}: {1}", cycle.Name, cycle.CycleType)})
+			sender.ReportProgress(0,
+								New With {.Target = "ListBox", .Message = String.Format("Detected Cycle {0}: {1}", cycle.Name, cycle.CycleType)})
 		Next
 
-		sender.ReportProgress(0, New With {.Target = "ListBox", .Message = String.Format("Starting Simulation ({0} Jobs, {1} Runs)", JobFileList.Count, jobContainer.GetProgress().Count)})
+		sender.ReportProgress(0,
+							New _
+								With {.Target = "ListBox",
+								.Message = _
+								String.Format("Starting Simulation ({0} Jobs, {1} Runs)", JobFileList.Count, jobContainer.GetProgress().Count)})
 
 		jobContainer.Execute(True)
 
@@ -1673,15 +1681,21 @@ lbFound:
 			Dim duration As Double = (DateTime.Now() - start).TotalSeconds
 
 			sender.ReportProgress(Int((sumProgress * 100.0) / progress.Count), New With {.Target = "Status",
-																						 .Message = String.Format("Duration: {0:0}s, Current Progress: {1:P} ({2})", duration, sumProgress / progress.Count, String.Join(", ", progress.Select(Function(pair) String.Format("{0,4:P}", pair.Value.Progress))))})
+									.Message = _
+									String.Format("Duration: {0:0}s, Current Progress: {1:P} ({2})", duration, sumProgress / progress.Count,
+												String.Join(", ", progress.Select(Function(pair) String.Format("{0,4:P}", pair.Value.Progress))))})
 
-			Dim justFinished As Dictionary(Of Integer, JobContainer.ProgressEntry) = progress.Where(Function(proc) proc.Value.Done AndAlso Not finishedRuns.Contains(proc.Key)).ToDictionary(Function(pair) pair.Key, Function(pair) pair.Value)
+			Dim justFinished As Dictionary(Of Integer, JobContainer.ProgressEntry) =
+					progress.Where(Function(proc) proc.Value.Done AndAlso Not finishedRuns.Contains(proc.Key)).ToDictionary(
+						Function(pair) pair.Key, Function(pair) pair.Value)
 			PrintRuns(justFinished, fileWriters)
 			finishedRuns.AddRange(justFinished.Select(Function(pair) pair.Key))
 			Thread.Sleep(100)
 		End While
-		
-		Dim remainingRuns As Dictionary(Of Integer, JobContainer.ProgressEntry) = jobContainer.GetProgress().Where(Function(proc) proc.Value.Done AndAlso Not finishedRuns.Contains(proc.Key)).ToDictionary(Function(pair) pair.Key, Function(pair) pair.Value)
+
+		Dim remainingRuns As Dictionary(Of Integer, JobContainer.ProgressEntry) =
+				jobContainer.GetProgress().Where(Function(proc) proc.Value.Done AndAlso Not finishedRuns.Contains(proc.Key)).
+				ToDictionary(Function(pair) pair.Key, Function(pair) pair.Value)
 		PrintRuns(remainingRuns, fileWriters)
 
 		finishedRuns.Clear()
@@ -1689,10 +1703,11 @@ lbFound:
 
 		For Each progressEntry As KeyValuePair(Of Integer, JobContainer.ProgressEntry) In jobContainer.GetProgress()
 			sender.ReportProgress(100, New With {.Target = "ListBox",
-												 .Message = String.Format("{0,-60} {1,8:P} {2,10:F2}s - {3}",
-																		  String.Format("{0} {1} {2}", progressEntry.Value.RunName, progressEntry.Value.CycleName, progressEntry.Value.RunSuffix),
-																		  progressEntry.Value.Progress, progressEntry.Value.ExecTime / 1000.0,
-																		  IIf(progressEntry.Value.Success, "Success", "Aborted"))})
+									.Message = String.Format("{0,-60} {1,8:P} {2,10:F2}s - {3}",
+															String.Format("{0} {1} {2}", progressEntry.Value.RunName, progressEntry.Value.CycleName,
+																		progressEntry.Value.RunSuffix),
+															progressEntry.Value.Progress, progressEntry.Value.ExecTime / 1000.0,
+															IIf(progressEntry.Value.Success, "Success", "Aborted"))})
 			If (Not progressEntry.Value.Success) Then
 				sender.ReportProgress(100, New With {.Target = "ListBox", .Message = progressEntry.Value.Error.Message})
 			End If
@@ -1702,33 +1717,52 @@ lbFound:
 		For Each job As String In JobFileList
 			Dim report As String = New FileOutputWriter(job).PDFReportName
 			If File.Exists(report) Then
-				sender.ReportProgress(100, New With {.Target = "ListBox", .Message = String.Format("PDF-Report for '{0}' written to {1}", Path.GetFileName(job), report), .Link = report})
+				sender.ReportProgress(100,
+									New _
+										With {.Target = "ListBox",
+										.Message = String.Format("PDF-Report for '{0}' written to {1}", Path.GetFileName(job), report), .Link = report
+										})
 			End If
 		Next
 
 		If File.Exists(sumFileWriter.SumFileName) Then
 			sender.ReportProgress(100, New With {.Target = "ListBox",
-												 .Message = String.Format("Sum File written to {0}", sumFileWriter.SumFileName),
-												 .Link = sumFileWriter.SumFileName})
+									.Message = String.Format("Sum File written to {0}", sumFileWriter.SumFileName),
+									.Link = sumFileWriter.SumFileName})
 		End If
 
-		sender.ReportProgress(100, New With {.Target = "ListBox", .Message = String.Format("Simulation Finished in {0:0}s", (DateTime.Now() - start).TotalSeconds)})
+		sender.ReportProgress(100,
+							New _
+								With {.Target = "ListBox",
+								.Message = String.Format("Simulation Finished in {0:0}s", (DateTime.Now() - start).TotalSeconds)})
 	End Sub
 
 
-	Private Shared Sub PrintRuns(progress As Dictionary(Of Integer, JobContainer.ProgressEntry), fileWriters As Dictionary(Of Integer, FileOutputWriter))
+	Private Shared Sub PrintRuns(progress As Dictionary(Of Integer, JobContainer.ProgressEntry),
+								fileWriters As Dictionary(Of Integer, FileOutputWriter))
 		For Each p As KeyValuePair(Of Integer, JobContainer.ProgressEntry) In progress
-			Dim modFilename As String = fileWriters(p.Key).GetModDataFileName(p.Value.RunName, p.Value.CycleName, p.Value.RunSuffix)
+			Dim modFilename As String = fileWriters(p.Key).GetModDataFileName(p.Value.RunName, p.Value.CycleName,
+																			p.Value.RunSuffix + IIf(Cfg.Mod1Hz, "_1Hz", ""))
+
 			Dim runName As String = String.Format("{0} {1} {2}", p.Value.RunName, p.Value.CycleName, p.Value.RunSuffix)
 
 			If Not p.Value.Error Is Nothing Then
-				VECTOworkerV3.ReportProgress(0, New With {.Target = "ListBoxError", .Message = String.Format("Finished Run {0} with ERROR: {1}", runName, p.Value.Error.Message), .Link = modFilename})
+				VECTOworkerV3.ReportProgress(0,
+											New _
+												With {.Target = "ListBoxError",
+												.Message = String.Format("Finished Run {0} with ERROR: {1}", runName, p.Value.Error.Message),
+												.Link = modFilename})
 			Else
-				VECTOworkerV3.ReportProgress(0, New With {.Target = "ListBox", .Message = String.Format("Finished Run {0} successfully.", runName)})
+				VECTOworkerV3.ReportProgress(0,
+											New With {.Target = "ListBox", .Message = String.Format("Finished Run {0} successfully.", runName)})
 			End If
 
 			If (File.Exists(modFilename)) Then
-				VECTOworkerV3.ReportProgress(0, New With {.Target = "ListBox", .Message = String.Format("Run {0}: Modal Results written to {1}", runName, modFilename), .Link = modFilename})
+				VECTOworkerV3.ReportProgress(0,
+											New _
+												With {.Target = "ListBox",
+												.Message = String.Format("Run {0}: Modal Results written to {1}", runName, modFilename), .Link = modFilename
+												})
 			End If
 		Next
 	End Sub
@@ -1755,7 +1789,6 @@ lbFound:
 	End Sub
 
 	Private Sub VectoWorkerV3_OnRunWorkerCompleted(sender As Object, e As RunWorkerCompletedEventArgs)
-		Dim Result As tCalcResult
 
 		'Progbar reset
 		ToolStripProgBarOverall.Visible = False
@@ -1764,8 +1797,6 @@ lbFound:
 		ProgSecStop()
 
 		LvGEN.SelectedIndices.Clear()
-
-		Result = e.Result
 
 		'ShutDown when Unexpected Error
 		If e.Error IsNot Nothing Then
@@ -1785,7 +1816,7 @@ lbFound:
 	End Sub
 
 	'Mode Change (STANDARD/BATCH)
-	Private Sub CbBatch_CheckedChanged(sender As System.Object, e As System.EventArgs) Handles CbBatch.CheckedChanged
+	Private Sub CbBatch_CheckedChanged(sender As Object, e As EventArgs) Handles CbBatch.CheckedChanged
 		ModeUpdate()
 	End Sub
 
@@ -1796,7 +1827,7 @@ lbFound:
 		If Cfg.BatchMode Then CycleListView.SaveList()
 
 		'New mode
-		Cfg.BatchMode = Me.CbBatch.Checked
+		Cfg.BatchMode = CbBatch.Checked
 
 		'GUI changes according to current mode
 
@@ -1808,16 +1839,16 @@ lbFound:
 			CycleListView.LoadList()
 
 			'Update cycle counter
-			DRIchecked = Me.LvDRI.CheckedItems.Count
+			DRIchecked = LvDRI.CheckedItems.Count
 			UpdateCycleTabText()
 
 			'Show mode-specific settings
-			Me.GrBoxSTD.Visible = False
-			Me.GrBoxBATCH.Visible = True
+			GrBoxSTD.Visible = False
+			GrBoxBATCH.Visible = True
 
 			'Show Cycle Tab Page
 			If Not CycleTabPageVisible Then
-				Me.TabControl1.TabPages.Insert(1, CycleTabPage)
+				TabControl1.TabPages.Insert(1, CycleTabPage)
 				CycleTabPageVisible = True
 			End If
 
@@ -1830,19 +1861,19 @@ lbFound:
 			End If
 
 			'Show mode-specific settings
-			Me.GrBoxSTD.Visible = False	 'Currently no specific settings for STANDARD mode, therefore always 'False'
-			Me.GrBoxBATCH.Visible = False
+			GrBoxSTD.Visible = False	 'Currently no specific settings for STANDARD mode, therefore always 'False'
+			GrBoxBATCH.Visible = False
 
 			'Hide Cycle Tab Page
 			If CycleTabPageVisible Then
-				Me.TabControl1.Controls.Remove(CycleTabPage)
+				TabControl1.Controls.Remove(CycleTabPage)
 				CycleTabPageVisible = False
 			End If
 
 		End If
 
 		'Update job counter
-		GENchecked = Me.LvGEN.CheckedItems.Count
+		GENchecked = LvGEN.CheckedItems.Count
 		UpdateJobTabText()
 
 		'Status label
@@ -1855,7 +1886,7 @@ lbFound:
 		Private LoadedDefault As Boolean
 		Public LVbox As ListView
 
-		Public Sub New(ByVal Path As String)
+		Public Sub New(Path As String)
 			FilePath = Path
 			LoadedDefault = False
 		End Sub
@@ -1934,7 +1965,7 @@ lbFound:
 	End Class
 
 	'Set color of job files in list (Error, Warnings, Currently running, etc.)
-	Private Sub SetCheckedItemColor(ByVal LvID As Integer, ByVal Status As tJobStatus)
+	Private Sub SetCheckedItemColor(LvID As Integer, Status As tJobStatus)
 		Dim lv0 As ListViewItem
 
 		lv0 = CheckedItems(LvID)
@@ -1962,7 +1993,7 @@ lbFound:
 	End Sub
 
 	'Open Job Editor and open file (or new file)
-	Friend Sub OpenVECTOeditor(ByVal x As String)
+	Friend Sub OpenVECTOeditor(x As String)
 
 		If Not F_VECTO.Visible Then
 			F_VECTO.Show()
@@ -1981,7 +2012,7 @@ lbFound:
 	End Sub
 
 	'Open signature file (.vsig)
-	Friend Sub OpenSigFile(ByVal file As String)
+	Friend Sub OpenSigFile(file As String)
 		If Not F_FileSign.Visible Then
 			F_FileSign.Show()
 
@@ -2003,21 +2034,21 @@ lbFound:
 
 	'Initialise progress bar (Start of next job in calculation)
 	Private Sub ProgSecStart()
-		Me.ToolStripProgBarJob.Value = 0
-		Me.ToolStripProgBarJob.Style = ProgressBarStyle.Marquee
-		Me.ToolStripProgBarJob.Visible = True
-		Me.TmProgSec.Start()
+		ToolStripProgBarJob.Value = 0
+		ToolStripProgBarJob.Style = ProgressBarStyle.Marquee
+		ToolStripProgBarJob.Visible = True
+		TmProgSec.Start()
 	End Sub
 
 	'Stop - Hide progress bar
 	Private Sub ProgSecStop()
-		Me.TmProgSec.Stop()
-		Me.ToolStripProgBarJob.Visible = False
-		Me.ToolStripProgBarJob.Value = 0
+		TmProgSec.Stop()
+		ToolStripProgBarJob.Visible = False
+		ToolStripProgBarJob.Value = 0
 	End Sub
 
 	'Timer to update progress bar regularly
-	Private Sub TmProgSec_Tick(sender As Object, e As System.EventArgs) Handles TmProgSec.Tick
+	Private Sub TmProgSec_Tick(sender As Object, e As EventArgs) Handles TmProgSec.Tick
 		If GUItest0.TestActive Then
 			Call GUItest0.TestTick()
 			Exit Sub
@@ -2031,8 +2062,8 @@ lbFound:
 
 		With ProgBarCtrl
 
-			If .ProgJobInt > 0 AndAlso Me.ToolStripProgBarJob.Style = ProgressBarStyle.Marquee Then
-				Me.ToolStripProgBarJob.Style = ProgressBarStyle.Continuous
+			If .ProgJobInt > 0 AndAlso ToolStripProgBarJob.Style = ProgressBarStyle.Marquee Then
+				ToolStripProgBarJob.Style = ProgressBarStyle.Continuous
 			End If
 
 			If .ProgJobInt < 0 Then
@@ -2041,11 +2072,11 @@ lbFound:
 				.ProgJobInt = 100
 			End If
 
-			Me.ToolStripProgBarJob.Value = .ProgJobInt
+			ToolStripProgBarJob.Value = .ProgJobInt
 
-			If .ProgOverallStartInt > - 1 Then
-				Me.ToolStripProgBarOverall.Value =
-					CInt(.ProgOverallStartInt + (.PgroOverallEndInt - .ProgOverallStartInt)*.ProgJobInt/100)
+			If .ProgOverallStartInt > -1 Then
+				ToolStripProgBarOverall.Value =
+					CInt(.ProgOverallStartInt + (.PgroOverallEndInt - .ProgOverallStartInt) * .ProgJobInt / 100)
 			End If
 
 		End With
@@ -2058,68 +2089,70 @@ lbFound:
 
 	'Load options from config class
 	Public Sub LoadOptions()
-		Me.ChBoxCyclDistCor.Checked = Cfg.DistCorr
-		Me.ChBoxUseGears.Checked = Cfg.GnUfromCycle
-		Me.ChBoxModOut.Checked = Cfg.ModOut
-		CbBOmode.SelectedIndex = - 1
+		ChBoxCyclDistCor.Checked = Cfg.DistCorr
+		ChBoxUseGears.Checked = Cfg.GnUfromCycle
+		ChBoxModOut.Checked = Cfg.ModOut
+		ChBoxMod1Hz.Checked = Cfg.Mod1Hz
+		CbBOmode.SelectedIndex = -1
 		Select Case UCase(Cfg.BATCHoutpath)
 			Case sKey.JobPath
 				CbBOmode.SelectedIndex = 0
 			Case Else
 				CbBOmode.SelectedIndex = 1
-				Me.TbBOpath.Text = Cfg.BATCHoutpath
+				TbBOpath.Text = Cfg.BATCHoutpath
 		End Select
-		Me.ChBoxBatchSubD.Checked = Cfg.BATCHoutSubD
+		ChBoxBatchSubD.Checked = Cfg.BATCHoutSubD
 
 		'Set Mode
-		If Not Cfg.DeclMode Then Me.CbBatch.Checked = Cfg.BatchMode
+		If Not Cfg.DeclMode Then CbBatch.Checked = Cfg.BatchMode
 
-		Me.RbDecl.Checked = Cfg.DeclMode
+		RbDecl.Checked = Cfg.DeclMode
 	End Sub
 
 	'Update config class from options in GUI, e.g. before running calculations 
 	Private Sub SetOptions()
 
 		'General(Allgemein)
-		Cfg.DistCorr = Me.ChBoxCyclDistCor.Checked
-		Cfg.GnUfromCycle = Me.ChBoxUseGears.Checked
+		Cfg.DistCorr = ChBoxCyclDistCor.Checked
+		Cfg.GnUfromCycle = ChBoxUseGears.Checked
 
 		'BATCH
-		Cfg.ModOut = Me.ChBoxModOut.Checked
+		Cfg.ModOut = ChBoxModOut.Checked
+		Cfg.Mod1Hz = ChBoxMod1Hz.Checked
 		Select Case CbBOmode.SelectedIndex
 			Case 0
 				Cfg.BATCHoutpath = sKey.JobPath
 			Case Else
-				Cfg.BATCHoutpath = Trim(Me.TbBOpath.Text)
+				Cfg.BATCHoutpath = Trim(TbBOpath.Text)
 				If Microsoft.VisualBasic.Right(Cfg.BATCHoutpath, 1) <> "\" Then Cfg.BATCHoutpath &= "\"
 		End Select
-		Cfg.BATCHoutSubD = Me.ChBoxBatchSubD.Checked
+		Cfg.BATCHoutSubD = ChBoxBatchSubD.Checked
 
 		DEV.SetOptions()
 	End Sub
 
 #Region "Events"
 
-	Private Sub ChBoxAutoSD_CheckedChanged(ByVal sender As System.Object, ByVal e As System.EventArgs) _
+	Private Sub ChBoxAutoSD_CheckedChanged(sender As Object, e As EventArgs) _
 		Handles ChBoxAutoSD.CheckedChanged
-		Me.LbAutoShDown.Visible = Me.ChBoxAutoSD.Checked
+		LbAutoShDown.Visible = ChBoxAutoSD.Checked
 	End Sub
 
-	Private Sub CbBOmode_SelectedIndexChanged(ByVal sender As System.Object, ByVal e As System.EventArgs) _
+	Private Sub CbBOmode_SelectedIndexChanged(sender As Object, e As EventArgs) _
 		Handles CbBOmode.SelectedIndexChanged
-		Me.TbBOpath.Visible = (Me.CbBOmode.SelectedIndex = 2)
-		Me.ButBObrowse.Visible = (Me.CbBOmode.SelectedIndex = 2)
+		TbBOpath.Visible = (CbBOmode.SelectedIndex = 2)
+		ButBObrowse.Visible = (CbBOmode.SelectedIndex = 2)
 	End Sub
 
-	Private Sub ButBObrowse_Click(ByVal sender As System.Object, ByVal e As System.EventArgs) Handles ButBObrowse.Click
-		If fbFolder.OpenDialog(Me.TbBOpath.Text) Then
-			Me.TbBOpath.Text = fbFolder.Files(0)
+	Private Sub ButBObrowse_Click(sender As Object, e As EventArgs) Handles ButBObrowse.Click
+		If fbFolder.OpenDialog(TbBOpath.Text) Then
+			TbBOpath.Text = fbFolder.Files(0)
 		End If
 	End Sub
 
-	Private Sub ChBoxBatchOut_CheckedChanged(ByVal sender As System.Object, ByVal e As System.EventArgs) _
+	Private Sub ChBoxBatchOut_CheckedChanged(sender As Object, e As EventArgs) _
 		Handles ChBoxModOut.CheckedChanged
-		Me.ChBoxBatchSubD.Enabled = Me.ChBoxModOut.Checked
+		ChBoxBatchSubD.Enabled = ChBoxModOut.Checked
 	End Sub
 
 #End Region
@@ -2135,9 +2168,9 @@ lbFound:
 		Dim i As Integer
 		Dim Config0 As KeyValuePair(Of String, cDEVoption)
 
-		Me.LvDEVoptions.Items.Clear()
+		LvDEVoptions.Items.Clear()
 
-		i = - 1
+		i = -1
 		For Each Config0 In DEV.Options
 			i += 1
 
@@ -2165,7 +2198,7 @@ lbFound:
 				LV0.ForeColor = Color.DarkGray
 			End If
 
-			Me.LvDEVoptions.Items.Add(LV0)
+			LvDEVoptions.Items.Add(LV0)
 
 			UpdateDEVconfigs(LV0)
 
@@ -2178,12 +2211,12 @@ lbFound:
 	End Sub
 
 	'Change value of DEV option or execute action-type DEV options
-	Private Sub LvDEVoptions_DoubleClick(sender As Object, e As System.EventArgs) Handles LvDEVoptions.DoubleClick
+	Private Sub LvDEVoptions_DoubleClick(sender As Object, e As EventArgs) Handles LvDEVoptions.DoubleClick
 		Dim Config0 As cDEVoption
 		Dim str As String
 		Dim i As Integer
 
-		Config0 = DEV.Options(Me.LvDEVoptions.SelectedItems(0).Tag)
+		Config0 = DEV.Options(LvDEVoptions.SelectedItems(0).Tag)
 
 		If Not Config0.Enabled Then Exit Sub
 
@@ -2196,11 +2229,11 @@ lbFound:
 
 			Case tDEVconfType.tSelection
 
-				CmDEVitem = Me.LvDEVoptions.SelectedItems(0)
+				CmDEVitem = LvDEVoptions.SelectedItems(0)
 
 				CmDEV.Items.Clear()
 
-				i = - 1
+				i = -1
 				For Each str In Config0.Modes
 					i += 1
 					CmDEV.Items.Add("(" & i & ") " & str)
@@ -2226,11 +2259,11 @@ lbFound:
 				Config0.StringVal = dlg.ShowDlog("New Value <" & Config0.TypeString & "> =", Config0.StringVal)
 		End Select
 
-		UpdateDEVconfigs(Me.LvDEVoptions.SelectedItems(0))
+		UpdateDEVconfigs(LvDEVoptions.SelectedItems(0))
 	End Sub
 
 	'Context menu for selection-type DEV options
-	Private Sub CmDEV_ItemClicked(sender As Object, e As System.Windows.Forms.ToolStripItemClickedEventArgs) _
+	Private Sub CmDEV_ItemClicked(sender As Object, e As ToolStripItemClickedEventArgs) _
 		Handles CmDEV.ItemClicked
 		Dim i As Integer
 
@@ -2245,7 +2278,7 @@ lbFound:
 #End Region
 
 	'Add message to message list
-	Public Sub MSGtoForm(ByVal ID As tMsgID, ByVal Msg As String, ByVal Source As String, ByVal Link As String)
+	Public Sub MSGtoForm(ID As tMsgID, Msg As String, Source As String, Link As String)
 
 		Dim lv0 As ListViewItem
 
@@ -2281,7 +2314,7 @@ lbFound:
 
 		If Link <> "" Then
 			If Not ID = tMsgID.Err Then lv0.ForeColor = Color.Blue
-			lv0.SubItems(0).Font = New Font(Me.LvMsg.Font, FontStyle.Underline)
+			lv0.SubItems(0).Font = New Font(LvMsg.Font, FontStyle.Underline)
 			lv0.Tag = Link
 		End If
 
@@ -2293,47 +2326,47 @@ lbFound:
 
 
 	'Open link in message list
-	Private Sub LvMsg_MouseClick(sender As Object, e As System.Windows.Forms.MouseEventArgs) Handles LvMsg.MouseClick
+	Private Sub LvMsg_MouseClick(sender As Object, e As MouseEventArgs) Handles LvMsg.MouseClick
 		Dim txt As String
-		If Me.LvMsg.SelectedIndices.Count > 0 Then
-			If Not Me.LvMsg.SelectedItems(0).Tag Is Nothing Then
+		If LvMsg.SelectedIndices.Count > 0 Then
+			If Not LvMsg.SelectedItems(0).Tag Is Nothing Then
 				If _
-					Len(CStr(Me.LvMsg.SelectedItems(0).Tag)) > 4 AndAlso
-					Microsoft.VisualBasic.Left(CStr(Me.LvMsg.SelectedItems(0).Tag), 4) = "<UM>" Then
-					txt = CStr(Me.LvMsg.SelectedItems(0).Tag).Replace("<UM>", MyAppPath & "User Manual")
+					Len(CStr(LvMsg.SelectedItems(0).Tag)) > 4 AndAlso
+					Microsoft.VisualBasic.Left(CStr(LvMsg.SelectedItems(0).Tag), 4) = "<UM>" Then
+					txt = CStr(LvMsg.SelectedItems(0).Tag).Replace("<UM>", MyAppPath & "User Manual")
 					txt = txt.Replace(" ", "%20")
 					txt = txt.Replace("\", "/")
 					txt = "file:///" & txt
 					Try
-						System.Diagnostics.Process.Start(txt)
+						Process.Start(txt)
 					Catch ex As Exception
 						MsgBox("Cannot open link! (-_-;)")
 					End Try
 				ElseIf _
-					Len(CStr(Me.LvMsg.SelectedItems(0).Tag)) > 5 AndAlso
-					Microsoft.VisualBasic.Left(CStr(Me.LvMsg.SelectedItems(0).Tag), 5) = "<GUI>" Then
-					txt = CStr(Me.LvMsg.SelectedItems(0).Tag).Replace("<GUI>", "")
+					Len(CStr(LvMsg.SelectedItems(0).Tag)) > 5 AndAlso
+					Microsoft.VisualBasic.Left(CStr(LvMsg.SelectedItems(0).Tag), 5) = "<GUI>" Then
+					txt = CStr(LvMsg.SelectedItems(0).Tag).Replace("<GUI>", "")
 					OpenVectoFile(txt)
 				ElseIf _
-					Len(CStr(Me.LvMsg.SelectedItems(0).Tag)) > 5 AndAlso
-					Microsoft.VisualBasic.Left(CStr(Me.LvMsg.SelectedItems(0).Tag), 5) = "<RUN>" Then
-					txt = CStr(Me.LvMsg.SelectedItems(0).Tag).Replace("<RUN>", "")
+					Len(CStr(LvMsg.SelectedItems(0).Tag)) > 5 AndAlso
+					Microsoft.VisualBasic.Left(CStr(LvMsg.SelectedItems(0).Tag), 5) = "<RUN>" Then
+					txt = CStr(LvMsg.SelectedItems(0).Tag).Replace("<RUN>", "")
 					Try
 						Process.Start(txt)
 					Catch ex As Exception
 						GUImsg(tMsgID.Err, "Could not run '" & txt & "'!")
 					End Try
 				Else
-					OpenFiles(CStr(Me.LvMsg.SelectedItems(0).Tag))
+					OpenFiles(CStr(LvMsg.SelectedItems(0).Tag))
 				End If
 			End If
 		End If
 	End Sub
 
 	'Link-cursor (Hand) for links
-	Private Sub LvMsg_MouseMove(sender As Object, e As System.Windows.Forms.MouseEventArgs) Handles LvMsg.MouseMove
+	Private Sub LvMsg_MouseMove(sender As Object, e As MouseEventArgs) Handles LvMsg.MouseMove
 		Dim lv0 As ListViewItem
-		lv0 = Me.LvMsg.GetItemAt(e.Location.X, e.Location.Y)
+		lv0 = LvMsg.GetItemAt(e.Location.X, e.Location.Y)
 		If lv0 Is Nothing OrElse lv0.Tag Is Nothing Then
 			LvMsg.Cursor = Cursors.Arrow
 		Else
@@ -2358,7 +2391,7 @@ lbFound:
 
 		CmFiles = files
 
-		Me.OpenInGraphWindowToolStripMenuItem.Enabled = (UCase(fEXT(CmFiles(0))) = ".VMOD")
+		OpenInGraphWindowToolStripMenuItem.Enabled = (UCase(fEXT(CmFiles(0))) = ".VMOD")
 
 
 		OpenWithToolStripMenuItem.Text = "Open with " & Cfg.OpenCmdName
@@ -2367,12 +2400,12 @@ lbFound:
 	End Sub
 
 	'Open with tool defined in Settings
-	Private Sub OpenWithToolStripMenuItem_Click(sender As System.Object, e As System.EventArgs) _
+	Private Sub OpenWithToolStripMenuItem_Click(sender As Object, e As EventArgs) _
 		Handles OpenWithToolStripMenuItem.Click
 		If Not FileOpenAlt(CmFiles(0)) Then MsgBox("Failed to open file!")
 	End Sub
 
-	Private Sub OpenInGraphWindowToolStripMenuItem_Click(sender As System.Object, e As System.EventArgs) _
+	Private Sub OpenInGraphWindowToolStripMenuItem_Click(sender As Object, e As EventArgs) _
 		Handles OpenInGraphWindowToolStripMenuItem.Click
 		Dim FGraph As New F_Graph
 		FGraph.Show()
@@ -2380,11 +2413,11 @@ lbFound:
 	End Sub
 
 	'Show in folder
-	Private Sub ShowInFolderToolStripMenuItem_Click(sender As System.Object, e As System.EventArgs) _
+	Private Sub ShowInFolderToolStripMenuItem_Click(sender As Object, e As EventArgs) _
 		Handles ShowInFolderToolStripMenuItem.Click
-		If IO.File.Exists(CmFiles(0)) Then
+		If File.Exists(CmFiles(0)) Then
 			Try
-				System.Diagnostics.Process.Start("explorer", "/select,""" & CmFiles(0) & "")
+				Process.Start("explorer", "/select,""" & CmFiles(0) & "")
 			Catch ex As Exception
 				MsgBox("Failed to open file!")
 			End Try
@@ -2396,17 +2429,17 @@ lbFound:
 #End Region
 
 	'Change Declaraion Mode
-	Private Sub RbDecl_CheckedChanged(sender As Object, e As System.EventArgs) Handles RbDecl.CheckedChanged
+	Private Sub RbDecl_CheckedChanged(sender As Object, e As EventArgs) Handles RbDecl.CheckedChanged
 		If CbDeclLock Then Exit Sub
 
 		If F_VECTO.Visible Or F_VEH.Visible Or F_GBX.Visible Or F_ENG.Visible Then
 			CbDeclLock = True
-			Me.RbDecl.Checked = Not Me.RbDecl.Checked
+			RbDecl.Checked = Not RbDecl.Checked
 			CbDeclLock = False
 			MsgBox("Please close all dialog windows (e.g. Job Editor) before changing mode!")
 		Else
-			Cfg.DeclMode = Me.RbDecl.Checked
-			Me.RbDev.Checked = Not Me.RbDecl.Checked
+			Cfg.DeclMode = RbDecl.Checked
+			RbDev.Checked = Not RbDecl.Checked
 			DeclOnOff()
 		End If
 	End Sub
@@ -2529,7 +2562,7 @@ lbFound:
 					MyForm.LvMsg.Items.Insert(RowLim - 4, Space(ColLim - 30) & "         " & Space(10) & "*|       |*")
 			End Select
 			Exit Sub
-			LbRace:
+LbRace:
 
 			PRbAlt = Not PRbAlt
 
@@ -2557,17 +2590,17 @@ lbFound:
 					sAbort()
 					Exit Sub
 				End If
-				Scr += 5*DiffLvl
+				Scr += 5 * DiffLvl
 			End If
 
 			Scr += DiffLvl
 			DiffC += 1
 
 			'Erhöhe Schwierigkeitsgrad
-			If DiffC = (DiffLvl + 3)*4 Then
+			If DiffC = (DiffLvl + 3) * 4 Then
 				DiffC = 0
 				DiffLvl += 1
-				If DiffLvl > 2 And DiffLvl < 7 Then MyForm.TmProgSec.Interval = 300 - (DiffLvl)*30
+				If DiffLvl > 2 And DiffLvl < 7 Then MyForm.TmProgSec.Interval = 300 - (DiffLvl) * 30
 				Scr += 100
 				Select Case DiffLvl
 					Case 3
@@ -2586,7 +2619,7 @@ lbFound:
 			End If
 		End Sub
 
-		Public Sub TestKey(ByVal Key0 As Integer)
+		Public Sub TestKey(Key0 As Integer)
 
 			If TestActive Then
 				Select Case Key0
@@ -2651,10 +2684,10 @@ lbFound:
 			Ctrls(RowLim + 1) = 0
 			CtrlC += 1
 			If CtrlC < CtrlCL Then Exit Sub
-			Select Case CInt(Int((CtrlRnd*Rnd()) + 1))
+			Select Case CInt(Int((CtrlRnd * Rnd()) + 1))
 				Case 1, 2
 					CtrlC = 0
-					x = CInt(Int((7*Rnd()) + 1))
+					x = CInt(Int((7 * Rnd()) + 1))
 					Ctrls(RowLim + 1) = x
 				Case Else
 			End Select
@@ -2698,7 +2731,7 @@ lbFound:
 				s = s.Insert(Ctrls(RowLim + 1) + 1, "X")
 			End If
 			Select Case xPanel - Pnls(RowLim)
-				Case - 1
+				Case -1
 					s = Replace(s, "|", "\")
 				Case 1
 					s = Replace(s, "|", "/")
@@ -2710,15 +2743,15 @@ lbFound:
 			PnDirC += 1
 			If PnDirC < PnDirCL Then GoTo Lb1
 			PnDirC = 0
-			Select Case CInt(Int((PnDirRnd*Rnd()) + 1))
+			Select Case CInt(Int((PnDirRnd * Rnd()) + 1))
 				Case 1
 					PnDir = 1
 				Case 2
-					PnDir = - 1
+					PnDir = -1
 				Case Else
 					PnDir = 0
 			End Select
-			Lb1:
+Lb1:
 			xPanel += PnDir
 			If xPanel > ColLim Then
 				xPanel = ColLim
@@ -2736,7 +2769,7 @@ lbFound:
 			Next
 		End Sub
 
-		Public Sub New(ByVal Form As F_MAINForm)
+		Public Sub New(Form As F_MAINForm)
 			MyForm = Form
 			KeyCode = New List(Of Integer)
 			KeyCode.Add(Keys.Up)
@@ -2753,12 +2786,12 @@ lbFound:
 		End Sub
 	End Class
 
-	Private Sub LvMsg_KeyDown(sender As Object, e As System.Windows.Forms.KeyEventArgs) Handles LvMsg.KeyDown
+	Private Sub LvMsg_KeyDown(sender As Object, e As KeyEventArgs) Handles LvMsg.KeyDown
 		GUItest0.TestKey(e.KeyValue)
 		If GUItest0.TestActive Then e.SuppressKeyPress = True
 	End Sub
 
-	Private Sub LvMsg_LostFocus(sender As Object, e As System.EventArgs) Handles LvMsg.LostFocus
+	Private Sub LvMsg_LostFocus(sender As Object, e As EventArgs) Handles LvMsg.LostFocus
 		If GUItest0.TestActive Then GUItest0.TestStop()
 	End Sub
 
@@ -2769,7 +2802,7 @@ lbFound:
 			Dim builder As StringBuilder = New StringBuilder()
 			For Each selectedItem As ListViewItem In LvMsg.SelectedItems
 				builder.AppendLine(String.Join(", ",
-												selectedItem.SubItems.Cast (Of ListViewItem.ListViewSubItem).Select(
+												selectedItem.SubItems.Cast(Of ListViewItem.ListViewSubItem).Select(
 													Function(item) item.Text)))
 			Next
 			Clipboard.SetText(builder.ToString())

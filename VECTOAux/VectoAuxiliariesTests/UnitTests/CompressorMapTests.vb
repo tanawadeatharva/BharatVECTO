@@ -1,4 +1,5 @@
 ﻿Imports NUnit.Framework
+Imports TUGraz.VectoCommon.Utils
 Imports VectoAuxiliaries.Pneumatics
 
 Namespace UnitTests
@@ -56,28 +57,28 @@ Namespace UnitTests
 			target.Initialise()
 		End Sub
 
-		<Test(), ExpectedException("System.FormatException")>
+		<Test(), ExpectedException("System.InvalidCastException")>
 		Public Sub InitialisationInvalidRpmThrowsExceptionTest()
 			Dim path As String = INVALIDRPMMAP
 			Dim target As CompressorMap = New CompressorMap(path)
 			target.Initialise()
 		End Sub
 
-		<Test(), ExpectedException("System.FormatException")>
+		<Test(), ExpectedException("System.InvalidCastException")>
 		Public Sub InitialisationInvalidFlowRateThrowsExceptionTest()
 			Dim path As String = INVALIDFLOWRATEMAP
 			Dim target As CompressorMap = New CompressorMap(path)
 			target.Initialise()
 		End Sub
 
-		<Test(), ExpectedException("System.FormatException")>
+		<Test(), ExpectedException("System.InvalidCastException")>
 		Public Sub InitialisationInvalidPowerCompressorOnThrowsExceptionTest()
 			Dim path As String = INVALIDPOWERCOMPRESSORONMAP
 			Dim target As CompressorMap = New CompressorMap(path)
 			target.Initialise()
 		End Sub
 
-		<Test(), ExpectedException("System.FormatException")>
+		<Test(), ExpectedException("System.InvalidCastException")>
 		Public Sub InitialisationInvalidPowerCompressorOffThrowsExceptionTest()
 			Dim path As String = INVALIDPOWERCOMPRESSOROFFMAP
 			Dim target As CompressorMap = New CompressorMap(path)
@@ -96,16 +97,16 @@ Namespace UnitTests
 		Public Sub GetFlowRateKeyPassedTest()
 			Dim target As CompressorMap = GetInitialiseMap()
 			Dim expected As Single = 400
-			Dim value As Single = target.GetFlowRate(2000)
-			Assert.AreEqual(expected, value)
+			Dim value As NormLiterPerSecond = target.GetFlowRate(2000)
+			Assert.AreEqual(expected, value.Value(), 0.001)
 		End Sub
 
 		<Test()>
 		Public Sub GetFlowRateInterpolaitionTest()
 			Dim target As CompressorMap = GetInitialiseMap()
 			Dim expected As Single = 500
-			Dim value As Single = target.GetFlowRate(2500)
-			Assert.AreEqual(expected, value)
+			Dim value As NormLiterPerSecond = target.GetFlowRate(2500)
+			Assert.AreEqual(expected, value.Value(), 0.001)
 		End Sub
 
 
@@ -113,8 +114,8 @@ Namespace UnitTests
 		Public Sub GetPowerCompressorOnInterpolaitionTest()
 			Dim target As CompressorMap = GetInitialiseMap()
 			Dim expected As Single = 5000
-			Dim value As Single = target.GetPowerCompressorOn(2500)
-			Assert.AreEqual(expected, value)
+			Dim value As Watt = target.GetPowerCompressorOn(2500)
+			Assert.AreEqual(expected, value.Value(), 0.001)
 		End Sub
 
 
@@ -122,8 +123,8 @@ Namespace UnitTests
 		Public Sub GetPowerCompressorOffInterpolaitionTest()
 			Dim target As CompressorMap = GetInitialiseMap()
 			Dim expected As Single = 2500
-			Dim value As Single = target.GetPowerCompressorOff(2500)
-			Assert.AreEqual(expected, value)
+			Dim value As Watt = target.GetPowerCompressorOff(2500)
+			Assert.AreEqual(expected, value.Value(), 0.001)
 		End Sub
 
 
@@ -135,7 +136,7 @@ Namespace UnitTests
 
 			Dim actual = target.GetFlowRate(1750)
 
-			Assert.AreEqual(actual, 300)
+			Assert.AreEqual(300, actual.Value(), 0.001)
 		End Sub
 	End Class
 End Namespace

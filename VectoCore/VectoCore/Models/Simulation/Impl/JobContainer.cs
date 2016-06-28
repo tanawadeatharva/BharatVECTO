@@ -31,10 +31,10 @@
 
 using System;
 using System.Collections.Generic;
-using System.ComponentModel;
 using System.Diagnostics;
 using System.Linq;
 using System.Threading;
+using System.Threading.Tasks;
 using TUGraz.VectoCommon.Models;
 using TUGraz.VectoCore.Models.SimulationComponent.Data;
 using TUGraz.VectoCore.OutputData;
@@ -50,9 +50,6 @@ namespace TUGraz.VectoCore.Models.Simulation.Impl
 		private readonly SummaryDataContainer _sumWriter;
 
 		private static int _jobNumber;
-
-		private readonly AutoResetEvent _resetEvent = new AutoResetEvent(false);
-
 
 		/// <summary>
 		/// Initializes a new empty instance of the <see cref="JobContainer"/> class.
@@ -108,17 +105,16 @@ namespace TUGraz.VectoCore.Models.Simulation.Impl
 		public void Execute(bool multithreaded = true)
 		{
 			Log.Info("VectoRun started running. Executing Runs.");
-
-			foreach (var job in Runs) {
-				if (multithreaded) {
-					job.Started = true;
-					job.RunWorkerAsync();
+			if (multithreaded) {
+				Runs.ForEach(r => r.RunWorkerAsync());
+			} else {
+				var first = new Task(() => { });
+				var task = first;
+				foreach (var run in Runs) {
+					var r = run;
+					task = task.ContinueWith(t => r.RunWorkerAsync().Wait(), TaskContinuationOptions.OnlyOnRanToCompletion);
 				}
-			}
-			if (!multithreaded) {
-				var entry = Runs.First();
-				entry.Started = true;
-				entry.RunWorkerAsync();
+				first.Start();
 			}
 		}
 
@@ -127,6 +123,7 @@ namespace TUGraz.VectoCore.Models.Simulation.Impl
 			foreach (var job in Runs) {
 				job.CancelAsync();
 			}
+			WaitFinished();
 		}
 
 		public void CancelCurrent()
@@ -136,44 +133,42 @@ namespace TUGraz.VectoCore.Models.Simulation.Impl
 			}
 		}
 
-
 		public void WaitFinished()
 		{
-			_resetEvent.WaitOne();
+			try {
+				Task.WaitAll(Runs.Select(r => r.RunTask).ToArray());
+			} catch (Exception) {
+				// ignored
+			}
 		}
-
 
 		private void JobCompleted()
 		{
-			var next = Runs.FirstOrDefault(x => x.Started == false);
-			if (next != null) {
-				next.Started = true;
-				next.RunWorkerAsync();
-			}
 			if (AllCompleted) {
 				_sumWriter.Finish();
-				_resetEvent.Set();
 			}
-		}
-
-		public Dictionary<int, ProgressEntry> GetProgress()
-		{
-			return Runs.ToDictionary(jobEntry => jobEntry.Run.RunIdentifier, entry => new ProgressEntry {
-				RunName = entry.Run.RunName,
-				CycleName = entry.Run.CycleName,
-				RunSuffix = entry.Run.RunSuffix,
-				Progress = entry.Progress,
-				Done = entry.Done,
-				ExecTime = entry.ExecTime,
-				Success = entry.Success,
-				Canceled = entry.Canceled,
-				Error = entry.ExecException
-			});
 		}
 
 		public bool AllCompleted
 		{
 			get { return Runs.All(r => r.Done); }
+		}
+
+		public Dictionary<int, ProgressEntry> GetProgress()
+		{
+			return Runs.ToDictionary(
+				r => r.Run.RunIdentifier,
+				r => new ProgressEntry {
+					RunName = r.Run.RunName,
+					CycleName = r.Run.CycleName,
+					RunSuffix = r.Run.RunSuffix,
+					Progress = r.Run.Progress,
+					Done = r.Done,
+					ExecTime = r.ExecTime,
+					Success = r.Success,
+					Canceled = r.Canceled,
+					Error = r.ExecException
+				});
 		}
 
 		public class ProgressEntry
@@ -189,7 +184,7 @@ namespace TUGraz.VectoCore.Models.Simulation.Impl
 			public string RunSuffix;
 		}
 
-		internal class RunEntry : LoggingObject, IDisposable
+		internal class RunEntry : LoggingObject
 		{
 			public IVectoRun Run;
 			public JobContainer JobContainer;
@@ -200,56 +195,37 @@ namespace TUGraz.VectoCore.Models.Simulation.Impl
 			public bool Canceled;
 			public double ExecTime;
 			public Exception ExecException;
-
-			private readonly BackgroundWorker _worker = new BackgroundWorker();
+			public Task RunTask;
 
 			public RunEntry()
 			{
-				_worker.DoWork += OnDoWork;
-				_worker.RunWorkerCompleted += OnRunWorkerCompleted;
-				_worker.WorkerSupportsCancellation = true;
+				RunTask = new Task(() => {
+					Started = true;
+					var stopWatch = Stopwatch.StartNew();
+					try {
+						Run.Run();
+					} catch (Exception ex) {
+						Log.Error(ex, "Error during simulation run!");
+						ExecException = ex;
+					}
+					stopWatch.Stop();
+					Success = Run.FinishedWithoutErrors;
+					Done = true;
+					ExecTime = stopWatch.Elapsed.TotalMilliseconds;
+					JobContainer.JobCompleted();
+				});
 			}
 
-			public void RunWorkerAsync()
+			public Task RunWorkerAsync()
 			{
-				_worker.RunWorkerAsync();
+				RunTask.Start();
+				return RunTask;
 			}
 
 			public void CancelAsync()
 			{
-				_worker.CancelAsync();
-			}
-
-			private void OnDoWork(object sender, DoWorkEventArgs e)
-			{
-				var stopWatch = Stopwatch.StartNew();
-				try {
-					Run.Run(_worker, x => Progress = x);
-				} catch (Exception ex) {
-					Log.Error(ex, "Error during simulation run!");
-					ExecException = ex;
-				}
-				if (_worker.CancellationPending) {
-					e.Cancel = true;
-					Canceled = true;
-				}
-				stopWatch.Stop();
-				Success = Run.FinishedWithoutErrors;
-				Done = true;
-				ExecTime = stopWatch.Elapsed.TotalMilliseconds;
-				JobContainer.JobCompleted();
-			}
-
-			private void OnRunWorkerCompleted(object sender, RunWorkerCompletedEventArgs e)
-			{
-				if (e.Error != null) {
-					ExecException = e.Error;
-				}
-			}
-
-			public void Dispose()
-			{
-				_worker.Dispose();
+				Run.Cancel();
+				Canceled = true;
 			}
 		}
 	}

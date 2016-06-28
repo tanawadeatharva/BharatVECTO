@@ -93,15 +93,15 @@ namespace TUGraz.VectoCore.Models.Declaration
 		{
 			var wheelsEntry = Wheels.Lookup(wheels.RemoveWhitespace());
 			try {
-			var rimsEntry = Rims.Lookup(rims);
+				var rimsEntry = Rims.Lookup(rims);
 
-			var correction = wheelsEntry.SizeClass != "a" ? rimsEntry.F_b : rimsEntry.F_a;
+				var correction = wheelsEntry.SizeClass != "a" ? rimsEntry.F_b : rimsEntry.F_a;
 
-			return wheelsEntry.DynamicTyreRadius * correction / (2 * Math.PI);
+				return wheelsEntry.DynamicTyreRadius * correction / (2 * Math.PI);
 			} catch (KeyNotFoundException) {
 				throw new VectoException(
 					"Calculating Dynamic Tyre Radius not possible: Declaration Lookup could not find Key '{0}' for rim.", rims);
-		}
+			}
 		}
 
 		public static Fan Fan
@@ -174,9 +174,12 @@ namespace TUGraz.VectoCore.Models.Declaration
 			{
 				public const bool Enabled = true;
 
-				public static readonly MeterPerSquareSecond Deceleration = -0.5.SI<MeterPerSquareSecond>();
+				//public static readonly MeterPerSquareSecond Deceleration = -0.5.SI<MeterPerSquareSecond>();
+				//public static readonly MeterPerSecond MinimumSpeed = 50.KMPHtoMeterPerSecond();
 
-				public static readonly MeterPerSecond MinimumSpeed = 50.KMPHtoMeterPerSecond();
+				public const double DecisionFactorCoastingOffset = 2.5;
+				public const double DecisionFactorCoastingScaling = 1.5;
+				public const double LookAheadDistanceFactor = 10;
 			}
 
 			public static class OverSpeedEcoRoll

@@ -30,11 +30,12 @@
 */
 
 using TUGraz.VectoCore.Models.SimulationComponent.Data.Gearbox;
+using TUGraz.VectoCore.Utils;
 
 namespace TUGraz.VectoCore.Models.SimulationComponent.Data
 {
 	public class AxleGearData : SimulationComponentData
 	{
-		public GearData AxleGear;
+		[ValidateObject] public GearData AxleGear;
 	}
 }

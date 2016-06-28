@@ -51,5 +51,11 @@ namespace TUGraz.VectoCore.Models.Simulation.DataBus
 		Kilogram VehicleLoading { get; }
 
 		Kilogram TotalMass { get; }
+
+		Newton AirDragResistance(MeterPerSecond previousVelocity, MeterPerSecond nextVelocity);
+
+		Newton RollingResistance(Radian gradient);
+
+		Newton SlopeResistance(Radian gradient);
 	}
 }

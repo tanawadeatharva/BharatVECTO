@@ -9,421 +9,415 @@
 '
 ' See the LICENSE.txt for the specific language governing permissions and limitations.
 Imports System.Collections.Generic
+Imports System.IO
+Imports System.Text
+Imports Microsoft.VisualBasic.FileIO
 Imports Newtonsoft.Json
 
+''' <summary>
+''' uses JSON.NET http://json.codeplex.com/
+''' </summary>
+''' <remarks></remarks>
+Public Class JSON
+	Public Content As Dictionary(Of String, Object)
+	Public ErrorMsg As String
 
-'uses JSON.NET http://json.codeplex.com/
+	Public Sub New()
+		Content = New Dictionary(Of String, Object)
+	End Sub
 
-Public Class cJSON
-    Public Content As Dictionary(Of String, Object)
-    Public ErrorMsg As String
+	''' <summary>
+	''' Reads a JSON File into the Content variable.
+	''' </summary>
+	''' <param name="path"></param>
+	''' <returns></returns>
+	''' <remarks></remarks>
+	Public Function ReadFile(path As String) As Boolean
+		Dim file As TextFieldParser
+		Dim str As String
 
-    Public Sub New()
-        Content = New Dictionary(Of String, Object)
-    End Sub
+		Content.Clear()
 
+		If Not IO.File.Exists(path) Then
+			ErrorMsg = "file not found"
+			Return False
+		End If
 
-    Public Function ReadFile(ByVal path As String) As Boolean
-        Dim file As Microsoft.VisualBasic.FileIO.TextFieldParser
-        Dim str As String
+		Try
+			file = New TextFieldParser(path)
+		Catch ex As Exception
+			ErrorMsg = ex.Message
+			Return False
+		End Try
 
+		If file.EndOfData Then
+			file.Close()
+			ErrorMsg = "file is empty"
+			Return False
+		End If
 
-        Content.Clear()
+		str = file.ReadToEnd
 
-        'check if file exists
-        If Not IO.File.Exists(path) Then
-            ErrorMsg = "file not found"
-            Return False
-        End If
+		file.Close()
 
-        'open file
-        Try
-            file = New Microsoft.VisualBasic.FileIO.TextFieldParser(path)
-        Catch ex As Exception
-            ErrorMsg = ex.Message
-            Return False
-        End Try
+		Try
+			Content = JsonConvert.DeserializeObject(str, Content.GetType)
+		Catch ex As Exception
+			ErrorMsg = ex.Message
+			Return False
+		End Try
 
-        'Check if file is empty
-        If file.EndOfData Then
-            file.Close()
-            ErrorMsg = "file is empty"
-            Return False
-        End If
+		Return True
+	End Function
 
-        'read file
-        str = file.ReadToEnd
+	''' <summary>
+	''' Writes the Content variable into a JSON file.
+	''' </summary>
+	''' <param name="path"></param>
+	''' <returns></returns>
+	''' <remarks></remarks>
+	Public Function WriteFile(path As String) As Boolean
+		Dim file As StreamWriter
+		Dim str As String
 
-        'close file
-        file.Close()
+		If Content.Count = 0 Then
+			Return False
+		End If
 
-        'parse JSON to Dictionary
-        Try
-            'JSONobj = JsonConvert.DeserializeObject(str)
-            Content = JsonConvert.DeserializeObject(str, Content.GetType)
-        Catch ex As Exception
-            ErrorMsg = ex.Message
-            Return False
-        End Try
+		Try
+			str = JsonConvert.SerializeObject(Content, Formatting.Indented)
+			file = My.Computer.FileSystem.OpenTextFileWriter(path, False)
+		Catch ex As Exception
+			Return False
+		End Try
 
-        Return True
+		file.Write(str)
+		file.Close()
 
-    End Function
-
-    Public Function WriteFile(ByVal path As String) As Boolean
-        Dim file As System.IO.StreamWriter
-        Dim str As String
-        Dim First As Boolean = True
-
-        If Content.Count = 0 Then Return False
-
-        Try
-            str = Newtonsoft.Json.JsonConvert.SerializeObject(Content, Formatting.Indented)
-            file = My.Computer.FileSystem.OpenTextFileWriter(path, False)
-        Catch ex As Exception
-            Return False
-        End Try
-
-        file.Write(str)
-
-        file.Close()
-
-        Return True
-
-    End Function
+		Return True
+	End Function
 
 
 #Region "old self-made parser"
-    Private fullfile As String
 
-    Private Function ReadFileXXX(ByVal path As String) As Boolean
-        Dim file As Microsoft.VisualBasic.FileIO.TextFieldParser
+	Private fullfile As String
 
-        Content.Clear()
+	Private Function ReadFileXXX(path As String) As Boolean
+		Dim file As TextFieldParser
 
-        'check if file exists
-        If Not IO.File.Exists(path) Then Return False
+		Content.Clear()
 
-        'open file
-        Try
-            file = New Microsoft.VisualBasic.FileIO.TextFieldParser(path)
-        Catch ex As Exception
-            Return False
-        End Try
+		'check if file exists
+		If Not IO.File.Exists(path) Then Return False
 
-        'Check if file is empty
-        If file.EndOfData Then
-            file.Close()
-            Return False
-        End If
+		'open file
+		Try
+			file = New TextFieldParser(path)
+		Catch ex As Exception
+			Return False
+		End Try
 
-        'read file
-        fullfile = file.ReadToEnd
+		'Check if file is empty
+		If file.EndOfData Then
+			file.Close()
+			Return False
+		End If
 
-        'close file
-        file.Close()
+		'read file
+		fullfile = file.ReadToEnd
 
-        'trim spaces
-        fullfile = fullfile.Trim
+		'close file
+		file.Close()
 
-        'remove line breaks
-        fullfile = fullfile.Replace(vbCrLf, "")
+		'trim spaces
+		fullfile = fullfile.Trim
 
-        If Left(fullfile, 1) <> "{" Or Right(fullfile, 1) <> "}" Then Return False
+		'remove line breaks
+		fullfile = fullfile.Replace(vbCrLf, "")
 
-        'parse JSON to Dictionary
-        Try
-            Content = GetObject()
-        Catch ex As Exception
-            Return False
-        End Try
+		If Left(fullfile, 1) <> "{" Or Right(fullfile, 1) <> "}" Then Return False
 
+		'parse JSON to Dictionary
+		Try
+			Content = GetObject()
+		Catch ex As Exception
+			Return False
+		End Try
 
-        Return True
 
-    End Function
+		Return True
+	End Function
 
 
+	Private Function WriteFileXXX(path As String) As Boolean
+		Dim file As StreamWriter
+		Dim kv As KeyValuePair(Of String, Object)
+		Dim str As New StringBuilder
+		Dim First As Boolean = True
 
+		If Content.Count = 0 Then Return False
 
-    Private Function WriteFileXXX(ByVal path As String) As Boolean
-        Dim file As System.IO.StreamWriter
-        Dim kv As KeyValuePair(Of String, Object)
-        Dim str As New System.Text.StringBuilder
-        Dim First As Boolean = True
+		Try
+			str.AppendLine("{")
+			For Each kv In Content
+				If First Then
+					First = False
+				Else
+					str.AppendLine(",")
+				End If
+				str.Append(GetKeyValString(1, kv))
+			Next
+			str.AppendLine()
+			str.AppendLine("}")
+		Catch ex As Exception
+			Return False
+		End Try
 
-        If Content.Count = 0 Then Return False
+		Try
+			file = My.Computer.FileSystem.OpenTextFileWriter(path, False)
+		Catch ex As Exception
+			Return False
+		End Try
 
-        Try
-            str.AppendLine("{")
-            For Each kv In Content
-                If First Then
-                    First = False
-                Else
-                    str.AppendLine(",")
-                End If
-                str.Append(GetKeyValString(1, kv))
-            Next
-            str.AppendLine()
-            str.AppendLine("}")
-        Catch ex As Exception
-            Return False
-        End Try
+		file.Write(str.ToString)
 
-        Try
-            file = My.Computer.FileSystem.OpenTextFileWriter(path, False)
-        Catch ex As Exception
-            Return False
-        End Try
+		file.Close()
 
-        file.Write(str.ToString)
+		Return True
+	End Function
 
-        file.Close()
+	Private Function GetKeyValString(TabLvl As Integer, ByRef kv As KeyValuePair(Of String, Object)) As String
+		Dim str As New StringBuilder
+		Dim obj As Object
+		Dim kv0 As KeyValuePair(Of String, Object)
+		Dim First As Boolean
 
-        Return True
+		str.Append(Tabs(TabLvl) & ChrW(34) & kv.Key & ChrW(34) & ": ")
 
-    End Function
+		Select Case kv.Value.GetType
 
-    Private Function GetKeyValString(ByVal TabLvl As Integer, ByRef kv As KeyValuePair(Of String, Object)) As String
-        Dim str As New System.Text.StringBuilder
-        Dim obj As Object
-        Dim kv0 As KeyValuePair(Of String, Object)
-        Dim First As Boolean
+			Case GetType(Dictionary(Of String, Object))
 
-        str.Append(Tabs(TabLvl) & ChrW(34) & kv.Key & ChrW(34) & ": ")
+				str.AppendLine("{")
 
-        Select Case kv.Value.GetType
+				First = True
+				For Each kv0 In kv.Value
+					If First Then
+						First = False
+					Else
+						str.AppendLine(",")
+					End If
+					str.Append(GetKeyValString(TabLvl + 1, kv0))
+				Next
 
-            Case GetType(Dictionary(Of String, Object))
+				str.AppendLine()
+				str.Append(Tabs(TabLvl) & "}")
 
-                str.AppendLine("{")
+			Case GetType(List(Of Object))
 
-                First = True
-                For Each kv0 In kv.Value
-                    If First Then
-                        First = False
-                    Else
-                        str.AppendLine(",")
-                    End If
-                    str.Append(GetKeyValString(TabLvl + 1, kv0))
-                Next
+				str.AppendLine("[")
 
-                str.AppendLine()
-                str.Append(Tabs(TabLvl) & "}")
+				First = True
+				For Each obj In kv.Value
+					If First Then
+						First = False
+					Else
+						str.AppendLine(",")
+					End If
+					str.Append(Tabs(TabLvl + 1) & GetObjString(TabLvl + 1, obj))
+				Next
 
-            Case GetType(List(Of Object))
+				str.AppendLine()
+				str.Append(Tabs(TabLvl) & "]")
 
-                str.AppendLine("[")
+			Case Else
 
-                First = True
-                For Each obj In kv.Value
-                    If First Then
-                        First = False
-                    Else
-                        str.AppendLine(",")
-                    End If
-                    str.Append(Tabs(TabLvl + 1) & GetObjString(TabLvl + 1, obj))
-                Next
+				str.Append(GetObjString(TabLvl + 1, kv.Value))
 
-                str.AppendLine()
-                str.Append(Tabs(TabLvl) & "]")
+		End Select
 
-            Case Else
+		Return str.ToString
+	End Function
 
-                str.Append(GetObjString(TabLvl + 1, kv.Value))
+	Private Function GetObjString(TabLvl As Integer, ByRef obj As Object) As String
+		Dim kv0 As KeyValuePair(Of String, Object)
+		Dim First As Boolean
+		Dim str As StringBuilder
 
-        End Select
+		If obj Is Nothing Then
+			Return "null"
+		Else
+			Select Case obj.GetType
 
-        Return str.ToString
+				Case GetType(Dictionary(Of String, Object))
 
-    End Function
+					str = New StringBuilder
+					str.AppendLine("{")
 
-    Private Function GetObjString(ByVal TabLvl As Integer, ByRef obj As Object) As String
-        Dim kv0 As KeyValuePair(Of String, Object)
-        Dim First As Boolean
-        Dim str As System.Text.StringBuilder
+					First = True
+					For Each kv0 In obj
+						If First Then
+							First = False
+						Else
+							str.AppendLine(",")
+						End If
+						str.Append(GetKeyValString(TabLvl + 1, kv0))
+					Next
 
-        If obj Is Nothing Then
-            Return "null"
-        Else
-            Select Case obj.GetType
+					str.AppendLine()
+					str.Append(Tabs(TabLvl) & "}")
 
-                Case GetType(Dictionary(Of String, Object))
+					Return str.ToString
 
-                    str = New System.Text.StringBuilder
-                    str.AppendLine("{")
+				Case GetType(String)
 
-                    First = True
-                    For Each kv0 In obj
-                        If First Then
-                            First = False
-                        Else
-                            str.AppendLine(",")
-                        End If
-                        str.Append(GetKeyValString(TabLvl + 1, kv0))
-                    Next
+					Return ChrW(34) & CStr(obj) & ChrW(34)
 
-                    str.AppendLine()
-                    str.Append(Tabs(TabLvl) & "}")
+				Case GetType(Boolean)
 
-                    Return str.ToString
+					If CBool(obj) Then
+						Return "true"
+					Else
+						Return "false"
+					End If
 
-                Case GetType(String)
+				Case Else
 
-                    Return ChrW(34) & CStr(obj) & ChrW(34)
+					Return CDbl(obj).ToString
 
-                Case GetType(Boolean)
+			End Select
+		End If
+	End Function
 
-                    If CBool(obj) Then
-                        Return "true"
-                    Else
-                        Return "false"
-                    End If
+	Private Function Tabs(l As Integer) As String
+		Dim i As Integer
+		Dim str As String
 
-                Case Else
+		str = ""
+		For i = 1 To l
+			str &= vbTab
+		Next
 
-                    Return CDbl(obj).ToString
+		Return str
+	End Function
 
-            End Select
-        End If
+	Private Function GetObject() As Dictionary(Of String, Object)
+		Dim MyDic As Dictionary(Of String, Object)
+		Dim key As String
+		Dim obj As Object
+		Dim i As Integer
+		Dim i2 As Integer
+		Dim Valstr As String
+		Dim ValList As List(Of Object) = Nothing
+		Dim ArrayMode As Boolean = False
 
+		'remove {
+		fullfile = (Right(fullfile, Len(fullfile) - 1)).Trim
 
-    End Function
+		'new list of key/value pairs
+		MyDic = New Dictionary(Of String, Object)
 
-    Private Function Tabs(ByVal l As Integer) As String
-        Dim i As Integer
-        Dim str As String
 
-        str = ""
-        For i = 1 To l
-            str &= vbTab
-        Next
-
-        Return str
-    End Function
-
-    Private Function GetObject() As Dictionary(Of String, Object)
-        Dim MyDic As Dictionary(Of String, Object)
-        Dim key As String
-        Dim obj As Object
-        Dim i As Integer
-        Dim i2 As Integer
-        Dim Valstr As String
-        Dim ValList As List(Of Object) = Nothing
-        Dim ArrayMode As Boolean = False
-
-        'remove {
-        fullfile = (Right(fullfile, Len(fullfile) - 1)).Trim
-
-        'new list of key/value pairs
-        MyDic = New Dictionary(Of String, Object)
-
-
-        'loop through key/value pairs
+		'loop through key/value pairs
 lb10:
-        If Left(fullfile, 1) <> ChrW(34) Then
-            Throw New Exception
-            Return Nothing
-        End If
+		If Left(fullfile, 1) <> ChrW(34) Then
+			Throw New Exception
+			Return Nothing
+		End If
 
-        'get key
-        i = fullfile.IndexOf(ChrW(34), 1)
-        key = Mid(fullfile, 2, i - 1)
-        fullfile = (Right(fullfile, Len(fullfile) - i - 1)).Trim
-        fullfile = (Right(fullfile, Len(fullfile) - 1)).Trim
+		'get key
+		i = fullfile.IndexOf(ChrW(34), 1)
+		key = Mid(fullfile, 2, i - 1)
+		fullfile = (Right(fullfile, Len(fullfile) - i - 1)).Trim
+		fullfile = (Right(fullfile, Len(fullfile) - 1)).Trim
 
-        If key = "" Then
-            Throw New Exception
-            Return Nothing
-        End If
+		If key = "" Then
+			Throw New Exception
+			Return Nothing
+		End If
 
-        'get value (object, number, boolean, array)
-        If Left(fullfile, 1) = "[" Then
-            ArrayMode = True
-            fullfile = (Right(fullfile, Len(fullfile) - 1)).Trim
-            ValList = New List(Of Object)
-        End If
+		'get value (object, number, boolean, array)
+		If Left(fullfile, 1) = "[" Then
+			ArrayMode = True
+			fullfile = (Right(fullfile, Len(fullfile) - 1)).Trim
+			ValList = New List(Of Object)
+		End If
 
 lb20:
-        If Left(fullfile, 1) = "{" Then
-            obj = GetObject()
-        Else
-            If Left(fullfile, 1) = ChrW(34) Then
-                'string
-                i = fullfile.IndexOf(ChrW(34), 1)
-                obj = Mid(fullfile, 2, i - 1)
-                fullfile = (Right(fullfile, Len(fullfile) - i - 1)).Trim
-            Else
-                'number/boolean
-                i = fullfile.IndexOf(",", 1)
-                i2 = fullfile.IndexOf("}", 1)
+		If Left(fullfile, 1) = "{" Then
+			obj = GetObject()
+		Else
+			If Left(fullfile, 1) = ChrW(34) Then
+				'string
+				i = fullfile.IndexOf(ChrW(34), 1)
+				obj = Mid(fullfile, 2, i - 1)
+				fullfile = (Right(fullfile, Len(fullfile) - i - 1)).Trim
+			Else
+				'number/boolean
+				i = fullfile.IndexOf(",", 1)
+				i2 = fullfile.IndexOf("}", 1)
 
-                If i = -1 Then
-                    If i2 = -1 Then
-                        Valstr = Right(fullfile, Len(fullfile) - 1)
-                        fullfile = ""
-                    Else
-                        Valstr = Mid(fullfile, 1, i2)
-                        fullfile = (Right(fullfile, Len(fullfile) - i2)).Trim
-                    End If
-                Else
-                    If i2 = -1 Or i < i2 Then
-                        Valstr = Mid(fullfile, 1, i)
-                        fullfile = (Right(fullfile, Len(fullfile) - i)).Trim
-                    Else
-                        Valstr = Mid(fullfile, 1, i2)
-                        fullfile = (Right(fullfile, Len(fullfile) - i2)).Trim
-                    End If
-                End If
+				If i = -1 Then
+					If i2 = -1 Then
+						Valstr = Right(fullfile, Len(fullfile) - 1)
+						fullfile = ""
+					Else
+						Valstr = Mid(fullfile, 1, i2)
+						fullfile = (Right(fullfile, Len(fullfile) - i2)).Trim
+					End If
+				Else
+					If i2 = -1 Or i < i2 Then
+						Valstr = Mid(fullfile, 1, i)
+						fullfile = (Right(fullfile, Len(fullfile) - i)).Trim
+					Else
+						Valstr = Mid(fullfile, 1, i2)
+						fullfile = (Right(fullfile, Len(fullfile) - i2)).Trim
+					End If
+				End If
 
-                If IsNumeric(Valstr) Then
-                    obj = CDbl(Valstr)
-                ElseIf (UCase(Valstr)).Trim = "FALSE" Then
-                    obj = False
-                ElseIf (UCase(Valstr)).Trim = "TRUE" Then
-                    obj = True
-                ElseIf (UCase(Valstr)).Trim = "NULL" Then
-                    obj = Nothing
-                Else
-                    Throw New Exception
-                    Return Nothing
-                End If
+				If IsNumeric(Valstr) Then
+					obj = CDbl(Valstr)
+				ElseIf (UCase(Valstr)).Trim = "FALSE" Then
+					obj = False
+				ElseIf (UCase(Valstr)).Trim = "TRUE" Then
+					obj = True
+				ElseIf (UCase(Valstr)).Trim = "NULL" Then
+					obj = Nothing
+				Else
+					Throw New Exception
+					Return Nothing
+				End If
 
-            End If
-        End If
+			End If
+		End If
 
-        If ArrayMode Then
-            ValList.Add(obj)
-            If Left(fullfile, 1) = "]" Then
-                ArrayMode = False
-                fullfile = (Right(fullfile, Len(fullfile) - 1)).Trim
-                MyDic.Add(key, ValList)
-            End If
-        Else
-            MyDic.Add(key, obj)
-        End If
+		If ArrayMode Then
+			ValList.Add(obj)
+			If Left(fullfile, 1) = "]" Then
+				ArrayMode = False
+				fullfile = (Right(fullfile, Len(fullfile) - 1)).Trim
+				MyDic.Add(key, ValList)
+			End If
+		Else
+			MyDic.Add(key, obj)
+		End If
 
-        If Left(fullfile, 1) = "," Then
-            fullfile = (Right(fullfile, Len(fullfile) - 1)).Trim
-            If ArrayMode Then
-                GoTo lb20
-            Else
-                GoTo lb10
-            End If
-        End If
+		If Left(fullfile, 1) = "," Then
+			fullfile = (Right(fullfile, Len(fullfile) - 1)).Trim
+			If ArrayMode Then
+				GoTo lb20
+			Else
+				GoTo lb10
+			End If
+		End If
 
-        If Left(fullfile, 1) = "}" Then
-            fullfile = (Right(fullfile, Len(fullfile) - 1)).Trim
-        End If
+		If Left(fullfile, 1) = "}" Then
+			fullfile = (Right(fullfile, Len(fullfile) - 1)).Trim
+		End If
 
-        Return MyDic
-
-
-    End Function
+		Return MyDic
+	End Function
 
 
 #End Region
-
-
-
 End Class

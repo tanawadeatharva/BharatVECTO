@@ -1,4 +1,5 @@
 ﻿
+Imports TUGraz.VectoCommon.Utils
 Imports VectoAuxiliaries.Electrics
 Imports VectoAuxiliaries.Pneumatics
 Imports VectoAuxiliaries.Hvac
@@ -6,97 +7,103 @@ Imports VectoAuxiliaries.DownstreamModules
 
 
 Public Class M6_Mock
- Implements IM6
+	Implements IM6
+
+	Public Property _AveragePowerDemandAtCrankFromPneumatics As Watt
+	Public Property _AvgPowerDemandAtCrankFromElectricsIncHVAC As Watt
+	Public Property _OverrunFlag As Integer
+	Public Property _SmartElecAndPneumaticAirCompPowerGenAtCrank As Watt
+	Public Property _SmartElecAndPneumaticAltPowerGenAtCrank As Watt
+	Public Property _SmartElecAndPneumaticsCompressorFlag As Integer
+	Public Property _SmartElecOnlyAltPowerGenAtCrank As Watt
+	Public Property _SmartPneumaticOnlyAirCompPowerGenAtCrank As Watt
+	Public Property _SmartPneumaticsOnlyCompressorFlag As Integer
 
 
-Public Property _AveragePowerDemandAtCrankFromPneumatics       As Single
-public property _AvgPowerDemandAtCrankFromElectricsIncHVAC     As single
-public property _OverrunFlag                                   As integer
-public property _SmartElecAndPneumaticAirCompPowerGenAtCrank   As single
-public property _SmartElecAndPneumaticAltPowerGenAtCrank       As single
-public property _SmartElecAndPneumaticsCompressorFlag          As integer
-public property _SmartElecOnlyAltPowerGenAtCrank               As single
-public property _SmartPneumaticOnlyAirCompPowerGenAtCrank      As single
-public property _SmartPneumaticsOnlyCompressorFlag             As integer
+	Public ReadOnly Property AveragePowerDemandAtCrankFromPneumatics As Watt _
+		Implements IM6.AveragePowerDemandAtCrankFromPneumatics
+		Get
+			Return _AveragePowerDemandAtCrankFromPneumatics
+		End Get
+	End Property
+
+	Public ReadOnly Property AvgPowerDemandAtCrankFromElectricsIncHVAC As Watt _
+		Implements IM6.AvgPowerDemandAtCrankFromElectricsIncHVAC
+		Get
+			Return _AvgPowerDemandAtCrankFromElectricsIncHVAC
+		End Get
+	End Property
+
+	Public ReadOnly Property OverrunFlag As Boolean Implements IM6.OverrunFlag
+		Get
+			Return _OverrunFlag
+		End Get
+	End Property
+
+	Public ReadOnly Property SmartElecAndPneumaticAirCompPowerGenAtCrank As Watt _
+		Implements IM6.SmartElecAndPneumaticAirCompPowerGenAtCrank
+		Get
+			Return _SmartElecAndPneumaticAirCompPowerGenAtCrank
+		End Get
+	End Property
+
+	Public ReadOnly Property SmartElecAndPneumaticAltPowerGenAtCrank As Watt _
+		Implements IM6.SmartElecAndPneumaticAltPowerGenAtCrank
+		Get
+			Return _SmartElecAndPneumaticAltPowerGenAtCrank
+		End Get
+	End Property
+
+	Public ReadOnly Property SmartElecAndPneumaticsCompressorFlag As Boolean _
+		Implements IM6.SmartElecAndPneumaticsCompressorFlag
+		Get
+			Return _SmartElecAndPneumaticsCompressorFlag
+		End Get
+	End Property
+
+	Public ReadOnly Property SmartElecOnlyAltPowerGenAtCrank As Watt Implements IM6.SmartElecOnlyAltPowerGenAtCrank
+		Get
+			Return _SmartElecOnlyAltPowerGenAtCrank
+		End Get
+	End Property
+
+	Public ReadOnly Property SmartPneumaticOnlyAirCompPowerGenAtCrank As Watt _
+		Implements IM6.SmartPneumaticOnlyAirCompPowerGenAtCrank
+		Get
+			Return _SmartPneumaticOnlyAirCompPowerGenAtCrank
+		End Get
+	End Property
+
+	Public ReadOnly Property SmartPneumaticsOnlyCompressorFlag As Boolean Implements IM6.SmartPneumaticsOnlyCompressorFlag
+		Get
+			Return _SmartPneumaticsOnlyCompressorFlag
+		End Get
+	End Property
 
 
-    Public ReadOnly Property AveragePowerDemandAtCrankFromPneumatics As Single Implements IM6.AveragePowerDemandAtCrankFromPneumatics
-        Get
-        Return _AveragePowerDemandAtCrankFromPneumatics
-        End Get
+	Public Sub New()
+	End Sub
 
-    End Property
-    Public ReadOnly Property AvgPowerDemandAtCrankFromElectricsIncHVAC As Single Implements IM6.AvgPowerDemandAtCrankFromElectricsIncHVAC
-        Get
-        Return _AvgPowerDemandAtCrankFromElectricsIncHVAC
-        End Get
-    End Property
-    Public ReadOnly Property OverrunFlag As Integer Implements IM6.OverrunFlag
-        Get
-        Return _OverrunFlag
-        End Get
-    End Property
-    Public ReadOnly Property SmartElecAndPneumaticAirCompPowerGenAtCrank As Single Implements IM6.SmartElecAndPneumaticAirCompPowerGenAtCrank
-        Get
-        Return _SmartElecAndPneumaticAirCompPowerGenAtCrank
-        End Get
-    End Property
-    Public ReadOnly Property SmartElecAndPneumaticAltPowerGenAtCrank As Single Implements IM6.SmartElecAndPneumaticAltPowerGenAtCrank
-        Get
-         Return _SmartElecAndPneumaticAltPowerGenAtCrank
-        End Get
-    End Property
-    Public ReadOnly Property SmartElecAndPneumaticsCompressorFlag As Integer Implements IM6.SmartElecAndPneumaticsCompressorFlag
-        Get
-          Return _SmartElecAndPneumaticsCompressorFlag
-        End Get
-    End Property
-    Public ReadOnly Property SmartElecOnlyAltPowerGenAtCrank As Single Implements IM6.SmartElecOnlyAltPowerGenAtCrank
-        Get
-        Return _SmartElecOnlyAltPowerGenAtCrank
-        End Get
-    End Property
-    Public ReadOnly Property SmartPneumaticOnlyAirCompPowerGenAtCrank As Single Implements IM6.SmartPneumaticOnlyAirCompPowerGenAtCrank
-        Get
-          return _SmartPneumaticOnlyAirCompPowerGenAtCrank
-        End Get
-    End Property
-    Public ReadOnly Property SmartPneumaticsOnlyCompressorFlag As Integer Implements IM6.SmartPneumaticsOnlyCompressorFlag
-        Get
-         Return _SmartPneumaticsOnlyCompressorFlag
-        End Get
-    End Property
+	Public Sub New(AveragePowerDemandAtCrankFromPneumatics As Double,
+					AvgPowerDemandAtCrankFromElectricsIncHVAC As Double,
+					OverrunFlag As Boolean,
+					SmartElecAndPneumaticAirCompPowerGenAtCrank As Double,
+					SmartElecAndPneumaticAltPowerGenAtCrank As Double,
+					SmartElecAndPneumaticsCompressorFlag As Boolean,
+					SmartElecOnlyAltPowerGenAtCrank As Double,
+					SmartPneumaticOnlyAirCompPowerGenAtCrank As Double,
+					SmartPneumaticsOnlyCompressorFlag As Boolean)
 
 
-    Public Sub new()
-
-    End Sub
-
-    Public Sub new(_AveragePowerDemandAtCrankFromPneumatics       As Single , _
-                   _AvgPowerDemandAtCrankFromElectricsIncHVAC     As single , _
-                   _OverrunFlag                                   As integer, _
-                   _SmartElecAndPneumaticAirCompPowerGenAtCrank   As single , _
-                   _SmartElecAndPneumaticAltPowerGenAtCrank       As single , _
-                   _SmartElecAndPneumaticsCompressorFlag          As integer, _
-                   _SmartElecOnlyAltPowerGenAtCrank               As single , _
-                   _SmartPneumaticOnlyAirCompPowerGenAtCrank      As single , _
-                   _SmartPneumaticsOnlyCompressorFlag             As integer)
-
-
-       _AveragePowerDemandAtCrankFromPneumatics     = AveragePowerDemandAtCrankFromPneumatics
-       _AvgPowerDemandAtCrankFromElectricsIncHVAC   = AvgPowerDemandAtCrankFromElectricsIncHVAC
-       _OverrunFlag                                 = OverrunFlag
-       _SmartElecAndPneumaticAirCompPowerGenAtCrank = SmartElecAndPneumaticAirCompPowerGenAtCrank
-       _SmartElecAndPneumaticAltPowerGenAtCrank     = SmartElecAndPneumaticAltPowerGenAtCrank
-       _SmartElecAndPneumaticsCompressorFlag        = SmartElecAndPneumaticsCompressorFlag
-       _SmartElecOnlyAltPowerGenAtCrank             = SmartElecOnlyAltPowerGenAtCrank
-       _SmartPneumaticOnlyAirCompPowerGenAtCrank    = SmartPneumaticOnlyAirCompPowerGenAtCrank
-       _SmartPneumaticsOnlyCompressorFlag           = SmartPneumaticsOnlyCompressorFlag
-                                                         
-                                                           
-                                                                   
-    End Sub                                               
-                                                                 
-
+		_AveragePowerDemandAtCrankFromPneumatics = AveragePowerDemandAtCrankFromPneumatics.SI(Of Watt)()
+		_AvgPowerDemandAtCrankFromElectricsIncHVAC = AvgPowerDemandAtCrankFromElectricsIncHVAC.SI(Of Watt)()
+		_OverrunFlag = OverrunFlag
+		_SmartElecAndPneumaticAirCompPowerGenAtCrank = SmartElecAndPneumaticAirCompPowerGenAtCrank.SI(Of Watt)()
+		_SmartElecAndPneumaticAltPowerGenAtCrank = SmartElecAndPneumaticAltPowerGenAtCrank.SI(Of Watt)()
+		_SmartElecAndPneumaticsCompressorFlag = SmartElecAndPneumaticsCompressorFlag
+		_SmartElecOnlyAltPowerGenAtCrank = SmartElecOnlyAltPowerGenAtCrank.SI(Of Watt)()
+		_SmartPneumaticOnlyAirCompPowerGenAtCrank = SmartPneumaticOnlyAirCompPowerGenAtCrank.SI(Of Watt)()
+		_SmartPneumaticsOnlyCompressorFlag = SmartPneumaticsOnlyCompressorFlag
+	End Sub
 End Class
 

@@ -9,47 +9,47 @@
 '
 ' See the LICENSE.txt for the specific language governing permissions and limitations.
 
+Imports TUGraz.VectoCommon.Utils
 Imports VectoAuxiliaries.Electrics
+
 Namespace Electrics
+	Public Class ElectricsUserInputsConfig
+		Implements IElectricsUserInputsConfig
 
-Public Class ElectricsUserInputsConfig
-Implements IElectricsUserInputsConfig
+		Public Property PowerNetVoltage As Double Implements IElectricsUserInputsConfig.PowerNetVoltage
+		Public Property AlternatorMap As String Implements IElectricsUserInputsConfig.AlternatorMap
+		Public Property AlternatorGearEfficiency As Double Implements IElectricsUserInputsConfig.AlternatorGearEfficiency
 
-        Public Property PowerNetVoltage As Single Implements IElectricsUserInputsConfig.PowerNetVoltage
-        Public Property AlternatorMap As String Implements IElectricsUserInputsConfig.AlternatorMap
-        Public Property AlternatorGearEfficiency As Single Implements IElectricsUserInputsConfig.AlternatorGearEfficiency
-        Public Property ElectricalConsumers As IElectricalConsumerList Implements IElectricsUserInputsConfig.ElectricalConsumers
-        Public Property DoorActuationTimeSecond As Integer Implements IElectricsUserInputsConfig.DoorActuationTimeSecond
-        Public Property StoredEnergyEfficiency As Single Implements IElectricsUserInputsConfig.StoredEnergyEfficiency
+		Public Property ElectricalConsumers As IElectricalConsumerList _
+			Implements IElectricsUserInputsConfig.ElectricalConsumers
 
-        Public Property ResultCardIdle As IResultCard Implements IElectricsUserInputsConfig.ResultCardIdle
-        Public Property ResultCardTraction As IResultCard Implements IElectricsUserInputsConfig.ResultCardTraction
-        Public Property ResultCardOverrun As IResultCard Implements IElectricsUserInputsConfig.ResultCardOverrun
+		Public Property DoorActuationTimeSecond As Integer Implements IElectricsUserInputsConfig.DoorActuationTimeSecond
+		Public Property StoredEnergyEfficiency As Single Implements IElectricsUserInputsConfig.StoredEnergyEfficiency
 
-        Public Property SmartElectrical As Boolean Implements IElectricsUserInputsConfig.SmartElectrical
+		Public Property ResultCardIdle As IResultCard Implements IElectricsUserInputsConfig.ResultCardIdle
+		Public Property ResultCardTraction As IResultCard Implements IElectricsUserInputsConfig.ResultCardTraction
+		Public Property ResultCardOverrun As IResultCard Implements IElectricsUserInputsConfig.ResultCardOverrun
 
-        Public Sub New(Optional setToDefaults As Boolean = False, Optional vectoInputs As VectoInputs = Nothing)
+		Public Property SmartElectrical As Boolean Implements IElectricsUserInputsConfig.SmartElectrical
 
-            If setToDefaults Then SetPropertiesToDefaults(vectoInputs)
+		Public Sub New(Optional setToDefaults As Boolean = False, Optional vectoInputs As VectoInputs = Nothing)
 
-        End Sub
+			If setToDefaults Then SetPropertiesToDefaults(vectoInputs)
+		End Sub
 
-        Public Sub SetPropertiesToDefaults(vectoInputs As VectoInputs)
+		Public Sub SetPropertiesToDefaults(vectoInputs As VectoInputs)
 
-            DoorActuationTimeSecond = 4
-            StoredEnergyEfficiency = 0.935
-            AlternatorGearEfficiency = 0.92
-            PowerNetVoltage = vectoInputs.PowerNetVoltage
-            ResultCardIdle = New ResultCard(New List(Of SmartResult))
-            ResultCardOverrun = New ResultCard(New List(Of SmartResult))
-            ResultCardTraction = New ResultCard(New List(Of SmartResult))
-            SmartElectrical = False
-            AlternatorMap = String.Empty
-
-        End Sub
-End Class
-
+			DoorActuationTimeSecond = 4
+			StoredEnergyEfficiency = 0.935
+			AlternatorGearEfficiency = 0.92
+			PowerNetVoltage = vectoInputs.PowerNetVoltage.Value()
+			ResultCardIdle = New ResultCard(New List(Of SmartResult))
+			ResultCardOverrun = New ResultCard(New List(Of SmartResult))
+			ResultCardTraction = New ResultCard(New List(Of SmartResult))
+			SmartElectrical = False
+			AlternatorMap = String.Empty
+		End Sub
+	End Class
 End Namespace
-
 
 

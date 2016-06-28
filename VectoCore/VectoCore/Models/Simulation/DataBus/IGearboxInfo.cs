@@ -45,11 +45,12 @@ namespace TUGraz.VectoCore.Models.Simulation.DataBus
 		/// <returns></returns>
 		uint Gear { get; }
 
-
 		MeterPerSecond StartSpeed { get; }
 
 		MeterPerSquareSecond StartAcceleration { get; }
 
 		FullLoadCurve GearFullLoadCurve { get; }
+
+		Watt GearboxLoss();
 	}
 }

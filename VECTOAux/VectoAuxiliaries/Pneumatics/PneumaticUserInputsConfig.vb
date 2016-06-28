@@ -10,56 +10,50 @@
 ' See the LICENSE.txt for the specific language governing permissions and limitations.
 
 Namespace Pneumatics
+	Public Class PneumaticUserInputsConfig
+		Implements IPneumaticUserInputsConfig
 
-    Public Class PneumaticUserInputsConfig
-        Implements IPneumaticUserInputsConfig
+		Public Property CompressorMap As String Implements IPneumaticUserInputsConfig.CompressorMap
+		Public Property CompressorGearRatio As Double Implements IPneumaticUserInputsConfig.CompressorGearRatio
+		Public Property CompressorGearEfficiency As Double Implements IPneumaticUserInputsConfig.CompressorGearEfficiency
 
-        Public Property CompressorMap As String Implements IPneumaticUserInputsConfig.CompressorMap
-        Public Property CompressorGearRatio As Single Implements IPneumaticUserInputsConfig.CompressorGearRatio
-        Public Property CompressorGearEfficiency As Single Implements IPneumaticUserInputsConfig.CompressorGearEfficiency
+		'pnmeumatic or electric
+		Public Property AdBlueDosing As String Implements IPneumaticUserInputsConfig.AdBlueDosing
 
-        'pnmeumatic or electric
-        Public Property AdBlueDosing As String Implements IPneumaticUserInputsConfig.AdBlueDosing
+		'mechanical or electrical
+		Public Property AirSuspensionControl As String Implements IPneumaticUserInputsConfig.AirSuspensionControl
 
-        'mechanical or electrical
-        Public Property AirSuspensionControl As String Implements IPneumaticUserInputsConfig.AirSuspensionControl
+		'pneumatic or electric
+		Public Property Doors As String Implements IPneumaticUserInputsConfig.Doors
+		Public Property KneelingHeightMillimeters As Double Implements IPneumaticUserInputsConfig.KneelingHeightMillimeters
 
-        'pneumatic or electric
-        Public Property Doors As String Implements IPneumaticUserInputsConfig.Doors
-        Public Property KneelingHeightMillimeters As Single Implements IPneumaticUserInputsConfig.KneelingHeightMillimeters
+		'PneumaticActuationsMap
+		Public Property ActuationsMap As String Implements IPneumaticUserInputsConfig.ActuationsMap
 
-        'PneumaticActuationsMap
-        Public Property ActuationsMap As String Implements IPneumaticUserInputsConfig.ActuationsMap
+		Public Property RetarderBrake As Boolean Implements IPneumaticUserInputsConfig.RetarderBrake
+		Public Property SmartAirCompression As Boolean Implements IPneumaticUserInputsConfig.SmartAirCompression
+		Public Property SmartRegeneration As Boolean Implements IPneumaticUserInputsConfig.SmartRegeneration
 
-        Public Property RetarderBrake As Boolean Implements IPneumaticUserInputsConfig.RetarderBrake
-        Public Property SmartAirCompression As Boolean Implements IPneumaticUserInputsConfig.SmartAirCompression
-        Public Property SmartRegeneration As Boolean Implements IPneumaticUserInputsConfig.SmartRegeneration
+		Public Sub New(Optional setToDefaults As Boolean = False)
 
-        Public Sub New(Optional setToDefaults As Boolean = False)
+			If setToDefaults Then SetPropertiesToDefaults()
+		End Sub
 
-            If setToDefaults Then SetPropertiesToDefaults()
+		Public Sub SetPropertiesToDefaults()
 
-        End Sub
-
-        Public Sub SetPropertiesToDefaults()
-
-            CompressorMap = String.Empty
-            CompressorGearRatio = 1.0
-            CompressorGearEfficiency = 0.97
-            AdBlueDosing = "Pneumatic"
-            AirSuspensionControl = "Mechanically"
-            Doors = "Pneumatic"
-            KneelingHeightMillimeters = 70
-            ActuationsMap = Nothing
-            RetarderBrake = True
-            SmartAirCompression = False
-            SmartRegeneration = False
-
-        End Sub
-
-    End Class
-
+			CompressorMap = String.Empty
+			CompressorGearRatio = 1.0
+			CompressorGearEfficiency = 0.97
+			AdBlueDosing = "Pneumatic"
+			AirSuspensionControl = "Mechanically"
+			Doors = "Pneumatic"
+			KneelingHeightMillimeters = 70
+			ActuationsMap = Nothing
+			RetarderBrake = True
+			SmartAirCompression = False
+			SmartRegeneration = False
+		End Sub
+	End Class
 End Namespace
-
 
 

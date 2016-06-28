@@ -53,8 +53,10 @@ namespace TUGraz.VectoCore.Models.Simulation.Impl
 
 		internal IEngineInfo Engine;
 		internal IGearboxInfo Gearbox;
+		internal IAxlegearInfo Axlegear;
 		internal IVehicleInfo Vehicle;
 		internal IBrakes Brakes;
+		internal IWheelsInfo Wheels;
 		internal IDriverInfo Driver;
 
 		internal IMileageCounter MilageCounter;
@@ -63,11 +65,10 @@ namespace TUGraz.VectoCore.Models.Simulation.Impl
 
 		internal IDrivingCycleInfo DrivingCycle;
 
-		internal IRoadLookAhead Road;
-
 		internal ISimulationOutPort Cycle;
 
 		internal IModalDataContainer ModData;
+
 		internal WriteSumData WriteSumData;
 
 		#region IGearCockpit
@@ -116,6 +117,11 @@ namespace TUGraz.VectoCore.Models.Simulation.Impl
 			get { return Gearbox != null ? Gearbox.GearFullLoadCurve : null; }
 		}
 
+		public Watt GearboxLoss()
+		{
+			return Gearbox.GearboxLoss();
+		}
+
 		#endregion
 
 		#region IEngineCockpit
@@ -131,6 +137,11 @@ namespace TUGraz.VectoCore.Models.Simulation.Impl
 				}
 				return Engine.EngineSpeed;
 			}
+		}
+
+		public NewtonMeter EngineTorque
+		{
+			get { return Engine.EngineTorque; }
 		}
 
 		public Watt EngineStationaryFullPower(PerSecond angularSpeed)
@@ -151,6 +162,11 @@ namespace TUGraz.VectoCore.Models.Simulation.Impl
 		public PerSecond EngineRatedSpeed
 		{
 			get { return Engine.EngineRatedSpeed; }
+		}
+
+		public PerSecond EngineN95hSpeed
+		{
+			get { return Engine.EngineN95hSpeed; }
 		}
 
 		#endregion
@@ -175,6 +191,21 @@ namespace TUGraz.VectoCore.Models.Simulation.Impl
 		public Kilogram TotalMass
 		{
 			get { return Vehicle != null ? Vehicle.TotalMass : 0.SI<Kilogram>(); }
+		}
+
+		public Newton AirDragResistance(MeterPerSecond previousVelocity, MeterPerSecond nextVelocity)
+		{
+			return Vehicle.AirDragResistance(previousVelocity, nextVelocity);
+		}
+
+		public Newton RollingResistance(Radian gradient)
+		{
+			return Vehicle.RollingResistance(gradient);
+		}
+
+		public Newton SlopeResistance(Radian gradient)
+		{
+			return Vehicle.SlopeResistance(gradient);
 		}
 
 		#endregion
@@ -213,6 +244,8 @@ namespace TUGraz.VectoCore.Models.Simulation.Impl
 					Gearbox = c;
 					commitPriority = 4;
 				})
+				.If<IAxlegearInfo>(c => Axlegear = c)
+				.If<IWheelsInfo>(c => Wheels = c)
 				.If<IVehicleInfo>(c => {
 					Vehicle = c;
 					commitPriority = 5;
@@ -220,7 +253,6 @@ namespace TUGraz.VectoCore.Models.Simulation.Impl
 				.If<ISimulationOutPort>(c => Cycle = c)
 				.If<IMileageCounter>(c => MilageCounter = c)
 				.If<IBrakes>(c => Brakes = c)
-				.If<IRoadLookAhead>(c => Road = c)
 				.If<IClutchInfo>(c => Clutch = c)
 				.If<IDrivingCycleInfo>(c => {
 					DrivingCycle = c;
@@ -230,7 +262,6 @@ namespace TUGraz.VectoCore.Models.Simulation.Impl
 			_components.Add(Tuple.Create(commitPriority, component));
 			_components = _components.OrderBy(x => x.Item1).Reverse().ToList();
 		}
-
 
 		public void CommitSimulationStep(Second time, Second simulationInterval)
 		{
@@ -279,12 +310,12 @@ namespace TUGraz.VectoCore.Models.Simulation.Impl
 
 		public IReadOnlyList<DrivingCycleData.DrivingCycleEntry> LookAhead(Meter lookaheadDistance)
 		{
-			return Road.LookAhead(lookaheadDistance);
+			return DrivingCycle.LookAhead(lookaheadDistance);
 		}
 
 		public IReadOnlyList<DrivingCycleData.DrivingCycleEntry> LookAhead(Second time)
 		{
-			return Road.LookAhead(time);
+			return DrivingCycle.LookAhead(time);
 		}
 
 		public Watt BrakePower
@@ -314,7 +345,7 @@ namespace TUGraz.VectoCore.Models.Simulation.Impl
 
 		public Meter CycleStartDistance
 		{
-			get { return Road == null ? 0.SI<Meter>() : Road.CycleStartDistance; }
+			get { return DrivingCycle == null ? 0.SI<Meter>() : DrivingCycle.CycleStartDistance; }
 		}
 
 		public VectoRunData RunData { get; set; }
@@ -323,6 +354,26 @@ namespace TUGraz.VectoCore.Models.Simulation.Impl
 		public CycleData CycleData
 		{
 			get { return DrivingCycle.CycleData; }
+		}
+
+		public DrivingCycleData.DrivingCycleEntry CycleLookAhead(Meter distance)
+		{
+			return DrivingCycle.CycleLookAhead(distance);
+		}
+
+		public Meter Altitude
+		{
+			get { return DrivingCycle.Altitude; }
+		}
+
+		public Watt AxlegearLoss()
+		{
+			return Axlegear.AxlegearLoss();
+		}
+
+		public Kilogram ReducedMassWheels
+		{
+			get { return Wheels.ReducedMassWheels; }
 		}
 	}
 }

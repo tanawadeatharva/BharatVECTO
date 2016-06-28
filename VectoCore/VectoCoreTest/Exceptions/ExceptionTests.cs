@@ -33,6 +33,8 @@ using System;
 using Microsoft.VisualStudio.TestTools.UnitTesting;
 using TUGraz.VectoCommon.Exceptions;
 
+// ReSharper disable ObjectCreationAsStatement
+
 namespace TUGraz.VectoCore.Tests.Exceptions
 {
 	[TestClass]

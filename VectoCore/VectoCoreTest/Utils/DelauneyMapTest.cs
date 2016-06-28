@@ -51,7 +51,7 @@ namespace TUGraz.VectoCore.Tests.Utils
 
 			var result = map.Interpolate(0.25, 0.25);
 
-			AssertHelper.AreRelativeEqual(0, result);
+			AssertHelper.AreRelativeEqual(0, result.Value);
 		}
 
 		[TestMethod]
@@ -65,27 +65,27 @@ namespace TUGraz.VectoCore.Tests.Utils
 			map.Triangulate();
 
 			// fixed points
-			AssertHelper.AreRelativeEqual(0, map.Interpolate(0, 0));
-			AssertHelper.AreRelativeEqual(1, map.Interpolate(1, 0));
-			AssertHelper.AreRelativeEqual(2, map.Interpolate(0, 1));
+			AssertHelper.AreRelativeEqual(0, map.Interpolate(0, 0).Value);
+			AssertHelper.AreRelativeEqual(1, map.Interpolate(1, 0).Value);
+			AssertHelper.AreRelativeEqual(2, map.Interpolate(0, 1).Value);
 
 			// interpolations
-			AssertHelper.AreRelativeEqual(0.5, map.Interpolate(0.5, 0));
-			AssertHelper.AreRelativeEqual(1, map.Interpolate(0, 0.5));
-			AssertHelper.AreRelativeEqual(1.5, map.Interpolate(0.5, 0.5));
+			AssertHelper.AreRelativeEqual(0.5, map.Interpolate(0.5, 0).Value);
+			AssertHelper.AreRelativeEqual(1, map.Interpolate(0, 0.5).Value);
+			AssertHelper.AreRelativeEqual(1.5, map.Interpolate(0.5, 0.5).Value);
 
-			AssertHelper.AreRelativeEqual(0.25, map.Interpolate(0.25, 0));
-			AssertHelper.AreRelativeEqual(0.5, map.Interpolate(0, 0.25));
-			AssertHelper.AreRelativeEqual(0.75, map.Interpolate(0.25, 0.25));
+			AssertHelper.AreRelativeEqual(0.25, map.Interpolate(0.25, 0).Value);
+			AssertHelper.AreRelativeEqual(0.5, map.Interpolate(0, 0.25).Value);
+			AssertHelper.AreRelativeEqual(0.75, map.Interpolate(0.25, 0.25).Value);
 
-			AssertHelper.AreRelativeEqual(0.75, map.Interpolate(0.75, 0));
-			AssertHelper.AreRelativeEqual(1.5, map.Interpolate(0, 0.75));
+			AssertHelper.AreRelativeEqual(0.75, map.Interpolate(0.75, 0).Value);
+			AssertHelper.AreRelativeEqual(1.5, map.Interpolate(0, 0.75).Value);
 
 			// extrapolation (should fail)
-			AssertHelper.Exception<VectoException>(() => map.Interpolate(1, 1), "TEST: Interpolation failed. x: 1, y: 1");
-			AssertHelper.Exception<VectoException>(() => map.Interpolate(-1, -1), "TEST: Interpolation failed. x: -1, y: -1");
-			AssertHelper.Exception<VectoException>(() => map.Interpolate(1, -1), "TEST: Interpolation failed. x: 1, y: -1");
-			AssertHelper.Exception<VectoException>(() => map.Interpolate(-1, 1), "TEST: Interpolation failed. x: -1, y: 1");
+			Assert.IsNull(map.Interpolate(1, 1));
+			Assert.IsNull(map.Interpolate(-1, -1));
+			Assert.IsNull(map.Interpolate(1, -1));
+			Assert.IsNull(map.Interpolate(-1, 1));
 		}
 
 		public void Test_DelaunayMapPlane()
@@ -99,24 +99,24 @@ namespace TUGraz.VectoCore.Tests.Utils
 			map.Triangulate();
 
 			// fixed points
-			AssertHelper.AreRelativeEqual(0, map.Interpolate(0, 0));
-			AssertHelper.AreRelativeEqual(1, map.Interpolate(1, 0));
-			AssertHelper.AreRelativeEqual(2, map.Interpolate(0, 1));
-			AssertHelper.AreRelativeEqual(3, map.Interpolate(1, 1));
+			AssertHelper.AreRelativeEqual(0, map.Interpolate(0, 0).Value);
+			AssertHelper.AreRelativeEqual(1, map.Interpolate(1, 0).Value);
+			AssertHelper.AreRelativeEqual(2, map.Interpolate(0, 1).Value);
+			AssertHelper.AreRelativeEqual(3, map.Interpolate(1, 1).Value);
 
 			// interpolations
-			AssertHelper.AreRelativeEqual(0.5, map.Interpolate(0.5, 0));
-			AssertHelper.AreRelativeEqual(1, map.Interpolate(0, 0.5));
-			AssertHelper.AreRelativeEqual(2, map.Interpolate(1, 0.5));
-			AssertHelper.AreRelativeEqual(2.5, map.Interpolate(0.5, 1));
+			AssertHelper.AreRelativeEqual(0.5, map.Interpolate(0.5, 0).Value);
+			AssertHelper.AreRelativeEqual(1, map.Interpolate(0, 0.5).Value);
+			AssertHelper.AreRelativeEqual(2, map.Interpolate(1, 0.5).Value);
+			AssertHelper.AreRelativeEqual(2.5, map.Interpolate(0.5, 1).Value);
 
-			AssertHelper.AreRelativeEqual(1.5, map.Interpolate(0.5, 0.5));
+			AssertHelper.AreRelativeEqual(1.5, map.Interpolate(0.5, 0.5).Value);
 
-			AssertHelper.AreRelativeEqual(0.75, map.Interpolate(0.25, 0.25));
-			AssertHelper.AreRelativeEqual(2.25, map.Interpolate(0.75, 0.75));
+			AssertHelper.AreRelativeEqual(0.75, map.Interpolate(0.25, 0.25).Value);
+			AssertHelper.AreRelativeEqual(2.25, map.Interpolate(0.75, 0.75).Value);
 
-			AssertHelper.AreRelativeEqual(1.75, map.Interpolate(0.25, 0.75));
-			AssertHelper.AreRelativeEqual(1.25, map.Interpolate(0.75, 0.25));
+			AssertHelper.AreRelativeEqual(1.75, map.Interpolate(0.25, 0.75).Value);
+			AssertHelper.AreRelativeEqual(1.25, map.Interpolate(0.75, 0.25).Value);
 
 			// extrapolation (should fail)
 			AssertHelper.Exception<VectoException>(() => map.Interpolate(1.5, 0.5), "Interpolation failed.");
@@ -164,7 +164,6 @@ namespace TUGraz.VectoCore.Tests.Utils
 			map.AddPoint(1, 1, 3);
 			map.AddPoint(0, 1, 2);
 			map.AddPoint(1, 1, 5);
-
 
 			AssertHelper.Exception<VectoException>(() => { map.Triangulate(); },
 				"TEST: Input Data for Delaunay map contains duplicates! \n1 / 1");

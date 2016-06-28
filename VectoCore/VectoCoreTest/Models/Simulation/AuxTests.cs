@@ -56,7 +56,7 @@ namespace TUGraz.VectoCore.Tests.Models.Simulation
 
 		{
 			var fileWriter = new FileOutputWriter("AuxWriteModFileSumFile");
-			var modData = new ModalDataContainer("AuxWriteModFileSumFile", fileWriter);
+			var modData = new ModalDataContainer("AuxWriteModFileSumFile", fileWriter, ExecutionMode.Engineering);
 			modData.AddAuxiliary("FAN");
 			modData.AddAuxiliary("PS");
 			modData.AddAuxiliary("STP");
@@ -104,7 +104,7 @@ namespace TUGraz.VectoCore.Tests.Models.Simulation
 			var testColumns = new[] { "P_aux_FAN", "P_aux_STP", "P_aux_AC", "P_aux_ES", "P_aux_PS", "P_aux" };
 
 			ResultFileHelper.TestModFile(@"TestData\Results\EngineOnlyCycles\40t_Long_Haul_Truck_Long_Haul_Empty Loading.vmod",
-				@"AuxWriteModFileSumFile.vmod", testColumns);
+				@"AuxWriteModFileSumFile.vmod", testColumns, testVelocity:false);
 			ResultFileHelper.TestSumFile(@"TestData\Results\EngineOnlyCycles\AuxWriteModFileSumFile.vsum",
 				@"AuxWriteModFileSumFile.vsum");
 		}

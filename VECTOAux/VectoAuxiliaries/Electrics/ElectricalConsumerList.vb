@@ -11,18 +11,19 @@
 
 
 Imports System.Collections.Generic
+Imports TUGraz.VectoCommon.Utils
 
 Namespace Electrics
 	Public Class ElectricalConsumerList
 		Implements IElectricalConsumerList
 
 		Private _items As New List(Of IElectricalConsumer)
-		Private _powernetVoltage As Single
-		Private _doorDutyCycleZeroToOne As Single
+		Private _powernetVoltage As Double
+		Private _doorDutyCycleZeroToOne As Double
 
 
 		'Constructor
-		Public Sub New(powernetVoltage As Single, doorDutyCycle_ZeroToOne As Single,
+		Public Sub New(powernetVoltage As Double, doorDutyCycle_ZeroToOne As Double,
 						Optional createDefaultList As Boolean = False)
 
 			_powernetVoltage = powernetVoltage
@@ -63,63 +64,82 @@ Namespace Electrics
 
 			Dim c1, c2, c3, c4, c5, c6, c7, c8, c9, c10, c11, c12, c13, c14, c15, c16, c17, c18, c19, c20 As IElectricalConsumer
 
-			c1 = CType(New ElectricalConsumer(False, "Doors", "Doors per Door", 3.0, 0.096339, _powernetVoltage, 3, ""), 
+			c1 = CType(New ElectricalConsumer(False, "Doors", "Doors per Door", 3.0, 0.096339,
+											_powernetVoltage, 3, ""), 
 						IElectricalConsumer)
-			c2 = CType(New ElectricalConsumer(True, "Veh Electronics &Engine", "Controllers,Valves etc", 25.0, 1.0,
+			c2 = CType(New ElectricalConsumer(True, "Veh Electronics &Engine", "Controllers,Valves etc",
+											25.0, 1.0,
 											_powernetVoltage, 1, ""), 
 						IElectricalConsumer)
-			c3 = CType(New ElectricalConsumer(False, "Vehicle basic equipment", "Radio City", 2.0, 0.8, _powernetVoltage, 1, ""), 
+			c3 = CType(New ElectricalConsumer(False, "Vehicle basic equipment", "Radio City", 2.0, 0.8,
+											_powernetVoltage, 1, ""), 
 						IElectricalConsumer)
-			c4 = CType(New ElectricalConsumer(False, "Vehicle basic equipment", "Radio Intercity", 5.0, 0.8, _powernetVoltage,
+			c4 = CType(New ElectricalConsumer(False, "Vehicle basic equipment", "Radio Intercity", 5.0,
+											0.8, _powernetVoltage,
 											0, ""), 
 						IElectricalConsumer)
-			c5 = CType(New ElectricalConsumer(False, "Vehicle basic equipment", "Radio/Audio Tourism", 9.0, 0.8,
+			c5 = CType(New ElectricalConsumer(False, "Vehicle basic equipment", "Radio/Audio Tourism",
+											9.0, 0.8,
 											_powernetVoltage, 0, ""), 
 						IElectricalConsumer)
-			c6 = CType(New ElectricalConsumer(False, "Vehicle basic equipment", "Fridge", 4.0, 0.5, _powernetVoltage, 0, ""), 
+			c6 = CType(New ElectricalConsumer(False, "Vehicle basic equipment", "Fridge", 4.0, 0.5,
+											_powernetVoltage, 0, ""), 
 						IElectricalConsumer)
-			c7 = CType(New ElectricalConsumer(False, "Vehicle basic equipment", "Kitchen Standard", 67.0, 0.05, _powernetVoltage,
+			c7 = CType(New ElectricalConsumer(False, "Vehicle basic equipment", "Kitchen Standard",
+											67.0, 0.05, _powernetVoltage,
 											0, ""), 
 						IElectricalConsumer)
 			c8 = CType(New ElectricalConsumer(False, "Vehicle basic equipment",
-											"Interior lights City/ Intercity + Doorlights [Should be 1/m]", 1.0, 0.7, _powernetVoltage, 12,
+											"Interior lights City/ Intercity + Doorlights [Should be 1/m]", 1.0, 0.7,
+											_powernetVoltage, 12,
 											"1 Per metre length of bus"), 
 						IElectricalConsumer)
 			c9 = CType(New ElectricalConsumer(False, "Vehicle basic equipment",
-											"LED Interior lights ceiling city/Intercity + door [Should be 1/m]", 0.6, 0.7, _powernetVoltage, 0,
+											"LED Interior lights ceiling city/Intercity + door [Should be 1/m]", 0.6, 0.7,
+											_powernetVoltage, 0,
 											"1 Per metre length of bus"), 
 						IElectricalConsumer)
-			c10 = CType(New ElectricalConsumer(False, "Vehicle basic equipment", "Interior lights Tourism + reading [1/m]", 1.1,
+			c10 = CType(New ElectricalConsumer(False, "Vehicle basic equipment", "Interior lights Tourism + reading [1/m]",
+												1.1,
 												0.7, _powernetVoltage, 0, "1 Per metre length of bus"), 
 						IElectricalConsumer)
 			c11 = CType(New ElectricalConsumer(False, "Vehicle basic equipment",
-												"LED Interior lights ceiling Tourism + LED reading [Should be 1/m]", 0.66, 0.7, _powernetVoltage, 0,
+												"LED Interior lights ceiling Tourism + LED reading [Should be 1/m]", 0.66, 0.7,
+												_powernetVoltage, 0,
 												"1 Per metre length of bus"), 
 						IElectricalConsumer)
 			c12 = CType(New ElectricalConsumer(False, "Customer Specific Equipment", "External Displays Font/Side/Rear",
 												2.65017667844523, 1.0, _powernetVoltage, 4, ""), 
 						IElectricalConsumer)
 			c13 = CType(New ElectricalConsumer(False, "Customer Specific Equipment",
-												"Internal display per unit ( front side rear)", 1.06007067137809, 1.0, _powernetVoltage, 1, ""), 
+												"Internal display per unit ( front side rear)", 1.06007067137809, 1.0,
+												_powernetVoltage, 1, ""), 
 						IElectricalConsumer)
 			c14 = CType(New ElectricalConsumer(False, "Customer Specific Equipment",
-												"CityBus Ref EBSF Table4 Devices ITS No Displays", 9.3, 1.0, _powernetVoltage, 1, ""), 
-						IElectricalConsumer)
-			c15 = CType(New ElectricalConsumer(False, "Lights", "Exterior Lights BULB", 7.4, 1.0, _powernetVoltage, 1, ""), 
-						IElectricalConsumer)
-			c16 = CType(New ElectricalConsumer(False, "Lights", "Day running lights LED bonus", -0.723, 1.0, _powernetVoltage,
-												1, ""), 
-						IElectricalConsumer)
-			c17 = CType(New ElectricalConsumer(False, "Lights", "Antifog rear lights LED bonus", -0.17, 1.0, _powernetVoltage,
-												1, ""), 
-						IElectricalConsumer)
-			c18 = CType(New ElectricalConsumer(False, "Lights", "Position lights LED bonus", -1.2, 1.0, _powernetVoltage, 1,
+												"CityBus Ref EBSF Table4 Devices ITS No Displays", 9.3, 1.0, _powernetVoltage, 1,
 												""), 
 						IElectricalConsumer)
-			c19 = CType(New ElectricalConsumer(False, "Lights", "Direction lights LED bonus", -0.3, 1.0, _powernetVoltage, 1,
+			c15 = CType(New ElectricalConsumer(False, "Lights", "Exterior Lights BULB", 7.4, 1.0,
+												_powernetVoltage, 1, ""), 
+						IElectricalConsumer)
+			c16 = CType(New ElectricalConsumer(False, "Lights", "Day running lights LED bonus",
+												-0.723, 1.0, _powernetVoltage,
+												1, ""), 
+						IElectricalConsumer)
+			c17 = CType(New ElectricalConsumer(False, "Lights", "Antifog rear lights LED bonus",
+												-0.17, 1.0, _powernetVoltage,
+												1, ""), 
+						IElectricalConsumer)
+			c18 = CType(New ElectricalConsumer(False, "Lights", "Position lights LED bonus", -1.2,
+												1.0, _powernetVoltage, 1,
 												""), 
 						IElectricalConsumer)
-			c20 = CType(New ElectricalConsumer(False, "Lights", "Brake Lights LED bonus", -1.2, 1.0, _powernetVoltage, 1, ""), 
+			c19 = CType(New ElectricalConsumer(False, "Lights", "Direction lights LED bonus", -0.3,
+												1.0, _powernetVoltage, 1,
+												""), 
+						IElectricalConsumer)
+			c20 = CType(New ElectricalConsumer(False, "Lights", "Brake Lights LED bonus", -1.2, 1.0,
+												_powernetVoltage, 1, ""), 
 						IElectricalConsumer)
 
 			items.Add(c1)
@@ -148,12 +168,12 @@ Namespace Electrics
 
 
 		'Interface implementation
-		Public Property DoorDutyCycleFraction As Single Implements IElectricalConsumerList.DoorDutyCycleFraction
+		Public Property DoorDutyCycleFraction As Double Implements IElectricalConsumerList.DoorDutyCycleFraction
 
 			Get
 				Return _doorDutyCycleZeroToOne
 			End Get
-			Set(value As Single)
+			Set(value As Double)
 				_doorDutyCycleZeroToOne = value
 			End Set
 		End Property
@@ -188,10 +208,11 @@ Namespace Electrics
 			End If
 		End Sub
 
-		Public Function GetTotalAverageDemandAmps(excludeOnBase As Boolean) As Single _
+
+		Public Function GetTotalAverageDemandAmps(excludeOnBase As Boolean) As Ampere _
 			Implements Electrics.IElectricalConsumerList.GetTotalAverageDemandAmps
 
-			Dim Amps As Single
+			Dim Amps As Ampere
 
 			If excludeOnBase Then
 				Amps =

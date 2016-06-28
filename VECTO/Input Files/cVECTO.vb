@@ -162,7 +162,7 @@ Public Class cVECTO
 		Dim AuxEntryKV As KeyValuePair(Of String, cAuxEntry)
 		'Dim s As String
 		Dim sb As cSubPath
-		Dim JSON As New cJSON
+		Dim JSON As New JSON
 		Dim ls As List(Of Object)
 		Dim dic As Dictionary(Of String, Object)
 		Dim dic0 As Dictionary(Of String, Object)
@@ -239,6 +239,12 @@ Public Class cVECTO
 		dic.Add("Enabled", LookAheadOn)
 		dic.Add("Dec", a_lookahead)
 		dic.Add("MinSpeed", vMinLA)
+		dic.Add("PreviewDistanceFactor", LacPreviewFactor)
+		dic.Add("DF_offset", LacDfOffset)
+		dic.Add("DF_scaling", LacDfScale)
+		dic.Add("DF_targetSpeedLookup", LacDfTargetSpeedFile)
+		dic.Add("Df_velocityDropLookup", LacDfVelocityDropFile)
+
 		dic0.Add("LAC", dic)
 
 		'Overspeed / EcoRoll
@@ -268,7 +274,7 @@ Public Class cVECTO
 		Dim AuxID As String
 		Dim MsgSrc As String
 		Dim SubPath As cSubPath
-		Dim JSON As New cJSON
+		Dim JSON As New JSON
 		Dim str As String
 		Dim dic As Object
 
@@ -370,6 +376,11 @@ Public Class cVECTO
 				LookAheadOn = dic("Enabled")
 				a_lookahead = dic("Dec")
 				vMinLA = dic("MinSpeed")
+				LacPreviewFactor = If(dic("PreviewDistanceFactor") Is Nothing, 10, dic("PreviewDistanceFactor"))
+				LacDfOffset = If(dic("DF_offset") Is Nothing, 2.5, dic("DF_offset"))
+				LacDfScale = If(dic("DF_scaling") Is Nothing, 1.5, dic("DF_scaling"))
+				LacDfTargetSpeedFile = If(Not dic("DF_targetSpeedLookup") Is Nothing, dic("DF_targetSpeedLookup"), "")
+				LacDfVelocityDropFile = If(Not dic("Df_velocityDropLookup") Is Nothing, dic("Df_velocityDropLookup"), "")
 			Else
 				LookAheadOn = False
 			End If
@@ -803,6 +814,17 @@ lbAuxError:
 			stDesMaxFile.Init(MyPath, value)
 		End Set
 	End Property
+
+	Public Property LacPreviewFactor As Single
+
+	Public Property LacDfOffset As Single
+
+	Public Property LacDfScale As Single
+
+	Public Property LacDfTargetSpeedFile As String
+
+	Public Property LacDfVelocityDropFile As String
+
 
 #End Region
 

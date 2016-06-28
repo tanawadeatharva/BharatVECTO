@@ -70,7 +70,7 @@ namespace TUGraz.VectoCore.Tests.Integration.SimulationRuns
 		public void Test_FullPowertrain_SimpleGearbox()
 		{
 			var fileWriter = new FileOutputWriter("Coach_FullPowertrain_SimpleGearbox");
-			var modData = new ModalDataContainer("Coach_FullPowertrain_SimpleGearbox", fileWriter);
+			var modData = new ModalDataContainer("Coach_FullPowertrain_SimpleGearbox", fileWriter, ExecutionMode.Engineering);
 			var container = new VehicleContainer(ExecutionMode.Engineering, modData);
 
 			var engineData = MockSimulationDataFactory.CreateEngineDataFromFile(EngineFile);
@@ -129,7 +129,7 @@ namespace TUGraz.VectoCore.Tests.Integration.SimulationRuns
 		public void Test_FullPowertrain()
 		{
 			var fileWriter = new FileOutputWriter("Coach_FullPowertrain");
-			var modData = new ModalDataContainer("Coach_FullPowertrain", fileWriter);
+			var modData = new ModalDataContainer("Coach_FullPowertrain", fileWriter, ExecutionMode.Engineering);
 			var container = new VehicleContainer(ExecutionMode.Engineering, modData);
 
 			var engineData = MockSimulationDataFactory.CreateEngineDataFromFile(EngineFile);
@@ -203,7 +203,7 @@ namespace TUGraz.VectoCore.Tests.Integration.SimulationRuns
 		public void Test_FullPowertrain_LowSpeed()
 		{
 			var fileWriter = new FileOutputWriter("Coach_FullPowertrain_LowSpeed");
-			var modData = new ModalDataContainer("Coach_FullPowertrain_LowSpeed", fileWriter);
+			var modData = new ModalDataContainer("Coach_FullPowertrain_LowSpeed", fileWriter, ExecutionMode.Engineering);
 			var container = new VehicleContainer(ExecutionMode.Engineering, modData);
 
 			var engineData = MockSimulationDataFactory.CreateEngineDataFromFile(EngineFile);
@@ -299,7 +299,7 @@ namespace TUGraz.VectoCore.Tests.Integration.SimulationRuns
 		private static GearboxData CreateGearboxData()
 		{
 			var ratios = new[] { 6.38, 4.63, 3.44, 2.59, 1.86, 1.35, 1, 0.76 };
-			
+
 			return new GearboxData {
 				Gears = ratios.Select((ratio, i) =>
 					Tuple.Create((uint)i,
@@ -401,7 +401,8 @@ namespace TUGraz.VectoCore.Tests.Integration.SimulationRuns
 				AccelerationCurve = AccelerationCurveData.ReadFromFile(accelerationFile),
 				LookAheadCoasting = new DriverData.LACData {
 					Enabled = false,
-					Deceleration = -0.5.SI<MeterPerSquareSecond>()
+					//Deceleration = -0.5.SI<MeterPerSquareSecond>()
+					LookAheadDecisionFactor = new LACDecisionFactor()
 				},
 				OverSpeedEcoRoll = new DriverData.OverSpeedEcoRollData {
 					Mode = DriverMode.Off

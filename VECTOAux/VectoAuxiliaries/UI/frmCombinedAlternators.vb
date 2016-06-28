@@ -7,641 +7,636 @@ Imports System.ComponentModel
 Imports VectoAuxiliaries.Hvac
 
 
-
 Public Class frmCombinedAlternators
+	Private combinedAlt As CombinedAlternator
+	Private originalAlt As CombinedAlternator
+	Private altSignals As ICombinedAlternatorSignals
+	Protected gbColor As System.Drawing.Color = Color.LightGreen
+	Private UserHitCancel As Boolean = False
+	Private UserHitSave As Boolean = False
+	Private aaltPath As String = ""
 
-    Private combinedAlt As CombinedAlternator
-    Private originalAlt As CombinedAlternator
-    Private altSignals As ICombinedAlternatorSignals
-    Protected gbColor As System.Drawing.Color = Color.LightGreen
-    Private UserHitCancel As Boolean = False
-    Private UserHitSave As Boolean = False
-    Private aaltPath As String = ""
+	'Constructor(s)
+	Public Sub New(aaltPath As String, altSignals As ICombinedAlternatorSignals)
 
-    'Constructor(s)
-    Public Sub New(aaltPath As String, altSignals As ICombinedAlternatorSignals)
+		' This call is required by the designer.
+		InitializeComponent()
 
-        ' This call is required by the designer.
-        InitializeComponent()
+		' Add any initialization after the InitializeComponent() call.
+		Me.aaltpath = aaltPath
 
-        ' Add any initialization after the InitializeComponent() call.
-        Me.aaltpath = aaltPath
+		combinedAlt = New CombinedAlternator(aaltPath)
+		originalAlt = New CombinedAlternator(aaltPath)
 
-        combinedAlt = New CombinedAlternator(aaltPath)
-        originalAlt = New CombinedAlternator(aaltPath)
+		SetupControls()
+		BindGrid()
+	End Sub
 
-        SetupControls()
-        BindGrid()
 
+	'General Helpders
+	Private Sub BindGrid()
 
-    End Sub
+		gvAlternators.DataSource =
+			New BindingList(Of IAlternator)(combinedAlt.Alternators.OrderBy(Function(o) o.AlternatorName).ToList())
+	End Sub
 
+	Private Sub SetupControls()
 
-    'General Helpders
-    Private Sub BindGrid()
+		'gvAlternators
+		gvAlternators.AutoGenerateColumns = False
 
-        gvAlternators.DataSource = New BindingList(Of IAlternator)(combinedAlt.Alternators.OrderBy(Function(o) o.AlternatorName).ToList())
+		Dim cIndex As Integer
 
-    End Sub
-    Private Sub SetupControls()
+		'Column - AlternatorName
+		cIndex = gvAlternators.Columns.Add("AlternatorName", "AlternatorName")
+		gvAlternators.Columns(cIndex).DataPropertyName = "AlternatorName"
+		gvAlternators.Columns(cIndex).Width = 250
+		gvAlternators.Columns(cIndex).ReadOnly = True
+		gvAlternators.Columns(cIndex).HeaderCell.Style.Alignment = DataGridViewContentAlignment.TopCenter
+		gvAlternators.Columns(cIndex).HeaderCell.Style.Padding = New Padding(1, 2, 1, 1)
 
-        'gvAlternators
-        gvAlternators.AutoGenerateColumns = False
 
-        Dim cIndex As Integer
+		'Column - PulleyRatio
+		cIndex = gvAlternators.Columns.Add("PulleyRatio", "PulleyRatio")
+		gvAlternators.Columns(cIndex).DataPropertyName = "PulleyRatio"
+		gvAlternators.Columns(cIndex).Width = 70
+		gvAlternators.Columns(cIndex).ReadOnly = True
+		gvAlternators.Columns(cIndex).HeaderCell.Style.Alignment = DataGridViewContentAlignment.TopCenter
+		gvAlternators.Columns(cIndex).HeaderCell.Style.Padding = New Padding(1, 2, 1, 1)
 
-        'Column - AlternatorName
-        cIndex = gvAlternators.Columns.Add("AlternatorName", "AlternatorName")
-        gvAlternators.Columns(cIndex).DataPropertyName = "AlternatorName"
-        gvAlternators.Columns(cIndex).Width = 250
-        gvAlternators.Columns(cIndex).ReadOnly = True
-        gvAlternators.Columns(cIndex).HeaderCell.Style.Alignment = DataGridViewContentAlignment.TopCenter
-        gvAlternators.Columns(cIndex).HeaderCell.Style.Padding = New Padding(1, 2, 1, 1)
 
+		Dim deleteColumn As New DeleteAlternatorColumn()
+		With deleteColumn
+			.HeaderText = ""
+			.ToolTipText = "Delete this row"
+			.Name = "Delete"
+			.Width = 25
+			.DefaultCellStyle.Alignment = DataGridViewContentAlignment.MiddleCenter
+		End With
 
-        'Column - PulleyRatio
-        cIndex = gvAlternators.Columns.Add("PulleyRatio", "PulleyRatio")
-        gvAlternators.Columns(cIndex).DataPropertyName = "PulleyRatio"
-        gvAlternators.Columns(cIndex).Width = 70
-        gvAlternators.Columns(cIndex).ReadOnly = True
-        gvAlternators.Columns(cIndex).HeaderCell.Style.Alignment = DataGridViewContentAlignment.TopCenter
-        gvAlternators.Columns(cIndex).HeaderCell.Style.Padding = New Padding(1, 2, 1, 1)
+		'  deleteColumn.CellTemplate.ToolTipText="Delete this alternator"
+		gvAlternators.Columns.Add(deleteColumn)
+	End Sub
 
+	Public Sub UpdateButtonText()
 
-        Dim deleteColumn As New DeleteAlternatorColumn()
-        With deleteColumn
-            .HeaderText = ""
-            .ToolTipText = "Delete this row"
-            .Name = "Delete"
-            .Width = 25
-            .DefaultCellStyle.Alignment = DataGridViewContentAlignment.MiddleCenter
-        End With
+		If txtIndex.Text = String.Empty Then
+			btnUpdate.Text = "Add"
+		Else
+			btnUpdate.Text = "Update"
+		End If
+	End Sub
 
-        '  deleteColumn.CellTemplate.ToolTipText="Delete this alternator"
-        gvAlternators.Columns.Add(deleteColumn)
+	Private Sub CreateDiagnostics()
 
+		txtDiagnostics.Text = combinedAlt.ToString()
+	End Sub
 
 
-    End Sub
-    Public Sub UpdateButtonText()
+	'Validation Helpers
+	Private Sub IsTextBoxNumber(control As TextBox, errorProviderMessage As String, ByRef result As Boolean)
 
-        If txtIndex.Text = String.Empty Then
-            btnUpdate.Text = "Add"
-        Else
-            btnUpdate.Text = "Update"
-        End If
+		If Not IsNumeric(control.Text) Then
+			ErrorProvider1.SetError(control, errorProviderMessage)
+			result = False
+		Else
+			ErrorProvider1.SetError(control, String.Empty)
 
-    End Sub
-    Private Sub CreateDiagnostics()
+		End If
+	End Sub
 
-        txtDiagnostics.Text = combinedAlt.ToString()
+	Private Sub IsEmptyString(text As String, control As Control, errorProviderMessage As String, ByRef result As Boolean)
 
-    End Sub
+		If String.IsNullOrEmpty(text) Then
+			ErrorProvider1.SetError(control, errorProviderMessage)
+			result = False
+		Else
+			ErrorProvider1.SetError(control, String.Empty)
 
+		End If
+	End Sub
 
-    'Validation Helpers
-    Private Sub IsTextBoxNumber(control As TextBox, errorProviderMessage As String, ByRef result As Boolean)
+	Private Function IsPostiveInteger(ByVal test As String) As Boolean
 
-        If Not IsNumeric(control.Text) Then
-            ErrorProvider1.SetError(control, errorProviderMessage)
-            result = False
-        Else
-            ErrorProvider1.SetError(control, String.Empty)
+		'Is this numeric sanity check.
+		If Not IsNumeric(test) Then Return False
 
-        End If
+		Dim number As Integer
 
-    End Sub
-    Private Sub IsEmptyString(text As String, control As Control, errorProviderMessage As String, ByRef result As Boolean)
+		If Not Integer.TryParse(test, number) Then Return False
 
-        If String.IsNullOrEmpty(text) Then
-            ErrorProvider1.SetError(control, errorProviderMessage)
-            result = False
-        Else
-            ErrorProvider1.SetError(control, String.Empty)
+		If number <= 0 Then Return False
 
-        End If
 
-    End Sub
-    Private Function IsPostiveInteger(ByVal test As String) As Boolean
+		Return True
+	End Function
 
-        'Is this numeric sanity check.
-        If Not IsNumeric(test) Then Return False
+	Private Function IsPostiveNumber(ByVal test As String) As Boolean
 
-        Dim number As Integer
+		'Is this numeric sanity check.
+		If Not IsNumeric(test) Then Return False
 
-        If Not Integer.TryParse(test, number) Then Return False
+		Dim number As Double
 
-        If number <= 0 Then Return False
+		If Not Double.TryParse(test, number) Then Return False
 
+		If number <= 0 Then Return False
 
-        Return True
 
-    End Function
-    Private Function IsPostiveNumber(ByVal test As String) As Boolean
+		Return True
+	End Function
 
-        'Is this numeric sanity check.
-        If Not IsNumeric(test) Then Return False
+	Private Function IsZeroOrPostiveNumber(ByVal test As String) As Boolean
 
-        Dim number As Double
+		'Is this numeric sanity check.
+		If Not IsNumeric(test) Then Return False
 
-        If Not Double.TryParse(test, number) Then Return False
+		Dim number As Double
 
-        If number <= 0 Then Return False
+		If Not Double.TryParse(test, number) Then Return False
 
+		If number < 0 Then Return False
 
-        Return True
 
-    End Function
-    Private Function IsZeroOrPostiveNumber(ByVal test As String) As Boolean
+		Return True
+	End Function
 
-        'Is this numeric sanity check.
-        If Not IsNumeric(test) Then Return False
+	Private Function IsNumberBetweenZeroandOne(test As String) As Boolean
 
-        Dim number As Double
+		'Is this numeric sanity check.
+		If Not IsNumeric(test) Then Return False
 
-        If Not Double.TryParse(test, number) Then Return False
+		Dim number As Double
 
-        If number < 0 Then Return False
+		If Not Double.TryParse(test, number) Then Return False
 
+		If number < 0 OrElse number > 1 Then Return False
 
-        Return True
+		Return True
+	End Function
 
-    End Function
-    Private Function IsNumberBetweenZeroandOne(test As String) As Boolean
+	Private Function IsNumberBetweenOverZeroAndLessThan100(txtBox As TextBox) As Boolean
 
-        'Is this numeric sanity check.
-        If Not IsNumeric(test) Then Return False
+		'Is this numeric sanity check.
+		If Not IsNumeric(txtBox.Text) Then
+			ErrorProvider1.SetError(txtBox, "Please enter a number")
+			Return False
+		Else
+			ErrorProvider1.SetError(txtBox, "")
+		End If
 
-        Dim number As Double
 
-        If Not Double.TryParse(test, number) Then Return False
+		Dim number As Double = 0
 
-        If number < 0 OrElse number > 1 Then Return False
+		If Not Double.TryParse(txtBox.Text, number) Then
+			ErrorProvider1.SetError(txtBox, "Please enter a number >0 and <100")
+			Return False
 
-        Return True
+		Else
+			ErrorProvider1.SetError(txtBox, String.Empty)
+		End If
 
-    End Function
-    Private Function IsNumberBetweenOverZeroAndLessThan100(txtBox As TextBox) As Boolean
+		If number <= 0 OrElse number >= 100 Then
 
-        'Is this numeric sanity check.
-        If Not IsNumeric(txtBox.Text) Then
-            ErrorProvider1.SetError(txtBox, "Please enter a number")
-            Return False
-        Else
-            ErrorProvider1.SetError(txtBox, "")
-        End If
+			ErrorProvider1.SetError(txtBox, "Please enter a number >0 and <100")
+			Return False
+		Else
+			ErrorProvider1.SetError(txtBox, String.Empty)
+			Return True
 
+		End If
 
 
+		Return True
+	End Function
 
-        Dim number As Double = 0
+	Private Function IsNumberGreaterThan10(txtBox As TextBox) As Boolean
 
-        If Not Double.TryParse(txtBox.Text, number) Then
-            ErrorProvider1.SetError(txtBox, "Please enter a number >0 and <100")
-            Return False
+		'Is this numeric sanity check.
+		If Not IsNumeric(txtBox.Text) Then
+			ErrorProvider1.SetError(txtBox, "Please enter a number")
+			Return False
+		Else
+			ErrorProvider1.SetError(txtBox, "")
+		End If
 
-        Else
-            ErrorProvider1.SetError(txtBox, String.Empty)
-        End If
+		Dim number As Double = 0
 
-        If number <= 0 OrElse number >= 100 Then
+		If Not Double.TryParse(txtBox.Text, number) Then
+			ErrorProvider1.SetError(txtBox, "Please enter a number >10")
+			Return False
 
-            ErrorProvider1.SetError(txtBox, "Please enter a number >0 and <100")
-            Return False
-        Else
-            ErrorProvider1.SetError(txtBox, String.Empty)
-            Return True
+		Else
+			ErrorProvider1.SetError(txtBox, String.Empty)
+		End If
 
-        End If
+		If number <= 10 Then
 
+			ErrorProvider1.SetError(txtBox, "Please enter a number > 10")
+			Return False
+		Else
+			ErrorProvider1.SetError(txtBox, String.Empty)
+			Return True
+		End If
 
-        Return True
 
-    End Function
-    Private Function IsNumberGreaterThan10(txtBox As TextBox) As Boolean
+		Return True
+	End Function
 
-        'Is this numeric sanity check.
-        If Not IsNumeric(txtBox.Text) Then
-            ErrorProvider1.SetError(txtBox, "Please enter a number")
-            Return False
-        Else
-            ErrorProvider1.SetError(txtBox, "")
-        End If
+	Private Function IsIntegerZeroOrPositiveNumber(test As String) As Boolean
 
-        Dim number As Double = 0
+		'Is this numeric sanity check.
+		If Not IsNumeric(test) Then Return False
 
-        If Not Double.TryParse(txtBox.Text, number) Then
-            ErrorProvider1.SetError(txtBox, "Please enter a number >10")
-            Return False
+		'if not integer then return false
 
-        Else
-            ErrorProvider1.SetError(txtBox, String.Empty)
-        End If
+		Dim number As Integer
 
-        If number <= 10 Then
+		If Not Integer.TryParse(test, number) Then Return False
 
-            ErrorProvider1.SetError(txtBox, "Please enter a number > 10")
-            Return False
-        Else
-            ErrorProvider1.SetError(txtBox, String.Empty)
-            Return True
-        End If
+		If number < 0 Then Return False
 
+		Return True
+	End Function
 
-        Return True
+	'Other events
+	Private Sub groupBoxUserInput_Paint(sender As Object, e As Windows.Forms.PaintEventArgs) _
+		Handles grpTable2000PRM.Paint, grpTable6000PRM.Paint, grpTable4000PRM.Paint
 
-    End Function
-    Private Function IsIntegerZeroOrPositiveNumber(test As String) As Boolean
 
-        'Is this numeric sanity check.
-        If Not IsNumeric(test) Then Return False
+		Dim p As Pen = Nothing
 
-        'if not integer then return false
+		Dim sdr As Control = DirectCast(sender, Control)
 
-        Dim number As Integer
+		Select Case sdr.Name
 
-        If Not Integer.TryParse(test, number) Then Return False
+			Case "grpTable2000PRM"
+				p = New Pen(Color.LightGreen, 3)
+			Case "grpTable4000PRM"
+				p = New Pen(Color.Yellow, 3)
+			Case "grpTable6000PRM"
+				p = New Pen(Color.LightPink, 3)
+			Case Else
+				p = New Pen(Color.Black, 3)
 
-        If number < 0 Then Return False
+		End Select
 
-        Return True
+		Dim gfx As Graphics = e.Graphics
 
+		gfx.DrawLine(p, 0, 5, 0, e.ClipRectangle.Height - 2)
+		gfx.DrawLine(p, 0, 5, 10, 5)
+		gfx.DrawLine(p, 85, 5, e.ClipRectangle.Width - 2, 5)
+		gfx.DrawLine(p, e.ClipRectangle.Width - 2, 5, e.ClipRectangle.Width - 2, e.ClipRectangle.Height - 2)
+		gfx.DrawLine(p, e.ClipRectangle.Width - 2, e.ClipRectangle.Height - 2, 0, e.ClipRectangle.Height - 2)
+	End Sub
 
-    End Function
 
-    'Other events
-    Private Sub groupBoxUserInput_Paint(sender As Object, e As Windows.Forms.PaintEventArgs) Handles grpTable2000PRM.Paint, grpTable6000PRM.Paint, grpTable4000PRM.Paint
+	'Grid Events
+	Private Sub gvAlternators_CellClick(sender As Object, e As DataGridViewCellEventArgs) Handles gvAlternators.CellClick
 
+		If e.ColumnIndex < 0 OrElse e.RowIndex < 0 Then Return
 
-        Dim p As Pen = Nothing
+		If gvAlternators.Columns(e.ColumnIndex).Name = "Delete" Then
 
-        Dim sdr As Control = DirectCast(sender, Control)
 
-        Select Case sdr.Name
+			Dim feedback As String = String.Empty
+			Dim alternatorName As String = gvAlternators.Rows(e.RowIndex).Cells(0).Value.ToString()
 
-            Case "grpTable2000PRM"
-                p = New Pen(Color.LightGreen, 3)
-            Case "grpTable4000PRM"
-                p = New Pen(Color.Yellow, 3)
-            Case "grpTable6000PRM"
-                p = New Pen(Color.LightPink, 3)
-            Case Else
-                p = New Pen(Color.Black, 3)
+			Select Case gvAlternators.Columns(e.ColumnIndex).Name
 
-        End Select
+				Case "Delete"
+					Dim dr As DialogResult = MessageBox.Show(String.Format("Do you want to delete  '{0}' ?", alternatorName), "",
+															MessageBoxButtons.YesNo)
+					If dr = Windows.Forms.DialogResult.Yes Then
+						If combinedAlt.DeleteAlternator(alternatorName, feedback, True) Then
+							BindGrid()
+						Else
+							MessageBox.Show(feedback)
 
-        Dim gfx As Graphics = e.Graphics
+						End If
 
-        gfx.DrawLine(p, 0, 5, 0, e.ClipRectangle.Height - 2)
-        gfx.DrawLine(p, 0, 5, 10, 5)
-        gfx.DrawLine(p, 85, 5, e.ClipRectangle.Width - 2, 5)
-        gfx.DrawLine(p, e.ClipRectangle.Width - 2, 5, e.ClipRectangle.Width - 2, e.ClipRectangle.Height - 2)
-        gfx.DrawLine(p, e.ClipRectangle.Width - 2, e.ClipRectangle.Height - 2, 0, e.ClipRectangle.Height - 2)
+					End If
 
-    End Sub
+			End Select
 
+		End If
+	End Sub
 
-    'Grid Events
-    Private Sub gvAlternators_CellClick(sender As Object, e As DataGridViewCellEventArgs) Handles gvAlternators.CellClick
+	Private Sub gvAlternators_CellDoubleClick(sender As Object, e As DataGridViewCellEventArgs) _
+		Handles gvAlternators.CellDoubleClick
 
-        If e.ColumnIndex < 0 OrElse e.RowIndex < 0 Then Return
+		If gvAlternators.SelectedCells.Count < 1 Then Return
 
-        If gvAlternators.Columns(e.ColumnIndex).Name = "Delete" Then
+		Dim row As Integer = gvAlternators.SelectedCells(0).OwningRow.Index
 
+		Dim alternatorName As String
 
-            Dim feedback As String = String.Empty
-            Dim alternatorName As String = gvAlternators.Rows(e.RowIndex).Cells(0).Value.ToString()
+		alternatorName = gvAlternators.Rows(row).Cells("AlternatorName").Value.ToString()
 
-            Select Case gvAlternators.Columns(e.ColumnIndex).Name
+		Dim alt As IAlternator = combinedAlt.Alternators.First(Function(w) w.AlternatorName = alternatorName)
 
-                Case "Delete"
-                    Dim dr As DialogResult = MessageBox.Show(String.Format("Do you want to delete  '{0}' ?", alternatorName), "", MessageBoxButtons.YesNo)
-                    If dr = Windows.Forms.DialogResult.Yes Then
-                        If combinedAlt.DeleteAlternator(alternatorName, feedback, True) Then
-                            BindGrid()
-                        Else
-                            MessageBox.Show(feedback)
 
-                        End If
+		FillEditPanel(row)
 
-                    End If
+		UpdateButtonText()
+	End Sub
 
-            End Select
+	'Button Events
+	Private Sub btnClearForm_Click(sender As Object, e As EventArgs) Handles btnClearForm.Click
 
-        End If
+		ClearEditPanel()
+		UpdateButtonText()
+	End Sub
 
-    End Sub
-    Private Sub gvAlternators_CellDoubleClick(sender As Object, e As DataGridViewCellEventArgs) Handles gvAlternators.CellDoubleClick
+	Public Function GetAlternatorFromPanel() As List(Of ICombinedAlternatorMapRow)
 
-        If gvAlternators.SelectedCells.Count < 1 Then Return
+		Dim newAlt As New List(Of ICombinedAlternatorMapRow)
 
-        Dim row As Integer = gvAlternators.SelectedCells(0).OwningRow.Index
+		newAlt.Add(New CombinedAlternatorMapRow(txtAlternatorName.Text, 2000, Convert.ToSingle(txt2K10Amps.Text),
+												Convert.ToSingle(txt2K10Efficiency.Text), Convert.ToSingle(txtPulleyRatio.Text)))
+		newAlt.Add(New CombinedAlternatorMapRow(txtAlternatorName.Text, 2000, Convert.ToSingle(txt2KMax2Amps.Text),
+												Convert.ToSingle(txt2KMax2Efficiency.Text), Convert.ToSingle(txtPulleyRatio.Text)))
+		newAlt.Add(New CombinedAlternatorMapRow(txtAlternatorName.Text, 2000, Convert.ToSingle(txt2KMaxAmps.Text),
+												Convert.ToSingle(txt2KMaxEfficiency.Text), Convert.ToSingle(txtPulleyRatio.Text)))
 
-        Dim alternatorName As String
+		newAlt.Add(New CombinedAlternatorMapRow(txtAlternatorName.Text, 4000, Convert.ToSingle(txt4K10Amps.Text),
+												Convert.ToSingle(txt4K10Efficiency.Text), Convert.ToSingle(txtPulleyRatio.Text)))
+		newAlt.Add(New CombinedAlternatorMapRow(txtAlternatorName.Text, 4000, Convert.ToSingle(txt4KMax2Amps.Text),
+												Convert.ToSingle(txt4KMax2Efficiency.Text), Convert.ToSingle(txtPulleyRatio.Text)))
+		newAlt.Add(New CombinedAlternatorMapRow(txtAlternatorName.Text, 4000, Convert.ToSingle(txt4KMaxAmps.Text),
+												Convert.ToSingle(txt4KMaxEfficiency.Text), Convert.ToSingle(txtPulleyRatio.Text)))
 
-        alternatorName = gvAlternators.Rows(row).Cells("AlternatorName").Value.ToString()
+		newAlt.Add(New CombinedAlternatorMapRow(txtAlternatorName.Text, 6000, Convert.ToSingle(txt6K10Amps.Text),
+												Convert.ToSingle(txt6K10Efficiency.Text), Convert.ToSingle(txtPulleyRatio.Text)))
+		newAlt.Add(New CombinedAlternatorMapRow(txtAlternatorName.Text, 6000, Convert.ToSingle(txt6KMax2Amps.Text),
+												Convert.ToSingle(txt6KMax2Efficiency.Text), Convert.ToSingle(txtPulleyRatio.Text)))
+		newAlt.Add(New CombinedAlternatorMapRow(txtAlternatorName.Text, 6000, Convert.ToSingle(txt6KMaxAmps.Text),
+												Convert.ToSingle(txt6KMaxEfficiency.Text), Convert.ToSingle(txtPulleyRatio.Text)))
 
-        Dim alt As IAlternator = combinedAlt.Alternators.First(Function(w) w.AlternatorName = alternatorName)
+		Return newAlt
+	End Function
 
+	Private Sub btnUpdate_Click(sender As Object, e As EventArgs) Handles btnUpdate.Click
 
-        FillEditPanel(row)
 
-        UpdateButtonText()
+		Dim feedback As String = String.Empty
 
+		If Not Validate_UpdatePanel() Then Return
 
-    End Sub
+		If txtIndex.Text.Trim.Length = 0 Then
+			'This is an Add
+			If Not combinedAlt.AddAlternator(GetAlternatorFromPanel(), feedback) Then
+				MessageBox.Show(feedback)
+			Else
 
-    'Button Events
-    Private Sub btnClearForm_Click(sender As Object, e As EventArgs) Handles btnClearForm.Click
 
-        ClearEditPanel()
-        UpdateButtonText()
+				BindGrid()
 
-    End Sub
-    Public Function GetAlternatorFromPanel() As List(Of ICombinedAlternatorMapRow)
+				UpdateButtonText()
 
-        Dim newAlt As New List(Of ICombinedAlternatorMapRow)
+			End If
 
-        newAlt.Add(New CombinedAlternatorMapRow(txtAlternatorName.Text, 2000, Convert.ToSingle(txt2K10Amps.Text), Convert.ToSingle(txt2K10Efficiency.Text), Convert.ToSingle(txtPulleyRatio.Text)))
-        newAlt.Add(New CombinedAlternatorMapRow(txtAlternatorName.Text, 2000, Convert.ToSingle(txt2KMax2Amps.Text), Convert.ToSingle(txt2KMax2Efficiency.Text), Convert.ToSingle(txtPulleyRatio.Text)))
-        newAlt.Add(New CombinedAlternatorMapRow(txtAlternatorName.Text, 2000, Convert.ToSingle(txt2KMaxAmps.Text), Convert.ToSingle(txt2KMaxEfficiency.Text), Convert.ToSingle(txtPulleyRatio.Text)))
+		Else
 
-        newAlt.Add(New CombinedAlternatorMapRow(txtAlternatorName.Text, 4000, Convert.ToSingle(txt4K10Amps.Text), Convert.ToSingle(txt4K10Efficiency.Text), Convert.ToSingle(txtPulleyRatio.Text)))
-        newAlt.Add(New CombinedAlternatorMapRow(txtAlternatorName.Text, 4000, Convert.ToSingle(txt4KMax2Amps.Text), Convert.ToSingle(txt4KMax2Efficiency.Text), Convert.ToSingle(txtPulleyRatio.Text)))
-        newAlt.Add(New CombinedAlternatorMapRow(txtAlternatorName.Text, 4000, Convert.ToSingle(txt4KMaxAmps.Text), Convert.ToSingle(txt4KMaxEfficiency.Text), Convert.ToSingle(txtPulleyRatio.Text)))
+			'Get Existing row name.
+			Dim altName As String = gvAlternators.Rows(Convert.ToInt32(txtIndex.Text)).Cells("AlternatorName").Value.ToString()
 
-        newAlt.Add(New CombinedAlternatorMapRow(txtAlternatorName.Text, 6000, Convert.ToSingle(txt6K10Amps.Text), Convert.ToSingle(txt6K10Efficiency.Text), Convert.ToSingle(txtPulleyRatio.Text)))
-        newAlt.Add(New CombinedAlternatorMapRow(txtAlternatorName.Text, 6000, Convert.ToSingle(txt6KMax2Amps.Text), Convert.ToSingle(txt6KMax2Efficiency.Text), Convert.ToSingle(txtPulleyRatio.Text)))
-        newAlt.Add(New CombinedAlternatorMapRow(txtAlternatorName.Text, 6000, Convert.ToSingle(txt6KMaxAmps.Text), Convert.ToSingle(txt6KMaxEfficiency.Text), Convert.ToSingle(txtPulleyRatio.Text)))
+			'Does name used in update exist in other alternators excluding the original being edited ?, if so abort.
+			If _
+				combinedAlt.Alternators.Where(
+					Function(f) f.AlternatorName <> altName AndAlso f.AlternatorName = txtAlternatorName.Text).Count > 0 Then
+				MessageBox.Show(
+					String.Format(
+						"The lternator '{0}' name you are using to update the alternator '{1}' already exists, operation aborted",
+						txtAlternatorName.Text, altName))
+				Return
+			End If
 
-        Return newAlt
+			'This is an update so delete the one being updated
 
-    End Function
-    Private Sub btnUpdate_Click(sender As Object, e As EventArgs) Handles btnUpdate.Click
+			If _
+				combinedAlt.DeleteAlternator(altName, feedback, False) AndAlso
+				combinedAlt.AddAlternator(GetAlternatorFromPanel(), feedback) Then
 
+				BindGrid()
+				ClearEditPanel()
+				UpdateButtonText()
 
-        Dim feedback As String = String.Empty
+			Else
+				MessageBox.Show(feedback)
+			End If
 
-        If Not Validate_UpdatePanel() Then Return
+		End If
+	End Sub
 
-        If txtIndex.Text.Trim.Length = 0 Then
-            'This is an Add
-            If Not combinedAlt.AddAlternator(GetAlternatorFromPanel(), feedback) Then
-                MessageBox.Show(feedback)
-            Else
+	Private Sub btnCancel_Click(sender As Object, e As EventArgs) Handles btnCancel.Click
 
+		UserHitCancel = True
+		Me.close()
+	End Sub
 
-                BindGrid()
+	Private Sub btnSave_Click(sender As Object, e As EventArgs) Handles btnSave.Click
 
-                UpdateButtonText()
+		'  If Not ValidateAll then Return 
 
-            End If
+		UserHitSave = True
 
-        Else
+		Me.DialogResult = Windows.Forms.DialogResult.OK
+		Me.Close()
+	End Sub
 
-            'Get Existing row name.
-            Dim altName As String = gvAlternators.Rows(Convert.ToInt32(txtIndex.Text)).Cells("AlternatorName").Value.ToString()
 
-            'Does name used in update exist in other alternators excluding the original being edited ?, if so abort.
-            If combinedAlt.Alternators.Where(Function(f) f.AlternatorName <> altName AndAlso f.AlternatorName = txtAlternatorName.Text).Count > 0 Then
-                MessageBox.Show(String.Format("The lternator '{0}' name you are using to update the alternator '{1}' already exists, operation aborted", txtAlternatorName.Text, altName))
-                Return
-            End If
+	'Form / Tab Events
+	Private Sub TabControl1_SelectedIndexChanged(sender As Object, e As EventArgs) Handles TabControl1.SelectedIndexChanged
 
-            'This is an update so delete the one being updated
+		If TabControl1.SelectedIndex = 1 Then
+			CreateDiagnostics()
+		End If
+	End Sub
 
-            If combinedAlt.DeleteAlternator(altName, feedback, False) AndAlso combinedAlt.AddAlternator(GetAlternatorFromPanel(), feedback) Then
+	Private Sub frmCombinedAlternators_FormClosing(sender As Object, e As FormClosingEventArgs) Handles MyBase.FormClosing
 
-                BindGrid()
-                ClearEditPanel()
-                UpdateButtonText()
 
-            Else
-                MessageBox.Show(feedback)
-            End If
+		Dim result As DialogResult
 
-        End If
+		'If UserHitCancel then bail
+		If UserHitCancel Then
+			DialogResult = Windows.Forms.DialogResult.Cancel
+			UserHitCancel = False
+			Return
+		End If
 
+		'UserHitSave
+		If UserHitSave Then
+			DialogResult = Windows.Forms.DialogResult.Cancel
+			If Not combinedAlt.Save(aaltPath) Then
+				MessageBox.Show("Unable to save file, aborting.")
+				e.Cancel = True
+			End If
+			UserHitSave = False
+			DialogResult = Windows.Forms.DialogResult.OK
+			Return
+		End If
 
 
-    End Sub
-    Private Sub btnCancel_Click(sender As Object, e As EventArgs) Handles btnCancel.Click
+		''This must be a close box event. If nothing changed, then bail, otherwise ask user if they wanna save
+		If Not combinedAlt.IsEqualTo(originalAlt) Then
 
-        UserHitCancel = True
-        Me.close()
+			result =
+				(MessageBox.Show("Would you like to save changes before closing?", "Save Changes", MessageBoxButtons.YesNoCancel,
+								MessageBoxIcon.Question))
 
-    End Sub
-    Private Sub btnSave_Click(sender As Object, e As EventArgs) Handles btnSave.Click
 
-        '  If Not ValidateAll then Return 
+			Select Case result
 
-        UserHitSave = True
+				Case DialogResult.Yes
+					'save 
 
-        Me.DialogResult = Windows.Forms.DialogResult.OK
-        Me.Close()
+					If Not combinedAlt.Save(aaltPath) Then
+						e.Cancel = True
+					End If
 
+				Case DialogResult.No
+					'just allow the form to close
+					'without saving
+					Me.DialogResult = Windows.Forms.DialogResult.Cancel
 
+				Case DialogResult.Cancel
+					'cancel the close
+					e.Cancel = True
+					Me.DialogResult = Windows.Forms.DialogResult.Cancel
 
-    End Sub
+			End Select
 
+		End If
 
-    'Form / Tab Events
-    Private Sub TabControl1_SelectedIndexChanged(sender As Object, e As EventArgs) Handles TabControl1.SelectedIndexChanged
+		UserHitCancel = False
+		UserHitSave = False
+	End Sub
 
-        If TabControl1.SelectedIndex = 1 Then
-            CreateDiagnostics()
-        End If
 
-    End Sub
-    Private Sub frmCombinedAlternators_FormClosing(sender As Object, e As FormClosingEventArgs) Handles MyBase.FormClosing
+	'List Management
+	Private Sub ClearEditPanel()
 
+		txtIndex.Text = String.Empty
+		txtAlternatorName.Text = String.Empty
+		txt2K10Efficiency.Text = String.Empty
+		txt2KMax2Efficiency.Text = String.Empty
+		txt2KMaxEfficiency.Text = String.Empty
 
-        Dim result As DialogResult
+		txt4K10Efficiency.Text = String.Empty
+		txt4KMax2Efficiency.Text = String.Empty
+		txt4KMaxEfficiency.Text = String.Empty
 
-        'If UserHitCancel then bail
-        If UserHitCancel Then
-            DialogResult = Windows.Forms.DialogResult.Cancel
-            UserHitCancel = False
-            Return
-        End If
+		txt6K10Efficiency.Text = String.Empty
+		txt6KMax2Efficiency.Text = String.Empty
+		txt6KMaxEfficiency.Text = String.Empty
 
-        'UserHitSave
-        If UserHitSave Then
-            DialogResult = Windows.Forms.DialogResult.Cancel
-            If Not combinedAlt.Save(aaltPath) Then
-                MessageBox.Show("Unable to save file, aborting.")
-                e.Cancel = True
-            End If
-            UserHitSave = False
-            DialogResult = Windows.Forms.DialogResult.OK
-            Return
-        End If
+		txt2KMax2Amps.Text = String.Empty
+		txt2KMaxAmps.Text = String.Empty
 
+		txt4KMax2Amps.Text = String.Empty
+		txt4KMaxAmps.Text = String.Empty
 
-        ''This must be a close box event. If nothing changed, then bail, otherwise ask user if they wanna save
-        If Not combinedAlt.IsEqualTo(originalAlt) Then
+		txt6KMax2Amps.Text = String.Empty
+		txt6KMaxAmps.Text = String.Empty
 
-            result = (MessageBox.Show("Would you like to save changes before closing?", "Save Changes", MessageBoxButtons.YesNoCancel, MessageBoxIcon.Question))
+		txtPulleyRatio.Text = String.Empty
 
+		ErrorProvider1.SetError(txtAlternatorName, String.empty)
+		ErrorProvider1.SetError(txt2K10Efficiency, String.empty)
+		ErrorProvider1.SetError(txt2KMax2Efficiency, String.empty)
+		ErrorProvider1.SetError(txt2KMaxEfficiency, String.empty)
+		ErrorProvider1.SetError(txt4K10Efficiency, String.empty)
+		ErrorProvider1.SetError(txt4KMax2Efficiency, String.empty)
+		ErrorProvider1.SetError(txt4KMaxEfficiency, String.empty)
+		ErrorProvider1.SetError(txt6K10Efficiency, String.empty)
+		ErrorProvider1.SetError(txt6KMax2Efficiency, String.empty)
+		ErrorProvider1.SetError(txt6KMaxEfficiency, String.empty)
 
-            Select Case result
+		ErrorProvider1.SetError(txtPulleyRatio, String.empty)
+	End Sub
 
-                Case DialogResult.Yes
-                    'save 
+	Public Function Validate_UpdatePanel() As Boolean
 
-                    If Not combinedAlt.Save(aaltPath) Then
-                        e.Cancel = True
-                    End If
+		Dim returnResult As Boolean = True
 
-                Case DialogResult.No
-                    'just allow the form to close
-                    'without saving
-                    Me.DialogResult = Windows.Forms.DialogResult.Cancel
+		IsEmptyString(txtAlternatorName.Text, txtAlternatorName,
+					"Please enter a name for the alternator, names must be unique", returnResult)
 
-                Case DialogResult.Cancel
-                    'cancel the close
-                    e.Cancel = True
-                    Me.DialogResult = Windows.Forms.DialogResult.Cancel
+		If Not IsNumberBetweenOverZeroAndLessThan100(txt2K10Efficiency) Then returnResult = False
+		If Not IsNumberBetweenOverZeroAndLessThan100(txt2KMax2Efficiency) Then returnResult = False
+		If Not IsNumberBetweenOverZeroAndLessThan100(txt2KMaxEfficiency) Then returnResult = False
 
-            End Select
+		If Not IsNumberBetweenOverZeroAndLessThan100(txt4K10Efficiency) Then returnResult = False
+		If Not IsNumberBetweenOverZeroAndLessThan100(txt4KMax2Efficiency) Then returnResult = False
+		If Not IsNumberBetweenOverZeroAndLessThan100(txt4KMaxEfficiency) Then returnResult = False
 
-        End If
+		If Not IsNumberBetweenOverZeroAndLessThan100(txt6K10Efficiency) Then returnResult = False
+		If Not IsNumberBetweenOverZeroAndLessThan100(txt6KMax2Efficiency) Then returnResult = False
+		If Not IsNumberBetweenOverZeroAndLessThan100(txt6KMaxEfficiency) Then returnResult = False
 
-        UserHitCancel = False
-        UserHitSave = False
+		If Not IsNumberGreaterThan10(txt2KMax2Amps) Then returnResult = False
+		If Not IsNumberGreaterThan10(txt2KMaxAmps) Then returnResult = False
 
+		If Not IsNumberGreaterThan10(txt4KMax2Amps) Then returnResult = False
+		If Not IsNumberGreaterThan10(txt4KMaxAmps) Then returnResult = False
 
+		If Not IsNumberGreaterThan10(txt6KMax2Amps) Then returnResult = False
+		If Not IsNumberGreaterThan10(txt6KMaxAmps) Then returnResult = False
 
-    End Sub
+		If Not IsPostiveNumber(txtPulleyRatio.text) Then
+			ErrorProvider1.SetError(txtPulleyRatio, "Please enter a sensible positive number")
+			returnResult = False
+		Else
+			ErrorProvider1.SetError(txtPulleyRatio, String.Empty)
+		End If
 
+		Return returnResult
+	End Function
 
-    'List Management
-    Private Sub ClearEditPanel()
+	Private Sub FillEditPanel(index As Integer)
 
-        txtIndex.Text = String.Empty
-        txtAlternatorName.Text = String.Empty
-        txt2K10Efficiency.Text = String.Empty
-        txt2KMax2Efficiency.Text = String.Empty
-        txt2KMaxEfficiency.Text = String.Empty
+		Dim alt As IAlternator
+		Dim alternatorName As String = gvAlternators.Rows(index).Cells("AlternatorName").Value.ToString()
 
-        txt4K10Efficiency.Text = String.Empty
-        txt4KMax2Efficiency.Text = String.Empty
-        txt4KMaxEfficiency.Text = String.Empty
+		alt = combinedAlt.Alternators.First(Function(f) f.AlternatorName = alternatorName)
 
-        txt6K10Efficiency.Text = String.Empty
-        txt6KMax2Efficiency.Text = String.Empty
-        txt6KMaxEfficiency.Text = String.Empty
+		txtIndex.Text = index.ToString()
+		txtAlternatorName.Text = alt.AlternatorName
 
-        txt2KMax2Amps.Text = String.Empty
-        txt2KMaxAmps.Text = String.Empty
+		'Table1 - 2K Table
+		txt2K10Amps.Text = alt.InputTable2000.OrderBy(Function(x) x.Amps).Skip(1).First().Amps.ToString()
+		txt2K10Efficiency.Text = alt.InputTable2000.OrderBy(Function(x) x.Amps).Skip(1).First().Eff.ToString()
 
-        txt4KMax2Amps.Text = String.Empty
-        txt4KMaxAmps.Text = String.Empty
+		txt2KMax2Amps.Text = alt.InputTable2000.OrderBy(Function(x) x.Amps).Skip(2).First().Amps.ToString()
+		txt2KMax2Efficiency.Text = alt.InputTable2000.OrderBy(Function(x) x.Amps).Skip(2).First().Eff.ToString()
 
-        txt6KMax2Amps.Text = String.Empty
-        txt6KMaxAmps.Text = String.Empty
+		txt2KMaxAmps.Text = alt.InputTable2000.OrderBy(Function(x) x.Amps).Skip(3).First().Amps.ToString()
+		txt2KMaxEfficiency.Text = alt.InputTable2000.OrderBy(Function(x) x.Amps).Skip(3).First().Eff.ToString()
 
-        txtPulleyRatio.Text = String.Empty
+		'Table2 - 4K Table
+		txt4K10Amps.Text = alt.InputTable4000.OrderBy(Function(x) x.Amps).Skip(1).First().Amps.ToString()
+		txt4K10Efficiency.Text = alt.InputTable4000.OrderBy(Function(x) x.Amps).Skip(1).First().Eff.ToString()
 
-        ErrorProvider1.SetError(txtAlternatorName, String.empty)
-        ErrorProvider1.SetError(txt2K10Efficiency, String.empty)
-        ErrorProvider1.SetError(txt2KMax2Efficiency, String.empty)
-        ErrorProvider1.SetError(txt2KMaxEfficiency, String.empty)
-        ErrorProvider1.SetError(txt4K10Efficiency, String.empty)
-        ErrorProvider1.SetError(txt4KMax2Efficiency, String.empty)
-        ErrorProvider1.SetError(txt4KMaxEfficiency, String.empty)
-        ErrorProvider1.SetError(txt6K10Efficiency, String.empty)
-        ErrorProvider1.SetError(txt6KMax2Efficiency, String.empty)
-        ErrorProvider1.SetError(txt6KMaxEfficiency, String.empty)
+		txt4KMax2Amps.Text = alt.InputTable4000.OrderBy(Function(x) x.Amps).Skip(2).First().Amps.ToString()
+		txt4KMax2Efficiency.Text = alt.InputTable4000.OrderBy(Function(x) x.Amps).Skip(2).First().Eff.ToString()
 
-        ErrorProvider1.SetError(txtPulleyRatio, String.empty)
+		txt4KMaxAmps.Text = alt.InputTable4000.OrderBy(Function(x) x.Amps).Skip(3).First().Amps.ToString()
+		txt4KMaxEfficiency.Text = alt.InputTable4000.OrderBy(Function(x) x.Amps).Skip(3).First().Eff.ToString()
 
+		'Table3 - 6K Table
+		txt6K10Amps.Text = alt.InputTable6000.OrderBy(Function(x) x.Amps).Skip(1).First().Amps.ToString()
+		txt6K10Efficiency.Text = alt.InputTable6000.OrderBy(Function(x) x.Amps).Skip(1).First().Eff.ToString()
 
-    End Sub
-    Public Function Validate_UpdatePanel() As Boolean
+		txt6KMax2Amps.Text = alt.InputTable6000.OrderBy(Function(x) x.Amps).Skip(2).First().Amps.ToString()
+		txt6KMax2Efficiency.Text = alt.InputTable6000.OrderBy(Function(x) x.Amps).Skip(2).First().Eff.ToString()
 
-        Dim returnResult As Boolean = True
+		txt6KMaxAmps.Text = alt.InputTable6000.OrderBy(Function(x) x.Amps).Skip(3).First().Amps.ToString()
+		txt6KMaxEfficiency.Text = alt.InputTable6000.OrderBy(Function(x) x.Amps).Skip(3).First().Eff.ToString()
 
-        IsEmptyString(txtAlternatorName.Text, txtAlternatorName, "Please enter a name for the alternator, names must be unique", returnResult)
-
-        If Not IsNumberBetweenOverZeroAndLessThan100(txt2K10Efficiency) Then returnResult = False
-        If Not IsNumberBetweenOverZeroAndLessThan100(txt2KMax2Efficiency) Then returnResult = False
-        If Not IsNumberBetweenOverZeroAndLessThan100(txt2KMaxEfficiency) Then returnResult = False
-
-        If Not IsNumberBetweenOverZeroAndLessThan100(txt4K10Efficiency) Then returnResult = False
-        If Not IsNumberBetweenOverZeroAndLessThan100(txt4KMax2Efficiency) Then returnResult = False
-        If Not IsNumberBetweenOverZeroAndLessThan100(txt4KMaxEfficiency) Then returnResult = False
-
-        If Not IsNumberBetweenOverZeroAndLessThan100(txt6K10Efficiency) Then returnResult = False
-        If Not IsNumberBetweenOverZeroAndLessThan100(txt6KMax2Efficiency) Then returnResult = False
-        If Not IsNumberBetweenOverZeroAndLessThan100(txt6KMaxEfficiency) Then returnResult = False
-
-        If Not IsNumberGreaterThan10(txt2KMax2Amps) Then returnResult = False
-        If Not IsNumberGreaterThan10(txt2KMaxAmps) Then returnResult = False
-
-        If Not IsNumberGreaterThan10(txt4KMax2Amps) Then returnResult = False
-        If Not IsNumberGreaterThan10(txt4KMaxAmps) Then returnResult = False
-
-        If Not IsNumberGreaterThan10(txt6KMax2Amps) Then returnResult = False
-        If Not IsNumberGreaterThan10(txt6KMaxAmps) Then returnResult = False
-
-        If Not IsPostiveNumber(txtPulleyRatio.text) Then
-            ErrorProvider1.SetError(txtPulleyRatio, "Please enter a sensible positive number")
-            returnResult = False
-        Else
-            ErrorProvider1.SetError(txtPulleyRatio, String.Empty)
-        End If
-
-        Return returnResult
-
-    End Function
-    Private Sub FillEditPanel(index As Integer)
-
-        Dim alt As IAlternator
-        Dim alternatorName As String = gvAlternators.Rows(index).Cells("AlternatorName").Value.ToString()
-
-        alt = combinedAlt.Alternators.First(Function(f) f.AlternatorName = alternatorName)
-
-        txtIndex.Text = index.ToString()
-        txtAlternatorName.Text = alt.AlternatorName
-
-        'Table1 - 2K Table
-        txt2K10Amps.Text = alt.InputTable2000.OrderBy(Function(x) x.Amps).Skip(1).First().Amps.ToString()
-        txt2K10Efficiency.Text = alt.InputTable2000.OrderBy(Function(x) x.Amps).Skip(1).First().Eff.ToString()
-
-        txt2KMax2Amps.Text = alt.InputTable2000.OrderBy(Function(x) x.Amps).Skip(2).First().Amps.ToString()
-        txt2KMax2Efficiency.Text = alt.InputTable2000.OrderBy(Function(x) x.Amps).Skip(2).First().Eff.ToString()
-
-        txt2KMaxAmps.Text = alt.InputTable2000.OrderBy(Function(x) x.Amps).Skip(3).First().Amps.ToString()
-        txt2KMaxEfficiency.Text = alt.InputTable2000.OrderBy(Function(x) x.Amps).Skip(3).First().Eff.ToString()
-
-        'Table2 - 4K Table
-        txt4K10Amps.Text = alt.InputTable4000.OrderBy(Function(x) x.Amps).Skip(1).First().Amps.ToString()
-        txt4K10Efficiency.Text = alt.InputTable4000.OrderBy(Function(x) x.Amps).Skip(1).First().Eff.ToString()
-
-        txt4KMax2Amps.Text = alt.InputTable4000.OrderBy(Function(x) x.Amps).Skip(2).First().Amps.ToString()
-        txt4KMax2Efficiency.Text = alt.InputTable4000.OrderBy(Function(x) x.Amps).Skip(2).First().Eff.ToString()
-
-        txt4KMaxAmps.Text = alt.InputTable4000.OrderBy(Function(x) x.Amps).Skip(3).First().Amps.ToString()
-        txt4KMaxEfficiency.Text = alt.InputTable4000.OrderBy(Function(x) x.Amps).Skip(3).First().Eff.ToString()
-
-        'Table3 - 6K Table
-        txt6K10Amps.Text = alt.InputTable6000.OrderBy(Function(x) x.Amps).Skip(1).First().Amps.ToString()
-        txt6K10Efficiency.Text = alt.InputTable6000.OrderBy(Function(x) x.Amps).Skip(1).First().Eff.ToString()
-
-        txt6KMax2Amps.Text = alt.InputTable6000.OrderBy(Function(x) x.Amps).Skip(2).First().Amps.ToString()
-        txt6KMax2Efficiency.Text = alt.InputTable6000.OrderBy(Function(x) x.Amps).Skip(2).First().Eff.ToString()
-
-        txt6KMaxAmps.Text = alt.InputTable6000.OrderBy(Function(x) x.Amps).Skip(3).First().Amps.ToString()
-        txt6KMaxEfficiency.Text = alt.InputTable6000.OrderBy(Function(x) x.Amps).Skip(3).First().Eff.ToString()
-       
-        txtPulleyRatio.Text = alt.PulleyRatio.ToString()
-
-
-    End Sub
-
-
-
+		txtPulleyRatio.Text = alt.PulleyRatio.ToString()
+	End Sub
 End Class
 
 

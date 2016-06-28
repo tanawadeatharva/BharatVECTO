@@ -1,6 +1,7 @@
 ﻿Imports System.Collections.Generic
 Imports VectoAuxiliaries
 Imports System.IO
+Imports TUGraz.VectoCommon.Utils
 
 Module mAAUX_Global
 	Public ClutchEngaged As Boolean
@@ -60,13 +61,13 @@ Module mAAUX_Global
 
 					'Set Statics
 					advancedAuxModel.VectoInputs.Cycle = DetermineCycleNameFromCurrentFile()
-					advancedAuxModel.VectoInputs.VehicleWeightKG = VEH.Mass
+					advancedAuxModel.VectoInputs.VehicleWeightKG = VEH.Mass.SI(Of Kilogram)()
 					advancedAuxModel.VectoInputs.FuelMap = fuelMap 'ENG.FuelMapFullPath
-					advancedAuxModel.VectoInputs.FuelDensity = Cfg.FuelDens
+					advancedAuxModel.VectoInputs.FuelDensity = CType(Cfg.FuelDens * 1000, Double).SI(Of KilogramPerCubicMeter)()
 
 					'Set Signals
 					advancedAuxModel.Signals.TotalCycleTimeSeconds = CycleTimeInSeconds
-					advancedAuxModel.Signals.EngineIdleSpeed = ENG.Nidle
+					advancedAuxModel.Signals.EngineIdleSpeed = ENG.Nidle.RPMtoRad()
 					advancedAuxModel.RunStart(aauxFile, VEC.FilePath)
 
 

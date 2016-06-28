@@ -5,6 +5,7 @@ Imports VectoAuxiliaries.DownstreamModules
 Imports NUnit.Framework
 Imports VectoAuxiliaries
 Imports Moq
+Imports TUGraz.VectoCommon.Utils
 
 
 Namespace UnitTests
@@ -20,31 +21,31 @@ Namespace UnitTests
 		Public Sub Clone(from As ISSMTOOL) Implements ISSMTOOL.Clone
 		End Sub
 
-		Public ReadOnly Property ElectricalWAdjusted As Single Implements ISSMTOOL.ElectricalWAdjusted
+		Public ReadOnly Property ElectricalWAdjusted As Double Implements ISSMTOOL.ElectricalWAdjusted
 			Get
 				Throw New NotImplementedException
 			End Get
 		End Property
 
-		Public ReadOnly Property ElectricalWBase As Single Implements ISSMTOOL.ElectricalWBase
+		Public ReadOnly Property ElectricalWBase As Double Implements ISSMTOOL.ElectricalWBase
 			Get
 				Throw New NotImplementedException
 			End Get
 		End Property
 
-		Public ReadOnly Property FuelPerHBase As Single Implements ISSMTOOL.FuelPerHBase
+		Public ReadOnly Property FuelPerHBase As Double Implements ISSMTOOL.FuelPerHBase
 			Get
 				Throw New NotImplementedException
 			End Get
 		End Property
 
-		Public ReadOnly Property FuelPerHBaseAdjusted As Single Implements ISSMTOOL.FuelPerHBaseAdjusted
+		Public ReadOnly Property FuelPerHBaseAdjusted As Double Implements ISSMTOOL.FuelPerHBaseAdjusted
 			Get
 				Throw New NotImplementedException
 			End Get
 		End Property
 
-		Public Function FuelPerHBaseAsjusted(AverageUseableEngineWasteHeatKW As Single) As Single _
+		Public Function FuelPerHBaseAsjusted(AverageUseableEngineWasteHeatKW As Double) As Double _
 			Implements ISSMTOOL.FuelPerHBaseAsjusted
 
 			Return 0.5 * AverageUseableEngineWasteHeatKW
@@ -67,13 +68,13 @@ Namespace UnitTests
 			Throw New NotImplementedException
 		End Function
 
-		Public ReadOnly Property MechanicalWBase As Single Implements ISSMTOOL.MechanicalWBase
+		Public ReadOnly Property MechanicalWBase As Double Implements ISSMTOOL.MechanicalWBase
 			Get
 				Throw New NotImplementedException
 			End Get
 		End Property
 
-		Public ReadOnly Property MechanicalWBaseAdjusted As Single Implements ISSMTOOL.MechanicalWBaseAdjusted
+		Public ReadOnly Property MechanicalWBaseAdjusted As Double Implements ISSMTOOL.MechanicalWBaseAdjusted
 			Get
 				Throw New NotImplementedException
 			End Get
@@ -96,21 +97,20 @@ Namespace UnitTests
 		Public Sub ValuesTest()
 
 			'Arrange
-			Dim ip1 As Single = 1000.0F
-			Dim ip5 As Single = 3114
-			Dim ip6 As Single = 3114
+			Dim ip1 As Double = 1000.0
+			Dim ip5 As Double = 3114
 
-			Dim expectedOut1 As Single = 780333.4F
-			Dim expectedOut2 As Single = 0.934531F
+			Dim expectedOut1 As Double = 1799.3334	' 780333.4 
+			Dim expectedOut2 As Double = 2.13093
 
 			Dim m13 As New Mock(Of IM13)
 			Dim hvacSSM As New Mock(Of ISSMTOOL)
 			Dim signals As New Mock(Of ISignals)
 			Dim ssmMock As ISSMTOOL = New SSMToolMock()
-			Dim constants As IHVACConstants = New HVACConstants(835)
+			Dim constants As IHVACConstants = New HVACConstants(835.SI(Of KilogramPerCubicMeter))
 
 			'Moq' Arrangements
-			m13.Setup(Function(x) x.WHTCTotalCycleFuelConsumptionGrams).Returns(ip1)
+			m13.Setup(Function(x) x.WHTCTotalCycleFuelConsumptionGrams).Returns((ip1 / 1000).SI(Of Kilogram))
 			signals.Setup(Function(x) x.CurrentCycleTimeInSeconds).Returns(ip5)
 
 
@@ -118,8 +118,8 @@ Namespace UnitTests
 			Dim m14 As New M14(m13.Object, ssmMock, constants, signals.Object)
 
 			'Assert
-			Assert.AreEqual(expectedOut1, m14.TotalCycleFCGrams)
-			Assert.AreEqual(expectedOut2, m14.TotalCycleFCLitres)
+			Assert.AreEqual(expectedOut1.SI().Gramm.Value(), m14.TotalCycleFCGrams.Value(), 0.1)
+			Assert.AreEqual(expectedOut2.SI().Liter.Value(), m14.TotalCycleFCLitres.Value(), 0.00001)
 		End Sub
 	End Class
 End Namespace

@@ -8,39 +8,36 @@
 '   WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
 '
 ' See the LICENSE.txt for the specific language governing permissions and limitations.
-Imports System.Collections.Generic
-Imports System.Linq
-Imports System.Reflection
-Imports Microsoft.VisualBasic.ApplicationServices
-Imports TUGraz.VectoCore.Models.Simulation.Impl
+Imports System.ComponentModel
+Imports System.IO
+Imports System.Text
+Imports vectolic
 
 Module VECTO_Global
 	Public Const VECTOvers As String = "2.2"
-    Public COREvers As String = "NOT FOUND" 'Assembly.LoadFrom("VectoCore.dll").GetName().Version.ToString()
+	Public COREvers As String = "NOT FOUND"
 
 	Public Const LicSigAppCode As String = "VECTO-Release-0093C61E0A2E4BFA9A7ED7E729C56AE4"
 	Public MyAppPath As String
 	Public MyConfPath As String
 	Public MyDeclPath As String
 
-	'Log
 	Public LogFile As cLogFile
 
-	'BackgroundWorker
-	Public VECTOworker As System.ComponentModel.BackgroundWorker
-	Public VECTOworkerV3 As System.ComponentModel.BackgroundWorker
+	'to ensure correct format for backgroundworker thread
+	Public SetCulture As Boolean
 
-	'Log/Msg
+	Public VECTOworker As BackgroundWorker
+	Public VECTOworkerV3 As BackgroundWorker
+
 	Public MSGerror As Integer
 	Public MSGwarn As Integer
 
-	'Config-------------------------------------------------------
-	Public Cfg As cConfig
+	Public Cfg As Configuration
 
 	Public sKey As csKey
 
-	'File format
-	Public FileFormat As System.Text.Encoding = System.Text.Encoding.UTF8
+	Public FileFormat As Encoding = Encoding.UTF8
 
 	Public VEC As cVECTO
 	Public VEH As cVEH
@@ -49,7 +46,7 @@ Module VECTO_Global
 	Public MAP As cMAP
 	Public DRI As cDRI
 	Public MODdata As cMOD
-	Public Lic As vectolic.cLicense
+	Public Lic As cLicense
 	Public VSUM As cVSUM
 	Public DEV As cDEV
 
@@ -57,21 +54,33 @@ Module VECTO_Global
 
 	Public ProgBarCtrl As cProgBarCtrl
 
-	Public SetCulture As Boolean	   'Damit der Backgroundworker das richtige Format verwendet
-
-	Public Function nMtoPe(ByVal nU As Double, ByVal M As Double) As Double
-		Return ((nU*2*Math.PI/60)*M/1000)
+	''' <summary>
+	''' Converts engine speed and torque to power.
+	''' </summary>
+	''' <param name="nU">engine speed</param>
+	''' <param name="M">Torque</param>
+	''' <returns>Power</returns>
+	''' <remarks></remarks>
+	Public Function nMtoPe(nU As Double, M As Double) As Double
+		Return (nU * 2 * Math.PI / 60) * M / 1000
 	End Function
 
-	Public Function nPeToM(ByVal nU As Single, ByVal Pe As Double) As Single
-		Return Pe*1000/(nU*2*Math.PI/60)
+	''' <summary>
+	''' Convert engine speed and power to torque.
+	''' </summary>
+	''' <param name="nU">engine speed</param>
+	''' <param name="Pe">Power</param>
+	''' <returns>Torque</returns>
+	''' <remarks></remarks>
+	Public Function nPeToM(nU As Single, Pe As Double) As Single
+		Return Pe * 1000 / (nU * 2 * Math.PI / 60)
 	End Function
 
 
 #Region "sKey > Typ Umwandlung"
 
 
-	Public Function GearboxConv(ByVal Gearbox As tGearbox) As String
+	Public Function GearboxConv(Gearbox As tGearbox) As String
 		Select Case Gearbox
 			Case tGearbox.Manual
 				Return "MT"
@@ -84,7 +93,7 @@ Module VECTO_Global
 		End Select
 	End Function
 
-	Public Function GearboxConv(ByVal Gearbox As String) As tGearbox
+	Public Function GearboxConv(Gearbox As String) As tGearbox
 		Select Case UCase(Trim(Gearbox))
 			Case "MT"
 				Return tGearbox.Manual
@@ -97,7 +106,7 @@ Module VECTO_Global
 		End Select
 	End Function
 
-	Public Function fDriComp(ByVal sK As String) As tDriComp
+	Public Function fDriComp(sK As String) As tDriComp
 		sK = Trim(UCase(sK))
 		Select Case sK
 			Case sKey.DRI.t
@@ -134,13 +143,13 @@ Module VECTO_Global
 		End Select
 	End Function
 
-	Public Function fAuxComp(ByVal sK As String) As tAuxComp
+	Public Function fAuxComp(sK As String) As tAuxComp
 		Dim x As Integer
 		sK = Trim(UCase(sK))
 
 		x = sK.IndexOf("_")
 
-		If x = - 1 Then Return tAuxComp.Undefined
+		If x = -1 Then Return tAuxComp.Undefined
 
 		sK = Left(sK, x + 1)
 
@@ -153,20 +162,20 @@ Module VECTO_Global
 	End Function
 
 
-	Public Function fCompSubStr(ByVal sK As String) As String
+	Public Function fCompSubStr(sK As String) As String
 		Dim x As Integer
 
 		sK = Trim(UCase(sK))
 
 		x = sK.IndexOf("_")
 
-		If x = - 1 Then Return ""
+		If x = -1 Then Return ""
 
 		sK = Right(sK, Len(sK) - x - 1)
 
 		x = CShort(sK.IndexOf(">"))
 
-		If x = - 1 Then Return ""
+		If x = -1 Then Return ""
 
 		sK = Left(sK, x)
 
@@ -178,7 +187,7 @@ Module VECTO_Global
 
 #Region "Typ > Name Conversion"
 
-	Public Function ConvLoading(ByVal load As tLoading) As String
+	Public Function ConvLoading(load As tLoading) As String
 		Select Case load
 			Case tLoading.FullLoaded
 				Return "Full Loading"
@@ -196,7 +205,7 @@ Module VECTO_Global
 	End Function
 
 
-	Public Function ConvVehCat(ByVal VehCat As tVehCat, ByVal NiceName As Boolean) As String
+	Public Function ConvVehCat(VehCat As tVehCat, NiceName As Boolean) As String
 		Select Case VehCat
 			Case tVehCat.Citybus
 				Return "Citybus"
@@ -225,7 +234,7 @@ Module VECTO_Global
 		End Select
 	End Function
 
-	Public Function ConvVehCat(ByVal VehCat As String) As tVehCat
+	Public Function ConvVehCat(VehCat As String) As tVehCat
 		Select Case UCase(Trim(VehCat))
 			Case "CITYBUS"
 				Return tVehCat.Citybus
@@ -242,7 +251,7 @@ Module VECTO_Global
 		End Select
 	End Function
 
-	Public Function ConvAxleConf(ByVal AxleConf As tAxleConf) As String
+	Public Function ConvAxleConf(AxleConf As tAxleConf) As String
 		Select Case AxleConf
 			Case tAxleConf.a4x2
 				Return "4x2"
@@ -265,7 +274,7 @@ Module VECTO_Global
 		End Select
 	End Function
 
-	Public Function ConvAxleConf(ByVal AxleConf As String) As tAxleConf
+	Public Function ConvAxleConf(AxleConf As String) As tAxleConf
 		Select Case UCase(Trim(AxleConf))
 			Case "4X2"
 				Return tAxleConf.a4x2
@@ -288,7 +297,7 @@ Module VECTO_Global
 		End Select
 	End Function
 
-	Public Function ConvMission(ByVal Mission As tMission) As String
+	Public Function ConvMission(Mission As tMission) As String
 		Select Case Mission
 			Case tMission.LongHaul
 				Return "LongHaul"
@@ -315,7 +324,7 @@ Module VECTO_Global
 		End Select
 	End Function
 
-	Public Function ConvMission(ByVal Mission As String) As tMission
+	Public Function ConvMission(Mission As String) As tMission
 		Select Case Mission
 			Case "LongHaul"
 				Return tMission.LongHaul
@@ -343,7 +352,7 @@ Module VECTO_Global
 	End Function
 
 
-	Public Function CdModeConv(ByVal CdMode As tCdMode) As String
+	Public Function CdModeConv(CdMode As tCdMode) As String
 		Select Case CdMode
 			Case tCdMode.CdOfBeta
 				Return "CdOfBeta"
@@ -356,7 +365,7 @@ Module VECTO_Global
 		End Select
 	End Function
 
-	Public Function CdModeConv(ByVal CdMode As String) As tCdMode
+	Public Function CdModeConv(CdMode As String) As tCdMode
 		Select Case UCase(Trim(CdMode))
 			Case "CDOFBETA"
 				Return tCdMode.CdOfBeta
@@ -370,7 +379,7 @@ Module VECTO_Global
 	End Function
 
 
-	Public Function RtTypeConv(ByVal RtType As tRtType) As String
+	Public Function RtTypeConv(RtType As tRtType) As String
 		Select Case RtType
 			Case tRtType.Primary
 				Return "Primary"
@@ -381,7 +390,7 @@ Module VECTO_Global
 		End Select
 	End Function
 
-	Public Function RtTypeConv(ByVal RtType As String) As tRtType
+	Public Function RtTypeConv(RtType As String) As tRtType
 		Select Case UCase(Trim(RtType))
 			Case "PRIMARY"
 				Return tRtType.Primary
@@ -394,13 +403,10 @@ Module VECTO_Global
 
 #End Region
 
-
 	Public Class cLogFile
-		Private LOGstream As System.IO.StreamWriter
+		Private LOGstream As StreamWriter
 
 		Public Function StartLog() As Boolean
-
-			'Log start
 			Try
 				LOGstream = My.Computer.FileSystem.OpenTextFileWriter(MyAppPath & "LOG.txt", True, FileFormat)
 				LOGstream.AutoFlush = True
@@ -414,17 +420,17 @@ Module VECTO_Global
 		End Function
 
 		Public Function SizeCheck() As Boolean
-			Dim logfDetail As IO.FileInfo
+			Dim logfDetail As FileInfo
 			Dim BackUpError As Boolean
 
 			'Start new log if file size limit reached
-			If IO.File.Exists(MyAppPath & "LOG.txt") Then
+			If File.Exists(MyAppPath & "LOG.txt") Then
 
 				'File size check
 				logfDetail = My.Computer.FileSystem.GetFileInfo(MyAppPath & "LOG.txt")
 
 				'If Log too large: Delete
-				If logfDetail.Length/(2^20) > Cfg.LogSize Then
+				If logfDetail.Length / (2 ^ 20) > Cfg.LogSize Then
 
 					WriteToLog(tMsgID.Normal, "Starting new logfile")
 					LOGstream.Close()
@@ -432,8 +438,8 @@ Module VECTO_Global
 					BackUpError = False
 
 					Try
-						If IO.File.Exists(MyAppPath & "LOG_backup.txt") Then IO.File.Delete(MyAppPath & "LOG_backup.txt")
-						IO.File.Move(MyAppPath & "LOG.txt", MyAppPath & "LOG_backup.txt")
+						If File.Exists(MyAppPath & "LOG_backup.txt") Then File.Delete(MyAppPath & "LOG_backup.txt")
+						File.Move(MyAppPath & "LOG.txt", MyAppPath & "LOG_backup.txt")
 					Catch ex As Exception
 						BackUpError = True
 					End Try
@@ -465,7 +471,7 @@ Module VECTO_Global
 		End Function
 
 
-		Public Function WriteToLog(ByVal MsgType As tMsgID, ByVal Msg As String) As Boolean
+		Public Function WriteToLog(MsgType As tMsgID, Msg As String) As Boolean
 			Dim MsgTypeStr As String
 
 			Select Case MsgType
@@ -489,7 +495,7 @@ Module VECTO_Global
 #Region "File path functions"
 
 	'When no path is specified, then insert either HomeDir or MainDir   Special-folders
-	Public Function fFileRepl(ByVal file As String, Optional ByVal MainDir As String = "") As String
+	Public Function fFileRepl(file As String, Optional ByVal MainDir As String = "") As String
 
 		Dim ReplPath As String
 
@@ -500,9 +506,9 @@ Module VECTO_Global
 		If file = "" Then Return ""
 
 		'Replace sKeys
-		file = Microsoft.VisualBasic.Strings.Replace(file, sKey.DefVehPath & "\", MyAppPath & "Default Vehicles\", 1, - 1,
-													CompareMethod.Text)
-		file = Microsoft.VisualBasic.Strings.Replace(file, sKey.HomePath & "\", MyAppPath, 1, - 1, CompareMethod.Text)
+		file = Replace(file, sKey.DefVehPath & "\", MyAppPath & "Default Vehicles\", 1, -1,
+						CompareMethod.Text)
+		file = Replace(file, sKey.HomePath & "\", MyAppPath, 1, -1, CompareMethod.Text)
 
 		'Replace - Determine folder
 		If MainDir = "" Then
@@ -529,37 +535,37 @@ Module VECTO_Global
 	End Function
 
 	'Path one-level-up      "C:\temp\ordner1\"  >>  "C:\temp\"
-	Private Function fPathUp(ByVal Pfad As String) As String
+	Private Function fPathUp(Pfad As String) As String
 		Dim x As Int16
 
 		Pfad = Pfad.Substring(0, Pfad.Length - 1)
 
 		x = Pfad.LastIndexOf("\")
 
-		If x = - 1 Then Return ""
+		If x = -1 Then Return ""
 
 		Return Pfad.Substring(0, x + 1)
 	End Function
 
 	'File name without the path    "C:\temp\TEST.txt"  >>  "TEST.txt" oder "TEST"
-	Public Function fFILE(ByVal Pfad As String, ByVal MitEndung As Boolean) As String
+	Public Function fFILE(Pfad As String, MitEndung As Boolean) As String
 		Dim x As Int16
 		x = Pfad.LastIndexOf("\") + 1
-		Pfad = Microsoft.VisualBasic.Right(Pfad, Microsoft.VisualBasic.Len(Pfad) - x)
+		Pfad = Right(Pfad, Len(Pfad) - x)
 		If Not MitEndung Then
 			x = Pfad.LastIndexOf(".")
-			If x > 0 Then Pfad = Microsoft.VisualBasic.Left(Pfad, x)
+			If x > 0 Then Pfad = Left(Pfad, x)
 		End If
 		Return Pfad
 	End Function
 
 	'Filename without extension   "C:\temp\TEST.txt" >> "C:\temp\TEST"
-	Public Function fFileWoExt(ByVal Path As String) As String
+	Public Function fFileWoExt(Path As String) As String
 		Return fPATH(Path) & fFILE(Path, False)
 	End Function
 
 	'Filename without path if Path = WorkDir or MainDir
-	Public Function fFileWoDir(ByVal file As String, Optional ByVal MainDir As String = "") As String
+	Public Function fFileWoDir(file As String, Optional ByVal MainDir As String = "") As String
 		Dim path As String
 
 		If MainDir = "" Then
@@ -575,21 +581,21 @@ Module VECTO_Global
 
 	'Path alone        "C:\temp\TEST.txt"  >>  "C:\temp\"
 	'                   "TEST.txt"          >>  ""
-	Public Function fPATH(ByVal Pfad As String) As String
+	Public Function fPATH(Pfad As String) As String
 		Dim x As Int16
 		If Pfad Is Nothing OrElse Pfad.Length < 3 OrElse Pfad.Substring(1, 2) <> ":\" Then Return ""
 		x = Pfad.LastIndexOf("\")
-		Return Microsoft.VisualBasic.Left(Pfad, x + 1)
+		Return Left(Pfad, x + 1)
 	End Function
 
 	'Extension alone      "C:\temp\TEST.txt" >> ".txt"
-	Public Function fEXT(ByVal Pfad As String) As String
+	Public Function fEXT(Pfad As String) As String
 		Dim x As Int16
 		x = Pfad.LastIndexOf(".")
-		If x = - 1 Then
+		If x = -1 Then
 			Return ""
 		Else
-			Return Microsoft.VisualBasic.Right(Pfad, Microsoft.VisualBasic.Len(Pfad) - x)
+			Return Right(Pfad, Len(Pfad) - x)
 		End If
 	End Function
 

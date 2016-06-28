@@ -38,7 +38,6 @@ using TUGraz.VectoCore.Models.Connector.Ports;
 using TUGraz.VectoCore.Models.Connector.Ports.Impl;
 using TUGraz.VectoCore.Models.Simulation;
 using TUGraz.VectoCore.Models.Simulation.Data;
-using TUGraz.VectoCore.Models.Simulation.DataBus;
 using TUGraz.VectoCore.Models.SimulationComponent.Data;
 using TUGraz.VectoCore.OutputData;
 using TUGraz.VectoCore.Utils;
@@ -71,7 +70,7 @@ namespace TUGraz.VectoCore.Models.SimulationComponent.Impl
 
 		protected readonly Watt StationaryIdleFullLoadPower;
 
-		internal readonly CombustionEngineData ModelData;
+		[ValidateObject] internal readonly CombustionEngineData ModelData;
 
 		protected IEngineAuxPort EngineAux;
 
@@ -97,6 +96,11 @@ namespace TUGraz.VectoCore.Models.SimulationComponent.Impl
 			get { return PreviousState.EngineSpeed; }
 		}
 
+		public NewtonMeter EngineTorque
+		{
+			get { return PreviousState.EngineTorque; }
+		}
+
 		public Watt EngineStationaryFullPower(PerSecond angularSpeed)
 		{
 			return ModelData.FullLoadCurve.FullLoadStationaryTorque(angularSpeed) * angularSpeed;
@@ -115,6 +119,11 @@ namespace TUGraz.VectoCore.Models.SimulationComponent.Impl
 		public PerSecond EngineRatedSpeed
 		{
 			get { return ModelData.FullLoadCurve.RatedSpeed; }
+		}
+
+		public PerSecond EngineN95hSpeed
+		{
+			get { return ModelData.FullLoadCurve.N95hSpeed; }
 		}
 
 		public ICombustionEngineIdleController IdleController
@@ -168,7 +177,7 @@ namespace TUGraz.VectoCore.Models.SimulationComponent.Impl
 			var avgEngineSpeed = (PreviousState.EngineSpeed + CurrentState.EngineSpeed) / 2.0;
 			CurrentState.EngineTorqueOut = torqueOut;
 			CurrentState.FullDragTorque = ModelData.FullLoadCurve.DragLoadStationaryTorque(avgEngineSpeed);
-			var dynamicFullLoadPower = ComputeFullLoadPower(angularVelocity, dt);
+			var dynamicFullLoadPower = ComputeFullLoadPower(avgEngineSpeed, dt);
 			CurrentState.DynamicFullLoadTorque = dynamicFullLoadPower / avgEngineSpeed;
 			CurrentState.InertiaTorqueLoss =
 				Formulas.InertiaPower(angularVelocity, PreviousState.EngineSpeed, ModelData.Inertia, dt) /
@@ -232,7 +241,7 @@ namespace TUGraz.VectoCore.Models.SimulationComponent.Impl
 			CurrentState.EngineTorque = VectoMath.Limit(totalTorqueDemand, minTorque, maxTorque);
 			CurrentState.EnginePower = CurrentState.EngineTorque * avgEngineSpeed;
 
-			if (torqueOut.IsGreater(0.SI<NewtonMeter>()) &&
+			if (totalTorqueDemand.IsGreater(0.SI<NewtonMeter>()) &&
 				(deltaFull * avgEngineSpeed).IsGreater(0.SI<Watt>(), Constants.SimulationSettings.LineSearchTolerance)) {
 				Log.Debug("requested engine power exceeds fullload power: delta: {0}", deltaFull);
 				return new ResponseOverload {
@@ -245,7 +254,7 @@ namespace TUGraz.VectoCore.Models.SimulationComponent.Impl
 				};
 			}
 
-			if (torqueOut.IsSmaller(0.SI<NewtonMeter>()) &&
+			if (totalTorqueDemand.IsSmaller(0.SI<NewtonMeter>()) &&
 				(deltaDrag * avgEngineSpeed).IsSmaller(0.SI<Watt>(), Constants.SimulationSettings.LineSearchTolerance)) {
 				Log.Debug("requested engine power is below drag power: delta: {0}", deltaDrag);
 				return new ResponseUnderload {
@@ -333,41 +342,25 @@ namespace TUGraz.VectoCore.Models.SimulationComponent.Impl
 			container[ModalResultField.Tq_full] = CurrentState.DynamicFullLoadTorque;
 			container[ModalResultField.Tq_drag] = CurrentState.FullDragTorque;
 
-			try {
-				var fc = ModelData.ConsumptionMap.GetFuelConsumption(CurrentState.EngineTorque, avgEngineSpeed,
-					allowExtrapolation: (DataBus.ExecutionMode != ExecutionMode.Declaration));
+			var fc = ModelData.ConsumptionMap.GetFuelConsumption(CurrentState.EngineTorque, avgEngineSpeed);
 
-				//TODO mk-2015-11-11: calculate aux start stop correction
-				var fcAux = fc;
+			//TODO mk-2015-11-11: calculate aux start stop correction
+			var fcAux = fc;
 
-				var fcWHTC = fcAux * ModelData.WHTCCorrectionFactor;
-				var fcAAUX = fcWHTC;
+			var fcWHTC = fcAux * ModelData.WHTCCorrectionFactor;
+			var fcAAUX = fcWHTC;
 				var advancedAux = EngineAux as BusAuxiliariesAdapter;
 				if (advancedAux != null) {
 					advancedAux.DoWriteModalResults(container);
 					fcAAUX = advancedAux.AAuxFuelConsumption;
 				}
-				var fcFinal = fcAAUX;
+			var fcFinal = fcAAUX;
 
-				container[ModalResultField.FCMap] = fc;
-				container[ModalResultField.FCAUXc] = fcAux;
-				container[ModalResultField.FCWHTCc] = fcWHTC;
-				container[ModalResultField.FCAAUX] = fcAAUX;
-				container[ModalResultField.FCFinal] = fcFinal;
-
-				if (ModelData.ConsumptionMap.Extrapolated) {
-					Log.Warn("FuelMap Extrapolated: n_eng_avg: {0} Tq: {1}, FC: {2}", avgEngineSpeed.ConvertTo().Rounds.Per.Minute,
-						CurrentState.EngineTorque, fc);
-				}
-			} catch (VectoException ex) {
-				Log.Warn("FuelMap: {0} n_eng_avg: {1} Tq: {2}", ex.Message, avgEngineSpeed.ConvertTo().Rounds.Per.Minute,
-					CurrentState.EngineTorque);
-				container[ModalResultField.FCMap] = null;
-				container[ModalResultField.FCAUXc] = null;
-				container[ModalResultField.FCWHTCc] = null;
-				container[ModalResultField.FCAAUX] = null;
-				container[ModalResultField.FCFinal] = null;
-			}
+			container[ModalResultField.FCMap] = fc;
+			container[ModalResultField.FCAUXc] = fcAux;
+			container[ModalResultField.FCWHTCc] = fcWHTC;
+			container[ModalResultField.FCAAUX] = fcAAUX;
+			container[ModalResultField.FCFinal] = fcFinal;
 		}
 
 		protected override void DoCommitSimulationStep()

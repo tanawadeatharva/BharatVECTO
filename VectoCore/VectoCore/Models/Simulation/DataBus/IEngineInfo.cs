@@ -43,13 +43,16 @@ namespace TUGraz.VectoCore.Models.Simulation.DataBus
 		/// </summary>
 		PerSecond EngineSpeed { get; }
 
+		NewtonMeter EngineTorque { get; }
+
 		Watt EngineStationaryFullPower(PerSecond angularSpeed);
 
 		Watt EngineDragPower(PerSecond angularSpeed);
 
 		PerSecond EngineIdleSpeed { get; }
 
-
 		PerSecond EngineRatedSpeed { get; }
+
+		PerSecond EngineN95hSpeed { get; }
 	}
 }

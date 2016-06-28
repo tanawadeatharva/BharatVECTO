@@ -62,36 +62,34 @@ namespace TUGraz.VectoCore.Tests.Models.Simulation
 		public void TestEngineOnly_JobRun()
 		{
 			var actual = @"TestData\Jobs\EngineOnlyJob_Coach Engine Only short.vmod";
-			var expected = @"TestData\Results\EngineOnlyCycles\24tCoach_EngineOnly short.vmod";
+			var expected = @"TestData\Results\EngineOnlyCycles\EngineOnlyJob_Coach Engine Only short.vmod";
 
 			var job = CreateRun(actual);
 			job.Run();
 
-			ResultFileHelper.TestModFile(expected, actual);
-		}
+			Assert.IsTrue(job.FinishedWithoutErrors);
 
-		private class MockSumWriter : SummaryDataContainer
-		{
-			public override void Write(IModalDataContainer modData, string jobFileName, string jobName,
-				string cycleFileName, Kilogram vehicleMass, Kilogram vehicleLoading) {}
-
-			public override void Finish() {}
+			ResultFileHelper.TestModFile(expected, actual, testVelocity: false);
 		}
 
 		[TestMethod]
 		public void TestEngineOnly_SimulatorRun()
 		{
 			var actual = @"TestData\Jobs\EngineOnlyJob_Coach Engine Only short.vmod";
-			var expected = @"TestData\Results\EngineOnlyCycles\24tCoach_EngineOnly short.vmod";
+			var expected = @"TestData\Results\EngineOnlyCycles\EngineOnlyJob_Coach Engine Only short.vmod";
 
 			var run = CreateRun(actual);
 
-			var sim = new JobContainer(new MockSumWriter());
-			sim.AddRun(run);
-			sim.Execute();
-			sim.WaitFinished();
+			var jobContainer = new JobContainer(new MockSumWriter());
+			jobContainer.AddRun(run);
+			jobContainer.Execute();
+			jobContainer.WaitFinished();
 
-			ResultFileHelper.TestModFile(expected, actual);
+			foreach (var r in jobContainer.Runs) {
+				Assert.IsTrue(r.Run.FinishedWithoutErrors, string.Format("{0}", r.ExecException));
+			}
+
+			ResultFileHelper.TestModFile(expected, actual, testVelocity: false);
 		}
 
 		public IVectoRun CreateRun(string resultFileName)
@@ -124,18 +122,22 @@ namespace TUGraz.VectoCore.Tests.Models.Simulation
 
 			jobContainer.WaitFinished();
 
+			foreach (var run in jobContainer.Runs) {
+				Assert.IsTrue(run.Run.FinishedWithoutErrors, string.Format("{0}", run.ExecException));
+			}
+
 			ResultFileHelper.TestSumFile(@"TestData\Results\EngineOnlyCycles\24t Coach.vsum",
 				@"TestData\Jobs\24t Coach EngineOnly.vsum");
 
 			ResultFileHelper.TestModFiles(new[] {
-				@"TestData\Results\EngineOnlyCycles\24t Coach_Engine Only1.vmod",
-				@"TestData\Results\EngineOnlyCycles\24t Coach_Engine Only2.vmod",
-				@"TestData\Results\EngineOnlyCycles\24t Coach_Engine Only3.vmod"
+				@"TestData\Results\EngineOnlyCycles\24t Coach EngineOnly_Engine Only1.vmod",
+				@"TestData\Results\EngineOnlyCycles\24t Coach EngineOnly_Engine Only2.vmod",
+				@"TestData\Results\EngineOnlyCycles\24t Coach EngineOnly_Engine Only3.vmod"
 			}, new[] {
 				@"TestData\Jobs\24t Coach EngineOnly_Engine Only1.vmod",
 				@"TestData\Jobs\24t Coach EngineOnly_Engine Only2.vmod",
 				@"TestData\Jobs\24t Coach EngineOnly_Engine Only3.vmod"
-			})
+			}, testVelocity: false)
 				;
 		}
 	}

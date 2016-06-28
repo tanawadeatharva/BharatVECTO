@@ -42,6 +42,7 @@ using TUGraz.VectoCommon.Models;
 using TUGraz.VectoCommon.Utils;
 using TUGraz.VectoCore.Configuration;
 using TUGraz.VectoCore.InputData.Impl;
+using TUGraz.VectoCore.Models.Declaration;
 using TUGraz.VectoCore.Utils;
 using DriverData = TUGraz.VectoCore.Models.SimulationComponent.Data.DriverData;
 
@@ -434,10 +435,32 @@ namespace TUGraz.VectoCore.InputData.FileIO.JSON
 			get
 			{
 				var lac = Body.GetEx(JsonKeys.DriverData_LookaheadCoasting);
+				var distanceScalingFactor = lac["PreviewDistanceFactor"] != null
+					? lac.GetEx<double>("PreviewDistanceFactor")
+					: DeclarationData.Driver.LookAhead.LookAheadDistanceFactor;
+				var lacDfOffset = lac["DF_offset"] != null
+					? lac.GetEx<double>("DF_offset")
+					: DeclarationData.Driver.LookAhead.DecisionFactorCoastingOffset;
+				var lacDfScaling = lac["DF_scaling"] != null
+					? lac.GetEx<double>("DF_scaling")
+					: DeclarationData.Driver.LookAhead.DecisionFactorCoastingScaling;
+				var speedDependentLookup = lac["DF_targetSpeedLookup"] != null
+					? ReadTableData(lac.GetEx<string>("DF_targetSpeedLookup"), "Lookahead Coasting Decisionfactor - Target speed",
+						false)
+					: null;
+				var velocityDropLookup = lac["Df_velocityDropLookup"] != null
+					? ReadTableData(lac.GetEx<string>("Df_velocityDropLookup"),
+						"Lookahead Coasting Decisionfactor - Velocity drop", false)
+					: null;
 				return new LookAheadCoastingInputData() {
 					Enabled = lac.GetEx<bool>(JsonKeys.DriverData_Lookahead_Enabled),
 					Deceleration = lac.GetEx<double>(JsonKeys.DriverData_Lookahead_Deceleration).SI<MeterPerSquareSecond>(),
 					MinSpeed = lac.GetEx<double>(JsonKeys.DriverData_Lookahead_MinSpeed).KMPHtoMeterPerSecond(),
+					LookaheadDistanceFactor = distanceScalingFactor,
+					CoastingDecisionFactorOffset = lacDfOffset,
+					CoastingDecisionFactorScaling = lacDfScaling,
+					CoastingDecisionFactorTargetSpeedLookup = speedDependentLookup,
+					CoastingDecisionFactorVelocityDropLookup = velocityDropLookup
 				};
 			}
 		}

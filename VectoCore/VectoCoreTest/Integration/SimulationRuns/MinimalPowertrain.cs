@@ -74,7 +74,7 @@ namespace TUGraz.VectoCore.Tests.Integration.SimulationRuns
 			var driverData = CreateDriverData(AccelerationFile);
 
 			var fileWriter = new FileOutputWriter("Coach_MinimalPowertrainOverload");
-			var modData = new ModalDataContainer("Coach_MinimalPowertrainOverload", fileWriter); //new TestModalDataWriter();
+			var modData = new ModalDataContainer("Coach_MinimalPowertrainOverload", fileWriter, ExecutionMode.Engineering);
 			var vehicleContainer = new VehicleContainer(ExecutionMode.Engineering, modData);
 
 			var driver = new Driver(vehicleContainer, driverData, new DefaultDriverStrategy());
@@ -123,7 +123,7 @@ namespace TUGraz.VectoCore.Tests.Integration.SimulationRuns
 			var driverData = CreateDriverData(AccelerationFile);
 
 			var fileWriter = new FileOutputWriter("Coach_MinimalPowertrain");
-			var modData = new ModalDataContainer("Coach_MinimalPowertrain", fileWriter); //new TestModalDataWriter();
+			var modData = new ModalDataContainer("Coach_MinimalPowertrain", fileWriter, ExecutionMode.Engineering);
 			var vehicleContainer = new VehicleContainer(ExecutionMode.Engineering, modData);
 
 			var cycle = new DistanceBasedDrivingCycle(vehicleContainer, cycleData);
@@ -180,7 +180,7 @@ namespace TUGraz.VectoCore.Tests.Integration.SimulationRuns
 			Assert.IsInstanceOfType(response, typeof(ResponseCycleFinished));
 
 			modData.Finish(VectoRun.Status.Success);
-			
+
 			NLog.LogManager.EnableLogging();
 		}
 
@@ -197,7 +197,7 @@ namespace TUGraz.VectoCore.Tests.Integration.SimulationRuns
 			var driverData = CreateDriverData(AccelerationFile2);
 
 			var fileWriter = new FileOutputWriter("Coach_MinimalPowertrainOverload");
-			var modData = new ModalDataContainer("Coach_MinimalPowertrainOverload", fileWriter);
+			var modData = new ModalDataContainer("Coach_MinimalPowertrainOverload", fileWriter, ExecutionMode.Engineering);
 			var vehicleContainer = new VehicleContainer(ExecutionMode.Engineering, modData);
 
 			var cycle = new DistanceBasedDrivingCycle(vehicleContainer, cycleData);
@@ -300,7 +300,8 @@ namespace TUGraz.VectoCore.Tests.Integration.SimulationRuns
 				AccelerationCurve = AccelerationCurveData.ReadFromFile(accelerationFile),
 				LookAheadCoasting = new DriverData.LACData {
 					Enabled = false,
-					Deceleration = -0.5.SI<MeterPerSquareSecond>()
+					//Deceleration = -0.5.SI<MeterPerSquareSecond>()
+					LookAheadDecisionFactor = new LACDecisionFactor()
 				},
 				OverSpeedEcoRoll = new DriverData.OverSpeedEcoRollData {
 					Mode = DriverMode.Off

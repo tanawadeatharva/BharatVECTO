@@ -96,7 +96,7 @@ namespace TUGraz.VectoCore.Configuration
 			/// <summary>
 			/// The lower time bound before braking is initiated.
 			/// </summary>
-			public static readonly Second LowerBoundTimeInterval = 0.2.SI<Second>();
+			public static readonly Second LowerBoundTimeInterval = 0.25.SI<Second>();
 
 			/// <summary>
 			/// simulation interval if the vehicle stands still
@@ -127,7 +127,8 @@ namespace TUGraz.VectoCore.Configuration
 			/// </summary>
 			public const double InterpolateSearchTolerance = 1e-3;
 
-			public const double ClutchNormSpeed = 0.03;
+			public const double ClutchClosingSpeedNorm = 0.03;
+			public static readonly MeterPerSecond ClutchDisengageWhenHaltingSpeed = 15.KMPHtoMeterPerSecond();
 
 			public static readonly MeterPerSquareSecond MinimumAcceleration = 0.1.SI<MeterPerSquareSecond>();
 
@@ -148,6 +149,8 @@ namespace TUGraz.VectoCore.Configuration
 			public const int MaximumIterationCountForSimulationStep = 30;
 
 			public static readonly MeterPerSecond VehicleStopClutchDisengageSpeed = 10.KMPHtoMeterPerSecond();
+
+			public static readonly Meter GearboxLookaheadForAccelerationEstimation = 100.SI<Meter>();
 		}
 	}
 }

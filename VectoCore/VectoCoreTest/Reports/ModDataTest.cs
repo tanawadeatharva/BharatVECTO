@@ -130,9 +130,6 @@ namespace TUGraz.VectoCore.Tests.Reports
 
 				Assert.AreEqual(pRetIn.Value(), (pAxleIn + pLossRet).Value(), 1E-3, "time: {0}  distance: {1}", time, distance);
 
-				Assert.AreEqual(pGbxIn.Value(), (pRetIn + pLossGbx + pGbxInertia).Value(), gear != 0 ? 1E-3 : 0.5,
-					"time: {0}  distance: {1}", time,
-					distance);
 
 				Assert.AreEqual(pGbxIn.Value(), pClutchOut.Value(), 1E-3, "time: {0}  distance: {1}", time, distance);
 
@@ -140,6 +137,9 @@ namespace TUGraz.VectoCore.Tests.Reports
 					"time: {0}  distance: {1}", time, distance);
 
 				if (gear != 0) {
+					Assert.AreEqual(pGbxIn.Value(), (pRetIn + pLossGbx + pGbxInertia).Value(), gear != 0 ? 1E-3 : 0.5,
+						"time: {0}  distance: {1}", time,
+						distance);
 					Assert.AreEqual(pEngFcmap.Value(),
 						(pTrac + pWheelInertia + pBrakeLoss + pLossAxle + pLossRet + pLossGbx + pGbxInertia + pEngInertia + pAux +
 						pClutchLoss).Value(), 0.5, "time: {0}  distance: {1}", time, distance);

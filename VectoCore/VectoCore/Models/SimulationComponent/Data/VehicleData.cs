@@ -41,22 +41,20 @@ using TUGraz.VectoCore.Utils;
 
 namespace TUGraz.VectoCore.Models.SimulationComponent.Data
 {
+	/// <summary>
+	/// Data Class for the Vehicle
+	/// </summary>
 	[CustomValidation(typeof(VehicleData), "ValidateVehicleData")]
 	public class VehicleData : SimulationComponentData
 	{
-		//public string BasePath { get; internal set; }
-		private List<Axle> _axleData;
-
 		public VehicleCategory VehicleCategory { get; internal set; }
 		public VehicleClass VehicleClass { get; internal set; }
-		//public CrossWindCorrectionMode CrossWindCorrectionMode { get; internal set; }
 
 		[Required, ValidateObject]
 		public ICrossWindCorrection CrossWindCorrectionCurve { get; internal set; }
 
-		/// <summary>
-		///     Set the properties for all axles of the vehicle
-		/// </summary>
+		private List<Axle> _axleData;
+
 		[ValidateObject]
 		public List<Axle> AxleData
 		{
@@ -86,7 +84,6 @@ namespace TUGraz.VectoCore.Models.SimulationComponent.Data
 		public Meter DynamicTyreRadius { get; internal set; }
 
 		public KilogramSquareMeter WheelsInertia { get; internal set; }
-
 
 		public string Rim { get; internal set; }
 
@@ -128,7 +125,7 @@ namespace TUGraz.VectoCore.Models.SimulationComponent.Data
 			foreach (var axle in _axleData) {
 				var nrWheels = axle.TwinTyres ? 4 : 2;
 				var baseValue = (axle.AxleWeightShare * TotalVehicleWeight() * g / axle.TyreTestLoad / nrWheels).Value();
-				if (baseValue == 0) {
+				if (baseValue.IsEqual(0)) {
 					throw new VectoSimulationException(
 						"Axle Roll Resistance Coefficient could not be calculated. One of the values is 0: AxleWeightShare: {0}, TotalVehicleWeight: {1}, TyreTestLoad: {2}, nrWheels: {3}",
 						axle.AxleWeightShare, TotalVehicleWeight(), axle.TyreTestLoad, nrWheels);

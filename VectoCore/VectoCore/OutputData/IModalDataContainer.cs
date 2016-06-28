@@ -40,6 +40,12 @@ using TUGraz.VectoCore.Utils;
 
 namespace TUGraz.VectoCore.OutputData
 {
+	public interface IModalDataFilter
+	{
+		ModalResults Filter(ModalResults data);
+		string ID { get; }
+	}
+
 	public interface IModalDataContainer
 	{
 		/// <summary>
@@ -92,6 +98,8 @@ namespace TUGraz.VectoCore.OutputData
 		IEnumerable<T> GetValues<T>(DataColumn col);
 
 		Dictionary<string, DataColumn> Auxiliaries { get; set; }
+
+		void SetDataValue(string fieldName, object value);
 
 		void AddAuxiliary(string id);
 	}

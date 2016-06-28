@@ -1,4 +1,6 @@
-﻿Public Interface IFuelConsumptionMap
+﻿Imports TUGraz.VectoCommon.Utils
+
+Public Interface IFuelConsumptionMap
 	''' <summary>
 	''' 
 	''' </summary>
@@ -6,5 +8,5 @@
 	''' <param name="angularVelocity"></param>
 	''' <returns></returns>
 	''' <remarks></remarks>
-	Function GetFuelConsumption(torque As Double, angularVelocity As Double) As Double
+	Function GetFuelConsumption(torque As NewtonMeter, angularVelocity As PerSecond) As KilogramPerSecond
 End Interface

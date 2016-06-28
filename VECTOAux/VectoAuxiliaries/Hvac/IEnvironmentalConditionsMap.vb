@@ -1,11 +1,7 @@
 ﻿Namespace Hvac
+	Public Interface IEnvironmentalConditionsMap
+		Function Initialise() As Boolean
 
-    Public Interface IEnvironmentalConditionsMap
-
-        Function Initialise() As Boolean
-
-        Function GetEnvironmentalConditions() As List(Of IEnvironmentalCondition)
-
-    End Interface
-
+		Function GetEnvironmentalConditions() As List(Of IEnvironmentalCondition)
+	End Interface
 End Namespace

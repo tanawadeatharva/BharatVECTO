@@ -88,6 +88,21 @@ namespace TUGraz.VectoCore.Tests.Utils
 			get { return VehicleMass; }
 		}
 
+		public Newton AirDragResistance(MeterPerSecond previousVelocity, MeterPerSecond nextVelocity)
+		{
+			return 0.SI<Newton>();
+		}
+
+		public Newton RollingResistance(Radian gradient)
+		{
+			return 0.SI<Newton>();
+		}
+
+		public Newton SlopeResistance(Radian gradient)
+		{
+			return 0.SI<Newton>();
+		}
+
 		public void Connect(IFvOutPort other)
 		{
 			NextComponent = other;

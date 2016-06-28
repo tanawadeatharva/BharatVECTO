@@ -139,7 +139,7 @@ namespace TUGraz.VectoCommon.Utils
 		/// <returns></returns>
 		public static bool IsPositive(this double self, double tolerance = Tolerance)
 		{
-			return self.IsGreaterOrEqual(0.0, tolerance);
+			return self >= -tolerance;
 		}
 
 		/// <summary>
@@ -148,6 +148,16 @@ namespace TUGraz.VectoCommon.Utils
 		/// <param name="self"></param>
 		/// <returns></returns>
 		public static PerSecond RPMtoRad(this double self)
+		{
+			return SI<PerSecond>(self * 2 * Math.PI / 60.0);
+		}
+
+		/// <summary>
+		/// Converts the double-value from RPM (rounds per minute) to the SI Unit PerSecond.
+		/// </summary>
+		/// <param name="self"></param>
+		/// <returns></returns>
+		public static PerSecond RPMtoRad(this float self)
 		{
 			return SI<PerSecond>(self * 2 * Math.PI / 60.0);
 		}

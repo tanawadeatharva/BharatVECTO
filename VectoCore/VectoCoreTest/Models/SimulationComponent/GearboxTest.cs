@@ -31,12 +31,14 @@
 
 using System;
 using System.Linq;
-using Microsoft.VisualStudio.TestTools.UnitTesting;
+using NUnit.Framework;
 using TUGraz.VectoCommon.Exceptions;
 using TUGraz.VectoCommon.Models;
 using TUGraz.VectoCommon.Utils;
+using TUGraz.VectoCore.Configuration;
 using TUGraz.VectoCore.InputData.Reader;
 using TUGraz.VectoCore.Models.Connector.Ports.Impl;
+using TUGraz.VectoCore.Models.Simulation.DataBus;
 using TUGraz.VectoCore.Models.Simulation.Impl;
 using TUGraz.VectoCore.Models.SimulationComponent.Data;
 using TUGraz.VectoCore.Models.SimulationComponent.Data.Gearbox;
@@ -44,13 +46,17 @@ using TUGraz.VectoCore.Models.SimulationComponent.Impl;
 using TUGraz.VectoCore.Tests.Utils;
 using TUGraz.VectoCore.Utils;
 
+// ReSharper disable RedundantAssignment
+// ReSharper disable UnusedVariable
+// ReSharper disable InconsistentNaming
+
 namespace TUGraz.VectoCore.Tests.Models.SimulationComponent
 {
-	[TestClass]
+	[TestFixture]
 	public class GearboxTest
 	{
-		protected string GearboxDataFile = @"TestData\Components\24t Coach.vgbx";
-		protected string EngineDataFile = @"TestData\Components\24t Coach.veng";
+		public const string GearboxDataFile = @"TestData\Components\24t Coach.vgbx";
+		public const string EngineDataFile = @"TestData\Components\24t Coach.veng";
 
 		public const string CycleFile = @"TestData\Integration\FullPowerTrain\1-Gear-Test-dist.vdri";
 		public const string CoachCycleFile = @"TestData\Integration\FullPowerTrain\Coach.vdri";
@@ -63,7 +69,8 @@ namespace TUGraz.VectoCore.Tests.Models.SimulationComponent
 		public const string GearboxShiftPolygonFile = @"TestData\Components\ShiftPolygons.vgbs";
 		public const string GearboxFullLoadCurveFile = @"TestData\Components\Gearbox.vfld";
 
-		public TestContext TestContext { get; set; }
+		public const string AxleGearValidRangeDataFile = @"TestData\Components\AxleGearValidRange.vgbx";
+		public const string AxleGearInvalidRangeDataFile = @"TestData\Components\AxleGearInvalidRange.vgbx";
 
 		private static GearboxData CreateGearboxData()
 		{
@@ -86,8 +93,14 @@ namespace TUGraz.VectoCore.Tests.Models.SimulationComponent
 			};
 		}
 
-		[TestMethod]
-		public void AxleGearTest()
+		protected PerSecond SpeedToAngularSpeed(double v, double r)
+		{
+			return ((60 * v) / (2 * r * Math.PI / 1000)).RPMtoRad();
+		}
+
+		[Test,
+		TestCase(520, 20.320, 279698.4, 9401.44062)]
+		public void AxleGearTest(double rdyn, double speed, double power, double expectedLoss)
 		{
 			var vehicle = new VehicleContainer(ExecutionMode.Engineering);
 			var axleGearData = MockSimulationDataFactory.CreateAxleGearDataFromFile(GearboxDataFile);
@@ -99,41 +112,55 @@ namespace TUGraz.VectoCore.Tests.Models.SimulationComponent
 			var absTime = 0.SI<Second>();
 			var dt = 1.SI<Second>();
 
-			var rdyn = 520;
-			var speed = 20.320;
-
 			var angSpeed = SpeedToAngularSpeed(speed, rdyn);
-			var PvD = 279698.4.SI<Watt>();
+			var PvD = power.SI<Watt>();
 			var torqueToWheels = Formulas.PowerToTorque(PvD, angSpeed);
 
 			axleGear.Request(absTime, dt, torqueToWheels, angSpeed);
 
-			var loss = 9401.44062.SI<Watt>();
+			var loss = expectedLoss.SI<Watt>();
 
 			Assert.AreEqual(Formulas.PowerToTorque(PvD + loss, angSpeed * axleGearData.AxleGear.Ratio).Value(),
 				mockPort.Torque.Value(), 0.01, "Torque Engine Side");
 			Assert.AreEqual((angSpeed * axleGearData.AxleGear.Ratio).Value(), mockPort.AngularVelocity.Value(), 0.01,
-				"Torque Engine Side");
+				"AngularVelocity Engine Side");
 		}
 
-		protected PerSecond SpeedToAngularSpeed(double v, double r)
+		[TestCase]
+		public void AxleGearValidRangeTest()
 		{
-			return ((60 * v) / (2 * r * Math.PI / 1000)).RPMtoRad();
+			var vehicle = new VehicleContainer(ExecutionMode.Engineering);
+			var axleGearData = MockSimulationDataFactory.CreateAxleGearDataFromFile(AxleGearValidRangeDataFile);
+			var axleGear = new AxleGear(vehicle, axleGearData);
+			Assert.AreEqual(0, axleGear.Validate().Count);
 		}
 
-		[TestMethod]
-		public void Gearbox_LessThanTwoGearsException()
+		[TestCase]
+		public void AxleGearInvalidRangeTest()
 		{
-			var wrongFile = @"TestData\Components\24t Coach LessThanTwoGears.vgbx";
+			var vehicle = new VehicleContainer(ExecutionMode.Engineering);
+			var axleGearData = MockSimulationDataFactory.CreateAxleGearDataFromFile(AxleGearInvalidRangeDataFile);
+			var axleGear = new AxleGear(vehicle, axleGearData);
+			var errors = axleGear.Validate();
+			Assert.AreEqual(1, errors.Count);
+		}
+
+		[Test,
+		TestCase(@"TestData\Components\24t Coach LessThanTwoGears.vgbx")]
+		public void Gearbox_LessThanTwoGearsException(string wrongFile)
+		{
 			AssertHelper.Exception<VectoSimulationException>(
 				() => MockSimulationDataFactory.CreateGearboxDataFromFile(wrongFile, EngineDataFile),
 				"At least one Gear-Entry must be defined in Gearbox!");
 		}
 
-		[TestMethod]
-		public void Gearbox_LossMapInterpolation()
+		[Test,
+		TestCase(GearboxDataFile, EngineDataFile, 6.38, 2300, 1600, 2356.2326),
+		TestCase(GearboxDataFile, EngineDataFile, 6.38, -1300, 1000, -1267.0686)]
+		public void Gearbox_LossMapInterpolation(string gbxFile, string engineFile, double ratio, double torque,
+			double inAngularSpeed, double expectedTorque)
 		{
-			var gearboxData = MockSimulationDataFactory.CreateGearboxDataFromFile(GearboxDataFile, EngineDataFile);
+			var gearboxData = MockSimulationDataFactory.CreateGearboxDataFromFile(gbxFile, engineFile);
 			var container = new VehicleContainer(ExecutionMode.Engineering);
 			var gearbox = new Gearbox(container, gearboxData, new AMTShiftStrategy(gearboxData, container));
 			var driver = new MockDriver(container);
@@ -145,34 +172,29 @@ namespace TUGraz.VectoCore.Tests.Models.SimulationComponent
 
 			gearbox.Initialize(0.SI<NewtonMeter>(), 0.RPMtoRad());
 
-			const double ratio = 6.38;
 			var absTime = 0.SI<Second>();
 			var dt = 2.SI<Second>();
-			var t = 2600.SI<NewtonMeter>();
-			var n = 1600.RPMtoRad();
-			var response = gearbox.OutPort().Request(absTime, dt, t * ratio, n / ratio);
-			Assert.IsInstanceOfType(response, typeof(ResponseSuccess));
+			var tq = torque.SI<NewtonMeter>();
+			var n = inAngularSpeed.RPMtoRad();
+			var response = (ResponseSuccess)gearbox.OutPort().Request(absTime, dt, tq * ratio, n / ratio);
+
 			AssertHelper.AreRelativeEqual(absTime, port.AbsTime);
 			AssertHelper.AreRelativeEqual(dt, port.Dt);
-			AssertHelper.AreRelativeEqual(n, port.AngularVelocity);
-			AssertHelper.AreRelativeEqual(2658.10267.SI<NewtonMeter>(), port.Torque);
+			AssertHelper.AreRelativeEqual(inAngularSpeed, port.AngularVelocity.Value() / Constants.RPMToRad);
+			AssertHelper.AreRelativeEqual(expectedTorque, port.Torque.Value());
 
-			absTime += dt;
-			t = -1300.SI<NewtonMeter>();
-			n = 1000.RPMtoRad();
-			response = gearbox.OutPort().Request(absTime, dt, t * ratio, n / ratio);
-
-			Assert.IsInstanceOfType(response, typeof(ResponseSuccess));
-			AssertHelper.AreRelativeEqual(absTime, port.AbsTime);
-			AssertHelper.AreRelativeEqual(dt, port.Dt);
-			AssertHelper.AreRelativeEqual(n, port.AngularVelocity);
-			AssertHelper.AreRelativeEqual(-1272.4030255.SI<NewtonMeter>(), port.Torque);
+			Assert.IsFalse(gearbox.CurrentState.TorqueLossResult.Extrapolated);
+			var modData = new MockModalDataContainer();
+			gearbox.CommitSimulationStep(modData);
 		}
 
-		[TestMethod]
-		public void Gearbox_LossMapExtrapolation_Declaration()
+		[Test,
+		TestCase(GearboxDataFile, EngineDataFile, 6.38, 2600, 1600, 2658.10267),
+		TestCase(GearboxDataFile, EngineDataFile, 6.38, -2600, 1000, -2543.4076)]
+		public void Gearbox_LossMapExtrapolation_Declaration(string gbxFile, string engineFile, double ratio, double torque,
+			double inAngularSpeed, double expectedTorque)
 		{
-			var gearboxData = MockSimulationDataFactory.CreateGearboxDataFromFile(GearboxDataFile, EngineDataFile);
+			var gearboxData = MockSimulationDataFactory.CreateGearboxDataFromFile(gbxFile, engineFile);
 			var container = new VehicleContainer(ExecutionMode.Declaration);
 			var gearbox = new Gearbox(container, gearboxData, new AMTShiftStrategy(gearboxData, container));
 			var driver = new MockDriver(container);
@@ -184,32 +206,27 @@ namespace TUGraz.VectoCore.Tests.Models.SimulationComponent
 
 			gearbox.Initialize(0.SI<NewtonMeter>(), 0.RPMtoRad());
 
-			const double ratio = 6.38;
 			var absTime = 0.SI<Second>();
 			var dt = 2.SI<Second>();
-			var t = 2600.SI<NewtonMeter>();
-			var n = 1600.RPMtoRad();
-			var response = gearbox.OutPort().Request(absTime, dt, t * ratio, n / ratio);
-			Assert.IsInstanceOfType(response, typeof(ResponseSuccess));
+			var tq = torque.SI<NewtonMeter>();
+			var n = inAngularSpeed.RPMtoRad();
+			var response = (ResponseSuccess)gearbox.OutPort().Request(absTime, dt, tq * ratio, n / ratio);
 
-			absTime += dt;
-			t = -2300.SI<NewtonMeter>();
-			n = 1000.RPMtoRad();
-			response = gearbox.OutPort().Request(absTime, dt, t * ratio, n / ratio);
-
-			Assert.IsInstanceOfType(response, typeof(ResponseSuccess));
 			Assert.AreEqual(absTime, port.AbsTime);
 			Assert.AreEqual(dt, port.Dt);
-			Assert.AreEqual(n, port.AngularVelocity);
-			AssertHelper.AreRelativeEqual(-2272.3774.SI<NewtonMeter>(), port.Torque);
+			Assert.AreEqual(inAngularSpeed, port.AngularVelocity.Value() / Constants.RPMToRad, 1e-3);
+			AssertHelper.AreRelativeEqual(expectedTorque.SI<NewtonMeter>(), port.Torque);
 
 			var modData = new MockModalDataContainer();
-			Assert.IsTrue(gearbox.ModelData.Gears[gearbox.Gear].LossMap.Extrapolated);
+			Assert.IsTrue(gearbox.CurrentState.TorqueLossResult.Extrapolated);
 			AssertHelper.Exception<VectoException>(() => { gearbox.CommitSimulationStep(modData); });
 		}
 
-		[TestMethod]
-		public void Gearbox_LossMapExtrapolation_Engineering()
+		[Test,
+		TestCase(GearboxDataFile, EngineDataFile, 6.38, 2600, 1600, 2658.10267),
+		TestCase(GearboxDataFile, EngineDataFile, 6.38, -2600, 1000, -2543.4076)]
+		public void Gearbox_LossMapExtrapolation_Engineering(string gbxFile, string engineFile, double ratio, double torque,
+			double inAngularSpeed, double expectedTorque)
 		{
 			var gearboxData = MockSimulationDataFactory.CreateGearboxDataFromFile(GearboxDataFile, EngineDataFile);
 			var container = new VehicleContainer(executionMode: ExecutionMode.Engineering);
@@ -223,32 +240,28 @@ namespace TUGraz.VectoCore.Tests.Models.SimulationComponent
 
 			gearbox.Initialize(0.SI<NewtonMeter>(), 0.RPMtoRad());
 
-			var ratio = 6.38;
 			var absTime = 0.SI<Second>();
 			var dt = 2.SI<Second>();
-			var t = 2600.SI<NewtonMeter>();
-			var n = 1600.RPMtoRad();
-			var response = gearbox.OutPort().Request(absTime, dt, t * ratio, n / ratio);
-			Assert.IsInstanceOfType(response, typeof(ResponseSuccess));
+			var t = torque.SI<NewtonMeter>();
+			var n = inAngularSpeed.RPMtoRad();
+			var response = (ResponseSuccess)gearbox.OutPort().Request(absTime, dt, t * ratio, n / ratio);
 
-			absTime += dt;
-			t = -2500.SI<NewtonMeter>();
-			n = 1000.RPMtoRad();
-			response = gearbox.OutPort().Request(absTime, dt, t * ratio, n / ratio);
-
-			Assert.IsInstanceOfType(response, typeof(ResponseSuccess));
 			Assert.AreEqual(absTime, port.AbsTime);
 			Assert.AreEqual(dt, port.Dt);
 			Assert.AreEqual(n, port.AngularVelocity);
-			AssertHelper.AreRelativeEqual(-2472.3723.SI<NewtonMeter>(), port.Torque);
+			AssertHelper.AreRelativeEqual(expectedTorque.SI<NewtonMeter>(), port.Torque);
 
 			var modData = new MockModalDataContainer();
-			Assert.IsTrue(gearbox.ModelData.Gears[gearbox.Gear].LossMap.Extrapolated);
+			Assert.IsTrue(gearbox.CurrentState.TorqueLossResult.Extrapolated);
 			gearbox.CommitSimulationStep(modData);
 		}
 
-		[TestMethod]
-		public void Gearbox_LossMapExtrapolation_DryRun()
+		[Test,
+		TestCase(GearboxDataFile, EngineDataFile, 6.38, 2600, 1600, true, 2658.10267),
+		TestCase(GearboxDataFile, EngineDataFile, 6.38, -2500, 1000, false, -2443.5392),
+		TestCase(GearboxDataFile, EngineDataFile, 6.38, -1000, 1000, false, -972.95098)]
+		public void Gearbox_LossMapExtrapolation_DryRun(string gbxFile, string engineFile, double ratio, double torque,
+			double inAngularSpeed, bool extrapolated, double expectedTorque)
 		{
 			var gearboxData = MockSimulationDataFactory.CreateGearboxDataFromFile(GearboxDataFile, EngineDataFile);
 			var container = new VehicleContainer(ExecutionMode.Engineering);
@@ -262,42 +275,23 @@ namespace TUGraz.VectoCore.Tests.Models.SimulationComponent
 
 			gearbox.Initialize(0.SI<NewtonMeter>(), 0.RPMtoRad());
 
-			var ratio = 6.38;
 			var absTime = 0.SI<Second>();
 			var dt = 2.SI<Second>();
-			var t = 2600.SI<NewtonMeter>();
-			var n = 1600.RPMtoRad();
-			var response = gearbox.OutPort().Request(absTime, dt, t * ratio, n / ratio);
-			Assert.IsInstanceOfType(response, typeof(ResponseSuccess));
+			var t = torque.SI<NewtonMeter>();
+			var n = inAngularSpeed.RPMtoRad();
+			var response = (ResponseSuccess)gearbox.OutPort().Request(absTime, dt, t * ratio, n / ratio);
 
-			absTime += dt;
-			t = -2500.SI<NewtonMeter>();
-			n = 1000.RPMtoRad();
-			response = gearbox.OutPort().Request(absTime, dt, t * ratio, n / ratio, dryRun: true);
-			Assert.IsTrue(gearbox.ModelData.Gears[gearbox.Gear].LossMap.Extrapolated);
-
-			Assert.IsInstanceOfType(response, typeof(ResponseDryRun));
 			Assert.AreEqual(absTime, port.AbsTime);
 			Assert.AreEqual(dt, port.Dt);
 			Assert.AreEqual(n, port.AngularVelocity);
-			AssertHelper.AreRelativeEqual(-2472.3723.SI<NewtonMeter>(), port.Torque);
-
-			t = -1000.SI<NewtonMeter>();
-			n = 1000.RPMtoRad();
-			response = gearbox.OutPort().Request(absTime, dt, t * ratio, n / ratio);
-			Assert.IsFalse(gearbox.ModelData.Gears[gearbox.Gear].LossMap.Extrapolated);
-
-			Assert.IsInstanceOfType(response, typeof(ResponseSuccess));
-			Assert.AreEqual(absTime, port.AbsTime);
-			Assert.AreEqual(dt, port.Dt);
-			Assert.AreEqual(n, port.AngularVelocity);
-			AssertHelper.AreRelativeEqual(-972.95098.SI<NewtonMeter>(), port.Torque);
+			AssertHelper.AreRelativeEqual(expectedTorque.SI<NewtonMeter>(), port.Torque);
+			Assert.AreEqual(extrapolated, gearbox.CurrentState.TorqueLossResult.Extrapolated);
 
 			var modData = new MockModalDataContainer();
 			gearbox.CommitSimulationStep(modData);
 		}
 
-		[TestMethod]
+		[Test]
 		public void Gearbox_IntersectFullLoadCurves()
 		{
 			var container = new VehicleContainer(ExecutionMode.Engineering);
@@ -323,9 +317,7 @@ namespace TUGraz.VectoCore.Tests.Models.SimulationComponent
 			foreach (var exp in expected) {
 				var torque = exp.t.SI<NewtonMeter>() * ratio;
 				var angularVelocity = exp.n.RPMtoRad() / ratio;
-				var response = gearbox.OutPort().Request(0.SI<Second>(), 1.SI<Second>(), torque, angularVelocity);
-
-				Assert.IsInstanceOfType(response, typeof(ResponseSuccess));
+				var response = (ResponseSuccess)gearbox.OutPort().Request(0.SI<Second>(), 1.SI<Second>(), torque, angularVelocity);
 			}
 
 			var expectedCorrect = new[] {
@@ -339,13 +331,31 @@ namespace TUGraz.VectoCore.Tests.Models.SimulationComponent
 				var torque = exp.t.SI<NewtonMeter>() * ratio;
 				var angularVelocity = exp.n.RPMtoRad() / ratio;
 
-				var response = gearbox.OutPort().Request(0.SI<Second>(), 1.SI<Second>(), torque, angularVelocity);
-				Assert.IsInstanceOfType(response, typeof(ResponseSuccess));
+				var response = (ResponseSuccess)gearbox.OutPort().Request(0.SI<Second>(), 1.SI<Second>(), torque, angularVelocity);
 			}
 		}
 
-		[TestMethod]
-		public void Gearbox_Request()
+		[Test,
+		TestCase(1, -1000, 600, 28.096, typeof(ResponseSuccess)),
+		TestCase(2, -1000, 600, 28.096, typeof(ResponseSuccess)),
+		TestCase(7, -1000, 600, 13.096, typeof(ResponseSuccess)),
+		TestCase(7, 850, 600, 12.346, typeof(ResponseSuccess)),
+		TestCase(7, 2050, 1200, 21.382, typeof(ResponseSuccess)),
+		TestCase(1, 50, 600, 9.096, typeof(ResponseSuccess)),
+		TestCase(1, 2450, 800, 58.11, typeof(ResponseSuccess)),
+		TestCase(1, 850, 800, 26.11, typeof(ResponseSuccess)),
+		TestCase(1, 850, 200, 23.07, typeof(ResponseSuccess)),
+		TestCase(2, 50, 600, 9.096, typeof(ResponseSuccess)),
+		TestCase(2, 2050, 1200, 52.132, typeof(ResponseSuccess)),
+		TestCase(2, 850, 800, 26.11, typeof(ResponseSuccess)),
+		TestCase(2, 850, 600, 25.096, typeof(ResponseSuccess)),
+		TestCase(2, 850, 0, 22.06, typeof(ResponseSuccess)),
+		TestCase(1, 850, 0, 22.06, typeof(ResponseSuccess)),
+		TestCase(7, -1000, 0, 10.06, typeof(ResponseSuccess)),
+		TestCase(7, 850, 0, 9.31, typeof(ResponseSuccess)),
+		TestCase(7, 2450, 0, 17.31, typeof(ResponseSuccess))
+		]
+		public void Gearbox_Request_engaged(int gear, double t, double n, double loss, Type responseType)
 		{
 			var container = new VehicleContainer(ExecutionMode.Engineering);
 			var gearboxData = CreateGearboxData();
@@ -361,130 +371,101 @@ namespace TUGraz.VectoCore.Tests.Models.SimulationComponent
 			var ratios = new[] { 0.0, 6.38, 4.63, 3.44, 2.59, 1.86, 1.35, 1, 0.76 };
 			// the first element 0.0 is just a placeholder for axlegear, not used in this test
 
-			var expected = new[] {
-				new { gear = 1, t = -1000, n = 600, loss = 28.096, responseType = typeof(ResponseSuccess) },
-				new { gear = 2, t = -1000, n = 600, loss = 28.096, responseType = typeof(ResponseSuccess) },
-				new { gear = 7, t = -1000, n = 600, loss = 13.096, responseType = typeof(ResponseSuccess) },
-				new { gear = 7, t = 850, n = 600, loss = 12.346, responseType = typeof(ResponseSuccess) },
-				new { gear = 7, t = 2050, n = 1200, loss = 21.382, responseType = typeof(ResponseSuccess) },
-				new { gear = 1, t = 50, n = 600, loss = 9.096, responseType = typeof(ResponseSuccess) },
-				new { gear = 1, t = 2450, n = 800, loss = 58.11, responseType = typeof(ResponseSuccess) },
-				new { gear = 1, t = 850, n = 800, loss = 26.11, responseType = typeof(ResponseSuccess) },
-				new { gear = 1, t = 850, n = 0, loss = 22.06, responseType = typeof(ResponseSuccess) },
-				new { gear = 1, t = 850, n = 200, loss = 23.07, responseType = typeof(ResponseSuccess) },
-				new { gear = 2, t = 50, n = 600, loss = 9.096, responseType = typeof(ResponseSuccess) },
-				new { gear = 2, t = 2050, n = 1200, loss = 52.132, responseType = typeof(ResponseSuccess) },
-				new { gear = 2, t = 850, n = 800, loss = 26.11, responseType = typeof(ResponseSuccess) },
-				new { gear = 2, t = 850, n = 0, loss = 22.06, responseType = typeof(ResponseSuccess) },
-				new { gear = 2, t = 850, n = 600, loss = 25.096, responseType = typeof(ResponseSuccess) },
-				new { gear = 7, t = -1000, n = 0, loss = 10.06, responseType = typeof(ResponseSuccess) },
-				new { gear = 7, t = 850, n = 0, loss = 9.31, responseType = typeof(ResponseSuccess) },
-				new { gear = 7, t = 2450, n = 0, loss = 17.31, responseType = typeof(ResponseSuccess) },
-			};
-
 			var absTime = 0.SI<Second>();
 			var dt = 2.SI<Second>();
 
-			foreach (var exp in expected) {
-				var expectedT = exp.t.SI<NewtonMeter>();
-				var expectedN = exp.n.RPMtoRad();
-				var expectedLoss = exp.loss.SI<NewtonMeter>();
+			var expectedT = t.SI<NewtonMeter>();
+			var expectedN = n.RPMtoRad();
+			var expectedLoss = loss.SI<NewtonMeter>();
 
-				var torque = (expectedT - expectedLoss) * ratios[exp.gear];
-				var angularVelocity = expectedN / ratios[exp.gear];
+			var torque = (expectedT - expectedLoss) * ratios[gear];
+			var angularVelocity = expectedN / ratios[gear];
 
-				gearbox.Gear = (uint)exp.gear;
-				gearbox.OutPort().Initialize(torque, angularVelocity);
-				var response = gearbox.OutPort().Request(absTime, dt, torque, angularVelocity);
-				Assert.IsInstanceOfType(response, exp.responseType, exp.ToString());
+			gearbox.OutPort().Initialize(torque, angularVelocity);
+			gearbox.Gear = (uint)gear;
+			var response = gearbox.OutPort().Request(absTime, dt, torque, angularVelocity);
+			Assert.IsTrue(response.GetType() == responseType);
 
-				if (exp.responseType == typeof(ResponseSuccess)) {
-					AssertHelper.AreRelativeEqual(absTime, port.AbsTime, message: exp.ToString());
-					AssertHelper.AreRelativeEqual(dt, port.Dt, message: exp.ToString());
-					AssertHelper.AreRelativeEqual(expectedN, port.AngularVelocity, message: exp.ToString());
-					AssertHelper.AreRelativeEqual(expectedT, port.Torque, message: exp.ToString(), toleranceFactor: 1e-5);
-				}
+			if (responseType == typeof(ResponseSuccess)) {
+				AssertHelper.AreRelativeEqual(absTime, port.AbsTime);
+				AssertHelper.AreRelativeEqual(dt, port.Dt);
+				AssertHelper.AreRelativeEqual(expectedN, port.AngularVelocity);
+				AssertHelper.AreRelativeEqual(expectedT, port.Torque, toleranceFactor: 1e-5);
 			}
 		}
 
-		[TestMethod]
-		public void Gearbox_ShiftDown()
+		[Test,
+		TestCase(8, 7, 1500, 750, typeof(ResponseGearShift)),
+		TestCase(7, 6, 1500, 750, typeof(ResponseGearShift)),
+		TestCase(6, 5, 1500, 750, typeof(ResponseGearShift)),
+		TestCase(5, 4, 1500, 750, typeof(ResponseGearShift)),
+		TestCase(4, 3, 1500, 750, typeof(ResponseGearShift)),
+		TestCase(3, 2, 1500, 750, typeof(ResponseGearShift)),
+		TestCase(2, 1, 1500, 750, typeof(ResponseGearShift)),
+		TestCase(1, 1, 1200, 700, typeof(ResponseSuccess)),
+		TestCase(8, 1, 15000, 50, typeof(ResponseGearShift)),]
+		public void Gearbox_ShiftDown(int gear, int newGear, double t, double n, Type responseType)
 		{
 			var container = new VehicleContainer(ExecutionMode.Engineering);
 			var gearboxData = MockSimulationDataFactory.CreateGearboxDataFromFile(GearboxDataFile, EngineDataFile);
 			var gearbox = new Gearbox(container, gearboxData, new AMTShiftStrategy(gearboxData, container));
 
 			var driver = new MockDriver(container);
-			var port = new MockTnOutPort();
+			var port = new MockTnOutPort() { EngineN95hSpeed = 2000.RPMtoRad() };
 			gearbox.InPort().Connect(port);
 			var vehicle = new MockVehicle(container) { MyVehicleSpeed = 10.SI<MeterPerSecond>() };
 			container.Engine = port;
 
 			var ratios = new[] { 0.0, 6.38, 4.63, 3.44, 2.59, 1.86, 1.35, 1, 0.76 };
 			// the first element 0.0 is just a placeholder for axlegear, not used in this test
-
-			var expected = new[] {
-				new { gear = 8, newGear = 7, t = 1500, n = 750, responseType = typeof(ResponseGearShift) },
-				new { gear = 7, newGear = 6, t = 1500, n = 750, responseType = typeof(ResponseGearShift) },
-				new { gear = 6, newGear = 5, t = 1500, n = 750, responseType = typeof(ResponseGearShift) },
-				new { gear = 5, newGear = 4, t = 1500, n = 750, responseType = typeof(ResponseGearShift) },
-				new { gear = 4, newGear = 3, t = 1500, n = 750, responseType = typeof(ResponseGearShift) },
-				new { gear = 3, newGear = 2, t = 1500, n = 750, responseType = typeof(ResponseGearShift) },
-				new { gear = 2, newGear = 1, t = 1500, n = 750, responseType = typeof(ResponseGearShift) },
-				new { gear = 1, newGear = 1, t = 1200, n = 700, responseType = typeof(ResponseSuccess) },
-				new { gear = 8, newGear = 1, t = 15000, n = 50, responseType = typeof(ResponseGearShift) }
-			};
 
 			var absTime = 0.SI<Second>();
 			var dt = 2.SI<Second>();
 
 			gearbox.OutPort().Initialize(1.SI<NewtonMeter>(), 1.SI<PerSecond>());
 
-			foreach (var exp in expected) {
-				var expectedT = exp.t.SI<NewtonMeter>();
-				var expectedN = exp.n.RPMtoRad();
+			var expectedT = t.SI<NewtonMeter>();
+			var expectedN = n.RPMtoRad();
 
-				var torque = expectedT * ratios[exp.gear];
-				var angularVelocity = expectedN / ratios[exp.gear];
+			var torque = expectedT * ratios[gear];
+			var angularVelocity = expectedN / ratios[gear];
 
-				gearbox.Gear = (uint)exp.gear;
-				var gearShiftResponse = gearbox.OutPort().Request(absTime, dt, torque, angularVelocity);
-				Assert.IsInstanceOfType(gearShiftResponse, exp.responseType, exp.ToString());
+			gearbox.Gear = (uint)gear;
+			var gearShiftResponse = gearbox.OutPort().Request(absTime, dt, torque, angularVelocity);
+			Assert.IsTrue(gearShiftResponse.GetType() == responseType);
 
-				absTime += dt;
-				var successResponse = gearbox.OutPort().Request(absTime, dt, torque, angularVelocity);
-				Assert.IsInstanceOfType(successResponse, typeof(ResponseSuccess), exp.ToString());
-				Assert.AreEqual((uint)exp.newGear, container.Gear, exp.ToString());
-				absTime += dt;
-			}
+			absTime += dt;
+			var successResponse = (ResponseSuccess)gearbox.OutPort().Request(absTime, dt, torque, angularVelocity);
+			Assert.AreEqual((uint)newGear, container.Gear);
 		}
 
-		[TestMethod]
-		public void Gearbox_ShiftUp()
+		[Test,
+		TestCase(7, 8, 1000, 1400, typeof(ResponseGearShift)),
+		TestCase(6, 7, 1000, 1400, typeof(ResponseGearShift)),
+		TestCase(5, 6, 1000, 1400, typeof(ResponseGearShift)),
+		TestCase(4, 5, 1000, 1400, typeof(ResponseGearShift)),
+		TestCase(3, 4, 1000, 1400, typeof(ResponseGearShift)),
+		TestCase(2, 3, 1000, 1400, typeof(ResponseGearShift)),
+		TestCase(1, 2, 1000, 1400, typeof(ResponseGearShift)),
+		TestCase(8, 8, 1000, 1400, typeof(ResponseSuccess)),
+		TestCase(1, 6, 200, 9000, typeof(ResponseGearShift)),]
+		public void Gearbox_ShiftUp(int gear, int newGear, double tq, double n, Type responseType)
 		{
-			var container = new VehicleContainer(ExecutionMode.Engineering);
+			var container = new MockVehicleContainer() {
+				VehicleSpeed = 10.SI<MeterPerSecond>(),
+				DriverBehavior = DrivingBehavior.Driving,
+				Altitude = 0.SI<Meter>(),
+				VehicleMass = 10000.SI<Kilogram>(),
+				ReducedMassWheels = 100.SI<Kilogram>()
+			};
 			var gearboxData = MockSimulationDataFactory.CreateGearboxDataFromFile(GearboxDataFile, EngineDataFile);
 			var gearbox = new Gearbox(container, gearboxData, new AMTShiftStrategy(gearboxData, container));
-			var driver = new MockDriver(container);
-			var vehicle = new MockVehicle(container) { MyVehicleSpeed = 10.SI<MeterPerSecond>() };
-			var port = new MockTnOutPort();
+			var port = new MockTnOutPort() { EngineN95hSpeed = 2000.RPMtoRad() };
 			container.Engine = port;
 			gearbox.InPort().Connect(port);
 
 			var ratios = new[] { 0.0, 6.38, 4.63, 3.44, 2.59, 1.86, 1.35, 1, 0.76 };
 			// the first element 0.0 is just a placeholder for axlegear, not used in this test
-
-			var expected = new[] {
-				new { gear = 7, newGear = 8, t = 1000, n = 1400, responseType = typeof(ResponseGearShift) },
-				new { gear = 6, newGear = 7, t = 1000, n = 1400, responseType = typeof(ResponseGearShift) },
-				new { gear = 5, newGear = 6, t = 1000, n = 1400, responseType = typeof(ResponseGearShift) },
-				new { gear = 4, newGear = 5, t = 1000, n = 1400, responseType = typeof(ResponseGearShift) },
-				new { gear = 3, newGear = 4, t = 1000, n = 1400, responseType = typeof(ResponseGearShift) },
-				new { gear = 2, newGear = 3, t = 1000, n = 1400, responseType = typeof(ResponseGearShift) },
-				new { gear = 1, newGear = 2, t = 1000, n = 1400, responseType = typeof(ResponseGearShift) },
-				new { gear = 8, newGear = 8, t = 1000, n = 1400, responseType = typeof(ResponseSuccess) },
-				new { gear = 1, newGear = 8, t = 200, n = 9000, responseType = typeof(ResponseGearShift) }
-			};
 
 			var absTime = 0.SI<Second>();
 			var dt = 2.SI<Second>();
@@ -492,23 +473,20 @@ namespace TUGraz.VectoCore.Tests.Models.SimulationComponent
 			gearbox.OutPort().Initialize(1.SI<NewtonMeter>(), 1.SI<PerSecond>());
 
 			absTime += dt;
-			foreach (var exp in expected) {
-				var expectedT = exp.t.SI<NewtonMeter>();
-				var expectedN = exp.n.RPMtoRad();
 
-				var torque = expectedT * ratios[exp.gear];
-				var angularVelocity = expectedN / ratios[exp.gear];
+			var expectedT = tq.SI<NewtonMeter>();
+			var expectedN = n.RPMtoRad();
 
-				gearbox.Gear = (uint)exp.gear;
-				var response = gearbox.OutPort().Request(absTime, dt, torque, angularVelocity);
-				Assert.IsInstanceOfType(response, exp.responseType, exp.ToString());
+			var torque = expectedT * ratios[gear];
+			var angularVelocity = expectedN / ratios[gear];
 
-				absTime += dt;
-				response = gearbox.OutPort().Request(absTime, dt, torque, angularVelocity);
-				Assert.IsInstanceOfType(response, typeof(ResponseSuccess), exp.ToString());
-				Assert.AreEqual((uint)exp.newGear, container.Gear, exp.ToString());
-				absTime += dt;
-			}
+			gearbox.Gear = (uint)gear;
+			var response = gearbox.OutPort().Request(absTime, dt, torque, angularVelocity);
+			Assert.IsTrue(response.GetType() == responseType);
+
+			absTime += dt;
+			response = (ResponseSuccess)gearbox.OutPort().Request(absTime, dt, torque, angularVelocity);
+			Assert.AreEqual((uint)newGear, gearbox.Gear);
 		}
 	}
 }

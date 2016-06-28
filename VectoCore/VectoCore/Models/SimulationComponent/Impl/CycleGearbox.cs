@@ -56,7 +56,7 @@ namespace TUGraz.VectoCore.Models.SimulationComponent.Impl
 		/// <summary>
 		/// The data and settings for the gearbox.
 		/// </summary>
-		internal readonly GearboxData ModelData;
+		[ValidateObject] internal readonly GearboxData ModelData;
 
 		public bool ClutchClosed(Second absTime)
 		{
@@ -112,6 +112,17 @@ namespace TUGraz.VectoCore.Models.SimulationComponent.Impl
 			get { return Gear == 0 ? null : ModelData.Gears[Gear].FullLoadCurve; }
 		}
 
+		public Watt GearboxLoss()
+		{
+			//var outTorque = ModelData.Gears[Gear].LossMap.GetOutTorque(inAngularVelocity, inTorque, true);
+			//var torqueLoss = inTorque - outTorque * ModelData.Gears[Gear].Ratio;
+
+			//return torqueLoss * inAngularVelocity;
+
+			return (PreviousState.TransmissionTorqueLoss +
+					PreviousState.InertiaTorqueLossOut / ModelData.Gears[PreviousState.Gear].Ratio) * PreviousState.InAngularVelocity;
+		}
+
 		#endregion
 
 		#region ITnInPort
@@ -136,8 +147,9 @@ namespace TUGraz.VectoCore.Models.SimulationComponent.Impl
 
 			if (Gear != 0) {
 				inAngularVelocity = outAngularVelocity * ModelData.Gears[Gear].Ratio;
-				var inTorqueLoss = ModelData.Gears[Gear].LossMap.GetTorqueLoss(outAngularVelocity, outTorque);
-				inTorque = outTorque / ModelData.Gears[Gear].Ratio - inTorqueLoss;
+				var inTorqueLossResult = ModelData.Gears[Gear].LossMap.GetTorqueLoss(outAngularVelocity, outTorque);
+				CurrentState.TorqueLossResult = inTorqueLossResult;
+				inTorque = outTorque / ModelData.Gears[Gear].Ratio - inTorqueLossResult.Value;
 
 				var torqueLossInertia = outAngularVelocity.IsEqual(0)
 					? 0.SI<NewtonMeter>()
@@ -168,8 +180,9 @@ namespace TUGraz.VectoCore.Models.SimulationComponent.Impl
 		internal ResponseDryRun Initialize(uint gear, NewtonMeter outTorque, PerSecond outAngularVelocity)
 		{
 			var inAngularVelocity = outAngularVelocity * ModelData.Gears[gear].Ratio;
-			var inTorqueLoss = ModelData.Gears[Gear].LossMap.GetTorqueLoss(outAngularVelocity, outTorque);
-			var inTorque = outTorque / ModelData.Gears[Gear].Ratio - inTorqueLoss;
+			var inTorqueLossResult = ModelData.Gears[Gear].LossMap.GetTorqueLoss(outAngularVelocity, outTorque);
+			CurrentState.TorqueLossResult = inTorqueLossResult;
+			var inTorque = outTorque / ModelData.Gears[Gear].Ratio - inTorqueLossResult.Value;
 
 			if (!inAngularVelocity.IsEqual(0)) {
 				var alpha = (ModelData.Inertia.IsEqual(0))
@@ -216,7 +229,9 @@ namespace TUGraz.VectoCore.Models.SimulationComponent.Impl
 		public IResponse Request(Second absTime, Second dt, NewtonMeter outTorque, PerSecond outAngularVelocity, bool dryRun)
 		{
 			Log.Debug("Gearbox Power Request: torque: {0}, angularVelocity: {1}", outTorque, outAngularVelocity);
-			Gear = DataBus.CycleData.LeftSample.Gear;
+			Gear = DataBus.DriverBehavior == DrivingBehavior.Braking
+				? DataBus.CycleData.LeftSample.Gear
+				: DataBus.CycleData.RightSample.Gear;
 
 			var avgOutAngularVelocity = (PreviousState.OutAngularVelocity + outAngularVelocity) / 2.0;
 
@@ -258,8 +273,9 @@ namespace TUGraz.VectoCore.Models.SimulationComponent.Impl
 				return disengagedResponse;
 			} else {
 				//engaged
-				var inTorqueLoss = ModelData.Gears[Gear].LossMap.GetTorqueLoss(avgOutAngularVelocity, outTorque);
-				var inTorque = outTorque / ModelData.Gears[Gear].Ratio - inTorqueLoss;
+				var inTorqueLossResult = ModelData.Gears[Gear].LossMap.GetTorqueLoss(avgOutAngularVelocity, outTorque);
+				var inTorque = outTorque / ModelData.Gears[Gear].Ratio - inTorqueLossResult.Value;
+				CurrentState.TorqueLossResult = inTorqueLossResult;
 				var inAngularVelocity = outAngularVelocity * ModelData.Gears[Gear].Ratio;
 
 				if (dryRun) {
@@ -310,7 +326,7 @@ namespace TUGraz.VectoCore.Models.SimulationComponent.Impl
 		protected override void DoCommitSimulationStep()
 		{
 			if (Gear != 0) {
-				if (ModelData.Gears[Gear].LossMap.Extrapolated) {
+				if (CurrentState.TorqueLossResult != null && CurrentState.TorqueLossResult.Extrapolated) {
 					Log.Warn(
 						"Gear {0} LossMap data was extrapolated: range for loss map is not sufficient: n:{1}, torque:{2}",
 						Gear, CurrentState.OutAngularVelocity.ConvertTo().Rounds.Per.Minute, CurrentState.OutTorque);

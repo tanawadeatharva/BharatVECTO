@@ -33,6 +33,7 @@ using TUGraz.VectoCommon.Models;
 using TUGraz.VectoCommon.Utils;
 using TUGraz.VectoCore.Configuration;
 using TUGraz.VectoCore.Models.Connector.Ports;
+using TUGraz.VectoCore.Models.Connector.Ports.Impl;
 using TUGraz.VectoCore.Models.Simulation;
 using TUGraz.VectoCore.Models.Simulation.Data;
 using TUGraz.VectoCore.Models.Simulation.DataBus;
@@ -51,6 +52,7 @@ namespace TUGraz.VectoCore.Models.SimulationComponent.Impl
 		private ClutchState _clutchState = ClutchState.ClutchSlipping;
 
 		protected ICombustionEngineIdleController IdleController;
+		private readonly SI _clutchSpeedSlippingFactor;
 
 		protected Clutch(IVehicleContainer container) : base(container) {}
 
@@ -61,6 +63,8 @@ namespace TUGraz.VectoCore.Models.SimulationComponent.Impl
 		{
 			_idleSpeed = engineData.IdleSpeed;
 			_ratedSpeed = engineData.FullLoadCurve.RatedSpeed;
+			_clutchSpeedSlippingFactor = Constants.SimulationSettings.ClutchClosingSpeedNorm * (_ratedSpeed - _idleSpeed) /
+										(_idleSpeed + Constants.SimulationSettings.ClutchClosingSpeedNorm * (_ratedSpeed - _idleSpeed));
 			IdleController = idleController;
 		}
 
@@ -94,7 +98,13 @@ namespace TUGraz.VectoCore.Models.SimulationComponent.Impl
 		{
 			NewtonMeter torqueIn;
 			PerSecond engineSpeedIn;
-			AddClutchLoss(torque, angularVelocity, out torqueIn, out engineSpeedIn);
+			if (DataBus.DriverBehavior == DrivingBehavior.Halted /*DataBus.VehicleStopped*/) {
+				_clutchState = ClutchState.ClutchOpened;
+				engineSpeedIn = _idleSpeed;
+				torqueIn = 0.SI<NewtonMeter>();
+			} else {
+				AddClutchLoss(torque, angularVelocity, out torqueIn, out engineSpeedIn);
+			}
 			PreviousState.SetState(torqueIn, angularVelocity, torque, angularVelocity);
 
 			var retVal = NextComponent.Initialize(torqueIn, engineSpeedIn);
@@ -116,10 +126,21 @@ namespace TUGraz.VectoCore.Models.SimulationComponent.Impl
 			if (IdleController != null) {
 				IdleController.Reset();
 			}
+
+			Log.Debug("from Wheels: torque: {0}, angularVelocity: {1}, power {2}", torque, angularVelocity,
+				Formulas.TorqueToPower(torque, angularVelocity));
+
 			NewtonMeter torqueIn;
 			PerSecond angularVelocityIn;
-			AddClutchLoss(torque, angularVelocity, out torqueIn, out angularVelocityIn);
-
+			if (DataBus.DriverBehavior == DrivingBehavior.Halted /*DataBus.VehicleStopped*/) {
+				_clutchState = ClutchState.ClutchOpened;
+				angularVelocityIn = _idleSpeed;
+				torqueIn = 0.SI<NewtonMeter>();
+			} else {
+				AddClutchLoss(torque, angularVelocity, out torqueIn, out angularVelocityIn);
+			}
+			Log.Debug("to Engine:   torque: {0}, angularVelocity: {1}, power {2}", torqueIn, angularVelocityIn,
+				Formulas.TorqueToPower(torqueIn, angularVelocityIn));
 			CurrentState.SetState(torqueIn, angularVelocityIn, torque, angularVelocity);
 
 			var retVal = NextComponent.Request(absTime, dt, torqueIn, angularVelocityIn, dryRun);
@@ -154,32 +175,27 @@ namespace TUGraz.VectoCore.Models.SimulationComponent.Impl
 		private void AddClutchLoss(NewtonMeter torque, PerSecond angularVelocity, out NewtonMeter torqueIn,
 			out PerSecond angularVelocityIn)
 		{
-			Log.Debug("from Wheels: torque: {0}, angularVelocity: {1}, power {2}", torque, angularVelocity,
-				Formulas.TorqueToPower(torque, angularVelocity));
 			torqueIn = torque;
 			angularVelocityIn = angularVelocity;
 
-			if (DataBus.DriverBehavior == DrivingBehavior.Halted /*DataBus.VehicleStopped*/) {
-				_clutchState = ClutchState.ClutchOpened;
-				angularVelocityIn = _idleSpeed;
-				torqueIn = 0.SI<NewtonMeter>();
+			var engineSpeedNorm = (angularVelocity - _idleSpeed) / (_ratedSpeed - _idleSpeed);
+			if (engineSpeedNorm < Constants.SimulationSettings.ClutchClosingSpeedNorm) {
+				_clutchState = ClutchState.ClutchSlipping;
+				// MQ: 27.5.2016: when angularVelocity is 0 (at the end of the simulation interval) don't use the 
+				//     angularVelocity but average angular velocity
+				//     Reason: if angularVelocity = 0 also the power (torque * angularVelocity) is 0 and then
+				//             the torque demand for the engine is 0. no drag torque although vehicle has to decelerate
+				//             "the clutch" eats up the whole torque
+				var effectiveAngularVelocity = angularVelocity.IsEqual(0.SI<PerSecond>())
+					? (PreviousState.OutAngularVelocity + angularVelocity) / 2
+					: angularVelocity;
+				var engineSpeed = VectoMath.Max(_idleSpeed, angularVelocity);
+
+				angularVelocityIn = _clutchSpeedSlippingFactor * engineSpeed + _idleSpeed;
+				torqueIn = torque * effectiveAngularVelocity / ClutchEff / ((angularVelocityIn));
 			} else {
-				var engineSpeedNorm = (angularVelocity - _idleSpeed) / (_ratedSpeed - _idleSpeed);
-				if (engineSpeedNorm < Constants.SimulationSettings.ClutchNormSpeed) {
-					_clutchState = ClutchState.ClutchSlipping;
-
-					var engineSpeed0 = VectoMath.Max(_idleSpeed, angularVelocity);
-					var clutchSpeedNorm = Constants.SimulationSettings.ClutchNormSpeed /
-										((_idleSpeed + Constants.SimulationSettings.ClutchNormSpeed * (_ratedSpeed - _idleSpeed)) / _ratedSpeed);
-					angularVelocityIn = (clutchSpeedNorm * engineSpeed0 / _ratedSpeed) * (_ratedSpeed - _idleSpeed) + _idleSpeed;
-
-					torqueIn = (torque * angularVelocity) / ClutchEff / angularVelocityIn;
-				} else {
-					_clutchState = ClutchState.ClutchClosed;
-				}
+				_clutchState = ClutchState.ClutchClosed;
 			}
-			Log.Debug("to Engine:   torque: {0}, angularVelocity: {1}, power {2}", torqueIn, angularVelocityIn,
-				Formulas.TorqueToPower(torqueIn, angularVelocityIn));
 		}
 	}
 }

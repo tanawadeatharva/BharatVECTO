@@ -1,6 +1,7 @@
 ﻿Imports VectoAuxiliaries.Electrics
 Imports VectoAuxiliaries.Hvac
 Imports NUnit.Framework
+Imports TUGraz.VectoCommon.Utils
 Imports VectoAuxiliariesTests.Mocks
 Imports VectoAuxiliaries
 
@@ -32,7 +33,7 @@ Namespace UnitTests
 
 		Private Function GetAverageElectricalDemandInstance() As M2_AverageElectricalLoadDemand
 
-			signals.EngineSpeed = 2000
+			signals.EngineSpeed = 2000.RPMtoRad()
 
 
 			Dim consumers As IElectricalConsumerList = CType(New ElectricalConsumerList(26.3, 0.096, True), 
@@ -40,12 +41,12 @@ Namespace UnitTests
 
 			Dim altMap As IAlternatorMap = CType(New AlternatorMap("testfiles\testAlternatorMap.aalt"), IAlternatorMap)
 			altMap.Initialise()
-			Dim m0 As New M0_NonSmart_AlternatorsSetEfficiency(consumers, altMap, 26.3, signals, GetSSM())
+			Dim m0 As New M0_NonSmart_AlternatorsSetEfficiency(consumers, altMap, 26.3.SI(Of Volt), signals, GetSSM())
 
 			'Get Consumers.
 
 
-			Return New M2_AverageElectricalLoadDemand(consumers, m0, 0.8, 26.3, signals)
+			Return New M2_AverageElectricalLoadDemand(consumers, m0, 0.8, 26.3.SI(Of Volt), signals)
 		End Function
 
 #End Region
@@ -63,16 +64,16 @@ Namespace UnitTests
 
 			Dim expected As Single = 1594.61572
 			Dim target As M2_AverageElectricalLoadDemand = GetAverageElectricalDemandInstance()
-			Dim actual As Single = target.GetAveragePowerDemandAtAlternator()
-			Assert.AreEqual(expected, actual)
+			Dim actual As Watt = target.GetAveragePowerDemandAtAlternator()
+			Assert.AreEqual(expected, actual.Value(), 0.001)
 		End Sub
 
 		<Test()>
 		Public Sub GetAveragePowerAtCrankTest()
 			Dim target As M2_AverageElectricalLoadDemand = GetAverageElectricalDemandInstance()
 			Dim expected As Single = 10914.6543
-			Dim actual As Single = target.GetAveragePowerAtCrankFromElectrics()
-			Assert.AreEqual(expected, actual)
+			Dim actual As Watt = target.GetAveragePowerAtCrankFromElectrics()
+			Assert.AreEqual(expected, actual.Value(), 0.001)
 		End Sub
 	End Class
 End Namespace

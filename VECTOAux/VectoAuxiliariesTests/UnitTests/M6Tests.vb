@@ -5,6 +5,7 @@ Imports VectoAuxiliaries.DownstreamModules
 Imports NUnit.Framework
 Imports VectoAuxiliaries
 Imports Moq
+Imports TUGraz.VectoCommon.Utils
 
 Namespace UnitTests
 	<TestFixture()>
@@ -29,9 +30,9 @@ Namespace UnitTests
 
 		Public Sub New()
 
-			Signals.EngineMotoringPower = 100
-			Signals.EngineDrivelinePower = 150
-			Signals.PreExistingAuxPower = 30
+			Signals.EngineMotoringPower = 100000.SI(Of Watt)()
+			Signals.EngineDrivelinePower = 150000.SI(Of Watt)()
+			Signals.PreExistingAuxPower = 30000.SI(Of Watt)()
 		End Sub
 
 		<Test()>
@@ -45,30 +46,34 @@ Namespace UnitTests
 
 		'Test Cases Supplied by Mike Preston.
 		<Test()> _
-		<TestCase(100, 100, 100, 100, 20, 20, 40, 100, 100, 100, 0.1F, -0.55F, False, 0, 0, 0, 20, 0, 100, 20, 200, 0)> _
-		<TestCase(100, 100, 100, 100, 20, 20, 40, 100, 100, 100, 100, -550, True, 0, 0, 0, 20, 0, 100, 20, 200, 0)>
-		Public Sub MikesConditionsTest(M1_1 As Single,
-										M1_2 As Single,
-										M2_1 As Single,
-										M3_1 As Single,
-										M4_1 As Single,
-										M4_2 As Single,
-										M4_3 As Single,
-										M5_1 As Single,
-										M5_2 As Single,
-										AUX As Single,
-										EMP As Single,
-										EDP As Single,
+		<
+			TestCase _
+				(100, 100, 100, 100, 20, 20, 40, 100, 100, 100, 0.1F, -0.55, False, False, False, 0, 20, 0, 100, 20, 200, False)> _
+		<
+			TestCase _
+				(100, 100, 100, 100, 20, 20, 40, 100, 100, 100, 100, -550, True, False, False, 0, 20, 0, 100, 20, 200, False)>
+		Public Sub MikesConditionsTest(M1_1 As Double,
+										M1_2 As Double,
+										M2_1 As Double,
+										M3_1 As Double,
+										M4_1 As Double,
+										M4_2 As Double,
+										M4_3 As Double,
+										M5_1 As Double,
+										M5_2 As Double,
+										AUX As Double,
+										EMP As Double,
+										EDP As Double,
 										SM As Boolean,
-										OUT1 As Single,
-										OUT2 As Single,
-										OUT3 As Single,
-										OUT4 As Single,
-										OUT5 As Single,
-										OUT6 As Single,
-										OUT7 As Single,
-										OUT8 As Single,
-										OUT9 As Single)
+										OUT1 As Boolean,
+										OUT2 As Boolean,
+										OUT3 As Double,
+										OUT4 As Double,
+										OUT5 As Double,
+										OUT6 As Double,
+										OUT7 As Double,
+										OUT8 As Double,
+										OUT9 As Boolean)
 
 
 			Dim M1 = New M1_Mock()
@@ -80,20 +85,21 @@ Namespace UnitTests
 			Dim signals As New Signals()
 
 
-			M1._AveragePowerDemandAtCrankFromHVACMechanicalsWatts = M1_1
-			M1._AveragePowerDemandAtCrankFromHVACElectricsWatts = M1_2
-			M2._GetAveragePowerAtCrankFromElectrics = M2_1
-			M3._GetAveragePowerDemandAtCrankFromPneumatics = M3_1
-			M4._PowerCompressorOff = M4_1
-			M4._PowerDifference = M4_2
-			M4._PowerCompressorOn = M4_3
-			M5._AlternatorsGenerationPowerAtCrankTractionOnWatts = M5_1
-			M5._AlternatorsGenerationPowerAtCrankOverrunWatts = M5_2
+			M1._AveragePowerDemandAtCrankFromHVACMechanicalsWatts = M1_1.SI(Of Watt)()
+			M1._AveragePowerDemandAtCrankFromHVACElectricsWatts = M1_2.SI(Of Watt)()
+			M2._GetAveragePowerAtCrankFromElectrics = M2_1.SI(Of Watt)()
+			M3._GetAveragePowerDemandAtCrankFromPneumatics = M3_1.SI(Of Watt)()
+			M4._PowerCompressorOff = M4_1.SI(Of Watt)()
+			M4._PowerDifference = M4_2.SI(Of Watt)()
+			M4._PowerCompressorOn = M4_3.SI(Of Watt)()
+			M5._AlternatorsGenerationPowerAtCrankTractionOnWatts = M5_1.SI(Of Watt)()
+			M5._AlternatorsGenerationPowerAtCrankOverrunWatts = M5_2.SI(Of Watt)()
 
 
-			signals.EngineMotoringPower = EMP
-			signals.PreExistingAuxPower = AUX
-			signals.EngineDrivelinePower = EDP
+			signals.EngineMotoringPower = (EMP * 1000).SI(Of Watt)()
+			signals.InternalEnginePower = 0.SI(Of Watt)()
+			signals.PreExistingAuxPower = (AUX * 1000).SI(Of Watt)()
+			signals.EngineDrivelinePower = (EDP * 1000).SI(Of Watt)()
 			signals.SmartElectrics = SM
 
 
@@ -101,12 +107,12 @@ Namespace UnitTests
 
 			Assert.AreEqual(OUT1, target.OverrunFlag)
 			Assert.AreEqual(OUT2, target.SmartElecAndPneumaticsCompressorFlag)
-			Assert.AreEqual(OUT3, target.SmartElecAndPneumaticAltPowerGenAtCrank)
-			Assert.AreEqual(OUT4, target.SmartElecAndPneumaticAirCompPowerGenAtCrank)
-			Assert.AreEqual(OUT5, target.SmartElecOnlyAltPowerGenAtCrank)
-			Assert.AreEqual(OUT6, target.AveragePowerDemandAtCrankFromPneumatics)
-			Assert.AreEqual(OUT7, target.SmartElecAndPneumaticAirCompPowerGenAtCrank)
-			Assert.AreEqual(OUT8, target.AvgPowerDemandAtCrankFromElectricsIncHVAC)
+			Assert.AreEqual(OUT3, target.SmartElecAndPneumaticAltPowerGenAtCrank.Value(), 0.001)
+			Assert.AreEqual(OUT4, target.SmartElecAndPneumaticAirCompPowerGenAtCrank.Value(), 0.001)
+			Assert.AreEqual(OUT5, target.SmartElecOnlyAltPowerGenAtCrank.Value(), 0.001)
+			Assert.AreEqual(OUT6, target.AveragePowerDemandAtCrankFromPneumatics.Value(), 0.001)
+			Assert.AreEqual(OUT7, target.SmartElecAndPneumaticAirCompPowerGenAtCrank.Value(), 0.001)
+			Assert.AreEqual(OUT8, target.AvgPowerDemandAtCrankFromElectricsIncHVAC.Value(), 0.001)
 			Assert.AreEqual(OUT9, target.SmartPneumaticsOnlyCompressorFlag)
 		End Sub
 	End Class

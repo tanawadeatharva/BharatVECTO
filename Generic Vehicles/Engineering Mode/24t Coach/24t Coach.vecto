@@ -1,8 +1,8 @@
 ﻿{
   "Header": {
-    "CreatedBy": "John.Norris@ricardo-aea.com, Rasa.Narkeviciute@ricardo-aea.com, Scott.Hanchett@ricardo-aea.com, Dana.Nurse@ricardo-aea.com, pascal.revereault@ricardo.com, james.baxter@ricardo.com (51e9f02e-c88f-4c25-9798-3f807530e154)",
-    "Date": "20/07/2015 11:48:25",
-    "AppVersion": "2.0.4-beta3",
+    "CreatedBy": " ()",
+    "Date": "15.06.2016 14:58:17",
+    "AppVersion": "2.2",
     "FileVersion": 2
   },
   "Body": {
@@ -37,7 +37,7 @@
       }
     ],
     "VACC": "Coach.vacc",
-    "EngineOnlyMode": true,
+    "EngineOnlyMode": false,
     "StartStop": {
       "Enabled": false,
       "MaxSpeed": 5.0,

@@ -155,7 +155,6 @@ namespace TUGraz.VectoCore.Utils
 			foreach (var col in columns) {
 				table.Columns.Add(col);
 			}
-
 			if (lines.Current == null) {
 				return table;
 			}

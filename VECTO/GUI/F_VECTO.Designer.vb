@@ -62,13 +62,27 @@ Partial Class F_VECTO
 		Me.BtDesMaxBr = New System.Windows.Forms.Button()
 		Me.BtAccOpen = New System.Windows.Forms.Button()
 		Me.GrLAC = New System.Windows.Forms.GroupBox()
+		Me.GroupBox2 = New System.Windows.Forms.GroupBox()
+		Me.Label12 = New System.Windows.Forms.Label()
+		Me.tbDfCoastingScale = New System.Windows.Forms.TextBox()
+		Me.Label11 = New System.Windows.Forms.Label()
+		Me.tbDfCoastingOffset = New System.Windows.Forms.TextBox()
+		Me.Label10 = New System.Windows.Forms.Label()
+		Me.Label5 = New System.Windows.Forms.Label()
+		Me.Label3 = New System.Windows.Forms.Label()
+		Me.tbLacDfVelocityDropFile = New System.Windows.Forms.TextBox()
+		Me.tbLacPreviewFactor = New System.Windows.Forms.TextBox()
+		Me.btnDfVelocityDrop = New System.Windows.Forms.Button()
+		Me.btnDfTargetSpeed = New System.Windows.Forms.Button()
+		Me.Label4 = New System.Windows.Forms.Label()
+		Me.tbLacDfTargetSpeedFile = New System.Windows.Forms.TextBox()
 		Me.PnLookAhead = New System.Windows.Forms.Panel()
-		Me.Label29 = New System.Windows.Forms.Label()
-		Me.Label25 = New System.Windows.Forms.Label()
+		Me.Label9 = New System.Windows.Forms.Label()
+		Me.Label8 = New System.Windows.Forms.Label()
 		Me.TbAlookahead = New System.Windows.Forms.TextBox()
-		Me.Label24 = New System.Windows.Forms.Label()
+		Me.Label7 = New System.Windows.Forms.Label()
 		Me.TbVminLA = New System.Windows.Forms.TextBox()
-		Me.Label28 = New System.Windows.Forms.Label()
+		Me.Label6 = New System.Windows.Forms.Label()
 		Me.CbLookAhead = New System.Windows.Forms.CheckBox()
 		Me.GroupBox1 = New System.Windows.Forms.GroupBox()
 		Me.PnEcoRoll = New System.Windows.Forms.Panel()
@@ -131,6 +145,7 @@ Partial Class F_VECTO
 		Me.TabPgDriver.SuspendLayout()
 		Me.GrVACC.SuspendLayout()
 		Me.GrLAC.SuspendLayout()
+		Me.GroupBox2.SuspendLayout()
 		Me.PnLookAhead.SuspendLayout()
 		Me.GroupBox1.SuspendLayout()
 		Me.PnEcoRoll.SuspendLayout()
@@ -160,7 +175,7 @@ Partial Class F_VECTO
 		Me.TabPgGen.Location = New System.Drawing.Point(4, 22)
 		Me.TabPgGen.Name = "TabPgGen"
 		Me.TabPgGen.Padding = New System.Windows.Forms.Padding(3)
-		Me.TabPgGen.Size = New System.Drawing.Size(527, 542)
+		Me.TabPgGen.Size = New System.Drawing.Size(527, 573)
 		Me.TabPgGen.TabIndex = 0
 		Me.TabPgGen.Text = "General"
 		Me.TabPgGen.UseVisualStyleBackColor = True
@@ -174,9 +189,9 @@ Partial Class F_VECTO
 		Me.GrCycles.Controls.Add(Me.LvCycles)
 		Me.GrCycles.Controls.Add(Me.BtDRIrem)
 		Me.GrCycles.Controls.Add(Me.BtDRIadd)
-		Me.GrCycles.Location = New System.Drawing.Point(6, 322)
+		Me.GrCycles.Location = New System.Drawing.Point(7, 314)
 		Me.GrCycles.Name = "GrCycles"
-		Me.GrCycles.Size = New System.Drawing.Size(515, 186)
+		Me.GrCycles.Size = New System.Drawing.Size(515, 184)
 		Me.GrCycles.TabIndex = 10
 		Me.GrCycles.TabStop = False
 		Me.GrCycles.Text = "Cycles"
@@ -185,7 +200,7 @@ Partial Class F_VECTO
 		'
 		Me.Label2.Anchor = CType((System.Windows.Forms.AnchorStyles.Top Or System.Windows.Forms.AnchorStyles.Right), System.Windows.Forms.AnchorStyles)
 		Me.Label2.AutoSize = True
-		Me.Label2.Location = New System.Drawing.Point(386, 162)
+		Me.Label2.Location = New System.Drawing.Point(386, 159)
 		Me.Label2.Name = "Label2"
 		Me.Label2.Size = New System.Drawing.Size(122, 13)
 		Me.Label2.TabIndex = 3
@@ -219,7 +234,7 @@ Partial Class F_VECTO
 		'
 		Me.BtDRIrem.Anchor = CType((System.Windows.Forms.AnchorStyles.Bottom Or System.Windows.Forms.AnchorStyles.Left), System.Windows.Forms.AnchorStyles)
 		Me.BtDRIrem.Image = Global.VECTO.My.Resources.Resources.minus_circle_icon
-		Me.BtDRIrem.Location = New System.Drawing.Point(41, 157)
+		Me.BtDRIrem.Location = New System.Drawing.Point(41, 154)
 		Me.BtDRIrem.Name = "BtDRIrem"
 		Me.BtDRIrem.Size = New System.Drawing.Size(29, 23)
 		Me.BtDRIrem.TabIndex = 2
@@ -229,7 +244,7 @@ Partial Class F_VECTO
 		'
 		Me.BtDRIadd.Anchor = CType((System.Windows.Forms.AnchorStyles.Bottom Or System.Windows.Forms.AnchorStyles.Left), System.Windows.Forms.AnchorStyles)
 		Me.BtDRIadd.Image = Global.VECTO.My.Resources.Resources.plus_circle_icon
-		Me.BtDRIadd.Location = New System.Drawing.Point(6, 157)
+		Me.BtDRIadd.Location = New System.Drawing.Point(6, 154)
 		Me.BtDRIadd.Name = "BtDRIadd"
 		Me.BtDRIadd.Size = New System.Drawing.Size(29, 23)
 		Me.BtDRIadd.TabIndex = 1
@@ -253,7 +268,7 @@ Partial Class F_VECTO
 		Me.GrAux.Controls.Add(Me.ButAuxAdd)
 		Me.GrAux.Location = New System.Drawing.Point(6, 87)
 		Me.GrAux.Name = "GrAux"
-		Me.GrAux.Size = New System.Drawing.Size(515, 229)
+		Me.GrAux.Size = New System.Drawing.Size(515, 223)
 		Me.GrAux.TabIndex = 9
 		Me.GrAux.TabStop = False
 		Me.GrAux.Text = "Auxiliaries"
@@ -325,7 +340,7 @@ Partial Class F_VECTO
 		'
 		Me.Label32.Anchor = CType((System.Windows.Forms.AnchorStyles.Top Or System.Windows.Forms.AnchorStyles.Right), System.Windows.Forms.AnchorStyles)
 		Me.Label32.AutoSize = True
-		Me.Label32.Location = New System.Drawing.Point(369, 205)
+		Me.Label32.Location = New System.Drawing.Point(370, 200)
 		Me.Label32.Name = "Label32"
 		Me.Label32.Size = New System.Drawing.Size(139, 13)
 		Me.Label32.TabIndex = 3
@@ -480,7 +495,7 @@ Partial Class F_VECTO
 		Me.TabControl1.Location = New System.Drawing.Point(1, 107)
 		Me.TabControl1.Name = "TabControl1"
 		Me.TabControl1.SelectedIndex = 0
-		Me.TabControl1.Size = New System.Drawing.Size(535, 568)
+		Me.TabControl1.Size = New System.Drawing.Size(535, 599)
 		Me.TabControl1.SizeMode = System.Windows.Forms.TabSizeMode.Fixed
 		Me.TabControl1.TabIndex = 0
 		'
@@ -493,7 +508,7 @@ Partial Class F_VECTO
 		Me.TabPgDriver.Location = New System.Drawing.Point(4, 22)
 		Me.TabPgDriver.Name = "TabPgDriver"
 		Me.TabPgDriver.Padding = New System.Windows.Forms.Padding(3)
-		Me.TabPgDriver.Size = New System.Drawing.Size(527, 542)
+		Me.TabPgDriver.Size = New System.Drawing.Size(527, 573)
 		Me.TabPgDriver.TabIndex = 7
 		Me.TabPgDriver.Text = "Driver Assist"
 		Me.TabPgDriver.UseVisualStyleBackColor = True
@@ -503,9 +518,9 @@ Partial Class F_VECTO
 		Me.GrVACC.Controls.Add(Me.TbDesMaxFile)
 		Me.GrVACC.Controls.Add(Me.BtDesMaxBr)
 		Me.GrVACC.Controls.Add(Me.BtAccOpen)
-		Me.GrVACC.Location = New System.Drawing.Point(6, 401)
+		Me.GrVACC.Location = New System.Drawing.Point(7, 502)
 		Me.GrVACC.Name = "GrVACC"
-		Me.GrVACC.Size = New System.Drawing.Size(515, 84)
+		Me.GrVACC.Size = New System.Drawing.Size(515, 65)
 		Me.GrVACC.TabIndex = 3
 		Me.GrVACC.TabStop = False
 		Me.GrVACC.Text = "Max. acceleration and brake curves"
@@ -542,77 +557,222 @@ Partial Class F_VECTO
 		'
 		'GrLAC
 		'
+		Me.GrLAC.Controls.Add(Me.GroupBox2)
 		Me.GrLAC.Controls.Add(Me.PnLookAhead)
 		Me.GrLAC.Controls.Add(Me.CbLookAhead)
 		Me.GrLAC.Location = New System.Drawing.Point(7, 290)
 		Me.GrLAC.Name = "GrLAC"
-		Me.GrLAC.Size = New System.Drawing.Size(514, 105)
+		Me.GrLAC.Size = New System.Drawing.Size(514, 206)
 		Me.GrLAC.TabIndex = 2
 		Me.GrLAC.TabStop = False
 		Me.GrLAC.Text = "Look-Ahead Coasting"
 		'
+		'GroupBox2
+		'
+		Me.GroupBox2.BackColor = System.Drawing.Color.AliceBlue
+		Me.GroupBox2.Controls.Add(Me.Label12)
+		Me.GroupBox2.Controls.Add(Me.tbDfCoastingScale)
+		Me.GroupBox2.Controls.Add(Me.Label11)
+		Me.GroupBox2.Controls.Add(Me.tbDfCoastingOffset)
+		Me.GroupBox2.Controls.Add(Me.Label10)
+		Me.GroupBox2.Controls.Add(Me.Label5)
+		Me.GroupBox2.Controls.Add(Me.Label3)
+		Me.GroupBox2.Controls.Add(Me.tbLacDfVelocityDropFile)
+		Me.GroupBox2.Controls.Add(Me.tbLacPreviewFactor)
+		Me.GroupBox2.Controls.Add(Me.btnDfVelocityDrop)
+		Me.GroupBox2.Controls.Add(Me.btnDfTargetSpeed)
+		Me.GroupBox2.Controls.Add(Me.Label4)
+		Me.GroupBox2.Controls.Add(Me.tbLacDfTargetSpeedFile)
+		Me.GroupBox2.Location = New System.Drawing.Point(15, 76)
+		Me.GroupBox2.Name = "GroupBox2"
+		Me.GroupBox2.Size = New System.Drawing.Size(478, 124)
+		Me.GroupBox2.TabIndex = 3
+		Me.GroupBox2.TabStop = False
+		Me.GroupBox2.Text = "Coasting Parameters WB2016   (v3 only)"
+		'
+		'Label12
+		'
+		Me.Label12.AutoSize = True
+		Me.Label12.Location = New System.Drawing.Point(272, 102)
+		Me.Label12.Name = "Label12"
+		Me.Label12.Size = New System.Drawing.Size(130, 13)
+		Me.Label12.TabIndex = 17
+		Me.Label12.Text = "* DF_vTarget * DF_vDrop"
+		'
+		'tbDfCoastingScale
+		'
+		Me.tbDfCoastingScale.Location = New System.Drawing.Point(229, 99)
+		Me.tbDfCoastingScale.Name = "tbDfCoastingScale"
+		Me.tbDfCoastingScale.Size = New System.Drawing.Size(37, 20)
+		Me.tbDfCoastingScale.TabIndex = 16
+		'
+		'Label11
+		'
+		Me.Label11.AutoSize = True
+		Me.Label11.Location = New System.Drawing.Point(212, 101)
+		Me.Label11.Name = "Label11"
+		Me.Label11.Size = New System.Drawing.Size(13, 13)
+		Me.Label11.TabIndex = 15
+		Me.Label11.Text = "- "
+		'
+		'tbDfCoastingOffset
+		'
+		Me.tbDfCoastingOffset.Location = New System.Drawing.Point(168, 99)
+		Me.tbDfCoastingOffset.Name = "tbDfCoastingOffset"
+		Me.tbDfCoastingOffset.Size = New System.Drawing.Size(37, 20)
+		Me.tbDfCoastingOffset.TabIndex = 14
+		'
+		'Label10
+		'
+		Me.Label10.AutoSize = True
+		Me.Label10.Location = New System.Drawing.Point(82, 102)
+		Me.Label10.Name = "Label10"
+		Me.Label10.Size = New System.Drawing.Size(79, 13)
+		Me.Label10.TabIndex = 12
+		Me.Label10.Text = "DF_coasting = "
+		'
+		'Label5
+		'
+		Me.Label5.AutoSize = True
+		Me.Label5.Location = New System.Drawing.Point(8, 76)
+		Me.Label5.Name = "Label5"
+		Me.Label5.Size = New System.Drawing.Size(153, 13)
+		Me.Label5.TabIndex = 11
+		Me.Label5.Text = "Decision Factor - Velocity Drop"
+		Me.Label5.TextAlign = System.Drawing.ContentAlignment.MiddleRight
+		'
+		'Label3
+		'
+		Me.Label3.AutoSize = True
+		Me.Label3.Location = New System.Drawing.Point(43, 23)
+		Me.Label3.Name = "Label3"
+		Me.Label3.Size = New System.Drawing.Size(118, 13)
+		Me.Label3.TabIndex = 4
+		Me.Label3.Text = "Preview distance factor"
+		Me.Label3.TextAlign = System.Drawing.ContentAlignment.MiddleRight
+		'
+		'tbLacDfVelocityDropFile
+		'
+		Me.tbLacDfVelocityDropFile.Anchor = CType(((System.Windows.Forms.AnchorStyles.Top Or System.Windows.Forms.AnchorStyles.Left) _
+			Or System.Windows.Forms.AnchorStyles.Right), System.Windows.Forms.AnchorStyles)
+		Me.tbLacDfVelocityDropFile.Location = New System.Drawing.Point(167, 73)
+		Me.tbLacDfVelocityDropFile.Name = "tbLacDfVelocityDropFile"
+		Me.tbLacDfVelocityDropFile.Size = New System.Drawing.Size(264, 20)
+		Me.tbLacDfVelocityDropFile.TabIndex = 9
+		'
+		'tbLacPreviewFactor
+		'
+		Me.tbLacPreviewFactor.Location = New System.Drawing.Point(167, 20)
+		Me.tbLacPreviewFactor.Name = "tbLacPreviewFactor"
+		Me.tbLacPreviewFactor.Size = New System.Drawing.Size(64, 20)
+		Me.tbLacPreviewFactor.TabIndex = 5
+		'
+		'btnDfVelocityDrop
+		'
+		Me.btnDfVelocityDrop.Anchor = CType((System.Windows.Forms.AnchorStyles.Top Or System.Windows.Forms.AnchorStyles.Right), System.Windows.Forms.AnchorStyles)
+		Me.btnDfVelocityDrop.Location = New System.Drawing.Point(437, 72)
+		Me.btnDfVelocityDrop.Name = "btnDfVelocityDrop"
+		Me.btnDfVelocityDrop.Size = New System.Drawing.Size(28, 21)
+		Me.btnDfVelocityDrop.TabIndex = 10
+		Me.btnDfVelocityDrop.TabStop = False
+		Me.btnDfVelocityDrop.Text = "..."
+		Me.btnDfVelocityDrop.UseVisualStyleBackColor = True
+		'
+		'btnDfTargetSpeed
+		'
+		Me.btnDfTargetSpeed.Anchor = CType((System.Windows.Forms.AnchorStyles.Top Or System.Windows.Forms.AnchorStyles.Right), System.Windows.Forms.AnchorStyles)
+		Me.btnDfTargetSpeed.Location = New System.Drawing.Point(437, 45)
+		Me.btnDfTargetSpeed.Name = "btnDfTargetSpeed"
+		Me.btnDfTargetSpeed.Size = New System.Drawing.Size(28, 21)
+		Me.btnDfTargetSpeed.TabIndex = 7
+		Me.btnDfTargetSpeed.TabStop = False
+		Me.btnDfTargetSpeed.Text = "..."
+		Me.btnDfTargetSpeed.UseVisualStyleBackColor = True
+		'
+		'Label4
+		'
+		Me.Label4.AutoSize = True
+		Me.Label4.Location = New System.Drawing.Point(6, 49)
+		Me.Label4.Name = "Label4"
+		Me.Label4.Size = New System.Drawing.Size(155, 13)
+		Me.Label4.TabIndex = 8
+		Me.Label4.Text = "Decision Factor - Target Speed"
+		Me.Label4.TextAlign = System.Drawing.ContentAlignment.MiddleRight
+		'
+		'tbLacDfTargetSpeedFile
+		'
+		Me.tbLacDfTargetSpeedFile.Anchor = CType(((System.Windows.Forms.AnchorStyles.Top Or System.Windows.Forms.AnchorStyles.Left) _
+			Or System.Windows.Forms.AnchorStyles.Right), System.Windows.Forms.AnchorStyles)
+		Me.tbLacDfTargetSpeedFile.Location = New System.Drawing.Point(167, 46)
+		Me.tbLacDfTargetSpeedFile.Name = "tbLacDfTargetSpeedFile"
+		Me.tbLacDfTargetSpeedFile.Size = New System.Drawing.Size(264, 20)
+		Me.tbLacDfTargetSpeedFile.TabIndex = 6
+		'
 		'PnLookAhead
 		'
-		Me.PnLookAhead.Controls.Add(Me.Label29)
-		Me.PnLookAhead.Controls.Add(Me.Label25)
+		Me.PnLookAhead.BackColor = System.Drawing.Color.Transparent
+		Me.PnLookAhead.Controls.Add(Me.Label9)
+		Me.PnLookAhead.Controls.Add(Me.Label8)
 		Me.PnLookAhead.Controls.Add(Me.TbAlookahead)
-		Me.PnLookAhead.Controls.Add(Me.Label24)
+		Me.PnLookAhead.Controls.Add(Me.Label7)
 		Me.PnLookAhead.Controls.Add(Me.TbVminLA)
-		Me.PnLookAhead.Controls.Add(Me.Label28)
-		Me.PnLookAhead.Location = New System.Drawing.Point(117, 10)
+		Me.PnLookAhead.Controls.Add(Me.Label6)
+		Me.PnLookAhead.Location = New System.Drawing.Point(136, 12)
 		Me.PnLookAhead.Name = "PnLookAhead"
-		Me.PnLookAhead.Size = New System.Drawing.Size(252, 71)
+		Me.PnLookAhead.Size = New System.Drawing.Size(232, 59)
 		Me.PnLookAhead.TabIndex = 1
 		'
-		'Label29
+		'Label9
 		'
-		Me.Label29.AutoSize = True
-		Me.Label29.Location = New System.Drawing.Point(197, 38)
-		Me.Label29.Name = "Label29"
-		Me.Label29.Size = New System.Drawing.Size(38, 13)
-		Me.Label29.TabIndex = 3
-		Me.Label29.Text = "[km/h]"
+		Me.Label9.AutoSize = True
+		Me.Label9.Location = New System.Drawing.Point(182, 12)
+		Me.Label9.Name = "Label9"
+		Me.Label9.Size = New System.Drawing.Size(34, 13)
+		Me.Label9.TabIndex = 7
+		Me.Label9.Text = "[m/s²]"
 		'
-		'Label25
+		'Label8
 		'
-		Me.Label25.AutoSize = True
-		Me.Label25.Location = New System.Drawing.Point(197, 12)
-		Me.Label25.Name = "Label25"
-		Me.Label25.Size = New System.Drawing.Size(34, 13)
-		Me.Label25.TabIndex = 3
-		Me.Label25.Text = "[m/s²]"
+		Me.Label8.AutoSize = True
+		Me.Label8.Location = New System.Drawing.Point(182, 38)
+		Me.Label8.Name = "Label8"
+		Me.Label8.Size = New System.Drawing.Size(38, 13)
+		Me.Label8.TabIndex = 4
+		Me.Label8.Text = "[km/h]"
 		'
 		'TbAlookahead
 		'
-		Me.TbAlookahead.Location = New System.Drawing.Point(127, 9)
+		Me.TbAlookahead.Location = New System.Drawing.Point(112, 9)
 		Me.TbAlookahead.Name = "TbAlookahead"
 		Me.TbAlookahead.Size = New System.Drawing.Size(64, 20)
 		Me.TbAlookahead.TabIndex = 0
 		'
-		'Label24
+		'Label7
 		'
-		Me.Label24.AutoSize = True
-		Me.Label24.Location = New System.Drawing.Point(25, 12)
-		Me.Label24.Name = "Label24"
-		Me.Label24.Size = New System.Drawing.Size(96, 13)
-		Me.Label24.TabIndex = 1
-		Me.Label24.Text = "Target Retardation"
+		Me.Label7.AutoSize = True
+		Me.Label7.Location = New System.Drawing.Point(26, 38)
+		Me.Label7.Name = "Label7"
+		Me.Label7.Size = New System.Drawing.Size(80, 13)
+		Me.Label7.TabIndex = 6
+		Me.Label7.Text = "Minimum speed"
+		Me.Label7.TextAlign = System.Drawing.ContentAlignment.MiddleRight
 		'
 		'TbVminLA
 		'
-		Me.TbVminLA.Location = New System.Drawing.Point(127, 35)
+		Me.TbVminLA.Location = New System.Drawing.Point(112, 35)
 		Me.TbVminLA.Name = "TbVminLA"
 		Me.TbVminLA.Size = New System.Drawing.Size(64, 20)
 		Me.TbVminLA.TabIndex = 1
 		'
-		'Label28
+		'Label6
 		'
-		Me.Label28.AutoSize = True
-		Me.Label28.Location = New System.Drawing.Point(41, 38)
-		Me.Label28.Name = "Label28"
-		Me.Label28.Size = New System.Drawing.Size(80, 13)
-		Me.Label28.TabIndex = 1
-		Me.Label28.Text = "Minimum speed"
+		Me.Label6.AutoSize = True
+		Me.Label6.Location = New System.Drawing.Point(10, 12)
+		Me.Label6.Name = "Label6"
+		Me.Label6.Size = New System.Drawing.Size(96, 13)
+		Me.Label6.TabIndex = 5
+		Me.Label6.Text = "Target Retardation"
+		Me.Label6.TextAlign = System.Drawing.ContentAlignment.MiddleRight
 		'
 		'CbLookAhead
 		'
@@ -879,7 +1039,7 @@ Partial Class F_VECTO
 		'StatusStrip1
 		'
 		Me.StatusStrip1.Items.AddRange(New System.Windows.Forms.ToolStripItem() {Me.ToolStripStatusLabelGEN})
-		Me.StatusStrip1.Location = New System.Drawing.Point(0, 678)
+		Me.StatusStrip1.Location = New System.Drawing.Point(0, 725)
 		Me.StatusStrip1.Name = "StatusStrip1"
 		Me.StatusStrip1.Size = New System.Drawing.Size(944, 22)
 		Me.StatusStrip1.SizingGrip = False
@@ -895,7 +1055,7 @@ Partial Class F_VECTO
 		'ButOK
 		'
 		Me.ButOK.Anchor = CType((System.Windows.Forms.AnchorStyles.Bottom Or System.Windows.Forms.AnchorStyles.Right), System.Windows.Forms.AnchorStyles)
-		Me.ButOK.Location = New System.Drawing.Point(779, 652)
+		Me.ButOK.Location = New System.Drawing.Point(779, 699)
 		Me.ButOK.Name = "ButOK"
 		Me.ButOK.Size = New System.Drawing.Size(75, 23)
 		Me.ButOK.TabIndex = 0
@@ -906,7 +1066,7 @@ Partial Class F_VECTO
 		'
 		Me.ButCancel.Anchor = CType((System.Windows.Forms.AnchorStyles.Bottom Or System.Windows.Forms.AnchorStyles.Right), System.Windows.Forms.AnchorStyles)
 		Me.ButCancel.DialogResult = System.Windows.Forms.DialogResult.Cancel
-		Me.ButCancel.Location = New System.Drawing.Point(860, 652)
+		Me.ButCancel.Location = New System.Drawing.Point(860, 699)
 		Me.ButCancel.Name = "ButCancel"
 		Me.ButCancel.Size = New System.Drawing.Size(75, 23)
 		Me.ButCancel.TabIndex = 1
@@ -1103,7 +1263,7 @@ Partial Class F_VECTO
 		Me.AutoScaleDimensions = New System.Drawing.SizeF(6.0!, 13.0!)
 		Me.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font
 		Me.CancelButton = Me.ButCancel
-		Me.ClientSize = New System.Drawing.Size(944, 700)
+		Me.ClientSize = New System.Drawing.Size(944, 747)
 		Me.Controls.Add(Me.TbHVCclass)
 		Me.Controls.Add(Me.TbMass)
 		Me.Controls.Add(Me.TbAxleConf)
@@ -1138,6 +1298,8 @@ Partial Class F_VECTO
 		Me.GrVACC.PerformLayout()
 		Me.GrLAC.ResumeLayout(False)
 		Me.GrLAC.PerformLayout()
+		Me.GroupBox2.ResumeLayout(False)
+		Me.GroupBox2.PerformLayout()
 		Me.PnLookAhead.ResumeLayout(False)
 		Me.PnLookAhead.PerformLayout()
 		Me.GroupBox1.ResumeLayout(False)
@@ -1160,103 +1322,117 @@ Partial Class F_VECTO
 		Me.PerformLayout()
 
 	End Sub
-    Friend WithEvents TabPgGen As System.Windows.Forms.TabPage
-    Friend WithEvents TabControl1 As System.Windows.Forms.TabControl
-    Friend WithEvents StatusStrip1 As System.Windows.Forms.StatusStrip
-    Friend WithEvents ButtonVEH As System.Windows.Forms.Button
-    Friend WithEvents ButtonMAP As System.Windows.Forms.Button
-    Friend WithEvents ButtonGBX As System.Windows.Forms.Button
-    Friend WithEvents ButOpenVEH As System.Windows.Forms.Button
-    Friend WithEvents ButOpenGBX As System.Windows.Forms.Button
-    Friend WithEvents ButOpenENG As System.Windows.Forms.Button
-    Friend WithEvents ToolStripStatusLabelGEN As System.Windows.Forms.ToolStripStatusLabel
-    Friend WithEvents ButOK As System.Windows.Forms.Button
-    Friend WithEvents TbGBX As System.Windows.Forms.TextBox
-    Friend WithEvents TbENG As System.Windows.Forms.TextBox
-    Friend WithEvents TbVEH As System.Windows.Forms.TextBox
-    Friend WithEvents ButCancel As System.Windows.Forms.Button
-    Friend WithEvents ToolStrip1 As System.Windows.Forms.ToolStrip
-    Friend WithEvents ToolStripBtNew As System.Windows.Forms.ToolStripButton
-    Friend WithEvents ToolStripBtOpen As System.Windows.Forms.ToolStripButton
-    Friend WithEvents ToolStripBtSave As System.Windows.Forms.ToolStripButton
-    Friend WithEvents ToolStripBtSaveAs As System.Windows.Forms.ToolStripButton
-    Friend WithEvents ToolStripBtSendTo As System.Windows.Forms.ToolStripButton
-    Friend WithEvents ToolStripSeparator1 As System.Windows.Forms.ToolStripSeparator
-    Friend WithEvents GrAux As System.Windows.Forms.GroupBox
-    Friend WithEvents LvAux As System.Windows.Forms.ListView
-    Friend WithEvents ColumnHeader4 As System.Windows.Forms.ColumnHeader
-    Friend WithEvents ColumnHeader5 As System.Windows.Forms.ColumnHeader
-    Friend WithEvents ColumnHeader6 As System.Windows.Forms.ColumnHeader
-    Friend WithEvents ButAuxRem As System.Windows.Forms.Button
-    Friend WithEvents ButAuxAdd As System.Windows.Forms.Button
-    Friend WithEvents PictureBox1 As System.Windows.Forms.PictureBox
-    Friend WithEvents TabPgDriver As System.Windows.Forms.TabPage
-    Friend WithEvents BtDesMaxBr As System.Windows.Forms.Button
-    Friend WithEvents TbDesMaxFile As System.Windows.Forms.TextBox
-    Friend WithEvents GrCycles As System.Windows.Forms.GroupBox
-    Friend WithEvents LvCycles As System.Windows.Forms.ListView
-    Friend WithEvents ColumnHeader1 As System.Windows.Forms.ColumnHeader
-    Friend WithEvents BtDRIrem As System.Windows.Forms.Button
-    Friend WithEvents BtDRIadd As System.Windows.Forms.Button
-    Friend WithEvents ToolStripSeparator2 As System.Windows.Forms.ToolStripSeparator
-    Friend WithEvents ToolStripButton1 As System.Windows.Forms.ToolStripButton
-    Friend WithEvents CbEngOnly As System.Windows.Forms.CheckBox
-    Friend WithEvents BtAccOpen As System.Windows.Forms.Button
-    Friend WithEvents Label2 As System.Windows.Forms.Label
-    Friend WithEvents CmOpenFile As System.Windows.Forms.ContextMenuStrip
-    Friend WithEvents OpenWithToolStripMenuItem As System.Windows.Forms.ToolStripMenuItem
-    Friend WithEvents ShowInFolderToolStripMenuItem As System.Windows.Forms.ToolStripMenuItem
-    Friend WithEvents ChBStartStop As System.Windows.Forms.CheckBox
-    Friend WithEvents GrStartStop As System.Windows.Forms.GroupBox
-    Friend WithEvents TbSSspeed As System.Windows.Forms.TextBox
-    Friend WithEvents TbSStime As System.Windows.Forms.TextBox
-    Friend WithEvents LabelSStime As System.Windows.Forms.Label
-    Friend WithEvents LabelSSspeed As System.Windows.Forms.Label
-    Friend WithEvents GrLAC As System.Windows.Forms.GroupBox
-    Friend WithEvents Label25 As System.Windows.Forms.Label
-    Friend WithEvents CbLookAhead As System.Windows.Forms.CheckBox
-    Friend WithEvents TbAlookahead As System.Windows.Forms.TextBox
-    Friend WithEvents Label24 As System.Windows.Forms.Label
-    Friend WithEvents GroupBox1 As System.Windows.Forms.GroupBox
-    Friend WithEvents Label21 As System.Windows.Forms.Label
-    Friend WithEvents Label20 As System.Windows.Forms.Label
-    Friend WithEvents Label14 As System.Windows.Forms.Label
-    Friend WithEvents TbVmin As System.Windows.Forms.TextBox
-    Friend WithEvents TbUnderSpeed As System.Windows.Forms.TextBox
-    Friend WithEvents TbOverspeed As System.Windows.Forms.TextBox
-    Friend WithEvents Label23 As System.Windows.Forms.Label
-    Friend WithEvents Label22 As System.Windows.Forms.Label
-    Friend WithEvents Label13 As System.Windows.Forms.Label
-    Friend WithEvents RdEcoRoll As System.Windows.Forms.RadioButton
-    Friend WithEvents RdOverspeed As System.Windows.Forms.RadioButton
-    Friend WithEvents RdOff As System.Windows.Forms.RadioButton
-    Friend WithEvents PnStartStop As System.Windows.Forms.Panel
-    Friend WithEvents Label27 As System.Windows.Forms.Label
-    Friend WithEvents Label26 As System.Windows.Forms.Label
-    Friend WithEvents PnLookAhead As System.Windows.Forms.Panel
-    Friend WithEvents Label29 As System.Windows.Forms.Label
-    Friend WithEvents TbVminLA As System.Windows.Forms.TextBox
-    Friend WithEvents Label28 As System.Windows.Forms.Label
-    Friend WithEvents Label31 As System.Windows.Forms.Label
-    Friend WithEvents Label30 As System.Windows.Forms.Label
-    Friend WithEvents TbSSdelay As System.Windows.Forms.TextBox
-    Friend WithEvents Label32 As System.Windows.Forms.Label
-    Friend WithEvents PnEcoRoll As System.Windows.Forms.Panel
-    Friend WithEvents PicVehicle As System.Windows.Forms.PictureBox
-    Friend WithEvents PicBox As System.Windows.Forms.PictureBox
-    Friend WithEvents TbEngTxt As System.Windows.Forms.TextBox
-    Friend WithEvents TbVehCat As System.Windows.Forms.TextBox
-    Friend WithEvents TbAxleConf As System.Windows.Forms.TextBox
-    Friend WithEvents TbHVCclass As System.Windows.Forms.TextBox
-    Friend WithEvents TbGbxTxt As System.Windows.Forms.TextBox
-    Friend WithEvents TbMass As System.Windows.Forms.TextBox
-    Friend WithEvents GrVACC As System.Windows.Forms.GroupBox
-    Friend WithEvents cboAdvancedAuxiliaries As System.Windows.Forms.ComboBox
-    Friend WithEvents picAuxInfo As System.Windows.Forms.PictureBox
-    Friend WithEvents ToolTip1 As System.Windows.Forms.ToolTip
-    Friend WithEvents Label1 As System.Windows.Forms.Label
-    Friend WithEvents btnBrowseAAUXFile As System.Windows.Forms.Button
-    Friend WithEvents txtAdvancedAuxiliaryFile As System.Windows.Forms.TextBox
-    Friend WithEvents lbAdvancedAuxiliaries As System.Windows.Forms.Label
-    Friend WithEvents btnAAUXOpen As System.Windows.Forms.Button
+	Friend WithEvents TabPgGen As System.Windows.Forms.TabPage
+	Friend WithEvents TabControl1 As System.Windows.Forms.TabControl
+	Friend WithEvents StatusStrip1 As System.Windows.Forms.StatusStrip
+	Friend WithEvents ButtonVEH As System.Windows.Forms.Button
+	Friend WithEvents ButtonMAP As System.Windows.Forms.Button
+	Friend WithEvents ButtonGBX As System.Windows.Forms.Button
+	Friend WithEvents ButOpenVEH As System.Windows.Forms.Button
+	Friend WithEvents ButOpenGBX As System.Windows.Forms.Button
+	Friend WithEvents ButOpenENG As System.Windows.Forms.Button
+	Friend WithEvents ToolStripStatusLabelGEN As System.Windows.Forms.ToolStripStatusLabel
+	Friend WithEvents ButOK As System.Windows.Forms.Button
+	Friend WithEvents TbGBX As System.Windows.Forms.TextBox
+	Friend WithEvents TbENG As System.Windows.Forms.TextBox
+	Friend WithEvents TbVEH As System.Windows.Forms.TextBox
+	Friend WithEvents ButCancel As System.Windows.Forms.Button
+	Friend WithEvents ToolStrip1 As System.Windows.Forms.ToolStrip
+	Friend WithEvents ToolStripBtNew As System.Windows.Forms.ToolStripButton
+	Friend WithEvents ToolStripBtOpen As System.Windows.Forms.ToolStripButton
+	Friend WithEvents ToolStripBtSave As System.Windows.Forms.ToolStripButton
+	Friend WithEvents ToolStripBtSaveAs As System.Windows.Forms.ToolStripButton
+	Friend WithEvents ToolStripBtSendTo As System.Windows.Forms.ToolStripButton
+	Friend WithEvents ToolStripSeparator1 As System.Windows.Forms.ToolStripSeparator
+	Friend WithEvents GrAux As System.Windows.Forms.GroupBox
+	Friend WithEvents LvAux As System.Windows.Forms.ListView
+	Friend WithEvents ColumnHeader4 As System.Windows.Forms.ColumnHeader
+	Friend WithEvents ColumnHeader5 As System.Windows.Forms.ColumnHeader
+	Friend WithEvents ColumnHeader6 As System.Windows.Forms.ColumnHeader
+	Friend WithEvents ButAuxRem As System.Windows.Forms.Button
+	Friend WithEvents ButAuxAdd As System.Windows.Forms.Button
+	Friend WithEvents PictureBox1 As System.Windows.Forms.PictureBox
+	Friend WithEvents TabPgDriver As System.Windows.Forms.TabPage
+	Friend WithEvents BtDesMaxBr As System.Windows.Forms.Button
+	Friend WithEvents TbDesMaxFile As System.Windows.Forms.TextBox
+	Friend WithEvents GrCycles As System.Windows.Forms.GroupBox
+	Friend WithEvents LvCycles As System.Windows.Forms.ListView
+	Friend WithEvents ColumnHeader1 As System.Windows.Forms.ColumnHeader
+	Friend WithEvents BtDRIrem As System.Windows.Forms.Button
+	Friend WithEvents BtDRIadd As System.Windows.Forms.Button
+	Friend WithEvents ToolStripSeparator2 As System.Windows.Forms.ToolStripSeparator
+	Friend WithEvents ToolStripButton1 As System.Windows.Forms.ToolStripButton
+	Friend WithEvents CbEngOnly As System.Windows.Forms.CheckBox
+	Friend WithEvents BtAccOpen As System.Windows.Forms.Button
+	Friend WithEvents Label2 As System.Windows.Forms.Label
+	Friend WithEvents CmOpenFile As System.Windows.Forms.ContextMenuStrip
+	Friend WithEvents OpenWithToolStripMenuItem As System.Windows.Forms.ToolStripMenuItem
+	Friend WithEvents ShowInFolderToolStripMenuItem As System.Windows.Forms.ToolStripMenuItem
+	Friend WithEvents ChBStartStop As System.Windows.Forms.CheckBox
+	Friend WithEvents GrStartStop As System.Windows.Forms.GroupBox
+	Friend WithEvents TbSSspeed As System.Windows.Forms.TextBox
+	Friend WithEvents TbSStime As System.Windows.Forms.TextBox
+	Friend WithEvents LabelSStime As System.Windows.Forms.Label
+	Friend WithEvents LabelSSspeed As System.Windows.Forms.Label
+	Friend WithEvents GrLAC As System.Windows.Forms.GroupBox
+	Friend WithEvents CbLookAhead As System.Windows.Forms.CheckBox
+	Friend WithEvents GroupBox1 As System.Windows.Forms.GroupBox
+	Friend WithEvents Label21 As System.Windows.Forms.Label
+	Friend WithEvents Label20 As System.Windows.Forms.Label
+	Friend WithEvents Label14 As System.Windows.Forms.Label
+	Friend WithEvents TbVmin As System.Windows.Forms.TextBox
+	Friend WithEvents TbUnderSpeed As System.Windows.Forms.TextBox
+	Friend WithEvents TbOverspeed As System.Windows.Forms.TextBox
+	Friend WithEvents Label23 As System.Windows.Forms.Label
+	Friend WithEvents Label22 As System.Windows.Forms.Label
+	Friend WithEvents Label13 As System.Windows.Forms.Label
+	Friend WithEvents RdEcoRoll As System.Windows.Forms.RadioButton
+	Friend WithEvents RdOverspeed As System.Windows.Forms.RadioButton
+	Friend WithEvents RdOff As System.Windows.Forms.RadioButton
+	Friend WithEvents PnStartStop As System.Windows.Forms.Panel
+	Friend WithEvents Label27 As System.Windows.Forms.Label
+	Friend WithEvents Label26 As System.Windows.Forms.Label
+	Friend WithEvents PnLookAhead As System.Windows.Forms.Panel
+	Friend WithEvents Label31 As System.Windows.Forms.Label
+	Friend WithEvents Label30 As System.Windows.Forms.Label
+	Friend WithEvents TbSSdelay As System.Windows.Forms.TextBox
+	Friend WithEvents Label32 As System.Windows.Forms.Label
+	Friend WithEvents PnEcoRoll As System.Windows.Forms.Panel
+	Friend WithEvents PicVehicle As System.Windows.Forms.PictureBox
+	Friend WithEvents PicBox As System.Windows.Forms.PictureBox
+	Friend WithEvents TbEngTxt As System.Windows.Forms.TextBox
+	Friend WithEvents TbVehCat As System.Windows.Forms.TextBox
+	Friend WithEvents TbAxleConf As System.Windows.Forms.TextBox
+	Friend WithEvents TbHVCclass As System.Windows.Forms.TextBox
+	Friend WithEvents TbGbxTxt As System.Windows.Forms.TextBox
+	Friend WithEvents TbMass As System.Windows.Forms.TextBox
+	Friend WithEvents GrVACC As System.Windows.Forms.GroupBox
+	Friend WithEvents cboAdvancedAuxiliaries As System.Windows.Forms.ComboBox
+	Friend WithEvents picAuxInfo As System.Windows.Forms.PictureBox
+	Friend WithEvents ToolTip1 As System.Windows.Forms.ToolTip
+	Friend WithEvents Label1 As System.Windows.Forms.Label
+	Friend WithEvents btnBrowseAAUXFile As System.Windows.Forms.Button
+	Friend WithEvents txtAdvancedAuxiliaryFile As System.Windows.Forms.TextBox
+	Friend WithEvents lbAdvancedAuxiliaries As System.Windows.Forms.Label
+	Friend WithEvents btnAAUXOpen As System.Windows.Forms.Button
+	Friend WithEvents Label3 As System.Windows.Forms.Label
+	Friend WithEvents tbLacPreviewFactor As System.Windows.Forms.TextBox
+	Friend WithEvents tbLacDfTargetSpeedFile As System.Windows.Forms.TextBox
+	Friend WithEvents btnDfTargetSpeed As System.Windows.Forms.Button
+	Friend WithEvents Label4 As System.Windows.Forms.Label
+	Friend WithEvents Label5 As System.Windows.Forms.Label
+	Friend WithEvents tbLacDfVelocityDropFile As System.Windows.Forms.TextBox
+	Friend WithEvents btnDfVelocityDrop As System.Windows.Forms.Button
+	Friend WithEvents TbVminLA As System.Windows.Forms.TextBox
+	Friend WithEvents TbAlookahead As System.Windows.Forms.TextBox
+	Friend WithEvents Label9 As System.Windows.Forms.Label
+	Friend WithEvents Label8 As System.Windows.Forms.Label
+	Friend WithEvents Label7 As System.Windows.Forms.Label
+	Friend WithEvents Label6 As System.Windows.Forms.Label
+	Friend WithEvents GroupBox2 As System.Windows.Forms.GroupBox
+	Friend WithEvents Label12 As System.Windows.Forms.Label
+	Friend WithEvents tbDfCoastingScale As System.Windows.Forms.TextBox
+	Friend WithEvents Label11 As System.Windows.Forms.Label
+	Friend WithEvents tbDfCoastingOffset As System.Windows.Forms.TextBox
+	Friend WithEvents Label10 As System.Windows.Forms.Label
 End Class

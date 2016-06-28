@@ -45,7 +45,7 @@ using TUGraz.VectoCore.Utils;
 namespace TUGraz.VectoCore.Models.SimulationComponent.Data
 {
 	[CustomValidation(typeof(AuxiliaryData), "ValidateAuxMap")]
-	public sealed class AuxiliaryData: IDisposable
+	public sealed class AuxiliaryData
 	{
 		[Required, Range(double.Epsilon, 1)]
 		public double EfficiencyToSupply { get; set; }
@@ -60,7 +60,12 @@ namespace TUGraz.VectoCore.Models.SimulationComponent.Data
 
 		public Watt GetPowerDemand(PerSecond nAuxiliary, Watt powerAuxOut)
 		{
-			return _map.Interpolate(nAuxiliary.Value(), powerAuxOut.Value()).SI<Watt>();
+			var value = _map.Interpolate(nAuxiliary.Value(), powerAuxOut.Value());
+			if (value.HasValue)
+				return value.Value.SI<Watt>();
+
+			throw new VectoException("AuxiliaryData: Interpolation failed. nAux: {0}, powerOut:{1}", nAuxiliary.AsRPM,
+				powerAuxOut);
 		}
 
 		public static AuxiliaryData ReadFromFile(string fileName, string id)
@@ -137,7 +142,6 @@ namespace TUGraz.VectoCore.Models.SimulationComponent.Data
 			_map.Triangulate();
 		}
 
-
 		private static bool HeaderIsValid(DataColumnCollection columns)
 		{
 			return columns.Contains(Fields.AuxSpeed) && columns.Contains(Fields.MechPower) &&
@@ -192,11 +196,6 @@ namespace TUGraz.VectoCore.Models.SimulationComponent.Data
 				}
 			}
 			return ValidationResult.Success;
-		}
-
-		public void Dispose()
-		{
-			_map.Dispose();
 		}
 	}
 

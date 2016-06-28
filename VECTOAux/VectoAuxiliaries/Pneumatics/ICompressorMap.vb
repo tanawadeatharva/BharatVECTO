@@ -8,25 +8,25 @@
 '   WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
 '
 ' See the LICENSE.txt for the specific language governing permissions and limitations.
+Imports TUGraz.VectoCommon.Utils
 
 Namespace Pneumatics
+	Public Interface ICompressorMap
+		Inherits IAuxiliaryEvent
 
-    Public Interface ICompressorMap
-    Inherits IAuxiliaryEvent
+		''' <summary>
+		''' Initilaises the map from the supplied csv data
+		''' </summary>
+		''' <remarks></remarks>
+		Function Initialise() As Boolean
 
-        ''' <summary>
-        ''' Initilaises the map from the supplied csv data
-        ''' </summary>
-        ''' <remarks></remarks>
-        Function Initialise() As Boolean
-
-        ''' <summary>
-        ''' Returns compressor flow rate at the given rotation speed
-        ''' </summary>
-        ''' <param name="rpm">compressor rotation speed</param>
-        ''' <returns></returns>
-        ''' <remarks>Single</remarks>
-		Function GetFlowRate(ByVal rpm As Double) As Single
+		''' <summary>
+		''' Returns compressor flow rate at the given rotation speed
+		''' </summary>
+		''' <param name="rpm">compressor rotation speed</param>
+		''' <returns></returns>
+		''' <remarks>Single</remarks>
+		Function GetFlowRate(ByVal rpm As Double) As NormLiterPerSecond
 
 		''' <summary>
 		''' Returns mechanical power at rpm when compressor is on
@@ -34,7 +34,7 @@ Namespace Pneumatics
 		''' <param name="rpm">compressor rotation speed</param>
 		''' <returns></returns>
 		''' <remarks>Single</remarks>
-		Function GetPowerCompressorOn(ByVal rpm As Double) As Single
+		Function GetPowerCompressorOn(ByVal rpm As Double) As Watt
 
 		''' <summary>
 		''' Returns mechanical power at rpm when compressor is off
@@ -42,12 +42,9 @@ Namespace Pneumatics
 		''' <param name="rpm">compressor rotation speed</param>
 		''' <returns></returns>
 		''' <remarks>Single</remarks>
-		Function GetPowerCompressorOff(ByVal rpm As Double) As Single
+		Function GetPowerCompressorOff(ByVal rpm As Double) As Watt
 
-        'Returns Average Power Demand Per Compressor Unit FlowRate
-        Function GetAveragePowerDemandPerCompressorUnitFlowRate() As Single
-
-
-    End Interface
-
+		'Returns Average Power Demand Per Compressor Unit FlowRate
+		Function GetAveragePowerDemandPerCompressorUnitFlowRate() As Double
+	End Interface
 End Namespace

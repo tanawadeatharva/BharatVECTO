@@ -102,13 +102,11 @@ namespace TUGraz.VectoCommon.InputData
 		/// </summary>
 		SquareMeter AirDragAreaRigidTruck { get; } // without trailer
 
-
 		/// <summary>
 		/// P117  Powered axle tyres/rims
 		/// cf. VECTO Input Parameters.xlsx
 		/// </summary>
 		string Rim { get; }
-
 
 		/// <summary>
 		/// parameters for every axle
@@ -123,7 +121,6 @@ namespace TUGraz.VectoCommon.InputData
 		/// </summary>
 		double RetarderRatio { get; }
 	}
-
 
 	public interface IRetarderInputData : IComponentInputData
 	{
@@ -203,6 +200,12 @@ namespace TUGraz.VectoCommon.InputData
 		DataTable LossMap { get; }
 
 		/// <summary>
+		/// P079
+		/// cf. VECTO Input Parameters.xlsx
+		/// </summary>
+		double Efficiency { get; }
+
+		/// <summary>
 		/// P145
 		/// cf. VECTO Input Parameters.xlsx
 		/// </summary>
@@ -236,6 +239,12 @@ namespace TUGraz.VectoCommon.InputData
 		/// cf. VECTO Input Parameters.xlsx
 		/// </summary>
 		DataTable LossMap { get; }
+
+		/// <summary>
+		/// P079
+		/// cf. VECTO Input Parameters.xlsx
+		/// </summary>
+		double Efficiency { get; }
 	}
 
 	public interface ITorqueConverterInputData
@@ -250,6 +259,7 @@ namespace TUGraz.VectoCommon.InputData
 		/// P092
 		/// cf. VECTO Input Parameters.xlsx
 		/// </summary>
+		// ReSharper disable once InconsistentNaming
 		PerSecond ReferenceRPM { get; }
 
 		/// <summary>
@@ -263,6 +273,7 @@ namespace TUGraz.VectoCommon.InputData
 		/// P099, P100, P101
 		/// cf. VECTO Input Parameters.xlsx
 		/// </summary>
+		// ReSharper disable once InconsistentNaming
 		DataTable TCData { get; }
 	}
 
@@ -321,7 +332,6 @@ namespace TUGraz.VectoCommon.InputData
 		IList<IAuxiliaryDeclarationInputData> Auxiliaries { get; }
 	}
 
-
 	public interface ICycleData
 	{
 		string Name { get; }
@@ -342,7 +352,6 @@ namespace TUGraz.VectoCommon.InputData
 		IOverSpeedEcoRollDeclarationInputData OverSpeedEcoRoll { get; }
 	}
 
-
 	public interface IOverSpeedEcoRollDeclarationInputData
 	{
 		/// <summary>
@@ -352,7 +361,6 @@ namespace TUGraz.VectoCommon.InputData
 		DriverMode Mode { get; }
 	}
 
-
 	public interface IStartStopDeclarationInputData
 	{
 		/// <summary>
@@ -361,7 +369,6 @@ namespace TUGraz.VectoCommon.InputData
 		/// </summary>
 		bool Enabled { get; }
 	}
-
 
 	public interface IAuxiliaryDeclarationInputData
 	{

@@ -30,7 +30,6 @@
 */
 
 using System;
-using System.ComponentModel;
 using System.ComponentModel.DataAnnotations;
 using System.Threading;
 using TUGraz.VectoCommon.Exceptions;
@@ -53,6 +52,7 @@ namespace TUGraz.VectoCore.Models.Simulation.Impl
 		protected Second AbsTime = 0.SI<Second>();
 		// ReSharper disable once InconsistentNaming
 		protected Second dt = 1.SI<Second>();
+		private bool _cancelled;
 		protected SummaryDataContainer SumWriter { get; set; }
 		protected string JobName { get; set; }
 		protected ISimulationOutPort CyclePort { get; set; }
@@ -61,6 +61,7 @@ namespace TUGraz.VectoCore.Models.Simulation.Impl
 		protected IVehicleContainer Container { get; set; }
 
 		public bool FinishedWithoutErrors { get; protected set; }
+
 		public int RunIdentifier { get; protected set; }
 
 		public string RunName
@@ -78,6 +79,11 @@ namespace TUGraz.VectoCore.Models.Simulation.Impl
 			get { return Container.RunData.ModFileSuffix; }
 		}
 
+		public double Progress
+		{
+			get { return CyclePort.Progress; }
+		}
+
 		protected VectoRun(IVehicleContainer container)
 		{
 			Container = container;
@@ -91,12 +97,13 @@ namespace TUGraz.VectoCore.Models.Simulation.Impl
 			return Container;
 		}
 
-
-		public void Run(BackgroundWorker worker = null, Action<double> reportProgressAction = null)
+		public void Run()
 		{
 			var debug = new DebugData();
-			
+
 			Log.Info("VectoJob started running.");
+
+			//var lastProgress = -1.0;
 
 			Initialize();
 			try {
@@ -107,11 +114,8 @@ namespace TUGraz.VectoCore.Models.Simulation.Impl
 					if (response is ResponseSuccess) {
 						Container.CommitSimulationStep(AbsTime, dt);
 						AbsTime += dt;
-						if (reportProgressAction != null) {
-							reportProgressAction(CyclePort.Progress);
-						}
-						if (worker != null && worker.CancellationPending) {
-							Log.Error("Background Task canceled!");
+						if (_cancelled) {
+							Log.Error("Run canceled!");
 							Container.RunStatus = Status.Canceled;
 							Container.FinishSimulation();
 							return;
@@ -145,10 +149,14 @@ namespace TUGraz.VectoCore.Models.Simulation.Impl
 			}
 			Container.RunStatus = Status.Success;
 			Container.FinishSimulation();
-
 			IterationStatistics.FinishSimulation(RunName + CycleName + RunSuffix + RunIdentifier);
 
 			Log.Info("VectoJob finished.");
+		}
+
+		public void Cancel()
+		{
+			_cancelled = true;
 		}
 
 		private static object TryCatch(Func<object> action)

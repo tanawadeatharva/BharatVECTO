@@ -42,7 +42,7 @@ Namespace Hvac
 							If Not firstline Then
 
 								'split the line
-								Dim elements() As String = line.Split(New Char() {","}, StringSplitOptions.RemoveEmptyEntries)
+								Dim elements() As String = line.Split(New Char() {","c}, StringSplitOptions.RemoveEmptyEntries)
 
 								'3 entries per line required
 								If (elements.Length <> 4) Then
