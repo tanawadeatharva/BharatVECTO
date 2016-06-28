@@ -58,7 +58,7 @@ namespace TUGraz.VectoCore.Models.Declaration
 		private WHTCCorrection _whtcCorrection;
 		private AirDrag _airDrag;
 		private TorqueConverter _torqueConverter;
-		private StandardWeigths _standardWeigths;
+		private StandardWeights _standardWeights;
 		public static Kilogram MaximumGrossVehicleWeight = 40000.SI<Kilogram>();
 
 		public static Wheels Wheels
@@ -137,9 +137,9 @@ namespace TUGraz.VectoCore.Models.Declaration
 			}
 		}
 
-		public static StandardWeigths StandardWeights
+		public static StandardWeights StandardWeights
 		{
-			get { return Instance()._standardWeigths ?? (Instance()._standardWeigths = new StandardWeigths()); }
+			get { return Instance()._standardWeights ?? (Instance()._standardWeights = new StandardWeights()); }
 		}
 
 		public static PneumaticSystem PneumaticSystem
