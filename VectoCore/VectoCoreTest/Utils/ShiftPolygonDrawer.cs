@@ -54,7 +54,7 @@ namespace TUGraz.VectoCore.Tests.Utils
 
 		public static void DrawShiftPolygons(string title, EngineFullLoadCurve engineFld, List<ShiftPolygon> polygons,
 			string imageFileName, PerSecond speed85kmh, List<List<Point>> upshiftOrig = null,
-			List<List<Point>> downshiftTransformed = null)
+			List<List<Point>> downshiftTransformed = null, List<List<Point>> downshiftOrig = null)
 		{
 			var numRows = Math.Ceiling(polygons.Count / 4.0);
 			var numCols = Math.Ceiling(polygons.Count / numRows);
@@ -75,12 +75,18 @@ namespace TUGraz.VectoCore.Tests.Utils
 
 				if (upshiftOrig != null && i < upshiftOrig.Count) {
 					PlotShiftLine("UpshiftOrig " + i, chartArea, chart, Color.Gray,
-						upshiftOrig[i].Select(pt => pt.X / Constants.RPMToRad).ToList(), upshiftOrig[i].Select(pt => pt.Y).ToList(), true);
+						upshiftOrig[i].Select(pt => pt.X / Constants.RPMToRad).ToList(),
+						upshiftOrig[i].Select(pt => pt.Y).ToList(), true);
 				}
 				if (downshiftTransformed != null && i < downshiftTransformed.Count) {
 					PlotShiftLine("DownTransformed " + i, chartArea, chart, Color.BlueViolet,
 						downshiftTransformed[i].Select(pt => pt.X / Constants.RPMToRad).ToList(),
 						downshiftTransformed[i].Select(pt => pt.Y).ToList(), true);
+				}
+				if (downshiftOrig != null && i < downshiftOrig.Count) {
+					PlotShiftLine("DownshiftOrig" + i, chartArea, chart, Color.Gray,
+						downshiftOrig[i].Select(pt => pt.X / Constants.RPMToRad).ToList(),
+						downshiftOrig[i].Select(pt => pt.Y).ToList(), true);
 				}
 
 				PlotShiftPolygon(i, shiftPolygon, chartArea, chart);
@@ -370,7 +376,7 @@ namespace TUGraz.VectoCore.Tests.Utils
 			});
 			legend.CustomItems.Add(new LegendItem() {
 				Color = Color.Gray,
-				Name = "Upshift orig.",
+				Name = "Downshift/Upshift orig.",
 				MarkerStyle = MarkerStyle.None,
 				ImageStyle = LegendImageStyle.Line,
 				BorderWidth = 3,

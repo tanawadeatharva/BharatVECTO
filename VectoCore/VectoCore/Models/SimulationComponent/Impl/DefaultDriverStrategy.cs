@@ -271,13 +271,14 @@ namespace TUGraz.VectoCore.Models.SimulationComponent.Impl
 			Log.Debug("Next Driving Action: {0}", NextDrivingAction);
 		}
 
-		protected DrivingBehaviorEntry GetNextDrivingAction(Meter minDistance, Meter ds)
+		protected internal DrivingBehaviorEntry GetNextDrivingAction(Meter minDistance, Meter ds)
 		{
 			var currentSpeed = Driver.DataBus.VehicleSpeed;
 
-			// distance until halt
-			var lookaheadDistance = (currentSpeed.Value() * 3.6 * 10).SI<Meter>();
-			lookaheadDistance = VectoMath.Max(2 * ds, 1.2 * lookaheadDistance);
+			var lookaheadDistance =
+				(currentSpeed.Value() * 3.6 * Driver.DriverData.LookAheadCoasting.LookAheadDistanceFactor).SI<Meter>();
+			var stopDistance = Driver.ComputeDecelerationDistance(0.SI<MeterPerSecond>());
+			lookaheadDistance = VectoMath.Max(2 * ds, lookaheadDistance, 1.2 * stopDistance);
 			var lookaheadData = Driver.DataBus.LookAhead(lookaheadDistance);
 
 			Log.Debug("Lookahead distance: {0} @ current speed {1}", lookaheadDistance, currentSpeed);
@@ -327,47 +328,39 @@ namespace TUGraz.VectoCore.Models.SimulationComponent.Impl
 			return nextBrakingAction;
 		}
 
-		protected internal virtual Meter ComputeCoastingDistance(MeterPerSecond v_veh,
+		protected internal virtual Meter ComputeCoastingDistance(MeterPerSecond vehicleSpeed,
 			DrivingCycleData.DrivingCycleEntry actionEntry)
 		{
-			var v_target = OverspeedAllowed(actionEntry.RoadGradient, actionEntry.VehicleTargetSpeed)
+			var targetSpeed = OverspeedAllowed(actionEntry.RoadGradient, actionEntry.VehicleTargetSpeed)
 				? actionEntry.VehicleTargetSpeed + Driver.DriverData.OverSpeedEcoRoll.OverSpeed
 				: actionEntry.VehicleTargetSpeed;
 
-			var m = Driver.DataBus.TotalMass;
-			var g = Physics.GravityAccelleration;
-			var h_target = actionEntry.Altitude; //dec.Altitude;
+			var vehicleMass = Driver.DataBus.TotalMass + Driver.DataBus.ReducedMassWheels;
+			var targetAltitude = actionEntry.Altitude; //dec.Altitude;
 
-			var h_vehicle = Driver.DataBus.Altitude;
+			var vehicleAltitude = Driver.DataBus.Altitude;
 
-			var E_kin_veh = m * v_veh * v_veh / 2;
-			var E_kin_target = m * v_target * v_target / 2;
-			var E_pot_target = m * g * h_target;
-			var E_pot_veh = m * g * h_vehicle;
+			var targetEnergy = vehicleMass * Physics.GravityAccelleration * targetAltitude +
+								vehicleMass * targetSpeed * targetSpeed / 2;
+			var vehicleEnergy = vehicleMass * Physics.GravityAccelleration * vehicleAltitude +
+								vehicleMass * vehicleSpeed * vehicleSpeed / 2;
 
-			var delta_E = (E_kin_veh + E_pot_veh) - (E_kin_target + E_pot_target);
+			var energyDifference = vehicleEnergy - targetEnergy;
 
-			//var F_dec_average = delta_E / x_delta;
+			var airDragForce = Driver.DataBus.AirDragResistance(vehicleSpeed, targetSpeed);
+			var rollResistanceForce = Driver.DataBus.RollingResistance(
+				((targetAltitude - vehicleAltitude) / (actionEntry.Distance - Driver.DataBus.Distance)).Value().SI<Radian>());
+			var engineDragLoss = Driver.DataBus.EngineDragPower(Driver.DataBus.EngineSpeed);
+			var gearboxLoss = Driver.DataBus.GearboxLoss();
+			var axleLoss = Driver.DataBus.AxlegearLoss();
 
-			var F_air = Driver.DataBus.AirDragResistance(v_veh, v_target);
-			var F_roll =
-				Driver.DataBus.RollingResistance(
-					((h_target - h_vehicle) / (actionEntry.Distance - Driver.DataBus.Distance)).Value().SI<Radian>());
-			var F_enginedrag = Driver.DataBus.EngineDragPower(Driver.DataBus.EngineSpeed) / v_veh;
-			var F_loss_gb = Driver.DataBus.GearboxLoss(Driver.DataBus.EngineSpeed, Driver.DataBus.EngineTorque) / v_veh;
+			var coastingResistanceForce = airDragForce + rollResistanceForce +
+										(gearboxLoss + axleLoss - engineDragLoss) / vehicleSpeed;
 
-			// todo mk-2016-05-11 calculate ra loss
-			var F_loss_ra = 0.SI<Newton>();
-
-			var F_coasting = F_air + F_roll + F_loss_gb + F_loss_ra - F_enginedrag;
-
-			//var CDP = F_dec_average / -F_coasting;
-
-			var DF_coasting = LACDecisionFactor.Lookup(v_target, v_veh - v_target);
-
-			var delta_x = (delta_E / (DF_coasting * F_coasting)).Cast<Meter>();
-
-			return delta_x;
+			var coastingDecisionFactor = Driver.DriverData.LookAheadCoasting.LookAheadDecisionFactor.Lookup(targetSpeed,
+				vehicleSpeed - targetSpeed);
+			var coastingDistance = (energyDifference / (coastingDecisionFactor * coastingResistanceForce)).Cast<Meter>();
+			return coastingDistance;
 		}
 
 
@@ -445,7 +438,8 @@ namespace TUGraz.VectoCore.Models.SimulationComponent.Impl
 				//DriverStrategy.BrakeTrigger = DriverStrategy.NextDrivingAction;
 			}
 
-			var newOperatingPoint = VectoMath.ComputeTimeInterval(DataBus.VehicleSpeed, response.Acceleration, DataBus.Distance, ds);
+			var newOperatingPoint = VectoMath.ComputeTimeInterval(DataBus.VehicleSpeed, response.Acceleration, DataBus.Distance,
+				ds);
 			if (newOperatingPoint.SimulationInterval.IsSmaller(Constants.SimulationSettings.LowerBoundTimeInterval)) {
 				// the next time interval will be too short, this may lead to issues with inertia etc. 
 				// instead of accelerating, drive at constant speed.
@@ -638,8 +632,16 @@ namespace TUGraz.VectoCore.Models.SimulationComponent.Impl
 			if (Phase == BrakingPhase.Coast) {
 				var brakingDistance = Driver.ComputeDecelerationDistance(DriverStrategy.BrakeTrigger.NextTargetSpeed) +
 									DefaultDriverStrategy.BrakingSafetyMargin;
-				Log.Debug("breaking distance: {0}, start braking @ {1}", brakingDistance,
-					DriverStrategy.BrakeTrigger.TriggerDistance - brakingDistance);
+				DriverStrategy.BrakeTrigger.BrakingStartDistance = DriverStrategy.BrakeTrigger.TriggerDistance - brakingDistance;
+
+				var nextBrakeAction = DriverStrategy.GetNextDrivingAction(DataBus.Distance, ds);
+				if (nextBrakeAction != null && !DriverStrategy.BrakeTrigger.TriggerDistance.IsEqual(nextBrakeAction.TriggerDistance) &&
+					nextBrakeAction.BrakingStartDistance.IsSmaller( DriverStrategy.BrakeTrigger.BrakingStartDistance)) {
+					DriverStrategy.BrakeTrigger = nextBrakeAction;
+					Log.Debug("setting brake trigger to new trigger: trigger distance: {0}, start braking @ {1}", nextBrakeAction.TriggerDistance, nextBrakeAction.BrakingStartDistance);
+				}
+				
+				Log.Debug("start braking @ {0}", DriverStrategy.BrakeTrigger.TriggerDistance - brakingDistance);
 				var remainingDistanceToBrake = DriverStrategy.BrakeTrigger.TriggerDistance - brakingDistance - currentDistance;
 				var estimatedTimeInterval = remainingDistanceToBrake / DataBus.VehicleSpeed;
 				if (estimatedTimeInterval.IsSmaller(Constants.SimulationSettings.LowerBoundTimeInterval) ||

@@ -169,6 +169,7 @@ namespace TUGraz.VectoCore.Tests.Models.SimulationComponent
 
 		public PerSecond EngineIdleSpeed { get; set; }
 		public PerSecond EngineRatedSpeed { get; set; }
+		public PerSecond EngineN95hSpeed { get; set; }
 
 		protected override void DoWriteModalResults(IModalDataContainer container)
 		{

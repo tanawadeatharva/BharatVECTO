@@ -107,6 +107,16 @@ Partial Class F_GBX
 		Me.Label32 = New System.Windows.Forms.Label()
 		Me.PnInertiaTI = New System.Windows.Forms.Panel()
 		Me.PicBox = New System.Windows.Forms.PictureBox()
+		Me.GroupBox1 = New System.Windows.Forms.GroupBox()
+		Me.Label19 = New System.Windows.Forms.Label()
+		Me.Label20 = New System.Windows.Forms.Label()
+		Me.Label21 = New System.Windows.Forms.Label()
+		Me.Label22 = New System.Windows.Forms.Label()
+		Me.Label23 = New System.Windows.Forms.Label()
+		Me.Label24 = New System.Windows.Forms.Label()
+		Me.tbDownshiftAfterUpshift = New System.Windows.Forms.TextBox()
+		Me.tbUpshiftAfterDownshift = New System.Windows.Forms.TextBox()
+		Me.tbUpshiftMinAcceleration = New System.Windows.Forms.TextBox()
 		Me.ToolStrip1.SuspendLayout()
 		Me.StatusStrip1.SuspendLayout()
 		CType(Me.PictureBox1, System.ComponentModel.ISupportInitialize).BeginInit()
@@ -119,6 +129,7 @@ Partial Class F_GBX
 		Me.GroupBox4.SuspendLayout()
 		Me.PnInertiaTI.SuspendLayout()
 		CType(Me.PicBox, System.ComponentModel.ISupportInitialize).BeginInit()
+		Me.GroupBox1.SuspendLayout()
 		Me.SuspendLayout()
 		'
 		'ToolStrip1
@@ -203,7 +214,7 @@ Partial Class F_GBX
 		'StatusStrip1
 		'
 		Me.StatusStrip1.Items.AddRange(New System.Windows.Forms.ToolStripItem() {Me.LbStatus})
-		Me.StatusStrip1.Location = New System.Drawing.Point(0, 595)
+		Me.StatusStrip1.Location = New System.Drawing.Point(0, 684)
 		Me.StatusStrip1.Name = "StatusStrip1"
 		Me.StatusStrip1.Size = New System.Drawing.Size(877, 22)
 		Me.StatusStrip1.SizingGrip = False
@@ -220,7 +231,7 @@ Partial Class F_GBX
 		'
 		Me.ButCancel.Anchor = CType((System.Windows.Forms.AnchorStyles.Bottom Or System.Windows.Forms.AnchorStyles.Right), System.Windows.Forms.AnchorStyles)
 		Me.ButCancel.DialogResult = System.Windows.Forms.DialogResult.Cancel
-		Me.ButCancel.Location = New System.Drawing.Point(790, 569)
+		Me.ButCancel.Location = New System.Drawing.Point(790, 658)
 		Me.ButCancel.Name = "ButCancel"
 		Me.ButCancel.Size = New System.Drawing.Size(75, 23)
 		Me.ButCancel.TabIndex = 7
@@ -230,7 +241,7 @@ Partial Class F_GBX
 		'ButOK
 		'
 		Me.ButOK.Anchor = CType((System.Windows.Forms.AnchorStyles.Bottom Or System.Windows.Forms.AnchorStyles.Right), System.Windows.Forms.AnchorStyles)
-		Me.ButOK.Location = New System.Drawing.Point(709, 569)
+		Me.ButOK.Location = New System.Drawing.Point(709, 658)
 		Me.ButOK.Name = "ButOK"
 		Me.ButOK.Size = New System.Drawing.Size(75, 23)
 		Me.ButOK.TabIndex = 6
@@ -369,6 +380,7 @@ Partial Class F_GBX
 		'
 		'GrGearShift
 		'
+		Me.GrGearShift.Controls.Add(Me.GroupBox1)
 		Me.GrGearShift.Controls.Add(Me.PnTorqRes)
 		Me.GrGearShift.Controls.Add(Me.ChShiftInside)
 		Me.GrGearShift.Controls.Add(Me.TbShiftTime)
@@ -378,7 +390,7 @@ Partial Class F_GBX
 		Me.GrGearShift.Controls.Add(Me.GroupBox2)
 		Me.GrGearShift.Location = New System.Drawing.Point(12, 377)
 		Me.GrGearShift.Name = "GrGearShift"
-		Me.GrGearShift.Size = New System.Drawing.Size(441, 182)
+		Me.GrGearShift.Size = New System.Drawing.Size(441, 291)
 		Me.GrGearShift.TabIndex = 3
 		Me.GrGearShift.TabStop = False
 		Me.GrGearShift.Text = "Gear shift parameters"
@@ -479,7 +491,7 @@ Partial Class F_GBX
 		Me.GroupBox2.Controls.Add(Me.Label8)
 		Me.GroupBox2.Controls.Add(Me.Label5)
 		Me.GroupBox2.Controls.Add(Me.Label7)
-		Me.GroupBox2.Location = New System.Drawing.Point(6, 77)
+		Me.GroupBox2.Location = New System.Drawing.Point(6, 186)
 		Me.GroupBox2.Name = "GroupBox2"
 		Me.GroupBox2.Size = New System.Drawing.Size(429, 99)
 		Me.GroupBox2.TabIndex = 4
@@ -783,13 +795,107 @@ Partial Class F_GBX
 		Me.PicBox.TabIndex = 48
 		Me.PicBox.TabStop = False
 		'
+		'GroupBox1
+		'
+		Me.GroupBox1.BackColor = System.Drawing.Color.AliceBlue
+		Me.GroupBox1.Controls.Add(Me.tbUpshiftMinAcceleration)
+		Me.GroupBox1.Controls.Add(Me.tbUpshiftAfterDownshift)
+		Me.GroupBox1.Controls.Add(Me.tbDownshiftAfterUpshift)
+		Me.GroupBox1.Controls.Add(Me.Label24)
+		Me.GroupBox1.Controls.Add(Me.Label23)
+		Me.GroupBox1.Controls.Add(Me.Label22)
+		Me.GroupBox1.Controls.Add(Me.Label21)
+		Me.GroupBox1.Controls.Add(Me.Label20)
+		Me.GroupBox1.Controls.Add(Me.Label19)
+		Me.GroupBox1.Location = New System.Drawing.Point(6, 82)
+		Me.GroupBox1.Name = "GroupBox1"
+		Me.GroupBox1.Size = New System.Drawing.Size(429, 100)
+		Me.GroupBox1.TabIndex = 10
+		Me.GroupBox1.TabStop = False
+		Me.GroupBox1.Text = "Shift Strategy Parameters"
+		'
+		'Label19
+		'
+		Me.Label19.AutoSize = True
+		Me.Label19.Location = New System.Drawing.Point(20, 25)
+		Me.Label19.Name = "Label19"
+		Me.Label19.Size = New System.Drawing.Size(137, 13)
+		Me.Label19.TabIndex = 0
+		Me.Label19.Text = "Downshift afer upshift delay"
+		'
+		'Label20
+		'
+		Me.Label20.AutoSize = True
+		Me.Label20.Location = New System.Drawing.Point(20, 48)
+		Me.Label20.Name = "Label20"
+		Me.Label20.Size = New System.Drawing.Size(137, 13)
+		Me.Label20.TabIndex = 1
+		Me.Label20.Text = "Upshift afer downshift delay"
+		'
+		'Label21
+		'
+		Me.Label21.AutoSize = True
+		Me.Label21.Location = New System.Drawing.Point(20, 74)
+		Me.Label21.Name = "Label21"
+		Me.Label21.Size = New System.Drawing.Size(146, 13)
+		Me.Label21.TabIndex = 2
+		Me.Label21.Text = "Min. acceleration after upshift"
+		'
+		'Label22
+		'
+		Me.Label22.AutoSize = True
+		Me.Label22.Location = New System.Drawing.Point(275, 25)
+		Me.Label22.Name = "Label22"
+		Me.Label22.Size = New System.Drawing.Size(18, 13)
+		Me.Label22.TabIndex = 3
+		Me.Label22.Text = "[s]"
+		'
+		'Label23
+		'
+		Me.Label23.AutoSize = True
+		Me.Label23.Location = New System.Drawing.Point(275, 48)
+		Me.Label23.Name = "Label23"
+		Me.Label23.Size = New System.Drawing.Size(18, 13)
+		Me.Label23.TabIndex = 4
+		Me.Label23.Text = "[s]"
+		'
+		'Label24
+		'
+		Me.Label24.AutoSize = True
+		Me.Label24.Location = New System.Drawing.Point(275, 74)
+		Me.Label24.Name = "Label24"
+		Me.Label24.Size = New System.Drawing.Size(34, 13)
+		Me.Label24.TabIndex = 5
+		Me.Label24.Text = "[m/s²]"
+		'
+		'tbDownshiftAfterUpshift
+		'
+		Me.tbDownshiftAfterUpshift.Location = New System.Drawing.Point(209, 20)
+		Me.tbDownshiftAfterUpshift.Name = "tbDownshiftAfterUpshift"
+		Me.tbDownshiftAfterUpshift.Size = New System.Drawing.Size(57, 20)
+		Me.tbDownshiftAfterUpshift.TabIndex = 6
+		'
+		'tbUpshiftAfterDownshift
+		'
+		Me.tbUpshiftAfterDownshift.Location = New System.Drawing.Point(209, 45)
+		Me.tbUpshiftAfterDownshift.Name = "tbUpshiftAfterDownshift"
+		Me.tbUpshiftAfterDownshift.Size = New System.Drawing.Size(57, 20)
+		Me.tbUpshiftAfterDownshift.TabIndex = 7
+		'
+		'tbUpshiftMinAcceleration
+		'
+		Me.tbUpshiftMinAcceleration.Location = New System.Drawing.Point(209, 71)
+		Me.tbUpshiftMinAcceleration.Name = "tbUpshiftMinAcceleration"
+		Me.tbUpshiftMinAcceleration.Size = New System.Drawing.Size(57, 20)
+		Me.tbUpshiftMinAcceleration.TabIndex = 8
+		'
 		'F_GBX
 		'
 		Me.AcceptButton = Me.ButOK
 		Me.AutoScaleDimensions = New System.Drawing.SizeF(6.0!, 13.0!)
 		Me.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font
 		Me.CancelButton = Me.ButCancel
-		Me.ClientSize = New System.Drawing.Size(877, 617)
+		Me.ClientSize = New System.Drawing.Size(877, 706)
 		Me.Controls.Add(Me.PicBox)
 		Me.Controls.Add(Me.PnInertiaTI)
 		Me.Controls.Add(Me.GroupBox4)
@@ -831,6 +937,8 @@ Partial Class F_GBX
 		Me.PnInertiaTI.ResumeLayout(False)
 		Me.PnInertiaTI.PerformLayout()
 		CType(Me.PicBox, System.ComponentModel.ISupportInitialize).EndInit()
+		Me.GroupBox1.ResumeLayout(False)
+		Me.GroupBox1.PerformLayout()
 		Me.ResumeLayout(False)
 		Me.PerformLayout()
 
@@ -908,4 +1016,14 @@ Partial Class F_GBX
     Friend WithEvents Label1 As System.Windows.Forms.Label
 	Friend WithEvents Label18 As System.Windows.Forms.Label
 	Friend WithEvents ColumnHeader6 As System.Windows.Forms.ColumnHeader
+	Friend WithEvents GroupBox1 As System.Windows.Forms.GroupBox
+	Friend WithEvents tbUpshiftMinAcceleration As System.Windows.Forms.TextBox
+	Friend WithEvents tbUpshiftAfterDownshift As System.Windows.Forms.TextBox
+	Friend WithEvents tbDownshiftAfterUpshift As System.Windows.Forms.TextBox
+	Friend WithEvents Label24 As System.Windows.Forms.Label
+	Friend WithEvents Label23 As System.Windows.Forms.Label
+	Friend WithEvents Label22 As System.Windows.Forms.Label
+	Friend WithEvents Label21 As System.Windows.Forms.Label
+	Friend WithEvents Label20 As System.Windows.Forms.Label
+	Friend WithEvents Label19 As System.Windows.Forms.Label
 End Class

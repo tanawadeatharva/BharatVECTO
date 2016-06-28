@@ -572,6 +572,10 @@ namespace TUGraz.VectoCore.Models.SimulationComponent.Impl
 							// else: use same timeinterval as before.
 							if (!(acc.IsEqual(0) && DataBus.VehicleSpeed.IsEqual(0))) {
 								var tmp = ComputeTimeInterval(acc, ds);
+								if (tmp.SimulationInterval.IsEqual(0.SI<Second>(), 1e-9.SI<Second>())) {
+									throw new VectoSearchAbortedException("next TimeInterval is 0. a: {0}, v: {1}, dt: {2}", acc,
+										DataBus.VehicleSpeed, tmp.SimulationInterval);
+								}
 								retVal.Acceleration = tmp.Acceleration;
 								retVal.SimulationInterval = tmp.SimulationInterval;
 								retVal.SimulationDistance = tmp.SimulationDistance;

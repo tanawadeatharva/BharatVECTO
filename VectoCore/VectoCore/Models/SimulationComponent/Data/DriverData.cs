@@ -31,6 +31,7 @@
 
 using TUGraz.VectoCommon.Models;
 using TUGraz.VectoCommon.Utils;
+using TUGraz.VectoCore.Models.Declaration;
 using TUGraz.VectoCore.Models.Simulation.Data;
 
 namespace TUGraz.VectoCore.Models.SimulationComponent.Data
@@ -59,7 +60,10 @@ namespace TUGraz.VectoCore.Models.SimulationComponent.Data
 		{
 			public bool Enabled;
 			//public MeterPerSquareSecond Deceleration;
-			public MeterPerSecond MinSpeed;
+			//public MeterPerSecond MinSpeed;
+
+			public double LookAheadDistanceFactor;
+			public LACDecisionFactor LookAheadDecisionFactor;
 		}
 	}
 }

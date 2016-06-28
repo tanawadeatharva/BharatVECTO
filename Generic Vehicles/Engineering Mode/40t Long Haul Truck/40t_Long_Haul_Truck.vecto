@@ -1,0 +1,44 @@
+﻿{
+  "Header": {
+    "CreatedBy": " ()",
+    "Date": "6/9/2016 2:57:01 PM",
+    "AppVersion": "2.2",
+    "FileVersion": 2
+  },
+  "Body": {
+    "SavedInDeclMode": false,
+    "VehicleFile": "40t_Long_Haul_Truck.vveh",
+    "EngineFile": "40t_Long_Haul_Truck.veng",
+    "GearboxFile": "40t_Long_Haul_Truck.vgbx",
+    "Cycles": [
+      "LongHaul"
+    ],
+    "AuxiliaryAssembly": "CLASSIC",
+    "AuxiliaryVersion": "CLASSIC",
+    "AdvancedAuxiliaryFilePath": "",
+    "VACC": "Truck.vacc",
+    "EngineOnlyMode": false,
+    "StartStop": {
+      "Enabled": false,
+      "MaxSpeed": 5.0,
+      "MinTime": 5.0,
+      "Delay": 5
+    },
+    "LAC": {
+      "Enabled": true,
+      "Dec": -0.5,
+      "MinSpeed": 50.0,
+      "PreviewDistanceFactor": 10.0,
+      "DF_offset": 4.0,
+      "DF_scaling": 3.0,
+      "DF_targetSpeedLookup": "",
+      "Df_velocityDropLookup": ""
+    },
+    "OverSpeedEcoRoll": {
+      "Mode": "OverSpeed",
+      "MinSpeed": 50.0,
+      "OverSpeed": 5.0,
+      "UnderSpeed": 5.0
+    }
+  }
+}

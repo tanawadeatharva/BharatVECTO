@@ -130,5 +130,9 @@ namespace TUGraz.VectoCore.Models.SimulationComponent.Data
 		/// <c>true</c> if this instance has torque converter; otherwise, <c>false</c>.
 		/// </value>
 		public bool HasTorqueConverter { get; internal set; }
+
+		public Second UpshiftAfterDownshiftDelay { get; internal set; }
+		public Second DownshiftAfterUpshiftDelay { get; internal set; }
+		public MeterPerSquareSecond UpshiftMinAcceleration { get; internal set; }
 	}
 }

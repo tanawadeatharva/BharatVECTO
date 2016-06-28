@@ -375,14 +375,17 @@ namespace TUGraz.VectoCore.Tests.Models.Declaration
 		[TestMethod]
 		public void CompueShiftPolygonDeclarationTestConfidentialEngine()
 		{
-			var engineFldFile = @"E:\QUAM\Downloads\EngineFLD\Map_375c_BB1390_modTUG_R49_375c_BB1386.vfld";
-			var gearboxFile = @"TestData\Components\40t_Long_Haul_Truck.vgbx";
+			//var engineFldFile = @"E:\QUAM\Downloads\EngineFLD\Map_375c_BB1390_modTUG_R49_375c_BB1386.vfld";
+			var engineFldFile = @"E:\QUAM\tmp\scania_fullload_shiftpolygon-test.csv";
+			var gearboxFile = @"E:\QUAM\Downloads\TUG_dev_gbx\TUG_dev\GRS905R.vgbx";
+			//@"TestData\Components\40t_Long_Haul_Truck.vgbx";
 
-			if (!File.Exists(engineFldFile))
+			if (!File.Exists(engineFldFile)) {
 				Assert.Inconclusive("Confidential File not found. Test cannot run without file.");
+			}
 
 			var rdyn = 0.4882675.SI<Meter>();
-			var axlegearRatio = 2.59;
+			var axlegearRatio = 3.71; //2.31; // 3.71; //2.59;
 
 			var engineData = new CombustionEngineData() {
 				IdleSpeed = 509.RPMtoRad(),
@@ -394,21 +397,23 @@ namespace TUGraz.VectoCore.Tests.Models.Declaration
 
 			var shiftPolygons = new List<ShiftPolygon>();
 			var downshiftTransformed = new List<List<Point>>();
+			var downshiftOrig = new List<List<Point>>();
 			var upshiftOrig = new List<List<Point>>();
 			for (var i = 0; i < gearboxData.Gears.Count; i++) {
 				shiftPolygons.Add(DeclarationData.Gearbox.ComputeShiftPolygon(i, engineData.FullLoadCurve, gearboxData.Gears,
 					engineData, axlegearRatio, rdyn));
-				List<Point> tmp1, tmp2;
+				List<Point> tmp1, tmp2, tmp3;
 				ShiftPolygonComparison.ComputShiftPolygonPoints(i, engineData.FullLoadCurve, gearboxData.Gears,
-					engineData, axlegearRatio, rdyn, out tmp1, out tmp2);
+					engineData, axlegearRatio, rdyn, out tmp1, out tmp2, out tmp3);
 				upshiftOrig.Add(tmp1);
 				downshiftTransformed.Add(tmp2);
+				downshiftOrig.Add(tmp3);
 			}
 
 			ShiftPolygonDrawer.DrawShiftPolygons(Path.GetDirectoryName(gearboxFile), engineData.FullLoadCurve, shiftPolygons,
-				"R49_375c_BB1386.png",
+				"scania_fullload_shiftpolygon-test.png",
 				DeclarationData.Gearbox.TruckMaxAllowedSpeed / rdyn * axlegearRatio * gearboxData.Gears.Last().Ratio, upshiftOrig,
-				downshiftTransformed);
+				downshiftTransformed, downshiftOrig);
 		}
 	}
 
@@ -416,7 +421,7 @@ namespace TUGraz.VectoCore.Tests.Models.Declaration
 	public class ShiftPolygonComparison
 	{
 		const string BasePath = @"E:\QUAM\Workspace\Daten_INTERN\Testfahrzeuge\";
-		
+
 		[
 			TestCase(@"class2_12t_baseline\175kW_Diesel_example.vfld", @"class2_12t_baseline\delivery_12t_example.vgbx", 0.421,
 				4.18, 600),
@@ -441,9 +446,10 @@ namespace TUGraz.VectoCore.Tests.Models.Declaration
 		public void ComputeShiftPolygon(string engineFldFile, string gearboxFile, double rdyn, double axlegearRatio,
 			double idlingSpeed)
 		{
-			if (!Directory.Exists(BasePath))
+			if (!Directory.Exists(BasePath)) {
 				NUnit.Framework.Assert.Ignore("Confidential File not found. Test cannot run without file.");
-			
+			}
+
 			var engineData = new CombustionEngineData() {
 				IdleSpeed = idlingSpeed.RPMtoRad(),
 				FullLoadCurve = EngineFullLoadCurve.ReadFromFile(Path.Combine(BasePath, engineFldFile), true)
@@ -461,9 +467,9 @@ namespace TUGraz.VectoCore.Tests.Models.Declaration
 					DeclarationData.Gearbox.ComputeShiftPolygon(i, engineData.FullLoadCurve, gearboxData.Gears,
 						engineData, axlegearRatio, rdyn.SI<Meter>())
 					);
-				List<Point> tmp1, tmp2;
+				List<Point> tmp1, tmp2, tmp3;
 				ComputShiftPolygonPoints(i, engineData.FullLoadCurve, gearboxData.Gears,
-					engineData, axlegearRatio, rdyn.SI<Meter>(), out tmp1, out tmp2);
+					engineData, axlegearRatio, rdyn.SI<Meter>(), out tmp1, out tmp2, out tmp3);
 				upshiftOrig.Add(tmp1);
 				downshiftTransformed.Add(tmp2);
 			}
@@ -480,7 +486,7 @@ namespace TUGraz.VectoCore.Tests.Models.Declaration
 
 		public static void ComputShiftPolygonPoints(int gear, FullLoadCurve fullLoadCurve,
 			IList<ITransmissionInputData> gears, CombustionEngineData engine, double axlegearRatio, Meter dynamicTyreRadius,
-			out List<Point> upshiftOrig, out List<Point> downshiftTransformed)
+			out List<Point> upshiftOrig, out List<Point> downshiftTransformed, out List<Point> downshiftOrig)
 		{
 			var engineSpeed85kmhLastGear = DeclarationData.Gearbox.TruckMaxAllowedSpeed / dynamicTyreRadius * axlegearRatio *
 											gears[gears.Count - 1].Ratio;
@@ -504,6 +510,8 @@ namespace TUGraz.VectoCore.Tests.Models.Declaration
 
 			var p6 = new Point(p2.X, VectoMath.Interpolate(p1, p3, p2.X));
 			var p7 = new Point(p4.X, VectoMath.Interpolate(p2, p5, p4.X));
+
+			downshiftOrig = new[] { p2, p6, p3 }.ToList();
 
 			//var fldMargin = ShiftPolygonFldMargin(fullLoadCurve.FullLoadEntries, nVHigh * 0.95);
 			//var downshiftCorr = MoveDownshiftBelowFld(Edge.Create(p6, p3), fldMargin, 1.1 * fullLoadCurve.MaxTorque);

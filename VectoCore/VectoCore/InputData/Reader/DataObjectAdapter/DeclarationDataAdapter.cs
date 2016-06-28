@@ -58,7 +58,9 @@ namespace TUGraz.VectoCore.InputData.Reader.DataObjectAdaper
 			var lookAheadData = new DriverData.LACData {
 				Enabled = DeclarationData.Driver.LookAhead.Enabled,
 				//Deceleration = DeclarationData.Driver.LookAhead.Deceleration,
-				MinSpeed = DeclarationData.Driver.LookAhead.MinimumSpeed
+				//MinSpeed = DeclarationData.Driver.LookAhead.MinimumSpeed,
+				LookAheadDecisionFactor = new LACDecisionFactor(),
+				LookAheadDistanceFactor = DeclarationData.Driver.LookAhead.LookAheadDistanceFactor,
 			};
 			var overspeedData = new DriverData.OverSpeedEcoRollData {
 				Mode = data.OverSpeedEcoRoll.Mode,
@@ -191,8 +193,9 @@ namespace TUGraz.VectoCore.InputData.Reader.DataObjectAdaper
 			TransmissionLossMap gearLossMap;
 			retVal.Gears = gears.Select((gear, i) => {
 				try {
-					if (gear.LossMap == null)
+					if (gear.LossMap == null) {
 						throw new InvalidFileFormatException(string.Format("LossMap for Gear {0} is missing.", i + 1));
+					}
 					gearLossMap = TransmissionLossMap.Create(gear.LossMap, gear.Ratio, string.Format("Gear {0}", i + 1));
 				} catch (InvalidFileFormatException) {
 					if (useEfficiencyFallback) {
@@ -218,6 +221,10 @@ namespace TUGraz.VectoCore.InputData.Reader.DataObjectAdaper
 						TorqueConverterActive = false
 					});
 			}).ToDictionary(kv => kv.Key, kv => kv.Value);
+
+			retVal.DownshiftAfterUpshiftDelay = 10.SI<Second>();
+			retVal.UpshiftAfterDownshiftDelay = 10.SI<Second>();
+			retVal.UpshiftMinAcceleration = 0.1.SI<MeterPerSquareSecond>();
 			return retVal;
 		}
 
@@ -318,8 +325,9 @@ namespace TUGraz.VectoCore.InputData.Reader.DataObjectAdaper
 					var cdA = aerodynamicDragAera + deltaCdA;
 
 					var degreeShare = (double)alphaStep / maxAlpha;
-					if (alpha == 0 || alpha == maxAlpha)
+					if (alpha == 0 || alpha == maxAlpha) {
 						degreeShare /= 2;
+					}
 
 					cdASum += degreeShare * cdA * ((vAirX * vAirX + vAirY * vAirY) / (vVeh * vVeh)).Cast<Scalar>();
 				}

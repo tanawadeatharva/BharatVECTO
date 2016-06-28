@@ -29,7 +29,12 @@
     "LAC": {
       "Enabled": true,
       "Dec": -0.5,
-      "MinSpeed": 50.0
+      "MinSpeed": 50.0,
+      "PreviewDistanceFactor": 5.0,
+      "DF_offset": 3.5,
+      "DF_scaling": 2.5,
+      "DF_targetSpeedLookup": "LAC-DF-Vtarget.csv",
+      "Df_velocityDropLookup": "LAC-DF-Vdrop.csv"
     },
     "OverSpeedEcoRoll": {
       "Mode": "OverSpeed",

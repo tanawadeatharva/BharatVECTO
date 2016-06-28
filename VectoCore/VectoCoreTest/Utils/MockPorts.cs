@@ -121,6 +121,8 @@ namespace TUGraz.VectoCore.Tests.Utils
 			// just a test value. not real.
 			get { return 1600.SI<PerSecond>(); }
 		}
+
+		public PerSecond EngineN95hSpeed { get; set; }
 	}
 
 	public class MockDrivingCycleOutPort : LoggingObject, IDrivingCycleOutPort

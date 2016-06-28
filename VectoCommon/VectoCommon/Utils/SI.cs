@@ -44,7 +44,7 @@ namespace TUGraz.VectoCommon.Utils
 	/// <summary>
 	/// SI Class for Scalar Values. Converts implicitely to double and is only castable if the SI value has no units.
 	/// </summary>
-	public sealed class Scalar : SIBase<Scalar>
+	public class Scalar : SIBase<Scalar>
 	{
 		[DebuggerHidden]
 		private Scalar(double val) : base(val) {}
@@ -112,7 +112,7 @@ namespace TUGraz.VectoCommon.Utils
 	/// <summary>
 	/// SI Class for Newton [N].
 	/// </summary>
-	public sealed class Newton : SIBase<Newton>
+	public class Newton : SIBase<Newton>
 	{
 		private static readonly Unit[] NumeratorDefault = { Unit.N };
 
@@ -149,7 +149,7 @@ namespace TUGraz.VectoCommon.Utils
 	/// <summary>
 	/// SI Class for Radian [] (rad).
 	/// </summary>
-	public sealed class Radian : SIBase<Radian>
+	public class Radian : SIBase<Radian>
 	{
 		[DebuggerHidden]
 		private Radian(double val) : base(val) {}
@@ -158,7 +158,7 @@ namespace TUGraz.VectoCommon.Utils
 	/// <summary>
 	/// SI Class for PerSquareSecond [1/s^2].
 	/// </summary>
-	public sealed class PerSquareSecond : SIBase<PerSquareSecond>
+	public class PerSquareSecond : SIBase<PerSquareSecond>
 	{
 		private static readonly Unit[] DenominatorDefault = { Unit.s, Unit.s };
 
@@ -175,7 +175,7 @@ namespace TUGraz.VectoCommon.Utils
 	/// <summary>
 	/// SI Class for Meter per square second [m/s^2].
 	/// </summary>
-	public sealed class MeterPerSquareSecond : SIBase<MeterPerSquareSecond>
+	public class MeterPerSquareSecond : SIBase<MeterPerSquareSecond>
 	{
 		private static readonly Unit[] NumeratorDefault = { Unit.m };
 		private static readonly Unit[] DenominatorDefault = { Unit.s, Unit.s };
@@ -196,7 +196,7 @@ namespace TUGraz.VectoCommon.Utils
 	/// <summary>
 	/// SI Class for Second [s].
 	/// </summary>
-	public sealed class Second : SIBase<Second>
+	public class Second : SIBase<Second>
 	{
 		private static readonly Unit[] NumeratorDefault = { Unit.s };
 
@@ -207,7 +207,7 @@ namespace TUGraz.VectoCommon.Utils
 	/// <summary>
 	/// SI Class for Meter [m].
 	/// </summary>
-	public sealed class Meter : SIBase<Meter>
+	public class Meter : SIBase<Meter>
 	{
 		private static readonly Unit[] NumeratorDefault = { Unit.m };
 
@@ -239,7 +239,7 @@ namespace TUGraz.VectoCommon.Utils
 	/// <summary>
 	///  SI Class for KilogramPerMeter [kg/m].
 	/// </summary>
-	public sealed class KilogramPerMeter : SIBase<KilogramPerMeter>
+	public class KilogramPerMeter : SIBase<KilogramPerMeter>
 	{
 		private static readonly Unit[] NumeratorDefault = { Unit.k, Unit.g };
 		private static readonly Unit[] DenominatorDefault = { Unit.m };
@@ -248,7 +248,39 @@ namespace TUGraz.VectoCommon.Utils
 		private KilogramPerMeter(double val) : base(val, NumeratorDefault, DenominatorDefault) {}
 	}
 
-	public sealed class LiterPerSecond : SIBase<LiterPerSecond>
+	///// <summary>
+	///// SI Class for Gram
+	///// </summary>
+	//public class Gram : SIBase<Gram>
+	//{
+	//	private static readonly Unit[] NumeratorDefault = { Unit.g };
+
+	//	[DebuggerHidden]
+	//	private Gram(double val) : base(val, NumeratorDefault) {}
+	//}
+
+	//public class GramPerSecond : SIBase<GramPerSecond>
+	//{
+	//	private static readonly Unit[] NumeratorDefault = { Unit.g };
+	//	private static readonly Unit[] DenominatorDefault = { Unit.s };
+
+	//	private GramPerSecond(double val) : base(val, NumeratorDefault, DenominatorDefault) { }
+
+	//	public static Gram operator *(GramPerSecond gps, Second s)
+	//	{
+	//		return SIBase<Gram>.Create(gps.Val * s.Value());
+	//	}
+	//}
+
+	//public class GramPerLiter : SIBase<GramPerLiter>
+	//{
+	//	private static readonly Unit[] NumeratorDefault = { Unit.g };
+	//	private static readonly Unit[] DenominatorDefault = { Unit.liter };
+
+	//	private GramPerLiter(double val) : base(val, NumeratorDefault, DenominatorDefault) {}
+	//}
+
+	public class LiterPerSecond : SIBase<LiterPerSecond>
 	{
 		private static readonly Unit[] NumeratorDefault = { Unit.liter };
 		private static readonly Unit[] DenominatorDefault = { Unit.s };
@@ -259,7 +291,7 @@ namespace TUGraz.VectoCommon.Utils
 	/// <summary>
 	/// SI Class for Kilogram [kg].
 	/// </summary>
-	public sealed class Kilogram : SIBase<Kilogram>
+	public class Kilogram : SIBase<Kilogram>
 	{
 		private static readonly Unit[] NumeratorDefault = { Unit.k, Unit.g };
 
@@ -290,7 +322,7 @@ namespace TUGraz.VectoCommon.Utils
 		}
 	}
 
-	public sealed class Liter : SIBase<Liter>
+	public class Liter : SIBase<Liter>
 	{
 		private static readonly Unit[] NumeratorDefault = { Unit.liter };
 
@@ -306,7 +338,7 @@ namespace TUGraz.VectoCommon.Utils
 	/// <summary>
 	/// 
 	/// </summary>
-	public sealed class NormLiter : SIBase<NormLiter>
+	public class NormLiter : SIBase<NormLiter>
 	{
 		private static readonly Unit[] NumeratorDefault = { Unit.NI };
 
@@ -322,7 +354,7 @@ namespace TUGraz.VectoCommon.Utils
 	/// <summary>
 	/// 
 	/// </summary>
-	public sealed class NormLiterPerSecond : SIBase<NormLiterPerSecond>
+	public class NormLiterPerSecond : SIBase<NormLiterPerSecond>
 	{
 		private static readonly Unit[] NumeratorDefault = { Unit.NI };
 		private static readonly Unit[] DenominatorDefault = { Unit.s };
@@ -344,7 +376,7 @@ namespace TUGraz.VectoCommon.Utils
 	/// <summary>
 	/// SI Class for Kilogram per Second [kg].
 	/// </summary>
-	public sealed class KilogramPerSecond : SIBase<KilogramPerSecond>
+	public class KilogramPerSecond : SIBase<KilogramPerSecond>
 	{
 		private static readonly Unit[] NumeratorDefault = { Unit.k, Unit.g };
 		private static readonly Unit[] DenominatorDefault = { Unit.s };
@@ -362,7 +394,7 @@ namespace TUGraz.VectoCommon.Utils
 	/// <summary>
 	/// SI Class for Square meter [m^2].
 	/// </summary>
-	public sealed class SquareMeter : SIBase<SquareMeter>
+	public class SquareMeter : SIBase<SquareMeter>
 	{
 		private static readonly Unit[] NumeratorDefault = { Unit.m, Unit.m };
 
@@ -385,7 +417,7 @@ namespace TUGraz.VectoCommon.Utils
 	/// <summary>
 	/// SI Class for Kilogram Square Meter [kgm^2].
 	/// </summary>
-	public sealed class KilogramSquareMeter : SIBase<KilogramSquareMeter>
+	public class KilogramSquareMeter : SIBase<KilogramSquareMeter>
 	{
 		private static readonly Unit[] NumeratorDefault = { Unit.k, Unit.g, Unit.m, Unit.m };
 
@@ -402,7 +434,7 @@ namespace TUGraz.VectoCommon.Utils
 	/// <summary>
 	/// SI Class for Kilogram Square Meter [kgm^2].
 	/// </summary>
-	public sealed class KilogramPerCubicMeter : SIBase<KilogramPerCubicMeter>
+	public class KilogramPerCubicMeter : SIBase<KilogramPerCubicMeter>
 	{
 		private static readonly Unit[] NumeratorDefault = { Unit.k, Unit.g };
 		private static readonly Unit[] DenominatorDefault = { Unit.m, Unit.m, Unit.m };
@@ -430,7 +462,7 @@ namespace TUGraz.VectoCommon.Utils
 	/// <summary>
 	/// SI Class for Kilogramm per watt second [kg/Ws].
 	/// </summary>
-	public sealed class KilogramPerWattSecond : SIBase<KilogramPerWattSecond>
+	public class KilogramPerWattSecond : SIBase<KilogramPerWattSecond>
 	{
 		private static readonly Unit[] NumeratorDefault = { Unit.k, Unit.g };
 		private static readonly Unit[] DenominatorDefault = { Unit.W, Unit.s };
@@ -442,7 +474,7 @@ namespace TUGraz.VectoCommon.Utils
 	/// <summary>
 	/// SI Class for watt second [Ws].
 	/// </summary>
-	public sealed class WattSecond : SIBase<WattSecond>
+	public class WattSecond : SIBase<WattSecond>
 	{
 		private static readonly Unit[] NumeratorDefault = { Unit.W, Unit.s };
 
@@ -459,7 +491,7 @@ namespace TUGraz.VectoCommon.Utils
 	/// <summary>
 	/// SI Class for Watt [W].
 	/// </summary>
-	public sealed class Watt : SIBase<Watt>
+	public class Watt : SIBase<Watt>
 	{
 		private static readonly Unit[] NumeratorDefault = { Unit.W };
 
@@ -513,7 +545,7 @@ namespace TUGraz.VectoCommon.Utils
 		}
 	}
 
-	public sealed class Joule : SIBase<Joule>
+	public class Joule : SIBase<Joule>
 	{
 		private static readonly Unit[] NumeratorDefault = { Unit.W, Unit.s };
 
@@ -536,7 +568,7 @@ namespace TUGraz.VectoCommon.Utils
 		}
 	}
 
-	public sealed class JoulePerKilogramm : SIBase<JoulePerKilogramm>
+	public class JoulePerKilogramm : SIBase<JoulePerKilogramm>
 	{
 		private static readonly Unit[] NumeratorDefault = { Unit.J };
 		private static readonly Unit[] DenominatorDefault = { Unit.k, Unit.g };
@@ -553,7 +585,7 @@ namespace TUGraz.VectoCommon.Utils
 	/// SI Class for one per second [1/s].
 	/// </summary>
 	[DebuggerDisplay("rad/s: {this} | rpm: {ConvertTo().Rounds.Per.Minute}")]
-	public sealed class PerSecond : SIBase<PerSecond>
+	public class PerSecond : SIBase<PerSecond>
 	{
 		private static readonly Unit[] DenominatorDefault = { Unit.s };
 
@@ -570,7 +602,7 @@ namespace TUGraz.VectoCommon.Utils
 	/// SI Class for Meter per second [m/s].
 	/// </summary>
 	[DebuggerDisplay("{this} | {ConvertTo().Kilo.Meter.Per.Hour}")]
-	public sealed class MeterPerSecond : SIBase<MeterPerSecond>
+	public class MeterPerSecond : SIBase<MeterPerSecond>
 	{
 		private static readonly Unit[] NumeratorDefault = { Unit.m };
 		private static readonly Unit[] DenominatorDefault = { Unit.s };
@@ -636,7 +668,7 @@ namespace TUGraz.VectoCommon.Utils
 	/// <summary>
 	/// SI Class for NewtonMeter [Nm].
 	/// </summary>
-	public sealed class NewtonMeter : SIBase<NewtonMeter>
+	public class NewtonMeter : SIBase<NewtonMeter>
 	{
 		private static readonly Unit[] NumeratorDefault = { Unit.N, Unit.m };
 
@@ -686,7 +718,7 @@ namespace TUGraz.VectoCommon.Utils
 		}
 	}
 
-	public sealed class NewtonMeterSecond : SIBase<NewtonMeterSecond>
+	public class NewtonMeterSecond : SIBase<NewtonMeterSecond>
 	{
 		private static readonly Unit[] NumeratorDefault = { Unit.N, Unit.m, Unit.s };
 		private NewtonMeterSecond(double val) : base(val, NumeratorDefault) {}
@@ -695,7 +727,7 @@ namespace TUGraz.VectoCommon.Utils
 	/// <summary>
 	/// 
 	/// </summary>
-	public sealed class Ampere : SIBase<Ampere>
+	public class Ampere : SIBase<Ampere>
 	{
 		private static readonly Unit[] NumeratorDefault = { Unit.Ampere };
 		private Ampere(double val) : base(val, NumeratorDefault) {}
@@ -724,7 +756,7 @@ namespace TUGraz.VectoCommon.Utils
 	/// <summary>
 	/// 
 	/// </summary>
-	public sealed class Volt : SIBase<Volt>
+	public class Volt : SIBase<Volt>
 	{
 		private static readonly Unit[] NumeratorDefault = { Unit.Volt };
 		private Volt(double val) : base(val, NumeratorDefault) {}
@@ -747,7 +779,7 @@ namespace TUGraz.VectoCommon.Utils
 	/// <typeparam name="T"></typeparam>
 	public abstract class SIBase<T> : SI where T : SIBase<T>
 	{
-		private static readonly T ZeroPrototype;
+		static T _zeroPrototype;
 
 		static SIBase()
 		{
@@ -756,7 +788,7 @@ namespace TUGraz.VectoCommon.Utils
 			var parameter = Expression.Parameter(typeof(double));
 			var lambda = Expression.Lambda<Func<double, T>>(Expression.New(constructorInfo, parameter), parameter);
 			Constructor = lambda.Compile();
-			ZeroPrototype = Constructor(0);
+			_zeroPrototype = Constructor(0);
 		}
 
 		/// <summary>
@@ -770,8 +802,9 @@ namespace TUGraz.VectoCommon.Utils
 		/// <param name="val">The value of the SI object.</param>
 		public static T Create(double val)
 		{
-			if (val == 0)
-				return ZeroPrototype;
+			if (val == 0) {
+				return _zeroPrototype;
+			}
 
 			return Constructor(val);
 		}

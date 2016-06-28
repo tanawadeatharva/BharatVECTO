@@ -174,6 +174,10 @@ namespace TUGraz.VectoCommon.InputData
 		/// cf. VECTO Input Parameters.xlsx
 		/// </summary>
 		ITorqueConverterInputData TorqueConverter { get; }
+
+		Second DownshiftAferUpshiftDelay { get; }
+		Second UpshiftAfterDownshiftDelay { get; }
+		MeterPerSquareSecond UpshiftMinAcceleration { get; }
 	}
 
 	public interface IEngineEngineeringInputData : IEngineDeclarationInputData
@@ -275,7 +279,16 @@ namespace TUGraz.VectoCommon.InputData
 		/// P021
 		/// cf. VECTO Input Parameters.xlsx
 		/// </summary>
-		MeterPerSecond MinSpeed { get; }
+		//MeterPerSecond MinSpeed { get; }
+		double CoastingDecisionFactorOffset { get; }
+
+		double CoastingDecisionFactorScaling { get; }
+
+		double LookaheadDistanceFactor { get; }
+
+		DataTable CoastingDecisionFactorTargetSpeedLookup { get; }
+
+		DataTable CoastingDecisionFactorVelocityDropLookup { get; }
 	}
 
 	public interface IAuxiliaryEngineeringInputData : IAuxiliaryDeclarationInputData

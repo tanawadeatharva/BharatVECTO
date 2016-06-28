@@ -190,8 +190,11 @@ namespace TUGraz.VectoCore.Models.Declaration
 				public const bool Enabled = true;
 
 				//public static readonly MeterPerSquareSecond Deceleration = -0.5.SI<MeterPerSquareSecond>();
+				//public static readonly MeterPerSecond MinimumSpeed = 50.KMPHtoMeterPerSecond();
 
-				public static readonly MeterPerSecond MinimumSpeed = 50.KMPHtoMeterPerSecond();
+				public const double DecisionFactorCoastingOffset = 2.5;
+				public const double DecisionFactorCoastingScaling = 1.5;
+				public const double LookAheadDistanceFactor = 10;
 			}
 
 			public static class OverSpeedEcoRoll
