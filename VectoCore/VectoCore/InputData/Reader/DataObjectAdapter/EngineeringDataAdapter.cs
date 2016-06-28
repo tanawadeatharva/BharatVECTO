@@ -167,6 +167,10 @@ namespace TUGraz.VectoCore.InputData.Reader.DataObjectAdaper
 					TorqueConverterActive = gear.TorqueConverterActive
 				});
 			}).ToDictionary(kv => kv.Key, kv => kv.Value);
+
+			retVal.DownshiftAfterUpshiftDelay = gearbox.DownshiftAferUpshiftDelay;
+			retVal.UpshiftAfterDownshiftDelay = gearbox.UpshiftAfterDownshiftDelay;
+			retVal.UpshiftMinAcceleration = gearbox.UpshiftMinAcceleration;
 			return retVal;
 		}
 
@@ -204,7 +208,12 @@ namespace TUGraz.VectoCore.InputData.Reader.DataObjectAdaper
 			var lookAheadData = new DriverData.LACData {
 				Enabled = driver.Lookahead.Enabled,
 				//Deceleration = driver.Lookahead.Deceleration,
-				MinSpeed = driver.Lookahead.MinSpeed,
+				//MinSpeed = driver.Lookahead.MinSpeed,
+				LookAheadDecisionFactor =
+					new LACDecisionFactor(driver.Lookahead.CoastingDecisionFactorOffset, driver.Lookahead.CoastingDecisionFactorScaling,
+						driver.Lookahead.CoastingDecisionFactorTargetSpeedLookup,
+						driver.Lookahead.CoastingDecisionFactorVelocityDropLookup),
+				LookAheadDistanceFactor = driver.Lookahead.LookaheadDistanceFactor
 			};
 			var overspeedData = new DriverData.OverSpeedEcoRollData {
 				Mode = driver.OverSpeedEcoRoll.Mode,

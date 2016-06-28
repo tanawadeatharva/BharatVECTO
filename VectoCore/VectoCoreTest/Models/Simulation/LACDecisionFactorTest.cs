@@ -46,15 +46,18 @@ namespace TUGraz.VectoCore.Tests.Models.Simulation
 				vVehicle < 100.KMPHtoMeterPerSecond();
 				vVehicle += 1.KMPHtoMeterPerSecond()) {
 				for (var vTarget = vVehicle; vTarget > 0; vTarget -= 1.KMPHtoMeterPerSecond()) {
-					var df_coast = LACDecisionFactor.Lookup(vTarget, vVehicle - vTarget);
-					if (vTarget < 48.KMPHtoMeterPerSecond())
+					var df_coast = new LACDecisionFactor().Lookup(vTarget, vVehicle - vTarget);
+					if (vTarget < 48.KMPHtoMeterPerSecond()) {
 						AssertHelper.AreRelativeEqual(df_coast, 2.5, string.Format("vVehicle: {0}, vTarget: {1}", vVehicle, vTarget));
+					}
 
-					if (vVehicle - vTarget > 11)
+					if (vVehicle - vTarget > 11) {
 						AssertHelper.AreRelativeEqual(df_coast, 2.5, string.Format("vVehicle: {0}, vTarget: {1}", vVehicle, vTarget));
+					}
 
-					if (vTarget > 52.KMPHtoMeterPerSecond() && vVehicle - vTarget < 9.KMPHtoMeterPerSecond())
+					if (vTarget > 52.KMPHtoMeterPerSecond() && vVehicle - vTarget < 9.KMPHtoMeterPerSecond()) {
 						AssertHelper.AreRelativeEqual(df_coast, 1.0, string.Format("vVehicle: {0}, vTarget: {1}", vVehicle, vTarget));
+					}
 				}
 			}
 		}

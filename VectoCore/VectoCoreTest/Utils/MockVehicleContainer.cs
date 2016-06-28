@@ -43,59 +43,88 @@ using TUGraz.VectoCore.OutputData;
 
 namespace TUGraz.VectoCore.Tests.Utils
 {
-	public class MockVairVehicleContainer : IVehicleContainer
+	public class MockVehicleContainer : IVehicleContainer
 	{
 		// only CycleData Lookup is set / accessed...
 
-		public uint Gear { get; private set; }
-		public MeterPerSecond StartSpeed { get; private set; }
-		public MeterPerSquareSecond StartAcceleration { get; private set; }
-		public FullLoadCurve GearFullLoadCurve { get; private set; }
+		public List<VectoSimulationComponent> Components = new List<VectoSimulationComponent>();
+		private Watt _axlegearLoss = 0.SI<Watt>();
+		private bool _clutchClosed = true;
 
-		public Watt GearboxLoss(PerSecond inAngularVelocity, NewtonMeter inTorque)
+		public IEngineInfo Engine { get; set; }
+
+		public uint Gear { get; set; }
+		public MeterPerSecond StartSpeed { get; set; }
+		public MeterPerSquareSecond StartAcceleration { get; set; }
+		public FullLoadCurve GearFullLoadCurve { get; set; }
+
+		public Watt GearboxLoss()
 		{
 			throw new System.NotImplementedException();
 		}
 
-		public PerSecond EngineSpeed { get; private set; }
-		public NewtonMeter EngineTorque { get; private set; }
+		public PerSecond EngineSpeed { get; set; }
+		public NewtonMeter EngineTorque { get; set; }
 
 		public Watt EngineStationaryFullPower(PerSecond angularSpeed)
 		{
-			throw new System.NotImplementedException();
+			return Engine.EngineStationaryFullPower(angularSpeed);
 		}
 
 		public Watt EngineDragPower(PerSecond angularSpeed)
 		{
-			throw new System.NotImplementedException();
+			return Engine.EngineStationaryFullPower(angularSpeed);
 		}
 
-		public PerSecond EngineIdleSpeed { get; private set; }
-		public PerSecond EngineRatedSpeed { get; private set; }
-		public MeterPerSecond VehicleSpeed { get; private set; }
-		public Kilogram VehicleMass { get; private set; }
-		public Kilogram VehicleLoading { get; private set; }
-		public Kilogram TotalMass { get; private set; }
+		public PerSecond EngineIdleSpeed
+		{
+			get { return Engine.EngineIdleSpeed; }
+		}
+
+		public PerSecond EngineRatedSpeed
+		{
+			get { return Engine.EngineRatedSpeed; }
+		}
+
+		public PerSecond EngineN95hSpeed
+		{
+			get { return Engine.EngineN95hSpeed; }
+		}
+
+		public MeterPerSecond VehicleSpeed { get; set; }
+		public Kilogram VehicleMass { get; set; }
+		public Kilogram VehicleLoading { get; set; }
+		public Kilogram TotalMass { get; set; }
 
 		public Newton AirDragResistance(MeterPerSecond previousVelocity, MeterPerSecond nextVelocity)
 		{
-			throw new System.NotImplementedException();
+			return 0.SI<Newton>();
 		}
 
 		public Newton RollingResistance(Radian gradient)
 		{
-			throw new System.NotImplementedException();
+			return 0.SI<Newton>();
 		}
 
-		public Meter Distance { get; private set; }
+		public Newton SlopeResistance(Radian gradient)
+		{
+			return 0.SI<Newton>();
+		}
+
+		public Meter Distance { get; set; }
+
+		public bool SetClutchClosed
+		{
+			set { _clutchClosed = value; }
+		}
 
 		public bool ClutchClosed(Second absTime)
 		{
-			throw new System.NotImplementedException();
+			return _clutchClosed;
 		}
 
 		public Watt BrakePower { get; set; }
-		public Meter CycleStartDistance { get; private set; }
+		public Meter CycleStartDistance { get; set; }
 
 		public IReadOnlyList<DrivingCycleData.DrivingCycleEntry> LookAhead(Meter lookaheadDistance)
 		{
@@ -107,13 +136,22 @@ namespace TUGraz.VectoCore.Tests.Utils
 			throw new System.NotImplementedException();
 		}
 
-		public bool VehicleStopped { get; private set; }
-		public DrivingBehavior DriverBehavior { get; private set; }
+		public bool VehicleStopped { get; set; }
+		public DrivingBehavior DriverBehavior { get; set; }
 		public CycleData CycleData { get; set; }
+
+		public DrivingCycleData.DrivingCycleEntry CycleLookAhead(Meter distance)
+		{
+			return new DrivingCycleData.DrivingCycleEntry() {
+				RoadGradient = 0.SI<Radian>(),
+				Altitude = 0.SI<Meter>()
+			};
+		}
+
 		public Meter Altitude { get; set; }
 		public ExecutionMode ExecutionMode { get; set; }
-		public IModalDataContainer ModalData { get; private set; }
-		public VectoRunData RunData { get; private set; }
+		public IModalDataContainer ModalData { get; set; }
+		public VectoRunData RunData { get; set; }
 
 		public ISimulationOutPort GetCycleOutPort()
 		{
@@ -124,17 +162,28 @@ namespace TUGraz.VectoCore.Tests.Utils
 
 		public void AddComponent(VectoSimulationComponent component)
 		{
-			throw new System.NotImplementedException();
+			Components.Add(component);
 		}
 
 		public void CommitSimulationStep(Second time, Second simulationInterval)
 		{
-			throw new System.NotImplementedException();
+			foreach (var entry in Components) {
+				entry.CommitSimulationStep(ModalData);
+			}
 		}
 
-		public void FinishSimulation()
+		public void FinishSimulation() {}
+
+		public Watt SetAxlegearLoss
 		{
-			throw new System.NotImplementedException();
+			set { _axlegearLoss = value; }
 		}
+
+		public Watt AxlegearLoss()
+		{
+			return _axlegearLoss;
+		}
+
+		public Kilogram ReducedMassWheels { get; set; }
 	}
 }

@@ -192,8 +192,8 @@ namespace TUGraz.VectoCore.OutputData
 				.Concat(Auxiliaries.Values.Select(c => c.ColumnName))
 				.Concat(
 					new[] {
-						ModalResultField.FCMap, ModalResultField.FCAUXc, ModalResultField.FCWHTCc, ModalResultField.FCAAUX,
-						ModalResultField.FCFinal
+						ModalResultField.FCMap, ModalResultField.FCAUXc, ModalResultField.FCWHTCc,
+						ModalResultField.FCAAUX, ModalResultField.FCFinal
 					}.Select(x => x.GetName()));
 
 			if (_mode != ExecutionMode.Declaration || WriteModalResults) {
@@ -368,9 +368,9 @@ namespace TUGraz.VectoCore.OutputData
 			private static IEnumerable<object> MultiplyRow(IEnumerable<object> row, SI dt)
 			{
 				return row.Select(val => {
-					if (val is SI)
+					if (val is SI) {
 						val = (SI)val * dt.Value();
-					else {
+					} else {
 						val.Switch()
 							.Case<int>(i => val = i * dt.Value())
 							.Case<double>(d => val = d * dt.Value())
@@ -392,10 +392,11 @@ namespace TUGraz.VectoCore.OutputData
 
 				return row.ZipAll(addRow, (val, addVal) => {
 					if (val is SI || addVal is SI) {
-						if (DBNull.Value == val)
+						if (DBNull.Value == val) {
 							val = addVal;
-						else if (DBNull.Value != addVal)
+						} else if (DBNull.Value != addVal) {
 							val = (SI)val + (SI)addVal;
+						}
 					} else {
 						val.Switch()
 							.Case<int>(i => val = i + (int)addVal)

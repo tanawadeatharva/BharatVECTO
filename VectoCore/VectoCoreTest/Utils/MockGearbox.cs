@@ -74,7 +74,7 @@ namespace TUGraz.VectoCore.Tests.Utils
 			get { return null; }
 		}
 
-		public Watt GearboxLoss(PerSecond inAngularVelocity, NewtonMeter inTorque)
+		public Watt GearboxLoss()
 		{
 			return 0.SI<Watt>();
 		}

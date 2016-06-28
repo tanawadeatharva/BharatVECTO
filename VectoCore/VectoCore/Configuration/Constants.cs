@@ -149,6 +149,8 @@ namespace TUGraz.VectoCore.Configuration
 			public const int MaximumIterationCountForSimulationStep = 30;
 
 			public static readonly MeterPerSecond VehicleStopClutchDisengageSpeed = 10.KMPHtoMeterPerSecond();
+
+			public static readonly Meter GearboxLookaheadForAccelerationEstimation = 100.SI<Meter>();
 		}
 	}
 }

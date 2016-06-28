@@ -62,6 +62,12 @@ namespace TUGraz.VectoCore.InputData.Impl
 		public MeterPerSquareSecond Deceleration { get; internal set; }
 
 		public MeterPerSecond MinSpeed { get; internal set; }
+
+		public double CoastingDecisionFactorOffset { get; internal set; }
+		public double CoastingDecisionFactorScaling { get; internal set; }
+		public double LookaheadDistanceFactor { get; internal set; }
+		public DataTable CoastingDecisionFactorTargetSpeedLookup { get; internal set; }
+		public DataTable CoastingDecisionFactorVelocityDropLookup { get; internal set; }
 	}
 
 	public class OverSpeedEcoRollInputData : IOverSpeedEcoRollEngineeringInputData

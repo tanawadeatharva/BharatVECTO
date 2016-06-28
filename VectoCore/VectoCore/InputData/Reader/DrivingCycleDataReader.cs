@@ -161,12 +161,31 @@ namespace TUGraz.VectoCore.InputData.Reader
 			if (type == CycleType.DistanceBased) {
 				entries = FilterDrivingCycleEntries(entries);
 			}
+			if (type == CycleType.MeasuredSpeed || type == CycleType.MeasuredSpeedGear) {
+				entries = ComputeAltitudeTimeBased(entries);
+			}
 			var cycle = new DrivingCycleData {
 				Entries = entries,
 				CycleType = type,
 				Name = name
 			};
 			return cycle;
+		}
+
+		private static List<DrivingCycleData.DrivingCycleEntry> ComputeAltitudeTimeBased(
+			List<DrivingCycleData.DrivingCycleEntry> entries)
+		{
+			var current = entries.First();
+			current.Altitude = 0.SI<Meter>();
+			var altitude = current.Altitude;
+			var lastTime = entries.First().Time;
+			foreach (var drivingCycleEntry in entries) {
+				altitude += (drivingCycleEntry.VehicleTargetSpeed * (drivingCycleEntry.Time - lastTime)) *
+							drivingCycleEntry.RoadGradient;
+				drivingCycleEntry.Altitude = altitude;
+				lastTime = drivingCycleEntry.Time;
+			}
+			return entries;
 		}
 
 		private static List<DrivingCycleData.DrivingCycleEntry> FilterDrivingCycleEntries(

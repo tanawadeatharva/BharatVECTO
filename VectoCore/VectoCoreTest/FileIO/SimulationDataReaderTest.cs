@@ -75,8 +75,8 @@ namespace TUGraz.VectoCore.Tests.FileIO
 			Assert.AreEqual(6, runData.VehicleData.AxleData[0].Inertia.Value(), Tolerance);
 
 			Assert.AreEqual(true, runData.DriverData.LookAheadCoasting.Enabled);
-			Assert.AreEqual(DeclarationData.Driver.LookAhead.MinimumSpeed.Value(),
-				runData.DriverData.LookAheadCoasting.MinSpeed.Value(), Tolerance);
+			//Assert.AreEqual(DeclarationData.Driver.LookAhead.MinimumSpeed.Value(),
+			//	runData.DriverData.LookAheadCoasting.MinSpeed.Value(), Tolerance);
 			//Assert.AreEqual(DeclarationData.Driver.LookAhead.Deceleration.Value(),
 			//	runData.DriverData.LookAheadCoasting.Deceleration.Value(), Tolerance);
 

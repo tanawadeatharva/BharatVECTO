@@ -802,8 +802,9 @@ namespace TUGraz.VectoCommon.Utils
 		/// <param name="val">The value of the SI object.</param>
 		public static T Create(double val)
 		{
-			if (val == 0)
+			if (val == 0) {
 				return _zeroPrototype;
+			}
 
 			return Constructor(val);
 		}

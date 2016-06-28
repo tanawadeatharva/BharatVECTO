@@ -112,12 +112,15 @@ namespace TUGraz.VectoCore.Models.SimulationComponent.Impl
 			get { return Gear == 0 ? null : ModelData.Gears[Gear].FullLoadCurve; }
 		}
 
-		public Watt GearboxLoss(PerSecond inAngularVelocity, NewtonMeter inTorque)
+		public Watt GearboxLoss()
 		{
-			var outTorque = ModelData.Gears[Gear].LossMap.GetOutTorque(inAngularVelocity, inTorque, true);
-			var torqueLoss = inTorque - outTorque * ModelData.Gears[Gear].Ratio;
+			//var outTorque = ModelData.Gears[Gear].LossMap.GetOutTorque(inAngularVelocity, inTorque, true);
+			//var torqueLoss = inTorque - outTorque * ModelData.Gears[Gear].Ratio;
 
-			return torqueLoss * inAngularVelocity;
+			//return torqueLoss * inAngularVelocity;
+
+			return (PreviousState.TransmissionTorqueLoss +
+					PreviousState.InertiaTorqueLossOut / ModelData.Gears[PreviousState.Gear].Ratio) * PreviousState.InAngularVelocity;
 		}
 
 		#endregion
@@ -226,7 +229,9 @@ namespace TUGraz.VectoCore.Models.SimulationComponent.Impl
 		public IResponse Request(Second absTime, Second dt, NewtonMeter outTorque, PerSecond outAngularVelocity, bool dryRun)
 		{
 			Log.Debug("Gearbox Power Request: torque: {0}, angularVelocity: {1}", outTorque, outAngularVelocity);
-			Gear = DataBus.CycleData.LeftSample.Gear;
+			Gear = DataBus.DriverBehavior == DrivingBehavior.Braking
+				? DataBus.CycleData.LeftSample.Gear
+				: DataBus.CycleData.RightSample.Gear;
 
 			var avgOutAngularVelocity = (PreviousState.OutAngularVelocity + outAngularVelocity) / 2.0;
 

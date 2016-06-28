@@ -85,7 +85,8 @@ namespace TUGraz.VectoCore.Tests.Integration.EngineOnlyCycle
 			var absTime = 0.SI<Second>();
 			var dt = 1.SI<Second>();
 
-			var modFile = Path.GetFileNameWithoutExtension(Path.GetRandomFileName()); // + ".vmod";
+			var modFile = Path.GetFileNameWithoutExtension(modalResultFile);
+				//Path.GetFileNameWithoutExtension(Path.GetRandomFileName()); // + ".vmod";
 			var fileWriter = new FileOutputWriter(modFile);
 			var modData = new ModalDataContainer(modFile, fileWriter, ExecutionMode.EngineOnly);
 
@@ -103,7 +104,7 @@ namespace TUGraz.VectoCore.Tests.Integration.EngineOnlyCycle
 			}
 			modData.Finish(VectoRun.Status.Success);
 
-			ResultFileHelper.TestModFile(modalResultFile, modFile + Constants.FileExtensions.ModDataFile);
+			ResultFileHelper.TestModFile(modalResultFile, modFile + Constants.FileExtensions.ModDataFile, testVelocity: false);
 		}
 
 		[TestCase]

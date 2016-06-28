@@ -87,6 +87,10 @@ Public Class F_GBX
 		Me.TbStartSpeed.Text = cDeclaration.StartSpeed
 		Me.TbStartAcc.Text = cDeclaration.StartAcc
 
+		tbUpshiftMinAcceleration.Text = cDeclaration.UpshiftMinAcceleration
+		tbDownshiftAfterUpshift.Text = cDeclaration.DownshiftAfterUpshiftDelay
+		tbUpshiftAfterDownshift.Text = cDeclaration.UpshiftAfterDownshiftDelay
+
 		For Each lv0 In Me.LvGears.Items
 			lv0.SubItems(4).Text = "-"
 		Next
@@ -269,6 +273,10 @@ Public Class F_GBX
 		Me.TbTCrefrpm.Text = GBX0.TCrefrpm
 		Me.TbTCinertia.Text = GBX0.TCinertia
 
+		tbUpshiftMinAcceleration.Text = GBX0.UpshiftMinAcceleration
+		tbDownshiftAfterUpshift.Text = GBX0.DownshiftAfterUpshift
+		tbUpshiftAfterDownshift.Text = GBX0.UpshiftAfterDownshift
+
 		If CType(GBX0.gs_Type, Integer) <= Me.CbGStype.Items.Count - 1 Then
 			Me.CbGStype.SelectedIndex = CType(GBX0.gs_Type, Integer)
 		Else
@@ -339,6 +347,10 @@ Public Class F_GBX
 		GBX0.TCfile = Me.TbTCfile.Text
 		GBX0.TCrefrpm = fTextboxToNumString(Me.TbTCrefrpm.Text)
 		GBX0.TCinertia = fTextboxToNumString(Me.TbTCinertia.Text)
+
+		GBX0.DownshiftAfterUpshift = fTextboxToNumString(tbDownshiftAfterUpshift.Text)
+		GBX0.UpshiftAfterDownshift = fTextboxToNumString(tbUpshiftAfterDownshift.Text)
+		GBX0.UpshiftMinAcceleration = fTextboxToNumString(tbUpshiftMinAcceleration.Text)
 
 		If Not GBX0.SaveFile Then
 			MsgBox("Cannot safe to " & file, MsgBoxStyle.Critical)
@@ -980,4 +992,15 @@ Public Class F_GBX
 
 
 #End Region
+
+	Private Sub GroupBox1_Enter(sender As Object, e As EventArgs) Handles GroupBox1.Enter
+	End Sub
+
+	Public Sub New()
+
+		' Dieser Aufruf ist für den Designer erforderlich.
+		InitializeComponent()
+
+		' Fügen Sie Initialisierungen nach dem InitializeComponent()-Aufruf hinzu.
+	End Sub
 End Class
