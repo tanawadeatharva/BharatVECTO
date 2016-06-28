@@ -38,6 +38,24 @@ using TUGraz.VectoCore.Utils;
 
 namespace TUGraz.VectoCore.Models.Declaration
 {
+	public sealed class StandardWeight
+	{
+		public Kilogram CurbWeight;
+		public Kilogram GrossVehicleWeight;
+
+		public Kilogram MaxPayLoad
+		{
+			get { return GrossVehicleWeight - CurbWeight; }
+		}
+	}
+
+	/// <summary>
+	/// Lookup Class for Standard Weights of Bodies, Trailers and Semitrailers.
+	/// Standard Weights include 
+	///		CurbWeight (=Empty Weight), 
+	///		Gross Vehicle Weight (=Maximum Allowed Weight), and 
+	///		MaxPayload.
+	/// </summary>
 	public sealed class StandardWeigths : LookupData<string, StandardWeight>
 	{
 		private const string ResourceId = "TUGraz.VectoCore.Resources.Declaration.StandardWeights.csv";
@@ -68,11 +86,5 @@ namespace TUGraz.VectoCore.Models.Declaration
 						GrossVehicleWeight = kv.ParseDoubleOrGetDefault("gvw").SI<Kilogram>()
 					});
 		}
-	}
-
-	public sealed class StandardWeight
-	{
-		public Kilogram CurbWeight;
-		public Kilogram GrossVehicleWeight;
 	}
 }
