@@ -102,78 +102,78 @@ namespace TUGraz.VectoCore.Models.Declaration
 			return segment;
 		}
 
+		//mk 2016-06-28 remove param curbWeight
 		private static Mission[] CreateMissions(ref Kilogram grossVehicleWeight, Kilogram curbWeight, DataRow row)
 		{
-			var trailerOnlyInLongHaul = row.Field<string>("vehiclecategory") == VehicleCategory.RigidTruck.ToString() &&
-										!string.IsNullOrWhiteSpace(row.Field<string>("traileraxles-longhaul")) &&
-										string.IsNullOrWhiteSpace(row.Field<string>("traileraxles-other"));
-
 			var missionTypes = Enum.GetValues(typeof(MissionType)).Cast<MissionType>();
 			var missions = new List<Mission>();
 			foreach (var missionType in missionTypes.Where(m => row.Field<string>(m.ToString()) == "1")) {
-				string vcdvField;
-				string axleField;
-				string trailerField;
+				var body = DeclarationData.StandardWeights.Lookup(row.Field<string>("body"));
 
-				if (missionType == MissionType.LongHaul) {
-					vcdvField = "crosswindcorrection-longhaul";
-					axleField = "truckaxles-longhaul";
-					trailerField = "traileraxles-longhaul";
-				} else {
-					vcdvField = "crosswindcorrection-other";
-					axleField = "truckaxles-other";
-					trailerField = "traileraxles-other";
-				}
+				var trailer = ShouldTrailerBeUsed(row, missionType)
+					? DeclarationData.StandardWeights.Lookup(row.Field<string>("trailer"))
+					: DeclarationData.StandardWeights.Empty;
+
+				var gvw = VectoMath.Min(grossVehicleWeight + trailer.GrossVehicleWeight, DeclarationData.MaximumGrossVehicleWeight);
+				var maxLoad = gvw - curbWeight - body.CurbWeight - trailer.CurbWeight;
+				var refLoadValue =
+					row.Field<string>("payload-" + missionType.GetName()).Replace("+T", "").ToDouble(double.NaN);
+				var refLoad = VectoMath.Min(!double.IsNaN(refLoadValue)
+					? refLoadValue.SI<Kilogram>()
+					: DeclarationData.PayloadForGVW(grossVehicleWeight, missionType) +
+					DeclarationData.PayloadForTrailer(trailer.GrossVehicleWeight, trailer.CurbWeight), maxLoad);
 
 				var mission = new Mission {
 					MissionType = missionType,
-					CrossWindCorrection = row.Field<string>(vcdvField),
-					MassExtra = row.ParseDouble("massextra-" + missionType.ToString().ToLower()).SI<Kilogram>(),
+					CrossWindCorrection = row.Field<string>("crosswindcorrection" + GetMissionSuffix(missionType)),
 					CycleFile = RessourceHelper.ReadStream(RessourceHelper.Namespace + "MissionCycles." + missionType + ".vdri"),
-					AxleWeightDistribution = row.Field<string>(axleField).Split('/').ToDouble().Select(x => x / 100.0).ToArray(),
-					UseCdA2 = trailerOnlyInLongHaul && missionType != MissionType.LongHaul,
+					AxleWeightDistribution = GetAxleWeightDistribution(row, missionType),
+					CurbWeight = curbWeight,
+					BodyCurbWeight = body.CurbWeight,
+					BodyGrossVehicleWeight = grossVehicleWeight,
+					TrailerCurbWeight = trailer.CurbWeight,
+					TrailerGrossVehicleWeight = trailer.GrossVehicleWeight,
+					DeltaCdA = trailer.DeltaCrossWindArea,
+					MinLoad = 0.SI<Kilogram>(),
+					MaxLoad = maxLoad,
+					RefLoad = refLoad,
+					TrailerAxleWeightDistribution = GetTrailerAxleWeightDistribution(row, missionType),
 				};
-
-				var trailerAxles = row.Field<string>(trailerField).Split('/');
-				var count = 0;
-				var weightPercent = 0.0;
-
-				if (!string.IsNullOrWhiteSpace(trailerAxles[0])) {
-					count = int.Parse(trailerAxles[1]);
-					weightPercent = trailerAxles[0].ToDouble();
-				}
-				mission.TrailerAxleWeightDistribution = (weightPercent / 100.0 / count).Repeat(count).ToArray();
-				mission.TrailerGrossVehicleMassRating = 0.SI<Kilogram>();
-				mission.MinLoad = 0.SI<Kilogram>();
-				mission.MaxLoad = grossVehicleWeight - curbWeight - mission.MassExtra;
-
-				var refLoadField = row.Field<string>("payload-" + missionType.ToString().ToLower());
-				switch (refLoadField) {
-					case "pc(R)":
-						mission.RefLoad = VectoMath.Min(DeclarationData.PayloadForGVW(grossVehicleWeight, missionType), mission.MaxLoad);
-						break;
-					case "pc(R)+T":
-						// VECTO-262
-						var trailerCurbWeight = DeclarationData.StandardWeights.Lookup(row.Field<string>("Trailer")).CurbWeight;
-						mission.TrailerGrossVehicleMassRating =
-							DeclarationData.StandardWeights.Lookup(row.Field<string>("Trailer")).GrossVehicleWeight;
-						mission.MaxLoad += mission.TrailerGrossVehicleMassRating - trailerCurbWeight;
-
-						// mass extra doesn't need to be changed: trailer curb weight already included in segment table!
-						//mission.MassExtra += trailerCurbWeight;
-
-						var payload = DeclarationData.PayloadForGVW(grossVehicleWeight, missionType) +
-									(mission.TrailerGrossVehicleMassRating - trailerCurbWeight) * 3 / 4;
-
-						mission.RefLoad = VectoMath.Min(payload, mission.MaxLoad);
-						break;
-					default:
-						mission.RefLoad = VectoMath.Min(refLoadField.ToDouble().SI<Kilogram>(), mission.MaxLoad);
-						break;
-				}
 				missions.Add(mission);
 			}
 			return missions.ToArray();
+		}
+
+		/// <summary>
+		/// Checks if a trailer should be used for the current missionType.
+		/// </summary>
+		private static bool ShouldTrailerBeUsed(DataRow row, MissionType missionType)
+		{
+			var payloadText = row.Field<string>("payload-" + missionType.GetName());
+			return payloadText.Contains("+T");
+		}
+
+		private static double[] GetTrailerAxleWeightDistribution(DataRow row, MissionType missionType)
+		{
+			var trailerAxles =
+				row.Field<string>("traileraxles" + GetMissionSuffix(missionType)).Split('/');
+			if (!string.IsNullOrWhiteSpace(trailerAxles[0])) {
+				var count = int.Parse(trailerAxles[1]);
+				return (trailerAxles[0].ToDouble() / 100.0 / count).Repeat(count).ToArray();
+			}
+			return new double[0];
+		}
+
+		private static double[] GetAxleWeightDistribution(DataRow row, MissionType missionType)
+		{
+			return
+				row.Field<string>("truckaxles" + GetMissionSuffix(missionType))
+					.Split('/').ToDouble().Select(x => x / 100.0).ToArray();
+		}
+
+		private static string GetMissionSuffix(MissionType missionType)
+		{
+			return (missionType == MissionType.LongHaul ? "-longhaul" : "-other");
 		}
 	}
 }

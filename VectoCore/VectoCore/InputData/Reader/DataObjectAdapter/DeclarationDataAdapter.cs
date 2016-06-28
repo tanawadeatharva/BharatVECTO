@@ -94,20 +94,17 @@ namespace TUGraz.VectoCore.InputData.Reader.DataObjectAdaper
 			}
 
 			var retVal = SetCommonVehicleData(data);
-
 			retVal.GrossVehicleMassRating = data.GrossVehicleMassRating;
-			retVal.TrailerGrossVehicleMassRating = mission.TrailerGrossVehicleMassRating;
-			retVal.CurbWeigthExtra = mission.MassExtra;
+			retVal.TrailerGrossVehicleMassRating = mission.TrailerGrossVehicleWeight;
+			retVal.CurbWeigthExtra = mission.BodyCurbWeight + mission.TrailerCurbWeight;
 			retVal.Loading = loading;
 			retVal.DynamicTyreRadius =
 				DeclarationData.DynamicTyreRadius(data.Axles[DeclarationData.PoweredAxle()].Wheels, data.Rim);
 
-			var aerodynamicDragAera = mission.UseCdA2
-				? data.AirDragAreaRigidTruck
-				: data.AirDragArea;
+			var aerodynamicDragArea = data.AirDragArea + mission.DeltaCdA;
 
 			retVal.CrossWindCorrectionCurve =
-				new CrosswindCorrectionCdxALookup(GetDeclarationAirResistanceCurve(retVal.VehicleCategory, aerodynamicDragAera),
+				new CrosswindCorrectionCdxALookup(GetDeclarationAirResistanceCurve(retVal.VehicleCategory, aerodynamicDragArea),
 					CrossWindCorrectionMode.DeclarationModeCorrection);
 			var axles = data.Axles;
 			if (axles.Count < mission.AxleWeightDistribution.Length) {
