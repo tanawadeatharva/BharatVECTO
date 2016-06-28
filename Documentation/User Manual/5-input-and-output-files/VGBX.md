@@ -104,6 +104,9 @@ Refers to other files:
       "RefRPM": 0.0,
       "Inertia": 0.0
     }
+    "DownshiftAferUpshiftDelay": 10.0,
+    "UpshiftAfterDownshiftDelay": 10.0,
+    "UpshiftMinAcceleration": 0.1
   }
 }
 ~~~
