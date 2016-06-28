@@ -59,6 +59,7 @@ namespace TUGraz.VectoCore.Models.Declaration
 		private AirDrag _airDrag;
 		private TorqueConverter _torqueConverter;
 		private StandardWeigths _standardWeigths;
+		public static Kilogram MaximumGrossVehicleWeight = 40000.SI<Kilogram>();
 
 		public static Wheels Wheels
 		{
@@ -97,6 +98,14 @@ namespace TUGraz.VectoCore.Models.Declaration
 			var payload = missionType == MissionType.LongHaul ? payload75 : payload50;
 
 			return VectoMath.Interpolate(gvw[0], gvw[1], payload[0], payload[1], grossVehicleWeight);
+		}
+
+		/// <summary>
+		/// Returns the payload for a trailer. This is 75% of (GVW-CurbWeight).
+		/// </summary>
+		public static Kilogram PayloadForTrailer(Kilogram grossVehicleWeight, Kilogram curbWeight)
+		{
+			return (grossVehicleWeight - curbWeight) * 3 / 4;
 		}
 
 		public static Meter DynamicTyreRadius(string wheels, string rims)
