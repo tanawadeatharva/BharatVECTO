@@ -40,7 +40,7 @@ namespace TUGraz.VectoCommon.Utils
 	{
 		public static IEnumerable<double> ToDouble(this IEnumerable<string> self)
 		{
-			return self.Select(StringExtensionMethods.ToDouble);
+			return self.Select(s => s.ToDouble());
 		}
 
 		public static bool SequenceEqualFast<T>(this IEnumerable<T> self, IEnumerable<T> other) where T : IComparable
