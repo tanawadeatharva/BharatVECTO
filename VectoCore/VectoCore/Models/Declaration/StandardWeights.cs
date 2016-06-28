@@ -47,6 +47,8 @@ namespace TUGraz.VectoCore.Models.Declaration
 		{
 			get { return GrossVehicleWeight - CurbWeight; }
 		}
+
+		public SquareMeter DeltaCrossWindArea;
 	}
 
 	/// <summary>
@@ -56,17 +58,27 @@ namespace TUGraz.VectoCore.Models.Declaration
 	///		Gross Vehicle Weight (=Maximum Allowed Weight), and 
 	///		MaxPayload.
 	/// </summary>
-	public sealed class StandardWeigths : LookupData<string, StandardWeight>
+	public sealed class StandardWeights : LookupData<string, StandardWeight>
 	{
-		private const string ResourceId = "TUGraz.VectoCore.Resources.Declaration.StandardWeights.csv";
+		private const string ResourceId = "TUGraz.VectoCore.Resources.Declaration.Body_Trailers_Weights.csv";
 
-		public StandardWeigths()
+		public StandardWeights()
 		{
 			ParseData(ReadCsvResource(ResourceId));
 		}
 
+		public StandardWeight Empty = new StandardWeight {
+			CurbWeight = 0.SI<Kilogram>(),
+			GrossVehicleWeight = 0.SI<Kilogram>(),
+			DeltaCrossWindArea = 0.SI<SquareMeter>()
+		};
+
 		public override StandardWeight Lookup(string id)
 		{
+			if (string.IsNullOrWhiteSpace(id)) {
+				return Empty;
+			}
+
 			try {
 				return Data[id];
 			} catch (KeyNotFoundException) {
@@ -82,8 +94,9 @@ namespace TUGraz.VectoCore.Models.Declaration
 				.ToDictionary(
 					kv => kv.Field<string>("name"),
 					kv => new StandardWeight {
-						CurbWeight = kv.ParseDoubleOrGetDefault("curbweight").SI<Kilogram>(),
-						GrossVehicleWeight = kv.ParseDoubleOrGetDefault("gvw").SI<Kilogram>()
+						CurbWeight = kv.ParseDoubleOrGetDefault("curbmass").SI<Kilogram>(),
+						GrossVehicleWeight = kv.ParseDoubleOrGetDefault("maxgrossmass").SI<Kilogram>(),
+						DeltaCrossWindArea = kv.ParseDoubleOrGetDefault("deltacdxafortraileroperationinlonghaul").SI<SquareMeter>()
 					});
 		}
 	}
