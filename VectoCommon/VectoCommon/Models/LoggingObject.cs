@@ -145,7 +145,7 @@ namespace TUGraz.VectoCommon.Models
 		public void Error(Exception e, string message = null, params object[] args)
 		{
 			if (LogEnabled) {
-				_log.Error(e, message, args);
+				_log.Error(e.Message, message, args);
 			}
 		}
 
