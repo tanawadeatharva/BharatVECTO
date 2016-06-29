@@ -439,7 +439,7 @@ namespace TUGraz.VectoCore.Models.SimulationComponent.Impl
 			}
 
 			var newOperatingPoint = VectoMath.ComputeTimeInterval(DataBus.VehicleSpeed, response.Acceleration, DataBus.Distance,
-				ds);
+				newds);
 			if (newOperatingPoint.SimulationInterval.IsSmaller(Constants.SimulationSettings.LowerBoundTimeInterval)) {
 				// the next time interval will be too short, this may lead to issues with inertia etc. 
 				// instead of accelerating, drive at constant speed.
@@ -751,7 +751,7 @@ namespace TUGraz.VectoCore.Models.SimulationComponent.Impl
 		protected override IResponse CheckRequestDoesNotExceedNextAction(Second absTime, Meter ds,
 			MeterPerSecond targetVelocity, Radian gradient, IResponse response, out Meter newds)
 		{
-			var nextAction = DriverStrategy.NextDrivingAction;
+			var nextAction = DriverStrategy.BrakeTrigger;
 			newds = ds;
 			if (nextAction == null) {
 				return response;
