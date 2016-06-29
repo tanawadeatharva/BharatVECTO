@@ -291,7 +291,7 @@ namespace TUGraz.VectoCore.Models.Simulation.Impl
 
 			// connect aux --> engine
 			if (data.AdvancedAux != null && data.AdvancedAux.AuxiliaryAssembly == AuxiliaryModel.Advanced) {
-				engine.Connect(CreateBusAuxiliaries(data, container).Port());
+				engine.Connect(CreateAdvancedAuxiliaries(data, container).Port());
 			} else {
 				if (data.Aux != null) {
 					engine.Connect(CreateAuxiliaries(data, container).Port());
@@ -303,10 +303,11 @@ namespace TUGraz.VectoCore.Models.Simulation.Impl
 			return container;
 		}
 
-		private IEngineAuxInProvider CreateBusAuxiliaries(VectoRunData data, VehicleContainer container)
+		private IEngineAuxInProvider CreateAdvancedAuxiliaries(VectoRunData data, VehicleContainer container)
 		{
+			var conventionalAux = CreateAuxiliaries(data, container);
 			var busAux = new BusAuxiliariesAdapter(container, data.AdvancedAux.AdvancedAuxiliaryFilePath, data.Cycle.Name,
-				data.VehicleData.TotalVehicleWeight(), data.EngineData.ConsumptionMap, data.EngineData.IdleSpeed);
+				data.VehicleData.TotalVehicleWeight(), data.EngineData.ConsumptionMap, data.EngineData.IdleSpeed, conventionalAux);
 			return busAux;
 		}
 
