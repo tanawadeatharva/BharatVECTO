@@ -840,7 +840,7 @@ Public Class frmAuxiliaryConfig
 
 	Private Sub btnAlternatorMapPath_Click(sender As Object, e As EventArgs) Handles btnAlternatorMapPath.Click
 
-		Dim fbAux As New cFileBrowser("AAUXALT", True, False)
+		Dim fbAux As New cFileBrowser("AAUXALT", False, False)
 		fbAux.Extensions = New String() {"AALT"}
 
 		Dim suppliedAALTPath As String = txtAlternatorMapPath.Text
@@ -989,7 +989,7 @@ Public Class frmAuxiliaryConfig
 
 	Private Sub btnSSMBSource_Click(sender As Object, e As EventArgs) Handles btnSSMBSource.Click
 
-		Dim fbAux As New cFileBrowser("AAUXSSM", True, False)
+		Dim fbAux As New cFileBrowser("AAUXSSM", False, False)
 		fbAux.Extensions = New String() {"AHSM"}
 
 		Dim suppliedSSMPath As String = txtSSMFilePath.Text.Trim()
