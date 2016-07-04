@@ -157,7 +157,10 @@ namespace TUGraz.VectoCore.OutputData.PDF
 
 			var i = 1;
 			foreach (var results in missions.Values.OrderBy(m => m.Mission.MissionType)) {
-				pdfFields.SetField("Mission" + i, results.Mission.MissionType.ToString());
+				var trailerSuffix = results.Mission.TrailerType != TrailerType.None
+					? string.Format(" with {0} Trailer", results.Mission.TrailerType)
+					: "";
+				pdfFields.SetField("Mission" + i, results.Mission.MissionType + trailerSuffix);
 
 				var data = results.ModData[LoadingType.ReferenceLoad];
 
@@ -191,7 +194,7 @@ namespace TUGraz.VectoCore.OutputData.PDF
 			img.SetAbsolutePosition(360, 75);
 			content.AddImage(img);
 
-			img = GetVehicleImage(Segment, MissionType.LongHaul);
+			img = GetVehicleImage(Segment, TrailerType.None);
 			img.ScaleAbsolute(180, 50);
 			img.SetAbsolutePosition(30, 475);
 			content.AddImage(img);
@@ -228,7 +231,11 @@ namespace TUGraz.VectoCore.OutputData.PDF
 					Segment.AxleConfiguration.GetName(), Segment.VehicleCategory));
 			pdfFields.SetField("HDVclass", "HDV Class " + Segment.VehicleClass.GetClassNumber());
 			pdfFields.SetField("PageNr", string.Format("Page {0} of {1}", currentPageNr, pageCount));
-			pdfFields.SetField("Mission", results.Mission.MissionType.ToString());
+
+			var trailerSuffix = results.Mission.TrailerType != TrailerType.None
+				? string.Format(" with {0} Trailer", results.Mission.TrailerType)
+				: "";
+			pdfFields.SetField("Mission", results.Mission.MissionType + trailerSuffix);
 
 			foreach (var pair in results.ModData) {
 				var loadingType = pair.Key;
@@ -253,7 +260,7 @@ namespace TUGraz.VectoCore.OutputData.PDF
 
 			var content = stamper.GetOverContent(1);
 
-			var img = GetVehicleImage(Segment, results.Mission.MissionType);
+			var img = GetVehicleImage(Segment, results.Mission.TrailerType);
 			img.ScaleAbsolute(180, 50);
 			img.SetAbsolutePosition(600, 475);
 			content.AddImage(img);
@@ -371,8 +378,9 @@ namespace TUGraz.VectoCore.OutputData.PDF
 					TitleFont = new Font("Helvetica", 20),
 					LabelStyle = { Font = new Font("Helvetica", 20) },
 					LabelAutoFitStyle = LabelAutoFitStyles.None,
-					Minimum = 0,
-					Maximum = 80
+					Minimum = 20,
+					Maximum = 80,
+					Interval = 10,
 				},
 				AxisY = {
 					Title = "CO2 [g/km]",
@@ -562,26 +570,24 @@ namespace TUGraz.VectoCore.OutputData.PDF
 		/// <summary>
 		/// Gets the appropriate vehicle image.
 		/// </summary>
-		/// <param name="segment">The segment.</param>
-		/// <param name="missionType">Type of the mission.</param>
-		/// <returns></returns>
-		private static Image GetVehicleImage(Segment segment, MissionType missionType)
+		private static Image GetVehicleImage(Segment segment, TrailerType trailerType)
 		{
 			var name = "Undef.png";
+			var withTrailer = trailerType != TrailerType.None;
 			switch (segment.VehicleClass) {
 				case VehicleClass.Class1:
 				case VehicleClass.Class2:
 				case VehicleClass.Class3:
-					name = "4x2r.png";
+					name = withTrailer ? "4x2rt.png" : "4x2r.png";
 					break;
 				case VehicleClass.Class4:
-					name = missionType == MissionType.LongHaul ? "4x2rt.png" : "4x2r.png";
+					name = withTrailer ? "4x2rt.png" : "4x2r.png";
 					break;
 				case VehicleClass.Class5:
 					name = "4x2tt.png";
 					break;
 				case VehicleClass.Class9:
-					name = missionType == MissionType.LongHaul ? "6x2rt.png" : "6x2r.png";
+					name = withTrailer ? "6x2rt.png" : "6x2r.png";
 					break;
 				case VehicleClass.Class10:
 					name = "6x2tt.png";
