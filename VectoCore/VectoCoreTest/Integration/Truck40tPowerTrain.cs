@@ -152,6 +152,9 @@ namespace TUGraz.VectoCore.Tests.Integration
 				StartTorqueReserve = 0.2,
 				SkipGears = true,
 				EarlyShiftUp = true,
+				UpshiftAfterDownshiftDelay = 10.SI<Second>(),
+				DownshiftAfterUpshiftDelay = 10.SI<Second>(),
+				UpshiftMinAcceleration = 0.1.SI<MeterPerSquareSecond>()
 			};
 		}
 
