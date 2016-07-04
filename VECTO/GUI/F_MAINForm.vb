@@ -1721,8 +1721,7 @@ lbFound:
 				sender.ReportProgress(100,
 									New _
 										With {.Target = "ListBox",
-										.Message = String.Format("PDF-Report for '{0}' written to {1}", Path.GetFileName(job), report), .Link = report
-										})
+										.Message = String.Format("PDF-Report for '{0}' written to {1}", Path.GetFileName(job), report), .Link = "<RUN>" + report})
 			End If
 		Next
 
