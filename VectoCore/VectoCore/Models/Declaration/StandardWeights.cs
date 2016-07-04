@@ -38,7 +38,7 @@ using TUGraz.VectoCore.Utils;
 
 namespace TUGraz.VectoCore.Models.Declaration
 {
-	public sealed class StandardWeight
+	internal sealed class StandardWeight
 	{
 		public Kilogram CurbWeight;
 		public Kilogram GrossVehicleWeight;
@@ -58,7 +58,7 @@ namespace TUGraz.VectoCore.Models.Declaration
 	///		Gross Vehicle Weight (=Maximum Allowed Weight), and 
 	///		MaxPayload.
 	/// </summary>
-	public sealed class StandardWeights : LookupData<string, StandardWeight>
+	internal sealed class StandardWeights : LookupData<string, StandardWeight>
 	{
 		private const string ResourceId = "TUGraz.VectoCore.Resources.Declaration.Body_Trailers_Weights.csv";
 

@@ -43,7 +43,7 @@ using TUGraz.VectoCore.Utils;
 
 namespace TUGraz.VectoCore.Models.Declaration
 {
-	public class DeclarationData
+	internal class DeclarationData
 	{
 		private static DeclarationData _instance;
 		private Segments _segments;
@@ -59,7 +59,7 @@ namespace TUGraz.VectoCore.Models.Declaration
 		private AirDrag _airDrag;
 		private TorqueConverter _torqueConverter;
 		private StandardWeights _standardWeights;
-		public static Kilogram MaximumGrossVehicleWeight = 40000.SI<Kilogram>();
+		private Payloads _payloads;
 
 		public static Wheels Wheels
 		{
@@ -81,31 +81,14 @@ namespace TUGraz.VectoCore.Models.Declaration
 			get { return Instance()._pt1 ?? (Instance()._pt1 = new PT1()); }
 		}
 
+		public static Payloads Payloads
+		{
+			get { return Instance()._payloads ?? (Instance()._payloads = new Payloads()); }
+		}
+
 		public static ElectricSystem ElectricSystem
 		{
 			get { return Instance()._electricSystem ?? (Instance()._electricSystem = new ElectricSystem()); }
-		}
-
-		/// <summary>
-		/// Formula for calculating the payload for a given gross vehicle weight.
-		/// (so called "pc-formula", Whitebook Apr 2016, Part 1, p.187)
-		/// </summary>
-		public static Kilogram PayloadForGVW(Kilogram grossVehicleWeight, MissionType missionType)
-		{
-			var gvw = new[] { 7.5.SI().Ton.Cast<Kilogram>(), 16.SI().Ton.Cast<Kilogram>() };
-			var payload50 = new[] { 1.25.SI().Ton.Cast<Kilogram>(), 4.6.SI().Ton.Cast<Kilogram>() };
-			var payload75 = new[] { 1.9.SI().Ton.Cast<Kilogram>(), 6.9.SI().Ton.Cast<Kilogram>() };
-			var payload = missionType == MissionType.LongHaul ? payload75 : payload50;
-
-			return VectoMath.Interpolate(gvw[0], gvw[1], payload[0], payload[1], grossVehicleWeight);
-		}
-
-		/// <summary>
-		/// Returns the payload for a trailer. This is 75% of (GVW-CurbWeight).
-		/// </summary>
-		public static Kilogram PayloadForTrailer(Kilogram grossVehicleWeight, Kilogram curbWeight)
-		{
-			return (grossVehicleWeight - curbWeight) * 3 / 4;
 		}
 
 		public static Meter DynamicTyreRadius(string wheels, string rims)
@@ -121,6 +104,25 @@ namespace TUGraz.VectoCore.Models.Declaration
 				throw new VectoException(
 					"Calculating Dynamic Tyre Radius not possible: Declaration Lookup could not find Key '{0}' for rim.", rims);
 			}
+		}
+
+		/// <summary>
+		/// Formula for calculating the payload for a given gross vehicle weight.
+		/// (so called "pc-formula", Whitebook Apr 2016, Part 1, p.187)
+		/// </summary>
+		public static Kilogram GetPayloadForGrossVehicleWeight(Kilogram grossVehicleWeight, MissionType missionType)
+		{
+			return missionType == MissionType.LongHaul
+				? Payloads.Lookup75Percent(grossVehicleWeight)
+				: Payloads.Lookup50Percent(grossVehicleWeight);
+		}
+
+		/// <summary>
+		/// Returns the payload for a trailer. This is 75% of (GVW-CurbWeight).
+		/// </summary>
+		public static Kilogram GetPayloadForTrailerWeight(Kilogram grossVehicleWeight, Kilogram curbWeight)
+		{
+			return Payloads.LookupTrailer(grossVehicleWeight, curbWeight);
 		}
 
 		public static Fan Fan
@@ -317,7 +319,7 @@ namespace TUGraz.VectoCore.Models.Declaration
 				}
 
 				var gearRatio = gears[gear].Ratio / gears[gear + 1].Ratio;
-				var rpmMarginFactor = 1 + DeclarationData.Gearbox.ShiftPolygonRPMMargin / 100.0;
+				var rpmMarginFactor = 1 + ShiftPolygonRPMMargin / 100.0;
 
 				var p2p = new Point(p2.X * gearRatio * rpmMarginFactor, p2.Y / gearRatio);
 				var p3p = new Point(p3.X * gearRatio * rpmMarginFactor, p3.Y / gearRatio);

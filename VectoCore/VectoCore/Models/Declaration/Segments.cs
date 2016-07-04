@@ -36,6 +36,7 @@ using System.Linq;
 using TUGraz.VectoCommon.Exceptions;
 using TUGraz.VectoCommon.Models;
 using TUGraz.VectoCommon.Utils;
+using TUGraz.VectoCore.Configuration;
 using TUGraz.VectoCore.Utils;
 
 namespace TUGraz.VectoCore.Models.Declaration
@@ -102,26 +103,32 @@ namespace TUGraz.VectoCore.Models.Declaration
 			return segment;
 		}
 
-		//mk 2016-06-28 remove param curbWeight
 		private static Mission[] CreateMissions(ref Kilogram grossVehicleWeight, Kilogram curbWeight, DataRow row)
 		{
 			var missionTypes = Enum.GetValues(typeof(MissionType)).Cast<MissionType>();
 			var missions = new List<Mission>();
-			foreach (var missionType in missionTypes.Where(m => row.Field<string>(m.ToString()) == "1")) {
+			foreach (var missionType in missionTypes.Where(m => row.Field<string>(m.ToString()) != "-")) {
 				var body = DeclarationData.StandardWeights.Lookup(row.Field<string>("body"));
 
 				var trailer = ShouldTrailerBeUsed(row, missionType)
 					? DeclarationData.StandardWeights.Lookup(row.Field<string>("trailer"))
 					: DeclarationData.StandardWeights.Empty;
 
-				var gvw = VectoMath.Min(grossVehicleWeight + trailer.GrossVehicleWeight, DeclarationData.MaximumGrossVehicleWeight);
+				// limit gvw to MaxGVW (40t)
+				var gvw = VectoMath.Min(grossVehicleWeight + trailer.GrossVehicleWeight,
+					Constants.SimulationSettings.MaximumGrossVehicleWeight);
 				var maxLoad = gvw - curbWeight - body.CurbWeight - trailer.CurbWeight;
-				var refLoadValue =
-					row.Field<string>("payload-" + missionType.GetName()).Replace("+T", "").ToDouble(double.NaN);
-				var refLoad = VectoMath.Min(!double.IsNaN(refLoadValue)
-					? refLoadValue.SI<Kilogram>()
-					: DeclarationData.PayloadForGVW(grossVehicleWeight, missionType) +
-					DeclarationData.PayloadForTrailer(trailer.GrossVehicleWeight, trailer.CurbWeight), maxLoad);
+
+				var refLoadValue = row.Field<string>(missionType.ToString()).ToDouble(double.NaN);
+				Kilogram refLoad;
+				if (double.IsNaN(refLoadValue)) {
+					refLoad = DeclarationData.GetPayloadForGrossVehicleWeight(grossVehicleWeight, missionType) +
+							DeclarationData.GetPayloadForTrailerWeight(trailer.GrossVehicleWeight, trailer.CurbWeight);
+				} else {
+					refLoad = refLoadValue.SI<Kilogram>();
+				}
+
+				refLoad = VectoMath.Min(refLoad, maxLoad);
 
 				var mission = new Mission {
 					MissionType = missionType,
@@ -149,8 +156,7 @@ namespace TUGraz.VectoCore.Models.Declaration
 		/// </summary>
 		private static bool ShouldTrailerBeUsed(DataRow row, MissionType missionType)
 		{
-			var payloadText = row.Field<string>("payload-" + missionType.GetName());
-			return payloadText.Contains("+T");
+			return !string.IsNullOrWhiteSpace(row.Field<string>("traileraxles" + GetMissionSuffix(missionType)));
 		}
 
 		private static double[] GetTrailerAxleWeightDistribution(DataRow row, MissionType missionType)
