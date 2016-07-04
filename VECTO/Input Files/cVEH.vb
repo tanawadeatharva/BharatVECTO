@@ -8,7 +8,11 @@
 '   WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
 '
 ' See the LICENSE.txt for the specific language governing permissions and limitations.
+Option Infer On
+
 Imports System.Collections.Generic
+Imports System.Linq
+
 
 Public Class cVEH
 	'V2 MassMax is now saved in [t] instead of [kg]
@@ -255,100 +259,62 @@ Public Class cVEH
 	End Function
 
 	Public Function SaveFile() As Boolean
-		Dim dic As Dictionary(Of String, Object)
-		Dim dic0 As Dictionary(Of String, Object)
-		Dim ls As List(Of Dictionary(Of String, Object))
-		Dim a0 As cAxle
-		Dim JSON As New JSON
-
-
-		'Header
-		dic = New Dictionary(Of String, Object)
-		dic.Add("CreatedBy", Lic.LicString & " (" & Lic.GUID & ")")
-		dic.Add("Date", Now.ToString)
-		dic.Add("AppVersion", VECTOvers)
-		dic.Add("FileVersion", FormatVersion)
-		JSON.Content.Add("Header", dic)
-
-		'Body
-		dic = New Dictionary(Of String, Object)
-
-		dic.Add("SavedInDeclMode", Cfg.DeclMode)
 		SavedInDeclMode = Cfg.DeclMode
 
-		dic.Add("VehCat", ConvVehCat(VehCat, False))
+		Dim json As New JSON
+		json.Content.Add("Header", New Dictionary(Of String, Object) From {
+							{"CreatedBy", Lic.LicString & " (" & Lic.GUID & ")"},
+							{"Date", Now.ToString},
+							{"AppVersion", VECTOvers},
+							{"FileVersion", FormatVersion}})
 
-		dic.Add("CurbWeight", Mass)
-		dic.Add("CurbWeightExtra", MassExtra)
-		dic.Add("Loading", Loading)
-		dic.Add("MassMax", MassMax)
+		'Body
+		Dim dic As Dictionary(Of String, Object)
+		dic = New Dictionary(Of String, Object) From {
+			{"SavedInDeclMode", Cfg.DeclMode},
+			{"VehCat", ConvVehCat(VehCat, False)},
+			{"CurbWeight", Mass},
+			{"CurbWeightExtra", MassExtra},
+			{"Loading", Loading},
+			{"MassMax", MassMax},
+			{"CdA", CdA0},
+			{"CdA2", CdA02},
+			{"rdyn", rdyn},
+			{"Rim", Rim},
+			{"CdCorrMode", CdModeConv(CdMode)},
+			{"CdCorrFile", CdFile.PathOrDummy},
+			{"Retarder", New Dictionary(Of String, Object) From {
+				{"Type", RtTypeConv(RtType)},
+				{"Ratio", RtRatio},
+				{"File", RtFile.PathOrDummy}}},
+			{"AxleConfig", New Dictionary(Of String, Object) From {
+				{"Type", ConvAxleConf(AxleConf)},
+				{"Axles", (From axle In Axles Select New Dictionary(Of String, Object) From {
+					{"Inertia", axle.Inertia},
+					{"Wheels", axle.Wheels},
+					{"AxleWeightShare", axle.Share},
+					{"TwinTyres", axle.TwinTire},
+					{"RRCISO", axle.RRC},
+					{"FzISO", axle.FzISO}})}}}}
 
-		dic.Add("CdA", CdA0)
-
-		If CdA02 > 0 Then
-			dic.Add("CdA2", CdA02)
-		End If
-
-		dic.Add("rdyn", rdyn)
-		dic.Add("Rim", Rim)
-
-
-		dic.Add("CdCorrMode", CdModeConv(CdMode))
-		dic.Add("CdCorrFile", CdFile.PathOrDummy)
-
-		dic0 = New Dictionary(Of String, Object)
-		dic0.Add("Type", RtTypeConv(RtType))
-		dic0.Add("Ratio", RtRatio)
-		dic0.Add("File", RtFile.PathOrDummy)
-		dic.Add("Retarder", dic0)
-
-		ls = New List(Of Dictionary(Of String, Object))
-		For Each a0 In Axles
-			dic0 = New Dictionary(Of String, Object)
-
-			dic0.Add("Inertia", a0.Inertia)
-			dic0.Add("Wheels", a0.Wheels)
-			dic0.Add("AxleWeightShare", a0.Share)
-			dic0.Add("TwinTyres", a0.TwinTire)
-			dic0.Add("RRCISO", a0.RRC)
-			dic0.Add("FzISO", a0.FzISO)
-			ls.Add(dic0)
-		Next
-
-		dic0 = New Dictionary(Of String, Object)
-		dic0.Add("Type", ConvAxleConf(AxleConf))
-		dic0.Add("Axles", ls)
-		dic.Add("AxleConfig", dic0)
-
-		JSON.Content.Add("Body", dic)
-
-		Return JSON.WriteFile(sFilePath)
+		json.Content.Add("Body", dic)
+		Return json.WriteFile(sFilePath)
 	End Function
 
 
 	Public Function DeclInitCycle() As Boolean
-		Dim al As List(Of Single)
-		Dim i As Integer
-		Dim a As Single
-		Dim a0 As cAxle
-		Dim MissionID As tMission
-		Dim MsgSrc As String
-
-		MsgSrc = "VEH/DeclInit"
-
-		MissionID = Declaration.CurrentMission.MissionID
+		Dim MsgSrc = "VEH/DeclInit"
+		Dim MissionID = Declaration.CurrentMission.MissionID
 
 		MassExtra = Declaration.SegRef.GetBodyTrWeight(MissionID)
 
-
-		al = Declaration.SegRef.AxleShares(MissionID)
-
+		Dim al = Declaration.SegRef.AxleShares(MissionID)
 		If al.Count > Axles.Count Then
 			WorkerMsg(tMsgID.Err, "Invalid number of axles! Defined: " & Axles.Count & ", required: " & al.Count, MsgSrc)
 			Return False
 		End If
 
-		i = -1
+		Dim i = -1
 		For Each a In al
 			i += 1
 			Axles(i).Share = a / 100
@@ -359,36 +325,28 @@ Public Class cVEH
 			Axles.RemoveAt(Axles.Count - 1)
 		Loop
 
-
 		'(Semi-) Trailer
 		If Not Declaration.SegRef.TrailerOnlyInLongHaul OrElse MissionID = tMission.LongHaul Then
 			al = Declaration.SegRef.AxleSharesTr(MissionID)
 			For Each a In al
-
-				a0 = New cAxle
-
+				Dim a0 = New cAxle
 				a0.Inertia = 0	 'Defined later
 				a0.Wheels = cDeclaration.TyreTr
-
 				a0.Share = a / 100
 				a0.TwinTire = False
 				a0.RRC = cDeclaration.RRCTr
 				a0.FzISO = cDeclaration.FzISOTr
-
 				Axles.Add(a0)
-
 			Next
 		End If
 
 		'Wheels Inertias
 		For Each a0 In Axles
 			a0.Inertia = Declaration.WheelsInertia(a0.Wheels)
-
 			If a0.Inertia < 0 Then
 				WorkerMsg(tMsgID.Err, "Selected wheels (" & a0.Wheels & ") are not supported!", MsgSrc)
 				Return False
 			End If
-
 		Next
 
 		CdMode = tCdMode.CdOfVdecl
@@ -398,17 +356,13 @@ Public Class cVEH
 		End If
 
 		If Declaration.SegRef.TrailerOnlyInLongHaul Then
-
 			If MissionID = tMission.LongHaul Then
 				CdA0Act = CdA0
 			Else
 				CdA0Act = CdA02
 			End If
-
 		Else
-
 			CdA0Act = CdA0
-
 		End If
 
 		If Axles.Count < 2 Then
@@ -530,7 +484,7 @@ Public Class cVEH
 				nrwheels = 2
 			End If
 
-			RRC += a0.Share * (a0.RRC * ((Loading + Mass + MassExtra) * a0.Share * 9.81 / (a0.FzISO * nrwheels)) ^ (0.9 - 1))	  'Beta=0.9
+			RRC += a0.Share * (a0.RRC * ((Loading + Mass + MassExtra) * a0.Share * 9.81 / (a0.FzISO * nrwheels)) ^ (0.9 - 1)) 'Beta=0.9
 
 			m_red0 += nrwheels * a0.Inertia / ((rdyn / 1000) ^ 2)
 
@@ -869,7 +823,7 @@ lbInt:
 		Get
 			Return siFr0
 		End Get
-		Set(ByVal value As Single)
+		Set(value As Single)
 			siFr0 = value
 		End Set
 	End Property
@@ -878,7 +832,7 @@ lbInt:
 		Get
 			Return sFilePath
 		End Get
-		Set(ByVal value As String)
+		Set(value As String)
 			sFilePath = value
 			If sFilePath = "" Then
 				MyPath = ""
@@ -891,4 +845,3 @@ lbInt:
 
 #End Region
 End Class
-

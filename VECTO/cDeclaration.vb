@@ -82,7 +82,7 @@ Public Class cDeclaration
 
 	Public Const UpshiftMinAcceleration As Single = 0.1
 
-	Public Function VCDVparamPerCat(ByVal VehCat As tVehCat) As List(Of Single)
+	Public Function VCDVparamPerCat(VehCat As tVehCat) As List(Of Single)
 		Select Case VehCat
 			Case tVehCat.Citybus, tVehCat.Coach, tVehCat.InterurbanBus
 				Return VCDVvehClassParam("CoachBus")
@@ -676,11 +676,11 @@ Public Class cDeclaration
 		Return True
 	End Function
 
-	Public Function EngInertia(ByVal Displ As Single) As Single
+	Public Function EngInertia(Displ As Single) As Single
 		Return 1.3 + 0.41 + 0.27 * (Displ / 1000)
 	End Function
 
-	Public Function TracInt(ByVal Gearbox As tGearbox) As Single
+	Public Function TracInt(Gearbox As tGearbox) As Single
 		Select Case Gearbox
 			Case tGearbox.Manual
 				Return 2
@@ -694,7 +694,7 @@ Public Class cDeclaration
 		End Select
 	End Function
 
-	Public Function SkipGears(ByVal Gearbox As tGearbox) As Boolean
+	Public Function SkipGears(Gearbox As tGearbox) As Boolean
 		If Gearbox = tGearbox.Automatic Then
 			Return False
 		Else
@@ -702,7 +702,7 @@ Public Class cDeclaration
 		End If
 	End Function
 
-	Public Function ShiftInside(ByVal Gearbox As tGearbox) As Boolean
+	Public Function ShiftInside(Gearbox As tGearbox) As Boolean
 		If Gearbox = tGearbox.SemiAutomatic Then
 			Return True
 		Else
@@ -710,7 +710,7 @@ Public Class cDeclaration
 		End If
 	End Function
 
-	Public Function ShiftTime(ByVal Gearbox As tGearbox) As Single
+	Public Function ShiftTime(Gearbox As tGearbox) As Single
 		Select Case Gearbox
 			Case tGearbox.Manual
 				Return 3
@@ -724,7 +724,7 @@ Public Class cDeclaration
 		End Select
 	End Function
 
-	Public Function WheelsInertia(ByVal Wheel As String) As Single
+	Public Function WheelsInertia(Wheel As String) As Single
 
 		If Wheels.ContainsKey(Wheel) Then
 			Return Wheels(Wheel).Inertia
@@ -733,7 +733,7 @@ Public Class cDeclaration
 		End If
 	End Function
 
-	Public Function rdyn(ByVal Wheel As String, ByVal Rim As String) As Single
+	Public Function rdyn(Wheel As String, Rim As String) As Single
 		Dim F As Single
 		Dim w As cWheel
 
@@ -769,7 +769,7 @@ Public Class cDeclaration
 		End Get
 	End Property
 
-	Public Function ConvPicPath(ByVal HDVclass As String, ByVal LongHaul As Boolean) As String
+	Public Function ConvPicPath(HDVclass As String, LongHaul As Boolean) As String
 
 		Select Case HDVclass
 
@@ -804,7 +804,12 @@ Public Class cDeclaration
 
 
 	Public Function SetRef() As Boolean
-		Return SegmentTable.SetRef(SegRef, VEH.VehCat, VEH.AxleConf, VEH.MassMax)
+		SegRef = SegmentTable.SetRef(VEH.VehCat, VEH.AxleConf, VEH.MassMax)
+		If SegRef Is Nothing Then
+			Return False
+		Else
+			Return True
+		End If
 	End Function
 
 
@@ -814,7 +819,7 @@ Public Class cDeclaration
 	''' <param name="CycleIndex"></param>
 	''' <returns></returns>
 	''' <remarks></remarks>      
-	Public Function CalcInitCycle(ByVal CycleIndex As Integer) As Boolean
+	Public Function CalcInitCycle(CycleIndex As Integer) As Boolean
 
 		CurrentMission = Missions(SegRef.Missions(CycleIndex))
 
@@ -834,7 +839,7 @@ Public Class cDeclaration
 	''' <param name="Loading"></param>
 	''' <returns></returns>
 	''' <remarks></remarks>
-	Public Function CalcInitLoad(ByVal Loading As tLoading) As Boolean
+	Public Function CalcInitLoad(Loading As tLoading) As Boolean
 		Dim MsgSrc As String
 		Dim U As Single
 		Dim F As Single
@@ -930,7 +935,7 @@ Public Class cDeclaration
 		Return Result
 	End Function
 
-	Public Function PT1(ByVal nU As Single) As Single
+	Public Function PT1(nU As Single) As Single
 		Dim i As Int32
 
 		'Extrapolation for x < x(1)
@@ -1054,17 +1059,14 @@ Public Class cSegmentTable
 	Public SegTableEntries As New List(Of cSegmentTableEntry)
 	Public MissionList As New List(Of tMission)
 
-	Public Function SetRef(ByRef SegTableEntryRef As cSegmentTableEntry, ByVal VehCat As tVehCat,
-							ByVal AxleConf As tAxleConf, ByVal MaxMass As Single) As Boolean
+	Public Function SetRef(vehCat As tVehCat, axleConf As tAxleConf, maxMass As Single) As cSegmentTableEntry
 		For Each s0 As cSegmentTableEntry In SegTableEntries
-			If s0.VehCat = VehCat And s0.AxleConf = AxleConf And MaxMass >= s0.MinGVW And MaxMass <= s0.MaxGVW Then
-				SegTableEntryRef = s0
-				Return True
+			If s0.VehCat = vehCat And s0.AxleConf = axleConf And MaxMass >= s0.MinGVW And MaxMass <= s0.MaxGVW Then
+				Return s0
 			End If
 		Next
 
-		SegTableEntryRef = Nothing
-		Return False
+		Return Nothing
 	End Function
 End Class
 
@@ -1095,7 +1097,7 @@ Public Class cSegmentTableEntry
 		Return l
 	End Function
 
-	Public Function GetBodyTrWeight(ByVal Mission As tMission) As Single
+	Public Function GetBodyTrWeight(Mission As tMission) As Single
 
 		'Check if Config is valid
 		If BodyTrWeight.ContainsKey(Mission) AndAlso IsNumeric(BodyTrWeight(Mission)) Then
@@ -1105,7 +1107,7 @@ Public Class cSegmentTableEntry
 		End If
 	End Function
 
-	Public Function GetLoading(ByVal Mission As tMission, ByVal MassMax As Single) As Single
+	Public Function GetLoading(Mission As tMission, MassMax As Single) As Single
 
 		'Check if Config is valid
 		If Loading.ContainsKey(Mission) Then
