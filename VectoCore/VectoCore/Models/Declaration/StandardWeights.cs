@@ -29,6 +29,7 @@
 *   Martin Rexeis, rexeis@ivt.tugraz.at, IVT, Graz University of Technology
 */
 
+using System.CodeDom;
 using System.Collections.Generic;
 using System.Data;
 using System.Linq;
@@ -49,6 +50,15 @@ namespace TUGraz.VectoCore.Models.Declaration
 		}
 
 		public SquareMeter DeltaCrossWindArea;
+
+		public static StandardWeight operator +(StandardWeight first, StandardWeight second)
+		{
+			return new StandardWeight {
+				CurbWeight = first.CurbWeight + second.CurbWeight,
+				DeltaCrossWindArea = first.DeltaCrossWindArea + second.DeltaCrossWindArea,
+				GrossVehicleWeight = first.GrossVehicleWeight + second.GrossVehicleWeight
+			};
+		}
 	}
 
 	/// <summary>

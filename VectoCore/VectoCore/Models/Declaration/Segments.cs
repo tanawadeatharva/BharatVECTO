@@ -114,6 +114,13 @@ namespace TUGraz.VectoCore.Models.Declaration
 					? DeclarationData.StandardWeights.Lookup(row.Field<string>("trailer"))
 					: DeclarationData.StandardWeights.Empty;
 
+				var semiTrailerField = row.Field<string>("semitrailer");
+				var semiTrailer = !string.IsNullOrWhiteSpace(semiTrailerField)
+					? DeclarationData.StandardWeights.Lookup(semiTrailerField)
+					: DeclarationData.StandardWeights.Empty;
+
+				trailer += semiTrailer;
+
 				// limit gvw to MaxGVW (40t)
 				var gvw = VectoMath.Min(grossVehicleWeight + trailer.GrossVehicleWeight,
 					Constants.SimulationSettings.MaximumGrossVehicleWeight);
