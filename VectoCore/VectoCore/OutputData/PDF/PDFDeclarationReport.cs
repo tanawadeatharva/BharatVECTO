@@ -36,6 +36,7 @@ using System.Drawing.Imaging;
 using System.Globalization;
 using System.IO;
 using System.Linq;
+using System.Threading.Tasks;
 using System.Windows.Forms.DataVisualization.Charting;
 using iTextSharp.text;
 using iTextSharp.text.pdf;
@@ -51,8 +52,14 @@ using Rectangle = System.Drawing.Rectangle;
 
 namespace TUGraz.VectoCore.OutputData.PDF
 {
+	/// <summary>
+	/// Class for writing a PDF Declaration report.
+	/// </summary>
 	public class PDFDeclarationReport : DeclarationReport
 	{
+		/// <summary>
+		/// the writer which actually persists the stream (either to file or somewhere else).
+		/// </summary>
 		private readonly IReportWriter _writer;
 
 		/// <summary>
@@ -91,12 +98,23 @@ namespace TUGraz.VectoCore.OutputData.PDF
 		protected internal override void DoWriteReport()
 		{
 			ReportDate = DateTime.Now.ToString(CultureInfo.InvariantCulture);
-			var titlePage = CreateTitlePage(Missions);
-			var cyclePages = Missions.OrderBy(m => m.Key).Select((m, i) => CreateCyclePage(m.Value, i + 2, Missions.Count + 1));
 
-			MergeDocuments(titlePage, cyclePages, _writer.WriteStream(ReportType.DeclarationReportPdf));
+			var tasks = new List<Task<Stream>> { Task.Run(() => CreateTitlePage(Missions)) };
+			tasks.AddRange(Missions
+				.OrderBy(m => m.Key)
+				.Select((m, i) => Task.Run(() => CreateCyclePage(m.Value, i + 2, Missions.Count + 1))));
+
+			Task.WaitAll(tasks.Cast<Task>().ToArray());
+			var pages = tasks.Select(t => t.Result);
+
+			MergeDocuments(pages, _writer.WriteStream(ReportType.DeclarationReportPdf));
 		}
 
+		/// <summary>
+		/// Initializes the report with the current date and some general data.
+		/// </summary>
+		/// <param name="modelData">the model data.</param>
+		/// <param name="segment">the current segment of the vehicle.</param>
 		protected override void DoInitializeReport(VectoRunData modelData, Segment segment)
 		{
 			EngineModel = modelData.EngineData.ModelName;
@@ -182,6 +200,7 @@ namespace TUGraz.VectoCore.OutputData.PDF
 			stamper.Writer.CloseStream = false;
 			stamper.Close();
 
+			stream.Position = 0;
 			return stream;
 		}
 
@@ -253,30 +272,27 @@ namespace TUGraz.VectoCore.OutputData.PDF
 
 			stamper.Writer.CloseStream = false;
 			stamper.Close();
+
+			stream.Position = 0;
 			return stream;
 		}
 
 		/// <summary>
 		/// Merges the given stream to one document and writes it to a file on disk.
 		/// </summary>
-		/// <param name="titlePage"></param>
 		/// <param name="pages">The pages.</param>
 		/// <param name="reportWriter"></param>
-		private static void MergeDocuments(Stream titlePage, IEnumerable<Stream> pages, Stream reportWriter)
+		private static void MergeDocuments(IEnumerable<Stream> pages, Stream reportWriter)
 		{
-			var document = new Document(PageSize.A4.Rotate(), 12, 12, 12, 12);
-			var writer = PdfWriter.GetInstance(document, reportWriter);
-
-			document.Open();
-			titlePage.Position = 0;
-			document.Add(Image.GetInstance(writer.GetImportedPage(new PdfReader(titlePage), 1)));
-
-			foreach (var cyclePage in pages) {
-				cyclePage.Position = 0;
-				document.Add(Image.GetInstance(writer.GetImportedPage(new PdfReader(cyclePage), 1)));
+			using (var document = new Document(PageSize.A4.Rotate(), 12, 12, 12, 12))
+			using (var writer = new PdfCopy(document, reportWriter)) {
+				document.Open();
+				foreach (var page in pages) {
+					using (var reader = new PdfReader(page)) {
+						writer.AddDocument(reader);
+					}
+				}
 			}
-
-			document.Close();
 		}
 
 		/// <summary>
