@@ -35,6 +35,7 @@
       <HintPath>..\..\packages\NLog.4.2.3\lib\net45\NLog.dll</HintPath>
     </Reference>
     <Reference Include="System" />
+    <Reference Include="System.ComponentModel.DataAnnotations" />
     <Reference Include="System.Core" />
     <Reference Include="System.Xml.Linq" />
     <Reference Include="System.Data.DataSetExtensions" />
@@ -67,6 +68,7 @@
     <Compile Include="Utils\IntExtensionMethods.cs" />
     <Compile Include="Utils\SI.cs" />
     <Compile Include="Utils\StringExtensionMethods.cs" />
+    <Compile Include="Utils\Validation.cs" />
     <Compile Include="Utils\VectoMath.cs" />
   </ItemGroup>
   <ItemGroup>

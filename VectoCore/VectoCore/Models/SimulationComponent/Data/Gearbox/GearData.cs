@@ -30,7 +30,7 @@
 */
 
 using System.ComponentModel.DataAnnotations;
-using TUGraz.VectoCore.Utils;
+using TUGraz.VectoCommon.Utils;
 
 namespace TUGraz.VectoCore.Models.SimulationComponent.Data.Gearbox
 {

@@ -36,9 +36,8 @@ using System.ComponentModel.DataAnnotations;
 using System.IO;
 using System.Linq;
 using System.Reflection;
-using TUGraz.VectoCommon.Utils;
 
-namespace TUGraz.VectoCore.Utils
+namespace TUGraz.VectoCommon.Utils
 {
 	/// <summary>
 	/// Helper Class for doing the Validation
