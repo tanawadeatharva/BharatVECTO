@@ -70,6 +70,7 @@ namespace TUGraz.VectoCore.Models.Declaration
 		public Kilogram CurbWeight;
 		public Kilogram BodyCurbWeight;
 		public Kilogram BodyGrossVehicleWeight;
+		public TrailerType TrailerType;
 		public Kilogram TrailerCurbWeight;
 		public Kilogram TrailerGrossVehicleWeight;
 		public Stream CycleFile;
@@ -90,5 +91,12 @@ namespace TUGraz.VectoCore.Models.Declaration
 				};
 			}
 		}
+	}
+
+	public enum TrailerType
+	{
+		None,
+		T1,
+		T2
 	}
 }
