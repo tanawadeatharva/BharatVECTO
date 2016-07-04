@@ -110,8 +110,13 @@ namespace TUGraz.VectoCore.Models.Declaration
 			foreach (var missionType in missionTypes.Where(m => row.Field<string>(m.ToString()) != "-")) {
 				var body = DeclarationData.StandardWeights.Lookup(row.Field<string>("body"));
 
-				var trailer = ShouldTrailerBeUsed(row, missionType)
-					? DeclarationData.StandardWeights.Lookup(row.Field<string>("trailer"))
+				var trailerIsUsed = ShouldTrailerBeUsed(row, missionType);
+				var trailerField = row.Field<string>("trailer");
+				var trailerType = trailerIsUsed && !string.IsNullOrWhiteSpace(trailerField)
+					? trailerField.ParseEnum<TrailerType>()
+					: TrailerType.None;
+				var trailer = trailerIsUsed
+					? DeclarationData.StandardWeights.Lookup(trailerField)
 					: DeclarationData.StandardWeights.Empty;
 
 				var semiTrailerField = row.Field<string>("semitrailer");
@@ -145,6 +150,7 @@ namespace TUGraz.VectoCore.Models.Declaration
 					CurbWeight = curbWeight,
 					BodyCurbWeight = body.CurbWeight,
 					BodyGrossVehicleWeight = grossVehicleWeight,
+					TrailerType = trailerType,
 					TrailerCurbWeight = trailer.CurbWeight,
 					TrailerGrossVehicleWeight = trailer.GrossVehicleWeight,
 					DeltaCdA = trailer.DeltaCrossWindArea,
