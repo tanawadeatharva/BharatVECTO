@@ -84,7 +84,7 @@ namespace TUGraz.VectoCore.Models.Declaration
 				});
 			} catch (InvalidOperationException e) {
 				var errorMessage = string.Format(
-					"ERROR: Could not find the declaration segment for vehicle. Category: {0}, AxleConfiguration: {1}, GrossVehicleMassRating: {2}",
+					"ERROR: Could not find the declaration segment for vehicle. Category: {0}, AxleConfiguration: {1}, GrossVehicleWeight: {2}",
 					vehicleCategory, axleConfiguration.GetName(), grossVehicleMassRating);
 				Log.Fatal(errorMessage);
 				throw new VectoException(errorMessage, e);

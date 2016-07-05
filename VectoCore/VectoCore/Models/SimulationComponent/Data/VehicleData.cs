@@ -36,6 +36,7 @@ using System.Linq;
 using TUGraz.VectoCommon.Exceptions;
 using TUGraz.VectoCommon.Models;
 using TUGraz.VectoCommon.Utils;
+using TUGraz.VectoCore.Configuration;
 using TUGraz.VectoCore.Models.Declaration;
 using TUGraz.VectoCore.Utils;
 
@@ -49,13 +50,14 @@ namespace TUGraz.VectoCore.Models.SimulationComponent.Data
 	{
 		public VehicleCategory VehicleCategory { get; internal set; }
 		public VehicleClass VehicleClass { get; internal set; }
+		public AxleConfiguration AxleConfiguration { get; internal set; }
 
 		[Required, ValidateObject]
 		public ICrossWindCorrection CrossWindCorrectionCurve { get; internal set; }
 
 		private List<Axle> _axleData;
 
-		[ValidateObject]
+		[Required, ValidateObject]
 		public List<Axle> AxleData
 		{
 			get { return _axleData; }
@@ -66,22 +68,28 @@ namespace TUGraz.VectoCore.Models.SimulationComponent.Data
 			}
 		}
 
-		public AxleConfiguration AxleConfiguration { get; internal set; }
-
+		/// <summary>
+		/// The Curb Weight of the vehicle 
+		/// (+ Curb Weight of Standard-Body if it has one)
+		/// (+ Curb Weight of Trailer if it has one)
+		/// </summary>
 		[Required, SIRange(500, 40000)]
 		public Kilogram CurbWeight { get; internal set; }
 
 		[Required, SIRange(0, 40000)]
-		public Kilogram CurbWeigthExtra { get; internal set; }
-
-		[Required, SIRange(0, 40000)]
 		public Kilogram Loading { get; internal set; }
 
+		/// <summary>
+		/// The Gross Vehicle Weight of the Vehicle.
+		/// </summary>
 		[Required, SIRange(3500, 40000)]
-		public Kilogram GrossVehicleMassRating { get; internal set; }
+		public Kilogram GrossVehicleWeight { get; internal set; }
 
+		/// <summary>
+		/// The Gross Vehicle Weight of the Trailer (if the vehicle has one).
+		/// </summary>
 		[Required, SIRange(0, 40000)]
-		public Kilogram TrailerGrossVehicleMassRating { get; internal set; }
+		public Kilogram TrailerGrossVehicleWeight { get; internal set; }
 
 		[Required, SIRange(0.1, 0.7)]
 		public Meter DynamicTyreRadius { get; internal set; }
@@ -99,7 +107,6 @@ namespace TUGraz.VectoCore.Models.SimulationComponent.Data
 		{
 			var retVal = 0.SI<Kilogram>();
 			retVal += CurbWeight ?? 0.SI<Kilogram>();
-			retVal += CurbWeigthExtra ?? 0.SI<Kilogram>();
 			retVal += Loading ?? 0.SI<Kilogram>();
 			return retVal;
 		}
@@ -108,7 +115,6 @@ namespace TUGraz.VectoCore.Models.SimulationComponent.Data
 		{
 			var retVal = 0.SI<Kilogram>();
 			retVal += CurbWeight ?? 0.SI<Kilogram>();
-			retVal += CurbWeigthExtra ?? 0.SI<Kilogram>();
 			return retVal;
 		}
 
@@ -150,10 +156,13 @@ namespace TUGraz.VectoCore.Models.SimulationComponent.Data
 						weightShareSum, 1 - weightShareSum));
 			}
 
-			var gvwTotal = vehicleData.GrossVehicleMassRating + vehicleData.TrailerGrossVehicleMassRating;
+			// total gvw is limited by max gvw (40t)
+			var gvwTotal = VectoMath.Min(vehicleData.GrossVehicleWeight + vehicleData.TrailerGrossVehicleWeight,
+				Constants.SimulationSettings.MaximumGrossVehicleWeight);
+
 			if (vehicleData.TotalVehicleWeight() > gvwTotal) {
 				return new ValidationResult(
-					string.Format("Total Vehicle Weight is greater than GrossVehicleMassRating! sum: {0},  GVM: {1}",
+					string.Format("Total Vehicle Weight is greater than GrossVehicleWeight! Weight: {0},  GVW: {1}",
 						vehicleData.TotalVehicleWeight(), gvwTotal));
 			}
 

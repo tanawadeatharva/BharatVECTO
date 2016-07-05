@@ -94,9 +94,9 @@ namespace TUGraz.VectoCore.InputData.Reader.DataObjectAdaper
 			}
 
 			var retVal = SetCommonVehicleData(data);
-			retVal.GrossVehicleMassRating = data.GrossVehicleMassRating;
-			retVal.TrailerGrossVehicleMassRating = mission.TrailerGrossVehicleWeight;
-			retVal.CurbWeigthExtra = mission.BodyCurbWeight + mission.TrailerCurbWeight;
+			retVal.GrossVehicleWeight = data.GrossVehicleMassRating;
+			retVal.TrailerGrossVehicleWeight = mission.TrailerGrossVehicleWeight;
+			retVal.CurbWeight += mission.BodyCurbWeight + mission.TrailerCurbWeight;
 			retVal.Loading = loading;
 			retVal.DynamicTyreRadius =
 				DeclarationData.DynamicTyreRadius(data.Axles[DeclarationData.PoweredAxle()].Wheels, data.Rim);
