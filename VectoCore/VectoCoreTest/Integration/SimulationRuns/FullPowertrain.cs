@@ -352,7 +352,10 @@ namespace TUGraz.VectoCore.Tests.Integration.SimulationRuns
 				StartSpeed = 2.SI<MeterPerSecond>(),
 				StartAcceleration = 0.6.SI<MeterPerSquareSecond>(),
 				StartTorqueReserve = 0.2,
-				TorqueReserve = 0.2
+				TorqueReserve = 0.2,
+				DownshiftAfterUpshiftDelay = 10.SI<Second>(),
+				UpshiftAfterDownshiftDelay = 10.SI<Second>(),
+				UpshiftMinAcceleration = 0.1.SI<MeterPerSquareSecond>()
 			};
 		}
 
