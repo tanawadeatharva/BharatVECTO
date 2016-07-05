@@ -81,7 +81,7 @@ namespace TUGraz.VectoCore.Models.SimulationComponent.Impl
 			foreach (var kv in _powerDemands.Where(kv => !string.IsNullOrWhiteSpace(kv.Key))) {
 				container[kv.Key] = kv.Value;
 			}
-			if (container[ModalResultField.P_aux] == null) {
+			if (container[ModalResultField.P_aux] == null || container[ModalResultField.P_aux] == DBNull.Value) {
 				// don't overwrite if someone else already wrote the total aux power
 				container[ModalResultField.P_aux] = _powerDemands.Values.Sum(p => p);
 			}
