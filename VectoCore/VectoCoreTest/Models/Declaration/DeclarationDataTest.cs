@@ -638,11 +638,5 @@ namespace TUGraz.VectoCore.Tests.Models.Declaration
 			EqualAcceleration(data, -20, 1, -1);
 			EqualAcceleration(data, 140, 0.5, -0.5);
 		}
-
-		[Test]
-		public void Declaration_Class2_WeightTest()
-		{
-			Assert.Fail();
-		}
 	}
 }
