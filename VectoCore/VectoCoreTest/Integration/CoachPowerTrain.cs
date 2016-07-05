@@ -71,7 +71,7 @@ namespace TUGraz.VectoCore.Tests.Integration
 		{
 			var fileWriter = new FileOutputWriter(modFileName);
 			var modData = new ModalDataContainer(modFileName, fileWriter, ExecutionMode.Engineering);
-			var container = new VehicleContainer(ExecutionMode.Engineering, modData, null) {
+			var container = new VehicleContainer(ExecutionMode.Engineering, modData) {
 				RunData = new VectoRunData { JobName = modFileName, Cycle = cycleData }
 			};
 
@@ -120,11 +120,9 @@ namespace TUGraz.VectoCore.Tests.Integration
 					Tuple.Create((uint)i,
 						new GearData {
 							FullLoadCurve = FullLoadCurveReader.ReadFromFile(GearboxFullLoadCurveFile),
-							LossMap = (ratio != 1.0)
-								? TransmissionLossMap.ReadFromFile(GearboxIndirectLoss, ratio,
-									string.Format("Gear {0}", i))
-								: TransmissionLossMap.ReadFromFile(GearboxDirectLoss, ratio,
-									string.Format("Gear {0}", i)),
+							LossMap = ratio.IsEqual(1)
+								? TransmissionLossMap.ReadFromFile(GearboxIndirectLoss, ratio, string.Format("Gear {0}", i))
+								: TransmissionLossMap.ReadFromFile(GearboxDirectLoss, ratio, string.Format("Gear {0}", i)),
 							Ratio = ratio,
 							ShiftPolygon = ShiftPolygonReader.ReadFromFile(GearboxShiftPolygonFile)
 						}))
