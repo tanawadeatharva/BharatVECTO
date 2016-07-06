@@ -1,5 +1,20 @@
 #Changelog
 
+**VECTO 3.0.4**
+
+***Build 537 (2016-06-28)***
+
+- Main Updates
+    + New gear shift strategy according to White Book 2016
+    + New coasting strategy according to White Book 2016
+    + New input parameters (enineering mode) for coasting and gear shift behavior
+    + Use SI units in Advanced Auxiliaries Module and compile with strict compiler settings (no implicit casts, etc.)
+
+- Bugfixes
+    + Auxiliary TechList not read from JSON input data
+    + Improvements in driver strategy
+    + Bugfixes in MeasuredSpeed mode
+
 **VECTO 3.0.3**
 
 ***Build 537 (2016-06-21)***
