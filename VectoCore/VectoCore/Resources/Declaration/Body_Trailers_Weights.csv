@@ -7,6 +7,6 @@ B4,2100,-,-,---
 B5,2200,-,-,"""B6"" changed to ""B5"" as ""old B5"" not applicable anymore"
 T1,3400,10500,1.1,
 T2,5400,18000,0.6,
-ST1,7500,-,-,relevant for fully loaded is GVM of tractor semitrailer combination = 40000kg
+ST1,7500,24000,-,relevant for fully loaded is GVM of tractor semitrailer combination = 40000kg
 ST1-v2,7500,-,-,
 Dolly,2500,-,-,only relevant for EMS
