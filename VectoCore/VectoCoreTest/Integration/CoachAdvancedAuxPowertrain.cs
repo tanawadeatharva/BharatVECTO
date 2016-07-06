@@ -133,7 +133,10 @@ namespace TUGraz.VectoCore.Tests.Integration
 				StartAcceleration = 0.6.SI<MeterPerSquareSecond>(),
 				StartTorqueReserve = 0.2,
 				SkipGears = true,
-				TorqueReserve = 0.2
+				TorqueReserve = 0.2,
+				UpshiftAfterDownshiftDelay = 10.SI<Second>(),
+				DownshiftAfterUpshiftDelay = 10.SI<Second>(),
+				UpshiftMinAcceleration = 0.1.SI<MeterPerSquareSecond>()
 			};
 		}
 
@@ -181,7 +184,6 @@ namespace TUGraz.VectoCore.Tests.Integration
 					new CrosswindCorrectionCdxALookup(CrossWindCorrectionCurveReader.GetNoCorrectionCurve(3.2634.SI<SquareMeter>()),
 						CrossWindCorrectionMode.NoCorrection),
 				CurbWeight = 15700.SI<Kilogram>(),
-				CurbWeigthExtra = 0.SI<Kilogram>(),
 				Loading = loading,
 				DynamicTyreRadius = 0.52.SI<Meter>(),
 				AxleData = axles,

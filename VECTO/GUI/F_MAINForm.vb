@@ -1650,6 +1650,7 @@ lbFound:
 			Catch ex As Exception
 				MsgBox(String.Format("ERROR running job {0}: {1}", jobFile, ex.Message), MsgBoxStyle.Critical)
 				sender.ReportProgress(0, New With {.Target = "ListBoxError", .Message = ex.Message})
+				Return
 			End Try
 		Next
 
@@ -1720,8 +1721,7 @@ lbFound:
 				sender.ReportProgress(100,
 									New _
 										With {.Target = "ListBox",
-										.Message = String.Format("PDF-Report for '{0}' written to {1}", Path.GetFileName(job), report), .Link = report
-										})
+										.Message = String.Format("PDF-Report for '{0}' written to {1}", Path.GetFileName(job), report), .Link = "<RUN>" + report})
 			End If
 		Next
 

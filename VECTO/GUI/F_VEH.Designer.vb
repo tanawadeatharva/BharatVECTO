@@ -103,10 +103,6 @@ Partial Class F_VEH
 		Me.PnLoad = New System.Windows.Forms.Panel()
 		Me.GrAirRes = New System.Windows.Forms.GroupBox()
 		Me.PnCdATrTr = New System.Windows.Forms.Panel()
-		Me.LbCdATr = New System.Windows.Forms.Label()
-		Me.PnCdARig = New System.Windows.Forms.Panel()
-		Me.LbCdARig = New System.Windows.Forms.Label()
-		Me.TBcdA2 = New System.Windows.Forms.TextBox()
 		Me.Label38 = New System.Windows.Forms.Label()
 		Me.PictureBox1 = New System.Windows.Forms.PictureBox()
 		Me.CmOpenFile = New System.Windows.Forms.ContextMenuStrip(Me.components)
@@ -126,7 +122,6 @@ Partial Class F_VEH
 		Me.PnLoad.SuspendLayout()
 		Me.GrAirRes.SuspendLayout()
 		Me.PnCdATrTr.SuspendLayout()
-		Me.PnCdARig.SuspendLayout()
 		CType(Me.PictureBox1, System.ComponentModel.ISupportInitialize).BeginInit()
 		Me.CmOpenFile.SuspendLayout()
 		Me.PnAll.SuspendLayout()
@@ -168,7 +163,7 @@ Partial Class F_VEH
 		'Label3
 		'
 		Me.Label3.AutoSize = True
-		Me.Label3.Location = New System.Drawing.Point(36, 52)
+		Me.Label3.Location = New System.Drawing.Point(3, 6)
 		Me.Label3.Name = "Label3"
 		Me.Label3.Size = New System.Drawing.Size(37, 13)
 		Me.Label3.TabIndex = 8
@@ -176,9 +171,7 @@ Partial Class F_VEH
 		'
 		'TBcdA
 		'
-		Me.TBcdA.Anchor = CType(((System.Windows.Forms.AnchorStyles.Top Or System.Windows.Forms.AnchorStyles.Left) _
-			Or System.Windows.Forms.AnchorStyles.Right), System.Windows.Forms.AnchorStyles)
-		Me.TBcdA.Location = New System.Drawing.Point(2, 24)
+		Me.TBcdA.Location = New System.Drawing.Point(46, 3)
 		Me.TBcdA.Name = "TBcdA"
 		Me.TBcdA.Size = New System.Drawing.Size(57, 20)
 		Me.TBcdA.TabIndex = 0
@@ -743,9 +736,6 @@ Partial Class F_VEH
 		'GrAirRes
 		'
 		Me.GrAirRes.Controls.Add(Me.PnCdATrTr)
-		Me.GrAirRes.Controls.Add(Me.PnCdARig)
-		Me.GrAirRes.Controls.Add(Me.Label3)
-		Me.GrAirRes.Controls.Add(Me.Label38)
 		Me.GrAirRes.Location = New System.Drawing.Point(278, 3)
 		Me.GrAirRes.Name = "GrAirRes"
 		Me.GrAirRes.Size = New System.Drawing.Size(266, 124)
@@ -755,51 +745,19 @@ Partial Class F_VEH
 		'
 		'PnCdATrTr
 		'
-		Me.PnCdATrTr.Controls.Add(Me.LbCdATr)
 		Me.PnCdATrTr.Controls.Add(Me.TBcdA)
-		Me.PnCdATrTr.Location = New System.Drawing.Point(79, 25)
+		Me.PnCdATrTr.Controls.Add(Me.Label38)
+		Me.PnCdATrTr.Controls.Add(Me.Label3)
+		Me.PnCdATrTr.Dock = System.Windows.Forms.DockStyle.Fill
+		Me.PnCdATrTr.Location = New System.Drawing.Point(3, 16)
 		Me.PnCdATrTr.Name = "PnCdATrTr"
-		Me.PnCdATrTr.Size = New System.Drawing.Size(64, 78)
+		Me.PnCdATrTr.Size = New System.Drawing.Size(260, 105)
 		Me.PnCdATrTr.TabIndex = 0
-		'
-		'LbCdATr
-		'
-		Me.LbCdATr.AutoSize = True
-		Me.LbCdATr.Location = New System.Drawing.Point(3, 3)
-		Me.LbCdATr.Name = "LbCdATr"
-		Me.LbCdATr.Size = New System.Drawing.Size(58, 13)
-		Me.LbCdATr.TabIndex = 25
-		Me.LbCdATr.Text = "Tr && Trailer"
-		'
-		'PnCdARig
-		'
-		Me.PnCdARig.Controls.Add(Me.LbCdARig)
-		Me.PnCdARig.Controls.Add(Me.TBcdA2)
-		Me.PnCdARig.Location = New System.Drawing.Point(146, 25)
-		Me.PnCdARig.Name = "PnCdARig"
-		Me.PnCdARig.Size = New System.Drawing.Size(64, 78)
-		Me.PnCdARig.TabIndex = 1
-		'
-		'LbCdARig
-		'
-		Me.LbCdARig.AutoSize = True
-		Me.LbCdARig.Location = New System.Drawing.Point(10, 3)
-		Me.LbCdARig.Name = "LbCdARig"
-		Me.LbCdARig.Size = New System.Drawing.Size(31, 13)
-		Me.LbCdARig.TabIndex = 25
-		Me.LbCdARig.Text = "Rigid"
-		'
-		'TBcdA2
-		'
-		Me.TBcdA2.Location = New System.Drawing.Point(3, 24)
-		Me.TBcdA2.Name = "TBcdA2"
-		Me.TBcdA2.Size = New System.Drawing.Size(57, 20)
-		Me.TBcdA2.TabIndex = 0
 		'
 		'Label38
 		'
 		Me.Label38.AutoSize = True
-		Me.Label38.Location = New System.Drawing.Point(212, 52)
+		Me.Label38.Location = New System.Drawing.Point(109, 6)
 		Me.Label38.Name = "Label38"
 		Me.Label38.Size = New System.Drawing.Size(24, 13)
 		Me.Label38.TabIndex = 24
@@ -910,11 +868,8 @@ Partial Class F_VEH
 		Me.PnLoad.ResumeLayout(False)
 		Me.PnLoad.PerformLayout()
 		Me.GrAirRes.ResumeLayout(False)
-		Me.GrAirRes.PerformLayout()
 		Me.PnCdATrTr.ResumeLayout(False)
 		Me.PnCdATrTr.PerformLayout()
-		Me.PnCdARig.ResumeLayout(False)
-		Me.PnCdARig.PerformLayout()
 		CType(Me.PictureBox1, System.ComponentModel.ISupportInitialize).EndInit()
 		Me.CmOpenFile.ResumeLayout(False)
 		Me.PnAll.ResumeLayout(False)
@@ -989,19 +944,15 @@ Partial Class F_VEH
 	Friend WithEvents ColumnHeader1 As System.Windows.Forms.ColumnHeader
 	Friend WithEvents ColumnHeader2 As System.Windows.Forms.ColumnHeader
 	Friend WithEvents PnLoad As System.Windows.Forms.Panel
-	Friend WithEvents LbCdARig As System.Windows.Forms.Label
-	Friend WithEvents LbCdATr As System.Windows.Forms.Label
-	Friend WithEvents TBcdA2 As System.Windows.Forms.TextBox
-	Friend WithEvents PnCdARig As System.Windows.Forms.Panel
-    Friend WithEvents PnAll As System.Windows.Forms.Panel
-    Friend WithEvents Label6 As System.Windows.Forms.Label
-    Friend WithEvents ColumnHeader3 As System.Windows.Forms.ColumnHeader
-    Friend WithEvents ColumnHeader4 As System.Windows.Forms.ColumnHeader
-    Friend WithEvents Label7 As System.Windows.Forms.Label
-    Friend WithEvents CbRim As System.Windows.Forms.ComboBox
-    Friend WithEvents PnWheelDiam As System.Windows.Forms.Panel
-    Friend WithEvents PicVehicle As System.Windows.Forms.PictureBox
-    Friend WithEvents Label8 As System.Windows.Forms.Label
+	Friend WithEvents PnAll As System.Windows.Forms.Panel
+	Friend WithEvents Label6 As System.Windows.Forms.Label
+	Friend WithEvents ColumnHeader3 As System.Windows.Forms.ColumnHeader
+	Friend WithEvents ColumnHeader4 As System.Windows.Forms.ColumnHeader
+	Friend WithEvents Label7 As System.Windows.Forms.Label
+	Friend WithEvents CbRim As System.Windows.Forms.ComboBox
+	Friend WithEvents PnWheelDiam As System.Windows.Forms.Panel
+	Friend WithEvents PicVehicle As System.Windows.Forms.PictureBox
+	Friend WithEvents Label8 As System.Windows.Forms.Label
 	Friend WithEvents PnCdATrTr As System.Windows.Forms.Panel
 	Friend WithEvents Label38 As System.Windows.Forms.Label
 End Class

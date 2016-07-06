@@ -91,16 +91,10 @@ namespace TUGraz.VectoCommon.InputData
 		Kilogram GrossVehicleMassRating { get; }
 
 		/// <summary>
-		/// P146  DragCoefficient * Cross Section Area - Truck & Trailer
+		/// P146, P147  DragCoefficient * Cross Section Area - Rigid
 		/// cf. VECTO Input Parameters.xlsx
 		/// </summary>
-		SquareMeter AirDragArea { get; }
-
-		/// <summary>
-		/// P147  DragCoefficient * Cross Section Area - Rigid
-		/// cf. VECTO Input Parameters.xlsx
-		/// </summary>
-		SquareMeter AirDragAreaRigidTruck { get; } // without trailer
+		SquareMeter AirDragArea { get; } // without trailer
 
 		/// <summary>
 		/// P117  Powered axle tyres/rims

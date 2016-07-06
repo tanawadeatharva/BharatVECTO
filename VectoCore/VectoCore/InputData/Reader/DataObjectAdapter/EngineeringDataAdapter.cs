@@ -56,7 +56,8 @@ namespace TUGraz.VectoCore.InputData.Reader.DataObjectAdaper
 
 			var retVal = SetCommonVehicleData(data);
 
-			retVal.CurbWeigthExtra = data.CurbWeightExtra;
+			retVal.CurbWeight += data.CurbWeightExtra;
+			retVal.TrailerGrossVehicleWeight = 0.SI<Kilogram>();
 			retVal.Loading = data.Loading;
 			retVal.DynamicTyreRadius = data.DynamicTyreRadius;
 			retVal.CrossWindCorrectionMode = data.CrossWindCorrectionMode;

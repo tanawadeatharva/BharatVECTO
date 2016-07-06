@@ -44,4 +44,12 @@ namespace TUGraz.VectoCore.Models.Declaration
 		Interurban,
 		Coach
 	}
+
+	public static class MissionTypeHelper
+	{
+		public static string GetName(this MissionType self)
+		{
+			return self.ToString().ToLowerInvariant();
+		}
+	}
 }

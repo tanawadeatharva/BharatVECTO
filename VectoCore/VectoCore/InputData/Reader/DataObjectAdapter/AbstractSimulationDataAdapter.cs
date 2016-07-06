@@ -63,7 +63,7 @@ namespace TUGraz.VectoCore.InputData.Reader.DataObjectAdaper
 				CurbWeight = data.CurbWeightChassis,
 				//CurbWeigthExtra = data.CurbWeightExtra.SI<Kilogram>(),
 				//Loading = data.Loading.SI<Kilogram>(),
-				GrossVehicleMassRating = data.GrossVehicleMassRating,
+				GrossVehicleWeight = data.GrossVehicleMassRating,
 				//DragCoefficient = data.DragCoefficient,
 				//CrossSectionArea = data.CrossSectionArea.SI<SquareMeter>(),
 				//DragCoefficientRigidTruck = data.DragCoefficientRigidTruck,

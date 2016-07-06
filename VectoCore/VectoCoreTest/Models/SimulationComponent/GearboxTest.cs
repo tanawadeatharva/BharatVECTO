@@ -456,7 +456,8 @@ namespace TUGraz.VectoCore.Tests.Models.SimulationComponent
 				DriverBehavior = DrivingBehavior.Driving,
 				Altitude = 0.SI<Meter>(),
 				VehicleMass = 10000.SI<Kilogram>(),
-				ReducedMassWheels = 100.SI<Kilogram>()
+				ReducedMassWheels = 100.SI<Kilogram>(),
+				TotalMass = 19000.SI<Kilogram>()
 			};
 			var gearboxData = MockSimulationDataFactory.CreateGearboxDataFromFile(GearboxDataFile, EngineDataFile);
 			var gearbox = new Gearbox(container, gearboxData, new AMTShiftStrategy(gearboxData, container));

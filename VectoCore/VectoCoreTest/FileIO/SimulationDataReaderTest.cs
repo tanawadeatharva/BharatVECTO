@@ -64,14 +64,16 @@ namespace TUGraz.VectoCore.Tests.FileIO
 			Assert.AreEqual(ExecutionMode.Declaration, runData.ExecutionMode);
 
 			Assert.AreEqual(Path.GetFileNameWithoutExtension(DeclarationJob), runData.JobName);
-			Assert.AreEqual(5850, runData.VehicleData.CurbWeight.Value());
-			Assert.AreEqual(1900, runData.VehicleData.CurbWeigthExtra.Value()); // taken from segmentation table
-			Assert.AreEqual(11900, runData.VehicleData.GrossVehicleMassRating.Value());
+
+			// curbweight + bodyCurbWeight + trailerCurbWeight (for Long Haul only)
+			Assert.AreEqual(5850 + 1900 + 3400, runData.VehicleData.CurbWeight.Value());
+
+			Assert.AreEqual(11900, runData.VehicleData.GrossVehicleWeight.Value());
 			Assert.AreEqual(AxleConfiguration.AxleConfig_4x2, runData.VehicleData.AxleConfiguration);
 			Assert.AreEqual(0.4069297458, runData.VehicleData.DynamicTyreRadius.Value(), Tolerance);
 
 			Assert.AreEqual(VehicleClass.Class2, runData.VehicleData.VehicleClass);
-			Assert.AreEqual(2, runData.VehicleData.AxleData.Count);
+			Assert.AreEqual(3, runData.VehicleData.AxleData.Count);
 			Assert.AreEqual(6, runData.VehicleData.AxleData[0].Inertia.Value(), Tolerance);
 
 			Assert.AreEqual(true, runData.DriverData.LookAheadCoasting.Enabled);
@@ -116,9 +118,6 @@ namespace TUGraz.VectoCore.Tests.FileIO
 					runData.GearboxData.Gears[1].ShiftPolygon.Upshift[i].AngularSpeed.Value(), Tolerance);
 				Assert.AreEqual(upshiftTorque[i], runData.GearboxData.Gears[1].ShiftPolygon.Upshift[i].Torque.Value(), Tolerance);
 			}
-			//Assert.AreEqual();
-
-
 			//Assert.AreEqual(, runData.DriverData.LookAheadCoasting.);
 		}
 	}
