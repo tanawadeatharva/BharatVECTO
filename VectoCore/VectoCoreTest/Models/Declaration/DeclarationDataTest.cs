@@ -600,8 +600,8 @@ namespace TUGraz.VectoCore.Tests.Models.Declaration
 			var vehicleData = new {
 				VehicleCategory = VehicleCategory.RigidTruck,
 				AxleConfiguration = AxleConfiguration.AxleConfig_4x2,
-				GrossVehicleMassRating = 40000.SI<Kilogram>(),
-				CurbWeight = 5850.SI<Kilogram>()
+				GrossVehicleMassRating = 18000.SI<Kilogram>(),
+				CurbWeight = 7500.SI<Kilogram>()
 			};
 
 			var segment = DeclarationData.Segments.Lookup(vehicleData.VehicleCategory, vehicleData.AxleConfiguration,
@@ -639,8 +639,8 @@ namespace TUGraz.VectoCore.Tests.Models.Declaration
 			var vehicleData = new {
 				VehicleCategory = VehicleCategory.Tractor,
 				AxleConfiguration = AxleConfiguration.AxleConfig_4x2,
-				GrossVehicleMassRating = 40000.SI<Kilogram>(),
-				CurbWeight = 5850.SI<Kilogram>()
+				GrossVehicleMassRating = 18000.SI<Kilogram>(),
+				CurbWeight = 7500.SI<Kilogram>()
 			};
 
 			var segment = DeclarationData.Segments.Lookup(vehicleData.VehicleCategory, vehicleData.AxleConfiguration,
