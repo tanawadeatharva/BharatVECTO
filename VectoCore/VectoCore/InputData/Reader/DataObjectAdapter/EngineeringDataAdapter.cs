@@ -145,11 +145,11 @@ namespace TUGraz.VectoCore.InputData.Reader.DataObjectAdaper
 
 			retVal.Gears = gears.Select((gear, i) => {
 				TransmissionLossMap lossMap;
-				if (gear.LossMap != null)
+				if (gear.LossMap != null) {
 					lossMap = TransmissionLossMap.Create(gear.LossMap, gear.Ratio, string.Format("Gear {0}", i + 1));
-				else if (useEfficiencyFallback)
+				} else if (useEfficiencyFallback) {
 					lossMap = TransmissionLossMap.Create(gear.Efficiency, gear.Ratio, string.Format("Gear {0}", i + 1));
-				else {
+				} else {
 					throw new InvalidFileFormatException("Gear {0} LossMap or Efficiency missing.", i + 1);
 				}
 				var gearFullLoad = gear.FullLoadCurve != null
@@ -184,6 +184,10 @@ namespace TUGraz.VectoCore.InputData.Reader.DataObjectAdaper
 			return auxInputData.Auxiliaries.Select(a => {
 				if (a.DemandMap == null) {
 					throw new VectoSimulationException("Demand Map for auxiliary {0} {1} required", a.ID, a.Technology);
+				}
+				if (a.DemandMap.Columns.Count != 3 || a.DemandMap.Rows.Count < 4) {
+					throw new VectoSimulationException(
+						"Demand Map for auxiliary {0} {1} has to contain exactly 3 columns and at least 4 rows", a.ID, a.Technology);
 				}
 				return new VectoRunData.AuxData {
 					ID = a.ID,
