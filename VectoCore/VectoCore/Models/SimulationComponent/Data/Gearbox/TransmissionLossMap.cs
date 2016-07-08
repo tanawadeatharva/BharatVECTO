@@ -253,7 +253,7 @@ namespace TUGraz.VectoCore.Models.SimulationComponent.Data.Gearbox
 			}
 		}
 
-		private static class Fields
+		public static class Fields
 		{
 			/// <summary>[rpm]</summary>
 			public const string InputSpeed = "Input Speed";
