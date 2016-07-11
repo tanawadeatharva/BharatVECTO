@@ -390,8 +390,31 @@ Module VECTO_Global
 		End Select
 	End Function
 
-	Public Function RtTypeConv(RtType As String) As tRtType
-		Select Case UCase(Trim(RtType))
+	Public Function AngularGearTypeConverter(type As tAngularGearType) As String
+		Select Case type
+			Case tAngularGearType.SeparateAngularGear
+				Return "Separate"
+			Case tAngularGearType.IncludedInTransmission
+				Return "Included"
+			Case Else
+				Return "None"
+		End Select
+	End Function
+
+	Public Function AngularGearTypeConverter(type As String) As tAngularGearType
+		Select Case type
+			Case "Separate"
+				Return tAngularGearType.SeparateAngularGear
+			Case "Included"
+				Return tAngularGearType.IncludedInTransmission
+			Case Else
+				Return tAngularGearType.None
+		End Select
+	End Function
+
+
+	Public Function RtTypeConv(rtType As String) As tRtType
+		Select Case UCase(Trim(rtType))
 			Case "PRIMARY"
 				Return tRtType.Primary
 			Case "SECONDARY"

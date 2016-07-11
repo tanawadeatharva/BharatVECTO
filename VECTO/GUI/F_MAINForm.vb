@@ -1,4 +1,4 @@
-'
+﻿'
 ' This file is part of VECTO.
 '
 ' Copyright © 2012-2016 European Union
@@ -766,7 +766,7 @@ Public Class F_MAINForm
 						If F_VEH.WindowState = FormWindowState.Minimized Then F_VEH.WindowState = FormWindowState.Normal
 						F_VEH.BringToFront()
 					End If
-					F_VEH.openVEH(File)
+					F_VEH.OpenVehicle(File)
 				Case ".VENG"
 					If Not F_ENG.Visible Then
 						F_ENG.Show()

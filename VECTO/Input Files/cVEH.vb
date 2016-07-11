@@ -56,6 +56,9 @@ Public Class cVEH
 	Private MyFileList As List(Of String)
 
 	Public SavedInDeclMode As Boolean
+	Public AngularGearType As tAngularGearType
+	Public AngularGearRatio As Single
+	Public AngularGearLossMapFile As cSubPath
 
 
 	Public Class cAxle
@@ -78,6 +81,9 @@ Public Class cVEH
 		'Retarder
 		If Me.RtType <> tRtType.None Then MyFileList.Add(Me.RtFile.FullPath)
 
+		'Angular Gear
+		If AngularGearType <> tAngularGearType.None Then MyFileList.Add(Me.AngularGearLossMapFile.FullPath)
+
 		Return True
 	End Function
 
@@ -89,6 +95,7 @@ Public Class cVEH
 		CdX = New List(Of Single)
 		CdY = New List(Of Single)
 		RtFile = New cSubPath
+		AngularGearLossMapFile = New cSubPath()
 		RtnU = New List(Of Single)
 		RtM = New List(Of Single)
 		Axles = New List(Of cAxle)
@@ -113,10 +120,16 @@ Public Class cVEH
 		Rim = ""
 
 		RtType = tRtType.None
-		RtRatio = 0
+		RtRatio = 1
 		RtnU.Clear()
 		RtM.Clear()
 		RtFile.Clear()
+		AngularGearLossMapFile.Clear()
+
+		AngularGearType = tAngularGearType.None
+		AngularGearLossMapFile.Clear()
+		AngularGearRatio = 1
+
 		Axles.Clear()
 		VehCat = tVehCat.Undef
 		MassMax = 0
@@ -215,6 +228,18 @@ Public Class cVEH
 					RtFile.Init(MyPath, JSON.Content("Body")("Retarder")("File"))
 			End If
 
+			If JSON.Content("Body")("AngularGear") Is Nothing Then
+				AngularGearType = tAngularGearType.None
+			Else
+				AngularGearType = AngularGearTypeConverter(JSON.Content("Body")("AngularGear")("Type").ToString)
+
+				If Not JSON.Content("Body")("AngularGear")("Ratio") Is Nothing Then _
+					AngularGearRatio = JSON.Content("Body")("AngularGear")("Ratio")
+				If Not JSON.Content("Body")("AngularGear")("LossMap") Is Nothing Then _
+					AngularGearLossMapFile.Init(MyPath, JSON.Content("Body")("AngularGear")("LossMap"))
+			End If
+
+
 			VehCat = ConvVehCat(JSON.Content("Body")("VehCat").ToString)
 			AxleConf = ConvAxleConf(JSON.Content("Body")("AxleConfig")("Type").ToString)
 
@@ -287,6 +312,10 @@ Public Class cVEH
 				{"Type", RtTypeConv(RtType)},
 				{"Ratio", RtRatio},
 				{"File", RtFile.PathOrDummy}}},
+			{"AngularGear", New Dictionary(Of String, Object) From {
+				{"Type", AngularGearTypeConverter(AngularGearType)},
+				{"Ratio", AngularGearRatio},
+				{"LossMap", AngularGearLossMapFile.PathOrDummy}}},
 			{"AxleConfig", New Dictionary(Of String, Object) From {
 				{"Type", ConvAxleConf(AxleConf)},
 				{"Axles", (From axle In Axles Select New Dictionary(Of String, Object) From {
@@ -295,7 +324,8 @@ Public Class cVEH
 					{"AxleWeightShare", axle.Share},
 					{"TwinTyres", axle.TwinTire},
 					{"RRCISO", axle.RRC},
-					{"FzISO", axle.FzISO}})}}}}
+					{"FzISO", axle.FzISO}})}}}
+			}
 
 		json.Content.Add("Body", dic)
 		Return json.WriteFile(sFilePath)
