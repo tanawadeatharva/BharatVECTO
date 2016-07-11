@@ -77,17 +77,25 @@ namespace TUGraz.VectoCore.Tests.Models.SimulationComponent
 			Assert.AreEqual(112, nextRequest.Torque.Value(), Delta);
 
 			// --------
-			outPort.Initialize(50.SI<NewtonMeter>(), 1550.RPMtoRad());
+			outPort.Initialize(50.SI<NewtonMeter>(), 650.RPMtoRad());
 			outPort.Request(absTime, dt, 50.SI<NewtonMeter>(), 1550.RPMtoRad());
-
+			retarder.CommitSimulationStep(new MockModalDataContainer());
 			Assert.AreEqual(1550.RPMtoRad().Value(), nextRequest.AngularVelocity.Value(), Delta);
-			Assert.AreEqual(50 + 14.81, nextRequest.Torque.Value(), Delta);
+
+			// (650+1550)/2 = 1100 => 12.42Nm
+			Assert.AreEqual(50 + 12.42, nextRequest.Torque.Value(), Delta);
+
+			//VECTO-307: added an additional request after a commit
+			outPort.Request(absTime, dt, 50.SI<NewtonMeter>(), 450.RPMtoRad());
+			Assert.AreEqual(450.RPMtoRad().Value(), nextRequest.AngularVelocity.Value(), Delta);
+			// avg: (1550+450)/2 = 1000 rpm => 12Nm
+			Assert.AreEqual(50 + 12, nextRequest.Torque.Value(), Delta);
 		}
 
 		[TestMethod]
 		public void RetarderRatioTest()
 		{
-			var vehicle = new VehicleContainer(ExecutionMode.Engineering, null, null);
+			var vehicle = new VehicleContainer(ExecutionMode.Engineering);
 			var retarderData = RetarderLossMap.ReadFromFile(RetarderLossMapFile);
 			var retarder = new Retarder(vehicle, retarderData, 2.0);
 
@@ -132,12 +140,10 @@ namespace TUGraz.VectoCore.Tests.Models.SimulationComponent
 			retarder.InPort().Connect(nextRequest);
 			var outPort = retarder.OutPort();
 
-			var absTime = 0.SI<Second>();
-			var dt = 0.SI<Second>();
-
-			// --------
-			AssertHelper.Exception<VectoSimulationException>(() => outPort.Initialize(50.SI<NewtonMeter>(), 1550.RPMtoRad()),
-				"angular velocity 324.6312 [1/s] above max. entry in retarder loss map (240.8554 [1/s])");
+			outPort.Initialize(50.SI<NewtonMeter>(), 2550.RPMtoRad());
+			outPort.Request(0.SI<Second>(), 0.SI<Second>(), 50.SI<NewtonMeter>(), 2550.RPMtoRad());
+			AssertHelper.Exception<VectoException>(() => retarder.CommitSimulationStep(new MockModalDataContainer()),
+				"Retarder LossMap data was extrapolated in Declaration mode: range for loss map is not sufficient: n:2550 (min:0, max:2300), ratio:2");
 		}
 
 		[TestMethod]
