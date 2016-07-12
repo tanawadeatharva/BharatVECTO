@@ -77,34 +77,38 @@ namespace TUGraz.VectoCore.InputData.Reader.DataObjectAdapter
 
 		internal RetarderData SetCommonRetarderData(IRetarderInputData data, IVehicleDeclarationInputData vehicle)
 		{
-			var retarder = new RetarderData {
-				SavedInDeclarationMode = data.SavedInDeclarationMode,
-				Vendor = data.Vendor,
-				ModelName = data.ModelName,
-				Creator = data.Creator,
-				Date = data.Date,
-				TypeId = data.TypeId,
-				DigestValue = data.DigestValue,
-				IntegrityStatus = data.IntegrityStatus,
-				Type = data.RetarderType,
-			};
-			switch (retarder.Type) {
-				case RetarderType.Primary:
-				case RetarderType.Secondary:
-					retarder.LossMap = RetarderLossMap.Create(data.RetarderLossMap);
-					retarder.Ratio = data.RetarderRatio;
-					break;
-				case RetarderType.None:
-				case RetarderType.LossesIncludedInTransmission:
-					retarder.Ratio = 1;
-					break;
-				default:
-					// ReSharper disable once NotResolvedInText
-					// ReSharper disable once LocalizableElement
-					throw new ArgumentOutOfRangeException("retarder.Type", "RetarderType unknown");
-			}
+			try {
+				var retarder = new RetarderData {
+					SavedInDeclarationMode = data.SavedInDeclarationMode,
+					Vendor = data.Vendor,
+					ModelName = data.ModelName,
+					Creator = data.Creator,
+					Date = data.Date,
+					TypeId = data.TypeId,
+					DigestValue = data.DigestValue,
+					IntegrityStatus = data.IntegrityStatus,
+					Type = data.RetarderType,
+				};
+				switch (retarder.Type) {
+					case RetarderType.Primary:
+					case RetarderType.Secondary:
+						retarder.LossMap = RetarderLossMap.Create(data.RetarderLossMap);
+						retarder.Ratio = data.RetarderRatio;
+						break;
+					case RetarderType.None:
+					case RetarderType.LossesIncludedInTransmission:
+						retarder.Ratio = 1;
+						break;
+					default:
+						// ReSharper disable once NotResolvedInText
+						// ReSharper disable once LocalizableElement
+						throw new ArgumentOutOfRangeException("retarder.Type", "RetarderType unknown");
+				}
 
-			return retarder;
+				return retarder;
+			} catch (Exception e) {
+				throw new VectoException("Error while Reading Retarder Data: {0}", e.Message);
+			}
 		}
 
 		internal CombustionEngineData SetCommonCombustionEngineData(IEngineDeclarationInputData data)
