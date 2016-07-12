@@ -32,41 +32,29 @@
 using System.Linq;
 using TUGraz.VectoCommon.Models;
 using TUGraz.VectoCommon.Utils;
-using TUGraz.VectoCore.Models.SimulationComponent.Impl;
 
 namespace TUGraz.VectoCore.Models.Connector.Ports.Impl
 {
 	public abstract class AbstractResponse : IResponse
 	{
-		public Second SimulationInterval { get; set; }
-
-		public Meter SimulationDistance { get; set; }
-
-		public MeterPerSquareSecond Acceleration { get; set; }
-
-		public Watt EnginePowerRequest { get; set; }
-
-		public Watt AuxiliariesPowerDemand { get; set; }
-
-		public Watt ClutchPowerRequest { get; set; }
-
-		public Watt GearboxPowerRequest { get; set; }
-
-		public Watt AxlegearPowerRequest { get; set; }
-
-		public Watt WheelsPowerRequest { get; set; }
-
-		public Watt VehiclePowerRequest { get; set; }
-
-		public Watt BrakePower { get; set; }
+		public object Source { get; set; }
 
 		public Second AbsTime { get; set; }
-
+		public Second SimulationInterval { get; set; }
+		public Meter SimulationDistance { get; set; }
+		public MeterPerSquareSecond Acceleration { get; set; }
 		public OperatingPoint OperatingPoint { get; set; }
-
 		public PerSecond EngineSpeed { get; set; }
 
-		public object Source { get; set; }
+		public Watt EnginePowerRequest { get; set; }
+		public Watt AngularGearPowerRequest { get; set; }
+		public Watt ClutchPowerRequest { get; set; }
+		public Watt GearboxPowerRequest { get; set; }
+		public Watt AxlegearPowerRequest { get; set; }
+		public Watt WheelsPowerRequest { get; set; }
+		public Watt VehiclePowerRequest { get; set; }
+		public Watt BrakePower { get; set; }
+		public Watt AuxiliariesPowerDemand { get; set; }
 
 		public override string ToString()
 		{
@@ -84,17 +72,13 @@ namespace TUGraz.VectoCore.Models.Connector.Ports.Impl
 	/// <summary>
 	/// Response when a request was successful.
 	/// </summary>
-	public class ResponseSuccess : AbstractResponse
-	{
-		public ResponseSuccess() {}
-	}
+	public class ResponseSuccess : AbstractResponse {}
 
 	/// <summary>
 	/// Response when the request resulted in an engine or gearbox overload. 
 	/// </summary>
 	public class ResponseOverload : AbstractResponse
 	{
-		public ResponseOverload() {}
 		public Watt Delta { get; set; }
 		public double Gradient { get; set; }
 	}
@@ -104,7 +88,6 @@ namespace TUGraz.VectoCore.Models.Connector.Ports.Impl
 	/// </summary>
 	public class ResponseUnderload : AbstractResponse
 	{
-		public ResponseUnderload() {}
 		public Watt Delta { get; set; }
 		public double Gradient { get; set; }
 	}
@@ -119,7 +102,6 @@ namespace TUGraz.VectoCore.Models.Connector.Ports.Impl
 	/// </summary>
 	public class ResponseFailTimeInterval : AbstractResponse
 	{
-		public ResponseFailTimeInterval() {}
 		public Second DeltaT { get; set; }
 	}
 

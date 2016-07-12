@@ -29,6 +29,7 @@
 *   Martin Rexeis, rexeis@ivt.tugraz.at, IVT, Graz University of Technology
 */
 
+using System;
 using TUGraz.VectoCommon.Utils;
 
 namespace TUGraz.VectoCommon.Models
@@ -44,6 +45,7 @@ namespace TUGraz.VectoCommon.Models
 		MeterPerSquareSecond Acceleration { get; set; }
 		PerSecond EngineSpeed { get; set; }
 		OperatingPoint OperatingPoint { get; set; }
+		object Source { get; set; }
 
 		Watt EnginePowerRequest { get; set; }
 		Watt ClutchPowerRequest { get; set; }
