@@ -71,13 +71,23 @@ Powered axle tyres/rims
 
 If a separate retarder is used in the vehicle a **Retarder Torque Loss Map** can be defined here to consider idling losses caused by the retarder.
 
-Three options are available:
+Four options are available:
 : -   No retarder
 -	Included in Transmission Loss Maps: Use this if the [Transmission Loss Maps](#transmission-loss-map) already include retarder losses.
 -   Primary Retarder (before gearbox): The rpm ratio is relative to the engine speed
 -   Secondary Retarder (after gearbox): The rpm ratio is relative to the cardan shaft speed
 
 Both, primary and secondary retarders, require an [Retarder Torque Loss Input File (.vrlm)](#retarder-loss-torque-input-file-.vrlm).
+
+###Angular Gear
+
+If an angular gear is used in the vehicle, it can be defined here.
+
+Three options are available:
+
+- No angular gear (**default**)
+- Separate angular gear: Use this if the angular gear is measured separately. In this case the ratio must be set and a [Transmission Loss Map](#transmission-loss-map) for the angular gear must be given.
+- Included in transmission: Use this if the gearbox already includes the transmission losses for the angular gear in the respective transmission loss maps.
 
 
 ###Cross Wind Correction Options

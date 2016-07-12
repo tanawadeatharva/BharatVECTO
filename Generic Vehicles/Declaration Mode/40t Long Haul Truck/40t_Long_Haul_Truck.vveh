@@ -1,7 +1,7 @@
 ﻿{
   "Header": {
     "CreatedBy": " ()",
-    "Date": "11.07.2016 17:58:02",
+    "Date": "12.07.2016 11:30:47",
     "AppVersion": "2.2",
     "FileVersion": 7
   },
@@ -24,9 +24,9 @@
       "File": "Retarder.vrlm"
     },
     "AngularGear": {
-      "Type": "None",
-      "Ratio": 0.0,
-      "LossMap": "<NOFILE>"
+      "Type": "Separate",
+      "Ratio": 1.0,
+      "LossMap": "AngularGear.vtlm"
     },
     "AxleConfig": {
       "Type": "4x2",

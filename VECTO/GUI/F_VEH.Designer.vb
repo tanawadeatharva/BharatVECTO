@@ -205,7 +205,7 @@ Partial Class F_VEH
 		'ButOK
 		'
 		Me.ButOK.Anchor = CType((System.Windows.Forms.AnchorStyles.Bottom Or System.Windows.Forms.AnchorStyles.Right), System.Windows.Forms.AnchorStyles)
-		Me.ButOK.Location = New System.Drawing.Point(421, 721)
+		Me.ButOK.Location = New System.Drawing.Point(421, 697)
 		Me.ButOK.Name = "ButOK"
 		Me.ButOK.Size = New System.Drawing.Size(75, 23)
 		Me.ButOK.TabIndex = 5
@@ -216,7 +216,7 @@ Partial Class F_VEH
 		'
 		Me.ButCancel.Anchor = CType((System.Windows.Forms.AnchorStyles.Bottom Or System.Windows.Forms.AnchorStyles.Right), System.Windows.Forms.AnchorStyles)
 		Me.ButCancel.DialogResult = System.Windows.Forms.DialogResult.Cancel
-		Me.ButCancel.Location = New System.Drawing.Point(502, 721)
+		Me.ButCancel.Location = New System.Drawing.Point(502, 697)
 		Me.ButCancel.Name = "ButCancel"
 		Me.ButCancel.Size = New System.Drawing.Size(75, 23)
 		Me.ButCancel.TabIndex = 6
@@ -672,7 +672,7 @@ Partial Class F_VEH
 		'StatusStrip1
 		'
 		Me.StatusStrip1.Items.AddRange(New System.Windows.Forms.ToolStripItem() {Me.LbStatus})
-		Me.StatusStrip1.Location = New System.Drawing.Point(0, 747)
+		Me.StatusStrip1.Location = New System.Drawing.Point(0, 723)
 		Me.StatusStrip1.Name = "StatusStrip1"
 		Me.StatusStrip1.Size = New System.Drawing.Size(589, 22)
 		Me.StatusStrip1.SizingGrip = False
@@ -818,7 +818,7 @@ Partial Class F_VEH
 		Me.PnAll.Controls.Add(Me.GroupBox6)
 		Me.PnAll.Location = New System.Drawing.Point(6, 172)
 		Me.PnAll.Name = "PnAll"
-		Me.PnAll.Size = New System.Drawing.Size(575, 544)
+		Me.PnAll.Size = New System.Drawing.Size(575, 524)
 		Me.PnAll.TabIndex = 4
 		'
 		'GroupBox2
@@ -924,7 +924,7 @@ Partial Class F_VEH
 		Me.AutoScaleDimensions = New System.Drawing.SizeF(6.0!, 13.0!)
 		Me.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font
 		Me.CancelButton = Me.ButCancel
-		Me.ClientSize = New System.Drawing.Size(589, 769)
+		Me.ClientSize = New System.Drawing.Size(589, 745)
 		Me.Controls.Add(Me.Label8)
 		Me.Controls.Add(Me.TbHDVclass)
 		Me.Controls.Add(Me.PicVehicle)
