@@ -12,6 +12,7 @@ Option Infer On
 
 Imports System.IO
 Imports System.Text.RegularExpressions
+Imports TUGraz.VectoCommon.Models
 
 ''' <summary>
 ''' Vehicle Editor.
@@ -390,7 +391,7 @@ Public Class F_VEH
 		veh.RtRatio = CSng(fTextboxToNumString(TbRtRatio.Text))
 		veh.RtFile.Init(fPATH(file), TbRtPath.Text)
 
-		veh.AngularGearType = CType(cbAngularGearType.SelectedIndex, tAngularGearType)
+		veh.AngularGearType = CType(cbAngularGearType.SelectedIndex, AngularGearType)
 		veh.AngularGearRatio = CSng(fTextboxToNumString(tbAngularGearRatio.Text))
 		veh.AngularGearLossMapFile.Init(fPATH(file), tbAngularGearLossMapPath.Text)
 
@@ -758,10 +759,11 @@ Public Class F_VEH
 		Select Case cbAngularGearType.SelectedIndex
 			Case 1 'Separate Angular Gear
 				tbAngularGearRatio.Enabled = True
+				tbAngularGearRatio.Text = "1.0"
 				btAngularGearLossMapBrowse.Enabled = True
 				tbAngularGearLossMapPath.Enabled = True
 			Case Else 'Losses included in Transmission, None
-				tbAngularGearRatio.Text = "0"
+				tbAngularGearRatio.Text = ""
 				tbAngularGearRatio.Enabled = False
 				btAngularGearLossMapBrowse.Enabled = False
 				tbAngularGearLossMapPath.Text = ""

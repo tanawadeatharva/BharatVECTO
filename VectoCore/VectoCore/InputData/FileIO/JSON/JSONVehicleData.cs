@@ -41,7 +41,7 @@ using TUGraz.VectoCore.InputData.Impl;
 
 namespace TUGraz.VectoCore.InputData.FileIO.JSON
 {
-	public class JSONVehicleDataV7 : JSONFile, IVehicleEngineeringInputData, IRetarderInputData
+	public class JSONVehicleDataV7 : JSONFile, IVehicleEngineeringInputData, IRetarderInputData, IAngularGearInputData
 	{
 		public JSONVehicleDataV7(JObject data, string fileName) : base(data, fileName) {}
 
@@ -140,17 +140,11 @@ namespace TUGraz.VectoCore.InputData.FileIO.JSON
 			get { return ReadTableData(Body.GetEx<string>("CdCorrFile"), "CrosswindCorrection File"); }
 		}
 
-
-		public virtual double RetarderRatio
-		{
-			get { return Body.GetEx(JsonKeys.Vehicle_Retarder).GetEx<double>(JsonKeys.Vehicle_Retarder_Ratio); }
-		}
-
 		#endregion
 
 		#region IRetarderInputData
 
-		public virtual RetarderType Type
+		public virtual RetarderType RetarderType
 		{
 			get
 			{
@@ -161,14 +155,50 @@ namespace TUGraz.VectoCore.InputData.FileIO.JSON
 			}
 		}
 
+		public virtual double RetarderRatio
+		{
+			get { return Body.GetEx(JsonKeys.Vehicle_Retarder).GetEx<double>(JsonKeys.Vehicle_Retarder_Ratio); }
+		}
 
-		public virtual DataTable LossMap
+		public virtual DataTable RetarderLossMap
 		{
 			get
 			{
 				return
-					ReadTableData(Body.GetEx(JsonKeys.Vehicle_Retarder).GetEx<string>(JsonKeys.Vehicle_Retarder_LossMapFile),
+					ReadTableData(
+						Body.GetEx(JsonKeys.Vehicle_Retarder)
+							.GetEx<string>(JsonKeys.Vehicle_Retarder_LossMapFile),
 						"LossMap");
+			}
+		}
+
+		#endregion
+
+		#region IAngularGearInputData
+
+		public AngularGearType AngularGearType
+		{
+			get
+			{
+				return Body.GetEx(JsonKeys.Vehicle_AngularGear)
+					.GetEx<string>(JsonKeys.Vehicle_AngularGear_Type)
+					.ParseEnum<AngularGearType>();
+			}
+		}
+
+		public double AngularGearRatio
+		{
+			get { return Body.GetEx(JsonKeys.Vehicle_AngularGear).GetEx<double>(JsonKeys.Vehicle_AngularGear_Ratio); }
+		}
+
+		public DataTable AngularGearLossMap
+		{
+			get
+			{
+				return ReadTableData(
+					Body.GetEx(JsonKeys.Vehicle_AngularGear)
+						.GetEx<string>(JsonKeys.Vehicle_AngularGear_LossMapFile),
+					"LossMap");
 			}
 		}
 

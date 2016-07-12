@@ -3,7 +3,7 @@
 	public enum AngularGearType
 	{
 		None,
-		SeparateAngleGear,
-		LossesIncludedInTransmission,
+		SeparateAngularGear,
+		LossesIncludedInGearbox,
 	}
 }

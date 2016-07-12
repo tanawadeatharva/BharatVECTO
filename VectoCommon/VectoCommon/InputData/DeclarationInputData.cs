@@ -108,12 +108,6 @@ namespace TUGraz.VectoCommon.InputData
 		/// cf. VECTO Input Parameters.xlsx
 		/// </summary>
 		IList<IAxleDeclarationInputData> Axles { get; }
-
-		/// <summary>
-		/// P053
-		/// cf. VECTO Input Parameters.xlsx
-		/// </summary>
-		double RetarderRatio { get; }
 	}
 
 	public interface IRetarderInputData : IComponentInputData
@@ -122,14 +116,29 @@ namespace TUGraz.VectoCommon.InputData
 		/// P052  
 		/// cf. VECTO Input Parameters.xlsx
 		/// </summary>
-		RetarderType Type { get; }
+		RetarderType RetarderType { get; }
+
+		/// <summary>
+		/// P053
+		/// cf. VECTO Input Parameters.xlsx
+		/// </summary>
+		double RetarderRatio { get; }
 
 		/// <summary>
 		/// P054
 		/// P057, P058
 		/// cf. VECTO Input Parameters.xlsx
 		/// </summary>
-		DataTable LossMap { get; }
+		DataTable RetarderLossMap { get; }
+	}
+
+	public interface IAngularGearInputData : IComponentInputData
+	{
+		AngularGearType AngularGearType { get; }
+
+		double AngularGearRatio { get; }
+
+		DataTable AngularGearLossMap { get; }
 	}
 
 	public interface IAxleDeclarationInputData : IComponentInputData

@@ -41,7 +41,7 @@ using TUGraz.VectoCore.Models.SimulationComponent.Data.Engine;
 using TUGraz.VectoCore.Models.SimulationComponent.Data.Gearbox;
 using TUGraz.VectoCore.Utils;
 
-namespace TUGraz.VectoCore.InputData.Reader.DataObjectAdaper
+namespace TUGraz.VectoCore.InputData.Reader.DataObjectAdapter
 {
 	public abstract class AbstractSimulationDataAdapter : LoggingObject
 	{
@@ -86,13 +86,13 @@ namespace TUGraz.VectoCore.InputData.Reader.DataObjectAdaper
 				TypeId = data.TypeId,
 				DigestValue = data.DigestValue,
 				IntegrityStatus = data.IntegrityStatus,
-				Type = data.Type,
+				Type = data.RetarderType,
 			};
 			switch (retarder.Type) {
 				case RetarderType.Primary:
 				case RetarderType.Secondary:
-					retarder.LossMap = RetarderLossMap.Create(data.LossMap);
-					retarder.Ratio = vehicle.RetarderRatio;
+					retarder.LossMap = RetarderLossMap.Create(data.RetarderLossMap);
+					retarder.Ratio = data.RetarderRatio;
 					break;
 				case RetarderType.None:
 				case RetarderType.LossesIncludedInTransmission:

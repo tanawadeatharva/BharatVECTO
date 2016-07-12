@@ -111,12 +111,6 @@ Public Enum tRtType
 	Secondary = 2
 End Enum
 
-Public Enum tAngularGearType
-	None = 0
-	SeparateAngularGear = 1
-	IncludedInTransmission = 2
-End Enum
-
 Public Enum tGearbox
 	Manual = 0
 	SemiAutomatic = 1

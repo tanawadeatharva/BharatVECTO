@@ -173,6 +173,18 @@
 	<data name="Vehicle_Retarder_LossMapFile" xml:space="preserve">
     <value>File</value>
   </data>
+	<data name="Vehicle_AngularGear" xml:space="preserve">
+    <value>AngularGear</value>
+  </data>
+	<data name="Vehicle_AngularGear_Type" xml:space="preserve">
+    <value>Type</value>
+  </data>
+	<data name="Vehicle_AngularGear_Ratio" xml:space="preserve">
+    <value>Ratio</value>
+  </data>
+	<data name="Vehicle_AngularGear_LossMapFile" xml:space="preserve">
+    <value>LossMap</value>
+  </data>
 	<data name="Engine_ModelName" xml:space="preserve">
     <value>ModelName</value>
   </data>

@@ -13,6 +13,8 @@ Option Infer On
 Imports System.Collections.Generic
 Imports System.IO
 Imports System.Linq
+Imports TUGraz.VectoCommon.Models
+Imports TUGraz.VectoCommon.Utils
 
 
 Public Class cVEH
@@ -57,7 +59,7 @@ Public Class cVEH
 	Private _myFileList As List(Of String)
 
 	Public SavedInDeclMode As Boolean
-	Public AngularGearType As tAngularGearType '0=None, 1=Separate, 2=Included
+	Public AngularGearType As AngularGearType '0=None, 1=Separate, 2=Included
 	Public AngularGearRatio As Single
 	Public AngularGearLossMapFile As cSubPath
 
@@ -86,7 +88,7 @@ Public Class cVEH
 		End If
 
 		'Angular Gear
-		If AngularGearType <> tAngularGearType.None Then
+		If AngularGearType <> AngularGearType.None Then
 			_myFileList.Add(AngularGearLossMapFile.FullPath)
 		End If
 
@@ -131,7 +133,7 @@ Public Class cVEH
 		RtFile.Clear()
 		AngularGearLossMapFile.Clear()
 
-		AngularGearType = tAngularGearType.None
+		AngularGearType = AngularGearType.None
 		AngularGearLossMapFile.Clear()
 		AngularGearRatio = 1
 
@@ -226,9 +228,9 @@ Public Class cVEH
 			End If
 
 			If body("AngularGear") Is Nothing Then
-				AngularGearType = tAngularGearType.None
+				AngularGearType = AngularGearType.None
 			Else
-				AngularGearType = AngularGearTypeConverter(body("AngularGear")("Type").ToString)
+				AngularGearType = body("AngularGear")("Type").ToString.ParseEnum(Of AngularGearType)()
 				If Not body("AngularGear")("Ratio") Is Nothing Then
 					AngularGearRatio = body("AngularGear")("Ratio")
 				End If
@@ -304,7 +306,7 @@ Public Class cVEH
 				{"Ratio", RtRatio},
 				{"File", RtFile.PathOrDummy}}},
 			{"AngularGear", New Dictionary(Of String, Object) From {
-				{"Type", AngularGearTypeConverter(AngularGearType)},
+				{"Type", AngularGearType.ToString()},
 				{"Ratio", AngularGearRatio},
 				{"LossMap", AngularGearLossMapFile.PathOrDummy}}},
 			{"AxleConfig", New Dictionary(Of String, Object) From {

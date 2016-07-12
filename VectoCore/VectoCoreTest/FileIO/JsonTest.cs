@@ -183,7 +183,7 @@ namespace TUGraz.VectoCore.Tests.FileIO
 
 			var angleGearType = angleGear.ParseEnum<AngularGearType>();
 
-			Assert.AreEqual(AngularGearType.LossesIncludedInTransmission, angleGearType);
+			Assert.AreEqual(AngularGearType.LossesIncludedInGearbox, angleGearType);
 
 			Assert.Fail("not implemented");
 		}
