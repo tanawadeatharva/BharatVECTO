@@ -50,7 +50,7 @@
     <Compile Include="InputData\EngineeringInputData.cs" />
     <Compile Include="InputData\IInputDataProvider.cs" />
     <Compile Include="InputData\IntegrityStatus.cs" />
-    <Compile Include="Models\AngleGearType.cs" />
+    <Compile Include="Models\AngularGearType.cs" />
     <Compile Include="Models\AuxiliaryModel.cs" />
     <Compile Include="Models\AxleConfiguration.cs" />
     <Compile Include="Models\CrossWindCorrectionMode.cs" />

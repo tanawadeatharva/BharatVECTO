@@ -1,6 +1,6 @@
 ﻿namespace TUGraz.VectoCommon.Models
 {
-	public enum AngleGearType
+	public enum AngularGearType
 	{
 		None,
 		SeparateAngleGear,

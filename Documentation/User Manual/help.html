@@ -3449,6 +3449,7 @@ Example: “Gears\Gear1.vtlm” points to the “Gears” subdirectory of the Ge
 <ul>
 <li><a href="#cross-wind-correction">Cross Wind Correction (VCDV, VCDB)</a></li>
 <li><a href="#retarder-loss-torque-input-file-.vrlm">Retarder Loss Map (VRLM)</a></li>
+<li><a href="#transmission-loss-map">Transmission Loss Map (for Angular Gear) (VTLM)</a></li>
 </ul>
 <p><strong>Example:</strong></p>
 <div class="sourceCode"><pre class="sourceCode json"><code class="sourceCode json"><span class="fu">{</span>
@@ -3474,6 +3475,11 @@ Example: “Gears\Gear1.vtlm” points to the “Gears” subdirectory of the Ge
       <span class="dt">&quot;Type&quot;</span><span class="fu">:</span> <span class="st">&quot;Secondary&quot;</span><span class="fu">,</span>
       <span class="dt">&quot;Ratio&quot;</span><span class="fu">:</span> <span class="fl">1.0</span><span class="fu">,</span>
       <span class="dt">&quot;File&quot;</span><span class="fu">:</span> <span class="st">&quot;Retarder.vrlm&quot;</span>
+    <span class="fu">},</span>
+    <span class="dt">&quot;AngularGear&quot;</span><span class="fu">:</span> <span class="fu">{</span>
+      <span class="dt">&quot;Type&quot;</span> <span class="fu">:</span> <span class="st">&quot;Separate&quot;</span><span class="fu">,</span>
+      <span class="dt">&quot;Ratio&quot;</span><span class="fu">:</span> <span class="fl">1.0</span><span class="fu">,</span>
+      <span class="dt">&quot;LossMap&quot;</span><span class="fu">:</span> <span class="st">&quot;AngularGear.vtlm&quot;</span>
     <span class="fu">},</span>
     <span class="dt">&quot;AxleConfig&quot;</span><span class="fu">:</span> <span class="fu">{</span>
       <span class="dt">&quot;Type&quot;</span><span class="fu">:</span> <span class="st">&quot;4x2&quot;</span><span class="fu">,</span>
@@ -3800,7 +3806,7 @@ Example: “Gears\Gear1.vtlm” points to the “Gears” subdirectory of the Ge
 </div>
 <div id="transmission-loss-map" class="section level2">
 <h2>Transmission Loss Map</h2>
-<p>This file defines losses in gearbox and axle transmission and must be provided for each gear in the <a href="#gearbox-editor">Gearbox File</a>. The file uses the <a href="#csv">VECTO CSV format</a>.</p>
+<p>This file defines losses in gearbox and axle transmission and must be provided for each gear in the <a href="#gearbox-editor">Gearbox File</a>. The file uses the <a href="#csv">VECTO CSV format</a>. The same file format is also used for the axle gear (gear 0) and the angular gear.</p>
 <ul>
 <li>Filetype: .vtlm</li>
 <li>Header: <strong>Input Speed [rpm], Input Torque [Nm], Torque Loss [Nm]</strong></li>
@@ -5740,6 +5746,24 @@ Kneeling, UnknownCycleName, 0,</code></pre>
 </div>
 <div id="changelog" class="section level1">
 <h1>Changelog</h1>
+<p><strong>VECTO 3.0.4</strong></p>
+<p><strong><em>Build 544 (2016-06-28)</em></strong></p>
+<ul>
+<li>Main Updates
+<ul>
+<li>New gear shift strategy according to White Book 2016</li>
+<li>New coasting strategy according to White Book 2016</li>
+<li>New input parameters (enineering mode) for coasting and gear shift behavior</li>
+<li>Use SI units in Advanced Auxiliaries Module and compile with strict compiler settings (no implicit casts, etc.)</li>
+<li>Allow efficiency for transmission losses (in engineering mode)</li>
+</ul></li>
+<li>Bugfixes
+<ul>
+<li>Auxiliary TechList not read from JSON input data</li>
+<li>Improvements in driver strategy</li>
+<li>Bugfixes in MeasuredSpeed mode</li>
+</ul></li>
+</ul>
 <p><strong>VECTO 3.0.3</strong></p>
 <p><strong><em>Build 537 (2016-06-21)</em></strong></p>
 <ul>

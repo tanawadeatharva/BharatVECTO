@@ -181,9 +181,9 @@ namespace TUGraz.VectoCore.Tests.FileIO
 			var json = (JObject)JToken.ReadFrom(new JsonTextReader(File.OpenText(TestVehicleFile)));
 			var angleGear = json["Body"]["AngleGear"].Value<string>();
 
-			var angleGearType = angleGear.ParseEnum<AngleGearType>();
+			var angleGearType = angleGear.ParseEnum<AngularGearType>();
 
-			Assert.AreEqual(AngleGearType.LossesIncludedInTransmission, angleGearType);
+			Assert.AreEqual(AngularGearType.LossesIncludedInTransmission, angleGearType);
 
 			Assert.Fail("not implemented");
 		}
