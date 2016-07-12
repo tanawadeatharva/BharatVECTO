@@ -1,7 +1,7 @@
 ﻿{
   "Header": {
     "CreatedBy": " ()",
-    "Date": "12.07.2016 12:53:40",
+    "Date": "12.07.2016 15:47:48",
     "AppVersion": "2.2",
     "FileVersion": 7
   },
@@ -21,7 +21,7 @@
     "Retarder": {
       "Type": "Secondary",
       "Ratio": 1.0,
-      "File": "<NOFILE>"
+      "File": "Retarder.vrlm"
     },
     "AngularGear": {
       "Type": "SeparateAngularGear",
