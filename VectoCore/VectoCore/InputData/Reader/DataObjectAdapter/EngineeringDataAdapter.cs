@@ -99,7 +99,7 @@ namespace TUGraz.VectoCore.InputData.Reader.DataObjectAdapter
 
 		private void WarnEngineeringMode(string msg)
 		{
-			Log.Warn("{0} is in Declaration Mode but is used for Engineering Mode!", msg);
+			Log.Error("{0} is in Declaration Mode but is used for Engineering Mode!", msg);
 		}
 
 		internal CombustionEngineData CreateEngineData(IEngineEngineeringInputData engine)
