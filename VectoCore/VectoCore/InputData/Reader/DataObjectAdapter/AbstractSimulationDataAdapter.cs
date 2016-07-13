@@ -87,13 +87,13 @@ namespace TUGraz.VectoCore.InputData.Reader.DataObjectAdapter
 					TypeId = data.TypeId,
 					DigestValue = data.DigestValue,
 					IntegrityStatus = data.IntegrityStatus,
-					Type = data.RetarderType,
+					Type = data.Type,
 				};
 				switch (retarder.Type) {
 					case RetarderType.Primary:
 					case RetarderType.Secondary:
-						retarder.LossMap = RetarderLossMap.Create(data.RetarderLossMap);
-						retarder.Ratio = data.RetarderRatio;
+						retarder.LossMap = RetarderLossMap.Create(data.LossMap);
+						retarder.Ratio = data.Ratio;
 						break;
 					case RetarderType.None:
 					case RetarderType.LossesIncludedInTransmission:
