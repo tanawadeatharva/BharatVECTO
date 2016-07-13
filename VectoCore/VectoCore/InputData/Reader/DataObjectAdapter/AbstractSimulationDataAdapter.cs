@@ -198,7 +198,7 @@ namespace TUGraz.VectoCore.InputData.Reader.DataObjectAdapter
 					case AngularGearType.SeparateAngularGear:
 						try {
 							angularGear.AngularGear.LossMap = TransmissionLossMap.Create(data.LossMap, data.Ratio, "AngularGear");
-						} catch (InvalidFileFormatException) {
+						} catch (VectoException) {
 							if (useEfficiencyFallback)
 								angularGear.AngularGear.LossMap = TransmissionLossMap.Create(data.Efficiency, data.Ratio, "AngularGear");
 							else {
@@ -211,9 +211,12 @@ namespace TUGraz.VectoCore.InputData.Reader.DataObjectAdapter
 					case AngularGearType.LossesIncludedInGearbox:
 					case AngularGearType.None:
 						angularGear.AngularGear.Ratio = 1;
+						// if no angular gear or already included: Create LossMap with 100% efficiency
+						angularGear.AngularGear.LossMap = TransmissionLossMap.Create(1, angularGear.AngularGear.Ratio,
+							"Zero Losses AngularGear");
 						break;
 					default:
-						throw new ArgumentOutOfRangeException("data", "Unknown AngularGearType.");
+						throw new ArgumentOutOfRangeException("data", "Unknown AngularGear Type.");
 				}
 				return angularGear;
 			} catch (Exception e) {
@@ -236,7 +239,7 @@ namespace TUGraz.VectoCore.InputData.Reader.DataObjectAdapter
 			var entries =
 				gearCurve.FullLoadEntries.Concat(engineCurve.FullLoadEntries)
 					.OrderBy(x => x.EngineSpeed)
-					.Distinct(new FullLoadEntryEqualityComparer())
+					.DistinctBy((x, y) => x.EngineSpeed.Value().IsEqual(y.EngineSpeed.Value()))
 					.Select(x => new FullLoadCurve.FullLoadCurveEntry {
 						EngineSpeed = x.EngineSpeed,
 						TorqueFullLoad =
@@ -250,19 +253,6 @@ namespace TUGraz.VectoCore.InputData.Reader.DataObjectAdapter
 				PT1Data = engineCurve.PT1Data
 			};
 			return flc;
-		}
-
-		internal class FullLoadEntryEqualityComparer : IEqualityComparer<FullLoadCurve.FullLoadCurveEntry>
-		{
-			public bool Equals(FullLoadCurve.FullLoadCurveEntry x, FullLoadCurve.FullLoadCurveEntry y)
-			{
-				return x.EngineSpeed.Value().IsEqual(y.EngineSpeed.Value());
-			}
-
-			public int GetHashCode(FullLoadCurve.FullLoadCurveEntry obj)
-			{
-				return obj.EngineSpeed.Value().GetHashCode();
-			}
 		}
 	}
 }
