@@ -170,6 +170,57 @@ namespace TUGraz.VectoCore.InputData.Reader.DataObjectAdapter
 			};
 		}
 
+		internal AngularGearData CreateAngularGearData(IAngularGearInputData data, bool useEfficiencyFallback)
+		{
+			try {
+				var type = AngularGearType.None;
+				try {
+					type = data.Type;
+				} catch (Exception) {
+					Log.Info("AngularGear not found. Assuming None.");
+					// ignored
+				}
+
+				var angularGear = new AngularGearData {
+					SavedInDeclarationMode = data.SavedInDeclarationMode,
+					Vendor = data.Vendor,
+					ModelName = data.ModelName,
+					Creator = data.Creator,
+					Date = data.Date,
+					TypeId = data.TypeId,
+					DigestValue = data.DigestValue,
+					IntegrityStatus = data.IntegrityStatus,
+					Type = type,
+					AngularGear = new TransmissionData()
+				};
+
+				switch (angularGear.Type) {
+					case AngularGearType.SeparateAngularGear:
+						try {
+							angularGear.AngularGear.LossMap = TransmissionLossMap.Create(data.LossMap, data.Ratio, "AngularGear");
+						} catch (InvalidFileFormatException) {
+							if (useEfficiencyFallback)
+								angularGear.AngularGear.LossMap = TransmissionLossMap.Create(data.Efficiency, data.Ratio, "AngularGear");
+							else {
+								throw;
+							}
+						}
+						angularGear.AngularGear.Ratio = data.Ratio;
+						break;
+
+					case AngularGearType.LossesIncludedInGearbox:
+					case AngularGearType.None:
+						angularGear.AngularGear.Ratio = 1;
+						break;
+					default:
+						throw new ArgumentOutOfRangeException("data", "Unknown AngularGearType.");
+				}
+				return angularGear;
+			} catch (Exception e) {
+				throw new VectoException("Error while reading AngularGear data: {0}", e.Message);
+			}
+		}
+
 		/// <summary>
 		/// Intersects full load curves.
 		/// </summary>
