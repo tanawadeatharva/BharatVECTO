@@ -47,7 +47,7 @@ The product of Drag Coefficient [-] and Cross Sectional Area [m²] (**c~d~ x A**
 
 
 For each axle the parameters **Relative axle load, RRC~ISO~** and **F~zISO~** have to be given in order to calculate the total [Rolling Resistance Coefficient](#rolling-resistance-coefficient).
-Furthermore the **Wheels Inertia [kgm²]** has to be set per wheel for each axle. In [Declaration Mode](#declaration-mode) the inertia is computed based on the selected tyres and rims. The number of axles specified have to match the vehicle type (e.g., 2 axles for a 4x2 truck). 
+Furthermore the **Wheels Inertia [kgm²]** has to be set per wheel for each axle. In [Declaration Mode](#declaration-mode) the inertia is computed based on the selected tyres and rims. The number of axles specified have to match the vehicle type (e.g., 2 axles for a 4x2 truck).
 
 <div class="declaration">
 In [Declaration mode](#declaration-mode) only the axles of the truck have to be given. For the trailer predefined wheels and weight-shares are used.
@@ -82,11 +82,10 @@ Both, primary and secondary retarders, require an [Retarder Torque Loss Input Fi
 ###Angular Gear
 
 If an angular gear is used in the vehicle, it can be defined here.
-
 Three options are available:
 
 - No angular gear (**default**)
-- Separate angular gear: Use this if the angular gear is measured separately. In this case the ratio must be set and a [Transmission Loss Map](#transmission-loss-map) for the angular gear must be given.
+- Separate angular gear: Use this if the angular gear is measured separately. In this case the ratio must be set and the [Transmission Loss Map](#transmission-loss-map) (or an Efficiency value) must also be given.
 - Included in transmission: Use this if the gearbox already includes the transmission losses for the angular gear in the respective transmission loss maps.
 
 

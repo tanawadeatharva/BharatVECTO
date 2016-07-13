@@ -39,7 +39,7 @@ Refers to other files:
       "File": "Retarder.vrlm"
     },
     "AngularGear": {
-      "Type" : "Separate",
+      "Type" : "SeparateAngularGear",
       "Ratio": 1.0,
       "LossMap": "AngularGear.vtlm"
     },
