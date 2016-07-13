@@ -1,7 +1,10 @@
 using System;
+using System.Collections.Generic;
 using TUGraz.VectoCommon.Models;
 using TUGraz.VectoCore.Models.Connector.Ports;
 using TUGraz.VectoCore.Models.Simulation;
+using TUGraz.VectoCore.Models.Simulation.Data;
+using TUGraz.VectoCore.Models.Simulation.Impl;
 using TUGraz.VectoCore.Models.SimulationComponent;
 using TUGraz.VectoCore.Models.SimulationComponent.Data;
 using TUGraz.VectoCore.Models.SimulationComponent.Impl;
@@ -10,6 +13,19 @@ namespace TUGraz.VectoCore.Utils
 {
 	public static class ProviderExtensions
 	{
+		public static void AddAuxiliaries(this CombustionEngine engine, VehicleContainer container,
+			VectoRunData data)
+		{
+			// aux --> engine
+			if (data.AdvancedAux != null && data.AdvancedAux.AuxiliaryAssembly == AuxiliaryModel.Advanced) {
+				engine.Connect(PowertrainBuilder.CreateAdvancedAuxiliaries(data, container).Port());
+			} else {
+				if (data.Aux != null) {
+					engine.Connect(PowertrainBuilder.CreateAuxiliaries(data, container).Port());
+				}
+			}
+		}
+
 		public static IDriver AddComponent(this IDrivingCycleInProvider prev, IDriver next)
 		{
 			prev.InPort().Connect(next.OutPort());
