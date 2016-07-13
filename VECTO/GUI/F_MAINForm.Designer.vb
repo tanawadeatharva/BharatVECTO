@@ -229,7 +229,7 @@ Partial Class F_MAINForm
 		'
 		Me.btStartV3.Image = Global.VECTO.My.Resources.Resources.Play_icon
 		Me.btStartV3.ImageAlign = System.Drawing.ContentAlignment.MiddleLeft
-		Me.btStartV3.Location = New System.Drawing.Point(6, 100)
+		Me.btStartV3.Location = New System.Drawing.Point(6, 83)
 		Me.btStartV3.Name = "btStartV3"
 		Me.btStartV3.Size = New System.Drawing.Size(105, 41)
 		Me.btStartV3.TabIndex = 20
@@ -241,7 +241,7 @@ Partial Class F_MAINForm
 		'
 		Me.LbDecl.AutoSize = True
 		Me.LbDecl.Font = New System.Drawing.Font("Microsoft Sans Serif", 8.25!, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, CType(0, Byte))
-		Me.LbDecl.Location = New System.Drawing.Point(3, 141)
+		Me.LbDecl.Location = New System.Drawing.Point(3, 127)
 		Me.LbDecl.Name = "LbDecl"
 		Me.LbDecl.Size = New System.Drawing.Size(107, 13)
 		Me.LbDecl.TabIndex = 19
@@ -261,9 +261,9 @@ Partial Class F_MAINForm
 		'
 		Me.BtGENdown.Anchor = CType((System.Windows.Forms.AnchorStyles.Bottom Or System.Windows.Forms.AnchorStyles.Right), System.Windows.Forms.AnchorStyles)
 		Me.BtGENdown.Image = Global.VECTO.My.Resources.Resources.Actions_arrow_down_icon
-		Me.BtGENdown.Location = New System.Drawing.Point(1002, 321)
+		Me.BtGENdown.Location = New System.Drawing.Point(1008, 316)
 		Me.BtGENdown.Name = "BtGENdown"
-		Me.BtGENdown.Size = New System.Drawing.Size(30, 23)
+		Me.BtGENdown.Size = New System.Drawing.Size(30, 24)
 		Me.BtGENdown.TabIndex = 6
 		Me.BtGENdown.UseVisualStyleBackColor = True
 		'
@@ -271,9 +271,9 @@ Partial Class F_MAINForm
 		'
 		Me.BtGENup.Anchor = CType((System.Windows.Forms.AnchorStyles.Bottom Or System.Windows.Forms.AnchorStyles.Right), System.Windows.Forms.AnchorStyles)
 		Me.BtGENup.Image = Global.VECTO.My.Resources.Resources.Actions_arrow_up_icon
-		Me.BtGENup.Location = New System.Drawing.Point(966, 321)
+		Me.BtGENup.Location = New System.Drawing.Point(977, 316)
 		Me.BtGENup.Name = "BtGENup"
-		Me.BtGENup.Size = New System.Drawing.Size(30, 23)
+		Me.BtGENup.Size = New System.Drawing.Size(30, 24)
 		Me.BtGENup.TabIndex = 4
 		Me.BtGENup.UseVisualStyleBackColor = True
 		'
@@ -283,7 +283,7 @@ Partial Class F_MAINForm
 		Me.LbAutoShDown.AutoSize = True
 		Me.LbAutoShDown.Font = New System.Drawing.Font("Microsoft Sans Serif", 8.25!, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, CType(0, Byte))
 		Me.LbAutoShDown.ForeColor = System.Drawing.Color.Red
-		Me.LbAutoShDown.Location = New System.Drawing.Point(250, 326)
+		Me.LbAutoShDown.Location = New System.Drawing.Point(449, 323)
 		Me.LbAutoShDown.Name = "LbAutoShDown"
 		Me.LbAutoShDown.Size = New System.Drawing.Size(225, 13)
 		Me.LbAutoShDown.TabIndex = 17
@@ -294,11 +294,11 @@ Partial Class F_MAINForm
 		'
 		Me.ChBoxAllGEN.Anchor = CType((System.Windows.Forms.AnchorStyles.Bottom Or System.Windows.Forms.AnchorStyles.Left), System.Windows.Forms.AnchorStyles)
 		Me.ChBoxAllGEN.AutoSize = True
-		Me.ChBoxAllGEN.Location = New System.Drawing.Point(126, 325)
+		Me.ChBoxAllGEN.Location = New System.Drawing.Point(188, 320)
 		Me.ChBoxAllGEN.Name = "ChBoxAllGEN"
-		Me.ChBoxAllGEN.Size = New System.Drawing.Size(37, 17)
+		Me.ChBoxAllGEN.Size = New System.Drawing.Size(70, 17)
 		Me.ChBoxAllGEN.TabIndex = 16
-		Me.ChBoxAllGEN.Text = "All"
+		Me.ChBoxAllGEN.Text = "Select All"
 		Me.ChBoxAllGEN.UseVisualStyleBackColor = True
 		'
 		'LvGEN
@@ -334,9 +334,9 @@ Partial Class F_MAINForm
 		'ButtonGENopt
 		'
 		Me.ButtonGENopt.Anchor = CType((System.Windows.Forms.AnchorStyles.Bottom Or System.Windows.Forms.AnchorStyles.Right), System.Windows.Forms.AnchorStyles)
-		Me.ButtonGENopt.Location = New System.Drawing.Point(1038, 321)
+		Me.ButtonGENopt.Location = New System.Drawing.Point(1039, 316)
 		Me.ButtonGENopt.Name = "ButtonGENopt"
-		Me.ButtonGENopt.Size = New System.Drawing.Size(80, 23)
+		Me.ButtonGENopt.Size = New System.Drawing.Size(80, 24)
 		Me.ButtonGENopt.TabIndex = 8
 		Me.ButtonGENopt.Text = "List Options"
 		Me.ButtonGENopt.UseVisualStyleBackColor = True
@@ -346,9 +346,9 @@ Partial Class F_MAINForm
 		Me.ButtonGENremove.Anchor = CType((System.Windows.Forms.AnchorStyles.Bottom Or System.Windows.Forms.AnchorStyles.Right), System.Windows.Forms.AnchorStyles)
 		Me.ButtonGENremove.Font = New System.Drawing.Font("Microsoft Sans Serif", 8.25!, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, CType(0, Byte))
 		Me.ButtonGENremove.Image = Global.VECTO.My.Resources.Resources.minus_circle_icon
-		Me.ButtonGENremove.Location = New System.Drawing.Point(930, 321)
+		Me.ButtonGENremove.Location = New System.Drawing.Point(144, 316)
 		Me.ButtonGENremove.Name = "ButtonGENremove"
-		Me.ButtonGENremove.Size = New System.Drawing.Size(30, 23)
+		Me.ButtonGENremove.Size = New System.Drawing.Size(30, 24)
 		Me.ButtonGENremove.TabIndex = 2
 		Me.ButtonGENremove.UseVisualStyleBackColor = True
 		'
@@ -358,7 +358,7 @@ Partial Class F_MAINForm
 		Me.Button1.ImageAlign = System.Drawing.ContentAlignment.MiddleLeft
 		Me.Button1.Location = New System.Drawing.Point(6, 53)
 		Me.Button1.Name = "Button1"
-		Me.Button1.Size = New System.Drawing.Size(105, 41)
+		Me.Button1.Size = New System.Drawing.Size(105, 28)
 		Me.Button1.TabIndex = 12
 		Me.Button1.Text = "START V2.2"
 		Me.Button1.TextImageRelation = System.Windows.Forms.TextImageRelation.ImageBeforeText
@@ -369,9 +369,9 @@ Partial Class F_MAINForm
 		Me.ButtonGENadd.Anchor = CType((System.Windows.Forms.AnchorStyles.Bottom Or System.Windows.Forms.AnchorStyles.Right), System.Windows.Forms.AnchorStyles)
 		Me.ButtonGENadd.Font = New System.Drawing.Font("Microsoft Sans Serif", 8.25!, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, CType(0, Byte))
 		Me.ButtonGENadd.Image = Global.VECTO.My.Resources.Resources.plus_circle_icon
-		Me.ButtonGENadd.Location = New System.Drawing.Point(894, 321)
+		Me.ButtonGENadd.Location = New System.Drawing.Point(113, 316)
 		Me.ButtonGENadd.Name = "ButtonGENadd"
-		Me.ButtonGENadd.Size = New System.Drawing.Size(30, 23)
+		Me.ButtonGENadd.Size = New System.Drawing.Size(30, 24)
 		Me.ButtonGENadd.TabIndex = 1
 		Me.ButtonGENadd.UseVisualStyleBackColor = True
 		'
@@ -396,9 +396,9 @@ Partial Class F_MAINForm
 		'
 		Me.BtDRIdown.Anchor = CType((System.Windows.Forms.AnchorStyles.Bottom Or System.Windows.Forms.AnchorStyles.Right), System.Windows.Forms.AnchorStyles)
 		Me.BtDRIdown.Image = Global.VECTO.My.Resources.Resources.Actions_arrow_down_icon
-		Me.BtDRIdown.Location = New System.Drawing.Point(999, 318)
+		Me.BtDRIdown.Location = New System.Drawing.Point(1003, 313)
 		Me.BtDRIdown.Name = "BtDRIdown"
-		Me.BtDRIdown.Size = New System.Drawing.Size(30, 23)
+		Me.BtDRIdown.Size = New System.Drawing.Size(30, 24)
 		Me.BtDRIdown.TabIndex = 3
 		Me.BtDRIdown.UseVisualStyleBackColor = True
 		'
@@ -406,9 +406,9 @@ Partial Class F_MAINForm
 		'
 		Me.BtDRIup.Anchor = CType((System.Windows.Forms.AnchorStyles.Bottom Or System.Windows.Forms.AnchorStyles.Right), System.Windows.Forms.AnchorStyles)
 		Me.BtDRIup.Image = Global.VECTO.My.Resources.Resources.Actions_arrow_up_icon
-		Me.BtDRIup.Location = New System.Drawing.Point(963, 318)
+		Me.BtDRIup.Location = New System.Drawing.Point(973, 313)
 		Me.BtDRIup.Name = "BtDRIup"
-		Me.BtDRIup.Size = New System.Drawing.Size(30, 23)
+		Me.BtDRIup.Size = New System.Drawing.Size(30, 24)
 		Me.BtDRIup.TabIndex = 2
 		Me.BtDRIup.UseVisualStyleBackColor = True
 		'
@@ -416,11 +416,11 @@ Partial Class F_MAINForm
 		'
 		Me.ChBoxAllDRI.Anchor = CType((System.Windows.Forms.AnchorStyles.Bottom Or System.Windows.Forms.AnchorStyles.Left), System.Windows.Forms.AnchorStyles)
 		Me.ChBoxAllDRI.AutoSize = True
-		Me.ChBoxAllDRI.Location = New System.Drawing.Point(15, 322)
+		Me.ChBoxAllDRI.Location = New System.Drawing.Point(74, 317)
 		Me.ChBoxAllDRI.Name = "ChBoxAllDRI"
-		Me.ChBoxAllDRI.Size = New System.Drawing.Size(37, 17)
+		Me.ChBoxAllDRI.Size = New System.Drawing.Size(70, 17)
 		Me.ChBoxAllDRI.TabIndex = 7
-		Me.ChBoxAllDRI.Text = "All"
+		Me.ChBoxAllDRI.Text = "Select All"
 		Me.ChBoxAllDRI.UseVisualStyleBackColor = True
 		'
 		'LvDRI
@@ -456,7 +456,7 @@ Partial Class F_MAINForm
 		'ButtonDRIedit
 		'
 		Me.ButtonDRIedit.Anchor = CType((System.Windows.Forms.AnchorStyles.Bottom Or System.Windows.Forms.AnchorStyles.Right), System.Windows.Forms.AnchorStyles)
-		Me.ButtonDRIedit.Location = New System.Drawing.Point(1035, 318)
+		Me.ButtonDRIedit.Location = New System.Drawing.Point(1035, 313)
 		Me.ButtonDRIedit.Name = "ButtonDRIedit"
 		Me.ButtonDRIedit.Size = New System.Drawing.Size(80, 23)
 		Me.ButtonDRIedit.TabIndex = 4
@@ -468,9 +468,9 @@ Partial Class F_MAINForm
 		Me.ButtonDRIremove.Anchor = CType((System.Windows.Forms.AnchorStyles.Bottom Or System.Windows.Forms.AnchorStyles.Right), System.Windows.Forms.AnchorStyles)
 		Me.ButtonDRIremove.Font = New System.Drawing.Font("Microsoft Sans Serif", 8.25!, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, CType(0, Byte))
 		Me.ButtonDRIremove.Image = Global.VECTO.My.Resources.Resources.minus_circle_icon
-		Me.ButtonDRIremove.Location = New System.Drawing.Point(927, 318)
+		Me.ButtonDRIremove.Location = New System.Drawing.Point(37, 313)
 		Me.ButtonDRIremove.Name = "ButtonDRIremove"
-		Me.ButtonDRIremove.Size = New System.Drawing.Size(30, 23)
+		Me.ButtonDRIremove.Size = New System.Drawing.Size(30, 24)
 		Me.ButtonDRIremove.TabIndex = 1
 		Me.ButtonDRIremove.UseVisualStyleBackColor = True
 		'
@@ -479,9 +479,9 @@ Partial Class F_MAINForm
 		Me.ButtonDRIadd.Anchor = CType((System.Windows.Forms.AnchorStyles.Bottom Or System.Windows.Forms.AnchorStyles.Right), System.Windows.Forms.AnchorStyles)
 		Me.ButtonDRIadd.Font = New System.Drawing.Font("Microsoft Sans Serif", 8.25!, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, CType(0, Byte))
 		Me.ButtonDRIadd.Image = Global.VECTO.My.Resources.Resources.plus_circle_icon
-		Me.ButtonDRIadd.Location = New System.Drawing.Point(891, 318)
+		Me.ButtonDRIadd.Location = New System.Drawing.Point(6, 313)
 		Me.ButtonDRIadd.Name = "ButtonDRIadd"
-		Me.ButtonDRIadd.Size = New System.Drawing.Size(30, 23)
+		Me.ButtonDRIadd.Size = New System.Drawing.Size(30, 24)
 		Me.ButtonDRIadd.TabIndex = 0
 		Me.ButtonDRIadd.UseVisualStyleBackColor = True
 		'
@@ -538,11 +538,11 @@ Partial Class F_MAINForm
 		'ButBObrowse
 		'
 		Me.ButBObrowse.Anchor = CType((System.Windows.Forms.AnchorStyles.Top Or System.Windows.Forms.AnchorStyles.Right), System.Windows.Forms.AnchorStyles)
-		Me.ButBObrowse.Location = New System.Drawing.Point(1054, 18)
+		Me.ButBObrowse.Image = Global.VECTO.My.Resources.Resources.Open_icon
+		Me.ButBObrowse.Location = New System.Drawing.Point(1048, 16)
 		Me.ButBObrowse.Name = "ButBObrowse"
-		Me.ButBObrowse.Size = New System.Drawing.Size(28, 20)
+		Me.ButBObrowse.Size = New System.Drawing.Size(24, 24)
 		Me.ButBObrowse.TabIndex = 3
-		Me.ButBObrowse.Text = "..."
 		Me.ButBObrowse.UseVisualStyleBackColor = True
 		'
 		'CbBOmode
@@ -710,11 +710,11 @@ Partial Class F_MAINForm
 		'
 		Me.Label1.Anchor = CType((System.Windows.Forms.AnchorStyles.Bottom Or System.Windows.Forms.AnchorStyles.Left), System.Windows.Forms.AnchorStyles)
 		Me.Label1.AutoSize = True
-		Me.Label1.Location = New System.Drawing.Point(6, 331)
+		Me.Label1.Location = New System.Drawing.Point(1012, 328)
 		Me.Label1.Name = "Label1"
-		Me.Label1.Size = New System.Drawing.Size(125, 13)
+		Me.Label1.Size = New System.Drawing.Size(106, 13)
 		Me.Label1.TabIndex = 1
-		Me.Label1.Text = "Double-Click entry to edit"
+		Me.Label1.Text = "(Double-Click to Edit)"
 		'
 		'LvDEVoptions
 		'

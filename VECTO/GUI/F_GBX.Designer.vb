@@ -65,6 +65,16 @@ Partial Class F_GBX
 		Me.PictureBox1 = New System.Windows.Forms.PictureBox()
 		Me.BtRemGear = New System.Windows.Forms.Button()
 		Me.GrGearShift = New System.Windows.Forms.GroupBox()
+		Me.GroupBox1 = New System.Windows.Forms.GroupBox()
+		Me.tbUpshiftMinAcceleration = New System.Windows.Forms.TextBox()
+		Me.tbUpshiftAfterDownshift = New System.Windows.Forms.TextBox()
+		Me.tbDownshiftAfterUpshift = New System.Windows.Forms.TextBox()
+		Me.Label24 = New System.Windows.Forms.Label()
+		Me.Label23 = New System.Windows.Forms.Label()
+		Me.Label22 = New System.Windows.Forms.Label()
+		Me.Label21 = New System.Windows.Forms.Label()
+		Me.Label20 = New System.Windows.Forms.Label()
+		Me.Label19 = New System.Windows.Forms.Label()
 		Me.PnTorqRes = New System.Windows.Forms.Panel()
 		Me.Label2 = New System.Windows.Forms.Label()
 		Me.Label4 = New System.Windows.Forms.Label()
@@ -107,20 +117,11 @@ Partial Class F_GBX
 		Me.Label32 = New System.Windows.Forms.Label()
 		Me.PnInertiaTI = New System.Windows.Forms.Panel()
 		Me.PicBox = New System.Windows.Forms.PictureBox()
-		Me.GroupBox1 = New System.Windows.Forms.GroupBox()
-		Me.Label19 = New System.Windows.Forms.Label()
-		Me.Label20 = New System.Windows.Forms.Label()
-		Me.Label21 = New System.Windows.Forms.Label()
-		Me.Label22 = New System.Windows.Forms.Label()
-		Me.Label23 = New System.Windows.Forms.Label()
-		Me.Label24 = New System.Windows.Forms.Label()
-		Me.tbDownshiftAfterUpshift = New System.Windows.Forms.TextBox()
-		Me.tbUpshiftAfterDownshift = New System.Windows.Forms.TextBox()
-		Me.tbUpshiftMinAcceleration = New System.Windows.Forms.TextBox()
 		Me.ToolStrip1.SuspendLayout()
 		Me.StatusStrip1.SuspendLayout()
 		CType(Me.PictureBox1, System.ComponentModel.ISupportInitialize).BeginInit()
 		Me.GrGearShift.SuspendLayout()
+		Me.GroupBox1.SuspendLayout()
 		Me.PnTorqRes.SuspendLayout()
 		Me.GroupBox2.SuspendLayout()
 		Me.CmOpenFile.SuspendLayout()
@@ -129,7 +130,6 @@ Partial Class F_GBX
 		Me.GroupBox4.SuspendLayout()
 		Me.PnInertiaTI.SuspendLayout()
 		CType(Me.PicBox, System.ComponentModel.ISupportInitialize).BeginInit()
-		Me.GroupBox1.SuspendLayout()
 		Me.SuspendLayout()
 		'
 		'ToolStrip1
@@ -394,6 +394,100 @@ Partial Class F_GBX
 		Me.GrGearShift.TabIndex = 3
 		Me.GrGearShift.TabStop = False
 		Me.GrGearShift.Text = "Gear shift parameters"
+		'
+		'GroupBox1
+		'
+		Me.GroupBox1.BackColor = System.Drawing.Color.AliceBlue
+		Me.GroupBox1.Controls.Add(Me.tbUpshiftMinAcceleration)
+		Me.GroupBox1.Controls.Add(Me.tbUpshiftAfterDownshift)
+		Me.GroupBox1.Controls.Add(Me.tbDownshiftAfterUpshift)
+		Me.GroupBox1.Controls.Add(Me.Label24)
+		Me.GroupBox1.Controls.Add(Me.Label23)
+		Me.GroupBox1.Controls.Add(Me.Label22)
+		Me.GroupBox1.Controls.Add(Me.Label21)
+		Me.GroupBox1.Controls.Add(Me.Label20)
+		Me.GroupBox1.Controls.Add(Me.Label19)
+		Me.GroupBox1.Location = New System.Drawing.Point(6, 82)
+		Me.GroupBox1.Name = "GroupBox1"
+		Me.GroupBox1.Size = New System.Drawing.Size(429, 100)
+		Me.GroupBox1.TabIndex = 10
+		Me.GroupBox1.TabStop = False
+		Me.GroupBox1.Text = "Shift Strategy Parameters"
+		'
+		'tbUpshiftMinAcceleration
+		'
+		Me.tbUpshiftMinAcceleration.Location = New System.Drawing.Point(209, 71)
+		Me.tbUpshiftMinAcceleration.Name = "tbUpshiftMinAcceleration"
+		Me.tbUpshiftMinAcceleration.Size = New System.Drawing.Size(57, 20)
+		Me.tbUpshiftMinAcceleration.TabIndex = 8
+		'
+		'tbUpshiftAfterDownshift
+		'
+		Me.tbUpshiftAfterDownshift.Location = New System.Drawing.Point(209, 45)
+		Me.tbUpshiftAfterDownshift.Name = "tbUpshiftAfterDownshift"
+		Me.tbUpshiftAfterDownshift.Size = New System.Drawing.Size(57, 20)
+		Me.tbUpshiftAfterDownshift.TabIndex = 7
+		'
+		'tbDownshiftAfterUpshift
+		'
+		Me.tbDownshiftAfterUpshift.Location = New System.Drawing.Point(209, 20)
+		Me.tbDownshiftAfterUpshift.Name = "tbDownshiftAfterUpshift"
+		Me.tbDownshiftAfterUpshift.Size = New System.Drawing.Size(57, 20)
+		Me.tbDownshiftAfterUpshift.TabIndex = 6
+		'
+		'Label24
+		'
+		Me.Label24.AutoSize = True
+		Me.Label24.Location = New System.Drawing.Point(275, 74)
+		Me.Label24.Name = "Label24"
+		Me.Label24.Size = New System.Drawing.Size(34, 13)
+		Me.Label24.TabIndex = 5
+		Me.Label24.Text = "[m/s²]"
+		'
+		'Label23
+		'
+		Me.Label23.AutoSize = True
+		Me.Label23.Location = New System.Drawing.Point(275, 48)
+		Me.Label23.Name = "Label23"
+		Me.Label23.Size = New System.Drawing.Size(18, 13)
+		Me.Label23.TabIndex = 4
+		Me.Label23.Text = "[s]"
+		'
+		'Label22
+		'
+		Me.Label22.AutoSize = True
+		Me.Label22.Location = New System.Drawing.Point(275, 25)
+		Me.Label22.Name = "Label22"
+		Me.Label22.Size = New System.Drawing.Size(18, 13)
+		Me.Label22.TabIndex = 3
+		Me.Label22.Text = "[s]"
+		'
+		'Label21
+		'
+		Me.Label21.AutoSize = True
+		Me.Label21.Location = New System.Drawing.Point(20, 74)
+		Me.Label21.Name = "Label21"
+		Me.Label21.Size = New System.Drawing.Size(146, 13)
+		Me.Label21.TabIndex = 2
+		Me.Label21.Text = "Min. acceleration after upshift"
+		'
+		'Label20
+		'
+		Me.Label20.AutoSize = True
+		Me.Label20.Location = New System.Drawing.Point(20, 48)
+		Me.Label20.Name = "Label20"
+		Me.Label20.Size = New System.Drawing.Size(137, 13)
+		Me.Label20.TabIndex = 1
+		Me.Label20.Text = "Upshift afer downshift delay"
+		'
+		'Label19
+		'
+		Me.Label19.AutoSize = True
+		Me.Label19.Location = New System.Drawing.Point(20, 25)
+		Me.Label19.Name = "Label19"
+		Me.Label19.Size = New System.Drawing.Size(137, 13)
+		Me.Label19.TabIndex = 0
+		Me.Label19.Text = "Downshift afer upshift delay"
 		'
 		'PnTorqRes
 		'
@@ -676,30 +770,30 @@ Partial Class F_GBX
 		'BtTCfileBrowse
 		'
 		Me.BtTCfileBrowse.Anchor = CType((System.Windows.Forms.AnchorStyles.Top Or System.Windows.Forms.AnchorStyles.Right), System.Windows.Forms.AnchorStyles)
-		Me.BtTCfileBrowse.Location = New System.Drawing.Point(341, 19)
+		Me.BtTCfileBrowse.Image = Global.VECTO.My.Resources.Resources.Open_icon
+		Me.BtTCfileBrowse.Location = New System.Drawing.Point(348, 19)
 		Me.BtTCfileBrowse.Name = "BtTCfileBrowse"
-		Me.BtTCfileBrowse.Size = New System.Drawing.Size(32, 23)
+		Me.BtTCfileBrowse.Size = New System.Drawing.Size(24, 24)
 		Me.BtTCfileBrowse.TabIndex = 1
 		Me.BtTCfileBrowse.TabStop = False
-		Me.BtTCfileBrowse.Text = "..."
 		Me.BtTCfileBrowse.UseVisualStyleBackColor = True
 		'
 		'TbTCfile
 		'
 		Me.TbTCfile.Anchor = CType(((System.Windows.Forms.AnchorStyles.Top Or System.Windows.Forms.AnchorStyles.Left) _
 			Or System.Windows.Forms.AnchorStyles.Right), System.Windows.Forms.AnchorStyles)
-		Me.TbTCfile.Location = New System.Drawing.Point(0, 21)
+		Me.TbTCfile.Location = New System.Drawing.Point(4, 21)
 		Me.TbTCfile.Name = "TbTCfile"
-		Me.TbTCfile.Size = New System.Drawing.Size(335, 20)
+		Me.TbTCfile.Size = New System.Drawing.Size(343, 20)
 		Me.TbTCfile.TabIndex = 0
 		'
 		'BtTCfileOpen
 		'
 		Me.BtTCfileOpen.Anchor = CType((System.Windows.Forms.AnchorStyles.Top Or System.Windows.Forms.AnchorStyles.Right), System.Windows.Forms.AnchorStyles)
 		Me.BtTCfileOpen.Image = Global.VECTO.My.Resources.Resources.application_export_icon_small
-		Me.BtTCfileOpen.Location = New System.Drawing.Point(379, 19)
+		Me.BtTCfileOpen.Location = New System.Drawing.Point(372, 19)
 		Me.BtTCfileOpen.Name = "BtTCfileOpen"
-		Me.BtTCfileOpen.Size = New System.Drawing.Size(23, 23)
+		Me.BtTCfileOpen.Size = New System.Drawing.Size(24, 24)
 		Me.BtTCfileOpen.TabIndex = 2
 		Me.BtTCfileOpen.TabStop = False
 		Me.BtTCfileOpen.UseVisualStyleBackColor = True
@@ -795,100 +889,6 @@ Partial Class F_GBX
 		Me.PicBox.TabIndex = 48
 		Me.PicBox.TabStop = False
 		'
-		'GroupBox1
-		'
-		Me.GroupBox1.BackColor = System.Drawing.Color.AliceBlue
-		Me.GroupBox1.Controls.Add(Me.tbUpshiftMinAcceleration)
-		Me.GroupBox1.Controls.Add(Me.tbUpshiftAfterDownshift)
-		Me.GroupBox1.Controls.Add(Me.tbDownshiftAfterUpshift)
-		Me.GroupBox1.Controls.Add(Me.Label24)
-		Me.GroupBox1.Controls.Add(Me.Label23)
-		Me.GroupBox1.Controls.Add(Me.Label22)
-		Me.GroupBox1.Controls.Add(Me.Label21)
-		Me.GroupBox1.Controls.Add(Me.Label20)
-		Me.GroupBox1.Controls.Add(Me.Label19)
-		Me.GroupBox1.Location = New System.Drawing.Point(6, 82)
-		Me.GroupBox1.Name = "GroupBox1"
-		Me.GroupBox1.Size = New System.Drawing.Size(429, 100)
-		Me.GroupBox1.TabIndex = 10
-		Me.GroupBox1.TabStop = False
-		Me.GroupBox1.Text = "Shift Strategy Parameters"
-		'
-		'Label19
-		'
-		Me.Label19.AutoSize = True
-		Me.Label19.Location = New System.Drawing.Point(20, 25)
-		Me.Label19.Name = "Label19"
-		Me.Label19.Size = New System.Drawing.Size(137, 13)
-		Me.Label19.TabIndex = 0
-		Me.Label19.Text = "Downshift afer upshift delay"
-		'
-		'Label20
-		'
-		Me.Label20.AutoSize = True
-		Me.Label20.Location = New System.Drawing.Point(20, 48)
-		Me.Label20.Name = "Label20"
-		Me.Label20.Size = New System.Drawing.Size(137, 13)
-		Me.Label20.TabIndex = 1
-		Me.Label20.Text = "Upshift afer downshift delay"
-		'
-		'Label21
-		'
-		Me.Label21.AutoSize = True
-		Me.Label21.Location = New System.Drawing.Point(20, 74)
-		Me.Label21.Name = "Label21"
-		Me.Label21.Size = New System.Drawing.Size(146, 13)
-		Me.Label21.TabIndex = 2
-		Me.Label21.Text = "Min. acceleration after upshift"
-		'
-		'Label22
-		'
-		Me.Label22.AutoSize = True
-		Me.Label22.Location = New System.Drawing.Point(275, 25)
-		Me.Label22.Name = "Label22"
-		Me.Label22.Size = New System.Drawing.Size(18, 13)
-		Me.Label22.TabIndex = 3
-		Me.Label22.Text = "[s]"
-		'
-		'Label23
-		'
-		Me.Label23.AutoSize = True
-		Me.Label23.Location = New System.Drawing.Point(275, 48)
-		Me.Label23.Name = "Label23"
-		Me.Label23.Size = New System.Drawing.Size(18, 13)
-		Me.Label23.TabIndex = 4
-		Me.Label23.Text = "[s]"
-		'
-		'Label24
-		'
-		Me.Label24.AutoSize = True
-		Me.Label24.Location = New System.Drawing.Point(275, 74)
-		Me.Label24.Name = "Label24"
-		Me.Label24.Size = New System.Drawing.Size(34, 13)
-		Me.Label24.TabIndex = 5
-		Me.Label24.Text = "[m/s²]"
-		'
-		'tbDownshiftAfterUpshift
-		'
-		Me.tbDownshiftAfterUpshift.Location = New System.Drawing.Point(209, 20)
-		Me.tbDownshiftAfterUpshift.Name = "tbDownshiftAfterUpshift"
-		Me.tbDownshiftAfterUpshift.Size = New System.Drawing.Size(57, 20)
-		Me.tbDownshiftAfterUpshift.TabIndex = 6
-		'
-		'tbUpshiftAfterDownshift
-		'
-		Me.tbUpshiftAfterDownshift.Location = New System.Drawing.Point(209, 45)
-		Me.tbUpshiftAfterDownshift.Name = "tbUpshiftAfterDownshift"
-		Me.tbUpshiftAfterDownshift.Size = New System.Drawing.Size(57, 20)
-		Me.tbUpshiftAfterDownshift.TabIndex = 7
-		'
-		'tbUpshiftMinAcceleration
-		'
-		Me.tbUpshiftMinAcceleration.Location = New System.Drawing.Point(209, 71)
-		Me.tbUpshiftMinAcceleration.Name = "tbUpshiftMinAcceleration"
-		Me.tbUpshiftMinAcceleration.Size = New System.Drawing.Size(57, 20)
-		Me.tbUpshiftMinAcceleration.TabIndex = 8
-		'
 		'F_GBX
 		'
 		Me.AcceptButton = Me.ButOK
@@ -923,6 +923,8 @@ Partial Class F_GBX
 		CType(Me.PictureBox1, System.ComponentModel.ISupportInitialize).EndInit()
 		Me.GrGearShift.ResumeLayout(False)
 		Me.GrGearShift.PerformLayout()
+		Me.GroupBox1.ResumeLayout(False)
+		Me.GroupBox1.PerformLayout()
 		Me.PnTorqRes.ResumeLayout(False)
 		Me.PnTorqRes.PerformLayout()
 		Me.GroupBox2.ResumeLayout(False)
@@ -937,8 +939,6 @@ Partial Class F_GBX
 		Me.PnInertiaTI.ResumeLayout(False)
 		Me.PnInertiaTI.PerformLayout()
 		CType(Me.PicBox, System.ComponentModel.ISupportInitialize).EndInit()
-		Me.GroupBox1.ResumeLayout(False)
-		Me.GroupBox1.PerformLayout()
 		Me.ResumeLayout(False)
 		Me.PerformLayout()
 

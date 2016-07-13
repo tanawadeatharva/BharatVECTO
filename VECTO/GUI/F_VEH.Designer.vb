@@ -63,6 +63,7 @@ Partial Class F_VEH
 		Me.ToolStripSeparator1 = New System.Windows.Forms.ToolStripSeparator()
 		Me.ToolStripButton1 = New System.Windows.Forms.ToolStripButton()
 		Me.GroupBox7 = New System.Windows.Forms.GroupBox()
+		Me.Label15 = New System.Windows.Forms.Label()
 		Me.PnRt = New System.Windows.Forms.Panel()
 		Me.Label45 = New System.Windows.Forms.Label()
 		Me.LbRtRatio = New System.Windows.Forms.Label()
@@ -111,6 +112,7 @@ Partial Class F_VEH
 		Me.PnAll = New System.Windows.Forms.Panel()
 		Me.GroupBox2 = New System.Windows.Forms.GroupBox()
 		Me.Label4 = New System.Windows.Forms.Label()
+		Me.Label12 = New System.Windows.Forms.Label()
 		Me.Label10 = New System.Windows.Forms.Label()
 		Me.tbAngularGearRatio = New System.Windows.Forms.TextBox()
 		Me.btAngularGearLossMapBrowse = New System.Windows.Forms.Button()
@@ -118,8 +120,6 @@ Partial Class F_VEH
 		Me.cbAngularGearType = New System.Windows.Forms.ComboBox()
 		Me.PicVehicle = New System.Windows.Forms.PictureBox()
 		Me.Label8 = New System.Windows.Forms.Label()
-		Me.Label12 = New System.Windows.Forms.Label()
-		Me.Label15 = New System.Windows.Forms.Label()
 		Me.GroupBox6.SuspendLayout()
 		Me.ToolStrip1.SuspendLayout()
 		Me.GroupBox7.SuspendLayout()
@@ -410,6 +410,15 @@ Partial Class F_VEH
 		Me.GroupBox7.TabStop = False
 		Me.GroupBox7.Text = "Retarder Losses"
 		'
+		'Label15
+		'
+		Me.Label15.Location = New System.Drawing.Point(4, 66)
+		Me.Label15.Name = "Label15"
+		Me.Label15.Size = New System.Drawing.Size(269, 17)
+		Me.Label15.TabIndex = 12
+		Me.Label15.Text = "Retarder Loss Map"
+		Me.Label15.TextAlign = System.Drawing.ContentAlignment.BottomLeft
+		'
 		'PnRt
 		'
 		Me.PnRt.Controls.Add(Me.Label45)
@@ -558,7 +567,7 @@ Partial Class F_VEH
 		'ButAxlRem
 		'
 		Me.ButAxlRem.Image = Global.VECTO.My.Resources.Resources.minus_circle_icon
-		Me.ButAxlRem.Location = New System.Drawing.Point(28, 121)
+		Me.ButAxlRem.Location = New System.Drawing.Point(29, 122)
 		Me.ButAxlRem.Name = "ButAxlRem"
 		Me.ButAxlRem.Size = New System.Drawing.Size(24, 24)
 		Me.ButAxlRem.TabIndex = 2
@@ -618,7 +627,7 @@ Partial Class F_VEH
 		'ButAxlAdd
 		'
 		Me.ButAxlAdd.Image = Global.VECTO.My.Resources.Resources.plus_circle_icon
-		Me.ButAxlAdd.Location = New System.Drawing.Point(5, 121)
+		Me.ButAxlAdd.Location = New System.Drawing.Point(5, 122)
 		Me.ButAxlAdd.Name = "ButAxlAdd"
 		Me.ButAxlAdd.Size = New System.Drawing.Size(24, 24)
 		Me.ButAxlAdd.TabIndex = 1
@@ -849,6 +858,15 @@ Partial Class F_VEH
 		Me.Label4.TabIndex = 10
 		Me.Label4.Text = "[-]"
 		'
+		'Label12
+		'
+		Me.Label12.Location = New System.Drawing.Point(3, 67)
+		Me.Label12.Name = "Label12"
+		Me.Label12.Size = New System.Drawing.Size(269, 16)
+		Me.Label12.TabIndex = 11
+		Me.Label12.Text = "Transmission Loss Map or Efficiency Value [0..1]"
+		Me.Label12.TextAlign = System.Drawing.ContentAlignment.BottomLeft
+		'
 		'Label10
 		'
 		Me.Label10.Location = New System.Drawing.Point(149, 49)
@@ -912,24 +930,6 @@ Partial Class F_VEH
 		Me.Label8.Size = New System.Drawing.Size(58, 13)
 		Me.Label8.TabIndex = 10
 		Me.Label8.Text = "HDV Class"
-		'
-		'Label12
-		'
-		Me.Label12.Location = New System.Drawing.Point(6, 67)
-		Me.Label12.Name = "Label12"
-		Me.Label12.Size = New System.Drawing.Size(266, 16)
-		Me.Label12.TabIndex = 11
-		Me.Label12.Text = "Transmission Loss Map or Efficiency Value [0..1]"
-		Me.Label12.TextAlign = System.Drawing.ContentAlignment.BottomLeft
-		'
-		'Label15
-		'
-		Me.Label15.Location = New System.Drawing.Point(6, 66)
-		Me.Label15.Name = "Label15"
-		Me.Label15.Size = New System.Drawing.Size(267, 17)
-		Me.Label15.TabIndex = 12
-		Me.Label15.Text = "Retarder Loss Map"
-		Me.Label15.TextAlign = System.Drawing.ContentAlignment.BottomLeft
 		'
 		'F_VEH
 		'
