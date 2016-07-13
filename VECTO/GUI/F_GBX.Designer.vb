@@ -372,9 +372,9 @@ Partial Class F_GBX
 		'BtRemGear
 		'
 		Me.BtRemGear.Image = Global.VECTO.My.Resources.Resources.minus_circle_icon
-		Me.BtRemGear.Location = New System.Drawing.Point(41, 207)
+		Me.BtRemGear.Location = New System.Drawing.Point(30, 202)
 		Me.BtRemGear.Name = "BtRemGear"
-		Me.BtRemGear.Size = New System.Drawing.Size(29, 23)
+		Me.BtRemGear.Size = New System.Drawing.Size(24, 24)
 		Me.BtRemGear.TabIndex = 2
 		Me.BtRemGear.UseVisualStyleBackColor = True
 		'
@@ -839,9 +839,9 @@ Partial Class F_GBX
 		'BtAddGear
 		'
 		Me.BtAddGear.Image = Global.VECTO.My.Resources.Resources.plus_circle_icon
-		Me.BtAddGear.Location = New System.Drawing.Point(6, 207)
+		Me.BtAddGear.Location = New System.Drawing.Point(6, 202)
 		Me.BtAddGear.Name = "BtAddGear"
-		Me.BtAddGear.Size = New System.Drawing.Size(29, 23)
+		Me.BtAddGear.Size = New System.Drawing.Size(24, 24)
 		Me.BtAddGear.TabIndex = 1
 		Me.BtAddGear.UseVisualStyleBackColor = True
 		'
@@ -853,7 +853,7 @@ Partial Class F_GBX
 		Me.GroupBox4.Controls.Add(Me.BtAddGear)
 		Me.GroupBox4.Location = New System.Drawing.Point(12, 135)
 		Me.GroupBox4.Name = "GroupBox4"
-		Me.GroupBox4.Size = New System.Drawing.Size(441, 236)
+		Me.GroupBox4.Size = New System.Drawing.Size(441, 232)
 		Me.GroupBox4.TabIndex = 2
 		Me.GroupBox4.TabStop = False
 		Me.GroupBox4.Text = "Gears"
@@ -861,11 +861,11 @@ Partial Class F_GBX
 		'Label32
 		'
 		Me.Label32.AutoSize = True
-		Me.Label32.Location = New System.Drawing.Point(312, 212)
+		Me.Label32.Location = New System.Drawing.Point(331, 202)
 		Me.Label32.Name = "Label32"
-		Me.Label32.Size = New System.Drawing.Size(123, 13)
+		Me.Label32.Size = New System.Drawing.Size(106, 13)
 		Me.Label32.TabIndex = 3
-		Me.Label32.Text = "Double-Click to edit gear"
+		Me.Label32.Text = "(Double-Click to Edit)"
 		'
 		'PnInertiaTI
 		'
