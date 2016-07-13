@@ -538,6 +538,15 @@ namespace TUGraz.VectoCore {
         }
         
         /// <summary>
+        ///   Looks up a localized string similar to Efficiency.
+        /// </summary>
+        internal static string Vehicle_AngularGear_Efficiency {
+            get {
+                return ResourceManager.GetString("Vehicle_AngularGear_Efficiency", resourceCulture);
+            }
+        }
+        
+        /// <summary>
         ///   Looks up a localized string similar to LossMap.
         /// </summary>
         internal static string Vehicle_AngularGear_LossMapFile {
