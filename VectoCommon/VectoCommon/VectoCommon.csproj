@@ -64,7 +64,7 @@
     <Compile Include="Models\VehicleCategory.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
     <Compile Include="Utils\DoubleExtensionMethods.cs" />
-    <Compile Include="Utils\EnumberableExtensionMethods.cs" />
+    <Compile Include="Utils\EnumerableExtensionMethods.cs" />
     <Compile Include="Utils\EnumHelper.cs" />
     <Compile Include="Utils\IntExtensionMethods.cs" />
     <Compile Include="Utils\SI.cs" />
