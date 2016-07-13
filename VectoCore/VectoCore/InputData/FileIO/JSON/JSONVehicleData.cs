@@ -144,7 +144,7 @@ namespace TUGraz.VectoCore.InputData.FileIO.JSON
 
 		#region IRetarderInputData
 
-		public virtual RetarderType RetarderType
+		RetarderType IRetarderInputData.Type
 		{
 			get
 			{
@@ -155,12 +155,12 @@ namespace TUGraz.VectoCore.InputData.FileIO.JSON
 			}
 		}
 
-		public virtual double RetarderRatio
+		double IRetarderInputData.Ratio
 		{
 			get { return Body.GetEx(JsonKeys.Vehicle_Retarder).GetEx<double>(JsonKeys.Vehicle_Retarder_Ratio); }
 		}
 
-		public virtual DataTable RetarderLossMap
+		DataTable IRetarderInputData.LossMap
 		{
 			get
 			{
@@ -176,7 +176,7 @@ namespace TUGraz.VectoCore.InputData.FileIO.JSON
 
 		#region IAngularGearInputData
 
-		public AngularGearType AngularGearType
+		AngularGearType IAngularGearInputData.Type
 		{
 			get
 			{
@@ -186,12 +186,12 @@ namespace TUGraz.VectoCore.InputData.FileIO.JSON
 			}
 		}
 
-		public double AngularGearRatio
+		double IAngularGearInputData.Ratio
 		{
 			get { return Body.GetEx(JsonKeys.Vehicle_AngularGear).GetEx<double>(JsonKeys.Vehicle_AngularGear_Ratio); }
 		}
 
-		public DataTable AngularGearLossMap
+		DataTable IAngularGearInputData.LossMap
 		{
 			get
 			{
@@ -200,6 +200,11 @@ namespace TUGraz.VectoCore.InputData.FileIO.JSON
 						.GetEx<string>(JsonKeys.Vehicle_AngularGear_LossMapFile),
 					"LossMap");
 			}
+		}
+
+		double IAngularGearInputData.Efficiency
+		{
+			get { return Body.GetEx(JsonKeys.Vehicle_AngularGear).GetEx<double>(JsonKeys.Vehicle_AngularGear_Efficiency); }
 		}
 
 		#endregion

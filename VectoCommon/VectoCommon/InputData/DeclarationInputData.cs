@@ -116,29 +116,31 @@ namespace TUGraz.VectoCommon.InputData
 		/// P052  
 		/// cf. VECTO Input Parameters.xlsx
 		/// </summary>
-		RetarderType RetarderType { get; }
+		RetarderType Type { get; }
 
 		/// <summary>
 		/// P053
 		/// cf. VECTO Input Parameters.xlsx
 		/// </summary>
-		double RetarderRatio { get; }
+		double Ratio { get; }
 
 		/// <summary>
 		/// P054
 		/// P057, P058
 		/// cf. VECTO Input Parameters.xlsx
 		/// </summary>
-		DataTable RetarderLossMap { get; }
+		DataTable LossMap { get; }
 	}
 
 	public interface IAngularGearInputData : IComponentInputData
 	{
-		AngularGearType AngularGearType { get; }
+		AngularGearType Type { get; }
 
-		double AngularGearRatio { get; }
+		double Ratio { get; }
 
-		DataTable AngularGearLossMap { get; }
+		DataTable LossMap { get; }
+
+		double Efficiency { get; }
 	}
 
 	public interface IAxleDeclarationInputData : IComponentInputData
