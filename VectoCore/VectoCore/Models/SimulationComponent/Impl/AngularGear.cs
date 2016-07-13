@@ -1,6 +1,7 @@
 using TUGraz.VectoCommon.Models;
 using TUGraz.VectoCommon.Utils;
 using TUGraz.VectoCore.Models.Simulation;
+using TUGraz.VectoCore.Models.SimulationComponent.Data;
 using TUGraz.VectoCore.Models.SimulationComponent.Data.Gearbox;
 using TUGraz.VectoCore.OutputData;
 
@@ -10,7 +11,7 @@ namespace TUGraz.VectoCore.Models.SimulationComponent.Impl
 
 	public class AngularGear : TransmissionComponent
 	{
-		public AngularGear(IVehicleContainer container, TransmissionData modelData) : base(container, modelData) {}
+		public AngularGear(IVehicleContainer container, AngularGearData modelData) : base(container, modelData.AngularGear) {}
 
 		public override IResponse Request(Second absTime, Second dt, NewtonMeter torque, PerSecond angularVelocity,
 			bool dryRun = false)
