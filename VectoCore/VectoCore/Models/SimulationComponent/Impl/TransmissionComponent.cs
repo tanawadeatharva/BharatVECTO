@@ -20,8 +20,7 @@ namespace TUGraz.VectoCore.Models.SimulationComponent.Impl
 			public NewtonMeter TorqueLoss = 0.SI<NewtonMeter>();
 		}
 
-		protected TransmissionComponent(IVehicleContainer container, TransmissionData modelData)
-			: base(container)
+		protected TransmissionComponent(IVehicleContainer container, TransmissionData modelData) : base(container)
 		{
 			ModelData = modelData;
 		}
