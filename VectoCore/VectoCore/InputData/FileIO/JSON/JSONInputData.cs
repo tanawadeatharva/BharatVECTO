@@ -43,19 +43,11 @@ using TUGraz.VectoCommon.Utils;
 using TUGraz.VectoCore.Configuration;
 using TUGraz.VectoCore.InputData.Impl;
 using TUGraz.VectoCore.Models.Declaration;
+using TUGraz.VectoCore.Models.SimulationComponent.Data;
 using TUGraz.VectoCore.Utils;
-using DriverData = TUGraz.VectoCore.Models.SimulationComponent.Data.DriverData;
 
 namespace TUGraz.VectoCore.InputData.FileIO.JSON
 {
-	/// <summary>
-	/// "Header": {
-	///		"CreatedBy": "Raphael Luz IVT TU-Graz (85407225-fc3f-48a8-acda-c84a05df6837)",
-	///		"Date": "29.07.2015 16:59:03",
-	///		"AppVersion": "2.2",
-	///		"FileVersion": 7
-	/// },
-	/// </summary>
 	public abstract class JSONFile : LoggingObject
 	{
 		private string _basePath;
@@ -111,96 +103,20 @@ namespace TUGraz.VectoCore.InputData.FileIO.JSON
 	}
 
 	/// <summary>
-	/// A class which represents the json data format for serializing and deserializing the Job Data files.
+	/// Class for reading json data of vecto-job-file.
 	/// Fileformat: .vecto
 	/// </summary>
-	/// <code>
-	/// {
-	///   "Header": {
-	///     "CreatedBy": " ()",
-	///     "Date": "3/4/2015 12:31:06 PM",
-	///     "AppVersion": "2.0.4-beta3",
-	///     "FileVersion": 2
-	///   },
-	///   "Body": {
-	///     "SavedInDeclMode": true,
-	///     "VehicleFile": "../Components/12t Delivery Truck.vveh",
-	///     "EngineFile": "../Components/12t Delivery Truck.veng",
-	///     "GearboxFile": "../Components/12t Delivery Truck.vgbx",
-	///     "Cycles": [
-	///       "Long Haul",
-	///       "Regional Delivery",
-	///       "Urban Delivery"
-	///     ],
-	///     "Aux": [
-	///       {
-	///         "ID": "FAN",
-	///         "Type": "Fan",
-	///         "Path": "<NOFILE>",
-	///         "Technology": ""
-	///       },
-	///       {
-	///         "ID": "STP",
-	///         "Type": "Steering pump",
-	///         "Path": "<NOFILE>",
-	///         "Technology": ""
-	///       },
-	///       {
-	///         "ID": "AC",
-	///         "Type": "HVAC",
-	///         "Path": "<NOFILE>",
-	///         "Technology": ""
-	///       },
-	///       {
-	///         "ID": "ES",
-	///         "Type": "Electric System",
-	///         "Path": "<NOFILE>",
-	///         "Technology": "",
-	///         "TechList": []
-	///       },
-	///       {
-	///         "ID": "PS",
-	///         "Type": "Pneumatic System",
-	///         "Path": "<NOFILE>",
-	///         "Technology": ""
-	///       }
-	///     ],
-	///     "VACC": "<NOFILE>",
-	///     "EngineOnlyMode": true,
-	///     "StartStop": {
-	///       "Enabled": false,
-	///       "MaxSpeed": 5.0,
-	///       "MinTime": 5.0,
-	///       "Delay": 5
-	///     },
-	///     "LAC": {
-	///       "Enabled": true,
-	///       "Dec": -0.5,
-	///       "MinSpeed": 50.0
-	///     },
-	///     "OverSpeedEcoRoll": {
-	///       "Mode": "OverSpeed",
-	///       "MinSpeed": 50.0,
-	///       "OverSpeed": 5.0,
-	///       "UnderSpeed": 5.0
-	///     }
-	///   }
-	/// }
-	/// </code>
 	public class JSONInputDataV2 : JSONFile, IEngineeringInputDataProvider, IDeclarationInputDataProvider,
 		IEngineeringJobInputData, IDriverEngineeringInputData, IAuxiliariesEngineeringInputData
 	{
 		protected IGearboxEngineeringInputData Gearbox;
-
 		protected IAxleGearInputData AxleGear;
-
+		public IAngularGearInputData AngularGear;
 		protected IEngineEngineeringInputData Engine;
-
 		protected IVehicleEngineeringInputData VehicleData;
-
 		protected IRetarderInputData Retarder;
 
-		private string _jobname;
+		private readonly string _jobname;
 
 		public JSONInputDataV2(JObject data, string filename) : base(data, filename)
 		{
@@ -211,10 +127,7 @@ namespace TUGraz.VectoCore.InputData.FileIO.JSON
 					Gearbox = JSONInputDataFactory.ReadGearbox(Path.Combine(BasePath, gearboxFile));
 				}
 
-				var axleGear = Gearbox as IAxleGearInputData;
-				if (axleGear != null) {
-					AxleGear = axleGear;
-				}
+				AxleGear = Gearbox as IAxleGearInputData;
 
 				Engine = JSONInputDataFactory.ReadEngine(
 					Path.Combine(BasePath, Body.GetEx(JsonKeys.Vehicle_EngineFile).Value<string>()));
@@ -223,6 +136,8 @@ namespace TUGraz.VectoCore.InputData.FileIO.JSON
 				if (!EmptyOrInvalidFileName(vehicleFile)) {
 					VehicleData = JSONInputDataFactory.ReadJsonVehicle(
 						Path.Combine(BasePath, vehicleFile));
+
+					AngularGear = VehicleData as IAngularGearInputData;
 				}
 			} catch (Exception e) {
 				throw new VectoException("Failed to read input data: {0}", e, e.Message);
@@ -291,6 +206,17 @@ namespace TUGraz.VectoCore.InputData.FileIO.JSON
 					throw new InvalidFileFormatException("AxleGearData not found");
 				}
 				return AxleGear;
+			}
+		}
+
+		public IAngularGearInputData AngularGearInputData
+		{
+			get
+			{
+				if (AngularGear == null) {
+					throw new InvalidFileFormatException("AngularGear not found");
+				}
+				return AngularGear;
 			}
 		}
 
