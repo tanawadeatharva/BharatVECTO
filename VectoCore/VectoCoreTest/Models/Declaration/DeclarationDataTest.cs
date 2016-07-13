@@ -33,17 +33,15 @@ using System;
 using System.Collections.Generic;
 using System.IO;
 using System.Linq;
-using Microsoft.VisualStudio.TestTools.UnitTesting;
 using NUnit.Framework;
 using TUGraz.VectoCommon.Exceptions;
 using TUGraz.VectoCommon.Models;
 using TUGraz.VectoCommon.Utils;
-using TUGraz.VectoCore.InputData.Reader.DataObjectAdaper;
+using TUGraz.VectoCore.InputData.Reader.DataObjectAdapter;
 using TUGraz.VectoCore.Models.Declaration;
 using TUGraz.VectoCore.Models.SimulationComponent.Data;
 using TUGraz.VectoCore.Tests.Utils;
 using TUGraz.VectoCore.Utils;
-using Assert = Microsoft.VisualStudio.TestTools.UnitTesting.Assert;
 using CrossWindCorrectionMode = TUGraz.VectoCommon.Models.CrossWindCorrectionMode;
 
 namespace TUGraz.VectoCore.Tests.Models.Declaration
@@ -54,9 +52,7 @@ namespace TUGraz.VectoCore.Tests.Models.Declaration
 		public const double Tolerance = 0.0001;
 		public readonly MissionType[] Missions = EnumHelper.GetValues<MissionType>().ToArray();
 
-		[Test,
-		TestCase("285/70 R19.5", 7.9, 0.8943, "b"),
-		]
+		[TestCase("285/70 R19.5", 7.9, 0.8943, "b")]
 		public void WheelDataTest(string wheels, double intertia, double dynamicRadius, string sizeClass)
 		{
 			var tmp = DeclarationData.Wheels.Lookup(wheels);
@@ -66,9 +62,7 @@ namespace TUGraz.VectoCore.Tests.Models.Declaration
 			Assert.AreEqual(sizeClass, tmp.SizeClass);
 		}
 
-		[Test,
-		TestCase("15° DC Rims", 3.03, 3.05),
-		]
+		[TestCase("15° DC Rims", 3.03, 3.05)]
 		public void RimsDataTest(string rim, double fa, double fb)
 		{
 			var tmp = DeclarationData.Rims.Lookup(rim);
@@ -77,30 +71,30 @@ namespace TUGraz.VectoCore.Tests.Models.Declaration
 			Assert.AreEqual(fb, tmp.F_b, Tolerance);
 		}
 
-		[Test,
-		// fixed points
-		TestCase(400, 0),
-		TestCase(800, 0.47),
-		TestCase(1000, 0.58),
-		TestCase(1200, 0.53),
-		TestCase(1400, 0.46),
-		TestCase(1500, 0.43),
-		TestCase(1750, 0.22),
-		TestCase(1800, 0.2),
-		TestCase(2000, 0.11),
-		TestCase(2500, 0.11),
-		// interpolate
-		TestCase(600, 0.235),
-		TestCase(900, 0.525),
-		TestCase(1100, 0.555),
-		TestCase(1300, 0.495),
-		TestCase(1450, 0.445),
-		TestCase(1625, 0.325),
-		TestCase(1775, 0.21),
-		TestCase(1900, 0.155),
-		TestCase(2250, 0.11),
-		// extrapolate
-		TestCase(3000, 0.11),
+		[
+			// fixed points
+			TestCase(400, 0),
+			TestCase(800, 0.47),
+			TestCase(1000, 0.58),
+			TestCase(1200, 0.53),
+			TestCase(1400, 0.46),
+			TestCase(1500, 0.43),
+			TestCase(1750, 0.22),
+			TestCase(1800, 0.2),
+			TestCase(2000, 0.11),
+			TestCase(2500, 0.11),
+			// interpolate
+			TestCase(600, 0.235),
+			TestCase(900, 0.525),
+			TestCase(1100, 0.555),
+			TestCase(1300, 0.495),
+			TestCase(1450, 0.445),
+			TestCase(1625, 0.325),
+			TestCase(1775, 0.21),
+			TestCase(1900, 0.155),
+			TestCase(2250, 0.11),
+			// extrapolate
+			TestCase(3000, 0.11),
 		]
 		public void PT1Test(double rpm, double expectedPt1)
 		{
@@ -114,7 +108,7 @@ namespace TUGraz.VectoCore.Tests.Models.Declaration
 			AssertHelper.Exception<VectoException>(() => DeclarationData.PT1.Lookup(0.RPMtoRad()));
 		}
 
-		[Test]
+		[TestCase]
 		public void WHTCTest()
 		{
 			var whtc = DeclarationData.WHTCCorrection;
@@ -136,7 +130,7 @@ namespace TUGraz.VectoCore.Tests.Models.Declaration
 			}
 		}
 
-		[TestMethod]
+		[TestCase]
 		public void WHTCLookupTestLongHaul()
 		{
 			var expected = 1.015501;
@@ -150,7 +144,7 @@ namespace TUGraz.VectoCore.Tests.Models.Declaration
 			Assert.AreEqual(expected, lookup, 1e-8);
 		}
 
-		[TestMethod]
+		[Test]
 		public void WHTCLookupTestRegionalDelivery()
 		{
 			var expected = 1.02708700;
@@ -242,32 +236,32 @@ namespace TUGraz.VectoCore.Tests.Models.Declaration
 				crossWindCorrectionCurve.EffectiveAirDragArea(kmph.KMPHtoMeterPerSecond()));
 		}
 
-		[Test,
-		// fixed points
-		TestCase(150, 1.000, 1.000, 0.00),
-		TestCase(150, 1.100, 1.000, -40.34),
-		TestCase(150, 1.222, 1.000, -80.34),
-		TestCase(150, 1.375, 1.000, -136.11),
-		TestCase(150, 1.571, 1.000, -216.52),
-		TestCase(150, 1.833, 1.000, -335.19),
-		TestCase(150, 2.200, 1.000, -528.77),
-		TestCase(150, 2.750, 1.000, -883.40),
-		TestCase(150, 4.400, 1.000, -2462.17),
-		TestCase(150, 11.000, 1.000, -16540.98),
-		// interpolated
-		TestCase(150, 1.0025, 1.0, 0.0),
-		TestCase(150, 1.0525, 1.0, -20.17),
-		TestCase(150, 1.161, 1.0, -60.34),
-		TestCase(150, 1.2985, 1.0, -108.225),
-		TestCase(150, 1.473, 1.0, -176.315),
-		TestCase(150, 1.702, 1.0, -275.855),
-		TestCase(150, 2.0165, 1.0, -431.98),
-		TestCase(150, 2.475, 1.0, -706.085),
-		TestCase(150, 3.575, 1.0, -1672.785),
-		TestCase(150, 7.7, 1.0, -9501.575),
-		// extrapolated
-		TestCase(150, 0.5, 1.0, 0.0),
-		TestCase(150, 12.0, 1.0, -18674.133), // = (12-4.4)*(-16540.98- -2462.17)/(11-4.4)+ -2462.17
+		[
+			// fixed points
+			TestCase(150, 1.000, 1.000, 0.00),
+			TestCase(150, 1.100, 1.000, -40.34),
+			TestCase(150, 1.222, 1.000, -80.34),
+			TestCase(150, 1.375, 1.000, -136.11),
+			TestCase(150, 1.571, 1.000, -216.52),
+			TestCase(150, 1.833, 1.000, -335.19),
+			TestCase(150, 2.200, 1.000, -528.77),
+			TestCase(150, 2.750, 1.000, -883.40),
+			TestCase(150, 4.400, 1.000, -2462.17),
+			TestCase(150, 11.000, 1.000, -16540.98),
+			// interpolated
+			TestCase(150, 1.0025, 1.0, 0.0),
+			TestCase(150, 1.0525, 1.0, -20.17),
+			TestCase(150, 1.161, 1.0, -60.34),
+			TestCase(150, 1.2985, 1.0, -108.225),
+			TestCase(150, 1.473, 1.0, -176.315),
+			TestCase(150, 1.702, 1.0, -275.855),
+			TestCase(150, 2.0165, 1.0, -431.98),
+			TestCase(150, 2.475, 1.0, -706.085),
+			TestCase(150, 3.575, 1.0, -1672.785),
+			TestCase(150, 7.7, 1.0, -9501.575),
+			// extrapolated
+			TestCase(150, 0.5, 1.0, 0.0),
+			TestCase(150, 12.0, 1.0, -18674.133), // = (12-4.4)*(-16540.98- -2462.17)/(11-4.4)+ -2462.17
 		]
 		public void DefaultTcTest(double referenceRpm, double nu, double mu, double torque)
 		{
@@ -332,24 +326,26 @@ namespace TUGraz.VectoCore.Tests.Models.Declaration
 			}
 		}
 
-		[Test,
-		TestCase("",
-			new[] { 618, 671, 516, 566, 1037, 0, 0, 0, 0, 0 }),
-		TestCase("Crankshaft mounted - Electronically controlled visco clutch (Default)",
-			new[] { 618, 671, 516, 566, 1037, 0, 0, 0, 0, 0 }),
-		TestCase("Crankshaft mounted - Bimetallic controlled visco clutch", new[] { 818, 871, 676, 766, 1277, 0, 0, 0, 0, 0 }),
-		TestCase("Crankshaft mounted - Discrete step clutch", new[] { 668, 721, 616, 616, 1157, 0, 0, 0, 0, 0 }),
-		TestCase("Crankshaft mounted - On/Off clutch", new[] { 718, 771, 666, 666, 1237, 0, 0, 0, 0, 0 }),
-		TestCase("Belt driven or driven via transm. - Electronically controlled visco clutch",
-			new[] { 889, 944, 733, 833, 1378, 0, 0, 0, 0, 0 }),
-		TestCase("Belt driven or driven via transm. - Bimetallic controlled visco clutch",
-			new[] { 1089, 1144, 893, 1033, 1618, 0, 0, 0, 0, 0 }),
-		TestCase("Belt driven or driven via transm. - Discrete step clutch", new[] { 939, 994, 883, 883, 1498, 0, 0, 0, 0, 0 }
-			),
-		TestCase("Belt driven or driven via transm. - On/Off clutch", new[] { 989, 1044, 933, 933, 1578, 0, 0, 0, 0, 0 }),
-		TestCase("Hydraulic driven - Variable displacement pump", new[] { 738, 955, 632, 717, 1672, 0, 0, 0, 0, 0 }),
-		TestCase("Hydraulic driven - Constant displacement pump", new[] { 1000, 1200, 800, 900, 2100, 0, 0, 0, 0, 0 }),
-		TestCase("Hydraulic driven - Electronically controlled", new[] { 700, 800, 600, 600, 1400, 0, 0, 0, 0, 0 }),
+		[
+			TestCase("",
+				new[] { 618, 671, 516, 566, 1037, 0, 0, 0, 0, 0 }),
+			TestCase("Crankshaft mounted - Electronically controlled visco clutch (Default)",
+				new[] { 618, 671, 516, 566, 1037, 0, 0, 0, 0, 0 }),
+			TestCase("Crankshaft mounted - Bimetallic controlled visco clutch", new[] { 818, 871, 676, 766, 1277, 0, 0, 0, 0, 0 }
+				),
+			TestCase("Crankshaft mounted - Discrete step clutch", new[] { 668, 721, 616, 616, 1157, 0, 0, 0, 0, 0 }),
+			TestCase("Crankshaft mounted - On/Off clutch", new[] { 718, 771, 666, 666, 1237, 0, 0, 0, 0, 0 }),
+			TestCase("Belt driven or driven via transm. - Electronically controlled visco clutch",
+				new[] { 889, 944, 733, 833, 1378, 0, 0, 0, 0, 0 }),
+			TestCase("Belt driven or driven via transm. - Bimetallic controlled visco clutch",
+				new[] { 1089, 1144, 893, 1033, 1618, 0, 0, 0, 0, 0 }),
+			TestCase("Belt driven or driven via transm. - Discrete step clutch",
+				new[] { 939, 994, 883, 883, 1498, 0, 0, 0, 0, 0 }
+				),
+			TestCase("Belt driven or driven via transm. - On/Off clutch", new[] { 989, 1044, 933, 933, 1578, 0, 0, 0, 0, 0 }),
+			TestCase("Hydraulic driven - Variable displacement pump", new[] { 738, 955, 632, 717, 1672, 0, 0, 0, 0, 0 }),
+			TestCase("Hydraulic driven - Constant displacement pump", new[] { 1000, 1200, 800, 900, 2100, 0, 0, 0, 0, 0 }),
+			TestCase("Hydraulic driven - Electronically controlled", new[] { 700, 800, 600, 600, 1400, 0, 0, 0, 0, 0 }),
 		]
 		public void AuxFanTechTest(string technology, int[] expected)
 		{
@@ -635,7 +631,6 @@ namespace TUGraz.VectoCore.Tests.Models.Declaration
 				trailerAxleWeightDistribution: new double[] { }, bodyCurbWeight: 2100, trailerCurbWeight: 0,
 				trailerType: TrailerType.None, minLoad: 0, refLoad: 4400, trailerGrossVehicleWeight: 0, deltaCdA: 0, maxLoad: 8400);
 		}
-
 
 		/// <summary>
 		/// Segment 5: fixed reference weight, trailer always used

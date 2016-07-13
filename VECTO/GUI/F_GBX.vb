@@ -15,7 +15,6 @@ Imports TUGraz.VectoCommon.InputData
 Imports TUGraz.VectoCommon.Utils
 Imports TUGraz.VectoCore.Configuration
 Imports TUGraz.VectoCore.InputData.Impl
-Imports TUGraz.VectoCore.InputData.Reader.DataObjectAdaper
 Imports TUGraz.VectoCore.Models.Declaration
 Imports TUGraz.VectoCore.Models.SimulationComponent.Data
 Imports TUGraz.VectoCore.Models.SimulationComponent.Data.Engine
