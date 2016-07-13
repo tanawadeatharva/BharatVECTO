@@ -668,12 +668,10 @@ namespace TUGraz.VectoCore.Tests.Models.Declaration
 				maxLoad: 25000);
 		}
 
-		[Test]
 		public static void AssertMission(Mission m, dynamic vehicleData, MissionType missionType, string cosswindCorrection,
 			double[] axleWeightDistribution, double[] trailerAxleWeightDistribution, double bodyCurbWeight,
 			double trailerCurbWeight, TrailerType trailerType, double minLoad, double refLoad, double maxLoad,
-			double trailerGrossVehicleWeight,
-			double deltaCdA)
+			double trailerGrossVehicleWeight, double deltaCdA)
 		{
 			Assert.AreEqual(missionType, m.MissionType);
 			Assert.AreEqual(cosswindCorrection, m.CrossWindCorrection);

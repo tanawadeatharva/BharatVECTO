@@ -176,16 +176,15 @@ namespace TUGraz.VectoCore.Tests.FileIO
 		}
 
 		[TestMethod]
-		public void TestReadAngleGear()
+		public void JSON_Read_AngleGear()
 		{
 			var json = (JObject)JToken.ReadFrom(new JsonTextReader(File.OpenText(TestVehicleFile)));
-			var angleGear = json["Body"]["AngleGear"].Value<string>();
+			var angleGear = json["Body"]["AngularGear"];
 
-			var angleGearType = angleGear.ParseEnum<AngularGearType>();
-
-			Assert.AreEqual(AngularGearType.LossesIncludedInGearbox, angleGearType);
-
-			Assert.Fail("not implemented");
+			Assert.AreEqual(AngularGearType.SeparateAngularGear,
+				angleGear["Type"].Value<string>().ParseEnum<AngularGearType>());
+			Assert.AreEqual(3.5, angleGear["Ratio"].Value<double>());
+			Assert.AreEqual("AngularGear.vtlm", angleGear["LossMap"].Value<string>());
 		}
 	}
 

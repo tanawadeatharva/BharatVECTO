@@ -375,7 +375,7 @@ namespace TUGraz.VectoCore.Tests.Models.Declaration
 			//@"TestData\Components\40t_Long_Haul_Truck.vgbx";
 
 			if (!File.Exists(engineFldFile)) {
-				Assert.Inconclusive("Confidential File not found. Test cannot run without file.");
+				Assert.Ignore("Confidential File not found. Test cannot run without file.");
 			}
 
 			var rdyn = 0.4882675.SI<Meter>();
