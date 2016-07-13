@@ -33,7 +33,6 @@ using System;
 using System.Linq;
 using TUGraz.VectoCommon.Exceptions;
 using TUGraz.VectoCommon.Models;
-using TUGraz.VectoCore.Models.Connector.Ports;
 using TUGraz.VectoCore.Models.Simulation.Data;
 using TUGraz.VectoCore.Models.SimulationComponent;
 using TUGraz.VectoCore.Models.SimulationComponent.Data;
@@ -101,18 +100,15 @@ namespace TUGraz.VectoCore.Models.Simulation.Impl
 			var container = new VehicleContainer(ExecutionMode.Engineering, _modData, _sumWriter) { RunData = data };
 			var gearbox = new CycleGearbox(container, data.GearboxData);
 
-			// PWheelCycle --> AxleGear --> CycleClutch --> Engine
-			var engine = new PWheelCycle(container, data.Cycle, data.AxleGearData.AxleGear.Ratio,
+			// PWheelCycle --> AxleGear --> CycleClutch --> Engine <-- Aux
+			new PWheelCycle(container, data.Cycle, data.AxleGearData.AxleGear.Ratio,
 				gearbox.ModelData.Gears.ToDictionary(g => g.Key, g => g.Value.Ratio))
 				.AddComponent(new AxleGear(container, data.AxleGearData))
+				.AddComponent(new AngularGear(container, data.AngularGearData))
 				.AddRetarderAndGearbox(data.Retarder, gearbox, container)
 				.AddComponent(new CycleClutch(container))
-				.AddComponent(new CombustionEngine(container, data.EngineData, pt1Disabled: true));
-
-			// aux --> engine		
-			if (data.Aux != null) {
-				engine.Connect(CreateAuxiliaries(data, container).Port());
-			}
+				.AddComponent(new CombustionEngine(container, data.EngineData, pt1Disabled: true))
+				.AddAuxiliaries(container, data);
 
 			return container;
 		}
@@ -126,20 +122,17 @@ namespace TUGraz.VectoCore.Models.Simulation.Impl
 			var engine = new CombustionEngine(container, data.EngineData);
 
 			// MeasuredSpeedDrivingCycle --> vehicle --> wheels --> brakes 
-			// --> axleGear --> (retarder) --> CycleGearBox --> (retarder) --> CycleClutch --> engine
-			engine = new MeasuredSpeedDrivingCycle(container, data.Cycle)
+			// --> axleGear --> (retarder) --> CycleGearBox --> (retarder) --> CycleClutch --> engine <-- Aux
+			new MeasuredSpeedDrivingCycle(container, data.Cycle)
 				.AddComponent(new Vehicle(container, data.VehicleData))
 				.AddComponent(new Wheels(container, data.VehicleData.DynamicTyreRadius, data.VehicleData.WheelsInertia))
 				.AddComponent(new Brakes(container))
 				.AddComponent(new AxleGear(container, data.AxleGearData))
+				.AddComponent(new AngularGear(container, data.AngularGearData))
 				.AddRetarderAndGearbox(data.Retarder, GetGearbox(container, data.GearboxData), container)
 				.AddComponent(new Clutch(container, data.EngineData, engine.IdleController))
-				.AddComponent(engine);
-
-			// aux --> engine
-			if (data.Aux != null) {
-				engine.Connect(CreateAuxiliaries(data, container).Port());
-			}
+				.AddComponent(engine)
+				.AddAuxiliaries(container, data);
 
 			return container;
 		}
@@ -152,20 +145,17 @@ namespace TUGraz.VectoCore.Models.Simulation.Impl
 			var container = new VehicleContainer(ExecutionMode.Engineering, _modData, _sumWriter) { RunData = data };
 
 			// MeasuredSpeedDrivingCycle --> vehicle --> wheels --> brakes 
-			// --> axleGear --> (retarder) --> CycleGearBox --> (retarder) --> CycleClutch --> engine
-			var engine = new MeasuredSpeedDrivingCycle(container, data.Cycle)
+			// --> axleGear --> (retarder) --> CycleGearBox --> (retarder) --> CycleClutch --> engine <-- Aux
+			new MeasuredSpeedDrivingCycle(container, data.Cycle)
 				.AddComponent(new Vehicle(container, data.VehicleData))
 				.AddComponent(new Wheels(container, data.VehicleData.DynamicTyreRadius, data.VehicleData.WheelsInertia))
 				.AddComponent(new Brakes(container))
 				.AddComponent(new AxleGear(container, data.AxleGearData))
+				.AddComponent(new AngularGear(container, data.AngularGearData))
 				.AddRetarderAndGearbox(data.Retarder, new CycleGearbox(container, data.GearboxData), container)
 				.AddComponent(new CycleClutch(container))
-				.AddComponent(new CombustionEngine(container, data.EngineData));
-
-			// connect aux --> engine
-			if (data.Aux != null) {
-				engine.Connect(CreateAuxiliaries(data, container).Port());
-			}
+				.AddComponent(new CombustionEngine(container, data.EngineData))
+				.AddAuxiliaries(container, data);
 
 			return container;
 		}
@@ -181,30 +171,23 @@ namespace TUGraz.VectoCore.Models.Simulation.Impl
 			var engine = new CombustionEngine(container, data.EngineData);
 
 			// DistanceBasedDrivingCycle --> driver --> vehicle --> wheels 
-			// --> axleGear --> (retarder) --> gearBox --> (retarder) --> clutch --> engine
-			engine = new DistanceBasedDrivingCycle(container, data.Cycle)
+			// --> axleGear --> (retarder) --> gearBox --> (retarder) --> clutch --> engine <-- Aux
+			new DistanceBasedDrivingCycle(container, data.Cycle)
 				.AddComponent(new Driver(container, data.DriverData, new DefaultDriverStrategy()))
 				.AddComponent(new Vehicle(container, data.VehicleData))
 				.AddComponent(new Wheels(container, data.VehicleData.DynamicTyreRadius, data.VehicleData.WheelsInertia))
 				.AddComponent(new Brakes(container))
 				.AddComponent(new AxleGear(container, data.AxleGearData))
+				.AddComponent(new AngularGear(container, data.AngularGearData))
 				.AddRetarderAndGearbox(data.Retarder, GetGearbox(container, data.GearboxData), container)
 				.AddComponent(new Clutch(container, data.EngineData, engine.IdleController))
-				.AddComponent(engine);
-
-			// aux --> engine
-			if (data.AdvancedAux != null && data.AdvancedAux.AuxiliaryAssembly == AuxiliaryModel.Advanced) {
-				engine.Connect(CreateAdvancedAuxiliaries(data, container).Port());
-			} else {
-				if (data.Aux != null) {
-					engine.Connect(CreateAuxiliaries(data, container).Port());
-				}
-			}
+				.AddComponent(engine)
+				.AddAuxiliaries(container, data);
 
 			return container;
 		}
 
-		private IEngineAuxInProvider CreateAdvancedAuxiliaries(VectoRunData data, IVehicleContainer container)
+		internal static IEngineAuxInProvider CreateAdvancedAuxiliaries(VectoRunData data, IVehicleContainer container)
 		{
 			var conventionalAux = CreateAuxiliaries(data, container);
 			var busAux = new BusAuxiliariesAdapter(container, data.AdvancedAux.AdvancedAuxiliaryFilePath, data.Cycle.Name,
@@ -212,7 +195,7 @@ namespace TUGraz.VectoCore.Models.Simulation.Impl
 			return busAux;
 		}
 
-		private EngineAuxiliary CreateAuxiliaries(VectoRunData data, IVehicleContainer container)
+		internal static EngineAuxiliary CreateAuxiliaries(VectoRunData data, IVehicleContainer container)
 		{
 			var aux = new EngineAuxiliary(container);
 			foreach (var auxData in data.Aux) {
@@ -232,7 +215,7 @@ namespace TUGraz.VectoCore.Models.Simulation.Impl
 					default:
 						throw new ArgumentOutOfRangeException();
 				}
-				_modData.AddAuxiliary(id);
+				container.ModalData.AddAuxiliary(id);
 			}
 			return aux;
 		}
