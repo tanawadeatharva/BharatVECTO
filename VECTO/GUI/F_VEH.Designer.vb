@@ -110,7 +110,6 @@ Partial Class F_VEH
 		Me.ShowInFolderToolStripMenuItem = New System.Windows.Forms.ToolStripMenuItem()
 		Me.PnAll = New System.Windows.Forms.Panel()
 		Me.GroupBox2 = New System.Windows.Forms.GroupBox()
-		Me.Panel1 = New System.Windows.Forms.Panel()
 		Me.Label4 = New System.Windows.Forms.Label()
 		Me.Label10 = New System.Windows.Forms.Label()
 		Me.tbAngularGearRatio = New System.Windows.Forms.TextBox()
@@ -119,6 +118,8 @@ Partial Class F_VEH
 		Me.cbAngularGearType = New System.Windows.Forms.ComboBox()
 		Me.PicVehicle = New System.Windows.Forms.PictureBox()
 		Me.Label8 = New System.Windows.Forms.Label()
+		Me.Label12 = New System.Windows.Forms.Label()
+		Me.Label15 = New System.Windows.Forms.Label()
 		Me.GroupBox6.SuspendLayout()
 		Me.ToolStrip1.SuspendLayout()
 		Me.GroupBox7.SuspendLayout()
@@ -134,7 +135,6 @@ Partial Class F_VEH
 		Me.CmOpenFile.SuspendLayout()
 		Me.PnAll.SuspendLayout()
 		Me.GroupBox2.SuspendLayout()
-		Me.Panel1.SuspendLayout()
 		CType(Me.PicVehicle, System.ComponentModel.ISupportInitialize).BeginInit()
 		Me.SuspendLayout()
 		'
@@ -398,6 +398,7 @@ Partial Class F_VEH
 		'
 		'GroupBox7
 		'
+		Me.GroupBox7.Controls.Add(Me.Label15)
 		Me.GroupBox7.Controls.Add(Me.PnRt)
 		Me.GroupBox7.Controls.Add(Me.BtRtBrowse)
 		Me.GroupBox7.Controls.Add(Me.TbRtPath)
@@ -414,7 +415,7 @@ Partial Class F_VEH
 		Me.PnRt.Controls.Add(Me.Label45)
 		Me.PnRt.Controls.Add(Me.LbRtRatio)
 		Me.PnRt.Controls.Add(Me.TbRtRatio)
-		Me.PnRt.Location = New System.Drawing.Point(6, 46)
+		Me.PnRt.Location = New System.Drawing.Point(6, 42)
 		Me.PnRt.Name = "PnRt"
 		Me.PnRt.Size = New System.Drawing.Size(266, 34)
 		Me.PnRt.TabIndex = 1
@@ -423,7 +424,7 @@ Partial Class F_VEH
 		'
 		Me.Label45.Anchor = CType((System.Windows.Forms.AnchorStyles.Top Or System.Windows.Forms.AnchorStyles.Right), System.Windows.Forms.AnchorStyles)
 		Me.Label45.AutoSize = True
-		Me.Label45.Location = New System.Drawing.Point(243, 10)
+		Me.Label45.Location = New System.Drawing.Point(247, 7)
 		Me.Label45.Name = "Label45"
 		Me.Label45.Size = New System.Drawing.Size(16, 13)
 		Me.Label45.TabIndex = 10
@@ -431,17 +432,17 @@ Partial Class F_VEH
 		'
 		'LbRtRatio
 		'
-		Me.LbRtRatio.Location = New System.Drawing.Point(17, 10)
+		Me.LbRtRatio.Location = New System.Drawing.Point(19, 7)
 		Me.LbRtRatio.Name = "LbRtRatio"
 		Me.LbRtRatio.Size = New System.Drawing.Size(167, 17)
 		Me.LbRtRatio.TabIndex = 5
-		Me.LbRtRatio.Text = "LbRtRatio"
+		Me.LbRtRatio.Text = "Ratio"
 		Me.LbRtRatio.TextAlign = System.Drawing.ContentAlignment.TopRight
 		'
 		'TbRtRatio
 		'
 		Me.TbRtRatio.Anchor = CType((System.Windows.Forms.AnchorStyles.Top Or System.Windows.Forms.AnchorStyles.Right), System.Windows.Forms.AnchorStyles)
-		Me.TbRtRatio.Location = New System.Drawing.Point(186, 7)
+		Me.TbRtRatio.Location = New System.Drawing.Point(187, 4)
 		Me.TbRtRatio.Name = "TbRtRatio"
 		Me.TbRtRatio.Size = New System.Drawing.Size(56, 20)
 		Me.TbRtRatio.TabIndex = 0
@@ -630,7 +631,7 @@ Partial Class F_VEH
 		Me.CbAxleConfig.Items.AddRange(New Object() {"-", "4x2", "4x4", "6x2", "6x4", "6x6", "8x2", "8x4", "8x6", "8x8"})
 		Me.CbAxleConfig.Location = New System.Drawing.Point(153, 80)
 		Me.CbAxleConfig.Name = "CbAxleConfig"
-		Me.CbAxleConfig.Size = New System.Drawing.Size(89, 21)
+		Me.CbAxleConfig.Size = New System.Drawing.Size(60, 21)
 		Me.CbAxleConfig.TabIndex = 1
 		'
 		'CbCat
@@ -640,13 +641,13 @@ Partial Class F_VEH
 		Me.CbCat.Items.AddRange(New Object() {"-", "Rigid Truck", "Tractor", "City Bus", "Interurban Bus", "Coach"})
 		Me.CbCat.Location = New System.Drawing.Point(12, 80)
 		Me.CbCat.Name = "CbCat"
-		Me.CbCat.Size = New System.Drawing.Size(114, 21)
+		Me.CbCat.Size = New System.Drawing.Size(135, 21)
 		Me.CbCat.TabIndex = 0
 		'
 		'Label5
 		'
 		Me.Label5.AutoSize = True
-		Me.Label5.Location = New System.Drawing.Point(13, 117)
+		Me.Label5.Location = New System.Drawing.Point(13, 110)
 		Me.Label5.Name = "Label5"
 		Me.Label5.Size = New System.Drawing.Size(134, 13)
 		Me.Label5.TabIndex = 2
@@ -655,7 +656,7 @@ Partial Class F_VEH
 		'Label9
 		'
 		Me.Label9.AutoSize = True
-		Me.Label9.Location = New System.Drawing.Point(197, 117)
+		Me.Label9.Location = New System.Drawing.Point(197, 110)
 		Me.Label9.Name = "Label9"
 		Me.Label9.Size = New System.Drawing.Size(16, 13)
 		Me.Label9.TabIndex = 3
@@ -664,7 +665,7 @@ Partial Class F_VEH
 		'
 		'TbMassMass
 		'
-		Me.TbMassMass.Location = New System.Drawing.Point(153, 114)
+		Me.TbMassMass.Location = New System.Drawing.Point(153, 107)
 		Me.TbMassMass.Name = "TbMassMass"
 		Me.TbMassMass.Size = New System.Drawing.Size(42, 20)
 		Me.TbMassMass.TabIndex = 2
@@ -687,12 +688,13 @@ Partial Class F_VEH
 		'
 		'TbHDVclass
 		'
-		Me.TbHDVclass.Location = New System.Drawing.Point(153, 140)
+		Me.TbHDVclass.Location = New System.Drawing.Point(153, 133)
 		Me.TbHDVclass.Name = "TbHDVclass"
 		Me.TbHDVclass.ReadOnly = True
-		Me.TbHDVclass.Size = New System.Drawing.Size(25, 20)
+		Me.TbHDVclass.Size = New System.Drawing.Size(42, 20)
 		Me.TbHDVclass.TabIndex = 3
 		Me.TbHDVclass.TabStop = False
+		Me.TbHDVclass.TextAlign = System.Windows.Forms.HorizontalAlignment.Center
 		'
 		'Label11
 		'
@@ -823,7 +825,10 @@ Partial Class F_VEH
 		'
 		'GroupBox2
 		'
-		Me.GroupBox2.Controls.Add(Me.Panel1)
+		Me.GroupBox2.Controls.Add(Me.Label4)
+		Me.GroupBox2.Controls.Add(Me.Label12)
+		Me.GroupBox2.Controls.Add(Me.Label10)
+		Me.GroupBox2.Controls.Add(Me.tbAngularGearRatio)
 		Me.GroupBox2.Controls.Add(Me.btAngularGearLossMapBrowse)
 		Me.GroupBox2.Controls.Add(Me.tbAngularGearLossMapPath)
 		Me.GroupBox2.Controls.Add(Me.cbAngularGearType)
@@ -834,21 +839,11 @@ Partial Class F_VEH
 		Me.GroupBox2.TabStop = False
 		Me.GroupBox2.Text = "Angular Gear"
 		'
-		'Panel1
-		'
-		Me.Panel1.Controls.Add(Me.Label4)
-		Me.Panel1.Controls.Add(Me.Label10)
-		Me.Panel1.Controls.Add(Me.tbAngularGearRatio)
-		Me.Panel1.Location = New System.Drawing.Point(6, 46)
-		Me.Panel1.Name = "Panel1"
-		Me.Panel1.Size = New System.Drawing.Size(266, 34)
-		Me.Panel1.TabIndex = 1
-		'
 		'Label4
 		'
 		Me.Label4.Anchor = CType((System.Windows.Forms.AnchorStyles.Top Or System.Windows.Forms.AnchorStyles.Right), System.Windows.Forms.AnchorStyles)
 		Me.Label4.AutoSize = True
-		Me.Label4.Location = New System.Drawing.Point(243, 10)
+		Me.Label4.Location = New System.Drawing.Point(251, 49)
 		Me.Label4.Name = "Label4"
 		Me.Label4.Size = New System.Drawing.Size(16, 13)
 		Me.Label4.TabIndex = 10
@@ -856,9 +851,9 @@ Partial Class F_VEH
 		'
 		'Label10
 		'
-		Me.Label10.Location = New System.Drawing.Point(17, 11)
+		Me.Label10.Location = New System.Drawing.Point(149, 49)
 		Me.Label10.Name = "Label10"
-		Me.Label10.Size = New System.Drawing.Size(167, 18)
+		Me.Label10.Size = New System.Drawing.Size(44, 18)
 		Me.Label10.TabIndex = 5
 		Me.Label10.Text = "Ratio"
 		Me.Label10.TextAlign = System.Drawing.ContentAlignment.TopRight
@@ -866,7 +861,7 @@ Partial Class F_VEH
 		'tbAngularGearRatio
 		'
 		Me.tbAngularGearRatio.Anchor = CType((System.Windows.Forms.AnchorStyles.Top Or System.Windows.Forms.AnchorStyles.Right), System.Windows.Forms.AnchorStyles)
-		Me.tbAngularGearRatio.Location = New System.Drawing.Point(186, 7)
+		Me.tbAngularGearRatio.Location = New System.Drawing.Point(194, 46)
 		Me.tbAngularGearRatio.Name = "tbAngularGearRatio"
 		Me.tbAngularGearRatio.Size = New System.Drawing.Size(56, 20)
 		Me.tbAngularGearRatio.TabIndex = 0
@@ -912,11 +907,29 @@ Partial Class F_VEH
 		'Label8
 		'
 		Me.Label8.AutoSize = True
-		Me.Label8.Location = New System.Drawing.Point(89, 143)
+		Me.Label8.Location = New System.Drawing.Point(89, 136)
 		Me.Label8.Name = "Label8"
 		Me.Label8.Size = New System.Drawing.Size(58, 13)
 		Me.Label8.TabIndex = 10
 		Me.Label8.Text = "HDV Class"
+		'
+		'Label12
+		'
+		Me.Label12.Location = New System.Drawing.Point(6, 67)
+		Me.Label12.Name = "Label12"
+		Me.Label12.Size = New System.Drawing.Size(266, 16)
+		Me.Label12.TabIndex = 11
+		Me.Label12.Text = "Transmission Loss Map or Efficiency Value [0..1]"
+		Me.Label12.TextAlign = System.Drawing.ContentAlignment.BottomLeft
+		'
+		'Label15
+		'
+		Me.Label15.Location = New System.Drawing.Point(6, 66)
+		Me.Label15.Name = "Label15"
+		Me.Label15.Size = New System.Drawing.Size(267, 17)
+		Me.Label15.TabIndex = 12
+		Me.Label15.Text = "Retarder Loss Map"
+		Me.Label15.TextAlign = System.Drawing.ContentAlignment.BottomLeft
 		'
 		'F_VEH
 		'
@@ -971,8 +984,6 @@ Partial Class F_VEH
 		Me.PnAll.ResumeLayout(False)
 		Me.GroupBox2.ResumeLayout(False)
 		Me.GroupBox2.PerformLayout()
-		Me.Panel1.ResumeLayout(False)
-		Me.Panel1.PerformLayout()
 		CType(Me.PicVehicle, System.ComponentModel.ISupportInitialize).EndInit()
 		Me.ResumeLayout(False)
 		Me.PerformLayout()
@@ -1062,5 +1073,6 @@ Partial Class F_VEH
 	Friend WithEvents btAngularGearLossMapBrowse As System.Windows.Forms.Button
 	Friend WithEvents tbAngularGearLossMapPath As System.Windows.Forms.TextBox
 	Friend WithEvents cbAngularGearType As System.Windows.Forms.ComboBox
-	Friend WithEvents Panel1 As System.Windows.Forms.Panel
+	Friend WithEvents Label12 As System.Windows.Forms.Label
+	Friend WithEvents Label15 As System.Windows.Forms.Label
 End Class
