@@ -451,7 +451,7 @@ Public Class F_VEH
 
 		Next
 
-		If Math.Abs(axleShareCheck - 1) > 0.000001 Then
+		If Not Cfg.DeclMode AndAlso Math.Abs(axleShareCheck - 1) > 0.000001 Then
 			MsgBox("Relative axle loads must sum up to 1.0. Current value: " & axleShareCheck, MsgBoxStyle.Critical)
 			Return False
 		End If
