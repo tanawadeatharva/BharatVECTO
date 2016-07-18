@@ -22,11 +22,6 @@
 			"Ratio": 1.0,
 			"File": "Retarder.vrlm"
 		},
-		"AngularGear": {
-			"Type" : "SeparateAngularGear",
-			"Ratio": 3.5,
-			"LossMap": "AngleGear.vtlm"
-		},
 		"AxleConfig": {
 			"Type": "6x2",
 			"Axles": [

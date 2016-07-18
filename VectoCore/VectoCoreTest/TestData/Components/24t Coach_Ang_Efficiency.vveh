@@ -25,7 +25,7 @@
 		"AngularGear": {
 			"Type" : "SeparateAngularGear",
 			"Ratio": 3.5,
-			"LossMap": "AngleGear.vtlm"
+			"Efficiency": "0.95"
 		},
 		"AxleConfig": {
 			"Type": "6x2",
