@@ -240,7 +240,7 @@ Partial Class F_MAINForm
 		Me.btStartV3.Font = New System.Drawing.Font("Microsoft Sans Serif", 8.25!, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, CType(0, Byte))
 		Me.btStartV3.Image = Global.VECTO.My.Resources.Resources.Play_icon
 		Me.btStartV3.ImageAlign = System.Drawing.ContentAlignment.MiddleLeft
-		Me.btStartV3.Location = New System.Drawing.Point(6, 83)
+		Me.btStartV3.Location = New System.Drawing.Point(6, 92)
 		Me.btStartV3.Name = "btStartV3"
 		Me.btStartV3.Size = New System.Drawing.Size(105, 55)
 		Me.btStartV3.TabIndex = 20
@@ -253,7 +253,7 @@ Partial Class F_MAINForm
 		'
 		Me.LbDecl.AutoSize = True
 		Me.LbDecl.Font = New System.Drawing.Font("Microsoft Sans Serif", 8.25!, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, CType(0, Byte))
-		Me.LbDecl.Location = New System.Drawing.Point(4, 141)
+		Me.LbDecl.Location = New System.Drawing.Point(4, 150)
 		Me.LbDecl.Name = "LbDecl"
 		Me.LbDecl.Size = New System.Drawing.Size(107, 13)
 		Me.LbDecl.TabIndex = 19
@@ -364,7 +364,7 @@ Partial Class F_MAINForm
 		Me.Button1.ImageAlign = System.Drawing.ContentAlignment.MiddleLeft
 		Me.Button1.Location = New System.Drawing.Point(6, 53)
 		Me.Button1.Name = "Button1"
-		Me.Button1.Size = New System.Drawing.Size(105, 28)
+		Me.Button1.Size = New System.Drawing.Size(105, 33)
 		Me.Button1.TabIndex = 12
 		Me.Button1.Text = "START V2.2"
 		Me.Button1.TextImageRelation = System.Windows.Forms.TextImageRelation.ImageBeforeText

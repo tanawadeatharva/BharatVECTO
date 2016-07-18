@@ -118,7 +118,7 @@ Partial Class FB_Dialog
 		'ButtonNewDir
 		'
 		Me.ButtonNewDir.Image = Global.VECTO.My.Resources.Resources.new_dir
-		Me.ButtonNewDir.Location = New System.Drawing.Point(134, 2)
+		Me.ButtonNewDir.Location = New System.Drawing.Point(139, 2)
 		Me.ButtonNewDir.Name = "ButtonNewDir"
 		Me.ButtonNewDir.Size = New System.Drawing.Size(24, 24)
 		Me.ButtonNewDir.TabIndex = 21
@@ -129,7 +129,7 @@ Partial Class FB_Dialog
 		'ButtonDesktop
 		'
 		Me.ButtonDesktop.Image = Global.VECTO.My.Resources.Resources.desktop
-		Me.ButtonDesktop.Location = New System.Drawing.Point(82, 2)
+		Me.ButtonDesktop.Location = New System.Drawing.Point(86, 2)
 		Me.ButtonDesktop.Name = "ButtonDesktop"
 		Me.ButtonDesktop.Size = New System.Drawing.Size(24, 24)
 		Me.ButtonDesktop.TabIndex = 22
@@ -140,7 +140,7 @@ Partial Class FB_Dialog
 		'ButtonHisFolder
 		'
 		Me.ButtonHisFolder.Image = Global.VECTO.My.Resources.Resources.favorites
-		Me.ButtonHisFolder.Location = New System.Drawing.Point(106, 2)
+		Me.ButtonHisFolder.Location = New System.Drawing.Point(112, 2)
 		Me.ButtonHisFolder.Name = "ButtonHisFolder"
 		Me.ButtonHisFolder.Size = New System.Drawing.Size(24, 24)
 		Me.ButtonHisFolder.TabIndex = 24
@@ -151,7 +151,7 @@ Partial Class FB_Dialog
 		'ButtonFolderBack
 		'
 		Me.ButtonFolderBack.Image = CType(resources.GetObject("ButtonFolderBack.Image"), System.Drawing.Image)
-		Me.ButtonFolderBack.Location = New System.Drawing.Point(58, 2)
+		Me.ButtonFolderBack.Location = New System.Drawing.Point(60, 2)
 		Me.ButtonFolderBack.Name = "ButtonFolderBack"
 		Me.ButtonFolderBack.Size = New System.Drawing.Size(24, 24)
 		Me.ButtonFolderBack.TabIndex = 20
@@ -188,7 +188,7 @@ Partial Class FB_Dialog
 		'
 		'ColumnHeader3
 		'
-		Me.ColumnHeader3.Text = "Sub-Directories"
+		Me.ColumnHeader3.Text = "Sub-Directories:"
 		Me.ColumnHeader3.Width = 368
 		'
 		'ImageList1
@@ -228,7 +228,7 @@ Partial Class FB_Dialog
 		'
 		'ButtonAll
 		'
-		Me.ButtonAll.Location = New System.Drawing.Point(23, 2)
+		Me.ButtonAll.Location = New System.Drawing.Point(25, 2)
 		Me.ButtonAll.Name = "ButtonAll"
 		Me.ButtonAll.Size = New System.Drawing.Size(71, 24)
 		Me.ButtonAll.TabIndex = 19
@@ -285,7 +285,7 @@ Partial Class FB_Dialog
 		'
 		'ColumnHeader1
 		'
-		Me.ColumnHeader1.Text = "Files"
+		Me.ColumnHeader1.Text = "Files:"
 		Me.ColumnHeader1.Width = 367
 		'
 		'ContextMenuFile
