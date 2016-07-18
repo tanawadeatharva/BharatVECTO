@@ -5359,7 +5359,7 @@ Kneeling, UnknownCycleName, 0,</code></pre>
 <tr class="even">
 <td align="left">P_gbx_loss</td>
 <td align="left">[kW]</td>
-<td align="left">Power loss at the gerbox, interpolated from the loss-map</td>
+<td align="left">Power loss at the gearbox, interpolated from the loss-map</td>
 </tr>
 <tr class="odd">
 <td align="left">P_gbx_inertia</td>
@@ -5374,12 +5374,22 @@ Kneeling, UnknownCycleName, 0,</code></pre>
 <tr class="odd">
 <td align="left">P_ret_loss</td>
 <td align="left">[kW]</td>
-<td align="left">Power loss at the retarder, interpolated from the loss-map</td>
+<td align="left">Power loss at the retarder, interpolated from the loss-map.</td>
+</tr>
+<tr class="even">
+<td align="left">P_angle_in</td>
+<td align="left">[kW]</td>
+<td align="left">Power at the Anglegear’s input shaft. Empty if no Anglegear is used.</td>
+</tr>
+<tr class="odd">
+<td align="left">P_angle_loss</td>
+<td align="left">[kW]</td>
+<td align="left">Power loss at the Anglegear, interpolated from the loss-map. Empty if no Anglegear is used.</td>
 </tr>
 <tr class="even">
 <td align="left">P_axle_in</td>
 <td align="left">[kW]</td>
-<td align="left">Power at the axle-gear input shaft. P_axle_in = P_ret_in - P_ret_loss</td>
+<td align="left">Power at the axle-gear input shaft. P_axle_in = P_ret_in - P_ret_loss ( - P_angle_loss if an Angulargear is used)</td>
 </tr>
 <tr class="odd">
 <td align="left">P_axle_loss</td>
