@@ -148,6 +148,7 @@ Partial Class F_MAINForm
 		Me.SplitContainer1.Panel1.SuspendLayout()
 		Me.SplitContainer1.Panel2.SuspendLayout()
 		Me.SplitContainer1.SuspendLayout()
+		Me.ToolStrip1.SuspendLayout()
 		Me.CmOpenFile.SuspendLayout()
 		Me.SuspendLayout()
 		'
@@ -273,7 +274,7 @@ Partial Class F_MAINForm
 		'
 		Me.BtGENdown.Anchor = CType((System.Windows.Forms.AnchorStyles.Bottom Or System.Windows.Forms.AnchorStyles.Left), System.Windows.Forms.AnchorStyles)
 		Me.BtGENdown.Image = Global.VECTO.My.Resources.Resources.Actions_arrow_down_icon
-		Me.BtGENdown.Location = New System.Drawing.Point(294, 247)
+		Me.BtGENdown.Location = New System.Drawing.Point(307, 247)
 		Me.BtGENdown.Name = "BtGENdown"
 		Me.BtGENdown.Size = New System.Drawing.Size(30, 30)
 		Me.BtGENdown.TabIndex = 6
@@ -284,7 +285,7 @@ Partial Class F_MAINForm
 		'
 		Me.BtGENup.Anchor = CType((System.Windows.Forms.AnchorStyles.Bottom Or System.Windows.Forms.AnchorStyles.Left), System.Windows.Forms.AnchorStyles)
 		Me.BtGENup.Image = Global.VECTO.My.Resources.Resources.Actions_arrow_up_icon
-		Me.BtGENup.Location = New System.Drawing.Point(262, 247)
+		Me.BtGENup.Location = New System.Drawing.Point(276, 247)
 		Me.BtGENup.Name = "BtGENup"
 		Me.BtGENup.Size = New System.Drawing.Size(30, 30)
 		Me.BtGENup.TabIndex = 4
@@ -308,7 +309,7 @@ Partial Class F_MAINForm
 		'
 		Me.ChBoxAllGEN.Anchor = CType((System.Windows.Forms.AnchorStyles.Bottom Or System.Windows.Forms.AnchorStyles.Left), System.Windows.Forms.AnchorStyles)
 		Me.ChBoxAllGEN.AutoSize = True
-		Me.ChBoxAllGEN.Location = New System.Drawing.Point(186, 255)
+		Me.ChBoxAllGEN.Location = New System.Drawing.Point(195, 254)
 		Me.ChBoxAllGEN.Name = "ChBoxAllGEN"
 		Me.ChBoxAllGEN.Size = New System.Drawing.Size(70, 17)
 		Me.ChBoxAllGEN.TabIndex = 16
@@ -351,9 +352,9 @@ Partial Class F_MAINForm
 		Me.ButtonGENremove.Anchor = CType((System.Windows.Forms.AnchorStyles.Bottom Or System.Windows.Forms.AnchorStyles.Left), System.Windows.Forms.AnchorStyles)
 		Me.ButtonGENremove.Font = New System.Drawing.Font("Microsoft Sans Serif", 8.25!, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, CType(0, Byte))
 		Me.ButtonGENremove.Image = Global.VECTO.My.Resources.Resources.minus_circle_icon
-		Me.ButtonGENremove.Location = New System.Drawing.Point(145, 247)
+		Me.ButtonGENremove.Location = New System.Drawing.Point(147, 247)
 		Me.ButtonGENremove.Name = "ButtonGENremove"
-		Me.ButtonGENremove.Size = New System.Drawing.Size(30, 30)
+		Me.ButtonGENremove.Size = New System.Drawing.Size(33, 30)
 		Me.ButtonGENremove.TabIndex = 2
 		Me.ToolTip1.SetToolTip(Me.ButtonGENremove, "Remove selected entries")
 		Me.ButtonGENremove.UseVisualStyleBackColor = True
@@ -378,7 +379,7 @@ Partial Class F_MAINForm
 		Me.ButtonGENadd.Image = Global.VECTO.My.Resources.Resources.plus_circle_icon
 		Me.ButtonGENadd.Location = New System.Drawing.Point(113, 247)
 		Me.ButtonGENadd.Name = "ButtonGENadd"
-		Me.ButtonGENadd.Size = New System.Drawing.Size(30, 30)
+		Me.ButtonGENadd.Size = New System.Drawing.Size(33, 30)
 		Me.ButtonGENadd.TabIndex = 1
 		Me.ToolTip1.SetToolTip(Me.ButtonGENadd, "Add Job File")
 		Me.ButtonGENadd.UseVisualStyleBackColor = True
@@ -395,7 +396,7 @@ Partial Class F_MAINForm
 		Me.TabPageDRI.Location = New System.Drawing.Point(4, 22)
 		Me.TabPageDRI.Name = "TabPageDRI"
 		Me.TabPageDRI.Padding = New System.Windows.Forms.Padding(3)
-		Me.TabPageDRI.Size = New System.Drawing.Size(1058, 256)
+		Me.TabPageDRI.Size = New System.Drawing.Size(1058, 282)
 		Me.TabPageDRI.TabIndex = 1
 		Me.TabPageDRI.Text = "Driving Cycles"
 		Me.TabPageDRI.UseVisualStyleBackColor = True
@@ -404,7 +405,7 @@ Partial Class F_MAINForm
 		'
 		Me.BtDRIdown.Anchor = CType((System.Windows.Forms.AnchorStyles.Bottom Or System.Windows.Forms.AnchorStyles.Right), System.Windows.Forms.AnchorStyles)
 		Me.BtDRIdown.Image = Global.VECTO.My.Resources.Resources.Actions_arrow_down_icon
-		Me.BtDRIdown.Location = New System.Drawing.Point(940, 222)
+		Me.BtDRIdown.Location = New System.Drawing.Point(940, 248)
 		Me.BtDRIdown.Name = "BtDRIdown"
 		Me.BtDRIdown.Size = New System.Drawing.Size(30, 24)
 		Me.BtDRIdown.TabIndex = 3
@@ -414,7 +415,7 @@ Partial Class F_MAINForm
 		'
 		Me.BtDRIup.Anchor = CType((System.Windows.Forms.AnchorStyles.Bottom Or System.Windows.Forms.AnchorStyles.Right), System.Windows.Forms.AnchorStyles)
 		Me.BtDRIup.Image = Global.VECTO.My.Resources.Resources.Actions_arrow_up_icon
-		Me.BtDRIup.Location = New System.Drawing.Point(910, 222)
+		Me.BtDRIup.Location = New System.Drawing.Point(910, 248)
 		Me.BtDRIup.Name = "BtDRIup"
 		Me.BtDRIup.Size = New System.Drawing.Size(30, 24)
 		Me.BtDRIup.TabIndex = 2
@@ -424,7 +425,7 @@ Partial Class F_MAINForm
 		'
 		Me.ChBoxAllDRI.Anchor = CType((System.Windows.Forms.AnchorStyles.Bottom Or System.Windows.Forms.AnchorStyles.Left), System.Windows.Forms.AnchorStyles)
 		Me.ChBoxAllDRI.AutoSize = True
-		Me.ChBoxAllDRI.Location = New System.Drawing.Point(74, 226)
+		Me.ChBoxAllDRI.Location = New System.Drawing.Point(74, 252)
 		Me.ChBoxAllDRI.Name = "ChBoxAllDRI"
 		Me.ChBoxAllDRI.Size = New System.Drawing.Size(70, 17)
 		Me.ChBoxAllDRI.TabIndex = 7
@@ -446,7 +447,7 @@ Partial Class F_MAINForm
 		Me.LvDRI.LabelEdit = True
 		Me.LvDRI.Location = New System.Drawing.Point(6, 6)
 		Me.LvDRI.Name = "LvDRI"
-		Me.LvDRI.Size = New System.Drawing.Size(1046, 215)
+		Me.LvDRI.Size = New System.Drawing.Size(1046, 241)
 		Me.LvDRI.TabIndex = 6
 		Me.LvDRI.UseCompatibleStateImageBehavior = False
 		Me.LvDRI.View = System.Windows.Forms.View.Details
@@ -464,7 +465,7 @@ Partial Class F_MAINForm
 		'ButtonDRIedit
 		'
 		Me.ButtonDRIedit.Anchor = CType((System.Windows.Forms.AnchorStyles.Bottom Or System.Windows.Forms.AnchorStyles.Right), System.Windows.Forms.AnchorStyles)
-		Me.ButtonDRIedit.Location = New System.Drawing.Point(972, 222)
+		Me.ButtonDRIedit.Location = New System.Drawing.Point(972, 248)
 		Me.ButtonDRIedit.Name = "ButtonDRIedit"
 		Me.ButtonDRIedit.Size = New System.Drawing.Size(80, 23)
 		Me.ButtonDRIedit.TabIndex = 4
@@ -476,7 +477,7 @@ Partial Class F_MAINForm
 		Me.ButtonDRIremove.Anchor = CType((System.Windows.Forms.AnchorStyles.Bottom Or System.Windows.Forms.AnchorStyles.Right), System.Windows.Forms.AnchorStyles)
 		Me.ButtonDRIremove.Font = New System.Drawing.Font("Microsoft Sans Serif", 8.25!, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, CType(0, Byte))
 		Me.ButtonDRIremove.Image = Global.VECTO.My.Resources.Resources.minus_circle_icon
-		Me.ButtonDRIremove.Location = New System.Drawing.Point(-26, 222)
+		Me.ButtonDRIremove.Location = New System.Drawing.Point(-26, 248)
 		Me.ButtonDRIremove.Name = "ButtonDRIremove"
 		Me.ButtonDRIremove.Size = New System.Drawing.Size(30, 24)
 		Me.ButtonDRIremove.TabIndex = 1
@@ -487,7 +488,7 @@ Partial Class F_MAINForm
 		Me.ButtonDRIadd.Anchor = CType((System.Windows.Forms.AnchorStyles.Bottom Or System.Windows.Forms.AnchorStyles.Right), System.Windows.Forms.AnchorStyles)
 		Me.ButtonDRIadd.Font = New System.Drawing.Font("Microsoft Sans Serif", 8.25!, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, CType(0, Byte))
 		Me.ButtonDRIadd.Image = Global.VECTO.My.Resources.Resources.plus_circle_icon
-		Me.ButtonDRIadd.Location = New System.Drawing.Point(-57, 222)
+		Me.ButtonDRIadd.Location = New System.Drawing.Point(-57, 248)
 		Me.ButtonDRIadd.Name = "ButtonDRIadd"
 		Me.ButtonDRIadd.Size = New System.Drawing.Size(30, 24)
 		Me.ButtonDRIadd.TabIndex = 0
@@ -502,7 +503,7 @@ Partial Class F_MAINForm
 		Me.TabPgOptions.Location = New System.Drawing.Point(4, 22)
 		Me.TabPgOptions.Name = "TabPgOptions"
 		Me.TabPgOptions.Padding = New System.Windows.Forms.Padding(3)
-		Me.TabPgOptions.Size = New System.Drawing.Size(1058, 256)
+		Me.TabPgOptions.Size = New System.Drawing.Size(1058, 282)
 		Me.TabPgOptions.TabIndex = 2
 		Me.TabPgOptions.Text = "Options"
 		Me.TabPgOptions.UseVisualStyleBackColor = True
@@ -519,7 +520,7 @@ Partial Class F_MAINForm
 		Me.GrBoxBATCH.Controls.Add(Me.TbBOpath)
 		Me.GrBoxBATCH.Location = New System.Drawing.Point(6, 224)
 		Me.GrBoxBATCH.Name = "GrBoxBATCH"
-		Me.GrBoxBATCH.Size = New System.Drawing.Size(1046, 26)
+		Me.GrBoxBATCH.Size = New System.Drawing.Size(1046, 52)
 		Me.GrBoxBATCH.TabIndex = 5
 		Me.GrBoxBATCH.TabStop = False
 		Me.GrBoxBATCH.Text = "Batch Options"
@@ -579,7 +580,7 @@ Partial Class F_MAINForm
 			Or System.Windows.Forms.AnchorStyles.Right), System.Windows.Forms.AnchorStyles)
 		Me.GrBoxSTD.Location = New System.Drawing.Point(6, 224)
 		Me.GrBoxSTD.Name = "GrBoxSTD"
-		Me.GrBoxSTD.Size = New System.Drawing.Size(1046, 26)
+		Me.GrBoxSTD.Size = New System.Drawing.Size(1046, 52)
 		Me.GrBoxSTD.TabIndex = 14
 		Me.GrBoxSTD.TabStop = False
 		Me.GrBoxSTD.Text = "Standard Options"
@@ -709,7 +710,7 @@ Partial Class F_MAINForm
 		Me.TabPageDEV.Location = New System.Drawing.Point(4, 22)
 		Me.TabPageDEV.Name = "TabPageDEV"
 		Me.TabPageDEV.Padding = New System.Windows.Forms.Padding(3)
-		Me.TabPageDEV.Size = New System.Drawing.Size(1058, 256)
+		Me.TabPageDEV.Size = New System.Drawing.Size(1058, 282)
 		Me.TabPageDEV.TabIndex = 3
 		Me.TabPageDEV.Text = "Test"
 		Me.TabPageDEV.UseVisualStyleBackColor = True
@@ -718,7 +719,7 @@ Partial Class F_MAINForm
 		'
 		Me.Label1.Anchor = CType((System.Windows.Forms.AnchorStyles.Bottom Or System.Windows.Forms.AnchorStyles.Left), System.Windows.Forms.AnchorStyles)
 		Me.Label1.AutoSize = True
-		Me.Label1.Location = New System.Drawing.Point(1012, 237)
+		Me.Label1.Location = New System.Drawing.Point(1012, 263)
 		Me.Label1.Name = "Label1"
 		Me.Label1.Size = New System.Drawing.Size(106, 13)
 		Me.Label1.TabIndex = 1
@@ -735,7 +736,7 @@ Partial Class F_MAINForm
 		Me.LvDEVoptions.Location = New System.Drawing.Point(6, 6)
 		Me.LvDEVoptions.MultiSelect = False
 		Me.LvDEVoptions.Name = "LvDEVoptions"
-		Me.LvDEVoptions.Size = New System.Drawing.Size(1046, 231)
+		Me.LvDEVoptions.Size = New System.Drawing.Size(1046, 257)
 		Me.LvDEVoptions.TabIndex = 0
 		Me.LvDEVoptions.UseCompatibleStateImageBehavior = False
 		Me.LvDEVoptions.View = System.Windows.Forms.View.Details
@@ -864,6 +865,7 @@ Partial Class F_MAINForm
 		'
 		Me.ToolStrip1.BackgroundImageLayout = System.Windows.Forms.ImageLayout.None
 		Me.ToolStrip1.GripStyle = System.Windows.Forms.ToolStripGripStyle.Hidden
+		Me.ToolStrip1.Items.AddRange(New System.Windows.Forms.ToolStripItem() {Me.ToolStripBtNew, Me.ToolStripBtOpen, Me.ToolStripSeparator2, Me.ToolStripDrDnBtTools, Me.ToolStripDrDnBtInfo})
 		Me.ToolStrip1.Location = New System.Drawing.Point(0, 0)
 		Me.ToolStrip1.Name = "ToolStrip1"
 		Me.ToolStrip1.Size = New System.Drawing.Size(1073, 25)
@@ -1083,6 +1085,8 @@ Partial Class F_MAINForm
 		Me.SplitContainer1.Panel2.ResumeLayout(False)
 		CType(Me.SplitContainer1, System.ComponentModel.ISupportInitialize).EndInit()
 		Me.SplitContainer1.ResumeLayout(False)
+		Me.ToolStrip1.ResumeLayout(False)
+		Me.ToolStrip1.PerformLayout()
 		Me.CmOpenFile.ResumeLayout(False)
 		Me.ResumeLayout(False)
 		Me.PerformLayout()
@@ -1186,5 +1190,15 @@ Partial Class F_MAINForm
 	Friend WithEvents ChBoxMod1Hz As System.Windows.Forms.CheckBox
 	Friend WithEvents Label6 As System.Windows.Forms.Label
 	Friend WithEvents ToolTip1 As System.Windows.Forms.ToolTip
+	Friend WithEvents NewToolStripButton As System.Windows.Forms.ToolStripButton
+	Friend WithEvents OpenToolStripButton As System.Windows.Forms.ToolStripButton
+	Friend WithEvents SaveToolStripButton As System.Windows.Forms.ToolStripButton
+	Friend WithEvents PrintToolStripButton As System.Windows.Forms.ToolStripButton
+	Friend WithEvents toolStripSeparator As System.Windows.Forms.ToolStripSeparator
+	Friend WithEvents CutToolStripButton As System.Windows.Forms.ToolStripButton
+	Friend WithEvents CopyToolStripButton As System.Windows.Forms.ToolStripButton
+	Friend WithEvents PasteToolStripButton As System.Windows.Forms.ToolStripButton
+	Friend WithEvents toolStripSeparator1 As System.Windows.Forms.ToolStripSeparator
+	Friend WithEvents HelpToolStripButton As System.Windows.Forms.ToolStripButton
 
 End Class

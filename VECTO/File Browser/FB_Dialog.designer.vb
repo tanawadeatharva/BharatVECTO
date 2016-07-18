@@ -118,9 +118,9 @@ Partial Class FB_Dialog
 		'ButtonNewDir
 		'
 		Me.ButtonNewDir.Image = Global.VECTO.My.Resources.Resources.new_dir
-		Me.ButtonNewDir.Location = New System.Drawing.Point(139, 2)
+		Me.ButtonNewDir.Location = New System.Drawing.Point(141, 1)
 		Me.ButtonNewDir.Name = "ButtonNewDir"
-		Me.ButtonNewDir.Size = New System.Drawing.Size(24, 24)
+		Me.ButtonNewDir.Size = New System.Drawing.Size(26, 25)
 		Me.ButtonNewDir.TabIndex = 21
 		Me.ButtonNewDir.TabStop = False
 		Me.ToolTip1.SetToolTip(Me.ButtonNewDir, "Create new Directory")
@@ -129,9 +129,9 @@ Partial Class FB_Dialog
 		'ButtonDesktop
 		'
 		Me.ButtonDesktop.Image = Global.VECTO.My.Resources.Resources.desktop
-		Me.ButtonDesktop.Location = New System.Drawing.Point(86, 2)
+		Me.ButtonDesktop.Location = New System.Drawing.Point(87, 1)
 		Me.ButtonDesktop.Name = "ButtonDesktop"
-		Me.ButtonDesktop.Size = New System.Drawing.Size(24, 24)
+		Me.ButtonDesktop.Size = New System.Drawing.Size(26, 25)
 		Me.ButtonDesktop.TabIndex = 22
 		Me.ButtonDesktop.TabStop = False
 		Me.ToolTip1.SetToolTip(Me.ButtonDesktop, "Go to Desktop")
@@ -140,9 +140,9 @@ Partial Class FB_Dialog
 		'ButtonHisFolder
 		'
 		Me.ButtonHisFolder.Image = Global.VECTO.My.Resources.Resources.favorites
-		Me.ButtonHisFolder.Location = New System.Drawing.Point(112, 2)
+		Me.ButtonHisFolder.Location = New System.Drawing.Point(114, 1)
 		Me.ButtonHisFolder.Name = "ButtonHisFolder"
-		Me.ButtonHisFolder.Size = New System.Drawing.Size(24, 24)
+		Me.ButtonHisFolder.Size = New System.Drawing.Size(26, 25)
 		Me.ButtonHisFolder.TabIndex = 24
 		Me.ButtonHisFolder.TabStop = False
 		Me.ToolTip1.SetToolTip(Me.ButtonHisFolder, "Select from recent directories / favorites")
@@ -151,9 +151,9 @@ Partial Class FB_Dialog
 		'ButtonFolderBack
 		'
 		Me.ButtonFolderBack.Image = CType(resources.GetObject("ButtonFolderBack.Image"), System.Drawing.Image)
-		Me.ButtonFolderBack.Location = New System.Drawing.Point(60, 2)
+		Me.ButtonFolderBack.Location = New System.Drawing.Point(60, 1)
 		Me.ButtonFolderBack.Name = "ButtonFolderBack"
-		Me.ButtonFolderBack.Size = New System.Drawing.Size(24, 24)
+		Me.ButtonFolderBack.Size = New System.Drawing.Size(26, 25)
 		Me.ButtonFolderBack.TabIndex = 20
 		Me.ButtonFolderBack.TabStop = False
 		Me.ToolTip1.SetToolTip(Me.ButtonFolderBack, "Move up one directory level")
@@ -230,7 +230,7 @@ Partial Class FB_Dialog
 		'
 		Me.ButtonAll.Location = New System.Drawing.Point(25, 2)
 		Me.ButtonAll.Name = "ButtonAll"
-		Me.ButtonAll.Size = New System.Drawing.Size(71, 24)
+		Me.ButtonAll.Size = New System.Drawing.Size(71, 23)
 		Me.ButtonAll.TabIndex = 19
 		Me.ButtonAll.Text = "Select All"
 		Me.ToolTip1.SetToolTip(Me.ButtonAll, "Select All Files")
@@ -248,9 +248,9 @@ Partial Class FB_Dialog
 		'ButtonHisFile
 		'
 		Me.ButtonHisFile.Image = Global.VECTO.My.Resources.Resources.file_history
-		Me.ButtonHisFile.Location = New System.Drawing.Point(-1, 2)
+		Me.ButtonHisFile.Location = New System.Drawing.Point(-1, 1)
 		Me.ButtonHisFile.Name = "ButtonHisFile"
-		Me.ButtonHisFile.Size = New System.Drawing.Size(24, 24)
+		Me.ButtonHisFile.Size = New System.Drawing.Size(26, 25)
 		Me.ButtonHisFile.TabIndex = 24
 		Me.ButtonHisFile.TabStop = False
 		Me.ToolTip1.SetToolTip(Me.ButtonHisFile, "Select from recent files")

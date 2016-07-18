@@ -1777,7 +1777,7 @@ Partial Class frmHVACTool
 		'btnOpenAenv
 		'
 		Me.btnOpenAenv.Image = CType(resources.GetObject("btnOpenAenv.Image"), System.Drawing.Image)
-		Me.btnOpenAenv.Location = New System.Drawing.Point(728, 122)
+		Me.btnOpenAenv.Location = New System.Drawing.Point(745, 122)
 		Me.btnOpenAenv.Name = "btnOpenAenv"
 		Me.btnOpenAenv.Size = New System.Drawing.Size(24, 24)
 		Me.btnOpenAenv.TabIndex = 62
@@ -1786,7 +1786,7 @@ Partial Class frmHVACTool
 		'btnEnvironmentConditionsSource
 		'
 		Me.btnEnvironmentConditionsSource.Image = Global.VectoAuxiliaries.My.Resources.Resources.Open_icon
-		Me.btnEnvironmentConditionsSource.Location = New System.Drawing.Point(704, 122)
+		Me.btnEnvironmentConditionsSource.Location = New System.Drawing.Point(721, 122)
 		Me.btnEnvironmentConditionsSource.Name = "btnEnvironmentConditionsSource"
 		Me.btnEnvironmentConditionsSource.Size = New System.Drawing.Size(24, 24)
 		Me.btnEnvironmentConditionsSource.TabIndex = 61
