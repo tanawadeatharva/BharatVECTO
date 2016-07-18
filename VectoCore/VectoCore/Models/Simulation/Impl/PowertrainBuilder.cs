@@ -76,7 +76,7 @@ namespace TUGraz.VectoCore.Models.Simulation.Impl
 
 		private VehicleContainer BuildEngineOnly(VectoRunData data)
 		{
-			if (data.Cycle.CycleType == CycleType.EngineOnly)
+			if (data.Cycle.CycleType != CycleType.EngineOnly)
 				throw new VectoException("CycleType must be EngineOnly.");
 
 			var container = new VehicleContainer(ExecutionMode.EngineOnly, _modData, _sumWriter) { RunData = data };
@@ -94,7 +94,7 @@ namespace TUGraz.VectoCore.Models.Simulation.Impl
 
 		private VehicleContainer BuildPWheel(VectoRunData data)
 		{
-			if (data.Cycle.CycleType == CycleType.PWheel)
+			if (data.Cycle.CycleType != CycleType.PWheel)
 				throw new VectoException("CycleType must be PWheel.");
 
 			var container = new VehicleContainer(ExecutionMode.Engineering, _modData, _sumWriter) { RunData = data };
@@ -115,7 +115,7 @@ namespace TUGraz.VectoCore.Models.Simulation.Impl
 
 		private VehicleContainer BuildMeasuredSpeed(VectoRunData data)
 		{
-			if (data.Cycle.CycleType == CycleType.MeasuredSpeed)
+			if (data.Cycle.CycleType != CycleType.MeasuredSpeed)
 				throw new VectoException("CycleType must be MeasuredSpeed.");
 
 			var container = new VehicleContainer(ExecutionMode.Engineering, _modData, _sumWriter) { RunData = data };
@@ -139,7 +139,7 @@ namespace TUGraz.VectoCore.Models.Simulation.Impl
 
 		private VehicleContainer BuildMeasuredSpeedGear(VectoRunData data)
 		{
-			if (data.Cycle.CycleType == CycleType.MeasuredSpeedGear)
+			if (data.Cycle.CycleType != CycleType.MeasuredSpeedGear)
 				throw new VectoException("CycleType must be MeasuredSpeed with Gear.");
 
 			var container = new VehicleContainer(ExecutionMode.Engineering, _modData, _sumWriter) { RunData = data };
