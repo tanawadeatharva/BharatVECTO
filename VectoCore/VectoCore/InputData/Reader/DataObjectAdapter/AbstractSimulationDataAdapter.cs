@@ -207,7 +207,7 @@ namespace TUGraz.VectoCore.InputData.Reader.DataObjectAdapter
 								Log.Info("AngularGear Trying with Efficiency instead of Loss Map.");
 								angularGear.AngularGear.LossMap = TransmissionLossMap.Create(data.Efficiency, data.Ratio, "AngularGear");
 							} else {
-								throw new VectoException("AngularGear: LossMap or Efficiency not found.", ex);
+								throw new VectoException("AngularGear: LossMap not found.", ex);
 							}
 						}
 						return angularGear;
