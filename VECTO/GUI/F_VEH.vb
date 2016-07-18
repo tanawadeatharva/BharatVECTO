@@ -502,8 +502,6 @@ Public Class F_VEH
 		Select Case CbRtType.SelectedIndex
 			Case 1 'Primary
 				LbRtRatio.Text = "Ratio to engine speed"
-				TbRtPath.Enabled = True
-				BtRtBrowse.Enabled = True
 				PnRt.Enabled = True
 			Case 2 'Secondary
 				LbRtRatio.Text = "Ratio to cardan shaft speed"
@@ -512,8 +510,6 @@ Public Class F_VEH
 				PnRt.Enabled = True
 			Case Else '0 None
 				LbRtRatio.Text = "Ratio"
-				TbRtPath.Enabled = False
-				BtRtBrowse.Enabled = False
 				PnRt.Enabled = False
 		End Select
 
@@ -569,9 +565,8 @@ Public Class F_VEH
 	End Sub
 
 	Private Sub TBcw_TextChanged(sender As Object, e As EventArgs) _
-		Handles TbLoad.TextChanged, TBrdyn.TextChanged, TBcdA.TextChanged, TbCdFile.TextChanged, TbRtPath.TextChanged,
-				TbRtRatio.TextChanged, tbAngularGearRatio.TextChanged, tbAngularGearLossMapPath.TextChanged,
-				cbAngularGearType.SelectedIndexChanged
+		Handles TbLoad.TextChanged, TBrdyn.TextChanged, TBcdA.TextChanged, TbCdFile.TextChanged, TbRtRatio.TextChanged,
+				cbAngularGearType.SelectedIndexChanged, TbRtPath.TextChanged, tbAngularGearLossMapPath.TextChanged, tbAngularGearRatio.TextChanged
 		Change()
 	End Sub
 
@@ -758,18 +753,13 @@ Public Class F_VEH
 		Handles cbAngularGearType.SelectedIndexChanged
 		Select Case cbAngularGearType.SelectedIndex
 			Case 1 'Separate Angular Gear
-				tbAngularGearRatio.Enabled = True
+				pnAngularGearFields.Enabled = True
 				tbAngularGearRatio.Text = "1.0"
-				btAngularGearLossMapBrowse.Enabled = True
-				tbAngularGearLossMapPath.Enabled = True
 			Case Else 'Losses included in Transmission, None
 				tbAngularGearRatio.Text = ""
-				tbAngularGearRatio.Enabled = False
-				btAngularGearLossMapBrowse.Enabled = False
 				tbAngularGearLossMapPath.Text = ""
-				tbAngularGearLossMapPath.Enabled = False
+				pnAngularGearFields.Enabled = False
 		End Select
-
 		Change()
 	End Sub
 
@@ -779,5 +769,6 @@ Public Class F_VEH
 	End Sub
 
 #End Region
+
 End Class
 

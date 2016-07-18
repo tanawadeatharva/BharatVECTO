@@ -33,6 +33,7 @@ Partial Class FB_Dialog
     <System.Diagnostics.DebuggerStepThrough()> _
     Private Sub InitializeComponent()
 		Me.components = New System.ComponentModel.Container()
+		Dim resources As System.ComponentModel.ComponentResourceManager = New System.ComponentModel.ComponentResourceManager(GetType(FB_Dialog))
 		Me.SplitContainer1 = New System.Windows.Forms.SplitContainer()
 		Me.Label1 = New System.Windows.Forms.Label()
 		Me.ButtonNewDir = New System.Windows.Forms.Button()
@@ -42,10 +43,11 @@ Partial Class FB_Dialog
 		Me.TextBoxSearchFolder = New System.Windows.Forms.TextBox()
 		Me.ListViewFolder = New System.Windows.Forms.ListView()
 		Me.ColumnHeader3 = CType(New System.Windows.Forms.ColumnHeader(), System.Windows.Forms.ColumnHeader)
+		Me.ImageList1 = New System.Windows.Forms.ImageList(Me.components)
 		Me.ComboBoxDrive = New System.Windows.Forms.ComboBox()
+		Me.Label5 = New System.Windows.Forms.Label()
 		Me.Label2 = New System.Windows.Forms.Label()
 		Me.ButtonAll = New System.Windows.Forms.Button()
-		Me.LabelFileAnz = New System.Windows.Forms.Label()
 		Me.ComboBoxExt = New System.Windows.Forms.ComboBox()
 		Me.ButtonHisFile = New System.Windows.Forms.Button()
 		Me.TextBoxSearchFile = New System.Windows.Forms.TextBox()
@@ -61,8 +63,8 @@ Partial Class FB_Dialog
 		Me.ButtonCancel = New System.Windows.Forms.Button()
 		Me.TextBoxCurrent = New System.Windows.Forms.TextBox()
 		Me.Label3 = New System.Windows.Forms.Label()
-		Me.ImageList1 = New System.Windows.Forms.ImageList(Me.components)
 		Me.Label4 = New System.Windows.Forms.Label()
+		Me.ToolTip1 = New System.Windows.Forms.ToolTip(Me.components)
 		CType(Me.SplitContainer1, System.ComponentModel.ISupportInitialize).BeginInit()
 		Me.SplitContainer1.Panel1.SuspendLayout()
 		Me.SplitContainer1.Panel2.SuspendLayout()
@@ -75,8 +77,7 @@ Partial Class FB_Dialog
 		Me.SplitContainer1.Anchor = CType((((System.Windows.Forms.AnchorStyles.Top Or System.Windows.Forms.AnchorStyles.Bottom) _
 			Or System.Windows.Forms.AnchorStyles.Left) _
 			Or System.Windows.Forms.AnchorStyles.Right), System.Windows.Forms.AnchorStyles)
-		Me.SplitContainer1.BorderStyle = System.Windows.Forms.BorderStyle.Fixed3D
-		Me.SplitContainer1.Location = New System.Drawing.Point(3, 49)
+		Me.SplitContainer1.Location = New System.Drawing.Point(0, 46)
 		Me.SplitContainer1.Name = "SplitContainer1"
 		'
 		'SplitContainer1.Panel1
@@ -92,15 +93,15 @@ Partial Class FB_Dialog
 		'
 		'SplitContainer1.Panel2
 		'
+		Me.SplitContainer1.Panel2.Controls.Add(Me.Label5)
 		Me.SplitContainer1.Panel2.Controls.Add(Me.Label2)
 		Me.SplitContainer1.Panel2.Controls.Add(Me.ButtonAll)
-		Me.SplitContainer1.Panel2.Controls.Add(Me.LabelFileAnz)
 		Me.SplitContainer1.Panel2.Controls.Add(Me.ComboBoxExt)
 		Me.SplitContainer1.Panel2.Controls.Add(Me.ButtonHisFile)
 		Me.SplitContainer1.Panel2.Controls.Add(Me.TextBoxSearchFile)
 		Me.SplitContainer1.Panel2.Controls.Add(Me.ListViewFiles)
-		Me.SplitContainer1.Size = New System.Drawing.Size(562, 395)
-		Me.SplitContainer1.SplitterDistance = 280
+		Me.SplitContainer1.Size = New System.Drawing.Size(734, 292)
+		Me.SplitContainer1.SplitterDistance = 365
 		Me.SplitContainer1.TabIndex = 5
 		Me.SplitContainer1.TabStop = False
 		'
@@ -108,7 +109,7 @@ Partial Class FB_Dialog
 		'
 		Me.Label1.Anchor = CType((System.Windows.Forms.AnchorStyles.Bottom Or System.Windows.Forms.AnchorStyles.Left), System.Windows.Forms.AnchorStyles)
 		Me.Label1.AutoSize = True
-		Me.Label1.Location = New System.Drawing.Point(3, 372)
+		Me.Label1.Location = New System.Drawing.Point(3, 272)
 		Me.Label1.Name = "Label1"
 		Me.Label1.Size = New System.Drawing.Size(32, 13)
 		Me.Label1.TabIndex = 28
@@ -116,54 +117,55 @@ Partial Class FB_Dialog
 		'
 		'ButtonNewDir
 		'
-		Me.ButtonNewDir.Anchor = CType((System.Windows.Forms.AnchorStyles.Top Or System.Windows.Forms.AnchorStyles.Right), System.Windows.Forms.AnchorStyles)
-		Me.ButtonNewDir.Location = New System.Drawing.Point(96, 2)
+		Me.ButtonNewDir.Image = Global.VECTO.My.Resources.Resources.new_dir
+		Me.ButtonNewDir.Location = New System.Drawing.Point(134, 2)
 		Me.ButtonNewDir.Name = "ButtonNewDir"
-		Me.ButtonNewDir.Size = New System.Drawing.Size(38, 23)
+		Me.ButtonNewDir.Size = New System.Drawing.Size(24, 24)
 		Me.ButtonNewDir.TabIndex = 21
 		Me.ButtonNewDir.TabStop = False
-		Me.ButtonNewDir.Text = "New"
+		Me.ToolTip1.SetToolTip(Me.ButtonNewDir, "Create new Directory")
 		Me.ButtonNewDir.UseVisualStyleBackColor = True
 		'
 		'ButtonDesktop
 		'
-		Me.ButtonDesktop.Anchor = CType((System.Windows.Forms.AnchorStyles.Top Or System.Windows.Forms.AnchorStyles.Right), System.Windows.Forms.AnchorStyles)
-		Me.ButtonDesktop.Location = New System.Drawing.Point(133, 2)
+		Me.ButtonDesktop.Image = Global.VECTO.My.Resources.Resources.desktop
+		Me.ButtonDesktop.Location = New System.Drawing.Point(82, 2)
 		Me.ButtonDesktop.Name = "ButtonDesktop"
-		Me.ButtonDesktop.Size = New System.Drawing.Size(57, 23)
+		Me.ButtonDesktop.Size = New System.Drawing.Size(24, 24)
 		Me.ButtonDesktop.TabIndex = 22
 		Me.ButtonDesktop.TabStop = False
-		Me.ButtonDesktop.Text = "Desktop"
+		Me.ToolTip1.SetToolTip(Me.ButtonDesktop, "Go to Desktop")
 		Me.ButtonDesktop.UseVisualStyleBackColor = True
 		'
 		'ButtonHisFolder
 		'
-		Me.ButtonHisFolder.Anchor = CType((System.Windows.Forms.AnchorStyles.Top Or System.Windows.Forms.AnchorStyles.Right), System.Windows.Forms.AnchorStyles)
-		Me.ButtonHisFolder.Location = New System.Drawing.Point(189, 2)
+		Me.ButtonHisFolder.Image = Global.VECTO.My.Resources.Resources.favorites
+		Me.ButtonHisFolder.Location = New System.Drawing.Point(106, 2)
 		Me.ButtonHisFolder.Name = "ButtonHisFolder"
-		Me.ButtonHisFolder.Size = New System.Drawing.Size(87, 23)
+		Me.ButtonHisFolder.Size = New System.Drawing.Size(24, 24)
 		Me.ButtonHisFolder.TabIndex = 24
 		Me.ButtonHisFolder.TabStop = False
-		Me.ButtonHisFolder.Text = "History / Fav."
+		Me.ToolTip1.SetToolTip(Me.ButtonHisFolder, "Select from recent directories / favorites")
 		Me.ButtonHisFolder.UseVisualStyleBackColor = True
 		'
 		'ButtonFolderBack
 		'
-		Me.ButtonFolderBack.Location = New System.Drawing.Point(60, 2)
+		Me.ButtonFolderBack.Image = CType(resources.GetObject("ButtonFolderBack.Image"), System.Drawing.Image)
+		Me.ButtonFolderBack.Location = New System.Drawing.Point(58, 2)
 		Me.ButtonFolderBack.Name = "ButtonFolderBack"
-		Me.ButtonFolderBack.Size = New System.Drawing.Size(28, 23)
+		Me.ButtonFolderBack.Size = New System.Drawing.Size(24, 24)
 		Me.ButtonFolderBack.TabIndex = 20
 		Me.ButtonFolderBack.TabStop = False
-		Me.ButtonFolderBack.Text = "<"
+		Me.ToolTip1.SetToolTip(Me.ButtonFolderBack, "Move up one directory level")
 		Me.ButtonFolderBack.UseVisualStyleBackColor = True
 		'
 		'TextBoxSearchFolder
 		'
 		Me.TextBoxSearchFolder.Anchor = CType(((System.Windows.Forms.AnchorStyles.Bottom Or System.Windows.Forms.AnchorStyles.Left) _
 			Or System.Windows.Forms.AnchorStyles.Right), System.Windows.Forms.AnchorStyles)
-		Me.TextBoxSearchFolder.Location = New System.Drawing.Point(41, 369)
+		Me.TextBoxSearchFolder.Location = New System.Drawing.Point(37, 269)
 		Me.TextBoxSearchFolder.Name = "TextBoxSearchFolder"
-		Me.TextBoxSearchFolder.Size = New System.Drawing.Size(234, 20)
+		Me.TextBoxSearchFolder.Size = New System.Drawing.Size(328, 20)
 		Me.TextBoxSearchFolder.TabIndex = 15
 		'
 		'ListViewFolder
@@ -175,10 +177,10 @@ Partial Class FB_Dialog
 		Me.ListViewFolder.FullRowSelect = True
 		Me.ListViewFolder.GridLines = True
 		Me.ListViewFolder.HideSelection = False
-		Me.ListViewFolder.Location = New System.Drawing.Point(3, 27)
+		Me.ListViewFolder.Location = New System.Drawing.Point(-2, 27)
 		Me.ListViewFolder.MultiSelect = False
 		Me.ListViewFolder.Name = "ListViewFolder"
-		Me.ListViewFolder.Size = New System.Drawing.Size(272, 339)
+		Me.ListViewFolder.Size = New System.Drawing.Size(367, 241)
 		Me.ListViewFolder.SmallImageList = Me.ImageList1
 		Me.ListViewFolder.TabIndex = 10
 		Me.ListViewFolder.UseCompatibleStateImageBehavior = False
@@ -189,20 +191,36 @@ Partial Class FB_Dialog
 		Me.ColumnHeader3.Text = "Sub-Directories"
 		Me.ColumnHeader3.Width = 368
 		'
+		'ImageList1
+		'
+		Me.ImageList1.ColorDepth = System.Windows.Forms.ColorDepth.Depth32Bit
+		Me.ImageList1.ImageSize = New System.Drawing.Size(16, 16)
+		Me.ImageList1.TransparentColor = System.Drawing.Color.Transparent
+		'
 		'ComboBoxDrive
 		'
 		Me.ComboBoxDrive.DropDownStyle = System.Windows.Forms.ComboBoxStyle.DropDownList
 		Me.ComboBoxDrive.FormattingEnabled = True
-		Me.ComboBoxDrive.Location = New System.Drawing.Point(5, 3)
+		Me.ComboBoxDrive.Location = New System.Drawing.Point(3, 3)
 		Me.ComboBoxDrive.Name = "ComboBoxDrive"
 		Me.ComboBoxDrive.Size = New System.Drawing.Size(54, 21)
 		Me.ComboBoxDrive.TabIndex = 5
+		'
+		'Label5
+		'
+		Me.Label5.Anchor = CType((System.Windows.Forms.AnchorStyles.Bottom Or System.Windows.Forms.AnchorStyles.Right), System.Windows.Forms.AnchorStyles)
+		Me.Label5.AutoSize = True
+		Me.Label5.Location = New System.Drawing.Point(295, 272)
+		Me.Label5.Name = "Label5"
+		Me.Label5.Size = New System.Drawing.Size(10, 13)
+		Me.Label5.TabIndex = 30
+		Me.Label5.Text = "."
 		'
 		'Label2
 		'
 		Me.Label2.Anchor = CType((System.Windows.Forms.AnchorStyles.Bottom Or System.Windows.Forms.AnchorStyles.Left), System.Windows.Forms.AnchorStyles)
 		Me.Label2.AutoSize = True
-		Me.Label2.Location = New System.Drawing.Point(3, 372)
+		Me.Label2.Location = New System.Drawing.Point(3, 272)
 		Me.Label2.Name = "Label2"
 		Me.Label2.Size = New System.Drawing.Size(32, 13)
 		Me.Label2.TabIndex = 29
@@ -210,50 +228,41 @@ Partial Class FB_Dialog
 		'
 		'ButtonAll
 		'
-		Me.ButtonAll.Anchor = CType((System.Windows.Forms.AnchorStyles.Top Or System.Windows.Forms.AnchorStyles.Right), System.Windows.Forms.AnchorStyles)
-		Me.ButtonAll.Location = New System.Drawing.Point(146, 2)
+		Me.ButtonAll.Location = New System.Drawing.Point(23, 2)
 		Me.ButtonAll.Name = "ButtonAll"
-		Me.ButtonAll.Size = New System.Drawing.Size(71, 23)
+		Me.ButtonAll.Size = New System.Drawing.Size(71, 24)
 		Me.ButtonAll.TabIndex = 19
 		Me.ButtonAll.Text = "Select All"
+		Me.ToolTip1.SetToolTip(Me.ButtonAll, "Select All Files")
 		Me.ButtonAll.UseVisualStyleBackColor = True
-		'
-		'LabelFileAnz
-		'
-		Me.LabelFileAnz.AutoSize = True
-		Me.LabelFileAnz.Location = New System.Drawing.Point(3, 7)
-		Me.LabelFileAnz.Name = "LabelFileAnz"
-		Me.LabelFileAnz.Size = New System.Drawing.Size(37, 13)
-		Me.LabelFileAnz.TabIndex = 7
-		Me.LabelFileAnz.Text = "0 Files"
 		'
 		'ComboBoxExt
 		'
 		Me.ComboBoxExt.Anchor = CType((System.Windows.Forms.AnchorStyles.Bottom Or System.Windows.Forms.AnchorStyles.Right), System.Windows.Forms.AnchorStyles)
 		Me.ComboBoxExt.FormattingEnabled = True
-		Me.ComboBoxExt.Location = New System.Drawing.Point(216, 369)
+		Me.ComboBoxExt.Location = New System.Drawing.Point(307, 269)
 		Me.ComboBoxExt.Name = "ComboBoxExt"
 		Me.ComboBoxExt.Size = New System.Drawing.Size(57, 21)
 		Me.ComboBoxExt.TabIndex = 20
 		'
 		'ButtonHisFile
 		'
-		Me.ButtonHisFile.Anchor = CType((System.Windows.Forms.AnchorStyles.Top Or System.Windows.Forms.AnchorStyles.Right), System.Windows.Forms.AnchorStyles)
-		Me.ButtonHisFile.Location = New System.Drawing.Point(216, 2)
+		Me.ButtonHisFile.Image = Global.VECTO.My.Resources.Resources.file_history
+		Me.ButtonHisFile.Location = New System.Drawing.Point(-1, 2)
 		Me.ButtonHisFile.Name = "ButtonHisFile"
-		Me.ButtonHisFile.Size = New System.Drawing.Size(57, 23)
+		Me.ButtonHisFile.Size = New System.Drawing.Size(24, 24)
 		Me.ButtonHisFile.TabIndex = 24
 		Me.ButtonHisFile.TabStop = False
-		Me.ButtonHisFile.Text = "History"
+		Me.ToolTip1.SetToolTip(Me.ButtonHisFile, "Select from recent files")
 		Me.ButtonHisFile.UseVisualStyleBackColor = True
 		'
 		'TextBoxSearchFile
 		'
 		Me.TextBoxSearchFile.Anchor = CType(((System.Windows.Forms.AnchorStyles.Bottom Or System.Windows.Forms.AnchorStyles.Left) _
 			Or System.Windows.Forms.AnchorStyles.Right), System.Windows.Forms.AnchorStyles)
-		Me.TextBoxSearchFile.Location = New System.Drawing.Point(41, 369)
+		Me.TextBoxSearchFile.Location = New System.Drawing.Point(36, 269)
 		Me.TextBoxSearchFile.Name = "TextBoxSearchFile"
-		Me.TextBoxSearchFile.Size = New System.Drawing.Size(174, 20)
+		Me.TextBoxSearchFile.Size = New System.Drawing.Size(257, 20)
 		Me.TextBoxSearchFile.TabIndex = 15
 		'
 		'ListViewFiles
@@ -266,9 +275,9 @@ Partial Class FB_Dialog
 		Me.ListViewFiles.FullRowSelect = True
 		Me.ListViewFiles.GridLines = True
 		Me.ListViewFiles.HideSelection = False
-		Me.ListViewFiles.Location = New System.Drawing.Point(3, 27)
+		Me.ListViewFiles.Location = New System.Drawing.Point(0, 27)
 		Me.ListViewFiles.Name = "ListViewFiles"
-		Me.ListViewFiles.Size = New System.Drawing.Size(270, 339)
+		Me.ListViewFiles.Size = New System.Drawing.Size(367, 241)
 		Me.ListViewFiles.SmallImageList = Me.ImageList1
 		Me.ListViewFiles.TabIndex = 10
 		Me.ListViewFiles.UseCompatibleStateImageBehavior = False
@@ -277,7 +286,7 @@ Partial Class FB_Dialog
 		'ColumnHeader1
 		'
 		Me.ColumnHeader1.Text = "Files"
-		Me.ColumnHeader1.Width = 364
+		Me.ColumnHeader1.Width = 367
 		'
 		'ContextMenuFile
 		'
@@ -301,9 +310,9 @@ Partial Class FB_Dialog
 		'
 		Me.TextBoxPath.Anchor = CType(((System.Windows.Forms.AnchorStyles.Bottom Or System.Windows.Forms.AnchorStyles.Left) _
 			Or System.Windows.Forms.AnchorStyles.Right), System.Windows.Forms.AnchorStyles)
-		Me.TextBoxPath.Location = New System.Drawing.Point(3, 461)
+		Me.TextBoxPath.Location = New System.Drawing.Point(47, 354)
 		Me.TextBoxPath.Name = "TextBoxPath"
-		Me.TextBoxPath.Size = New System.Drawing.Size(562, 20)
+		Me.TextBoxPath.Size = New System.Drawing.Size(680, 20)
 		Me.TextBoxPath.TabIndex = 15
 		'
 		'ContextMenuHisFolder
@@ -320,7 +329,7 @@ Partial Class FB_Dialog
 		'
 		Me.ButtonOK.Anchor = CType((System.Windows.Forms.AnchorStyles.Bottom Or System.Windows.Forms.AnchorStyles.Right), System.Windows.Forms.AnchorStyles)
 		Me.ButtonOK.DialogResult = System.Windows.Forms.DialogResult.OK
-		Me.ButtonOK.Location = New System.Drawing.Point(409, 488)
+		Me.ButtonOK.Location = New System.Drawing.Point(574, 383)
 		Me.ButtonOK.Name = "ButtonOK"
 		Me.ButtonOK.Size = New System.Drawing.Size(75, 23)
 		Me.ButtonOK.TabIndex = 20
@@ -332,7 +341,7 @@ Partial Class FB_Dialog
 		'
 		Me.ButtonCancel.Anchor = CType((System.Windows.Forms.AnchorStyles.Bottom Or System.Windows.Forms.AnchorStyles.Right), System.Windows.Forms.AnchorStyles)
 		Me.ButtonCancel.DialogResult = System.Windows.Forms.DialogResult.Cancel
-		Me.ButtonCancel.Location = New System.Drawing.Point(490, 488)
+		Me.ButtonCancel.Location = New System.Drawing.Point(652, 383)
 		Me.ButtonCancel.Name = "ButtonCancel"
 		Me.ButtonCancel.Size = New System.Drawing.Size(75, 23)
 		Me.ButtonCancel.TabIndex = 25
@@ -345,10 +354,10 @@ Partial Class FB_Dialog
 		Me.TextBoxCurrent.Anchor = CType(((System.Windows.Forms.AnchorStyles.Top Or System.Windows.Forms.AnchorStyles.Left) _
 			Or System.Windows.Forms.AnchorStyles.Right), System.Windows.Forms.AnchorStyles)
 		Me.TextBoxCurrent.Cursor = System.Windows.Forms.Cursors.Hand
-		Me.TextBoxCurrent.Location = New System.Drawing.Point(5, 23)
+		Me.TextBoxCurrent.Location = New System.Drawing.Point(5, 17)
 		Me.TextBoxCurrent.Name = "TextBoxCurrent"
 		Me.TextBoxCurrent.ReadOnly = True
-		Me.TextBoxCurrent.Size = New System.Drawing.Size(557, 20)
+		Me.TextBoxCurrent.Size = New System.Drawing.Size(722, 20)
 		Me.TextBoxCurrent.TabIndex = 0
 		Me.TextBoxCurrent.TabStop = False
 		'
@@ -356,23 +365,16 @@ Partial Class FB_Dialog
 		'
 		Me.Label3.Anchor = CType((System.Windows.Forms.AnchorStyles.Bottom Or System.Windows.Forms.AnchorStyles.Left), System.Windows.Forms.AnchorStyles)
 		Me.Label3.AutoSize = True
-		Me.Label3.Location = New System.Drawing.Point(2, 447)
+		Me.Label3.Location = New System.Drawing.Point(5, 357)
 		Me.Label3.Name = "Label3"
-		Me.Label3.Size = New System.Drawing.Size(52, 13)
+		Me.Label3.Size = New System.Drawing.Size(38, 13)
 		Me.Label3.TabIndex = 29
-		Me.Label3.Text = "Filename:"
-		'
-		'ImageList1
-		'
-		Me.ImageList1.ColorDepth = System.Windows.Forms.ColorDepth.Depth32Bit
-		Me.ImageList1.ImageSize = New System.Drawing.Size(16, 16)
-		Me.ImageList1.TransparentColor = System.Drawing.Color.Transparent
+		Me.Label3.Text = "Name:"
 		'
 		'Label4
 		'
-		Me.Label4.Anchor = CType((System.Windows.Forms.AnchorStyles.Bottom Or System.Windows.Forms.AnchorStyles.Left), System.Windows.Forms.AnchorStyles)
 		Me.Label4.AutoSize = True
-		Me.Label4.Location = New System.Drawing.Point(3, 7)
+		Me.Label4.Location = New System.Drawing.Point(4, 3)
 		Me.Label4.Name = "Label4"
 		Me.Label4.Size = New System.Drawing.Size(89, 13)
 		Me.Label4.TabIndex = 30
@@ -383,7 +385,7 @@ Partial Class FB_Dialog
 		Me.AutoScaleDimensions = New System.Drawing.SizeF(6.0!, 13.0!)
 		Me.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font
 		Me.CancelButton = Me.ButtonCancel
-		Me.ClientSize = New System.Drawing.Size(569, 515)
+		Me.ClientSize = New System.Drawing.Size(734, 412)
 		Me.Controls.Add(Me.Label4)
 		Me.Controls.Add(Me.Label3)
 		Me.Controls.Add(Me.TextBoxCurrent)
@@ -391,11 +393,11 @@ Partial Class FB_Dialog
 		Me.Controls.Add(Me.ButtonOK)
 		Me.Controls.Add(Me.TextBoxPath)
 		Me.Controls.Add(Me.SplitContainer1)
-		Me.MaximizeBox = False
 		Me.MinimizeBox = False
-		Me.MinimumSize = New System.Drawing.Size(585, 268)
+		Me.MinimumSize = New System.Drawing.Size(341, 272)
 		Me.Name = "FB_Dialog"
 		Me.ShowIcon = False
+		Me.ShowInTaskbar = False
 		Me.StartPosition = System.Windows.Forms.FormStartPosition.CenterParent
 		Me.Text = "File Browser"
 		Me.SplitContainer1.Panel1.ResumeLayout(False)
@@ -415,8 +417,7 @@ Partial Class FB_Dialog
     Friend WithEvents ListViewFiles As System.Windows.Forms.ListView
     Friend WithEvents ColumnHeader1 As System.Windows.Forms.ColumnHeader
     Friend WithEvents TextBoxSearchFolder As System.Windows.Forms.TextBox
-    Friend WithEvents TextBoxSearchFile As System.Windows.Forms.TextBox
-    Friend WithEvents TextBoxPath As System.Windows.Forms.TextBox
+	Friend WithEvents TextBoxPath As System.Windows.Forms.TextBox
     Friend WithEvents ButtonFolderBack As System.Windows.Forms.Button
     Friend WithEvents ContextMenuHisFolder As System.Windows.Forms.ContextMenuStrip
     Friend WithEvents ContextMenuHisFile As System.Windows.Forms.ContextMenuStrip
@@ -424,20 +425,22 @@ Partial Class FB_Dialog
     Friend WithEvents ButtonHisFile As System.Windows.Forms.Button
     Friend WithEvents ButtonOK As System.Windows.Forms.Button
     Friend WithEvents ButtonCancel As System.Windows.Forms.Button
-    Friend WithEvents ComboBoxExt As System.Windows.Forms.ComboBox
-    Friend WithEvents TextBoxCurrent As System.Windows.Forms.TextBox
+	Friend WithEvents TextBoxCurrent As System.Windows.Forms.TextBox
     Friend WithEvents ColumnHeader3 As System.Windows.Forms.ColumnHeader
-    Friend WithEvents LabelFileAnz As System.Windows.Forms.Label
-    Friend WithEvents ButtonDesktop As System.Windows.Forms.Button
+	Friend WithEvents ButtonDesktop As System.Windows.Forms.Button
     Friend WithEvents ContextMenuFile As System.Windows.Forms.ContextMenuStrip
     Friend WithEvents RenameFileToolStripMenuItem As System.Windows.Forms.ToolStripMenuItem
     Friend WithEvents DeleteFileToolStripMenuItem As System.Windows.Forms.ToolStripMenuItem
     Friend WithEvents ButtonNewDir As System.Windows.Forms.Button
 	Friend WithEvents ButtonAll As System.Windows.Forms.Button
 	Friend WithEvents Label1 As System.Windows.Forms.Label
-	Friend WithEvents Label2 As System.Windows.Forms.Label
 	Friend WithEvents Label3 As System.Windows.Forms.Label
-	Friend WithEvents ImageList1 As System.Windows.Forms.ImageList
 	Friend WithEvents Label4 As System.Windows.Forms.Label
+	Friend WithEvents ImageList1 As System.Windows.Forms.ImageList
+	Friend WithEvents ToolTip1 As System.Windows.Forms.ToolTip
+	Friend WithEvents Label5 As System.Windows.Forms.Label
+	Friend WithEvents Label2 As System.Windows.Forms.Label
+	Friend WithEvents ComboBoxExt As System.Windows.Forms.ComboBox
+	Friend WithEvents TextBoxSearchFile As System.Windows.Forms.TextBox
 
 End Class

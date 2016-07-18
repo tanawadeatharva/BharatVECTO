@@ -63,13 +63,13 @@ Partial Class F_VEH
 		Me.ToolStripSeparator1 = New System.Windows.Forms.ToolStripSeparator()
 		Me.ToolStripButton1 = New System.Windows.Forms.ToolStripButton()
 		Me.GroupBox7 = New System.Windows.Forms.GroupBox()
-		Me.Label15 = New System.Windows.Forms.Label()
 		Me.PnRt = New System.Windows.Forms.Panel()
+		Me.Label15 = New System.Windows.Forms.Label()
+		Me.BtRtBrowse = New System.Windows.Forms.Button()
+		Me.TbRtPath = New System.Windows.Forms.TextBox()
 		Me.Label45 = New System.Windows.Forms.Label()
 		Me.LbRtRatio = New System.Windows.Forms.Label()
 		Me.TbRtRatio = New System.Windows.Forms.TextBox()
-		Me.BtRtBrowse = New System.Windows.Forms.Button()
-		Me.TbRtPath = New System.Windows.Forms.TextBox()
 		Me.CbRtType = New System.Windows.Forms.ComboBox()
 		Me.Label46 = New System.Windows.Forms.Label()
 		Me.Label50 = New System.Windows.Forms.Label()
@@ -111,6 +111,7 @@ Partial Class F_VEH
 		Me.ShowInFolderToolStripMenuItem = New System.Windows.Forms.ToolStripMenuItem()
 		Me.PnAll = New System.Windows.Forms.Panel()
 		Me.GroupBox2 = New System.Windows.Forms.GroupBox()
+		Me.pnAngularGearFields = New System.Windows.Forms.Panel()
 		Me.Label4 = New System.Windows.Forms.Label()
 		Me.Label12 = New System.Windows.Forms.Label()
 		Me.Label10 = New System.Windows.Forms.Label()
@@ -135,6 +136,7 @@ Partial Class F_VEH
 		Me.CmOpenFile.SuspendLayout()
 		Me.PnAll.SuspendLayout()
 		Me.GroupBox2.SuspendLayout()
+		Me.pnAngularGearFields.SuspendLayout()
 		CType(Me.PicVehicle, System.ComponentModel.ISupportInitialize).BeginInit()
 		Me.SuspendLayout()
 		'
@@ -398,10 +400,7 @@ Partial Class F_VEH
 		'
 		'GroupBox7
 		'
-		Me.GroupBox7.Controls.Add(Me.Label15)
 		Me.GroupBox7.Controls.Add(Me.PnRt)
-		Me.GroupBox7.Controls.Add(Me.BtRtBrowse)
-		Me.GroupBox7.Controls.Add(Me.TbRtPath)
 		Me.GroupBox7.Controls.Add(Me.CbRtType)
 		Me.GroupBox7.Location = New System.Drawing.Point(6, 327)
 		Me.GroupBox7.Name = "GroupBox7"
@@ -410,30 +409,51 @@ Partial Class F_VEH
 		Me.GroupBox7.TabStop = False
 		Me.GroupBox7.Text = "Retarder Losses"
 		'
-		'Label15
-		'
-		Me.Label15.Location = New System.Drawing.Point(4, 66)
-		Me.Label15.Name = "Label15"
-		Me.Label15.Size = New System.Drawing.Size(269, 17)
-		Me.Label15.TabIndex = 12
-		Me.Label15.Text = "Retarder Loss Map"
-		Me.Label15.TextAlign = System.Drawing.ContentAlignment.BottomLeft
-		'
 		'PnRt
 		'
+		Me.PnRt.Controls.Add(Me.Label15)
+		Me.PnRt.Controls.Add(Me.BtRtBrowse)
+		Me.PnRt.Controls.Add(Me.TbRtPath)
 		Me.PnRt.Controls.Add(Me.Label45)
 		Me.PnRt.Controls.Add(Me.LbRtRatio)
 		Me.PnRt.Controls.Add(Me.TbRtRatio)
-		Me.PnRt.Location = New System.Drawing.Point(6, 42)
+		Me.PnRt.Location = New System.Drawing.Point(3, 42)
 		Me.PnRt.Name = "PnRt"
-		Me.PnRt.Size = New System.Drawing.Size(266, 34)
+		Me.PnRt.Size = New System.Drawing.Size(272, 63)
 		Me.PnRt.TabIndex = 1
+		'
+		'Label15
+		'
+		Me.Label15.Location = New System.Drawing.Point(6, 23)
+		Me.Label15.Name = "Label15"
+		Me.Label15.Size = New System.Drawing.Size(201, 16)
+		Me.Label15.TabIndex = 15
+		Me.Label15.Text = "Retarder Loss Map"
+		Me.Label15.TextAlign = System.Drawing.ContentAlignment.BottomLeft
+		'
+		'BtRtBrowse
+		'
+		Me.BtRtBrowse.Anchor = CType((System.Windows.Forms.AnchorStyles.Bottom Or System.Windows.Forms.AnchorStyles.Left), System.Windows.Forms.AnchorStyles)
+		Me.BtRtBrowse.Image = Global.VECTO.My.Resources.Resources.Open_icon
+		Me.BtRtBrowse.Location = New System.Drawing.Point(245, 39)
+		Me.BtRtBrowse.Name = "BtRtBrowse"
+		Me.BtRtBrowse.Size = New System.Drawing.Size(24, 24)
+		Me.BtRtBrowse.TabIndex = 14
+		Me.BtRtBrowse.UseVisualStyleBackColor = True
+		'
+		'TbRtPath
+		'
+		Me.TbRtPath.Anchor = CType((System.Windows.Forms.AnchorStyles.Bottom Or System.Windows.Forms.AnchorStyles.Left), System.Windows.Forms.AnchorStyles)
+		Me.TbRtPath.Location = New System.Drawing.Point(6, 41)
+		Me.TbRtPath.Name = "TbRtPath"
+		Me.TbRtPath.Size = New System.Drawing.Size(239, 20)
+		Me.TbRtPath.TabIndex = 13
 		'
 		'Label45
 		'
 		Me.Label45.Anchor = CType((System.Windows.Forms.AnchorStyles.Top Or System.Windows.Forms.AnchorStyles.Right), System.Windows.Forms.AnchorStyles)
 		Me.Label45.AutoSize = True
-		Me.Label45.Location = New System.Drawing.Point(247, 7)
+		Me.Label45.Location = New System.Drawing.Point(251, 4)
 		Me.Label45.Name = "Label45"
 		Me.Label45.Size = New System.Drawing.Size(16, 13)
 		Me.Label45.TabIndex = 10
@@ -441,7 +461,7 @@ Partial Class F_VEH
 		'
 		'LbRtRatio
 		'
-		Me.LbRtRatio.Location = New System.Drawing.Point(19, 7)
+		Me.LbRtRatio.Location = New System.Drawing.Point(19, 4)
 		Me.LbRtRatio.Name = "LbRtRatio"
 		Me.LbRtRatio.Size = New System.Drawing.Size(167, 17)
 		Me.LbRtRatio.TabIndex = 5
@@ -451,28 +471,10 @@ Partial Class F_VEH
 		'TbRtRatio
 		'
 		Me.TbRtRatio.Anchor = CType((System.Windows.Forms.AnchorStyles.Top Or System.Windows.Forms.AnchorStyles.Right), System.Windows.Forms.AnchorStyles)
-		Me.TbRtRatio.Location = New System.Drawing.Point(187, 4)
+		Me.TbRtRatio.Location = New System.Drawing.Point(193, 2)
 		Me.TbRtRatio.Name = "TbRtRatio"
 		Me.TbRtRatio.Size = New System.Drawing.Size(56, 20)
 		Me.TbRtRatio.TabIndex = 0
-		'
-		'BtRtBrowse
-		'
-		Me.BtRtBrowse.Anchor = CType((System.Windows.Forms.AnchorStyles.Bottom Or System.Windows.Forms.AnchorStyles.Left), System.Windows.Forms.AnchorStyles)
-		Me.BtRtBrowse.Image = Global.VECTO.My.Resources.Resources.Open_icon
-		Me.BtRtBrowse.Location = New System.Drawing.Point(249, 82)
-		Me.BtRtBrowse.Name = "BtRtBrowse"
-		Me.BtRtBrowse.Size = New System.Drawing.Size(24, 24)
-		Me.BtRtBrowse.TabIndex = 3
-		Me.BtRtBrowse.UseVisualStyleBackColor = True
-		'
-		'TbRtPath
-		'
-		Me.TbRtPath.Anchor = CType((System.Windows.Forms.AnchorStyles.Bottom Or System.Windows.Forms.AnchorStyles.Left), System.Windows.Forms.AnchorStyles)
-		Me.TbRtPath.Location = New System.Drawing.Point(5, 84)
-		Me.TbRtPath.Name = "TbRtPath"
-		Me.TbRtPath.Size = New System.Drawing.Size(244, 20)
-		Me.TbRtPath.TabIndex = 2
 		'
 		'CbRtType
 		'
@@ -834,12 +836,7 @@ Partial Class F_VEH
 		'
 		'GroupBox2
 		'
-		Me.GroupBox2.Controls.Add(Me.Label4)
-		Me.GroupBox2.Controls.Add(Me.Label12)
-		Me.GroupBox2.Controls.Add(Me.Label10)
-		Me.GroupBox2.Controls.Add(Me.tbAngularGearRatio)
-		Me.GroupBox2.Controls.Add(Me.btAngularGearLossMapBrowse)
-		Me.GroupBox2.Controls.Add(Me.tbAngularGearLossMapPath)
+		Me.GroupBox2.Controls.Add(Me.pnAngularGearFields)
 		Me.GroupBox2.Controls.Add(Me.cbAngularGearType)
 		Me.GroupBox2.Location = New System.Drawing.Point(290, 327)
 		Me.GroupBox2.Name = "GroupBox2"
@@ -848,59 +845,72 @@ Partial Class F_VEH
 		Me.GroupBox2.TabStop = False
 		Me.GroupBox2.Text = "Angular Gear"
 		'
+		'pnAngularGearFields
+		'
+		Me.pnAngularGearFields.Controls.Add(Me.Label4)
+		Me.pnAngularGearFields.Controls.Add(Me.Label12)
+		Me.pnAngularGearFields.Controls.Add(Me.Label10)
+		Me.pnAngularGearFields.Controls.Add(Me.tbAngularGearRatio)
+		Me.pnAngularGearFields.Controls.Add(Me.btAngularGearLossMapBrowse)
+		Me.pnAngularGearFields.Controls.Add(Me.tbAngularGearLossMapPath)
+		Me.pnAngularGearFields.Location = New System.Drawing.Point(3, 42)
+		Me.pnAngularGearFields.Name = "pnAngularGearFields"
+		Me.pnAngularGearFields.Size = New System.Drawing.Size(272, 63)
+		Me.pnAngularGearFields.TabIndex = 6
+		'
 		'Label4
 		'
 		Me.Label4.Anchor = CType((System.Windows.Forms.AnchorStyles.Top Or System.Windows.Forms.AnchorStyles.Right), System.Windows.Forms.AnchorStyles)
 		Me.Label4.AutoSize = True
-		Me.Label4.Location = New System.Drawing.Point(251, 49)
+		Me.Label4.Location = New System.Drawing.Point(251, 4)
 		Me.Label4.Name = "Label4"
 		Me.Label4.Size = New System.Drawing.Size(16, 13)
-		Me.Label4.TabIndex = 10
+		Me.Label4.TabIndex = 16
 		Me.Label4.Text = "[-]"
 		'
 		'Label12
 		'
-		Me.Label12.Location = New System.Drawing.Point(3, 67)
+		Me.Label12.Location = New System.Drawing.Point(6, 24)
 		Me.Label12.Name = "Label12"
-		Me.Label12.Size = New System.Drawing.Size(269, 16)
-		Me.Label12.TabIndex = 11
+		Me.Label12.Size = New System.Drawing.Size(263, 16)
+		Me.Label12.TabIndex = 17
 		Me.Label12.Text = "Transmission Loss Map or Efficiency Value [0..1]"
 		Me.Label12.TextAlign = System.Drawing.ContentAlignment.BottomLeft
 		'
 		'Label10
 		'
-		Me.Label10.Location = New System.Drawing.Point(149, 49)
+		Me.Label10.Location = New System.Drawing.Point(144, 4)
 		Me.Label10.Name = "Label10"
 		Me.Label10.Size = New System.Drawing.Size(44, 18)
-		Me.Label10.TabIndex = 5
+		Me.Label10.TabIndex = 15
 		Me.Label10.Text = "Ratio"
 		Me.Label10.TextAlign = System.Drawing.ContentAlignment.TopRight
 		'
 		'tbAngularGearRatio
 		'
 		Me.tbAngularGearRatio.Anchor = CType((System.Windows.Forms.AnchorStyles.Top Or System.Windows.Forms.AnchorStyles.Right), System.Windows.Forms.AnchorStyles)
-		Me.tbAngularGearRatio.Location = New System.Drawing.Point(194, 46)
+		Me.tbAngularGearRatio.Location = New System.Drawing.Point(193, 2)
 		Me.tbAngularGearRatio.Name = "tbAngularGearRatio"
 		Me.tbAngularGearRatio.Size = New System.Drawing.Size(56, 20)
-		Me.tbAngularGearRatio.TabIndex = 0
+		Me.tbAngularGearRatio.TabIndex = 12
 		'
 		'btAngularGearLossMapBrowse
 		'
 		Me.btAngularGearLossMapBrowse.Anchor = CType((System.Windows.Forms.AnchorStyles.Bottom Or System.Windows.Forms.AnchorStyles.Left), System.Windows.Forms.AnchorStyles)
 		Me.btAngularGearLossMapBrowse.Image = Global.VECTO.My.Resources.Resources.Open_icon
-		Me.btAngularGearLossMapBrowse.Location = New System.Drawing.Point(249, 82)
+		Me.btAngularGearLossMapBrowse.Location = New System.Drawing.Point(244, 39)
 		Me.btAngularGearLossMapBrowse.Name = "btAngularGearLossMapBrowse"
 		Me.btAngularGearLossMapBrowse.Size = New System.Drawing.Size(24, 24)
-		Me.btAngularGearLossMapBrowse.TabIndex = 3
+		Me.btAngularGearLossMapBrowse.TabIndex = 14
 		Me.btAngularGearLossMapBrowse.UseVisualStyleBackColor = True
 		'
 		'tbAngularGearLossMapPath
 		'
 		Me.tbAngularGearLossMapPath.Anchor = CType((System.Windows.Forms.AnchorStyles.Bottom Or System.Windows.Forms.AnchorStyles.Left), System.Windows.Forms.AnchorStyles)
-		Me.tbAngularGearLossMapPath.Location = New System.Drawing.Point(5, 84)
+		Me.tbAngularGearLossMapPath.Location = New System.Drawing.Point(6, 41)
 		Me.tbAngularGearLossMapPath.Name = "tbAngularGearLossMapPath"
-		Me.tbAngularGearLossMapPath.Size = New System.Drawing.Size(244, 20)
-		Me.tbAngularGearLossMapPath.TabIndex = 2
+		Me.tbAngularGearLossMapPath.Size = New System.Drawing.Size(238, 20)
+		Me.tbAngularGearLossMapPath.TabIndex = 13
 		'
 		'cbAngularGearType
 		'
@@ -963,7 +973,6 @@ Partial Class F_VEH
 		Me.ToolStrip1.ResumeLayout(False)
 		Me.ToolStrip1.PerformLayout()
 		Me.GroupBox7.ResumeLayout(False)
-		Me.GroupBox7.PerformLayout()
 		Me.PnRt.ResumeLayout(False)
 		Me.PnRt.PerformLayout()
 		Me.GroupBox8.ResumeLayout(False)
@@ -983,7 +992,8 @@ Partial Class F_VEH
 		Me.CmOpenFile.ResumeLayout(False)
 		Me.PnAll.ResumeLayout(False)
 		Me.GroupBox2.ResumeLayout(False)
-		Me.GroupBox2.PerformLayout()
+		Me.pnAngularGearFields.ResumeLayout(False)
+		Me.pnAngularGearFields.PerformLayout()
 		CType(Me.PicVehicle, System.ComponentModel.ISupportInitialize).EndInit()
 		Me.ResumeLayout(False)
 		Me.PerformLayout()
@@ -1017,8 +1027,6 @@ Partial Class F_VEH
 	Friend WithEvents GroupBox7 As System.Windows.Forms.GroupBox
 	Friend WithEvents LbRtRatio As System.Windows.Forms.Label
 	Friend WithEvents TbRtRatio As System.Windows.Forms.TextBox
-	Friend WithEvents BtRtBrowse As System.Windows.Forms.Button
-	Friend WithEvents TbRtPath As System.Windows.Forms.TextBox
 	Friend WithEvents CbRtType As System.Windows.Forms.ComboBox
 	Friend WithEvents Label45 As System.Windows.Forms.Label
 	Friend WithEvents PnRt As System.Windows.Forms.Panel
@@ -1067,12 +1075,15 @@ Partial Class F_VEH
 	Friend WithEvents PnCdATrTr As System.Windows.Forms.Panel
 	Friend WithEvents Label38 As System.Windows.Forms.Label
 	Friend WithEvents GroupBox2 As System.Windows.Forms.GroupBox
+	Friend WithEvents cbAngularGearType As System.Windows.Forms.ComboBox
+	Friend WithEvents Label15 As System.Windows.Forms.Label
+	Friend WithEvents BtRtBrowse As System.Windows.Forms.Button
+	Friend WithEvents TbRtPath As System.Windows.Forms.TextBox
+	Friend WithEvents pnAngularGearFields As System.Windows.Forms.Panel
 	Friend WithEvents Label4 As System.Windows.Forms.Label
+	Friend WithEvents Label12 As System.Windows.Forms.Label
 	Friend WithEvents Label10 As System.Windows.Forms.Label
 	Friend WithEvents tbAngularGearRatio As System.Windows.Forms.TextBox
 	Friend WithEvents btAngularGearLossMapBrowse As System.Windows.Forms.Button
 	Friend WithEvents tbAngularGearLossMapPath As System.Windows.Forms.TextBox
-	Friend WithEvents cbAngularGearType As System.Windows.Forms.ComboBox
-	Friend WithEvents Label12 As System.Windows.Forms.Label
-	Friend WithEvents Label15 As System.Windows.Forms.Label
 End Class

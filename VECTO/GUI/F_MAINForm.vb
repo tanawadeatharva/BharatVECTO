@@ -801,19 +801,6 @@ Public Class F_MAINForm
 		AddJobFile()
 	End Sub
 
-	Private Sub ButtonGENoptions_Click(sender As Object, e As EventArgs) _
-		Handles ButtonGENopt.Click
-		ConMenTarget = LvGEN
-		ConMenTarJob = True
-
-		'Locked functions show/hide
-		LoadListToolStripMenuItem.Enabled = Not GUIlocked
-		LoadDefaultListToolStripMenuItem.Enabled = Not GUIlocked
-		ClearListToolStripMenuItem.Enabled = Not GUIlocked
-
-		ConMenFilelist.Show(MousePosition)
-	End Sub
-
 	Private Sub ListViewGEN_KeyDown(sender As Object, e As KeyEventArgs) _
 		Handles LvGEN.KeyDown
 		Select Case e.KeyCode
@@ -2815,5 +2802,20 @@ Lb1:
 
 	Private Sub LvMsg_MouseUp(sender As Object, e As MouseEventArgs) Handles LvMsg.MouseUp
 		mouseDownOnListView = False
+		
+	End Sub
+
+	Private Sub LvGEN_MouseUp(sender As Object, e As MouseEventArgs) Handles LvGEN.MouseUp
+		If e.Button = MouseButtons.Right Then
+			ConMenTarget = LvGEN
+			ConMenTarJob = True
+
+			'Locked functions show/hide
+			LoadListToolStripMenuItem.Enabled = Not GUIlocked
+			LoadDefaultListToolStripMenuItem.Enabled = Not GUIlocked
+			ClearListToolStripMenuItem.Enabled = Not GUIlocked
+
+			ConMenFilelist.Show(MousePosition)
+		End If
 	End Sub
 End Class

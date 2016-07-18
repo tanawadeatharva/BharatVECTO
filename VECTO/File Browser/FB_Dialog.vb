@@ -78,9 +78,9 @@ Public Class FB_Dialog
 	Private Sub Resized()
 		'To autosize to the width of the column heading, set the Width property to -2
 		ListViewFolder.Columns(0).Width = -2
-		ListViewFolder.Columns(0).Width -= 2
+		'ListViewFolder.Columns(0).Width -= 1
 		ListViewFiles.Columns(0).Width = -2
-		ListViewFiles.Columns(0).Width -= 2
+		'ListViewFiles.Columns(0).Width -= 1
 	End Sub
 
 	'SplitterMoved
@@ -205,6 +205,7 @@ Public Class FB_Dialog
 		'Form Config
 		ListViewFiles.MultiSelect = multiFile
 		ButtonAll.Visible = multiFile
+		Me.Title = title
 		Text = title
 
 		'Ext-Combobox
@@ -285,6 +286,8 @@ Public Class FB_Dialog
 			Return False
 		End If
 	End Function
+
+	Public Title As String
 
 	'Close and save File / Folder History
 	Public Sub SaveAndClose()
@@ -604,8 +607,13 @@ Public Class FB_Dialog
 		If Not _updateLock Then LoadListFiles()
 	End Sub
 
-	Private Sub ButtonHisFolder_Click(sender As Object, e As EventArgs) Handles ButtonHisFolder.Click, ButtonHisFile.Click
+	Private Sub ButtonHisFolder_Click(sender As Object, e As EventArgs) Handles ButtonHisFolder.Click
 		ContextMenuHisFolder.Show(MousePosition)
+	End Sub
+
+
+	Private Sub ButtonHisFile_Click(sender As Object, e As EventArgs) Handles ButtonHisFile.Click
+		ContextMenuHisFile.Show(MousePosition)
 	End Sub
 
 	Private Sub ButtonAll_Click(sender As Object, e As EventArgs) Handles ButtonAll.Click
@@ -633,7 +641,7 @@ Public Class FB_Dialog
 
 		If path = FavText Then
 			Dim favdlog = New FB_FavDlog
-			If favdlog.ShowDialog = DialogResult.OK Then
+			If favdlog.ShowDialog(Me) = DialogResult.OK Then
 				For x = 10 To 19
 					path = favdlog.ListBox1.Items(x - 10)
 					If path = NoFavString Then
@@ -731,6 +739,9 @@ Public Class FB_Dialog
 		'Set Folder
 		_myFolder = path
 		If Microsoft.VisualBasic.Right(_myFolder, 1) <> "\" Then _myFolder &= "\"
+
+		Me.Text = Me.Title & " " & _myFolder
+
 		LoadListFolder()
 		LoadListFiles()
 
@@ -794,7 +805,6 @@ Public Class FB_Dialog
 		'Abort if bBrowseFolder
 		If _bBrowseFolder Then Exit Sub
 
-		LabelFileAnz.Text = "0 Files"
 		'Define Extension-filter
 		Dim extStr As String()
 		If Trim(ComboBoxExt.Text.ToString) = "" Then
@@ -830,11 +840,6 @@ Public Class FB_Dialog
 					ListViewFiles.Items.Add(fi.ToString, x + 1)
 				Next
 			Next
-			If x = 0 Then
-				LabelFileAnz.Text = "1 File"
-			Else
-				LabelFileAnz.Text = x + 1 & " Files"
-			End If
 		Catch ex As Exception
 			ListViewFiles.Items.Add("<ERROR: " & ex.Message.ToString & ">")
 		End Try
@@ -946,9 +951,6 @@ lb10:
 			_noExt = False
 		End Set
 	End Property
-
-	Private Sub Label3_Click(sender As Object, e As EventArgs) Handles Label3.Click
-	End Sub
 End Class
 
 
