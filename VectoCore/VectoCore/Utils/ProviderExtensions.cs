@@ -83,6 +83,9 @@ namespace TUGraz.VectoCore.Utils
 
 		public static IPowerTrainComponent AddComponent(this IPowerTrainComponent prev, IPowerTrainComponent next)
 		{
+			if (next == null)
+				return prev;
+
 			prev.InPort().Connect(next.OutPort());
 			return next;
 		}

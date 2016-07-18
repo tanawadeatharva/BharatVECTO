@@ -211,13 +211,7 @@ namespace TUGraz.VectoCore.InputData.FileIO.JSON
 
 		public IAngularGearInputData AngularGearInputData
 		{
-			get
-			{
-				if (AngularGear == null) {
-					throw new InvalidFileFormatException("AngularGear not found");
-				}
-				return AngularGear;
-			}
+			get { return AngularGear; }
 		}
 
 		IEngineDeclarationInputData IDeclarationInputDataProvider.EngineInputData

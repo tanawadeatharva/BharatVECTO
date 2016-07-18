@@ -30,7 +30,6 @@
 */
 
 using System;
-using System.Collections.Generic;
 using System.Linq;
 using TUGraz.VectoCommon.Exceptions;
 using TUGraz.VectoCommon.InputData;
@@ -170,6 +169,12 @@ namespace TUGraz.VectoCore.InputData.Reader.DataObjectAdapter
 			};
 		}
 
+		/// <summary>
+		/// Creates an AngularGearData or returns null if there is no angular gear.
+		/// </summary>
+		/// <param name="data"></param>
+		/// <param name="useEfficiencyFallback">if true, the Efficiency value is used if no LossMap is found.</param>
+		/// <returns></returns>
 		internal AngularGearData CreateAngularGearData(IAngularGearInputData data, bool useEfficiencyFallback)
 		{
 			try {
@@ -178,47 +183,41 @@ namespace TUGraz.VectoCore.InputData.Reader.DataObjectAdapter
 					type = data.Type;
 				} catch (Exception) {
 					Log.Info("AngularGear not found. Assuming None.");
-					// ignored
 				}
 
-				var angularGear = new AngularGearData {
-					SavedInDeclarationMode = data.SavedInDeclarationMode,
-					Vendor = data.Vendor,
-					ModelName = data.ModelName,
-					Creator = data.Creator,
-					Date = data.Date,
-					TypeId = data.TypeId,
-					DigestValue = data.DigestValue,
-					IntegrityStatus = data.IntegrityStatus,
-					Type = type,
-					AngularGear = new TransmissionData()
-				};
-
-				switch (angularGear.Type) {
+				switch (type) {
 					case AngularGearType.SeparateAngularGear:
+						var angularGear = new AngularGearData {
+							SavedInDeclarationMode = data.SavedInDeclarationMode,
+							Vendor = data.Vendor,
+							ModelName = data.ModelName,
+							Creator = data.Creator,
+							Date = data.Date,
+							TypeId = data.TypeId,
+							DigestValue = data.DigestValue,
+							IntegrityStatus = data.IntegrityStatus,
+							Type = type,
+							AngularGear = new TransmissionData { Ratio = data.Ratio }
+						};
 						try {
 							angularGear.AngularGear.LossMap = TransmissionLossMap.Create(data.LossMap, data.Ratio, "AngularGear");
-						} catch (VectoException) {
-							if (useEfficiencyFallback)
+						} catch (VectoException ex) {
+							Log.Info("AngularGear Loss Map not found.");
+							if (useEfficiencyFallback) {
+								Log.Info("AngularGear Trying with Efficiency instead of Loss Map.");
 								angularGear.AngularGear.LossMap = TransmissionLossMap.Create(data.Efficiency, data.Ratio, "AngularGear");
-							else {
-								throw;
+							} else {
+								throw new VectoException("AngularGear: LossMap or Efficiency not found.", ex);
 							}
 						}
-						angularGear.AngularGear.Ratio = data.Ratio;
-						break;
+						return angularGear;
 
 					case AngularGearType.LossesIncludedInGearbox:
 					case AngularGearType.None:
-						angularGear.AngularGear.Ratio = 1;
-						// if no angular gear or already included: Create LossMap with 100% efficiency
-						angularGear.AngularGear.LossMap = TransmissionLossMap.Create(1, angularGear.AngularGear.Ratio,
-							"Zero Losses AngularGear");
-						break;
+						return null;
 					default:
 						throw new ArgumentOutOfRangeException("data", "Unknown AngularGear Type.");
 				}
-				return angularGear;
 			} catch (Exception e) {
 				throw new VectoException("Error while reading AngularGear data: {0}", e.Message);
 			}
