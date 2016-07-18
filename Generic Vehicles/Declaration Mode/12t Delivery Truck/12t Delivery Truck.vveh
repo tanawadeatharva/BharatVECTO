@@ -1,7 +1,7 @@
 ﻿{
   "Header": {
     "CreatedBy": " ()",
-    "Date": "13.07.2016 10:41:59",
+    "Date": "18.07.2016 10:17:04",
     "AppVersion": "2.2",
     "FileVersion": 7
   },
@@ -22,11 +22,6 @@
       "Type": "None",
       "Ratio": 1.0,
       "File": "<NOFILE>"
-    },
-    "AngularGear": {
-      "Type": "None",
-      "Ratio": 1.0,
-      "LossMap": "<NOFILE>"
     },
     "AxleConfig": {
       "Type": "4x2",
