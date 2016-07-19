@@ -69,7 +69,6 @@ namespace TUGraz.VectoCore.Tests.Models.Simulation
 			var gearbox = vehicleContainer.Gearbox as Gearbox;
 			Assert.IsNotNull(gearbox);
 
-
 			// -- shiftpolygon downshift 
 
 			// no downshift curve in first gear!
@@ -112,7 +111,7 @@ namespace TUGraz.VectoCore.Tests.Models.Simulation
 			var run = factory.SimulationRuns().First();
 
 			var vehicleContainer = (VehicleContainer)run.GetContainer();
-			Assert.AreEqual(11, vehicleContainer.SimulationComponents().Count);
+			Assert.AreEqual(12, vehicleContainer.SimulationComponents().Count);
 
 			Assert.IsInstanceOfType(vehicleContainer.Gearbox, typeof(Gearbox), "gearbox not installed");
 			Assert.IsInstanceOfType(vehicleContainer.Engine, typeof(CombustionEngine), "engine not installed");

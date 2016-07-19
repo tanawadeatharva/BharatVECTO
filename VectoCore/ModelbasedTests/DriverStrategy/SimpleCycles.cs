@@ -108,7 +108,7 @@ namespace TUGraz.VectoCore.ModelbasedTests.DriverStrategy
 		]
 		public void Coach_AllSlopes(double v1, double v2)
 		{
-			var slopes = new[] { 25, 20, 15, 12, 10, 7, 5, 3, 1, 0, -1, -3, -5, -7, -10, -12, -15, -20, -25 };
+			var slopes = new[] { 15, 12, 10, 7, 5, 3, 1, 0, -1, -3, -5, -7, -10, -12, -15 };
 
 			foreach (var slope in slopes) {
 				try {

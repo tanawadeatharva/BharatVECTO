@@ -611,7 +611,7 @@ Public Class frmAuxiliaryConfig
 		Dim s As Single
 
 
-		If e.ColumnIndex = - 1 Then
+		If e.ColumnIndex = -1 Then
 
 			e.Cancel = True
 			Exit Sub
@@ -840,7 +840,7 @@ Public Class frmAuxiliaryConfig
 
 	Private Sub btnAlternatorMapPath_Click(sender As Object, e As EventArgs) Handles btnAlternatorMapPath.Click
 
-		Dim fbAux As New cFileBrowser("AAUXALT", True, False)
+		Dim fbAux As New cFileBrowser("AAUXALT", False, False)
 		fbAux.Extensions = New String() {"AALT"}
 
 		Dim suppliedAALTPath As String = txtAlternatorMapPath.Text
@@ -907,7 +907,7 @@ Public Class frmAuxiliaryConfig
 					Return
 				End If
 			End Using
-
+			BindingContext(auxConfig.ElectricalUserInputsConfig).EndCurrentEdit()
 			Validate_Electrics()
 
 		End If
@@ -933,6 +933,10 @@ Public Class frmAuxiliaryConfig
 
 		'Causes binding to fire
 		txtCompressorMap.Focus()
+	End Sub
+
+	Private Sub btnActuationsMap_BindingContextChanged(sender As Object, e As EventArgs) _
+		Handles btnActuationsMap.BindingContextChanged
 	End Sub
 
 	Private Sub btnActuationsMap_Click(sender As Object, e As EventArgs) Handles btnActuationsMap.Click
@@ -987,9 +991,13 @@ Public Class frmAuxiliaryConfig
 		End If
 	End Sub
 
+	Private Sub btnSSMBSource_BindingContextChanged(sender As Object, e As EventArgs) _
+		Handles btnSSMBSource.BindingContextChanged
+	End Sub
+
 	Private Sub btnSSMBSource_Click(sender As Object, e As EventArgs) Handles btnSSMBSource.Click
 
-		Dim fbAux As New cFileBrowser("AAUXSSM", True, False)
+		Dim fbAux As New cFileBrowser("AAUXSSM", False, False)
 		fbAux.Extensions = New String() {"AHSM"}
 
 		Dim suppliedSSMPath As String = txtSSMFilePath.Text.Trim()
@@ -1058,7 +1066,7 @@ Public Class frmAuxiliaryConfig
 					Return
 				End If
 			End Using
-
+			BindingContext(auxConfig.HvacUserInputsConfig).EndCurrentEdit()
 			Validate_HVAC()
 
 		End If
@@ -1188,10 +1196,10 @@ Public Class frmAuxiliaryConfig
 			e.Graphics.FillRectangle(br, e.Bounds)
 			Dim sz As SizeF = e.Graphics.MeasureString(tabMain.TabPages(e.Index).Text, e.Font)
 			e.Graphics.DrawString(tabMain.TabPages(e.Index).Text, e.Font, Brushes.Black,
-								e.Bounds.Left + (e.Bounds.Width - sz.Width)/2, e.Bounds.Top + (e.Bounds.Height - sz.Height)/2 + 1)
+								e.Bounds.Left + (e.Bounds.Width - sz.Width) / 2, e.Bounds.Top + (e.Bounds.Height - sz.Height) / 2 + 1)
 
 			Dim rect As Rectangle = e.Bounds
-			rect.Offset(- 1, - 1)
+			rect.Offset(-1, -1)
 			rect.Inflate(1, 1)
 			' e.Graphics.DrawRectangle(Pens.DarkGray, rect)
 			'e.DrawFocusRectangle()

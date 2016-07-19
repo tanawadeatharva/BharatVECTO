@@ -90,12 +90,17 @@ namespace TUGraz.VectoCore.Tests.Utils
 
 		public Newton AirDragResistance(MeterPerSecond previousVelocity, MeterPerSecond nextVelocity)
 		{
-			throw new NotImplementedException();
+			return 0.SI<Newton>();
 		}
 
 		public Newton RollingResistance(Radian gradient)
 		{
-			throw new NotImplementedException();
+			return 0.SI<Newton>();
+		}
+
+		public Newton SlopeResistance(Radian gradient)
+		{
+			return 0.SI<Newton>();
 		}
 
 		public void Connect(IFvOutPort other)

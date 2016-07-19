@@ -109,6 +109,11 @@ namespace TUGraz.VectoCore.Utils
 			return c1.CompareTo(c2) >= 0 ? c1 : c2;
 		}
 
+		public static T Max<T>(T c1, T c2, T c3) where T : IComparable
+		{
+			return Max(Max(c1, c2), c3);
+		}
+
 		public static T Limit<T>(this T value, T lowerBound, T upperBound) where T : IComparable
 		{
 			if (lowerBound.CompareTo(upperBound) > 0) {

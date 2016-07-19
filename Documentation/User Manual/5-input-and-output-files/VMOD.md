@@ -73,11 +73,13 @@ In Vecto 3.0.2 the structure of the modal data output has been revised and re-st
 | P_clutch_out		|	[kW]	|	Power at the clutch's out shaft. P_clutch_out = P_eng_out - P_clutch_loss |
 | P_aux				|	[kW]	|	Total power demand by the auxiliaries |
 | P_gbx_in			|	[kW]	|	Power at the gearbox' input shaft |
-| P_gbx_loss		|	[kW]	|	Power loss at the gerbox, interpolated from the loss-map |
+| P_gbx_loss		|	[kW]	|	Power loss at the gearbox, interpolated from the loss-map |
 | P_gbx_inertia		|	[kW]	|	Power loss due to the gearbox' inertia |
 | P_ret_in			|	[kW]	|	Power at the retarder's input shaft. P_ret_in = P_gbx_in - P_gbx_loss - P_gbx_inertia |
-| P_ret_loss		|	[kW]	|	Power loss at the retarder, interpolated from the loss-map |
-| P_axle_in			|	[kW]	|	Power at the axle-gear input shaft. P_axle_in = P_ret_in - P_ret_loss |
+| P_ret_loss		|	[kW]	|	Power loss at the retarder, interpolated from the loss-map. |
+| P_angle_in		|	[kW]	|	Power at the Anglegear's input shaft. Empty if no Anglegear is used. |
+| P_angle_loss		|	[kW]	|	Power loss at the Anglegear, interpolated from the loss-map. Empty if no Anglegear is used. |
+| P_axle_in			|	[kW]	|	Power at the axle-gear input shaft. P_axle_in = P_ret_in - P_ret_loss ( - P_angle_loss if an Angulargear is used) |
 | P_axle_loss		|	[kW]	|	Power loss at the axle gear, interpolated from the loss-map |
 | P_brake_in		|	[kW]	|	Power at the brake input shaft (definition: serially mounted into the drive train between wheels and axle). P_brake_in = P_axle_in - P_axle_loss |
 | P_brake_loss		|	[kW]	|	Power loss due to braking |

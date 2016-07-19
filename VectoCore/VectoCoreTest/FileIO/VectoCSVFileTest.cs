@@ -1,8 +1,41 @@
-﻿using System.Data;
+﻿/*
+* This file is part of VECTO.
+*
+* Copyright © 2012-2016 European Union
+*
+* Developed by Graz University of Technology,
+*              Institute of Internal Combustion Engines and Thermodynamics,
+*              Institute of Technical Informatics
+*
+* VECTO is licensed under the EUPL, Version 1.1 or - as soon they will be approved
+* by the European Commission - subsequent versions of the EUPL (the "Licence");
+* You may not use VECTO except in compliance with the Licence.
+* You may obtain a copy of the Licence at:
+*
+* https://joinup.ec.europa.eu/community/eupl/og_page/eupl
+*
+* Unless required by applicable law or agreed to in writing, VECTO
+* distributed under the Licence is distributed on an "AS IS" basis,
+* WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+* See the Licence for the specific language governing permissions and
+* limitations under the Licence.
+*
+* Authors:
+*   Stefan Hausberger, hausberger@ivt.tugraz.at, IVT, Graz University of Technology
+*   Christian Kreiner, christian.kreiner@tugraz.at, ITI, Graz University of Technology
+*   Michael Krisper, michael.krisper@tugraz.at, ITI, Graz University of Technology
+*   Raphael Luz, luz@ivt.tugraz.at, IVT, Graz University of Technology
+*   Markus Quaritsch, markus.quaritsch@tugraz.at, IVT, Graz University of Technology
+*   Martin Rexeis, rexeis@ivt.tugraz.at, IVT, Graz University of Technology
+*/
+
+using System.Data;
 using System.IO;
 using System.Linq;
 using NUnit.Framework;
+using TUGraz.VectoCommon.Exceptions;
 using TUGraz.VectoCommon.Utils;
+using TUGraz.VectoCore.Tests.Utils;
 using TUGraz.VectoCore.Utils;
 
 namespace TUGraz.VectoCore.Tests.FileIO
@@ -15,11 +48,11 @@ namespace TUGraz.VectoCore.Tests.FileIO
 		{
 			var table = VectoCSVFile.Read(@"TestData\test.csv");
 			Assert.AreEqual(3, table.Columns.Count);
-			Assert.IsTrue(new[] { "a", "b", "c" }.SequenceEqual(table.Columns.Cast<DataColumn>().Select(c => c.ColumnName)));
+			CollectionAssert.AreEqual(new[] { "a", "b", "c" }, table.Columns.Cast<DataColumn>().Select(c => c.ColumnName));
 			Assert.AreEqual(2, table.Rows.Count);
 
-			Assert.IsTrue(new[] { "1", "2", "3" }.SequenceEqual(table.Rows[0].ItemArray));
-			Assert.IsTrue(new[] { "4", "5", "6" }.SequenceEqual(table.Rows[1].ItemArray));
+			CollectionAssert.AreEqual(new[] { "1", "2", "3" }, table.Rows[0].ItemArray);
+			CollectionAssert.AreEqual(new[] { "4", "5", "6" }, table.Rows[1].ItemArray);
 		}
 
 		[Test]
@@ -27,9 +60,8 @@ namespace TUGraz.VectoCore.Tests.FileIO
 		{
 			var table = VectoCSVFile.Read(@"TestData\Components\Axle.vtlm");
 			Assert.AreEqual(3, table.Columns.Count);
-			Assert.IsTrue(
-				new[] { "Input Speed", "Input Torque", "Torque Loss" }.SequenceEqual(
-					table.Columns.Cast<DataColumn>().Select(c => c.ColumnName)));
+			CollectionAssert.AreEqual(
+				new[] { "Input Speed", "Input Torque", "Torque Loss" }, table.Columns.Cast<DataColumn>().Select(c => c.ColumnName));
 			Assert.AreEqual(285, table.Rows.Count);
 		}
 
@@ -39,12 +71,11 @@ namespace TUGraz.VectoCore.Tests.FileIO
 			var stream = "a,b,c\n1,2,3\n4,5,6".GetStream();
 			var table = VectoCSVFile.ReadStream(stream);
 
-			Assert.AreEqual(3, table.Columns.Count);
-			Assert.IsTrue(new[] { "a", "b", "c" }.SequenceEqual(table.Columns.Cast<DataColumn>().Select(c => c.ColumnName)));
+			CollectionAssert.AreEqual(new[] { "a", "b", "c" }, table.Columns.Cast<DataColumn>().Select(c => c.ColumnName));
 			Assert.AreEqual(2, table.Rows.Count);
 
-			Assert.IsTrue(new[] { "1", "2", "3" }.SequenceEqual(table.Rows[0].ItemArray));
-			Assert.IsTrue(new[] { "4", "5", "6" }.SequenceEqual(table.Rows[1].ItemArray));
+			CollectionAssert.AreEqual(new[] { "1", "2", "3" }, table.Rows[0].ItemArray);
+			CollectionAssert.AreEqual(new[] { "4", "5", "6" }, table.Rows[1].ItemArray);
 		}
 
 		[Test]
@@ -53,12 +84,28 @@ namespace TUGraz.VectoCore.Tests.FileIO
 			var stream = "1,2,3\n4,5,6".GetStream();
 			var table = VectoCSVFile.ReadStream(stream);
 
-			Assert.AreEqual(3, table.Columns.Count);
-			Assert.IsTrue(new[] { "0", "1", "2" }.SequenceEqual(table.Columns.Cast<DataColumn>().Select(c => c.ColumnName)));
+			CollectionAssert.AreEqual(new[] { "0", "1", "2" }, table.Columns.Cast<DataColumn>().Select(c => c.ColumnName));
 			Assert.AreEqual(2, table.Rows.Count);
 
-			Assert.IsTrue(new[] { "1", "2", "3" }.SequenceEqual(table.Rows[0].ItemArray));
-			Assert.IsTrue(new[] { "4", "5", "6" }.SequenceEqual(table.Rows[1].ItemArray));
+			CollectionAssert.AreEqual(new[] { "1", "2", "3" }, table.Rows[0].ItemArray);
+			CollectionAssert.AreEqual(new[] { "4", "5", "6" }, table.Rows[1].ItemArray);
+		}
+
+		[Test]
+		public void VectoCSVFile_ReadStream_No_Content()
+		{
+			var stream = "a,b,c".GetStream();
+			var table = VectoCSVFile.ReadStream(stream);
+
+			Assert.AreEqual(3, table.Columns.Count);
+			CollectionAssert.AreEqual(new[] { "a", "b", "c" }, table.Columns.Cast<DataColumn>().Select(c => c.ColumnName));
+			Assert.AreEqual(0, table.Rows.Count);
+		}
+
+		[Test]
+		public void VectoCSVFile_ReadStream_Empty()
+		{
+			AssertHelper.Exception<VectoException>(() => VectoCSVFile.ReadStream("".GetStream()));
 		}
 
 		[Test]
@@ -73,12 +120,11 @@ namespace TUGraz.VectoCore.Tests.FileIO
                            4,5,6".GetStream();
 			var table = VectoCSVFile.ReadStream(stream);
 
-			Assert.AreEqual(3, table.Columns.Count);
-			Assert.IsTrue(new[] { "a", "b", "c" }.SequenceEqual(table.Columns.Cast<DataColumn>().Select(c => c.ColumnName)));
+			CollectionAssert.AreEqual(new[] { "a", "b", "c" }, table.Columns.Cast<DataColumn>().Select(c => c.ColumnName));
 			Assert.AreEqual(2, table.Rows.Count);
 
-			Assert.IsTrue(new[] { "1", "2", "3" }.SequenceEqual(table.Rows[0].ItemArray));
-			Assert.IsTrue(new[] { "4", "5", "6" }.SequenceEqual(table.Rows[1].ItemArray));
+			CollectionAssert.AreEqual(new[] { "1", "2", "3" }, table.Rows[0].ItemArray);
+			CollectionAssert.AreEqual(new[] { "4", "5", "6" }, table.Rows[1].ItemArray);
 		}
 
 		[Test]
@@ -107,7 +153,7 @@ namespace TUGraz.VectoCore.Tests.FileIO
 			table.Columns.Add("a");
 			table.Columns.Add("b");
 			var row = table.NewRow();
-			row.ItemArray = new[] { "1", "2" };
+			row.ItemArray = new object[] { "1", "2" };
 			table.Rows.Add(row);
 
 			using (var stream = new MemoryStream()) {

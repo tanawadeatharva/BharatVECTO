@@ -52,17 +52,20 @@ namespace TUGraz.VectoCore.Models.SimulationComponent.Impl
 		protected internal BusAuxState CurrentState;
 		protected internal BusAuxState PreviousState;
 
+		protected internal IEngineAuxPort AdditionalAux;
+
 		protected IAdvancedAuxiliaries Auxiliaries;
 		private readonly FuelConsumptionAdapter _fcMapAdapter;
 
-
 		public BusAuxiliariesAdapter(IDataBus container, string aauxFile, string cycleName, Kilogram vehicleWeight,
-			FuelConsumptionMap fcMap, PerSecond engineIdleSpeed)
+			FuelConsumptionMap fcMap, PerSecond engineIdleSpeed, IEngineAuxPort additionalAux = null)
 		{
 			//	mAAUX_Global.advancedAuxModel.Signals.DeclarationMode = Cfg.DeclMode
 			//	mAAUX_Global.advancedAuxModel.Signals.WHTC = Declaration.WHTCcorrFactor
 			CurrentState = new BusAuxState();
 			PreviousState = new BusAuxState();
+
+			AdditionalAux = additionalAux;
 
 			DataBus = container;
 			var tmpAux = new AdvancedAuxiliaries();
@@ -129,6 +132,10 @@ namespace TUGraz.VectoCore.Models.SimulationComponent.Impl
 		{
 			PreviousState.TotalFuelConsumption = 0.SI<Kilogram>();
 			PreviousState.AngularSpeed = angularSpeed;
+			CurrentState.AngularSpeed = angularSpeed;
+			if (AdditionalAux != null) {
+				AdditionalAux.Initialize(torque, angularSpeed);
+			}
 			PreviousState.PowerDemand = GetBusAuxPowerDemand(0.SI<Second>(), 1.SI<Second>(), torque, torque, angularSpeed);
 			return PreviousState.PowerDemand / angularSpeed;
 		}
@@ -245,7 +252,11 @@ namespace TUGraz.VectoCore.Models.SimulationComponent.Impl
 			}
 			Auxiliaries.Signals.EngineMotoringPower = -DataBus.EngineDragPower(angularSpeed);
 			Auxiliaries.Signals.EngineSpeed = angularSpeed;
-			Auxiliaries.Signals.PreExistingAuxPower = 0.SI<Watt>(); //mAAUX_Global.PreExistingAuxPower;
+			var avgAngularSpeed = (PreviousState.AngularSpeed + CurrentState.AngularSpeed) / 2;
+			Auxiliaries.Signals.PreExistingAuxPower = AdditionalAux != null
+				? AdditionalAux.PowerDemand(absTime, dt, torquePowerTrain, torqueEngine, angularSpeed, dryRun) * avgAngularSpeed
+				: 0.SI<Watt>();
+			; //mAAUX_Global.PreExistingAuxPower;
 			Auxiliaries.Signals.Idle = DataBus.VehicleStopped;
 			Auxiliaries.Signals.InNeutral = DataBus.Gear == 0;
 			Auxiliaries.Signals.RunningCalc = true;
@@ -253,7 +264,7 @@ namespace TUGraz.VectoCore.Models.SimulationComponent.Impl
 			//mAAUX_Global.Internal_Engine_Power;
 			//'Power coming out of Advanced Model is in Watts.
 
-			return Auxiliaries.AuxiliaryPowerAtCrankWatts;
+			return Auxiliaries.AuxiliaryPowerAtCrankWatts + Auxiliaries.Signals.PreExistingAuxPower;
 		}
 
 		protected class FuelConsumptionAdapter : IFuelConsumptionMap

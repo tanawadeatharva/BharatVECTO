@@ -209,6 +209,36 @@ namespace TUGraz.VectoCore.InputData.FileIO.JSON
 			get { return this; }
 		}
 
+		public Second DownshiftAferUpshiftDelay
+		{
+			get
+			{
+				return Body["DownshiftAferUpshiftDelay"] == null
+					? 10.SI<Second>()
+					: Body.GetEx<double>("DownshiftAferUpshiftDelay").SI<Second>();
+			}
+		}
+
+		public Second UpshiftAfterDownshiftDelay
+		{
+			get
+			{
+				return Body["UpshiftAfterDownshiftDelay"] == null
+					? 10.SI<Second>()
+					: Body.GetEx<double>("UpshiftAfterDownshiftDelay").SI<Second>();
+			}
+		}
+
+		public MeterPerSquareSecond UpshiftMinAcceleration
+		{
+			get
+			{
+				return Body["UpshiftMinAcceleration"] == null
+					? 0.1.SI<MeterPerSquareSecond>()
+					: Body.GetEx<double>("UpshiftMinAcceleration").SI<MeterPerSquareSecond>();
+			}
+		}
+
 		#endregion
 
 		#region ITorqueConverterInputData

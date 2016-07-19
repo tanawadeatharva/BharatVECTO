@@ -529,6 +529,51 @@ namespace TUGraz.VectoCore {
         }
         
         /// <summary>
+        ///   Looks up a localized string similar to AngularGear.
+        /// </summary>
+        internal static string Vehicle_AngularGear {
+            get {
+                return ResourceManager.GetString("Vehicle_AngularGear", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Efficiency.
+        /// </summary>
+        internal static string Vehicle_AngularGear_Efficiency {
+            get {
+                return ResourceManager.GetString("Vehicle_AngularGear_Efficiency", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to LossMap.
+        /// </summary>
+        internal static string Vehicle_AngularGear_LossMapFile {
+            get {
+                return ResourceManager.GetString("Vehicle_AngularGear_LossMapFile", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Ratio.
+        /// </summary>
+        internal static string Vehicle_AngularGear_Ratio {
+            get {
+                return ResourceManager.GetString("Vehicle_AngularGear_Ratio", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Type.
+        /// </summary>
+        internal static string Vehicle_AngularGear_Type {
+            get {
+                return ResourceManager.GetString("Vehicle_AngularGear_Type", resourceCulture);
+            }
+        }
+        
+        /// <summary>
         ///   Looks up a localized string similar to AxleConfig.
         /// </summary>
         internal static string Vehicle_AxleConfiguration {

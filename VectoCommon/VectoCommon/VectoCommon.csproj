@@ -35,6 +35,7 @@
       <HintPath>..\..\packages\NLog.4.2.3\lib\net45\NLog.dll</HintPath>
     </Reference>
     <Reference Include="System" />
+    <Reference Include="System.ComponentModel.DataAnnotations" />
     <Reference Include="System.Core" />
     <Reference Include="System.Xml.Linq" />
     <Reference Include="System.Data.DataSetExtensions" />
@@ -49,6 +50,7 @@
     <Compile Include="InputData\EngineeringInputData.cs" />
     <Compile Include="InputData\IInputDataProvider.cs" />
     <Compile Include="InputData\IntegrityStatus.cs" />
+    <Compile Include="Models\AngularGearType.cs" />
     <Compile Include="Models\AuxiliaryModel.cs" />
     <Compile Include="Models\AxleConfiguration.cs" />
     <Compile Include="Models\CrossWindCorrectionMode.cs" />
@@ -62,11 +64,12 @@
     <Compile Include="Models\VehicleCategory.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
     <Compile Include="Utils\DoubleExtensionMethods.cs" />
-    <Compile Include="Utils\EnumberableExtensionMethods.cs" />
+    <Compile Include="Utils\EnumerableExtensionMethods.cs" />
     <Compile Include="Utils\EnumHelper.cs" />
     <Compile Include="Utils\IntExtensionMethods.cs" />
     <Compile Include="Utils\SI.cs" />
     <Compile Include="Utils\StringExtensionMethods.cs" />
+    <Compile Include="Utils\Validation.cs" />
     <Compile Include="Utils\VectoMath.cs" />
   </ItemGroup>
   <ItemGroup>

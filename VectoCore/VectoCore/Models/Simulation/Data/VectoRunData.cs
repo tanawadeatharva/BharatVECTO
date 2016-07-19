@@ -37,6 +37,7 @@ using TUGraz.VectoCommon.Utils;
 using TUGraz.VectoCore.Configuration;
 using TUGraz.VectoCore.Models.Declaration;
 using TUGraz.VectoCore.Models.SimulationComponent.Data;
+using TUGraz.VectoCore.Models.SimulationComponent.Data.Gearbox;
 using TUGraz.VectoCore.OutputData;
 using TUGraz.VectoCore.Utils;
 using DriverData = TUGraz.VectoCore.Models.SimulationComponent.Data.DriverData;
@@ -57,6 +58,9 @@ namespace TUGraz.VectoCore.Models.Simulation.Data
 
 		[ValidateObject]
 		public AxleGearData AxleGearData { get; internal set; }
+
+		[ValidateObject]
+		public AngularGearData AngularGearData { get; internal set; }
 
 		[Required, ValidateObject]
 		public DrivingCycleData Cycle { get; internal set; }

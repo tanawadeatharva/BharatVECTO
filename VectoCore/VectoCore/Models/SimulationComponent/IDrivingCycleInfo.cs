@@ -29,6 +29,7 @@
 *   Martin Rexeis, rexeis@ivt.tugraz.at, IVT, Graz University of Technology
 */
 
+using System.Collections.Generic;
 using TUGraz.VectoCommon.Utils;
 using TUGraz.VectoCore.Models.SimulationComponent.Data;
 
@@ -45,6 +46,20 @@ namespace TUGraz.VectoCore.Models.SimulationComponent
 		/// </summary>
 		CycleData CycleData { get; }
 
+		/// <summary>
+		/// get a single driving-cycle entry at a certain distance ahead
+		/// altitude is interpolated between sampling points, slope is averaged
+		/// </summary>
+		/// <param name="distance"></param>
+		/// <returns></returns>
+		DrivingCycleData.DrivingCycleEntry CycleLookAhead(Meter distance);
+
 		Meter Altitude { get; }
+
+		Meter CycleStartDistance { get; }
+
+		IReadOnlyList<DrivingCycleData.DrivingCycleEntry> LookAhead(Meter lookaheadDistance);
+
+		IReadOnlyList<DrivingCycleData.DrivingCycleEntry> LookAhead(Second time);
 	}
 }

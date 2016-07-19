@@ -1,4 +1,4 @@
-' Copyright 2015 European Union.
+' Copyright 2014 European Union.
 ' Licensed under the EUPL (the 'Licence');
 '
 ' * You may not use this work except in compliance with the Licence.
@@ -8,6 +8,8 @@
 '   WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
 '
 ' See the LICENSE.txt for the specific language governing permissions and limitations.
+Option Infer On
+
 Imports System.Windows.Forms
 
 ''' <summary>
@@ -15,50 +17,46 @@ Imports System.Windows.Forms
 ''' </summary>
 ''' <remarks></remarks>
 Public Class FB_FavDlog
-	Private Const NoFavString As String = "<undefined>"
+	Private Const NoFavString As String = "<empty favorite slot>"
 	Private Const EmptyText As String = " "
 
-	Private Sub FB_FavDlog_Load(sender As Object, e As System.EventArgs) Handles Me.Load
-		Dim x As Integer
-		Dim txt As String
+	Private Sub FB_FavDlog_Load(sender As Object, e As EventArgs) Handles Me.Load
 		For x = 10 To 19
-			txt = FB_FolderHistory(x)
+			Dim txt = FB_FolderHistory(x)
 			If txt = EmptyText Then
-				Me.ListBox1.Items.Add(NoFavString)
+				ListBox1.Items.Add(NoFavString)
 			Else
-				Me.ListBox1.Items.Add(txt)
+				ListBox1.Items.Add(txt)
 			End If
 		Next
 	End Sub
 
-	Private Sub OK_Button_Click(ByVal sender As System.Object, ByVal e As System.EventArgs) Handles OK_Button.Click
-		Me.DialogResult = System.Windows.Forms.DialogResult.OK
-		Me.Close()
+	Private Sub OK_Button_Click(sender As Object, e As EventArgs) Handles OK_Button.Click
+		DialogResult = DialogResult.OK
+		Close()
 	End Sub
 
-	Private Sub Cancel_Button_Click(ByVal sender As System.Object, ByVal e As System.EventArgs) Handles Cancel_Button.Click
-		Me.DialogResult = System.Windows.Forms.DialogResult.Cancel
-		Me.Close()
+	Private Sub Cancel_Button_Click(sender As Object, e As EventArgs) Handles Cancel_Button.Click
+		DialogResult = DialogResult.Cancel
+		Close()
 	End Sub
 
-	Private Sub ListBox1_MouseDoubleClick(sender As Object, e As System.Windows.Forms.MouseEventArgs) _
-		Handles ListBox1.MouseDoubleClick
-		Dim i As Integer
-		Dim txt As String
-		Dim fb As cFileBrowser
-
-		i = Me.ListBox1.SelectedIndex
-
-		txt = Me.ListBox1.Items(i).ToString
+	Private Sub ListBox1_MouseDoubleClick(sender As Object, e As MouseEventArgs) Handles ListBox1.MouseDoubleClick
+		Dim i = ListBox1.SelectedIndex
+		Dim txt = ListBox1.Items(i).ToString
 
 		If txt = NoFavString Then txt = ""
 
-		fb = New cFileBrowser("DirBr", True, True)
+		Dim fb = New cFileBrowser("DirBr", True, True)
 
 		If fb.OpenDialog(txt) Then
 			txt = fb.Files(0)
-			Me.ListBox1.Items.Insert(i, txt)
-			Me.ListBox1.Items.RemoveAt(i + 1)
+			ListBox1.Items.Insert(i, txt)
+			ListBox1.Items.RemoveAt(i + 1)
 		End If
+	End Sub
+
+	Private Sub ListBox1_SelectedIndexChanged(sender As Object, e As EventArgs) Handles ListBox1.SelectedIndexChanged
+
 	End Sub
 End Class

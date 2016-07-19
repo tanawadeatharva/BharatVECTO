@@ -52,7 +52,7 @@ namespace TUGraz.VectoCore.Models.SimulationComponent.Impl
 	/// </summary>
 	public sealed class DistanceBasedDrivingCycle :
 		StatefulVectoSimulationComponent<DistanceBasedDrivingCycle.DrivingCycleState>, IDrivingCycle, ISimulationOutPort,
-		IDrivingCycleInPort, IRoadLookAhead, IDisposable
+		IDrivingCycleInPort, IDisposable
 	{
 		private const double LookaheadTimeSafetyMargin = 1.5;
 		private readonly DrivingCycleData _data;
@@ -393,6 +393,52 @@ namespace TUGraz.VectoCore.Models.SimulationComponent.Impl
 					RightSample = CycleIntervalIterator.RightSample
 				};
 			}
+		}
+
+		public DrivingCycleData.DrivingCycleEntry CycleLookAhead(Meter distance)
+		{
+			var absDistance = CurrentState.Distance + distance;
+			var myIterator = CycleIntervalIterator.Clone();
+
+			if (absDistance > _data.Entries.Last().Distance) {
+				return ExtrapolateCycleEntry(absDistance, _data.Entries.Last());
+			}
+			while (myIterator.RightSample.Distance < absDistance) {
+				myIterator.MoveNext();
+			}
+			
+			return InterpolateCycleEntry(absDistance, myIterator.RightSample);
+		}
+
+		private DrivingCycleData.DrivingCycleEntry InterpolateCycleEntry(Meter absDistance,
+			DrivingCycleData.DrivingCycleEntry lookahead)
+		{
+			var retVal = new DrivingCycleData.DrivingCycleEntry(lookahead) {
+				Distance = absDistance,
+				Altitude = VectoMath.Interpolate(CurrentState.Distance, lookahead.Distance, CurrentState.Altitude,
+					lookahead.Altitude, absDistance)
+			};
+
+			retVal.RoadGradient =
+				((retVal.Altitude - CurrentState.Altitude) / (absDistance - CurrentState.Distance)).Value().SI<Radian>();
+
+			return retVal;
+		}
+
+		private DrivingCycleData.DrivingCycleEntry ExtrapolateCycleEntry(Meter absDistance,
+			DrivingCycleData.DrivingCycleEntry lookahead)
+		{
+			var retVal = new DrivingCycleData.DrivingCycleEntry(lookahead)
+			{
+				Distance = absDistance,
+				Altitude = lookahead.Altitude + lookahead.RoadGradient * (absDistance - lookahead.Distance),
+				//VectoMath.Interpolate(CurrentState.Distance, lookahead.Distance, CurrentState.Altitude,lookahead.Altitude, absDistance)
+			};
+
+			retVal.RoadGradient =
+				((retVal.Altitude - CurrentState.Altitude) / (absDistance - CurrentState.Distance)).Value().SI<Radian>();
+
+			return retVal;
 		}
 
 		public Meter Altitude

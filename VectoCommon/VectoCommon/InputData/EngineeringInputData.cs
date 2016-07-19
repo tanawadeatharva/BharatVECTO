@@ -30,6 +30,7 @@
 */
 
 using System.Collections.Generic;
+using System.ComponentModel.DataAnnotations;
 using System.Data;
 using TUGraz.VectoCommon.Models;
 using TUGraz.VectoCommon.Utils;
@@ -94,7 +95,6 @@ namespace TUGraz.VectoCommon.InputData
 		DataTable CrosswindCorrectionMap { get; }
 	}
 
-
 	public interface IAxleEngineeringInputData : IAxleDeclarationInputData
 	{
 		/// <summary>
@@ -109,7 +109,6 @@ namespace TUGraz.VectoCommon.InputData
 		/// </summary>
 		KilogramSquareMeter Inertia { get; }
 	}
-
 
 	public interface IGearboxEngineeringInputData : IGearboxDeclarationInputData
 	{
@@ -168,12 +167,20 @@ namespace TUGraz.VectoCommon.InputData
 		/// </summary>
 		bool SkipGears { get; }
 
-
 		/// <summary>
 		/// P090, P091, P092, P127
 		/// cf. VECTO Input Parameters.xlsx
 		/// </summary>
 		ITorqueConverterInputData TorqueConverter { get; }
+
+		[Required, SIRange(0, double.MaxValue)]
+		Second DownshiftAferUpshiftDelay { get; }
+
+		[Required, SIRange(0, double.MaxValue)]
+		Second UpshiftAfterDownshiftDelay { get; }
+
+		[Required, SIRange(0, double.MaxValue)]
+		MeterPerSquareSecond UpshiftMinAcceleration { get; }
 	}
 
 	public interface IEngineEngineeringInputData : IEngineDeclarationInputData
@@ -184,7 +191,6 @@ namespace TUGraz.VectoCommon.InputData
 		/// </summary>
 		KilogramSquareMeter Inertia { get; }
 	}
-
 
 	public interface IAuxiliariesEngineeringInputData : IAuxiliariesDeclarationInputData
 	{
@@ -197,7 +203,6 @@ namespace TUGraz.VectoCommon.InputData
 
 		string AdvancedAuxiliaryFilePath { get; }
 	}
-
 
 	public interface IDriverEngineeringInputData : IDriverDeclarationInputData
 	{
@@ -213,7 +218,6 @@ namespace TUGraz.VectoCommon.InputData
 
 		ILookaheadCoastingInputData Lookahead { get; }
 	}
-
 
 	public interface IOverSpeedEcoRollEngineeringInputData : IOverSpeedEcoRollDeclarationInputData
 	{
@@ -257,7 +261,6 @@ namespace TUGraz.VectoCommon.InputData
 		Second Delay { get; }
 	}
 
-
 	public interface ILookaheadCoastingInputData
 	{
 		/// <summary>
@@ -275,7 +278,16 @@ namespace TUGraz.VectoCommon.InputData
 		/// P021
 		/// cf. VECTO Input Parameters.xlsx
 		/// </summary>
-		MeterPerSecond MinSpeed { get; }
+		//MeterPerSecond MinSpeed { get; }
+		double CoastingDecisionFactorOffset { get; }
+
+		double CoastingDecisionFactorScaling { get; }
+
+		double LookaheadDistanceFactor { get; }
+
+		DataTable CoastingDecisionFactorTargetSpeedLookup { get; }
+
+		DataTable CoastingDecisionFactorVelocityDropLookup { get; }
 	}
 
 	public interface IAuxiliaryEngineeringInputData : IAuxiliaryDeclarationInputData

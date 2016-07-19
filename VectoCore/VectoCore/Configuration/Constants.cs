@@ -87,7 +87,6 @@ namespace TUGraz.VectoCore.Configuration
 			/// </summary>
 			public static readonly Second TargetTimeInterval = 0.5.SI<Second>();
 
-
 			/// <summary>
 			/// maximum time interval for the simulation in measured speed mode.
 			/// </summary>
@@ -149,6 +148,10 @@ namespace TUGraz.VectoCore.Configuration
 			public const int MaximumIterationCountForSimulationStep = 30;
 
 			public static readonly MeterPerSecond VehicleStopClutchDisengageSpeed = 10.KMPHtoMeterPerSecond();
+
+			public static readonly Meter GearboxLookaheadForAccelerationEstimation = 100.SI<Meter>();
+
+			public static Kilogram MaximumGrossVehicleWeight = 40000.SI<Kilogram>();
 		}
 	}
 }

@@ -851,6 +851,7 @@
     <None Include="..\User Manual\Release Notes.pdf">
       <Link>Release Files\User Manual\Release Notes.pdf</Link>
     </None>
+    <None Include="Resources\Icons.xcf" />
     <None Include="VECTO_TemporaryKey.pfx" />
   </ItemGroup>
   <ItemGroup>
@@ -1505,6 +1506,21 @@
     <Content Include="..\User Manual\usermanual.html">
       <Link>Release Files\User Manual\usermanual.html</Link>
     </Content>
+    <None Include="Resources\Up.bmp" />
+    <None Include="Resources\up-directory.png" />
+    <None Include="Resources\up-directory16x16.png" />
+    <None Include="Resources\new_dir.png" />
+    <None Include="Resources\desktop.png" />
+    <None Include="Resources\favorites.png" />
+    <None Include="Resources\file-history.png" />
+    <Content Include="Resources\F_ENG.ico" />
+    <Content Include="Resources\F_GBX.ico" />
+    <Content Include="Resources\F_VECTO.ico" />
+    <Content Include="Resources\F_VEH.ico" />
+    <Content Include="Resources\Graph.ico" />
+    <Content Include="Resources\Status-dialog-password-icon.ico" />
+    <Content Include="Resources\up.ico" />
+    <Content Include="Resources\up.png" />
   </ItemGroup>
   <Import Project="$(MSBuildBinPath)\Microsoft.VisualBasic.targets" />
   <PropertyGroup>

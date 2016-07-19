@@ -99,8 +99,8 @@ namespace TUGraz.VectoCore.Tests.Integration.SimulationRuns
 
 			Assert.IsInstanceOfType(response, typeof(ResponseSuccess));
 
-//			time [s] , dist [m] , v_act [km/h] , v_targ [km/h] , acc [m/s²] , grad [%] , n_eng_avg [1/min] , T_eng_fcmap [Nm] , Tq_clutch [Nm] , Tq_full [Nm] , Tq_drag [Nm] , P_eng_out [kW] , P_eng_full [kW] , P_eng_drag [kW] , P_clutch_out [kW] , Pa Eng [kW] , P_aux [kW] , Gear [-] , Ploss GB [kW] , Ploss Diff [kW] , Ploss Retarder [kW] , Pa GB [kW] , Pa Veh [kW] , P_roll [kW] , P_air [kW] , P_slope [kW] , P_wheel_in [kW] , P_brake_loss [kW] , FC-Map [g/h] , FC-AUXc [g/h] , FC-WHTCc [g/h]
-//			1.5      , 5        , 18           , 18            , 0          , 2.842372 , 964.1117  , 323.7562    , 323.7562       , 2208.664     , -158.0261    , 32.68693    , 222.9902     , -15.95456    , 32.68693       , 0           , 0         , 1        , 0             , 0               , 0                   , 0          , 0           , 5.965827   , 0.2423075 , 26.47879   , 32.68693    , 0           , 7574.113     , -             , -
+			//			time [s] , dist [m] , v_act [km/h] , v_targ [km/h] , acc [m/s²] , grad [%] , n_eng_avg [1/min] , T_eng_fcmap [Nm] , Tq_clutch [Nm] , Tq_full [Nm] , Tq_drag [Nm] , P_eng_out [kW] , P_eng_full [kW] , P_eng_drag [kW] , P_clutch_out [kW] , Pa Eng [kW] , P_aux [kW] , Gear [-] , Ploss GB [kW] , Ploss Diff [kW] , Ploss Retarder [kW] , Pa GB [kW] , Pa Veh [kW] , P_roll [kW] , P_air [kW] , P_slope [kW] , P_wheel_in [kW] , P_brake_loss [kW] , FC-Map [g/h] , FC-AUXc [g/h] , FC-WHTCc [g/h]
+			//			1.5      , 5        , 18           , 18            , 0          , 2.842372 , 964.1117  , 323.7562    , 323.7562       , 2208.664     , -158.0261    , 32.68693    , 222.9902     , -15.95456    , 32.68693       , 0           , 0         , 1        , 0             , 0               , 0                   , 0          , 0           , 5.965827   , 0.2423075 , 26.47879   , 32.68693    , 0           , 7574.113     , -             , -
 
 			AssertHelper.AreRelativeEqual(964.1117.RPMtoRad().Value(), vehicleContainer.Engine.EngineSpeed.Value());
 			Assert.AreEqual(2208.664, engine.PreviousState.StationaryFullLoadTorque.Value(), Tolerance);
@@ -286,7 +286,6 @@ namespace TUGraz.VectoCore.Tests.Integration.SimulationRuns
 					new CrosswindCorrectionCdxALookup(CrossWindCorrectionCurveReader.GetNoCorrectionCurve(3.2634.SI<SquareMeter>()),
 						CrossWindCorrectionMode.NoCorrection),
 				CurbWeight = 15700.SI<Kilogram>(),
-				CurbWeigthExtra = 0.SI<Kilogram>(),
 				Loading = loading,
 				DynamicTyreRadius = 0.52.SI<Meter>(),
 				AxleData = axles,
@@ -301,6 +300,7 @@ namespace TUGraz.VectoCore.Tests.Integration.SimulationRuns
 				LookAheadCoasting = new DriverData.LACData {
 					Enabled = false,
 					//Deceleration = -0.5.SI<MeterPerSquareSecond>()
+					LookAheadDecisionFactor = new LACDecisionFactor()
 				},
 				OverSpeedEcoRoll = new DriverData.OverSpeedEcoRollData {
 					Mode = DriverMode.Off

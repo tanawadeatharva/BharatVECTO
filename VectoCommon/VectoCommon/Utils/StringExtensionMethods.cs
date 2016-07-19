@@ -29,6 +29,7 @@
 *   Martin Rexeis, rexeis@ivt.tugraz.at, IVT, Graz University of Technology
 */
 
+using System;
 using System.Collections.Generic;
 using System.Globalization;
 using System.IO;
@@ -44,9 +45,15 @@ namespace TUGraz.VectoCommon.Utils
 			return string.Join(s, values);
 		}
 
-		public static double ToDouble(this string self)
+		public static double ToDouble(this string self, double? defaultValue = null)
 		{
-			return double.Parse(self, CultureInfo.InvariantCulture);
+			try {
+				return double.Parse(self, CultureInfo.InvariantCulture);
+			} catch (FormatException) {
+				if (defaultValue.HasValue)
+					return defaultValue.Value;
+				throw;
+			}
 		}
 
 		public static double IndulgentParse(this string self)

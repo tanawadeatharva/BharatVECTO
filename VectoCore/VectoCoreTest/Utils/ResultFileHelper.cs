@@ -35,6 +35,7 @@ using System.IO;
 using System.Linq;
 using Microsoft.VisualStudio.TestTools.UnitTesting;
 using TUGraz.VectoCommon.Utils;
+using TUGraz.VectoCore.Models.Simulation.Data;
 using TUGraz.VectoCore.Utils;
 
 namespace TUGraz.VectoCore.Tests.Utils
@@ -42,13 +43,13 @@ namespace TUGraz.VectoCore.Tests.Utils
 	public static class ResultFileHelper
 	{
 		public static void TestModFile(string expectedFile, string actualFile, string[] testColumns = null,
-			bool testRowCount = true)
+			bool testRowCount = true, bool testVelocity = true)
 		{
-			TestModFiles(new[] { expectedFile }, new[] { actualFile }, testColumns, testRowCount);
+			TestModFiles(new[] { expectedFile }, new[] { actualFile }, testColumns, testRowCount, testVelocity);
 		}
 
 		public static void TestModFiles(IEnumerable<string> expectedFiles, IEnumerable<string> actualFiles,
-			string[] testColumns = null, bool testRowcount = true)
+			string[] testColumns = null, bool testRowcount = true, bool testVelocity = true)
 		{
 			var resultFiles = expectedFiles.ZipAll(actualFiles, (expectedFile, actualFile) => new { expectedFile, actualFile });
 			foreach (var result in resultFiles) {
@@ -57,6 +58,17 @@ namespace TUGraz.VectoCore.Tests.Utils
 
 				var expected = VectoCSVFile.Read(result.expectedFile);
 				var actual = VectoCSVFile.Read(result.actualFile);
+
+				if (testVelocity) {
+					Assert.IsTrue(
+						actual.Rows.Cast<DataRow>()
+							.All(r => r.ParseDouble(ModalResultField.v_act.GetShortCaption()).IsGreaterOrEqual(0)),
+						"v_act must not be negative.");
+					Assert.IsTrue(
+						actual.Rows.Cast<DataRow>()
+							.All(r => r.ParseDouble(ModalResultField.v_targ.GetShortCaption()).IsGreaterOrEqual(0)),
+						"v_targ must not be negative.");
+				}
 
 				if (testRowcount) {
 					Assert.AreEqual(expected.Rows.Count, actual.Rows.Count,
@@ -79,7 +91,7 @@ namespace TUGraz.VectoCore.Tests.Utils
 						.ToList();
 				}
 
-				Assert.IsTrue(expectedCols.SequenceEqual(actualCols),
+				CollectionAssert.AreEqual(expectedCols, actualCols,
 					string.Format("Moddata {3}: Columns differ:\nExpected: {0}\nMissing:{1},\nToo Much:{2}",
 						", ".Join(expectedCols),
 						", ".Join(expectedCols.Except(actualCols)),
@@ -111,7 +123,7 @@ namespace TUGraz.VectoCore.Tests.Utils
 			var actualCols = actual.Columns.Cast<DataColumn>().Select(x => x.ColumnName).OrderBy(x => x).ToList();
 			var expectedCols = expected.Columns.Cast<DataColumn>().Select(x => x.ColumnName).OrderBy(x => x).ToList();
 
-			Assert.IsTrue(expectedCols.SequenceEqual(actualCols),
+			CollectionAssert.AreEqual(expectedCols, actualCols,
 				string.Format("SUM FILE {3}: Columns differ:\nExpected: {0}\nMissing:{1},\nToo Much:{2}",
 					", ".Join(expectedCols),
 					", ".Join(expectedCols.Except(actualCols)),

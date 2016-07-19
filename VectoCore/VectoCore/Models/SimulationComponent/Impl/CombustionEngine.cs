@@ -30,6 +30,7 @@
 */
 
 using System;
+using System.Collections.Generic;
 using TUGraz.VectoCommon.Exceptions;
 using TUGraz.VectoCommon.Models;
 using TUGraz.VectoCommon.Utils;
@@ -38,6 +39,7 @@ using TUGraz.VectoCore.Models.Connector.Ports;
 using TUGraz.VectoCore.Models.Connector.Ports.Impl;
 using TUGraz.VectoCore.Models.Simulation;
 using TUGraz.VectoCore.Models.Simulation.Data;
+using TUGraz.VectoCore.Models.Simulation.Impl;
 using TUGraz.VectoCore.Models.SimulationComponent.Data;
 using TUGraz.VectoCore.OutputData;
 using TUGraz.VectoCore.Utils;
@@ -119,6 +121,11 @@ namespace TUGraz.VectoCore.Models.SimulationComponent.Impl
 		public PerSecond EngineRatedSpeed
 		{
 			get { return ModelData.FullLoadCurve.RatedSpeed; }
+		}
+
+		public PerSecond EngineN95hSpeed
+		{
+			get { return ModelData.FullLoadCurve.N95hSpeed; }
 		}
 
 		public ICombustionEngineIdleController IdleController
@@ -344,11 +351,11 @@ namespace TUGraz.VectoCore.Models.SimulationComponent.Impl
 
 			var fcWHTC = fcAux * ModelData.WHTCCorrectionFactor;
 			var fcAAUX = fcWHTC;
-				var advancedAux = EngineAux as BusAuxiliariesAdapter;
-				if (advancedAux != null) {
-					advancedAux.DoWriteModalResults(container);
-					fcAAUX = advancedAux.AAuxFuelConsumption;
-				}
+			var advancedAux = EngineAux as BusAuxiliariesAdapter;
+			if (advancedAux != null) {
+				advancedAux.DoWriteModalResults(container);
+				fcAAUX = advancedAux.AAuxFuelConsumption;
+			}
 			var fcFinal = fcAAUX;
 
 			container[ModalResultField.FCMap] = fc;

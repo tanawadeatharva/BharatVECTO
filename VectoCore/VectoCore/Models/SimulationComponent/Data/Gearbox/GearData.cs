@@ -30,23 +30,26 @@
 */
 
 using System.ComponentModel.DataAnnotations;
-using TUGraz.VectoCore.Utils;
+using TUGraz.VectoCommon.Utils;
 
 namespace TUGraz.VectoCore.Models.SimulationComponent.Data.Gearbox
 {
-	public class GearData
+	public class TransmissionData
+	{
+		[ValidateObject]
+		public TransmissionLossMap LossMap { get; internal set; }
+
+		[Required, Range(double.Epsilon, 25)]
+		public double Ratio { get; internal set; }
+	}
+
+	public class GearData : TransmissionData
 	{
 		[ValidateObject]
 		public ShiftPolygon ShiftPolygon { get; internal set; }
 
 		[ValidateObject]
-		public TransmissionLossMap LossMap { get; internal set; }
-
-		[ValidateObject]
 		public FullLoadCurve FullLoadCurve { get; internal set; }
-
-		[Required, Range(double.Epsilon, 25)]
-		public double Ratio { get; internal set; }
 
 		// TODO mk-2016-05-09: Refactor TorqueConverterActive Flag when implementing Torque Converter
 		public bool TorqueConverterActive { get; internal set; }

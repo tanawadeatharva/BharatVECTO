@@ -35,7 +35,6 @@ using System.Runtime.Serialization;
 using TUGraz.VectoCommon.Models;
 using TUGraz.VectoCommon.Utils;
 using TUGraz.VectoCore.Models.SimulationComponent.Data.Gearbox;
-using TUGraz.VectoCore.Utils;
 
 namespace TUGraz.VectoCore.Models.SimulationComponent.Data
 {
@@ -51,29 +50,11 @@ namespace TUGraz.VectoCore.Models.SimulationComponent.Data
 		/// </summary>
 		[Required, ValidateObject] public Dictionary<uint, GearData> Gears = new Dictionary<uint, GearData>();
 
-		/// <summary>
-		/// Gets the type.
-		/// </summary>
-		/// <value>
-		/// The type.
-		/// </value>
 		public GearboxType Type { get; internal set; }
 
-		/// <summary>
-		/// Gets the inertia.
-		/// </summary>
-		/// <value>
-		/// The inertia.
-		/// </value>
 		[Required, SIRange(0, 10)]
 		public KilogramSquareMeter Inertia { get; internal set; }
 
-		/// <summary>
-		/// Gets the traction interruption.
-		/// </summary>
-		/// <value>
-		/// The traction interruption.
-		/// </value>
 		[Required, SIRange(0, 5)]
 		public Second TractionInterruption { get; internal set; }
 
@@ -105,21 +86,9 @@ namespace TUGraz.VectoCore.Models.SimulationComponent.Data
 		[Required, Range(0, 0.5)]
 		public double StartTorqueReserve { get; internal set; }
 
-		/// <summary>
-		/// Gets the start speed.
-		/// </summary>
-		/// <value>
-		/// The start speed.
-		/// </value>
 		[Required, SIRange(double.Epsilon, 5)]
 		public MeterPerSecond StartSpeed { get; internal set; }
 
-		/// <summary>
-		/// Gets the start acceleration.
-		/// </summary>
-		/// <value>
-		/// The start acceleration.
-		/// </value>
 		[Required, SIRange(double.Epsilon, 2)]
 		public MeterPerSquareSecond StartAcceleration { get; internal set; }
 
@@ -130,5 +99,14 @@ namespace TUGraz.VectoCore.Models.SimulationComponent.Data
 		/// <c>true</c> if this instance has torque converter; otherwise, <c>false</c>.
 		/// </value>
 		public bool HasTorqueConverter { get; internal set; }
+
+		[Required, SIRange(0, double.MaxValue)]
+		public Second UpshiftAfterDownshiftDelay { get; internal set; }
+
+		[Required, SIRange(0, double.MaxValue)]
+		public Second DownshiftAfterUpshiftDelay { get; internal set; }
+
+		[Required, SIRange(0, double.MaxValue)]
+		public MeterPerSquareSecond UpshiftMinAcceleration { get; internal set; }
 	}
 }

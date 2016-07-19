@@ -30,11 +30,12 @@
 */
 
 using TUGraz.VectoCore.Models.Connector.Ports;
+using TUGraz.VectoCore.Models.Simulation.DataBus;
 
 namespace TUGraz.VectoCore.Models.SimulationComponent
 {
 	/// <summary>
 	/// Defines interfaces for a wheels component.
 	/// </summary>
-	public interface IWheels : IFvOutProvider, ITnInProvider {}
+	public interface IWheels : IFvOutProvider, ITnInProvider, IWheelsInfo {}
 }

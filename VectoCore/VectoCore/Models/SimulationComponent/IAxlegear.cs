@@ -29,18 +29,9 @@
 *   Martin Rexeis, rexeis@ivt.tugraz.at, IVT, Graz University of Technology
 */
 
-using System.Collections.Generic;
-using TUGraz.VectoCommon.Utils;
-using TUGraz.VectoCore.Models.SimulationComponent.Data;
+using TUGraz.VectoCore.Models.Simulation.DataBus;
 
-namespace TUGraz.VectoCore.Models.Simulation.DataBus
+namespace TUGraz.VectoCore.Models.SimulationComponent
 {
-	public interface IRoadLookAhead
-	{
-		Meter CycleStartDistance { get; }
-
-		IReadOnlyList<DrivingCycleData.DrivingCycleEntry> LookAhead(Meter lookaheadDistance);
-
-		IReadOnlyList<DrivingCycleData.DrivingCycleEntry> LookAhead(Second time);
-	}
+	public interface IAxlegear : IPowerTrainComponent, IAxlegearInfo {}
 }

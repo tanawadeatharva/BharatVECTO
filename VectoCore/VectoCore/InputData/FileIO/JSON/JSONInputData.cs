@@ -42,19 +42,12 @@ using TUGraz.VectoCommon.Models;
 using TUGraz.VectoCommon.Utils;
 using TUGraz.VectoCore.Configuration;
 using TUGraz.VectoCore.InputData.Impl;
+using TUGraz.VectoCore.Models.Declaration;
+using TUGraz.VectoCore.Models.SimulationComponent.Data;
 using TUGraz.VectoCore.Utils;
-using DriverData = TUGraz.VectoCore.Models.SimulationComponent.Data.DriverData;
 
 namespace TUGraz.VectoCore.InputData.FileIO.JSON
 {
-	/// <summary>
-	/// "Header": {
-	///		"CreatedBy": "Raphael Luz IVT TU-Graz (85407225-fc3f-48a8-acda-c84a05df6837)",
-	///		"Date": "29.07.2015 16:59:03",
-	///		"AppVersion": "2.2",
-	///		"FileVersion": 7
-	/// },
-	/// </summary>
 	public abstract class JSONFile : LoggingObject
 	{
 		private string _basePath;
@@ -110,96 +103,20 @@ namespace TUGraz.VectoCore.InputData.FileIO.JSON
 	}
 
 	/// <summary>
-	/// A class which represents the json data format for serializing and deserializing the Job Data files.
+	/// Class for reading json data of vecto-job-file.
 	/// Fileformat: .vecto
 	/// </summary>
-	/// <code>
-	/// {
-	///   "Header": {
-	///     "CreatedBy": " ()",
-	///     "Date": "3/4/2015 12:31:06 PM",
-	///     "AppVersion": "2.0.4-beta3",
-	///     "FileVersion": 2
-	///   },
-	///   "Body": {
-	///     "SavedInDeclMode": true,
-	///     "VehicleFile": "../Components/12t Delivery Truck.vveh",
-	///     "EngineFile": "../Components/12t Delivery Truck.veng",
-	///     "GearboxFile": "../Components/12t Delivery Truck.vgbx",
-	///     "Cycles": [
-	///       "Long Haul",
-	///       "Regional Delivery",
-	///       "Urban Delivery"
-	///     ],
-	///     "Aux": [
-	///       {
-	///         "ID": "FAN",
-	///         "Type": "Fan",
-	///         "Path": "<NOFILE>",
-	///         "Technology": ""
-	///       },
-	///       {
-	///         "ID": "STP",
-	///         "Type": "Steering pump",
-	///         "Path": "<NOFILE>",
-	///         "Technology": ""
-	///       },
-	///       {
-	///         "ID": "AC",
-	///         "Type": "HVAC",
-	///         "Path": "<NOFILE>",
-	///         "Technology": ""
-	///       },
-	///       {
-	///         "ID": "ES",
-	///         "Type": "Electric System",
-	///         "Path": "<NOFILE>",
-	///         "Technology": "",
-	///         "TechList": []
-	///       },
-	///       {
-	///         "ID": "PS",
-	///         "Type": "Pneumatic System",
-	///         "Path": "<NOFILE>",
-	///         "Technology": ""
-	///       }
-	///     ],
-	///     "VACC": "<NOFILE>",
-	///     "EngineOnlyMode": true,
-	///     "StartStop": {
-	///       "Enabled": false,
-	///       "MaxSpeed": 5.0,
-	///       "MinTime": 5.0,
-	///       "Delay": 5
-	///     },
-	///     "LAC": {
-	///       "Enabled": true,
-	///       "Dec": -0.5,
-	///       "MinSpeed": 50.0
-	///     },
-	///     "OverSpeedEcoRoll": {
-	///       "Mode": "OverSpeed",
-	///       "MinSpeed": 50.0,
-	///       "OverSpeed": 5.0,
-	///       "UnderSpeed": 5.0
-	///     }
-	///   }
-	/// }
-	/// </code>
 	public class JSONInputDataV2 : JSONFile, IEngineeringInputDataProvider, IDeclarationInputDataProvider,
 		IEngineeringJobInputData, IDriverEngineeringInputData, IAuxiliariesEngineeringInputData
 	{
 		protected IGearboxEngineeringInputData Gearbox;
-
 		protected IAxleGearInputData AxleGear;
-
+		public IAngularGearInputData AngularGear;
 		protected IEngineEngineeringInputData Engine;
-
 		protected IVehicleEngineeringInputData VehicleData;
-
 		protected IRetarderInputData Retarder;
 
-		private string _jobname;
+		private readonly string _jobname;
 
 		public JSONInputDataV2(JObject data, string filename) : base(data, filename)
 		{
@@ -210,10 +127,7 @@ namespace TUGraz.VectoCore.InputData.FileIO.JSON
 					Gearbox = JSONInputDataFactory.ReadGearbox(Path.Combine(BasePath, gearboxFile));
 				}
 
-				var axleGear = Gearbox as IAxleGearInputData;
-				if (axleGear != null) {
-					AxleGear = axleGear;
-				}
+				AxleGear = Gearbox as IAxleGearInputData;
 
 				Engine = JSONInputDataFactory.ReadEngine(
 					Path.Combine(BasePath, Body.GetEx(JsonKeys.Vehicle_EngineFile).Value<string>()));
@@ -222,6 +136,8 @@ namespace TUGraz.VectoCore.InputData.FileIO.JSON
 				if (!EmptyOrInvalidFileName(vehicleFile)) {
 					VehicleData = JSONInputDataFactory.ReadJsonVehicle(
 						Path.Combine(BasePath, vehicleFile));
+
+					AngularGear = VehicleData as IAngularGearInputData;
 				}
 			} catch (Exception e) {
 				throw new VectoException("Failed to read input data: {0}", e, e.Message);
@@ -291,6 +207,11 @@ namespace TUGraz.VectoCore.InputData.FileIO.JSON
 				}
 				return AxleGear;
 			}
+		}
+
+		public IAngularGearInputData AngularGearInputData
+		{
+			get { return AngularGear; }
 		}
 
 		IEngineDeclarationInputData IDeclarationInputDataProvider.EngineInputData
@@ -434,10 +355,32 @@ namespace TUGraz.VectoCore.InputData.FileIO.JSON
 			get
 			{
 				var lac = Body.GetEx(JsonKeys.DriverData_LookaheadCoasting);
+				var distanceScalingFactor = lac["PreviewDistanceFactor"] != null
+					? lac.GetEx<double>("PreviewDistanceFactor")
+					: DeclarationData.Driver.LookAhead.LookAheadDistanceFactor;
+				var lacDfOffset = lac["DF_offset"] != null
+					? lac.GetEx<double>("DF_offset")
+					: DeclarationData.Driver.LookAhead.DecisionFactorCoastingOffset;
+				var lacDfScaling = lac["DF_scaling"] != null
+					? lac.GetEx<double>("DF_scaling")
+					: DeclarationData.Driver.LookAhead.DecisionFactorCoastingScaling;
+				var speedDependentLookup = lac["DF_targetSpeedLookup"] != null
+					? ReadTableData(lac.GetEx<string>("DF_targetSpeedLookup"), "Lookahead Coasting Decisionfactor - Target speed",
+						false)
+					: null;
+				var velocityDropLookup = lac["Df_velocityDropLookup"] != null
+					? ReadTableData(lac.GetEx<string>("Df_velocityDropLookup"),
+						"Lookahead Coasting Decisionfactor - Velocity drop", false)
+					: null;
 				return new LookAheadCoastingInputData() {
 					Enabled = lac.GetEx<bool>(JsonKeys.DriverData_Lookahead_Enabled),
 					Deceleration = lac.GetEx<double>(JsonKeys.DriverData_Lookahead_Deceleration).SI<MeterPerSquareSecond>(),
 					MinSpeed = lac.GetEx<double>(JsonKeys.DriverData_Lookahead_MinSpeed).KMPHtoMeterPerSecond(),
+					LookaheadDistanceFactor = distanceScalingFactor,
+					CoastingDecisionFactorOffset = lacDfOffset,
+					CoastingDecisionFactorScaling = lacDfScaling,
+					CoastingDecisionFactorTargetSpeedLookup = speedDependentLookup,
+					CoastingDecisionFactorVelocityDropLookup = velocityDropLookup
 				};
 			}
 		}
@@ -508,6 +451,9 @@ namespace TUGraz.VectoCore.InputData.FileIO.JSON
 					Type = aux.GetEx<string>("Type"),
 					Technology = aux.GetEx<string>("Technology")
 				};
+				if (aux["TechList"] != null) {
+					auxData.TechList = aux["TechList"].Select(x => x.ToString()).ToList(); //  .Select(x => x.ToString).ToArray();
+				}
 				var auxFile = aux["Path"];
 				retVal.Add(auxData);
 

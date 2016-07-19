@@ -135,5 +135,10 @@ namespace TUGraz.VectoCore.Models.SimulationComponent.Impl
 			public NewtonMeter TorqueIn;
 			public NewtonMeter InertiaTorqueLoss;
 		}
+
+		public Kilogram ReducedMassWheels
+		{
+			get { return (_totalWheelsInertia / _dynamicWheelRadius / _dynamicWheelRadius).Cast<Kilogram>(); }
+		}
 	}
 }

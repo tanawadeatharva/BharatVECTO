@@ -64,6 +64,17 @@ Use the ![add](pics/plus-circle-icon.png) and ![remove](pics/minus-circle-icon.p
 ![](pics/checkbox.png) Skip Gears
 :   See [Gear Shift Model](#gear-shift-model).
 
+<div class="vecto3">
+Since version Vecto 3.0.3 the gearshift polygon calculation according to the ACEA White Book 2016 is implemented and since Vecto 3.0.4 the ACEA White Book 2016 shift strategy for AMT and MT is implemented. For details on this topic please see the ACEA White Book 2016.
+
+The user interface contains input fields for the following parameters:
+! - **Downshift after upshift delay**: to prevent frequent (oscilating) up-/down shifts this parameter blocks downshifts for a certain period after an upshift
+- **Upshift after downshift delay**: to prevent frequent (oscilating) up-/down shifts this parameter blocks upshifts for a certain period after a downshift
+- **Min acceleration after upshift**: after an upshift the vehicle must be able to accelerate with at least the given acceleration. The achievable acceleration after an upshift is estimated on the current driving condition and powertrain state.
+
+![](pics/Vecto_ShiftStrategyParameters.png)
+
+</div>
 
 Torque Reserve \[%\]
 :   This parameter is required for the **Allow shift-up inside polygons** and **Skip Gears** options.

@@ -32,6 +32,7 @@
 using System;
 using System.Globalization;
 using NUnit.Framework;
+using TUGraz.VectoCommon.Models;
 using TUGraz.VectoCommon.Utils;
 using TUGraz.VectoCore.Models.Simulation.Data;
 using TUGraz.VectoCore.Tests.Utils;
@@ -110,13 +111,29 @@ namespace TUGraz.VectoCore.Tests.Integration.DriverStrategy
 		]
 		public void Truck_Accelerate(double v1, double v2, double slope)
 		{
-			var cycle = string.Format(CultureInfo.InvariantCulture, "0, {0}, {1}, {2}\n1000, {3}, {4}, {5}", v1, slope,
-				v1.IsEqual(0) ? 2 : 0, v2, slope, v2.IsEqual(0) ? 2 : 0);
+			Assert.IsTrue(v2 > v1);
+			var cycle = string.Format(CultureInfo.InvariantCulture, "0, {0}, {1}, {2}\n100, {3}, {4}, 0\n1000, {3}, {4}, {5}", v1,
+				slope, v1.IsEqual(0) ? 2 : 0, v2, slope, v2.IsEqual(0) ? 2 : 0);
 
 			Truck_Special(cycle,
 				string.Format(CultureInfo.InvariantCulture, "40t_Long_Haul_Truck_Cycle_Accelerate_{0}_{1}_{2}.vmod",
 					v1, v2, GetSlopeString(slope)));
 		}
+
+		[Test,
+		TestCase(20, 60, 25),
+		]
+		public void Truck_Accelerate_MT(double v1, double v2, double slope)
+		{
+			Assert.IsTrue(v2 > v1);
+			var cycle = string.Format(CultureInfo.InvariantCulture, "0, {0}, {1}, {2}\n100, {3}, {4}, 0\n1000, {3}, {4}, {5}", v1,
+				slope, v1.IsEqual(0) ? 2 : 0, v2, slope, v2.IsEqual(0) ? 2 : 0);
+
+			Truck_Special(cycle,
+				string.Format(CultureInfo.InvariantCulture, "40t_Long_Haul_Truck_Cycle_Accelerate_MT_{0}_{1}_{2}.vmod",
+					v1, v2, GetSlopeString(slope)), gbxType: GearboxType.MT);
+		}
+
 
 		[Category("ComparisonV2"),
 		TestCase(22, 20, -5),
@@ -140,6 +157,7 @@ namespace TUGraz.VectoCore.Tests.Integration.DriverStrategy
 		]
 		public void Truck_Decelerate(double v1, double v2, double slope)
 		{
+			Assert.IsTrue(v2 < v1);
 			var cycle = string.Format(CultureInfo.InvariantCulture, "0, {0}, {1}, {2}\n1000, {3}, {4}, {5}", v1, slope,
 				v1.IsEqual(0) ? 2 : 0, v2, slope, v2.IsEqual(0) ? 2 : 0);
 
@@ -176,39 +194,39 @@ namespace TUGraz.VectoCore.Tests.Integration.DriverStrategy
 
 		[Category("ComparisonV2"),
 		TestCase(SimpleDrivingCycles.CycleDrive_80_Increasing_Slope,
-			"40t_Long_Haul_Truck_Cycle_Drive_80_Increasing_Slope.vmod"),
+			"40t_Long_Haul_Truck_Cycle_Drive_80_Increasing_Slope.vmod", GearboxType.AMT),
 		TestCase(SimpleDrivingCycles.CycleDrive_50_Increasing_Slope,
-			"40t_Long_Haul_Truck_Cycle_Drive_50_Increasing_Slope.vmod"),
+			"40t_Long_Haul_Truck_Cycle_Drive_50_Increasing_Slope.vmod", GearboxType.AMT),
 		TestCase(SimpleDrivingCycles.CycleDrive_30_Increasing_Slope,
-			"40t_Long_Haul_Truck_Cycle_Drive_30_Increasing_Slope.vmod"),
+			"40t_Long_Haul_Truck_Cycle_Drive_30_Increasing_Slope.vmod", GearboxType.AMT),
 		TestCase(SimpleDrivingCycles.CycleDrive_80_Decreasing_Slope,
-			"40t_Long_Haul_Truck_Cycle_Drive_80_Decreasing_Slope.vmod"),
+			"40t_Long_Haul_Truck_Cycle_Drive_80_Decreasing_Slope.vmod", GearboxType.AMT),
 		TestCase(SimpleDrivingCycles.CycleDrive_50_Decreasing_Slope,
-			"40t_Long_Haul_Truck_Cycle_Drive_50_Decreasing_Slope.vmod"),
+			"40t_Long_Haul_Truck_Cycle_Drive_50_Decreasing_Slope.vmod", GearboxType.AMT),
 		TestCase(SimpleDrivingCycles.CycleDrive_30_Decreasing_Slope,
-			"40t_Long_Haul_Truck_Cycle_Drive_30_Decreasing_Slope.vmod"),
+			"40t_Long_Haul_Truck_Cycle_Drive_30_Decreasing_Slope.vmod", GearboxType.AMT),
 		TestCase(SimpleDrivingCycles.CycleDrive_80_Dec_Increasing_Slope,
-			"40t_Long_Haul_Truck_Cycle_Drive_80_Dec_Increasing_Slope.vmod"),
+			"40t_Long_Haul_Truck_Cycle_Drive_80_Dec_Increasing_Slope.vmod", GearboxType.AMT),
 		TestCase(SimpleDrivingCycles.CycleDrive_50_Dec_Increasing_Slope,
-			"40t_Long_Haul_Truck_Cycle_Drive_50_Dec_Increasing_Slope.vmod"),
+			"40t_Long_Haul_Truck_Cycle_Drive_50_Dec_Increasing_Slope.vmod", GearboxType.AMT),
 		TestCase(SimpleDrivingCycles.CycleDrive_30_Dec_Increasing_Slope,
-			"40t_Long_Haul_Truck_Cycle_Drive_30_Dec_Increasing_Slope.vmod"),
+			"40t_Long_Haul_Truck_Cycle_Drive_30_Dec_Increasing_Slope.vmod", GearboxType.AMT),
 		TestCase(SimpleDrivingCycles.CycleDecelerateWhileBrake_80_0_level,
-			"40t_Long_Haul_Truck_Cycle_DecelerateWhileBrake_80_0_level.vmod"),
+			"40t_Long_Haul_Truck_Cycle_DecelerateWhileBrake_80_0_level.vmod", GearboxType.AMT),
 		TestCase(SimpleDrivingCycles.CycleAccelerateWhileBrake_80_0_level,
-			"40t_Long_Haul_Truck_Cycle_AccelerateWhileBrake_80_0_level.vmod"),
+			"40t_Long_Haul_Truck_Cycle_AccelerateWhileBrake_80_0_level.vmod", GearboxType.AMT),
 		TestCase(SimpleDrivingCycles.CycleAccelerateAtBrake_80_0_level,
-			"40t_Long_Haul_Truck_Cycle_AccelerateAtBrake_80_0_level.vmod"),
+			"40t_Long_Haul_Truck_Cycle_AccelerateAtBrake_80_0_level.vmod", GearboxType.AMT),
 		TestCase(SimpleDrivingCycles.CycleAccelerateBeforeBrake_80_0_level,
-			"40t_Long_Haul_Truck_Cycle_AccelerateBeforeBrake_80_0_level.vmod"),
-		TestCase(SimpleDrivingCycles.CycleDrive_stop_85_stop_85_level, "24t Truck_Cycle_Drive_stop_85_stop_85_level.vmod"),
-		TestCase(SimpleDrivingCycles.CycleDrive_SlopeChangeBeforeStop, "Truck_DriverStrategy_SlopeChangeBeforeStop.vmod"),
-		TestCase(SimpleDrivingCycles.CycleDriver_FrequentSlopChange, "Truck_DriverStrategy_SlopeChangeBeforeStop.vmod"),
+			"40t_Long_Haul_Truck_Cycle_AccelerateBeforeBrake_80_0_level.vmod", GearboxType.AMT),
+		TestCase(SimpleDrivingCycles.CycleDrive_stop_85_stop_85_level, "24t Truck_Cycle_Drive_stop_85_stop_85_level.vmod", GearboxType.AMT),
+		TestCase(SimpleDrivingCycles.CycleDrive_SlopeChangeBeforeStop, "Truck_DriverStrategy_SlopeChangeBeforeStop.vmod", GearboxType.AMT),
+		TestCase(SimpleDrivingCycles.CycleDriver_FrequentSlopChange, "Truck_DriverStrategy_SlopeChangeBeforeStop.vmod", GearboxType.AMT),
 		]
-		public void Truck_Special(string cycleData, string modFileName)
+		public void Truck_Special(string cycleData, string modFileName, GearboxType gbxType = GearboxType.AMT)
 		{
 			var cycle = SimpleDrivingCycles.CreateCycleData(cycleData);
-			var run = Truck40tPowerTrain.CreateEngineeringRun(cycle, modFileName);
+			var run = Truck40tPowerTrain.CreateEngineeringRun(cycle, modFileName, gbxType: gbxType);
 
 			run.Run();
 			Assert.IsTrue(run.FinishedWithoutErrors);
