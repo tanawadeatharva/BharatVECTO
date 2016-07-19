@@ -54,7 +54,7 @@ namespace TUGraz.VectoCore.InputData.Reader.Impl
 					JobName = InputDataProvider.JobInputData().JobName,
 					EngineData = dao.CreateEngineData(InputDataProvider.EngineInputData),
 					Cycle = DrivingCycleDataReader.ReadFromDataTable(cycle.CycleData, CycleType.EngineOnly, cycle.Name, false),
-					ExecutionMode = ExecutionMode.EngineOnly
+					ExecutionMode = ExecutionMode.Engineering
 				};
 				yield return simulationRunData;
 			}
