@@ -146,7 +146,7 @@ namespace TUGraz.VectoCore.Tests.Models.Declaration
 			Assert.AreEqual(expected, lookup, 1e-8);
 		}
 
-		[Test]
+		[TestCase]
 		public void WHTCLookupTestRegionalDelivery()
 		{
 			var expected = 1.02708700;
@@ -677,10 +677,10 @@ namespace TUGraz.VectoCore.Tests.Models.Declaration
 		{
 			Assert.AreEqual(missionType, m.MissionType);
 			Assert.AreEqual(cosswindCorrection, m.CrossWindCorrection);
-			Assert.IsTrue(axleWeightDistribution.SequenceEqual(m.AxleWeightDistribution),
+			CollectionAssert.AreEqual(axleWeightDistribution, m.AxleWeightDistribution,
 				"Axle distribution not equal.\nexpected: {0}\nactual: {1}", string.Join(",", axleWeightDistribution),
 				string.Join(",", m.AxleWeightDistribution));
-			Assert.IsTrue(trailerAxleWeightDistribution.SequenceEqual(m.TrailerAxleWeightDistribution),
+			CollectionAssert.AreEqual(trailerAxleWeightDistribution, m.TrailerAxleWeightDistribution,
 				"Trailer axle distribution not equal.\nexpected: {0}\nactual: {1}", string.Join(",", trailerAxleWeightDistribution),
 				string.Join(",", m.TrailerAxleWeightDistribution));
 			Assert.AreEqual(bodyCurbWeight.SI<Kilogram>(), m.BodyCurbWeight);
