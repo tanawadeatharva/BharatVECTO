@@ -2,7 +2,13 @@
 
 **VECTO 3.0.4**
 
+***Build 565 (2016-07-19)***
 
+- Bugfixes
+    + AAUX HVAC Dialog does not store path to ActuationsMap and SSMSource
+    + GUI: check for axle loads in declaration mode renders editing dialog useless 
+    + Vecto 2.2: Simulation aborts (Vecto terminates) when simulating EngineOnly cycles
+    + Vecto 3: Building SimulationRun EngineOnly simulation failed
 
 ***Build 544 (2016-06-28)***
 
