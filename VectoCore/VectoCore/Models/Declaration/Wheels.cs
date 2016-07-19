@@ -50,7 +50,7 @@ namespace TUGraz.VectoCore.Models.Declaration
 			return base.Lookup(key.RemoveWhitespace());
 		}
 
-		protected override sealed void ParseData(DataTable table)
+		protected sealed override void ParseData(DataTable table)
 		{
 			Data = (from DataRow row in table.Rows
 				select new WheelsEntry {

@@ -142,7 +142,7 @@
     <Compile Include="Models\Declaration\PT1.cs" />
     <Compile Include="Models\Declaration\Rims.cs" />
     <Compile Include="Models\Declaration\Segments.cs" />
-    <Compile Include="Models\Declaration\StandardWeights.cs" />
+    <Compile Include="Models\Declaration\StandardBodies.cs" />
     <Compile Include="Models\Declaration\SteeringPump.cs" />
     <Compile Include="Models\Declaration\TorqueConverter.cs" />
     <Compile Include="Models\Declaration\VehicleClass.cs" />

@@ -35,14 +35,16 @@ using System.IO;
 using System.Linq;
 using NUnit.Framework;
 using TUGraz.VectoCommon.Exceptions;
+using TUGraz.VectoCommon.InputData;
 using TUGraz.VectoCommon.Models;
 using TUGraz.VectoCommon.Utils;
+using TUGraz.VectoCore.InputData.FileIO.JSON;
 using TUGraz.VectoCore.InputData.Reader.DataObjectAdapter;
+using TUGraz.VectoCore.InputData.Reader.Impl;
 using TUGraz.VectoCore.Models.Declaration;
 using TUGraz.VectoCore.Models.SimulationComponent.Data;
 using TUGraz.VectoCore.Tests.Utils;
 using TUGraz.VectoCore.Utils;
-using CrossWindCorrectionMode = TUGraz.VectoCommon.Models.CrossWindCorrectionMode;
 
 namespace TUGraz.VectoCore.Tests.Models.Declaration
 {
@@ -144,7 +146,7 @@ namespace TUGraz.VectoCore.Tests.Models.Declaration
 			Assert.AreEqual(expected, lookup, 1e-8);
 		}
 
-		[Test]
+		[TestCase]
 		public void WHTCLookupTestRegionalDelivery()
 		{
 			var expected = 1.02708700;
@@ -675,10 +677,10 @@ namespace TUGraz.VectoCore.Tests.Models.Declaration
 		{
 			Assert.AreEqual(missionType, m.MissionType);
 			Assert.AreEqual(cosswindCorrection, m.CrossWindCorrection);
-			Assert.IsTrue(axleWeightDistribution.SequenceEqual(m.AxleWeightDistribution),
+			CollectionAssert.AreEqual(axleWeightDistribution, m.AxleWeightDistribution,
 				"Axle distribution not equal.\nexpected: {0}\nactual: {1}", string.Join(",", axleWeightDistribution),
 				string.Join(",", m.AxleWeightDistribution));
-			Assert.IsTrue(trailerAxleWeightDistribution.SequenceEqual(m.TrailerAxleWeightDistribution),
+			CollectionAssert.AreEqual(trailerAxleWeightDistribution, m.TrailerAxleWeightDistribution,
 				"Trailer axle distribution not equal.\nexpected: {0}\nactual: {1}", string.Join(",", trailerAxleWeightDistribution),
 				string.Join(",", m.TrailerAxleWeightDistribution));
 			Assert.AreEqual(bodyCurbWeight.SI<Kilogram>(), m.BodyCurbWeight);
@@ -724,6 +726,72 @@ namespace TUGraz.VectoCore.Tests.Models.Declaration
 			// EXTRAPOLATE 
 			EqualAcceleration(data, -20, 1, -1);
 			EqualAcceleration(data, 140, 0.5, -0.5);
+		}
+
+		[TestCase]
+		public void Declaration_WheelsForT1_Class2()
+		{
+			var dataProvider =
+				JSONInputDataFactory.ReadJsonJob(@"TestData\Jobs\12t Delivery Truck.vecto") as IDeclarationInputDataProvider;
+			var dataReader = new DeclarationModeVectoRunDataFactory(dataProvider, null);
+
+			var runs = dataReader.NextRun().ToList();
+			Assert.AreEqual(9, runs.Count);
+			var withT1 = new[] { 6.0, 6.0, 4.5 };
+			CollectionAssert.AreEqual(withT1, runs[0].VehicleData.AxleData.Select(a => a.Inertia.Value()));
+			CollectionAssert.AreEqual(withT1, runs[1].VehicleData.AxleData.Select(a => a.Inertia.Value()));
+			CollectionAssert.AreEqual(withT1, runs[2].VehicleData.AxleData.Select(a => a.Inertia.Value()));
+
+			var bodyOnly = new[] { 6.0, 6.0 };
+			CollectionAssert.AreEqual(bodyOnly, runs[3].VehicleData.AxleData.Select(a => a.Inertia.Value()));
+			CollectionAssert.AreEqual(bodyOnly, runs[4].VehicleData.AxleData.Select(a => a.Inertia.Value()));
+			CollectionAssert.AreEqual(bodyOnly, runs[5].VehicleData.AxleData.Select(a => a.Inertia.Value()));
+			CollectionAssert.AreEqual(bodyOnly, runs[6].VehicleData.AxleData.Select(a => a.Inertia.Value()));
+			CollectionAssert.AreEqual(bodyOnly, runs[7].VehicleData.AxleData.Select(a => a.Inertia.Value()));
+			CollectionAssert.AreEqual(bodyOnly, runs[8].VehicleData.AxleData.Select(a => a.Inertia.Value()));
+		}
+
+		[TestCase]
+		public void Declaration_WheelsForT2_Class4()
+		{
+			var dataProvider =
+				JSONInputDataFactory.ReadJsonJob(@"TestData\Jobs\Class4_40t_Long_Haul_Truck.vecto") as IDeclarationInputDataProvider;
+			var dataReader = new DeclarationModeVectoRunDataFactory(dataProvider, null);
+
+			var runs = dataReader.NextRun().ToList();
+			Assert.AreEqual(9, runs.Count);
+			var withT1 = new[] { 14.9, 14.9, 19.2, 19.2 };
+			CollectionAssert.AreEqual(withT1, runs[0].VehicleData.AxleData.Select(a => a.Inertia.Value()));
+			CollectionAssert.AreEqual(withT1, runs[1].VehicleData.AxleData.Select(a => a.Inertia.Value()));
+			CollectionAssert.AreEqual(withT1, runs[2].VehicleData.AxleData.Select(a => a.Inertia.Value()));
+
+			var bodyOnly = new[] { 14.9, 14.9 };
+			CollectionAssert.AreEqual(bodyOnly, runs[3].VehicleData.AxleData.Select(a => a.Inertia.Value()));
+			CollectionAssert.AreEqual(bodyOnly, runs[4].VehicleData.AxleData.Select(a => a.Inertia.Value()));
+			CollectionAssert.AreEqual(bodyOnly, runs[5].VehicleData.AxleData.Select(a => a.Inertia.Value()));
+			CollectionAssert.AreEqual(bodyOnly, runs[6].VehicleData.AxleData.Select(a => a.Inertia.Value()));
+			CollectionAssert.AreEqual(bodyOnly, runs[7].VehicleData.AxleData.Select(a => a.Inertia.Value()));
+			CollectionAssert.AreEqual(bodyOnly, runs[8].VehicleData.AxleData.Select(a => a.Inertia.Value()));
+		}
+
+		[TestCase]
+		public void Declaration_WheelsForDefault_Class5()
+		{
+			var dataProvider =
+				JSONInputDataFactory.ReadJsonJob(@"TestData\Jobs\40t_Long_Haul_Truck.vecto") as IDeclarationInputDataProvider;
+			var dataReader = new DeclarationModeVectoRunDataFactory(dataProvider, null);
+
+			var runs = dataReader.NextRun().ToList();
+			Assert.AreEqual(6, runs.Count);
+			var withT1 = new[] { 14.9, 14.9, 19.2, 19.2, 19.2 };
+			CollectionAssert.AreEqual(withT1, runs[0].VehicleData.AxleData.Select(a => a.Inertia.Value()));
+			CollectionAssert.AreEqual(withT1, runs[1].VehicleData.AxleData.Select(a => a.Inertia.Value()));
+			CollectionAssert.AreEqual(withT1, runs[2].VehicleData.AxleData.Select(a => a.Inertia.Value()));
+
+			var bodyOnly = new[] { 14.9, 14.9, 19.2, 19.2, 19.2 };
+			CollectionAssert.AreEqual(bodyOnly, runs[3].VehicleData.AxleData.Select(a => a.Inertia.Value()));
+			CollectionAssert.AreEqual(bodyOnly, runs[4].VehicleData.AxleData.Select(a => a.Inertia.Value()));
+			CollectionAssert.AreEqual(bodyOnly, runs[5].VehicleData.AxleData.Select(a => a.Inertia.Value()));
 		}
 	}
 }
