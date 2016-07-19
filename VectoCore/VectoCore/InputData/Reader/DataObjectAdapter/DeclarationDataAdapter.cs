@@ -222,9 +222,9 @@ namespace TUGraz.VectoCore.InputData.Reader.DataObjectAdaper
 					});
 			}).ToDictionary(kv => kv.Key, kv => kv.Value);
 
-			retVal.DownshiftAfterUpshiftDelay = 10.SI<Second>();
-			retVal.UpshiftAfterDownshiftDelay = 10.SI<Second>();
-			retVal.UpshiftMinAcceleration = 0.1.SI<MeterPerSquareSecond>();
+			retVal.DownshiftAfterUpshiftDelay = DeclarationData.Gearbox.DownshiftAfterUpshiftDelay;
+			retVal.UpshiftAfterDownshiftDelay = DeclarationData.Gearbox.UpshiftAfterDownshiftDelay;
+			retVal.UpshiftMinAcceleration =DeclarationData.Gearbox.UpshiftMinAcceleration;
 			return retVal;
 		}
 
