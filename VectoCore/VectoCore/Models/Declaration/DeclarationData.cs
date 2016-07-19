@@ -58,7 +58,7 @@ namespace TUGraz.VectoCore.Models.Declaration
 		private WHTCCorrection _whtcCorrection;
 		private AirDrag _airDrag;
 		private TorqueConverter _torqueConverter;
-		private StandardWeights _standardWeights;
+		private StandardBodies _standardBodies;
 		private Payloads _payloads;
 
 		public static Wheels Wheels
@@ -139,9 +139,9 @@ namespace TUGraz.VectoCore.Models.Declaration
 			}
 		}
 
-		public static StandardWeights StandardWeights
+		public static StandardBodies StandardBodies
 		{
-			get { return Instance()._standardWeights ?? (Instance()._standardWeights = new StandardWeights()); }
+			get { return Instance()._standardBodies ?? (Instance()._standardBodies = new StandardBodies()); }
 		}
 
 		public static PneumaticSystem PneumaticSystem

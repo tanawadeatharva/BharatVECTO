@@ -108,7 +108,7 @@ namespace TUGraz.VectoCore.Models.Declaration
 			var missionTypes = Enum.GetValues(typeof(MissionType)).Cast<MissionType>();
 			var missions = new List<Mission>();
 			foreach (var missionType in missionTypes.Where(m => row.Field<string>(m.ToString()) != "-")) {
-				var body = DeclarationData.StandardWeights.Lookup(row.Field<string>("body"));
+				var body = DeclarationData.StandardBodies.Lookup(row.Field<string>("body"));
 
 				var trailerIsUsed = ShouldTrailerBeUsed(row, missionType);
 				var trailerField = row.Field<string>("trailer");
@@ -116,13 +116,13 @@ namespace TUGraz.VectoCore.Models.Declaration
 					? trailerField.ParseEnum<TrailerType>()
 					: TrailerType.None;
 				var trailer = trailerIsUsed
-					? DeclarationData.StandardWeights.Lookup(trailerField)
-					: DeclarationData.StandardWeights.Empty;
+					? DeclarationData.StandardBodies.Lookup(trailerField)
+					: DeclarationData.StandardBodies.Empty;
 
 				var semiTrailerField = row.Field<string>("semitrailer");
 				var semiTrailer = !string.IsNullOrWhiteSpace(semiTrailerField)
-					? DeclarationData.StandardWeights.Lookup(semiTrailerField)
-					: DeclarationData.StandardWeights.Empty;
+					? DeclarationData.StandardBodies.Lookup(semiTrailerField)
+					: DeclarationData.StandardBodies.Empty;
 
 				trailer += semiTrailer;
 

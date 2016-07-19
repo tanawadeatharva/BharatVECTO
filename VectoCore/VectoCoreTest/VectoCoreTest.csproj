@@ -214,6 +214,9 @@
     <None Include="TestData\Components\40t_Long_Haul_Truck_NoAng.vveh">
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
     </None>
+    <None Include="TestData\Components\Class4_40t_Long_Haul_Truck.vveh">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </None>
     <None Include="TestData\Components\40t_Long_Haul_Truck AxleEfficiency.vgbx">
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
     </None>
@@ -958,6 +961,9 @@
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
     </None>
     <None Include="TestData\Jobs\40t_Long_Haul_Truck_NoAng.vecto">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </None>
+    <None Include="TestData\Jobs\Class4_40t_Long_Haul_Truck.vecto">
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
     </None>
     <None Include="TestData\Jobs\40t_Long_Haul_Truck with AxleEfficiency.vecto">
