@@ -31,31 +31,27 @@
 
 using System;
 using System.Collections.Generic;
-using System.Diagnostics;
-using System.Drawing;
 using System.IO;
 using System.Linq;
-using Microsoft.VisualStudio.TestTools.UnitTesting;
 using NUnit.Framework;
 using TUGraz.VectoCommon.InputData;
 using TUGraz.VectoCommon.Utils;
 using TUGraz.VectoCore.InputData.FileIO.JSON;
-using TUGraz.VectoCore.InputData.Reader.DataObjectAdaper;
+using TUGraz.VectoCore.InputData.Reader.DataObjectAdapter;
 using TUGraz.VectoCore.Models.Declaration;
 using TUGraz.VectoCore.Models.SimulationComponent.Data;
 using TUGraz.VectoCore.Models.SimulationComponent.Data.Engine;
 using TUGraz.VectoCore.Models.SimulationComponent.Data.Gearbox;
 using TUGraz.VectoCore.Tests.Utils;
 using TUGraz.VectoCore.Utils;
-using Assert = Microsoft.VisualStudio.TestTools.UnitTesting.Assert;
 using Point = TUGraz.VectoCore.Utils.Point;
 
 namespace TUGraz.VectoCore.Tests.Models.Declaration
 {
-	[TestClass]
+	[TestFixture]
 	public class ShiftPolygonTest
 	{
-		[TestMethod]
+		[TestCase]
 		public void IntersectShiftLines1()
 		{
 			var upShift = new[] {
@@ -86,7 +82,7 @@ namespace TUGraz.VectoCore.Tests.Models.Declaration
 			}
 		}
 
-		[TestMethod]
+		[TestCase]
 		public void IntersectShiftLines2()
 		{
 			var upShift = new[] {
@@ -126,8 +122,7 @@ namespace TUGraz.VectoCore.Tests.Models.Declaration
 			}
 		}
 
-
-		[TestMethod]
+		[TestCase]
 		public void IntersectShiftLines3()
 		{
 			var upShift = new[] {
@@ -168,7 +163,7 @@ namespace TUGraz.VectoCore.Tests.Models.Declaration
 			}
 		}
 
-		[TestMethod]
+		[TestCase]
 		public void IntersectShiftLines4()
 		{
 			var upShift = new[] {
@@ -209,7 +204,7 @@ namespace TUGraz.VectoCore.Tests.Models.Declaration
 			}
 		}
 
-		[TestMethod]
+		[TestCase]
 		public void ShiftPolygonFldMarginTest()
 		{
 			var engineFld = new[] {
@@ -264,7 +259,7 @@ namespace TUGraz.VectoCore.Tests.Models.Declaration
 			}
 		}
 
-		[TestMethod]
+		[TestCase]
 		public void CorrectDownShiftByEngineFldTest()
 		{
 			var downshift = Edge.Create(new Point(10, 10), new Point(22, 20));
@@ -294,7 +289,7 @@ namespace TUGraz.VectoCore.Tests.Models.Declaration
 			Assert.AreEqual(20, corrected.P2.Y, 1e-3);
 		}
 
-		[TestMethod]
+		[TestCase]
 		public void CompueShiftPolygonDeclarationTest()
 		{
 			var engineFile = @"TestData\Components\40t_Long_Haul_Truck.veng";
@@ -371,8 +366,7 @@ namespace TUGraz.VectoCore.Tests.Models.Declaration
 			Assert.AreEqual(0, shiftPolygons.Last().Upshift.Count);
 		}
 
-
-		[TestMethod]
+		[TestCase]
 		public void CompueShiftPolygonDeclarationTestConfidentialEngine()
 		{
 			//var engineFldFile = @"E:\QUAM\Downloads\EngineFLD\Map_375c_BB1390_modTUG_R49_375c_BB1386.vfld";
@@ -381,7 +375,7 @@ namespace TUGraz.VectoCore.Tests.Models.Declaration
 			//@"TestData\Components\40t_Long_Haul_Truck.vgbx";
 
 			if (!File.Exists(engineFldFile)) {
-				Assert.Inconclusive("Confidential File not found. Test cannot run without file.");
+				Assert.Ignore("Confidential File not found. Test cannot run without file.");
 			}
 
 			var rdyn = 0.4882675.SI<Meter>();
@@ -447,7 +441,7 @@ namespace TUGraz.VectoCore.Tests.Models.Declaration
 			double idlingSpeed)
 		{
 			if (!Directory.Exists(BasePath)) {
-				NUnit.Framework.Assert.Ignore("Confidential File not found. Test cannot run without file.");
+				Assert.Ignore("Confidential File not found. Test cannot run without file.");
 			}
 
 			var engineData = new CombustionEngineData() {
@@ -482,7 +476,6 @@ namespace TUGraz.VectoCore.Tests.Models.Declaration
 				DeclarationData.Gearbox.TruckMaxAllowedSpeed / rdyn.SI<Meter>() * axlegearRatio * gearboxData.Gears.Last().Ratio,
 				upshiftOrig, downshiftTransformed);
 		}
-
 
 		public static void ComputShiftPolygonPoints(int gear, FullLoadCurve fullLoadCurve,
 			IList<ITransmissionInputData> gears, CombustionEngineData engine, double axlegearRatio, Meter dynamicTyreRadius,

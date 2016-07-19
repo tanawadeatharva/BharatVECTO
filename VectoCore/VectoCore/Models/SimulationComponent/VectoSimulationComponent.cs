@@ -78,8 +78,8 @@ namespace TUGraz.VectoCore.Models.SimulationComponent
 		protected internal TStateType CurrentState;
 		protected internal TStateType PreviousState;
 
-		protected StatefulVectoSimulationComponent(IVehicleContainer contaier)
-			: base(contaier)
+		protected StatefulVectoSimulationComponent(IVehicleContainer container)
+			: base(container)
 		{
 			CurrentState = new TStateType();
 			PreviousState = new TStateType();

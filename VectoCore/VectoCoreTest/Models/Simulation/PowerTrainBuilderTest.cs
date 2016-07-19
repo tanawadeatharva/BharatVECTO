@@ -30,7 +30,7 @@
 */
 
 using System.Linq;
-using Microsoft.VisualStudio.TestTools.UnitTesting;
+using NUnit.Framework;
 using TUGraz.VectoCommon.Exceptions;
 using TUGraz.VectoCommon.InputData;
 using TUGraz.VectoCore.InputData.FileIO.JSON;
@@ -40,21 +40,30 @@ using TUGraz.VectoCore.Models.Simulation;
 using TUGraz.VectoCore.Models.Simulation.Impl;
 using TUGraz.VectoCore.Models.SimulationComponent.Impl;
 using TUGraz.VectoCore.Tests.Utils;
+using Assert = Microsoft.VisualStudio.TestTools.UnitTesting.Assert;
 
 namespace TUGraz.VectoCore.Tests.Models.Simulation
 {
-	[TestClass]
+	[TestFixture]
 	public class PowerTrainBuilderTest
 	{
 		public const string JobFile = @"TestData\Jobs\24t Coach.vecto";
+		public const string JobFileNoAngular = @"TestData\Jobs\24t CoachNoAng.vecto";
+		public const string JobFileAngEfficiency = @"TestData\Jobs\24t Coach_Ang_Efficiency.vecto";
 
-		[TestMethod]
-		public void BuildFullPowerTrainTest()
+		public const string JobFileDecl = @"TestData\Jobs\40t_Long_Haul_Truck.vecto";
+		public const string JobFileDeclNoAngular = @"TestData\Jobs\40t_Long_Haul_Truck_NoAng.vecto";
+		public const string JobFileDeclAngEfficiency = @"TestData\Jobs\40t_Long_Haul_Truck with AngleEfficiency.vecto";
+
+		[TestCase(JobFile, 12),
+		TestCase(JobFileNoAngular, 11),
+		TestCase(JobFileAngEfficiency, 12)]
+		public void BuildFullPowerTrain_Engineering(string inputFile, int componentCount)
 		{
-			var dataProvider = JSONInputDataFactory.ReadJsonJob(JobFile);
+			var dataProvider = JSONInputDataFactory.ReadJsonJob(inputFile);
 			var engineeringProvider = dataProvider as IEngineeringInputDataProvider;
 			if (engineeringProvider == null) {
-				throw new VectoException("Failed to cas to Engineering InputDataProvider");
+				throw new VectoException("Failed to cast to Engineering InputDataProvider");
 			}
 			var reader = new EngineeringModeVectoRunDataFactory(engineeringProvider);
 			var runData = reader.NextRun().First();
@@ -65,12 +74,44 @@ namespace TUGraz.VectoCore.Tests.Models.Simulation
 			var powerTrain = builder.Build(runData);
 
 			Assert.IsInstanceOfType(powerTrain, typeof(IVehicleContainer));
-			Assert.AreEqual(11, powerTrain.SimulationComponents().Count);
+			Assert.AreEqual(componentCount, powerTrain.SimulationComponents().Count);
 
 			Assert.IsInstanceOfType(powerTrain.Engine, typeof(CombustionEngine));
 			Assert.IsInstanceOfType(powerTrain.Gearbox, typeof(Gearbox));
 			Assert.IsInstanceOfType(powerTrain.Cycle, typeof(ISimulationOutPort));
 			Assert.IsInstanceOfType(powerTrain.Vehicle, typeof(Vehicle));
+		}
+
+		[TestCase(JobFileDeclNoAngular, 11, false),
+		TestCase(JobFileDecl, 12, false),
+		TestCase(JobFileDeclAngEfficiency, 11, true)]
+		public void BuildFullPowerTrain_Declaration(string inputFile, int componentCount, bool shouldFail)
+		{
+			var dataProvider = JSONInputDataFactory.ReadJsonJob(inputFile);
+			var provider = dataProvider as IDeclarationInputDataProvider;
+			if (provider == null) {
+				throw new VectoException("Failed to cast to Declaration InputDataProvider");
+			}
+			var reader = new DeclarationModeVectoRunDataFactory(provider, null);
+
+			if (!shouldFail) {
+				var runData = reader.NextRun().First();
+
+				var writer = new MockModalDataContainer();
+				var builder = new PowertrainBuilder(writer);
+
+				var powerTrain = builder.Build(runData);
+
+				Assert.IsInstanceOfType(powerTrain, typeof(IVehicleContainer));
+				Assert.AreEqual(componentCount, powerTrain.SimulationComponents().Count);
+
+				Assert.IsInstanceOfType(powerTrain.Engine, typeof(CombustionEngine));
+				Assert.IsInstanceOfType(powerTrain.Gearbox, typeof(Gearbox));
+				Assert.IsInstanceOfType(powerTrain.Cycle, typeof(ISimulationOutPort));
+				Assert.IsInstanceOfType(powerTrain.Vehicle, typeof(Vehicle));
+			} else {
+				AssertHelper.Exception<VectoException>(() => { reader.NextRun().ToList(); });
+			}
 		}
 	}
 }

@@ -72,6 +72,8 @@ namespace TUGraz.VectoCore.Tests.Models.SimulationComponent
 		public const string AxleGearValidRangeDataFile = @"TestData\Components\AxleGearValidRange.vgbx";
 		public const string AxleGearInvalidRangeDataFile = @"TestData\Components\AxleGearInvalidRange.vgbx";
 
+		public const string AngularGearLossMap = @"TestData\Components\AngleGear.vtlm";
+
 		private static GearboxData CreateGearboxData()
 		{
 			var ratios = new[] { 6.38, 4.63, 3.44, 2.59, 1.86, 1.35, 1, 0.76 };
@@ -98,8 +100,7 @@ namespace TUGraz.VectoCore.Tests.Models.SimulationComponent
 			return ((60 * v) / (2 * r * Math.PI / 1000)).RPMtoRad();
 		}
 
-		[Test,
-		TestCase(520, 20.320, 279698.4, 9401.44062)]
+		[TestCase(520, 20.320, 279698.4, 9401.44062)]
 		public void AxleGearTest(double rdyn, double speed, double power, double expectedLoss)
 		{
 			var vehicle = new VehicleContainer(ExecutionMode.Engineering);
@@ -145,8 +146,39 @@ namespace TUGraz.VectoCore.Tests.Models.SimulationComponent
 			Assert.AreEqual(1, errors.Count);
 		}
 
-		[Test,
-		TestCase(@"TestData\Components\24t Coach LessThanTwoGears.vgbx")]
+		[TestCase(520, 20.320, 279698.4, 9401.44062, 3.240355)]
+		public void AngularGear_Losses(double rdyn, double speed, double power, double expectedLoss, double ratio)
+		{
+			// convert to SI
+			var angSpeed = SpeedToAngularSpeed(speed, rdyn);
+			var PvD = power.SI<Watt>();
+			var torqueToWheels = PvD / angSpeed;
+			var loss = expectedLoss.SI<Watt>();
+
+			// setup components
+			var vehicle = new VehicleContainer(ExecutionMode.Engineering);
+			var angularGearData = new AngularGearData {
+				AngularGear = new TransmissionData {
+					LossMap = TransmissionLossMap.Create(VectoCSVFile.Read(AngularGearLossMap), ratio, "AngularGear"),
+					Ratio = ratio
+				}
+			};
+			var mockPort = new MockTnOutPort();
+			var angularGear = new AngularGear(vehicle, angularGearData);
+			angularGear.InPort().Connect(mockPort);
+
+			// issue request
+			angularGear.Request(0.SI<Second>(), 1.SI<Second>(), torqueToWheels, angSpeed);
+
+			// test
+			AssertHelper.AreRelativeEqual(angSpeed * angularGearData.AngularGear.Ratio, mockPort.AngularVelocity,
+				"AngularVelocity Engine Side");
+
+			AssertHelper.AreRelativeEqual((PvD + loss) / (angSpeed * angularGearData.AngularGear.Ratio), mockPort.Torque,
+				"Torque Engine Side");
+		}
+
+		[TestCase(@"TestData\Components\24t Coach LessThanTwoGears.vgbx")]
 		public void Gearbox_LessThanTwoGearsException(string wrongFile)
 		{
 			AssertHelper.Exception<VectoSimulationException>(
@@ -154,8 +186,7 @@ namespace TUGraz.VectoCore.Tests.Models.SimulationComponent
 				"At least one Gear-Entry must be defined in Gearbox!");
 		}
 
-		[Test,
-		TestCase(GearboxDataFile, EngineDataFile, 6.38, 2300, 1600, 2356.2326),
+		[TestCase(GearboxDataFile, EngineDataFile, 6.38, 2300, 1600, 2356.2326),
 		TestCase(GearboxDataFile, EngineDataFile, 6.38, -1300, 1000, -1267.0686)]
 		public void Gearbox_LossMapInterpolation(string gbxFile, string engineFile, double ratio, double torque,
 			double inAngularSpeed, double expectedTorque)
@@ -188,8 +219,7 @@ namespace TUGraz.VectoCore.Tests.Models.SimulationComponent
 			gearbox.CommitSimulationStep(modData);
 		}
 
-		[Test,
-		TestCase(GearboxDataFile, EngineDataFile, 6.38, 2600, 1600, 2658.10267),
+		[TestCase(GearboxDataFile, EngineDataFile, 6.38, 2600, 1600, 2658.10267),
 		TestCase(GearboxDataFile, EngineDataFile, 6.38, -2600, 1000, -2543.4076)]
 		public void Gearbox_LossMapExtrapolation_Declaration(string gbxFile, string engineFile, double ratio, double torque,
 			double inAngularSpeed, double expectedTorque)
@@ -222,8 +252,7 @@ namespace TUGraz.VectoCore.Tests.Models.SimulationComponent
 			AssertHelper.Exception<VectoException>(() => { gearbox.CommitSimulationStep(modData); });
 		}
 
-		[Test,
-		TestCase(GearboxDataFile, EngineDataFile, 6.38, 2600, 1600, 2658.10267),
+		[TestCase(GearboxDataFile, EngineDataFile, 6.38, 2600, 1600, 2658.10267),
 		TestCase(GearboxDataFile, EngineDataFile, 6.38, -2600, 1000, -2543.4076)]
 		public void Gearbox_LossMapExtrapolation_Engineering(string gbxFile, string engineFile, double ratio, double torque,
 			double inAngularSpeed, double expectedTorque)
@@ -256,8 +285,7 @@ namespace TUGraz.VectoCore.Tests.Models.SimulationComponent
 			gearbox.CommitSimulationStep(modData);
 		}
 
-		[Test,
-		TestCase(GearboxDataFile, EngineDataFile, 6.38, 2600, 1600, true, 2658.10267),
+		[TestCase(GearboxDataFile, EngineDataFile, 6.38, 2600, 1600, true, 2658.10267),
 		TestCase(GearboxDataFile, EngineDataFile, 6.38, -2500, 1000, false, -2443.5392),
 		TestCase(GearboxDataFile, EngineDataFile, 6.38, -1000, 1000, false, -972.95098)]
 		public void Gearbox_LossMapExtrapolation_DryRun(string gbxFile, string engineFile, double ratio, double torque,
@@ -306,7 +334,7 @@ namespace TUGraz.VectoCore.Tests.Models.SimulationComponent
 
 			gearbox.Initialize(0.SI<NewtonMeter>(), 0.RPMtoRad());
 
-			var ratio = 6.38;
+			const double ratio = 6.38;
 
 			var expected = new[] {
 				new { t = 2500, n = 900 },
@@ -335,8 +363,7 @@ namespace TUGraz.VectoCore.Tests.Models.SimulationComponent
 			}
 		}
 
-		[Test,
-		TestCase(1, -1000, 600, 28.096, typeof(ResponseSuccess)),
+		[TestCase(1, -1000, 600, 28.096, typeof(ResponseSuccess)),
 		TestCase(2, -1000, 600, 28.096, typeof(ResponseSuccess)),
 		TestCase(7, -1000, 600, 13.096, typeof(ResponseSuccess)),
 		TestCase(7, 850, 600, 12.346, typeof(ResponseSuccess)),
@@ -394,8 +421,7 @@ namespace TUGraz.VectoCore.Tests.Models.SimulationComponent
 			}
 		}
 
-		[Test,
-		TestCase(8, 7, 1500, 750, typeof(ResponseGearShift)),
+		[TestCase(8, 7, 1500, 750, typeof(ResponseGearShift)),
 		TestCase(7, 6, 1500, 750, typeof(ResponseGearShift)),
 		TestCase(6, 5, 1500, 750, typeof(ResponseGearShift)),
 		TestCase(5, 4, 1500, 750, typeof(ResponseGearShift)),
@@ -439,8 +465,7 @@ namespace TUGraz.VectoCore.Tests.Models.SimulationComponent
 			Assert.AreEqual((uint)newGear, container.Gear);
 		}
 
-		[Test,
-		TestCase(7, 8, 1000, 1400, typeof(ResponseGearShift)),
+		[TestCase(7, 8, 1000, 1400, typeof(ResponseGearShift)),
 		TestCase(6, 7, 1000, 1400, typeof(ResponseGearShift)),
 		TestCase(5, 6, 1000, 1400, typeof(ResponseGearShift)),
 		TestCase(4, 5, 1000, 1400, typeof(ResponseGearShift)),

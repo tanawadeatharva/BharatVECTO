@@ -30,7 +30,6 @@
 */
 
 using System;
-using System.Collections.Generic;
 using System.Linq;
 using TUGraz.VectoCommon.Exceptions;
 using TUGraz.VectoCommon.InputData;
@@ -41,7 +40,7 @@ using TUGraz.VectoCore.Models.SimulationComponent.Data.Engine;
 using TUGraz.VectoCore.Models.SimulationComponent.Data.Gearbox;
 using TUGraz.VectoCore.Utils;
 
-namespace TUGraz.VectoCore.InputData.Reader.DataObjectAdaper
+namespace TUGraz.VectoCore.InputData.Reader.DataObjectAdapter
 {
 	public abstract class AbstractSimulationDataAdapter : LoggingObject
 	{
@@ -77,34 +76,38 @@ namespace TUGraz.VectoCore.InputData.Reader.DataObjectAdaper
 
 		internal RetarderData SetCommonRetarderData(IRetarderInputData data, IVehicleDeclarationInputData vehicle)
 		{
-			var retarder = new RetarderData {
-				SavedInDeclarationMode = data.SavedInDeclarationMode,
-				Vendor = data.Vendor,
-				ModelName = data.ModelName,
-				Creator = data.Creator,
-				Date = data.Date,
-				TypeId = data.TypeId,
-				DigestValue = data.DigestValue,
-				IntegrityStatus = data.IntegrityStatus,
-				Type = data.Type,
-			};
-			switch (retarder.Type) {
-				case RetarderType.Primary:
-				case RetarderType.Secondary:
-					retarder.LossMap = RetarderLossMap.Create(data.LossMap);
-					retarder.Ratio = vehicle.RetarderRatio;
-					break;
-				case RetarderType.None:
-				case RetarderType.LossesIncludedInTransmission:
-					retarder.Ratio = 1;
-					break;
-				default:
-					// ReSharper disable once NotResolvedInText
-					// ReSharper disable once LocalizableElement
-					throw new ArgumentOutOfRangeException("retarder.Type", "RetarderType unknown");
-			}
+			try {
+				var retarder = new RetarderData {
+					SavedInDeclarationMode = data.SavedInDeclarationMode,
+					Vendor = data.Vendor,
+					ModelName = data.ModelName,
+					Creator = data.Creator,
+					Date = data.Date,
+					TypeId = data.TypeId,
+					DigestValue = data.DigestValue,
+					IntegrityStatus = data.IntegrityStatus,
+					Type = data.Type,
+				};
+				switch (retarder.Type) {
+					case RetarderType.Primary:
+					case RetarderType.Secondary:
+						retarder.LossMap = RetarderLossMap.Create(data.LossMap);
+						retarder.Ratio = data.Ratio;
+						break;
+					case RetarderType.None:
+					case RetarderType.LossesIncludedInTransmission:
+						retarder.Ratio = 1;
+						break;
+					default:
+						// ReSharper disable once NotResolvedInText
+						// ReSharper disable once LocalizableElement
+						throw new ArgumentOutOfRangeException("retarder.Type", "RetarderType unknown");
+				}
 
-			return retarder;
+				return retarder;
+			} catch (Exception e) {
+				throw new VectoException("Error while Reading Retarder Data: {0}", e.Message);
+			}
 		}
 
 		internal CombustionEngineData SetCommonCombustionEngineData(IEngineDeclarationInputData data)
@@ -167,6 +170,60 @@ namespace TUGraz.VectoCore.InputData.Reader.DataObjectAdaper
 		}
 
 		/// <summary>
+		/// Creates an AngularGearData or returns null if there is no angular gear.
+		/// </summary>
+		/// <param name="data"></param>
+		/// <param name="useEfficiencyFallback">if true, the Efficiency value is used if no LossMap is found.</param>
+		/// <returns></returns>
+		internal AngularGearData CreateAngularGearData(IAngularGearInputData data, bool useEfficiencyFallback)
+		{
+			try {
+				var type = AngularGearType.None;
+				try {
+					type = data.Type;
+				} catch (Exception) {
+					Log.Info("AngularGear not found. Assuming None.");
+				}
+
+				switch (type) {
+					case AngularGearType.SeparateAngularGear:
+						var angularGear = new AngularGearData {
+							SavedInDeclarationMode = data.SavedInDeclarationMode,
+							Vendor = data.Vendor,
+							ModelName = data.ModelName,
+							Creator = data.Creator,
+							Date = data.Date,
+							TypeId = data.TypeId,
+							DigestValue = data.DigestValue,
+							IntegrityStatus = data.IntegrityStatus,
+							Type = type,
+							AngularGear = new TransmissionData { Ratio = data.Ratio }
+						};
+						try {
+							angularGear.AngularGear.LossMap = TransmissionLossMap.Create(data.LossMap, data.Ratio, "AngularGear");
+						} catch (VectoException ex) {
+							Log.Info("AngularGear Loss Map not found.");
+							if (useEfficiencyFallback) {
+								Log.Info("AngularGear Trying with Efficiency instead of Loss Map.");
+								angularGear.AngularGear.LossMap = TransmissionLossMap.Create(data.Efficiency, data.Ratio, "AngularGear");
+							} else {
+								throw new VectoException("AngularGear: LossMap not found.", ex);
+							}
+						}
+						return angularGear;
+
+					case AngularGearType.LossesIncludedInGearbox:
+					case AngularGearType.None:
+						return null;
+					default:
+						throw new ArgumentOutOfRangeException("data", "Unknown AngularGear Type.");
+				}
+			} catch (Exception e) {
+				throw new VectoException("Error while reading AngularGear data: {0}", e.Message);
+			}
+		}
+
+		/// <summary>
 		/// Intersects full load curves.
 		/// </summary>
 		/// <param name="engineCurve"></param>
@@ -181,7 +238,7 @@ namespace TUGraz.VectoCore.InputData.Reader.DataObjectAdaper
 			var entries =
 				gearCurve.FullLoadEntries.Concat(engineCurve.FullLoadEntries)
 					.OrderBy(x => x.EngineSpeed)
-					.Distinct(new FullLoadEntryEqualityComparer())
+					.DistinctBy((x, y) => x.EngineSpeed.Value().IsEqual(y.EngineSpeed.Value()))
 					.Select(x => new FullLoadCurve.FullLoadCurveEntry {
 						EngineSpeed = x.EngineSpeed,
 						TorqueFullLoad =
@@ -195,19 +252,6 @@ namespace TUGraz.VectoCore.InputData.Reader.DataObjectAdaper
 				PT1Data = engineCurve.PT1Data
 			};
 			return flc;
-		}
-
-		internal class FullLoadEntryEqualityComparer : IEqualityComparer<FullLoadCurve.FullLoadCurveEntry>
-		{
-			public bool Equals(FullLoadCurve.FullLoadCurveEntry x, FullLoadCurve.FullLoadCurveEntry y)
-			{
-				return x.EngineSpeed.Value().IsEqual(y.EngineSpeed.Value());
-			}
-
-			public int GetHashCode(FullLoadCurve.FullLoadCurveEntry obj)
-			{
-				return obj.EngineSpeed.Value().GetHashCode();
-			}
 		}
 	}
 }

@@ -36,6 +36,6 @@ namespace TUGraz.VectoCore.Models.SimulationComponent.Data
 {
 	public class AxleGearData : SimulationComponentData
 	{
-		[ValidateObject] public GearData AxleGear;
+		[ValidateObject] public TransmissionData AxleGear;
 	}
 }

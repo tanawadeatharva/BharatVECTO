@@ -200,11 +200,11 @@ Partial Class F_VECTO
 		'
 		Me.Label2.Anchor = CType((System.Windows.Forms.AnchorStyles.Top Or System.Windows.Forms.AnchorStyles.Right), System.Windows.Forms.AnchorStyles)
 		Me.Label2.AutoSize = True
-		Me.Label2.Location = New System.Drawing.Point(386, 159)
+		Me.Label2.Location = New System.Drawing.Point(379, 148)
 		Me.Label2.Name = "Label2"
-		Me.Label2.Size = New System.Drawing.Size(122, 13)
+		Me.Label2.Size = New System.Drawing.Size(133, 13)
 		Me.Label2.TabIndex = 3
-		Me.Label2.Text = "Double-Click to open file"
+		Me.Label2.Text = "(Double-Click to Open File)"
 		'
 		'LvCycles
 		'
@@ -234,9 +234,9 @@ Partial Class F_VECTO
 		'
 		Me.BtDRIrem.Anchor = CType((System.Windows.Forms.AnchorStyles.Bottom Or System.Windows.Forms.AnchorStyles.Left), System.Windows.Forms.AnchorStyles)
 		Me.BtDRIrem.Image = Global.VECTO.My.Resources.Resources.minus_circle_icon
-		Me.BtDRIrem.Location = New System.Drawing.Point(41, 154)
+		Me.BtDRIrem.Location = New System.Drawing.Point(29, 149)
 		Me.BtDRIrem.Name = "BtDRIrem"
-		Me.BtDRIrem.Size = New System.Drawing.Size(29, 23)
+		Me.BtDRIrem.Size = New System.Drawing.Size(24, 24)
 		Me.BtDRIrem.TabIndex = 2
 		Me.BtDRIrem.UseVisualStyleBackColor = True
 		'
@@ -244,9 +244,9 @@ Partial Class F_VECTO
 		'
 		Me.BtDRIadd.Anchor = CType((System.Windows.Forms.AnchorStyles.Bottom Or System.Windows.Forms.AnchorStyles.Left), System.Windows.Forms.AnchorStyles)
 		Me.BtDRIadd.Image = Global.VECTO.My.Resources.Resources.plus_circle_icon
-		Me.BtDRIadd.Location = New System.Drawing.Point(6, 154)
+		Me.BtDRIadd.Location = New System.Drawing.Point(5, 149)
 		Me.BtDRIadd.Name = "BtDRIadd"
-		Me.BtDRIadd.Size = New System.Drawing.Size(29, 23)
+		Me.BtDRIadd.Size = New System.Drawing.Size(24, 24)
 		Me.BtDRIadd.TabIndex = 1
 		Me.BtDRIadd.UseVisualStyleBackColor = True
 		'
@@ -268,7 +268,7 @@ Partial Class F_VECTO
 		Me.GrAux.Controls.Add(Me.ButAuxAdd)
 		Me.GrAux.Location = New System.Drawing.Point(6, 87)
 		Me.GrAux.Name = "GrAux"
-		Me.GrAux.Size = New System.Drawing.Size(515, 223)
+		Me.GrAux.Size = New System.Drawing.Size(515, 221)
 		Me.GrAux.TabIndex = 9
 		Me.GrAux.TabStop = False
 		Me.GrAux.Text = "Auxiliaries"
@@ -276,9 +276,9 @@ Partial Class F_VECTO
 		'btnAAUXOpen
 		'
 		Me.btnAAUXOpen.Image = Global.VECTO.My.Resources.Resources.application_export_icon_small
-		Me.btnAAUXOpen.Location = New System.Drawing.Point(486, 45)
+		Me.btnAAUXOpen.Location = New System.Drawing.Point(465, 45)
 		Me.btnAAUXOpen.Name = "btnAAUXOpen"
-		Me.btnAAUXOpen.Size = New System.Drawing.Size(26, 23)
+		Me.btnAAUXOpen.Size = New System.Drawing.Size(24, 24)
 		Me.btnAAUXOpen.TabIndex = 41
 		Me.btnAAUXOpen.UseVisualStyleBackColor = True
 		'
@@ -293,11 +293,11 @@ Partial Class F_VECTO
 		'
 		'btnBrowseAAUXFile
 		'
-		Me.btnBrowseAAUXFile.Location = New System.Drawing.Point(447, 45)
+		Me.btnBrowseAAUXFile.Image = Global.VECTO.My.Resources.Resources.Open_icon
+		Me.btnBrowseAAUXFile.Location = New System.Drawing.Point(441, 45)
 		Me.btnBrowseAAUXFile.Name = "btnBrowseAAUXFile"
-		Me.btnBrowseAAUXFile.Size = New System.Drawing.Size(36, 23)
+		Me.btnBrowseAAUXFile.Size = New System.Drawing.Size(24, 24)
 		Me.btnBrowseAAUXFile.TabIndex = 39
-		Me.btnBrowseAAUXFile.Text = ". . ."
 		Me.ToolTip1.SetToolTip(Me.btnBrowseAAUXFile, "Configure/Browser  Advanced Auxiliary Files")
 		Me.btnBrowseAAUXFile.UseVisualStyleBackColor = True
 		'
@@ -340,11 +340,11 @@ Partial Class F_VECTO
 		'
 		Me.Label32.Anchor = CType((System.Windows.Forms.AnchorStyles.Top Or System.Windows.Forms.AnchorStyles.Right), System.Windows.Forms.AnchorStyles)
 		Me.Label32.AutoSize = True
-		Me.Label32.Location = New System.Drawing.Point(370, 200)
+		Me.Label32.Location = New System.Drawing.Point(406, 189)
 		Me.Label32.Name = "Label32"
-		Me.Label32.Size = New System.Drawing.Size(139, 13)
+		Me.Label32.Size = New System.Drawing.Size(106, 13)
 		Me.Label32.TabIndex = 3
-		Me.Label32.Text = "Double-Click to edit auxiliary"
+		Me.Label32.Text = "(Double-Click to Edit)"
 		'
 		'LvAux
 		'
@@ -381,18 +381,18 @@ Partial Class F_VECTO
 		'ButAuxRem
 		'
 		Me.ButAuxRem.Image = Global.VECTO.My.Resources.Resources.minus_circle_icon
-		Me.ButAuxRem.Location = New System.Drawing.Point(42, 195)
+		Me.ButAuxRem.Location = New System.Drawing.Point(29, 190)
 		Me.ButAuxRem.Name = "ButAuxRem"
-		Me.ButAuxRem.Size = New System.Drawing.Size(29, 23)
+		Me.ButAuxRem.Size = New System.Drawing.Size(24, 24)
 		Me.ButAuxRem.TabIndex = 2
 		Me.ButAuxRem.UseVisualStyleBackColor = True
 		'
 		'ButAuxAdd
 		'
 		Me.ButAuxAdd.Image = Global.VECTO.My.Resources.Resources.plus_circle_icon
-		Me.ButAuxAdd.Location = New System.Drawing.Point(7, 195)
+		Me.ButAuxAdd.Location = New System.Drawing.Point(5, 190)
 		Me.ButAuxAdd.Name = "ButAuxAdd"
-		Me.ButAuxAdd.Size = New System.Drawing.Size(29, 23)
+		Me.ButAuxAdd.Size = New System.Drawing.Size(24, 24)
 		Me.ButAuxAdd.TabIndex = 1
 		Me.ButAuxAdd.UseVisualStyleBackColor = True
 		'
@@ -402,7 +402,7 @@ Partial Class F_VECTO
 			Or System.Windows.Forms.AnchorStyles.Right), System.Windows.Forms.AnchorStyles)
 		Me.TbGBX.Location = New System.Drawing.Point(84, 60)
 		Me.TbGBX.Name = "TbGBX"
-		Me.TbGBX.Size = New System.Drawing.Size(406, 20)
+		Me.TbGBX.Size = New System.Drawing.Size(411, 20)
 		Me.TbGBX.TabIndex = 7
 		'
 		'TbENG
@@ -411,7 +411,7 @@ Partial Class F_VECTO
 			Or System.Windows.Forms.AnchorStyles.Right), System.Windows.Forms.AnchorStyles)
 		Me.TbENG.Location = New System.Drawing.Point(84, 33)
 		Me.TbENG.Name = "TbENG"
-		Me.TbENG.Size = New System.Drawing.Size(406, 20)
+		Me.TbENG.Size = New System.Drawing.Size(411, 20)
 		Me.TbENG.TabIndex = 4
 		'
 		'TbVEH
@@ -420,7 +420,7 @@ Partial Class F_VECTO
 			Or System.Windows.Forms.AnchorStyles.Right), System.Windows.Forms.AnchorStyles)
 		Me.TbVEH.Location = New System.Drawing.Point(84, 7)
 		Me.TbVEH.Name = "TbVEH"
-		Me.TbVEH.Size = New System.Drawing.Size(406, 20)
+		Me.TbVEH.Size = New System.Drawing.Size(411, 20)
 		Me.TbVEH.TabIndex = 1
 		'
 		'ButOpenGBX
@@ -456,34 +456,34 @@ Partial Class F_VECTO
 		'ButtonVEH
 		'
 		Me.ButtonVEH.Anchor = CType((System.Windows.Forms.AnchorStyles.Top Or System.Windows.Forms.AnchorStyles.Right), System.Windows.Forms.AnchorStyles)
-		Me.ButtonVEH.Location = New System.Drawing.Point(496, 6)
+		Me.ButtonVEH.Image = CType(resources.GetObject("ButtonVEH.Image"), System.Drawing.Image)
+		Me.ButtonVEH.Location = New System.Drawing.Point(496, 5)
 		Me.ButtonVEH.Name = "ButtonVEH"
-		Me.ButtonVEH.Size = New System.Drawing.Size(28, 21)
+		Me.ButtonVEH.Size = New System.Drawing.Size(24, 24)
 		Me.ButtonVEH.TabIndex = 2
 		Me.ButtonVEH.TabStop = False
-		Me.ButtonVEH.Text = "..."
 		Me.ButtonVEH.UseVisualStyleBackColor = True
 		'
 		'ButtonGBX
 		'
 		Me.ButtonGBX.Anchor = CType((System.Windows.Forms.AnchorStyles.Top Or System.Windows.Forms.AnchorStyles.Right), System.Windows.Forms.AnchorStyles)
-		Me.ButtonGBX.Location = New System.Drawing.Point(496, 60)
+		Me.ButtonGBX.Image = CType(resources.GetObject("ButtonGBX.Image"), System.Drawing.Image)
+		Me.ButtonGBX.Location = New System.Drawing.Point(496, 58)
 		Me.ButtonGBX.Name = "ButtonGBX"
-		Me.ButtonGBX.Size = New System.Drawing.Size(28, 21)
+		Me.ButtonGBX.Size = New System.Drawing.Size(24, 24)
 		Me.ButtonGBX.TabIndex = 8
 		Me.ButtonGBX.TabStop = False
-		Me.ButtonGBX.Text = "..."
 		Me.ButtonGBX.UseVisualStyleBackColor = True
 		'
 		'ButtonMAP
 		'
 		Me.ButtonMAP.Anchor = CType((System.Windows.Forms.AnchorStyles.Top Or System.Windows.Forms.AnchorStyles.Right), System.Windows.Forms.AnchorStyles)
-		Me.ButtonMAP.Location = New System.Drawing.Point(496, 33)
+		Me.ButtonMAP.Image = CType(resources.GetObject("ButtonMAP.Image"), System.Drawing.Image)
+		Me.ButtonMAP.Location = New System.Drawing.Point(496, 31)
 		Me.ButtonMAP.Name = "ButtonMAP"
-		Me.ButtonMAP.Size = New System.Drawing.Size(28, 21)
+		Me.ButtonMAP.Size = New System.Drawing.Size(24, 24)
 		Me.ButtonMAP.TabIndex = 5
 		Me.ButtonMAP.TabStop = False
-		Me.ButtonMAP.Text = "..."
 		Me.ButtonMAP.UseVisualStyleBackColor = True
 		'
 		'TabControl1
@@ -537,20 +537,20 @@ Partial Class F_VECTO
 		'BtDesMaxBr
 		'
 		Me.BtDesMaxBr.Anchor = CType((System.Windows.Forms.AnchorStyles.Top Or System.Windows.Forms.AnchorStyles.Right), System.Windows.Forms.AnchorStyles)
-		Me.BtDesMaxBr.Location = New System.Drawing.Point(452, 28)
+		Me.BtDesMaxBr.Image = Global.VECTO.My.Resources.Resources.Open_icon
+		Me.BtDesMaxBr.Location = New System.Drawing.Point(446, 27)
 		Me.BtDesMaxBr.Name = "BtDesMaxBr"
-		Me.BtDesMaxBr.Size = New System.Drawing.Size(28, 21)
+		Me.BtDesMaxBr.Size = New System.Drawing.Size(24, 24)
 		Me.BtDesMaxBr.TabIndex = 1
-		Me.BtDesMaxBr.Text = "..."
 		Me.BtDesMaxBr.UseVisualStyleBackColor = True
 		'
 		'BtAccOpen
 		'
 		Me.BtAccOpen.Anchor = CType((System.Windows.Forms.AnchorStyles.Top Or System.Windows.Forms.AnchorStyles.Right), System.Windows.Forms.AnchorStyles)
 		Me.BtAccOpen.Image = Global.VECTO.My.Resources.Resources.application_export_icon_small
-		Me.BtAccOpen.Location = New System.Drawing.Point(486, 27)
+		Me.BtAccOpen.Location = New System.Drawing.Point(469, 27)
 		Me.BtAccOpen.Name = "BtAccOpen"
-		Me.BtAccOpen.Size = New System.Drawing.Size(23, 23)
+		Me.BtAccOpen.Size = New System.Drawing.Size(24, 24)
 		Me.BtAccOpen.TabIndex = 2
 		Me.BtAccOpen.TabStop = False
 		Me.BtAccOpen.UseVisualStyleBackColor = True
@@ -670,23 +670,23 @@ Partial Class F_VECTO
 		'btnDfVelocityDrop
 		'
 		Me.btnDfVelocityDrop.Anchor = CType((System.Windows.Forms.AnchorStyles.Top Or System.Windows.Forms.AnchorStyles.Right), System.Windows.Forms.AnchorStyles)
-		Me.btnDfVelocityDrop.Location = New System.Drawing.Point(437, 72)
+		Me.btnDfVelocityDrop.Image = CType(resources.GetObject("btnDfVelocityDrop.Image"), System.Drawing.Image)
+		Me.btnDfVelocityDrop.Location = New System.Drawing.Point(431, 72)
 		Me.btnDfVelocityDrop.Name = "btnDfVelocityDrop"
-		Me.btnDfVelocityDrop.Size = New System.Drawing.Size(28, 21)
+		Me.btnDfVelocityDrop.Size = New System.Drawing.Size(24, 24)
 		Me.btnDfVelocityDrop.TabIndex = 10
 		Me.btnDfVelocityDrop.TabStop = False
-		Me.btnDfVelocityDrop.Text = "..."
 		Me.btnDfVelocityDrop.UseVisualStyleBackColor = True
 		'
 		'btnDfTargetSpeed
 		'
 		Me.btnDfTargetSpeed.Anchor = CType((System.Windows.Forms.AnchorStyles.Top Or System.Windows.Forms.AnchorStyles.Right), System.Windows.Forms.AnchorStyles)
-		Me.btnDfTargetSpeed.Location = New System.Drawing.Point(437, 45)
+		Me.btnDfTargetSpeed.Image = CType(resources.GetObject("btnDfTargetSpeed.Image"), System.Drawing.Image)
+		Me.btnDfTargetSpeed.Location = New System.Drawing.Point(431, 45)
 		Me.btnDfTargetSpeed.Name = "btnDfTargetSpeed"
-		Me.btnDfTargetSpeed.Size = New System.Drawing.Size(28, 21)
+		Me.btnDfTargetSpeed.Size = New System.Drawing.Size(24, 24)
 		Me.btnDfTargetSpeed.TabIndex = 7
 		Me.btnDfTargetSpeed.TabStop = False
-		Me.btnDfTargetSpeed.Text = "..."
 		Me.btnDfTargetSpeed.UseVisualStyleBackColor = True
 		'
 		'Label4

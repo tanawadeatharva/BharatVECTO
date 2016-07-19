@@ -82,7 +82,6 @@ namespace TUGraz.VectoCore.Tests.Integration
 				gearboxData.Inertia = gearBoxInertia;
 
 			var vehicleData = CreateVehicleData(3300.SI<Kilogram>());
-			//var retarder = new RetarderData { Type = RetarderData.RetarderType.None };
 			var driverData = CreateDriverData(AccelerationFile, overspeed);
 
 			var cycle = new DistanceBasedDrivingCycle(container, cycleData);

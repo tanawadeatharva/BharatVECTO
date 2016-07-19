@@ -1,4 +1,4 @@
-'
+﻿'
 ' This file is part of VECTO.
 '
 ' Copyright © 2012-2016 European Union
@@ -766,7 +766,7 @@ Public Class F_MAINForm
 						If F_VEH.WindowState = FormWindowState.Minimized Then F_VEH.WindowState = FormWindowState.Normal
 						F_VEH.BringToFront()
 					End If
-					F_VEH.openVEH(File)
+					F_VEH.OpenVehicle(File)
 				Case ".VENG"
 					If Not F_ENG.Visible Then
 						F_ENG.Show()
@@ -799,19 +799,6 @@ Public Class F_MAINForm
 	Private Sub ButtonGENadd_Click(sender As Object, e As EventArgs) _
 		Handles ButtonGENadd.Click
 		AddJobFile()
-	End Sub
-
-	Private Sub ButtonGENoptions_Click(sender As Object, e As EventArgs) _
-		Handles ButtonGENopt.Click
-		ConMenTarget = LvGEN
-		ConMenTarJob = True
-
-		'Locked functions show/hide
-		LoadListToolStripMenuItem.Enabled = Not GUIlocked
-		LoadDefaultListToolStripMenuItem.Enabled = Not GUIlocked
-		ClearListToolStripMenuItem.Enabled = Not GUIlocked
-
-		ConMenFilelist.Show(MousePosition)
 	End Sub
 
 	Private Sub ListViewGEN_KeyDown(sender As Object, e As KeyEventArgs) _
@@ -2815,5 +2802,20 @@ Lb1:
 
 	Private Sub LvMsg_MouseUp(sender As Object, e As MouseEventArgs) Handles LvMsg.MouseUp
 		mouseDownOnListView = False
+		
+	End Sub
+
+	Private Sub LvGEN_MouseUp(sender As Object, e As MouseEventArgs) Handles LvGEN.MouseUp
+		If e.Button = MouseButtons.Right Then
+			ConMenTarget = LvGEN
+			ConMenTarJob = True
+
+			'Locked functions show/hide
+			LoadListToolStripMenuItem.Enabled = Not GUIlocked
+			LoadDefaultListToolStripMenuItem.Enabled = Not GUIlocked
+			ClearListToolStripMenuItem.Enabled = Not GUIlocked
+
+			ConMenFilelist.Show(MousePosition)
+		End If
 	End Sub
 End Class
