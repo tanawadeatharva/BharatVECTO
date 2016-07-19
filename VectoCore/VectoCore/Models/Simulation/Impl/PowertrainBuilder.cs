@@ -59,25 +59,22 @@ namespace TUGraz.VectoCore.Models.Simulation.Impl
 
 		public VehicleContainer Build(VectoRunData data)
 		{
-			if (data.ExecutionMode == ExecutionMode.EngineOnly) {
-				return BuildEngineOnly(data);
+			switch (data.Cycle.CycleType) {
+				case CycleType.EngineOnly:
+					return BuildEngineOnly(data);
+				case CycleType.PWheel:
+					return BuildPWheel(data);
+				case CycleType.MeasuredSpeed:
+					return BuildMeasuredSpeed(data);
+				case CycleType.MeasuredSpeedGear:
+					return BuildMeasuredSpeedGear(data);
 			}
-			if (data.Cycle.CycleType == CycleType.PWheel) {
-				return BuildPWheel(data);
-			}
-			if (data.Cycle.CycleType == CycleType.MeasuredSpeed) {
-				return BuildMeasuredSpeed(data);
-			}
-			if (data.Cycle.CycleType == CycleType.MeasuredSpeedGear) {
-				return BuildMeasuredSpeedGear(data);
-			}
-
 			return BuildFullPowertrain(data);
 		}
 
 		private VehicleContainer BuildEngineOnly(VectoRunData data)
 		{
-			var container = new VehicleContainer(ExecutionMode.EngineOnly, _modData, _sumWriter) { RunData = data };
+			var container = new VehicleContainer(ExecutionMode.Engineering, _modData, _sumWriter) { RunData = data };
 			var cycle = new PowertrainDrivingCycle(container, data.Cycle);
 
 			var directAux = new EngineAuxiliary(container);
@@ -244,7 +241,7 @@ namespace TUGraz.VectoCore.Models.Simulation.Impl
 		private VehicleContainer BuildFullPowertrain(VectoRunData data)
 		{
 			if (data.Cycle.CycleType != CycleType.DistanceBased) {
-				throw new VectoSimulationException("Powertrain Builder cannot build FullPowertrain for Cycle Type {0}",
+				throw new VectoSimulationException("Powertrain Builder cannot build FullPowertrain for cycle type {0}",
 					data.Cycle.CycleType);
 			}
 

@@ -98,7 +98,7 @@ namespace TUGraz.VectoCore.Tests.Models.Simulation
 			var sumWriter = new SummaryDataContainer(fileWriter);
 
 			var inputData = JSONInputDataFactory.ReadJsonJob(EngineOnlyJob);
-			var factory = new SimulatorFactory(ExecutionMode.EngineOnly, inputData, fileWriter) {
+			var factory = new SimulatorFactory(ExecutionMode.Engineering, inputData, fileWriter) {
 				SumData = sumWriter
 			};
 
@@ -114,7 +114,7 @@ namespace TUGraz.VectoCore.Tests.Models.Simulation
 			var jobContainer = new JobContainer(sumWriter);
 
 			var inputData = JSONInputDataFactory.ReadJsonJob(jobFile);
-			var runsFactory = new SimulatorFactory(ExecutionMode.EngineOnly,
+			var runsFactory = new SimulatorFactory(ExecutionMode.Engineering,
 				inputData, fileWriter);
 
 			jobContainer.AddRuns(runsFactory);

@@ -56,7 +56,7 @@ namespace TUGraz.VectoCore.Tests.Models.Simulation
 
 		{
 			var fileWriter = new FileOutputWriter("AuxWriteModFileSumFile");
-			var modData = new ModalDataContainer("AuxWriteModFileSumFile", fileWriter, ExecutionMode.Engineering);
+			var modData = new ModalDataContainer("AuxWriteModFileSumFile", fileWriter);
 			modData.AddAuxiliary("FAN");
 			modData.AddAuxiliary("PS");
 			modData.AddAuxiliary("STP");
