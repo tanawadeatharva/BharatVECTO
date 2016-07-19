@@ -38,6 +38,7 @@ using TUGraz.VectoCommon.Utils;
 using TUGraz.VectoCore.Configuration;
 using TUGraz.VectoCore.InputData.Reader;
 using TUGraz.VectoCore.Models.Connector.Ports.Impl;
+using TUGraz.VectoCore.Models.Declaration;
 using TUGraz.VectoCore.Models.Simulation.DataBus;
 using TUGraz.VectoCore.Models.Simulation.Impl;
 using TUGraz.VectoCore.Models.SimulationComponent.Data;
@@ -90,6 +91,9 @@ namespace TUGraz.VectoCore.Tests.Models.SimulationComponent
 				ShiftTime = 2.SI<Second>(),
 				Inertia = 0.SI<KilogramSquareMeter>(),
 				TractionInterruption = 1.SI<Second>(),
+				DownshiftAfterUpshiftDelay = DeclarationData.Gearbox.DownshiftAfterUpshiftDelay,
+				UpshiftAfterDownshiftDelay = DeclarationData.Gearbox.UpshiftAfterDownshiftDelay,
+				UpshiftMinAcceleration = DeclarationData.Gearbox.UpshiftMinAcceleration
 			};
 		}
 
@@ -456,7 +460,8 @@ namespace TUGraz.VectoCore.Tests.Models.SimulationComponent
 				DriverBehavior = DrivingBehavior.Driving,
 				Altitude = 0.SI<Meter>(),
 				VehicleMass = 10000.SI<Kilogram>(),
-				ReducedMassWheels = 100.SI<Kilogram>()
+				ReducedMassWheels = 100.SI<Kilogram>(),
+				TotalMass = 10000.SI<Kilogram>(),
 			};
 			var gearboxData = MockSimulationDataFactory.CreateGearboxDataFromFile(GearboxDataFile, EngineDataFile);
 			var gearbox = new Gearbox(container, gearboxData, new AMTShiftStrategy(gearboxData, container));

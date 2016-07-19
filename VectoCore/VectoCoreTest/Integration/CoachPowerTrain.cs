@@ -70,7 +70,7 @@ namespace TUGraz.VectoCore.Tests.Integration
 			bool overspeed = false, KilogramSquareMeter gearBoxInertia = null)
 		{
 			var fileWriter = new FileOutputWriter(modFileName);
-			var modData = new ModalDataContainer(modFileName, fileWriter, ExecutionMode.Engineering);
+			var modData = new ModalDataContainer(modFileName, fileWriter);
 			var container = new VehicleContainer(ExecutionMode.Engineering, modData, null) {
 				RunData = new VectoRunData { JobName = modFileName, Cycle = cycleData }
 			};
@@ -78,8 +78,9 @@ namespace TUGraz.VectoCore.Tests.Integration
 			var engineData = MockSimulationDataFactory.CreateEngineDataFromFile(EngineFile);
 			var axleGearData = CreateAxleGearData();
 			var gearboxData = CreateGearboxData();
-			if (gearBoxInertia != null)
+			if (gearBoxInertia != null) {
 				gearboxData.Inertia = gearBoxInertia;
+			}
 
 			var vehicleData = CreateVehicleData(3300.SI<Kilogram>());
 			//var retarder = new RetarderData { Type = RetarderData.RetarderType.None };
@@ -136,7 +137,10 @@ namespace TUGraz.VectoCore.Tests.Integration
 				StartAcceleration = 0.6.SI<MeterPerSquareSecond>(),
 				StartTorqueReserve = 0.2,
 				SkipGears = true,
-				TorqueReserve = 0.2
+				TorqueReserve = 0.2,
+				DownshiftAfterUpshiftDelay = DeclarationData.Gearbox.DownshiftAfterUpshiftDelay,
+				UpshiftAfterDownshiftDelay = DeclarationData.Gearbox.UpshiftAfterDownshiftDelay,
+				UpshiftMinAcceleration = DeclarationData.Gearbox.UpshiftMinAcceleration
 			};
 		}
 

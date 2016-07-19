@@ -72,7 +72,7 @@ namespace TUGraz.VectoCore.Tests.Integration
 			bool overspeed = false)
 		{
 			var fileWriter = new FileOutputWriter(modFileName);
-			var modData = new ModalDataContainer(modFileName, fileWriter, ExecutionMode.Engineering) { WriteAdvancedAux = true };
+			var modData = new ModalDataContainer(modFileName, fileWriter) { WriteAdvancedAux = true };
 			var container = new VehicleContainer(ExecutionMode.Engineering, modData) {
 				RunData = new VectoRunData { JobName = modFileName, Cycle = cycleData }
 			};
@@ -133,7 +133,10 @@ namespace TUGraz.VectoCore.Tests.Integration
 				StartAcceleration = 0.6.SI<MeterPerSquareSecond>(),
 				StartTorqueReserve = 0.2,
 				SkipGears = true,
-				TorqueReserve = 0.2
+				TorqueReserve = 0.2,
+				DownshiftAfterUpshiftDelay = DeclarationData.Gearbox.DownshiftAfterUpshiftDelay,
+				UpshiftAfterDownshiftDelay = DeclarationData.Gearbox.UpshiftAfterDownshiftDelay,
+				UpshiftMinAcceleration = DeclarationData.Gearbox.UpshiftMinAcceleration
 			};
 		}
 
