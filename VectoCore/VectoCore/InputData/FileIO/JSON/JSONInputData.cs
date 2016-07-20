@@ -529,7 +529,7 @@ namespace TUGraz.VectoCore.InputData.FileIO.JSON
 				var auxData = new AuxiliaryDataInputData {
 					ID = aux.GetEx<string>("ID"),
 					Type = aux.GetEx<string>("Type"),
-					Technology = aux.GetEx<string>("Technology")
+					Technology = aux.GetEx<string>("Technology"),
 				};
 				if (aux["TechList"] != null) {
 					auxData.TechList = aux["TechList"].Select(x => x.ToString()).ToList(); //  .Select(x => x.ToString).ToArray();

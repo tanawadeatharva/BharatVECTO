@@ -235,7 +235,7 @@ namespace TUGraz.VectoCore.Models.SimulationComponent.Data
 			return m / k * Math.Exp((k * t).Value()) + b * t + c;
 		}
 
-		private static class Fields
+		public static class Fields
 		{
 			public const string Velocity = "v";
 

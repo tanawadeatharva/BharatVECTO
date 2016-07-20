@@ -122,18 +122,20 @@ namespace TUGraz.VectoCore.Models.SimulationComponent.Data.Engine
 		{
 			// delaunay map needs is initialised with rpm, therefore the angularVelocity has to be converted.
 			var value = _fuelMap.Interpolate(torque.Value(), angularVelocity.AsRPM);
-			if (value.HasValue)
+			if (value.HasValue) {
 				return value.Value.SI().Kilo.Gramm.Per.Second.Cast<KilogramPerSecond>();
+			}
 
-			if (allowExtrapolation)
+			if (allowExtrapolation) {
 				return
 					_fuelMap.Extrapolate(torque.Value(), angularVelocity.AsRPM).SI().Kilo.Gramm.Per.Second.Cast<KilogramPerSecond>();
+			}
 
 			throw new VectoException("FuelConsumptionMap: Interpolation failed. torque: {0}, n: {1}", torque.Value(),
 				angularVelocity.AsRPM);
 		}
 
-		private static class Fields
+		public static class Fields
 		{
 			/// <summary>
 			/// [rpm]

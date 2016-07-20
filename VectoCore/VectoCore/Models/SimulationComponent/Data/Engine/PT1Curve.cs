@@ -74,7 +74,7 @@ namespace TUGraz.VectoCore.Models.SimulationComponent.Data.Engine
 
 		protected override void ParseData(DataTable data)
 		{
-			if (data.Columns.Count < 4) {
+			if (data.Columns.Count < 3) {
 				throw new VectoException("FullLoadCurve/PT1 Data File must consist of at least 4 columns.");
 			}
 

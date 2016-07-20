@@ -153,7 +153,7 @@ namespace TUGraz.VectoCore.Models.SimulationComponent.Data
 			public NewtonMeter TorqueLoss { get; set; }
 		}
 
-		private static class Fields
+		public static class Fields
 		{
 			/// <summary>
 			///     [rpm]

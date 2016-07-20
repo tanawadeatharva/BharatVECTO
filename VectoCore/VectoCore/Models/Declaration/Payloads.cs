@@ -6,9 +6,9 @@ using TUGraz.VectoCore.Utils;
 
 namespace TUGraz.VectoCore.Models.Declaration
 {
-	internal sealed class Payloads : LookupData<Kilogram, Payloads.PayloadEntry>
+	public sealed class Payloads : LookupData<Kilogram, Payloads.PayloadEntry>
 	{
-		internal sealed class PayloadEntry
+		public sealed class PayloadEntry
 		{
 			public Kilogram Payload50Percent;
 			public Kilogram Payload75Percent;

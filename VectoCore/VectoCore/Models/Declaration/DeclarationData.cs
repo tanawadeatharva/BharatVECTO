@@ -43,7 +43,7 @@ using TUGraz.VectoCore.Utils;
 
 namespace TUGraz.VectoCore.Models.Declaration
 {
-	internal class DeclarationData
+	public sealed class DeclarationData
 	{
 		private static DeclarationData _instance;
 		private Segments _segments;
