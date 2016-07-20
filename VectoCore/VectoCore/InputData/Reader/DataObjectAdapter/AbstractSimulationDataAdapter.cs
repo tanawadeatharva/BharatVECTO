@@ -89,8 +89,9 @@ namespace TUGraz.VectoCore.InputData.Reader.DataObjectAdapter
 					Type = data.Type,
 				};
 				switch (retarder.Type) {
-					case RetarderType.Primary:
-					case RetarderType.Secondary:
+				//case RetarderType.EngineRetarder:
+				case RetarderType.TransmissionInputRetarder:
+				case RetarderType.TransmissionOutputRetarder:
 						retarder.LossMap = RetarderLossMap.Create(data.LossMap);
 						retarder.Ratio = data.Ratio;
 						break;
@@ -149,9 +150,9 @@ namespace TUGraz.VectoCore.InputData.Reader.DataObjectAdapter
 			try {
 				axleLossMap = TransmissionLossMap.Create(data.LossMap, data.Ratio, "AxleGear");
 			} catch (InvalidFileFormatException) {
-				if (useEfficiencyFallback)
+				if (useEfficiencyFallback) {
 					axleLossMap = TransmissionLossMap.Create(data.Efficiency, data.Ratio, "AxleGear");
-				else {
+				} else {
 					throw;
 				}
 			}

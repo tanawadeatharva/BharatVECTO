@@ -34,6 +34,7 @@ using System.Collections.Generic;
 using System.Data;
 using System.Linq;
 using Newtonsoft.Json.Linq;
+using TUGraz.VectoCommon.Exceptions;
 using TUGraz.VectoCommon.InputData;
 using TUGraz.VectoCommon.Models;
 using TUGraz.VectoCommon.Utils;
@@ -148,10 +149,19 @@ namespace TUGraz.VectoCore.InputData.FileIO.JSON
 		{
 			get
 			{
-				return
-					(RetarderType)
-						Enum.Parse(typeof(RetarderType),
-							Body.GetEx(JsonKeys.Vehicle_Retarder).GetEx<string>(JsonKeys.Vehicle_Retarder_Type), true);
+				var retarderType = Body.GetEx(JsonKeys.Vehicle_Retarder).GetEx<string>(JsonKeys.Vehicle_Retarder_Type);
+				try {
+					return retarderType.ParseEnum<RetarderType>();
+				} catch (Exception) {
+					switch (retarderType.ToLower()) {
+						case "primary":
+							return RetarderType.TransmissionInputRetarder;
+						case "secondary":
+							return RetarderType.TransmissionOutputRetarder;
+						default:
+							throw new VectoException("Unknown retarder type {0}", retarderType);
+					}
+				}
 			}
 		}
 
