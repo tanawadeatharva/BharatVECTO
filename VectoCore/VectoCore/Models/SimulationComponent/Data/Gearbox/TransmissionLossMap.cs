@@ -86,7 +86,7 @@ namespace TUGraz.VectoCore.Models.SimulationComponent.Data.Gearbox
 		public static TransmissionLossMap Create(DataTable data, double gearRatio, string gearName)
 		{
 			if (data.Columns.Count < 3) {
-				throw new VectoException("TransmissionLossMap Data File for {0} must consist of at least 3 columns.", gearName);
+				throw new VectoException("TransmissionLossMap Data File for {0} must consist of  3 columns.", gearName);
 			}
 
 			if (data.Rows.Count < 4) {
@@ -99,8 +99,8 @@ namespace TUGraz.VectoCore.Models.SimulationComponent.Data.Gearbox
 				entries = CreateFromColumnNames(data);
 			} else {
 				Logger<TransmissionLossMap>().Warn(
-					"TransmissionLossMap {5}: Header line is not valid. Expected: '{0}, {1}, {2}, <{3}>'. Got: '{4}'. Falling back to column index.",
-					Fields.InputSpeed, Fields.InputTorque, Fields.TorqeLoss, Fields.Efficiency,
+					"TransmissionLossMap {5}: Header line is not valid. Expected: '{0}, {1}, {2}'. Got: '{3}'. Falling back to column index.",
+					Fields.InputSpeed, Fields.InputTorque, Fields.TorqeLoss,
 					", ".Join(data.Columns.Cast<DataColumn>().Select(c => c.ColumnName).Reverse()), gearName);
 
 				entries = CreateFromColumIndizes(data);
@@ -263,9 +263,6 @@ namespace TUGraz.VectoCore.Models.SimulationComponent.Data.Gearbox
 
 			/// <summary>[Nm]</summary>
 			public const string TorqeLoss = "Torque Loss";
-
-			/// <summary>[-]</summary>
-			public const string Efficiency = "Eff";
 		}
 	}
 }
