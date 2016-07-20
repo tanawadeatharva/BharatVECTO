@@ -35,6 +35,5 @@ namespace TUGraz.VectoCommon.Models
 	{
 		Engineering,
 		Declaration,
-		EngineOnly,
 	}
 }

@@ -262,6 +262,9 @@ namespace TUGraz.VectoCore.Models.Declaration
 			private static double ShiftPolygonEngineFldMargin = 0.98;
 
 			public static readonly Second MinTimeBetweenGearshifts = 2.SI<Second>();
+			public static readonly Second DownshiftAfterUpshiftDelay = 10.SI<Second>();
+			public static readonly Second UpshiftAfterDownshiftDelay = 10.SI<Second>();
+			public static readonly MeterPerSquareSecond UpshiftMinAcceleration = 0.1.SI<MeterPerSquareSecond>();
 
 			/// <summary>
 			/// computes the shift polygons for a single gear according to the whitebook 2016

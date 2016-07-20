@@ -58,19 +58,16 @@ namespace TUGraz.VectoCore.Models.Simulation.Impl
 
 		public VehicleContainer Build(VectoRunData data)
 		{
-			if (data.ExecutionMode == ExecutionMode.EngineOnly) {
-				return BuildEngineOnly(data);
+			switch (data.Cycle.CycleType) {
+				case CycleType.EngineOnly:
+					return BuildEngineOnly(data);
+				case CycleType.PWheel:
+					return BuildPWheel(data);
+				case CycleType.MeasuredSpeed:
+					return BuildMeasuredSpeed(data);
+				case CycleType.MeasuredSpeedGear:
+					return BuildMeasuredSpeedGear(data);
 			}
-			if (data.Cycle.CycleType == CycleType.PWheel) {
-				return BuildPWheel(data);
-			}
-			if (data.Cycle.CycleType == CycleType.MeasuredSpeed) {
-				return BuildMeasuredSpeed(data);
-			}
-			if (data.Cycle.CycleType == CycleType.MeasuredSpeedGear) {
-				return BuildMeasuredSpeedGear(data);
-			}
-
 			return BuildFullPowertrain(data);
 		}
 
@@ -78,8 +75,8 @@ namespace TUGraz.VectoCore.Models.Simulation.Impl
 		{
 			if (data.Cycle.CycleType != CycleType.EngineOnly)
 				throw new VectoException("CycleType must be EngineOnly.");
-
-			var container = new VehicleContainer(ExecutionMode.EngineOnly, _modData, _sumWriter) { RunData = data };
+			
+			var container = new VehicleContainer(ExecutionMode.Engineering, _modData, _sumWriter) { RunData = data };
 			var cycle = new PowertrainDrivingCycle(container, data.Cycle);
 
 			var directAux = new EngineAuxiliary(container);

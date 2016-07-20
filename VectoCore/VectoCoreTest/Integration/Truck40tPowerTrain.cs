@@ -84,7 +84,7 @@ namespace TUGraz.VectoCore.Tests.Integration
 			Kilogram massExtra, Kilogram loading, bool overspeed = false, GearboxType gbxType = GearboxType.AMT)
 		{
 			var fileWriter = new FileOutputWriter(modFileName);
-			var modData = new ModalDataContainer(Path.GetFileName(modFileName), fileWriter, ExecutionMode.Engineering);
+			var modData = new ModalDataContainer(Path.GetFileName(modFileName), fileWriter);
 			var container = new VehicleContainer(ExecutionMode.Engineering, modData) {
 				RunData = new VectoRunData { JobName = modFileName, Cycle = cycleData }
 			};
@@ -152,9 +152,9 @@ namespace TUGraz.VectoCore.Tests.Integration
 				StartTorqueReserve = 0.2,
 				SkipGears = true,
 				EarlyShiftUp = true,
-				UpshiftAfterDownshiftDelay = 10.SI<Second>(),
-				DownshiftAfterUpshiftDelay = 10.SI<Second>(),
-				UpshiftMinAcceleration = 0.1.SI<MeterPerSquareSecond>()
+				DownshiftAfterUpshiftDelay = DeclarationData.Gearbox.DownshiftAfterUpshiftDelay,
+				UpshiftAfterDownshiftDelay = DeclarationData.Gearbox.UpshiftAfterDownshiftDelay,
+				UpshiftMinAcceleration = DeclarationData.Gearbox.UpshiftMinAcceleration
 			};
 		}
 

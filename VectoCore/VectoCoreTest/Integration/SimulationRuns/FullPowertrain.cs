@@ -70,7 +70,7 @@ namespace TUGraz.VectoCore.Tests.Integration.SimulationRuns
 		public void Test_FullPowertrain_SimpleGearbox()
 		{
 			var fileWriter = new FileOutputWriter("Coach_FullPowertrain_SimpleGearbox");
-			var modData = new ModalDataContainer("Coach_FullPowertrain_SimpleGearbox", fileWriter, ExecutionMode.Engineering);
+			var modData = new ModalDataContainer("Coach_FullPowertrain_SimpleGearbox", fileWriter);
 			var container = new VehicleContainer(ExecutionMode.Engineering, modData);
 
 			var engineData = MockSimulationDataFactory.CreateEngineDataFromFile(EngineFile);
@@ -129,7 +129,7 @@ namespace TUGraz.VectoCore.Tests.Integration.SimulationRuns
 		public void Test_FullPowertrain()
 		{
 			var fileWriter = new FileOutputWriter("Coach_FullPowertrain");
-			var modData = new ModalDataContainer("Coach_FullPowertrain", fileWriter, ExecutionMode.Engineering);
+			var modData = new ModalDataContainer("Coach_FullPowertrain", fileWriter);
 			var container = new VehicleContainer(ExecutionMode.Engineering, modData);
 
 			var engineData = MockSimulationDataFactory.CreateEngineDataFromFile(EngineFile);
@@ -203,7 +203,7 @@ namespace TUGraz.VectoCore.Tests.Integration.SimulationRuns
 		public void Test_FullPowertrain_LowSpeed()
 		{
 			var fileWriter = new FileOutputWriter("Coach_FullPowertrain_LowSpeed");
-			var modData = new ModalDataContainer("Coach_FullPowertrain_LowSpeed", fileWriter, ExecutionMode.Engineering);
+			var modData = new ModalDataContainer("Coach_FullPowertrain_LowSpeed", fileWriter);
 			var container = new VehicleContainer(ExecutionMode.Engineering, modData);
 
 			var engineData = MockSimulationDataFactory.CreateEngineDataFromFile(EngineFile);
@@ -318,9 +318,9 @@ namespace TUGraz.VectoCore.Tests.Integration.SimulationRuns
 				StartAcceleration = 0.6.SI<MeterPerSquareSecond>(),
 				StartTorqueReserve = 0.2,
 				TorqueReserve = 0.2,
-				DownshiftAfterUpshiftDelay = 10.SI<Second>(),
-				UpshiftAfterDownshiftDelay = 10.SI<Second>(),
-				UpshiftMinAcceleration = 0.1.SI<MeterPerSquareSecond>()
+				DownshiftAfterUpshiftDelay = DeclarationData.Gearbox.DownshiftAfterUpshiftDelay,
+				UpshiftAfterDownshiftDelay = DeclarationData.Gearbox.UpshiftAfterDownshiftDelay,
+				UpshiftMinAcceleration = DeclarationData.Gearbox.UpshiftMinAcceleration
 			};
 		}
 
@@ -356,9 +356,9 @@ namespace TUGraz.VectoCore.Tests.Integration.SimulationRuns
 				StartAcceleration = 0.6.SI<MeterPerSquareSecond>(),
 				StartTorqueReserve = 0.2,
 				TorqueReserve = 0.2,
-				DownshiftAfterUpshiftDelay = 10.SI<Second>(),
-				UpshiftAfterDownshiftDelay = 10.SI<Second>(),
-				UpshiftMinAcceleration = 0.1.SI<MeterPerSquareSecond>()
+				DownshiftAfterUpshiftDelay = DeclarationData.Gearbox.DownshiftAfterUpshiftDelay,
+				UpshiftAfterDownshiftDelay = DeclarationData.Gearbox.UpshiftAfterDownshiftDelay,
+				UpshiftMinAcceleration = DeclarationData.Gearbox.UpshiftMinAcceleration
 			};
 		}
 
