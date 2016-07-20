@@ -55,16 +55,19 @@ namespace TUGraz.VectoCore.Models.SimulationComponent.Data
 		[Required, ValidateObject]
 		public ICrossWindCorrection CrossWindCorrectionCurve { get; internal set; }
 
-		private List<Axle> _axleData;
+		[Required, ValidateObject] private List<Axle> _axleData;
 
-		[Required, ValidateObject]
+		private KilogramSquareMeter _wheelsInertia;
+		private double? _totalRollResistanceCoefficient;
+
 		public List<Axle> AxleData
 		{
 			get { return _axleData; }
 			internal set
 			{
 				_axleData = value;
-				ComputeRollResistanceAndReducedMassWheels();
+				_wheelsInertia = null;
+				_totalRollResistanceCoefficient = null;
 			}
 		}
 
@@ -94,12 +97,32 @@ namespace TUGraz.VectoCore.Models.SimulationComponent.Data
 		[Required, SIRange(0.1, 0.7)]
 		public Meter DynamicTyreRadius { get; internal set; }
 
-		public KilogramSquareMeter WheelsInertia { get; internal set; }
+		public KilogramSquareMeter WheelsInertia
+		{
+			get
+			{
+				if (_wheelsInertia == null) {
+					ComputeRollResistanceAndReducedMassWheels();
+				}
+				return _wheelsInertia;
+			}
+			internal set { _wheelsInertia = value; }
+		}
 
 		public string Rim { get; internal set; }
 
 		[Required, SIRange(0, 1E12)]
-		public double TotalRollResistanceCoefficient { get; private set; }
+		public double TotalRollResistanceCoefficient
+		{
+			get
+			{
+				if (_totalRollResistanceCoefficient == null) {
+					ComputeRollResistanceAndReducedMassWheels();
+				}
+				return _totalRollResistanceCoefficient.GetValueOrDefault();
+			}
+			private set { _totalRollResistanceCoefficient = value; }
+		}
 
 		public CrossWindCorrectionMode CrossWindCorrectionMode { get; set; }
 
