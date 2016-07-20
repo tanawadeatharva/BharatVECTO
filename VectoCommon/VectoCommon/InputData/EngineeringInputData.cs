@@ -293,6 +293,11 @@ namespace TUGraz.VectoCommon.InputData
 	public interface IAuxiliaryEngineeringInputData : IAuxiliaryDeclarationInputData
 	{
 		/// <summary>
+		/// either mapping or constant
+		/// </summary>
+		AuxiliaryDemandType AuxiliaryType { get; }
+
+		/// <summary>
 		/// P022  Aux-InputFile: transmission ratio
 		/// cf. VECTO Input Parameters.xlsx
 		/// </summary>
@@ -315,5 +320,11 @@ namespace TUGraz.VectoCommon.InputData
 		/// cf. VECTO Input Parameters.xlsx
 		/// </summary>
 		DataTable DemandMap { get; }
+
+		/// <summary>
+		/// P178
+		/// additional constant auxiliary load, similar to Padd; not specified in the cycle but as auxiliary
+		/// </summary>
+		Watt ConstantPowerDemand { get; }
 	}
 }
