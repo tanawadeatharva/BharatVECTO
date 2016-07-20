@@ -31,24 +31,19 @@
 
 using System;
 using System.Collections.Generic;
-using System.Diagnostics;
 using System.Linq;
-using System.Net.NetworkInformation;
-using iTextSharp.text.pdf;
-using iTextSharp.text.pdf.interfaces;
 using TUGraz.VectoCommon.Exceptions;
 using TUGraz.VectoCommon.InputData;
 using TUGraz.VectoCommon.Models;
 using TUGraz.VectoCommon.Utils;
 using TUGraz.VectoCore.Configuration;
 using TUGraz.VectoCore.Models.SimulationComponent.Data;
-using TUGraz.VectoCore.Models.SimulationComponent.Data.Engine;
 using TUGraz.VectoCore.Models.SimulationComponent.Data.Gearbox;
 using TUGraz.VectoCore.Utils;
 
 namespace TUGraz.VectoCore.Models.Declaration
 {
-	public class DeclarationData
+	internal class DeclarationData
 	{
 		private static DeclarationData _instance;
 		private Segments _segments;
@@ -63,6 +58,8 @@ namespace TUGraz.VectoCore.Models.Declaration
 		private WHTCCorrection _whtcCorrection;
 		private AirDrag _airDrag;
 		private TorqueConverter _torqueConverter;
+		private StandardBodies _standardBodies;
+		private Payloads _payloads;
 
 		public static Wheels Wheels
 		{
@@ -82,6 +79,11 @@ namespace TUGraz.VectoCore.Models.Declaration
 		public static PT1 PT1
 		{
 			get { return Instance()._pt1 ?? (Instance()._pt1 = new PT1()); }
+		}
+
+		public static Payloads Payloads
+		{
+			get { return Instance()._payloads ?? (Instance()._payloads = new Payloads()); }
 		}
 
 		public static ElectricSystem ElectricSystem
@@ -104,6 +106,25 @@ namespace TUGraz.VectoCore.Models.Declaration
 			}
 		}
 
+		/// <summary>
+		/// Formula for calculating the payload for a given gross vehicle weight.
+		/// (so called "pc-formula", Whitebook Apr 2016, Part 1, p.187)
+		/// </summary>
+		public static Kilogram GetPayloadForGrossVehicleWeight(Kilogram grossVehicleWeight, MissionType missionType)
+		{
+			return missionType == MissionType.LongHaul
+				? Payloads.Lookup75Percent(grossVehicleWeight)
+				: Payloads.Lookup50Percent(grossVehicleWeight);
+		}
+
+		/// <summary>
+		/// Returns the payload for a trailer. This is 75% of (GVW-CurbWeight).
+		/// </summary>
+		public static Kilogram GetPayloadForTrailerWeight(Kilogram grossVehicleWeight, Kilogram curbWeight)
+		{
+			return Payloads.LookupTrailer(grossVehicleWeight, curbWeight);
+		}
+
 		public static Fan Fan
 		{
 			get { return Instance()._fan ?? (Instance()._fan = new Fan()); }
@@ -116,6 +137,11 @@ namespace TUGraz.VectoCore.Models.Declaration
 				return Instance()._heatingVentilationAirConditioning ??
 						(Instance()._heatingVentilationAirConditioning = new HeatingVentilationAirConditioning());
 			}
+		}
+
+		public static StandardBodies StandardBodies
+		{
+			get { return Instance()._standardBodies ?? (Instance()._standardBodies = new StandardBodies()); }
 		}
 
 		public static PneumaticSystem PneumaticSystem
@@ -296,7 +322,7 @@ namespace TUGraz.VectoCore.Models.Declaration
 				}
 
 				var gearRatio = gears[gear].Ratio / gears[gear + 1].Ratio;
-				var rpmMarginFactor = 1 + DeclarationData.Gearbox.ShiftPolygonRPMMargin / 100.0;
+				var rpmMarginFactor = 1 + ShiftPolygonRPMMargin / 100.0;
 
 				var p2p = new Point(p2.X * gearRatio * rpmMarginFactor, p2.Y / gearRatio);
 				var p3p = new Point(p3.X * gearRatio * rpmMarginFactor, p3.Y / gearRatio);
@@ -348,7 +374,6 @@ namespace TUGraz.VectoCore.Models.Declaration
 						.ToList();
 			}
 
-
 			internal static PerSecond ComputeEngineSpeed85kmh(ITransmissionInputData gear, double axleRatio,
 				Meter dynamicTyreRadius, CombustionEngineData engine)
 			{
@@ -363,7 +388,6 @@ namespace TUGraz.VectoCore.Models.Declaration
 				//}
 				return engineSpeed;
 			}
-
 
 			internal static List<Point> IntersectShiftPolygon(List<Point> orig, List<Point> transformedDownshift)
 			{

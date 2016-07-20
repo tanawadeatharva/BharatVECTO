@@ -46,7 +46,7 @@ using TUGraz.VectoCore.OutputData;
 using TUGraz.VectoCore.Utils;
 using DriverData = TUGraz.VectoCore.Models.SimulationComponent.Data.DriverData;
 
-namespace TUGraz.VectoCore.InputData.Reader.DataObjectAdaper
+namespace TUGraz.VectoCore.InputData.Reader.DataObjectAdapter
 {
 	public class DeclarationDataAdapter : AbstractSimulationDataAdapter
 	{
@@ -94,20 +94,16 @@ namespace TUGraz.VectoCore.InputData.Reader.DataObjectAdaper
 			}
 
 			var retVal = SetCommonVehicleData(data);
-
-			retVal.GrossVehicleMassRating = data.GrossVehicleMassRating;
-
-			retVal.CurbWeigthExtra = mission.MassExtra;
+			retVal.TrailerGrossVehicleWeight = mission.TrailerGrossVehicleWeight;
+			retVal.CurbWeight += mission.BodyCurbWeight + mission.TrailerCurbWeight;
 			retVal.Loading = loading;
 			retVal.DynamicTyreRadius =
 				DeclarationData.DynamicTyreRadius(data.Axles[DeclarationData.PoweredAxle()].Wheels, data.Rim);
 
-			var aerodynamicDragAera = mission.UseCdA2
-				? data.AirDragAreaRigidTruck
-				: data.AirDragArea;
+			var aerodynamicDragArea = data.AirDragArea + mission.DeltaCdA;
 
 			retVal.CrossWindCorrectionCurve =
-				new CrosswindCorrectionCdxALookup(GetDeclarationAirResistanceCurve(retVal.VehicleCategory, aerodynamicDragAera),
+				new CrosswindCorrectionCdxALookup(GetDeclarationAirResistanceCurve(retVal.VehicleCategory, aerodynamicDragArea),
 					CrossWindCorrectionMode.DeclarationModeCorrection);
 			var axles = data.Axles;
 			if (axles.Count < mission.AxleWeightDistribution.Length) {
@@ -129,13 +125,18 @@ namespace TUGraz.VectoCore.InputData.Reader.DataObjectAdaper
 				axleData.Add(axle);
 			}
 
-			axleData.AddRange(mission.TrailerAxleWeightDistribution.Select(tmp => new Axle {
-				AxleType = AxleType.Trailer,
-				AxleWeightShare = tmp,
-				TwinTyres = DeclarationData.Trailer.TwinTyres,
-				RollResistanceCoefficient = DeclarationData.Trailer.RollResistanceCoefficient,
-				TyreTestLoad = DeclarationData.Trailer.TyreTestLoad.SI<Newton>(),
-				Inertia = DeclarationData.Wheels.Lookup(DeclarationData.Trailer.WheelsType).Inertia
+			axleData.AddRange(mission.TrailerAxleWeightDistribution.Select(tmp => {
+				var wheel = mission.TrailerType != TrailerType.None
+					? DeclarationData.StandardBodies.Lookup(mission.TrailerType.ToString()).Wheels
+					: DeclarationData.Wheels.Lookup(DeclarationData.Trailer.WheelsType);
+				return new Axle {
+					AxleType = AxleType.Trailer,
+					AxleWeightShare = tmp,
+					TwinTyres = DeclarationData.Trailer.TwinTyres,
+					RollResistanceCoefficient = DeclarationData.Trailer.RollResistanceCoefficient,
+					TyreTestLoad = DeclarationData.Trailer.TyreTestLoad.SI<Newton>(),
+					Inertia = wheel.Inertia
+				};
 			}));
 			retVal.AxleData = axleData;
 			return retVal;

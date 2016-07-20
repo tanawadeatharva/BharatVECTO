@@ -142,6 +142,8 @@ namespace TUGraz.VectoCore.OutputData
 					ModalResultField.P_gbx_inertia,
 					ModalResultField.P_retarder_in,
 					ModalResultField.P_ret_loss,
+					ModalResultField.P_angle_in,
+					ModalResultField.P_angle_loss,
 					ModalResultField.P_axle_in,
 					ModalResultField.P_axle_loss,
 					ModalResultField.P_brake_in,

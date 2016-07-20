@@ -29,6 +29,7 @@
 *   Martin Rexeis, rexeis@ivt.tugraz.at, IVT, Graz University of Technology
 */
 
+using System.ComponentModel.DataAnnotations;
 using System.Diagnostics;
 using TUGraz.VectoCommon.Exceptions;
 using TUGraz.VectoCommon.Models;
@@ -57,7 +58,7 @@ namespace TUGraz.VectoCore.Models.SimulationComponent.Impl
 		/// <summary>
 		/// The data and settings for the gearbox.
 		/// </summary>
-		[ValidateObject] internal readonly GearboxData ModelData;
+		[Required, ValidateObject] internal readonly GearboxData ModelData;
 
 		/// <summary>
 		/// The shift strategy.

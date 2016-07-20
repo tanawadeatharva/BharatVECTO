@@ -81,7 +81,6 @@ namespace TUGraz.VectoCore.Tests.Integration
 			var axleGearData = CreateAxleGearData();
 			var gearboxData = CreateGearboxData();
 			var vehicleData = CreateVehicleData(3300.SI<Kilogram>());
-			//var retarder = new RetarderData { Type = RetarderData.RetarderType.None };
 			var driverData = CreateDriverData(AccelerationFile, overspeed);
 
 			var cycle = new DistanceBasedDrivingCycle(container, cycleData);
@@ -184,7 +183,6 @@ namespace TUGraz.VectoCore.Tests.Integration
 					new CrosswindCorrectionCdxALookup(CrossWindCorrectionCurveReader.GetNoCorrectionCurve(3.2634.SI<SquareMeter>()),
 						CrossWindCorrectionMode.NoCorrection),
 				CurbWeight = 15700.SI<Kilogram>(),
-				CurbWeigthExtra = 0.SI<Kilogram>(),
 				Loading = loading,
 				DynamicTyreRadius = 0.52.SI<Meter>(),
 				AxleData = axles,

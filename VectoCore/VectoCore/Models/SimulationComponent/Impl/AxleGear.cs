@@ -29,110 +29,38 @@
 *   Martin Rexeis, rexeis@ivt.tugraz.at, IVT, Graz University of Technology
 */
 
-using TUGraz.VectoCommon.Exceptions;
 using TUGraz.VectoCommon.Models;
 using TUGraz.VectoCommon.Utils;
-using TUGraz.VectoCore.Models.Connector.Ports;
 using TUGraz.VectoCore.Models.Simulation;
 using TUGraz.VectoCore.Models.Simulation.Data;
 using TUGraz.VectoCore.Models.SimulationComponent.Data;
-using TUGraz.VectoCore.Models.SimulationComponent.Data.Gearbox;
 using TUGraz.VectoCore.OutputData;
-using TUGraz.VectoCore.Utils;
 
 namespace TUGraz.VectoCore.Models.SimulationComponent.Impl
 {
-	public class AxleGear : StatefulVectoSimulationComponent<AxleGear.AxlegearState>, IAxlegear, ITnInPort,
-		ITnOutPort
+	public class AxleGear : TransmissionComponent, IAxlegear
 	{
-		protected ITnOutPort NextComponent;
+		public AxleGear(IVehicleContainer container, AxleGearData modelData) : base(container, modelData.AxleGear) {}
 
-		[ValidateObject] internal readonly AxleGearData ModelData;
-
-		public AxleGear(IVehicleContainer container, AxleGearData modelData) : base(container)
-		{
-			ModelData = modelData;
-		}
-
-		public ITnInPort InPort()
-		{
-			return this;
-		}
-
-		public ITnOutPort OutPort()
-		{
-			return this;
-		}
-
-		public void Connect(ITnOutPort other)
-		{
-			NextComponent = other;
-		}
-
-		public IResponse Request(Second absTime, Second dt, NewtonMeter torque, PerSecond angularVelocity,
+		public override IResponse Request(Second absTime, Second dt, NewtonMeter torque, PerSecond angularVelocity,
 			bool dryRun = false)
 		{
-			Log.Debug("request: torque: {0}, angularVelocity: {1}", torque, angularVelocity);
-
-			var inAngularVelocity = angularVelocity * ModelData.AxleGear.Ratio;
-			var avgOutAngularVelocity = (PreviousState.OutAngularVelocity + angularVelocity) / 2.0;
-
-			var torqueLossResult = ModelData.AxleGear.LossMap.GetTorqueLoss(avgOutAngularVelocity, torque);
-			var inTorque = torque / ModelData.AxleGear.Ratio + torqueLossResult.Value;
-
-			CurrentState.SetState(inTorque, inAngularVelocity, torque, angularVelocity);
-			CurrentState.TorqueLossResult = torqueLossResult;
-
-			var retVal = NextComponent.Request(absTime, dt, inTorque, inAngularVelocity, dryRun);
-
+			var retVal = base.Request(absTime, dt, torque, angularVelocity, dryRun);
 			retVal.AxlegearPowerRequest = torque * (PreviousState.OutAngularVelocity + CurrentState.OutAngularVelocity) / 2.0;
 			return retVal;
-		}
-
-		public IResponse Initialize(NewtonMeter torque, PerSecond angularVelocity)
-		{
-			var inAngularVelocity = angularVelocity * ModelData.AxleGear.Ratio;
-			var torqueLossResult = ModelData.AxleGear.LossMap.GetTorqueLoss(angularVelocity, torque);
-			var inTorque = torque / ModelData.AxleGear.Ratio + torqueLossResult.Value;
-
-			PreviousState.SetState(inTorque, inAngularVelocity, torque, angularVelocity);
-			PreviousState.TorqueLossResult = torqueLossResult;
-
-			return NextComponent.Initialize(inTorque, inAngularVelocity);
 		}
 
 		protected override void DoWriteModalResults(IModalDataContainer container)
 		{
 			var avgAngularVelocity = (PreviousState.InAngularVelocity + CurrentState.InAngularVelocity) / 2.0;
-			container[ModalResultField.P_axle_loss] = (CurrentState.InTorque - CurrentState.OutTorque / ModelData.AxleGear.Ratio) *
+			container[ModalResultField.P_axle_loss] = (CurrentState.InTorque - CurrentState.OutTorque / ModelData.Ratio) *
 													avgAngularVelocity;
 			container[ModalResultField.P_axle_in] = CurrentState.InTorque * avgAngularVelocity;
 		}
 
-		protected override void DoCommitSimulationStep()
-		{
-			if (CurrentState.TorqueLossResult.Extrapolated) {
-				Log.Warn("AxleGear LossMap data was extrapolated: range for loss map is not sufficient: n:{0}, torque:{1}",
-					CurrentState.OutAngularVelocity.ConvertTo().Rounds.Per.Minute, CurrentState.OutTorque);
-
-				if (DataBus.ExecutionMode == ExecutionMode.Declaration) {
-					throw new VectoException(
-						"AxleGear LossMap data was extrapolated in Declaration Mode: range for loss map is not sufficient: n:{0}, torque:{1}",
-						CurrentState.OutAngularVelocity.ConvertTo().Rounds.Per.Minute, CurrentState.OutTorque);
-				}
-			}
-			AdvanceState();
-		}
-
 		public Watt AxlegearLoss()
 		{
-			return (PreviousState.TransmissionTorqueLoss) * PreviousState.InAngularVelocity;
-		}
-
-		public class AxlegearState : SimpleComponentState
-		{
-			public TransmissionLossMap.LossMapResult TorqueLossResult;
-			public NewtonMeter TransmissionTorqueLoss = 0.SI<NewtonMeter>();
+			return PreviousState.TorqueLoss * PreviousState.InAngularVelocity;
 		}
 	}
 }

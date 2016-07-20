@@ -91,16 +91,10 @@ namespace TUGraz.VectoCommon.InputData
 		Kilogram GrossVehicleMassRating { get; }
 
 		/// <summary>
-		/// P146  DragCoefficient * Cross Section Area - Truck & Trailer
+		/// P146, P147  DragCoefficient * Cross Section Area - Rigid
 		/// cf. VECTO Input Parameters.xlsx
 		/// </summary>
-		SquareMeter AirDragArea { get; }
-
-		/// <summary>
-		/// P147  DragCoefficient * Cross Section Area - Rigid
-		/// cf. VECTO Input Parameters.xlsx
-		/// </summary>
-		SquareMeter AirDragAreaRigidTruck { get; } // without trailer
+		SquareMeter AirDragArea { get; } // without trailer
 
 		/// <summary>
 		/// P117  Powered axle tyres/rims
@@ -114,12 +108,6 @@ namespace TUGraz.VectoCommon.InputData
 		/// cf. VECTO Input Parameters.xlsx
 		/// </summary>
 		IList<IAxleDeclarationInputData> Axles { get; }
-
-		/// <summary>
-		/// P053
-		/// cf. VECTO Input Parameters.xlsx
-		/// </summary>
-		double RetarderRatio { get; }
 	}
 
 	public interface IRetarderInputData : IComponentInputData
@@ -131,11 +119,28 @@ namespace TUGraz.VectoCommon.InputData
 		RetarderType Type { get; }
 
 		/// <summary>
+		/// P053
+		/// cf. VECTO Input Parameters.xlsx
+		/// </summary>
+		double Ratio { get; }
+
+		/// <summary>
 		/// P054
 		/// P057, P058
 		/// cf. VECTO Input Parameters.xlsx
 		/// </summary>
 		DataTable LossMap { get; }
+	}
+
+	public interface IAngularGearInputData : IComponentInputData
+	{
+		AngularGearType Type { get; }
+
+		double Ratio { get; }
+
+		DataTable LossMap { get; }
+
+		double Efficiency { get; }
 	}
 
 	public interface IAxleDeclarationInputData : IComponentInputData

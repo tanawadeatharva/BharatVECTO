@@ -37,7 +37,7 @@ using Microsoft.VisualStudio.TestTools.UnitTesting;
 using TUGraz.VectoCommon.Models;
 using TUGraz.VectoCommon.Utils;
 using TUGraz.VectoCore.InputData.Reader;
-using TUGraz.VectoCore.InputData.Reader.DataObjectAdaper;
+using TUGraz.VectoCore.InputData.Reader.DataObjectAdapter;
 using TUGraz.VectoCore.Models.Simulation.Data;
 using TUGraz.VectoCore.Models.Simulation.Impl;
 using TUGraz.VectoCore.Models.SimulationComponent.Data;
@@ -129,7 +129,6 @@ namespace TUGraz.VectoCore.Tests.Models.SimulationComponentData
 			Assert.IsFalse(results.Any(), "Validation failed: " + "; ".Join(results.Select(r => r.ErrorMessage)));
 			Assert.IsTrue(engineData.IsValid());
 		}
-
 
 		[TestMethod]
 		public void Validation_CombustionEngineData_Declaration()
@@ -250,12 +249,10 @@ namespace TUGraz.VectoCore.Tests.Models.SimulationComponentData
 			Assert.IsTrue(results.Any());
 		}
 
-
 		public class DeepDataObject
 		{
 			[Required, Range(41, 42)] protected int public_field = 5;
 		}
-
 
 		public abstract class ParentDataObject
 		{

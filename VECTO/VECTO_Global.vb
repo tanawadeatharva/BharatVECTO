@@ -11,6 +11,7 @@
 Imports System.ComponentModel
 Imports System.IO
 Imports System.Text
+Imports TUGraz.VectoCommon.Models
 Imports vectolic
 
 Module VECTO_Global
@@ -390,8 +391,8 @@ Module VECTO_Global
 		End Select
 	End Function
 
-	Public Function RtTypeConv(RtType As String) As tRtType
-		Select Case UCase(Trim(RtType))
+	Public Function RtTypeConv(rtType As String) As tRtType
+		Select Case UCase(Trim(rtType))
 			Case "PRIMARY"
 				Return tRtType.Primary
 			Case "SECONDARY"

@@ -29,6 +29,7 @@
 *   Martin Rexeis, rexeis@ivt.tugraz.at, IVT, Graz University of Technology
 */
 
+using System;
 using System.Collections.Generic;
 using System.IO;
 using TUGraz.VectoCommon.Utils;
@@ -46,23 +47,38 @@ namespace TUGraz.VectoCore.Models.Declaration
 	{
 		public static string GetShortName(this LoadingType loadingType)
 		{
-			return loadingType.ToString().Substring(0, 1);
+			switch (loadingType) {
+				case LoadingType.FullLoading:
+					return "F";
+				case LoadingType.ReferenceLoad:
+					return "R";
+				case LoadingType.EmptyLoading:
+					return "E";
+				default:
+					throw new ArgumentOutOfRangeException("loadingType", loadingType, null);
+			}
 		}
 	}
 
-
 	public class Mission
 	{
-		public MissionType MissionType { get; set; }
-		public string CrossWindCorrection { get; set; }
-		public double[] AxleWeightDistribution { get; set; }
-		public double[] TrailerAxleWeightDistribution { get; set; }
+		public MissionType MissionType;
+		public string CrossWindCorrection;
+		public double[] AxleWeightDistribution;
+		public double[] TrailerAxleWeightDistribution;
 
-		public Kilogram MassExtra { get; set; }
+		public Kilogram CurbWeight;
+		public Kilogram BodyCurbWeight;
+		public Kilogram BodyGrossVehicleWeight;
+		public TrailerType TrailerType;
+		public Kilogram TrailerCurbWeight;
+		public Kilogram TrailerGrossVehicleWeight;
+		public Stream CycleFile;
+		public SquareMeter DeltaCdA;
 
-		public Kilogram MinLoad { get; set; }
-		public Kilogram RefLoad { get; set; }
-		public Kilogram MaxLoad { get; set; }
+		public Kilogram MinLoad;
+		public Kilogram RefLoad;
+		public Kilogram MaxLoad;
 
 		public Dictionary<LoadingType, Kilogram> Loadings
 		{
@@ -75,15 +91,12 @@ namespace TUGraz.VectoCore.Models.Declaration
 				};
 			}
 		}
+	}
 
-		public Stream CycleFile { get; set; }
-
-		public bool UseCdA2 { get; set; }
-
-		public class LoadingEntry
-		{
-			public Kilogram LoadingWeight;
-			public string Name;
-		}
+	public enum TrailerType
+	{
+		None,
+		T1,
+		T2
 	}
 }

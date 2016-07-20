@@ -42,9 +42,8 @@ using TUGraz.VectoCore.Models.SimulationComponent.Data;
 using TUGraz.VectoCore.Models.SimulationComponent.Data.Engine;
 using TUGraz.VectoCore.Models.SimulationComponent.Data.Gearbox;
 using TUGraz.VectoCore.OutputData;
-using DriverData = TUGraz.VectoCore.Models.SimulationComponent.Data.DriverData;
 
-namespace TUGraz.VectoCore.InputData.Reader.DataObjectAdaper
+namespace TUGraz.VectoCore.InputData.Reader.DataObjectAdapter
 {
 	public class EngineeringDataAdapter : AbstractSimulationDataAdapter
 	{
@@ -56,7 +55,8 @@ namespace TUGraz.VectoCore.InputData.Reader.DataObjectAdaper
 
 			var retVal = SetCommonVehicleData(data);
 
-			retVal.CurbWeigthExtra = data.CurbWeightExtra;
+			retVal.CurbWeight += data.CurbWeightExtra;
+			retVal.TrailerGrossVehicleWeight = 0.SI<Kilogram>();
 			retVal.Loading = data.Loading;
 			retVal.DynamicTyreRadius = data.DynamicTyreRadius;
 			retVal.CrossWindCorrectionMode = data.CrossWindCorrectionMode;
@@ -99,7 +99,7 @@ namespace TUGraz.VectoCore.InputData.Reader.DataObjectAdaper
 
 		private void WarnEngineeringMode(string msg)
 		{
-			Log.Warn("{0} is in Declaration Mode but is used for Engineering Mode!", msg);
+			Log.Error("{0} is in Declaration Mode but is used for Engineering Mode!", msg);
 		}
 
 		internal CombustionEngineData CreateEngineData(IEngineEngineeringInputData engine)

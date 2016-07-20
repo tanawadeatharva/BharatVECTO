@@ -91,7 +91,7 @@ namespace TUGraz.VectoCore.Tests.Utils
 						.ToList();
 				}
 
-				Assert.IsTrue(expectedCols.SequenceEqual(actualCols),
+				CollectionAssert.AreEqual(expectedCols, actualCols,
 					string.Format("Moddata {3}: Columns differ:\nExpected: {0}\nMissing:{1},\nToo Much:{2}",
 						", ".Join(expectedCols),
 						", ".Join(expectedCols.Except(actualCols)),
@@ -123,7 +123,7 @@ namespace TUGraz.VectoCore.Tests.Utils
 			var actualCols = actual.Columns.Cast<DataColumn>().Select(x => x.ColumnName).OrderBy(x => x).ToList();
 			var expectedCols = expected.Columns.Cast<DataColumn>().Select(x => x.ColumnName).OrderBy(x => x).ToList();
 
-			Assert.IsTrue(expectedCols.SequenceEqual(actualCols),
+			CollectionAssert.AreEqual(expectedCols, actualCols,
 				string.Format("SUM FILE {3}: Columns differ:\nExpected: {0}\nMissing:{1},\nToo Much:{2}",
 					", ".Join(expectedCols),
 					", ".Join(expectedCols.Except(actualCols)),
