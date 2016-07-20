@@ -72,7 +72,7 @@ namespace TUGraz.VectoCore.Tests.Integration
 			bool overspeed = false)
 		{
 			var fileWriter = new FileOutputWriter(modFileName);
-			var modData = new ModalDataContainer(modFileName, fileWriter, ExecutionMode.Engineering) { WriteAdvancedAux = true };
+			var modData = new ModalDataContainer(modFileName, fileWriter) { WriteAdvancedAux = true };
 			var container = new VehicleContainer(ExecutionMode.Engineering, modData) {
 				RunData = new VectoRunData { JobName = modFileName, Cycle = cycleData }
 			};
@@ -81,7 +81,6 @@ namespace TUGraz.VectoCore.Tests.Integration
 			var axleGearData = CreateAxleGearData();
 			var gearboxData = CreateGearboxData();
 			var vehicleData = CreateVehicleData(3300.SI<Kilogram>());
-			//var retarder = new RetarderData { Type = RetarderData.RetarderType.None };
 			var driverData = CreateDriverData(AccelerationFile, overspeed);
 
 			var cycle = new DistanceBasedDrivingCycle(container, cycleData);
@@ -134,9 +133,9 @@ namespace TUGraz.VectoCore.Tests.Integration
 				StartTorqueReserve = 0.2,
 				SkipGears = true,
 				TorqueReserve = 0.2,
-				UpshiftAfterDownshiftDelay = 10.SI<Second>(),
-				DownshiftAfterUpshiftDelay = 10.SI<Second>(),
-				UpshiftMinAcceleration = 0.1.SI<MeterPerSquareSecond>()
+				DownshiftAfterUpshiftDelay = DeclarationData.Gearbox.DownshiftAfterUpshiftDelay,
+				UpshiftAfterDownshiftDelay = DeclarationData.Gearbox.UpshiftAfterDownshiftDelay,
+				UpshiftMinAcceleration = DeclarationData.Gearbox.UpshiftMinAcceleration
 			};
 		}
 

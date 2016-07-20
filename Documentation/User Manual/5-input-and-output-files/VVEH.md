@@ -9,7 +9,7 @@ Refers to other files:
 
 * [Cross Wind Correction (VCDV, VCDB)](#cross-wind-correction)
 * [Retarder Loss Map (VRLM)](#retarder-loss-torque-input-file-.vrlm)
-
+* [Transmission Loss Map (for Angular Gear) (VTLM)](#transmission-loss-map)
 
 **Example:**
 
@@ -37,6 +37,11 @@ Refers to other files:
       "Type": "Secondary",
       "Ratio": 1.0,
       "File": "Retarder.vrlm"
+    },
+    "AngularGear": {
+      "Type" : "SeparateAngularGear",
+      "Ratio": 1.0,
+      "LossMap": "AngularGear.vtlm"
     },
     "AxleConfig": {
       "Type": "4x2",

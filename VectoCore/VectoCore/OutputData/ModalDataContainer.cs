@@ -45,7 +45,7 @@ namespace TUGraz.VectoCore.OutputData
 {
 	public class ModalDataContainer : IModalDataContainer
 	{
-		private readonly ExecutionMode _mode;
+		private readonly bool _writeEngineOnly;
 		private readonly IModalDataFilter[] _filters;
 		private readonly Action<ModalDataContainer> _addReportResult;
 		internal ModalResults Data { get; set; }
@@ -64,15 +64,15 @@ namespace TUGraz.VectoCore.OutputData
 
 		public bool WriteAdvancedAux { get; set; }
 
-		public ModalDataContainer(string runName, IModalDataWriter writer, ExecutionMode mode)
-			: this(runName, "", "", writer, _ => { }, mode) {}
+		public ModalDataContainer(string runName, IModalDataWriter writer, bool writeEngineOnly = false)
+			: this(runName, "", "", writer, _ => { }, writeEngineOnly) {}
 
 		public ModalDataContainer(VectoRunData runData, IModalDataWriter writer, Action<ModalDataContainer> addReportResult,
-			ExecutionMode mode, params IModalDataFilter[] filter)
-			: this(runData.JobName, runData.Cycle.Name, runData.ModFileSuffix, writer, addReportResult, mode, filter) {}
+			bool writeEngineOnly, params IModalDataFilter[] filter)
+			: this(runData.JobName, runData.Cycle.Name, runData.ModFileSuffix, writer, addReportResult, writeEngineOnly, filter) {}
 
 		protected ModalDataContainer(string runName, string cycleName, string runSuffix, IModalDataWriter writer,
-			Action<ModalDataContainer> addReportResult, ExecutionMode mode, params IModalDataFilter[] filters)
+			Action<ModalDataContainer> addReportResult, bool writeEngineOnly, params IModalDataFilter[] filters)
 
 		{
 			HasTorqueConverter = false;
@@ -81,9 +81,9 @@ namespace TUGraz.VectoCore.OutputData
 			RunSuffix = runSuffix;
 			_writer = writer;
 
-			_mode = mode;
+			_writeEngineOnly = writeEngineOnly;
 			_filters = filters;
-			_addReportResult = addReportResult;
+			_addReportResult = addReportResult ?? (x => { });
 
 			Data = new ModalResults();
 			Auxiliaries = new Dictionary<string, DataColumn>();
@@ -105,7 +105,7 @@ namespace TUGraz.VectoCore.OutputData
 
 			RunStatus = runStatus;
 
-			if (_mode != ExecutionMode.EngineOnly) {
+			if (!_writeEngineOnly) {
 				dataColumns.AddRange(new[] {
 					ModalResultField.simulationInterval,
 					ModalResultField.dist,
@@ -115,7 +115,7 @@ namespace TUGraz.VectoCore.OutputData
 					ModalResultField.grad
 				});
 			}
-			if (_mode != ExecutionMode.EngineOnly) {
+			if (!_writeEngineOnly) {
 				dataColumns.AddRange(new[] {
 					ModalResultField.Gear,
 				});
@@ -135,13 +135,15 @@ namespace TUGraz.VectoCore.OutputData
 				ModalResultField.P_aux
 			});
 
-			if (_mode != ExecutionMode.EngineOnly) {
+			if (!_writeEngineOnly) {
 				dataColumns.AddRange(new[] {
 					ModalResultField.P_gbx_in,
 					ModalResultField.P_gbx_loss,
 					ModalResultField.P_gbx_inertia,
 					ModalResultField.P_retarder_in,
 					ModalResultField.P_ret_loss,
+					ModalResultField.P_angle_in,
+					ModalResultField.P_angle_loss,
 					ModalResultField.P_axle_in,
 					ModalResultField.P_axle_loss,
 					ModalResultField.P_brake_in,
@@ -164,7 +166,7 @@ namespace TUGraz.VectoCore.OutputData
 					});
 				}
 			}
-			if (_mode != ExecutionMode.EngineOnly && WriteAdvancedAux) {
+			if (!_writeEngineOnly && WriteAdvancedAux) {
 				dataColumns.AddRange(new[] {
 					ModalResultField.AA_NonSmartAlternatorsEfficiency,
 					ModalResultField.AA_SmartIdleCurrent_Amps,
@@ -196,7 +198,7 @@ namespace TUGraz.VectoCore.OutputData
 						ModalResultField.FCAAUX, ModalResultField.FCFinal
 					}.Select(x => x.GetName()));
 
-			if (_mode != ExecutionMode.Declaration || WriteModalResults) {
+			if (WriteModalResults) {
 				var filteredData = Data;
 				foreach (var filter in _filters) {
 					RunSuffix += "_" + filter.ID;
@@ -205,9 +207,7 @@ namespace TUGraz.VectoCore.OutputData
 				_writer.WriteModData(RunName, CycleName, RunSuffix, new DataView(filteredData).ToTable(false, strCols.ToArray()));
 			}
 
-			if (_mode == ExecutionMode.Declaration) {
-				_addReportResult(this);
-			}
+			_addReportResult(this);
 		}
 
 		public IEnumerable<T> GetValues<T>(DataColumn col)

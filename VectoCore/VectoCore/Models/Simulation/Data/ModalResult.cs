@@ -246,6 +246,11 @@ namespace TUGraz.VectoCore.Models.Simulation.Data
 		[ModalResultField(typeof(SI), name: "Ploss Diff", caption: "P_axle_loss [kW]", outputFactor: 1e-3)] P_axle_loss,
 
 		/// <summary>
+		///     [kW]	Losses in angle transmission.
+		/// </summary>
+		[ModalResultField(typeof(SI), name: "Ploss Angle", caption: "P_angle_loss [kW]", outputFactor: 1e-3)] P_angle_loss,
+
+		/// <summary>
 		///     [kW]	Retarder losses.
 		/// </summary>
 		[ModalResultField(typeof(SI), name: "P_ret_loss", caption: "P_ret_loss [kW]", outputFactor: 1e-3)] P_ret_loss,
@@ -290,6 +295,8 @@ namespace TUGraz.VectoCore.Models.Simulation.Data
 		[ModalResultField(typeof(SI), caption: "P_brake_in [kW]", outputFactor: 1e-3)] P_brake_in,
 
 		[ModalResultField(typeof(SI), caption: "P_axle_in [kW]", outputFactor: 1e-3)] P_axle_in,
+
+		[ModalResultField(typeof(SI), caption: "P_angle_in [kW]", outputFactor: 1e-3)] P_angle_in,
 
 		[ModalResultField(typeof(SI), caption: "P_ret_in [kW]", outputFactor: 1e-3)] P_retarder_in,
 

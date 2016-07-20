@@ -34,10 +34,10 @@ using System.Linq;
 using System.Runtime.CompilerServices;
 using TUGraz.VectoCommon.InputData;
 using TUGraz.VectoCommon.Models;
-using TUGraz.VectoCore.InputData.Reader.DataObjectAdaper;
+using TUGraz.VectoCore.InputData.Reader.DataObjectAdapter;
 using TUGraz.VectoCore.InputData.Reader.DataObjectAdapter;
 using TUGraz.VectoCore.Models.Simulation.Data;
-using DriverData = TUGraz.VectoCore.Models.SimulationComponent.Data.DriverData;
+using TUGraz.VectoCore.Models.SimulationComponent.Data;
 
 [assembly: InternalsVisibleTo("VectoCoreTest")]
 
@@ -71,12 +71,14 @@ namespace TUGraz.VectoCore.InputData.Reader.Impl
 			var gearboxData = dao.CreateGearboxData(InputDataProvider.GearboxInputData, engineData, axlegearData.AxleGear.Ratio,
 				tempVehicle.DynamicTyreRadius, useEfficiencyFallback: true);
 			var crossWindRequired = vehicleInputData.CrossWindCorrectionMode == CrossWindCorrectionMode.VAirBetaLookupTable;
+			var angularGearData = dao.CreateAngularGearData(InputDataProvider.AngularGearInputData, useEfficiencyFallback: true);
 
 			return InputDataProvider.JobInputData().Cycles.Select(cycle => new VectoRunData {
 				JobName = InputDataProvider.JobInputData().JobName,
 				EngineData = engineData,
 				GearboxData = gearboxData,
 				AxleGearData = axlegearData,
+				AngularGearData = angularGearData,
 				VehicleData = dao.CreateVehicleData(vehicleInputData),
 				DriverData = driver,
 				Aux = dao.CreateAuxiliaryData(InputDataProvider.AuxiliaryInputData()),

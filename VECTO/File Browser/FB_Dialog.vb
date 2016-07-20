@@ -13,6 +13,7 @@ Option Infer On
 Imports System.IO
 Imports System.Text
 Imports Microsoft.VisualBasic.FileIO
+Imports System.Runtime.InteropServices
 
 ''' <summary>
 ''' File Browser dialog. Entirely controlled by cFilebrowser class.
@@ -62,7 +63,7 @@ Public Class FB_Dialog
 	End Sub
 
 	'Resize
-	Private Sub FB_Dialog_Resize(sender As Object, e As EventArgs) Handles Me.Resize
+	Private Sub FB_Dialog_Resize(sender As Object, e As EventArgs) Handles Me.ResizeEnd
 		Resized()
 	End Sub
 
@@ -75,8 +76,11 @@ Public Class FB_Dialog
 
 	'Resized ListView Format
 	Private Sub Resized()
+		'To autosize to the width of the column heading, set the Width property to -2
 		ListViewFolder.Columns(0).Width = -2
+		'ListViewFolder.Columns(0).Width -= 1
 		ListViewFiles.Columns(0).Width = -2
+		'ListViewFiles.Columns(0).Width -= 1
 	End Sub
 
 	'SplitterMoved
@@ -201,6 +205,7 @@ Public Class FB_Dialog
 		'Form Config
 		ListViewFiles.MultiSelect = multiFile
 		ButtonAll.Visible = multiFile
+		Me.Title = title
 		Text = title
 
 		'Ext-Combobox
@@ -281,6 +286,8 @@ Public Class FB_Dialog
 			Return False
 		End If
 	End Function
+
+	Public Title As String
 
 	'Close and save File / Folder History
 	Public Sub SaveAndClose()
@@ -600,8 +607,13 @@ Public Class FB_Dialog
 		If Not _updateLock Then LoadListFiles()
 	End Sub
 
-	Private Sub ButtonHisFolder_Click(sender As Object, e As EventArgs) Handles ButtonHisFolder.Click, ButtonHisFile.Click
+	Private Sub ButtonHisFolder_Click(sender As Object, e As EventArgs) Handles ButtonHisFolder.Click
 		ContextMenuHisFolder.Show(MousePosition)
+	End Sub
+
+
+	Private Sub ButtonHisFile_Click(sender As Object, e As EventArgs) Handles ButtonHisFile.Click
+		ContextMenuHisFile.Show(MousePosition)
 	End Sub
 
 	Private Sub ButtonAll_Click(sender As Object, e As EventArgs) Handles ButtonAll.Click
@@ -629,7 +641,7 @@ Public Class FB_Dialog
 
 		If path = FavText Then
 			Dim favdlog = New FB_FavDlog
-			If favdlog.ShowDialog = DialogResult.OK Then
+			If favdlog.ShowDialog(Me) = DialogResult.OK Then
 				For x = 10 To 19
 					path = favdlog.ListBox1.Items(x - 10)
 					If path = NoFavString Then
@@ -727,6 +739,9 @@ Public Class FB_Dialog
 		'Set Folder
 		_myFolder = path
 		If Microsoft.VisualBasic.Right(_myFolder, 1) <> "\" Then _myFolder &= "\"
+
+		Me.Text = Me.Title & " " & _myFolder
+
 		LoadListFolder()
 		LoadListFiles()
 
@@ -747,6 +762,20 @@ Public Class FB_Dialog
 		End If
 	End Sub
 
+
+	Private Structure SHFILEINFO
+		Public hIcon As IntPtr ' : icon
+		Public iIcon As Integer	' : icondex
+		Public dwAttributes As Integer ' : SFGAO_ flags
+		<MarshalAs(UnmanagedType.ByValTStr, SizeConst:=260)> Public szDisplayName As String
+		<MarshalAs(UnmanagedType.ByValTStr, SizeConst:=80)> Public szTypeName As String
+	End Structure
+
+	Private Const SHGFI_ICON = &H100
+	Private Const SHGFI_SMALLICON = &H1
+	Private Declare Ansi Function SHGetFileInfo Lib "shell32.dll" (pszPath As String, dwFileAttributes As Integer,
+																ByRef psfi As SHFILEINFO, cbFileInfo As Integer, uFlags As Integer) As IntPtr
+
 	'Load Folder-List
 	Private Sub LoadListFolder()
 		'Delete Folder-List
@@ -756,8 +785,15 @@ Public Class FB_Dialog
 			'Add Folder
 			Dim di As New DirectoryInfo(_myFolder)
 			Dim aryFi = di.GetDirectories(searchPat)
+			ImageList1.Images.Clear()
+			Dim shinfo = New SHFILEINFO()
+			shinfo.szDisplayName = New String(Chr(0), 260)
+			shinfo.szTypeName = New String(Chr(0), 80)
+			SHGetFileInfo(_myFolder, 0, shinfo, Marshal.SizeOf(shinfo), SHGFI_ICON Or SHGFI_SMALLICON)
+			Dim myIcon = Icon.FromHandle(shinfo.hIcon)
+			ImageList1.Images.Add(myIcon)
 			For Each fi In aryFi
-				ListViewFolder.Items.Add(fi.ToString)
+				ListViewFolder.Items.Add(fi.ToString, 0)
 			Next
 		Catch ex As Exception
 			ListViewFolder.Items.Add("<ERROR: " & ex.Message.ToString & ">")
@@ -769,7 +805,6 @@ Public Class FB_Dialog
 		'Abort if bBrowseFolder
 		If _bBrowseFolder Then Exit Sub
 
-		LabelFileAnz.Text = "0 Files"
 		'Define Extension-filter
 		Dim extStr As String()
 		If Trim(ComboBoxExt.Text.ToString) = "" Then
@@ -795,14 +830,16 @@ Public Class FB_Dialog
 				aryFi = di.GetFiles(searchPat)
 				For Each fi In aryFi
 					x += 1
-					ListViewFiles.Items.Add(fi.ToString)
+					Dim shinfo = New SHFILEINFO()
+					shinfo.szDisplayName = New String(Chr(0), 260)
+					shinfo.szTypeName = New String(Chr(0), 80)
+					SHGetFileInfo(Path.Combine(_myFolder, fi.ToString), 0, shinfo, Marshal.SizeOf(shinfo),
+								SHGFI_ICON Or SHGFI_SMALLICON)
+					Dim myIcon = Icon.FromHandle(shinfo.hIcon)
+					ImageList1.Images.Add(myIcon)
+					ListViewFiles.Items.Add(fi.ToString, x + 1)
 				Next
 			Next
-			If x = 0 Then
-				LabelFileAnz.Text = "1 File"
-			Else
-				LabelFileAnz.Text = x + 1 & " Files"
-			End If
 		Catch ex As Exception
 			ListViewFiles.Items.Add("<ERROR: " & ex.Message.ToString & ">")
 		End Try
@@ -874,12 +911,12 @@ lb10:
 		End If
 	End Sub
 
-	Private Shared Function fPATH(Pfad As String) As String
-		Dim x = Pfad.LastIndexOf("\")
+	Private Shared Function fPATH(path As String) As String
+		Dim x = path.LastIndexOf("\")
 		If x = -1 Then
-			Return Microsoft.VisualBasic.Left(Pfad, 0)
+			Return Microsoft.VisualBasic.Left(path, 0)
 		Else
-			Return Microsoft.VisualBasic.Left(Pfad, x + 1)
+			Return Microsoft.VisualBasic.Left(path, x + 1)
 		End If
 	End Function
 

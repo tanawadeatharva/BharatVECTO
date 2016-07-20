@@ -45,7 +45,7 @@ namespace TUGraz.VectoCore.Tests.Models.Simulation
 		[TestMethod]
 		public void VechicleContainerHasEngine()
 		{
-			var vehicle = new VehicleContainer(ExecutionMode.EngineOnly);
+			var vehicle = new VehicleContainer(ExecutionMode.Engineering);
 			var engineData = MockSimulationDataFactory.CreateEngineDataFromFile(EngineFile);
 			var engine = new CombustionEngine(vehicle, engineData);
 

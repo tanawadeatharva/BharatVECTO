@@ -56,9 +56,9 @@ Partial Class F_Settings
 		'ButtonOK
 		'
 		Me.ButtonOK.Anchor = CType((System.Windows.Forms.AnchorStyles.Bottom Or System.Windows.Forms.AnchorStyles.Right), System.Windows.Forms.AnchorStyles)
-		Me.ButtonOK.Location = New System.Drawing.Point(347, 287)
+		Me.ButtonOK.Location = New System.Drawing.Point(347, 278)
 		Me.ButtonOK.Name = "ButtonOK"
-		Me.ButtonOK.Size = New System.Drawing.Size(75, 26)
+		Me.ButtonOK.Size = New System.Drawing.Size(75, 24)
 		Me.ButtonOK.TabIndex = 2
 		Me.ButtonOK.Text = "OK"
 		Me.ButtonOK.UseVisualStyleBackColor = True
@@ -67,9 +67,9 @@ Partial Class F_Settings
 		'
 		Me.ButtonCancel.Anchor = CType((System.Windows.Forms.AnchorStyles.Bottom Or System.Windows.Forms.AnchorStyles.Right), System.Windows.Forms.AnchorStyles)
 		Me.ButtonCancel.DialogResult = System.Windows.Forms.DialogResult.Cancel
-		Me.ButtonCancel.Location = New System.Drawing.Point(428, 287)
+		Me.ButtonCancel.Location = New System.Drawing.Point(428, 278)
 		Me.ButtonCancel.Name = "ButtonCancel"
-		Me.ButtonCancel.Size = New System.Drawing.Size(75, 26)
+		Me.ButtonCancel.Size = New System.Drawing.Size(75, 24)
 		Me.ButtonCancel.TabIndex = 3
 		Me.ButtonCancel.Text = "Cancel"
 		Me.ButtonCancel.UseVisualStyleBackColor = True
@@ -156,7 +156,7 @@ Partial Class F_Settings
 		Me.TabControl1.Location = New System.Drawing.Point(3, 3)
 		Me.TabControl1.Name = "TabControl1"
 		Me.TabControl1.SelectedIndex = 0
-		Me.TabControl1.Size = New System.Drawing.Size(508, 278)
+		Me.TabControl1.Size = New System.Drawing.Size(508, 269)
 		Me.TabControl1.TabIndex = 12
 		'
 		'TabPage2
@@ -166,7 +166,7 @@ Partial Class F_Settings
 		Me.TabPage2.Location = New System.Drawing.Point(4, 22)
 		Me.TabPage2.Name = "TabPage2"
 		Me.TabPage2.Padding = New System.Windows.Forms.Padding(3)
-		Me.TabPage2.Size = New System.Drawing.Size(500, 252)
+		Me.TabPage2.Size = New System.Drawing.Size(500, 243)
 		Me.TabPage2.TabIndex = 0
 		Me.TabPage2.Text = "VECTO"
 		Me.TabPage2.UseVisualStyleBackColor = True
@@ -267,9 +267,9 @@ Partial Class F_Settings
 		'ButReset
 		'
 		Me.ButReset.Anchor = CType((System.Windows.Forms.AnchorStyles.Bottom Or System.Windows.Forms.AnchorStyles.Left), System.Windows.Forms.AnchorStyles)
-		Me.ButReset.Location = New System.Drawing.Point(35, 287)
+		Me.ButReset.Location = New System.Drawing.Point(31, 278)
 		Me.ButReset.Name = "ButReset"
-		Me.ButReset.Size = New System.Drawing.Size(108, 26)
+		Me.ButReset.Size = New System.Drawing.Size(108, 24)
 		Me.ButReset.TabIndex = 1
 		Me.ButReset.Text = "Reset All Settings"
 		Me.ButReset.UseVisualStyleBackColor = True
@@ -278,9 +278,9 @@ Partial Class F_Settings
 		'
 		Me.BtHelp.Anchor = CType((System.Windows.Forms.AnchorStyles.Bottom Or System.Windows.Forms.AnchorStyles.Left), System.Windows.Forms.AnchorStyles)
 		Me.BtHelp.Image = Global.VECTO.My.Resources.Resources.Help_icon
-		Me.BtHelp.Location = New System.Drawing.Point(3, 287)
+		Me.BtHelp.Location = New System.Drawing.Point(4, 278)
 		Me.BtHelp.Name = "BtHelp"
-		Me.BtHelp.Size = New System.Drawing.Size(26, 26)
+		Me.BtHelp.Size = New System.Drawing.Size(24, 24)
 		Me.BtHelp.TabIndex = 0
 		Me.BtHelp.UseVisualStyleBackColor = True
 		'
@@ -290,7 +290,7 @@ Partial Class F_Settings
 		Me.AutoScaleDimensions = New System.Drawing.SizeF(6.0!, 13.0!)
 		Me.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font
 		Me.CancelButton = Me.ButtonCancel
-		Me.ClientSize = New System.Drawing.Size(515, 325)
+		Me.ClientSize = New System.Drawing.Size(515, 310)
 		Me.Controls.Add(Me.BtHelp)
 		Me.Controls.Add(Me.ButReset)
 		Me.Controls.Add(Me.TabControl1)

@@ -54,6 +54,7 @@ namespace TUGraz.VectoCore.Models.Simulation.Impl
 		private static int _jobNumberCounter;
 
 		private readonly ExecutionMode _mode;
+		private readonly bool _engineOnlyMode;
 
 		public SimulatorFactory(ExecutionMode mode, IInputDataProvider dataProvider, IOutputDataWriter writer,
 			DeclarationReport declarationReport = null)
@@ -80,14 +81,12 @@ namespace TUGraz.VectoCore.Models.Simulation.Impl
 					if (engDataProvider == null) {
 						throw new VectoException("InputDataProvider does not implement Engineering interface");
 					}
-					DataReader = new EngineeringModeVectoRunDataFactory(engDataProvider);
-					break;
-				case ExecutionMode.EngineOnly:
-					var engineDataProvider = dataProvider as IEngineeringInputDataProvider;
-					if (engineDataProvider == null) {
-						throw new VectoException("InputDataProvider does not implement Engineering interface");
+					if (engDataProvider.JobInputData().EngineOnlyMode) {
+						DataReader = new EngineOnlyVectoRunDataFactory(engDataProvider);
+						_engineOnlyMode = true;
+					} else {
+						DataReader = new EngineeringModeVectoRunDataFactory(engDataProvider);
 					}
-					DataReader = new EngineOnlyVectoRunDataFactory(engineDataProvider);
 					break;
 				default:
 					throw new VectoException("Unkown factory mode in SimulatorFactory: {0}", mode);
@@ -118,17 +117,18 @@ namespace TUGraz.VectoCore.Models.Simulation.Impl
 
 			foreach (var data in DataReader.NextRun()) {
 				var d = data;
+				Action<ModalDataContainer> addReportResult = writer => {
+					if (d.Report != null) {
+						d.Report.AddResult(d.Loading, d.Mission, writer);
+					}
+				};
 				IModalDataContainer modContainer =
 					new ModalDataContainer(data, ModWriter,
-						addReportResult: writer => {
-							if (d.Report != null) {
-								d.Report.AddResult(d.Loading, d.Mission, writer);
-							}
-						},
-						mode: _mode,
+						addReportResult: _mode == ExecutionMode.Declaration ? addReportResult : null,
+						writeEngineOnly: _engineOnlyMode,
 						filter: modDataFilter) {
 							WriteAdvancedAux = data.AdvancedAux != null && data.AdvancedAux.AuxiliaryAssembly == AuxiliaryModel.Advanced,
-							WriteModalResults = WriteModalResults
+							WriteModalResults = _mode != ExecutionMode.Declaration || WriteModalResults
 						};
 				var current = i++;
 				var builder = new PowertrainBuilder(modContainer, (writer, mass, loading) =>

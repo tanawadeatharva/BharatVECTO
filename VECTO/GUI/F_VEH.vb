@@ -10,22 +10,22 @@
 ' See the LICENSE.txt for the specific language governing permissions and limitations.
 Option Infer On
 
-
 Imports System.IO
 Imports System.Text.RegularExpressions
+Imports TUGraz.VectoCommon.Models
 
 ''' <summary>
 ''' Vehicle Editor.
 ''' </summary>
-''' <remarks></remarks>
 Public Class F_VEH
-	Dim AxlDlog As F_VEH_Axle
-	Private HDVclass As String
-	Dim VehFile As String
+	Private _axlDlog As F_VEH_Axle
+	Private _hdVclass As String
+	Private _vehFile As String
+	Private _changed As Boolean = False
+	Private _cmFiles As String()
+
 	Public AutoSendTo As Boolean = False
 	Public JobDir As String = ""
-
-	Private Changed As Boolean = False
 
 	'Close - Check for unsaved changes
 	Private Sub F_VEH_FormClosing(sender As Object, e As FormClosingEventArgs) Handles Me.FormClosing
@@ -45,32 +45,32 @@ Public Class F_VEH
 		CbCdMode.Enabled = Not Cfg.DeclMode
 		PnWheelDiam.Enabled = Not Cfg.DeclMode
 
-		AxlDlog = New F_VEH_Axle
+		_axlDlog = New F_VEH_Axle
 
 		CbRim.Items.Add("-")
 		For Each txt In Declaration.RimsList
 			CbRim.Items.Add(txt)
 		Next
 
-		Changed = False
+		_changed = False
 
-		newVEH()
+		NewVehicle()
 	End Sub
 
 	'Set HDVclasss
-	Private Sub SetHDVclass()
-		Dim VehC = CType(CbCat.SelectedIndex, tVehCat)
-		Dim AxlC = CType(CbAxleConfig.SelectedIndex, tAxleConf)
-		Dim MaxMass = CSng(fTextboxToNumString(TbMassMass.Text))
+	Private Sub SetHdVclass()
+		Dim vehC = CType(CbCat.SelectedIndex, tVehCat)
+		Dim axlC = CType(CbAxleConfig.SelectedIndex, tAxleConf)
+		Dim maxMass = CSng(fTextboxToNumString(TbMassMass.Text))
 
-		Dim s0 As cSegmentTableEntry = Declaration.SegmentTable.SetRef(VehC, AxlC, MaxMass)
-		HDVclass = "-"
+		Dim s0 As cSegmentTableEntry = Declaration.SegmentTable.SetRef(vehC, axlC, maxMass)
+		_hdVclass = "-"
 		If Not s0 Is Nothing Then
-			HDVclass = s0.HDVclass
+			_hdVclass = s0.HDVclass
 		End If
 
-		TbHDVclass.Text = HDVclass
-		PicVehicle.Image = Image.FromFile(Declaration.ConvPicPath(HDVclass, False))
+		TbHDVclass.Text = _hdVclass
+		PicVehicle.Image = Image.FromFile(Declaration.ConvPicPath(_hdVclass, False))
 	End Sub
 
 
@@ -84,7 +84,7 @@ Public Class F_VEH
 		Dim s0 = Declaration.SegmentTable.SetRef(vehC, axlC, maxMass)
 
 		If Not s0 Is Nothing Then
-			HDVclass = s0.HDVclass
+			_hdVclass = s0.HDVclass
 			Dim axleCount As Short = s0.AxleShares(s0.Missions(0)).Count
 			Dim i0 = LvRRC.Items.Count
 
@@ -101,10 +101,9 @@ Public Class F_VEH
 					LvRRC.Items.Add(lvi)
 				Next
 
-			ElseIf AxleCount < LvRRC.Items.Count Then
-				For i = AxleCount To LvRRC.Items.Count - 1
+			ElseIf axleCount < LvRRC.Items.Count Then
+				For i = axleCount To LvRRC.Items.Count - 1
 					LvRRC.Items.RemoveAt(LvRRC.Items.Count - 1)
-					'LvRRC.Items(i).ForeColor = Color.Red
 				Next
 			End If
 
@@ -112,7 +111,7 @@ Public Class F_VEH
 
 		Else
 			PnAll.Enabled = False
-			HDVclass = "-"
+			_hdVclass = "-"
 		End If
 
 		TbMassExtra.Text = "-"
@@ -139,12 +138,12 @@ Public Class F_VEH
 
 	'New
 	Private Sub ToolStripBtNew_Click(sender As Object, e As EventArgs) Handles ToolStripBtNew.Click
-		newVEH()
+		NewVehicle()
 	End Sub
 
 	'Open
 	Private Sub ToolStripBtOpen_Click(sender As Object, e As EventArgs) Handles ToolStripBtOpen.Click
-		If fbVEH.OpenDialog(VehFile) Then openVEH(fbVEH.Files(0))
+		If fbVEH.OpenDialog(_vehFile) Then OpenVehicle(fbVEH.Files(0))
 	End Sub
 
 	'Save
@@ -162,7 +161,7 @@ Public Class F_VEH
 
 		If ChangeCheckCancel() Then Exit Sub
 
-		If VehFile = "" Then
+		If _vehFile = "" Then
 			If MsgBox("Save file now?", MsgBoxStyle.YesNo) = MsgBoxResult.Yes Then
 				If Not SaveOrSaveAs(True) Then Exit Sub
 			Else
@@ -179,18 +178,15 @@ Public Class F_VEH
 			F_VECTO.WindowState = FormWindowState.Normal
 		End If
 
-		F_VECTO.TbVEH.Text = fFileWoDir(VehFile, JobDir)
+		F_VECTO.TbVEH.Text = fFileWoDir(_vehFile, JobDir)
 	End Sub
 
 	'Help
 	Private Sub ToolStripButton1_Click(sender As Object, e As EventArgs) Handles ToolStripButton1.Click
 		If File.Exists(MyAppPath & "User Manual\help.html") Then
-			Dim BrowserRegistryString As String =
-					My.Computer.Registry.ClassesRoot.OpenSubKey("\http\shell\open\command\").GetValue("").ToString
-			Dim DefaultBrowserPath As String =
-					Regex.Match(BrowserRegistryString, "(\"".*?\"")").Captures(0).ToString
-			Process.Start(DefaultBrowserPath,
-						String.Format("""{0}{1}""", MyAppPath, "User Manual\help.html#vehicle-editor"))
+			Dim registryString = My.Computer.Registry.ClassesRoot.OpenSubKey("\http\shell\open\command\").GetValue("").ToString
+			Dim defaultBrowserPath = Regex.Match(registryString, "(\"".*?\"")").Captures(0).ToString
+			Process.Start(defaultBrowserPath, String.Format("""{0}{1}""", MyAppPath, "User Manual\help.html#vehicle-editor"))
 		Else
 			MsgBox("User Manual not found!", MsgBoxStyle.Critical)
 		End If
@@ -209,20 +205,19 @@ Public Class F_VEH
 	End Sub
 
 	'Save or Save As function = true if file is saved
-	Private Function SaveOrSaveAs(SaveAs As Boolean) As Boolean
-		If VehFile = "" Or SaveAs Then
-			If fbVEH.SaveDialog(VehFile) Then
-				VehFile = fbVEH.Files(0)
+	Private Function SaveOrSaveAs(saveAs As Boolean) As Boolean
+		If _vehFile = "" Or saveAs Then
+			If fbVEH.SaveDialog(_vehFile) Then
+				_vehFile = fbVEH.Files(0)
 			Else
 				Return False
 			End If
 		End If
-		Return saveVEH(VehFile)
+		Return SaveVehicle(_vehFile)
 	End Function
 
 	'New VEH
-	Private Sub newVEH()
-
+	Private Sub NewVehicle()
 		If ChangeCheckCancel() Then Exit Sub
 
 		TbMass.Text = ""
@@ -234,7 +229,11 @@ Public Class F_VEH
 		TbCdFile.Text = ""
 
 		CbRtType.SelectedIndex = 0
-		TbRtRatio.Text = "1"
+		TbRtRatio.Text = ""
+		TbRtPath.Text = ""
+
+		CbRtType.SelectedIndex = 0
+		TbRtRatio.Text = ""
 		TbRtPath.Text = ""
 
 		CbCat.SelectedIndex = 0
@@ -247,38 +246,30 @@ Public Class F_VEH
 
 		CbRim.SelectedIndex = 0
 
-
 		DeclInit()
 
-
-		VehFile = ""
+		_vehFile = ""
 		Text = "VEH Editor"
 		LbStatus.Text = ""
 
-		Changed = False
+		_changed = False
 	End Sub
 
 	'Open VEH
-	Sub openVEH(file As String)
-		Dim i As Int16
-		Dim VEH0 As cVEH
+	Sub OpenVehicle(file As String)
 		Dim inertia As Single
-
-		Dim a0 As cVEH.cAxle
-		Dim lvi As ListViewItem
 
 		If ChangeCheckCancel() Then Exit Sub
 
-		VEH0 = New cVEH
+		Dim veh = New cVEH
+		veh.FilePath = file
 
-		VEH0.FilePath = file
-
-		If Not VEH0.ReadFile Then
+		If Not veh.ReadFile Then
 			MsgBox("Cannot read " & file & "!")
 			Exit Sub
 		End If
 
-		If Cfg.DeclMode <> VEH0.SavedInDeclMode Then
+		If Cfg.DeclMode <> veh.SavedInDeclMode Then
 			Select Case WrongMode()
 				Case 1
 					Close()
@@ -286,34 +277,35 @@ Public Class F_VEH
 					F_MAINForm.OpenVectoFile(file)
 				Case -1
 					Exit Sub
-				Case Else '0
-					'Continue...
 			End Select
 		End If
 
-		TbMass.Text = VEH0.Mass
-		TbMassExtra.Text = VEH0.MassExtra
-		TbLoad.Text = VEH0.Loading
-		TBrdyn.Text = VEH0.rdyn
-		CbRim.Text = VEH0.Rim
+		TbMass.Text = veh.Mass
+		TbMassExtra.Text = veh.MassExtra
+		TbLoad.Text = veh.Loading
+		TBrdyn.Text = veh.rdyn
+		CbRim.Text = veh.Rim
 
 
-		CbCdMode.SelectedIndex = CType(VEH0.CdMode, Integer)
-		TbCdFile.Text = VEH0.CdFile.OriginalPath
+		CbCdMode.SelectedIndex = CType(veh.CdMode, Integer)
+		TbCdFile.Text = veh.CdFile.OriginalPath
 
-		CbRtType.SelectedIndex = CType(VEH0.RtType, Integer)
-		TbRtRatio.Text = CStr(VEH0.RtRatio)
-		TbRtPath.Text = CStr(VEH0.RtFile.OriginalPath)
+		CbRtType.SelectedIndex = CType(veh.RtType, Integer)
+		TbRtRatio.Text = veh.RtRatio
+		TbRtPath.Text = veh.RtFile.OriginalPath
 
+		cbAngularGearType.SelectedIndex = CType(veh.AngularGearType, Integer)
+		tbAngularGearRatio.Text = veh.AngularGearRatio
+		tbAngularGearLossMapPath.Text = veh.AngularGearLossMapFile.OriginalPath
 
-		CbCat.SelectedIndex = CType(VEH0.VehCat, Integer)
+		CbCat.SelectedIndex = CType(veh.VehCat, Integer)
 
 
 		LvRRC.Items.Clear()
-		i = 0
-		For Each a0 In VEH0.Axles
+		Dim i = 0
+		For Each a0 In veh.Axles
 			i += 1
-			lvi = New ListViewItem
+			Dim lvi = New ListViewItem
 			lvi.SubItems(0).Text = i.ToString
 
 			If Cfg.DeclMode Then
@@ -345,36 +337,36 @@ Public Class F_VEH
 			LvRRC.Items.Add(lvi)
 		Next
 
-		TbMassMass.Text = VEH0.MassMax
-		TbMassExtra.Text = VEH0.MassExtra
+		TbMassMass.Text = veh.MassMax
+		TbMassExtra.Text = veh.MassExtra
 
-		CbAxleConfig.SelectedIndex = CType(VEH0.AxleConf, Integer)
+		CbAxleConfig.SelectedIndex = CType(veh.AxleConf, Integer)
 
-		TBcdA.Text = VEH0.CdA0
+		TBcdA.Text = veh.CdA0
 
 		DeclInit()
 
 		fbVEH.UpdateHistory(file)
 		Text = fFILE(file, True)
 		LbStatus.Text = ""
-		VehFile = file
+		_vehFile = file
 		Activate()
 
-		Changed = False
+		_changed = False
 	End Sub
 
 	'Save VEH
-	Private Function saveVEH(file As String) As Boolean
+	Private Function SaveVehicle(file As String) As Boolean
 
-		Dim veh0 = New cVEH
-		veh0.FilePath = file
+		Dim veh = New cVEH
+		veh.FilePath = file
 
-		veh0.Mass = CSng(fTextboxToNumString(TbMass.Text))
-		veh0.MassExtra = CSng(fTextboxToNumString(TbMassExtra.Text))
-		veh0.Loading = CSng(fTextboxToNumString(TbLoad.Text))
+		veh.Mass = CSng(fTextboxToNumString(TbMass.Text))
+		veh.MassExtra = CSng(fTextboxToNumString(TbMassExtra.Text))
+		veh.Loading = CSng(fTextboxToNumString(TbLoad.Text))
 
-		veh0.CdA0 = CSng(fTextboxToNumString(TBcdA.Text))
-		veh0.CdA02 = veh0.CdA0
+		veh.CdA0 = CSng(fTextboxToNumString(TBcdA.Text))
+		veh.CdA02 = veh.CdA0
 
 		Dim vehC = CType(CbCat.SelectedIndex, tVehCat)
 		Dim axlC = CType(CbAxleConfig.SelectedIndex, tAxleConf)
@@ -383,22 +375,27 @@ Public Class F_VEH
 		If Not s0 Is Nothing Then
 			If s0.HDVclass = "2" Then
 				' CdA Addition for T1 Trailer
-				veh0.CdA02 += 1.1
+				veh.CdA02 += 1.1
 			End If
 			If s0.HDVclass = "4" OrElse s0.HDVclass = "9" Then
 				' CdA Addition for T2 Trailer
-				veh0.CdA02 += 0.6
+				veh.CdA02 += 0.6
 			End If
 		End If
 
-		veh0.Rim = CbRim.Text
-		veh0.rdyn = CSng(fTextboxToNumString(TBrdyn.Text))
-		veh0.CdMode = CType(CbCdMode.SelectedIndex, tCdMode)
-		veh0.CdFile.Init(fPATH(file), TbCdFile.Text)
-		veh0.RtType = CType(CbRtType.SelectedIndex, tRtType)
-		veh0.RtRatio = CSng(fTextboxToNumString(TbRtRatio.Text))
-		veh0.RtFile.Init(fPATH(file), TbRtPath.Text)
-		veh0.VehCat = CType(CbCat.SelectedIndex, tVehCat)
+		veh.Rim = CbRim.Text
+		veh.rdyn = CSng(fTextboxToNumString(TBrdyn.Text))
+		veh.CdMode = CType(CbCdMode.SelectedIndex, tCdMode)
+		veh.CdFile.Init(fPATH(file), TbCdFile.Text)
+		veh.RtType = CType(CbRtType.SelectedIndex, tRtType)
+		veh.RtRatio = CSng(fTextboxToNumString(TbRtRatio.Text))
+		veh.RtFile.Init(fPATH(file), TbRtPath.Text)
+
+		veh.AngularGearType = CType(cbAngularGearType.SelectedIndex, AngularGearType)
+		veh.AngularGearRatio = CSng(fTextboxToNumString(tbAngularGearRatio.Text))
+		veh.AngularGearLossMapFile.Init(fPATH(file), tbAngularGearLossMapPath.Text)
+
+		veh.VehCat = CType(CbCat.SelectedIndex, tVehCat)
 
 		Dim axleShareCheck As Double
 		For Each LV0 In LvRRC.Items
@@ -410,7 +407,7 @@ Public Class F_VEH
 			a0.FzISO = fTextboxToNumString(LV0.SubItems(4).Text)
 			a0.Wheels = LV0.SubItems(5).Text
 			a0.Inertia = fTextboxToNumString(LV0.SubItems(6).Text)
-			veh0.Axles.Add(a0)
+			veh.Axles.Add(a0)
 		Next
 
 		If Not Cfg.DeclMode AndAlso Math.Abs(axleShareCheck - 1) > 0.000001 Then
@@ -418,12 +415,12 @@ Public Class F_VEH
 			Return False
 		End If
 
-		veh0.MassMax = CSng(fTextboxToNumString(TbMassMass.Text))
-		veh0.MassExtra = CSng(fTextboxToNumString(TbMassExtra.Text))
-		veh0.AxleConf = CType(CbAxleConfig.SelectedIndex, tAxleConf)
+		veh.MassMax = CSng(fTextboxToNumString(TbMassMass.Text))
+		veh.MassExtra = CSng(fTextboxToNumString(TbMassExtra.Text))
+		veh.AxleConf = CType(CbAxleConfig.SelectedIndex, tAxleConf)
 
 		'---------------------------------------------------------------------------------
-		If Not veh0.SaveFile Then
+		If Not veh.SaveFile Then
 			MsgBox("Cannot safe to " & file, MsgBoxStyle.Critical)
 			Return False
 		End If
@@ -439,7 +436,7 @@ Public Class F_VEH
 		Text = fFILE(file, True)
 		LbStatus.Text = ""
 
-		Changed = False
+		_changed = False
 
 		Return True
 	End Function
@@ -486,13 +483,13 @@ Public Class F_VEH
 			ex = "vcdb"
 		End If
 
-		If fbCDx.OpenDialog(fFileRepl(TbCdFile.Text, fPATH(VehFile)), False, ex) Then _
-			TbCdFile.Text = fFileWoDir(fbCDx.Files(0), fPATH(VehFile))
+		If fbCDx.OpenDialog(fFileRepl(TbCdFile.Text, fPATH(_vehFile)), False, ex) Then _
+			TbCdFile.Text = fFileWoDir(fbCDx.Files(0), fPATH(_vehFile))
 	End Sub
 
 	'Open Cd File
 	Private Sub BtCdFileOpen_Click(sender As Object, e As EventArgs) Handles BtCdFileOpen.Click
-		OpenFiles(fFileRepl(TbCdFile.Text, fPATH(VehFile)))
+		OpenFiles(fFileRepl(TbCdFile.Text, fPATH(_vehFile)))
 	End Sub
 
 #End Region
@@ -505,8 +502,6 @@ Public Class F_VEH
 		Select Case CbRtType.SelectedIndex
 			Case 1 'Primary
 				LbRtRatio.Text = "Ratio to engine speed"
-				TbRtPath.Enabled = True
-				BtRtBrowse.Enabled = True
 				PnRt.Enabled = True
 			Case 2 'Secondary
 				LbRtRatio.Text = "Ratio to cardan shaft speed"
@@ -515,8 +510,6 @@ Public Class F_VEH
 				PnRt.Enabled = True
 			Case Else '0 None
 				LbRtRatio.Text = "Ratio"
-				TbRtPath.Enabled = False
-				BtRtBrowse.Enabled = False
 				PnRt.Enabled = False
 		End Select
 
@@ -525,9 +518,8 @@ Public Class F_VEH
 
 	'Rt File Browse
 	Private Sub BtRtBrowse_Click(sender As Object, e As EventArgs) Handles BtRtBrowse.Click
-
-		If fbRLM.OpenDialog(fFileRepl(TbRtPath.Text, fPATH(VehFile))) Then _
-			TbRtPath.Text = fFileWoDir(fbRLM.Files(0), fPATH(VehFile))
+		If fbRLM.OpenDialog(fFileRepl(TbRtPath.Text, fPATH(_vehFile))) Then _
+			TbRtPath.Text = fFileWoDir(fbRLM.Files(0), fPATH(_vehFile))
 	End Sub
 
 #End Region
@@ -535,23 +527,23 @@ Public Class F_VEH
 #Region "Track changes"
 
 	Private Sub Change()
-		If Not Changed Then
+		If Not _changed Then
 			LbStatus.Text = "Unsaved changes in current file"
-			Changed = True
+			_changed = True
 		End If
 	End Sub
 
 	' "Save changes? "... Returns True if user aborts
 	Private Function ChangeCheckCancel() As Boolean
 
-		If Changed Then
+		If _changed Then
 			Select Case MsgBox("Save changes ?", MsgBoxStyle.YesNoCancel)
 				Case MsgBoxResult.Yes
 					Return Not SaveOrSaveAs(False)
 				Case MsgBoxResult.Cancel
 					Return True
 				Case Else 'MsgBoxResult.No
-					Changed = False
+					_changed = False
 					Return False
 			End Select
 
@@ -567,22 +559,20 @@ Public Class F_VEH
 		Change()
 	End Sub
 
-	Private Sub CbRim_SelectedIndexChanged(sender As Object, e As EventArgs) _
-		Handles CbRim.SelectedIndexChanged
+	Private Sub CbRim_SelectedIndexChanged(sender As Object, e As EventArgs) Handles CbRim.SelectedIndexChanged
 		Change()
 		DeclInit()
 	End Sub
 
 	Private Sub TBcw_TextChanged(sender As Object, e As EventArgs) _
-		Handles TbLoad.TextChanged, TBrdyn.TextChanged, TBcdA.TextChanged, TbCdFile.TextChanged, TbRtPath.TextChanged,
-				TbRtRatio.TextChanged
+		Handles TbLoad.TextChanged, TBrdyn.TextChanged, TBcdA.TextChanged, TbCdFile.TextChanged, TbRtRatio.TextChanged,
+				cbAngularGearType.SelectedIndexChanged, TbRtPath.TextChanged, tbAngularGearLossMapPath.TextChanged, tbAngularGearRatio.TextChanged
 		Change()
 	End Sub
 
-	Private Sub CbCat_SelectedIndexChanged(sender As Object, e As EventArgs) _
-		Handles CbCat.SelectedIndexChanged
+	Private Sub CbCat_SelectedIndexChanged(sender As Object, e As EventArgs) Handles CbCat.SelectedIndexChanged
 		Change()
-		SetHDVclass()
+		SetHdVclass()
 		DeclInit()
 	End Sub
 
@@ -594,14 +584,14 @@ Public Class F_VEH
 	Private Sub TbMassMax_TextChanged(sender As Object, e As EventArgs) Handles TbMassMass.TextChanged
 		SetMaxLoad()
 		Change()
-		SetHDVclass()
+		SetHdVclass()
 		DeclInit()
 	End Sub
 
 	Private Sub CbAxleConfig_SelectedIndexChanged(sender As Object, e As EventArgs) _
 		Handles CbAxleConfig.SelectedIndexChanged
 		Change()
-		SetHDVclass()
+		SetHdVclass()
 		DeclInit()
 	End Sub
 
@@ -623,22 +613,22 @@ Public Class F_VEH
 	Private Sub ButAxlAdd_Click(sender As Object, e As EventArgs) Handles ButAxlAdd.Click
 		Dim lv0 As ListViewItem
 
-		AxlDlog.Clear()
+		_axlDlog.Clear()
 
-		If AxlDlog.ShowDialog = DialogResult.OK Then
+		If _axlDlog.ShowDialog = DialogResult.OK Then
 			lv0 = New ListViewItem
 
 			lv0.SubItems(0).Text = LvRRC.Items.Count + 1
-			lv0.SubItems.Add(Trim(AxlDlog.TbAxleShare.Text))
-			If AxlDlog.CbTwinT.Checked Then
+			lv0.SubItems.Add(Trim(_axlDlog.TbAxleShare.Text))
+			If _axlDlog.CbTwinT.Checked Then
 				lv0.SubItems.Add("yes")
 			Else
 				lv0.SubItems.Add("no")
 			End If
-			lv0.SubItems.Add(Trim(AxlDlog.TbRRC.Text))
-			lv0.SubItems.Add(Trim(AxlDlog.TbFzISO.Text))
-			lv0.SubItems.Add(Trim(AxlDlog.CbWheels.Text))
-			lv0.SubItems.Add(Trim(AxlDlog.TbI_wheels.Text))
+			lv0.SubItems.Add(Trim(_axlDlog.TbRRC.Text))
+			lv0.SubItems.Add(Trim(_axlDlog.TbFzISO.Text))
+			lv0.SubItems.Add(Trim(_axlDlog.CbWheels.Text))
+			lv0.SubItems.Add(Trim(_axlDlog.TbI_wheels.Text))
 
 			LvRRC.Items.Add(lv0)
 
@@ -699,24 +689,24 @@ Public Class F_VEH
 
 		Dim lv0 = LvRRC.SelectedItems(0)
 
-		AxlDlog.TbAxleShare.Text = lv0.SubItems(1).Text
-		AxlDlog.CbTwinT.Checked = (lv0.SubItems(2).Text = "yes")
-		AxlDlog.TbRRC.Text = lv0.SubItems(3).Text
-		AxlDlog.TbFzISO.Text = lv0.SubItems(4).Text
-		AxlDlog.TbI_wheels.Text = lv0.SubItems(6).Text
-		AxlDlog.CbWheels.Text = lv0.SubItems(5).Text
+		_axlDlog.TbAxleShare.Text = lv0.SubItems(1).Text
+		_axlDlog.CbTwinT.Checked = (lv0.SubItems(2).Text = "yes")
+		_axlDlog.TbRRC.Text = lv0.SubItems(3).Text
+		_axlDlog.TbFzISO.Text = lv0.SubItems(4).Text
+		_axlDlog.TbI_wheels.Text = lv0.SubItems(6).Text
+		_axlDlog.CbWheels.Text = lv0.SubItems(5).Text
 
-		If AxlDlog.ShowDialog = DialogResult.OK Then
-			lv0.SubItems(1).Text = AxlDlog.TbAxleShare.Text
-			If AxlDlog.CbTwinT.Checked Then
+		If _axlDlog.ShowDialog = DialogResult.OK Then
+			lv0.SubItems(1).Text = _axlDlog.TbAxleShare.Text
+			If _axlDlog.CbTwinT.Checked Then
 				lv0.SubItems(2).Text = "yes"
 			Else
 				lv0.SubItems(2).Text = "no"
 			End If
-			lv0.SubItems(3).Text = AxlDlog.TbRRC.Text
-			lv0.SubItems(4).Text = AxlDlog.TbFzISO.Text
-			lv0.SubItems(5).Text = AxlDlog.CbWheels.Text
-			lv0.SubItems(6).Text = AxlDlog.TbI_wheels.Text
+			lv0.SubItems(3).Text = _axlDlog.TbRRC.Text
+			lv0.SubItems(4).Text = _axlDlog.TbFzISO.Text
+			lv0.SubItems(5).Text = _axlDlog.CbWheels.Text
+			lv0.SubItems(6).Text = _axlDlog.TbI_wheels.Text
 
 			Change()
 			DeclInit()
@@ -727,26 +717,25 @@ Public Class F_VEH
 
 #Region "Open File Context Menu"
 
-	Private CmFiles As String()
 
 	Private Sub OpenFiles(ParamArray files() As String)
 		If files.Length = 0 Then Exit Sub
 
-		CmFiles = files
+		_cmFiles = files
 		OpenWithToolStripMenuItem.Text = "Open with " & Cfg.OpenCmdName
 		CmOpenFile.Show(Cursor.Position)
 	End Sub
 
 	Private Sub OpenWithToolStripMenuItem_Click(sender As Object, e As EventArgs) _
 		Handles OpenWithToolStripMenuItem.Click
-		If Not FileOpenAlt(CmFiles(0)) Then MsgBox("Failed to open file!")
+		If Not FileOpenAlt(_cmFiles(0)) Then MsgBox("Failed to open file!")
 	End Sub
 
 	Private Sub ShowInFolderToolStripMenuItem_Click(sender As Object, e As EventArgs) _
 		Handles ShowInFolderToolStripMenuItem.Click
-		If File.Exists(CmFiles(0)) Then
+		If File.Exists(_cmFiles(0)) Then
 			Try
-				Process.Start("explorer", "/select,""" & CmFiles(0) & "")
+				Process.Start("explorer", "/select,""" & _cmFiles(0) & "")
 			Catch ex As Exception
 				MsgBox("Failed to open file!")
 			End Try
@@ -756,5 +745,30 @@ Public Class F_VEH
 	End Sub
 
 #End Region
+
+
+#Region "Angular Gear"
+
+	Private Sub cbAngularGearType_SelectedIndexChanged(sender As Object, e As EventArgs) _
+		Handles cbAngularGearType.SelectedIndexChanged
+		Select Case cbAngularGearType.SelectedIndex
+			Case 1 'Separate Angular Gear
+				pnAngularGearFields.Enabled = True
+				tbAngularGearRatio.Text = "1.0"
+			Case Else 'Losses included in Transmission, None
+				tbAngularGearRatio.Text = ""
+				tbAngularGearLossMapPath.Text = ""
+				pnAngularGearFields.Enabled = False
+		End Select
+		Change()
+	End Sub
+
+	Private Sub btAngularGearLossMapBrowse_Click(sender As Object, e As EventArgs) Handles btAngularGearLossMapBrowse.Click
+		If fbTLM.OpenDialog(fFileRepl(TbRtPath.Text, fPATH(_vehFile))) Then _
+			tbAngularGearLossMapPath.Text = fFileWoDir(fbTLM.Files(0), fPATH(_vehFile))
+	End Sub
+
+#End Region
+
 End Class
 

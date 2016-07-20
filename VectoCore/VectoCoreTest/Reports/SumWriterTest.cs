@@ -49,7 +49,8 @@ namespace TUGraz.VectoCore.Tests.Reports
 			var writer = new FileOutputWriter("testsumcalc_fixed");
 			var sumWriter = new SummaryDataContainer(writer);
 
-			var modData = new ModalDataContainer("testsumcalc_fixed", writer, ExecutionMode.Engineering);
+			var modData = new ModalDataContainer("testsumcalc_fixed", writer);
+			
 			modData.AddAuxiliary("FAN");
 
 			for (var i = 0; i < 500; i++) {
@@ -99,7 +100,7 @@ namespace TUGraz.VectoCore.Tests.Reports
 			var writer = new FileOutputWriter("testsumcalc_var");
 			var sumWriter = new SummaryDataContainer(writer);
 
-			var modData = new ModalDataContainer("testsumcalc_var", writer, ExecutionMode.Engineering);
+			var modData = new ModalDataContainer("testsumcalc_var", writer);
 			modData.AddAuxiliary("FAN");
 
 			var timeSteps = new[]

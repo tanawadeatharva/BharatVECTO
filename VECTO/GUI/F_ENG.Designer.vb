@@ -301,7 +301,7 @@ Partial Class F_ENG
 		'
 		Me.TbMAP.Location = New System.Drawing.Point(12, 259)
 		Me.TbMAP.Name = "TbMAP"
-		Me.TbMAP.Size = New System.Drawing.Size(418, 20)
+		Me.TbMAP.Size = New System.Drawing.Size(434, 20)
 		Me.TbMAP.TabIndex = 5
 		'
 		'Label6
@@ -315,12 +315,12 @@ Partial Class F_ENG
 		'
 		'BtMAP
 		'
-		Me.BtMAP.Location = New System.Drawing.Point(436, 257)
+		Me.BtMAP.Image = Global.VECTO.My.Resources.Resources.Open_icon
+		Me.BtMAP.Location = New System.Drawing.Point(446, 257)
 		Me.BtMAP.Name = "BtMAP"
-		Me.BtMAP.Size = New System.Drawing.Size(28, 23)
+		Me.BtMAP.Size = New System.Drawing.Size(24, 24)
 		Me.BtMAP.TabIndex = 6
 		Me.BtMAP.TabStop = False
-		Me.BtMAP.Text = "..."
 		Me.BtMAP.UseVisualStyleBackColor = True
 		'
 		'PictureBox1
@@ -354,9 +354,9 @@ Partial Class F_ENG
 		'BtMAPopen
 		'
 		Me.BtMAPopen.Image = Global.VECTO.My.Resources.Resources.application_export_icon_small
-		Me.BtMAPopen.Location = New System.Drawing.Point(470, 257)
+		Me.BtMAPopen.Location = New System.Drawing.Point(469, 257)
 		Me.BtMAPopen.Name = "BtMAPopen"
-		Me.BtMAPopen.Size = New System.Drawing.Size(23, 23)
+		Me.BtMAPopen.Size = New System.Drawing.Size(24, 24)
 		Me.BtMAPopen.TabIndex = 7
 		Me.BtMAPopen.TabStop = False
 		Me.BtMAPopen.UseVisualStyleBackColor = True
@@ -468,7 +468,7 @@ Partial Class F_ENG
 		'
 		Me.TbFLD.Location = New System.Drawing.Point(12, 202)
 		Me.TbFLD.Name = "TbFLD"
-		Me.TbFLD.Size = New System.Drawing.Size(418, 20)
+		Me.TbFLD.Size = New System.Drawing.Size(434, 20)
 		Me.TbFLD.TabIndex = 5
 		'
 		'Label14
@@ -482,20 +482,20 @@ Partial Class F_ENG
 		'
 		'BtFLD
 		'
-		Me.BtFLD.Location = New System.Drawing.Point(436, 200)
+		Me.BtFLD.Image = Global.VECTO.My.Resources.Resources.Open_icon
+		Me.BtFLD.Location = New System.Drawing.Point(446, 200)
 		Me.BtFLD.Name = "BtFLD"
-		Me.BtFLD.Size = New System.Drawing.Size(28, 23)
+		Me.BtFLD.Size = New System.Drawing.Size(24, 24)
 		Me.BtFLD.TabIndex = 6
 		Me.BtFLD.TabStop = False
-		Me.BtFLD.Text = "..."
 		Me.BtFLD.UseVisualStyleBackColor = True
 		'
 		'BtFLDopen
 		'
 		Me.BtFLDopen.Image = Global.VECTO.My.Resources.Resources.application_export_icon_small
-		Me.BtFLDopen.Location = New System.Drawing.Point(470, 200)
+		Me.BtFLDopen.Location = New System.Drawing.Point(469, 200)
 		Me.BtFLDopen.Name = "BtFLDopen"
-		Me.BtFLDopen.Size = New System.Drawing.Size(23, 23)
+		Me.BtFLDopen.Size = New System.Drawing.Size(24, 24)
 		Me.BtFLDopen.TabIndex = 7
 		Me.BtFLDopen.TabStop = False
 		Me.BtFLDopen.UseVisualStyleBackColor = True

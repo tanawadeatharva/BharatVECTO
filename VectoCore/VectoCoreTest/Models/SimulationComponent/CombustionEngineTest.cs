@@ -63,7 +63,7 @@ namespace TUGraz.VectoCore.Tests.Models.SimulationComponent
 		[TestCase]
 		public void TestEngineHasOutPort()
 		{
-			var vehicle = new VehicleContainer(ExecutionMode.EngineOnly);
+			var vehicle = new VehicleContainer(ExecutionMode.Engineering);
 			var engineData = MockSimulationDataFactory.CreateEngineDataFromFile(CoachEngine);
 			var engine = new CombustionEngine(vehicle, engineData);
 
@@ -74,7 +74,7 @@ namespace TUGraz.VectoCore.Tests.Models.SimulationComponent
 		[TestCase]
 		public void TestOutPortRequestNotFailing()
 		{
-			var vehicle = new VehicleContainer(ExecutionMode.EngineOnly);
+			var vehicle = new VehicleContainer(ExecutionMode.Engineering);
 			var engineData = MockSimulationDataFactory.CreateEngineDataFromFile(CoachEngine);
 			var engine = new CombustionEngine(vehicle, engineData);
 

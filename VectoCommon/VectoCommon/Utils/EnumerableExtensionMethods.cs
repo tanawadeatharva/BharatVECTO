@@ -36,7 +36,7 @@ using TUGraz.VectoCommon.Models;
 
 namespace TUGraz.VectoCommon.Utils
 {
-	public static class EnumberableExtensionMethods
+	public static class EnumerableExtensionMethods
 	{
 		public static IEnumerable<double> ToDouble(this IEnumerable<string> self)
 		{
@@ -226,9 +226,74 @@ namespace TUGraz.VectoCommon.Utils
 			}
 		}
 
+		/// <summary>
+		/// Repeats the element and returns an Enumerable.
+		/// </summary>
+		/// <typeparam name="T"></typeparam>
+		/// <param name="element"></param>
+		/// <param name="count"></param>
+		/// <returns></returns>
 		public static IEnumerable<T> Repeat<T>(this T element, int count)
 		{
 			return Enumerable.Repeat(element, count);
+		}
+
+		/// <summary>
+		/// Distinct only by a defined key function (uses GetHashCode of TKey).
+		/// </summary>
+		/// <typeparam name="T"></typeparam>
+		/// <typeparam name="TKey"></typeparam>
+		/// <param name="items"></param>
+		/// <param name="keySelector"></param>
+		/// <returns></returns>
+		public static IEnumerable<T> DistinctBy<T, TKey>(this IEnumerable<T> items, Func<T, TKey> keySelector)
+		{
+			return
+				items.Distinct(new LambdaComparer<T>(
+					equals: (x, y) => x.GetHashCode() == y.GetHashCode(),
+					getHashCode: k => keySelector(k).GetHashCode()));
+		}
+
+		/// <summary>
+		/// Distinct by a defined equals function (uses this function for checking equality. No Hash is used.)
+		/// </summary>
+		public static IEnumerable<T> DistinctBy<T>(this IEnumerable<T> items, Func<T, T, bool> equals)
+		{
+			return items.Distinct(new LambdaComparer<T>(equals));
+		}
+
+		/// <summary>
+		/// Distinct by hash function and equality function (like IEqualityComparer, but with lambdas).
+		/// </summary>
+		public static IEnumerable<T> DistinctBy<T>(this IEnumerable<T> items, Func<T, T, bool> equals,
+			Func<T, int> getHashCode)
+		{
+			return items.Distinct(new LambdaComparer<T>(equals, getHashCode));
+		}
+
+		/// <summary>
+		/// Comparer which uses lambda expressions for equality and hashcode.
+		/// </summary>
+		private class LambdaComparer<T> : IEqualityComparer<T>
+		{
+			private readonly Func<T, T, bool> _equals;
+			private readonly Func<T, int> _getHashCode;
+
+			public LambdaComparer(Func<T, T, bool> equals, Func<T, int> getHashCode = null)
+			{
+				_equals = equals;
+				_getHashCode = getHashCode ?? (o => 0);
+			}
+
+			public bool Equals(T x, T y)
+			{
+				return _equals(x, y);
+			}
+
+			public int GetHashCode(T obj)
+			{
+				return _getHashCode(obj);
+			}
 		}
 	}
 }

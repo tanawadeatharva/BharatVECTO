@@ -131,6 +131,8 @@
     <Compile Include="Models\Connector\Ports\Impl\Response.cs" />
     <Compile Include="Models\Connector\Ports\IFvPort.cs" />
     <Compile Include="Models\Connector\Ports\ITnPort.cs" />
+    <Compile Include="Models\SimulationComponent\Data\AngularGearData.cs" />
+    <Compile Include="Utils\ProviderExtensions.cs" />
     <Compile Include="Models\Declaration\AirDrag.cs" />
     <Compile Include="Models\Declaration\Fan.cs" />
     <Compile Include="Models\Declaration\HVAC.cs" />
@@ -140,7 +142,7 @@
     <Compile Include="Models\Declaration\PT1.cs" />
     <Compile Include="Models\Declaration\Rims.cs" />
     <Compile Include="Models\Declaration\Segments.cs" />
-    <Compile Include="Models\Declaration\StandardWeights.cs" />
+    <Compile Include="Models\Declaration\StandardBodies.cs" />
     <Compile Include="Models\Declaration\SteeringPump.cs" />
     <Compile Include="Models\Declaration\TorqueConverter.cs" />
     <Compile Include="Models\Declaration\VehicleClass.cs" />
@@ -172,6 +174,7 @@
     <Compile Include="Models\SimulationComponent\IDrivingCycleInfo.cs" />
     <Compile Include="Models\SimulationComponent\IEngineAuxPort.cs" />
     <Compile Include="Models\SimulationComponent\Impl\AMTShiftStrategy.cs" />
+    <Compile Include="Models\SimulationComponent\Impl\AngularGear.cs" />
     <Compile Include="Models\SimulationComponent\Impl\Brakes.cs" />
     <Compile Include="Models\SimulationComponent\Impl\BusAuxiliariesAdapter.cs" />
     <Compile Include="Models\SimulationComponent\Impl\CycleGearbox.cs" />
@@ -181,6 +184,7 @@
     <Compile Include="Models\SimulationComponent\Impl\EngineOnlyCombustionEngine.cs" />
     <Compile Include="Models\SimulationComponent\Impl\CycleClutch.cs" />
     <Compile Include="Models\SimulationComponent\Impl\MTShiftStrategy.cs" />
+    <Compile Include="Models\SimulationComponent\Impl\TransmissionComponent.cs" />
     <Compile Include="Models\SimulationComponent\IShiftStrategy.cs" />
     <Compile Include="Models\SimulationComponent\Impl\ShiftStrategy.cs" />
     <Compile Include="Models\Simulation\DataBus\IAxlegearInfo.cs" />

@@ -38,6 +38,7 @@ using TUGraz.VectoCommon.InputData;
 using TUGraz.VectoCommon.Models;
 using TUGraz.VectoCommon.Utils;
 using TUGraz.VectoCore.InputData.Impl;
+using TUGraz.VectoCore.Models.Declaration;
 
 namespace TUGraz.VectoCore.InputData.FileIO.JSON
 {
@@ -214,7 +215,7 @@ namespace TUGraz.VectoCore.InputData.FileIO.JSON
 			get
 			{
 				return Body["DownshiftAferUpshiftDelay"] == null
-					? 10.SI<Second>()
+					? DeclarationData.Gearbox.DownshiftAfterUpshiftDelay
 					: Body.GetEx<double>("DownshiftAferUpshiftDelay").SI<Second>();
 			}
 		}
@@ -224,7 +225,7 @@ namespace TUGraz.VectoCore.InputData.FileIO.JSON
 			get
 			{
 				return Body["UpshiftAfterDownshiftDelay"] == null
-					? 10.SI<Second>()
+					? DeclarationData.Gearbox.UpshiftAfterDownshiftDelay
 					: Body.GetEx<double>("UpshiftAfterDownshiftDelay").SI<Second>();
 			}
 		}
@@ -234,7 +235,7 @@ namespace TUGraz.VectoCore.InputData.FileIO.JSON
 			get
 			{
 				return Body["UpshiftMinAcceleration"] == null
-					? 0.1.SI<MeterPerSquareSecond>()
+					? DeclarationData.Gearbox.UpshiftMinAcceleration
 					: Body.GetEx<double>("UpshiftMinAcceleration").SI<MeterPerSquareSecond>();
 			}
 		}

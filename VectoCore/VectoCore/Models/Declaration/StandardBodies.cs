@@ -29,7 +29,6 @@
 *   Martin Rexeis, rexeis@ivt.tugraz.at, IVT, Graz University of Technology
 */
 
-using System.CodeDom;
 using System.Collections.Generic;
 using System.Data;
 using System.Linq;
@@ -39,8 +38,17 @@ using TUGraz.VectoCore.Utils;
 
 namespace TUGraz.VectoCore.Models.Declaration
 {
-	public sealed class StandardWeight
+	internal sealed class StandardBody
 	{
+		public StandardBody(Kilogram curbWeight, Kilogram grossVehicleWeight, SquareMeter deltaCrossWindArea,
+			Wheels.WheelsEntry wheels)
+		{
+			CurbWeight = curbWeight;
+			GrossVehicleWeight = grossVehicleWeight;
+			DeltaCrossWindArea = deltaCrossWindArea;
+			Wheels = wheels;
+		}
+
 		public Kilogram CurbWeight;
 		public Kilogram GrossVehicleWeight;
 
@@ -51,13 +59,14 @@ namespace TUGraz.VectoCore.Models.Declaration
 
 		public SquareMeter DeltaCrossWindArea;
 
-		public static StandardWeight operator +(StandardWeight first, StandardWeight second)
+		public Wheels.WheelsEntry Wheels;
+
+		public static StandardBody operator +(StandardBody first, StandardBody second)
 		{
-			return new StandardWeight {
-				CurbWeight = first.CurbWeight + second.CurbWeight,
-				DeltaCrossWindArea = first.DeltaCrossWindArea + second.DeltaCrossWindArea,
-				GrossVehicleWeight = first.GrossVehicleWeight + second.GrossVehicleWeight
-			};
+			return new StandardBody(first.CurbWeight + second.CurbWeight,
+				first.GrossVehicleWeight + second.GrossVehicleWeight,
+				first.DeltaCrossWindArea + second.DeltaCrossWindArea,
+				null);
 		}
 	}
 
@@ -65,25 +74,23 @@ namespace TUGraz.VectoCore.Models.Declaration
 	/// Lookup Class for Standard Weights of Bodies, Trailers and Semitrailers.
 	/// Standard Weights include 
 	///		CurbWeight (=Empty Weight), 
-	///		Gross Vehicle Weight (=Maximum Allowed Weight), and 
-	///		MaxPayload.
+	///		Gross Vehicle Weight (=Maximum Allowed Weight),
+	///		MaxPayload,
+	///     DeltaCrossWindArea,
+	///     Wheels
 	/// </summary>
-	public sealed class StandardWeights : LookupData<string, StandardWeight>
+	internal sealed class StandardBodies : LookupData<string, StandardBody>
 	{
 		private const string ResourceId = "TUGraz.VectoCore.Resources.Declaration.Body_Trailers_Weights.csv";
 
-		public StandardWeights()
+		public StandardBodies()
 		{
 			ParseData(ReadCsvResource(ResourceId));
 		}
 
-		public StandardWeight Empty = new StandardWeight {
-			CurbWeight = 0.SI<Kilogram>(),
-			GrossVehicleWeight = 0.SI<Kilogram>(),
-			DeltaCrossWindArea = 0.SI<SquareMeter>()
-		};
+		public StandardBody Empty = new StandardBody(0.SI<Kilogram>(), 0.SI<Kilogram>(), 0.SI<SquareMeter>(), null);
 
-		public override StandardWeight Lookup(string id)
+		public override StandardBody Lookup(string id)
 		{
 			if (string.IsNullOrWhiteSpace(id)) {
 				return Empty;
@@ -103,11 +110,13 @@ namespace TUGraz.VectoCore.Models.Declaration
 			Data = table.Rows.Cast<DataRow>()
 				.ToDictionary(
 					kv => kv.Field<string>("name"),
-					kv => new StandardWeight {
-						CurbWeight = kv.ParseDoubleOrGetDefault("curbmass").SI<Kilogram>(),
-						GrossVehicleWeight = kv.ParseDoubleOrGetDefault("maxgrossmass").SI<Kilogram>(),
-						DeltaCrossWindArea = kv.ParseDoubleOrGetDefault("deltacdxafortraileroperationinlonghaul").SI<SquareMeter>()
-					});
+					kv => new StandardBody(
+						kv.ParseDoubleOrGetDefault("curbmass").SI<Kilogram>(),
+						kv.ParseDoubleOrGetDefault("maxgrossmass").SI<Kilogram>(),
+						kv.ParseDoubleOrGetDefault("deltacdxafortraileroperationinlonghaul").SI<SquareMeter>(),
+						!string.IsNullOrWhiteSpace(kv.Field<string>("wheels"))
+							? DeclarationData.Wheels.Lookup(kv.Field<string>("wheels"))
+							: null));
 		}
 	}
 }

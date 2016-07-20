@@ -78,8 +78,8 @@ namespace TUGraz.VectoCore.Models.SimulationComponent
 		protected internal TStateType CurrentState;
 		protected internal TStateType PreviousState;
 
-		protected StatefulVectoSimulationComponent(IVehicleContainer contaier)
-			: base(contaier)
+		protected StatefulVectoSimulationComponent(IVehicleContainer container)
+			: base(container)
 		{
 			CurrentState = new TStateType();
 			PreviousState = new TStateType();
@@ -90,12 +90,6 @@ namespace TUGraz.VectoCore.Models.SimulationComponent
 			PreviousState = CurrentState;
 			CurrentState = new TStateType();
 		}
-
-		//protected virtual Watt GetPowerLoss(SimpleComponentState previousState, SimpleComponentState currentState)
-		//{
-		//	return (previousState.InAngularVelocity + currentState.InAngularVelocity) / 2.0 *
-		//			(currentState.InTorque - currentState.OutTorque);
-		//}
 	}
 
 	public class SimpleComponentState
@@ -106,13 +100,6 @@ namespace TUGraz.VectoCore.Models.SimulationComponent
 		public PerSecond OutAngularVelocity = 0.SI<PerSecond>();
 		public PerSecond InAngularVelocity = 0.SI<PerSecond>();
 
-		//public NewtonMeter TorqueLoss = 0.SI<NewtonMeter>();
-
-		//public Watt PowerLoss()
-		//{
-		//	return InTorque * InAngularVelocity - OutTorque * OutAngularVelocity;
-		//}
-
 		public void SetState(NewtonMeter inTorque, PerSecond inAngularVelocity, NewtonMeter outTorque,
 			PerSecond outAngularVelocity)
 		{
@@ -120,8 +107,6 @@ namespace TUGraz.VectoCore.Models.SimulationComponent
 			InAngularVelocity = inAngularVelocity;
 			OutTorque = outTorque;
 			OutAngularVelocity = outAngularVelocity;
-
-			//TorqueLoss = (inTorque * inAngularVelocity - outTorque * outAngularVelocity) / inAngularVelocity;
 		}
 	}
 }

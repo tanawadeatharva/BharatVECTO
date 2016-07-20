@@ -1,4 +1,4 @@
-' Copyright 2015 European Union.
+' Copyright 2014 European Union.
 ' Licensed under the EUPL (the 'Licence');
 '
 ' * You may not use this work except in compliance with the Licence.
@@ -8,157 +8,166 @@
 '   WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
 '
 ' See the LICENSE.txt for the specific language governing permissions and limitations.
+Option Infer On
+Option Explicit On
+Option Strict On
 
+Imports System.Drawing
+Imports System.IO
+Imports System.Text
+Imports Microsoft.VisualBasic.FileIO
+Imports System.Runtime.InteropServices
 Imports System.Windows.Forms
-
 
 ''' <summary>
 ''' File Browser dialog. Entirely controlled by cFilebrowser class.
 ''' </summary>
-''' <remarks></remarks>
 Public Class FB_Dialog
-	Private MyFolder As String
-	Private MyFiles() As String
-	Private MyDrive As String
-	Private UpdateLock As Boolean
-	Private Initialized As Boolean
-	Private MyID As String
-	Private MyExt() As String
-	Private LastFile As String
-	Private bFileMustExist As Boolean
-	Private bOverwriteCheck As Boolean
-	Private bMultiFiles As Boolean
-	Private NoExt As Boolean
-	Private bBrowseFolder As Boolean
-	Private bForceExt As Boolean
-	Private ExtListSingle As ArrayList
-	Private ExtListMulti As ArrayList
-	Private LastExt As String
-	Private bLightMode As Boolean
+	Private _myFolder As String
+	Private _myFiles() As String
+	Private _myDrive As String
+	Private _updateLock As Boolean
+	Private _initialized As Boolean
+	Private _myId As String
+	Private _myExt() As String
+	Private _lastFile As String
+	Private _bFileMustExist As Boolean
+	Private _bOverwriteCheck As Boolean
+	Private _bMultiFiles As Boolean
+	Private _noExt As Boolean
+	Private _bBrowseFolder As Boolean
+	Private _bForceExt As Boolean
+	Private _extListSingle As ArrayList
+	Private _extListMulti As ArrayList
+	Private _lastExt As String
+	Private ReadOnly _bLightMode As Boolean
 
 	Private Const FavText As String = "Edit Favorites..."
 	Private Const EmptyText As String = " "
 	Private Const NoFavString As String = "<undefined>"
 
 	'New
-	Public Sub New(ByVal LightMode As Boolean)
+	Public Sub New(lightMode As Boolean)
 		' This call is required by the Windows Form Designer.
 		InitializeComponent()
 		' Append any initialization after the InitializeComponent() call.
-		MyID = "Default"
-		UpdateLock = False
-		Initialized = False
-		MyFolder = ""
-		MyDrive = ""
-		LastFile = ""
-		bOverwriteCheck = False
-		bFileMustExist = False
-		bMultiFiles = False
-		NoExt = True
-		bBrowseFolder = False
-		bLightMode = LightMode
-		Me.ButtonHisFile.Enabled = Not bLightMode
+		_myId = "Default"
+		_updateLock = False
+		_initialized = False
+		_myFolder = ""
+		_myDrive = ""
+		_lastFile = ""
+		_bOverwriteCheck = False
+		_bFileMustExist = False
+		_bMultiFiles = False
+		_noExt = True
+		_bBrowseFolder = False
+		_bLightMode = LightMode
+		ButtonHisFile.Enabled = Not _bLightMode
 	End Sub
 
 	'Resize
-	Private Sub FB_Dialog_Resize(ByVal sender As Object, ByVal e As System.EventArgs) Handles Me.Resize
+	Private Sub FB_Dialog_Resize(sender As Object, e As EventArgs) Handles Me.ResizeEnd
 		Resized()
 	End Sub
 
 	'Shown
-	Private Sub FileBrowser_Shown(ByVal sender As Object, ByVal e As System.EventArgs) Handles Me.Shown
+	Private Sub FileBrowser_Shown(sender As Object, e As EventArgs) Handles Me.Shown
 		Resized()
-		Me.TextBoxPath.Focus()
-		Me.TextBoxPath.SelectAll()
+		TextBoxPath.Focus()
+		TextBoxPath.SelectAll()
 	End Sub
 
 	'Resized ListView Format
 	Private Sub Resized()
-		Me.ListViewFolder.Columns(0).Width = - 2
-		Me.ListViewFiles.Columns(0).Width = - 2
+		'To autosize to the width of the column heading, set the Width property to -2
+		ListViewFolder.Columns(0).Width = -2
+		'ListViewFolder.Columns(0).Width -= 1
+		ListViewFiles.Columns(0).Width = -2
+		'ListViewFiles.Columns(0).Width -= 1
 	End Sub
 
 	'SplitterMoved
-	Private Sub SplitContainer1_SplitterMoved(ByVal sender As System.Object,
-											ByVal e As System.Windows.Forms.SplitterEventArgs) Handles SplitContainer1.SplitterMoved
-		If Initialized Then Resized()
+	Private Sub SplitContainer1_SplitterMoved(sender As Object, e As SplitterEventArgs) _
+		Handles SplitContainer1.SplitterMoved
+		If _initialized Then Resized()
 	End Sub
 
 	'Closing (Overwrite-Check etc)
-	Private Sub FileBrowser_FormClosing(ByVal sender As Object, ByVal e As System.Windows.Forms.FormClosingEventArgs) _
-		Handles Me.FormClosing
+	Private Sub FileBrowser_FormClosing(sender As Object, e As FormClosingEventArgs) Handles Me.FormClosing
 		Dim x As Int32
 		Dim path As String
-		Dim Ext As String
-		Dim HasExt As Boolean
-		HasExt = False
-		If Me.DialogResult = Windows.Forms.DialogResult.OK Then
-			If bBrowseFolder Then
-				path = Trim(Me.TextBoxPath.Text)
+		Dim ext As String
+		Dim hasExt As Boolean
+		If DialogResult = DialogResult.OK Then
+			If _bBrowseFolder Then
+				path = Trim(TextBoxPath.Text)
 				'If empty path: use the Current-folder(MyFolder)
 				If path = "" Then
-					path = MyFolder
+					path = _myFolder
 				Else
-					If Microsoft.VisualBasic.Mid(path, 2, 1) <> ":" Then path = MyFolder & path
+					If Mid(path, 2, 1) <> ":" Then path = _myFolder & path
 				End If
-				If Not IO.Directory.Exists(path) Then
+				If Not Directory.Exists(path) Then
 					MsgBox("Directory " & path & " does not exist!", MsgBoxStyle.Critical)
 					e.Cancel = True
 					Exit Sub
 				End If
 				If Microsoft.VisualBasic.Right(path, 1) <> "\" Then path &= "\"
-				ReDim MyFiles(0)
-				MyFiles(0) = path
+				ReDim _myFiles(0)
+				_myFiles(0) = path
 			Else
 				'Stop if empty path
-				If Trim(Me.TextBoxPath.Text) = "" Then
+				If Trim(TextBoxPath.Text) = "" Then
 					e.Cancel = True
 					Exit Sub
 				End If
-				LastExt = Trim(Me.ComboBoxExt.Text)
+				_lastExt = Trim(ComboBoxExt.Text)
 				'Assume Files in array
-				If Microsoft.VisualBasic.Left(Me.TextBoxPath.Text, 1) = "<" And Me.ListViewFiles.SelectedItems.Count > 0 Then
+				If Microsoft.VisualBasic.Left(TextBoxPath.Text, 1) = "<" And ListViewFiles.SelectedItems.Count > 0 Then
 					'Multiple files selected
-					ReDim MyFiles(Me.ListViewFiles.SelectedItems.Count - 1)
-					x = - 1
-					For Each lv0 As ListViewItem In Me.ListViewFiles.Items
+					ReDim _myFiles(ListViewFiles.SelectedItems.Count - 1)
+					x = -1
+					For Each lv0 As ListViewItem In ListViewFiles.Items
 						If lv0.Selected Then
 							x += 1
-							MyFiles(x) = MyFolder & lv0.SubItems(0).Text
+							_myFiles(x) = _myFolder & lv0.SubItems(0).Text
 						End If
 					Next
-					bMultiFiles = True
+					_bMultiFiles = True
 				Else
 					'Single File
-					path = Trim(Me.TextBoxPath.Text)
+					path = Trim(TextBoxPath.Text)
 					'Primary extension (eg for bForceExt)
-					Ext = Trim(Me.ComboBoxExt.Text.Split(","c)(0))
+					ext = Trim(ComboBoxExt.Text.Split(","c)(0))
 					'If file without path then append path
-					If Microsoft.VisualBasic.Mid(path, 2, 1) <> ":" Then path = MyFolder & path
+
+
+					If Mid(path, 2, 1) <> ":" Then path = _myFolder & path
 					'If instead of File a Folder is entered: Switch to Folder and Abort
-					If IO.Directory.Exists(path) Then
+					If Directory.Exists(path) Then
 						SetFolder(path)
 						e.Cancel = True
 						Exit Sub
 					End If
 					'Force Extension
-					If bForceExt Then
-						If UCase(IO.Path.GetExtension(path)) <> "." & UCase(Ext) Then path &= "." & Ext
-						HasExt = True
+					If _bForceExt Then
+						If UCase(IO.Path.GetExtension(path)) <> "." & UCase(ext) Then path &= "." & ext
+						hasExt = True
 					Else
 						'Check whether specified a File with Ext
-						HasExt = (Microsoft.VisualBasic.Len(IO.Path.GetExtension(path)) > 1)
+						hasExt = (Microsoft.VisualBasic.Len(IO.Path.GetExtension(path)) > 1)
 					End If
 					'If File without Extension (after bForceExt question) and it does not exist, then add primary Extension
-					If Not HasExt Then
-						If Ext <> "*" And Ext <> "" Then
-							If Not IO.File.Exists(path) Then path &= "." & Ext
+					If Not hasExt Then
+						If ext <> "*" And ext <> "" Then
+							If Not File.Exists(path) Then path &= "." & ext
 						End If
 					End If
 					'Check that File exists
-					If IO.File.Exists(path) Then
+					If File.Exists(path) Then
 						'Yes: when bOverwriteCheck, check for Overwrite
-						If bOverwriteCheck Then
+						If _bOverwriteCheck Then
 							If MsgBox("Overwrite " & path & " ?", MsgBoxStyle.YesNo) = MsgBoxResult.No Then
 								e.Cancel = True
 								Exit Sub
@@ -166,70 +175,69 @@ Public Class FB_Dialog
 						End If
 					Else
 						'No: abort if bFileMustExist
-						If bFileMustExist Then
+						If _bFileMustExist Then
 							MsgBox("The file " & path & " does not exist!", MsgBoxStyle.Critical)
 							e.Cancel = True
 							Exit Sub
 						End If
 					End If
 					'Define MyFiles
-					ReDim MyFiles(0)
-					MyFiles(0) = path
-					bMultiFiles = False
+					ReDim _myFiles(0)
+					_myFiles(0) = path
+					_bMultiFiles = False
 				End If
 			End If
 		End If
 	End Sub
 
 	'Browse - Custom Dialog
-	Public Function Browse(ByVal path As String, ByVal FileMustExist As Boolean, ByVal OverwriteCheck As Boolean,
-							ByVal ExtMode As tFbExtMode, ByVal MultiFile As Boolean, ByVal Ext As String, ByVal Title As String) As Boolean
-		Dim x As Int16
-
-		If Not Initialized Then Init()
+	Public Function Browse(path As String, fileMustExist As Boolean, overwriteCheck As Boolean, extMode As tFbExtMode,
+							multiFile As Boolean, ext As String, title As String) As Boolean
+		If Not _initialized Then Init()
 
 		'Load Folder History ContextMenu
 		For x = 0 To 9
-			Me.ContextMenuHisFolder.Items(x).Text = FB_FolderHistory(x)
+			ContextMenuHisFolder.Items(x).Text = FB_FolderHistory(x)
 		Next
 		For x = 10 To 19
-			Me.ContextMenuHisFolder.Items(x + 1).Text = FB_FolderHistory(x)
+			ContextMenuHisFolder.Items(x + 1).Text = FB_FolderHistory(x)
 		Next
 
 		'Options
-		bOverwriteCheck = OverwriteCheck
-		bFileMustExist = FileMustExist
-		bForceExt = (ExtMode = tFbExtMode.ForceExt)
+		_bOverwriteCheck = overwriteCheck
+		_bFileMustExist = fileMustExist
+		_bForceExt = (extMode = tFbExtMode.ForceExt)
 
 		'Form Config
-		Me.ListViewFiles.MultiSelect = MultiFile
-		Me.ButtonAll.Visible = MultiFile
-		Me.Text = Title
+		ListViewFiles.MultiSelect = multiFile
+		ButtonAll.Visible = multiFile
+		Me.Title = title
+		Text = title
 
 		'Ext-Combobox
-		Me.ComboBoxExt.Items.Clear()
-		If NoExt Then
-			Me.ComboBoxExt.Items.Add("*")
-			Me.ComboBoxExt.SelectedIndex = 0
+		ComboBoxExt.Items.Clear()
+		If _noExt Then
+			ComboBoxExt.Items.Add("*")
+			ComboBoxExt.SelectedIndex = 0
 		Else
-			Select Case ExtMode
+			Select Case extMode
 				Case tFbExtMode.ForceExt
-					If Ext = "" Then Ext = ExtListSingle(0).ToString
-					Me.ComboBoxExt.Items.AddRange(ExtListSingle.ToArray)
-					Me.ComboBoxExt.Text = Ext
-					Me.ComboBoxExt.Enabled = False
+					If ext = "" Then ext = _extListSingle(0).ToString
+					ComboBoxExt.Items.AddRange(_extListSingle.ToArray)
+					ComboBoxExt.Text = ext
+					ComboBoxExt.Enabled = False
 				Case tFbExtMode.MultiExt, tFbExtMode.SingleExt
-					If ExtMode = tFbExtMode.MultiExt Then
-						Me.ComboBoxExt.Items.AddRange(ExtListMulti.ToArray)
+					If extMode = tFbExtMode.MultiExt Then
+						ComboBoxExt.Items.AddRange(_extListMulti.ToArray)
 					Else
-						Me.ComboBoxExt.Items.AddRange(ExtListSingle.ToArray)
+						ComboBoxExt.Items.AddRange(_extListSingle.ToArray)
 					End If
-					If Ext <> "" Then
-						Me.ComboBoxExt.Text = Ext
+					If ext <> "" Then
+						ComboBoxExt.Text = ext
 					Else
-						Me.ComboBoxExt.Text = LastExt
+						ComboBoxExt.Text = _lastExt
 					End If
-					Me.ComboBoxExt.Enabled = True
+					ComboBoxExt.Enabled = True
 			End Select
 		End If
 
@@ -239,7 +247,7 @@ Public Class FB_Dialog
 		If path = "" Then path = FB_FolderHistory(0)
 
 		'   If path-length too small  (Path is invalid): Last File
-		If path.Length < 2 Then path = LastFile
+		If path.Length < 2 Then path = _lastFile
 
 		'Open Folder - If no folder in the path: Last folder
 		If fPATH(path) = "" Then
@@ -253,31 +261,31 @@ Public Class FB_Dialog
 			'...Otherwise:
 			SetFolder(fPATH(path))
 		End If
-		If bBrowseFolder Then
+		If _bBrowseFolder Then
 			FolderUp()
-			Me.TextBoxPath.Text = path
+			TextBoxPath.Text = path
 		Else
-			Me.TextBoxPath.Text = IO.Path.GetFileName(path)
+			TextBoxPath.Text = IO.Path.GetFileName(path)
 		End If
 
 		'Show form ------------------------------------------------ ----
-		Me.ShowDialog()
-		If Me.DialogResult = Windows.Forms.DialogResult.OK Then
+		ShowDialog()
+		If DialogResult = DialogResult.OK Then
 			'File / Folder History
-			If bMultiFiles Then
-				LastFile = MyFolder
-				UpdateHisFolder(MyFolder)
+			If _bMultiFiles Then
+				_lastFile = _myFolder
+				UpdateHisFolder(_myFolder)
 			Else
-				LastFile = MyFiles(0)
-				UpdateHisFolder(fPATH(LastFile))
-				If Not bBrowseFolder Then UpdateHisFile(LastFile)
+				_lastFile = _myFiles(0)
+				UpdateHisFolder(fPATH(_lastFile))
+				If Not _bBrowseFolder Then UpdateHisFile(_lastFile)
 			End If
 			'Update Global History Folder
 			For x = 0 To 9
-				FB_FolderHistory(x) = Me.ContextMenuHisFolder.Items(x).Text
+				FB_FolderHistory(x) = ContextMenuHisFolder.Items(x).Text
 			Next
 			For x = 10 To 19
-				FB_FolderHistory(x) = Me.ContextMenuHisFolder.Items(x + 1).Text
+				FB_FolderHistory(x) = ContextMenuHisFolder.Items(x + 1).Text
 			Next
 			Return True
 		Else
@@ -285,14 +293,14 @@ Public Class FB_Dialog
 		End If
 	End Function
 
+	Public Title As String
+
 	'Close and save File / Folder History
 	Public Sub SaveAndClose()
-		Dim f As System.IO.StreamWriter
-		Dim x As Int16
 		'Folder History
 		If FB_Init Then
 			Try
-				f = My.Computer.FileSystem.OpenTextFileWriter(FB_FilHisDir & "Directories.txt", False, System.Text.Encoding.UTF8)
+				Dim f = My.Computer.FileSystem.OpenTextFileWriter(FB_FilHisDir & "Directories.txt", False, Encoding.UTF8)
 				For x = 0 To 19
 					f.WriteLine(FB_FolderHistory(x))
 				Next
@@ -303,80 +311,77 @@ Public Class FB_Dialog
 			FB_Init = False
 		End If
 		'File History
-		If Initialized And Not bLightMode Then
-			If Not bBrowseFolder Then
+		If _initialized And Not _bLightMode Then
+			If Not _bBrowseFolder Then
 				Try
-					f = My.Computer.FileSystem.OpenTextFileWriter(FB_FilHisDir & MyID & ".txt", False, System.Text.Encoding.UTF8)
+					Dim f = My.Computer.FileSystem.OpenTextFileWriter(FB_FilHisDir & _myId & ".txt", False, Encoding.UTF8)
 					For x = 0 To 9
-						f.WriteLine(Me.ContextMenuHisFile.Items(x).Text)
+						f.WriteLine(ContextMenuHisFile.Items(x).Text)
 					Next
 					f.Close()
 					f.Dispose()
 				Catch ex As Exception
 				End Try
 			End If
-			Initialized = False
+			_initialized = False
 		End If
-		f = Nothing
+
 		'Close
-		Me.Close()
+		Close()
 	End Sub
 
 	'Switching to FolderBrowser
 	Public Sub SetFolderBrowser()
-		If Initialized Then Exit Sub
-		bBrowseFolder = True
-		Me.Width = 500
-		Me.ListViewFiles.Enabled = False
-		Me.ButtonHisFile.Enabled = False
-		Me.TextBoxSearchFile.Enabled = False
-		Me.SplitContainer1.Panel2Collapsed = True
-		Me.Text = "Directory Browser"
+		If _initialized Then Exit Sub
+
+		_bBrowseFolder = True
+		Width = 500
+		ListViewFiles.Enabled = False
+		ButtonHisFile.Enabled = False
+		TextBoxSearchFile.Enabled = False
+		SplitContainer1.Panel2Collapsed = True
+		Text = "Directory Browser"
 	End Sub
 
 	'Initialize
 	Private Sub Init()
-		Dim x As Integer
-		Dim line As String
-		Dim f As System.IO.StreamReader
-
-		UpdateLock = True
+		_updateLock = True
 
 		'Initialization for Global File Browser
 		If Not FB_Init Then GlobalInit()
 
 		'Load Drive ComboBox
 		For x = 0 To UBound(FB_Drives)
-			Me.ComboBoxDrive.Items.Add(FB_Drives(x))
+			ComboBoxDrive.Items.Add(FB_Drives(x))
 		Next
 
 		'FolderHistory ContextMenu
-		Me.ContextMenuHisFolder.Items.Clear()
+		ContextMenuHisFolder.Items.Clear()
 		For x = 0 To 9
-			Me.ContextMenuHisFolder.Items.Add("")
+			ContextMenuHisFolder.Items.Add("")
 		Next
-		Me.ContextMenuHisFolder.Items.Add("-")
+		ContextMenuHisFolder.Items.Add("-")
 		For x = 10 To 19
-			Me.ContextMenuHisFolder.Items.Add("")
+			ContextMenuHisFolder.Items.Add("")
 		Next
-		Me.ContextMenuHisFolder.Items.Add("-")
-		Me.ContextMenuHisFolder.Items.Add(FavText)
+		ContextMenuHisFolder.Items.Add("-")
+		ContextMenuHisFolder.Items.Add(FavText)
 
 		'FileHistory ContextMenu
-		If bBrowseFolder Then
-			LastFile = FB_FolderHistory(0)
-		ElseIf Not bLightMode Then
+		If _bBrowseFolder Then
+			_lastFile = FB_FolderHistory(0)
+		ElseIf Not _bLightMode Then
 			For x = 0 To 9
-				Me.ContextMenuHisFile.Items.Add("")
+				ContextMenuHisFile.Items.Add("")
 			Next
-			If IO.File.Exists(FB_FilHisDir & MyID & ".txt") Then
-				f = New System.IO.StreamReader(FB_FilHisDir & MyID & ".txt")
-				x = - 1
+			If File.Exists(FB_FilHisDir & _myId & ".txt") Then
+				Dim f = New StreamReader(FB_FilHisDir & _myId & ".txt")
+				Dim x = -1
 				Do While Not f.EndOfStream And x < 9
 					x += 1
-					line = f.ReadLine
-					Me.ContextMenuHisFile.Items(x).Text = line
-					If x = 0 Then LastFile = line
+					Dim line = f.ReadLine
+					ContextMenuHisFile.Items(x).Text = line
+					If x = 0 Then _lastFile = line
 				Loop
 				f.Close()
 				f.Dispose()
@@ -384,34 +389,27 @@ Public Class FB_Dialog
 		End If
 
 		'Extension-ComboBox
-		If Not NoExt Then
-			ExtListSingle = New ArrayList
-			ExtListMulti = New ArrayList
-			For x = 0 To UBound(MyExt)
-				ExtListMulti.Add(MyExt(x))
-				For Each line In MyExt(x).Split(","c)
-					ExtListSingle.Add(Trim(line))
-				Next
+		If Not _noExt Then
+			_extListSingle = New ArrayList
+			_extListMulti = New ArrayList
+			For x = 0 To UBound(_myExt)
+				_extListMulti.Add(_myExt(x))
+				_extListSingle.AddRange(_myExt(x).Split(","c))
 			Next
-			ExtListMulti.Add("*")
-			ExtListSingle.Add("*")
+			_extListMulti.Add("*")
+			_extListSingle.Add("*")
 		End If
 
-		Initialized = True
-		f = Nothing
-		UpdateLock = False
+		_initialized = True
+		_updateLock = False
 	End Sub
 
 	Private Sub GlobalInit()
-		Dim drive As String
-		Dim x As Integer
-
-		Dim f As System.IO.StreamReader
 
 		'Create Drive List
-		ReDim FB_Drives(UBound(IO.Directory.GetLogicalDrives()))
-		x = - 1
-		For Each drive In IO.Directory.GetLogicalDrives()
+		ReDim FB_Drives(UBound(Directory.GetLogicalDrives()))
+		Dim x = -1
+		For Each drive In Directory.GetLogicalDrives()
 			x += 1
 			FB_Drives(x) = Microsoft.VisualBasic.Left(drive, 2)
 		Next
@@ -420,9 +418,9 @@ Public Class FB_Dialog
 		For x = 0 To 19
 			FB_FolderHistory(x) = EmptyText
 		Next
-		If IO.File.Exists(FB_FilHisDir & "Directories.txt") Then
-			f = New System.IO.StreamReader(FB_FilHisDir & "Directories.txt")
-			x = - 1
+		If File.Exists(FB_FilHisDir & "Directories.txt") Then
+			Dim f = New StreamReader(FB_FilHisDir & "Directories.txt")
+			x = -1
 			Do While Not f.EndOfStream And x < 19
 				x += 1
 				FB_FolderHistory(x) = f.ReadLine()
@@ -432,284 +430,230 @@ Public Class FB_Dialog
 		End If
 
 		FB_Init = True
-
-		f = Nothing
 	End Sub
 
 	'ComboBoxDrive_SelectedIndexChanged
-	Private Sub ComboBoxDrive_SelectedIndexChanged(ByVal sender As System.Object, ByVal e As System.EventArgs) _
+	Private Sub ComboBoxDrive_SelectedIndexChanged(sender As Object, e As EventArgs) _
 		Handles ComboBoxDrive.SelectedIndexChanged
-		If Not UpdateLock Then SetFolder(Me.ComboBoxDrive.SelectedItem.ToString)
+		If Not _updateLock Then SetFolder(ComboBoxDrive.SelectedItem.ToString)
 	End Sub
 
 
 	'ButtonFolderBack_Click
-	Private Sub ButtonFolderBack_Click(ByVal sender As System.Object, ByVal e As System.EventArgs) _
-		Handles ButtonFolderBack.Click
+	Private Sub ButtonFolderBack_Click(sender As Object, e As EventArgs) Handles ButtonFolderBack.Click
 		FolderUp()
 	End Sub
 
 	'TextBoxPath_KeyDown (ENTER)
-	Private Sub TextBoxPath_KeyDown(ByVal sender As Object, ByVal e As System.Windows.Forms.KeyEventArgs) _
-		Handles TextBoxPath.KeyDown
-		Dim path As String
+	Private Sub TextBoxPath_KeyDown(sender As Object, e As KeyEventArgs) Handles TextBoxPath.KeyDown
 		If e.KeyCode = Keys.Enter Then
-			path = Me.TextBoxPath.Text
-			If IO.Directory.Exists(path) Then
-				If bBrowseFolder Then
-					Me.DialogResult = Windows.Forms.DialogResult.OK
-					Me.Close()
+			Dim path = TextBoxPath.Text
+			If Directory.Exists(path) Then
+				If _bBrowseFolder Then
+					DialogResult = DialogResult.OK
+					Close()
 				Else
 					SetFolder(path)
 				End If
 			Else
-				Me.DialogResult = Windows.Forms.DialogResult.OK
-				Me.Close()
+				DialogResult = DialogResult.OK
+				Close()
 			End If
 		End If
 	End Sub
 
 	'ListViewFolder_SelectedIndexChanged
-	Private Sub ListViewFolder_SelectedIndexChanged(ByVal sender As System.Object, ByVal e As System.EventArgs) _
+	Private Sub ListViewFolder_SelectedIndexChanged(sender As Object, e As EventArgs) _
 		Handles ListViewFolder.SelectedIndexChanged
-		If bBrowseFolder Then
-			UpdateLock = True
-			If Me.ListViewFolder.SelectedItems.Count > 0 Then
-				Me.TextBoxPath.Text = Me.ListViewFolder.SelectedItems.Item(0).Text & "\"
+		If _bBrowseFolder Then
+			_updateLock = True
+			If ListViewFolder.SelectedItems.Count > 0 Then
+				TextBoxPath.Text = ListViewFolder.SelectedItems.Item(0).Text & "\"
 			End If
-			UpdateLock = False
+			_updateLock = False
 		End If
 	End Sub
 
 	'ListViewFolder_MouseDoubleClick
-	Private Sub ListViewFolder_MouseDoubleClick(ByVal sender As Object, ByVal e As System.Windows.Forms.MouseEventArgs) _
+	Private Sub ListViewFolder_MouseDoubleClick(sender As Object, e As MouseEventArgs) _
 		Handles ListViewFolder.MouseDoubleClick
-		If Me.ListViewFolder.SelectedItems.Count = 0 Then Exit Sub
-		SetFolder(MyFolder & Me.ListViewFolder.SelectedItems.Item(0).Text)
+		If ListViewFolder.SelectedItems.Count = 0 Then Exit Sub
+		SetFolder(_myFolder & ListViewFolder.SelectedItems.Item(0).Text)
 	End Sub
 
 	'ListViewFolder_KeyDown
-	Private Sub ListViewFolder_KeyDown(ByVal sender As Object, ByVal e As System.Windows.Forms.KeyEventArgs) _
-		Handles ListViewFolder.KeyDown
+	Private Sub ListViewFolder_KeyDown(sender As Object, e As KeyEventArgs) Handles ListViewFolder.KeyDown
 		If e.KeyCode = Keys.Enter Then
-			If Me.ListViewFolder.SelectedItems.Count = 0 Then Exit Sub
-			SetFolder(MyFolder & Me.ListViewFolder.SelectedItems.Item(0).Text)
+			If ListViewFolder.SelectedItems.Count = 0 Then Exit Sub
+			SetFolder(_myFolder & ListViewFolder.SelectedItems.Item(0).Text)
 		End If
 	End Sub
 
-	''<SORTER>
-	''Private Sub ListViewFiles_ColumnClick(ByVal sender As Object, ByVal e As System.Windows.Forms.ColumnClickEventArgs) Handles ListViewFiles.ColumnClick
-	''    ' Determine if the clicked column is already the column that is 
-	''    ' being sorted.
-	''    If (e.Column = lvwColumnSorter.SortColumn) Then
-	''        ' Reverse the current sort direction for this column.
-	''        If (lvwColumnSorter.Order = SortOrder.Ascending) Then
-	''            lvwColumnSorter.Order = SortOrder.Descending
-	''        Else
-	''            lvwColumnSorter.Order = SortOrder.Ascending
-	''        End If
-	''    Else
-	''        ' Set the column number that is to be sorted; default to ascending.
-	''        lvwColumnSorter.SortColumn = e.Column
-	''        lvwColumnSorter.Order = SortOrder.Ascending
-	''    End If
-
-	''    ' Perform the sort with these new sort options.
-	''    Me.ListViewFiles.Sort()
-
-	''End Sub
-
 	'ListViewFiles_SelectedIndexChanged
-	Private Sub ListViewFiles_SelectedIndexChanged(ByVal sender As System.Object, ByVal e As System.EventArgs) _
+	Private Sub ListViewFiles_SelectedIndexChanged(sender As Object, e As EventArgs) _
 		Handles ListViewFiles.SelectedIndexChanged
-		UpdateLock = True
-		If Me.ListViewFiles.SelectedItems.Count = 0 Then
-			Me.TextBoxPath.Text = ""
+		_updateLock = True
+		If ListViewFiles.SelectedItems.Count = 0 Then
+			TextBoxPath.Text = ""
 		Else
-			If Me.ListViewFiles.SelectedItems.Count > 1 Then
-				Me.TextBoxPath.Text = "<" & Me.ListViewFiles.SelectedItems.Count & " Files selected>"
+			If ListViewFiles.SelectedItems.Count > 1 Then
+				TextBoxPath.Text = "<" & ListViewFiles.SelectedItems.Count & " Files selected>"
 			Else
-				Me.TextBoxPath.Text = Me.ListViewFiles.SelectedItems.Item(0).Text
-				Me.TextBoxPath.SelectionStart = Me.TextBoxPath.Text.Length
+				TextBoxPath.Text = ListViewFiles.SelectedItems.Item(0).Text
+				TextBoxPath.SelectionStart = TextBoxPath.Text.Length
 			End If
 		End If
-		UpdateLock = False
+		_updateLock = False
 	End Sub
 
 	'ListViewFiles_MouseDoubleClick
-	Private Sub ListViewFiles_MouseDoubleClick(ByVal sender As Object, ByVal e As System.Windows.Forms.MouseEventArgs) _
+	Private Sub ListViewFiles_MouseDoubleClick(sender As Object, e As MouseEventArgs) _
 		Handles ListViewFiles.MouseDoubleClick
-		If Me.ListViewFiles.SelectedItems.Count = 0 Then Exit Sub
-		Me.DialogResult = Windows.Forms.DialogResult.OK
-		Me.Close()
+		If ListViewFiles.SelectedItems.Count = 0 Then Exit Sub
+
+		DialogResult = DialogResult.OK
+		Close()
 	End Sub
 
 	'ListViewFiles_KeyDown
-	Private Sub ListViewFiles_KeyDown(ByVal sender As Object, ByVal e As System.Windows.Forms.KeyEventArgs) _
-		Handles ListViewFiles.KeyDown
+	Private Sub ListViewFiles_KeyDown(sender As Object, e As KeyEventArgs) Handles ListViewFiles.KeyDown
 		If e.KeyCode = Keys.Enter Then
-			If Me.ListViewFiles.SelectedItems.Count = 0 Then Exit Sub
-			Me.DialogResult = Windows.Forms.DialogResult.OK
-			Me.Close()
+			If ListViewFiles.SelectedItems.Count = 0 Then Exit Sub
+			DialogResult = DialogResult.OK
+			Close()
 		End If
 	End Sub
 
 	'TextBoxSearchFolder_KeyDown
-	Private Sub TextBoxSearchFolder_KeyDown(ByVal sender As Object, ByVal e As System.Windows.Forms.KeyEventArgs) _
-		Handles TextBoxSearchFolder.KeyDown
-		Dim ItemCount As Int32
-		Dim SelIndex As Int32
-		Dim NoItem As Boolean
-		ItemCount = Me.ListViewFolder.Items.Count
-		NoItem = (ItemCount = 0)
-		If Not NoItem Then
-			If Me.ListViewFolder.SelectedItems.Count = 0 Then
-				SelIndex = - 1
+	Private Sub TextBoxSearchFolder_KeyDown(sender As Object, e As KeyEventArgs) Handles TextBoxSearchFolder.KeyDown
+		Dim itemCount = ListViewFolder.Items.Count
+		Dim noItem = (itemCount = 0)
+
+		Dim selIndex As Integer
+		If Not noItem Then
+			If ListViewFolder.SelectedItems.Count = 0 Then
+				selIndex = -1
 			Else
-				SelIndex = Me.ListViewFolder.SelectedIndices(0)
+				selIndex = ListViewFolder.SelectedIndices(0)
 			End If
 		End If
 		Select Case e.KeyCode
 			Case Keys.Enter
-				If NoItem Then Exit Sub
-				If Me.ListViewFolder.SelectedItems.Count = 0 Then Me.ListViewFolder.SelectedIndices.Add(0)
-				SetFolder(MyFolder & Me.ListViewFolder.SelectedItems.Item(0).Text)
+				If noItem Then Exit Sub
+				If ListViewFolder.SelectedItems.Count = 0 Then ListViewFolder.SelectedIndices.Add(0)
+				SetFolder(_myFolder & ListViewFolder.SelectedItems.Item(0).Text)
 			Case Keys.Up
-				If Not NoItem Then
-					If SelIndex < 1 Then
-						SelIndex = 1
+				If Not noItem Then
+					If selIndex < 1 Then
+						selIndex = 1
 					Else
-						Me.ListViewFolder.Items(SelIndex).Selected = False
+						ListViewFolder.Items(selIndex).Selected = False
 					End If
-					Me.ListViewFolder.Items(SelIndex - 1).Selected = True
-					Me.ListViewFolder.Items(SelIndex - 1).EnsureVisible()
+					ListViewFolder.Items(selIndex - 1).Selected = True
+					ListViewFolder.Items(selIndex - 1).EnsureVisible()
 				End If
 			Case Keys.Down
-				If Not NoItem And SelIndex < ItemCount - 1 Then
-					If Not SelIndex = - 1 Then Me.ListViewFolder.Items(SelIndex).Selected = False
-					Me.ListViewFolder.Items(SelIndex + 1).Selected = True
-					Me.ListViewFolder.Items(SelIndex + 1).EnsureVisible()
+				If Not noItem And selIndex < itemCount - 1 Then
+					If Not selIndex = -1 Then ListViewFolder.Items(selIndex).Selected = False
+					ListViewFolder.Items(selIndex + 1).Selected = True
+					ListViewFolder.Items(selIndex + 1).EnsureVisible()
 				End If
 			Case Keys.Back
-				If Me.TextBoxSearchFolder.Text = "" Then FolderUp()
+				If TextBoxSearchFolder.Text = "" Then FolderUp()
 		End Select
 	End Sub
 
 	'TextBoxSearchFolder_TextChanged
-	Private Sub TextBoxSearchFolder_TextChanged(ByVal sender As System.Object, ByVal e As System.EventArgs) _
-		Handles TextBoxSearchFolder.TextChanged
-		If Not UpdateLock Then LoadListFolder()
+	Private Sub TextBoxSearchFolder_TextChanged(sender As Object, e As EventArgs) Handles TextBoxSearchFolder.TextChanged
+		If Not _updateLock Then LoadListFolder()
 	End Sub
 
 	'TextBoxSearchFile_KeyDown
-	Private Sub TextBoxSearchFile_KeyDown(ByVal sender As Object, ByVal e As System.Windows.Forms.KeyEventArgs) _
-		Handles TextBoxSearchFile.KeyDown
-		Dim ItemCount As Int32
-		Dim SelIndex As Int32
-		Dim NoItem As Boolean
-		ItemCount = Me.ListViewFiles.Items.Count
-		NoItem = (ItemCount = 0)
-		If Not NoItem Then
-			If Me.ListViewFiles.SelectedItems.Count = 0 Then
-				SelIndex = - 1
+	Private Sub TextBoxSearchFile_KeyDown(sender As Object, e As KeyEventArgs) Handles TextBoxSearchFile.KeyDown
+		Dim selIndex As Integer
+
+		Dim itemCount = ListViewFiles.Items.Count
+		Dim noItem = (itemCount = 0)
+		If Not noItem Then
+			If ListViewFiles.SelectedItems.Count = 0 Then
+				selIndex = -1
 			Else
-				SelIndex = Me.ListViewFiles.SelectedIndices(0)
+				selIndex = ListViewFiles.SelectedIndices(0)
 			End If
 		End If
 		Select Case e.KeyCode
 			Case Keys.Enter
-				If NoItem Then Exit Sub
-				If Me.ListViewFiles.SelectedItems.Count = 0 Then Me.ListViewFiles.SelectedIndices.Add(0)
-				Me.DialogResult = Windows.Forms.DialogResult.OK
-				Me.Close()
+				If noItem Then Exit Sub
+				If ListViewFiles.SelectedItems.Count = 0 Then ListViewFiles.SelectedIndices.Add(0)
+				DialogResult = DialogResult.OK
+				Close()
 			Case Keys.Up
-				If Not NoItem Then
-					If SelIndex < 1 Then
-						SelIndex = 1
+				If Not noItem Then
+					If selIndex < 1 Then
+						selIndex = 1
 					Else
-						Me.ListViewFiles.Items(SelIndex).Selected = False
+						ListViewFiles.Items(selIndex).Selected = False
 					End If
-					Me.ListViewFiles.Items(SelIndex - 1).Selected = True
-					Me.ListViewFiles.Items(SelIndex - 1).EnsureVisible()
+					ListViewFiles.Items(selIndex - 1).Selected = True
+					ListViewFiles.Items(selIndex - 1).EnsureVisible()
 				End If
 			Case Keys.Down
-				If Not NoItem And SelIndex < ItemCount - 1 Then
-					If Not SelIndex = - 1 Then Me.ListViewFiles.Items(SelIndex).Selected = False
-					Me.ListViewFiles.Items(SelIndex + 1).Selected = True
-					Me.ListViewFiles.Items(SelIndex + 1).EnsureVisible()
+				If Not noItem And selIndex < itemCount - 1 Then
+					If Not selIndex = -1 Then ListViewFiles.Items(selIndex).Selected = False
+					ListViewFiles.Items(selIndex + 1).Selected = True
+					ListViewFiles.Items(selIndex + 1).EnsureVisible()
 				End If
 		End Select
 	End Sub
 
-	'TextBoxSearchFile_TextChanged
-	Private Sub TextBoxSearchFile_TextChanged(ByVal sender As System.Object, ByVal e As System.EventArgs) _
-		Handles TextBoxSearchFile.TextChanged
-		If Not UpdateLock Then LoadListFiles()
+	Private Sub TextBoxSearchFile_TextChanged(sender As Object, e As EventArgs) _
+		Handles TextBoxSearchFile.TextChanged, ComboBoxExt.TextChanged
+		If Not _updateLock Then LoadListFiles()
 	End Sub
 
-	'ComboBoxExt_TextChanged
-	Private Sub ComboBoxExt_TextChanged(ByVal sender As Object, ByVal e As System.EventArgs) _
-		Handles ComboBoxExt.TextChanged
-		If Not UpdateLock Then LoadListFiles()
+	Private Sub ButtonHisFolder_Click(sender As Object, e As EventArgs) Handles ButtonHisFolder.Click
+		ContextMenuHisFolder.Show(MousePosition)
 	End Sub
 
-	'ButtonHisFolder_Click
-	Private Sub ButtonHisFolder_Click(ByVal sender As System.Object, ByVal e As System.EventArgs) _
-		Handles ButtonHisFolder.Click
-		Me.ContextMenuHisFolder.Show(Control.MousePosition)
+
+	Private Sub ButtonHisFile_Click(sender As Object, e As EventArgs) Handles ButtonHisFile.Click
+		ContextMenuHisFile.Show(MousePosition)
 	End Sub
 
-	'ButtonHisFile_Click
-	Private Sub ButtonHisFile_Click(ByVal sender As System.Object, ByVal e As System.EventArgs) Handles ButtonHisFile.Click
-		Me.ContextMenuHisFile.Show(Control.MousePosition)
-	End Sub
-
-	'Select All - Click
-	Private Sub ButtonAll_Click(sender As System.Object, e As System.EventArgs) Handles ButtonAll.Click
-		Dim i As Integer
-		Me.ListViewFiles.BeginUpdate()
-		For i = 0 To Me.ListViewFiles.Items.Count - 1
-			Me.ListViewFiles.Items(i).Selected = True
+	Private Sub ButtonAll_Click(sender As Object, e As EventArgs) Handles ButtonAll.Click
+		ListViewFiles.BeginUpdate()
+		For i = 0 To ListViewFiles.Items.Count - 1
+			ListViewFiles.Items(i).Selected = True
 		Next
-		Me.ListViewFiles.EndUpdate()
+		ListViewFiles.EndUpdate()
 	End Sub
 
-	'ContextMenuHisFile_ItemClicked
-	Private Sub ContextMenuHisFile_ItemClicked(ByVal sender As Object,
-												ByVal e As System.Windows.Forms.ToolStripItemClickedEventArgs) Handles ContextMenuHisFile.ItemClicked
-		Dim path As String
-
-		path = e.ClickedItem.Text.ToString
-
+	Private Sub ContextMenuHisFile_ItemClicked(sender As Object, e As ToolStripItemClickedEventArgs) _
+		Handles ContextMenuHisFile.ItemClicked
+		Dim path = e.ClickedItem.Text.ToString
 		If path = EmptyText Then Exit Sub
-
 		SetFolder(fPATH(path))
-
-		Me.TextBoxPath.Text = IO.Path.GetFileName(path)
+		TextBoxPath.Text = IO.Path.GetFileName(path)
 	End Sub
 
-	'ContextMenuHisFolder_ItemClicked
-	Private Sub ContextMenuHisFolder_ItemClicked(ByVal sender As Object,
-												ByVal e As System.Windows.Forms.ToolStripItemClickedEventArgs) Handles ContextMenuHisFolder.ItemClicked
-		Dim path As String
-		Dim favdlog As FB_FavDlog
-		Dim x As Integer
+	Private Sub ContextMenuHisFolder_ItemClicked(sender As Object, e As ToolStripItemClickedEventArgs) _
+		Handles ContextMenuHisFolder.ItemClicked
 
-		path = e.ClickedItem.Text.ToString
+		Dim path = e.ClickedItem.Text.ToString
 
 		If path = EmptyText Then Exit Sub
 
 		If path = FavText Then
-			favdlog = New FB_FavDlog
-			If favdlog.ShowDialog = Windows.Forms.DialogResult.OK Then
-				For x = 10 To 19
+			Dim favdlog = New FB_FavDlog
+			If favdlog.ShowDialog(Me) = DialogResult.OK Then
+				For x As Integer = 10 To 19
 					path = CType(favdlog.ListBox1.Items(x - 10), String)
 					If path = NoFavString Then
 						FB_FolderHistory(x) = EmptyText
 					Else
 						FB_FolderHistory(x) = path
 					End If
-					Me.ContextMenuHisFolder.Items(x + 1).Text = FB_FolderHistory(x)
+					ContextMenuHisFolder.Items(x + 1).Text = FB_FolderHistory(x)
 				Next
 			End If
 		Else
@@ -717,17 +661,11 @@ Public Class FB_Dialog
 		End If
 	End Sub
 
-	'TextBoxCurrent_MouseClick
-	Private Sub TextBoxCurrent_MouseClick(ByVal sender As Object, ByVal e As System.Windows.Forms.MouseEventArgs) _
-		Handles TextBoxCurrent.MouseClick
-		Dim x As Int32
-		Dim x1 As Int32
-		Dim path As String
-		Dim newpath As String
-		newpath = ""
-		x = Me.TextBoxCurrent.SelectionStart
-		path = Me.TextBoxCurrent.Text
-		x1 = path.Length
+	Private Sub TextBoxCurrent_MouseClick(sender As Object, e As MouseEventArgs) Handles TextBoxCurrent.MouseClick
+		Dim newpath = ""
+		Dim x = TextBoxCurrent.SelectionStart
+		Dim path = TextBoxCurrent.Text
+		Dim x1 = path.Length
 		If x = x1 Then Exit Sub
 		If x < 4 Then
 			SetFolder(Microsoft.VisualBasic.Left(path, 2))
@@ -742,192 +680,193 @@ Public Class FB_Dialog
 		SetFolder(newpath)
 	End Sub
 
-	'ButtonDesktop_Click
-	Private Sub ButtonDesktop_Click(ByVal sender As System.Object, ByVal e As System.EventArgs) Handles ButtonDesktop.Click
-		SetFolder(FileIO.SpecialDirectories.Desktop.ToString)
+	Private Sub ButtonDesktop_Click(sender As Object, e As EventArgs) Handles ButtonDesktop.Click
+		SetFolder(SpecialDirectories.Desktop.ToString)
 	End Sub
 
-	'Context Menu Update
-	Private Sub UpdateHisFile(ByVal path As String)
-		Dim x As Int16
-		Dim y As Int16
-		If bLightMode Then Exit Sub
-		'Sort Context Menu
+	Private Sub UpdateHisFile(path As String)
+		If _bLightMode Then Exit Sub
+
+		Dim x As Integer
 		For x = 0 To 8
-			If UCase(Me.ContextMenuHisFile.Items(x).Text.ToString) = UCase(path) Then Exit For
+			If UCase(ContextMenuHisFile.Items(x).Text.ToString) = UCase(path) Then Exit For
 		Next
-		For y = x To 1 Step - 1
-			Me.ContextMenuHisFile.Items(y).Text = Me.ContextMenuHisFile.Items(y - 1).Text
+		For y = x To 1 Step -1
+			ContextMenuHisFile.Items(y).Text = ContextMenuHisFile.Items(y - 1).Text
 		Next
-		Me.ContextMenuHisFile.Items(0).Text = path
+		ContextMenuHisFile.Items(0).Text = path
 	End Sub
 
-	Private Sub UpdateHisFolder(ByVal path As String)
-		Dim x As Int16
-		Dim y As Int16
-
-		'Sort Context Menu
+	Private Sub UpdateHisFolder(path As String)
+		Dim x As Integer
 		For x = 0 To 8
-			If UCase(Me.ContextMenuHisFolder.Items(x).Text.ToString) = UCase(path) Then Exit For
+			If UCase(ContextMenuHisFolder.Items(x).Text.ToString) = UCase(path) Then Exit For
 		Next
-
-		For y = x To 1 Step - 1
-			Me.ContextMenuHisFolder.Items(y).Text = Me.ContextMenuHisFolder.Items(y - 1).Text
+		For y = x To 1 Step -1
+			ContextMenuHisFolder.Items(y).Text = ContextMenuHisFolder.Items(y - 1).Text
 		Next
-
-		Me.ContextMenuHisFolder.Items(0).Text = path
+		ContextMenuHisFolder.Items(0).Text = path
 	End Sub
 
-	'Manuelles History-Update
-	Public Sub UpdateHistory(ByVal path As String)
-		Dim x As Int16
-		Dim y As Int16
-		'Init
-		If Not Initialized Then Init()
-		'Files
+	Public Sub UpdateHistory(path As String)
+		If Not _initialized Then Init()
 		UpdateHisFile(path)
-		'Folder
 		path = fPATH(path)
+		Dim x As Integer
 		For x = 0 To 8
 			If UCase(FB_FolderHistory(x)) = UCase(path) Then Exit For
 		Next
-		For y = x To 1 Step - 1
+		For y = x To 1 Step -1
 			FB_FolderHistory(y) = FB_FolderHistory(y - 1)
 		Next
 		FB_FolderHistory(0) = path
 	End Sub
 
 	'Change folder
-	Private Sub SetFolder(ByVal Path As String)
+	Private Sub SetFolder(path As String)
 
 		'Abort if no drive specified
-		If Microsoft.VisualBasic.Mid(Path, 2, 1) <> ":" Then Exit Sub
+		If Mid(path, 2, 1) <> ":" Then Exit Sub
 
-		UpdateLock = True
+		_updateLock = True
 
 		'Delete Search-fields
-		Me.TextBoxSearchFile.Text = ""
-		Me.TextBoxSearchFolder.Text = ""
+		TextBoxSearchFile.Text = ""
+		TextBoxSearchFolder.Text = ""
 
 		'Set Drive
-		If MyDrive <> Microsoft.VisualBasic.Left(Path, 2) Then
-			MyDrive = UCase(Microsoft.VisualBasic.Left(Path, 2))
-			Me.ComboBoxDrive.SelectedItem = MyDrive
+		If _myDrive <> Microsoft.VisualBasic.Left(path, 2) Then
+			_myDrive = UCase(Microsoft.VisualBasic.Left(path, 2))
+			ComboBoxDrive.SelectedItem = _myDrive
 		End If
 
 		'Set Folder
-		MyFolder = Path
-		If Microsoft.VisualBasic.Right(MyFolder, 1) <> "\" Then MyFolder &= "\"
+		_myFolder = path
+		If Microsoft.VisualBasic.Right(_myFolder, 1) <> "\" Then _myFolder &= "\"
+
+		Me.Text = Me.Title & " " & _myFolder
+
 		LoadListFolder()
 		LoadListFiles()
 
-		If bBrowseFolder Then Me.TextBoxPath.Text = ""
+		If _bBrowseFolder Then TextBoxPath.Text = ""
 
-		Me.TextBoxCurrent.Text = MyFolder
+		TextBoxCurrent.Text = _myFolder
 
-		'Me.TextBoxPath.SelectionStart = Me.TextBoxPath.Text.Length
-		UpdateLock = False
+		'TextBoxPath.SelectionStart = TextBoxPath.Text.Length
+		_updateLock = False
 	End Sub
 
 	'Folder one level up
 	Private Sub FolderUp()
-		Dim path As String
-		Dim x As Int32
-		If MyFolder <> "" Then
-			path = Microsoft.VisualBasic.Left(MyFolder, MyFolder.Length - 1)
-			x = path.LastIndexOf("\")
+		If _myFolder <> "" Then
+			Dim path = Microsoft.VisualBasic.Left(_myFolder, _myFolder.Length - 1)
+			Dim x = path.LastIndexOf("\")
 			If x > 0 Then SetFolder(Microsoft.VisualBasic.Left(path, x))
 		End If
 	End Sub
 
+
+	Private Structure SHFILEINFO
+		Public hIcon As IntPtr ' : icon
+		Public iIcon As Integer	' : icondex
+		Public dwAttributes As Integer ' : SFGAO_ flags
+		<MarshalAs(UnmanagedType.ByValTStr, SizeConst:=260)> Public szDisplayName As String
+		<MarshalAs(UnmanagedType.ByValTStr, SizeConst:=80)> Public szTypeName As String
+	End Structure
+
+	Private Const SHGFI_ICON = &H100
+	Private Const SHGFI_SMALLICON = &H1
+	Private Declare Ansi Function SHGetFileInfo Lib "shell32.dll" (pszPath As String, dwFileAttributes As Integer,
+																ByRef psfi As SHFILEINFO, cbFileInfo As Integer, uFlags As Integer) As IntPtr
+
 	'Load Folder-List
 	Private Sub LoadListFolder()
-		Dim SearchPat As String
 		'Delete Folder-List
-		Me.ListViewFolder.Items.Clear()
-		SearchPat = "*" & Me.TextBoxSearchFolder.Text & "*"
+		ListViewFolder.Items.Clear()
+		Dim searchPat = "*" & TextBoxSearchFolder.Text & "*"
 		Try
 			'Add Folder
-			Dim di As New IO.DirectoryInfo(MyFolder)
-			Dim aryFi As IO.DirectoryInfo()
-			Dim fi As IO.DirectoryInfo
-			aryFi = di.GetDirectories(SearchPat)
+			Dim di As New DirectoryInfo(_myFolder)
+			Dim aryFi = di.GetDirectories(searchPat)
+			ImageList1.Images.Clear()
+			Dim shinfo = New SHFILEINFO()
+			shinfo.szDisplayName = New String(Chr(0), 260)
+			shinfo.szTypeName = New String(Chr(0), 80)
+			SHGetFileInfo(_myFolder, 0, shinfo, Marshal.SizeOf(shinfo), SHGFI_ICON Or SHGFI_SMALLICON)
+			Dim myIcon = Icon.FromHandle(shinfo.hIcon)
+			ImageList1.Images.Add(myIcon)
 			For Each fi In aryFi
-				Me.ListViewFolder.Items.Add(fi.ToString)
+				ListViewFolder.Items.Add(fi.ToString, 0)
 			Next
 		Catch ex As Exception
-			Me.ListViewFolder.Items.Add("<ERROR: " & ex.Message.ToString & ">")
+			ListViewFolder.Items.Add("<ERROR: " & ex.Message.ToString & ">")
 		End Try
 	End Sub
 
 	'Load File-list
 	Private Sub LoadListFiles()
-		Dim x As Int32
-		Dim SearchPat As String
-		Dim SearchFile As String
-		Dim SearchExt As String
-		Dim ExtStr As String()
-
 		'Abort if bBrowseFolder
-		If bBrowseFolder Then Exit Sub
+		If _bBrowseFolder Then Exit Sub
 
-		Me.LabelFileAnz.Text = "0 Files"
 		'Define Extension-filter
-		If Trim(Me.ComboBoxExt.Text.ToString) = "" Then
-			ExtStr = New String() {"*"}
+		Dim extStr As String()
+		If Trim(ComboBoxExt.Text.ToString) = "" Then
+			extStr = New String() {"*"}
 		Else
-			ExtStr = Me.ComboBoxExt.Text.ToString.Split(","c)
+			extStr = ComboBoxExt.Text.ToString.Split(","c)
 		End If
 
 		'Delete File-List
-		Me.ListViewFiles.Items.Clear()
+		ListViewFiles.Items.Clear()
 
-		SearchFile = Me.TextBoxSearchFile.Text
+		Dim searchFile = TextBoxSearchFile.Text
 
-		Me.ListViewFiles.BeginUpdate()
+		ListViewFiles.BeginUpdate()
 		Try
 			'Add Folder
-			Dim di As New IO.DirectoryInfo(MyFolder)
-			Dim aryFi As IO.FileInfo()
-			Dim fi As IO.FileInfo
-			x = - 1
-			For Each SearchExt In ExtStr
-				SearchPat = "*" & Trim(SearchFile) & "*." & Trim(SearchExt)
-				aryFi = di.GetFiles(SearchPat)
+			Dim di As New DirectoryInfo(_myFolder)
+			Dim aryFi As FileInfo()
+			Dim fi As FileInfo
+			Dim x = -1
+			For Each SearchExt In extStr
+				Dim searchPat = "*" & Trim(searchFile) & "*." & Trim(SearchExt)
+				aryFi = di.GetFiles(searchPat)
 				For Each fi In aryFi
 					x += 1
-					Me.ListViewFiles.Items.Add(fi.ToString)
+					Dim shinfo = New SHFILEINFO()
+					shinfo.szDisplayName = New String(Chr(0), 260)
+					shinfo.szTypeName = New String(Chr(0), 80)
+					SHGetFileInfo(Path.Combine(_myFolder, fi.ToString), 0, shinfo, Marshal.SizeOf(shinfo),
+								SHGFI_ICON Or SHGFI_SMALLICON)
+					Dim myIcon = Icon.FromHandle(shinfo.hIcon)
+					ImageList1.Images.Add(myIcon)
+					ListViewFiles.Items.Add(fi.ToString, x + 1)
 				Next
 			Next
-			If x = 0 Then
-				Me.LabelFileAnz.Text = "1 File"
-			Else
-				Me.LabelFileAnz.Text = x + 1 & " Files"
-			End If
 		Catch ex As Exception
-			Me.ListViewFiles.Items.Add("<ERROR: " & ex.Message.ToString & ">")
+			ListViewFiles.Items.Add("<ERROR: " & ex.Message.ToString & ">")
 		End Try
 
-		Me.ListViewFiles.EndUpdate()
+		ListViewFiles.EndUpdate()
 	End Sub
 
 	'Rename File
-	Private Sub RenameFileToolStripMenuItem_Click(ByVal sender As System.Object, ByVal e As System.EventArgs) _
+	Private Sub RenameFileToolStripMenuItem_Click(sender As Object, e As EventArgs) _
 		Handles RenameFileToolStripMenuItem.Click
-		Dim file0 As String
-		Dim file As String
-		If Me.ListViewFiles.SelectedItems.Count = 1 Then
-			file0 = Me.ListViewFiles.SelectedItems(0).Text
-			file = file0
-			lb1:
+
+		If ListViewFiles.SelectedItems.Count = 1 Then
+			Dim file0 = ListViewFiles.SelectedItems(0).Text
+			Dim file = file0
+lb1:
 			file = InputBox("New Filename", "Rename " & file0, file)
 			If file <> "" Then
-				If IO.File.Exists(MyFolder & file) Then
+				If IO.File.Exists(_myFolder & file) Then
 					MsgBox("File " & file & " already exists!")
 					GoTo lb1
 				End If
 				Try
-					My.Computer.FileSystem.RenameFile(MyFolder & file0, file)
+					My.Computer.FileSystem.RenameFile(_myFolder & file0, file)
 					LoadListFiles()
 				Catch ex As Exception
 					MsgBox("Cannot rename " & file0 & "!")
@@ -937,21 +876,19 @@ Public Class FB_Dialog
 	End Sub
 
 	'Delete File
-	Private Sub DeleteFileToolStripMenuItem_Click(ByVal sender As System.Object, ByVal e As System.EventArgs) _
+	Private Sub DeleteFileToolStripMenuItem_Click(sender As Object, e As EventArgs) _
 		Handles DeleteFileToolStripMenuItem.Click
-		Dim x As Int32
-		Dim c As Int32
-		c = Me.ListViewFiles.SelectedItems.Count
+		Dim c = ListViewFiles.SelectedItems.Count
 		If c > 0 Then
 			If c = 1 Then
-				If MsgBox("Delete " & MyFolder & Me.ListViewFiles.SelectedItems(0).Text & "?", MsgBoxStyle.YesNo) = MsgBoxResult.No _
+				If MsgBox("Delete " & _myFolder & ListViewFiles.SelectedItems(0).Text & "?", MsgBoxStyle.YesNo) = MsgBoxResult.No _
 					Then Exit Sub
 			Else
 				If MsgBox("Delete " & c & " files?", MsgBoxStyle.YesNo) = MsgBoxResult.No Then Exit Sub
 			End If
 			For x = 0 To c - 1
 				Try
-					IO.File.Delete(MyFolder & Me.ListViewFiles.SelectedItems(x).Text)
+					File.Delete(_myFolder & ListViewFiles.SelectedItems(x).Text)
 				Catch ex As Exception
 				End Try
 			Next
@@ -960,69 +897,64 @@ Public Class FB_Dialog
 	End Sub
 
 	'Neuer Ordner
-	Private Sub ButtonNewDir_Click(ByVal sender As System.Object, ByVal e As System.EventArgs) Handles ButtonNewDir.Click
-		Dim f As String
-		f = "New Folder"
-		lb10:
+	Private Sub ButtonNewDir_Click(sender As Object, e As EventArgs) Handles ButtonNewDir.Click
+		Dim f = "New Folder"
+lb10:
 		f = InputBox("Create New Folder", "New Folder", f)
 		If f <> "" Then
-			If IO.Directory.Exists(MyFolder & f) Then
-				MsgBox("Folder " & MyFolder & f & " already exists!")
+			If Directory.Exists(_myFolder & f) Then
+				MsgBox("Folder " & _myFolder & f & " already exists!")
 				GoTo lb10
 			End If
 			Try
-				IO.Directory.CreateDirectory(MyFolder & f)
-				SetFolder(MyFolder & f)
+				Directory.CreateDirectory(_myFolder & f)
+				SetFolder(_myFolder & f)
 			Catch ex As Exception
 				MsgBox("Cannot create " & f & "!")
 			End Try
 		End If
 	End Sub
 
-	''Private Function fTimeString(ByVal T As Date) As String
-	''    Return T.Year & "-" & T.Month.ToString("00") & "-" & T.Day.ToString("00") & " " & T.Hour.ToString("00") & ":" & T.Minute.ToString("00") & ":" & T.Second.ToString("00")
-	''End Function
-
-
-	Private Function fPATH(ByVal Pfad As String) As String
-		Dim x As Integer
-		x = Pfad.LastIndexOf("\")
-		If x = - 1 Then
-			Return Microsoft.VisualBasic.Left(Pfad, 0)
+	Private Shared Function fPATH(path As String) As String
+		Dim x = path.LastIndexOf("\")
+		If x = -1 Then
+			Return Microsoft.VisualBasic.Left(path, 0)
 		Else
-			Return Microsoft.VisualBasic.Left(Pfad, x + 1)
+			Return Microsoft.VisualBasic.Left(path, x + 1)
 		End If
 	End Function
 
-	Public ReadOnly Property Folder() As String
+	Public ReadOnly Property Folder As String
 		Get
-			Return MyFolder
+			Return _myFolder
 		End Get
 	End Property
 
-	Public ReadOnly Property Files() As String()
+	Public ReadOnly Property Files As String()
 		Get
-			Return MyFiles
+			Return _myFiles
 		End Get
 	End Property
 
-	Public Property ID() As String
+	Public Property ID As String
 		Get
-			Return MyID
+			Return _myId
 		End Get
-		Set(ByVal value As String)
-			MyID = value
+		Set(value As String)
+			_myId = value
 		End Set
 	End Property
 
-	Public Property Extensions() As String()
+	Public Property Extensions As String()
 		Get
-			Return MyExt
+			Return _myExt
 		End Get
-		Set(ByVal value As String())
-			MyExt = value
-			LastExt = MyExt(0)
-			NoExt = False
+		Set(value As String())
+			_myExt = value
+			_lastExt = _myExt(0)
+			_noExt = False
 		End Set
 	End Property
 End Class
+
+

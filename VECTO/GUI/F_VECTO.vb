@@ -246,7 +246,7 @@ Public Class F_VECTO
 			F_VEH.BringToFront()
 		End If
 
-		If Not Trim(f) = "" Then F_VEH.openVEH(f)
+		If Not Trim(f) = "" Then F_VEH.OpenVehicle(f)
 	End Sub
 
 	'Open Engine Editor
