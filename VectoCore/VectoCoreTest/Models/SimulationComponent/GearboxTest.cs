@@ -84,7 +84,7 @@ namespace TUGraz.VectoCore.Tests.Models.SimulationComponent
 					Tuple.Create((uint)i,
 						new GearData {
 							FullLoadCurve = FullLoadCurveReader.ReadFromFile(GearboxFullLoadCurveFile),
-							LossMap = TransmissionLossMap.ReadFromFile(i != 6 ? IndirectLossMap : DirectLossMap, ratio,
+							LossMap = TransmissionLossMapReader.ReadFromFile(i != 6 ? IndirectLossMap : DirectLossMap, ratio,
 								string.Format("Gear {0}", i)),
 							Ratio = ratio,
 							ShiftPolygon = ShiftPolygonReader.ReadFromFile(GearboxShiftPolygonFile)
@@ -163,7 +163,7 @@ namespace TUGraz.VectoCore.Tests.Models.SimulationComponent
 			var vehicle = new VehicleContainer(ExecutionMode.Engineering);
 			var angularGearData = new AngularGearData {
 				AngularGear = new TransmissionData {
-					LossMap = TransmissionLossMap.Create(VectoCSVFile.Read(AngularGearLossMap), ratio, "AngularGear"),
+					LossMap = TransmissionLossMapReader.Create(VectoCSVFile.Read(AngularGearLossMap), ratio, "AngularGear"),
 					Ratio = ratio
 				}
 			};

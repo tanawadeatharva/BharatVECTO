@@ -250,7 +250,7 @@ namespace TUGraz.VectoCore.Tests.Integration.SimulationRuns
 			return new AxleGearData() {
 				AxleGear = new GearData {
 					Ratio = 3.0 * 3.5,
-					LossMap = TransmissionLossMap.ReadFromFile(GbxLossMap, 3.0 * 3.5, "AxleGear")
+					LossMap = TransmissionLossMapReader.ReadFromFile(GbxLossMap, 3.0 * 3.5, "AxleGear")
 				}
 			};
 		}
@@ -296,7 +296,7 @@ namespace TUGraz.VectoCore.Tests.Integration.SimulationRuns
 		private static DriverData CreateDriverData(string accelerationFile)
 		{
 			return new DriverData {
-				AccelerationCurve = AccelerationCurveData.ReadFromFile(accelerationFile),
+				AccelerationCurve = AccelerationCurveReader.ReadFromFile(accelerationFile),
 				LookAheadCoasting = new DriverData.LACData {
 					Enabled = false,
 					//Deceleration = -0.5.SI<MeterPerSquareSecond>()

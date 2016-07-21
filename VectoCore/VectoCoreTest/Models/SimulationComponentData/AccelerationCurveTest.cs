@@ -51,7 +51,7 @@ namespace TUGraz.VectoCore.Tests.Models.SimulationComponentData
 		[TestMethod]
 		public void AccelerationTest()
 		{
-			Data = AccelerationCurveData.ReadFromFile(@"TestData\Components\Coach.vacc");
+			Data = AccelerationCurveReader.ReadFromFile(@"TestData\Components\Coach.vacc");
 
 			// FIXED POINTS
 			EqualAcceleration(0, 1.01570922360353, -0.231742702878269);
@@ -114,7 +114,7 @@ namespace TUGraz.VectoCore.Tests.Models.SimulationComponentData
 		[TestMethod]
 		public void ComputeAccelerationDistanceTest()
 		{
-			Data = AccelerationCurveData.ReadFromFile(@"TestData\Components\Truck.vacc");
+			Data = AccelerationCurveReader.ReadFromFile(@"TestData\Components\Truck.vacc");
 
 			// in this part the deceleration is constant
 

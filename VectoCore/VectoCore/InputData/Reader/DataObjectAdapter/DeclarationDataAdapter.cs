@@ -197,10 +197,10 @@ namespace TUGraz.VectoCore.InputData.Reader.DataObjectAdapter
 					if (gear.LossMap == null) {
 						throw new InvalidFileFormatException(string.Format("LossMap for Gear {0} is missing.", i + 1));
 					}
-					gearLossMap = TransmissionLossMap.Create(gear.LossMap, gear.Ratio, string.Format("Gear {0}", i + 1));
+					gearLossMap = TransmissionLossMapReader.Create(gear.LossMap, gear.Ratio, string.Format("Gear {0}", i + 1));
 				} catch (InvalidFileFormatException) {
 					if (useEfficiencyFallback) {
-						gearLossMap = TransmissionLossMap.Create(gear.Efficiency, gear.Ratio, string.Format("Gear {0}", i + 1));
+						gearLossMap = TransmissionLossMapReader.Create(gear.Efficiency, gear.Ratio, string.Format("Gear {0}", i + 1));
 					} else {
 						throw;
 					}

@@ -537,7 +537,7 @@ namespace TUGraz.VectoCore.Tests.Models.Declaration
 
 			Assert.AreEqual(VehicleClass.Class2, segment.VehicleClass);
 
-			var data = AccelerationCurveData.ReadFromStream(segment.AccelerationFile);
+			var data = AccelerationCurveReader.ReadFromStream(segment.AccelerationFile);
 			TestAcceleration(data);
 
 			Assert.AreEqual(3, segment.Missions.Length);
@@ -612,7 +612,7 @@ namespace TUGraz.VectoCore.Tests.Models.Declaration
 
 			Assert.AreEqual(VehicleClass.Class4, segment.VehicleClass);
 
-			var data = AccelerationCurveData.ReadFromStream(segment.AccelerationFile);
+			var data = AccelerationCurveReader.ReadFromStream(segment.AccelerationFile);
 			TestAcceleration(data);
 
 			Assert.AreEqual(3, segment.Missions.Length);
@@ -652,7 +652,7 @@ namespace TUGraz.VectoCore.Tests.Models.Declaration
 
 			Assert.AreEqual(VehicleClass.Class5, segment.VehicleClass);
 
-			var data = AccelerationCurveData.ReadFromStream(segment.AccelerationFile);
+			var data = AccelerationCurveReader.ReadFromStream(segment.AccelerationFile);
 			TestAcceleration(data);
 
 			Assert.AreEqual(2, segment.Missions.Length);

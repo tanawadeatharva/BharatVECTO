@@ -91,7 +91,7 @@ namespace TUGraz.VectoCore.InputData.Reader.DataObjectAdapter
 				switch (retarder.Type) {
 					case RetarderType.Primary:
 					case RetarderType.Secondary:
-						retarder.LossMap = RetarderLossMap.Create(data.LossMap);
+						retarder.LossMap = RetarderLossMapReader.Create(data.LossMap);
 						retarder.Ratio = data.Ratio;
 						break;
 					case RetarderType.None:
@@ -147,10 +147,10 @@ namespace TUGraz.VectoCore.InputData.Reader.DataObjectAdapter
 		{
 			TransmissionLossMap axleLossMap;
 			try {
-				axleLossMap = TransmissionLossMap.Create(data.LossMap, data.Ratio, "AxleGear");
+				axleLossMap = TransmissionLossMapReader.Create(data.LossMap, data.Ratio, "AxleGear");
 			} catch (InvalidFileFormatException) {
 				if (useEfficiencyFallback)
-					axleLossMap = TransmissionLossMap.Create(data.Efficiency, data.Ratio, "AxleGear");
+					axleLossMap = TransmissionLossMapReader.Create(data.Efficiency, data.Ratio, "AxleGear");
 				else {
 					throw;
 				}
@@ -200,12 +200,12 @@ namespace TUGraz.VectoCore.InputData.Reader.DataObjectAdapter
 							AngularGear = new TransmissionData { Ratio = data.Ratio }
 						};
 						try {
-							angularGear.AngularGear.LossMap = TransmissionLossMap.Create(data.LossMap, data.Ratio, "AngularGear");
+							angularGear.AngularGear.LossMap = TransmissionLossMapReader.Create(data.LossMap, data.Ratio, "AngularGear");
 						} catch (VectoException ex) {
 							Log.Info("AngularGear Loss Map not found.");
 							if (useEfficiencyFallback) {
 								Log.Info("AngularGear Trying with Efficiency instead of Loss Map.");
-								angularGear.AngularGear.LossMap = TransmissionLossMap.Create(data.Efficiency, data.Ratio, "AngularGear");
+								angularGear.AngularGear.LossMap = TransmissionLossMapReader.Create(data.Efficiency, data.Ratio, "AngularGear");
 							} else {
 								throw new VectoException("AngularGear: LossMap not found.", ex);
 							}
