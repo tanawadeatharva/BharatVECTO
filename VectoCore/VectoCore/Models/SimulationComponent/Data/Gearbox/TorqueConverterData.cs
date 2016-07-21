@@ -29,6 +29,7 @@
 *   Martin Rexeis, rexeis@ivt.tugraz.at, IVT, Graz University of Technology
 */
 
+using System;
 using System.Collections.Generic;
 using System.Data;
 using System.IO;
@@ -50,6 +51,38 @@ namespace TUGraz.VectoCore.Models.SimulationComponent.Data.Gearbox
 		{
 			TorqueRatio = torqueRatio;
 			CharacteristicTorque = characteristicTorque;
+		}
+
+		public void GetInputTorqueAndAngularSpeed(NewtonMeter torqueOut, PerSecond angularSpeedOut, out NewtonMeter torqueIn,
+			out PerSecond angularSpeedIn)
+		{
+			var solutions = new List<double>();
+			var mpNorm = 1000.RPMtoRad().Value();
+
+			foreach (
+				var muEdge in TorqueRatio.Pairwise((item1, item2) => Edge.Create(new Point(item1.SpeedRatio, item1.TorqueRatio),
+					new Point(item2.SpeedRatio, item2.TorqueRatio)))) {
+				foreach (
+					var mpEdge in
+						CharacteristicTorque.Pairwise((item1, item2) => Edge.Create(new Point(item1.SpeedRatio, item1.Torque.Value()),
+							new Point(item2.SpeedRatio, item2.Torque.Value())))) {
+					var a = muEdge.OffsetXY * mpEdge.OffsetXY / (mpNorm * mpNorm);
+					var b = angularSpeedOut.Value() * (muEdge.SlopeXY * mpEdge.OffsetXY + mpEdge.SlopeXY * muEdge.OffsetXY) / mpNorm;
+					var c = angularSpeedOut.Value() * angularSpeedOut.Value() * mpEdge.SlopeXY * muEdge.SlopeXY / mpNorm -
+							torqueOut.Value();
+					var sol = VectoMath.QuadraticEquationSolver(a, b, c);
+
+					var edge1 = muEdge;
+					var edge2 = mpEdge;
+					var selected =
+						sol.Where(x => x > 0 && angularSpeedOut.Value() / x >= edge1.P1.X && angularSpeedOut.Value() / x < edge1.P2.X
+										&& angularSpeedOut.Value() / x >= edge2.P1.X && angularSpeedOut.Value() / x < edge2.P2.X);
+					solutions.AddRange(selected);
+				}
+			}
+
+			angularSpeedIn = solutions.Min().SI<PerSecond>();
+			torqueIn = 0.SI<NewtonMeter>();
 		}
 	}
 
