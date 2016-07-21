@@ -29,7 +29,40 @@
 *   Martin Rexeis, rexeis@ivt.tugraz.at, IVT, Graz University of Technology
 */
 
+using System.Collections.Generic;
+using System.Data;
+using System.IO;
+using System.Linq;
+using iTextSharp.text.pdf.codec;
+using TUGraz.VectoCommon.Exceptions;
+using TUGraz.VectoCommon.Utils;
+using TUGraz.VectoCore.Utils;
+
 namespace TUGraz.VectoCore.Models.SimulationComponent.Data.Gearbox
 {
-	public class TorqueConverterData {}
+	public class TorqueConverterData
+	{
+		public List<TorqueRatioCurveEntry> TorqueRatio;
+		public List<CharacteristicTorqueEntry> CharacteristicTorque;
+
+		protected internal TorqueConverterData(List<TorqueRatioCurveEntry> torqueRatio,
+			List<CharacteristicTorqueEntry> characteristicTorque)
+		{
+			TorqueRatio = torqueRatio;
+			CharacteristicTorque = characteristicTorque;
+		}
+	}
+
+
+	public class CharacteristicTorqueEntry
+	{
+		public double SpeedRatio;
+		public NewtonMeter Torque;
+	}
+
+	public class TorqueRatioCurveEntry
+	{
+		public double SpeedRatio;
+		public double TorqueRatio;
+	}
 }
