@@ -134,12 +134,24 @@ namespace TUGraz.VectoCommon.InputData
 
 	public interface IAngularGearInputData : IComponentInputData
 	{
+		/// <summary>
+		/// P180
+		/// </summary>
 		AngularGearType Type { get; }
 
+		/// <summary>
+		/// P176
+		/// </summary>
 		double Ratio { get; }
 
+		/// <summary>
+		/// P173, P174, P175
+		/// </summary>
 		DataTable LossMap { get; }
 
+		/// <summary>
+		/// P177
+		/// </summary>
 		double Efficiency { get; }
 	}
 
