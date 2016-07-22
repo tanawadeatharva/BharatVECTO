@@ -8,7 +8,8 @@ using TUGraz.VectoCore.Utils;
 
 namespace TUGraz.VectoCore.Models.SimulationComponent.Data.Gearbox
 {
-	public class TorqueConverterDataReader {
+	public class TorqueConverterDataReader
+	{
 		public static TorqueConverterData ReadFromFile(string filename)
 		{
 			return Create(VectoCSVFile.Read(filename));
@@ -28,36 +29,25 @@ namespace TUGraz.VectoCore.Models.SimulationComponent.Data.Gearbox
 				throw new VectoException("TorqueConverter Characteristics data must contain at least 2 lines with numeric values");
 			}
 
-			List<TorqueRatioCurveEntry> torqueRatio;
-			List<CharacteristicTorqueEntry> characteristicTorque;
+			List<TorqueConverterEntry> characteristicTorque;
 			if (HeaderIsValid(data.Columns)) {
-				torqueRatio = (from DataRow row in data.Rows
-					select
-						new TorqueRatioCurveEntry() {
-							SpeedRatio = DataTableExtensionMethods.ParseDouble(row, (string)Fields.SpeedRatio),
-							TorqueRatio = DataTableExtensionMethods.ParseDouble(row, (string)Fields.TorqueRatio)
-						}).ToList();
 				characteristicTorque = (from DataRow row in data.Rows
 					select
-						new CharacteristicTorqueEntry() {
-							SpeedRatio = DataTableExtensionMethods.ParseDouble(row, (string)Fields.SpeedRatio),
-							Torque = DataTableExtensionMethods.ParseDouble(row, (string)Fields.CharacteristicTorque).SI<NewtonMeter>()
+						new TorqueConverterEntry() {
+							SpeedRatio = row.ParseDouble((string)Fields.SpeedRatio),
+							Torque = row.ParseDouble((string)Fields.CharacteristicTorque).SI<NewtonMeter>(),
+							TorqueRatio = row.ParseDouble((string)Fields.TorqueRatio)
 						}).ToList();
 			} else {
-				torqueRatio = (from DataRow row in data.Rows
-					select
-						new TorqueRatioCurveEntry() {
-							SpeedRatio = row.ParseDouble(0),
-							TorqueRatio = row.ParseDouble(1)
-						}).ToList();
 				characteristicTorque = (from DataRow row in data.Rows
 					select
-						new CharacteristicTorqueEntry() {
+						new TorqueConverterEntry() {
 							SpeedRatio = row.ParseDouble(0),
-							Torque = row.ParseDouble(2).SI<NewtonMeter>()
+							Torque = row.ParseDouble(2).SI<NewtonMeter>(),
+							TorqueRatio = row.ParseDouble(1)
 						}).ToList();
 			}
-			return new TorqueConverterData(torqueRatio, characteristicTorque);
+			return new TorqueConverterData(characteristicTorque);
 		}
 
 		private static bool HeaderIsValid(DataColumnCollection columns)
