@@ -26,6 +26,8 @@ namespace TUGraz.VectoCore.Tests.Models.SimulationComponentData
 		TestCase(190, 70, 1465.33, 1128.088),]
 		public void TestTorqueConverterOperatingPoint(double nOut, double Pout, double nInExpected, double tqInExpected)
 		{
+			var tqLimit = 1600;
+			Assert.IsTrue(nInExpected < tqLimit);
 			var tqInput = new[] {
 				"0,3.935741,563.6598  ",
 				"0.1,3.296827,534.1364",
@@ -49,9 +51,56 @@ namespace TUGraz.VectoCore.Tests.Models.SimulationComponentData
 			var outTorque = (Pout * 1000).SI<Watt>() / outAngularSpeed;
 			tqData.GetInputTorqueAndAngularSpeed(outTorque, outAngularSpeed, out inTorque, out inAngularSpeed);
 
-
+			Assert.IsTrue(inAngularSpeed.Value() < 1600.RPMtoRad().Value());
 			Assert.AreEqual(nInExpected.RPMtoRad().Value(), inAngularSpeed.Value(), 5);
 			Assert.AreEqual(tqInExpected, inTorque.Value(), 10);
+		}
+
+		[Test,
+		TestCase(10, 110),
+		TestCase(20, 130),
+		TestCase(50, 90),
+		TestCase(50, 190),
+		TestCase(60, 150),
+		TestCase(70, 70),
+		TestCase(70, 90),
+		TestCase(70, 190),
+		TestCase(80, 50),
+		TestCase(80, 130),
+		TestCase(90, 70),
+		TestCase(100, 150),
+		TestCase(130, 70),
+		TestCase(150, 80),
+		TestCase(170, 80),
+		]
+		public void TestTorqueConverterInvalidOperatingPoint(double nOut, double Pout)
+		{
+			var tqLimit = 1600;
+
+			var tqInput = new[] {
+				"0,3.935741,563.6598  ",
+				"0.1,3.296827,534.1364",
+				"0.2,2.701476,504.6129",
+				"0.3,2.265852,472.1372",
+				"0.4,1.931875,421.9474",
+				"0.5,1.554335,354.0435",
+				"0.6,1.249399,268.4255",
+				"0.7,1.075149,114.9037",
+			};
+
+			var tqData =
+				TorqueConverterDataReader.ReadFromStream(InputDataHelper.InputDataAsStream("Speed Ratio, Torque Ratio,MP1000",
+					tqInput));
+
+			PerSecond inAngularSpeed;
+			NewtonMeter inTorque;
+
+
+			var outAngularSpeed = nOut.RPMtoRad();
+			var outTorque = (Pout * 1000).SI<Watt>() / outAngularSpeed;
+			tqData.GetInputTorqueAndAngularSpeed(outTorque, outAngularSpeed, out inTorque, out inAngularSpeed);
+
+			Assert.IsTrue(inAngularSpeed.Value() > 1600.RPMtoRad().Value());
 		}
 	}
 }
