@@ -47,14 +47,9 @@ using TUGraz.VectoCore.Utils;
 
 namespace TUGraz.VectoCore.Models.SimulationComponent.Impl
 {
-	public class Gearbox : StatefulVectoSimulationComponent<Gearbox.GearboxState>, IGearbox, ITnOutPort, ITnInPort,
-		IClutchInfo
+	public class Gearbox : StatefulProviderComponent<Gearbox.GearboxState, ITnOutPort, ITnInPort, ITnOutPort>, IGearbox,
+		ITnOutPort, ITnInPort, IClutchInfo
 	{
-		/// <summary>
-		/// The next port.
-		/// </summary>
-		protected ITnOutPort NextComponent;
-
 		/// <summary>
 		/// The data and settings for the gearbox.
 		/// </summary>
@@ -93,63 +88,6 @@ namespace TUGraz.VectoCore.Models.SimulationComponent.Impl
 			LastDownshift = -double.MaxValue.SI<Second>();
 			LastUpshift = -double.MaxValue.SI<Second>();
 		}
-
-		#region ITnInProvider
-
-		public ITnInPort InPort()
-		{
-			return this;
-		}
-
-		#endregion
-
-		#region ITnOutProvider
-
-		[DebuggerHidden]
-		public ITnOutPort OutPort()
-		{
-			return this;
-		}
-
-		#endregion
-
-		#region IGearboxCockpit
-
-		/// <summary>
-		/// The current gear.
-		/// </summary>
-		public uint Gear { get; set; }
-
-		[DebuggerHidden]
-		public MeterPerSecond StartSpeed
-		{
-			get { return ModelData.StartSpeed; }
-		}
-
-		[DebuggerHidden]
-		public MeterPerSquareSecond StartAcceleration
-		{
-			get { return ModelData.StartAcceleration; }
-		}
-
-		public FullLoadCurve GearFullLoadCurve
-		{
-			get { return Gear == 0 ? null : ModelData.Gears[Gear].FullLoadCurve; }
-		}
-
-		public Watt GearboxLoss()
-		{
-			//var outTorque = ModelData.Gears[Gear].LossMap.GetOutTorque(inAngularVelocity, inTorque, true);
-			//var torqueLoss = inTorque - outTorque * ModelData.Gears[Gear].Ratio;
-
-			//return torqueLoss * inAngularVelocity;
-			return (PreviousState.TransmissionTorqueLoss +
-					PreviousState.InertiaTorqueLossOut / ModelData.Gears[PreviousState.Gear].Ratio) * PreviousState.InAngularVelocity;
-		}
-
-		#endregion
-
-		#region ITnOutPort
 
 		public IResponse Initialize(NewtonMeter outTorque, PerSecond outAngularVelocity)
 		{
@@ -436,19 +374,6 @@ namespace TUGraz.VectoCore.Models.SimulationComponent.Impl
 			return response;
 		}
 
-		#endregion
-
-		#region ITnInPort
-
-		public void Connect(ITnOutPort other)
-		{
-			NextComponent = other;
-		}
-
-		#endregion
-
-		#region VectoSimulationComponent
-
 		protected override void DoWriteModalResults(IModalDataContainer container)
 		{
 			//var avgAngularSpeed = ((PreviousState.InAngularVelocity * ModelData.Gears[CurrentState.Gear].Ratio /
@@ -483,7 +408,41 @@ namespace TUGraz.VectoCore.Models.SimulationComponent.Impl
 				Disengaged = false;
 				_engageTime = -double.MaxValue.SI<Second>();
 			}
-			AdvanceState();
+			base.DoCommitSimulationStep();
+		}
+
+		#region IGearboxCockpit
+
+		/// <summary>
+		/// The current gear.
+		/// </summary>
+		public uint Gear { get; set; }
+
+		[DebuggerHidden]
+		public MeterPerSecond StartSpeed
+		{
+			get { return ModelData.StartSpeed; }
+		}
+
+		[DebuggerHidden]
+		public MeterPerSquareSecond StartAcceleration
+		{
+			get { return ModelData.StartAcceleration; }
+		}
+
+		public FullLoadCurve GearFullLoadCurve
+		{
+			get { return Gear == 0 ? null : ModelData.Gears[Gear].FullLoadCurve; }
+		}
+
+		public Watt GearboxLoss()
+		{
+			//var outTorque = ModelData.Gears[Gear].LossMap.GetOutTorque(inAngularVelocity, inTorque, true);
+			//var torqueLoss = inTorque - outTorque * ModelData.Gears[Gear].Ratio;
+
+			//return torqueLoss * inAngularVelocity;
+			return (PreviousState.TransmissionTorqueLoss +
+					PreviousState.InertiaTorqueLossOut / ModelData.Gears[PreviousState.Gear].Ratio) * PreviousState.InAngularVelocity;
 		}
 
 		#endregion

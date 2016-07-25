@@ -43,10 +43,10 @@ namespace TUGraz.VectoCore.Models.SimulationComponent.Impl
 	/// <summary>
 	/// Retarder component.
 	/// </summary>
-	public class Retarder : StatefulVectoSimulationComponent<SimpleComponentState>, IPowerTrainComponent, ITnInPort,
+	public class Retarder : StatefulProviderComponent<SimpleComponentState, ITnOutPort, ITnInPort, ITnOutPort>,
+		IPowerTrainComponent, ITnInPort,
 		ITnOutPort
 	{
-		protected ITnOutPort NextComponent;
 		private readonly RetarderLossMap _lossMap;
 		private readonly double _ratio;
 
@@ -60,6 +60,24 @@ namespace TUGraz.VectoCore.Models.SimulationComponent.Impl
 		{
 			_lossMap = lossMap;
 			_ratio = ratio;
+		}
+
+		public IResponse Initialize(NewtonMeter torque, PerSecond angularVelocity)
+		{
+			var retarderTorqueLoss = _lossMap.RetarderLoss(angularVelocity * _ratio) / _ratio;
+			PreviousState.SetState(torque + retarderTorqueLoss, angularVelocity, torque, angularVelocity);
+			return NextComponent.Initialize(PreviousState.InTorque, PreviousState.InAngularVelocity);
+		}
+
+		public IResponse Request(Second absTime, Second dt, NewtonMeter torque, PerSecond angularVelocity, bool dryRun = false)
+		{
+			if (angularVelocity == null) {
+				return NextComponent.Request(absTime, dt, torque, null, dryRun);
+			}
+			var avgAngularSpeed = (PreviousState.InAngularVelocity + angularVelocity) / 2.0;
+			var retarderTorqueLoss = _lossMap.RetarderLoss(avgAngularSpeed * _ratio) / _ratio;
+			CurrentState.SetState(torque + retarderTorqueLoss, angularVelocity, torque, angularVelocity);
+			return NextComponent.Request(absTime, dt, CurrentState.InTorque, CurrentState.InAngularVelocity, dryRun);
 		}
 
 		protected override void DoWriteModalResults(IModalDataContainer container)
@@ -82,40 +100,7 @@ namespace TUGraz.VectoCore.Models.SimulationComponent.Impl
 						CurrentState.OutAngularVelocity.AsRPM, _lossMap.MinSpeed.AsRPM, _lossMap.MaxSpeed.AsRPM, _ratio);
 				}
 			}
-			AdvanceState();
-		}
-
-		public ITnInPort InPort()
-		{
-			return this;
-		}
-
-		public ITnOutPort OutPort()
-		{
-			return this;
-		}
-
-		public void Connect(ITnOutPort other)
-		{
-			NextComponent = other;
-		}
-
-		public IResponse Request(Second absTime, Second dt, NewtonMeter torque, PerSecond angularVelocity, bool dryRun = false)
-		{
-			if (angularVelocity == null) {
-				return NextComponent.Request(absTime, dt, torque, null, dryRun);
-			}
-			var avgAngularSpeed = (PreviousState.InAngularVelocity + angularVelocity) / 2.0;
-			var retarderTorqueLoss = _lossMap.RetarderLoss(avgAngularSpeed * _ratio) / _ratio;
-			CurrentState.SetState(torque + retarderTorqueLoss, angularVelocity, torque, angularVelocity);
-			return NextComponent.Request(absTime, dt, CurrentState.InTorque, CurrentState.InAngularVelocity, dryRun);
-		}
-
-		public IResponse Initialize(NewtonMeter torque, PerSecond angularVelocity)
-		{
-			var retarderTorqueLoss = _lossMap.RetarderLoss(angularVelocity * _ratio) / _ratio;
-			PreviousState.SetState(torque + retarderTorqueLoss, angularVelocity, torque, angularVelocity);
-			return NextComponent.Initialize(PreviousState.InTorque, PreviousState.InAngularVelocity);
+			base.DoCommitSimulationStep();
 		}
 	}
 }
