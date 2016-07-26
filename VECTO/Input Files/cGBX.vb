@@ -391,12 +391,12 @@ Public Class cGBX
 			Do While Not file.EndOfFile
 				line = file.ReadLine
 				TCnuMax = CSng(line(0))
-				If CSng(line(0)) < 1 Then
-					TCnu.Add(TCnuMax)
-					TCmu.Add(CSng(line(1)))
-					TCtorque.Add(CSng(line(2)))
-					TCdim += 1
-				End If
+				'If CSng(line(0)) < 1 Then '@@@quam: read the complete file!
+				TCnu.Add(TCnuMax)
+				TCmu.Add(CSng(line(1)))
+				TCtorque.Add(CSng(line(2)))
+				TCdim += 1
+				'End If
 			Loop
 		Catch ex As Exception
 			WorkerMsg(tMsgID.Err, "Error while reading Torque Converter file! (" & ex.Message & ")", MsgSrc)
@@ -413,29 +413,31 @@ Public Class cGBX
 
 		If TCnuMax > 1 Then TCnuMax = 1
 
-		'Add default values for nu>1
-		If Not file.OpenRead(MyDeclPath & "DefaultTC.vtcc") Then
-			WorkerMsg(tMsgID.Err, "Default Torque Converter file not found!", MsgSrc)
-			Return False
+		If False Then ' @@@quam: don'r read default tcc file
+			'Add default values for nu>1
+			If Not file.OpenRead(MyDeclPath & "DefaultTC.vtcc") Then
+				WorkerMsg(tMsgID.Err, "Default Torque Converter file not found!", MsgSrc)
+				Return False
+			End If
+
+			'Skip Header
+			file.ReadLine()
+
+			Try
+				Do While Not file.EndOfFile
+					line = file.ReadLine
+					TCnu.Add(CSng(line(0)))
+					TCmu.Add(CSng(line(1)))
+					TCtorque.Add(CSng(line(2)))
+					TCdim += 1
+				Loop
+			Catch ex As Exception
+				WorkerMsg(tMsgID.Err, "Error while reading Default Torque Converter file! (" & ex.Message & ")", MsgSrc)
+				Return False
+			End Try
+
+			file.Close()
 		End If
-
-		'Skip Header
-		file.ReadLine()
-
-		Try
-			Do While Not file.EndOfFile
-				line = file.ReadLine
-				TCnu.Add(CSng(line(0)))
-				TCmu.Add(CSng(line(1)))
-				TCtorque.Add(CSng(line(2)))
-				TCdim += 1
-			Loop
-		Catch ex As Exception
-			WorkerMsg(tMsgID.Err, "Error while reading Default Torque Converter file! (" & ex.Message & ")", MsgSrc)
-			Return False
-		End Try
-
-		file.Close()
 
 		Return True
 	End Function
