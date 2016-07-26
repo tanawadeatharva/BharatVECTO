@@ -163,29 +163,11 @@ namespace TUGraz.VectoCore.Models.Declaration
 			return _instance ?? (_instance = new DeclarationData());
 		}
 
-		//			Public Const SSspeed As Single = 5
-		//Public Const SStime As Single = 5
-		//Public Const SSdelay As Single = 5
-		//Public Const LACa As Single = -0.5
-		//Public Const LACvmin As Single = 50
-		//Public Const Overspeed As Single = 5
-		//Public Const Underspeed As Single = 5
-		//Public Const ECvmin As Single = 50
-
-		//Public Const AirDensity As Single = 1.188
-		//Public Const FuelDens As Single = 0.832
-		//Public Const CO2perFC As Single = 3.16
-
-		//Public Const AuxESeff As Single = 0.7
-
 		public static class Driver
 		{
 			public static class LookAhead
 			{
 				public const bool Enabled = true;
-
-				//public static readonly MeterPerSquareSecond Deceleration = -0.5.SI<MeterPerSquareSecond>();
-				//public static readonly MeterPerSecond MinimumSpeed = 50.KMPHtoMeterPerSecond();
 
 				public const double DecisionFactorCoastingOffset = 2.5;
 				public const double DecisionFactorCoastingScaling = 1.5;
