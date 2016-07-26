@@ -86,7 +86,7 @@ namespace TUGraz.VectoCore.Tests.Models.SimulationComponentData
 				WHTCRural = 1,
 				WHTCMotorway = 1,
 				FullLoadCurve = EngineFullLoadCurve.Create(fullLoad),
-				ConsumptionMap = FuelConsumptionMap.Create(fuelConsumption)
+				ConsumptionMap = FuelConsumptionMapReader.Create(fuelConsumption)
 			};
 			data.FullLoadCurve.EngineData = data;
 
@@ -183,14 +183,14 @@ namespace TUGraz.VectoCore.Tests.Models.SimulationComponentData
 
 			var gearboxData = new GearboxData();
 			gearboxData.Gears[1] = new GearData {
-				LossMap = TransmissionLossMap.ReadFromFile(@"TestData\Components\Direct Gear.vtlm", 1, "1"),
+				LossMap = TransmissionLossMapReader.ReadFromFile(@"TestData\Components\Direct Gear.vtlm", 1, "1"),
 				Ratio = 1
 			};
 
 			var axleGearData = new AxleGearData {
 				AxleGear = new GearData {
 					Ratio = 1,
-					LossMap = TransmissionLossMap.ReadFromFile(@"TestData\Components\limited.vtlm", 1, "1"),
+					LossMap = TransmissionLossMapReader.ReadFromFile(@"TestData\Components\limited.vtlm", 1, "1"),
 				}
 			};
 

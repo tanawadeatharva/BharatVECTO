@@ -29,7 +29,82 @@
 *   Martin Rexeis, rexeis@ivt.tugraz.at, IVT, Graz University of Technology
 */
 
+using System;
+using System.Collections.Generic;
+using System.Data;
+using System.IO;
+using System.Linq;
+using iTextSharp.text.pdf.codec;
+using TUGraz.VectoCommon.Exceptions;
+using TUGraz.VectoCommon.Utils;
+using TUGraz.VectoCore.Utils;
+
 namespace TUGraz.VectoCore.Models.SimulationComponent.Data.Gearbox
 {
-	public class TorqueConverterData {}
+	public class TorqueConverterData
+	{
+		public List<TorqueConverterEntry> TorqueConverterEntries;
+
+		protected internal TorqueConverterData(List<TorqueConverterEntry> torqueConverterEntries)
+		{
+			TorqueConverterEntries = torqueConverterEntries;
+		}
+
+		public void GetInputTorqueAndAngularSpeed(NewtonMeter torqueOut, PerSecond angularSpeedOut, out NewtonMeter torqueIn,
+			out PerSecond angularSpeedIn)
+		{
+			var solutions = new List<double>();
+			var mpNorm = 1000.RPMtoRad().Value();
+
+			// Find analytic solution for torque converter operating point
+			// mu = f(nu) = f(n_out / n_in) = T_out / T_in
+			// MP1000 = f(nu) = f(n_out / n_in)
+			// Tq_in = MP1000(nu) * (n_in/1000)^2 = T_out / mu
+			//
+			// mu(nu) and MP1000(nu) are provided as piecewise linear functions (y = k*x+d)
+			// solving the equation above for n_in results in a quadratic equation
+			foreach (var segment in TorqueConverterEntries.Pairwise(Tuple.Create)) {
+				var mpEdge = Edge.Create(new Point(segment.Item1.SpeedRatio, segment.Item1.Torque.Value()),
+					new Point(segment.Item2.SpeedRatio, segment.Item2.Torque.Value()));
+				var muEdge = Edge.Create(new Point(segment.Item1.SpeedRatio, segment.Item1.TorqueRatio),
+					new Point(segment.Item2.SpeedRatio, segment.Item2.TorqueRatio));
+
+				var a = muEdge.OffsetXY * mpEdge.OffsetXY / (mpNorm * mpNorm);
+				var b = angularSpeedOut.Value() * (muEdge.SlopeXY * mpEdge.OffsetXY + mpEdge.SlopeXY * muEdge.OffsetXY) /
+						(mpNorm * mpNorm);
+				var c = angularSpeedOut.Value() * angularSpeedOut.Value() * mpEdge.SlopeXY * muEdge.SlopeXY / (mpNorm * mpNorm) -
+						torqueOut.Value();
+				var sol = VectoMath.QuadraticEquationSolver(a, b, c);
+
+				var selected = sol.Where(x => x > 0
+											&& angularSpeedOut.Value() / x >= muEdge.P1.X && angularSpeedOut.Value() / x < muEdge.P2.X
+											&& angularSpeedOut.Value() / x >= mpEdge.P1.X && angularSpeedOut.Value() / x < mpEdge.P2.X);
+				solutions.AddRange(selected);
+			}
+			if (solutions.Count == 0) {
+				throw new VectoException("No solution for input torque/input speed found! n_out: {0}, tq_out: {1}", angularSpeedOut, torqueOut);
+			}
+
+			angularSpeedIn = solutions.Min().SI<PerSecond>();
+			var mu = MuLookup(angularSpeedOut / angularSpeedIn);
+			torqueIn = torqueOut / mu;
+		}
+
+		private double MuLookup(double nu)
+		{
+			int index;
+			TorqueConverterEntries.GetSection(x => x.SpeedRatio > nu, out index);
+			var muEdge = Edge.Create(new Point(TorqueConverterEntries[index].SpeedRatio, TorqueConverterEntries[index].TorqueRatio),
+				new Point(TorqueConverterEntries[index + 1].SpeedRatio, TorqueConverterEntries[index + 1].TorqueRatio));
+			return muEdge.SlopeXY * nu + muEdge.OffsetXY;
+		}
+	}
+
+
+	public class TorqueConverterEntry
+	{
+		public double SpeedRatio;
+		public NewtonMeter Torque;
+		public double TorqueRatio;
+	}
 }

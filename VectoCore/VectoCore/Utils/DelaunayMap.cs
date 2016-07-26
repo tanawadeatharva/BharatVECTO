@@ -39,6 +39,7 @@ using System.Windows.Forms.DataVisualization.Charting;
 using TUGraz.VectoCommon.Exceptions;
 using TUGraz.VectoCommon.Models;
 using TUGraz.VectoCommon.Utils;
+using Point = TUGraz.VectoCommon.Utils.Point;
 
 namespace TUGraz.VectoCore.Utils
 {

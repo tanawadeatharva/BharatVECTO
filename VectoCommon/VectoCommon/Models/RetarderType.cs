@@ -34,8 +34,9 @@ namespace TUGraz.VectoCommon.Models
 	public enum RetarderType
 	{
 		None,
-		Primary,
-		Secondary,
+		TransmissionInputRetarder,
+		TransmissionOutputRetarder,
+		EngineRetarder,
 		LossesIncludedInTransmission
 	}
 }

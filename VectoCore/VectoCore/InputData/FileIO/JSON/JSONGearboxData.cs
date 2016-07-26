@@ -69,7 +69,8 @@ namespace TUGraz.VectoCore.InputData.FileIO.JSON
 	///		]
 	/// }
 	// ReSharper disable once InconsistentNaming
-	public class JSONGearboxDataV5 : JSONFile, IGearboxEngineeringInputData, IAxleGearInputData, ITorqueConverterInputData
+	public class JSONGearboxDataV5 : JSONFile, IGearboxEngineeringInputData, IAxleGearInputData,
+		ITorqueConverterEngineeringInputData
 	{
 		public JSONGearboxDataV5(JObject data, string filename) : base(data, filename) {}
 
@@ -148,9 +149,7 @@ namespace TUGraz.VectoCore.InputData.FileIO.JSON
 					var inputData = new TransmissionInputData {
 						Gear = i,
 						Ratio = gear.GetEx<double>(JsonKeys.Gearbox_Gear_Ratio),
-						FullLoadCurve =
-							ReadTableData(gear.GetEx<string>(JsonKeys.Gearbox_Gear_FullLoadCurveFile), string.Format("Gear {0} FLD", i),
-								false),
+						MaxTorque = gear["MaxTorque"] != null ? gear["MaxTorque"].Value<double>().SI<NewtonMeter>() : null,
 						LossMap =
 							gear[JsonKeys.Gearbox_Gear_LossMapFile] != null
 								? ReadTableData(gear.GetEx<string>(JsonKeys.Gearbox_Gear_LossMapFile), string.Format("Gear {0} LossMap", i))
@@ -205,7 +204,7 @@ namespace TUGraz.VectoCore.InputData.FileIO.JSON
 			get { return Body.GetEx<double>(JsonKeys.Gearbox_StartTorqueReserve) / 100.0; }
 		}
 
-		public virtual ITorqueConverterInputData TorqueConverter
+		public virtual ITorqueConverterEngineeringInputData TorqueConverter
 		{
 			get { return this; }
 		}
@@ -244,14 +243,15 @@ namespace TUGraz.VectoCore.InputData.FileIO.JSON
 
 		#region ITorqueConverterInputData
 
-		public virtual bool Enabled
-		{
-			get
-			{
-				return false;
-				// TODO mk-2016-05-09: JSON ITorqueConverterInputData.Enabled always true --> as soon as TC is implemented, set to correct value!
-			}
-		}
+		// deprecated: AT transmission has to have a torque converter. 
+		//public virtual bool Enabled
+		//{
+		//	get
+		//	{
+		//		return false;
+		//		// TODO mk-2016-05-09: JSON ITorqueConverterInputData.Enabled always true --> as soon as TC is implemented, set to correct value!
+		//	}
+		//}
 
 		public virtual PerSecond ReferenceRPM
 		{
@@ -274,7 +274,7 @@ namespace TUGraz.VectoCore.InputData.FileIO.JSON
 			}
 		}
 
-		KilogramSquareMeter ITorqueConverterInputData.Inertia
+		KilogramSquareMeter ITorqueConverterEngineeringInputData.Inertia
 		{
 			get
 			{

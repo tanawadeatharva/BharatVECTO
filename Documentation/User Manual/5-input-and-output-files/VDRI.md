@@ -91,6 +91,12 @@ Header: **\<t>, \<v>***\[, \<grad>]\[, \<Padd>]\[, \<vair\_res>, \<vair\_beta>\]
 This driving cycle defines the actual measured speed of the vehicle, the gear, and the engine speed over time.
 It overrides the shift strategy of Vecto and also directly sets the engine speed.
 
+<div class="vecto2">
+It is necessary to set the option 'Use gears/rpm\'s from driving cycle in the **Options** tab.
+
+![](pics/MeasuredSpeedSettings.png)
+</div>
+
 Header: **\<t>, \<v>, \<n>, \<gear>***\[, \<grad>]\[, \<Padd>]\[, \<vair\_res>, \<vair\_beta>]\[, \<Aux\_ID>\]*
 
 |  Identifier |  Unit  |                                                                                                                                              Description                                                                                                                                               |

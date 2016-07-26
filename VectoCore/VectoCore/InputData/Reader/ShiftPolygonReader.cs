@@ -106,7 +106,7 @@ namespace TUGraz.VectoCore.InputData.Reader
 					}).ToList();
 		}
 
-		private static class Fields
+		public static class Fields
 		{
 			/// <summary>
 			///		[Nm] torque

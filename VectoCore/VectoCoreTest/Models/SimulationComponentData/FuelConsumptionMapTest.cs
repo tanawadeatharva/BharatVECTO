@@ -47,7 +47,7 @@ namespace TUGraz.VectoCore.Tests.Models.SimulationComponentData
 		[TestMethod]
 		public void TestFuelConsumption_FixedPoints()
 		{
-			var map = FuelConsumptionMap.ReadFromFile(@"TestData\Components\24t Coach.vmap");
+			var map = FuelConsumptionMapReader.ReadFromFile(@"TestData\Components\24t Coach.vmap");
 			var lines = File.ReadAllLines(@"TestData\Components\24t Coach.vmap").Skip(1).ToArray();
 			AssertMapValuesEqual(lines, map);
 		}
@@ -55,7 +55,7 @@ namespace TUGraz.VectoCore.Tests.Models.SimulationComponentData
 		[TestMethod]
 		public void TestFuelConsumption_InterpolatedPoints()
 		{
-			var map = FuelConsumptionMap.ReadFromFile(@"TestData\Components\24t Coach.vmap");
+			var map = FuelConsumptionMapReader.ReadFromFile(@"TestData\Components\24t Coach.vmap");
 			var lines = File.ReadAllLines(@"TestData\Components\24t CoachInterpolated.vmap").Skip(1).ToArray();
 			AssertMapValuesEqual(lines, map);
 		}

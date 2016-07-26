@@ -140,21 +140,17 @@ namespace TUGraz.VectoCore.InputData.Reader.DataObjectAdapter
 			retVal.StartSpeed = gearbox.StartSpeed;
 			retVal.StartAcceleration = gearbox.StartAcceleration;
 
-			retVal.HasTorqueConverter = gearbox.TorqueConverter.Enabled;
-
 			retVal.Gears = gears.Select((gear, i) => {
 				TransmissionLossMap lossMap;
-				if (gear.LossMap != null)
-					lossMap = TransmissionLossMap.Create(gear.LossMap, gear.Ratio, string.Format("Gear {0}", i + 1));
-				else if (useEfficiencyFallback)
-					lossMap = TransmissionLossMap.Create(gear.Efficiency, gear.Ratio, string.Format("Gear {0}", i + 1));
-				else {
+				if (gear.LossMap != null) {
+					lossMap = TransmissionLossMapReader.Create(gear.LossMap, gear.Ratio, string.Format("Gear {0}", i + 1));
+				} else if (useEfficiencyFallback) {
+					lossMap = TransmissionLossMapReader.Create(gear.Efficiency, gear.Ratio, string.Format("Gear {0}", i + 1));
+				} else {
 					throw new InvalidFileFormatException("Gear {0} LossMap or Efficiency missing.", i + 1);
 				}
-				var gearFullLoad = gear.FullLoadCurve != null
-					? FullLoadCurveReader.Create(gear.FullLoadCurve)
-					: null;
-				var fullLoadCurve = IntersectFullLoadCurves(engineData.FullLoadCurve, gearFullLoad);
+				
+				var fullLoadCurve = IntersectFullLoadCurves(engineData.FullLoadCurve, gear.MaxTorque);
 				var shiftPolygon = gear.ShiftPolygon != null
 					? ShiftPolygonReader.Create(gear.ShiftPolygon)
 					: DeclarationData.Gearbox.ComputeShiftPolygon(i, fullLoadCurve, gears, engineData, axlegearRatio, dynamicTyreRadius);
@@ -162,7 +158,7 @@ namespace TUGraz.VectoCore.InputData.Reader.DataObjectAdapter
 				return new KeyValuePair<uint, GearData>((uint)(i + 1), new GearData {
 					LossMap = lossMap,
 					ShiftPolygon = shiftPolygon,
-					FullLoadCurve = gearFullLoad,
+					MaxTorque = gear.MaxTorque,
 					Ratio = gear.Ratio,
 					TorqueConverterActive = gear.TorqueConverterActive
 				});
@@ -179,19 +175,43 @@ namespace TUGraz.VectoCore.InputData.Reader.DataObjectAdapter
 			if (auxInputData.SavedInDeclarationMode) {
 				WarnEngineeringMode("AuxData");
 			}
-
 			return auxInputData.Auxiliaries.Select(a => {
-				if (a.DemandMap == null) {
-					throw new VectoSimulationException("Demand Map for auxiliary {0} {1} required", a.ID, a.Technology);
+				switch (a.AuxiliaryType) {
+					case AuxiliaryDemandType.Mapping:
+						return CreateMappingAuxiliary(a);
+					case AuxiliaryDemandType.Constant:
+						return CreateConstantAuxiliary(a);
+					default:
+						throw new VectoException("Auxiliary type {0} not supported!", a.AuxiliaryType);
 				}
-				return new VectoRunData.AuxData {
-					ID = a.ID,
-					Technology = a.Technology,
-					TechList = a.TechList.DefaultIfNull(Enumerable.Empty<string>()).ToArray(),
-					DemandType = AuxiliaryDemandType.Mapping,
-					Data = new AuxiliaryData(a, a.ID) //AuxiliaryData.Create(a.DemandMap)
-				};
 			}).Concat(new VectoRunData.AuxData { ID = "", DemandType = AuxiliaryDemandType.Direct }.ToEnumerable()).ToList();
+		}
+
+		private static VectoRunData.AuxData CreateMappingAuxiliary(IAuxiliaryEngineeringInputData a)
+		{
+			if (a.DemandMap == null) {
+				throw new VectoSimulationException("Demand Map for auxiliary {0} {1} required", a.ID, a.Technology);
+			}
+			if (a.DemandMap.Columns.Count != 3 || a.DemandMap.Rows.Count < 4) {
+				throw new VectoSimulationException(
+					"Demand Map for auxiliary {0} {1} has to contain exactly 3 columns and at least 4 rows", a.ID, a.Technology);
+			}
+			return new VectoRunData.AuxData {
+				ID = a.ID,
+				Technology = a.Technology,
+				TechList = a.TechList.DefaultIfNull(Enumerable.Empty<string>()).ToArray(),
+				DemandType = AuxiliaryDemandType.Mapping,
+				Data = new AuxiliaryData(a, a.ID) //AuxiliaryData.Create(a.DemandMap)
+			};
+		}
+
+		private static VectoRunData.AuxData CreateConstantAuxiliary(IAuxiliaryEngineeringInputData a)
+		{
+			return new VectoRunData.AuxData {
+				ID = a.ID,
+				DemandType = AuxiliaryDemandType.Constant,
+				PowerDemand = a.ConstantPowerDemand
+			};
 		}
 
 		internal DriverData CreateDriverData(IDriverEngineeringInputData driver)
@@ -202,7 +222,7 @@ namespace TUGraz.VectoCore.InputData.Reader.DataObjectAdapter
 
 			AccelerationCurveData accelerationData = null;
 			if (driver.AccelerationCurve != null) {
-				accelerationData = AccelerationCurveData.Create(driver.AccelerationCurve);
+				accelerationData = AccelerationCurveReader.Create(driver.AccelerationCurve);
 			}
 
 			var lookAheadData = new DriverData.LACData {

@@ -649,7 +649,7 @@ Public Class cGBX
 			If ErrMin > DEV.TCiterPrec AndAlso iOptPassed > -1 AndAlso nuStep > 0.00001 Then
 				nuMin = nuList(iOptPassed - 1)
 				nuMax = nuList(iOptPassed)
-				nuStep = Math.Max((nuMax - nuMin) / 10, 0.00001)
+				nuStep = Math.Max((nuMax - nuMin) / 10.0, 0.00001)
 			Else
 				Exit Do
 			End If

@@ -14,7 +14,7 @@ Imports System.Text
 Imports TUGraz.VectoCommon.Models
 Imports vectolic
 
-Module VECTO_Global
+Public Module VECTO_Global
 	Public Const VECTOvers As String = "2.2"
 	Public COREvers As String = "NOT FOUND"
 

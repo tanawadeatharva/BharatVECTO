@@ -123,7 +123,7 @@ namespace TUGraz.VectoCore.Tests.Integration.BusAuxiliaries
 			var engineFCMapFilePath = @"TestData\Integration\BusAuxiliaries\24t Coach.vmap";
 
 			var vehicle = new VehicleContainer(ExecutionMode.Engineering);
-			var fcMap = FuelConsumptionMap.ReadFromFile(engineFCMapFilePath);
+			var fcMap = FuelConsumptionMapReader.ReadFromFile(engineFCMapFilePath);
 			var fld = EngineFullLoadCurve.ReadFromFile(engineFLDFilePath);
 			var modelData = new CombustionEngineData() {
 				ConsumptionMap = fcMap,

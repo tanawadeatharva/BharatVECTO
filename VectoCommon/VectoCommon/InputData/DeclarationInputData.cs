@@ -83,7 +83,7 @@ namespace TUGraz.VectoCommon.InputData
 		/// cf. VECTO Input Parameters.xlsx
 		/// </summary>
 		Kilogram CurbWeightChassis { get; }
-
+		
 		/// <summary>
 		/// P041  Max. vehicle weight
 		/// cf. VECTO Input Parameters.xlsx
@@ -96,11 +96,11 @@ namespace TUGraz.VectoCommon.InputData
 		/// </summary>
 		SquareMeter AirDragArea { get; } // without trailer
 
-		/// <summary>
-		/// P117  Powered axle tyres/rims
-		/// cf. VECTO Input Parameters.xlsx
-		/// </summary>
-		string Rim { get; }
+		///// <summary>
+		///// P117  Powered axle tyres/rims
+		///// cf. VECTO Input Parameters.xlsx
+		///// </summary>
+		//string Rim { get; }  // deprecated
 
 		/// <summary>
 		/// parameters for every axle
@@ -134,12 +134,24 @@ namespace TUGraz.VectoCommon.InputData
 
 	public interface IAngularGearInputData : IComponentInputData
 	{
+		/// <summary>
+		/// P180
+		/// </summary>
 		AngularGearType Type { get; }
 
+		/// <summary>
+		/// P176
+		/// </summary>
 		double Ratio { get; }
 
+		/// <summary>
+		/// P173, P174, P175
+		/// </summary>
 		DataTable LossMap { get; }
 
+		/// <summary>
+		/// P177
+		/// </summary>
 		double Efficiency { get; }
 	}
 
@@ -210,11 +222,16 @@ namespace TUGraz.VectoCommon.InputData
 		/// </summary>
 		double Efficiency { get; }
 
+		///// <summary>
+		///// P145
+		///// cf. VECTO Input Parameters.xlsx
+		///// </summary>
+		//DataTable FullLoadCurve { get; } // deprecated
+
 		/// <summary>
-		/// P145
-		/// cf. VECTO Input Parameters.xlsx
+		/// P157
 		/// </summary>
-		DataTable FullLoadCurve { get; }
+		NewtonMeter MaxTorque { get; }
 
 		/// <summary>
 		/// P082
@@ -252,27 +269,8 @@ namespace TUGraz.VectoCommon.InputData
 		double Efficiency { get; }
 	}
 
-	public interface ITorqueConverterInputData
+	public interface ITorqueConverterDeclarationInputData
 	{
-		/// <summary>
-		/// P090
-		/// cf. VECTO Input Parameters.xlsx
-		/// </summary>
-		bool Enabled { get; }
-
-		/// <summary>
-		/// P092
-		/// cf. VECTO Input Parameters.xlsx
-		/// </summary>
-		// ReSharper disable once InconsistentNaming
-		PerSecond ReferenceRPM { get; }
-
-		/// <summary>
-		/// P127
-		/// cf. VECTO Input Parameters.xlsx
-		/// </summary>
-		KilogramSquareMeter Inertia { get; }
-
 		/// <summary>
 		/// P091
 		/// P099, P100, P101

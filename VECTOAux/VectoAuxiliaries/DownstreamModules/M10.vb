@@ -10,11 +10,7 @@
 ' See the LICENSE.txt for the specific language governing permissions and limitations.
 
 Imports TUGraz.VectoCommon.Utils
-Imports TUGraz.VectoCore.Utils
-Imports VectoAuxiliaries.Electrics
 Imports VectoAuxiliaries.Pneumatics
-Imports VectoAuxiliaries.Hvac
-Imports VectoAuxiliaries.DownstreamModules
 
 Namespace DownstreamModules
 	Public Class M10

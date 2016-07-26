@@ -131,7 +131,13 @@
     <Compile Include="Models\Connector\Ports\Impl\Response.cs" />
     <Compile Include="Models\Connector\Ports\IFvPort.cs" />
     <Compile Include="Models\Connector\Ports\ITnPort.cs" />
+    <Compile Include="InputData\Reader\ComponentData\AccelerationCurveReader.cs" />
     <Compile Include="Models\SimulationComponent\Data\AngularGearData.cs" />
+    <Compile Include="InputData\Reader\ComponentData\TransmissionLossMapReader.cs" />
+    <Compile Include="InputData\Reader\ComponentData\RetarderLossMapReader.cs" />
+    <Compile Include="InputData\Reader\ComponentData\TorqueConverterDataReader.cs" />
+    <Compile Include="Models\SimulationComponent\Data\Engine\FuelConsumptionMapReader.cs" />
+    <Compile Include="Models\SimulationComponent\Impl\TorqueConverter.cs" />
     <Compile Include="Utils\ProviderExtensions.cs" />
     <Compile Include="Models\Declaration\AirDrag.cs" />
     <Compile Include="Models\Declaration\Fan.cs" />
@@ -149,7 +155,7 @@
     <Compile Include="Models\Declaration\Wheels.cs" />
     <Compile Include="Models\Declaration\WHTCCorrection.cs" />
     <Compile Include="Models\SimulationComponent\Data\CrosswindCorrectionCdxALookup.cs" />
-    <Compile Include="Models\SimulationComponent\Data\CrossWindCorrectionCurveReader.cs" />
+    <Compile Include="InputData\Reader\ComponentData\CrossWindCorrectionCurveReader.cs" />
     <Compile Include="Models\SimulationComponent\Data\AuxiliaryData.cs" />
     <Compile Include="Models\SimulationComponent\Data\AuxSupplyPowerReader.cs" />
     <Compile Include="Models\SimulationComponent\Data\AxleGearData.cs" />
@@ -191,7 +197,6 @@
     <Compile Include="Models\Simulation\DataBus\IClutchInfo.cs" />
     <Compile Include="Models\Simulation\DataBus\IDriverInfo.cs" />
     <Compile Include="Models\Simulation\DataBus\IWheelsInfo.cs" />
-    <Compile Include="Models\Simulation\Data\AuxiliaryDemandType.cs" />
     <Compile Include="Models\SimulationComponent\Data\AuxiliaryType.cs" />
     <Compile Include="Models\SimulationComponent\Data\FullLoadCurve.cs" />
     <Compile Include="Models\Simulation\DataBus\IMileageCounter.cs" />
