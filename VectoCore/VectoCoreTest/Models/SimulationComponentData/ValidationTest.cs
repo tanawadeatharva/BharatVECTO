@@ -86,7 +86,7 @@ namespace TUGraz.VectoCore.Tests.Models.SimulationComponentData
 				WHTCRural = 1,
 				WHTCMotorway = 1,
 				FullLoadCurve = EngineFullLoadCurve.Create(fullLoad),
-				ConsumptionMap = FuelConsumptionMap.Create(fuelConsumption)
+				ConsumptionMap = FuelConsumptionMapReader.Create(fuelConsumption)
 			};
 			data.FullLoadCurve.EngineData = data;
 

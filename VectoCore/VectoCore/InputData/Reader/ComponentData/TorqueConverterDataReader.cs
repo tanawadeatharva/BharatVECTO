@@ -4,9 +4,10 @@ using System.IO;
 using System.Linq;
 using TUGraz.VectoCommon.Exceptions;
 using TUGraz.VectoCommon.Utils;
+using TUGraz.VectoCore.Models.SimulationComponent.Data.Gearbox;
 using TUGraz.VectoCore.Utils;
 
-namespace TUGraz.VectoCore.Models.SimulationComponent.Data.Gearbox
+namespace TUGraz.VectoCore.InputData.Reader.ComponentData
 {
 	public class TorqueConverterDataReader
 	{

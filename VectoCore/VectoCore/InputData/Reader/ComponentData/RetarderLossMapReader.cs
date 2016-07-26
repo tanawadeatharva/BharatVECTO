@@ -78,7 +78,7 @@ namespace TUGraz.VectoCore.Models.SimulationComponent.Data
 				}).ToList();
 		}
 
-		private static class Fields
+		public static class Fields
 		{
 			/// <summary>
 			///     [rpm]

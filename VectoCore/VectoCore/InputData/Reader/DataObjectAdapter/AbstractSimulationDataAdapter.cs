@@ -30,7 +30,9 @@
 */
 
 using System;
+using System.Collections.Generic;
 using System.Linq;
+using iTextSharp.text.pdf;
 using TUGraz.VectoCommon.Exceptions;
 using TUGraz.VectoCommon.InputData;
 using TUGraz.VectoCommon.Models;
@@ -89,8 +91,8 @@ namespace TUGraz.VectoCore.InputData.Reader.DataObjectAdapter
 					Type = data.Type,
 				};
 				switch (retarder.Type) {
-				//case RetarderType.EngineRetarder:
-				case RetarderType.TransmissionInputRetarder:
+					//case RetarderType.EngineRetarder:
+					case RetarderType.TransmissionInputRetarder:
 						retarder.LossMap = RetarderLossMapReader.Create(data.LossMap);
 						retarder.Ratio = data.Ratio;
 						break;
@@ -123,7 +125,7 @@ namespace TUGraz.VectoCore.InputData.Reader.DataObjectAdapter
 				IntegrityStatus = data.IntegrityStatus,
 				Displacement = data.Displacement,
 				IdleSpeed = data.IdleSpeed,
-				ConsumptionMap = FuelConsumptionMap.Create(data.FuelConsumptionMap),
+				ConsumptionMap = FuelConsumptionMapReader.Create(data.FuelConsumptionMap),
 			};
 			return retVal;
 		}
@@ -216,7 +218,7 @@ namespace TUGraz.VectoCore.InputData.Reader.DataObjectAdapter
 					case AngularGearType.None:
 						return null;
 					default:
-						throw new ArgumentOutOfRangeException("data", "Unknown AngularGear Type.");
+						throw new ArgumentOutOfRangeException("data", "Unknown Angulargear Type.");
 				}
 			} catch (Exception e) {
 				throw new VectoException("Error while reading AngularGear data: {0}", e.Message);

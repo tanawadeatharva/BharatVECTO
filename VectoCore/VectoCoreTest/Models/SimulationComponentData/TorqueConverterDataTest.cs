@@ -2,6 +2,7 @@
 using System.Diagnostics;
 using NUnit.Framework;
 using TUGraz.VectoCommon.Utils;
+using TUGraz.VectoCore.InputData.Reader.ComponentData;
 using TUGraz.VectoCore.Models.SimulationComponent.Data.Gearbox;
 using TUGraz.VectoCore.Tests.Utils;
 
@@ -75,7 +76,7 @@ namespace TUGraz.VectoCore.Tests.Models.SimulationComponentData
 		]
 		public void TestTorqueConverterInvalidOperatingPoint(double nOut, double Pout)
 		{
-			var tqLimit = 1600;
+			var tqLimit = 1600.RPMtoRad();
 
 			var tqInput = new[] {
 				"0,3.935741,563.6598  ",
@@ -100,7 +101,7 @@ namespace TUGraz.VectoCore.Tests.Models.SimulationComponentData
 			var outTorque = (Pout * 1000).SI<Watt>() / outAngularSpeed;
 			tqData.GetInputTorqueAndAngularSpeed(outTorque, outAngularSpeed, out inTorque, out inAngularSpeed);
 
-			Assert.IsTrue(inAngularSpeed.Value() > 1600.RPMtoRad().Value());
+			Assert.IsTrue(inAngularSpeed.Value() > tqLimit.Value());
 		}
 	}
 }

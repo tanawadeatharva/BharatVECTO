@@ -43,75 +43,11 @@ namespace TUGraz.VectoCore.Models.SimulationComponent.Data.Engine
 {
 	public class FuelConsumptionMap : SimulationComponentData
 	{
-		[Required, ValidateObject] private readonly DelaunayMap _fuelMap = new DelaunayMap("FuelConsumptionMap");
+		[Required, ValidateObject] private readonly DelaunayMap _fuelMap;
 
-		private FuelConsumptionMap() {}
-
-		public static FuelConsumptionMap ReadFromFile(string fileName)
+		protected internal FuelConsumptionMap(DelaunayMap fuelMap)
 		{
-			try {
-				var data = VectoCSVFile.Read(fileName);
-				return Create(data);
-			} catch (Exception e) {
-				throw new VectoException(string.Format("File {0}: {1}", fileName, e.Message), e);
-			}
-		}
-
-		public static FuelConsumptionMap Create(DataTable data)
-		{
-			var headerValid = HeaderIsValid(data.Columns);
-			if (!headerValid) {
-				Logger<FuelConsumptionMap>().Warn(
-					"FuelConsumptionMap: Header Line is not valid. Expected: '{0}, {1}, {2}', Got: {3}",
-					Fields.EngineSpeed, Fields.Torque, Fields.FuelConsumption,
-					", ".Join(data.Columns.Cast<DataColumn>().Select(c => c.ColumnName)));
-			}
-			var fuelConsumptionMap = new FuelConsumptionMap();
-
-			foreach (DataRow row in data.Rows) {
-				try {
-					var entry = headerValid ? CreateFromColumNames(row) : CreateFromColumnIndizes(row);
-
-					// Delaunay map works only as expected, when the angularVelocity is in rpm.
-					fuelConsumptionMap._fuelMap.AddPoint(entry.Torque.Value(),
-						headerValid ? row.ParseDouble(Fields.EngineSpeed) : row.ParseDouble(0),
-						entry.FuelConsumption.Value());
-				} catch (Exception e) {
-					throw new VectoException(string.Format("Line {0}: {1}", data.Rows.IndexOf(row), e.Message), e);
-				}
-			}
-
-			fuelConsumptionMap._fuelMap.Triangulate();
-			return fuelConsumptionMap;
-		}
-
-		private static bool HeaderIsValid(DataColumnCollection columns)
-		{
-			return columns.Contains(Fields.EngineSpeed) && columns.Contains(Fields.Torque) &&
-					columns.Contains(Fields.FuelConsumption);
-		}
-
-		private static FuelConsumptionEntry CreateFromColumnIndizes(DataRow row)
-		{
-			return new FuelConsumptionEntry(
-				engineSpeed: row.ParseDouble(0).RPMtoRad(),
-				torque: row.ParseDouble(1).SI<NewtonMeter>(),
-				fuelConsumption:
-					row.ParseDouble(2).SI().Gramm.Per.Hour.ConvertTo().Kilo.Gramm.Per.Second.Cast<KilogramPerSecond>()
-				);
-		}
-
-		private static FuelConsumptionEntry CreateFromColumNames(DataRow row)
-		{
-			return new FuelConsumptionEntry(
-				engineSpeed: row.ParseDouble(Fields.EngineSpeed).SI().Rounds.Per.Minute.Cast<PerSecond>(),
-				torque: row.ParseDouble(Fields.Torque).SI<NewtonMeter>(),
-				fuelConsumption:
-					row.ParseDouble(Fields.FuelConsumption)
-						.SI()
-						.Gramm.Per.Hour.ConvertTo()
-						.Kilo.Gramm.Per.Second.Cast<KilogramPerSecond>()
-				);
+			_fuelMap = fuelMap;
 		}
 
 		/// <summary>
@@ -135,26 +71,8 @@ namespace TUGraz.VectoCore.Models.SimulationComponent.Data.Engine
 				angularVelocity.AsRPM);
 		}
 
-		public static class Fields
-		{
-			/// <summary>
-			/// [rpm]
-			/// </summary>
-			public const string EngineSpeed = "engine speed";
-
-			/// <summary>
-			/// [Nm]
-			/// </summary>
-			public const string Torque = "torque";
-
-			/// <summary>
-			/// [g/h]
-			/// </summary>
-			public const string FuelConsumption = "fuel consumption";
-		}
-
 		[SuppressMessage("ReSharper", "MemberCanBePrivate.Local")]
-		private class FuelConsumptionEntry
+		public class FuelConsumptionEntry
 		{
 			[Required, SIRange(0, 5000 * Constants.RPMToRad)]
 			public PerSecond EngineSpeed { get; set; }
