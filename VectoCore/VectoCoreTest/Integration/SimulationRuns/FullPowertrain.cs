@@ -306,7 +306,7 @@ namespace TUGraz.VectoCore.Tests.Integration.SimulationRuns
 						new GearData {
 							// TODO mk-2016-05-09: add realistic FullLoadCurve for gearbox - gearbox will have only 1 constant value as full load
 							FullLoadCurve = FullLoadCurveReader.ReadFromFile(GearboxFullLoadCurveFile),
-							LossMap = TransmissionLossMap.ReadFromFile(GearboxLossMap, ratio, string.Format("Gear {0}", i)),
+							LossMap = TransmissionLossMapReader.ReadFromFile(GearboxLossMap, ratio, string.Format("Gear {0}", i)),
 							Ratio = ratio,
 							ShiftPolygon = ShiftPolygonReader.ReadFromFile(GearboxShiftPolygonFile)
 						}))
@@ -330,7 +330,7 @@ namespace TUGraz.VectoCore.Tests.Integration.SimulationRuns
 			return new AxleGearData {
 				AxleGear = new GearData {
 					Ratio = ratio,
-					LossMap = TransmissionLossMap.ReadFromFile(AxleLossMap, ratio, "AxleGear")
+					LossMap = TransmissionLossMapReader.ReadFromFile(AxleLossMap, ratio, "AxleGear")
 				}
 			};
 		}
@@ -343,7 +343,7 @@ namespace TUGraz.VectoCore.Tests.Integration.SimulationRuns
 					{
 						1, new GearData {
 							FullLoadCurve = null,
-							LossMap = TransmissionLossMap.ReadFromFile(GearboxLossMap, ratio, "Gear 1"),
+							LossMap = TransmissionLossMapReader.ReadFromFile(GearboxLossMap, ratio, "Gear 1"),
 							Ratio = ratio,
 							ShiftPolygon = ShiftPolygonReader.ReadFromFile(GearboxShiftPolygonFile)
 						}
@@ -403,7 +403,7 @@ namespace TUGraz.VectoCore.Tests.Integration.SimulationRuns
 		private static DriverData CreateDriverData(string accelerationFile)
 		{
 			return new DriverData {
-				AccelerationCurve = AccelerationCurveData.ReadFromFile(accelerationFile),
+				AccelerationCurve = AccelerationCurveReader.ReadFromFile(accelerationFile),
 				LookAheadCoasting = new DriverData.LACData {
 					Enabled = false,
 					//Deceleration = -0.5.SI<MeterPerSquareSecond>()

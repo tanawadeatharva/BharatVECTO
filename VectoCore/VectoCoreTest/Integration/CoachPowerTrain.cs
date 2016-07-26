@@ -121,8 +121,8 @@ namespace TUGraz.VectoCore.Tests.Integration
 						new GearData {
 							FullLoadCurve = FullLoadCurveReader.ReadFromFile(GearboxFullLoadCurveFile),
 							LossMap = ratio.IsEqual(1)
-								? TransmissionLossMap.ReadFromFile(GearboxIndirectLoss, ratio, string.Format("Gear {0}", i))
-								: TransmissionLossMap.ReadFromFile(GearboxDirectLoss, ratio, string.Format("Gear {0}", i)),
+								? TransmissionLossMapReader.ReadFromFile(GearboxIndirectLoss, ratio, string.Format("Gear {0}", i))
+								: TransmissionLossMapReader.ReadFromFile(GearboxDirectLoss, ratio, string.Format("Gear {0}", i)),
 							Ratio = ratio,
 							ShiftPolygon = ShiftPolygonReader.ReadFromFile(GearboxShiftPolygonFile)
 						}))
@@ -147,7 +147,7 @@ namespace TUGraz.VectoCore.Tests.Integration
 			return new AxleGearData {
 				AxleGear = new GearData {
 					Ratio = ratio,
-					LossMap = TransmissionLossMap.ReadFromFile(AxleGearLossMap, ratio, "AxleGear")
+					LossMap = TransmissionLossMapReader.ReadFromFile(AxleGearLossMap, ratio, "AxleGear")
 				}
 			};
 		}
@@ -195,7 +195,7 @@ namespace TUGraz.VectoCore.Tests.Integration
 		private static DriverData CreateDriverData(string accelerationFile, bool overspeed = false)
 		{
 			return new DriverData {
-				AccelerationCurve = AccelerationCurveData.ReadFromFile(accelerationFile),
+				AccelerationCurve = AccelerationCurveReader.ReadFromFile(accelerationFile),
 				LookAheadCoasting = new DriverData.LACData {
 					Enabled = true,
 					//MinSpeed = 50.KMPHtoMeterPerSecond(),

@@ -93,6 +93,7 @@
     <Compile Include="Integration\DeclarationReportTest.cs" />
     <Compile Include="Integration\ShiftStrategy\ShiftStrategyTest.cs" />
     <Compile Include="Models\Declaration\ShiftPolygonTest.cs" />
+    <Compile Include="Models\SimulationComponentData\TorqueConverterDataTest.cs" />
     <Compile Include="Models\SimulationComponentData\ValidationTest.cs" />
     <Compile Include="Models\Simulation\FactoryTest.cs" />
     <Compile Include="Models\Simulation\LossMapRangeValidationTest.cs" />

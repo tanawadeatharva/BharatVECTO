@@ -143,9 +143,9 @@ namespace TUGraz.VectoCore.InputData.Reader.DataObjectAdapter
 			retVal.Gears = gears.Select((gear, i) => {
 				TransmissionLossMap lossMap;
 				if (gear.LossMap != null) {
-					lossMap = TransmissionLossMap.Create(gear.LossMap, gear.Ratio, string.Format("Gear {0}", i + 1));
+					lossMap = TransmissionLossMapReader.Create(gear.LossMap, gear.Ratio, string.Format("Gear {0}", i + 1));
 				} else if (useEfficiencyFallback) {
-					lossMap = TransmissionLossMap.Create(gear.Efficiency, gear.Ratio, string.Format("Gear {0}", i + 1));
+					lossMap = TransmissionLossMapReader.Create(gear.Efficiency, gear.Ratio, string.Format("Gear {0}", i + 1));
 				} else {
 					throw new InvalidFileFormatException("Gear {0} LossMap or Efficiency missing.", i + 1);
 				}
@@ -224,7 +224,7 @@ namespace TUGraz.VectoCore.InputData.Reader.DataObjectAdapter
 
 			AccelerationCurveData accelerationData = null;
 			if (driver.AccelerationCurve != null) {
-				accelerationData = AccelerationCurveData.Create(driver.AccelerationCurve);
+				accelerationData = AccelerationCurveReader.Create(driver.AccelerationCurve);
 			}
 
 			var lookAheadData = new DriverData.LACData {

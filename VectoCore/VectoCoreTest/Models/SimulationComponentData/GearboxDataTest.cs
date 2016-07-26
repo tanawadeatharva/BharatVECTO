@@ -119,7 +119,7 @@ namespace TUGraz.VectoCore.Tests.Models.SimulationComponentData
 			data.Rows.Add("100", "0", "10"); //        |       \         |
 			data.Rows.Add("100", "100", "10"); //    (0,0):10  ----- (100,10):10
 
-			var map = TransmissionLossMap.Create(data, 1.0, "1");
+			var map = TransmissionLossMapReader.Create(data, 1.0, "1");
 
 			// test inside the triangles
 			AssertHelper.AreRelativeEqual(10, map.GetTorqueLoss(25.RPMtoRad(), 25.SI<NewtonMeter>()).Value);
@@ -163,7 +163,7 @@ namespace TUGraz.VectoCore.Tests.Models.SimulationComponentData
 			data.Rows.Add("100", "0", "10"); //        |       \         |
 			data.Rows.Add("100", "100", "10"); //    (0,0):10  ----- (100,10):10
 
-			var map = TransmissionLossMap.Create(data, 1.0, "1");
+			var map = TransmissionLossMapReader.Create(data, 1.0, "1");
 
 			// test inside the triangles
 			AssertHelper.AreRelativeEqual(15, map.GetOutTorque(25.RPMtoRad(), 25.SI<NewtonMeter>(), true));
@@ -207,7 +207,7 @@ namespace TUGraz.VectoCore.Tests.Models.SimulationComponentData
 			data.Rows.Add("100", "10", "10"); //        |       \       |
 			data.Rows.Add("100", "140", "40"); //    (0,0):0 ----- (100,10):10
 
-			var map = TransmissionLossMap.Create(data, 1.0, "1");
+			var map = TransmissionLossMapReader.Create(data, 1.0, "1");
 
 			// test inside the triangles
 			AssertHelper.AreRelativeEqual(5, map.GetTorqueLoss(25.RPMtoRad(), 25.SI<NewtonMeter>()).Value);
@@ -251,7 +251,7 @@ namespace TUGraz.VectoCore.Tests.Models.SimulationComponentData
 			data.Rows.Add("100", "0", "10"); //        |       \       |
 			data.Rows.Add("100", "100", "40"); //    (0,0):0 ----- (100,0):10
 
-			var map = TransmissionLossMap.Create(data, 1.0, "1");
+			var map = TransmissionLossMapReader.Create(data, 1.0, "1");
 
 			// test inside the triangles
 			AssertHelper.AreRelativeEqual(20, map.GetOutTorque(25.RPMtoRad(), 25.SI<NewtonMeter>()));
