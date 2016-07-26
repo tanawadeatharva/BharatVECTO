@@ -69,7 +69,8 @@ namespace TUGraz.VectoCore.InputData.FileIO.JSON
 	///		]
 	/// }
 	// ReSharper disable once InconsistentNaming
-	public class JSONGearboxDataV5 : JSONFile, IGearboxEngineeringInputData, IAxleGearInputData, ITorqueConverterInputData
+	public class JSONGearboxDataV5 : JSONFile, IGearboxEngineeringInputData, IAxleGearInputData,
+		ITorqueConverterEngineeringInputData
 	{
 		public JSONGearboxDataV5(JObject data, string filename) : base(data, filename) {}
 
@@ -205,7 +206,7 @@ namespace TUGraz.VectoCore.InputData.FileIO.JSON
 			get { return Body.GetEx<double>(JsonKeys.Gearbox_StartTorqueReserve) / 100.0; }
 		}
 
-		public virtual ITorqueConverterInputData TorqueConverter
+		public virtual ITorqueConverterEngineeringInputData TorqueConverter
 		{
 			get { return this; }
 		}
@@ -244,14 +245,15 @@ namespace TUGraz.VectoCore.InputData.FileIO.JSON
 
 		#region ITorqueConverterInputData
 
-		public virtual bool Enabled
-		{
-			get
-			{
-				return false;
-				// TODO mk-2016-05-09: JSON ITorqueConverterInputData.Enabled always true --> as soon as TC is implemented, set to correct value!
-			}
-		}
+		// deprecated: AT transmission has to have a torque converter. 
+		//public virtual bool Enabled
+		//{
+		//	get
+		//	{
+		//		return false;
+		//		// TODO mk-2016-05-09: JSON ITorqueConverterInputData.Enabled always true --> as soon as TC is implemented, set to correct value!
+		//	}
+		//}
 
 		public virtual PerSecond ReferenceRPM
 		{
@@ -274,7 +276,7 @@ namespace TUGraz.VectoCore.InputData.FileIO.JSON
 			}
 		}
 
-		KilogramSquareMeter ITorqueConverterInputData.Inertia
+		KilogramSquareMeter ITorqueConverterEngineeringInputData.Inertia
 		{
 			get
 			{

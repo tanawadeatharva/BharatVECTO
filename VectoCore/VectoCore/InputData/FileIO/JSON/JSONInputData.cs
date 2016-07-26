@@ -111,6 +111,7 @@ namespace TUGraz.VectoCore.InputData.FileIO.JSON
 	{
 		protected IGearboxEngineeringInputData Gearbox;
 		protected IAxleGearInputData AxleGear;
+		protected ITorqueConverterEngineeringInputData TorqueConverter;
 		public IAngularGearInputData AngularGear;
 		protected IEngineEngineeringInputData Engine;
 		protected IVehicleEngineeringInputData VehicleData;
@@ -128,6 +129,7 @@ namespace TUGraz.VectoCore.InputData.FileIO.JSON
 				}
 
 				AxleGear = Gearbox as IAxleGearInputData;
+				TorqueConverter = Gearbox as ITorqueConverterEngineeringInputData;
 
 				Engine = JSONInputDataFactory.ReadEngine(
 					Path.Combine(BasePath, Body.GetEx(JsonKeys.Vehicle_EngineFile).Value<string>()));
@@ -163,6 +165,22 @@ namespace TUGraz.VectoCore.InputData.FileIO.JSON
 		IGearboxDeclarationInputData IDeclarationInputDataProvider.GearboxInputData
 		{
 			get { return GearboxInputData; }
+		}
+
+		ITorqueConverterDeclarationInputData IDeclarationInputDataProvider.TorqueConverterInputData
+		{
+			get { return TorqueConverterInputData; }
+		}
+
+		public ITorqueConverterEngineeringInputData TorqueConverterInputData
+		{
+			get
+			{
+				if (TorqueConverter == null) {
+					throw new InvalidFileFormatException("TorqueConverterData not found");
+				}
+				return TorqueConverter;
+			}
 		}
 
 		IDeclarationJobInputData IDeclarationInputDataProvider.JobInputData()

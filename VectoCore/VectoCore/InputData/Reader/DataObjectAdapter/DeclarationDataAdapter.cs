@@ -189,8 +189,6 @@ namespace TUGraz.VectoCore.InputData.Reader.DataObjectAdapter
 			retVal.StartSpeed = DeclarationData.Gearbox.StartSpeed;
 			retVal.StartAcceleration = DeclarationData.Gearbox.StartAcceleration;
 
-			retVal.HasTorqueConverter = false;
-
 			TransmissionLossMap gearLossMap;
 			retVal.Gears = gears.Select((gear, i) => {
 				try {
