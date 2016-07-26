@@ -13,7 +13,7 @@
 ''' Methods for GUI interaction
 ''' </summary>
 ''' <remarks></remarks>
-Module GUI_Subs
+Public Module GUI_Subs
 
     Public test As Integer = 0
 

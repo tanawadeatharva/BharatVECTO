@@ -10,7 +10,7 @@
 ' See the LICENSE.txt for the specific language governing permissions and limitations.
 Imports System.Collections.Generic
 
-Class cVSUM
+Public Class cVSUM
 
     Private Const FormatVersion As Short = 1
 
