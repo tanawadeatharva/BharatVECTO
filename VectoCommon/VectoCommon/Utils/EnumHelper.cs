@@ -33,6 +33,7 @@ using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Runtime.CompilerServices;
+using System.Text.RegularExpressions;
 
 namespace TUGraz.VectoCommon.Utils
 {
@@ -40,7 +41,7 @@ namespace TUGraz.VectoCommon.Utils
 	{
 		public static T ParseEnum<T>(this string s, bool ignoreCase = true)
 		{
-			return (T)Enum.Parse(typeof(T), s.RemoveWhitespace(), ignoreCase);
+			return (T)Enum.Parse(typeof(T), Regex.Replace(s, @"\s+", ""), ignoreCase);
 		}
 
 		public static IEnumerable<T> GetValues<T>()

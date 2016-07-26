@@ -143,7 +143,7 @@ namespace TUGraz.VectoCore.Tests.Models.Simulation
 					Tuple.Create((uint)i,
 						new GearData {
 							FullLoadCurve = FullLoadCurveReader.ReadFromFile(GearboxFullLoadCurveFile),
-							LossMap = TransmissionLossMap.ReadFromFile(!ratio.IsEqual(1.0) ? directlossMap : indirectLossMap, ratio,
+							LossMap = TransmissionLossMapReader.ReadFromFile(!ratio.IsEqual(1.0) ? directlossMap : indirectLossMap, ratio,
 								string.Format("Gear {0}", i)),
 							Ratio = ratio,
 							ShiftPolygon = ShiftPolygonReader.ReadFromFile(ShiftPolygonFile)
@@ -158,7 +158,7 @@ namespace TUGraz.VectoCore.Tests.Models.Simulation
 			return new AxleGearData {
 				AxleGear = new GearData {
 					Ratio = ratio,
-					LossMap = TransmissionLossMap.ReadFromFile(lossMap, ratio, "AxleGear")
+					LossMap = TransmissionLossMapReader.ReadFromFile(lossMap, ratio, "AxleGear")
 				}
 			};
 		}
@@ -169,7 +169,7 @@ namespace TUGraz.VectoCore.Tests.Models.Simulation
 		[TestMethod]
 		public void TestLossMapValuesWithEfficiency()
 		{
-			var lossMap = TransmissionLossMap.Create(0.95, 1.0, "Dummy");
+			var lossMap = TransmissionLossMapReader.Create(0.95, 1.0, "Dummy");
 
 			AssertHelper.AreRelativeEqual(0.SI<NewtonMeter>(),
 				lossMap.GetTorqueLoss(0.RPMtoRad(), 0.SI<NewtonMeter>()).Value);

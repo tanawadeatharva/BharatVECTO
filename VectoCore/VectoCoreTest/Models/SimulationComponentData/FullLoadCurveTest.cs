@@ -223,14 +223,14 @@ namespace TUGraz.VectoCore.Tests.Models.SimulationComponentData
 
 			var gearboxData = new GearboxData();
 			gearboxData.Gears[1] = new GearData {
-				LossMap = TransmissionLossMap.ReadFromFile(@"TestData\Components\limited.vtlm", 1, "1"),
+				LossMap = TransmissionLossMapReader.ReadFromFile(@"TestData\Components\limited.vtlm", 1, "1"),
 				Ratio = 1
 			};
 
 			var axleGearData = new AxleGearData() {
 				AxleGear = new GearData {
 					Ratio = 1,
-					LossMap = TransmissionLossMap.ReadFromFile(@"TestData\Components\limited.vtlm", 1, "1"),
+					LossMap = TransmissionLossMapReader.ReadFromFile(@"TestData\Components\limited.vtlm", 1, "1"),
 				}
 			};
 

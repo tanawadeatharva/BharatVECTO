@@ -161,7 +161,7 @@ namespace TUGraz.VectoCore.Models.SimulationComponent.Data
 			return columns.Contains(FieldsCdxABeta.Beta) && columns.Contains(FieldsCdxABeta.DeltaCdxA);
 		}
 
-		private static class FieldsCdxABeta
+		public static class FieldsCdxABeta
 		{
 			public const string Beta = "beta";
 

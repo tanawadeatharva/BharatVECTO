@@ -89,7 +89,11 @@ namespace TUGraz.VectoCore.InputData.Reader
 			if (declarationMode) {
 				tmp = new PT1();
 			} else {
-				tmp = PT1Curve.Create(data);
+				if (data.Columns.Count > 3) {
+					tmp = PT1Curve.Create(data);
+				} else {
+					tmp = new PT1();
+				}
 			}
 			entriesFld.Sort((entry1, entry2) => entry1.EngineSpeed.Value().CompareTo(entry2.EngineSpeed.Value()));
 			return new FullLoadCurve { FullLoadEntries = entriesFld, PT1Data = tmp };
@@ -123,7 +127,7 @@ namespace TUGraz.VectoCore.InputData.Reader
 		}
 
 
-		private static class Fields
+		public static class Fields
 		{
 			/// <summary>
 			/// [rpm] engine speed

@@ -38,7 +38,7 @@ using TUGraz.VectoCore.Utils;
 
 namespace TUGraz.VectoCore.Models.Declaration
 {
-	internal sealed class StandardBody
+	public sealed class StandardBody
 	{
 		public StandardBody(Kilogram curbWeight, Kilogram grossVehicleWeight, SquareMeter deltaCrossWindArea,
 			Wheels.WheelsEntry wheels)
@@ -79,7 +79,7 @@ namespace TUGraz.VectoCore.Models.Declaration
 	///     DeltaCrossWindArea,
 	///     Wheels
 	/// </summary>
-	internal sealed class StandardBodies : LookupData<string, StandardBody>
+	public sealed class StandardBodies : LookupData<string, StandardBody>
 	{
 		private const string ResourceId = "TUGraz.VectoCore.Resources.Declaration.Body_Trailers_Weights.csv";
 

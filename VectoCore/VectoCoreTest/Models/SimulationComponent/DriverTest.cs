@@ -402,7 +402,7 @@ namespace TUGraz.VectoCore.Tests.Models.SimulationComponent
 		private static DriverData CreateDriverData()
 		{
 			return new DriverData {
-				AccelerationCurve = AccelerationCurveData.ReadFromFile(AccelerationFile),
+				AccelerationCurve = AccelerationCurveReader.ReadFromFile(AccelerationFile),
 				LookAheadCoasting = new DriverData.LACData {
 					Enabled = false,
 					//Deceleration = -0.5.SI<MeterPerSquareSecond>()

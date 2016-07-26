@@ -29,7 +29,7 @@
 *   Martin Rexeis, rexeis@ivt.tugraz.at, IVT, Graz University of Technology
 */
 
-namespace TUGraz.VectoCore.Models.Simulation.Data
+namespace TUGraz.VectoCommon.Models
 {
 	public enum AuxiliaryDemandType
 	{

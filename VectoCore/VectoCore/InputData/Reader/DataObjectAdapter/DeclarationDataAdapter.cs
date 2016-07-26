@@ -98,7 +98,7 @@ namespace TUGraz.VectoCore.InputData.Reader.DataObjectAdapter
 			retVal.CurbWeight += mission.BodyCurbWeight + mission.TrailerCurbWeight;
 			retVal.Loading = loading;
 			retVal.DynamicTyreRadius =
-				DeclarationData.DynamicTyreRadius(data.Axles[DeclarationData.PoweredAxle()].Wheels, data.Rim);
+				DeclarationData.DynamicTyreRadius(data.Axles[DeclarationData.PoweredAxle()].Wheels, "5° DC Rims"); // TODO!
 
 			var aerodynamicDragArea = data.AirDragArea + mission.DeltaCdA;
 
@@ -189,27 +189,22 @@ namespace TUGraz.VectoCore.InputData.Reader.DataObjectAdapter
 			retVal.StartSpeed = DeclarationData.Gearbox.StartSpeed;
 			retVal.StartAcceleration = DeclarationData.Gearbox.StartAcceleration;
 
-			retVal.HasTorqueConverter = false;
-
 			TransmissionLossMap gearLossMap;
 			retVal.Gears = gears.Select((gear, i) => {
 				try {
 					if (gear.LossMap == null) {
 						throw new InvalidFileFormatException(string.Format("LossMap for Gear {0} is missing.", i + 1));
 					}
-					gearLossMap = TransmissionLossMap.Create(gear.LossMap, gear.Ratio, string.Format("Gear {0}", i + 1));
+					gearLossMap = TransmissionLossMapReader.Create(gear.LossMap, gear.Ratio, string.Format("Gear {0}", i + 1));
 				} catch (InvalidFileFormatException) {
 					if (useEfficiencyFallback) {
-						gearLossMap = TransmissionLossMap.Create(gear.Efficiency, gear.Ratio, string.Format("Gear {0}", i + 1));
+						gearLossMap = TransmissionLossMapReader.Create(gear.Efficiency, gear.Ratio, string.Format("Gear {0}", i + 1));
 					} else {
 						throw;
 					}
 				}
-				var gearFullLoad = gear.FullLoadCurve == null
-					? null
-					: FullLoadCurveReader.Create(gear.FullLoadCurve, true);
 
-				var fullLoadCurve = IntersectFullLoadCurves(engine.FullLoadCurve, gearFullLoad);
+				var fullLoadCurve = IntersectFullLoadCurves(engine.FullLoadCurve, gear.MaxTorque);
 				var shiftPolygon = DeclarationData.Gearbox.ComputeShiftPolygon(i, fullLoadCurve, gears, engine, axlegearRatio,
 					dynamicTyreRadius);
 
@@ -217,7 +212,7 @@ namespace TUGraz.VectoCore.InputData.Reader.DataObjectAdapter
 					new GearData {
 						LossMap = gearLossMap,
 						ShiftPolygon = shiftPolygon,
-						FullLoadCurve = gearFullLoad,
+						MaxTorque = gear.MaxTorque,
 						Ratio = gear.Ratio,
 						TorqueConverterActive = false
 					});
@@ -225,7 +220,7 @@ namespace TUGraz.VectoCore.InputData.Reader.DataObjectAdapter
 
 			retVal.DownshiftAfterUpshiftDelay = DeclarationData.Gearbox.DownshiftAfterUpshiftDelay;
 			retVal.UpshiftAfterDownshiftDelay = DeclarationData.Gearbox.UpshiftAfterDownshiftDelay;
-			retVal.UpshiftMinAcceleration =DeclarationData.Gearbox.UpshiftMinAcceleration;
+			retVal.UpshiftMinAcceleration = DeclarationData.Gearbox.UpshiftMinAcceleration;
 			return retVal;
 		}
 
