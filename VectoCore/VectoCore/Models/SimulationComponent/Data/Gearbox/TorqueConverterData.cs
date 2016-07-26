@@ -31,30 +31,30 @@
 
 using System;
 using System.Collections.Generic;
-using System.Data;
-using System.IO;
 using System.Linq;
-using iTextSharp.text.pdf.codec;
 using TUGraz.VectoCommon.Exceptions;
 using TUGraz.VectoCommon.Utils;
-using TUGraz.VectoCore.Utils;
 
 namespace TUGraz.VectoCore.Models.SimulationComponent.Data.Gearbox
 {
 	public class TorqueConverterData
 	{
-		public List<TorqueConverterEntry> TorqueConverterEntries;
+		protected List<TorqueConverterEntry> TorqueConverterEntries;
 
-		protected internal TorqueConverterData(List<TorqueConverterEntry> torqueConverterEntries)
+		protected PerSecond ReferenceSpeed;
+
+		protected internal TorqueConverterData(List<TorqueConverterEntry> torqueConverterEntries, PerSecond referenceSpeed)
 		{
 			TorqueConverterEntries = torqueConverterEntries;
+			ReferenceSpeed = referenceSpeed;
 		}
+
 
 		public void GetInputTorqueAndAngularSpeed(NewtonMeter torqueOut, PerSecond angularSpeedOut, out NewtonMeter torqueIn,
 			out PerSecond angularSpeedIn)
 		{
 			var solutions = new List<double>();
-			var mpNorm = 1000.RPMtoRad().Value();
+			var mpNorm = ReferenceSpeed.Value();
 
 			// Find analytic solution for torque converter operating point
 			// mu = f(nu) = f(n_out / n_in) = T_out / T_in
@@ -82,7 +82,8 @@ namespace TUGraz.VectoCore.Models.SimulationComponent.Data.Gearbox
 				solutions.AddRange(selected);
 			}
 			if (solutions.Count == 0) {
-				throw new VectoException("No solution for input torque/input speed found! n_out: {0}, tq_out: {1}", angularSpeedOut, torqueOut);
+				throw new VectoException("No solution for input torque/input speed found! n_out: {0}, tq_out: {1}", angularSpeedOut,
+					torqueOut);
 			}
 
 			angularSpeedIn = solutions.Min().SI<PerSecond>();
@@ -94,8 +95,9 @@ namespace TUGraz.VectoCore.Models.SimulationComponent.Data.Gearbox
 		{
 			int index;
 			TorqueConverterEntries.GetSection(x => x.SpeedRatio > nu, out index);
-			var muEdge = Edge.Create(new Point(TorqueConverterEntries[index].SpeedRatio, TorqueConverterEntries[index].TorqueRatio),
-				new Point(TorqueConverterEntries[index + 1].SpeedRatio, TorqueConverterEntries[index + 1].TorqueRatio));
+			var muEdge =
+				Edge.Create(new Point(TorqueConverterEntries[index].SpeedRatio, TorqueConverterEntries[index].TorqueRatio),
+					new Point(TorqueConverterEntries[index + 1].SpeedRatio, TorqueConverterEntries[index + 1].TorqueRatio));
 			return muEdge.SlopeXY * nu + muEdge.OffsetXY;
 		}
 	}

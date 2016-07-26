@@ -42,7 +42,7 @@ namespace TUGraz.VectoCore.Tests.Models.SimulationComponentData
 
 			var tqData =
 				TorqueConverterDataReader.ReadFromStream(InputDataHelper.InputDataAsStream("Speed Ratio, Torque Ratio,MP1000",
-					tqInput));
+					tqInput), 1000.RPMtoRad());
 
 			PerSecond inAngularSpeed;
 			NewtonMeter inTorque;
@@ -91,7 +91,7 @@ namespace TUGraz.VectoCore.Tests.Models.SimulationComponentData
 
 			var tqData =
 				TorqueConverterDataReader.ReadFromStream(InputDataHelper.InputDataAsStream("Speed Ratio, Torque Ratio,MP1000",
-					tqInput));
+					tqInput), 1000.RPMtoRad());
 
 			PerSecond inAngularSpeed;
 			NewtonMeter inTorque;
