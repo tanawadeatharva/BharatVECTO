@@ -53,16 +53,16 @@ namespace TUGraz.VectoCore.Tests.Models.Declaration
 		public const double Tolerance = 0.0001;
 		public readonly MissionType[] Missions = EnumHelper.GetValues<MissionType>().ToArray();
 
-		[TestCase("285/70 R19.5", 7.9, 0.8943, 3.03),
+		[TestCase("285/60 R22.5", 10.6, 0.9135, 3.03),
+		TestCase("285/70 R19.5", 7.9, 0.8943, 3.05),
 		TestCase("395/85 R20", 27.9, 1.1795, 3.05)]
-		public void WheelDataTest(string wheels, double inertia, double dynamicRadius, string sizeClass,
-			double circumferenceFactor)
+		public void WheelDataTest(string wheels, double inertia, double dynamicRadius, double circumferenceFactor)
 		{
 			var tmp = DeclarationData.Wheels.Lookup(wheels);
 
-			Assert.AreEqual(inertia, tmp.Inertia.Value(), Tolerance);
-			Assert.AreEqual(dynamicRadius, tmp.DynamicTyreRadius.Value(), Tolerance);
-			Assert.AreEqual(circumferenceFactor, tmp.CircumferenceFactor, Tolerance);
+			AssertHelper.AreRelativeEqual(inertia, tmp.Inertia);
+			AssertHelper.AreRelativeEqual(dynamicRadius, tmp.DynamicTyreRadius);
+			AssertHelper.AreRelativeEqual(circumferenceFactor, tmp.CircumferenceFactor);
 		}
 
 		[

@@ -184,7 +184,7 @@ namespace TUGraz.VectoCore.Tests.FileIO
 			Assert.AreEqual(AngularGearType.SeparateAngularGear,
 				angleGear["Type"].Value<string>().ParseEnum<AngularGearType>());
 			Assert.AreEqual(3.5, angleGear["Ratio"].Value<double>());
-			Assert.AreEqual("AngularGear.vtlm", angleGear["LossMap"].Value<string>());
+			Assert.AreEqual("AngleGear.vtlm", angleGear["LossMap"].Value<string>());
 		}
 	}
 
