@@ -91,7 +91,7 @@ namespace TUGraz.VectoCore.InputData.Impl
 
 		public double Efficiency { get; internal set; }
 
-		public DataTable FullLoadCurve { get; internal set; }
+		public NewtonMeter MaxTorque { get; internal set; }
 
 		public DataTable ShiftPolygon { get; internal set; }
 

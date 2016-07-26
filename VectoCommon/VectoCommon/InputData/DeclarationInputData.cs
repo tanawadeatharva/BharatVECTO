@@ -222,11 +222,16 @@ namespace TUGraz.VectoCommon.InputData
 		/// </summary>
 		double Efficiency { get; }
 
+		///// <summary>
+		///// P145
+		///// cf. VECTO Input Parameters.xlsx
+		///// </summary>
+		//DataTable FullLoadCurve { get; } // deprecated
+
 		/// <summary>
-		/// P145
-		/// cf. VECTO Input Parameters.xlsx
+		/// P157
 		/// </summary>
-		DataTable FullLoadCurve { get; }
+		NewtonMeter MaxTorque { get; }
 
 		/// <summary>
 		/// P082

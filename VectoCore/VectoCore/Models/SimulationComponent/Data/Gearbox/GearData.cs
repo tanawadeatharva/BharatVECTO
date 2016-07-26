@@ -51,7 +51,8 @@ namespace TUGraz.VectoCore.Models.SimulationComponent.Data.Gearbox
 		[ValidateObject]
 		public FullLoadCurve FullLoadCurve { get; internal set; }
 
-		// TODO mk-2016-05-09: Refactor TorqueConverterActive Flag when implementing Torque Converter
 		public bool TorqueConverterActive { get; internal set; }
+
+		public NewtonMeter MaxTorque { get; internal set; }
 	}
 }

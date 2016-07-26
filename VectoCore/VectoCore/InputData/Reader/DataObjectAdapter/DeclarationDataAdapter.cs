@@ -203,11 +203,8 @@ namespace TUGraz.VectoCore.InputData.Reader.DataObjectAdapter
 						throw;
 					}
 				}
-				var gearFullLoad = gear.FullLoadCurve == null
-					? null
-					: FullLoadCurveReader.Create(gear.FullLoadCurve, true);
 
-				var fullLoadCurve = IntersectFullLoadCurves(engine.FullLoadCurve, gearFullLoad);
+				var fullLoadCurve = IntersectFullLoadCurves(engine.FullLoadCurve, gear.MaxTorque);
 				var shiftPolygon = DeclarationData.Gearbox.ComputeShiftPolygon(i, fullLoadCurve, gears, engine, axlegearRatio,
 					dynamicTyreRadius);
 
@@ -215,7 +212,7 @@ namespace TUGraz.VectoCore.InputData.Reader.DataObjectAdapter
 					new GearData {
 						LossMap = gearLossMap,
 						ShiftPolygon = shiftPolygon,
-						FullLoadCurve = gearFullLoad,
+						MaxTorque = gear.MaxTorque,
 						Ratio = gear.Ratio,
 						TorqueConverterActive = false
 					});

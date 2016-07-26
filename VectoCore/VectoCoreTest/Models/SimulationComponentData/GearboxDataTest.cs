@@ -301,18 +301,12 @@ namespace TUGraz.VectoCore.Tests.Models.SimulationComponentData
 				"2000, 1352, -301",
 				"2100, 1100, -320",
 			};
-			var gbxFldString = new[] {
-				"560, 2500",
-				"2100, 2500"
-			};
 			var dataEng =
 				VectoCSVFile.ReadStream(InputDataHelper.InputDataAsStream("n [U/min],Mfull [Nm],Mdrag [Nm]", engineFldString));
 			var engineFld = EngineFullLoadCurve.Create(dataEng, true);
 
-			var dataGbx = VectoCSVFile.ReadStream(InputDataHelper.InputDataAsStream("n [U/min],Mfull [Nm]", gbxFldString));
-			var gbxFld = FullLoadCurveReader.Create(dataGbx, true);
 
-			var fullLoadCurve = AbstractSimulationDataAdapter.IntersectFullLoadCurves(engineFld, gbxFld);
+			var fullLoadCurve = AbstractSimulationDataAdapter.IntersectFullLoadCurves(engineFld, 2500.SI<NewtonMeter>());
 
 			Assert.AreEqual(10, fullLoadCurve.FullLoadEntries.Count);
 

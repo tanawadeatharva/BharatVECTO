@@ -149,9 +149,7 @@ namespace TUGraz.VectoCore.InputData.FileIO.JSON
 					var inputData = new TransmissionInputData {
 						Gear = i,
 						Ratio = gear.GetEx<double>(JsonKeys.Gearbox_Gear_Ratio),
-						FullLoadCurve =
-							ReadTableData(gear.GetEx<string>(JsonKeys.Gearbox_Gear_FullLoadCurveFile), string.Format("Gear {0} FLD", i),
-								false),
+						MaxTorque = gear["MaxTorque"] != null ? gear["MaxTorque"].Value<double>().SI<NewtonMeter>() : null,
 						LossMap =
 							gear[JsonKeys.Gearbox_Gear_LossMapFile] != null
 								? ReadTableData(gear.GetEx<string>(JsonKeys.Gearbox_Gear_LossMapFile), string.Format("Gear {0} LossMap", i))

@@ -231,22 +231,53 @@ namespace TUGraz.VectoCore.InputData.Reader.DataObjectAdapter
 		/// <param name="engineCurve"></param>
 		/// <param name="gearCurve"></param>
 		/// <returns>A combined EngineFullLoadCurve with the minimum full load torque over all inputs curves.</returns>
-		internal static EngineFullLoadCurve IntersectFullLoadCurves(EngineFullLoadCurve engineCurve, FullLoadCurve gearCurve)
+		internal static EngineFullLoadCurve IntersectFullLoadCurves(EngineFullLoadCurve engineCurve, NewtonMeter maxTorque)
 		{
-			if (gearCurve == null) {
+			if (maxTorque == null) {
 				return engineCurve;
 			}
-			// TODO mk-2016-04-18: refactor when new gearbox full load is implemented: gearbox will then only have 1 constant value as full load.
-			var entries =
-				gearCurve.FullLoadEntries.Concat(engineCurve.FullLoadEntries)
-					.OrderBy(x => x.EngineSpeed)
-					.DistinctBy((x, y) => x.EngineSpeed.Value().IsEqual(y.EngineSpeed.Value()))
-					.Select(x => new FullLoadCurve.FullLoadCurveEntry {
-						EngineSpeed = x.EngineSpeed,
-						TorqueFullLoad =
-							VectoMath.Min(engineCurve.FullLoadStationaryTorque(x.EngineSpeed),
-								gearCurve.FullLoadStationaryTorque(x.EngineSpeed))
+
+			var entries = new List<FullLoadCurve.FullLoadCurveEntry>();
+			var firstEntry = engineCurve.FullLoadEntries.First();
+			if (firstEntry.TorqueFullLoad < maxTorque) {
+				entries.Add(engineCurve.FullLoadEntries.First());
+			} else {
+				entries.Add(new FullLoadCurve.FullLoadCurveEntry {
+					EngineSpeed = firstEntry.EngineSpeed,
+					TorqueFullLoad = maxTorque,
+					TorqueDrag = firstEntry.TorqueDrag
+				});
+			}
+			foreach (var entry in engineCurve.FullLoadEntries.Pairwise(Tuple.Create)) {
+				if (entry.Item1.TorqueFullLoad <= maxTorque && entry.Item2.TorqueFullLoad <= maxTorque) {
+					// segment is below maxTorque line -> use directly
+					entries.Add(entry.Item2);
+				} else if (entry.Item1.TorqueFullLoad > maxTorque && entry.Item2.TorqueFullLoad > maxTorque) {
+					// segment is above maxTorque line -> add limited entry
+					entries.Add(new FullLoadCurve.FullLoadCurveEntry {
+						EngineSpeed = entry.Item2.EngineSpeed,
+						TorqueFullLoad = maxTorque,
+						TorqueDrag = entry.Item2.TorqueDrag
 					});
+				} else {
+					// segment intersects maxTorque line -> add new entry at intersection
+					var edgeFull = Edge.Create(new Point(entry.Item1.EngineSpeed.Value(), entry.Item1.TorqueFullLoad.Value()),
+						new Point(entry.Item2.EngineSpeed.Value(), entry.Item2.TorqueFullLoad.Value()));
+					var edgeDrag = Edge.Create(new Point(entry.Item1.EngineSpeed.Value(), entry.Item1.TorqueDrag.Value()),
+						new Point(entry.Item2.EngineSpeed.Value(), entry.Item2.TorqueDrag.Value()));
+					var intersectionX = (maxTorque.Value() - edgeFull.OffsetXY) / edgeFull.SlopeXY;
+					entries.Add(new FullLoadCurve.FullLoadCurveEntry {
+						EngineSpeed = intersectionX.SI<PerSecond>(),
+						TorqueFullLoad = maxTorque,
+						TorqueDrag = VectoMath.Interpolate(edgeDrag.P1, edgeDrag.P2, intersectionX).SI<NewtonMeter>()
+					});
+					entries.Add(new FullLoadCurve.FullLoadCurveEntry {
+						EngineSpeed = entry.Item2.EngineSpeed,
+						TorqueFullLoad = entry.Item2.TorqueFullLoad > maxTorque ? maxTorque : entry.Item2.TorqueFullLoad,
+						TorqueDrag = entry.Item2.TorqueDrag
+					});
+				}
+			}
 
 			var flc = new EngineFullLoadCurve {
 				FullLoadEntries = entries.ToList(),

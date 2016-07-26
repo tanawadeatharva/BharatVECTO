@@ -149,10 +149,8 @@ namespace TUGraz.VectoCore.InputData.Reader.DataObjectAdapter
 				} else {
 					throw new InvalidFileFormatException("Gear {0} LossMap or Efficiency missing.", i + 1);
 				}
-				var gearFullLoad = gear.FullLoadCurve != null
-					? FullLoadCurveReader.Create(gear.FullLoadCurve)
-					: null;
-				var fullLoadCurve = IntersectFullLoadCurves(engineData.FullLoadCurve, gearFullLoad);
+				
+				var fullLoadCurve = IntersectFullLoadCurves(engineData.FullLoadCurve, gear.MaxTorque);
 				var shiftPolygon = gear.ShiftPolygon != null
 					? ShiftPolygonReader.Create(gear.ShiftPolygon)
 					: DeclarationData.Gearbox.ComputeShiftPolygon(i, fullLoadCurve, gears, engineData, axlegearRatio, dynamicTyreRadius);
@@ -160,7 +158,7 @@ namespace TUGraz.VectoCore.InputData.Reader.DataObjectAdapter
 				return new KeyValuePair<uint, GearData>((uint)(i + 1), new GearData {
 					LossMap = lossMap,
 					ShiftPolygon = shiftPolygon,
-					FullLoadCurve = gearFullLoad,
+					MaxTorque = gear.MaxTorque,
 					Ratio = gear.Ratio,
 					TorqueConverterActive = gear.TorqueConverterActive
 				});
