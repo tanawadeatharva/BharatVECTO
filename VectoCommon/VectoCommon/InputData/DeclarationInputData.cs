@@ -83,7 +83,7 @@ namespace TUGraz.VectoCommon.InputData
 		/// cf. VECTO Input Parameters.xlsx
 		/// </summary>
 		Kilogram CurbWeightChassis { get; }
-
+		
 		/// <summary>
 		/// P041  Max. vehicle weight
 		/// cf. VECTO Input Parameters.xlsx
@@ -96,11 +96,11 @@ namespace TUGraz.VectoCommon.InputData
 		/// </summary>
 		SquareMeter AirDragArea { get; } // without trailer
 
-		/// <summary>
-		/// P117  Powered axle tyres/rims
-		/// cf. VECTO Input Parameters.xlsx
-		/// </summary>
-		string Rim { get; }
+		///// <summary>
+		///// P117  Powered axle tyres/rims
+		///// cf. VECTO Input Parameters.xlsx
+		///// </summary>
+		//string Rim { get; }  // deprecated
 
 		/// <summary>
 		/// parameters for every axle

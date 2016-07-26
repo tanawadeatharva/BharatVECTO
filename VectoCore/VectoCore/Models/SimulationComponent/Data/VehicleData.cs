@@ -109,8 +109,6 @@ namespace TUGraz.VectoCore.Models.SimulationComponent.Data
 			internal set { _wheelsInertia = value; }
 		}
 
-		public string Rim { get; internal set; }
-
 		[Required, SIRange(0, 1E12)]
 		public double TotalRollResistanceCoefficient
 		{

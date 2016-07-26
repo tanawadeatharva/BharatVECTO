@@ -70,7 +70,7 @@ namespace TUGraz.VectoCore.InputData.Reader.DataObjectAdapter
 				//DragCoefficientRigidTruck = data.DragCoefficientRigidTruck,
 				//CrossSectionAreaRigidTruck = data.CrossSectionAreaRigidTruck.SI<SquareMeter>(),
 				//TyreRadius = data.TyreRadius.SI().Milli.Meter.Cast<Meter>(),
-				Rim = data.Rim,
+				//Rim = data.Rim,
 			};
 
 			return retVal;
@@ -93,6 +93,7 @@ namespace TUGraz.VectoCore.InputData.Reader.DataObjectAdapter
 				switch (retarder.Type) {
 					//case RetarderType.EngineRetarder:
 					case RetarderType.TransmissionInputRetarder:
+					case RetarderType.TransmissionOutputRetarder:
 						retarder.LossMap = RetarderLossMapReader.Create(data.LossMap);
 						retarder.Ratio = data.Ratio;
 						break;
