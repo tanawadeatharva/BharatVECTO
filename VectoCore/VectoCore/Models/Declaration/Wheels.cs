@@ -52,12 +52,12 @@ namespace TUGraz.VectoCore.Models.Declaration
 
 		protected sealed override void ParseData(DataTable table)
 		{
-			Data = (from DataRow row in table.Rows
-				select new WheelsEntry {
+			Data = table.Rows.Cast<DataRow>()
+				.Select(row => new WheelsEntry {
 					WheelType = row.Field<string>(0).RemoveWhitespace(),
-					Inertia = row.ParseDouble(1).SI<KilogramSquareMeter>(),
-					DynamicTyreRadius = row.ParseDouble(2).SI().Milli.Meter.Cast<Meter>(),
-					SizeClass = row.Field<string>(3)
+					Inertia = row.ParseDouble("inertia").SI<KilogramSquareMeter>(),
+					DynamicTyreRadius = row.ParseDouble("d").SI().Milli.Meter.Cast<Meter>(),
+					CircumferenceFactor = row.ParseDouble("f")
 				}).ToDictionary(e => e.WheelType);
 		}
 
@@ -66,7 +66,7 @@ namespace TUGraz.VectoCore.Models.Declaration
 			public string WheelType;
 			public KilogramSquareMeter Inertia;
 			public Meter DynamicTyreRadius;
-			public string SizeClass;
+			public double CircumferenceFactor;
 		}
 	}
 }

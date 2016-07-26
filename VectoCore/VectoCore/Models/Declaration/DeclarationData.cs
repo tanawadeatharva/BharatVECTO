@@ -97,7 +97,7 @@ namespace TUGraz.VectoCore.Models.Declaration
 			try {
 				var rimsEntry = Rims.Lookup(rims);
 
-				var correction = wheelsEntry.SizeClass != "a" ? rimsEntry.F_b : rimsEntry.F_a;
+				var correction = rimsEntry.F_a;
 
 				return wheelsEntry.DynamicTyreRadius * correction / (2 * Math.PI);
 			} catch (KeyNotFoundException) {
