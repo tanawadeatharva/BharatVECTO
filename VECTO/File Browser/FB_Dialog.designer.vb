@@ -119,7 +119,7 @@ Partial Class FB_Dialog
 		'ButtonNewDir
 		'
 		Me.ButtonNewDir.Image = Global.VECTO.My.Resources.Resources.new_dir
-		Me.ButtonNewDir.Location = New System.Drawing.Point(114, 1)
+		Me.ButtonNewDir.Location = New System.Drawing.Point(119, 1)
 		Me.ButtonNewDir.Name = "ButtonNewDir"
 		Me.ButtonNewDir.Size = New System.Drawing.Size(26, 25)
 		Me.ButtonNewDir.TabIndex = 21
@@ -130,7 +130,7 @@ Partial Class FB_Dialog
 		'ButtonDesktop
 		'
 		Me.ButtonDesktop.Image = Global.VECTO.My.Resources.Resources.desktop
-		Me.ButtonDesktop.Location = New System.Drawing.Point(87, 1)
+		Me.ButtonDesktop.Location = New System.Drawing.Point(90, 1)
 		Me.ButtonDesktop.Name = "ButtonDesktop"
 		Me.ButtonDesktop.Size = New System.Drawing.Size(26, 25)
 		Me.ButtonDesktop.TabIndex = 22
@@ -153,7 +153,7 @@ Partial Class FB_Dialog
 		'ButtonFolderBack
 		'
 		Me.ButtonFolderBack.Image = CType(resources.GetObject("ButtonFolderBack.Image"), System.Drawing.Image)
-		Me.ButtonFolderBack.Location = New System.Drawing.Point(60, 1)
+		Me.ButtonFolderBack.Location = New System.Drawing.Point(61, 1)
 		Me.ButtonFolderBack.Name = "ButtonFolderBack"
 		Me.ButtonFolderBack.Size = New System.Drawing.Size(26, 25)
 		Me.ButtonFolderBack.TabIndex = 20
