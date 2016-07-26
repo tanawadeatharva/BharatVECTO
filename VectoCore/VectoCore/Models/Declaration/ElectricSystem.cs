@@ -47,7 +47,7 @@ namespace TUGraz.VectoCore.Models.Declaration
 
 		private readonly Dictionary<Tuple<MissionType, string>, Watt> _data =
 			new Dictionary<Tuple<MissionType, string>, Watt>();
-		
+
 		public ElectricSystem()
 		{
 			ParseData(ReadCsvResource(ResourceId));
@@ -84,14 +84,14 @@ namespace TUGraz.VectoCore.Models.Declaration
 			return sum / _alternator.Lookup(missionType, null);
 		}
 
-		private sealed class Alternator : LookupData<MissionType, string, double>
+		internal sealed class Alternator : LookupData<MissionType, string, double>
 		{
 			private const string ResourceId = "TUGraz.VectoCore.Resources.Declaration.VAUX.ALT-Tech.csv";
 			private const string Default = "Standard alternator";
 
 			private readonly Dictionary<Tuple<MissionType, string>, double> _data =
 				new Dictionary<Tuple<MissionType, string>, double>();
-			
+
 			public Alternator()
 			{
 				ParseData(ReadCsvResource(ResourceId));

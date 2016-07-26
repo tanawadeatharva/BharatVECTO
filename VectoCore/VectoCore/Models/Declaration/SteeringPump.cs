@@ -43,9 +43,12 @@ namespace TUGraz.VectoCore.Models.Declaration
 	{
 		private const string ResourceId = "TUGraz.VectoCore.Resources.Declaration.VAUX.SP-Table.csv";
 		private readonly SteeringPumpTechnologies _technologies = new SteeringPumpTechnologies();
+		private readonly SteeringPumpAxles _axles = new SteeringPumpAxles();
+		private readonly ElectricSystem.Alternator _alternator = new ElectricSystem.Alternator();
+
 		private readonly Dictionary<Tuple<MissionType, VehicleClass>, Watt[]> _data =
 			new Dictionary<Tuple<MissionType, VehicleClass>, Watt[]>();
-		
+
 		public SteeringPump()
 		{
 			ParseData(ReadCsvResource(ResourceId));
@@ -56,12 +59,7 @@ namespace TUGraz.VectoCore.Models.Declaration
 			try {
 				var shares = _data[Tuple.Create(mission, hdvClass)];
 				var factors = _technologies.Lookup(technology);
-
-				var sum = 0.SI<Watt>();
-				for (var i = 0; i < factors.Length; i++) {
-					sum += shares[i] * factors[i];
-				}
-				return sum;
+				return shares[0] * factors.UnloadedFriction + shares[1] * factors.Banking + shares[2] * factors.Steering;
 			} catch (KeyNotFoundException) {
 				throw new VectoException(
 					"Auxiliary Lookup Error: No value found for Steering Pump with mission '{0}', HDVClass '{1}' and technology '{3}'",
@@ -85,11 +83,51 @@ namespace TUGraz.VectoCore.Models.Declaration
 			}
 		}
 
-		private sealed class SteeringPumpTechnologies : LookupData<string, double[]>
+		private sealed class SteeringPumpTechnologies : LookupData<string, SteeringPumpTechnologies.CorrectionFactors>
 		{
 			private const string ResourceId = "TUGraz.VectoCore.Resources.Declaration.VAUX.SP-Tech.csv";
 
+			internal struct CorrectionFactors
+			{
+				public double UnloadedFriction;
+				public double Banking;
+				public double Steering;
+
+				public CorrectionFactors(double unloadedFriction, double banking, double steering)
+				{
+					UnloadedFriction = unloadedFriction;
+					Banking = banking;
+					Steering = steering;
+				}
+			}
+
 			public SteeringPumpTechnologies()
+			{
+				ParseData(ReadCsvResource(ResourceId));
+			}
+
+			protected override void ParseData(DataTable table)
+			{
+				Data = table.Rows.Cast<DataRow>().ToDictionary(
+					key => key.Field<string>("Scaling Factors"),
+					value => new CorrectionFactors(value.ParseDouble("UF"), value.ParseDouble("B"), value.ParseDouble("S")));
+			}
+
+			public override CorrectionFactors Lookup(string tech)
+			{
+				try {
+					return Data[tech];
+				} catch (KeyNotFoundException) {
+					throw new VectoException("Auxiliary Lookup Error: No value found for SteeringPump Technology with key '{0}'", tech);
+				}
+			}
+		}
+
+		private sealed class SteeringPumpAxles : LookupData<string, double[]>
+		{
+			private const string ResourceId = "TUGraz.VectoCore.Resources.Declaration.VAUX.SP-Tech.csv";
+
+			public SteeringPumpAxles()
 			{
 				ParseData(ReadCsvResource(ResourceId));
 			}
