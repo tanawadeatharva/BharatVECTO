@@ -57,7 +57,6 @@ namespace TUGraz.VectoCore.Models.Declaration
 		private SteeringPump _steeringPump;
 		private WHTCCorrection _whtcCorrection;
 		private AirDrag _airDrag;
-		private TorqueConverter _torqueConverter;
 		private StandardBodies _standardBodies;
 		private Payloads _payloads;
 
@@ -162,11 +161,6 @@ namespace TUGraz.VectoCore.Models.Declaration
 		public static AirDrag AirDrag
 		{
 			get { return Instance()._airDrag ?? (Instance()._airDrag = new AirDrag()); }
-		}
-
-		public static TorqueConverter TorqueConverter
-		{
-			get { return Instance()._torqueConverter ?? (Instance()._torqueConverter = new TorqueConverter()); }
 		}
 
 		public static int PoweredAxle()
