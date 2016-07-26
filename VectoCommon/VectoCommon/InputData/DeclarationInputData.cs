@@ -264,27 +264,8 @@ namespace TUGraz.VectoCommon.InputData
 		double Efficiency { get; }
 	}
 
-	public interface ITorqueConverterInputData
+	public interface ITorqueConverterDeclarationInputData
 	{
-		/// <summary>
-		/// P090
-		/// cf. VECTO Input Parameters.xlsx
-		/// </summary>
-		bool Enabled { get; }
-
-		/// <summary>
-		/// P092
-		/// cf. VECTO Input Parameters.xlsx
-		/// </summary>
-		// ReSharper disable once InconsistentNaming
-		PerSecond ReferenceRPM { get; }
-
-		/// <summary>
-		/// P127
-		/// cf. VECTO Input Parameters.xlsx
-		/// </summary>
-		KilogramSquareMeter Inertia { get; }
-
 		/// <summary>
 		/// P091
 		/// P099, P100, P101

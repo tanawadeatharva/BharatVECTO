@@ -171,7 +171,7 @@ namespace TUGraz.VectoCommon.InputData
 		/// P090, P091, P092, P127
 		/// cf. VECTO Input Parameters.xlsx
 		/// </summary>
-		ITorqueConverterInputData TorqueConverter { get; }
+		ITorqueConverterEngineeringInputData TorqueConverter { get; }
 
 		[Required, SIRange(0, double.MaxValue)]
 		Second DownshiftAferUpshiftDelay { get; }
@@ -181,6 +181,28 @@ namespace TUGraz.VectoCommon.InputData
 
 		[Required, SIRange(0, double.MaxValue)]
 		MeterPerSquareSecond UpshiftMinAcceleration { get; }
+	}
+
+	public interface ITorqueConverterEngineeringInputData : ITorqueConverterDeclarationInputData
+	{
+		///// <summary>
+		///// P090
+		///// cf. VECTO Input Parameters.xlsx
+		///// </summary>
+		//bool Enabled { get; }   // deprecated
+
+		/// <summary>
+		/// P092
+		/// cf. VECTO Input Parameters.xlsx
+		/// </summary>
+		// ReSharper disable once InconsistentNaming
+		PerSecond ReferenceRPM { get; }
+
+		/// <summary>
+		/// P127
+		/// cf. VECTO Input Parameters.xlsx
+		/// </summary>
+		KilogramSquareMeter Inertia { get; }
 	}
 
 	public interface IEngineEngineeringInputData : IEngineDeclarationInputData
