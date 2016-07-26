@@ -140,7 +140,6 @@
     <Compile Include="Models\Declaration\Payloads.cs" />
     <Compile Include="Models\Declaration\PneumaticSystem.cs" />
     <Compile Include="Models\Declaration\PT1.cs" />
-    <Compile Include="Models\Declaration\Rims.cs" />
     <Compile Include="Models\Declaration\Segments.cs" />
     <Compile Include="Models\Declaration\StandardBodies.cs" />
     <Compile Include="Models\Declaration\SteeringPump.cs" />
@@ -287,7 +286,6 @@
       <LastGenOutput>JsonKeys.Designer.cs</LastGenOutput>
       <SubType>Designer</SubType>
     </EmbeddedResource>
-    <EmbeddedResource Include="Resources\Declaration\Rims.csv" />
     <EmbeddedResource Include="Resources\Declaration\Wheels.csv" />
     <EmbeddedResource Include="Resources\Declaration\SegmentTable.csv" />
     <EmbeddedResource Include="Resources\Declaration\MissionCycles\HeavyUrban.vdri" />

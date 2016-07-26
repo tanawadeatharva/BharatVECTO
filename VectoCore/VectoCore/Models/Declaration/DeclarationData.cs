@@ -32,7 +32,6 @@
 using System;
 using System.Collections.Generic;
 using System.Linq;
-using TUGraz.VectoCommon.Exceptions;
 using TUGraz.VectoCommon.InputData;
 using TUGraz.VectoCommon.Models;
 using TUGraz.VectoCommon.Utils;
@@ -47,7 +46,6 @@ namespace TUGraz.VectoCore.Models.Declaration
 	{
 		private static DeclarationData _instance;
 		private Segments _segments;
-		private Rims _rims;
 		private Wheels _wheels;
 		private PT1 _pt1;
 		private ElectricSystem _electricSystem;
@@ -64,11 +62,6 @@ namespace TUGraz.VectoCore.Models.Declaration
 		public static Wheels Wheels
 		{
 			get { return Instance()._wheels ?? (Instance()._wheels = new Wheels()); }
-		}
-
-		public static Rims Rims
-		{
-			get { return Instance()._rims ?? (Instance()._rims = new Rims()); }
 		}
 
 		public static Segments Segments
@@ -94,16 +87,7 @@ namespace TUGraz.VectoCore.Models.Declaration
 		public static Meter DynamicTyreRadius(string wheels, string rims)
 		{
 			var wheelsEntry = Wheels.Lookup(wheels.RemoveWhitespace());
-			try {
-				var rimsEntry = Rims.Lookup(rims);
-
-				var correction = rimsEntry.F_a;
-
-				return wheelsEntry.DynamicTyreRadius * correction / (2 * Math.PI);
-			} catch (KeyNotFoundException) {
-				throw new VectoException(
-					"Calculating Dynamic Tyre Radius not possible: Declaration Lookup could not find Key '{0}' for rim.", rims);
-			}
+			return wheelsEntry.DynamicTyreRadius * wheelsEntry.CircumferenceFactor / (2 * Math.PI);
 		}
 
 		/// <summary>

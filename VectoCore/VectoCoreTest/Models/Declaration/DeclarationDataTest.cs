@@ -54,7 +54,8 @@ namespace TUGraz.VectoCore.Tests.Models.Declaration
 		public const double Tolerance = 0.0001;
 		public readonly MissionType[] Missions = EnumHelper.GetValues<MissionType>().ToArray();
 
-		[TestCase("285/70 R19.5", 7.9, 0.8943, 3.03)]
+		[TestCase("285/70 R19.5", 7.9, 0.8943, 3.03),
+		TestCase("395/85 R20", 27.9, 1.1795, 3.05)]
 		public void WheelDataTest(string wheels, double inertia, double dynamicRadius, string sizeClass,
 			double circumferenceFactor)
 		{
@@ -63,15 +64,6 @@ namespace TUGraz.VectoCore.Tests.Models.Declaration
 			Assert.AreEqual(inertia, tmp.Inertia.Value(), Tolerance);
 			Assert.AreEqual(dynamicRadius, tmp.DynamicTyreRadius.Value(), Tolerance);
 			Assert.AreEqual(circumferenceFactor, tmp.CircumferenceFactor, Tolerance);
-		}
-
-		[TestCase("15° DC Rims", 3.03, 3.05)]
-		public void RimsDataTest(string rim, double fa, double fb)
-		{
-			var tmp = DeclarationData.Rims.Lookup(rim);
-
-			Assert.AreEqual(fa, tmp.F_a, Tolerance);
-			Assert.AreEqual(fb, tmp.F_b, Tolerance);
 		}
 
 		[
