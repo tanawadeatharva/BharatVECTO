@@ -56,7 +56,7 @@ namespace TUGraz.VectoCore.Tests.Utils
 		public uint Gear { get; set; }
 		public MeterPerSecond StartSpeed { get; set; }
 		public MeterPerSquareSecond StartAcceleration { get; set; }
-		public FullLoadCurve GearFullLoadCurve { get; set; }
+		public NewtonMeter GearMaxTorque { get; set; }
 
 		public Watt GearboxLoss()
 		{

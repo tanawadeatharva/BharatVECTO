@@ -41,7 +41,9 @@ namespace TUGraz.VectoCore.Models.SimulationComponent.Data.Gearbox
 	{
 		protected List<TorqueConverterEntry> TorqueConverterEntries;
 
-		protected PerSecond ReferenceSpeed;
+		public PerSecond ReferenceSpeed { get; protected internal set; }
+
+		public KilogramSquareMeter Inertia { get; protected internal set; }
 
 		protected internal TorqueConverterData(List<TorqueConverterEntry> torqueConverterEntries, PerSecond referenceSpeed)
 		{

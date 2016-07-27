@@ -48,9 +48,6 @@ namespace TUGraz.VectoCore.Models.SimulationComponent.Data.Gearbox
 		[ValidateObject]
 		public ShiftPolygon ShiftPolygon { get; internal set; }
 
-		[ValidateObject]
-		public FullLoadCurve FullLoadCurve { get; internal set; }
-
 		public bool TorqueConverterActive { get; internal set; }
 
 		public NewtonMeter MaxTorque { get; internal set; }

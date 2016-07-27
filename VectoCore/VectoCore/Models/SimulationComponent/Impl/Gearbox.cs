@@ -47,19 +47,9 @@ using TUGraz.VectoCore.Utils;
 
 namespace TUGraz.VectoCore.Models.SimulationComponent.Impl
 {
-	public class Gearbox : StatefulVectoSimulationComponent<Gearbox.GearboxState>, IGearbox, ITnOutPort, ITnInPort,
+	public class Gearbox : AbstractGearbox<GearboxState>, IGearbox, ITnOutPort, ITnInPort,
 		IClutchInfo
 	{
-		/// <summary>
-		/// The next port.
-		/// </summary>
-		protected ITnOutPort NextComponent;
-
-		/// <summary>
-		/// The data and settings for the gearbox.
-		/// </summary>
-		[Required, ValidateObject] internal readonly GearboxData ModelData;
-
 		/// <summary>
 		/// The shift strategy.
 		/// </summary>
@@ -84,9 +74,9 @@ namespace TUGraz.VectoCore.Models.SimulationComponent.Impl
 			return _engageTime.IsSmallerOrEqual(absTime);
 		}
 
-		public Gearbox(IVehicleContainer container, GearboxData gearboxModelData, IShiftStrategy strategy) : base(container)
+		public Gearbox(IVehicleContainer container, GearboxData gearboxModelData, IShiftStrategy strategy)
+			: base(container, gearboxModelData)
 		{
-			ModelData = gearboxModelData;
 			_strategy = strategy;
 			_strategy.Gearbox = this;
 
@@ -94,64 +84,9 @@ namespace TUGraz.VectoCore.Models.SimulationComponent.Impl
 			LastUpshift = -double.MaxValue.SI<Second>();
 		}
 
-		#region ITnInProvider
-
-		public ITnInPort InPort()
-		{
-			return this;
-		}
-
-		#endregion
-
-		#region ITnOutProvider
-
-		[DebuggerHidden]
-		public ITnOutPort OutPort()
-		{
-			return this;
-		}
-
-		#endregion
-
-		#region IGearboxCockpit
-
-		/// <summary>
-		/// The current gear.
-		/// </summary>
-		public uint Gear { get; set; }
-
-		[DebuggerHidden]
-		public MeterPerSecond StartSpeed
-		{
-			get { return ModelData.StartSpeed; }
-		}
-
-		[DebuggerHidden]
-		public MeterPerSquareSecond StartAcceleration
-		{
-			get { return ModelData.StartAcceleration; }
-		}
-
-		public FullLoadCurve GearFullLoadCurve
-		{
-			get { return Gear == 0 ? null : ModelData.Gears[Gear].FullLoadCurve; }
-		}
-
-		public Watt GearboxLoss()
-		{
-			//var outTorque = ModelData.Gears[Gear].LossMap.GetOutTorque(inAngularVelocity, inTorque, true);
-			//var torqueLoss = inTorque - outTorque * ModelData.Gears[Gear].Ratio;
-
-			//return torqueLoss * inAngularVelocity;
-			return (PreviousState.TransmissionTorqueLoss +
-					PreviousState.InertiaTorqueLossOut / ModelData.Gears[PreviousState.Gear].Ratio) * PreviousState.InAngularVelocity;
-		}
-
-		#endregion
-
 		#region ITnOutPort
 
-		public IResponse Initialize(NewtonMeter outTorque, PerSecond outAngularVelocity)
+		public override IResponse Initialize(NewtonMeter outTorque, PerSecond outAngularVelocity)
 		{
 			var absTime = 0.SI<Second>();
 			var dt = Constants.SimulationSettings.TargetTimeInterval;
@@ -209,9 +144,8 @@ namespace TUGraz.VectoCore.Models.SimulationComponent.Impl
 				Default(r => { throw new UnexpectedResponseException("Gearbox.Initialize", r); });
 
 			var fullLoad = DataBus.EngineStationaryFullPower(inAngularVelocity);
-			if (ModelData.Gears[gear].FullLoadCurve != null) {
-				var fullLoadGearbox = ModelData.Gears[gear].FullLoadCurve.FullLoadStationaryTorque(inAngularVelocity) *
-									inAngularVelocity;
+			if (ModelData.Gears[gear].MaxTorque != null) {
+				var fullLoadGearbox = ModelData.Gears[gear].MaxTorque * inAngularVelocity;
 				fullLoad = VectoMath.Min(fullLoadGearbox, fullLoad);
 			}
 
@@ -234,7 +168,8 @@ namespace TUGraz.VectoCore.Models.SimulationComponent.Impl
 		/// <item><description>ResponseGearshift</description></item>
 		/// </list>
 		/// </returns>
-		public IResponse Request(Second absTime, Second dt, NewtonMeter torque, PerSecond angularVelocity, bool dryRun)
+		public override IResponse Request(Second absTime, Second dt, NewtonMeter torque, PerSecond angularVelocity,
+			bool dryRun)
 		{
 			IterationStatistics.Increment(this, "Requests");
 
@@ -438,15 +373,6 @@ namespace TUGraz.VectoCore.Models.SimulationComponent.Impl
 
 		#endregion
 
-		#region ITnInPort
-
-		public void Connect(ITnOutPort other)
-		{
-			NextComponent = other;
-		}
-
-		#endregion
-
 		#region VectoSimulationComponent
 
 		protected override void DoWriteModalResults(IModalDataContainer container)
@@ -487,13 +413,5 @@ namespace TUGraz.VectoCore.Models.SimulationComponent.Impl
 		}
 
 		#endregion
-
-		public class GearboxState : SimpleComponentState
-		{
-			public NewtonMeter InertiaTorqueLossOut = 0.SI<NewtonMeter>();
-			public NewtonMeter TransmissionTorqueLoss = 0.SI<NewtonMeter>();
-			public uint Gear;
-			public TransmissionLossMap.LossMapResult TorqueLossResult;
-		}
 	}
 }

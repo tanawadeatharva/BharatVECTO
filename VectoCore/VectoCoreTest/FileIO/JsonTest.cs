@@ -95,9 +95,7 @@ namespace TUGraz.VectoCore.Tests.FileIO
 			((JObject)json["Body"]).Property("Cycles").Remove();
 
 			AssertHelper.Exception<InvalidFileFormatException>(
-				() => {
-					var tmp = new JSONInputDataV2(json, TestJobFile).Cycles;
-				}, "Key Cycles not found");
+				() => { var tmp = new JSONInputDataV2(json, TestJobFile).Cycles; }, "Key Cycles not found");
 		}
 
 		[TestMethod]
@@ -154,9 +152,7 @@ namespace TUGraz.VectoCore.Tests.FileIO
 			((JObject)json["Body"]).Property("OverSpeedEcoRoll").Remove();
 
 			AssertHelper.Exception<VectoException>(
-				() => {
-					var tmp = new JSONInputDataV2(json, TestJobFile).DriverInputData.OverSpeedEcoRoll;
-				},
+				() => { var tmp = new JSONInputDataV2(json, TestJobFile).DriverInputData.OverSpeedEcoRoll; },
 				"Key OverSpeedEcoRoll not found");
 		}
 
@@ -184,7 +180,7 @@ namespace TUGraz.VectoCore.Tests.FileIO
 			Assert.AreEqual(AngularGearType.SeparateAngularGear,
 				angleGear["Type"].Value<string>().ParseEnum<AngularGearType>());
 			Assert.AreEqual(3.5, angleGear["Ratio"].Value<double>());
-			Assert.AreEqual("AngularGear.vtlm", angleGear["LossMap"].Value<string>());
+			Assert.AreEqual("AngleGear.vtlm", angleGear["LossMap"].Value<string>());
 		}
 	}
 

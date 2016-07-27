@@ -69,7 +69,7 @@ namespace TUGraz.VectoCore.Tests.Utils
 			get { return 0.6.SI<MeterPerSquareSecond>(); }
 		}
 
-		public FullLoadCurve GearFullLoadCurve
+		public NewtonMeter GearMaxTorque
 		{
 			get { return null; }
 		}

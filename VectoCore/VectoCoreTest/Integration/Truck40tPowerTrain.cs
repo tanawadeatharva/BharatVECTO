@@ -61,7 +61,7 @@ namespace TUGraz.VectoCore.Tests.Integration
 		public const string GearboxIndirectLoss = @"TestData\Components\Indirect Gear.vtlm";
 		public const string GearboxDirectLoss = @"TestData\Components\Direct Gear.vtlm";
 		public const string GearboxShiftPolygonFile = @"TestData\Components\ShiftPolygons.vgbs";
-		public const string GearboxFullLoadCurveFile = @"TestData\Components\Gearbox.vfld";
+		//public const string GearboxFullLoadCurveFile = @"TestData\Components\Gearbox.vfld";
 
 		public static VectoRun CreateEngineeringRun(DrivingCycleData cycleData, string modFileName,
 			bool overspeed = false, GearboxType gbxType = GearboxType.AMT)
@@ -136,7 +136,7 @@ namespace TUGraz.VectoCore.Tests.Integration
 
 			return new GearboxData {
 				Gears = ratios.Select((ratio, i) => Tuple.Create((uint)i, new GearData {
-					FullLoadCurve = FullLoadCurveReader.ReadFromFile(GearboxFullLoadCurveFile),
+					//MaxTorque = 2300.SI<NewtonMeter>(),
 					LossMap =
 						TransmissionLossMapReader.ReadFromFile(ratio.IsEqual(1) ? GearboxIndirectLoss : GearboxDirectLoss, ratio,
 							string.Format("Gear {0}", i)),

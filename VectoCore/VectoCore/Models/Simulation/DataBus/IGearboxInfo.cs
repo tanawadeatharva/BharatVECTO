@@ -49,7 +49,7 @@ namespace TUGraz.VectoCore.Models.Simulation.DataBus
 
 		MeterPerSquareSecond StartAcceleration { get; }
 
-		FullLoadCurve GearFullLoadCurve { get; }
+		NewtonMeter GearMaxTorque { get; }
 
 		Watt GearboxLoss();
 	}

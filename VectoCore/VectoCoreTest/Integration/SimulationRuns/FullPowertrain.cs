@@ -63,7 +63,7 @@ namespace TUGraz.VectoCore.Tests.Integration.SimulationRuns
 		public const string GearboxLossMap = @"TestData\Components\Indirect Gear.vtlm";
 		public const string AxleLossMap = @"TestData\Components\Axle.vtlm";
 		public const string GearboxShiftPolygonFile = @"TestData\Components\ShiftPolygons.vgbs";
-		public const string GearboxFullLoadCurveFile = @"TestData\Components\Gearbox.vfld";
+		//public const string GearboxFullLoadCurveFile = @"TestData\Components\Gearbox.vfld";
 		private static readonly LoggingObject Log = LogManager.GetLogger(typeof(FullPowerTrain).ToString());
 
 		[TestMethod, TestCategory("LongRunning")]
@@ -304,8 +304,7 @@ namespace TUGraz.VectoCore.Tests.Integration.SimulationRuns
 				Gears = ratios.Select((ratio, i) =>
 					Tuple.Create((uint)i,
 						new GearData {
-							// TODO mk-2016-05-09: add realistic FullLoadCurve for gearbox - gearbox will have only 1 constant value as full load
-							FullLoadCurve = FullLoadCurveReader.ReadFromFile(GearboxFullLoadCurveFile),
+							MaxTorque = ratio > 5 ? 2300.SI<NewtonMeter>() : null,
 							LossMap = TransmissionLossMapReader.ReadFromFile(GearboxLossMap, ratio, string.Format("Gear {0}", i)),
 							Ratio = ratio,
 							ShiftPolygon = ShiftPolygonReader.ReadFromFile(GearboxShiftPolygonFile)
@@ -342,7 +341,7 @@ namespace TUGraz.VectoCore.Tests.Integration.SimulationRuns
 				Gears = new Dictionary<uint, GearData> {
 					{
 						1, new GearData {
-							FullLoadCurve = null,
+							MaxTorque = null,
 							LossMap = TransmissionLossMapReader.ReadFromFile(GearboxLossMap, ratio, "Gear 1"),
 							Ratio = ratio,
 							ShiftPolygon = ShiftPolygonReader.ReadFromFile(GearboxShiftPolygonFile)

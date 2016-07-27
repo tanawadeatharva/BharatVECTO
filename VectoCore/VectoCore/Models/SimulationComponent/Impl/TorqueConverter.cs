@@ -13,12 +13,12 @@ namespace TUGraz.VectoCore.Models.SimulationComponent.Impl
 			NextComponent = other;
 		}
 
-		public IResponse Request(Second absTime, Second dt, NewtonMeter torque, PerSecond angularVelocity, bool dryRun = false)
+		public IResponse Initialize(NewtonMeter torque, PerSecond angularVelocity)
 		{
 			throw new System.NotImplementedException();
 		}
 
-		public IResponse Initialize(NewtonMeter torque, PerSecond angularVelocity)
+		public IResponse Request(Second absTime, Second dt, NewtonMeter torque, PerSecond angularVelocity, bool dryRun = false)
 		{
 			throw new System.NotImplementedException();
 		}
