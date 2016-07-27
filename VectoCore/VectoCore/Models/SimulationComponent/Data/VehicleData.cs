@@ -140,6 +140,8 @@ namespace TUGraz.VectoCore.Models.SimulationComponent.Data
 
 		public static ValidationResult ValidateVehicleData(VehicleData vehicleData, ValidationContext validationContext)
 		{
+			var mode = SimulationComponentData.GetExecutionMode(validationContext);
+
 			var weightShareSum = vehicleData.AxleData.Sum(axle => axle.AxleWeightShare);
 			if (!weightShareSum.IsEqual(1.0, 1E-10)) {
 				return new ValidationResult(
@@ -147,12 +149,15 @@ namespace TUGraz.VectoCore.Models.SimulationComponent.Data
 						weightShareSum, 1 - weightShareSum));
 			}
 
+			if (mode != ExecutionMode.Declaration) {
+				return ValidationResult.Success;
+			}
+
 			if (vehicleData.TotalVehicleWeight() > vehicleData.GrossVehicleMassRating) {
 				return new ValidationResult(
 					string.Format("Total Vehicle Weight is greater than GrossVehicleMassRating! sum: {0},  GVM: {1}",
 						vehicleData.TotalVehicleWeight(), vehicleData.GrossVehicleMassRating));
 			}
-
 			return ValidationResult.Success;
 		}
 	}

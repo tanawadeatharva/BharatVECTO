@@ -136,7 +136,7 @@ namespace TUGraz.VectoCore.Tests.Models.SimulationComponent
 			var vehicle = new VehicleContainer(ExecutionMode.Engineering);
 			var axleGearData = MockSimulationDataFactory.CreateAxleGearDataFromFile(AxleGearValidRangeDataFile);
 			var axleGear = new AxleGear(vehicle, axleGearData);
-			Assert.AreEqual(0, axleGear.Validate().Count);
+			Assert.AreEqual(0, axleGear.Validate(ExecutionMode.Declaration).Count);
 		}
 
 		[TestCase]
@@ -145,7 +145,7 @@ namespace TUGraz.VectoCore.Tests.Models.SimulationComponent
 			var vehicle = new VehicleContainer(ExecutionMode.Engineering);
 			var axleGearData = MockSimulationDataFactory.CreateAxleGearDataFromFile(AxleGearInvalidRangeDataFile);
 			var axleGear = new AxleGear(vehicle, axleGearData);
-			var errors = axleGear.Validate();
+			var errors = axleGear.Validate(ExecutionMode.Declaration);
 			Assert.AreEqual(1, errors.Count);
 		}
 

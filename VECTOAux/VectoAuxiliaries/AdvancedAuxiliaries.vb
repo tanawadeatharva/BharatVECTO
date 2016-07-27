@@ -18,14 +18,13 @@ Imports VectoAuxiliaries.DownstreamModules
 Imports System.Windows.Forms
 Imports TUGraz.VectoCommon.Utils
 
+<Assembly: InternalsVisibleTo("VectoCore")> 
 
 ''' <summary>
 ''' Main entry point for the advanced auxiliary module. 
 ''' This class represents slide number 17 titled Calculations of Cycle FC accounting for Smart Auxiliaries.
 ''' </summary>
 ''' <remarks></remarks>
-<Assembly: InternalsVisibleTo("VectoCore")> 
-
 Public Class AdvancedAuxiliaries
 	Implements IAdvancedAuxiliaries
 
