@@ -151,7 +151,7 @@ namespace TUGraz.VectoCore.Models.Simulation.Impl
 						throw new ArgumentOutOfRangeException("CycleType unknown:" + data.Cycle.CycleType);
 				}
 
-				var validationErrors = run.Validate();
+				var validationErrors = run.Validate(_mode);
 				if (validationErrors.Any()) {
 					throw new VectoException("Validation of Run-Data Failed: " +
 											"\n".Join(validationErrors.Select(r => r.ErrorMessage)));
