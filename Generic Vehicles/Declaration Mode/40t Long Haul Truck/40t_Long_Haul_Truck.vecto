@@ -28,7 +28,7 @@
         "ID": "STP",
         "Type": "Steering pump",
         "Path": "<NOFILE>",
-        "Technology": "Variable displacement"
+        "Technology": "Variable displacement mech. controlled"
       },
       {
         "ID": "AC",

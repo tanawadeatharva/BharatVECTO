@@ -328,6 +328,7 @@
     <EmbeddedResource Include="Resources\Declaration\LAC-DF-Vtarget.csv" />
     <EmbeddedResource Include="Resources\Declaration\Body_Trailers_Weights.csv" />
     <EmbeddedResource Include="Resources\Declaration\Payloads.csv" />
+    <EmbeddedResource Include="Resources\Declaration\VAUX\SP-Axles.csv" />
   </ItemGroup>
   <ItemGroup>
     <EmbeddedResource Include="Resources\Declaration\Report\4x2r.png" />

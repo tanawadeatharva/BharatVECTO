@@ -78,7 +78,8 @@ namespace TUGraz.VectoCore.Tests.Models.Simulation
 				DeclarationData.Fan.Lookup(MissionType.LongHaul, "Hydraulic driven - Constant displacement pump"));
 			aux.AddConstant("PS", DeclarationData.PneumaticSystem.Lookup(mission, hdvClass));
 			aux.AddConstant("STP",
-				DeclarationData.SteeringPump.Lookup(MissionType.LongHaul, hdvClass, "Variable displacement"));
+				DeclarationData.SteeringPump.Lookup(MissionType.LongHaul, hdvClass,
+					new[] { "Variable displacement mech. controlled" }));
 			aux.AddConstant("ES", DeclarationData.ElectricSystem.Lookup(mission, null));
 			aux.AddConstant("AC",
 				DeclarationData.HeatingVentilationAirConditioning.Lookup(mission, hdvClass));
@@ -104,7 +105,7 @@ namespace TUGraz.VectoCore.Tests.Models.Simulation
 			var testColumns = new[] { "P_aux_FAN", "P_aux_STP", "P_aux_AC", "P_aux_ES", "P_aux_PS", "P_aux" };
 
 			ResultFileHelper.TestModFile(@"TestData\Results\EngineOnlyCycles\40t_Long_Haul_Truck_Long_Haul_Empty Loading.vmod",
-				@"AuxWriteModFileSumFile.vmod", testColumns, testVelocity:false);
+				@"AuxWriteModFileSumFile.vmod", testColumns, testVelocity: false);
 			ResultFileHelper.TestSumFile(@"TestData\Results\EngineOnlyCycles\AuxWriteModFileSumFile.vsum",
 				@"AuxWriteModFileSumFile.vsum");
 		}

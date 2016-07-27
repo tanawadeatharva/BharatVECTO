@@ -39,67 +39,64 @@ using TUGraz.VectoCore.Utils;
 
 namespace TUGraz.VectoCore.Models.Declaration
 {
-	public sealed class SteeringPump : LookupData<MissionType, VehicleClass, string, Watt>
+	public sealed class SteeringPump : LookupData<MissionType, VehicleClass, IEnumerable<string>, Watt>
 	{
 		private const string ResourceId = "TUGraz.VectoCore.Resources.Declaration.VAUX.SP-Table.csv";
 		private readonly SteeringPumpTechnologies _technologies = new SteeringPumpTechnologies();
 		private readonly SteeringPumpAxles _axles = new SteeringPumpAxles();
-		private readonly ElectricSystem.Alternator _alternator = new ElectricSystem.Alternator();
 
-		private readonly Dictionary<Tuple<MissionType, VehicleClass>, Watt[]> _data =
-			new Dictionary<Tuple<MissionType, VehicleClass>, Watt[]>();
+		private readonly Dictionary<Tuple<MissionType, VehicleClass>, SteeringPumpValues<Watt>> _data =
+			new Dictionary<Tuple<MissionType, VehicleClass>, SteeringPumpValues<Watt>>();
 
 		public SteeringPump()
 		{
 			ParseData(ReadCsvResource(ResourceId));
 		}
 
-		public override Watt Lookup(MissionType mission, VehicleClass hdvClass, string technology)
+		public override Watt Lookup(MissionType mission, VehicleClass hdvClass, IEnumerable<string> technologies)
 		{
+			SteeringPumpValues<Watt> powerShares;
 			try {
-				var shares = _data[Tuple.Create(mission, hdvClass)];
-				var factors = _technologies.Lookup(technology);
-				return shares[0] * factors.UnloadedFriction + shares[1] * factors.Banking + shares[2] * factors.Steering;
+				powerShares = _data[Tuple.Create(mission, hdvClass)];
 			} catch (KeyNotFoundException) {
 				throw new VectoException(
-					"Auxiliary Lookup Error: No value found for Steering Pump with mission '{0}', HDVClass '{1}' and technology '{3}'",
-					mission, hdvClass, technology);
+					"Auxiliary Lookup Error: No value found for Steering Pump. Mission: '{0}', HDVClass: '{1}'", mission, hdvClass);
 			}
+
+			var sum = 0.SI<Watt>();
+			var i = 1;
+			foreach (var technology in technologies) {
+				var factors = _technologies.Lookup(technology, mission);
+				var axles = _axles.Lookup(mission, i);
+				sum += powerShares.UnloadedFriction * axles.UnloadedFriction * factors.UnloadedFriction
+						+ powerShares.Banking * axles.Banking * factors.Banking
+						+ powerShares.Steering * axles.Banking * factors.Steering;
+				i++;
+			}
+			return sum;
 		}
 
 		protected override void ParseData(DataTable table)
 		{
-			_data.Clear();
 			NormalizeTable(table);
+			_data.Clear();
 
 			foreach (DataRow row in table.Rows) {
 				var hdvClass = VehicleClassHelper.Parse(row.Field<string>("hdvclass/powerdemandpershare"));
 				foreach (var mission in EnumHelper.GetValues<MissionType>()) {
-					var values = row.Field<string>(mission.ToString().ToLower()).Split('/').ToDouble();
-					values = values.Concat(Enumerable.Repeat(0.0, 3));
-
-					_data[Tuple.Create(mission, hdvClass)] = values.Take(4).SI<Watt>().ToArray();
+					var values =
+						row.Field<string>(mission.ToString().ToLower()).Split('/')
+							.Select(v => v.ToDouble() / 100.0).Concat(0.0.Repeat(3)).SI<Watt>().ToList();
+					_data[Tuple.Create(mission, hdvClass)] = new SteeringPumpValues<Watt>(values[0], values[1], values[2]);
 				}
 			}
 		}
 
-		private sealed class SteeringPumpTechnologies : LookupData<string, SteeringPumpTechnologies.CorrectionFactors>
+		private sealed class SteeringPumpTechnologies : LookupData<string, SteeringPumpValues<double>>
 		{
+			private readonly ElectricSystem.Alternator _alternator = new ElectricSystem.Alternator();
+
 			private const string ResourceId = "TUGraz.VectoCore.Resources.Declaration.VAUX.SP-Tech.csv";
-
-			internal struct CorrectionFactors
-			{
-				public double UnloadedFriction;
-				public double Banking;
-				public double Steering;
-
-				public CorrectionFactors(double unloadedFriction, double banking, double steering)
-				{
-					UnloadedFriction = unloadedFriction;
-					Banking = banking;
-					Steering = steering;
-				}
-			}
 
 			public SteeringPumpTechnologies()
 			{
@@ -108,24 +105,38 @@ namespace TUGraz.VectoCore.Models.Declaration
 
 			protected override void ParseData(DataTable table)
 			{
+				NormalizeTable(table);
+				Data.Clear();
+
 				Data = table.Rows.Cast<DataRow>().ToDictionary(
-					key => key.Field<string>("Scaling Factors"),
-					value => new CorrectionFactors(value.ParseDouble("UF"), value.ParseDouble("B"), value.ParseDouble("S")));
+					key => key.Field<string>("Technology"),
+					value => new SteeringPumpValues<double>(value.ParseDouble("UF"), value.ParseDouble("B"), value.ParseDouble("S")));
 			}
 
-			public override CorrectionFactors Lookup(string tech)
+			[Obsolete("Use Lookup(string, MissionType) instead!", true)]
+			public new SteeringPumpValues<double> Lookup(string tech)
+			{
+				throw new NotImplementedException("Use Lookup(string, MissionType) instead!");
+			}
+
+			public SteeringPumpValues<double> Lookup(string tech, MissionType mission)
 			{
 				try {
-					return Data[tech];
+					var values = Data[tech];
+					if (tech == "Electric") {
+						values.Banking /= _alternator.Lookup(mission, "");
+						values.Steering /= _alternator.Lookup(mission, "");
+					}
+					return values;
 				} catch (KeyNotFoundException) {
 					throw new VectoException("Auxiliary Lookup Error: No value found for SteeringPump Technology with key '{0}'", tech);
 				}
 			}
 		}
 
-		private sealed class SteeringPumpAxles : LookupData<string, double[]>
+		private sealed class SteeringPumpAxles : LookupData<MissionType, int, SteeringPumpValues<double>>
 		{
-			private const string ResourceId = "TUGraz.VectoCore.Resources.Declaration.VAUX.SP-Tech.csv";
+			private const string ResourceId = "TUGraz.VectoCore.Resources.Declaration.VAUX.SP-Axles.csv";
 
 			public SteeringPumpAxles()
 			{
@@ -134,19 +145,33 @@ namespace TUGraz.VectoCore.Models.Declaration
 
 			protected override void ParseData(DataTable table)
 			{
-				Data = table.Rows.Cast<DataRow>().ToDictionary(
-					key => key.Field<string>("Scaling Factors"),
-					value => new[] { value.ParseDouble("U"), value.ParseDouble("F"), value.ParseDouble("B"), value.ParseDouble("S") });
-			}
+				NormalizeTable(table);
+				Data.Clear();
 
-			public override double[] Lookup(string tech)
-			{
-				try {
-					return Data[tech];
-				} catch (KeyNotFoundException) {
-					throw new VectoException("Auxiliary Lookup Error: No value found for SteeringPump Technology with key '{0}'", tech);
+				var i = 1;
+				foreach (DataRow row in table.Rows) {
+					foreach (MissionType mission in Enum.GetValues(typeof(MissionType))) {
+						var values =
+							row.Field<string>(mission.ToString().ToLowerInvariant()).Split('/').ToDouble(0).Concat(0.0.Repeat(3)).ToList();
+						Data[Tuple.Create(mission, i)] = new SteeringPumpValues<double>(values[0], values[1], values[2]);
+					}
+					i++;
 				}
 			}
+		}
+	}
+
+	internal struct SteeringPumpValues<T>
+	{
+		public T UnloadedFriction;
+		public T Banking;
+		public T Steering;
+
+		public SteeringPumpValues(T unloadedFriction, T banking, T steering)
+		{
+			UnloadedFriction = unloadedFriction;
+			Banking = banking;
+			Steering = steering;
 		}
 	}
 }

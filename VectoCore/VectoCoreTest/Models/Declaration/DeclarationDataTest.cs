@@ -420,33 +420,33 @@ namespace TUGraz.VectoCore.Tests.Models.Declaration
 		TestCase("Fixed displacement", VehicleClass.Class8, new[] { 0, 0, 0, 0, 0, 0, 0, 0, 0, 0 }),
 		TestCase("Fixed displacement", VehicleClass.Class9, new[] { 720, 550, 0, 550, 0, 0, 0, 0, 0, 0 }),
 		TestCase("Fixed displacement", VehicleClass.Class10, new[] { 570, 530, 0, 0, 0, 0, 0, 0, 0, 0 }),
-		TestCase("Variable displacement", VehicleClass.Class1, new[] { 0, 156, 162, 0, 0, 0, 0, 0, 0, 0 }),
-		TestCase("Variable displacement", VehicleClass.Class2, new[] { 222, 192, 186, 0, 0, 0, 0, 0, 0, 0 }),
-		TestCase("Variable displacement", VehicleClass.Class3, new[] { 0, 204, 210, 0, 0, 0, 0, 0, 0, 0 }),
-		TestCase("Variable displacement", VehicleClass.Class4, new[] { 366, 318, 0, 318, 0, 0, 0, 0, 0, 0 }),
-		TestCase("Variable displacement", VehicleClass.Class5, new[] { 432, 378, 372, 0, 0, 0, 0, 0, 0, 0 }),
-		TestCase("Variable displacement", VehicleClass.Class6, new[] { 0, 0, 0, 0, 0, 0, 0, 0, 0, 0 }),
-		TestCase("Variable displacement", VehicleClass.Class7, new[] { 0, 0, 0, 0, 0, 0, 0, 0, 0, 0 }),
-		TestCase("Variable displacement", VehicleClass.Class8, new[] { 0, 0, 0, 0, 0, 0, 0, 0, 0, 0 }),
-		TestCase("Variable displacement", VehicleClass.Class9, new[] { 432, 330, 0, 330, 0, 0, 0, 0, 0, 0 }),
-		TestCase("Variable displacement", VehicleClass.Class10, new[] { 342, 318, 0, 0, 0, 0, 0, 0, 0, 0 }),
-		TestCase("Hydraulic supported by electric", VehicleClass.Class1, new[] { 0, 225, 235, 0, 0, 0, 0, 0, 0, 0 }),
-		TestCase("Hydraulic supported by electric", VehicleClass.Class2, new[] { 322, 278, 269, 0, 0, 0, 0, 0, 0, 0 }),
-		TestCase("Hydraulic supported by electric", VehicleClass.Class3, new[] { 0, 295, 304, 0, 0, 0, 0, 0, 0, 0 }),
-		TestCase("Hydraulic supported by electric", VehicleClass.Class4, new[] { 531, 460, 0, 460, 0, 0, 0, 0, 0, 0 }),
-		TestCase("Hydraulic supported by electric", VehicleClass.Class5, new[] { 627, 546, 540, 0, 0, 0, 0, 0, 0, 0 }),
-		TestCase("Hydraulic supported by electric", VehicleClass.Class6, new[] { 0, 0, 0, 0, 0, 0, 0, 0, 0, 0 }),
-		TestCase("Hydraulic supported by electric", VehicleClass.Class7, new[] { 0, 0, 0, 0, 0, 0, 0, 0, 0, 0 }),
-		TestCase("Hydraulic supported by electric", VehicleClass.Class8, new[] { 0, 0, 0, 0, 0, 0, 0, 0, 0, 0 }),
-		TestCase("Hydraulic supported by electric", VehicleClass.Class9, new[] { 627, 478, 0, 478, 0, 0, 0, 0, 0, 0 }),
-		TestCase("Hydraulic supported by electric", VehicleClass.Class10, new[] { 498, 461, 0, 0, 0, 0, 0, 0, 0, 0 }),
+		TestCase("Variable displacement mech. controlled", VehicleClass.Class1, new[] { 0, 156, 162, 0, 0, 0, 0, 0, 0, 0 }),
+		TestCase("Variable displacement mech. controlled", VehicleClass.Class2, new[] { 222, 192, 186, 0, 0, 0, 0, 0, 0, 0 }),
+		TestCase("Variable displacement mech. controlled", VehicleClass.Class3, new[] { 0, 204, 210, 0, 0, 0, 0, 0, 0, 0 }),
+		TestCase("Variable displacement mech. controlled", VehicleClass.Class4, new[] { 366, 318, 0, 318, 0, 0, 0, 0, 0, 0 }),
+		TestCase("Variable displacement mech. controlled", VehicleClass.Class5, new[] { 432, 378, 372, 0, 0, 0, 0, 0, 0, 0 }),
+		TestCase("Variable displacement mech. controlled", VehicleClass.Class6, new[] { 0, 0, 0, 0, 0, 0, 0, 0, 0, 0 }),
+		TestCase("Variable displacement mech. controlled", VehicleClass.Class7, new[] { 0, 0, 0, 0, 0, 0, 0, 0, 0, 0 }),
+		TestCase("Variable displacement mech. controlled", VehicleClass.Class8, new[] { 0, 0, 0, 0, 0, 0, 0, 0, 0, 0 }),
+		TestCase("Variable displacement mech. controlled", VehicleClass.Class9, new[] { 432, 330, 0, 330, 0, 0, 0, 0, 0, 0 }),
+		TestCase("Variable displacement mech. controlled", VehicleClass.Class10, new[] { 342, 318, 0, 0, 0, 0, 0, 0, 0, 0 }),
+		TestCase("Variable displacement elec. controlled", VehicleClass.Class1, new[] { 0, 225, 235, 0, 0, 0, 0, 0, 0, 0 }),
+		TestCase("Variable displacement elec. controlled", VehicleClass.Class2, new[] { 322, 278, 269, 0, 0, 0, 0, 0, 0, 0 }),
+		TestCase("Variable displacement elec. controlled", VehicleClass.Class3, new[] { 0, 295, 304, 0, 0, 0, 0, 0, 0, 0 }),
+		TestCase("Variable displacement elec. controlled", VehicleClass.Class4, new[] { 531, 460, 0, 460, 0, 0, 0, 0, 0, 0 }),
+		TestCase("Variable displacement elec. controlled", VehicleClass.Class5, new[] { 627, 546, 540, 0, 0, 0, 0, 0, 0, 0 }),
+		TestCase("Variable displacement elec. controlled", VehicleClass.Class6, new[] { 0, 0, 0, 0, 0, 0, 0, 0, 0, 0 }),
+		TestCase("Variable displacement elec. controlled", VehicleClass.Class7, new[] { 0, 0, 0, 0, 0, 0, 0, 0, 0, 0 }),
+		TestCase("Variable displacement elec. controlled", VehicleClass.Class8, new[] { 0, 0, 0, 0, 0, 0, 0, 0, 0, 0 }),
+		TestCase("Variable displacement elec. controlled", VehicleClass.Class9, new[] { 627, 478, 0, 478, 0, 0, 0, 0, 0, 0 }),
+		TestCase("Variable displacement elec. controlled", VehicleClass.Class10, new[] { 498, 461, 0, 0, 0, 0, 0, 0, 0, 0 }),
 		]
 		public void AuxSteeringPumpTest(string technology, VehicleClass hdvClass, int[] expected)
 		{
 			var sp = DeclarationData.SteeringPump;
 
 			for (var i = 0; i < Missions.Length; i++) {
-				var value = sp.Lookup(Missions[i], hdvClass, technology);
+				var value = sp.Lookup(Missions[i], hdvClass, new[] { technology });
 				Assert.AreEqual(expected[i], value.Value(), Tolerance);
 			}
 		}

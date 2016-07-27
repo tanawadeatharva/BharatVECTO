@@ -29,6 +29,7 @@
 *   Martin Rexeis, rexeis@ivt.tugraz.at, IVT, Graz University of Technology
 */
 
+using System;
 using System.Collections.Generic;
 using System.Data;
 using TUGraz.VectoCommon.Models;
@@ -60,7 +61,6 @@ namespace TUGraz.VectoCore.Models.Declaration
 		}
 	}
 
-
 	public abstract class LookupData<TKey, TValue> : LookupData
 	{
 		protected Dictionary<TKey, TValue> Data = new Dictionary<TKey, TValue>();
@@ -73,7 +73,12 @@ namespace TUGraz.VectoCore.Models.Declaration
 
 	public abstract class LookupData<TKey1, TKey2, TValue> : LookupData
 	{
-		public abstract TValue Lookup(TKey1 key1, TKey2 key2);
+		protected Dictionary<Tuple<TKey1, TKey2>, TValue> Data = new Dictionary<Tuple<TKey1, TKey2>, TValue>();
+
+		public virtual TValue Lookup(TKey1 key1, TKey2 key2)
+		{
+			return Data[Tuple.Create(key1, key2)];
+		}
 	}
 
 	public abstract class LookupData<TKey1, TKey2, TKey3, TValue> : LookupData
