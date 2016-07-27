@@ -170,6 +170,8 @@ namespace TUGraz.VectoCore.Models.SimulationComponent.Data
 
 		public static ValidationResult ValidateVehicleData(VehicleData vehicleData, ValidationContext validationContext)
 		{
+			var mode = SimulationComponentData.GetExecutionMode(validationContext);
+
 			var weightShareSum = vehicleData.AxleData.Sum(axle => axle.AxleWeightShare);
 			if (!weightShareSum.IsEqual(1.0, 1E-10)) {
 				return new ValidationResult(
@@ -180,13 +182,15 @@ namespace TUGraz.VectoCore.Models.SimulationComponent.Data
 			// total gvw is limited by max gvw (40t)
 			var gvwTotal = VectoMath.Min(vehicleData.GrossVehicleWeight + vehicleData.TrailerGrossVehicleWeight,
 				Constants.SimulationSettings.MaximumGrossVehicleWeight);
+			if (mode != ExecutionMode.Declaration) {
+				return ValidationResult.Success;
+			}
 
 			if (vehicleData.TotalVehicleWeight() > gvwTotal) {
 				return new ValidationResult(
 					string.Format("Total Vehicle Weight is greater than GrossVehicleWeight! Weight: {0},  GVW: {1}",
 						vehicleData.TotalVehicleWeight(), gvwTotal));
 			}
-
 			return ValidationResult.Success;
 		}
 	}
