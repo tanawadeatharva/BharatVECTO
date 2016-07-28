@@ -182,9 +182,9 @@ namespace TUGraz.VectoCore.Tests.Models.SimulationComponentData
 						CrossWindCorrectionMode.NoCorrection),
 				CurbWeight = 7500.SI<Kilogram>(),
 				DynamicTyreRadius = 0.5.SI<Meter>(),
-				CurbWeigthExtra = 0.SI<Kilogram>(),
+				//CurbWeigthExtra = 0.SI<Kilogram>(),
 				Loading = 12000.SI<Kilogram>(),
-				GrossVehicleMassRating = 16000.SI<Kilogram>()
+				GrossVehicleWeight = 16000.SI<Kilogram>()
 			};
 			vehicleData.AxleData = new List<Axle>() {
 				new Axle() {
@@ -217,29 +217,24 @@ namespace TUGraz.VectoCore.Tests.Models.SimulationComponentData
 		{
 			var container = new VehicleContainer(ExecutionMode.Engineering);
 			var data = new DistanceRun(container);
-			var engineData = new CombustionEngineData
-			{
+			var engineData = new CombustionEngineData {
 				FullLoadCurve = EngineFullLoadCurve.ReadFromFile(@"TestData\Components\12t Delivery Truck.vfld"),
 				IdleSpeed = 560.RPMtoRad()
 			};
 
 			var gearboxData = new GearboxData();
-			gearboxData.Gears[1] = new GearData
-			{
-				LossMap = TransmissionLossMap.ReadFromFile(@"TestData\Components\Direct Gear.vtlm", 1, "1"),
+			gearboxData.Gears[1] = new GearData {
+				LossMap = TransmissionLossMapReader.ReadFromFile(@"TestData\Components\Direct Gear.vtlm", 1, "1"),
 				Ratio = 1
 			};
 
-			var axleGearData = new AxleGearData
-			{
-				AxleGear = new GearData
-				{
+			var axleGearData = new AxleGearData {
+				AxleGear = new GearData {
 					Ratio = 1,
-					LossMap = TransmissionLossMap.ReadFromFile(@"TestData\Components\limited.vtlm", 1, "1"),
+					LossMap = TransmissionLossMapReader.ReadFromFile(@"TestData\Components\limited.vtlm", 1, "1"),
 				}
 			};
-			var vehicleData = new VehicleData()
-			{
+			var vehicleData = new VehicleData() {
 				AxleConfiguration = AxleConfiguration.AxleConfig_4x2,
 				Creator = "Mr. Test",
 				CrossWindCorrectionMode = CrossWindCorrectionMode.NoCorrection,
@@ -248,9 +243,9 @@ namespace TUGraz.VectoCore.Tests.Models.SimulationComponentData
 						CrossWindCorrectionMode.NoCorrection),
 				CurbWeight = 7500.SI<Kilogram>(),
 				DynamicTyreRadius = 0.5.SI<Meter>(),
-				CurbWeigthExtra = 0.SI<Kilogram>(),
+				//CurbWeigthExtra = 0.SI<Kilogram>(),
 				Loading = 12000.SI<Kilogram>(),
-				GrossVehicleMassRating = 16000.SI<Kilogram>()
+				GrossVehicleWeight = 16000.SI<Kilogram>()
 			};
 			vehicleData.AxleData = new List<Axle>() {
 				new Axle() {
@@ -269,8 +264,7 @@ namespace TUGraz.VectoCore.Tests.Models.SimulationComponentData
 				},
 			};
 
-			container.RunData = new VectoRunData
-			{
+			container.RunData = new VectoRunData {
 				VehicleData = vehicleData,
 				GearboxData = gearboxData,
 				EngineData = engineData,

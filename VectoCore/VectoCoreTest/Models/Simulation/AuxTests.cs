@@ -39,6 +39,7 @@ using TUGraz.VectoCommon.Models;
 using TUGraz.VectoCommon.Utils;
 using TUGraz.VectoCore.InputData.FileIO.JSON;
 using TUGraz.VectoCore.InputData.Reader;
+using TUGraz.VectoCore.InputData.Reader.ComponentData;
 using TUGraz.VectoCore.Models.SimulationComponent.Data;
 using TUGraz.VectoCore.Models.SimulationComponent.Impl;
 using TUGraz.VectoCore.OutputData;
@@ -104,7 +105,7 @@ namespace TUGraz.VectoCore.Tests.Models.Simulation
 			var testColumns = new[] { "P_aux_FAN", "P_aux_STP", "P_aux_AC", "P_aux_ES", "P_aux_PS", "P_aux" };
 
 			ResultFileHelper.TestModFile(@"TestData\Results\EngineOnlyCycles\40t_Long_Haul_Truck_Long_Haul_Empty Loading.vmod",
-				@"AuxWriteModFileSumFile.vmod", testColumns, testVelocity:false);
+				@"AuxWriteModFileSumFile.vmod", testColumns, testVelocity: false);
 			ResultFileHelper.TestSumFile(@"TestData\Results\EngineOnlyCycles\AuxWriteModFileSumFile.vsum",
 				@"AuxWriteModFileSumFile.vsum");
 		}
@@ -187,7 +188,7 @@ namespace TUGraz.VectoCore.Tests.Models.Simulation
 
 			var aux = new EngineAuxiliary(container);
 
-			var auxData = AuxiliaryData.ReadFromFile(@"TestData\Components\24t_Coach_ALT.vaux", "ALT");
+			var auxData = AuxiliaryDataReader.ReadFromFile(@"TestData\Components\24t_Coach_ALT.vaux", "ALT");
 			// ratio = 4.078
 			// efficiency_engine = 0.96
 			// efficiency_supply = 0.98
@@ -246,7 +247,7 @@ namespace TUGraz.VectoCore.Tests.Models.Simulation
 
 			var aux = new EngineAuxiliary(container);
 
-			var auxData = AuxiliaryData.ReadFromFile(@"TestData\Components\24t_Coach_ALT.vaux", "ALT");
+			var auxData = AuxiliaryDataReader.ReadFromFile(@"TestData\Components\24t_Coach_ALT.vaux", "ALT");
 			// ratio = 4.078
 			// efficiency_engine = 0.96
 			// efficiency_supply = 0.98
@@ -297,7 +298,7 @@ namespace TUGraz.VectoCore.Tests.Models.Simulation
 		[TestMethod]
 		public void AuxFileMissing()
 		{
-			AssertHelper.Exception<VectoException>(() => AuxiliaryData.ReadFromFile(@"NOT_EXISTING_AUX_FILE.vaux", "N.A."),
+			AssertHelper.Exception<VectoException>(() => AuxiliaryDataReader.ReadFromFile(@"NOT_EXISTING_AUX_FILE.vaux", "N.A."),
 				"Auxiliary file not found: NOT_EXISTING_AUX_FILE.vaux");
 		}
 
