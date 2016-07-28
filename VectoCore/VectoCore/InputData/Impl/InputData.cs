@@ -136,7 +136,7 @@ namespace TUGraz.VectoCore.InputData.Impl
 		public KilogramSquareMeter Inertia { get; internal set; }
 	}
 
-	public class AuxiliaryDataInputData : IAuxiliaryEngineeringInputData
+	public class AuxiliaryDataInputData : IAuxiliaryEngineeringInputData, IAuxiliaryDeclarationInputData
 	{
 		public AuxiliaryDataInputData()
 		{
@@ -146,15 +146,11 @@ namespace TUGraz.VectoCore.InputData.Impl
 
 		public AuxiliaryDemandType AuxiliaryType { get; internal set; }
 
-		public bool SavedInDeclarationMode { get; internal set; }
-
 		public string ID { get; internal set; }
 
-		public string Type { get; internal set; }
+		public AuxiliaryType Type { get; internal set; }
 
-		public string Technology { get; internal set; }
-
-		public IList<string> TechList { get; internal set; }
+		public IList<string> Technology { get; internal set; }
 
 		public double TransmissionRatio { get; internal set; }
 
