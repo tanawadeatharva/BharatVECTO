@@ -62,7 +62,7 @@ namespace TUGraz.VectoCore.Models.SimulationComponent.Impl
 		public abstract bool ShiftRequired(Second absTime, Second dt, NewtonMeter outTorque, PerSecond outAngularVelocity,
 			NewtonMeter inTorque, PerSecond inAngularSpeed, uint gear, Second lastShiftTime);
 
-		public abstract uint InitGear(Second absTime, Second dt, NewtonMeter outTorque, PerSecond outEngineSpeed);
+		public abstract uint InitGear(Second absTime, Second dt, NewtonMeter outTorque, PerSecond outAngularVelocity);
 
 		public Gearbox Gearbox { get; set; }
 
