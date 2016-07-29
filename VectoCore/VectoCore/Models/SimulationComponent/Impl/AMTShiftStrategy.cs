@@ -89,11 +89,11 @@ namespace TUGraz.VectoCore.Models.SimulationComponent.Impl
 			PreviousGear = Gearbox.Gear;
 		}
 
-		public override uint InitGear(Second absTime, Second dt, NewtonMeter outTorque, PerSecond outEngineSpeed)
+		public override uint InitGear(Second absTime, Second dt, NewtonMeter outTorque, PerSecond outAngularVelocity)
 		{
 			if (DataBus.VehicleSpeed.IsEqual(0)) {
 				for (var gear = (uint)Data.Gears.Count; gear > 1; gear--) {
-					var inAngularSpeed = outEngineSpeed * Data.Gears[gear].Ratio;
+					var inAngularSpeed = outAngularVelocity * Data.Gears[gear].Ratio;
 
 					var ratedSpeed = Data.Gears[gear].FullLoadCurve != null
 						? Data.Gears[gear].FullLoadCurve.RatedSpeed
@@ -102,7 +102,7 @@ namespace TUGraz.VectoCore.Models.SimulationComponent.Impl
 						continue;
 					}
 
-					var response = Gearbox.Initialize(gear, outTorque, outEngineSpeed);
+					var response = Gearbox.Initialize(gear, outTorque, outAngularVelocity);
 
 					var fullLoadPower = response.EnginePowerRequest - response.DeltaFullLoad;
 					var reserve = 1 - response.EnginePowerRequest / fullLoadPower;
@@ -117,9 +117,9 @@ namespace TUGraz.VectoCore.Models.SimulationComponent.Impl
 				return 1;
 			}
 			for (var gear = (uint)Data.Gears.Count; gear > 1; gear--) {
-				var response = Gearbox.Initialize(gear, outTorque, outEngineSpeed);
+				var response = Gearbox.Initialize(gear, outTorque, outAngularVelocity);
 
-				var inAngularSpeed = outEngineSpeed * Data.Gears[gear].Ratio;
+				var inAngularSpeed = outAngularVelocity * Data.Gears[gear].Ratio;
 				var fullLoadPower = response.EnginePowerRequest - response.DeltaFullLoad;
 				var reserve = 1 - response.EnginePowerRequest / fullLoadPower;
 				var inTorque = response.ClutchPowerRequest / inAngularSpeed;
@@ -211,8 +211,8 @@ namespace TUGraz.VectoCore.Models.SimulationComponent.Impl
 				}
 				// if a gear is skipped but acceleration is less than 0.1, try for next gear. if acceleration is still below 0.1 don't shift!
 				if (nextGear > currentGear &&
-					EstimateAccelerationForGear(currentGear + 1, outAngularVelocity).IsSmaller(Gearbox.ModelData.UpshiftMinAcceleration))
-				{
+					EstimateAccelerationForGear(currentGear + 1, outAngularVelocity)
+						.IsSmaller(Gearbox.ModelData.UpshiftMinAcceleration)) {
 					return currentGear;
 				}
 				nextGear = currentGear + 1;
