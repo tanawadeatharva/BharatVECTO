@@ -36,6 +36,7 @@ using TUGraz.VectoCommon.Exceptions;
 using TUGraz.VectoCommon.InputData;
 using TUGraz.VectoCommon.Models;
 using TUGraz.VectoCommon.Utils;
+using TUGraz.VectoCore.InputData.Reader.ComponentData;
 using TUGraz.VectoCore.Models.Declaration;
 using TUGraz.VectoCore.Models.Simulation.Data;
 using TUGraz.VectoCore.Models.SimulationComponent.Data;
@@ -102,14 +103,15 @@ namespace TUGraz.VectoCore.InputData.Reader.DataObjectAdapter
 			Log.Error("{0} is in Declaration Mode but is used for Engineering Mode!", msg);
 		}
 
-		internal CombustionEngineData CreateEngineData(IEngineEngineeringInputData engine)
+		internal CombustionEngineData CreateEngineData(IEngineEngineeringInputData engine, IGearboxEngineeringInputData gbx)
 		{
 			if (engine.SavedInDeclarationMode) {
 				WarnEngineeringMode("EngineData");
 			}
 
 			var retVal = SetCommonCombustionEngineData(engine);
-			retVal.Inertia = engine.Inertia;
+			retVal.Inertia = engine.Inertia +
+							(gbx != null && gbx.Type == GearboxType.AT ? gbx.TorqueConverter.Inertia : 0.SI<KilogramSquareMeter>());
 			retVal.FullLoadCurve = EngineFullLoadCurve.Create(engine.FullLoadCurve);
 			retVal.FullLoadCurve.EngineData = retVal;
 			return retVal;
@@ -149,7 +151,7 @@ namespace TUGraz.VectoCore.InputData.Reader.DataObjectAdapter
 				} else {
 					throw new InvalidFileFormatException("Gear {0} LossMap or Efficiency missing.", i + 1);
 				}
-				
+
 				var fullLoadCurve = IntersectFullLoadCurves(engineData.FullLoadCurve, gear.MaxTorque);
 				var shiftPolygon = gear.ShiftPolygon != null
 					? ShiftPolygonReader.Create(gear.ShiftPolygon)
@@ -163,6 +165,18 @@ namespace TUGraz.VectoCore.InputData.Reader.DataObjectAdapter
 					TorqueConverterActive = gear.TorqueConverterActive
 				});
 			}).ToDictionary(kv => kv.Key, kv => kv.Value);
+
+			if (gears.Any(g => g.TorqueConverterActive)) {
+				if (retVal.Type != GearboxType.AT) {
+					throw new VectoException("Torque Converter can only be used with AT gearbox model");
+				}
+				retVal.TorqueConverterData = TorqueConverterDataReader.Create(gearbox.TorqueConverter.TCData,
+					gearbox.TorqueConverter.ReferenceRPM);
+			} else {
+				if (retVal.Type == GearboxType.AT) {
+					throw new VectoException("AT gearbox model requires torque converter");
+				}
+			}
 
 			retVal.DownshiftAfterUpshiftDelay = gearbox.DownshiftAferUpshiftDelay;
 			retVal.UpshiftAfterDownshiftDelay = gearbox.UpshiftAfterDownshiftDelay;

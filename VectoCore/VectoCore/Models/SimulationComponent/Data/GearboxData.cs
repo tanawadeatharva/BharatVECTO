@@ -32,6 +32,7 @@
 using System.Collections.Generic;
 using System.ComponentModel.DataAnnotations;
 using System.Runtime.Serialization;
+using Newtonsoft.Json;
 using TUGraz.VectoCommon.Models;
 using TUGraz.VectoCommon.Utils;
 using TUGraz.VectoCore.Models.SimulationComponent.Data.Gearbox;
@@ -45,12 +46,14 @@ namespace TUGraz.VectoCore.Models.SimulationComponent.Data
 	[DataContract]
 	public class GearboxData : SimulationComponentData
 	{
+		public GearboxType Type { get; internal set; }
+
 		/// <summary>
 		/// The gear data.
 		/// </summary>
 		[Required, ValidateObject] public Dictionary<uint, GearData> Gears = new Dictionary<uint, GearData>();
 
-		public GearboxType Type { get; internal set; }
+		public TorqueConverterData TorqueConverterData { get; internal set; }
 
 		[Required, SIRange(0, 10)]
 		public KilogramSquareMeter Inertia { get; internal set; }
@@ -86,9 +89,11 @@ namespace TUGraz.VectoCore.Models.SimulationComponent.Data
 		[Required, Range(0, 0.5)]
 		public double StartTorqueReserve { get; internal set; }
 
+		// MQ: TODO: move to Driver Data ?
 		[Required, SIRange(double.Epsilon, 5)]
 		public MeterPerSecond StartSpeed { get; internal set; }
 
+		// MQ: TODO: move to Driver Data ?
 		[Required, SIRange(double.Epsilon, 2)]
 		public MeterPerSquareSecond StartAcceleration { get; internal set; }
 

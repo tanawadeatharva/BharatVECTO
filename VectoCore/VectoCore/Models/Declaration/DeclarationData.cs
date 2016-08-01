@@ -233,13 +233,16 @@ namespace TUGraz.VectoCore.Models.Declaration
 		public static class Engine
 		{
 			public static readonly KilogramSquareMeter ClutchInertia = 1.3.SI<KilogramSquareMeter>();
+			public static readonly KilogramSquareMeter TorqueConverterInertia = 1.2.SI<KilogramSquareMeter>();
+
 			public static readonly KilogramSquareMeter EngineBaseInertia = 0.41.SI<KilogramSquareMeter>();
 			public static readonly SI EngineDisplacementInertia = (0.27 * 1000).SI().Kilo.Gramm.Per.Meter; // [kg/m]
 
-			public static KilogramSquareMeter EngineInertia(SI displacement)
+			public static KilogramSquareMeter EngineInertia(SI displacement, GearboxType gbxType)
 			{
 				// VB Code:    Return 1.3 + 0.41 + 0.27 * (Displ / 1000)
-				return ClutchInertia + EngineBaseInertia + EngineDisplacementInertia * displacement;
+				return (gbxType == GearboxType.AT ? TorqueConverterInertia : ClutchInertia) + EngineBaseInertia +
+						EngineDisplacementInertia * displacement;
 			}
 		}
 

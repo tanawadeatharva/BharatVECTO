@@ -8,13 +8,10 @@ using TUGraz.VectoCore.OutputData;
 
 namespace TUGraz.VectoCore.Models.SimulationComponent.Impl
 {
-	public class ATGearbox : AbstractGearbox<GearboxState>, IGearbox, ITnOutPort, ITnInPort,
+	public class ATGearbox : AbstractGearbox<ATGearbox.ATGearboxState>, IGearbox, ITnOutPort, ITnInPort,
 		IClutchInfo
 	{
-		public ATGearbox(IVehicleContainer container, GearboxData gearboxModelData) : base(container, gearboxModelData)
-		{
-		
-		}
+		public ATGearbox(IVehicleContainer container, GearboxData gearboxModelData) : base(container, gearboxModelData) {}
 
 		protected override void DoWriteModalResults(IModalDataContainer container)
 		{
@@ -26,8 +23,9 @@ namespace TUGraz.VectoCore.Models.SimulationComponent.Impl
 			throw new System.NotImplementedException();
 		}
 
-		
-		public override IResponse Request(Second absTime, Second dt, NewtonMeter torque, PerSecond angularVelocity, bool dryRun = false)
+
+		public override IResponse Request(Second absTime, Second dt, NewtonMeter torque, PerSecond angularVelocity,
+			bool dryRun = false)
 		{
 			throw new System.NotImplementedException();
 		}
@@ -42,6 +40,9 @@ namespace TUGraz.VectoCore.Models.SimulationComponent.Impl
 			throw new System.NotImplementedException();
 		}
 
-		public class GearboxState : SimpleComponentState {}
+		public class ATGearboxState : GearboxState
+		{
+			public bool TorqueConverterOpen;
+		}
 	}
 }

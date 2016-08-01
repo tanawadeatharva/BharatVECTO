@@ -142,7 +142,7 @@ namespace TUGraz.VectoCore.InputData.Reader.DataObjectAdapter
 			return retVal;
 		}
 
-		internal CombustionEngineData CreateEngineData(IEngineDeclarationInputData engine)
+		internal CombustionEngineData CreateEngineData(IEngineDeclarationInputData engine, GearboxType gearboxType)
 		{
 			if (!engine.SavedInDeclarationMode) {
 				WarnDeclarationMode("EngineData");
@@ -152,7 +152,7 @@ namespace TUGraz.VectoCore.InputData.Reader.DataObjectAdapter
 			retVal.WHTCUrban = engine.WHTCUrban;
 			retVal.WHTCMotorway = engine.WHTCMotorway;
 			retVal.WHTCRural = engine.WHTCRural;
-			retVal.Inertia = DeclarationData.Engine.EngineInertia(retVal.Displacement);
+			retVal.Inertia = DeclarationData.Engine.EngineInertia(retVal.Displacement, gearboxType);
 			retVal.FullLoadCurve = EngineFullLoadCurve.Create(engine.FullLoadCurve, true);
 			retVal.FullLoadCurve.EngineData = retVal;
 			return retVal;
