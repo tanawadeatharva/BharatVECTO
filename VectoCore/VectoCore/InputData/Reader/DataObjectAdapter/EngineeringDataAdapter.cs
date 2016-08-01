@@ -113,6 +113,7 @@ namespace TUGraz.VectoCore.InputData.Reader.DataObjectAdapter
 			retVal.Inertia = engine.Inertia;
 			retVal.FullLoadCurve = EngineFullLoadCurve.Create(engine.FullLoadCurve);
 			retVal.FullLoadCurve.EngineData = retVal;
+			retVal.WHTCCorrectionFactor = engine.WHTCEngineering;
 			return retVal;
 		}
 
