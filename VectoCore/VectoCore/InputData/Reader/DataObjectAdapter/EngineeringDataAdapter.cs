@@ -36,6 +36,7 @@ using TUGraz.VectoCommon.Exceptions;
 using TUGraz.VectoCommon.InputData;
 using TUGraz.VectoCommon.Models;
 using TUGraz.VectoCommon.Utils;
+using TUGraz.VectoCore.InputData.Reader.ComponentData;
 using TUGraz.VectoCore.Models.Declaration;
 using TUGraz.VectoCore.Models.Simulation.Data;
 using TUGraz.VectoCore.Models.SimulationComponent.Data;
@@ -149,7 +150,7 @@ namespace TUGraz.VectoCore.InputData.Reader.DataObjectAdapter
 				} else {
 					throw new InvalidFileFormatException("Gear {0} LossMap or Efficiency missing.", i + 1);
 				}
-				
+
 				var fullLoadCurve = IntersectFullLoadCurves(engineData.FullLoadCurve, gear.MaxTorque);
 				var shiftPolygon = gear.ShiftPolygon != null
 					? ShiftPolygonReader.Create(gear.ShiftPolygon)
@@ -172,9 +173,6 @@ namespace TUGraz.VectoCore.InputData.Reader.DataObjectAdapter
 
 		public IList<VectoRunData.AuxData> CreateAuxiliaryData(IAuxiliariesEngineeringInputData auxInputData)
 		{
-			if (auxInputData.SavedInDeclarationMode) {
-				WarnEngineeringMode("AuxData");
-			}
 			return auxInputData.Auxiliaries.Select(a => {
 				switch (a.AuxiliaryType) {
 					case AuxiliaryDemandType.Mapping:
@@ -190,18 +188,16 @@ namespace TUGraz.VectoCore.InputData.Reader.DataObjectAdapter
 		private static VectoRunData.AuxData CreateMappingAuxiliary(IAuxiliaryEngineeringInputData a)
 		{
 			if (a.DemandMap == null) {
-				throw new VectoSimulationException("Demand Map for auxiliary {0} {1} required", a.ID, a.Technology);
+				throw new VectoSimulationException("Demand Map for auxiliary {0} required", a.ID);
 			}
 			if (a.DemandMap.Columns.Count != 3 || a.DemandMap.Rows.Count < 4) {
 				throw new VectoSimulationException(
-					"Demand Map for auxiliary {0} {1} has to contain exactly 3 columns and at least 4 rows", a.ID, a.Technology);
+					"Demand Map for auxiliary {0} has to contain exactly 3 columns and at least 4 rows", a.ID);
 			}
 			return new VectoRunData.AuxData {
 				ID = a.ID,
-				Technology = a.Technology,
-				TechList = a.TechList.DefaultIfNull(Enumerable.Empty<string>()).ToArray(),
 				DemandType = AuxiliaryDemandType.Mapping,
-				Data = new AuxiliaryData(a, a.ID) //AuxiliaryData.Create(a.DemandMap)
+				Data = AuxiliaryDataReader.Create(a)
 			};
 		}
 

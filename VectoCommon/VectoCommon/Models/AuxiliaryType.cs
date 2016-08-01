@@ -32,13 +32,13 @@
 using System;
 using TUGraz.VectoCore.Configuration;
 
-namespace TUGraz.VectoCore.Models.SimulationComponent.Data
+namespace TUGraz.VectoCommon.Models
 {
 	public enum AuxiliaryType
 	{
 		Fan,
 		SteeringPump,
-		HeatingVentilationAirCondition,
+		HVAC,
 		PneumaticSystem,
 		ElectricSystem
 	}
@@ -53,7 +53,7 @@ namespace TUGraz.VectoCore.Models.SimulationComponent.Data
 				case Constants.Auxiliaries.Names.SteeringPump:
 					return AuxiliaryType.SteeringPump;
 				case Constants.Auxiliaries.Names.HeatingVentilationAirCondition:
-					return AuxiliaryType.HeatingVentilationAirCondition;
+					return AuxiliaryType.HVAC;
 				case Constants.Auxiliaries.Names.ElectricSystem:
 					return AuxiliaryType.ElectricSystem;
 				case Constants.Auxiliaries.Names.PneumaticSystem:
@@ -70,7 +70,7 @@ namespace TUGraz.VectoCore.Models.SimulationComponent.Data
 					return Constants.Auxiliaries.Names.Fan;
 				case AuxiliaryType.SteeringPump:
 					return Constants.Auxiliaries.Names.SteeringPump;
-				case AuxiliaryType.HeatingVentilationAirCondition:
+				case AuxiliaryType.HVAC:
 					return Constants.Auxiliaries.Names.HeatingVentilationAirCondition;
 				case AuxiliaryType.PneumaticSystem:
 					return Constants.Auxiliaries.Names.PneumaticSystem;

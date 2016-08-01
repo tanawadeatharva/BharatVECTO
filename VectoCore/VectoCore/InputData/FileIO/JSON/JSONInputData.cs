@@ -107,7 +107,8 @@ namespace TUGraz.VectoCore.InputData.FileIO.JSON
 	/// Fileformat: .vecto
 	/// </summary>
 	public class JSONInputDataV2 : JSONFile, IEngineeringInputDataProvider, IDeclarationInputDataProvider,
-		IEngineeringJobInputData, IDriverEngineeringInputData, IAuxiliariesEngineeringInputData
+		IEngineeringJobInputData, IDriverEngineeringInputData, IAuxiliariesEngineeringInputData,
+		IAuxiliariesDeclarationInputData
 	{
 		protected IGearboxEngineeringInputData Gearbox;
 		protected IAxleGearInputData AxleGear;
@@ -262,7 +263,7 @@ namespace TUGraz.VectoCore.InputData.FileIO.JSON
 
 		IAuxiliariesDeclarationInputData IDeclarationInputDataProvider.AuxiliaryInputData()
 		{
-			return AuxiliaryInputData();
+			return this;
 		}
 
 		public virtual IRetarderInputData RetarderInputData
@@ -450,7 +451,7 @@ namespace TUGraz.VectoCore.InputData.FileIO.JSON
 
 		#endregion
 
-		public virtual IList<IAuxiliaryEngineeringInputData> Auxiliaries
+		IList<IAuxiliaryEngineeringInputData> IAuxiliariesEngineeringInputData.Auxiliaries
 		{
 			get { return AuxData().Cast<IAuxiliaryEngineeringInputData>().ToList(); }
 		}
@@ -466,12 +467,12 @@ namespace TUGraz.VectoCore.InputData.FileIO.JSON
 			foreach (var aux in Body["Aux"] ?? Enumerable.Empty<JToken>()) {
 				var auxData = new AuxiliaryDataInputData {
 					ID = aux.GetEx<string>("ID"),
-					Type = aux.GetEx<string>("Type"),
-					Technology = aux.GetEx<string>("Technology"),
+					Type = AuxiliaryTypeHelper.Parse(aux.GetEx<string>("Type")),
+					Technology = new List<string>() { aux.GetEx<string>("Technology") },
 				};
-				if (aux["TechList"] != null) {
-					auxData.TechList = aux["TechList"].Select(x => x.ToString()).ToList(); //  .Select(x => x.ToString).ToArray();
-				}
+				//if (aux["TechList"] != null) {
+				//	auxData.TechList = aux["TechList"].Select(x => x.ToString()).ToList(); //  .Select(x => x.ToString).ToArray();
+				//}
 				var auxFile = aux["Path"];
 				retVal.Add(auxData);
 

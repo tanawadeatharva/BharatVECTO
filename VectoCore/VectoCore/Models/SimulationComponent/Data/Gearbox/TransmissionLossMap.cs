@@ -87,7 +87,7 @@ namespace TUGraz.VectoCore.Models.SimulationComponent.Data.Gearbox
 		/// <returns>Torque loss as seen on input side (towards the engine).</returns>
 		public LossMapResult GetTorqueLoss(PerSecond outAngularVelocity, NewtonMeter outTorque)
 		{
-			var result = new TransmissionLossMap.LossMapResult();
+			var result = new LossMapResult();
 			var torqueLoss = _lossMap.Interpolate(outAngularVelocity.ConvertTo().Rounds.Per.Minute.Value() * _ratio,
 				outTorque.Value() / _ratio);
 
@@ -104,6 +104,7 @@ namespace TUGraz.VectoCore.Models.SimulationComponent.Data.Gearbox
 			return result;
 		}
 
+		[DebuggerDisplay("{Value} (extrapolated: {Extrapolated})")]
 		public class LossMapResult
 		{
 			public bool Extrapolated;

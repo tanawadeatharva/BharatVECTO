@@ -32,6 +32,7 @@
 using System;
 using System.ComponentModel.DataAnnotations;
 using System.Data;
+using System.Diagnostics;
 using System.Diagnostics.CodeAnalysis;
 using System.Linq;
 using TUGraz.VectoCommon.Exceptions;
@@ -53,18 +54,22 @@ namespace TUGraz.VectoCore.Models.SimulationComponent.Data.Engine
 		/// <summary>
 		/// Calculates the fuel consumption based on the given fuel map, the angularVelocity and the torque.
 		/// </summary>
-		public KilogramPerSecond GetFuelConsumption(NewtonMeter torque, PerSecond angularVelocity,
+		public FuelConsumptionResult GetFuelConsumption(NewtonMeter torque, PerSecond angularVelocity,
 			bool allowExtrapolation = false)
 		{
+			var result = new FuelConsumptionResult();
 			// delaunay map needs is initialised with rpm, therefore the angularVelocity has to be converted.
 			var value = _fuelMap.Interpolate(torque.Value(), angularVelocity.AsRPM);
 			if (value.HasValue) {
-				return value.Value.SI().Kilo.Gramm.Per.Second.Cast<KilogramPerSecond>();
+				result.Value = value.Value.SI().Kilo.Gramm.Per.Second.Cast<KilogramPerSecond>();
+				return result;
 			}
 
 			if (allowExtrapolation) {
-				return
+				result.Value =
 					_fuelMap.Extrapolate(torque.Value(), angularVelocity.AsRPM).SI().Kilo.Gramm.Per.Second.Cast<KilogramPerSecond>();
+				result.Extrapolated = true;
+				return result;
 			}
 
 			throw new VectoException("FuelConsumptionMap: Interpolation failed. torque: {0}, n: {1}", torque.Value(),
@@ -123,6 +128,13 @@ namespace TUGraz.VectoCore.Models.SimulationComponent.Data.Engine
 			}
 
 			#endregion
+		}
+
+		[DebuggerDisplay("{Value} (extrapolated: {Extrapolated})")]
+		public class FuelConsumptionResult
+		{
+			public KilogramPerSecond Value;
+			public bool Extrapolated;
 		}
 
 		#region Equality members
