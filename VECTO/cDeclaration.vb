@@ -443,7 +443,7 @@ Public Class cDeclaration
 			Do While Not file.EndOfFile
 				line = file.ReadLine
 				at0.Add(line(0))
-				AuxSteepPumpFactors.Add(line(0), New Single() {CSng(line(1)), CSng(line(2)), CSng(line(3)), CSng(line(4))})
+				AuxSteepPumpFactors.Add(line(0), New Single() {CSng(line(1)), CSng(line(2)), CSng(line(3))})
 			Loop
 			file.Close()
 			If Not file.OpenRead(MyDeclPath & "VAUX\SP-Table.csv") Then
@@ -462,7 +462,7 @@ Public Class cDeclaration
 						STEpower0.Add(mt0, New Single() {0})
 					Else
 						stl = line(i).Split("/")
-						STEpower0.Add(mt0, New Single() {CSng(stl(0)), CSng(stl(1)), CSng(stl(2)), CSng(stl(3))})
+						STEpower0.Add(mt0, New Single() {CSng(stl(0)), CSng(stl(1)), CSng(stl(2))})
 					End If
 				Next
 				AuxSteerPumpPower.Add(line(0), STEpower0)

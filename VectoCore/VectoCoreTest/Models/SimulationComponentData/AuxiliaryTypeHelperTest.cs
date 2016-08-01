@@ -31,11 +31,10 @@
 
 using System;
 using Microsoft.VisualStudio.TestTools.UnitTesting;
-using TUGraz.VectoCommon.Configuration;
 using TUGraz.VectoCommon.Models;
-using TUGraz.VectoCore.Models.SimulationComponent.Data;
+using TUGraz.VectoCore.Configuration;
+using TUGraz.VectoCore.Models.Declaration;
 using TUGraz.VectoCore.Tests.Utils;
-using TUGraz.VectoCore.Utils;
 
 namespace TUGraz.VectoCore.Tests.Models.SimulationComponentData
 {

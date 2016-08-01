@@ -33,8 +33,8 @@ using System.Collections.Generic;
 using System.Data;
 using System.Globalization;
 using System.Linq;
-using TUGraz.VectoCommon.Configuration;
 using TUGraz.VectoCommon.Utils;
+using TUGraz.VectoCore.Configuration;
 
 namespace TUGraz.VectoCore.Models.SimulationComponent.Data
 {
