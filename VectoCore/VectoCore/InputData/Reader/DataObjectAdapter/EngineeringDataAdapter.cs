@@ -114,6 +114,7 @@ namespace TUGraz.VectoCore.InputData.Reader.DataObjectAdapter
 							(gbx != null && gbx.Type == GearboxType.AT ? gbx.TorqueConverter.Inertia : 0.SI<KilogramSquareMeter>());
 			retVal.FullLoadCurve = EngineFullLoadCurve.Create(engine.FullLoadCurve);
 			retVal.FullLoadCurve.EngineData = retVal;
+			retVal.WHTCCorrectionFactor = engine.WHTCEngineering;
 			return retVal;
 		}
 
@@ -186,9 +187,6 @@ namespace TUGraz.VectoCore.InputData.Reader.DataObjectAdapter
 
 		public IList<VectoRunData.AuxData> CreateAuxiliaryData(IAuxiliariesEngineeringInputData auxInputData)
 		{
-			if (auxInputData.SavedInDeclarationMode) {
-				WarnEngineeringMode("AuxData");
-			}
 			return auxInputData.Auxiliaries.Select(a => {
 				switch (a.AuxiliaryType) {
 					case AuxiliaryDemandType.Mapping:
@@ -204,18 +202,16 @@ namespace TUGraz.VectoCore.InputData.Reader.DataObjectAdapter
 		private static VectoRunData.AuxData CreateMappingAuxiliary(IAuxiliaryEngineeringInputData a)
 		{
 			if (a.DemandMap == null) {
-				throw new VectoSimulationException("Demand Map for auxiliary {0} {1} required", a.ID, a.Technology);
+				throw new VectoSimulationException("Demand Map for auxiliary {0} required", a.ID);
 			}
 			if (a.DemandMap.Columns.Count != 3 || a.DemandMap.Rows.Count < 4) {
 				throw new VectoSimulationException(
-					"Demand Map for auxiliary {0} {1} has to contain exactly 3 columns and at least 4 rows", a.ID, a.Technology);
+					"Demand Map for auxiliary {0} has to contain exactly 3 columns and at least 4 rows", a.ID);
 			}
 			return new VectoRunData.AuxData {
 				ID = a.ID,
-				Technology = a.Technology,
-				TechList = a.TechList.DefaultIfNull(Enumerable.Empty<string>()).ToArray(),
 				DemandType = AuxiliaryDemandType.Mapping,
-				Data = new AuxiliaryData(a, a.ID) //AuxiliaryData.Create(a.DemandMap)
+				Data = AuxiliaryDataReader.Create(a)
 			};
 		}
 

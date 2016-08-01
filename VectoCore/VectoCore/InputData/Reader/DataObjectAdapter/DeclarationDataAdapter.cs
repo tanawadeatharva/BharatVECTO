@@ -240,7 +240,7 @@ namespace TUGraz.VectoCore.InputData.Reader.DataObjectAdapter
 			}
 
 			foreach (var auxType in EnumHelper.GetValues<AuxiliaryType>()) {
-				var auxData = auxInputData.Auxiliaries.FirstOrDefault(a => AuxiliaryTypeHelper.Parse(a.Type) == auxType);
+				var auxData = auxInputData.Auxiliaries.FirstOrDefault(a => a.Type == auxType);
 				if (auxData == null) {
 					throw new VectoException("Auxiliary {0} not found.", auxType);
 				}
@@ -250,14 +250,14 @@ namespace TUGraz.VectoCore.InputData.Reader.DataObjectAdapter
 				};
 				switch (auxType) {
 					case AuxiliaryType.Fan:
-						aux.PowerDemand = DeclarationData.Fan.Lookup(mission, auxData.Technology);
+						aux.PowerDemand = DeclarationData.Fan.Lookup(mission, auxData.Technology.First());
 						aux.ID = Constants.Auxiliaries.IDs.Fan;
 						break;
 					case AuxiliaryType.SteeringPump:
-						aux.PowerDemand = DeclarationData.SteeringPump.Lookup(mission, hvdClass, auxData.Technology);
+						aux.PowerDemand = DeclarationData.SteeringPump.Lookup(mission, hvdClass, auxData.Technology.First());
 						aux.ID = Constants.Auxiliaries.IDs.SteeringPump;
 						break;
-					case AuxiliaryType.HeatingVentilationAirCondition:
+					case AuxiliaryType.HVAC:
 						aux.PowerDemand = DeclarationData.HeatingVentilationAirConditioning.Lookup(mission, hvdClass);
 						aux.ID = Constants.Auxiliaries.IDs.HeatingVentilationAirCondition;
 						break;
@@ -266,10 +266,10 @@ namespace TUGraz.VectoCore.InputData.Reader.DataObjectAdapter
 						aux.ID = Constants.Auxiliaries.IDs.PneumaticSystem;
 						break;
 					case AuxiliaryType.ElectricSystem:
-						aux.PowerDemand = DeclarationData.ElectricSystem.Lookup(mission,
-							auxData.TechList.DefaultIfNull(Enumerable.Empty<string>()).ToArray());
+						//aux.PowerDemand = DeclarationData.ElectricSystem.Lookup(mission,
+						//	auxData.TechList.DefaultIfNull(Enumerable.Empty<string>()).ToArray());
 						aux.ID = Constants.Auxiliaries.IDs.ElectricSystem;
-						aux.TechList = auxData.TechList.DefaultIfNull(Enumerable.Empty<string>()).ToArray();
+						//aux.TechList = auxData.TechList.DefaultIfNull(Enumerable.Empty<string>()).ToArray();
 						break;
 					default:
 						continue;

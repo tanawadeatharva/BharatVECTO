@@ -86,7 +86,7 @@ namespace TUGraz.VectoCore.Tests.Reports
 				// check fuel consumption interpolation
 				var fuelConsumption = (SI)row[(int)ModalResultField.FCMap];
 				Assert.AreEqual(fuelConsumption.Value(),
-					engineData.ConsumptionMap.GetFuelConsumption(tqEngFcmap, nEngFcMap).Value(), 1E-3, "time: {0}  distance: {1}",
+					engineData.ConsumptionMap.GetFuelConsumption(tqEngFcmap, nEngFcMap).Value.Value(), 1E-3, "time: {0}  distance: {1}",
 					time, distance);
 
 				// check P_eng_FCmap = T_eng_fcmap * n_eng

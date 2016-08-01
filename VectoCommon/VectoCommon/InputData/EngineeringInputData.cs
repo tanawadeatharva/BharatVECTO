@@ -212,9 +212,14 @@ namespace TUGraz.VectoCommon.InputData
 		/// cf. VECTO Input Parameters.xlsx
 		/// </summary>
 		KilogramSquareMeter Inertia { get; }
+
+		/// <summary>
+		/// P170
+		/// </summary>
+		double WHTCEngineering { get; }
 	}
 
-	public interface IAuxiliariesEngineeringInputData : IAuxiliariesDeclarationInputData
+	public interface IAuxiliariesEngineeringInputData
 	{
 		new IList<IAuxiliaryEngineeringInputData> Auxiliaries { get; }
 
@@ -312,8 +317,14 @@ namespace TUGraz.VectoCommon.InputData
 		DataTable CoastingDecisionFactorVelocityDropLookup { get; }
 	}
 
-	public interface IAuxiliaryEngineeringInputData : IAuxiliaryDeclarationInputData
+	public interface IAuxiliaryEngineeringInputData
 	{
+		/// <summary>
+		/// P006  Aux-ID
+		/// cf. VECTO Input Parameters.xlsx
+		/// </summary>
+		string ID { get; }
+
 		/// <summary>
 		/// either mapping or constant
 		/// </summary>

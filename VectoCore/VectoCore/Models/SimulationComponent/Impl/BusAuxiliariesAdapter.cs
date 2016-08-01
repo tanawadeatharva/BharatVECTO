@@ -275,7 +275,7 @@ namespace TUGraz.VectoCore.Models.SimulationComponent.Impl
 
 			public KilogramPerSecond GetFuelConsumption(NewtonMeter torque, PerSecond angularVelocity)
 			{
-				return FcMap.GetFuelConsumption(torque, angularVelocity, AllowExtrapolation);
+				return FcMap.GetFuelConsumption(torque, angularVelocity, AllowExtrapolation).Value;
 			}
 		}
 

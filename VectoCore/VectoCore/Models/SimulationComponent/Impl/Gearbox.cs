@@ -406,7 +406,7 @@ namespace TUGraz.VectoCore.Models.SimulationComponent.Impl
 				}
 			}
 			if (DataBus.VehicleStopped) {
-				Disengaged = false;
+				Disengaged = true;
 				_engageTime = -double.MaxValue.SI<Second>();
 			}
 			AdvanceState();

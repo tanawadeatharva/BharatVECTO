@@ -29,8 +29,11 @@
 *   Martin Rexeis, rexeis@ivt.tugraz.at, IVT, Graz University of Technology
 */
 
+using System.ComponentModel.DataAnnotations;
 using TUGraz.VectoCommon.InputData;
 using TUGraz.VectoCommon.Models;
+using TUGraz.VectoCommon.Utils;
+using TUGraz.VectoCore.Utils;
 
 namespace TUGraz.VectoCore.Models.SimulationComponent.Data
 {
@@ -50,5 +53,11 @@ namespace TUGraz.VectoCore.Models.SimulationComponent.Data
 		public string DigestValue { get; internal set; }
 
 		public IntegrityStatus IntegrityStatus { get; internal set; }
+
+		protected static ExecutionMode GetExecutionMode(ValidationContext context)
+		{
+			var modeService = context.GetService(typeof(ExecutionMode)) as ExecutionModeServiceContainer;
+			return modeService == null ? ExecutionMode.Declaration : modeService.Mode;
+		}
 	}
 }

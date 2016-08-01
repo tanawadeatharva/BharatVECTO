@@ -36,6 +36,7 @@ using System.ComponentModel.DataAnnotations;
 using System.IO;
 using System.Linq;
 using System.Reflection;
+using TUGraz.VectoCommon.Models;
 
 namespace TUGraz.VectoCommon.Utils
 {
@@ -49,12 +50,14 @@ namespace TUGraz.VectoCommon.Utils
 		/// </summary>
 		/// <typeparam name="T"></typeparam>
 		/// <param name="entity">The entity.</param>
+		/// <param name="mode">validate the entity for the given execution mode</param>
 		/// <returns>Null, if the validation was successfull. Otherwise a list of ValidationResults with the ErrorMessages.</returns>
-		public static IList<ValidationResult> Validate<T>(this T entity)
+		public static IList<ValidationResult> Validate<T>(this T entity, ExecutionMode mode)
 		{
 			var context = new ValidationContext(entity);
+			context.ServiceContainer.AddService(typeof(ExecutionMode), new ExecutionModeServiceContainer(mode));
 			var results = new List<ValidationResult>();
-			Validator.TryValidateObject(entity, new ValidationContext(entity), results, true);
+			Validator.TryValidateObject(entity, context, results, true);
 
 			const BindingFlags flags =
 				BindingFlags.Instance | BindingFlags.Static | BindingFlags.NonPublic | BindingFlags.Public |
@@ -128,6 +131,16 @@ namespace TUGraz.VectoCommon.Utils
 		}
 	}
 
+	public class ExecutionModeServiceContainer
+	{
+		public ExecutionModeServiceContainer(ExecutionMode mode)
+		{
+			Mode = mode;
+		}
+
+		public ExecutionMode Mode { get; protected set; }
+	}
+
 	/// <summary>
 	/// Determines that the attributed object should be validated recursively.
 	/// </summary>
@@ -147,11 +160,14 @@ namespace TUGraz.VectoCommon.Utils
 				return ValidationResult.Success;
 			}
 
+			var modeService = validationContext.GetService(typeof(ExecutionMode)) as ExecutionModeServiceContainer;
+			var mode = modeService != null ? modeService.Mode : ExecutionMode.Declaration;
+
 			var enumerable = value as IEnumerable;
 			if (enumerable != null) {
 				var i = 0;
 				foreach (var element in enumerable) {
-					var results = element.Validate();
+					var results = element.Validate(mode);
 					if (results.Any()) {
 						return new ValidationResult(
 							string.Format("{1}[{0}] in {1} invalid: {2}", i, validationContext.DisplayName,
@@ -160,7 +176,7 @@ namespace TUGraz.VectoCommon.Utils
 					i++;
 				}
 			} else {
-				var results = value.Validate();
+				var results = value.Validate(mode);
 				if (!results.Any()) {
 					return ValidationResult.Success;
 				}

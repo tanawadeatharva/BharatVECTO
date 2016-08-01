@@ -83,7 +83,7 @@ namespace TUGraz.VectoCommon.InputData
 		/// cf. VECTO Input Parameters.xlsx
 		/// </summary>
 		Kilogram CurbWeightChassis { get; }
-		
+
 		/// <summary>
 		/// P041  Max. vehicle weight
 		/// cf. VECTO Input Parameters.xlsx
@@ -375,30 +375,18 @@ namespace TUGraz.VectoCommon.InputData
 
 	public interface IAuxiliaryDeclarationInputData
 	{
-		bool SavedInDeclarationMode { get; }
-
-		/// <summary>
-		/// P006  Aux-ID
-		/// cf. VECTO Input Parameters.xlsx
-		/// </summary>
-		string ID { get; }
-
 		/// <summary>
 		/// P005  Aux-Type
 		/// cf. VECTO Input Parameters.xlsx
 		/// </summary>
-		string Type { get; }
+		AuxiliaryType Type { get; }
 
 		/// <summary>
 		/// P118  Aux-Technology
 		/// cf. VECTO Input Parameters.xlsx
 		/// </summary>
-		string Technology { get; }
-
-		/// <summary>
-		/// P143  Aux-Techlist
-		/// cf. VECTO Input Parameters.xlsx
-		/// </summary>
-		IList<string> TechList { get; }
+		IList<string> Technology { get; }
 	}
+
+
 }

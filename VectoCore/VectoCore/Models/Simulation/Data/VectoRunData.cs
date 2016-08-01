@@ -29,6 +29,7 @@
 *   Martin Rexeis, rexeis@ivt.tugraz.at, IVT, Graz University of Technology
 */
 
+using System;
 using System.Collections.Generic;
 using System.ComponentModel.DataAnnotations;
 using TUGraz.VectoCommon.Exceptions;
@@ -102,7 +103,7 @@ namespace TUGraz.VectoCore.Models.Simulation.Data
 
 			[Required] public AuxiliaryType Type;
 
-			public string Technology;
+			public IList<string> Technology;
 
 			public string[] TechList;
 
@@ -143,6 +144,8 @@ namespace TUGraz.VectoCore.Models.Simulation.Data
 									string.Format("Interpolation of Gear-{0}-LossMap failed with torque={1} and angularSpeed={2}", gear.Key,
 										inTorque, angularVelocity.ConvertTo().Rounds.Per.Minute));
 							}
+							var velocity = angularVelocity / gear.Value.Ratio / axleGearData.AxleGear.Ratio *
+											runData.VehicleData.DynamicTyreRadius;
 
 							if (axleGearData != null) {
 								var axleAngularVelocity = angularVelocity / gear.Value.Ratio;
@@ -151,8 +154,9 @@ namespace TUGraz.VectoCore.Models.Simulation.Data
 								} catch (VectoException) {
 									return
 										new ValidationResult(
-											string.Format("Interpolation of AxleGear-LossMap failed with torque={0} and angularSpeed={1}", axleTorque,
-												axleAngularVelocity.ConvertTo().Rounds.Per.Minute));
+											string.Format(
+												"Interpolation of AxleGear-LossMap failed with torque={0} and angularSpeed={1} (gear={2}, velocity={3})",
+												axleTorque, axleAngularVelocity.ConvertTo().Rounds.Per.Minute, gear.Key, velocity));
 								}
 							}
 						}
