@@ -32,8 +32,8 @@
 using System;
 using System.Data;
 using System.IO;
+using TUGraz.VectoCommon.Configuration;
 using TUGraz.VectoCommon.Models;
-using TUGraz.VectoCore.Configuration;
 using TUGraz.VectoCore.Utils;
 
 namespace TUGraz.VectoCore.OutputData.FileIO

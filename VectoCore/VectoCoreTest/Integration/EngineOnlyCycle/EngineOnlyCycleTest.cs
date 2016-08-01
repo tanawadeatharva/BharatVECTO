@@ -32,9 +32,9 @@
 using System.IO;
 using System.Linq;
 using NUnit.Framework;
+using TUGraz.VectoCommon.Configuration;
 using TUGraz.VectoCommon.Models;
 using TUGraz.VectoCommon.Utils;
-using TUGraz.VectoCore.Configuration;
 using TUGraz.VectoCore.InputData.Reader;
 using TUGraz.VectoCore.Models.Connector.Ports.Impl;
 using TUGraz.VectoCore.Models.Simulation.Data;

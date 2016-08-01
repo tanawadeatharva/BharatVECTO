@@ -30,7 +30,6 @@
 */
 
 using System;
-using TUGraz.VectoCore.Configuration;
 
 namespace TUGraz.VectoCommon.Models
 {

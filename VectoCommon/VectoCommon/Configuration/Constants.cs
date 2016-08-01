@@ -32,7 +32,7 @@
 using System;
 using TUGraz.VectoCommon.Utils;
 
-namespace TUGraz.VectoCore.Configuration
+namespace TUGraz.VectoCommon.Configuration
 {
 	public static class Constants
 	{

@@ -9,8 +9,8 @@
 '
 ' See the LICENSE.txt for the specific language governing permissions and limitations.
 Imports System.Collections.Generic
+Imports TUGraz.VectoCommon.Configuration
 Imports TUGraz.VectoCommon.Utils
-Imports TUGraz.VectoCore.Configuration
 Imports VectoAuxiliaries
 
 Public Class cMAP

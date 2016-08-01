@@ -1,4 +1,4 @@
-' Copyright 2014 European Union.
+﻿' Copyright 2014 European Union.
 ' Licensed under the EUPL (the 'Licence');
 '
 ' * You may not use this work except in compliance with the Licence.
@@ -11,9 +11,9 @@
 Imports System.Collections.Generic
 Imports System.Globalization
 Imports System.Linq
+Imports TUGraz.VectoCommon.Configuration
 Imports TUGraz.VectoCommon.InputData
 Imports TUGraz.VectoCommon.Utils
-Imports TUGraz.VectoCore.Configuration
 Imports TUGraz.VectoCore.InputData.Impl
 Imports TUGraz.VectoCore.Models.Declaration
 Imports TUGraz.VectoCore.Models.SimulationComponent.Data

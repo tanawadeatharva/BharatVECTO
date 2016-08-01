@@ -31,8 +31,8 @@
 
 using System.Data;
 using NUnit.Framework;
+using TUGraz.VectoCommon.Configuration;
 using TUGraz.VectoCommon.Utils;
-using TUGraz.VectoCore.Configuration;
 using TUGraz.VectoCore.Models.Simulation.DataBus;
 using TUGraz.VectoCore.Models.SimulationComponent.Data;
 using TUGraz.VectoCore.Tests.Utils;
