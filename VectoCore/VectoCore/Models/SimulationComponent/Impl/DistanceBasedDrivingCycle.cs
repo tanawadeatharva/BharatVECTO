@@ -40,7 +40,6 @@ using TUGraz.VectoCore.Models.Connector.Ports;
 using TUGraz.VectoCore.Models.Connector.Ports.Impl;
 using TUGraz.VectoCore.Models.Simulation;
 using TUGraz.VectoCore.Models.Simulation.Data;
-using TUGraz.VectoCore.Models.Simulation.DataBus;
 using TUGraz.VectoCore.Models.SimulationComponent.Data;
 using TUGraz.VectoCore.OutputData;
 using TUGraz.VectoCore.Utils;
@@ -262,7 +261,7 @@ namespace TUGraz.VectoCore.Models.SimulationComponent.Impl
 
 		public IResponse Request(Second absTime, Second dt)
 		{
-			throw new NotImplementedException("Distance Based Driving Cycle does not support time requests.");
+			throw new InvalidOperationException("Distance Based Driving Cycle does not support time requests.");
 		}
 
 		public IResponse Initialize()
@@ -406,7 +405,7 @@ namespace TUGraz.VectoCore.Models.SimulationComponent.Impl
 			while (myIterator.RightSample.Distance < absDistance) {
 				myIterator.MoveNext();
 			}
-			
+
 			return InterpolateCycleEntry(absDistance, myIterator.RightSample);
 		}
 
@@ -428,8 +427,7 @@ namespace TUGraz.VectoCore.Models.SimulationComponent.Impl
 		private DrivingCycleData.DrivingCycleEntry ExtrapolateCycleEntry(Meter absDistance,
 			DrivingCycleData.DrivingCycleEntry lookahead)
 		{
-			var retVal = new DrivingCycleData.DrivingCycleEntry(lookahead)
-			{
+			var retVal = new DrivingCycleData.DrivingCycleEntry(lookahead) {
 				Distance = absDistance,
 				Altitude = lookahead.Altitude + lookahead.RoadGradient * (absDistance - lookahead.Distance),
 				//VectoMath.Interpolate(CurrentState.Distance, lookahead.Distance, CurrentState.Altitude,lookahead.Altitude, absDistance)
@@ -457,7 +455,7 @@ namespace TUGraz.VectoCore.Models.SimulationComponent.Impl
 		public sealed class DrivingCycleEnumerator : IEnumerator<DrivingCycleData.DrivingCycleEntry>
 		{
 			private int _currentCycleIndex;
-			private DrivingCycleData _data;
+			private readonly DrivingCycleData _data;
 
 			public DrivingCycleEnumerator(DrivingCycleData data)
 			{
