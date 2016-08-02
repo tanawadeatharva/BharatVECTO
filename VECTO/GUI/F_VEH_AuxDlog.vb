@@ -15,7 +15,6 @@ Imports System.Windows.Forms
 ''' <summary>
 ''' Aux Config Editor (Job Editor sub-dialog)
 ''' </summary>
-''' <remarks></remarks>
 Public Class F_VEH_AuxDlog
 	Public VehPath As String = ""
 
@@ -32,7 +31,7 @@ Public Class F_VEH_AuxDlog
 
 	'Initialise form
 	Private Sub F_VEH_AuxDlog_Load(sender As Object, e As EventArgs) Handles Me.Load
-		Me.Text = CbType.Text
+		Text = CbType.Text
 	End Sub
 
 	'Set generic values for Declaration mode
@@ -40,59 +39,43 @@ Public Class F_VEH_AuxDlog
 		CbTech.Items.Clear()
 		Select Case TbID.Text
 			Case sKey.AUX.Fan
-				For Each txt In Declaration.AuxTechs(tAux.Fan)
-					CbTech.Items.Add(txt)
-				Next
-
+				CbTech.Items.AddRange(Declaration.AuxTechs(tAux.Fan).ToArray())
 			Case sKey.AUX.SteerPump
-				For Each txt In Declaration.AuxTechs(tAux.SteerPump)
-					CbTech.Items.Add(txt)
-				Next
-
+				CbTech.Items.AddRange(Declaration.AuxTechs(tAux.SteerPump).ToArray())
 			Case sKey.AUX.HVAC
-				For Each txt In Declaration.AuxTechs(tAux.HVAC)
-					CbTech.Items.Add(txt)
-				Next
-				CbTech.SelectedIndex = 0
-
+				CbTech.Items.AddRange(Declaration.AuxTechs(tAux.HVAC).ToArray())
 			Case sKey.AUX.ElecSys
-				For Each txt In Declaration.AuxTechs(tAux.ElectricSys)
-					CbTech.Items.Add(txt)
-				Next
-				CbTech.SelectedIndex = 0
-
+				CbTech.Items.AddRange(Declaration.AuxTechs(tAux.ElectricSys).ToArray())
 			Case Else 'sKey.AUX.PneumSys
-				For Each txt In Declaration.AuxTechs(tAux.PneumSys)
-					CbTech.Items.Add(txt)
-				Next
-				CbTech.SelectedIndex = 0
+				CbTech.Items.AddRange(Declaration.AuxTechs(tAux.PneumSys).ToArray())
 		End Select
+		CbTech.SelectedIndex = 0
 	End Sub
 
 	'Close form. Check if form is complete and valid
 	Private Sub F_VEH_AuxDlog_FormClosing(sender As Object, e As FormClosingEventArgs) Handles Me.FormClosing
-		If e.CloseReason <> CloseReason.WindowsShutDown And Me.DialogResult <> DialogResult.Cancel Then
+		If e.CloseReason <> CloseReason.WindowsShutDown And DialogResult <> DialogResult.Cancel Then
 
-			If Trim(Me.TbID.Text) = "" Or Trim(Me.CbType.Text) = "" Then
+			If Trim(TbID.Text) = "" Or Trim(CbType.Text) = "" Then
 				MsgBox("Form is incomplete!", MsgBoxStyle.Critical)
 				e.Cancel = True
 			End If
 
-			If Me.TbID.Text.Contains(",") Or Me.CbType.Text.Contains(",") Or Me.TbPath.Text.Contains(",") Then
+			If TbID.Text.Contains(",") Or CbType.Text.Contains(",") Or TbPath.Text.Contains(",") Then
 				MsgBox("',' is no valid character!", MsgBoxStyle.Critical)
 				e.Cancel = True
 			End If
 
 			If Cfg.DeclMode Then
 
-				If Me.CbTech.Text = "" Then
+				If CbTech.Text = "" Then
 					MsgBox("Form is incomplete!", MsgBoxStyle.Critical)
 					e.Cancel = True
 				End If
 
 			Else
 
-				If Trim(Me.TbPath.Text) = "" Then
+				If Trim(TbPath.Text) = "" Then
 					MsgBox("Form is incomplete!", MsgBoxStyle.Critical)
 					e.Cancel = True
 				End If
@@ -104,28 +87,28 @@ Public Class F_VEH_AuxDlog
 
 	'Browse for .vaux files
 	Private Sub BtBrowse_Click(sender As Object, e As EventArgs) Handles BtBrowse.Click
-		If fbAUX.OpenDialog(fFileRepl(Me.TbPath.Text, VehPath)) Then Me.TbPath.Text = fFileWoDir(fbAUX.Files(0), VehPath)
+		If fbAUX.OpenDialog(fFileRepl(TbPath.Text, VehPath)) Then TbPath.Text = fFileWoDir(fbAUX.Files(0), VehPath)
 	End Sub
 
 	'Update ID when Aux Type was changed
 	Private Sub CbType_TextChanged(sender As Object, e As EventArgs) Handles CbType.TextChanged
 
-		If Me.CbType.Text = "" Then
-			Me.TbID.Text = ""
+		If CbType.Text = "" Then
+			TbID.Text = ""
 		Else
 			If Cfg.DeclMode Then
-				Select Case Me.CbType.SelectedIndex
+				Select Case CbType.SelectedIndex
 					Case 0
-						Me.TbID.Text = sKey.AUX.Fan
+						TbID.Text = sKey.AUX.Fan
 					Case 1
-						Me.TbID.Text = sKey.AUX.SteerPump
+						TbID.Text = sKey.AUX.SteerPump
 
 					Case Else '2
-						Me.TbID.Text = sKey.AUX.HVAC
+						TbID.Text = sKey.AUX.HVAC
 
 				End Select
 			Else
-				Me.TbID.Text = Trim(UCase(Me.CbType.Text.Substring(0, CInt(Math.Min(Me.CbType.Text.Length, 3)))))
+				TbID.Text = Trim(UCase(CbType.Text.Substring(0, CInt(Math.Min(CbType.Text.Length, 3)))))
 			End If
 		End If
 	End Sub
@@ -135,10 +118,10 @@ Public Class F_VEH_AuxDlog
 
 		DeclInit()
 
-		If Trim(Me.TbID.Text) = "" Or Cfg.DeclMode Then
-			Me.LbIDhelp.Text = ""
+		If Trim(TbID.Text) = "" Or Cfg.DeclMode Then
+			LbIDhelp.Text = ""
 		Else
-			Me.LbIDhelp.Text = "Header in Driving cycle: <AUX_" & Trim(Me.TbID.Text) & ">"
+			LbIDhelp.Text = "Header in Driving cycle: <AUX_" & Trim(TbID.Text) & ">"
 		End If
 	End Sub
 End Class

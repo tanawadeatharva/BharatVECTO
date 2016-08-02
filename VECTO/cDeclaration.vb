@@ -61,15 +61,10 @@ Public Class cDeclaration
 	Public AuxPower As Dictionary(Of String, Single)
 
 	Private AuxFanPower As Dictionary(Of String, Dictionary(Of tMission, Single))
-
 	Private AuxSteerPumpPower As Dictionary(Of String, Dictionary(Of tMission, Single()))
 	Private AuxSteepPumpFactors As Dictionary(Of String, Single())
-
 	Private AuxHVACPower As Dictionary(Of String, Dictionary(Of tMission, Single))
-
-	Private AuxESbase As Dictionary(Of tMission, Single)
 	Public AuxESpower As Dictionary(Of String, Dictionary(Of tMission, Single))
-
 	Private AuxPSpower As Dictionary(Of String, Dictionary(Of tMission, Single))
 
 	Private Wheels As Dictionary(Of String, cWheel)
@@ -107,7 +102,6 @@ Public Class cDeclaration
 		Dim TrS As Single
 		Dim TrA As Single
 		Dim stl As String()
-		Dim First As Boolean
 
 		Dim BodyTrWeightList As List(Of String)
 		Dim LoadingList As List(Of String)
@@ -845,8 +839,6 @@ Public Class cDeclaration
 		Dim fS As Single
 		Dim sl As Single()
 		Dim Result As Boolean
-		Dim ESsum As Single
-		Dim EStech As String
 
 		MsgSrc = "DeclInit"
 
@@ -895,22 +887,8 @@ Public Class cDeclaration
 
 		'Electric System
 		Try
-
-			ESsum = AuxESbase(CurrentMission.MissionID)
-
-			For Each EStech In VEC.EStechs
-
-				If Not AuxESpower.ContainsKey(EStech) Then
-					WorkerMsg(tMsgID.Err, "Electric system '" & EStech & "' is not supported! ", MsgSrc)
-					Result = False
-				End If
-
-				ESsum += AuxESpower(EStech)(CurrentMission.MissionID)
-
-			Next
-
-			AuxPower.Add(sKey.AUX.ElecSys, ESsum / (1000 * AuxESeff))
-
+			AuxPower.Add(sKey.AUX.ElecSys,
+						AuxESpower(VEC.AuxPaths(sKey.AUX.ElecSys).TechStr)(CurrentMission.MissionID) / (1000 * AuxESeff))
 		Catch ex As Exception
 			WorkerMsg(tMsgID.Err, "Failed to initialise electric system! " & ex.Message, MsgSrc)
 			Result = False

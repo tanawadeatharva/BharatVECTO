@@ -266,10 +266,8 @@ namespace TUGraz.VectoCore.InputData.Reader.DataObjectAdapter
 						aux.ID = Constants.Auxiliaries.IDs.PneumaticSystem;
 						break;
 					case AuxiliaryType.ElectricSystem:
-						//aux.PowerDemand = DeclarationData.ElectricSystem.Lookup(mission,
-						//	auxData.TechList.DefaultIfNull(Enumerable.Empty<string>()).ToArray());
+						aux.PowerDemand = DeclarationData.ElectricSystem.Lookup(mission, auxData.Technology.First());
 						aux.ID = Constants.Auxiliaries.IDs.ElectricSystem;
-						//aux.TechList = auxData.TechList.DefaultIfNull(Enumerable.Empty<string>()).ToArray();
 						break;
 					default:
 						continue;

@@ -13,6 +13,7 @@ Option Infer On
 Imports System.Collections.Generic
 Imports System.Drawing.Imaging
 Imports System.IO
+Imports System.Linq
 Imports System.Text.RegularExpressions
 Imports System.Windows.Forms.DataVisualization.Charting
 
@@ -29,8 +30,6 @@ Public Class F_VECTO
 	Private pgDriverON As Boolean = True
 
 	Private AuxDlog As F_VEH_AuxDlog
-
-	Private EStechs As New List(Of String)
 
 	Public n_idle As Single
 	Public FLDfile As String
@@ -444,8 +443,6 @@ Public Class F_VECTO
 			LvAux.Items.Add(lv0)
 		Next
 
-		EStechs = VEC0.EStechs
-
 		For Each sb In VEC0.CycleFiles
 			Dim lv0 = New ListViewItem
 			lv0.Text = sb.OriginalPath
@@ -568,9 +565,6 @@ Public Class F_VECTO
 			auxEntry.Type = lv0.SubItems(1).Text
 			vec0.AuxPaths.Add(lv0.SubItems(0).Text, auxEntry)
 		Next
-
-		vec0.EStechs = EStechs
-
 
 		vec0.EngOnly = CbEngOnly.Checked
 
@@ -810,29 +804,29 @@ lbDlog:
 			Exit Sub
 		End If
 
-		Dim SelItem = LvAux.SelectedItems(0)
+		Dim selItem = LvAux.SelectedItems(0)
 
 		AuxDlog.VehPath = fPATH(VECTOfile)
 		AuxDlog.CbType.SelectedIndex = -1
-		AuxDlog.CbType.Text = SelItem.SubItems(1).Text
-		AuxDlog.TbID.Text = SelItem.SubItems(0).Text	'After Type-set!
+		AuxDlog.CbType.Text = selItem.SubItems(1).Text
+		AuxDlog.TbID.Text = selItem.SubItems(0).Text	'After Type-set!
 
 		If Cfg.DeclMode Then
-			AuxDlog.CbTech.Text = SelItem.SubItems(2).Text
+			AuxDlog.CbTech.Text = selItem.SubItems(2).Text
 			AuxDlog.TbPath.Text = ""
 		Else
 			AuxDlog.CbTech.SelectedIndex = -1
-			AuxDlog.TbPath.Text = SelItem.SubItems(2).Text
+			AuxDlog.TbPath.Text = selItem.SubItems(2).Text
 		End If
 
 		If AuxDlog.ShowDialog = DialogResult.OK Then
-			SelItem.SubItems(0).Text = UCase(Trim(AuxDlog.TbID.Text))
-			SelItem.SubItems(1).Text = Trim(AuxDlog.CbType.Text)
+			selItem.SubItems(0).Text = UCase(Trim(AuxDlog.TbID.Text))
+			selItem.SubItems(1).Text = Trim(AuxDlog.CbType.Text)
 
 			If Cfg.DeclMode Then
-				SelItem.SubItems(2).Text = Trim(AuxDlog.CbTech.Text)
+				selItem.SubItems(2).Text = Trim(AuxDlog.CbTech.Text)
 			Else
-				SelItem.SubItems(2).Text = Trim(AuxDlog.TbPath.Text)
+				selItem.SubItems(2).Text = Trim(AuxDlog.TbPath.Text)
 			End If
 
 			Change()
