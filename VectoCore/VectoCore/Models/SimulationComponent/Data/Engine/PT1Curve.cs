@@ -46,7 +46,7 @@ namespace TUGraz.VectoCore.Models.SimulationComponent.Data.Engine
 
 		protected override string ResourceId
 		{
-			get { throw new NotImplementedException(); }
+			get { return null; }
 		}
 
 		protected override string ErrorMessage

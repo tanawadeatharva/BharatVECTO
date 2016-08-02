@@ -43,7 +43,8 @@ namespace TUGraz.VectoCore.Models.Declaration
 	{
 		protected LookupData()
 		{
-			ParseData(ReadCsvResource(ResourceId));
+			if (!string.IsNullOrWhiteSpace(ResourceId))
+				ParseData(ReadCsvResource(ResourceId));
 		}
 
 		protected abstract string ResourceId { get; }
