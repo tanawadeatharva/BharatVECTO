@@ -46,7 +46,7 @@ namespace TUGraz.VectoCore.Models.Declaration
 
 		protected override string ErrorMessage
 		{
-			get { throw new NotImplementedException(); }
+			get { return "AirDrag Lookup Error: no value found. Key: '{0}'"; }
 		}
 
 		protected override void ParseData(DataTable table)

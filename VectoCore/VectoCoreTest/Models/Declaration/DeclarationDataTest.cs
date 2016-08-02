@@ -160,33 +160,29 @@ namespace TUGraz.VectoCore.Tests.Models.Declaration
 			Assert.AreEqual(expected, lookup, 1e-8);
 		}
 
-		[Test]
-		public void AirDragTest()
+		[TestCase("RigidSolo", 0.013526, 0.017746, -0.000666),
+		TestCase("RigidTrailer", 0.017125, 0.072275, -0.004148),
+		TestCase("TractorSemitrailer", 0.034767, 0.039367, -0.001897),
+		TestCase("CoachBus", -0.000794, 0.02109, -0.00109)]
+		public void AirDrag_WithStringKey(string key, double a1, double a2, double a3)
 		{
-			var airDrag = DeclarationData.AirDrag;
+			var value = DeclarationData.AirDrag.Lookup(key);
+			Assert.AreEqual(a1, value.A1);
+			Assert.AreEqual(a2, value.A2);
+			Assert.AreEqual(a3, value.A3);
+		}
 
-			var expected = new Dictionary<string, AirDrag.Entry> {
-				{ "RigidTruck", new AirDrag.Entry(0.013526, 0.017746, -0.000666) },
-				{ "RigidTrailer", new AirDrag.Entry(0.017125, 0.072275, -0.004148) },
-				{ "TractorSemitrailer", new AirDrag.Entry(0.034767, 0.039367, -0.001897) },
-				{ "CoachBus", new AirDrag.Entry(-0.000794, 0.02109, -0.00109) }
-			};
-
-			foreach (var kv in expected) {
-				Assert.AreEqual(kv.Value, airDrag.Lookup(kv.Key));
-			}
-
-			var expectedCat = new Dictionary<VehicleCategory, AirDrag.Entry> {
-				{ VehicleCategory.RigidTruck, new AirDrag.Entry(0.013526, 0.017746, -0.000666) },
-				{ VehicleCategory.Tractor, new AirDrag.Entry(0.034767, 0.039367, -0.001897) },
-				{ VehicleCategory.CityBus, new AirDrag.Entry(-0.000794, 0.02109, -0.00109) },
-				{ VehicleCategory.Coach, new AirDrag.Entry(-0.000794, 0.02109, -0.00109) },
-				{ VehicleCategory.InterurbanBus, new AirDrag.Entry(-0.000794, 0.02109, -0.00109) }
-			};
-
-			foreach (var kv in expectedCat) {
-				Assert.AreEqual(kv.Value, airDrag.Lookup(kv.Key));
-			}
+		[TestCase(VehicleCategory.RigidTruck, 0.013526, 0.017746, -0.000666),
+		TestCase(VehicleCategory.Tractor, 0.034767, 0.039367, -0.001897),
+		TestCase(VehicleCategory.CityBus, -0.000794, 0.02109, -0.00109),
+		TestCase(VehicleCategory.Coach, -0.000794, 0.02109, -0.00109),
+		TestCase(VehicleCategory.InterurbanBus, -0.000794, 0.02109, -0.00109)]
+		public void AirDrag_WithVehicleCategory(VehicleCategory cat, double a1, double a2, double a3)
+		{
+			var value = DeclarationData.AirDrag.Lookup(cat);
+			Assert.AreEqual(a1, value.A1);
+			Assert.AreEqual(a2, value.A2);
+			Assert.AreEqual(a3, value.A3);
 		}
 
 		[
