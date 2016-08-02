@@ -29,6 +29,7 @@
 *   Martin Rexeis, rexeis@ivt.tugraz.at, IVT, Graz University of Technology
 */
 
+using System;
 using System.Collections.Generic;
 using System.Data;
 using System.Linq;
@@ -40,9 +41,18 @@ namespace TUGraz.VectoCore.Models.Declaration
 {
 	public sealed class PT1 : LookupData<PerSecond, Second>
 	{
-		private const string ResourceId = "TUGraz.VectoCore.Resources.Declaration.PT1.csv";
+		protected override string ResourceId
+		{
+			get { return "TUGraz.VectoCore.Resources.Declaration.PT1.csv"; }
+		}
+
+		protected override string ErrorMessage
+		{
+			get { throw new InvalidOperationException("ErrorMessage not applicable."); }
+		}
+
 		private List<KeyValuePair<PerSecond, Second>> _entries;
-		
+
 		public PT1()
 		{
 			ParseData(ReadCsvResource(ResourceId));

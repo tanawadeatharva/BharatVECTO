@@ -69,8 +69,8 @@ namespace TUGraz.VectoCore.Tests.Models.Declaration
 		{
 			var tmp = DeclarationData.Rims.Lookup(rim);
 
-			Assert.AreEqual(fa, tmp.F_a, Tolerance);
-			Assert.AreEqual(fb, tmp.F_b, Tolerance);
+			Assert.AreEqual(fa, tmp.Fa, Tolerance);
+			Assert.AreEqual(fb, tmp.Fb, Tolerance);
 		}
 
 		[
@@ -165,33 +165,23 @@ namespace TUGraz.VectoCore.Tests.Models.Declaration
 		{
 			var airDrag = DeclarationData.AirDrag;
 
-			var expected = new Dictionary<string, AirDrag.AirDragEntry> {
-				{ "RigidSolo", new AirDrag.AirDragEntry { A1 = 0.013526, A2 = 0.017746, A3 = -0.000666 } },
-				{ "RigidTrailer", new AirDrag.AirDragEntry { A1 = 0.017125, A2 = 0.072275, A3 = -0.004148 } },
-				{ "TractorSemitrailer", new AirDrag.AirDragEntry { A1 = 0.034767, A2 = 0.039367, A3 = -0.001897 } },
-				{ "CoachBus", new AirDrag.AirDragEntry { A1 = -0.000794, A2 = 0.02109, A3 = -0.00109 } }
+			var expected = new Dictionary<string, AirDrag.Entry> {
+				{ "RigidTruck", new AirDrag.Entry(0.013526, 0.017746, -0.000666) },
+				{ "RigidTrailer", new AirDrag.Entry(0.017125, 0.072275, -0.004148) },
+				{ "TractorSemitrailer", new AirDrag.Entry(0.034767, 0.039367, -0.001897) },
+				{ "CoachBus", new AirDrag.Entry(-0.000794, 0.02109, -0.00109) }
 			};
 
 			foreach (var kv in expected) {
 				Assert.AreEqual(kv.Value, airDrag.Lookup(kv.Key));
 			}
 
-			var expectedCat = new Dictionary<VehicleCategory, AirDrag.AirDragEntry> {
-				{
-					VehicleCategory.RigidTruck,
-					new AirDrag.AirDragEntry { A1 = 0.013526, A2 = 0.017746, A3 = -0.000666 }
-				}, {
-					VehicleCategory.Tractor,
-					new AirDrag.AirDragEntry { A1 = 0.034767, A2 = 0.039367, A3 = -0.001897 }
-				}, {
-					VehicleCategory.CityBus,
-					new AirDrag.AirDragEntry { A1 = -0.000794, A2 = 0.02109, A3 = -0.00109 }
-				}, {
-					VehicleCategory.Coach, new AirDrag.AirDragEntry { A1 = -0.000794, A2 = 0.02109, A3 = -0.00109 }
-				}, {
-					VehicleCategory.InterurbanBus,
-					new AirDrag.AirDragEntry { A1 = -0.000794, A2 = 0.02109, A3 = -0.00109 }
-				}
+			var expectedCat = new Dictionary<VehicleCategory, AirDrag.Entry> {
+				{ VehicleCategory.RigidTruck, new AirDrag.Entry(0.013526, 0.017746, -0.000666) },
+				{ VehicleCategory.Tractor, new AirDrag.Entry(0.034767, 0.039367, -0.001897) },
+				{ VehicleCategory.CityBus, new AirDrag.Entry(-0.000794, 0.02109, -0.00109) },
+				{ VehicleCategory.Coach, new AirDrag.Entry(-0.000794, 0.02109, -0.00109) },
+				{ VehicleCategory.InterurbanBus, new AirDrag.Entry(-0.000794, 0.02109, -0.00109) }
 			};
 
 			foreach (var kv in expectedCat) {
@@ -321,7 +311,7 @@ namespace TUGraz.VectoCore.Tests.Models.Declaration
 
 			foreach (var expectation in expected) {
 				var baseConsumption = es.Lookup(expectation.Mission, null);
-				var leds = es.Lookup(expectation.Mission, new[] { "LED lights" });
+				var leds = es.Lookup(expectation.Mission, "LED lights");
 
 				AssertHelper.AreRelativeEqual(expectation.Base / expectation.Efficiency, baseConsumption);
 				AssertHelper.AreRelativeEqual(expectation.LED / expectation.Efficiency, leds);

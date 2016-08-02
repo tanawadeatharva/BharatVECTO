@@ -38,21 +38,27 @@ namespace TUGraz.VectoCore.Models.Declaration
 {
 	public sealed class TorqueConverter : LookupData<double, TorqueConverter.TorqueConverterEntry>
 	{
-		private const string ResourceId = "TUGraz.VectoCore.Resources.Declaration.DefaultTC.vtcc";
-		
+		protected override string ResourceId
+		{
+			get { return "TUGraz.VectoCore.Resources.Declaration.DefaultTC.vtcc"; }
+		}
+
+		protected override string ErrorMessage
+		{
+			get { throw new InvalidOperationException("ErrorMessage not applicable."); }
+		}
+
 		public TorqueConverter()
 		{
 			ParseData(ReadCsvResource(ResourceId));
 		}
 
-
-		[Obsolete("Default Lookup not available. Use LookupMu or LookupTorque instead.", true)]
+		[Obsolete("Default Lookup not implemente. Use LookupMu or LookupTorque instead.", true)]
 		private new TorqueConverterEntry Lookup(double key)
 		{
 			throw new InvalidOperationException(
 				"Default Lookup not available. Use TorqueConverter.LookupMu() or TorqueConverter.LookupTorque() instead.");
 		}
-
 
 		public NewtonMeter LookupTorque(double nu, PerSecond angularSpeedIn, PerSecond referenceSpeed)
 		{
@@ -76,7 +82,6 @@ namespace TUGraz.VectoCore.Models.Declaration
 
 			return VectoMath.Interpolate(sec.Item1.Key, sec.Item2.Key, sec.Item1.Value.Mu, sec.Item2.Value.Mu, nu);
 		}
-
 
 		protected override void ParseData(DataTable table)
 		{

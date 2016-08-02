@@ -36,32 +36,36 @@ using TUGraz.VectoCore.Utils;
 
 namespace TUGraz.VectoCore.Models.Declaration
 {
-	public class Wheels : LookupData<string, Wheels.WheelsEntry>
+	public sealed class Wheels : LookupData<string, Wheels.Entry>
 	{
-		protected const string ResourceId = "TUGraz.VectoCore.Resources.Declaration.Wheels.csv";
-
-		public Wheels()
+		protected override string ResourceId
 		{
-			ParseData(ReadCsvResource(ResourceId));
+			get { return "TUGraz.VectoCore.Resources.Declaration.Wheels.csv"; }
 		}
 
-		public override WheelsEntry Lookup(string key)
+		protected override string ErrorMessage
+		{
+			get { return "Auxiliary Lookup Error: No value found for Wheels. Key: '{0}'"; }
+		}
+
+		public override Entry Lookup(string key)
 		{
 			return base.Lookup(key.RemoveWhitespace());
 		}
 
-		protected sealed override void ParseData(DataTable table)
+		protected override void ParseData(DataTable table)
 		{
-			Data = (from DataRow row in table.Rows
-				select new WheelsEntry {
+			Data = table.Rows.Cast<DataRow>()
+				.Select(row => new Entry {
 					WheelType = row.Field<string>(0).RemoveWhitespace(),
 					Inertia = row.ParseDouble(1).SI<KilogramSquareMeter>(),
 					DynamicTyreRadius = row.ParseDouble(2).SI().Milli.Meter.Cast<Meter>(),
 					SizeClass = row.Field<string>(3)
-				}).ToDictionary(e => e.WheelType);
+				})
+				.ToDictionary(e => e.WheelType);
 		}
 
-		public class WheelsEntry
+		public class Entry
 		{
 			public string WheelType;
 			public KilogramSquareMeter Inertia;

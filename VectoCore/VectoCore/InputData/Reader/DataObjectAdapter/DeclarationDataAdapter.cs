@@ -337,7 +337,7 @@ namespace TUGraz.VectoCore.InputData.Reader.DataObjectAdapter
 			return points;
 		}
 
-		protected static SquareMeter ComputeDeltaCd(double beta, AirDrag.AirDragEntry values)
+		protected static SquareMeter ComputeDeltaCd(double beta, AirDrag.Entry values)
 		{
 			return (values.A1 * beta + values.A2 * beta * beta + values.A3 * beta * beta * beta).SI<SquareMeter>();
 		}

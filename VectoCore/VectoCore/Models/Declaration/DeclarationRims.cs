@@ -35,31 +35,37 @@ using TUGraz.VectoCore.Utils;
 
 namespace TUGraz.VectoCore.Models.Declaration
 {
-	public class DeclarationRims : LookupData<string, DeclarationRims.RimsEntry>
+	public sealed class DeclarationRims : LookupData<string, DeclarationRims.RimsEntry>
 	{
-		protected string ResourceId = "TUGraz.VectoCore.Resources.Declaration.Rims.csv";
-
-		public DeclarationRims()
+		protected override string ResourceId
 		{
-			ParseData(ReadCsvResource(ResourceId));
+			get { return "TUGraz.VectoCore.Resources.Declaration.Rims.csv"; }
 		}
 
-
-		protected override sealed void ParseData(DataTable table)
+		protected override string ErrorMessage
 		{
-			Data = (from DataRow row in table.Rows
-				select new RimsEntry {
-					RimsType = row[0].ToString(),
-					F_a = row.ParseDouble(1),
-					F_b = row.ParseDouble(2)
-				}).ToDictionary(e => e.RimsType);
+			get { return "Auxiliary Lookup Error: No value found for Rims. Key: '{0}'"; }
+		}
+
+		protected override void ParseData(DataTable table)
+		{
+			Data = table.Rows.Cast<DataRow>()
+				.Select(row => new RimsEntry(row[0].ToString(), row.ParseDouble(1), row.ParseDouble(2)))
+				.ToDictionary(e => e.RimsType);
 		}
 
 		public class RimsEntry
 		{
 			public string RimsType;
-			public double F_a;
-			public double F_b;
+			public double Fa;
+			public double Fb;
+
+			public RimsEntry(string rimsType, double fa, double fb)
+			{
+				RimsType = rimsType;
+				Fa = fa;
+				Fb = fb;
+			}
 		}
 	}
 }
