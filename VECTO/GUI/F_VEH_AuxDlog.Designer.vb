@@ -47,8 +47,6 @@ Partial Class F_VEH_AuxDlog
 		Me.CbTech = New System.Windows.Forms.ComboBox()
 		Me.PnTech = New System.Windows.Forms.Panel()
 		Me.PnFile = New System.Windows.Forms.Panel()
-		Me.LVTech = New System.Windows.Forms.ListView()
-		Me.ColumnHeader1 = CType(New System.Windows.Forms.ColumnHeader(), System.Windows.Forms.ColumnHeader)
 		Me.TableLayoutPanel1.SuspendLayout()
 		Me.PnTech.SuspendLayout()
 		Me.PnFile.SuspendLayout()
@@ -62,7 +60,7 @@ Partial Class F_VEH_AuxDlog
 		Me.TableLayoutPanel1.ColumnStyles.Add(New System.Windows.Forms.ColumnStyle(System.Windows.Forms.SizeType.Percent, 50.0!))
 		Me.TableLayoutPanel1.Controls.Add(Me.OK_Button, 0, 0)
 		Me.TableLayoutPanel1.Controls.Add(Me.Cancel_Button, 1, 0)
-		Me.TableLayoutPanel1.Location = New System.Drawing.Point(301, 388)
+		Me.TableLayoutPanel1.Location = New System.Drawing.Point(301, 143)
 		Me.TableLayoutPanel1.Name = "TableLayoutPanel1"
 		Me.TableLayoutPanel1.RowCount = 1
 		Me.TableLayoutPanel1.RowStyles.Add(New System.Windows.Forms.RowStyle(System.Windows.Forms.SizeType.Percent, 50.0!))
@@ -72,6 +70,7 @@ Partial Class F_VEH_AuxDlog
 		'OK_Button
 		'
 		Me.OK_Button.Anchor = System.Windows.Forms.AnchorStyles.None
+		Me.OK_Button.DialogResult = System.Windows.Forms.DialogResult.OK
 		Me.OK_Button.Location = New System.Drawing.Point(3, 3)
 		Me.OK_Button.Name = "OK_Button"
 		Me.OK_Button.Size = New System.Drawing.Size(67, 23)
@@ -192,28 +191,10 @@ Partial Class F_VEH_AuxDlog
 		Me.PnFile.Controls.Add(Me.Label2)
 		Me.PnFile.Controls.Add(Me.Label3)
 		Me.PnFile.Controls.Add(Me.Label1)
-		Me.PnFile.Location = New System.Drawing.Point(12, 293)
+		Me.PnFile.Location = New System.Drawing.Point(12, 51)
 		Me.PnFile.Name = "PnFile"
 		Me.PnFile.Size = New System.Drawing.Size(435, 89)
 		Me.PnFile.TabIndex = 29
-		'
-		'LVTech
-		'
-		Me.LVTech.CheckBoxes = True
-		Me.LVTech.Columns.AddRange(New System.Windows.Forms.ColumnHeader() {Me.ColumnHeader1})
-		Me.LVTech.FullRowSelect = True
-		Me.LVTech.GridLines = True
-		Me.LVTech.Location = New System.Drawing.Point(12, 52)
-		Me.LVTech.Name = "LVTech"
-		Me.LVTech.Size = New System.Drawing.Size(435, 235)
-		Me.LVTech.TabIndex = 30
-		Me.LVTech.UseCompatibleStateImageBehavior = False
-		Me.LVTech.View = System.Windows.Forms.View.Details
-		'
-		'ColumnHeader1
-		'
-		Me.ColumnHeader1.Text = "Technologies"
-		Me.ColumnHeader1.Width = 420
 		'
 		'F_VEH_AuxDlog
 		'
@@ -221,8 +202,7 @@ Partial Class F_VEH_AuxDlog
 		Me.AutoScaleDimensions = New System.Drawing.SizeF(6.0!, 13.0!)
 		Me.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font
 		Me.CancelButton = Me.Cancel_Button
-		Me.ClientSize = New System.Drawing.Size(459, 429)
-		Me.Controls.Add(Me.LVTech)
+		Me.ClientSize = New System.Drawing.Size(459, 184)
 		Me.Controls.Add(Me.PnFile)
 		Me.Controls.Add(Me.PnTech)
 		Me.Controls.Add(Me.TableLayoutPanel1)
@@ -256,7 +236,5 @@ Partial Class F_VEH_AuxDlog
     Friend WithEvents CbTech As System.Windows.Forms.ComboBox
     Friend WithEvents PnTech As System.Windows.Forms.Panel
     Friend WithEvents PnFile As System.Windows.Forms.Panel
-    Friend WithEvents LVTech As System.Windows.Forms.ListView
-    Friend WithEvents ColumnHeader1 As System.Windows.Forms.ColumnHeader
 
 End Class

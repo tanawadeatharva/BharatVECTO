@@ -8,6 +8,7 @@
 '   WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
 '
 ' See the LICENSE.txt for the specific language governing permissions and limitations.
+Option Infer On
 
 Imports System.Collections.Generic
 Imports System.Drawing.Imaging
@@ -48,7 +49,7 @@ Public Class F_VECTO
 
 
 	'Initialise form
-	Private Sub F02_GEN_Load(ByVal sender As Object, ByVal e As EventArgs) Handles Me.Load
+	Private Sub F02_GEN_Load(sender As Object, e As EventArgs) Handles Me.Load
 		Dim x As Int16
 
 		n_idle = -1
@@ -56,30 +57,30 @@ Public Class F_VECTO
 
 		AuxDlog = New F_VEH_AuxDlog
 
-		pgDriver = Me.TabPgDriver
+		pgDriver = TabPgDriver
 
-		For x = 0 To Me.TabControl1.TabCount - 1
-			Me.TabControl1.TabPages(x).Show()
+		For x = 0 To TabControl1.TabCount - 1
+			TabControl1.TabPages(x).Show()
 		Next
 
-		Me.LvAux.Columns(2).Width = -2
+		LvAux.Columns(2).Width = -2
 
 		'Declaration Mode
 		If Cfg.DeclMode Then
-			Me.LvAux.Columns(2).Text = "Technology"
+			LvAux.Columns(2).Text = "Technology"
 		Else
-			Me.LvAux.Columns(2).Text = "Input File"
+			LvAux.Columns(2).Text = "Input File"
 		End If
 
-		Me.CbEngOnly.Enabled = Not Cfg.DeclMode
-		Me.GrCycles.Enabled = Not Cfg.DeclMode
-		Me.GrVACC.Enabled = Not Cfg.DeclMode
-		Me.PnStartStop.Enabled = Not Cfg.DeclMode
-		Me.RdOff.Enabled = Not Cfg.DeclMode
-		Me.GrLAC.Enabled = Not Cfg.DeclMode
-		Me.ButAuxAdd.Enabled = Not Cfg.DeclMode
-		Me.ButAuxRem.Enabled = Not Cfg.DeclMode
-		Me.PnEcoRoll.Enabled = Not Cfg.DeclMode
+		CbEngOnly.Enabled = Not Cfg.DeclMode
+		GrCycles.Enabled = Not Cfg.DeclMode
+		GrVACC.Enabled = Not Cfg.DeclMode
+		PnStartStop.Enabled = Not Cfg.DeclMode
+		RdOff.Enabled = Not Cfg.DeclMode
+		GrLAC.Enabled = Not Cfg.DeclMode
+		ButAuxAdd.Enabled = Not Cfg.DeclMode
+		ButAuxRem.Enabled = Not Cfg.DeclMode
+		PnEcoRoll.Enabled = Not Cfg.DeclMode
 
 		Changed = False
 		'AA-TB
@@ -89,8 +90,7 @@ Public Class F_VECTO
 	End Sub
 
 	'Close - Check for unsaved changes
-	Private Sub F02_GEN_FormClosing(ByVal sender As Object, ByVal e As FormClosingEventArgs) _
-		Handles Me.FormClosing
+	Private Sub F02_GEN_FormClosing(sender As Object, e As FormClosingEventArgs) Handles Me.FormClosing
 		If e.CloseReason <> CloseReason.ApplicationExitCall And e.CloseReason <> CloseReason.WindowsShutDown Then
 			e.Cancel = ChangeCheckCancel()
 		End If
@@ -102,31 +102,31 @@ Public Class F_VECTO
 
 		If Not Cfg.DeclMode Then Exit Sub
 
-		Me.LvCycles.Items.Clear()
-		Me.CbEngOnly.Checked = False
-		Me.TbDesMaxFile.Text = ""
-		If Not Me.RdEcoRoll.Checked Then Me.RdOverspeed.Checked = True
-		Me.CbLookAhead.Checked = True
+		LvCycles.Items.Clear()
+		CbEngOnly.Checked = False
+		TbDesMaxFile.Text = ""
+		If Not RdEcoRoll.Checked Then RdOverspeed.Checked = True
+		CbLookAhead.Checked = True
 
-		Me.TbSSspeed.Text = cDeclaration.SSspeed
-		Me.TbSStime.Text = cDeclaration.SStime
-		Me.TbSSdelay.Text = cDeclaration.SSdelay
-		Me.TbAlookahead.Text = cDeclaration.LACa
-		Me.TbVminLA.Text = cDeclaration.LACvmin
+		TbSSspeed.Text = cDeclaration.SSspeed
+		TbSStime.Text = cDeclaration.SStime
+		TbSSdelay.Text = cDeclaration.SSdelay
+		TbAlookahead.Text = cDeclaration.LACa
+		TbVminLA.Text = cDeclaration.LACvmin
 		tbLacPreviewFactor.Text = "10"
 		tbLacDfTargetSpeedFile.Text = ""
 		tbLacDfVelocityDropFile.Text = ""
 
-		Me.TbOverspeed.Text = cDeclaration.Overspeed
-		Me.TbUnderSpeed.Text = cDeclaration.Underspeed
-		Me.TbVmin.Text = cDeclaration.ECvmin
+		TbOverspeed.Text = cDeclaration.Overspeed
+		TbUnderSpeed.Text = cDeclaration.Underspeed
+		TbVmin.Text = cDeclaration.ECvmin
 
 		If _
 			LvAux.Items.Count <> 5 OrElse
-			(Me.LvAux.Items(0).Text <> sKey.AUX.Fan OrElse Me.LvAux.Items(1).Text <> sKey.AUX.SteerPump OrElse
-			Me.LvAux.Items(2).Text <> sKey.AUX.HVAC OrElse Me.LvAux.Items(3).Text <> sKey.AUX.ElecSys OrElse
-			Me.LvAux.Items(4).Text <> sKey.AUX.PneumSys) Then
-			Me.LvAux.Items.Clear()
+			(LvAux.Items(0).Text <> sKey.AUX.Fan OrElse LvAux.Items(1).Text <> sKey.AUX.SteerPump OrElse
+			LvAux.Items(2).Text <> sKey.AUX.HVAC OrElse LvAux.Items(3).Text <> sKey.AUX.ElecSys OrElse
+			LvAux.Items(4).Text <> sKey.AUX.PneumSys) Then
+			LvAux.Items.Clear()
 
 			LV0 = New ListViewItem(sKey.AUX.Fan)
 			LV0.SubItems.Add("Fan")
@@ -135,7 +135,7 @@ Public Class F_VECTO
 			Else
 				LV0.SubItems.Add(Declaration.AuxTechs(tAux.Fan)(0))
 			End If
-			Me.LvAux.Items.Add(LV0)
+			LvAux.Items.Add(LV0)
 
 			LV0 = New ListViewItem(sKey.AUX.SteerPump)
 			LV0.SubItems.Add("Steering pump")
@@ -144,7 +144,7 @@ Public Class F_VECTO
 			Else
 				LV0.SubItems.Add(Declaration.AuxTechs(tAux.SteerPump)(0))
 			End If
-			Me.LvAux.Items.Add(LV0)
+			LvAux.Items.Add(LV0)
 
 			LV0 = New ListViewItem(sKey.AUX.HVAC)
 			LV0.SubItems.Add("HVAC")
@@ -153,7 +153,7 @@ Public Class F_VECTO
 			Else
 				LV0.SubItems.Add(Declaration.AuxTechs(tAux.HVAC)(0))
 			End If
-			Me.LvAux.Items.Add(LV0)
+			LvAux.Items.Add(LV0)
 
 			LV0 = New ListViewItem(sKey.AUX.ElecSys)
 			LV0.SubItems.Add("Electric System")
@@ -162,7 +162,7 @@ Public Class F_VECTO
 			Else
 				LV0.SubItems.Add(Declaration.AuxTechs(tAux.ElectricSys)(0))
 			End If
-			Me.LvAux.Items.Add(LV0)
+			LvAux.Items.Add(LV0)
 
 			LV0 = New ListViewItem(sKey.AUX.PneumSys)
 			LV0.SubItems.Add("Pneumatic System")
@@ -171,23 +171,23 @@ Public Class F_VECTO
 			Else
 				LV0.SubItems.Add(Declaration.AuxTechs(tAux.PneumSys)(0))
 			End If
-			Me.LvAux.Items.Add(LV0)
+			LvAux.Items.Add(LV0)
 
 		End If
 	End Sub
 
 
 	'Show/Hide "Driver Assist" Tab
-	Private Sub SetDrivertab(ByVal OnOff As Boolean)
-		If OnOff Then
+	Private Sub SetDrivertab(onOff As Boolean)
+		If onOff Then
 			If Not pgDriverON Then
 				pgDriverON = True
-				Me.TabControl1.TabPages.Insert(1, pgDriver)
+				TabControl1.TabPages.Insert(1, pgDriver)
 			End If
 		Else
 			If pgDriverON Then
 				pgDriverON = False
-				Me.TabControl1.Controls.Remove(pgDriver)
+				TabControl1.Controls.Remove(pgDriver)
 			End If
 		End If
 	End Sub
@@ -195,28 +195,32 @@ Public Class F_VECTO
 
 #Region "Browse Buttons"
 
-	Private Sub ButtonVEH_Click(ByVal sender As Object, ByVal e As EventArgs) Handles ButtonVEH.Click
-		If fbVEH.OpenDialog(fFileRepl(Me.TbVEH.Text, fPATH(VECTOfile))) Then _
-			Me.TbVEH.Text = fFileWoDir(fbVEH.Files(0), fPATH(VECTOfile))
+	Private Sub ButtonVEH_Click(sender As Object, e As EventArgs) Handles ButtonVEH.Click
+		If fbVEH.OpenDialog(fFileRepl(TbVEH.Text, fPATH(VECTOfile))) Then
+			TbVEH.Text = fFileWoDir(fbVEH.Files(0), fPATH(VECTOfile))
+		End If
 	End Sub
 
-	Private Sub ButtonMAP_Click(ByVal sender As Object, ByVal e As EventArgs) Handles ButtonMAP.Click
-		If fbENG.OpenDialog(fFileRepl(Me.TbENG.Text, fPATH(VECTOfile))) Then _
-			Me.TbENG.Text = fFileWoDir(fbENG.Files(0), fPATH(VECTOfile))
+	Private Sub ButtonMAP_Click(sender As Object, e As EventArgs) Handles ButtonMAP.Click
+		If fbENG.OpenDialog(fFileRepl(TbENG.Text, fPATH(VECTOfile))) Then
+			TbENG.Text = fFileWoDir(fbENG.Files(0), fPATH(VECTOfile))
+		End If
 	End Sub
 
-	Private Sub ButtonGBX_Click(ByVal sender As Object, ByVal e As EventArgs) Handles ButtonGBX.Click
-		If fbGBX.OpenDialog(fFileRepl(Me.TbGBX.Text, fPATH(VECTOfile))) Then _
-			Me.TbGBX.Text = fFileWoDir(fbGBX.Files(0), fPATH(VECTOfile))
+	Private Sub ButtonGBX_Click(sender As Object, e As EventArgs) Handles ButtonGBX.Click
+		If fbGBX.OpenDialog(fFileRepl(TbGBX.Text, fPATH(VECTOfile))) Then
+			TbGBX.Text = fFileWoDir(fbGBX.Files(0), fPATH(VECTOfile))
+		End If
 	End Sub
 
 	Private Sub BtDesMaxBr_Click_1(sender As Object, e As EventArgs) Handles BtDesMaxBr.Click
-		If fbACC.OpenDialog(fFileRepl(Me.TbDesMaxFile.Text, fPATH(VECTOfile))) Then _
-			Me.TbDesMaxFile.Text = fFileWoDir(fbACC.Files(0), fPATH(VECTOfile))
+		If fbACC.OpenDialog(fFileRepl(TbDesMaxFile.Text, fPATH(VECTOfile))) Then
+			TbDesMaxFile.Text = fFileWoDir(fbACC.Files(0), fPATH(VECTOfile))
+		End If
 	End Sub
 
 	Private Sub BtAccOpen_Click(sender As Object, e As EventArgs) Handles BtAccOpen.Click
-		OpenFiles(fFileRepl(Me.TbDesMaxFile.Text, fPATH(VECTOfile)))
+		OpenFiles(fFileRepl(TbDesMaxFile.Text, fPATH(VECTOfile)))
 	End Sub
 
 #End Region
@@ -224,7 +228,7 @@ Public Class F_VECTO
 #Region "Open Buttons"
 
 	'Open Vehicle Editor
-	Private Sub ButOpenVEH_Click(ByVal sender As Object, ByVal e As EventArgs) Handles ButOpenVEH.Click
+	Private Sub ButOpenVEH_Click(sender As Object, e As EventArgs) Handles ButOpenVEH.Click
 		Dim f As String
 		f = fFileRepl(TbVEH.Text, fPATH(VECTOfile))
 
@@ -250,7 +254,7 @@ Public Class F_VECTO
 	End Sub
 
 	'Open Engine Editor
-	Private Sub ButOpenENG_Click(ByVal sender As Object, ByVal e As EventArgs) Handles ButOpenENG.Click
+	Private Sub ButOpenENG_Click(sender As Object, e As EventArgs) Handles ButOpenENG.Click
 		Dim f As String
 		f = fFileRepl(TbENG.Text, fPATH(VECTOfile))
 
@@ -276,7 +280,7 @@ Public Class F_VECTO
 	End Sub
 
 	'Open Gearbox Editor
-	Private Sub ButOpenGBX_Click(ByVal sender As Object, ByVal e As EventArgs) Handles ButOpenGBX.Click
+	Private Sub ButOpenGBX_Click(sender As Object, e As EventArgs) Handles ButOpenGBX.Click
 		Dim f As String
 		f = fFileRepl(TbGBX.Text, fPATH(VECTOfile))
 
@@ -365,23 +369,16 @@ Public Class F_VECTO
 	End Function
 
 	'Open file
-	Public Sub VECTOload2Form(ByVal file As String)
-		Dim x As Int16
-		Dim VEC0 As cVECTO
-		Dim AuxEntryKV As KeyValuePair(Of String, cVECTO.cAuxEntry)
-		Dim LV0 As ListViewItem
-		Dim sb As cSubPath
-
+	Public Sub VECTOload2Form(file As String)
 		If ChangeCheckCancel() Then Exit Sub
 
 		VECTOnew()
 
 		'Read GEN
-		VEC0 = New cVECTO
+		Dim VEC0 = New cVECTO
 		VEC0.FilePath = file
 		Try
 			If Not VEC0.ReadFile() Then
-				VEC0 = Nothing
 				MsgBox("Failed to load " & fFILE(file, True) & "!")
 				Exit Sub
 			End If
@@ -393,7 +390,7 @@ Public Class F_VECTO
 		If Cfg.DeclMode <> VEC0.SavedInDeclMode Then
 			Select Case WrongMode()
 				Case 1
-					Me.Close()
+					Close()
 					F_MAINForm.RbDecl.Checked = Not F_MAINForm.RbDecl.Checked
 					F_MAINForm.OpenVectoFile(file)
 				Case -1
@@ -412,70 +409,64 @@ Public Class F_VECTO
 		TbGBX.Text = VEC0.PathGBX(True)
 
 		'Start/Stop
-		Me.ChBStartStop.Checked = VEC0.StartStop
-		Me.TbSSspeed.Text = VEC0.StStV
-		Me.TbSStime.Text = VEC0.StStT
-		Me.TbSSdelay.Text = VEC0.StStDelay
+		ChBStartStop.Checked = VEC0.StartStop
+		TbSSspeed.Text = VEC0.StStV.ToString()
+		TbSStime.Text = VEC0.StStT.ToString()
+		TbSSdelay.Text = VEC0.StStDelay.ToString()
 
 		'VACC
-		Me.TbDesMaxFile.Text = VEC0.DesMaxFile(True)
+		TbDesMaxFile.Text = VEC0.DesMaxFile(True)
 
 
 		'AA-TB
 		'Try and Select any previously selected Auxiliary Type
 		For Each item As cAdvancedAuxiliary In cboAdvancedAuxiliaries.Items
-
-			Dim aai As cAdvancedAuxiliary = DirectCast(item, cAdvancedAuxiliary)
-
-			If aai.AssemblyName = VEC0.AuxiliaryAssembly AndAlso VEC0.AuxiliaryVersion = aai.AuxiliaryVersion Then
-
+			If item.AssemblyName = VEC0.AuxiliaryAssembly AndAlso VEC0.AuxiliaryVersion = item.AuxiliaryVersion Then
 				cboAdvancedAuxiliaries.SelectedItem = item
 				Exit For
-
 			End If
-
 		Next
 		'AA-TB
 		'Assign any previously saved Axiliary FilePath
 		txtAdvancedAuxiliaryFile.Text = VEC0.AdvancedAuxiliaryFilePath
 
 
-		Me.LvAux.Items.Clear()
+		LvAux.Items.Clear()
 		For Each AuxEntryKV In VEC0.AuxPaths
-			LV0 = New ListViewItem
-			LV0.SubItems(0).Text = AuxEntryKV.Key
-			LV0.SubItems.Add(AuxEntryKV.Value.Type)
+			Dim lv0 = New ListViewItem
+			lv0.SubItems(0).Text = AuxEntryKV.Key
+			lv0.SubItems.Add(AuxEntryKV.Value.Type)
 			If Cfg.DeclMode Then
-				LV0.SubItems.Add(AuxEntryKV.Value.TechStr)
+				lv0.SubItems.Add(AuxEntryKV.Value.TechStr)
 			Else
-				LV0.SubItems.Add(AuxEntryKV.Value.Path.OriginalPath)
+				lv0.SubItems.Add(AuxEntryKV.Value.Path.OriginalPath)
 			End If
-			LvAux.Items.Add(LV0)
+			LvAux.Items.Add(lv0)
 		Next
 
 		EStechs = VEC0.EStechs
 
 		For Each sb In VEC0.CycleFiles
-			LV0 = New ListViewItem
-			LV0.Text = sb.OriginalPath
-			LvCycles.Items.Add(LV0)
+			Dim lv0 = New ListViewItem
+			lv0.Text = sb.OriginalPath
+			LvCycles.Items.Add(lv0)
 		Next
 
-		Me.CbEngOnly.Checked = VEC0.EngOnly
+		CbEngOnly.Checked = VEC0.EngOnly
 
 		If VEC0.EcoRollOn Then
-			Me.RdEcoRoll.Checked = True
+			RdEcoRoll.Checked = True
 		ElseIf VEC0.OverSpeedOn Then
-			Me.RdOverspeed.Checked = True
+			RdOverspeed.Checked = True
 		Else
-			Me.RdOff.Checked = True
+			RdOff.Checked = True
 		End If
-		Me.TbOverspeed.Text = CStr(VEC0.OverSpeed)
-		Me.TbUnderSpeed.Text = CStr(VEC0.UnderSpeed)
-		Me.TbVmin.Text = CStr(VEC0.vMin)
-		Me.CbLookAhead.Checked = VEC0.LookAheadOn
-		Me.TbAlookahead.Text = CStr(VEC0.a_lookahead)
-		Me.TbVminLA.Text = CStr(VEC0.vMinLA)
+		TbOverspeed.Text = CStr(VEC0.OverSpeed)
+		TbUnderSpeed.Text = CStr(VEC0.UnderSpeed)
+		TbVmin.Text = CStr(VEC0.vMin)
+		CbLookAhead.Checked = VEC0.LookAheadOn
+		TbAlookahead.Text = CStr(VEC0.a_lookahead)
+		TbVminLA.Text = CStr(VEC0.vMinLA)
 		tbLacPreviewFactor.Text = CStr(VEC0.LacPreviewFactor)
 		tbDfCoastingOffset.Text = CStr(VEC0.LacDfOffset)
 		tbDfCoastingScale.Text = CStr(VEC0.LacDfScale)
@@ -495,13 +486,13 @@ Public Class F_VECTO
 
 		VECTOfile = file
 
-		x = Len(file)
+		Dim x As Short = Len(file)
 		While Mid(file, x, 1) <> "\" And x > 0
 			x = x - 1
 		End While
-		Me.Text = Mid(file, x + 1, Len(file) - x)
+		Text = Mid(file, x + 1, Len(file) - x)
 		Changed = False
-		Me.ToolStripStatusLabelGEN.Text = ""	'file & " opened."
+		ToolStripStatusLabelGEN.Text = ""	'file & " opened."
 
 		UpdatePic()
 
@@ -509,17 +500,8 @@ Public Class F_VECTO
 	End Sub
 
 	'Save file
-	Private Function VECTOsave(ByVal file As String) As Boolean
-
-		Dim VEC0 As cVECTO
-		Dim AuxEntry As cVECTO.cAuxEntry
-		Dim LV0 As ListViewItem
-		Dim sb As cSubPath
-		Dim absoluteAAUxFile As String = String.Empty
-		Dim aaAssemblyName As String = String.Empty
-		Dim aaAssemblyVersion As String = String.Empty
+	Private Function VECTOsave(file As String) As Boolean
 		Dim message As String = String.Empty
-
 
 		'AA-TB
 		'Validation of Auxiliary Types/Advanced Auxiliaries
@@ -527,10 +509,10 @@ Public Class F_VECTO
 		If cboAdvancedAuxiliaries.SelectedIndex > 0 Then
 
 			'resolve absolute path for auxiliary file.
-			absoluteAAUxFile = ResolveAAUXFilePath(fPATH(VECTOfile), txtAdvancedAuxiliaryFile.Text)
+			Dim absoluteAAUxFile = ResolveAAUXFilePath(fPATH(VECTOfile), txtAdvancedAuxiliaryFile.Text)
 
-			aaAssemblyName = DirectCast(cboAdvancedAuxiliaries.SelectedItem, cAdvancedAuxiliary).AssemblyName
-			aaAssemblyVersion = DirectCast(cboAdvancedAuxiliaries.SelectedItem, cAdvancedAuxiliary).AuxiliaryVersion
+			Dim aaAssemblyName = DirectCast(cboAdvancedAuxiliaries.SelectedItem, cAdvancedAuxiliary).AssemblyName
+			Dim aaAssemblyVersion = DirectCast(cboAdvancedAuxiliaries.SelectedItem, cAdvancedAuxiliary).AuxiliaryVersion
 
 
 			If Not ValidateAAUXFile(absoluteAAUxFile, aaAssemblyName, aaAssemblyVersion, message) Then
@@ -543,74 +525,73 @@ Public Class F_VECTO
 		End If
 
 
-		VEC0 = New cVECTO
-		VEC0.FilePath = file
+		Dim vec0 = New cVECTO
+		vec0.FilePath = file
 
 		'Files ------------------------------------------------- -----------------
 
-		VEC0.PathVEH = Me.TbVEH.Text
-		VEC0.PathENG = Me.TbENG.Text
+		vec0.PathVEH = TbVEH.Text
+		vec0.PathENG = TbENG.Text
 
-		For Each LV0 In LvCycles.Items
-			sb = New cSubPath
-			sb.Init(fPATH(file), LV0.Text)
-			VEC0.CycleFiles.Add(sb)
+		For Each lv0 As ListViewItem In LvCycles.Items
+			Dim sb = New cSubPath
+			sb.Init(fPATH(file), lv0.Text)
+			vec0.CycleFiles.Add(sb)
 		Next
 
-		VEC0.PathGBX = Me.TbGBX.Text
+		vec0.PathGBX = TbGBX.Text
 
 
 		'Start/Stop
-		VEC0.StartStop = Me.ChBStartStop.Checked
-		VEC0.StStV = CSng(fTextboxToNumString(Me.TbSSspeed.Text))
-		VEC0.StStT = CSng(fTextboxToNumString(Me.TbSStime.Text))
-		VEC0.StStDelay = CInt(fTextboxToNumString(Me.TbSSdelay.Text))
+		vec0.StartStop = ChBStartStop.Checked
+		vec0.StStV = CSng(fTextboxToNumString(TbSSspeed.Text))
+		vec0.StStT = CSng(fTextboxToNumString(TbSStime.Text))
+		vec0.StStDelay = CInt(fTextboxToNumString(TbSSdelay.Text))
 
 		'a_DesMax
-		VEC0.DesMaxFile = Me.TbDesMaxFile.Text
+		vec0.DesMaxFile = TbDesMaxFile.Text
 
 		'AA-TB
-		VEC0.AuxiliaryAssembly = DirectCast(cboAdvancedAuxiliaries.SelectedItem, cAdvancedAuxiliary).AssemblyName
-		VEC0.AuxiliaryVersion = DirectCast(cboAdvancedAuxiliaries.SelectedItem, cAdvancedAuxiliary).AuxiliaryVersion
-		VEC0.AdvancedAuxiliaryFilePath = txtAdvancedAuxiliaryFile.Text
+		vec0.AuxiliaryAssembly = DirectCast(cboAdvancedAuxiliaries.SelectedItem, cAdvancedAuxiliary).AssemblyName
+		vec0.AuxiliaryVersion = DirectCast(cboAdvancedAuxiliaries.SelectedItem, cAdvancedAuxiliary).AuxiliaryVersion
+		vec0.AdvancedAuxiliaryFilePath = txtAdvancedAuxiliaryFile.Text
 
-
-		For Each LV0 In LvAux.Items
-			AuxEntry = New cVECTO.cAuxEntry
+		For Each lv0 As ListViewItem In LvAux.Items
+			Dim auxEntry = New cVECTO.cAuxEntry
 
 			If Cfg.DeclMode Then
-				AuxEntry.TechStr = LV0.SubItems(2).Text
+				auxEntry.TechStr = lv0.SubItems(2).Text
 			Else
-				AuxEntry.Path.Init(fPATH(file), LV0.SubItems(2).Text)
+				auxEntry.Path.Init(fPATH(file), lv0.SubItems(2).Text)
 			End If
 
-			AuxEntry.Type = LV0.SubItems(1).Text
-			VEC0.AuxPaths.Add(LV0.SubItems(0).Text, AuxEntry)
+			auxEntry.Type = lv0.SubItems(1).Text
+			vec0.AuxPaths.Add(lv0.SubItems(0).Text, auxEntry)
 		Next
 
-		VEC0.EStechs = EStechs
+		vec0.EStechs = EStechs
 
 
-		VEC0.EngOnly = Me.CbEngOnly.Checked
+		vec0.EngOnly = CbEngOnly.Checked
 
-		VEC0.EcoRollOn = RdEcoRoll.Checked
-		VEC0.OverSpeedOn = RdOverspeed.Checked
-		VEC0.OverSpeed = CSng(fTextboxToNumString(Me.TbOverspeed.Text))
-		VEC0.UnderSpeed = CSng(fTextboxToNumString(Me.TbUnderSpeed.Text))
-		VEC0.vMin = CSng(fTextboxToNumString(Me.TbVmin.Text))
-		VEC0.LookAheadOn = Me.CbLookAhead.Checked
-		VEC0.a_lookahead = CSng(fTextboxToNumString(Me.TbAlookahead.Text))
-		VEC0.vMinLA = CSng(fTextboxToNumString(Me.TbVminLA.Text))
+		vec0.EcoRollOn = RdEcoRoll.Checked
+		vec0.OverSpeedOn = RdOverspeed.Checked
+		vec0.OverSpeed = CSng(fTextboxToNumString(TbOverspeed.Text))
+		vec0.UnderSpeed = CSng(fTextboxToNumString(TbUnderSpeed.Text))
+		vec0.vMin = CSng(fTextboxToNumString(TbVmin.Text))
+		vec0.LookAheadOn = CbLookAhead.Checked
+		vec0.a_lookahead = CSng(fTextboxToNumString(TbAlookahead.Text))
+		vec0.vMinLA = CSng(fTextboxToNumString(TbVminLA.Text))
 
-		VEC0.LacPreviewFactor = CSng(fTextboxToNumString(tbLacPreviewFactor.Text))
-		VEC0.LacDfOffset = CSng(fTextboxToNumString(tbDfCoastingOffset.Text))
-		VEC0.LacDfScale = CSng(fTextboxToNumString(tbDfCoastingScale.Text))
-		VEC0.LacDfTargetSpeedFile = tbLacDfTargetSpeedFile.Text
-		VEC0.LacDfVelocityDropFile = tbLacDfVelocityDropFile.Text
+		vec0.LacPreviewFactor = CSng(fTextboxToNumString(tbLacPreviewFactor.Text))
+		vec0.LacDfOffset = CSng(fTextboxToNumString(tbDfCoastingOffset.Text))
+		vec0.LacDfScale = CSng(fTextboxToNumString(tbDfCoastingScale.Text))
+		vec0.LacDfTargetSpeedFile = tbLacDfTargetSpeedFile.Text
+		vec0.LacDfVelocityDropFile = tbLacDfVelocityDropFile.Text
 		'------------------------------------------------------------
 
 		'SAVE
-		If Not VEC0.SaveFile Then
+		If Not vec0.SaveFile Then
 			MsgBox("Cannot safe to " & file, MsgBoxStyle.Critical)
 			Return False
 		End If
@@ -619,9 +600,8 @@ Public Class F_VECTO
 
 		file = fFILE(VECTOfile, True)
 
-		Me.Text = file
-
-		Me.ToolStripStatusLabelGEN.Text = ""
+		Text = file
+		ToolStripStatusLabelGEN.Text = ""
 
 		F_MAINForm.AddToJobListView(VECTOfile)
 
@@ -639,28 +619,28 @@ Public Class F_VECTO
 		FLDfile = ""
 
 		'Files
-		Me.TbVEH.Text = ""
-		Me.TbENG.Text = ""
-		Me.LvCycles.Items.Clear()
-		Me.TbGBX.Text = ""
-		Me.TbDesMaxFile.Text = ""
+		TbVEH.Text = ""
+		TbENG.Text = ""
+		LvCycles.Items.Clear()
+		TbGBX.Text = ""
+		TbDesMaxFile.Text = ""
 
 		'Start/Stop
-		Me.TbSSspeed.Text = "5"
-		Me.TbSStime.Text = "5"
-		Me.ChBStartStop.Checked = False
+		TbSSspeed.Text = "5"
+		TbSStime.Text = "5"
+		ChBStartStop.Checked = False
 
-		Me.LvAux.Items.Clear()
+		LvAux.Items.Clear()
 
-		Me.CbEngOnly.Checked = False
+		CbEngOnly.Checked = False
 
-		Me.RdOff.Checked = True
-		Me.CbLookAhead.Checked = True
-		Me.TbAlookahead.Text = "-0.5"
-		Me.TbOverspeed.Text = ""
-		Me.TbUnderSpeed.Text = ""
-		Me.TbVmin.Text = ""
-		Me.TbVminLA.Text = "50"
+		RdOff.Checked = True
+		CbLookAhead.Checked = True
+		TbAlookahead.Text = "-0.5"
+		TbOverspeed.Text = ""
+		TbUnderSpeed.Text = ""
+		TbVmin.Text = ""
+		TbVminLA.Text = "50"
 		tbLacPreviewFactor.Text = "10"
 		tbDfCoastingOffset.Text = "2.5"
 		tbDfCoastingScale.Text = "1.5"
@@ -674,8 +654,8 @@ Public Class F_VECTO
 		F_ENG.AutoSendTo = False
 
 		VECTOfile = ""
-		Me.Text = "Job Editor"
-		Me.ToolStripStatusLabelGEN.Text = ""
+		Text = "Job Editor"
+		ToolStripStatusLabelGEN.Text = ""
 		Changed = False
 		UpdatePic()
 	End Sub
@@ -685,19 +665,19 @@ Public Class F_VECTO
 
 #Region "'Change' Events"
 
-	Private Sub TextBoxVEH_TextChanged(ByVal sender As Object, ByVal e As EventArgs) _
+	Private Sub TextBoxVEH_TextChanged(sender As Object, e As EventArgs) _
 		Handles TbVEH.TextChanged
 		UpdatePic()
 		Change()
 	End Sub
 
-	Private Sub TextBoxMAP_TextChanged(ByVal sender As Object, ByVal e As EventArgs) _
+	Private Sub TextBoxMAP_TextChanged(sender As Object, e As EventArgs) _
 		Handles TbENG.TextChanged
 		UpdatePic()
 		Change()
 	End Sub
 
-	Private Sub TextBoxFLD_TextChanged(ByVal sender As Object, ByVal e As EventArgs) _
+	Private Sub TextBoxFLD_TextChanged(sender As Object, e As EventArgs) _
 		Handles TbGBX.TextChanged
 		UpdatePic()
 		Change()
@@ -744,7 +724,7 @@ Public Class F_VECTO
 
 	Private Sub Change()
 		If Not Changed Then
-			Me.ToolStripStatusLabelGEN.Text = "Unsaved changes in current file"
+			ToolStripStatusLabelGEN.Text = "Unsaved changes in current file"
 			Changed = True
 		End If
 	End Sub
@@ -776,22 +756,22 @@ Public Class F_VECTO
 #Region "Aux Listview"
 
 	Private Sub ButAuxAdd_Click(sender As Object, e As EventArgs) Handles ButAuxAdd.Click
-		Dim LV0 As ListViewItem
 		Dim ID As String
 
 		AuxDlog.VehPath = fPATH(VECTOfile)
 		AuxDlog.TbPath.Text = ""
 		AuxDlog.CbType.SelectedIndex = -1
 		AuxDlog.CbType.Text = ""
-		AuxDlog.TbID.Text = ""		 '!!! Vorher Type setzen weil ID beim ändern von Type überschrieben wird !!!"
+		AuxDlog.TbID.Text = "" '!!! Set Type before ID, because changing the type will overwrite the id !!!
 
 lbDlog:
 		If AuxDlog.ShowDialog = DialogResult.OK Then
 
 			ID = UCase(Trim(AuxDlog.TbID.Text))
 
-			For Each LV0 In LvAux.Items
-				If LV0.SubItems(0).Text = ID Then
+			Dim lv0 As ListViewItem
+			For Each lv0 In LvAux.Items
+				If lv0.SubItems(0).Text = ID Then
 					MsgBox("ID '" & ID & "' already defined!", MsgBoxStyle.Critical)
 					AuxDlog.TbID.SelectAll()
 					AuxDlog.TbID.Focus()
@@ -799,22 +779,12 @@ lbDlog:
 				End If
 			Next
 
-			LV0 = New ListViewItem
-			LV0.SubItems(0).Text = UCase(Trim(AuxDlog.TbID.Text))
-			LV0.SubItems.Add(Trim(AuxDlog.CbType.Text))
-			LV0.SubItems.Add(Trim(AuxDlog.TbPath.Text))
-
-			LvAux.Items.Add(LV0)
-
-			If ID = sKey.AUX.ElecSys Then
-				EStechs.Clear()
-				For Each LV0 In AuxDlog.LVTech.CheckedItems
-					EStechs.Add(LV0.Text)
-				Next
-			End If
-
+			lv0 = New ListViewItem
+			lv0.SubItems(0).Text = UCase(Trim(AuxDlog.TbID.Text))
+			lv0.SubItems.Add(Trim(AuxDlog.CbType.Text))
+			lv0.SubItems.Add(Trim(AuxDlog.TbPath.Text))
+			LvAux.Items.Add(lv0)
 			Change()
-
 		End If
 	End Sub
 
@@ -836,12 +806,11 @@ lbDlog:
 	End Sub
 
 	Private Sub EditAuxItem()
-		Dim SelItem As ListViewItem
-		Dim LV0 As ListViewItem
+		If LvAux.SelectedItems.Count = 0 Then
+			Exit Sub
+		End If
 
-		If LvAux.SelectedItems.Count = 0 Then Exit Sub
-
-		SelItem = LvAux.SelectedItems(0)
+		Dim SelItem = LvAux.SelectedItems(0)
 
 		AuxDlog.VehPath = fPATH(VECTOfile)
 		AuxDlog.CbType.SelectedIndex = -1
@@ -851,17 +820,6 @@ lbDlog:
 		If Cfg.DeclMode Then
 			AuxDlog.CbTech.Text = SelItem.SubItems(2).Text
 			AuxDlog.TbPath.Text = ""
-
-			If AuxDlog.TbID.Text = sKey.AUX.ElecSys Then
-				For Each LV0 In AuxDlog.LVTech.Items
-					If EStechs.Contains(LV0.Text) Then
-						LV0.Checked = True
-					Else
-						LV0.Checked = False
-					End If
-				Next
-			End If
-
 		Else
 			AuxDlog.CbTech.SelectedIndex = -1
 			AuxDlog.TbPath.Text = SelItem.SubItems(2).Text
@@ -877,15 +835,7 @@ lbDlog:
 				SelItem.SubItems(2).Text = Trim(AuxDlog.TbPath.Text)
 			End If
 
-			If UCase(Trim(AuxDlog.TbID.Text)) = sKey.AUX.ElecSys Then
-				EStechs.Clear()
-				For Each LV0 In AuxDlog.LVTech.CheckedItems
-					EStechs.Add(LV0.Text)
-				Next
-			End If
-
 			Change()
-
 		End If
 	End Sub
 
@@ -919,21 +869,21 @@ lbDlog:
 #End Region
 
 	'OK (Save & Close)
-	Private Sub ButSave_Click(ByVal sender As Object, ByVal e As EventArgs) Handles ButOK.Click
+	Private Sub ButSave_Click(sender As Object, e As EventArgs) Handles ButOK.Click
 		If Not Save() Then Exit Sub
-		Me.Close()
+		Close()
 	End Sub
 
 	'Cancel
-	Private Sub ButCancel_Click(ByVal sender As Object, ByVal e As EventArgs) Handles ButCancel.Click
-		Me.Close()
+	Private Sub ButCancel_Click(sender As Object, e As EventArgs) Handles ButCancel.Click
+		Close()
 	End Sub
 
 #Region "Cycle list"
 
 	Private Sub LvCycles_DoubleClick(sender As Object, e As EventArgs) Handles LvCycles.DoubleClick
-		If Me.LvCycles.SelectedItems.Count > 0 Then _
-			OpenFiles(fFileRepl(Me.LvCycles.SelectedItems(0).SubItems(0).Text, fPATH(VECTOfile)))
+		If LvCycles.SelectedItems.Count > 0 Then _
+			OpenFiles(fFileRepl(LvCycles.SelectedItems(0).SubItems(0).Text, fPATH(VECTOfile)))
 	End Sub
 
 	Private Sub LvCycles_KeyDown(sender As Object, e As KeyEventArgs) Handles LvCycles.KeyDown
@@ -941,7 +891,7 @@ lbDlog:
 			Case Keys.Delete, Keys.Back
 				RemoveCycle()
 			Case Keys.Enter
-				If Me.LvCycles.SelectedItems.Count > 0 Then Me.LvCycles.SelectedItems(0).BeginEdit()
+				If LvCycles.SelectedItems.Count > 0 Then LvCycles.SelectedItems(0).BeginEdit()
 		End Select
 	End Sub
 
@@ -955,7 +905,7 @@ lbDlog:
 		If fbDRI.OpenDialog("", True) Then
 
 			For Each str In fbDRI.Files
-				Me.LvCycles.Items.Add(fFileWoDir(str, GenDir))
+				LvCycles.Items.Add(fFileWoDir(str, GenDir))
 			Next
 
 			Change()
@@ -1025,14 +975,14 @@ lbDlog:
 	Private Sub ChBStartStop_CheckedChanged_1(sender As Object, e As EventArgs) _
 		Handles ChBStartStop.CheckedChanged
 		Change()
-		If Not Cfg.DeclMode Then Me.PnStartStop.Enabled = Me.ChBStartStop.Checked
+		If Not Cfg.DeclMode Then PnStartStop.Enabled = ChBStartStop.Checked
 	End Sub
 
 	'LAC changed
 	Private Sub CbLookAhead_CheckedChanged(sender As Object, e As EventArgs) _
 		Handles CbLookAhead.CheckedChanged
 		Change()
-		Me.PnLookAhead.Enabled = CbLookAhead.Checked
+		PnLookAhead.Enabled = CbLookAhead.Checked
 	End Sub
 
 	'EcoRoll / Overspeed changed
@@ -1043,72 +993,65 @@ lbDlog:
 
 		Change()
 
-		EcoR = Me.RdEcoRoll.Checked
-		Ovr = Me.RdOverspeed.Checked
+		EcoR = RdEcoRoll.Checked
+		Ovr = RdOverspeed.Checked
 
-		Me.TbOverspeed.Enabled = Ovr Or EcoR
-		Me.Label13.Enabled = Ovr Or EcoR
-		Me.Label14.Enabled = Ovr Or EcoR
+		TbOverspeed.Enabled = Ovr Or EcoR
+		Label13.Enabled = Ovr Or EcoR
+		Label14.Enabled = Ovr Or EcoR
 
-		Me.TbUnderSpeed.Enabled = EcoR
-		Me.Label22.Enabled = EcoR
-		Me.Label20.Enabled = EcoR
+		TbUnderSpeed.Enabled = EcoR
+		Label22.Enabled = EcoR
+		Label20.Enabled = EcoR
 
-		Me.TbVmin.Enabled = Ovr Or EcoR
-		Me.Label23.Enabled = Ovr Or EcoR
-		Me.Label21.Enabled = Ovr Or EcoR
+		TbVmin.Enabled = Ovr Or EcoR
+		Label23.Enabled = Ovr Or EcoR
+		Label21.Enabled = Ovr Or EcoR
 	End Sub
 
 #End Region
 
 	Public Sub UpdatePic()
 		Dim VEH0 As New cVEH
-		Dim ENG0 As cENG
-		Dim GBX0 As cGBX
-		Dim FLD0 As cFLD
-		Dim Shiftpoly As cGBX.cShiftPolygon
-		Dim MAP0 As cMAP
-		Dim OkCount As Integer
 		Dim i As Integer
 		Dim pmax As Single
 
-		Dim f As cFile_V3 = Nothing
+		Dim f As cFile_V3
 		Dim lM As List(Of Single)
 		Dim lup As List(Of Single)
 		Dim ldown As List(Of Single)
-		Dim line As String() = Nothing
+		Dim line As String()
 
-		Dim s0 As cSegmentTableEntry = Nothing
+		Dim s0 As cSegmentTableEntry
 		Dim HDVclass As String
 		Dim m0 As tMission
 
-		Dim MyChart As Chart
 		Dim s As Series
 		Dim a As ChartArea
 		Dim img As Image
 
-		Dim EngOK As Boolean = False
+		Dim EngOK = False
 
-		Me.TbHVCclass.Text = ""
-		Me.TbVehCat.Text = ""
-		Me.TbMass.Text = ""
-		Me.TbAxleConf.Text = ""
-		Me.TbEngTxt.Text = ""
-		Me.TbGbxTxt.Text = ""
-		Me.PicVehicle.Image = Nothing
-		Me.PicBox.Image = Nothing
+		TbHVCclass.Text = ""
+		TbVehCat.Text = ""
+		TbMass.Text = ""
+		TbAxleConf.Text = ""
+		TbEngTxt.Text = ""
+		TbGbxTxt.Text = ""
+		PicVehicle.Image = Nothing
+		PicBox.Image = Nothing
 
 
-		VEH0.FilePath = fFileRepl(Me.TbVEH.Text, fPATH(VECTOfile))
+		VEH0.FilePath = fFileRepl(TbVEH.Text, fPATH(VECTOfile))
 		If VEH0.ReadFile(False) Then
 			s0 = Declaration.SegmentTable.SetRef(VEH0.VehCat, VEH0.AxleConf, VEH0.MassMax)
 			If Not s0 Is Nothing Then
 				HDVclass = s0.HDVclass
 
 				If Cfg.DeclMode Then
-					Me.LvCycles.Items.Clear()
+					LvCycles.Items.Clear()
 					For Each m0 In s0.Missions
-						Me.LvCycles.Items.Add(Declaration.Missions(m0).NameStr)
+						LvCycles.Items.Add(Declaration.Missions(m0).NameStr)
 					Next
 				End If
 
@@ -1116,29 +1059,29 @@ lbDlog:
 				HDVclass = "-"
 			End If
 
-			Me.PicVehicle.Image = Image.FromFile(Declaration.ConvPicPath(HDVclass, False))
+			PicVehicle.Image = Image.FromFile(Declaration.ConvPicPath(HDVclass, False))
 
-			Me.TbHVCclass.Text = "HDV Class " & HDVclass
-			Me.TbVehCat.Text = ConvVehCat(VEH0.VehCat, True)
-			Me.TbMass.Text = VEH0.MassMax & " t"
-			Me.TbAxleConf.Text = ConvAxleConf(VEH0.AxleConf)
+			TbHVCclass.Text = "HDV Class " & HDVclass
+			TbVehCat.Text = ConvVehCat(VEH0.VehCat, True)
+			TbMass.Text = VEH0.MassMax & " t"
+			TbAxleConf.Text = ConvAxleConf(VEH0.AxleConf)
 
 		End If
 
 
-		OkCount = 0
+		Dim OkCount = 0
 
-		ENG0 = New cENG
-		ENG0.FilePath = fFileRepl(Me.TbENG.Text, fPATH(VECTOfile))
+		Dim ENG0 = New cENG
+		ENG0.FilePath = fFileRepl(TbENG.Text, fPATH(VECTOfile))
 
 		'Create plot
-		MyChart = New Chart
-		MyChart.Width = Me.PicBox.Width
-		MyChart.Height = Me.PicBox.Height
+		Dim MyChart = New Chart
+		MyChart.Width = PicBox.Width
+		MyChart.Height = PicBox.Height
 
 		a = New ChartArea
 
-		FLD0 = New cFLD
+		Dim FLD0 = New cFLD
 
 		If ENG0.ReadFile(False) Then
 
@@ -1172,10 +1115,10 @@ lbDlog:
 
 			End If
 
-			Me.TbEngTxt.Text = (ENG0.Displ / 1000).ToString("0.0") & " l " & pmax.ToString("#") & " kW  " & ENG0.ModelName
+			TbEngTxt.Text = (ENG0.Displ / 1000).ToString("0.0") & " l " & pmax.ToString("#") & " kW  " & ENG0.ModelName
 
 
-			MAP0 = New cMAP
+			Dim MAP0 = New cMAP
 			MAP0.FilePath = ENG0.PathMAP
 
 			If MAP0.ReadFile(False) Then
@@ -1194,12 +1137,12 @@ lbDlog:
 
 		End If
 
-		GBX0 = New cGBX
-		GBX0.FilePath = fFileRepl(Me.TbGBX.Text, fPATH(VECTOfile))
+		Dim GBX0 = New cGBX
+		GBX0.FilePath = fFileRepl(TbGBX.Text, fPATH(VECTOfile))
 
 		If GBX0.ReadFile(False) Then
 
-			Me.TbGbxTxt.Text = GBX0.GearCount & "-Speed " & GearboxConv(GBX0.gs_Type) & "  " & GBX0.ModelName
+			TbGbxTxt.Text = GBX0.GearCount & "-Speed " & GearboxConv(GBX0.gs_Type) & "  " & GBX0.ModelName
 
 			If Cfg.DeclMode Then
 
@@ -1213,7 +1156,7 @@ lbDlog:
 						If FLD0.ReadFile(True, False) Then
 
 							If FLD0.Init(ENG0.Nidle) Then
-								Shiftpoly = New cGBX.cShiftPolygon("", 0)
+								Dim Shiftpoly = New cGBX.cShiftPolygon("", 0)
 								Shiftpoly.SetGenericShiftPoly(FLD0, ENG0.Nidle)
 
 								s = New Series
@@ -1325,9 +1268,9 @@ lbDlog:
 			MyChart.Update()
 
 			img = New Bitmap(MyChart.Width, MyChart.Height, PixelFormat.Format32bppArgb)
-			MyChart.DrawToBitmap(img, New Rectangle(0, 0, Me.PicBox.Width, Me.PicBox.Height))
+			MyChart.DrawToBitmap(img, New Rectangle(0, 0, PicBox.Width, PicBox.Height))
 
-			Me.PicBox.Image = img
+			PicBox.Image = img
 
 
 		End If
@@ -1339,14 +1282,11 @@ lbDlog:
 	Private CmFiles As String()
 
 	Private Sub OpenFiles(ParamArray files() As String)
-
 		If files.Length = 0 Then Exit Sub
 
 		CmFiles = files
-
 		OpenWithToolStripMenuItem.Text = "Open with " & Cfg.OpenCmdName
-
-		CmOpenFile.Show(System.Windows.Forms.Cursor.Position)
+		CmOpenFile.Show(Windows.Forms.Cursor.Position)
 	End Sub
 
 	Private Sub OpenWithToolStripMenuItem_Click(sender As Object, e As EventArgs) _
@@ -1481,16 +1421,18 @@ lbDlog:
 	'AA-TB
 	Private Sub btnAAUXOpen_Click(sender As Object, e As EventArgs) Handles btnAAUXOpen.Click
 
-		OpenFiles(fFileRepl(Me.txtAdvancedAuxiliaryFile.Text, fPATH(VECTOfile)))
+		OpenFiles(fFileRepl(txtAdvancedAuxiliaryFile.Text, fPATH(VECTOfile)))
 	End Sub
 
 	Private Sub Button1_Click(sender As Object, e As EventArgs) Handles btnDfTargetSpeed.Click
-		If fbDfTargetSpeed.OpenDialog(fFileRepl(Me.tbLacDfTargetSpeedFile.Text, fPATH(VECTOfile))) Then _
-			Me.tbLacDfTargetSpeedFile.Text = fFileWoDir(fbDfTargetSpeed.Files(0), fPATH(VECTOfile))
+		If fbDfTargetSpeed.OpenDialog(fFileRepl(tbLacDfTargetSpeedFile.Text, fPATH(VECTOfile))) Then _
+			tbLacDfTargetSpeedFile.Text = fFileWoDir(fbDfTargetSpeed.Files(0), fPATH(VECTOfile))
 	End Sub
 
 	Private Sub btnDfVelocityDrop_Click(sender As Object, e As EventArgs) Handles btnDfVelocityDrop.Click
-		If fbDfVelocityDrop.OpenDialog(fFileRepl(Me.tbLacDfVelocityDropFile.Text, fPATH(VECTOfile))) Then _
-			Me.tbLacDfVelocityDropFile.Text = fFileWoDir(fbDfVelocityDrop.Files(0), fPATH(VECTOfile))
+		If fbDfVelocityDrop.OpenDialog(fFileRepl(tbLacDfVelocityDropFile.Text, fPATH(VECTOfile))) Then _
+			tbLacDfVelocityDropFile.Text = fFileWoDir(fbDfVelocityDrop.Files(0), fPATH(VECTOfile))
 	End Sub
 End Class
+
+

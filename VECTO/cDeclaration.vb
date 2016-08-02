@@ -12,6 +12,7 @@
 Imports System.Collections.Generic
 Imports iTextSharp.text.pdf
 Imports System.IO
+Imports System.Linq
 Imports iTextSharp.text
 
 Public Class cDeclaration
@@ -506,41 +507,34 @@ Public Class cDeclaration
 		AuxTechs.Add(tAux.HVAC, at0)
 
 		'Aux - Electric System
-		AuxESbase = New Dictionary(Of tMission, Single)
 		AuxESpower = New Dictionary(Of String, Dictionary(Of tMission, Single))
 		Try
 			If Not file.OpenRead(MyDeclPath & "VAUX\ES-Tech.csv") Then
-				GUImsg(tMsgID.Err, "Failed to load Declaration Config (Electric system config)!")
+				GUImsg(tMsgID.Err, "Failed to load Declaration Config (Electric system aux config)!")
 				Return False
 			End If
 
 			'Skip Header
 			file.ReadLine()
-			First = True
+			at0 = New List(Of String)
 			Do While Not file.EndOfFile
 				line = file.ReadLine
+				at0.Add(line(0))
 				AuxPower0 = New Dictionary(Of tMission, Single)
 				i = 0
-				For Each mt0 In SegmentTable.MissionList
+				For Each mt0 In SegmentTable.MissionList.Take(5)
 					i += 1
 					AuxPower0.Add(mt0, line(i))
 				Next
-				If First Then
-					AuxESbase = AuxPower0
-					First = False
-				Else
-					AuxESpower.Add(line(0), AuxPower0)
-				End If
+				AuxESpower.Add(line(0), AuxPower0)
 			Loop
+			AuxTechs.Add(tAux.ElectricSys, at0)
 			file.Close()
 		Catch ex As Exception
 			file.Close()
 			GUImsg(tMsgID.Err, "Failed to load Declaration Config (Electric system config)!" & ex.Message)
 			Return False
 		End Try
-		at0 = New List(Of String)
-		at0.Add("Custom Technology List")
-		AuxTechs.Add(tAux.ElectricSys, at0)
 
 
 		'Aux - Pneumatic System
