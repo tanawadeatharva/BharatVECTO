@@ -37,6 +37,7 @@ using System.IO;
 using System.Linq;
 using System.Text;
 using System.Text.RegularExpressions;
+using Microsoft.VisualBasic.FileIO;
 using TUGraz.VectoCommon.Exceptions;
 using TUGraz.VectoCommon.Models;
 using TUGraz.VectoCommon.Utils;
@@ -59,8 +60,8 @@ namespace TUGraz.VectoCore.Utils
 	public static class VectoCSVFile
 	{
 		private static readonly Regex HeaderFilter = new Regex(@"\[.*?\]|\<|\>", RegexOptions.Compiled);
-		private const char Delimiter = ',';
-		private const char Comment = '#';
+		private const string Delimiter = ",";
+		private const string Comment = "#";
 
 		/// <summary>
 		/// Reads a CSV file which is stored in Vecto-CSV-Format.
@@ -90,84 +91,59 @@ namespace TUGraz.VectoCore.Utils
 		/// <returns>A DataTable which represents the CSV File.</returns>
 		public static DataTable ReadStream(Stream stream, bool ignoreEmptyColumns = false, bool fullHeader = false)
 		{
+			var p = new TextFieldParser(stream) {
+				TextFieldType = FieldType.Delimited,
+				Delimiters = new[] { Delimiter },
+				CommentTokens = new[] { Comment },
+				HasFieldsEnclosedInQuotes = true,
+				TrimWhiteSpace = true
+			};
+
+			string[] colsWithoutComment;
+
 			try {
-				return ReadData(ReadLines(stream), ignoreEmptyColumns, fullHeader);
-			} catch (Exception e) {
-				LogManager.GetLogger(typeof(VectoCSVFile).FullName).Error(e);
-				throw new VectoException("Failed to read stream: " + e.Message, e);
+				colsWithoutComment = p.ReadFields()
+					.Select(l => l.Contains(Comment) ? l.Substring(0, l.IndexOf(Comment)) : l)
+					.ToArray();
+			} catch (ArgumentNullException) {
+				throw new CSVReadException("CSV Read Error: File was empty.");
 			}
-		}
 
-		private static IEnumerable<string> ReadLines(Stream stream)
-		{
-			using (var reader = new StreamReader(stream, Encoding.UTF8)) {
-				while (!reader.EndOfStream) {
-					yield return reader.ReadLine();
-				}
-			}
-		}
-
-		/// <summary>
-		/// 
-		/// </summary>
-		/// <param name="allLines"></param>
-		/// <param name="ignoreEmptyColumns"></param>
-		/// <param name="fullHeader"></param>
-		/// <returns></returns>
-		private static DataTable ReadData(IEnumerable<string> allLines, bool ignoreEmptyColumns = false,
-			bool fullHeader = false)
-		{
-			// trim, remove comments and filter empty lines
-			var lines = allLines
-				.Select(l => l.Trim())
-				.Select(l => l.Contains(Comment) ? l.Substring(0, l.IndexOf(Comment)) : l)
-				.Where(l => !string.IsNullOrWhiteSpace(l))
-				.GetEnumerator();
-
-			// start the enumerable
-			lines.MoveNext();
-
-			// add columns
-			var line = lines.Current;
-			if (!fullHeader) {
-				line = HeaderFilter.Replace(line, "");
-			}
 			double tmp;
-			var splittedColumns = line
-				.Split(Delimiter);
-
-			var columns = splittedColumns
-				.Select(col => col.Trim())
+			var columns = colsWithoutComment
+				.Select(l => fullHeader ? l : HeaderFilter.Replace(l, ""))
+				.Select(l => l.Trim())
 				.Where(col => !double.TryParse(col, NumberStyles.Any, CultureInfo.InvariantCulture, out tmp))
 				.ToList();
 
-			if (columns.Count > 0) {
-				// first line was a valid header: advance to first data line
-				lines.MoveNext();
-			} else {
+			var firstLineIsData = columns.Count == 0;
+
+			if (firstLineIsData) {
 				LogManager.GetLogger(typeof(VectoCSVFile).FullName)
 					.Warn("No valid Data Header found. Interpreting the first line as data line.");
 				// set the validColumns to: {"0", "1", "2", "3", ...} for all columns in first line.
-				columns = splittedColumns.Select((_, index) => index.ToString()).ToList();
+				columns = colsWithoutComment.Select((_, i) => i.ToString()).ToList();
 			}
 
 			var table = new DataTable();
 			foreach (var col in columns) {
 				table.Columns.Add(col);
 			}
-			if (lines.Current == null) {
-				return table;
-			}
-			// read data into table
-			var i = 0;
-			do {
-				i++;
-				line = lines.Current;
 
-				var cells = line.Split(Delimiter).Select(s => s.Trim()).ToArray();
-				if (cells.Length != table.Columns.Count && !ignoreEmptyColumns) {
+			if (p.EndOfData)
+				return table;
+
+			do {
+				var cells = firstLineIsData
+					? colsWithoutComment
+					: p.ReadFields()
+						.Select(l => l.Contains(Comment) ? l.Substring(0, l.IndexOf(Comment)) : l)
+						.Select(s => s.Trim())
+						.ToArray();
+				firstLineIsData = false;
+				if (table.Columns.Count != cells.Length && !ignoreEmptyColumns) {
 					throw new CSVReadException(
-						string.Format("Line {0}: The number of values is not correct. Expected {1} Columns, Got {2} Columns", i,
+						string.Format("Line {0}: The number of values is not correct. Expected {1} Columns, Got {2} Columns", p.LineNumber,
 							table.Columns.Count, cells.Length));
 				}
 
@@ -176,9 +152,10 @@ namespace TUGraz.VectoCore.Utils
 					table.Rows.Add(cells);
 				} catch (InvalidCastException e) {
 					throw new CSVReadException(
-						string.Format("Line {0}: The data format of a value is not correct. {1}", i, e.Message), e);
+						string.Format("Line {0}: The data format of a value is not correct. {1}", p.LineNumber, e.Message), e);
 				}
-			} while (lines.MoveNext());
+			} while (!p.EndOfData);
+
 			return table;
 		}
 

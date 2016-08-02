@@ -56,14 +56,17 @@ namespace TUGraz.VectoCore.Models.Declaration
 			NormalizeTable(table);
 
 			foreach (DataRow row in table.Rows) {
-				var name = row.Field<string>("Technology");
-				foreach (MissionType mission in Enum.GetValues(typeof(MissionType))) {
-					Data[Tuple.Create(mission, name)] = row.ParseDouble(mission.ToString().ToLower()).SI<Watt>();
+				var name = row.Field<string>("technology");
+				foreach (DataColumn col in table.Columns) {
+					if (col.Caption != "technology") {
+						Data[Tuple.Create(col.Caption.ParseEnum<MissionType>(), name)] =
+							row.ParseDouble(col).SI<Watt>();
+					}
 				}
 			}
 		}
 
-		public override Watt Lookup(MissionType missionType, string technology)
+		public override Watt Lookup(MissionType missionType, string technology = "Standard technology")
 		{
 			var value = base.Lookup(missionType, technology);
 			return value / _alternator.Lookup(missionType);

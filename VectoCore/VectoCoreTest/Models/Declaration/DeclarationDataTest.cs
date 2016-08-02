@@ -44,7 +44,6 @@ using TUGraz.VectoCore.InputData.Reader.Impl;
 using TUGraz.VectoCore.Models.Declaration;
 using TUGraz.VectoCore.Models.SimulationComponent.Data;
 using TUGraz.VectoCore.Tests.Utils;
-using TUGraz.VectoCore.Utils;
 
 namespace TUGraz.VectoCore.Tests.Models.Declaration
 {
@@ -266,52 +265,30 @@ namespace TUGraz.VectoCore.Tests.Models.Declaration
 				torque.SI<NewtonMeter>() * Math.Pow((angularSpeed / referenceSpeed).Cast<Scalar>(), 2), torqueLookup);
 		}
 
-		[Test]
-		public void AuxElectricSystemTest()
+		[
+			TestCase(MissionType.LongHaul, "Standard technology", 1200, 0.7),
+			TestCase(MissionType.RegionalDelivery, "Standard technology", 1000, 0.7),
+			TestCase(MissionType.UrbanDelivery, "Standard technology", 1000, 0.7),
+			TestCase(MissionType.MunicipalUtility, "Standard technology", 1000, 0.7),
+			TestCase(MissionType.Construction, "Standard technology", 1000, 0.7),
+			TestCase(MissionType.LongHaul, "Standard technology - LED headlights, all", 1150, 0.7),
+			TestCase(MissionType.RegionalDelivery, "Standard technology - LED headlights, all", 950, 0.7),
+			TestCase(MissionType.UrbanDelivery, "Standard technology - LED headlights, all", 950, 0.7),
+			TestCase(MissionType.MunicipalUtility, "Standard technology - LED headlights, all", 950, 0.7),
+			TestCase(MissionType.Construction, "Standard technology - LED headlights, all", 950, 0.7),
+		]
+		public void AuxElectricSystemTest(MissionType mission, string technology, double value, double efficiency)
 		{
-			var es = DeclarationData.ElectricSystem;
+			AssertHelper.AreRelativeEqual(value / efficiency, DeclarationData.ElectricSystem.Lookup(mission, technology));
+		}
 
-			var expected = new[] {
-				new { Mission = MissionType.LongHaul, Base = 1240.SI<Watt>(), LED = 1190.SI<Watt>(), Efficiency = 0.7 },
-				new {
-					Mission = MissionType.RegionalDelivery,
-					Base = 1055.SI<Watt>(),
-					LED = 1005.SI<Watt>(),
-					Efficiency = 0.7
-				},
-				new {
-					Mission = MissionType.UrbanDelivery,
-					Base = 974.SI<Watt>(),
-					LED = 924.SI<Watt>(),
-					Efficiency = 0.7
-				},
-				new {
-					Mission = MissionType.MunicipalUtility,
-					Base = 974.SI<Watt>(),
-					LED = 924.SI<Watt>(),
-					Efficiency = 0.7
-				},
-				new {
-					Mission = MissionType.Construction,
-					Base = 975.SI<Watt>(),
-					LED = 925.SI<Watt>(),
-					Efficiency = 0.7
-				},
-				new { Mission = MissionType.HeavyUrban, Base = 0.SI<Watt>(), LED = 0.SI<Watt>(), Efficiency = 1.0 },
-				new { Mission = MissionType.Urban, Base = 0.SI<Watt>(), LED = 0.SI<Watt>(), Efficiency = 1.0 },
-				new { Mission = MissionType.Suburban, Base = 0.SI<Watt>(), LED = 0.SI<Watt>(), Efficiency = 1.0 },
-				new { Mission = MissionType.Interurban, Base = 0.SI<Watt>(), LED = 0.SI<Watt>(), Efficiency = 1.0 },
-				new { Mission = MissionType.Coach, Base = 0.SI<Watt>(), LED = 0.SI<Watt>(), Efficiency = 1.0 }
-			};
-			Assert.AreEqual(expected.Length, Enum.GetValues(typeof(MissionType)).Length);
-
-			foreach (var expectation in expected) {
-				var baseConsumption = es.Lookup(expectation.Mission, null);
-				var leds = es.Lookup(expectation.Mission, "LED lights");
-
-				AssertHelper.AreRelativeEqual(expectation.Base / expectation.Efficiency, baseConsumption);
-				AssertHelper.AreRelativeEqual(expectation.LED / expectation.Efficiency, leds);
-			}
+		[
+			TestCase(MissionType.Interurban, "Standard technology"),
+			TestCase(MissionType.LongHaul, "Standard technology - Flux-Compensator")
+		]
+		public void AuxElectricSystem_NotExistingError(MissionType mission, string technology)
+		{
+			AssertHelper.Exception<VectoException>(() => { DeclarationData.ElectricSystem.Lookup(mission, technology); });
 		}
 
 		[
