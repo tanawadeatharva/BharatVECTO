@@ -372,46 +372,72 @@ namespace TUGraz.VectoCore.Tests.Models.Declaration
 			}
 		}
 
-		[Test,
-		TestCase("Fixed displacement", VehicleClass.Class1, new[] { 0, 260, 270, 0, 0, 0, 0, 0, 0, 0 }),
-		TestCase("Fixed displacement", VehicleClass.Class2, new[] { 370, 320, 310, 0, 0, 0, 0, 0, 0, 0 }),
-		TestCase("Fixed displacement", VehicleClass.Class3, new[] { 0, 340, 350, 0, 0, 0, 0, 0, 0, 0 }),
-		TestCase("Fixed displacement", VehicleClass.Class4, new[] { 610, 530, 0, 530, 0, 0, 0, 0, 0, 0 }),
-		TestCase("Fixed displacement", VehicleClass.Class5, new[] { 720, 630, 620, 0, 0, 0, 0, 0, 0, 0 }),
-		TestCase("Fixed displacement", VehicleClass.Class6, new[] { 0, 0, 0, 0, 0, 0, 0, 0, 0, 0 }),
-		TestCase("Fixed displacement", VehicleClass.Class7, new[] { 0, 0, 0, 0, 0, 0, 0, 0, 0, 0 }),
-		TestCase("Fixed displacement", VehicleClass.Class8, new[] { 0, 0, 0, 0, 0, 0, 0, 0, 0, 0 }),
-		TestCase("Fixed displacement", VehicleClass.Class9, new[] { 720, 550, 0, 550, 0, 0, 0, 0, 0, 0 }),
-		TestCase("Fixed displacement", VehicleClass.Class10, new[] { 570, 530, 0, 0, 0, 0, 0, 0, 0, 0 }),
-		TestCase("Variable displacement mech. controlled", VehicleClass.Class1, new[] { 0, 156, 162, 0, 0, 0, 0, 0, 0, 0 }),
-		TestCase("Variable displacement mech. controlled", VehicleClass.Class2, new[] { 222, 192, 186, 0, 0, 0, 0, 0, 0, 0 }),
-		TestCase("Variable displacement mech. controlled", VehicleClass.Class3, new[] { 0, 204, 210, 0, 0, 0, 0, 0, 0, 0 }),
-		TestCase("Variable displacement mech. controlled", VehicleClass.Class4, new[] { 366, 318, 0, 318, 0, 0, 0, 0, 0, 0 }),
-		TestCase("Variable displacement mech. controlled", VehicleClass.Class5, new[] { 432, 378, 372, 0, 0, 0, 0, 0, 0, 0 }),
-		TestCase("Variable displacement mech. controlled", VehicleClass.Class6, new[] { 0, 0, 0, 0, 0, 0, 0, 0, 0, 0 }),
-		TestCase("Variable displacement mech. controlled", VehicleClass.Class7, new[] { 0, 0, 0, 0, 0, 0, 0, 0, 0, 0 }),
-		TestCase("Variable displacement mech. controlled", VehicleClass.Class8, new[] { 0, 0, 0, 0, 0, 0, 0, 0, 0, 0 }),
-		TestCase("Variable displacement mech. controlled", VehicleClass.Class9, new[] { 432, 330, 0, 330, 0, 0, 0, 0, 0, 0 }),
-		TestCase("Variable displacement mech. controlled", VehicleClass.Class10, new[] { 342, 318, 0, 0, 0, 0, 0, 0, 0, 0 }),
-		TestCase("Variable displacement elec. controlled", VehicleClass.Class1, new[] { 0, 225, 235, 0, 0, 0, 0, 0, 0, 0 }),
-		TestCase("Variable displacement elec. controlled", VehicleClass.Class2, new[] { 322, 278, 269, 0, 0, 0, 0, 0, 0, 0 }),
-		TestCase("Variable displacement elec. controlled", VehicleClass.Class3, new[] { 0, 295, 304, 0, 0, 0, 0, 0, 0, 0 }),
-		TestCase("Variable displacement elec. controlled", VehicleClass.Class4, new[] { 531, 460, 0, 460, 0, 0, 0, 0, 0, 0 }),
-		TestCase("Variable displacement elec. controlled", VehicleClass.Class5, new[] { 627, 546, 540, 0, 0, 0, 0, 0, 0, 0 }),
-		TestCase("Variable displacement elec. controlled", VehicleClass.Class6, new[] { 0, 0, 0, 0, 0, 0, 0, 0, 0, 0 }),
-		TestCase("Variable displacement elec. controlled", VehicleClass.Class7, new[] { 0, 0, 0, 0, 0, 0, 0, 0, 0, 0 }),
-		TestCase("Variable displacement elec. controlled", VehicleClass.Class8, new[] { 0, 0, 0, 0, 0, 0, 0, 0, 0, 0 }),
-		TestCase("Variable displacement elec. controlled", VehicleClass.Class9, new[] { 627, 478, 0, 478, 0, 0, 0, 0, 0, 0 }),
-		TestCase("Variable displacement elec. controlled", VehicleClass.Class10, new[] { 498, 461, 0, 0, 0, 0, 0, 0, 0, 0 }),
+		[
+			TestCase(MissionType.LongHaul, VehicleClass.Class2, 370, "Fixed displacement", null, null, null),
+			TestCase(MissionType.LongHaul, VehicleClass.Class4, 610, "Fixed displacement", null, null, null),
+			TestCase(MissionType.LongHaul, VehicleClass.Class5, 720, "Fixed displacement", null, null, null),
+			TestCase(MissionType.LongHaul, VehicleClass.Class9, 720, "Fixed displacement", null, null, null),
+			TestCase(MissionType.LongHaul, VehicleClass.Class10, 570, "Fixed displacement", null, null, null),
+			TestCase(MissionType.LongHaul, VehicleClass.Class11, 720, "Fixed displacement", null, null, null),
+			TestCase(MissionType.LongHaul, VehicleClass.Class12, 570, "Fixed displacement", null, null, null),
+			TestCase(MissionType.RegionalDelivery, VehicleClass.Class1, 280, "Fixed displacement", null, null, null),
+			TestCase(MissionType.RegionalDelivery, VehicleClass.Class2, 340, "Fixed displacement", null, null, null),
+			TestCase(MissionType.RegionalDelivery, VehicleClass.Class3, 370, "Fixed displacement", null, null, null),
+			TestCase(MissionType.RegionalDelivery, VehicleClass.Class4, 570, "Fixed displacement", null, null, null),
+			TestCase(MissionType.RegionalDelivery, VehicleClass.Class5, 670, "Fixed displacement", null, null, null),
+			TestCase(MissionType.RegionalDelivery, VehicleClass.Class9, 590, "Fixed displacement", null, null, null),
+			TestCase(MissionType.RegionalDelivery, VehicleClass.Class10, 570, "Fixed displacement", null, null, null),
+			TestCase(MissionType.RegionalDelivery, VehicleClass.Class11, 590, "Fixed displacement", null, null, null),
+			TestCase(MissionType.RegionalDelivery, VehicleClass.Class12, 570, "Fixed displacement", null, null, null),
+			TestCase(MissionType.UrbanDelivery, VehicleClass.Class1, 270, "Fixed displacement", null, null, null),
+			TestCase(MissionType.UrbanDelivery, VehicleClass.Class2, 310, "Fixed displacement", null, null, null),
+			TestCase(MissionType.UrbanDelivery, VehicleClass.Class3, 350, "Fixed displacement", null, null, null),
+			TestCase(MissionType.UrbanDelivery, VehicleClass.Class5, 620, "Fixed displacement", null, null, null),
+			TestCase(MissionType.MunicipalUtility, VehicleClass.Class4, 510, "Fixed displacement", null, null, null),
+			TestCase(MissionType.MunicipalUtility, VehicleClass.Class9, 510, "Fixed displacement", null, null, null),
+			TestCase(MissionType.MunicipalUtility, VehicleClass.Class11, 510, "Fixed displacement", null, null, null),
+			TestCase(MissionType.Construction, VehicleClass.Class11, 770, "Fixed displacement", null, null, null),
+			TestCase(MissionType.Construction, VehicleClass.Class12, 770, "Fixed displacement", null, null, null),
+			TestCase(MissionType.Construction, VehicleClass.Class16, 770, "Fixed displacement", null, null, null),
+			TestCase(MissionType.RegionalDelivery, VehicleClass.Class2, 325.5, "Fixed displacement with elec. control", null,
+				null,
+				null),
+			TestCase(MissionType.RegionalDelivery, VehicleClass.Class2, 289, "Dual displacement", null, null, null),
+			TestCase(MissionType.RegionalDelivery, VehicleClass.Class2, 255, "Variable displacement mech. controlled", null, null,
+				null),
+			TestCase(MissionType.RegionalDelivery, VehicleClass.Class2, 204, "Variable displacement elec. controlled", null, null,
+				null),
+			TestCase(MissionType.RegionalDelivery, VehicleClass.Class2, 92.8571, "Electric", null, null, null),
+			TestCase(MissionType.RegionalDelivery, VehicleClass.Class2, 665, "Fixed displacement", "Fixed displacement", null,
+				null),
+			TestCase(MissionType.RegionalDelivery, VehicleClass.Class2, 1295, "Fixed displacement", "Fixed displacement",
+				"Fixed displacement", "Fixed displacement"),
+			TestCase(MissionType.RegionalDelivery, VehicleClass.Class2, 1021.5, "Dual displacement",
+				"Variable displacement mech. controlled", "Fixed displacement with elec. control",
+				"Variable displacement elec. controlled"),
 		]
-		public void AuxSteeringPumpTest(string technology, VehicleClass hdvClass, int[] expected)
+		public void Aux_SteeringPumpLookupValues(MissionType mission, VehicleClass hdvClass, double expected, string axle1,
+			string axle2, string axle3, string axle4)
 		{
-			var sp = DeclarationData.SteeringPump;
+			// mk remark: made the test call with 4 axle params, so that the test name is clear in the test explorer.
+			AssertHelper.AreRelativeEqual(expected,
+				SteeringPump.Lookup(mission, hdvClass,
+					new[] { axle1, axle2, axle3, axle4 }.TakeWhile(a => a != null).ToArray()));
+		}
 
-			for (var i = 0; i < Missions.Length; i++) {
-				var value = sp.Lookup(Missions[i], hdvClass, new[] { technology });
-				Assert.AreEqual(expected[i], value.Value(), Tolerance);
-			}
+		[TestCase(MissionType.LongHaul, VehicleClass.Class1, "Dual displacement",
+			TestName = "Aux_SteeringPumpLookupFail( No Value )"),
+		TestCase(MissionType.RegionalDelivery, VehicleClass.Class2, "Super displacement",
+			TestName = "Aux_SteeringPumpLookupFail( Wrong Tech )"),
+		TestCase(MissionType.RegionalDelivery, VehicleClass.Class2, "Dual displacement", "Dual displacement",
+			"Dual displacement", "Dual displacement", "Dual displacement", TestName = "Aux_SteeringPumpLookupFail( >4 Techs )"),
+		TestCase(MissionType.RegionalDelivery, VehicleClass.Class2, TestName = "Aux_SteeringPumpLookupFail( Null Techs )"),
+		TestCase(MissionType.RegionalDelivery, VehicleClass.Class2, new string[0],
+			TestName = "Aux_SteeringPumpLookupFail( 0 Techs )"),
+		]
+		public void Aux_SteeringPumpLookupFail(MissionType mission, VehicleClass hdvClass, params string[] tech)
+		{
+			AssertHelper.Exception<VectoException>(() => SteeringPump.Lookup(mission, hdvClass, tech));
 		}
 
 		[

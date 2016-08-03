@@ -79,7 +79,7 @@ namespace TUGraz.VectoCore.Tests.Models.Simulation
 				DeclarationData.Fan.Lookup(MissionType.LongHaul, "Hydraulic driven - Constant displacement pump"));
 			aux.AddConstant("PS", DeclarationData.PneumaticSystem.Lookup(mission, hdvClass));
 			aux.AddConstant("STP",
-				DeclarationData.SteeringPump.Lookup(MissionType.LongHaul, hdvClass,
+				SteeringPump.Lookup(MissionType.LongHaul, hdvClass,
 					new[] { "Variable displacement mech. controlled" }));
 			aux.AddConstant("ES", DeclarationData.ElectricSystem.Lookup(mission, null));
 			aux.AddConstant("AC",

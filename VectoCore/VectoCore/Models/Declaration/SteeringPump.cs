@@ -40,24 +40,34 @@ namespace TUGraz.VectoCore.Models.Declaration
 {
 	public sealed class SteeringPump
 	{
-		private readonly SteeringPumpBaseLine _baseline = new SteeringPumpBaseLine();
-		private readonly SteeringPumpAxles _axles = new SteeringPumpAxles();
-		private readonly SteeringPumpTechnologies _technologies = new SteeringPumpTechnologies();
-
-		public Watt Lookup(MissionType mission, VehicleClass hdvClass, IEnumerable<string> technologies)
+		public static Watt Lookup(MissionType mission, VehicleClass hdvClass, IEnumerable<string> technologies)
 		{
-			var powerShares = _baseline.Lookup(mission, hdvClass);
-			var sum = 0.SI<Watt>();
-			var i = 1;
+			var baseLookup = new SteeringPumpBaseLine();
+			var axleLookup = new SteeringPumpAxles();
+			var techLookup = new SteeringPumpTechnologies();
+
+			var baseLine = baseLookup.Lookup(mission, hdvClass);
+			var power = new SteeringPumpValues<Watt>(0.SI<Watt>(), 0.SI<Watt>(), 0.SI<Watt>());
+			var factors = new SteeringPumpValues<double>(0, 0, 0);
+			var i = 0;
 			foreach (var technology in technologies) {
-				var factors = _technologies.Lookup(technology, mission);
-				var axles = _axles.Lookup(mission, i);
-				sum += powerShares.UnloadedFriction * axles.UnloadedFriction * factors.UnloadedFriction
-						+ powerShares.Banking * axles.Banking * factors.Banking
-						+ powerShares.Steering * axles.Banking * factors.Steering;
 				i++;
+				var axles = axleLookup.Lookup(mission, i);
+				power.UnloadedFriction += baseLine.UnloadedFriction * axles.UnloadedFriction;
+				power.Banking += baseLine.Banking * axles.Banking;
+				power.Steering += baseLine.Steering * axles.Steering;
+
+				var f = techLookup.Lookup(technology, mission);
+				factors.UnloadedFriction += f.UnloadedFriction;
+				factors.Banking += f.Banking;
+				factors.Steering += f.Steering;
 			}
-			return sum;
+
+			power.UnloadedFriction *= factors.UnloadedFriction / i;
+			power.Banking *= factors.Banking / i;
+			power.Steering *= factors.Steering / i;
+
+			return power.UnloadedFriction + power.Banking + power.Steering;
 		}
 
 		private sealed class SteeringPumpBaseLine : LookupData<MissionType, VehicleClass, SteeringPumpValues<Watt>>
@@ -78,20 +88,21 @@ namespace TUGraz.VectoCore.Models.Declaration
 				Data.Clear();
 
 				foreach (DataRow row in table.Rows) {
-					var hdvClass = VehicleClassHelper.Parse(row.Field<string>("hdvclass/powerdemandpershare"));
-					foreach (var mission in EnumHelper.GetValues<MissionType>()) {
-						var values = row.Field<string>(mission.ToString().ToLower())
-							.Split('/').Select(v => v.ToDouble() / 100.0).Concat(0.0.Repeat(3)).SI<Watt>().ToList();
-						Data[Tuple.Create(mission, hdvClass)] = new SteeringPumpValues<Watt>(values[0], values[1], values[2]);
+					var hdvClass = VehicleClassHelper.Parse(row.Field<string>("hdvclass"));
+					foreach (DataColumn col in table.Columns) {
+						if (col.Caption == "hdvclass" || string.IsNullOrWhiteSpace(row.Field<string>(col.Caption)))
+							continue;
+						var values = row.Field<string>(col.Caption).Split('/')
+							.Select(v => v.ToDouble() / 100.0).Concat(0.0.Repeat(3)).SI<Watt>().ToList();
+						Data[Tuple.Create(col.Caption.ParseEnum<MissionType>(), hdvClass)] = new SteeringPumpValues<Watt>(values[0],
+							values[1], values[2]);
 					}
 				}
 			}
 		}
 
-		private sealed class SteeringPumpTechnologies : LookupData<string, MissionType, SteeringPumpValues<double>>
+		private sealed class SteeringPumpTechnologies : LookupData<string, SteeringPumpValues<double>>
 		{
-			private readonly ElectricSystem.Alternator _alternator = new ElectricSystem.Alternator();
-
 			protected override string ResourceId
 			{
 				get { return "TUGraz.VectoCore.Resources.Declaration.VAUX.SP-Tech.csv"; }
@@ -108,16 +119,28 @@ namespace TUGraz.VectoCore.Models.Declaration
 				Data.Clear();
 
 				Data = table.Rows.Cast<DataRow>().ToDictionary(
-					key => Tuple.Create(key.Field<string>("Technology"), MissionType.LongHaul),
+					key => key.Field<string>("Technology"),
 					value => new SteeringPumpValues<double>(value.ParseDouble("UF"), value.ParseDouble("B"), value.ParseDouble("S")));
 			}
 
-			public override SteeringPumpValues<double> Lookup(string tech, MissionType mission)
+			public override SteeringPumpValues<double> Lookup(string key)
 			{
-				var values = base.Lookup(tech, MissionType.LongHaul);
+				throw new InvalidOperationException("Standard lookup is not supported. Use Lookup(string, MissionType) instead.");
+			}
+
+			/// <summary>
+			/// Lookup for Steering Pump Technologies.
+			/// </summary>
+			/// <param name="tech">The technology string.</param>
+			/// <param name="mission">Only used when Tech is Electric System.</param>
+			/// <returns></returns>
+			public SteeringPumpValues<double> Lookup(string tech, MissionType mission)
+			{
+				var values = base.Lookup(tech);
 				if (tech == "Electric") {
-					values.Banking /= _alternator.Lookup(mission);
-					values.Steering /= _alternator.Lookup(mission);
+					var alternator = new ElectricSystem.Alternator();
+					values.Banking /= alternator.Lookup(mission);
+					values.Steering /= alternator.Lookup(mission);
 				}
 				return values;
 			}
@@ -140,14 +163,18 @@ namespace TUGraz.VectoCore.Models.Declaration
 				NormalizeTable(table);
 				Data.Clear();
 
-				var i = 1;
 				foreach (DataRow row in table.Rows) {
-					foreach (MissionType mission in Enum.GetValues(typeof(MissionType))) {
-						var values =
-							row.Field<string>(mission.ToString().ToLowerInvariant()).Split('/').ToDouble(0).Concat(0.0.Repeat(3)).ToList();
-						Data[Tuple.Create(mission, i)] = new SteeringPumpValues<double>(values[0], values[1], values[2]);
+					var axleNumber = int.Parse(row.Field<string>("steeredaxles"));
+					foreach (DataColumn col in table.Columns) {
+						if (col.Caption == "steeredaxles")
+							continue;
+						var field = row.Field<string>(col.Caption);
+						if (string.IsNullOrWhiteSpace(field))
+							continue;
+						var values = field.Split('/').ToDouble().Concat(0.0.Repeat(3)).ToList();
+						Data[Tuple.Create(col.Caption.ParseEnum<MissionType>(), axleNumber)] = new SteeringPumpValues<double>(values[0],
+							values[1], values[2]);
 					}
-					i++;
 				}
 			}
 		}
