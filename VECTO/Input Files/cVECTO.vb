@@ -15,7 +15,6 @@ Imports System.Linq
 
 Public Class cVECTO
 	Private Const FormatVersion As Short = 3
-	Private FileVersion As Short
 
 	'AA-TB
 	'STORES THE Type and version of the chosen or default Auxiliary Type ( Classic/Original or other )
@@ -263,10 +262,7 @@ Public Class cVECTO
 		If Not JSON.ReadFile(sFilePath) Then Return False
 
 		Try
-
-			FileVersion = JSON.Content("Header")("FileVersion")
-
-			If FileVersion > 1 Then
+			If JSON.Content("Header")("FileVersion") > 1 Then
 				SavedInDeclMode = JSON.Content("Body")("SavedInDeclMode")
 			Else
 				SavedInDeclMode = Cfg.DeclMode
@@ -439,7 +435,6 @@ Public Class cVECTO
 		siStStV = 5
 		siStStT = 5
 		StStDelay = 0
-		FileVersion = 0
 
 		stPathVEH.Clear()
 		stPathENG.Clear()
