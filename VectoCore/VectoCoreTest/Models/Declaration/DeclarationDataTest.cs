@@ -50,8 +50,15 @@ namespace TUGraz.VectoCore.Tests.Models.Declaration
 	[TestFixture]
 	public class DeclarationDataTest
 	{
-		public const double Tolerance = 0.0001;
-		public readonly MissionType[] Missions = EnumHelper.GetValues<MissionType>().ToArray();
+		private const double Tolerance = 0.0001;
+
+		private readonly MissionType[] _missions = {
+			MissionType.LongHaul,
+			MissionType.RegionalDelivery,
+			MissionType.UrbanDelivery,
+			MissionType.MunicipalUtility,
+			MissionType.Construction,
+		};
 
 		[TestCase("285/70 R19.5", 7.9, 0.8943, "b")]
 		public void WheelDataTest(string wheels, double intertia, double dynamicRadius, string sizeClass)
@@ -121,11 +128,11 @@ namespace TUGraz.VectoCore.Tests.Models.Declaration
 			};
 
 			var r = new Random();
-			for (var i = 0; i < Missions.Length; i++) {
+			for (var i = 0; i < _missions.Length; i++) {
 				var urban = r.NextDouble() * 2;
 				var rural = r.NextDouble() * 2;
 				var motorway = r.NextDouble() * 2;
-				var whtcValue = whtc.Lookup(Missions[i], rural: rural, urban: urban, motorway: motorway);
+				var whtcValue = whtc.Lookup(_missions[i], rural: rural, urban: urban, motorway: motorway);
 				Assert.AreEqual(urban * factors.urban[i] + rural * factors.rural[i] + motorway * factors.motorway[i],
 					whtcValue);
 			}
@@ -292,32 +299,36 @@ namespace TUGraz.VectoCore.Tests.Models.Declaration
 		}
 
 		[
-			TestCase("",
-				new[] { 618, 671, 516, 566, 1037, 0, 0, 0, 0, 0 }),
-			TestCase("Crankshaft mounted - Electronically controlled visco clutch (Default)",
-				new[] { 618, 671, 516, 566, 1037, 0, 0, 0, 0, 0 }),
-			TestCase("Crankshaft mounted - Bimetallic controlled visco clutch", new[] { 818, 871, 676, 766, 1277, 0, 0, 0, 0, 0 }
-				),
-			TestCase("Crankshaft mounted - Discrete step clutch", new[] { 668, 721, 616, 616, 1157, 0, 0, 0, 0, 0 }),
-			TestCase("Crankshaft mounted - On/Off clutch", new[] { 718, 771, 666, 666, 1237, 0, 0, 0, 0, 0 }),
+			TestCase("", new[] { 618, 671, 516, 566, 1037 }),
+			TestCase("Crankshaft mounted - Electronically controlled visco clutch", new[] { 618, 671, 516, 566, 1037 }),
+			TestCase("Crankshaft mounted - Bimetallic controlled visco clutch", new[] { 818, 871, 676, 766, 1277 }),
+			TestCase("Crankshaft mounted - Discrete step clutch", new[] { 668, 721, 616, 616, 1157 }),
+			TestCase("Crankshaft mounted - On/off clutch", new[] { 718, 771, 666, 666, 1237 }),
 			TestCase("Belt driven or driven via transm. - Electronically controlled visco clutch",
-				new[] { 889, 944, 733, 833, 1378, 0, 0, 0, 0, 0 }),
+				new[] { 989, 1044, 833, 933, 1478 }),
 			TestCase("Belt driven or driven via transm. - Bimetallic controlled visco clutch",
-				new[] { 1089, 1144, 893, 1033, 1618, 0, 0, 0, 0, 0 }),
-			TestCase("Belt driven or driven via transm. - Discrete step clutch",
-				new[] { 939, 994, 883, 883, 1498, 0, 0, 0, 0, 0 }
-				),
-			TestCase("Belt driven or driven via transm. - On/Off clutch", new[] { 989, 1044, 933, 933, 1578, 0, 0, 0, 0, 0 }),
-			TestCase("Hydraulic driven - Variable displacement pump", new[] { 738, 955, 632, 717, 1672, 0, 0, 0, 0, 0 }),
-			TestCase("Hydraulic driven - Constant displacement pump", new[] { 1000, 1200, 800, 900, 2100, 0, 0, 0, 0, 0 }),
-			TestCase("Hydraulic driven - Electronically controlled", new[] { 700, 800, 600, 600, 1400, 0, 0, 0, 0, 0 }),
+				new[] { 1189, 1244, 993, 1133, 1718 }),
+			TestCase("Belt driven or driven via transm. - Discrete step clutch", new[] { 1039, 1094, 983, 983, 1598 }),
+			TestCase("Belt driven or driven via transm. - On/off clutch", new[] { 1089, 1144, 1033, 1033, 1678 }),
+			TestCase("Hydraulic driven - Variable displacement pump", new[] { 938, 1155, 832, 917, 1872 }),
+			TestCase("Hydraulic driven - Constant displacement pump", new[] { 1200, 1400, 1000, 1100, 2300 }),
+			TestCase("Hydraulic driven - Electronically controlled", new[] { 700, 800, 600, 600, 1400 }),
 		]
 		public void AuxFanTechTest(string technology, int[] expected)
 		{
-			for (var i = 0; i < Missions.Length; i++) {
-				var value = DeclarationData.Fan.Lookup(Missions[i], technology);
+			for (var i = 0; i < _missions.Length; i++) {
+				var value = DeclarationData.Fan.Lookup(_missions[i], technology);
 				Assert.AreEqual(expected[i], value.Value(), Tolerance);
 			}
+		}
+
+		[TestCase("Superfluid Hydraulic", MissionType.LongHaul, TestName = "AuxFanTechError( wrong tech )"),
+		TestCase("Hydraulic driven - Electronically controlled", MissionType.Coach,
+			TestName = "AuxFanTechError( wrong mission )")
+		]
+		public void AuxFanTechError(string technology, MissionType missionType)
+		{
+			AssertHelper.Exception<VectoException>(() => DeclarationData.Fan.Lookup(missionType, technology));
 		}
 
 		[Test]
@@ -340,9 +351,9 @@ namespace TUGraz.VectoCore.Tests.Models.Declaration
 				{ VehicleClass.Class12, new[] { 0, 0, 0, 0, 200, 0, 0, 0, 0, 0 } }
 			};
 
-			for (var i = 0; i < Missions.Length; i++) {
+			for (var i = 0; i < _missions.Length; i++) {
 				foreach (var expect in expected) {
-					var value = hvac.Lookup(Missions[i], expect.Key);
+					var value = hvac.Lookup(_missions[i], expect.Key);
 					Assert.AreEqual(expect.Value[i], value.Value(), Tolerance);
 				}
 			}
@@ -366,8 +377,8 @@ namespace TUGraz.VectoCore.Tests.Models.Declaration
 		{
 			var ps = DeclarationData.PneumaticSystem;
 
-			for (var i = 0; i < Missions.Length; i++) {
-				var value = ps.Lookup(Missions[i], vehicleClass);
+			for (var i = 0; i < _missions.Length; i++) {
+				var value = ps.Lookup(_missions[i], vehicleClass);
 				Assert.AreEqual(expected[i], value.Value(), Tolerance);
 			}
 		}

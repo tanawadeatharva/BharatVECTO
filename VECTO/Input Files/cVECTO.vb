@@ -351,6 +351,17 @@ Public Class cVECTO
 										msgSrc)
 						End Select
 					End If
+
+					If auxId = sKey.AUX.Fan Then
+						Select auxEntry.TechStr
+							Case "Crankshaft mounted - Electronically controlled visco clutch (Default)"
+								auxEntry.TechStr = "Crankshaft mounted - Electronically controlled visco clutch"
+							Case "Crankshaft mounted - On/Off clutch"
+								auxEntry.TechStr = "Crankshaft mounted - On/off clutch"
+							Case "Belt driven or driven via transm. - On/Off clutch"
+								auxEntry.TechStr = "Belt driven or driven via transm. - On/off clutch"
+						End Select
+					End If
 				Next
 			End If
 

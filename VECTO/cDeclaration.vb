@@ -25,7 +25,7 @@ Public Class cDeclaration
 	Public Const SSspeed As Single = 5
 	Public Const SStime As Single = 5
 	Public Const SSdelay As Single = 5
-	Public Const LACa As Single = -0.5
+	Public Const LACa As Single = - 0.5
 	Public Const LACvmin As Single = 50
 	Public Const Overspeed As Single = 5
 	Public Const Underspeed As Single = 5
@@ -247,11 +247,11 @@ Public Class cDeclaration
 					Select Case i
 						Case 0
 							mc0.WHTCWF = New Dictionary(Of tWHTCpart, Single)
-							mc0.WHTCWF.Add(tWHTCpart.Urban, line(a) / 100)
+							mc0.WHTCWF.Add(tWHTCpart.Urban, line(a)/100)
 						Case 1
-							mc0.WHTCWF.Add(tWHTCpart.Rural, line(a) / 100)
+							mc0.WHTCWF.Add(tWHTCpart.Rural, line(a)/100)
 						Case Else '2
-							mc0.WHTCWF.Add(tWHTCpart.Motorway, line(a) / 100)
+							mc0.WHTCWF.Add(tWHTCpart.Motorway, line(a)/100)
 					End Select
 				Next
 			Next
@@ -368,7 +368,7 @@ Public Class cDeclaration
 
 
 							For a = 1 To TrA
-								l0.Add(TrS / TrA)
+								l0.Add(TrS/TrA)
 							Next
 
 							ste0.AxleSharesTr.Add(SegmentTable.MissionList(i), l0)
@@ -410,7 +410,7 @@ Public Class cDeclaration
 				at0.Add(line(0))
 				AuxPower0 = New Dictionary(Of tMission, Single)
 				i = 0
-				For Each mt0 In SegmentTable.MissionList
+				For Each mt0 In SegmentTable.MissionList.Take(5)
 					i += 1
 					AuxPower0.Add(mt0, line(i))
 				Next
@@ -564,7 +564,7 @@ Public Class cDeclaration
 		'Default PT1 values
 		lPT1nU = New List(Of Single)
 		lPT1 = New List(Of Single)
-		PT1dim = -1
+		PT1dim = - 1
 
 		If Not file.OpenRead(MyDeclPath & "PT1.csv") Then
 			GUImsg(tMsgID.Err, "Failed to load Declaration Config (PT1 table)!")
@@ -665,7 +665,7 @@ Public Class cDeclaration
 	End Function
 
 	Public Function EngInertia(Displ As Single) As Single
-		Return 1.3 + 0.41 + 0.27 * (Displ / 1000)
+		Return 1.3 + 0.41 + 0.27*(Displ/1000)
 	End Function
 
 	Public Function TracInt(Gearbox As tGearbox) As Single
@@ -717,7 +717,7 @@ Public Class cDeclaration
 		If Wheels.ContainsKey(Wheel) Then
 			Return Wheels(Wheel).Inertia
 		Else
-			Return -1
+			Return - 1
 		End If
 	End Function
 
@@ -726,12 +726,12 @@ Public Class cDeclaration
 		Dim w As cWheel
 
 		If Not Wheels.ContainsKey(Wheel) Then
-			Return -1
+			Return - 1
 		End If
 
 
 		If Not Rims.ContainsKey(Rim) Then
-			Return -1
+			Return - 1
 		End If
 
 		w = Wheels(Wheel)
@@ -742,7 +742,7 @@ Public Class cDeclaration
 			F = Rims(Rim).Fb
 		End If
 
-		Return (F * w.Diam) / (2 * Math.PI)
+		Return (F*w.Diam)/(2*Math.PI)
 	End Function
 
 	Public ReadOnly Property WheelsList As Dictionary(Of String, cWheel).KeyCollection
@@ -811,9 +811,9 @@ Public Class cDeclaration
 
 		CurrentMission = Missions(SegRef.Missions(CycleIndex))
 
-		WHTCcorrFactor = CurrentMission.WHTCWF(tWHTCpart.Urban) * ENG.WHTCurban _
-						+ CurrentMission.WHTCWF(tWHTCpart.Rural) * ENG.WHTCrural _
-						+ CurrentMission.WHTCWF(tWHTCpart.Motorway) * ENG.WHTCmw
+		WHTCcorrFactor = CurrentMission.WHTCWF(tWHTCpart.Urban)*ENG.WHTCurban _
+						+ CurrentMission.WHTCWF(tWHTCpart.Rural)*ENG.WHTCrural _
+						+ CurrentMission.WHTCWF(tWHTCpart.Motorway)*ENG.WHTCmw
 
 
 		If Not VEH.DeclInitCycle Then Return False
@@ -853,7 +853,7 @@ Public Class cDeclaration
 
 		'Fan
 		Try
-			AuxPower.Add(sKey.AUX.Fan, AuxFanPower(VEC.AuxPaths(sKey.AUX.Fan).TechStr)(CurrentMission.MissionID) / 1000)
+			AuxPower.Add(sKey.AUX.Fan, AuxFanPower(VEC.AuxPaths(sKey.AUX.Fan).TechStr)(CurrentMission.MissionID)/1000)
 		Catch ex As Exception
 			WorkerMsg(tMsgID.Err, "Failed to initialise fan! " & ex.Message, MsgSrc)
 			Result = False
@@ -871,7 +871,7 @@ Public Class cDeclaration
 			fF = sl(1)
 			fB = sl(2)
 			fS = sl(3)
-			AuxPower.Add(sKey.AUX.SteerPump, (U * fU + F * fF + B * fB + S * fS) / 1000)
+			AuxPower.Add(sKey.AUX.SteerPump, (U*fU + F*fF + B*fB + S*fS)/1000)
 		Catch ex As Exception
 			WorkerMsg(tMsgID.Err, "Failed to initialise steering pump! " & ex.Message, MsgSrc)
 			Result = False
@@ -879,7 +879,7 @@ Public Class cDeclaration
 
 		'HVAC
 		Try
-			AuxPower.Add(sKey.AUX.HVAC, AuxHVACPower(SegRef.HDVclass)(CurrentMission.MissionID) / 1000)
+			AuxPower.Add(sKey.AUX.HVAC, AuxHVACPower(SegRef.HDVclass)(CurrentMission.MissionID)/1000)
 		Catch ex As Exception
 			WorkerMsg(tMsgID.Err, "Failed to initialise HVAC! " & ex.Message, MsgSrc)
 			Result = False
@@ -888,7 +888,7 @@ Public Class cDeclaration
 		'Electric System
 		Try
 			AuxPower.Add(sKey.AUX.ElecSys,
-						AuxESpower(VEC.AuxPaths(sKey.AUX.ElecSys).TechStr)(CurrentMission.MissionID) / (1000 * AuxESeff))
+						AuxESpower(VEC.AuxPaths(sKey.AUX.ElecSys).TechStr)(CurrentMission.MissionID)/(1000*AuxESeff))
 		Catch ex As Exception
 			WorkerMsg(tMsgID.Err, "Failed to initialise electric system! " & ex.Message, MsgSrc)
 			Result = False
@@ -921,9 +921,9 @@ Public Class cDeclaration
 			i += 1
 		Loop
 
-lbInt:
+		lbInt:
 		'Interpolation
-		Return (nU - lPT1nU(i - 1)) * (lPT1(i) - lPT1(i - 1)) / (lPT1nU(i) - lPT1nU(i - 1)) + lPT1(i - 1)
+		Return (nU - lPT1nU(i - 1))*(lPT1(i) - lPT1(i - 1))/(lPT1nU(i) - lPT1nU(i - 1)) + lPT1(i - 1)
 	End Function
 
 	Public Sub ReportInit()
@@ -939,7 +939,7 @@ lbInt:
 			.JobFile = fFILE(JobFile, True)
 			.DateStr = Now.ToString
 			.Creator = Lic.LicString
-			.EngStr = (ENG.Displ / 1000).ToString("0.0") & " l  " & Math.Round(ENG.Pmax, 0).ToString("#") & " kW"
+			.EngStr = (ENG.Displ/1000).ToString("0.0") & " l  " & Math.Round(ENG.Pmax, 0).ToString("#") & " kW"
 			.EngModelStr = ENG.ModelName
 			.GbxStr = GBX.GearCount & "-Speed " & GearboxConv(GBX.gs_Type)
 			.GbxModelStr = GBX.ModelName
@@ -970,27 +970,27 @@ lbInt:
 		For t = 0 To t1
 			sum += MODdata.Vh.V(t)
 		Next
-		Vquer = 3.6 * sum / (t1 + 1)
+		Vquer = 3.6*sum/(t1 + 1)
 
 		With lr
 
-			.Loading = VEH.Loading / 1000
+			.Loading = VEH.Loading/1000
 			.Speed = Vquer
-			.FCkm = (100 * MODdata.FCavgFinal / Vquer) / (Cfg.FuelDens * 1000)
-			.CO2km = Cfg.CO2perFC * (MODdata.FCavgFinal / Vquer)
+			.FCkm = (100*MODdata.FCavgFinal/Vquer)/(Cfg.FuelDens*1000)
+			.CO2km = Cfg.CO2perFC*(MODdata.FCavgFinal/Vquer)
 			If VEH.Loading > 0 Then
-				.FCtkm = .FCkm / .Loading
-				.CO2tkm = .CO2km / .Loading
+				.FCtkm = .FCkm/.Loading
+				.CO2tkm = .CO2km/.Loading
 			End If
 			.FCerror = MODdata.FCerror
 
 			d = 0
 			MODdata.Vh.AltIntp(d, True)
 			For t = 0 To t1
-				.ActualSpeed.Add(MODdata.Vh.V(t) * 3.6)
-				.TargetSpeed.Add(MODdata.Vh.Vsoll(t) * 3.6)
+				.ActualSpeed.Add(MODdata.Vh.V(t)*3.6)
+				.TargetSpeed.Add(MODdata.Vh.Vsoll(t)*3.6)
 				d += MODdata.Vh.V(t)
-				.Distance.Add(CSng(d / 1000))
+				.Distance.Add(CSng(d/1000))
 				.Alt.Add(MODdata.Vh.AltIntp(d, False))
 				.nU.Add(MODdata.nU(t))
 				.Tq.Add(nPeToM(MODdata.nU(t), MODdata.Pe(t)))
@@ -1075,7 +1075,7 @@ Public Class cSegmentTableEntry
 		If BodyTrWeight.ContainsKey(Mission) AndAlso IsNumeric(BodyTrWeight(Mission)) Then
 			Return CSng(BodyTrWeight(Mission))
 		Else
-			Return -1
+			Return - 1
 		End If
 	End Function
 
@@ -1084,18 +1084,18 @@ Public Class cSegmentTableEntry
 		'Check if Config is valid
 		If Loading.ContainsKey(Mission) Then
 			If Not (Loading(Mission) = "f" OrElse IsNumeric(Loading(Mission))) Then
-				Return -1
+				Return - 1
 			End If
 		Else
-			Return -1
+			Return - 1
 		End If
 
 		'Return Loading
 		If HDVclass < 4 Then
 			If Mission = tMission.LongHaul Then
-				Return 588.2 * MassMax - 2511.8
+				Return 588.2*MassMax - 2511.8
 			Else
-				Return 394.1 * MassMax - 1705.9
+				Return 394.1*MassMax - 1705.9
 			End If
 		Else
 			Return CSng(Loading(Mission))
@@ -1373,7 +1373,7 @@ Public Class cReport
 			s.MarkerSize = 15
 			s.MarkerStyle = DataVisualization.Charting.MarkerStyle.Circle
 			s.ChartType = DataVisualization.Charting.SeriesChartType.Point
-			i = -1
+			i = - 1
 			For Each lr In mr.Results
 				i += 1
 				s.Points.AddXY(lr.Value.Speed, lr.Value.CO2km)
