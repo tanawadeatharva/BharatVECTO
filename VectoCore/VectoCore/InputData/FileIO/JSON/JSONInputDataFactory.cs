@@ -57,6 +57,8 @@ namespace TUGraz.VectoCore.InputData.FileIO.JSON
 			switch (version) {
 				case 2:
 					return new JSONInputDataV2(json, filename);
+				case 3:
+					return new JSONInputDataV3(json, filename);
 				default:
 					throw new VectoException("Job-File: Unsupported FileVersion. Got: {0} ", version);
 			}

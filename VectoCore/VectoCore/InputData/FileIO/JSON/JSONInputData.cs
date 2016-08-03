@@ -462,18 +462,73 @@ namespace TUGraz.VectoCore.InputData.FileIO.JSON
 			get { return AuxData().Cast<IAuxiliaryDeclarationInputData>().ToList(); }
 		}
 
-		private IList<AuxiliaryDataInputData> AuxData()
+		protected virtual IList<AuxiliaryDataInputData> AuxData()
 		{
 			var retVal = new List<AuxiliaryDataInputData>();
 			foreach (var aux in Body["Aux"] ?? Enumerable.Empty<JToken>()) {
 				var auxData = new AuxiliaryDataInputData {
 					ID = aux.GetEx<string>("ID"),
 					Type = AuxiliaryTypeHelper.Parse(aux.GetEx<string>("Type")),
-					Technology = new List<string>() { aux.GetEx<string>("Technology") },
+					Technology = new List<string>(),
 				};
-				//if (aux["TechList"] != null) {
-				//	auxData.TechList = aux["TechList"].Select(x => x.ToString()).ToList(); //  .Select(x => x.ToString).ToArray();
-				//}
+				var tech = aux.GetEx<string>("Technology");
+
+				// Convert old Electric System to new format
+				if (auxData.Type == AuxiliaryType.ElectricSystem) {
+					if (aux["TechList"] == null || aux["TechList"].Any()) {
+						auxData.Technology.Add("Standard technology");
+						Log.Warn("Aux: Upgraded Electric System to new format: 'Standard technology'");
+					} else {
+						auxData.Technology.Add("Standard technology - LED headlights, all");
+						Log.Warn("Aux: Upgraded Electric System to new format: 'Standard technology - LED headlights, all'");
+					}
+				}
+
+				// Convert old Steering Pump to new format
+				if (auxData.Type == AuxiliaryType.SteeringPump) {
+					switch (tech) {
+						case "Variable displacement":
+							Log.Warn(
+								"Aux: Upgraded Steering Pump Technology from 'Variable displacement' to 'Variable displacement elec. controlled'");
+							auxData.Technology.Add("Variable displacement elec. controlled");
+							break;
+						case "Hydraulic supported by electric":
+							Log.Warn("Aux: Upgraded Steering Pump Technology from 'Hydraulic supported by electric' to 'Dual displacement'");
+							auxData.Technology.Add("Dual displacement");
+							break;
+						default:
+							auxData.Technology.Add(tech);
+							break;
+					}
+				}
+
+				// Convert old Pneumatic System to new format
+				if (auxData.Type == AuxiliaryType.PneumaticSystem) {
+					Log.Warn("Aux: Upgraded Pneumatic System Technology to 'Medium Supply 1-stage'");
+					auxData.Technology.Add("Medium Supply 1-stage");
+				}
+
+				// Convert old HVAC to new format
+				if (auxData.Type == AuxiliaryType.HVAC) {
+					if (tech == "") {
+						auxData.Technology.Add("");
+					} else if (tech == "") {
+						Log.Warn(
+							"Aux: Upgraded HVAC Technology from '' to ''");
+						auxData.Technology.Add("");
+					}
+				}
+
+				if (auxData.Type == AuxiliaryType.Fan) {
+					if (tech == "") {
+						auxData.Technology.Add("");
+					} else if (tech == "") {
+						Log.Warn(
+							"Aux: Upgraded Fan Technology from '' to ''");
+						auxData.Technology.Add("");
+					}
+				}
+
 				var auxFile = aux["Path"];
 				retVal.Add(auxData);
 
@@ -518,5 +573,38 @@ namespace TUGraz.VectoCore.InputData.FileIO.JSON
 		}
 
 		#endregion
+	}
+
+	public class JSONInputDataV3 : JSONInputDataV2
+	{
+		public JSONInputDataV3(JObject data, string filename) : base(data, filename) {}
+
+		protected override IList<AuxiliaryDataInputData> AuxData()
+		{
+			var retVal = new List<AuxiliaryDataInputData>();
+			foreach (var aux in Body["Aux"] ?? Enumerable.Empty<JToken>()) {
+				var auxData = new AuxiliaryDataInputData {
+					ID = aux.GetEx<string>("ID"),
+					Type = AuxiliaryTypeHelper.Parse(aux.GetEx<string>("Type")),
+					Technology = aux.GetEx<List<string>>("Technology"),
+				};
+
+				var auxFile = aux["Path"];
+				retVal.Add(auxData);
+
+				if (auxFile == null || EmptyOrInvalidFileName(auxFile.Value<string>())) {
+					continue;
+				}
+				var stream = new StreamReader(Path.Combine(BasePath, auxFile.Value<string>()));
+				stream.ReadLine(); // skip header "Transmission ration to engine rpm [-]"
+				auxData.TransmissionRatio = stream.ReadLine().IndulgentParse();
+				stream.ReadLine(); // skip header "Efficiency to engine [-]"
+				auxData.EfficiencyToEngine = stream.ReadLine().IndulgentParse();
+				stream.ReadLine(); // skip header "Efficiency auxiliary to supply [-]"
+				auxData.EfficiencyToSupply = stream.ReadLine().IndulgentParse();
+				auxData.DemandMap = VectoCSVFile.ReadStream(new MemoryStream(Encoding.UTF8.GetBytes(stream.ReadToEnd())));
+			}
+			return retVal;
+		}
 	}
 }
