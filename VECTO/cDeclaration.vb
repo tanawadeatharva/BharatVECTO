@@ -541,25 +541,25 @@ Public Class cDeclaration
 
 			'Skip Header
 			file.ReadLine()
+			at0 = New List(Of String)
 			Do While Not file.EndOfFile
 				line = file.ReadLine
+				at0.Add(line(0))
 				AuxPower0 = New Dictionary(Of tMission, Single)
 				i = 0
-				For Each mt0 In SegmentTable.MissionList
+				For Each mt0 In SegmentTable.MissionList.Take(5)
 					i += 1
 					AuxPower0.Add(mt0, line(i))
 				Next
 				AuxPSpower.Add(line(0), AuxPower0)
 			Loop
+			AuxTechs.Add(tAux.PneumSys, at0)
+			file.Close()
 		Catch ex As Exception
 			file.Close()
 			GUImsg(tMsgID.Err, "Failed to load Declaration Config (Pneumatic system config)!" & ex.Message)
 			Return False
 		End Try
-
-		at0 = New List(Of String)
-		at0.Add("Default")
-		AuxTechs.Add(tAux.PneumSys, at0)
 
 		'Default PT1 values
 		lPT1nU = New List(Of Single)
