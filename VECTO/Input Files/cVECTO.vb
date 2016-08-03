@@ -343,11 +343,13 @@ Public Class cVECTO
 							Case "Variable displacement"
 								auxEntry.TechStr = "Variable displacement elec. controlled"
 								WorkerMsg(tMsgID.Warn,
-										"Aux: Upgraded Steering Pump Technology from 'Variable displacement' to '" + auxEntry.TechStr + "'", msgSrc)
+										"Aux: Upgraded Steering Pump Technology from 'Variable displacement' to new format: '" + auxEntry.TechStr +
+										"'", msgSrc)
 							Case "Hydraulic supported by electric"
 								auxEntry.TechStr = "Dual displacement"
 								WorkerMsg(tMsgID.Warn,
-										"Aux: Upgraded Steering Pump Technology from 'Hydraulic supported by electric' to '" + auxEntry.TechStr + "'",
+										"Aux: Upgraded Steering Pump Technology from 'Hydraulic supported by electric' to new format: '" +
+										auxEntry.TechStr + "'",
 										msgSrc)
 						End Select
 					End If
@@ -361,6 +363,12 @@ Public Class cVECTO
 							Case "Belt driven or driven via transm. - On/Off clutch"
 								auxEntry.TechStr = "Belt driven or driven via transm. - On/off clutch"
 						End Select
+					End If
+
+					If JSON.Content("Header")("FileVersion") = 2 AndAlso auxId = sKey.AUX.PneumSys Then
+						auxEntry.TechStr = "Medium Supply 1-stage"
+						WorkerMsg(tMsgID.Warn, "Aux: Upgraded Pneumatic System Technology to new format: '" + auxEntry.TechStr + "'",
+								msgSrc)
 					End If
 				Next
 			End If

@@ -36,7 +36,7 @@ using TUGraz.VectoCore.Utils;
 
 namespace TUGraz.VectoCore.Models.Declaration
 {
-	public sealed class PneumaticSystem : LookupData<MissionType, VehicleClass, Watt>
+	public sealed class PneumaticSystem : LookupData<MissionType, string, Watt>
 	{
 		protected override string ResourceId
 		{
@@ -45,7 +45,7 @@ namespace TUGraz.VectoCore.Models.Declaration
 
 		protected override string ErrorMessage
 		{
-			get { return "Auxiliary Lookup Error: No value found for Pneumatic System. Mission: '{0}', HDVClass: '{1}'"; }
+			get { return "Auxiliary Lookup Error: No value found for Pneumatic System. Mission: '{0}', Technology: '{1}'"; }
 		}
 
 		protected override void ParseData(DataTable table)
@@ -54,9 +54,11 @@ namespace TUGraz.VectoCore.Models.Declaration
 			NormalizeTable(table);
 
 			foreach (DataRow row in table.Rows) {
-				var hdvClass = VehicleClassHelper.Parse(row.Field<string>("hdvclass/power"));
-				foreach (MissionType mission in Enum.GetValues(typeof(MissionType))) {
-					Data[Tuple.Create(mission, hdvClass)] = row.ParseDouble(mission.ToString().ToLower()).SI<Watt>();
+				var technology = row.Field<string>("technology");
+				foreach (DataColumn col in table.Columns) {
+					if (col.Caption != "hdvclass") {
+						Data[Tuple.Create(col.Caption.ParseEnum<MissionType>(), technology)] = row.ParseDouble(col.Caption).SI<Watt>();
+					}
 				}
 			}
 		}
