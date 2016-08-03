@@ -230,7 +230,7 @@ namespace TUGraz.VectoCore.InputData.Reader.DataObjectAdapter
 		/// Intersects full load curves.
 		/// </summary>
 		/// <param name="engineCurve"></param>
-		/// <param name="gearCurve"></param>
+		/// <param name="maxTorque"></param>
 		/// <returns>A combined EngineFullLoadCurve with the minimum full load torque over all inputs curves.</returns>
 		internal static EngineFullLoadCurve IntersectFullLoadCurves(EngineFullLoadCurve engineCurve, NewtonMeter maxTorque)
 		{
