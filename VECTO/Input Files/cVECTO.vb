@@ -14,7 +14,7 @@ Imports System.Collections.Generic
 Imports System.Linq
 
 Public Class cVECTO
-	Private Const FormatVersion As Short = 2
+	Private Const FormatVersion As Short = 3
 	Private FileVersion As Short
 
 	'AA-TB
@@ -69,7 +69,7 @@ Public Class cVECTO
 
 	Public Class cAuxEntry
 		Public Type As String
-		Public Path As cSubPath
+		Public ReadOnly Path As cSubPath
 		Public TechStr As String = ""
 
 		Public Sub New()
@@ -312,7 +312,7 @@ Public Class cVECTO
 						Return False
 					End If
 
-					Dim auxEntry As cAuxEntry = New cAuxEntry
+					Dim auxEntry = New cAuxEntry
 
 					auxEntry.Type = dic("Type")
 					auxEntry.Path.Init(MyPath, dic("Path"))
@@ -324,24 +324,43 @@ Public Class cVECTO
 					AuxDef = True
 
 					If auxId = sKey.AUX.ElecSys Then
-						Dim hasTech = False
+						If auxEntry.TechStr = "Custom Technology List" Then
+							Dim hasTech = False
 
-						If Not dic("TechList") Is Nothing Then
-							For Each t In dic("TechList")
-								hasTech = True
-							Next
-						End If
+							If Not dic("TechList") Is Nothing Then
+								For Each t In dic("TechList")
+									hasTech = True
+								Next
+							End If
 
-						If Not hasTech Then
-							auxEntry.TechStr = "Standard technology"
-						Else
-							auxEntry.TechStr = "Standard technology - LED headlights, all"
+							If Not hasTech Then
+								auxEntry.TechStr = "Standard technology"
+							Else
+								auxEntry.TechStr = "Standard technology - LED headlights, all"
+							End If
+							WorkerMsg(tMsgID.Warn, "Aux: Upgraded Electric System to new format: '" + auxEntry.TechStr + "'", msgSrc)
 						End If
+					End If
+
+					If auxId = sKey.AUX.SteerPump Then
+						Select Case auxEntry.TechStr
+							Case "Variable displacement"
+								auxEntry.TechStr = "Variable displacement elec. controlled"
+								WorkerMsg(tMsgID.Warn,
+										"Aux: Upgraded Steering Pump Technology from 'Variable displacement' to '" + auxEntry.TechStr + "'", msgSrc)
+							Case "Hydraulic supported by electric"
+								auxEntry.TechStr = "Dual displacement"
+								WorkerMsg(tMsgID.Warn,
+										"Aux: Upgraded Steering Pump Technology from 'Hydraulic supported by electric' to '" + auxEntry.TechStr + "'",
+										msgSrc)
+						End Select
 					End If
 				Next
 			End If
 
-			If Not JSON.Content("Body")("VACC") Is Nothing Then stDesMaxFile.Init(MyPath, JSON.Content("Body")("VACC"))
+			If Not JSON.Content("Body")("VACC") Is Nothing Then
+				stDesMaxFile.Init(MyPath, JSON.Content("Body")("VACC"))
+			End If
 
 			EngOnly = JSON.Content("Body")("EngineOnlyMode")
 
@@ -431,7 +450,7 @@ Public Class cVECTO
 		laDesV.Clear()
 		laDesMax.Clear()
 		laDesMin.Clear()
-		DesMaxDim = -1
+		DesMaxDim = - 1
 
 		AuxPaths.Clear()
 		AuxRefs.Clear()
@@ -506,7 +525,7 @@ Public Class cVECTO
 			laDesV.Clear()
 			laDesMax.Clear()
 			laDesMin.Clear()
-			DesMaxDim = -1
+			DesMaxDim = - 1
 			Try
 
 				Do While Not file.EndOfFile
@@ -515,7 +534,7 @@ Public Class cVECTO
 
 					line = file.ReadLine
 
-					laDesV.Add(CSng(line(0)) / 3.6)																															'km/h => m/s !!!!
+					laDesV.Add(CSng(line(0))/3.6)																															'km/h => m/s !!!!
 					laDesMax.Add(CSng(line(1)))
 					laDesMin.Add(CSng(line(2)))
 
@@ -614,7 +633,7 @@ Public Class cVECTO
 			Return 0
 		End If
 
-lbAuxError:
+		lbAuxError:
 		MODdata.ModErrors.AuxNegative = auxId
 		Return 0
 	End Function
@@ -746,7 +765,7 @@ lbAuxError:
 
 		'Extrapolation for x < x(1)
 		If laDesV(0) >= v Then
-			If laDesV(0) > v Then MODdata.ModErrors.DesMaxExtr = "v= " & v * 3.6 & "[km/h]"
+			If laDesV(0) > v Then MODdata.ModErrors.DesMaxExtr = "v= " & v*3.6 & "[km/h]"
 			i = 1
 			GoTo lbInt
 		End If
@@ -758,12 +777,12 @@ lbAuxError:
 
 		'Extrapolation for x > x(imax)
 		If laDesV(i) < v Then
-			MODdata.ModErrors.DesMaxExtr = "v= " & v * 3.6 & "[km/h]"
+			MODdata.ModErrors.DesMaxExtr = "v= " & v*3.6 & "[km/h]"
 		End If
 
-lbInt:
+		lbInt:
 		'Interpolation
-		Return (v - laDesV(i - 1)) * (laDesMax(i) - laDesMax(i - 1)) / (laDesV(i) - laDesV(i - 1)) + laDesMax(i - 1)
+		Return (v - laDesV(i - 1))*(laDesMax(i) - laDesMax(i - 1))/(laDesV(i) - laDesV(i - 1)) + laDesMax(i - 1)
 	End Function
 
 	Public Function aDesMin(v As Single) As Single
@@ -771,7 +790,7 @@ lbInt:
 
 		'Extrapolation for x < x(1)
 		If laDesV(0) >= v Then
-			If laDesV(0) > v Then MODdata.ModErrors.DesMaxExtr = "v= " & v * 3.6 & "[km/h]"
+			If laDesV(0) > v Then MODdata.ModErrors.DesMaxExtr = "v= " & v*3.6 & "[km/h]"
 			i = 1
 			GoTo lbInt
 		End If
@@ -783,12 +802,12 @@ lbInt:
 
 		'Extrapolation for x > x(imax)
 		If laDesV(i) < v Then
-			MODdata.ModErrors.DesMaxExtr = "v= " & v * 3.6 & "[km/h]"
+			MODdata.ModErrors.DesMaxExtr = "v= " & v*3.6 & "[km/h]"
 		End If
 
-lbInt:
+		lbInt:
 		'Interpolation
-		Return (v - laDesV(i - 1)) * (laDesMin(i) - laDesMin(i - 1)) / (laDesV(i) - laDesV(i - 1)) + laDesMin(i - 1)
+		Return (v - laDesV(i - 1))*(laDesMin(i) - laDesMin(i - 1))/(laDesV(i) - laDesV(i - 1)) + laDesMin(i - 1)
 	End Function
 End Class
 
