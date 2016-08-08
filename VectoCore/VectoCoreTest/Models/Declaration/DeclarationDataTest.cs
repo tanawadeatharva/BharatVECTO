@@ -29,11 +29,10 @@
 *   Martin Rexeis, rexeis@ivt.tugraz.at, IVT, Graz University of Technology
 */
 
+using NUnit.Framework;
 using System;
-using System.Collections.Generic;
 using System.IO;
 using System.Linq;
-using NUnit.Framework;
 using TUGraz.VectoCommon.Exceptions;
 using TUGraz.VectoCommon.InputData;
 using TUGraz.VectoCommon.Models;
@@ -169,7 +168,7 @@ namespace TUGraz.VectoCore.Tests.Models.Declaration
 			Assert.AreEqual(a1, value.A1);
 			Assert.AreEqual(a2, value.A2);
 			Assert.AreEqual(a3, value.A3);
-			}
+		}
 
 		[TestCase(VehicleCategory.RigidTruck, 0.013526, 0.017746, -0.000666),
 		TestCase(VehicleCategory.Tractor, 0.034767, 0.039367, -0.001897),
@@ -177,12 +176,12 @@ namespace TUGraz.VectoCore.Tests.Models.Declaration
 		TestCase(VehicleCategory.Coach, -0.000794, 0.02109, -0.00109),
 		TestCase(VehicleCategory.InterurbanBus, -0.000794, 0.02109, -0.00109)]
 		public void AirDrag_WithVehicleCategory(VehicleCategory cat, double a1, double a2, double a3)
-				{
+		{
 			var value = DeclarationData.AirDrag.Lookup(cat);
 			Assert.AreEqual(a1, value.A1);
 			Assert.AreEqual(a2, value.A2);
 			Assert.AreEqual(a3, value.A3);
-				}
+		}
 
 		[
 			TestCase(VehicleCategory.Tractor, 6.46, 0, 8.12204),
@@ -289,7 +288,7 @@ namespace TUGraz.VectoCore.Tests.Models.Declaration
 		public void AuxElectricSystem_NotExistingError(MissionType mission, string technology)
 		{
 			AssertHelper.Exception<VectoException>(() => { DeclarationData.ElectricSystem.Lookup(mission, technology); });
-			}
+		}
 
 		[
 			TestCase("", new[] { 618, 671, 516, 566, 1037 }),
@@ -324,30 +323,25 @@ namespace TUGraz.VectoCore.Tests.Models.Declaration
 			AssertHelper.Exception<VectoException>(() => DeclarationData.Fan.Lookup(missionType, technology));
 		}
 
-		[Test]
-		public void AuxHeatingVentilationAirConditionTest()
+		[TestCase(VehicleClass.Class1, new[] { 0, 150, 150, 0, 0 }),
+		TestCase(VehicleClass.Class2, new[] { 200, 200, 150, 0, 0 }),
+		TestCase(VehicleClass.Class3, new[] { 0, 200, 150, 0, 0 }),
+		TestCase(VehicleClass.Class4, new[] { 350, 200, 0, 300, 0 }),
+		TestCase(VehicleClass.Class5, new[] { 350, 200, 0, 0, 0 }),
+		TestCase(VehicleClass.Class9, new[] { 350, 200, 0, 300, 0 }),
+		TestCase(VehicleClass.Class10, new[] { 350, 200, 0, 0, 0 }),
+		TestCase(VehicleClass.Class11, new[] { 350, 200, 0, 300, 200 }),
+		TestCase(VehicleClass.Class12, new[] { 350, 200, 0, 0, 200 }),
+		TestCase(VehicleClass.Class16, new[] { 0, 0, 0, 0, 200 })]
+		public void AuxHeatingVentilationAirConditionTest(VehicleClass vehicleClass, int[] expected)
 		{
-			var hvac = DeclarationData.HeatingVentilationAirConditioning;
-
-			var expected = new Dictionary<VehicleClass, int[]> {
-				{ VehicleClass.Class1, new[] { 0, 150, 150, 0, 0, 0, 0, 0, 0, 0 } },
-				{ VehicleClass.Class2, new[] { 200, 200, 150, 0, 0, 0, 0, 0, 0, 0 } },
-				{ VehicleClass.Class3, new[] { 0, 200, 150, 0, 0, 0, 0, 0, 0, 0 } },
-				{ VehicleClass.Class4, new[] { 350, 200, 0, 300, 0, 0, 0, 0, 0, 0 } },
-				{ VehicleClass.Class5, new[] { 350, 200, 0, 0, 0, 0, 0, 0, 0, 0 } },
-				{ VehicleClass.Class6, new[] { 0, 0, 0, 0, 0, 0, 0, 0, 0, 0 } },
-				{ VehicleClass.Class7, new[] { 0, 0, 0, 0, 200, 0, 0, 0, 0, 0 } },
-				{ VehicleClass.Class8, new[] { 0, 0, 0, 0, 0, 0, 0, 0, 0, 0 } },
-				{ VehicleClass.Class9, new[] { 350, 200, 0, 300, 0, 0, 0, 0, 0, 0 } },
-				{ VehicleClass.Class10, new[] { 350, 200, 0, 0, 0, 0, 0, 0, 0, 0 } },
-				{ VehicleClass.Class11, new[] { 0, 0, 0, 0, 200, 0, 0, 0, 0, 0 } },
-				{ VehicleClass.Class12, new[] { 0, 0, 0, 0, 200, 0, 0, 0, 0, 0 } }
-			};
-
-			for (var i = 0; i < _missions.Length; i++) {
-				foreach (var expect in expected) {
-					var value = hvac.Lookup(_missions[i], expect.Key);
-					Assert.AreEqual(expect.Value[i], value.Value(), Tolerance);
+			for (var i = 0; i < expected.Length; i++) {
+				if (expected[i] > 0) {
+					AssertHelper.AreRelativeEqual(expected[i],
+						DeclarationData.HeatingVentilationAirConditioning.Lookup(_missions[i], vehicleClass));
+				} else {
+					AssertHelper.Exception<VectoException>(
+						() => DeclarationData.HeatingVentilationAirConditioning.Lookup(_missions[i], vehicleClass));
 				}
 			}
 		}
