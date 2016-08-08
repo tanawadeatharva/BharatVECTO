@@ -56,7 +56,7 @@ namespace TUGraz.VectoCore.Models.Declaration
 			foreach (DataRow row in table.Rows) {
 				var technology = row.Field<string>("technology");
 				foreach (DataColumn col in table.Columns) {
-					if (col.Caption != "hdvclass") {
+					if (col.Caption != "technology") {
 						Data[Tuple.Create(col.Caption.ParseEnum<MissionType>(), technology)] = row.ParseDouble(col.Caption).SI<Watt>();
 					}
 				}
