@@ -66,8 +66,10 @@ namespace TUGraz.VectoCore.Models.Declaration
 			}
 		}
 
-		public override Watt Lookup(MissionType missionType, string technology = "Standard technology")
+		public override Watt Lookup(MissionType missionType, string technology = null)
 		{
+			if (string.IsNullOrWhiteSpace(technology))
+				technology = "Standard technology";
 			var value = base.Lookup(missionType, technology);
 			return value / _alternator.Lookup(missionType);
 		}
@@ -99,8 +101,10 @@ namespace TUGraz.VectoCore.Models.Declaration
 				}
 			}
 
-			public override double Lookup(MissionType missionType, string technology = "Standard alternator efficiency")
+			public override double Lookup(MissionType missionType, string technology = null)
 			{
+				if (string.IsNullOrWhiteSpace(technology))
+					technology = "Standard alternator efficiency";
 				return base.Lookup(missionType, technology);
 			}
 		}

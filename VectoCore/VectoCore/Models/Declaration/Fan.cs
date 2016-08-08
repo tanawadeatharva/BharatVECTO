@@ -63,7 +63,7 @@ namespace TUGraz.VectoCore.Models.Declaration
 			}
 		}
 
-		public override Watt Lookup(MissionType mission, string technology)
+		public override Watt Lookup(MissionType mission, string technology = null)
 		{
 			if (string.IsNullOrWhiteSpace(technology))
 				technology = "Crankshaft mounted - Electronically controlled visco clutch";
