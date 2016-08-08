@@ -81,7 +81,7 @@ namespace TUGraz.VectoCore.Models.SimulationComponent.Impl
 					CycleIntervalIterator.LeftSample.RoadGradient, DataBus.StartAcceleration);
 				if (!(retVal is ResponseSuccess)) {
 					throw new UnexpectedResponseException("Couldn't find start gear.", retVal);
-		}
+				}
 			}
 
 			return NextComponent.Initialize(CycleIntervalIterator.LeftSample.VehicleTargetSpeed,
@@ -278,25 +278,6 @@ namespace TUGraz.VectoCore.Models.SimulationComponent.Impl
 			return null;
 		}
 
-		public IResponse Request(Second absTime, Second dt)
-		{
-			throw new InvalidOperationException("Distance Based Driving Cycle does not support time requests.");
-		}
-
-		public IResponse Initialize()
-		{
-			if (CycleIntervalIterator.LeftSample.VehicleTargetSpeed.IsEqual(0)) {
-				var retVal = _nextComponent.Initialize(DataBus.StartSpeed,
-					CycleIntervalIterator.LeftSample.RoadGradient, DataBus.StartAcceleration);
-				if (!(retVal is ResponseSuccess)) {
-					throw new UnexpectedResponseException("Couldn't find start gear.", retVal);
-				}
-			}
-
-			return _nextComponent.Initialize(CycleIntervalIterator.LeftSample.VehicleTargetSpeed,
-				CycleIntervalIterator.LeftSample.RoadGradient);
-		}
-
 		/// <summary>
 		/// Progress of the distance in the driving cycle.
 		/// </summary>
@@ -377,7 +358,7 @@ namespace TUGraz.VectoCore.Models.SimulationComponent.Impl
 			while (myIterator.RightSample.Distance < absDistance) {
 				myIterator.MoveNext();
 			}
-			
+
 			return InterpolateCycleEntry(absDistance, myIterator.RightSample);
 		}
 

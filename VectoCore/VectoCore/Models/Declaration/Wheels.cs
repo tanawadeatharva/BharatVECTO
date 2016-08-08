@@ -56,7 +56,7 @@ namespace TUGraz.VectoCore.Models.Declaration
 		protected override void ParseData(DataTable table)
 		{
 			Data = table.Rows.Cast<DataRow>()
-				.Select(row => new WheelsEntry {
+				.Select(row => new Entry {
 					WheelType = row.Field<string>(0).RemoveWhitespace(),
 					Inertia = row.ParseDouble("inertia").SI<KilogramSquareMeter>(),
 					DynamicTyreRadius = row.ParseDouble("d").SI().Milli.Meter.Cast<Meter>(),
