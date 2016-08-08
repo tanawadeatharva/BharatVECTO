@@ -12,6 +12,7 @@ Option Infer On
 
 Imports System.Collections.Generic
 Imports System.Linq
+Imports TUGraz.VectoCommon.Utils
 
 Public Class cVECTO
 	Private Const FormatVersion As Short = 3
@@ -158,15 +159,14 @@ Public Class cVECTO
 	End Sub
 
 	Public Function SaveFile() As Boolean
-		'Header
-		Dim dic = New Dictionary(Of String, Object)
-		dic.Add("CreatedBy", Lic.LicString & " (" & Lic.GUID & ")")
-		dic.Add("Date", Now.ToString)
-		dic.Add("AppVersion", VECTOvers)
-		dic.Add("FileVersion", FormatVersion)
-
 		Dim JSON As New JSON
-		JSON.Content.Add("Header", dic)
+
+		'Header
+		JSON.Content.Add("Header", New Dictionary(Of String, Object) From {
+							{"CreatedBy", Lic.LicString & " (" & Lic.GUID & ")"},
+							{"Date", Now.ToString},
+							{"AppVersion", VECTOvers},
+							{"FileVersion", FormatVersion}})
 
 		'Body
 		Dim dic0 = New Dictionary(Of String, Object)
@@ -194,60 +194,44 @@ Public Class cVECTO
 		dic0.Add("AuxiliaryVersion", AuxiliaryVersion)
 		dic0.Add("AdvancedAuxiliaryFilePath", AdvancedAuxiliaryFilePath)
 
-		'Aux
-		If AuxPaths.Count > 0 Then
-			Dim ls = New List(Of Object)
-			For Each AuxEntryKV In AuxPaths
-				dic = New Dictionary(Of String, Object)
-				dic.Add("ID", Trim(UCase(AuxEntryKV.Key)))
-				dic.Add("Type", AuxEntryKV.Value.Type)
-				dic.Add("Path", AuxEntryKV.Value.Path.PathOrDummy)
-				dic.Add("Technology", AuxEntryKV.Value.TechStr)
-				ls.Add(dic)
-			Next
-			dic0.Add("Aux", ls)
+		If AuxPaths.Any() Then
+			dic0.Add("Aux", AuxPaths.Select(Function(kv) New Dictionary(Of String, Object) From {
+												{"ID", Trim(UCase(kv.Key))},
+												{"Type", kv.Value.Type},
+												{"Path", kv.Value.Path.PathOrDummy},
+												{"Technology", kv.Value.TechStr.ToEnumerable()}}))
 		End If
 
-		'VACC
 		dic0.Add("VACC", stDesMaxFile.PathOrDummy)
-
-		'EngineOnlyMode
 		dic0.Add("EngineOnlyMode", EngOnly)
-
-		'Start Stop
-		dic = New Dictionary(Of String, Object)
-		dic.Add("Enabled", boStartStop)
-		dic.Add("MaxSpeed", siStStV)
-		dic.Add("MinTime", siStStT)
-		dic.Add("Delay", StStDelay)
-		dic0.Add("StartStop", dic)
-
-		'LAC
-		dic = New Dictionary(Of String, Object)
-		dic.Add("Enabled", LookAheadOn)
-		dic.Add("Dec", a_lookahead)
-		dic.Add("MinSpeed", vMinLA)
-		dic.Add("PreviewDistanceFactor", LacPreviewFactor)
-		dic.Add("DF_offset", LacDfOffset)
-		dic.Add("DF_scaling", LacDfScale)
-		dic.Add("DF_targetSpeedLookup", LacDfTargetSpeedFile)
-		dic.Add("Df_velocityDropLookup", LacDfVelocityDropFile)
-
-		dic0.Add("LAC", dic)
+		dic0.Add("StartStop", New Dictionary(Of String, Object) From {
+					{"Enabled", boStartStop},
+					{"MaxSpeed", siStStV},
+					{"MinTime", siStStT},
+					{"Delay", StStDelay}})
+		dic0.Add("LAC", New Dictionary(Of String, Object) From {
+					{"Enabled", LookAheadOn},
+					{"Dec", a_lookahead},
+					{"MinSpeed", vMinLA},
+					{"PreviewDistanceFactor", LacPreviewFactor},
+					{"DF_offset", LacDfOffset},
+					{"DF_scaling", LacDfScale},
+					{"DF_targetSpeedLookup", LacDfTargetSpeedFile},
+					{"Df_velocityDropLookup", LacDfVelocityDropFile}})
 
 		'Overspeed / EcoRoll
-		dic = New Dictionary(Of String, Object)
+		Dim overspeedDic = New Dictionary(Of String, Object)
 		If EcoRollOn Then
-			dic.Add("Mode", "EcoRoll")
+			overspeedDic.Add("Mode", "EcoRoll")
 		ElseIf OverSpeedOn Then
-			dic.Add("Mode", "OverSpeed")
+			overspeedDic.Add("Mode", "OverSpeed")
 		Else
-			dic.Add("Mode", "Off")
+			overspeedDic.Add("Mode", "Off")
 		End If
-		dic.Add("MinSpeed", vMin)
-		dic.Add("OverSpeed", OverSpeed)
-		dic.Add("UnderSpeed", UnderSpeed)
-		dic0.Add("OverSpeedEcoRoll", dic)
+		overspeedDic.Add("MinSpeed", vMin)
+		overspeedDic.Add("OverSpeed", OverSpeed)
+		overspeedDic.Add("UnderSpeed", UnderSpeed)
+		dic0.Add("OverSpeedEcoRoll", overspeedDic)
 
 		JSON.Content.Add("Body", dic0)
 		Return JSON.WriteFile(sFilePath)
@@ -313,8 +297,7 @@ Public Class cVECTO
 					auxEntry.Type = dic("Type")
 					auxEntry.Path.Init(MyPath, dic("Path"))
 
-					If Not dic("Technology") Is Nothing Then auxEntry.TechStr = dic("Technology")
-
+					If Not dic("Technology") Is Nothing Then auxEntry.TechStr = dic("Technology")(0)
 					AuxPaths.Add(auxId, auxEntry)
 
 					AuxDef = True
@@ -355,7 +338,7 @@ Public Class cVECTO
 					End If
 
 					If auxId = sKey.AUX.Fan Then
-						Select auxEntry.TechStr
+						Select Case auxEntry.TechStr
 							Case "Crankshaft mounted - Electronically controlled visco clutch (Default)"
 								auxEntry.TechStr = "Crankshaft mounted - Electronically controlled visco clutch"
 							Case "Crankshaft mounted - On/Off clutch"
@@ -464,7 +447,7 @@ Public Class cVECTO
 		laDesV.Clear()
 		laDesMax.Clear()
 		laDesMin.Clear()
-		DesMaxDim = - 1
+		DesMaxDim = -1
 
 		AuxPaths.Clear()
 		AuxRefs.Clear()
@@ -539,7 +522,7 @@ Public Class cVECTO
 			laDesV.Clear()
 			laDesMax.Clear()
 			laDesMin.Clear()
-			DesMaxDim = - 1
+			DesMaxDim = -1
 			Try
 
 				Do While Not file.EndOfFile
@@ -548,7 +531,7 @@ Public Class cVECTO
 
 					line = file.ReadLine
 
-					laDesV.Add(CSng(line(0))/3.6)																															'km/h => m/s !!!!
+					laDesV.Add(CSng(line(0)) / 3.6)																																	  'km/h => m/s !!!!
 					laDesMax.Add(CSng(line(1)))
 					laDesMin.Add(CSng(line(2)))
 
@@ -647,7 +630,7 @@ Public Class cVECTO
 			Return 0
 		End If
 
-		lbAuxError:
+lbAuxError:
 		MODdata.ModErrors.AuxNegative = auxId
 		Return 0
 	End Function
@@ -779,7 +762,7 @@ Public Class cVECTO
 
 		'Extrapolation for x < x(1)
 		If laDesV(0) >= v Then
-			If laDesV(0) > v Then MODdata.ModErrors.DesMaxExtr = "v= " & v*3.6 & "[km/h]"
+			If laDesV(0) > v Then MODdata.ModErrors.DesMaxExtr = "v= " & v * 3.6 & "[km/h]"
 			i = 1
 			GoTo lbInt
 		End If
@@ -791,12 +774,12 @@ Public Class cVECTO
 
 		'Extrapolation for x > x(imax)
 		If laDesV(i) < v Then
-			MODdata.ModErrors.DesMaxExtr = "v= " & v*3.6 & "[km/h]"
+			MODdata.ModErrors.DesMaxExtr = "v= " & v * 3.6 & "[km/h]"
 		End If
 
-		lbInt:
+lbInt:
 		'Interpolation
-		Return (v - laDesV(i - 1))*(laDesMax(i) - laDesMax(i - 1))/(laDesV(i) - laDesV(i - 1)) + laDesMax(i - 1)
+		Return (v - laDesV(i - 1)) * (laDesMax(i) - laDesMax(i - 1)) / (laDesV(i) - laDesV(i - 1)) + laDesMax(i - 1)
 	End Function
 
 	Public Function aDesMin(v As Single) As Single
@@ -804,7 +787,7 @@ Public Class cVECTO
 
 		'Extrapolation for x < x(1)
 		If laDesV(0) >= v Then
-			If laDesV(0) > v Then MODdata.ModErrors.DesMaxExtr = "v= " & v*3.6 & "[km/h]"
+			If laDesV(0) > v Then MODdata.ModErrors.DesMaxExtr = "v= " & v * 3.6 & "[km/h]"
 			i = 1
 			GoTo lbInt
 		End If
@@ -816,12 +799,12 @@ Public Class cVECTO
 
 		'Extrapolation for x > x(imax)
 		If laDesV(i) < v Then
-			MODdata.ModErrors.DesMaxExtr = "v= " & v*3.6 & "[km/h]"
+			MODdata.ModErrors.DesMaxExtr = "v= " & v * 3.6 & "[km/h]"
 		End If
 
-		lbInt:
+lbInt:
 		'Interpolation
-		Return (v - laDesV(i - 1))*(laDesMin(i) - laDesMin(i - 1))/(laDesV(i) - laDesV(i - 1)) + laDesMin(i - 1)
+		Return (v - laDesV(i - 1)) * (laDesMin(i) - laDesMin(i - 1)) / (laDesV(i) - laDesV(i - 1)) + laDesMin(i - 1)
 	End Function
 End Class
 
