@@ -282,7 +282,7 @@ namespace TUGraz.VectoCore.InputData.Reader.DataObjectAdapter
 
 		public RetarderData CreateRetarderData(IRetarderInputData retarder, IVehicleDeclarationInputData vehicle)
 		{
-			return SetCommonRetarderData(retarder, vehicle);
+			return SetCommonRetarderData(retarder);
 		}
 
 		public static List<CrossWindCorrectionCurveReader.CrossWindCorrectionEntry> GetDeclarationAirResistanceCurve(
