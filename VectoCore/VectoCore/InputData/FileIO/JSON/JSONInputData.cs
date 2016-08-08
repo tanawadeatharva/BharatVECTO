@@ -470,9 +470,14 @@ namespace TUGraz.VectoCore.InputData.FileIO.JSON
 		{
 			var retVal = new List<AuxiliaryDataInputData>();
 			foreach (var aux in Body["Aux"] ?? Enumerable.Empty<JToken>()) {
+				var type = (AuxiliaryType)0;
+				try {
+					type = AuxiliaryTypeHelper.Parse(aux.GetEx<string>("Type"));
+				} catch (ArgumentOutOfRangeException) {}
+
 				var auxData = new AuxiliaryDataInputData {
 					ID = aux.GetEx<string>("ID"),
-					Type = AuxiliaryTypeHelper.Parse(aux.GetEx<string>("Type")),
+					Type = type,
 					Technology = new List<string>(),
 				};
 				var tech = aux.GetEx<string>("Technology");
@@ -481,10 +486,10 @@ namespace TUGraz.VectoCore.InputData.FileIO.JSON
 				if (auxData.Type == AuxiliaryType.ElectricSystem) {
 					if (aux["TechList"] == null || aux["TechList"].Any()) {
 						auxData.Technology.Add("Standard technology");
-						Log.Warn("Aux: Upgraded Electric System to new format: 'Standard technology'");
+						Log.Warn("Aux: Upgraded Electric System to new format: '{0}'", auxData.Technology.Last());
 					} else {
 						auxData.Technology.Add("Standard technology - LED headlights, all");
-						Log.Warn("Aux: Upgraded Electric System to new format: 'Standard technology - LED headlights, all'");
+						Log.Warn("Aux: Upgraded Electric System to new format: '{0}'", auxData.Technology.Last());
 					}
 				}
 
@@ -492,13 +497,13 @@ namespace TUGraz.VectoCore.InputData.FileIO.JSON
 				if (auxData.Type == AuxiliaryType.SteeringPump) {
 					switch (tech) {
 						case "Variable displacement":
-							Log.Warn(
-								"Aux: Upgraded Steering Pump Technology from 'Variable displacement' to 'Variable displacement elec. controlled'");
 							auxData.Technology.Add("Variable displacement elec. controlled");
+							Log.Warn("Aux: Upgraded Steering Pump Technology from '{0}' to '{1}'", tech, auxData.Technology.Last());
+
 							break;
 						case "Hydraulic supported by electric":
-							Log.Warn("Aux: Upgraded Steering Pump Technology from 'Hydraulic supported by electric' to 'Dual displacement'");
 							auxData.Technology.Add("Dual displacement");
+							Log.Warn("Aux: Upgraded Steering Pump Technology from '{0}' to '{1}'", tech, auxData.Technology.Last());
 							break;
 						default:
 							auxData.Technology.Add(tech);
@@ -508,18 +513,14 @@ namespace TUGraz.VectoCore.InputData.FileIO.JSON
 
 				// Convert old Pneumatic System to new format
 				if (auxData.Type == AuxiliaryType.PneumaticSystem) {
-					Log.Warn("Aux: Upgraded Pneumatic System Technology to 'Medium Supply 1-stage'");
 					auxData.Technology.Add("Medium Supply 1-stage");
+					Log.Warn("Aux: Upgraded Pneumatic System Technology to '{0}'", tech, auxData.Technology.Last());
 				}
 
 				// Convert old HVAC to new format
 				if (auxData.Type == AuxiliaryType.HVAC) {
-					if (tech == "") {
-						auxData.Technology.Add("");
-					} else if (tech == "") {
-						Log.Warn(
-							"Aux: Upgraded HVAC Technology from '' to ''");
-						auxData.Technology.Add("");
+					if (!string.IsNullOrWhiteSpace(tech)) {
+						Log.Warn("Aux: Upgraded HVAC Technology from '{0}' to '{1}'", tech, "");
 					}
 				}
 
@@ -602,9 +603,14 @@ namespace TUGraz.VectoCore.InputData.FileIO.JSON
 						aux.GetEx<string>("ID"));
 				}
 
+				var type = (AuxiliaryType)0;
+				try {
+					type = AuxiliaryTypeHelper.Parse(aux.GetEx<string>("Type"));
+				} catch (ArgumentOutOfRangeException) {}
+
 				var auxData = new AuxiliaryDataInputData {
 					ID = aux.GetEx<string>("ID"),
-					Type = AuxiliaryTypeHelper.Parse(aux.GetEx<string>("Type")),
+					Type = type,
 					Technology = aux.GetEx("Technology").ToObject<List<string>>()
 				};
 
