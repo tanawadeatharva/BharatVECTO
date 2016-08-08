@@ -99,7 +99,7 @@ namespace TUGraz.VectoCore.Models.Declaration
 				}
 			}
 
-			public override double Lookup(MissionType missionType, string technology = "Standard alternator")
+			public override double Lookup(MissionType missionType, string technology = "Standard alternator efficiency")
 			{
 				return base.Lookup(missionType, technology);
 			}
