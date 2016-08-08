@@ -25,8 +25,8 @@ Public Class F_VEH_AuxDlog
 		CbType.Items.Add("Steering pump")
 		CbType.Items.Add("HVAC")
 		CbType.Items.Add("Electric System")
-		PnFile.Enabled = Not Cfg.DeclMode
-		PnTech.Enabled = Cfg.DeclMode
+		PnTech.Visible = Cfg.DeclMode
+		PnFile.Visible = Not Cfg.DeclMode
 	End Sub
 
 	'Initialise form
