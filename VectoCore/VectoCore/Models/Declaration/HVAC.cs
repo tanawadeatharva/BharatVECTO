@@ -56,8 +56,9 @@ namespace TUGraz.VectoCore.Models.Declaration
 			foreach (DataRow row in table.Rows) {
 				var hdvClass = VehicleClassHelper.Parse(row.Field<string>("hdvclass"));
 				foreach (DataColumn col in table.Columns) {
-					if (col.Caption != "hdvclass") {
-						Data[Tuple.Create(col.Caption.ParseEnum<MissionType>(), hdvClass)] = row.ParseDouble(col.Caption).SI<Watt>();
+					var value = row.ParseDoubleOrGetDefault(col.Caption, double.NaN);
+					if (col.Caption != "hdvclass" && !double.IsNaN(value)) {
+						Data[Tuple.Create(col.Caption.ParseEnum<MissionType>(), hdvClass)] = value.SI<Watt>();
 					}
 				}
 			}
