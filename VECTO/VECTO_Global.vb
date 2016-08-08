@@ -85,8 +85,10 @@ Public Module VECTO_Global
 		Select Case Gearbox
 			Case tGearbox.Manual
 				Return "MT"
-			Case tGearbox.Automatic
-				Return "AT"
+			Case tGearbox.AutomaticSerial
+				Return "ATSerial"
+			Case tGearbox.AutomaticPowerSplit
+				Return "ATPowerSplit"
 			Case tGearbox.SemiAutomatic
 				Return "AMT"
 			Case Else 'tGearbox.Custom
@@ -99,7 +101,11 @@ Public Module VECTO_Global
 			Case "MT"
 				Return tGearbox.Manual
 			Case "AT"
-				Return tGearbox.Automatic
+				Return tGearbox.AutomaticSerial
+			Case "ATSERIAL"
+				Return tGearbox.AutomaticSerial
+			Case "ATPOWERSPLIT"
+				Return tGearbox.AutomaticPowerSplit
 			Case "AMT"
 				Return tGearbox.SemiAutomatic
 			Case Else '"Custom"

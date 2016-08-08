@@ -695,7 +695,7 @@ Public Class cDeclaration
 	End Function
 
 	Public Function SkipGears(Gearbox As tGearbox) As Boolean
-		If Gearbox = tGearbox.Automatic Then
+		If AutomaticTransmission(Gearbox) Then
 			Return False
 		Else
 			Return True

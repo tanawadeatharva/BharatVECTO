@@ -55,7 +55,8 @@ Public Class F_GBX
 		Me.CbGStype.Items.Add("Manual Transmission (MT)")
 		Me.CbGStype.Items.Add("Automated Manual Transmission (AMT)")
 		If Not Cfg.DeclMode Then
-			Me.CbGStype.Items.Add("Automatic Transmission (AT)")
+			Me.CbGStype.Items.Add("Automatic Transmission - Serial (AT-S)")
+			Me.CbGStype.Items.Add("Automatic Transmission - PowerSplit (AT-P)")
 			Me.CbGStype.Items.Add("Custom")
 		End If
 
@@ -243,15 +244,15 @@ Public Class F_GBX
 				lv0 = New ListViewItem(i.ToString("00"))
 			End If
 
-			If Me.ChTCon.Checked And i > 0 Then
-				If GBX0.IsTCgear(i) Then
-					lv0.SubItems.Add("on")
-				Else
-					lv0.SubItems.Add("off")
-				End If
-			Else
-				lv0.SubItems.Add("-")
-			End If
+			'If Me.ChTCon.Checked And i > 0 Then
+			'	If False Then ' GBX0.IsTCgear(i) Then
+			'		lv0.SubItems.Add("on")
+			'	Else
+			'		lv0.SubItems.Add("off")
+			'	End If
+			'Else
+			lv0.SubItems.Add("-")
+			'End If
 			lv0.SubItems.Add(GBX0.Igetr(i))
 			lv0.SubItems.Add(GBX0.GetrMap(i, True))
 			lv0.SubItems.Add(GBX0.gsFile(i, True))
@@ -322,7 +323,7 @@ Public Class F_GBX
 		GBX0.GbxInertia = fTextboxToNumString(Me.TBI_getr.Text)
 
 		For i = 0 To Me.LvGears.Items.Count - 1
-			GBX0.IsTCgear.Add(Me.LvGears.Items(i).SubItems(1).Text = "on" And i > 0)
+			'GBX0.IsTCgear.Add(Me.LvGears.Items(i).SubItems(1).Text = "on" And i > 0)
 			GBX0.Igetr.Add(CSng(Me.LvGears.Items(i).SubItems(2).Text))
 			GBX0.GetrMaps.Add(New cSubPath)
 			GBX0.GetrMap(i) = Me.LvGears.Items(i).SubItems(3).Text
@@ -497,7 +498,7 @@ Public Class F_GBX
 		If GStype <> tGearbox.Custom Then
 			Me.ChShiftInside.Checked = Declaration.ShiftInside(GStype)
 			Me.ChSkipGears.Checked = Declaration.SkipGears(GStype)
-			Me.ChTCon.Checked = (GStype = tGearbox.Automatic)
+			Me.ChTCon.Checked = (GStype = tGearbox.AutomaticSerial OrElse GStype = tGearbox.AutomaticPowerSplit)
 		End If
 	End Sub
 
@@ -542,7 +543,7 @@ Public Class F_GBX
 
 		Do
 
-			GearDia.ChIsTCgear.Enabled = (Me.ChTCon.Checked And Me.LvGears.SelectedIndices(0) > 0)
+			'GearDia.ChIsTCgear.Enabled = (Me.ChTCon.Checked And Me.LvGears.SelectedIndices(0) > 0)
 			GearDia.PnShiftPoly.Enabled = (Not Cfg.DeclMode And Me.LvGears.SelectedIndices(0) > 0)
 			GearDia.PnFld.Enabled = (Me.LvGears.SelectedIndices(0) > 0)
 			GearDia.GbxPath = fPATH(GbxFile)
@@ -567,15 +568,15 @@ Public Class F_GBX
 
 			If GearDia.ShowDialog = Windows.Forms.DialogResult.OK Then
 
-				If GearDia.ChIsTCgear.Checked Then
-					Me.LvGears.SelectedItems(0).SubItems(1).Text = "on"
-				Else
-					If Me.ChTCon.Checked Then
-						Me.LvGears.SelectedItems(0).SubItems(1).Text = "off"
-					Else
-						Me.LvGears.SelectedItems(0).SubItems(1).Text = "-"
-					End If
-				End If
+				'If GearDia.ChIsTCgear.Checked Then
+				'	Me.LvGears.SelectedItems(0).SubItems(1).Text = "on"
+				'Else
+				'	If Me.ChTCon.Checked Then
+				'		Me.LvGears.SelectedItems(0).SubItems(1).Text = "off"
+				'	Else
+				Me.LvGears.SelectedItems(0).SubItems(1).Text = "-"
+				'	End If
+				'End If
 
 				Me.LvGears.SelectedItems(0).SubItems(2).Text = GearDia.TbRatio.Text
 				Me.LvGears.SelectedItems(0).SubItems(3).Text = GearDia.TbMapPath.Text
@@ -609,11 +610,11 @@ Public Class F_GBX
 		Dim lvi As ListViewItem
 
 		lvi = New ListViewItem(Me.LvGears.Items.Count.ToString("00"))
-		If Me.ChTCon.Checked Then
-			lvi.SubItems.Add("off")
-		Else
-			lvi.SubItems.Add("-")
-		End If
+		'If Me.ChTCon.Checked Then
+		'	lvi.SubItems.Add("off")
+		'Else
+		lvi.SubItems.Add("-")
+		'End If
 		lvi.SubItems.Add("")
 		lvi.SubItems.Add("")
 		lvi.SubItems.Add("")
@@ -977,15 +978,15 @@ Public Class F_GBX
 
 			If lv0.SubItems(0).Text = "Axle" Then Continue For
 
-			If Me.ChTCon.Checked Then
-				If lv0.Index = 1 Then
-					lv0.SubItems(1).Text = "on"
-				Else
-					lv0.SubItems(1).Text = "off"
-				End If
-			Else
-				lv0.SubItems(1).Text = "-"
-			End If
+			'If Me.ChTCon.Checked Then
+			'	If lv0.Index = 1 Then
+			'		lv0.SubItems(1).Text = "on"
+			'	Else
+			'		lv0.SubItems(1).Text = "off"
+			'	End If
+			'Else
+			lv0.SubItems(1).Text = "-"
+			'End If
 		Next
 	End Sub
 

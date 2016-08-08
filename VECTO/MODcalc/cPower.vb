@@ -989,7 +989,7 @@ lbCheck:
 
 			Else
 
-				If GBX.TCon And GBX.IsTCgear(Gear) Then
+				If GBX.TCon And False Then 'GBX.IsTCgear(Gear) Then
 
 					PlossGB = fPlossGB(Pwheel, Vact, Gear, False)
 					PlossDiff = fPlossDiff(Pwheel, Vact, False)
@@ -1121,7 +1121,7 @@ lb_nOK:
 					PaGbx = 0
 				Case tEngClutch.Closed
 
-					If GBX.TCon And GBX.IsTCgear(Gear) Then
+					If GBX.TCon And False Then ' GBX.IsTCgear(Gear) Then
 
 						Pclutch = nMtoPe(nU, GBX.TCMin)
 
@@ -1258,7 +1258,9 @@ lb_nOK:
 
 				If EngState0 = tEngState.Load Then
 					Pbrake = 0
-					If GBX.TCon And GBX.IsTCgear(Gear) Then Pbrake = GBX.TC_PeBrake
+					If GBX.TCon And False Then 'GBX.IsTCgear(Gear) Then
+						Pbrake = GBX.TC_PeBrake
+					End If
 					If Math.Abs(P / Pmax - 1) < 0.02 Then EngState0 = tEngState.FullLoad
 				Else ' tEngState.Drag (tEngState.Idle, tEngState.Stopped kann's hier nicht geben weil Clutch <> Closed)
 					If P < Pmin Then
@@ -1450,7 +1452,7 @@ lb_nOK:
 
 			'Torque Converter output
 			If GBX.TCon Then
-				If GBX.IsTCgear(Gear) Then
+				If False Then 'GBX.IsTCgear(Gear) Then
 					If nU = 0 Then
 						MODdata.TCnu.Add(0)
 					Else
@@ -2201,19 +2203,19 @@ lb_nOK:
 		If LastGear = 0 Then Return 1
 
 		If LastGear < GBX.GearCount Then
-			PlusGearLockUp = Not GBX.IsTCgear(LastGear + 1)
+			PlusGearLockUp = True 'Not GBX.IsTCgear(LastGear + 1)
 		Else
 			PlusGearLockUp = False
 		End If
 
 		If LastGear > 1 Then
-			MinusGearTC = GBX.IsTCgear(LastGear - 1)
+			MinusGearTC = False	'GBX.IsTCgear(LastGear - 1)
 		Else
 			MinusGearTC = False
 		End If
 
 		'2C-to-1C
-		If MinusGearTC And GBX.IsTCgear(LastGear) Then
+		If MinusGearTC And False Then ' GBX.IsTCgear(LastGear) Then
 			If fnUout(Vact, LastGear) <= ENG.Nidle Then
 				Return LastGear - 1
 			End If
@@ -2226,7 +2228,7 @@ lb_nOK:
 		End If
 
 		'nU
-		If GBX.IsTCgear(LastGear) Then
+		If False Then 'GBX.IsTCgear(LastGear) Then
 			n = MODdata.TCnu(t - 1)
 			nU = (Vact * 60.0 * GBX.Igetr(0) * GBX.Igetr(LastGear) / (2 * VEH.rdyn * Math.PI / 1000)) / n
 		Else

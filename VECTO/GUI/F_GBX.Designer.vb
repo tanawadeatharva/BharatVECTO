@@ -1006,7 +1006,7 @@ Partial Class F_GBX
     Friend WithEvents PnTC As System.Windows.Forms.Panel
     Friend WithEvents PnTorqRes As System.Windows.Forms.Panel
     Friend WithEvents BtAddGear As System.Windows.Forms.Button
-    Friend WithEvents ColumnHeader4 As System.Windows.Forms.ColumnHeader
+	Friend WithEvents ColumnHeader4 As System.Windows.Forms.ColumnHeader
     Friend WithEvents GroupBox4 As System.Windows.Forms.GroupBox
     Friend WithEvents Label32 As System.Windows.Forms.Label
     Friend WithEvents PnInertiaTI As System.Windows.Forms.Panel
