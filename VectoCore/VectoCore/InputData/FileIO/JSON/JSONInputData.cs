@@ -29,13 +29,13 @@
 *   Martin Rexeis, rexeis@ivt.tugraz.at, IVT, Graz University of Technology
 */
 
+using Newtonsoft.Json.Linq;
 using System;
 using System.Collections.Generic;
 using System.Data;
 using System.IO;
 using System.Linq;
 using System.Text;
-using Newtonsoft.Json.Linq;
 using TUGraz.VectoCommon.Exceptions;
 using TUGraz.VectoCommon.InputData;
 using TUGraz.VectoCommon.Models;
@@ -45,7 +45,6 @@ using TUGraz.VectoCore.InputData.Impl;
 using TUGraz.VectoCore.Models.Declaration;
 using TUGraz.VectoCore.Models.SimulationComponent.Data;
 using TUGraz.VectoCore.Utils;
-using AuxiliaryTypeHelper = TUGraz.VectoCore.Models.Declaration.AuxiliaryTypeHelper;
 
 namespace TUGraz.VectoCore.InputData.FileIO.JSON
 {
@@ -53,19 +52,14 @@ namespace TUGraz.VectoCore.InputData.FileIO.JSON
 	{
 		private string _basePath;
 
-		protected JObject Header;
-		protected JObject Body;
+		protected readonly JObject Header;
+		protected readonly JObject Body;
 
 		protected JSONFile(JObject data, string filename)
 		{
 			Header = (JObject)data.GetEx(JsonKeys.JsonHeader);
 			Body = (JObject)data.GetEx(JsonKeys.JsonBody);
 			BasePath = filename;
-		}
-
-		public int FileVersion
-		{
-			get { return Header.GetEx(JsonKeys.JsonHeader_FileVersion).Value<int>(); }
 		}
 
 		public bool SavedInDeclarationMode
@@ -86,7 +80,7 @@ namespace TUGraz.VectoCore.InputData.FileIO.JSON
 					return VectoCSVFile.Read(Path.Combine(BasePath, filename), true);
 				} catch (Exception e) {
 					Log.Warn("Failed to read file {0} {1}", Path.Combine(BasePath, filename), tableType);
-					throw new VectoException(string.Format("Failed to read file for {0}: {1}", tableType, filename), e);
+					throw new VectoException("Failed to read file for {0}: {1}", e, tableType, filename);
 				}
 			}
 			if (required) {
@@ -111,13 +105,13 @@ namespace TUGraz.VectoCore.InputData.FileIO.JSON
 		IEngineeringJobInputData, IDriverEngineeringInputData, IAuxiliariesEngineeringInputData,
 		IAuxiliariesDeclarationInputData
 	{
-		protected IGearboxEngineeringInputData Gearbox;
-		protected IAxleGearInputData AxleGear;
-		protected ITorqueConverterEngineeringInputData TorqueConverter;
-		public IAngularGearInputData AngularGear;
-		protected IEngineEngineeringInputData Engine;
-		protected IVehicleEngineeringInputData VehicleData;
-		protected IRetarderInputData Retarder;
+		protected readonly IGearboxEngineeringInputData Gearbox;
+		protected readonly IAxleGearInputData AxleGear;
+		protected readonly ITorqueConverterEngineeringInputData TorqueConverter;
+		protected readonly IAngularGearInputData AngularGear;
+		protected readonly IEngineEngineeringInputData Engine;
+		protected readonly IVehicleEngineeringInputData VehicleData;
+		protected readonly IRetarderInputData Retarder;
 
 		private readonly string _jobname;
 
@@ -590,10 +584,18 @@ namespace TUGraz.VectoCore.InputData.FileIO.JSON
 		{
 			var retVal = new List<AuxiliaryDataInputData>();
 			foreach (var aux in Body["Aux"] ?? Enumerable.Empty<JToken>()) {
+				try {
+					aux.GetEx("Technology").ToObject<List<string>>();
+				} catch (Exception) {
+					throw new VectoException(
+						"Aux: Technology for aux '{0}' list could not be read. Maybe it is a single string instead of a list of strings?",
+						aux.GetEx<string>("ID"));
+				}
+
 				var auxData = new AuxiliaryDataInputData {
 					ID = aux.GetEx<string>("ID"),
 					Type = AuxiliaryTypeHelper.Parse(aux.GetEx<string>("Type")),
-					Technology = aux.GetEx<List<string>>("Technology"),
+					Technology = aux.GetEx("Technology").ToObject<List<string>>()
 				};
 
 				var auxFile = aux["Path"];
