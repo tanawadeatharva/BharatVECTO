@@ -32,14 +32,12 @@
 using System;
 using System.Collections.Generic;
 using System.Linq;
-using TUGraz.VectoCommon.Exceptions;
 using TUGraz.VectoCommon.InputData;
 using TUGraz.VectoCommon.Models;
 using TUGraz.VectoCommon.Utils;
 using TUGraz.VectoCore.Configuration;
 using TUGraz.VectoCore.Models.SimulationComponent.Data;
 using TUGraz.VectoCore.Models.SimulationComponent.Data.Gearbox;
-using TUGraz.VectoCore.Utils;
 
 namespace TUGraz.VectoCore.Models.Declaration
 {
@@ -47,7 +45,6 @@ namespace TUGraz.VectoCore.Models.Declaration
 	{
 		private static DeclarationData _instance;
 		private Segments _segments;
-		private Rims _rims;
 		private Wheels _wheels;
 		private PT1 _pt1;
 		private ElectricSystem _electricSystem;
@@ -64,11 +61,6 @@ namespace TUGraz.VectoCore.Models.Declaration
 		public static Wheels Wheels
 		{
 			get { return Instance()._wheels ?? (Instance()._wheels = new Wheels()); }
-		}
-
-		public static Rims Rims
-		{
-			get { return Instance()._rims ?? (Instance()._rims = new Rims()); }
 		}
 
 		public static Segments Segments
@@ -94,16 +86,7 @@ namespace TUGraz.VectoCore.Models.Declaration
 		public static Meter DynamicTyreRadius(string wheels, string rims)
 		{
 			var wheelsEntry = Wheels.Lookup(wheels.RemoveWhitespace());
-			try {
-				var rimsEntry = Rims.Lookup(rims);
-
-				var correction = wheelsEntry.SizeClass != "a" ? rimsEntry.Fb : rimsEntry.Fa;
-
-				return wheelsEntry.DynamicTyreRadius * correction / (2 * Math.PI);
-			} catch (KeyNotFoundException) {
-				throw new VectoException(
-					"Calculating Dynamic Tyre Radius not possible: Declaration Lookup could not find Key '{0}' for rim.", rims);
-			}
+			return wheelsEntry.DynamicTyreRadius * wheelsEntry.CircumferenceFactor / (2 * Math.PI);
 		}
 
 		/// <summary>
@@ -179,29 +162,11 @@ namespace TUGraz.VectoCore.Models.Declaration
 			return _instance ?? (_instance = new DeclarationData());
 		}
 
-		//			Public Const SSspeed As Single = 5
-		//Public Const SStime As Single = 5
-		//Public Const SSdelay As Single = 5
-		//Public Const LACa As Single = -0.5
-		//Public Const LACvmin As Single = 50
-		//Public Const Overspeed As Single = 5
-		//Public Const Underspeed As Single = 5
-		//Public Const ECvmin As Single = 50
-
-		//Public Const AirDensity As Single = 1.188
-		//Public Const FuelDens As Single = 0.832
-		//Public Const CO2perFC As Single = 3.16
-
-		//Public Const AuxESeff As Single = 0.7
-
 		public static class Driver
 		{
 			public static class LookAhead
 			{
 				public const bool Enabled = true;
-
-				//public static readonly MeterPerSquareSecond Deceleration = -0.5.SI<MeterPerSquareSecond>();
-				//public static readonly MeterPerSecond MinimumSpeed = 50.KMPHtoMeterPerSecond();
 
 				public const double DecisionFactorCoastingOffset = 2.5;
 				public const double DecisionFactorCoastingScaling = 1.5;

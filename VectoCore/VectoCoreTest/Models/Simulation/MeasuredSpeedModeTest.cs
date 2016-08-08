@@ -43,6 +43,7 @@ using Microsoft.VisualStudio.TestTools.UnitTesting;
 using TUGraz.VectoCommon.Exceptions;
 using TUGraz.VectoCommon.Models;
 using TUGraz.VectoCommon.Utils;
+using TUGraz.VectoCore.Models.Declaration;
 using TUGraz.VectoCore.Models.SimulationComponent.Impl;
 using TUGraz.VectoCore.Models.SimulationComponent.Data;
 using TUGraz.VectoCore.Models.SimulationComponent.Data.Engine;
@@ -231,7 +232,14 @@ namespace TUGraz.VectoCore.Tests.Models.Simulation
 						CrossWindCorrectionCurve =
 							new CrosswindCorrectionCdxALookup(
 								CrossWindCorrectionCurveReader.GetNoCorrectionCurve(6.16498344.SI<SquareMeter>()),
-								CrossWindCorrectionMode.NoCorrection)
+								CrossWindCorrectionMode.NoCorrection),
+						GrossVehicleWeight = 12000.SI<Kilogram>(),
+						CurbWeight = 3400.SI<Kilogram>(),
+						DynamicTyreRadius = 0.5.SI<Meter>(),
+						AxleData =
+							new List<Axle> {
+								new Axle { AxleWeightShare = 1.0, TyreTestLoad = 52532.SI<Newton>(), Inertia = 10.SI<KilogramSquareMeter>() }
+							}
 					},
 				AxleGearData = new AxleGearData { AxleGear = new GearData { Ratio = 2.3 } },
 				EngineData = new CombustionEngineData { IdleSpeed = 560.RPMtoRad(), FullLoadCurve = fullLoadCurve },

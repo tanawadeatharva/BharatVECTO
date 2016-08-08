@@ -60,23 +60,16 @@ namespace TUGraz.VectoCore.Tests.Models.Declaration
 			MissionType.Construction,
 		};
 
-		[TestCase("285/70 R19.5", 7.9, 0.8943, "b")]
-		public void WheelDataTest(string wheels, double intertia, double dynamicRadius, string sizeClass)
+		[TestCase("285/60 R22.5", 10.6, 0.9135, 3.03),
+		TestCase("285/70 R19.5", 7.9, 0.8943, 3.05),
+		TestCase("395/85 R20", 27.9, 1.1795, 3.05)]
+		public void WheelDataTest(string wheels, double inertia, double dynamicRadius, double circumferenceFactor)
 		{
 			var tmp = DeclarationData.Wheels.Lookup(wheels);
 
-			Assert.AreEqual(intertia, tmp.Inertia.Value(), Tolerance);
-			Assert.AreEqual(dynamicRadius, tmp.DynamicTyreRadius.Value(), Tolerance);
-			Assert.AreEqual(sizeClass, tmp.SizeClass);
-		}
-
-		[TestCase("15° DC Rims", 3.03, 3.05)]
-		public void RimsDataTest(string rim, double fa, double fb)
-		{
-			var tmp = DeclarationData.Rims.Lookup(rim);
-
-			Assert.AreEqual(fa, tmp.Fa, Tolerance);
-			Assert.AreEqual(fb, tmp.Fb, Tolerance);
+			AssertHelper.AreRelativeEqual(inertia, tmp.Inertia);
+			AssertHelper.AreRelativeEqual(dynamicRadius, tmp.DynamicTyreRadius);
+			AssertHelper.AreRelativeEqual(circumferenceFactor, tmp.CircumferenceFactor);
 		}
 
 		[
@@ -176,7 +169,7 @@ namespace TUGraz.VectoCore.Tests.Models.Declaration
 			Assert.AreEqual(a1, value.A1);
 			Assert.AreEqual(a2, value.A2);
 			Assert.AreEqual(a3, value.A3);
-		}
+			}
 
 		[TestCase(VehicleCategory.RigidTruck, 0.013526, 0.017746, -0.000666),
 		TestCase(VehicleCategory.Tractor, 0.034767, 0.039367, -0.001897),
@@ -184,12 +177,12 @@ namespace TUGraz.VectoCore.Tests.Models.Declaration
 		TestCase(VehicleCategory.Coach, -0.000794, 0.02109, -0.00109),
 		TestCase(VehicleCategory.InterurbanBus, -0.000794, 0.02109, -0.00109)]
 		public void AirDrag_WithVehicleCategory(VehicleCategory cat, double a1, double a2, double a3)
-		{
+				{
 			var value = DeclarationData.AirDrag.Lookup(cat);
 			Assert.AreEqual(a1, value.A1);
 			Assert.AreEqual(a2, value.A2);
 			Assert.AreEqual(a3, value.A3);
-		}
+				}
 
 		[
 			TestCase(VehicleCategory.Tractor, 6.46, 0, 8.12204),
@@ -296,7 +289,7 @@ namespace TUGraz.VectoCore.Tests.Models.Declaration
 		public void AuxElectricSystem_NotExistingError(MissionType mission, string technology)
 		{
 			AssertHelper.Exception<VectoException>(() => { DeclarationData.ElectricSystem.Lookup(mission, technology); });
-		}
+			}
 
 		[
 			TestCase("", new[] { 618, 671, 516, 566, 1037 }),

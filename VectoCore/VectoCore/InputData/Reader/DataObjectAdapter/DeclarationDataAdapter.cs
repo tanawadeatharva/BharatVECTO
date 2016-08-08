@@ -106,7 +106,7 @@ namespace TUGraz.VectoCore.InputData.Reader.DataObjectAdapter
 			var axles = data.Axles;
 			if (axles.Count < mission.AxleWeightDistribution.Length) {
 				throw new VectoException("Vehicle does not contain sufficient axles. {0} axles defined, {1} axles required",
-					data.Axles.Count, mission.AxleWeightDistribution.Count());
+					data.Axles.Count, mission.AxleWeightDistribution.Length);
 			}
 			var axleData = new List<Axle>();
 			for (var i = 0; i < mission.AxleWeightDistribution.Length; i++) {
@@ -280,7 +280,7 @@ namespace TUGraz.VectoCore.InputData.Reader.DataObjectAdapter
 			Log.Warn("{0} not in Declaration Mode!", inputData);
 		}
 
-		public RetarderData CreateRetarderData(IRetarderInputData retarder, IVehicleDeclarationInputData vehicle)
+		public RetarderData CreateRetarderData(IRetarderInputData retarder)
 		{
 			return SetCommonRetarderData(retarder);
 		}
@@ -308,11 +308,9 @@ namespace TUGraz.VectoCore.InputData.Reader.DataObjectAdapter
 				var cdASum = 0.0.SI<SquareMeter>();
 
 				for (var alpha = 0; alpha <= maxAlpha; alpha += alphaStep) {
-					var vWindX = Physics.BaseWindSpeed * Math.Cos(alpha.ToRadian());
-					var vWindY = Physics.BaseWindSpeed * Math.Sin(alpha.ToRadian());
-					var vAirX = vVeh + vWindX;
-					var vAirY = vWindY;
-					var beta = Math.Atan((vAirY / vAirX).Value()).ToDegree();
+					var vAirX = vVeh + Physics.BaseWindSpeed * Math.Cos(alpha.ToRadian());
+					var vAirY = Physics.BaseWindSpeed * Math.Sin(alpha.ToRadian());
+					var beta = Math.Atan(vAirY / vAirX).ToDegree();
 					var deltaCdA = ComputeDeltaCd(beta, values);
 					var cdA = aerodynamicDragAera + deltaCdA;
 

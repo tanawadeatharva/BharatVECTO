@@ -92,6 +92,37 @@ namespace TUGraz.VectoCore.Models.SimulationComponent
 		}
 	}
 
+	public abstract class StatefulProviderComponent<TStateType, TProviderOutPort, TProviderInPort, TOutPort> :
+		StatefulVectoSimulationComponent<TStateType>
+		where TStateType : new()
+		where TProviderOutPort : class
+		where TProviderInPort : class
+	{
+		protected TOutPort NextComponent;
+
+		protected StatefulProviderComponent(IVehicleContainer container) : base(container) {}
+
+		public TProviderOutPort OutPort()
+		{
+			return this as TProviderOutPort;
+		}
+
+		public TProviderInPort InPort()
+		{
+			return this as TProviderInPort;
+		}
+
+		public void Connect(TOutPort other)
+		{
+			NextComponent = other;
+		}
+
+		protected override void DoCommitSimulationStep()
+		{
+			AdvanceState();
+		}
+	}
+
 	public class SimpleComponentState
 	{
 		public NewtonMeter OutTorque = 0.SI<NewtonMeter>();

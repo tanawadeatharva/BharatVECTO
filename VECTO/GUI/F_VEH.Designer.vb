@@ -121,6 +121,7 @@ Partial Class F_VEH
 		Me.cbAngularGearType = New System.Windows.Forms.ComboBox()
 		Me.PicVehicle = New System.Windows.Forms.PictureBox()
 		Me.Label8 = New System.Windows.Forms.Label()
+		Me.ToolTip1 = New System.Windows.Forms.ToolTip(Me.components)
 		Me.GroupBox6.SuspendLayout()
 		Me.ToolStrip1.SuspendLayout()
 		Me.GroupBox7.SuspendLayout()
@@ -547,6 +548,7 @@ Partial Class F_VEH
 		Me.CbRim.Name = "CbRim"
 		Me.CbRim.Size = New System.Drawing.Size(184, 21)
 		Me.CbRim.TabIndex = 4
+		Me.ToolTip1.SetToolTip(Me.CbRim, "(Vecto 2 only)" & Global.Microsoft.VisualBasic.ChrW(13) & Global.Microsoft.VisualBasic.ChrW(10) & "The Rims parameter will be removed in Vecto 3")
 		'
 		'Label7
 		'
@@ -1086,4 +1088,5 @@ Partial Class F_VEH
 	Friend WithEvents tbAngularGearRatio As System.Windows.Forms.TextBox
 	Friend WithEvents btAngularGearLossMapBrowse As System.Windows.Forms.Button
 	Friend WithEvents tbAngularGearLossMapPath As System.Windows.Forms.TextBox
+	Friend WithEvents ToolTip1 As System.Windows.Forms.ToolTip
 End Class

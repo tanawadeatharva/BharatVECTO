@@ -66,7 +66,7 @@ namespace TUGraz.VectoCore.InputData.Reader.DataObjectAdapter
 			return retVal;
 		}
 
-		internal RetarderData SetCommonRetarderData(IRetarderInputData data, IVehicleDeclarationInputData vehicle)
+		internal RetarderData SetCommonRetarderData(IRetarderInputData data)
 		{
 			try {
 				var retarder = new RetarderData {

@@ -745,9 +745,9 @@ Public Class cDeclaration
 		Return (F*w.Diam)/(2*Math.PI)
 	End Function
 
-	Public ReadOnly Property WheelsList As Dictionary(Of String, cWheel).KeyCollection
+	Public ReadOnly Property WheelsList As String()
 		Get
-			Return Wheels.Keys
+			Return Wheels.Keys.ToArray()
 		End Get
 	End Property
 
