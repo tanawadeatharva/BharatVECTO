@@ -94,8 +94,6 @@ namespace TUGraz.VectoCore.InputData.Impl
 		public NewtonMeter MaxTorque { get; internal set; }
 
 		public DataTable ShiftPolygon { get; internal set; }
-
-		public bool TorqueConverterActive { get; internal set; }
 	}
 
 	public class AxleInputData : IAxleEngineeringInputData

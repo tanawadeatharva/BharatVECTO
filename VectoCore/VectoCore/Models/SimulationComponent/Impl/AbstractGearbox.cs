@@ -50,10 +50,10 @@ namespace TUGraz.VectoCore.Models.SimulationComponent.Impl
 
 		#region ITnOutPort
 
-		public abstract IResponse Request(Second absTime, Second dt, NewtonMeter torque, PerSecond angularVelocity,
+		public abstract IResponse Request(Second absTime, Second dt, NewtonMeter outTorque, PerSecond outAngularVelocity,
 			bool dryRun = false);
 
-		public abstract IResponse Initialize(NewtonMeter torque, PerSecond angularVelocity);
+		public abstract IResponse Initialize(NewtonMeter outTorque, PerSecond outAngularVelocity);
 
 		#endregion
 

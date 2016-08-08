@@ -140,6 +140,7 @@
     <Compile Include="Models\SimulationComponent\Data\Engine\FuelConsumptionMapReader.cs" />
     <Compile Include="Models\SimulationComponent\Impl\AbstractGearbox.cs" />
     <Compile Include="Models\SimulationComponent\Impl\ATGearbox.cs" />
+    <Compile Include="Models\SimulationComponent\Impl\ATShiftStrategy.cs" />
     <Compile Include="Models\SimulationComponent\Impl\TorqueConverter.cs" />
     <Compile Include="Utils\AuxiliaryTypeHelper.cs" />
     <Compile Include="Utils\ProviderExtensions.cs" />

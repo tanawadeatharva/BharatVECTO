@@ -97,7 +97,11 @@ namespace TUGraz.VectoCore.Utils
 
 			var clutch = prev as IClutch;
 			if (clutch != null) {
-				next.IdleController.RequestPort = clutch.IdleControlPort;
+				clutch.IdleController = next.IdleController;
+			}
+			var atGbx = prev as ATGearbox;
+			if (atGbx != null) {
+				atGbx.IdleController = next.IdleController;
 			}
 			return next;
 		}

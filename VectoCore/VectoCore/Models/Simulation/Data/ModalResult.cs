@@ -314,6 +314,11 @@ namespace TUGraz.VectoCore.Models.Simulation.Data
 		[ModalResultField(typeof(SI), outputFactor: 1e-3)] P_aux_,
 
 		/// <summary>
+		///		[-]  true/false  indicate whether torque converter is locked or not (only applicable for gears with TC)
+		/// </summary>
+		[ModalResultField(typeof(int), caption: "TC locked")] TC_Locked,
+
+		/// <summary>
 		///     [-]	    Torque converter speed ratio
 		/// </summary>
 		[ModalResultField(typeof(SI), name: "TCnu")] TCv,

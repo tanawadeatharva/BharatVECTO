@@ -60,14 +60,14 @@ namespace TUGraz.VectoCore.Models.SimulationComponent.Impl
 
 		public Watt BrakePower { get; set; }
 
-		public IResponse Request(Second absTime, Second dt, NewtonMeter torque, PerSecond angularVelocity, bool dryRun = false)
+		public IResponse Request(Second absTime, Second dt, NewtonMeter outTorque, PerSecond outAngularVelocity, bool dryRun = false)
 		{
 			var brakeTorque = 0.SI<NewtonMeter>();
-			var avgAngularSpeed = (PreviousState.OutAngularVelocity + angularVelocity) / 2.0;
+			var avgAngularSpeed = (PreviousState.OutAngularVelocity + outAngularVelocity) / 2.0;
 
 			if (!BrakePower.IsEqual(0)) {
 				if (avgAngularSpeed.IsEqual(0)) {
-					brakeTorque = torque;
+					brakeTorque = outTorque;
 				} else {
 					brakeTorque = BrakePower / avgAngularSpeed;
 				}
@@ -76,20 +76,20 @@ namespace TUGraz.VectoCore.Models.SimulationComponent.Impl
 			if (!dryRun && BrakePower < 0) {
 				throw new VectoSimulationException("Negative Braking Power is not allowed!");
 			}
-			CurrentState.SetState(torque + brakeTorque, angularVelocity, torque, angularVelocity);
+			CurrentState.SetState(outTorque + brakeTorque, outAngularVelocity, outTorque, outAngularVelocity);
 
-			var retVal = NextComponent.Request(absTime, dt, torque + brakeTorque, angularVelocity, dryRun);
+			var retVal = NextComponent.Request(absTime, dt, outTorque + brakeTorque, outAngularVelocity, dryRun);
 			retVal.BrakePower = brakeTorque * avgAngularSpeed;
 			return retVal;
 		}
 
-		public IResponse Initialize(NewtonMeter torque, PerSecond angularVelocity)
+		public IResponse Initialize(NewtonMeter outTorque, PerSecond outAngularVelocity)
 		{
 			BrakePower = 0.SI<Watt>();
-			PreviousState.SetState(torque, angularVelocity, torque, angularVelocity);
+			PreviousState.SetState(outTorque, outAngularVelocity, outTorque, outAngularVelocity);
 			return DataBus.DriverBehavior == DrivingBehavior.Halted && DataBus.VehicleStopped
 				? NextComponent.Initialize(0.SI<NewtonMeter>(), 0.SI<PerSecond>())
-				: NextComponent.Initialize(torque, angularVelocity);
+				: NextComponent.Initialize(outTorque, outAngularVelocity);
 		}
 
 

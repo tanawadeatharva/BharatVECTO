@@ -11,17 +11,17 @@ namespace TUGraz.VectoCore.InputData.Reader.ComponentData
 {
 	public class TorqueConverterDataReader
 	{
-		public static TorqueConverterData ReadFromFile(string filename, PerSecond referenceRpm)
+		public static TorqueConverterData ReadFromFile(string filename, PerSecond referenceRpm, PerSecond maxRpm)
 		{
-			return Create(VectoCSVFile.Read(filename), referenceRpm);
+			return Create(VectoCSVFile.Read(filename), referenceRpm, maxRpm);
 		}
 
-		public static TorqueConverterData ReadFromStream(Stream stream, PerSecond referenceRpm)
+		public static TorqueConverterData ReadFromStream(Stream stream, PerSecond referenceRpm, PerSecond maxRpm)
 		{
-			return Create(VectoCSVFile.ReadStream(stream), referenceRpm);
+			return Create(VectoCSVFile.ReadStream(stream), referenceRpm, maxRpm);
 		}
 
-		public static TorqueConverterData Create(DataTable data, PerSecond referenceRpm)
+		public static TorqueConverterData Create(DataTable data, PerSecond referenceRpm, PerSecond maxRpm)
 		{
 			if (data.Columns.Count != 3) {
 				throw new VectoException("TorqueConverter Characteristics data must consist of 3 columns");
@@ -48,7 +48,7 @@ namespace TUGraz.VectoCore.InputData.Reader.ComponentData
 							TorqueRatio = row.ParseDouble(1)
 						}).ToList();
 			}
-			return new TorqueConverterData(characteristicTorque, referenceRpm);
+			return new TorqueConverterData(characteristicTorque, referenceRpm, maxRpm);
 		}
 
 		private static bool HeaderIsValid(DataColumnCollection columns)

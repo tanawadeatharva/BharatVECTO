@@ -199,6 +199,7 @@ namespace TUGraz.VectoCommon.InputData
 		IList<ITransmissionInputData> Gears { get; }
 	}
 
+
 	public interface ITransmissionInputData
 	{
 		int Gear { get; }
@@ -240,11 +241,11 @@ namespace TUGraz.VectoCommon.InputData
 		/// </summary>
 		DataTable ShiftPolygon { get; }
 
-		/// <summary>
-		/// P077
-		/// cf. VECTO Input Parameters.xlsx
-		/// </summary>
-		bool TorqueConverterActive { get; }
+		///// <summary>
+		///// P077
+		///// cf. VECTO Input Parameters.xlsx
+		///// </summary>
+		//bool HasTorqueConverter { get; }     // DEPRECATED
 	}
 
 	public interface IAxleGearInputData : IComponentInputData
@@ -387,6 +388,4 @@ namespace TUGraz.VectoCommon.InputData
 		/// </summary>
 		IList<string> Technology { get; }
 	}
-
-
 }

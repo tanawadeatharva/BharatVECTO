@@ -42,6 +42,7 @@ namespace TUGraz.VectoCore.Models.SimulationComponent
 
 	public interface IClutch : IPowerTrainComponent
 	{
-		ITnOutPort IdleControlPort { get; }
+		//ITnOutPort IdleControlPort { get; }
+		ICombustionEngineIdleController IdleController { get; set; }
 	}
 }

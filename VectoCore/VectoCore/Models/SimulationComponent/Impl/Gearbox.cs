@@ -102,10 +102,7 @@ namespace TUGraz.VectoCore.Models.SimulationComponent.Impl
 			var torqueLossResult = ModelData.Gears[Gear].LossMap.GetTorqueLoss(outAngularVelocity, outTorque);
 			CurrentState.TorqueLossResult = torqueLossResult;
 			var inTorque = outTorque / ModelData.Gears[Gear].Ratio + torqueLossResult.Value;
-			var torqueLossInertia = outAngularVelocity.IsEqual(0)
-				? 0.SI<NewtonMeter>()
-				: Formulas.InertiaPower(inAngularVelocity, PreviousState.InAngularVelocity, ModelData.Inertia, dt) /
-				inAngularVelocity;
+			var torqueLossInertia = 0.SI<NewtonMeter>();
 
 			inTorque += torqueLossInertia;
 
@@ -168,12 +165,12 @@ namespace TUGraz.VectoCore.Models.SimulationComponent.Impl
 		/// <item><description>ResponseGearshift</description></item>
 		/// </list>
 		/// </returns>
-		public override IResponse Request(Second absTime, Second dt, NewtonMeter torque, PerSecond angularVelocity,
+		public override IResponse Request(Second absTime, Second dt, NewtonMeter outTorque, PerSecond outAngularVelocity,
 			bool dryRun)
 		{
 			IterationStatistics.Increment(this, "Requests");
 
-			Log.Debug("Gearbox Power Request: torque: {0}, angularVelocity: {1}", torque, angularVelocity);
+			Log.Debug("Gearbox Power Request: torque: {0}, angularVelocity: {1}", outTorque, outAngularVelocity);
 			if (DataBus.VehicleStopped) {
 				_engageTime = absTime;
 			}
@@ -181,22 +178,22 @@ namespace TUGraz.VectoCore.Models.SimulationComponent.Impl
 				_engageTime = absTime + dt;
 			}
 
-			var engineSpeedNorm = (angularVelocity - DataBus.EngineIdleSpeed) /
+			var engineSpeedNorm = (outAngularVelocity - DataBus.EngineIdleSpeed) /
 								(DataBus.EngineRatedSpeed - DataBus.EngineIdleSpeed);
 			if (DataBus.DriverBehavior == DrivingBehavior.Braking && DataBus.BrakePower.IsGreater(0.SI<Watt>()) &&
 				engineSpeedNorm < Constants.SimulationSettings.ClutchClosingSpeedNorm &&
 				DataBus.VehicleSpeed.IsSmaller(Constants.SimulationSettings.ClutchDisengageWhenHaltingSpeed)) {
 				_engageTime = absTime + dt;
 				Disengaged = true;
-				return RequestGearDisengaged(absTime, dt, torque, angularVelocity, dryRun);
+				return RequestGearDisengaged(absTime, dt, outTorque, outAngularVelocity, dryRun);
 			}
 
 			IResponse retVal;
 			// TODO MQ 2016/03/10: investigate further the effects of having the condition angularvelocity != 0
 			if (ClutchClosed(absTime) /* && !angularVelocity.IsEqual(0) */) {
-				retVal = RequestGearEngaged(absTime, dt, torque, angularVelocity, dryRun);
+				retVal = RequestGearEngaged(absTime, dt, outTorque, outAngularVelocity, dryRun);
 			} else {
-				retVal = RequestGearDisengaged(absTime, dt, torque, angularVelocity, dryRun);
+				retVal = RequestGearDisengaged(absTime, dt, outTorque, outAngularVelocity, dryRun);
 			}
 
 			return retVal;

@@ -100,21 +100,21 @@ namespace TUGraz.VectoCore.Models.SimulationComponent.Impl
 			NextComponent = other;
 		}
 
-		public IResponse Request(Second absTime, Second dt, NewtonMeter torque, PerSecond angularVelocity, bool dryRun = false)
+		public IResponse Request(Second absTime, Second dt, NewtonMeter outTorque, PerSecond outAngularVelocity, bool dryRun = false)
 		{
-			if (angularVelocity == null) {
-				return NextComponent.Request(absTime, dt, torque, null, dryRun);
+			if (outAngularVelocity == null) {
+				return NextComponent.Request(absTime, dt, outTorque, null, dryRun);
 			}
-			var avgAngularSpeed = (PreviousState.InAngularVelocity + angularVelocity) / 2.0;
+			var avgAngularSpeed = (PreviousState.InAngularVelocity + outAngularVelocity) / 2.0;
 			var retarderTorqueLoss = _lossMap.RetarderLoss(avgAngularSpeed * _ratio) / _ratio;
-			CurrentState.SetState(torque + retarderTorqueLoss, angularVelocity, torque, angularVelocity);
+			CurrentState.SetState(outTorque + retarderTorqueLoss, outAngularVelocity, outTorque, outAngularVelocity);
 			return NextComponent.Request(absTime, dt, CurrentState.InTorque, CurrentState.InAngularVelocity, dryRun);
 		}
 
-		public IResponse Initialize(NewtonMeter torque, PerSecond angularVelocity)
+		public IResponse Initialize(NewtonMeter outTorque, PerSecond outAngularVelocity)
 		{
-			var retarderTorqueLoss = _lossMap.RetarderLoss(angularVelocity * _ratio) / _ratio;
-			PreviousState.SetState(torque + retarderTorqueLoss, angularVelocity, torque, angularVelocity);
+			var retarderTorqueLoss = _lossMap.RetarderLoss(outAngularVelocity * _ratio) / _ratio;
+			PreviousState.SetState(outTorque + retarderTorqueLoss, outAngularVelocity, outTorque, outAngularVelocity);
 			return NextComponent.Initialize(PreviousState.InTorque, PreviousState.InAngularVelocity);
 		}
 	}

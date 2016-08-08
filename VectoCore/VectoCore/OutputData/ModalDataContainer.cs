@@ -119,6 +119,9 @@ namespace TUGraz.VectoCore.OutputData
 				dataColumns.AddRange(new[] {
 					ModalResultField.Gear,
 				});
+				if (HasTorqueConverter) {
+					dataColumns.AddRange(new[] { ModalResultField.TC_Locked });
+				}
 			}
 			dataColumns.AddRange(new[] {
 				ModalResultField.n_eng_avg,

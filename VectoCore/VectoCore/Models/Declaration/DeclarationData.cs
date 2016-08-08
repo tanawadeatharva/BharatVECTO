@@ -241,7 +241,7 @@ namespace TUGraz.VectoCore.Models.Declaration
 			public static KilogramSquareMeter EngineInertia(SI displacement, GearboxType gbxType)
 			{
 				// VB Code:    Return 1.3 + 0.41 + 0.27 * (Displ / 1000)
-				return (gbxType == GearboxType.AT ? TorqueConverterInertia : ClutchInertia) + EngineBaseInertia +
+				return (gbxType.AutomaticTransmission() ? TorqueConverterInertia : ClutchInertia) + EngineBaseInertia +
 						EngineDisplacementInertia * displacement;
 			}
 		}
@@ -262,6 +262,8 @@ namespace TUGraz.VectoCore.Models.Declaration
 			public static readonly Second DownshiftAfterUpshiftDelay = 10.SI<Second>();
 			public static readonly Second UpshiftAfterDownshiftDelay = 10.SI<Second>();
 			public static readonly MeterPerSquareSecond UpshiftMinAcceleration = 0.1.SI<MeterPerSquareSecond>();
+			public static readonly PerSecond TorqueConverterSpeedLimit = 1600.RPMtoRad();
+			public static readonly double TorqueConverterSecondGearThreshold = 1.8;
 
 			/// <summary>
 			/// computes the shift polygons for a single gear according to the whitebook 2016
@@ -318,7 +320,7 @@ namespace TUGraz.VectoCore.Models.Declaration
 					return new ShiftPolygon(downShift, upShift);
 				}
 
-				var gearRatio = gears[gear].Ratio / gears[gear + 1].Ratio;
+				var gearRatio = gears[(int)gear].Ratio / gears[(int)(gear + 1)].Ratio;
 				var rpmMarginFactor = 1 + ShiftPolygonRPMMargin / 100.0;
 
 				var p2p = new Point(p2.X * gearRatio * rpmMarginFactor, p2.Y / gearRatio);
