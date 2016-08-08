@@ -66,7 +66,6 @@ Public Class cVECTO
 
 	Public SavedInDeclMode As Boolean
 
-
 	Public Class cAuxEntry
 		Public Type As String
 		Public ReadOnly Path As cSubPath
@@ -246,7 +245,8 @@ Public Class cVECTO
 		If Not JSON.ReadFile(sFilePath) Then Return False
 
 		Try
-			If JSON.Content("Header")("FileVersion") > 1 Then
+			Dim fileVersion = JSON.Content("Header")("FileVersion")
+			If fileVersion > 1 Then
 				SavedInDeclMode = JSON.Content("Body")("SavedInDeclMode")
 			Else
 				SavedInDeclMode = Cfg.DeclMode
@@ -297,13 +297,21 @@ Public Class cVECTO
 					auxEntry.Type = dic("Type")
 					auxEntry.Path.Init(MyPath, dic("Path"))
 
-					If Not dic("Technology") Is Nothing Then auxEntry.TechStr = dic("Technology")(0)
-					AuxPaths.Add(auxId, auxEntry)
+					If Not dic("Technology") Is Nothing Then
+						If fileVersion = 2 Then
+							auxEntry.TechStr = dic("Technology")
+						End If
+						If fileVersion = 3 Then
+							auxEntry.TechStr = dic("Technology")(0)
+						End If
+					End If
 
-					AuxDef = True
+					If (auxId = sKey.AUX.HVAC) Then
+						auxEntry.TechStr = ""
+					End If
 
 					If auxId = sKey.AUX.ElecSys Then
-						If auxEntry.TechStr = "Custom Technology List" Then
+						If auxEntry.TechStr = "Custom Technology List" OrElse String.IsNullOrWhiteSpace(auxEntry.TechStr) Then
 							Dim hasTech = False
 
 							If Not dic("TechList") Is Nothing Then
@@ -348,11 +356,14 @@ Public Class cVECTO
 						End Select
 					End If
 
-					If JSON.Content("Header")("FileVersion") = 2 AndAlso auxId = sKey.AUX.PneumSys Then
+					If fileVersion = 2 AndAlso auxId = sKey.AUX.PneumSys Then
 						auxEntry.TechStr = "Medium Supply 1-stage"
 						WorkerMsg(tMsgID.Warn, "Aux: Upgraded Pneumatic System Technology to new format: '" + auxEntry.TechStr + "'",
 								msgSrc)
 					End If
+
+					AuxPaths.Add(auxId, auxEntry)
+					AuxDef = True
 				Next
 			End If
 
@@ -531,7 +542,7 @@ Public Class cVECTO
 
 					line = file.ReadLine
 
-					laDesV.Add(CSng(line(0)) / 3.6)																																	  'km/h => m/s !!!!
+					laDesV.Add(CSng(line(0)) / 3.6)																																						'km/h => m/s !!!!
 					laDesMax.Add(CSng(line(1)))
 					laDesMin.Add(CSng(line(2)))
 

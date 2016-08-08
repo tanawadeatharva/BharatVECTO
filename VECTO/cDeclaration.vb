@@ -496,9 +496,7 @@ Public Class cDeclaration
 			Return False
 		End Try
 
-		at0 = New List(Of String)
-		at0.Add("Default")
-		AuxTechs.Add(tAux.HVAC, at0)
+		AuxTechs.Add(tAux.HVAC, New List(Of String))
 
 		'Aux - Electric System
 		AuxESpower = New Dictionary(Of String, Dictionary(Of tMission, Single))

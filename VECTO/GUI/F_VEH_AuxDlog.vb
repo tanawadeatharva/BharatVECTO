@@ -49,7 +49,12 @@ Public Class F_VEH_AuxDlog
 			Case Else 'sKey.AUX.PneumSys
 				CbTech.Items.AddRange(Declaration.AuxTechs(tAux.PneumSys).ToArray())
 		End Select
-		CbTech.SelectedIndex = 0
+		If CbTech.Items.Count > 0 Then
+			CbTech.SelectedIndex = 0
+			PnTech.Enabled = True
+		Else
+			PnTech.Enabled = False
+		End If
 	End Sub
 
 	'Close form. Check if form is complete and valid
@@ -68,7 +73,7 @@ Public Class F_VEH_AuxDlog
 
 			If Cfg.DeclMode Then
 
-				If CbTech.Text = "" Then
+				If CbTech.Items.Count > 0 AndAlso CbTech.Text = "" Then
 					MsgBox("Form is incomplete!", MsgBoxStyle.Critical)
 					e.Cancel = True
 				End If

@@ -147,11 +147,7 @@ Public Class F_VECTO
 
 			LV0 = New ListViewItem(sKey.AUX.HVAC)
 			LV0.SubItems.Add("HVAC")
-			If Declaration.AuxTechs(tAux.HVAC).Count > 1 Then
-				LV0.SubItems.Add("")
-			Else
-				LV0.SubItems.Add(Declaration.AuxTechs(tAux.HVAC)(0))
-			End If
+			LV0.SubItems.Add("")
 			LvAux.Items.Add(LV0)
 
 			LV0 = New ListViewItem(sKey.AUX.ElecSys)
