@@ -135,7 +135,7 @@ namespace TUGraz.VectoCore.Models.Declaration
 					Constants.SimulationSettings.MaximumGrossVehicleWeight);
 				var maxLoad = gvw - curbWeight - body.CurbWeight - trailer.CurbWeight;
 
-				var refLoadValue = row.Field<string>(missionType.ToString()).ToDouble(double.NaN);
+				var refLoadValue = row.ParseDoubleOrGetDefault(missionType.ToString(), double.NaN);
 				Kilogram refLoad;
 				if (double.IsNaN(refLoadValue)) {
 					refLoad = DeclarationData.GetPayloadForGrossVehicleWeight(grossVehicleWeight, missionType) +
