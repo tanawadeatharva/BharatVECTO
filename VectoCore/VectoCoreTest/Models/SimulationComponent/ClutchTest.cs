@@ -69,8 +69,7 @@ namespace TUGraz.VectoCore.Tests.Models.SimulationComponent
 			var container = new VehicleContainer(ExecutionMode.Engineering);
 			var engineData = MockSimulationDataFactory.CreateEngineDataFromFile(CoachEngine);
 			var gearbox = new MockGearbox(container);
-			var idleController = new MockIdleController();
-			var clutch = new Clutch(container, engineData, idleController);
+			var clutch = new Clutch(container, engineData) { IdleController = new MockIdleController() };
 
 			var inPort = clutch.InPort();
 			var outPort = new MockTnOutPort();
@@ -96,8 +95,7 @@ namespace TUGraz.VectoCore.Tests.Models.SimulationComponent
 			var engineData = MockSimulationDataFactory.CreateEngineDataFromFile(CoachEngine);
 			var gearbox = new MockGearbox(container);
 			var engine = new MockEngine(container);
-			var idleController = new MockIdleController();
-			var clutch = new Clutch(container, engineData, idleController);
+			var clutch = new Clutch(container, engineData) { IdleController = new MockIdleController() };
 
 			var inPort = clutch.InPort();
 			var outPort = new MockTnOutPort();

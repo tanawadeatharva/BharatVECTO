@@ -44,6 +44,7 @@ using TUGraz.VectoCore.Models.SimulationComponent.Impl;
 using TUGraz.VectoCore.OutputData;
 using TUGraz.VectoCore.OutputData.FileIO;
 using TUGraz.VectoCore.Tests.Utils;
+using TUGraz.VectoCore.Utils;
 using Wheels = TUGraz.VectoCore.Models.SimulationComponent.Impl.Wheels;
 
 namespace TUGraz.VectoCore.Tests.Integration
@@ -85,26 +86,21 @@ namespace TUGraz.VectoCore.Tests.Integration
 
 			var cycle = new DistanceBasedDrivingCycle(container, cycleData);
 			var engine = new CombustionEngine(container, engineData);
-			var clutch = new Clutch(container, engineData, engine.IdleController);
 
-			dynamic tmp = Port.AddComponent(cycle, new Driver(container, driverData, new DefaultDriverStrategy()));
-			tmp = Port.AddComponent(tmp, new Vehicle(container, vehicleData));
-			tmp = Port.AddComponent(tmp, new Wheels(container, vehicleData.DynamicTyreRadius, vehicleData.WheelsInertia));
-			tmp = Port.AddComponent(tmp, new Brakes(container));
-			tmp = Port.AddComponent(tmp, new AxleGear(container, axleGearData));
-			tmp = Port.AddComponent(tmp, new DummyRetarder(container));
-			tmp = Port.AddComponent(tmp,
-				new Gearbox(container, gearboxData, new AMTShiftStrategy(gearboxData, container)));
-			tmp = Port.AddComponent(tmp, clutch);
+			cycle.AddComponent(new Driver(container, driverData, new DefaultDriverStrategy()))
+				.AddComponent(new Vehicle(container, vehicleData))
+				.AddComponent(new Wheels(container, vehicleData.DynamicTyreRadius, vehicleData.WheelsInertia))
+				.AddComponent(new Brakes(container))
+				.AddComponent(new AxleGear(container, axleGearData))
+				.AddComponent(new DummyRetarder(container))
+				.AddComponent(new Gearbox(container, gearboxData, new AMTShiftStrategy(gearboxData, container)))
+				.AddComponent(new Clutch(container, engineData))
+				.AddComponent(engine);
 
 			var aux = new BusAuxiliariesAdapter(container, AdvancedAuxFile, "Coach",
 				vehicleData.TotalVehicleWeight(), engineData.ConsumptionMap, engineData.IdleSpeed);
 
 			engine.Connect(aux.Port());
-
-			Port.AddComponent(tmp, engine);
-
-			engine.IdleController.RequestPort = clutch.IdleControlPort;
 
 			return container;
 		}

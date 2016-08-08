@@ -82,18 +82,16 @@ namespace TUGraz.VectoCore.Tests.Integration.SimulationRuns
 
 			var cycle = new DistanceBasedDrivingCycle(container, cycleData);
 			var cyclePort = cycle.OutPort();
-			dynamic tmp = Port.AddComponent(cycle, new Driver(container, driverData, new DefaultDriverStrategy()));
-			tmp = Port.AddComponent(tmp, new Vehicle(container, vehicleData));
-			tmp = Port.AddComponent(tmp, new Wheels(container, vehicleData.DynamicTyreRadius, vehicleData.WheelsInertia));
-			tmp = Port.AddComponent(tmp, new Brakes(container));
-			tmp = Port.AddComponent(tmp, new AxleGear(container, axleGearData));
-			var gbx = new Gearbox(container, gearboxData, new AMTShiftStrategy(gearboxData, container));
-			tmp = Port.AddComponent(tmp, gbx);
-			var engine = new CombustionEngine(container, engineData);
-			var clutch = new Clutch(container, engineData, engine.IdleController);
-			tmp = Port.AddComponent(tmp, clutch);
-			Port.AddComponent(tmp, engine);
-			engine.IdleController.RequestPort = clutch.IdleControlPort;
+
+			cycle.AddComponent(new Driver(container, driverData, new DefaultDriverStrategy()))
+				.AddComponent(new Vehicle(container, vehicleData))
+				.AddComponent(new Wheels(container, vehicleData.DynamicTyreRadius, vehicleData.WheelsInertia))
+				.AddComponent(new Brakes(container))
+				.AddComponent(new AxleGear(container, axleGearData))
+				.AddComponent(new Gearbox(container, gearboxData, new AMTShiftStrategy(gearboxData, container)))
+				.AddComponent(new Clutch(container, engineData))
+				.AddComponent(new CombustionEngine(container, engineData));
+
 
 			cyclePort.Initialize();
 
@@ -140,19 +138,16 @@ namespace TUGraz.VectoCore.Tests.Integration.SimulationRuns
 			var driverData = CreateDriverData(AccelerationFile);
 
 			var cycle = new DistanceBasedDrivingCycle(container, cycleData);
+
 			var cyclePort = cycle.OutPort();
-			dynamic tmp = Port.AddComponent(cycle, new Driver(container, driverData, new DefaultDriverStrategy()));
-			tmp = Port.AddComponent(tmp, new Vehicle(container, vehicleData));
-			tmp = Port.AddComponent(tmp, new Wheels(container, vehicleData.DynamicTyreRadius, vehicleData.WheelsInertia));
-			tmp = Port.AddComponent(tmp, new Brakes(container));
-			tmp = Port.AddComponent(tmp, new AxleGear(container, axleGearData));
-			var gbx = new Gearbox(container, gearboxData, new AMTShiftStrategy(gearboxData, container));
-			tmp = Port.AddComponent(tmp, gbx);
-			var engine = new CombustionEngine(container, engineData);
-			var clutch = new Clutch(container, engineData, engine.IdleController);
-			tmp = Port.AddComponent(tmp, clutch);
-			Port.AddComponent(tmp, engine);
-			engine.IdleController.RequestPort = clutch.IdleControlPort;
+			cycle.AddComponent(new Driver(container, driverData, new DefaultDriverStrategy()))
+				.AddComponent(new Vehicle(container, vehicleData))
+				.AddComponent(new Wheels(container, vehicleData.DynamicTyreRadius, vehicleData.WheelsInertia))
+				.AddComponent(new Brakes(container))
+				.AddComponent(new AxleGear(container, axleGearData))
+				.AddComponent(new Gearbox(container, gearboxData, new AMTShiftStrategy(gearboxData, container)))
+				.AddComponent(new Clutch(container, engineData))
+				.AddComponent(new CombustionEngine(container, engineData));
 
 			cyclePort.Initialize();
 
@@ -215,18 +210,14 @@ namespace TUGraz.VectoCore.Tests.Integration.SimulationRuns
 
 			var cycle = new DistanceBasedDrivingCycle(container, cycleData);
 			var cyclePort = cycle.OutPort();
-			dynamic tmp = Port.AddComponent(cycle, new Driver(container, driverData, new DefaultDriverStrategy()));
-			tmp = Port.AddComponent(tmp, new Vehicle(container, vehicleData));
-			tmp = Port.AddComponent(tmp, new Wheels(container, vehicleData.DynamicTyreRadius, vehicleData.WheelsInertia));
-			tmp = Port.AddComponent(tmp, new Brakes(container));
-			tmp = Port.AddComponent(tmp, new AxleGear(container, axleGearData));
-			tmp = Port.AddComponent(tmp,
-				new Gearbox(container, gearboxData, new AMTShiftStrategy(gearboxData, container)));
-			var engine = new CombustionEngine(container, engineData);
-			var clutch = new Clutch(container, engineData, engine.IdleController);
-			tmp = Port.AddComponent(tmp, clutch);
-			Port.AddComponent(tmp, engine);
-			engine.IdleController.RequestPort = clutch.IdleControlPort;
+			cycle.AddComponent(new Driver(container, driverData, new DefaultDriverStrategy()))
+				.AddComponent(new Vehicle(container, vehicleData))
+				.AddComponent(new Wheels(container, vehicleData.DynamicTyreRadius, vehicleData.WheelsInertia))
+				.AddComponent(new Brakes(container))
+				.AddComponent(new AxleGear(container, axleGearData))
+				.AddComponent(new Gearbox(container, gearboxData, new AMTShiftStrategy(gearboxData, container)))
+				.AddComponent(new Clutch(container, engineData))
+				.AddComponent(new CombustionEngine(container, engineData));
 
 			cyclePort.Initialize();
 

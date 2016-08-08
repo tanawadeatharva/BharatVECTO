@@ -84,21 +84,21 @@ namespace TUGraz.VectoCore.Tests.Utils
 			_outPort = other;
 		}
 
-		public IResponse Request(Second absTime, Second dt, NewtonMeter torque, PerSecond angularVelocity, bool dryRun = false)
+		public IResponse Request(Second absTime, Second dt, NewtonMeter outTorque, PerSecond outAngularVelocity, bool dryRun = false)
 		{
 			if (_outPort != null) {
 				if (Gear > 0) {
-					return _outPort.Request(absTime, dt, torque, angularVelocity, dryRun);
+					return _outPort.Request(absTime, dt, outTorque, outAngularVelocity, dryRun);
 				}
 				return _outPort.Request(absTime, dt, 0.SI<NewtonMeter>(), null, dryRun);
 			}
 			throw new NotImplementedException();
 		}
 
-		public IResponse Initialize(NewtonMeter torque, PerSecond angularVelocity)
+		public IResponse Initialize(NewtonMeter outTorque, PerSecond outAngularVelocity)
 		{
 			if (_outPort != null) {
-				return _outPort.Initialize(torque, angularVelocity);
+				return _outPort.Initialize(outTorque, outAngularVelocity);
 			}
 			throw new NotImplementedException();
 		}

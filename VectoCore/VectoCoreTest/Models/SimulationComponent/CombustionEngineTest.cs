@@ -269,7 +269,7 @@ namespace TUGraz.VectoCore.Tests.Models.SimulationComponent
 			var engineData = MockSimulationDataFactory.CreateEngineDataFromFile(CoachEngine);
 
 			var engine = new CombustionEngine(container, engineData);
-			var clutch = new Clutch(container, engineData, engine.IdleController);
+			var clutch = new Clutch(container, engineData);
 
 			var d = new MockDriver(container);
 
@@ -282,7 +282,7 @@ namespace TUGraz.VectoCore.Tests.Models.SimulationComponent
 			gearbox.InPort().Connect(clutch.OutPort());
 			clutch.InPort().Connect(engine.OutPort());
 			engine.Connect(aux.Port());
-			engine.IdleController.RequestPort = clutch.IdleControlPort;
+			clutch.IdleController = engine.IdleController;
 
 			//			var expectedResults = VectoCSVFile.Read(TestContext.DataRow["ResultFile"].ToString());
 
@@ -528,7 +528,7 @@ namespace TUGraz.VectoCore.Tests.Models.SimulationComponent
 			var engineData = MockSimulationDataFactory.CreateEngineDataFromFile(engineFile);
 
 			engine = new CombustionEngine(container, engineData);
-			var clutch = new Clutch(container, engineData, engine.IdleController);
+			var clutch = new Clutch(container, engineData);
 
 			var d = new MockDriver(container);
 
@@ -543,7 +543,7 @@ namespace TUGraz.VectoCore.Tests.Models.SimulationComponent
 			engine.Connect(aux.Port());
 
 			// has to be done after connecting components!
-			engine.IdleController.RequestPort = clutch.IdleControlPort;
+			clutch.IdleController = engine.IdleController;
 
 			requestPort = gearbox.OutPort();
 

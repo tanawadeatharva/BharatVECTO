@@ -54,7 +54,7 @@
     "GearboxType": "AT",
     "TorqueConverter": {
       "Enabled": true,
-      "File": "TorqueConverter.vtcc",
+      "File": "W410_6_TP2_575_mue232.vtcc",
       "RefRPM": 1000.0,
       "Inertia": 0.5
     }
