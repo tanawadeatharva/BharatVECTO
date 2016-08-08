@@ -29,11 +29,10 @@
 *   Martin Rexeis, rexeis@ivt.tugraz.at, IVT, Graz University of Technology
 */
 
-using System.IO;
-using System.Linq;
 using Microsoft.VisualStudio.TestTools.UnitTesting;
 using Newtonsoft.Json;
 using Newtonsoft.Json.Linq;
+using System.IO;
 using TUGraz.VectoCommon.Exceptions;
 using TUGraz.VectoCommon.InputData;
 using TUGraz.VectoCommon.Models;
@@ -65,7 +64,7 @@ namespace TUGraz.VectoCore.Tests.FileIO
 			((JObject)json["Body"]).Property("EngineFile").Remove();
 
 			AssertHelper.Exception<VectoException>(() => new JSONInputDataV2(json, TestJobFile),
-				"Failed to read input data: Key EngineFile not found");
+				"JobFile: Failed to read Engine file '': Key EngineFile not found");
 		}
 
 		[TestMethod]
@@ -75,7 +74,7 @@ namespace TUGraz.VectoCore.Tests.FileIO
 			((JObject)json["Body"]).Property("GearboxFile").Remove();
 
 			AssertHelper.Exception<VectoException>(() => new JSONInputDataV2(json, TestJobFile),
-				"Failed to read input data: Key GearboxFile not found");
+				"JobFile: Failed to read Gearbox file '': Key GearboxFile not found");
 		}
 
 		[TestMethod]
@@ -85,7 +84,7 @@ namespace TUGraz.VectoCore.Tests.FileIO
 			((JObject)json["Body"]).Property("VehicleFile").Remove();
 
 			AssertHelper.Exception<VectoException>(() => new JSONInputDataV2(json, TestJobFile),
-				"Failed to read input data: Key VehicleFile not found");
+				"JobFile: Failed to read Vehicle file '': Key VehicleFile not found");
 		}
 
 		[TestMethod]
@@ -95,7 +94,9 @@ namespace TUGraz.VectoCore.Tests.FileIO
 			((JObject)json["Body"]).Property("Cycles").Remove();
 
 			AssertHelper.Exception<InvalidFileFormatException>(
-				() => { var tmp = new JSONInputDataV2(json, TestJobFile).Cycles; }, "Key Cycles not found");
+				() => {
+					var tmp = new JSONInputDataV2(json, TestJobFile).Cycles;
+				}, "Key Cycles not found");
 		}
 
 		[TestMethod]
@@ -152,7 +153,9 @@ namespace TUGraz.VectoCore.Tests.FileIO
 			((JObject)json["Body"]).Property("OverSpeedEcoRoll").Remove();
 
 			AssertHelper.Exception<VectoException>(
-				() => { var tmp = new JSONInputDataV2(json, TestJobFile).DriverInputData.OverSpeedEcoRoll; },
+				() => {
+					var tmp = new JSONInputDataV2(json, TestJobFile).DriverInputData.OverSpeedEcoRoll;
+				},
 				"Key OverSpeedEcoRoll not found");
 		}
 

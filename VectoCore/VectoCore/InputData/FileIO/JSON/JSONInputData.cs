@@ -126,7 +126,7 @@ namespace TUGraz.VectoCore.InputData.FileIO.JSON
 				AxleGear = Gearbox as IAxleGearInputData;
 				TorqueConverter = Gearbox as ITorqueConverterEngineeringInputData;
 			} catch (Exception e) {
-				throw new VectoException("JobFile: Failed to read Gearbox File '{0}': {1}", e, Body[JsonKeys.Vehicle_GearboxFile],
+				throw new VectoException("JobFile: Failed to read Gearbox file '{0}': {1}", e, Body[JsonKeys.Vehicle_GearboxFile],
 					e.Message);
 			}
 
@@ -134,7 +134,7 @@ namespace TUGraz.VectoCore.InputData.FileIO.JSON
 				Engine = JSONInputDataFactory.ReadEngine(
 					Path.Combine(BasePath, Body.GetEx(JsonKeys.Vehicle_EngineFile).Value<string>()));
 			} catch (Exception e) {
-				throw new VectoException("JobFile: Failed to read Engine File '{0}': {1}", e, Body[JsonKeys.Vehicle_EngineFile],
+				throw new VectoException("JobFile: Failed to read Engine file '{0}': {1}", e, Body[JsonKeys.Vehicle_EngineFile],
 					e.Message);
 			}
 
@@ -147,7 +147,7 @@ namespace TUGraz.VectoCore.InputData.FileIO.JSON
 					AngularGear = VehicleData as IAngularGearInputData;
 				}
 			} catch (Exception e) {
-				throw new VectoException("JobFile: Failed to read Vehicle File '{0}': {1}", e, Body[JsonKeys.Vehicle_VehicleFile],
+				throw new VectoException("JobFile: Failed to read Vehicle file '{0}': {1}", e, Body[JsonKeys.Vehicle_VehicleFile],
 					e.Message);
 			}
 			var retarder = VehicleData as IRetarderInputData;

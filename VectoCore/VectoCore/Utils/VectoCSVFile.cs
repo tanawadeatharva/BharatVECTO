@@ -29,15 +29,14 @@
 *   Martin Rexeis, rexeis@ivt.tugraz.at, IVT, Graz University of Technology
 */
 
+using Microsoft.VisualBasic.FileIO;
 using System;
-using System.Collections.Generic;
 using System.Data;
 using System.Globalization;
 using System.IO;
 using System.Linq;
 using System.Text;
 using System.Text.RegularExpressions;
-using Microsoft.VisualBasic.FileIO;
 using TUGraz.VectoCommon.Exceptions;
 using TUGraz.VectoCommon.Models;
 using TUGraz.VectoCommon.Utils;
@@ -114,6 +113,7 @@ namespace TUGraz.VectoCore.Utils
 				.Select(l => fullHeader ? l : HeaderFilter.Replace(l, ""))
 				.Select(l => l.Trim())
 				.Where(col => !double.TryParse(col, NumberStyles.Any, CultureInfo.InvariantCulture, out tmp))
+				.Distinct()
 				.ToList();
 
 			var firstLineIsData = columns.Count == 0;

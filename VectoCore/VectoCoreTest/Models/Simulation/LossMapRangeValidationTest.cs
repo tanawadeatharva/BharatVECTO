@@ -29,10 +29,10 @@
 *   Martin Rexeis, rexeis@ivt.tugraz.at, IVT, Graz University of Technology
 */
 
+using Microsoft.VisualStudio.TestTools.UnitTesting;
 using System;
 using System.ComponentModel.DataAnnotations;
 using System.Linq;
-using Microsoft.VisualStudio.TestTools.UnitTesting;
 using TUGraz.VectoCommon.Exceptions;
 using TUGraz.VectoCommon.Models;
 using TUGraz.VectoCommon.Utils;
@@ -44,7 +44,6 @@ using TUGraz.VectoCore.Models.SimulationComponent.Data;
 using TUGraz.VectoCore.Models.SimulationComponent.Data.Gearbox;
 using TUGraz.VectoCore.OutputData.FileIO;
 using TUGraz.VectoCore.Tests.Utils;
-using TUGraz.VectoCore.Utils;
 
 namespace TUGraz.VectoCore.Tests.Models.Simulation
 {
@@ -114,7 +113,8 @@ namespace TUGraz.VectoCore.Tests.Models.Simulation
 		{
 			var gearboxData = CreateGearboxData(GearboxDirectLoss, GearboxIndirectLoss);
 			var engineData = MockSimulationDataFactory.CreateEngineDataFromFile(EngineFile);
-			var runData = new VectoRunData { GearboxData = gearboxData, EngineData = engineData };
+			var vehicleData = new VehicleData { DynamicTyreRadius = 0.85.SI<Meter>() };
+			var runData = new VectoRunData { GearboxData = gearboxData, EngineData = engineData, VehicleData = vehicleData };
 			var result = VectoRunData.ValidateRunData(runData, new ValidationContext(runData));
 			Assert.IsTrue(ValidationResult.Success == result);
 			Assert.IsFalse(runData.IsValid());

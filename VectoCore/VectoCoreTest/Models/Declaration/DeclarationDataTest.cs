@@ -59,9 +59,9 @@ namespace TUGraz.VectoCore.Tests.Models.Declaration
 			MissionType.Construction,
 		};
 
-		[TestCase("285/60 R22.5", 10.6, 0.9135, 3.03),
-		TestCase("285/70 R19.5", 7.9, 0.8943, 3.05),
-		TestCase("395/85 R20", 27.9, 1.1795, 3.05)]
+		[TestCase("285/60 R22.5", 10.6, 0.914, 3.03),
+		TestCase("285/70 R19.5", 7.9, 0.895, 3.05),
+		TestCase("395/85 R20", 27.9, 1.18, 3.05)]
 		public void WheelDataTest(string wheels, double inertia, double dynamicRadius, double circumferenceFactor)
 		{
 			var tmp = DeclarationData.Wheels.Lookup(wheels);
