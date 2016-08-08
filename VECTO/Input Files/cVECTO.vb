@@ -307,7 +307,10 @@ Public Class cVECTO
 					End If
 
 					If (auxId = sKey.AUX.HVAC) Then
-						auxEntry.TechStr = ""
+						If Not String.IsNullOrWhiteSpace(auxEntry.TechStr) Then
+							auxEntry.TechStr = ""
+							WorkerMsg(tMsgID.Warn, "Aux: Upgraded HVAC to new format: '" + auxEntry.TechStr + "'", msgSrc)
+						End If
 					End If
 
 					If auxId = sKey.AUX.ElecSys Then
@@ -542,7 +545,7 @@ Public Class cVECTO
 
 					line = file.ReadLine
 
-					laDesV.Add(CSng(line(0)) / 3.6)																																						'km/h => m/s !!!!
+					laDesV.Add(CSng(line(0)) / 3.6)																																							  'km/h => m/s !!!!
 					laDesMax.Add(CSng(line(1)))
 					laDesMin.Add(CSng(line(2)))
 
