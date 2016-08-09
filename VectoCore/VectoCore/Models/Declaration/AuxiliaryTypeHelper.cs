@@ -1,4 +1,6 @@
 ﻿using System;
+using System.Collections.Generic;
+using System.Linq;
 using TUGraz.VectoCommon.Models;
 using TUGraz.VectoCore.Configuration;
 
@@ -6,40 +8,29 @@ namespace TUGraz.VectoCore.Models.Declaration
 {
 	public static class AuxiliaryTypeHelper
 	{
+		private static readonly Dictionary<AuxiliaryType, string> AuxToStr = new Dictionary<AuxiliaryType, string> {
+			{ AuxiliaryType.Fan, Constants.Auxiliaries.Names.Fan },
+			{ AuxiliaryType.SteeringPump, Constants.Auxiliaries.Names.SteeringPump },
+			{ AuxiliaryType.HVAC, Constants.Auxiliaries.Names.HeatingVentilationAirCondition },
+			{ AuxiliaryType.PneumaticSystem, Constants.Auxiliaries.Names.PneumaticSystem },
+			{ AuxiliaryType.ElectricSystem, Constants.Auxiliaries.Names.ElectricSystem },
+		};
+
+		private static readonly Dictionary<string, AuxiliaryType> StrToAux = AuxToStr.ToDictionary(kv => kv.Value,
+			kv => kv.Key);
+
 		public static AuxiliaryType Parse(string s)
 		{
-			switch (s) {
-				case Constants.Auxiliaries.Names.Fan:
-					return AuxiliaryType.Fan;
-				case Constants.Auxiliaries.Names.SteeringPump:
-					return AuxiliaryType.SteeringPump;
-				case Constants.Auxiliaries.Names.HeatingVentilationAirCondition:
-					return AuxiliaryType.HVAC;
-				case Constants.Auxiliaries.Names.ElectricSystem:
-					return AuxiliaryType.ElectricSystem;
-				case Constants.Auxiliaries.Names.PneumaticSystem:
-					return AuxiliaryType.PneumaticSystem;
-				default:
-					throw new ArgumentOutOfRangeException("s", s, "Could not parse auxiliary type string.");
-			}
+			AuxiliaryType aux;
+			if (StrToAux.TryGetValue(s, out aux))
+				return aux;
+
+			throw new ArgumentOutOfRangeException("s", s, "Could not parse auxiliary type string.");
 		}
 
 		public static string ToString(AuxiliaryType t)
 		{
-			switch (t) {
-				case AuxiliaryType.Fan:
-					return Constants.Auxiliaries.Names.Fan;
-				case AuxiliaryType.SteeringPump:
-					return Constants.Auxiliaries.Names.SteeringPump;
-				case AuxiliaryType.HVAC:
-					return Constants.Auxiliaries.Names.HeatingVentilationAirCondition;
-				case AuxiliaryType.PneumaticSystem:
-					return Constants.Auxiliaries.Names.PneumaticSystem;
-				case AuxiliaryType.ElectricSystem:
-					return Constants.Auxiliaries.Names.ElectricSystem;
-				default:
-					throw new ArgumentOutOfRangeException();
-			}
+			return AuxToStr[t];
 		}
 	}
 }
