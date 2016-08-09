@@ -132,6 +132,7 @@
     <Compile Include="Models\Connector\Ports\IFvPort.cs" />
     <Compile Include="Models\Connector\Ports\ITnPort.cs" />
     <Compile Include="InputData\Reader\ComponentData\AccelerationCurveReader.cs" />
+    <Compile Include="Models\Declaration\AuxiliaryTypeHelper.cs" />
     <Compile Include="Models\SimulationComponent\Data\AngularGearData.cs" />
     <Compile Include="InputData\Reader\ComponentData\TransmissionLossMapReader.cs" />
     <Compile Include="InputData\Reader\ComponentData\RetarderLossMapReader.cs" />
@@ -139,7 +140,6 @@
     <Compile Include="InputData\Reader\ComponentData\AuxiliaryDataReader.cs" />
     <Compile Include="Models\SimulationComponent\Data\Engine\FuelConsumptionMapReader.cs" />
     <Compile Include="Models\SimulationComponent\Impl\TorqueConverter.cs" />
-    <Compile Include="Utils\AuxiliaryTypeHelper.cs" />
     <Compile Include="Utils\ProviderExtensions.cs" />
     <Compile Include="Models\Declaration\AirDrag.cs" />
     <Compile Include="Models\Declaration\Fan.cs" />
