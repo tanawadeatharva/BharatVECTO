@@ -67,9 +67,9 @@ namespace TUGraz.VectoCore.InputData.Reader.ComponentData
 		private static void FillFromColumnNames(DataTable table, DelaunayMap map)
 		{
 			var data = table.Rows.Cast<DataRow>().Select(row => new {
-				AuxiliarySpeed = DataTableExtensionMethods.ParseDouble(row, (string)Fields.AuxSpeed).RPMtoRad(),
-				MechanicalPower = DataTableExtensionMethods.ParseDouble(row, (string)Fields.MechPower).SI().Kilo.Watt.Cast<Watt>(),
-				SupplyPower = DataTableExtensionMethods.ParseDouble(row, (string)Fields.SupplyPower).SI().Kilo.Watt.Cast<Watt>()
+				AuxiliarySpeed = row.ParseDouble(Fields.AuxSpeed).RPMtoRad(),
+				MechanicalPower = row.ParseDouble(Fields.MechPower).SI().Kilo.Watt.Cast<Watt>(),
+				SupplyPower = row.ParseDouble(Fields.SupplyPower).SI().Kilo.Watt.Cast<Watt>()
 			});
 			foreach (var d in data) {
 				map.AddPoint(d.AuxiliarySpeed.Value(), d.SupplyPower.Value(), d.MechanicalPower.Value());
