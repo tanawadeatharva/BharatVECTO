@@ -45,11 +45,15 @@ namespace TUGraz.VectoCore.Utils
 {
 	public sealed class DelaunayMap : LoggingObject
 	{
-		internal readonly ICollection<Point> Points = new HashSet<Point>();
+		internal ICollection<Point> Points = new HashSet<Point>();
 		private List<Triangle> _triangles = new List<Triangle>();
 		private Edge[] _convexHull;
 
 		private readonly string _mapName;
+		private double _minY;
+		private double _minX;
+		private double _maxY;
+		private double _maxX;
 
 		public DelaunayMap(string name)
 		{
@@ -78,10 +82,14 @@ namespace TUGraz.VectoCore.Utils
 			SanitycheckInputPoints();
 
 			// The "supertriangle" encompasses all triangulation points.
-			// This is just a helper triangle which initializes the algorithm and will be removed later.
-			const int superTriangleScalingFactor = 10;
-			var max = Points.Max(point => Math.Max(Math.Abs(point.X), Math.Abs(point.Y))) * superTriangleScalingFactor;
-			var superTriangle = new Triangle(new Point(max, 0), new Point(0, max), new Point(-max, -max));
+			// This is just a helper triangle which initializes the algorithm and will be removed in the end of the algorithm.
+			_maxX = Points.Max(p => p.X);
+			_maxY = Points.Max(p => p.Y);
+			_minX = Points.Min(p => p.X);
+			_minY = Points.Min(p => p.Y);
+			Points =
+				Points.Select(p => new Point((p.X - _minX) / (_maxX - _minX), (p.Y - _minY) / (_maxY - _minY), p.Z)).ToList();
+			var superTriangle = new Triangle(new Point(-1, -1), new Point(4, -1), new Point(-1, 4));
 			var triangles = new List<Triangle> { superTriangle };
 
 			var pointCount = 0;
@@ -146,8 +154,7 @@ namespace TUGraz.VectoCore.Utils
 
 		public void DrawGraph()
 		{
-			const int max = 100000;
-			var superTriangle = new Triangle(new Point(max, 0), new Point(0, max), new Point(-max, -max));
+			var superTriangle = new Triangle(new Point(-1, -1), new Point(4, -1), new Point(-1, 4));
 			DrawGraph(0, _triangles, superTriangle, Points.ToArray());
 		}
 
@@ -215,6 +222,8 @@ namespace TUGraz.VectoCore.Utils
 		///          null if interpolation has failed.</returns>
 		public double? Interpolate(double x, double y)
 		{
+			x = (x - _minX) / (_maxX - _minX);
+			y = (y - _minY) / (_maxY - _minY);
 			var tr = _triangles.Find(triangle => triangle.IsInside(x, y, exact: true)) ??
 					_triangles.Find(triangle => triangle.IsInside(x, y, exact: false));
 
@@ -234,6 +243,8 @@ namespace TUGraz.VectoCore.Utils
 		/// <returns></returns>
 		public double Extrapolate(double x, double y)
 		{
+			x = (x - _minX) / (_maxX - _minX);
+			y = (y - _minY) / (_maxY - _minY);
 			var point = new Point(x, y);
 
 			// get nearest point on convex hull
