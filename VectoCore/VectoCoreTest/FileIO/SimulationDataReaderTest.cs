@@ -71,7 +71,7 @@ namespace TUGraz.VectoCore.Tests.FileIO
 
 			Assert.AreEqual(11900, runData.VehicleData.GrossVehicleWeight.Value());
 			Assert.AreEqual(AxleConfiguration.AxleConfig_4x2, runData.VehicleData.AxleConfiguration);
-			AssertHelper.AreRelativeEqual(0.407269, runData.VehicleData.DynamicTyreRadius);
+			AssertHelper.AreRelativeEqual(0.40726954, runData.VehicleData.DynamicTyreRadius);
 
 			Assert.AreEqual(VehicleClass.Class2, runData.VehicleData.VehicleClass);
 			Assert.AreEqual(3, runData.VehicleData.AxleData.Count);
