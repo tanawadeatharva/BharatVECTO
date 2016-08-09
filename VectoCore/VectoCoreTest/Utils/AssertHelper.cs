@@ -29,10 +29,10 @@
 *   Martin Rexeis, rexeis@ivt.tugraz.at, IVT, Graz University of Technology
 */
 
+using Microsoft.VisualStudio.TestTools.UnitTesting;
 using System;
 using System.Diagnostics;
 using System.Globalization;
-using Microsoft.VisualStudio.TestTools.UnitTesting;
 using TUGraz.VectoCommon.Utils;
 
 namespace TUGraz.VectoCore.Tests.Utils
@@ -73,29 +73,35 @@ namespace TUGraz.VectoCore.Tests.Utils
 		}
 
 		[DebuggerHidden]
-		public static void AreRelativeEqual(double expected, SI actual,
+		public static void AreRelativeEqual(double? expected, SI actual,
 			double toleranceFactor = DoubleExtensionMethods.ToleranceFactor)
 		{
-			AreRelativeEqual(expected, actual.Value(), toleranceFactor: toleranceFactor);
+			if (expected.HasValue && actual != null)
+				AreRelativeEqual(expected.Value, actual.Value(), toleranceFactor: toleranceFactor);
+
+			Assert.IsNull(actual);
+			Assert.IsFalse(expected.HasValue);
 		}
 
 		[DebuggerHidden]
-		public static void AreRelativeEqual(double expected, double actual, string message = null,
+		public static void AreRelativeEqual(double? expected, double? actual, string message = null,
 			double toleranceFactor = DoubleExtensionMethods.ToleranceFactor)
 		{
 			if (!string.IsNullOrWhiteSpace(message)) {
-				message = "\n_eng_avg" + message;
+				message = "\n" + message;
 			} else {
 				message = "";
 			}
 
-			if (double.IsNaN(expected)) {
-				Assert.IsTrue(double.IsNaN(actual),
+			Assert.IsFalse(expected.HasValue ^ actual.HasValue, "Both Values have to be null or not null.");
+
+			if (double.IsNaN(expected.Value)) {
+				Assert.IsTrue(double.IsNaN(actual.Value),
 					string.Format("Actual value is not NaN. Expected: {0}, Actual: {1}{2}", expected, actual, message));
 				return;
 			}
 
-			var ratio = expected == 0 ? Math.Abs(actual) : Math.Abs(actual / expected - 1);
+			var ratio = expected == 0 ? Math.Abs(actual.Value) : Math.Abs(actual.Value / expected.Value - 1);
 			Assert.IsTrue(ratio < toleranceFactor, string.Format(CultureInfo.InvariantCulture,
 				"Given values are not equal. Expected: {0}, Actual: {1}, Difference: {3} (Tolerance Factor: {2}){4}",
 				expected, actual, toleranceFactor, expected - actual, message));
