@@ -212,6 +212,11 @@ namespace TUGraz.VectoCommon.InputData
 		/// cf. VECTO Input Parameters.xlsx
 		/// </summary>
 		KilogramSquareMeter Inertia { get; }
+
+		/// <summary>
+		/// P170
+		/// </summary>
+		double WHTCEngineering { get; }
 	}
 
 	public interface IAuxiliariesEngineeringInputData
