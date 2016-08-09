@@ -133,6 +133,7 @@ namespace TUGraz.VectoCore.Utils
 			if (p.EndOfData)
 				return table;
 
+			var lineNumber = 1;
 			do {
 				var cells = firstLineIsData
 					? colsWithoutComment
@@ -143,8 +144,8 @@ namespace TUGraz.VectoCore.Utils
 				firstLineIsData = false;
 				if (table.Columns.Count != cells.Length && !ignoreEmptyColumns) {
 					throw new CSVReadException(
-						string.Format("Line {0}: The number of values is not correct. Expected {1} Columns, Got {2} Columns", p.LineNumber,
-							table.Columns.Count, cells.Length));
+						string.Format("Line {0}: The number of values is not correct. Expected {1} Columns, Got {2} Columns",
+							lineNumber, table.Columns.Count, cells.Length));
 				}
 
 				try {
@@ -152,8 +153,9 @@ namespace TUGraz.VectoCore.Utils
 					table.Rows.Add(cells);
 				} catch (InvalidCastException e) {
 					throw new CSVReadException(
-						string.Format("Line {0}: The data format of a value is not correct. {1}", p.LineNumber, e.Message), e);
+						string.Format("Line {0}: The data format of a value is not correct. {1}", lineNumber, e.Message), e);
 				}
+				lineNumber++;
 			} while (!p.EndOfData);
 
 			return table;
