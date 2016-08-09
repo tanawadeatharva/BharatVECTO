@@ -44,14 +44,16 @@ namespace TUGraz.VectoCore.Models.SimulationComponent.Data.Engine
 	{
 		private List<KeyValuePair<PerSecond, Second>> _entries;
 
+		// just for Lookup-inheritance compatibility
 		protected override string ResourceId
 		{
 			get { return null; }
 		}
 
+		// just for Lookup-inheritance compatibility
 		protected override string ErrorMessage
 		{
-			get { throw new NotImplementedException(); }
+			get { throw new InvalidOperationException(); }
 		}
 
 		private PT1Curve(DataTable data)
@@ -92,10 +94,10 @@ namespace TUGraz.VectoCore.Models.SimulationComponent.Data.Engine
 					"FullLoadCurve/PT1 must consist of at least two lines with numeric values (below file header)");
 			}
 
-			if (data.Columns.Contains("engine speed") && data.Columns.Contains("PT1")) {
+			if (data.Columns.Contains(Fields.EngineSpeed) && data.Columns.Contains(Fields.PT1)) {
 				_entries = data.Rows.Cast<DataRow>()
-					.Select(r => new KeyValuePair<PerSecond, Second>(r.ParseDouble("engine speed").RPMtoRad(),
-						r.ParseDouble("PT1").SI<Second>()))
+					.Select(r => new KeyValuePair<PerSecond, Second>(r.ParseDouble(Fields.EngineSpeed).RPMtoRad(),
+						r.ParseDouble(Fields.PT1).SI<Second>()))
 					.OrderBy(x => x.Key).ToList();
 			} else {
 				_entries = data.Rows.Cast<DataRow>()
@@ -123,6 +125,12 @@ namespace TUGraz.VectoCore.Models.SimulationComponent.Data.Engine
 				throw new VectoException("The calculated pt1 value must not be smaller than 0. Value: " + pt1);
 			}
 			return pt1;
+		}
+
+		private static class Fields
+		{
+			public const string PT1 = "PT1";
+			public const string EngineSpeed = "engine speed";
 		}
 	}
 }
