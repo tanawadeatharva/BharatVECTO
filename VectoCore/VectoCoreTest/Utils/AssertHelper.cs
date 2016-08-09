@@ -76,11 +76,11 @@ namespace TUGraz.VectoCore.Tests.Utils
 		public static void AreRelativeEqual(double? expected, SI actual,
 			double toleranceFactor = DoubleExtensionMethods.ToleranceFactor)
 		{
-			if (expected.HasValue && actual != null)
+			if (expected.HasValue) {
 				AreRelativeEqual(expected.Value, actual.Value(), toleranceFactor: toleranceFactor);
-
-			Assert.IsNull(actual);
-			Assert.IsFalse(expected.HasValue);
+			} else {
+				Assert.IsNull(actual, "Both Values have to be null or not null.");
+			}
 		}
 
 		[DebuggerHidden]
