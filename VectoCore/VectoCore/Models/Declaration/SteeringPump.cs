@@ -40,7 +40,7 @@ namespace TUGraz.VectoCore.Models.Declaration
 {
 	public sealed class SteeringPump
 	{
-		public static Watt Lookup(MissionType mission, VehicleClass hdvClass, IEnumerable<string> technologies)
+		public Watt Lookup(MissionType mission, VehicleClass hdvClass, IEnumerable<string> technologies)
 		{
 			var baseLookup = new SteeringPumpBaseLine();
 			var axleLookup = new SteeringPumpAxles();

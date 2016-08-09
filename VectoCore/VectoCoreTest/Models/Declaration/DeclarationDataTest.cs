@@ -101,6 +101,7 @@ namespace TUGraz.VectoCore.Tests.Models.Declaration
 			Assert.AreEqual(expectedPt1, DeclarationData.PT1.Lookup(rpm.RPMtoRad()).Value(), Tolerance);
 		}
 
+		[TestCase]
 		public void PT1ExceptionsTest()
 		{
 			// EXTRAPOLATE 
@@ -223,48 +224,6 @@ namespace TUGraz.VectoCore.Tests.Models.Declaration
 		}
 
 		[
-			// fixed points
-			TestCase(150, 1.000, 1.000, 0.00),
-			TestCase(150, 1.100, 1.000, -40.34),
-			TestCase(150, 1.222, 1.000, -80.34),
-			TestCase(150, 1.375, 1.000, -136.11),
-			TestCase(150, 1.571, 1.000, -216.52),
-			TestCase(150, 1.833, 1.000, -335.19),
-			TestCase(150, 2.200, 1.000, -528.77),
-			TestCase(150, 2.750, 1.000, -883.40),
-			TestCase(150, 4.400, 1.000, -2462.17),
-			TestCase(150, 11.000, 1.000, -16540.98),
-			// interpolated
-			TestCase(150, 1.0025, 1.0, 0.0),
-			TestCase(150, 1.0525, 1.0, -20.17),
-			TestCase(150, 1.161, 1.0, -60.34),
-			TestCase(150, 1.2985, 1.0, -108.225),
-			TestCase(150, 1.473, 1.0, -176.315),
-			TestCase(150, 1.702, 1.0, -275.855),
-			TestCase(150, 2.0165, 1.0, -431.98),
-			TestCase(150, 2.475, 1.0, -706.085),
-			TestCase(150, 3.575, 1.0, -1672.785),
-			TestCase(150, 7.7, 1.0, -9501.575),
-			// extrapolated
-			TestCase(150, 0.5, 1.0, 0.0),
-			TestCase(150, 12.0, 1.0, -18674.133), // = (12-4.4)*(-16540.98- -2462.17)/(11-4.4)+ -2462.17
-		]
-		public void DefaultTcTest(double referenceRpm, double nu, double mu, double torque)
-		{
-			var referenceSpeed = referenceRpm.SI<PerSecond>();
-
-			var r = new Random();
-
-			var muLookup = DeclarationData.TorqueConverter.LookupMu(nu);
-			Assert.AreEqual(muLookup, mu);
-
-			var angularSpeed = r.Next(1000).SI<PerSecond>();
-			var torqueLookup = DeclarationData.TorqueConverter.LookupTorque(nu, angularSpeed, referenceSpeed);
-			AssertHelper.AreRelativeEqual(
-				torque.SI<NewtonMeter>() * Math.Pow((angularSpeed / referenceSpeed).Cast<Scalar>(), 2), torqueLookup);
-		}
-
-		[
 			TestCase(MissionType.LongHaul, "Standard technology", 1200, 0.7),
 			TestCase(MissionType.RegionalDelivery, "Standard technology", 1000, 0.7),
 			TestCase(MissionType.UrbanDelivery, "Standard technology", 1000, 0.7),
@@ -340,8 +299,9 @@ namespace TUGraz.VectoCore.Tests.Models.Declaration
 					AssertHelper.AreRelativeEqual(expected[i],
 						DeclarationData.HeatingVentilationAirConditioning.Lookup(_missions[i], vehicleClass));
 				} else {
+					var i1 = i;
 					AssertHelper.Exception<VectoException>(
-						() => DeclarationData.HeatingVentilationAirConditioning.Lookup(_missions[i], vehicleClass));
+						() => DeclarationData.HeatingVentilationAirConditioning.Lookup(_missions[i1], vehicleClass));
 				}
 			}
 		}
@@ -433,7 +393,7 @@ namespace TUGraz.VectoCore.Tests.Models.Declaration
 		{
 			// mk remark: made the test call with 4 axle params, so that the test name is clear in the test explorer.
 			AssertHelper.AreRelativeEqual(expected,
-				SteeringPump.Lookup(mission, hdvClass,
+				DeclarationData.SteeringPump.Lookup(mission, hdvClass,
 					new[] { axle1, axle2, axle3, axle4 }.TakeWhile(a => a != null).ToArray()));
 		}
 
@@ -449,7 +409,7 @@ namespace TUGraz.VectoCore.Tests.Models.Declaration
 		]
 		public void Aux_SteeringPumpLookupFail(MissionType mission, VehicleClass hdvClass, params string[] tech)
 		{
-			AssertHelper.Exception<VectoException>(() => SteeringPump.Lookup(mission, hdvClass, tech));
+			AssertHelper.Exception<VectoException>(() => DeclarationData.SteeringPump.Lookup(mission, hdvClass, tech));
 		}
 
 		[
@@ -700,7 +660,7 @@ namespace TUGraz.VectoCore.Tests.Models.Declaration
 			Assert.AreEqual(deltaCdA.SI<SquareMeter>(), m.DeltaCdA);
 		}
 
-		public void EqualAcceleration(AccelerationCurveData data, double velocity, double acceleration,
+		private static void EqualAcceleration(AccelerationCurveData data, double velocity, double acceleration,
 			double deceleration)
 		{
 			var entry = data.Lookup(velocity.KMPHtoMeterPerSecond());
@@ -708,7 +668,7 @@ namespace TUGraz.VectoCore.Tests.Models.Declaration
 			Assert.AreEqual(entry.Deceleration.Value(), deceleration, Tolerance);
 		}
 
-		public void TestAcceleration(AccelerationCurveData data)
+		private static void TestAcceleration(AccelerationCurveData data)
 		{
 			// FIXED POINTS
 			EqualAcceleration(data, 0, 1, -1);
