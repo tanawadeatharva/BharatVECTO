@@ -8,7 +8,7 @@ using TUGraz.VectoCore.Utils;
 
 namespace TUGraz.VectoCore.Models.SimulationComponent.Data.Engine
 {
-	public class FuelConsumptionMapReader
+	public static class FuelConsumptionMapReader
 	{
 		public static FuelConsumptionMap ReadFromFile(string fileName)
 		{
@@ -34,10 +34,7 @@ namespace TUGraz.VectoCore.Models.SimulationComponent.Data.Engine
 			foreach (DataRow row in data.Rows) {
 				try {
 					var entry = headerValid ? CreateFromColumNames(row) : CreateFromColumnIndizes(row);
-
-					// Delaunay map works only as expected, when the angularVelocity is in rpm.
-					delaunayMap.AddPoint(entry.Torque.Value(),
-						headerValid ? DataTableExtensionMethods.ParseDouble(row, (string)Fields.EngineSpeed) : row.ParseDouble(0),
+					delaunayMap.AddPoint(entry.Torque.Value(), headerValid ? row.ParseDouble(Fields.EngineSpeed) : row.ParseDouble(0),
 						entry.FuelConsumption.Value());
 				} catch (Exception e) {
 					throw new VectoException(string.Format("Line {0}: {1}", data.Rows.IndexOf(row), e.Message), e);
@@ -67,10 +64,10 @@ namespace TUGraz.VectoCore.Models.SimulationComponent.Data.Engine
 		private static FuelConsumptionMap.FuelConsumptionEntry CreateFromColumNames(DataRow row)
 		{
 			return new FuelConsumptionMap.FuelConsumptionEntry(
-				engineSpeed: row.ParseDouble((string)Fields.EngineSpeed).SI().Rounds.Per.Minute.Cast<PerSecond>(),
-				torque: row.ParseDouble((string)Fields.Torque).SI<NewtonMeter>(),
+				engineSpeed: row.ParseDouble(Fields.EngineSpeed).SI().Rounds.Per.Minute.Cast<PerSecond>(),
+				torque: row.ParseDouble(Fields.Torque).SI<NewtonMeter>(),
 				fuelConsumption:
-					row.ParseDouble((string)Fields.FuelConsumption)
+					row.ParseDouble(Fields.FuelConsumption)
 						.SI()
 						.Gramm.Per.Hour.ConvertTo()
 						.Kilo.Gramm.Per.Second.Cast<KilogramPerSecond>()
