@@ -140,7 +140,6 @@
     <Compile Include="InputData\Reader\ComponentData\TorqueConverterDataReader.cs" />
     <Compile Include="InputData\Reader\ComponentData\AuxiliaryDataReader.cs" />
     <Compile Include="Models\SimulationComponent\Data\Engine\FuelConsumptionMapReader.cs" />
-    <Compile Include="Models\SimulationComponent\Impl\TorqueConverter.cs" />
     <Compile Include="Utils\ProviderExtensions.cs" />
     <Compile Include="Models\Declaration\AirDrag.cs" />
     <Compile Include="Models\Declaration\Fan.cs" />
