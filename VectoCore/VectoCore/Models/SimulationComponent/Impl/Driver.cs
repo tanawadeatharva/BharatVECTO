@@ -573,13 +573,6 @@ namespace TUGraz.VectoCore.Models.SimulationComponent.Impl
 							return response;
 						},
 					criterion: response => {
-						if (response is ResponseEngineSpeedTooLow) {
-							LogManager.EnableLogging();
-							Log.Debug("Got EngineSpeedTooLow during SearchOperatingPoint. Aborting!");
-							LogManager.DisableLogging();
-							//throw new VectoEngineSpeedTooLowException("EngineSpeed too low during search.");
-						}
-
 						var r = (ResponseDryRun)response;
 						delta = actionRoll ? r.GearboxPowerRequest : (coastingOrRoll ? r.DeltaDragLoad : r.DeltaFullLoad);
 						return delta.Value();
