@@ -222,6 +222,8 @@ namespace TUGraz.VectoCore.Utils
 		///          null if interpolation has failed.</returns>
 		public double? Interpolate(double x, double y)
 		{
+			if (!_triangles.Any())
+				throw new VectoException("Interpolation not possible. Call DelaunayMap.Triangulate first.");
 			x = (x - _minX) / (_maxX - _minX);
 			y = (y - _minY) / (_maxY - _minY);
 			var tr = _triangles.Find(triangle => triangle.IsInside(x, y, exact: true)) ??
