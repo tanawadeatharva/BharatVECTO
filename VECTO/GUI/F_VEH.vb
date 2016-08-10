@@ -36,8 +36,6 @@ Public Class F_VEH
 
 	'Initialise form
 	Private Sub F05_VEH_Load(sender As Object, e As EventArgs) Handles MyBase.Load
-		Dim txt As String
-
 		TbLoadingMax.Text = "-"
 		PnLoad.Enabled = Not Cfg.DeclMode
 		ButAxlAdd.Enabled = Not Cfg.DeclMode
@@ -46,11 +44,6 @@ Public Class F_VEH
 		PnWheelDiam.Enabled = Not Cfg.DeclMode
 
 		_axlDlog = New F_VEH_Axle
-
-		CbRim.Items.Add("-")
-		For Each txt In Declaration.RimsList
-			CbRim.Items.Add(txt)
-		Next
 
 		_changed = False
 
@@ -70,7 +63,7 @@ Public Class F_VEH
 		End If
 
 		TbHDVclass.Text = _hdVclass
-		PicVehicle.Image = Image.FromFile(Declaration.ConvPicPath(_hdVclass, False))
+		PicVehicle.Image = Image.FromFile(cDeclaration.ConvPicPath(_hdVclass, False))
 	End Sub
 
 
@@ -120,11 +113,7 @@ Public Class F_VEH
 		TbCdFile.Text = ""
 
 		Dim rdyn As Single
-		If LvRRC.Items.Count > 0 Then
-			rdyn = Declaration.rdyn(LvRRC.Items(1).SubItems(5).Text, CbRim.Text)
-		Else
-			rdyn = -1
-		End If
+		rdyn = -1
 
 		If rdyn < 0 Then
 			TBrdyn.Text = "-"
@@ -244,8 +233,6 @@ Public Class F_VEH
 		TbMassExtra.Text = ""
 		CbAxleConfig.SelectedIndex = 0
 
-		CbRim.SelectedIndex = 0
-
 		DeclInit()
 
 		_vehFile = ""
@@ -284,8 +271,6 @@ Public Class F_VEH
 		TbMassExtra.Text = veh.MassExtra
 		TbLoad.Text = veh.Loading
 		TBrdyn.Text = veh.rdyn
-		CbRim.Text = veh.Rim
-
 
 		CbCdMode.SelectedIndex = CType(veh.CdMode, Integer)
 		TbCdFile.Text = veh.CdFile.OriginalPath
@@ -383,7 +368,6 @@ Public Class F_VEH
 			End If
 		End If
 
-		veh.Rim = CbRim.Text
 		veh.rdyn = CSng(fTextboxToNumString(TBrdyn.Text))
 		veh.CdMode = CType(CbCdMode.SelectedIndex, tCdMode)
 		veh.CdFile.Init(fPATH(file), TbCdFile.Text)
@@ -559,14 +543,15 @@ Public Class F_VEH
 		Change()
 	End Sub
 
-	Private Sub CbRim_SelectedIndexChanged(sender As Object, e As EventArgs) Handles CbRim.SelectedIndexChanged
+	Private Sub CbRim_SelectedIndexChanged(sender As Object, e As EventArgs)
 		Change()
 		DeclInit()
 	End Sub
 
 	Private Sub TBcw_TextChanged(sender As Object, e As EventArgs) _
 		Handles TbLoad.TextChanged, TBrdyn.TextChanged, TBcdA.TextChanged, TbCdFile.TextChanged, TbRtRatio.TextChanged,
-				cbAngularGearType.SelectedIndexChanged, TbRtPath.TextChanged, tbAngularGearLossMapPath.TextChanged, tbAngularGearRatio.TextChanged
+				cbAngularGearType.SelectedIndexChanged, TbRtPath.TextChanged, tbAngularGearLossMapPath.TextChanged,
+				tbAngularGearRatio.TextChanged
 		Change()
 	End Sub
 
@@ -769,6 +754,5 @@ Public Class F_VEH
 	End Sub
 
 #End Region
-
 End Class
 

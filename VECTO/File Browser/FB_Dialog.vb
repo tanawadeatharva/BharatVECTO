@@ -186,7 +186,7 @@ Public Class FB_Dialog
 
 	'Browse - Custom Dialog
 	Public Function Browse(path As String, fileMustExist As Boolean, overwriteCheck As Boolean, extMode As tFbExtMode,
-							multiFile As Boolean, ext As String, title As String) As Boolean
+							multiFile As Boolean, ext As String, caption As String) As Boolean
 		If Not _initialized Then Init()
 
 		'Load Folder History ContextMenu
@@ -205,8 +205,8 @@ Public Class FB_Dialog
 		'Form Config
 		ListViewFiles.MultiSelect = multiFile
 		ButtonAll.Visible = multiFile
-		Me.Title = title
-		Text = title
+		Title = caption
+		Text = caption
 
 		'Ext-Combobox
 		ComboBoxExt.Items.Clear()

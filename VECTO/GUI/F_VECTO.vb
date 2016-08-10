@@ -37,12 +37,10 @@ Public Class F_VECTO
 	'AA-TB
 	'Populate Advanced Auxiliaries
 	Private Sub PopulateAdvancedAuxiliaries()
-
-
 		'Scan the program directory for DLL's which are AdvancedAuxiliaries and display
-		Dim AList As List(Of cAdvancedAuxiliary) = DiscoverAdvancedAuxiliaries()
+		Dim aList As List(Of cAdvancedAuxiliary) = DiscoverAdvancedAuxiliaries()
 
-		cboAdvancedAuxiliaries.DataSource = AList
+		cboAdvancedAuxiliaries.DataSource = aList
 		cboAdvancedAuxiliaries.DisplayMember = "AuxiliaryName"
 	End Sub
 
@@ -399,9 +397,9 @@ Public Class F_VECTO
 		'Update Form
 
 		'Files -----------------------------
-		TbVEH.Text = VEC0.PathVEH(True)
-		TbENG.Text = VEC0.PathENG(True)
-		TbGBX.Text = VEC0.PathGBX(True)
+		TbVEH.Text = VEC0.PathVeh(True)
+		TbENG.Text = VEC0.PathEng(True)
+		TbGBX.Text = VEC0.PathGbx(True)
 
 		'Start/Stop
 		ChBStartStop.Checked = VEC0.StartStop
@@ -456,10 +454,10 @@ Public Class F_VECTO
 		End If
 		TbOverspeed.Text = CStr(VEC0.OverSpeed)
 		TbUnderSpeed.Text = CStr(VEC0.UnderSpeed)
-		TbVmin.Text = CStr(VEC0.vMin)
+		TbVmin.Text = CStr(VEC0.VMin)
 		CbLookAhead.Checked = VEC0.LookAheadOn
-		TbAlookahead.Text = CStr(VEC0.a_lookahead)
-		TbVminLA.Text = CStr(VEC0.vMinLA)
+		TbAlookahead.Text = CStr(VEC0.ALookahead)
+		TbVminLA.Text = CStr(VEC0.VMinLa)
 		tbLacPreviewFactor.Text = CStr(VEC0.LacPreviewFactor)
 		tbDfCoastingOffset.Text = CStr(VEC0.LacDfOffset)
 		tbDfCoastingScale.Text = CStr(VEC0.LacDfScale)
@@ -523,8 +521,8 @@ Public Class F_VECTO
 
 		'Files ------------------------------------------------- -----------------
 
-		vec0.PathVEH = TbVEH.Text
-		vec0.PathENG = TbENG.Text
+		vec0.PathVeh = TbVEH.Text
+		vec0.PathEng = TbENG.Text
 
 		For Each lv0 As ListViewItem In LvCycles.Items
 			Dim sb = New cSubPath
@@ -532,7 +530,7 @@ Public Class F_VECTO
 			vec0.CycleFiles.Add(sb)
 		Next
 
-		vec0.PathGBX = TbGBX.Text
+		vec0.PathGbx = TbGBX.Text
 
 
 		'Start/Stop
@@ -550,7 +548,7 @@ Public Class F_VECTO
 		vec0.AdvancedAuxiliaryFilePath = txtAdvancedAuxiliaryFile.Text
 
 		For Each lv0 As ListViewItem In LvAux.Items
-			Dim auxEntry = New cVECTO.cAuxEntry
+			Dim auxEntry = New cVECTO.AuxEntry
 
 			If Cfg.DeclMode Then
 				auxEntry.TechStr = lv0.SubItems(2).Text
@@ -568,10 +566,10 @@ Public Class F_VECTO
 		vec0.OverSpeedOn = RdOverspeed.Checked
 		vec0.OverSpeed = CSng(fTextboxToNumString(TbOverspeed.Text))
 		vec0.UnderSpeed = CSng(fTextboxToNumString(TbUnderSpeed.Text))
-		vec0.vMin = CSng(fTextboxToNumString(TbVmin.Text))
+		vec0.VMin = CSng(fTextboxToNumString(TbVmin.Text))
 		vec0.LookAheadOn = CbLookAhead.Checked
-		vec0.a_lookahead = CSng(fTextboxToNumString(TbAlookahead.Text))
-		vec0.vMinLA = CSng(fTextboxToNumString(TbVminLA.Text))
+		vec0.ALookahead = CSng(fTextboxToNumString(TbAlookahead.Text))
+		vec0.VMinLa = CSng(fTextboxToNumString(TbVminLA.Text))
 
 		vec0.LacPreviewFactor = CSng(fTextboxToNumString(tbLacPreviewFactor.Text))
 		vec0.LacDfOffset = CSng(fTextboxToNumString(tbDfCoastingOffset.Text))
@@ -885,21 +883,14 @@ lbDlog:
 		End Select
 	End Sub
 
-
 	Private Sub BtDRIadd_Click(sender As Object, e As EventArgs) Handles BtDRIadd.Click
-		Dim str As String
-		Dim GenDir As String
-
-		GenDir = fPATH(VECTOfile)
+		Dim genDir As String = fPATH(VECTOfile)
 
 		If fbDRI.OpenDialog("", True) Then
-
-			For Each str In fbDRI.Files
-				LvCycles.Items.Add(fFileWoDir(str, GenDir))
+			For Each s In fbDRI.Files
+				LvCycles.Items.Add(fFileWoDir(s, genDir))
 			Next
-
 			Change()
-
 		End If
 	End Sub
 
@@ -1049,7 +1040,7 @@ lbDlog:
 				HDVclass = "-"
 			End If
 
-			PicVehicle.Image = Image.FromFile(Declaration.ConvPicPath(HDVclass, False))
+			PicVehicle.Image = Image.FromFile(cDeclaration.ConvPicPath(HDVclass, False))
 
 			TbHVCclass.Text = "HDV Class " & HDVclass
 			TbVehCat.Text = ConvVehCat(VEH0.VehCat, True)

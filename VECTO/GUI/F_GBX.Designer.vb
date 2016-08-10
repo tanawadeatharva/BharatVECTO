@@ -397,7 +397,6 @@ Partial Class F_GBX
 		'
 		'GroupBox1
 		'
-		Me.GroupBox1.BackColor = System.Drawing.Color.AliceBlue
 		Me.GroupBox1.Controls.Add(Me.tbUpshiftMinAcceleration)
 		Me.GroupBox1.Controls.Add(Me.tbUpshiftAfterDownshift)
 		Me.GroupBox1.Controls.Add(Me.tbDownshiftAfterUpshift)

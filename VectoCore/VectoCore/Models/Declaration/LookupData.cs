@@ -52,22 +52,16 @@ namespace TUGraz.VectoCore.Models.Declaration
 
 		protected abstract void ParseData(DataTable table);
 
-		protected DataTable ReadCsvResource(string resourceId)
+		protected static DataTable ReadCsvResource(string resourceId)
 		{
 			return VectoCSVFile.ReadStream(RessourceHelper.ReadStream(resourceId));
 		}
 
-		protected DataTable ReadCsvFile(string fileName)
-		{
-			return VectoCSVFile.Read(fileName);
-		}
-
-		protected static DataTable NormalizeTable(DataTable table)
+		protected static void NormalizeTable(DataTable table)
 		{
 			foreach (DataColumn col in table.Columns) {
 				table.Columns[col.ColumnName].ColumnName = col.ColumnName.ToLower().RemoveWhitespace();
 			}
-			return table;
 		}
 	}
 
@@ -87,7 +81,7 @@ namespace TUGraz.VectoCore.Models.Declaration
 
 	public abstract class LookupData<TKey1, TKey2, TValue> : LookupData
 	{
-		protected Dictionary<Tuple<TKey1, TKey2>, TValue> Data = new Dictionary<Tuple<TKey1, TKey2>, TValue>();
+		protected readonly Dictionary<Tuple<TKey1, TKey2>, TValue> Data = new Dictionary<Tuple<TKey1, TKey2>, TValue>();
 
 		public virtual TValue Lookup(TKey1 key1, TKey2 key2)
 		{
@@ -95,20 +89,6 @@ namespace TUGraz.VectoCore.Models.Declaration
 				return Data[new Tuple<TKey1, TKey2>(key1, key2)];
 			} catch (KeyNotFoundException) {
 				throw new VectoException(string.Format(ErrorMessage, key1, key2));
-			}
-		}
-	}
-
-	public abstract class LookupData<TKey1, TKey2, TKey3, TValue> : LookupData
-	{
-		protected Dictionary<Tuple<TKey1, TKey2, TKey3>, TValue> Data = new Dictionary<Tuple<TKey1, TKey2, TKey3>, TValue>();
-
-		public virtual TValue Lookup(TKey1 key1, TKey2 key2, TKey3 key3)
-		{
-			try {
-				return Data[new Tuple<TKey1, TKey2, TKey3>(key1, key2, key3)];
-			} catch (KeyNotFoundException) {
-				throw new VectoException(string.Format(ErrorMessage, key1, key2, key3));
 			}
 		}
 	}

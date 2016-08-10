@@ -204,7 +204,8 @@ namespace TUGraz.VectoCore.OutputData
 			}
 			row[FCFINAL_LITERPER100KM] = modData.FuelConsumptionFinalLiterPer100Kilometer();
 			if (vehicleLoading != null && !vehicleLoading.IsEqual(0)) {
-				row[FCFINAL_LITERPER100TKM] = modData.FuelConsumptionFinalLiterPer100Kilometer() / vehicleLoading.ConvertTo().Ton;
+				row[FCFINAL_LITERPER100TKM] = (modData.FuelConsumptionFinalLiterPer100Kilometer() ?? 0.SI()) /
+											vehicleLoading.ConvertTo().Ton;
 			}
 
 			var kilogramPerMeter = modData.CO2PerMeter();

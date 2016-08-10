@@ -223,7 +223,7 @@ namespace TUGraz.VectoCore.Tests.Models.SimulationComponent
 			gearbox.CommitSimulationStep(modData);
 		}
 
-		[TestCase(GearboxDataFile, EngineDataFile, 6.38, 2600, 1600, 2658.10267),
+		[TestCase(GearboxDataFile, EngineDataFile, 6.38, 2600, 1600, 2658.1060109),
 		TestCase(GearboxDataFile, EngineDataFile, 6.38, -2600, 1000, -2543.4076)]
 		public void Gearbox_LossMapExtrapolation_Declaration(string gbxFile, string engineFile, double ratio, double torque,
 			double inAngularSpeed, double expectedTorque)
@@ -256,7 +256,7 @@ namespace TUGraz.VectoCore.Tests.Models.SimulationComponent
 			AssertHelper.Exception<VectoException>(() => { gearbox.CommitSimulationStep(modData); });
 		}
 
-		[TestCase(GearboxDataFile, EngineDataFile, 6.38, 2600, 1600, 2658.10267),
+		[TestCase(GearboxDataFile, EngineDataFile, 6.38, 2600, 1600, 2658.1060109),
 		TestCase(GearboxDataFile, EngineDataFile, 6.38, -2600, 1000, -2543.4076)]
 		public void Gearbox_LossMapExtrapolation_Engineering(string gbxFile, string engineFile, double ratio, double torque,
 			double inAngularSpeed, double expectedTorque)
@@ -289,7 +289,7 @@ namespace TUGraz.VectoCore.Tests.Models.SimulationComponent
 			gearbox.CommitSimulationStep(modData);
 		}
 
-		[TestCase(GearboxDataFile, EngineDataFile, 6.38, 2600, 1600, true, 2658.10267),
+		[TestCase(GearboxDataFile, EngineDataFile, 6.38, 2600, 1600, true, 2658.1060109),
 		TestCase(GearboxDataFile, EngineDataFile, 6.38, -2500, 1000, false, -2443.5392),
 		TestCase(GearboxDataFile, EngineDataFile, 6.38, -1000, 1000, false, -972.95098)]
 		public void Gearbox_LossMapExtrapolation_DryRun(string gbxFile, string engineFile, double ratio, double torque,

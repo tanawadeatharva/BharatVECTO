@@ -157,7 +157,7 @@ Public Class cGBX
 		'Header
 		dic = New Dictionary(Of String, Object)
 		dic.Add("CreatedBy", Lic.LicString & " (" & Lic.GUID & ")")
-		dic.Add("Date", Now.ToString)
+		dic.Add("Date", Now.ToUniversalTime().ToString("o"))
 		dic.Add("AppVersion", VECTOvers)
 		dic.Add("FileVersion", FormatVersion)
 		JSON.Content.Add("Header", dic)
@@ -339,10 +339,10 @@ Public Class cGBX
 		End If
 
 		GbxInertia = cDeclaration.GbInertia
-		TracIntrSi = Declaration.TracInt(gs_Type)
-		gs_SkipGears = Declaration.SkipGears(gs_Type)
-		gs_ShiftTime = Declaration.ShiftTime(gs_Type)
-		gs_ShiftInside = Declaration.ShiftInside(gs_Type)
+		TracIntrSi = cDeclaration.TracInt(gs_Type)
+		gs_SkipGears = cDeclaration.SkipGears(gs_Type)
+		gs_ShiftTime = cDeclaration.ShiftTime(gs_Type)
+		gs_ShiftInside = cDeclaration.ShiftInside(gs_Type)
 		gs_TorqueResv = cDeclaration.TqResv
 		gs_TorqueResvStart = cDeclaration.TqResvStart
 		gs_StartSpeed = cDeclaration.StartSpeed
@@ -574,7 +574,7 @@ Public Class cGBX
 				mAAUX_Global.EngineDrivelinePower = PeOut
 
 				'[1/min]
-				mAAUX_Global.EngineSpeed = nU
+				mAAUX_Global.EngineSpeed = nu
 
 				'[Nm] (using Power => Torque conversion)
 				mAAUX_Global.EngineDrivelineTorque = nPeToM(EngineSpeed, EngineDrivelinePower)
@@ -772,9 +772,9 @@ lbInt:
 		'Set Gearbox Type-specific settings
 		If gs_Type <> tGearbox.Custom Then
 
-			gs_ShiftInside = Declaration.ShiftInside(gs_Type)
+			gs_ShiftInside = cDeclaration.ShiftInside(gs_Type)
 			TCon = (gs_Type = tGearbox.Automatic)
-			gs_SkipGears = Declaration.SkipGears(gs_Type)
+			gs_SkipGears = cDeclaration.SkipGears(gs_Type)
 
 		End If
 

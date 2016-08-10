@@ -1,9 +1,9 @@
 ﻿{
   "Header": {
-    "CreatedBy": "Raphael Luz IVT TU-Graz (14fea510-e457-4bf6-860f-a9514dc327f1)",
-    "Date": "22.04.2015 15:19:30",
-    "AppVersion": "2.1",
-    "FileVersion": 2
+    "CreatedBy": "Michael Krisper, IVT, Graz University of Technology",
+    "Date": "2016-08-10T14:14:07.6435917Z",
+    "AppVersion": "2.2",
+    "FileVersion": 3
   },
   "Body": {
     "SavedInDeclMode": false,
@@ -15,12 +15,15 @@
       "zykl_Citybus_2_Urban.vdri",
       "zykl_Citybus_3_Suburban.vdri"
     ],
+    "AuxiliaryAssembly": "CLASSIC",
+    "AuxiliaryVersion": "CLASSIC",
+    "AdvancedAuxiliaryFilePath": "",
     "Aux": [
       {
         "ID": "ALT",
         "Type": "Alternator",
         "Path": "Alt.vaux",
-        "Technology": ""
+        "Technology": []
       }
     ],
     "VACC": "test.vacc",
@@ -34,7 +37,12 @@
     "LAC": {
       "Enabled": false,
       "Dec": -0.5,
-      "MinSpeed": 50.0
+      "MinSpeed": 50.0,
+      "PreviewDistanceFactor": 10.0,
+      "DF_offset": 2.5,
+      "DF_scaling": 1.5,
+      "DF_targetSpeedLookup": "",
+      "Df_velocityDropLookup": ""
     },
     "OverSpeedEcoRoll": {
       "Mode": "Off",

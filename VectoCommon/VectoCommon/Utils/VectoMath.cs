@@ -438,10 +438,10 @@ namespace TUGraz.VectoCommon.Utils
 		/// <returns></returns>
 		public bool IsInside(double x, double y, bool exact)
 		{
-			if ((P1.Y < y && P2.Y < y && P3.Y < y)
-				|| (P1.X < x && P2.X < x && P3.X < x)
-				|| (P1.X > x && P2.X > x && P3.X > x)
-				|| (P1.Y > y && P2.Y > y && P3.Y > y))
+			if ((P1.Y.IsSmaller(y) && P2.Y.IsSmaller(y) && P3.Y.IsSmaller(y))
+				|| (P1.X.IsSmaller(x) && P2.X.IsSmaller(x) && P3.X.IsSmaller(x))
+				|| (P1.X.IsGreater(x) && P2.X.IsGreater(x) && P3.X.IsGreater(x))
+				|| (P1.Y.IsGreater(y) && P2.Y.IsGreater(y) && P3.Y.IsGreater(y)))
 				return false;
 
 			var v0X = P3.X - P1.X;
