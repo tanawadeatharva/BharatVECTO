@@ -22,12 +22,12 @@ namespace TUGraz.VectoCore.Tests.Models.SimulationComponent
 		TestCase(5, 100, 1),
 		TestCase(5, 300, 1),
 		TestCase(5, 600, 1),
-		TestCase(15, 100, 4),
-		TestCase(15, 300, 4),
-		TestCase(15, 600, 4),
+		TestCase(15, 100, 3),
+		TestCase(15, 300, 3),
+		TestCase(15, 600, 2),
 		TestCase(40, 100, 6),
-		TestCase(40, 300, 6),
-		TestCase(40, 600, 6),
+		TestCase(40, 300, 4),
+		TestCase(40, 600, 4),
 		TestCase(70, 100, 6),
 		TestCase(70, 300, 6),
 		TestCase(70, 600, 6),
@@ -62,6 +62,40 @@ namespace TUGraz.VectoCore.Tests.Models.SimulationComponent
 							   200,  0, 0,    2";
 			var cycle = SimpleDrivingCycles.CreateCycleData(cycleData);
 			var run = ATPowerTrain.CreateEngineeringRun(cycle, "AT_Vehicle_Drive-TC.vmod");
+
+			run.Run();
+			Assert.IsTrue(run.FinishedWithoutErrors);
+		}
+
+		[Test]
+		public void TestATGearboxShiftUp()
+		{
+			var cycleData = @"  0,  0, 0,    2
+							  500, 40, 0,    0";
+			var cycle = SimpleDrivingCycles.CreateCycleData(cycleData);
+			var run = ATPowerTrain.CreateEngineeringRun(cycle, "AT_Vehicle_Drive-TC_shiftup.vmod");
+
+			run.Run();
+			Assert.IsTrue(run.FinishedWithoutErrors);
+		}
+
+		[Test]
+		public void TestATGearboxShiftDown()
+		{
+			var cycleData = @"  0, 70, 0,    0
+							  500,  0, 0,    2";
+			var cycle = SimpleDrivingCycles.CreateCycleData(cycleData);
+			var run = ATPowerTrain.CreateEngineeringRun(cycle, "AT_Vehicle_Drive-TC_shiftdown.vmod");
+
+			run.Run();
+			Assert.IsTrue(run.FinishedWithoutErrors);
+		}
+
+		[Test]
+		public void TestATGearboxDrive()
+		{
+			var cycle = SimpleDrivingCycles.ReadDeclarationCycle("Urban");
+			var run = ATPowerTrain.CreateEngineeringRun(cycle, "AT_Vehicle_Drive-TC_Urban.vmod");
 
 			run.Run();
 			Assert.IsTrue(run.FinishedWithoutErrors);
