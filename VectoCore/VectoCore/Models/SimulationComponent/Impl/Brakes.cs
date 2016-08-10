@@ -40,25 +40,22 @@ using TUGraz.VectoCore.OutputData;
 
 namespace TUGraz.VectoCore.Models.SimulationComponent.Impl
 {
-	public class Brakes : StatefulVectoSimulationComponent<SimpleComponentState>, IPowerTrainComponent, ITnOutPort,
+	public class Brakes : StatefulProviderComponent<SimpleComponentState, ITnOutPort, ITnInPort, ITnOutPort>,
+		IPowerTrainComponent, ITnOutPort,
 		ITnInPort, IBrakes
 	{
-		protected ITnOutPort NextComponent;
+		public Watt BrakePower { get; set; }
 
 		public Brakes(IVehicleContainer dataBus) : base(dataBus) {}
 
-
-		public ITnInPort InPort()
+		public IResponse Initialize(NewtonMeter torque, PerSecond angularVelocity)
 		{
-			return this;
+			BrakePower = 0.SI<Watt>();
+			PreviousState.SetState(torque, angularVelocity, torque, angularVelocity);
+			return DataBus.DriverBehavior == DrivingBehavior.Halted && DataBus.VehicleStopped
+				? NextComponent.Initialize(0.SI<NewtonMeter>(), 0.SI<PerSecond>())
+				: NextComponent.Initialize(torque, angularVelocity);
 		}
-
-		public ITnOutPort OutPort()
-		{
-			return this;
-		}
-
-		public Watt BrakePower { get; set; }
 
 		public IResponse Request(Second absTime, Second dt, NewtonMeter torque, PerSecond angularVelocity, bool dryRun = false)
 		{
@@ -83,21 +80,6 @@ namespace TUGraz.VectoCore.Models.SimulationComponent.Impl
 			return retVal;
 		}
 
-		public IResponse Initialize(NewtonMeter torque, PerSecond angularVelocity)
-		{
-			BrakePower = 0.SI<Watt>();
-			PreviousState.SetState(torque, angularVelocity, torque, angularVelocity);
-			return DataBus.DriverBehavior == DrivingBehavior.Halted && DataBus.VehicleStopped
-				? NextComponent.Initialize(0.SI<NewtonMeter>(), 0.SI<PerSecond>())
-				: NextComponent.Initialize(torque, angularVelocity);
-		}
-
-
-		public void Connect(ITnOutPort other)
-		{
-			NextComponent = other;
-		}
-
 		protected override void DoWriteModalResults(IModalDataContainer container)
 		{
 			container[ModalResultField.P_brake_loss] = BrakePower;
@@ -108,7 +90,7 @@ namespace TUGraz.VectoCore.Models.SimulationComponent.Impl
 		protected override void DoCommitSimulationStep()
 		{
 			BrakePower = 0.SI<Watt>();
-			AdvanceState();
+			base.DoCommitSimulationStep();
 		}
 	}
 }

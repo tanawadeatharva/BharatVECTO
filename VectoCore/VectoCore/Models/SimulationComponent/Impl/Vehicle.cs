@@ -43,13 +43,11 @@ using TUGraz.VectoCore.Utils;
 
 namespace TUGraz.VectoCore.Models.SimulationComponent.Impl
 {
-	public class Vehicle : StatefulVectoSimulationComponent<Vehicle.VehicleState>, IVehicle, IMileageCounter, IFvInPort,
+	public class Vehicle : StatefulProviderComponent<Vehicle.VehicleState, IDriverDemandOutPort, IFvInPort, IFvOutPort>,
+		IVehicle, IMileageCounter, IFvInPort,
 		IDriverDemandOutPort
 	{
-		//private readonly CrossWindCorrectionCurve _airResistanceCurve;
-		[ValidateObject] internal readonly VehicleData ModelData;
-
-		protected IFvOutPort NextComponent;
+		internal readonly VehicleData ModelData;
 
 		public Vehicle(IVehicleContainer container, VehicleData modelData) : base(container)
 		{
@@ -118,51 +116,6 @@ namespace TUGraz.VectoCore.Models.SimulationComponent.Impl
 			return retval;
 		}
 
-		public void Connect(IFvOutPort other)
-		{
-			NextComponent = other;
-		}
-
-		public Meter Distance
-		{
-			get { return PreviousState.Distance; }
-		}
-
-		public MeterPerSecond VehicleSpeed
-		{
-			get { return PreviousState.Velocity; }
-		}
-
-		public bool VehicleStopped
-		{
-			get { return PreviousState.Velocity.IsEqual(0.SI<MeterPerSecond>(), 0.01.SI<MeterPerSecond>()); }
-		}
-
-		public Kilogram VehicleMass
-		{
-			get { return ModelData.TotalCurbWeight(); }
-		}
-
-		public Kilogram VehicleLoading
-		{
-			get { return ModelData.Loading; }
-		}
-
-		public Kilogram TotalMass
-		{
-			get { return ModelData.TotalVehicleWeight(); }
-		}
-
-		public IFvInPort InPort()
-		{
-			return this;
-		}
-
-		public IDriverDemandOutPort OutPort()
-		{
-			return this;
-		}
-
 		protected override void DoWriteModalResults(IModalDataContainer container)
 		{
 			var averageVelocity = (PreviousState.Velocity + CurrentState.Velocity) / 2.0;
@@ -185,11 +138,6 @@ namespace TUGraz.VectoCore.Models.SimulationComponent.Impl
 						(distance - CurrentState.Distance).Value(), distance);
 				}
 			}
-		}
-
-		protected override void DoCommitSimulationStep()
-		{
-			AdvanceState();
 		}
 
 		public Newton RollingResistance(Radian gradient)
@@ -229,14 +177,39 @@ namespace TUGraz.VectoCore.Models.SimulationComponent.Impl
 			return result;
 		}
 
-		//public Newton AirDragResistance(MeterPerSecond previousVelocity, MeterPerSquareSecond acceleration, Second dt)
-		//{
-		//	return AirDragResistance(previousVelocity, previousVelocity + acceleration * dt);
-		//}
-
 		private Watt ComputeAirDragPowerLoss(MeterPerSecond v1, MeterPerSecond v2)
 		{
 			return ModelData.CrossWindCorrectionCurve.AverageAirDragPowerLoss(v1, v2);
+		}
+
+		public Meter Distance
+		{
+			get { return PreviousState.Distance; }
+		}
+
+		public MeterPerSecond VehicleSpeed
+		{
+			get { return PreviousState.Velocity; }
+		}
+
+		public bool VehicleStopped
+		{
+			get { return PreviousState.Velocity.IsEqual(0.SI<MeterPerSecond>(), 0.01.SI<MeterPerSecond>()); }
+		}
+
+		public Kilogram VehicleMass
+		{
+			get { return ModelData.TotalCurbWeight(); }
+		}
+
+		public Kilogram VehicleLoading
+		{
+			get { return ModelData.Loading; }
+		}
+
+		public Kilogram TotalMass
+		{
+			get { return ModelData.TotalVehicleWeight(); }
 		}
 
 		public class VehicleState

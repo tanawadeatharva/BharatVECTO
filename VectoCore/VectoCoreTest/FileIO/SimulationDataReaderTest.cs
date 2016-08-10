@@ -29,9 +29,9 @@
 *   Martin Rexeis, rexeis@ivt.tugraz.at, IVT, Graz University of Technology
 */
 
+using Microsoft.VisualStudio.TestTools.UnitTesting;
 using System.IO;
 using System.Linq;
-using Microsoft.VisualStudio.TestTools.UnitTesting;
 using TUGraz.VectoCommon.Exceptions;
 using TUGraz.VectoCommon.InputData;
 using TUGraz.VectoCommon.Models;
@@ -39,6 +39,7 @@ using TUGraz.VectoCommon.Utils;
 using TUGraz.VectoCore.InputData.FileIO.JSON;
 using TUGraz.VectoCore.InputData.Reader.Impl;
 using TUGraz.VectoCore.Models.Declaration;
+using TUGraz.VectoCore.Tests.Utils;
 
 namespace TUGraz.VectoCore.Tests.FileIO
 {
@@ -70,7 +71,7 @@ namespace TUGraz.VectoCore.Tests.FileIO
 
 			Assert.AreEqual(11900, runData.VehicleData.GrossVehicleWeight.Value());
 			Assert.AreEqual(AxleConfiguration.AxleConfig_4x2, runData.VehicleData.AxleConfiguration);
-			Assert.AreEqual(0.4069297458, runData.VehicleData.DynamicTyreRadius.Value(), Tolerance);
+			AssertHelper.AreRelativeEqual(0.40726954, runData.VehicleData.DynamicTyreRadius);
 
 			Assert.AreEqual(VehicleClass.Class2, runData.VehicleData.VehicleClass);
 			Assert.AreEqual(3, runData.VehicleData.AxleData.Count);

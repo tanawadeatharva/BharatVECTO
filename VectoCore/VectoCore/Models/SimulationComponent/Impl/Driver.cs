@@ -30,7 +30,6 @@
 */
 
 using System;
-using System.Linq;
 using TUGraz.VectoCommon.Exceptions;
 using TUGraz.VectoCommon.Models;
 using TUGraz.VectoCommon.Utils;
@@ -46,12 +45,10 @@ using DriverData = TUGraz.VectoCore.Models.SimulationComponent.Data.DriverData;
 
 namespace TUGraz.VectoCore.Models.SimulationComponent.Impl
 {
-	public class Driver : StatefulVectoSimulationComponent<Driver.DriverState>, IDriver, IDrivingCycleOutPort,
-		IDriverDemandInPort, IDriverActions,
-		IDriverInfo
+	public class Driver :
+		StatefulProviderComponent<Driver.DriverState, IDrivingCycleOutPort, IDriverDemandInPort, IDriverDemandOutPort>,
+		IDriver, IDrivingCycleOutPort, IDriverDemandInPort, IDriverActions, IDriverInfo
 	{
-		protected IDriverDemandOutPort NextComponent;
-
 		public DriverData DriverData { get; protected set; }
 
 		protected IDriverStrategy DriverStrategy;
@@ -62,16 +59,6 @@ namespace TUGraz.VectoCore.Models.SimulationComponent.Impl
 			DriverData = driverData;
 			DriverStrategy = strategy;
 			strategy.Driver = this;
-		}
-
-		public IDriverDemandInPort InPort()
-		{
-			return this;
-		}
-
-		public void Connect(IDriverDemandOutPort other)
-		{
-			NextComponent = other;
 		}
 
 		public IResponse Initialize(MeterPerSecond vehicleSpeed, Radian roadGradient)
@@ -586,13 +573,6 @@ namespace TUGraz.VectoCore.Models.SimulationComponent.Impl
 							return response;
 						},
 					criterion: response => {
-						if (response is ResponseEngineSpeedTooLow) {
-							LogManager.EnableLogging();
-							Log.Debug("Got EngineSpeedTooLow during SearchOperatingPoint. Aborting!");
-							LogManager.DisableLogging();
-							//throw new VectoEngineSpeedTooLowException("EngineSpeed too low during search.");
-						}
-
 						var r = (ResponseDryRun)response;
 						delta = actionRoll ? r.GearboxPowerRequest : (coastingOrRoll ? r.DeltaDragLoad : r.DeltaFullLoad);
 						return delta.Value();
@@ -718,11 +698,6 @@ namespace TUGraz.VectoCore.Models.SimulationComponent.Impl
 			CurrentState.dt = dt;
 			CurrentState.Acceleration = 0.SI<MeterPerSquareSecond>();
 			return retVal;
-		}
-
-		public IDrivingCycleOutPort OutPort()
-		{
-			return this;
 		}
 
 		protected override void DoWriteModalResults(IModalDataContainer container)

@@ -62,7 +62,6 @@ namespace VectoLegacyTests
 
 			VECTO_Global.MODdata.CycleInit();
 
-
 			VECTO_Global.GBX = cGbx;
 			VECTO_Global.ENG = new cENG();
 			VECTO_Global.ENG.FilePath =

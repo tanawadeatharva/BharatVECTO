@@ -37,70 +37,51 @@ using TUGraz.VectoCore.Utils;
 
 namespace TUGraz.VectoCore.Models.Declaration
 {
-	public class LACDecisionFactor
+	/// <summary>
+	/// Class for Look Ahead Coasting Decision Factor (DF_coast)
+	/// </summary>
+	public sealed class LACDecisionFactor
 	{
-		private readonly DecisionFactor LAC;
+		private readonly LACDecisionFactorVTarget _vTarget;
+		private readonly LACDecisionFactorVdrop _vDrop;
+		private readonly double _offset;
+		private readonly double _scaling;
 
 		public LACDecisionFactor()
 		{
-			LAC = new DecisionFactor();
+			_offset = DeclarationData.Driver.LookAhead.DecisionFactorCoastingOffset;
+			_scaling = DeclarationData.Driver.LookAhead.DecisionFactorCoastingScaling;
+			_vTarget = new LACDecisionFactorVTarget();
+			_vDrop = new LACDecisionFactorVdrop();
 		}
 
 		public LACDecisionFactor(double offset, double scaling, DataTable vTargetLookup, DataTable vDropLookup)
 		{
-			LAC = new DecisionFactor(offset, scaling, vTargetLookup, vDropLookup);
+			_offset = offset;
+			_scaling = scaling;
+			_vTarget = new LACDecisionFactorVTarget(vTargetLookup);
+			_vDrop = new LACDecisionFactorVdrop(vDropLookup);
 		}
 
 		public double Lookup(MeterPerSecond targetVelocity, MeterPerSecond velocityDrop)
 		{
-			return LAC.Lookup(targetVelocity, velocityDrop);
+			// normalize values from [0 .. 1] to [2.5 .. 1]
+			return _offset - _scaling * _vTarget.Lookup(targetVelocity) * _vDrop.Lookup(velocityDrop);
 		}
 
-		/// <summary>
-		/// Class for Look Ahead Coasting Decision Factor (DF_coast)
-		/// </summary>
-		public sealed class DecisionFactor : LookupData<MeterPerSecond, MeterPerSecond, double>
+		private sealed class LACDecisionFactorVdrop : LookupData<MeterPerSecond, double>
 		{
-			private readonly LACDecisionFactorVTarget _vTarget;
-			private readonly LACDecisionFactorVdrop _vDrop;
-			private readonly double _offset;
-			private readonly double _scaling;
-
-			public DecisionFactor(double offset, double scaling, DataTable vTargetLookup, DataTable vDropLookup)
+			protected override string ResourceId
 			{
-				_offset = offset;
-				_scaling = scaling;
-				_vTarget = new LACDecisionFactorVTarget(vTargetLookup);
-				_vDrop = new LACDecisionFactorVdrop(vDropLookup);
+				get { return "TUGraz.VectoCore.Resources.Declaration.LAC-DF-Vdrop.csv"; }
 			}
 
-			public DecisionFactor()
+			protected override string ErrorMessage
 			{
-				_offset = DeclarationData.Driver.LookAhead.DecisionFactorCoastingOffset;
-				_scaling = DeclarationData.Driver.LookAhead.DecisionFactorCoastingScaling;
-				_vTarget = new LACDecisionFactorVTarget();
-				_vDrop = new LACDecisionFactorVdrop();
+				get { throw new System.NotImplementedException(); }
 			}
 
-
-			public override double Lookup(MeterPerSecond targetVelocity, MeterPerSecond velocityDrop)
-			{
-				// normalize values inverse from [0 .. 1] to [2.5 .. 1]
-				return _offset - _scaling * _vTarget.Lookup(targetVelocity) * _vDrop.Lookup(velocityDrop);
-			}
-
-
-			protected override void ParseData(DataTable table) {}
-		}
-
-		public sealed class LACDecisionFactorVdrop : LookupData<MeterPerSecond, double>
-		{
-			private const string ResourceId = "TUGraz.VectoCore.Resources.Declaration.LAC-DF-Vdrop.csv";
-
-			public LACDecisionFactorVdrop()
-			{
-				ParseData(ReadCsvResource(ResourceId));
-			}
+			public LACDecisionFactorVdrop() {}
 
 			public LACDecisionFactorVdrop(DataTable vDrop)
 			{
@@ -135,21 +116,26 @@ namespace TUGraz.VectoCore.Models.Declaration
 				}
 			}
 
-			public static class Fields
+			private static class Fields
 			{
-				public const string VelocityDrop = "v_drop";
 				public const string DecisionFactor = "decision_factor";
+				public const string VelocityDrop = "v_drop";
 			}
 		}
 
-		public sealed class LACDecisionFactorVTarget : LookupData<MeterPerSecond, double>
+		private sealed class LACDecisionFactorVTarget : LookupData<MeterPerSecond, double>
 		{
-			private const string ResourceId = "TUGraz.VectoCore.Resources.Declaration.LAC-DF-Vtarget.csv";
-
-			public LACDecisionFactorVTarget()
+			protected override string ResourceId
 			{
-				ParseData(ReadCsvResource(ResourceId));
+				get { return "TUGraz.VectoCore.Resources.Declaration.LAC-DF-Vtarget.csv"; }
 			}
+
+			protected override string ErrorMessage
+			{
+				get { throw new System.NotImplementedException(); }
+			}
+
+			public LACDecisionFactorVTarget() {}
 
 			public LACDecisionFactorVTarget(DataTable vTargetLookup)
 			{
@@ -184,7 +170,7 @@ namespace TUGraz.VectoCore.Models.Declaration
 				}
 			}
 
-			public static class Fields
+			private static class Fields
 			{
 				public const string TargetVelocity = "v_target";
 				public const string DecisionFactor = "decision_factor";

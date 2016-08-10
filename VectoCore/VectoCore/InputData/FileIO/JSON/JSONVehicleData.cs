@@ -150,17 +150,13 @@ namespace TUGraz.VectoCore.InputData.FileIO.JSON
 			get
 			{
 				var retarderType = Body.GetEx(JsonKeys.Vehicle_Retarder).GetEx<string>(JsonKeys.Vehicle_Retarder_Type);
-				try {
-					return retarderType.ParseEnum<RetarderType>();
-				} catch (Exception) {
-					switch (retarderType.ToLower()) {
-						case "primary":
-							return RetarderType.TransmissionInputRetarder;
-						case "secondary":
-							return RetarderType.TransmissionOutputRetarder;
-						default:
-							throw new VectoException("Unknown retarder type {0}", retarderType);
-					}
+				switch (retarderType.ToLowerInvariant()) {
+					case "primary":
+						return RetarderType.TransmissionInputRetarder;
+					case "secondary":
+						return RetarderType.TransmissionOutputRetarder;
+					default:
+						return retarderType.ParseEnum<RetarderType>();
 				}
 			}
 		}

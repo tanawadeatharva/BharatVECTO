@@ -79,6 +79,45 @@ namespace TUGraz.VectoCore.Tests.FileIO
 		}
 
 		[Test]
+		public void VectoCSVFile_ReadStream_Escaped()
+		{
+			var stream = "a,b,c\n\"1,1\",2,3\n4,5,6".GetStream();
+			var table = VectoCSVFile.ReadStream(stream);
+
+			CollectionAssert.AreEqual(new[] { "a", "b", "c" }, table.Columns.Cast<DataColumn>().Select(c => c.ColumnName));
+			Assert.AreEqual(2, table.Rows.Count);
+
+			CollectionAssert.AreEqual(new[] { "1,1", "2", "3" }, table.Rows[0].ItemArray);
+			CollectionAssert.AreEqual(new[] { "4", "5", "6" }, table.Rows[1].ItemArray);
+		}
+
+		[Test]
+		public void VectoCSVFile_ReadStream_Comment()
+		{
+			var stream = "a,b,c\n\"1,1\",2,3#asdf\n4,5,6".GetStream();
+			var table = VectoCSVFile.ReadStream(stream);
+
+			CollectionAssert.AreEqual(new[] { "a", "b", "c" }, table.Columns.Cast<DataColumn>().Select(c => c.ColumnName));
+			Assert.AreEqual(2, table.Rows.Count);
+
+			CollectionAssert.AreEqual(new[] { "1,1", "2", "3" }, table.Rows[0].ItemArray);
+			CollectionAssert.AreEqual(new[] { "4", "5", "6" }, table.Rows[1].ItemArray);
+		}
+
+		[Test]
+		public void VectoCSVFile_ReadStream_EscapedComment()
+		{
+			var stream = "a,b,c\n\"1,1\",2,\"3#asdf\"\n4,5,6".GetStream();
+			var table = VectoCSVFile.ReadStream(stream);
+
+			CollectionAssert.AreEqual(new[] { "a", "b", "c" }, table.Columns.Cast<DataColumn>().Select(c => c.ColumnName));
+			Assert.AreEqual(2, table.Rows.Count);
+
+			CollectionAssert.AreEqual(new[] { "1,1", "2", "3" }, table.Rows[0].ItemArray);
+			CollectionAssert.AreEqual(new[] { "4", "5", "6" }, table.Rows[1].ItemArray);
+		}
+
+		[Test]
 		public void VectoCSVFile_ReadStream_No_Header()
 		{
 			var stream = "1,2,3\n4,5,6".GetStream();

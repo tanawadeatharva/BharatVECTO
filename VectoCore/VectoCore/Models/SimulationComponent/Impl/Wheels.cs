@@ -39,12 +39,18 @@ using TUGraz.VectoCore.Utils;
 
 namespace TUGraz.VectoCore.Models.SimulationComponent.Impl
 {
-	public class Wheels : StatefulVectoSimulationComponent<Wheels.WheelsState>, IWheels, IFvOutPort, ITnInPort
+	public class Wheels : StatefulProviderComponent<Wheels.WheelsState, IFvOutPort, ITnInPort, ITnOutPort>, IWheels,
+		IFvOutPort, ITnInPort
 	{
-		protected ITnOutPort NextComponent;
-
 		private readonly Meter _dynamicWheelRadius;
 		private readonly KilogramSquareMeter _totalWheelsInertia;
+
+		public class WheelsState
+		{
+			public PerSecond AngularVelocity;
+			public NewtonMeter TorqueIn;
+			public NewtonMeter InertiaTorqueLoss;
+		}
 
 		public Wheels(IVehicleContainer cockpit, Meter rdyn, KilogramSquareMeter totalWheelsInertia)
 			: base(cockpit)
@@ -53,25 +59,14 @@ namespace TUGraz.VectoCore.Models.SimulationComponent.Impl
 			_totalWheelsInertia = totalWheelsInertia;
 		}
 
-		#region IFvOutProvider
-
-		public IFvOutPort OutPort()
+		public IResponse Initialize(Newton force, MeterPerSecond velocity)
 		{
-			return this;
+			PreviousState.TorqueIn = force * _dynamicWheelRadius;
+			PreviousState.AngularVelocity = velocity / _dynamicWheelRadius;
+			PreviousState.InertiaTorqueLoss = 0.SI<NewtonMeter>();
+
+			return NextComponent.Initialize(PreviousState.TorqueIn, PreviousState.AngularVelocity);
 		}
-
-		#endregion
-
-		#region ITnInProvider
-
-		public ITnInPort InPort()
-		{
-			return this;
-		}
-
-		#endregion
-
-		#region IFvOutPort
 
 		public IResponse Request(Second absTime, Second dt, Newton force, MeterPerSecond velocity, bool dryRun)
 		{
@@ -91,49 +86,12 @@ namespace TUGraz.VectoCore.Models.SimulationComponent.Impl
 			return retVal;
 		}
 
-
-		public IResponse Initialize(Newton force, MeterPerSecond velocity)
-		{
-			PreviousState.TorqueIn = force * _dynamicWheelRadius;
-			PreviousState.AngularVelocity = velocity / _dynamicWheelRadius;
-			PreviousState.InertiaTorqueLoss = 0.SI<NewtonMeter>();
-
-			return NextComponent.Initialize(PreviousState.TorqueIn, PreviousState.AngularVelocity);
-		}
-
-		#endregion
-
-		#region ITnInPort
-
-		public void Connect(ITnOutPort other)
-		{
-			NextComponent = other;
-		}
-
-		#endregion
-
-		#region VectoSimulationComponent
-
 		protected override void DoWriteModalResults(IModalDataContainer container)
 		{
 			var avgAngularSpeed = (CurrentState.AngularVelocity + PreviousState.AngularVelocity) / 2.0;
 
 			container[ModalResultField.P_wheel_in] = CurrentState.TorqueIn * avgAngularSpeed;
 			container[ModalResultField.P_wheel_inertia] = CurrentState.InertiaTorqueLoss * avgAngularSpeed;
-		}
-
-		protected override void DoCommitSimulationStep()
-		{
-			AdvanceState();
-		}
-
-		#endregion
-
-		public class WheelsState
-		{
-			public PerSecond AngularVelocity;
-			public NewtonMeter TorqueIn;
-			public NewtonMeter InertiaTorqueLoss;
 		}
 
 		public Kilogram ReducedMassWheels

@@ -42,9 +42,7 @@ using TUGraz.VectoCore.Models.Simulation.Data;
 using TUGraz.VectoCore.Models.SimulationComponent.Data;
 using TUGraz.VectoCore.Models.SimulationComponent.Data.Engine;
 using TUGraz.VectoCore.Models.SimulationComponent.Data.Gearbox;
-using TUGraz.VectoCore.OutputData;
 using TUGraz.VectoCore.Utils;
-using DriverData = TUGraz.VectoCore.Models.SimulationComponent.Data.DriverData;
 
 namespace TUGraz.VectoCore.InputData.Reader.DataObjectAdapter
 {
@@ -98,7 +96,7 @@ namespace TUGraz.VectoCore.InputData.Reader.DataObjectAdapter
 			retVal.CurbWeight += mission.BodyCurbWeight + mission.TrailerCurbWeight;
 			retVal.Loading = loading;
 			retVal.DynamicTyreRadius =
-				DeclarationData.DynamicTyreRadius(data.Axles[DeclarationData.PoweredAxle()].Wheels, "5° DC Rims"); // TODO!
+				DeclarationData.DynamicTyreRadius(data.Axles[DeclarationData.PoweredAxle()].Wheels); // TODO!
 
 			var aerodynamicDragArea = data.AirDragArea + mission.DeltaCdA;
 
@@ -108,7 +106,7 @@ namespace TUGraz.VectoCore.InputData.Reader.DataObjectAdapter
 			var axles = data.Axles;
 			if (axles.Count < mission.AxleWeightDistribution.Length) {
 				throw new VectoException("Vehicle does not contain sufficient axles. {0} axles defined, {1} axles required",
-					data.Axles.Count, mission.AxleWeightDistribution.Count());
+					data.Axles.Count, mission.AxleWeightDistribution.Length);
 			}
 			var axleData = new List<Axle>();
 			for (var i = 0; i < mission.AxleWeightDistribution.Length; i++) {
@@ -254,7 +252,7 @@ namespace TUGraz.VectoCore.InputData.Reader.DataObjectAdapter
 						aux.ID = Constants.Auxiliaries.IDs.Fan;
 						break;
 					case AuxiliaryType.SteeringPump:
-						aux.PowerDemand = DeclarationData.SteeringPump.Lookup(mission, hvdClass, auxData.Technology.First());
+						aux.PowerDemand = DeclarationData.SteeringPump.Lookup(mission, hvdClass, auxData.Technology);
 						aux.ID = Constants.Auxiliaries.IDs.SteeringPump;
 						break;
 					case AuxiliaryType.HVAC:
@@ -262,14 +260,12 @@ namespace TUGraz.VectoCore.InputData.Reader.DataObjectAdapter
 						aux.ID = Constants.Auxiliaries.IDs.HeatingVentilationAirCondition;
 						break;
 					case AuxiliaryType.PneumaticSystem:
-						aux.PowerDemand = DeclarationData.PneumaticSystem.Lookup(mission, hvdClass);
+						aux.PowerDemand = DeclarationData.PneumaticSystem.Lookup(mission, auxData.Technology.First());
 						aux.ID = Constants.Auxiliaries.IDs.PneumaticSystem;
 						break;
 					case AuxiliaryType.ElectricSystem:
-						//aux.PowerDemand = DeclarationData.ElectricSystem.Lookup(mission,
-						//	auxData.TechList.DefaultIfNull(Enumerable.Empty<string>()).ToArray());
+						aux.PowerDemand = DeclarationData.ElectricSystem.Lookup(mission, auxData.Technology.First());
 						aux.ID = Constants.Auxiliaries.IDs.ElectricSystem;
-						//aux.TechList = auxData.TechList.DefaultIfNull(Enumerable.Empty<string>()).ToArray();
 						break;
 					default:
 						continue;
@@ -284,9 +280,9 @@ namespace TUGraz.VectoCore.InputData.Reader.DataObjectAdapter
 			Log.Warn("{0} not in Declaration Mode!", inputData);
 		}
 
-		public RetarderData CreateRetarderData(IRetarderInputData retarder, IVehicleDeclarationInputData vehicle)
+		public RetarderData CreateRetarderData(IRetarderInputData retarder)
 		{
-			return SetCommonRetarderData(retarder, vehicle);
+			return SetCommonRetarderData(retarder);
 		}
 
 		public static List<CrossWindCorrectionCurveReader.CrossWindCorrectionEntry> GetDeclarationAirResistanceCurve(
@@ -312,11 +308,9 @@ namespace TUGraz.VectoCore.InputData.Reader.DataObjectAdapter
 				var cdASum = 0.0.SI<SquareMeter>();
 
 				for (var alpha = 0; alpha <= maxAlpha; alpha += alphaStep) {
-					var vWindX = Physics.BaseWindSpeed * Math.Cos(alpha.ToRadian());
-					var vWindY = Physics.BaseWindSpeed * Math.Sin(alpha.ToRadian());
-					var vAirX = vVeh + vWindX;
-					var vAirY = vWindY;
-					var beta = Math.Atan((vAirY / vAirX).Value()).ToDegree();
+					var vAirX = vVeh + Physics.BaseWindSpeed * Math.Cos(alpha.ToRadian());
+					var vAirY = Physics.BaseWindSpeed * Math.Sin(alpha.ToRadian());
+					var beta = Math.Atan(vAirY / vAirX).ToDegree();
 					var deltaCdA = ComputeDeltaCd(beta, values);
 					var cdA = aerodynamicDragAera + deltaCdA;
 
@@ -337,7 +331,7 @@ namespace TUGraz.VectoCore.InputData.Reader.DataObjectAdapter
 			return points;
 		}
 
-		protected static SquareMeter ComputeDeltaCd(double beta, AirDrag.AirDragEntry values)
+		protected static SquareMeter ComputeDeltaCd(double beta, AirDrag.Entry values)
 		{
 			return (values.A1 * beta + values.A2 * beta * beta + values.A3 * beta * beta * beta).SI<SquareMeter>();
 		}

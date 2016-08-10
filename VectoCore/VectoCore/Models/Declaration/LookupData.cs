@@ -29,8 +29,10 @@
 *   Martin Rexeis, rexeis@ivt.tugraz.at, IVT, Graz University of Technology
 */
 
+using System;
 using System.Collections.Generic;
 using System.Data;
+using TUGraz.VectoCommon.Exceptions;
 using TUGraz.VectoCommon.Models;
 using TUGraz.VectoCommon.Utils;
 using TUGraz.VectoCore.Utils;
@@ -39,6 +41,15 @@ namespace TUGraz.VectoCore.Models.Declaration
 {
 	public abstract class LookupData : LoggingObject
 	{
+		protected LookupData()
+		{
+			if (!string.IsNullOrWhiteSpace(ResourceId))
+				ParseData(ReadCsvResource(ResourceId));
+		}
+
+		protected abstract string ResourceId { get; }
+		protected abstract string ErrorMessage { get; }
+
 		protected abstract void ParseData(DataTable table);
 
 		protected DataTable ReadCsvResource(string resourceId)
@@ -60,25 +71,46 @@ namespace TUGraz.VectoCore.Models.Declaration
 		}
 	}
 
-
 	public abstract class LookupData<TKey, TValue> : LookupData
 	{
 		protected Dictionary<TKey, TValue> Data = new Dictionary<TKey, TValue>();
 
 		public virtual TValue Lookup(TKey key)
 		{
-			return Data[key];
+			try {
+				return Data[key];
+			} catch (KeyNotFoundException) {
+				throw new VectoException(string.Format(ErrorMessage, key));
+			}
 		}
 	}
 
 	public abstract class LookupData<TKey1, TKey2, TValue> : LookupData
 	{
-		public abstract TValue Lookup(TKey1 key1, TKey2 key2);
+		protected Dictionary<Tuple<TKey1, TKey2>, TValue> Data = new Dictionary<Tuple<TKey1, TKey2>, TValue>();
+
+		public virtual TValue Lookup(TKey1 key1, TKey2 key2)
+		{
+			try {
+				return Data[new Tuple<TKey1, TKey2>(key1, key2)];
+			} catch (KeyNotFoundException) {
+				throw new VectoException(string.Format(ErrorMessage, key1, key2));
+			}
+		}
 	}
 
 	public abstract class LookupData<TKey1, TKey2, TKey3, TValue> : LookupData
 	{
-		public abstract TValue Lookup(TKey1 key1, TKey2 key2, TKey3 key3);
+		protected Dictionary<Tuple<TKey1, TKey2, TKey3>, TValue> Data = new Dictionary<Tuple<TKey1, TKey2, TKey3>, TValue>();
+
+		public virtual TValue Lookup(TKey1 key1, TKey2 key2, TKey3 key3)
+		{
+			try {
+				return Data[new Tuple<TKey1, TKey2, TKey3>(key1, key2, key3)];
+			} catch (KeyNotFoundException) {
+				throw new VectoException(string.Format(ErrorMessage, key1, key2, key3));
+			}
+		}
 	}
 
 	public abstract class LookupData<TKey1, TKey2, TKey3, TKey4, TValue> : LookupData
