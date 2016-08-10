@@ -876,7 +876,7 @@ lbInt:
 			.AxleConf = SegRef.AxleConf
 			.MassMaxStr = VEH.MassMax & "t"
 			.JobFile = fFILE(JobFile, True)
-			.DateStr = Now.ToString
+			.DateStr = Now.ToUniversalTime().ToString("o")
 			.Creator = Lic.LicString
 			.EngStr = (ENG.Displ / 1000).ToString("0.0") & " l  " & Math.Round(ENG.Pmax, 0).ToString("#") & " kW"
 			.EngModelStr = ENG.ModelName

@@ -278,7 +278,7 @@ Public Class cVEH
 		'Header
 		json.Content.Add("Header", New Dictionary(Of String, Object) From {
 							{"CreatedBy", Lic.LicString & " (" & Lic.GUID & ")"},
-							{"Date", Now.ToString},
+							{"Date", Now.ToUniversalTime().ToString("o")},
 							{"AppVersion", VECTOvers},
 							{"FileVersion", FormatVersion}})
 

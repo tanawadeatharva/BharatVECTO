@@ -111,7 +111,7 @@ Public Class Configuration
 
 		dic = New Dictionary(Of String, Object)
 		dic.Add("CreatedBy", Lic.LicString & " (" & Lic.GUID & ")")
-		dic.Add("Date", Now.ToString)
+		dic.Add("Date", Now.ToUniversalTime().ToString("o"))
 		dic.Add("AppVersion", VECTOvers)
 		dic.Add("FileVersion", FormatVersion)
 		json.Content.Add("Header", dic)

@@ -527,7 +527,7 @@ Public Class cVSUM
 
 		dic = New Dictionary(Of String, Object)
 		dic.Add("CreatedBy", Lic.LicString & " (" & Lic.GUID & ")")
-		dic.Add("Date", Now.ToString)
+		dic.Add("Date", Now.ToUniversalTime().ToString("o"))
 		dic.Add("AppVersion", VECTOvers)
 		dic.Add("FileVersion", FormatVersion)
 		vsumJSON.Content.Add("Header", dic)
@@ -545,7 +545,7 @@ Public Class cVSUM
 		'Info
 		If DEV.AdvFormat Then
 			Fvsum.WriteLine("VECTO " & VECTOvers)
-			Fvsum.WriteLine(Now.ToString)
+			Fvsum.WriteLine(Now.ToUniversalTime().ToString("o"))
 			Fvsum.WriteLine("Input File: " & JobFile)
 		End If
 
@@ -758,28 +758,28 @@ End Class
 Public Class cVSUMentry
 	Public Head As String
 	Public Unit As String
-    Public MyVal As Object
-    Public Multi As Boolean
+	Public MyVal As Object
+	Public Multi As Boolean
 
-    Public Sub New(ByVal HeadStr As String, ByVal UnitStr As String)
-        Head = HeadStr
-        Unit = UnitStr
-        MyVal = Nothing
+	Public Sub New(ByVal HeadStr As String, ByVal UnitStr As String)
+		Head = HeadStr
+		Unit = UnitStr
+		MyVal = Nothing
 		Multi = False
 	End Sub
 
-    Public Property ValueString As Object
-        Get
-            If MyVal Is Nothing Then
-                Return "-"
-            Else
-                Return MyVal
-            End If
-        End Get
-        Set(value As Object)
-            MyVal = value
-        End Set
-    End Property
+	Public Property ValueString As Object
+		Get
+			If MyVal Is Nothing Then
+				Return "-"
+			Else
+				Return MyVal
+			End If
+		End Get
+		Set(value As Object)
+			MyVal = value
+		End Set
+	End Property
 
 
 

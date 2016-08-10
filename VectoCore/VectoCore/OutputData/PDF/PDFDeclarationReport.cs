@@ -97,7 +97,7 @@ namespace TUGraz.VectoCore.OutputData.PDF
 		/// </summary>
 		protected internal override void DoWriteReport()
 		{
-			ReportDate = DateTime.Now.ToString(CultureInfo.InvariantCulture);
+			ReportDate = DateTime.Now.ToUniversalTime().ToString(CultureInfo.InvariantCulture);
 
 			var tasks = new List<Task<Stream>> { Task.Run(() => CreateTitlePage(Missions)) };
 			tasks.AddRange(Missions

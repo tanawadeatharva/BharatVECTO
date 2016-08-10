@@ -147,7 +147,7 @@ Public Class cVECTO
 		'Header
 		json.Content.Add("Header", New Dictionary(Of String, Object) From {
 							{"CreatedBy", Lic.LicString & " (" & Lic.GUID & ")"},
-							{"Date", Now.ToString},
+							{"Date", Now.ToUniversalTime().ToString("o")},
 							{"AppVersion", VECTOvers},
 							{"FileVersion", FormatVersion}})
 
@@ -525,7 +525,7 @@ Public Class cVECTO
 
 					line = file.ReadLine
 
-					_laDesV.Add(CSng(line(0)) / 3.6)																																	'km/h => m/s !!!!
+					_laDesV.Add(CSng(line(0)) / 3.6)																																  'km/h => m/s !!!!
 					_laDesMax.Add(CSng(line(1)))
 					_laDesMin.Add(CSng(line(2)))
 
