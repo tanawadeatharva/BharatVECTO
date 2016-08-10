@@ -137,6 +137,8 @@ namespace TUGraz.VectoCore.Models.SimulationComponent.Impl
 
 			if (DataBus.VehicleStopped && outAngularVelocity > 0) {
 				Gear = _strategy.InitGear(absTime, dt, outTorque, outAngularVelocity);
+				LastShift = absTime;
+				Disengaged = false;
 			}
 
 			IResponse retVal;
@@ -149,11 +151,13 @@ namespace TUGraz.VectoCore.Models.SimulationComponent.Impl
 				} else {
 					Disengaged = false;
 					retVal = RequestEngaged(absTime, dt, outTorque, outAngularVelocity, dryRun);
+					IdleController.Reset();
 				}
 				retVal.Switch()
 					.Case<ResponseGearShift>(r => {
 						loop = true;
 						Gear = _strategy.Engage(absTime, dt, outTorque, outAngularVelocity);
+						LastShift = absTime;
 					});
 			} while (loop && ++count < 2);
 
@@ -281,6 +285,12 @@ namespace TUGraz.VectoCore.Models.SimulationComponent.Impl
 				Disengaged = true;
 			}
 			AdvanceState();
+			if (TorqueConverterLocked) {
+				// Todo!?
+				TorqueConverter.Locked(CurrentState.InTorque, CurrentState.InAngularVelocity);
+			} else {
+				TorqueConverter.CommitSimulationStep();
+			}
 		}
 
 
