@@ -34,7 +34,8 @@ namespace TUGraz.VectoCore.Models.SimulationComponent.Data.Engine
 			foreach (DataRow row in data.Rows) {
 				try {
 					var entry = headerValid ? CreateFromColumNames(row) : CreateFromColumnIndizes(row);
-					delaunayMap.AddPoint(entry.Torque.Value(), headerValid ? row.ParseDouble(Fields.EngineSpeed) : row.ParseDouble(0),
+					delaunayMap.AddPoint(entry.Torque.Value(),
+						(headerValid ? row.ParseDouble(Fields.EngineSpeed) : row.ParseDouble(0)).RPMtoRad().Value(),
 						entry.FuelConsumption.Value());
 				} catch (Exception e) {
 					throw new VectoException(string.Format("Line {0}: {1}", data.Rows.IndexOf(row), e.Message), e);
@@ -51,9 +52,9 @@ namespace TUGraz.VectoCore.Models.SimulationComponent.Data.Engine
 					columns.Contains(Fields.FuelConsumption);
 		}
 
-		private static FuelConsumptionMap.FuelConsumptionEntry CreateFromColumnIndizes(DataRow row)
+		private static FuelConsumptionMap.Entry CreateFromColumnIndizes(DataRow row)
 		{
-			return new FuelConsumptionMap.FuelConsumptionEntry(
+			return new FuelConsumptionMap.Entry(
 				engineSpeed: row.ParseDouble(0).RPMtoRad(),
 				torque: row.ParseDouble(1).SI<NewtonMeter>(),
 				fuelConsumption:
@@ -61,9 +62,9 @@ namespace TUGraz.VectoCore.Models.SimulationComponent.Data.Engine
 				);
 		}
 
-		private static FuelConsumptionMap.FuelConsumptionEntry CreateFromColumNames(DataRow row)
+		private static FuelConsumptionMap.Entry CreateFromColumNames(DataRow row)
 		{
-			return new FuelConsumptionMap.FuelConsumptionEntry(
+			return new FuelConsumptionMap.Entry(
 				engineSpeed: row.ParseDouble(Fields.EngineSpeed).SI().Rounds.Per.Minute.Cast<PerSecond>(),
 				torque: row.ParseDouble(Fields.Torque).SI<NewtonMeter>(),
 				fuelConsumption:

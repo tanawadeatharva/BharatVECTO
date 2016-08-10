@@ -482,46 +482,16 @@ namespace TUGraz.VectoCore.InputData.FileIO.JSON
 				};
 				var tech = aux.GetEx<string>("Technology");
 
-				// Convert old Electric System to new format
 				if (auxData.Type == AuxiliaryType.ElectricSystem) {
 					if (aux["TechList"] == null || aux["TechList"].Any()) {
 						auxData.Technology.Add("Standard technology");
-						Log.Warn("Aux: Upgraded Electric System to new format: '{0}'", auxData.Technology.Last());
 					} else {
 						auxData.Technology.Add("Standard technology - LED headlights, all");
-						Log.Warn("Aux: Upgraded Electric System to new format: '{0}'", auxData.Technology.Last());
 					}
 				}
 
-				// Convert old Steering Pump to new format
 				if (auxData.Type == AuxiliaryType.SteeringPump) {
-					switch (tech) {
-						case "Variable displacement":
-							auxData.Technology.Add("Variable displacement elec. controlled");
-							Log.Warn("Aux: Upgraded Steering Pump Technology from '{0}' to '{1}'", tech, auxData.Technology.Last());
-
-							break;
-						case "Hydraulic supported by electric":
-							auxData.Technology.Add("Dual displacement");
-							Log.Warn("Aux: Upgraded Steering Pump Technology from '{0}' to '{1}'", tech, auxData.Technology.Last());
-							break;
-						default:
-							auxData.Technology.Add(tech);
-							break;
-					}
-				}
-
-				// Convert old Pneumatic System to new format
-				if (auxData.Type == AuxiliaryType.PneumaticSystem) {
-					auxData.Technology.Add("Medium Supply 1-stage");
-					Log.Warn("Aux: Upgraded Pneumatic System Technology to '{0}'", tech, auxData.Technology.Last());
-				}
-
-				// Convert old HVAC to new format
-				if (auxData.Type == AuxiliaryType.HVAC) {
-					if (!string.IsNullOrWhiteSpace(tech)) {
-						Log.Warn("Aux: Upgraded HVAC Technology from '{0}' to '{1}'", tech, "");
-					}
+					auxData.Technology.Add(tech);
 				}
 
 				if (auxData.Type == AuxiliaryType.Fan) {

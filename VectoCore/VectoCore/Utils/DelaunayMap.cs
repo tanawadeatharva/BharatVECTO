@@ -35,6 +35,7 @@ using System.Diagnostics;
 using System.Drawing;
 using System.IO;
 using System.Linq;
+using System.Runtime.CompilerServices;
 using System.Windows.Forms.DataVisualization.Charting;
 using TUGraz.VectoCommon.Exceptions;
 using TUGraz.VectoCommon.Models;
@@ -46,7 +47,7 @@ namespace TUGraz.VectoCore.Utils
 	public sealed class DelaunayMap : LoggingObject
 	{
 		internal ICollection<Point> Points = new HashSet<Point>();
-		private List<Triangle> _triangles = new List<Triangle>();
+		private List<Triangle> _triangles;
 		private Edge[] _convexHull;
 
 		private readonly string _mapName;
@@ -213,6 +214,11 @@ namespace TUGraz.VectoCore.Utils
 			}
 		}
 
+		public double? Interpolate(SI x, SI y)
+		{
+			return Interpolate(x.Value(), y.Value());
+		}
+
 		/// <summary>
 		/// Interpolates the value of an point in the delaunay map.
 		/// </summary>
@@ -220,21 +226,35 @@ namespace TUGraz.VectoCore.Utils
 		/// <param name="y"></param>
 		/// <returns>a value if interpolation is successfull, 
 		///          null if interpolation has failed.</returns>
+		[MethodImpl(MethodImplOptions.Synchronized)]
 		public double? Interpolate(double x, double y)
 		{
-			if (!_triangles.Any())
+			if (_triangles == null)
 				throw new VectoException("Interpolation not possible. Call DelaunayMap.Triangulate first.");
+
 			x = (x - _minX) / (_maxX - _minX);
 			y = (y - _minY) / (_maxY - _minY);
-			var tr = _triangles.Find(triangle => triangle.IsInside(x, y, exact: true)) ??
-					_triangles.Find(triangle => triangle.IsInside(x, y, exact: false));
 
-			if (tr != null) {
-				var plane = new Plane(tr);
-				return (plane.W - plane.X * x - plane.Y * y) / plane.Z;
+			var i = 0;
+			while (i < _triangles.Count && !_triangles[i].IsInside(x, y, true))
+				i++;
+			if (i == _triangles.Count) {
+				i = 0;
+				while (i < _triangles.Count && !_triangles[i].IsInside(x, y, false))
+					i++;
 			}
 
-			return null;
+			if (i == _triangles.Count)
+				return null;
+
+			var tr = _triangles[i];
+			var plane = new Plane(tr);
+			return (plane.W - plane.X * x - plane.Y * y) / plane.Z;
+		}
+
+		public double Extrapolate(SI x, SI y)
+		{
+			return Extrapolate(x.Value(), y.Value());
 		}
 
 		/// <summary>

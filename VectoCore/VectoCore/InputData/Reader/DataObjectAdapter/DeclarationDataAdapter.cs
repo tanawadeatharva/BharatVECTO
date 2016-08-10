@@ -248,7 +248,7 @@ namespace TUGraz.VectoCore.InputData.Reader.DataObjectAdapter
 				};
 				switch (auxType) {
 					case AuxiliaryType.Fan:
-						aux.PowerDemand = DeclarationData.Fan.Lookup(mission, auxData.Technology.First());
+						aux.PowerDemand = DeclarationData.Fan.Lookup(mission, auxData.Technology.FirstOrDefault());
 						aux.ID = Constants.Auxiliaries.IDs.Fan;
 						break;
 					case AuxiliaryType.SteeringPump:
@@ -260,11 +260,11 @@ namespace TUGraz.VectoCore.InputData.Reader.DataObjectAdapter
 						aux.ID = Constants.Auxiliaries.IDs.HeatingVentilationAirCondition;
 						break;
 					case AuxiliaryType.PneumaticSystem:
-						aux.PowerDemand = DeclarationData.PneumaticSystem.Lookup(mission, auxData.Technology.First());
+						aux.PowerDemand = DeclarationData.PneumaticSystem.Lookup(mission, auxData.Technology.FirstOrDefault());
 						aux.ID = Constants.Auxiliaries.IDs.PneumaticSystem;
 						break;
 					case AuxiliaryType.ElectricSystem:
-						aux.PowerDemand = DeclarationData.ElectricSystem.Lookup(mission, auxData.Technology.First());
+						aux.PowerDemand = DeclarationData.ElectricSystem.Lookup(mission, auxData.Technology.FirstOrDefault());
 						aux.ID = Constants.Auxiliaries.IDs.ElectricSystem;
 						break;
 					default:
