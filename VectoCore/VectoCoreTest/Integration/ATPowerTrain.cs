@@ -42,9 +42,10 @@ namespace TUGraz.VectoCore.Tests.Integration
 			bool overspeed = false, KilogramSquareMeter gearBoxInertia = null)
 		{
 			var fileWriter = new FileOutputWriter(modFileName);
-			var modData = new ModalDataContainer(modFileName, fileWriter);
-			modData.WriteModalResults = true;
-			modData.HasTorqueConverter = true;
+			var modData = new ModalDataContainer(modFileName, fileWriter) {
+				WriteModalResults = true,
+				HasTorqueConverter = true
+			};
 			var container = new VehicleContainer(ExecutionMode.Engineering, modData) {
 				RunData = new VectoRunData { JobName = modFileName, Cycle = cycleData }
 			};
@@ -81,7 +82,7 @@ namespace TUGraz.VectoCore.Tests.Integration
 
 		private static GearboxData CreateGearboxData()
 		{
-			var ratios = new[] { 3.0, 3.0, 1.0, 0.8 };
+			var ratios = new[] { 3.4, 1.9, 1.42, 1.0, 0.7, 0.62 };
 
 			return new GearboxData {
 				Gears = ratios.Select((ratio, i) =>
