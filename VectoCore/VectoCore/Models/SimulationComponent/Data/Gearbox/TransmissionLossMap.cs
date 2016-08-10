@@ -29,12 +29,9 @@
 *   Martin Rexeis, rexeis@ivt.tugraz.at, IVT, Graz University of Technology
 */
 
-using System;
 using System.Collections.Generic;
 using System.ComponentModel.DataAnnotations;
-using System.Data;
 using System.Diagnostics;
-using System.Linq;
 using TUGraz.VectoCommon.Exceptions;
 using TUGraz.VectoCommon.Models;
 using TUGraz.VectoCommon.Utils;
@@ -69,10 +66,8 @@ namespace TUGraz.VectoCore.Models.SimulationComponent.Data.Gearbox
 			_lossMap = new DelaunayMap("TransmissionLossMap " + GearName);
 			_invertedLossMap = new DelaunayMap("TransmissionLossMapInv. " + GearName);
 			foreach (var entry in _entries) {
-				_lossMap.AddPoint(entry.InputSpeed.ConvertTo().Rounds.Per.Minute.Value(),
-					(entry.InputTorque - entry.TorqueLoss).Value(), entry.TorqueLoss.Value());
-				_invertedLossMap.AddPoint(entry.InputSpeed.ConvertTo().Rounds.Per.Minute.Value(), entry.InputTorque.Value(),
-					entry.TorqueLoss.Value());
+				_lossMap.AddPoint(entry.InputSpeed.Value(), (entry.InputTorque - entry.TorqueLoss).Value(), entry.TorqueLoss.Value());
+				_invertedLossMap.AddPoint(entry.InputSpeed.Value(), entry.InputTorque.Value(), entry.TorqueLoss.Value());
 			}
 
 			_lossMap.Triangulate();
@@ -88,12 +83,10 @@ namespace TUGraz.VectoCore.Models.SimulationComponent.Data.Gearbox
 		public LossMapResult GetTorqueLoss(PerSecond outAngularVelocity, NewtonMeter outTorque)
 		{
 			var result = new LossMapResult();
-			var torqueLoss = _lossMap.Interpolate(outAngularVelocity.ConvertTo().Rounds.Per.Minute.Value() * _ratio,
-				outTorque.Value() / _ratio);
+			var torqueLoss = _lossMap.Interpolate(outAngularVelocity.Value() * _ratio, outTorque.Value() / _ratio);
 
 			if (!torqueLoss.HasValue) {
-				torqueLoss = _lossMap.Extrapolate(outAngularVelocity.ConvertTo().Rounds.Per.Minute.Value() * _ratio,
-					outTorque.Value() / _ratio);
+				torqueLoss = _lossMap.Extrapolate(outAngularVelocity.Value() * _ratio, outTorque.Value() / _ratio);
 				result.Extrapolated = true;
 			}
 
@@ -120,14 +113,13 @@ namespace TUGraz.VectoCore.Models.SimulationComponent.Data.Gearbox
 		/// <returns>Torque needed at output side (towards the wheels).</returns>
 		public NewtonMeter GetOutTorque(PerSecond inAngularVelocity, NewtonMeter inTorque, bool allowExtrapolation = false)
 		{
-			var torqueLoss = _invertedLossMap.Interpolate(inAngularVelocity.ConvertTo().Rounds.Per.Minute.Value(),
-				inTorque.Value());
+			var torqueLoss = _invertedLossMap.Interpolate(inAngularVelocity.Value(), inTorque.Value());
 			if (torqueLoss.HasValue) {
 				return (inTorque - torqueLoss.Value.SI<NewtonMeter>()) / _ratio;
 			}
 
 			if (allowExtrapolation) {
-				torqueLoss = _invertedLossMap.Extrapolate(inAngularVelocity.ConvertTo().Rounds.Per.Minute.Value(), inTorque.Value());
+				torqueLoss = _invertedLossMap.Extrapolate(inAngularVelocity.Value(), inTorque.Value());
 				return (inTorque - torqueLoss.Value.SI<NewtonMeter>()) / _ratio;
 			}
 
