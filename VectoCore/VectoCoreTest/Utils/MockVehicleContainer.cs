@@ -137,7 +137,10 @@ namespace TUGraz.VectoCore.Tests.Utils
 		}
 
 		public bool VehicleStopped { get; set; }
+
 		public DrivingBehavior DriverBehavior { get; set; }
+		public MeterPerSquareSecond DriverAcceleration { get; set; }
+
 		public CycleData CycleData { get; set; }
 
 		public DrivingCycleData.DrivingCycleEntry CycleLookAhead(Meter distance)

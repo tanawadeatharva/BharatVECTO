@@ -31,6 +31,7 @@
 
 using System;
 using System.Linq;
+using System.Windows.Forms.VisualStyles;
 using TUGraz.VectoCommon.Exceptions;
 using TUGraz.VectoCommon.Models;
 using TUGraz.VectoCommon.Utils;
@@ -62,6 +63,7 @@ namespace TUGraz.VectoCore.Models.SimulationComponent.Impl
 			DriverData = driverData;
 			DriverStrategy = strategy;
 			strategy.Driver = this;
+			DriverAcceleration = 0.SI<MeterPerSquareSecond>();
 		}
 
 		public IDriverDemandInPort InPort()
@@ -146,6 +148,7 @@ namespace TUGraz.VectoCore.Models.SimulationComponent.Impl
 			var operatingPoint = ComputeAcceleration(ds, targetVelocity);
 
 			IResponse retVal = null;
+			DriverAcceleration = operatingPoint.Acceleration;
 			var response = previousResponse ??
 							NextComponent.Request(absTime, operatingPoint.SimulationInterval, operatingPoint.Acceleration, gradient);
 
@@ -177,6 +180,7 @@ namespace TUGraz.VectoCore.Models.SimulationComponent.Impl
 				Log.Debug("Found operating point for Drive/Accelerate. dt: {0}, acceleration: {1}",
 					limitedOperatingPoint.SimulationInterval, limitedOperatingPoint.Acceleration);
 
+				DriverAcceleration = limitedOperatingPoint.Acceleration;
 				retVal = NextComponent.Request(absTime, limitedOperatingPoint.SimulationInterval, limitedOperatingPoint.Acceleration,
 					gradient);
 				retVal.Switch().
@@ -188,6 +192,7 @@ namespace TUGraz.VectoCore.Models.SimulationComponent.Impl
 						Log.Info(
 							"Operating point with limited acceleration resulted in an overload! trying again with original acceleration {0}",
 							nextOperatingPoint.Acceleration);
+						DriverAcceleration = nextOperatingPoint.Acceleration;
 						retVal = NextComponent.Request(absTime, nextOperatingPoint.SimulationInterval, nextOperatingPoint.Acceleration,
 							gradient);
 						retVal.Switch().
@@ -267,6 +272,7 @@ namespace TUGraz.VectoCore.Models.SimulationComponent.Impl
 			bool rollAction)
 		{
 			var requestedOperatingPoint = ComputeAcceleration(ds, DataBus.VehicleSpeed);
+			DriverAcceleration = requestedOperatingPoint.Acceleration;
 			var initialResponse = NextComponent.Request(absTime, requestedOperatingPoint.SimulationInterval,
 				requestedOperatingPoint.Acceleration, gradient, dryRun: true);
 
@@ -307,6 +313,7 @@ namespace TUGraz.VectoCore.Models.SimulationComponent.Impl
 				return new ResponseSpeedLimitExceeded() { Source = this };
 			}
 
+			DriverAcceleration = limitedOperatingPoint.Acceleration;
 			var response = NextComponent.Request(absTime, limitedOperatingPoint.SimulationInterval,
 				limitedOperatingPoint.Acceleration, gradient);
 
@@ -377,6 +384,7 @@ namespace TUGraz.VectoCore.Models.SimulationComponent.Impl
 				}
 			}
 
+			DriverAcceleration = operatingPoint.Acceleration;
 			var response = previousResponse ??
 							NextComponent.Request(absTime, operatingPoint.SimulationInterval, operatingPoint.Acceleration, gradient);
 
@@ -425,6 +433,7 @@ namespace TUGraz.VectoCore.Models.SimulationComponent.Impl
 				return new ResponseOverload { Source = this };
 			}
 
+			DriverAcceleration = operatingPoint.Acceleration;
 			retVal = NextComponent.Request(absTime, operatingPoint.SimulationInterval, operatingPoint.Acceleration, gradient);
 
 			retVal.Switch().
@@ -502,6 +511,7 @@ namespace TUGraz.VectoCore.Models.SimulationComponent.Impl
 			initialResponse.Switch().
 				Case<ResponseGearShift>(r => {
 					IterationStatistics.Increment(this, "SearchBrakingPower");
+					DriverAcceleration = operatingPoint.Acceleration;
 					var nextResp = NextComponent.Request(absTime, operatingPoint.SimulationInterval, operatingPoint.Acceleration,
 						gradient, true);
 					deltaPower = nextResp.GearboxPowerRequest;
@@ -521,6 +531,7 @@ namespace TUGraz.VectoCore.Models.SimulationComponent.Impl
 						operatingPoint = ComputeTimeInterval(operatingPoint.Acceleration, ds);
 
 						IterationStatistics.Increment(this, "SearchBrakingPower");
+						DriverAcceleration = operatingPoint.Acceleration;
 						return NextComponent.Request(absTime, operatingPoint.SimulationInterval, operatingPoint.Acceleration, gradient,
 							true);
 					},
@@ -581,6 +592,7 @@ namespace TUGraz.VectoCore.Models.SimulationComponent.Impl
 								retVal.SimulationDistance = tmp.SimulationDistance;
 							}
 							IterationStatistics.Increment(this, "SearchOperatingPoint");
+							DriverAcceleration = acc;
 							var response = NextComponent.Request(absTime, retVal.SimulationInterval, acc, gradient, true);
 							response.OperatingPoint = retVal;
 							return response;
@@ -710,11 +722,14 @@ namespace TUGraz.VectoCore.Models.SimulationComponent.Impl
 					DataBus.VehicleSpeed);
 			}
 
+			DriverAcceleration = 0.SI<MeterPerSquareSecond>();
 			var retVal = NextComponent.Request(absTime, dt, 0.SI<MeterPerSquareSecond>(), gradient);
 
 			retVal.Switch().
-				Case<ResponseGearShift>(
-					r => { retVal = NextComponent.Request(absTime, dt, 0.SI<MeterPerSquareSecond>(), gradient); });
+				Case<ResponseGearShift>(r => {
+						DriverAcceleration = 0.SI<MeterPerSquareSecond>();
+						retVal = NextComponent.Request(absTime, dt, 0.SI<MeterPerSquareSecond>(), gradient);
+					});
 			CurrentState.dt = dt;
 			CurrentState.Acceleration = 0.SI<MeterPerSquareSecond>();
 			return retVal;
@@ -755,5 +770,7 @@ namespace TUGraz.VectoCore.Models.SimulationComponent.Impl
 		}
 
 		public DrivingBehavior DriverBehavior { get; set; }
+
+		public MeterPerSquareSecond DriverAcceleration { get; protected set; }
 	}
 }
