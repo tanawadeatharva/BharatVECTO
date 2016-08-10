@@ -99,7 +99,7 @@ namespace TUGraz.VectoCore.Models.SimulationComponent.Data.Gearbox
 			};
 			retVal.SpeedRatio = angularSpeedOut / retVal.InAngularVelocity;
 			retVal.TorqueRatio = MuLookup(angularSpeedOut / retVal.InAngularVelocity);
-			retVal.InTorque = torqueOut / retVal.SpeedRatio;
+			retVal.InTorque = torqueOut / retVal.TorqueRatio;
 
 			return retVal;
 		}
