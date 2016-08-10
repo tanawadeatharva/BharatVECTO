@@ -8,87 +8,74 @@
 '   WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
 '
 ' See the LICENSE.txt for the specific language governing permissions and limitations.
-Imports System.Windows.Forms
+Option Infer On
+Option Strict On
+Option Explicit On
 
 ''' <summary>
 ''' Axle Config Editor (Vehicle Editor sub-dialog)
 ''' </summary>
-''' <remarks></remarks>
 Public Class F_VEH_Axle
+	Public Sub New()
+		InitializeComponent()
 
-    Public Sub New()
-        Dim w As String
+		CbWheels.Items.Add("-")
+		CbWheels.Items.AddRange(Declaration.WheelsList)
+	End Sub
 
-        ' Dieser Aufruf ist für den Designer erforderlich.
-        InitializeComponent()
+	Public Sub Clear()
+		CbTwinT.Checked = False
+		TbAxleShare.Text = ""
+		TbI_wheels.Text = ""
+		TbRRC.Text = ""
+		TbFzISO.Text = ""
+		CbWheels.SelectedIndex = 0
+	End Sub
 
-        ' Fügen Sie Initialisierungen nach dem InitializeComponent()-Aufruf hinzu.
-        Me.CbWheels.Items.Add("-")
-        For Each w In Declaration.WheelsList
-            Me.CbWheels.Items.Add(w)
-        Next
+	'Initialise
+	Private Sub F_VEH_Axle_Load(sender As Object, e As EventArgs) Handles Me.Load
+		PnAxle.Enabled = Not Cfg.DeclMode
+	End Sub
 
+	'Save and close
+	Private Sub OK_Button_Click(sender As Object, e As EventArgs) Handles OK_Button.Click
 
+		If Not Cfg.DeclMode Then
+			If Not IsNumeric(TbAxleShare.Text) OrElse Trim(TbAxleShare.Text) = "" Then
+				MsgBox("Weight input is not valid!")
+				Exit Sub
+			End If
+		End If
 
-    End Sub
+		If Not IsNumeric(TbRRC.Text) OrElse Trim(TbRRC.Text) = "" Then
+			MsgBox("RRC input is not valid!")
+			Exit Sub
+		End If
 
-    Public Sub Clear()
-        Me.CbTwinT.Checked = False
-        Me.TbAxleShare.Text = ""
-        Me.TbI_wheels.Text = ""
-        Me.TbRRC.Text = ""
-        Me.TbFzISO.Text = ""
-        Me.CbWheels.SelectedIndex = 0
-    End Sub
+		If Not IsNumeric(TbFzISO.Text) OrElse Trim(TbFzISO.Text) = "" Then
+			MsgBox("Fz ISO input is not valid!")
+			Exit Sub
+		End If
 
-    'Initialise
-    Private Sub F_VEH_Axle_Load(sender As Object, e As System.EventArgs) Handles Me.Load
-        Me.PnAxle.Enabled = Not Cfg.DeclMode
-    End Sub
+		DialogResult = DialogResult.OK
+		Close()
+	End Sub
 
-    'Save and close
-    Private Sub OK_Button_Click(ByVal sender As System.Object, ByVal e As System.EventArgs) Handles OK_Button.Click
+	Private Sub CbWheels_SelectedIndexChanged(sender As Object, e As EventArgs) Handles CbWheels.SelectedIndexChanged
+		Dim inertia As Single
+		If Cfg.DeclMode Then
+			inertia = Declaration.WheelsInertia(CbWheels.Text)
+			If inertia < 0 Then
+				TbI_wheels.Text = "-"
+			Else
+				TbI_wheels.Text = inertia.ToString()
+			End If
+		End If
+	End Sub
 
-        If Not Cfg.DeclMode Then
-            If Not IsNumeric(Me.TbAxleShare.Text) OrElse Trim(Me.TbAxleShare.Text) = "" Then
-                MsgBox("Weight input is not valid!")
-                Exit Sub
-            End If
-        End If
-
-        If Not IsNumeric(Me.TbRRC.Text) OrElse Trim(Me.TbRRC.Text) = "" Then
-            MsgBox("RRC input is not valid!")
-            Exit Sub
-        End If
-
-        If Not IsNumeric(Me.TbFzISO.Text) OrElse Trim(Me.TbFzISO.Text) = "" Then
-            MsgBox("Fz ISO input is not valid!")
-            Exit Sub
-        End If
-
-        Me.DialogResult = System.Windows.Forms.DialogResult.OK
-        Me.Close()
-    End Sub
-
-    Private Sub CbWheels_SelectedIndexChanged(sender As System.Object, e As System.EventArgs) Handles CbWheels.SelectedIndexChanged
-        Dim inertia As Single
-        If Cfg.DeclMode Then
-            inertia = Declaration.WheelsInertia(Me.CbWheels.Text)
-            If inertia < 0 Then
-                Me.TbI_wheels.Text = "-"
-            Else
-                Me.TbI_wheels.Text = inertia
-            End If
-        End If
-    End Sub
-
-    'Cancel
-    Private Sub Cancel_Button_Click(ByVal sender As System.Object, ByVal e As System.EventArgs) Handles Cancel_Button.Click
-        Me.DialogResult = System.Windows.Forms.DialogResult.Cancel
-        Me.Close()
-    End Sub
-
-
-
-    
+	'Cancel
+	Private Sub Cancel_Button_Click(sender As Object, e As EventArgs) Handles Cancel_Button.Click
+		DialogResult = DialogResult.Cancel
+		Close()
+	End Sub
 End Class

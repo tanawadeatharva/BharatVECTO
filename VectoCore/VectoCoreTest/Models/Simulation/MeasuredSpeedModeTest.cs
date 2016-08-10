@@ -29,25 +29,26 @@
 *   Martin Rexeis, rexeis@ivt.tugraz.at, IVT, Graz University of Technology
 */
 
+using Microsoft.VisualStudio.TestTools.UnitTesting;
+using System.Collections.Generic;
 using System.Data;
 using System.Linq;
-using TUGraz.VectoCore.Utils;
-using System.Collections.Generic;
-using TUGraz.VectoCore.OutputData;
-using TUGraz.VectoCore.InputData.Reader;
-using TUGraz.VectoCore.OutputData.FileIO;
-using TUGraz.VectoCore.InputData.FileIO.JSON;
-using TUGraz.VectoCore.Models.Simulation.Data;
-using TUGraz.VectoCore.Models.Simulation.Impl;
-using Microsoft.VisualStudio.TestTools.UnitTesting;
 using TUGraz.VectoCommon.Exceptions;
 using TUGraz.VectoCommon.Models;
 using TUGraz.VectoCommon.Utils;
-using TUGraz.VectoCore.Models.SimulationComponent.Impl;
+using TUGraz.VectoCore.InputData.FileIO.JSON;
+using TUGraz.VectoCore.InputData.Reader;
+using TUGraz.VectoCore.Models.Declaration;
+using TUGraz.VectoCore.Models.Simulation.Data;
+using TUGraz.VectoCore.Models.Simulation.Impl;
 using TUGraz.VectoCore.Models.SimulationComponent.Data;
 using TUGraz.VectoCore.Models.SimulationComponent.Data.Engine;
 using TUGraz.VectoCore.Models.SimulationComponent.Data.Gearbox;
+using TUGraz.VectoCore.Models.SimulationComponent.Impl;
+using TUGraz.VectoCore.OutputData;
+using TUGraz.VectoCore.OutputData.FileIO;
 using TUGraz.VectoCore.Tests.Utils;
+using TUGraz.VectoCore.Utils;
 
 // ReSharper disable UnusedVariable
 
@@ -114,7 +115,7 @@ namespace TUGraz.VectoCore.Tests.Models.Simulation
 			inputData = @"<t>,<grad>,<Padd>,<n>,<gear>
 						  0  ,0";
 			AssertHelper.Exception<VectoException>(() => TestCycleRead(inputData, CycleType.MeasuredSpeedGear),
-				"Failed to read stream: Line 1: The number of values is not correct. Expected 5 Columns, Got 2 Columns");
+				"Line 1: The number of values is not correct. Expected 5 Columns, Got 2 Columns");
 		}
 
 		/// <summary>
@@ -171,7 +172,7 @@ namespace TUGraz.VectoCore.Tests.Models.Simulation
 			inputData = @"<t>,<v>,<grad>,<Padd>,<vair_res>,<vair_beta>,<Aux_Alt>
 						  0  ,0";
 			AssertHelper.Exception<VectoException>(() => TestCycleRead(inputData, CycleType.MeasuredSpeed),
-				"Failed to read stream: Line 1: The number of values is not correct. Expected 7 Columns, Got 2 Columns");
+				"Line 1: The number of values is not correct. Expected 7 Columns, Got 2 Columns");
 		}
 
 		private static void TestCycleRead(string inputData, CycleType cycleType, bool autoCycle = true,
@@ -231,7 +232,14 @@ namespace TUGraz.VectoCore.Tests.Models.Simulation
 						CrossWindCorrectionCurve =
 							new CrosswindCorrectionCdxALookup(
 								CrossWindCorrectionCurveReader.GetNoCorrectionCurve(6.16498344.SI<SquareMeter>()),
-								CrossWindCorrectionMode.NoCorrection)
+								CrossWindCorrectionMode.NoCorrection),
+						GrossVehicleWeight = 12000.SI<Kilogram>(),
+						CurbWeight = 3400.SI<Kilogram>(),
+						DynamicTyreRadius = 0.5.SI<Meter>(),
+						AxleData =
+							new List<Axle> {
+								new Axle { AxleWeightShare = 1.0, TyreTestLoad = 52532.SI<Newton>(), Inertia = 10.SI<KilogramSquareMeter>() }
+							}
 					},
 				AxleGearData = new AxleGearData { AxleGear = new GearData { Ratio = 2.3 } },
 				EngineData = new CombustionEngineData { IdleSpeed = 560.RPMtoRad(), FullLoadCurve = fullLoadCurve },

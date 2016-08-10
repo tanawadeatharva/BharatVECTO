@@ -221,7 +221,7 @@ namespace TUGraz.VectoCommon.InputData
 
 	public interface IAuxiliariesEngineeringInputData
 	{
-		new IList<IAuxiliaryEngineeringInputData> Auxiliaries { get; }
+		IList<IAuxiliaryEngineeringInputData> Auxiliaries { get; }
 
 		// Advanced Auxiliaries
 		AuxiliaryModel AuxiliaryAssembly { get; }

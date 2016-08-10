@@ -29,7 +29,6 @@
 *   Martin Rexeis, rexeis@ivt.tugraz.at, IVT, Graz University of Technology
 */
 
-using System;
 using System.Collections.Generic;
 using System.ComponentModel.DataAnnotations;
 using TUGraz.VectoCommon.Exceptions;
@@ -38,9 +37,7 @@ using TUGraz.VectoCommon.Utils;
 using TUGraz.VectoCore.Configuration;
 using TUGraz.VectoCore.Models.Declaration;
 using TUGraz.VectoCore.Models.SimulationComponent.Data;
-using TUGraz.VectoCore.Models.SimulationComponent.Data.Gearbox;
 using TUGraz.VectoCore.OutputData;
-using TUGraz.VectoCore.Utils;
 using DriverData = TUGraz.VectoCore.Models.SimulationComponent.Data.DriverData;
 
 namespace TUGraz.VectoCore.Models.Simulation.Data
@@ -144,10 +141,10 @@ namespace TUGraz.VectoCore.Models.Simulation.Data
 									string.Format("Interpolation of Gear-{0}-LossMap failed with torque={1} and angularSpeed={2}", gear.Key,
 										inTorque, angularVelocity.ConvertTo().Rounds.Per.Minute));
 							}
-							var velocity = angularVelocity / gear.Value.Ratio / axleGearData.AxleGear.Ratio *
-											runData.VehicleData.DynamicTyreRadius;
 
 							if (axleGearData != null) {
+								var velocity = angularVelocity / gear.Value.Ratio / axleGearData.AxleGear.Ratio *
+												runData.VehicleData.DynamicTyreRadius;
 								var axleAngularVelocity = angularVelocity / gear.Value.Ratio;
 								try {
 									axleGearData.AxleGear.LossMap.GetOutTorque(axleAngularVelocity, axleTorque);

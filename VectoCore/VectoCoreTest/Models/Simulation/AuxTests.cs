@@ -29,10 +29,6 @@
 *   Martin Rexeis, rexeis@ivt.tugraz.at, IVT, Graz University of Technology
 */
 
-using TUGraz.VectoCore.Tests.Utils;
-using TUGraz.VectoCore.Models.Declaration;
-using TUGraz.VectoCore.Models.Simulation.Data;
-using TUGraz.VectoCore.Models.Simulation.Impl;
 using Microsoft.VisualStudio.TestTools.UnitTesting;
 using TUGraz.VectoCommon.Exceptions;
 using TUGraz.VectoCommon.Models;
@@ -40,10 +36,14 @@ using TUGraz.VectoCommon.Utils;
 using TUGraz.VectoCore.InputData.FileIO.JSON;
 using TUGraz.VectoCore.InputData.Reader;
 using TUGraz.VectoCore.InputData.Reader.ComponentData;
+using TUGraz.VectoCore.Models.Declaration;
+using TUGraz.VectoCore.Models.Simulation.Data;
+using TUGraz.VectoCore.Models.Simulation.Impl;
 using TUGraz.VectoCore.Models.SimulationComponent.Data;
 using TUGraz.VectoCore.Models.SimulationComponent.Impl;
 using TUGraz.VectoCore.OutputData;
 using TUGraz.VectoCore.OutputData.FileIO;
+using TUGraz.VectoCore.Tests.Utils;
 
 // ReSharper disable ObjectCreationAsStatement
 
@@ -77,10 +77,11 @@ namespace TUGraz.VectoCore.Tests.Models.Simulation
 
 			aux.AddConstant("FAN",
 				DeclarationData.Fan.Lookup(MissionType.LongHaul, "Hydraulic driven - Constant displacement pump"));
-			aux.AddConstant("PS", DeclarationData.PneumaticSystem.Lookup(mission, hdvClass));
+			aux.AddConstant("PS", DeclarationData.PneumaticSystem.Lookup(mission, "Medium Supply 1-stage"));
 			aux.AddConstant("STP",
-				DeclarationData.SteeringPump.Lookup(MissionType.LongHaul, hdvClass, "Variable displacement"));
-			aux.AddConstant("ES", DeclarationData.ElectricSystem.Lookup(mission, null));
+				DeclarationData.SteeringPump.Lookup(MissionType.LongHaul, hdvClass,
+					new[] { "Variable displacement mech. controlled" }));
+			aux.AddConstant("ES", DeclarationData.ElectricSystem.Lookup(mission));
 			aux.AddConstant("AC",
 				DeclarationData.HeatingVentilationAirConditioning.Lookup(mission, hdvClass));
 

@@ -60,21 +60,13 @@ namespace TUGraz.VectoCore.InputData.Reader.DataObjectAdapter
 				VehicleCategory = data.VehicleCategory,
 				AxleConfiguration = data.AxleConfiguration,
 				CurbWeight = data.CurbWeightChassis,
-				//CurbWeigthExtra = data.CurbWeightExtra.SI<Kilogram>(),
-				//Loading = data.Loading.SI<Kilogram>(),
 				GrossVehicleWeight = data.GrossVehicleMassRating,
-				//DragCoefficient = data.DragCoefficient,
-				//CrossSectionArea = data.CrossSectionArea.SI<SquareMeter>(),
-				//DragCoefficientRigidTruck = data.DragCoefficientRigidTruck,
-				//CrossSectionAreaRigidTruck = data.CrossSectionAreaRigidTruck.SI<SquareMeter>(),
-				//TyreRadius = data.TyreRadius.SI().Milli.Meter.Cast<Meter>(),
-				//Rim = data.Rim,
 			};
 
 			return retVal;
 		}
 
-		internal RetarderData SetCommonRetarderData(IRetarderInputData data, IVehicleDeclarationInputData vehicle)
+		internal RetarderData SetCommonRetarderData(IRetarderInputData data)
 		{
 			try {
 				var retarder = new RetarderData {
@@ -182,11 +174,14 @@ namespace TUGraz.VectoCore.InputData.Reader.DataObjectAdapter
 				var type = AngularGearType.None;
 				try {
 					type = data.Type;
-				} catch (Exception) {
+				} catch (InvalidFileFormatException) {
 					Log.Info("AngularGear not found. Assuming None.");
 				}
 
 				switch (type) {
+					case AngularGearType.LossesIncludedInGearbox:
+					case AngularGearType.None:
+						return null;
 					case AngularGearType.SeparateAngularGear:
 						var angularGear = new AngularGearData {
 							SavedInDeclarationMode = data.SavedInDeclarationMode,
@@ -212,10 +207,6 @@ namespace TUGraz.VectoCore.InputData.Reader.DataObjectAdapter
 							}
 						}
 						return angularGear;
-
-					case AngularGearType.LossesIncludedInGearbox:
-					case AngularGearType.None:
-						return null;
 					default:
 						throw new ArgumentOutOfRangeException("data", "Unknown Angulargear Type.");
 				}
