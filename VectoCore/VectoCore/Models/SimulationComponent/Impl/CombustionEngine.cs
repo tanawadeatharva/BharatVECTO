@@ -302,7 +302,7 @@ namespace TUGraz.VectoCore.Models.SimulationComponent.Impl
 			};
 			PreviousState.DynamicFullLoadTorque = PreviousState.StationaryFullLoadTorque;
 
-			return new ResponseSuccess { Source = this, EnginePowerRequest = PreviousState.EnginePower };
+			return new ResponseSuccess { Source = this, EnginePowerRequest = PreviousState.EnginePower, EngineSpeed = outAngularVelocity};
 		}
 
 		/// <summary>
