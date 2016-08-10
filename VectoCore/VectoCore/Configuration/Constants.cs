@@ -102,7 +102,7 @@ namespace TUGraz.VectoCore.Configuration
 			/// </summary>
 			public static readonly Meter DriveOffDistance = 1.SI<Meter>();
 
-			public static readonly Meter BrakeNextTargetDistance = 5.SI<Meter>();
+			public static readonly Meter BrakeNextTargetDistance = 2.5.SI<Meter>();
 
 			public static readonly MeterPerSecond MinVelocityForCoast = 5.KMPHtoMeterPerSecond();
 
@@ -127,7 +127,7 @@ namespace TUGraz.VectoCore.Configuration
 			public const double InterpolateSearchTolerance = 1e-3;
 
 			public const double ClutchClosingSpeedNorm = 0.03;
-			
+
 			public static readonly MeterPerSecond ClutchDisengageWhenHaltingSpeed = 15.KMPHtoMeterPerSecond();
 
 			public static readonly MeterPerSecond ATGearboxDisengageWhenHaltingSpeed = 5.KMPHtoMeterPerSecond();
