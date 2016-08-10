@@ -167,14 +167,14 @@ namespace TUGraz.VectoCore.OutputData.PDF
 				pdfFields.SetField("Loading" + i, results.Mission.RefLoad.ConvertTo().Ton.ToOutputFormat(1) + " t");
 				pdfFields.SetField("Speed" + i, data.Speed().ConvertTo().Kilo.Meter.Per.Hour.ToOutputFormat(1) + " km/h");
 
-				var fcLiterPer100Km = data.FuelConsumptionFinalLiterPer100Kilometer();
+				var fcLiterPer100Km = data.FuelConsumptionFinalLiterPer100Kilometer() ?? 0.SI();
 				pdfFields.SetField("FC" + i, fcLiterPer100Km.ToOutputFormat(1));
 
 				var loadingTon = results.Mission.RefLoad.ConvertTo().Ton;
 				var fcLiterPer100Tonkm = fcLiterPer100Km / loadingTon;
 				pdfFields.SetField("FCt" + i, fcLiterPer100Tonkm.ToOutputFormat(1));
 
-				var co2GrammPerKm = data.CO2PerMeter().ConvertTo().Gramm.Per.Kilo.Meter;
+				var co2GrammPerKm = (data.CO2PerMeter() ?? 0.SI<KilogramPerMeter>()).ConvertTo().Gramm.Per.Kilo.Meter;
 				var co2GrammPerTonKm = co2GrammPerKm / loadingTon;
 
 				pdfFields.SetField("CO2" + i, co2GrammPerKm.ToOutputFormat(1));
@@ -247,12 +247,12 @@ namespace TUGraz.VectoCore.OutputData.PDF
 				pdfFields.SetField("Load" + loadAppendix, loadingTon.ToOutputFormat(1) + " t");
 				pdfFields.SetField("Speed" + loadAppendix, data.Speed().ConvertTo().Kilo.Meter.Per.Hour.ToOutputFormat(1));
 
-				var fcLiterPer100Km = data.FuelConsumptionFinalLiterPer100Kilometer();
+				var fcLiterPer100Km = data.FuelConsumptionFinalLiterPer100Kilometer() ?? 0.SI();
 				pdfFields.SetField("FCkm" + loadAppendix, fcLiterPer100Km.ToOutputFormat(1));
 				pdfFields.SetField("FCtkm" + loadAppendix,
 					loadingTon.IsEqual(0) ? "-" : (fcLiterPer100Km / loadingTon).ToOutputFormat(1));
 
-				var co2GrammPerKm = data.CO2PerMeter().ConvertTo().Gramm.Per.Kilo.Meter;
+				var co2GrammPerKm = (data.CO2PerMeter() ?? 0.SI<KilogramPerMeter>()).ConvertTo().Gramm.Per.Kilo.Meter;
 				pdfFields.SetField("CO2km" + loadAppendix, co2GrammPerKm.ToOutputFormat(1));
 				pdfFields.SetField("CO2tkm" + loadAppendix,
 					loadingTon.IsEqual(0) ? "-" : (co2GrammPerKm / loadingTon).ToOutputFormat(1));
@@ -336,7 +336,8 @@ namespace TUGraz.VectoCore.OutputData.PDF
 				var data = missionResult.Value.ModData[LoadingType.ReferenceLoad];
 
 				var loadingTon = missionResult.Value.Mission.Loadings[LoadingType.ReferenceLoad].ConvertTo().Ton;
-				var co2GrammPerTonKm = data.CO2PerMeter().ConvertTo().Gramm.Per.Kilo.Meter / loadingTon;
+				var co2GrammPerTonKm = (data.CO2PerMeter() ?? 0.SI<KilogramPerMeter>()).ConvertTo().Gramm.Per.Kilo.Meter /
+										loadingTon;
 
 				var series = new Series(missionResult.Key + " (Ref. load.)");
 				var dataPoint = new DataPoint {
@@ -399,7 +400,7 @@ namespace TUGraz.VectoCore.OutputData.PDF
 				foreach (var pair in missionResult.Value.ModData) {
 					var data = missionResult.Value.ModData[pair.Key];
 
-					var co2GramPerKilometer = data.CO2PerMeter().ConvertTo().Gramm.Per.Kilo.Meter;
+					var co2GramPerKilometer = (data.CO2PerMeter() ?? 0.SI<KilogramPerMeter>()).ConvertTo().Gramm.Per.Kilo.Meter;
 					var loadingTon = missionResult.Value.Mission.Loadings[pair.Key].ConvertTo().Ton;
 
 					var point = new DataPoint(data.Speed().ConvertTo().Kilo.Meter.Per.Hour.Value(), co2GramPerKilometer.Value()) {

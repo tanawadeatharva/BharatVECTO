@@ -34,6 +34,7 @@ using System.Linq;
 using System.Runtime.CompilerServices;
 using TUGraz.VectoCore.Models.Declaration;
 using TUGraz.VectoCore.Models.Simulation.Data;
+using TUGraz.VectoCore.Models.Simulation.Impl;
 using TUGraz.VectoCore.Models.SimulationComponent.Data;
 
 namespace TUGraz.VectoCore.OutputData
@@ -98,6 +99,11 @@ namespace TUGraz.VectoCore.OutputData
 		[MethodImpl(MethodImplOptions.Synchronized)]
 		public void AddResult(LoadingType loadingType, Mission mission, IModalDataContainer modData)
 		{
+			if (modData.RunStatus != VectoRun.Status.Success) {
+				Missions.Clear();
+				return;
+			}
+
 			if (!Missions.ContainsKey(mission.MissionType)) {
 				Missions[mission.MissionType] = new ResultContainer {
 					Mission = mission,
