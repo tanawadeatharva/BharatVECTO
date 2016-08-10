@@ -113,8 +113,6 @@ Public Class cDeclaration
 		Dim AuxPower0 As Dictionary(Of tMission, Single)
 		Dim STEpower0 As Dictionary(Of tMission, Single())
 
-		Dim w0 As cWheel
-
 		'Initialize
 		Missions = New Dictionary(Of tMission, cMission)
 		SegmentTable = New cSegmentTable
@@ -603,21 +601,14 @@ Public Class cDeclaration
 
 		'Skip Header
 		file.ReadLine()
-
 		Try
-
 			Do While Not file.EndOfFile
 				line = file.ReadLine
-
-				w0 = New cWheel
-				w0.Inertia = CSng(line(1))
-				w0.Diam = CSng(line(2))
-				w0.SizeA = (line(3) = "a")
-
-				Wheels.Add(line(0), w0)
-
+				Wheels.Add(line(0), New cWheel With {
+							.Inertia = CSng(line(5)),
+							.Diam = CSng(line(4))
+							})
 			Loop
-
 		Catch ex As Exception
 			file.Close()
 			GUImsg(tMsgID.Err, "Failed to load Declaration Config (Wheels table)!" & ex.Message)
@@ -951,7 +942,6 @@ End Class
 Public Class cWheel
 	Public Inertia As Single
 	Public Diam As Single
-	Public SizeA As Boolean
 End Class
 
 Public Class cMission
