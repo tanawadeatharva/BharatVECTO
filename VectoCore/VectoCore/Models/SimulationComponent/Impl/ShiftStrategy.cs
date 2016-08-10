@@ -121,13 +121,7 @@ namespace TUGraz.VectoCore.Models.SimulationComponent.Impl
 			if (gear <= 1) {
 				return false;
 			}
-
-			var downSection = Data.Gears[gear].ShiftPolygon.Downshift.GetSection(entry => entry.AngularSpeed < inEngineSpeed);
-			if (downSection.Item2.AngularSpeed < inEngineSpeed) {
-				return false;
-			}
-
-			return ShiftPolygon.IsLeftOf(inEngineSpeed, inTorque, downSection);
+			return Data.Gears[gear].ShiftPolygon.IsBelowDownshiftCurve(inTorque, inEngineSpeed);
 		}
 
 		/// <summary>
@@ -142,14 +136,7 @@ namespace TUGraz.VectoCore.Models.SimulationComponent.Impl
 			if (gear >= Data.Gears.Count) {
 				return false;
 			}
-
-			var upSection = Data.Gears[gear].ShiftPolygon.Upshift.GetSection(entry => entry.AngularSpeed < inEngineSpeed);
-
-			if (upSection.Item2.AngularSpeed < inEngineSpeed) {
-				return true;
-			}
-
-			return ShiftPolygon.IsRightOf(inEngineSpeed, inTorque, upSection);
+			return Data.Gears[gear].ShiftPolygon.IsAboveUpshiftCurve(inTorque, inEngineSpeed);
 		}
 	}
 }
