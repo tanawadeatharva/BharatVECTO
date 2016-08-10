@@ -160,6 +160,7 @@ namespace TUGraz.VectoCore.OutputData
 				if (HasTorqueConverter) {
 					dataColumns.AddRange(new[] {
 						ModalResultField.TCv,
+						ModalResultField.P_tc_loss,
 						ModalResultField.TCmu,
 						ModalResultField.TC_M_Out,
 						ModalResultField.TC_n_Out

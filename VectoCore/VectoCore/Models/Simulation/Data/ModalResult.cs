@@ -334,6 +334,11 @@ namespace TUGraz.VectoCore.Models.Simulation.Data
 		[ModalResultField(typeof(SI))] TC_n_Out,
 
 		/// <summary>
+		///     [kW]	Power loss at the torque converter.
+		/// </summary>
+		[ModalResultField(typeof(SI), caption: "P_tc_loss [kW]", outputFactor: 1e-3)] P_tc_loss,
+
+		/// <summary>
 		///     [m]	Altitude
 		/// </summary>
 		[ModalResultField(typeof(SI))] altitude,
