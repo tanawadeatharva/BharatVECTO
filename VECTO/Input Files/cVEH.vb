@@ -48,7 +48,6 @@ Public Class cVEH
 
 	Public rdyn As Single
 	Public Axles As List(Of cAxle)
-	Public Rim As String
 	Private m_red0 As Single
 
 	Public VehCat As tVehCat
@@ -124,7 +123,6 @@ Public Class cVEH
 
 		siFr0 = 0
 		rdyn = 0
-		Rim = ""
 
 		RtType = tRtType.None
 		RtRatio = 1
@@ -243,9 +241,7 @@ Public Class cVEH
 			If FileVersion < 3 Then
 				inertiaTemp = body("WheelsInertia")
 				rdyn = 1000 * body("WheelsDiaEff") / 2
-				Rim = "-"
 			Else
-				Rim = body("Rim")
 				rdyn = body("rdyn")
 			End If
 
@@ -298,7 +294,6 @@ Public Class cVEH
 			{"CdA", CdA0},
 			{"CdA2", CdA02},
 			{"rdyn", rdyn},
-			{"Rim", Rim},
 			{"CdCorrMode", CdModeConv(CdMode)},
 			{"CdCorrFile", CdFile.PathOrDummy},
 			{"Retarder", New Dictionary(Of String, Object) From {
@@ -386,17 +381,6 @@ Public Class cVEH
 			End If
 		Else
 			CdA0Act = CdA0
-		End If
-
-		If Axles.Count < 2 Then
-			rdyn = -1
-		Else
-			rdyn = Declaration.rdyn(Axles(1).Wheels, Rim)
-		End If
-
-		If rdyn < 0 Then
-			WorkerMsg(tMsgID.Err, "Failed to calculate dynamic tire radius! Check wheels/rims", msgSrc)
-			Return False
 		End If
 
 		Return True
@@ -792,7 +776,7 @@ lbInt:
 		End Get
 	End Property
 
-	Public ReadOnly Property m_red As Single
+	Public ReadOnly Property MRed As Single
 		Get
 			Return m_red0
 		End Get

@@ -334,7 +334,7 @@ End Property
     ''' <remarks></remarks>
     Public Function DeclInit() As Boolean
 
-        I_mot = Declaration.EngInertia(Displ)
+		I_mot = cDeclaration.EngInertia(Displ)
 
 		FLD.DeclInit()
 

@@ -278,7 +278,6 @@ Public Class F_MAINForm
 		LvDRI.LabelEdit = Not Lock
 		ChBoxAllDRI.Enabled = Not Lock
 
-		Button1.Enabled = Not Lock
 		btStartV3.Enabled = Not Lock
 
 		If DEV.Enabled Then
@@ -336,10 +335,6 @@ Public Class F_MAINForm
 		'Disable Options
 		LockGUI(True)
 
-		'Button switch
-		Button1.Enabled = True
-		Button1.Text = "STOP"
-		Button1.Image = My.Resources.Stop_icon
 
 		'ProgBars start
 		If ProgOverallEnabled Then
@@ -357,9 +352,6 @@ Public Class F_MAINForm
 
 	'Abort Job
 	Private Sub JobAbort()
-		Button1.Enabled = False
-		Button1.Text = "Aborting..."
-		Button1.Image = My.Resources.Play_icon_gray
 		VECTOworker.CancelAsync()
 	End Sub
 
@@ -449,8 +441,6 @@ Public Class F_MAINForm
 
 		'Options enable / GUI reset
 		LockGUI(False)
-		Button1.Text = "START V2.2"
-		Button1.Image = My.Resources.Play_icon
 		Status(LastModeName & " Mode")
 
 		'Command Line Shutdown
@@ -590,11 +580,11 @@ Public Class F_MAINForm
 	Private Sub DeclOnOff()
 
 		If Cfg.DeclMode Then
-			Text = "VECTO " & VECTOvers & " / VectoCore " & COREvers & " - Declaration Mode"
+			Text = "VECTO " & COREvers & " - Declaration Mode"
 			CbBatch.Checked = False
 			Cfg.DeclInit()
 		Else
-			Text = "VECTO " & VECTOvers & " / VectoCore " & COREvers
+			Text = "VECTO " & COREvers
 		End If
 
 		If Cfg.DeclMode Then
@@ -1534,7 +1524,7 @@ lbFound:
 #End Region
 
 	'VECTO Start button - Calls VECTO_Launcher or aborts calculation
-	Private Sub Button1_Click(sender As Object, e As EventArgs) Handles Button1.Click
+	Private Sub Button1_Click(sender As Object, e As EventArgs)
 
 		'VECTO Start/Stop
 		If VECTOworker.IsBusy Then
@@ -1568,7 +1558,7 @@ lbFound:
 				Exit Sub
 			End If
 
-			Status("Launching VECTO V3...")
+			Status("Launching VECTO ...")
 			JobFileList.Clear()
 			JobFileList.AddRange(From listViewItem In LvGEN.CheckedItems Select fFileRepl(listViewItem.SubItems(0).Text))
 
@@ -1794,7 +1784,7 @@ lbFound:
 
 		'Options enable / GUI reset
 		LockGUI(False)
-		btStartV3.Text = "START V3"
+		btStartV3.Text = "START"
 		btStartV3.Image = My.Resources.Play_icon
 		Status(LastModeName & " Mode")
 

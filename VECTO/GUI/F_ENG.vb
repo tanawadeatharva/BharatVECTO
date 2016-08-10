@@ -45,7 +45,7 @@ Public Class F_ENG
 
 		If Not Cfg.DeclMode Then Exit Sub
 
-		Me.TbInertia.Text = CStr(Declaration.EngInertia(fTextboxToNumString(Me.TbDispl.Text)))
+		Me.TbInertia.Text = CStr(cDeclaration.EngInertia(fTextboxToNumString(Me.TbDispl.Text)))
 	End Sub
 
 
