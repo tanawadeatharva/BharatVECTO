@@ -1054,25 +1054,15 @@ lbFound:
 
 #Region "Events"
 
-	Private Sub ButtonDRIadd_Click(sender As Object, e As EventArgs) _
-		Handles ButtonDRIadd.Click
+	Private Sub ButtonDRIadd_Click(sender As Object, e As EventArgs) Handles ButtonDRIadd.Click
 		AddCycle()
 	End Sub
 
-	Private Sub ButtonDRIremove_Click(sender As Object, e As EventArgs) _
-		Handles ButtonDRIremove.Click
+	Private Sub ButtonDRIremove_Click(sender As Object, e As EventArgs) Handles ButtonDRIremove.Click
 		RemoveCycle()
 	End Sub
 
-	Private Sub ButtonDRIoptions_Click(sender As Object, e As EventArgs) _
-		Handles ButtonDRIedit.Click
-		ConMenTarget = LvDRI
-		ConMenTarJob = False
-		ConMenFilelist.Show(MousePosition)
-	End Sub
-
-	Private Sub LvDRI_ItemChecked(sender As Object, e As ItemCheckedEventArgs) _
-		Handles LvDRI.ItemChecked
+	Private Sub LvDRI_ItemChecked(sender As Object, e As ItemCheckedEventArgs) Handles LvDRI.ItemChecked
 
 		If e.Item.Checked Then
 			DRIchecked += 1
@@ -1084,8 +1074,7 @@ lbFound:
 		UpdateCycleTabText()
 	End Sub
 
-	Private Sub ChBoxAllDRI_CheckedChanged(sender As Object, e As EventArgs) _
-		Handles ChBoxAllDRI.CheckedChanged
+	Private Sub ChBoxAllDRI_CheckedChanged(sender As Object, e As EventArgs) Handles ChBoxAllDRI.CheckedChanged
 		Dim Check As Boolean
 		Dim x As ListViewItem
 
@@ -1116,8 +1105,7 @@ lbFound:
 		End If
 	End Sub
 
-	Private Sub ListViewDRI_KeyDown(sender As Object, e As KeyEventArgs) _
-		Handles LvDRI.KeyDown
+	Private Sub ListViewDRI_KeyDown(sender As Object, e As KeyEventArgs) Handles LvDRI.KeyDown
 		Select Case e.KeyCode
 			Case Keys.Delete, Keys.Back
 				If Not GUIlocked Then RemoveCycle()
@@ -1127,13 +1115,11 @@ lbFound:
 	End Sub
 
 	'Drag n' Drop
-	Private Sub ListDRI_DragEnter(sender As Object, e As DragEventArgs) _
-		Handles LvDRI.DragEnter
+	Private Sub ListDRI_DragEnter(sender As Object, e As DragEventArgs) Handles LvDRI.DragEnter
 		If (e.Data.GetDataPresent(DataFormats.FileDrop)) Then e.Effect = DragDropEffects.Copy
 	End Sub
 
-	Private Sub ListDRI_DragDrop(sender As Object, e As DragEventArgs) _
-		Handles LvDRI.DragDrop
+	Private Sub ListDRI_DragDrop(sender As Object, e As DragEventArgs) Handles LvDRI.DragDrop
 		Dim f As String()
 		f = CType(e.Data.GetData(DataFormats.FileDrop), Array)
 		AddToCycleListView(f)
@@ -2261,7 +2247,7 @@ lbFound:
 
 		lv0 = New ListViewItem
 		lv0.Text = Msg
-		lv0.SubItems.Add(Now.ToString)
+		lv0.SubItems.Add(Now.ToString("HH:mm:ss.ff"))
 		lv0.SubItems.Add(Source)
 
 		If LvMsg.Items.Count > 9999 Then LvMsg.Items.RemoveAt(0)
@@ -2805,6 +2791,14 @@ Lb1:
 			LoadDefaultListToolStripMenuItem.Enabled = Not GUIlocked
 			ClearListToolStripMenuItem.Enabled = Not GUIlocked
 
+			ConMenFilelist.Show(MousePosition)
+		End If
+	End Sub
+
+	Private Sub LvDRI_MouseUp(sender As Object, e As MouseEventArgs) Handles LvDRI.MouseUp
+		If e.Button = MouseButtons.Right Then
+			ConMenTarget = LvDRI
+			ConMenTarJob = False
 			ConMenFilelist.Show(MousePosition)
 		End If
 	End Sub
