@@ -75,8 +75,8 @@ namespace TUGraz.VectoCore.Models.SimulationComponent.Impl
 
 			if (inAngularVelocity != null) {
 				// emergency shift to not stall the engine ------------------------
-				if (inAngularVelocity.IsEqual(0.SI<PerSecond>())) {
-					NextGear.SetState(absTime, true, 1, false);
+				if (_gearbox.TorqueConverterLocked && inAngularVelocity.IsEqual(0.SI<PerSecond>())) {
+					NextGear.SetState(absTime, false, 1, false);
 					return true;
 				}
 				if (inAngularVelocity.IsSmaller(DataBus.EngineIdleSpeed)) {

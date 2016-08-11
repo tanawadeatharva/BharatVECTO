@@ -201,7 +201,8 @@ namespace TUGraz.VectoCore.Models.SimulationComponent.Impl
 			if (!TorqueConverterLocked) {
 				return TorqueConverter.Request(absTime, dt, inTorque, inAngularVelocity, dryRun);
 			}
-			if (_strategy.ShiftRequired(absTime, dt, outTorque, outAngularVelocity, inTorque, inAngularVelocity, Gear, LastShift)) {
+			if (!dryRun &&
+				_strategy.ShiftRequired(absTime, dt, outTorque, outAngularVelocity, inTorque, inAngularVelocity, Gear, LastShift)) {
 				return new ResponseGearShift() {
 					Source = this
 				};

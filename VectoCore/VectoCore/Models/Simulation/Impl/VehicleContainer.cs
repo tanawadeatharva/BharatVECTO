@@ -343,6 +343,11 @@ namespace TUGraz.VectoCore.Models.Simulation.Impl
 			get { return Driver.DriverBehavior; }
 		}
 
+		public MeterPerSquareSecond DriverAcceleration
+		{
+			get { return Driver.DriverAcceleration; }
+		}
+
 		public Meter CycleStartDistance
 		{
 			get { return DrivingCycle == null ? 0.SI<Meter>() : DrivingCycle.CycleStartDistance; }

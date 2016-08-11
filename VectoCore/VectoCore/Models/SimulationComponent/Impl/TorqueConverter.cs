@@ -6,6 +6,7 @@ using TUGraz.VectoCore.Configuration;
 using TUGraz.VectoCore.Models.Connector.Ports;
 using TUGraz.VectoCore.Models.Connector.Ports.Impl;
 using TUGraz.VectoCore.Models.Simulation;
+using TUGraz.VectoCore.Models.Simulation.DataBus;
 using TUGraz.VectoCore.Models.SimulationComponent.Data.Gearbox;
 using TUGraz.VectoCore.OutputData;
 
@@ -60,8 +61,18 @@ namespace TUGraz.VectoCore.Models.SimulationComponent.Impl
 				var deltaEngine = (engineResponse.DeltaFullLoad > 0 ? engineResponse.DeltaFullLoad : 0.SI<Watt>()) +
 								(engineResponse.DeltaDragLoad < 0 ? -engineResponse.DeltaDragLoad : 0.SI<Watt>());
 				if (deltaTorqueConverter.IsEqual(0)) {
-					if (deltaEngine.IsEqual(0)) {
-						return new ResponseDryRun { Source = this, DeltaFullLoad = deltaTorqueConverter };
+					if (DataBus.DriverBehavior != DrivingBehavior.Braking) {
+						if (engineResponse.DeltaFullLoad.IsSmaller(Constants.SimulationSettings.LineSearchTolerance)) {
+							return new ResponseDryRun { Source = this, DeltaFullLoad = engineResponse.DeltaFullLoad };
+						}
+						//if (DataBus.DriverAcceleration.IsSmallerOrEqual(0.1.SI<MeterPerSquareSecond>())) {
+						//	dryOperatingPoint = SearchOperatingPointFor
+
+						//}
+					} else {
+						if (engineResponse.DeltaDragLoad.IsSmaller(Constants.SimulationSettings.LineSearchTolerance)) {
+							return new ResponseDryRun { Source = this, DeltaDragLoad = engineResponse.DeltaDragLoad };
+						}
 					}
 					return engineResponse;
 				}
@@ -69,7 +80,8 @@ namespace TUGraz.VectoCore.Models.SimulationComponent.Impl
 				var delta = deltaTorqueConverter.Value() * (deltaEngine.IsEqual(0) ? 1 : deltaEngine.Value());
 				return new ResponseDryRun() {
 					Source = this,
-					DeltaFullLoad = delta.SI<Watt>()
+					DeltaFullLoad = delta.SI<Watt>(),
+					DeltaDragLoad = delta.SI<Watt>()
 				};
 			}
 			var operatingPoint = FindOperatingPoint(outTorque, outAngularVelocity);
@@ -77,10 +89,12 @@ namespace TUGraz.VectoCore.Models.SimulationComponent.Impl
 				// a different operating point was found...
 				var delta = (outTorque - operatingPoint.OutTorque) *
 							(PreviousState.OutAngularVelocity + operatingPoint.OutAngularVelocity) / 2.0;
-				if (delta > 0) {
-					return new ResponseOverload { Source = this, Delta = delta };
+				if (!delta.IsEqual(0, Constants.SimulationSettings.LineSearchTolerance)) {
+					if (delta > 0) {
+						return new ResponseOverload { Source = this, Delta = delta };
+					}
+					return new ResponseUnderload { Source = this, Delta = delta };
 				}
-				return new ResponseUnderload { Source = this, Delta = delta };
 			}
 			var ratio = Gearbox.ModelData.Gears[Gearbox.Gear].TorqueConverterRatio;
 			if (ShiftStrategy.ShiftRequired(absTime, dt, outTorque, outAngularVelocity / ratio, operatingPoint.InTorque * ratio,
