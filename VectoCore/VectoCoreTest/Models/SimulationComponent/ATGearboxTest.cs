@@ -91,11 +91,42 @@ namespace TUGraz.VectoCore.Tests.Models.SimulationComponent
 			Assert.IsTrue(run.FinishedWithoutErrors);
 		}
 
+
 		[Test]
-		public void TestATGearboxDrive()
+		public void TestATGearboxDriveUrban()
 		{
 			var cycle = SimpleDrivingCycles.ReadDeclarationCycle("Urban");
 			var run = ATPowerTrain.CreateEngineeringRun(cycle, "AT_Vehicle_Drive-TC_Urban.vmod");
+
+			run.Run();
+			Assert.IsTrue(run.FinishedWithoutErrors);
+		}
+
+		[Test]
+		public void TestATGearboxDriveSuburban()
+		{
+			var cycle = SimpleDrivingCycles.ReadDeclarationCycle("Suburban");
+			var run = ATPowerTrain.CreateEngineeringRun(cycle, "AT_Vehicle_Drive-TC_Suburban.vmod");
+
+			run.Run();
+			Assert.IsTrue(run.FinishedWithoutErrors);
+		}
+
+		[Test]
+		public void TestATGearboxDriveInterurban()
+		{
+			var cycle = SimpleDrivingCycles.ReadDeclarationCycle("Interurban");
+			var run = ATPowerTrain.CreateEngineeringRun(cycle, "AT_Vehicle_Drive-TC_Interurban.vmod");
+
+			run.Run();
+			Assert.IsTrue(run.FinishedWithoutErrors);
+		}
+
+		[Test]
+		public void TestATGearboxDriveHeavyurban()
+		{
+			var cycle = SimpleDrivingCycles.ReadDeclarationCycle("HeavyUrban");
+			var run = ATPowerTrain.CreateEngineeringRun(cycle, "AT_Vehicle_Drive-TC_Heavyurban.vmod");
 
 			run.Run();
 			Assert.IsTrue(run.FinishedWithoutErrors);
