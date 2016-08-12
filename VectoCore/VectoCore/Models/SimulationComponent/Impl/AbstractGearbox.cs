@@ -68,6 +68,11 @@ namespace TUGraz.VectoCore.Models.SimulationComponent.Impl
 
 		#region IGearboxCockpit
 
+		public GearboxType GearboxType
+		{
+			get { return ModelData.Type; }
+		}
+
 		/// <summary>
 		/// The current gear.
 		/// </summary>

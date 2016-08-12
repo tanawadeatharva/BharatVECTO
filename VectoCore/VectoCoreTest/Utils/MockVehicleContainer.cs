@@ -53,6 +53,7 @@ namespace TUGraz.VectoCore.Tests.Utils
 
 		public IEngineInfo Engine { get; set; }
 
+		public GearboxType GearboxType { get; set; }
 		public uint Gear { get; set; }
 		public MeterPerSecond StartSpeed { get; set; }
 		public MeterPerSquareSecond StartAcceleration { get; set; }

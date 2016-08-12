@@ -73,6 +73,11 @@ namespace TUGraz.VectoCore.Models.Simulation.Impl
 
 		#region IGearCockpit
 
+		public GearboxType GearboxType
+		{
+			get { return Gearbox.GearboxType; }
+		}
+
 		public uint Gear
 		{
 			[System.Diagnostics.CodeAnalysis.SuppressMessage("Microsoft.Design",

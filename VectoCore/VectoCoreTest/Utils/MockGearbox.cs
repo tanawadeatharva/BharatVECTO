@@ -57,6 +57,7 @@ namespace TUGraz.VectoCore.Tests.Utils
 			return this;
 		}
 
+		public GearboxType GearboxType { get; set; }
 		public uint Gear { get; set; }
 
 		public MeterPerSecond StartSpeed
@@ -84,7 +85,8 @@ namespace TUGraz.VectoCore.Tests.Utils
 			_outPort = other;
 		}
 
-		public IResponse Request(Second absTime, Second dt, NewtonMeter outTorque, PerSecond outAngularVelocity, bool dryRun = false)
+		public IResponse Request(Second absTime, Second dt, NewtonMeter outTorque, PerSecond outAngularVelocity,
+			bool dryRun = false)
 		{
 			if (_outPort != null) {
 				if (Gear > 0) {
