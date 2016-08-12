@@ -189,12 +189,23 @@ namespace TUGraz.VectoCore.Models.SimulationComponent.Impl
 					Case<ResponseOverload>(() => {
 						// deceleration is limited by driver model, operating point moves above full load (e.g., steep uphill)
 						// the vehicle/driver can't achieve an acceleration higher than deceleration curve, try again with higher deceleration
-						Log.Info(
-							"Operating point with limited acceleration resulted in an overload! trying again with original acceleration {0}",
-							nextOperatingPoint.Acceleration);
-						DriverAcceleration = nextOperatingPoint.Acceleration;
-						retVal = NextComponent.Request(absTime, nextOperatingPoint.SimulationInterval, nextOperatingPoint.Acceleration,
-							gradient);
+						if (DataBus.GearboxType.AutomaticTransmission()) {
+							Log.Info("AT Gearbox - Operating point resulted in an overload, searching again...");
+							// search again for operating point, transmission may have shifted inbetween
+							nextOperatingPoint = SearchOperatingPoint(absTime, ds, gradient, operatingPoint.Acceleration, response);
+							limitedOperatingPoint = LimitAccelerationByDriverModel(nextOperatingPoint, LimitationMode.LimitDecelerationDriver);
+							DriverAcceleration = limitedOperatingPoint.Acceleration;
+							retVal = NextComponent.Request(absTime, limitedOperatingPoint.SimulationInterval,
+								limitedOperatingPoint.Acceleration,
+								gradient);
+						} else {
+							Log.Info(
+								"Operating point with limited acceleration resulted in an overload! trying again with original acceleration {0}",
+								nextOperatingPoint.Acceleration);
+							DriverAcceleration = nextOperatingPoint.Acceleration;
+							retVal = NextComponent.Request(absTime, nextOperatingPoint.SimulationInterval, nextOperatingPoint.Acceleration,
+								gradient);
+						}
 						retVal.Switch().
 							Case<ResponseSuccess>(() => operatingPoint = nextOperatingPoint).
 							Case<ResponseGearShift>(() => operatingPoint = nextOperatingPoint).
@@ -727,9 +738,9 @@ namespace TUGraz.VectoCore.Models.SimulationComponent.Impl
 
 			retVal.Switch().
 				Case<ResponseGearShift>(r => {
-						DriverAcceleration = 0.SI<MeterPerSquareSecond>();
-						retVal = NextComponent.Request(absTime, dt, 0.SI<MeterPerSquareSecond>(), gradient);
-					});
+					DriverAcceleration = 0.SI<MeterPerSquareSecond>();
+					retVal = NextComponent.Request(absTime, dt, 0.SI<MeterPerSquareSecond>(), gradient);
+				});
 			CurrentState.dt = dt;
 			CurrentState.Acceleration = 0.SI<MeterPerSquareSecond>();
 			return retVal;
