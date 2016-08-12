@@ -6,13 +6,15 @@ using TUGraz.VectoCore.Configuration;
 using TUGraz.VectoCore.Models.Connector.Ports;
 using TUGraz.VectoCore.Models.Connector.Ports.Impl;
 using TUGraz.VectoCore.Models.Simulation;
+using TUGraz.VectoCore.Models.Simulation.Data;
 using TUGraz.VectoCore.Models.Simulation.DataBus;
 using TUGraz.VectoCore.Models.SimulationComponent.Data.Gearbox;
 using TUGraz.VectoCore.OutputData;
 
 namespace TUGraz.VectoCore.Models.SimulationComponent.Impl
 {
-	public class TorqueConverter : StatefulVectoSimulationComponent<SimpleComponentState>, ITnInPort, ITnOutPort
+	public class TorqueConverter : StatefulVectoSimulationComponent<TorqueConverter.TorqueConverterComponentState>,
+		ITnInPort, ITnOutPort
 	{
 		protected ATGearbox Gearbox;
 
@@ -94,6 +96,8 @@ namespace TUGraz.VectoCore.Models.SimulationComponent.Impl
 				operatingPoint.InAngularVelocity, Gearbox.Gear, Gearbox.LastShift)) {
 				return new ResponseGearShift() { Source = this };
 			}
+			CurrentState.SetState(operatingPoint.InTorque, operatingPoint.InAngularVelocity, outTorque, outAngularVelocity);
+			CurrentState.OperatingPoint = operatingPoint;
 			var retVal = NextComponent.Request(absTime, dt, operatingPoint.InTorque, operatingPoint.InAngularVelocity, dryRun);
 			return retVal;
 		}
@@ -117,19 +121,15 @@ namespace TUGraz.VectoCore.Models.SimulationComponent.Impl
 			}
 		}
 
-		public void CommitSimulationStep()
-		{
-			DoCommitSimulationStep();
-		}
-
-		public void WriteModalResults(IModalDataContainer container)
-		{
-			DoWriteModalResults(container);
-		}
-
 		protected override void DoWriteModalResults(IModalDataContainer container)
 		{
-			// TODO!
+			if (CurrentState.OperatingPoint == null) {
+				//container[ModalResultField.TorqueConverterTorqueRatio] = 1.0;
+				//container[ModalResultField.TorqueConverterSpeedRatio] = 1.0;
+			} else {
+				container[ModalResultField.TorqueConverterTorqueRatio] = CurrentState.OperatingPoint.TorqueRatio;
+				container[ModalResultField.TorqueConverterSpeedRatio] = CurrentState.OperatingPoint.SpeedRatio;
+			}
 		}
 
 		protected override void DoCommitSimulationStep()
@@ -140,7 +140,12 @@ namespace TUGraz.VectoCore.Models.SimulationComponent.Impl
 
 		public void Locked(NewtonMeter outTorque, PerSecond outAngularVelocity)
 		{
-			PreviousState.SetState(outTorque, outAngularVelocity, outTorque, outAngularVelocity);
+			CurrentState.SetState(outTorque, outAngularVelocity, outTorque, outAngularVelocity);
+		}
+
+		public class TorqueConverterComponentState : SimpleComponentState
+		{
+			public TorqueConverterOperatingPoint OperatingPoint;
 		}
 	}
 }

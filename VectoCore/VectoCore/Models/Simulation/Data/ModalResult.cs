@@ -321,12 +321,12 @@ namespace TUGraz.VectoCore.Models.Simulation.Data
 		/// <summary>
 		///     [-]	    Torque converter speed ratio
 		/// </summary>
-		[ModalResultField(typeof(SI), name: "TCnu")] TCv,
+		[ModalResultField(typeof(double), name: "TCnu")] TorqueConverterSpeedRatio,
 
 		/// <summary>
 		///     [-]	    Torque converter torque ratio
 		/// </summary>
-		[ModalResultField(typeof(SI), name: "TCmu")] TCmu,
+		[ModalResultField(typeof(double), name: "TCmu")] TorqueConverterTorqueRatio,
 
 		/// <summary>
 		///     [Nm]	Torque converter output torque
