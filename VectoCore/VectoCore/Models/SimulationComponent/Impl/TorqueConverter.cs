@@ -61,27 +61,20 @@ namespace TUGraz.VectoCore.Models.SimulationComponent.Impl
 				var deltaEngine = (engineResponse.DeltaFullLoad > 0 ? engineResponse.DeltaFullLoad : 0.SI<Watt>()) +
 								(engineResponse.DeltaDragLoad < 0 ? -engineResponse.DeltaDragLoad : 0.SI<Watt>());
 				if (deltaTorqueConverter.IsEqual(0)) {
-					if (DataBus.DriverBehavior != DrivingBehavior.Braking) {
-						if (engineResponse.DeltaFullLoad.IsSmaller(Constants.SimulationSettings.LineSearchTolerance)) {
-							return new ResponseDryRun { Source = this, DeltaFullLoad = engineResponse.DeltaFullLoad };
-						}
-						//if (DataBus.DriverAcceleration.IsSmallerOrEqual(0.1.SI<MeterPerSquareSecond>())) {
-						//	dryOperatingPoint = SearchOperatingPointFor
-
-						//}
-					} else {
-						if (engineResponse.DeltaDragLoad.IsSmaller(Constants.SimulationSettings.LineSearchTolerance)) {
-							return new ResponseDryRun { Source = this, DeltaDragLoad = engineResponse.DeltaDragLoad };
-						}
-					}
-					return engineResponse;
+					return new ResponseDryRun {
+						Source = this,
+						DeltaFullLoad = engineResponse.DeltaFullLoad,
+						DeltaDragLoad = engineResponse.DeltaDragLoad,
+						TorqueConverterOperatingPoint = dryOperatingPoint
+					};
 				}
 
 				var delta = deltaTorqueConverter.Value() * (deltaEngine.IsEqual(0) ? 1 : deltaEngine.Value());
 				return new ResponseDryRun() {
 					Source = this,
 					DeltaFullLoad = delta.SI<Watt>(),
-					DeltaDragLoad = delta.SI<Watt>()
+					DeltaDragLoad = delta.SI<Watt>(),
+					TorqueConverterOperatingPoint = dryOperatingPoint
 				};
 			}
 			var operatingPoint = FindOperatingPoint(outTorque, outAngularVelocity);
@@ -91,9 +84,9 @@ namespace TUGraz.VectoCore.Models.SimulationComponent.Impl
 							(PreviousState.OutAngularVelocity + operatingPoint.OutAngularVelocity) / 2.0;
 				if (!delta.IsEqual(0, Constants.SimulationSettings.LineSearchTolerance)) {
 					if (delta > 0) {
-						return new ResponseOverload { Source = this, Delta = delta };
+						return new ResponseOverload { Source = this, Delta = delta, TorqueConverterOperatingPoint = operatingPoint };
 					}
-					return new ResponseUnderload { Source = this, Delta = delta };
+					return new ResponseUnderload { Source = this, Delta = delta, TorqueConverterOperatingPoint = operatingPoint };
 				}
 			}
 			var ratio = Gearbox.ModelData.Gears[Gearbox.Gear].TorqueConverterRatio;
@@ -102,7 +95,6 @@ namespace TUGraz.VectoCore.Models.SimulationComponent.Impl
 				return new ResponseGearShift() { Source = this };
 			}
 			var retVal = NextComponent.Request(absTime, dt, operatingPoint.InTorque, operatingPoint.InAngularVelocity, dryRun);
-
 			return retVal;
 		}
 

@@ -32,6 +32,8 @@
 using System.Linq;
 using TUGraz.VectoCommon.Models;
 using TUGraz.VectoCommon.Utils;
+using TUGraz.VectoCore.Models.SimulationComponent.Data.Gearbox;
+using TUGraz.VectoCore.Models.SimulationComponent.Impl;
 
 namespace TUGraz.VectoCore.Models.Connector.Ports.Impl
 {
@@ -55,6 +57,8 @@ namespace TUGraz.VectoCore.Models.Connector.Ports.Impl
 		public Watt VehiclePowerRequest { get; set; }
 		public Watt BrakePower { get; set; }
 		public Watt AuxiliariesPowerDemand { get; set; }
+
+		public TorqueConverterOperatingPoint TorqueConverterOperatingPoint { get; set; }
 
 		public override string ToString()
 		{
