@@ -455,6 +455,14 @@ namespace TUGraz.VectoCore.Models.SimulationComponent.Impl
 						Source = this,
 						MaxDistance = DataBus.VehicleSpeed * r.DeltaT + operatingPoint.Acceleration / 2 * r.DeltaT * r.DeltaT
 					}).
+				Case<ResponseUnderload>(r => {
+					if (DataBus.GearboxType.AutomaticTransmission()) {
+						operatingPoint = SearchBrakingPower(absTime, operatingPoint.SimulationDistance, gradient,
+							operatingPoint.Acceleration, response);
+						DriverAcceleration = operatingPoint.Acceleration;
+						retVal = NextComponent.Request(absTime, operatingPoint.SimulationInterval, operatingPoint.Acceleration, gradient);
+					}
+				}).
 				Default(
 					r => {
 						throw new UnexpectedResponseException("DrivingAction Brake: request failed after braking power was found.", r);
