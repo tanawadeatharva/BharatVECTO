@@ -344,12 +344,12 @@ namespace TUGraz.VectoCore.Models.Simulation.Data
 		/// <summary>
 		///     [Nm]	Torque converter output torque
 		/// </summary>
-		[ModalResultField(typeof(SI), "T_TC_out")] TC_TorqueIn,
+		[ModalResultField(typeof(SI), "T_TC_in")] TC_TorqueIn,
 
 		/// <summary>
 		///     [1/min]	Torque converter output speed
 		/// </summary>
-		[ModalResultField(typeof(SI), "n_TC_out")] TC_angularSpeedIn,
+		[ModalResultField(typeof(SI), "n_TC_in")] TC_angularSpeedIn,
 
 		/// <summary>
 		///     [m]	Altitude
