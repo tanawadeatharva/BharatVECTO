@@ -124,12 +124,21 @@ namespace TUGraz.VectoCore.Models.SimulationComponent.Impl
 		protected override void DoWriteModalResults(IModalDataContainer container)
 		{
 			if (CurrentState.OperatingPoint == null) {
-				//container[ModalResultField.TorqueConverterTorqueRatio] = 1.0;
-				//container[ModalResultField.TorqueConverterSpeedRatio] = 1.0;
+				container[ModalResultField.TorqueConverterTorqueRatio] = 1.0;
+				container[ModalResultField.TorqueConverterSpeedRatio] = 1.0;
 			} else {
 				container[ModalResultField.TorqueConverterTorqueRatio] = CurrentState.OperatingPoint.TorqueRatio;
 				container[ModalResultField.TorqueConverterSpeedRatio] = CurrentState.OperatingPoint.SpeedRatio;
 			}
+			container[ModalResultField.TC_TorqueIn] = CurrentState.InTorque;
+			container[ModalResultField.TC_TorqueOut] =CurrentState.OutTorque;
+			container[ModalResultField.TC_angularSpeedIn] =CurrentState.InAngularVelocity;
+			container[ModalResultField.TC_angularSpeedOut] = CurrentState.OutAngularVelocity;
+
+			var avgOutVelocity = (PreviousState.OutAngularVelocity + CurrentState.OutAngularVelocity) / 2.0;
+			var avgInVelocity = (PreviousState.InAngularVelocity + CurrentState.InAngularVelocity) / 2.0;
+			container[ModalResultField.P_TC_out] = CurrentState.OutTorque * avgOutVelocity;
+			container[ModalResultField.P_TC_loss] = CurrentState.InTorque * avgInVelocity - CurrentState.OutTorque * avgOutVelocity;
 		}
 
 		protected override void DoCommitSimulationStep()

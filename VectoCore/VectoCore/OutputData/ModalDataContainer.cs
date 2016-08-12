@@ -133,8 +133,19 @@ namespace TUGraz.VectoCore.OutputData
 				ModalResultField.P_eng_drag,
 				ModalResultField.P_eng_inertia,
 				ModalResultField.P_eng_out,
-				ModalResultField.P_clutch_loss,
-				ModalResultField.P_clutch_out,
+			});
+			if (HasTorqueConverter) {
+				dataColumns.AddRange(new[] {
+					ModalResultField.P_TC_loss,
+					ModalResultField.P_TC_out,
+				});
+			} else {
+				dataColumns.AddRange(new[] {
+					ModalResultField.P_clutch_loss,
+					ModalResultField.P_clutch_out,
+				});
+			}
+			dataColumns.AddRange(new[] {
 				ModalResultField.P_aux
 			});
 
@@ -164,8 +175,10 @@ namespace TUGraz.VectoCore.OutputData
 					dataColumns.AddRange(new[] {
 						ModalResultField.TorqueConverterSpeedRatio,
 						ModalResultField.TorqueConverterTorqueRatio,
-						ModalResultField.TC_M_Out,
-						ModalResultField.TC_n_Out
+						ModalResultField.TC_TorqueOut,
+						ModalResultField.TC_angularSpeedOut,
+						ModalResultField.TC_TorqueIn,
+						ModalResultField.TC_angularSpeedIn,
 					});
 				}
 			}
