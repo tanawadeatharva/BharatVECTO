@@ -85,6 +85,7 @@ namespace TUGraz.VectoCore.Tests.Integration
 			var ratios = new[] { 3.4, 1.9, 1.42, 1.0, 0.7, 0.62 };
 
 			return new GearboxData {
+				Type = GearboxType.ATSerial,
 				Gears = ratios.Select((ratio, i) =>
 					Tuple.Create((uint)i,
 						new GearData {
