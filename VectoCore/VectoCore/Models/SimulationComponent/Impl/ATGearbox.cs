@@ -207,6 +207,8 @@ namespace TUGraz.VectoCore.Models.SimulationComponent.Impl
 					Source = this
 				};
 			}
+
+			TorqueConverter.Locked(CurrentState.InTorque, CurrentState.InAngularVelocity);
 			return NextComponent.Request(absTime, dt, inTorque, inAngularVelocity, dryRun);
 		}
 
@@ -245,6 +247,9 @@ namespace TUGraz.VectoCore.Models.SimulationComponent.Impl
 			var retval = IdleController.Request(absTime, dt, 0.SI<NewtonMeter>(), null);
 			retval.ClutchPowerRequest = 0.SI<Watt>();
 			CurrentState.SetState(0.SI<NewtonMeter>(), retval.EngineSpeed, outTorque, outAngularVelocity);
+
+			TorqueConverter.Locked(CurrentState.InTorque, CurrentState.InAngularVelocity);
+
 			CurrentState.Gear = 0;
 			return retval;
 		}
@@ -257,10 +262,7 @@ namespace TUGraz.VectoCore.Models.SimulationComponent.Impl
 
 			container[ModalResultField.Gear] = Disengaged || DataBus.VehicleStopped ? 0 : Gear;
 			container[ModalResultField.TC_Locked] = TorqueConverterLocked;
-			//container[ModalResultField.TCv] =; 
-			//container[ModalResultField.TCmu] =;
-			//container[ModalResultField.TC_n_Out] =;
-			//container[ModalResultField.TC_M_Out] =;
+
 			container[ModalResultField.P_gbx_loss] = CurrentState.TransmissionTorqueLoss * avgInAngularSpeed;
 			container[ModalResultField.P_gbx_inertia] = CurrentState.InertiaTorqueLossOut * avgInAngularSpeed;
 			container[ModalResultField.P_gbx_in] = CurrentState.InTorque * avgInAngularSpeed;
@@ -286,12 +288,6 @@ namespace TUGraz.VectoCore.Models.SimulationComponent.Impl
 				Disengaged = true;
 			}
 			AdvanceState();
-			if (TorqueConverterLocked) {
-				// Todo!?
-				TorqueConverter.Locked(CurrentState.InTorque, CurrentState.InAngularVelocity);
-			} else {
-				TorqueConverter.CommitSimulationStep();
-			}
 		}
 
 
