@@ -126,7 +126,7 @@ namespace TUGraz.VectoCore.Tests.Models.Simulation
 				Assert.IsTrue(run.Run.FinishedWithoutErrors, string.Format("{0}", run.ExecException));
 			}
 
-			ResultFileHelper.TestSumFile(@"TestData\Results\EngineOnlyCycles\24t Coach.vsum",
+			ResultFileHelper.TestSumFile(@"TestData\Results\EngineOnlyCycles\24t Coach EngineOnly.vsum",
 				@"TestData\Jobs\24t Coach EngineOnly.vsum");
 
 			ResultFileHelper.TestModFiles(new[] {
