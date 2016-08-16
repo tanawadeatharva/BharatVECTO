@@ -139,6 +139,26 @@ namespace TUGraz.VectoCommon.Utils
 
 		/// <summary>
 		/// Get the first two adjacent items where the predicate changes from true to false.
+		/// If the predicate is always false, the first 2 elements are returned.
+		/// If the predicate is always true, the last 2 elements are returned.
+		/// </summary>
+		public static Tuple<T, T> GetSection<T>(this T[] self, Func<T, bool> predicate)
+		{
+			var i = 0;
+			for (; i < self.Length; i++) {
+				if (!predicate(self[i]))
+					break;
+			}
+			if (i == 0) {
+				i = 1;
+			} else if (i == self.Length) {
+				i--;
+			}
+			return Tuple.Create(self[i - 1], self[i]);
+		}
+
+		/// <summary>
+		/// Get the first two adjacent items where the predicate changes from true to false.
 		/// If the predicate never gets true, the last 2 elements are returned.
 		/// </summary>
 		/// <example>GetSection(data => data.X &lt; searchedX); //returns the pair where first &lt; searchedX and second &gt;= searchedX</example>>
