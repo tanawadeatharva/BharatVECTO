@@ -298,10 +298,15 @@ namespace TUGraz.VectoCore.Models.SimulationComponent.Impl
 							entry.Distance - brakingDistance, brakingDistance, entry.Distance, nextTargetSpeed);
 					} else {
 						//var coastingDistance = ComputeCoastingDistance(currentSpeed, nextTargetSpeed);
-						action = DrivingBehavior.Coasting;
-						Log.Debug(
-							"adding 'Coasting' starting at distance {0}. coastingDistance: {1}, triggerDistance: {2}, nextTargetSpeed: {3}",
-							entry.Distance - coastingDistance, coastingDistance, entry.Distance, nextTargetSpeed);
+						if (currentSpeed > 50.KMPHtoMeterPerSecond()) {
+							action = DrivingBehavior.Coasting;
+
+							Log.Debug(
+								"adding 'Coasting' starting at distance {0}. coastingDistance: {1}, triggerDistance: {2}, nextTargetSpeed: {3}",
+								entry.Distance - coastingDistance, coastingDistance, entry.Distance, nextTargetSpeed);
+						} else {
+							coastingDistance = -1.SI<Meter>();
+						}
 					}
 					nextActions.Add(
 						new DrivingBehaviorEntry {
