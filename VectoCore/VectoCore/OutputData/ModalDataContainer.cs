@@ -35,7 +35,6 @@ using System.Data;
 using System.Globalization;
 using System.Linq;
 using System.Runtime.CompilerServices;
-using TUGraz.VectoCommon.Models;
 using TUGraz.VectoCommon.Utils;
 using TUGraz.VectoCore.Models.Simulation.Data;
 using TUGraz.VectoCore.Models.Simulation.Impl;
@@ -50,7 +49,6 @@ namespace TUGraz.VectoCore.OutputData
 		private readonly Action<ModalDataContainer> _addReportResult;
 		internal ModalResults Data { get; set; }
 		private DataRow CurrentRow { get; set; }
-		//private readonly VectoRunData _runData;
 
 		private readonly IModalDataWriter _writer;
 		private readonly List<string> _additionalColumns = new List<string>();
@@ -160,6 +158,7 @@ namespace TUGraz.VectoCore.OutputData
 				if (HasTorqueConverter) {
 					dataColumns.AddRange(new[] {
 						ModalResultField.TCv,
+						ModalResultField.P_tc_loss,
 						ModalResultField.TCmu,
 						ModalResultField.TC_M_Out,
 						ModalResultField.TC_n_Out

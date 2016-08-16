@@ -43,6 +43,7 @@ using TUGraz.VectoCore.Models.SimulationComponent.Data;
 using TUGraz.VectoCore.Models.SimulationComponent.Impl;
 using TUGraz.VectoCore.OutputData;
 using TUGraz.VectoCore.OutputData.FileIO;
+using TUGraz.VectoCore.Tests.Models.SimulationComponent;
 using TUGraz.VectoCore.Tests.Utils;
 
 // ReSharper disable ObjectCreationAsStatement
@@ -90,6 +91,8 @@ namespace TUGraz.VectoCore.Tests.Models.Simulation
 			var t = 0.SI<Second>();
 			var dt = 1.SI<Second>();
 
+			new MockEngine(container);
+
 			aux.Initialize(torque, speed);
 			for (var i = 0; i < 11; i++) {
 				aux.PowerDemand(t, dt, torque, torque, speed);
@@ -105,7 +108,7 @@ namespace TUGraz.VectoCore.Tests.Models.Simulation
 
 			var testColumns = new[] { "P_aux_FAN", "P_aux_STP", "P_aux_AC", "P_aux_ES", "P_aux_PS", "P_aux" };
 
-			ResultFileHelper.TestModFile(@"TestData\Results\EngineOnlyCycles\40t_Long_Haul_Truck_Long_Haul_Empty Loading.vmod",
+			ResultFileHelper.TestModFile(@"TestData\Results\EngineOnlyCycles\AuxWriteModFileSumFile.vmod",
 				@"AuxWriteModFileSumFile.vmod", testColumns, testVelocity: false);
 			ResultFileHelper.TestSumFile(@"TestData\Results\EngineOnlyCycles\AuxWriteModFileSumFile.vsum",
 				@"AuxWriteModFileSumFile.vsum");

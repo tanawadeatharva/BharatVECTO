@@ -79,16 +79,20 @@ In Vecto 3.0.2 the structure of the modal data output has been revised and re-st
 | P_ret_loss		|	[kW]	|	Power loss at the retarder, interpolated from the loss-map. |
 | P_angle_in		|	[kW]	|	Power at the Anglegear's input shaft. Empty if no Anglegear is used. |
 | P_angle_loss		|	[kW]	|	Power loss at the Anglegear, interpolated from the loss-map. Empty if no Anglegear is used. |
-| P_axle_in			|	[kW]	|	Power at the axle-gear input shaft. P_axle_in = P_ret_in - P_ret_loss ( - P_angle_loss if an Angulargear is used) |
-| P_axle_loss		|	[kW]	|	Power loss at the axle gear, interpolated from the loss-map |
+| P_axle_in			|	[kW]	|	Power at the axle-gear input shaft. P_axle_in = P_ret_in - P_ret_loss ( - P_angle_loss if an Angulargear is used). |
+| P_axle_loss		|	[kW]	|	Power loss at the axle gear, interpolated from the loss-map. |
+| P_angle_in        |   [kW]    |   Power at the angle-gear input shaft. |
+| P_angle_loss      |   [kW]    |   Power loss at the angle gear, interpolated from the loss-map. |
+| P_tc_in           |   [kW]    |   Power at the torque-converter input shaft. |
+| P_tc_loss         |   [kW]    |   Power loss at the torque-converter. |
 | P_brake_in		|	[kW]	|	Power at the brake input shaft (definition: serially mounted into the drive train between wheels and axle). P_brake_in = P_axle_in - P_axle_loss |
-| P_brake_loss		|	[kW]	|	Power loss due to braking |
+| P_brake_loss		|	[kW]	|	Power loss due to braking. |
 | P_wheel_in		|	[kW]	|	Power at the driven wheels. P_wheel_in = P_brake_in - P_brake_loss |
 | P_wheel_inertia	|	[kW]	|	Power loss due to the wheels' inertia |
 | P_trac			|	[kW]	|	Vehicle's traction power. P_trac = P_wheel_in - P_wheel_inertia |
 | P_slope			|	[kW]	|	Power loss/gain due to the road's slope |
-| P_air				|	[kW]	|	Power loss due to air drag |
-| P_roll			|	[kW]	|	Rolling resistance power loss |
+| P_air				|	[kW]	|	Power loss due to air drag. |
+| P_roll			|	[kW]	|	Rolling resistance power loss. |
 | P_veh_inertia		|	[kW]	|	Power loss due to the vehicle's inertia |
 | AA_NonSmartAlternatorsEfficiency     | [Fraction]  | Non-Smart Alternators Efficiency, Advance Auxiliaries Module |
 | AA_SmartIdleCurrent_Amps             | [Amps]      | Smart Idle Current in Amps, Advance Auxiliaries Module |
