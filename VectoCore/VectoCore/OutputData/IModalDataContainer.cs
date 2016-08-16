@@ -239,10 +239,14 @@ namespace TUGraz.VectoCore.OutputData
 			return data.TimeIntegral<WattSecond>(ModalResultField.P_ret_loss);
 		}
 
+		public static WattSecond WorkAngularGear(this IModalDataContainer data)
+		{
+			return data.TimeIntegral<WattSecond>(ModalResultField.P_angle_loss);
+		}
+
 		public static WattSecond WorkTorqueConverter(this IModalDataContainer data)
 		{
-			//TODO mk-2015-11-10: return torque converter work when TorqueConverter is implemented
-			return 0.SI<WattSecond>();
+			return data.TimeIntegral<WattSecond>(ModalResultField.P_tc_loss);
 		}
 
 		public static Second Duration(this IModalDataContainer data)

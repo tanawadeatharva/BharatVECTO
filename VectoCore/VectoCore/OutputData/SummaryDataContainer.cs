@@ -66,45 +66,46 @@ namespace TUGraz.VectoCore.OutputData
 		private const string FCAAUX_H = "FC-AAUX [g/h]";
 		private const string FCAAUX_KM = "FC-AAUX [g/km]";
 
-		public const string FCFINAL_H = "FC-Final [g/h]";
-		public const string FCFINAL_KM = "FC-Final [g/km]";
-		public const string FCFINAL_LITERPER100KM = "FC-Final [l/100km]";
-		public const string FCFINAL_LITERPER100TKM = "FC-Final [l/100tkm]";
+		private const string FCFINAL_H = "FC-Final [g/h]";
+		private const string FCFINAL_KM = "FC-Final [g/km]";
+		private const string FCFINAL_LITERPER100KM = "FC-Final [l/100km]";
+		private const string FCFINAL_LITERPER100TKM = "FC-Final [l/100tkm]";
 
-		public const string CO2_KM = "CO2 [g/km]";
-		public const string CO2_TKM = "CO2 [g/tkm]";
+		private const string CO2_KM = "CO2 [g/km]";
+		private const string CO2_TKM = "CO2 [g/tkm]";
 
-		public const string P_WHEEL_POS = "P_wheel_in_pos [kW]";
-		public const string P_BRAKE_LOSS = "P_brake_loss [kW]";
-		public const string P_CLUTCH_POS = "P_clutch_pos [kW]";
-		public const string P_CLUTCH_NEG = "P_clutch_neg [kW]";
+		private const string P_WHEEL_POS = "P_wheel_in_pos [kW]";
+		private const string P_BRAKE_LOSS = "P_brake_loss [kW]";
+		private const string P_CLUTCH_POS = "P_clutch_pos [kW]";
+		private const string P_CLUTCH_NEG = "P_clutch_neg [kW]";
 		private const string P_FCMAP_POS = "P_fcmap_pos [kW]";
 		private const string P_ANGLE_LOSS = "P_angle_loss [kW]";
 		private const string P_TC_LOSS = "P_tc_loss [kW]";
 
-		public const string E_AUX_FORMAT = "E_aux_{0} [kWh]";
-		public const string E_AUX = "E_aux_sum [kWh]";
+		private const string E_AUX_FORMAT = "E_aux_{0} [kWh]";
+		private const string E_AUX = "E_aux_sum [kWh]";
 
-		public const string E_AIR = "E_air [kWh]";
-		public const string E_ROLL = "E_roll [kWh]";
-		public const string E_GRAD = "E_grad [kWh]";
-		public const string E_INERTIA = "E_inertia [kWh]";
-		public const string E_BRAKE = "E_brake [kWh]";
-		public const string E_GBX_AXL_LOSS = "E_gbx_axl_loss [kWh]";
-		public const string E_RET_LOSS = "E_ret_loss [kWh]";
-		public const string E_TC_LOSS = "E_tc_loss [kWh]";
-		public const string E_ENG_POS = "E_eng_out_pos [kWh]";
-		public const string E_ENG_NEG = "E_eng_out_neg [kWh]";
+		private const string E_AIR = "E_air [kWh]";
+		private const string E_ROLL = "E_roll [kWh]";
+		private const string E_GRAD = "E_grad [kWh]";
+		private const string E_INERTIA = "E_inertia [kWh]";
+		private const string E_BRAKE = "E_brake [kWh]";
+		private const string E_GBX_AXL_LOSS = "E_gbx_axl_loss [kWh]";
+		private const string E_RET_LOSS = "E_ret_loss [kWh]";
+		private const string E_TC_LOSS = "E_tc_loss [kWh]";
+		private const string E_ANGLE_LOSS = "E_angle_loss [kWh]";
+		private const string E_CLUTCH_POS = "E_clutch_pos [kWh]";
+		private const string E_CLUTCH_NEG = "E_clutch_neg [kWh]";
 		private const string E_FCMAP_POS = "E_fcmap_pos [kWh]";
 
-		public const string ACC = "a [m/s^2]";
-		public const string ACC_POS = "a_pos [m/s^2]";
-		public const string ACC_NEG = "a_neg [m/s^2]";
+		private const string ACC = "a [m/s^2]";
+		private const string ACC_POS = "a_pos [m/s^2]";
+		private const string ACC_NEG = "a_neg [m/s^2]";
 
-		public const string ACC_TIMESHARE = "AccelerationTimeShare [%]";
-		public const string DEC_TIMESHARE = "DecelerationTimeShare [%]";
-		public const string CRUISE_TIMESHARE = "CruiseTimeShare [%]";
-		public const string STOP_TIMESHARE = "StopTimeShare [%]";
+		private const string ACC_TIMESHARE = "AccelerationTimeShare [%]";
+		private const string DEC_TIMESHARE = "DecelerationTimeShare [%]";
+		private const string CRUISE_TIMESHARE = "CruiseTimeShare [%]";
+		private const string STOP_TIMESHARE = "StopTimeShare [%]";
 		// ReSharper restore InconsistentNaming
 
 		private readonly DataTable _table;
@@ -130,7 +131,9 @@ namespace TUGraz.VectoCore.OutputData
 				MASS, LOADING, TIME, DISTANCE, SPEED, ALTITUDE_DELTA, FCMAP_H, FCMAP_KM, FCAUXC_H, FCAUXC_KM, FCWHTCC_H, FCWHTCC_KM,
 				FCAAUX_H, FCAAUX_KM, FCFINAL_H, FCFINAL_KM, FCFINAL_LITERPER100KM, FCFINAL_LITERPER100TKM, CO2_KM, CO2_TKM,
 				P_WHEEL_POS, P_BRAKE_LOSS, P_ANGLE_LOSS, P_TC_LOSS, P_CLUTCH_POS, P_CLUTCH_NEG, P_FCMAP_POS, E_AUX, E_AIR, E_ROLL,
-				E_GRAD, E_INERTIA, E_BRAKE, E_GBX_AXL_LOSS, E_RET_LOSS, E_TC_LOSS, E_ENG_POS, E_ENG_NEG, E_FCMAP_POS, ACC, ACC_POS,
+				E_GRAD, E_INERTIA, E_BRAKE, E_GBX_AXL_LOSS, E_RET_LOSS, E_TC_LOSS, E_ANGLE_LOSS, E_CLUTCH_POS, E_CLUTCH_NEG,
+				E_FCMAP_POS, ACC,
+				ACC_POS,
 				ACC_NEG, ACC_TIMESHARE, DEC_TIMESHARE, CRUISE_TIMESHARE, STOP_TIMESHARE
 			}.Select(x => new DataColumn(x, typeof(SI))).ToArray());
 		}
@@ -250,8 +253,9 @@ namespace TUGraz.VectoCore.OutputData
 			row[E_GBX_AXL_LOSS] = modData.WorkTransmission().ConvertTo().Kilo.Watt.Hour;
 			row[E_RET_LOSS] = modData.WorkRetarder().ConvertTo().Kilo.Watt.Hour;
 			row[E_TC_LOSS] = modData.WorkTorqueConverter().ConvertTo().Kilo.Watt.Hour;
-			row[E_ENG_POS] = modData.EngineWorkPositive().ConvertTo().Kilo.Watt.Hour;
-			row[E_ENG_NEG] = modData.EngineWorkNegative().ConvertTo().Kilo.Watt.Hour;
+			row[E_ANGLE_LOSS] = modData.WorkAngularGear().ConvertTo().Kilo.Watt.Hour;
+			row[E_CLUTCH_POS] = modData.EngineWorkPositive().ConvertTo().Kilo.Watt.Hour;
+			row[E_CLUTCH_NEG] = modData.EngineWorkNegative().ConvertTo().Kilo.Watt.Hour;
 			row[E_FCMAP_POS] = modData.TotalEngineWorkPositive().ConvertTo().Kilo.Watt.Hour;
 
 			row[ACC] = modData.AccelerationAverage();
