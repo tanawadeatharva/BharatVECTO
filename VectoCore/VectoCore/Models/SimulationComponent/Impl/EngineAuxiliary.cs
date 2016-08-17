@@ -41,8 +41,8 @@ using TUGraz.VectoCore.OutputData;
 
 namespace TUGraz.VectoCore.Models.SimulationComponent.Impl
 {
-	public class EngineAuxiliary : StatefulVectoSimulationComponent<EngineAuxiliary.EngineAuxState>, IEngineAuxInProvider,
-		IEngineAuxPort
+	public class EngineAuxiliary : StatefulVectoSimulationComponent<EngineAuxiliary.EngineAuxState>, IAuxInProvider,
+		IAuxPort
 	{
 		public const string DirectAuxiliaryId = "";
 
@@ -51,7 +51,7 @@ namespace TUGraz.VectoCore.Models.SimulationComponent.Impl
 
 		public EngineAuxiliary(IVehicleContainer container) : base(container) {}
 
-		public IEngineAuxPort Port()
+		public IAuxPort Port()
 		{
 			return this;
 		}

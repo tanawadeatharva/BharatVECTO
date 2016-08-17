@@ -74,7 +74,7 @@ namespace TUGraz.VectoCore.Models.SimulationComponent.Impl
 
 		internal readonly CombustionEngineData ModelData;
 
-		protected IEngineAuxPort EngineAux;
+		protected IAuxPort EngineAux;
 
 		public CombustionEngine(IVehicleContainer cockpit, CombustionEngineData modelData, bool pt1Disabled = false)
 			: base(cockpit)
@@ -146,7 +146,7 @@ namespace TUGraz.VectoCore.Models.SimulationComponent.Impl
 
 		#endregion
 
-		public void Connect(IEngineAuxPort aux)
+		public void Connect(IAuxPort aux)
 		{
 			EngineAux = aux;
 		}

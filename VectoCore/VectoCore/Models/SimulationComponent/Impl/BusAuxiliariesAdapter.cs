@@ -45,19 +45,19 @@ using VectoAuxiliaries.Pneumatics;
 
 namespace TUGraz.VectoCore.Models.SimulationComponent.Impl
 {
-	public class BusAuxiliariesAdapter : LoggingObject, IEngineAuxInProvider, IEngineAuxPort
+	public class BusAuxiliariesAdapter : LoggingObject, IAuxInProvider, IAuxPort
 	{
 		protected IDataBus DataBus;
 		protected internal BusAuxState CurrentState;
 		protected internal BusAuxState PreviousState;
 
-		protected internal IEngineAuxPort AdditionalAux;
+		protected internal IAuxPort AdditionalAux;
 
 		protected IAdvancedAuxiliaries Auxiliaries;
 		private readonly FuelConsumptionAdapter _fcMapAdapter;
 
 		public BusAuxiliariesAdapter(IDataBus container, string aauxFile, string cycleName, Kilogram vehicleWeight,
-			FuelConsumptionMap fcMap, PerSecond engineIdleSpeed, IEngineAuxPort additionalAux = null)
+			FuelConsumptionMap fcMap, PerSecond engineIdleSpeed, IAuxPort additionalAux = null)
 		{
 			//	mAAUX_Global.advancedAuxModel.Signals.DeclarationMode = Cfg.DeclMode
 			//	mAAUX_Global.advancedAuxModel.Signals.WHTC = Declaration.WHTCcorrFactor
@@ -122,7 +122,7 @@ namespace TUGraz.VectoCore.Models.SimulationComponent.Impl
 			return cycle;
 		}
 
-		public IEngineAuxPort Port()
+		public IAuxPort Port()
 		{
 			return this;
 		}

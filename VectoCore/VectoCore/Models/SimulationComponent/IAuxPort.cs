@@ -33,22 +33,21 @@ using TUGraz.VectoCommon.Utils;
 
 namespace TUGraz.VectoCore.Models.SimulationComponent
 {
-	public interface IEngineAuxInProvider
+	public interface IAuxInProvider
 	{
-		IEngineAuxPort Port();
+		IAuxPort Port();
 	}
 
-	public interface IEngineAuxOutProvider
+	public interface IAuxOutProvider
 	{
-		void Connect(IEngineAuxPort aux);
+		void Connect(IAuxPort aux);
 	}
 
-	public interface IEngineAuxPort
+	public interface IAuxPort
 	{
 		NewtonMeter Initialize(NewtonMeter torque, PerSecond angularSpeed);
 
 		NewtonMeter PowerDemand(Second absTime, Second dt, NewtonMeter torquePowerTrain, NewtonMeter torqueEngine,
-			PerSecond angularSpeed,
-			bool dryRun = false);
+			PerSecond angularSpeed, bool dryRun = false);
 	}
 }
