@@ -42,7 +42,8 @@ using TUGraz.VectoCore.InputData.Impl;
 
 namespace TUGraz.VectoCore.InputData.FileIO.JSON
 {
-	public class JSONVehicleDataV7 : JSONFile, IVehicleEngineeringInputData, IRetarderInputData, IAngularGearInputData
+	public class JSONVehicleDataV7 : JSONFile, IVehicleEngineeringInputData, IRetarderInputData, IAngularGearInputData,
+		IPTOTransmissionInputData
 	{
 		public JSONVehicleDataV7(JObject data, string fileName) : base(data, fileName) {}
 
@@ -186,9 +187,9 @@ namespace TUGraz.VectoCore.InputData.FileIO.JSON
 		{
 			get
 			{
-				return Body.GetEx(JsonKeys.Vehicle_AngularGear)
-					.GetEx<string>(JsonKeys.Vehicle_AngularGear_Type)
-					.ParseEnum<AngularGearType>();
+					return Body.GetEx(JsonKeys.Vehicle_AngularGear)
+						.GetEx<string>(JsonKeys.Vehicle_AngularGear_Type)
+						.ParseEnum<AngularGearType>();
 			}
 		}
 
@@ -204,13 +205,37 @@ namespace TUGraz.VectoCore.InputData.FileIO.JSON
 				return ReadTableData(
 					Body.GetEx(JsonKeys.Vehicle_AngularGear)
 						.GetEx<string>(JsonKeys.Vehicle_AngularGear_LossMapFile),
-					"LossMap");
+						"LossMap");
 			}
 		}
 
 		double IAngularGearInputData.Efficiency
 		{
 			get { return Body.GetEx(JsonKeys.Vehicle_AngularGear).GetEx<double>(JsonKeys.Vehicle_AngularGear_Efficiency); }
+		}
+
+		#endregion
+
+		#region IPTOTransmissionInputData
+
+		string IPTOTransmissionInputData.PTOTransmissionType
+		{
+			get
+			{
+				try {
+					return Body.GetEx(JsonKeys.Vehicle_PTO).GetEx<string>(JsonKeys.Vehicle_PTO_Type);
+				} catch (Exception) {
+					return "None";
+				}
+			}
+		}
+
+		DataTable IPTOTransmissionInputData.PTOLossMap
+		{
+			get
+			{
+				return ReadTableData(Body.GetEx(JsonKeys.Vehicle_PTO).GetEx<string>(JsonKeys.Vehicle_PTO_LossMapFile), "LossMap");
+			}
 		}
 
 		#endregion

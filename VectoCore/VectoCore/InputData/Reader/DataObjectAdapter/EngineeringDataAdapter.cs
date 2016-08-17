@@ -258,6 +258,18 @@ namespace TUGraz.VectoCore.InputData.Reader.DataObjectAdapter
 			return SetCommonRetarderData(retarder);
 		}
 
+		public PTOTransmissionData CreatePTOTransmissionData(IPTOTransmissionInputData pto)
+		{
+			if (pto.PTOTransmissionType != "None") {
+				return new PTOTransmissionData {
+					TransmissionType = pto.PTOTransmissionType,
+					LossMap = PTOIdleLossMapReader.Create(pto.PTOLossMap)
+				};
+			}
+
+			return null;
+		}
+
 		public AdvancedAuxData CreateAdvancedAuxData(IAuxiliariesEngineeringInputData auxInputData)
 		{
 			return new AdvancedAuxData() {

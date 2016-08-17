@@ -112,6 +112,7 @@ namespace TUGraz.VectoCore.InputData.FileIO.JSON
 		protected readonly IEngineEngineeringInputData Engine;
 		protected readonly IVehicleEngineeringInputData VehicleData;
 		protected readonly IRetarderInputData Retarder;
+		protected readonly IPTOTransmissionInputData PTOTransmission;
 
 		private readonly string _jobname;
 
@@ -146,6 +147,7 @@ namespace TUGraz.VectoCore.InputData.FileIO.JSON
 
 					AngularGear = VehicleData as IAngularGearInputData;
 					Retarder = VehicleData as IRetarderInputData;
+					PTOTransmission = VehicleData as IPTOTransmissionInputData;
 				}
 			} catch (Exception e) {
 				throw new VectoException("JobFile: Failed to read Vehicle file '{0}': {1}", e, Body[JsonKeys.Vehicle_VehicleFile],
@@ -261,6 +263,11 @@ namespace TUGraz.VectoCore.InputData.FileIO.JSON
 		IDriverEngineeringInputData IEngineeringInputDataProvider.DriverInputData
 		{
 			get { return this; }
+		}
+
+		public IPTOTransmissionInputData PTOTransmissionInputData
+		{
+			get { return PTOTransmission; }
 		}
 
 		IAuxiliariesDeclarationInputData IDeclarationInputDataProvider.AuxiliaryInputData()
@@ -453,6 +460,8 @@ namespace TUGraz.VectoCore.InputData.FileIO.JSON
 
 		#endregion
 
+		#region IAuxiliariesEngineeringInputData
+
 		IList<IAuxiliaryEngineeringInputData> IAuxiliariesEngineeringInputData.Auxiliaries
 		{
 			get { return AuxData().Cast<IAuxiliaryEngineeringInputData>().ToList(); }
@@ -525,6 +534,8 @@ namespace TUGraz.VectoCore.InputData.FileIO.JSON
 			}
 			return retVal;
 		}
+
+		#endregion
 
 		#region AdvancedAuxiliaries
 

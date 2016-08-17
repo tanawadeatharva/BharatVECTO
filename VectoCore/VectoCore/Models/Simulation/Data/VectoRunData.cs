@@ -75,6 +75,9 @@ namespace TUGraz.VectoCore.Models.Simulation.Data
 		public RetarderData Retarder { get; internal set; }
 
 		[ValidateObject]
+		public PTOTransmissionData PTOTransmission { get; internal set; }
+
+		[ValidateObject]
 		public DriverData DriverData { get; internal set; }
 
 		public ExecutionMode ExecutionMode { get; internal set; }

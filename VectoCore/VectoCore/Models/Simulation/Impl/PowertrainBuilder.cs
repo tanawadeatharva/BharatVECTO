@@ -75,12 +75,12 @@ namespace TUGraz.VectoCore.Models.Simulation.Impl
 		{
 			if (data.Cycle.CycleType != CycleType.EngineOnly)
 				throw new VectoException("CycleType must be EngineOnly.");
-			
+
 			var container = new VehicleContainer(ExecutionMode.Engineering, _modData, _sumWriter) { RunData = data };
 			var cycle = new PowertrainDrivingCycle(container, data.Cycle);
 
 			var directAux = new EngineAuxiliary(container);
-			directAux.AddDirect();
+			directAux.AddCycle();
 
 			var engine = new EngineOnlyCombustionEngine(container, data.EngineData);
 			engine.Connect(directAux.Port());
@@ -102,7 +102,7 @@ namespace TUGraz.VectoCore.Models.Simulation.Impl
 				gearbox.ModelData.Gears.ToDictionary(g => g.Key, g => g.Value.Ratio))
 				.AddComponent(new AxleGear(container, data.AxleGearData))
 				.AddComponent(data.AngularGearData != null ? new AngularGear(container, data.AngularGearData) : null)
-				.AddRetarderAndGearbox(data.Retarder, gearbox, container)
+				.AddComponent(gearbox, data.Retarder, data.PTOTransmission, container)
 				.AddComponent(new CycleClutch(container))
 				.AddComponent(new CombustionEngine(container, data.EngineData, pt1Disabled: true))
 				.AddAuxiliaries(container, data);
@@ -126,7 +126,7 @@ namespace TUGraz.VectoCore.Models.Simulation.Impl
 				.AddComponent(new Brakes(container))
 				.AddComponent(new AxleGear(container, data.AxleGearData))
 				.AddComponent(data.AngularGearData != null ? new AngularGear(container, data.AngularGearData) : null)
-				.AddRetarderAndGearbox(data.Retarder, GetGearbox(container, data.GearboxData), container)
+				.AddComponent(GetGearbox(container, data.GearboxData), data.Retarder, data.PTOTransmission, container)
 				.AddComponent(new Clutch(container, data.EngineData, engine.IdleController))
 				.AddComponent(engine)
 				.AddAuxiliaries(container, data);
@@ -149,7 +149,7 @@ namespace TUGraz.VectoCore.Models.Simulation.Impl
 				.AddComponent(new Brakes(container))
 				.AddComponent(new AxleGear(container, data.AxleGearData))
 				.AddComponent(data.AngularGearData != null ? new AngularGear(container, data.AngularGearData) : null)
-				.AddRetarderAndGearbox(data.Retarder, new CycleGearbox(container, data.GearboxData), container)
+				.AddComponent(new CycleGearbox(container, data.GearboxData), data.Retarder, data.PTOTransmission, container)
 				.AddComponent(new CycleClutch(container))
 				.AddComponent(new CombustionEngine(container, data.EngineData))
 				.AddAuxiliaries(container, data);
@@ -176,7 +176,7 @@ namespace TUGraz.VectoCore.Models.Simulation.Impl
 				.AddComponent(new Brakes(container))
 				.AddComponent(new AxleGear(container, data.AxleGearData))
 				.AddComponent(data.AngularGearData != null ? new AngularGear(container, data.AngularGearData) : null)
-				.AddRetarderAndGearbox(data.Retarder, GetGearbox(container, data.GearboxData), container)
+				.AddComponent(GetGearbox(container, data.GearboxData), data.Retarder, data.PTOTransmission, container)
 				.AddComponent(new Clutch(container, data.EngineData, engine.IdleController))
 				.AddComponent(engine)
 				.AddAuxiliaries(container, data);
@@ -204,7 +204,7 @@ namespace TUGraz.VectoCore.Models.Simulation.Impl
 						aux.AddConstant(id, auxData.PowerDemand);
 						break;
 					case AuxiliaryDemandType.Direct:
-						aux.AddDirect();
+						aux.AddCycle();
 						break;
 					case AuxiliaryDemandType.Mapping:
 						aux.AddMapping(id, auxData.Data);

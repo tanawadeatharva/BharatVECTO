@@ -46,7 +46,7 @@ namespace TUGraz.VectoCore.InputData.Reader.Impl
 	{
 		protected DriverData Driver;
 
-		protected IEngineeringInputDataProvider InputDataProvider;
+		protected readonly IEngineeringInputDataProvider InputDataProvider;
 
 		internal EngineeringModeVectoRunDataFactory(IEngineeringInputDataProvider dataProvider)
 		{
@@ -83,6 +83,7 @@ namespace TUGraz.VectoCore.InputData.Reader.Impl
 				Aux = dao.CreateAuxiliaryData(InputDataProvider.AuxiliaryInputData()),
 				AdvancedAux = dao.CreateAdvancedAuxData(InputDataProvider.AuxiliaryInputData()),
 				Retarder = dao.CreateRetarderData(InputDataProvider.RetarderInputData, InputDataProvider.VehicleInputData),
+				PTOTransmission = dao.CreatePTOTransmissionData(InputDataProvider.PTOTransmissionInputData),
 				Cycle = DrivingCycleDataReader.ReadFromDataTable(cycle.CycleData, cycle.Name, crossWindRequired),
 				ExecutionMode = ExecutionMode.Engineering
 			});
