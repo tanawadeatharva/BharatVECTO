@@ -184,20 +184,18 @@ namespace TUGraz.VectoCore.Tests.Models.Declaration
 			Assert.AreEqual(a3, value.A3);
 		}
 
-		[
-			TestCase(VehicleCategory.Tractor, 6.46, 0, 8.12204),
-			TestCase(VehicleCategory.Tractor, 6.46, 60, 8.12204),
-			TestCase(VehicleCategory.Tractor, 6.46, 75, 7.67058),
-			TestCase(VehicleCategory.Tractor, 6.46, 100, 7.23735),
-			TestCase(VehicleCategory.Tractor, 6.46, 52.1234, 8.12196),
-			TestCase(VehicleCategory.Tractor, 6.46, 73.5432, 7.70815),
-			TestCase(VehicleCategory.Tractor, 6.46, 92.8765, 7.33443),
-			TestCase(VehicleCategory.Tractor, 6.46, 100.449, 7.2321466),
-			TestCase(VehicleCategory.Tractor, 6.46, 103, 7.2025564),
-			TestCase(VehicleCategory.Tractor, 6.46, 105, 7.17936),
-			TestCase(VehicleCategory.Tractor, 6.46, 115, 7.08174),
-			TestCase(VehicleCategory.Tractor, 6.46, 130, 6.96979),
-		]
+		[TestCase(VehicleCategory.Tractor, 6.46, 0, 8.12204),
+		TestCase(VehicleCategory.Tractor, 6.46, 60, 8.12204),
+		TestCase(VehicleCategory.Tractor, 6.46, 75, 7.67058),
+		TestCase(VehicleCategory.Tractor, 6.46, 100, 7.23735),
+		TestCase(VehicleCategory.Tractor, 6.46, 52.1234, 8.12196),
+		TestCase(VehicleCategory.Tractor, 6.46, 73.5432, 7.70815),
+		TestCase(VehicleCategory.Tractor, 6.46, 92.8765, 7.33443),
+		TestCase(VehicleCategory.Tractor, 6.46, 100.449, 7.2321466),
+		TestCase(VehicleCategory.Tractor, 6.46, 103, 7.2025564),
+		TestCase(VehicleCategory.Tractor, 6.46, 105, 7.17936),
+		TestCase(VehicleCategory.Tractor, 6.46, 115, 7.08174),
+		TestCase(VehicleCategory.Tractor, 6.46, 130, 6.96979),]
 		public void CrossWindCorrectionTest(VehicleCategory vehicleCategory, double crossSectionArea, double kmph,
 			double expected)
 		{
@@ -209,10 +207,8 @@ namespace TUGraz.VectoCore.Tests.Models.Declaration
 			Assert.AreEqual(expected, tmp.Value(), Tolerance);
 		}
 
-		[
-			TestCase(VehicleCategory.Tractor, 6.46, -0.1),
-			TestCase(VehicleCategory.Tractor, 6.46, 130.1),
-		]
+		[TestCase(VehicleCategory.Tractor, 6.46, -0.1),
+		TestCase(VehicleCategory.Tractor, 6.46, 130.1),]
 		public void CrossWindCorrectionExceptionTest(VehicleCategory vehicleCategory, double crossSectionArea, double kmph)
 		{
 			var crossWindCorrectionCurve = new CrosswindCorrectionCdxALookup(
@@ -223,48 +219,62 @@ namespace TUGraz.VectoCore.Tests.Models.Declaration
 				crossWindCorrectionCurve.EffectiveAirDragArea(kmph.KMPHtoMeterPerSecond()));
 		}
 
-		[
-			TestCase(MissionType.LongHaul, "Standard technology", 1200, 0.7),
-			TestCase(MissionType.RegionalDelivery, "Standard technology", 1000, 0.7),
-			TestCase(MissionType.UrbanDelivery, "Standard technology", 1000, 0.7),
-			TestCase(MissionType.MunicipalUtility, "Standard technology", 1000, 0.7),
-			TestCase(MissionType.Construction, "Standard technology", 1000, 0.7),
-			TestCase(MissionType.LongHaul, "Standard technology - LED headlights, all", 1150, 0.7),
-			TestCase(MissionType.RegionalDelivery, "Standard technology - LED headlights, all", 950, 0.7),
-			TestCase(MissionType.UrbanDelivery, "Standard technology - LED headlights, all", 950, 0.7),
-			TestCase(MissionType.MunicipalUtility, "Standard technology - LED headlights, all", 950, 0.7),
-			TestCase(MissionType.Construction, "Standard technology - LED headlights, all", 950, 0.7),
-		]
+		[TestCase(MissionType.LongHaul, "Standard technology", 1200, 0.7),
+		TestCase(MissionType.RegionalDelivery, "Standard technology", 1000, 0.7),
+		TestCase(MissionType.UrbanDelivery, "Standard technology", 1000, 0.7),
+		TestCase(MissionType.MunicipalUtility, "Standard technology", 1000, 0.7),
+		TestCase(MissionType.Construction, "Standard technology", 1000, 0.7),
+		TestCase(MissionType.LongHaul, "Standard technology - LED headlights, all", 1150, 0.7),
+		TestCase(MissionType.RegionalDelivery, "Standard technology - LED headlights, all", 950, 0.7),
+		TestCase(MissionType.UrbanDelivery, "Standard technology - LED headlights, all", 950, 0.7),
+		TestCase(MissionType.MunicipalUtility, "Standard technology - LED headlights, all", 950, 0.7),
+		TestCase(MissionType.Construction, "Standard technology - LED headlights, all", 950, 0.7),]
 		public void AuxElectricSystemTest(MissionType mission, string technology, double value, double efficiency)
 		{
 			AssertHelper.AreRelativeEqual(value / efficiency, DeclarationData.ElectricSystem.Lookup(mission, technology));
 		}
 
-		[
-			TestCase(MissionType.Interurban, "Standard technology"),
-			TestCase(MissionType.LongHaul, "Standard technology - Flux-Compensator")
-		]
+		[TestCase(MissionType.Interurban, "Standard technology"),
+		TestCase(MissionType.LongHaul, "Standard technology - Flux-Compensator")]
 		public void AuxElectricSystem_NotExistingError(MissionType mission, string technology)
 		{
 			AssertHelper.Exception<VectoException>(() => { DeclarationData.ElectricSystem.Lookup(mission, technology); });
 		}
 
-		[
-			TestCase("", new[] { 618, 671, 516, 566, 1037 }),
-			TestCase("Crankshaft mounted - Electronically controlled visco clutch", new[] { 618, 671, 516, 566, 1037 }),
-			TestCase("Crankshaft mounted - Bimetallic controlled visco clutch", new[] { 818, 871, 676, 766, 1277 }),
-			TestCase("Crankshaft mounted - Discrete step clutch", new[] { 668, 721, 616, 616, 1157 }),
-			TestCase("Crankshaft mounted - On/off clutch", new[] { 718, 771, 666, 666, 1237 }),
-			TestCase("Belt driven or driven via transm. - Electronically controlled visco clutch",
-				new[] { 989, 1044, 833, 933, 1478 }),
-			TestCase("Belt driven or driven via transm. - Bimetallic controlled visco clutch",
-				new[] { 1189, 1244, 993, 1133, 1718 }),
-			TestCase("Belt driven or driven via transm. - Discrete step clutch", new[] { 1039, 1094, 983, 983, 1598 }),
-			TestCase("Belt driven or driven via transm. - On/off clutch", new[] { 1089, 1144, 1033, 1033, 1678 }),
-			TestCase("Hydraulic driven - Variable displacement pump", new[] { 938, 1155, 832, 917, 1872 }),
-			TestCase("Hydraulic driven - Constant displacement pump", new[] { 1200, 1400, 1000, 1100, 2300 }),
-			TestCase("Hydraulic driven - Electronically controlled", new[] { 700, 800, 600, 600, 1400 }),
-		]
+		[TestCase("only the drive shaft of the PTO - shift claw, synchronizer, Schieberad", 50),
+		TestCase("only the drive shaft of the PTO - multi-disc clutch", 1000),
+		TestCase("only the drive shaft of the PTO - multi-disc clutch, oil pump", 2000),
+		TestCase("drive shaft and/or up to 2 gear wheels - shift claw, synchronizer, Schieberad", 300),
+		TestCase("drive shaft and/or up to 2 gear wheels - multi-disc clutch", 1500),
+		TestCase("drive shaft and/or up to 2 gear wheels - multi-disc clutch, oil pump", 3000),
+		TestCase("drive shaft and/or more than 2 gear wheels - shift claw, synchronizer, Schieberad", 600),
+		TestCase("drive shaft and/or more than 2 gear wheels - multi-disc clutch", 2000),
+		TestCase("drive shaft and/or more than 2 gear wheels - multi-disc clutch, oil pump", 4000),]
+		public void AuxPTOTransmissionTest(string technology, double value)
+		{
+			AssertHelper.AreRelativeEqual(value, DeclarationData.PTOTransmission.Lookup(technology));
+		}
+
+		[TestCase("Superfluid")]
+		public void AuxPTOTransmission_NotExistingError(string technology)
+		{
+			AssertHelper.Exception<VectoException>(() => { DeclarationData.PTOTransmission.Lookup(technology); });
+		}
+
+		[TestCase("", new[] { 618, 671, 516, 566, 1037 }),
+		TestCase("Crankshaft mounted - Electronically controlled visco clutch", new[] { 618, 671, 516, 566, 1037 }),
+		TestCase("Crankshaft mounted - Bimetallic controlled visco clutch", new[] { 818, 871, 676, 766, 1277 }),
+		TestCase("Crankshaft mounted - Discrete step clutch", new[] { 668, 721, 616, 616, 1157 }),
+		TestCase("Crankshaft mounted - On/off clutch", new[] { 718, 771, 666, 666, 1237 }),
+		TestCase("Belt driven or driven via transm. - Electronically controlled visco clutch",
+			new[] { 989, 1044, 833, 933, 1478 }),
+		TestCase("Belt driven or driven via transm. - Bimetallic controlled visco clutch",
+			new[] { 1189, 1244, 993, 1133, 1718 }),
+		TestCase("Belt driven or driven via transm. - Discrete step clutch", new[] { 1039, 1094, 983, 983, 1598 }),
+		TestCase("Belt driven or driven via transm. - On/off clutch", new[] { 1089, 1144, 1033, 1033, 1678 }),
+		TestCase("Hydraulic driven - Variable displacement pump", new[] { 938, 1155, 832, 917, 1872 }),
+		TestCase("Hydraulic driven - Constant displacement pump", new[] { 1200, 1400, 1000, 1100, 2300 }),
+		TestCase("Hydraulic driven - Electronically controlled", new[] { 700, 800, 600, 600, 1400 }),]
 		public void AuxFanTechTest(string technology, int[] expected)
 		{
 			for (var i = 0; i < _missions.Length; i++) {
