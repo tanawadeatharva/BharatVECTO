@@ -18,9 +18,7 @@ namespace TUGraz.VectoCore.Models.SimulationComponent.Data
 		/// <summary>
 		/// Calculates the pto torque loss.
 		/// </summary>
-		/// <param name="angularVelocity"></param>
-		/// <returns></returns>
-		public NewtonMeter PTOTorqueLoss(PerSecond angularVelocity)
+		public NewtonMeter GetTorqueLoss(PerSecond angularVelocity)
 		{
 			var s = _entries.GetSection(e => e.EngineSpeed < angularVelocity);
 			return VectoMath.Interpolate(s.Item1.EngineSpeed, s.Item2.EngineSpeed, s.Item1.PTOTorque, s.Item2.PTOTorque,
