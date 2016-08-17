@@ -75,7 +75,6 @@ Partial Class F_VEH
 		Me.Label50 = New System.Windows.Forms.Label()
 		Me.TbMassExtra = New System.Windows.Forms.TextBox()
 		Me.GroupBox8 = New System.Windows.Forms.GroupBox()
-		Me.PnWheelDiam = New System.Windows.Forms.Panel()
 		Me.Label6 = New System.Windows.Forms.Label()
 		Me.ButAxlRem = New System.Windows.Forms.Button()
 		Me.LvRRC = New System.Windows.Forms.ListView()
@@ -87,6 +86,7 @@ Partial Class F_VEH
 		Me.ColumnHeader3 = CType(New System.Windows.Forms.ColumnHeader(), System.Windows.Forms.ColumnHeader)
 		Me.ColumnHeader4 = CType(New System.Windows.Forms.ColumnHeader(), System.Windows.Forms.ColumnHeader)
 		Me.ButAxlAdd = New System.Windows.Forms.Button()
+		Me.PnWheelDiam = New System.Windows.Forms.Panel()
 		Me.CbAxleConfig = New System.Windows.Forms.ComboBox()
 		Me.CbCat = New System.Windows.Forms.ComboBox()
 		Me.Label5 = New System.Windows.Forms.Label()
@@ -108,6 +108,7 @@ Partial Class F_VEH
 		Me.OpenWithToolStripMenuItem = New System.Windows.Forms.ToolStripMenuItem()
 		Me.ShowInFolderToolStripMenuItem = New System.Windows.Forms.ToolStripMenuItem()
 		Me.PnAll = New System.Windows.Forms.Panel()
+		Me.GroupBox3 = New System.Windows.Forms.GroupBox()
 		Me.GroupBox2 = New System.Windows.Forms.GroupBox()
 		Me.pnAngularGearFields = New System.Windows.Forms.Panel()
 		Me.Label4 = New System.Windows.Forms.Label()
@@ -120,7 +121,11 @@ Partial Class F_VEH
 		Me.PicVehicle = New System.Windows.Forms.PictureBox()
 		Me.Label8 = New System.Windows.Forms.Label()
 		Me.ToolTip1 = New System.Windows.Forms.ToolTip(Me.components)
-		Me.GroupBox3 = New System.Windows.Forms.GroupBox()
+		Me.gbPTO = New System.Windows.Forms.GroupBox()
+		Me.Label7 = New System.Windows.Forms.Label()
+		Me.btPTOLossMapBrowse = New System.Windows.Forms.Button()
+		Me.tbPTOLossMap = New System.Windows.Forms.TextBox()
+		Me.cbPTOType = New System.Windows.Forms.ComboBox()
 		Me.GroupBox6.SuspendLayout()
 		Me.ToolStrip1.SuspendLayout()
 		Me.GroupBox7.SuspendLayout()
@@ -135,10 +140,11 @@ Partial Class F_VEH
 		CType(Me.PictureBox1, System.ComponentModel.ISupportInitialize).BeginInit()
 		Me.CmOpenFile.SuspendLayout()
 		Me.PnAll.SuspendLayout()
+		Me.GroupBox3.SuspendLayout()
 		Me.GroupBox2.SuspendLayout()
 		Me.pnAngularGearFields.SuspendLayout()
 		CType(Me.PicVehicle, System.ComponentModel.ISupportInitialize).BeginInit()
-		Me.GroupBox3.SuspendLayout()
+		Me.gbPTO.SuspendLayout()
 		Me.SuspendLayout()
 		'
 		'Label1
@@ -208,7 +214,7 @@ Partial Class F_VEH
 		'ButOK
 		'
 		Me.ButOK.Anchor = CType((System.Windows.Forms.AnchorStyles.Bottom Or System.Windows.Forms.AnchorStyles.Right), System.Windows.Forms.AnchorStyles)
-		Me.ButOK.Location = New System.Drawing.Point(421, 661)
+		Me.ButOK.Location = New System.Drawing.Point(421, 675)
 		Me.ButOK.Name = "ButOK"
 		Me.ButOK.Size = New System.Drawing.Size(75, 23)
 		Me.ButOK.TabIndex = 5
@@ -219,7 +225,7 @@ Partial Class F_VEH
 		'
 		Me.ButCancel.Anchor = CType((System.Windows.Forms.AnchorStyles.Bottom Or System.Windows.Forms.AnchorStyles.Right), System.Windows.Forms.AnchorStyles)
 		Me.ButCancel.DialogResult = System.Windows.Forms.DialogResult.Cancel
-		Me.ButCancel.Location = New System.Drawing.Point(502, 661)
+		Me.ButCancel.Location = New System.Drawing.Point(502, 675)
 		Me.ButCancel.Name = "ButCancel"
 		Me.ButCancel.Size = New System.Drawing.Size(75, 23)
 		Me.ButCancel.TabIndex = 6
@@ -260,18 +266,17 @@ Partial Class F_VEH
 		Me.CbCdMode.Items.AddRange(New Object() {"No Correction", "Speed dependent (User-defined)", "Speed dependent (Declaration Mode)", "Vair & Beta Input"})
 		Me.CbCdMode.Location = New System.Drawing.Point(6, 19)
 		Me.CbCdMode.Name = "CbCdMode"
-		Me.CbCdMode.Size = New System.Drawing.Size(207, 21)
+		Me.CbCdMode.Size = New System.Drawing.Size(268, 21)
 		Me.CbCdMode.TabIndex = 0
 		'
 		'TbCdFile
 		'
-		Me.TbCdFile.Anchor = CType((((System.Windows.Forms.AnchorStyles.Top Or System.Windows.Forms.AnchorStyles.Bottom) _
-			Or System.Windows.Forms.AnchorStyles.Left) _
+		Me.TbCdFile.Anchor = CType(((System.Windows.Forms.AnchorStyles.Bottom Or System.Windows.Forms.AnchorStyles.Left) _
 			Or System.Windows.Forms.AnchorStyles.Right), System.Windows.Forms.AnchorStyles)
 		Me.TbCdFile.Enabled = False
-		Me.TbCdFile.Location = New System.Drawing.Point(6, 46)
+		Me.TbCdFile.Location = New System.Drawing.Point(6, 58)
 		Me.TbCdFile.Name = "TbCdFile"
-		Me.TbCdFile.Size = New System.Drawing.Size(504, 20)
+		Me.TbCdFile.Size = New System.Drawing.Size(222, 20)
 		Me.TbCdFile.TabIndex = 1
 		'
 		'BtCdFileBrowse
@@ -279,7 +284,7 @@ Partial Class F_VEH
 		Me.BtCdFileBrowse.Anchor = CType((System.Windows.Forms.AnchorStyles.Bottom Or System.Windows.Forms.AnchorStyles.Right), System.Windows.Forms.AnchorStyles)
 		Me.BtCdFileBrowse.Enabled = False
 		Me.BtCdFileBrowse.Image = Global.VECTO.My.Resources.Resources.Open_icon
-		Me.BtCdFileBrowse.Location = New System.Drawing.Point(510, 43)
+		Me.BtCdFileBrowse.Location = New System.Drawing.Point(228, 55)
 		Me.BtCdFileBrowse.Name = "BtCdFileBrowse"
 		Me.BtCdFileBrowse.Size = New System.Drawing.Size(24, 24)
 		Me.BtCdFileBrowse.TabIndex = 2
@@ -292,9 +297,9 @@ Partial Class F_VEH
 		Me.GroupBox6.Controls.Add(Me.CbCdMode)
 		Me.GroupBox6.Controls.Add(Me.BtCdFileBrowse)
 		Me.GroupBox6.Controls.Add(Me.TbCdFile)
-		Me.GroupBox6.Location = New System.Drawing.Point(6, 407)
+		Me.GroupBox6.Location = New System.Drawing.Point(290, 51)
 		Me.GroupBox6.Name = "GroupBox6"
-		Me.GroupBox6.Size = New System.Drawing.Size(562, 74)
+		Me.GroupBox6.Size = New System.Drawing.Size(280, 86)
 		Me.GroupBox6.TabIndex = 5
 		Me.GroupBox6.TabStop = False
 		Me.GroupBox6.Text = "Cross Wind Correction"
@@ -304,7 +309,7 @@ Partial Class F_VEH
 		Me.BtCdFileOpen.Anchor = CType((System.Windows.Forms.AnchorStyles.Bottom Or System.Windows.Forms.AnchorStyles.Right), System.Windows.Forms.AnchorStyles)
 		Me.BtCdFileOpen.Enabled = False
 		Me.BtCdFileOpen.Image = Global.VECTO.My.Resources.Resources.application_export_icon_small
-		Me.BtCdFileOpen.Location = New System.Drawing.Point(533, 43)
+		Me.BtCdFileOpen.Location = New System.Drawing.Point(251, 55)
 		Me.BtCdFileOpen.Name = "BtCdFileOpen"
 		Me.BtCdFileOpen.Size = New System.Drawing.Size(24, 24)
 		Me.BtCdFileOpen.TabIndex = 3
@@ -314,7 +319,7 @@ Partial Class F_VEH
 		'LbCdMode
 		'
 		Me.LbCdMode.AutoSize = True
-		Me.LbCdMode.Location = New System.Drawing.Point(219, 22)
+		Me.LbCdMode.Location = New System.Drawing.Point(6, 42)
 		Me.LbCdMode.Name = "LbCdMode"
 		Me.LbCdMode.Size = New System.Drawing.Size(59, 13)
 		Me.LbCdMode.TabIndex = 28
@@ -403,7 +408,7 @@ Partial Class F_VEH
 		'
 		Me.GroupBox7.Controls.Add(Me.PnRt)
 		Me.GroupBox7.Controls.Add(Me.CbRtType)
-		Me.GroupBox7.Location = New System.Drawing.Point(6, 290)
+		Me.GroupBox7.Location = New System.Drawing.Point(6, 295)
 		Me.GroupBox7.Name = "GroupBox7"
 		Me.GroupBox7.Size = New System.Drawing.Size(278, 111)
 		Me.GroupBox7.TabIndex = 3
@@ -518,24 +523,12 @@ Partial Class F_VEH
 		Me.GroupBox8.Controls.Add(Me.ButAxlRem)
 		Me.GroupBox8.Controls.Add(Me.LvRRC)
 		Me.GroupBox8.Controls.Add(Me.ButAxlAdd)
-		Me.GroupBox8.Location = New System.Drawing.Point(6, 133)
+		Me.GroupBox8.Location = New System.Drawing.Point(6, 138)
 		Me.GroupBox8.Name = "GroupBox8"
-		Me.GroupBox8.Size = New System.Drawing.Size(562, 151)
+		Me.GroupBox8.Size = New System.Drawing.Size(564, 151)
 		Me.GroupBox8.TabIndex = 2
 		Me.GroupBox8.TabStop = False
 		Me.GroupBox8.Text = "Axles / Wheels"
-		'
-		'PnWheelDiam
-		'
-		Me.PnWheelDiam.Anchor = CType(((System.Windows.Forms.AnchorStyles.Top Or System.Windows.Forms.AnchorStyles.Left) _
-			Or System.Windows.Forms.AnchorStyles.Right), System.Windows.Forms.AnchorStyles)
-		Me.PnWheelDiam.Controls.Add(Me.Label13)
-		Me.PnWheelDiam.Controls.Add(Me.TBrdyn)
-		Me.PnWheelDiam.Controls.Add(Me.Label35)
-		Me.PnWheelDiam.Location = New System.Drawing.Point(3, 16)
-		Me.PnWheelDiam.Name = "PnWheelDiam"
-		Me.PnWheelDiam.Size = New System.Drawing.Size(228, 34)
-		Me.PnWheelDiam.TabIndex = 5
 		'
 		'Label6
 		'
@@ -566,7 +559,7 @@ Partial Class F_VEH
 		Me.LvRRC.Location = New System.Drawing.Point(6, 19)
 		Me.LvRRC.MultiSelect = False
 		Me.LvRRC.Name = "LvRRC"
-		Me.LvRRC.Size = New System.Drawing.Size(550, 102)
+		Me.LvRRC.Size = New System.Drawing.Size(552, 102)
 		Me.LvRRC.TabIndex = 0
 		Me.LvRRC.TabStop = False
 		Me.LvRRC.UseCompatibleStateImageBehavior = False
@@ -614,6 +607,17 @@ Partial Class F_VEH
 		Me.ButAxlAdd.Size = New System.Drawing.Size(24, 24)
 		Me.ButAxlAdd.TabIndex = 1
 		Me.ButAxlAdd.UseVisualStyleBackColor = True
+		'
+		'PnWheelDiam
+		'
+		Me.PnWheelDiam.Controls.Add(Me.Label13)
+		Me.PnWheelDiam.Controls.Add(Me.TBrdyn)
+		Me.PnWheelDiam.Controls.Add(Me.Label35)
+		Me.PnWheelDiam.Dock = System.Windows.Forms.DockStyle.Fill
+		Me.PnWheelDiam.Location = New System.Drawing.Point(3, 16)
+		Me.PnWheelDiam.Name = "PnWheelDiam"
+		Me.PnWheelDiam.Size = New System.Drawing.Size(131, 29)
+		Me.PnWheelDiam.TabIndex = 5
 		'
 		'CbAxleConfig
 		'
@@ -664,7 +668,7 @@ Partial Class F_VEH
 		'StatusStrip1
 		'
 		Me.StatusStrip1.Items.AddRange(New System.Windows.Forms.ToolStripItem() {Me.LbStatus})
-		Me.StatusStrip1.Location = New System.Drawing.Point(0, 687)
+		Me.StatusStrip1.Location = New System.Drawing.Point(0, 701)
 		Me.StatusStrip1.Name = "StatusStrip1"
 		Me.StatusStrip1.Size = New System.Drawing.Size(589, 22)
 		Me.StatusStrip1.SizingGrip = False
@@ -722,7 +726,7 @@ Partial Class F_VEH
 		Me.GroupBox1.Controls.Add(Me.Label14)
 		Me.GroupBox1.Location = New System.Drawing.Point(6, 3)
 		Me.GroupBox1.Name = "GroupBox1"
-		Me.GroupBox1.Size = New System.Drawing.Size(278, 124)
+		Me.GroupBox1.Size = New System.Drawing.Size(278, 134)
 		Me.GroupBox1.TabIndex = 0
 		Me.GroupBox1.TabStop = False
 		Me.GroupBox1.Text = "Weight / Loading"
@@ -748,7 +752,7 @@ Partial Class F_VEH
 		Me.GrAirRes.Controls.Add(Me.PnCdATrTr)
 		Me.GrAirRes.Location = New System.Drawing.Point(290, 3)
 		Me.GrAirRes.Name = "GrAirRes"
-		Me.GrAirRes.Size = New System.Drawing.Size(278, 48)
+		Me.GrAirRes.Size = New System.Drawing.Size(137, 48)
 		Me.GrAirRes.TabIndex = 1
 		Me.GrAirRes.TabStop = False
 		Me.GrAirRes.Text = "Air Resistance"
@@ -761,7 +765,7 @@ Partial Class F_VEH
 		Me.PnCdATrTr.Dock = System.Windows.Forms.DockStyle.Fill
 		Me.PnCdATrTr.Location = New System.Drawing.Point(3, 16)
 		Me.PnCdATrTr.Name = "PnCdATrTr"
-		Me.PnCdATrTr.Size = New System.Drawing.Size(272, 29)
+		Me.PnCdATrTr.Size = New System.Drawing.Size(131, 29)
 		Me.PnCdATrTr.TabIndex = 0
 		'
 		'Label38
@@ -803,6 +807,7 @@ Partial Class F_VEH
 		'
 		'PnAll
 		'
+		Me.PnAll.Controls.Add(Me.gbPTO)
 		Me.PnAll.Controls.Add(Me.GroupBox3)
 		Me.PnAll.Controls.Add(Me.GroupBox2)
 		Me.PnAll.Controls.Add(Me.GrAirRes)
@@ -812,16 +817,26 @@ Partial Class F_VEH
 		Me.PnAll.Controls.Add(Me.GroupBox6)
 		Me.PnAll.Location = New System.Drawing.Point(6, 172)
 		Me.PnAll.Name = "PnAll"
-		Me.PnAll.Size = New System.Drawing.Size(575, 485)
+		Me.PnAll.Size = New System.Drawing.Size(575, 503)
 		Me.PnAll.TabIndex = 4
+		'
+		'GroupBox3
+		'
+		Me.GroupBox3.Controls.Add(Me.PnWheelDiam)
+		Me.GroupBox3.Location = New System.Drawing.Point(433, 3)
+		Me.GroupBox3.Name = "GroupBox3"
+		Me.GroupBox3.Size = New System.Drawing.Size(137, 48)
+		Me.GroupBox3.TabIndex = 6
+		Me.GroupBox3.TabStop = False
+		Me.GroupBox3.Text = "Dynamic Tire Radius"
 		'
 		'GroupBox2
 		'
 		Me.GroupBox2.Controls.Add(Me.pnAngularGearFields)
 		Me.GroupBox2.Controls.Add(Me.cbAngularGearType)
-		Me.GroupBox2.Location = New System.Drawing.Point(290, 290)
+		Me.GroupBox2.Location = New System.Drawing.Point(290, 295)
 		Me.GroupBox2.Name = "GroupBox2"
-		Me.GroupBox2.Size = New System.Drawing.Size(278, 111)
+		Me.GroupBox2.Size = New System.Drawing.Size(280, 111)
 		Me.GroupBox2.TabIndex = 4
 		Me.GroupBox2.TabStop = False
 		Me.GroupBox2.Text = "Angular Gear"
@@ -922,15 +937,57 @@ Partial Class F_VEH
 		Me.Label8.TabIndex = 10
 		Me.Label8.Text = "HDV Class"
 		'
-		'GroupBox3
+		'gbPTO
 		'
-		Me.GroupBox3.Controls.Add(Me.PnWheelDiam)
-		Me.GroupBox3.Location = New System.Drawing.Point(290, 54)
-		Me.GroupBox3.Name = "GroupBox3"
-		Me.GroupBox3.Size = New System.Drawing.Size(278, 73)
-		Me.GroupBox3.TabIndex = 6
-		Me.GroupBox3.TabStop = False
-		Me.GroupBox3.Text = "Dynamic Tire Radius"
+		Me.gbPTO.Controls.Add(Me.btPTOLossMapBrowse)
+		Me.gbPTO.Controls.Add(Me.cbPTOType)
+		Me.gbPTO.Controls.Add(Me.tbPTOLossMap)
+		Me.gbPTO.Controls.Add(Me.Label7)
+		Me.gbPTO.Location = New System.Drawing.Point(6, 412)
+		Me.gbPTO.Name = "gbPTO"
+		Me.gbPTO.Size = New System.Drawing.Size(564, 86)
+		Me.gbPTO.TabIndex = 4
+		Me.gbPTO.TabStop = False
+		Me.gbPTO.Text = "PTO Transmission"
+		'
+		'Label7
+		'
+		Me.Label7.Anchor = CType((System.Windows.Forms.AnchorStyles.Bottom Or System.Windows.Forms.AnchorStyles.Left), System.Windows.Forms.AnchorStyles)
+		Me.Label7.Location = New System.Drawing.Point(6, 41)
+		Me.Label7.Name = "Label7"
+		Me.Label7.Size = New System.Drawing.Size(201, 16)
+		Me.Label7.TabIndex = 15
+		Me.Label7.Text = "PTO Loss Map"
+		Me.Label7.TextAlign = System.Drawing.ContentAlignment.BottomLeft
+		'
+		'btPTOLossMapBrowse
+		'
+		Me.btPTOLossMapBrowse.Anchor = CType((System.Windows.Forms.AnchorStyles.Bottom Or System.Windows.Forms.AnchorStyles.Left), System.Windows.Forms.AnchorStyles)
+		Me.btPTOLossMapBrowse.Image = Global.VECTO.My.Resources.Resources.Open_icon
+		Me.btPTOLossMapBrowse.Location = New System.Drawing.Point(531, 56)
+		Me.btPTOLossMapBrowse.Name = "btPTOLossMapBrowse"
+		Me.btPTOLossMapBrowse.Size = New System.Drawing.Size(24, 24)
+		Me.btPTOLossMapBrowse.TabIndex = 14
+		Me.btPTOLossMapBrowse.UseVisualStyleBackColor = True
+		'
+		'tbPTOLossMap
+		'
+		Me.tbPTOLossMap.Anchor = CType((System.Windows.Forms.AnchorStyles.Bottom Or System.Windows.Forms.AnchorStyles.Left), System.Windows.Forms.AnchorStyles)
+		Me.tbPTOLossMap.Location = New System.Drawing.Point(9, 58)
+		Me.tbPTOLossMap.Name = "tbPTOLossMap"
+		Me.tbPTOLossMap.Size = New System.Drawing.Size(522, 20)
+		Me.tbPTOLossMap.TabIndex = 13
+		'
+		'cbPTOType
+		'
+		Me.cbPTOType.DropDownStyle = System.Windows.Forms.ComboBoxStyle.DropDownList
+		Me.cbPTOType.FormattingEnabled = True
+		Me.cbPTOType.Items.AddRange(New Object() {"None", "only the drive shaft of the PTO - shift claw, synchronizer, Schieberad", "only the drive shaft of the PTO - multi-disc clutch", "only the drive shaft of the PTO - multi-disc clutch, oil pump", "drive shaft and/or up to 2 gear wheels - shift claw, synchronizer, Schieberad", "drive shaft and/or up to 2 gear wheels - multi-disc clutch", "drive shaft and/or up to 2 gear wheels - multi-disc clutch, oil pump", "drive shaft and/or more than 2 gear wheels - shift claw, synchronizer, Schieberad" & _
+				"", "drive shaft and/or more than 2 gear wheels - multi-disc clutch", "drive shaft and/or more than 2 gear wheels - multi-disc clutch, oil pump"})
+		Me.cbPTOType.Location = New System.Drawing.Point(6, 19)
+		Me.cbPTOType.Name = "cbPTOType"
+		Me.cbPTOType.Size = New System.Drawing.Size(548, 21)
+		Me.cbPTOType.TabIndex = 0
 		'
 		'F_VEH
 		'
@@ -938,7 +995,7 @@ Partial Class F_VEH
 		Me.AutoScaleDimensions = New System.Drawing.SizeF(6.0!, 13.0!)
 		Me.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font
 		Me.CancelButton = Me.ButCancel
-		Me.ClientSize = New System.Drawing.Size(589, 709)
+		Me.ClientSize = New System.Drawing.Size(589, 723)
 		Me.Controls.Add(Me.Label8)
 		Me.Controls.Add(Me.TbHDVclass)
 		Me.Controls.Add(Me.PicVehicle)
@@ -982,11 +1039,13 @@ Partial Class F_VEH
 		CType(Me.PictureBox1, System.ComponentModel.ISupportInitialize).EndInit()
 		Me.CmOpenFile.ResumeLayout(False)
 		Me.PnAll.ResumeLayout(False)
+		Me.GroupBox3.ResumeLayout(False)
 		Me.GroupBox2.ResumeLayout(False)
 		Me.pnAngularGearFields.ResumeLayout(False)
 		Me.pnAngularGearFields.PerformLayout()
 		CType(Me.PicVehicle, System.ComponentModel.ISupportInitialize).EndInit()
-		Me.GroupBox3.ResumeLayout(False)
+		Me.gbPTO.ResumeLayout(False)
+		Me.gbPTO.PerformLayout()
 		Me.ResumeLayout(False)
 		Me.PerformLayout()
 
@@ -1078,4 +1137,9 @@ Partial Class F_VEH
 	Friend WithEvents tbAngularGearLossMapPath As System.Windows.Forms.TextBox
 	Friend WithEvents ToolTip1 As System.Windows.Forms.ToolTip
 	Friend WithEvents GroupBox3 As System.Windows.Forms.GroupBox
+	Friend WithEvents Label7 As System.Windows.Forms.Label
+	Friend WithEvents tbPTOLossMap As System.Windows.Forms.TextBox
+	Friend WithEvents gbPTO As System.Windows.Forms.GroupBox
+	Friend WithEvents btPTOLossMapBrowse As System.Windows.Forms.Button
+	Friend WithEvents cbPTOType As System.Windows.Forms.ComboBox
 End Class
