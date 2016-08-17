@@ -206,6 +206,7 @@ namespace TUGraz.VectoCore.OutputData
 				});
 			}
 
+
 			var strCols = dataColumns.Select(x => x.GetName())
 				.Concat(Auxiliaries.Values.Select(c => c.ColumnName))
 				.Concat(
@@ -213,7 +214,9 @@ namespace TUGraz.VectoCore.OutputData
 						ModalResultField.FCMap, ModalResultField.FCAUXc, ModalResultField.FCWHTCc,
 						ModalResultField.FCAAUX, ModalResultField.FCFinal
 					}.Select(x => x.GetName()));
-
+#if TRACE
+			strCols = strCols.Concat(_additionalColumns);
+#endif
 			if (WriteModalResults) {
 				var filteredData = Data;
 				foreach (var filter in _filters) {

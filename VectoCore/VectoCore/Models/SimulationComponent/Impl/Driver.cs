@@ -143,6 +143,7 @@ namespace TUGraz.VectoCore.Models.SimulationComponent.Impl
 		public IResponse DrivingActionAccelerate(Second absTime, Meter ds, MeterPerSecond targetVelocity, Radian gradient,
 			IResponse previousResponse = null)
 		{
+			CurrentAction = "ACCELERATE";
 			IterationStatistics.Increment(this, "Accelerate");
 			Log.Debug("DrivingAction Accelerate");
 			var operatingPoint = ComputeAcceleration(ds, targetVelocity);
@@ -236,6 +237,7 @@ namespace TUGraz.VectoCore.Models.SimulationComponent.Impl
 		/// <returns></returns>
 		public IResponse DrivingActionCoast(Second absTime, Meter ds, MeterPerSecond maxVelocity, Radian gradient)
 		{
+			CurrentAction = "COAST";
 			IterationStatistics.Increment(this, "Coast");
 			Log.Debug("DrivingAction Coast");
 
@@ -252,6 +254,7 @@ namespace TUGraz.VectoCore.Models.SimulationComponent.Impl
 		/// <returns></returns>
 		public IResponse DrivingActionRoll(Second absTime, Meter ds, MeterPerSecond maxVelocity, Radian gradient)
 		{
+			CurrentAction = "ROLL";
 			IterationStatistics.Increment(this, "Roll");
 
 			Log.Debug("DrivingAction Roll");
@@ -358,6 +361,7 @@ namespace TUGraz.VectoCore.Models.SimulationComponent.Impl
 		public IResponse DrivingActionBrake(Second absTime, Meter ds, MeterPerSecond nextTargetSpeed, Radian gradient,
 			IResponse previousResponse = null, Meter targetDistance = null)
 		{
+			CurrentAction = "BRAKE";
 			IterationStatistics.Increment(this, "Brake");
 			Log.Debug("DrivingAction Brake");
 
@@ -733,6 +737,7 @@ namespace TUGraz.VectoCore.Models.SimulationComponent.Impl
 		/// <returns></returns>
 		public IResponse DrivingActionHalt(Second absTime, Second dt, MeterPerSecond targetVelocity, Radian gradient)
 		{
+			CurrentAction = "HALT";
 			if (!targetVelocity.IsEqual(0) || !DataBus.VehicleStopped) {
 				Log.Error("TargetVelocity ({0}) and VehicleVelocity ({1}) must be zero when vehicle is halting!", targetVelocity,
 					DataBus.VehicleSpeed);
@@ -762,6 +767,25 @@ namespace TUGraz.VectoCore.Models.SimulationComponent.Impl
 		protected override void DoWriteModalResults(IModalDataContainer container)
 		{
 			container[ModalResultField.acc] = CurrentState.Acceleration;
+			container.SetDataValue("DriverAction", ActionToNumber(CurrentAction));
+		}
+
+		private int ActionToNumber(string currentAction)
+		{
+			switch (currentAction.ToUpper()) {
+				case "HALT":
+					return 0;
+				case "ROLL":
+					return 2;
+				case "COAST":
+					return 4;
+				case "ACCELERATE":
+					return 6;
+				case "BRAKE":
+					return -5;
+				default:
+					return -10;
+			}
 		}
 
 		protected override void DoCommitSimulationStep()
