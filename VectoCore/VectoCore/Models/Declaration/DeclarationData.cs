@@ -55,6 +55,12 @@ namespace TUGraz.VectoCore.Models.Declaration
 		private AirDrag _airDrag;
 		private StandardBodies _standardBodies;
 		private Payloads _payloads;
+		private PTOTransmission _pto;
+
+		public static PTOTransmission PTOTransmission
+		{
+			get { return Instance()._pto ?? (Instance()._pto = new PTOTransmission()); }
+		}
 
 		public static Wheels Wheels
 		{
