@@ -48,7 +48,7 @@ namespace TUGraz.VectoCore.InputData.Reader.ComponentData
 				.Select(row => new RetarderLossMap.RetarderLossEntry {
 					RetarderSpeed = row.ParseDouble(Fields.RetarderSpeed).RPMtoRad(),
 					TorqueLoss = row.ParseDouble(Fields.TorqueLoss).SI<NewtonMeter>()
-				}).OrderBy(e => e.RetarderSpeed));
+				}).OrderBy(e => e.RetarderSpeed).ToArray());
 		}
 
 		public static class Fields

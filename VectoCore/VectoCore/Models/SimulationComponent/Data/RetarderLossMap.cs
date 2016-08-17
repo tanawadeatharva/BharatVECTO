@@ -29,7 +29,6 @@
 *   Martin Rexeis, rexeis@ivt.tugraz.at, IVT, Graz University of Technology
 */
 
-using System.Collections.Generic;
 using System.ComponentModel.DataAnnotations;
 using System.Linq;
 using TUGraz.VectoCommon.Utils;
@@ -45,9 +44,9 @@ namespace TUGraz.VectoCore.Models.SimulationComponent.Data
 		private PerSecond _minSpeed;
 		private PerSecond _maxSpeed;
 
-		protected internal RetarderLossMap(IEnumerable<RetarderLossEntry> entries)
+		protected internal RetarderLossMap(RetarderLossEntry[] entries)
 		{
-			_entries = entries.ToArray();
+			_entries = entries;
 		}
 
 		/// <summary>
