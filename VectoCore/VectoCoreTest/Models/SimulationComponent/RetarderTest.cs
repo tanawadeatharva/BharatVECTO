@@ -33,8 +33,8 @@ using Microsoft.VisualStudio.TestTools.UnitTesting;
 using TUGraz.VectoCommon.Exceptions;
 using TUGraz.VectoCommon.Models;
 using TUGraz.VectoCommon.Utils;
+using TUGraz.VectoCore.InputData.Reader.ComponentData;
 using TUGraz.VectoCore.Models.Simulation.Impl;
-using TUGraz.VectoCore.Models.SimulationComponent.Data;
 using TUGraz.VectoCore.Models.SimulationComponent.Impl;
 using TUGraz.VectoCore.Tests.Utils;
 using TUGraz.VectoCore.Utils;
@@ -133,7 +133,7 @@ namespace TUGraz.VectoCore.Tests.Models.SimulationComponent
 		public void RetarderDeclarationTest()
 		{
 			var retarderData = RetarderLossMapReader.ReadFromFile(RetarderLossMapFile);
-			var declVehicle = new VehicleContainer(ExecutionMode.Declaration, null, null);
+			var declVehicle = new VehicleContainer(ExecutionMode.Declaration);
 			var retarder = new Retarder(declVehicle, retarderData, 2.0);
 			var nextRequest = new MockTnOutPort();
 
@@ -160,7 +160,7 @@ namespace TUGraz.VectoCore.Tests.Models.SimulationComponent
 			var retarderTbl =
 				VectoCSVFile.ReadStream(InputDataHelper.InputDataAsStream("Retarder Speed [rpm],Loss Torque [Nm]",
 					retarderEntries));
-			var vehicle = new VehicleContainer(ExecutionMode.Engineering, null, null);
+			var vehicle = new VehicleContainer(ExecutionMode.Engineering);
 			var retarderData = RetarderLossMapReader.Create(retarderTbl);
 			var retarder = new Retarder(vehicle, retarderData, 2.0);
 
