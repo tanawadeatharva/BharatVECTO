@@ -62,6 +62,42 @@ namespace TUGraz.VectoCore.Tests.Models.SimulationComponentData
 			//Assert.AreEqual(tqInExpected, inTorque.Value(), 10);
 		}
 
+		[Test,
+		TestCase(898, 463)]
+		public void TestTorqueConverterOperatingPointForward(double nIn, double tqIn)
+		{
+			var tqLimit = 1600;
+
+			var tqInput = new[] {
+				"0.0,  4.5, 700",
+				"0.1,  3.5, 640	",
+				"0.2,  2.7, 560	",
+				"0.3,  2.2, 460	",
+				"0.4,  1.6, 350	",
+				"0.5,  1.2, 250	",
+				"0.6,  0.9, 160	",
+				"0.74, 0.9,   1",
+			};
+
+			var tqData =
+				TorqueConverterDataReader.ReadFromStream(InputDataHelper.InputDataAsStream("Speed Ratio, Torque Ratio,MP1000",
+					tqInput), 1000.RPMtoRad(), tqLimit.RPMtoRad());
+
+
+			var operatingPoint = tqData.GetOutTorqueAndSpeed(tqIn.SI<NewtonMeter>(), nIn.RPMtoRad());
+
+			Assert.AreEqual(operatingPoint.InTorque.Value(), tqIn, 1e-6);
+			Assert.AreEqual(operatingPoint.InAngularVelocity.Value(), nIn.RPMtoRad().Value(), 1e-6);
+
+
+			var reverseOP = tqData.FindOperatingPoint(operatingPoint.OutTorque, operatingPoint.OutAngularVelocity);
+
+			Assert.AreEqual(operatingPoint.InTorque.Value(), reverseOP.InTorque.Value(), 1e-6);
+			Assert.AreEqual(operatingPoint.OutTorque.Value(), reverseOP.OutTorque.Value(), 1e-6);
+			Assert.AreEqual(operatingPoint.InAngularVelocity.Value(), reverseOP.InAngularVelocity.Value(), 1e-6);
+			Assert.AreEqual(operatingPoint.OutAngularVelocity.Value(), reverseOP.OutAngularVelocity.Value(), 1e-6);
+		}
+
 		[Test]
 		public void TestTorqueConverterComparisonV2()
 		{

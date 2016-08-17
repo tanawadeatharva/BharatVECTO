@@ -107,7 +107,7 @@ namespace TUGraz.VectoCore.Models.SimulationComponent.Data.Gearbox
 		private double MuLookup(double nu)
 		{
 			int index;
-			TorqueConverterEntries.GetSection(x => x.SpeedRatio > nu, out index);
+			TorqueConverterEntries.GetSection(x => x.SpeedRatio < nu, out index);
 			var muEdge =
 				Edge.Create(new Point(TorqueConverterEntries[index].SpeedRatio, TorqueConverterEntries[index].TorqueRatio),
 					new Point(TorqueConverterEntries[index + 1].SpeedRatio, TorqueConverterEntries[index + 1].TorqueRatio));
@@ -135,6 +135,31 @@ namespace TUGraz.VectoCore.Models.SimulationComponent.Data.Gearbox
 			}
 			throw new VectoException("No solution for output speed/input speed found! n_out: {0}, n_in: {1}", outAngularVelocity,
 				inAngularVelocity);
+		}
+
+		public TorqueConverterOperatingPoint GetOutTorqueAndSpeed(NewtonMeter inTorque, PerSecond inAngularVelocity)
+		{
+			var referenceTorque = inTorque.Value() / inAngularVelocity.Value() / inAngularVelocity.Value() *
+								ReferenceSpeed.Value() * ReferenceSpeed.Value();
+			var maxTorque = TorqueConverterEntries.Max(x => x.Torque.Value());
+			if (referenceTorque.IsGreaterOrEqual(maxTorque)) {
+				referenceTorque = 0.9 * maxTorque;
+			}
+
+			var solutions = new List<double>();
+			foreach (var edge in TorqueConverterEntries.Pairwise(
+				(p1, p2) => Edge.Create(new Point(p1.SpeedRatio, p1.Torque.Value()), new Point(p2.SpeedRatio, p2.Torque.Value())))) {
+				var x = (referenceTorque - edge.OffsetXY) / edge.SlopeXY;
+				if (x >= edge.P1.X && x < edge.P2.X) {
+					solutions.Add(x * inAngularVelocity.Value());
+				}
+			}
+			if (solutions.Count == 0) {
+				throw new VectoSimulationException(
+					"Failed to find torque converter Operating Point for inputTorque/inputSpeed! n_in: {0}, tq_in: {1}",
+					inAngularVelocity, inTorque);
+			}
+			return GetOutTorque(inAngularVelocity, solutions.Max().SI<PerSecond>());
 		}
 	}
 
