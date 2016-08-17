@@ -62,28 +62,30 @@ namespace TUGraz.VectoCore.Models.SimulationComponent.Impl
 						true);
 				var deltaEngine = (engineResponse.DeltaFullLoad > 0 ? engineResponse.DeltaFullLoad : 0.SI<Watt>()) +
 								(engineResponse.DeltaDragLoad < 0 ? -engineResponse.DeltaDragLoad : 0.SI<Watt>());
-				if (deltaTorqueConverter.IsEqual(0)) {
-					if (deltaEngine.IsEqual(0)) {
-						return new ResponseDryRun {
-							Source = this,
-							DeltaFullLoad = 0.SI<Watt>(),
-							DeltaDragLoad = 0.SI<Watt>(),
-							TorqueConverterOperatingPoint = dryOperatingPoint
-						};
-					}
+				if (deltaTorqueConverter.IsEqual(0) && deltaEngine.IsEqual(0)) {
 					return new ResponseDryRun {
 						Source = this,
-						DeltaFullLoad = engineResponse.DeltaFullLoad,
-						DeltaDragLoad = engineResponse.DeltaDragLoad,
+						DeltaFullLoad = 0.SI<Watt>(),
+						DeltaDragLoad = 0.SI<Watt>(),
 						TorqueConverterOperatingPoint = dryOperatingPoint
 					};
 				}
+				if (engineResponse.DeltaFullLoad > 0 || engineResponse.DeltaDragLoad < 0) {
+					// engine is overloaded with current operating point, reduce torque...
+					dryOperatingPoint =
+						ModelData.GetOutTorqueAndSpeed(
+							outTorque > 0 ? engineResponse.EngineMaxTorqueOut : engineResponse.EngineDragTorque,
+							dryOperatingPoint.InAngularVelocity);
+				}
 
-				var delta = deltaTorqueConverter.Value() * (deltaEngine.IsEqual(0) ? 1 : deltaEngine.Value());
+
+				var delta = (outTorque - dryOperatingPoint.OutTorque) *
+							(PreviousState.OutAngularVelocity + dryOperatingPoint.OutAngularVelocity) / 2.0;
+				//deltaTorqueConverter.Value() * (deltaEngine.IsEqual(0) ? 1 : deltaEngine.Value());
 				return new ResponseDryRun() {
 					Source = this,
-					DeltaFullLoad = delta.SI<Watt>(),
-					DeltaDragLoad = delta.SI<Watt>(),
+					DeltaFullLoad = delta,
+					DeltaDragLoad = delta,
 					TorqueConverterOperatingPoint = dryOperatingPoint
 				};
 			}
