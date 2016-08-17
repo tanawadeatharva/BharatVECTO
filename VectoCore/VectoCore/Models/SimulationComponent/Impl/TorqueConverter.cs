@@ -100,7 +100,7 @@ namespace TUGraz.VectoCore.Models.SimulationComponent.Impl
 				}
 			}
 			var ratio = Gearbox.ModelData.Gears[Gearbox.Gear].TorqueConverterRatio;
-			if (ShiftStrategy.ShiftRequired(absTime, dt, outTorque, outAngularVelocity / ratio, operatingPoint.InTorque * ratio,
+			if (ShiftStrategy.ShiftRequired(absTime, dt, outTorque * ratio, outAngularVelocity / ratio, operatingPoint.InTorque,
 				operatingPoint.InAngularVelocity, Gearbox.Gear, Gearbox.LastShift)) {
 				return new ResponseGearShift() { Source = this };
 			}
