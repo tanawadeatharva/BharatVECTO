@@ -63,6 +63,14 @@ namespace TUGraz.VectoCore.Models.SimulationComponent.Impl
 				var deltaEngine = (engineResponse.DeltaFullLoad > 0 ? engineResponse.DeltaFullLoad : 0.SI<Watt>()) +
 								(engineResponse.DeltaDragLoad < 0 ? -engineResponse.DeltaDragLoad : 0.SI<Watt>());
 				if (deltaTorqueConverter.IsEqual(0)) {
+					if (deltaEngine.IsEqual(0)) {
+						return new ResponseDryRun {
+							Source = this,
+							DeltaFullLoad = 0.SI<Watt>(),
+							DeltaDragLoad = 0.SI<Watt>(),
+							TorqueConverterOperatingPoint = dryOperatingPoint
+						};
+					}
 					return new ResponseDryRun {
 						Source = this,
 						DeltaFullLoad = engineResponse.DeltaFullLoad,
@@ -131,14 +139,15 @@ namespace TUGraz.VectoCore.Models.SimulationComponent.Impl
 				container[ModalResultField.TorqueConverterSpeedRatio] = CurrentState.OperatingPoint.SpeedRatio;
 			}
 			container[ModalResultField.TC_TorqueIn] = CurrentState.InTorque;
-			container[ModalResultField.TC_TorqueOut] =CurrentState.OutTorque;
-			container[ModalResultField.TC_angularSpeedIn] =CurrentState.InAngularVelocity;
+			container[ModalResultField.TC_TorqueOut] = CurrentState.OutTorque;
+			container[ModalResultField.TC_angularSpeedIn] = CurrentState.InAngularVelocity;
 			container[ModalResultField.TC_angularSpeedOut] = CurrentState.OutAngularVelocity;
 
 			var avgOutVelocity = (PreviousState.OutAngularVelocity + CurrentState.OutAngularVelocity) / 2.0;
 			var avgInVelocity = (PreviousState.InAngularVelocity + CurrentState.InAngularVelocity) / 2.0;
 			container[ModalResultField.P_TC_out] = CurrentState.OutTorque * avgOutVelocity;
-			container[ModalResultField.P_TC_loss] = CurrentState.InTorque * avgInVelocity - CurrentState.OutTorque * avgOutVelocity;
+			container[ModalResultField.P_TC_loss] = CurrentState.InTorque * avgInVelocity -
+													CurrentState.OutTorque * avgOutVelocity;
 		}
 
 		protected override void DoCommitSimulationStep()
