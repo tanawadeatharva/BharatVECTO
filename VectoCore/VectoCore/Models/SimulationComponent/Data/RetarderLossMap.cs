@@ -38,7 +38,7 @@ namespace TUGraz.VectoCore.Models.SimulationComponent.Data
 	/// <summary>
 	/// LossMap for retarder.
 	/// </summary>
-	public class RetarderLossMap : SimulationComponentData
+	public class RetarderLossMap : SimulationComponentData, ILossMap
 	{
 		[ValidateObject] private readonly RetarderLossEntry[] _entries;
 		private PerSecond _minSpeed;
@@ -68,7 +68,7 @@ namespace TUGraz.VectoCore.Models.SimulationComponent.Data
 		/// <summary>
 		/// Calculates the retarder losses.
 		/// </summary>
-		public NewtonMeter RetarderLoss(PerSecond angularVelocity)
+		public NewtonMeter GetTorqueLoss(PerSecond angularVelocity)
 		{
 			var s = _entries.GetSection(e => e.RetarderSpeed < angularVelocity);
 			return VectoMath.Interpolate(s.Item1.RetarderSpeed, s.Item2.RetarderSpeed, s.Item1.TorqueLoss, s.Item2.TorqueLoss,
