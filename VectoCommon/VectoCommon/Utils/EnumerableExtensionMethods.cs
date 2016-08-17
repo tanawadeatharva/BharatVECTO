@@ -112,8 +112,9 @@ namespace TUGraz.VectoCommon.Utils
 		}
 
 		/// <summary>
-		/// Get the first two adjacent items where the predicate changes from true to false.
-		/// If the predicate never gets true, the last 2 elements are returned.
+		/// Get the first two items where the predicate changes from true to false.
+		/// If the predicate is always true, the last 2 elements are returned.
+		/// If the predicate is always false, the first 2 elements are returned.
 		/// </summary>
 		public static Tuple<T, T> GetSection<T>(this IEnumerable<T> self, Func<T, bool> skip, out int index,
 			string message = null)
