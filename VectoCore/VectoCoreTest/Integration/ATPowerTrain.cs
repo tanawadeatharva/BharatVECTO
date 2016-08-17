@@ -4,6 +4,7 @@ using System.IO;
 using System.Linq;
 using TUGraz.VectoCommon.Models;
 using TUGraz.VectoCommon.Utils;
+using TUGraz.VectoCore.Configuration;
 using TUGraz.VectoCore.InputData.Reader;
 using TUGraz.VectoCore.InputData.Reader.ComponentData;
 using TUGraz.VectoCore.Models.Declaration;
@@ -27,18 +28,20 @@ namespace TUGraz.VectoCore.Tests.Integration
 		//public const string AxleGearLossMap = @"TestData\Components\AT_GBX\Axle.vtlm";
 		//public const string GearboxIndirectLoss = @"TestData\Components\AT_GBX\Indirect Gear.vtlm";
 		//public const string GearboxDirectLoss = @"TestData\Components\AT_GBX\Direct Gear.vtlm";
-		public const string TorqueConverterFile = @"TestData\Components\AT_GBX\TorqueConverter.vtcc";
+		public const string TorqueConverterGenericFile = @"TestData\Components\AT_GBX\TorqueConverter.vtcc";
+		public const string TorqueConverterPowerSplitFile = @"TestData\Components\AT_GBX\TorqueConverterPowerSplit.vtcc";
 		public const string GearboxShiftPolygonFile = @"TestData\Components\AT_GBX\AT-Shift.vgbs";
 
 
-		public static VectoRun CreateEngineeringRun(DrivingCycleData cycleData, string modFileName,
+		public static VectoRun CreateEngineeringRun(DrivingCycleData cycleData, GearboxType gbxType, string modFileName,
 			bool overspeed = false, KilogramSquareMeter gearBoxInertia = null)
 		{
-			var container = CreatePowerTrain(cycleData, Path.GetFileNameWithoutExtension(modFileName), overspeed, gearBoxInertia);
+			var container = CreatePowerTrain(cycleData, gbxType, Path.GetFileNameWithoutExtension(modFileName), overspeed,
+				gearBoxInertia);
 			return new DistanceRun(container);
 		}
 
-		public static VehicleContainer CreatePowerTrain(DrivingCycleData cycleData, string modFileName,
+		public static VehicleContainer CreatePowerTrain(DrivingCycleData cycleData, GearboxType gbxType, string modFileName,
 			bool overspeed = false, KilogramSquareMeter gearBoxInertia = null)
 		{
 			var fileWriter = new FileOutputWriter(modFileName);
@@ -47,12 +50,11 @@ namespace TUGraz.VectoCore.Tests.Integration
 				HasTorqueConverter = true
 			};
 			var container = new VehicleContainer(ExecutionMode.Engineering, modData) {
-				RunData = new VectoRunData { JobName = modFileName, Cycle = cycleData }
+				RunData = new VectoRunData { JobName = modFileName, Cycle = cycleData },
 			};
-
 			var engineData = MockSimulationDataFactory.CreateEngineDataFromFile(EngineFile);
-			var axleGearData = CreateAxleGearData();
-			var gearboxData = CreateGearboxData();
+			var axleGearData = CreateAxleGearData(gbxType);
+			var gearboxData = CreateGearboxData(gbxType);
 			if (gearBoxInertia != null) {
 				gearboxData.Inertia = gearBoxInertia;
 			}
@@ -80,12 +82,16 @@ namespace TUGraz.VectoCore.Tests.Integration
 			return container;
 		}
 
-		private static GearboxData CreateGearboxData()
+		private static GearboxData CreateGearboxData(GearboxType gbxType)
 		{
-			var ratios = new[] { 3.4, 1.9, 1.42, 1.0, 0.7, 0.62 };
-
+			var ratios = gbxType == GearboxType.ATSerial
+				? new[] { 3.4, 1.9, 1.42, 1.0, 0.7, 0.62 }
+				: new[] { 1.35, 1.0, 0.73 };
+			var torqueConverterFile = gbxType == GearboxType.ATSerial
+				? TorqueConverterGenericFile
+				: TorqueConverterPowerSplitFile;
 			return new GearboxData {
-				Type = GearboxType.ATSerial,
+				Type = gbxType == GearboxType.ATSerial ? GearboxType.ATSerial : GearboxType.ATPowerSplit,
 				Gears = ratios.Select((ratio, i) =>
 					Tuple.Create((uint)i,
 						new GearData {
@@ -95,9 +101,11 @@ namespace TUGraz.VectoCore.Tests.Integration
 								: TransmissionLossMapReader.Create(0.98, ratio, string.Format("Gear {0}", i)),
 							Ratio = ratio,
 							ShiftPolygon = ShiftPolygonReader.ReadFromFile(GearboxShiftPolygonFile),
-							TorqueConverterRatio = i == 0 ? ratio : double.NaN,
-							TorqueConverterGearLossMap =
-								i == 0 ? TransmissionLossMapReader.Create(0.98, ratio, string.Format("Gear {0}", i)) : null,
+							TorqueConverterRatio = i == 0 ? (gbxType == GearboxType.ATPowerSplit ? 1.0 : ratio) : double.NaN,
+							TorqueConverterGearLossMap = i == 0
+								? TransmissionLossMapReader.Create(gbxType == GearboxType.ATPowerSplit ? 1.0 : 0.98, ratio,
+									string.Format("Gear {0}", i))
+								: null,
 						}))
 					.ToDictionary(k => k.Item1 + 1, v => v.Item2),
 				ShiftTime = 1.SI<Second>(),
@@ -112,14 +120,14 @@ namespace TUGraz.VectoCore.Tests.Integration
 				UpshiftAfterDownshiftDelay = DeclarationData.Gearbox.UpshiftAfterDownshiftDelay,
 				UpshiftMinAcceleration = DeclarationData.Gearbox.UpshiftMinAcceleration,
 				TorqueConverterData =
-					TorqueConverterDataReader.ReadFromFile(TorqueConverterFile, 1000.RPMtoRad(),
+					TorqueConverterDataReader.ReadFromFile(torqueConverterFile, 1000.RPMtoRad(),
 						DeclarationData.Gearbox.TorqueConverterSpeedLimit)
 			};
 		}
 
-		private static AxleGearData CreateAxleGearData()
+		private static AxleGearData CreateAxleGearData(GearboxType gbxType)
 		{
-			const double ratio = 6.2;
+			var ratio = gbxType == GearboxType.ATSerial ? 6.2 : 5.8;
 			return new AxleGearData {
 				AxleGear = new GearData {
 					Ratio = ratio,
