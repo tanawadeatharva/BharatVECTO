@@ -163,7 +163,7 @@ Partial Class F_MAINForm
 		'ToolStripLbStatus
 		'
 		Me.ToolStripLbStatus.Name = "ToolStripLbStatus"
-		Me.ToolStripLbStatus.Size = New System.Drawing.Size(948, 17)
+		Me.ToolStripLbStatus.Size = New System.Drawing.Size(1030, 17)
 		Me.ToolStripLbStatus.Spring = True
 		Me.ToolStripLbStatus.Text = "Status Text"
 		Me.ToolStripLbStatus.TextAlign = System.Drawing.ContentAlignment.MiddleLeft
@@ -241,7 +241,7 @@ Partial Class F_MAINForm
 		Me.btStartV3.ImageAlign = System.Drawing.ContentAlignment.MiddleLeft
 		Me.btStartV3.Location = New System.Drawing.Point(3, 56)
 		Me.btStartV3.Name = "btStartV3"
-		Me.btStartV3.Size = New System.Drawing.Size(108, 36)
+		Me.btStartV3.Size = New System.Drawing.Size(108, 50)
 		Me.btStartV3.TabIndex = 20
 		Me.btStartV3.Text = "START"
 		Me.btStartV3.TextImageRelation = System.Windows.Forms.TextImageRelation.ImageBeforeText
@@ -252,7 +252,7 @@ Partial Class F_MAINForm
 		'
 		Me.LbDecl.AutoSize = True
 		Me.LbDecl.Font = New System.Drawing.Font("Microsoft Sans Serif", 8.25!, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, CType(0, Byte))
-		Me.LbDecl.Location = New System.Drawing.Point(5, 95)
+		Me.LbDecl.Location = New System.Drawing.Point(3, 118)
 		Me.LbDecl.Name = "LbDecl"
 		Me.LbDecl.Size = New System.Drawing.Size(107, 13)
 		Me.LbDecl.TabIndex = 19
@@ -381,7 +381,7 @@ Partial Class F_MAINForm
 		Me.TabPageDRI.Location = New System.Drawing.Point(4, 22)
 		Me.TabPageDRI.Name = "TabPageDRI"
 		Me.TabPageDRI.Padding = New System.Windows.Forms.Padding(3)
-		Me.TabPageDRI.Size = New System.Drawing.Size(952, 302)
+		Me.TabPageDRI.Size = New System.Drawing.Size(1034, 302)
 		Me.TabPageDRI.TabIndex = 1
 		Me.TabPageDRI.Text = "Driving Cycles"
 		Me.TabPageDRI.UseVisualStyleBackColor = True
@@ -390,7 +390,7 @@ Partial Class F_MAINForm
 		'
 		Me.Label3.Anchor = CType((System.Windows.Forms.AnchorStyles.Bottom Or System.Windows.Forms.AnchorStyles.Right), System.Windows.Forms.AnchorStyles)
 		Me.Label3.AutoSize = True
-		Me.Label3.Location = New System.Drawing.Point(732, 268)
+		Me.Label3.Location = New System.Drawing.Point(814, 268)
 		Me.Label3.Name = "Label3"
 		Me.Label3.Size = New System.Drawing.Size(217, 13)
 		Me.Label3.TabIndex = 22
@@ -442,7 +442,7 @@ Partial Class F_MAINForm
 		Me.LvDRI.LabelEdit = True
 		Me.LvDRI.Location = New System.Drawing.Point(6, 6)
 		Me.LvDRI.Name = "LvDRI"
-		Me.LvDRI.Size = New System.Drawing.Size(940, 261)
+		Me.LvDRI.Size = New System.Drawing.Size(1022, 261)
 		Me.LvDRI.TabIndex = 6
 		Me.LvDRI.UseCompatibleStateImageBehavior = False
 		Me.LvDRI.View = System.Windows.Forms.View.Details
@@ -488,7 +488,7 @@ Partial Class F_MAINForm
 		Me.TabPgOptions.Location = New System.Drawing.Point(4, 22)
 		Me.TabPgOptions.Name = "TabPgOptions"
 		Me.TabPgOptions.Padding = New System.Windows.Forms.Padding(3)
-		Me.TabPgOptions.Size = New System.Drawing.Size(952, 302)
+		Me.TabPgOptions.Size = New System.Drawing.Size(1034, 302)
 		Me.TabPgOptions.TabIndex = 2
 		Me.TabPgOptions.Text = "Options"
 		Me.TabPgOptions.UseVisualStyleBackColor = True
@@ -505,7 +505,7 @@ Partial Class F_MAINForm
 		Me.GrBoxBATCH.Controls.Add(Me.TbBOpath)
 		Me.GrBoxBATCH.Location = New System.Drawing.Point(6, 224)
 		Me.GrBoxBATCH.Name = "GrBoxBATCH"
-		Me.GrBoxBATCH.Size = New System.Drawing.Size(940, 72)
+		Me.GrBoxBATCH.Size = New System.Drawing.Size(1022, 72)
 		Me.GrBoxBATCH.TabIndex = 5
 		Me.GrBoxBATCH.TabStop = False
 		Me.GrBoxBATCH.Text = "Batch Options"
@@ -533,7 +533,7 @@ Partial Class F_MAINForm
 		'
 		Me.ButBObrowse.Anchor = CType((System.Windows.Forms.AnchorStyles.Top Or System.Windows.Forms.AnchorStyles.Right), System.Windows.Forms.AnchorStyles)
 		Me.ButBObrowse.Image = Global.VECTO.My.Resources.Resources.Open_icon
-		Me.ButBObrowse.Location = New System.Drawing.Point(879, 16)
+		Me.ButBObrowse.Location = New System.Drawing.Point(961, 16)
 		Me.ButBObrowse.Name = "ButBObrowse"
 		Me.ButBObrowse.Size = New System.Drawing.Size(24, 24)
 		Me.ButBObrowse.TabIndex = 3
@@ -555,7 +555,7 @@ Partial Class F_MAINForm
 			Or System.Windows.Forms.AnchorStyles.Right), System.Windows.Forms.AnchorStyles)
 		Me.TbBOpath.Location = New System.Drawing.Point(227, 18)
 		Me.TbBOpath.Name = "TbBOpath"
-		Me.TbBOpath.Size = New System.Drawing.Size(652, 20)
+		Me.TbBOpath.Size = New System.Drawing.Size(734, 20)
 		Me.TbBOpath.TabIndex = 1
 		'
 		'GrBoxSTD
@@ -565,7 +565,7 @@ Partial Class F_MAINForm
 			Or System.Windows.Forms.AnchorStyles.Right), System.Windows.Forms.AnchorStyles)
 		Me.GrBoxSTD.Location = New System.Drawing.Point(6, 224)
 		Me.GrBoxSTD.Name = "GrBoxSTD"
-		Me.GrBoxSTD.Size = New System.Drawing.Size(940, 72)
+		Me.GrBoxSTD.Size = New System.Drawing.Size(1022, 72)
 		Me.GrBoxSTD.TabIndex = 14
 		Me.GrBoxSTD.TabStop = False
 		Me.GrBoxSTD.Text = "Standard Options"
@@ -574,7 +574,7 @@ Partial Class F_MAINForm
 		'
 		Me.ChBoxAutoSD.Anchor = CType((System.Windows.Forms.AnchorStyles.Top Or System.Windows.Forms.AnchorStyles.Right), System.Windows.Forms.AnchorStyles)
 		Me.ChBoxAutoSD.AutoSize = True
-		Me.ChBoxAutoSD.Location = New System.Drawing.Point(777, 6)
+		Me.ChBoxAutoSD.Location = New System.Drawing.Point(859, 6)
 		Me.ChBoxAutoSD.Name = "ChBoxAutoSD"
 		Me.ChBoxAutoSD.Size = New System.Drawing.Size(169, 17)
 		Me.ChBoxAutoSD.TabIndex = 13
@@ -695,7 +695,7 @@ Partial Class F_MAINForm
 		Me.TabPageDEV.Location = New System.Drawing.Point(4, 22)
 		Me.TabPageDEV.Name = "TabPageDEV"
 		Me.TabPageDEV.Padding = New System.Windows.Forms.Padding(3)
-		Me.TabPageDEV.Size = New System.Drawing.Size(952, 302)
+		Me.TabPageDEV.Size = New System.Drawing.Size(1034, 302)
 		Me.TabPageDEV.TabIndex = 3
 		Me.TabPageDEV.Text = "Test"
 		Me.TabPageDEV.UseVisualStyleBackColor = True
@@ -721,7 +721,7 @@ Partial Class F_MAINForm
 		Me.LvDEVoptions.Location = New System.Drawing.Point(6, 6)
 		Me.LvDEVoptions.MultiSelect = False
 		Me.LvDEVoptions.Name = "LvDEVoptions"
-		Me.LvDEVoptions.Size = New System.Drawing.Size(940, 277)
+		Me.LvDEVoptions.Size = New System.Drawing.Size(1022, 277)
 		Me.LvDEVoptions.TabIndex = 0
 		Me.LvDEVoptions.UseCompatibleStateImageBehavior = False
 		Me.LvDEVoptions.View = System.Windows.Forms.View.Details
