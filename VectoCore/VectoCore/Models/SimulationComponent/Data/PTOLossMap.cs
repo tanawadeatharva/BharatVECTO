@@ -6,11 +6,11 @@ namespace TUGraz.VectoCore.Models.SimulationComponent.Data
 	/// <summary>
 	/// LossMap for PTO Idle losses.
 	/// </summary>
-	public class PTOIdleLossMap : SimulationComponentData
+	public class PTOLossMap : SimulationComponentData, ILossMap
 	{
 		[ValidateObject] private readonly Entry[] _entries;
 
-		protected internal PTOIdleLossMap(Entry[] entries)
+		protected internal PTOLossMap(Entry[] entries)
 		{
 			_entries = entries;
 		}
