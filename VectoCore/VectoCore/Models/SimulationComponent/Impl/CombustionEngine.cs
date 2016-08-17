@@ -157,7 +157,8 @@ namespace TUGraz.VectoCore.Models.SimulationComponent.Impl
 		{
 			IterationStatistics.Increment(this, "Requests");
 
-			Log.Debug("Engine Powertrain Power Request: torque: {0}, angularVelocity: {1}, power: {2}", outTorque, outAngularVelocity,
+			Log.Debug("Engine Powertrain Power Request: torque: {0}, angularVelocity: {1}, power: {2}", outTorque,
+				outAngularVelocity,
 				outTorque * outAngularVelocity);
 
 			return DoHandleRequest(absTime, dt, outTorque, outAngularVelocity, dryRun);
@@ -214,6 +215,10 @@ namespace TUGraz.VectoCore.Models.SimulationComponent.Impl
 					EnginePowerRequest = torqueOut * avgEngineSpeed,
 					AuxiliariesPowerDemand = auxTorqueDemand * avgEngineSpeed,
 					EngineSpeed = angularVelocity,
+					EngineMaxTorqueOut =
+						VectoMath.Max(CurrentState.DynamicFullLoadTorque - auxTorqueDemand - CurrentState.InertiaTorqueLoss,
+							gearboxFullLoad ?? 0.SI<NewtonMeter>()),
+					EngineDragTorque = CurrentState.FullDragTorque,
 					Source = this,
 				};
 			}
@@ -302,7 +307,11 @@ namespace TUGraz.VectoCore.Models.SimulationComponent.Impl
 			};
 			PreviousState.DynamicFullLoadTorque = PreviousState.StationaryFullLoadTorque;
 
-			return new ResponseSuccess { Source = this, EnginePowerRequest = PreviousState.EnginePower, EngineSpeed = outAngularVelocity};
+			return new ResponseSuccess {
+				Source = this,
+				EnginePowerRequest = PreviousState.EnginePower,
+				EngineSpeed = outAngularVelocity
+			};
 		}
 
 		/// <summary>
