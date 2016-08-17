@@ -243,6 +243,9 @@
     <None Include="TestData\Components\AT_GBX\Gearbox_v5.vgbx">
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
     </None>
+    <None Include="TestData\Components\AT_GBX\TorqueConverterPowerSplit.vtcc">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </None>
     <None Include="TestData\Components\AT_GBX\TorqueConverter.vtcc">
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
     </None>
