@@ -142,7 +142,10 @@
     <Compile Include="InputData\Reader\ComponentData\TorqueConverterDataReader.cs" />
     <Compile Include="InputData\Reader\ComponentData\AuxiliaryDataReader.cs" />
     <Compile Include="Models\SimulationComponent\Data\Engine\FuelConsumptionMapReader.cs" />
-    <Compile Include="Models\SimulationComponent\Data\PTOIdleLossMap.cs" />
+    <Compile Include="Models\SimulationComponent\Data\PTOTransmissionData.cs" />
+    <Compile Include="Models\SimulationComponent\ILossMap.cs" />
+    <Compile Include="Models\SimulationComponent\Data\PTOLossMap.cs" />
+    <Compile Include="Models\SimulationComponent\Impl\GearboxAuxiliary.cs" />
     <Compile Include="Utils\ProviderExtensions.cs" />
     <Compile Include="Models\Declaration\AirDrag.cs" />
     <Compile Include="Models\Declaration\Fan.cs" />
