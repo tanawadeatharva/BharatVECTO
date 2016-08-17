@@ -679,7 +679,10 @@ namespace TUGraz.VectoCore.Models.SimulationComponent.Impl
 							// coast would decelerate more than driver's max deceleration => issue brakes to decelerate with driver's max deceleration
 							response = Driver.DrivingActionBrake(absTime, ds, DriverStrategy.BrakeTrigger.NextTargetSpeed,
 								gradient, r);
-							Phase = BrakingPhase.Brake;
+							if ((DriverStrategy.BrakeTrigger.BrakingStartDistance - currentDistance).IsSmallerOrEqual(
+								Constants.SimulationSettings.DriverActionDistanceTolerance)) {
+								Phase = BrakingPhase.Brake;
+							}
 						}).
 						Case<ResponseOverload>(r => {
 							// limiting deceleration while coast may result in an overload => issue brakes to decelerate with driver's max deceleration
