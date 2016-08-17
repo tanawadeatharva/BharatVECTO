@@ -145,14 +145,11 @@ namespace TUGraz.VectoCore.InputData.FileIO.JSON
 						Path.Combine(BasePath, vehicleFile));
 
 					AngularGear = VehicleData as IAngularGearInputData;
+					Retarder = VehicleData as IRetarderInputData;
 				}
 			} catch (Exception e) {
 				throw new VectoException("JobFile: Failed to read Vehicle file '{0}': {1}", e, Body[JsonKeys.Vehicle_VehicleFile],
 					e.Message);
-			}
-			var retarder = VehicleData as IRetarderInputData;
-			if (retarder != null) {
-				Retarder = retarder;
 			}
 		}
 
