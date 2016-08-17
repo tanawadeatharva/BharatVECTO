@@ -44,14 +44,14 @@ namespace TUGraz.VectoCore.Tests.Models.Simulation
 		[TestCase]
 		public void PTOIdleLosses_FixPoints()
 		{
-			var entryList = new List<PTOIdleLossMap.Entry>();
+			var entryList = new List<PTOLossMap.Entry>();
 			for (var i = 0; i < 2000; i += 200) {
-				entryList.Add(new PTOIdleLossMap.Entry {
+				entryList.Add(new PTOLossMap.Entry {
 					EngineSpeed = i.RPMtoRad(),
 					PTOTorque = (Math.Sqrt(i) / 10).SI<NewtonMeter>()
 				});
 			}
-			var pto = new PTOIdleLossMap(entryList.ToArray());
+			var pto = new PTOLossMap(entryList.ToArray());
 
 			foreach (var entry in entryList) {
 				Assert.AreEqual(entry.PTOTorque, pto.GetTorqueLoss(entry.EngineSpeed));
@@ -61,14 +61,14 @@ namespace TUGraz.VectoCore.Tests.Models.Simulation
 		[TestCase]
 		public void PTOIdleLosses_Interpolate()
 		{
-			var entryList = new List<PTOIdleLossMap.Entry>();
+			var entryList = new List<PTOLossMap.Entry>();
 			for (var i = 0; i < 2000; i += 200) {
-				entryList.Add(new PTOIdleLossMap.Entry {
+				entryList.Add(new PTOLossMap.Entry {
 					EngineSpeed = i.RPMtoRad(),
 					PTOTorque = (Math.Sqrt(i) / 10).SI<NewtonMeter>()
 				});
 			}
-			var pto = new PTOIdleLossMap(entryList.ToArray());
+			var pto = new PTOLossMap(entryList.ToArray());
 
 			for (var i = 1; i < entryList.Count; i++) {
 				var v1 = entryList[i - 1];

@@ -16,7 +16,7 @@ namespace TUGraz.VectoCore.InputData.Reader.ComponentData
 		/// </summary>
 		/// <param name="fileName"></param>
 		/// <returns></returns>
-		public static PTOIdleLossMap ReadFromFile(string fileName)
+		public static PTOLossMap ReadFromFile(string fileName)
 		{
 			try {
 				return Create(VectoCSVFile.Read(fileName));
@@ -28,7 +28,7 @@ namespace TUGraz.VectoCore.InputData.Reader.ComponentData
 		/// <summary>
 		/// Create the pto idle loss map from an appropriate datatable. (2 columns: Engine Speed, PTO Torque)
 		/// </summary>
-		public static PTOIdleLossMap Create(DataTable data)
+		public static PTOLossMap Create(DataTable data)
 		{
 			if (data.Columns.Count != 2) {
 				throw new VectoException("PTO Idle LossMap Data File must consist of 2 columns: {0}, {1}", Fields.EngineSpeed,
@@ -47,8 +47,8 @@ namespace TUGraz.VectoCore.InputData.Reader.ComponentData
 					Fields.EngineSpeed, Fields.PTOTorque, ", ".Join(data.Columns.Cast<DataColumn>().Select(c => c.ColumnName)));
 			}
 
-			return new PTOIdleLossMap(data.Rows.Cast<DataRow>()
-				.Select(row => new PTOIdleLossMap.Entry {
+			return new PTOLossMap(data.Rows.Cast<DataRow>()
+				.Select(row => new PTOLossMap.Entry {
 					EngineSpeed = row.ParseDouble(Fields.EngineSpeed).RPMtoRad(),
 					PTOTorque = row.ParseDouble(Fields.PTOTorque).SI<NewtonMeter>()
 				}).OrderBy(e => e.EngineSpeed).ToArray());

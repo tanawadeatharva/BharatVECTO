@@ -41,19 +41,51 @@ using TUGraz.VectoCore.OutputData;
 
 namespace TUGraz.VectoCore.Models.SimulationComponent.Impl
 {
-	public class EngineAuxiliary : StatefulVectoSimulationComponent<EngineAuxiliary.EngineAuxState>, IAuxInProvider,
+	public class EngineAuxiliary : StatefulVectoSimulationComponent<EngineAuxiliary.State>, IAuxInProvider,
 		IAuxPort
 	{
-		public const string DirectAuxiliaryId = "";
+		private const string DirectAuxiliaryId = "";
 
-		private readonly Dictionary<string, Func<PerSecond, Watt>> _auxDict = new Dictionary<string, Func<PerSecond, Watt>>();
-		private Dictionary<string, Watt> _powerDemands = new Dictionary<string, Watt>();
+		private readonly Dictionary<string, Func<PerSecond, Watt>> _auxiliaries =
+			new Dictionary<string, Func<PerSecond, Watt>>();
 
 		public EngineAuxiliary(IVehicleContainer container) : base(container) {}
 
 		public IAuxPort Port()
 		{
 			return this;
+		}
+
+		public void AddConstant(string auxId, Watt powerDemand)
+		{
+			Add(auxId, _ => powerDemand);
+		}
+
+		public void AddCycle()
+		{
+			Add(DirectAuxiliaryId, _ => DataBus.CycleData.LeftSample.AdditionalAuxPowerDemand);
+		}
+
+		public void AddMapping(string auxId, AuxiliaryData data)
+		{
+			if (!DataBus.CycleData.LeftSample.AuxiliarySupplyPower.ContainsKey("Aux_" + auxId)) {
+				var error = string.Format("driving cycle does not contain column for auxiliary: {0}", auxId);
+				Log.Error(error);
+				throw new VectoException(error);
+			}
+
+			Add(auxId, speed => {
+				var powerSupply = DataBus.CycleData.LeftSample.AuxiliarySupplyPower["Aux_" + auxId];
+				var nAuxiliary = speed * data.TransmissionRatio;
+				var powerAuxOut = powerSupply / data.EfficiencyToSupply;
+				var powerAuxIn = data.GetPowerDemand(nAuxiliary, powerAuxOut);
+				return powerAuxIn / data.EfficiencyToEngine;
+			});
+		}
+
+		public void Add(string auxId, Func<PerSecond, Watt> powerLoss)
+		{
+			_auxiliaries[auxId] = powerLoss;
 		}
 
 		public NewtonMeter PowerDemand(Second absTime, Second dt, NewtonMeter torquePowerTrain, NewtonMeter torqueEngine,
@@ -72,18 +104,18 @@ namespace TUGraz.VectoCore.Models.SimulationComponent.Impl
 
 		private Watt ComputePowerDemand(PerSecond engineSpeed)
 		{
-			_powerDemands = _auxDict.ToDictionary(kv => kv.Key, kv => kv.Value(engineSpeed));
-			return _powerDemands.Values.Sum(p => p);
+			CurrentState.PowerDemands = _auxiliaries.ToDictionary(kv => kv.Key, kv => kv.Value(engineSpeed));
+			return CurrentState.PowerDemands.Values.Sum(p => p);
 		}
 
 		protected override void DoWriteModalResults(IModalDataContainer container)
 		{
-			foreach (var kv in _powerDemands.Where(kv => !string.IsNullOrWhiteSpace(kv.Key))) {
+			foreach (var kv in CurrentState.PowerDemands.Where(kv => !string.IsNullOrWhiteSpace(kv.Key))) {
 				container[kv.Key] = kv.Value;
 			}
 			if (container[ModalResultField.P_aux] == null || container[ModalResultField.P_aux] == DBNull.Value) {
 				// don't overwrite if someone else already wrote the total aux power
-				container[ModalResultField.P_aux] = _powerDemands.Values.Sum(p => p);
+				container[ModalResultField.P_aux] = CurrentState.PowerDemands.Values.Sum(p => p);
 			}
 		}
 
@@ -92,36 +124,10 @@ namespace TUGraz.VectoCore.Models.SimulationComponent.Impl
 			AdvanceState();
 		}
 
-		public void AddConstant(string auxId, Watt powerDemand)
-		{
-			_auxDict[auxId] = speed => powerDemand;
-		}
-
-		public void AddDirect()
-		{
-			_auxDict[DirectAuxiliaryId] = speed => DataBus.CycleData.LeftSample.AdditionalAuxPowerDemand;
-		}
-
-		public void AddMapping(string auxId, AuxiliaryData data)
-		{
-			if (!DataBus.CycleData.LeftSample.AuxiliarySupplyPower.ContainsKey("Aux_" + auxId)) {
-				var error = string.Format("driving cycle does not contain column for auxiliary: {0}", auxId);
-				Log.Error(error);
-				throw new VectoException(error);
-			}
-
-			_auxDict[auxId] = speed => {
-				var powerSupply = DataBus.CycleData.LeftSample.AuxiliarySupplyPower["Aux_" + auxId];
-				var nAuxiliary = speed * data.TransmissionRatio;
-				var powerAuxOut = powerSupply / data.EfficiencyToSupply;
-				var powerAuxIn = data.GetPowerDemand(nAuxiliary, powerAuxOut);
-				return powerAuxIn / data.EfficiencyToEngine;
-			};
-		}
-
-		public class EngineAuxState
+		public class State
 		{
 			public PerSecond AngularSpeed;
+			public Dictionary<string, Watt> PowerDemands;
 		}
 	}
 }
