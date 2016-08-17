@@ -84,9 +84,6 @@ namespace TUGraz.VectoCore.Models.Declaration
 
 			protected override void ParseData(DataTable table)
 			{
-				NormalizeTable(table);
-				Data.Clear();
-
 				foreach (DataRow row in table.Rows) {
 					var hdvClass = VehicleClassHelper.Parse(row.Field<string>("hdvclass"));
 					foreach (DataColumn col in table.Columns) {
@@ -115,9 +112,6 @@ namespace TUGraz.VectoCore.Models.Declaration
 
 			protected override void ParseData(DataTable table)
 			{
-				NormalizeTable(table);
-				Data.Clear();
-
 				Data = table.Rows.Cast<DataRow>().ToDictionary(
 					key => key.Field<string>("Technology"),
 					value => new SteeringPumpValues<double>(value.ParseDouble("UF"), value.ParseDouble("B"), value.ParseDouble("S")));
@@ -160,9 +154,6 @@ namespace TUGraz.VectoCore.Models.Declaration
 
 			protected override void ParseData(DataTable table)
 			{
-				NormalizeTable(table);
-				Data.Clear();
-
 				foreach (DataRow row in table.Rows) {
 					var axleNumber = int.Parse(row.Field<string>("steeredaxles"));
 					foreach (DataColumn col in table.Columns) {

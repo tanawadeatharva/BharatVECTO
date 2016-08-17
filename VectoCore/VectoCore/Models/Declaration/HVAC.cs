@@ -50,9 +50,6 @@ namespace TUGraz.VectoCore.Models.Declaration
 
 		protected override void ParseData(DataTable table)
 		{
-			Data.Clear();
-			NormalizeTable(table);
-
 			foreach (DataRow row in table.Rows) {
 				var hdvClass = VehicleClassHelper.Parse(row.Field<string>("hdvclass"));
 				foreach (DataColumn col in table.Columns) {
