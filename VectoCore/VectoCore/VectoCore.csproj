@@ -180,7 +180,7 @@
     <Compile Include="Models\SimulationComponent\IDriverActions.cs" />
     <Compile Include="Models\SimulationComponent\IDriverStrategy.cs" />
     <Compile Include="Models\SimulationComponent\IDrivingCycleInfo.cs" />
-    <Compile Include="Models\SimulationComponent\IEngineAuxPort.cs" />
+    <Compile Include="Models\SimulationComponent\IAuxPort.cs" />
     <Compile Include="Models\SimulationComponent\Impl\AMTShiftStrategy.cs" />
     <Compile Include="Models\SimulationComponent\Impl\AngularGear.cs" />
     <Compile Include="Models\SimulationComponent\Impl\Brakes.cs" />

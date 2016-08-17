@@ -49,6 +49,7 @@ namespace TUGraz.VectoCore.Models.SimulationComponent.Impl
 		IGearbox, ITnOutPort, ITnInPort, IClutchInfo
 	{
 		internal readonly GearboxData ModelData;
+		private IAuxPort _auxiliary;
 
 		public CycleGearbox(IVehicleContainer container, GearboxData gearboxModelData) : base(container)
 		{
@@ -76,6 +77,10 @@ namespace TUGraz.VectoCore.Models.SimulationComponent.Impl
 					inAngularVelocity;
 
 				inTorque += torqueLossInertia;
+
+				if (_auxiliary != null)
+					//todo mk-2016-08-17: aux loss from out-direction or in-direction of the gearbox?
+					inTorque += _auxiliary.Initialize(outTorque, outAngularVelocity);
 			} else {
 				inTorque = 0.SI<NewtonMeter>();
 				inAngularVelocity = 0.RPMtoRad();
@@ -111,6 +116,10 @@ namespace TUGraz.VectoCore.Models.SimulationComponent.Impl
 				var inertiaPowerLoss = Formulas.InertiaPower(inAngularVelocity, alpha, ModelData.Inertia,
 					Constants.SimulationSettings.TargetTimeInterval);
 				inTorque += inertiaPowerLoss / inAngularVelocity;
+
+				//todo mk-2016-08-17: aux loss from out-direction or in-direction of the gearbox?
+				if (_auxiliary != null)
+					inTorque += _auxiliary.Initialize(outTorque, outAngularVelocity);
 			}
 
 			var response = NextComponent.Initialize(inTorque, inAngularVelocity);
@@ -193,9 +202,14 @@ namespace TUGraz.VectoCore.Models.SimulationComponent.Impl
 			} else {
 				//engaged
 				var inTorqueLossResult = ModelData.Gears[Gear].LossMap.GetTorqueLoss(avgOutAngularVelocity, outTorque);
+				//todo mk-2016-08-17: minus inTorqueLoss?? Why not plus?
 				var inTorque = outTorque / ModelData.Gears[Gear].Ratio - inTorqueLossResult.Value;
 				CurrentState.TorqueLossResult = inTorqueLossResult;
 				var inAngularVelocity = outAngularVelocity * ModelData.Gears[Gear].Ratio;
+
+				//todo mk-2016-08-17: aux loss from out-direction or in-direction of the gearbox?
+				if (_auxiliary != null)
+					inTorque += _auxiliary.PowerDemand(absTime, dt, outTorque, inTorque, outAngularVelocity, dryRun);
 
 				if (dryRun) {
 					var dryRunResponse = NextComponent.Request(absTime, dt, inTorque, inAngularVelocity, true);
@@ -295,5 +309,10 @@ namespace TUGraz.VectoCore.Models.SimulationComponent.Impl
 		}
 
 		#endregion
+
+		public void Connect(IAuxPort aux)
+		{
+			_auxiliary = aux;
+		}
 	}
 }

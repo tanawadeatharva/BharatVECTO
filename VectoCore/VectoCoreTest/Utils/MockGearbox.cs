@@ -114,5 +114,10 @@ namespace TUGraz.VectoCore.Tests.Utils
 		{
 			return true;
 		}
+
+		public void Connect(IAuxPort aux)
+		{
+			throw new NotImplementedException();
+		}
 	}
 }
