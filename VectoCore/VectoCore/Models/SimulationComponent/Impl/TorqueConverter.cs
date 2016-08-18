@@ -75,7 +75,7 @@ namespace TUGraz.VectoCore.Models.SimulationComponent.Impl
 					dryOperatingPoint =
 						ModelData.GetOutTorqueAndSpeed(
 							outTorque > 0 ? engineResponse.EngineMaxTorqueOut : engineResponse.EngineDragTorque,
-							dryOperatingPoint.InAngularVelocity);
+							dryOperatingPoint.InAngularVelocity, null);
 				}
 
 

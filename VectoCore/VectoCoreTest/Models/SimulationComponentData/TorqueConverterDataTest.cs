@@ -85,7 +85,7 @@ namespace TUGraz.VectoCore.Tests.Models.SimulationComponentData
 					tqInput), 1000.RPMtoRad(), tqLimit.RPMtoRad());
 
 
-			var operatingPoint = tqData.GetOutTorqueAndSpeed(tqIn.SI<NewtonMeter>(), nIn.RPMtoRad());
+			var operatingPoint = tqData.GetOutTorqueAndSpeed(tqIn.SI<NewtonMeter>(), nIn.RPMtoRad(), null);
 
 			Assert.AreEqual(operatingPoint.InTorque.Value(), tqIn, 1e-6);
 			Assert.AreEqual(operatingPoint.InAngularVelocity.Value(), nIn.RPMtoRad().Value(), 1e-6);

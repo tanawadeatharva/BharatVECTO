@@ -104,14 +104,25 @@ namespace TUGraz.VectoCore.Models.SimulationComponent.Data.Gearbox
 			return retVal;
 		}
 
-		private double MuLookup(double nu)
+		private double MuLookup(double speedRatio)
 		{
 			int index;
-			TorqueConverterEntries.GetSection(x => x.SpeedRatio < nu, out index);
-			var muEdge =
-				Edge.Create(new Point(TorqueConverterEntries[index].SpeedRatio, TorqueConverterEntries[index].TorqueRatio),
-					new Point(TorqueConverterEntries[index + 1].SpeedRatio, TorqueConverterEntries[index + 1].TorqueRatio));
-			return muEdge.SlopeXY * nu + muEdge.OffsetXY;
+			TorqueConverterEntries.GetSection(x => x.SpeedRatio < speedRatio, out index);
+			var retVal = VectoMath.Interpolate(TorqueConverterEntries[index].SpeedRatio,
+				TorqueConverterEntries[index + 1].SpeedRatio, TorqueConverterEntries[index].TorqueRatio,
+				TorqueConverterEntries[index + 1].TorqueRatio, speedRatio);
+			return retVal;
+		}
+
+
+		private NewtonMeter ReferenceTorqueLookup(double speedRatio)
+		{
+			int index;
+			TorqueConverterEntries.GetSection(x => x.SpeedRatio < speedRatio, out index);
+			var retVal = VectoMath.Interpolate(TorqueConverterEntries[index].SpeedRatio,
+				TorqueConverterEntries[index + 1].SpeedRatio, TorqueConverterEntries[index].Torque,
+				TorqueConverterEntries[index + 1].Torque, speedRatio);
+			return retVal;
 		}
 
 		public TorqueConverterOperatingPoint GetOutTorque(PerSecond inAngularVelocity, PerSecond outAngularVelocity)
@@ -137,13 +148,16 @@ namespace TUGraz.VectoCore.Models.SimulationComponent.Data.Gearbox
 				inAngularVelocity);
 		}
 
-		public TorqueConverterOperatingPoint GetOutTorqueAndSpeed(NewtonMeter inTorque, PerSecond inAngularVelocity)
+		public TorqueConverterOperatingPoint GetOutTorqueAndSpeed(NewtonMeter inTorque, PerSecond inAngularVelocity,
+			PerSecond outAngularSpeedEstimated)
 		{
 			var referenceTorque = inTorque.Value() / inAngularVelocity.Value() / inAngularVelocity.Value() *
 								ReferenceSpeed.Value() * ReferenceSpeed.Value();
 			var maxTorque = TorqueConverterEntries.Max(x => x.Torque.Value());
 			if (referenceTorque.IsGreaterOrEqual(maxTorque)) {
-				referenceTorque = 0.9 * maxTorque;
+				referenceTorque = outAngularSpeedEstimated != null
+					? ReferenceTorqueLookup(outAngularSpeedEstimated / inAngularVelocity).Value()
+					: 0.9 * maxTorque;
 			}
 
 			var solutions = new List<double>();
