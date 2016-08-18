@@ -218,7 +218,7 @@ namespace TUGraz.VectoCore.Models.SimulationComponent.Impl
 					EngineMaxTorqueOut =
 						VectoMath.Max(CurrentState.DynamicFullLoadTorque - auxTorqueDemand - CurrentState.InertiaTorqueLoss,
 							gearboxFullLoad ?? 0.SI<NewtonMeter>()),
-					EngineDragTorque = CurrentState.FullDragTorque,
+					EngineDragTorque = CurrentState.FullDragTorque - auxTorqueDemand - CurrentState.InertiaTorqueLoss,
 					Source = this,
 				};
 			}
