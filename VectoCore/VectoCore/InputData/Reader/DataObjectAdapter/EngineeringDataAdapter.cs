@@ -188,8 +188,9 @@ namespace TUGraz.VectoCore.InputData.Reader.DataObjectAdapter
 						// -> duplicate ratio and lossmap for torque converter mode, remove locked transmission for previous gear
 						gearData.TorqueConverterRatio = gearData.Ratio;
 						gearData.TorqueConverterGearLossMap = gearData.LossMap;
-						gears[i - 1].Ratio = double.NaN;
-						gears[i - 1].LossMap = null;
+						// NOTE: the lower gear in 'gears' dictionary has index i !!
+						gears[i].Ratio = double.NaN;
+						gears[i].LossMap = null;
 					}
 				}
 				gears.Add(i + 1, gearData);
