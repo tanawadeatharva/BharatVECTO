@@ -30,7 +30,6 @@
 */
 
 using System;
-using System.IO;
 using System.Runtime.Serialization;
 using TUGraz.VectoCommon.Models;
 
@@ -85,7 +84,6 @@ namespace TUGraz.VectoCommon.Exceptions
 	{
 		public InvalidFileFormatException(string message) : base(message) {}
 		public InvalidFileFormatException(string message, params object[] args) : base(string.Format(message, args)) {}
-		public InvalidFileFormatException(string message, Exception inner) : base(message) {}
 	}
 
 	/// <summary>
@@ -96,10 +94,6 @@ namespace TUGraz.VectoCommon.Exceptions
 	{
 		public UnsupportedFileVersionException(string message) : base(message) {}
 		public UnsupportedFileVersionException(string message, Exception inner) : base(message, inner) {}
-
-		public UnsupportedFileVersionException(string filename, int version, Exception inner = null)
-			: base(string.Format("Unsupported Version of {0} file. Got Version {1}",
-				Path.GetExtension(filename), version), inner) {}
 	}
 
 	/// <summary>

@@ -1,4 +1,4 @@
-' Copyright 2014 European Union.
+﻿' Copyright 2014 European Union.
 ' Licensed under the EUPL (the 'Licence');
 '
 ' * You may not use this work except in compliance with the Licence.
@@ -79,8 +79,8 @@ Public Class F_GBX
 
 		GStype = CType(Me.CbGStype.SelectedIndex, tGearbox)
 
-		Me.TbTracInt.Text = Declaration.TracInt(GStype)
-		Me.TbShiftTime.Text = Declaration.ShiftTime(GStype)
+		Me.TbTracInt.Text = cDeclaration.TracInt(GStype)
+		Me.TbShiftTime.Text = cDeclaration.ShiftTime(GStype)
 
 		Me.TbTqResv.Text = cDeclaration.TqResv
 		Me.TbTqResvStart.Text = cDeclaration.TqResvStart
@@ -496,8 +496,8 @@ Public Class F_GBX
 		Me.ChTCon.Enabled = (GStype = tGearbox.Custom)
 
 		If GStype <> tGearbox.Custom Then
-			Me.ChShiftInside.Checked = Declaration.ShiftInside(GStype)
-			Me.ChSkipGears.Checked = Declaration.SkipGears(GStype)
+			Me.ChShiftInside.Checked = cDeclaration.ShiftInside(GStype)
+			Me.ChSkipGears.Checked = cDeclaration.SkipGears(GStype)
 			Me.ChTCon.Checked = (GStype = tGearbox.AutomaticSerial OrElse GStype = tGearbox.AutomaticPowerSplit)
 		End If
 	End Sub

@@ -569,7 +569,6 @@ Partial Class F_VECTO
 		'
 		'GroupBox2
 		'
-		Me.GroupBox2.BackColor = System.Drawing.Color.AliceBlue
 		Me.GroupBox2.Controls.Add(Me.Label12)
 		Me.GroupBox2.Controls.Add(Me.tbDfCoastingScale)
 		Me.GroupBox2.Controls.Add(Me.Label11)
@@ -588,7 +587,7 @@ Partial Class F_VECTO
 		Me.GroupBox2.Size = New System.Drawing.Size(478, 124)
 		Me.GroupBox2.TabIndex = 3
 		Me.GroupBox2.TabStop = False
-		Me.GroupBox2.Text = "Coasting Parameters WB2016   (v3 only)"
+		Me.GroupBox2.Text = "Coasting Parameters"
 		'
 		'Label12
 		'

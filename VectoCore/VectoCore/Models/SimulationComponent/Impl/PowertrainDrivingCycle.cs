@@ -238,12 +238,12 @@ namespace TUGraz.VectoCore.Models.SimulationComponent.Impl
 
 		public IReadOnlyList<DrivingCycleData.DrivingCycleEntry> LookAhead(Meter lookaheadDistance)
 		{
-			throw new System.NotImplementedException();
+			throw new NotImplementedException();
 		}
 
 		public IReadOnlyList<DrivingCycleData.DrivingCycleEntry> LookAhead(Second time)
 		{
-			throw new System.NotImplementedException();
+			throw new NotImplementedException();
 		}
 	}
 
@@ -324,7 +324,9 @@ namespace TUGraz.VectoCore.Models.SimulationComponent.Impl
 	/// <summary>
 	/// Driving Cycle for the Measured Speed Gear driving cycle.
 	/// </summary>
-	public class MeasuredSpeedDrivingCycle : StatefulVectoSimulationComponent<MeasuredSpeedDrivingCycle.DrivingCycleState>,
+	public class MeasuredSpeedDrivingCycle :
+		StatefulProviderComponent
+			<MeasuredSpeedDrivingCycle.DrivingCycleState, ISimulationOutPort, IDriverDemandInPort, IDriverDemandOutPort>,
 		IDriverInfo, IDrivingCycleInfo, IMileageCounter, IDriverDemandInProvider, IDriverDemandInPort, ISimulationOutProvider,
 		ISimulationOutPort
 	{
@@ -345,7 +347,6 @@ namespace TUGraz.VectoCore.Models.SimulationComponent.Impl
 		}
 
 		protected DrivingCycleData Data;
-		protected IDriverDemandOutPort NextComponent;
 		private bool _isInitializing;
 		protected IEnumerator<DrivingCycleData.DrivingCycleEntry> RightSample { get; set; }
 		protected IEnumerator<DrivingCycleData.DrivingCycleEntry> LeftSample { get; set; }
@@ -376,25 +377,24 @@ namespace TUGraz.VectoCore.Models.SimulationComponent.Impl
 			CurrentState = PreviousState.Clone();
 		}
 
-		#region IDriverDemandInProvider
-
-		public IDriverDemandInPort InPort()
+		public IResponse Initialize()
 		{
-			return this;
+			var first = Data.Entries.First();
+
+			AbsTime = first.Time;
+
+			_isInitializing = true;
+
+			var response = NextComponent.Initialize(first.VehicleTargetSpeed, first.RoadGradient);
+			if (!(response is ResponseSuccess)) {
+				throw new UnexpectedResponseException("Couldn't find start gear.", response);
+			}
+
+			_isInitializing = false;
+
+			response.AbsTime = AbsTime;
+			return response;
 		}
-
-		#endregion
-
-		#region ISimulationOutProvider
-
-		public ISimulationOutPort OutPort()
-		{
-			return this;
-		}
-
-		#endregion
-
-		#region ISimulationOutPort
 
 		public IResponse Request(Second absTime, Meter ds)
 		{
@@ -487,47 +487,15 @@ namespace TUGraz.VectoCore.Models.SimulationComponent.Impl
 			return response;
 		}
 
-		public IResponse Initialize()
+		protected override void DoWriteModalResults(IModalDataContainer container)
 		{
-			var first = Data.Entries.First();
-
-			AbsTime = first.Time;
-
-			_isInitializing = true;
-
-			var response = NextComponent.Initialize(first.VehicleTargetSpeed, first.RoadGradient);
-			if (!(response is ResponseSuccess)) {
-				throw new UnexpectedResponseException("Couldn't find start gear.", response);
-			}
-
-			_isInitializing = false;
-
-			response.AbsTime = AbsTime;
-			return response;
+			container[ModalResultField.dist] = CurrentState.Distance;
+			container[ModalResultField.simulationDistance] = CurrentState.SimulationDistance;
+			container[ModalResultField.v_targ] = LeftSample.Current.VehicleTargetSpeed;
+			container[ModalResultField.grad] = LeftSample.Current.RoadGradientPercent;
+			container[ModalResultField.altitude] = LeftSample.Current.Altitude;
+			container[ModalResultField.acc] = CurrentState.Acceleration;
 		}
-
-		public string CycleName
-		{
-			get { return Data.Name; }
-		}
-
-		public double Progress
-		{
-			get { return AbsTime == null ? 0 : AbsTime.Value() / Data.Entries.Last().Time.Value(); }
-		}
-
-		#endregion
-
-		#region IDriverDemandInPort
-
-		public void Connect(IDriverDemandOutPort other)
-		{
-			NextComponent = other;
-		}
-
-		#endregion
-
-		#region VectoSimulationComponent
 
 		protected override void DoCommitSimulationStep()
 		{
@@ -540,7 +508,15 @@ namespace TUGraz.VectoCore.Models.SimulationComponent.Impl
 			CurrentState = CurrentState.Clone();
 		}
 
-		#endregion
+		public string CycleName
+		{
+			get { return Data.Name; }
+		}
+
+		public double Progress
+		{
+			get { return AbsTime == null ? 0 : AbsTime.Value() / Data.Entries.Last().Time.Value(); }
+		}
 
 		public CycleData CycleData
 		{
@@ -573,22 +549,12 @@ namespace TUGraz.VectoCore.Models.SimulationComponent.Impl
 
 		public IReadOnlyList<DrivingCycleData.DrivingCycleEntry> LookAhead(Meter lookaheadDistance)
 		{
-			throw new System.NotImplementedException();
+			throw new NotImplementedException();
 		}
 
 		public IReadOnlyList<DrivingCycleData.DrivingCycleEntry> LookAhead(Second time)
 		{
-			throw new System.NotImplementedException();
-		}
-
-		protected override void DoWriteModalResults(IModalDataContainer container)
-		{
-			container[ModalResultField.dist] = CurrentState.Distance;
-			container[ModalResultField.simulationDistance] = CurrentState.SimulationDistance;
-			container[ModalResultField.v_targ] = LeftSample.Current.VehicleTargetSpeed;
-			container[ModalResultField.grad] = LeftSample.Current.RoadGradientPercent;
-			container[ModalResultField.altitude] = LeftSample.Current.Altitude;
-			container[ModalResultField.acc] = CurrentState.Acceleration;
+			throw new NotImplementedException();
 		}
 
 		public bool VehicleStopped

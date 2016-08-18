@@ -42,7 +42,6 @@ namespace TUGraz.VectoCore.Models.Connector.Ports
 		/// <summary>
 		/// Returns the inport to connect it to another outport.
 		/// </summary>
-		/// <returns></returns>
 		ITnInPort InPort();
 	}
 
@@ -54,13 +53,8 @@ namespace TUGraz.VectoCore.Models.Connector.Ports
 		/// <summary>
 		/// Returns the outport to send requests to.
 		/// </summary>
-		/// <returns></returns>
 		ITnOutPort OutPort();
 	}
-
-
-	//========================================================================
-
 
 	/// <summary>
 	/// Defines a connect method to connect the inport to an outport.

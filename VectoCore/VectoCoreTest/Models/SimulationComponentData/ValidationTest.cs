@@ -29,12 +29,12 @@
 *   Martin Rexeis, rexeis@ivt.tugraz.at, IVT, Graz University of Technology
 */
 
+using Microsoft.VisualStudio.TestTools.UnitTesting;
 using System.Collections.Generic;
 using System.ComponentModel.DataAnnotations;
 using System.Data;
 using System.Diagnostics.CodeAnalysis;
 using System.Linq;
-using Microsoft.VisualStudio.TestTools.UnitTesting;
 using TUGraz.VectoCommon.Models;
 using TUGraz.VectoCommon.Utils;
 using TUGraz.VectoCore.InputData.Reader;
@@ -173,7 +173,7 @@ namespace TUGraz.VectoCore.Tests.Models.SimulationComponentData
 		[TestMethod]
 		public void ValidationModeVehicleDataTest()
 		{
-			var vehicleData = new VehicleData() {
+			var vehicleData = new VehicleData {
 				AxleConfiguration = AxleConfiguration.AxleConfig_4x2,
 				Creator = "Mr. Test",
 				CrossWindCorrectionMode = CrossWindCorrectionMode.NoCorrection,
@@ -184,29 +184,30 @@ namespace TUGraz.VectoCore.Tests.Models.SimulationComponentData
 				DynamicTyreRadius = 0.5.SI<Meter>(),
 				//CurbWeigthExtra = 0.SI<Kilogram>(),
 				Loading = 12000.SI<Kilogram>(),
-				GrossVehicleWeight = 16000.SI<Kilogram>()
-			};
-			vehicleData.AxleData = new List<Axle>() {
-				new Axle() {
-					AxleType = AxleType.VehicleNonDriven,
-					AxleWeightShare = 0.4,
-					Inertia = 0.5.SI<KilogramSquareMeter>(),
-					RollResistanceCoefficient = 0.00555,
-					TyreTestLoad = 33000.SI<Newton>()
-				},
-				new Axle() {
-					AxleType = AxleType.VehicleNonDriven,
-					AxleWeightShare = 0.6,
-					Inertia = 0.5.SI<KilogramSquareMeter>(),
-					RollResistanceCoefficient = 0.00555,
-					TyreTestLoad = 33000.SI<Newton>()
-				},
+				GrossVehicleWeight = 16000.SI<Kilogram>(),
+				TrailerGrossVehicleWeight = 0.SI<Kilogram>(),
+				AxleData = new List<Axle> {
+					new Axle {
+						AxleType = AxleType.VehicleNonDriven,
+						AxleWeightShare = 0.4,
+						Inertia = 0.5.SI<KilogramSquareMeter>(),
+						RollResistanceCoefficient = 0.00555,
+						TyreTestLoad = 33000.SI<Newton>()
+					},
+					new Axle {
+						AxleType = AxleType.VehicleNonDriven,
+						AxleWeightShare = 0.6,
+						Inertia = 0.5.SI<KilogramSquareMeter>(),
+						RollResistanceCoefficient = 0.00555,
+						TyreTestLoad = 33000.SI<Newton>()
+					},
+				}
 			};
 			var result = vehicleData.Validate(ExecutionMode.Engineering);
-			Assert.IsTrue(!result.Any());
+			Assert.IsTrue(!result.Any(), "validation should have succeded but failed." + string.Concat(result));
 
 			result = vehicleData.Validate(ExecutionMode.Declaration);
-			Assert.IsTrue(result.Any(), "validation should have failed, but succeeded");
+			Assert.IsTrue(result.Any(), "validation should have failed, but succeeded.");
 		}
 
 		/// <summary>
@@ -234,7 +235,7 @@ namespace TUGraz.VectoCore.Tests.Models.SimulationComponentData
 					LossMap = TransmissionLossMapReader.ReadFromFile(@"TestData\Components\limited.vtlm", 1, "1"),
 				}
 			};
-			var vehicleData = new VehicleData() {
+			var vehicleData = new VehicleData {
 				AxleConfiguration = AxleConfiguration.AxleConfig_4x2,
 				Creator = "Mr. Test",
 				CrossWindCorrectionMode = CrossWindCorrectionMode.NoCorrection,
@@ -245,23 +246,24 @@ namespace TUGraz.VectoCore.Tests.Models.SimulationComponentData
 				DynamicTyreRadius = 0.5.SI<Meter>(),
 				//CurbWeigthExtra = 0.SI<Kilogram>(),
 				Loading = 12000.SI<Kilogram>(),
-				GrossVehicleWeight = 16000.SI<Kilogram>()
-			};
-			vehicleData.AxleData = new List<Axle>() {
-				new Axle() {
-					AxleType = AxleType.VehicleNonDriven,
-					AxleWeightShare = 0.4,
-					Inertia = 0.5.SI<KilogramSquareMeter>(),
-					RollResistanceCoefficient = 0.00555,
-					TyreTestLoad = 33000.SI<Newton>()
-				},
-				new Axle() {
-					AxleType = AxleType.VehicleNonDriven,
-					AxleWeightShare = 0.6,
-					Inertia = 0.5.SI<KilogramSquareMeter>(),
-					RollResistanceCoefficient = 0.00555,
-					TyreTestLoad = 33000.SI<Newton>()
-				},
+				GrossVehicleWeight = 16000.SI<Kilogram>(),
+				TrailerGrossVehicleWeight = 0.SI<Kilogram>(),
+				AxleData = new List<Axle> {
+					new Axle {
+						AxleType = AxleType.VehicleNonDriven,
+						AxleWeightShare = 0.4,
+						Inertia = 0.5.SI<KilogramSquareMeter>(),
+						RollResistanceCoefficient = 0.00555,
+						TyreTestLoad = 33000.SI<Newton>()
+					},
+					new Axle {
+						AxleType = AxleType.VehicleNonDriven,
+						AxleWeightShare = 0.6,
+						Inertia = 0.5.SI<KilogramSquareMeter>(),
+						RollResistanceCoefficient = 0.00555,
+						TyreTestLoad = 33000.SI<Newton>()
+					},
+				}
 			};
 
 			container.RunData = new VectoRunData {
@@ -294,13 +296,13 @@ namespace TUGraz.VectoCore.Tests.Models.SimulationComponentData
 			var gearboxData = new GearboxData();
 			gearboxData.Gears[1] = new GearData {
 				LossMap = TransmissionLossMapReader.ReadFromFile(@"TestData\Components\Direct Gear.vtlm", 1, "1"),
-				Ratio = 1
+				Ratio = 1,
 			};
 
 			var axleGearData = new AxleGearData {
 				AxleGear = new GearData {
-					Ratio = 1,
 					LossMap = TransmissionLossMapReader.ReadFromFile(@"TestData\Components\limited.vtlm", 1, "1"),
+					Ratio = 1,
 				}
 			};
 

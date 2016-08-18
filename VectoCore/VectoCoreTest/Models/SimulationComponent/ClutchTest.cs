@@ -35,6 +35,7 @@ using NUnit.Framework;
 using Org.BouncyCastle.Asn1.Esf;
 using TUGraz.VectoCommon.Models;
 using TUGraz.VectoCommon.Utils;
+using TUGraz.VectoCore.Models.Simulation.Data;
 using TUGraz.VectoCore.Models.Simulation.DataBus;
 using TUGraz.VectoCore.Models.Simulation.Impl;
 using TUGraz.VectoCore.Models.SimulationComponent;
@@ -171,12 +172,25 @@ namespace TUGraz.VectoCore.Tests.Models.SimulationComponent
 
 		protected override void DoWriteModalResults(IModalDataContainer container)
 		{
-			throw new System.NotImplementedException();
+			container[ModalResultField.P_eng_fcmap] = 0.SI<Watt>();
+			container[ModalResultField.P_eng_out] = 0.SI<Watt>();
+			container[ModalResultField.P_eng_inertia] = 0.SI<Watt>();
+
+			container[ModalResultField.n_eng_avg] = 0.SI<PerSecond>();
+			container[ModalResultField.T_eng_fcmap] = 0.SI<NewtonMeter>();
+
+			container[ModalResultField.P_eng_full] = 0.SI<Watt>();
+			container[ModalResultField.P_eng_drag] = 0.SI<Watt>();
+			container[ModalResultField.Tq_full] = 0.SI<NewtonMeter>();
+			container[ModalResultField.Tq_drag] = 0.SI<NewtonMeter>();
+
+			container[ModalResultField.FCMap] = 0.SI<KilogramPerSecond>();
+			container[ModalResultField.FCAUXc] = 0.SI<KilogramPerSecond>();
+			container[ModalResultField.FCWHTCc] = 0.SI<KilogramPerSecond>();
+			container[ModalResultField.FCAAUX] = 0.SI<KilogramPerSecond>();
+			container[ModalResultField.FCFinal] = 0.SI<KilogramPerSecond>();
 		}
 
-		protected override void DoCommitSimulationStep()
-		{
-			throw new System.NotImplementedException();
-		}
+		protected override void DoCommitSimulationStep() {}
 	}
 }

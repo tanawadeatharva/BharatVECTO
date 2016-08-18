@@ -110,7 +110,7 @@ Public Class cPower
 
 
 		'Check Input
-		If VEC.LookAheadOn AndAlso VEC.a_lookahead >= 0 Then
+		If VEC.LookAheadOn AndAlso VEC.ALookahead >= 0 Then
 			WorkerMsg(tMsgID.Err, "Lookahead deceleration invalid! Value must be below zero.", MsgSrc)
 			Return False
 		End If
@@ -456,7 +456,7 @@ Public Class cPower
 
 				'Calc Coasting-Start time step
 				If VEC.LookAheadOn Then
-					Tlookahead = CInt((vset2 - vset1) / VEC.a_lookahead)
+					Tlookahead = CInt((vset2 - vset1) / VEC.ALookahead)
 					t = Math.Max(0, i - Tlookahead)
 				End If
 
@@ -2695,7 +2695,7 @@ lb10:
 
 	'--------Vehicle Acceleration-capability(Beschleunigungsleistung) --------
 	Private Function fPaFZ(ByVal v As Single, ByVal a As Single) As Single
-		Return CSng(((VEH.Mass + VEH.MassExtra + VEH.m_red + VEH.Loading) * a * v) * 0.001)
+		Return CSng(((VEH.Mass + VEH.MassExtra + VEH.MRed + VEH.Loading) * a * v) * 0.001)
 	End Function
 
 	Private Function fPaMotSimple(ByVal t As Integer, ByVal Gear As Integer, ByVal v As Single, ByVal a As Single) _

@@ -75,7 +75,7 @@ namespace TUGraz.VectoCore.InputData.Reader.Impl
 			var angularGearData = dao.CreateAngularGearData(InputDataProvider.AngularGearInputData, false);
 			var gearboxData = dao.CreateGearboxData(InputDataProvider.GearboxInputData, engineData, axlegearData.AxleGear.Ratio,
 				tempVehicle.DynamicTyreRadius, false);
-			var retarderData = dao.CreateRetarderData(InputDataProvider.RetarderInputData, InputDataProvider.VehicleInputData);
+			var retarderData = dao.CreateRetarderData(InputDataProvider.RetarderInputData);
 
 			if (Report != null) {
 				var powertrainConfig = new VectoRunData() {

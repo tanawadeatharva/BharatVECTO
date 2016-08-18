@@ -45,7 +45,9 @@ using TUGraz.VectoCore.Utils;
 namespace TUGraz.VectoCore.Models.SimulationComponent.Impl
 {
 	public class Gearbox : AbstractGearbox<GearboxState>, IGearbox, ITnOutPort, ITnInPort,
+	public class Gearbox : StatefulProviderComponent<Gearbox.GearboxState, ITnOutPort, ITnInPort, ITnOutPort>, IGearbox,
 		IClutchInfo
+		ITnOutPort, ITnInPort, IClutchInfo
 	{
 		/// <summary>
 		/// The shift strategy.
@@ -80,8 +82,6 @@ namespace TUGraz.VectoCore.Models.SimulationComponent.Impl
 			LastDownshift = -double.MaxValue.SI<Second>();
 			LastUpshift = -double.MaxValue.SI<Second>();
 		}
-
-		#region ITnOutPort
 
 		public override IResponse Initialize(NewtonMeter outTorque, PerSecond outAngularVelocity)
 		{
@@ -365,10 +365,6 @@ namespace TUGraz.VectoCore.Models.SimulationComponent.Impl
 			return response;
 		}
 
-		#endregion
-
-		#region VectoSimulationComponent
-
 		protected override void DoWriteModalResults(IModalDataContainer container)
 		{
 			//var avgAngularSpeed = ((PreviousState.InAngularVelocity * ModelData.Gears[CurrentState.Gear].Ratio /
@@ -403,7 +399,41 @@ namespace TUGraz.VectoCore.Models.SimulationComponent.Impl
 				Disengaged = true;
 				_engageTime = -double.MaxValue.SI<Second>();
 			}
-			AdvanceState();
+			base.DoCommitSimulationStep();
+		}
+
+		#region IGearboxCockpit
+
+		/// <summary>
+		/// The current gear.
+		/// </summary>
+		public uint Gear { get; set; }
+
+		[DebuggerHidden]
+		public MeterPerSecond StartSpeed
+		{
+			get { return ModelData.StartSpeed; }
+		}
+
+		[DebuggerHidden]
+		public MeterPerSquareSecond StartAcceleration
+		{
+			get { return ModelData.StartAcceleration; }
+		}
+
+		public FullLoadCurve GearFullLoadCurve
+		{
+			get { return Gear == 0 ? null : ModelData.Gears[Gear].FullLoadCurve; }
+		}
+
+		public Watt GearboxLoss()
+		{
+			//var outTorque = ModelData.Gears[Gear].LossMap.GetOutTorque(inAngularVelocity, inTorque, true);
+			//var torqueLoss = inTorque - outTorque * ModelData.Gears[Gear].Ratio;
+
+			//return torqueLoss * inAngularVelocity;
+			return (PreviousState.TransmissionTorqueLoss +
+					PreviousState.InertiaTorqueLossOut / ModelData.Gears[PreviousState.Gear].Ratio) * PreviousState.InAngularVelocity;
 		}
 
 		#endregion

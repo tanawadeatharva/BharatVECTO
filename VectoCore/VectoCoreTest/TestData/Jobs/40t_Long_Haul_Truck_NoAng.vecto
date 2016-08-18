@@ -1,9 +1,9 @@
 ﻿{
   "Header": {
-    "CreatedBy": "Raphael Luz IVT TU-Graz (85407225-fc3f-48a8-acda-c84a05df6837)",
-    "Date": "29.07.2014 16:59:08",
-    "AppVersion": "2.0.4-beta",
-    "FileVersion": 2
+    "CreatedBy": "Michael Krisper, IVT, Graz University of Technology",
+    "Date": "2016-08-10T15:05:27.0005917Z",
+    "AppVersion": "2.2",
+    "FileVersion": 3
   },
   "Body": {
     "SavedInDeclMode": true,
@@ -14,37 +14,47 @@
       "Long Haul",
       "Regional Delivery"
     ],
+    "AuxiliaryAssembly": "CLASSIC",
+    "AuxiliaryVersion": "CLASSIC",
+    "AdvancedAuxiliaryFilePath": "",
     "Aux": [
       {
         "ID": "FAN",
         "Type": "Fan",
         "Path": "<NOFILE>",
-        "Technology": "Hydraulic driven - Constant displacement pump"
+        "Technology": [
+          "Hydraulic driven - Constant displacement pump"
+        ]
       },
       {
         "ID": "STP",
         "Type": "Steering pump",
         "Path": "<NOFILE>",
-        "Technology": "Variable displacement"
+        "Technology": [
+          "Variable displacement mech. controlled"
+        ]
       },
       {
         "ID": "AC",
         "Type": "HVAC",
         "Path": "<NOFILE>",
-        "Technology": "Default"
+        "Technology": []
       },
       {
         "ID": "ES",
         "Type": "Electric System",
         "Path": "<NOFILE>",
-        "Technology": "Custom Technology List",
-        "TechList": []
+        "Technology": [
+          "Standard technology"
+        ]
       },
       {
         "ID": "PS",
         "Type": "Pneumatic System",
         "Path": "<NOFILE>",
-        "Technology": "Default"
+        "Technology": [
+          "Medium Supply 1-stage"
+        ]
       }
     ],
     "VACC": "<NOFILE>",
@@ -58,7 +68,12 @@
     "LAC": {
       "Enabled": true,
       "Dec": -0.5,
-      "MinSpeed": 50.0
+      "MinSpeed": 50.0,
+      "PreviewDistanceFactor": 10.0,
+      "DF_offset": 2.5,
+      "DF_scaling": 1.5,
+      "DF_targetSpeedLookup": "",
+      "Df_velocityDropLookup": ""
     },
     "OverSpeedEcoRoll": {
       "Mode": "OverSpeed",

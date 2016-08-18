@@ -560,7 +560,7 @@ Public Class cMOD
 
 		If DEV.AdvFormat Then
 			f.WriteLine("VECTO " & VECTOvers)
-			f.WriteLine(Now.ToString)
+			f.WriteLine(Now.ToUniversalTime().ToString("o"))
 			f.WriteLine("Input File: " & JobFile)
 		End If
 

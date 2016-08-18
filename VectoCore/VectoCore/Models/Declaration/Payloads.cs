@@ -39,23 +39,23 @@ namespace TUGraz.VectoCore.Models.Declaration
 {
 	public sealed class Payloads : LookupData<Kilogram, Payloads.PayloadEntry>
 	{
-		public sealed class PayloadEntry
+		protected override string ResourceId
 		{
-			public Kilogram Payload50Percent;
-			public Kilogram Payload75Percent;
+			get { return "TUGraz.VectoCore.Resources.Declaration.Payloads.csv"; }
 		}
 
-		private const string ResourceId = "TUGraz.VectoCore.Resources.Declaration.Payloads.csv";
-
-		public Payloads()
+		protected override string ErrorMessage
 		{
-			ParseData(ReadCsvResource(ResourceId));
+			get { throw new InvalidOperationException("ErrorMessage not applicable."); }
 		}
 
+		/// <summary>
+		/// Obsolete. Call Lookup50Percent, Lookup75Percent or LookupTrailer instead!
+		/// </summary>
 		[Obsolete("Call Lookup50Percent, Lookup75Percent or LookupTrailer!", true)]
 		private new PayloadEntry Lookup(Kilogram grossVehicleWeight)
 		{
-			throw new NotImplementedException("Call Lookup50Percent, Lookup75Percent or LookupTrailer!");
+			throw new InvalidOperationException("Call Lookup50Percent, Lookup75Percent or LookupTrailer!");
 		}
 
 		public Kilogram Lookup50Percent(Kilogram grossVehicleWeight)
@@ -82,6 +82,7 @@ namespace TUGraz.VectoCore.Models.Declaration
 		protected override void ParseData(DataTable table)
 		{
 			NormalizeTable(table);
+
 			Data = table.Rows.Cast<DataRow>()
 				.ToDictionary(
 					kv => kv.ParseDouble("grossvehicleweight").SI<Kilogram>(),
@@ -89,6 +90,12 @@ namespace TUGraz.VectoCore.Models.Declaration
 						Payload50Percent = kv.ParseDouble("payload50%").SI<Kilogram>(),
 						Payload75Percent = kv.ParseDouble("payload75%").SI<Kilogram>()
 					});
+		}
+
+		public sealed class PayloadEntry
+		{
+			public Kilogram Payload50Percent;
+			public Kilogram Payload75Percent;
 		}
 	}
 }

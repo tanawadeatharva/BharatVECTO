@@ -29,12 +29,8 @@
 *   Martin Rexeis, rexeis@ivt.tugraz.at, IVT, Graz University of Technology
 */
 
-using System;
 using System.ComponentModel.DataAnnotations;
-using System.Data;
 using System.Diagnostics;
-using System.Diagnostics.CodeAnalysis;
-using System.Linq;
 using TUGraz.VectoCommon.Exceptions;
 using TUGraz.VectoCommon.Utils;
 using TUGraz.VectoCore.Configuration;
@@ -59,7 +55,7 @@ namespace TUGraz.VectoCore.Models.SimulationComponent.Data.Engine
 		{
 			var result = new FuelConsumptionResult();
 			// delaunay map needs is initialised with rpm, therefore the angularVelocity has to be converted.
-			var value = _fuelMap.Interpolate(torque.Value(), angularVelocity.AsRPM);
+			var value = _fuelMap.Interpolate(torque, angularVelocity);
 			if (value.HasValue) {
 				result.Value = value.Value.SI().Kilo.Gramm.Per.Second.Cast<KilogramPerSecond>();
 				return result;
@@ -67,7 +63,7 @@ namespace TUGraz.VectoCore.Models.SimulationComponent.Data.Engine
 
 			if (allowExtrapolation) {
 				result.Value =
-					_fuelMap.Extrapolate(torque.Value(), angularVelocity.AsRPM).SI().Kilo.Gramm.Per.Second.Cast<KilogramPerSecond>();
+					_fuelMap.Extrapolate(torque, angularVelocity).SI().Kilo.Gramm.Per.Second.Cast<KilogramPerSecond>();
 				result.Extrapolated = true;
 				return result;
 			}
@@ -76,58 +72,18 @@ namespace TUGraz.VectoCore.Models.SimulationComponent.Data.Engine
 				angularVelocity.AsRPM);
 		}
 
-		[SuppressMessage("ReSharper", "MemberCanBePrivate.Local")]
-		public class FuelConsumptionEntry
+		public class Entry
 		{
-			[Required, SIRange(0, 5000 * Constants.RPMToRad)]
-			public PerSecond EngineSpeed { get; set; }
+			[Required, SIRange(0, 5000 * Constants.RPMToRad)] public readonly PerSecond EngineSpeed;
+			[Required] public readonly NewtonMeter Torque;
+			[Required, SIRange(0, double.MaxValue)] public readonly KilogramPerSecond FuelConsumption;
 
-			[Required]
-			public NewtonMeter Torque { get; set; }
-
-			[Required, SIRange(0, double.MaxValue)]
-			public KilogramPerSecond FuelConsumption { get; set; }
-
-			#region Equality members
-
-			public FuelConsumptionEntry(PerSecond engineSpeed, NewtonMeter torque, KilogramPerSecond fuelConsumption)
+			public Entry(PerSecond engineSpeed, NewtonMeter torque, KilogramPerSecond fuelConsumption)
 			{
 				EngineSpeed = engineSpeed;
 				Torque = torque;
 				FuelConsumption = fuelConsumption;
 			}
-
-			private bool Equals(FuelConsumptionEntry other)
-			{
-				return EngineSpeed.Equals(other.EngineSpeed) && Torque.Equals(other.Torque) &&
-						FuelConsumption.Equals(other.FuelConsumption);
-			}
-
-			public override bool Equals(object obj)
-			{
-				if (ReferenceEquals(null, obj)) {
-					return false;
-				}
-				if (ReferenceEquals(this, obj)) {
-					return true;
-				}
-				if (obj.GetType() != GetType()) {
-					return false;
-				}
-				return Equals((FuelConsumptionEntry)obj);
-			}
-
-			public override int GetHashCode()
-			{
-				unchecked {
-					var hashCode = EngineSpeed.GetHashCode();
-					hashCode = (hashCode * 397) ^ Torque.GetHashCode();
-					hashCode = (hashCode * 397) ^ FuelConsumption.GetHashCode();
-					return hashCode;
-				}
-			}
-
-			#endregion
 		}
 
 		[DebuggerDisplay("{Value} (extrapolated: {Extrapolated})")]
@@ -136,33 +92,5 @@ namespace TUGraz.VectoCore.Models.SimulationComponent.Data.Engine
 			public KilogramPerSecond Value;
 			public bool Extrapolated;
 		}
-
-		#region Equality members
-
-		protected bool Equals(FuelConsumptionMap other)
-		{
-			return Equals(_fuelMap, other._fuelMap);
-		}
-
-		public override bool Equals(object obj)
-		{
-			if (ReferenceEquals(null, obj)) {
-				return false;
-			}
-			if (ReferenceEquals(this, obj)) {
-				return true;
-			}
-			if (obj.GetType() != GetType()) {
-				return false;
-			}
-			return Equals((FuelConsumptionMap)obj);
-		}
-
-		public override int GetHashCode()
-		{
-			return _fuelMap != null ? _fuelMap.GetHashCode() : 0;
-		}
-
-		#endregion
 	}
 }

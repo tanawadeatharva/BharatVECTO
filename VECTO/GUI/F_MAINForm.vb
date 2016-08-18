@@ -278,7 +278,6 @@ Public Class F_MAINForm
 		LvDRI.LabelEdit = Not Lock
 		ChBoxAllDRI.Enabled = Not Lock
 
-		Button1.Enabled = Not Lock
 		btStartV3.Enabled = Not Lock
 
 		If DEV.Enabled Then
@@ -336,10 +335,6 @@ Public Class F_MAINForm
 		'Disable Options
 		LockGUI(True)
 
-		'Button switch
-		Button1.Enabled = True
-		Button1.Text = "STOP"
-		Button1.Image = My.Resources.Stop_icon
 
 		'ProgBars start
 		If ProgOverallEnabled Then
@@ -357,9 +352,6 @@ Public Class F_MAINForm
 
 	'Abort Job
 	Private Sub JobAbort()
-		Button1.Enabled = False
-		Button1.Text = "Aborting..."
-		Button1.Image = My.Resources.Play_icon_gray
 		VECTOworker.CancelAsync()
 	End Sub
 
@@ -449,8 +441,6 @@ Public Class F_MAINForm
 
 		'Options enable / GUI reset
 		LockGUI(False)
-		Button1.Text = "START V2.2"
-		Button1.Image = My.Resources.Play_icon
 		Status(LastModeName & " Mode")
 
 		'Command Line Shutdown
@@ -590,11 +580,11 @@ Public Class F_MAINForm
 	Private Sub DeclOnOff()
 
 		If Cfg.DeclMode Then
-			Text = "VECTO " & VECTOvers & " / VectoCore " & COREvers & " - Declaration Mode"
+			Text = "VECTO " & COREvers & " - Declaration Mode"
 			CbBatch.Checked = False
 			Cfg.DeclInit()
 		Else
-			Text = "VECTO " & VECTOvers & " / VectoCore " & COREvers
+			Text = "VECTO " & COREvers
 		End If
 
 		If Cfg.DeclMode Then
@@ -1064,25 +1054,15 @@ lbFound:
 
 #Region "Events"
 
-	Private Sub ButtonDRIadd_Click(sender As Object, e As EventArgs) _
-		Handles ButtonDRIadd.Click
+	Private Sub ButtonDRIadd_Click(sender As Object, e As EventArgs) Handles ButtonDRIadd.Click
 		AddCycle()
 	End Sub
 
-	Private Sub ButtonDRIremove_Click(sender As Object, e As EventArgs) _
-		Handles ButtonDRIremove.Click
+	Private Sub ButtonDRIremove_Click(sender As Object, e As EventArgs) Handles ButtonDRIremove.Click
 		RemoveCycle()
 	End Sub
 
-	Private Sub ButtonDRIoptions_Click(sender As Object, e As EventArgs) _
-		Handles ButtonDRIedit.Click
-		ConMenTarget = LvDRI
-		ConMenTarJob = False
-		ConMenFilelist.Show(MousePosition)
-	End Sub
-
-	Private Sub LvDRI_ItemChecked(sender As Object, e As ItemCheckedEventArgs) _
-		Handles LvDRI.ItemChecked
+	Private Sub LvDRI_ItemChecked(sender As Object, e As ItemCheckedEventArgs) Handles LvDRI.ItemChecked
 
 		If e.Item.Checked Then
 			DRIchecked += 1
@@ -1094,8 +1074,7 @@ lbFound:
 		UpdateCycleTabText()
 	End Sub
 
-	Private Sub ChBoxAllDRI_CheckedChanged(sender As Object, e As EventArgs) _
-		Handles ChBoxAllDRI.CheckedChanged
+	Private Sub ChBoxAllDRI_CheckedChanged(sender As Object, e As EventArgs) Handles ChBoxAllDRI.CheckedChanged
 		Dim Check As Boolean
 		Dim x As ListViewItem
 
@@ -1126,8 +1105,7 @@ lbFound:
 		End If
 	End Sub
 
-	Private Sub ListViewDRI_KeyDown(sender As Object, e As KeyEventArgs) _
-		Handles LvDRI.KeyDown
+	Private Sub ListViewDRI_KeyDown(sender As Object, e As KeyEventArgs) Handles LvDRI.KeyDown
 		Select Case e.KeyCode
 			Case Keys.Delete, Keys.Back
 				If Not GUIlocked Then RemoveCycle()
@@ -1137,13 +1115,11 @@ lbFound:
 	End Sub
 
 	'Drag n' Drop
-	Private Sub ListDRI_DragEnter(sender As Object, e As DragEventArgs) _
-		Handles LvDRI.DragEnter
+	Private Sub ListDRI_DragEnter(sender As Object, e As DragEventArgs) Handles LvDRI.DragEnter
 		If (e.Data.GetDataPresent(DataFormats.FileDrop)) Then e.Effect = DragDropEffects.Copy
 	End Sub
 
-	Private Sub ListDRI_DragDrop(sender As Object, e As DragEventArgs) _
-		Handles LvDRI.DragDrop
+	Private Sub ListDRI_DragDrop(sender As Object, e As DragEventArgs) Handles LvDRI.DragDrop
 		Dim f As String()
 		f = CType(e.Data.GetData(DataFormats.FileDrop), Array)
 		AddToCycleListView(f)
@@ -1534,7 +1510,7 @@ lbFound:
 #End Region
 
 	'VECTO Start button - Calls VECTO_Launcher or aborts calculation
-	Private Sub Button1_Click(sender As Object, e As EventArgs) Handles Button1.Click
+	Private Sub Button1_Click(sender As Object, e As EventArgs)
 
 		'VECTO Start/Stop
 		If VECTOworker.IsBusy Then
@@ -1568,7 +1544,7 @@ lbFound:
 				Exit Sub
 			End If
 
-			Status("Launching VECTO V3...")
+			Status("Launching VECTO ...")
 			JobFileList.Clear()
 			JobFileList.AddRange(From listViewItem In LvGEN.CheckedItems Select fFileRepl(listViewItem.SubItems(0).Text))
 
@@ -1794,7 +1770,7 @@ lbFound:
 
 		'Options enable / GUI reset
 		LockGUI(False)
-		btStartV3.Text = "START V3"
+		btStartV3.Text = "START"
 		btStartV3.Image = My.Resources.Play_icon
 		Status(LastModeName & " Mode")
 
@@ -2271,7 +2247,7 @@ lbFound:
 
 		lv0 = New ListViewItem
 		lv0.Text = Msg
-		lv0.SubItems.Add(Now.ToString)
+		lv0.SubItems.Add(Now.ToString("HH:mm:ss.ff"))
 		lv0.SubItems.Add(Source)
 
 		If LvMsg.Items.Count > 9999 Then LvMsg.Items.RemoveAt(0)
@@ -2815,6 +2791,14 @@ Lb1:
 			LoadDefaultListToolStripMenuItem.Enabled = Not GUIlocked
 			ClearListToolStripMenuItem.Enabled = Not GUIlocked
 
+			ConMenFilelist.Show(MousePosition)
+		End If
+	End Sub
+
+	Private Sub LvDRI_MouseUp(sender As Object, e As MouseEventArgs) Handles LvDRI.MouseUp
+		If e.Button = MouseButtons.Right Then
+			ConMenTarget = LvDRI
+			ConMenTarJob = False
 			ConMenFilelist.Show(MousePosition)
 		End If
 	End Sub

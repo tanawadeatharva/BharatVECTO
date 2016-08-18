@@ -56,7 +56,6 @@ namespace TUGraz.VectoCore.Models.SimulationComponent.Impl
 			Data.SkipGears = true;
 		}
 
-
 		private bool SpeedTooLowForEngine(uint gear, PerSecond outAngularSpeed)
 		{
 			return (outAngularSpeed * Data.Gears[gear].Ratio).IsSmaller(DataBus.EngineIdleSpeed);
@@ -70,7 +69,6 @@ namespace TUGraz.VectoCore.Models.SimulationComponent.Impl
 			return
 				(outAngularSpeed * Data.Gears[gear].Ratio).IsGreaterOrEqual(DataBus.EngineN95hSpeed);
 		}
-
 
 		public override uint Engage(Second absTime, Second dt, NewtonMeter outTorque, PerSecond outAngularVelocity)
 		{
@@ -163,7 +161,6 @@ namespace TUGraz.VectoCore.Models.SimulationComponent.Impl
 				return true;
 			}
 
-
 			// normal shift when all requirements are fullfilled ------------------
 			var minimumShiftTimePassed = (lastShiftTime + Data.ShiftTime).IsSmallerOrEqual(absTime);
 			if (!minimumShiftTimePassed) {
@@ -255,25 +252,23 @@ namespace TUGraz.VectoCore.Models.SimulationComponent.Impl
 				_gearbox.Gear = tryNextGear;
 				var response = (ResponseDryRun)_gearbox.Request(absTime, dt, outTorque, outAngularVelocity, true);
 				_gearbox.Gear = tmpGear;
-				if (!(response is ResponseEngineSpeedTooLow)) {
-					inAngularVelocity = Data.Gears[tryNextGear].Ratio * outAngularVelocity;
-					inTorque = response.ClutchPowerRequest / inAngularVelocity;
 
-					// if next gear supplied enough power reserve: take it
-					// otherwise take
-					if (!IsBelowDownShiftCurve(tryNextGear, inTorque, inAngularVelocity)) {
-						var fullLoadPower = response.EnginePowerRequest - response.DeltaFullLoad;
-						var reserve = 1 - response.EnginePowerRequest / fullLoadPower;
+				inAngularVelocity = Data.Gears[tryNextGear].Ratio * outAngularVelocity;
+				inTorque = response.ClutchPowerRequest / inAngularVelocity;
 
-						if (reserve >= Data.TorqueReserve) {
-							currentGear = tryNextGear;
-						}
+				// if next gear supplied enough power reserve: take it
+				// otherwise take
+				if (!IsBelowDownShiftCurve(tryNextGear, inTorque, inAngularVelocity)) {
+					var fullLoadPower = response.EnginePowerRequest - response.DeltaFullLoad;
+					var reserve = 1 - response.EnginePowerRequest / fullLoadPower;
+
+					if (reserve >= Data.TorqueReserve) {
+						currentGear = tryNextGear;
 					}
 				}
 			}
 			return currentGear;
 		}
-
 
 		protected virtual uint DoCheckDownshift(Second absTime, Second dt, NewtonMeter outTorque, PerSecond outAngularVelocity,
 			NewtonMeter inTorque, PerSecond inAngularVelocity, uint currentGear)

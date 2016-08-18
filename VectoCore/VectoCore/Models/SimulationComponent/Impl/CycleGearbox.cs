@@ -48,16 +48,9 @@ namespace TUGraz.VectoCore.Models.SimulationComponent.Impl
 	public class CycleGearbox : AbstractGearbox<GearboxState>, IGearbox, ITnOutPort, ITnInPort,
 		IClutchInfo
 	{
-		public bool ClutchClosed(Second absTime)
-		{
-			return DataBus.CycleData.LeftSample.Gear != 0;
-		}
 
 		public CycleGearbox(IVehicleContainer container, GearboxData gearboxModelData)
 			: base(container, gearboxModelData) {}
-
-		#region ITnOutPort
-
 		public override IResponse Initialize(NewtonMeter outTorque, PerSecond outAngularVelocity)
 		{
 			var dt = Constants.SimulationSettings.TargetTimeInterval;
@@ -228,10 +221,6 @@ namespace TUGraz.VectoCore.Models.SimulationComponent.Impl
 			}
 		}
 
-		#endregion
-
-		#region VectoSimulationComponent
-
 		protected override void DoWriteModalResults(IModalDataContainer container)
 		{
 			container[ModalResultField.Gear] = Gear;
@@ -259,8 +248,46 @@ namespace TUGraz.VectoCore.Models.SimulationComponent.Impl
 					}
 				}
 			}
+			base.DoCommitSimulationStep();
+		}
 
-			AdvanceState();
+		#region IGearboxCockpit
+
+		/// <summary>
+		/// The current gear.
+		/// </summary>
+		public uint Gear { get; private set; }
+
+		[DebuggerHidden]
+		public MeterPerSecond StartSpeed
+		{
+			get { return ModelData.StartSpeed; }
+		}
+
+		[DebuggerHidden]
+		public MeterPerSquareSecond StartAcceleration
+		{
+			get { return ModelData.StartAcceleration; }
+		}
+
+		public FullLoadCurve GearFullLoadCurve
+		{
+			get { return Gear == 0 ? null : ModelData.Gears[Gear].FullLoadCurve; }
+		}
+
+		public Watt GearboxLoss()
+		{
+			return (PreviousState.TransmissionTorqueLoss +
+					PreviousState.InertiaTorqueLossOut / ModelData.Gears[PreviousState.Gear].Ratio) * PreviousState.InAngularVelocity;
+		}
+
+		#endregion
+
+		#region ICluchInfo
+
+		public bool ClutchClosed(Second absTime)
+		{
+			return DataBus.CycleData.LeftSample.Gear != 0;
 		}
 
 		#endregion

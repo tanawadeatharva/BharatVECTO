@@ -8,10 +8,12 @@
 '   WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
 '
 ' See the LICENSE.txt for the specific language governing permissions and limitations.
+Option Infer On
 
 Imports System.Collections.Generic
 Imports iTextSharp.text.pdf
 Imports System.IO
+Imports System.Linq
 Imports iTextSharp.text
 
 Public Class cDeclaration
@@ -60,19 +62,13 @@ Public Class cDeclaration
 	Public AuxPower As Dictionary(Of String, Single)
 
 	Private AuxFanPower As Dictionary(Of String, Dictionary(Of tMission, Single))
-
 	Private AuxSteerPumpPower As Dictionary(Of String, Dictionary(Of tMission, Single()))
 	Private AuxSteepPumpFactors As Dictionary(Of String, Single())
-
 	Private AuxHVACPower As Dictionary(Of String, Dictionary(Of tMission, Single))
-
-	Private AuxESbase As Dictionary(Of tMission, Single)
 	Public AuxESpower As Dictionary(Of String, Dictionary(Of tMission, Single))
-
 	Private AuxPSpower As Dictionary(Of String, Dictionary(Of tMission, Single))
 
 	Private Wheels As Dictionary(Of String, cWheel)
-	Private Rims As Dictionary(Of String, cRim)
 
 	Private VCDVvehClassParam As Dictionary(Of String, List(Of Single))
 
@@ -106,7 +102,6 @@ Public Class cDeclaration
 		Dim TrS As Single
 		Dim TrA As Single
 		Dim stl As String()
-		Dim First As Boolean
 
 		Dim BodyTrWeightList As List(Of String)
 		Dim LoadingList As List(Of String)
@@ -117,9 +112,6 @@ Public Class cDeclaration
 		Dim at0 As List(Of String)
 		Dim AuxPower0 As Dictionary(Of tMission, Single)
 		Dim STEpower0 As Dictionary(Of tMission, Single())
-
-		Dim w0 As cWheel
-		Dim r0 As cRim
 
 		'Initialize
 		Missions = New Dictionary(Of tMission, cMission)
@@ -204,8 +196,8 @@ Public Class cDeclaration
 		'Cross Wind Correction parameters  (BEFORE Segment Table!)
 		VCDVvehClassParam = New Dictionary(Of String, List(Of Single))
 
-		If Not file.OpenRead(MyDeclPath & "VCDV\paramerters.csv") Then
-			GUImsg(tMsgID.Err, "Failed to load Declaration Config (VCDV\paramerters)!")
+		If Not file.OpenRead(MyDeclPath & "VCDV\parameters.csv") Then
+			GUImsg(tMsgID.Err, "Failed to load Declaration Config (VCDV\parameters)!")
 			Return False
 		End If
 
@@ -224,7 +216,7 @@ Public Class cDeclaration
 
 		Catch ex As Exception
 			file.Close()
-			GUImsg(tMsgID.Err, "Error in VCDV\paramerters! " & ex.Message)
+			GUImsg(tMsgID.Err, "Error in VCDV\parameters! " & ex.Message)
 			Return False
 		End Try
 
@@ -415,7 +407,7 @@ Public Class cDeclaration
 				at0.Add(line(0))
 				AuxPower0 = New Dictionary(Of tMission, Single)
 				i = 0
-				For Each mt0 In SegmentTable.MissionList
+				For Each mt0 In SegmentTable.MissionList.Take(5)
 					i += 1
 					AuxPower0.Add(mt0, line(i))
 				Next
@@ -443,7 +435,7 @@ Public Class cDeclaration
 			Do While Not file.EndOfFile
 				line = file.ReadLine
 				at0.Add(line(0))
-				AuxSteepPumpFactors.Add(line(0), New Single() {CSng(line(1)), CSng(line(2)), CSng(line(3)), CSng(line(4))})
+				AuxSteepPumpFactors.Add(line(0), New Single() {CSng(line(1)), CSng(line(2)), CSng(line(3))})
 			Loop
 			file.Close()
 			If Not file.OpenRead(MyDeclPath & "VAUX\SP-Table.csv") Then
@@ -456,13 +448,13 @@ Public Class cDeclaration
 				line = file.ReadLine
 				STEpower0 = New Dictionary(Of tMission, Single())
 				i = 0
-				For Each mt0 In SegmentTable.MissionList
+				For Each mt0 In SegmentTable.MissionList.Take(5)
 					i += 1
-					If line(i) = "0" Then
+					If line(i) = "0" OrElse String.IsNullOrWhiteSpace(line(i)) Then
 						STEpower0.Add(mt0, New Single() {0})
 					Else
 						stl = line(i).Split("/")
-						STEpower0.Add(mt0, New Single() {CSng(stl(0)), CSng(stl(1)), CSng(stl(2)), CSng(stl(3))})
+						STEpower0.Add(mt0, New Single() {CSng(stl(0)), CSng(stl(1)), CSng(stl(2))})
 					End If
 				Next
 				AuxSteerPumpPower.Add(line(0), STEpower0)
@@ -489,9 +481,13 @@ Public Class cDeclaration
 				line = file.ReadLine
 				AuxPower0 = New Dictionary(Of tMission, Single)
 				i = 0
-				For Each mt0 In SegmentTable.MissionList
+				For Each mt0 In SegmentTable.MissionList.Take(5)
 					i += 1
-					AuxPower0.Add(mt0, line(i))
+					If (String.IsNullOrWhiteSpace(line(i))) Then
+						AuxPower0.Add(mt0, 0)
+					Else
+						AuxPower0.Add(mt0, line(i))
+					End If
 				Next
 				AuxHVACPower.Add(line(0), AuxPower0)
 			Loop
@@ -501,46 +497,37 @@ Public Class cDeclaration
 			Return False
 		End Try
 
-		at0 = New List(Of String)
-		at0.Add("Default")
-		AuxTechs.Add(tAux.HVAC, at0)
+		AuxTechs.Add(tAux.HVAC, New List(Of String))
 
 		'Aux - Electric System
-		AuxESbase = New Dictionary(Of tMission, Single)
 		AuxESpower = New Dictionary(Of String, Dictionary(Of tMission, Single))
 		Try
 			If Not file.OpenRead(MyDeclPath & "VAUX\ES-Tech.csv") Then
-				GUImsg(tMsgID.Err, "Failed to load Declaration Config (Electric system config)!")
+				GUImsg(tMsgID.Err, "Failed to load Declaration Config (Electric system aux config)!")
 				Return False
 			End If
 
 			'Skip Header
 			file.ReadLine()
-			First = True
+			at0 = New List(Of String)
 			Do While Not file.EndOfFile
 				line = file.ReadLine
+				at0.Add(line(0))
 				AuxPower0 = New Dictionary(Of tMission, Single)
 				i = 0
-				For Each mt0 In SegmentTable.MissionList
+				For Each mt0 In SegmentTable.MissionList.Take(5)
 					i += 1
 					AuxPower0.Add(mt0, line(i))
 				Next
-				If First Then
-					AuxESbase = AuxPower0
-					First = False
-				Else
-					AuxESpower.Add(line(0), AuxPower0)
-				End If
+				AuxESpower.Add(line(0), AuxPower0)
 			Loop
+			AuxTechs.Add(tAux.ElectricSys, at0)
 			file.Close()
 		Catch ex As Exception
 			file.Close()
 			GUImsg(tMsgID.Err, "Failed to load Declaration Config (Electric system config)!" & ex.Message)
 			Return False
 		End Try
-		at0 = New List(Of String)
-		at0.Add("Custom Technology List")
-		AuxTechs.Add(tAux.ElectricSys, at0)
 
 
 		'Aux - Pneumatic System
@@ -553,25 +540,25 @@ Public Class cDeclaration
 
 			'Skip Header
 			file.ReadLine()
+			at0 = New List(Of String)
 			Do While Not file.EndOfFile
 				line = file.ReadLine
+				at0.Add(line(0))
 				AuxPower0 = New Dictionary(Of tMission, Single)
 				i = 0
-				For Each mt0 In SegmentTable.MissionList
+				For Each mt0 In SegmentTable.MissionList.Take(5)
 					i += 1
 					AuxPower0.Add(mt0, line(i))
 				Next
 				AuxPSpower.Add(line(0), AuxPower0)
 			Loop
+			AuxTechs.Add(tAux.PneumSys, at0)
+			file.Close()
 		Catch ex As Exception
 			file.Close()
 			GUImsg(tMsgID.Err, "Failed to load Declaration Config (Pneumatic system config)!" & ex.Message)
 			Return False
 		End Try
-
-		at0 = New List(Of String)
-		at0.Add("Default")
-		AuxTechs.Add(tAux.PneumSys, at0)
 
 		'Default PT1 values
 		lPT1nU = New List(Of Single)
@@ -614,21 +601,14 @@ Public Class cDeclaration
 
 		'Skip Header
 		file.ReadLine()
-
 		Try
-
 			Do While Not file.EndOfFile
 				line = file.ReadLine
-
-				w0 = New cWheel
-				w0.Inertia = CSng(line(1))
-				w0.Diam = CSng(line(2))
-				w0.SizeA = (line(3) = "a")
-
-				Wheels.Add(line(0), w0)
-
+				Wheels.Add(line(0), New cWheel With {
+							.Inertia = CSng(line(5)),
+							.Diam = CSng(line(4))
+							})
 			Loop
-
 		Catch ex As Exception
 			file.Close()
 			GUImsg(tMsgID.Err, "Failed to load Declaration Config (Wheels table)!" & ex.Message)
@@ -637,50 +617,16 @@ Public Class cDeclaration
 
 		file.Close()
 
-
-		'Rims
-		Rims = New Dictionary(Of String, cRim)
-
-		If Not file.OpenRead(MyDeclPath & "rims.csv") Then
-			GUImsg(tMsgID.Err, "Failed to load Declaration Config (Rims table)!")
-			Return False
-		End If
-
-		'Skip Header
-		file.ReadLine()
-
-		Try
-
-			Do While Not file.EndOfFile
-				line = file.ReadLine
-
-				r0 = New cRim
-				r0.Fa = CSng(line(1))
-				r0.Fb = CSng(line(2))
-
-				Rims.Add(line(0), r0)
-
-			Loop
-
-		Catch ex As Exception
-			file.Close()
-			GUImsg(tMsgID.Err, "Failed to load Declaration Config (Rims table)!" & ex.Message)
-			Return False
-		End Try
-
-		file.Close()
-
-
 		GUImsg(tMsgID.Normal, "Declaration Config loaded.")
 
 		Return True
 	End Function
 
-	Public Function EngInertia(Displ As Single) As Single
-		Return 1.3 + 0.41 + 0.27 * (Displ / 1000)
+	Public Shared Function EngInertia(displ As Single) As Single
+		Return 1.3 + 0.41 + 0.27 * (displ / 1000)
 	End Function
 
-	Public Function TracInt(Gearbox As tGearbox) As Single
+	Public Shared Function TracInt(gearbox As tGearbox) As Single
 		Select Case Gearbox
 			Case tGearbox.Manual
 				Return 2
@@ -694,7 +640,7 @@ Public Class cDeclaration
 		End Select
 	End Function
 
-	Public Function SkipGears(Gearbox As tGearbox) As Boolean
+	Public Shared Function SkipGears(gearbox As tGearbox) As Boolean
 		If AutomaticTransmission(Gearbox) Then
 			Return False
 		Else
@@ -702,16 +648,16 @@ Public Class cDeclaration
 		End If
 	End Function
 
-	Public Function ShiftInside(Gearbox As tGearbox) As Boolean
-		If Gearbox = tGearbox.SemiAutomatic Then
+	Public Shared Function ShiftInside(gearbox As tGearbox) As Boolean
+		If gearbox = tGearbox.SemiAutomatic Then
 			Return True
 		Else
 			Return False
 		End If
 	End Function
 
-	Public Function ShiftTime(Gearbox As tGearbox) As Single
-		Select Case Gearbox
+	Public Shared Function ShiftTime(gearbox As tGearbox) As Single
+		Select Case gearbox
 			Case tGearbox.Manual
 				Return 3
 
@@ -724,81 +670,53 @@ Public Class cDeclaration
 		End Select
 	End Function
 
-	Public Function WheelsInertia(Wheel As String) As Single
+	Public Function WheelsInertia(wheel As String) As Single
 
-		If Wheels.ContainsKey(Wheel) Then
-			Return Wheels(Wheel).Inertia
+		If Wheels.ContainsKey(wheel) Then
+			Return Wheels(wheel).Inertia
 		Else
 			Return -1
 		End If
 	End Function
 
-	Public Function rdyn(Wheel As String, Rim As String) As Single
-		Dim F As Single
+	Public Function rdyn(wheel As String) As Single
+		Dim F As Single = 1
 		Dim w As cWheel
 
-		If Not Wheels.ContainsKey(Wheel) Then
+		If Not Wheels.ContainsKey(wheel) Then
 			Return -1
 		End If
 
-
-		If Not Rims.ContainsKey(Rim) Then
-			Return -1
-		End If
-
-		w = Wheels(Wheel)
-
-		If w.SizeA Then
-			F = Rims(Rim).Fa
-		Else
-			F = Rims(Rim).Fb
-		End If
+		w = Wheels(wheel)
 
 		Return (F * w.Diam) / (2 * Math.PI)
 	End Function
 
-	Public ReadOnly Property WheelsList As Dictionary(Of String, cWheel).KeyCollection
+	Public ReadOnly Property WheelsList As String()
 		Get
-			Return Wheels.Keys
+			Return Wheels.Keys.ToArray()
 		End Get
 	End Property
 
-	Public ReadOnly Property RimsList As Dictionary(Of String, cRim).KeyCollection
-		Get
-			Return Rims.Keys
-		End Get
-	End Property
+	Public Shared Function ConvPicPath(hdVclass As String, isLongHaul As Boolean) As String
+		Dim longHaulFlag = ""
+		If isLongHaul Then
+			longHaulFlag = "t"
+		End If
 
-	Public Function ConvPicPath(HDVclass As String, LongHaul As Boolean) As String
-
-		Select Case HDVclass
-
+		Select Case hdVclass
 			Case 1, 2, 3
-				Return MyDeclPath & "Reports\4x2r.png"
-
+				Return MyDeclPath & "Report\4x2r.png"
 			Case 4
-				If LongHaul Then
-					Return MyDeclPath & "Reports\4x2rt.png"
-				Else
-					Return MyDeclPath & "Reports\4x2r.png"
-				End If
-
+				Return MyDeclPath & "Report\4x2r" & longHaulFlag & ".png"
 			Case 5
-				Return MyDeclPath & "Reports\4x2tt.png"
-
+				Return MyDeclPath & "Report\4x2tt.png"
 			Case 9
-				If LongHaul Then
-					Return MyDeclPath & "Reports\6x2rt.png"
-				Else
-					Return MyDeclPath & "Reports\6x2r.png"
-				End If
-
+				Return MyDeclPath & "Report\6x2r" & longHaulFlag & ".png"
 			Case 10
-				Return MyDeclPath & "Reports\6x2tt.png"
-
+				Return MyDeclPath & "Report\6x2tt.png"
 			Case Else
-				Return MyDeclPath & "Reports\Undef.png"
-
+				Return MyDeclPath & "Report\Undef.png"
 		End Select
 	End Function
 
@@ -816,12 +734,12 @@ Public Class cDeclaration
 	''' <summary>
 	''' Init Vehicle for current mission. Must happen before setting loading in CalcInitLoad
 	''' </summary>
-	''' <param name="CycleIndex"></param>
+	''' <param name="cycleIndex"></param>
 	''' <returns></returns>
 	''' <remarks></remarks>      
-	Public Function CalcInitCycle(CycleIndex As Integer) As Boolean
+	Public Function CalcInitCycle(cycleIndex As Integer) As Boolean
 
-		CurrentMission = Missions(SegRef.Missions(CycleIndex))
+		CurrentMission = Missions(SegRef.Missions(cycleIndex))
 
 		WHTCcorrFactor = CurrentMission.WHTCWF(tWHTCpart.Urban) * ENG.WHTCurban _
 						+ CurrentMission.WHTCWF(tWHTCpart.Rural) * ENG.WHTCrural _
@@ -851,8 +769,6 @@ Public Class cDeclaration
 		Dim fS As Single
 		Dim sl As Single()
 		Dim Result As Boolean
-		Dim ESsum As Single
-		Dim EStech As String
 
 		MsgSrc = "DeclInit"
 
@@ -901,22 +817,8 @@ Public Class cDeclaration
 
 		'Electric System
 		Try
-
-			ESsum = AuxESbase(CurrentMission.MissionID)
-
-			For Each EStech In VEC.EStechs
-
-				If Not AuxESpower.ContainsKey(EStech) Then
-					WorkerMsg(tMsgID.Err, "Electric system '" & EStech & "' is not supported! ", MsgSrc)
-					Result = False
-				End If
-
-				ESsum += AuxESpower(EStech)(CurrentMission.MissionID)
-
-			Next
-
-			AuxPower.Add(sKey.AUX.ElecSys, ESsum / (1000 * AuxESeff))
-
+			AuxPower.Add(sKey.AUX.ElecSys,
+						AuxESpower(VEC.AuxPaths(sKey.AUX.ElecSys).TechStr)(CurrentMission.MissionID) / (1000 * AuxESeff))
 		Catch ex As Exception
 			WorkerMsg(tMsgID.Err, "Failed to initialise electric system! " & ex.Message, MsgSrc)
 			Result = False
@@ -965,7 +867,7 @@ lbInt:
 			.AxleConf = SegRef.AxleConf
 			.MassMaxStr = VEH.MassMax & "t"
 			.JobFile = fFILE(JobFile, True)
-			.DateStr = Now.ToString
+			.DateStr = Now.ToUniversalTime().ToString("o")
 			.Creator = Lic.LicString
 			.EngStr = (ENG.Displ / 1000).ToString("0.0") & " l  " & Math.Round(ENG.Pmax, 0).ToString("#") & " kW"
 			.EngModelStr = ENG.ModelName
@@ -1040,12 +942,6 @@ End Class
 Public Class cWheel
 	Public Inertia As Single
 	Public Diam As Single
-	Public SizeA As Boolean
-End Class
-
-Public Class cRim
-	Public Fa As Single
-	Public Fb As Single
 End Class
 
 Public Class cMission
@@ -1061,7 +957,7 @@ Public Class cSegmentTable
 
 	Public Function SetRef(vehCat As tVehCat, axleConf As tAxleConf, maxMass As Single) As cSegmentTableEntry
 		For Each s0 As cSegmentTableEntry In SegTableEntries
-			If s0.VehCat = vehCat And s0.AxleConf = axleConf And MaxMass >= s0.MinGVW And MaxMass <= s0.MaxGVW Then
+			If s0.VehCat = vehCat And s0.AxleConf = axleConf And maxMass >= s0.MinGVW And maxMass <= s0.MaxGVW Then
 				Return s0
 			End If
 		Next
@@ -1541,7 +1437,7 @@ Public Class cReport
 			imgp.SetAbsolutePosition(360, 75)
 			pdfContentByte.AddImage(imgp)
 
-			imgp = iTextSharp.text.Image.GetInstance(Declaration.ConvPicPath(HDVclassStr, True))
+			imgp = iTextSharp.text.Image.GetInstance(cDeclaration.ConvPicPath(HDVclassStr, True))
 			imgp.ScaleAbsolute(180, 50)
 			imgp.SetAbsolutePosition(30, 475)
 			pdfContentByte.AddImage(imgp)
@@ -1607,7 +1503,7 @@ Public Class cReport
 				'Add Images
 				pdfContentByte = pdfStamper.GetOverContent(1)
 
-				imgp = iTextSharp.text.Image.GetInstance(Declaration.ConvPicPath(HDVclassStr,
+				imgp = iTextSharp.text.Image.GetInstance(cDeclaration.ConvPicPath(HDVclassStr,
 																				(mr.MissionRef.MissionID = tMission.LongHaul)))
 				imgp.ScaleAbsolute(180, 50)
 				imgp.SetAbsolutePosition(600, 475)
@@ -1665,7 +1561,7 @@ Public Class cReport
 
 
 	Public Class cMissionResults
-		Public Results As Dictionary(Of tLoading, cLoadingResults)
+		Public ReadOnly Results As Dictionary(Of tLoading, cLoadingResults)
 
 		Public MissionRef As cMission
 

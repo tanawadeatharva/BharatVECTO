@@ -29,22 +29,23 @@
 *   Martin Rexeis, rexeis@ivt.tugraz.at, IVT, Graz University of Technology
 */
 
+using Microsoft.VisualStudio.TestTools.UnitTesting;
 using System;
+using System.Collections.Generic;
 using System.ComponentModel.DataAnnotations;
 using System.Linq;
-using Microsoft.VisualStudio.TestTools.UnitTesting;
 using TUGraz.VectoCommon.Exceptions;
 using TUGraz.VectoCommon.Models;
 using TUGraz.VectoCommon.Utils;
 using TUGraz.VectoCore.InputData.FileIO.JSON;
 using TUGraz.VectoCore.InputData.Reader;
+using TUGraz.VectoCore.Models.Declaration;
 using TUGraz.VectoCore.Models.Simulation.Data;
 using TUGraz.VectoCore.Models.Simulation.Impl;
 using TUGraz.VectoCore.Models.SimulationComponent.Data;
 using TUGraz.VectoCore.Models.SimulationComponent.Data.Gearbox;
 using TUGraz.VectoCore.OutputData.FileIO;
 using TUGraz.VectoCore.Tests.Utils;
-using TUGraz.VectoCore.Utils;
 
 namespace TUGraz.VectoCore.Tests.Models.Simulation
 {
@@ -70,8 +71,27 @@ namespace TUGraz.VectoCore.Tests.Models.Simulation
 			var gearboxData = CreateGearboxData(GearboxDirectLoss, GearboxIndirectLoss);
 			var engineData = MockSimulationDataFactory.CreateEngineDataFromFile(EngineFile);
 			var axleGearData = CreateAxleGearData(AxleGearLossMap);
+			var vehicleData = new VehicleData {
+				DynamicTyreRadius = 0.85.SI<Meter>(),
+				Loading = 0.SI<Kilogram>(),
+				CurbWeight = 2000.SI<Kilogram>(),
+				AxleData =
+					new List<Axle> {
+						new Axle {
+							TwinTyres = false,
+							AxleWeightShare = 1,
+							TyreTestLoad = 50000.SI<Newton>(),
+							Inertia = 10.SI<KilogramSquareMeter>()
+						}
+					}
+			};
 
-			var runData = new VectoRunData { GearboxData = gearboxData, EngineData = engineData, AxleGearData = axleGearData };
+			var runData = new VectoRunData {
+				GearboxData = gearboxData,
+				EngineData = engineData,
+				AxleGearData = axleGearData,
+				VehicleData = vehicleData
+			};
 
 			var result = VectoRunData.ValidateRunData(runData, new ValidationContext(runData));
 			Assert.IsTrue(ValidationResult.Success == result);
@@ -114,7 +134,21 @@ namespace TUGraz.VectoCore.Tests.Models.Simulation
 		{
 			var gearboxData = CreateGearboxData(GearboxDirectLoss, GearboxIndirectLoss);
 			var engineData = MockSimulationDataFactory.CreateEngineDataFromFile(EngineFile);
-			var runData = new VectoRunData { GearboxData = gearboxData, EngineData = engineData };
+			var vehicleData = new VehicleData {
+				DynamicTyreRadius = 0.85.SI<Meter>(),
+				Loading = 0.SI<Kilogram>(),
+				CurbWeight = 2000.SI<Kilogram>(),
+				AxleData =
+					new List<Axle> {
+						new Axle {
+							TwinTyres = false,
+							AxleWeightShare = 1,
+							TyreTestLoad = 50000.SI<Newton>(),
+							Inertia = 10.SI<KilogramSquareMeter>()
+						}
+					}
+			};
+			var runData = new VectoRunData { GearboxData = gearboxData, EngineData = engineData, VehicleData = vehicleData };
 			var result = VectoRunData.ValidateRunData(runData, new ValidationContext(runData));
 			Assert.IsTrue(ValidationResult.Success == result);
 			Assert.IsFalse(runData.IsValid());

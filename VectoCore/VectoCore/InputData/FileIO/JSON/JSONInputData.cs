@@ -29,13 +29,13 @@
 *   Martin Rexeis, rexeis@ivt.tugraz.at, IVT, Graz University of Technology
 */
 
+using Newtonsoft.Json.Linq;
 using System;
 using System.Collections.Generic;
 using System.Data;
 using System.IO;
 using System.Linq;
 using System.Text;
-using Newtonsoft.Json.Linq;
 using TUGraz.VectoCommon.Exceptions;
 using TUGraz.VectoCommon.InputData;
 using TUGraz.VectoCommon.Models;
@@ -52,19 +52,14 @@ namespace TUGraz.VectoCore.InputData.FileIO.JSON
 	{
 		private string _basePath;
 
-		protected JObject Header;
-		protected JObject Body;
+		protected readonly JObject Header;
+		protected readonly JObject Body;
 
 		protected JSONFile(JObject data, string filename)
 		{
 			Header = (JObject)data.GetEx(JsonKeys.JsonHeader);
 			Body = (JObject)data.GetEx(JsonKeys.JsonBody);
 			BasePath = filename;
-		}
-
-		public int FileVersion
-		{
-			get { return Header.GetEx(JsonKeys.JsonHeader_FileVersion).Value<int>(); }
 		}
 
 		public bool SavedInDeclarationMode
@@ -85,7 +80,7 @@ namespace TUGraz.VectoCore.InputData.FileIO.JSON
 					return VectoCSVFile.Read(Path.Combine(BasePath, filename), true);
 				} catch (Exception e) {
 					Log.Warn("Failed to read file {0} {1}", Path.Combine(BasePath, filename), tableType);
-					throw new VectoException(string.Format("Failed to read file for {0}: {1}", tableType, filename), e);
+					throw new VectoException("Failed to read file for {0}: {1}", e, tableType, filename);
 				}
 			}
 			if (required) {
@@ -110,13 +105,13 @@ namespace TUGraz.VectoCore.InputData.FileIO.JSON
 		IEngineeringJobInputData, IDriverEngineeringInputData, IAuxiliariesEngineeringInputData,
 		IAuxiliariesDeclarationInputData
 	{
-		protected IGearboxEngineeringInputData Gearbox;
-		protected IAxleGearInputData AxleGear;
-		protected ITorqueConverterEngineeringInputData TorqueConverter;
-		public IAngularGearInputData AngularGear;
-		protected IEngineEngineeringInputData Engine;
-		protected IVehicleEngineeringInputData VehicleData;
-		protected IRetarderInputData Retarder;
+		protected readonly IGearboxEngineeringInputData Gearbox;
+		protected readonly IAxleGearInputData AxleGear;
+		protected readonly ITorqueConverterEngineeringInputData TorqueConverter;
+		protected readonly IAngularGearInputData AngularGear;
+		protected readonly IEngineEngineeringInputData Engine;
+		protected readonly IVehicleEngineeringInputData VehicleData;
+		protected readonly IRetarderInputData Retarder;
 
 		private readonly string _jobname;
 
@@ -128,13 +123,22 @@ namespace TUGraz.VectoCore.InputData.FileIO.JSON
 				if (!EmptyOrInvalidFileName(gearboxFile)) {
 					Gearbox = JSONInputDataFactory.ReadGearbox(Path.Combine(BasePath, gearboxFile));
 				}
-
 				AxleGear = Gearbox as IAxleGearInputData;
 				TorqueConverter = Gearbox as ITorqueConverterEngineeringInputData;
+			} catch (Exception e) {
+				throw new VectoException("JobFile: Failed to read Gearbox file '{0}': {1}", e, Body[JsonKeys.Vehicle_GearboxFile],
+					e.Message);
+			}
 
+			try {
 				Engine = JSONInputDataFactory.ReadEngine(
 					Path.Combine(BasePath, Body.GetEx(JsonKeys.Vehicle_EngineFile).Value<string>()));
+			} catch (Exception e) {
+				throw new VectoException("JobFile: Failed to read Engine file '{0}': {1}", e, Body[JsonKeys.Vehicle_EngineFile],
+					e.Message);
+			}
 
+			try {
 				var vehicleFile = Body.GetEx(JsonKeys.Vehicle_VehicleFile).Value<string>();
 				if (!EmptyOrInvalidFileName(vehicleFile)) {
 					VehicleData = JSONInputDataFactory.ReadJsonVehicle(
@@ -143,7 +147,8 @@ namespace TUGraz.VectoCore.InputData.FileIO.JSON
 					AngularGear = VehicleData as IAngularGearInputData;
 				}
 			} catch (Exception e) {
-				throw new VectoException("Failed to read input data: {0}", e, e.Message);
+				throw new VectoException("JobFile: Failed to read Vehicle file '{0}': {1}", e, Body[JsonKeys.Vehicle_VehicleFile],
+					e.Message);
 			}
 			var retarder = VehicleData as IRetarderInputData;
 			if (retarder != null) {
@@ -461,18 +466,51 @@ namespace TUGraz.VectoCore.InputData.FileIO.JSON
 			get { return AuxData().Cast<IAuxiliaryDeclarationInputData>().ToList(); }
 		}
 
-		private IList<AuxiliaryDataInputData> AuxData()
+		protected virtual IList<AuxiliaryDataInputData> AuxData()
 		{
 			var retVal = new List<AuxiliaryDataInputData>();
 			foreach (var aux in Body["Aux"] ?? Enumerable.Empty<JToken>()) {
+				var type = (AuxiliaryType)0;
+				try {
+					type = AuxiliaryTypeHelper.Parse(aux.GetEx<string>("Type"));
+				} catch (ArgumentOutOfRangeException) {}
+
 				var auxData = new AuxiliaryDataInputData {
 					ID = aux.GetEx<string>("ID"),
-					Type = AuxiliaryTypeHelper.Parse(aux.GetEx<string>("Type")),
-					Technology = new List<string>() { aux.GetEx<string>("Technology") },
+					Type = type,
+					Technology = new List<string>(),
 				};
-				//if (aux["TechList"] != null) {
-				//	auxData.TechList = aux["TechList"].Select(x => x.ToString()).ToList(); //  .Select(x => x.ToString).ToArray();
-				//}
+				var tech = aux.GetEx<string>("Technology");
+
+				if (auxData.Type == AuxiliaryType.ElectricSystem) {
+					if (aux["TechList"] == null || aux["TechList"].Any()) {
+						auxData.Technology.Add("Standard technology");
+					} else {
+						auxData.Technology.Add("Standard technology - LED headlights, all");
+					}
+				}
+
+				if (auxData.Type == AuxiliaryType.SteeringPump) {
+					auxData.Technology.Add(tech);
+				}
+
+				if (auxData.Type == AuxiliaryType.Fan) {
+					switch (tech) {
+						case "Crankshaft mounted - Electronically controlled visco clutch (Default)":
+							auxData.Technology.Add("Crankshaft mounted - Electronically controlled visco clutch");
+							break;
+						case "Crankshaft mounted - On/Off clutch":
+							auxData.Technology.Add("Crankshaft mounted - On/off clutch");
+							break;
+						case "Belt driven or driven via transm. - On/Off clutch":
+							auxData.Technology.Add("Belt driven or driven via transm. - On/off clutch");
+							break;
+						default:
+							auxData.Technology.Add(tech);
+							break;
+					}
+				}
+
 				var auxFile = aux["Path"];
 				retVal.Add(auxData);
 
@@ -517,5 +555,51 @@ namespace TUGraz.VectoCore.InputData.FileIO.JSON
 		}
 
 		#endregion
+	}
+
+	public class JSONInputDataV3 : JSONInputDataV2
+	{
+		public JSONInputDataV3(JObject data, string filename) : base(data, filename) {}
+
+		protected override IList<AuxiliaryDataInputData> AuxData()
+		{
+			var retVal = new List<AuxiliaryDataInputData>();
+			foreach (var aux in Body["Aux"] ?? Enumerable.Empty<JToken>()) {
+				try {
+					aux.GetEx("Technology").ToObject<List<string>>();
+				} catch (Exception) {
+					throw new VectoException(
+						"Aux: Technology for aux '{0}' list could not be read. Maybe it is a single string instead of a list of strings?",
+						aux.GetEx<string>("ID"));
+				}
+
+				var type = (AuxiliaryType)0;
+				try {
+					type = AuxiliaryTypeHelper.Parse(aux.GetEx<string>("Type"));
+				} catch (ArgumentOutOfRangeException) {}
+
+				var auxData = new AuxiliaryDataInputData {
+					ID = aux.GetEx<string>("ID"),
+					Type = type,
+					Technology = aux.GetEx("Technology").ToObject<List<string>>()
+				};
+
+				var auxFile = aux["Path"];
+				retVal.Add(auxData);
+
+				if (auxFile == null || EmptyOrInvalidFileName(auxFile.Value<string>())) {
+					continue;
+				}
+				var stream = new StreamReader(Path.Combine(BasePath, auxFile.Value<string>()));
+				stream.ReadLine(); // skip header "Transmission ration to engine rpm [-]"
+				auxData.TransmissionRatio = stream.ReadLine().IndulgentParse();
+				stream.ReadLine(); // skip header "Efficiency to engine [-]"
+				auxData.EfficiencyToEngine = stream.ReadLine().IndulgentParse();
+				stream.ReadLine(); // skip header "Efficiency auxiliary to supply [-]"
+				auxData.EfficiencyToSupply = stream.ReadLine().IndulgentParse();
+				auxData.DemandMap = VectoCSVFile.ReadStream(new MemoryStream(Encoding.UTF8.GetBytes(stream.ReadToEnd())));
+			}
+			return retVal;
+		}
 	}
 }

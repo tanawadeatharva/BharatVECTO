@@ -33,7 +33,6 @@ using TUGraz.VectoCommon.Models;
 using TUGraz.VectoCommon.Utils;
 using TUGraz.VectoCore.Configuration;
 using TUGraz.VectoCore.Models.Connector.Ports;
-using TUGraz.VectoCore.Models.Connector.Ports.Impl;
 using TUGraz.VectoCore.Models.Simulation;
 using TUGraz.VectoCore.Models.Simulation.Data;
 using TUGraz.VectoCore.Models.Simulation.DataBus;
@@ -43,11 +42,11 @@ using TUGraz.VectoCore.Utils;
 
 namespace TUGraz.VectoCore.Models.SimulationComponent.Impl
 {
-	public class Clutch : StatefulVectoSimulationComponent<SimpleComponentState>, IClutch, ITnOutPort, ITnInPort
+	public class Clutch : StatefulProviderComponent<SimpleComponentState, ITnOutPort, ITnInPort, ITnOutPort>, IClutch,
+		ITnOutPort, ITnInPort
 	{
 		private readonly PerSecond _idleSpeed;
 		private readonly PerSecond _ratedSpeed;
-		protected ITnOutPort NextComponent;
 		private const double ClutchEff = 1;
 		private ClutchState _clutchState = ClutchState.ClutchSlipping;
 
@@ -66,7 +65,6 @@ namespace TUGraz.VectoCore.Models.SimulationComponent.Impl
 
 		protected Clutch(IVehicleContainer container) : base(container) {}
 
-
 		public Clutch(IVehicleContainer container, CombustionEngineData engineData) : base(container)
 		{
 			_idleSpeed = engineData.IdleSpeed;
@@ -80,26 +78,10 @@ namespace TUGraz.VectoCore.Models.SimulationComponent.Impl
 			return _clutchState;
 		}
 
-		public ITnInPort InPort()
-		{
-			return this;
-		}
-
-		public ITnOutPort OutPort()
-		{
-			return this;
-		}
-
-		public void Connect(ITnOutPort other)
-		{
-			NextComponent = other;
-		}
-
 		//public ITnOutPort IdleControlPort
 		//{
 		//	get { return NextComponent; }
 		//}
-
 
 		public virtual IResponse Initialize(NewtonMeter outTorque, PerSecond outAngularVelocity)
 		{
@@ -157,28 +139,6 @@ namespace TUGraz.VectoCore.Models.SimulationComponent.Impl
 			return retVal;
 		}
 
-
-		protected override void DoWriteModalResults(IModalDataContainer container)
-		{
-			if (PreviousState.InAngularVelocity == null || CurrentState.InAngularVelocity == null) {
-				container[ModalResultField.P_clutch_out] = 0.SI<Watt>();
-				container[ModalResultField.P_clutch_loss] = 0.SI<Watt>();
-			} else {
-				var avgOutAngularVelocity = (PreviousState.OutAngularVelocity + CurrentState.OutAngularVelocity) / 2.0;
-				var avgInAngularVelocity = (PreviousState.InAngularVelocity + CurrentState.InAngularVelocity) / 2.0;
-				container[ModalResultField.P_clutch_out] = CurrentState.OutTorque * avgOutAngularVelocity;
-				container[ModalResultField.P_clutch_loss] = CurrentState.InTorque * avgInAngularVelocity -
-															CurrentState.OutTorque * avgOutAngularVelocity;
-				//(CurrentState.InTorque - CurrentState.OutTorque) * avgInAngularVelocity;
-			}
-		}
-
-		protected override void DoCommitSimulationStep()
-		{
-			AdvanceState();
-		}
-
-
 		private void AddClutchLoss(NewtonMeter torque, PerSecond angularVelocity, out NewtonMeter torqueIn,
 			out PerSecond angularVelocityIn)
 		{
@@ -202,6 +162,21 @@ namespace TUGraz.VectoCore.Models.SimulationComponent.Impl
 				torqueIn = torque * effectiveAngularVelocity / ClutchEff / ((angularVelocityIn));
 			} else {
 				_clutchState = ClutchState.ClutchClosed;
+			}
+		}
+
+		protected override void DoWriteModalResults(IModalDataContainer container)
+		{
+			if (PreviousState.InAngularVelocity == null || CurrentState.InAngularVelocity == null) {
+				container[ModalResultField.P_clutch_out] = 0.SI<Watt>();
+				container[ModalResultField.P_clutch_loss] = 0.SI<Watt>();
+			} else {
+				var avgOutAngularVelocity = (PreviousState.OutAngularVelocity + CurrentState.OutAngularVelocity) / 2.0;
+				var avgInAngularVelocity = (PreviousState.InAngularVelocity + CurrentState.InAngularVelocity) / 2.0;
+				container[ModalResultField.P_clutch_out] = CurrentState.OutTorque * avgOutAngularVelocity;
+				container[ModalResultField.P_clutch_loss] = CurrentState.InTorque * avgInAngularVelocity -
+															CurrentState.OutTorque * avgOutAngularVelocity;
+				//(CurrentState.InTorque - CurrentState.OutTorque) * avgInAngularVelocity;
 			}
 		}
 	}

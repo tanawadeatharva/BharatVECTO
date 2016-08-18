@@ -1,9 +1,9 @@
 ﻿{
   "Header": {
-    "CreatedBy": "Raphael Luz IVT TU-Graz (14fea510-e457-4bf6-860f-a9514dc327f1)",
-    "Date": "24.06.2015 12:03:58",
-    "AppVersion": "2.2 beta",
-    "FileVersion": 2
+    "CreatedBy": "Michael Krisper, IVT, Graz University of Technology",
+    "Date": "2016-08-10T14:14:07.6435917Z",
+    "AppVersion": "2.2",
+    "FileVersion": 3
   },
   "Body": {
     "SavedInDeclMode": true,
@@ -23,32 +23,39 @@
         "ID": "FAN",
         "Type": "Fan",
         "Path": "<NOFILE>",
-        "Technology": "Crankshaft mounted - Discrete step clutch"
+        "Technology": [
+          "Crankshaft mounted - Discrete step clutch"
+        ]
       },
       {
         "ID": "STP",
         "Type": "Steering pump",
         "Path": "<NOFILE>",
-        "Technology": "Fixed displacement"
+        "Technology": [
+          "Fixed displacement"
+        ]
       },
       {
         "ID": "AC",
         "Type": "HVAC",
         "Path": "<NOFILE>",
-        "Technology": ""
+        "Technology": []
       },
       {
         "ID": "ES",
         "Type": "Electric System",
         "Path": "<NOFILE>",
-        "Technology": "",
-        "TechList": []
+        "Technology": [
+          "Standard technology"
+        ]
       },
       {
         "ID": "PS",
         "Type": "Pneumatic System",
         "Path": "<NOFILE>",
-        "Technology": ""
+        "Technology": [
+          "Medium Supply 1-stage"
+        ]
       }
     ],
     "VACC": "<NOFILE>",
@@ -62,7 +69,12 @@
     "LAC": {
       "Enabled": true,
       "Dec": -0.5,
-      "MinSpeed": 50.0
+      "MinSpeed": 50.0,
+      "PreviewDistanceFactor": 10.0,
+      "DF_offset": 2.5,
+      "DF_scaling": 1.5,
+      "DF_targetSpeedLookup": "",
+      "Df_velocityDropLookup": ""
     },
     "OverSpeedEcoRoll": {
       "Mode": "OverSpeed",
