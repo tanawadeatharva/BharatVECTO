@@ -456,7 +456,7 @@ namespace TUGraz.VectoCore.Tests.Integration.DriverStrategy
 		TestCase(0, 85, 1),
 		TestCase(0, 85, 10),
 		TestCase(0, 85, 2),
-		TestCase(0, 85, 25),
+		//TestCase(0, 85, 25),
 		TestCase(0, 85, 5),
 		TestCase(20, 22, 5),
 		TestCase(20, 60, -15),
@@ -464,7 +464,7 @@ namespace TUGraz.VectoCore.Tests.Integration.DriverStrategy
 		TestCase(20, 60, -5),
 		TestCase(20, 60, 0),
 		TestCase(20, 60, 15),
-		TestCase(20, 60, 25),
+		//TestCase(20, 60, 25),
 		TestCase(20, 60, 5),
 		]
 		public void AT_Gearbox_Accelerate(double v1, double v2, double slope)
@@ -486,14 +486,14 @@ namespace TUGraz.VectoCore.Tests.Integration.DriverStrategy
 		TestCase(60, 20, -25),
 		TestCase(60, 20, -5),
 		TestCase(60, 20, 0),
-		TestCase(60, 20, 15),
+		//TestCase(60, 20, 15),
 		TestCase(60, 20, 5),
 		TestCase(80, 0, -15),
 		TestCase(80, 0, -25),
 		TestCase(80, 0, -5),
 		TestCase(80, 0, 0),
-		TestCase(80, 0, 20),
-		TestCase(80, 0, 15),
+		//TestCase(80, 0, 20),
+		//TestCase(80, 0, 15),
 		TestCase(80, 0, 3),
 		TestCase(80, 0, 5),
 		]
@@ -521,7 +521,7 @@ namespace TUGraz.VectoCore.Tests.Integration.DriverStrategy
 		TestCase(80, 80, -15),
 		TestCase(80, 80, -5),
 		TestCase(80, 80, 0),
-		TestCase(80, 80, 15),
+		//TestCase(80, 80, 15),
 		TestCase(80, 80, 5),
 		]
 		public void AT_Gearbox_Drive(double v1, double v2, double slope)
