@@ -10,15 +10,10 @@ using TUGraz.VectoCore.Models.SimulationComponent.Data.Gearbox;
 
 namespace TUGraz.VectoCore.Models.SimulationComponent.Impl
 {
-	public abstract class AbstractGearbox<TStateType> : StatefulVectoSimulationComponent<TStateType>, ITnInProvider,
-		ITnOutProvider, ITnOutPort, ITnInPort,
-		IGearboxInfo where TStateType : GearboxState, new()
+	public abstract class AbstractGearbox<TStateType> :
+		StatefulProviderComponent<TStateType, ITnOutPort, ITnInPort, ITnOutPort>, ITnInProvider,
+		ITnOutProvider, ITnOutPort, ITnInPort, IGearboxInfo where TStateType : GearboxState, new()
 	{
-		/// <summary>
-		/// The next port.
-		/// </summary>
-		protected ITnOutPort NextComponent;
-
 		/// <summary>
 		/// The data and settings for the gearbox.
 		/// </summary>
@@ -29,40 +24,12 @@ namespace TUGraz.VectoCore.Models.SimulationComponent.Impl
 			ModelData = gearboxModelData;
 		}
 
-		#region ITnInProvider
-
-		public ITnInPort InPort()
-		{
-			return this;
-		}
-
-		#endregion
-
-		#region ITnOutProvider
-
-		[DebuggerHidden]
-		public ITnOutPort OutPort()
-		{
-			return this;
-		}
-
-		#endregion
-
 		#region ITnOutPort
 
 		public abstract IResponse Request(Second absTime, Second dt, NewtonMeter outTorque, PerSecond outAngularVelocity,
 			bool dryRun = false);
 
 		public abstract IResponse Initialize(NewtonMeter outTorque, PerSecond outAngularVelocity);
-
-		#endregion
-
-		#region ITnInPort
-
-		public void Connect(ITnOutPort other)
-		{
-			NextComponent = other;
-		}
 
 		#endregion
 
