@@ -52,6 +52,9 @@ namespace TUGraz.VectoCore.Models.Simulation.Impl
 
 		public PowertrainBuilder(IModalDataContainer modData, WriteSumData sumWriter = null)
 		{
+			if (modData == null) {
+				throw new VectoException("Modal Data Container can't be null");
+			}
 			_modData = modData;
 			_sumWriter = sumWriter;
 		}
@@ -130,7 +133,7 @@ namespace TUGraz.VectoCore.Models.Simulation.Impl
 				.AddComponent(data.AngularGearData != null ? new AngularGear(container, data.AngularGearData) : null)
 				.AddRetarderAndGearbox(data.Retarder, GetGearbox(container, data.GearboxData), container);
 			if (data.GearboxData.Type.ManualTransmission()) {
-				powertrain.AddComponent(new Clutch(container, data.EngineData));
+				powertrain = powertrain.AddComponent(new Clutch(container, data.EngineData));
 			}
 			powertrain.AddComponent(new CombustionEngine(container, data.EngineData))
 				.AddAuxiliaries(container, data);
@@ -182,7 +185,7 @@ namespace TUGraz.VectoCore.Models.Simulation.Impl
 				.AddComponent(data.AngularGearData != null ? new AngularGear(container, data.AngularGearData) : null)
 				.AddRetarderAndGearbox(data.Retarder, GetGearbox(container, data.GearboxData), container);
 			if (data.GearboxData.Type.ManualTransmission()) {
-				powertrain.AddComponent(new Clutch(container, data.EngineData));
+				powertrain = powertrain.AddComponent(new Clutch(container, data.EngineData));
 			}
 			powertrain.AddComponent(new CombustionEngine(container, data.EngineData))
 				.AddAuxiliaries(container, data);
