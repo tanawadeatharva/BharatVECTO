@@ -95,9 +95,7 @@ namespace TUGraz.VectoCore.Tests.FileIO
 			((JObject)json["Body"]).Property("Cycles").Remove();
 
 			AssertHelper.Exception<InvalidFileFormatException>(
-				() => {
-					var tmp = new JSONInputDataV2(json, TestJobFile).Cycles;
-				}, "Key Cycles not found");
+				() => { var tmp = new JSONInputDataV2(json, TestJobFile).Cycles; }, "Key Cycles not found");
 		}
 
 		[TestMethod]
@@ -154,9 +152,7 @@ namespace TUGraz.VectoCore.Tests.FileIO
 			((JObject)json["Body"]).Property("OverSpeedEcoRoll").Remove();
 
 			AssertHelper.Exception<VectoException>(
-				() => {
-					var tmp = new JSONInputDataV2(json, TestJobFile).DriverInputData.OverSpeedEcoRoll;
-				},
+				() => { var tmp = new JSONInputDataV2(json, TestJobFile).DriverInputData.OverSpeedEcoRoll; },
 				"Key OverSpeedEcoRoll not found");
 		}
 
@@ -176,12 +172,12 @@ namespace TUGraz.VectoCore.Tests.FileIO
 			Assert.AreEqual(ratios.Length, gbxData.Gears.Count);
 
 			// interpreted as gearbox with first and second gear using TC (due to gear ratios)
-			Assert.IsFalse(gbxData.Gears[0].HasLockedGear);
-			Assert.IsTrue(gbxData.Gears[0].HasTorqueConverter);
-			Assert.IsTrue(gbxData.Gears[1].HasLockedGear);
+			Assert.IsFalse(gbxData.Gears[1].HasLockedGear);
 			Assert.IsTrue(gbxData.Gears[1].HasTorqueConverter);
 			Assert.IsTrue(gbxData.Gears[2].HasLockedGear);
-			Assert.IsFalse(gbxData.Gears[2].HasTorqueConverter);
+			Assert.IsTrue(gbxData.Gears[2].HasTorqueConverter);
+			Assert.IsTrue(gbxData.Gears[3].HasLockedGear);
+			Assert.IsFalse(gbxData.Gears[3].HasTorqueConverter);
 		}
 
 		[TestMethod]
@@ -189,7 +185,7 @@ namespace TUGraz.VectoCore.Tests.FileIO
 		{
 			var inputProvider = JSONInputDataFactory.ReadGearbox(@"TestData\Components\AT_GBX\GearboxSerial.vgbx");
 
-			var ratios = new[] { 3.1, 2.4, 1.8, 1.3, 1.0 };
+			var ratios = new[] { 3.4, 1.9, 1.42, 1.0, 0.7, 0.62 };
 			Assert.AreEqual(ratios.Length, inputProvider.Gears.Count);
 			for (int i = 0; i < ratios.Length; i++) {
 				Assert.AreEqual(ratios[i], inputProvider.Gears[i].Ratio);
@@ -199,14 +195,14 @@ namespace TUGraz.VectoCore.Tests.FileIO
 				true);
 			Assert.AreEqual(ratios.Length, gbxData.Gears.Count);
 
-			Assert.IsTrue(gbxData.Gears[0].HasLockedGear);
-			Assert.IsTrue(gbxData.Gears[0].HasTorqueConverter);
 			Assert.IsTrue(gbxData.Gears[1].HasLockedGear);
-			Assert.IsFalse(gbxData.Gears[1].HasTorqueConverter);
+			Assert.IsTrue(gbxData.Gears[1].HasTorqueConverter);
 			Assert.IsTrue(gbxData.Gears[2].HasLockedGear);
 			Assert.IsFalse(gbxData.Gears[2].HasTorqueConverter);
+			Assert.IsTrue(gbxData.Gears[3].HasLockedGear);
+			Assert.IsFalse(gbxData.Gears[3].HasTorqueConverter);
 
-			var gear = gbxData.Gears[0];
+			var gear = gbxData.Gears[1];
 			Assert.AreEqual(gear.Ratio, gear.TorqueConverterRatio);
 		}
 
@@ -215,7 +211,7 @@ namespace TUGraz.VectoCore.Tests.FileIO
 		{
 			var inputProvider = JSONInputDataFactory.ReadGearbox(@"TestData\Components\AT_GBX\GearboxPowerSplit.vgbx");
 
-			var ratios = new[] { 3.1, 2.4, 1.8, 1.3, 1.0 };
+			var ratios = new[] { 1.35, 1.0, 0.73 };
 			Assert.AreEqual(ratios.Length, inputProvider.Gears.Count);
 			for (int i = 0; i < ratios.Length; i++) {
 				Assert.AreEqual(ratios[i], inputProvider.Gears[i].Ratio);
@@ -225,14 +221,14 @@ namespace TUGraz.VectoCore.Tests.FileIO
 				true);
 			Assert.AreEqual(ratios.Length, gbxData.Gears.Count);
 
-			Assert.IsTrue(gbxData.Gears[0].HasLockedGear);
-			Assert.IsTrue(gbxData.Gears[0].HasTorqueConverter);
 			Assert.IsTrue(gbxData.Gears[1].HasLockedGear);
-			Assert.IsFalse(gbxData.Gears[1].HasTorqueConverter);
+			Assert.IsTrue(gbxData.Gears[1].HasTorqueConverter);
 			Assert.IsTrue(gbxData.Gears[2].HasLockedGear);
 			Assert.IsFalse(gbxData.Gears[2].HasTorqueConverter);
+			Assert.IsTrue(gbxData.Gears[3].HasLockedGear);
+			Assert.IsFalse(gbxData.Gears[3].HasTorqueConverter);
 
-			Assert.AreEqual(1, gbxData.Gears[0].TorqueConverterRatio);
+			Assert.AreEqual(1, gbxData.Gears[1].TorqueConverterRatio);
 		}
 
 		[TestMethod]
@@ -250,15 +246,15 @@ namespace TUGraz.VectoCore.Tests.FileIO
 				true);
 			Assert.AreEqual(ratios.Length, gbxData.Gears.Count);
 
-			Assert.IsFalse(gbxData.Gears[0].HasLockedGear);
-			Assert.IsTrue(gbxData.Gears[0].HasTorqueConverter);
-			Assert.IsTrue(gbxData.Gears[1].HasLockedGear);
+			Assert.IsFalse(gbxData.Gears[1].HasLockedGear);
 			Assert.IsTrue(gbxData.Gears[1].HasTorqueConverter);
 			Assert.IsTrue(gbxData.Gears[2].HasLockedGear);
-			Assert.IsFalse(gbxData.Gears[2].HasTorqueConverter);
+			Assert.IsTrue(gbxData.Gears[2].HasTorqueConverter);
+			Assert.IsTrue(gbxData.Gears[3].HasLockedGear);
+			Assert.IsFalse(gbxData.Gears[3].HasTorqueConverter);
 
 
-			var gear = gbxData.Gears[1];
+			var gear = gbxData.Gears[2];
 			Assert.AreEqual(gear.Ratio, gear.TorqueConverterRatio);
 		}
 
