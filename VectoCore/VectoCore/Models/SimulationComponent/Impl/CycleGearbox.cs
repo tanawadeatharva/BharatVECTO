@@ -45,17 +45,13 @@ using TUGraz.VectoCore.Utils;
 
 namespace TUGraz.VectoCore.Models.SimulationComponent.Impl
 {
-	public class CycleGearbox : StatefulProviderComponent<Gearbox.GearboxState, ITnOutPort, ITnInPort, ITnOutPort>,
-		IGearbox, ITnOutPort, ITnInPort, IClutchInfo
+	public class CycleGearbox : AbstractGearbox<GearboxState>, IGearbox, ITnOutPort, ITnInPort,
+		IClutchInfo
 	{
-		internal readonly GearboxData ModelData;
+		public CycleGearbox(IVehicleContainer container, GearboxData gearboxModelData)
+			: base(container, gearboxModelData) {}
 
-		public CycleGearbox(IVehicleContainer container, GearboxData gearboxModelData) : base(container)
-		{
-			ModelData = gearboxModelData;
-		}
-
-		public IResponse Initialize(NewtonMeter outTorque, PerSecond outAngularVelocity)
+		public override IResponse Initialize(NewtonMeter outTorque, PerSecond outAngularVelocity)
 		{
 			var dt = Constants.SimulationSettings.TargetTimeInterval;
 
@@ -120,8 +116,7 @@ namespace TUGraz.VectoCore.Models.SimulationComponent.Impl
 				Case<ResponseUnderload>().
 				Default(r => { throw new UnexpectedResponseException("Gearbox.Initialize", r); });
 
-			var fullLoadGearbox = ModelData.Gears[gear].FullLoadCurve.FullLoadStationaryTorque(inAngularVelocity) *
-								inAngularVelocity;
+			var fullLoadGearbox = ModelData.Gears[gear].MaxTorque * inAngularVelocity;
 			var fullLoadEngine = DataBus.EngineStationaryFullPower(inAngularVelocity);
 
 			var fullLoad = VectoMath.Min(fullLoadGearbox, fullLoadEngine);
@@ -145,7 +140,8 @@ namespace TUGraz.VectoCore.Models.SimulationComponent.Impl
 		/// <item><description>ResponseGearshift</description></item>
 		/// </list>
 		/// </returns>
-		public IResponse Request(Second absTime, Second dt, NewtonMeter outTorque, PerSecond outAngularVelocity, bool dryRun)
+		public override IResponse Request(Second absTime, Second dt, NewtonMeter outTorque, PerSecond outAngularVelocity,
+			bool dryRun)
 		{
 			Log.Debug("Gearbox Power Request: torque: {0}, angularVelocity: {1}", outTorque, outAngularVelocity);
 			Gear = DataBus.DriverBehavior == DrivingBehavior.Braking
@@ -254,38 +250,6 @@ namespace TUGraz.VectoCore.Models.SimulationComponent.Impl
 			}
 			base.DoCommitSimulationStep();
 		}
-
-		#region IGearboxCockpit
-
-		/// <summary>
-		/// The current gear.
-		/// </summary>
-		public uint Gear { get; private set; }
-
-		[DebuggerHidden]
-		public MeterPerSecond StartSpeed
-		{
-			get { return ModelData.StartSpeed; }
-		}
-
-		[DebuggerHidden]
-		public MeterPerSquareSecond StartAcceleration
-		{
-			get { return ModelData.StartAcceleration; }
-		}
-
-		public FullLoadCurve GearFullLoadCurve
-		{
-			get { return Gear == 0 ? null : ModelData.Gears[Gear].FullLoadCurve; }
-		}
-
-		public Watt GearboxLoss()
-		{
-			return (PreviousState.TransmissionTorqueLoss +
-					PreviousState.InertiaTorqueLossOut / ModelData.Gears[PreviousState.Gear].Ratio) * PreviousState.InAngularVelocity;
-		}
-
-		#endregion
 
 		#region ICluchInfo
 

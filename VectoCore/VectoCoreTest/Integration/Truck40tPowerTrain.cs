@@ -46,6 +46,7 @@ using TUGraz.VectoCore.Models.SimulationComponent.Impl;
 using TUGraz.VectoCore.OutputData;
 using TUGraz.VectoCore.OutputData.FileIO;
 using TUGraz.VectoCore.Tests.Utils;
+using TUGraz.VectoCore.Utils;
 using Wheels = TUGraz.VectoCore.Models.SimulationComponent.Impl.Wheels;
 
 namespace TUGraz.VectoCore.Tests.Integration
@@ -60,7 +61,7 @@ namespace TUGraz.VectoCore.Tests.Integration
 		public const string GearboxIndirectLoss = @"TestData\Components\Indirect Gear.vtlm";
 		public const string GearboxDirectLoss = @"TestData\Components\Direct Gear.vtlm";
 		public const string GearboxShiftPolygonFile = @"TestData\Components\ShiftPolygons.vgbs";
-		public const string GearboxFullLoadCurveFile = @"TestData\Components\Gearbox.vfld";
+		//public const string GearboxFullLoadCurveFile = @"TestData\Components\Gearbox.vfld";
 
 		public static VectoRun CreateEngineeringRun(DrivingCycleData cycleData, string modFileName,
 			bool overspeed = false, GearboxType gbxType = GearboxType.AMT)
@@ -96,7 +97,7 @@ namespace TUGraz.VectoCore.Tests.Integration
 
 			var cycle = new DistanceBasedDrivingCycle(container, cycleData);
 			var engine = new CombustionEngine(container, engineData);
-			var clutch = new Clutch(container, engineData, engine.IdleController);
+			var clutch = new Clutch(container, engineData);
 
 			IShiftStrategy gbxStrategy;
 			switch (gbxType) {
@@ -110,21 +111,19 @@ namespace TUGraz.VectoCore.Tests.Integration
 					throw new ArgumentOutOfRangeException("gbxType", gbxType, null);
 			}
 
-			dynamic tmp = Port.AddComponent(cycle, new Driver(container, driverData, new DefaultDriverStrategy()));
-			tmp = Port.AddComponent(tmp, new Vehicle(container, vehicleData));
-			tmp = Port.AddComponent(tmp, new Wheels(container, vehicleData.DynamicTyreRadius, vehicleData.WheelsInertia));
-			tmp = Port.AddComponent(tmp, new Brakes(container));
-			tmp = Port.AddComponent(tmp, new AxleGear(container, axleGearData));
-			tmp = Port.AddComponent(tmp, new DummyRetarder(container));
-			tmp = Port.AddComponent(tmp, new Gearbox(container, gearboxData, gbxStrategy));
-			tmp = Port.AddComponent(tmp, clutch);
+			dynamic tmp = cycle.AddComponent(new Driver(container, driverData, new DefaultDriverStrategy()))
+				.AddComponent(new Vehicle(container, vehicleData))
+				.AddComponent(new Wheels(container, vehicleData.DynamicTyreRadius, vehicleData.WheelsInertia))
+				.AddComponent(new Brakes(container))
+				.AddComponent(new AxleGear(container, axleGearData))
+				.AddComponent(new DummyRetarder(container))
+				.AddComponent(new Gearbox(container, gearboxData, gbxStrategy))
+				.AddComponent(clutch)
+				.AddComponent(engine);
 
 			var aux = new EngineAuxiliary(container);
 			aux.AddConstant("", 0.SI<Watt>());
 			engine.Connect(aux.Port());
-
-			Port.AddComponent(tmp, engine);
-			engine.IdleController.RequestPort = clutch.IdleControlPort;
 
 			return container;
 		}
@@ -135,7 +134,7 @@ namespace TUGraz.VectoCore.Tests.Integration
 
 			return new GearboxData {
 				Gears = ratios.Select((ratio, i) => Tuple.Create((uint)i, new GearData {
-					FullLoadCurve = FullLoadCurveReader.ReadFromFile(GearboxFullLoadCurveFile),
+					//MaxTorque = 2300.SI<NewtonMeter>(),
 					LossMap =
 						TransmissionLossMapReader.ReadFromFile(ratio.IsEqual(1) ? GearboxIndirectLoss : GearboxDirectLoss, ratio,
 							string.Format("Gear {0}", i)),

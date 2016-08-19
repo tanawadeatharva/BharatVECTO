@@ -71,31 +71,31 @@ namespace TUGraz.VectoCore.Models.SimulationComponent.Impl
 			NextComponent = other;
 		}
 
-		public virtual IResponse Request(Second absTime, Second dt, NewtonMeter torque, PerSecond angularVelocity,
+		public virtual IResponse Request(Second absTime, Second dt, NewtonMeter outTorque, PerSecond outAngularVelocity,
 			bool dryRun = false)
 		{
-			Log.Debug("request: torque: {0}, angularVelocity: {1}", torque, angularVelocity);
+			Log.Debug("request: torque: {0}, angularVelocity: {1}", outTorque, outAngularVelocity);
 
-			var inAngularVelocity = angularVelocity * ModelData.Ratio;
-			var avgOutAngularVelocity = (PreviousState.OutAngularVelocity + angularVelocity) / 2.0;
+			var inAngularVelocity = outAngularVelocity * ModelData.Ratio;
+			var avgOutAngularVelocity = (PreviousState.OutAngularVelocity + outAngularVelocity) / 2.0;
 
-			var torqueLossResult = ModelData.LossMap.GetTorqueLoss(avgOutAngularVelocity, torque);
-			var inTorque = torque / ModelData.Ratio + torqueLossResult.Value;
+			var torqueLossResult = ModelData.LossMap.GetTorqueLoss(avgOutAngularVelocity, outTorque);
+			var inTorque = outTorque / ModelData.Ratio + torqueLossResult.Value;
 
-			CurrentState.SetState(inTorque, inAngularVelocity, torque, angularVelocity);
+			CurrentState.SetState(inTorque, inAngularVelocity, outTorque, outAngularVelocity);
 			CurrentState.TorqueLossResult = torqueLossResult;
 
 			var retVal = NextComponent.Request(absTime, dt, inTorque, inAngularVelocity, dryRun);
 			return retVal;
 		}
 
-		public virtual IResponse Initialize(NewtonMeter torque, PerSecond angularVelocity)
+		public virtual IResponse Initialize(NewtonMeter outTorque, PerSecond outAngularVelocity)
 		{
-			var inAngularVelocity = angularVelocity * ModelData.Ratio;
-			var torqueLossResult = ModelData.LossMap.GetTorqueLoss(angularVelocity, torque);
-			var inTorque = torque / ModelData.Ratio + torqueLossResult.Value;
+			var inAngularVelocity = outAngularVelocity * ModelData.Ratio;
+			var torqueLossResult = ModelData.LossMap.GetTorqueLoss(outAngularVelocity, outTorque);
+			var inTorque = outTorque / ModelData.Ratio + torqueLossResult.Value;
 
-			PreviousState.SetState(inTorque, inAngularVelocity, torque, angularVelocity);
+			PreviousState.SetState(inTorque, inAngularVelocity, outTorque, outAngularVelocity);
 			PreviousState.TorqueLossResult = torqueLossResult;
 
 			return NextComponent.Initialize(inTorque, inAngularVelocity);

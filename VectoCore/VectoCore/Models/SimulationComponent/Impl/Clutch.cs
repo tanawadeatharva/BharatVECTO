@@ -50,19 +50,27 @@ namespace TUGraz.VectoCore.Models.SimulationComponent.Impl
 		private const double ClutchEff = 1;
 		private ClutchState _clutchState = ClutchState.ClutchSlipping;
 
-		protected ICombustionEngineIdleController IdleController;
+		public ICombustionEngineIdleController IdleController
+		{
+			get { return _idleController; }
+			set
+			{
+				_idleController = value;
+				_idleController.RequestPort = NextComponent;
+			}
+		}
+
 		private readonly SI _clutchSpeedSlippingFactor;
+		private ICombustionEngineIdleController _idleController;
 
 		protected Clutch(IVehicleContainer container) : base(container) {}
 
-		public Clutch(IVehicleContainer container, CombustionEngineData engineData,
-			ICombustionEngineIdleController idleController) : base(container)
+		public Clutch(IVehicleContainer container, CombustionEngineData engineData) : base(container)
 		{
 			_idleSpeed = engineData.IdleSpeed;
 			_ratedSpeed = engineData.FullLoadCurve.RatedSpeed;
 			_clutchSpeedSlippingFactor = Constants.SimulationSettings.ClutchClosingSpeedNorm * (_ratedSpeed - _idleSpeed) /
 										(_idleSpeed + Constants.SimulationSettings.ClutchClosingSpeedNorm * (_ratedSpeed - _idleSpeed));
-			IdleController = idleController;
 		}
 
 		public ClutchState State()
@@ -70,12 +78,12 @@ namespace TUGraz.VectoCore.Models.SimulationComponent.Impl
 			return _clutchState;
 		}
 
-		public ITnOutPort IdleControlPort
-		{
-			get { return NextComponent; }
-		}
+		//public ITnOutPort IdleControlPort
+		//{
+		//	get { return NextComponent; }
+		//}
 
-		public virtual IResponse Initialize(NewtonMeter torque, PerSecond angularVelocity)
+		public virtual IResponse Initialize(NewtonMeter outTorque, PerSecond outAngularVelocity)
 		{
 			NewtonMeter torqueIn;
 			PerSecond engineSpeedIn;
@@ -84,32 +92,32 @@ namespace TUGraz.VectoCore.Models.SimulationComponent.Impl
 				engineSpeedIn = _idleSpeed;
 				torqueIn = 0.SI<NewtonMeter>();
 			} else {
-				AddClutchLoss(torque, angularVelocity, out torqueIn, out engineSpeedIn);
+				AddClutchLoss(outTorque, outAngularVelocity, out torqueIn, out engineSpeedIn);
 			}
-			PreviousState.SetState(torqueIn, angularVelocity, torque, angularVelocity);
+			PreviousState.SetState(torqueIn, outAngularVelocity, outTorque, outAngularVelocity);
 
 			var retVal = NextComponent.Initialize(torqueIn, engineSpeedIn);
-			retVal.ClutchPowerRequest = torque * angularVelocity;
+			retVal.ClutchPowerRequest = outTorque * outAngularVelocity;
 			return retVal;
 		}
 
-		public virtual IResponse Request(Second absTime, Second dt, NewtonMeter torque, PerSecond angularVelocity,
+		public virtual IResponse Request(Second absTime, Second dt, NewtonMeter outTorque, PerSecond outAngularVelocity,
 			bool dryRun = false)
 		{
-			if (angularVelocity == null) {
+			if (outAngularVelocity == null) {
 				Log.Debug("Invoking IdleController...");
 
-				var retval = IdleController.Request(absTime, dt, torque, null, dryRun);
+				var retval = IdleController.Request(absTime, dt, outTorque, null, dryRun);
 				retval.ClutchPowerRequest = 0.SI<Watt>();
-				CurrentState.SetState(0.SI<NewtonMeter>(), retval.EngineSpeed, torque, retval.EngineSpeed);
+				CurrentState.SetState(0.SI<NewtonMeter>(), retval.EngineSpeed, outTorque, retval.EngineSpeed);
 				return retval;
 			}
 			if (IdleController != null) {
 				IdleController.Reset();
 			}
 
-			Log.Debug("from Wheels: torque: {0}, angularVelocity: {1}, power {2}", torque, angularVelocity,
-				Formulas.TorqueToPower(torque, angularVelocity));
+			Log.Debug("from Wheels: torque: {0}, angularVelocity: {1}, power {2}", outTorque, outAngularVelocity,
+				Formulas.TorqueToPower(outTorque, outAngularVelocity));
 
 			NewtonMeter torqueIn;
 			PerSecond angularVelocityIn;
@@ -118,15 +126,15 @@ namespace TUGraz.VectoCore.Models.SimulationComponent.Impl
 				angularVelocityIn = _idleSpeed;
 				torqueIn = 0.SI<NewtonMeter>();
 			} else {
-				AddClutchLoss(torque, angularVelocity, out torqueIn, out angularVelocityIn);
+				AddClutchLoss(outTorque, outAngularVelocity, out torqueIn, out angularVelocityIn);
 			}
 			Log.Debug("to Engine:   torque: {0}, angularVelocity: {1}, power {2}", torqueIn, angularVelocityIn,
 				Formulas.TorqueToPower(torqueIn, angularVelocityIn));
-			CurrentState.SetState(torqueIn, angularVelocityIn, torque, angularVelocity);
+			CurrentState.SetState(torqueIn, angularVelocityIn, outTorque, outAngularVelocity);
 
 			var retVal = NextComponent.Request(absTime, dt, torqueIn, angularVelocityIn, dryRun);
 
-			retVal.ClutchPowerRequest = torque *
+			retVal.ClutchPowerRequest = outTorque *
 										((PreviousState.OutAngularVelocity ?? 0.SI<PerSecond>()) + CurrentState.OutAngularVelocity) / 2.0;
 			return retVal;
 		}

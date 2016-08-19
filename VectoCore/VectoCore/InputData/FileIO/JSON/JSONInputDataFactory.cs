@@ -83,6 +83,8 @@ namespace TUGraz.VectoCore.InputData.FileIO.JSON
 			switch (version) {
 				case 5:
 					return new JSONGearboxDataV5(json, filename);
+				case 6:
+					return new JSONGearboxDataV6(json, filename);
 				default:
 					throw new VectoException("Gearbox-File: Unsupported FileVersion. Got {0}", version);
 			}

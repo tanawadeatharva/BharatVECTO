@@ -34,6 +34,7 @@ namespace TUGraz.VectoCore.InputData.Reader.ComponentData
 				var map = ReadAuxMap(id, table);
 
 				return new AuxiliaryData(transmissionRatio, efficiencyToEngine, efficiencyToSupply, map);
+				
 			} catch (FileNotFoundException e) {
 				throw new VectoException("Auxiliary file not found: " + fileName, e);
 			}

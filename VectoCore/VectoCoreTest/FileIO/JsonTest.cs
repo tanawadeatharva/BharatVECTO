@@ -38,6 +38,7 @@ using TUGraz.VectoCommon.InputData;
 using TUGraz.VectoCommon.Models;
 using TUGraz.VectoCommon.Utils;
 using TUGraz.VectoCore.InputData.FileIO.JSON;
+using TUGraz.VectoCore.InputData.Reader.DataObjectAdapter;
 using TUGraz.VectoCore.Tests.Utils;
 
 namespace TUGraz.VectoCore.Tests.FileIO
@@ -94,9 +95,7 @@ namespace TUGraz.VectoCore.Tests.FileIO
 			((JObject)json["Body"]).Property("Cycles").Remove();
 
 			AssertHelper.Exception<InvalidFileFormatException>(
-				() => {
-					var tmp = new JSONInputDataV2(json, TestJobFile).Cycles;
-				}, "Key Cycles not found");
+				() => { var tmp = new JSONInputDataV2(json, TestJobFile).Cycles; }, "Key Cycles not found");
 		}
 
 		[TestMethod]
@@ -153,10 +152,110 @@ namespace TUGraz.VectoCore.Tests.FileIO
 			((JObject)json["Body"]).Property("OverSpeedEcoRoll").Remove();
 
 			AssertHelper.Exception<VectoException>(
-				() => {
-					var tmp = new JSONInputDataV2(json, TestJobFile).DriverInputData.OverSpeedEcoRoll;
-				},
+				() => { var tmp = new JSONInputDataV2(json, TestJobFile).DriverInputData.OverSpeedEcoRoll; },
 				"Key OverSpeedEcoRoll not found");
+		}
+
+		[TestMethod]
+		public void ReadGearboxV5()
+		{
+			var inputProvider = JSONInputDataFactory.ReadGearbox(@"TestData\Components\AT_GBX\Gearbox_v5.vgbx");
+
+			var ratios = new[] { 3.0, 1.0, 0.8 };
+			Assert.AreEqual(ratios.Length, inputProvider.Gears.Count);
+			for (int i = 0; i < ratios.Length; i++) {
+				Assert.AreEqual(ratios[i], inputProvider.Gears[i].Ratio);
+			}
+			var gbxData = new EngineeringDataAdapter().CreateGearboxData(inputProvider,
+				MockSimulationDataFactory.CreateEngineDataFromFile(@"TestData\Components\AT_GBX\Engine.veng"), 2.1, 0.5.SI<Meter>(),
+				true);
+			Assert.AreEqual(ratios.Length, gbxData.Gears.Count);
+
+			// interpreted as gearbox with first and second gear using TC (due to gear ratios)
+			Assert.IsFalse(gbxData.Gears[1].HasLockedGear);
+			Assert.IsTrue(gbxData.Gears[1].HasTorqueConverter);
+			Assert.IsTrue(gbxData.Gears[2].HasLockedGear);
+			Assert.IsTrue(gbxData.Gears[2].HasTorqueConverter);
+			Assert.IsTrue(gbxData.Gears[3].HasLockedGear);
+			Assert.IsFalse(gbxData.Gears[3].HasTorqueConverter);
+		}
+
+		[TestMethod]
+		public void ReadGearboxSerialTC()
+		{
+			var inputProvider = JSONInputDataFactory.ReadGearbox(@"TestData\Components\AT_GBX\GearboxSerial.vgbx");
+
+			var ratios = new[] { 3.4, 1.9, 1.42, 1.0, 0.7, 0.62 };
+			Assert.AreEqual(ratios.Length, inputProvider.Gears.Count);
+			for (int i = 0; i < ratios.Length; i++) {
+				Assert.AreEqual(ratios[i], inputProvider.Gears[i].Ratio);
+			}
+			var gbxData = new EngineeringDataAdapter().CreateGearboxData(inputProvider,
+				MockSimulationDataFactory.CreateEngineDataFromFile(@"TestData\Components\AT_GBX\Engine.veng"), 2.1, 0.5.SI<Meter>(),
+				true);
+			Assert.AreEqual(ratios.Length, gbxData.Gears.Count);
+
+			Assert.IsTrue(gbxData.Gears[1].HasLockedGear);
+			Assert.IsTrue(gbxData.Gears[1].HasTorqueConverter);
+			Assert.IsTrue(gbxData.Gears[2].HasLockedGear);
+			Assert.IsFalse(gbxData.Gears[2].HasTorqueConverter);
+			Assert.IsTrue(gbxData.Gears[3].HasLockedGear);
+			Assert.IsFalse(gbxData.Gears[3].HasTorqueConverter);
+
+			var gear = gbxData.Gears[1];
+			Assert.AreEqual(gear.Ratio, gear.TorqueConverterRatio);
+		}
+
+		[TestMethod]
+		public void ReadGearboxPowersplitTC()
+		{
+			var inputProvider = JSONInputDataFactory.ReadGearbox(@"TestData\Components\AT_GBX\GearboxPowerSplit.vgbx");
+
+			var ratios = new[] { 1.35, 1.0, 0.73 };
+			Assert.AreEqual(ratios.Length, inputProvider.Gears.Count);
+			for (int i = 0; i < ratios.Length; i++) {
+				Assert.AreEqual(ratios[i], inputProvider.Gears[i].Ratio);
+			}
+			var gbxData = new EngineeringDataAdapter().CreateGearboxData(inputProvider,
+				MockSimulationDataFactory.CreateEngineDataFromFile(@"TestData\Components\AT_GBX\Engine.veng"), 2.1, 0.5.SI<Meter>(),
+				true);
+			Assert.AreEqual(ratios.Length, gbxData.Gears.Count);
+
+			Assert.IsTrue(gbxData.Gears[1].HasLockedGear);
+			Assert.IsTrue(gbxData.Gears[1].HasTorqueConverter);
+			Assert.IsTrue(gbxData.Gears[2].HasLockedGear);
+			Assert.IsFalse(gbxData.Gears[2].HasTorqueConverter);
+			Assert.IsTrue(gbxData.Gears[3].HasLockedGear);
+			Assert.IsFalse(gbxData.Gears[3].HasTorqueConverter);
+
+			Assert.AreEqual(1, gbxData.Gears[1].TorqueConverterRatio);
+		}
+
+		[TestMethod]
+		public void ReadGearboxDualTC()
+		{
+			var inputProvider = JSONInputDataFactory.ReadGearbox(@"TestData\Components\AT_GBX\GearboxSerialDualTC.vgbx");
+
+			var ratios = new[] { 4.35, 2.4, 1.8, 1.3, 1.0 };
+			Assert.AreEqual(ratios.Length, inputProvider.Gears.Count);
+			for (int i = 0; i < ratios.Length; i++) {
+				Assert.AreEqual(ratios[i], inputProvider.Gears[i].Ratio);
+			}
+			var gbxData = new EngineeringDataAdapter().CreateGearboxData(inputProvider,
+				MockSimulationDataFactory.CreateEngineDataFromFile(@"TestData\Components\AT_GBX\Engine.veng"), 2.1, 0.5.SI<Meter>(),
+				true);
+			Assert.AreEqual(ratios.Length, gbxData.Gears.Count);
+
+			Assert.IsFalse(gbxData.Gears[1].HasLockedGear);
+			Assert.IsTrue(gbxData.Gears[1].HasTorqueConverter);
+			Assert.IsTrue(gbxData.Gears[2].HasLockedGear);
+			Assert.IsTrue(gbxData.Gears[2].HasTorqueConverter);
+			Assert.IsTrue(gbxData.Gears[3].HasLockedGear);
+			Assert.IsFalse(gbxData.Gears[3].HasTorqueConverter);
+
+
+			var gear = gbxData.Gears[2];
+			Assert.AreEqual(gear.Ratio, gear.TorqueConverterRatio);
 		}
 
 		//[TestMethod]

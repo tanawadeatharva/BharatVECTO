@@ -313,6 +313,11 @@ namespace TUGraz.VectoCore.Models.SimulationComponent.Impl
 			get { return DrivingBehavior.Driving; }
 		}
 
+		public MeterPerSquareSecond DriverAcceleration
+		{
+			get { return 0.SI<MeterPerSquareSecond>(); }
+		}
+
 		#endregion
 	}
 
@@ -420,6 +425,7 @@ namespace TUGraz.VectoCore.Models.SimulationComponent.Impl
 			var deltaT = RightSample.Current.Time - LeftSample.Current.Time;
 			var acceleration = deltaV / deltaT;
 			var gradient = LeftSample.Current.RoadGradient;
+			DriverAcceleration = acceleration;
 			DriverBehavior = acceleration < 0
 				? DriverBehavior = DrivingBehavior.Braking
 				: DriverBehavior = DrivingBehavior.Driving;
@@ -557,6 +563,8 @@ namespace TUGraz.VectoCore.Models.SimulationComponent.Impl
 		}
 
 		public DrivingBehavior DriverBehavior { get; internal set; }
+
+		public MeterPerSquareSecond DriverAcceleration { get; protected set; }
 
 		public Meter Distance
 		{

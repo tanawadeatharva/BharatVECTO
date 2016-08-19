@@ -39,13 +39,24 @@ namespace TUGraz.VectoCommon.Models
 	{
 		MT, // Manual Transmission
 		AMT, // Automated Manual Transmission
-		AT, // Automatic Transmission
-		Custom,
+		ATSerial, // Automatic Transmission
+		ATPowerSplit,
+		//Custom,
 		DrivingCycle
 	}
 
 	public static class GearBoxTypeExtension
 	{
+		public static bool AutomaticTransmission(this GearboxType type)
+		{
+			return type == GearboxType.ATPowerSplit || type == GearboxType.ATSerial;
+		}
+
+		public static bool ManualTransmission(this GearboxType type)
+		{
+			return type == GearboxType.MT || type == GearboxType.AMT;
+		}
+
 		public static bool EarlyShiftGears(this GearboxType type)
 		{
 			switch (type) {
@@ -53,7 +64,8 @@ namespace TUGraz.VectoCommon.Models
 					return false;
 				case GearboxType.AMT:
 					return true;
-				case GearboxType.AT:
+				case GearboxType.ATSerial:
+				case GearboxType.ATPowerSplit:
 					return false;
 			}
 			return false;
@@ -66,7 +78,8 @@ namespace TUGraz.VectoCommon.Models
 					return true;
 				case GearboxType.AMT:
 					return true;
-				case GearboxType.AT:
+				case GearboxType.ATSerial:
+				case GearboxType.ATPowerSplit:
 					return false;
 			}
 			return false;
@@ -79,7 +92,8 @@ namespace TUGraz.VectoCommon.Models
 					return 2.SI<Second>();
 				case GearboxType.AMT:
 					return 1.SI<Second>();
-				case GearboxType.AT:
+				case GearboxType.ATSerial:
+				case GearboxType.ATPowerSplit:
 					return 0.8.SI<Second>();
 			}
 			return 0.SI<Second>();

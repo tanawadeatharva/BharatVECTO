@@ -29,6 +29,8 @@
 *   Martin Rexeis, rexeis@ivt.tugraz.at, IVT, Graz University of Technology
 */
 
+using TUGraz.VectoCommon.Utils;
+
 namespace TUGraz.VectoCore.Models.Simulation.DataBus
 {
 	public enum DrivingBehavior
@@ -43,5 +45,6 @@ namespace TUGraz.VectoCore.Models.Simulation.DataBus
 	public interface IDriverInfo
 	{
 		DrivingBehavior DriverBehavior { get; }
+		MeterPerSquareSecond DriverAcceleration { get; }
 	}
 }

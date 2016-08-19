@@ -3,7 +3,7 @@
     "CreatedBy": " ()",
     "Date": "03.05.2016 17:05:59",
     "AppVersion": "2.2",
-    "FileVersion": 2
+    "FileVersion": 3
   },
   "Body": {
     "SavedInDeclMode": true,
@@ -19,36 +19,43 @@
     "AuxiliaryVersion": "CLASSIC",
     "AdvancedAuxiliaryFilePath": "",
     "Aux": [
-      {
+{
         "ID": "FAN",
         "Type": "Fan",
         "Path": "<NOFILE>",
-        "Technology": "Crankshaft mounted - Discrete step clutch"
+        "Technology": [
+          "Crankshaft mounted - Discrete step clutch"
+        ]
       },
       {
         "ID": "STP",
         "Type": "Steering pump",
         "Path": "<NOFILE>",
-        "Technology": "Fixed displacement"
+        "Technology": [
+          "Fixed displacement"
+        ]
       },
       {
         "ID": "AC",
         "Type": "HVAC",
         "Path": "<NOFILE>",
-        "Technology": ""
+        "Technology": []
       },
       {
         "ID": "ES",
         "Type": "Electric System",
         "Path": "<NOFILE>",
-        "Technology": "",
-        "TechList": []
+        "Technology": [
+          "Standard technology"
+        ]
       },
       {
         "ID": "PS",
         "Type": "Pneumatic System",
         "Path": "<NOFILE>",
-        "Technology": ""
+        "Technology": [
+          "Medium Supply 1-stage"
+        ]
       }
     ],
     "VACC": "<NOFILE>",
