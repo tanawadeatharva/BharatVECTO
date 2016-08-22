@@ -8,6 +8,10 @@
 '   WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
 '
 ' See the LICENSE.txt for the specific language governing permissions and limitations.
+Option Infer On
+
+Imports System.Collections.Generic
+Imports System.Linq
 Imports System.Runtime.CompilerServices
 
 ''' <summary>
@@ -153,6 +157,58 @@ Public Enum tAxleConf As Integer
 	a8x6 = 8
 	a8x8 = 9
 End Enum
+
+
+Public Enum tPTOType
+	None = 0
+	OnlyDriveShaftShiftClawSynchronizerSchieberad = 1
+	OnlyDriveShaftMultiDiscClutch = 2
+	OnlyDriveShaftMultiDiscClutchOilPump = 3
+	DriveShaftUpTo2GearWheelsShiftClawSynchronizerSchieberad = 4
+	DriveShaftUpTo2GearWheelsMultiDiscClutch = 5
+	DriveShaftUpTo2GearWheelsMultiDiscClutchOilPump = 6
+	DriveShaftMoreThan2GearWheelsShiftClawSynchronizerSchieberad = 7
+	DriveShaftMoreThan2GearWheelsMultiDiscClutch = 8
+	DriveShaftMoreThan2GearWheelsMultiDiscClutchOilPump = 9
+End Enum
+
+Module PTOType
+	Public ReadOnly PtoTypeStrings As New Dictionary(Of tPTOType, String) From {
+		{tPTOType.None, "None"},
+		{tPTOType.OnlyDriveShaftShiftClawSynchronizerSchieberad,
+		"only the drive shaft of the PTO - shift claw, synchronizer, Schieberad"},
+		{tPTOType.OnlyDriveShaftMultiDiscClutch, "only the drive shaft of the PTO - multi-disc clutch"},
+		{tPTOType.OnlyDriveShaftMultiDiscClutchOilPump, "only the drive shaft of the PTO - multi-disc clutch, oil pump"},
+		{tPTOType.DriveShaftUpTo2GearWheelsShiftClawSynchronizerSchieberad,
+		"drive shaft and/or up to 2 gear wheels - shift claw, synchronizer, Schieberad"},
+		{tPTOType.DriveShaftUpTo2GearWheelsMultiDiscClutch, "drive shaft and/or up to 2 gear wheels - multi-disc clutch"},
+		{tPTOType.DriveShaftUpTo2GearWheelsMultiDiscClutchOilPump,
+		"drive shaft and/or up to 2 gear wheels - multi-disc clutch, oil pump"},
+		{tPTOType.DriveShaftMoreThan2GearWheelsShiftClawSynchronizerSchieberad,
+		"drive shaft and/or more than 2 gear wheels - shift claw, synchronizer, Schieberad"},
+		{tPTOType.DriveShaftMoreThan2GearWheelsMultiDiscClutch,
+		"drive shaft and/or more than 2 gear wheels - multi-disc clutch"},
+		{tPTOType.DriveShaftMoreThan2GearWheelsMultiDiscClutchOilPump,
+		"drive shaft and/or more than 2 gear wheels - multi-disc clutch, oil pump"}
+		}
+
+
+	Public Function GetPTOString(p As tPTOType) As String
+		If Not PtoTypeStrings.ContainsKey(p) Then
+			Return PtoTypeStrings(tPTOType.None)
+		Else
+			Return PtoTypeStrings(p)
+		End If
+	End Function
+
+	Public Function GetPTOType(p As String) As tPTOType
+		If Not PtoTypeStrings.ContainsValue(p) Then
+			Return tPTOType.None
+		End If
+		Return PtoTypeStrings.ToDictionary(Function(pair) pair.Value, Function(pair) pair.Key)(p)
+	End Function
+End Module
+
 
 Public Enum tLoading
 	FullLoaded

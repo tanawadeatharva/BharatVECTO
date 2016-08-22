@@ -174,7 +174,7 @@
     <value>File</value>
   </data>
 	<data name="Vehicle_PTO" xml:space="preserve">
-    <value>PTOTransmission</value>
+    <value>PTO</value>
   </data>
 	<data name="Vehicle_PTO_LossMapFile" xml:space="preserve">
     <value>LossMap</value>

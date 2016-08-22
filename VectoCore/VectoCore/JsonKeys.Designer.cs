@@ -727,7 +727,7 @@ namespace TUGraz.VectoCore {
         }
         
         /// <summary>
-        ///   Looks up a localized string similar to PTOTransmission.
+        ///   Looks up a localized string similar to PTO.
         /// </summary>
         internal static string Vehicle_PTO {
             get {

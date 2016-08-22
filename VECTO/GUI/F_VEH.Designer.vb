@@ -109,10 +109,11 @@ Partial Class F_VEH
 		Me.ShowInFolderToolStripMenuItem = New System.Windows.Forms.ToolStripMenuItem()
 		Me.PnAll = New System.Windows.Forms.Panel()
 		Me.gbPTO = New System.Windows.Forms.GroupBox()
+		Me.pnPTO = New System.Windows.Forms.Panel()
 		Me.btPTOLossMapBrowse = New System.Windows.Forms.Button()
-		Me.cbPTOType = New System.Windows.Forms.ComboBox()
-		Me.tbPTOLossMap = New System.Windows.Forms.TextBox()
 		Me.Label7 = New System.Windows.Forms.Label()
+		Me.tbPTOLossMap = New System.Windows.Forms.TextBox()
+		Me.cbPTOType = New System.Windows.Forms.ComboBox()
 		Me.GroupBox3 = New System.Windows.Forms.GroupBox()
 		Me.GroupBox2 = New System.Windows.Forms.GroupBox()
 		Me.pnAngularGearFields = New System.Windows.Forms.Panel()
@@ -141,6 +142,7 @@ Partial Class F_VEH
 		Me.CmOpenFile.SuspendLayout()
 		Me.PnAll.SuspendLayout()
 		Me.gbPTO.SuspendLayout()
+		Me.pnPTO.SuspendLayout()
 		Me.GroupBox3.SuspendLayout()
 		Me.GroupBox2.SuspendLayout()
 		Me.pnAngularGearFields.SuspendLayout()
@@ -822,10 +824,8 @@ Partial Class F_VEH
 		'
 		'gbPTO
 		'
-		Me.gbPTO.Controls.Add(Me.btPTOLossMapBrowse)
+		Me.gbPTO.Controls.Add(Me.pnPTO)
 		Me.gbPTO.Controls.Add(Me.cbPTOType)
-		Me.gbPTO.Controls.Add(Me.tbPTOLossMap)
-		Me.gbPTO.Controls.Add(Me.Label7)
 		Me.gbPTO.Location = New System.Drawing.Point(6, 412)
 		Me.gbPTO.Name = "gbPTO"
 		Me.gbPTO.Size = New System.Drawing.Size(564, 86)
@@ -833,44 +833,54 @@ Partial Class F_VEH
 		Me.gbPTO.TabStop = False
 		Me.gbPTO.Text = "PTO Transmission"
 		'
+		'pnPTO
+		'
+		Me.pnPTO.Controls.Add(Me.btPTOLossMapBrowse)
+		Me.pnPTO.Controls.Add(Me.Label7)
+		Me.pnPTO.Controls.Add(Me.tbPTOLossMap)
+		Me.pnPTO.Dock = System.Windows.Forms.DockStyle.Bottom
+		Me.pnPTO.Location = New System.Drawing.Point(3, 42)
+		Me.pnPTO.Name = "pnPTO"
+		Me.pnPTO.Size = New System.Drawing.Size(558, 41)
+		Me.pnPTO.TabIndex = 4
+		'
 		'btPTOLossMapBrowse
 		'
 		Me.btPTOLossMapBrowse.Anchor = CType((System.Windows.Forms.AnchorStyles.Bottom Or System.Windows.Forms.AnchorStyles.Left), System.Windows.Forms.AnchorStyles)
 		Me.btPTOLossMapBrowse.Image = Global.VECTO.My.Resources.Resources.Open_icon
-		Me.btPTOLossMapBrowse.Location = New System.Drawing.Point(532, 55)
+		Me.btPTOLossMapBrowse.Location = New System.Drawing.Point(529, 15)
 		Me.btPTOLossMapBrowse.Name = "btPTOLossMapBrowse"
 		Me.btPTOLossMapBrowse.Size = New System.Drawing.Size(24, 24)
 		Me.btPTOLossMapBrowse.TabIndex = 14
 		Me.btPTOLossMapBrowse.UseVisualStyleBackColor = True
 		'
-		'cbPTOType
+		'Label7
 		'
-		Me.cbPTOType.DropDownStyle = System.Windows.Forms.ComboBoxStyle.DropDownList
-		Me.cbPTOType.FormattingEnabled = True
-		Me.cbPTOType.Items.AddRange(New Object() {"None", "only the drive shaft of the PTO - shift claw, synchronizer, Schieberad", "only the drive shaft of the PTO - multi-disc clutch", "only the drive shaft of the PTO - multi-disc clutch, oil pump", "drive shaft and/or up to 2 gear wheels - shift claw, synchronizer, Schieberad", "drive shaft and/or up to 2 gear wheels - multi-disc clutch", "drive shaft and/or up to 2 gear wheels - multi-disc clutch, oil pump", "drive shaft and/or more than 2 gear wheels - shift claw, synchronizer, Schieberad" & _
-				"", "drive shaft and/or more than 2 gear wheels - multi-disc clutch", "drive shaft and/or more than 2 gear wheels - multi-disc clutch, oil pump"})
-		Me.cbPTOType.Location = New System.Drawing.Point(6, 19)
-		Me.cbPTOType.Name = "cbPTOType"
-		Me.cbPTOType.Size = New System.Drawing.Size(550, 21)
-		Me.cbPTOType.TabIndex = 0
+		Me.Label7.Anchor = CType((System.Windows.Forms.AnchorStyles.Bottom Or System.Windows.Forms.AnchorStyles.Left), System.Windows.Forms.AnchorStyles)
+		Me.Label7.Location = New System.Drawing.Point(3, -1)
+		Me.Label7.Name = "Label7"
+		Me.Label7.Size = New System.Drawing.Size(201, 16)
+		Me.Label7.TabIndex = 15
+		Me.Label7.Text = "PTO Consumer Loss Map (.vptol)"
+		Me.Label7.TextAlign = System.Drawing.ContentAlignment.BottomLeft
 		'
 		'tbPTOLossMap
 		'
 		Me.tbPTOLossMap.Anchor = CType((System.Windows.Forms.AnchorStyles.Bottom Or System.Windows.Forms.AnchorStyles.Left), System.Windows.Forms.AnchorStyles)
-		Me.tbPTOLossMap.Location = New System.Drawing.Point(9, 58)
+		Me.tbPTOLossMap.Location = New System.Drawing.Point(6, 18)
 		Me.tbPTOLossMap.Name = "tbPTOLossMap"
 		Me.tbPTOLossMap.Size = New System.Drawing.Size(523, 20)
 		Me.tbPTOLossMap.TabIndex = 13
+		Me.ToolTip1.SetToolTip(Me.tbPTOLossMap, "PTO Consumer Loss Map")
 		'
-		'Label7
+		'cbPTOType
 		'
-		Me.Label7.Anchor = CType((System.Windows.Forms.AnchorStyles.Bottom Or System.Windows.Forms.AnchorStyles.Left), System.Windows.Forms.AnchorStyles)
-		Me.Label7.Location = New System.Drawing.Point(6, 41)
-		Me.Label7.Name = "Label7"
-		Me.Label7.Size = New System.Drawing.Size(201, 16)
-		Me.Label7.TabIndex = 15
-		Me.Label7.Text = "PTO Loss Map"
-		Me.Label7.TextAlign = System.Drawing.ContentAlignment.BottomLeft
+		Me.cbPTOType.DropDownStyle = System.Windows.Forms.ComboBoxStyle.DropDownList
+		Me.cbPTOType.Location = New System.Drawing.Point(6, 17)
+		Me.cbPTOType.Name = "cbPTOType"
+		Me.cbPTOType.Size = New System.Drawing.Size(550, 21)
+		Me.cbPTOType.TabIndex = 0
+		Me.ToolTip1.SetToolTip(Me.cbPTOType, "Transmission type to the PTO consumer")
 		'
 		'GroupBox3
 		'
@@ -1040,7 +1050,8 @@ Partial Class F_VEH
 		Me.CmOpenFile.ResumeLayout(False)
 		Me.PnAll.ResumeLayout(False)
 		Me.gbPTO.ResumeLayout(False)
-		Me.gbPTO.PerformLayout()
+		Me.pnPTO.ResumeLayout(False)
+		Me.pnPTO.PerformLayout()
 		Me.GroupBox3.ResumeLayout(False)
 		Me.GroupBox2.ResumeLayout(False)
 		Me.pnAngularGearFields.ResumeLayout(False)
@@ -1142,4 +1153,5 @@ Partial Class F_VEH
 	Friend WithEvents gbPTO As System.Windows.Forms.GroupBox
 	Friend WithEvents btPTOLossMapBrowse As System.Windows.Forms.Button
 	Friend WithEvents cbPTOType As System.Windows.Forms.ComboBox
+	Friend WithEvents pnPTO As System.Windows.Forms.Panel
 End Class

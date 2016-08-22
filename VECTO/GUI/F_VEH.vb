@@ -11,6 +11,7 @@
 Option Infer On
 
 Imports System.IO
+Imports System.Linq
 Imports System.Text.RegularExpressions
 Imports TUGraz.VectoCommon.Models
 
@@ -42,8 +43,11 @@ Public Class F_VEH
 		ButAxlRem.Enabled = Not Cfg.DeclMode
 		CbCdMode.Enabled = Not Cfg.DeclMode
 		PnWheelDiam.Enabled = Not Cfg.DeclMode
+		gbPTO.Enabled = Not Cfg.DeclMode
 
 		_axlDlog = New F_VEH_Axle
+
+		cbPTOType.Items.AddRange(PtoTypeStrings.Values.Cast(Of Object).ToArray())
 
 		_changed = False
 
@@ -233,6 +237,9 @@ Public Class F_VEH
 		TbMassExtra.Text = ""
 		CbAxleConfig.SelectedIndex = 0
 
+		cbPTOType.SelectedIndex = 0
+		tbPTOLossMap.Text = ""
+
 		DeclInit()
 
 		_vehFile = ""
@@ -329,6 +336,9 @@ Public Class F_VEH
 
 		TBcdA.Text = veh.CdA0
 
+		cbPTOType.SelectedIndex = CType(veh.PTOType, Integer)
+		tbPTOLossMap.Text = veh.PTOLossMap.OriginalPath
+
 		DeclInit()
 
 		fbVEH.UpdateHistory(file)
@@ -393,6 +403,9 @@ Public Class F_VEH
 			a0.Inertia = fTextboxToNumString(LV0.SubItems(6).Text)
 			veh.Axles.Add(a0)
 		Next
+
+		veh.PTOType = CType(cbPTOType.SelectedIndex, tPTOType)
+		veh.PTOLossMap.Init(fPATH(file), tbPTOLossMap.Text)
 
 		If Not Cfg.DeclMode AndAlso Math.Abs(axleShareCheck - 1) > 0.000001 Then
 			MsgBox("Relative axle loads must sum up to 1.0. Current value: " & axleShareCheck, MsgBoxStyle.Critical)
@@ -543,15 +556,10 @@ Public Class F_VEH
 		Change()
 	End Sub
 
-	Private Sub CbRim_SelectedIndexChanged(sender As Object, e As EventArgs)
-		Change()
-		DeclInit()
-	End Sub
-
 	Private Sub TBcw_TextChanged(sender As Object, e As EventArgs) _
 		Handles TbLoad.TextChanged, TBrdyn.TextChanged, TBcdA.TextChanged, TbCdFile.TextChanged, TbRtRatio.TextChanged,
 				cbAngularGearType.SelectedIndexChanged, TbRtPath.TextChanged, tbAngularGearLossMapPath.TextChanged,
-				tbAngularGearRatio.TextChanged
+				tbAngularGearRatio.TextChanged, tbPTOLossMap.TextChanged
 		Change()
 	End Sub
 
@@ -754,5 +762,23 @@ Public Class F_VEH
 	End Sub
 
 #End Region
+
+	Private Sub cbPTOType_SelectedIndexChanged(sender As Object, e As EventArgs) Handles cbPTOType.SelectedIndexChanged
+
+		If (cbPTOType.SelectedIndex = 0) Then
+			pnPTO.Enabled = False
+			tbPTOLossMap.Text = ""
+		Else
+			pnPTO.Enabled = True
+		End If
+
+		Change()
+	End Sub
+
+	Private Sub btPTOLossMapBrowse_Click(sender As Object, e As EventArgs) Handles btPTOLossMapBrowse.Click
+		If fbPTOLM.OpenDialog(fFileRepl(tbPTOLossMap.Text, fPATH(_vehFile))) Then
+			tbPTOLossMap.Text = fFileWoDir(fbPTOLM.Files(0), fPATH(_vehFile))
+		End If
+	End Sub
 End Class
 

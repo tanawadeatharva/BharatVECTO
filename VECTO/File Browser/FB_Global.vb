@@ -36,6 +36,7 @@ Public Module FB_Global
 
 	Public fbGBS As cFileBrowser
 	Public fbTLM As cFileBrowser
+	Public fbPTOLM As cFileBrowser
 	Public fbRLM As cFileBrowser
 	Public fbTCC As cFileBrowser
 	Public fbCDx As cFileBrowser

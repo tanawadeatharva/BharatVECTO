@@ -62,6 +62,8 @@ Public Class cVEH
 	Public AngularGearRatio As Single
 	Public AngularGearLossMapFile As cSubPath
 
+	Public PTOType As tPTOType
+	Public PTOLossMap As cSubPath
 
 	Public Class cAxle
 		Public RRC As Single
@@ -105,6 +107,7 @@ Public Class cVEH
 		RtnU = New List(Of Single)
 		RtM = New List(Of Single)
 		Axles = New List(Of cAxle)
+		PTOLossMap = New cSubPath()
 		SetDefault()
 	End Sub
 
@@ -129,11 +132,13 @@ Public Class cVEH
 		RtnU.Clear()
 		RtM.Clear()
 		RtFile.Clear()
-		AngularGearLossMapFile.Clear()
 
 		AngularGearType = AngularGearType.None
 		AngularGearLossMapFile.Clear()
 		AngularGearRatio = 1
+
+		PTOType = tPTOType.None
+		PTOLossMap.Clear()
 
 		Axles.Clear()
 		VehCat = tVehCat.Undef
@@ -263,6 +268,23 @@ Public Class cVEH
 				Axles.Add(axle)
 			Next
 
+			PTOType = tPTOType.None
+			If Not body("PTO") Is Nothing Then
+				Dim ptoStr = body("PTO")("Type")
+
+				If String.IsNullOrWhiteSpace(ptoStr) Then
+					PTOType = tPTOType.None
+					WorkerMsg(tMsgID.Normal, "PTO automatically updated to '" + PTOType + "'", msgSrc)
+				Else
+					PTOType = GetPTOType(ptoStr)
+				End If
+
+			End If
+
+			If Not PTOType = tPTOType.None Then
+				PTOLossMap.Init(MyPath, body("PTO")("LossMap"))
+			End If
+
 		Catch ex As Exception
 			If showMsg Then WorkerMsg(tMsgID.Err, "Failed to read Vehicle file! " & ex.Message, msgSrc)
 			Return False
@@ -304,6 +326,9 @@ Public Class cVEH
 				{"Type", AngularGearType.ToString()},
 				{"Ratio", AngularGearRatio},
 				{"LossMap", AngularGearLossMapFile.PathOrDummy}}},
+			{"PTO", New Dictionary(Of String, Object) From {
+				{"Type", GetPTOString(PTOType)},
+				{"LossMap", PTOLossMap.PathOrDummy}}},
 			{"AxleConfig", New Dictionary(Of String, Object) From {
 				{"Type", ConvAxleConf(AxleConf)},
 				{"Axles", (From axle In Axles Select New Dictionary(Of String, Object) From {
