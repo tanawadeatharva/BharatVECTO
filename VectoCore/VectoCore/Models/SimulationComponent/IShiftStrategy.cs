@@ -70,9 +70,9 @@ namespace TUGraz.VectoCore.Models.SimulationComponent
 		/// <param name="absTime">The abs time.</param>
 		/// <param name="dt">The dt.</param>
 		/// <param name="outTorque">The out torque.</param>
-		/// <param name="outEngineSpeed">The out engine speed.</param>
+		/// <param name="outAngularVelocity">The out engine speed.</param>
 		/// <returns>The gear to take.</returns>
-		uint Engage(Second absTime, Second dt, NewtonMeter outTorque, PerSecond outEngineSpeed);
+		uint Engage(Second absTime, Second dt, NewtonMeter outTorque, PerSecond outAngularVelocity);
 
 		/// <summary>
 		/// Disengages a gear.
@@ -89,6 +89,6 @@ namespace TUGraz.VectoCore.Models.SimulationComponent
 		/// <value>
 		/// The gearbox.
 		/// </value>
-		Gearbox Gearbox { get; set; }
+		IGearbox Gearbox { get; set; }
 	}
 }

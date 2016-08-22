@@ -117,6 +117,9 @@ namespace TUGraz.VectoCore.OutputData
 				dataColumns.AddRange(new[] {
 					ModalResultField.Gear,
 				});
+				if (HasTorqueConverter) {
+					dataColumns.AddRange(new[] { ModalResultField.TC_Locked });
+				}
 			}
 			dataColumns.AddRange(new[] {
 				ModalResultField.n_eng_avg,
@@ -128,8 +131,19 @@ namespace TUGraz.VectoCore.OutputData
 				ModalResultField.P_eng_drag,
 				ModalResultField.P_eng_inertia,
 				ModalResultField.P_eng_out,
-				ModalResultField.P_clutch_loss,
-				ModalResultField.P_clutch_out,
+			});
+			if (HasTorqueConverter) {
+				dataColumns.AddRange(new[] {
+					ModalResultField.P_TC_loss,
+					ModalResultField.P_TC_out,
+				});
+			} else {
+				dataColumns.AddRange(new[] {
+					ModalResultField.P_clutch_loss,
+					ModalResultField.P_clutch_out,
+				});
+			}
+			dataColumns.AddRange(new[] {
 				ModalResultField.P_aux
 			});
 
@@ -157,11 +171,12 @@ namespace TUGraz.VectoCore.OutputData
 
 				if (HasTorqueConverter) {
 					dataColumns.AddRange(new[] {
-						ModalResultField.TCv,
-						ModalResultField.P_tc_loss,
-						ModalResultField.TCmu,
-						ModalResultField.TC_M_Out,
-						ModalResultField.TC_n_Out
+						ModalResultField.TorqueConverterSpeedRatio,
+						ModalResultField.TorqueConverterTorqueRatio,
+						ModalResultField.TC_TorqueOut,
+						ModalResultField.TC_angularSpeedOut,
+						ModalResultField.TC_TorqueIn,
+						ModalResultField.TC_angularSpeedIn,
 					});
 				}
 			}
@@ -189,6 +204,7 @@ namespace TUGraz.VectoCore.OutputData
 				});
 			}
 
+
 			var strCols = dataColumns.Select(x => x.GetName())
 				.Concat(Auxiliaries.Values.Select(c => c.ColumnName))
 				.Concat(
@@ -196,7 +212,9 @@ namespace TUGraz.VectoCore.OutputData
 						ModalResultField.FCMap, ModalResultField.FCAUXc, ModalResultField.FCWHTCc,
 						ModalResultField.FCAAUX, ModalResultField.FCFinal
 					}.Select(x => x.GetName()));
-
+#if TRACE
+			strCols = strCols.Concat(_additionalColumns);
+#endif
 			if (WriteModalResults) {
 				var filteredData = Data;
 				foreach (var filter in _filters) {

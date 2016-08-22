@@ -186,11 +186,13 @@ namespace TUGraz.VectoCore.Tests.Integration
 			var modFileName = "40t_Long_Haul_Truck_RegionalDeliveryFullLoading.vmod";
 			var modFileName1Hz = "40t_Long_Haul_Truck_RegionalDeliveryFullLoading_1Hz.vmod";
 
-			if (File.Exists(modFileName))
+			if (File.Exists(modFileName)) {
 				File.Delete(modFileName);
+			}
 
-			if (File.Exists(modFileName1Hz))
+			if (File.Exists(modFileName1Hz)) {
 				File.Delete(modFileName1Hz);
+			}
 
 			var inputData = JSONInputDataFactory.ReadJsonJob(LongHaulTruckDeclarationJob);
 			var fileWriter = new FileOutputWriter("Truck40t_Mod1Hz_Test.vecto");
@@ -286,7 +288,7 @@ namespace TUGraz.VectoCore.Tests.Integration
 			var jobContainer = new JobContainer(sumData);
 			jobContainer.AddRuns(factory);
 
-			//var i = 7;
+			//var i = 2;
 			//jobContainer.Runs[i].Run.Run();
 			//Assert.IsTrue(jobContainer.Runs[i].Run.FinishedWithoutErrors);
 
@@ -299,7 +301,10 @@ namespace TUGraz.VectoCore.Tests.Integration
 
 			jobContainer.Execute();
 			jobContainer.WaitFinished();
-			Assert.IsTrue(jobContainer.Runs.All(r => r.Success), string.Concat(jobContainer.Runs.Select(r => r.ExecException)));
+			Assert.IsTrue(jobContainer.Runs.All(r => r.Success),
+				string.Format("folowing runs failed: {0}\n{1}",
+					string.Concat(jobContainer.Runs.Where(r => !r.Success).Select(r => r.Run.RunName + " - " + r.Run.CycleName)),
+					string.Concat(jobContainer.Runs.Select(r => r.ExecException))));
 		}
 
 		[TestMethod, TestCategory("LongRunning")]

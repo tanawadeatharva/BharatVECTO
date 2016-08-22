@@ -146,6 +146,10 @@
     <Compile Include="Models\SimulationComponent\ILossMap.cs" />
     <Compile Include="Models\SimulationComponent\Data\PTOLossMap.cs" />
     <Compile Include="Models\SimulationComponent\Impl\GearboxAuxiliary.cs" />
+    <Compile Include="Models\SimulationComponent\Impl\AbstractGearbox.cs" />
+    <Compile Include="Models\SimulationComponent\Impl\ATGearbox.cs" />
+    <Compile Include="Models\SimulationComponent\Impl\ATShiftStrategy.cs" />
+    <Compile Include="Models\SimulationComponent\Impl\TorqueConverter.cs" />
     <Compile Include="Utils\ProviderExtensions.cs" />
     <Compile Include="Models\Declaration\AirDrag.cs" />
     <Compile Include="Models\Declaration\Fan.cs" />
@@ -317,7 +321,6 @@
     <EmbeddedResource Include="Resources\Declaration\VAUX\PS-Table.csv" />
     <EmbeddedResource Include="Resources\Declaration\VAUX\SP-Table.csv" />
     <EmbeddedResource Include="Resources\Declaration\VAUX\SP-Tech.csv" />
-    <EmbeddedResource Include="Resources\Declaration\DefaultTC.vtcc" />
     <EmbeddedResource Include="Resources\Declaration\VCDV\parameters.csv" />
     <EmbeddedResource Include="Resources\Declaration\WHTC-Weighting-Factors.csv" />
     <EmbeddedResource Include="Resources\Declaration\VAUX\ALT-Tech.csv" />

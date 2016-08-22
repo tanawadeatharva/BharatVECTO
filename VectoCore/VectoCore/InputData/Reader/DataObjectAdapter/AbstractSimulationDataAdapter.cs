@@ -159,7 +159,7 @@ namespace TUGraz.VectoCore.InputData.Reader.DataObjectAdapter
 				TypeId = data.TypeId,
 				DigestValue = data.DigestValue,
 				IntegrityStatus = data.IntegrityStatus,
-				AxleGear = new GearData { LossMap = axleLossMap, Ratio = data.Ratio, TorqueConverterActive = false }
+				AxleGear = new GearData { LossMap = axleLossMap, Ratio = data.Ratio }
 			};
 		}
 

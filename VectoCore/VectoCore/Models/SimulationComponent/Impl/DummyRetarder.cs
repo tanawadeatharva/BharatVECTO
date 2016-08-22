@@ -49,10 +49,10 @@ namespace TUGraz.VectoCore.Models.SimulationComponent.Impl
 			return NextComponent.Initialize(torque, angularVelocity);
 		}
 
-		public IResponse Request(Second absTime, Second dt, NewtonMeter torque, PerSecond angularVelocity, bool dryRun = false)
+		public IResponse Request(Second absTime, Second dt, NewtonMeter outTorque, PerSecond outAngularVelocity, bool dryRun = false)
 		{
-			CurrentState.SetState(torque, angularVelocity, torque, angularVelocity);
-			return NextComponent.Request(absTime, dt, torque, angularVelocity, dryRun);
+			CurrentState.SetState(outTorque, outAngularVelocity, outTorque, outAngularVelocity);
+			return NextComponent.Request(absTime, dt, outTorque, outAngularVelocity, dryRun);
 		}
 
 		protected override void DoWriteModalResults(IModalDataContainer container)

@@ -11,7 +11,7 @@
 Imports System.Collections.Generic
 
 Public Class cGBX
-	Private Const FormatVersion As Short = 5
+	Private Const FormatVersion As Short = 6
 	Private FileVersion As Short
 
 	Private MyPath As String
@@ -23,7 +23,7 @@ Public Class cGBX
 
 	Public Igetr As List(Of Single)
 	Public GetrMaps As List(Of cSubPath)
-	Public IsTCgear As List(Of Boolean)
+	'Public IsTCgear As List(Of Boolean)
 
 	Private MyGBmaps As List(Of cDelaunayMap)
 	Private GetrEffDef As List(Of Boolean)
@@ -117,7 +117,7 @@ Public Class cGBX
 		TracIntrSi = 0
 
 		Igetr = New List(Of Single)
-		IsTCgear = New List(Of Boolean)
+		'IsTCgear = New List(Of Boolean)
 		GetrMaps = New List(Of cSubPath)
 		gs_files = New List(Of cSubPath)
 		FldFiles = New List(Of cSubPath)
@@ -183,7 +183,7 @@ Public Class cGBX
 				dic0.Add("LossMap", GetrMaps(i).PathOrDummy)
 			End If
 			If i > 0 Then
-				dic0.Add("TCactive", IsTCgear(i))
+				'dic0.Add("TCactive", IsTCgear(i))
 				dic0.Add("ShiftPolygon", gs_files(i).PathOrDummy)
 				dic0.Add("FullLoadCurve", FldFiles(i).PathOrDummy)
 			End If
@@ -263,11 +263,11 @@ Public Class cGBX
 				FldFiles.Add(New cSubPath)
 
 				If i = 0 Then
-					IsTCgear.Add(False)
+					'IsTCgear.Add(False)
 					gs_files(i).Init(MyPath, sKey.NoFile)
 					FldFiles(i).Init(MyPath, sKey.NoFile)
 				Else
-					IsTCgear.Add(dic("TCactive"))
+					'IsTCgear.Add(dic("TCactive"))
 					If FileVersion < 2 Then
 						gs_files(i).Init(MyPath, JSON.Content("Body")("ShiftPolygons"))
 					Else
@@ -333,7 +333,7 @@ Public Class cGBX
 
 		MsgSrc = "GBX/DeclInit"
 
-		If gs_Type = tGearbox.Custom Or gs_Type = tGearbox.Automatic Then
+		If gs_Type = tGearbox.Custom Or tGearboxExtension.AutomaticTransmission(gs_Type) Then
 			WorkerMsg(tMsgID.Err, "Invalid gearbox type for Declaration Mode!", MsgSrc)
 			Return False
 		End If
@@ -352,7 +352,7 @@ Public Class cGBX
 		DownshiftAfterUpshift = 10
 		UpshiftMinAcceleration = 0.1
 
-		TCon = (gs_Type = tGearbox.Automatic)
+		TCon = (AutomaticTransmission(gs_Type))
 
 		For i = 1 To GearCount()
 			Shiftpolygons(i).SetGenericShiftPoly(FLD(i), ENG.Nidle)
@@ -773,7 +773,7 @@ lbInt:
 		If gs_Type <> tGearbox.Custom Then
 
 			gs_ShiftInside = cDeclaration.ShiftInside(gs_Type)
-			TCon = (gs_Type = tGearbox.Automatic)
+			TCon = AutomaticTransmission(gs_Type)
 			gs_SkipGears = cDeclaration.SkipGears(gs_Type)
 
 		End If
@@ -926,70 +926,70 @@ lbInt:
 				'Calculate average efficiency for fast approx. calculation
 				If i > 0 Then
 
-					If GBX.IsTCgear(i) Then
+					'If GBX.IsTCgear(i) Then
 
-						GetrEff(i) = -1
+					'	GetrEff(i) = -1
 
-					Else
+					'Else
 
-						EffSum = 0
-						Anz = 0
+					EffSum = 0
+					Anz = 0
 
-						dnU = (2 / 3) * (ENG.Nrated - ENG.Nidle) / 10
-						nU = ENG.Nidle + dnU
+					dnU = (2 / 3) * (ENG.Nrated - ENG.Nidle) / 10
+					nU = ENG.Nidle + dnU
 
-						Do While nU <= ENG.Nrated
+					Do While nU <= ENG.Nrated
 
-							dM = nPeToM(nU, (2 / 3) * FLD(i).Pfull(nU) / 10)
-							M_in = nPeToM(nU, (1 / 3) * FLD(i).Pfull(nU))
+						dM = nPeToM(nU, (2 / 3) * FLD(i).Pfull(nU) / 10)
+						M_in = nPeToM(nU, (1 / 3) * FLD(i).Pfull(nU))
 
-							Do While M_in <= nPeToM(nU, FLD(i).Pfull(nU))
+						Do While M_in <= nPeToM(nU, FLD(i).Pfull(nU))
 
-								P_In = nMtoPe(nU, M_in)
+							P_In = nMtoPe(nU, M_in)
 
-								P_Loss = IntpolPeLossFwd(i, nU, P_In, False)
+							P_Loss = IntpolPeLossFwd(i, nU, P_In, False)
 
-								EffSum += (P_In - P_Loss) / P_In
-								Anz += 1
-
-
-								plossG = P_Loss
-								MinG = M_in
+							EffSum += (P_In - P_Loss) / P_In
+							Anz += 1
 
 
-								'Axle
-								P_In -= P_Loss
-								P_Loss = IntpolPeLossFwd(0, nU / GBX.Igetr(i), P_In, False)
-								EffDiffSum += (P_In - P_Loss) / P_In
-								AnzDiff += 1
-
-								If MODdata.ModErrors.TrLossMapExtr <> "" Then
-									WorkerMsg(tMsgID.Err, "Transmission loss map does not cover full engine operating range!", MsgSrc)
-									WorkerMsg(tMsgID.Err, MODdata.ModErrors.TrLossMapExtr, MsgSrc)
-									WorkerMsg(tMsgID.Err, "nU_In(GB)=" & nU & " [1/min]", MsgSrc)
-									WorkerMsg(tMsgID.Err, "M_In(GB)=" & MinG & " [Nm]", MsgSrc)
-									WorkerMsg(tMsgID.Err, "P_Loss(GB)=" & plossG & " [kW]", MsgSrc)
-									WorkerMsg(tMsgID.Err, "nU_In(axle)=" & CStr(nU / Igetr(i)) & " [1/min]", MsgSrc)
-									WorkerMsg(tMsgID.Err, "M_In(axle)=" & CStr(nPeToM(nU / Igetr(i), P_In)) & " [Nm]", MsgSrc)
-									WorkerMsg(tMsgID.Err, "P_Loss(axle)=" & P_Loss & " [kW]", MsgSrc)
-									Return False
-								End If
-
-								M_in += dM
-							Loop
+							plossG = P_Loss
+							MinG = M_in
 
 
-							nU += dnU
+							'Axle
+							P_In -= P_Loss
+							P_Loss = IntpolPeLossFwd(0, nU / GBX.Igetr(i), P_In, False)
+							EffDiffSum += (P_In - P_Loss) / P_In
+							AnzDiff += 1
+
+							If MODdata.ModErrors.TrLossMapExtr <> "" Then
+								WorkerMsg(tMsgID.Err, "Transmission loss map does not cover full engine operating range!", MsgSrc)
+								WorkerMsg(tMsgID.Err, MODdata.ModErrors.TrLossMapExtr, MsgSrc)
+								WorkerMsg(tMsgID.Err, "nU_In(GB)=" & nU & " [1/min]", MsgSrc)
+								WorkerMsg(tMsgID.Err, "M_In(GB)=" & MinG & " [Nm]", MsgSrc)
+								WorkerMsg(tMsgID.Err, "P_Loss(GB)=" & plossG & " [kW]", MsgSrc)
+								WorkerMsg(tMsgID.Err, "nU_In(axle)=" & CStr(nU / Igetr(i)) & " [1/min]", MsgSrc)
+								WorkerMsg(tMsgID.Err, "M_In(axle)=" & CStr(nPeToM(nU / Igetr(i), P_In)) & " [Nm]", MsgSrc)
+								WorkerMsg(tMsgID.Err, "P_Loss(axle)=" & P_Loss & " [kW]", MsgSrc)
+								Return False
+							End If
+
+							M_in += dM
 						Loop
 
-						If Anz = 0 Then
-							WorkerMsg(tMsgID.Err, "Failed to calculate approx. transmission losses!", MsgSrc)
-							Return False
-						End If
 
-						GetrEff(i) = EffSum / Anz
+						nU += dnU
+					Loop
 
+					If Anz = 0 Then
+						WorkerMsg(tMsgID.Err, "Failed to calculate approx. transmission losses!", MsgSrc)
+						Return False
 					End If
+
+					GetrEff(i) = EffSum / Anz
+
+					'	End If
 
 				End If
 

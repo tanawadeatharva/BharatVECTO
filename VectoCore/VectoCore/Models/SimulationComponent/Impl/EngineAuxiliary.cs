@@ -88,6 +88,12 @@ namespace TUGraz.VectoCore.Models.SimulationComponent.Impl
 			_auxiliaries[auxId] = powerLoss;
 		}
 
+		public NewtonMeter Initialize(NewtonMeter torque, PerSecond angularSpeed)
+		{
+			PreviousState.AngularSpeed = angularSpeed;
+			return ComputePowerDemand(angularSpeed) / angularSpeed;
+		}
+
 		public NewtonMeter PowerDemand(Second absTime, Second dt, NewtonMeter torquePowerTrain, NewtonMeter torqueEngine,
 			PerSecond angularSpeed, bool dryRun = false)
 		{
@@ -96,16 +102,16 @@ namespace TUGraz.VectoCore.Models.SimulationComponent.Impl
 			return ComputePowerDemand(avgAngularSpeed) / avgAngularSpeed;
 		}
 
-		public NewtonMeter Initialize(NewtonMeter torque, PerSecond angularSpeed)
-		{
-			PreviousState.AngularSpeed = angularSpeed;
-			return ComputePowerDemand(angularSpeed) / angularSpeed;
-		}
-
 		private Watt ComputePowerDemand(PerSecond engineSpeed)
 		{
-			CurrentState.PowerDemands = _auxiliaries.ToDictionary(kv => kv.Key, kv => kv.Value(engineSpeed));
-			return CurrentState.PowerDemands.Values.Sum(p => p);
+			CurrentState.PowerDemands = new Dictionary<string, Watt>(_auxiliaries.Count);
+			CurrentState.TotalPowerDemand = 0.SI<Watt>();
+			foreach (var item in _auxiliaries) {
+				var value = item.Value(engineSpeed);
+				CurrentState.PowerDemands[item.Key] = value;
+				CurrentState.TotalPowerDemand += value;
+			}
+			return CurrentState.TotalPowerDemand;
 		}
 
 		protected override void DoWriteModalResults(IModalDataContainer container)
@@ -114,8 +120,8 @@ namespace TUGraz.VectoCore.Models.SimulationComponent.Impl
 				container[kv.Key] = kv.Value;
 			}
 			if (container[ModalResultField.P_aux] == null || container[ModalResultField.P_aux] == DBNull.Value) {
-				// don't overwrite if someone else already wrote the total aux power
-				container[ModalResultField.P_aux] = CurrentState.PowerDemands.Values.Sum(p => p);
+				// only overwrite if nobody else already wrote the total aux power
+				container[ModalResultField.P_aux] = CurrentState.TotalPowerDemand;
 			}
 		}
 
@@ -128,6 +134,7 @@ namespace TUGraz.VectoCore.Models.SimulationComponent.Impl
 		{
 			public PerSecond AngularSpeed;
 			public Dictionary<string, Watt> PowerDemands;
+			public Watt TotalPowerDemand;
 		}
 	}
 }

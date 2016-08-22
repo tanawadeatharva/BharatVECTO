@@ -73,6 +73,11 @@ namespace TUGraz.VectoCore.Models.Simulation.Impl
 
 		#region IGearCockpit
 
+		public GearboxType GearboxType
+		{
+			get { return Gearbox.GearboxType; }
+		}
+
 		public uint Gear
 		{
 			[System.Diagnostics.CodeAnalysis.SuppressMessage("Microsoft.Design",
@@ -112,9 +117,9 @@ namespace TUGraz.VectoCore.Models.Simulation.Impl
 			}
 		}
 
-		public FullLoadCurve GearFullLoadCurve
+		public NewtonMeter GearMaxTorque
 		{
-			get { return Gearbox != null ? Gearbox.GearFullLoadCurve : null; }
+			get { return Gearbox != null ? Gearbox.GearMaxTorque : null; }
 		}
 
 		public Watt GearboxLoss()
@@ -266,7 +271,7 @@ namespace TUGraz.VectoCore.Models.Simulation.Impl
 		public void CommitSimulationStep(Second time, Second simulationInterval)
 		{
 			Log.Info("VehicleContainer committing simulation. time: {0}, dist: {1}, speed: {2}", time,
-				 Distance, VehicleSpeed);
+				Distance, VehicleSpeed);
 
 			foreach (var component in _components) {
 				component.Item2.CommitSimulationStep(ModData);
@@ -341,6 +346,11 @@ namespace TUGraz.VectoCore.Models.Simulation.Impl
 		public DrivingBehavior DriverBehavior
 		{
 			get { return Driver.DriverBehavior; }
+		}
+
+		public MeterPerSquareSecond DriverAcceleration
+		{
+			get { return Driver.DriverAcceleration; }
 		}
 
 		public Meter CycleStartDistance

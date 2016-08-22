@@ -248,7 +248,7 @@ namespace TUGraz.VectoCore.Tests.Models.Simulation
 			};
 
 			// call builder (actual test)
-			var builder = new PowertrainBuilder(null);
+			var builder = new PowertrainBuilder(new MockModalDataContainer());
 			builder.Build(data);
 		}
 
@@ -310,7 +310,7 @@ namespace TUGraz.VectoCore.Tests.Models.Simulation
 			};
 
 			// call builder (actual test)
-			var builder = new PowertrainBuilder(null);
+			var builder = new PowertrainBuilder(new MockModalDataContainer());
 			var jobContainer = builder.Build(data);
 		}
 

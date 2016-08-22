@@ -53,14 +53,14 @@ namespace TUGraz.VectoCore.Tests.Utils
 			var engineInput = JSONInputDataFactory.ReadEngine(engineFile);
 			if (declarationMode) {
 				var dao = new DeclarationDataAdapter();
-				var engineData = dao.CreateEngineData(engineInput);
+				var engineData = dao.CreateEngineData(engineInput, gearboxInput.Type);
 				return dao.CreateGearboxData(gearboxInput, engineData, ((IAxleGearInputData)gearboxInput).Ratio, 0.5.SI<Meter>(),
 					false);
 			} else {
 				var dao = new EngineeringDataAdapter();
-				var engineData = dao.CreateEngineData(engineInput);
+				var engineData = dao.CreateEngineData(engineInput, gearboxInput);
 				return dao.CreateGearboxData(gearboxInput, engineData, ((IAxleGearInputData)gearboxInput).Ratio, 0.5.SI<Meter>(),
-					false);
+					true);
 			}
 		}
 
@@ -75,7 +75,7 @@ namespace TUGraz.VectoCore.Tests.Utils
 		{
 			var dao = new EngineeringDataAdapter();
 			var engineInput = JSONInputDataFactory.ReadEngine(engineFile);
-			return dao.CreateEngineData(engineInput);
+			return dao.CreateEngineData(engineInput, null);
 		}
 
 		public static VehicleData CreateVehicleDataFromFile(string vehicleDataFile)

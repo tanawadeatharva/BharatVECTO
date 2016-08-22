@@ -81,6 +81,7 @@
     <Compile Include="FileIO\JsonTest.cs" />
     <Compile Include="FileIO\SimulationDataReaderTest.cs" />
     <Compile Include="GraphProgram.cs" />
+    <Compile Include="Integration\ATPowerTrain.cs" />
     <Compile Include="Integration\BusAuxiliaries\AuxDemandTest.cs" />
     <Compile Include="Integration\BusAuxiliaries\BusAdapterTest.cs" />
     <Compile Include="Integration\BusAuxiliaries\AAuxTests.cs" />
@@ -95,6 +96,7 @@
     <Compile Include="Models\Declaration\ShiftPolygonTest.cs" />
     <Compile Include="Models\SimulationComponentData\TorqueConverterDataTest.cs" />
     <Compile Include="Models\SimulationComponentData\ValidationTest.cs" />
+    <Compile Include="Models\SimulationComponent\ATGearboxTest.cs" />
     <Compile Include="Models\Simulation\FactoryTest.cs" />
     <Compile Include="Models\Simulation\PTOIdleLossTest.cs" />
     <Compile Include="Models\Simulation\LossMapRangeValidationTest.cs" />
@@ -118,7 +120,6 @@
     <Compile Include="Utils\MockIdleController.cs" />
     <Compile Include="Utils\MockSimulationDataFactory.cs" />
     <Compile Include="Utils\MockVehicleContainer.cs" />
-    <Compile Include="Utils\Port.cs" />
     <Compile Include="Models\SimulationComponentData\AuxiliaryTypeHelperTest.cs" />
     <Compile Include="Models\Simulation\AuxTests.cs" />
     <Compile Include="Utils\MockAuxiliaryDemand.cs" />
@@ -215,6 +216,39 @@
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
     </None>
     <None Include="TestData\Components\40t_Long_Haul_Truck_NoAng.vveh">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </None>
+    <None Include="TestData\Components\AT_GBX\AT-Shift.vgbs">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </None>
+    <None Include="TestData\Components\AT_GBX\Engine.veng">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </None>
+    <None Include="TestData\Components\AT_GBX\FCMap.vmap">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </None>
+    <None Include="TestData\Components\AT_GBX\FullLoad.vfld">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </None>
+    <None Include="TestData\Components\AT_GBX\Gearbox.vgbx">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </None>
+    <None Include="TestData\Components\AT_GBX\GearboxPowerSplit.vgbx">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </None>
+    <None Include="TestData\Components\AT_GBX\GearboxSerial.vgbx">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </None>
+    <None Include="TestData\Components\AT_GBX\GearboxSerialDualTC.vgbx">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </None>
+    <None Include="TestData\Components\AT_GBX\Gearbox_v5.vgbx">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </None>
+    <None Include="TestData\Components\AT_GBX\TorqueConverterPowerSplit.vtcc">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </None>
+    <None Include="TestData\Components\AT_GBX\TorqueConverter.vtcc">
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
     </None>
     <None Include="TestData\Components\Class4_40t_Long_Haul_Truck.vveh">

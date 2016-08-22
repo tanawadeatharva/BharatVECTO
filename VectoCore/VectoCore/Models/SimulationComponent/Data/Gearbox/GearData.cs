@@ -45,13 +45,27 @@ namespace TUGraz.VectoCore.Models.SimulationComponent.Data.Gearbox
 
 	public class GearData : TransmissionData
 	{
+		public GearData()
+		{
+			TorqueConverterRatio = double.NaN;
+		}
+
+		public bool HasTorqueConverter
+		{
+			get { return !double.IsNaN(TorqueConverterRatio) && TorqueConverterGearLossMap != null; }
+		}
+
+		public bool HasLockedGear
+		{
+			get { return !double.IsNaN(Ratio) && LossMap != null; }
+		}
+
 		[ValidateObject]
 		public ShiftPolygon ShiftPolygon { get; internal set; }
 
-		[ValidateObject]
-		public FullLoadCurve FullLoadCurve { get; internal set; }
+		public double TorqueConverterRatio { get; internal set; }
 
-		public bool TorqueConverterActive { get; internal set; }
+		public TransmissionLossMap TorqueConverterGearLossMap { get; internal set; }
 
 		public NewtonMeter MaxTorque { get; internal set; }
 	}

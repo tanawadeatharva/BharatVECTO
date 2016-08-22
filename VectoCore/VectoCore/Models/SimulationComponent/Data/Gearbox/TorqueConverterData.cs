@@ -31,30 +31,36 @@
 
 using System;
 using System.Collections.Generic;
-using System.Data;
-using System.IO;
 using System.Linq;
-using iTextSharp.text.pdf.codec;
+using iTextSharp.text.pdf.parser.clipper;
 using TUGraz.VectoCommon.Exceptions;
 using TUGraz.VectoCommon.Utils;
-using TUGraz.VectoCore.Utils;
 
 namespace TUGraz.VectoCore.Models.SimulationComponent.Data.Gearbox
 {
 	public class TorqueConverterData
 	{
-		public List<TorqueConverterEntry> TorqueConverterEntries;
+		protected List<TorqueConverterEntry> TorqueConverterEntries;
 
-		protected internal TorqueConverterData(List<TorqueConverterEntry> torqueConverterEntries)
+		public PerSecond ReferenceSpeed { get; protected internal set; }
+
+		public KilogramSquareMeter Inertia { get; protected internal set; }
+
+		public PerSecond TorqueConverterSpeedLimit { get; protected internal set; }
+
+		protected internal TorqueConverterData(List<TorqueConverterEntry> torqueConverterEntries, PerSecond referenceSpeed,
+			PerSecond maxRpm)
 		{
 			TorqueConverterEntries = torqueConverterEntries;
+			ReferenceSpeed = referenceSpeed;
+			TorqueConverterSpeedLimit = maxRpm;
 		}
 
-		public void GetInputTorqueAndAngularSpeed(NewtonMeter torqueOut, PerSecond angularSpeedOut, out NewtonMeter torqueIn,
-			out PerSecond angularSpeedIn)
+
+		public TorqueConverterOperatingPoint FindOperatingPoint(NewtonMeter torqueOut, PerSecond angularSpeedOut)
 		{
 			var solutions = new List<double>();
-			var mpNorm = 1000.RPMtoRad().Value();
+			var mpNorm = ReferenceSpeed.Value();
 
 			// Find analytic solution for torque converter operating point
 			// mu = f(nu) = f(n_out / n_in) = T_out / T_in
@@ -82,24 +88,112 @@ namespace TUGraz.VectoCore.Models.SimulationComponent.Data.Gearbox
 				solutions.AddRange(selected);
 			}
 			if (solutions.Count == 0) {
-				throw new VectoException("No solution for input torque/input speed found! n_out: {0}, tq_out: {1}", angularSpeedOut, torqueOut);
+				throw new VectoException("No solution for input torque/input speed found! n_out: {0}, tq_out: {1}", angularSpeedOut,
+					torqueOut);
 			}
 
-			angularSpeedIn = solutions.Min().SI<PerSecond>();
-			var mu = MuLookup(angularSpeedOut / angularSpeedIn);
-			torqueIn = torqueOut / mu;
+			var retVal = new TorqueConverterOperatingPoint {
+				OutTorque = torqueOut,
+				OutAngularVelocity = angularSpeedOut,
+				InAngularVelocity = solutions.Min().SI<PerSecond>()
+			};
+			retVal.SpeedRatio = angularSpeedOut / retVal.InAngularVelocity;
+			retVal.TorqueRatio = MuLookup(angularSpeedOut / retVal.InAngularVelocity);
+			retVal.InTorque = torqueOut / retVal.TorqueRatio;
+
+			return retVal;
 		}
 
-		private double MuLookup(double nu)
+		private double MuLookup(double speedRatio)
 		{
 			int index;
-			TorqueConverterEntries.GetSection(x => x.SpeedRatio > nu, out index);
-			var muEdge = Edge.Create(new Point(TorqueConverterEntries[index].SpeedRatio, TorqueConverterEntries[index].TorqueRatio),
-				new Point(TorqueConverterEntries[index + 1].SpeedRatio, TorqueConverterEntries[index + 1].TorqueRatio));
-			return muEdge.SlopeXY * nu + muEdge.OffsetXY;
+			TorqueConverterEntries.GetSection(x => x.SpeedRatio < speedRatio, out index);
+			var retVal = VectoMath.Interpolate(TorqueConverterEntries[index].SpeedRatio,
+				TorqueConverterEntries[index + 1].SpeedRatio, TorqueConverterEntries[index].TorqueRatio,
+				TorqueConverterEntries[index + 1].TorqueRatio, speedRatio);
+			return retVal;
+		}
+
+
+		private NewtonMeter ReferenceTorqueLookup(double speedRatio)
+		{
+			int index;
+			TorqueConverterEntries.GetSection(x => x.SpeedRatio < speedRatio, out index);
+			var retVal = VectoMath.Interpolate(TorqueConverterEntries[index].SpeedRatio,
+				TorqueConverterEntries[index + 1].SpeedRatio, TorqueConverterEntries[index].Torque,
+				TorqueConverterEntries[index + 1].Torque, speedRatio);
+			return retVal;
+		}
+
+		public TorqueConverterOperatingPoint GetOutTorque(PerSecond inAngularVelocity, PerSecond outAngularVelocity)
+		{
+			var retVal = new TorqueConverterOperatingPoint {
+				InAngularVelocity = inAngularVelocity,
+				OutAngularVelocity = outAngularVelocity,
+				SpeedRatio = outAngularVelocity.Value() / inAngularVelocity.Value(),
+			};
+			foreach (var segment in TorqueConverterEntries.Pairwise(Tuple.Create)) {
+				if (!(retVal.SpeedRatio >= segment.Item1.SpeedRatio) || !(retVal.SpeedRatio < segment.Item2.SpeedRatio)) {
+					continue;
+				}
+				var mpTorque = VectoMath.Interpolate(segment.Item1.SpeedRatio, segment.Item2.SpeedRatio, segment.Item1.Torque,
+					segment.Item2.Torque, retVal.SpeedRatio);
+				retVal.TorqueRatio = VectoMath.Interpolate(segment.Item1.SpeedRatio, segment.Item2.SpeedRatio,
+					segment.Item1.TorqueRatio, segment.Item2.TorqueRatio, retVal.SpeedRatio);
+				retVal.InTorque = mpTorque * (inAngularVelocity * inAngularVelocity / ReferenceSpeed / ReferenceSpeed).Value();
+				retVal.OutTorque = retVal.InTorque * retVal.TorqueRatio;
+				return retVal;
+			}
+			throw new VectoException("No solution for output speed/input speed found! n_out: {0}, n_in: {1}", outAngularVelocity,
+				inAngularVelocity);
+		}
+
+		public TorqueConverterOperatingPoint GetOutTorqueAndSpeed(NewtonMeter inTorque, PerSecond inAngularVelocity,
+			PerSecond outAngularSpeedEstimated)
+		{
+			var referenceTorque = inTorque.Value() / inAngularVelocity.Value() / inAngularVelocity.Value() *
+								ReferenceSpeed.Value() * ReferenceSpeed.Value();
+			var maxTorque = TorqueConverterEntries.Max(x => x.Torque.Value());
+			if (referenceTorque.IsGreaterOrEqual(maxTorque)) {
+				referenceTorque = outAngularSpeedEstimated != null
+					? ReferenceTorqueLookup(outAngularSpeedEstimated / inAngularVelocity).Value()
+					: 0.9 * maxTorque;
+			}
+
+			var solutions = new List<double>();
+			foreach (var edge in TorqueConverterEntries.Pairwise(
+				(p1, p2) => Edge.Create(new Point(p1.SpeedRatio, p1.Torque.Value()), new Point(p2.SpeedRatio, p2.Torque.Value())))) {
+				var x = (referenceTorque - edge.OffsetXY) / edge.SlopeXY;
+				if (x >= edge.P1.X && x < edge.P2.X) {
+					solutions.Add(x * inAngularVelocity.Value());
+				}
+			}
+			if (solutions.Count == 0) {
+				throw new VectoSimulationException(
+					"Failed to find torque converter Operating Point for inputTorque/inputSpeed! n_in: {0}, tq_in: {1}",
+					inAngularVelocity, inTorque);
+			}
+			return GetOutTorque(inAngularVelocity, solutions.Max().SI<PerSecond>());
 		}
 	}
 
+	public class TorqueConverterOperatingPoint
+	{
+		public PerSecond OutAngularVelocity;
+		public NewtonMeter OutTorque;
+
+		public PerSecond InAngularVelocity;
+		public NewtonMeter InTorque;
+
+		public double SpeedRatio;
+		public double TorqueRatio;
+
+		public override string ToString()
+		{
+			return string.Format("n_out: {0}, n_in: {1}, tq_out: {2}, tq_in {3}, nu: {4}, my: {5}", OutAngularVelocity,
+				InAngularVelocity, OutTorque, InTorque, SpeedRatio, TorqueRatio);
+		}
+	}
 
 	public class TorqueConverterEntry
 	{

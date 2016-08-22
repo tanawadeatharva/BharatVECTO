@@ -140,7 +140,7 @@ namespace TUGraz.VectoCore.InputData.Reader.DataObjectAdapter
 			return retVal;
 		}
 
-		internal CombustionEngineData CreateEngineData(IEngineDeclarationInputData engine)
+		internal CombustionEngineData CreateEngineData(IEngineDeclarationInputData engine, GearboxType gearboxType)
 		{
 			if (!engine.SavedInDeclarationMode) {
 				WarnDeclarationMode("EngineData");
@@ -150,7 +150,7 @@ namespace TUGraz.VectoCore.InputData.Reader.DataObjectAdapter
 			retVal.WHTCUrban = engine.WHTCUrban;
 			retVal.WHTCMotorway = engine.WHTCMotorway;
 			retVal.WHTCRural = engine.WHTCRural;
-			retVal.Inertia = DeclarationData.Engine.EngineInertia(retVal.Displacement);
+			retVal.Inertia = DeclarationData.Engine.EngineInertia(retVal.Displacement, gearboxType);
 			retVal.FullLoadCurve = EngineFullLoadCurve.Create(engine.FullLoadCurve, true);
 			retVal.FullLoadCurve.EngineData = retVal;
 			return retVal;
@@ -164,11 +164,12 @@ namespace TUGraz.VectoCore.InputData.Reader.DataObjectAdapter
 			}
 			var retVal = SetCommonGearboxData(gearbox);
 			switch (retVal.Type) {
-				case GearboxType.AT:
+				case GearboxType.ATPowerSplit:
+				case GearboxType.ATSerial:
 					throw new VectoSimulationException(
 						"Automatic Transmission currently not supported in DeclarationMode!");
-				case GearboxType.Custom:
-					throw new VectoSimulationException("Custom Transmission not supported in DeclarationMode!");
+				//case GearboxType.Custom:
+				//	throw new VectoSimulationException("Custom Transmission not supported in DeclarationMode!");
 			}
 			var gears = gearbox.Gears;
 			if (gears.Count < 1) {
@@ -212,7 +213,7 @@ namespace TUGraz.VectoCore.InputData.Reader.DataObjectAdapter
 						ShiftPolygon = shiftPolygon,
 						MaxTorque = gear.MaxTorque,
 						Ratio = gear.Ratio,
-						TorqueConverterActive = false
+	
 					});
 			}).ToDictionary(kv => kv.Key, kv => kv.Value);
 

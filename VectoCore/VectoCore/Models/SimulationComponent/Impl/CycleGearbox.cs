@@ -29,12 +29,10 @@
 *   Martin Rexeis, rexeis@ivt.tugraz.at, IVT, Graz University of Technology
 */
 
-using System.Diagnostics;
 using TUGraz.VectoCommon.Exceptions;
 using TUGraz.VectoCommon.Models;
 using TUGraz.VectoCommon.Utils;
 using TUGraz.VectoCore.Configuration;
-using TUGraz.VectoCore.Models.Connector.Ports;
 using TUGraz.VectoCore.Models.Connector.Ports.Impl;
 using TUGraz.VectoCore.Models.Simulation;
 using TUGraz.VectoCore.Models.Simulation.Data;
@@ -45,18 +43,12 @@ using TUGraz.VectoCore.Utils;
 
 namespace TUGraz.VectoCore.Models.SimulationComponent.Impl
 {
-	public class CycleGearbox : StatefulProviderComponent<Gearbox.GearboxState, ITnOutPort, ITnInPort, ITnOutPort>,
-		IGearbox, ITnOutPort, ITnInPort, IClutchInfo
+	public class CycleGearbox : AbstractGearbox<GearboxState>
 	{
-		internal readonly GearboxData ModelData;
-		private IAuxPort _auxiliary;
+		public CycleGearbox(IVehicleContainer container, GearboxData gearboxModelData)
+			: base(container, gearboxModelData) {}
 
-		public CycleGearbox(IVehicleContainer container, GearboxData gearboxModelData) : base(container)
-		{
-			ModelData = gearboxModelData;
-		}
-
-		public IResponse Initialize(NewtonMeter outTorque, PerSecond outAngularVelocity)
+		public override IResponse Initialize(NewtonMeter outTorque, PerSecond outAngularVelocity)
 		{
 			var dt = Constants.SimulationSettings.TargetTimeInterval;
 
@@ -78,9 +70,10 @@ namespace TUGraz.VectoCore.Models.SimulationComponent.Impl
 
 				inTorque += torqueLossInertia;
 
-				if (_auxiliary != null)
+				if (Auxiliary != null) {
 					//todo mk-2016-08-17: aux loss from out-direction or in-direction of the gearbox?
-					inTorque += _auxiliary.Initialize(outTorque, outAngularVelocity);
+					inTorque += Auxiliary.Initialize(outTorque, outAngularVelocity);
+				}
 			} else {
 				inTorque = 0.SI<NewtonMeter>();
 				inAngularVelocity = 0.RPMtoRad();
@@ -118,8 +111,8 @@ namespace TUGraz.VectoCore.Models.SimulationComponent.Impl
 				inTorque += inertiaPowerLoss / inAngularVelocity;
 
 				//todo mk-2016-08-17: aux loss from out-direction or in-direction of the gearbox?
-				if (_auxiliary != null)
-					inTorque += _auxiliary.Initialize(outTorque, outAngularVelocity);
+				if (Auxiliary != null)
+					inTorque += Auxiliary.Initialize(outTorque, outAngularVelocity);
 			}
 
 			var response = NextComponent.Initialize(inTorque, inAngularVelocity);
@@ -129,8 +122,7 @@ namespace TUGraz.VectoCore.Models.SimulationComponent.Impl
 				Case<ResponseUnderload>().
 				Default(r => { throw new UnexpectedResponseException("Gearbox.Initialize", r); });
 
-			var fullLoadGearbox = ModelData.Gears[gear].FullLoadCurve.FullLoadStationaryTorque(inAngularVelocity) *
-								inAngularVelocity;
+			var fullLoadGearbox = ModelData.Gears[gear].MaxTorque * inAngularVelocity;
 			var fullLoadEngine = DataBus.EngineStationaryFullPower(inAngularVelocity);
 
 			var fullLoad = VectoMath.Min(fullLoadGearbox, fullLoadEngine);
@@ -154,7 +146,8 @@ namespace TUGraz.VectoCore.Models.SimulationComponent.Impl
 		/// <item><description>ResponseGearshift</description></item>
 		/// </list>
 		/// </returns>
-		public IResponse Request(Second absTime, Second dt, NewtonMeter outTorque, PerSecond outAngularVelocity, bool dryRun)
+		public override IResponse Request(Second absTime, Second dt, NewtonMeter outTorque, PerSecond outAngularVelocity,
+			bool dryRun = false)
 		{
 			Log.Debug("Gearbox Power Request: torque: {0}, angularVelocity: {1}", outTorque, outAngularVelocity);
 			Gear = DataBus.DriverBehavior == DrivingBehavior.Braking
@@ -208,8 +201,8 @@ namespace TUGraz.VectoCore.Models.SimulationComponent.Impl
 				var inAngularVelocity = outAngularVelocity * ModelData.Gears[Gear].Ratio;
 
 				//todo mk-2016-08-17: aux loss from out-direction or in-direction of the gearbox?
-				if (_auxiliary != null)
-					inTorque += _auxiliary.PowerDemand(absTime, dt, outTorque, inTorque, outAngularVelocity, dryRun);
+				if (Auxiliary != null)
+					inTorque += Auxiliary.PowerDemand(absTime, dt, outTorque, inTorque, outAngularVelocity, dryRun);
 
 				if (dryRun) {
 					var dryRunResponse = NextComponent.Request(absTime, dt, inTorque, inAngularVelocity, true);
@@ -269,50 +262,13 @@ namespace TUGraz.VectoCore.Models.SimulationComponent.Impl
 			base.DoCommitSimulationStep();
 		}
 
-		#region IGearboxCockpit
-
-		/// <summary>
-		/// The current gear.
-		/// </summary>
-		public uint Gear { get; private set; }
-
-		[DebuggerHidden]
-		public MeterPerSecond StartSpeed
-		{
-			get { return ModelData.StartSpeed; }
-		}
-
-		[DebuggerHidden]
-		public MeterPerSquareSecond StartAcceleration
-		{
-			get { return ModelData.StartAcceleration; }
-		}
-
-		public FullLoadCurve GearFullLoadCurve
-		{
-			get { return Gear == 0 ? null : ModelData.Gears[Gear].FullLoadCurve; }
-		}
-
-		public Watt GearboxLoss()
-		{
-			return (PreviousState.TransmissionTorqueLoss +
-					PreviousState.InertiaTorqueLossOut / ModelData.Gears[PreviousState.Gear].Ratio) * PreviousState.InAngularVelocity;
-		}
-
-		#endregion
-
 		#region ICluchInfo
 
-		public bool ClutchClosed(Second absTime)
+		public override bool ClutchClosed(Second absTime)
 		{
 			return DataBus.CycleData.LeftSample.Gear != 0;
 		}
 
 		#endregion
-
-		public void Connect(IAuxPort aux)
-		{
-			_auxiliary = aux;
-		}
 	}
 }

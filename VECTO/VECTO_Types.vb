@@ -8,6 +8,7 @@
 '   WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
 '
 ' See the LICENSE.txt for the specific language governing permissions and limitations.
+Imports System.Runtime.CompilerServices
 
 ''' <summary>
 ''' Determines how file extensions are set in the File Browser
@@ -114,9 +115,22 @@ End Enum
 Public Enum tGearbox
 	Manual = 0
 	SemiAutomatic = 1
-	Automatic = 2
-	Custom = 3
+	AutomaticSerial = 2
+	AutomaticPowerSplit = 3
+	Custom = 4
 End Enum
+
+<Extension>
+Module tGearboxExtension
+	Public Function AutomaticTransmission(type As tGearbox) As Boolean
+		Return type = tGearbox.AutomaticPowerSplit OrElse type = tGearbox.AutomaticSerial
+	End Function
+
+
+	Public Function ManualTransmission(type As tGearbox) As Boolean
+		Return type = tGearbox.Manual OrElse type = tGearbox.SemiAutomatic
+	End Function
+End Module
 
 Public Enum tVehCat As Integer
 	Undef = 0

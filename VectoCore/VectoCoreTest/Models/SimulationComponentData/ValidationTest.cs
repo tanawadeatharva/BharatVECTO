@@ -125,7 +125,7 @@ namespace TUGraz.VectoCore.Tests.Models.SimulationComponentData
 			};
 			var dao = new EngineeringDataAdapter();
 
-			var engineData = dao.CreateEngineData(data);
+			var engineData = dao.CreateEngineData(data, null);
 
 			var results = engineData.Validate(ExecutionMode.Declaration);
 			Assert.IsFalse(results.Any(), "Validation failed: " + "; ".Join(results.Select(r => r.ErrorMessage)));
@@ -163,7 +163,7 @@ namespace TUGraz.VectoCore.Tests.Models.SimulationComponentData
 			};
 			var dao = new DeclarationDataAdapter();
 
-			var engineData = dao.CreateEngineData(data);
+			var engineData = dao.CreateEngineData(data, GearboxType.AMT);
 
 			var results = engineData.Validate(ExecutionMode.Declaration);
 			Assert.IsFalse(results.Any(), "Validation failed: " + "; ".Join(results.Select(r => r.ErrorMessage)));

@@ -108,6 +108,11 @@ Partial Class F_VEH
 		Me.OpenWithToolStripMenuItem = New System.Windows.Forms.ToolStripMenuItem()
 		Me.ShowInFolderToolStripMenuItem = New System.Windows.Forms.ToolStripMenuItem()
 		Me.PnAll = New System.Windows.Forms.Panel()
+		Me.gbPTO = New System.Windows.Forms.GroupBox()
+		Me.btPTOLossMapBrowse = New System.Windows.Forms.Button()
+		Me.cbPTOType = New System.Windows.Forms.ComboBox()
+		Me.tbPTOLossMap = New System.Windows.Forms.TextBox()
+		Me.Label7 = New System.Windows.Forms.Label()
 		Me.GroupBox3 = New System.Windows.Forms.GroupBox()
 		Me.GroupBox2 = New System.Windows.Forms.GroupBox()
 		Me.pnAngularGearFields = New System.Windows.Forms.Panel()
@@ -121,11 +126,6 @@ Partial Class F_VEH
 		Me.PicVehicle = New System.Windows.Forms.PictureBox()
 		Me.Label8 = New System.Windows.Forms.Label()
 		Me.ToolTip1 = New System.Windows.Forms.ToolTip(Me.components)
-		Me.gbPTO = New System.Windows.Forms.GroupBox()
-		Me.Label7 = New System.Windows.Forms.Label()
-		Me.btPTOLossMapBrowse = New System.Windows.Forms.Button()
-		Me.tbPTOLossMap = New System.Windows.Forms.TextBox()
-		Me.cbPTOType = New System.Windows.Forms.ComboBox()
 		Me.GroupBox6.SuspendLayout()
 		Me.ToolStrip1.SuspendLayout()
 		Me.GroupBox7.SuspendLayout()
@@ -140,11 +140,11 @@ Partial Class F_VEH
 		CType(Me.PictureBox1, System.ComponentModel.ISupportInitialize).BeginInit()
 		Me.CmOpenFile.SuspendLayout()
 		Me.PnAll.SuspendLayout()
+		Me.gbPTO.SuspendLayout()
 		Me.GroupBox3.SuspendLayout()
 		Me.GroupBox2.SuspendLayout()
 		Me.pnAngularGearFields.SuspendLayout()
 		CType(Me.PicVehicle, System.ComponentModel.ISupportInitialize).BeginInit()
-		Me.gbPTO.SuspendLayout()
 		Me.SuspendLayout()
 		'
 		'Label1
@@ -820,6 +820,58 @@ Partial Class F_VEH
 		Me.PnAll.Size = New System.Drawing.Size(575, 503)
 		Me.PnAll.TabIndex = 4
 		'
+		'gbPTO
+		'
+		Me.gbPTO.Controls.Add(Me.btPTOLossMapBrowse)
+		Me.gbPTO.Controls.Add(Me.cbPTOType)
+		Me.gbPTO.Controls.Add(Me.tbPTOLossMap)
+		Me.gbPTO.Controls.Add(Me.Label7)
+		Me.gbPTO.Location = New System.Drawing.Point(6, 412)
+		Me.gbPTO.Name = "gbPTO"
+		Me.gbPTO.Size = New System.Drawing.Size(564, 86)
+		Me.gbPTO.TabIndex = 4
+		Me.gbPTO.TabStop = False
+		Me.gbPTO.Text = "PTO Transmission"
+		'
+		'btPTOLossMapBrowse
+		'
+		Me.btPTOLossMapBrowse.Anchor = CType((System.Windows.Forms.AnchorStyles.Bottom Or System.Windows.Forms.AnchorStyles.Left), System.Windows.Forms.AnchorStyles)
+		Me.btPTOLossMapBrowse.Image = Global.VECTO.My.Resources.Resources.Open_icon
+		Me.btPTOLossMapBrowse.Location = New System.Drawing.Point(532, 55)
+		Me.btPTOLossMapBrowse.Name = "btPTOLossMapBrowse"
+		Me.btPTOLossMapBrowse.Size = New System.Drawing.Size(24, 24)
+		Me.btPTOLossMapBrowse.TabIndex = 14
+		Me.btPTOLossMapBrowse.UseVisualStyleBackColor = True
+		'
+		'cbPTOType
+		'
+		Me.cbPTOType.DropDownStyle = System.Windows.Forms.ComboBoxStyle.DropDownList
+		Me.cbPTOType.FormattingEnabled = True
+		Me.cbPTOType.Items.AddRange(New Object() {"None", "only the drive shaft of the PTO - shift claw, synchronizer, Schieberad", "only the drive shaft of the PTO - multi-disc clutch", "only the drive shaft of the PTO - multi-disc clutch, oil pump", "drive shaft and/or up to 2 gear wheels - shift claw, synchronizer, Schieberad", "drive shaft and/or up to 2 gear wheels - multi-disc clutch", "drive shaft and/or up to 2 gear wheels - multi-disc clutch, oil pump", "drive shaft and/or more than 2 gear wheels - shift claw, synchronizer, Schieberad" & _
+				"", "drive shaft and/or more than 2 gear wheels - multi-disc clutch", "drive shaft and/or more than 2 gear wheels - multi-disc clutch, oil pump"})
+		Me.cbPTOType.Location = New System.Drawing.Point(6, 19)
+		Me.cbPTOType.Name = "cbPTOType"
+		Me.cbPTOType.Size = New System.Drawing.Size(550, 21)
+		Me.cbPTOType.TabIndex = 0
+		'
+		'tbPTOLossMap
+		'
+		Me.tbPTOLossMap.Anchor = CType((System.Windows.Forms.AnchorStyles.Bottom Or System.Windows.Forms.AnchorStyles.Left), System.Windows.Forms.AnchorStyles)
+		Me.tbPTOLossMap.Location = New System.Drawing.Point(9, 58)
+		Me.tbPTOLossMap.Name = "tbPTOLossMap"
+		Me.tbPTOLossMap.Size = New System.Drawing.Size(523, 20)
+		Me.tbPTOLossMap.TabIndex = 13
+		'
+		'Label7
+		'
+		Me.Label7.Anchor = CType((System.Windows.Forms.AnchorStyles.Bottom Or System.Windows.Forms.AnchorStyles.Left), System.Windows.Forms.AnchorStyles)
+		Me.Label7.Location = New System.Drawing.Point(6, 41)
+		Me.Label7.Name = "Label7"
+		Me.Label7.Size = New System.Drawing.Size(201, 16)
+		Me.Label7.TabIndex = 15
+		Me.Label7.Text = "PTO Loss Map"
+		Me.Label7.TextAlign = System.Drawing.ContentAlignment.BottomLeft
+		'
 		'GroupBox3
 		'
 		Me.GroupBox3.Controls.Add(Me.PnWheelDiam)
@@ -894,7 +946,7 @@ Partial Class F_VEH
 		'
 		Me.btAngularGearLossMapBrowse.Anchor = CType((System.Windows.Forms.AnchorStyles.Bottom Or System.Windows.Forms.AnchorStyles.Left), System.Windows.Forms.AnchorStyles)
 		Me.btAngularGearLossMapBrowse.Image = Global.VECTO.My.Resources.Resources.Open_icon
-		Me.btAngularGearLossMapBrowse.Location = New System.Drawing.Point(244, 39)
+		Me.btAngularGearLossMapBrowse.Location = New System.Drawing.Point(245, 39)
 		Me.btAngularGearLossMapBrowse.Name = "btAngularGearLossMapBrowse"
 		Me.btAngularGearLossMapBrowse.Size = New System.Drawing.Size(24, 24)
 		Me.btAngularGearLossMapBrowse.TabIndex = 14
@@ -905,7 +957,7 @@ Partial Class F_VEH
 		Me.tbAngularGearLossMapPath.Anchor = CType((System.Windows.Forms.AnchorStyles.Bottom Or System.Windows.Forms.AnchorStyles.Left), System.Windows.Forms.AnchorStyles)
 		Me.tbAngularGearLossMapPath.Location = New System.Drawing.Point(6, 41)
 		Me.tbAngularGearLossMapPath.Name = "tbAngularGearLossMapPath"
-		Me.tbAngularGearLossMapPath.Size = New System.Drawing.Size(238, 20)
+		Me.tbAngularGearLossMapPath.Size = New System.Drawing.Size(239, 20)
 		Me.tbAngularGearLossMapPath.TabIndex = 13
 		'
 		'cbAngularGearType
@@ -936,58 +988,6 @@ Partial Class F_VEH
 		Me.Label8.Size = New System.Drawing.Size(58, 13)
 		Me.Label8.TabIndex = 10
 		Me.Label8.Text = "HDV Class"
-		'
-		'gbPTO
-		'
-		Me.gbPTO.Controls.Add(Me.btPTOLossMapBrowse)
-		Me.gbPTO.Controls.Add(Me.cbPTOType)
-		Me.gbPTO.Controls.Add(Me.tbPTOLossMap)
-		Me.gbPTO.Controls.Add(Me.Label7)
-		Me.gbPTO.Location = New System.Drawing.Point(6, 412)
-		Me.gbPTO.Name = "gbPTO"
-		Me.gbPTO.Size = New System.Drawing.Size(564, 86)
-		Me.gbPTO.TabIndex = 4
-		Me.gbPTO.TabStop = False
-		Me.gbPTO.Text = "PTO Transmission"
-		'
-		'Label7
-		'
-		Me.Label7.Anchor = CType((System.Windows.Forms.AnchorStyles.Bottom Or System.Windows.Forms.AnchorStyles.Left), System.Windows.Forms.AnchorStyles)
-		Me.Label7.Location = New System.Drawing.Point(6, 41)
-		Me.Label7.Name = "Label7"
-		Me.Label7.Size = New System.Drawing.Size(201, 16)
-		Me.Label7.TabIndex = 15
-		Me.Label7.Text = "PTO Loss Map"
-		Me.Label7.TextAlign = System.Drawing.ContentAlignment.BottomLeft
-		'
-		'btPTOLossMapBrowse
-		'
-		Me.btPTOLossMapBrowse.Anchor = CType((System.Windows.Forms.AnchorStyles.Bottom Or System.Windows.Forms.AnchorStyles.Left), System.Windows.Forms.AnchorStyles)
-		Me.btPTOLossMapBrowse.Image = Global.VECTO.My.Resources.Resources.Open_icon
-		Me.btPTOLossMapBrowse.Location = New System.Drawing.Point(531, 56)
-		Me.btPTOLossMapBrowse.Name = "btPTOLossMapBrowse"
-		Me.btPTOLossMapBrowse.Size = New System.Drawing.Size(24, 24)
-		Me.btPTOLossMapBrowse.TabIndex = 14
-		Me.btPTOLossMapBrowse.UseVisualStyleBackColor = True
-		'
-		'tbPTOLossMap
-		'
-		Me.tbPTOLossMap.Anchor = CType((System.Windows.Forms.AnchorStyles.Bottom Or System.Windows.Forms.AnchorStyles.Left), System.Windows.Forms.AnchorStyles)
-		Me.tbPTOLossMap.Location = New System.Drawing.Point(9, 58)
-		Me.tbPTOLossMap.Name = "tbPTOLossMap"
-		Me.tbPTOLossMap.Size = New System.Drawing.Size(522, 20)
-		Me.tbPTOLossMap.TabIndex = 13
-		'
-		'cbPTOType
-		'
-		Me.cbPTOType.DropDownStyle = System.Windows.Forms.ComboBoxStyle.DropDownList
-		Me.cbPTOType.FormattingEnabled = True
-		Me.cbPTOType.Items.AddRange(New Object() {"None", "only the drive shaft of the PTO - shift claw, synchronizer, Schieberad", "only the drive shaft of the PTO - multi-disc clutch", "only the drive shaft of the PTO - multi-disc clutch, oil pump", "drive shaft and/or up to 2 gear wheels - shift claw, synchronizer, Schieberad", "drive shaft and/or up to 2 gear wheels - multi-disc clutch", "drive shaft and/or up to 2 gear wheels - multi-disc clutch, oil pump", "drive shaft and/or more than 2 gear wheels - shift claw, synchronizer, Schieberad" & _
-				"", "drive shaft and/or more than 2 gear wheels - multi-disc clutch", "drive shaft and/or more than 2 gear wheels - multi-disc clutch, oil pump"})
-		Me.cbPTOType.Location = New System.Drawing.Point(6, 19)
-		Me.cbPTOType.Name = "cbPTOType"
-		Me.cbPTOType.Size = New System.Drawing.Size(548, 21)
-		Me.cbPTOType.TabIndex = 0
 		'
 		'F_VEH
 		'
@@ -1039,13 +1039,13 @@ Partial Class F_VEH
 		CType(Me.PictureBox1, System.ComponentModel.ISupportInitialize).EndInit()
 		Me.CmOpenFile.ResumeLayout(False)
 		Me.PnAll.ResumeLayout(False)
+		Me.gbPTO.ResumeLayout(False)
+		Me.gbPTO.PerformLayout()
 		Me.GroupBox3.ResumeLayout(False)
 		Me.GroupBox2.ResumeLayout(False)
 		Me.pnAngularGearFields.ResumeLayout(False)
 		Me.pnAngularGearFields.PerformLayout()
 		CType(Me.PicVehicle, System.ComponentModel.ISupportInitialize).EndInit()
-		Me.gbPTO.ResumeLayout(False)
-		Me.gbPTO.PerformLayout()
 		Me.ResumeLayout(False)
 		Me.PerformLayout()
 

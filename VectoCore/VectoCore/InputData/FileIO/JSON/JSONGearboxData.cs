@@ -29,19 +29,47 @@
 *   Martin Rexeis, rexeis@ivt.tugraz.at, IVT, Graz University of Technology
 */
 
+using System;
 using System.Collections.Generic;
 using System.Data;
 using System.Linq;
 using Newtonsoft.Json.Linq;
+using Org.BouncyCastle.Asn1.Mozilla;
 using TUGraz.VectoCommon.Exceptions;
 using TUGraz.VectoCommon.InputData;
 using TUGraz.VectoCommon.Models;
 using TUGraz.VectoCommon.Utils;
 using TUGraz.VectoCore.InputData.Impl;
 using TUGraz.VectoCore.Models.Declaration;
+using TUGraz.VectoCore.Models.Simulation.Data;
 
 namespace TUGraz.VectoCore.InputData.FileIO.JSON
 {
+	public class JSONGearboxDataV6 : JSONGearboxDataV5
+	{
+		public JSONGearboxDataV6(JObject data, string filename) : base(data, filename) {}
+
+		public override GearboxType Type
+		{
+			get { return Body.GetEx<string>(JsonKeys.Gearbox_GearboxType).ParseEnum<GearboxType>(); }
+		}
+
+		public override IList<ITransmissionInputData> Gears
+		{
+			get
+			{
+				var resultGears = new List<ITransmissionInputData>();
+				var gears = Body.GetEx(JsonKeys.Gearbox_Gears);
+				for (var i = 1; i < gears.Count(); i++) {
+					var gear = gears[i];
+
+					resultGears.Add(CreateGear(i, gear));
+				}
+				return resultGears;
+			}
+		}
+	}
+
 	/// <summary>
 	///		Represents the Data containing all parameters of the gearbox
 	/// </summary>
@@ -125,7 +153,20 @@ namespace TUGraz.VectoCore.InputData.FileIO.JSON
 
 		public virtual GearboxType Type
 		{
-			get { return Body.GetEx<string>(JsonKeys.Gearbox_GearboxType).ParseEnum<GearboxType>(); }
+			get
+			{
+				//return Body.GetEx<string>(JsonKeys.Gearbox_GearboxType).ParseEnum<GearboxType>(); 
+				var typeString = Body.GetEx<string>(JsonKeys.Gearbox_GearboxType);
+				if (!"AT".Equals(typeString)) {
+					return typeString.ParseEnum<GearboxType>();
+				}
+				var gearRatio = Body.GetEx(JsonKeys.Gearbox_Gears)[1].GetEx<double>(JsonKeys.Gearbox_Gear_Ratio);
+				var gearEfficiency = Body.GetEx(JsonKeys.Gearbox_Gears)[1][JsonKeys.Gearbox_Gear_Efficiency].Value<double>();
+				if (gearRatio.IsEqual(1) && gearEfficiency.IsEqual(1)) {
+					return GearboxType.ATPowerSplit;
+				}
+				return GearboxType.ATSerial;
+			}
 		}
 
 		public virtual KilogramSquareMeter Inertia
@@ -144,29 +185,71 @@ namespace TUGraz.VectoCore.InputData.FileIO.JSON
 			{
 				var resultGears = new List<ITransmissionInputData>();
 				var gears = Body.GetEx(JsonKeys.Gearbox_Gears);
-				for (var i = 1; i < gears.Count(); i++) {
+				var gearNr = 1;
+				for (var i = 1; i < gears.Count(); i++, gearNr++) {
 					var gear = gears[i];
-					var inputData = new TransmissionInputData {
-						Gear = i,
-						Ratio = gear.GetEx<double>(JsonKeys.Gearbox_Gear_Ratio),
-						MaxTorque = gear["MaxTorque"] != null ? gear["MaxTorque"].Value<double>().SI<NewtonMeter>() : null,
-						LossMap =
-							gear[JsonKeys.Gearbox_Gear_LossMapFile] != null
-								? ReadTableData(gear.GetEx<string>(JsonKeys.Gearbox_Gear_LossMapFile), string.Format("Gear {0} LossMap", i))
-								: null,
-						Efficiency =
-							gear[JsonKeys.Gearbox_Gear_Efficiency] != null
-								? gear[JsonKeys.Gearbox_Gear_Efficiency].Value<double>()
-								: double.NaN,
-						ShiftPolygon =
-							ReadTableData(gear.GetEx<string>(JsonKeys.Gearbox_Gear_ShiftPolygonFile),
-								string.Format("Gear {0} shiftPolygon", i), false),
-						TorqueConverterActive = gear.GetEx<bool>(JsonKeys.Gearbox_Gear_TCactive)
-					};
-					resultGears.Add(inputData);
+					var torqueConverter = gear.GetEx<bool>(JsonKeys.Gearbox_Gear_TCactive);
+
+					if (torqueConverter) {
+						if (gears[i + 1].GetEx<bool>(JsonKeys.Gearbox_Gear_TCactive)) {
+							resultGears.Add(CreateGear(gearNr, gear));
+						} else {
+							resultGears.Add(CreateTorqueConverterGear(gearNr, gear, gears[++i]));
+						}
+					} else {
+						resultGears.Add(CreateGear(gearNr, gear));
+					}
 				}
 				return resultGears;
 			}
+		}
+
+		private TransmissionInputData CreateTorqueConverterGear(int gearNr, JToken gear, JToken nextGear)
+		{
+			var ratio = gear.GetEx<double>(JsonKeys.Gearbox_Gear_Ratio);
+			var efficiency = gear[JsonKeys.Gearbox_Gear_Efficiency] != null
+				? gear[JsonKeys.Gearbox_Gear_Efficiency].Value<double>()
+				: double.NaN;
+			var nextEfficiency = nextGear[JsonKeys.Gearbox_Gear_Efficiency] != null
+				? nextGear[JsonKeys.Gearbox_Gear_Efficiency].Value<double>()
+				: double.NaN;
+			var nextRatio = nextGear.GetEx<double>(JsonKeys.Gearbox_Gear_Ratio);
+
+			if (!((ratio.IsEqual(1) && efficiency.IsEqual(1)) || (!ratio.IsEqual(1) && ratio.IsEqual(nextRatio)))) {
+				throw new VectoException(
+					"TorqueConverter gear either has to have a ratio of 1 and efficiency of 1, or the ratios of the torque converter gear and the locked gear have to be the same");
+			}
+			return new TransmissionInputData {
+				Gear = gearNr,
+				Ratio = nextRatio,
+				LossMap = nextGear[JsonKeys.Gearbox_Gear_LossMapFile] != null
+					? ReadTableData(nextGear.GetEx<string>(JsonKeys.Gearbox_Gear_LossMapFile),
+						string.Format("Gear {0} LossMap", gearNr))
+					: null,
+				Efficiency = nextEfficiency,
+				MaxTorque = gear["MaxTorque"] != null ? gear["MaxTorque"].Value<double>().SI<NewtonMeter>() : null,
+				ShiftPolygon = ReadTableData(gear.GetEx<string>(JsonKeys.Gearbox_Gear_ShiftPolygonFile),
+					string.Format("Gear {0} shiftPolygon", gearNr), false),
+			};
+		}
+
+		protected TransmissionInputData CreateGear(int gearNumber, JToken gear)
+		{
+			return new TransmissionInputData {
+				Gear = gearNumber,
+				Ratio = gear.GetEx<double>(JsonKeys.Gearbox_Gear_Ratio),
+				MaxTorque = gear["MaxTorque"] != null ? gear["MaxTorque"].Value<double>().SI<NewtonMeter>() : null,
+				LossMap =
+					gear[JsonKeys.Gearbox_Gear_LossMapFile] != null
+						? ReadTableData(gear.GetEx<string>(JsonKeys.Gearbox_Gear_LossMapFile),
+							string.Format("Gear {0} LossMap", gearNumber))
+						: null,
+				Efficiency = gear[JsonKeys.Gearbox_Gear_Efficiency] != null
+					? gear[JsonKeys.Gearbox_Gear_Efficiency].Value<double>()
+					: double.NaN,
+				ShiftPolygon = ReadTableData(gear.GetEx<string>(JsonKeys.Gearbox_Gear_ShiftPolygonFile),
+					string.Format("Gear {0} shiftPolygon", gearNumber), false),
+			};
 		}
 
 		public virtual bool SkipGears
