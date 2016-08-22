@@ -149,6 +149,9 @@
     <Compile Include="Models\SimulationComponent\Impl\AbstractGearbox.cs" />
     <Compile Include="Models\SimulationComponent\Impl\ATGearbox.cs" />
     <Compile Include="Models\SimulationComponent\Impl\ATShiftStrategy.cs" />
+    <Compile Include="Models\SimulationComponent\Impl\MeasuredSpeedDrivingCycle.cs" />
+    <Compile Include="Models\SimulationComponent\Impl\PTOEngineCycleController.cs" />
+    <Compile Include="Models\SimulationComponent\Impl\PWheelCycle.cs" />
     <Compile Include="Models\SimulationComponent\Impl\TorqueConverter.cs" />
     <Compile Include="Utils\ProviderExtensions.cs" />
     <Compile Include="Models\Declaration\AirDrag.cs" />
@@ -249,7 +252,6 @@
     <Compile Include="Models\SimulationComponent\Data\RetarderLossMap.cs" />
     <Compile Include="Models\SimulationComponent\Data\VehicleData.cs" />
     <Compile Include="Models\SimulationComponent\IClutch.cs" />
-    <Compile Include="Models\SimulationComponent\IPowertrainSimulation.cs" />
     <Compile Include="Models\SimulationComponent\IDrivingCycle.cs" />
     <Compile Include="Models\SimulationComponent\IDriver.cs" />
     <Compile Include="Models\SimulationComponent\Impl\Vehicle.cs" />
