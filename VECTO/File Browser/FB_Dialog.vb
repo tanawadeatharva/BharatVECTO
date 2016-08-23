@@ -50,7 +50,7 @@ Public Class FB_Dialog
 		_myId = "Default"
 		_updateLock = False
 		_initialized = False
-		_myFolder = ""
+		_myFolder = "."
 		_myDrive = ""
 		_lastFile = ""
 		_bOverwriteCheck = False
