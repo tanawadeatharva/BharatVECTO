@@ -411,6 +411,7 @@ namespace TUGraz.VectoCore.Models.SimulationComponent.Impl
 			} else {
 				if (DataBus.VehicleSpeed.IsSmallerOrEqual(0.SI<MeterPerSecond>())) {
 					// the clutch is disengaged, and the vehicle stopped - we can't perform a roll action. wait for the clutch to be engaged
+					// todo mk 2016-08-23: is this still needed?
 					var remainingShiftTime = Constants.SimulationSettings.TargetTimeInterval;
 					while (!DataBus.ClutchClosed(absTime + remainingShiftTime)) {
 						remainingShiftTime += Constants.SimulationSettings.TargetTimeInterval;
