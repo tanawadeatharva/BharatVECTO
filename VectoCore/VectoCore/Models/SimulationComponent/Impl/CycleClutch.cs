@@ -29,7 +29,6 @@
 *   Martin Rexeis, rexeis@ivt.tugraz.at, IVT, Graz University of Technology
 */
 
-using TUGraz.VectoCommon.Exceptions;
 using TUGraz.VectoCommon.Models;
 using TUGraz.VectoCommon.Utils;
 using TUGraz.VectoCore.Configuration;
@@ -65,25 +64,21 @@ namespace TUGraz.VectoCore.Models.SimulationComponent.Impl
 				var retVal = NextComponent.Request(absTime, dt, outTorque, angularVelocityIn, dryRun);
 				if (dryRun) {
 					return retVal;
-				} else {
-					retVal.Switch().
-						Case<ResponseSuccess>().
-						Case<ResponseUnderload>(r => {
-							var angularSpeed = SearchAlgorithm.Search(angularVelocityIn, r.Delta,
-								Constants.SimulationSettings.EngineIdlingSearchInterval,
-								getYValue: result => ((ResponseDryRun)result).DeltaDragLoad,
-								evaluateFunction: n => NextComponent.Request(absTime, dt, outTorque, n, true),
-								criterion: result => ((ResponseDryRun)result).DeltaDragLoad.Value());
-							Log.Debug(
-								"Found operating point for idling in cycle clutch. absTime: {0}, dt: {1}, torque: {2}, angularSpeed: {3}",
-								absTime, dt,
-								outTorque, angularSpeed);
-							retVal = NextComponent.Request(absTime, dt, outTorque, angularSpeed);
-						}).
-						Default(r => { throw new UnexpectedResponseException("searching CycleClutch Idling point", r); });
-
-					return retVal;
 				}
+
+				var r = retVal as ResponseUnderload;
+				if (r != null) {
+					var angularSpeed = SearchAlgorithm.Search(angularVelocityIn, r.Delta,
+						Constants.SimulationSettings.EngineIdlingSearchInterval,
+						getYValue: result => ((ResponseDryRun)result).DeltaDragLoad,
+						evaluateFunction: n => NextComponent.Request(absTime, dt, outTorque, n, true),
+						criterion: result => ((ResponseDryRun)result).DeltaDragLoad.Value());
+					Log.Debug(
+						"Found operating point for idling in cycle clutch. absTime: {0}, dt: {1}, torque: {2}, angularSpeed: {3}",
+						absTime, dt, outTorque, angularSpeed);
+					retVal = NextComponent.Request(absTime, dt, outTorque, angularSpeed);
+				}
+				return retVal;
 			}
 		}
 
