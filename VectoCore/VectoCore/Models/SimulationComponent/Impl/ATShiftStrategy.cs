@@ -5,18 +5,15 @@ using TUGraz.VectoCommon.Utils;
 using TUGraz.VectoCore.Configuration;
 using TUGraz.VectoCore.Models.Simulation.DataBus;
 using TUGraz.VectoCore.Models.SimulationComponent.Data;
-using TUGraz.VectoCore.Models.SimulationComponent.Data.Gearbox;
 
 namespace TUGraz.VectoCore.Models.SimulationComponent.Impl
 {
 	public class ATShiftStrategy : LoggingObject, IShiftStrategy
 	{
-		protected GearboxData Data;
-
-		protected IDataBus DataBus;
+		protected readonly GearboxData Data;
+		protected readonly IDataBus DataBus;
 		private ATGearbox _gearbox;
-
-		protected NextGearState NextGear;
+		protected readonly NextGearState NextGear;
 
 		public ATShiftStrategy(GearboxData data, IDataBus dataBus)
 		{
@@ -227,10 +224,7 @@ namespace TUGraz.VectoCore.Models.SimulationComponent.Impl
 		/// <returns><c>true</c> if the operating point is below the down-shift curv; otherwise, <c>false</c>.</returns>
 		protected virtual bool IsBelowDownShiftCurve(uint gear, NewtonMeter inTorque, PerSecond inEngineSpeed)
 		{
-			if (gear <= 1) {
-				return false;
-			}
-			return Data.Gears[gear].ShiftPolygon.IsBelowDownshiftCurve(inTorque, inEngineSpeed);
+			return gear > 1 && Data.Gears[gear].ShiftPolygon.IsBelowDownshiftCurve(inTorque, inEngineSpeed);
 		}
 
 		/// <summary>
@@ -242,10 +236,7 @@ namespace TUGraz.VectoCore.Models.SimulationComponent.Impl
 		/// <returns><c>true</c> if the operating point is above the up-shift curve; otherwise, <c>false</c>.</returns>
 		protected virtual bool IsAboveUpShiftCurve(uint gear, NewtonMeter inTorque, PerSecond inEngineSpeed)
 		{
-			if (gear >= Data.Gears.Count) {
-				return false;
-			}
-			return Data.Gears[gear].ShiftPolygon.IsAboveUpshiftCurve(inTorque, inEngineSpeed);
+			return gear < Data.Gears.Keys.Max() && Data.Gears[gear].ShiftPolygon.IsAboveUpshiftCurve(inTorque, inEngineSpeed);
 		}
 
 		protected class NextGearState
