@@ -492,7 +492,7 @@ namespace TUGraz.VectoCore.Models.SimulationComponent.Impl
 			IResponse response = null;
 			if (DataBus.VehicleSpeed <= DriverStrategy.BrakeTrigger.NextTargetSpeed) {
 				if (DataBus.ClutchClosed(absTime)) {
-					if (DataBus.VehicleSpeed.IsGreater(0.SI<MeterPerSecond>())) {
+					if (DataBus.VehicleSpeed.IsGreater(0)) {
 						response = Driver.DrivingActionAccelerate(absTime, ds, DriverStrategy.BrakeTrigger.NextTargetSpeed, gradient);
 					} else {
 						if (RetryDistanceExceeded) {

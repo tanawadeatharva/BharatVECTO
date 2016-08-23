@@ -65,7 +65,7 @@ namespace TUGraz.VectoCore.Models.SimulationComponent.Impl
 			}
 			if (DataBus.DriverBehavior == DrivingBehavior.Braking &&
 				DataBus.VehicleSpeed.IsSmaller(Constants.SimulationSettings.ATGearboxDisengageWhenHaltingSpeed) &&
-				outTorque.IsSmaller(0.SI<NewtonMeter>())) {
+				outTorque.IsSmaller(0)) {
 				// disengage before halting
 				NextGear.SetState(absTime, true, 1, false);
 				return true;
