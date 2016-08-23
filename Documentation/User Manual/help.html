@@ -4561,6 +4561,7 @@ Kneeling, UnknownCycleName, 0,</code></pre>
 <h3>Engineering Mode: Target-Speed, Distance-Based Cycle</h3>
 <p>This driving cycle defines the target speed over distance. Vecto tries to achieve and maintain this target speed.</p>
 <p>Header: <strong>&lt;s&gt;, &lt;v&gt;, &lt;stop&gt;</strong><em>[, &lt;Padd&gt;][, &lt;grad&gt;][, &lt;vair_res&gt;, &lt;vair_beta&gt;][, &lt;Aux_ID&gt;]</em></p>
+<p><strong>Bold columns</strong> are mandatory. <em>Italic columns</em> are optional. Only the listed columns are allowed (no other columns!).<br /> The order is not important when the headers are annotated with &lt;angle-brackets&gt; (less-than-sign “&lt;” and greater-than-sign “&gt;”).<br /> Units are optional and are enclosed in [square-brackets] after the header-column. Comments may be written with a preceding hash-sign “#”.</p>
 <table>
 <colgroup>
 <col width="4%"></col>
@@ -4664,6 +4665,7 @@ Kneeling, UnknownCycleName, 0,</code></pre>
 <h3>Engineering Mode: Measured-Speed, Time-Based Cycle</h3>
 <p>This driving cycle defines the actual measured speed over time. Vecto tries to simulate the vehicle model using this speed as the actual vehicle speed. Due to differences in the real and simulated shift strategies a short difference in speed could occur, but Vecto immediately tries to catch up after the gear is engaged again.</p>
 <p>Header: <strong>&lt;t&gt;, &lt;v&gt;</strong><em>[, &lt;grad&gt;][, &lt;Padd&gt;][, &lt;vair_res&gt;, &lt;vair_beta&gt;][, &lt;Aux_ID&gt;]</em></p>
+<p><strong>Bold columns</strong> are mandatory. <em>Italic columns</em> are optional. Only the listed columns are allowed (no other columns!).<br /> The order is not important when the headers are annotated with &lt;angle-brackets&gt; (less-than-sign “&lt;” and greater-than-sign “&gt;”).<br /> Units are optional and are enclosed in [square-brackets] after the header-column. Comments may be written with a preceding hash-sign “#”.</p>
 <table style="width:100%;">
 <colgroup>
 <col width="3%"></col>
@@ -4764,6 +4766,7 @@ Kneeling, UnknownCycleName, 0,</code></pre>
 </div>
 </div>
 <p>Header: <strong>&lt;t&gt;, &lt;v&gt;, &lt;n&gt;, &lt;gear&gt;</strong><em>[, &lt;grad&gt;][, &lt;Padd&gt;][, &lt;vair_res&gt;, &lt;vair_beta&gt;][, &lt;Aux_ID&gt;]</em></p>
+<p><strong>Bold columns</strong> are mandatory. <em>Italic columns</em> are optional. Only the listed columns are allowed (no other columns!).<br /> The order is not important when the headers are annotated with &lt;angle-brackets&gt; (less-than-sign “&lt;” and greater-than-sign “&gt;”).<br /> Units are optional and are enclosed in [square-brackets] after the header-column. Comments may be written with a preceding hash-sign “#”.</p>
 <table style="width:100%;">
 <colgroup>
 <col width="3%"></col>
@@ -4877,6 +4880,7 @@ Kneeling, UnknownCycleName, 0,</code></pre>
 <h3>Engineering Mode: Pwheel (SiCo), Time-Based</h3>
 <p>This driving cycle defines the power measured at the wheels over time. Vecto tries to simulate the vehicle with this power requirement.</p>
 <p>Header: <strong>&lt;t&gt;, &lt;Pwheel&gt;, &lt;gear&gt;, &lt;n&gt;</strong><em>[, &lt;Padd&gt;]</em></p>
+<p><strong>Bold columns</strong> are mandatory. <em>Italic columns</em> are optional. Only the listed columns are allowed (no other columns!).<br /> The order is not important when the headers are annotated with &lt;angle-brackets&gt; (less-than-sign “&lt;” and greater-than-sign “&gt;”).<br /> Units are optional and are enclosed in [square-brackets] after the header-column. Comments may be written with a preceding hash-sign “#”.</p>
 <table>
 <colgroup>
 <col width="8%"></col>
@@ -4965,6 +4969,7 @@ Kneeling, UnknownCycleName, 0,</code></pre>
 <h3>Engine Only Mode: Engine Only Driving Cycle</h3>
 <p>This driving cycle directly defines the power or torque at the output shaft of the engine over time. Vecto add the engine’s inertia to the given power demand and simulates the engine.</p>
 <p>Header: <strong>&lt;t&gt;, &lt;n&gt;, (&lt;Pe&gt;|&lt;Me&gt;)</strong><em>[, &lt;Padd&gt;]</em></p>
+<p><strong>Bold columns</strong> are mandatory. <em>Italic columns</em> are optional. Only the listed columns are allowed (no other columns!).<br /> The order is not important when the headers are annotated with &lt;angle-brackets&gt; (less-than-sign “&lt;” and greater-than-sign “&gt;”).<br /> Units are optional and are enclosed in [square-brackets] after the header-column. Comments may be written with a preceding hash-sign “#”.</p>
 <table>
 <colgroup>
 <col width="8%"></col>
@@ -5432,12 +5437,32 @@ Kneeling, UnknownCycleName, 0,</code></pre>
 <tr class="even">
 <td align="left">P_axle_in</td>
 <td align="left">[kW]</td>
-<td align="left">Power at the axle-gear input shaft. P_axle_in = P_ret_in - P_ret_loss ( - P_angle_loss if an Angulargear is used)</td>
+<td align="left">Power at the axle-gear input shaft. P_axle_in = P_ret_in - P_ret_loss ( - P_angle_loss if an Angulargear is used).</td>
 </tr>
 <tr class="odd">
 <td align="left">P_axle_loss</td>
 <td align="left">[kW]</td>
-<td align="left">Power loss at the axle gear, interpolated from the loss-map</td>
+<td align="left">Power loss at the axle gear, interpolated from the loss-map.</td>
+</tr>
+<tr class="even">
+<td align="left">P_angle_in</td>
+<td align="left">[kW]</td>
+<td align="left">Power at the angle-gear input shaft.</td>
+</tr>
+<tr class="odd">
+<td align="left">P_angle_loss</td>
+<td align="left">[kW]</td>
+<td align="left">Power loss at the angle gear, interpolated from the loss-map.</td>
+</tr>
+<tr class="even">
+<td align="left">P_tc_in</td>
+<td align="left">[kW]</td>
+<td align="left">Power at the torque-converter input shaft.</td>
+</tr>
+<tr class="odd">
+<td align="left">P_tc_loss</td>
+<td align="left">[kW]</td>
+<td align="left">Power loss at the torque-converter.</td>
 </tr>
 <tr class="even">
 <td align="left">P_brake_in</td>
@@ -5447,7 +5472,7 @@ Kneeling, UnknownCycleName, 0,</code></pre>
 <tr class="odd">
 <td align="left">P_brake_loss</td>
 <td align="left">[kW]</td>
-<td align="left">Power loss due to braking</td>
+<td align="left">Power loss due to braking.</td>
 </tr>
 <tr class="even">
 <td align="left">P_wheel_in</td>
@@ -5472,12 +5497,12 @@ Kneeling, UnknownCycleName, 0,</code></pre>
 <tr class="even">
 <td align="left">P_air</td>
 <td align="left">[kW]</td>
-<td align="left">Power loss due to air drag</td>
+<td align="left">Power loss due to air drag.</td>
 </tr>
 <tr class="odd">
 <td align="left">P_roll</td>
 <td align="left">[kW]</td>
-<td align="left">Rolling resistance power loss</td>
+<td align="left">Rolling resistance power loss.</td>
 </tr>
 <tr class="even">
 <td align="left">P_veh_inertia</td>
@@ -5669,7 +5694,7 @@ Kneeling, UnknownCycleName, 0,</code></pre>
 <tr class="odd">
 <td align="left">FC-Final</td>
 <td align="left">[g/h], [g/km], [l/100km], [l/100tkm]</td>
-<td align="left">Final average fuel consumption after ALL corrections. Value for calculation of CO<sub>2</sub> value. Output for [l/100tkm] is empty when Loading = 0[kg].</td>
+<td align="left">Final average fuel consumption after ALL corrections. Value for calculation of CO<sub>2</sub> value. If Loading = 0[kg] the column [l/100tkm] is left empty.</td>
 </tr>
 <tr class="even">
 <td align="left">CO2</td>
@@ -5687,14 +5712,14 @@ Kneeling, UnknownCycleName, 0,</code></pre>
 <td align="left">Average brake power losses (not including engine drag)</td>
 </tr>
 <tr class="odd">
-<td align="left">P_eng_out_pos</td>
+<td align="left">P_clutch_pos</td>
 <td align="left">[kW]</td>
-<td align="left">Average positive engine power (all non-negative values averaged over the whole cycle duration)</td>
+<td align="left">Average positive power at clutch (coming from engine) (all non-negative values averaged over the whole cycle duration)</td>
 </tr>
 <tr class="even">
-<td align="left">P_eng_out_neg</td>
+<td align="left">P_clutch_neg</td>
 <td align="left">[kW]</td>
-<td align="left">Average negative engine power (all non-positive values averaged over the whole cycle duration)</td>
+<td align="left">Average negative power at clutch (coming from engine) (all non-positive values averaged over the whole cycle duration)</td>
 </tr>
 <tr class="odd">
 <td align="left">E_aux_xxx</td>
@@ -5747,46 +5772,51 @@ Kneeling, UnknownCycleName, 0,</code></pre>
 <td align="left">Total torque converter energy loss</td>
 </tr>
 <tr class="odd">
-<td align="left">E_eng_out_pos</td>
+<td align="left">E_angle_loss</td>
 <td align="left">[kWh]</td>
-<td align="left">Total positive engine work</td>
+<td align="left">Total torque converter energy loss</td>
 </tr>
 <tr class="even">
-<td align="left">E_eng_out_neg</td>
+<td align="left">E_clutch_pos</td>
 <td align="left">[kWh]</td>
-<td align="left">Total negative engine work (engine drag)</td>
+<td align="left">Total positive work at clutch input (produced by engine) (all non-negative values averaged over the whole cycle duration)</td>
 </tr>
 <tr class="odd">
+<td align="left">E_clutch_neg</td>
+<td align="left">[kWh]</td>
+<td align="left">Total negative work at clutch input (produced by engine drag) (all non-positive values averaged over the whole cycle duration)</td>
+</tr>
+<tr class="even">
 <td align="left">a</td>
 <td align="left">[m/s<sup>2</sup>]</td>
 <td align="left">Average acceleration</td>
 </tr>
-<tr class="even">
+<tr class="odd">
 <td align="left">a_pos</td>
 <td align="left">[m/s<sup>2</sup>]</td>
 <td align="left">Average acceleration in acceleration phases (a<sub>3s</sub> &gt; 0.125 [m/s<sup>2</sup>], a<sub>3s</sub> = 3-seconds-averaged acceleration)</td>
 </tr>
-<tr class="odd">
+<tr class="even">
 <td align="left">a_neg</td>
 <td align="left">[m/s<sup>2</sup>]</td>
 <td align="left">Average deceleration in deceleration phases (a<sub>3s</sub> &lt; 0.125 [m/s<sup>2</sup>], a<sub>3s</sub> = 3-seconds-averaged acceleration)</td>
 </tr>
-<tr class="even">
+<tr class="odd">
 <td align="left">AccelerationTimeShare</td>
 <td align="left">[%]</td>
 <td align="left">Time share of acceleration phases (a<sub>3s</sub> &gt; 0.125 [m/s<sup>2</sup>], a<sub>3s</sub> = 3-seconds-averaged acceleration)</td>
 </tr>
-<tr class="odd">
+<tr class="even">
 <td align="left">DecelerationTimeShare</td>
 <td align="left">[%]</td>
 <td align="left">Time share of deceleration phases (a<sub>3s</sub> &lt; 0.125 [m/s<sup>2</sup>], a<sub>3s</sub> = 3-seconds-averaged acceleration)</td>
 </tr>
-<tr class="even">
+<tr class="odd">
 <td align="left">CruiseTimeShare</td>
 <td align="left">[%]</td>
 <td align="left">Time share of cruise phases (-0.125 ≤ a<sub>3s</sub> ≤ 0.125 [m/s<sup>2</sup>])</td>
 </tr>
-<tr class="odd">
+<tr class="even">
 <td align="left">StopTimeShare</td>
 <td align="left">[%]</td>
 <td align="left">Time share of stop phases (v &lt; 0.1 [m/s])</td>
