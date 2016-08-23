@@ -551,11 +551,9 @@ Public Class F_GBX
 			GearDia.TbRatio.Text = Me.LvGears.SelectedItems(0).SubItems(2).Text
 			GearDia.TbMapPath.Text = Me.LvGears.SelectedItems(0).SubItems(3).Text
 			If Me.LvGears.SelectedIndices(0) > 0 Then
-				GearDia.ChIsTCgear.Checked = (Me.ChTCon.Checked And Me.LvGears.SelectedItems(0).SubItems(1).Text = "on")
 				GearDia.TbShiftPolyFile.Text = Me.LvGears.SelectedItems(0).SubItems(4).Text
 				GearDia.TbFld.Text = Me.LvGears.SelectedItems(0).SubItems(5).Text
 			Else
-				GearDia.ChIsTCgear.Checked = False
 				GearDia.TbShiftPolyFile.Text = ""
 				GearDia.TbFld.Text = ""
 			End If
