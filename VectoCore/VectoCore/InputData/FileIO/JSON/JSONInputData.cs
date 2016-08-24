@@ -470,10 +470,7 @@ namespace TUGraz.VectoCore.InputData.FileIO.JSON
 		{
 			var retVal = new List<AuxiliaryDataInputData>();
 			foreach (var aux in Body["Aux"] ?? Enumerable.Empty<JToken>()) {
-				var type = (AuxiliaryType)0;
-				try {
-					type = AuxiliaryTypeHelper.Parse(aux.GetEx<string>("Type"));
-				} catch (ArgumentOutOfRangeException) {}
+				var type = AuxiliaryTypeHelper.Parse(aux.GetEx<string>("Type"));
 
 				var auxData = new AuxiliaryDataInputData {
 					ID = aux.GetEx<string>("ID"),
@@ -573,10 +570,7 @@ namespace TUGraz.VectoCore.InputData.FileIO.JSON
 						aux.GetEx<string>("ID"));
 				}
 
-				var type = (AuxiliaryType)0;
-				try {
-					type = AuxiliaryTypeHelper.Parse(aux.GetEx<string>("Type"));
-				} catch (ArgumentOutOfRangeException) {}
+				var type = AuxiliaryTypeHelper.Parse(aux.GetEx<string>("Type"));
 
 				var auxData = new AuxiliaryDataInputData {
 					ID = aux.GetEx<string>("ID"),
