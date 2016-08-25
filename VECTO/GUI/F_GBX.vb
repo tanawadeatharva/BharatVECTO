@@ -25,6 +25,15 @@ Imports TUGraz.VectoCore.Models.SimulationComponent.Data.Gearbox
 ''' </summary>
 ''' <remarks></remarks>
 Public Class F_GBX
+	Private Enum GearboxTbl
+		GearNr = 0
+		TorqueConverter = 1
+		Ratio = 2
+		LossMapEfficiency = 3
+		ShiftPolygons = 4
+		FullLoadCurve = 5
+	End Enum
+
 	Private GbxFile As String = ""
 	Public AutoSendTo As Boolean = False
 	Public JobDir As String = ""
@@ -155,7 +164,7 @@ Public Class F_GBX
 
 	'New file
 	Private Sub newGBX()
-		Dim lvi As ListViewItem
+		'Dim lvi As ListViewItem
 
 		If ChangeCheckCancel() Then Exit Sub
 
@@ -167,13 +176,7 @@ Public Class F_GBX
 
 		Me.LvGears.Items.Clear()
 
-		lvi = New ListViewItem("Axle")
-		lvi.SubItems.Add("-")
-		lvi.SubItems.Add("0")
-		lvi.SubItems.Add("0")
-		lvi.SubItems.Add("")
-		lvi.SubItems.Add("")
-		Me.LvGears.Items.Add(lvi)
+		Me.LvGears.Items.Add(CreateListviewItem("Axle", "-", 0, 0, "", ""))
 
 		'Me.ChSkipGears.Checked = False         'set by CbGStype.SelectedIndexChanged
 		'Me.ChShiftInside.Checked = False       'set by CbGStype.SelectedIndexChanged
@@ -202,7 +205,7 @@ Public Class F_GBX
 	Public Sub openGBX(ByVal file As String)
 		Dim GBX0 As cGBX
 		Dim i As Integer
-		Dim lv0 As ListViewItem
+		'Dim lv0 As ListViewItem
 
 		If ChangeCheckCancel() Then Exit Sub
 
@@ -239,26 +242,30 @@ Public Class F_GBX
 		For i = 0 To GBX0.Igetr.Count - 1
 
 			If i = 0 Then
-				lv0 = New ListViewItem("Axle")
+				'lv0 = New ListViewItem("Axle")
+				Me.LvGears.Items.Add(CreateListviewItem("Axle", "-", GBX.Igetr(i), GBX.GetrMap(i, True), GBX.gsFile(i, True),
+														GBX0.FldFile(i, True)))
 			Else
-				lv0 = New ListViewItem(i.ToString("00"))
+				'lv0 = New ListViewItem(i.ToString("00"))
+				Me.LvGears.Items.Add(CreateListviewItem("Axle", "-", GBX.Igetr(i), GBX.GetrMap(i, True), GBX.gsFile(i, True),
+														GBX0.FldFile(i, True)))
 			End If
 
-			'If Me.ChTCon.Checked And i > 0 Then
-			'	If False Then ' GBX0.IsTCgear(i) Then
-			'		lv0.SubItems.Add("on")
-			'	Else
-			'		lv0.SubItems.Add("off")
-			'	End If
-			'Else
-			lv0.SubItems.Add("-")
-			'End If
-			lv0.SubItems.Add(GBX0.Igetr(i))
-			lv0.SubItems.Add(GBX0.GetrMap(i, True))
-			lv0.SubItems.Add(GBX0.gsFile(i, True))
-			lv0.SubItems.Add(GBX0.FldFile(i, True))
+			''If Me.ChTCon.Checked And i > 0 Then
+			''	If False Then ' GBX0.IsTCgear(i) Then
+			''		lv0.SubItems.Add("on")
+			''	Else
+			''		lv0.SubItems.Add("off")
+			''	End If
+			''Else
+			'lv0.SubItems.Add("-")
+			''End If
+			'lv0.SubItems.Add(GBX0.Igetr(i))
+			'lv0.SubItems.Add(GBX0.GetrMap(i, True))
+			'lv0.SubItems.Add(GBX0.gsFile(i, True))
+			'lv0.SubItems.Add(GBX0.FldFile(i, True))
 
-			Me.LvGears.Items.Add(lv0)
+
 		Next
 
 		Me.ChSkipGears.Checked = GBX0.gs_SkipGears
@@ -296,6 +303,17 @@ Public Class F_GBX
 		UpdatePic()
 	End Sub
 
+	Private Function CreateListviewItem(gear As String, tc As String, ratio As Single, getrMap As String,
+										shiftPolygon As String, fldFile As String) As ListViewItem
+		Dim retVal As ListViewItem = New ListViewItem(gear)
+		retVal.SubItems.Add(tc)
+		retVal.SubItems.Add(ratio)
+		retVal.SubItems.Add(getrMap)
+		retVal.SubItems.Add(shiftPolygon)
+		retVal.SubItems.Add(fldFile)
+		Return retVal
+	End Function
+
 	'Save or Save As function = true if file is saved
 	Private Function SaveOrSaveAs(ByVal SaveAs As Boolean) As Boolean
 		If GbxFile = "" Or SaveAs Then
@@ -323,14 +341,14 @@ Public Class F_GBX
 		GBX0.GbxInertia = fTextboxToNumString(Me.TBI_getr.Text)
 
 		For i = 0 To Me.LvGears.Items.Count - 1
-			'GBX0.IsTCgear.Add(Me.LvGears.Items(i).SubItems(1).Text = "on" And i > 0)
-			GBX0.Igetr.Add(CSng(Me.LvGears.Items(i).SubItems(2).Text))
+			'GBX0.IsTCgear.Add(Me.LvGears.Items(i).SubItems(GearboxTbl.TorqueConverter).Text = "on" And i > 0)
+			GBX0.Igetr.Add(CSng(Me.LvGears.Items(i).SubItems(GearboxTbl.Ratio).Text))
 			GBX0.GetrMaps.Add(New cSubPath)
-			GBX0.GetrMap(i) = Me.LvGears.Items(i).SubItems(3).Text
+			GBX0.GetrMap(i) = Me.LvGears.Items(i).SubItems(GearboxTbl.LossMapEfficiency).Text
 			GBX0.gs_files.Add(New cSubPath)
-			GBX0.gsFile(i) = Me.LvGears.Items(i).SubItems(4).Text
+			GBX0.gsFile(i) = Me.LvGears.Items(i).SubItems(GearboxTbl.ShiftPolygons).Text
 			GBX0.FldFiles.Add(New cSubPath)
-			GBX0.FldFile(i) = Me.LvGears.Items(i).SubItems(5).Text
+			GBX0.FldFile(i) = Me.LvGears.Items(i).SubItems(GearboxTbl.FullLoadCurve).Text
 		Next
 
 		GBX0.gs_TorqueResv = fTextboxToNumString(Me.TbTqResv.Text)
@@ -824,7 +842,7 @@ Public Class F_GBX
 
 		Dim vectoJob As cVECTO = New cVECTO() With {.FilePath = F_VECTO.VECTOfile}
 		Dim vectoOk As Boolean = vectoJob.ReadFile()
-		Dim vehicle As cVEH = New cVEH() With {.FilePath = vectoJob.PathVEH(False)}
+		Dim vehicle As cVEH = New cVEH() With {.FilePath = vectoJob.PathVeh(False)}
 		Dim vehicleOk As Boolean = vehicle.ReadFile(False)
 
 		'Fld
