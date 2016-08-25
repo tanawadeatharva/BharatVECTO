@@ -22,10 +22,7 @@ namespace TUGraz.VectoCore.Models.Declaration
 		public static AuxiliaryType Parse(string s)
 		{
 			AuxiliaryType aux;
-			if (StrToAux.TryGetValue(s, out aux))
-				return aux;
-
-			throw new ArgumentOutOfRangeException("s", s, "Could not parse auxiliary type string.");
+			return StrToAux.TryGetValue(s, out aux) ? aux : AuxiliaryType.Fan;
 		}
 
 		public static string ToString(AuxiliaryType t)

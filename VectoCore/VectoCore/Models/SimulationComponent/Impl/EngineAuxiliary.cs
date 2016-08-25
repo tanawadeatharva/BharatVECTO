@@ -34,6 +34,7 @@ using System.Collections.Generic;
 using System.Linq;
 using TUGraz.VectoCommon.Exceptions;
 using TUGraz.VectoCommon.Utils;
+using TUGraz.VectoCore.Configuration;
 using TUGraz.VectoCore.Models.Simulation;
 using TUGraz.VectoCore.Models.Simulation.Data;
 using TUGraz.VectoCore.Models.SimulationComponent.Data;
@@ -104,14 +105,15 @@ namespace TUGraz.VectoCore.Models.SimulationComponent.Impl
 
 		public void AddMapping(string auxId, AuxiliaryData data)
 		{
-			if (!DataBus.CycleData.LeftSample.AuxiliarySupplyPower.ContainsKey("Aux_" + auxId)) {
-				var error = string.Format("driving cycle does not contain column for auxiliary: {0}", auxId);
+			if (!DataBus.CycleData.LeftSample.AuxiliarySupplyPower.ContainsKey(auxId)) {
+				var error = string.Format("driving cycle does not contain column for auxiliary: {0}",
+					Constants.Auxiliaries.Prefix + auxId);
 				Log.Error(error);
 				throw new VectoException(error);
 			}
 
 			_auxDict[auxId] = speed => {
-				var powerSupply = DataBus.CycleData.LeftSample.AuxiliarySupplyPower["Aux_" + auxId];
+				var powerSupply = DataBus.CycleData.LeftSample.AuxiliarySupplyPower[auxId];
 				var nAuxiliary = speed * data.TransmissionRatio;
 				var powerAuxOut = powerSupply / data.EfficiencyToSupply;
 				var powerAuxIn = data.GetPowerDemand(nAuxiliary, powerAuxOut);

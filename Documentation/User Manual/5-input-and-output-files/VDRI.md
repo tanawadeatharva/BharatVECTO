@@ -41,6 +41,10 @@ This driving cycle defines the target speed over distance. Vecto tries to achiev
 
 Header: **\<s>, \<v>, \<stop>***\[, \<Padd>]\[, \<grad>]\[, \<vair\_res>, \<vair\_beta>]\[, \<Aux\_ID>]*
 
+**Bold columns** are mandatory. *Italic columns* are optional. Only the listed columns are allowed (no other columns!).<br />
+The order is not important when the headers are annotated with \<angle-brackets\> (less-than-sign "<" and greater-than-sign ">").<br />
+Units are optional and are enclosed in [square-brackets] after the header-column. Comments may be written with a preceding hash-sign "#".
+
 |  Identifier |  Unit  |                                                                                                                                      Description                                                                                                                                      |
 | ----------- | ------ | ------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- |
 | **s**       | [m]    | Traveled distance. Must always be increasing.                                                                                                                                                                                                                                         |
@@ -66,6 +70,10 @@ This driving cycle defines the actual measured speed over time. Vecto tries to s
 Due to differences in the real and simulated shift strategies a short difference in speed could occur, but Vecto immediately tries to catch up after the gear is engaged again.
 
 Header: **\<t>, \<v>***\[, \<grad>]\[, \<Padd>]\[, \<vair\_res>, \<vair\_beta>\]\[, \<Aux\_ID>]*
+
+**Bold columns** are mandatory. *Italic columns* are optional. Only the listed columns are allowed (no other columns!).<br />
+The order is not important when the headers are annotated with \<angle-brackets\> (less-than-sign "<" and greater-than-sign ">").<br />
+Units are optional and are enclosed in [square-brackets] after the header-column. Comments may be written with a preceding hash-sign "#".
 
 |  Identifier |  Unit  |                                                                                                                                              Description                                                                                                                                               |
 | ----------- | ------ | ------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------ |
@@ -99,6 +107,10 @@ It is necessary to set the option 'Use gears/rpm\'s from driving cycle in the **
 
 Header: **\<t>, \<v>, \<n>, \<gear>***\[, \<grad>]\[, \<Padd>]\[, \<vair\_res>, \<vair\_beta>]\[, \<Aux\_ID>\]*
 
+**Bold columns** are mandatory. *Italic columns* are optional. Only the listed columns are allowed (no other columns!).<br />
+The order is not important when the headers are annotated with \<angle-brackets\> (less-than-sign "<" and greater-than-sign ">").<br />
+Units are optional and are enclosed in [square-brackets] after the header-column. Comments may be written with a preceding hash-sign "#".
+
 |  Identifier |  Unit  |                                                                                                                                              Description                                                                                                                                               |
 | ----------- | ------ | ------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------ |
 | **t**       | [s]    | The absolute time. Must always be increasing.                                                                                                                                                                                                                                                          |
@@ -125,6 +137,10 @@ This driving cycle defines the power measured at the wheels over time. Vecto tri
 
 Header: **\<t>, \<Pwheel>, \<gear>, \<n>***\[, \<Padd>]*
 
+**Bold columns** are mandatory. *Italic columns* are optional. Only the listed columns are allowed (no other columns!).<br />
+The order is not important when the headers are annotated with \<angle-brackets\> (less-than-sign "<" and greater-than-sign ">").<br />
+Units are optional and are enclosed in [square-brackets] after the header-column. Comments may be written with a preceding hash-sign "#".
+
 | Identifier |  Unit |                      Quantity                                                    Description                      |
 | ---------- | ----- | ----------------------------------------------------------------------------------------------------------------- |
 | **t**      | [s]   | The absolute time. Must always be increasing.                                                                     |
@@ -147,6 +163,10 @@ Header: **\<t>, \<Pwheel>, \<gear>, \<n>***\[, \<Padd>]*
 This driving cycle directly defines the power or torque at the output shaft of the engine over time. Vecto add the engine's inertia to the given power demand and simulates the engine.
 
 Header: **\<t>, \<n>, (\<Pe>|\<Me>)***\[, \<Padd>]*
+
+**Bold columns** are mandatory. *Italic columns* are optional. Only the listed columns are allowed (no other columns!).<br />
+The order is not important when the headers are annotated with \<angle-brackets\> (less-than-sign "<" and greater-than-sign ">").<br />
+Units are optional and are enclosed in [square-brackets] after the header-column. Comments may be written with a preceding hash-sign "#".
 
 | Identifier |  Unit |                                                    Description                                                    |
 | ---------- | ----- | ----------------------------------------------------------------------------------------------------------------- |

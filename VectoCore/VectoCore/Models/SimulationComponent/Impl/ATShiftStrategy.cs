@@ -5,18 +5,15 @@ using TUGraz.VectoCommon.Utils;
 using TUGraz.VectoCore.Configuration;
 using TUGraz.VectoCore.Models.Simulation.DataBus;
 using TUGraz.VectoCore.Models.SimulationComponent.Data;
-using TUGraz.VectoCore.Models.SimulationComponent.Data.Gearbox;
 
 namespace TUGraz.VectoCore.Models.SimulationComponent.Impl
 {
 	public class ATShiftStrategy : LoggingObject, IShiftStrategy
 	{
-		protected GearboxData Data;
-
-		protected IDataBus DataBus;
+		protected readonly GearboxData Data;
+		protected readonly IDataBus DataBus;
 		private ATGearbox _gearbox;
-
-		protected NextGearState NextGear;
+		protected readonly NextGearState NextGear;
 
 		public ATShiftStrategy(GearboxData data, IDataBus dataBus)
 		{
@@ -68,7 +65,7 @@ namespace TUGraz.VectoCore.Models.SimulationComponent.Impl
 			}
 			if (DataBus.DriverBehavior == DrivingBehavior.Braking &&
 				DataBus.VehicleSpeed.IsSmaller(Constants.SimulationSettings.ATGearboxDisengageWhenHaltingSpeed) &&
-				outTorque.IsSmaller(0.SI<NewtonMeter>())) {
+				outTorque.IsSmaller(0)) {
 				// disengage before halting
 				NextGear.SetState(absTime, true, 1, false);
 				return true;
@@ -106,7 +103,7 @@ namespace TUGraz.VectoCore.Models.SimulationComponent.Impl
 					Log.Debug("engine speed would fall below idle speed - shift down");
 					return true;
 				}
-				if (inAngularVelocity.IsGreater(DataBus.EngineRatedSpeed)) {
+				if (inAngularVelocity.IsGreater(DataBus.EngineRatedSpeed) && Data.Gears.ContainsKey(gear + 1)) {
 					NextGear.SetState(absTime, false, gear + 1, Data.Gears[gear + 1].HasLockedGear);
 					Log.Debug("engine speed would be above rated speed - shift up");
 					return true;
@@ -227,10 +224,7 @@ namespace TUGraz.VectoCore.Models.SimulationComponent.Impl
 		/// <returns><c>true</c> if the operating point is below the down-shift curv; otherwise, <c>false</c>.</returns>
 		protected virtual bool IsBelowDownShiftCurve(uint gear, NewtonMeter inTorque, PerSecond inEngineSpeed)
 		{
-			if (gear <= 1) {
-				return false;
-			}
-			return Data.Gears[gear].ShiftPolygon.IsBelowDownshiftCurve(inTorque, inEngineSpeed);
+			return gear > 1 && Data.Gears[gear].ShiftPolygon.IsBelowDownshiftCurve(inTorque, inEngineSpeed);
 		}
 
 		/// <summary>
@@ -242,10 +236,7 @@ namespace TUGraz.VectoCore.Models.SimulationComponent.Impl
 		/// <returns><c>true</c> if the operating point is above the up-shift curve; otherwise, <c>false</c>.</returns>
 		protected virtual bool IsAboveUpShiftCurve(uint gear, NewtonMeter inTorque, PerSecond inEngineSpeed)
 		{
-			if (gear >= Data.Gears.Count) {
-				return false;
-			}
-			return Data.Gears[gear].ShiftPolygon.IsAboveUpshiftCurve(inTorque, inEngineSpeed);
+			return gear < Data.Gears.Keys.Max() && Data.Gears[gear].ShiftPolygon.IsAboveUpshiftCurve(inTorque, inEngineSpeed);
 		}
 
 		protected class NextGearState

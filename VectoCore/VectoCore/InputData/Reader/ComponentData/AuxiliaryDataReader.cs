@@ -10,7 +10,7 @@ using TUGraz.VectoCore.Utils;
 
 namespace TUGraz.VectoCore.InputData.Reader.ComponentData
 {
-	public sealed class AuxiliaryDataReader
+	public static class AuxiliaryDataReader
 	{
 		public static AuxiliaryData Create(IAuxiliaryEngineeringInputData data)
 		{
@@ -34,7 +34,6 @@ namespace TUGraz.VectoCore.InputData.Reader.ComponentData
 				var map = ReadAuxMap(id, table);
 
 				return new AuxiliaryData(transmissionRatio, efficiencyToEngine, efficiencyToSupply, map);
-				
 			} catch (FileNotFoundException e) {
 				throw new VectoException("Auxiliary file not found: " + fileName, e);
 			}
@@ -85,19 +84,13 @@ namespace TUGraz.VectoCore.InputData.Reader.ComponentData
 
 		public static class Fields
 		{
-			/// <summary>
-			/// [1/min]
-			/// </summary>
+			/// <summary>[1/min]</summary>
 			public const string AuxSpeed = "Auxiliary speed";
 
-			/// <summary>
-			/// [kW]
-			/// </summary>
+			/// <summary>[kW]</summary>
 			public const string MechPower = "Mechanical power";
 
-			/// <summary>
-			/// [kW]
-			/// </summary>
+			/// <summary>[kW]</summary>
 			public const string SupplyPower = "Supply power";
 		}
 	}

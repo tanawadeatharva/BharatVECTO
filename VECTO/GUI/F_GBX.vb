@@ -569,11 +569,9 @@ Public Class F_GBX
 			GearDia.TbRatio.Text = Me.LvGears.SelectedItems(0).SubItems(2).Text
 			GearDia.TbMapPath.Text = Me.LvGears.SelectedItems(0).SubItems(3).Text
 			If Me.LvGears.SelectedIndices(0) > 0 Then
-				GearDia.ChIsTCgear.Checked = (Me.ChTCon.Checked And Me.LvGears.SelectedItems(0).SubItems(1).Text = "on")
 				GearDia.TbShiftPolyFile.Text = Me.LvGears.SelectedItems(0).SubItems(4).Text
 				GearDia.TbFld.Text = Me.LvGears.SelectedItems(0).SubItems(5).Text
 			Else
-				GearDia.ChIsTCgear.Checked = False
 				GearDia.TbShiftPolyFile.Text = ""
 				GearDia.TbFld.Text = ""
 			End If
@@ -863,37 +861,38 @@ Public Class F_GBX
 					Shiftpoly.SetGenericShiftPoly(FLD0, F_VECTO.n_idle)
 					'Dim fullLoadCurve As FullLoadCurve = ConvertToFullLoadCurve(FLD0.LnU, FLD0.LTq)
 					Dim gears As IList(Of ITransmissionInputData) = ConvertToGears(LvGears.Items)
-					Dim engine As CombustionEngineData = ConvertToEngineData(FLD0, F_VECTO.n_idle)
-					Dim shiftLines As ShiftPolygon = DeclarationData.Gearbox.ComputeShiftPolygon(Gear - 1, engine.FullLoadCurve, gears,
-																								engine,
-																								Double.Parse(LvGears.Items(0).SubItems(2).Text, CultureInfo.InvariantCulture),
-																								(vehicle.rdyn / 1000.0).SI(Of Meter))
+					If (gears.Count > 1) Then
+						Dim engine As CombustionEngineData = ConvertToEngineData(FLD0, F_VECTO.n_idle)
+						Dim shiftLines As ShiftPolygon = DeclarationData.Gearbox.ComputeShiftPolygon(Gear - 1, engine.FullLoadCurve, gears,
+																									engine,
+																									Double.Parse(LvGears.Items(0).SubItems(2).Text, CultureInfo.InvariantCulture),
+																									(vehicle.rdyn / 1000.0).SI(Of Meter))
 
-					s = New System.Windows.Forms.DataVisualization.Charting.Series
+						s = New System.Windows.Forms.DataVisualization.Charting.Series
 
-					's.Points.DataBindXY(Shiftpoly.gs_nUup, Shiftpoly.gs_TqUp)
-					s.Points.DataBindXY(
-						shiftLines.Upshift.Select(Function(pt) pt.AngularSpeed.Value() / Constants.RPMToRad).ToList(),
-						shiftLines.Upshift.Select(Function(pt) pt.Torque.Value()).ToList())
-					s.ChartType = DataVisualization.Charting.SeriesChartType.FastLine
-					s.BorderWidth = 2
-					s.Color = Color.DarkRed
-					s.BorderDashStyle = DataVisualization.Charting.ChartDashStyle.Dash
-					s.Name = "Upshift curve (generic)"
-					MyChart.Series.Add(s)
+						's.Points.DataBindXY(Shiftpoly.gs_nUup, Shiftpoly.gs_TqUp)
+						s.Points.DataBindXY(
+							shiftLines.Upshift.Select(Function(pt) pt.AngularSpeed.Value() / Constants.RPMToRad).ToList(),
+							shiftLines.Upshift.Select(Function(pt) pt.Torque.Value()).ToList())
+						s.ChartType = DataVisualization.Charting.SeriesChartType.FastLine
+						s.BorderWidth = 2
+						s.Color = Color.DarkRed
+						s.BorderDashStyle = DataVisualization.Charting.ChartDashStyle.Dash
+						s.Name = "Upshift curve (generic)"
+						MyChart.Series.Add(s)
 
-					s = New System.Windows.Forms.DataVisualization.Charting.Series
-					's.Points.DataBindXY(Shiftpoly.gs_nUdown, Shiftpoly.gs_TqDown)
-					s.Points.DataBindXY(
-						shiftLines.Downshift.Select(Function(pt) pt.AngularSpeed.Value() / Constants.RPMToRad).ToList(),
-						shiftLines.Downshift.Select(Function(pt) pt.Torque.Value()).ToList())
-					s.ChartType = DataVisualization.Charting.SeriesChartType.FastLine
-					s.BorderWidth = 2
-					s.Color = Color.DarkRed
-					s.BorderDashStyle = DataVisualization.Charting.ChartDashStyle.Dash
-					s.Name = "Downshift curve (generic)"
-					MyChart.Series.Add(s)
-
+						s = New System.Windows.Forms.DataVisualization.Charting.Series
+						's.Points.DataBindXY(Shiftpoly.gs_nUdown, Shiftpoly.gs_TqDown)
+						s.Points.DataBindXY(
+							shiftLines.Downshift.Select(Function(pt) pt.AngularSpeed.Value() / Constants.RPMToRad).ToList(),
+							shiftLines.Downshift.Select(Function(pt) pt.Torque.Value()).ToList())
+						s.ChartType = DataVisualization.Charting.SeriesChartType.FastLine
+						s.BorderWidth = 2
+						s.Color = Color.DarkRed
+						s.BorderDashStyle = DataVisualization.Charting.ChartDashStyle.Dash
+						s.Name = "Downshift curve (generic)"
+						MyChart.Series.Add(s)
+					End If
 				End If
 			End If
 

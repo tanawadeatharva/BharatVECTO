@@ -43,6 +43,8 @@ namespace TUGraz.VectoCore.Configuration
 
 		public static class Auxiliaries
 		{
+			public const string Prefix = "AUX_";
+
 			public static class IDs
 			{
 				public const string Fan = "FAN";
