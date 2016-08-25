@@ -175,7 +175,7 @@ namespace TUGraz.VectoCore.Models.SimulationComponent.Impl
 
 			var engineSpeedNorm = (outAngularVelocity - DataBus.EngineIdleSpeed) /
 								(DataBus.EngineRatedSpeed - DataBus.EngineIdleSpeed);
-			if (DataBus.DriverBehavior == DrivingBehavior.Braking && DataBus.BrakePower.IsGreater(0.SI<Watt>()) &&
+			if (DataBus.DriverBehavior == DrivingBehavior.Braking && DataBus.BrakePower.IsGreater(0) &&
 				engineSpeedNorm < Constants.SimulationSettings.ClutchClosingSpeedNorm &&
 				DataBus.VehicleSpeed.IsSmaller(Constants.SimulationSettings.ClutchDisengageWhenHaltingSpeed)) {
 				_engageTime = absTime + dt;

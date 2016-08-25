@@ -141,7 +141,7 @@ namespace TUGraz.VectoCore.Models.SimulationComponent.Impl
 		/// </list>
 		/// </returns>
 		public override IResponse Request(Second absTime, Second dt, NewtonMeter outTorque, PerSecond outAngularVelocity,
-			bool dryRun)
+			bool dryRun = false)
 		{
 			Log.Debug("Gearbox Power Request: torque: {0}, angularVelocity: {1}", outTorque, outAngularVelocity);
 			Gear = DataBus.DriverBehavior == DrivingBehavior.Braking
@@ -193,15 +193,6 @@ namespace TUGraz.VectoCore.Models.SimulationComponent.Impl
 				CurrentState.TorqueLossResult = inTorqueLossResult;
 				var inAngularVelocity = outAngularVelocity * ModelData.Gears[Gear].Ratio;
 
-				if (dryRun) {
-					var dryRunResponse = NextComponent.Request(absTime, dt, inTorque, inAngularVelocity, true);
-					dryRunResponse.GearboxPowerRequest = outTorque * avgOutAngularVelocity;
-					return dryRunResponse;
-				}
-
-				// this code has to be _after_ the check for a potential gear-shift!
-				// (the above block issues dry-run requests and thus may update the CurrentState!)
-				CurrentState.TransmissionTorqueLoss = inTorque - (outTorque / ModelData.Gears[Gear].Ratio);
 				if (!inAngularVelocity.IsEqual(0)) {
 					// MQ 19.2.2016: check! inertia is related to output side, torque loss accounts to input side
 					CurrentState.InertiaTorqueLossOut =
@@ -211,6 +202,19 @@ namespace TUGraz.VectoCore.Models.SimulationComponent.Impl
 				} else {
 					CurrentState.InertiaTorqueLossOut = 0.SI<NewtonMeter>();
 				}
+
+				// todo mk 2016-08-23: add pto auxiliaries!!
+
+				if (dryRun) {
+					var dryRunResponse = NextComponent.Request(absTime, dt, inTorque, inAngularVelocity, true);
+					dryRunResponse.GearboxPowerRequest = outTorque * avgOutAngularVelocity;
+					return dryRunResponse;
+				}
+
+				// this code has to be _after_ the check for a potential gear-shift!
+				// (the above block issues dry-run requests and thus may update the CurrentState!)
+				CurrentState.TransmissionTorqueLoss = inTorque - (outTorque / ModelData.Gears[Gear].Ratio);
+
 				CurrentState.SetState(inTorque, inAngularVelocity, outTorque, outAngularVelocity);
 				CurrentState.Gear = Gear;
 				// end critical section

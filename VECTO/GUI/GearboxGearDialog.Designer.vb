@@ -34,7 +34,6 @@ Partial Class GearboxGearDialog
 		Me.Label3 = New System.Windows.Forms.Label()
 		Me.BtBrowse = New System.Windows.Forms.Button()
 		Me.BtNext = New System.Windows.Forms.Button()
-		Me.ChIsTCgear = New System.Windows.Forms.CheckBox()
 		Me.TbShiftPolyFile = New System.Windows.Forms.TextBox()
 		Me.BtShiftPolyBrowse = New System.Windows.Forms.Button()
 		Me.Label4 = New System.Windows.Forms.Label()
@@ -155,16 +154,6 @@ Partial Class GearboxGearDialog
 		Me.BtNext.Text = "&Next >"
 		Me.BtNext.UseVisualStyleBackColor = True
 		'
-		'ChIsTCgear
-		'
-		Me.ChIsTCgear.AutoSize = True
-		Me.ChIsTCgear.Location = New System.Drawing.Point(236, 8)
-		Me.ChIsTCgear.Name = "ChIsTCgear"
-		Me.ChIsTCgear.Size = New System.Drawing.Size(241, 17)
-		Me.ChIsTCgear.TabIndex = 4
-		Me.ChIsTCgear.Text = "Torque Conveter active (lock-up clutch open)"
-		Me.ChIsTCgear.UseVisualStyleBackColor = True
-		'
 		'TbShiftPolyFile
 		'
 		Me.TbShiftPolyFile.Location = New System.Drawing.Point(2, 17)
@@ -267,7 +256,6 @@ Partial Class GearboxGearDialog
 		Me.Controls.Add(Me.BtPrevious)
 		Me.Controls.Add(Me.PnFld)
 		Me.Controls.Add(Me.PnShiftPoly)
-		Me.Controls.Add(Me.ChIsTCgear)
 		Me.Controls.Add(Me.BtNext)
 		Me.Controls.Add(Me.BtBrowse)
 		Me.Controls.Add(Me.Label3)
@@ -304,7 +292,6 @@ Partial Class GearboxGearDialog
 	Friend WithEvents Label3 As System.Windows.Forms.Label
 	Friend WithEvents BtBrowse As System.Windows.Forms.Button
 	Friend WithEvents BtNext As System.Windows.Forms.Button
-	Friend WithEvents ChIsTCgear As System.Windows.Forms.CheckBox
 	Friend WithEvents TbShiftPolyFile As System.Windows.Forms.TextBox
 	Friend WithEvents BtShiftPolyBrowse As System.Windows.Forms.Button
 	Friend WithEvents Label4 As System.Windows.Forms.Label

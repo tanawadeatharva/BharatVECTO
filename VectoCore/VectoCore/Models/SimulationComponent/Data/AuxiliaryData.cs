@@ -29,15 +29,9 @@
 *   Martin Rexeis, rexeis@ivt.tugraz.at, IVT, Graz University of Technology
 */
 
-using System;
 using System.Collections.Generic;
 using System.ComponentModel.DataAnnotations;
-using System.Data;
-using System.IO;
-using System.Linq;
-using System.Text;
 using TUGraz.VectoCommon.Exceptions;
-using TUGraz.VectoCommon.InputData;
 using TUGraz.VectoCommon.Models;
 using TUGraz.VectoCommon.Utils;
 using TUGraz.VectoCore.InputData.Reader.ComponentData;
@@ -49,13 +43,13 @@ namespace TUGraz.VectoCore.Models.SimulationComponent.Data
 	public sealed class AuxiliaryData
 	{
 		[Required, Range(double.Epsilon, 1)]
-		public double EfficiencyToSupply { get; set; }
+		public double EfficiencyToSupply { get; private set; }
 
 		[Required, Range(double.Epsilon, double.MaxValue)]
-		public double TransmissionRatio { get; set; }
+		public double TransmissionRatio { get; private set; }
 
 		[Required, Range(double.Epsilon, 1)]
-		public double EfficiencyToEngine { get; set; }
+		public double EfficiencyToEngine { get; private set; }
 
 		[Required] private readonly DelaunayMap _map;
 
@@ -84,6 +78,7 @@ namespace TUGraz.VectoCore.Models.SimulationComponent.Data
 		/// <param name="data">The data.</param>
 		/// <param name="context">The validation context.</param>
 		/// <returns></returns>
+		// ReSharper disable once UnusedMember.Global
 		public static ValidationResult ValidateAuxMap(AuxiliaryData data, ValidationContext context)
 		{
 			var xValidationRules = new[] { new RangeAttribute(0, double.MaxValue) };

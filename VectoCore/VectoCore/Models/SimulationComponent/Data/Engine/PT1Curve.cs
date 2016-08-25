@@ -109,13 +109,13 @@ namespace TUGraz.VectoCore.Models.SimulationComponent.Data.Engine
 		public override Second Lookup(PerSecond key)
 		{
 			var index = 1;
-			if (key < _entries[0].Key) {
+			if (key.IsSmaller(_entries[0].Key)) {
 				Log.Error("requested rpm below minimum rpm in pt1 - extrapolating. n_eng_avg: {0}, rpm_min: {1}",
 					key.ConvertTo().Rounds.Per.Minute, _entries[0].Key.ConvertTo().Rounds.Per.Minute);
 			} else {
-				index = _entries.FindIndex(x => x.Key > key);
+				index = _entries.FindIndex(x => x.Key.IsGreater(key));
 				if (index <= 0) {
-					index = (key > _entries[0].Key) ? _entries.Count - 1 : 1;
+					index = key.IsGreater(_entries[0].Key) ? _entries.Count - 1 : 1;
 				}
 			}
 
