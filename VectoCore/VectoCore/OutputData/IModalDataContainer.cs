@@ -98,6 +98,7 @@ namespace TUGraz.VectoCore.OutputData
 		IEnumerable<T> GetValues<T>(DataColumn col);
 
 		Dictionary<string, DataColumn> Auxiliaries { get; set; }
+		T TimeIntegral<T>(ModalResultField field, Func<SI, bool> filter = null) where T : SIBase<T>;
 
 		void SetDataValue(string fieldName, object value);
 
@@ -147,49 +148,44 @@ namespace TUGraz.VectoCore.OutputData
 			return self ?? defaultValue;
 		}
 
-		public static MeterPerSquareSecond AccelerationsPositive(this IModalDataContainer data)
+		public static MeterPerSquareSecond AccelerationsPositive(this MeterPerSquareSecond[] acceleration3SecondAverage)
 		{
 			try {
-				var acceleration3SecondAverage = AccelerationPer3Seconds(data);
 				return acceleration3SecondAverage.Where(x => x > 0.125).Average();
 			} catch (NullReferenceException) {
 				return null;
 			}
 		}
 
-		public static MeterPerSquareSecond AccelerationsNegative(this IModalDataContainer data)
+		public static MeterPerSquareSecond AccelerationsNegative(this MeterPerSquareSecond[] acceleration3SecondAverage)
 		{
-			var acceleration3SecondAverage = AccelerationPer3Seconds(data).ToList();
-			if (acceleration3SecondAverage.Any()) {
+			if (acceleration3SecondAverage.Length > 0) {
 				return acceleration3SecondAverage.Where(x => x < -0.125).Average();
 			}
 			return null;
 		}
 
-		public static Scalar AccelerationTimeShare(this IModalDataContainer data)
+		public static Scalar AccelerationTimeShare(this MeterPerSquareSecond[] acceleration3SecondAverage)
 		{
-			var acceleration3SecondAverage = AccelerationPer3Seconds(data).ToList();
-			if (acceleration3SecondAverage.Any()) {
-				return 100.SI<Scalar>() * acceleration3SecondAverage.Count(x => x > 0.125) / acceleration3SecondAverage.Count;
+			if (acceleration3SecondAverage.Length > 0) {
+				return 100.SI<Scalar>() * acceleration3SecondAverage.Count(x => x > 0.125) / acceleration3SecondAverage.Length;
 			}
 			return null;
 		}
 
-		public static Scalar DecelerationTimeShare(this IModalDataContainer data)
+		public static Scalar DecelerationTimeShare(this MeterPerSquareSecond[] acceleration3SecondAverage)
 		{
-			var acceleration3SecondAverage = AccelerationPer3Seconds(data).ToList();
-			if (acceleration3SecondAverage.Any()) {
-				return 100.SI<Scalar>() * acceleration3SecondAverage.Count(x => x < -0.125) / acceleration3SecondAverage.Count;
+			if (acceleration3SecondAverage.Length > 0) {
+				return 100.SI<Scalar>() * acceleration3SecondAverage.Count(x => x < -0.125) / acceleration3SecondAverage.Length;
 			}
 			return null;
 		}
 
-		public static Scalar CruiseTimeShare(this IModalDataContainer data)
+		public static Scalar CruiseTimeShare(this MeterPerSquareSecond[] acceleration3SecondAverage)
 		{
-			var acceleration3SecondAverage = AccelerationPer3Seconds(data).ToList();
-			if (acceleration3SecondAverage.Any()) {
+			if (acceleration3SecondAverage.Length > 0) {
 				return 100.SI<Scalar>() * acceleration3SecondAverage.Count(x => x.IsBetween(-0.125, -0.125)) /
-						acceleration3SecondAverage.Count;
+						acceleration3SecondAverage.Length;
 			}
 			return null;
 		}
@@ -197,8 +193,8 @@ namespace TUGraz.VectoCore.OutputData
 		public static Scalar StopTimeShare(this IModalDataContainer data)
 		{
 			var stopTime = data.GetValues<MeterPerSecond>(ModalResultField.v_act)
-				.Zip(data.SimulationIntervals(), (v, dt) => new { v, dt })
-				.Where(x => x.v < 0.1).Sum(x => x.dt) ?? 0.SI<Second>();
+								.Zip(data.SimulationIntervals(), (v, dt) => new { v, dt })
+								.Where(x => x.v < 0.1).Sum(x => x.dt) ?? 0.SI<Second>();
 			return 100 * (stopTime / data.Duration()).Cast<Scalar>();
 		}
 
@@ -246,7 +242,7 @@ namespace TUGraz.VectoCore.OutputData
 
 		public static WattSecond WorkTorqueConverter(this IModalDataContainer data)
 		{
-			return data.TimeIntegral<WattSecond>(ModalResultField.P_tc_loss);
+			return data.TimeIntegral<WattSecond>(ModalResultField.P_TC_loss);
 		}
 
 		public static Second Duration(this IModalDataContainer data)
@@ -317,7 +313,7 @@ namespace TUGraz.VectoCore.OutputData
 
 		public static Watt PowerTorqueConverter(this IModalDataContainer data)
 		{
-			return data.TimeIntegral<WattSecond>(ModalResultField.P_tc_loss) / data.Duration();
+			return data.TimeIntegral<WattSecond>(ModalResultField.P_TC_loss) / data.Duration();
 		}
 
 		public static Watt PowerWheelPositive(this IModalDataContainer data)
@@ -467,33 +463,23 @@ namespace TUGraz.VectoCore.OutputData
 			return data.GetValues<Watt>(auxCol).Zip(simulationIntervals, (value, dt) => value * dt).Sum().Cast<WattSecond>();
 		}
 
-		private static T TimeIntegral<T>(this IModalDataContainer data, ModalResultField field, Func<SI, bool> filter = null)
-			where T : SIBase<T>
+		public static MeterPerSquareSecond[] AccelerationPer3Seconds(this IModalDataContainer data)
 		{
-			var simulationIntervals = data.GetValues<Second>(ModalResultField.simulationInterval);
-			var filteredList = data.GetValues<SI>(field)
-				.Zip(simulationIntervals, (value, dt) => new { value, dt })
-				.Where(x => filter == null || filter(x.value)).ToList();
-
-			return filteredList.Any()
-				? filteredList.Select(x => (x.value == null ? SIBase<T>.Create(0) : x.value * x.dt)).Sum().Cast<T>()
-				: SIBase<T>.Create(0);
-		}
-
-		private static IEnumerable<MeterPerSquareSecond> AccelerationPer3Seconds(IModalDataContainer data)
-		{
+			var accs = new List<MeterPerSquareSecond>(1000);
 			var accelerationAverages = AccelerationPerSecond(data).ToList();
 			if (accelerationAverages.Count >= 3) {
 				var runningAverage = (accelerationAverages[0] + accelerationAverages[1] + accelerationAverages[2]) / 3.0;
 
-				yield return runningAverage;
+				accs.Add(runningAverage);
 
 				for (var i = 2; i < accelerationAverages.Count - 1; i++) {
 					runningAverage -= accelerationAverages[i - 2] / 3.0;
 					runningAverage += accelerationAverages[i + 1] / 3.0;
-					yield return runningAverage;
+					accs.Add(runningAverage);
 				}
 			}
+
+			return accs.ToArray();
 		}
 
 		/// <summary>

@@ -204,7 +204,6 @@ namespace TUGraz.VectoCore.OutputData
 				});
 			}
 
-
 			var strCols = dataColumns.Select(x => x.GetName())
 				.Concat(Auxiliaries.Values.Select(c => c.ColumnName))
 				.Concat(
@@ -230,6 +229,23 @@ namespace TUGraz.VectoCore.OutputData
 		public IEnumerable<T> GetValues<T>(DataColumn col)
 		{
 			return Data.Rows.Cast<DataRow>().Select(x => x.Field<T>(col));
+		}
+
+		public T TimeIntegral<T>(ModalResultField field, Func<SI, bool> filter = null)
+			where T : SIBase<T>
+		{
+			var result = 0.0;
+			for (var i = 0; i < Data.Rows.Count; i++) {
+				var value = Data.Rows[i][(int)field];
+				if (value != null && value != DBNull.Value) {
+					var siValue = (SI)value;
+					if (filter == null || filter(siValue)) {
+						result += siValue.Value() * ((Second)Data.Rows[i][(int)ModalResultField.simulationInterval]).Value();
+					}
+				}
+			}
+
+			return result.SI<T>();
 		}
 
 		public IEnumerable<T> GetValues<T>(ModalResultField key)

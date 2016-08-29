@@ -49,7 +49,6 @@ namespace TUGraz.VectoCore.Tests.Models.SimulationComponentData
 			Assert.AreEqual(AuxiliaryType.ElectricSystem, AuxiliaryTypeHelper.Parse("Electric System"));
 			Assert.AreEqual(AuxiliaryType.HVAC, AuxiliaryTypeHelper.Parse("HVAC"));
 			Assert.AreEqual(AuxiliaryType.PneumaticSystem, AuxiliaryTypeHelper.Parse("Pneumatic System"));
-			AssertHelper.Exception<ArgumentOutOfRangeException>(() => { AuxiliaryTypeHelper.Parse("Foo Bar Blupp"); });
 		}
 
 		[TestMethod]
