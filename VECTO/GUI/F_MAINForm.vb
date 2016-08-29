@@ -137,6 +137,7 @@ Public Class F_MAINForm
 		fbRLM = New cFileBrowser("vrlm")
 		fbTLM = New cFileBrowser("vtlm")
 		fbTCC = New cFileBrowser("vtcc")
+		fbTCCShift = New cFileBrowser("vgbs")
 		fbCDx = New cFileBrowser("vcdx")
 		fbDfVelocityDrop = New cFileBrowser("DfVelocityDrop")
 		fbDfTargetSpeed = New cFileBrowser("DfTargetSpeed")
@@ -161,6 +162,7 @@ Public Class F_MAINForm
 		fbRLM.Extensions = New String() {"vrlm"}
 		fbTLM.Extensions = New String() {"vtlm"}
 		fbTCC.Extensions = New String() {"vtcc"}
+		fbTCCShift.Extensions = New String() {"vgbs"}
 		fbCDx.Extensions = New String() {"vcdv", "vcdb"}
 
 		fbVMOD.Extensions = New String() {"vmod"}
@@ -182,6 +184,7 @@ Public Class F_MAINForm
 		fbRLM.Close()
 		fbTLM.Close()
 		fbTCC.Close()
+		fbTCCShift.Close()
 		fbCDx.Close()
 		fbVMOD.Close()
 	End Sub

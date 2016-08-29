@@ -50,7 +50,6 @@ Partial Class F_GBX
 		Me.TbTracInt = New System.Windows.Forms.TextBox()
 		Me.LvGears = New System.Windows.Forms.ListView()
 		Me.ColumnHeader1 = CType(New System.Windows.Forms.ColumnHeader(), System.Windows.Forms.ColumnHeader)
-		'Me.ColumnHeader4 = CType(New System.Windows.Forms.ColumnHeader(), System.Windows.Forms.ColumnHeader) 'TC Column
 		Me.ColumnHeader2 = CType(New System.Windows.Forms.ColumnHeader(), System.Windows.Forms.ColumnHeader)
 		Me.ColumnHeader3 = CType(New System.Windows.Forms.ColumnHeader(), System.Windows.Forms.ColumnHeader)
 		Me.ColumnHeader5 = CType(New System.Windows.Forms.ColumnHeader(), System.Windows.Forms.ColumnHeader)
@@ -117,6 +116,9 @@ Partial Class F_GBX
 		Me.Label32 = New System.Windows.Forms.Label()
 		Me.PnInertiaTI = New System.Windows.Forms.Panel()
 		Me.PicBox = New System.Windows.Forms.PictureBox()
+		Me.TBTCShiftPolygon = New System.Windows.Forms.TextBox()
+		Me.LblTCShiftFile = New System.Windows.Forms.Label()
+		Me.BtTCShiftFileBrowse = New System.Windows.Forms.Button()
 		Me.ToolStrip1.SuspendLayout()
 		Me.StatusStrip1.SuspendLayout()
 		CType(Me.PictureBox1, System.ComponentModel.ISupportInitialize).BeginInit()
@@ -274,11 +276,6 @@ Partial Class F_GBX
 		'
 		Me.ColumnHeader1.Text = "Gear"
 		Me.ColumnHeader1.Width = 46
-		'
-		''ColumnHeader4
-		''
-		'Me.ColumnHeader4.Text = "TC"
-		'Me.ColumnHeader4.Width = 31
 		'
 		'ColumnHeader2
 		'
@@ -686,11 +683,14 @@ Partial Class F_GBX
 		'
 		'GroupBox3
 		'
+		Me.GroupBox3.Controls.Add(Me.BtTCShiftFileBrowse)
+		Me.GroupBox3.Controls.Add(Me.LblTCShiftFile)
+		Me.GroupBox3.Controls.Add(Me.TBTCShiftPolygon)
 		Me.GroupBox3.Controls.Add(Me.PnTC)
 		Me.GroupBox3.Controls.Add(Me.ChTCon)
 		Me.GroupBox3.Location = New System.Drawing.Point(459, 440)
 		Me.GroupBox3.Name = "GroupBox3"
-		Me.GroupBox3.Size = New System.Drawing.Size(414, 119)
+		Me.GroupBox3.Size = New System.Drawing.Size(414, 162)
 		Me.GroupBox3.TabIndex = 5
 		Me.GroupBox3.TabStop = False
 		Me.GroupBox3.Text = "Torque Converter"
@@ -888,6 +888,35 @@ Partial Class F_GBX
 		Me.PicBox.TabIndex = 48
 		Me.PicBox.TabStop = False
 		'
+		'TBTCShiftPolygon
+		'
+		Me.TBTCShiftPolygon.Anchor = CType(((System.Windows.Forms.AnchorStyles.Top Or System.Windows.Forms.AnchorStyles.Left) _
+			Or System.Windows.Forms.AnchorStyles.Right), System.Windows.Forms.AnchorStyles)
+		Me.TBTCShiftPolygon.Location = New System.Drawing.Point(10, 136)
+		Me.TBTCShiftPolygon.Name = "TBTCShiftPolygon"
+		Me.TBTCShiftPolygon.Size = New System.Drawing.Size(343, 20)
+		Me.TBTCShiftPolygon.TabIndex = 37
+		'
+		'LblTCShiftFile
+		'
+		Me.LblTCShiftFile.AutoSize = True
+		Me.LblTCShiftFile.Location = New System.Drawing.Point(7, 120)
+		Me.LblTCShiftFile.Name = "LblTCShiftFile"
+		Me.LblTCShiftFile.Size = New System.Drawing.Size(172, 13)
+		Me.LblTCShiftFile.TabIndex = 5
+		Me.LblTCShiftFile.Text = "Torque converter shift polygons file"
+		'
+		'BtTCShiftFileBrowse
+		'
+		Me.BtTCShiftFileBrowse.Anchor = CType((System.Windows.Forms.AnchorStyles.Top Or System.Windows.Forms.AnchorStyles.Right), System.Windows.Forms.AnchorStyles)
+		Me.BtTCShiftFileBrowse.Image = Global.VECTO.My.Resources.Resources.Open_icon
+		Me.BtTCShiftFileBrowse.Location = New System.Drawing.Point(354, 134)
+		Me.BtTCShiftFileBrowse.Name = "BtTCShiftFileBrowse"
+		Me.BtTCShiftFileBrowse.Size = New System.Drawing.Size(24, 24)
+		Me.BtTCShiftFileBrowse.TabIndex = 5
+		Me.BtTCShiftFileBrowse.TabStop = False
+		Me.BtTCShiftFileBrowse.UseVisualStyleBackColor = True
+		'
 		'F_GBX
 		'
 		Me.AcceptButton = Me.ButOK
@@ -942,77 +971,77 @@ Partial Class F_GBX
 		Me.PerformLayout()
 
 	End Sub
-    Friend WithEvents ToolStrip1 As System.Windows.Forms.ToolStrip
-    Friend WithEvents ToolStripBtNew As System.Windows.Forms.ToolStripButton
-    Friend WithEvents ToolStripBtOpen As System.Windows.Forms.ToolStripButton
-    Friend WithEvents ToolStripBtSave As System.Windows.Forms.ToolStripButton
-    Friend WithEvents ToolStripBtSaveAs As System.Windows.Forms.ToolStripButton
-    Friend WithEvents ToolStripSeparator3 As System.Windows.Forms.ToolStripSeparator
-    Friend WithEvents ToolStripBtSendTo As System.Windows.Forms.ToolStripButton
-    Friend WithEvents StatusStrip1 As System.Windows.Forms.StatusStrip
-    Friend WithEvents LbStatus As System.Windows.Forms.ToolStripStatusLabel
-    Friend WithEvents ButCancel As System.Windows.Forms.Button
-    Friend WithEvents ButOK As System.Windows.Forms.Button
-    Friend WithEvents BtRemGear As System.Windows.Forms.Button
-    Friend WithEvents TbTracInt As System.Windows.Forms.TextBox
-    Friend WithEvents LvGears As System.Windows.Forms.ListView
-    Friend WithEvents ColumnHeader1 As System.Windows.Forms.ColumnHeader
-    Friend WithEvents ColumnHeader2 As System.Windows.Forms.ColumnHeader
-    Friend WithEvents ColumnHeader3 As System.Windows.Forms.ColumnHeader
-    Friend WithEvents TBI_getr As System.Windows.Forms.TextBox
-    Friend WithEvents Label49 As System.Windows.Forms.Label
-    Friend WithEvents Label33 As System.Windows.Forms.Label
-    Friend WithEvents Label48 As System.Windows.Forms.Label
-    Friend WithEvents Label6 As System.Windows.Forms.Label
-    Friend WithEvents Label3 As System.Windows.Forms.Label
-    Friend WithEvents TbName As System.Windows.Forms.TextBox
-    Friend WithEvents PictureBox1 As System.Windows.Forms.PictureBox
-    Friend WithEvents ToolStripSeparator1 As System.Windows.Forms.ToolStripSeparator
-    Friend WithEvents ToolStripButton1 As System.Windows.Forms.ToolStripButton
-    Friend WithEvents GrGearShift As System.Windows.Forms.GroupBox
-    Friend WithEvents Label2 As System.Windows.Forms.Label
-    Friend WithEvents TbTqResvStart As System.Windows.Forms.TextBox
-    Friend WithEvents TbTqResv As System.Windows.Forms.TextBox
-    Friend WithEvents Label7 As System.Windows.Forms.Label
-    Friend WithEvents Label5 As System.Windows.Forms.Label
-    Friend WithEvents Label4 As System.Windows.Forms.Label
-    Friend WithEvents GroupBox2 As System.Windows.Forms.GroupBox
-    Friend WithEvents TbStartAcc As System.Windows.Forms.TextBox
-    Friend WithEvents Label11 As System.Windows.Forms.Label
-    Friend WithEvents TbStartSpeed As System.Windows.Forms.TextBox
-    Friend WithEvents Label9 As System.Windows.Forms.Label
-    Friend WithEvents Label10 As System.Windows.Forms.Label
-    Friend WithEvents Label8 As System.Windows.Forms.Label
-    Friend WithEvents TbShiftTime As System.Windows.Forms.TextBox
-    Friend WithEvents Label12 As System.Windows.Forms.Label
-    Friend WithEvents Label13 As System.Windows.Forms.Label
-    Friend WithEvents ChSkipGears As System.Windows.Forms.CheckBox
-    Friend WithEvents ChShiftInside As System.Windows.Forms.CheckBox
-    Friend WithEvents CmOpenFile As System.Windows.Forms.ContextMenuStrip
-    Friend WithEvents OpenWithToolStripMenuItem As System.Windows.Forms.ToolStripMenuItem
-    Friend WithEvents ShowInFolderToolStripMenuItem As System.Windows.Forms.ToolStripMenuItem
-    Friend WithEvents GroupBox3 As System.Windows.Forms.GroupBox
-    Friend WithEvents TbTCfile As System.Windows.Forms.TextBox
-    Friend WithEvents ChTCon As System.Windows.Forms.CheckBox
-    Friend WithEvents BtTCfileBrowse As System.Windows.Forms.Button
-    Friend WithEvents BtTCfileOpen As System.Windows.Forms.Button
-    Friend WithEvents TbTCrefrpm As System.Windows.Forms.TextBox
-    Friend WithEvents Label14 As System.Windows.Forms.Label
-    Friend WithEvents Label15 As System.Windows.Forms.Label
-    Friend WithEvents Label16 As System.Windows.Forms.Label
-    Friend WithEvents CbGStype As System.Windows.Forms.ComboBox
-    Friend WithEvents Label17 As System.Windows.Forms.Label
-    Friend WithEvents PnTC As System.Windows.Forms.Panel
-    Friend WithEvents PnTorqRes As System.Windows.Forms.Panel
-    Friend WithEvents BtAddGear As System.Windows.Forms.Button
+	Friend WithEvents ToolStrip1 As System.Windows.Forms.ToolStrip
+	Friend WithEvents ToolStripBtNew As System.Windows.Forms.ToolStripButton
+	Friend WithEvents ToolStripBtOpen As System.Windows.Forms.ToolStripButton
+	Friend WithEvents ToolStripBtSave As System.Windows.Forms.ToolStripButton
+	Friend WithEvents ToolStripBtSaveAs As System.Windows.Forms.ToolStripButton
+	Friend WithEvents ToolStripSeparator3 As System.Windows.Forms.ToolStripSeparator
+	Friend WithEvents ToolStripBtSendTo As System.Windows.Forms.ToolStripButton
+	Friend WithEvents StatusStrip1 As System.Windows.Forms.StatusStrip
+	Friend WithEvents LbStatus As System.Windows.Forms.ToolStripStatusLabel
+	Friend WithEvents ButCancel As System.Windows.Forms.Button
+	Friend WithEvents ButOK As System.Windows.Forms.Button
+	Friend WithEvents BtRemGear As System.Windows.Forms.Button
+	Friend WithEvents TbTracInt As System.Windows.Forms.TextBox
+	Friend WithEvents LvGears As System.Windows.Forms.ListView
+	Friend WithEvents ColumnHeader1 As System.Windows.Forms.ColumnHeader
+	Friend WithEvents ColumnHeader2 As System.Windows.Forms.ColumnHeader
+	Friend WithEvents ColumnHeader3 As System.Windows.Forms.ColumnHeader
+	Friend WithEvents TBI_getr As System.Windows.Forms.TextBox
+	Friend WithEvents Label49 As System.Windows.Forms.Label
+	Friend WithEvents Label33 As System.Windows.Forms.Label
+	Friend WithEvents Label48 As System.Windows.Forms.Label
+	Friend WithEvents Label6 As System.Windows.Forms.Label
+	Friend WithEvents Label3 As System.Windows.Forms.Label
+	Friend WithEvents TbName As System.Windows.Forms.TextBox
+	Friend WithEvents PictureBox1 As System.Windows.Forms.PictureBox
+	Friend WithEvents ToolStripSeparator1 As System.Windows.Forms.ToolStripSeparator
+	Friend WithEvents ToolStripButton1 As System.Windows.Forms.ToolStripButton
+	Friend WithEvents GrGearShift As System.Windows.Forms.GroupBox
+	Friend WithEvents Label2 As System.Windows.Forms.Label
+	Friend WithEvents TbTqResvStart As System.Windows.Forms.TextBox
+	Friend WithEvents TbTqResv As System.Windows.Forms.TextBox
+	Friend WithEvents Label7 As System.Windows.Forms.Label
+	Friend WithEvents Label5 As System.Windows.Forms.Label
+	Friend WithEvents Label4 As System.Windows.Forms.Label
+	Friend WithEvents GroupBox2 As System.Windows.Forms.GroupBox
+	Friend WithEvents TbStartAcc As System.Windows.Forms.TextBox
+	Friend WithEvents Label11 As System.Windows.Forms.Label
+	Friend WithEvents TbStartSpeed As System.Windows.Forms.TextBox
+	Friend WithEvents Label9 As System.Windows.Forms.Label
+	Friend WithEvents Label10 As System.Windows.Forms.Label
+	Friend WithEvents Label8 As System.Windows.Forms.Label
+	Friend WithEvents TbShiftTime As System.Windows.Forms.TextBox
+	Friend WithEvents Label12 As System.Windows.Forms.Label
+	Friend WithEvents Label13 As System.Windows.Forms.Label
+	Friend WithEvents ChSkipGears As System.Windows.Forms.CheckBox
+	Friend WithEvents ChShiftInside As System.Windows.Forms.CheckBox
+	Friend WithEvents CmOpenFile As System.Windows.Forms.ContextMenuStrip
+	Friend WithEvents OpenWithToolStripMenuItem As System.Windows.Forms.ToolStripMenuItem
+	Friend WithEvents ShowInFolderToolStripMenuItem As System.Windows.Forms.ToolStripMenuItem
+	Friend WithEvents GroupBox3 As System.Windows.Forms.GroupBox
+	Friend WithEvents TbTCfile As System.Windows.Forms.TextBox
+	Friend WithEvents ChTCon As System.Windows.Forms.CheckBox
+	Friend WithEvents BtTCfileBrowse As System.Windows.Forms.Button
+	Friend WithEvents BtTCfileOpen As System.Windows.Forms.Button
+	Friend WithEvents TbTCrefrpm As System.Windows.Forms.TextBox
+	Friend WithEvents Label14 As System.Windows.Forms.Label
+	Friend WithEvents Label15 As System.Windows.Forms.Label
+	Friend WithEvents Label16 As System.Windows.Forms.Label
+	Friend WithEvents CbGStype As System.Windows.Forms.ComboBox
+	Friend WithEvents Label17 As System.Windows.Forms.Label
+	Friend WithEvents PnTC As System.Windows.Forms.Panel
+	Friend WithEvents PnTorqRes As System.Windows.Forms.Panel
+	Friend WithEvents BtAddGear As System.Windows.Forms.Button
 	Friend WithEvents ColumnHeader4 As System.Windows.Forms.ColumnHeader
-    Friend WithEvents GroupBox4 As System.Windows.Forms.GroupBox
-    Friend WithEvents Label32 As System.Windows.Forms.Label
-    Friend WithEvents PnInertiaTI As System.Windows.Forms.Panel
-    Friend WithEvents ColumnHeader5 As System.Windows.Forms.ColumnHeader
-    Friend WithEvents PicBox As System.Windows.Forms.PictureBox
-    Friend WithEvents TbTCinertia As System.Windows.Forms.TextBox
-    Friend WithEvents Label1 As System.Windows.Forms.Label
+	Friend WithEvents GroupBox4 As System.Windows.Forms.GroupBox
+	Friend WithEvents Label32 As System.Windows.Forms.Label
+	Friend WithEvents PnInertiaTI As System.Windows.Forms.Panel
+	Friend WithEvents ColumnHeader5 As System.Windows.Forms.ColumnHeader
+	Friend WithEvents PicBox As System.Windows.Forms.PictureBox
+	Friend WithEvents TbTCinertia As System.Windows.Forms.TextBox
+	Friend WithEvents Label1 As System.Windows.Forms.Label
 	Friend WithEvents Label18 As System.Windows.Forms.Label
 	Friend WithEvents ColumnHeader6 As System.Windows.Forms.ColumnHeader
 	Friend WithEvents GroupBox1 As System.Windows.Forms.GroupBox
@@ -1025,4 +1054,7 @@ Partial Class F_GBX
 	Friend WithEvents Label21 As System.Windows.Forms.Label
 	Friend WithEvents Label20 As System.Windows.Forms.Label
 	Friend WithEvents Label19 As System.Windows.Forms.Label
+	Friend WithEvents BtTCShiftFileBrowse As System.Windows.Forms.Button
+	Friend WithEvents LblTCShiftFile As System.Windows.Forms.Label
+	Friend WithEvents TBTCShiftPolygon As System.Windows.Forms.TextBox
 End Class

@@ -247,7 +247,8 @@ Public Class F_GBX
 														GBX0.FldFile(i, True)))
 			Else
 				'lv0 = New ListViewItem(i.ToString("00"))
-				Me.LvGears.Items.Add(CreateListviewItem(i.ToString("00"), "-", GBX0.Igetr(i), GBX0.GetrMap(i, True), GBX0.gsFile(i, True),
+				Me.LvGears.Items.Add(CreateListviewItem(i.ToString("00"), "-", GBX0.Igetr(i), GBX0.GetrMap(i, True),
+														GBX0.gsFile(i, True),
 														GBX0.FldFile(i, True)))
 			End If
 
@@ -264,6 +265,7 @@ Public Class F_GBX
 		Me.TbTCfile.Text = GBX0.TCfile(True)
 		Me.TbTCrefrpm.Text = GBX0.TCrefrpm
 		Me.TbTCinertia.Text = GBX0.TCinertia
+		TBTCShiftPolygon.Text = GBX0.TCshiftFile
 
 		tbUpshiftMinAcceleration.Text = GBX0.UpshiftMinAcceleration
 		tbDownshiftAfterUpshift.Text = GBX0.DownshiftAfterUpshift
@@ -350,6 +352,7 @@ Public Class F_GBX
 		GBX0.TCfile = Me.TbTCfile.Text
 		GBX0.TCrefrpm = fTextboxToNumString(Me.TbTCrefrpm.Text)
 		GBX0.TCinertia = fTextboxToNumString(Me.TbTCinertia.Text)
+		GBX0.TCshiftFile = TBTCShiftPolygon.Text
 
 		GBX0.DownshiftAfterUpshift = fTextboxToNumString(tbDownshiftAfterUpshift.Text)
 		GBX0.UpshiftAfterDownshift = fTextboxToNumString(tbUpshiftAfterDownshift.Text)
@@ -944,6 +947,8 @@ Public Class F_GBX
 		Change()
 		CheckGearTC()
 		PnTC.Enabled = ChTCon.Checked
+		LblTCShiftFile.Enabled = ChTCon.Checked
+		TBTCShiftPolygon.Enabled = ChTCon.Checked
 	End Sub
 
 	'Browse TC file
@@ -983,5 +988,11 @@ Public Class F_GBX
 		InitializeComponent()
 
 		' Fügen Sie Initialisierungen nach dem InitializeComponent()-Aufruf hinzu.
+	End Sub
+
+	Private Sub BtTCShiftFileBrowse_Click(sender As Object, e As EventArgs) Handles BtTCShiftFileBrowse.Click
+		If fbTCCShift.OpenDialog(fFileRepl(Me.TBTCShiftPolygon.Text, fPATH(GbxFile))) Then
+			Me.TBTCShiftPolygon.Text = fFileWoDir(fbTCCShift.Files(0), fPATH(GbxFile))
+		End If
 	End Sub
 End Class

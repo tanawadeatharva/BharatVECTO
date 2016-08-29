@@ -77,6 +77,7 @@ Public Class cGBX
 	Public UpshiftMinAcceleration As Single
 	Public DownshiftAfterUpshift As Single
 	Public UpshiftAfterDownshift As Single
+	Public TCshiftFile As String
 
 
 	Public Function CreateFileList() As Boolean
@@ -208,7 +209,9 @@ Public Class cGBX
 		dic0.Add("File", TC_file.PathOrDummy)
 		dic0.Add("RefRPM", TCrefrpm)
 		dic0.Add("Inertia", TCinertia)
+		dic0.Add("ShiftPolygon", TCshiftFile)
 		dic.Add("TorqueConverter", dic0)
+
 
 		dic.Add("DownshiftAferUpshiftDelay", DownshiftAfterUpshift)
 		dic.Add("UpshiftAfterDownshiftDelay", UpshiftAfterDownshift)
@@ -316,9 +319,13 @@ Public Class cGBX
 				TCon = JSON.Content("Body")("TorqueConverter")("Enabled")
 				TC_file.Init(MyPath, JSON.Content("Body")("TorqueConverter")("File"))
 				TCrefrpm = JSON.Content("Body")("TorqueConverter")("RefRPM")
-				If FileVersion > 2 Then TCinertia = JSON.Content("Body")("TorqueConverter")("Inertia")
+				If FileVersion > 2 Then
+					TCinertia = JSON.Content("Body")("TorqueConverter")("Inertia")
+				End If
+				If FileVersion > 5 Then
+					TCshiftFile = JSON.Content("Body")("TorqueConverter")("ShiftPolygon")
+				End If
 			End If
-
 		Catch ex As Exception
 			If ShowMsg Then WorkerMsg(tMsgID.Err, "Failed to read VECTO file! " & ex.Message, MsgSrc)
 			Return False
