@@ -257,12 +257,14 @@ namespace TUGraz.VectoCore.OutputData
 			row[E_CLUTCH_NEG] = modData.EngineWorkNegative().ConvertTo().Kilo.Watt.Hour;
 			row[E_FCMAP_POS] = modData.TotalEngineWorkPositive().ConvertTo().Kilo.Watt.Hour;
 
+			var acc = modData.AccelerationPer3Seconds();
+
 			row[ACC] = modData.AccelerationAverage();
-			row[ACC_POS] = modData.AccelerationsPositive();
-			row[ACC_NEG] = modData.AccelerationsNegative();
-			row[ACC_TIMESHARE] = modData.AccelerationTimeShare();
-			row[DEC_TIMESHARE] = modData.DecelerationTimeShare();
-			row[CRUISE_TIMESHARE] = modData.CruiseTimeShare();
+			row[ACC_POS] = acc.AccelerationsPositive();
+			row[ACC_NEG] = acc.AccelerationsNegative();
+			row[ACC_TIMESHARE] = acc.AccelerationTimeShare();
+			row[DEC_TIMESHARE] = acc.DecelerationTimeShare();
+			row[CRUISE_TIMESHARE] = acc.CruiseTimeShare();
 			row[STOP_TIMESHARE] = modData.StopTimeShare();
 		}
 

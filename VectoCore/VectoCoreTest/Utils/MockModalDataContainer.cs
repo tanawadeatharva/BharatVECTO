@@ -29,6 +29,7 @@
 *   Martin Rexeis, rexeis@ivt.tugraz.at, IVT, Graz University of Technology
 */
 
+using System;
 using System.Collections.Generic;
 using System.Data;
 using System.Linq;
@@ -90,6 +91,11 @@ namespace TUGraz.VectoCore.Tests.Utils
 		public IEnumerable<T> GetValues<T>(DataColumn col)
 		{
 			return Data.Rows.Cast<DataRow>().Select(x => x.Field<T>(col));
+		}
+
+		public T TimeIntegral<T>(ModalResultField field, Func<SI, bool> filter = null) where T : SIBase<T>
+		{
+			throw new NotImplementedException();
 		}
 
 		public Dictionary<string, DataColumn> Auxiliaries { get; set; }
