@@ -50,7 +50,7 @@ Partial Class F_GBX
 		Me.TbTracInt = New System.Windows.Forms.TextBox()
 		Me.LvGears = New System.Windows.Forms.ListView()
 		Me.ColumnHeader1 = CType(New System.Windows.Forms.ColumnHeader(), System.Windows.Forms.ColumnHeader)
-		Me.ColumnHeader4 = CType(New System.Windows.Forms.ColumnHeader(), System.Windows.Forms.ColumnHeader)
+		'Me.ColumnHeader4 = CType(New System.Windows.Forms.ColumnHeader(), System.Windows.Forms.ColumnHeader) 'TC Column
 		Me.ColumnHeader2 = CType(New System.Windows.Forms.ColumnHeader(), System.Windows.Forms.ColumnHeader)
 		Me.ColumnHeader3 = CType(New System.Windows.Forms.ColumnHeader(), System.Windows.Forms.ColumnHeader)
 		Me.ColumnHeader5 = CType(New System.Windows.Forms.ColumnHeader(), System.Windows.Forms.ColumnHeader)
@@ -257,7 +257,7 @@ Partial Class F_GBX
 		'
 		'LvGears
 		'
-		Me.LvGears.Columns.AddRange(New System.Windows.Forms.ColumnHeader() {Me.ColumnHeader1, Me.ColumnHeader4, Me.ColumnHeader2, Me.ColumnHeader3, Me.ColumnHeader5, Me.ColumnHeader6})
+		Me.LvGears.Columns.AddRange(New System.Windows.Forms.ColumnHeader() {Me.ColumnHeader1, Me.ColumnHeader2, Me.ColumnHeader3, Me.ColumnHeader5, Me.ColumnHeader6})
 		Me.LvGears.FullRowSelect = True
 		Me.LvGears.GridLines = True
 		Me.LvGears.HideSelection = False
@@ -273,32 +273,32 @@ Partial Class F_GBX
 		'ColumnHeader1
 		'
 		Me.ColumnHeader1.Text = "Gear"
-		Me.ColumnHeader1.Width = 40
+		Me.ColumnHeader1.Width = 46
 		'
-		'ColumnHeader4
-		'
-		Me.ColumnHeader4.Text = "TC"
-		Me.ColumnHeader4.Width = 31
+		''ColumnHeader4
+		''
+		'Me.ColumnHeader4.Text = "TC"
+		'Me.ColumnHeader4.Width = 31
 		'
 		'ColumnHeader2
 		'
 		Me.ColumnHeader2.Text = "Ratio"
-		Me.ColumnHeader2.Width = 43
+		Me.ColumnHeader2.Width = 50
 		'
 		'ColumnHeader3
 		'
 		Me.ColumnHeader3.Text = "Loss Map or Efficiency"
-		Me.ColumnHeader3.Width = 122
+		Me.ColumnHeader3.Width = 128
 		'
 		'ColumnHeader5
 		'
 		Me.ColumnHeader5.Text = "Shift Polygons"
-		Me.ColumnHeader5.Width = 88
+		Me.ColumnHeader5.Width = 94
 		'
 		'ColumnHeader6
 		'
 		Me.ColumnHeader6.Text = "Full Load Curve"
-		Me.ColumnHeader6.Width = 89
+		Me.ColumnHeader6.Width = 95
 		'
 		'TBI_getr
 		'
