@@ -25,6 +25,15 @@ Imports TUGraz.VectoCore.Models.SimulationComponent.Data.Gearbox
 ''' </summary>
 ''' <remarks></remarks>
 Public Class F_GBX
+	Private Enum GearboxTbl
+		GearNr = 0
+		'TorqueConverter = 1
+		Ratio = 1
+		LossMapEfficiency = 2
+		ShiftPolygons = 3
+		FullLoadCurve = 4
+	End Enum
+
 	Private GbxFile As String = ""
 	Public AutoSendTo As Boolean = False
 	Public JobDir As String = ""
@@ -92,7 +101,7 @@ Public Class F_GBX
 		tbUpshiftAfterDownshift.Text = cDeclaration.UpshiftAfterDownshiftDelay
 
 		For Each lv0 In Me.LvGears.Items
-			lv0.SubItems(4).Text = "-"
+			lv0.SubItems(GearboxTbl.ShiftPolygons).Text = "-"
 		Next
 	End Sub
 
@@ -155,7 +164,7 @@ Public Class F_GBX
 
 	'New file
 	Private Sub newGBX()
-		Dim lvi As ListViewItem
+		'Dim lvi As ListViewItem
 
 		If ChangeCheckCancel() Then Exit Sub
 
@@ -167,13 +176,7 @@ Public Class F_GBX
 
 		Me.LvGears.Items.Clear()
 
-		lvi = New ListViewItem("Axle")
-		lvi.SubItems.Add("-")
-		lvi.SubItems.Add("0")
-		lvi.SubItems.Add("0")
-		lvi.SubItems.Add("")
-		lvi.SubItems.Add("")
-		Me.LvGears.Items.Add(lvi)
+		Me.LvGears.Items.Add(CreateListviewItem("Axle", "-", 0, 0, "", ""))
 
 		'Me.ChSkipGears.Checked = False         'set by CbGStype.SelectedIndexChanged
 		'Me.ChShiftInside.Checked = False       'set by CbGStype.SelectedIndexChanged
@@ -202,7 +205,7 @@ Public Class F_GBX
 	Public Sub openGBX(ByVal file As String)
 		Dim GBX0 As cGBX
 		Dim i As Integer
-		Dim lv0 As ListViewItem
+		'Dim lv0 As ListViewItem
 
 		If ChangeCheckCancel() Then Exit Sub
 
@@ -239,26 +242,15 @@ Public Class F_GBX
 		For i = 0 To GBX0.Igetr.Count - 1
 
 			If i = 0 Then
-				lv0 = New ListViewItem("Axle")
+				'lv0 = New ListViewItem("Axle")
+				Me.LvGears.Items.Add(CreateListviewItem("Axle", "-", GBX0.Igetr(i), GBX0.GetrMap(i, True), GBX0.gsFile(i, True),
+														GBX0.FldFile(i, True)))
 			Else
-				lv0 = New ListViewItem(i.ToString("00"))
+				'lv0 = New ListViewItem(i.ToString("00"))
+				Me.LvGears.Items.Add(CreateListviewItem(i.ToString("00"), "-", GBX0.Igetr(i), GBX0.GetrMap(i, True), GBX0.gsFile(i, True),
+														GBX0.FldFile(i, True)))
 			End If
 
-			'If Me.ChTCon.Checked And i > 0 Then
-			'	If False Then ' GBX0.IsTCgear(i) Then
-			'		lv0.SubItems.Add("on")
-			'	Else
-			'		lv0.SubItems.Add("off")
-			'	End If
-			'Else
-			lv0.SubItems.Add("-")
-			'End If
-			lv0.SubItems.Add(GBX0.Igetr(i))
-			lv0.SubItems.Add(GBX0.GetrMap(i, True))
-			lv0.SubItems.Add(GBX0.gsFile(i, True))
-			lv0.SubItems.Add(GBX0.FldFile(i, True))
-
-			Me.LvGears.Items.Add(lv0)
 		Next
 
 		Me.ChSkipGears.Checked = GBX0.gs_SkipGears
@@ -296,6 +288,17 @@ Public Class F_GBX
 		UpdatePic()
 	End Sub
 
+	Private Function CreateListviewItem(gear As String, tc As String, ratio As Single, getrMap As String,
+										shiftPolygon As String, fldFile As String) As ListViewItem
+		Dim retVal As ListViewItem = New ListViewItem(gear)
+		'retVal.SubItems.Add(tc)
+		retVal.SubItems.Add(ratio)
+		retVal.SubItems.Add(getrMap)
+		retVal.SubItems.Add(shiftPolygon)
+		retVal.SubItems.Add(fldFile)
+		Return retVal
+	End Function
+
 	'Save or Save As function = true if file is saved
 	Private Function SaveOrSaveAs(ByVal SaveAs As Boolean) As Boolean
 		If GbxFile = "" Or SaveAs Then
@@ -323,14 +326,14 @@ Public Class F_GBX
 		GBX0.GbxInertia = fTextboxToNumString(Me.TBI_getr.Text)
 
 		For i = 0 To Me.LvGears.Items.Count - 1
-			'GBX0.IsTCgear.Add(Me.LvGears.Items(i).SubItems(1).Text = "on" And i > 0)
-			GBX0.Igetr.Add(CSng(Me.LvGears.Items(i).SubItems(2).Text))
+			'GBX0.IsTCgear.Add(Me.LvGears.Items(i).SubItems(GearboxTbl.TorqueConverter).Text = "on" And i > 0)
+			GBX0.Igetr.Add(CSng(Me.LvGears.Items(i).SubItems(GearboxTbl.Ratio).Text))
 			GBX0.GetrMaps.Add(New cSubPath)
-			GBX0.GetrMap(i) = Me.LvGears.Items(i).SubItems(3).Text
+			GBX0.GetrMap(i) = Me.LvGears.Items(i).SubItems(GearboxTbl.LossMapEfficiency).Text
 			GBX0.gs_files.Add(New cSubPath)
-			GBX0.gsFile(i) = Me.LvGears.Items(i).SubItems(4).Text
+			GBX0.gsFile(i) = Me.LvGears.Items(i).SubItems(GearboxTbl.ShiftPolygons).Text
 			GBX0.FldFiles.Add(New cSubPath)
-			GBX0.FldFile(i) = Me.LvGears.Items(i).SubItems(5).Text
+			GBX0.FldFile(i) = Me.LvGears.Items(i).SubItems(GearboxTbl.FullLoadCurve).Text
 		Next
 
 		GBX0.gs_TorqueResv = fTextboxToNumString(Me.TbTqResv.Text)
@@ -547,12 +550,12 @@ Public Class F_GBX
 			GearDia.PnShiftPoly.Enabled = (Not Cfg.DeclMode And Me.LvGears.SelectedIndices(0) > 0)
 			GearDia.PnFld.Enabled = (Me.LvGears.SelectedIndices(0) > 0)
 			GearDia.GbxPath = fPATH(GbxFile)
-			GearDia.TbGear.Text = Me.LvGears.SelectedItems(0).SubItems(0).Text
-			GearDia.TbRatio.Text = Me.LvGears.SelectedItems(0).SubItems(2).Text
-			GearDia.TbMapPath.Text = Me.LvGears.SelectedItems(0).SubItems(3).Text
+			GearDia.TbGear.Text = Me.LvGears.SelectedItems(0).SubItems(GearboxTbl.GearNr).Text
+			GearDia.TbRatio.Text = Me.LvGears.SelectedItems(0).SubItems(GearboxTbl.Ratio).Text
+			GearDia.TbMapPath.Text = Me.LvGears.SelectedItems(0).SubItems(GearboxTbl.LossMapEfficiency).Text
 			If Me.LvGears.SelectedIndices(0) > 0 Then
-				GearDia.TbShiftPolyFile.Text = Me.LvGears.SelectedItems(0).SubItems(4).Text
-				GearDia.TbFld.Text = Me.LvGears.SelectedItems(0).SubItems(5).Text
+				GearDia.TbShiftPolyFile.Text = Me.LvGears.SelectedItems(0).SubItems(GearboxTbl.ShiftPolygons).Text
+				GearDia.TbFld.Text = Me.LvGears.SelectedItems(0).SubItems(GearboxTbl.FullLoadCurve).Text
 			Else
 				GearDia.TbShiftPolyFile.Text = ""
 				GearDia.TbFld.Text = ""
@@ -566,27 +569,20 @@ Public Class F_GBX
 
 			If GearDia.ShowDialog = Windows.Forms.DialogResult.OK Then
 
-				'If GearDia.ChIsTCgear.Checked Then
-				'	Me.LvGears.SelectedItems(0).SubItems(1).Text = "on"
-				'Else
-				'	If Me.ChTCon.Checked Then
-				'		Me.LvGears.SelectedItems(0).SubItems(1).Text = "off"
-				'	Else
-				Me.LvGears.SelectedItems(0).SubItems(1).Text = "-"
-				'	End If
-				'End If
+				'Me.LvGears.SelectedItems(0).SubItems(GearboxTbl.TorqueConverter).Text = "-"
 
-				Me.LvGears.SelectedItems(0).SubItems(2).Text = GearDia.TbRatio.Text
-				Me.LvGears.SelectedItems(0).SubItems(3).Text = GearDia.TbMapPath.Text
-				Me.LvGears.SelectedItems(0).SubItems(4).Text = GearDia.TbShiftPolyFile.Text
-				Me.LvGears.SelectedItems(0).SubItems(5).Text = GearDia.TbFld.Text
+
+				Me.LvGears.SelectedItems(0).SubItems(GearboxTbl.Ratio).Text = GearDia.TbRatio.Text
+				Me.LvGears.SelectedItems(0).SubItems(GearboxTbl.LossMapEfficiency).Text = GearDia.TbMapPath.Text
+				Me.LvGears.SelectedItems(0).SubItems(GearboxTbl.ShiftPolygons).Text = GearDia.TbShiftPolyFile.Text
+				Me.LvGears.SelectedItems(0).SubItems(GearboxTbl.FullLoadCurve).Text = GearDia.TbFld.Text
 
 				UpdatePic()
 				Change()
 
 			Else
 
-				If LvGears.SelectedItems(0).SubItems(2).Text = "" Then RemoveGear(True)
+				If LvGears.SelectedItems(0).SubItems(GearboxTbl.Ratio).Text = "" Then RemoveGear(True)
 
 			End If
 
@@ -607,16 +603,8 @@ Public Class F_GBX
 	Private Sub AddGear()
 		Dim lvi As ListViewItem
 
-		lvi = New ListViewItem(Me.LvGears.Items.Count.ToString("00"))
-		'If Me.ChTCon.Checked Then
-		'	lvi.SubItems.Add("off")
-		'Else
-		lvi.SubItems.Add("-")
-		'End If
-		lvi.SubItems.Add("")
-		lvi.SubItems.Add("")
-		lvi.SubItems.Add("")
-		lvi.SubItems.Add("")
+		lvi = CreateListviewItem(Me.LvGears.Items.Count.ToString("00"), "-", 1, "", "", "")
+
 		Me.LvGears.Items.Add(lvi)
 
 		lvi.EnsureVisible()
@@ -644,9 +632,9 @@ Public Class F_GBX
 
 		i = 0
 		For Each lv0 In Me.LvGears.Items
-			If lv0.SubItems(0).Text = "Axle" Then Continue For
+			If lv0.SubItems(GearboxTbl.GearNr).Text = "Axle" Then Continue For
 			i += 1
-			lv0.SubItems(0).Text = i.ToString("00")
+			lv0.SubItems(GearboxTbl.GearNr).Text = i.ToString("00")
 		Next
 
 		If i0 < Me.LvGears.Items.Count Then
@@ -727,12 +715,12 @@ Public Class F_GBX
 			If Me.LvGears.Items.Count > 1 Then
 
 				If Me.LvGears.SelectedItems.Count > 0 AndAlso Me.LvGears.SelectedIndices(0) > 0 Then
-					path = fFileRepl(Me.LvGears.SelectedItems(0).SubItems(4).Text, fPATH(GbxFile))
-					fldpath = fFileRepl(Me.LvGears.SelectedItems(0).SubItems(5).Text, fPATH(GbxFile))
+					path = fFileRepl(Me.LvGears.SelectedItems(0).SubItems(GearboxTbl.ShiftPolygons).Text, fPATH(GbxFile))
+					fldpath = fFileRepl(Me.LvGears.SelectedItems(0).SubItems(GearboxTbl.FullLoadCurve).Text, fPATH(GbxFile))
 					Gear = Me.LvGears.SelectedIndices(0)
 				Else
-					path = fFileRepl(Me.LvGears.Items(1).SubItems(4).Text, fPATH(GbxFile))
-					fldpath = fFileRepl(Me.LvGears.Items(1).SubItems(5).Text, fPATH(GbxFile))
+					path = fFileRepl(Me.LvGears.Items(1).SubItems(GearboxTbl.ShiftPolygons).Text, fPATH(GbxFile))
+					fldpath = fFileRepl(Me.LvGears.Items(1).SubItems(GearboxTbl.FullLoadCurve).Text, fPATH(GbxFile))
 					Gear = 1
 				End If
 
@@ -847,7 +835,7 @@ Public Class F_GBX
 						Dim engine As CombustionEngineData = ConvertToEngineData(FLD0, F_VECTO.n_idle)
 						Dim shiftLines As ShiftPolygon = DeclarationData.Gearbox.ComputeShiftPolygon(Gear - 1, engine.FullLoadCurve, gears,
 																									engine,
-																									Double.Parse(LvGears.Items(0).SubItems(2).Text, CultureInfo.InvariantCulture),
+																									Double.Parse(LvGears.Items(0).SubItems(GearboxTbl.Ratio).Text, CultureInfo.InvariantCulture),
 																									(vehicle.rdyn / 1000.0).SI(Of Meter))
 
 						s = New System.Windows.Forms.DataVisualization.Charting.Series
@@ -936,7 +924,9 @@ Public Class F_GBX
 		Dim value As Double
 
 		For i As Integer = 1 To gbx.Count - 1
-			If gbx(i).SubItems(2).Text <> "" AndAlso Double.TryParse(gbx(i).SubItems(2).Text, value) Then
+			If _
+				gbx(i).SubItems(GearboxTbl.Ratio).Text <> "" AndAlso Double.TryParse(gbx(i).SubItems(GearboxTbl.Ratio).Text, value) _
+				Then
 				retVal.Add(
 					New TransmissionInputData() _
 							With {.Ratio = Double.Parse(value, CultureInfo.InvariantCulture)})
@@ -975,17 +965,9 @@ Public Class F_GBX
 
 		For Each lv0 In Me.LvGears.Items
 
-			If lv0.SubItems(0).Text = "Axle" Then Continue For
+			If lv0.SubItems(GearboxTbl.GearNr).Text = "Axle" Then Continue For
 
-			'If Me.ChTCon.Checked Then
-			'	If lv0.Index = 1 Then
-			'		lv0.SubItems(1).Text = "on"
-			'	Else
-			'		lv0.SubItems(1).Text = "off"
-			'	End If
-			'Else
-			lv0.SubItems(1).Text = "-"
-			'End If
+			'lv0.SubItems(GearboxTbl.TorqueConverter).Text = "-"
 		Next
 	End Sub
 
