@@ -296,7 +296,7 @@ namespace TUGraz.VectoCore.Tests.Models.Simulation
 
 			var aux = new EngineAuxiliary(container);
 			AssertHelper.Exception<VectoException>(() => aux.AddMapping("NONEXISTING_AUX", null),
-				"driving cycle does not contain column for auxiliary: NONEXISTING_AUX");
+				"driving cycle does not contain column for auxiliary: AUX_NONEXISTING_AUX");
 		}
 
 		[TestMethod]

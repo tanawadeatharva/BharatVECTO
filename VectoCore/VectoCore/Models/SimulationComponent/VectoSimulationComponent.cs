@@ -93,7 +93,7 @@ namespace TUGraz.VectoCore.Models.SimulationComponent
 	}
 
 	public abstract class StatefulProviderComponent<TStateType, TProviderOutPort, TProviderInPort, TOutPort> :
-		StatefulVectoSimulationComponent<TStateType>
+			StatefulVectoSimulationComponent<TStateType>
 		where TStateType : new()
 		where TProviderOutPort : class
 		where TProviderInPort : class
@@ -112,7 +112,7 @@ namespace TUGraz.VectoCore.Models.SimulationComponent
 			return this as TProviderInPort;
 		}
 
-		public void Connect(TOutPort other)
+		public virtual void Connect(TOutPort other)
 		{
 			NextComponent = other;
 		}

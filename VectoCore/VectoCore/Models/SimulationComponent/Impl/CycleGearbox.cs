@@ -200,6 +200,16 @@ namespace TUGraz.VectoCore.Models.SimulationComponent.Impl
 				CurrentState.TorqueLossResult = inTorqueLossResult;
 				var inAngularVelocity = outAngularVelocity * ModelData.Gears[Gear].Ratio;
 
+				if (!inAngularVelocity.IsEqual(0)) {
+					// MQ 19.2.2016: check! inertia is related to output side, torque loss accounts to input side
+					CurrentState.InertiaTorqueLossOut =
+						Formulas.InertiaPower(outAngularVelocity, PreviousState.OutAngularVelocity, ModelData.Inertia, dt) /
+						avgOutAngularVelocity;
+					inTorque += CurrentState.InertiaTorqueLossOut / ModelData.Gears[Gear].Ratio;
+				} else {
+					CurrentState.InertiaTorqueLossOut = 0.SI<NewtonMeter>();
+				}
+
 				//todo mk-2016-08-17: aux loss from out-direction or in-direction of the gearbox?
 				if (Auxiliary != null)
 					inTorque += Auxiliary.PowerDemand(absTime, dt, outTorque, inTorque, outAngularVelocity, dryRun);
@@ -213,15 +223,7 @@ namespace TUGraz.VectoCore.Models.SimulationComponent.Impl
 				// this code has to be _after_ the check for a potential gear-shift!
 				// (the above block issues dry-run requests and thus may update the CurrentState!)
 				CurrentState.TransmissionTorqueLoss = inTorque - (outTorque / ModelData.Gears[Gear].Ratio);
-				if (!inAngularVelocity.IsEqual(0)) {
-					// MQ 19.2.2016: check! inertia is related to output side, torque loss accounts to input side
-					CurrentState.InertiaTorqueLossOut =
-						Formulas.InertiaPower(outAngularVelocity, PreviousState.OutAngularVelocity, ModelData.Inertia, dt) /
-						avgOutAngularVelocity;
-					inTorque += CurrentState.InertiaTorqueLossOut / ModelData.Gears[Gear].Ratio;
-				} else {
-					CurrentState.InertiaTorqueLossOut = 0.SI<NewtonMeter>();
-				}
+
 				CurrentState.SetState(inTorque, inAngularVelocity, outTorque, outAngularVelocity);
 				CurrentState.Gear = Gear;
 				// end critical section

@@ -132,9 +132,7 @@ namespace TUGraz.VectoCore.OutputData
 				FCAAUX_H, FCAAUX_KM, FCFINAL_H, FCFINAL_KM, FCFINAL_LITERPER100KM, FCFINAL_LITERPER100TKM, CO2_KM, CO2_TKM,
 				P_WHEEL_POS, P_BRAKE_LOSS, P_ANGLE_LOSS, P_TC_LOSS, P_CLUTCH_POS, P_CLUTCH_NEG, P_FCMAP_POS, E_AUX, E_AIR, E_ROLL,
 				E_GRAD, E_INERTIA, E_BRAKE, E_GBX_AXL_LOSS, E_RET_LOSS, E_TC_LOSS, E_ANGLE_LOSS, E_CLUTCH_POS, E_CLUTCH_NEG,
-				E_FCMAP_POS, ACC,
-				ACC_POS,
-				ACC_NEG, ACC_TIMESHARE, DEC_TIMESHARE, CRUISE_TIMESHARE, STOP_TIMESHARE
+				E_FCMAP_POS, ACC, ACC_POS, ACC_NEG, ACC_TIMESHARE, DEC_TIMESHARE, CRUISE_TIMESHARE, STOP_TIMESHARE
 			}.Select(x => new DataColumn(x, typeof(SI))).ToArray());
 		}
 
@@ -227,6 +225,7 @@ namespace TUGraz.VectoCore.OutputData
 			row[P_BRAKE_LOSS] = modData.PowerBrake().ConvertTo().Kilo.Watt;
 
 			row[P_ANGLE_LOSS] = modData.PowerAngle().ConvertTo().Kilo.Watt;
+
 			row[P_TC_LOSS] = modData.PowerTorqueConverter().ConvertTo().Kilo.Watt;
 
 			row[P_CLUTCH_POS] = modData.EnginePowerPositiveAverage().ConvertTo().Kilo.Watt;
@@ -258,12 +257,14 @@ namespace TUGraz.VectoCore.OutputData
 			row[E_CLUTCH_NEG] = modData.EngineWorkNegative().ConvertTo().Kilo.Watt.Hour;
 			row[E_FCMAP_POS] = modData.TotalEngineWorkPositive().ConvertTo().Kilo.Watt.Hour;
 
+			var acc = modData.AccelerationPer3Seconds();
+
 			row[ACC] = modData.AccelerationAverage();
-			row[ACC_POS] = modData.AccelerationsPositive();
-			row[ACC_NEG] = modData.AccelerationsNegative();
-			row[ACC_TIMESHARE] = modData.AccelerationTimeShare();
-			row[DEC_TIMESHARE] = modData.DecelerationTimeShare();
-			row[CRUISE_TIMESHARE] = modData.CruiseTimeShare();
+			row[ACC_POS] = acc.AccelerationsPositive();
+			row[ACC_NEG] = acc.AccelerationsNegative();
+			row[ACC_TIMESHARE] = acc.AccelerationTimeShare();
+			row[DEC_TIMESHARE] = acc.DecelerationTimeShare();
+			row[CRUISE_TIMESHARE] = acc.CruiseTimeShare();
 			row[STOP_TIMESHARE] = modData.StopTimeShare();
 		}
 

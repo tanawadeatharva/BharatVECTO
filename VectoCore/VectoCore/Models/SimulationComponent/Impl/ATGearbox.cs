@@ -46,10 +46,10 @@ namespace TUGraz.VectoCore.Models.SimulationComponent.Impl
 			}
 		}
 
-		public new void Connect(ITnOutPort other)
+		public override void Connect(ITnOutPort other)
 		{
-			NextComponent = other;
-			TorqueConverter.NextComponent = NextComponent;
+			base.Connect(other);
+			TorqueConverter.NextComponent = other;
 		}
 
 		public override IResponse Initialize(NewtonMeter outTorque, PerSecond outAngularVelocity)

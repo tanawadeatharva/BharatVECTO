@@ -329,6 +329,10 @@ namespace TUGraz.VectoCore.Models.Simulation.Data
 		[ModalResultField(typeof(double), name: "TCmu")] TorqueConverterTorqueRatio,
 
 		[ModalResultField(typeof(SI), "P_TC_out [kW]", outputFactor: 1e-3)] P_TC_out,
+
+		/// <summary>
+		///     [kW]	Power loss at the torque converter.
+		/// </summary>
 		[ModalResultField(typeof(SI), "P_TC_loss [kW]", outputFactor: 1e-3)] P_TC_loss,
 
 		/// <summary>
@@ -350,11 +354,6 @@ namespace TUGraz.VectoCore.Models.Simulation.Data
 		///     [1/min]	Torque converter output speed
 		/// </summary>
 		[ModalResultField(typeof(SI), "n_TC_in")] TC_angularSpeedIn,
-
-		/// <summary>
-		///     [kW]	Power loss at the torque converter.
-		/// </summary>
-		[ModalResultField(typeof(SI), caption: "P_tc_loss [kW]", outputFactor: 1e-3)] P_tc_loss,
 
 		/// <summary>
 		///     [m]	Altitude

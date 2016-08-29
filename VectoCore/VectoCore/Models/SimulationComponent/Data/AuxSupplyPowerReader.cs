@@ -31,10 +31,9 @@
 
 using System.Collections.Generic;
 using System.Data;
-using System.Globalization;
-using System.Linq;
 using TUGraz.VectoCommon.Utils;
 using TUGraz.VectoCore.Configuration;
+using TUGraz.VectoCore.Utils;
 
 namespace TUGraz.VectoCore.Models.SimulationComponent.Data
 {
@@ -48,13 +47,16 @@ namespace TUGraz.VectoCore.Models.SimulationComponent.Data
 		/// </summary>
 		public static Dictionary<string, Watt> GetAuxiliaries(this DataRow row)
 		{
-			return row.Table.Columns.Cast<DataColumn>()
-				.Where(col => {
-					var s = col.ColumnName;
-					return s[0] == 'A' && s[1] == 'u' && s[2] == 'x' && s[3] == '_';
-				})
-				.ToDictionary(col => "Aux_" + col.ColumnName.Substring(4).ToUpper(),
-					col => SIBase<Watt>.Create(double.Parse(row.Field<string>(col), CultureInfo.InvariantCulture) * Constants.Kilo));
+			var aux = new Dictionary<string, Watt>();
+			var cols = row.Table.Columns;
+			var auxLen = Constants.Auxiliaries.Prefix.Length;
+			for (var i = 0; i < cols.Count; i++) {
+				var c = cols[i].ColumnName.ToUpper();
+				if (c.Length >= auxLen && c.Substring(0, auxLen) == Constants.Auxiliaries.Prefix) {
+					aux[c.Substring(auxLen)] = (row.ParseDouble(i) * Constants.Kilo).SI<Watt>();
+				}
+			}
+			return aux;
 		}
 	}
 }
