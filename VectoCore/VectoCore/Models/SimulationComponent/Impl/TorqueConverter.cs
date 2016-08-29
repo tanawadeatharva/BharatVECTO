@@ -148,9 +148,8 @@ namespace TUGraz.VectoCore.Models.SimulationComponent.Impl
 			var avgOutVelocity = (PreviousState.OutAngularVelocity + CurrentState.OutAngularVelocity) / 2.0;
 			var avgInVelocity = (PreviousState.InAngularVelocity + CurrentState.InAngularVelocity) / 2.0;
 			container[ModalResultField.P_TC_out] = CurrentState.OutTorque * avgOutVelocity;
-			var tmp = CurrentState.InTorque * avgInVelocity -
-					CurrentState.OutTorque * avgOutVelocity;
-			container[ModalResultField.P_TC_loss] = tmp;
+			container[ModalResultField.P_TC_loss] = CurrentState.InTorque * avgInVelocity -
+													CurrentState.OutTorque * avgOutVelocity;
 		}
 
 		protected override void DoCommitSimulationStep()
