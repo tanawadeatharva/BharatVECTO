@@ -255,7 +255,7 @@ namespace TUGraz.VectoCore.Models.SimulationComponent.Impl
 
 			var retval = IdleController.Request(absTime, dt, 0.SI<NewtonMeter>(), null);
 			retval.ClutchPowerRequest = 0.SI<Watt>();
-			CurrentState.SetState(0.SI<NewtonMeter>(), retval.EngineSpeed, outTorque, outAngularVelocity);
+			CurrentState.SetState(0.SI<NewtonMeter>(), 0.SI<PerSecond>(), outTorque, outAngularVelocity);
 
 			TorqueConverter.Locked(CurrentState.InTorque, CurrentState.InAngularVelocity);
 

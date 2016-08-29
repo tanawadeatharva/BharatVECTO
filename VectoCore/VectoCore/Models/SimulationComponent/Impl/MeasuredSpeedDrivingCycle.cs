@@ -21,7 +21,7 @@ namespace TUGraz.VectoCore.Models.SimulationComponent.Impl
 	/// </summary>
 	public class MeasuredSpeedDrivingCycle :
 		StatefulProviderComponent
-			<MeasuredSpeedDrivingCycle.DrivingCycleState, ISimulationOutPort, IDriverDemandInPort, IDriverDemandOutPort>,
+		<MeasuredSpeedDrivingCycle.DrivingCycleState, ISimulationOutPort, IDriverDemandInPort, IDriverDemandOutPort>,
 		IDriverInfo, IDrivingCycleInfo, IMileageCounter, IDriverDemandInProvider, IDriverDemandInPort, ISimulationOutProvider,
 		ISimulationOutPort
 	{
@@ -134,19 +134,32 @@ namespace TUGraz.VectoCore.Models.SimulationComponent.Impl
 					.Case<ResponseGearShift>(() => response = NextComponent.Request(absTime, dt, acceleration, gradient))
 					.Case<ResponseUnderload>(r => {
 						DataBus.BrakePower = SearchAlgorithm.Search(DataBus.BrakePower, r.Delta, -r.Delta,
-							getYValue: result => RightSample.Current.Gear == 0
-								? ((ResponseDryRun)result).GearboxPowerRequest
-								: ((ResponseDryRun)result).DeltaDragLoad,
+							getYValue: result => DataBus.ClutchClosed(absTime)
+								? ((ResponseDryRun)result).DeltaDragLoad
+								: ((ResponseDryRun)result).GearboxPowerRequest,
 							evaluateFunction: x => {
 								DataBus.BrakePower = x;
 								return NextComponent.Request(absTime, dt, acceleration, gradient, true);
 							},
-							criterion: y => RightSample.Current.Gear == 0
-								? ((ResponseDryRun)y).GearboxPowerRequest.Value()
-								: ((ResponseDryRun)y).DeltaDragLoad.Value());
+							criterion: y => DataBus.ClutchClosed(absTime)
+								? ((ResponseDryRun)y).DeltaDragLoad.Value()
+								: ((ResponseDryRun)y).GearboxPowerRequest.Value());
 						Log.Info(
 							"Found operating point for braking. absTime: {0}, dt: {1}, acceleration: {2}, gradient: {3}, BrakePower: {4}",
 							absTime, dt, acceleration, gradient, DataBus.BrakePower);
+
+						if (DataBus.BrakePower.IsSmaller(0)) {
+							Log.Info(
+								"BrakePower was negative: {4}. Setting to 0 and searching for acceleration operating point. absTime: {0}, dt: {1}, acceleration: {2}, gradient: {3}",
+								absTime, dt, acceleration, gradient, DataBus.BrakePower);
+							DataBus.BrakePower = 0.SI<Watt>();
+							acceleration = SearchAlgorithm.Search(acceleration, r.Delta,
+								Constants.SimulationSettings.OperatingPointInitialSearchIntervalAccelerating,
+								getYValue: result => ((ResponseDryRun)result).DeltaFullLoad,
+								evaluateFunction: x => NextComponent.Request(absTime, dt, x, gradient, true),
+								criterion: y => ((ResponseDryRun)y).DeltaFullLoad.Value());
+						}
+
 						response = NextComponent.Request(absTime, dt, acceleration, gradient);
 					})
 					.Case<ResponseOverload>(r => {
@@ -155,7 +168,7 @@ namespace TUGraz.VectoCore.Models.SimulationComponent.Impl
 							getYValue: result => ((ResponseDryRun)result).DeltaFullLoad,
 							evaluateFunction: x => NextComponent.Request(absTime, dt, x, gradient, true),
 							criterion:
-								y => ((ResponseDryRun)y).DeltaFullLoad.Value());
+							y => ((ResponseDryRun)y).DeltaFullLoad.Value());
 						Log.Info(
 							"Found operating point for driver acceleration. absTime: {0}, dt: {1}, acceleration: {2}, gradient: {3}",
 							absTime,
