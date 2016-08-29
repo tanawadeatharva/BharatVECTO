@@ -246,7 +246,7 @@ namespace TUGraz.VectoCore.OutputData
 
 		public static WattSecond WorkTorqueConverter(this IModalDataContainer data)
 		{
-			return data.TimeIntegral<WattSecond>(ModalResultField.P_tc_loss);
+			return data.TimeIntegral<WattSecond>(ModalResultField.P_TC_loss);
 		}
 
 		public static Second Duration(this IModalDataContainer data)
@@ -317,7 +317,7 @@ namespace TUGraz.VectoCore.OutputData
 
 		public static Watt PowerTorqueConverter(this IModalDataContainer data)
 		{
-			return data.TimeIntegral<WattSecond>(ModalResultField.P_tc_loss) / data.Duration();
+			return data.TimeIntegral<WattSecond>(ModalResultField.P_TC_loss) / data.Duration();
 		}
 
 		public static Watt PowerWheelPositive(this IModalDataContainer data)
