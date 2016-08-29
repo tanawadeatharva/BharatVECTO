@@ -525,7 +525,7 @@ Public Class cVECTO
 
 					line = file.ReadLine
 
-					_laDesV.Add(CSng(line(0)) / 3.6)																																  'km/h => m/s !!!!
+					_laDesV.Add(CSng(line(0)) / 3.6)																																'km/h => m/s !!!!
 					_laDesMax.Add(CSng(line(1)))
 					_laDesMin.Add(CSng(line(2)))
 
@@ -546,97 +546,6 @@ Public Class cVECTO
 
 		Return True
 	End Function
-
-#Region "Aux"
-
-	Public Function AuxInit() As Boolean
-		Dim msgSrc = "VEH/AuxInit"
-		AuxRefs = New Dictionary(Of String, cAux)
-
-		If Cfg.DeclMode Then
-			For Each auxPathKv In AuxPaths
-				AuxRefs.Add(auxPathKv.Key, Nothing)
-			Next
-			Return True
-		End If
-
-		If DRI.AuxDef Xor AuxDef Then
-			If AuxDef Then
-				WorkerMsg(tMsgID.Err, "No auxiliary input defined in driving cycle!", msgSrc)
-				Return False
-			Else
-				WorkerMsg(tMsgID.Warn, "No auxiliary defined in vehicle file! Psupply input will be ignored!", msgSrc)
-				Return True
-			End If
-		End If
-
-		If Not (DRI.AuxDef Or AuxDef) Then
-			Return True
-		End If
-
-		Dim drIauxcheck = DRI.AuxComponents.Keys.ToDictionary(Function(auxId) auxId, Function(auxId) False)
-
-		For Each auxPathKv In AuxPaths
-			msgSrc = "VEH/AuxInit/" & auxPathKv.Key
-			If Not DRI.AuxComponents.ContainsKey(auxPathKv.Key) Then
-				WorkerMsg(tMsgID.Err, "No Psupply input defined in driving cycle for auxiliary '" & auxPathKv.Key & "'!", msgSrc)
-				Return False
-			End If
-
-			Dim aux0 = New cAux
-			aux0.Filepath = auxPathKv.Value.Path.FullPath
-
-			If Not aux0.Readfile Then
-				Return False
-			End If
-
-			AuxRefs.Add(auxPathKv.Key, aux0)
-			drIauxcheck(auxPathKv.Key) = True
-		Next
-
-		msgSrc = "VEH/AuxInit"
-
-		For Each auxId In DRI.AuxComponents.Keys
-			If Not drIauxcheck(auxId) Then
-				WorkerMsg(tMsgID.Warn, "Auxiliary '" & auxId & "' not found! Psupply input will be ignored!", msgSrc)
-			End If
-		Next
-
-		Return True
-	End Function
-
-	Public Function Paux(auxId As String, t As Integer, nU As Single) As Single
-		If Cfg.DeclMode Then Return Declaration.AuxPower(auxId)
-
-		If AuxDef Then
-			Dim aux0 = AuxRefs(auxId)
-			Dim psupply As Single = DRI.AuxComponents(auxId)(t)
-			If psupply < 0 Then
-				GoTo lbAuxError
-			End If
-
-			Dim px As Single = aux0.Paux(nU, psupply)
-			If px < 0 Then
-				GoTo lbAuxError
-			End If
-			Return px
-		Else
-			Return 0
-		End If
-
-lbAuxError:
-		MODdata.ModErrors.AuxNegative = auxId
-		Return 0
-	End Function
-
-	Public Function PauxSum(t As Integer, nU As Single) As Single
-		If AuxDef Then
-			Return AuxRefs.Keys.Sum(Function(auxId) Paux(auxId, t, nU))
-		End If
-		Return 0
-	End Function
-
-#End Region
 
 
 #Region "Properties"
@@ -750,56 +659,6 @@ lbAuxError:
 
 
 #End Region
-
-	Public Function ADesMax(v As Single) As Single
-		Dim i As Int32
-
-		'Extrapolation for x < x(1)
-		If _laDesV(0) >= v Then
-			If _laDesV(0) > v Then MODdata.ModErrors.DesMaxExtr = "v= " & v * 3.6 & "[km/h]"
-			i = 1
-			GoTo lbInt
-		End If
-
-		i = 0
-		Do While _laDesV(i) < v And i < _desMaxDim
-			i += 1
-		Loop
-
-		'Extrapolation for x > x(imax)
-		If _laDesV(i) < v Then
-			MODdata.ModErrors.DesMaxExtr = "v= " & v * 3.6 & "[km/h]"
-		End If
-
-lbInt:
-		'Interpolation
-		Return (v - _laDesV(i - 1)) * (_laDesMax(i) - _laDesMax(i - 1)) / (_laDesV(i) - _laDesV(i - 1)) + _laDesMax(i - 1)
-	End Function
-
-	Public Function ADesMin(v As Single) As Single
-		Dim i As Int32
-
-		'Extrapolation for x < x(1)
-		If _laDesV(0) >= v Then
-			If _laDesV(0) > v Then MODdata.ModErrors.DesMaxExtr = "v= " & v * 3.6 & "[km/h]"
-			i = 1
-			GoTo lbInt
-		End If
-
-		i = 0
-		Do While _laDesV(i) < v And i < _desMaxDim
-			i += 1
-		Loop
-
-		'Extrapolation for x > x(imax)
-		If _laDesV(i) < v Then
-			MODdata.ModErrors.DesMaxExtr = "v= " & v * 3.6 & "[km/h]"
-		End If
-
-lbInt:
-		'Interpolation
-		Return (v - _laDesV(i - 1)) * (_laDesMin(i) - _laDesMin(i - 1)) / (_laDesV(i) - _laDesV(i - 1)) + _laDesMin(i - 1)
-	End Function
 End Class
 
 

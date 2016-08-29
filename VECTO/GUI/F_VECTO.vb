@@ -1131,8 +1131,7 @@ lbDlog:
 
 					For i = 1 To GBX0.GearCount
 
-						FLD0.FilePath = GBX0.FldFile(i)
-						If FLD0.FilePath.Trim = "" Then FLD0.FilePath = ENG0.PathFLD
+						FLD0.FilePath = ENG0.PathFLD
 
 						If FLD0.ReadFile(True, False) Then
 

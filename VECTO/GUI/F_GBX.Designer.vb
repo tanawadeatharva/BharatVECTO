@@ -294,7 +294,7 @@ Partial Class F_GBX
 		'
 		'ColumnHeader6
 		'
-		Me.ColumnHeader6.Text = "Full Load Curve"
+		Me.ColumnHeader6.Text = "Max Torque"
 		Me.ColumnHeader6.Width = 95
 		'
 		'TBI_getr

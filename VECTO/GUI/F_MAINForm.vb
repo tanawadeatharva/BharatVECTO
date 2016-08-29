@@ -361,24 +361,7 @@ Public Class F_MAINForm
 
 #Region "BackgroundWorker Events"
 
-	'DoWork - Start Calculations
-	Private Sub BackgroundWorker1_DoWork(sender As Object, e As DoWorkEventArgs) _
-		Handles BackgroundWorker1.DoWork
-
-		'Prevent SLEEP
-		AllowSleepOFF()
-
-		If SetCulture Then
-			Try
-				Thread.CurrentThread.CurrentCulture = New CultureInfo("en-US")
-			Catch ex As Exception
-				GUImsg(tMsgID.Err, "Failed to set thread culture 'en-US'! Check system decimal- and group- separators!")
-			End Try
-		End If
-
-		e.Result = VECTO()
-	End Sub
-
+	
 	'Progress Report - Progressbar, Messages, etc.
 	Private Sub BackgroundWorker1_ProgressChanged(sender As Object,
 												e As ProgressChangedEventArgs) _

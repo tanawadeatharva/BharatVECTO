@@ -885,51 +885,51 @@ lbInt:
 		Report.MissionResults.Add(mr)
 	End Sub
 
-	Public Sub ReportAddResults()
-		Dim lr As New cReport.cLoadingResults
-		Dim t1 As Integer
-		Dim t As Integer
-		Dim Vquer As Single
-		Dim sum As Double
-		Dim d As Double
+	'Public Sub ReportAddResults()
+	'	Dim lr As New cReport.cLoadingResults
+	'	Dim t1 As Integer
+	'	Dim t As Integer
+	'	Dim Vquer As Single
+	'	Dim sum As Double
+	'	Dim d As Double
 
-		t1 = MODdata.tDim
+	'	t1 = MODdata.tDim
 
-		'Average Speed calculation
-		sum = 0
-		For t = 0 To t1
-			sum += MODdata.Vh.V(t)
-		Next
-		Vquer = 3.6 * sum / (t1 + 1)
+	'	'Average Speed calculation
+	'	sum = 0
+	'	For t = 0 To t1
+	'		sum += MODdata.Vh.V(t)
+	'	Next
+	'	Vquer = 3.6 * sum / (t1 + 1)
 
-		With lr
+	'	With lr
 
-			.Loading = VEH.Loading / 1000
-			.Speed = Vquer
-			.FCkm = (100 * MODdata.FCavgFinal / Vquer) / (Cfg.FuelDens * 1000)
-			.CO2km = Cfg.CO2perFC * (MODdata.FCavgFinal / Vquer)
-			If VEH.Loading > 0 Then
-				.FCtkm = .FCkm / .Loading
-				.CO2tkm = .CO2km / .Loading
-			End If
-			.FCerror = MODdata.FCerror
+	'		.Loading = VEH.Loading / 1000
+	'		.Speed = Vquer
+	'		.FCkm = (100 * MODdata.FCavgFinal / Vquer) / (Cfg.FuelDens * 1000)
+	'		.CO2km = Cfg.CO2perFC * (MODdata.FCavgFinal / Vquer)
+	'		If VEH.Loading > 0 Then
+	'			.FCtkm = .FCkm / .Loading
+	'			.CO2tkm = .CO2km / .Loading
+	'		End If
+	'		.FCerror = MODdata.FCerror
 
-			d = 0
-			MODdata.Vh.AltIntp(d, True)
-			For t = 0 To t1
-				.ActualSpeed.Add(MODdata.Vh.V(t) * 3.6)
-				.TargetSpeed.Add(MODdata.Vh.Vsoll(t) * 3.6)
-				d += MODdata.Vh.V(t)
-				.Distance.Add(CSng(d / 1000))
-				.Alt.Add(MODdata.Vh.AltIntp(d, False))
-				.nU.Add(MODdata.nU(t))
-				.Tq.Add(nPeToM(MODdata.nU(t), MODdata.Pe(t)))
-			Next
+	'		d = 0
+	'		MODdata.Vh.AltIntp(d, True)
+	'		For t = 0 To t1
+	'			.ActualSpeed.Add(MODdata.Vh.V(t) * 3.6)
+	'			.TargetSpeed.Add(MODdata.Vh.Vsoll(t) * 3.6)
+	'			d += MODdata.Vh.V(t)
+	'			.Distance.Add(CSng(d / 1000))
+	'			.Alt.Add(MODdata.Vh.AltIntp(d, False))
+	'			.nU.Add(MODdata.nU(t))
+	'			.Tq.Add(nPeToM(MODdata.nU(t), MODdata.Pe(t)))
+	'		Next
 
-		End With
+	'	End With
 
-		Report.CurrentMR.Results.Add(CurrentLoading, lr)
-	End Sub
+	'	Report.CurrentMR.Results.Add(CurrentLoading, lr)
+	'End Sub
 
 	Public Function WriteReport() As Boolean
 

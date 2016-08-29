@@ -31,7 +31,7 @@ Public Class F_GBX
 		Ratio = 1
 		LossMapEfficiency = 2
 		ShiftPolygons = 3
-		FullLoadCurve = 4
+		MaxTorque = 4
 	End Enum
 
 	Private GbxFile As String = ""
@@ -244,12 +244,11 @@ Public Class F_GBX
 			If i = 0 Then
 				'lv0 = New ListViewItem("Axle")
 				Me.LvGears.Items.Add(CreateListviewItem("Axle", "-", GBX0.Igetr(i), GBX0.GetrMap(i, True), GBX0.gsFile(i, True),
-														GBX0.FldFile(i, True)))
+														GBX0.MaxTorque(i)))
 			Else
 				'lv0 = New ListViewItem(i.ToString("00"))
 				Me.LvGears.Items.Add(CreateListviewItem(i.ToString("00"), "-", GBX0.Igetr(i), GBX0.GetrMap(i, True),
-														GBX0.gsFile(i, True),
-														GBX0.FldFile(i, True)))
+														GBX0.gsFile(i, True), GBX0.MaxTorque(i)))
 			End If
 
 		Next
@@ -334,8 +333,9 @@ Public Class F_GBX
 			GBX0.GetrMap(i) = Me.LvGears.Items(i).SubItems(GearboxTbl.LossMapEfficiency).Text
 			GBX0.gs_files.Add(New cSubPath)
 			GBX0.gsFile(i) = Me.LvGears.Items(i).SubItems(GearboxTbl.ShiftPolygons).Text
-			GBX0.FldFiles.Add(New cSubPath)
-			GBX0.FldFile(i) = Me.LvGears.Items(i).SubItems(GearboxTbl.FullLoadCurve).Text
+			'GBX0.FldFiles.Add(New cSubPath)
+			'GBX0.FldFile(i) = Me.LvGears.Items(i).SubItems(GearboxTbl.MaxTorque).Text
+			GBX0.MaxTorque.Add(LvGears.Items(i).SubItems(GearboxTbl.MaxTorque).Text)
 		Next
 
 		GBX0.gs_TorqueResv = fTextboxToNumString(Me.TbTqResv.Text)
@@ -558,10 +558,10 @@ Public Class F_GBX
 			GearDia.TbMapPath.Text = Me.LvGears.SelectedItems(0).SubItems(GearboxTbl.LossMapEfficiency).Text
 			If Me.LvGears.SelectedIndices(0) > 0 Then
 				GearDia.TbShiftPolyFile.Text = Me.LvGears.SelectedItems(0).SubItems(GearboxTbl.ShiftPolygons).Text
-				GearDia.TbFld.Text = Me.LvGears.SelectedItems(0).SubItems(GearboxTbl.FullLoadCurve).Text
+				GearDia.TbMaxTorque.Text = Me.LvGears.SelectedItems(0).SubItems(GearboxTbl.MaxTorque).Text
 			Else
 				GearDia.TbShiftPolyFile.Text = ""
-				GearDia.TbFld.Text = ""
+				GearDia.TbMaxTorque.Text = ""
 			End If
 
 			If LvGears.SelectedItems(0).Index = 0 Then
@@ -578,7 +578,7 @@ Public Class F_GBX
 				Me.LvGears.SelectedItems(0).SubItems(GearboxTbl.Ratio).Text = GearDia.TbRatio.Text
 				Me.LvGears.SelectedItems(0).SubItems(GearboxTbl.LossMapEfficiency).Text = GearDia.TbMapPath.Text
 				Me.LvGears.SelectedItems(0).SubItems(GearboxTbl.ShiftPolygons).Text = GearDia.TbShiftPolyFile.Text
-				Me.LvGears.SelectedItems(0).SubItems(GearboxTbl.FullLoadCurve).Text = GearDia.TbFld.Text
+				Me.LvGears.SelectedItems(0).SubItems(GearboxTbl.MaxTorque).Text = GearDia.TbMaxTorque.Text
 
 				UpdatePic()
 				Change()
@@ -719,21 +719,19 @@ Public Class F_GBX
 
 				If Me.LvGears.SelectedItems.Count > 0 AndAlso Me.LvGears.SelectedIndices(0) > 0 Then
 					path = fFileRepl(Me.LvGears.SelectedItems(0).SubItems(GearboxTbl.ShiftPolygons).Text, fPATH(GbxFile))
-					fldpath = fFileRepl(Me.LvGears.SelectedItems(0).SubItems(GearboxTbl.FullLoadCurve).Text, fPATH(GbxFile))
+					'fldpath = fFileRepl(Me.LvGears.SelectedItems(0).SubItems(GearboxTbl.MaxTorque).Text, fPATH(GbxFile))
 					Gear = Me.LvGears.SelectedIndices(0)
 				Else
 					path = fFileRepl(Me.LvGears.Items(1).SubItems(GearboxTbl.ShiftPolygons).Text, fPATH(GbxFile))
-					fldpath = fFileRepl(Me.LvGears.Items(1).SubItems(GearboxTbl.FullLoadCurve).Text, fPATH(GbxFile))
+					'fldpath = fFileRepl(Me.LvGears.Items(1).SubItems(GearboxTbl.MaxTorque).Text, fPATH(GbxFile))
 					Gear = 1
 				End If
 
 				f = New cFile_V3
 				ShiftOK = f.OpenRead(path)
 
-				If fldpath.Trim = "" Then
-					If F_VECTO.Visible AndAlso F_VECTO.FLDfile <> "" Then fldpath = F_VECTO.FLDfile
-				End If
-
+				 fldpath = F_VECTO.FLDfile
+				
 				fldOK = fldpath.Trim <> ""
 
 				If fldOK Then
@@ -834,7 +832,7 @@ Public Class F_GBX
 					Shiftpoly.SetGenericShiftPoly(FLD0, F_VECTO.n_idle)
 					'Dim fullLoadCurve As FullLoadCurve = ConvertToFullLoadCurve(FLD0.LnU, FLD0.LTq)
 					Dim gears As IList(Of ITransmissionInputData) = ConvertToGears(LvGears.Items)
-					If (gears.Count > 1) Then
+					If (Not AutomaticTransmission(CType(Me.CbGStype.SelectedIndex, tGearbox)) AndAlso gears.Count > 1) Then
 						Dim engine As CombustionEngineData = ConvertToEngineData(FLD0, F_VECTO.n_idle)
 						Dim shiftLines As ShiftPolygon = DeclarationData.Gearbox.ComputeShiftPolygon(Gear - 1, engine.FullLoadCurve, gears,
 																									engine,

@@ -88,9 +88,9 @@ Public Class GearboxGearDialog
 		End If
 	End Sub
 
-	Private Sub BtBrowseFld_Click(sender As Object, e As EventArgs) Handles BtBrowseFld.Click
-		If fbFLD.OpenDialog(fFileRepl(TbFld.Text, GbxPath)) Then
-			TbFld.Text = fFileWoDir(fbFLD.Files(0), GbxPath)
+	Private Sub BtBrowseFld_Click(sender As Object, e As EventArgs)
+		If fbFLD.OpenDialog(fFileRepl(TbMaxTorque.Text, GbxPath)) Then
+			TbMaxTorque.Text = fFileWoDir(fbFLD.Files(0), GbxPath)
 		End If
 	End Sub
 

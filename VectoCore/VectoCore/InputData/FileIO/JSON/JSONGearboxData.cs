@@ -42,6 +42,7 @@ using TUGraz.VectoCommon.Utils;
 using TUGraz.VectoCore.InputData.Impl;
 using TUGraz.VectoCore.Models.Declaration;
 using TUGraz.VectoCore.Models.Simulation.Data;
+using TUGraz.VectoCore.Utils;
 
 namespace TUGraz.VectoCore.InputData.FileIO.JSON
 {
@@ -66,6 +67,15 @@ namespace TUGraz.VectoCore.InputData.FileIO.JSON
 					resultGears.Add(CreateGear(i, gear));
 				}
 				return resultGears;
+			}
+		}
+
+		public override DataTable ShiftPolygon
+		{
+			get
+			{
+				return ReadTableData(Body.GetEx(JsonKeys.Gearbox_TorqueConverter)
+					.GetEx<string>("ShiftPolygon"), "TorqueConverter Shift Polygon");
 			}
 		}
 	}
@@ -174,6 +184,15 @@ namespace TUGraz.VectoCore.InputData.FileIO.JSON
 			get { return Body.GetEx<double>(JsonKeys.Gearbox_Inertia).SI<KilogramSquareMeter>(); }
 		}
 
+		public virtual DataTable ShiftPolygon
+		{
+			get
+			{
+				return ReadTableData(Body.GetEx(JsonKeys.Gearbox_Gears)[1].GetEx<string>("ShiftPolygon"),
+					"TorqueConverter Shift Polygon");
+			}
+		}
+
 		public Second TractionInterruption
 		{
 			get { return Body.GetEx<double>(JsonKeys.Gearbox_TractionInterruption).SI<Second>(); }
@@ -238,7 +257,10 @@ namespace TUGraz.VectoCore.InputData.FileIO.JSON
 			return new TransmissionInputData {
 				Gear = gearNumber,
 				Ratio = gear.GetEx<double>(JsonKeys.Gearbox_Gear_Ratio),
-				MaxTorque = gear["MaxTorque"] != null ? gear["MaxTorque"].Value<double>().SI<NewtonMeter>() : null,
+				MaxTorque =
+					gear["MaxTorque"] != null && !string.IsNullOrEmpty(gear["MaxTorque"].ToString())
+						? gear["MaxTorque"].Value<double>().SI<NewtonMeter>()
+						: null,
 				LossMap =
 					gear[JsonKeys.Gearbox_Gear_LossMapFile] != null
 						? ReadTableData(gear.GetEx<string>(JsonKeys.Gearbox_Gear_LossMapFile),
