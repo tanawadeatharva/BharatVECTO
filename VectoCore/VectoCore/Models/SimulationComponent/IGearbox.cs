@@ -30,11 +30,15 @@
 */
 
 using TUGraz.VectoCore.Models.Simulation.DataBus;
+using TUGraz.VectoCore.Models.SimulationComponent.Impl;
 
 namespace TUGraz.VectoCore.Models.SimulationComponent
 {
 	/// <summary>
 	/// Defines interfaces for a gearbox.
 	/// </summary>
-	public interface IGearbox : IPowerTrainComponent, IAuxOutProvider, IGearboxInfo {}
+	public interface IGearbox : IPowerTrainComponent, IAuxOutProvider, IGearboxInfo
+	{
+		PTOEngineCycleController PTOController { get; set; }
+	}
 }

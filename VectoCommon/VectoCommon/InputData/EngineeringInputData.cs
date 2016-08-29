@@ -106,6 +106,8 @@ namespace TUGraz.VectoCommon.InputData
 		/// The PTO Loss map for idling losses of the "consumer" part.
 		/// </summary>
 		DataTable PTOLossMap { get; }
+
+		DataTable PTOCycle { get; }
 	}
 
 	public interface IAxleEngineeringInputData : IAxleDeclarationInputData

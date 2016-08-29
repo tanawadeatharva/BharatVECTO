@@ -179,6 +179,9 @@
 	<data name="Vehicle_PTO_LossMapFile" xml:space="preserve">
     <value>LossMap</value>
   </data>
+	<data name="Vehicle_PTO_Cycle" xml:space="preserve">
+    <value>Cycle</value>
+  </data>
 	<data name="Vehicle_PTO_Type" xml:space="preserve">
     <value>Type</value>
   </data>

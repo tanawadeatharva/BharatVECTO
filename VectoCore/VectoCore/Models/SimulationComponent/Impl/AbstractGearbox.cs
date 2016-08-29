@@ -11,7 +11,8 @@ using TUGraz.VectoCore.Models.SimulationComponent.Data.Gearbox;
 namespace TUGraz.VectoCore.Models.SimulationComponent.Impl
 {
 	public abstract class AbstractGearbox<TStateType> :
-		StatefulProviderComponent<TStateType, ITnOutPort, ITnInPort, ITnOutPort>, ITnOutPort, ITnInPort, IGearbox, IClutchInfo
+			StatefulProviderComponent<TStateType, ITnOutPort, ITnInPort, ITnOutPort>, ITnOutPort, ITnInPort, IGearbox,
+			IClutchInfo
 		where TStateType : GearboxState, new()
 	{
 		/// <summary>
@@ -87,6 +88,7 @@ namespace TUGraz.VectoCore.Models.SimulationComponent.Impl
 		#endregion
 
 		public abstract bool ClutchClosed(Second absTime);
+		public PTOEngineCycleController PTOController { get; set; }
 	}
 
 	public class GearboxState : SimpleComponentState

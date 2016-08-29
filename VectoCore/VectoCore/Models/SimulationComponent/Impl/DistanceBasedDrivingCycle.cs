@@ -116,6 +116,7 @@ namespace TUGraz.VectoCore.Models.SimulationComponent.Impl
 							}
 						}
 					}
+
 					CurrentState.Response = DriveTimeInterval(absTime, dt);
 					return CurrentState.Response;
 				}

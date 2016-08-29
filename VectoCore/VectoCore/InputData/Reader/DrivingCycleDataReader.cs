@@ -55,6 +55,10 @@ namespace TUGraz.VectoCore.InputData.Reader
 		{
 			var cols = cycleData.Columns.Cast<DataColumn>().Select(c => c.ColumnName).ToArray();
 
+			if (PTOCycleDataParser.ValidateHeader(cols, false)) {
+				return CycleType.PTO;
+			}
+
 			if (PWheelCycleDataParser.ValidateHeader(cols, false)) {
 				return CycleType.PWheel;
 			}
@@ -86,6 +90,8 @@ namespace TUGraz.VectoCore.InputData.Reader
 					return new MeasuredSpeedGearDataParser();
 				case CycleType.MeasuredSpeed:
 					return new MeasuredSpeedDataParser();
+				case CycleType.PTO:
+					return new PTOCycleDataParser();
 				default:
 					throw new ArgumentOutOfRangeException("type");
 			}
@@ -294,6 +300,8 @@ namespace TUGraz.VectoCore.InputData.Reader
 
 		private static class Fields
 		{
+			public const string PTOTorque = "PTO Torque";
+			public const string EngineSpeedFull = "Engine Speed";
 			public const string PWheel = "Pwheel";
 			public const string Distance = "s";
 			public const string Time = "t";
@@ -637,6 +645,44 @@ namespace TUGraz.VectoCore.InputData.Reader
 
 				return CheckColumns(header, allowedCols, requiredCols, throwExceptions, allowAux) &&
 						CheckComboColumns(header, new[] { Fields.AirSpeedRelativeToVehicle, Fields.WindYawAngle }, throwExceptions);
+			}
+		}
+
+		/// <summary>
+		/// Parser for PTO Cycles.
+		/// </summary>
+		// <t> [s], <Engine Speed> [rpm], <PTO Torque> [Nm]
+		private class PTOCycleDataParser : AbstractCycleDataParser
+		{
+			public override IEnumerable<DrivingCycleData.DrivingCycleEntry> Parse(DataTable table, bool crossWindRequired)
+			{
+				ValidateHeader(table.Columns.Cast<DataColumn>().Select(col => col.ColumnName).ToArray());
+
+				var entries = table.Rows.Cast<DataRow>().Select(row => new DrivingCycleData.DrivingCycleEntry {
+					Time = row.ParseDouble(Fields.Time).SI<Second>(),
+					AngularVelocity = row.ParseDouble(Fields.EngineSpeedFull).RPMtoRad(),
+					Torque = row.ParseDouble(Fields.PTOTorque).SI<NewtonMeter>()
+				}).ToArray();
+
+				return entries;
+			}
+
+			public static bool ValidateHeader(string[] header, bool throwExceptions = true)
+			{
+				var requiredCols = new[] {
+					Fields.Time,
+					Fields.EngineSpeedFull,
+					Fields.PTOTorque
+				};
+				var allowedCols = new[] {
+					Fields.Time,
+					Fields.EngineSpeedFull,
+					Fields.PTOTorque
+				};
+
+				var allowAux = false;
+
+				return CheckColumns(header, allowedCols, requiredCols, throwExceptions, allowAux);
 			}
 		}
 	}

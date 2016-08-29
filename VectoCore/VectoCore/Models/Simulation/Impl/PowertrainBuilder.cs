@@ -79,7 +79,7 @@ namespace TUGraz.VectoCore.Models.Simulation.Impl
 			if (data.Cycle.CycleType != CycleType.EngineOnly) {
 				throw new VectoException("CycleType must be EngineOnly.");
 			}
-			
+
 			var container = new VehicleContainer(ExecutionMode.Engineering, _modData, _sumWriter) { RunData = data };
 			var cycle = new PowertrainDrivingCycle(container, data.Cycle);
 
@@ -104,7 +104,7 @@ namespace TUGraz.VectoCore.Models.Simulation.Impl
 
 			// PWheelCycle --> AxleGear --> CycleClutch --> Engine <-- Aux
 			new PWheelCycle(container, data.Cycle, data.AxleGearData.AxleGear.Ratio,
-				gearbox.ModelData.Gears.ToDictionary(g => g.Key, g => g.Value.Ratio))
+					gearbox.ModelData.Gears.ToDictionary(g => g.Key, g => g.Value.Ratio))
 				.AddComponent(new AxleGear(container, data.AxleGearData))
 				.AddComponent(data.AngularGearData != null ? new AngularGear(container, data.AngularGearData) : null)
 				.AddComponent(gearbox, data.Retarder, data.PTOTransmission, container)
@@ -187,8 +187,7 @@ namespace TUGraz.VectoCore.Models.Simulation.Impl
 			if (data.GearboxData.Type.ManualTransmission()) {
 				powertrain = powertrain.AddComponent(new Clutch(container, data.EngineData));
 			}
-			powertrain.AddComponent(new CombustionEngine(container, data.EngineData))
-				.AddAuxiliaries(container, data);
+			powertrain.AddComponent(new CombustionEngine(container, data.EngineData)).AddAuxiliaries(container, data);
 
 			_modData.HasTorqueConverter = data.GearboxData.Type.AutomaticTransmission();
 

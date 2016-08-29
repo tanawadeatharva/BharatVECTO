@@ -4,5 +4,6 @@ namespace TUGraz.VectoCore.Models.SimulationComponent.Data
 	{
 		public string TransmissionType;
 		public ILossMap LossMap;
+		public DrivingCycleData PTOCycle;
 	}
 }

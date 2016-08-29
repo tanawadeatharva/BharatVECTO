@@ -34,7 +34,6 @@ using System.Collections.Generic;
 using System.Data;
 using System.Linq;
 using Newtonsoft.Json.Linq;
-using TUGraz.VectoCommon.Exceptions;
 using TUGraz.VectoCommon.InputData;
 using TUGraz.VectoCommon.Models;
 using TUGraz.VectoCommon.Utils;
@@ -236,6 +235,11 @@ namespace TUGraz.VectoCore.InputData.FileIO.JSON
 			{
 				return ReadTableData(Body.GetEx(JsonKeys.Vehicle_PTO).GetEx<string>(JsonKeys.Vehicle_PTO_LossMapFile), "LossMap");
 			}
+		}
+
+		public DataTable PTOCycle
+		{
+			get { return ReadTableData(Body.GetEx(JsonKeys.Vehicle_PTO).GetEx<string>(JsonKeys.Vehicle_PTO_Cycle), "Cycle"); }
 		}
 
 		#endregion
