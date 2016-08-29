@@ -187,9 +187,9 @@ namespace TUGraz.VectoCore.InputData.FileIO.JSON
 		{
 			get
 			{
-					return Body.GetEx(JsonKeys.Vehicle_AngularGear)
-						.GetEx<string>(JsonKeys.Vehicle_AngularGear_Type)
-						.ParseEnum<AngularGearType>();
+				return Body.GetEx(JsonKeys.Vehicle_AngularGear)
+					.GetEx<string>(JsonKeys.Vehicle_AngularGear_Type)
+					.ParseEnum<AngularGearType>();
 			}
 		}
 
@@ -205,7 +205,7 @@ namespace TUGraz.VectoCore.InputData.FileIO.JSON
 				return ReadTableData(
 					Body.GetEx(JsonKeys.Vehicle_AngularGear)
 						.GetEx<string>(JsonKeys.Vehicle_AngularGear_LossMapFile),
-						"LossMap");
+					"LossMap");
 			}
 		}
 
@@ -222,11 +222,11 @@ namespace TUGraz.VectoCore.InputData.FileIO.JSON
 		{
 			get
 			{
-				try {
-					return Body.GetEx(JsonKeys.Vehicle_PTO).GetEx<string>(JsonKeys.Vehicle_PTO_Type);
-				} catch (Exception) {
-					return "None";
+				var pto = Body[JsonKeys.Vehicle_PTO];
+				if (pto != null) {
+					return pto[JsonKeys.Vehicle_PTO_Type].Value<string>();
 				}
+				return "None";
 			}
 		}
 

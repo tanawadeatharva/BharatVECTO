@@ -140,14 +140,13 @@ namespace TUGraz.VectoCore.InputData.Reader.DataObjectAdapter
 		internal AxleGearData CreateAxleGearData(IAxleGearInputData data, bool useEfficiencyFallback)
 		{
 			TransmissionLossMap axleLossMap;
-			try {
+			if (data.LossMap == null && useEfficiencyFallback) {
+				axleLossMap = TransmissionLossMapReader.Create(data.Efficiency, data.Ratio, "AxleGear");
+			} else {
 				axleLossMap = TransmissionLossMapReader.Create(data.LossMap, data.Ratio, "AxleGear");
-			} catch (InvalidFileFormatException) {
-				if (useEfficiencyFallback) {
-					axleLossMap = TransmissionLossMapReader.Create(data.Efficiency, data.Ratio, "AxleGear");
-				} else {
-					throw;
-				}
+			}
+			if (axleLossMap == null) {
+				throw new Exception("LossMap for AxleGear is missing.");
 			}
 
 			return new AxleGearData {
