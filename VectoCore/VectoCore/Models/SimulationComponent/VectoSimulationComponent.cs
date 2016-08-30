@@ -43,7 +43,7 @@ namespace TUGraz.VectoCore.Models.SimulationComponent
 	/// </summary>
 	public abstract class VectoSimulationComponent : LoggingObject
 	{
-		[NonSerialized] protected IDataBus DataBus;
+		[NonSerialized] protected readonly IDataBus DataBus;
 
 		/// <summary>
 		/// Constructor. Registers the component in the cockpit.
