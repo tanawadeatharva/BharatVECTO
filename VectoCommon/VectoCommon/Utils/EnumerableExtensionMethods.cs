@@ -32,6 +32,7 @@
 using System;
 using System.Collections.Generic;
 using System.Linq;
+using System.Runtime.CompilerServices;
 using TUGraz.VectoCommon.Models;
 
 namespace TUGraz.VectoCommon.Utils
@@ -43,6 +44,7 @@ namespace TUGraz.VectoCommon.Utils
 			return self.Select(s => s.ToDouble(defaultValue));
 		}
 
+		[MethodImpl(MethodImplOptions.AggressiveInlining)]
 		public static bool SequenceEqualFast<T>(this T[] self, T[] other) where T : IComparable
 		{
 			if (self.Equals(other)) {

@@ -387,13 +387,6 @@ namespace TUGraz.VectoCore.Tests.Utils
 		{
 			AssertHelper.AreRelativeEqual(-3, -3.SI().Value());
 			AssertHelper.AreRelativeEqual(3.SI(), (-3).SI().Abs());
-
-			AssertHelper.AreRelativeEqual(6.SI(), 36.SI().Sqrt());
-			AssertHelper.AreRelativeEqual(6.SI<NewtonMeter>(), (6.SI<NewtonMeter>() * 6.SI<NewtonMeter>()).Sqrt());
-			AssertHelper.AreRelativeEqual(6.SI().Second, 36.SI().Square.Second.Sqrt());
-
-			AssertHelper.Exception<VectoException>(() => 36.SI().Second.Sqrt(),
-				"The squareroot cannot be calculated because the Unit-Exponents are not even: [s]");
 		}
 
 		[TestMethod]
