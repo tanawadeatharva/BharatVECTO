@@ -108,7 +108,7 @@ namespace TUGraz.VectoCore.Models.Simulation.Impl
 				.AddComponent(new AxleGear(container, data.AxleGearData))
 				.AddComponent(data.AngularGearData != null ? new AngularGear(container, data.AngularGearData) : null)
 				.AddRetarderAndGearbox(data.Retarder, gearbox, container)
-				.AddComponent(new CycleClutch(container))
+				.AddComponent(new Clutch(container, data.EngineData))
 				.AddComponent(new CombustionEngine(container, data.EngineData, pt1Disabled: true))
 				.AddAuxiliaries(container, data);
 
@@ -124,7 +124,7 @@ namespace TUGraz.VectoCore.Models.Simulation.Impl
 			var container = new VehicleContainer(ExecutionMode.Engineering, _modData, _sumWriter) { RunData = data };
 
 			// MeasuredSpeedDrivingCycle --> vehicle --> wheels --> brakes 
-			// --> axleGear --> (retarder) --> CycleGearBox --> (retarder) --> CycleClutch --> engine <-- Aux
+			// --> axleGear --> (retarder) --> GearBox --> (retarder) --> Clutch --> engine <-- Aux
 			var powertrain = new MeasuredSpeedDrivingCycle(container, data.Cycle)
 				.AddComponent(new Vehicle(container, data.VehicleData))
 				.AddComponent(new Wheels(container, data.VehicleData.DynamicTyreRadius, data.VehicleData.WheelsInertia))
@@ -152,15 +152,17 @@ namespace TUGraz.VectoCore.Models.Simulation.Impl
 
 			// MeasuredSpeedDrivingCycle --> vehicle --> wheels --> brakes 
 			// --> axleGear --> (retarder) --> CycleGearBox --> (retarder) --> CycleClutch --> engine <-- Aux
-			new MeasuredSpeedDrivingCycle(container, data.Cycle)
+			var powertrain = new MeasuredSpeedDrivingCycle(container, data.Cycle)
 				.AddComponent(new Vehicle(container, data.VehicleData))
 				.AddComponent(new Wheels(container, data.VehicleData.DynamicTyreRadius, data.VehicleData.WheelsInertia))
 				.AddComponent(new Brakes(container))
 				.AddComponent(new AxleGear(container, data.AxleGearData))
 				.AddComponent(data.AngularGearData != null ? new AngularGear(container, data.AngularGearData) : null)
-				.AddRetarderAndGearbox(data.Retarder, new CycleGearbox(container, data.GearboxData), container)
-				.AddComponent(new CycleClutch(container))
-				.AddComponent(new CombustionEngine(container, data.EngineData))
+				.AddRetarderAndGearbox(data.Retarder, new CycleGearbox(container, data.GearboxData), container);
+			if (data.GearboxData.Type.ManualTransmission()) {
+				powertrain = powertrain.AddComponent(new CycleClutch(container));
+			}
+			powertrain.AddComponent(new CombustionEngine(container, data.EngineData))
 				.AddAuxiliaries(container, data);
 
 			return container;

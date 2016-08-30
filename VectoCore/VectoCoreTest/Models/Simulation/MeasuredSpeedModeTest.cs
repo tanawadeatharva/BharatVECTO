@@ -438,6 +438,15 @@ namespace TUGraz.VectoCore.Tests.Models.Simulation
 		}
 
 		[TestMethod]
+		public void MeasuredSpeed_Gear_AT_Run()
+		{
+			RunJob(@"TestData\MeasuredSpeed\MeasuredSpeedGearAT.vecto",
+				@"TestData\MeasuredSpeed\Results\MeasuredSpeedGear_MeasuredSpeed_GearAT_SORT.vmod",
+				@"TestData\MeasuredSpeed\MeasuredSpeedGear_MeasuredSpeed_GearAT_SORT.vmod",
+				@"TestData\MeasuredSpeed\Results\MeasuredSpeedGearAT.vsum", @"TestData\MeasuredSpeed\MeasuredSpeedGearAT.vsum");
+		}
+
+		[TestMethod]
 		public void VcdbTest()
 		{
 			var tbl = VectoCSVFile.Read(@"TestData/MeasuredSpeed/VairBetaFull.vcdb");
