@@ -5,9 +5,10 @@ using System.Linq;
 using TUGraz.VectoCommon.Exceptions;
 using TUGraz.VectoCommon.Models;
 using TUGraz.VectoCommon.Utils;
+using TUGraz.VectoCore.Models.SimulationComponent.Data.Gearbox;
 using TUGraz.VectoCore.Utils;
 
-namespace TUGraz.VectoCore.Models.SimulationComponent.Data.Gearbox
+namespace TUGraz.VectoCore.InputData.Reader.ComponentData
 {
 	public sealed class TransmissionLossMapReader
 	{
@@ -80,9 +81,9 @@ namespace TUGraz.VectoCore.Models.SimulationComponent.Data.Gearbox
 
 		private static bool HeaderIsValid(DataColumnCollection columns)
 		{
-			return columns.Contains(TransmissionLossMapReader.Fields.InputSpeed) &&
-					columns.Contains(TransmissionLossMapReader.Fields.InputTorque) &&
-					columns.Contains(TransmissionLossMapReader.Fields.TorqeLoss);
+			return columns.Contains(Fields.InputSpeed) &&
+					columns.Contains(Fields.InputTorque) &&
+					columns.Contains(Fields.TorqeLoss);
 		}
 
 		private static List<TransmissionLossMap.GearLossMapEntry> CreateFromColumnNames(DataTable data)

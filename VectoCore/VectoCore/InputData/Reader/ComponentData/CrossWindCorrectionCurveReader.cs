@@ -38,7 +38,7 @@ using TUGraz.VectoCommon.Models;
 using TUGraz.VectoCommon.Utils;
 using TUGraz.VectoCore.Utils;
 
-namespace TUGraz.VectoCore.Models.SimulationComponent.Data
+namespace TUGraz.VectoCore.InputData.Reader.ComponentData
 {
 	public class CrossWindCorrectionCurveReader : LoggingObject
 	{

@@ -29,12 +29,10 @@
 *   Martin Rexeis, rexeis@ivt.tugraz.at, IVT, Graz University of Technology
 */
 
-using System.Diagnostics;
 using TUGraz.VectoCommon.Exceptions;
 using TUGraz.VectoCommon.Models;
 using TUGraz.VectoCommon.Utils;
 using TUGraz.VectoCore.Configuration;
-using TUGraz.VectoCore.Models.Connector.Ports;
 using TUGraz.VectoCore.Models.Connector.Ports.Impl;
 using TUGraz.VectoCore.Models.Simulation;
 using TUGraz.VectoCore.Models.Simulation.Data;
@@ -45,8 +43,7 @@ using TUGraz.VectoCore.Utils;
 
 namespace TUGraz.VectoCore.Models.SimulationComponent.Impl
 {
-	public class CycleGearbox : AbstractGearbox<GearboxState>, IGearbox, ITnOutPort, ITnInPort,
-		IClutchInfo
+	public class CycleGearbox : AbstractGearbox<GearboxState>, IGearbox, IClutchInfo
 	{
 		public CycleGearbox(IVehicleContainer container, GearboxData gearboxModelData)
 			: base(container, gearboxModelData) {}
@@ -100,7 +97,7 @@ namespace TUGraz.VectoCore.Models.SimulationComponent.Impl
 			var inTorque = outTorque / ModelData.Gears[Gear].Ratio - inTorqueLossResult.Value;
 
 			if (!inAngularVelocity.IsEqual(0)) {
-				var alpha = (ModelData.Inertia.IsEqual(0))
+				var alpha = ModelData.Inertia.IsEqual(0)
 					? 0.SI<PerSquareSecond>()
 					: outTorque / ModelData.Inertia;
 

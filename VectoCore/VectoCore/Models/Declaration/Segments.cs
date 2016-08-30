@@ -196,7 +196,7 @@ namespace TUGraz.VectoCore.Models.Declaration
 
 		private static string GetMissionSuffix(MissionType missionType)
 		{
-			return (missionType == MissionType.LongHaul ? "-longhaul" : "-other");
+			return missionType == MissionType.LongHaul ? "-longhaul" : "-other";
 		}
 	}
 }

@@ -462,7 +462,7 @@ namespace TUGraz.VectoCore.Models.SimulationComponent.Impl
 					if ((Driver.DataBus.Distance + ds).IsSmaller(nextAction.TriggerDistance - newBrakingDistance)) {
 						return response;
 					}
-					newds = (nextAction.TriggerDistance - newBrakingDistance) - Driver.DataBus.Distance -
+					newds = nextAction.TriggerDistance - newBrakingDistance - Driver.DataBus.Distance -
 							Constants.SimulationSettings.DriverActionDistanceTolerance / 2;
 					break;
 				default:
@@ -583,11 +583,9 @@ namespace TUGraz.VectoCore.Models.SimulationComponent.Impl
 						}).
 						Case<ResponseOverload>(r => {
 							// limiting deceleration while coast may result in an overload => issue brakes to decelerate with driver's max deceleration
-							if (DataBus.ClutchClosed(absTime)) {
-								response = Driver.DrivingActionAccelerate(absTime, ds, targetVelocity, gradient);
-							} else {
-								response = Driver.DrivingActionRoll(absTime, ds, targetVelocity, gradient);
-							}
+							response = DataBus.ClutchClosed(absTime)
+								? Driver.DrivingActionAccelerate(absTime, ds, targetVelocity, gradient)
+								: Driver.DrivingActionRoll(absTime, ds, targetVelocity, gradient);
 							//Phase = BrakingPhase.Brake;
 						}).
 						Case<ResponseDrivingCycleDistanceExceeded>(r => {

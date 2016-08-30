@@ -29,9 +29,6 @@
 *   Martin Rexeis, rexeis@ivt.tugraz.at, IVT, Graz University of Technology
 */
 
-using System;
-using System.ComponentModel;
-
 namespace TUGraz.VectoCore.Models.Simulation
 {
 	/// <summary>

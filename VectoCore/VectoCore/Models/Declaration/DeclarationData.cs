@@ -243,8 +243,9 @@ namespace TUGraz.VectoCore.Models.Declaration
 			public static ShiftPolygon ComputeShiftPolygon(int gear, FullLoadCurve fullLoadCurve,
 				IList<ITransmissionInputData> gears, CombustionEngineData engine, double axlegearRatio, Meter dynamicTyreRadius)
 			{
-				if (gears.Count < 2)
+				if (gears.Count < 2) {
 					throw new VectoException("ComputeShiftPolygon needs at least 2 gears. {0} gears given.", gears.Count);
+				}
 
 				// ReSharper disable once InconsistentNaming
 				var engineSpeed85kmhLastGear = ComputeEngineSpeed85kmh(gears[gears.Count - 1], axlegearRatio, dynamicTyreRadius);
@@ -286,7 +287,7 @@ namespace TUGraz.VectoCore.Models.Declaration
 					return new ShiftPolygon(downShift, upShift);
 				}
 
-				var gearRatio = gears[(int)gear].Ratio / gears[(int)(gear + 1)].Ratio;
+				var gearRatio = gears[gear].Ratio / gears[gear + 1].Ratio;
 				var rpmMarginFactor = 1 + ShiftPolygonRPMMargin / 100.0;
 
 				// ReSharper disable InconsistentNaming
@@ -353,7 +354,9 @@ namespace TUGraz.VectoCore.Models.Declaration
 			{
 				var intersections = new List<Point>();
 				// compute all intersection points between both line segments
+				// ReSharper disable once LoopCanBeConvertedToQuery
 				foreach (var origLine in orig.Pairwise(Edge.Create)) {
+					// ReSharper disable once LoopCanBeConvertedToQuery
 					foreach (var transformedLine in transformedDownshift.Pairwise(Edge.Create)) {
 						var isect = VectoMath.Intersect(origLine, transformedLine);
 						if (isect != null) {

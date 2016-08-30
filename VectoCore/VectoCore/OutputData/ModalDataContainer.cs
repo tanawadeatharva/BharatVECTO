@@ -310,7 +310,7 @@ namespace TUGraz.VectoCore.OutputData
 
 				object[] remainingRow = null;
 				var gearsList = new Dictionary<object, Second>(3);
-				var v_act = data.Rows.Cast<DataRow>().First().Field<MeterPerSecond>((int)ModalResultField.v_act);
+				var vAct = data.Rows.Cast<DataRow>().First().Field<MeterPerSecond>((int)ModalResultField.v_act);
 
 				foreach (DataRow row in data.Rows) {
 					var currentDt = row.Field<Second>((int)ModalResultField.simulationInterval);
@@ -324,8 +324,8 @@ namespace TUGraz.VectoCore.OutputData
 						var gear = row[(int)ModalResultField.Gear];
 						gearsList[gear] = gearsList.GetValueOrZero(gear) + diffDt;
 
-						distance += diffDt * v_act + diffDt * diffDt * (MeterPerSquareSecond)row[(int)ModalResultField.acc] / 2;
-						v_act += diffDt * (MeterPerSquareSecond)row[(int)ModalResultField.acc];
+						distance += diffDt * vAct + diffDt * diffDt * (MeterPerSquareSecond)row[(int)ModalResultField.acc] / 2;
+						vAct += diffDt * (MeterPerSquareSecond)row[(int)ModalResultField.acc];
 						r.ItemArray = AddRow(remainingRow, MultiplyRow(row.ItemArray, diffDt));
 						absTime += diffDt;
 
@@ -333,7 +333,7 @@ namespace TUGraz.VectoCore.OutputData
 						r[(int)ModalResultField.simulationInterval] = 1.SI<Second>();
 						r[(int)ModalResultField.Gear] = gearsList.MaxBy(kv => kv.Value).Key;
 						r[(int)ModalResultField.dist] = distance;
-						r[(int)ModalResultField.v_act] = v_act;
+						r[(int)ModalResultField.v_act] = vAct;
 
 						gearsList.Clear();
 						results.Rows.Add(r);
@@ -349,13 +349,13 @@ namespace TUGraz.VectoCore.OutputData
 						var r = results.NewRow();
 						r.ItemArray = row.ItemArray;
 						absTime += dt;
-						distance += dt * v_act + dt * dt * (MeterPerSquareSecond)row[(int)ModalResultField.acc] / 2;
-						v_act += dt * (MeterPerSquareSecond)row[(int)ModalResultField.acc];
+						distance += dt * vAct + dt * dt * (MeterPerSquareSecond)row[(int)ModalResultField.acc] / 2;
+						vAct += dt * (MeterPerSquareSecond)row[(int)ModalResultField.acc];
 
 						r[(int)ModalResultField.time] = absTime;
 						r[(int)ModalResultField.simulationInterval] = dt;
 						r[(int)ModalResultField.dist] = distance;
-						r[(int)ModalResultField.v_act] = v_act;
+						r[(int)ModalResultField.v_act] = vAct;
 						results.Rows.Add(r);
 					}
 
@@ -364,8 +364,8 @@ namespace TUGraz.VectoCore.OutputData
 						var gear = row[(int)ModalResultField.Gear];
 						gearsList[gear] = gearsList.GetValueOrZero(gear) + currentDt;
 
-						distance += currentDt * v_act + currentDt * currentDt * (MeterPerSquareSecond)row[(int)ModalResultField.acc] / 2;
-						v_act += currentDt * (MeterPerSquareSecond)row[(int)ModalResultField.acc];
+						distance += currentDt * vAct + currentDt * currentDt * (MeterPerSquareSecond)row[(int)ModalResultField.acc] / 2;
+						vAct += currentDt * (MeterPerSquareSecond)row[(int)ModalResultField.acc];
 						remainingRow = AddRow(remainingRow, MultiplyRow(row.ItemArray, currentDt));
 						remainingDt += currentDt;
 						absTime += currentDt;
@@ -383,15 +383,15 @@ namespace TUGraz.VectoCore.OutputData
 					var r = results.NewRow();
 
 					r.ItemArray = MultiplyRow(remainingRow, 1 / remainingDt).ToArray();
-					distance += remainingDt * v_act +
+					distance += remainingDt * vAct +
 								remainingDt * remainingDt * (MeterPerSquareSecond)last[(int)ModalResultField.acc] / 2;
-					v_act += remainingDt * (MeterPerSquareSecond)last[(int)ModalResultField.acc];
+					vAct += remainingDt * (MeterPerSquareSecond)last[(int)ModalResultField.acc];
 
 					r[(int)ModalResultField.time] = VectoMath.Ceiling(absTime);
 					r[(int)ModalResultField.simulationInterval] = 1.SI<Second>();
 					r[(int)ModalResultField.Gear] = gearsList.MaxBy(kv => kv.Value).Key;
 					r[(int)ModalResultField.dist] = distance;
-					r[(int)ModalResultField.v_act] = v_act;
+					r[(int)ModalResultField.v_act] = vAct;
 					results.Rows.Add(r);
 				}
 

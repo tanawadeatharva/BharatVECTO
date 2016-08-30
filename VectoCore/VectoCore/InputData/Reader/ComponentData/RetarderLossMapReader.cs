@@ -5,9 +5,10 @@ using System.Linq;
 using TUGraz.VectoCommon.Exceptions;
 using TUGraz.VectoCommon.Models;
 using TUGraz.VectoCommon.Utils;
+using TUGraz.VectoCore.Models.SimulationComponent.Data;
 using TUGraz.VectoCore.Utils;
 
-namespace TUGraz.VectoCore.Models.SimulationComponent.Data
+namespace TUGraz.VectoCore.InputData.Reader.ComponentData
 {
 	public class RetarderLossMapReader
 	{
@@ -59,8 +60,8 @@ namespace TUGraz.VectoCore.Models.SimulationComponent.Data
 		{
 			return data.Rows.Cast<DataRow>()
 				.Select(row => new RetarderLossMap.RetarderLossEntry {
-					RetarderSpeed = DataTableExtensionMethods.ParseDouble(row, (string)Fields.RetarderSpeed).RPMtoRad(),
-					TorqueLoss = DataTableExtensionMethods.ParseDouble(row, (string)Fields.TorqueLoss).SI<NewtonMeter>()
+					RetarderSpeed = row.ParseDouble(Fields.RetarderSpeed).RPMtoRad(),
+					TorqueLoss = row.ParseDouble(Fields.TorqueLoss).SI<NewtonMeter>()
 				}).ToList();
 		}
 

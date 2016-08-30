@@ -6,9 +6,10 @@ using System.Linq;
 using TUGraz.VectoCommon.Exceptions;
 using TUGraz.VectoCommon.Models;
 using TUGraz.VectoCommon.Utils;
+using TUGraz.VectoCore.Models.SimulationComponent.Data;
 using TUGraz.VectoCore.Utils;
 
-namespace TUGraz.VectoCore.Models.SimulationComponent.Data
+namespace TUGraz.VectoCore.InputData.Reader.ComponentData
 {
 	public class AccelerationCurveReader
 	{
@@ -43,7 +44,7 @@ namespace TUGraz.VectoCore.Models.SimulationComponent.Data
 			}
 			LoggingObject.Logger<AccelerationCurveData>()
 				.Warn("Acceleration Curve: Header Line is not valid. Expected: '{0}, {1}, {2}', Got: {3}",
-					Fields.Velocity, AccelerationCurveReader.Fields.Acceleration,
+					Fields.Velocity, Fields.Acceleration,
 					Fields.Deceleration,
 					", ".Join(data.Columns.Cast<DataColumn>().Select(c => c.ColumnName)));
 			return CreateFromColumnIndizes(data);

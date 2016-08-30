@@ -170,7 +170,7 @@ namespace TUGraz.VectoCore.Models.SimulationComponent.Data
 
 		public static ValidationResult ValidateVehicleData(VehicleData vehicleData, ValidationContext validationContext)
 		{
-			var mode = SimulationComponentData.GetExecutionMode(validationContext);
+			var mode = GetExecutionMode(validationContext);
 
 			var weightShareSum = vehicleData.AxleData.Sum(axle => axle.AxleWeightShare);
 			if (!weightShareSum.IsEqual(1.0, 1E-10)) {

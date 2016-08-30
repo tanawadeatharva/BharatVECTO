@@ -29,20 +29,16 @@
 *   Martin Rexeis, rexeis@ivt.tugraz.at, IVT, Graz University of Technology
 */
 
-using System;
 using System.Collections.Generic;
 using System.Data;
 using System.Linq;
 using Newtonsoft.Json.Linq;
-using Org.BouncyCastle.Asn1.Mozilla;
 using TUGraz.VectoCommon.Exceptions;
 using TUGraz.VectoCommon.InputData;
 using TUGraz.VectoCommon.Models;
 using TUGraz.VectoCommon.Utils;
 using TUGraz.VectoCore.InputData.Impl;
 using TUGraz.VectoCore.Models.Declaration;
-using TUGraz.VectoCore.Models.Simulation.Data;
-using TUGraz.VectoCore.Utils;
 
 namespace TUGraz.VectoCore.InputData.FileIO.JSON
 {
@@ -210,11 +206,9 @@ namespace TUGraz.VectoCore.InputData.FileIO.JSON
 					var torqueConverter = gear.GetEx<bool>(JsonKeys.Gearbox_Gear_TCactive);
 
 					if (torqueConverter) {
-						if (gears[i + 1].GetEx<bool>(JsonKeys.Gearbox_Gear_TCactive)) {
-							resultGears.Add(CreateGear(gearNr, gear));
-						} else {
-							resultGears.Add(CreateTorqueConverterGear(gearNr, gear, gears[++i]));
-						}
+						resultGears.Add(gears[i + 1].GetEx<bool>(JsonKeys.Gearbox_Gear_TCactive)
+							? CreateGear(gearNr, gear)
+							: CreateTorqueConverterGear(gearNr, gear, gears[++i]));
 					} else {
 						resultGears.Add(CreateGear(gearNr, gear));
 					}
