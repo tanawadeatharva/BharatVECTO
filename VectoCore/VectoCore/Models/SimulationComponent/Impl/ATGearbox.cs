@@ -20,7 +20,7 @@ namespace TUGraz.VectoCore.Models.SimulationComponent.Impl
 
 		protected internal readonly IShiftStrategy Strategy;
 
-		protected TorqueConverter TorqueConverter;
+		protected internal TorqueConverter TorqueConverter;
 
 		public Second LastShift { get; private set; }
 

@@ -110,7 +110,8 @@ namespace TUGraz.VectoCore.Models.SimulationComponent.Impl
 			return retVal;
 		}
 
-		protected TorqueConverterOperatingPoint FindOperatingPoint(NewtonMeter outTorque, PerSecond outAngularVelocity)
+		protected internal TorqueConverterOperatingPoint FindOperatingPoint(NewtonMeter outTorque,
+			PerSecond outAngularVelocity)
 		{
 			try {
 				var operatingPoint = ModelData.FindOperatingPoint(outTorque, outAngularVelocity);
