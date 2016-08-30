@@ -1,4 +1,4 @@
-M_shift in Nm,n_down in rpm,n_up in rpm
--200,600,800
-0,600,800
-3000,600,800
+engine torque [Nm],downshift rpm [1/min],upshift rpm [1/min]
+-200,700,800
+0,700,800
+3000,700,800

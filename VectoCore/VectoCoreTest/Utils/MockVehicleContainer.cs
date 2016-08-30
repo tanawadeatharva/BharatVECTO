@@ -92,6 +92,11 @@ namespace TUGraz.VectoCore.Tests.Utils
 			get { return Engine.EngineN95hSpeed; }
 		}
 
+		public PerSecond EngineN80hSpeed
+		{
+			get { return Engine.EngineN80hSpeed; }
+		}
+
 		public MeterPerSecond VehicleSpeed { get; set; }
 		public Kilogram VehicleMass { get; set; }
 		public Kilogram VehicleLoading { get; set; }
