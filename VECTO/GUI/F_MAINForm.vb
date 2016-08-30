@@ -125,6 +125,7 @@ Public Class F_MAINForm
 		fbVEH = New cFileBrowser("vveh")
 		fbMAP = New cFileBrowser("vmap")
 		fbDRI = New cFileBrowser("vdri")
+		fbFLD = New cFileBrowser("vfld")
 		fbENG = New cFileBrowser("veng")
 		fbGBX = New cFileBrowser("vgbx")
 		fbACC = New cFileBrowser("vacc")
@@ -357,7 +358,7 @@ Public Class F_MAINForm
 
 #Region "BackgroundWorker Events"
 
-	
+
 	'Progress Report - Progressbar, Messages, etc.
 	Private Sub BackgroundWorker1_ProgressChanged(sender As Object,
 												e As ProgressChangedEventArgs) _
@@ -1645,7 +1646,8 @@ lbFound:
 				sender.ReportProgress(100,
 									New _
 										With {.Target = "ListBox",
-										.Message = String.Format("PDF-Report for '{0}' written to {1}", Path.GetFileName(job), report), .Link = "<RUN>" + report})
+										.Message = String.Format("PDF-Report for '{0}' written to {1}", Path.GetFileName(job), report),
+										.Link = "<RUN>" + report})
 			End If
 		Next
 
@@ -2739,7 +2741,6 @@ Lb1:
 
 	Private Sub LvMsg_MouseUp(sender As Object, e As MouseEventArgs) Handles LvMsg.MouseUp
 		mouseDownOnListView = False
-		
 	End Sub
 
 	Private Sub LvGEN_MouseUp(sender As Object, e As MouseEventArgs) Handles LvGEN.MouseUp
