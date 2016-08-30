@@ -142,7 +142,7 @@
     <Compile Include="InputData\Reader\ComponentData\TorqueConverterDataReader.cs" />
     <Compile Include="InputData\Reader\ComponentData\AuxiliaryDataReader.cs" />
     <Compile Include="Models\SimulationComponent\Data\Engine\FuelConsumptionMapReader.cs" />
-    <Compile Include="Models\SimulationComponent\Data\PTOTransmissionData.cs" />
+    <Compile Include="Models\SimulationComponent\Data\PTOData.cs" />
     <Compile Include="Models\SimulationComponent\ILossMap.cs" />
     <Compile Include="Models\SimulationComponent\Data\PTOLossMap.cs" />
     <Compile Include="Models\SimulationComponent\Impl\GearboxAuxiliary.cs" />
@@ -150,7 +150,7 @@
     <Compile Include="Models\SimulationComponent\Impl\ATGearbox.cs" />
     <Compile Include="Models\SimulationComponent\Impl\ATShiftStrategy.cs" />
     <Compile Include="Models\SimulationComponent\Impl\MeasuredSpeedDrivingCycle.cs" />
-    <Compile Include="Models\SimulationComponent\Impl\PTOEngineCycleController.cs" />
+    <Compile Include="Models\SimulationComponent\Impl\PTOCycleController.cs" />
     <Compile Include="Models\SimulationComponent\Impl\PWheelCycle.cs" />
     <Compile Include="Models\SimulationComponent\Impl\TorqueConverter.cs" />
     <Compile Include="Utils\ProviderExtensions.cs" />
@@ -186,7 +186,7 @@
     <Compile Include="Models\SimulationComponent\IAuxiliary.cs" />
     <Compile Include="Models\SimulationComponent\IAxlegear.cs" />
     <Compile Include="Models\SimulationComponent\IBrakes.cs" />
-    <Compile Include="Models\SimulationComponent\ICombustionEngineIdleController.cs" />
+    <Compile Include="Models\SimulationComponent\IIdleController.cs" />
     <Compile Include="Models\SimulationComponent\IDriverActions.cs" />
     <Compile Include="Models\SimulationComponent\IDriverStrategy.cs" />
     <Compile Include="Models\SimulationComponent\IDrivingCycleInfo.cs" />

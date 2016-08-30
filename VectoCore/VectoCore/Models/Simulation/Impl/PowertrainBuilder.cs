@@ -103,13 +103,16 @@ namespace TUGraz.VectoCore.Models.Simulation.Impl
 			var gearbox = new CycleGearbox(container, data.GearboxData);
 
 			// PWheelCycle --> AxleGear --> CycleClutch --> Engine <-- Aux
-			new PWheelCycle(container, data.Cycle, data.AxleGearData.AxleGear.Ratio,
+			var powertrain = new PWheelCycle(container, data.Cycle, data.AxleGearData.AxleGear.Ratio,
 					gearbox.ModelData.Gears.ToDictionary(g => g.Key, g => g.Value.Ratio))
 				.AddComponent(new AxleGear(container, data.AxleGearData))
 				.AddComponent(data.AngularGearData != null ? new AngularGear(container, data.AngularGearData) : null)
-				.AddComponent(gearbox, data.Retarder, data.PTOTransmission, container)
-				.AddComponent(new CycleClutch(container))
-				.AddComponent(new CombustionEngine(container, data.EngineData, pt1Disabled: true))
+				.AddComponent(gearbox, data.Retarder, data.PTO, container)
+				.AddComponent(new CycleClutch(container));
+			var engine = new CombustionEngine(container, data.EngineData, pt1Disabled: true);
+			var idleController = GetIdleController(data.PTO, engine, container);
+
+			powertrain.AddComponent(engine, idleController, container)
 				.AddAuxiliaries(container, data);
 
 			return container;
@@ -125,17 +128,22 @@ namespace TUGraz.VectoCore.Models.Simulation.Impl
 
 			// MeasuredSpeedDrivingCycle --> vehicle --> wheels --> brakes 
 			// --> axleGear --> (retarder) --> CycleGearBox --> (retarder) --> CycleClutch --> engine <-- Aux
-			var powertrain = new MeasuredSpeedDrivingCycle(container, data.Cycle)
+			var cycle = new MeasuredSpeedDrivingCycle(container, data.Cycle);
+			var powertrain = cycle
 				.AddComponent(new Vehicle(container, data.VehicleData))
 				.AddComponent(new Wheels(container, data.VehicleData.DynamicTyreRadius, data.VehicleData.WheelsInertia))
 				.AddComponent(new Brakes(container))
 				.AddComponent(new AxleGear(container, data.AxleGearData))
 				.AddComponent(data.AngularGearData != null ? new AngularGear(container, data.AngularGearData) : null)
-				.AddComponent(GetGearbox(container, data.GearboxData), data.Retarder, data.PTOTransmission, container);
+				.AddComponent(GetGearbox(container, data.GearboxData), data.Retarder, data.PTO, container);
 			if (data.GearboxData.Type.ManualTransmission()) {
 				powertrain = powertrain.AddComponent(new Clutch(container, data.EngineData));
 			}
-			powertrain.AddComponent(new CombustionEngine(container, data.EngineData))
+
+			var engine = new CombustionEngine(container, data.EngineData);
+			var idleController = GetIdleController(data.PTO, engine, container);
+
+			powertrain.AddComponent(engine, idleController, container)
 				.AddAuxiliaries(container, data);
 			_modData.HasTorqueConverter = data.GearboxData.Type.AutomaticTransmission();
 
@@ -152,15 +160,17 @@ namespace TUGraz.VectoCore.Models.Simulation.Impl
 
 			// MeasuredSpeedDrivingCycle --> vehicle --> wheels --> brakes 
 			// --> axleGear --> (retarder) --> CycleGearBox --> (retarder) --> CycleClutch --> engine <-- Aux
-			new MeasuredSpeedDrivingCycle(container, data.Cycle)
+			var powertrain = new MeasuredSpeedDrivingCycle(container, data.Cycle)
 				.AddComponent(new Vehicle(container, data.VehicleData))
 				.AddComponent(new Wheels(container, data.VehicleData.DynamicTyreRadius, data.VehicleData.WheelsInertia))
 				.AddComponent(new Brakes(container))
 				.AddComponent(new AxleGear(container, data.AxleGearData))
 				.AddComponent(data.AngularGearData != null ? new AngularGear(container, data.AngularGearData) : null)
-				.AddComponent(new CycleGearbox(container, data.GearboxData), data.Retarder, data.PTOTransmission, container)
-				.AddComponent(new CycleClutch(container))
-				.AddComponent(new CombustionEngine(container, data.EngineData))
+				.AddComponent(new CycleGearbox(container, data.GearboxData), data.Retarder, data.PTO, container)
+				.AddComponent(new CycleClutch(container));
+
+			var engine = new CombustionEngine(container, data.EngineData);
+			powertrain.AddComponent(engine, GetIdleController(data.PTO, engine, container), container)
 				.AddAuxiliaries(container, data);
 
 			return container;
@@ -176,22 +186,35 @@ namespace TUGraz.VectoCore.Models.Simulation.Impl
 
 			// DistanceBasedDrivingCycle --> driver --> vehicle --> wheels 
 			// --> axleGear --> (retarder) --> gearBox --> (retarder) --> clutch --> engine <-- Aux
-			var powertrain = new DistanceBasedDrivingCycle(container, data.Cycle)
-				.AddComponent(new Driver(container, data.DriverData, new DefaultDriverStrategy()))
+			var cycle = new DistanceBasedDrivingCycle(container, data.Cycle);
+			var powertrain = cycle.AddComponent(new Driver(container, data.DriverData, new DefaultDriverStrategy()))
 				.AddComponent(new Vehicle(container, data.VehicleData))
 				.AddComponent(new Wheels(container, data.VehicleData.DynamicTyreRadius, data.VehicleData.WheelsInertia))
 				.AddComponent(new Brakes(container))
 				.AddComponent(new AxleGear(container, data.AxleGearData))
 				.AddComponent(data.AngularGearData != null ? new AngularGear(container, data.AngularGearData) : null)
-				.AddComponent(GetGearbox(container, data.GearboxData), data.Retarder, data.PTOTransmission, container);
+				.AddComponent(GetGearbox(container, data.GearboxData), data.Retarder, data.PTO, container);
 			if (data.GearboxData.Type.ManualTransmission()) {
 				powertrain = powertrain.AddComponent(new Clutch(container, data.EngineData));
 			}
-			powertrain.AddComponent(new CombustionEngine(container, data.EngineData)).AddAuxiliaries(container, data);
+
+			var engine = new CombustionEngine(container, data.EngineData);
+			var idleController = GetIdleController(data.PTO, engine, container);
+			cycle.IdleController = idleController as IdleControllerSwitcher;
+
+			powertrain.AddComponent(engine, idleController, container)
+				.AddAuxiliaries(container, data);
 
 			_modData.HasTorqueConverter = data.GearboxData.Type.AutomaticTransmission();
 
 			return container;
+		}
+
+		private static IIdleController GetIdleController(PTOData pto, CombustionEngine engine, IVehicleContainer container)
+		{
+			return pto == null
+				? engine.IdleController
+				: new IdleControllerSwitcher(engine.IdleController, new PTOCycleController(container, pto.PTOCycle));
 		}
 
 		internal static IAuxInProvider CreateAdvancedAuxiliaries(VectoRunData data, IVehicleContainer container)

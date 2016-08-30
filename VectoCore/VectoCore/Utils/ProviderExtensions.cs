@@ -32,6 +32,7 @@
 using System;
 using System.Collections.Generic;
 using TUGraz.VectoCommon.Models;
+using TUGraz.VectoCommon.Utils;
 using TUGraz.VectoCore.InputData.Reader;
 using TUGraz.VectoCore.Models.Connector.Ports;
 using TUGraz.VectoCore.Models.Declaration;
@@ -93,30 +94,30 @@ namespace TUGraz.VectoCore.Utils
 			return next;
 		}
 
-		public static CombustionEngine AddComponent(this IPowerTrainComponent prev, CombustionEngine next)
+		public static CombustionEngine AddComponent(this IPowerTrainComponent prev, CombustionEngine next,
+			IIdleController idleController, IVehicleContainer container)
 		{
 			prev.InPort().Connect(next.OutPort());
 
 			var clutch = prev as IClutch;
 			if (clutch != null) {
-				clutch.IdleController = next.IdleController;
+				clutch.IdleController = idleController;
 			}
 			var atGbx = prev as ATGearbox;
 			if (atGbx != null) {
-				atGbx.IdleController = next.IdleController;
+				atGbx.IdleController = idleController;
 			}
 
 			return next;
 		}
 
 		public static IPowerTrainComponent AddComponent(this IPowerTrainComponent prev, IGearbox gearbox, RetarderData data,
-			PTOTransmissionData pto, IVehicleContainer container)
+			PTOData pto, IVehicleContainer container)
 		{
 			if (pto != null) {
 				var aux = new GearboxAuxiliary(container);
 				aux.AddConstant("PTO_TRANSM", DeclarationData.PTOTransmission.Lookup(pto.TransmissionType));
 				aux.Add("PTO_IDLE", n => pto.LossMap.GetTorqueLoss(n) * n);
-				gearbox.PTOController = new PTOEngineCycleController(container, pto.PTOCycle);
 			}
 
 			switch (data.Type) {
@@ -131,6 +132,64 @@ namespace TUGraz.VectoCore.Utils
 				default:
 					throw new ArgumentOutOfRangeException(data.Type.ToString());
 			}
+		}
+	}
+
+	public class IdleControllerSwitcher : IIdleController
+	{
+		private readonly IIdleController _idleController;
+		private readonly PTOCycleController _ptoController;
+		private IIdleController _currentController;
+
+		public IdleControllerSwitcher(IIdleController idleController, PTOCycleController ptoController)
+		{
+			_idleController = idleController;
+			_ptoController = ptoController;
+
+			// default state is idleController
+			_currentController = _idleController;
+		}
+
+		public IResponse Request(Second absTime, Second dt, NewtonMeter outTorque, PerSecond outAngularVelocity,
+			bool dryRun = false)
+		{
+			return _currentController.Request(absTime, dt, outTorque, outAngularVelocity, dryRun);
+		}
+
+		public IResponse Initialize(NewtonMeter outTorque, PerSecond outAngularVelocity)
+		{
+			throw new InvalidOperationException(string.Format("{0} cannot initialize.", GetType().FullName));
+		}
+
+		public ITnOutPort RequestPort
+		{
+			set
+			{
+				_idleController.RequestPort = value;
+				_ptoController.RequestPort = value;
+			}
+		}
+
+		public void Reset()
+		{
+			_idleController.Reset();
+			_ptoController.Reset();
+			_currentController = _idleController;
+		}
+
+		public void ActivatePTO()
+		{
+			_currentController = _ptoController;
+		}
+
+		public void ActivateIdle()
+		{
+			_currentController = _idleController;
+		}
+
+		public Second GetNextCycleTime()
+		{
+			return _ptoController.GetNextCycleTime();
 		}
 	}
 }

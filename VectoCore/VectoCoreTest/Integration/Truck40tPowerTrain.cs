@@ -119,7 +119,7 @@ namespace TUGraz.VectoCore.Tests.Integration
 				.AddComponent(new DummyRetarder(container))
 				.AddComponent(new Gearbox(container, gearboxData, gbxStrategy))
 				.AddComponent(clutch)
-				.AddComponent(engine);
+				.AddComponent(engine, null, container);
 
 			var aux = new EngineAuxiliary(container);
 			aux.AddConstant("", 0.SI<Watt>());
