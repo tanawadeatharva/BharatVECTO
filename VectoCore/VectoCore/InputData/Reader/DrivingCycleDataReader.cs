@@ -182,7 +182,7 @@ namespace TUGraz.VectoCore.InputData.Reader
 			var altitude = current.Altitude;
 			var lastTime = entries.First().Time;
 			foreach (var drivingCycleEntry in entries) {
-				altitude += (drivingCycleEntry.VehicleTargetSpeed * (drivingCycleEntry.Time - lastTime)) *
+				altitude += drivingCycleEntry.VehicleTargetSpeed * (drivingCycleEntry.Time - lastTime) *
 							drivingCycleEntry.RoadGradient;
 				drivingCycleEntry.Altitude = altitude;
 				lastTime = drivingCycleEntry.Time;

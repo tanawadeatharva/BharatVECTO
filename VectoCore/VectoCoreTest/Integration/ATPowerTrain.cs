@@ -106,6 +106,7 @@ namespace TUGraz.VectoCore.Tests.Integration
 								? TransmissionLossMapReader.Create(gbxType == GearboxType.ATPowerSplit ? 1.0 : 0.98, ratio,
 									string.Format("Gear {0}", i))
 								: null,
+							TorqueConverterShiftPolygon = i == 0 ? ShiftPolygonReader.ReadFromFile(GearboxShiftPolygonFile) : null
 						}))
 					.ToDictionary(k => k.Item1 + 1, v => v.Item2),
 				ShiftTime = 1.SI<Second>(),

@@ -141,7 +141,7 @@ namespace TUGraz.VectoCore.Models.SimulationComponent.Impl
 				if (nextEngineSpeed.IsEqual(0)) {
 					return false;
 				}
-				if (IsAboveUpShiftCurve(gear, enginePower / nextEngineSpeed, nextEngineSpeed) &&
+				if (IsAboveUpShiftCurve(gear, enginePower / nextEngineSpeed, nextEngineSpeed, _gearbox.TorqueConverterLocked) &&
 					enginePower.IsSmallerOrEqual(DataBus.EngineStationaryFullPower(nextEngineSpeed))) {
 					NextGear.SetState(absTime, false, nextGear, true);
 					return true;
@@ -149,7 +149,16 @@ namespace TUGraz.VectoCore.Models.SimulationComponent.Impl
 			}
 			if (!_gearbox.TorqueConverterLocked && Data.Gears.ContainsKey(gear + 1) && Data.Gears[gear + 1].HasTorqueConverter) {
 				// C -> C upshift
-				// TODO!
+				var gearRatio = Data.Gears[gear + 1].Ratio / Data.Gears[gear].Ratio;
+				var minEnginseSpeed = VectoMath.Min(700.RPMtoRad(), gearRatio * (DataBus.EngineN80hSpeed - 150.RPMtoRad()));
+				var nextGbxInSpeed = outAngularVelocity * Data.Gears[gear + 1].Ratio;
+				var nextGbxInTorque = outTorque / Data.Gears[gear + 1].Ratio;
+				var tcOperatingPoint = _gearbox.TorqueConverter.FindOperatingPoint(nextGbxInTorque, nextGbxInSpeed);
+				if (tcOperatingPoint.InAngularVelocity.IsGreater(minEnginseSpeed) &&
+					DataBus.EngineStationaryFullPower(tcOperatingPoint.InAngularVelocity)
+						.IsGreater(0.7 * DataBus.EngineStationaryFullPower(inAngularVelocity))) {
+					return true;
+				}
 			}
 			return false;
 		}
@@ -233,10 +242,16 @@ namespace TUGraz.VectoCore.Models.SimulationComponent.Impl
 		/// <param name="gear">The gear.</param>
 		/// <param name="inTorque">The in torque.</param>
 		/// <param name="inEngineSpeed">The in engine speed.</param>
+		/// <param name="torqueConverterLocked">if true, the regular shift polygon is used, otherwise the shift polygon for the torque converter is used</param>
 		/// <returns><c>true</c> if the operating point is above the up-shift curve; otherwise, <c>false</c>.</returns>
-		protected virtual bool IsAboveUpShiftCurve(uint gear, NewtonMeter inTorque, PerSecond inEngineSpeed)
+		protected virtual bool IsAboveUpShiftCurve(uint gear, NewtonMeter inTorque, PerSecond inEngineSpeed,
+			bool torqueConverterLocked)
 		{
-			return gear < Data.Gears.Keys.Max() && Data.Gears[gear].ShiftPolygon.IsAboveUpshiftCurve(inTorque, inEngineSpeed);
+			if (torqueConverterLocked) {
+				return gear < Data.Gears.Keys.Max() && Data.Gears[gear].ShiftPolygon.IsAboveUpshiftCurve(inTorque, inEngineSpeed);
+			}
+			return gear < Data.Gears.Keys.Max() &&
+					Data.Gears[gear].TorqueConverterShiftPolygon.IsAboveUpshiftCurve(inTorque, inEngineSpeed);
 		}
 
 		protected class NextGearState

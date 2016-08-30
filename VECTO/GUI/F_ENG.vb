@@ -278,10 +278,6 @@ Public Class F_ENG
 		Change()
 	End Sub
 
-	Private Sub TbPnenn_TextChanged(sender As System.Object, e As System.EventArgs)
-		Change()
-	End Sub
-
 	Private Sub TbDispl_TextChanged(sender As System.Object, e As System.EventArgs) Handles TbDispl.TextChanged
 		Change()
 		DeclInit()
@@ -293,10 +289,6 @@ Public Class F_ENG
 
 	Private Sub TbNleerl_TextChanged(sender As System.Object, e As System.EventArgs) Handles TbNleerl.TextChanged
 		UpdatePic()
-		Change()
-	End Sub
-
-	Private Sub TbNnenn_TextChanged(sender As System.Object, e As System.EventArgs)
 		Change()
 	End Sub
 
@@ -316,10 +308,6 @@ Public Class F_ENG
 
 	Private Sub TbWHTCmw_TextChanged(sender As System.Object, e As System.EventArgs) Handles TbWHTCmw.TextChanged
 		Change()
-	End Sub
-
-	Private Sub LvFLDs_SelectedIndexChanged(sender As System.Object, e As System.EventArgs)
-		UpdatePic()
 	End Sub
 
 

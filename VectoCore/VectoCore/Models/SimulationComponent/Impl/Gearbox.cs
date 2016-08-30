@@ -29,12 +29,10 @@
 *   Martin Rexeis, rexeis@ivt.tugraz.at, IVT, Graz University of Technology
 */
 
-using System.Diagnostics;
 using TUGraz.VectoCommon.Exceptions;
 using TUGraz.VectoCommon.Models;
 using TUGraz.VectoCommon.Utils;
 using TUGraz.VectoCore.Configuration;
-using TUGraz.VectoCore.Models.Connector.Ports;
 using TUGraz.VectoCore.Models.Connector.Ports.Impl;
 using TUGraz.VectoCore.Models.Simulation;
 using TUGraz.VectoCore.Models.Simulation.Data;
@@ -119,7 +117,7 @@ namespace TUGraz.VectoCore.Models.SimulationComponent.Impl
 			var inTorque = outTorque / ModelData.Gears[gear].Ratio + torqueLossResult.Value;
 
 			if (!inAngularVelocity.IsEqual(0)) {
-				var alpha = (ModelData.Inertia.IsEqual(0))
+				var alpha = ModelData.Inertia.IsEqual(0)
 					? 0.SI<PerSquareSecond>()
 					: outTorque / ModelData.Inertia;
 
@@ -224,7 +222,8 @@ namespace TUGraz.VectoCore.Models.SimulationComponent.Impl
 			}
 
 			var shiftTimeExceeded = absTime.IsSmaller(_engageTime) &&
-									_engageTime.IsSmaller(absTime + dt, Constants.SimulationSettings.LowerBoundTimeInterval); // allow 5% tolerance of shift time
+									_engageTime.IsSmaller(absTime + dt, Constants.SimulationSettings.LowerBoundTimeInterval);
+				// allow 5% tolerance of shift time
 			if (shiftTimeExceeded) {
 				return new ResponseFailTimeInterval {
 					Source = this,
@@ -278,11 +277,9 @@ namespace TUGraz.VectoCore.Models.SimulationComponent.Impl
 			if (Disengaged && !outAngularVelocity.IsEqual(0)) {
 				Disengaged = false;
 				var lastGear = Gear;
-				if (DataBus.VehicleStopped) {
-					Gear = _strategy.InitGear(absTime, dt, outTorque, outAngularVelocity);
-				} else {
-					Gear = _strategy.Engage(absTime, dt, outTorque, outAngularVelocity);
-				}
+				Gear = DataBus.VehicleStopped
+					? _strategy.InitGear(absTime, dt, outTorque, outAngularVelocity)
+					: _strategy.Engage(absTime, dt, outTorque, outAngularVelocity);
 				if (Gear > lastGear) {
 					LastUpshift = absTime;
 				}

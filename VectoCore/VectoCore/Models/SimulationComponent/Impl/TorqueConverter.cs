@@ -1,5 +1,4 @@
-﻿using System;
-using TUGraz.VectoCommon.Exceptions;
+﻿using TUGraz.VectoCommon.Exceptions;
 using TUGraz.VectoCommon.Models;
 using TUGraz.VectoCommon.Utils;
 using TUGraz.VectoCore.Configuration;
@@ -7,7 +6,6 @@ using TUGraz.VectoCore.Models.Connector.Ports;
 using TUGraz.VectoCore.Models.Connector.Ports.Impl;
 using TUGraz.VectoCore.Models.Simulation;
 using TUGraz.VectoCore.Models.Simulation.Data;
-using TUGraz.VectoCore.Models.Simulation.DataBus;
 using TUGraz.VectoCore.Models.SimulationComponent.Data.Gearbox;
 using TUGraz.VectoCore.OutputData;
 
@@ -108,11 +106,12 @@ namespace TUGraz.VectoCore.Models.SimulationComponent.Impl
 			}
 			CurrentState.SetState(operatingPoint.InTorque, operatingPoint.InAngularVelocity, outTorque, outAngularVelocity);
 			CurrentState.OperatingPoint = operatingPoint;
-			var retVal = NextComponent.Request(absTime, dt, operatingPoint.InTorque, operatingPoint.InAngularVelocity, dryRun);
+			var retVal = NextComponent.Request(absTime, dt, operatingPoint.InTorque, operatingPoint.InAngularVelocity);
 			return retVal;
 		}
 
-		protected TorqueConverterOperatingPoint FindOperatingPoint(NewtonMeter outTorque, PerSecond outAngularVelocity)
+		protected internal TorqueConverterOperatingPoint FindOperatingPoint(NewtonMeter outTorque,
+			PerSecond outAngularVelocity)
 		{
 			try {
 				var operatingPoint = ModelData.FindOperatingPoint(outTorque, outAngularVelocity);

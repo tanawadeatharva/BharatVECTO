@@ -32,15 +32,12 @@
 using System;
 using System.Collections.Generic;
 using System.ComponentModel.DataAnnotations;
-using System.Data;
 using System.Diagnostics;
 using System.Linq;
 using TUGraz.VectoCommon.Exceptions;
 using TUGraz.VectoCommon.Utils;
 using TUGraz.VectoCore.Configuration;
 using TUGraz.VectoCore.Models.Declaration;
-using TUGraz.VectoCore.Models.SimulationComponent.Data.Engine;
-using TUGraz.VectoCore.Utils;
 
 namespace TUGraz.VectoCore.Models.SimulationComponent.Data
 {
@@ -223,7 +220,7 @@ namespace TUGraz.VectoCore.Models.SimulationComponent.Data
 			public override int GetHashCode()
 			{
 				unchecked {
-					var hashCode = (EngineSpeed != null ? EngineSpeed.GetHashCode() : 0);
+					var hashCode = EngineSpeed != null ? EngineSpeed.GetHashCode() : 0;
 					hashCode = (hashCode * 397) ^ (TorqueFullLoad != null ? TorqueFullLoad.GetHashCode() : 0);
 					hashCode = (hashCode * 397) ^ (TorqueDrag != null ? TorqueDrag.GetHashCode() : 0);
 					return hashCode;

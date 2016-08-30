@@ -33,7 +33,6 @@ using System.ComponentModel.DataAnnotations;
 using TUGraz.VectoCommon.Utils;
 using TUGraz.VectoCore.Configuration;
 using TUGraz.VectoCore.Models.SimulationComponent.Data.Engine;
-using TUGraz.VectoCore.Utils;
 
 namespace TUGraz.VectoCore.Models.SimulationComponent.Data
 {
@@ -105,7 +104,7 @@ namespace TUGraz.VectoCore.Models.SimulationComponent.Data
 			if (ReferenceEquals(this, obj)) {
 				return true;
 			}
-			if (obj.GetType() != this.GetType()) {
+			if (obj.GetType() != GetType()) {
 				return false;
 			}
 			return Equals((CombustionEngineData)obj);
@@ -119,9 +118,9 @@ namespace TUGraz.VectoCore.Models.SimulationComponent.Data
 				hashCode = (hashCode * 397) ^ (Displacement != null ? Displacement.GetHashCode() : 0);
 				hashCode = (hashCode * 397) ^ (IdleSpeed != null ? IdleSpeed.GetHashCode() : 0);
 				hashCode = (hashCode * 397) ^ (Inertia != null ? Inertia.GetHashCode() : 0);
-				hashCode = (hashCode * 397) ^ (WHTCUrban.GetHashCode());
-				hashCode = (hashCode * 397) ^ (WHTCRural.GetHashCode());
-				hashCode = (hashCode * 397) ^ (WHTCMotorway.GetHashCode());
+				hashCode = (hashCode * 397) ^ WHTCUrban.GetHashCode();
+				hashCode = (hashCode * 397) ^ WHTCRural.GetHashCode();
+				hashCode = (hashCode * 397) ^ WHTCMotorway.GetHashCode();
 				hashCode = (hashCode * 397) ^ (ConsumptionMap != null ? ConsumptionMap.GetHashCode() : 0);
 				return hashCode;
 			}

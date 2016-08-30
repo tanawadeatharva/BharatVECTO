@@ -180,7 +180,7 @@ namespace TUGraz.VectoCore.Models.SimulationComponent.Impl
 				NextGear--;
 			}
 
-			return (NextGear != gear);
+			return NextGear != gear;
 		}
 
 		protected virtual uint CheckUpshift(Second absTime, Second dt, NewtonMeter outTorque, PerSecond outAngularVelocity,

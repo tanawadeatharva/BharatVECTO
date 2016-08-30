@@ -61,9 +61,6 @@ Public Class F_MAINForm
 	Private ConMenTarget As ListView
 	Private ConMenTarJob As Boolean
 
-	Private MODpath As String
-	Private MODVehList As Int32()
-
 	Private CycleTabPage As TabPage
 	Private CycleTabPageVisible As Boolean
 
@@ -137,6 +134,7 @@ Public Class F_MAINForm
 		fbRLM = New cFileBrowser("vrlm")
 		fbTLM = New cFileBrowser("vtlm")
 		fbTCC = New cFileBrowser("vtcc")
+		fbTCCShift = New cFileBrowser("vgbs")
 		fbCDx = New cFileBrowser("vcdx")
 		fbDfVelocityDrop = New cFileBrowser("DfVelocityDrop")
 		fbDfTargetSpeed = New cFileBrowser("DfTargetSpeed")
@@ -161,6 +159,7 @@ Public Class F_MAINForm
 		fbRLM.Extensions = New String() {"vrlm"}
 		fbTLM.Extensions = New String() {"vtlm"}
 		fbTCC.Extensions = New String() {"vtcc"}
+		fbTCCShift.Extensions = New String() {"vgbs"}
 		fbCDx.Extensions = New String() {"vcdv", "vcdb"}
 
 		fbVMOD.Extensions = New String() {"vmod"}
@@ -182,6 +181,7 @@ Public Class F_MAINForm
 		fbRLM.Close()
 		fbTLM.Close()
 		fbTCC.Close()
+		fbTCCShift.Close()
 		fbCDx.Close()
 		fbVMOD.Close()
 	End Sub
@@ -358,23 +358,6 @@ Public Class F_MAINForm
 
 #Region "BackgroundWorker Events"
 
-	'DoWork - Start Calculations
-	Private Sub BackgroundWorker1_DoWork(sender As Object, e As DoWorkEventArgs) _
-		Handles BackgroundWorker1.DoWork
-
-		'Prevent SLEEP
-		AllowSleepOFF()
-
-		If SetCulture Then
-			Try
-				Thread.CurrentThread.CurrentCulture = New CultureInfo("en-US")
-			Catch ex As Exception
-				GUImsg(tMsgID.Err, "Failed to set thread culture 'en-US'! Check system decimal- and group- separators!")
-			End Try
-		End If
-
-		e.Result = VECTO()
-	End Sub
 
 	'Progress Report - Progressbar, Messages, etc.
 	Private Sub BackgroundWorker1_ProgressChanged(sender As Object,
@@ -1510,27 +1493,6 @@ lbFound:
 #End Region
 
 	'VECTO Start button - Calls VECTO_Launcher or aborts calculation
-	Private Sub Button1_Click(sender As Object, e As EventArgs)
-
-		'VECTO Start/Stop
-		If VECTOworker.IsBusy Then
-
-			'If VECTO already running: STOP
-			ComLineShutDown = False
-			JobAbort()
-
-		Else
-
-			'...Otherwise: START
-
-			'Save Lists if Crash
-			SaveFileLists()
-
-			'Start
-			VECTO_Launcher()
-
-		End If
-	End Sub
 
 	Private Sub btStartV3_Click(sender As Object, e As EventArgs) Handles btStartV3.Click
 		If Not VECTOworkerV3.IsBusy Then
@@ -1684,7 +1646,8 @@ lbFound:
 				sender.ReportProgress(100,
 									New _
 										With {.Target = "ListBox",
-										.Message = String.Format("PDF-Report for '{0}' written to {1}", Path.GetFileName(job), report), .Link = "<RUN>" + report})
+										.Message = String.Format("PDF-Report for '{0}' written to {1}", Path.GetFileName(job), report),
+										.Link = "<RUN>" + report})
 			End If
 		Next
 
@@ -2778,7 +2741,6 @@ Lb1:
 
 	Private Sub LvMsg_MouseUp(sender As Object, e As MouseEventArgs) Handles LvMsg.MouseUp
 		mouseDownOnListView = False
-		
 	End Sub
 
 	Private Sub LvGEN_MouseUp(sender As Object, e As MouseEventArgs) Handles LvGEN.MouseUp

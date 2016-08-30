@@ -438,13 +438,14 @@ namespace TUGraz.VectoCore.Models.SimulationComponent.Impl
 				response.Switch()
 					.Case<ResponseGearShift>(() => response = NextComponent.Request(absTime, dt, acceleration, gradient))
 					.Case<ResponseUnderload>(r => {
+						var acceleration1 = acceleration;
 						DataBus.BrakePower = SearchAlgorithm.Search(DataBus.BrakePower, r.Delta, -r.Delta,
 							getYValue: result => DataBus.ClutchClosed(absTime)
 								? ((ResponseDryRun)result).DeltaDragLoad
 								: ((ResponseDryRun)result).GearboxPowerRequest,
 							evaluateFunction: x => {
 								DataBus.BrakePower = x;
-								return NextComponent.Request(absTime, dt, acceleration, gradient, true);
+								return NextComponent.Request(absTime, dt, acceleration1, gradient, true);
 							},
 							criterion: y => DataBus.ClutchClosed(absTime)
 								? ((ResponseDryRun)y).DeltaDragLoad.Value()

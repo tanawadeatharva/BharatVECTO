@@ -68,5 +68,7 @@ namespace TUGraz.VectoCore.Models.SimulationComponent.Data.Gearbox
 		public TransmissionLossMap TorqueConverterGearLossMap { get; internal set; }
 
 		public NewtonMeter MaxTorque { get; internal set; }
+
+		public ShiftPolygon TorqueConverterShiftPolygon { get; set; }
 	}
 }

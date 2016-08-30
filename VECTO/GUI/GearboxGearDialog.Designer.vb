@@ -39,11 +39,10 @@ Partial Class GearboxGearDialog
 		Me.Label4 = New System.Windows.Forms.Label()
 		Me.PnShiftPoly = New System.Windows.Forms.Panel()
 		Me.Label5 = New System.Windows.Forms.Label()
-		Me.BtBrowseFld = New System.Windows.Forms.Button()
-		Me.TbFld = New System.Windows.Forms.TextBox()
+		Me.TbMaxTorque = New System.Windows.Forms.TextBox()
 		Me.PnFld = New System.Windows.Forms.Panel()
-		Me.Label6 = New System.Windows.Forms.Label()
 		Me.BtPrevious = New System.Windows.Forms.Button()
+		Me.Label6 = New System.Windows.Forms.Label()
 		Me.TableLayoutPanel1.SuspendLayout()
 		Me.PnShiftPoly.SuspendLayout()
 		Me.PnFld.SuspendLayout()
@@ -57,7 +56,7 @@ Partial Class GearboxGearDialog
 		Me.TableLayoutPanel1.ColumnStyles.Add(New System.Windows.Forms.ColumnStyle(System.Windows.Forms.SizeType.Percent, 50.0!))
 		Me.TableLayoutPanel1.Controls.Add(Me.OK_Button, 0, 0)
 		Me.TableLayoutPanel1.Controls.Add(Me.Cancel_Button, 1, 0)
-		Me.TableLayoutPanel1.Location = New System.Drawing.Point(377, 210)
+		Me.TableLayoutPanel1.Location = New System.Drawing.Point(370, 184)
 		Me.TableLayoutPanel1.Name = "TableLayoutPanel1"
 		Me.TableLayoutPanel1.RowCount = 1
 		Me.TableLayoutPanel1.RowStyles.Add(New System.Windows.Forms.RowStyle(System.Windows.Forms.SizeType.Percent, 50.0!))
@@ -147,7 +146,7 @@ Partial Class GearboxGearDialog
 		'BtNext
 		'
 		Me.BtNext.Anchor = CType((System.Windows.Forms.AnchorStyles.Bottom Or System.Windows.Forms.AnchorStyles.Left), System.Windows.Forms.AnchorStyles)
-		Me.BtNext.Location = New System.Drawing.Point(203, 213)
+		Me.BtNext.Location = New System.Drawing.Point(196, 187)
 		Me.BtNext.Name = "BtNext"
 		Me.BtNext.Size = New System.Drawing.Size(67, 23)
 		Me.BtNext.TabIndex = 11
@@ -195,56 +194,45 @@ Partial Class GearboxGearDialog
 		Me.Label5.AutoSize = True
 		Me.Label5.Location = New System.Drawing.Point(1, 5)
 		Me.Label5.Name = "Label5"
-		Me.Label5.Size = New System.Drawing.Size(97, 13)
+		Me.Label5.Size = New System.Drawing.Size(123, 13)
 		Me.Label5.TabIndex = 0
-		Me.Label5.Text = "Full Load Curve file"
+		Me.Label5.Text = "Maximum allowed torque"
 		'
-		'BtBrowseFld
+		'TbMaxTorque
 		'
-		Me.BtBrowseFld.Image = CType(resources.GetObject("BtBrowseFld.Image"), System.Drawing.Image)
-		Me.BtBrowseFld.Location = New System.Drawing.Point(478, 17)
-		Me.BtBrowseFld.Name = "BtBrowseFld"
-		Me.BtBrowseFld.Size = New System.Drawing.Size(24, 24)
-		Me.BtBrowseFld.TabIndex = 2
-		Me.BtBrowseFld.TabStop = False
-		Me.BtBrowseFld.UseVisualStyleBackColor = True
-		'
-		'TbFld
-		'
-		Me.TbFld.Location = New System.Drawing.Point(2, 19)
-		Me.TbFld.Name = "TbFld"
-		Me.TbFld.Size = New System.Drawing.Size(476, 20)
-		Me.TbFld.TabIndex = 1
+		Me.TbMaxTorque.Location = New System.Drawing.Point(2, 19)
+		Me.TbMaxTorque.Name = "TbMaxTorque"
+		Me.TbMaxTorque.Size = New System.Drawing.Size(88, 20)
+		Me.TbMaxTorque.TabIndex = 1
 		'
 		'PnFld
 		'
 		Me.PnFld.Controls.Add(Me.Label6)
-		Me.PnFld.Controls.Add(Me.TbFld)
-		Me.PnFld.Controls.Add(Me.BtBrowseFld)
+		Me.PnFld.Controls.Add(Me.TbMaxTorque)
 		Me.PnFld.Controls.Add(Me.Label5)
 		Me.PnFld.Location = New System.Drawing.Point(10, 126)
 		Me.PnFld.Name = "PnFld"
-		Me.PnFld.Size = New System.Drawing.Size(513, 61)
+		Me.PnFld.Size = New System.Drawing.Size(513, 46)
 		Me.PnFld.TabIndex = 9
-		'
-		'Label6
-		'
-		Me.Label6.AutoSize = True
-		Me.Label6.Location = New System.Drawing.Point(1, 41)
-		Me.Label6.Name = "Label6"
-		Me.Label6.Size = New System.Drawing.Size(347, 13)
-		Me.Label6.TabIndex = 3
-		Me.Label6.Text = "(If no file is defined the Full Load Curve from the Engine File will be used)"
 		'
 		'BtPrevious
 		'
 		Me.BtPrevious.Anchor = CType((System.Windows.Forms.AnchorStyles.Bottom Or System.Windows.Forms.AnchorStyles.Left), System.Windows.Forms.AnchorStyles)
-		Me.BtPrevious.Location = New System.Drawing.Point(136, 213)
+		Me.BtPrevious.Location = New System.Drawing.Point(129, 187)
 		Me.BtPrevious.Name = "BtPrevious"
 		Me.BtPrevious.Size = New System.Drawing.Size(67, 23)
 		Me.BtPrevious.TabIndex = 10
 		Me.BtPrevious.Text = "< &Previous"
 		Me.BtPrevious.UseVisualStyleBackColor = True
+		'
+		'Label6
+		'
+		Me.Label6.AutoSize = True
+		Me.Label6.Location = New System.Drawing.Point(96, 22)
+		Me.Label6.Name = "Label6"
+		Me.Label6.Size = New System.Drawing.Size(29, 13)
+		Me.Label6.TabIndex = 2
+		Me.Label6.Text = "[Nm]"
 		'
 		'GearboxGearDialog
 		'
@@ -252,7 +240,7 @@ Partial Class GearboxGearDialog
 		Me.AutoScaleDimensions = New System.Drawing.SizeF(6.0!, 13.0!)
 		Me.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font
 		Me.CancelButton = Me.Cancel_Button
-		Me.ClientSize = New System.Drawing.Size(528, 254)
+		Me.ClientSize = New System.Drawing.Size(528, 225)
 		Me.Controls.Add(Me.BtPrevious)
 		Me.Controls.Add(Me.PnFld)
 		Me.Controls.Add(Me.PnShiftPoly)
@@ -297,10 +285,9 @@ Partial Class GearboxGearDialog
 	Friend WithEvents Label4 As System.Windows.Forms.Label
 	Friend WithEvents PnShiftPoly As System.Windows.Forms.Panel
 	Friend WithEvents Label5 As System.Windows.Forms.Label
-	Friend WithEvents BtBrowseFld As System.Windows.Forms.Button
-	Friend WithEvents TbFld As System.Windows.Forms.TextBox
+	Friend WithEvents TbMaxTorque As System.Windows.Forms.TextBox
 	Friend WithEvents PnFld As System.Windows.Forms.Panel
-	Friend WithEvents Label6 As System.Windows.Forms.Label
 	Friend WithEvents BtPrevious As System.Windows.Forms.Button
+	Friend WithEvents Label6 As System.Windows.Forms.Label
 
 End Class

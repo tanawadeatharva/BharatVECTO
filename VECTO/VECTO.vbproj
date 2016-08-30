@@ -228,7 +228,6 @@
     <Compile Include="cDEV.vb" />
     <Compile Include="File Browser\cFileBrowser.vb" />
     <Compile Include="mAAUX_Global.vb" />
-    <Compile Include="MODcalc\cVh.vb" />
     <Compile Include="File Browser\FB_Dialog.designer.vb">
       <DependentUpon>FB_Dialog.vb</DependentUpon>
     </Compile>
@@ -241,8 +240,6 @@
     <Compile Include="File Browser\FB_FavDlog.vb">
       <SubType>Form</SubType>
     </Compile>
-    <Compile Include="MODcalc\cPower.vb" />
-    <Compile Include="MODcalc\cMOD.vb" />
     <Compile Include="Input Files\cFLD.vb" />
     <Compile Include="Input Files\cMAP.vb" />
     <Compile Include="Input Files\cDRI.vb" />
@@ -291,7 +288,6 @@
       <SubType>Form</SubType>
     </Compile>
     <Compile Include="M_MAIN.vb" />
-    <Compile Include="cVSUM.vb" />
     <Compile Include="GUI\F_MAINForm.vb">
       <SubType>Form</SubType>
     </Compile>
@@ -300,7 +296,6 @@
       <SubType>Form</SubType>
     </Compile>
     <Compile Include="File Browser\FB_Global.vb" />
-    <Compile Include="cCycleKin.vb" />
     <Compile Include="My Project\AssemblyInfo.vb" />
     <Compile Include="My Project\Application.Designer.vb">
       <AutoGen>True</AutoGen>
@@ -1522,6 +1517,7 @@
     <Content Include="Resources\up.ico" />
     <Content Include="Resources\up.png" />
   </ItemGroup>
+  <ItemGroup />
   <Import Project="$(MSBuildBinPath)\Microsoft.VisualBasic.targets" />
   <PropertyGroup>
     <PostBuildEvent>

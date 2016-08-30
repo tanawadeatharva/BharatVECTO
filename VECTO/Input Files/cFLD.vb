@@ -15,78 +15,77 @@ Imports System.Collections.Generic
 ''' </summary>
 ''' <remarks></remarks>
 Public Class cFLD
+	''' <summary>
+	''' Full file path. Needs to be defined via FilePath property before calling ReadFile or SaveFile.
+	''' </summary>
+	''' <remarks></remarks>
+	Private sFilePath As String
 
-    ''' <summary>
-    ''' Full file path. Needs to be defined via FilePath property before calling ReadFile or SaveFile.
-    ''' </summary>
-    ''' <remarks></remarks>
-    Private sFilePath As String
+	''' <summary>
+	''' List of full load torque values [Nm]
+	''' </summary>
+	''' <remarks></remarks>
+	Public LTq As List(Of Single)
 
-    ''' <summary>
-    ''' List of full load torque values [Nm]
-    ''' </summary>
-    ''' <remarks></remarks>
-    Public LTq As List(Of Single)
+	''' <summary>
+	''' List of motoring torque values [Nm]
+	''' </summary>
+	''' <remarks></remarks>
+	Public LTqDrag As List(Of Single)
 
-    ''' <summary>
-    ''' List of motoring torque values [Nm]
-    ''' </summary>
-    ''' <remarks></remarks>
-    Public LTqDrag As List(Of Single)
+	''' <summary>
+	''' List of engine speed values [1/min]
+	''' </summary>
+	''' <remarks></remarks>
+	Public LnU As List(Of Single)
 
-    ''' <summary>
-    ''' List of engine speed values [1/min]
-    ''' </summary>
-    ''' <remarks></remarks>
-    Public LnU As List(Of Single)
+	''' <summary>
+	''' List of PT1 values [s]
+	''' </summary>
+	''' <remarks></remarks>
+	Private LPT1 As List(Of Single)
 
-    ''' <summary>
-    ''' List of PT1 values [s]
-    ''' </summary>
-    ''' <remarks></remarks>
-    Private LPT1 As List(Of Single)
+	''' <summary>
+	''' Last index of lists (items count - 1)
+	''' </summary>
+	''' <remarks></remarks>
+	Private iDim As Integer
 
-    ''' <summary>
-    ''' Last index of lists (items count - 1)
-    ''' </summary>
-    ''' <remarks></remarks>
-    Private iDim As Integer
+	''' <summary>
+	''' Nlo [1/min]. Lowest enging speed with 55% of max. power. Defined in Init.
+	''' </summary>
+	''' <remarks></remarks>
+	Public Nlo As Single
 
-    ''' <summary>
-    ''' Nlo [1/min]. Lowest enging speed with 55% of max. power. Defined in Init.
-    ''' </summary>
-    ''' <remarks></remarks>
-    Public Nlo As Single
+	''' <summary>
+	''' Nhi [1/min]. Highest engine speed with 70% of max. power. Defined in Init.
+	''' </summary>
+	''' <remarks></remarks>
+	Public Nhi As Single
 
-    ''' <summary>
-    ''' Nhi [1/min]. Highest engine speed with 70% of max. power. Defined in Init.
-    ''' </summary>
-    ''' <remarks></remarks>
-    Public Nhi As Single
+	''' <summary>
+	''' Npref [1/min]. Speed at 51% torque/speed-integral between idling and N95h. Defined in Init.
+	''' </summary>
+	''' <remarks></remarks>
+	Public Npref As Single
 
-    ''' <summary>
-    ''' Npref [1/min]. Speed at 51% torque/speed-integral between idling and N95h. Defined in Init.
-    ''' </summary>
-    ''' <remarks></remarks>
-    Public Npref As Single
+	''' <summary>
+	''' N95h [1/min]. Highest engine speed with 95% of max. power. Defined in Init.
+	''' </summary>
+	''' <remarks></remarks>
+	Public N95h As Single
 
-    ''' <summary>
-    ''' N95h [1/min]. Highest engine speed with 95% of max. power. Defined in Init.
-    ''' </summary>
-    ''' <remarks></remarks>
-    Public N95h As Single
+	''' <summary>
+	''' N80h [1/min]. Highest engine speed with 80% of max. power. Defined in Init.
+	''' </summary>
+	''' <remarks></remarks>
+	Public N80h As Single
 
-    ''' <summary>
-    ''' N80h [1/min]. Highest engine speed with 80% of max. power. Defined in Init.
-    ''' </summary>
-    ''' <remarks></remarks>
-    Public N80h As Single
-
-    ''' <summary>
-    ''' Read file. FilePath must be set before calling. 
-    ''' </summary>
-    ''' <returns>True if successful.</returns>
-    ''' <remarks></remarks>   
+	''' <summary>
+	''' Read file. FilePath must be set before calling. 
+	''' </summary>
+	''' <returns>True if successful.</returns>
+	''' <remarks></remarks>   
 	Public Function ReadFile(ByVal TqOnly As Boolean, Optional ByVal ShowMsg As Boolean = True) As Boolean
 		Dim file As cFile_V3
 		Dim line As String()
@@ -167,7 +166,8 @@ Public Class cFLD
 
 		Catch ex As Exception
 
-			If ShowMsg Then WorkerMsg(tMsgID.Err, "Error during file read! Line number: " & iDim + 1 & " (" & sFilePath & ")", MsgSrc, sFilePath)
+			If ShowMsg Then _
+				WorkerMsg(tMsgID.Err, "Error during file read! Line number: " & iDim + 1 & " (" & sFilePath & ")", MsgSrc, sFilePath)
 			GoTo lbEr
 
 		End Try
@@ -185,361 +185,352 @@ lbEr:
 		file = Nothing
 
 		Return False
-
 	End Function
 
-    ''' <summary>
-    ''' Returns motoring power [kW] for given engine speed
-    ''' </summary>
-    ''' <param name="nU">engine speed [1/min]</param>
-    ''' <returns>motoring power [kW]</returns>
-    ''' <remarks></remarks>
-    Public Function Pdrag(ByVal nU As Single) As Single
-        Dim i As Int32
+	''' <summary>
+	''' Returns motoring power [kW] for given engine speed
+	''' </summary>
+	''' <param name="nU">engine speed [1/min]</param>
+	''' <returns>motoring power [kW]</returns>
+	''' <remarks></remarks>
+	Public Function Pdrag(ByVal nU As Single) As Single
+		Dim i As Int32
 
-        'Extrapolation for x < x(1)
-        If LnU(0) >= nU Then
-            If LnU(0) > nU Then MODdata.ModErrors.FLDextrapol = "n= " & nU & " [1/min]"
-            i = 1
-            GoTo lbInt
-        End If
+		'Extrapolation for x < x(1)
+		If LnU(0) >= nU Then
+			'If LnU(0) > nU Then MODdata.ModErrors.FLDextrapol = "n= " & nU & " [1/min]"
+			i = 1
+			GoTo lbInt
+		End If
 
-        i = 0
-        Do While LnU(i) < nU And i < iDim
-            i += 1
-        Loop
+		i = 0
+		Do While LnU(i) < nU And i < iDim
+			i += 1
+		Loop
 
-        'Extrapolation for x > x(imax)
-        If LnU(i) < nU Then
-            MODdata.ModErrors.FLDextrapol = "n= " & nU & " [1/min]"
-        End If
-
-lbInt:
-        'Interpolation
-        Return nMtoPe(nU, (nU - LnU(i - 1)) * (LTqDrag(i) - LTqDrag(i - 1)) / (LnU(i) - LnU(i - 1)) + LTqDrag(i - 1))
-
-    End Function
-
-    ''' <summary>
-    ''' Returns full load power [kW] at given engine speed considering transient torque build-up via PT1.
-    ''' </summary>
-    ''' <param name="nU">engine speed [1/min]</param>
-    ''' <param name="LastPe">engine power at previous time step</param>
-    ''' <returns>full load power [kW]</returns>
-    ''' <remarks></remarks>
-    Public Function Pfull(ByVal nU As Single, ByVal LastPe As Single) As Single
-        Dim i As Int32
-        Dim PfullStat As Single
-        Dim PT1 As Single
-
-        'Extrapolation for x < x(1)
-        If LnU(0) >= nU Then
-            If LnU(0) > nU Then MODdata.ModErrors.FLDextrapol = "n= " & nU & " [1/min]"
-            i = 1
-            GoTo lbInt
-        End If
-
-        i = 0
-        Do While LnU(i) < nU And i < iDim
-            i += 1
-        Loop
-
-        'Extrapolation for x > x(imax)
-        If LnU(i) < nU Then
-            MODdata.ModErrors.FLDextrapol = "n= " & nU & " [1/min]"
-        End If
+		'Extrapolation for x > x(imax)
+		If LnU(i) < nU Then
+			'MODdata.ModErrors.FLDextrapol = "n= " & nU & " [1/min]"
+		End If
 
 lbInt:
-        'Interpolation
-        PfullStat = nMtoPe(nU, (nU - LnU(i - 1)) * (LTq(i) - LTq(i - 1)) / (LnU(i) - LnU(i - 1)) + LTq(i - 1))
-        PT1 = (nU - LnU(i - 1)) * (LPT1(i) - LPT1(i - 1)) / (LnU(i) - LnU(i - 1)) + LPT1(i - 1)
+		'Interpolation
+		Return nMtoPe(nU, (nU - LnU(i - 1)) * (LTqDrag(i) - LTqDrag(i - 1)) / (LnU(i) - LnU(i - 1)) + LTqDrag(i - 1))
+	End Function
 
-        'Dynamic Full-load
-        Return Math.Min((1 / (PT1 + 1)) * (PfullStat + PT1 * LastPe), PfullStat)
+	''' <summary>
+	''' Returns full load power [kW] at given engine speed considering transient torque build-up via PT1.
+	''' </summary>
+	''' <param name="nU">engine speed [1/min]</param>
+	''' <param name="LastPe">engine power at previous time step</param>
+	''' <returns>full load power [kW]</returns>
+	''' <remarks></remarks>
+	Public Function Pfull(ByVal nU As Single, ByVal LastPe As Single) As Single
+		Dim i As Int32
+		Dim PfullStat As Single
+		Dim PT1 As Single
 
-    End Function
+		'Extrapolation for x < x(1)
+		If LnU(0) >= nU Then
+			'If LnU(0) > nU Then MODdata.ModErrors.FLDextrapol = "n= " & nU & " [1/min]"
+			i = 1
+			GoTo lbInt
+		End If
 
-    ''' <summary>
-    ''' Returns stationary full load power [kW] at given engine speed.
-    ''' </summary>
-    ''' <param name="nU">engine speed [1/min]</param>
-    ''' <returns>stationary full load power [kW]</returns>
-    ''' <remarks></remarks>
-    Public Function Pfull(ByVal nU As Single) As Single
-        Dim i As Int32
+		i = 0
+		Do While LnU(i) < nU And i < iDim
+			i += 1
+		Loop
 
-        'Extrapolation for x < x(1)
-        If LnU(0) >= nU Then
-            If LnU(0) > nU Then MODdata.ModErrors.FLDextrapol = "n= " & nU & " [1/min]"
-            i = 1
-            GoTo lbInt
-        End If
-
-        i = 0
-        Do While LnU(i) < nU And i < iDim
-            i += 1
-        Loop
-
-        'Extrapolation for x > x(imax)
-        If LnU(i) < nU Then
-            MODdata.ModErrors.FLDextrapol = "n= " & nU & " [1/min]"
-        End If
+		'Extrapolation for x > x(imax)
+		If LnU(i) < nU Then
+			'MODdata.ModErrors.FLDextrapol = "n= " & nU & " [1/min]"
+		End If
 
 lbInt:
-        'Interpolation
-        Return nMtoPe(nU, (nU - LnU(i - 1)) * (LTq(i) - LTq(i - 1)) / (LnU(i) - LnU(i - 1)) + LTq(i - 1))
-    End Function
+		'Interpolation
+		PfullStat = nMtoPe(nU, (nU - LnU(i - 1)) * (LTq(i) - LTq(i - 1)) / (LnU(i) - LnU(i - 1)) + LTq(i - 1))
+		PT1 = (nU - LnU(i - 1)) * (LPT1(i) - LPT1(i - 1)) / (LnU(i) - LnU(i - 1)) + LPT1(i - 1)
 
-    ''' <summary>
-    ''' Returns stationary full load torque [Nm] at given engine speed.
-    ''' </summary>
-    ''' <param name="nU">engine speed [1/min]</param>
-    ''' <returns>stationary full load torque [Nm]</returns>
-    ''' <remarks></remarks>
-    Public Function Tq(ByVal nU As Single) As Single
-        Dim i As Int32
+		'Dynamic Full-load
+		Return Math.Min((1 / (PT1 + 1)) * (PfullStat + PT1 * LastPe), PfullStat)
+	End Function
 
-        'Extrapolation for x < x(1)
-        If LnU(0) >= nU Then
-            If LnU(0) > nU Then MODdata.ModErrors.FLDextrapol = "n= " & nU & " [1/min]"
-            i = 1
-            GoTo lbInt
-        End If
+	''' <summary>
+	''' Returns stationary full load power [kW] at given engine speed.
+	''' </summary>
+	''' <param name="nU">engine speed [1/min]</param>
+	''' <returns>stationary full load power [kW]</returns>
+	''' <remarks></remarks>
+	Public Function Pfull(ByVal nU As Single) As Single
+		Dim i As Int32
 
-        i = 0
-        Do While LnU(i) < nU And i < iDim
-            i += 1
-        Loop
+		'Extrapolation for x < x(1)
+		If LnU(0) >= nU Then
+			'If LnU(0) > nU Then MODdata.ModErrors.FLDextrapol = "n= " & nU & " [1/min]"
+			i = 1
+			GoTo lbInt
+		End If
 
-        'Extrapolation for x > x(imax)
-        If LnU(i) < nU Then
-            MODdata.ModErrors.FLDextrapol = "n= " & nU & " [1/min]"
-        End If
+		i = 0
+		Do While LnU(i) < nU And i < iDim
+			i += 1
+		Loop
+
+		'Extrapolation for x > x(imax)
+		If LnU(i) < nU Then
+			'MODdata.ModErrors.FLDextrapol = "n= " & nU & " [1/min]"
+		End If
 
 lbInt:
-        'Interpolation
-        Return (nU - LnU(i - 1)) * (LTq(i) - LTq(i - 1)) / (LnU(i) - LnU(i - 1)) + LTq(i - 1)
-    End Function
+		'Interpolation
+		Return nMtoPe(nU, (nU - LnU(i - 1)) * (LTq(i) - LTq(i - 1)) / (LnU(i) - LnU(i - 1)) + LTq(i - 1))
+	End Function
 
-    ''' <summary>
-    ''' Calculates and returns Npref [1/min]. Speed at 51% torque/speed-integral between idling and N95h. Defined in Init.
-    ''' </summary>
-    ''' <returns>Npref [1/min]</returns>
-    ''' <remarks></remarks>
-    Public Function fNpref(ByVal Nidle As Single) As Single
-        Dim i As Integer
-        Dim Amax As Single
-        Dim N95h As Single
-        Dim n As Single
-        Dim T0 As Single
-        Dim dn As Single
-        Dim A As Single
-        Dim k As Single
+	''' <summary>
+	''' Returns stationary full load torque [Nm] at given engine speed.
+	''' </summary>
+	''' <param name="nU">engine speed [1/min]</param>
+	''' <returns>stationary full load torque [Nm]</returns>
+	''' <remarks></remarks>
+	Public Function Tq(ByVal nU As Single) As Single
+		Dim i As Int32
 
+		'Extrapolation for x < x(1)
+		If LnU(0) >= nU Then
+			'If LnU(0) > nU Then MODdata.ModErrors.FLDextrapol = "n= " & nU & " [1/min]"
+			i = 1
+			GoTo lbInt
+		End If
 
-        dn = 0.001
+		i = 0
+		Do While LnU(i) < nU And i < iDim
+			i += 1
+		Loop
 
-        N95h = fnUofPfull(0.95 * Pfull(fnUrated), False)
+		'Extrapolation for x > x(imax)
+		If LnU(i) < nU Then
+			'MODdata.ModErrors.FLDextrapol = "n= " & nU & " [1/min]"
+		End If
 
-        If N95h < 0 Then Return -1
+lbInt:
+		'Interpolation
+		Return (nU - LnU(i - 1)) * (LTq(i) - LTq(i - 1)) / (LnU(i) - LnU(i - 1)) + LTq(i - 1)
+	End Function
 
-        Amax = Area(Nidle, N95h)
-
-        For i = 0 To iDim - 1
-
-            If Area(Nidle, LnU(i + 1)) > 0.51 * Amax Then
-
-                n = LnU(i)
-                T0 = LTq(i)
-                A = Area(Nidle, n)
-
-                k = (LTq(i + 1) - LTq(i)) / (LnU(i + 1) - LnU(i))
-
-                Do While A < 0.51 * Amax
-                    n += dn
-                    A += dn * (2 * T0 + k * dn) / 2
-                Loop
-
-                Exit For
-
-            End If
-
-        Next
-
-        Return n
-
-    End Function
-
-    ''' <summary>
-    ''' Calculates torque/speed-integral between two engine speed limits. Used for Npref.
-    ''' </summary>
-    ''' <param name="nFrom">lower engine speed limit [1/min]</param>
-    ''' <param name="nTo">upper engine speed limit [1/min]</param>
-    ''' <returns>torque/speed-integral between nFrom and nTo [Nm/min]</returns>
-    ''' <remarks></remarks>
-    Private Function Area(ByVal nFrom As Single, ByVal nTo As Single) As Single
-        Dim A As Single
-        Dim i As Integer
+	''' <summary>
+	''' Calculates and returns Npref [1/min]. Speed at 51% torque/speed-integral between idling and N95h. Defined in Init.
+	''' </summary>
+	''' <returns>Npref [1/min]</returns>
+	''' <remarks></remarks>
+	Public Function fNpref(ByVal Nidle As Single) As Single
+		Dim i As Integer
+		Dim Amax As Single
+		Dim N95h As Single
+		Dim n As Single
+		Dim T0 As Single
+		Dim dn As Single
+		Dim A As Single
+		Dim k As Single
 
 
-        A = 0
-        For i = 1 To iDim
+		dn = 0.001
 
-            If LnU(i - 1) >= nTo Then Exit For
+		N95h = fnUofPfull(0.95 * Pfull(fnUrated), False)
 
-            If LnU(i - 1) >= nFrom Then
+		If N95h < 0 Then Return -1
+
+		Amax = Area(Nidle, N95h)
+
+		For i = 0 To iDim - 1
+
+			If Area(Nidle, LnU(i + 1)) > 0.51 * Amax Then
+
+				n = LnU(i)
+				T0 = LTq(i)
+				A = Area(Nidle, n)
+
+				k = (LTq(i + 1) - LTq(i)) / (LnU(i + 1) - LnU(i))
+
+				Do While A < 0.51 * Amax
+					n += dn
+					A += dn * (2 * T0 + k * dn) / 2
+				Loop
+
+				Exit For
+
+			End If
+
+		Next
+
+		Return n
+	End Function
+
+	''' <summary>
+	''' Calculates torque/speed-integral between two engine speed limits. Used for Npref.
+	''' </summary>
+	''' <param name="nFrom">lower engine speed limit [1/min]</param>
+	''' <param name="nTo">upper engine speed limit [1/min]</param>
+	''' <returns>torque/speed-integral between nFrom and nTo [Nm/min]</returns>
+	''' <remarks></remarks>
+	Private Function Area(ByVal nFrom As Single, ByVal nTo As Single) As Single
+		Dim A As Single
+		Dim i As Integer
 
 
-                If LnU(i) <= nTo Then
+		A = 0
+		For i = 1 To iDim
 
-                    'Add full segment
-                    A += (LnU(i) - LnU(i - 1)) * (LTq(i) + LTq(i - 1)) / 2
+			If LnU(i - 1) >= nTo Then Exit For
 
-                Else
-
-                    'Add segment till nTo
-                    A += (nTo - LnU(i - 1)) * (Tq(nTo) + LTq(i - 1)) / 2
-
-                End If
-
-            Else
-
-                If LnU(i) > nFrom Then
-
-                    'Add segment starting from nFrom
-                    A += (LnU(i) - nFrom) * (LTq(i) + Tq(nFrom)) / 2
-
-                End If
-
-            End If
-
-        Next
-
-        Return A
+			If LnU(i - 1) >= nFrom Then
 
 
-    End Function
+				If LnU(i) <= nTo Then
 
-    ''' <summary>
-    ''' Calculates and returns engine speed at maximum power [1/min]. 
-    ''' </summary>
-    ''' <returns>engine speed at maximum power [1/min]</returns>
-    ''' <remarks></remarks>
-    Public Function fnUrated() As Single
-        Dim PeMax As Single
-        Dim nU As Single
-        Dim nUmax As Single
-        Dim nUrated As Single
-        Dim dnU As Single
-        Dim P As Single
+					'Add full segment
+					A += (LnU(i) - LnU(i - 1)) * (LTq(i) + LTq(i - 1)) / 2
 
-        dnU = 1
-        PeMax = 0
-        nU = LnU(0)
-        nUmax = LnU(iDim)
-        nUrated = nU
+				Else
 
-        Do
-            P = nMtoPe(nU, Tq(nU))
-            If P > PeMax Then
-                PeMax = P
-                nUrated = nU
-            End If
-            nU += dnU
-        Loop Until nU > nUmax
+					'Add segment till nTo
+					A += (nTo - LnU(i - 1)) * (Tq(nTo) + LTq(i - 1)) / 2
 
-        Return nUrated
+				End If
 
-    End Function
+			Else
 
-    ''' <summary>
-    ''' Calculates and returns lowest or highest engine speed at given full load power [1/min]. 
-    ''' </summary>
-    ''' <param name="PeTarget">full load power [kW]</param>
-    ''' <param name="FromLeft">True= lowest engine speed; False= highest engine speed</param>
-    ''' <returns>lowest or highest engine speed at given full load power [1/min]</returns>
-    ''' <remarks></remarks>
-    Public Function fnUofPfull(ByVal PeTarget As Single, ByVal FromLeft As Boolean) As Single
-        Dim Pe As Single
-        Dim LastPe As Single
-        Dim nU As Single
-        Dim nUmin As Single
-        Dim nUmax As Single
-        Dim nUtarget As Single
-        Dim dnU As Single
+				If LnU(i) > nFrom Then
 
-        dnU = 1
-        nUmin = LnU(0)
-        nUmax = LnU(iDim)
+					'Add segment starting from nFrom
+					A += (LnU(i) - nFrom) * (LTq(i) + Tq(nFrom)) / 2
 
-        If FromLeft Then
+				End If
 
-            nU = nUmin
-            LastPe = nMtoPe(nU, Tq(nU))
-            nUtarget = nU
+			End If
 
-            If LastPe > PeTarget Then Return -1
+		Next
 
-            Do
-                Pe = nMtoPe(nU, Tq(nU))
+		Return A
+	End Function
 
-                If Pe > PeTarget Then
-                    If Math.Abs(LastPe - PeTarget) < Math.Abs(Pe - PeTarget) Then
-                        Return nU - dnU
-                    Else
-                        Return nU
-                    End If
-                End If
+	''' <summary>
+	''' Calculates and returns engine speed at maximum power [1/min]. 
+	''' </summary>
+	''' <returns>engine speed at maximum power [1/min]</returns>
+	''' <remarks></remarks>
+	Public Function fnUrated() As Single
+		Dim PeMax As Single
+		Dim nU As Single
+		Dim nUmax As Single
+		Dim nUrated As Single
+		Dim dnU As Single
+		Dim P As Single
 
-                LastPe = Pe
-                nU += dnU
-            Loop Until nU > nUmax
+		dnU = 1
+		PeMax = 0
+		nU = LnU(0)
+		nUmax = LnU(iDim)
+		nUrated = nU
 
-        Else
+		Do
+			P = nMtoPe(nU, Tq(nU))
+			If P > PeMax Then
+				PeMax = P
+				nUrated = nU
+			End If
+			nU += dnU
+		Loop Until nU > nUmax
 
-            nU = nUmax
-            LastPe = nMtoPe(nU, Tq(nU))
-            nUtarget = nU
+		Return nUrated
+	End Function
 
-            If LastPe > PeTarget Then Return -1
+	''' <summary>
+	''' Calculates and returns lowest or highest engine speed at given full load power [1/min]. 
+	''' </summary>
+	''' <param name="PeTarget">full load power [kW]</param>
+	''' <param name="FromLeft">True= lowest engine speed; False= highest engine speed</param>
+	''' <returns>lowest or highest engine speed at given full load power [1/min]</returns>
+	''' <remarks></remarks>
+	Public Function fnUofPfull(ByVal PeTarget As Single, ByVal FromLeft As Boolean) As Single
+		Dim Pe As Single
+		Dim LastPe As Single
+		Dim nU As Single
+		Dim nUmin As Single
+		Dim nUmax As Single
+		Dim nUtarget As Single
+		Dim dnU As Single
 
-            Do
-                Pe = nMtoPe(nU, Tq(nU))
+		dnU = 1
+		nUmin = LnU(0)
+		nUmax = LnU(iDim)
 
-                If Pe > PeTarget Then
-                    If Math.Abs(LastPe - PeTarget) < Math.Abs(Pe - PeTarget) Then
-                        Return nU + dnU
-                    Else
-                        Return nU
-                    End If
-                End If
+		If FromLeft Then
 
-                LastPe = Pe
-                nU -= dnU
-            Loop Until nU < nUmin
+			nU = nUmin
+			LastPe = nMtoPe(nU, Tq(nU))
+			nUtarget = nU
 
-        End If
+			If LastPe > PeTarget Then Return -1
 
-        Return nUtarget
+			Do
+				Pe = nMtoPe(nU, Tq(nU))
 
-    End Function
+				If Pe > PeTarget Then
+					If Math.Abs(LastPe - PeTarget) < Math.Abs(Pe - PeTarget) Then
+						Return nU - dnU
+					Else
+						Return nU
+					End If
+				End If
 
-    ''' <summary>
-    ''' Calculates and returns maximum torque [Nm]. 
-    ''' </summary>
-    ''' <returns>maximum torque [Nm]</returns>
-    ''' <remarks></remarks>
-    Public Function Tmax() As Single
-        Dim i As Int16
-        Dim Tm As Single
+				LastPe = Pe
+				nU += dnU
+			Loop Until nU > nUmax
 
-        Tm = LTq(0)
-        For i = 1 To iDim
-            If LTq(i) > Tm Then Tm = LTq(i)
-        Next
+		Else
 
-        Return Tm
+			nU = nUmax
+			LastPe = nMtoPe(nU, Tq(nU))
+			nUtarget = nU
 
+			If LastPe > PeTarget Then Return -1
+
+			Do
+				Pe = nMtoPe(nU, Tq(nU))
+
+				If Pe > PeTarget Then
+					If Math.Abs(LastPe - PeTarget) < Math.Abs(Pe - PeTarget) Then
+						Return nU + dnU
+					Else
+						Return nU
+					End If
+				End If
+
+				LastPe = Pe
+				nU -= dnU
+			Loop Until nU < nUmin
+
+		End If
+
+		Return nUtarget
+	End Function
+
+	''' <summary>
+	''' Calculates and returns maximum torque [Nm]. 
+	''' </summary>
+	''' <returns>maximum torque [Nm]</returns>
+	''' <remarks></remarks>
+	Public Function Tmax() As Single
+		Dim i As Int16
+		Dim Tm As Single
+
+		Tm = LTq(0)
+		For i = 1 To iDim
+			If LTq(i) > Tm Then Tm = LTq(i)
+		Next
+
+		Return Tm
 	End Function
 
 	Public Sub LimitToEng()
@@ -552,81 +543,74 @@ lbInt:
 			TqEng = ENG.FLD.Tq(nU)
 			If TqEng < LTq(i) Then LTq(i) = TqEng
 		Next
-
 	End Sub
 
-    Public Function Init(ByVal Nidle As Single) As Boolean
-        Dim Pmax As Single
-        Dim MsgSrc As String
+	Public Function Init(ByVal Nidle As Single) As Boolean
+		Dim Pmax As Single
+		Dim MsgSrc As String
 
-        MsgSrc = "Main/ReadInp/Eng.Init"
+		MsgSrc = "Main/ReadInp/Eng.Init"
 
-        Pmax = Pfull(fnUrated)
+		Pmax = Pfull(fnUrated)
 
-        Nlo = fnUofPfull(0.55 * Pmax, True)
+		Nlo = fnUofPfull(0.55 * Pmax, True)
 
-        If Nlo < 0 Then
-            WorkerMsg(tMsgID.Err, "Failed to calculate Nlo! Expand full load curve!", MsgSrc)
-            Return False
-        End If
+		If Nlo < 0 Then
+			WorkerMsg(tMsgID.Err, "Failed to calculate Nlo! Expand full load curve!", MsgSrc)
+			Return False
+		End If
 
-        N95h = fnUofPfull(0.95 * Pmax, False)
+		N95h = fnUofPfull(0.95 * Pmax, False)
 
-        If N95h < 0 Then
-            WorkerMsg(tMsgID.Err, "Failed to calculate N95h! Expand full load curve!", MsgSrc)
-            Return False
-        End If
+		If N95h < 0 Then
+			WorkerMsg(tMsgID.Err, "Failed to calculate N95h! Expand full load curve!", MsgSrc)
+			Return False
+		End If
 
-        N80h = fnUofPfull(0.8 * Pmax, False)
+		N80h = fnUofPfull(0.8 * Pmax, False)
 
-        If N80h < 0 Then
-            WorkerMsg(tMsgID.Err, "Failed to calculate N80h! Expand full load curve!", MsgSrc)
-            Return False
-        End If
+		If N80h < 0 Then
+			WorkerMsg(tMsgID.Err, "Failed to calculate N80h! Expand full load curve!", MsgSrc)
+			Return False
+		End If
 
-        Npref = fNpref(Nidle)
+		Npref = fNpref(Nidle)
 
-        If Npref < 0 Then
-            WorkerMsg(tMsgID.Err, "Failed to calculate Npref! Expand full load curve!", MsgSrc)
-            Return False
-        End If
+		If Npref < 0 Then
+			WorkerMsg(tMsgID.Err, "Failed to calculate Npref! Expand full load curve!", MsgSrc)
+			Return False
+		End If
 
-        Nhi = fnUofPfull(0.7 * Pmax, False)
+		Nhi = fnUofPfull(0.7 * Pmax, False)
 
-        If Nhi < 0 Then
-            WorkerMsg(tMsgID.Err, "Failed to calculate Nhi! Expand full load curve!", MsgSrc)
-            Return False
-        End If
+		If Nhi < 0 Then
+			WorkerMsg(tMsgID.Err, "Failed to calculate Nhi! Expand full load curve!", MsgSrc)
+			Return False
+		End If
 
-        Return True
+		Return True
+	End Function
 
-    End Function
+	Public Sub DeclInit()
+		Dim i As Integer
 
-    Public Sub DeclInit()
-        Dim i As Integer
+		For i = 0 To iDim
+			LPT1(i) = Declaration.PT1(LnU(i))
+		Next
+	End Sub
 
-        For i = 0 To iDim
-            LPT1(i) = Declaration.PT1(LnU(i))
-        Next
-
-    End Sub
-
-    ''' <summary>
-    ''' Get or set Filepath before calling ReadFile
-    ''' </summary>
-    ''' <value></value>
-    ''' <returns>Full filepath</returns>
-    ''' <remarks></remarks>
-    Public Property FilePath() As String
-        Get
-            Return sFilePath
-        End Get
-        Set(ByVal value As String)
-            sFilePath = value
-        End Set
-    End Property
-
-
-
-
+	''' <summary>
+	''' Get or set Filepath before calling ReadFile
+	''' </summary>
+	''' <value></value>
+	''' <returns>Full filepath</returns>
+	''' <remarks></remarks>
+	Public Property FilePath() As String
+		Get
+			Return sFilePath
+		End Get
+		Set(ByVal value As String)
+			sFilePath = value
+		End Set
+	End Property
 End Class

@@ -32,9 +32,7 @@ Public Class cGBX
 	'Gear shift polygons
 	Public gs_files As List(Of cSubPath)
 	Public Shiftpolygons As List(Of cShiftPolygon)
-
-	Public FldFiles As List(Of cSubPath)
-	Public FLD As List(Of cFLD)
+	Public MaxTorque As List(Of String)
 
 	Public gs_TorqueResv As Single
 	Public gs_SkipGears As Boolean
@@ -77,6 +75,7 @@ Public Class cGBX
 	Public UpshiftMinAcceleration As Single
 	Public DownshiftAfterUpshift As Single
 	Public UpshiftAfterDownshift As Single
+	Public TCshiftFile As String
 
 
 	Public Function CreateFileList() As Boolean
@@ -120,8 +119,7 @@ Public Class cGBX
 		'IsTCgear = New List(Of Boolean)
 		GetrMaps = New List(Of cSubPath)
 		gs_files = New List(Of cSubPath)
-		FldFiles = New List(Of cSubPath)
-		FLD = New List(Of cFLD)
+		MaxTorque = New List(Of String)
 
 		GetrEffDef = New List(Of Boolean)
 		GetrEff = New List(Of Single)
@@ -185,7 +183,8 @@ Public Class cGBX
 			If i > 0 Then
 				'dic0.Add("TCactive", IsTCgear(i))
 				dic0.Add("ShiftPolygon", gs_files(i).PathOrDummy)
-				dic0.Add("FullLoadCurve", FldFiles(i).PathOrDummy)
+				'dic0.Add("FullLoadCurve", FldFiles(i).PathOrDummy)
+				dic0.Add("MaxTorque", MaxTorque(i))
 			End If
 
 			ls.Add(dic0)
@@ -208,7 +207,9 @@ Public Class cGBX
 		dic0.Add("File", TC_file.PathOrDummy)
 		dic0.Add("RefRPM", TCrefrpm)
 		dic0.Add("Inertia", TCinertia)
+		dic0.Add("ShiftPolygon", TCshiftFile)
 		dic.Add("TorqueConverter", dic0)
+
 
 		dic.Add("DownshiftAferUpshiftDelay", DownshiftAfterUpshift)
 		dic.Add("UpshiftAfterDownshiftDelay", UpshiftAfterDownshift)
@@ -258,14 +259,14 @@ Public Class cGBX
 					GetrMaps(i).Init(MyPath, dic("Efficiency"))
 				End If
 
-
+				MaxTorque.Add(dic("MaxTorque"))
 				gs_files.Add(New cSubPath)
-				FldFiles.Add(New cSubPath)
+				'FldFiles.Add(New cSubPath)
 
 				If i = 0 Then
 					'IsTCgear.Add(False)
 					gs_files(i).Init(MyPath, sKey.NoFile)
-					FldFiles(i).Init(MyPath, sKey.NoFile)
+					'FldFiles(i).Init(MyPath, sKey.NoFile)
 				Else
 					'IsTCgear.Add(dic("TCactive"))
 					If FileVersion < 2 Then
@@ -273,11 +274,11 @@ Public Class cGBX
 					Else
 						gs_files(i).Init(MyPath, dic("ShiftPolygon"))
 					End If
-					If FileVersion < 5 Then
-						FldFiles(i).Init(MyPath, sKey.NoFile)
-					Else
-						FldFiles(i).Init(MyPath, dic("FullLoadCurve"))
-					End If
+					'If FileVersion < 5 Then
+					'	FldFiles(i).Init(MyPath, sKey.NoFile)
+					'Else
+					'	FldFiles(i).Init(MyPath, dic("FullLoadCurve"))
+					'End If
 				End If
 
 			Next
@@ -316,9 +317,13 @@ Public Class cGBX
 				TCon = JSON.Content("Body")("TorqueConverter")("Enabled")
 				TC_file.Init(MyPath, JSON.Content("Body")("TorqueConverter")("File"))
 				TCrefrpm = JSON.Content("Body")("TorqueConverter")("RefRPM")
-				If FileVersion > 2 Then TCinertia = JSON.Content("Body")("TorqueConverter")("Inertia")
+				If FileVersion > 2 Then
+					TCinertia = JSON.Content("Body")("TorqueConverter")("Inertia")
+				End If
+				If FileVersion > 5 Then
+					TCshiftFile = JSON.Content("Body")("TorqueConverter")("ShiftPolygon")
+				End If
 			End If
-
 		Catch ex As Exception
 			If ShowMsg Then WorkerMsg(tMsgID.Err, "Failed to read VECTO file! " & ex.Message, MsgSrc)
 			Return False
@@ -355,7 +360,7 @@ Public Class cGBX
 		TCon = (AutomaticTransmission(gs_Type))
 
 		For i = 1 To GearCount()
-			Shiftpolygons(i).SetGenericShiftPoly(FLD(i), ENG.Nidle)
+			Shiftpolygons(i).SetGenericShiftPoly(ENG.FLD, ENG.Nidle)
 		Next
 
 
@@ -442,815 +447,11 @@ Public Class cGBX
 		Return True
 	End Function
 
-	Public Function TCiteration(ByVal Gear As Integer, ByVal nUout As Single, ByVal PeOut As Single, ByVal t As Integer,
-								Optional ByVal LastnU As Single? = Nothing, Optional ByVal LastPe As Single? = Nothing) As Boolean
-
-		Dim i As Integer
-		Dim iDim As Integer
-		Dim nUin As Single
-		Dim Mout As Single
-		Dim Min As Single
-		Dim MinMax As Single
-		Dim MinCalc As Single
-		Dim nuStep As Single
-		Dim nuMin As Single
-		Dim nuMax As Single
-
-		Dim nu As Single
-		Dim mu As Single
-
-		Dim MoutCalc As Single
-
-		Dim Paux As Single
-		Dim PaMot As Single
-		Dim Pfull As Single
-		Dim PinMax As Single
-
-		Dim nuList As New List(Of Single)
-		Dim McalcRatio As New List(Of Single)
-
-		Dim McalcRatMax As Single
-		Dim ErrMin As Single
-		Dim iMin As Integer
-
-		Dim Brake As Boolean
-		Dim FirstDone As Boolean
-
-		Dim rpmLimit As Single
-
-		Dim iOptPassed As Integer
-
-		Dim MsgSrc As String
-
-		MsgSrc = "GBX/TCiteration/t= " & t + 1
-
-		TC_PeBrake = 0
-		TCReduce = False
-		Brake = False
-		TCNeutral = False
-
-		'TC rpm limit
-		If DEV.TClimitOn Then
-			If MODdata.Vh.a(t) >= DEV.TCaccmin Then
-				rpmLimit = DEV.TClimit
-			Else
-				rpmLimit = ENG.Nrated
-			End If
-		Else
-			rpmLimit = ENG.Nrated
-		End If
-
-		'Power to torque
-		Mout = nPeToM(nUout, PeOut)
-
-
-		'Set nu boundaries
-		If Mout < 0 Then
-
-			'Speed too low in motoring(check if nu=1 allows enough engine speed)
-			If nUout < ENG.Nidle Then
-				TCNeutral = True
-				Return True
-			End If
-
-			nuMin = 1
-			nuMax = Math.Min(TCnu(TCdim), nUout / ENG.Nidle)
-
-		Else
-			nuMin = Math.Max(nUout / rpmLimit, TCnu(0))
-			nuMax = Math.Min(TCnuMax, nUout / ENG.Nidle)
-		End If
-
-		If nuMax <= nuMin Then
-			TCReduce = True
-			Return True
-		End If
-
-		'Reduce step size if nu-range is too low
-		nuStep = 0.01
-		Do While (nuMax - nuMin) / nuStep < 10 And nuStep > 0.00001
-			nuStep *= 0.1
-		Loop
-
-
-		Do
-
-			iOptPassed = -1
-			FirstDone = False
-			nu = nuMin - nuStep
-			iDim = -1
-			nuList.Clear()
-			McalcRatio.Clear()
-			Do While nu + nuStep <= nuMax
-
-				'nu
-				nu += nuStep
-
-				'Abort if nu<=0
-				If nu <= 0 Then Continue Do
-
-				'mu
-				mu = fTCmu(nu)
-
-				'Abort if mu<=0
-				If mu <= 0 Then Continue Do
-
-				'nIn
-				nUin = nUout / nu
-
-
-				'AA-TB
-				'Recalculate for Advanced Auxiliaries.
-
-				mAAUX_Global.ClutchEngaged = (Gear > 0)
-
-				mAAUX_Global.Idle = False '(Gear = 0 And Not Pplus And Not Pminus)
-
-				mAAUX_Global.InNeutral = (Gear = 0)
-
-				'Driveline Power = required power at clutch = power at wheels plus powertrain losses
-				'[kW]
-				'**** RL 7-7-15 ****
-				mAAUX_Global.EngineDrivelinePower = PeOut
-
-				'[1/min]
-				mAAUX_Global.EngineSpeed = nu
-
-				'[Nm] (using Power => Torque conversion)
-				mAAUX_Global.EngineDrivelineTorque = nPeToM(EngineSpeed, EngineDrivelinePower)
-
-				'Motoring power (< 0 !!!)
-				'[kW]
-				'** MULTIPLIED BY - TO GET POSITIVE VALUE
-				mAAUX_Global.EngineMotoringPower = -FLD(Gear).Pdrag(EngineSpeed)
-
-				'Additional aux power from driving cycle (optional user input)
-				'[kW]
-				mAAUX_Global.PreExistingAuxPower = MODdata.Vh.Padd(t)
-
-
-				'MinMax
-				Paux = MODdata.Px.fPaux(t, Math.Max(nUin, ENG.Nidle))
-				If LastnU Is Nothing Then
-					PaMot = 0
-				Else
-					PaMot = MODdata.Px.fPaMot(nUin, LastnU)
-				End If
-				If LastPe Is Nothing Then
-					Pfull = FLD(Gear).Pfull(nUin)
-				Else
-					Pfull = FLD(Gear).Pfull(nUin, LastPe)
-				End If
-				PinMax = 0.999 * (Pfull - Paux - PaMot)
-				MinMax = nPeToM(nUin, PinMax)
-
-				'Min
-				Min = Mout / mu
-
-				'Check if Min is too high
-				If Min > MinMax Then Continue Do
-
-				'Calculated input and output torque for given mu
-				MinCalc = fTCtorque(nu, nUin)
-				MoutCalc = MinCalc * mu
-
-				'Add to lists
-				nuList.Add(nu)
-				McalcRatio.Add(MoutCalc / Mout)
-				iDim += 1
-
-				'Calc smallest error for each mu value
-				If FirstDone Then
-					If Math.Abs(1 - McalcRatio(iDim)) < ErrMin Then
-						ErrMin = Math.Abs(1 - McalcRatio(iDim))
-						iMin = iDim
-					End If
-					If McalcRatio(iDim) > McalcRatMax Then McalcRatMax = McalcRatio(iDim)
-					If _
-						(McalcRatio(iDim) > 1 AndAlso McalcRatio(iDim - 1) < 1) OrElse
-						(McalcRatio(iDim) < 1 AndAlso McalcRatio(iDim - 1) > 1) Then
-						iOptPassed = iDim
-					End If
-				Else
-					FirstDone = True
-					ErrMin = Math.Abs(1 - McalcRatio(iDim))
-					iMin = iDim
-					McalcRatMax = McalcRatio(iDim)
-				End If
-
-				'Abort if error is small enough
-				If ErrMin <= DEV.TCiterPrec Then Exit Do
-
-			Loop
-
-			If iDim = -1 Then
-				TCReduce = True
-				Return True
-			End If
-
-			If ErrMin > DEV.TCiterPrec AndAlso iOptPassed > -1 AndAlso nuStep > 0.00001 Then
-				nuMin = nuList(iOptPassed - 1)
-				nuMax = nuList(iOptPassed)
-				nuStep = Math.Max((nuMax - nuMin) / 10.0, 0.00001)
-			Else
-				Exit Do
-			End If
-
-		Loop
-
-		If ErrMin > DEV.TCiterPrec Then
-
-			If McalcRatMax >= 1 Then
-
-				'Creeping...
-				FirstDone = False
-				For i = 0 To iDim
-					If McalcRatio(i) > 1 Then
-						If FirstDone Then
-							If Math.Abs(1 - McalcRatio(i)) < ErrMin Then
-								ErrMin = Math.Abs(1 - McalcRatio(i))
-								iMin = i
-							End If
-						Else
-							FirstDone = True
-							ErrMin = Math.Abs(1 - McalcRatio(i))
-							iMin = i
-						End If
-					End If
-				Next
-
-				Brake = True
-
-			Else
-
-				If MoutCalc > 0 Then
-					TCReduce = True
-					Return True
-				End If
-
-
-			End If
-
-		End If
-
-		nu = nuList(iMin)
-		mu = fTCmu(nu)
-		TCnUin = nUout / nu
-		TCMout = fTCtorque(nu, TCnUin) * mu
-		TCMin = TCMout / mu
-		TCnUout = nUout
-
-		TC_mu = mu
-		TC_nu = nu
-
-		If Brake Then TC_PeBrake = nMtoPe(TCnUout, Mout - TCMout)
-
-
-		Return True
-	End Function
-
-
-	Private Function fTCmu(ByVal nu As Single) As Single
-		Dim i As Int32
-
-		'Extrapolation for x < x(1)
-		If TCnu(0) >= nu Then
-			If TCnu(0) > nu Then MODdata.ModErrors.TCextrapol = "nu= " & nu & " [n_out/n_in]"
-			i = 1
-			GoTo lbInt
-		End If
-
-		i = 0
-		Do While TCnu(i) < nu And i < TCdim
-			i += 1
-		Loop
-
-		'Extrapolation for x > x(imax)
-		If TCnu(i) < nu Then
-			MODdata.ModErrors.TCextrapol = "nu= " & nu & " [n_out/n_in]"
-		End If
-
-lbInt:
-		'Interpolation
-		Return (nu - TCnu(i - 1)) * (TCmu(i) - TCmu(i - 1)) / (TCnu(i) - TCnu(i - 1)) + TCmu(i - 1)
-	End Function
-
-	Private Function fTCtorque(ByVal nu As Single, ByVal nUin As Single) As Single
-		Dim i As Int32
-		Dim M0 As Single
-
-		'Extrapolation for x < x(1)
-		If TCnu(0) >= nu Then
-			If TCnu(0) > nu Then MODdata.ModErrors.TCextrapol = "nu= " & nu & " [n_out/n_in]"
-			i = 1
-			GoTo lbInt
-		End If
-
-		i = 0
-		Do While TCnu(i) < nu And i < TCdim
-			i += 1
-		Loop
-
-		'Extrapolation for x > x(imax)
-		If TCnu(i) < nu Then
-			MODdata.ModErrors.TCextrapol = "nu= " & nu & " [n_out/n_in]"
-		End If
-
-lbInt:
-		'Interpolation
-		M0 = (nu - TCnu(i - 1)) * (TCtorque(i) - TCtorque(i - 1)) / (TCnu(i) - TCnu(i - 1)) + TCtorque(i - 1)
-
-		Return M0 * (nUin / TCrefrpm) ^ 2
-	End Function
-
-	Public Function GSinit() As Boolean
-		Dim i As Integer
-		Dim MsgSrc As String
-
-		MsgSrc = "GBX/Init"
-
-		'Set Gearbox Type-specific settings
-		If gs_Type <> tGearbox.Custom Then
-
-			gs_ShiftInside = cDeclaration.ShiftInside(gs_Type)
-			TCon = AutomaticTransmission(gs_Type)
-			gs_SkipGears = cDeclaration.SkipGears(gs_Type)
-
-		End If
-
-		Shiftpolygons = New List(Of cShiftPolygon)
-		For i = 0 To Igetr.Count - 1
-			Shiftpolygons.Add(New cShiftPolygon(gs_files(i).FullPath, i))
-			If Not Cfg.DeclMode And i > 0 Then
-				'Error-notification within ReadFile()
-				If Not Shiftpolygons(i).ReadFile() Then Return False
-			End If
-		Next
-
-		'Fld
-		For i = 0 To GearCount()
-
-			FLD.Add(New cFLD)
-
-			If FldFile(i) = "" Then
-				FLD(i).FilePath = ENG.FLD.FilePath
-			Else
-				FLD(i).FilePath = FldFile(i)
-			End If
-
-			Try
-				If Not FLD(i).ReadFile(True) Then Return False 'Error message in ReadFile
-			Catch ex As Exception
-				WorkerMsg(tMsgID.Err, "File read error! (" & FldFile(i) & ")", MsgSrc, FldFile(i))
-				Return False
-			End Try
-
-			'If Engine full load is lower than gear's max torque then limit to engine
-			FLD(i).LimitToEng()
-
-
-			If Not FLD(i).Init(ENG.Nidle) Then Return False
-
-		Next
-
-
-		Return True
-	End Function
 
 	Public Function GearCount() As Integer
 		Return Me.Igetr.Count - 1
 	End Function
 
-#Region "Transmission Loss Maps"
-
-	Public Function TrLossMapInit() As Boolean
-		Dim i As Short
-		Dim GBmap0 As cDelaunayMap
-		'Dim n_norm As Double
-		'Dim Pe_norm As Double
-		Dim file As cFile_V3
-		Dim path As String
-		Dim line As String()
-		Dim l As Integer
-		Dim nU As Double
-		Dim M_in As Double
-		Dim M_loss As Double
-		Dim M_out As Double
-
-		Dim dnU As Single
-		Dim dM As Single
-		Dim P_In As Single
-		Dim P_Loss As Single
-		Dim EffSum As Single
-		Dim Anz As Integer
-		Dim EffDiffSum As Single = 0
-		Dim AnzDiff As Integer = 0
-
-		Dim MinG As Single
-		Dim plossG As Single
-
-		Dim MsgSrc As String
-
-		MyGBmaps = New List(Of cDelaunayMap)
-		file = New cFile_V3
-
-		For i = 0 To GBX.GearCount
-
-			MsgSrc = "VEH/TrLossMapInit/G" & i
-
-			If IsNumeric(GetrMap(i, True)) Then
-				GetrEffDef.Add(True)
-				GetrEff.Add(CSng(GBX.GetrMap(i, True)))
-			Else
-				GetrEffDef.Add(False)
-				GetrEff.Add(0)
-			End If
-
-			If GetrEffDef(i) Then
-
-				If GetrEff(i) > 1 Or GetrEff(i) <= 0 Then
-					WorkerMsg(tMsgID.Err, "Gearboy efficiency '" & GetrEff(i) & "' invalid!", MsgSrc)
-					Return False
-				End If
-
-				MyGBmaps.Add(Nothing)
-
-			Else
-
-				path = GetrMaps(i).FullPath
-
-				If Not file.OpenRead(path) Then
-					WorkerMsg(tMsgID.Err, "Cannot read file '" & path & "'!", MsgSrc)
-					MyGBmaps = Nothing
-					Return False
-				End If
-
-				'Skip header
-				file.ReadLine()
-
-				GBmap0 = New cDelaunayMap
-				GBmap0.DualMode = True
-
-				l = 0	'Nur für Fehler-Ausgabe
-				Do While Not file.EndOfFile
-					l += 1
-					line = file.ReadLine
-					Try
-
-						nU = CDbl(line(0))
-						M_in = CDbl(line(1))
-						M_loss = CDbl(line(2))
-
-						M_out = M_in - M_loss
-
-						'old version: Power instead of torque: GBmap0.AddPoints(nU, nMtoPe(nU, M_out), nMtoPe(nU, M_in))
-						GBmap0.AddPoints(nU, M_out, M_in)
-					Catch ex As Exception
-						WorkerMsg(tMsgID.Err, "Error during file read! Line number: " & l & " (" & path & ")", MsgSrc, path)
-						file.Close()
-						MyGBmaps = Nothing
-						Return False
-					End Try
-				Loop
-
-				file.Close()
-
-				If Not GBmap0.Triangulate Then
-					WorkerMsg(tMsgID.Err, "Map triangulation failed! File: " & path, MsgSrc, path)
-					MyGBmaps = Nothing
-					Return False
-				End If
-
-				MyGBmaps.Add(GBmap0)
-
-				'Calculate average efficiency for fast approx. calculation
-				If i > 0 Then
-
-					'If GBX.IsTCgear(i) Then
-
-					'	GetrEff(i) = -1
-
-					'Else
-
-					EffSum = 0
-					Anz = 0
-
-					dnU = (2 / 3) * (ENG.Nrated - ENG.Nidle) / 10
-					nU = ENG.Nidle + dnU
-
-					Do While nU <= ENG.Nrated
-
-						dM = nPeToM(nU, (2 / 3) * FLD(i).Pfull(nU) / 10)
-						M_in = nPeToM(nU, (1 / 3) * FLD(i).Pfull(nU))
-
-						Do While M_in <= nPeToM(nU, FLD(i).Pfull(nU))
-
-							P_In = nMtoPe(nU, M_in)
-
-							P_Loss = IntpolPeLossFwd(i, nU, P_In, False)
-
-							EffSum += (P_In - P_Loss) / P_In
-							Anz += 1
-
-
-							plossG = P_Loss
-							MinG = M_in
-
-
-							'Axle
-							P_In -= P_Loss
-							P_Loss = IntpolPeLossFwd(0, nU / GBX.Igetr(i), P_In, False)
-							EffDiffSum += (P_In - P_Loss) / P_In
-							AnzDiff += 1
-
-							If MODdata.ModErrors.TrLossMapExtr <> "" Then
-								WorkerMsg(tMsgID.Err, "Transmission loss map does not cover full engine operating range!", MsgSrc)
-								WorkerMsg(tMsgID.Err, MODdata.ModErrors.TrLossMapExtr, MsgSrc)
-								WorkerMsg(tMsgID.Err, "nU_In(GB)=" & nU & " [1/min]", MsgSrc)
-								WorkerMsg(tMsgID.Err, "M_In(GB)=" & MinG & " [Nm]", MsgSrc)
-								WorkerMsg(tMsgID.Err, "P_Loss(GB)=" & plossG & " [kW]", MsgSrc)
-								WorkerMsg(tMsgID.Err, "nU_In(axle)=" & CStr(nU / Igetr(i)) & " [1/min]", MsgSrc)
-								WorkerMsg(tMsgID.Err, "M_In(axle)=" & CStr(nPeToM(nU / Igetr(i), P_In)) & " [Nm]", MsgSrc)
-								WorkerMsg(tMsgID.Err, "P_Loss(axle)=" & P_Loss & " [kW]", MsgSrc)
-								Return False
-							End If
-
-							M_in += dM
-						Loop
-
-
-						nU += dnU
-					Loop
-
-					If Anz = 0 Then
-						WorkerMsg(tMsgID.Err, "Failed to calculate approx. transmission losses!", MsgSrc)
-						Return False
-					End If
-
-					GetrEff(i) = EffSum / Anz
-
-					'	End If
-
-				End If
-
-
-			End If
-
-		Next
-
-		If Not GetrEffDef(0) Then
-			GetrEff(0) = EffDiffSum / AnzDiff
-		End If
-
-
-		Return True
-	End Function
-
-	Public Function IntpolPeLoss(ByVal Gear As Integer, ByVal nU As Double, ByVal PeOut As Double, ByVal Approx As Boolean) _
-		As Double
-
-		Dim PeIn As Double
-		Dim WG As Double
-		Dim GBmap As cDelaunayMap
-		Dim i As Integer
-		Dim Ab As Double
-		Dim AbMin As Double
-		Dim iMin As Integer
-		Dim PeOutX As Double
-		Dim GrTxt As String
-		Dim Ploss As Single
-
-		Dim MsgSrc As String
-
-		MsgSrc = "VEH/TrLossMapInterpol/G" & Gear
-
-		If Gear = 0 Then
-			GrTxt = "A"
-		Else
-			GrTxt = Gear.ToString
-		End If
-
-		If GetrEffDef(Gear) Or (Approx AndAlso GetrEff(Gear) > 0) Then
-
-			If PeOut > 0 Then
-				PeIn = PeOut / GetrEff(Gear)
-			Else
-				PeIn = PeOut * GetrEff(Gear)
-			End If
-			Ploss = PeIn - PeOut
-
-		Else
-
-			GBmap = MyGBmaps(Gear)
-
-
-			'Interpolate with Original Values
-			PeIn = nMtoPe(nU, GBmap.Intpol(nU, nPeToM(nU, PeOut)))
-
-			If GBmap.ExtrapolError Then
-
-				'If error: try extrapolation
-
-				'Search for the nearest Map point
-				AbMin = ((GBmap.ptList(0).X - nU) ^ 2 + (GBmap.ptList(0).Y - nPeToM(nU, PeOut)) ^ 2) ^ 0.5
-				iMin = 0
-				For i = 1 To GBmap.ptDim
-					Ab = ((GBmap.ptList(i).X - nU) ^ 2 + (GBmap.ptList(i).Y - nPeToM(nU, PeOut)) ^ 2) ^ 0.5
-					If Ab < AbMin Then
-						AbMin = Ab
-						iMin = i
-					End If
-				Next
-
-				PeOutX = nMtoPe(nU, GBmap.ptList(iMin).Y)
-				PeIn = nMtoPe(nU, GBmap.ptList(iMin).Z)
-
-				'Efficiency
-				If PeOutX > 0 Then
-					If PeIn > 0 Then
-
-						WG = PeOutX / PeIn
-						PeIn = PeOut / WG
-						Ploss = PeIn - PeOut
-
-					Else
-
-						'Drag => Drive: ERROR!
-						WorkerMsg(tMsgID.Err,
-								"Transmission Loss Map invalid! Gear= " & GrTxt & ", nU= " & nU.ToString("0.00") & " [1/min], PeIn=" &
-								PeIn.ToString("0.0") & " [kW], PeOut=" & PeOutX.ToString("0.0") & " [kW]", MsgSrc)
-						WorkerAbort()
-						Return 0
-
-					End If
-
-				ElseIf PeOutX < 0 Then
-
-					If PeIn > 0 Then
-
-						WG = (PeIn - (PeIn - PeOutX)) / PeIn
-						PeIn = PeOut / WG
-						Ploss = PeIn - PeOut
-
-					ElseIf PeIn < 0 Then
-
-						WG = PeIn / PeOutX
-						PeIn = PeOut * WG
-						Ploss = PeIn - PeOut
-
-					Else
-
-						Ploss = Math.Abs(PeOut)
-
-					End If
-
-
-				Else
-
-					If PeIn > 0 Then
-
-						Ploss = PeIn
-
-					ElseIf PeIn < 0 Then
-
-						'Drag => Zero: ERROR!
-						WorkerMsg(tMsgID.Err,
-								"Transmission Loss Map invalid! Gear= " & GrTxt & ", nU= " & nU.ToString("0.00") & " [1/min], PeIn=" &
-								PeIn.ToString("0.0") & " [kW], PeOut=" & PeOutX.ToString("0.0") & " [kW]", MsgSrc)
-						WorkerAbort()
-						Return 0
-					Else
-
-						Ploss = Math.Abs(PeOut)
-
-					End If
-
-				End If
-
-				MODdata.ModErrors.TrLossMapExtr = "Gear= " & GrTxt & ", nU= " & nU.ToString("0.00") & " [1/min], MeOut=" &
-												nPeToM(nU, PeOut).ToString("0.00") & " [Nm]"
-
-			Else
-
-				Ploss = PeIn - PeOut
-
-
-			End If
-
-		End If
-
-		Return Math.Max(Ploss, 0)
-	End Function
-
-	Public Function IntpolPeLossFwd(ByVal Gear As Integer, ByVal nU As Double, ByVal PeIn As Double,
-									ByVal Approx As Boolean) As Double
-
-		Dim PeOut As Double
-		Dim WG As Double
-		Dim GBmap As cDelaunayMap
-		Dim i As Integer
-		Dim Ab As Double
-		Dim AbMin As Double
-		Dim iMin As Integer
-		Dim PeInX As Double
-		Dim GrTxt As String
-
-		Dim MsgSrc As String
-
-		MsgSrc = "VEH/TrLossMapInterpolFwd/G" & Gear
-
-		If Gear = 0 Then
-			GrTxt = "A"
-		Else
-			GrTxt = Gear.ToString
-		End If
-
-		If GetrEffDef(Gear) Or (Approx AndAlso GetrEff(Gear) > 0) Then
-
-			If PeIn > 0 Then
-				PeOut = PeIn * GetrEff(Gear)
-			Else
-				PeOut = PeIn / GetrEff(Gear)
-			End If
-
-		Else
-
-			GBmap = MyGBmaps(Gear)
-
-
-			'Interpolate with original values
-			PeOut = nMtoPe(nU, GBmap.IntpolXZ(nU, nPeToM(nU, PeIn)))
-
-			If GBmap.ExtrapolError Then
-
-				'If error: try extrapolation
-
-				'Search for the nearest Map-point
-				AbMin = ((GBmap.ptList(0).X - nU) ^ 2 + (GBmap.ptList(0).Z - nPeToM(nU, PeIn)) ^ 2) ^ 0.5
-				iMin = 0
-				For i = 1 To GBmap.ptDim
-					Ab = ((GBmap.ptList(i).X - nU) ^ 2 + (GBmap.ptList(i).Z - nPeToM(nU, PeIn)) ^ 2) ^ 0.5
-					If Ab < AbMin Then
-						AbMin = Ab
-						iMin = i
-					End If
-				Next
-
-				PeInX = nMtoPe(nU, GBmap.ptList(iMin).Z)
-				PeOut = nMtoPe(nU, GBmap.ptList(iMin).Y)
-
-				'Efficiency
-				If PeOut > 0 Then
-					If PeInX > 0 Then
-
-						'Drivetrain => Drivetrain
-						WG = PeOut / PeInX
-
-					Else
-
-						'Drag => Drivetrain: ERROR!
-						WorkerMsg(tMsgID.Err,
-								"Transmission Loss Map invalid! Gear= " & GrTxt & ", nU= " & nU.ToString("0.00") & " [1/min], PeIn=" &
-								PeInX.ToString("0.00") & " [kW], PeOut=" & PeOut.ToString("0.00") & " [kW] (fwd)", MsgSrc)
-						WorkerAbort()
-						Return 0
-
-					End If
-
-				Else
-					If PeInX > 0 Then
-
-						WorkerMsg(tMsgID.Warn,
-								"Change of sign in Transmission Loss Map! Set efficiency to 10%. Gear= " & GrTxt & ", nU= " &
-								nU.ToString("0.00") & " [1/min], PeIn=" & PeInX.ToString("0.00") & " [kW], PeOut=" & PeOut.ToString("0.00") &
-								" [kW] (fwd)", MsgSrc)
-						'WorkerAbort()
-						WG = 0.1
-
-					Else
-
-						'Drag => Drag
-						WG = PeInX / PeOut
-
-
-					End If
-				End If
-
-				'Calculate efficiency with PeIn for original PeOut
-				PeOut = PeIn * WG
-
-				MODdata.ModErrors.TrLossMapExtr = "Gear= " & GrTxt & ", nU= " & nU.ToString("0.00") & " [1/min], MeIn=" &
-												nPeToM(nU, PeIn).ToString("0.00") & " [Nm] (fwd)"
-
-			End If
-
-		End If
-
-		Return Math.Max(PeIn - PeOut, 0)
-	End Function
-
-
-#End Region
 
 	Public ReadOnly Property FileList As List(Of String)
 		Get
@@ -1298,18 +499,18 @@ lbInt:
 		End Set
 	End Property
 
-	Public Property FldFile(ByVal x As Short, Optional ByVal Original As Boolean = False) As String
-		Get
-			If Original Then
-				Return FldFiles(x).OriginalPath
-			Else
-				Return FldFiles(x).FullPath
-			End If
-		End Get
-		Set(value As String)
-			FldFiles(x).Init(MyPath, value)
-		End Set
-	End Property
+	'Public Property FldFile(ByVal x As Short, Optional ByVal Original As Boolean = False) As String
+	'	Get
+	'		If Original Then
+	'			Return FldFiles(x).OriginalPath
+	'		Else
+	'			Return FldFiles(x).FullPath
+	'		End If
+	'	End Get
+	'	Set(value As String)
+	'		FldFiles(x).Init(MyPath, value)
+	'	End Set
+	'End Property
 
 
 	Public Property TCfile(Optional ByVal Original As Boolean = False) As String

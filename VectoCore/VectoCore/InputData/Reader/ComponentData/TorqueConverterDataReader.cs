@@ -35,9 +35,9 @@ namespace TUGraz.VectoCore.InputData.Reader.ComponentData
 				characteristicTorque = (from DataRow row in data.Rows
 					select
 						new TorqueConverterEntry() {
-							SpeedRatio = row.ParseDouble((string)Fields.SpeedRatio),
-							Torque = row.ParseDouble((string)Fields.CharacteristicTorque).SI<NewtonMeter>(),
-							TorqueRatio = row.ParseDouble((string)Fields.TorqueRatio)
+							SpeedRatio = row.ParseDouble(Fields.SpeedRatio),
+							Torque = row.ParseDouble(Fields.CharacteristicTorque).SI<NewtonMeter>(),
+							TorqueRatio = row.ParseDouble(Fields.TorqueRatio)
 						}).ToList();
 			} else {
 				characteristicTorque = (from DataRow row in data.Rows

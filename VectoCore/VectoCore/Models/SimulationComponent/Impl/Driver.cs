@@ -30,7 +30,6 @@
 */
 
 using System;
-using System.Windows.Forms.VisualStyles;
 using TUGraz.VectoCommon.Exceptions;
 using TUGraz.VectoCommon.Models;
 using TUGraz.VectoCommon.Utils;

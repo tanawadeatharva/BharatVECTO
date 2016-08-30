@@ -698,10 +698,6 @@ Public Class F_VECTO
 		Change()
 	End Sub
 
-	Private Sub TbAlookahead_TextChanged(sender As Object, e As EventArgs)
-		Change()
-	End Sub
-
 	Private Sub LvCycles_AfterLabelEdit(sender As Object, e As LabelEditEventArgs) _
 		Handles LvCycles.AfterLabelEdit
 		Change()
@@ -1131,8 +1127,7 @@ lbDlog:
 
 					For i = 1 To GBX0.GearCount
 
-						FLD0.FilePath = GBX0.FldFile(i)
-						If FLD0.FilePath.Trim = "" Then FLD0.FilePath = ENG0.PathFLD
+						FLD0.FilePath = ENG0.PathFLD
 
 						If FLD0.ReadFile(True, False) Then
 

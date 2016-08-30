@@ -29,19 +29,16 @@
 *   Martin Rexeis, rexeis@ivt.tugraz.at, IVT, Graz University of Technology
 */
 
-using System;
 using System.Collections.Generic;
 using System.Data;
 using System.Linq;
 using Newtonsoft.Json.Linq;
-using Org.BouncyCastle.Asn1.Mozilla;
 using TUGraz.VectoCommon.Exceptions;
 using TUGraz.VectoCommon.InputData;
 using TUGraz.VectoCommon.Models;
 using TUGraz.VectoCommon.Utils;
 using TUGraz.VectoCore.InputData.Impl;
 using TUGraz.VectoCore.Models.Declaration;
-using TUGraz.VectoCore.Models.Simulation.Data;
 
 namespace TUGraz.VectoCore.InputData.FileIO.JSON
 {
@@ -66,6 +63,15 @@ namespace TUGraz.VectoCore.InputData.FileIO.JSON
 					resultGears.Add(CreateGear(i, gear));
 				}
 				return resultGears;
+			}
+		}
+
+		public override DataTable ShiftPolygon
+		{
+			get
+			{
+				return ReadTableData(Body.GetEx(JsonKeys.Gearbox_TorqueConverter)
+					.GetEx<string>("ShiftPolygon"), "TorqueConverter Shift Polygon");
 			}
 		}
 	}
@@ -174,6 +180,15 @@ namespace TUGraz.VectoCore.InputData.FileIO.JSON
 			get { return Body.GetEx<double>(JsonKeys.Gearbox_Inertia).SI<KilogramSquareMeter>(); }
 		}
 
+		public virtual DataTable ShiftPolygon
+		{
+			get
+			{
+				return ReadTableData(Body.GetEx(JsonKeys.Gearbox_Gears)[1].GetEx<string>("ShiftPolygon"),
+					"TorqueConverter Shift Polygon");
+			}
+		}
+
 		public Second TractionInterruption
 		{
 			get { return Body.GetEx<double>(JsonKeys.Gearbox_TractionInterruption).SI<Second>(); }
@@ -191,11 +206,9 @@ namespace TUGraz.VectoCore.InputData.FileIO.JSON
 					var torqueConverter = gear.GetEx<bool>(JsonKeys.Gearbox_Gear_TCactive);
 
 					if (torqueConverter) {
-						if (gears[i + 1].GetEx<bool>(JsonKeys.Gearbox_Gear_TCactive)) {
-							resultGears.Add(CreateGear(gearNr, gear));
-						} else {
-							resultGears.Add(CreateTorqueConverterGear(gearNr, gear, gears[++i]));
-						}
+						resultGears.Add(gears[i + 1].GetEx<bool>(JsonKeys.Gearbox_Gear_TCactive)
+							? CreateGear(gearNr, gear)
+							: CreateTorqueConverterGear(gearNr, gear, gears[++i]));
 					} else {
 						resultGears.Add(CreateGear(gearNr, gear));
 					}
@@ -238,7 +251,10 @@ namespace TUGraz.VectoCore.InputData.FileIO.JSON
 			return new TransmissionInputData {
 				Gear = gearNumber,
 				Ratio = gear.GetEx<double>(JsonKeys.Gearbox_Gear_Ratio),
-				MaxTorque = gear["MaxTorque"] != null ? gear["MaxTorque"].Value<double>().SI<NewtonMeter>() : null,
+				MaxTorque =
+					gear["MaxTorque"] != null && !string.IsNullOrEmpty(gear["MaxTorque"].ToString())
+						? gear["MaxTorque"].Value<double>().SI<NewtonMeter>()
+						: null,
 				LossMap =
 					gear[JsonKeys.Gearbox_Gear_LossMapFile] != null
 						? ReadTableData(gear.GetEx<string>(JsonKeys.Gearbox_Gear_LossMapFile),

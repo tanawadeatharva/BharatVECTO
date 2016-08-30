@@ -30,7 +30,6 @@
 */
 
 using System;
-using System.Collections.Generic;
 using TUGraz.VectoCommon.Models;
 using TUGraz.VectoCore.Models.Connector.Ports;
 using TUGraz.VectoCore.Models.Simulation;

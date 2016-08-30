@@ -126,6 +126,7 @@ namespace TUGraz.VectoCore.Tests.Utils
 		}
 
 		public PerSecond EngineN95hSpeed { get; set; }
+		public PerSecond EngineN80hSpeed { get; set; }
 	}
 
 	public class MockDrivingCycleOutPort : LoggingObject, IDrivingCycleOutPort

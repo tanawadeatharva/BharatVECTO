@@ -46,9 +46,9 @@ Public Module VECTO_Global
 	Public GBX As cGBX
 	Public MAP As cMAP
 	Public DRI As cDRI
-	Public MODdata As cMOD
+	'Public MODdata As cMOD
 	Public Lic As cLicense
-	Public VSUM As cVSUM
+	'Public VSUM As cVSUM
 	Public DEV As cDEV
 
 	Public Declaration As cDeclaration

@@ -1,5 +1,4 @@
-﻿using System.CodeDom;
-using TUGraz.VectoCommon.Exceptions;
+﻿using TUGraz.VectoCommon.Exceptions;
 using TUGraz.VectoCommon.Models;
 using TUGraz.VectoCommon.Utils;
 using TUGraz.VectoCore.Configuration;
@@ -14,24 +13,24 @@ using TUGraz.VectoCore.Utils;
 
 namespace TUGraz.VectoCore.Models.SimulationComponent.Impl
 {
-	public class ATGearbox : AbstractGearbox<ATGearbox.ATGearboxState>, IGearbox, ITnOutPort, ITnInPort,
+	public class ATGearbox : AbstractGearbox<ATGearbox.ATGearboxState>, IGearbox, ITnInPort,
 		IClutchInfo
 	{
 		protected internal bool Disengaged = true;
 
-		protected internal readonly IShiftStrategy _strategy;
+		protected internal readonly IShiftStrategy Strategy;
 
-		protected TorqueConverter TorqueConverter;
+		protected internal TorqueConverter TorqueConverter;
 
 		public Second LastShift { get; private set; }
 
 		public ATGearbox(IVehicleContainer container, GearboxData gearboxModelData, IShiftStrategy strategy)
 			: base(container, gearboxModelData)
 		{
-			_strategy = strategy;
-			_strategy.Gearbox = this;
+			Strategy = strategy;
+			Strategy.Gearbox = this;
 			LastShift = -double.MaxValue.SI<Second>();
-			TorqueConverter = new TorqueConverter(this, _strategy, container, gearboxModelData.TorqueConverterData);
+			TorqueConverter = new TorqueConverter(this, Strategy, container, gearboxModelData.TorqueConverterData);
 		}
 
 
@@ -58,7 +57,7 @@ namespace TUGraz.VectoCore.Models.SimulationComponent.Impl
 		public override IResponse Initialize(NewtonMeter outTorque, PerSecond outAngularVelocity)
 		{
 			if (Disengaged) {
-				Gear = _strategy.InitGear(0.SI<Second>(), Constants.SimulationSettings.TargetTimeInterval, outTorque,
+				Gear = Strategy.InitGear(0.SI<Second>(), Constants.SimulationSettings.TargetTimeInterval, outTorque,
 					outAngularVelocity);
 			}
 			var inAngularVelocity = 0.SI<PerSecond>();
@@ -136,7 +135,7 @@ namespace TUGraz.VectoCore.Models.SimulationComponent.Impl
 			Log.Debug("AT-Gearbox Power Request: torque: {0}, angularVelocity: {1}", outTorque, outAngularVelocity);
 
 			if (DataBus.VehicleStopped && outAngularVelocity > 0) {
-				Gear = _strategy.InitGear(absTime, dt, outTorque, outAngularVelocity);
+				Gear = Strategy.InitGear(absTime, dt, outTorque, outAngularVelocity);
 				LastShift = absTime;
 				Disengaged = false;
 			}
@@ -156,7 +155,7 @@ namespace TUGraz.VectoCore.Models.SimulationComponent.Impl
 				retVal.Switch()
 					.Case<ResponseGearShift>(r => {
 						loop = true;
-						Gear = _strategy.Engage(absTime, dt, outTorque, outAngularVelocity);
+						Gear = Strategy.Engage(absTime, dt, outTorque, outAngularVelocity);
 						LastShift = absTime;
 					});
 			} while (loop && ++count < 2);
@@ -202,7 +201,7 @@ namespace TUGraz.VectoCore.Models.SimulationComponent.Impl
 				return TorqueConverter.Request(absTime, dt, inTorque, inAngularVelocity, dryRun);
 			}
 			if (!dryRun &&
-				_strategy.ShiftRequired(absTime, dt, outTorque, outAngularVelocity, inTorque, inAngularVelocity, Gear, LastShift)) {
+				Strategy.ShiftRequired(absTime, dt, outTorque, outAngularVelocity, inTorque, inAngularVelocity, Gear, LastShift)) {
 				return new ResponseGearShift() {
 					Source = this
 				};
