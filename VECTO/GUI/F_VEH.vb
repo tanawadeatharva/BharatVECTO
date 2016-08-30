@@ -543,11 +543,6 @@ Public Class F_VEH
 		Change()
 	End Sub
 
-	Private Sub CbRim_SelectedIndexChanged(sender As Object, e As EventArgs)
-		Change()
-		DeclInit()
-	End Sub
-
 	Private Sub TBcw_TextChanged(sender As Object, e As EventArgs) _
 		Handles TbLoad.TextChanged, TBrdyn.TextChanged, TBcdA.TextChanged, TbCdFile.TextChanged, TbRtRatio.TextChanged,
 				cbAngularGearType.SelectedIndexChanged, TbRtPath.TextChanged, tbAngularGearLossMapPath.TextChanged,

@@ -40,17 +40,15 @@ Public Class cRegression
 
         Public PearsonsR As Double
 
-        Public t As Double
+		Public t As Double
 
-        Dim Residuals As ArrayList = New ArrayList
+		Public Overrides Function ToString() As String
 
-        Public Overrides Function ToString() As String
+			Dim ret As String = "SampleSize=" & Me.SampleSize & vbCrLf & "StandardError=" & Me.StandardError & vbCrLf & "y=" & Me.a & " + " & Me.b & "x"
 
-            Dim ret As String = "SampleSize=" & Me.SampleSize & vbCrLf & "StandardError=" & Me.StandardError & vbCrLf & "y=" & Me.a & " + " & Me.b & "x"
+			Return ret
 
-            Return ret
-
-        End Function
+		End Function
 
     End Class
 

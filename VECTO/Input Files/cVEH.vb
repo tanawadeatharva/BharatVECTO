@@ -42,7 +42,6 @@ Public Class cVEH
 	Public RtType As tRtType '0=None, 1=Primary, 2=Secondary
 	Public RtRatio As Single = 0
 	Public RtFile As cSubPath
-	Private RtDim As Integer
 	Private RtnU As List(Of Single)
 	Private RtM As List(Of Single)
 

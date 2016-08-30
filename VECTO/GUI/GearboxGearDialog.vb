@@ -88,12 +88,6 @@ Public Class GearboxGearDialog
 		End If
 	End Sub
 
-	Private Sub BtBrowseFld_Click(sender As Object, e As EventArgs)
-		If fbFLD.OpenDialog(fFileRepl(TbMaxTorque.Text, GbxPath)) Then
-			TbMaxTorque.Text = fFileWoDir(fbFLD.Files(0), GbxPath)
-		End If
-	End Sub
-
 	Private Sub Button1_Click(sender As Object, e As EventArgs) Handles BtPrevious.Click
 		If Not IsNumeric(TbRatio.Text) Then
 			MsgBox("Gear ratio is invalid!")

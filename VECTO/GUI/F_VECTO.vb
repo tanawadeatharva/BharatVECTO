@@ -698,10 +698,6 @@ Public Class F_VECTO
 		Change()
 	End Sub
 
-	Private Sub TbAlookahead_TextChanged(sender As Object, e As EventArgs)
-		Change()
-	End Sub
-
 	Private Sub LvCycles_AfterLabelEdit(sender As Object, e As LabelEditEventArgs) _
 		Handles LvCycles.AfterLabelEdit
 		Change()

@@ -61,9 +61,6 @@ Public Class F_MAINForm
 	Private ConMenTarget As ListView
 	Private ConMenTarJob As Boolean
 
-	Private MODpath As String
-	Private MODVehList As Int32()
-
 	Private CycleTabPage As TabPage
 	Private CycleTabPageVisible As Boolean
 
@@ -128,7 +125,6 @@ Public Class F_MAINForm
 		fbVEH = New cFileBrowser("vveh")
 		fbMAP = New cFileBrowser("vmap")
 		fbDRI = New cFileBrowser("vdri")
-		fbFLD = New cFileBrowser("vfld")
 		fbENG = New cFileBrowser("veng")
 		fbGBX = New cFileBrowser("vgbx")
 		fbACC = New cFileBrowser("vacc")
@@ -1496,27 +1492,6 @@ lbFound:
 #End Region
 
 	'VECTO Start button - Calls VECTO_Launcher or aborts calculation
-	Private Sub Button1_Click(sender As Object, e As EventArgs)
-
-		'VECTO Start/Stop
-		If VECTOworker.IsBusy Then
-
-			'If VECTO already running: STOP
-			ComLineShutDown = False
-			JobAbort()
-
-		Else
-
-			'...Otherwise: START
-
-			'Save Lists if Crash
-			SaveFileLists()
-
-			'Start
-			VECTO_Launcher()
-
-		End If
-	End Sub
 
 	Private Sub btStartV3_Click(sender As Object, e As EventArgs) Handles btStartV3.Click
 		If Not VECTOworkerV3.IsBusy Then
