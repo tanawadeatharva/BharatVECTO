@@ -122,7 +122,5 @@ namespace TUGraz.VectoCore.Tests.Utils
 		{
 			throw new NotImplementedException();
 		}
-
-		public PTOEngineCycleController PTOController { get; set; }
 	}
 }

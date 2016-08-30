@@ -8,12 +8,16 @@ using TUGraz.VectoCore.Models.SimulationComponent.Data;
 
 namespace TUGraz.VectoCore.Models.SimulationComponent.Impl
 {
-	public class PTOEngineCycleController : PowertrainDrivingCycle, ICombustionEngineIdleController
+	public class PTOCycleController : PowertrainDrivingCycle, IIdleController
 	{
-		public ITnOutPort RequestPort { get; set; }
+		public ITnOutPort RequestPort
+		{
+			set { NextComponent = value; }
+		}
+
 		protected Second IdleStart;
 
-		public PTOEngineCycleController(IVehicleContainer container, DrivingCycleData cycle)
+		public PTOCycleController(IVehicleContainer container, DrivingCycleData cycle)
 			: base(container, cycle) {}
 
 		public IResponse Request(Second absTime, Second dt, NewtonMeter outTorque, PerSecond outAngularVelocity,
@@ -28,7 +32,7 @@ namespace TUGraz.VectoCore.Models.SimulationComponent.Impl
 			if (IdleStart == null) {
 				IdleStart = absTime;
 			}
-			return base.Request(absTime, dt);
+			return base.Request(absTime - IdleStart, dt);
 		}
 
 		public IResponse Initialize(NewtonMeter outTorque, PerSecond outAngularVelocity)
@@ -46,6 +50,11 @@ namespace TUGraz.VectoCore.Models.SimulationComponent.Impl
 			RightSample.MoveNext();
 
 			IdleStart = null;
+		}
+
+		public Second GetNextCycleTime()
+		{
+			return IdleStart + RightSample.Current.Time;
 		}
 	}
 }

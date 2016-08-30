@@ -37,7 +37,7 @@ using TUGraz.VectoCore.Models.SimulationComponent;
 
 namespace TUGraz.VectoCore.Tests.Utils
 {
-	public class MockIdleController : ICombustionEngineIdleController
+	public class MockIdleController : IIdleController
 	{
 		public IResponse Request(Second absTime, Second dt, NewtonMeter outTorque, PerSecond outAngularVelocity, bool dryRun = false)
 		{

@@ -88,7 +88,6 @@ namespace TUGraz.VectoCore.Models.SimulationComponent.Impl
 		#endregion
 
 		public abstract bool ClutchClosed(Second absTime);
-		public PTOEngineCycleController PTOController { get; set; }
 	}
 
 	public class GearboxState : SimpleComponentState

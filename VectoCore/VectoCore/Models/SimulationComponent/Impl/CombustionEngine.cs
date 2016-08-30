@@ -128,7 +128,7 @@ namespace TUGraz.VectoCore.Models.SimulationComponent.Impl
 			get { return ModelData.FullLoadCurve.N95hSpeed; }
 		}
 
-		public ICombustionEngineIdleController IdleController
+		public IIdleController IdleController
 		{
 			get { return EngineIdleController ?? (EngineIdleController = new CombustionEngineIdleController(this)); }
 		}
@@ -481,7 +481,7 @@ namespace TUGraz.VectoCore.Models.SimulationComponent.Impl
 			// ReSharper disable once InconsistentNaming
 		}
 
-		protected class CombustionEngineIdleController : LoggingObject, ICombustionEngineIdleController
+		protected class CombustionEngineIdleController : LoggingObject, IIdleController
 		{
 			protected readonly double PeDropSlope = -0.75;
 			protected readonly double PeDropOffset = 1.0;

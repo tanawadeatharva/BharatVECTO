@@ -77,11 +77,6 @@ namespace TUGraz.VectoCore.Models.SimulationComponent.Impl
 			AbsTime = 0.SI<Second>();
 		}
 
-		protected PowertrainDrivingCycle(IVehicleContainer container) : base(container)
-		{
-			AbsTime = 0.SI<Second>();
-		}
-
 		#region ISimulationOutPort
 
 		public IResponse Request(Second absTime, Meter ds)

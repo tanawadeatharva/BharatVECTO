@@ -32,11 +32,11 @@ namespace TUGraz.VectoCore.Models.SimulationComponent.Impl
 			TorqueConverter = new TorqueConverter(this, Strategy, container, gearboxModelData.TorqueConverterData);
 		}
 
-		private ICombustionEngineIdleController _idleController;
+		private IIdleController _idleController;
 
 		public bool TorqueConverterLocked { get; protected internal set; }
 
-		public ICombustionEngineIdleController IdleController
+		public IIdleController IdleController
 		{
 			get { return _idleController; }
 			set

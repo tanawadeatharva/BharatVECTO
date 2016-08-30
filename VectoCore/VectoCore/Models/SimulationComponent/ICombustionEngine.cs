@@ -39,6 +39,6 @@ namespace TUGraz.VectoCore.Models.SimulationComponent
 	/// </summary>
 	public interface ICombustionEngine : ITnOutProvider, IAuxOutProvider, IEngineInfo
 	{
-		ICombustionEngineIdleController IdleController { get; }
+		IIdleController IdleController { get; }
 	}
 }
