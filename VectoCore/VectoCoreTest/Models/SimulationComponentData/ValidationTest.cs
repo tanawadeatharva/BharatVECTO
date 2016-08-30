@@ -93,7 +93,7 @@ namespace TUGraz.VectoCore.Tests.Models.SimulationComponentData
 			data.FullLoadCurve.EngineData = data;
 
 			var results = data.Validate(ExecutionMode.Declaration);
-			Assert.IsFalse(results.Any(), "Validation Failed: " + "; ".Join(results.Select(r => r.ErrorMessage)));
+			Assert.IsFalse(results.Any(), "Validation Failed: " + string.Join("; ", results.Select(r => r.ErrorMessage)));
 			Assert.IsTrue(data.IsValid());
 		}
 
@@ -128,7 +128,7 @@ namespace TUGraz.VectoCore.Tests.Models.SimulationComponentData
 			var engineData = dao.CreateEngineData(data, null);
 
 			var results = engineData.Validate(ExecutionMode.Declaration);
-			Assert.IsFalse(results.Any(), "Validation failed: " + "; ".Join(results.Select(r => r.ErrorMessage)));
+			Assert.IsFalse(results.Any(), "Validation failed: " + string.Join("; ", results.Select(r => r.ErrorMessage)));
 			Assert.IsTrue(engineData.IsValid());
 		}
 
@@ -166,7 +166,8 @@ namespace TUGraz.VectoCore.Tests.Models.SimulationComponentData
 			var engineData = dao.CreateEngineData(data, GearboxType.AMT);
 
 			var results = engineData.Validate(ExecutionMode.Declaration);
-			Assert.IsFalse(results.Any(), "Validation failed: " + "; ".Join(results.Select(r => r.ErrorMessage)));
+			Assert.IsFalse(results.Any(), "Validation failed: " + string.Join("; ", results.Select(r => r.ErrorMessage)));
+
 			Assert.IsTrue(engineData.IsValid());
 		}
 

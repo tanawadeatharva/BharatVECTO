@@ -107,7 +107,7 @@ namespace TUGraz.VectoCore.Models.SimulationComponent.Data
 				.Warn(
 					"Crosswind correction file: Header line is not valid. Expected: '{0}, {1}', Got: '{2}'. Falling back to column index.",
 					FieldsSpeedDependent.Velocity, FieldsSpeedDependent.Cd,
-					", ".Join(data.Columns.Cast<DataColumn>().Select(c => c.ColumnName).Reverse()));
+					string.Join(", ", data.Columns.Cast<DataColumn>().Select(c => c.ColumnName).Reverse()));
 			return ParseSpeedDependentFromColumnIndizes(data, aerodynamicDragArea);
 		}
 
@@ -140,20 +140,20 @@ namespace TUGraz.VectoCore.Models.SimulationComponent.Data
 		{
 			return (from DataRow row in betaTable.Rows
 				select
-					new AirDragBetaEntry() {
-						Beta = row.ParseDouble(0),
-						DeltaCdA = row.ParseDouble(1).SI<SquareMeter>()
-					}).ToList();
+				new AirDragBetaEntry() {
+					Beta = row.ParseDouble(0),
+					DeltaCdA = row.ParseDouble(1).SI<SquareMeter>()
+				}).ToList();
 		}
 
 		private static List<AirDragBetaEntry> ParseCdxABetaFromColumnNames(DataTable betaTable)
 		{
 			return (from DataRow row in betaTable.Rows
 				select
-					new AirDragBetaEntry() {
-						Beta = row.ParseDouble(FieldsCdxABeta.Beta),
-						DeltaCdA = row.ParseDouble(FieldsCdxABeta.DeltaCdxA).SI<SquareMeter>()
-					}).ToList();
+				new AirDragBetaEntry() {
+					Beta = row.ParseDouble(FieldsCdxABeta.Beta),
+					DeltaCdA = row.ParseDouble(FieldsCdxABeta.DeltaCdxA).SI<SquareMeter>()
+				}).ToList();
 		}
 
 		private static bool HeaderIsValid(DataColumnCollection columns)

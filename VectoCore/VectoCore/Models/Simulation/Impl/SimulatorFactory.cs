@@ -127,9 +127,9 @@ namespace TUGraz.VectoCore.Models.Simulation.Impl
 						addReportResult: _mode == ExecutionMode.Declaration ? addReportResult : null,
 						writeEngineOnly: _engineOnlyMode,
 						filter: modDataFilter) {
-							WriteAdvancedAux = data.AdvancedAux != null && data.AdvancedAux.AuxiliaryAssembly == AuxiliaryModel.Advanced,
-							WriteModalResults = _mode != ExecutionMode.Declaration || WriteModalResults
-						};
+						WriteAdvancedAux = data.AdvancedAux != null && data.AdvancedAux.AuxiliaryAssembly == AuxiliaryModel.Advanced,
+						WriteModalResults = _mode != ExecutionMode.Declaration || WriteModalResults
+					};
 				var current = i++;
 				var builder = new PowertrainBuilder(modContainer, (writer, mass, loading) =>
 					SumData.Write(modContainer, d.JobName, string.Format("{0}-{1}", JobNumber, current),
@@ -154,7 +154,7 @@ namespace TUGraz.VectoCore.Models.Simulation.Impl
 				var validationErrors = run.Validate(_mode);
 				if (validationErrors.Any()) {
 					throw new VectoException("Validation of Run-Data Failed: " +
-											"\n".Join(validationErrors.Select(r => r.ErrorMessage)));
+											string.Join("\n", validationErrors.Select(r => r.ErrorMessage)));
 				}
 
 				yield return run;

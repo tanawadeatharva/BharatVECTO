@@ -55,7 +55,6 @@ namespace TUGraz.VectoCore.InputData.Reader
 			}
 		}
 
-
 		public static FullLoadCurve Create(DataTable data, bool declarationMode = false, bool engineFld = false)
 		{
 			if (engineFld) {
@@ -80,7 +79,7 @@ namespace TUGraz.VectoCore.InputData.Reader
 				Logger<FullLoadCurve>().Warn(
 					"FullLoadCurve: Header Line is not valid. Expected: '{0}, {1}, {2}', Got: '{3}'. Falling back to column index.",
 					Fields.EngineSpeed, Fields.TorqueFullLoad,
-					Fields.TorqueDrag, ", ".Join(data.Columns.Cast<DataColumn>().Select(c => c.ColumnName)));
+					Fields.TorqueDrag, string.Join(", ", data.Columns.Cast<DataColumn>().Select(c => c.ColumnName)));
 
 				entriesFld = CreateFromColumnIndizes(data, engineFld);
 			}
@@ -125,7 +124,6 @@ namespace TUGraz.VectoCore.InputData.Reader
 					TorqueDrag = (engineFld ? row.ParseDouble(2).SI<NewtonMeter>() : null)
 				}).ToList();
 		}
-
 
 		public static class Fields
 		{

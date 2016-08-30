@@ -44,7 +44,7 @@ namespace TUGraz.VectoCore.InputData.Reader.ComponentData
 				data.Columns[1].ColumnName = Fields.PTOTorque;
 				LoggingObject.Logger<RetarderLossMap>().Warn(
 					"PTO Idle LossMap: Header Line is not valid. Expected: '{0}, {1}', Got: '{2}'. Falling back to column index.",
-					Fields.EngineSpeed, Fields.PTOTorque, ", ".Join(data.Columns.Cast<DataColumn>().Select(c => c.ColumnName)));
+					Fields.EngineSpeed, Fields.PTOTorque, string.Join(", ", data.Columns.Cast<DataColumn>().Select(c => c.ColumnName)));
 			}
 
 			return new PTOLossMap(data.Rows.Cast<DataRow>()

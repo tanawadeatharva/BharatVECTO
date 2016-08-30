@@ -302,10 +302,10 @@ namespace TUGraz.VectoCore.InputData.Reader.DataObjectAdapter
 			return SetCommonRetarderData(retarder);
 		}
 
-		public PTOTransmissionData CreatePTOTransmissionData(IPTOTransmissionInputData pto)
+		public PTOData CreatePTOTransmissionData(IPTOTransmissionInputData pto)
 		{
 			if (pto.PTOTransmissionType != "None") {
-				return new PTOTransmissionData {
+				return new PTOData {
 					TransmissionType = pto.PTOTransmissionType,
 					LossMap = PTOIdleLossMapReader.Create(pto.PTOLossMap),
 					PTOCycle = DrivingCycleDataReader.ReadFromDataTable(pto.PTOCycle, CycleType.PTO, "PTO", false)

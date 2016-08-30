@@ -46,7 +46,7 @@ namespace TUGraz.VectoCore.Models.SimulationComponent.Data.Gearbox
 				LoggingObject.Logger<TransmissionLossMap>().Warn(
 					"TransmissionLossMap {5}: Header line is not valid. Expected: '{0}, {1}, {2}'. Got: '{4}'. Falling back to column index.",
 					Fields.InputSpeed, Fields.InputTorque, Fields.TorqeLoss,
-					", ".Join(data.Columns.Cast<DataColumn>().Select(c => c.ColumnName).Reverse()), gearName);
+					string.Join(", ", data.Columns.Cast<DataColumn>().Select(c => c.ColumnName).Reverse()), gearName);
 
 				entries = CreateFromColumIndizes(data);
 			}
