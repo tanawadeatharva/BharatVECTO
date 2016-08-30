@@ -174,6 +174,11 @@ namespace TUGraz.VectoCore.Models.Simulation.Impl
 			get { return Engine.EngineN95hSpeed; }
 		}
 
+		public PerSecond EngineN80hSpeed
+		{
+			get { return Engine.EngineN80hSpeed; }
+		}
+
 		#endregion
 
 		#region IVehicleCockpit
