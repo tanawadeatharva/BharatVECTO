@@ -181,10 +181,10 @@ namespace TUGraz.VectoCore.Tests.Models.Simulation
 			var container = new VehicleContainer(ExecutionMode.Engineering);
 
 			if (autoCycle) {
-				var cycleTypeCalc = DrivingCycleDataReader.DetectCycleType(VectoCSVFile.ReadStream(inputData.GetStream()));
+				var cycleTypeCalc = DrivingCycleDataReader.DetectCycleType(VectoCSVFile.ReadStream(inputData.ToStream()));
 				Assert.AreEqual(cycleType, cycleTypeCalc);
 			}
-			var drivingCycle = DrivingCycleDataReader.ReadFromStream(inputData.GetStream(), cycleType, "", crossWindRequired);
+			var drivingCycle = DrivingCycleDataReader.ReadFromStream(inputData.ToStream(), cycleType, "", crossWindRequired);
 			Assert.AreEqual(cycleType, drivingCycle.CycleType);
 
 			var cycle = new MeasuredSpeedDrivingCycle(container, drivingCycle);
@@ -204,7 +204,7 @@ namespace TUGraz.VectoCore.Tests.Models.Simulation
 							  3  ,5.2782 ,-0.041207832,2.453370264,723.75 ,1
 							  4  ,10.5768,-0.049730127,3.520827362,1223.25,1";
 
-			var drivingCycle = DrivingCycleDataReader.ReadFromStream(inputData.GetStream(), CycleType.MeasuredSpeedGear, "",
+			var drivingCycle = DrivingCycleDataReader.ReadFromStream(inputData.ToStream(), CycleType.MeasuredSpeedGear, "",
 				false);
 
 			var fuelConsumption = new DataTable();
@@ -266,7 +266,7 @@ namespace TUGraz.VectoCore.Tests.Models.Simulation
 							  3  ,5.2782 ,-0.041207832,2.453370264
 							  4  ,10.5768,-0.049730127,3.520827362";
 
-			var drivingCycle = DrivingCycleDataReader.ReadFromStream(inputData.GetStream(), CycleType.MeasuredSpeed, "", false);
+			var drivingCycle = DrivingCycleDataReader.ReadFromStream(inputData.ToStream(), CycleType.MeasuredSpeed, "", false);
 
 			var fuelConsumption = new DataTable();
 			fuelConsumption.Columns.Add("");
