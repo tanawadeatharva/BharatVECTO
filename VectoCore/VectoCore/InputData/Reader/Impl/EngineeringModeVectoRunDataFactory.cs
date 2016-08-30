@@ -84,7 +84,7 @@ namespace TUGraz.VectoCore.InputData.Reader.Impl
 				Aux = dao.CreateAuxiliaryData(InputDataProvider.AuxiliaryInputData()),
 				AdvancedAux = dao.CreateAdvancedAuxData(InputDataProvider.AuxiliaryInputData()),
 				Retarder = dao.CreateRetarderData(InputDataProvider.RetarderInputData, InputDataProvider.VehicleInputData),
-				PTOTransmission = ptoTransmissionData,
+				PTO = ptoTransmissionData,
 				Cycle = DrivingCycleDataReader.ReadFromDataTable(cycle.CycleData, cycle.Name, crossWindRequired),
 				ExecutionMode = ExecutionMode.Engineering
 			});
