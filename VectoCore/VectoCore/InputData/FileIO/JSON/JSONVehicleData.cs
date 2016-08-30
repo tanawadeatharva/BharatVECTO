@@ -186,9 +186,11 @@ namespace TUGraz.VectoCore.InputData.FileIO.JSON
 		{
 			get
 			{
-				return Body.GetEx(JsonKeys.Vehicle_AngularGear)
-					.GetEx<string>(JsonKeys.Vehicle_AngularGear_Type)
-					.ParseEnum<AngularGearType>();
+				var angleDrive = Body[JsonKeys.Vehicle_AngularGear];
+				if (angleDrive == null)
+					return AngularGearType.None;
+
+				return angleDrive.GetEx<string>(JsonKeys.Vehicle_AngularGear_Type).ParseEnum<AngularGearType>();
 			}
 		}
 

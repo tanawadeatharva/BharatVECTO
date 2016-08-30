@@ -171,12 +171,7 @@ namespace TUGraz.VectoCore.InputData.Reader.DataObjectAdapter
 		internal AngularGearData CreateAngularGearData(IAngularGearInputData data, bool useEfficiencyFallback)
 		{
 			try {
-				var type = AngularGearType.None;
-				try {
-					type = data.Type;
-				} catch (InvalidFileFormatException) {
-					Log.Info("AngularGear not found. Assuming None.");
-				}
+				var type = data.Type;
 
 				switch (type) {
 					case AngularGearType.LossesIncludedInGearbox:
