@@ -86,6 +86,14 @@ namespace TUGraz.VectoCore.Utils
 			}
 		}
 
+		public static bool ParseBoolean(this DataRow row, string columnName)
+		{
+			if (!row.Table.Columns.Contains(columnName)) {
+				throw new KeyNotFoundException(string.Format("Column {0} was not found in DataRow.", columnName));
+			}
+			return row.Field<string>(row.Table.Columns[columnName]).ToBoolean();
+		}
+
 		public static IEnumerable<T> Values<T>(this DataColumn column)
 		{
 			return column.Table.AsEnumerable().Select(r => r.Field<T>(column));

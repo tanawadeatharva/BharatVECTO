@@ -50,10 +50,19 @@ namespace TUGraz.VectoCommon.Utils
 			try {
 				return double.Parse(self, CultureInfo.InvariantCulture);
 			} catch (FormatException) {
-				if (defaultValue.HasValue)
+				if (defaultValue.HasValue) {
 					return defaultValue.Value;
+				}
 				throw;
 			}
+		}
+
+		public static bool ToBoolean(this string self)
+		{
+			if (string.IsNullOrEmpty(self)) {
+				return false;
+			}
+			return int.Parse(self) != 0;
 		}
 
 		public static double IndulgentParse(this string self)
