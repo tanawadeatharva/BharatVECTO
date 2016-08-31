@@ -85,7 +85,7 @@ namespace TUGraz.VectoCore.Models.SimulationComponent.Data
 		/// <summary>
 		/// The Gross Vehicle Weight of the Vehicle.
 		/// </summary>
-		[Required, SIRange(3500, 40000)]
+		[Required, SIRange(3500, 40000, ExecutionMode.Declaration), SIRange(0, 1000000, ExecutionMode.Engineering)]
 		public Kilogram GrossVehicleWeight { get; internal set; }
 
 		/// <summary>

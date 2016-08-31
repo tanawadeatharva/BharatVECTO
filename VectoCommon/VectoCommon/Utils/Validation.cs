@@ -194,8 +194,22 @@ namespace TUGraz.VectoCommon.Utils
 	/// <summary>
 	/// Attribute which validates the Min-Max Range of an SI Object.
 	/// </summary>
+	[AttributeUsage(AttributeTargets.Property | AttributeTargets.Field, AllowMultiple = true)]
 	public class SIRangeAttribute : RangeAttribute
 	{
+		private ExecutionMode? _mode;
+
+		/// <summary>
+		/// Checks the Min-Max Range of SI Objects.
+		/// </summary>
+		/// <param name="minimum">The minimum.</param>
+		/// <param name="maximum">The maximum.</param>
+		/// <param name="mode">if specified the validation is only performed in the corresponding mode</param>
+		public SIRangeAttribute(int minimum, int maximum, ExecutionMode mode) : base(minimum, maximum)
+		{
+			_mode = mode;
+		}
+
 		/// <summary>
 		/// Checks the Min-Max Range of SI Objects.
 		/// </summary>
@@ -208,6 +222,18 @@ namespace TUGraz.VectoCommon.Utils
 		/// </summary>
 		/// <param name="minimum">The minimum.</param>
 		/// <param name="maximum">The maximum.</param>
+		/// <param name="mode">if specified the validation is only performed in the corresponding mode</param>
+		public SIRangeAttribute(double minimum, double maximum, ExecutionMode mode) : base(minimum, maximum)
+		{
+			_mode = mode;
+		}
+
+		/// <summary>
+		/// Checks the Min-Max Range of SI Objects.
+		/// </summary>
+		/// <param name="minimum">The minimum.</param>
+		/// <param name="maximum">The maximum.</param>
+		/// <param name="mode">if specified the validation is only performed in the corresponding mode</param>
 		public SIRangeAttribute(double minimum, double maximum) : base(minimum, maximum) {}
 
 		/// <summary>
@@ -215,6 +241,18 @@ namespace TUGraz.VectoCommon.Utils
 		/// </summary>
 		/// <param name="minimum">The minimum.</param>
 		/// <param name="maximum">The maximum.</param>
+		/// <param name="mode">if specified the validation is only performed in the corresponding mode</param>
+		public SIRangeAttribute(SI minimum, SI maximum, ExecutionMode mode) : base(minimum.Value(), maximum.Value())
+		{
+			_mode = mode;
+		}
+
+		/// <summary>
+		/// Checks the Min-Max Range of SI Objects.
+		/// </summary>
+		/// <param name="minimum">The minimum.</param>
+		/// <param name="maximum">The maximum.</param>
+		/// <param name="mode">if specified the validation is only performed in the corresponding mode</param>
 		public SIRangeAttribute(SI minimum, SI maximum) : base(minimum.Value(), maximum.Value()) {}
 
 		/// <summary>
@@ -228,7 +266,16 @@ namespace TUGraz.VectoCommon.Utils
 		protected override ValidationResult IsValid(object value, ValidationContext validationContext)
 		{
 			var si = value as SI;
-			return base.IsValid(si != null ? si.Value() : value, validationContext);
+
+			var modeService = validationContext.GetService(typeof(ExecutionMode)) as ExecutionModeServiceContainer;
+			var mode = modeService == null ? (ExecutionMode?)null : modeService.Mode;
+			if (mode == null) {
+				return base.IsValid(si != null ? si.Value() : value, validationContext);
+			}
+			if (_mode == null || (_mode != null && (_mode.Value == mode))) {
+				return base.IsValid(si != null ? si.Value() : value, validationContext);
+			}
+			return ValidationResult.Success;
 		}
 	}
 
