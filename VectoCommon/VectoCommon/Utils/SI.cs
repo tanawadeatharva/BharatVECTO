@@ -1085,8 +1085,7 @@ namespace TUGraz.VectoCommon.Utils
 			Denominator = new Unit[0];
 			_exponent = 1;
 
-			// check for NaN works like this: val != val
-			if (val != val) {
+			if (double.IsNaN(val)) {
 				throw new VectoException("NaN [{0}] is not allowed for SI-Values in Vecto.", GetUnitString());
 			}
 
