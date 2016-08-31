@@ -160,7 +160,7 @@ namespace TUGraz.VectoCore.Models.Simulation.Impl
 				.AddComponent(data.AngularGearData != null ? new AngularGear(container, data.AngularGearData) : null)
 				.AddRetarderAndGearbox(data.Retarder, new CycleGearbox(container, data.GearboxData), container);
 			if (data.GearboxData.Type.ManualTransmission()) {
-				powertrain = powertrain.AddComponent(new CycleClutch(container));
+				powertrain = powertrain.AddComponent(new Clutch(container, data.EngineData));
 			}
 			powertrain.AddComponent(new CombustionEngine(container, data.EngineData))
 				.AddAuxiliaries(container, data);

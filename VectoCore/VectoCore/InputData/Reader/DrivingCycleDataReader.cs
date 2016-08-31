@@ -625,7 +625,6 @@ namespace TUGraz.VectoCore.InputData.Reader
 				var requiredCols = new[] {
 					Fields.Time,
 					Fields.VehicleSpeed,
-					//Fields.EngineSpeed,
 					Fields.Gear
 				};
 				var allowedCols = new[] {

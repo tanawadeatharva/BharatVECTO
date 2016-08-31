@@ -191,7 +191,6 @@
     <Compile Include="Models\SimulationComponent\Impl\DummyRetarder.cs" />
     <Compile Include="Models\SimulationComponent\Impl\EngineAuxiliary.cs" />
     <Compile Include="Models\SimulationComponent\Impl\EngineOnlyCombustionEngine.cs" />
-    <Compile Include="Models\SimulationComponent\Impl\CycleClutch.cs" />
     <Compile Include="Models\SimulationComponent\Impl\MTShiftStrategy.cs" />
     <Compile Include="Models\SimulationComponent\Impl\TransmissionComponent.cs" />
     <Compile Include="Models\SimulationComponent\IShiftStrategy.cs" />
