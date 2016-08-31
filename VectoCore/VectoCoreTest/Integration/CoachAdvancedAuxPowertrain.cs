@@ -95,7 +95,7 @@ namespace TUGraz.VectoCore.Tests.Integration
 				.AddComponent(new DummyRetarder(container))
 				.AddComponent(new Gearbox(container, gearboxData, new AMTShiftStrategy(gearboxData, container)))
 				.AddComponent(new Clutch(container, engineData))
-				.AddComponent(engine, null, container);
+				.AddComponent(engine);
 
 			var aux = new BusAuxiliariesAdapter(container, AdvancedAuxFile, "Coach",
 				vehicleData.TotalVehicleWeight(), engineData.ConsumptionMap, engineData.IdleSpeed);

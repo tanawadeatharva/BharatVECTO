@@ -174,14 +174,14 @@ namespace TUGraz.VectoCore.Tests.Models.Simulation
 			var ratios = new[] { 14.93, 11.64, 9.02, 7.04, 5.64, 4.4, 3.39, 2.65, 2.05, 1.6, 1.28, 1.0 };
 			return new GearboxData {
 				Gears = ratios.Select((ratio, i) =>
-					Tuple.Create((uint)i,
-						new GearData {
-							MaxTorque = 2300.SI<NewtonMeter>(),
-							LossMap = TransmissionLossMapReader.ReadFromFile(!ratio.IsEqual(1.0) ? directlossMap : indirectLossMap, ratio,
-								string.Format("Gear {0}", i)),
-							Ratio = ratio,
-							ShiftPolygon = ShiftPolygonReader.ReadFromFile(ShiftPolygonFile)
-						}))
+						Tuple.Create((uint)i,
+							new GearData {
+								MaxTorque = 2300.SI<NewtonMeter>(),
+								LossMap = TransmissionLossMapReader.ReadFromFile(!ratio.IsEqual(1.0) ? directlossMap : indirectLossMap, ratio,
+									string.Format("Gear {0}", i)),
+								Ratio = ratio,
+								ShiftPolygon = ShiftPolygonReader.ReadFromFile(ShiftPolygonFile)
+							}))
 					.ToDictionary(k => k.Item1 + 1, v => v.Item2)
 			};
 		}

@@ -143,6 +143,8 @@ namespace TUGraz.VectoCore.InputData.Reader.DataObjectAdapter
 			if (data.LossMap == null && useEfficiencyFallback) {
 				axleLossMap = TransmissionLossMapReader.Create(data.Efficiency, data.Ratio, "AxleGear");
 			} else {
+				if (data.LossMap == null)
+					throw new Exception("LossMap for AxleGear is missing.");
 				axleLossMap = TransmissionLossMapReader.Create(data.LossMap, data.Ratio, "AxleGear");
 			}
 			if (axleLossMap == null) {

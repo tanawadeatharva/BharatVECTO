@@ -90,7 +90,7 @@ namespace TUGraz.VectoCore.Tests.Integration.SimulationRuns
 				.AddComponent(new AxleGear(container, axleGearData))
 				.AddComponent(new Gearbox(container, gearboxData, new AMTShiftStrategy(gearboxData, container)))
 				.AddComponent(new Clutch(container, engineData))
-				.AddComponent(new CombustionEngine(container, engineData), null, container);
+				.AddComponent(new CombustionEngine(container, engineData));
 
 			cyclePort.Initialize();
 
@@ -146,7 +146,7 @@ namespace TUGraz.VectoCore.Tests.Integration.SimulationRuns
 				.AddComponent(new AxleGear(container, axleGearData))
 				.AddComponent(new Gearbox(container, gearboxData, new AMTShiftStrategy(gearboxData, container)))
 				.AddComponent(new Clutch(container, engineData))
-				.AddComponent(new CombustionEngine(container, engineData), null, container);
+				.AddComponent(new CombustionEngine(container, engineData));
 
 			cyclePort.Initialize();
 
@@ -216,7 +216,7 @@ namespace TUGraz.VectoCore.Tests.Integration.SimulationRuns
 				.AddComponent(new AxleGear(container, axleGearData))
 				.AddComponent(new Gearbox(container, gearboxData, new AMTShiftStrategy(gearboxData, container)))
 				.AddComponent(new Clutch(container, engineData))
-				.AddComponent(new CombustionEngine(container, engineData), null, container);
+				.AddComponent(new CombustionEngine(container, engineData));
 
 			cyclePort.Initialize();
 

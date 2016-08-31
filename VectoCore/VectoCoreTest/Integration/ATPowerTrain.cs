@@ -71,7 +71,7 @@ namespace TUGraz.VectoCore.Tests.Integration
 				.AddComponent(new AxleGear(container, axleGearData))
 				.AddComponent(new DummyRetarder(container))
 				.AddComponent(new ATGearbox(container, gearboxData, new ATShiftStrategy(gearboxData, container)))
-				.AddComponent(engine, null, container);
+				.AddComponent(engine);
 
 			var aux = new EngineAuxiliary(container);
 			aux.AddConstant("", 0.SI<Watt>());

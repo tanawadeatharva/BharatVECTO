@@ -115,7 +115,7 @@ namespace TUGraz.VectoCore.Models.Simulation.Impl
 			var engine = new CombustionEngine(container, data.EngineData, pt1Disabled: true);
 			var idleController = GetIdleController(data.PTO, engine);
 
-			powertrain.AddComponent(engine, idleController, container)
+			powertrain.AddComponent(engine, idleController)
 				.AddAuxiliaries(container, data);
 
 			return container;
@@ -146,7 +146,7 @@ namespace TUGraz.VectoCore.Models.Simulation.Impl
 			var engine = new CombustionEngine(container, data.EngineData);
 			var idleController = GetIdleController(data.PTO, engine);
 
-			powertrain.AddComponent(engine, idleController, container)
+			powertrain.AddComponent(engine, idleController)
 				.AddAuxiliaries(container, data);
 			_modData.HasTorqueConverter = data.GearboxData.Type.AutomaticTransmission();
 
@@ -173,7 +173,7 @@ namespace TUGraz.VectoCore.Models.Simulation.Impl
 				.AddComponent(new CycleClutch(container));
 
 			var engine = new CombustionEngine(container, data.EngineData);
-			powertrain.AddComponent(engine, GetIdleController(data.PTO, engine), container)
+			powertrain.AddComponent(engine, GetIdleController(data.PTO, engine))
 				.AddAuxiliaries(container, data);
 
 			return container;
@@ -205,7 +205,7 @@ namespace TUGraz.VectoCore.Models.Simulation.Impl
 			var idleController = GetIdleController(data.PTO, engine);
 			cycle.IdleController = idleController as IdleControllerSwitcher;
 
-			powertrain.AddComponent(engine, idleController, container)
+			powertrain.AddComponent(engine, idleController)
 				.AddAuxiliaries(container, data);
 
 			_modData.HasTorqueConverter = data.GearboxData.Type.AutomaticTransmission();

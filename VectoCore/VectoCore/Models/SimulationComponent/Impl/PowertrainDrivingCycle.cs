@@ -49,7 +49,7 @@ namespace TUGraz.VectoCore.Models.SimulationComponent.Impl
 	/// </summary>
 	public class PowertrainDrivingCycle :
 		StatefulProviderComponent<PowertrainDrivingCycle.DummyState, ISimulationOutPort, ITnInPort, ITnOutPort>,
-		IDrivingCycleInfo, ISimulationOutPort, ITnInProvider
+		IDrivingCycleInfo, ISimulationOutPort, ITnInProvider, ITnInPort
 	{
 		public class DummyState {}
 

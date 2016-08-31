@@ -94,9 +94,13 @@ namespace TUGraz.VectoCore.Utils
 		}
 
 		public static CombustionEngine AddComponent(this IPowerTrainComponent prev, CombustionEngine next,
-			IIdleController idleController, IVehicleContainer container)
+			IIdleController idleController = null)
 		{
 			prev.InPort().Connect(next.OutPort());
+
+			if (idleController == null) {
+				idleController = next.IdleController;
+			}
 
 			var clutch = prev as IClutch;
 			if (clutch != null) {

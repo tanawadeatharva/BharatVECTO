@@ -83,7 +83,7 @@ namespace TUGraz.VectoCore.Tests.Integration.SimulationRuns
 				.AddComponent(new Wheels(container, vehicleData.DynamicTyreRadius, vehicleData.WheelsInertia))
 				.AddComponent(new AxleGear(container, axleGearData))
 				.AddComponent(new Clutch(container, engineData))
-				.AddComponent(engine, null, container);
+				.AddComponent(engine);
 
 			var gbx = new MockGearbox(container);
 
@@ -131,7 +131,7 @@ namespace TUGraz.VectoCore.Tests.Integration.SimulationRuns
 				.AddComponent(new Brakes(container))
 				.AddComponent(new AxleGear(container, axleGearData))
 				.AddComponent(new Clutch(container, engineData))
-				.AddComponent(new CombustionEngine(container, engineData), null, container);
+				.AddComponent(new CombustionEngine(container, engineData));
 			//engine.IdleController.RequestPort = clutch.IdleControlPort;
 
 			var gbx = new MockGearbox(container);
@@ -202,7 +202,7 @@ namespace TUGraz.VectoCore.Tests.Integration.SimulationRuns
 				.AddComponent(new Brakes(container))
 				.AddComponent(new AxleGear(container, axleGearData))
 				.AddComponent(new Clutch(container, engineData))
-				.AddComponent(new CombustionEngine(container, engineData), null, container);
+				.AddComponent(new CombustionEngine(container, engineData));
 			//engine.IdleController.RequestPort = clutch.IdleControlPort;
 
 			var gbx = new MockGearbox(container);
