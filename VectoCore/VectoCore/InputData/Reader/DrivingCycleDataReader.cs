@@ -315,6 +315,7 @@ namespace TUGraz.VectoCore.InputData.Reader
 			public const string WindYawAngle = "vair_beta";
 			public const string EnginePower = "Pe";
 			public const string EngineTorque = "Me";
+			public const string PTOActive = "PTO";
 		}
 
 		#region DataParser
@@ -398,7 +399,8 @@ namespace TUGraz.VectoCore.InputData.Reader
 					AirSpeedRelativeToVehicle =
 						crossWindRequired ? row.ParseDouble(Fields.AirSpeedRelativeToVehicle).KMPHtoMeterPerSecond() : null,
 					WindYawAngle = crossWindRequired ? row.ParseDoubleOrGetDefault(Fields.WindYawAngle) : 0,
-					AuxiliarySupplyPower = row.GetAuxiliaries()
+					AuxiliarySupplyPower = row.GetAuxiliaries(),
+					PTOActive = table.Columns.Contains(Fields.PTOActive) && row.Field<char>(Fields.PTOActive) == '1'
 				});
 			}
 
@@ -417,10 +419,11 @@ namespace TUGraz.VectoCore.InputData.Reader
 					Fields.AdditionalAuxPowerDemand,
 					Fields.RoadGradient,
 					Fields.AirSpeedRelativeToVehicle,
-					Fields.WindYawAngle
+					Fields.WindYawAngle,
+					Fields.PTOActive
 				};
 
-				var allowAux = true;
+				const bool allowAux = true;
 
 				return CheckColumns(header, allowedCols, requiredCols, throwExceptions, allowAux) &&
 						CheckComboColumns(header, new[] { Fields.AirSpeedRelativeToVehicle, Fields.WindYawAngle }, throwExceptions);
@@ -481,7 +484,7 @@ namespace TUGraz.VectoCore.InputData.Reader
 					Fields.AdditionalAuxPowerDemand
 				};
 
-				var allowAux = false;
+				const bool allowAux = false;
 
 				if (!CheckColumns(header, allowedCols, requiredCols, throwExceptions, allowAux)) {
 					return false;
@@ -543,9 +546,7 @@ namespace TUGraz.VectoCore.InputData.Reader
 					Fields.AdditionalAuxPowerDemand
 				};
 
-				var allowAux = false;
-
-				return CheckColumns(header, allowedCols, requiredCols, throwExceptions, allowAux);
+				return CheckColumns(header, allowedCols, requiredCols, throwExceptions, allowAux: false);
 			}
 		}
 
@@ -589,7 +590,7 @@ namespace TUGraz.VectoCore.InputData.Reader
 					Fields.WindYawAngle
 				};
 
-				var allowAux = true;
+				const bool allowAux = true;
 
 				return CheckColumns(header, allowedCols, requiredCols, throwExceptions, allowAux) &&
 						CheckComboColumns(header, new[] { Fields.AirSpeedRelativeToVehicle, Fields.WindYawAngle }, throwExceptions);
@@ -641,7 +642,7 @@ namespace TUGraz.VectoCore.InputData.Reader
 					Fields.WindYawAngle
 				};
 
-				var allowAux = true;
+				const bool allowAux = true;
 
 				return CheckColumns(header, allowedCols, requiredCols, throwExceptions, allowAux) &&
 						CheckComboColumns(header, new[] { Fields.AirSpeedRelativeToVehicle, Fields.WindYawAngle }, throwExceptions);
@@ -680,7 +681,7 @@ namespace TUGraz.VectoCore.InputData.Reader
 					Fields.PTOTorque
 				};
 
-				var allowAux = false;
+				const bool allowAux = false;
 
 				return CheckColumns(header, allowedCols, requiredCols, throwExceptions, allowAux);
 			}
