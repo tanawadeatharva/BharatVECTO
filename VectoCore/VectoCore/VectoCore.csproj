@@ -153,6 +153,7 @@
     <Compile Include="Models\SimulationComponent\Impl\PTOCycleController.cs" />
     <Compile Include="Models\SimulationComponent\Impl\PWheelCycle.cs" />
     <Compile Include="Models\SimulationComponent\Impl\TorqueConverter.cs" />
+    <Compile Include="Models\SimulationComponent\Impl\IdleControllerSwitcher.cs" />
     <Compile Include="Utils\ProviderExtensions.cs" />
     <Compile Include="Models\Declaration\AirDrag.cs" />
     <Compile Include="Models\Declaration\Fan.cs" />

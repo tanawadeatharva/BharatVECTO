@@ -52,7 +52,11 @@ namespace TUGraz.VectoCore.Models.SimulationComponent
 		protected VectoSimulationComponent(IVehicleContainer dataBus)
 		{
 			DataBus = dataBus;
-			dataBus.AddComponent(this);
+
+			// if a component doesn't want to be registered in DataBus, it supplies null to the constructor
+			// (mk 2016-08-31: currently the only example is PTOCycleController, to not interfere with the real DrivingCycle)
+			if (dataBus != null)
+				dataBus.AddComponent(this);
 		}
 
 		public virtual void CommitSimulationStep(IModalDataContainer container)

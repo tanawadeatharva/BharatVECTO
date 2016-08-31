@@ -400,7 +400,7 @@ namespace TUGraz.VectoCore.InputData.Reader
 						crossWindRequired ? row.ParseDouble(Fields.AirSpeedRelativeToVehicle).KMPHtoMeterPerSecond() : null,
 					WindYawAngle = crossWindRequired ? row.ParseDoubleOrGetDefault(Fields.WindYawAngle) : 0,
 					AuxiliarySupplyPower = row.GetAuxiliaries(),
-					PTOActive = table.Columns.Contains(Fields.PTOActive) && row.Field<char>(Fields.PTOActive) == '1'
+					PTOActive = table.Columns.Contains(Fields.PTOActive) && row.Field<string>(Fields.PTOActive) == "1"
 				});
 			}
 

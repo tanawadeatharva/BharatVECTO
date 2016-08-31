@@ -70,8 +70,11 @@ namespace TUGraz.VectoCore.Models.Simulation.Impl
 					return BuildMeasuredSpeed(data);
 				case CycleType.MeasuredSpeedGear:
 					return BuildMeasuredSpeedGear(data);
+				case CycleType.DistanceBased:
+					return BuildFullPowertrain(data);
+				default:
+					throw new VectoException("Powertrain Builder cannot build Powertrain for CycleType: {0}", data.Cycle.CycleType);
 			}
-			return BuildFullPowertrain(data);
 		}
 
 		private VehicleContainer BuildEngineOnly(VectoRunData data)
@@ -110,7 +113,7 @@ namespace TUGraz.VectoCore.Models.Simulation.Impl
 				.AddComponent(gearbox, data.Retarder, data.PTO, container)
 				.AddComponent(new CycleClutch(container));
 			var engine = new CombustionEngine(container, data.EngineData, pt1Disabled: true);
-			var idleController = GetIdleController(data.PTO, engine, container);
+			var idleController = GetIdleController(data.PTO, engine);
 
 			powertrain.AddComponent(engine, idleController, container)
 				.AddAuxiliaries(container, data);
@@ -141,7 +144,7 @@ namespace TUGraz.VectoCore.Models.Simulation.Impl
 			}
 
 			var engine = new CombustionEngine(container, data.EngineData);
-			var idleController = GetIdleController(data.PTO, engine, container);
+			var idleController = GetIdleController(data.PTO, engine);
 
 			powertrain.AddComponent(engine, idleController, container)
 				.AddAuxiliaries(container, data);
@@ -170,7 +173,7 @@ namespace TUGraz.VectoCore.Models.Simulation.Impl
 				.AddComponent(new CycleClutch(container));
 
 			var engine = new CombustionEngine(container, data.EngineData);
-			powertrain.AddComponent(engine, GetIdleController(data.PTO, engine, container), container)
+			powertrain.AddComponent(engine, GetIdleController(data.PTO, engine), container)
 				.AddAuxiliaries(container, data);
 
 			return container;
@@ -199,7 +202,7 @@ namespace TUGraz.VectoCore.Models.Simulation.Impl
 			}
 
 			var engine = new CombustionEngine(container, data.EngineData);
-			var idleController = GetIdleController(data.PTO, engine, container);
+			var idleController = GetIdleController(data.PTO, engine);
 			cycle.IdleController = idleController as IdleControllerSwitcher;
 
 			powertrain.AddComponent(engine, idleController, container)
@@ -210,11 +213,14 @@ namespace TUGraz.VectoCore.Models.Simulation.Impl
 			return container;
 		}
 
-		private static IIdleController GetIdleController(PTOData pto, CombustionEngine engine, IVehicleContainer container)
+		private static IIdleController GetIdleController(PTOData pto, ICombustionEngine engine)
 		{
-			return pto == null
-				? engine.IdleController
-				: new IdleControllerSwitcher(engine.IdleController, new PTOCycleController(container, pto.PTOCycle));
+			if (pto == null)
+				return engine.IdleController;
+			else {
+				var ptoController = new PTOCycleController(pto.PTOCycle);
+				return new IdleControllerSwitcher(engine.IdleController, ptoController);
+			}
 		}
 
 		internal static IAuxInProvider CreateAdvancedAuxiliaries(VectoRunData data, IVehicleContainer container)

@@ -57,6 +57,7 @@ namespace TUGraz.VectoCore.Models.SimulationComponent.Impl
 		private readonly DrivingCycleData _data;
 		internal readonly DrivingCycleEnumerator CycleIntervalIterator;
 		private bool _intervalProlonged;
+		internal IdleControllerSwitcher IdleController;
 
 		public DistanceBasedDrivingCycle(IVehicleContainer container, DrivingCycleData cycle) : base(container)
 		{
@@ -106,17 +107,38 @@ namespace TUGraz.VectoCore.Models.SimulationComponent.Impl
 						throw new VectoSimulationException("Stopping Time only allowed when target speed is zero!");
 					}
 					var dt = CycleIntervalIterator.LeftSample.StoppingTime - PreviousState.WaitTime;
-					if (CycleIntervalIterator.LeftSample.StoppingTime.IsGreater(3 * Constants.SimulationSettings.TargetTimeInterval)) {
-						// split into 3 parts
+
+					if (CycleIntervalIterator.LeftSample.PTOActive) {
 						if (PreviousState.WaitTime.IsEqual(0)) {
+							// waiting just started. Activate PTO
+							IdleController.Reset();
+							IdleController.ActivatePTO();
+						} else {
+							// we already started pto cycle and are now in the follow up call.
+							// So we have to manually commit the previous simulation step to go further.
+							IdleController.CommitSimulationStep();
+						}
+						var nextCycleTime = IdleController.GetNextCycleTime();
+						if (nextCycleTime == null) {
+							// PTO Cycle has finished. Switch to normal idle controller.
+							IdleController.ActivateIdle();
 							dt = Constants.SimulationSettings.TargetTimeInterval;
 						} else {
-							if (dt > Constants.SimulationSettings.TargetTimeInterval) {
-								dt -= Constants.SimulationSettings.TargetTimeInterval;
+							// set dt to the next time interval in the pto cycle (to synchronize driving cycle with pto cycle)
+							dt = nextCycleTime - PreviousState.WaitTime;
+						}
+					} else {
+						if (CycleIntervalIterator.LeftSample.StoppingTime.IsGreater(3 * Constants.SimulationSettings.TargetTimeInterval)) {
+							// split into 3 parts or use idle controller time intervals
+							if (PreviousState.WaitTime.IsEqual(0)) {
+								dt = Constants.SimulationSettings.TargetTimeInterval;
+							} else {
+								if (dt > Constants.SimulationSettings.TargetTimeInterval) {
+									dt -= Constants.SimulationSettings.TargetTimeInterval;
+								}
 							}
 						}
 					}
-
 					CurrentState.Response = DriveTimeInterval(absTime, dt);
 					return CurrentState.Response;
 				}
