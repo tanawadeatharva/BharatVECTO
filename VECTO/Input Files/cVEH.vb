@@ -64,6 +64,7 @@ Public Class cVEH
 
 	Public PTOType As tPTOType
 	Public PTOLossMap As cSubPath
+	Public PTOCycle As cSubPath
 
 	Public Class cAxle
 		Public RRC As Single
@@ -108,6 +109,7 @@ Public Class cVEH
 		RtM = New List(Of Single)
 		Axles = New List(Of cAxle)
 		PTOLossMap = New cSubPath()
+		PTOCycle = New cSubPath()
 		SetDefault()
 	End Sub
 
@@ -122,7 +124,7 @@ Public Class cVEH
 		CdMode = tCdMode.ConstCd0
 		CdX.Clear()
 		CdY.Clear()
-		CdDim = -1
+		CdDim = - 1
 
 		siFr0 = 0
 		rdyn = 0
@@ -139,6 +141,7 @@ Public Class cVEH
 
 		PTOType = tPTOType.None
 		PTOLossMap.Clear()
+		PTOCycle.Clear()
 
 		Axles.Clear()
 		VehCat = tVehCat.Undef
@@ -190,7 +193,7 @@ Public Class cVEH
 
 			If FileVersion < 7 Then
 				'calc CdA from Cd and area value
-				CdA0 = CSng(body("Cd")) * CSng(body("CrossSecArea"))
+				CdA0 = CSng(body("Cd"))*CSng(body("CrossSecArea"))
 			Else
 				CdA0 = body("CdA")
 			End If
@@ -199,11 +202,11 @@ Public Class cVEH
 
 			If FileVersion < 4 Then
 				If Not body("CdRigid") Is Nothing AndAlso Not body("CrossSecAreaRigid") Is Nothing Then
-					CdA02 = CSng(body("CdRigid")) * CSng(body("CrossSecAreaRigid"))
+					CdA02 = CSng(body("CdRigid"))*CSng(body("CrossSecAreaRigid"))
 				End If
 			ElseIf FileVersion < 7 Then
 				If Not body("Cd2") Is Nothing AndAlso Not body("CrossSecArea2") Is Nothing Then
-					CdA02 = CSng(body("Cd2")) * CSng(body("CrossSecArea2"))
+					CdA02 = CSng(body("Cd2"))*CSng(body("CrossSecArea2"))
 				End If
 			Else
 				If Not body("CdA2") Is Nothing Then
@@ -233,7 +236,7 @@ Public Class cVEH
 			If body("AngularGear") Is Nothing Then
 				AngularGearType = AngularGearType.None
 			Else
-				AngularGearType = body("AngularGear")("Type").ToString.ParseEnum(Of AngularGearType)()
+				AngularGearType = body("AngularGear")("Type").ToString.ParseEnum (Of AngularGearType)()
 				If Not body("AngularGear")("Ratio") Is Nothing Then
 					AngularGearRatio = body("AngularGear")("Ratio")
 				End If
@@ -245,7 +248,7 @@ Public Class cVEH
 			Dim inertiaTemp As Single
 			If FileVersion < 3 Then
 				inertiaTemp = body("WheelsInertia")
-				rdyn = 1000 * body("WheelsDiaEff") / 2
+				rdyn = 1000*body("WheelsDiaEff")/2
 			Else
 				rdyn = body("rdyn")
 			End If
@@ -260,7 +263,7 @@ Public Class cVEH
 
 				If FileVersion < 3 Then
 					axle.Wheels = "-"
-					axle.Inertia = inertiaTemp / (IIf(axle.TwinTire, 4, 2) * axleCount)
+					axle.Inertia = inertiaTemp/(IIf(axle.TwinTire, 4, 2)*axleCount)
 				Else
 					axle.Wheels = CStr(axleEntry("Wheels")).Replace("R ", "R")
 					axle.Inertia = CSng(axleEntry("Inertia"))
@@ -283,7 +286,9 @@ Public Class cVEH
 
 			If Not PTOType = tPTOType.None Then
 				PTOLossMap.Init(MyPath, body("PTO")("LossMap"))
+				PTOCycle.Init(MyPath, body("PTO")("Cycle"))
 			End If
+
 
 		Catch ex As Exception
 			If showMsg Then WorkerMsg(tMsgID.Err, "Failed to read Vehicle file! " & ex.Message, msgSrc)
@@ -328,7 +333,8 @@ Public Class cVEH
 				{"LossMap", AngularGearLossMapFile.PathOrDummy}}},
 			{"PTO", New Dictionary(Of String, Object) From {
 				{"Type", GetPTOString(PTOType)},
-				{"LossMap", PTOLossMap.PathOrDummy}}},
+				{"LossMap", PTOLossMap.PathOrDummy},
+				{"Cycle", PTOCycle.PathOrDummy}}},
 			{"AxleConfig", New Dictionary(Of String, Object) From {
 				{"Type", ConvAxleConf(AxleConf)},
 				{"Axles", (From axle In Axles Select New Dictionary(Of String, Object) From {
@@ -357,10 +363,10 @@ Public Class cVEH
 			Return False
 		End If
 
-		Dim i = -1
+		Dim i = - 1
 		For Each a In al
 			i += 1
-			Axles(i).Share = a / 100
+			Axles(i).Share = a/100
 		Next
 
 		'Remove non-Truck axles
@@ -375,7 +381,7 @@ Public Class cVEH
 				Dim a0 = New cAxle
 				a0.Inertia = 0	 'Defined later
 				a0.Wheels = cDeclaration.TyreTr
-				a0.Share = a / 100
+				a0.Share = a/100
 				a0.TwinTire = False
 				a0.RRC = cDeclaration.RRCTr
 				a0.FzISO = cDeclaration.FzISOTr
@@ -415,7 +421,7 @@ Public Class cVEH
 		Const msgSrc = "VEH/DeclInit"
 
 		Dim missionId As tMission = Declaration.CurrentMission.MissionID
-		Dim lmax = MassMax * 1000 - Mass - MassExtra
+		Dim lmax = MassMax*1000 - Mass - MassExtra
 
 		Select Case loadingId
 			Case tLoading.FullLoaded
@@ -482,7 +488,7 @@ Public Class cVEH
 		m_red0 = 0
 		For Each a0 In Axles
 
-			If a0.RRC < -0.000001 Then
+			If a0.RRC < - 0.000001 Then
 				WorkerMsg(tMsgID.Err, "Invalid RRC value! (" & a0.RRC & ")", msgSrc, "<GUI>" & sFilePath)
 				Return False
 			End If
@@ -499,9 +505,9 @@ Public Class cVEH
 				nrwheels = 2
 			End If
 
-			rrc += a0.Share * (a0.RRC * ((Loading + Mass + MassExtra) * a0.Share * 9.81 / (a0.FzISO * nrwheels)) ^ (0.9 - 1)) 'Beta=0.9
+			rrc += a0.Share*(a0.RRC*((Loading + Mass + MassExtra)*a0.Share*9.81/(a0.FzISO*nrwheels))^(0.9 - 1)) 'Beta=0.9
 
-			m_red0 += nrwheels * a0.Inertia / ((rdyn / 1000) ^ 2)
+			m_red0 += nrwheels*a0.Inertia/((rdyn/1000)^2)
 
 		Next
 
@@ -552,7 +558,7 @@ Public Class cVEH
 
 		CdX.Clear()
 		CdY.Clear()
-		CdDim = -1
+		CdDim = - 1
 		Do While Not file.EndOfFile
 
 			CdDim += 1
@@ -588,7 +594,7 @@ Public Class cVEH
 		Dim a As List(Of Single)
 		Dim share As Single
 
-		Const vwind = cDeclaration.Vwind * 3.6
+		Const vwind = cDeclaration.Vwind*3.6
 
 		Try
 			If Cfg.DeclMode Then
@@ -603,14 +609,14 @@ Public Class cVEH
 		For i = 0 To 12
 			beta = CSng(i)
 			lBeta.Add(beta)
-			lDeltaCdA.Add(a(0) * beta + a(1) * beta ^ 2 + a(2) * beta ^ 3)
+			lDeltaCdA.Add(a(0)*beta + a(1)*beta^2 + a(2)*beta^3)
 		Next
 
 		Dim iDim As Integer = lBeta.Count - 1
 
 		CdX.Clear()
 		CdY.Clear()
-		CdDim = -1
+		CdDim = - 1
 
 		CdX.Add(0)
 		CdY.Add(0)
@@ -620,12 +626,12 @@ Public Class cVEH
 			Dim cdAsum As Single = 0
 			For j = 0 To 180 Step 10
 				Dim alpha = CSng(j)
-				Dim vwindX As Single = vwind * Math.Cos(alpha * Math.PI / 180)
-				Dim vwindY As Single = vwind * Math.Sin(alpha * Math.PI / 180)
+				Dim vwindX As Single = vwind*Math.Cos(alpha*Math.PI/180)
+				Dim vwindY As Single = vwind*Math.Sin(alpha*Math.PI/180)
 				Dim vairX As Single = vveh + vwindX
 				Dim vairY As Single = vwindY
-				Dim vair As Single = Math.Sqrt(vairX ^ 2 + vairY ^ 2)
-				beta = Math.Atan(vairY / vairX) * 180 / Math.PI
+				Dim vair As Single = Math.Sqrt(vairX^2 + vairY^2)
+				beta = Math.Atan(vairY/vairX)*180/Math.PI
 
 				Dim k As Integer
 				If lBeta(0) >= beta Then
@@ -636,18 +642,18 @@ Public Class cVEH
 						k += 1
 					Loop
 				End If
-				Dim deltaCdA = (beta - lBeta(k - 1)) * (lDeltaCdA(k) - lDeltaCdA(k - 1)) / (lBeta(k) - lBeta(k - 1)) +
+				Dim deltaCdA = (beta - lBeta(k - 1))*(lDeltaCdA(k) - lDeltaCdA(k - 1))/(lBeta(k) - lBeta(k - 1)) +
 								lDeltaCdA(k - 1)
 
 				Dim cdA = CdA0Act + deltaCdA
 
 				If j = 0 OrElse j = 180 Then
-					share = 5 / 180
+					share = 5/180
 				Else
-					share = 10 / 180
+					share = 10/180
 				End If
 
-				cdAsum += share * cdA * (vair ^ 2 / vveh ^ 2)
+				cdAsum += share*cdA*(vair^2/vveh^2)
 
 			Next
 			CdX.Add(vveh)
@@ -698,9 +704,9 @@ Public Class cVEH
 			End If
 		End If
 
-lbInt:
+		lbInt:
 		'Interpolation
-		Return (x - CdX(i - 1)) * (CdY(i) - CdY(i - 1)) / (CdX(i) - CdX(i - 1)) + CdY(i - 1)
+		Return (x - CdX(i - 1))*(CdY(i) - CdY(i - 1))/(CdX(i) - CdX(i - 1)) + CdY(i - 1)
 	End Function
 
 #End Region
@@ -725,7 +731,7 @@ lbInt:
 		'Skip Header
 		file.ReadLine()
 
-		RtDim = -1
+		RtDim = - 1
 		Do While Not file.EndOfFile
 
 			RtDim += 1
@@ -760,13 +766,13 @@ lbInt:
 
 		Select Case RtType
 			Case tRtType.Primary
-				nU = (60 * v) / (2 * VEH.rdyn * Math.PI / 1000) * GBX.Igetr(0) * GBX.Igetr(gear) * RtRatio
+				nU = (60*v)/(2*VEH.rdyn*Math.PI/1000)*GBX.Igetr(0)*GBX.Igetr(gear)*RtRatio
 			Case tRtType.Secondary
-				nU = (60 * v) / (2 * VEH.rdyn * Math.PI / 1000) * GBX.Igetr(0) * RtRatio
+				nU = (60*v)/(2*VEH.rdyn*Math.PI/1000)*GBX.Igetr(0)*RtRatio
 			Case Else 'tRtType.None
 				Return 0
 		End Select
-		Return RtIntpol(nU) * nU * 2 * Math.PI / 60 / 1000
+		Return RtIntpol(nU)*nU*2*Math.PI/60/1000
 	End Function
 
 	Private Function RtIntpol(nU As Single) As Single
@@ -786,9 +792,9 @@ lbInt:
 		'Extrapolation for x> x(imax)
 		If RtnU(i) < nU Then MODdata.ModErrors.RtExtrapol = "n= " & nU & " [1/min]"
 
-lbInt:
+		lbInt:
 		'Interpolation
-		Return (nU - RtnU(i - 1)) * (RtM(i) - RtM(i - 1)) / (RtnU(i) - RtnU(i - 1)) + RtM(i - 1)
+		Return (nU - RtnU(i - 1))*(RtM(i) - RtM(i - 1))/(RtnU(i) - RtnU(i - 1)) + RtM(i - 1)
 	End Function
 
 #End Region

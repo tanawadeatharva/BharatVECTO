@@ -110,6 +110,9 @@ Partial Class F_VEH
 		Me.PnAll = New System.Windows.Forms.Panel()
 		Me.gbPTO = New System.Windows.Forms.GroupBox()
 		Me.pnPTO = New System.Windows.Forms.Panel()
+		Me.btPTOCycle = New System.Windows.Forms.Button()
+		Me.Label16 = New System.Windows.Forms.Label()
+		Me.tbPTOCycle = New System.Windows.Forms.TextBox()
 		Me.btPTOLossMapBrowse = New System.Windows.Forms.Button()
 		Me.Label7 = New System.Windows.Forms.Label()
 		Me.tbPTOLossMap = New System.Windows.Forms.TextBox()
@@ -831,10 +834,13 @@ Partial Class F_VEH
 		Me.gbPTO.Size = New System.Drawing.Size(564, 86)
 		Me.gbPTO.TabIndex = 4
 		Me.gbPTO.TabStop = False
-		Me.gbPTO.Text = "PTO Transmission"
+		Me.gbPTO.Text = "PTO Consumer"
 		'
 		'pnPTO
 		'
+		Me.pnPTO.Controls.Add(Me.btPTOCycle)
+		Me.pnPTO.Controls.Add(Me.Label16)
+		Me.pnPTO.Controls.Add(Me.tbPTOCycle)
 		Me.pnPTO.Controls.Add(Me.btPTOLossMapBrowse)
 		Me.pnPTO.Controls.Add(Me.Label7)
 		Me.pnPTO.Controls.Add(Me.tbPTOLossMap)
@@ -844,11 +850,40 @@ Partial Class F_VEH
 		Me.pnPTO.Size = New System.Drawing.Size(558, 41)
 		Me.pnPTO.TabIndex = 4
 		'
+		'btPTOCycle
+		'
+		Me.btPTOCycle.Anchor = CType((System.Windows.Forms.AnchorStyles.Bottom Or System.Windows.Forms.AnchorStyles.Left), System.Windows.Forms.AnchorStyles)
+		Me.btPTOCycle.Image = Global.VECTO.My.Resources.Resources.Open_icon
+		Me.btPTOCycle.Location = New System.Drawing.Point(529, 16)
+		Me.btPTOCycle.Name = "btPTOCycle"
+		Me.btPTOCycle.Size = New System.Drawing.Size(24, 24)
+		Me.btPTOCycle.TabIndex = 17
+		Me.btPTOCycle.UseVisualStyleBackColor = True
+		'
+		'Label16
+		'
+		Me.Label16.Anchor = CType((System.Windows.Forms.AnchorStyles.Bottom Or System.Windows.Forms.AnchorStyles.Left), System.Windows.Forms.AnchorStyles)
+		Me.Label16.Location = New System.Drawing.Point(287, -1)
+		Me.Label16.Name = "Label16"
+		Me.Label16.Size = New System.Drawing.Size(201, 16)
+		Me.Label16.TabIndex = 18
+		Me.Label16.Text = "PTO Cycle (.vdri)"
+		Me.Label16.TextAlign = System.Drawing.ContentAlignment.BottomLeft
+		'
+		'tbPTOCycle
+		'
+		Me.tbPTOCycle.Anchor = CType((System.Windows.Forms.AnchorStyles.Bottom Or System.Windows.Forms.AnchorStyles.Left), System.Windows.Forms.AnchorStyles)
+		Me.tbPTOCycle.Location = New System.Drawing.Point(290, 18)
+		Me.tbPTOCycle.Name = "tbPTOCycle"
+		Me.tbPTOCycle.Size = New System.Drawing.Size(239, 20)
+		Me.tbPTOCycle.TabIndex = 16
+		Me.ToolTip1.SetToolTip(Me.tbPTOCycle, "PTO Consumer Loss Map")
+		'
 		'btPTOLossMapBrowse
 		'
 		Me.btPTOLossMapBrowse.Anchor = CType((System.Windows.Forms.AnchorStyles.Bottom Or System.Windows.Forms.AnchorStyles.Left), System.Windows.Forms.AnchorStyles)
 		Me.btPTOLossMapBrowse.Image = Global.VECTO.My.Resources.Resources.Open_icon
-		Me.btPTOLossMapBrowse.Location = New System.Drawing.Point(529, 15)
+		Me.btPTOLossMapBrowse.Location = New System.Drawing.Point(245, 16)
 		Me.btPTOLossMapBrowse.Name = "btPTOLossMapBrowse"
 		Me.btPTOLossMapBrowse.Size = New System.Drawing.Size(24, 24)
 		Me.btPTOLossMapBrowse.TabIndex = 14
@@ -869,7 +904,7 @@ Partial Class F_VEH
 		Me.tbPTOLossMap.Anchor = CType((System.Windows.Forms.AnchorStyles.Bottom Or System.Windows.Forms.AnchorStyles.Left), System.Windows.Forms.AnchorStyles)
 		Me.tbPTOLossMap.Location = New System.Drawing.Point(6, 18)
 		Me.tbPTOLossMap.Name = "tbPTOLossMap"
-		Me.tbPTOLossMap.Size = New System.Drawing.Size(523, 20)
+		Me.tbPTOLossMap.Size = New System.Drawing.Size(239, 20)
 		Me.tbPTOLossMap.TabIndex = 13
 		Me.ToolTip1.SetToolTip(Me.tbPTOLossMap, "PTO Consumer Loss Map")
 		'
@@ -928,7 +963,7 @@ Partial Class F_VEH
 		'
 		'Label12
 		'
-		Me.Label12.Location = New System.Drawing.Point(6, 24)
+		Me.Label12.Location = New System.Drawing.Point(6, 23)
 		Me.Label12.Name = "Label12"
 		Me.Label12.Size = New System.Drawing.Size(263, 16)
 		Me.Label12.TabIndex = 17
@@ -1154,4 +1189,7 @@ Partial Class F_VEH
 	Friend WithEvents btPTOLossMapBrowse As System.Windows.Forms.Button
 	Friend WithEvents cbPTOType As System.Windows.Forms.ComboBox
 	Friend WithEvents pnPTO As System.Windows.Forms.Panel
+	Friend WithEvents btPTOCycle As System.Windows.Forms.Button
+	Friend WithEvents Label16 As System.Windows.Forms.Label
+	Friend WithEvents tbPTOCycle As System.Windows.Forms.TextBox
 End Class

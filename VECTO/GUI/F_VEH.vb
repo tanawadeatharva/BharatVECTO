@@ -47,7 +47,7 @@ Public Class F_VEH
 
 		_axlDlog = New F_VEH_Axle
 
-		cbPTOType.Items.AddRange(PtoTypeStrings.Values.Cast(Of Object).ToArray())
+		cbPTOType.Items.AddRange(PtoTypeStrings.Values.Cast (Of Object).ToArray())
 
 		_changed = False
 
@@ -59,11 +59,10 @@ Public Class F_VEH
 		Dim vehC = CType(CbCat.SelectedIndex, tVehCat)
 		Dim axlC = CType(CbAxleConfig.SelectedIndex, tAxleConf)
 		Dim maxMass = CSng(fTextboxToNumString(TbMassMass.Text))
-
-		Dim s0 As cSegmentTableEntry = Declaration.SegmentTable.SetRef(vehC, axlC, maxMass)
+		Dim segmentEntry As cSegmentTableEntry = Declaration.SegmentTable.SetRef(vehC, axlC, maxMass)
 		_hdVclass = "-"
-		If Not s0 Is Nothing Then
-			_hdVclass = s0.HDVclass
+		If Not segmentEntry Is Nothing Then
+			_hdVclass = segmentEntry.HDVclass
 		End If
 
 		TbHDVclass.Text = _hdVclass
@@ -117,7 +116,7 @@ Public Class F_VEH
 		TbCdFile.Text = ""
 
 		Dim rdyn As Single
-		rdyn = -1
+		rdyn = - 1
 
 		If rdyn < 0 Then
 			TBrdyn.Text = "-"
@@ -269,7 +268,7 @@ Public Class F_VEH
 					Close()
 					F_MAINForm.RbDecl.Checked = Not F_MAINForm.RbDecl.Checked
 					F_MAINForm.OpenVectoFile(file)
-				Case -1
+				Case - 1
 					Exit Sub
 			End Select
 		End If
@@ -338,6 +337,7 @@ Public Class F_VEH
 
 		cbPTOType.SelectedIndex = CType(veh.PTOType, Integer)
 		tbPTOLossMap.Text = veh.PTOLossMap.OriginalPath
+		tbPTOCycle.Text = veh.PTOCycle.OriginalPath
 
 		DeclInit()
 
@@ -406,6 +406,7 @@ Public Class F_VEH
 
 		veh.PTOType = CType(cbPTOType.SelectedIndex, tPTOType)
 		veh.PTOLossMap.Init(fPATH(file), tbPTOLossMap.Text)
+		veh.PTOCycle.Init(fPATH(file), tbPTOCycle.Text)
 
 		If Not Cfg.DeclMode AndAlso Math.Abs(axleShareCheck - 1) > 0.000001 Then
 			MsgBox("Relative axle loads must sum up to 1.0. Current value: " & axleShareCheck, MsgBoxStyle.Critical)
@@ -594,7 +595,7 @@ Public Class F_VEH
 	Private Sub SetMaxLoad()
 		If Not Cfg.DeclMode Then
 			If IsNumeric(TbMass.Text) And IsNumeric(TbMassExtra.Text) And IsNumeric(TbMassMass.Text) Then
-				TbLoadingMax.Text = CStr(CSng(TbMassMass.Text) * 1000 - CSng(TbMass.Text) - CSng(TbMassExtra.Text))
+				TbLoadingMax.Text = CStr(CSng(TbMassMass.Text)*1000 - CSng(TbMass.Text) - CSng(TbMassExtra.Text))
 			Else
 				TbLoadingMax.Text = ""
 			End If
@@ -778,6 +779,12 @@ Public Class F_VEH
 	Private Sub btPTOLossMapBrowse_Click(sender As Object, e As EventArgs) Handles btPTOLossMapBrowse.Click
 		If fbPTOLM.OpenDialog(fFileRepl(tbPTOLossMap.Text, fPATH(_vehFile))) Then
 			tbPTOLossMap.Text = fFileWoDir(fbPTOLM.Files(0), fPATH(_vehFile))
+		End If
+	End Sub
+
+	Private Sub btPTOCycle_Click(sender As Object, e As EventArgs) Handles btPTOCycle.Click
+		If fbDRI.OpenDialog(fFileRepl(tbPTOCycle.Text, fPATH(_vehFile))) Then
+			tbPTOCycle.Text = fFileWoDir(fbDRI.Files(0), fPATH(_vehFile))
 		End If
 	End Sub
 End Class
