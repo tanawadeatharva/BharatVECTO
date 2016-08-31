@@ -161,8 +161,7 @@ namespace TUGraz.VectoCore.Models.SimulationComponent.Impl
 			IterationStatistics.Increment(this, "Requests");
 
 			Log.Debug("Engine Powertrain Power Request: torque: {0}, angularVelocity: {1}, power: {2}", outTorque,
-				outAngularVelocity,
-				outTorque * outAngularVelocity);
+				outAngularVelocity, outTorque * outAngularVelocity);
 
 			return DoHandleRequest(absTime, dt, outTorque, outAngularVelocity, dryRun);
 		}

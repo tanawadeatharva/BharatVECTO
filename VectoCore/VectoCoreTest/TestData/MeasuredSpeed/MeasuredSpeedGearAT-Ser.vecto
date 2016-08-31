@@ -9,9 +9,9 @@
     "SavedInDeclMode": false,
     "VehicleFile": "VehicleAT.vveh",
     "EngineFile": "EngineAT.veng",
-    "GearboxFile": "GearboxPowerSplit.vgbx",
+    "GearboxFile": "GearboxSerial.vgbx",
     "Cycles": [
-      "MeasuredSpeedGearAT.vdri"
+      "MeasuredSpeedGear_AT-Ser.vdri"
     ],
     "AuxiliaryAssembly": "CLASSIC",
     "AuxiliaryVersion": "CLASSIC",
