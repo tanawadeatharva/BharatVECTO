@@ -1,3 +1,4 @@
+using System.Linq;
 using TUGraz.VectoCommon.Exceptions;
 using TUGraz.VectoCommon.Models;
 using TUGraz.VectoCommon.Utils;
@@ -14,9 +15,14 @@ namespace TUGraz.VectoCore.Models.SimulationComponent.Impl
 			set { NextComponent = value; }
 		}
 
+		public readonly Second Duration;
+
 		protected Second IdleStart;
 
-		public PTOCycleController(DrivingCycleData cycle) : base(null, cycle) {}
+		public PTOCycleController(DrivingCycleData cycle) : base(null, cycle)
+		{
+			Duration = Data.Entries.Last().Time - Data.Entries.First().Time;
+		}
 
 		public IResponse Request(Second absTime, Second dt, NewtonMeter outTorque, PerSecond outAngularVelocity,
 			bool dryRun = false)
@@ -55,7 +61,7 @@ namespace TUGraz.VectoCore.Models.SimulationComponent.Impl
 			if (RightSample.Current == null)
 				return null;
 
-			return RightSample.Current.Time;
+			return RightSample.Current.Time - LeftSample.Current.Time;
 		}
 	}
 }

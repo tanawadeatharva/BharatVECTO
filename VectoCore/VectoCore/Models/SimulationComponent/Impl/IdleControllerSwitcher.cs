@@ -66,5 +66,17 @@ namespace TUGraz.VectoCore.Models.SimulationComponent.Impl
 		{
 			_ptoController.CommitSimulationStep(null);
 		}
+
+		public Second Duration
+		{
+			get
+			{
+				if (_ptoController != null)
+					return _ptoController.Duration;
+				else {
+					return 0.SI<Second>();
+				}
+			}
+		}
 	}
 }
