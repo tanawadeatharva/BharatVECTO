@@ -31,12 +31,14 @@
 
 using System;
 using System.Data;
+using Org.BouncyCastle.Asn1;
 using TUGraz.VectoCommon.Utils;
 using TUGraz.VectoCore.Utils;
 
 namespace TUGraz.VectoCore.Models.Declaration
 {
-	public sealed class HeatingVentilationAirConditioning : LookupData<MissionType, VehicleClass, Watt>
+	public sealed class HeatingVentilationAirConditioning : LookupData<MissionType, VehicleClass, Watt>,
+		IDeclarationAuxiliaryTable
 	{
 		protected override string ResourceId
 		{
@@ -62,6 +64,11 @@ namespace TUGraz.VectoCore.Models.Declaration
 					}
 				}
 			}
+		}
+
+		public string[] GetTechnologies()
+		{
+			return new[] { "Default" };
 		}
 	}
 }

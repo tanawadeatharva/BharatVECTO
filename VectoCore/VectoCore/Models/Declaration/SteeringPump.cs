@@ -38,26 +38,26 @@ using TUGraz.VectoCore.Utils;
 
 namespace TUGraz.VectoCore.Models.Declaration
 {
-	public sealed class SteeringPump
+	public sealed class SteeringPump : IDeclarationAuxiliaryTable
 	{
+		private readonly SteeringPumpBaseLine _baseLookup = new SteeringPumpBaseLine();
+		private readonly SteeringPumpAxles _axleLookup = new SteeringPumpAxles();
+		private readonly SteeringPumpTechnologies _techLookup = new SteeringPumpTechnologies();
+
 		public Watt Lookup(MissionType mission, VehicleClass hdvClass, IEnumerable<string> technologies)
 		{
-			var baseLookup = new SteeringPumpBaseLine();
-			var axleLookup = new SteeringPumpAxles();
-			var techLookup = new SteeringPumpTechnologies();
-
-			var baseLine = baseLookup.Lookup(mission, hdvClass);
+			var baseLine = _baseLookup.Lookup(mission, hdvClass);
 			var power = new SteeringPumpValues<Watt>(0.SI<Watt>(), 0.SI<Watt>(), 0.SI<Watt>());
 			var factors = new SteeringPumpValues<double>(0, 0, 0);
 			var i = 0;
 			foreach (var technology in technologies) {
 				i++;
-				var axles = axleLookup.Lookup(mission, i);
+				var axles = _axleLookup.Lookup(mission, i);
 				power.UnloadedFriction += baseLine.UnloadedFriction * axles.UnloadedFriction;
 				power.Banking += baseLine.Banking * axles.Banking;
 				power.Steering += baseLine.Steering * axles.Steering;
 
-				var f = techLookup.Lookup(technology, mission);
+				var f = _techLookup.Lookup(technology, mission);
 				factors.UnloadedFriction += f.UnloadedFriction;
 				factors.Banking += f.Banking;
 				factors.Steering += f.Steering;
@@ -90,8 +90,9 @@ namespace TUGraz.VectoCore.Models.Declaration
 				foreach (DataRow row in table.Rows) {
 					var hdvClass = VehicleClassHelper.Parse(row.Field<string>("hdvclass"));
 					foreach (DataColumn col in table.Columns) {
-						if (col.Caption == "hdvclass" || string.IsNullOrWhiteSpace(row.Field<string>(col.Caption)))
+						if (col.Caption == "hdvclass" || string.IsNullOrWhiteSpace(row.Field<string>(col.Caption))) {
 							continue;
+						}
 						var values = row.Field<string>(col.Caption).Split('/')
 							.Select(v => v.ToDouble() / 100.0).Concat(0.0.Repeat(3)).SI<Watt>().ToList();
 						Data[Tuple.Create(col.Caption.ParseEnum<MissionType>(), hdvClass)] = new SteeringPumpValues<Watt>(values[0],
@@ -144,6 +145,11 @@ namespace TUGraz.VectoCore.Models.Declaration
 				}
 				return values;
 			}
+
+			public string[] GetTechnologies()
+			{
+				return Data.Keys.Distinct().ToArray();
+			}
 		}
 
 		private sealed class SteeringPumpAxles : LookupData<MissionType, int, SteeringPumpValues<double>>
@@ -166,11 +172,13 @@ namespace TUGraz.VectoCore.Models.Declaration
 				foreach (DataRow row in table.Rows) {
 					var axleNumber = int.Parse(row.Field<string>("steeredaxles"));
 					foreach (DataColumn col in table.Columns) {
-						if (col.Caption == "steeredaxles")
+						if (col.Caption == "steeredaxles") {
 							continue;
+						}
 						var field = row.Field<string>(col.Caption);
-						if (string.IsNullOrWhiteSpace(field))
+						if (string.IsNullOrWhiteSpace(field)) {
 							continue;
+						}
 						var values = field.Split('/').ToDouble().Concat(0.0.Repeat(3)).ToList();
 						Data[Tuple.Create(col.Caption.ParseEnum<MissionType>(), axleNumber)] = new SteeringPumpValues<double>(values[0],
 							values[1], values[2]);
@@ -191,6 +199,11 @@ namespace TUGraz.VectoCore.Models.Declaration
 				Banking = banking;
 				Steering = steering;
 			}
+		}
+
+		public string[] GetTechnologies()
+		{
+			return _techLookup.GetTechnologies();
 		}
 	}
 }
