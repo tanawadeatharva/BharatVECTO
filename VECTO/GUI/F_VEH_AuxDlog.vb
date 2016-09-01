@@ -11,6 +11,9 @@
 Option Infer On
 
 Imports System.Windows.Forms
+Imports TUGraz.VectoCore.Models.Declaration
+Imports TUGraz.VECTO.File_Browser
+
 
 ''' <summary>
 ''' Aux Config Editor (Job Editor sub-dialog)
@@ -39,15 +42,15 @@ Public Class F_VEH_AuxDlog
 		CbTech.Items.Clear()
 		Select Case TbID.Text
 			Case sKey.AUX.Fan
-				CbTech.Items.AddRange(Declaration.AuxTechs(tAux.Fan).ToArray())
+				CbTech.Items.AddRange(DeclarationData.Fan.GetTechnologies())
 			Case sKey.AUX.SteerPump
-				CbTech.Items.AddRange(Declaration.AuxTechs(tAux.SteerPump).ToArray())
+				CbTech.Items.AddRange(DeclarationData.SteeringPump.GetTechnologies())
 			Case sKey.AUX.HVAC
-				CbTech.Items.AddRange(Declaration.AuxTechs(tAux.HVAC).ToArray())
+				CbTech.Items.AddRange(DeclarationData.HeatingVentilationAirConditioning.GetTechnologies())
 			Case sKey.AUX.ElecSys
-				CbTech.Items.AddRange(Declaration.AuxTechs(tAux.ElectricSys).ToArray())
-			Case Else 'sKey.AUX.PneumSys
-				CbTech.Items.AddRange(Declaration.AuxTechs(tAux.PneumSys).ToArray())
+				CbTech.Items.AddRange(DeclarationData.ElectricSystem.GetTechnologies())
+			Case sKey.AUX.PneumSys
+				CbTech.Items.AddRange(DeclarationData.PneumaticSystem.GetTechnologies())
 		End Select
 		If CbTech.Items.Count > 0 Then
 			CbTech.SelectedIndex = 0

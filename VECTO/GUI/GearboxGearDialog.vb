@@ -8,8 +8,9 @@
 '   WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
 '
 ' See the LICENSE.txt for the specific language governing permissions and limitations.
-
 Imports System.Windows.Forms
+Imports TUGraz.VECTO.File_Browser
+
 
 ''' <summary>
 ''' Gear Editor (Vehicle Editor sub-dialog)

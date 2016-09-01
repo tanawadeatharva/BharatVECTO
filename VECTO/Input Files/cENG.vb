@@ -9,6 +9,8 @@
 '
 ' See the LICENSE.txt for the specific language governing permissions and limitations.
 Imports System.Collections.Generic
+Imports System.IO
+Imports TUGraz.VECTO.Input_Files
 
 ''' <summary>
 ''' Engine input file
@@ -57,8 +59,6 @@ Public Class cENG
 	''' <remarks></remarks>
 	Public fFLD As cSubPath
 
-	Public FLD As cFLD
-
 	''' <summary>
 	''' Path to fuel consumption map
 	''' </summary>
@@ -101,47 +101,10 @@ Public Class cENG
 	''' <remarks></remarks>
 	Public WHTCmw As Single
 
-	''' <summary>
-	''' Rated engine speed [1/min]. Engine speed at max. power. Defined in Init.
-	''' </summary>
-	''' <remarks></remarks>
-	Public Nrated As Single
 
-	''' <summary>
-	''' Maximum engine power [kW]. Power at rated engine speed.
-	''' </summary>
-	''' <remarks></remarks>
-	Public Pmax As Single
 
 	Public SavedInDeclMode As Boolean
 
-	'AA-TB
-	'Added in order to expose readonly the full path of the fuel map being used by vecto
-	Public ReadOnly Property FuelMapFullPath As String
-		Get
-
-			Return fMAP.FullPath
-		End Get
-	End Property
-
-
-	''' <summary>
-	''' Generates list of all sub input files (e.g. FC map). Sets MyFileList.
-	''' </summary>
-	''' <returns>True if successful.</returns>
-	''' <remarks></remarks>
-	Public Function CreateFileList() As Boolean
-
-		MyFileList = New List(Of String)
-
-		MyFileList.Add(PathFLD)
-
-		MyFileList.Add(PathMAP)
-
-		'Not used!!! MyFileList.Add(PathWHTC)
-
-		Return True
-	End Function
 
 	''' <summary>
 	''' New instance. Initialise
@@ -164,8 +127,7 @@ Public Class cENG
 		Displ = 0
 		Nidle = 0
 		I_mot = 0
-		Nrated = 0
-		Pmax = 0
+
 
 		fMAP.Clear()
 		fFLD.Clear()
@@ -277,32 +239,6 @@ Public Class cENG
 
 
 	''' <summary>
-	''' Set generic values for Declaration Mode  
-	''' </summary>
-	''' <returns>True if successful.</returns>
-	''' <remarks></remarks>
-	Public Function DeclInit() As Boolean
-
-		I_mot = cDeclaration.EngInertia(Displ)
-
-		FLD.DeclInit()
-
-		Return True
-	End Function
-
-	''' <summary>
-	''' Returns list of sub input files after calling CreateFileList.
-	''' </summary>
-	''' <value></value>
-	''' <returns>list of sub input files</returns>
-	''' <remarks></remarks>
-	Public ReadOnly Property FileList As List(Of String)
-		Get
-			Return MyFileList
-		End Get
-	End Property
-
-	''' <summary>
 	''' Get or set Filepath before calling <see cref="M:VECTO.cENG.ReadFile" /> or <see cref="M:VECTO.cENG.SaveFile" />
 	''' </summary>
 	''' <value></value>
@@ -317,7 +253,7 @@ Public Class cENG
 			If sFilePath = "" Then
 				MyPath = ""
 			Else
-				MyPath = IO.Path.GetDirectoryName(sFilePath) & "\"
+				MyPath = Path.GetDirectoryName(sFilePath) & "\"
 			End If
 		End Set
 	End Property

@@ -12,10 +12,19 @@ Option Infer On
 
 Imports System.Collections.Generic
 Imports System.Drawing.Imaging
+Imports System.Globalization
 Imports System.IO
 Imports System.Linq
 Imports System.Text.RegularExpressions
 Imports System.Windows.Forms.DataVisualization.Charting
+Imports TUGraz.VECTO.Input_Files
+Imports TUGraz.VectoCommon.Models
+Imports TUGraz.VectoCommon.Utils
+Imports TUGraz.VectoCore.Configuration
+Imports TUGraz.VectoCore.Models.Declaration
+Imports TUGraz.VectoCore.Models.SimulationComponent.Data
+Imports TUGraz.VectoCore.Models.SimulationComponent.Data.Gearbox
+Imports TUGraz.VectoCore.Models.SimulationComponent.Impl
 
 ''' <summary>
 ''' Job Editor. Create/Edit VECTO job files (.vecto)
@@ -95,7 +104,6 @@ Public Class F_VECTO
 
 	'Set generic values for Declaration mode
 	Private Sub DeclInit()
-		Dim LV0 As ListViewItem
 
 		If Not Cfg.DeclMode Then Exit Sub
 
@@ -105,18 +113,17 @@ Public Class F_VECTO
 		If Not RdEcoRoll.Checked Then RdOverspeed.Checked = True
 		CbLookAhead.Checked = True
 
-		TbSSspeed.Text = cDeclaration.SSspeed
-		TbSStime.Text = cDeclaration.SStime
-		TbSSdelay.Text = cDeclaration.SSdelay
-		TbAlookahead.Text = cDeclaration.LACa
-		TbVminLA.Text = cDeclaration.LACvmin
-		tbLacPreviewFactor.Text = "10"
+		TbSSspeed.Text = DeclarationData.Driver.StartStop.MaxSpeed.AsKmph()	'cDeclaration.SSspeed
+		TbSStime.Text = DeclarationData.Driver.StartStop.MinTime.Value()   'cDeclaration.SStime
+		TbSSdelay.Text = DeclarationData.Driver.StartStop.Delay.Value()	 ' cDeclaration.SSdelay
+
+		tbLacPreviewFactor.Text = DeclarationData.Driver.LookAhead.LookAheadDistanceFactor
 		tbLacDfTargetSpeedFile.Text = ""
 		tbLacDfVelocityDropFile.Text = ""
 
-		TbOverspeed.Text = cDeclaration.Overspeed
-		TbUnderSpeed.Text = cDeclaration.Underspeed
-		TbVmin.Text = cDeclaration.ECvmin
+		TbOverspeed.Text = DeclarationData.Driver.OverSpeedEcoRoll.OverSpeed.AsKmph()  'cDeclaration.Overspeed
+		TbUnderSpeed.Text = DeclarationData.Driver.OverSpeedEcoRoll.UnderSpeed.AsKmph()	' cDeclaration.Underspeed
+		TbVmin.Text = DeclarationData.Driver.OverSpeedEcoRoll.MinSpeed.AsKmph()	 'cDeclaration.ECvmin
 
 		If _
 			LvAux.Items.Count <> 5 OrElse
@@ -125,49 +132,33 @@ Public Class F_VECTO
 			LvAux.Items(4).Text <> sKey.AUX.PneumSys) Then
 			LvAux.Items.Clear()
 
-			LV0 = New ListViewItem(sKey.AUX.Fan)
-			LV0.SubItems.Add("Fan")
-			If Declaration.AuxTechs(tAux.Fan).Count > 1 Then
-				LV0.SubItems.Add("")
-			Else
-				LV0.SubItems.Add(Declaration.AuxTechs(tAux.Fan)(0))
-			End If
-			LvAux.Items.Add(LV0)
 
-			LV0 = New ListViewItem(sKey.AUX.SteerPump)
-			LV0.SubItems.Add("Steering pump")
-			If Declaration.AuxTechs(tAux.SteerPump).Count > 1 Then
-				LV0.SubItems.Add("")
-			Else
-				LV0.SubItems.Add(Declaration.AuxTechs(tAux.SteerPump)(0))
-			End If
-			LvAux.Items.Add(LV0)
+			LvAux.Items.Add(GetTechListForAux(sKey.AUX.Fan, "Fan", DeclarationData.Fan))
 
-			LV0 = New ListViewItem(sKey.AUX.HVAC)
-			LV0.SubItems.Add("HVAC")
-			LV0.SubItems.Add("")
-			LvAux.Items.Add(LV0)
+			LvAux.Items.Add(GetTechListForAux(sKey.AUX.SteerPump, "Steering pump", DeclarationData.SteeringPump))
 
-			LV0 = New ListViewItem(sKey.AUX.ElecSys)
-			LV0.SubItems.Add("Electric System")
-			If Declaration.AuxTechs(tAux.ElectricSys).Count > 1 Then
-				LV0.SubItems.Add("")
-			Else
-				LV0.SubItems.Add(Declaration.AuxTechs(tAux.ElectricSys)(0))
-			End If
-			LvAux.Items.Add(LV0)
+			LvAux.Items.Add(GetTechListForAux(sKey.AUX.HVAC, "HVAC", DeclarationData.HeatingVentilationAirConditioning))
 
-			LV0 = New ListViewItem(sKey.AUX.PneumSys)
-			LV0.SubItems.Add("Pneumatic System")
-			If Declaration.AuxTechs(tAux.PneumSys).Count > 1 Then
-				LV0.SubItems.Add("")
-			Else
-				LV0.SubItems.Add(Declaration.AuxTechs(tAux.PneumSys)(0))
-			End If
-			LvAux.Items.Add(LV0)
+			LvAux.Items.Add(GetTechListForAux(sKey.AUX.ElecSys, "Electric System", DeclarationData.ElectricSystem))
+
+			LvAux.Items.Add(GetTechListForAux(sKey.AUX.PneumSys, "Pneymatic System", DeclarationData.PneumaticSystem))
 
 		End If
 	End Sub
+
+	Protected Function GetTechListForAux(key As String, name As String, aux As IDeclarationAuxiliaryTable) As ListViewItem
+		Dim LV0 As ListViewItem
+
+		LV0 = New ListViewItem(key)
+		LV0.SubItems.Add(name)
+		Dim auxtech As String() = aux.GetTechnologies()
+		If auxtech.Count > 1 Then
+			LV0.SubItems.Add("")
+		Else
+			LV0.SubItems.Add(auxtech(0))
+		End If
+		Return LV0
+	End Function
 
 
 	'Show/Hide "Driver Assist" Tab
@@ -456,8 +447,8 @@ Public Class F_VECTO
 		TbUnderSpeed.Text = CStr(VEC0.UnderSpeed)
 		TbVmin.Text = CStr(VEC0.VMin)
 		CbLookAhead.Checked = VEC0.LookAheadOn
-		TbAlookahead.Text = CStr(VEC0.ALookahead)
-		TbVminLA.Text = CStr(VEC0.VMinLa)
+		'TbAlookahead.Text = CStr(VEC0.ALookahead)
+		'TbVminLA.Text = CStr(VEC0.VMinLa)
 		tbLacPreviewFactor.Text = CStr(VEC0.LacPreviewFactor)
 		tbDfCoastingOffset.Text = CStr(VEC0.LacDfOffset)
 		tbDfCoastingScale.Text = CStr(VEC0.LacDfScale)
@@ -568,8 +559,8 @@ Public Class F_VECTO
 		vec0.UnderSpeed = CSng(fTextboxToNumString(TbUnderSpeed.Text))
 		vec0.VMin = CSng(fTextboxToNumString(TbVmin.Text))
 		vec0.LookAheadOn = CbLookAhead.Checked
-		vec0.ALookahead = CSng(fTextboxToNumString(TbAlookahead.Text))
-		vec0.VMinLa = CSng(fTextboxToNumString(TbVminLA.Text))
+		'vec0.ALookahead = CSng(fTextboxToNumString(TbAlookahead.Text))
+		'vec0.VMinLa = CSng(fTextboxToNumString(TbVminLA.Text))
 
 		vec0.LacPreviewFactor = CSng(fTextboxToNumString(tbLacPreviewFactor.Text))
 		vec0.LacDfOffset = CSng(fTextboxToNumString(tbDfCoastingOffset.Text))
@@ -624,11 +615,11 @@ Public Class F_VECTO
 
 		RdOff.Checked = True
 		CbLookAhead.Checked = True
-		TbAlookahead.Text = "-0.5"
+		'TbAlookahead.Text = "-0.5"
 		TbOverspeed.Text = ""
 		TbUnderSpeed.Text = ""
 		TbVmin.Text = ""
-		TbVminLA.Text = "50"
+		'TbVminLA.Text = "50"
 		tbLacPreviewFactor.Text = "10"
 		tbDfCoastingOffset.Text = "2.5"
 		tbDfCoastingScale.Text = "1.5"
@@ -959,7 +950,6 @@ lbDlog:
 	Private Sub CbLookAhead_CheckedChanged(sender As Object, e As EventArgs) _
 		Handles CbLookAhead.CheckedChanged
 		Change()
-		PnLookAhead.Enabled = CbLookAhead.Checked
 	End Sub
 
 	'EcoRoll / Overspeed changed
@@ -999,9 +989,9 @@ lbDlog:
 		Dim ldown As List(Of Single)
 		Dim line As String()
 
-		Dim s0 As cSegmentTableEntry
+
 		Dim HDVclass As String
-		Dim m0 As tMission
+		'Dim m0 As 
 
 		Dim s As Series
 		Dim a As ChartArea
@@ -1021,14 +1011,20 @@ lbDlog:
 
 		VEH0.FilePath = fFileRepl(TbVEH.Text, fPATH(VECTOfile))
 		If VEH0.ReadFile(False) Then
-			s0 = Declaration.SegmentTable.SetRef(VEH0.VehCat, VEH0.AxleConf, VEH0.MassMax)
+			Dim maxMass = (VEH0.MassMax * 1000).SI(Of Kilogram)()		   'CSng(fTextboxToNumString(TbMassMass.Text))
+
+			Dim s0 As Segment = Nothing
+			Try
+				s0 = DeclarationData.Segments.Lookup(VEH0.VehCat, VEH0.AxleConf, maxMass, 0.SI(Of Kilogram), True)
+			Catch
+			End Try
 			If Not s0 Is Nothing Then
-				HDVclass = s0.HDVclass
+				HDVclass = s0.VehicleClass.GetClassNumber()
 
 				If Cfg.DeclMode Then
 					LvCycles.Items.Clear()
 					For Each m0 In s0.Missions
-						LvCycles.Items.Add(Declaration.Missions(m0).NameStr)
+						LvCycles.Items.Add(m0.MissionType.ToString())
 					Next
 				End If
 
@@ -1036,12 +1032,12 @@ lbDlog:
 				HDVclass = "-"
 			End If
 
-			PicVehicle.Image = Image.FromFile(cDeclaration.ConvPicPath(HDVclass, False))
+			PicVehicle.Image = ConvPicPath(HDVclass, False)	'Image.FromFile(cDeclaration.ConvPicPath(HDVclass, False))
 
 			TbHVCclass.Text = "HDV Class " & HDVclass
-			TbVehCat.Text = ConvVehCat(VEH0.VehCat, True)
+			TbVehCat.Text = VEH0.VehCat.GetCategoryName()	'ConvVehCat(VEH0.VehCat, True)
 			TbMass.Text = VEH0.MassMax & " t"
-			TbAxleConf.Text = ConvAxleConf(VEH0.AxleConf)
+			TbAxleConf.Text = VEH0.AxleConf.GetName() 'ConvAxleConf(VEH0.AxleConf)
 
 		End If
 
@@ -1119,7 +1115,7 @@ lbDlog:
 
 		If GBX0.ReadFile(False) Then
 
-			TbGbxTxt.Text = GBX0.GearCount & "-Speed " & GearboxConv(GBX0.gs_Type) & "  " & GBX0.ModelName
+			TbGbxTxt.Text = GBX0.GearCount & "-Speed " & GBX0.gs_Type.ShortName() & "  " & GBX0.ModelName
 
 			If Cfg.DeclMode Then
 
@@ -1132,24 +1128,33 @@ lbDlog:
 						If FLD0.ReadFile(True, False) Then
 
 							If FLD0.Init(ENG0.Nidle) Then
-								Dim Shiftpoly = New cGBX.cShiftPolygon("", 0)
-								Shiftpoly.SetGenericShiftPoly(FLD0, ENG0.Nidle)
 
-								s = New Series
-								s.Points.DataBindXY(Shiftpoly.gs_nUup, Shiftpoly.gs_TqUp)
-								s.ChartType = SeriesChartType.FastLine
-								s.BorderWidth = 2
-								s.Color = Color.DarkRed
-								s.Name = "Upshift curve (" & i & ")"
-								MyChart.Series.Add(s)
+								'Dim engine As CombustionEngineData = ConvertToEngineData(FLD0, F_VECTO.n_idle)
+								'Dim shiftLines As ShiftPolygon = DeclarationData.Gearbox.ComputeShiftPolygon(Gear - 1,
+								'																			engine.FullLoadCurve, gears,
+								'																			engine,
+								'																			Double.Parse(LvGears.Items(0).SubItems(F_GBX.GearboxTbl.Ratio).Text,
+								'																						CultureInfo.InvariantCulture),
+								'																			(.rdyn / 1000.0).SI(Of Meter))
 
-								s = New Series
-								s.Points.DataBindXY(Shiftpoly.gs_nUdown, Shiftpoly.gs_TqDown)
-								s.ChartType = SeriesChartType.FastLine
-								s.BorderWidth = 2
-								s.Color = Color.DarkRed
-								s.Name = "Downshift curve (" & i & ")"
-								MyChart.Series.Add(s)
+								's = New Series
+								's.Points.DataBindXY(shiftLines.Upshift.Select(Function(pt) pt.AngularSpeed.Value() / Constants.RPMToRad).ToList(),
+								'					shiftLines.Upshift.Select(Function(pt) pt.Torque.Value()).ToList())
+								's.ChartType = SeriesChartType.FastLine
+								's.BorderWidth = 2
+								's.Color = Color.DarkRed
+								's.Name = "Upshift curve (" & i & ")"
+								'MyChart.Series.Add(s)
+
+								's = New Series
+								's.Points.DataBindXY(
+								'	shiftLines.Downshift.Select(Function(pt) pt.AngularSpeed.Value() / Constants.RPMToRad).ToList(),
+								'	shiftLines.Downshift.Select(Function(pt) pt.Torque.Value()).ToList())
+								's.ChartType = SeriesChartType.FastLine
+								's.BorderWidth = 2
+								's.Color = Color.DarkRed
+								's.Name = "Downshift curve (" & i & ")"
+								'MyChart.Series.Add(s)
 							End If
 
 
@@ -1394,6 +1399,7 @@ lbDlog:
 		End If
 	End Sub
 
+
 	'AA-TB
 	Private Sub btnAAUXOpen_Click(sender As Object, e As EventArgs) Handles btnAAUXOpen.Click
 
@@ -1405,7 +1411,7 @@ lbDlog:
 			tbLacDfTargetSpeedFile.Text = fFileWoDir(fbDfTargetSpeed.Files(0), fPATH(VECTOfile))
 	End Sub
 
-	Private Sub btnDfVelocityDrop_Click(sender As Object, e As EventArgs) Handles btnDfVelocityDrop.Click
+	Private Sub btnDfVelocityDrop_Click(sender As Object, e As EventArgs)
 		If fbDfVelocityDrop.OpenDialog(fFileRepl(tbLacDfVelocityDropFile.Text, fPATH(VECTOfile))) Then _
 			tbLacDfVelocityDropFile.Text = fFileWoDir(fbDfVelocityDrop.Files(0), fPATH(VECTOfile))
 	End Sub

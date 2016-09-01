@@ -9,9 +9,15 @@
 '
 ' See the LICENSE.txt for the specific language governing permissions and limitations.
 Imports System.Collections.Generic
+Imports System.Drawing.Imaging
 Imports System.Globalization
+Imports System.IO
 Imports System.Linq
+Imports System.Text.RegularExpressions
+Imports System.Windows.Forms.DataVisualization.Charting
+Imports TUGraz.VECTO.Input_Files
 Imports TUGraz.VectoCommon.InputData
+Imports TUGraz.VectoCommon.Models
 Imports TUGraz.VectoCommon.Utils
 Imports TUGraz.VectoCore.Configuration
 Imports TUGraz.VectoCore.InputData.Impl
@@ -44,14 +50,14 @@ Public Class F_GBX
 	Private Changed As Boolean = False
 
 	'Before closing Editor: Check if file was changed and ask to save.
-	Private Sub F_GBX_FormClosing(sender As Object, e As System.Windows.Forms.FormClosingEventArgs) Handles Me.FormClosing
+	Private Sub F_GBX_FormClosing(sender As Object, e As FormClosingEventArgs) Handles Me.FormClosing
 		If e.CloseReason <> CloseReason.ApplicationExitCall And e.CloseReason <> CloseReason.WindowsShutDown Then
 			e.Cancel = ChangeCheckCancel()
 		End If
 	End Sub
 
 	'Initialise.
-	Private Sub F_GBX_Load(sender As Object, e As System.EventArgs) Handles Me.Load
+	Private Sub F_GBX_Load(sender As Object, e As EventArgs) Handles Me.Load
 
 		Init = False
 		GearDia = New GearboxGearDialog
@@ -61,12 +67,19 @@ Public Class F_GBX
 		Me.ChTCon.Enabled = Not Cfg.DeclMode
 
 		Me.CbGStype.Items.Clear()
-		Me.CbGStype.Items.Add("Manual Transmission (MT)")
-		Me.CbGStype.Items.Add("Automated Manual Transmission (AMT)")
-		If Not Cfg.DeclMode Then
-			Me.CbGStype.Items.Add("Automatic Transmission - Serial (AT-S)")
-			Me.CbGStype.Items.Add("Automatic Transmission - PowerSplit (AT-P)")
-			Me.CbGStype.Items.Add("Custom")
+		CbGStype.ValueMember = "Value"
+		CbGStype.DisplayMember = "Label"
+
+		If Cfg.DeclMode Then
+			CbGStype.DataSource = [Enum].GetValues(GetType(GearboxType)) _
+				.Cast(Of GearboxType)() _
+				.Where(Function(type) type.ManualTransmission()) _
+				.Select(Function(type) New With {Key .Value = type, .Label = type.GetLabel()}).ToList()
+		Else
+			CbGStype.DataSource = [Enum].GetValues(GetType(GearboxType)) _
+				.Cast(Of GearboxType) _
+				.Where(Function(type) type.AutomaticTransmission() OrElse type.ManualTransmission()) _
+				.Select(Function(type) New With {Key .Value = type, .Label = type.GetLabel()}).ToList()
 		End If
 
 		Init = True
@@ -79,26 +92,26 @@ Public Class F_GBX
 
 	'Set generic values for Declaration mode.
 	Private Sub DeclInit()
-		Dim GStype As tGearbox
+		Dim GStype As GearboxType
 		Dim lv0 As ListViewItem
 
 		If Not Cfg.DeclMode Then Exit Sub
 
-		Me.TBI_getr.Text = cDeclaration.GbInertia
+		Me.TBI_getr.Text = DeclarationData.Gearbox.Inertia.Value() 'cDeclaration.GbInertia
 
-		GStype = CType(Me.CbGStype.SelectedIndex, tGearbox)
+		GStype = CbGStype.SelectedValue	'CType(Me.CbGStype.SelectedIndex, tGearbox)
 
-		Me.TbTracInt.Text = cDeclaration.TracInt(GStype)
-		Me.TbShiftTime.Text = cDeclaration.ShiftTime(GStype)
+		Me.TbTracInt.Text = GStype.TractionInterruption().Value()
+		Me.TbShiftTime.Text = DeclarationData.Gearbox.MinTimeBetweenGearshifts.Value() 'cDeclaration.ShiftTime(GStype)
 
-		Me.TbTqResv.Text = cDeclaration.TqResv
-		Me.TbTqResvStart.Text = cDeclaration.TqResvStart
-		Me.TbStartSpeed.Text = cDeclaration.StartSpeed
-		Me.TbStartAcc.Text = cDeclaration.StartAcc
+		Me.TbTqResv.Text = DeclarationData.Gearbox.TorqueReserve ' cDeclaration.TqResv
+		Me.TbTqResvStart.Text = DeclarationData.Gearbox.TorqueReserveStart 'cDeclaration.TqResvStart
+		Me.TbStartSpeed.Text = DeclarationData.Gearbox.StartSpeed.Value() 'cDeclaration.StartSpeed
+		Me.TbStartAcc.Text = DeclarationData.Gearbox.StartAcceleration.Value() ' cDeclaration.StartAcc
 
-		tbUpshiftMinAcceleration.Text = cDeclaration.UpshiftMinAcceleration
-		tbDownshiftAfterUpshift.Text = cDeclaration.DownshiftAfterUpshiftDelay
-		tbUpshiftAfterDownshift.Text = cDeclaration.UpshiftAfterDownshiftDelay
+		tbUpshiftMinAcceleration.Text = DeclarationData.Gearbox.UpshiftMinAcceleration.Value()
+		tbDownshiftAfterUpshift.Text = DeclarationData.Gearbox.DownshiftAfterUpshiftDelay.Value()
+		tbUpshiftAfterDownshift.Text = DeclarationData.Gearbox.UpshiftAfterDownshiftDelay.Value()
 
 		For Each lv0 In Me.LvGears.Items
 			lv0.SubItems(GearboxTbl.ShiftPolygons).Text = "-"
@@ -107,23 +120,23 @@ Public Class F_GBX
 
 #Region "Toolbar"
 
-	Private Sub ToolStripBtNew_Click(sender As System.Object, e As System.EventArgs) Handles ToolStripBtNew.Click
+	Private Sub ToolStripBtNew_Click(sender As Object, e As EventArgs) Handles ToolStripBtNew.Click
 		newGBX()
 	End Sub
 
-	Private Sub ToolStripBtOpen_Click(sender As System.Object, e As System.EventArgs) Handles ToolStripBtOpen.Click
+	Private Sub ToolStripBtOpen_Click(sender As Object, e As EventArgs) Handles ToolStripBtOpen.Click
 		If fbGBX.OpenDialog(GbxFile) Then openGBX(fbGBX.Files(0))
 	End Sub
 
-	Private Sub ToolStripBtSave_Click(sender As System.Object, e As System.EventArgs) Handles ToolStripBtSave.Click
+	Private Sub ToolStripBtSave_Click(sender As Object, e As EventArgs) Handles ToolStripBtSave.Click
 		SaveOrSaveAs(False)
 	End Sub
 
-	Private Sub ToolStripBtSaveAs_Click(sender As System.Object, e As System.EventArgs) Handles ToolStripBtSaveAs.Click
+	Private Sub ToolStripBtSaveAs_Click(sender As Object, e As EventArgs) Handles ToolStripBtSaveAs.Click
 		SaveOrSaveAs(True)
 	End Sub
 
-	Private Sub ToolStripBtSendTo_Click(sender As System.Object, e As System.EventArgs) Handles ToolStripBtSendTo.Click
+	Private Sub ToolStripBtSendTo_Click(sender As Object, e As EventArgs) Handles ToolStripBtSendTo.Click
 
 		If ChangeCheckCancel() Then Exit Sub
 
@@ -147,13 +160,13 @@ Public Class F_GBX
 	End Sub
 
 	'Help
-	Private Sub ToolStripButton1_Click(sender As System.Object, e As System.EventArgs) Handles ToolStripButton1.Click
-		If IO.File.Exists(MyAppPath & "User Manual\help.html") Then
+	Private Sub ToolStripButton1_Click(sender As Object, e As EventArgs) Handles ToolStripButton1.Click
+		If File.Exists(MyAppPath & "User Manual\help.html") Then
 			Dim BrowserRegistryString As String =
 					My.Computer.Registry.ClassesRoot.OpenSubKey("\http\shell\open\command\").GetValue("").ToString
 			Dim DefaultBrowserPath As String =
-					System.Text.RegularExpressions.Regex.Match(BrowserRegistryString, "(\"".*?\"")").Captures(0).ToString
-			System.Diagnostics.Process.Start(DefaultBrowserPath,
+					Regex.Match(BrowserRegistryString, "(\"".*?\"")").Captures(0).ToString
+			Process.Start(DefaultBrowserPath,
 											String.Format("""{0}{1}""", MyAppPath, "User Manual\help.html#gearbox-editor"))
 		Else
 			MsgBox("User Manual not found!", MsgBoxStyle.Critical)
@@ -270,11 +283,12 @@ Public Class F_GBX
 		tbDownshiftAfterUpshift.Text = GBX0.DownshiftAfterUpshift
 		tbUpshiftAfterDownshift.Text = GBX0.UpshiftAfterDownshift
 
-		If CType(GBX0.gs_Type, Integer) <= Me.CbGStype.Items.Count - 1 Then
-			Me.CbGStype.SelectedIndex = CType(GBX0.gs_Type, Integer)
-		Else
-			Me.CbGStype.SelectedIndex = 0
-		End If
+		CbGStype.SelectedValue = GBX0.gs_Type
+		'If CType(GBX0.gs_Type, Integer) <= Me.CbGStype.Items.Count - 1 Then
+		'	Me.CbGStype.SelectedIndex = CType(GBX0.gs_Type, Integer)
+		'Else
+		'	Me.CbGStype.SelectedIndex = 0
+		'End If
 
 		DeclInit()
 
@@ -346,7 +360,7 @@ Public Class F_GBX
 		GBX0.gs_StartAcc = fTextboxToNumString(Me.TbStartAcc.Text)
 		GBX0.gs_ShiftInside = Me.ChShiftInside.Checked
 
-		GBX0.gs_Type = CType(Me.CbGStype.SelectedIndex, tGearbox)
+		GBX0.gs_Type = CbGStype.SelectedValue
 
 		GBX0.TCon = Me.ChTCon.Checked
 		GBX0.TCfile = Me.TbTCfile.Text
@@ -410,59 +424,59 @@ Public Class F_GBX
 		End If
 	End Function
 
-	Private Sub TbName_TextChanged(sender As System.Object, e As System.EventArgs) Handles TbName.TextChanged
+	Private Sub TbName_TextChanged(sender As Object, e As EventArgs) Handles TbName.TextChanged
 		Change()
 	End Sub
 
-	Private Sub TBI_getr_TextChanged(sender As System.Object, e As System.EventArgs) Handles TBI_getr.TextChanged
+	Private Sub TBI_getr_TextChanged(sender As Object, e As EventArgs) Handles TBI_getr.TextChanged
 		Change()
 	End Sub
 
-	Private Sub TbTracInt_TextChanged(sender As System.Object, e As System.EventArgs) Handles TbTracInt.TextChanged
+	Private Sub TbTracInt_TextChanged(sender As Object, e As EventArgs) Handles TbTracInt.TextChanged
 		Change()
 	End Sub
 
-	Private Sub ChSkipGears_CheckedChanged(sender As System.Object, e As System.EventArgs) _
+	Private Sub ChSkipGears_CheckedChanged(sender As Object, e As EventArgs) _
 		Handles ChSkipGears.CheckedChanged
 		CheckEnableTorqRes()
 		Change()
 	End Sub
 
-	Private Sub ChShiftInside_CheckedChanged(sender As System.Object, e As System.EventArgs) _
+	Private Sub ChShiftInside_CheckedChanged(sender As Object, e As EventArgs) _
 		Handles ChShiftInside.CheckedChanged
 		CheckEnableTorqRes()
 		Change()
 	End Sub
 
-	Private Sub TbTqResv_TextChanged(sender As System.Object, e As System.EventArgs) Handles TbTqResv.TextChanged
+	Private Sub TbTqResv_TextChanged(sender As Object, e As EventArgs) Handles TbTqResv.TextChanged
 		Change()
 	End Sub
 
-	Private Sub TbShiftTime_TextChanged(sender As System.Object, e As System.EventArgs) Handles TbShiftTime.TextChanged
+	Private Sub TbShiftTime_TextChanged(sender As Object, e As EventArgs) Handles TbShiftTime.TextChanged
 		Change()
 	End Sub
 
-	Private Sub TbTqResvStart_TextChanged(sender As System.Object, e As System.EventArgs) Handles TbTqResvStart.TextChanged
+	Private Sub TbTqResvStart_TextChanged(sender As Object, e As EventArgs) Handles TbTqResvStart.TextChanged
 		Change()
 	End Sub
 
-	Private Sub TbStartSpeed_TextChanged(sender As System.Object, e As System.EventArgs) Handles TbStartSpeed.TextChanged
+	Private Sub TbStartSpeed_TextChanged(sender As Object, e As EventArgs) Handles TbStartSpeed.TextChanged
 		Change()
 	End Sub
 
-	Private Sub TbStartAcc_TextChanged(sender As System.Object, e As System.EventArgs) Handles TbStartAcc.TextChanged
+	Private Sub TbStartAcc_TextChanged(sender As Object, e As EventArgs) Handles TbStartAcc.TextChanged
 		Change()
 	End Sub
 
-	Private Sub TbTCfile_TextChanged(sender As System.Object, e As System.EventArgs) Handles TbTCfile.TextChanged
+	Private Sub TbTCfile_TextChanged(sender As Object, e As EventArgs) Handles TbTCfile.TextChanged
 		Change()
 	End Sub
 
-	Private Sub TbTCrefrpm_TextChanged(sender As System.Object, e As System.EventArgs) Handles TbTCrefrpm.TextChanged
+	Private Sub TbTCrefrpm_TextChanged(sender As Object, e As EventArgs) Handles TbTCrefrpm.TextChanged
 		Change()
 	End Sub
 
-	Private Sub TbTCinertia_TextChanged(sender As System.Object, e As System.EventArgs) Handles TbTCinertia.TextChanged
+	Private Sub TbTCinertia_TextChanged(sender As Object, e As EventArgs) Handles TbTCinertia.TextChanged
 		Change()
 	End Sub
 
@@ -479,37 +493,29 @@ Public Class F_GBX
 #End Region
 
 	'Save and close
-	Private Sub ButOK_Click(sender As System.Object, e As System.EventArgs) Handles ButOK.Click
+	Private Sub ButOK_Click(sender As Object, e As EventArgs) Handles ButOK.Click
 		If SaveOrSaveAs(False) Then Me.Close()
 	End Sub
 
 	'Cancel
-	Private Sub ButCancel_Click(sender As System.Object, e As System.EventArgs) Handles ButCancel.Click
+	Private Sub ButCancel_Click(sender As Object, e As EventArgs) Handles ButCancel.Click
 		Me.Close()
 	End Sub
 
 	'Enable/Disable settings for specific transmission types
-	Private Sub CbGStype_SelectedIndexChanged(sender As System.Object, e As System.EventArgs) _
+	Private Sub CbGStype_SelectedIndexChanged(sender As Object, e As EventArgs) _
 		Handles CbGStype.SelectedIndexChanged
-		Dim GStype As tGearbox
+		Dim GStype As GearboxType = CbGStype.SelectedItem.Value
 
 		Change()
 
-		GStype = CType(Me.CbGStype.SelectedIndex, tGearbox)
-
-		Me.ChShiftInside.Enabled = (GStype = tGearbox.Custom)
-		Me.ChSkipGears.Enabled = (GStype = tGearbox.Custom)
-		Me.ChTCon.Enabled = (GStype = tGearbox.Custom)
-
-		If GStype <> tGearbox.Custom Then
-			Me.ChShiftInside.Checked = cDeclaration.ShiftInside(GStype)
-			Me.ChSkipGears.Checked = cDeclaration.SkipGears(GStype)
-			Me.ChTCon.Checked = (GStype = tGearbox.AutomaticSerial OrElse GStype = tGearbox.AutomaticPowerSplit)
-		End If
+		ChShiftInside.Enabled = (GStype.EarlyShiftGears())
+		ChSkipGears.Enabled = (GStype.SkipGears())
+		ChTCon.Enabled = (GStype.AutomaticTransmission())
 	End Sub
 
 
-	Private Sub LvGears_SelectedIndexChanged(sender As System.Object, e As System.EventArgs) _
+	Private Sub LvGears_SelectedIndexChanged(sender As Object, e As EventArgs) _
 		Handles LvGears.SelectedIndexChanged
 		UpdatePic()
 	End Sub
@@ -517,13 +523,13 @@ Public Class F_GBX
 #Region "Gears"
 
 	'Gear-DoubleClick
-	Private Sub LvGears_MouseDoubleClick(ByVal sender As Object, ByVal e As System.Windows.Forms.MouseEventArgs) _
+	Private Sub LvGears_MouseDoubleClick(ByVal sender As Object, ByVal e As MouseEventArgs) _
 		Handles LvGears.MouseDoubleClick
 		EditGear()
 	End Sub
 
 	'Gear-KeyDown
-	Private Sub LvGears_KeyDown(sender As Object, e As System.Windows.Forms.KeyEventArgs) Handles LvGears.KeyDown
+	Private Sub LvGears_KeyDown(sender As Object, e As KeyEventArgs) Handles LvGears.KeyDown
 		Select Case e.KeyCode
 			Case Keys.Delete, Keys.Back
 				RemoveGear(False)
@@ -533,12 +539,12 @@ Public Class F_GBX
 	End Sub
 
 	'Remove Gear Button
-	Private Sub BtClearGear_Click(sender As System.Object, e As System.EventArgs) Handles BtRemGear.Click
+	Private Sub BtClearGear_Click(sender As Object, e As EventArgs) Handles BtRemGear.Click
 		RemoveGear(False)
 	End Sub
 
 	'Add Gear button
-	Private Sub BtAddGear_Click(sender As System.Object, e As System.EventArgs) Handles BtAddGear.Click
+	Private Sub BtAddGear_Click(sender As Object, e As EventArgs) Handles BtAddGear.Click
 		AddGear()
 		Me.LvGears.Items(Me.LvGears.Items.Count - 1).Selected = True
 		EditGear()
@@ -570,7 +576,7 @@ Public Class F_GBX
 				GearDia.BtPrevious.Enabled = True
 			End If
 
-			If GearDia.ShowDialog = Windows.Forms.DialogResult.OK Then
+			If GearDia.ShowDialog = DialogResult.OK Then
 
 				'Me.LvGears.SelectedItems(0).SubItems(GearboxTbl.TorqueConverter).Text = "-"
 
@@ -667,19 +673,19 @@ Public Class F_GBX
 
 		OpenWithToolStripMenuItem.Text = "Open with " & Cfg.OpenCmdName
 
-		CmOpenFile.Show(Cursor.Position)
+		CmOpenFile.Show(Windows.Forms.Cursor.Position)
 	End Sub
 
-	Private Sub OpenWithToolStripMenuItem_Click(sender As System.Object, e As System.EventArgs) _
+	Private Sub OpenWithToolStripMenuItem_Click(sender As Object, e As EventArgs) _
 		Handles OpenWithToolStripMenuItem.Click
 		If Not FileOpenAlt(CmFiles(0)) Then MsgBox("Failed to open file!")
 	End Sub
 
-	Private Sub ShowInFolderToolStripMenuItem_Click(sender As System.Object, e As System.EventArgs) _
+	Private Sub ShowInFolderToolStripMenuItem_Click(sender As Object, e As EventArgs) _
 		Handles ShowInFolderToolStripMenuItem.Click
-		If IO.File.Exists(CmFiles(0)) Then
+		If File.Exists(CmFiles(0)) Then
 			Try
-				System.Diagnostics.Process.Start("explorer", "/select,""" & CmFiles(0) & "")
+				Process.Start("explorer", "/select,""" & CmFiles(0) & "")
 			Catch ex As Exception
 				MsgBox("Failed to open file!")
 			End Try
@@ -693,22 +699,22 @@ Public Class F_GBX
 
 	Private Sub UpdatePic()
 
-		Dim f As cFile_V3 = Nothing
+		Dim f As cFile_V3
 		Dim path As String
 		Dim lM As List(Of Single) = Nothing
 		Dim lup As List(Of Single) = Nothing
 		Dim ldown As List(Of Single) = Nothing
-		Dim line As String() = Nothing
-		Dim MyChart As System.Windows.Forms.DataVisualization.Charting.Chart
-		Dim s As System.Windows.Forms.DataVisualization.Charting.Series
-		Dim a As System.Windows.Forms.DataVisualization.Charting.ChartArea
+		Dim line As String()
+		Dim MyChart As Chart
+		Dim s As Series
+		Dim a As ChartArea
 		Dim img As Image
 		Dim Gear As Integer
-		Dim fldOK As Boolean = False
+		Dim fldOK As Boolean
 		Dim fldpath As String
 		Dim FLD0 As cFLD = Nothing
-		Dim ShiftOK As Boolean = False
-		Dim Shiftpoly As cGBX.cShiftPolygon
+		Dim ShiftOK As Boolean
+
 
 		Me.PicBox.Image = Nothing
 
@@ -730,8 +736,8 @@ Public Class F_GBX
 				f = New cFile_V3
 				ShiftOK = f.OpenRead(path)
 
-				 fldpath = F_VECTO.FLDfile
-				
+				fldpath = F_VECTO.FLDfile
+
 				fldOK = fldpath.Trim <> ""
 
 				If fldOK Then
@@ -784,25 +790,25 @@ Public Class F_GBX
 		'Create plot
 		If Not ShiftOK And Not fldOK Then Exit Sub
 
-		MyChart = New System.Windows.Forms.DataVisualization.Charting.Chart
+		MyChart = New Chart
 		MyChart.Width = Me.PicBox.Width
 		MyChart.Height = Me.PicBox.Height
 
-		a = New System.Windows.Forms.DataVisualization.Charting.ChartArea
+		a = New ChartArea
 
 		'Shiftpolygons from file
 		If ShiftOK Then
-			s = New System.Windows.Forms.DataVisualization.Charting.Series
+			s = New Series
 			s.Points.DataBindXY(lup, lM)
-			s.ChartType = DataVisualization.Charting.SeriesChartType.FastLine
+			s.ChartType = SeriesChartType.FastLine
 			s.BorderWidth = 2
 			s.Color = Color.DarkRed
 			s.Name = "Upshift curve"
 			MyChart.Series.Add(s)
 
-			s = New System.Windows.Forms.DataVisualization.Charting.Series
+			s = New Series
 			s.Points.DataBindXY(ldown, lM)
-			s.ChartType = DataVisualization.Charting.SeriesChartType.FastLine
+			s.ChartType = SeriesChartType.FastLine
 			s.BorderWidth = 2
 			s.Color = Color.DarkRed
 			s.Name = "Downshift curve"
@@ -817,9 +823,9 @@ Public Class F_GBX
 		'Fld
 		If fldOK AndAlso vectoOk AndAlso vehicleOk Then
 
-			s = New System.Windows.Forms.DataVisualization.Charting.Series
+			s = New Series
 			s.Points.DataBindXY(FLD0.LnU, FLD0.LTq)
-			s.ChartType = DataVisualization.Charting.SeriesChartType.FastLine
+			s.ChartType = SeriesChartType.FastLine
 			s.BorderWidth = 2
 			s.Color = Color.DarkBlue
 			s.Name = "Full load"
@@ -828,39 +834,37 @@ Public Class F_GBX
 			If F_VECTO.Visible AndAlso F_VECTO.n_idle > 0 Then
 				If FLD0.Init(F_VECTO.n_idle) Then
 
-					Shiftpoly = New cGBX.cShiftPolygon("", 0)
-					Shiftpoly.SetGenericShiftPoly(FLD0, F_VECTO.n_idle)
 					'Dim fullLoadCurve As FullLoadCurve = ConvertToFullLoadCurve(FLD0.LnU, FLD0.LTq)
 					Dim gears As IList(Of ITransmissionInputData) = ConvertToGears(LvGears.Items)
-					If (Not AutomaticTransmission(CType(Me.CbGStype.SelectedIndex, tGearbox)) AndAlso gears.Count > 1) Then
+					If (CType(CbGStype.SelectedValue, GearboxType).ManualTransmission() AndAlso gears.Count > 1) Then
 						Dim engine As CombustionEngineData = ConvertToEngineData(FLD0, F_VECTO.n_idle)
 						Dim shiftLines As ShiftPolygon = DeclarationData.Gearbox.ComputeShiftPolygon(Gear - 1, engine.FullLoadCurve, gears,
 																									engine,
 																									Double.Parse(LvGears.Items(0).SubItems(GearboxTbl.Ratio).Text, CultureInfo.InvariantCulture),
 																									(vehicle.rdyn / 1000.0).SI(Of Meter))
 
-						s = New System.Windows.Forms.DataVisualization.Charting.Series
+						s = New Series
 
 						's.Points.DataBindXY(Shiftpoly.gs_nUup, Shiftpoly.gs_TqUp)
 						s.Points.DataBindXY(
 							shiftLines.Upshift.Select(Function(pt) pt.AngularSpeed.Value() / Constants.RPMToRad).ToList(),
 							shiftLines.Upshift.Select(Function(pt) pt.Torque.Value()).ToList())
-						s.ChartType = DataVisualization.Charting.SeriesChartType.FastLine
+						s.ChartType = SeriesChartType.FastLine
 						s.BorderWidth = 2
 						s.Color = Color.DarkRed
-						s.BorderDashStyle = DataVisualization.Charting.ChartDashStyle.Dash
+						s.BorderDashStyle = ChartDashStyle.Dash
 						s.Name = "Upshift curve (generic)"
 						MyChart.Series.Add(s)
 
-						s = New System.Windows.Forms.DataVisualization.Charting.Series
+						s = New Series
 						's.Points.DataBindXY(Shiftpoly.gs_nUdown, Shiftpoly.gs_TqDown)
 						s.Points.DataBindXY(
 							shiftLines.Downshift.Select(Function(pt) pt.AngularSpeed.Value() / Constants.RPMToRad).ToList(),
 							shiftLines.Downshift.Select(Function(pt) pt.Torque.Value()).ToList())
-						s.ChartType = DataVisualization.Charting.SeriesChartType.FastLine
+						s.ChartType = SeriesChartType.FastLine
 						s.BorderWidth = 2
 						s.Color = Color.DarkRed
-						s.BorderDashStyle = DataVisualization.Charting.ChartDashStyle.Dash
+						s.BorderDashStyle = ChartDashStyle.Dash
 						s.Name = "Downshift curve (generic)"
 						MyChart.Series.Add(s)
 					End If
@@ -875,17 +879,17 @@ Public Class F_GBX
 		a.AxisX.Title = "engine speed [1/min]"
 		a.AxisX.TitleFont = New Font("Helvetica", 10)
 		a.AxisX.LabelStyle.Font = New Font("Helvetica", 8)
-		a.AxisX.LabelAutoFitStyle = DataVisualization.Charting.LabelAutoFitStyles.None
-		a.AxisX.MajorGrid.LineDashStyle = DataVisualization.Charting.ChartDashStyle.Dot
+		a.AxisX.LabelAutoFitStyle = LabelAutoFitStyles.None
+		a.AxisX.MajorGrid.LineDashStyle = ChartDashStyle.Dot
 
 		a.AxisY.Title = "engine torque [Nm]"
 		a.AxisY.TitleFont = New Font("Helvetica", 10)
 		a.AxisY.LabelStyle.Font = New Font("Helvetica", 8)
-		a.AxisY.LabelAutoFitStyle = DataVisualization.Charting.LabelAutoFitStyles.None
-		a.AxisY.MajorGrid.LineDashStyle = DataVisualization.Charting.ChartDashStyle.Dot
+		a.AxisY.LabelAutoFitStyle = LabelAutoFitStyles.None
+		a.AxisY.MajorGrid.LineDashStyle = ChartDashStyle.Dot
 
 		a.AxisX.Minimum = 300
-		a.BorderDashStyle = DataVisualization.Charting.ChartDashStyle.Solid
+		a.BorderDashStyle = ChartDashStyle.Solid
 		a.BorderWidth = 1
 
 		a.BackColor = Color.GhostWhite
@@ -897,28 +901,13 @@ Public Class F_GBX
 
 		MyChart.Update()
 
-		img = New Bitmap(MyChart.Width, MyChart.Height, Imaging.PixelFormat.Format32bppArgb)
+		img = New Bitmap(MyChart.Width, MyChart.Height, PixelFormat.Format32bppArgb)
 		MyChart.DrawToBitmap(img, New Rectangle(0, 0, Me.PicBox.Width, Me.PicBox.Height))
 
 		Me.PicBox.Image = img
 	End Sub
 
-	Private Function ConvertToEngineData(fld As cFLD, nIdle As Single) As CombustionEngineData
 
-		Dim retVal As CombustionEngineData = New CombustionEngineData()
-		retVal.FullLoadCurve = New EngineFullLoadCurve()
-		retVal.FullLoadCurve.FullLoadEntries = New List(Of FullLoadCurve.FullLoadCurveEntry)
-		For i As Integer = 0 To fld.LnU.Count - 1
-			retVal.FullLoadCurve.FullLoadEntries.Add(
-				New FullLoadCurve.FullLoadCurveEntry() _
-														With {.EngineSpeed = CType(fld.LnU(i), Double).RPMtoRad(),
-														.TorqueFullLoad = CType(fld.LTq(i), Double).SI(Of NewtonMeter)(),
-														.TorqueDrag = CType(fld.LTqDrag(i), Double).SI(Of NewtonMeter)()})
-		Next
-
-		retVal.IdleSpeed = CType(nIdle, Double).RPMtoRad()
-		Return retVal
-	End Function
 
 	Private Function ConvertToGears(gbx As ListView.ListViewItemCollection) As IList(Of ITransmissionInputData)
 		Dim retVal As List(Of ITransmissionInputData) = New List(Of ITransmissionInputData)
@@ -941,7 +930,7 @@ Public Class F_GBX
 #Region "Torque Converter"
 
 	'TC on/off
-	Private Sub ChTCon_CheckedChanged(sender As System.Object, e As System.EventArgs) Handles ChTCon.CheckedChanged
+	Private Sub ChTCon_CheckedChanged(sender As Object, e As EventArgs) Handles ChTCon.CheckedChanged
 		Change()
 		CheckGearTC()
 		PnTC.Enabled = ChTCon.Checked
@@ -950,14 +939,14 @@ Public Class F_GBX
 	End Sub
 
 	'Browse TC file
-	Private Sub BtTCfileBrowse_Click(sender As System.Object, e As System.EventArgs) Handles BtTCfileBrowse.Click
+	Private Sub BtTCfileBrowse_Click(sender As Object, e As EventArgs) Handles BtTCfileBrowse.Click
 		If fbTCC.OpenDialog(fFileRepl(Me.TbTCfile.Text, fPATH(GbxFile))) Then
 			Me.TbTCfile.Text = fFileWoDir(fbTCC.Files(0), fPATH(GbxFile))
 		End If
 	End Sub
 
 	'Open TC file
-	Private Sub BtTCfileOpen_Click(sender As System.Object, e As System.EventArgs) Handles BtTCfileOpen.Click
+	Private Sub BtTCfileOpen_Click(sender As Object, e As EventArgs) Handles BtTCfileOpen.Click
 		OpenFiles(fFileRepl(Me.TbTCfile.Text, fPATH(GbxFile)))
 	End Sub
 

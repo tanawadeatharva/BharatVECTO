@@ -43,4 +43,3 @@ Public Module FB_Global
 
 	Public fbVMOD As cFileBrowser
 End Module
-

@@ -1,5 +1,12 @@
-Imports System.Web
+
+Imports System.Drawing.Imaging
+Imports System.IO
+Imports System.Text.RegularExpressions
+Imports System.Windows.Forms.DataVisualization.Charting
 Imports System.Xml.Linq
+Imports TUGraz.VectoCommon.Models
+Imports TUGraz.VectoCommon.Utils
+Imports TUGraz.VectoCore.Models.Declaration
 ' Copyright 2014 European Union.
 ' Licensed under the EUPL (the 'Licence');
 '
@@ -23,14 +30,14 @@ Public Class F_ENG
 
 
 	'Before closing Editor: Check if file was changed and ask to save.
-	Private Sub F_ENG_FormClosing(sender As Object, e As System.Windows.Forms.FormClosingEventArgs) Handles Me.FormClosing
+	Private Sub F_ENG_FormClosing(sender As Object, e As FormClosingEventArgs) Handles Me.FormClosing
 		If e.CloseReason <> CloseReason.ApplicationExitCall And e.CloseReason <> CloseReason.WindowsShutDown Then
 			e.Cancel = ChangeCheckCancel()
 		End If
 	End Sub
 
 	'Initialise.
-	Private Sub F_ENG_Load(sender As Object, e As System.EventArgs) Handles Me.Load
+	Private Sub F_ENG_Load(sender As Object, e As EventArgs) Handles Me.Load
 
 		Me.PnInertia.Enabled = Not Cfg.DeclMode
 		Me.GrWHTC.Enabled = Cfg.DeclMode
@@ -45,29 +52,32 @@ Public Class F_ENG
 
 		If Not Cfg.DeclMode Then Exit Sub
 
-		Me.TbInertia.Text = CStr(cDeclaration.EngInertia(fTextboxToNumString(Me.TbDispl.Text)))
+		Me.TbInertia.Text =
+			CStr(
+				DeclarationData.Engine.EngineInertia((fTextboxToNumString(Me.TbDispl.Text) / 1000.0).SI(Of CubicMeter),
+													GearboxType.AMT).Value())
 	End Sub
 
 
 #Region "Toolbar"
 
-	Private Sub ToolStripBtNew_Click(sender As System.Object, e As System.EventArgs) Handles ToolStripBtNew.Click
+	Private Sub ToolStripBtNew_Click(sender As Object, e As EventArgs) Handles ToolStripBtNew.Click
 		newENG()
 	End Sub
 
-	Private Sub ToolStripBtOpen_Click(sender As System.Object, e As System.EventArgs) Handles ToolStripBtOpen.Click
+	Private Sub ToolStripBtOpen_Click(sender As Object, e As EventArgs) Handles ToolStripBtOpen.Click
 		If fbENG.OpenDialog(EngFile) Then openENG(fbENG.Files(0))
 	End Sub
 
-	Private Sub ToolStripBtSave_Click(sender As System.Object, e As System.EventArgs) Handles ToolStripBtSave.Click
+	Private Sub ToolStripBtSave_Click(sender As Object, e As EventArgs) Handles ToolStripBtSave.Click
 		SaveOrSaveAs(False)
 	End Sub
 
-	Private Sub ToolStripBtSaveAs_Click(sender As System.Object, e As System.EventArgs) Handles ToolStripBtSaveAs.Click
+	Private Sub ToolStripBtSaveAs_Click(sender As Object, e As EventArgs) Handles ToolStripBtSaveAs.Click
 		SaveOrSaveAs(True)
 	End Sub
 
-	Private Sub ToolStripBtSendTo_Click(sender As System.Object, e As System.EventArgs) Handles ToolStripBtSendTo.Click
+	Private Sub ToolStripBtSendTo_Click(sender As Object, e As EventArgs) Handles ToolStripBtSendTo.Click
 
 		If ChangeCheckCancel() Then Exit Sub
 
@@ -90,13 +100,13 @@ Public Class F_ENG
 		F_VECTO.TbENG.Text = fFileWoDir(EngFile, JobDir)
 	End Sub
 
-	Private Sub ToolStripButton1_Click(sender As System.Object, e As System.EventArgs) Handles ToolStripButton1.Click
-		If IO.File.Exists(MyAppPath & "User Manual\help.html") Then
+	Private Sub ToolStripButton1_Click(sender As Object, e As EventArgs) Handles ToolStripButton1.Click
+		If File.Exists(MyAppPath & "User Manual\help.html") Then
 			Dim BrowserRegistryString As String =
 					My.Computer.Registry.ClassesRoot.OpenSubKey("\http\shell\open\command\").GetValue("").ToString
 			Dim DefaultBrowserPath As String =
-					System.Text.RegularExpressions.Regex.Match(BrowserRegistryString, "(\"".*?\"")").Captures(0).ToString
-			System.Diagnostics.Process.Start(DefaultBrowserPath,
+					Regex.Match(BrowserRegistryString, "(\"".*?\"")").Captures(0).ToString
+			Process.Start(DefaultBrowserPath,
 											String.Format("""{0}{1}""", MyAppPath, "User Manual\help.html#engine-editor"))
 		Else
 			MsgBox("User Manual not found!", MsgBoxStyle.Critical)
@@ -154,7 +164,7 @@ Public Class F_ENG
 					Me.Close()
 					F_MAINForm.RbDecl.Checked = Not F_MAINForm.RbDecl.Checked
 					F_MAINForm.OpenVectoFile(file)
-				Case - 1
+				Case -1
 					Exit Sub
 				Case Else '0
 					'Continue...
@@ -274,39 +284,39 @@ Public Class F_ENG
 	End Function
 
 
-	Private Sub TbName_TextChanged(sender As System.Object, e As System.EventArgs) Handles TbName.TextChanged
+	Private Sub TbName_TextChanged(sender As Object, e As EventArgs) Handles TbName.TextChanged
 		Change()
 	End Sub
 
-	Private Sub TbDispl_TextChanged(sender As System.Object, e As System.EventArgs) Handles TbDispl.TextChanged
+	Private Sub TbDispl_TextChanged(sender As Object, e As EventArgs) Handles TbDispl.TextChanged
 		Change()
 		DeclInit()
 	End Sub
 
-	Private Sub TbInertia_TextChanged(sender As System.Object, e As System.EventArgs) Handles TbInertia.TextChanged
+	Private Sub TbInertia_TextChanged(sender As Object, e As EventArgs) Handles TbInertia.TextChanged
 		Change()
 	End Sub
 
-	Private Sub TbNleerl_TextChanged(sender As System.Object, e As System.EventArgs) Handles TbNleerl.TextChanged
+	Private Sub TbNleerl_TextChanged(sender As Object, e As EventArgs) Handles TbNleerl.TextChanged
 		UpdatePic()
 		Change()
 	End Sub
 
-	Private Sub TbMAP_TextChanged(sender As System.Object, e As System.EventArgs) _
+	Private Sub TbMAP_TextChanged(sender As Object, e As EventArgs) _
 		Handles TbMAP.TextChanged, TbFLD.TextChanged
 		UpdatePic()
 		Change()
 	End Sub
 
-	Private Sub TbWHTCurban_TextChanged(sender As System.Object, e As System.EventArgs) Handles TbWHTCurban.TextChanged
+	Private Sub TbWHTCurban_TextChanged(sender As Object, e As EventArgs) Handles TbWHTCurban.TextChanged
 		Change()
 	End Sub
 
-	Private Sub TbWHTCrural_TextChanged(sender As System.Object, e As System.EventArgs) Handles TbWHTCrural.TextChanged
+	Private Sub TbWHTCrural_TextChanged(sender As Object, e As EventArgs) Handles TbWHTCrural.TextChanged
 		Change()
 	End Sub
 
-	Private Sub TbWHTCmw_TextChanged(sender As System.Object, e As System.EventArgs) Handles TbWHTCmw.TextChanged
+	Private Sub TbWHTCmw_TextChanged(sender As Object, e As EventArgs) Handles TbWHTCmw.TextChanged
 		Change()
 	End Sub
 
@@ -314,19 +324,19 @@ Public Class F_ENG
 #End Region
 
 	'Browse for VMAP file
-	Private Sub BtMAP_Click(sender As System.Object, e As System.EventArgs) Handles BtMAP.Click
+	Private Sub BtMAP_Click(sender As Object, e As EventArgs) Handles BtMAP.Click
 		If fbMAP.OpenDialog(fFileRepl(Me.TbMAP.Text, fPATH(EngFile))) Then _
 			Me.TbMAP.Text = fFileWoDir(fbMAP.Files(0), fPATH(EngFile))
 	End Sub
 
 
 	'Open VMAP file
-	Private Sub BtMAPopen_Click(sender As System.Object, e As System.EventArgs) Handles BtMAPopen.Click
+	Private Sub BtMAPopen_Click(sender As Object, e As EventArgs) Handles BtMAPopen.Click
 		Dim fldfile As String
 
 		fldfile = fFileRepl(Me.TbFLD.Text, fPATH(EngFile))
 
-		If fldfile <> sKey.NoFile AndAlso IO.File.Exists(fldfile) Then
+		If fldfile <> sKey.NoFile AndAlso File.Exists(fldfile) Then
 			OpenFiles(fFileRepl(Me.TbMAP.Text, fPATH(EngFile)), fldfile)
 		Else
 			OpenFiles(fFileRepl(Me.TbMAP.Text, fPATH(EngFile)))
@@ -335,12 +345,12 @@ Public Class F_ENG
 
 
 	'Save and close
-	Private Sub ButOK_Click(sender As System.Object, e As System.EventArgs) Handles ButOK.Click
+	Private Sub ButOK_Click(sender As Object, e As EventArgs) Handles ButOK.Click
 		If SaveOrSaveAs(False) Then Me.Close()
 	End Sub
 
 	'Close without saving (see FormClosing Event)
-	Private Sub ButCancel_Click(sender As System.Object, e As System.EventArgs) Handles ButCancel.Click
+	Private Sub ButCancel_Click(sender As Object, e As EventArgs) Handles ButCancel.Click
 		Me.Close()
 	End Sub
 
@@ -350,9 +360,9 @@ Public Class F_ENG
 		Dim mapOK As Boolean = False
 		Dim FLD0 As New cFLD
 		Dim MAP0 As New cMAP
-		Dim MyChart As System.Windows.Forms.DataVisualization.Charting.Chart
-		Dim s As System.Windows.Forms.DataVisualization.Charting.Series
-		Dim a As System.Windows.Forms.DataVisualization.Charting.ChartArea
+		Dim MyChart As Chart
+		Dim s As Series
+		Dim a As ChartArea
 		Dim img As Image
 
 		Me.PicBox.Image = Nothing
@@ -374,25 +384,25 @@ Public Class F_ENG
 
 
 		'Create plot
-		MyChart = New System.Windows.Forms.DataVisualization.Charting.Chart
+		MyChart = New Chart
 		MyChart.Width = Me.PicBox.Width
 		MyChart.Height = Me.PicBox.Height
 
-		a = New System.Windows.Forms.DataVisualization.Charting.ChartArea
+		a = New ChartArea
 
 		If fldOK Then
 
-			s = New System.Windows.Forms.DataVisualization.Charting.Series
+			s = New Series
 			s.Points.DataBindXY(FLD0.LnU, FLD0.LTq)
-			s.ChartType = DataVisualization.Charting.SeriesChartType.FastLine
+			s.ChartType = SeriesChartType.FastLine
 			s.BorderWidth = 2
 			s.Color = Color.DarkBlue
 			s.Name = "Full load (" & fFILE(FLD0.FilePath, True) & ")"
 			MyChart.Series.Add(s)
 
-			s = New System.Windows.Forms.DataVisualization.Charting.Series
+			s = New Series
 			s.Points.DataBindXY(FLD0.LnU, FLD0.LTqDrag)
-			s.ChartType = DataVisualization.Charting.SeriesChartType.FastLine
+			s.ChartType = SeriesChartType.FastLine
 			s.BorderWidth = 2
 			s.Color = Color.Blue
 			s.Name = "Motoring (" & fFILE(FLD0.FilePath, True) & ")"
@@ -401,9 +411,9 @@ Public Class F_ENG
 		End If
 
 		If mapOK Then
-			s = New System.Windows.Forms.DataVisualization.Charting.Series
+			s = New Series
 			s.Points.DataBindXY(MAP0.nU, MAP0.Tq)
-			s.ChartType = DataVisualization.Charting.SeriesChartType.Point
+			s.ChartType = SeriesChartType.Point
 			s.MarkerSize = 3
 			s.Color = Color.Red
 			s.Name = "Map"
@@ -415,17 +425,17 @@ Public Class F_ENG
 		a.AxisX.Title = "engine speed [1/min]"
 		a.AxisX.TitleFont = New Font("Helvetica", 10)
 		a.AxisX.LabelStyle.Font = New Font("Helvetica", 8)
-		a.AxisX.LabelAutoFitStyle = DataVisualization.Charting.LabelAutoFitStyles.None
-		a.AxisX.MajorGrid.LineDashStyle = DataVisualization.Charting.ChartDashStyle.Dot
+		a.AxisX.LabelAutoFitStyle = LabelAutoFitStyles.None
+		a.AxisX.MajorGrid.LineDashStyle = ChartDashStyle.Dot
 
 		a.AxisY.Title = "engine torque [Nm]"
 		a.AxisY.TitleFont = New Font("Helvetica", 10)
 		a.AxisY.LabelStyle.Font = New Font("Helvetica", 8)
-		a.AxisY.LabelAutoFitStyle = DataVisualization.Charting.LabelAutoFitStyles.None
-		a.AxisY.MajorGrid.LineDashStyle = DataVisualization.Charting.ChartDashStyle.Dot
+		a.AxisY.LabelAutoFitStyle = LabelAutoFitStyles.None
+		a.AxisY.MajorGrid.LineDashStyle = ChartDashStyle.Dot
 
 		a.AxisX.Minimum = 300
-		a.BorderDashStyle = DataVisualization.Charting.ChartDashStyle.Solid
+		a.BorderDashStyle = ChartDashStyle.Solid
 		a.BorderWidth = 1
 
 		a.BackColor = Color.GhostWhite
@@ -434,7 +444,7 @@ Public Class F_ENG
 
 		MyChart.Update()
 
-		img = New Bitmap(MyChart.Width, MyChart.Height, Imaging.PixelFormat.Format32bppArgb)
+		img = New Bitmap(MyChart.Width, MyChart.Height, PixelFormat.Format32bppArgb)
 		MyChart.DrawToBitmap(img, New Rectangle(0, 0, Me.PicBox.Width, Me.PicBox.Height))
 
 
@@ -454,19 +464,19 @@ Public Class F_ENG
 
 		OpenWithToolStripMenuItem.Text = "Open with " & Cfg.OpenCmdName
 
-		CmOpenFile.Show(Cursor.Position)
+		CmOpenFile.Show(Windows.Forms.Cursor.Position)
 	End Sub
 
-	Private Sub OpenWithToolStripMenuItem_Click(sender As System.Object, e As System.EventArgs) _
+	Private Sub OpenWithToolStripMenuItem_Click(sender As Object, e As EventArgs) _
 		Handles OpenWithToolStripMenuItem.Click
 		If Not FileOpenAlt(CmFiles(0)) Then MsgBox("Failed to open file!")
 	End Sub
 
-	Private Sub ShowInFolderToolStripMenuItem_Click(sender As System.Object, e As System.EventArgs) _
+	Private Sub ShowInFolderToolStripMenuItem_Click(sender As Object, e As EventArgs) _
 		Handles ShowInFolderToolStripMenuItem.Click
-		If IO.File.Exists(CmFiles(0)) Then
+		If File.Exists(CmFiles(0)) Then
 			Try
-				System.Diagnostics.Process.Start("explorer", "/select,""" & CmFiles(0) & "")
+				Process.Start("explorer", "/select,""" & CmFiles(0) & "")
 			Catch ex As Exception
 				MsgBox("Failed to open file!")
 			End Try
@@ -488,7 +498,7 @@ Public Class F_ENG
 
 		fldfile = fFileRepl(Me.TbFLD.Text, fPATH(EngFile))
 
-		If fldfile <> sKey.NoFile AndAlso IO.File.Exists(fldfile) Then
+		If fldfile <> sKey.NoFile AndAlso File.Exists(fldfile) Then
 			OpenFiles(fldfile)
 		End If
 	End Sub

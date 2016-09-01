@@ -9,6 +9,8 @@
 '
 ' See the LICENSE.txt for the specific language governing permissions and limitations.
 Imports System.Collections.Generic
+Imports System.IO
+Imports TUGraz.VectoCore.Models.Declaration
 
 Public Class Configuration
 	Public FilePath As String
@@ -35,9 +37,9 @@ Public Class Configuration
 	End Sub
 
 	Public Sub DeclInit()
-		AirDensity = cDeclaration.AirDensity
-		FuelDens = cDeclaration.FuelDens
-		CO2perFC = cDeclaration.CO2perFC
+		AirDensity = DeclarationData.Physics.AirDensity.Value()	' cDeclaration.AirDensity
+		FuelDens = DeclarationData.Physics.FuelDensity.Value()	' cDeclaration.FuelDens
+		CO2perFC = DeclarationData.Physics.CO2PerFuelWeight		' cDeclaration.CO2perFC
 		DistCorr = True
 		GnUfromCycle = False
 	End Sub
@@ -54,8 +56,8 @@ Public Class Configuration
 		AirDensity = 1.2
 		OpenCmd = "notepad"
 		OpenCmdName = "Notepad"
-		FuelDens = 0.835
-		CO2perFC = 3.153
+		FuelDens = DeclarationData.Physics.FuelDensity.Value()
+		CO2perFC = DeclarationData.Physics.CO2PerFuelWeight
 		FirstRun = True
 		DeclMode = True
 	End Sub
@@ -63,7 +65,7 @@ Public Class Configuration
 	Public Sub Load()
 		SetDefault()
 
-		If Not IO.File.Exists(FilePath) Then
+		If Not File.Exists(FilePath) Then
 			Exit Sub
 		End If
 

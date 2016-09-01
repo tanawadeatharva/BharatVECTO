@@ -10,7 +10,11 @@
 ' See the LICENSE.txt for the specific language governing permissions and limitations.
 
 Imports System.Collections.Generic
+Imports System.Drawing.Imaging
+Imports System.IO
 Imports System.Linq
+Imports System.Text.RegularExpressions
+Imports System.Windows.Forms.DataVisualization.Charting
 
 Public Class F_Graph
 	Private Filepath As String
@@ -37,7 +41,7 @@ Public Class F_Graph
 		Me.CbXaxis.SelectedIndex = 0
 	End Sub
 
-	Private Sub ToolStripBtOpen_Click(sender As System.Object, e As System.EventArgs) Handles ToolStripBtOpen.Click
+	Private Sub ToolStripBtOpen_Click(sender As Object, e As EventArgs) Handles ToolStripBtOpen.Click
 
 		If fbVMOD.OpenDialog(Filepath) Then
 
@@ -47,7 +51,7 @@ Public Class F_Graph
 	End Sub
 
 
-	Private Sub ToolStripButton2_Click(sender As System.Object, e As System.EventArgs) Handles ToolStripButton2.Click
+	Private Sub ToolStripButton2_Click(sender As Object, e As EventArgs) Handles ToolStripButton2.Click
 		LoadFile()
 	End Sub
 
@@ -156,9 +160,9 @@ Public Class F_Graph
 
 	Private Sub UpdateGraph()
 		Dim lv0 As ListViewItem
-		Dim MyChart As System.Windows.Forms.DataVisualization.Charting.Chart
-		Dim s As System.Windows.Forms.DataVisualization.Charting.Series
-		Dim a As System.Windows.Forms.DataVisualization.Charting.ChartArea
+		Dim MyChart As Chart
+		Dim s As Series
+		Dim a As ChartArea
 		Dim OverDist As Boolean
 		Dim leftaxis As New List(Of String)
 		Dim rightaxis As New List(Of String)
@@ -179,18 +183,18 @@ Public Class F_Graph
 		SetxMax0()
 
 
-		MyChart = New System.Windows.Forms.DataVisualization.Charting.Chart
+		MyChart = New Chart
 		MyChart.Width = Me.PictureBox1.Width
 		MyChart.Height = Me.PictureBox1.Height
 
-		a = New System.Windows.Forms.DataVisualization.Charting.ChartArea
+		a = New ChartArea
 
 
 		For Each lv0 In Me.ListView1.CheckedItems
 
 			IsLeft = (lv0.SubItems(1).Text = "Left")
 
-			s = New System.Windows.Forms.DataVisualization.Charting.Series
+			s = New Series
 
 			If OverDist Then
 				s.Points.DataBindXY(DistList, Channels(lv0.Tag).Values)
@@ -198,7 +202,7 @@ Public Class F_Graph
 				s.Points.DataBindXY(TimeList, Channels(lv0.Tag).Values)
 			End If
 
-			s.ChartType = DataVisualization.Charting.SeriesChartType.FastLine
+			s.ChartType = SeriesChartType.FastLine
 			s.Name = lv0.Text
 			s.BorderWidth = 2
 
@@ -206,7 +210,7 @@ Public Class F_Graph
 				If Not leftaxis.Contains(lv0.SubItems(0).Text) Then leftaxis.Add(lv0.SubItems(0).Text)
 			Else
 				If Not rightaxis.Contains(lv0.SubItems(0).Text) Then rightaxis.Add(lv0.SubItems(0).Text)
-				s.YAxisType = DataVisualization.Charting.AxisType.Secondary
+				s.YAxisType = AxisType.Secondary
 			End If
 
 			MyChart.Series.Add(s)
@@ -223,8 +227,8 @@ Public Class F_Graph
 		End If
 		a.AxisX.TitleFont = New Font("Helvetica", 10)
 		a.AxisX.LabelStyle.Font = New Font("Helvetica", 8)
-		a.AxisX.LabelAutoFitStyle = DataVisualization.Charting.LabelAutoFitStyles.None
-		a.AxisX.MajorGrid.LineDashStyle = DataVisualization.Charting.ChartDashStyle.Dot
+		a.AxisX.LabelAutoFitStyle = LabelAutoFitStyles.None
+		a.AxisX.MajorGrid.LineDashStyle = ChartDashStyle.Dot
 
 		If xMax > xMin Then
 			a.AxisX.Minimum = xMin
@@ -246,7 +250,7 @@ Public Class F_Graph
 			a.AxisY.Title = txt
 			a.AxisY.TitleFont = New Font("Helvetica", 10)
 			a.AxisY.LabelStyle.Font = New Font("Helvetica", 8)
-			a.AxisY.LabelAutoFitStyle = DataVisualization.Charting.LabelAutoFitStyles.None
+			a.AxisY.LabelAutoFitStyle = LabelAutoFitStyles.None
 
 		End If
 
@@ -260,7 +264,7 @@ Public Class F_Graph
 			a.AxisY2.Title = txt
 			a.AxisY2.TitleFont = New Font("Helvetica", 10)
 			a.AxisY2.LabelStyle.Font = New Font("Helvetica", 8)
-			a.AxisY2.LabelAutoFitStyle = DataVisualization.Charting.LabelAutoFitStyles.None
+			a.AxisY2.LabelAutoFitStyle = LabelAutoFitStyles.None
 			a.AxisY2.MinorGrid.Enabled = False
 			a.AxisY2.MajorGrid.Enabled = False
 
@@ -268,7 +272,7 @@ Public Class F_Graph
 
 		a.BackColor = Color.GhostWhite
 
-		a.BorderDashStyle = DataVisualization.Charting.ChartDashStyle.Solid
+		a.BorderDashStyle = ChartDashStyle.Solid
 		a.BorderWidth = 1
 
 		MyChart.ChartAreas.Add(a)
@@ -291,7 +295,7 @@ Public Class F_Graph
 
 		MyChart.Update()
 
-		img = New Bitmap(MyChart.Width, MyChart.Height, Imaging.PixelFormat.Format32bppArgb)
+		img = New Bitmap(MyChart.Width, MyChart.Height, PixelFormat.Format32bppArgb)
 		MyChart.DrawToBitmap(img, New Rectangle(0, 0, Me.PictureBox1.Width, Me.PictureBox1.Height))
 
 		Me.PictureBox1.Image = img
@@ -351,7 +355,7 @@ Public Class F_Graph
 		Public Values As List(Of String)
 	End Class
 
-	Private Sub BtAddCh_Click(sender As System.Object, e As System.EventArgs) Handles BtAddCh.Click
+	Private Sub BtAddCh_Click(sender As Object, e As EventArgs) Handles BtAddCh.Click
 		Dim dlog As New F_Graph_ChEdit
 		Dim i As Integer
 		Dim lv0 As ListViewItem
@@ -366,7 +370,7 @@ Public Class F_Graph
 
 		dlog.ComboBox1.SelectedIndex = 0
 
-		If dlog.ShowDialog = Windows.Forms.DialogResult.OK Then
+		If dlog.ShowDialog = DialogResult.OK Then
 			lv0 = New ListViewItem
 			i = dlog.ComboBox1.SelectedIndex
 			lv0.Text = Channels(i).Name
@@ -406,7 +410,7 @@ Public Class F_Graph
 
 		dlog.ComboBox1.SelectedIndex = lv0.Tag
 
-		If dlog.ShowDialog = Windows.Forms.DialogResult.OK Then
+		If dlog.ShowDialog = DialogResult.OK Then
 			i = dlog.ComboBox1.SelectedIndex
 			lv0.Text = Channels(i).Name
 			lv0.Tag = i
@@ -441,23 +445,23 @@ Public Class F_Graph
 		UpdateGraph()
 	End Sub
 
-	Private Sub ListView1_DoubleClick(sender As Object, e As System.EventArgs) Handles ListView1.DoubleClick
+	Private Sub ListView1_DoubleClick(sender As Object, e As EventArgs) Handles ListView1.DoubleClick
 		If Me.ListView1.SelectedItems.Count > 0 Then
 			Me.ListView1.SelectedItems(0).Checked = Not Me.ListView1.SelectedItems(0).Checked
 			EditChannel()
 		End If
 	End Sub
 
-	Private Sub BtRemCh_Click(sender As System.Object, e As System.EventArgs) Handles BtRemCh.Click
+	Private Sub BtRemCh_Click(sender As Object, e As EventArgs) Handles BtRemCh.Click
 		RemoveChannel()
 	End Sub
 
-	Private Sub ListView1_ItemChecked(sender As Object, e As System.Windows.Forms.ItemCheckedEventArgs) _
+	Private Sub ListView1_ItemChecked(sender As Object, e As ItemCheckedEventArgs) _
 		Handles ListView1.ItemChecked
 		UpdateGraph()
 	End Sub
 
-	Private Sub ListView1_KeyDown(sender As Object, e As System.Windows.Forms.KeyEventArgs) Handles ListView1.KeyDown
+	Private Sub ListView1_KeyDown(sender As Object, e As KeyEventArgs) Handles ListView1.KeyDown
 		Select Case e.KeyCode
 			Case Keys.Delete, Keys.Back
 				RemoveChannel()
@@ -466,7 +470,7 @@ Public Class F_Graph
 		End Select
 	End Sub
 
-	Private Sub CbXaxis_SelectedIndexChanged(sender As System.Object, e As System.EventArgs) _
+	Private Sub CbXaxis_SelectedIndexChanged(sender As Object, e As EventArgs) _
 		Handles CbXaxis.SelectedIndexChanged
 		SetxMax0()
 		Me.TbXmin.Text = 0
@@ -474,33 +478,33 @@ Public Class F_Graph
 		UpdateGraph()
 	End Sub
 
-	Private Sub BtReset_Click(sender As System.Object, e As System.EventArgs) Handles BtReset.Click
+	Private Sub BtReset_Click(sender As Object, e As EventArgs) Handles BtReset.Click
 		xMin = 0
 		xMax = xMax0
 		Me.TbXmin.Text = 0
 		Me.TbXmax.Text = xMax0
 	End Sub
 
-	Private Sub TbXmin_TextChanged(sender As System.Object, e As System.EventArgs) Handles TbXmin.TextChanged
+	Private Sub TbXmin_TextChanged(sender As Object, e As EventArgs) Handles TbXmin.TextChanged
 		If IsNumeric(Me.TbXmin.Text) Then xMin = Me.TbXmin.Text
 		UpdateGraph()
 	End Sub
 
-	Private Sub TbXmax_TextChanged(sender As System.Object, e As System.EventArgs) Handles TbXmax.TextChanged
+	Private Sub TbXmax_TextChanged(sender As Object, e As EventArgs) Handles TbXmax.TextChanged
 		If IsNumeric(Me.TbXmax.Text) Then xMax = Me.TbXmax.Text
 		UpdateGraph()
 	End Sub
 
-	Private Sub ToolStripButton3_Click(sender As System.Object, e As System.EventArgs) Handles ToolStripButton3.Click
+	Private Sub ToolStripButton3_Click(sender As Object, e As EventArgs) Handles ToolStripButton3.Click
 		Dim FGraph As New F_Graph
 		FGraph.Show()
 	End Sub
 
-	Private Sub F_Graph_SizeChanged(sender As Object, e As System.EventArgs) Handles Me.SizeChanged
+	Private Sub F_Graph_SizeChanged(sender As Object, e As EventArgs) Handles Me.SizeChanged
 		UpdateGraph()
 	End Sub
 
-	Private Sub BtZoomIn_Click(sender As System.Object, e As System.EventArgs) Handles BtZoomIn.Click
+	Private Sub BtZoomIn_Click(sender As Object, e As EventArgs) Handles BtZoomIn.Click
 		Dim d As Single
 
 		d = (xMax - xMin) / 10
@@ -518,7 +522,7 @@ Public Class F_Graph
 		Me.TbXmax.Text = xMax
 	End Sub
 
-	Private Sub BtZoomOut_Click(sender As System.Object, e As System.EventArgs) Handles BtZoomOut.Click
+	Private Sub BtZoomOut_Click(sender As Object, e As EventArgs) Handles BtZoomOut.Click
 		Dim d As Single
 
 		d = (xMax - xMin) / 10
@@ -536,7 +540,7 @@ Public Class F_Graph
 		Me.TbXmax.Text = xMax
 	End Sub
 
-	Private Sub BtMoveL_Click(sender As System.Object, e As System.EventArgs) Handles BtMoveL.Click
+	Private Sub BtMoveL_Click(sender As Object, e As EventArgs) Handles BtMoveL.Click
 		Dim d As Single
 
 		If xMin <= 0 Then Exit Sub
@@ -555,7 +559,7 @@ Public Class F_Graph
 		Me.TbXmax.Text = xMax
 	End Sub
 
-	Private Sub BtMoveR_Click(sender As System.Object, e As System.EventArgs) Handles BtMoveR.Click
+	Private Sub BtMoveR_Click(sender As Object, e As EventArgs) Handles BtMoveR.Click
 		Dim d As Single
 
 		If xMax >= xMax0 Then Exit Sub
@@ -574,13 +578,13 @@ Public Class F_Graph
 		Me.TbXmax.Text = xMax
 	End Sub
 
-	Private Sub ToolStripButton1_Click(sender As System.Object, e As System.EventArgs) Handles ToolStripButton1.Click
-		If IO.File.Exists(MyAppPath & "User Manual\help.html") Then
+	Private Sub ToolStripButton1_Click(sender As Object, e As EventArgs) Handles ToolStripButton1.Click
+		If File.Exists(MyAppPath & "User Manual\help.html") Then
 			Dim BrowserRegistryString As String =
 					My.Computer.Registry.ClassesRoot.OpenSubKey("\http\shell\open\command\").GetValue("").ToString
 			Dim DefaultBrowserPath As String =
-					System.Text.RegularExpressions.Regex.Match(BrowserRegistryString, "(\"".*?\"")").Captures(0).ToString
-			System.Diagnostics.Process.Start(DefaultBrowserPath,
+					Regex.Match(BrowserRegistryString, "(\"".*?\"")").Captures(0).ToString
+			Process.Start(DefaultBrowserPath,
 											String.Format("""{0}{1}""", MyAppPath, "User Manual\help.html#graph-window"))
 		Else
 			MsgBox("User Manual not found!", MsgBoxStyle.Critical)

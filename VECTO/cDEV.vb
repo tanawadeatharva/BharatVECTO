@@ -13,15 +13,7 @@ Imports System.Collections.Generic
 Public Class cDEV
 	Public Enabled As Boolean
 
-	Private MyOptions As Dictionary(Of String, cDEVoption)
-	Private iOptionsDim As Integer
-
-	Public AdvFormat As Boolean
-	Public TCiterPrec As Single
-	Public TClimitOn As Boolean
-	Public TClimit As Single
-	Public TCshiftModeNew As Boolean
-	Public TCaccmin As Single
+	Private ReadOnly MyOptions As Dictionary(Of String, cDEVoption)
 
 
 	'**************************************************************************************************************
@@ -89,80 +81,50 @@ Public Class cDEV
 
 		Dim Conf0 As cDEVoption
 
-		'Conf0 = New cDEVoption(tDEVconfType.tBoolean, "Kennfelderstellung mit Median")
+
+		'Conf0 = New cDEVoption(tDEVconfType.tSingleVal, "TC iteration: target precision for torque ratio")
+		'Conf0.SingleVal = 0.001
+		'MyOptions.Add("TCiterPrec", Conf0)
+
+		'Conf0 = New cDEVoption(tDEVconfType.tBoolean, "Advanced output files format")
 		'Conf0.BoolVal = False
-		'MyOptions.Add("KF-Median", Conf0)
+		'MyOptions.Add("AdvFormat", Conf0)
 
-		'Conf0 = New cDEVoption(tDEVconfType.tAction, "Action Test")
-		'Conf0.ActionDelegate = New cDEVoption.dActionDelegate(AddressOf Me.TestFunction)
-		'MyOptions.Add("Action_Test", Conf0)
+		'Conf0 = New cDEVoption(tDEVconfType.tBoolean,
+		'						"Limit engine speed in torque converter operation if Pe(acc_min) < Pe_max")
+		'Conf0.BoolVal = True
+		'MyOptions.Add("TClimitOn", Conf0)
 
-		'Conf0 = New cDEVoption(tDEVconfType.tIntVal, "Integer Test", True, False)
-		'Conf0.IntVal = 666
-		'MyOptions.Add("Integer_Test", Conf0)
+		'Conf0 = New cDEVoption(tDEVconfType.tSingleVal, "Max. engine speed for torque converter operation [1/min]")
+		'Conf0.SingleVal = 1600
+		'MyOptions.Add("TClimit", Conf0)
 
-		'Conf0 = New cDEVoption(tDEVconfType.tSingleVal, "Single Test")
-		'Conf0.SingleVal = 1.2345
-		'MyOptions.Add("Single_Test", Conf0)
-
-		'Conf0 = New cDEVoption(tDEVconfType.tStringVal, "String Test", False)
-		'Conf0.StringVal = "Hallo DU!"
-		'MyOptions.Add("String_Test", Conf0)
-
-		'Conf0 = New cDEVoption(tDEVconfType.tSelection, "Menu Test", False, False)
-		'Conf0.AddMode("Mode 0")
-		'Conf0.AddMode("Hugo")
-		'Conf0.AddMode("Charlie")
-		'Conf0.AddMode("Mode 3")
-		'Conf0.ModeIndex = 3
-		'MyOptions.Add("Menu_Test", Conf0)
+		'Conf0 = New cDEVoption(tDEVconfType.tSelection,
+		'						"Acceleration for AT Up-Shift power condition")
+		'Conf0.AddMode("acc_target")	'0
+		'Conf0.AddMode("acc_min")		'1
+		'Conf0.ModeIndex = 1
+		'MyOptions.Add("TCshiftMode", Conf0)
 
 
-		Conf0 = New cDEVoption(tDEVconfType.tSingleVal, "TC iteration: target precision for torque ratio")
-		Conf0.SingleVal = 0.001
-		MyOptions.Add("TCiterPrec", Conf0)
-
-		Conf0 = New cDEVoption(tDEVconfType.tBoolean, "Advanced output files format")
-		Conf0.BoolVal = False
-		MyOptions.Add("AdvFormat", Conf0)
-
-		Conf0 = New cDEVoption(tDEVconfType.tBoolean,
-								"Limit engine speed in torque converter operation if Pe(acc_min) < Pe_max")
-		Conf0.BoolVal = True
-		MyOptions.Add("TClimitOn", Conf0)
-
-		Conf0 = New cDEVoption(tDEVconfType.tSingleVal, "Max. engine speed for torque converter operation [1/min]")
-		Conf0.SingleVal = 1600
-		MyOptions.Add("TClimit", Conf0)
-
-		Conf0 = New cDEVoption(tDEVconfType.tSelection,
-								"Acceleration for AT Up-Shift power condition")
-		Conf0.AddMode("acc_target")	'0
-		Conf0.AddMode("acc_min")		'1
-		Conf0.ModeIndex = 1
-		MyOptions.Add("TCshiftMode", Conf0)
-
-
-		Conf0 = New cDEVoption(tDEVconfType.tSingleVal, "Minimum acceleration (acc_min) for TC rpm limit and AT-Shift [m/s²]")
-		Conf0.SingleVal = 0.025
-		MyOptions.Add("TCaccMin", Conf0)
+		'Conf0 = New cDEVoption(tDEVconfType.tSingleVal, "Minimum acceleration (acc_min) for TC rpm limit and AT-Shift [m/s²]")
+		'Conf0.SingleVal = 0.025
+		'MyOptions.Add("TCaccMin", Conf0)
 
 
 		'**************************** END: Parameters Configuration '*****************************
 		'*****************************************************************************************
 		'*****************************************************************************************
-
-		iOptionsDim = MyOptions.Count - 1
 	End Sub
 
 	'Initialize the actual Config-Parameters from MyConfigs list
 	Public Sub SetOptions()
-		TCiterPrec = MyOptions("TCiterPrec").SingleVal
-		AdvFormat = MyOptions("AdvFormat").BoolVal
-		TClimitOn = MyOptions("TClimitOn").BoolVal
-		TClimit = MyOptions("TClimit").SingleVal
-		TCshiftModeNew = (MyOptions("TCshiftMode").ModeIndex = 1)
-		TCaccmin = MyOptions("TCaccMin").SingleVal
+		'TCiterPrec = MyOptions("TCiterPrec").SingleVal
+		'AdvFormat = MyOptions("AdvFormat").BoolVal
+		'TClimitOn = MyOptions("TClimitOn").BoolVal
+		'TClimit = MyOptions("TClimit").SingleVal
+		'TCshiftModeNew = (MyOptions("TCshiftMode").ModeIndex = 1)
+		'TCaccmin = MyOptions("TCaccMin").SingleVal
 	End Sub
 
 	Public Sub SetDefault()
@@ -171,20 +133,15 @@ Public Class cDEV
 		For Each opt0 In MyOptions.Values
 			opt0.SetDefault()
 		Next
-
 	End Sub
 
-	'Demo for Delegate Function
-	Public Function TestFunction() As String
-		Return "OK...?"
-	End Function
-
-	Public sub UpdateDevConfigs
+	
+	Public Sub UpdateDevConfigs()
 		Dim lv0 As ListViewItem
 
 		EnabledOptCheck()
 
-		for each lv0 In F_MAINForm.LvDEVoptions.Items
+		For Each lv0 In F_MAINForm.LvDEVoptions.Items
 			lv0.SubItems(3).Text = DEV.Options(lv0.Tag).ValText
 			If DEV.Options(lv0.Tag).Enabled Then
 				lv0.ForeColor = Color.Black
@@ -194,34 +151,10 @@ Public Class cDEV
 		Next
 	End Sub
 
-	Private sub EnabledOptCheck
+	Private Sub EnabledOptCheck()
 		MyOptions("TClimit").EnabledOpt = MyOptions("TClimitOn").BoolVal
 		MyOptions("TCaccMin").EnabledOpt = MyOptions("TClimitOn").BoolVal Or MyOptions("TCshiftMode").ModeIndex = 1
 	End Sub
-
-
-	Public Function DEVinfo() As String
-		Dim s As New System.Text.StringBuilder
-		Dim Conf0 As KeyValuePair(Of String, cDEVoption)
-
-		For Each Conf0 In MyOptions
-
-			If Conf0.Value.ConfigType <> tDEVconfType.tAction Then
-
-				s.Append(Conf0.Key & " <" & Conf0.Value.TypeString & "> (" & Conf0.Value.Description & ")")
-
-				If Conf0.Value.ConfigType = tDEVconfType.tSelection Then
-					s.AppendLine("= " & Conf0.Value.ValToString & " (" & Conf0.Value.Mode & ")")
-				Else
-					s.AppendLine("= " & Conf0.Value.ValToString)
-				End If
-
-			End If
-
-		Next
-
-		Return s.ToString
-	End Function
 
 
 	Public Function LoadFromFile() As Boolean
@@ -261,7 +194,7 @@ Public Class cDEV
 			End If
 		Next
 
-		UpdateDevConfigs
+		UpdateDevConfigs()
 
 		Return True
 	End Function
@@ -300,12 +233,6 @@ Public Class cDEV
 	Public ReadOnly Property Options As Dictionary(Of String, cDEVoption)
 		Get
 			Return MyOptions
-		End Get
-	End Property
-
-	Public ReadOnly Property OptionsDim As Integer
-		Get
-			Return iOptionsDim
 		End Get
 	End Property
 
@@ -364,13 +291,13 @@ Public Class cDEVoption
 		End Select
 
 		sModes = New List(Of String)
-		iModesDim = - 1
+		iModesDim = -1
 
 		iIntVal = 0
 		sSingleVal = 0.0F
 		bBoolVal = False
 		sStringVal = ""
-		iModeIndex = - 1
+		iModeIndex = -1
 
 		If MyConfType = tDEVconfType.tAction Then
 			sValText = ""
@@ -401,8 +328,6 @@ Public Class cDEVoption
 		End If
 
 		StringToVal(si)
-
-
 	End Sub
 
 	Public Sub DoAction()
@@ -551,7 +476,7 @@ Public Class cDEVoption
 
 	Public ReadOnly Property Mode As String
 		Get
-			If iModeIndex = - 1 Then
+			If iModeIndex = -1 Then
 				Return "<undefined>"
 			Else
 				Return sModes(iModeIndex)

@@ -113,7 +113,7 @@ Public Class cFLD
 		file = New cFile_V3
 		If Not file.OpenRead(sFilePath) Then
 			If ShowMsg Then WorkerMsg(tMsgID.Err, "Failed to open file (" & sFilePath & ") !", MsgSrc)
-			file = Nothing
+
 			Return False
 		End If
 
@@ -121,10 +121,10 @@ Public Class cFLD
 		file.ReadLine()
 
 		'Initialize Lists
-		LTq = New System.Collections.Generic.List(Of Single)
-		LTqDrag = New System.Collections.Generic.List(Of Single)
-		LnU = New System.Collections.Generic.List(Of Single)
-		LPT1 = New System.Collections.Generic.List(Of Single)
+		LTq = New List(Of Single)
+		LTqDrag = New List(Of Single)
+		LnU = New List(Of Single)
+		LPT1 = New List(Of Single)
 
 		FirstLine = True
 		Try
@@ -182,78 +182,9 @@ Public Class cFLD
 		'ERROR-label for clean Abort
 lbEr:
 		file.Close()
-		file = Nothing
+
 
 		Return False
-	End Function
-
-	''' <summary>
-	''' Returns motoring power [kW] for given engine speed
-	''' </summary>
-	''' <param name="nU">engine speed [1/min]</param>
-	''' <returns>motoring power [kW]</returns>
-	''' <remarks></remarks>
-	Public Function Pdrag(ByVal nU As Single) As Single
-		Dim i As Int32
-
-		'Extrapolation for x < x(1)
-		If LnU(0) >= nU Then
-			'If LnU(0) > nU Then MODdata.ModErrors.FLDextrapol = "n= " & nU & " [1/min]"
-			i = 1
-			GoTo lbInt
-		End If
-
-		i = 0
-		Do While LnU(i) < nU And i < iDim
-			i += 1
-		Loop
-
-		'Extrapolation for x > x(imax)
-		If LnU(i) < nU Then
-			'MODdata.ModErrors.FLDextrapol = "n= " & nU & " [1/min]"
-		End If
-
-lbInt:
-		'Interpolation
-		Return nMtoPe(nU, (nU - LnU(i - 1)) * (LTqDrag(i) - LTqDrag(i - 1)) / (LnU(i) - LnU(i - 1)) + LTqDrag(i - 1))
-	End Function
-
-	''' <summary>
-	''' Returns full load power [kW] at given engine speed considering transient torque build-up via PT1.
-	''' </summary>
-	''' <param name="nU">engine speed [1/min]</param>
-	''' <param name="LastPe">engine power at previous time step</param>
-	''' <returns>full load power [kW]</returns>
-	''' <remarks></remarks>
-	Public Function Pfull(ByVal nU As Single, ByVal LastPe As Single) As Single
-		Dim i As Int32
-		Dim PfullStat As Single
-		Dim PT1 As Single
-
-		'Extrapolation for x < x(1)
-		If LnU(0) >= nU Then
-			'If LnU(0) > nU Then MODdata.ModErrors.FLDextrapol = "n= " & nU & " [1/min]"
-			i = 1
-			GoTo lbInt
-		End If
-
-		i = 0
-		Do While LnU(i) < nU And i < iDim
-			i += 1
-		Loop
-
-		'Extrapolation for x > x(imax)
-		If LnU(i) < nU Then
-			'MODdata.ModErrors.FLDextrapol = "n= " & nU & " [1/min]"
-		End If
-
-lbInt:
-		'Interpolation
-		PfullStat = nMtoPe(nU, (nU - LnU(i - 1)) * (LTq(i) - LTq(i - 1)) / (LnU(i) - LnU(i - 1)) + LTq(i - 1))
-		PT1 = (nU - LnU(i - 1)) * (LPT1(i) - LPT1(i - 1)) / (LnU(i) - LnU(i - 1)) + LPT1(i - 1)
-
-		'Dynamic Full-load
-		Return Math.Min((1 / (PT1 + 1)) * (PfullStat + PT1 * LastPe), PfullStat)
 	End Function
 
 	''' <summary>
@@ -533,18 +464,6 @@ lbInt:
 		Return Tm
 	End Function
 
-	Public Sub LimitToEng()
-		Dim i As Integer
-		Dim nU As Single
-		Dim TqEng As Single
-
-		For i = 0 To iDim
-			nU = LnU(i)
-			TqEng = ENG.FLD.Tq(nU)
-			If TqEng < LTq(i) Then LTq(i) = TqEng
-		Next
-	End Sub
-
 	Public Function Init(ByVal Nidle As Single) As Boolean
 		Dim Pmax As Single
 		Dim MsgSrc As String
@@ -590,14 +509,6 @@ lbInt:
 
 		Return True
 	End Function
-
-	Public Sub DeclInit()
-		Dim i As Integer
-
-		For i = 0 To iDim
-			LPT1(i) = Declaration.PT1(LnU(i))
-		Next
-	End Sub
 
 	''' <summary>
 	''' Get or set Filepath before calling ReadFile

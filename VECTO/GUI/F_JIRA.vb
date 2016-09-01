@@ -1,15 +1,16 @@
-﻿Imports System.Windows.Forms
+﻿Imports System.IO
+Imports System.Windows.Forms
 
 Public Class F_JIRA
 
-    Private Sub OK_Button_Click(ByVal sender As System.Object, ByVal e As System.EventArgs) Handles OK_Button.Click
-        Me.DialogResult = System.Windows.Forms.DialogResult.OK
-        Me.Close()
+	Private Sub OK_Button_Click(ByVal sender As Object, ByVal e As EventArgs) Handles OK_Button.Click
+		Me.DialogResult = DialogResult.OK
+		Me.Close()
 	End Sub
 
 	Private Sub LinkLabel1_LinkClicked(sender As Object, e As LinkLabelLinkClickedEventArgs) Handles LinkLabel1.LinkClicked
-		If IO.File.Exists(MyAppPath & "User Manual\JIRA Quick Start Guide.pdf") Then
-			System.Diagnostics.Process.Start(MyAppPath & "User Manual\JIRA Quick Start Guide.pdf")
+		If File.Exists(MyAppPath & "User Manual\JIRA Quick Start Guide.pdf") Then
+			Process.Start(MyAppPath & "User Manual\JIRA Quick Start Guide.pdf")
 		Else
 			MsgBox("File not found!", MsgBoxStyle.Critical)
 		End If
@@ -24,12 +25,12 @@ Public Class F_JIRA
 				   "- Country of workplace" & "%0A" & _
 				   "- Position"
 
-		System.Diagnostics.Process.Start("mailto:vecto@jrc.ec.europa.eu?subject=CITnet%20account&body=" & bodytext)
+		Process.Start("mailto:vecto@jrc.ec.europa.eu?subject=CITnet%20account&body=" & bodytext)
 
 	End Sub
 
 	Private Sub Button1_Click(sender As Object, e As EventArgs) Handles Button1.Click
-		System.Diagnostics.Process.Start("https://webgate.ec.europa.eu/CITnet/jira/browse/VECTO")
+		Process.Start("https://webgate.ec.europa.eu/CITnet/jira/browse/VECTO")
 	End Sub
 
 End Class

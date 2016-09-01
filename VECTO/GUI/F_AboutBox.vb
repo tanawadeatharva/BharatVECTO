@@ -8,8 +8,7 @@
 '   WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
 '
 ' See the LICENSE.txt for the specific language governing permissions and limitations.
-Imports System.Linq
-Imports System.Reflection
+
 
 ''' <summary>
 ''' About Dialog. Shows Licence and contact/support information
@@ -17,28 +16,28 @@ Imports System.Reflection
 ''' <remarks></remarks>
 Public Class F_AboutBox
 	'Initialize
-	Private Sub F10_AboutBox_Load(ByVal sender As System.Object, ByVal e As System.EventArgs) Handles MyBase.Load
+	Private Sub F10_AboutBox_Load(ByVal sender As Object, ByVal e As EventArgs) Handles MyBase.Load
 		Me.Text = "VECTO " & VECTOvers & " / VectoCore " & COREVers
 		Me.LabelLic.Text = Lic.LicString
 		Me.LabelLicDate.Text = "Expiring date (y/m/d):   " & Lic.ExpTime
 	End Sub
 
 	'e-mail links----------------------------------------------------------------
-	Private Sub LinkLabel1_LinkClicked_1(sender As System.Object, e As System.Windows.Forms.LinkLabelLinkClickedEventArgs) _
+	Private Sub LinkLabel1_LinkClicked_1(sender As Object, e As LinkLabelLinkClickedEventArgs) _
 		Handles LinkLabel1.LinkClicked
-		System.Diagnostics.Process.Start("mailto:vecto@jrc.ec.europa.eu")
+		Process.Start("mailto:vecto@jrc.ec.europa.eu")
 	End Sub
 
 	'----------------------------------------------------------------------------
 
 	'Picture Links------------------------------------------------------------------
-	Private Sub PictureBoxJRC_Click(sender As System.Object, e As System.EventArgs) Handles PictureBoxJRC.Click
-		System.Diagnostics.Process.Start("http://ec.europa.eu/dgs/jrc/index.cfm")
+	Private Sub PictureBoxJRC_Click(sender As Object, e As EventArgs) Handles PictureBoxJRC.Click
+		Process.Start("http://ec.europa.eu/dgs/jrc/index.cfm")
 	End Sub
 
 
-	Private Sub LinkLabel2_LinkClicked(sender As System.Object, e As System.Windows.Forms.LinkLabelLinkClickedEventArgs) _
+	Private Sub LinkLabel2_LinkClicked(sender As Object, e As LinkLabelLinkClickedEventArgs) _
 		Handles LinkLabel2.LinkClicked
-		System.Diagnostics.Process.Start("https://joinup.ec.europa.eu/community/eupl/og_page/eupl")
+		Process.Start("https://joinup.ec.europa.eu/community/eupl/og_page/eupl")
 	End Sub
 End Class

@@ -8,7 +8,7 @@
 '   WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
 '
 ' See the LICENSE.txt for the specific language governing permissions and limitations.
-Imports System.Windows.Forms
+
 Imports System.Runtime.InteropServices
 
 ''' <summary>
@@ -21,41 +21,41 @@ Public Class F_ShutDown
     Private objExitWin As New cWrapExitWindows()
 
     Public Function ShutDown() As Boolean
-        If Me.ShowDialog = Windows.Forms.DialogResult.Cancel Then
-            Me.Timer1.Stop()
-            Return False
-        Else
-            Me.Timer1.Stop()
-            Return True
-        End If
-    End Function
+		If Me.ShowDialog = DialogResult.Cancel Then
+			Me.Timer1.Stop()
+			Return False
+		Else
+			Me.Timer1.Stop()
+			Return True
+		End If
+	End Function
 
-    Private Sub F_ShutDown_Load(ByVal sender As Object, ByVal e As System.EventArgs) Handles Me.Load
-        iTime = 99
-        Me.LbTime.Text = iTime + 1
-        Me.Timer1.Start()
-    End Sub
+	Private Sub F_ShutDown_Load(ByVal sender As Object, ByVal e As EventArgs) Handles Me.Load
+		iTime = 99
+		Me.LbTime.Text = iTime + 1
+		Me.Timer1.Start()
+	End Sub
 
-    Private Sub Cancel_Button_Click(ByVal sender As System.Object, ByVal e As System.EventArgs) Handles Cancel_Button.Click
-        Me.Timer1.Stop()
-        Me.DialogResult = System.Windows.Forms.DialogResult.Cancel
-        Me.Close()
-    End Sub
+	Private Sub Cancel_Button_Click(ByVal sender As Object, ByVal e As EventArgs) Handles Cancel_Button.Click
+		Me.Timer1.Stop()
+		Me.DialogResult = DialogResult.Cancel
+		Me.Close()
+	End Sub
 
-    Private Sub Timer1_Tick(ByVal sender As Object, ByVal e As System.EventArgs) Handles Timer1.Tick
-        Me.LbTime.Text = iTime
-        If iTime = 0 Then
-            Me.Timer1.Stop()
-            Try
-                objExitWin.ExitWindows(cWrapExitWindows.Action.Shutdown)
-                Me.DialogResult = System.Windows.Forms.DialogResult.OK
-            Catch ex As Exception
-                Me.DialogResult = System.Windows.Forms.DialogResult.Cancel
-            End Try
-            Me.Close()
-        End If
-        iTime -= 1
-    End Sub
+	Private Sub Timer1_Tick(ByVal sender As Object, ByVal e As EventArgs) Handles Timer1.Tick
+		Me.LbTime.Text = iTime
+		If iTime = 0 Then
+			Me.Timer1.Stop()
+			Try
+				objExitWin.ExitWindows(cWrapExitWindows.Action.Shutdown)
+				Me.DialogResult = DialogResult.OK
+			Catch ex As Exception
+				Me.DialogResult = DialogResult.Cancel
+			End Try
+			Me.Close()
+		End If
+		iTime -= 1
+	End Sub
 
     Private Class cWrapExitWindows
 

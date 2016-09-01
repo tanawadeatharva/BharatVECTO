@@ -14,6 +14,8 @@ Imports System.IO
 Imports System.Text
 Imports Microsoft.VisualBasic.FileIO
 Imports System.Runtime.InteropServices
+Imports TUGraz.VECTO.File_Browser
+
 
 ''' <summary>
 ''' File Browser dialog. Entirely controlled by cFilebrowser class.
@@ -58,7 +60,7 @@ Public Class FB_Dialog
 		_bMultiFiles = False
 		_noExt = True
 		_bBrowseFolder = False
-		_bLightMode = LightMode
+		_bLightMode = lightMode
 		ButtonHisFile.Enabled = Not _bLightMode
 	End Sub
 
@@ -952,5 +954,6 @@ lb10:
 		End Set
 	End Property
 End Class
+
 
 

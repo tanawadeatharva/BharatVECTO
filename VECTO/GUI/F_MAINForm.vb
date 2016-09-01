@@ -32,7 +32,6 @@
 Imports System.Collections.Generic
 Imports System.Collections.ObjectModel
 Imports System.ComponentModel
-Imports System.Globalization
 Imports System.IO
 Imports System.Linq
 Imports System.Reflection
@@ -610,7 +609,7 @@ Public Class F_MAINForm
 		'End If
 
 		'VECTO Init
-		Declaration.Init()
+		'Declaration.Init()
 
 		'Command Line Args
 		If Command() <> "" Then
@@ -630,7 +629,7 @@ Public Class F_MAINForm
 		Dim bRUN As Boolean
 		Dim x As Object
 		Dim str As String
-		Dim ComFile As String = ""
+		Dim ComFile As String
 		Dim vecFiles As New List(Of String)
 		Dim driFiles As New List(Of String)
 
@@ -1831,7 +1830,7 @@ lbFound:
 				file.WriteLine(LVbox.Items(x - 1).SubItems(0).Text, Math.Abs(CInt(LVbox.Items(x - 1).Checked)))
 			Next
 			file.Close()
-			file = Nothing
+
 		End Sub
 
 		Public Sub LoadList(Optional ByVal Path As String = "")
@@ -2206,6 +2205,10 @@ lbFound:
 	'Add message to message list
 	Public Sub MSGtoForm(ID As tMsgID, Msg As String, Source As String, Link As String)
 
+		If (Me.InvokeRequired) Then
+			'Me.Invoke(New MsgToFormDelegate(AddressOf MSGtoForm), ID, Msg, Source, Link)
+			Exit Sub
+		End If
 		Dim lv0 As ListViewItem
 
 		lv0 = New ListViewItem

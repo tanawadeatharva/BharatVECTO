@@ -3,7 +3,7 @@ using System.Diagnostics;
 using System.Globalization;
 using System.Threading;
 using Microsoft.VisualStudio.TestTools.UnitTesting;
-using VECTO;
+using TUGraz.VECTO;
 
 namespace VectoLegacyTests
 {

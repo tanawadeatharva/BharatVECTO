@@ -8,6 +8,8 @@
 '   WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
 '
 ' See the LICENSE.txt for the specific language governing permissions and limitations.
+Imports System.IO
+Imports System.Text.RegularExpressions
 
 ''' <summary>
 ''' Settings form
@@ -15,7 +17,7 @@
 ''' <remarks></remarks>
 Public Class F_Settings
 	'Initialize - load config
-	Private Sub F03_Options_Load(ByVal sender As Object, ByVal e As System.EventArgs) Handles Me.Load
+	Private Sub F03_Options_Load(ByVal sender As Object, ByVal e As EventArgs) Handles Me.Load
 
 		LoadSettings()
 	End Sub
@@ -34,7 +36,7 @@ Public Class F_Settings
 
 
 	'Reset Button
-	Private Sub ButReset_Click(sender As System.Object, e As System.EventArgs) Handles ButReset.Click
+	Private Sub ButReset_Click(sender As Object, e As EventArgs) Handles ButReset.Click
 		If _
 			MsgBox(
 				"This will reset all application settings including the Options Tab. Filehistory will not be deleted." & vbCrLf &
@@ -48,7 +50,7 @@ Public Class F_Settings
 	End Sub
 
 	'Save and close
-	Private Sub ButtonOK_Click(ByVal sender As System.Object, ByVal e As System.EventArgs) Handles ButtonOK.Click
+	Private Sub ButtonOK_Click(ByVal sender As Object, ByVal e As EventArgs) Handles ButtonOK.Click
 		Cfg.LogSize = CSng(Me.TextBoxLogSize.Text)
 		Cfg.AirDensity = CSng(Me.TbAirDensity.Text)
 		Cfg.OpenCmd = Me.TbOpenCmd.Text
@@ -63,18 +65,18 @@ Public Class F_Settings
 	End Sub
 
 	'Cancel
-	Private Sub ButtonCancel_Click(ByVal sender As System.Object, ByVal e As System.EventArgs) Handles ButtonCancel.Click
+	Private Sub ButtonCancel_Click(ByVal sender As Object, ByVal e As EventArgs) Handles ButtonCancel.Click
 		Me.Close()
 	End Sub
 
 	'Help button
-	Private Sub BtHelp_Click(sender As System.Object, e As System.EventArgs) Handles BtHelp.Click
-		If IO.File.Exists(MyAppPath & "User Manual\help.html") Then
+	Private Sub BtHelp_Click(sender As Object, e As EventArgs) Handles BtHelp.Click
+		If File.Exists(MyAppPath & "User Manual\help.html") Then
 			Dim BrowserRegistryString As String =
 					My.Computer.Registry.ClassesRoot.OpenSubKey("\http\shell\open\command\").GetValue("").ToString
 			Dim DefaultBrowserPath As String =
-					System.Text.RegularExpressions.Regex.Match(BrowserRegistryString, "(\"".*?\"")").Captures(0).ToString
-			System.Diagnostics.Process.Start(DefaultBrowserPath,
+					Regex.Match(BrowserRegistryString, "(\"".*?\"")").Captures(0).ToString
+			Process.Start(DefaultBrowserPath,
 											String.Format("""{0}{1}""", MyAppPath, "User Manual\help.html#settings"))
 		Else
 			MsgBox("User Manual not found!", MsgBoxStyle.Critical)

@@ -7,8 +7,8 @@
     <SchemaVersion>2.0</SchemaVersion>
     <ProjectGuid>{AAC0F132-0A9F-45B3-B682-77AC9B24B352}</ProjectGuid>
     <OutputType>WinExe</OutputType>
-    <StartupObject>VECTO.My.MyApplication</StartupObject>
-    <RootNamespace>VECTO</RootNamespace>
+    <StartupObject>TUGraz.VECTO.My.MyApplication</StartupObject>
+    <RootNamespace>TUGraz.VECTO</RootNamespace>
     <AssemblyName>VECTO</AssemblyName>
     <MyType>WindowsForms</MyType>
     <ApplicationIcon>Resources\Icon2.ico</ApplicationIcon>
@@ -156,7 +156,6 @@
   <ItemGroup>
     <Compile Include="ApplicationEvents.vb" />
     <Compile Include="cJSONparser.vb" />
-    <Compile Include="cDeclaration.vb" />
     <Compile Include="GUI\F_FileSign.Designer.vb">
       <DependentUpon>F_FileSign.vb</DependentUpon>
     </Compile>
@@ -218,13 +217,9 @@
       <SubType>Form</SubType>
     </Compile>
     <Compile Include="Input Files\cAdvancedAuxiliary.vb" />
-    <Compile Include="Input Files\cAux.vb" />
-    <Compile Include="Input Files\cAuxEntry.vb" />
-    <Compile Include="Input Files\cAuxEntryPS.vb" />
     <Compile Include="Input Files\cENG.vb" />
     <Compile Include="Input Files\cGBX.vb" />
     <Compile Include="Configuration.vb" />
-    <Compile Include="cDelaunayMap.vb" />
     <Compile Include="cDEV.vb" />
     <Compile Include="File Browser\cFileBrowser.vb" />
     <Compile Include="mAAUX_Global.vb" />
@@ -242,7 +237,6 @@
     </Compile>
     <Compile Include="Input Files\cFLD.vb" />
     <Compile Include="Input Files\cMAP.vb" />
-    <Compile Include="Input Files\cDRI.vb" />
     <Compile Include="Input Files\cVECTO.vb" />
     <Compile Include="Input Files\cVEH.vb" />
     <Compile Include="GUI\GearboxGearDialog.Designer.vb">
@@ -267,7 +261,6 @@
     <Compile Include="cFile V3.vb" />
     <Compile Include="VECTO_Global.vb" />
     <Compile Include="VECTO_Types.vb" />
-    <Compile Include="cRegression.vb" />
     <Compile Include="GUI\GUI_Subs.vb" />
     <Compile Include="GUI\F_VEH.Designer.vb">
       <DependentUpon>F_VEH.vb</DependentUpon>
@@ -385,8 +378,6 @@
     </EmbeddedResource>
   </ItemGroup>
   <ItemGroup>
-    <None Include="ClassDiagram1.cd" />
-    <None Include="ClassDiagram2.cd" />
     <None Include="My Project\app.manifest">
       <SubType>Designer</SubType>
     </None>
@@ -1508,12 +1499,19 @@
     <None Include="Resources\desktop.png" />
     <None Include="Resources\favorites.png" />
     <None Include="Resources\file-history.png" />
+    <EmbeddedResource Include="Resources\4x2r.png" />
+    <EmbeddedResource Include="Resources\4x2rt.png" />
+    <EmbeddedResource Include="Resources\4x2tt.png" />
+    <EmbeddedResource Include="Resources\6x2r.png" />
+    <EmbeddedResource Include="Resources\6x2rt.png" />
+    <EmbeddedResource Include="Resources\6x2tt.png" />
     <Content Include="Resources\F_ENG.ico" />
     <Content Include="Resources\F_GBX.ico" />
     <Content Include="Resources\F_VECTO.ico" />
     <Content Include="Resources\F_VEH.ico" />
     <Content Include="Resources\Graph.ico" />
     <Content Include="Resources\Status-dialog-password-icon.ico" />
+    <EmbeddedResource Include="Resources\Undef.png" />
     <Content Include="Resources\up.ico" />
     <Content Include="Resources\up.png" />
   </ItemGroup>

@@ -13,6 +13,7 @@ Option Infer On
 Imports System.Collections.Generic
 Imports System.IO
 Imports System.Linq
+Imports TUGraz.VECTO.Input_Files
 Imports TUGraz.VectoCommon.Models
 Imports TUGraz.VectoCommon.Utils
 
@@ -30,16 +31,16 @@ Public Class cVEH
 	Private siFr0 As Single
 
 	Public CdA0 As Single
-	Public CdA02 As Single
-	Private CdA0Act As Single
+	'Public CdA02 As Single
+	'Private CdA0Act As Single
 
-	Public CdMode As tCdMode
+	Public CdMode As CrossWindCorrectionMode
 	Public CdFile As cSubPath
 	Private CdX As List(Of Single)
 	Private CdY As List(Of Single)
-	Private CdDim As Integer
 
-	Public RtType As tRtType '0=None, 1=Primary, 2=Secondary
+
+	Public RtType As RetarderType 'tRtType '0=None, 1=Primary, 2=Secondary
 	Public RtRatio As Single = 0
 	Public RtFile As cSubPath
 	Private RtnU As List(Of Single)
@@ -47,12 +48,12 @@ Public Class cVEH
 
 	Public rdyn As Single
 	Public Axles As List(Of cAxle)
-	Private m_red0 As Single
 
-	Public VehCat As tVehCat
+
+	Public VehCat As VehicleCategory
 	Public MassExtra As Single
 	Public MassMax As Single
-	Public AxleConf As tAxleConf
+	Public AxleConf As AxleConfiguration
 
 	Private _myFileList As List(Of String)
 
@@ -71,27 +72,6 @@ Public Class cVEH
 		Public Inertia As Single
 	End Class
 
-
-	Public Function CreateFileList() As Boolean
-		_myFileList = New List(Of String)
-
-		'.vcdv  / .vcdb
-		If CdMode = tCdMode.CdOfVeng Or CdMode = tCdMode.CdOfBeta Then
-			_myFileList.Add(CdFile.FullPath)
-		End If
-
-		'Retarder
-		If RtType <> tRtType.None Then
-			_myFileList.Add(RtFile.FullPath)
-		End If
-
-		'Angular Gear
-		If AngularGearType <> AngularGearType.None Then
-			_myFileList.Add(AngularGearLossMapFile.FullPath)
-		End If
-
-		Return True
-	End Function
 
 	Public Sub New()
 		MyPath = ""
@@ -112,18 +92,17 @@ Public Class cVEH
 		MassExtra = 0
 		Loading = 0
 		CdA0 = 0
-		CdA0Act = CdA0
-		CdA02 = 0
+		'		CdA0Act = CdA0
+		'		CdA02 = 0
 		CdFile.Clear()
-		CdMode = tCdMode.ConstCd0
+		CdMode = CrossWindCorrectionMode.NoCorrection
 		CdX.Clear()
 		CdY.Clear()
-		CdDim = -1
 
 		siFr0 = 0
 		rdyn = 0
 
-		RtType = tRtType.None
+		RtType = RetarderType.None
 		RtRatio = 1
 		RtnU.Clear()
 		RtM.Clear()
@@ -135,21 +114,12 @@ Public Class cVEH
 		AngularGearRatio = 1
 
 		Axles.Clear()
-		VehCat = tVehCat.Undef
+		VehCat = VehicleCategory.RigidTruck	'tVehCat.Undef
 		MassMax = 0
-		AxleConf = tAxleConf.Undef
+		AxleConf = AxleConfiguration.AxleConfig_4x2	 'tAxleConf.Undef
 
 		SavedInDeclMode = False
 	End Sub
-
-	Public Function Validate() As Boolean
-		Const msgSrc = "VEH/Validate"
-		If rdyn < 100 Then
-			WorkerMsg(tMsgID.Err, "Parameter 'Dynamic Tire Radius' is invalid (" & rdyn & "mm).", msgSrc, sFilePath)
-			Return False
-		End If
-		Return True
-	End Function
 
 	Public Function ReadFile(Optional showMsg As Boolean = True) As Boolean
 		Const msgSrc = "VEH/ReadFile"
@@ -172,8 +142,9 @@ Public Class cVEH
 			Mass = body("CurbWeight")
 			MassExtra = body("CurbWeightExtra")
 			Loading = body("Loading")
-			VehCat = ConvVehCat(body("VehCat").ToString)
-			AxleConf = ConvAxleConf(body("AxleConfig")("Type").ToString)
+			VehCat = body("VehCat").ToString.ParseEnum(Of VehicleCategory)() 'ConvVehCat(body("VehCat").ToString)
+			AxleConf = AxleConfigurationHelper.Parse(body("AxleConfig")("Type").ToString) _
+			'ConvAxleConf(body("AxleConfig")("Type").ToString)
 
 			If FileVersion < 2 Then
 				'convert kg to ton
@@ -189,33 +160,33 @@ Public Class cVEH
 				CdA0 = body("CdA")
 			End If
 
-			CdA02 = CdA0
+			'CdA02 = CdA0
 
-			If FileVersion < 4 Then
-				If Not body("CdRigid") Is Nothing AndAlso Not body("CrossSecAreaRigid") Is Nothing Then
-					CdA02 = CSng(body("CdRigid")) * CSng(body("CrossSecAreaRigid"))
-				End If
-			ElseIf FileVersion < 7 Then
-				If Not body("Cd2") Is Nothing AndAlso Not body("CrossSecArea2") Is Nothing Then
-					CdA02 = CSng(body("Cd2")) * CSng(body("CrossSecArea2"))
-				End If
-			Else
-				If Not body("CdA2") Is Nothing Then
-					CdA02 = body("CdA2")
-				End If
-			End If
+			'If FileVersion < 4 Then
+			'	If Not body("CdRigid") Is Nothing AndAlso Not body("CrossSecAreaRigid") Is Nothing Then
+			'		CdA02 = CSng(body("CdRigid")) * CSng(body("CrossSecAreaRigid"))
+			'	End If
+			'ElseIf FileVersion < 7 Then
+			'	If Not body("Cd2") Is Nothing AndAlso Not body("CrossSecArea2") Is Nothing Then
+			'		CdA02 = CSng(body("Cd2")) * CSng(body("CrossSecArea2"))
+			'	End If
+			'Else
+			'	If Not body("CdA2") Is Nothing Then
+			'		CdA02 = body("CdA2")
+			'	End If
+			'End If
 
-			CdA0Act = CdA0
+			'CdA0Act = CdA0
 
-			CdMode = CdModeConv(body("CdCorrMode").ToString)
+			CdMode = CrossWindCorrectionModeHelper.Parse(body("CdCorrMode").ToString) 'CdModeConv(body("CdCorrMode").ToString)
 			If Not body("CdCorrFile") Is Nothing Then
 				CdFile.Init(MyPath, body("CdCorrFile"))
 			End If
 
 			If body("Retarder") Is Nothing Then
-				RtType = tRtType.None
+				RtType = RetarderType.None
 			Else
-				RtType = RtTypeConv(body("Retarder")("Type").ToString)
+				RtType = RetarderTypeHelper.Parse(body("Retarder")("Type").ToString) 'RtTypeConv(body("Retarder")("Type").ToString)
 				If Not body("Retarder")("Ratio") Is Nothing Then
 					RtRatio = body("Retarder")("Ratio")
 				End If
@@ -285,18 +256,17 @@ Public Class cVEH
 		Dim dic As Dictionary(Of String, Object)
 		dic = New Dictionary(Of String, Object) From {
 			{"SavedInDeclMode", Cfg.DeclMode},
-			{"VehCat", ConvVehCat(VehCat, False)},
+			{"VehCat", VehCat.ToString()},
 			{"CurbWeight", Mass},
 			{"CurbWeightExtra", MassExtra},
 			{"Loading", Loading},
 			{"MassMax", MassMax},
 			{"CdA", CdA0},
-			{"CdA2", CdA02},
 			{"rdyn", rdyn},
-			{"CdCorrMode", CdModeConv(CdMode)},
+			{"CdCorrMode", CdMode.GetName()},
 			{"CdCorrFile", CdFile.PathOrDummy},
 			{"Retarder", New Dictionary(Of String, Object) From {
-				{"Type", RtTypeConv(RtType)},
+				{"Type", RtType.GetName()},
 				{"Ratio", RtRatio},
 				{"File", RtFile.PathOrDummy}}},
 			{"AngularGear", New Dictionary(Of String, Object) From {
@@ -304,7 +274,7 @@ Public Class cVEH
 				{"Ratio", AngularGearRatio},
 				{"LossMap", AngularGearLossMapFile.PathOrDummy}}},
 			{"AxleConfig", New Dictionary(Of String, Object) From {
-				{"Type", ConvAxleConf(AxleConf)},
+				{"Type", AxleConf.GetName()},
 				{"Axles", (From axle In Axles Select New Dictionary(Of String, Object) From {
 					{"Inertia", axle.Inertia},
 					{"Wheels", axle.Wheels},
@@ -319,129 +289,8 @@ Public Class cVEH
 	End Function
 
 
-	Public Function DeclInitCycle() As Boolean
-		Const msgSrc = "VEH/DeclInit"
-		Dim missionId = Declaration.CurrentMission.MissionID
-
-		MassExtra = Declaration.SegRef.GetBodyTrWeight(missionId)
-
-		Dim al = Declaration.SegRef.AxleShares(missionId)
-		If al.Count > Axles.Count Then
-			WorkerMsg(tMsgID.Err, "Invalid number of axles! Defined: " & Axles.Count & ", required: " & al.Count, msgSrc)
-			Return False
-		End If
-
-		Dim i = -1
-		For Each a In al
-			i += 1
-			Axles(i).Share = a / 100
-		Next
-
-		'Remove non-Truck axles
-		Do While Axles.Count > al.Count
-			Axles.RemoveAt(Axles.Count - 1)
-		Loop
-
-		'(Semi-) Trailer
-		If Not Declaration.SegRef.TrailerOnlyInLongHaul OrElse missionId = tMission.LongHaul Then
-			al = Declaration.SegRef.AxleSharesTr(missionId)
-			For Each a In al
-				Dim a0 = New cAxle
-				a0.Inertia = 0	 'Defined later
-				a0.Wheels = cDeclaration.TyreTr
-				a0.Share = a / 100
-				a0.TwinTire = False
-				a0.RRC = cDeclaration.RRCTr
-				a0.FzISO = cDeclaration.FzISOTr
-				Axles.Add(a0)
-			Next
-		End If
-
-		'Wheels Inertias
-		For Each a0 In Axles
-			a0.Inertia = Declaration.WheelsInertia(a0.Wheels)
-			If a0.Inertia < 0 Then
-				WorkerMsg(tMsgID.Err, "Selected wheels (" & a0.Wheels & ") are not supported!", msgSrc)
-				Return False
-			End If
-		Next
-
-		CdMode = tCdMode.CdOfVdecl
-		If Not Declaration.SegRef.VCDVparam.ContainsKey(missionId) Then
-			WorkerMsg(tMsgID.Err, "No Cross Wind Correction parameters defined for current vehicle & mission profile!", msgSrc)
-			Return False
-		End If
-
-		If Declaration.SegRef.TrailerOnlyInLongHaul Then
-			If missionId = tMission.LongHaul Then
-				CdA0Act = CdA0
-			Else
-				CdA0Act = CdA02
-			End If
-		Else
-			CdA0Act = CdA0
-		End If
-
-		Return True
-	End Function
-
-	Public Function DeclInitLoad(loadingId As tLoading) As Boolean
-		Const msgSrc = "VEH/DeclInit"
-
-		Dim missionId As tMission = Declaration.CurrentMission.MissionID
-		Dim lmax = MassMax * 1000 - Mass - MassExtra
-
-		Select Case loadingId
-			Case tLoading.FullLoaded
-				Loading = lmax
-
-			Case tLoading.RefLoaded
-				Loading = Declaration.SegRef.GetLoading(missionId, MassMax)
-				If Loading < 0 Then
-					WorkerMsg(tMsgID.Err, "Invalid loading in segement table!", msgSrc)
-					Return False
-				End If
-
-				If Loading > lmax Then
-					WorkerMsg(tMsgID.Warn, "Reference loading > Max. loading! Using max. loading.", msgSrc)
-					Loading = lmax
-				End If
-
-			Case tLoading.EmptyLoaded
-				Loading = 0
-
-			Case Else ' tLoading.EmptyLoaded
-				WorkerMsg(tMsgID.Err, "tLoading.UserDefLoaded not allowed!", msgSrc)
-				Return False
-
-		End Select
-
-		Return True
-	End Function
-
-
 #Region "Properties"
 
-	Public ReadOnly Property FileList As List(Of String)
-		Get
-			Return _myFileList
-		End Get
-	End Property
-
-	Public ReadOnly Property MRed As Single
-		Get
-			Return m_red0
-		End Get
-	End Property
-
-	Public Property Fr0 As Single
-		Get
-			Return siFr0
-		End Get
-		Set(value As Single)
-			siFr0 = value
-		End Set
-	End Property
 
 	Public Property FilePath() As String
 		Get

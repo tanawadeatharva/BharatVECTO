@@ -12,6 +12,9 @@ Option Infer On
 Option Strict On
 Option Explicit On
 
+Imports TUGraz.VectoCore.Models.Declaration
+
+
 ''' <summary>
 ''' Axle Config Editor (Vehicle Editor sub-dialog)
 ''' </summary>
@@ -20,7 +23,7 @@ Public Class F_VEH_Axle
 		InitializeComponent()
 
 		CbWheels.Items.Add("-")
-		CbWheels.Items.AddRange(Declaration.WheelsList)
+		CbWheels.Items.AddRange(DeclarationData.Wheels.GetWheelsDimensions())
 	End Sub
 
 	Public Sub Clear()
@@ -62,13 +65,13 @@ Public Class F_VEH_Axle
 	End Sub
 
 	Private Sub CbWheels_SelectedIndexChanged(sender As Object, e As EventArgs) Handles CbWheels.SelectedIndexChanged
-		Dim inertia As Single
+		'Dim inertia As Double
 		If Cfg.DeclMode Then
-			inertia = Declaration.WheelsInertia(CbWheels.Text)
-			If inertia < 0 Then
+			'inertia = DeclarationData.Wheels.Lookup(CbWheels.Text).Inertia.Value()
+			If CbWheels.Text = "-" Then
 				TbI_wheels.Text = "-"
 			Else
-				TbI_wheels.Text = inertia.ToString()
+				TbI_wheels.Text = DeclarationData.Wheels.Lookup(CbWheels.Text).Inertia.Value().ToString()
 			End If
 		End If
 	End Sub

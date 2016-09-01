@@ -12,6 +12,7 @@ Option Infer On
 
 Imports System.Windows.Forms
 
+
 ''' <summary>
 ''' Sub-dialog for File Browser. Entirely controlled by cFilebrowser class (via FB_Dialog).
 ''' </summary>
@@ -57,6 +58,5 @@ Public Class FB_FavDlog
 	End Sub
 
 	Private Sub ListBox1_SelectedIndexChanged(sender As Object, e As EventArgs) Handles ListBox1.SelectedIndexChanged
-
 	End Sub
 End Class

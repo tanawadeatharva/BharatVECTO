@@ -12,8 +12,10 @@ Option Infer On
 Option Explicit On
 
 Imports System.Collections.Generic
+Imports System.IO
 Imports System.Linq
 Imports Newtonsoft.Json.Linq
+Imports TUGraz.VECTO.Input_Files
 
 Public Class cVECTO
 	Private Const FormatVersion As Short = 3
@@ -44,9 +46,7 @@ Public Class cVECTO
 	Private _desMaxDim As Integer
 
 	Public ReadOnly AuxPaths As Dictionary(Of String, AuxEntry)
-	Public AuxRefs As Dictionary(Of String, cAux) _
 	'Alle Nebenverbraucher die in der Veh-Datei UND im Zyklus definiert sind
-	Public AuxDef As Boolean							   'True wenn ein oder mehrere Nebenverbraucher definiert sind
 
 	Public ReadOnly CycleFiles As List(Of cSubPath)
 
@@ -61,8 +61,6 @@ Public Class cVECTO
 	Public UnderSpeed As Single
 	Public EcoRollOn As Boolean
 
-	Private _myFileList As List(Of String)
-
 	Public SavedInDeclMode As Boolean
 
 	Public Class AuxEntry
@@ -74,50 +72,6 @@ Public Class cVECTO
 			Path = New cSubPath
 		End Sub
 	End Class
-
-	Public Function CreateFileList() As Boolean
-		_myFileList = New List(Of String)
-
-		'.vecto
-		_myFileList.Add(_sFilePath)
-
-		'Veh
-		If Not EngOnly Then
-			_myFileList.Add(PathVEH)
-
-			If Not VEH.CreateFileList Then Return False
-
-			_myFileList.AddRange(VEH.FileList)
-		End If
-
-		'Eng
-		_myFileList.Add(PathENG)
-
-		If Not ENG.CreateFileList Then Return False
-		_myFileList.AddRange(ENG.FileList)
-
-		If Not EngOnly Then
-			'Gbx
-			_myFileList.Add(PathGBX)
-
-			If Not GBX.CreateFileList Then Return False
-			_myFileList.AddRange(GBX.FileList)
-
-			'Aux
-			If AuxDef And Not Cfg.DeclMode Then
-				_myFileList.AddRange(AuxPaths.Values.Select(Function(entry) entry.Path.FullPath))
-			End If
-
-			'.vacc
-			_myFileList.Add(_stDesMaxFile.FullPath)
-
-		End If
-
-		'Cycles
-		_myFileList.AddRange(CycleFiles.Select(Function(path) path.FullPath))
-
-		Return True
-	End Function
 
 	Public Sub New()
 
@@ -135,8 +89,7 @@ Public Class cVECTO
 		_laDesMin = New List(Of Single)
 
 		AuxPaths = New Dictionary(Of String, AuxEntry)
-		AuxRefs = New Dictionary(Of String, cAux)
-		AuxDef = False
+		'AuxRefs = New Dictionary(Of String, cAux)
 
 		CycleFiles = New List(Of cSubPath)
 	End Sub
@@ -192,7 +145,7 @@ Public Class cVECTO
 		dic0.Add("LAC", New Dictionary(Of String, Object) From {
 					{"Enabled", LookAheadOn},
 					{"Dec", ALookahead},
-					{"MinSpeed", vMinLA},
+					{"MinSpeed", VMinLa},
 					{"PreviewDistanceFactor", LacPreviewFactor},
 					{"DF_offset", LacDfOffset},
 					{"DF_scaling", LacDfScale},
@@ -208,7 +161,7 @@ Public Class cVECTO
 		Else
 			overspeedDic.Add("Mode", "Off")
 		End If
-		overspeedDic.Add("MinSpeed", vMin)
+		overspeedDic.Add("MinSpeed", VMin)
 		overspeedDic.Add("OverSpeed", OverSpeed)
 		overspeedDic.Add("UnderSpeed", UnderSpeed)
 		dic0.Add("OverSpeedEcoRoll", overspeedDic)
@@ -346,7 +299,7 @@ Public Class cVECTO
 					End If
 
 					AuxPaths.Add(auxId, auxEntry)
-					AuxDef = True
+
 				Next
 			End If
 
@@ -370,7 +323,7 @@ Public Class cVECTO
 				Dim dic = body("LAC")
 				LookAheadOn = dic("Enabled")
 				ALookahead = dic("Dec")
-				vMinLA = dic("MinSpeed")
+				VMinLa = dic("MinSpeed")
 				LacPreviewFactor = If(dic("PreviewDistanceFactor") Is Nothing, 10, dic("PreviewDistanceFactor"))
 				LacDfOffset = If(dic("DF_offset") Is Nothing, 2.5, dic("DF_offset"))
 				LacDfScale = If(dic("DF_scaling") Is Nothing, 1.5, dic("DF_scaling"))
@@ -401,7 +354,7 @@ Public Class cVECTO
 						Return False
 				End Select
 
-				vMin = dic("MinSpeed")
+				VMin = dic("MinSpeed")
 				OverSpeed = dic("OverSpeed")
 				If Not dic("UnderSpeed") Is Nothing Then UnderSpeed = dic("UnderSpeed")
 
@@ -444,8 +397,6 @@ Public Class cVECTO
 		_desMaxDim = -1
 
 		AuxPaths.Clear()
-		AuxRefs.Clear()
-		AuxDef = False
 		EngOnly = False
 
 		ALookahead = 0
@@ -460,101 +411,11 @@ Public Class cVECTO
 		SavedInDeclMode = False
 	End Sub
 
-	Public Function DeclInit() As Boolean
-		EngOnly = False
-
-		CycleFiles.Clear()
-
-		Dim cl = Declaration.SegRef.GetCycles
-
-		For Each s In cl
-			Dim subPath = New cSubPath
-			subPath.Init(_myPath, s)
-			CycleFiles.Add(subPath)
-		Next
-
-		_stDesMaxFile.Init(_myPath, Declaration.SegRef.VACCfile)
-
-		_siStStV = cDeclaration.SSspeed
-		_siStStT = cDeclaration.SStime
-		StStDelay = cDeclaration.SSdelay
-
-		If Not EcoRollOn Then OverSpeedOn = True
-
-		OverSpeed = cDeclaration.Overspeed
-		UnderSpeed = cDeclaration.Underspeed
-		VMin = cDeclaration.ECvmin
-
-		LookAheadOn = True
-		ALookahead = cDeclaration.LACa
-		VMinLa = cDeclaration.LACvmin
-
-		'No need to check Aux (AuxDef). Will be checked in cDeclaration.CalcInitLoad
-
-		Return True
-	End Function
-
 	'This Sub reads those Input-files that do not have their own class, etc.
-	Public Function Init() As Boolean
-		Dim file As cFile_V3
-		Dim line As String()
-
-		Dim msgSrc = "VECTO/Init"
-
-		If Not EngOnly Then
-
-			file = New cFile_V3
-
-			If Not file.OpenRead(_stDesMaxFile.FullPath) Then
-				WorkerMsg(tMsgID.Err, "Can't read .vacc file (" & _stDesMaxFile.FullPath & ")", msgSrc)
-				Return False
-			End If
-
-			'Skip Header
-			file.ReadLine()
-
-			_laDesV.Clear()
-			_laDesMax.Clear()
-			_laDesMin.Clear()
-			_desMaxDim = -1
-			Try
-
-				Do While Not file.EndOfFile
-
-					_desMaxDim += 1
-
-					line = file.ReadLine
-
-					_laDesV.Add(CSng(line(0)) / 3.6)																																'km/h => m/s !!!!
-					_laDesMax.Add(CSng(line(1)))
-					_laDesMin.Add(CSng(line(2)))
-
-				Loop
-
-			Catch ex As Exception
-
-				file.Close()
-				WorkerMsg(tMsgID.Err, "Error in .vacc file. " & ex.Message & " (" & _stDesMaxFile.FullPath & ")", msgSrc,
-						_stDesMaxFile.FullPath)
-				Return False
-
-			End Try
-
-			file.Close()
-
-		End If
-
-		Return True
-	End Function
 
 
 #Region "Properties"
 
-	Public ReadOnly Property FileList As List(Of String)
-		Get
-			Return _myFileList
-		End Get
-	End Property
 
 	Public Property FilePath As String
 		Get
@@ -565,7 +426,7 @@ Public Class cVECTO
 			If _sFilePath = "" Then
 				_myPath = ""
 			Else
-				_myPath = IO.Path.GetDirectoryName(_sFilePath) & "\"
+				_myPath = Path.GetDirectoryName(_sFilePath) & "\"
 			End If
 		End Set
 	End Property

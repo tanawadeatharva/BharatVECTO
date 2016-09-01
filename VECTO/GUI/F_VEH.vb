@@ -11,8 +11,11 @@
 Option Infer On
 
 Imports System.IO
+Imports System.Linq
 Imports System.Text.RegularExpressions
 Imports TUGraz.VectoCommon.Models
+Imports TUGraz.VectoCommon.Utils
+Imports TUGraz.VectoCore.Models.Declaration
 
 ''' <summary>
 ''' Vehicle Editor.
@@ -52,18 +55,29 @@ Public Class F_VEH
 
 	'Set HDVclasss
 	Private Sub SetHdVclass()
-		Dim vehC = CType(CbCat.SelectedIndex, tVehCat)
-		Dim axlC = CType(CbAxleConfig.SelectedIndex, tAxleConf)
-		Dim maxMass = CSng(fTextboxToNumString(TbMassMass.Text))
+		If String.IsNullOrEmpty(TbMassMass.Text) Then
+			TbHDVclass.Text = "-"
+			Exit Sub
+		End If
+		Dim vehC = CbCat.SelectedValue							   'CType(CbCat.SelectedIndex, tVehCat)
+		Dim axlC = CbAxleConfig.SelectedValue	'CType(CbAxleConfig.SelectedIndex, tAxleConf)
+		Dim maxMass = (TbMassMass.Text.ToDouble() * 1000).SI(Of Kilogram)()				   'CSng(fTextboxToNumString(TbMassMass.Text))
 
-		Dim s0 As cSegmentTableEntry = Declaration.SegmentTable.SetRef(vehC, axlC, maxMass)
 		_hdVclass = "-"
+		Dim s0 As Segment = Nothing
+		Try
+			s0 = DeclarationData.Segments.Lookup(vehC, axlC, maxMass, 0.SI(Of Kilogram), True) _
+			' Declaration.SegmentTable.SetRef(vehC, axlC, maxMass)
+		Catch
+			' no segment found - ignore
+		End Try
 		If Not s0 Is Nothing Then
-			_hdVclass = s0.HDVclass
+			_hdVclass = s0.VehicleClass
 		End If
 
+
 		TbHDVclass.Text = _hdVclass
-		PicVehicle.Image = Image.FromFile(cDeclaration.ConvPicPath(_hdVclass, False))
+		PicVehicle.Image = ConvPicPath(_hdVclass, False)
 	End Sub
 
 
@@ -71,14 +85,24 @@ Public Class F_VEH
 	Private Sub DeclInit()
 		If Not Cfg.DeclMode Then Exit Sub
 
-		Dim vehC = CType(CbCat.SelectedIndex, tVehCat)
-		Dim axlC = CType(CbAxleConfig.SelectedIndex, tAxleConf)
-		Dim maxMass = CSng(fTextboxToNumString(TbMassMass.Text))
-		Dim s0 = Declaration.SegmentTable.SetRef(vehC, axlC, maxMass)
+		If String.IsNullOrEmpty(TbMassMass.Text) Then
+			TbHDVclass.Text = "-"
+			Exit Sub
+		End If
+		Dim vehC = CbCat.SelectedValue							   'CType(CbCat.SelectedIndex, tVehCat)
+		Dim axlC = CbAxleConfig.SelectedValue	'CType(CbAxleConfig.SelectedIndex, tAxleConf)
+		Dim maxMass = (TbMassMass.Text.ToDouble() * 1000).SI(Of Kilogram)()				   'CSng(fTextboxToNumString(TbMassMass.Text))
 
+		Dim s0 As Segment = Nothing
+		Try
+			s0 = DeclarationData.Segments.Lookup(vehC, axlC, maxMass, 0.SI(Of Kilogram), True) _
+			' Declaration.SegmentTable.SetRef(vehC, axlC, maxMass)
+		Catch
+			' no segment found - ignore
+		End Try
 		If Not s0 Is Nothing Then
-			_hdVclass = s0.HDVclass
-			Dim axleCount As Short = s0.AxleShares(s0.Missions(0)).Count
+			_hdVclass = s0.VehicleClass
+			Dim axleCount As Short = s0.Missions(0).AxleWeightDistribution.Count() '.AxleShares(s0.Missions(0)).Count
 			Dim i0 = LvRRC.Items.Count
 
 			If axleCount > i0 Then
@@ -109,7 +133,7 @@ Public Class F_VEH
 
 		TbMassExtra.Text = "-"
 		TbLoad.Text = "-"
-		CbCdMode.SelectedIndex = CType(tCdMode.CdOfVdecl, Integer)
+		CbCdMode.SelectedValue = CrossWindCorrectionMode.DeclarationModeCorrection
 		TbCdFile.Text = ""
 
 		Dim rdyn As Single
@@ -272,18 +296,18 @@ Public Class F_VEH
 		TbLoad.Text = veh.Loading
 		TBrdyn.Text = veh.rdyn
 
-		CbCdMode.SelectedIndex = CType(veh.CdMode, Integer)
+		CbCdMode.SelectedValue = veh.CdMode
 		TbCdFile.Text = veh.CdFile.OriginalPath
 
-		CbRtType.SelectedIndex = CType(veh.RtType, Integer)
+		CbRtType.SelectedValue = veh.RtType
 		TbRtRatio.Text = veh.RtRatio
 		TbRtPath.Text = veh.RtFile.OriginalPath
 
-		cbAngularGearType.SelectedIndex = CType(veh.AngularGearType, Integer)
+		cbAngularGearType.SelectedValue = veh.AngularGearType
 		tbAngularGearRatio.Text = veh.AngularGearRatio
 		tbAngularGearLossMapPath.Text = veh.AngularGearLossMapFile.OriginalPath
 
-		CbCat.SelectedIndex = CType(veh.VehCat, Integer)
+		CbCat.SelectedValue = veh.VehCat
 
 
 		LvRRC.Items.Clear()
@@ -309,7 +333,7 @@ Public Class F_VEH
 			lvi.SubItems.Add(a0.Wheels)
 
 			If Cfg.DeclMode Then
-				inertia = Declaration.WheelsInertia(a0.Wheels)
+				inertia = DeclarationData.Wheels.Lookup(a0.Wheels).Inertia.Value()
 				If inertia < 0 Then
 					lvi.SubItems.Add("-")
 				Else
@@ -325,7 +349,7 @@ Public Class F_VEH
 		TbMassMass.Text = veh.MassMax
 		TbMassExtra.Text = veh.MassExtra
 
-		CbAxleConfig.SelectedIndex = CType(veh.AxleConf, Integer)
+		CbAxleConfig.SelectedValue = veh.AxleConf
 
 		TBcdA.Text = veh.CdA0
 
@@ -351,35 +375,43 @@ Public Class F_VEH
 		veh.Loading = CSng(fTextboxToNumString(TbLoad.Text))
 
 		veh.CdA0 = CSng(fTextboxToNumString(TBcdA.Text))
-		veh.CdA02 = veh.CdA0
+		'veh.CdA02 = veh.CdA0
 
-		Dim vehC = CType(CbCat.SelectedIndex, tVehCat)
-		Dim axlC = CType(CbAxleConfig.SelectedIndex, tAxleConf)
-		Dim maxMass = CSng(fTextboxToNumString(TbMassMass.Text))
-		Dim s0 As cSegmentTableEntry = Declaration.SegmentTable.SetRef(vehC, axlC, maxMass)
-		If Not s0 Is Nothing Then
-			If s0.HDVclass = "2" Then
-				' CdA Addition for T1 Trailer
-				veh.CdA02 += 1.1
-			End If
-			If s0.HDVclass = "4" OrElse s0.HDVclass = "9" Then
-				' CdA Addition for T2 Trailer
-				veh.CdA02 += 0.6
-			End If
-		End If
+		' @@@quam: CdA2 is no longer used, Vecto 3 takes this into account internally
+
+		'Dim vehC = EnumHelper.ParseEnum(Of VehicleCategory)(CbCat.SelectedItem)				'CType(CbCat.SelectedIndex, tVehCat)
+		'Dim axlC = AxleConfigurationHelper.Parse(CbAxleConfig.SelectedItem)	'CType(CbAxleConfig.SelectedIndex, tAxleConf)
+		'Dim maxMass = (TbMassMass.Text.ToDouble() * 1000).SI(Of Kilogram)()		 'CSng(fTextboxToNumString(TbMassMass.Text))
+
+		'Dim s0 As Segment
+		'Try
+		'	s0 = DeclarationData.Segments.Lookup(vehC, axlC, maxMass, 0.SI(Of Kilogram))
+		'Catch
+		'End Try
+
+		'If Not s0 Is Nothing Then
+		'	If s0.VehicleClass = VehicleClass.Class2 Then
+		'		' CdA Addition for T1 Trailer
+		'		veh.CdA02 += 1.1
+		'	End If
+		'	If s0.VehicleClass = VehicleClass.Class4 OrElse s0.VehicleClass = VehicleClass.Class9 Then
+		'		' CdA Addition for T2 Trailer
+		'		veh.CdA02 += 0.6
+		'	End If
+		'End If
 
 		veh.rdyn = CSng(fTextboxToNumString(TBrdyn.Text))
-		veh.CdMode = CType(CbCdMode.SelectedIndex, tCdMode)
+		veh.CdMode = CbCdMode.SelectedValue
 		veh.CdFile.Init(fPATH(file), TbCdFile.Text)
-		veh.RtType = CType(CbRtType.SelectedIndex, tRtType)
+		veh.RtType = CbRtType.SelectedValue
 		veh.RtRatio = CSng(fTextboxToNumString(TbRtRatio.Text))
 		veh.RtFile.Init(fPATH(file), TbRtPath.Text)
 
-		veh.AngularGearType = CType(cbAngularGearType.SelectedIndex, AngularGearType)
+		veh.AngularGearType = cbAngularGearType.SelectedValue
 		veh.AngularGearRatio = CSng(fTextboxToNumString(tbAngularGearRatio.Text))
 		veh.AngularGearLossMapFile.Init(fPATH(file), tbAngularGearLossMapPath.Text)
 
-		veh.VehCat = CType(CbCat.SelectedIndex, tVehCat)
+		veh.VehCat = CbCat.SelectedValue 'CType(CbCat.SelectedIndex, tVehCat)
 
 		Dim axleShareCheck As Double
 		For Each LV0 In LvRRC.Items
@@ -401,7 +433,8 @@ Public Class F_VEH
 
 		veh.MassMax = CSng(fTextboxToNumString(TbMassMass.Text))
 		veh.MassExtra = CSng(fTextboxToNumString(TbMassExtra.Text))
-		veh.AxleConf = CType(CbAxleConfig.SelectedIndex, tAxleConf)
+		veh.AxleConf = CbAxleConfig.SelectedValue _
+		'CType(CbAxleConfig.SelectedIndex, tAxleConf)
 
 		'---------------------------------------------------------------------------------
 		If Not veh.SaveFile Then
@@ -432,15 +465,16 @@ Public Class F_VEH
 		Handles CbCdMode.SelectedIndexChanged
 		Dim bEnabled As Boolean
 
-		Select Case CType(CbCdMode.SelectedIndex, tCdMode)
+		Select Case CType(CbCdMode.SelectedValue, CrossWindCorrectionMode)
 
-			Case tCdMode.CdOfBeta
+			Case CrossWindCorrectionMode.VAirBetaLookupTable
 				bEnabled = True
 				LbCdMode.Text = "Input file: Yaw Angle [°], Cd Scaling Factor [-]"
 
-			Case tCdMode.CdOfVeng
+			Case CrossWindCorrectionMode.SpeedDependentCorrectionFactor
 				bEnabled = True
-				LbCdMode.Text = "Input file: Vehicle Speed [km/h], Cd Scaling Factor [-]"
+				LbCdMode.Text = "Input file: Vehicle Speed [km/h], Cd Scaling Factor [-]" _
+				'TODO: MQ 20160901: check if scaling factor or absolue value!
 
 			Case Else ' tCdMode.ConstCd0, tCdMode.CdOfVdecl
 				bEnabled = False
@@ -731,8 +765,8 @@ Public Class F_VEH
 
 	Private Sub cbAngularGearType_SelectedIndexChanged(sender As Object, e As EventArgs) _
 		Handles cbAngularGearType.SelectedIndexChanged
-		Select Case cbAngularGearType.SelectedIndex
-			Case 1 'Separate Angular Gear
+		Select Case CType(cbAngularGearType.SelectedValue, AngularGearType)
+			Case AngularGearType.SeparateAngularGear
 				pnAngularGearFields.Enabled = True
 				tbAngularGearRatio.Text = "1.0"
 			Case Else 'Losses included in Transmission, None

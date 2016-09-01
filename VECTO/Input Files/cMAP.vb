@@ -14,7 +14,7 @@ Imports TUGraz.VectoCore.Configuration
 Imports VectoAuxiliaries
 
 Public Class cMAP
-	Implements IFuelConsumptionMap
+	'Implements IFuelConsumptionMap
 
 	Private LnU As List(Of Single)
 	Private LTq As List(Of Single)
@@ -23,14 +23,12 @@ Public Class cMAP
 	Private sFilePath As String
 	Private iMapDim As Integer
 
-	Private FuelMap As cDelaunayMap
-
 	Private Sub ResetMe()
 		lFC = Nothing
 		LTq = Nothing
 		LnU = Nothing
 		iMapDim = -1
-		FuelMap = New cDelaunayMap
+
 	End Sub
 
 	Public Function ReadFile(Optional ByVal ShowMsg As Boolean = True) As Boolean
@@ -54,7 +52,7 @@ Public Class cMAP
 		'Open file
 		file = New cFile_V3
 		If Not file.OpenRead(sFilePath) Then
-			file = Nothing
+
 			If ShowMsg Then WorkerMsg(tMsgID.Err, "Failed to open file (" & sFilePath & ") !", MsgSrc)
 			Return False
 		End If
@@ -63,9 +61,9 @@ Public Class cMAP
 		file.ReadLine()
 
 		'Initi Lists (before version check so ReadOldFormat works)
-		lFC = New System.Collections.Generic.List(Of Single)
-		LTq = New System.Collections.Generic.List(Of Single)
-		LnU = New System.Collections.Generic.List(Of Single)
+		lFC = New List(Of Single)
+		LTq = New List(Of Single)
+		LnU = New List(Of Single)
 
 		Try
 			Do While Not file.EndOfFile
@@ -108,7 +106,7 @@ Public Class cMAP
 		'Close file
 		file.Close()
 
-		file = Nothing
+
 
 		Return True
 
@@ -116,41 +114,11 @@ Public Class cMAP
 		'ERROR-label for clean Abort
 lbEr:
 		file.Close()
-		file = Nothing
+
 
 		Return False
 	End Function
 
-	Public Function Triangulate() As Boolean
-		Dim i As Integer
-
-		Dim MsgSrc As String
-
-		MsgSrc = "MAP/Norm"
-
-		'FC Delauney
-		For i = 0 To iMapDim
-			FuelMap.AddPoints(LnU(i), LTq(i), lFC(i))
-		Next
-
-		Return FuelMap.Triangulate()
-	End Function
-
-
-	Public Function fFCdelaunay_Intp(ByVal nU As Single, ByVal Tq As Single) As Single
-		Dim val As Single
-
-		val = FuelMap.Intpol(nU, Tq)
-
-		If FuelMap.ExtrapolError Then
-			WorkerMsg(tMsgID.Err,
-					"Cannot extrapolate FC map! n= " & nU.ToString("0.0") & " [1/min], Me= " & Tq.ToString("0.0") & " [Nm]",
-					"MAP/FC_Intp")
-			Return -10000
-		Else
-			Return val
-		End If
-	End Function
 
 #Region "Properties"
 
@@ -163,21 +131,9 @@ lbEr:
 		End Set
 	End Property
 
-	Public ReadOnly Property MapDim As Integer
-		Get
-			Return iMapDim
-		End Get
-	End Property
-
 	Public ReadOnly Property Tq As List(Of Single)
 		Get
 			Return LTq
-		End Get
-	End Property
-
-	Public ReadOnly Property FC As List(Of Single)
-		Get
-			Return lFC
 		End Get
 	End Property
 
@@ -189,12 +145,12 @@ lbEr:
 
 #End Region
 
-	Public Function GetFuelConsumption(torque As NewtonMeter, angularVelocity As PerSecond) As KilogramPerSecond _
-		Implements IFuelConsumptionMap.GetFuelConsumption
-		'MQ: TODO: check units!
-		Return _
-			(fFCdelaunay_Intp(angularVelocity.Value() / Constants.RPMToRad, torque.Value()) / 3600 / 1000).SI(Of KilogramPerSecond)()
-	End Function
+	'Public Function GetFuelConsumption(torque As NewtonMeter, angularVelocity As PerSecond) As KilogramPerSecond _
+	'	Implements IFuelConsumptionMap.GetFuelConsumption
+	'	'MQ: TODO: check units!
+	'	Return _
+	'		(fFCdelaunay_Intp(angularVelocity.Value() / Constants.RPMToRad, torque.Value()) / 3600 / 1000).SI(Of KilogramPerSecond)()
+	'End Function
 End Class
 
 

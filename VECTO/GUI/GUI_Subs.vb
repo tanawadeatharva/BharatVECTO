@@ -39,52 +39,6 @@ Public Module GUI_Subs
 		End Try
 	End Sub
 
-	'Status => Statusbar
-	Public Sub WorkerStatus(ByVal Msg As String)
-		Dim WorkProg As New cWorkProg(tWorkMsgType.StatusBar)
-		WorkProg.Msg = Msg
-		VECTOworker.ReportProgress(0, WorkProg)
-	End Sub
-
-	'Job status => Job listview
-	Public Sub WorkerJobStatus(ByVal JobIndex As Int16, ByVal Msg As String, ByVal Status As tJobStatus)
-		Dim WorkProg As cWorkProg
-		WorkProg = New cWorkProg(tWorkMsgType.JobStatus)
-		WorkProg.FileIndex = JobIndex
-		WorkProg.Msg = Msg
-		WorkProg.Status = Status
-		VECTOworker.ReportProgress(0, WorkProg)
-	End Sub
-
-	'Cycle status => Cycle listview
-	Public Sub WorkerCycleStatus(ByVal CycleIndex As Int16, ByVal Msg As String)
-		Dim WorkProg As cWorkProg
-		WorkProg = New cWorkProg(tWorkMsgType.CycleStatus)
-		WorkProg.FileIndex = CycleIndex
-		WorkProg.Msg = Msg
-		VECTOworker.ReportProgress(0, WorkProg)
-	End Sub
-
-	'Worker Progress => Progbar
-	Public Sub WorkerProgJobEnd(ByVal Prog As Int16)
-		Dim WorkProg As New cWorkProg(tWorkMsgType.ProgBars)
-		VECTOworker.ReportProgress(Prog, WorkProg)
-	End Sub
-
-	'Progbar set to Continuous
-	Public Sub WorkerProgInit()
-		Dim WorkProg As New cWorkProg(tWorkMsgType.InitProgBar)
-		VECTOworker.ReportProgress(0, WorkProg)
-	End Sub
-
-	'Abort
-	Public Sub WorkerAbort()
-		Dim WorkProg As New cWorkProg(tWorkMsgType.Abort)
-		VECTOworker.ReportProgress(0, WorkProg)
-	End Sub
-
-
-
 #End Region
 
 #Region "Direct GUI control - Cannot be called by background worker!"

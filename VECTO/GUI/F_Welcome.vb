@@ -8,7 +8,7 @@
 '   WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
 '
 ' See the LICENSE.txt for the specific language governing permissions and limitations.
-Imports System.Windows.Forms
+Imports System.IO
 
 ''' <summary>
 ''' Welcome screen. Shows only on the first time application start
@@ -16,29 +16,29 @@ Imports System.Windows.Forms
 ''' <remarks></remarks>
 Public Class F_Welcome
 	'Close
-	Private Sub Cancel_Button_Click(ByVal sender As System.Object, ByVal e As System.EventArgs) Handles Cancel_Button.Click
-		Me.DialogResult = System.Windows.Forms.DialogResult.Cancel
+	Private Sub Cancel_Button_Click(ByVal sender As Object, ByVal e As EventArgs) Handles Cancel_Button.Click
+		Me.DialogResult = DialogResult.Cancel
 		Me.Close()
 	End Sub
 
 	'Init
-	Private Sub F_Welcome_Load(sender As Object, e As System.EventArgs) Handles Me.Load
+	Private Sub F_Welcome_Load(sender As Object, e As EventArgs) Handles Me.Load
 		Me.Text = "VECTO " & VECTOvers & " / VectoCore " & COREvers
 	End Sub
 
 	'Open Release Notes
-	Private Sub Button1_Click(sender As System.Object, e As System.EventArgs) Handles Button1.Click
-		If IO.File.Exists(MyAppPath & "User Manual\Release Notes.pdf") Then
-			System.Diagnostics.Process.Start(MyAppPath & "User Manual\Release Notes.pdf")
+	Private Sub Button1_Click(sender As Object, e As EventArgs) Handles Button1.Click
+		If File.Exists(MyAppPath & "User Manual\Release Notes.pdf") Then
+			Process.Start(MyAppPath & "User Manual\Release Notes.pdf")
 		Else
 			MsgBox("Release Notes not found!", MsgBoxStyle.Critical)
 		End If
 	End Sub
 
 	'Open Quick Start Guide
-	Private Sub Button2_Click(sender As System.Object, e As System.EventArgs) Handles Button2.Click
-		If IO.File.Exists(MyAppPath & "User Manual\help.html") Then
-			System.Diagnostics.Process.Start(MyAppPath & "User Manual\help.html")
+	Private Sub Button2_Click(sender As Object, e As EventArgs) Handles Button2.Click
+		If File.Exists(MyAppPath & "User Manual\help.html") Then
+			Process.Start(MyAppPath & "User Manual\help.html")
 		Else
 			MsgBox("User manual not found!", MsgBoxStyle.Critical)
 		End If
