@@ -29,6 +29,8 @@
 *   Martin Rexeis, rexeis@ivt.tugraz.at, IVT, Graz University of Technology
 */
 
+using System;
+
 namespace TUGraz.VectoCommon.Models
 {
 	public enum AngularGearType
@@ -36,5 +38,22 @@ namespace TUGraz.VectoCommon.Models
 		None,
 		SeparateAngularGear,
 		LossesIncludedInGearbox,
+	}
+
+	public static class AngularGearTypeHelper
+	{
+		public static string GetLabel(this AngularGearType type)
+		{
+			switch (type) {
+				case AngularGearType.None:
+					return "No Angular Gear";
+				case AngularGearType.SeparateAngularGear:
+					return "Separate Angular Gear";
+				case AngularGearType.LossesIncludedInGearbox:
+					return "Included in Transmission Loss Maps";
+				default:
+					throw new ArgumentOutOfRangeException("type", type, null);
+			}
+		}
 	}
 }
