@@ -134,6 +134,7 @@
     <Compile Include="Models\Connector\Ports\IFvPort.cs" />
     <Compile Include="Models\Connector\Ports\ITnPort.cs" />
     <Compile Include="InputData\Reader\ComponentData\AccelerationCurveReader.cs" />
+    <Compile Include="Models\Declaration\IDeclarationAuxiliaryTable.cs" />
     <Compile Include="Models\SimulationComponent\Data\AngularGearData.cs" />
     <Compile Include="InputData\Reader\ComponentData\TransmissionLossMapReader.cs" />
     <Compile Include="InputData\Reader\ComponentData\RetarderLossMapReader.cs" />
