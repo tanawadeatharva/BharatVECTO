@@ -15,8 +15,6 @@
 ''' <remarks></remarks>
 Public Module GUI_Subs
 
-	Public test As Integer = 0
-
 #Region "GUI control via background worker"
 
 	'Status Message => Msg-Listview
@@ -25,15 +23,12 @@ Public Module GUI_Subs
 		WorkProg.ID = ID
 		Select Case ID
 			Case tMsgID.Err
-				MSGerror += 1
 			Case tMsgID.Warn
-				MSGwarn += 1
 		End Select
 		WorkProg.Msg = Msg
 		WorkProg.Source = Source
-		WorkProg.Link = Link
 		Try
-			VECTOworker.ReportProgress(0, WorkProg)
+			'VECTOworker.ReportProgress(0, WorkProg)
 		Catch ex As Exception
 			GUImsg(ID, Msg)
 		End Try
@@ -62,29 +57,13 @@ Public Module GUI_Subs
 
 	'Class used to pass Messages from BackgroundWorker to GUI
 	Public Class cWorkProg
-		Private MyTarget As tWorkMsgType
 		Private MyID As tMsgID
 		Private MyMsg As String
-		Private MyFileIndex As Int16
 		Private MySource As String
-		Private MyStatus As tJobStatus
-		Public Link As String
 
 		Public Sub New(ByVal MsgTarget As tWorkMsgType)
-			MyTarget = MsgTarget
 			MySource = ""
-			MyStatus = tJobStatus.Undef
-			Link = ""
 		End Sub
-
-		Public Property Status As tJobStatus
-			Get
-				Return MyStatus
-			End Get
-			Set(value As tJobStatus)
-				MyStatus = value
-			End Set
-		End Property
 
 
 		Public Property Source As String
@@ -113,23 +92,6 @@ Public Module GUI_Subs
 				MyMsg = value
 			End Set
 		End Property
-
-		Public ReadOnly Property Target() As tWorkMsgType
-			Get
-				Return MyTarget
-			End Get
-		End Property
-
-		Public Property FileIndex() As Int16
-			Get
-				Return MyFileIndex
-			End Get
-			Set(ByVal value As Int16)
-				MyFileIndex = value
-			End Set
-		End Property
-
-
 	End Class
 
 	'Progress bar control
@@ -151,23 +113,7 @@ Public Module GUI_Subs
 		End If
 	End Function
 
-	'Empty text to writable placeholder
-	Public Function fStringOrDummySet(ByVal txt As String) As String
-		If txt = "" Then
-			Return sKey.EmptyString
-		Else
-			Return txt
-		End If
-	End Function
-
-	'Placeholder to empty string
-	Public Function fStringOrDummyGet(ByVal txt As String) As String
-		If Trim(UCase(txt)) = sKey.EmptyString Then
-			Return ""
-		Else
-			Return txt
-		End If
-	End Function
+	
 
 #End Region
 
@@ -185,19 +131,13 @@ Public Module GUI_Subs
 		Catch ex As Exception
 			Return False
 		End Try
-
 	End Function
 
 	Public Function WrongMode() As Integer
 
 		If Cfg.DeclMode Then
 
-			Select Case MsgBox("This file was created in Engineering Mode! Opening in Declaration Mode will overwrite some parameters with generic values." & vbCrLf & vbCrLf & _
-			 "Do you want to switch to Engineering Mode?" & vbCrLf & vbCrLf & _
-			 "[Yes] Switch mode and open file" & vbCrLf & _
-			 "[No] Open file without changing mode" & vbCrLf & _
-			 "[Cancel] Abort opening file" _
-			 , MsgBoxStyle.YesNoCancel, "Warning")
+			Select Case MsgBox("This file was created in Engineering Mode! Opening in Declaration Mode will overwrite some parameters with generic values." & vbCrLf & vbCrLf & "Do you want to switch to Engineering Mode?" & vbCrLf & vbCrLf & "[Yes] Switch mode and open file" & vbCrLf & "[No] Open file without changing mode" & vbCrLf & "[Cancel] Abort opening file", MsgBoxStyle.YesNoCancel, "Warning")
 				Case MsgBoxResult.Yes
 					Return 1
 
@@ -211,12 +151,7 @@ Public Module GUI_Subs
 
 		Else
 
-			Select Case MsgBox("This file was created in Declaration Mode! For use in Engineering Mode missing parameters must be defined." & vbCrLf & vbCrLf & _
-					  "Do you want to switch to Declaration Mode?" & vbCrLf & vbCrLf & _
-					  "[Yes] Switch mode and open file" & vbCrLf & _
-					  "[No] Open file without changing mode" & vbCrLf & _
-					  "[Cancel] Abort opening file" _
-					  , MsgBoxStyle.YesNoCancel, "Warning")
+			Select Case MsgBox("This file was created in Declaration Mode! For use in Engineering Mode missing parameters must be defined." & vbCrLf & vbCrLf & "Do you want to switch to Declaration Mode?" & vbCrLf & vbCrLf & "[Yes] Switch mode and open file" & vbCrLf & "[No] Open file without changing mode" & vbCrLf & "[Cancel] Abort opening file", MsgBoxStyle.YesNoCancel, "Warning")
 				Case MsgBoxResult.Yes
 					Return 1
 
@@ -229,7 +164,5 @@ Public Module GUI_Subs
 			End Select
 
 		End If
-
 	End Function
-
 End Module

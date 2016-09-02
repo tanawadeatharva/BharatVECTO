@@ -23,7 +23,6 @@ Imports TUGraz.VectoCore.Configuration
 Imports TUGraz.VectoCore.InputData.Impl
 Imports TUGraz.VectoCore.Models.Declaration
 Imports TUGraz.VectoCore.Models.SimulationComponent.Data
-Imports TUGraz.VectoCore.Models.SimulationComponent.Data.Engine
 Imports TUGraz.VectoCore.Models.SimulationComponent.Data.Gearbox
 
 ''' <summary>
@@ -62,11 +61,11 @@ Public Class F_GBX
 		Init = False
 		GearDia = New GearboxGearDialog
 
-		Me.PnInertiaTI.Enabled = Not Cfg.DeclMode
-		Me.GrGearShift.Enabled = Not Cfg.DeclMode
-		Me.ChTCon.Enabled = Not Cfg.DeclMode
+		PnInertiaTI.Enabled = Not Cfg.DeclMode
+		GrGearShift.Enabled = Not Cfg.DeclMode
+		ChTCon.Enabled = Not Cfg.DeclMode
 
-		Me.CbGStype.Items.Clear()
+		CbGStype.Items.Clear()
 		CbGStype.ValueMember = "Value"
 		CbGStype.DisplayMember = "Label"
 
@@ -97,23 +96,23 @@ Public Class F_GBX
 
 		If Not Cfg.DeclMode Then Exit Sub
 
-		Me.TBI_getr.Text = DeclarationData.Gearbox.Inertia.Value() 'cDeclaration.GbInertia
+		TBI_getr.Text = DeclarationData.Gearbox.Inertia.Value()	'cDeclaration.GbInertia
 
 		GStype = CbGStype.SelectedValue	'CType(Me.CbGStype.SelectedIndex, tGearbox)
 
-		Me.TbTracInt.Text = GStype.TractionInterruption().Value()
-		Me.TbShiftTime.Text = DeclarationData.Gearbox.MinTimeBetweenGearshifts.Value() 'cDeclaration.ShiftTime(GStype)
+		TbTracInt.Text = GStype.TractionInterruption().Value()
+		TbShiftTime.Text = DeclarationData.Gearbox.MinTimeBetweenGearshifts.Value()	'cDeclaration.ShiftTime(GStype)
 
-		Me.TbTqResv.Text = DeclarationData.Gearbox.TorqueReserve ' cDeclaration.TqResv
-		Me.TbTqResvStart.Text = DeclarationData.Gearbox.TorqueReserveStart 'cDeclaration.TqResvStart
-		Me.TbStartSpeed.Text = DeclarationData.Gearbox.StartSpeed.Value() 'cDeclaration.StartSpeed
-		Me.TbStartAcc.Text = DeclarationData.Gearbox.StartAcceleration.Value() ' cDeclaration.StartAcc
+		TbTqResv.Text = DeclarationData.Gearbox.TorqueReserve ' cDeclaration.TqResv
+		TbTqResvStart.Text = DeclarationData.Gearbox.TorqueReserveStart	'cDeclaration.TqResvStart
+		TbStartSpeed.Text = DeclarationData.Gearbox.StartSpeed.Value() 'cDeclaration.StartSpeed
+		TbStartAcc.Text = DeclarationData.Gearbox.StartAcceleration.Value()	' cDeclaration.StartAcc
 
 		tbUpshiftMinAcceleration.Text = DeclarationData.Gearbox.UpshiftMinAcceleration.Value()
 		tbDownshiftAfterUpshift.Text = DeclarationData.Gearbox.DownshiftAfterUpshiftDelay.Value()
 		tbUpshiftAfterDownshift.Text = DeclarationData.Gearbox.UpshiftAfterDownshiftDelay.Value()
 
-		For Each lv0 In Me.LvGears.Items
+		For Each lv0 In LvGears.Items
 			lv0.SubItems(GearboxTbl.ShiftPolygons).Text = "-"
 		Next
 	End Sub
@@ -167,7 +166,7 @@ Public Class F_GBX
 			Dim DefaultBrowserPath As String =
 					Regex.Match(BrowserRegistryString, "(\"".*?\"")").Captures(0).ToString
 			Process.Start(DefaultBrowserPath,
-											String.Format("""{0}{1}""", MyAppPath, "User Manual\help.html#gearbox-editor"))
+						String.Format("""{0}{1}""", MyAppPath, "User Manual\help.html#gearbox-editor"))
 		Else
 			MsgBox("User Manual not found!", MsgBoxStyle.Critical)
 		End If
@@ -181,34 +180,34 @@ Public Class F_GBX
 
 		If ChangeCheckCancel() Then Exit Sub
 
-		Me.CbGStype.SelectedIndex = 0
+		CbGStype.SelectedIndex = 0
 
-		Me.TbName.Text = ""
-		Me.TbTracInt.Text = ""
-		Me.TBI_getr.Text = ""
+		TbName.Text = ""
+		TbTracInt.Text = ""
+		TBI_getr.Text = ""
 
-		Me.LvGears.Items.Clear()
+		LvGears.Items.Clear()
 
-		Me.LvGears.Items.Add(CreateListviewItem("Axle", "-", 0, 0, "", ""))
+		LvGears.Items.Add(CreateListviewItem("Axle", "-", 0, 0, "", ""))
 
 		'Me.ChSkipGears.Checked = False         'set by CbGStype.SelectedIndexChanged
 		'Me.ChShiftInside.Checked = False       'set by CbGStype.SelectedIndexChanged
-		Me.TbTqResv.Text = ""
-		Me.TbShiftTime.Text = ""
-		Me.TbTqResvStart.Text = ""
-		Me.TbStartSpeed.Text = ""
-		Me.TbStartAcc.Text = ""
+		TbTqResv.Text = ""
+		TbShiftTime.Text = ""
+		TbTqResvStart.Text = ""
+		TbStartSpeed.Text = ""
+		TbStartAcc.Text = ""
 
 		'Me.ChTCon.Checked = False              'set by CbGStype.SelectedIndexChanged
-		Me.TbTCfile.Text = ""
-		Me.TbTCrefrpm.Text = ""
-		Me.TbTCinertia.Text = ""
+		TbTCfile.Text = ""
+		TbTCrefrpm.Text = ""
+		TbTCinertia.Text = ""
 
 		DeclInit()
 
 		GbxFile = ""
-		Me.Text = "GBX Editor"
-		Me.LbStatus.Text = ""
+		Text = "GBX Editor"
+		LbStatus.Text = ""
 
 		Changed = False
 		UpdatePic()
@@ -244,39 +243,39 @@ Public Class F_GBX
 			End Select
 		End If
 
-		Me.TbName.Text = GBX0.ModelName
-		Me.TbTracInt.Text = GBX0.TracIntrSi.ToString
-		Me.TBI_getr.Text = GBX0.GbxInertia.ToString
+		TbName.Text = GBX0.ModelName
+		TbTracInt.Text = GBX0.TracIntrSi.ToString
+		TBI_getr.Text = GBX0.GbxInertia.ToString
 
-		Me.ChTCon.Checked = GBX0.TCon
+		ChTCon.Checked = GBX0.TCon
 
-		Me.LvGears.Items.Clear()
+		LvGears.Items.Clear()
 
 		For i = 0 To GBX0.Igetr.Count - 1
 
 			If i = 0 Then
 				'lv0 = New ListViewItem("Axle")
-				Me.LvGears.Items.Add(CreateListviewItem("Axle", "-", GBX0.Igetr(i), GBX0.GetrMap(i, True), GBX0.gsFile(i, True),
-														GBX0.MaxTorque(i)))
+				LvGears.Items.Add(CreateListviewItem("Axle", "-", GBX0.Igetr(i), GBX0.GetrMap(i, True), GBX0.gsFile(i, True),
+													GBX0.MaxTorque(i)))
 			Else
 				'lv0 = New ListViewItem(i.ToString("00"))
-				Me.LvGears.Items.Add(CreateListviewItem(i.ToString("00"), "-", GBX0.Igetr(i), GBX0.GetrMap(i, True),
-														GBX0.gsFile(i, True), GBX0.MaxTorque(i)))
+				LvGears.Items.Add(CreateListviewItem(i.ToString("00"), "-", GBX0.Igetr(i), GBX0.GetrMap(i, True),
+													GBX0.gsFile(i, True), GBX0.MaxTorque(i)))
 			End If
 
 		Next
 
-		Me.ChSkipGears.Checked = GBX0.gs_SkipGears
-		Me.TbTqResv.Text = GBX0.gs_TorqueResv.ToString
-		Me.TbShiftTime.Text = GBX0.gs_ShiftTime.ToString
-		Me.TbTqResvStart.Text = GBX0.gs_TorqueResvStart.ToString
-		Me.TbStartSpeed.Text = GBX0.gs_StartSpeed.ToString
-		Me.TbStartAcc.Text = GBX0.gs_StartAcc.ToString
-		Me.ChShiftInside.Checked = GBX0.gs_ShiftInside
+		ChSkipGears.Checked = GBX0.gs_SkipGears
+		TbTqResv.Text = GBX0.gs_TorqueResv.ToString
+		TbShiftTime.Text = GBX0.gs_ShiftTime.ToString
+		TbTqResvStart.Text = GBX0.gs_TorqueResvStart.ToString
+		TbStartSpeed.Text = GBX0.gs_StartSpeed.ToString
+		TbStartAcc.Text = GBX0.gs_StartAcc.ToString
+		ChShiftInside.Checked = GBX0.gs_ShiftInside
 
-		Me.TbTCfile.Text = GBX0.TCfile(True)
-		Me.TbTCrefrpm.Text = GBX0.TCrefrpm
-		Me.TbTCinertia.Text = GBX0.TCinertia
+		TbTCfile.Text = GBX0.TCfile(True)
+		TbTCrefrpm.Text = GBX0.TCrefrpm
+		TbTCinertia.Text = GBX0.TCinertia
 		TBTCShiftPolygon.Text = GBX0.TCshiftFile
 
 		tbUpshiftMinAcceleration.Text = GBX0.UpshiftMinAcceleration
@@ -294,10 +293,10 @@ Public Class F_GBX
 
 
 		fbGBX.UpdateHistory(file)
-		Me.Text = fFILE(file, True)
-		Me.LbStatus.Text = ""
+		Text = fFILE(file, True)
+		LbStatus.Text = ""
 		GbxFile = file
-		Me.Activate()
+		Activate()
 
 		Changed = False
 		UpdatePic()
@@ -385,8 +384,8 @@ Public Class F_GBX
 		End If
 
 		fbGBX.UpdateHistory(file)
-		Me.Text = fFILE(file, True)
-		Me.LbStatus.Text = ""
+		Text = fFILE(file, True)
+		LbStatus.Text = ""
 
 		Changed = False
 
@@ -398,7 +397,7 @@ Public Class F_GBX
 	'Change Status ändern |@@| Change Status change
 	Private Sub Change()
 		If Not Changed Then
-			Me.LbStatus.Text = "Unsaved changes in current file"
+			LbStatus.Text = "Unsaved changes in current file"
 			Changed = True
 		End If
 	End Sub
@@ -906,7 +905,6 @@ Public Class F_GBX
 
 		Me.PicBox.Image = img
 	End Sub
-
 
 
 	Private Function ConvertToGears(gbx As ListView.ListViewItemCollection) As IList(Of ITransmissionInputData)

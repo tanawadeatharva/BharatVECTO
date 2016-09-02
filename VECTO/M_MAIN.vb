@@ -19,7 +19,6 @@ Imports TUGraz.VectoCore.Models.SimulationComponent.Data.Engine
 ''' <remarks></remarks>
 Module M_MAIN
 	Public JobFileList As List(Of String)
-	Public JobCycleList As List(Of String)
 
 	Public Function ConvertToEngineData(fld As cFLD, nIdle As Single) As CombustionEngineData
 

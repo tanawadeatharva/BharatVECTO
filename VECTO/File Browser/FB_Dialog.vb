@@ -14,7 +14,6 @@ Imports System.IO
 Imports System.Text
 Imports Microsoft.VisualBasic.FileIO
 Imports System.Runtime.InteropServices
-Imports TUGraz.VECTO.File_Browser
 
 
 ''' <summary>
@@ -921,12 +920,6 @@ lb10:
 			Return Microsoft.VisualBasic.Left(path, x + 1)
 		End If
 	End Function
-
-	Public ReadOnly Property Folder As String
-		Get
-			Return _myFolder
-		End Get
-	End Property
 
 	Public ReadOnly Property Files As String()
 		Get

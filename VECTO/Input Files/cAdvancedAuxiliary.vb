@@ -21,12 +21,6 @@ Public Class cAdvancedAuxiliary
 		End Get
 	End Property
 
-	Public ReadOnly Property FileName As String
-		Get
-			Return _FileName
-		End Get
-	End Property
-
 	Public ReadOnly Property AssemblyName As String
 		Get
 			Return _AssemblyName

@@ -1410,11 +1410,6 @@ lbDlog:
 		If fbDfTargetSpeed.OpenDialog(fFileRepl(tbLacDfTargetSpeedFile.Text, fPATH(VECTOfile))) Then _
 			tbLacDfTargetSpeedFile.Text = fFileWoDir(fbDfTargetSpeed.Files(0), fPATH(VECTOfile))
 	End Sub
-
-	Private Sub btnDfVelocityDrop_Click(sender As Object, e As EventArgs)
-		If fbDfVelocityDrop.OpenDialog(fFileRepl(tbLacDfVelocityDropFile.Text, fPATH(VECTOfile))) Then _
-			tbLacDfVelocityDropFile.Text = fFileWoDir(fbDfVelocityDrop.Files(0), fPATH(VECTOfile))
-	End Sub
 End Class
 
 

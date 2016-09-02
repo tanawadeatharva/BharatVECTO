@@ -9,7 +9,6 @@
 '
 ' See the LICENSE.txt for the specific language governing permissions and limitations.
 Imports System.Windows.Forms
-Imports TUGraz.VECTO.File_Browser
 
 
 ''' <summary>

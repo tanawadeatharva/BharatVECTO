@@ -38,7 +38,7 @@ Public Class F_Graph
 
 		Clear()
 
-		Me.CbXaxis.SelectedIndex = 0
+		CbXaxis.SelectedIndex = 0
 	End Sub
 
 	Private Sub ToolStripBtOpen_Click(sender As Object, e As EventArgs) Handles ToolStripBtOpen.Click
@@ -72,7 +72,7 @@ Public Class F_Graph
 				lv0.SubItems.Add("Left")
 				lv0.Tag = i
 				lv0.Checked = True
-				Me.ListView1.Items.Add(lv0)
+				ListView1.Items.Add(lv0)
 			End If
 			i += 1
 		Next
@@ -132,10 +132,10 @@ Public Class F_Graph
 
 				SetxMax0()
 
-				Me.TbXmin.Text = 0
-				Me.TbXmax.Text = xMax0
+				TbXmin.Text = 0
+				TbXmax.Text = xMax0
 
-				Me.Text = fFILE(Filepath, True)
+				Text = fFILE(Filepath, True)
 
 			Catch ex As Exception
 				file.Close()
@@ -151,7 +151,7 @@ Public Class F_Graph
 
 		If Channels.Count = 0 Then Exit Sub
 
-		If Me.CbXaxis.SelectedIndex = 0 Then
+		If CbXaxis.SelectedIndex = 0 Then
 			xMax0 = DistList(DistList.Count - 1)
 		Else
 			xMax0 = TimeList(TimeList.Count - 1)
@@ -171,26 +171,26 @@ Public Class F_Graph
 		Dim i As Integer
 		Dim img As Image
 
-		If Me.WindowState = FormWindowState.Minimized Then Exit Sub
+		If WindowState = FormWindowState.Minimized Then Exit Sub
 
-		If Me.ListView1.CheckedItems.Count = 0 Then
-			Me.PictureBox1.Image = Nothing
+		If ListView1.CheckedItems.Count = 0 Then
+			PictureBox1.Image = Nothing
 			Exit Sub
 		End If
 
-		OverDist = (Me.CbXaxis.SelectedIndex = 0)
+		OverDist = (CbXaxis.SelectedIndex = 0)
 
 		SetxMax0()
 
 
 		MyChart = New Chart
-		MyChart.Width = Me.PictureBox1.Width
-		MyChart.Height = Me.PictureBox1.Height
+		MyChart.Width = PictureBox1.Width
+		MyChart.Height = PictureBox1.Height
 
 		a = New ChartArea
 
 
-		For Each lv0 In Me.ListView1.CheckedItems
+		For Each lv0 In ListView1.CheckedItems
 
 			IsLeft = (lv0.SubItems(1).Text = "Left")
 
@@ -296,9 +296,9 @@ Public Class F_Graph
 		MyChart.Update()
 
 		img = New Bitmap(MyChart.Width, MyChart.Height, PixelFormat.Format32bppArgb)
-		MyChart.DrawToBitmap(img, New Rectangle(0, 0, Me.PictureBox1.Width, Me.PictureBox1.Height))
+		MyChart.DrawToBitmap(img, New Rectangle(0, 0, PictureBox1.Width, PictureBox1.Height))
 
-		Me.PictureBox1.Image = img
+		PictureBox1.Image = img
 	End Sub
 
 	Private Function xAutoInt() As Single
@@ -342,12 +342,12 @@ Public Class F_Graph
 
 		Filepath = ""
 
-		Me.ListView1.Items.Clear()
+		ListView1.Items.Clear()
 
-		Me.TbXmin.Text = ""
-		Me.TbXmax.Text = ""
+		TbXmin.Text = ""
+		TbXmax.Text = ""
 
-		Me.PictureBox1.Image = Nothing
+		PictureBox1.Image = Nothing
 	End Sub
 
 	Private Class cChannel
@@ -382,7 +382,7 @@ Public Class F_Graph
 				lv0.SubItems.Add("Right")
 			End If
 
-			Me.ListView1.Items.Add(lv0)
+			ListView1.Items.Add(lv0)
 
 			UpdateGraph()
 
@@ -394,9 +394,9 @@ Public Class F_Graph
 		Dim i As Integer
 		Dim lv0 As ListViewItem
 
-		If Me.ListView1.SelectedItems.Count = 0 Or Channels.Count = 0 Then Exit Sub
+		If ListView1.SelectedItems.Count = 0 Or Channels.Count = 0 Then Exit Sub
 
-		lv0 = Me.ListView1.SelectedItems(0)
+		lv0 = ListView1.SelectedItems(0)
 
 		For i = 0 To Channels.Count - 1
 			dlog.ComboBox1.Items.Add(Channels(i).Name)
@@ -429,25 +429,25 @@ Public Class F_Graph
 	Private Sub RemoveChannel()
 		Dim i0 As Int16
 
-		If Me.ListView1.Items.Count = 0 Then Exit Sub
+		If ListView1.Items.Count = 0 Then Exit Sub
 
-		If Me.ListView1.SelectedItems.Count = 0 Then Me.ListView1.Items(Me.ListView1.Items.Count - 1).Selected = True
+		If ListView1.SelectedItems.Count = 0 Then ListView1.Items(ListView1.Items.Count - 1).Selected = True
 
-		i0 = Me.ListView1.SelectedItems(0).Index
+		i0 = ListView1.SelectedItems(0).Index
 
-		Me.ListView1.SelectedItems(0).Remove()
+		ListView1.SelectedItems(0).Remove()
 
-		If i0 < Me.ListView1.Items.Count Then
-			Me.ListView1.Items(i0).Selected = True
-			Me.ListView1.Items(i0).EnsureVisible()
+		If i0 < ListView1.Items.Count Then
+			ListView1.Items(i0).Selected = True
+			ListView1.Items(i0).EnsureVisible()
 		End If
 
 		UpdateGraph()
 	End Sub
 
 	Private Sub ListView1_DoubleClick(sender As Object, e As EventArgs) Handles ListView1.DoubleClick
-		If Me.ListView1.SelectedItems.Count > 0 Then
-			Me.ListView1.SelectedItems(0).Checked = Not Me.ListView1.SelectedItems(0).Checked
+		If ListView1.SelectedItems.Count > 0 Then
+			ListView1.SelectedItems(0).Checked = Not ListView1.SelectedItems(0).Checked
 			EditChannel()
 		End If
 	End Sub
@@ -473,25 +473,25 @@ Public Class F_Graph
 	Private Sub CbXaxis_SelectedIndexChanged(sender As Object, e As EventArgs) _
 		Handles CbXaxis.SelectedIndexChanged
 		SetxMax0()
-		Me.TbXmin.Text = 0
-		Me.TbXmax.Text = xMax0
+		TbXmin.Text = 0
+		TbXmax.Text = xMax0
 		UpdateGraph()
 	End Sub
 
 	Private Sub BtReset_Click(sender As Object, e As EventArgs) Handles BtReset.Click
 		xMin = 0
 		xMax = xMax0
-		Me.TbXmin.Text = 0
-		Me.TbXmax.Text = xMax0
+		TbXmin.Text = 0
+		TbXmax.Text = xMax0
 	End Sub
 
 	Private Sub TbXmin_TextChanged(sender As Object, e As EventArgs) Handles TbXmin.TextChanged
-		If IsNumeric(Me.TbXmin.Text) Then xMin = Me.TbXmin.Text
+		If IsNumeric(TbXmin.Text) Then xMin = TbXmin.Text
 		UpdateGraph()
 	End Sub
 
 	Private Sub TbXmax_TextChanged(sender As Object, e As EventArgs) Handles TbXmax.TextChanged
-		If IsNumeric(Me.TbXmax.Text) Then xMax = Me.TbXmax.Text
+		If IsNumeric(TbXmax.Text) Then xMax = TbXmax.Text
 		UpdateGraph()
 	End Sub
 
@@ -518,8 +518,8 @@ Public Class F_Graph
 			xMin = Math.Round(xMin, 0)
 		End If
 
-		Me.TbXmin.Text = xMin
-		Me.TbXmax.Text = xMax
+		TbXmin.Text = xMin
+		TbXmax.Text = xMax
 	End Sub
 
 	Private Sub BtZoomOut_Click(sender As Object, e As EventArgs) Handles BtZoomOut.Click
@@ -536,8 +536,8 @@ Public Class F_Graph
 			xMin = Math.Round(xMin, 0)
 		End If
 
-		Me.TbXmin.Text = xMin
-		Me.TbXmax.Text = xMax
+		TbXmin.Text = xMin
+		TbXmax.Text = xMax
 	End Sub
 
 	Private Sub BtMoveL_Click(sender As Object, e As EventArgs) Handles BtMoveL.Click
@@ -555,8 +555,8 @@ Public Class F_Graph
 			xMin = Math.Round(xMin, 0)
 		End If
 
-		Me.TbXmin.Text = xMin
-		Me.TbXmax.Text = xMax
+		TbXmin.Text = xMin
+		TbXmax.Text = xMax
 	End Sub
 
 	Private Sub BtMoveR_Click(sender As Object, e As EventArgs) Handles BtMoveR.Click
@@ -574,8 +574,8 @@ Public Class F_Graph
 			xMin = Math.Round(xMin, 0)
 		End If
 
-		Me.TbXmin.Text = xMin
-		Me.TbXmax.Text = xMax
+		TbXmin.Text = xMin
+		TbXmax.Text = xMax
 	End Sub
 
 	Private Sub ToolStripButton1_Click(sender As Object, e As EventArgs) Handles ToolStripButton1.Click
@@ -585,7 +585,7 @@ Public Class F_Graph
 			Dim DefaultBrowserPath As String =
 					Regex.Match(BrowserRegistryString, "(\"".*?\"")").Captures(0).ToString
 			Process.Start(DefaultBrowserPath,
-											String.Format("""{0}{1}""", MyAppPath, "User Manual\help.html#graph-window"))
+						String.Format("""{0}{1}""", MyAppPath, "User Manual\help.html#graph-window"))
 		Else
 			MsgBox("User Manual not found!", MsgBoxStyle.Critical)
 		End If

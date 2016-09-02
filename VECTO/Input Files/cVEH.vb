@@ -28,7 +28,6 @@ Public Class cVEH
 
 	Public Mass As Single
 	Public Loading As Single
-	Private siFr0 As Single
 
 	Public CdA0 As Single
 	'Public CdA02 As Single
@@ -54,8 +53,6 @@ Public Class cVEH
 	Public MassExtra As Single
 	Public MassMax As Single
 	Public AxleConf As AxleConfiguration
-
-	Private _myFileList As List(Of String)
 
 	Public SavedInDeclMode As Boolean
 	Public AngularGearType As AngularGearType '0=None, 1=Separate, 2=Included
@@ -99,7 +96,6 @@ Public Class cVEH
 		CdX.Clear()
 		CdY.Clear()
 
-		siFr0 = 0
 		rdyn = 0
 
 		RtType = RetarderType.None

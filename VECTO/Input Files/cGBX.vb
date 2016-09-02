@@ -51,7 +51,6 @@ Public Class cGBX
 	Public TCinertia As Single
 
 
-	Private MyFileList As List(Of String)
 	Public SavedInDeclMode As Boolean
 	Public UpshiftMinAcceleration As Single
 	Public DownshiftAfterUpshift As Single

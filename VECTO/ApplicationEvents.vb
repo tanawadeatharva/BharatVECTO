@@ -10,8 +10,6 @@
 ' See the LICENSE.txt for the specific language governing permissions and limitations.
 Imports System.Collections.Generic
 
-Imports TUGraz.VECTO.File_Browser
-
 Namespace My
 	' The following events are available for MyApplication:
 	' 
@@ -30,7 +28,7 @@ Namespace My
 			Dim file As cFile_V3
 
 			'Paths
-			MyAppPath = My.Application.Info.DirectoryPath & "\"
+			MyAppPath = Application.Info.DirectoryPath & "\"
 			MyConfPath = MyAppPath & "Config\"
 
 			FB_FilHisDir = MyConfPath & "FileHistory\"
@@ -60,7 +58,7 @@ Namespace My
 
 					'Preconfigure Directories.txt
 					Try
-						s = IO.Directory.GetParent(My.Application.Info.DirectoryPath).ToString & "\"
+						s = IO.Directory.GetParent(Application.Info.DirectoryPath).ToString & "\"
 					Catch ex As Exception
 						s = MyAppPath
 					End Try
@@ -85,12 +83,10 @@ Namespace My
 			End If
 
 			'Separator!
-			SetCulture = False
-			If System.Globalization.CultureInfo.CurrentCulture.NumberFormat.NumberDecimalSeparator <> "." Then
-				SetCulture = True
+			If Globalization.CultureInfo.CurrentCulture.NumberFormat.NumberDecimalSeparator <> "." Then
 				Try
-					System.Threading.Thread.CurrentThread.CurrentCulture = New System.Globalization.CultureInfo("en-US")
-					System.Threading.Thread.CurrentThread.CurrentUICulture = New System.Globalization.CultureInfo("en-US")
+					Threading.Thread.CurrentThread.CurrentCulture = New Globalization.CultureInfo("en-US")
+					Threading.Thread.CurrentThread.CurrentUICulture = New Globalization.CultureInfo("en-US")
 					'MSGtoForm(8, "Set CurrentCulture to 'en-US'", True)
 				Catch ex As Exception
 					GUImsg(tMsgID.Err,
@@ -101,8 +97,8 @@ Namespace My
 			'Initialise Classes
 			sKey = New csKey
 			JobFileList = New List(Of String)
-			JobCycleList = New List(Of String)
-			DEV = New cDEV
+
+			'DEV = New cDEV
 
 			Cfg = New Configuration _
 			'ACHTUNG: Configuration.New löst Configuration.SetDefault aus welches sKey benötigt dehalb muss sKey schon vorher initialisiert werden!!

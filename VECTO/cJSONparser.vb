@@ -20,7 +20,6 @@ Imports Newtonsoft.Json
 ''' <remarks></remarks>
 Public Class JSON
 	Public Content As Dictionary(Of String, Object)
-	Public ErrorMsg As String
 
 	Public Sub New()
 		Content = New Dictionary(Of String, Object)
@@ -39,20 +38,17 @@ Public Class JSON
 		Content.Clear()
 
 		If Not IO.File.Exists(path) Then
-			ErrorMsg = "file not found"
 			Return False
 		End If
 
 		Try
 			file = New TextFieldParser(path)
 		Catch ex As Exception
-			ErrorMsg = ex.Message
 			Return False
 		End Try
 
 		If file.EndOfData Then
 			file.Close()
-			ErrorMsg = "file is empty"
 			Return False
 		End If
 
@@ -63,7 +59,6 @@ Public Class JSON
 		Try
 			Content = JsonConvert.DeserializeObject(str, Content.GetType)
 		Catch ex As Exception
-			ErrorMsg = ex.Message
 			Return False
 		End Try
 

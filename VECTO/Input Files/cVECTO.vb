@@ -39,11 +39,10 @@ Public Class cVECTO
 	Private _siStStT As Single
 	Public StStDelay As Integer
 
-	Private ReadOnly _stDesMaxFile As cSubPath
-	Private ReadOnly _laDesV As List(Of Single)
-	Private ReadOnly _laDesMax As List(Of Single)
-	Private ReadOnly _laDesMin As List(Of Single)
-	Private _desMaxDim As Integer
+	Private ReadOnly _driverAccelerationFile As cSubPath
+	'Private ReadOnly _laDesV As List(Of Single)
+	'Private ReadOnly _laDesMax As List(Of Single)
+	'Private ReadOnly _laDesMin As List(Of Single)
 
 	Public ReadOnly AuxPaths As Dictionary(Of String, AuxEntry)
 	'Alle Nebenverbraucher die in der Veh-Datei UND im Zyklus definiert sind
@@ -82,11 +81,11 @@ Public Class cVECTO
 		_stPathEng = New cSubPath
 		_stPathGbx = New cSubPath
 
-		_stDesMaxFile = New cSubPath
+		_driverAccelerationFile = New cSubPath
 
-		_laDesV = New List(Of Single)
-		_laDesMax = New List(Of Single)
-		_laDesMin = New List(Of Single)
+		'_laDesV = New List(Of Single)
+		'_laDesMax = New List(Of Single)
+		'_laDesMin = New List(Of Single)
 
 		AuxPaths = New Dictionary(Of String, AuxEntry)
 		'AuxRefs = New Dictionary(Of String, cAux)
@@ -135,7 +134,7 @@ Public Class cVECTO
 												}))
 		End If
 
-		dic0.Add("VACC", _stDesMaxFile.PathOrDummy)
+		dic0.Add("VACC", _driverAccelerationFile.PathOrDummy)
 		dic0.Add("EngineOnlyMode", EngOnly)
 		dic0.Add("StartStop", New Dictionary(Of String, Object) From {
 					{"Enabled", _boStartStop},
@@ -304,7 +303,7 @@ Public Class cVECTO
 			End If
 
 			If Not body("VACC") Is Nothing Then
-				_stDesMaxFile.Init(_myPath, body("VACC"))
+				_driverAccelerationFile.Init(_myPath, body("VACC"))
 			End If
 
 			EngOnly = body("EngineOnlyMode")
@@ -390,11 +389,10 @@ Public Class cVECTO
 		CycleFiles.Clear()
 		_stPathGbx.Clear()
 
-		_stDesMaxFile.Clear()
-		_laDesV.Clear()
-		_laDesMax.Clear()
-		_laDesMin.Clear()
-		_desMaxDim = -1
+		_driverAccelerationFile.Clear()
+		'_laDesV.Clear()
+		'_laDesMax.Clear()
+		'_laDesMin.Clear()
 
 		AuxPaths.Clear()
 		EngOnly = False
@@ -502,13 +500,13 @@ Public Class cVECTO
 	Public Property DesMaxFile(Optional ByVal original As Boolean = False) As String
 		Get
 			If original Then
-				Return _stDesMaxFile.OriginalPath
+				Return _driverAccelerationFile.OriginalPath
 			Else
-				Return _stDesMaxFile.FullPath
+				Return _driverAccelerationFile.FullPath
 			End If
 		End Get
 		Set(value As String)
-			_stDesMaxFile.Init(_myPath, value)
+			_driverAccelerationFile.Init(_myPath, value)
 		End Set
 	End Property
 

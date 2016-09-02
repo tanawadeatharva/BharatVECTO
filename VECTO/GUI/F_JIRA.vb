@@ -2,10 +2,9 @@
 Imports System.Windows.Forms
 
 Public Class F_JIRA
-
 	Private Sub OK_Button_Click(ByVal sender As Object, ByVal e As EventArgs) Handles OK_Button.Click
-		Me.DialogResult = DialogResult.OK
-		Me.Close()
+		DialogResult = DialogResult.OK
+		Close()
 	End Sub
 
 	Private Sub LinkLabel1_LinkClicked(sender As Object, e As LinkLabelLinkClickedEventArgs) Handles LinkLabel1.LinkClicked
@@ -19,18 +18,16 @@ Public Class F_JIRA
 	Private Sub LinkLabel3_LinkClicked(sender As Object, e As LinkLabelLinkClickedEventArgs) Handles LinkLabel3.LinkClicked
 		Dim bodytext As String
 
-		bodytext = "Please provide the following information:" & "%0A" & _
-				   "- Email" & "%0A" & _
-				   "- Name, Surname" & "%0A" & _
-				   "- Country of workplace" & "%0A" & _
-				   "- Position"
+		bodytext = "Please provide the following information:" & "%0A" &
+					"- Email" & "%0A" &
+					"- Name, Surname" & "%0A" &
+					"- Country of workplace" & "%0A" &
+					"- Position"
 
 		Process.Start("mailto:vecto@jrc.ec.europa.eu?subject=CITnet%20account&body=" & bodytext)
-
 	End Sub
 
 	Private Sub Button1_Click(sender As Object, e As EventArgs) Handles Button1.Click
 		Process.Start("https://webgate.ec.europa.eu/CITnet/jira/browse/VECTO")
 	End Sub
-
 End Class

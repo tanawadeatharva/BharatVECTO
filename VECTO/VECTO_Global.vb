@@ -25,13 +25,8 @@ Public Module VECTO_Global
 	Public LogFile As cLogFile
 
 	'to ensure correct format for backgroundworker thread
-	Public SetCulture As Boolean
 
-	Public VECTOworker As BackgroundWorker
 	Public VECTOworkerV3 As BackgroundWorker
-
-	Public MSGerror As Integer
-	Public MSGwarn As Integer
 
 	Public Cfg As Configuration
 
@@ -41,7 +36,7 @@ Public Module VECTO_Global
 
 	Public Lic As cLicense
 	'Public VSUM As cVSUM
-	Public DEV As cDEV
+	'Public DEV As cDEV
 
 
 	Public ProgBarCtrl As cProgBarCtrl

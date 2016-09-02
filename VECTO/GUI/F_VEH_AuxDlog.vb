@@ -12,7 +12,6 @@ Option Infer On
 
 Imports System.Windows.Forms
 Imports TUGraz.VectoCore.Models.Declaration
-Imports TUGraz.VECTO.File_Browser
 
 
 ''' <summary>

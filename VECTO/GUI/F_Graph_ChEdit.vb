@@ -11,7 +11,6 @@
 
 
 Public Class F_Graph_ChEdit
-
 	Private Sub OK_Button_Click(ByVal sender As Object, ByVal e As EventArgs) Handles OK_Button.Click
 		Me.DialogResult = DialogResult.OK
 		Me.Close()
@@ -21,5 +20,4 @@ Public Class F_Graph_ChEdit
 		Me.DialogResult = DialogResult.Cancel
 		Me.Close()
 	End Sub
-
 End Class

@@ -447,23 +447,6 @@ lbInt:
 		Return nUtarget
 	End Function
 
-	''' <summary>
-	''' Calculates and returns maximum torque [Nm]. 
-	''' </summary>
-	''' <returns>maximum torque [Nm]</returns>
-	''' <remarks></remarks>
-	Public Function Tmax() As Single
-		Dim i As Int16
-		Dim Tm As Single
-
-		Tm = LTq(0)
-		For i = 1 To iDim
-			If LTq(i) > Tm Then Tm = LTq(i)
-		Next
-
-		Return Tm
-	End Function
-
 	Public Function Init(ByVal Nidle As Single) As Boolean
 		Dim Pmax As Single
 		Dim MsgSrc As String

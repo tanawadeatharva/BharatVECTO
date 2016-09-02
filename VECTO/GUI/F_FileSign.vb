@@ -10,7 +10,6 @@
 ' See the LICENSE.txt for the specific language governing permissions and limitations.
 Imports System.IO
 Imports System.Windows.Forms
-Imports TUGraz.VECTO.File_Browser
 Imports vectolic
 
 ''' <summary>
@@ -23,51 +22,51 @@ Public Class F_FileSign
 		Dim lv0 As ListViewItem
 		Dim MainDir As String
 
-		If Me.lvFiles.Items.Count = 0 Then
+		If lvFiles.Items.Count = 0 Then
 			MsgBox("No files selected!", MsgBoxStyle.Critical)
 			Exit Sub
 		End If
 
-		If Trim(Me.TbSigFile.Text) = "" Then
+		If Trim(TbSigFile.Text) = "" Then
 			MsgBox("No signature file path defined!", MsgBoxStyle.Critical)
 			Exit Sub
 		End If
 
-		If File.Exists(Me.TbSigFile.Text) Then
+		If File.Exists(TbSigFile.Text) Then
 			If MsgBox("Overwrite existing signature file?", MsgBoxStyle.YesNo) = MsgBoxResult.No Then Exit Sub
 		End If
 
 		ClearForm(False)
 
 
-		MainDir = fPATH(Me.TbSigFile.Text)
+		MainDir = fPATH(TbSigFile.Text)
 
 
 		Lic.FileSigning.NewFile()
 		Lic.FileSigning.Mode = cFileSigning.tMode.Manual
 
 
-		For Each lv0 In Me.lvFiles.Items
+		For Each lv0 In lvFiles.Items
 			Lic.FileSigning.AddFile(fFileRepl(lv0.SubItems(0).Text, MainDir))
 			lv0.SubItems(1).Text = ""
 			lv0.ForeColor = Color.Black
 		Next
 
-		If Lic.FileSigning.WriteSigFile(Me.TbSigFile.Text, LicSigAppCode) Then
-			Me.LbStatus.Text = "Signature file created successfully"
-			Me.LbStatus.ForeColor = Color.DarkGreen
+		If Lic.FileSigning.WriteSigFile(TbSigFile.Text, LicSigAppCode) Then
+			LbStatus.Text = "Signature file created successfully"
+			LbStatus.ForeColor = Color.DarkGreen
 		Else
-			Me.LbStatus.Text = "Fail to create signature file! " & Lic.FileSigning.ErrorMsg
-			Me.LbStatus.ForeColor = Color.Red
+			LbStatus.Text = "Fail to create signature file! " & Lic.FileSigning.ErrorMsg
+			LbStatus.ForeColor = Color.Red
 		End If
 
-		Me.TbLicStr.Text = Lic.FileSigning.CreatorLicStr
-		Me.TbPubKey.Text = Lic.FileSigning.PubKey
-		Me.LbMode.Text = Lic.FileSigning.ModeConv(Lic.FileSigning.Mode)
-		Me.LbDateStr.Text = Lic.FileSigning.DateStr
+		TbLicStr.Text = Lic.FileSigning.CreatorLicStr
+		TbPubKey.Text = Lic.FileSigning.PubKey
+		LbMode.Text = Lic.FileSigning.ModeConv(Lic.FileSigning.Mode)
+		LbDateStr.Text = Lic.FileSigning.DateStr
 
 		If Lic.FileSigning.FilesOK.Count > 0 Then
-			For Each lv0 In Me.lvFiles.Items
+			For Each lv0 In lvFiles.Items
 				lv0.SubItems(1).Text = Lic.FileSigning.FilesMsg(lv0.Index)
 				If Lic.FileSigning.FilesOK(lv0.Index) Then
 					lv0.ForeColor = Color.DarkGreen
@@ -84,30 +83,30 @@ Public Class F_FileSign
 		Dim lv0 As ListViewItem
 		Dim i As Integer
 
-		If Not File.Exists(Me.TbSigFile.Text) Then
+		If Not File.Exists(TbSigFile.Text) Then
 			MsgBox("Signature file not found!", MsgBoxStyle.Critical)
 			Exit Sub
 		End If
 
 		ClearForm(True)
 
-		If Lic.FileSigning.ReadSigFile(Me.TbSigFile.Text, LicSigAppCode) Then
-			Me.LbStatus.Text = "File signature verified"
-			Me.LbStatus.ForeColor = Color.DarkGreen
+		If Lic.FileSigning.ReadSigFile(TbSigFile.Text, LicSigAppCode) Then
+			LbStatus.Text = "File signature verified"
+			LbStatus.ForeColor = Color.DarkGreen
 		Else
-			Me.LbStatus.Text = "ERROR! " & Lic.FileSigning.ErrorMsg
-			Me.LbStatus.ForeColor = Color.Red
+			LbStatus.Text = "ERROR! " & Lic.FileSigning.ErrorMsg
+			LbStatus.ForeColor = Color.Red
 		End If
 
-		Me.TbLicStr.Text = Lic.FileSigning.CreatorLicStr
-		Me.TbPubKey.Text = Lic.FileSigning.PubKey
-		Me.LbMode.Text = Lic.FileSigning.ModeConv(Lic.FileSigning.Mode)
+		TbLicStr.Text = Lic.FileSigning.CreatorLicStr
+		TbPubKey.Text = Lic.FileSigning.PubKey
+		LbMode.Text = Lic.FileSigning.ModeConv(Lic.FileSigning.Mode)
 		If Lic.FileSigning.Mode = cFileSigning.tMode.Auto Then
-			Me.LbMode.ForeColor = Color.DarkGreen
+			LbMode.ForeColor = Color.DarkGreen
 		Else
-			Me.LbMode.ForeColor = Color.Red
+			LbMode.ForeColor = Color.Red
 		End If
-		Me.LbDateStr.Text = Lic.FileSigning.DateStr
+		LbDateStr.Text = Lic.FileSigning.DateStr
 
 		For i = 0 To Lic.FileSigning.FilesOK.Count - 1
 			lv0 = New ListViewItem(Lic.FileSigning.Files(i))
@@ -124,15 +123,15 @@ Public Class F_FileSign
 	'Clear form
 	Private Sub ClearForm(ByVal ClearFileList As Boolean)
 		If ClearFileList Then lvFiles.Items.Clear()
-		Me.TbLicStr.Text = ""
-		Me.TbPubKey.Text = ""
-		Me.LbMode.Text = ""
-		Me.LbDateStr.Text = ""
-		Me.LbStatus.Text = ""
-		Me.LbMode.ForeColor = DefaultForeColor
-		Me.LbMode.BackColor = DefaultBackColor
-		Me.LbStatus.ForeColor = DefaultForeColor
-		Me.LbStatus.BackColor = DefaultBackColor
+		TbLicStr.Text = ""
+		TbPubKey.Text = ""
+		LbMode.Text = ""
+		LbDateStr.Text = ""
+		LbStatus.Text = ""
+		LbMode.ForeColor = DefaultForeColor
+		LbMode.BackColor = DefaultBackColor
+		LbStatus.ForeColor = DefaultForeColor
+		LbStatus.BackColor = DefaultBackColor
 	End Sub
 
 
@@ -194,10 +193,10 @@ Public Class F_FileSign
 				lvi.SubItems.Add("")
 				lvi.ForeColor = Color.Black
 
-				Me.lvFiles.Items.Add(lvi)
+				lvFiles.Items.Add(lvi)
 				lvi.EnsureVisible()
 
-				Me.lvFiles.Focus()
+				lvFiles.Focus()
 
 			Next
 
@@ -208,19 +207,19 @@ Public Class F_FileSign
 	Private Sub RemoveFile()
 		Dim i0 As Int16
 
-		If Me.lvFiles.Items.Count = 0 Then Exit Sub
+		If lvFiles.Items.Count = 0 Then Exit Sub
 
-		If Me.lvFiles.SelectedItems.Count = 0 Then Me.lvFiles.Items(Me.lvFiles.Items.Count - 1).Selected = True
+		If lvFiles.SelectedItems.Count = 0 Then lvFiles.Items(lvFiles.Items.Count - 1).Selected = True
 
-		i0 = Me.lvFiles.SelectedItems(0).Index
+		i0 = lvFiles.SelectedItems(0).Index
 
-		Me.lvFiles.SelectedItems(0).Remove()
+		lvFiles.SelectedItems(0).Remove()
 
-		If i0 < Me.lvFiles.Items.Count Then
-			Me.lvFiles.Items(i0).Selected = True
-			Me.lvFiles.Items(i0).EnsureVisible()
+		If i0 < lvFiles.Items.Count Then
+			lvFiles.Items(i0).Selected = True
+			lvFiles.Items(i0).EnsureVisible()
 		End If
 
-		Me.lvFiles.Focus()
+		lvFiles.Focus()
 	End Sub
 End Class

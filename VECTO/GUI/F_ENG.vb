@@ -39,8 +39,8 @@ Public Class F_ENG
 	'Initialise.
 	Private Sub F_ENG_Load(sender As Object, e As EventArgs) Handles Me.Load
 
-		Me.PnInertia.Enabled = Not Cfg.DeclMode
-		Me.GrWHTC.Enabled = Cfg.DeclMode
+		PnInertia.Enabled = Not Cfg.DeclMode
+		GrWHTC.Enabled = Cfg.DeclMode
 
 
 		Changed = False
@@ -52,9 +52,9 @@ Public Class F_ENG
 
 		If Not Cfg.DeclMode Then Exit Sub
 
-		Me.TbInertia.Text =
+		TbInertia.Text =
 			CStr(
-				DeclarationData.Engine.EngineInertia((fTextboxToNumString(Me.TbDispl.Text) / 1000.0).SI(Of CubicMeter),
+				DeclarationData.Engine.EngineInertia((fTextboxToNumString(TbDispl.Text) / 1000.0).SI(Of CubicMeter),
 													GearboxType.AMT).Value())
 	End Sub
 
@@ -107,7 +107,7 @@ Public Class F_ENG
 			Dim DefaultBrowserPath As String =
 					Regex.Match(BrowserRegistryString, "(\"".*?\"")").Captures(0).ToString
 			Process.Start(DefaultBrowserPath,
-											String.Format("""{0}{1}""", MyAppPath, "User Manual\help.html#engine-editor"))
+						String.Format("""{0}{1}""", MyAppPath, "User Manual\help.html#engine-editor"))
 		Else
 			MsgBox("User Manual not found!", MsgBoxStyle.Critical)
 		End If
@@ -120,23 +120,21 @@ Public Class F_ENG
 
 		If ChangeCheckCancel() Then Exit Sub
 
-		Me.TbName.Text = ""
-		Me.TbDispl.Text = ""
-		Me.TbInertia.Text = ""
-		Me.TbNleerl.Text = ""
-		Me.TbMAP.Text = ""
-		Me.TbFLD.Text = ""
-		Me.TbWHTCurban.Text = ""
-		Me.TbWHTCrural.Text = ""
-		Me.TbWHTCmw.Text = ""
-
+		TbName.Text = ""
+		TbDispl.Text = ""
+		TbInertia.Text = ""
+		TbNleerl.Text = ""
+		TbMAP.Text = ""
+		TbFLD.Text = ""
+		TbWHTCurban.Text = ""
+		TbWHTCrural.Text = ""
+		TbWHTCmw.Text = ""
 
 		DeclInit()
 
-
 		EngFile = ""
-		Me.Text = "ENG Editor"
-		Me.LbStatus.Text = ""
+		Text = "ENG Editor"
+		LbStatus.Text = ""
 
 		Changed = False
 
@@ -161,7 +159,7 @@ Public Class F_ENG
 		If Cfg.DeclMode <> ENG0.SavedInDeclMode Then
 			Select Case WrongMode()
 				Case 1
-					Me.Close()
+					Close()
 					F_MAINForm.RbDecl.Checked = Not F_MAINForm.RbDecl.Checked
 					F_MAINForm.OpenVectoFile(file)
 				Case -1
@@ -171,26 +169,24 @@ Public Class F_ENG
 			End Select
 		End If
 
-		Me.TbName.Text = ENG0.ModelName
-		Me.TbDispl.Text = ENG0.Displ.ToString
-		Me.TbInertia.Text = ENG0.I_mot.ToString
-		Me.TbNleerl.Text = ENG0.Nidle.ToString
+		TbName.Text = ENG0.ModelName
+		TbDispl.Text = ENG0.Displ.ToString
+		TbInertia.Text = ENG0.I_mot.ToString
+		TbNleerl.Text = ENG0.Nidle.ToString
 
-		Me.TbMAP.Text = ENG0.PathMAP(True)
-		Me.TbFLD.Text = ENG0.PathFLD(True)
-		Me.TbWHTCurban.Text = ENG0.WHTCurban
-		Me.TbWHTCrural.Text = ENG0.WHTCrural
-		Me.TbWHTCmw.Text = ENG0.WHTCmw
-
+		TbMAP.Text = ENG0.PathMAP(True)
+		TbFLD.Text = ENG0.PathFLD(True)
+		TbWHTCurban.Text = ENG0.WHTCurban
+		TbWHTCrural.Text = ENG0.WHTCrural
+		TbWHTCmw.Text = ENG0.WHTCmw
 
 		DeclInit()
 
-
 		fbENG.UpdateHistory(file)
-		Me.Text = fFILE(file, True)
-		Me.LbStatus.Text = ""
+		Text = fFILE(file, True)
+		LbStatus.Text = ""
 		EngFile = file
-		Me.Activate()
+		Activate()
 
 		Changed = False
 		UpdatePic()
@@ -215,19 +211,19 @@ Public Class F_ENG
 		ENG0 = New cENG
 		ENG0.FilePath = file
 
-		ENG0.ModelName = Me.TbName.Text
+		ENG0.ModelName = TbName.Text
 		If Trim(ENG0.ModelName) = "" Then ENG0.ModelName = "Undefined"
-		ENG0.Displ = CSng(fTextboxToNumString(Me.TbDispl.Text))
-		ENG0.I_mot = CSng(fTextboxToNumString(Me.TbInertia.Text))
-		ENG0.Nidle = CSng(fTextboxToNumString(Me.TbNleerl.Text))
+		ENG0.Displ = CSng(fTextboxToNumString(TbDispl.Text))
+		ENG0.I_mot = CSng(fTextboxToNumString(TbInertia.Text))
+		ENG0.Nidle = CSng(fTextboxToNumString(TbNleerl.Text))
 
-		ENG0.PathFLD = Me.TbFLD.Text
-		ENG0.PathMAP = Me.TbMAP.Text
+		ENG0.PathFLD = TbFLD.Text
+		ENG0.PathMAP = TbMAP.Text
 
 
-		ENG0.WHTCurban = CSng(fTextboxToNumString(Me.TbWHTCurban.Text))
-		ENG0.WHTCrural = CSng(fTextboxToNumString(Me.TbWHTCrural.Text))
-		ENG0.WHTCmw = CSng(fTextboxToNumString(Me.TbWHTCmw.Text))
+		ENG0.WHTCurban = CSng(fTextboxToNumString(TbWHTCurban.Text))
+		ENG0.WHTCrural = CSng(fTextboxToNumString(TbWHTCrural.Text))
+		ENG0.WHTCmw = CSng(fTextboxToNumString(TbWHTCmw.Text))
 
 
 		If Not ENG0.SaveFile Then
@@ -243,8 +239,8 @@ Public Class F_ENG
 		End If
 
 		fbENG.UpdateHistory(file)
-		Me.Text = fFILE(file, True)
-		Me.LbStatus.Text = ""
+		Text = fFILE(file, True)
+		LbStatus.Text = ""
 
 		Changed = False
 
