@@ -32,14 +32,14 @@ Public Module VECTO_Global
 
 	Public sKey As csKey
 
-	Public FileFormat As Encoding = Encoding.UTF8
+	Public ReadOnly FileFormat As Encoding = Encoding.UTF8
 
 	Public Lic As cLicense
 	'Public VSUM As cVSUM
 	'Public DEV As cDEV
 
 
-	Public ProgBarCtrl As cProgBarCtrl
+	Public ProgBarCtrl As ProgressbarControl
 
 	''' <summary>
 	''' Converts engine speed and torque to power.
@@ -60,8 +60,8 @@ Public Module VECTO_Global
 			Try
 				LOGstream = My.Computer.FileSystem.OpenTextFileWriter(MyAppPath & "LOG.txt", True, FileFormat)
 				LOGstream.AutoFlush = True
-				WriteToLog(tMsgID.Normal, "Starting Session " & Now)
-				WriteToLog(tMsgID.Normal, "VECTO " & VECTOvers)
+				WriteToLog(MessageType.Normal, "Starting Session " & Now)
+				WriteToLog(MessageType.Normal, "VECTO " & VECTOvers)
 			Catch ex As Exception
 				Return False
 			End Try
@@ -82,7 +82,7 @@ Public Module VECTO_Global
 				'If Log too large: Delete
 				If logfDetail.Length / (2 ^ 20) > Cfg.LogSize Then
 
-					WriteToLog(tMsgID.Normal, "Starting new logfile")
+					WriteToLog(MessageType.Normal, "Starting new logfile")
 					LOGstream.Close()
 
 					BackUpError = False
@@ -97,9 +97,9 @@ Public Module VECTO_Global
 					If Not StartLog() Then Return False
 
 					If BackUpError Then
-						WriteToLog(tMsgID.Err, "Failed to backup logfile! (" & MyAppPath & "LOG_backup.txt)")
+						WriteToLog(MessageType.Err, "Failed to backup logfile! (" & MyAppPath & "LOG_backup.txt)")
 					Else
-						WriteToLog(tMsgID.Normal, "Logfile restarted. Old log saved to LOG_backup.txt")
+						WriteToLog(MessageType.Normal, "Logfile restarted. Old log saved to LOG_backup.txt")
 					End If
 
 				End If
@@ -111,7 +111,7 @@ Public Module VECTO_Global
 
 		Public Function CloseLog() As Boolean
 			Try
-				WriteToLog(tMsgID.Normal, "Closing Session " & Now)
+				WriteToLog(MessageType.Normal, "Closing Session " & Now)
 				LOGstream.Close()
 			Catch ex As Exception
 				Return False
@@ -121,13 +121,13 @@ Public Module VECTO_Global
 		End Function
 
 
-		Public Function WriteToLog(MsgType As tMsgID, Msg As String) As Boolean
+		Public Function WriteToLog(MsgType As MessageType, Msg As String) As Boolean
 			Dim MsgTypeStr As String
 
 			Select Case MsgType
-				Case tMsgID.Err
+				Case MessageType.Err
 					MsgTypeStr = "Error"
-				Case tMsgID.Warn
+				Case MessageType.Warn
 					MsgTypeStr = "Warning"
 				Case Else
 					MsgTypeStr = "-"
@@ -252,7 +252,7 @@ End Module
 
 
 Public Class csKey
-	Public AUX As csKeyAux
+	Public ReadOnly AUX As csKeyAux
 
 	Public HomePath As String = "<HOME>"
 	Public JobPath As String = "<JOBPATH>"

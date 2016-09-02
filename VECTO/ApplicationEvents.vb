@@ -25,13 +25,13 @@ Namespace My
 
 			Dim s As String
 			Dim i As Int16
-			Dim file As cFile_V3
+			Dim file As CsvFile
 
 			'Paths
 			MyAppPath = Application.Info.DirectoryPath & "\"
 			MyConfPath = MyAppPath & "Config\"
 
-			FB_FilHisDir = MyConfPath & "FileHistory\"
+			FileHistoryPath = MyConfPath & "FileHistory\"
 
 			'Log
 			LogFile = New cLogFile
@@ -46,15 +46,15 @@ Namespace My
 					IO.Directory.CreateDirectory(MyConfPath)
 				Catch ex As Exception
 					MsgBox("Failed to create directory '" & MyConfPath & "'!", MsgBoxStyle.Critical)
-					LogFile.WriteToLog(tMsgID.Err, "Failed to create directory '" & MyConfPath & "'!")
+					LogFile.WriteToLog(MessageType.Err, "Failed to create directory '" & MyConfPath & "'!")
 					e.Cancel = True
 				End Try
 				IO.File.Create(MyConfPath & "joblist.txt")
 				IO.File.Create(MyConfPath & "cyclelist.txt")
 			End If
-			If Not IO.Directory.Exists(FB_FilHisDir) Then
+			If Not IO.Directory.Exists(FileHistoryPath) Then
 				Try
-					IO.Directory.CreateDirectory(FB_FilHisDir)
+					IO.Directory.CreateDirectory(FileHistoryPath)
 
 					'Preconfigure Directories.txt
 					Try
@@ -64,8 +64,8 @@ Namespace My
 					End Try
 					Try
 
-						file = New cFile_V3
-						file.OpenWrite(FB_FilHisDir & "Directories.txt")
+						file = New CsvFile
+						file.OpenWrite(FileHistoryPath & "Directories.txt")
 						file.WriteLine(s)
 						For i = 2 To 20
 							file.WriteLine(" ")
@@ -76,8 +76,8 @@ Namespace My
 					End Try
 
 				Catch ex As Exception
-					MsgBox("Failed to create directory '" & FB_FilHisDir & "'!", MsgBoxStyle.Critical)
-					LogFile.WriteToLog(tMsgID.Err, "Failed to create directory '" & FB_FilHisDir & "'!")
+					MsgBox("Failed to create directory '" & FileHistoryPath & "'!", MsgBoxStyle.Critical)
+					LogFile.WriteToLog(MessageType.Err, "Failed to create directory '" & FileHistoryPath & "'!")
 					e.Cancel = True
 				End Try
 			End If
@@ -89,7 +89,7 @@ Namespace My
 					Threading.Thread.CurrentThread.CurrentUICulture = New Globalization.CultureInfo("en-US")
 					'MSGtoForm(8, "Set CurrentCulture to 'en-US'", True)
 				Catch ex As Exception
-					GUImsg(tMsgID.Err,
+					GUImsg(MessageType.Err,
 							"Failed to set Application Regional Settings to 'en-US'! Check system decimal- and group- separators!")
 				End Try
 			End If
@@ -104,7 +104,7 @@ Namespace My
 			'ACHTUNG: Configuration.New löst Configuration.SetDefault aus welches sKey benötigt dehalb muss sKey schon vorher initialisiert werden!!
 			Cfg.FilePath = MyConfPath & "settings.json"
 
-			ProgBarCtrl = New cProgBarCtrl
+			ProgBarCtrl = New ProgressbarControl
 
 			'Config
 			Cfg.Load()
@@ -124,7 +124,7 @@ Namespace My
 			Handles Me.UnhandledException
 			e.ExitApplication = True
 			MsgBox("ERROR!" & ChrW(10) & ChrW(10) & e.Exception.Message.ToString, MsgBoxStyle.Critical, "Unexpected Error")
-			LogFile.WriteToLog(tMsgID.Err, ">>>Unexpected Error:" & e.Exception.ToString())
+			LogFile.WriteToLog(MessageType.Err, ">>>Unexpected Error:" & e.Exception.ToString())
 		End Sub
 	End Class
 End Namespace

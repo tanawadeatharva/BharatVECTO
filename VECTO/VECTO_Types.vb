@@ -30,28 +30,9 @@ Public Enum tWorkMsgType
 	Abort
 End Enum
 
-Public Enum tMsgID
+Public Enum MessageType
 	NewJob
 	Normal
 	Warn
 	Err
 End Enum
-
-
-Public Enum tCalcResult
-	Err
-	Abort
-	Done
-End Enum
-
-Public Enum tJobStatus
-	Running
-	Queued
-	OK
-	Err
-	Warn
-	Undef
-End Enum
-
-
-

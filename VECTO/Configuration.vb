@@ -60,9 +60,9 @@ Public Class Configuration
 			Exit Sub
 		End If
 
-		Dim json As New JSON
+		Dim json As New JSONParser
 		If Not json.ReadFile(FilePath) Then
-			GUImsg(tMsgID.Err, "Failed to load settings! Using default settings.")
+			GUImsg(MessageType.Err, "Failed to load settings! Using default settings.")
 			Exit Sub
 		End If
 
@@ -83,12 +83,12 @@ Public Class Configuration
 			FirstRun = json.Content("Body")("FirstRun")
 			DeclMode = json.Content("Body")("DeclMode")
 		Catch ex As Exception
-			GUImsg(tMsgID.Err, "Error while loading settings!")
+			GUImsg(MessageType.Err, "Error while loading settings!")
 		End Try
 	End Sub
 
 	Public Sub Save()
-		Dim json As New JSON
+		Dim json As New JSONParser
 		Dim dic As Dictionary(Of String, Object)
 
 		dic = New Dictionary(Of String, Object)

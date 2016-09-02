@@ -33,7 +33,7 @@ Namespace My
         
         <DebuggerStepThrough()>  _
         Protected Overrides Sub OnCreateMainForm()
-            Me.MainForm = VECTO.F_MAINForm
+			Me.MainForm = VECTO.MainForm
         End Sub
     End Class
 End Namespace

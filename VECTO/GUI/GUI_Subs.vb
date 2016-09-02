@@ -18,20 +18,20 @@ Public Module GUI_Subs
 #Region "GUI control via background worker"
 
 	'Status Message => Msg-Listview
-	Public Sub WorkerMsg(ByVal ID As tMsgID, ByVal Msg As String, ByVal Source As String,
-						Optional ByVal Link As String = "")
-		Dim WorkProg As New cWorkProg(tWorkMsgType.StatusListBox)
-		WorkProg.ID = ID
-		Select Case ID
-			Case tMsgID.Err
-			Case tMsgID.Warn
+	Public Sub WorkerMsg(ByVal id As MessageType, ByVal msg As String, ByVal source As String,
+						Optional ByVal link As String = "")
+		Dim workProg As New BackgroundWorkerMessage(tWorkMsgType.StatusListBox)
+		workProg.ID = id
+		Select Case id
+			Case MessageType.Err
+			Case MessageType.Warn
 		End Select
-		WorkProg.Msg = Msg
-		WorkProg.Source = Source
+		workProg.Msg = msg
+		workProg.Source = source
 		Try
 			'VECTOworker.ReportProgress(0, WorkProg)
 		Catch ex As Exception
-			GUImsg(ID, Msg)
+			GUIMsg(id, msg)
 		End Try
 	End Sub
 
@@ -40,63 +40,39 @@ Public Module GUI_Subs
 #Region "Direct GUI control - Cannot be called by background worker!"
 
 	'Status message
-	Public Sub GUImsg(ByVal ID As tMsgID, ByVal Msg As String)
-		F_MAINForm.MSGtoForm(ID, Msg, "", "")
+	' ReSharper disable once InconsistentNaming
+	Public Sub GUIMsg(ByVal ID As MessageType, ByVal Msg As String)
+		MainForm.MSGtoForm(ID, Msg, "", "")
 	End Sub
 
 	'Statusbar
 	Public Sub Status(ByVal txt As String)
-		F_MAINForm.ToolStripLbStatus.Text = txt
+		MainForm.ToolStripLbStatus.Text = txt
 	End Sub
 
 	'Status form reset
-	Public Sub ClearMSG()
-		F_MAINForm.LvMsg.Items.Clear()
+	Public Sub ClearMsg()
+		MainForm.LvMsg.Items.Clear()
 	End Sub
 
 #End Region
 
 	'Class used to pass Messages from BackgroundWorker to GUI
-	Public Class cWorkProg
-		Private MyID As tMsgID
-		Private MyMsg As String
-		Private MySource As String
-
-		Public Sub New(ByVal MsgTarget As tWorkMsgType)
-			MySource = ""
+	Private Class BackgroundWorkerMessage
+		Public Sub New(msgTarget As tWorkMsgType)
+			Source = ""
 		End Sub
 
 
 		Public Property Source As String
-			Get
-				Return MySource
-			End Get
-			Set(value As String)
-				MySource = value
-			End Set
-		End Property
 
-		Public Property ID() As tMsgID
-			Get
-				Return MyID
-			End Get
-			Set(ByVal value As tMsgID)
-				MyID = value
-			End Set
-		End Property
+		Public Property ID As MessageType
 
-		Public Property Msg() As String
-			Get
-				Return MyMsg
-			End Get
-			Set(ByVal value As String)
-				MyMsg = value
-			End Set
-		End Property
+		Public Property Msg As String
 	End Class
 
 	'Progress bar control
-	Public Class cProgBarCtrl
+	Public Class ProgressbarControl
 		Public ProgOverallStartInt As Integer = -1
 		Public PgroOverallEndInt As Integer = -1
 		Public ProgJobInt As Integer = -1
