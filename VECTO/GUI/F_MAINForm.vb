@@ -59,10 +59,6 @@ Public Class F_MAINForm
 	Private ConMenTarget As ListView
 	Private ConMenTarJob As Boolean
 
-	'Private CycleTabPage As TabPage
-	'Private CycleTabPageVisible As Boolean
-
-
 	Private GUIlocked As Boolean
 
 	Private CheckLock As Boolean
@@ -178,17 +174,12 @@ Public Class F_MAINForm
 
 #End Region
 
-
-	'VECTO-Launcher
-
 	'Lock certain GUI elements while VECTO is running
 	Private Sub LockGUI(Lock As Boolean)
 		GUIlocked = Lock
 
 		PanelOptAllg.Enabled = Not Lock
-		'GrBoxSTD.Enabled = Not Lock
-		'GrBoxBATCH.Enabled = Not Lock
-
+		
 		BtGENup.Enabled = Not Lock
 		BtGENdown.Enabled = Not Lock
 		ButtonGENadd.Enabled = Not Lock
@@ -196,21 +187,11 @@ Public Class F_MAINForm
 		LvGEN.LabelEdit = Not Lock
 		ChBoxAllGEN.Enabled = Not Lock
 
-		'BtDRIup.Enabled = Not Lock
-		'BtDRIdown.Enabled = Not Lock
-		'ButtonDRIadd.Enabled = Not Lock
-		'ButtonDRIremove.Enabled = Not Lock
-		'LvDRI.LabelEdit = Not Lock
-		'ChBoxAllDRI.Enabled = Not Lock
-
 		btStartV3.Enabled = Not Lock
 
-		'If DEV.Enabled Then
-		'	LvDEVoptions.Enabled = Not Lock
-		'End If
 	End Sub
 
-	'Define job file list
+
 
 
 #Region "Form Init/Close"
@@ -222,8 +203,6 @@ Public Class F_MAINForm
 		GUIlocked = False
 		CheckLock = False
 		GENcheckAllLock = False
-		'DRIcheckAllLock = False
-		'DRIchecked = 0
 		GENchecked = 0
 
 
@@ -232,15 +211,7 @@ Public Class F_MAINForm
 			TabControl1.TabPages(x).Show()
 		Next
 
-		'CycleTabPageVisible = True
-		'CycleTabPage = TabPageDRI
-
-		'DEVpage = TabPageDEV
-		'TabControl1.Controls.Remove(DEVpage)
-
 		LastModeName = ""
-
-		'ComLineShutDown = False
 
 		FB_Initialize()
 
@@ -251,16 +222,13 @@ Public Class F_MAINForm
 		JobListView = New cFileListView(MyConfPath & "joblist.txt")
 		JobListView.LVbox = LvGEN
 		CycleListView = New cFileListView(MyConfPath & "cyclelist.txt")
-		'CycleListView.LVbox = LvDRI
-
+		
 		JobListView.LoadList()
 
-		'Load GUI Options (here, the GEN/ADV/DRI lists are loaded)
 		LoadOptions()
 
 		'Resize columns ... after Loading the @file-lists
 		LvGEN.Columns(1).Width = -2
-		'LvDRI.Columns(1).Width = -2
 		LvMsg.Columns(2).Width = -2
 
 		'Initialize BackgroundWorker
@@ -297,13 +265,6 @@ Public Class F_MAINForm
 			If Lic.TimeWarn Then GUImsg(tMsgID.Warn, "License expiring date (y/m/d): " & Lic.ExpTime)
 		End If
 
-		'DEV.Enabled = True ' Lic.LicFeature(9)
-
-		'If DEV.Enabled Then
-		'	DEV.LoadFromFile()
-		'	LoadDEVconfigs()
-		'End If
-
 		DeclOnOff()
 	End Sub
 
@@ -333,23 +294,8 @@ Public Class F_MAINForm
 		If Cfg.DeclMode Then
 			LastModeName = "Declaration"
 		Else
-			'If Cfg.BatchMode Then
-			'	LastModeName = "Batch"
-			'Else
 			LastModeName = "Engineering"
-			'End If
-		End If
-
-		'If DEV.Enabled Then
-		'	If Not Cfg.DeclMode Then
-		'		If Not TabControl1.TabPages.Contains(DEVpage) Then _
-		'			TabControl1.TabPages.Insert(TabControl1.TabPages.Count, DEVpage)
-		'		LoadDEVconfigs()
-		'	Else
-		'		If TabControl1.TabPages.Contains(DEVpage) Then TabControl1.Controls.Remove(DEVpage)
-		'		DEV.SetDefault()
-		'	End If
-		'End If
+			End If
 
 		Status(LastModeName & " Mode")
 
@@ -357,25 +303,13 @@ Public Class F_MAINForm
 
 		LbDecl.Visible = Cfg.DeclMode
 
-		'PnDeclOpt.Enabled = Not Cfg.DeclMode
+
 	End Sub
 
 	'Shown Event (Form-Load finished) ... here StartUp Forms are loaded (DEV, GEN/ADV- Editor ..)
 	Private Sub F01_MAINForm_Shown(sender As Object, e As EventArgs) Handles Me.Shown
 		Dim fwelcome As F_Welcome
 
-		'DEV Form
-		'If DEV.Enabled And Not Cfg.DeclMode Then
-		'	TabControl1.TabPages.Insert(TabControl1.TabPages.Count, DEVpage)
-		'End If
-
-		'VECTO Init
-		'Declaration.Init()
-
-		'Command Line Args
-		'If Command() <> "" Then
-		'	CmdLineCtrl(My.Application.CommandLineArgs)
-		'Else
 		If Cfg.FirstRun Then
 			Cfg.FirstRun = False
 			fwelcome = New F_Welcome
@@ -398,8 +332,7 @@ Public Class F_MAINForm
 		'Config save
 		SetOptions()
 		Cfg.Save()
-		'If DEV.Enabled Then DEV.SaveToFile()
-
+		
 		'File browser instances close
 		FB_Close()
 	End Sub
@@ -633,7 +566,6 @@ Public Class F_MAINForm
 		Dim ListViewItem0 As ListViewItem
 
 		'If VECTO runs: Cancel operation (because Mode-change during calculation is not very clever)
-		'If VECTOworker.IsBusy Then Exit Sub
 		If VECTOworkerV3.IsBusy Then Exit Sub
 
 		pDim = UBound(Path)
@@ -710,8 +642,7 @@ lbFound:
 		c = LvGEN.Items.Count
 
 		TabPageGEN.Text = "Job Files ( " & GENchecked & " / " & c & " )"
-		'TabPageGEN.Text = "Job Files (" & c & ")"
-
+		
 		GENcheckAllLock = True
 
 		If GENchecked = 0 Then
@@ -888,7 +819,6 @@ lbFound:
 		Next
 
 		'Items select and Insert
-		'For y = y1 To 0 Step -1
 		For y = 0 To y1
 			If Not check(y) Then GENchecked += 1
 			ListViewItem0 = ListV.Items.Insert(index(y), items(y))
@@ -929,11 +859,8 @@ lbFound:
 				UpdateJobTabText()
 			Else 'DRI
 				'Mode toggle 
-				'If Not CbBatch.Checked Then CbBatch.Checked = True
 				CycleListView.LoadList(fbFileLists.Files(0))
-				'DRIchecked = LvDRI.CheckedItems.Count
-				'UpdateCycleTabText()
-			End If
+				End If
 
 		End If
 	End Sub
@@ -952,27 +879,20 @@ lbFound:
 			UpdateJobTabText()
 		Else
 			CycleListView.LoadList()
-			'DRIchecked = LvDRI.CheckedItems.Count
-			'UpdateCycleTabText()
+			
 		End If
 	End Sub
 
 	'Clear List
 	Private Sub ClearListToolStripMenuItem_Click(sender As Object, e As EventArgs) _
 		Handles ClearListToolStripMenuItem.Click
-		'Dim ListViewItem0 As ListViewItem
-		'For Each ListViewItem0 In ConMenTarget.SelectedItems
-		'    ListViewItem0.Remove()
-		'Next
+
 		If GUIlocked Then Exit Sub
 
 		ConMenTarget.Items.Clear()
 		If ConMenTarJob Then
 			GENchecked = LvGEN.CheckedItems.Count
 			UpdateJobTabText()
-		Else
-			'DRIchecked = LvDRI.CheckedItems.Count
-			'UpdateCycleTabText()
 		End If
 	End Sub
 
@@ -1232,30 +1152,14 @@ lbFound:
 
 		'Save lists
 		JobListView.SaveList()
-		'If Cfg.BatchMode Then CycleListView.SaveList()
-
-		'New mode
-		'Cfg.BatchMode = CbBatch.Checked
-
+		
 		'GUI changes according to current mode
-
-
+		
 		If Cfg.DeclMode Then
 			LastModeName = "Declaration"
 		Else
 			LastModeName = "Engineering"
 		End If
-
-		'Show mode-specific settings
-		'GrBoxSTD.Visible = False	 'Currently no specific settings for STANDARD mode, therefore always 'False'
-		'GrBoxBATCH.Visible = False
-
-		'Hide Cycle Tab Page
-		'If CycleTabPageVisible Then
-		'	TabControl1.Controls.Remove(CycleTabPage)
-		'	CycleTabPageVisible = False
-		'End If
-
 
 		'Update job counter
 		GENchecked = LvGEN.CheckedItems.Count
@@ -1348,34 +1252,7 @@ lbFound:
 		End Sub
 	End Class
 
-	'Set color of job files in list (Error, Warnings, Currently running, etc.)
-	'Private Sub SetCheckedItemColor(LvID As Integer, Status As tJobStatus)
-	'	Dim lv0 As ListViewItem
-
-	'	lv0 = CheckedItems(LvID)
-
-	'	Select Case Status
-	'		Case tJobStatus.Err
-	'			lv0.BackColor = Color.Red
-	'			lv0.ForeColor = Color.White
-	'		Case tJobStatus.OK
-	'			lv0.BackColor = Color.White
-	'			lv0.ForeColor = Color.DarkGreen
-	'		Case tJobStatus.Warn
-	'			lv0.BackColor = Color.Khaki
-	'			lv0.ForeColor = Color.DarkBlue		'FromArgb(218, 125, 0) 'DarkOrange 'OrangeRed
-	'		Case tJobStatus.Queued
-	'			lv0.BackColor = Color.LightGray
-	'			lv0.ForeColor = Color.DarkBlue
-	'		Case tJobStatus.Running
-	'			lv0.BackColor = Color.DarkBlue
-	'			lv0.ForeColor = Color.White
-	'		Case tJobStatus.Undef
-	'			lv0.BackColor = Color.FromKnownColor(KnownColor.Window)
-	'			lv0.ForeColor = Color.FromKnownColor(KnownColor.WindowText)
-	'	End Select
-	'End Sub
-
+	
 	'Open Job Editor and open file (or new file)
 	Friend Sub OpenVECTOeditor(x As String)
 
@@ -1467,167 +1344,21 @@ lbFound:
 
 	'Load options from config class
 	Public Sub LoadOptions()
-		'ChBoxCyclDistCor.Checked = Cfg.DistCorr
-		'ChBoxUseGears.Checked = Cfg.GnUfromCycle
 		ChBoxModOut.Checked = Cfg.ModOut
 		ChBoxMod1Hz.Checked = Cfg.Mod1Hz
-		'CbBOmode.SelectedIndex = -1
-		'Select Case UCase(Cfg.BATCHoutpath)
-		'	Case sKey.JobPath
-		'		CbBOmode.SelectedIndex = 0
-		'	Case Else
-		'		CbBOmode.SelectedIndex = 1
-		'		TbBOpath.Text = Cfg.BATCHoutpath
-		'End Select
-		'ChBoxBatchSubD.Checked = Cfg.BATCHoutSubD
-
-		'Set Mode
-		'If Not Cfg.DeclMode Then CbBatch.Checked = Cfg.BatchMode
-
+		
 		RbDecl.Checked = Cfg.DeclMode
 	End Sub
 
 	'Update config class from options in GUI, e.g. before running calculations 
 	Private Sub SetOptions()
-
-		'General(Allgemein)
-		'Cfg.DistCorr = ChBoxCyclDistCor.Checked
-		'Cfg.GnUfromCycle = ChBoxUseGears.Checked
-
-		'BATCH
-		Cfg.ModOut = ChBoxModOut.Checked
+	Cfg.ModOut = ChBoxModOut.Checked
 		Cfg.Mod1Hz = ChBoxMod1Hz.Checked
-		'Select Case CbBOmode.SelectedIndex
-		'	Case 0
-		'		Cfg.BATCHoutpath = sKey.JobPath
-		'	Case Else
-		'		Cfg.BATCHoutpath = Trim(TbBOpath.Text)
-		'		If Microsoft.VisualBasic.Right(Cfg.BATCHoutpath, 1) <> "\" Then Cfg.BATCHoutpath &= "\"
-		'End Select
-		'Cfg.BATCHoutSubD = ChBoxBatchSubD.Checked
-
-		'DEV.SetOptions()
+		
 	End Sub
 
 #End Region
 
-
-#Region "Developer options (DEV) Tab"
-
-	''Load DEV options
-	'Private Sub LoadDEVconfigs()
-	'	Dim LV0 As ListViewItem
-	'	Dim i As Integer
-	'	Dim Config0 As KeyValuePair(Of String, cDEVoption)
-
-	'	LvDEVoptions.Items.Clear()
-
-	'	i = -1
-	'	For Each Config0 In DEV.Options
-	'		i += 1
-
-	'		LV0 = New ListViewItem
-	'		LV0.SubItems(0).Text = Config0.Key
-	'		LV0.SubItems.Add(Config0.Value.Description)
-	'		LV0.SubItems.Add(Config0.Value.TypeString)
-	'		LV0.SubItems.Add("")
-	'		LV0.SubItems.Add(Config0.Value.ValTextDef)
-
-	'		If Config0.Value.ConfigType = tDEVconfType.tAction Then
-	'			LV0.SubItems.Add("")
-	'		Else
-	'			If Config0.Value.SaveInFile Then
-	'				LV0.SubItems.Add("True")
-	'			Else
-	'				LV0.SubItems.Add("False")
-	'			End If
-	'		End If
-
-
-	'		LV0.Tag = Config0.Key
-
-	'		If Not Config0.Value.Enabled Then
-	'			LV0.ForeColor = Color.DarkGray
-	'		End If
-
-	'		LvDEVoptions.Items.Add(LV0)
-
-	'		UpdateDEVconfigs(LV0)
-
-	'	Next
-	'End Sub
-
-	''Update value of specific DEV option
-	'Private Sub UpdateDEVconfigs(ByRef LV0 As ListViewItem)
-	'	DEV.UpdateDevConfigs()
-	'End Sub
-
-	'Change value of DEV option or execute action-type DEV options
-	'Private Sub LvDEVoptions_DoubleClick(sender As Object, e As EventArgs) Handles LvDEVoptions.DoubleClick
-	'	'Dim Config0 As cDEVoption
-	'	Dim str As String
-	'	Dim i As Integer
-
-	'	'Config0 = DEV.Options(LvDEVoptions.SelectedItems(0).Tag)
-
-	'	If Not Config0.Enabled Then Exit Sub
-
-	'	Select Case Config0.ConfigType
-	'		Case tDEVconfType.tAction
-	'			Config0.DoAction()
-
-	'		Case tDEVconfType.tBoolean
-	'			Config0.BoolVal = Not Config0.BoolVal
-
-	'		Case tDEVconfType.tSelection
-
-	'			CmDEVitem = LvDEVoptions.SelectedItems(0)
-
-	'			CmDEV.Items.Clear()
-
-	'			i = -1
-	'			For Each str In Config0.Modes
-	'				i += 1
-	'				CmDEV.Items.Add("(" & i & ") " & str)
-	'				CmDEV.Items(i).Tag = i
-	'			Next
-
-	'			CmDEV.Show(Cursor.Position)
-
-	'		Case tDEVconfType.tIntVal
-	'			str = InputBox("New Value <" & Config0.TypeString & "> =", , Config0.ValToString)
-	'			If str <> "" AndAlso IsNumeric(str) Then
-	'				Config0.IntVal = CInt(str)
-	'			End If
-
-	'		Case tDEVconfType.tSingleVal
-	'			str = InputBox("New Value <" & Config0.TypeString & "> =", , Config0.ValToString)
-	'			If str <> "" AndAlso IsNumeric(str) Then
-	'				Config0.SingleVal = CSng(str)
-	'			End If
-
-	'		Case Else 'tDEVconfType.tStringVal
-	'			Dim dlg As New F_StrInpBox
-	'			Config0.StringVal = dlg.ShowDlog("New Value <" & Config0.TypeString & "> =", Config0.StringVal)
-	'	End Select
-
-	'	UpdateDEVconfigs(LvDEVoptions.SelectedItems(0))
-	'End Sub
-
-	''Context menu for selection-type DEV options
-	'Private Sub CmDEV_ItemClicked(sender As Object, e As ToolStripItemClickedEventArgs) _
-	'	Handles CmDEV.ItemClicked
-	'	Dim i As Integer
-
-	'	i = e.ClickedItem.Tag
-
-	'	DEV.Options(CmDEVitem.Tag).ModeIndex = i
-
-	'	UpdateDEVconfigs(CmDEVitem)
-	'End Sub
-
-
-#End Region
 
 	'Add message to message list
 	Public Sub MSGtoForm(ID As tMsgID, Msg As String, Source As String, Link As String)

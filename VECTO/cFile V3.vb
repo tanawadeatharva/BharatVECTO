@@ -26,7 +26,7 @@ Public Class cFile_V3
 	Private FileEnd As Boolean
 
 	Public Sub New()
-		Me.Reset()
+		Reset()
 	End Sub
 
 	Private Sub Reset()
@@ -37,7 +37,7 @@ Public Class cFile_V3
 	End Sub
 
 	Public Function OpenRead(ByVal FileName As String, Optional ByVal Separator As String = ",", Optional ByVal SkipComment As Boolean = True, Optional ByVal StopAtE As Boolean = False) As Boolean
-		Me.Reset()
+		Reset()
 		StopE = StopAtE
 		Path = FileName
 		Sepp = Separator
@@ -56,7 +56,7 @@ Public Class cFile_V3
 
 		'If TxtFldParser.EndOfData Then Return False
 
-		Me.ReadLine()
+		ReadLine()
 		Return True
 	End Function
 
@@ -97,7 +97,7 @@ lb10:
 				If FileOpen Then StrWrter.Close()
 				StrWrter = Nothing
 		End Select
-		Me.Reset()
+		Reset()
 	End Sub
 
 	Public ReadOnly Property EndOfFile() As Boolean
@@ -107,7 +107,7 @@ lb10:
 	End Property
 
 	Public Function OpenWrite(ByVal FileName As String, Optional ByVal Separator As String = ",", Optional ByVal AutoFlush As Boolean = False, Optional ByVal Append As Boolean = False) As Boolean
-		Me.Reset()
+		Reset()
 		Path = FileName
 		Sepp = Separator
 		If Not (Mode = FileMode.Undefined) Then Return False

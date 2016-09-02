@@ -116,12 +116,12 @@ Public Class F_FileSign
 			Else
 				lv0.ForeColor = Color.Red
 			End If
-			Me.lvFiles.Items.Add(lv0)
+			lvFiles.Items.Add(lv0)
 		Next
 	End Sub
 
 	'Clear form
-	Private Sub ClearForm(ByVal ClearFileList As Boolean)
+	Private Sub ClearForm(ClearFileList As Boolean)
 		If ClearFileList Then lvFiles.Items.Clear()
 		TbLicStr.Text = ""
 		TbPubKey.Text = ""
@@ -141,11 +141,11 @@ Public Class F_FileSign
 		Dim fb As New cFileBrowser("sig", False, True)
 		fb.Extensions = New String() {"vsig"}
 
-		If fb.CustomDialog(Me.TbSigFile.Text, False, False, tFbExtMode.ForceExt, False, "vsig") Then
-			Me.TbSigFile.Text = fb.Files(0)
+		If fb.CustomDialog(TbSigFile.Text, False, False, tFbExtMode.ForceExt, False, "vsig") Then
+			TbSigFile.Text = fb.Files(0)
 		End If
 
-		If File.Exists(Me.TbSigFile.Text) Then
+		If File.Exists(TbSigFile.Text) Then
 			VerifySigFile()
 		End If
 	End Sub
@@ -159,11 +159,11 @@ Public Class F_FileSign
 	End Sub
 
 	Private Sub BtClose_Click(sender As Object, e As EventArgs) Handles BtClose.Click
-		Me.Close()
+		Close()
 	End Sub
 
 	Private Sub BtClearList_Click(sender As Object, e As EventArgs) Handles BtClearList.Click
-		Me.lvFiles.Items.Clear()
+		lvFiles.Items.Clear()
 	End Sub
 
 	Private Sub BtReload_Click(sender As Object, e As EventArgs) Handles BtReload.Click

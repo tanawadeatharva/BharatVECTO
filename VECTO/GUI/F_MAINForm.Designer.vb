@@ -58,8 +58,9 @@ Partial Class F_MAINForm
 		Me.ButtonGENadd = New System.Windows.Forms.Button()
 		Me.TabPgOptions = New System.Windows.Forms.TabPage()
 		Me.PanelOptAllg = New System.Windows.Forms.Panel()
-		Me.ChBoxMod1Hz = New System.Windows.Forms.CheckBox()
+		Me.GroupBox2 = New System.Windows.Forms.GroupBox()
 		Me.ChBoxModOut = New System.Windows.Forms.CheckBox()
+		Me.ChBoxMod1Hz = New System.Windows.Forms.CheckBox()
 		Me.GroupBox1 = New System.Windows.Forms.GroupBox()
 		Me.RbDev = New System.Windows.Forms.RadioButton()
 		Me.RbDecl = New System.Windows.Forms.RadioButton()
@@ -112,13 +113,13 @@ Partial Class F_MAINForm
 		Me.OpenInGraphWindowToolStripMenuItem = New System.Windows.Forms.ToolStripMenuItem()
 		Me.ShowInFolderToolStripMenuItem = New System.Windows.Forms.ToolStripMenuItem()
 		Me.ToolTip1 = New System.Windows.Forms.ToolTip(Me.components)
-		Me.GroupBox2 = New System.Windows.Forms.GroupBox()
 		Me.StatusBAR.SuspendLayout()
 		Me.TabControl1.SuspendLayout()
 		Me.TabPageGEN.SuspendLayout()
 		CType(Me.PictureBox1, System.ComponentModel.ISupportInitialize).BeginInit()
 		Me.TabPgOptions.SuspendLayout()
 		Me.PanelOptAllg.SuspendLayout()
+		Me.GroupBox2.SuspendLayout()
 		Me.GroupBox1.SuspendLayout()
 		Me.TabPageDEV.SuspendLayout()
 		Me.ConMenFilelist.SuspendLayout()
@@ -128,7 +129,6 @@ Partial Class F_MAINForm
 		Me.SplitContainer1.SuspendLayout()
 		Me.ToolStrip1.SuspendLayout()
 		Me.CmOpenFile.SuspendLayout()
-		Me.GroupBox2.SuspendLayout()
 		Me.SuspendLayout()
 		'
 		'StatusBAR
@@ -368,15 +368,16 @@ Partial Class F_MAINForm
 		Me.PanelOptAllg.Size = New System.Drawing.Size(1022, 290)
 		Me.PanelOptAllg.TabIndex = 0
 		'
-		'ChBoxMod1Hz
+		'GroupBox2
 		'
-		Me.ChBoxMod1Hz.AutoSize = True
-		Me.ChBoxMod1Hz.Location = New System.Drawing.Point(6, 42)
-		Me.ChBoxMod1Hz.Name = "ChBoxMod1Hz"
-		Me.ChBoxMod1Hz.Size = New System.Drawing.Size(121, 17)
-		Me.ChBoxMod1Hz.TabIndex = 16
-		Me.ChBoxMod1Hz.Text = "Modal results in 1Hz"
-		Me.ChBoxMod1Hz.UseVisualStyleBackColor = True
+		Me.GroupBox2.Controls.Add(Me.ChBoxModOut)
+		Me.GroupBox2.Controls.Add(Me.ChBoxMod1Hz)
+		Me.GroupBox2.Location = New System.Drawing.Point(9, 81)
+		Me.GroupBox2.Name = "GroupBox2"
+		Me.GroupBox2.Size = New System.Drawing.Size(167, 89)
+		Me.GroupBox2.TabIndex = 16
+		Me.GroupBox2.TabStop = False
+		Me.GroupBox2.Text = "Mode"
 		'
 		'ChBoxModOut
 		'
@@ -389,6 +390,16 @@ Partial Class F_MAINForm
 		Me.ChBoxModOut.TabIndex = 0
 		Me.ChBoxModOut.Text = "Write modal results"
 		Me.ChBoxModOut.UseVisualStyleBackColor = True
+		'
+		'ChBoxMod1Hz
+		'
+		Me.ChBoxMod1Hz.AutoSize = True
+		Me.ChBoxMod1Hz.Location = New System.Drawing.Point(6, 42)
+		Me.ChBoxMod1Hz.Name = "ChBoxMod1Hz"
+		Me.ChBoxMod1Hz.Size = New System.Drawing.Size(121, 17)
+		Me.ChBoxMod1Hz.TabIndex = 16
+		Me.ChBoxMod1Hz.Text = "Modal results in 1Hz"
+		Me.ChBoxMod1Hz.UseVisualStyleBackColor = True
 		'
 		'GroupBox1
 		'
@@ -521,9 +532,6 @@ Partial Class F_MAINForm
 		Me.ClearListToolStripMenuItem.Name = "ClearListToolStripMenuItem"
 		Me.ClearListToolStripMenuItem.Size = New System.Drawing.Size(175, 22)
 		Me.ClearListToolStripMenuItem.Text = "Clear List"
-		'
-		'BackgroundWorker1
-		'
 		'
 		'LvMsg
 		'
@@ -768,17 +776,6 @@ Partial Class F_MAINForm
 		Me.ShowInFolderToolStripMenuItem.Size = New System.Drawing.Size(198, 22)
 		Me.ShowInFolderToolStripMenuItem.Text = "Show in Folder"
 		'
-		'GroupBox2
-		'
-		Me.GroupBox2.Controls.Add(Me.ChBoxModOut)
-		Me.GroupBox2.Controls.Add(Me.ChBoxMod1Hz)
-		Me.GroupBox2.Location = New System.Drawing.Point(9, 81)
-		Me.GroupBox2.Name = "GroupBox2"
-		Me.GroupBox2.Size = New System.Drawing.Size(167, 89)
-		Me.GroupBox2.TabIndex = 16
-		Me.GroupBox2.TabStop = False
-		Me.GroupBox2.Text = "Mode"
-		'
 		'F_MAINForm
 		'
 		Me.AcceptButton = Me.btStartV3
@@ -798,6 +795,8 @@ Partial Class F_MAINForm
 		CType(Me.PictureBox1, System.ComponentModel.ISupportInitialize).EndInit()
 		Me.TabPgOptions.ResumeLayout(False)
 		Me.PanelOptAllg.ResumeLayout(False)
+		Me.GroupBox2.ResumeLayout(False)
+		Me.GroupBox2.PerformLayout()
 		Me.GroupBox1.ResumeLayout(False)
 		Me.GroupBox1.PerformLayout()
 		Me.TabPageDEV.ResumeLayout(False)
@@ -810,8 +809,6 @@ Partial Class F_MAINForm
 		Me.ToolStrip1.ResumeLayout(False)
 		Me.ToolStrip1.PerformLayout()
 		Me.CmOpenFile.ResumeLayout(False)
-		Me.GroupBox2.ResumeLayout(False)
-		Me.GroupBox2.PerformLayout()
 		Me.ResumeLayout(False)
 		Me.PerformLayout()
 

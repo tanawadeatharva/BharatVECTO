@@ -741,7 +741,7 @@ Public Class FB_Dialog
 		_myFolder = path
 		If Microsoft.VisualBasic.Right(_myFolder, 1) <> "\" Then _myFolder &= "\"
 
-		Me.Text = Me.Title & " " & _myFolder
+		Text = Title & " " & _myFolder
 
 		LoadListFolder()
 		LoadListFiles()

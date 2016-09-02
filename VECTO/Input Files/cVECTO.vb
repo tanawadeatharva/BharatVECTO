@@ -40,9 +40,6 @@ Public Class cVECTO
 	Public StStDelay As Integer
 
 	Private ReadOnly _driverAccelerationFile As cSubPath
-	'Private ReadOnly _laDesV As List(Of Single)
-	'Private ReadOnly _laDesMax As List(Of Single)
-	'Private ReadOnly _laDesMin As List(Of Single)
 
 	Public ReadOnly AuxPaths As Dictionary(Of String, AuxEntry)
 	'Alle Nebenverbraucher die in der Veh-Datei UND im Zyklus definiert sind
@@ -51,9 +48,7 @@ Public Class cVECTO
 
 	Public EngOnly As Boolean
 
-	Public ALookahead As Single
 	Public VMin As Single
-	Public VMinLa As Single
 	Public LookAheadOn As Boolean
 	Public OverSpeedOn As Boolean
 	Public OverSpeed As Single
@@ -83,12 +78,7 @@ Public Class cVECTO
 
 		_driverAccelerationFile = New cSubPath
 
-		'_laDesV = New List(Of Single)
-		'_laDesMax = New List(Of Single)
-		'_laDesMin = New List(Of Single)
-
 		AuxPaths = New Dictionary(Of String, AuxEntry)
-		'AuxRefs = New Dictionary(Of String, cAux)
 
 		CycleFiles = New List(Of cSubPath)
 	End Sub
@@ -143,8 +133,6 @@ Public Class cVECTO
 					{"Delay", StStDelay}})
 		dic0.Add("LAC", New Dictionary(Of String, Object) From {
 					{"Enabled", LookAheadOn},
-					{"Dec", ALookahead},
-					{"MinSpeed", VMinLa},
 					{"PreviewDistanceFactor", LacPreviewFactor},
 					{"DF_offset", LacDfOffset},
 					{"DF_scaling", LacDfScale},
@@ -321,8 +309,6 @@ Public Class cVECTO
 			If Not body("LAC") Is Nothing Then
 				Dim dic = body("LAC")
 				LookAheadOn = dic("Enabled")
-				ALookahead = dic("Dec")
-				VMinLa = dic("MinSpeed")
 				LacPreviewFactor = If(dic("PreviewDistanceFactor") Is Nothing, 10, dic("PreviewDistanceFactor"))
 				LacDfOffset = If(dic("DF_offset") Is Nothing, 2.5, dic("DF_offset"))
 				LacDfScale = If(dic("DF_scaling") Is Nothing, 1.5, dic("DF_scaling"))
@@ -390,21 +376,16 @@ Public Class cVECTO
 		_stPathGbx.Clear()
 
 		_driverAccelerationFile.Clear()
-		'_laDesV.Clear()
-		'_laDesMax.Clear()
-		'_laDesMin.Clear()
 
 		AuxPaths.Clear()
 		EngOnly = False
 
-		ALookahead = 0
 		VMin = 0
 		LookAheadOn = True
 		OverSpeedOn = False
 		EcoRollOn = False
 		OverSpeed = 0
 		UnderSpeed = 0
-		VMinLa = 0
 
 		SavedInDeclMode = False
 	End Sub

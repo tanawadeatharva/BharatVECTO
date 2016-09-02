@@ -18,7 +18,8 @@ Public Module GUI_Subs
 #Region "GUI control via background worker"
 
 	'Status Message => Msg-Listview
-	Public Sub WorkerMsg(ByVal ID As tMsgID, ByVal Msg As String, ByVal Source As String, Optional ByVal Link As String = "")
+	Public Sub WorkerMsg(ByVal ID As tMsgID, ByVal Msg As String, ByVal Source As String,
+						Optional ByVal Link As String = "")
 		Dim WorkProg As New cWorkProg(tWorkMsgType.StatusListBox)
 		WorkProg.ID = ID
 		Select Case ID
@@ -113,7 +114,6 @@ Public Module GUI_Subs
 		End If
 	End Function
 
-	
 
 #End Region
 
@@ -137,7 +137,12 @@ Public Module GUI_Subs
 
 		If Cfg.DeclMode Then
 
-			Select Case MsgBox("This file was created in Engineering Mode! Opening in Declaration Mode will overwrite some parameters with generic values." & vbCrLf & vbCrLf & "Do you want to switch to Engineering Mode?" & vbCrLf & vbCrLf & "[Yes] Switch mode and open file" & vbCrLf & "[No] Open file without changing mode" & vbCrLf & "[Cancel] Abort opening file", MsgBoxStyle.YesNoCancel, "Warning")
+			Select Case _
+				MsgBox(
+					"This file was created in Engineering Mode! Opening in Declaration Mode will overwrite some parameters with generic values." &
+					vbCrLf & vbCrLf & "Do you want to switch to Engineering Mode?" & vbCrLf & vbCrLf &
+					"[Yes] Switch mode and open file" & vbCrLf & "[No] Open file without changing mode" & vbCrLf &
+					"[Cancel] Abort opening file", MsgBoxStyle.YesNoCancel, "Warning")
 				Case MsgBoxResult.Yes
 					Return 1
 
@@ -151,7 +156,12 @@ Public Module GUI_Subs
 
 		Else
 
-			Select Case MsgBox("This file was created in Declaration Mode! For use in Engineering Mode missing parameters must be defined." & vbCrLf & vbCrLf & "Do you want to switch to Declaration Mode?" & vbCrLf & vbCrLf & "[Yes] Switch mode and open file" & vbCrLf & "[No] Open file without changing mode" & vbCrLf & "[Cancel] Abort opening file", MsgBoxStyle.YesNoCancel, "Warning")
+			Select Case _
+				MsgBox(
+					"This file was created in Declaration Mode! For use in Engineering Mode missing parameters must be defined." &
+					vbCrLf & vbCrLf & "Do you want to switch to Declaration Mode?" & vbCrLf & vbCrLf &
+					"[Yes] Switch mode and open file" & vbCrLf & "[No] Open file without changing mode" & vbCrLf &
+					"[Cancel] Abort opening file", MsgBoxStyle.YesNoCancel, "Warning")
 				Case MsgBoxResult.Yes
 					Return 1
 

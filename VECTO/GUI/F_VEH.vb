@@ -46,6 +46,34 @@ Public Class F_VEH
 		CbCdMode.Enabled = Not Cfg.DeclMode
 		PnWheelDiam.Enabled = Not Cfg.DeclMode
 
+		CbCdMode.ValueMember = "Value"
+		CbCdMode.DisplayMember = "Label"
+		CbCdMode.DataSource = [Enum].GetValues(GetType(CrossWindCorrectionMode)) _
+			.Cast(Of CrossWindCorrectionMode) _
+			.Select(Function(mode) New With {Key .Value = mode, .Label = mode.GetLabel()}).ToList()
+
+		CbRtType.ValueMember = "Value"
+		CbRtType.DisplayMember = "Label"
+		CbRtType.DataSource = [Enum].GetValues(GetType(RetarderType)) _
+			.Cast(Of RetarderType) _
+			.Select(Function(type) New With {Key .Value = type, .Label = type.GetLabel()}).ToList()
+
+		CbAxleConfig.ValueMember = "Value"
+		CbAxleConfig.DisplayMember = "Label"
+		CbAxleConfig.DataSource = [Enum].GetValues(GetType(AxleConfiguration)) _
+			.Cast(Of AxleConfiguration) _
+			.Select(Function(category) New With {Key .Value = category, .Label = category.GetName()}).ToList()
+
+		CbCat.ValueMember = "Value"
+		CbCat.DisplayMember = "Label"
+		CbCat.DataSource = [Enum].GetValues(GetType(VehicleCategory)) _
+			.Cast(Of VehicleCategory) _
+			.Select(Function(category) New With {Key .Value = category, .label = category.GetLabel()}).ToList()
+
+		cbAngularGearType.ValueMember = "Value"
+		cbAngularGearType.DisplayMember = "Label"
+		cbAngularGearType.DataSource = [Enum].GetValues(GetType(AngularGearType)) _
+			.Cast(Of AngularGearType).Select(Function(type) New With {Key .Value = type, .Label = type.GetLabel()}).ToList()
 		_axlDlog = New F_VEH_Axle
 
 		_changed = False
@@ -59,15 +87,15 @@ Public Class F_VEH
 			TbHDVclass.Text = "-"
 			Exit Sub
 		End If
-		Dim vehC = CbCat.SelectedValue							   'CType(CbCat.SelectedIndex, tVehCat)
-		Dim axlC = CbAxleConfig.SelectedValue	'CType(CbAxleConfig.SelectedIndex, tAxleConf)
-		Dim maxMass = (TbMassMass.Text.ToDouble() * 1000).SI(Of Kilogram)()				   'CSng(fTextboxToNumString(TbMassMass.Text))
+		Dim vehC = CbCat.SelectedValue
+		Dim axlC = CbAxleConfig.SelectedValue
+		Dim maxMass = (TbMassMass.Text.ToDouble() * 1000).SI(Of Kilogram)()
 
 		_hdVclass = "-"
 		Dim s0 As Segment = Nothing
 		Try
-			s0 = DeclarationData.Segments.Lookup(vehC, axlC, maxMass, 0.SI(Of Kilogram), True) _
-			' Declaration.SegmentTable.SetRef(vehC, axlC, maxMass)
+			s0 = DeclarationData.Segments.Lookup(vehC, axlC, maxMass, 0.SI(Of Kilogram), True)
+
 		Catch
 			' no segment found - ignore
 		End Try
@@ -89,20 +117,19 @@ Public Class F_VEH
 			TbHDVclass.Text = "-"
 			Exit Sub
 		End If
-		Dim vehC = CbCat.SelectedValue							   'CType(CbCat.SelectedIndex, tVehCat)
-		Dim axlC = CbAxleConfig.SelectedValue	'CType(CbAxleConfig.SelectedIndex, tAxleConf)
-		Dim maxMass = (TbMassMass.Text.ToDouble() * 1000).SI(Of Kilogram)()				   'CSng(fTextboxToNumString(TbMassMass.Text))
+		Dim vehC = CbCat.SelectedValue
+		Dim axlC = CbAxleConfig.SelectedValue
+		Dim maxMass = (TbMassMass.Text.ToDouble() * 1000).SI(Of Kilogram)()
 
 		Dim s0 As Segment = Nothing
 		Try
-			s0 = DeclarationData.Segments.Lookup(vehC, axlC, maxMass, 0.SI(Of Kilogram), True) _
-			' Declaration.SegmentTable.SetRef(vehC, axlC, maxMass)
+			s0 = DeclarationData.Segments.Lookup(vehC, axlC, maxMass, 0.SI(Of Kilogram), True)
 		Catch
 			' no segment found - ignore
 		End Try
 		If Not s0 Is Nothing Then
 			_hdVclass = s0.VehicleClass
-			Dim axleCount As Short = s0.Missions(0).AxleWeightDistribution.Count() '.AxleShares(s0.Missions(0)).Count
+			Dim axleCount As Short = s0.Missions(0).AxleWeightDistribution.Count()
 			Dim i0 = LvRRC.Items.Count
 
 			If axleCount > i0 Then
@@ -375,30 +402,6 @@ Public Class F_VEH
 		veh.Loading = CSng(fTextboxToNumString(TbLoad.Text))
 
 		veh.CdA0 = CSng(fTextboxToNumString(TBcdA.Text))
-		'veh.CdA02 = veh.CdA0
-
-		' @@@quam: CdA2 is no longer used, Vecto 3 takes this into account internally
-
-		'Dim vehC = EnumHelper.ParseEnum(Of VehicleCategory)(CbCat.SelectedItem)				'CType(CbCat.SelectedIndex, tVehCat)
-		'Dim axlC = AxleConfigurationHelper.Parse(CbAxleConfig.SelectedItem)	'CType(CbAxleConfig.SelectedIndex, tAxleConf)
-		'Dim maxMass = (TbMassMass.Text.ToDouble() * 1000).SI(Of Kilogram)()		 'CSng(fTextboxToNumString(TbMassMass.Text))
-
-		'Dim s0 As Segment
-		'Try
-		'	s0 = DeclarationData.Segments.Lookup(vehC, axlC, maxMass, 0.SI(Of Kilogram))
-		'Catch
-		'End Try
-
-		'If Not s0 Is Nothing Then
-		'	If s0.VehicleClass = VehicleClass.Class2 Then
-		'		' CdA Addition for T1 Trailer
-		'		veh.CdA02 += 1.1
-		'	End If
-		'	If s0.VehicleClass = VehicleClass.Class4 OrElse s0.VehicleClass = VehicleClass.Class9 Then
-		'		' CdA Addition for T2 Trailer
-		'		veh.CdA02 += 0.6
-		'	End If
-		'End If
 
 		veh.rdyn = CSng(fTextboxToNumString(TBrdyn.Text))
 		veh.CdMode = CbCdMode.SelectedValue
@@ -433,8 +436,8 @@ Public Class F_VEH
 
 		veh.MassMax = CSng(fTextboxToNumString(TbMassMass.Text))
 		veh.MassExtra = CSng(fTextboxToNumString(TbMassExtra.Text))
-		veh.AxleConf = CbAxleConfig.SelectedValue _
-		'CType(CbAxleConfig.SelectedIndex, tAxleConf)
+		veh.AxleConf = CbAxleConfig.SelectedValue
+
 
 		'---------------------------------------------------------------------------------
 		If Not veh.SaveFile Then

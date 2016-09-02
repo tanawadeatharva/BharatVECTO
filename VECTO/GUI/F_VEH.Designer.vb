@@ -262,11 +262,6 @@ Partial Class F_VEH
 		'
 		Me.CbCdMode.DropDownStyle = ComboBoxStyle.DropDownList
 		Me.CbCdMode.FormattingEnabled = True
-		CbCdMode.ValueMember = "Value"
-		CbCdMode.DisplayMember = "Label"
-		CbCdMode.DataSource = [Enum].GetValues(GetType(CrossWindCorrectionMode)) _
-			.Cast(Of CrossWindCorrectionMode) _
-			.Select(Function(mode) New With {Key .Value = mode, .Label = mode.GetLabel()}).ToList()
 		Me.CbCdMode.Location = New Point(6, 19)
 		Me.CbCdMode.Name = "CbCdMode"
 		Me.CbCdMode.Size = New Size(207, 21)
@@ -490,9 +485,7 @@ Partial Class F_VEH
 		'
 		Me.CbRtType.DropDownStyle = ComboBoxStyle.DropDownList
 		Me.CbRtType.FormattingEnabled = True
-		CbRtType.ValueMember = "Value"
-		CbRtType.DisplayMember = "Label"
-		Me.CbRtType.DataSource = [Enum].GetValues(GetType(RetarderType)).Cast(Of RetarderType).Select(Function(type) New With {Key .Value = type, .Label = type.GetLabel()}).ToList()
+		
 		Me.CbRtType.Location = New Point(6, 19)
 		Me.CbRtType.Name = "CbRtType"
 		Me.CbRtType.Size = New Size(266, 21)
@@ -630,11 +623,7 @@ Partial Class F_VEH
 		'
 		Me.CbAxleConfig.DropDownStyle = ComboBoxStyle.DropDownList
 		Me.CbAxleConfig.FormattingEnabled = True
-		CbAxleConfig.ValueMember = "Value"
-		CbAxleConfig.DisplayMember = "Label"
-		Me.CbAxleConfig.DataSource = [Enum].GetValues(GetType(AxleConfiguration)) _
-			.Cast(Of AxleConfiguration) _
-			.Select(Function(category) New With {Key .Value = category, .Label = category.GetName()}).ToList()
+		
 		Me.CbAxleConfig.Location = New Point(153, 80)
 		Me.CbAxleConfig.Name = "CbAxleConfig"
 		Me.CbAxleConfig.Size = New Size(60, 21)
@@ -644,11 +633,7 @@ Partial Class F_VEH
 		'
 		Me.CbCat.DropDownStyle = ComboBoxStyle.DropDownList
 		Me.CbCat.FormattingEnabled = True
-		CbCat.ValueMember = "Value"
-		CbCat.DisplayMember = "Label"
-		Me.CbCat.DataSource = [Enum].GetValues(GetType(VehicleCategory)) _
-			.Cast(Of VehicleCategory) _
-			.Select(Function(category) New With {Key .Value = category, .label = category.GetLabel()}).ToList()
+		
 		Me.CbCat.Location = New Point(12, 80)
 		Me.CbCat.Name = "CbCat"
 		Me.CbCat.Size = New Size(135, 21)
@@ -916,10 +901,7 @@ Partial Class F_VEH
 		'
 		Me.cbAngularGearType.DropDownStyle = ComboBoxStyle.DropDownList
 		Me.cbAngularGearType.FormattingEnabled = True
-		cbAngularGearType.ValueMember = "Value"
-		cbAngularGearType.DisplayMember = "Label"
-		Me.cbAngularGearType.DataSource = [Enum].GetValues(GetType(AngularGearType)) _
-			.Cast(Of AngularGearType).Select(Function(type) New With {Key .Value = type, .Label = type.GetLabel()}).ToList()
+		
 		Me.cbAngularGearType.Location = New Point(6, 19)
 		Me.cbAngularGearType.Name = "cbAngularGearType"
 		Me.cbAngularGearType.Size = New Size(266, 21)

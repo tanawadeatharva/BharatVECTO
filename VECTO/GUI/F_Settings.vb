@@ -24,14 +24,14 @@ Public Class F_Settings
 
 	Private Sub LoadSettings()
 
-		Me.TextBoxLogSize.Text = Cfg.LogSize
-		Me.TbAirDensity.Text = CStr(Cfg.AirDensity)
-		Me.TbOpenCmd.Text = Cfg.OpenCmd
-		Me.TbOpenCmdName.Text = Cfg.OpenCmdName
-		Me.TbFuelDens.Text = Cfg.FuelDens.ToString
-		Me.TbCO2toFC.Text = Cfg.CO2perFC.ToString
+		TextBoxLogSize.Text = Cfg.LogSize
+		TbAirDensity.Text = CStr(Cfg.AirDensity)
+		TbOpenCmd.Text = Cfg.OpenCmd
+		TbOpenCmdName.Text = Cfg.OpenCmdName
+		TbFuelDens.Text = Cfg.FuelDens.ToString
+		TbCO2toFC.Text = Cfg.CO2perFC.ToString
 
-		Me.GrCalc.Enabled = Not Cfg.DeclMode
+		GrCalc.Enabled = Not Cfg.DeclMode
 	End Sub
 
 
@@ -45,28 +45,28 @@ Public Class F_Settings
 			If Cfg.DeclMode Then Cfg.DeclInit()
 			F_MAINForm.LoadOptions()
 			LoadSettings()
-			Me.Close()
+			Close()
 		End If
 	End Sub
 
 	'Save and close
 	Private Sub ButtonOK_Click(ByVal sender As Object, ByVal e As EventArgs) Handles ButtonOK.Click
-		Cfg.LogSize = CSng(Me.TextBoxLogSize.Text)
-		Cfg.AirDensity = CSng(Me.TbAirDensity.Text)
-		Cfg.OpenCmd = Me.TbOpenCmd.Text
-		Cfg.OpenCmdName = Me.TbOpenCmdName.Text
-		Cfg.FuelDens = CSng(Me.TbFuelDens.Text)
-		Cfg.CO2perFC = CSng(Me.TbCO2toFC.Text)
+		Cfg.LogSize = CSng(TextBoxLogSize.Text)
+		Cfg.AirDensity = CSng(TbAirDensity.Text)
+		Cfg.OpenCmd = TbOpenCmd.Text
+		Cfg.OpenCmdName = TbOpenCmdName.Text
+		Cfg.FuelDens = CSng(TbFuelDens.Text)
+		Cfg.CO2perFC = CSng(TbCO2toFC.Text)
 		'----------------------------------------------------
 
 		Cfg.Save()
 
-		Me.Close()
+		Close()
 	End Sub
 
 	'Cancel
 	Private Sub ButtonCancel_Click(ByVal sender As Object, ByVal e As EventArgs) Handles ButtonCancel.Click
-		Me.Close()
+		Close()
 	End Sub
 
 	'Help button

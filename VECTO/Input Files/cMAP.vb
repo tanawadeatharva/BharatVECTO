@@ -9,9 +9,6 @@
 '
 ' See the LICENSE.txt for the specific language governing permissions and limitations.
 Imports System.Collections.Generic
-Imports TUGraz.VectoCommon.Utils
-Imports TUGraz.VectoCore.Configuration
-Imports VectoAuxiliaries
 
 Public Class cMAP
 	'Implements IFuelConsumptionMap
@@ -28,7 +25,6 @@ Public Class cMAP
 		LTq = Nothing
 		LnU = Nothing
 		iMapDim = -1
-
 	End Sub
 
 	Public Function ReadFile(Optional ByVal ShowMsg As Boolean = True) As Boolean
@@ -107,7 +103,6 @@ Public Class cMAP
 		file.Close()
 
 
-
 		Return True
 
 
@@ -144,13 +139,6 @@ lbEr:
 	End Property
 
 #End Region
-
-	'Public Function GetFuelConsumption(torque As NewtonMeter, angularVelocity As PerSecond) As KilogramPerSecond _
-	'	Implements IFuelConsumptionMap.GetFuelConsumption
-	'	'MQ: TODO: check units!
-	'	Return _
-	'		(fFCdelaunay_Intp(angularVelocity.Value() / Constants.RPMToRad, torque.Value()) / 3600 / 1000).SI(Of KilogramPerSecond)()
-	'End Function
 End Class
 
 

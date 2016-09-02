@@ -12,7 +12,6 @@ Option Infer On
 
 Imports System.Collections.Generic
 Imports System.Drawing.Imaging
-Imports System.Globalization
 Imports System.IO
 Imports System.Linq
 Imports System.Text.RegularExpressions
@@ -20,11 +19,7 @@ Imports System.Windows.Forms.DataVisualization.Charting
 Imports TUGraz.VECTO.Input_Files
 Imports TUGraz.VectoCommon.Models
 Imports TUGraz.VectoCommon.Utils
-Imports TUGraz.VectoCore.Configuration
 Imports TUGraz.VectoCore.Models.Declaration
-Imports TUGraz.VectoCore.Models.SimulationComponent.Data
-Imports TUGraz.VectoCore.Models.SimulationComponent.Data.Gearbox
-Imports TUGraz.VectoCore.Models.SimulationComponent.Impl
 
 ''' <summary>
 ''' Job Editor. Create/Edit VECTO job files (.vecto)
@@ -146,11 +141,11 @@ Public Class F_VECTO
 		End If
 	End Sub
 
-	Protected Function GetTechListForAux(key As String, name As String, aux As IDeclarationAuxiliaryTable) As ListViewItem
+	Protected Function GetTechListForAux(key As String, nameStr As String, aux As IDeclarationAuxiliaryTable) As ListViewItem
 		Dim LV0 As ListViewItem
 
 		LV0 = New ListViewItem(key)
-		LV0.SubItems.Add(name)
+		LV0.SubItems.Add(nameStr)
 		Dim auxtech As String() = aux.GetTechnologies()
 		If auxtech.Count > 1 Then
 			LV0.SubItems.Add("")

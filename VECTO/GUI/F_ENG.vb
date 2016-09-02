@@ -253,7 +253,7 @@ Public Class F_ENG
 	'Flags current file as modified.
 	Private Sub Change()
 		If Not Changed Then
-			Me.LbStatus.Text = "Unsaved changes in current file"
+			LbStatus.Text = "Unsaved changes in current file"
 			Changed = True
 		End If
 	End Sub
@@ -321,8 +321,8 @@ Public Class F_ENG
 
 	'Browse for VMAP file
 	Private Sub BtMAP_Click(sender As Object, e As EventArgs) Handles BtMAP.Click
-		If fbMAP.OpenDialog(fFileRepl(Me.TbMAP.Text, fPATH(EngFile))) Then _
-			Me.TbMAP.Text = fFileWoDir(fbMAP.Files(0), fPATH(EngFile))
+		If fbMAP.OpenDialog(fFileRepl(TbMAP.Text, fPATH(EngFile))) Then _
+			TbMAP.Text = fFileWoDir(fbMAP.Files(0), fPATH(EngFile))
 	End Sub
 
 
@@ -330,24 +330,24 @@ Public Class F_ENG
 	Private Sub BtMAPopen_Click(sender As Object, e As EventArgs) Handles BtMAPopen.Click
 		Dim fldfile As String
 
-		fldfile = fFileRepl(Me.TbFLD.Text, fPATH(EngFile))
+		fldfile = fFileRepl(TbFLD.Text, fPATH(EngFile))
 
 		If fldfile <> sKey.NoFile AndAlso File.Exists(fldfile) Then
-			OpenFiles(fFileRepl(Me.TbMAP.Text, fPATH(EngFile)), fldfile)
+			OpenFiles(fFileRepl(TbMAP.Text, fPATH(EngFile)), fldfile)
 		Else
-			OpenFiles(fFileRepl(Me.TbMAP.Text, fPATH(EngFile)))
+			OpenFiles(fFileRepl(TbMAP.Text, fPATH(EngFile)))
 		End If
 	End Sub
 
 
 	'Save and close
 	Private Sub ButOK_Click(sender As Object, e As EventArgs) Handles ButOK.Click
-		If SaveOrSaveAs(False) Then Me.Close()
+		If SaveOrSaveAs(False) Then Close()
 	End Sub
 
 	'Close without saving (see FormClosing Event)
 	Private Sub ButCancel_Click(sender As Object, e As EventArgs) Handles ButCancel.Click
-		Me.Close()
+		Close()
 	End Sub
 
 	Private Sub UpdatePic()
@@ -361,15 +361,15 @@ Public Class F_ENG
 		Dim a As ChartArea
 		Dim img As Image
 
-		Me.PicBox.Image = Nothing
+		PicBox.Image = Nothing
 
 		Try
 
 			'Read Files
-			FLD0.FilePath = fFileRepl(Me.TbFLD.Text, fPATH(EngFile))
+			FLD0.FilePath = fFileRepl(TbFLD.Text, fPATH(EngFile))
 			fldOK = FLD0.ReadFile(False, False)
 
-			MAP0.FilePath = fFileRepl(Me.TbMAP.Text, fPATH(EngFile))
+			MAP0.FilePath = fFileRepl(TbMAP.Text, fPATH(EngFile))
 			mapOK = MAP0.ReadFile(False)
 
 		Catch ex As Exception
@@ -381,8 +381,8 @@ Public Class F_ENG
 
 		'Create plot
 		MyChart = New Chart
-		MyChart.Width = Me.PicBox.Width
-		MyChart.Height = Me.PicBox.Height
+		MyChart.Width = PicBox.Width
+		MyChart.Height = PicBox.Height
 
 		a = New ChartArea
 
@@ -441,10 +441,10 @@ Public Class F_ENG
 		MyChart.Update()
 
 		img = New Bitmap(MyChart.Width, MyChart.Height, PixelFormat.Format32bppArgb)
-		MyChart.DrawToBitmap(img, New Rectangle(0, 0, Me.PicBox.Width, Me.PicBox.Height))
+		MyChart.DrawToBitmap(img, New Rectangle(0, 0, PicBox.Width, PicBox.Height))
 
 
-		Me.PicBox.Image = img
+		PicBox.Image = img
 	End Sub
 
 
@@ -485,14 +485,14 @@ Public Class F_ENG
 
 
 	Private Sub BtFLD_Click(sender As Object, e As EventArgs) Handles BtFLD.Click
-		If fbFLD.OpenDialog(fFileRepl(Me.TbFLD.Text, fPATH(EngFile))) Then _
-			Me.TbFLD.Text = fFileWoDir(fbFLD.Files(0), fPATH(EngFile))
+		If fbFLD.OpenDialog(fFileRepl(TbFLD.Text, fPATH(EngFile))) Then _
+			TbFLD.Text = fFileWoDir(fbFLD.Files(0), fPATH(EngFile))
 	End Sub
 
 	Private Sub BtFLDopen_Click(sender As Object, e As EventArgs) Handles BtFLDopen.Click
 		Dim fldfile As String
 
-		fldfile = fFileRepl(Me.TbFLD.Text, fPATH(EngFile))
+		fldfile = fFileRepl(TbFLD.Text, fPATH(EngFile))
 
 		If fldfile <> sKey.NoFile AndAlso File.Exists(fldfile) Then
 			OpenFiles(fldfile)
@@ -510,9 +510,9 @@ Public Class F_ENG
 		Try
 			xml = XDocument.Load(dlog.Files(0))
 
-			Me.TbWHTCurban.Text = xml.<VECTO-Engine-TransferFile>.<WHTCCorrectionFactors>.<Urban>.Value
-			Me.TbWHTCrural.Text = xml.<VECTO-Engine-TransferFile>.<WHTCCorrectionFactors>.<Rural>.Value
-			Me.TbWHTCmw.Text = xml.<VECTO-Engine-TransferFile>.<WHTCCorrectionFactors>.<Motorway>.Value
+			TbWHTCurban.Text = xml.<VECTO-Engine-TransferFile>.<WHTCCorrectionFactors>.<Urban>.Value
+			TbWHTCrural.Text = xml.<VECTO-Engine-TransferFile>.<WHTCCorrectionFactors>.<Rural>.Value
+			TbWHTCmw.Text = xml.<VECTO-Engine-TransferFile>.<WHTCCorrectionFactors>.<Motorway>.Value
 
 		Catch ex As Exception
 			MsgBox("Failed to load file! " & ex.Message, MsgBoxStyle.Critical)

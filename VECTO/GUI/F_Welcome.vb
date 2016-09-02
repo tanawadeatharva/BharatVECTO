@@ -17,13 +17,13 @@ Imports System.IO
 Public Class F_Welcome
 	'Close
 	Private Sub Cancel_Button_Click(ByVal sender As Object, ByVal e As EventArgs) Handles Cancel_Button.Click
-		Me.DialogResult = DialogResult.Cancel
-		Me.Close()
+		DialogResult = DialogResult.Cancel
+		Close()
 	End Sub
 
 	'Init
 	Private Sub F_Welcome_Load(sender As Object, e As EventArgs) Handles Me.Load
-		Me.Text = "VECTO " & VECTOvers & " / VectoCore " & COREvers
+		Text = "VECTO " & VECTOvers & " / VectoCore " & COREvers
 	End Sub
 
 	'Open Release Notes

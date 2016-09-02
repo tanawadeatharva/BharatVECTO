@@ -71,7 +71,6 @@ Public Class cGBX
 		TracIntrSi = 0
 
 		Igetr = New List(Of Single)
-		'IsTCgear = New List(Of Boolean)
 		GetrMaps = New List(Of cSubPath)
 		gs_files = New List(Of cSubPath)
 		MaxTorque = New List(Of String)
@@ -125,15 +124,13 @@ Public Class cGBX
 		For i = 0 To Igetr.Count - 1
 			dic0 = New Dictionary(Of String, Object)
 			dic0.Add("Ratio", Igetr(i))
-			If IsNumeric(Me.GetrMap(i, True)) Then
+			If IsNumeric(GetrMap(i, True)) Then
 				dic0.Add("Efficiency", GetrMaps(i).PathOrDummy)
 			Else
 				dic0.Add("LossMap", GetrMaps(i).PathOrDummy)
 			End If
 			If i > 0 Then
-				'dic0.Add("TCactive", IsTCgear(i))
 				dic0.Add("ShiftPolygon", gs_files(i).PathOrDummy)
-				'dic0.Add("FullLoadCurve", FldFiles(i).PathOrDummy)
 				dic0.Add("MaxTorque", MaxTorque(i))
 			End If
 
@@ -211,24 +208,15 @@ Public Class cGBX
 
 				MaxTorque.Add(dic("MaxTorque"))
 				gs_files.Add(New cSubPath)
-				'FldFiles.Add(New cSubPath)
 
 				If i = 0 Then
-					'IsTCgear.Add(False)
 					gs_files(i).Init(MyPath, sKey.NoFile)
-					'FldFiles(i).Init(MyPath, sKey.NoFile)
 				Else
-					'IsTCgear.Add(dic("TCactive"))
 					If FileVersion < 2 Then
 						gs_files(i).Init(MyPath, JSON.Content("Body")("ShiftPolygons"))
 					Else
 						gs_files(i).Init(MyPath, dic("ShiftPolygon"))
 					End If
-					'If FileVersion < 5 Then
-					'	FldFiles(i).Init(MyPath, sKey.NoFile)
-					'Else
-					'	FldFiles(i).Init(MyPath, dic("FullLoadCurve"))
-					'End If
 				End If
 
 			Next
@@ -284,7 +272,7 @@ Public Class cGBX
 
 
 	Public Function GearCount() As Integer
-		Return Me.Igetr.Count - 1
+		Return Igetr.Count - 1
 	End Function
 
 

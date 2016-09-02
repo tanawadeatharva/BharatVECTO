@@ -30,8 +30,6 @@ Public Class cVEH
 	Public Loading As Single
 
 	Public CdA0 As Single
-	'Public CdA02 As Single
-	'Private CdA0Act As Single
 
 	Public CdMode As CrossWindCorrectionMode
 	Public CdFile As cSubPath
@@ -139,9 +137,7 @@ Public Class cVEH
 			MassExtra = body("CurbWeightExtra")
 			Loading = body("Loading")
 			VehCat = body("VehCat").ToString.ParseEnum(Of VehicleCategory)() 'ConvVehCat(body("VehCat").ToString)
-			AxleConf = AxleConfigurationHelper.Parse(body("AxleConfig")("Type").ToString) _
-			'ConvAxleConf(body("AxleConfig")("Type").ToString)
-
+			AxleConf = AxleConfigurationHelper.Parse(body("AxleConfig")("Type").ToString)
 			If FileVersion < 2 Then
 				'convert kg to ton
 				MassMax /= 1000
@@ -158,23 +154,7 @@ Public Class cVEH
 
 			'CdA02 = CdA0
 
-			'If FileVersion < 4 Then
-			'	If Not body("CdRigid") Is Nothing AndAlso Not body("CrossSecAreaRigid") Is Nothing Then
-			'		CdA02 = CSng(body("CdRigid")) * CSng(body("CrossSecAreaRigid"))
-			'	End If
-			'ElseIf FileVersion < 7 Then
-			'	If Not body("Cd2") Is Nothing AndAlso Not body("CrossSecArea2") Is Nothing Then
-			'		CdA02 = CSng(body("Cd2")) * CSng(body("CrossSecArea2"))
-			'	End If
-			'Else
-			'	If Not body("CdA2") Is Nothing Then
-			'		CdA02 = body("CdA2")
-			'	End If
-			'End If
-
-			'CdA0Act = CdA0
-
-			CdMode = CrossWindCorrectionModeHelper.Parse(body("CdCorrMode").ToString) 'CdModeConv(body("CdCorrMode").ToString)
+			CdMode = CrossWindCorrectionModeHelper.Parse(body("CdCorrMode").ToString)
 			If Not body("CdCorrFile") Is Nothing Then
 				CdFile.Init(MyPath, body("CdCorrFile"))
 			End If
@@ -182,7 +162,7 @@ Public Class cVEH
 			If body("Retarder") Is Nothing Then
 				RtType = RetarderType.None
 			Else
-				RtType = RetarderTypeHelper.Parse(body("Retarder")("Type").ToString) 'RtTypeConv(body("Retarder")("Type").ToString)
+				RtType = RetarderTypeHelper.Parse(body("Retarder")("Type").ToString)
 				If Not body("Retarder")("Ratio") Is Nothing Then
 					RtRatio = body("Retarder")("Ratio")
 				End If

@@ -15,12 +15,8 @@ Imports TUGraz.VectoCore.Models.Declaration
 Public Class Configuration
 	Public FilePath As String
 	Public GnUfromCycle As Boolean
-	'Public BatchMode As Boolean
 	Public ModOut As Boolean
 	Public Mod1Hz As Boolean
-	'Public BATCHoutpath As String	'Output path for BATCH Mode
-	'	Public BATCHoutSubD As Boolean
-	'Public DistCorr As Boolean
 	Public LogSize As Single
 	Public AirDensity As Single
 	Public OpenCmd As String
@@ -40,18 +36,13 @@ Public Class Configuration
 		AirDensity = DeclarationData.Physics.AirDensity.Value()	' cDeclaration.AirDensity
 		FuelDens = DeclarationData.Physics.FuelDensity.Value()	' cDeclaration.FuelDens
 		CO2perFC = DeclarationData.Physics.CO2PerFuelWeight		' cDeclaration.CO2perFC
-		'DistCorr = True
 		GnUfromCycle = False
 	End Sub
 
 	Public Sub SetDefault()
 		GnUfromCycle = True
-		'BatchMode = False
 		ModOut = True
 		Mod1Hz = False
-		'BATCHoutpath = sKey.JobPath
-		'BATCHoutSubD = False
-		'DistCorr = True
 		LogSize = 2
 		AirDensity = 1.2
 		OpenCmd = "notepad"
@@ -76,25 +67,14 @@ Public Class Configuration
 		End If
 
 		Try
-			Dim fileVersion As Short = json.Content("Header")("FileVersion")
-
-			'If fileVersion < 2 Then
-			'	BatchMode = (json.Content("Body")("LastMode") = 1)
-			'Else
-			'	BatchMode = json.Content("Body")("LastModeBatch")
-			'End If
-
 			Try
 				Mod1Hz = json.Content("Body")("Mod1Hz")
 			Catch
 			End Try
 
 			ModOut = json.Content("Body")("ModOut")
-			'DistCorr = json.Content("Body")("DistCorrection")
 			GnUfromCycle = json.Content("Body")("UseGnUfromCycle")
 			LogSize = json.Content("Body")("LogSize")
-			'BATCHoutpath = json.Content("Body")("BATCHoutpath")
-			'BATCHoutSubD = json.Content("Body")("BATCHoutSubD")
 			AirDensity = json.Content("Body")("AirDensity")
 			FuelDens = json.Content("Body")("FuelDensity")
 			CO2perFC = json.Content("Body")("CO2perFC")
@@ -119,14 +99,9 @@ Public Class Configuration
 		json.Content.Add("Header", dic)
 
 		dic = New Dictionary(Of String, Object)
-		'dic.Add("LastModeBatch", BatchMode)
 		dic.Add("ModOut", ModOut)
 		dic.Add("Mod1Hz", Mod1Hz)
-		'dic.Add("DistCorrection", DistCorr)
-		dic.Add("UseGnUfromCycle", GnUfromCycle)
 		dic.Add("LogSize", LogSize)
-		'dic.Add("BATCHoutpath", BATCHoutpath)
-		'dic.Add("BATCHoutSubD", BATCHoutSubD)
 		dic.Add("AirDensity", AirDensity)
 		dic.Add("FuelDensity", FuelDens)
 		dic.Add("CO2perFC", CO2perFC)
