@@ -19,8 +19,8 @@ Imports vectolic
 Public Class FileSignDialog
 	'Create signature file
 	Private Sub BtSign_Click(sender As Object, e As EventArgs) Handles BtSign.Click
-		Dim lv0 As ListViewItem
-		Dim MainDir As String
+		Dim listViewItem As ListViewItem
+		Dim mainDirectory As String
 
 		If lvFiles.Items.Count = 0 Then
 			MsgBox("No files selected!", MsgBoxStyle.Critical)
@@ -39,17 +39,17 @@ Public Class FileSignDialog
 		ClearForm(False)
 
 
-		MainDir = fPATH(TbSigFile.Text)
+		mainDirectory = fPATH(TbSigFile.Text)
 
 
 		Lic.FileSigning.NewFile()
 		Lic.FileSigning.Mode = cFileSigning.tMode.Manual
 
 
-		For Each lv0 In lvFiles.Items
-			Lic.FileSigning.AddFile(fFileRepl(lv0.SubItems(0).Text, MainDir))
-			lv0.SubItems(1).Text = ""
-			lv0.ForeColor = Color.Black
+		For Each listViewItem In lvFiles.Items
+			Lic.FileSigning.AddFile(fFileRepl(listViewItem.SubItems(0).Text, mainDirectory))
+			listViewItem.SubItems(1).Text = ""
+			listViewItem.ForeColor = Color.Black
 		Next
 
 		If Lic.FileSigning.WriteSigFile(TbSigFile.Text, LicSigAppCode) Then
@@ -66,12 +66,12 @@ Public Class FileSignDialog
 		LbDateStr.Text = Lic.FileSigning.DateStr
 
 		If Lic.FileSigning.FilesOK.Count > 0 Then
-			For Each lv0 In lvFiles.Items
-				lv0.SubItems(1).Text = Lic.FileSigning.FilesMsg(lv0.Index)
-				If Lic.FileSigning.FilesOK(lv0.Index) Then
-					lv0.ForeColor = Color.DarkGreen
+			For Each listViewItem In lvFiles.Items
+				listViewItem.SubItems(1).Text = Lic.FileSigning.FilesMsg(listViewItem.Index)
+				If Lic.FileSigning.FilesOK(listViewItem.Index) Then
+					listViewItem.ForeColor = Color.DarkGreen
 				Else
-					lv0.ForeColor = Color.Red
+					listViewItem.ForeColor = Color.Red
 					Exit For
 				End If
 			Next

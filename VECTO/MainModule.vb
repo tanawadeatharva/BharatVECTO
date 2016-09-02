@@ -25,12 +25,12 @@ Module MainModule
 		Dim retVal As CombustionEngineData = New CombustionEngineData()
 		retVal.FullLoadCurve = New TUGraz.VectoCore.Models.SimulationComponent.Data.Engine.EngineFullLoadCurve()
 		retVal.FullLoadCurve.FullLoadEntries = New List(Of FullLoadCurve.FullLoadCurveEntry)
-		For i As Integer = 0 To fld.LnU.Count - 1
+		For i As Integer = 0 To fld.EngineSpeedList.Count - 1
 			retVal.FullLoadCurve.FullLoadEntries.Add(
 				New FullLoadCurve.FullLoadCurveEntry() _
-														With {.EngineSpeed = CType(fld.LnU(i), Double).RPMtoRad(),
-														.TorqueFullLoad = CType(fld.LTq(i), Double).SI(Of NewtonMeter)(),
-														.TorqueDrag = CType(fld.LTqDrag(i), Double).SI(Of NewtonMeter)()})
+														With {.EngineSpeed = CType(fld.EngineSpeedList(i), Double).RPMtoRad(),
+														.TorqueFullLoad = CType(fld.MaxTorqueList(i), Double).SI(Of NewtonMeter)(),
+														.TorqueDrag = CType(fld.DragTorqueList(i), Double).SI(Of NewtonMeter)()})
 		Next
 
 		retVal.IdleSpeed = CType(nIdle, Double).RPMtoRad()

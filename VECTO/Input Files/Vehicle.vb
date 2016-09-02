@@ -21,39 +21,34 @@ Imports TUGraz.VectoCommon.Utils
 Public Class Vehicle
 	'V2 MassMax is now saved in [t] instead of [kg]
 	Private Const FormatVersion As Short = 7
-	Private FileVersion As Short
+	Private _fileVersion As Short
 
-	Private sFilePath As String
-	Private MyPath As String
+	Private _filePath As String
+	Private _path As String
 
 	Public Mass As Single
 	Public Loading As Single
 
 	Public CdA0 As Single
 
-	Public CdMode As CrossWindCorrectionMode
-	Public ReadOnly CdFile As SubPath
-	Private ReadOnly CdX As List(Of Single)
-	Private ReadOnly CdY As List(Of Single)
+	Public CrossWindCorrectionMode As CrossWindCorrectionMode
+	Public ReadOnly CrossWindCorrectionFile As SubPath
 
+	Public RetarderType As RetarderType
+	Public RetarderRatio As Single = 0
+	Public ReadOnly RetarderLossMapFile As SubPath
 
-	Public RtType As RetarderType 'tRtType '0=None, 1=Primary, 2=Secondary
-	Public RtRatio As Single = 0
-	Public ReadOnly RtFile As SubPath
-	Private ReadOnly RtnU As List(Of Single)
-	Private ReadOnly RtM As List(Of Single)
-
-	Public rdyn As Single
+	Public DynamicTyreRadius As Single
 	Public ReadOnly Axles As List(Of Axle)
 
 
-	Public VehCat As VehicleCategory
+	Public VehicleCategory As VehicleCategory
 	Public MassExtra As Single
 	Public MassMax As Single
-	Public AxleConf As AxleConfiguration
+	Public AxleConfiguration As AxleConfiguration
 
 	Public SavedInDeclMode As Boolean
-	Public AngularGearType As AngularGearType '0=None, 1=Separate, 2=Included
+	Public AngularGearType As AngularGearType
 	Public AngularGearRatio As Single
 	Public ReadOnly AngularGearLossMapFile As SubPath
 
@@ -69,15 +64,13 @@ Public Class Vehicle
 
 
 	Public Sub New()
-		MyPath = ""
-		sFilePath = ""
-		CdFile = New SubPath
-		CdX = New List(Of Single)
-		CdY = New List(Of Single)
-		RtFile = New SubPath
+		_path = ""
+		_filePath = ""
+		CrossWindCorrectionFile = New SubPath
+
+		RetarderLossMapFile = New SubPath
 		AngularGearLossMapFile = New SubPath()
-		RtnU = New List(Of Single)
-		RtM = New List(Of Single)
+
 		Axles = New List(Of Axle)
 		SetDefault()
 	End Sub
@@ -89,18 +82,14 @@ Public Class Vehicle
 		CdA0 = 0
 		'		CdA0Act = CdA0
 		'		CdA02 = 0
-		CdFile.Clear()
-		CdMode = CrossWindCorrectionMode.NoCorrection
-		CdX.Clear()
-		CdY.Clear()
+		CrossWindCorrectionFile.Clear()
+		CrossWindCorrectionMode = CrossWindCorrectionMode.NoCorrection
 
-		rdyn = 0
+		DynamicTyreRadius = 0
 
-		RtType = RetarderType.None
-		RtRatio = 1
-		RtnU.Clear()
-		RtM.Clear()
-		RtFile.Clear()
+		RetarderType = RetarderType.None
+		RetarderRatio = 1
+		RetarderLossMapFile.Clear()
 		AngularGearLossMapFile.Clear()
 
 		AngularGearType = AngularGearType.None
@@ -108,9 +97,9 @@ Public Class Vehicle
 		AngularGearRatio = 1
 
 		Axles.Clear()
-		VehCat = VehicleCategory.RigidTruck	'tVehCat.Undef
+		VehicleCategory = VehicleCategory.RigidTruck	'tVehCat.Undef
 		MassMax = 0
-		AxleConf = AxleConfiguration.AxleConfig_4x2	 'tAxleConf.Undef
+		AxleConfiguration = AxleConfiguration.AxleConfig_4x2	 'tAxleConf.Undef
 
 		SavedInDeclMode = False
 	End Sub
@@ -120,14 +109,14 @@ Public Class Vehicle
 		SetDefault()
 
 		Dim json As New JSONParser
-		If Not json.ReadFile(sFilePath) Then Return False
+		If Not json.ReadFile(_filePath) Then Return False
 
 		Try
 			Dim header = json.Content("Header")
 			Dim body = json.Content("Body")
 
-			FileVersion = header("FileVersion")
-			If FileVersion > 4 Then
+			_fileVersion = header("FileVersion")
+			If _fileVersion > 4 Then
 				SavedInDeclMode = body("SavedInDeclMode")
 			Else
 				SavedInDeclMode = Cfg.DeclMode
@@ -136,16 +125,16 @@ Public Class Vehicle
 			Mass = body("CurbWeight")
 			MassExtra = body("CurbWeightExtra")
 			Loading = body("Loading")
-			VehCat = body("VehCat").ToString.ParseEnum(Of VehicleCategory)() 'ConvVehCat(body("VehCat").ToString)
-			AxleConf = AxleConfigurationHelper.Parse(body("AxleConfig")("Type").ToString)
-			If FileVersion < 2 Then
+			VehicleCategory = body("VehCat").ToString.ParseEnum(Of VehicleCategory)() 'ConvVehCat(body("VehCat").ToString)
+			AxleConfiguration = AxleConfigurationHelper.Parse(body("AxleConfig")("Type").ToString)
+			If _fileVersion < 2 Then
 				'convert kg to ton
 				MassMax /= 1000
 			Else
 				MassMax = body("MassMax")
 			End If
 
-			If FileVersion < 7 Then
+			If _fileVersion < 7 Then
 				'calc CdA from Cd and area value
 				CdA0 = CSng(body("Cd")) * CSng(body("CrossSecArea"))
 			Else
@@ -154,20 +143,20 @@ Public Class Vehicle
 
 			'CdA02 = CdA0
 
-			CdMode = CrossWindCorrectionModeHelper.Parse(body("CdCorrMode").ToString)
+			CrossWindCorrectionMode = CrossWindCorrectionModeHelper.Parse(body("CdCorrMode").ToString)
 			If Not body("CdCorrFile") Is Nothing Then
-				CdFile.Init(MyPath, body("CdCorrFile"))
+				CrossWindCorrectionFile.Init(_path, body("CdCorrFile"))
 			End If
 
 			If body("Retarder") Is Nothing Then
-				RtType = RetarderType.None
+				RetarderType = RetarderType.None
 			Else
-				RtType = RetarderTypeHelper.Parse(body("Retarder")("Type").ToString)
+				RetarderType = RetarderTypeHelper.Parse(body("Retarder")("Type").ToString)
 				If Not body("Retarder")("Ratio") Is Nothing Then
-					RtRatio = body("Retarder")("Ratio")
+					RetarderRatio = body("Retarder")("Ratio")
 				End If
 				If Not body("Retarder")("File") Is Nothing Then
-					RtFile.Init(MyPath, body("Retarder")("File"))
+					RetarderLossMapFile.Init(_path, body("Retarder")("File"))
 				End If
 			End If
 
@@ -179,16 +168,16 @@ Public Class Vehicle
 					AngularGearRatio = body("AngularGear")("Ratio")
 				End If
 				If Not body("AngularGear")("LossMap") Is Nothing Then
-					AngularGearLossMapFile.Init(MyPath, body("AngularGear")("LossMap"))
+					AngularGearLossMapFile.Init(_path, body("AngularGear")("LossMap"))
 				End If
 			End If
 
 			Dim inertiaTemp As Single
-			If FileVersion < 3 Then
+			If _fileVersion < 3 Then
 				inertiaTemp = body("WheelsInertia")
-				rdyn = 1000 * body("WheelsDiaEff") / 2
+				DynamicTyreRadius = 1000 * body("WheelsDiaEff") / 2
 			Else
-				rdyn = body("rdyn")
+				DynamicTyreRadius = body("rdyn")
 			End If
 
 			Dim axleCount = body("AxleConfig")("Axles").Count()
@@ -199,7 +188,7 @@ Public Class Vehicle
 						.RRC = CSng(axleEntry("RRCISO")),
 						.FzISO = CSng(axleEntry("FzISO"))}
 
-				If FileVersion < 3 Then
+				If _fileVersion < 3 Then
 					axle.Wheels = "-"
 					axle.Inertia = inertiaTemp / (IIf(axle.TwinTire, 4, 2) * axleCount)
 				Else
@@ -232,25 +221,25 @@ Public Class Vehicle
 		Dim dic As Dictionary(Of String, Object)
 		dic = New Dictionary(Of String, Object) From {
 			{"SavedInDeclMode", Cfg.DeclMode},
-			{"VehCat", VehCat.ToString()},
+			{"VehCat", VehicleCategory.ToString()},
 			{"CurbWeight", Mass},
 			{"CurbWeightExtra", MassExtra},
 			{"Loading", Loading},
 			{"MassMax", MassMax},
 			{"CdA", CdA0},
-			{"rdyn", rdyn},
-			{"CdCorrMode", CdMode.GetName()},
-			{"CdCorrFile", CdFile.PathOrDummy},
+			{"rdyn", DynamicTyreRadius},
+			{"CdCorrMode", CrossWindCorrectionMode.GetName()},
+			{"CdCorrFile", CrossWindCorrectionFile.PathOrDummy},
 			{"Retarder", New Dictionary(Of String, Object) From {
-				{"Type", RtType.GetName()},
-				{"Ratio", RtRatio},
-				{"File", RtFile.PathOrDummy}}},
+				{"Type", RetarderType.GetName()},
+				{"Ratio", RetarderRatio},
+				{"File", RetarderLossMapFile.PathOrDummy}}},
 			{"AngularGear", New Dictionary(Of String, Object) From {
 				{"Type", AngularGearType.ToString()},
 				{"Ratio", AngularGearRatio},
 				{"LossMap", AngularGearLossMapFile.PathOrDummy}}},
 			{"AxleConfig", New Dictionary(Of String, Object) From {
-				{"Type", AxleConf.GetName()},
+				{"Type", AxleConfiguration.GetName()},
 				{"Axles", (From axle In Axles Select New Dictionary(Of String, Object) From {
 					{"Inertia", axle.Inertia},
 					{"Wheels", axle.Wheels},
@@ -261,7 +250,7 @@ Public Class Vehicle
 			}
 
 		json.Content.Add("Body", dic)
-		Return json.WriteFile(sFilePath)
+		Return json.WriteFile(_filePath)
 	End Function
 
 
@@ -270,14 +259,14 @@ Public Class Vehicle
 
 	Public Property FilePath() As String
 		Get
-			Return sFilePath
+			Return _filePath
 		End Get
 		Set(value As String)
-			sFilePath = value
-			If sFilePath = "" Then
-				MyPath = ""
+			_filePath = value
+			If _filePath = "" Then
+				_path = ""
 			Else
-				MyPath = Path.GetDirectoryName(sFilePath) & "\"
+				_path = Path.GetDirectoryName(_filePath) & "\"
 			End If
 		End Set
 	End Property

@@ -25,12 +25,11 @@ Public Class Gearbox
 	Public GbxInertia As Single
 	Public TracIntrSi As Single
 
-	Public Igetr As List(Of Single)
-	Public GetrMaps As List(Of SubPath)
-	'Public IsTCgear As List(Of Boolean)
+	Public GearRatios As List(Of Single)
+	Public GearLossmaps As List(Of SubPath)
 
 	'Gear shift polygons
-	Public gs_files As List(Of SubPath)
+	Public GearshiftFiles As List(Of SubPath)
 
 	Public MaxTorque As List(Of String)
 
@@ -47,15 +46,15 @@ Public Class Gearbox
 	'Torque Converter Input
 	Public TorqueConverterEnabled As Boolean
 	Public TorqueConverterReferenceRpm As Single
-	Private ReadOnly TorqueConverterFile As New SubPath
+	Private ReadOnly _torqueConverterFile As New SubPath
 	Public TorqueConverterInertia As Single
+	Public TorqueConverterShiftPolygonFile As String
 
 
 	Public SavedInDeclMode As Boolean
 	Public UpshiftMinAcceleration As Single
 	Public DownshiftAfterUpshift As Single
 	Public UpshiftAfterDownshift As Single
-	Public TCshiftFile As String
 
 
 	Public Sub New()
@@ -70,9 +69,9 @@ Public Class Gearbox
 		GbxInertia = 0
 		TracIntrSi = 0
 
-		Igetr = New List(Of Single)
-		GetrMaps = New List(Of SubPath)
-		gs_files = New List(Of SubPath)
+		GearRatios = New List(Of Single)
+		GearLossmaps = New List(Of SubPath)
+		GearshiftFiles = New List(Of SubPath)
 		MaxTorque = New List(Of String)
 
 		TorqueResv = 0
@@ -87,7 +86,7 @@ Public Class Gearbox
 
 		TorqueConverterEnabled = False
 		TorqueConverterReferenceRpm = 0
-		TorqueConverterFile.Clear()
+		_torqueConverterFile.Clear()
 
 		TorqueConverterInertia = 0
 
@@ -96,174 +95,171 @@ Public Class Gearbox
 
 	Public Function SaveFile() As Boolean
 		Dim i As Integer
-		Dim JSON As New JSONParser
-		Dim dic As Dictionary(Of String, Object)
-		Dim dic0 As Dictionary(Of String, Object)
-		Dim ls As List(Of Object)
+		Dim writer As New JSONParser
+		Dim content As Dictionary(Of String, Object)
 
 		'Header
-		dic = New Dictionary(Of String, Object)
-		dic.Add("CreatedBy", Lic.LicString & " (" & Lic.GUID & ")")
-		dic.Add("Date", Now.ToUniversalTime().ToString("o"))
-		dic.Add("AppVersion", VECTOvers)
-		dic.Add("FileVersion", FormatVersion)
-		JSON.Content.Add("Header", dic)
+		content = New Dictionary(Of String, Object)
+		content.Add("CreatedBy", Lic.LicString & " (" & Lic.GUID & ")")
+		content.Add("Date", Now.ToUniversalTime().ToString("o"))
+		content.Add("AppVersion", VECTOvers)
+		content.Add("FileVersion", FormatVersion)
+		writer.Content.Add("Header", content)
 
 		'Body
-		dic = New Dictionary(Of String, Object)
+		content = New Dictionary(Of String, Object)
 
-		dic.Add("SavedInDeclMode", Cfg.DeclMode)
+		content.Add("SavedInDeclMode", Cfg.DeclMode)
 		SavedInDeclMode = Cfg.DeclMode
 
-		dic.Add("ModelName", ModelName)
+		content.Add("ModelName", ModelName)
 
-		dic.Add("Inertia", GbxInertia)
-		dic.Add("TracInt", TracIntrSi)
+		content.Add("Inertia", GbxInertia)
+		content.Add("TracInt", TracIntrSi)
 
-		ls = New List(Of Object)
-		For i = 0 To Igetr.Count - 1
-			dic0 = New Dictionary(Of String, Object)
-			dic0.Add("Ratio", Igetr(i))
-			If IsNumeric(GetrMap(i, True)) Then
-				dic0.Add("Efficiency", GetrMaps(i).PathOrDummy)
+		Dim ls As New List(Of Object)
+		For i = 0 To GearRatios.Count - 1
+			Dim gearDict As New Dictionary(Of String, Object)
+			gearDict.Add("Ratio", GearRatios(i))
+			If IsNumeric(GearLossMap(i, True)) Then
+				gearDict.Add("Efficiency", GearLossmaps(i).PathOrDummy)
 			Else
-				dic0.Add("LossMap", GetrMaps(i).PathOrDummy)
+				gearDict.Add("LossMap", GearLossmaps(i).PathOrDummy)
 			End If
 			If i > 0 Then
-				dic0.Add("ShiftPolygon", gs_files(i).PathOrDummy)
-				dic0.Add("MaxTorque", MaxTorque(i))
+				gearDict.Add("ShiftPolygon", GearshiftFiles(i).PathOrDummy)
+				gearDict.Add("MaxTorque", MaxTorque(i))
 			End If
 
-			ls.Add(dic0)
+			ls.Add(gearDict)
 		Next
-		dic.Add("Gears", ls)
+		content.Add("Gears", ls)
 
-		dic.Add("TqReserve", TorqueResv)
-		dic.Add("SkipGears", SkipGears)
-		dic.Add("ShiftTime", ShiftTime)
-		dic.Add("EaryShiftUp", ShiftInside)
+		content.Add("TqReserve", TorqueResv)
+		content.Add("SkipGears", SkipGears)
+		content.Add("ShiftTime", ShiftTime)
+		content.Add("EaryShiftUp", ShiftInside)
 
-		dic.Add("StartTqReserve", TorqueResvStart)
-		dic.Add("StartSpeed", StartSpeed)
-		dic.Add("StartAcc", StartAcc)
+		content.Add("StartTqReserve", TorqueResvStart)
+		content.Add("StartSpeed", StartSpeed)
+		content.Add("StartAcc", StartAcc)
 
-		dic.Add("GearboxType", Type)
+		content.Add("GearboxType", Type)
 
-		dic0 = New Dictionary(Of String, Object)
-		dic0.Add("Enabled", TorqueConverterEnabled)
-		dic0.Add("File", TorqueConverterFile.PathOrDummy)
-		dic0.Add("RefRPM", TorqueConverterReferenceRpm)
-		dic0.Add("Inertia", TorqueConverterInertia)
-		dic0.Add("ShiftPolygon", TCshiftFile)
-		dic.Add("TorqueConverter", dic0)
+		Dim torqueConverterDict As New Dictionary(Of String, Object)
+		torqueConverterDict.Add("Enabled", TorqueConverterEnabled)
+		torqueConverterDict.Add("File", _torqueConverterFile.PathOrDummy)
+		torqueConverterDict.Add("RefRPM", TorqueConverterReferenceRpm)
+		torqueConverterDict.Add("Inertia", TorqueConverterInertia)
+		torqueConverterDict.Add("ShiftPolygon", TorqueConverterShiftPolygonFile)
+		content.Add("TorqueConverter", torqueConverterDict)
 
 
-		dic.Add("DownshiftAferUpshiftDelay", DownshiftAfterUpshift)
-		dic.Add("UpshiftAfterDownshiftDelay", UpshiftAfterDownshift)
-		dic.Add("UpshiftMinAcceleration", UpshiftMinAcceleration)
+		content.Add("DownshiftAferUpshiftDelay", DownshiftAfterUpshift)
+		content.Add("UpshiftAfterDownshiftDelay", UpshiftAfterDownshift)
+		content.Add("UpshiftMinAcceleration", UpshiftMinAcceleration)
 
-		JSON.Content.Add("Body", dic)
+		writer.Content.Add("Body", content)
 
-		Return JSON.WriteFile(_filePath)
+		Return writer.WriteFile(_filePath)
 	End Function
 
-	Public Function ReadFile(Optional ByVal ShowMsg As Boolean = True) As Boolean
+	Public Function ReadFile(Optional ByVal showMsg As Boolean = True) As Boolean
 		Dim i As Integer
-		Dim MsgSrc As String
-		Dim JSON As New JSONParser
+		Dim parser As New JSONParser
 		Dim dic As Object
 
-		MsgSrc = "GBX/ReadFile"
+		Const msgSrc As String = "GBX/ReadFile"
 
 		SetDefault()
 
-		If Not JSON.ReadFile(_filePath) Then Return False
+		If Not parser.ReadFile(_filePath) Then Return False
 
 		Try
 
-			_fileVersion = JSON.Content("Header")("FileVersion")
+			_fileVersion = parser.Content("Header")("FileVersion")
 
 			If _fileVersion > 3 Then
-				SavedInDeclMode = JSON.Content("Body")("SavedInDeclMode")
+				SavedInDeclMode = parser.Content("Body")("SavedInDeclMode")
 			Else
 				SavedInDeclMode = Cfg.DeclMode
 			End If
 
-			ModelName = JSON.Content("Body")("ModelName")
-			GbxInertia = JSON.Content("Body")("Inertia")
-			TracIntrSi = JSON.Content("Body")("TracInt")
+			ModelName = parser.Content("Body")("ModelName")
+			GbxInertia = parser.Content("Body")("Inertia")
+			TracIntrSi = parser.Content("Body")("TracInt")
 
 			i = -1
-			For Each dic In JSON.Content("Body")("Gears")
+			For Each dic In parser.Content("Body")("Gears")
 				i += 1
 
-				Igetr.Add(dic("Ratio"))
-				GetrMaps.Add(New SubPath)
+				GearRatios.Add(dic("Ratio"))
+				GearLossmaps.Add(New SubPath)
 
 				If dic("Efficiency") Is Nothing Then
-					GetrMaps(i).Init(_myPath, dic("LossMap"))
+					GearLossmaps(i).Init(_myPath, dic("LossMap"))
 				Else
-					GetrMaps(i).Init(_myPath, dic("Efficiency"))
+					GearLossmaps(i).Init(_myPath, dic("Efficiency"))
 				End If
 
 				MaxTorque.Add(dic("MaxTorque"))
-				gs_files.Add(New SubPath)
+				GearshiftFiles.Add(New SubPath)
 
 				If i = 0 Then
-					gs_files(i).Init(_myPath, sKey.NoFile)
+					GearshiftFiles(i).Init(_myPath, sKey.NoFile)
 				Else
 					If _fileVersion < 2 Then
-						gs_files(i).Init(_myPath, JSON.Content("Body")("ShiftPolygons"))
+						GearshiftFiles(i).Init(_myPath, parser.Content("Body")("ShiftPolygons"))
 					Else
-						gs_files(i).Init(_myPath, dic("ShiftPolygon"))
+						GearshiftFiles(i).Init(_myPath, dic("ShiftPolygon"))
 					End If
 				End If
 
 			Next
 
-			TorqueResv = JSON.Content("Body")("TqReserve")
-			SkipGears = JSON.Content("Body")("SkipGears")
-			ShiftTime = JSON.Content("Body")("ShiftTime")
-			TorqueResvStart = JSON.Content("Body")("StartTqReserve")
-			StartSpeed = JSON.Content("Body")("StartSpeed")
-			StartAcc = JSON.Content("Body")("StartAcc")
-			ShiftInside = JSON.Content("Body")("EaryShiftUp")
+			TorqueResv = parser.Content("Body")("TqReserve")
+			SkipGears = parser.Content("Body")("SkipGears")
+			ShiftTime = parser.Content("Body")("ShiftTime")
+			TorqueResvStart = parser.Content("Body")("StartTqReserve")
+			StartSpeed = parser.Content("Body")("StartSpeed")
+			StartAcc = parser.Content("Body")("StartAcc")
+			ShiftInside = parser.Content("Body")("EaryShiftUp")
 
-			Type = JSON.Content("Body")("GearboxType").ToString.ParseEnum(Of GearboxType)()
+			Type = parser.Content("Body")("GearboxType").ToString.ParseEnum(Of GearboxType)()
 
-			If JSON.Content("Body")("UpshiftMinAcceleration") Is Nothing Then
+			If parser.Content("Body")("UpshiftMinAcceleration") Is Nothing Then
 				UpshiftMinAcceleration = 0.1
 			Else
-				UpshiftMinAcceleration = JSON.Content("Body")("UpshiftMinAcceleration")
+				UpshiftMinAcceleration = parser.Content("Body")("UpshiftMinAcceleration")
 			End If
-			If JSON.Content("Body")("DownshiftAferUpshiftDelay") Is Nothing Then
+			If parser.Content("Body")("DownshiftAferUpshiftDelay") Is Nothing Then
 				DownshiftAfterUpshift = 10
 			Else
-				DownshiftAfterUpshift = JSON.Content("Body")("DownshiftAferUpshiftDelay")
+				DownshiftAfterUpshift = parser.Content("Body")("DownshiftAferUpshiftDelay")
 			End If
 
-			If JSON.Content("Body")("UpshiftAfterDownshiftDelay") Is Nothing Then
+			If parser.Content("Body")("UpshiftAfterDownshiftDelay") Is Nothing Then
 				UpshiftAfterDownshift = 10
 			Else
-				UpshiftAfterDownshift = JSON.Content("Body")("UpshiftAfterDownshiftDelay")
+				UpshiftAfterDownshift = parser.Content("Body")("UpshiftAfterDownshiftDelay")
 			End If
 
 
-			If JSON.Content("Body")("TorqueConverter") Is Nothing Then
+			If parser.Content("Body")("TorqueConverter") Is Nothing Then
 				TorqueConverterEnabled = False
 			Else
-				TorqueConverterEnabled = JSON.Content("Body")("TorqueConverter")("Enabled")
-				TorqueConverterFile.Init(_myPath, JSON.Content("Body")("TorqueConverter")("File"))
-				TorqueConverterReferenceRpm = JSON.Content("Body")("TorqueConverter")("RefRPM")
+				TorqueConverterEnabled = parser.Content("Body")("TorqueConverter")("Enabled")
+				_torqueConverterFile.Init(_myPath, parser.Content("Body")("TorqueConverter")("File"))
+				TorqueConverterReferenceRpm = parser.Content("Body")("TorqueConverter")("RefRPM")
 				If _fileVersion > 2 Then
-					TorqueConverterInertia = JSON.Content("Body")("TorqueConverter")("Inertia")
+					TorqueConverterInertia = parser.Content("Body")("TorqueConverter")("Inertia")
 				End If
 				If _fileVersion > 5 Then
-					TCshiftFile = JSON.Content("Body")("TorqueConverter")("ShiftPolygon")
+					TorqueConverterShiftPolygonFile = parser.Content("Body")("TorqueConverter")("ShiftPolygon")
 				End If
 			End If
 		Catch ex As Exception
-			If ShowMsg Then WorkerMsg(MessageType.Err, "Failed to read VECTO file! " & ex.Message, MsgSrc)
+			If showMsg Then WorkerMsg(MessageType.Err, "Failed to read VECTO file! " & ex.Message, msgSrc)
 			Return False
 		End Try
 
@@ -272,7 +268,7 @@ Public Class Gearbox
 
 
 	Public Function GearCount() As Integer
-		Return Igetr.Count - 1
+		Return GearRatios.Count - 1
 	End Function
 
 
@@ -290,42 +286,43 @@ Public Class Gearbox
 		End Set
 	End Property
 
-	Public Property GetrMap(ByVal x As Short, Optional ByVal Original As Boolean = False) As String
+	Public Property GearLossMap(ByVal gearNr As Short, Optional ByVal original As Boolean = False) As String
 		Get
 			If Original Then
-				Return GetrMaps(x).OriginalPath
+				Return GearLossmaps(gearNr).OriginalPath
 			Else
-				Return GetrMaps(x).FullPath
+				Return GearLossmaps(gearNr).FullPath
 			End If
 		End Get
 		Set(ByVal value As String)
-			GetrMaps(x).Init(_myPath, value)
+			GearLossmaps(gearNr).Init(_myPath, value)
 		End Set
 	End Property
 
-	Public Property gsFile(ByVal x As Short, Optional ByVal Original As Boolean = False) As String
+	Public Property ShiftPolygonFile(ByVal gearNr As Short, Optional ByVal original As Boolean = False) As String
 		Get
-			If Original Then
-				Return gs_files(x).OriginalPath
+			If original Then
+				Return GearshiftFiles(gearNr).OriginalPath
 			Else
-				Return gs_files(x).FullPath
+				Return GearshiftFiles(gearNr).FullPath
 			End If
 		End Get
 		Set(value As String)
-			gs_files(x).Init(_myPath, value)
+			GearshiftFiles(gearNr).Init(_myPath, value)
 		End Set
 	End Property
 
-	Public Property TCfile(Optional ByVal Original As Boolean = False) As String
+	Public Property TorqueConverterFile(Optional ByVal original As Boolean = False) As String
 		Get
 			If Original Then
-				Return TorqueConverterFile.OriginalPath
+				Return _torqueConverterFile.OriginalPath
 			Else
-				Return TorqueConverterFile.FullPath
+				Return _torqueConverterFile.FullPath
 			End If
 		End Get
 		Set(value As String)
-			TorqueConverterFile.Init(_myPath, value)
+			_torqueConverterFile.Init(_myPath, value)
 		End Set
 	End Property
 End Class
+

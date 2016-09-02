@@ -25,29 +25,24 @@ Public Class FuelconsumptionMap
 		_angularSpeedList = Nothing
 	End Sub
 
-	Public Function ReadFile(Optional ByVal ShowMsg As Boolean = True) As Boolean
-		Dim file As CsvFile
-		Dim line As String()
-		Dim nU As Double
-		Dim MsgSrc As String
+	Public Function ReadFile(Optional ByVal showMsg As Boolean = True) As Boolean
 
-
-		MsgSrc = "Main/ReadInp/MAP"
+		Const msgSrc As String = "Main/ReadInp/MAP"
 
 		'Reset
 		ResetMe()
 
 		'Stop if there's no file
 		If _filePath = "" OrElse Not IO.File.Exists(_filePath) Then
-			If ShowMsg Then WorkerMsg(MessageType.Err, "Map file not found! (" & _filePath & ")", MsgSrc)
+			If showMsg Then WorkerMsg(MessageType.Err, "Map file not found! (" & _filePath & ")", msgSrc)
 			Return False
 		End If
 
 		'Open file
-		file = New CsvFile
+		Dim file As CsvFile = New CsvFile
 		If Not file.OpenRead(_filePath) Then
 
-			If ShowMsg Then WorkerMsg(MessageType.Err, "Failed to open file (" & _filePath & ") !", MsgSrc)
+			If showMsg Then WorkerMsg(MessageType.Err, "Failed to open file (" & _filePath & ") !", msgSrc)
 			Return False
 		End If
 
@@ -65,15 +60,15 @@ Public Class FuelconsumptionMap
 			Do While Not file.EndOfFile
 
 				'Line read
-				line = file.ReadLine
+				Dim line As String() = file.ReadLine
 
 				'Line counter up (was reset in ResetMe)
 				lineCount += 1
 
 				'Revolutions
-				nU = CDbl(line(0))
+				Dim rpm As Double = CDbl(line(0))
 
-				_angularSpeedList.Add(nU)
+				_angularSpeedList.Add(rpm)
 
 				'Power
 				_torqueList.Add(line(1))
@@ -82,7 +77,7 @@ Public Class FuelconsumptionMap
 				'Check sign
 				If CSng(line(2)) < 0 Then
 					file.Close()
-					If ShowMsg Then WorkerMsg(MessageType.Err, "FC < 0 in map at " & nU & " [1/min], " & line(1) & " [Nm]", MsgSrc)
+					If showMsg Then WorkerMsg(MessageType.Err, "FC < 0 in map at " & rpm & " [1/min], " & line(1) & " [Nm]", msgSrc)
 					Return False
 				End If
 
@@ -92,8 +87,8 @@ Public Class FuelconsumptionMap
 			Loop
 		Catch ex As Exception
 
-			If ShowMsg Then _
-				WorkerMsg(MessageType.Err, "Error during file read! Line number " & lineCount + 1 & " (" & _filePath & ")", MsgSrc,
+			If showMsg Then _
+				WorkerMsg(MessageType.Err, "Error during file read! Line number " & lineCount + 1 & " (" & _filePath & ")", msgSrc,
 						_filePath)
 			GoTo lbEr
 

@@ -38,11 +38,11 @@ Public Class cAdvancedAuxiliary
 		_AssemblyName = "CLASSIC"
 	End Sub
 
-	Public Sub New(AuxiliaryName As String, AuxiliaryVersion As String, FileName As String, AssemblyName As String)
+	Public Sub New(auxiliaryName As String, auxiliaryVersion As String, fileName As String, assemblyName As String)
 
-		_AuxiliaryName = AuxiliaryName
-		_AuxiliaryVersion = AuxiliaryVersion
-		_FileName = FileName
-		_AssemblyName = AssemblyName
+		_auxiliaryName = auxiliaryName
+		_auxiliaryVersion = auxiliaryVersion
+		_fileName = fileName
+		_assemblyName = assemblyName
 	End Sub
 End Class

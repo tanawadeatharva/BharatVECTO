@@ -30,14 +30,14 @@ Public Class VectoJob
 	Private _myPath As String
 
 	'Input parameters
-	Private ReadOnly _stPathVeh As SubPath
-	Private ReadOnly _stPathEng As SubPath
-	Private ReadOnly _stPathGbx As SubPath
+	Private ReadOnly _vehicleFile As SubPath
+	Private ReadOnly _engineFile As SubPath
+	Private ReadOnly _gearboxFile As SubPath
 
-	Private _boStartStop As Boolean
-	Private _siStStV As Single
-	Private _siStStT As Single
-	Public StStDelay As Integer
+	Private _startStop As Boolean
+	Private _startStopMaxSpeed As Single
+	Private _startStopMinTime As Single
+	Public StartStopDelay As Integer
 
 	Private ReadOnly _driverAccelerationFile As SubPath
 
@@ -46,7 +46,7 @@ Public Class VectoJob
 
 	Public ReadOnly CycleFiles As List(Of SubPath)
 
-	Public EngOnly As Boolean
+	Public EngineOnly As Boolean
 
 	Public VMin As Single
 	Public LookAheadOn As Boolean
@@ -72,9 +72,9 @@ Public Class VectoJob
 		_myPath = ""
 		_sFilePath = ""
 
-		_stPathVeh = New SubPath
-		_stPathEng = New SubPath
-		_stPathGbx = New SubPath
+		_vehicleFile = New SubPath
+		_engineFile = New SubPath
+		_gearboxFile = New SubPath
 
 		_driverAccelerationFile = New SubPath
 
@@ -100,9 +100,9 @@ Public Class VectoJob
 		SavedInDeclMode = Cfg.DeclMode
 
 		'Main Files
-		dic0.Add("VehicleFile", _stPathVeh.PathOrDummy)
-		dic0.Add("EngineFile", _stPathEng.PathOrDummy)
-		dic0.Add("GearboxFile", _stPathGbx.PathOrDummy)
+		dic0.Add("VehicleFile", _vehicleFile.PathOrDummy)
+		dic0.Add("EngineFile", _engineFile.PathOrDummy)
+		dic0.Add("GearboxFile", _gearboxFile.PathOrDummy)
 
 		'Cycles
 		If CycleFiles.Count > 0 Then
@@ -125,12 +125,12 @@ Public Class VectoJob
 		End If
 
 		dic0.Add("VACC", _driverAccelerationFile.PathOrDummy)
-		dic0.Add("EngineOnlyMode", EngOnly)
+		dic0.Add("EngineOnlyMode", EngineOnly)
 		dic0.Add("StartStop", New Dictionary(Of String, Object) From {
-					{"Enabled", _boStartStop},
-					{"MaxSpeed", _siStStV},
-					{"MinTime", _siStStT},
-					{"Delay", StStDelay}})
+					{"Enabled", _startStop},
+					{"MaxSpeed", _startStopMaxSpeed},
+					{"MinTime", _startStopMinTime},
+					{"Delay", StartStopDelay}})
 		dic0.Add("LAC", New Dictionary(Of String, Object) From {
 					{"Enabled", LookAheadOn},
 					{"PreviewDistanceFactor", LacPreviewFactor},
@@ -177,12 +177,12 @@ Public Class VectoJob
 			End If
 
 			If Not body("VehicleFile") Is Nothing Then _
-				_stPathVeh.Init(_myPath, body("VehicleFile"))
+				_vehicleFile.Init(_myPath, body("VehicleFile"))
 
-			_stPathEng.Init(_myPath, body("EngineFile"))
+			_engineFile.Init(_myPath, body("EngineFile"))
 
 			If Not body("GearboxFile") Is Nothing Then _
-				_stPathGbx.Init(_myPath, body("GearboxFile"))
+				_gearboxFile.Init(_myPath, body("GearboxFile"))
 
 			If Not body("Cycles") Is Nothing Then
 				For Each str As String In body("Cycles")
@@ -252,7 +252,8 @@ Public Class VectoJob
 							Else
 								auxEntry.TechStr = "Standard technology - LED headlights, all"
 							End If
-							WorkerMsg(MessageType.Normal, "Aux: Automatically Upgraded Electric System to new format: '" + auxEntry.TechStr + "'",
+							WorkerMsg(MessageType.Normal,
+									"Aux: Automatically Upgraded Electric System to new format: '" + auxEntry.TechStr + "'",
 									msgSrc)
 						End If
 					End If
@@ -294,16 +295,16 @@ Public Class VectoJob
 				_driverAccelerationFile.Init(_myPath, body("VACC"))
 			End If
 
-			EngOnly = body("EngineOnlyMode")
+			EngineOnly = body("EngineOnlyMode")
 
 			If Not body("StartStop") Is Nothing Then
 				Dim dic = body("StartStop")
-				_boStartStop = dic("Enabled")
-				_siStStV = dic("MaxSpeed")
-				_siStStT = dic("MinTime")
-				StStDelay = dic("Delay")
+				_startStop = dic("Enabled")
+				_startStopMaxSpeed = dic("MaxSpeed")
+				_startStopMinTime = dic("MinTime")
+				StartStopDelay = dic("Delay")
 			Else
-				_boStartStop = False
+				_startStop = False
 			End If
 
 			If Not body("LAC") Is Nothing Then
@@ -335,7 +336,8 @@ Public Class VectoJob
 						EcoRollOn = False
 
 					Case Else
-						WorkerMsg(MessageType.Err, "Value '" & dic("Mode").ToString() & "' is not valid for OverSpeedEcoRoll/Mode!", msgSrc)
+						WorkerMsg(MessageType.Err, "Value '" & dic("Mode").ToString() & "' is not valid for OverSpeedEcoRoll/Mode!",
+								msgSrc)
 						Return False
 				End Select
 
@@ -365,20 +367,20 @@ Public Class VectoJob
 		AdvancedAuxiliaryFilePath = String.Empty
 
 
-		_boStartStop = False
-		_siStStV = 5
-		_siStStT = 5
-		StStDelay = 0
+		_startStop = False
+		_startStopMaxSpeed = 5
+		_startStopMinTime = 5
+		StartStopDelay = 0
 
-		_stPathVeh.Clear()
-		_stPathEng.Clear()
+		_vehicleFile.Clear()
+		_engineFile.Clear()
 		CycleFiles.Clear()
-		_stPathGbx.Clear()
+		_gearboxFile.Clear()
 
 		_driverAccelerationFile.Clear()
 
 		AuxPaths.Clear()
-		EngOnly = False
+		EngineOnly = False
 
 		VMin = 0
 		LookAheadOn = True
@@ -414,67 +416,67 @@ Public Class VectoJob
 	Public Property PathVeh(Optional ByVal original As Boolean = False) As String
 		Get
 			If original Then
-				Return _stPathVeh.OriginalPath
+				Return _vehicleFile.OriginalPath
 			Else
-				Return _stPathVeh.FullPath
+				Return _vehicleFile.FullPath
 			End If
 		End Get
 		Set(value As String)
-			_stPathVeh.Init(_myPath, value)
+			_vehicleFile.Init(_myPath, value)
 		End Set
 	End Property
 
 	Public Property PathEng(Optional ByVal original As Boolean = False) As String
 		Get
 			If original Then
-				Return _stPathEng.OriginalPath
+				Return _engineFile.OriginalPath
 			Else
-				Return _stPathEng.FullPath
+				Return _engineFile.FullPath
 			End If
 		End Get
 		Set(value As String)
-			_stPathEng.Init(_myPath, value)
+			_engineFile.Init(_myPath, value)
 		End Set
 	End Property
 
 	Public Property PathGbx(Optional ByVal original As Boolean = False) As String
 		Get
 			If original Then
-				Return _stPathGbx.OriginalPath
+				Return _gearboxFile.OriginalPath
 			Else
-				Return _stPathGbx.FullPath
+				Return _gearboxFile.FullPath
 			End If
 		End Get
 		Set(value As String)
-			_stPathGbx.Init(_myPath, value)
+			_gearboxFile.Init(_myPath, value)
 		End Set
 	End Property
 
 
 	Public Property StartStop As Boolean
 		Get
-			Return _boStartStop
+			Return _startStop
 		End Get
 		Set(value As Boolean)
-			_boStartStop = value
+			_startStop = value
 		End Set
 	End Property
 
 	Public Property StStV As Single
 		Get
-			Return _siStStV
+			Return _startStopMaxSpeed
 		End Get
 		Set(value As Single)
-			_siStStV = value
+			_startStopMaxSpeed = value
 		End Set
 	End Property
 
 	Public Property StStT As Single
 		Get
-			Return _siStStT
+			Return _startStopMinTime
 		End Get
 		Set(value As Single)
-			_siStStT = value
+			_startStopMinTime = value
 		End Set
 	End Property
 

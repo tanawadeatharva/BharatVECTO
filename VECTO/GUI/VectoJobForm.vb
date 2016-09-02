@@ -391,7 +391,7 @@ Public Class VectoJobForm
 		ChBStartStop.Checked = VEC0.StartStop
 		TbSSspeed.Text = VEC0.StStV.ToString()
 		TbSStime.Text = VEC0.StStT.ToString()
-		TbSSdelay.Text = VEC0.StStDelay.ToString()
+		TbSSdelay.Text = VEC0.StartStopDelay.ToString()
 
 		'VACC
 		TbDesMaxFile.Text = VEC0.DesMaxFile(True)
@@ -429,7 +429,7 @@ Public Class VectoJobForm
 			LvCycles.Items.Add(lv0)
 		Next
 
-		CbEngOnly.Checked = VEC0.EngOnly
+		CbEngOnly.Checked = VEC0.EngineOnly
 
 		If VEC0.EcoRollOn Then
 			RdEcoRoll.Checked = True
@@ -523,7 +523,7 @@ Public Class VectoJobForm
 		vec0.StartStop = ChBStartStop.Checked
 		vec0.StStV = CSng(fTextboxToNumString(TbSSspeed.Text))
 		vec0.StStT = CSng(fTextboxToNumString(TbSStime.Text))
-		vec0.StStDelay = CInt(fTextboxToNumString(TbSSdelay.Text))
+		vec0.StartStopDelay = CInt(fTextboxToNumString(TbSSdelay.Text))
 
 		'a_DesMax
 		vec0.DesMaxFile = TbDesMaxFile.Text
@@ -546,7 +546,7 @@ Public Class VectoJobForm
 			vec0.AuxPaths.Add(lv0.SubItems(0).Text, auxEntry)
 		Next
 
-		vec0.EngOnly = CbEngOnly.Checked
+		vec0.EngineOnly = CbEngOnly.Checked
 
 		vec0.EcoRollOn = RdEcoRoll.Checked
 		vec0.OverSpeedOn = RdOverspeed.Checked
@@ -1010,7 +1010,7 @@ lbDlog:
 
 			Dim s0 As Segment = Nothing
 			Try
-				s0 = DeclarationData.Segments.Lookup(VEH0.VehCat, VEH0.AxleConf, maxMass, 0.SI(Of Kilogram), True)
+				s0 = DeclarationData.Segments.Lookup(VEH0.VehicleCategory, VEH0.AxleConfiguration, maxMass, 0.SI(Of Kilogram), True)
 			Catch
 			End Try
 			If Not s0 Is Nothing Then
@@ -1030,9 +1030,9 @@ lbDlog:
 			PicVehicle.Image = ConvPicPath(HDVclass, False)	'Image.FromFile(cDeclaration.ConvPicPath(HDVclass, False))
 
 			TbHVCclass.Text = "HDV Class " & HDVclass
-			TbVehCat.Text = VEH0.VehCat.GetCategoryName()	'ConvVehCat(VEH0.VehCat, True)
+			TbVehCat.Text = VEH0.VehicleCategory.GetCategoryName()	'ConvVehCat(VEH0.VehCat, True)
 			TbMass.Text = VEH0.MassMax & " t"
-			TbAxleConf.Text = VEH0.AxleConf.GetName() 'ConvAxleConf(VEH0.AxleConf)
+			TbAxleConf.Text = VEH0.AxleConfiguration.GetName() 'ConvAxleConf(VEH0.AxleConf)
 
 		End If
 
@@ -1062,7 +1062,7 @@ lbDlog:
 			If FLD0.ReadFile(False, False) Then
 
 				s = New Series
-				s.Points.DataBindXY(FLD0.LnU, FLD0.LTq)
+				s.Points.DataBindXY(FLD0.EngineSpeedList, FLD0.MaxTorqueList)
 				s.ChartType = SeriesChartType.FastLine
 				s.BorderWidth = 2
 				s.Color = Color.DarkBlue
@@ -1070,7 +1070,7 @@ lbDlog:
 				MyChart.Series.Add(s)
 
 				s = New Series
-				s.Points.DataBindXY(FLD0.LnU, FLD0.LTqDrag)
+				s.Points.DataBindXY(FLD0.EngineSpeedList, FLD0.DragTorqueList)
 				s.ChartType = SeriesChartType.FastLine
 				s.BorderWidth = 2
 				s.Color = Color.Blue
@@ -1079,7 +1079,7 @@ lbDlog:
 
 				OkCount += 1
 
-				pmax = FLD0.Pfull(FLD0.fnUrated)
+				pmax = FLD0.Pfull(FLD0.EngineRatedSpeed)
 
 			End If
 
@@ -1122,40 +1122,40 @@ lbDlog:
 
 						If FLD0.ReadFile(True, False) Then
 
-							If FLD0.Init(ENG0.Nidle) Then
+							'If FLD0.Init(ENG0.Nidle) Then '' use engine from below...
 
-								'Dim engine As CombustionEngineData = ConvertToEngineData(FLD0, F_VECTO.n_idle)
-								'Dim shiftLines As ShiftPolygon = DeclarationData.Gearbox.ComputeShiftPolygon(Gear - 1,
-								'																			engine.FullLoadCurve, gears,
-								'																			engine,
-								'																			Double.Parse(LvGears.Items(0).SubItems(F_GBX.GearboxTbl.Ratio).Text,
-								'																						CultureInfo.InvariantCulture),
-								'																			(.rdyn / 1000.0).SI(Of Meter))
+							'Dim engine As CombustionEngineData = ConvertToEngineData(FLD0, F_VECTO.n_idle)
+							'Dim shiftLines As ShiftPolygon = DeclarationData.Gearbox.ComputeShiftPolygon(Gear - 1,
+							'																			engine.FullLoadCurve, gears,
+							'																			engine,
+							'																			Double.Parse(LvGears.Items(0).SubItems(F_GBX.GearboxTbl.Ratio).Text,
+							'																						CultureInfo.InvariantCulture),
+							'																			(.rdyn / 1000.0).SI(Of Meter))
 
-								's = New Series
-								's.Points.DataBindXY(shiftLines.Upshift.Select(Function(pt) pt.AngularSpeed.Value() / Constants.RPMToRad).ToList(),
-								'					shiftLines.Upshift.Select(Function(pt) pt.Torque.Value()).ToList())
-								's.ChartType = SeriesChartType.FastLine
-								's.BorderWidth = 2
-								's.Color = Color.DarkRed
-								's.Name = "Upshift curve (" & i & ")"
-								'MyChart.Series.Add(s)
+							's = New Series
+							's.Points.DataBindXY(shiftLines.Upshift.Select(Function(pt) pt.AngularSpeed.Value() / Constants.RPMToRad).ToList(),
+							'					shiftLines.Upshift.Select(Function(pt) pt.Torque.Value()).ToList())
+							's.ChartType = SeriesChartType.FastLine
+							's.BorderWidth = 2
+							's.Color = Color.DarkRed
+							's.Name = "Upshift curve (" & i & ")"
+							'MyChart.Series.Add(s)
 
-								's = New Series
-								's.Points.DataBindXY(
-								'	shiftLines.Downshift.Select(Function(pt) pt.AngularSpeed.Value() / Constants.RPMToRad).ToList(),
-								'	shiftLines.Downshift.Select(Function(pt) pt.Torque.Value()).ToList())
-								's.ChartType = SeriesChartType.FastLine
-								's.BorderWidth = 2
-								's.Color = Color.DarkRed
-								's.Name = "Downshift curve (" & i & ")"
-								'MyChart.Series.Add(s)
-							End If
+							's = New Series
+							's.Points.DataBindXY(
+							'	shiftLines.Downshift.Select(Function(pt) pt.AngularSpeed.Value() / Constants.RPMToRad).ToList(),
+							'	shiftLines.Downshift.Select(Function(pt) pt.Torque.Value()).ToList())
+							's.ChartType = SeriesChartType.FastLine
+							's.BorderWidth = 2
+							's.Color = Color.DarkRed
+							's.Name = "Downshift curve (" & i & ")"
+							'MyChart.Series.Add(s)
+							'End If
 
 
 							OkCount += 1
 
-							pmax = FLD0.Pfull(FLD0.fnUrated)
+							pmax = FLD0.Pfull(FLD0.EngineRatedSpeed)
 
 						End If
 
@@ -1172,7 +1172,7 @@ lbDlog:
 					lup = New List(Of Single)
 					ldown = New List(Of Single)
 
-					If f.OpenRead(GBX0.gsFile(i)) Then
+					If f.OpenRead(GBX0.ShiftPolygonFile(i)) Then
 
 						f.ReadLine()
 

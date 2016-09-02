@@ -388,7 +388,7 @@ Public Class EngineForm
 		If fldOK Then
 
 			s = New Series
-			s.Points.DataBindXY(FLD0.LnU, FLD0.LTq)
+			s.Points.DataBindXY(FLD0.EngineSpeedList, FLD0.MaxTorqueList)
 			s.ChartType = SeriesChartType.FastLine
 			s.BorderWidth = 2
 			s.Color = Color.DarkBlue
@@ -396,7 +396,7 @@ Public Class EngineForm
 			MyChart.Series.Add(s)
 
 			s = New Series
-			s.Points.DataBindXY(FLD0.LnU, FLD0.LTqDrag)
+			s.Points.DataBindXY(FLD0.EngineSpeedList, FLD0.DragTorqueList)
 			s.ChartType = SeriesChartType.FastLine
 			s.BorderWidth = 2
 			s.Color = Color.Blue

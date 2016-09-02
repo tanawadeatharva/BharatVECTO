@@ -251,16 +251,16 @@ Public Class GearboxForm
 
 		LvGears.Items.Clear()
 
-		For i = 0 To GBX0.Igetr.Count - 1
+		For i = 0 To GBX0.GearRatios.Count - 1
 
 			If i = 0 Then
 				'lv0 = New ListViewItem("Axle")
-				LvGears.Items.Add(CreateListviewItem("Axle", "-", GBX0.Igetr(i), GBX0.GetrMap(i, True), GBX0.gsFile(i, True),
+				LvGears.Items.Add(CreateListviewItem("Axle", "-", GBX0.GearRatios(i), GBX0.GearLossMap(i, True), GBX0.ShiftPolygonFile(i, True),
 													GBX0.MaxTorque(i)))
 			Else
 				'lv0 = New ListViewItem(i.ToString("00"))
-				LvGears.Items.Add(CreateListviewItem(i.ToString("00"), "-", GBX0.Igetr(i), GBX0.GetrMap(i, True),
-													GBX0.gsFile(i, True), GBX0.MaxTorque(i)))
+				LvGears.Items.Add(CreateListviewItem(i.ToString("00"), "-", GBX0.GearRatios(i), GBX0.GearLossMap(i, True),
+													GBX0.ShiftPolygonFile(i, True), GBX0.MaxTorque(i)))
 			End If
 
 		Next
@@ -273,10 +273,10 @@ Public Class GearboxForm
 		TbStartAcc.Text = GBX0.StartAcc.ToString
 		ChShiftInside.Checked = GBX0.ShiftInside
 
-		TbTCfile.Text = GBX0.TCfile(True)
+		TbTCfile.Text = GBX0.TorqueConverterFile(True)
 		TbTCrefrpm.Text = GBX0.TorqueConverterReferenceRPM
 		TbTCinertia.Text = GBX0.TorqueConverterInertia
-		TBTCShiftPolygon.Text = GBX0.TCshiftFile
+		TBTCShiftPolygon.Text = GBX0.TorqueConverterShiftPolygonFile
 
 		tbUpshiftMinAcceleration.Text = GBX0.UpshiftMinAcceleration
 		tbDownshiftAfterUpshift.Text = GBX0.DownshiftAfterUpshift
@@ -341,11 +341,11 @@ Public Class GearboxForm
 
 		For i = 0 To LvGears.Items.Count - 1
 			'GBX0.IsTCgear.Add(Me.LvGears.Items(i).SubItems(GearboxTbl.TorqueConverter).Text = "on" And i > 0)
-			GBX0.Igetr.Add(CSng(LvGears.Items(i).SubItems(GearboxTbl.Ratio).Text))
-			GBX0.GetrMaps.Add(New SubPath)
-			GBX0.GetrMap(i) = LvGears.Items(i).SubItems(GearboxTbl.LossMapEfficiency).Text
-			GBX0.gs_files.Add(New SubPath)
-			GBX0.gsFile(i) = LvGears.Items(i).SubItems(GearboxTbl.ShiftPolygons).Text
+			GBX0.GearRatios.Add(CSng(LvGears.Items(i).SubItems(GearboxTbl.Ratio).Text))
+			GBX0.GearLossmaps.Add(New SubPath)
+			GBX0.GearLossMap(i) = LvGears.Items(i).SubItems(GearboxTbl.LossMapEfficiency).Text
+			GBX0.GearshiftFiles.Add(New SubPath)
+			GBX0.ShiftPolygonFile(i) = LvGears.Items(i).SubItems(GearboxTbl.ShiftPolygons).Text
 			'GBX0.FldFiles.Add(New cSubPath)
 			'GBX0.FldFile(i) = Me.LvGears.Items(i).SubItems(GearboxTbl.MaxTorque).Text
 			GBX0.MaxTorque.Add(LvGears.Items(i).SubItems(GearboxTbl.MaxTorque).Text)
@@ -362,10 +362,10 @@ Public Class GearboxForm
 		GBX0.Type = CbGStype.SelectedValue
 
 		GBX0.TorqueConverterEnabled = ChTCon.Checked
-		GBX0.TCfile = TbTCfile.Text
+		GBX0.TorqueConverterFile = TbTCfile.Text
 		GBX0.TorqueConverterReferenceRPM = fTextboxToNumString(TbTCrefrpm.Text)
 		GBX0.TorqueConverterInertia = fTextboxToNumString(TbTCinertia.Text)
-		GBX0.TCshiftFile = TBTCShiftPolygon.Text
+		GBX0.TorqueConverterShiftPolygonFile = TBTCShiftPolygon.Text
 
 		GBX0.DownshiftAfterUpshift = fTextboxToNumString(tbDownshiftAfterUpshift.Text)
 		GBX0.UpshiftAfterDownshift = fTextboxToNumString(tbUpshiftAfterDownshift.Text)
@@ -737,7 +737,7 @@ Public Class GearboxForm
 
 				fldpath = VectoJobForm.FLDfile
 
-				fldOK = fldpath.Trim <> ""
+				fldOK = Not IsNothing(fldpath) AndAlso fldpath.Trim <> ""
 
 				If fldOK Then
 					FLD0 = New EngineFullLoadCurve
@@ -823,7 +823,7 @@ Public Class GearboxForm
 		If fldOK AndAlso vectoOk AndAlso vehicleOk Then
 
 			s = New Series
-			s.Points.DataBindXY(FLD0.LnU, FLD0.LTq)
+			s.Points.DataBindXY(FLD0.EngineSpeedList, FLD0.MaxTorqueList)
 			s.ChartType = SeriesChartType.FastLine
 			s.BorderWidth = 2
 			s.Color = Color.DarkBlue
@@ -831,43 +831,43 @@ Public Class GearboxForm
 			MyChart.Series.Add(s)
 
 			If VectoJobForm.Visible AndAlso VectoJobForm.n_idle > 0 Then
-				If FLD0.Init(VectoJobForm.n_idle) Then
+				'If FLD0.Init(VectoJobForm.n_idle) Then
 
-					'Dim fullLoadCurve As FullLoadCurve = ConvertToFullLoadCurve(FLD0.LnU, FLD0.LTq)
-					Dim gears As IList(Of ITransmissionInputData) = ConvertToGears(LvGears.Items)
-					If (CType(CbGStype.SelectedValue, GearboxType).ManualTransmission() AndAlso gears.Count > 1) Then
-						Dim engine As CombustionEngineData = ConvertToEngineData(FLD0, VectoJobForm.n_idle)
-						Dim shiftLines As ShiftPolygon = DeclarationData.Gearbox.ComputeShiftPolygon(Gear - 1, engine.FullLoadCurve, gears,
-																									engine,
-																									Double.Parse(LvGears.Items(0).SubItems(GearboxTbl.Ratio).Text, CultureInfo.InvariantCulture),
-																									(vehicle.rdyn / 1000.0).SI(Of Meter))
+				'Dim fullLoadCurve As FullLoadCurve = ConvertToFullLoadCurve(FLD0.LnU, FLD0.LTq)
+				Dim gears As IList(Of ITransmissionInputData) = ConvertToGears(LvGears.Items)
+				If (CType(CbGStype.SelectedValue, GearboxType).ManualTransmission() AndAlso gears.Count > 1) Then
+					Dim engine As CombustionEngineData = ConvertToEngineData(FLD0, VectoJobForm.n_idle)
+					Dim shiftLines As ShiftPolygon = DeclarationData.Gearbox.ComputeShiftPolygon(Gear - 1, engine.FullLoadCurve, gears,
+																								engine,
+																								Double.Parse(LvGears.Items(0).SubItems(GearboxTbl.Ratio).Text, CultureInfo.InvariantCulture),
+																								(vehicle.DynamicTyreRadius / 1000.0).SI(Of Meter))
 
-						s = New Series
+					s = New Series
 
-						's.Points.DataBindXY(Shiftpoly.gs_nUup, Shiftpoly.gs_TqUp)
-						s.Points.DataBindXY(
-							shiftLines.Upshift.Select(Function(pt) pt.AngularSpeed.Value() / Constants.RPMToRad).ToList(),
-							shiftLines.Upshift.Select(Function(pt) pt.Torque.Value()).ToList())
-						s.ChartType = SeriesChartType.FastLine
-						s.BorderWidth = 2
-						s.Color = Color.DarkRed
-						s.BorderDashStyle = ChartDashStyle.Dash
-						s.Name = "Upshift curve (generic)"
-						MyChart.Series.Add(s)
+					's.Points.DataBindXY(Shiftpoly.gs_nUup, Shiftpoly.gs_TqUp)
+					s.Points.DataBindXY(
+						shiftLines.Upshift.Select(Function(pt) pt.AngularSpeed.Value() / Constants.RPMToRad).ToList(),
+						shiftLines.Upshift.Select(Function(pt) pt.Torque.Value()).ToList())
+					s.ChartType = SeriesChartType.FastLine
+					s.BorderWidth = 2
+					s.Color = Color.DarkRed
+					s.BorderDashStyle = ChartDashStyle.Dash
+					s.Name = "Upshift curve (generic)"
+					MyChart.Series.Add(s)
 
-						s = New Series
-						's.Points.DataBindXY(Shiftpoly.gs_nUdown, Shiftpoly.gs_TqDown)
-						s.Points.DataBindXY(
-							shiftLines.Downshift.Select(Function(pt) pt.AngularSpeed.Value() / Constants.RPMToRad).ToList(),
-							shiftLines.Downshift.Select(Function(pt) pt.Torque.Value()).ToList())
-						s.ChartType = SeriesChartType.FastLine
-						s.BorderWidth = 2
-						s.Color = Color.DarkRed
-						s.BorderDashStyle = ChartDashStyle.Dash
-						s.Name = "Downshift curve (generic)"
-						MyChart.Series.Add(s)
-					End If
+					s = New Series
+					's.Points.DataBindXY(Shiftpoly.gs_nUdown, Shiftpoly.gs_TqDown)
+					s.Points.DataBindXY(
+						shiftLines.Downshift.Select(Function(pt) pt.AngularSpeed.Value() / Constants.RPMToRad).ToList(),
+						shiftLines.Downshift.Select(Function(pt) pt.Torque.Value()).ToList())
+					s.ChartType = SeriesChartType.FastLine
+					s.BorderWidth = 2
+					s.Color = Color.DarkRed
+					s.BorderDashStyle = ChartDashStyle.Dash
+					s.Name = "Downshift curve (generic)"
+					MyChart.Series.Add(s)
 				End If
+				'End If
 			End If
 
 		End If

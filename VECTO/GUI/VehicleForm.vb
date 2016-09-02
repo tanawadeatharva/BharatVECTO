@@ -321,20 +321,20 @@ Public Class VehicleForm
 		TbMass.Text = veh.Mass
 		TbMassExtra.Text = veh.MassExtra
 		TbLoad.Text = veh.Loading
-		TBrdyn.Text = veh.rdyn
+		TBrdyn.Text = veh.DynamicTyreRadius
 
-		CbCdMode.SelectedValue = veh.CdMode
-		TbCdFile.Text = veh.CdFile.OriginalPath
+		CbCdMode.SelectedValue = veh.CrossWindCorrectionMode
+		TbCdFile.Text = veh.CrossWindCorrectionFile.OriginalPath
 
-		CbRtType.SelectedValue = veh.RtType
-		TbRtRatio.Text = veh.RtRatio
-		TbRtPath.Text = veh.RtFile.OriginalPath
+		CbRtType.SelectedValue = veh.RetarderType
+		TbRtRatio.Text = veh.RetarderRatio
+		TbRtPath.Text = veh.RetarderLossMapFile.OriginalPath
 
 		cbAngularGearType.SelectedValue = veh.AngularGearType
 		tbAngularGearRatio.Text = veh.AngularGearRatio
 		tbAngularGearLossMapPath.Text = veh.AngularGearLossMapFile.OriginalPath
 
-		CbCat.SelectedValue = veh.VehCat
+		CbCat.SelectedValue = veh.VehicleCategory
 
 
 		LvRRC.Items.Clear()
@@ -376,7 +376,7 @@ Public Class VehicleForm
 		TbMassMass.Text = veh.MassMax
 		TbMassExtra.Text = veh.MassExtra
 
-		CbAxleConfig.SelectedValue = veh.AxleConf
+		CbAxleConfig.SelectedValue = veh.AxleConfiguration
 
 		TBcdA.Text = veh.CdA0
 
@@ -403,18 +403,18 @@ Public Class VehicleForm
 
 		veh.CdA0 = CSng(fTextboxToNumString(TBcdA.Text))
 
-		veh.rdyn = CSng(fTextboxToNumString(TBrdyn.Text))
-		veh.CdMode = CbCdMode.SelectedValue
-		veh.CdFile.Init(fPATH(file), TbCdFile.Text)
-		veh.RtType = CbRtType.SelectedValue
-		veh.RtRatio = CSng(fTextboxToNumString(TbRtRatio.Text))
-		veh.RtFile.Init(fPATH(file), TbRtPath.Text)
+		veh.DynamicTyreRadius = CSng(fTextboxToNumString(TBrdyn.Text))
+		veh.CrossWindCorrectionMode = CbCdMode.SelectedValue
+		veh.CrossWindCorrectionFile.Init(fPATH(file), TbCdFile.Text)
+		veh.RetarderType = CbRtType.SelectedValue
+		veh.RetarderRatio = CSng(fTextboxToNumString(TbRtRatio.Text))
+		veh.RetarderLossMapFile.Init(fPATH(file), TbRtPath.Text)
 
 		veh.AngularGearType = cbAngularGearType.SelectedValue
 		veh.AngularGearRatio = CSng(fTextboxToNumString(tbAngularGearRatio.Text))
 		veh.AngularGearLossMapFile.Init(fPATH(file), tbAngularGearLossMapPath.Text)
 
-		veh.VehCat = CbCat.SelectedValue 'CType(CbCat.SelectedIndex, tVehCat)
+		veh.VehicleCategory = CbCat.SelectedValue 'CType(CbCat.SelectedIndex, tVehCat)
 
 		Dim axleShareCheck As Double
 		For Each LV0 In LvRRC.Items
@@ -436,7 +436,7 @@ Public Class VehicleForm
 
 		veh.MassMax = CSng(fTextboxToNumString(TbMassMass.Text))
 		veh.MassExtra = CSng(fTextboxToNumString(TbMassExtra.Text))
-		veh.AxleConf = CbAxleConfig.SelectedValue
+		veh.AxleConfiguration = CbAxleConfig.SelectedValue
 
 
 		'---------------------------------------------------------------------------------
