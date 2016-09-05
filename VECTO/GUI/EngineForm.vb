@@ -54,7 +54,7 @@ Public Class EngineForm
 
 		TbInertia.Text =
 			CStr(
-				DeclarationData.Engine.EngineInertia((fTextboxToNumString(TbDispl.Text) / 1000.0).SI(Of CubicMeter),
+				DeclarationData.Engine.EngineInertia((fTextboxToNumString(TbDispl.Text) / 1000.0 / 1000.0).SI(Of CubicMeter),
 													GearboxType.AMT).Value())
 	End Sub
 

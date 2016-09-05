@@ -135,7 +135,7 @@ Public Class GraphForm
 				TbXmin.Text = 0
 				TbXmax.Text = _xMax0
 
-				Text = fFILE(_filepath, True)
+				Text = GetFilenameWithoutPath(_filepath, True)
 
 			Catch ex As Exception
 				file.Close()

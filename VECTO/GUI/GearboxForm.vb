@@ -63,7 +63,7 @@ Public Class GearboxForm
 
 		PnInertiaTI.Enabled = Not Cfg.DeclMode
 		GrGearShift.Enabled = Not Cfg.DeclMode
-		ChTCon.Enabled = Not Cfg.DeclMode
+		'ChTCon.Enabled = Not Cfg.DeclMode
 
 		CbGStype.Items.Clear()
 		CbGStype.ValueMember = "Value"
@@ -112,6 +112,7 @@ Public Class GearboxForm
 		tbDownshiftAfterUpshift.Text = DeclarationData.Gearbox.DownshiftAfterUpshiftDelay.Value()
 		tbUpshiftAfterDownshift.Text = DeclarationData.Gearbox.UpshiftAfterDownshiftDelay.Value()
 
+		'ChTCon.Checked = GStype.AutomaticTransmission()
 		For Each lv0 In LvGears.Items
 			lv0.SubItems(GearboxTbl.ShiftPolygons).Text = "-"
 		Next
@@ -155,7 +156,7 @@ Public Class GearboxForm
 			VectoJobForm.WindowState = FormWindowState.Normal
 		End If
 
-		VectoJobForm.TbGBX.Text = fFileWoDir(GbxFile, JobDir)
+		VectoJobForm.TbGBX.Text = GetFilenameWithoutDirectory(GbxFile, JobDir)
 	End Sub
 
 	'Help
@@ -180,7 +181,7 @@ Public Class GearboxForm
 
 		If ChangeCheckCancel() Then Exit Sub
 
-		CbGStype.SelectedIndex = 0
+		'CbGStype.SelectedIndex = 0
 
 		TbName.Text = ""
 		TbTracInt.Text = ""
@@ -198,7 +199,7 @@ Public Class GearboxForm
 		TbStartSpeed.Text = ""
 		TbStartAcc.Text = ""
 
-		'Me.ChTCon.Checked = False              'set by CbGStype.SelectedIndexChanged
+		'ChTCon.Checked = False				'set by CbGStype.SelectedIndexChanged
 		TbTCfile.Text = ""
 		TbTCrefrpm.Text = ""
 		TbTCinertia.Text = ""
@@ -247,7 +248,7 @@ Public Class GearboxForm
 		TbTracInt.Text = GBX0.TracIntrSi.ToString
 		TBI_getr.Text = GBX0.GbxInertia.ToString
 
-		ChTCon.Checked = GBX0.TorqueConverterEnabled
+		'ChTCon.Checked = GBX0.TorqueConverterEnabled
 
 		LvGears.Items.Clear()
 
@@ -255,7 +256,8 @@ Public Class GearboxForm
 
 			If i = 0 Then
 				'lv0 = New ListViewItem("Axle")
-				LvGears.Items.Add(CreateListviewItem("Axle", "-", GBX0.GearRatios(i), GBX0.GearLossMap(i, True), GBX0.ShiftPolygonFile(i, True),
+				LvGears.Items.Add(CreateListviewItem("Axle", "-", GBX0.GearRatios(i), GBX0.GearLossMap(i, True),
+													GBX0.ShiftPolygonFile(i, True),
 													GBX0.MaxTorque(i)))
 			Else
 				'lv0 = New ListViewItem(i.ToString("00"))
@@ -274,7 +276,7 @@ Public Class GearboxForm
 		ChShiftInside.Checked = GBX0.ShiftInside
 
 		TbTCfile.Text = GBX0.TorqueConverterFile(True)
-		TbTCrefrpm.Text = GBX0.TorqueConverterReferenceRPM
+		TbTCrefrpm.Text = GBX0.TorqueConverterReferenceRpm
 		TbTCinertia.Text = GBX0.TorqueConverterInertia
 		TBTCShiftPolygon.Text = GBX0.TorqueConverterShiftPolygonFile
 
@@ -293,7 +295,7 @@ Public Class GearboxForm
 
 
 		GearboxFileBrowser.UpdateHistory(file)
-		Text = fFILE(file, True)
+		Text = GetFilenameWithoutPath(file, True)
 		LbStatus.Text = ""
 		GbxFile = file
 		Activate()
@@ -361,9 +363,9 @@ Public Class GearboxForm
 
 		GBX0.Type = CbGStype.SelectedValue
 
-		GBX0.TorqueConverterEnabled = ChTCon.Checked
+		GBX0.TorqueConverterEnabled = GBX0.Type.AutomaticTransmission()
 		GBX0.TorqueConverterFile = TbTCfile.Text
-		GBX0.TorqueConverterReferenceRPM = fTextboxToNumString(TbTCrefrpm.Text)
+		GBX0.TorqueConverterReferenceRpm = fTextboxToNumString(TbTCrefrpm.Text)
 		GBX0.TorqueConverterInertia = fTextboxToNumString(TbTCinertia.Text)
 		GBX0.TorqueConverterShiftPolygonFile = TBTCShiftPolygon.Text
 
@@ -378,13 +380,14 @@ Public Class GearboxForm
 
 		If AutoSendTo Then
 			If VectoJobForm.Visible Then
-				If UCase(fFileRepl(VectoJobForm.TbGBX.Text, JobDir)) <> UCase(file) Then VectoJobForm.TbGBX.Text = fFileWoDir(file, JobDir)
+				If UCase(fFileRepl(VectoJobForm.TbGBX.Text, JobDir)) <> UCase(file) Then _
+					VectoJobForm.TbGBX.Text = GetFilenameWithoutDirectory(file, JobDir)
 				VectoJobForm.UpdatePic()
 			End If
 		End If
 
 		GearboxFileBrowser.UpdateHistory(file)
-		Text = fFILE(file, True)
+		Text = GetFilenameWithoutPath(file, True)
 		LbStatus.Text = ""
 
 		Changed = False
@@ -510,7 +513,8 @@ Public Class GearboxForm
 
 		ChShiftInside.Enabled = (GStype.EarlyShiftGears())
 		ChSkipGears.Enabled = (GStype.SkipGears())
-		ChTCon.Enabled = (GStype.AutomaticTransmission())
+		'ChTCon.Enabled = (GStype.AutomaticTransmission())
+		PnTC.Enabled = GStype.AutomaticTransmission()
 	End Sub
 
 
@@ -557,7 +561,7 @@ Public Class GearboxForm
 			'GearDia.ChIsTCgear.Enabled = (Me.ChTCon.Checked And Me.LvGears.SelectedIndices(0) > 0)
 			GearDia.PnShiftPoly.Enabled = (Not Cfg.DeclMode And LvGears.SelectedIndices(0) > 0)
 			GearDia.PnFld.Enabled = (LvGears.SelectedIndices(0) > 0)
-			GearDia.GbxPath = fPATH(GbxFile)
+			GearDia.GbxPath = GetPath(GbxFile)
 			GearDia.TbGear.Text = LvGears.SelectedItems(0).SubItems(GearboxTbl.GearNr).Text
 			GearDia.TbRatio.Text = LvGears.SelectedItems(0).SubItems(GearboxTbl.Ratio).Text
 			GearDia.TbMapPath.Text = LvGears.SelectedItems(0).SubItems(GearboxTbl.LossMapEfficiency).Text
@@ -723,11 +727,11 @@ Public Class GearboxForm
 			If LvGears.Items.Count > 1 Then
 
 				If LvGears.SelectedItems.Count > 0 AndAlso LvGears.SelectedIndices(0) > 0 Then
-					path = fFileRepl(LvGears.SelectedItems(0).SubItems(GearboxTbl.ShiftPolygons).Text, fPATH(GbxFile))
+					path = fFileRepl(LvGears.SelectedItems(0).SubItems(GearboxTbl.ShiftPolygons).Text, GetPath(GbxFile))
 					'fldpath = fFileRepl(LvGears.SelectedItems(0).SubItems(GearboxTbl.MaxTorque).Text, fPATH(GbxFile))
 					Gear = LvGears.SelectedIndices(0)
 				Else
-					path = fFileRepl(LvGears.Items(1).SubItems(GearboxTbl.ShiftPolygons).Text, fPATH(GbxFile))
+					path = fFileRepl(LvGears.Items(1).SubItems(GearboxTbl.ShiftPolygons).Text, GetPath(GbxFile))
 					'fldpath = fFileRepl(Me.LvGears.Items(1).SubItems(GearboxTbl.MaxTorque).Text, fPATH(GbxFile))
 					Gear = 1
 				End If
@@ -835,12 +839,9 @@ Public Class GearboxForm
 
 				'Dim fullLoadCurve As FullLoadCurve = ConvertToFullLoadCurve(FLD0.LnU, FLD0.LTq)
 				Dim gears As IList(Of ITransmissionInputData) = ConvertToGears(LvGears.Items)
-				If (CType(CbGStype.SelectedValue, GearboxType).ManualTransmission() AndAlso gears.Count > 1) Then
-					Dim engine As CombustionEngineData = ConvertToEngineData(FLD0, VectoJobForm.n_idle)
-					Dim shiftLines As ShiftPolygon = DeclarationData.Gearbox.ComputeShiftPolygon(Gear - 1, engine.FullLoadCurve, gears,
-																								engine,
-																								Double.Parse(LvGears.Items(0).SubItems(GearboxTbl.Ratio).Text, CultureInfo.InvariantCulture),
-																								(vehicle.DynamicTyreRadius / 1000.0).SI(Of Meter))
+				Dim shiftLines As ShiftPolygon = GetShiftLines(FLD0, vehicle, gears, Gear)
+				If (CType(CbGStype.SelectedValue, GearboxType).ManualTransmission() AndAlso Not IsNothing(shiftLines)) Then
+
 
 					s = New Series
 
@@ -907,6 +908,29 @@ Public Class GearboxForm
 	End Sub
 
 
+	Private Function GetShiftLines(engineFullLoadCurve As EngineFullLoadCurve, vehicle As Vehicle,
+									gears As IList(Of ITransmissionInputData), gear As UInteger) As ShiftPolygon
+		Dim engine As CombustionEngineData = ConvertToEngineData(engineFullLoadCurve, VectoJobForm.n_idle)
+		If gears.Count <= 1 Then
+			Return Nothing
+		End If
+		Dim rDyn As Meter = (vehicle.DynamicTyreRadius / 1000.0).SI(Of Meter)()
+		If rDyn.IsEqual(0) Then
+			If (vehicle.Axles.Count < 2) Then
+				Return Nothing
+			End If
+			rDyn = DeclarationData.Wheels.Lookup(vehicle.Axles(1).Wheels).DynamicTyreRadius
+		End If
+		If (rDyn.IsEqual(0)) Then
+			Return Nothing
+		End If
+		Dim shiftLines As ShiftPolygon = DeclarationData.Gearbox.ComputeShiftPolygon(gear - 1, engine.FullLoadCurve, gears,
+																					engine,
+																					Double.Parse(LvGears.Items(0).SubItems(GearboxTbl.Ratio).Text, CultureInfo.InvariantCulture),
+																					(rDyn))
+		Return shiftLines
+	End Function
+
 	Private Function ConvertToGears(gbx As ListView.ListViewItemCollection) As IList(Of ITransmissionInputData)
 		Dim retVal As List(Of ITransmissionInputData) = New List(Of ITransmissionInputData)
 		Dim value As Double
@@ -927,38 +951,17 @@ Public Class GearboxForm
 
 #Region "Torque Converter"
 
-	'TC on/off
-	Private Sub ChTCon_CheckedChanged(sender As Object, e As EventArgs) Handles ChTCon.CheckedChanged
-		Change()
-		CheckGearTC()
-		PnTC.Enabled = ChTCon.Checked
-		LblTCShiftFile.Enabled = ChTCon.Checked
-		TBTCShiftPolygon.Enabled = ChTCon.Checked
-	End Sub
 
 	'Browse TC file
 	Private Sub BtTCfileBrowse_Click(sender As Object, e As EventArgs) Handles BtTCfileBrowse.Click
-		If TorqueConverterFileBrowser.OpenDialog(fFileRepl(TbTCfile.Text, fPATH(GbxFile))) Then
-			TbTCfile.Text = fFileWoDir(TorqueConverterFileBrowser.Files(0), fPATH(GbxFile))
+		If TorqueConverterFileBrowser.OpenDialog(fFileRepl(TbTCfile.Text, GetPath(GbxFile))) Then
+			TbTCfile.Text = GetFilenameWithoutDirectory(TorqueConverterFileBrowser.Files(0), GetPath(GbxFile))
 		End If
 	End Sub
 
 	'Open TC file
 	Private Sub BtTCfileOpen_Click(sender As Object, e As EventArgs) Handles BtTCfileOpen.Click
-		OpenFiles(fFileRepl(TbTCfile.Text, fPATH(GbxFile)))
-	End Sub
-
-	Private Sub CheckGearTC()
-		Dim lv0 As ListViewItem
-
-		If Not Init Then Exit Sub
-
-		For Each lv0 In LvGears.Items
-
-			If lv0.SubItems(GearboxTbl.GearNr).Text = "Axle" Then Continue For
-
-			'lv0.SubItems(GearboxTbl.TorqueConverter).Text = "-"
-		Next
+		OpenFiles(fFileRepl(TbTCfile.Text, GetPath(GbxFile)))
 	End Sub
 
 
@@ -976,8 +979,8 @@ Public Class GearboxForm
 	End Sub
 
 	Private Sub BtTCShiftFileBrowse_Click(sender As Object, e As EventArgs) Handles BtTCShiftFileBrowse.Click
-		If fbTCCShift.OpenDialog(fFileRepl(TBTCShiftPolygon.Text, fPATH(GbxFile))) Then
-			TBTCShiftPolygon.Text = fFileWoDir(fbTCCShift.Files(0), fPATH(GbxFile))
+		If fbTCCShift.OpenDialog(fFileRepl(TBTCShiftPolygon.Text, GetPath(GbxFile))) Then
+			TBTCShiftPolygon.Text = GetFilenameWithoutDirectory(fbTCCShift.Files(0), GetPath(GbxFile))
 		End If
 	End Sub
 End Class

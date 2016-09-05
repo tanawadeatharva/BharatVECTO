@@ -42,7 +42,7 @@ Public Class VectoJobForm
 	'Populate Advanced Auxiliaries
 	Private Sub PopulateAdvancedAuxiliaries()
 		'Scan the program directory for DLL's which are AdvancedAuxiliaries and display
-		Dim aList As List(Of cAdvancedAuxiliary) = DiscoverAdvancedAuxiliaries()
+		Dim aList As List(Of AdvancedAuxiliary) = DiscoverAdvancedAuxiliaries()
 
 		cboAdvancedAuxiliaries.DataSource = aList
 		cboAdvancedAuxiliaries.DisplayMember = "AuxiliaryName"
@@ -136,12 +136,13 @@ Public Class VectoJobForm
 
 			LvAux.Items.Add(GetTechListForAux(sKey.AUX.ElecSys, "Electric System", DeclarationData.ElectricSystem))
 
-			LvAux.Items.Add(GetTechListForAux(sKey.AUX.PneumSys, "Pneymatic System", DeclarationData.PneumaticSystem))
+			LvAux.Items.Add(GetTechListForAux(sKey.AUX.PneumSys, "Pneumatic System", DeclarationData.PneumaticSystem))
 
 		End If
 	End Sub
 
-	Protected Function GetTechListForAux(key As String, nameStr As String, aux As IDeclarationAuxiliaryTable) As ListViewItem
+	Protected Function GetTechListForAux(key As String, nameStr As String, aux As IDeclarationAuxiliaryTable) _
+		As ListViewItem
 		Dim LV0 As ListViewItem
 
 		LV0 = New ListViewItem(key)
@@ -175,31 +176,31 @@ Public Class VectoJobForm
 #Region "Browse Buttons"
 
 	Private Sub ButtonVEH_Click(sender As Object, e As EventArgs) Handles ButtonVEH.Click
-		If VehicleFileBrowser.OpenDialog(fFileRepl(TbVEH.Text, fPATH(VECTOfile))) Then
-			TbVEH.Text = fFileWoDir(VehicleFileBrowser.Files(0), fPATH(VECTOfile))
+		If VehicleFileBrowser.OpenDialog(fFileRepl(TbVEH.Text, GetPath(VECTOfile))) Then
+			TbVEH.Text = GetFilenameWithoutDirectory(VehicleFileBrowser.Files(0), GetPath(VECTOfile))
 		End If
 	End Sub
 
 	Private Sub ButtonMAP_Click(sender As Object, e As EventArgs) Handles ButtonMAP.Click
-		If EngineFileBrowser.OpenDialog(fFileRepl(TbENG.Text, fPATH(VECTOfile))) Then
-			TbENG.Text = fFileWoDir(EngineFileBrowser.Files(0), fPATH(VECTOfile))
+		If EngineFileBrowser.OpenDialog(fFileRepl(TbENG.Text, GetPath(VECTOfile))) Then
+			TbENG.Text = GetFilenameWithoutDirectory(EngineFileBrowser.Files(0), GetPath(VECTOfile))
 		End If
 	End Sub
 
 	Private Sub ButtonGBX_Click(sender As Object, e As EventArgs) Handles ButtonGBX.Click
-		If GearboxFileBrowser.OpenDialog(fFileRepl(TbGBX.Text, fPATH(VECTOfile))) Then
-			TbGBX.Text = fFileWoDir(GearboxFileBrowser.Files(0), fPATH(VECTOfile))
+		If GearboxFileBrowser.OpenDialog(fFileRepl(TbGBX.Text, GetPath(VECTOfile))) Then
+			TbGBX.Text = GetFilenameWithoutDirectory(GearboxFileBrowser.Files(0), GetPath(VECTOfile))
 		End If
 	End Sub
 
 	Private Sub BtDesMaxBr_Click_1(sender As Object, e As EventArgs) Handles BtDesMaxBr.Click
-		If DriverAccelerationFileBrowser.OpenDialog(fFileRepl(TbDesMaxFile.Text, fPATH(VECTOfile))) Then
-			TbDesMaxFile.Text = fFileWoDir(DriverAccelerationFileBrowser.Files(0), fPATH(VECTOfile))
+		If DriverAccelerationFileBrowser.OpenDialog(fFileRepl(TbDesMaxFile.Text, GetPath(VECTOfile))) Then
+			TbDesMaxFile.Text = GetFilenameWithoutDirectory(DriverAccelerationFileBrowser.Files(0), GetPath(VECTOfile))
 		End If
 	End Sub
 
 	Private Sub BtAccOpen_Click(sender As Object, e As EventArgs) Handles BtAccOpen.Click
-		OpenFiles(fFileRepl(TbDesMaxFile.Text, fPATH(VECTOfile)))
+		OpenFiles(fFileRepl(TbDesMaxFile.Text, GetPath(VECTOfile)))
 	End Sub
 
 #End Region
@@ -209,10 +210,10 @@ Public Class VectoJobForm
 	'Open Vehicle Editor
 	Private Sub ButOpenVEH_Click(sender As Object, e As EventArgs) Handles ButOpenVEH.Click
 		Dim f As String
-		f = fFileRepl(TbVEH.Text, fPATH(VECTOfile))
+		f = fFileRepl(TbVEH.Text, GetPath(VECTOfile))
 
 		'Thus Veh-file is returned
-		VehicleForm.JobDir = fPATH(VECTOfile)
+		VehicleForm.JobDir = GetPath(VECTOfile)
 		VehicleForm.AutoSendTo = True
 
 		If Not Trim(f) = "" Then
@@ -235,10 +236,10 @@ Public Class VectoJobForm
 	'Open Engine Editor
 	Private Sub ButOpenENG_Click(sender As Object, e As EventArgs) Handles ButOpenENG.Click
 		Dim f As String
-		f = fFileRepl(TbENG.Text, fPATH(VECTOfile))
+		f = fFileRepl(TbENG.Text, GetPath(VECTOfile))
 
 		'Thus Veh-file is returned
-		EngineForm.JobDir = fPATH(VECTOfile)
+		EngineForm.JobDir = GetPath(VECTOfile)
 		EngineForm.AutoSendTo = True
 
 		If Not Trim(f) = "" Then
@@ -261,10 +262,10 @@ Public Class VectoJobForm
 	'Open Gearbox Editor
 	Private Sub ButOpenGBX_Click(sender As Object, e As EventArgs) Handles ButOpenGBX.Click
 		Dim f As String
-		f = fFileRepl(TbGBX.Text, fPATH(VECTOfile))
+		f = fFileRepl(TbGBX.Text, GetPath(VECTOfile))
 
 		'Thus Veh-file is returned
-		GearboxForm.JobDir = fPATH(VECTOfile)
+		GearboxForm.JobDir = GetPath(VECTOfile)
 		GearboxForm.AutoSendTo = True
 
 		If Not Trim(f) = "" Then
@@ -358,11 +359,11 @@ Public Class VectoJobForm
 		VEC0.FilePath = file
 		Try
 			If Not VEC0.ReadFile() Then
-				MsgBox("Failed to load " & fFILE(file, True) & "!")
+				MsgBox("Failed to load " & GetFilenameWithoutPath(file, True) & "!")
 				Exit Sub
 			End If
 		Catch ex As Exception
-			MsgBox("Failed to load " & fFILE(file, True) & "!")
+			MsgBox("Failed to load " & GetFilenameWithoutPath(file, True) & "!")
 			Exit Sub
 		End Try
 
@@ -399,7 +400,7 @@ Public Class VectoJobForm
 
 		'AA-TB
 		'Try and Select any previously selected Auxiliary Type
-		For Each item As cAdvancedAuxiliary In cboAdvancedAuxiliaries.Items
+		For Each item As AdvancedAuxiliary In cboAdvancedAuxiliaries.Items
 			If item.AssemblyName = VEC0.AuxiliaryAssembly AndAlso VEC0.AuxiliaryVersion = item.AuxiliaryVersion Then
 				cboAdvancedAuxiliaries.SelectedItem = item
 				Exit For
@@ -486,10 +487,10 @@ Public Class VectoJobForm
 		If cboAdvancedAuxiliaries.SelectedIndex > 0 Then
 
 			'resolve absolute path for auxiliary file.
-			Dim absoluteAAUxFile = ResolveAAUXFilePath(fPATH(VECTOfile), txtAdvancedAuxiliaryFile.Text)
+			Dim absoluteAAUxFile = ResolveAAUXFilePath(GetPath(VECTOfile), txtAdvancedAuxiliaryFile.Text)
 
-			Dim aaAssemblyName = DirectCast(cboAdvancedAuxiliaries.SelectedItem, cAdvancedAuxiliary).AssemblyName
-			Dim aaAssemblyVersion = DirectCast(cboAdvancedAuxiliaries.SelectedItem, cAdvancedAuxiliary).AuxiliaryVersion
+			Dim aaAssemblyName = DirectCast(cboAdvancedAuxiliaries.SelectedItem, AdvancedAuxiliary).AssemblyName
+			Dim aaAssemblyVersion = DirectCast(cboAdvancedAuxiliaries.SelectedItem, AdvancedAuxiliary).AuxiliaryVersion
 
 
 			If Not ValidateAAUXFile(absoluteAAUxFile, aaAssemblyName, aaAssemblyVersion, message) Then
@@ -512,7 +513,7 @@ Public Class VectoJobForm
 
 		For Each lv0 As ListViewItem In LvCycles.Items
 			Dim sb = New SubPath
-			sb.Init(fPATH(file), lv0.Text)
+			sb.Init(GetPath(file), lv0.Text)
 			vec0.CycleFiles.Add(sb)
 		Next
 
@@ -529,8 +530,8 @@ Public Class VectoJobForm
 		vec0.DesMaxFile = TbDesMaxFile.Text
 
 		'AA-TB
-		vec0.AuxiliaryAssembly = DirectCast(cboAdvancedAuxiliaries.SelectedItem, cAdvancedAuxiliary).AssemblyName
-		vec0.AuxiliaryVersion = DirectCast(cboAdvancedAuxiliaries.SelectedItem, cAdvancedAuxiliary).AuxiliaryVersion
+		vec0.AuxiliaryAssembly = DirectCast(cboAdvancedAuxiliaries.SelectedItem, AdvancedAuxiliary).AssemblyName
+		vec0.AuxiliaryVersion = DirectCast(cboAdvancedAuxiliaries.SelectedItem, AdvancedAuxiliary).AuxiliaryVersion
 		vec0.AdvancedAuxiliaryFilePath = txtAdvancedAuxiliaryFile.Text
 
 		For Each lv0 As ListViewItem In LvAux.Items
@@ -539,7 +540,7 @@ Public Class VectoJobForm
 			If Cfg.DeclMode Then
 				auxEntry.TechStr = lv0.SubItems(2).Text
 			Else
-				auxEntry.Path.Init(fPATH(file), lv0.SubItems(2).Text)
+				auxEntry.Path.Init(GetPath(file), lv0.SubItems(2).Text)
 			End If
 
 			auxEntry.Type = lv0.SubItems(1).Text
@@ -572,7 +573,7 @@ Public Class VectoJobForm
 
 		VECTOfile = file
 
-		file = fFILE(VECTOfile, True)
+		file = GetFilenameWithoutPath(VECTOfile, True)
 
 		Text = file
 		ToolStripStatusLabelGEN.Text = ""
@@ -728,7 +729,7 @@ Public Class VectoJobForm
 	Private Sub ButAuxAdd_Click(sender As Object, e As EventArgs) Handles ButAuxAdd.Click
 		Dim ID As String
 
-		AuxDlog.VehPath = fPATH(VECTOfile)
+		AuxDlog.VehPath = GetPath(VECTOfile)
 		AuxDlog.TbPath.Text = ""
 		AuxDlog.CbType.SelectedIndex = -1
 		AuxDlog.CbType.Text = ""
@@ -782,7 +783,7 @@ lbDlog:
 
 		Dim selItem = LvAux.SelectedItems(0)
 
-		AuxDlog.VehPath = fPATH(VECTOfile)
+		AuxDlog.VehPath = GetPath(VECTOfile)
 		AuxDlog.CbType.SelectedIndex = -1
 		AuxDlog.CbType.Text = selItem.SubItems(1).Text
 		AuxDlog.TbID.Text = selItem.SubItems(0).Text	'After Type-set!
@@ -853,7 +854,7 @@ lbDlog:
 
 	Private Sub LvCycles_DoubleClick(sender As Object, e As EventArgs) Handles LvCycles.DoubleClick
 		If LvCycles.SelectedItems.Count > 0 Then _
-			OpenFiles(fFileRepl(LvCycles.SelectedItems(0).SubItems(0).Text, fPATH(VECTOfile)))
+			OpenFiles(fFileRepl(LvCycles.SelectedItems(0).SubItems(0).Text, GetPath(VECTOfile)))
 	End Sub
 
 	Private Sub LvCycles_KeyDown(sender As Object, e As KeyEventArgs) Handles LvCycles.KeyDown
@@ -866,11 +867,11 @@ lbDlog:
 	End Sub
 
 	Private Sub BtDRIadd_Click(sender As Object, e As EventArgs) Handles BtDRIadd.Click
-		Dim genDir As String = fPATH(VECTOfile)
+		Dim genDir As String = GetPath(VECTOfile)
 
 		If DrivingCycleFileBrowser.OpenDialog("", True) Then
 			For Each s In DrivingCycleFileBrowser.Files
-				LvCycles.Items.Add(fFileWoDir(s, genDir))
+				LvCycles.Items.Add(GetFilenameWithoutDirectory(s, genDir))
 			Next
 			Change()
 		End If
@@ -1004,9 +1005,9 @@ lbDlog:
 		PicBox.Image = Nothing
 
 
-		VEH0.FilePath = fFileRepl(TbVEH.Text, fPATH(VECTOfile))
+		VEH0.FilePath = fFileRepl(TbVEH.Text, GetPath(VECTOfile))
 		If VEH0.ReadFile(False) Then
-			Dim maxMass = (VEH0.MassMax * 1000).SI(Of Kilogram)()		   'CSng(fTextboxToNumString(TbMassMass.Text))
+			Dim maxMass = (VEH0.MassMax * 1000).SI(Of Kilogram)()				'CSng(fTextboxToNumString(TbMassMass.Text))
 
 			Dim s0 As Segment = Nothing
 			Try
@@ -1040,7 +1041,7 @@ lbDlog:
 		Dim OkCount = 0
 
 		Dim ENG0 = New Engine
-		ENG0.FilePath = fFileRepl(TbENG.Text, fPATH(VECTOfile))
+		ENG0.FilePath = fFileRepl(TbENG.Text, GetPath(VECTOfile))
 
 		'Create plot
 		Dim MyChart = New Chart
@@ -1053,7 +1054,7 @@ lbDlog:
 
 		If ENG0.ReadFile(False) Then
 
-			n_idle = ENG0.Nidle
+			n_idle = ENG0.IdleSpeed
 			FLDfile = ENG0.PathFLD
 
 			EngOK = True
@@ -1083,7 +1084,7 @@ lbDlog:
 
 			End If
 
-			TbEngTxt.Text = (ENG0.Displ / 1000).ToString("0.0") & " l " & pmax.ToString("#") & " kW  " & ENG0.ModelName
+			TbEngTxt.Text = (ENG0.Displacement / 1000).ToString("0.0") & " l " & pmax.ToString("#") & " kW  " & ENG0.ModelName
 
 
 			Dim MAP0 = New FuelconsumptionMap
@@ -1106,7 +1107,7 @@ lbDlog:
 		End If
 
 		Dim GBX0 = New Gearbox
-		GBX0.FilePath = fFileRepl(TbGBX.Text, fPATH(VECTOfile))
+		GBX0.FilePath = fFileRepl(TbGBX.Text, GetPath(VECTOfile))
 
 		If GBX0.ReadFile(False) Then
 
@@ -1293,9 +1294,9 @@ lbDlog:
 		If cboAdvancedAuxiliaries.SelectedIndex = -1 Then Exit Sub
 
 		'Get tooltip
-		Dim item As cAdvancedAuxiliary
+		Dim item As AdvancedAuxiliary
 
-		item = DirectCast(cboAdvancedAuxiliaries.SelectedItem, cAdvancedAuxiliary)
+		item = DirectCast(cboAdvancedAuxiliaries.SelectedItem, AdvancedAuxiliary)
 
 		If item.AuxiliaryVersion = "CLASSIC" Then
 
@@ -1323,20 +1324,20 @@ lbDlog:
 		Dim fbAux As New FileBrowser(True, False)
 		Dim message As String = String.Empty
 		Dim absoluteAuxPath As String
-		Dim assembly As cAdvancedAuxiliary
+		Dim assembly As AdvancedAuxiliary
 
 		'If Classic is selected, then bail
 		If cboAdvancedAuxiliaries.SelectedIndex = 0 Then Return
 
 		'Get Absolute Path for AAUX FILE.
-		absoluteAuxPath = ResolveAAUXFilePath(fPATH(VECTOfile), txtAdvancedAuxiliaryFile.Text)
+		absoluteAuxPath = ResolveAAUXFilePath(GetPath(VECTOfile), txtAdvancedAuxiliaryFile.Text)
 
 		'Set Extensions
 		fbAux.Extensions = New String() {"AAUX"}
 
 		Try
 
-			assembly = DirectCast(cboAdvancedAuxiliaries.SelectedItem, cAdvancedAuxiliary)
+			assembly = DirectCast(cboAdvancedAuxiliaries.SelectedItem, AdvancedAuxiliary)
 
 			Dim validAAUXFile As Boolean = ValidateAAUXFile(absoluteAuxPath, assembly.AssemblyName,
 															assembly.AuxiliaryVersion, message)
@@ -1353,11 +1354,11 @@ lbDlog:
 
 					'Find / Create  file and configure.
 					If fbAux.CustomDialog(absoluteAuxPath, False, False, tFbExtMode.ForceExt, False, String.Empty) Then
-						txtAdvancedAuxiliaryFile.Text = fFileWoDir(fbAux.Files(0), fPATH(VECTOfile))
-						assembly = DirectCast(cboAdvancedAuxiliaries.SelectedItem, cAdvancedAuxiliary)
+						txtAdvancedAuxiliaryFile.Text = GetFilenameWithoutDirectory(fbAux.Files(0), GetPath(VECTOfile))
+						assembly = DirectCast(cboAdvancedAuxiliaries.SelectedItem, AdvancedAuxiliary)
 
 						If _
-							File.Exists(ResolveAAUXFilePath(fPATH(VECTOfile), txtAdvancedAuxiliaryFile.Text)) OrElse
+							File.Exists(ResolveAAUXFilePath(GetPath(VECTOfile), txtAdvancedAuxiliaryFile.Text)) OrElse
 							MsgBox("Do you want to create a new .AAUX file?", MsgBoxStyle.YesNo) = MsgBoxResult.Yes Then
 							needToFindOrCreateFile = False
 							ConfigureAdvancedAuxiliaries(assembly.AssemblyName, assembly.AuxiliaryVersion,
@@ -1398,12 +1399,14 @@ lbDlog:
 	'AA-TB
 	Private Sub btnAAUXOpen_Click(sender As Object, e As EventArgs) Handles btnAAUXOpen.Click
 
-		OpenFiles(fFileRepl(txtAdvancedAuxiliaryFile.Text, fPATH(VECTOfile)))
+		OpenFiles(fFileRepl(txtAdvancedAuxiliaryFile.Text, GetPath(VECTOfile)))
 	End Sub
 
 	Private Sub Button1_Click(sender As Object, e As EventArgs) Handles btnDfTargetSpeed.Click
-		If DriverDecisionFactorTargetSpeedFileBrowser.OpenDialog(fFileRepl(tbLacDfTargetSpeedFile.Text, fPATH(VECTOfile))) Then _
-			tbLacDfTargetSpeedFile.Text = fFileWoDir(DriverDecisionFactorTargetSpeedFileBrowser.Files(0), fPATH(VECTOfile))
+		If DriverDecisionFactorTargetSpeedFileBrowser.OpenDialog(fFileRepl(tbLacDfTargetSpeedFile.Text, GetPath(VECTOfile))) _
+			Then _
+			tbLacDfTargetSpeedFile.Text = GetFilenameWithoutDirectory(DriverDecisionFactorTargetSpeedFileBrowser.Files(0),
+																	GetPath(VECTOfile))
 	End Sub
 End Class
 

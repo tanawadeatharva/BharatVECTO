@@ -94,7 +94,7 @@ Public Class VehicleAuxiliariesDialog
 
 	'Browse for .vaux files
 	Private Sub BtBrowse_Click(sender As Object, e As EventArgs) Handles BtBrowse.Click
-		If AuxFileBrowser.OpenDialog(fFileRepl(TbPath.Text, VehPath)) Then TbPath.Text = fFileWoDir(AuxFileBrowser.Files(0), VehPath)
+		If AuxFileBrowser.OpenDialog(fFileRepl(TbPath.Text, VehPath)) Then TbPath.Text = GetFilenameWithoutDirectory(AuxFileBrowser.Files(0), VehPath)
 	End Sub
 
 	'Update ID when Aux Type was changed

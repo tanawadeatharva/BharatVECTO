@@ -218,7 +218,7 @@ Public Class VehicleForm
 			VectoJobForm.WindowState = FormWindowState.Normal
 		End If
 
-		VectoJobForm.TbVEH.Text = fFileWoDir(_vehFile, JobDir)
+		VectoJobForm.TbVEH.Text = GetFilenameWithoutDirectory(_vehFile, JobDir)
 	End Sub
 
 	'Help
@@ -383,7 +383,7 @@ Public Class VehicleForm
 		DeclInit()
 
 		VehicleFileBrowser.UpdateHistory(file)
-		Text = fFILE(file, True)
+		Text = GetFilenameWithoutPath(file, True)
 		LbStatus.Text = ""
 		_vehFile = file
 		Activate()
@@ -405,14 +405,14 @@ Public Class VehicleForm
 
 		veh.DynamicTyreRadius = CSng(fTextboxToNumString(TBrdyn.Text))
 		veh.CrossWindCorrectionMode = CbCdMode.SelectedValue
-		veh.CrossWindCorrectionFile.Init(fPATH(file), TbCdFile.Text)
+		veh.CrossWindCorrectionFile.Init(GetPath(file), TbCdFile.Text)
 		veh.RetarderType = CbRtType.SelectedValue
 		veh.RetarderRatio = CSng(fTextboxToNumString(TbRtRatio.Text))
-		veh.RetarderLossMapFile.Init(fPATH(file), TbRtPath.Text)
+		veh.RetarderLossMapFile.Init(GetPath(file), TbRtPath.Text)
 
 		veh.AngularGearType = cbAngularGearType.SelectedValue
 		veh.AngularGearRatio = CSng(fTextboxToNumString(tbAngularGearRatio.Text))
-		veh.AngularGearLossMapFile.Init(fPATH(file), tbAngularGearLossMapPath.Text)
+		veh.AngularGearLossMapFile.Init(GetPath(file), tbAngularGearLossMapPath.Text)
 
 		veh.VehicleCategory = CbCat.SelectedValue 'CType(CbCat.SelectedIndex, tVehCat)
 
@@ -447,13 +447,13 @@ Public Class VehicleForm
 
 		If AutoSendTo Then
 			If VectoJobForm.Visible Then
-				If UCase(fFileRepl(VectoJobForm.TbVEH.Text, JobDir)) <> UCase(file) Then VectoJobForm.TbVEH.Text = fFileWoDir(file, JobDir)
+				If UCase(fFileRepl(VectoJobForm.TbVEH.Text, JobDir)) <> UCase(file) Then VectoJobForm.TbVEH.Text = GetFilenameWithoutDirectory(file, JobDir)
 				VectoJobForm.UpdatePic()
 			End If
 		End If
 
 		VehicleFileBrowser.UpdateHistory(file)
-		Text = fFILE(file, True)
+		Text = GetFilenameWithoutPath(file, True)
 		LbStatus.Text = ""
 
 		_changed = False
@@ -504,13 +504,13 @@ Public Class VehicleForm
 			ex = "vcdb"
 		End If
 
-		If fbCDx.OpenDialog(fFileRepl(TbCdFile.Text, fPATH(_vehFile)), False, ex) Then _
-			TbCdFile.Text = fFileWoDir(fbCDx.Files(0), fPATH(_vehFile))
+		If fbCDx.OpenDialog(fFileRepl(TbCdFile.Text, GetPath(_vehFile)), False, ex) Then _
+			TbCdFile.Text = GetFilenameWithoutDirectory(fbCDx.Files(0), GetPath(_vehFile))
 	End Sub
 
 	'Open Cd File
 	Private Sub BtCdFileOpen_Click(sender As Object, e As EventArgs) Handles BtCdFileOpen.Click
-		OpenFiles(fFileRepl(TbCdFile.Text, fPATH(_vehFile)))
+		OpenFiles(fFileRepl(TbCdFile.Text, GetPath(_vehFile)))
 	End Sub
 
 #End Region
@@ -539,8 +539,8 @@ Public Class VehicleForm
 
 	'Rt File Browse
 	Private Sub BtRtBrowse_Click(sender As Object, e As EventArgs) Handles BtRtBrowse.Click
-		If RetarderLossMapFileBrowser.OpenDialog(fFileRepl(TbRtPath.Text, fPATH(_vehFile))) Then _
-			TbRtPath.Text = fFileWoDir(RetarderLossMapFileBrowser.Files(0), fPATH(_vehFile))
+		If RetarderLossMapFileBrowser.OpenDialog(fFileRepl(TbRtPath.Text, GetPath(_vehFile))) Then _
+			TbRtPath.Text = GetFilenameWithoutDirectory(RetarderLossMapFileBrowser.Files(0), GetPath(_vehFile))
 	End Sub
 
 #End Region
@@ -781,8 +781,8 @@ Public Class VehicleForm
 	End Sub
 
 	Private Sub btAngularGearLossMapBrowse_Click(sender As Object, e As EventArgs) Handles btAngularGearLossMapBrowse.Click
-		If TransmissionLossMapFileBrowser.OpenDialog(fFileRepl(TbRtPath.Text, fPATH(_vehFile))) Then _
-			tbAngularGearLossMapPath.Text = fFileWoDir(TransmissionLossMapFileBrowser.Files(0), fPATH(_vehFile))
+		If TransmissionLossMapFileBrowser.OpenDialog(fFileRepl(TbRtPath.Text, GetPath(_vehFile))) Then _
+			tbAngularGearLossMapPath.Text = GetFilenameWithoutDirectory(TransmissionLossMapFileBrowser.Files(0), GetPath(_vehFile))
 	End Sub
 
 #End Region

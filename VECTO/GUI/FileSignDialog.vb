@@ -39,7 +39,7 @@ Public Class FileSignDialog
 		ClearForm(False)
 
 
-		mainDirectory = fPATH(TbSigFile.Text)
+		mainDirectory = GetPath(TbSigFile.Text)
 
 
 		Lic.FileSigning.NewFile()
