@@ -14,7 +14,7 @@ Imports System.Text
 Imports vectolic
 
 Public Module VECTO_Global
-	Public Const VECTOvers As String = "2.2"
+	Public Const VECTOvers As String = "3"
 	Public COREvers As String = "NOT FOUND"
 
 	Public Const LicSigAppCode As String = "VECTO-Release-0093C61E0A2E4BFA9A7ED7E729C56AE4"
