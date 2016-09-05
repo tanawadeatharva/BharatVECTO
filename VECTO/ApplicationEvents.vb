@@ -115,7 +115,7 @@ Namespace My
 
 			'License initialization
 			Lic = New vectolic.cLicense
-			Lic.AppVersion = VECTOvers
+			Lic.AppVersion = "2.2"	 'VECTOvers
 			Lic.FilePath = MyAppPath & "license.dat"
 		End Sub
 
