@@ -344,7 +344,7 @@ Public Class MainForm
 
 		Else
 
-			Select Case UCase(fEXT(File))
+			Select Case UCase(GetExtension(File))
 				Case ".VGBX"
 					If Not GearboxForm.Visible Then
 						GearboxForm.Show()
@@ -377,7 +377,7 @@ Public Class MainForm
 				Case ".VSIG"
 					OpenSigFile(File)
 				Case Else
-					MsgBox("Type '" & fEXT(File) & "' unknown!", MsgBoxStyle.Critical)
+					MsgBox("Type '" & GetExtension(File) & "' unknown!", MsgBoxStyle.Critical)
 			End Select
 
 		End If
@@ -1472,7 +1472,7 @@ lbFound:
 
 		CmFiles = files
 
-		OpenInGraphWindowToolStripMenuItem.Enabled = (UCase(fEXT(CmFiles(0))) = ".VMOD")
+		OpenInGraphWindowToolStripMenuItem.Enabled = (UCase(GetExtension(CmFiles(0))) = ".VMOD")
 
 
 		OpenWithToolStripMenuItem.Text = "Open with " & Cfg.OpenCmdName

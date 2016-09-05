@@ -198,7 +198,8 @@ Public Module VECTO_Global
 	End Function
 
 	'File name without the path    "C:\temp\TEST.txt"  >>  "TEST.txt" oder "TEST"
-	Public Function GetFilenameWithoutPath(file As String, includeFileExtension As Boolean) As String
+	Public Function GetFilenameWithoutPath(file As String, includeFileExtension As Boolean) As String _
+'GetFilenameWithoutPath
 		Dim x As Int16
 		x = file.LastIndexOf("\", StringComparison.Ordinal) + 1
 		file = Right(file, Len(file) - x)
@@ -212,7 +213,8 @@ Public Module VECTO_Global
 	'Filename without extension   "C:\temp\TEST.txt" >> "C:\temp\TEST"
 
 	'Filename without path if Path = WorkDir or MainDir
-	Public Function fFileWoDir(file As String, Optional ByVal mainDir As String = "") As String
+	Public Function GetFilenameWithoutDirectory(file As String, Optional ByVal mainDir As String = "") As String _
+'GetFilenameWithoutDirectory
 		Dim path As String
 
 		If mainDir = "" Then
@@ -228,7 +230,7 @@ Public Module VECTO_Global
 
 	'Path alone        "C:\temp\TEST.txt"  >>  "C:\temp\"
 	'                   "TEST.txt"          >>  ""
-	Public Function GetPath(file As String) As String
+	Public Function GetPath(file As String) As String 'GetPath
 		Dim x As Integer
 		If file Is Nothing OrElse file.Length < 3 OrElse file.Substring(1, 2) <> ":\" Then Return ""
 		x = file.LastIndexOf("\", StringComparison.Ordinal)
@@ -236,7 +238,7 @@ Public Module VECTO_Global
 	End Function
 
 	'Extension alone      "C:\temp\TEST.txt" >> ".txt"
-	Public Function GetExtension(file As String) As String
+	Public Function GetExtension(file As String) As String 'GetExtension
 		Dim x As Int16
 		x = file.LastIndexOf(".", StringComparison.Ordinal)
 		If x = -1 Then
