@@ -636,6 +636,10 @@ namespace TUGraz.VectoCommon.Utils
 		[DebuggerHidden]
 		private MeterPerSecond(double val) : base(val, NumeratorDefault, DenominatorDefault) {}
 
+		public double AsKmph()
+		{
+			return Val * 3.6;
+		}
 		/// <summary>
 		/// Implements the operator /.
 		/// </summary>

@@ -43,23 +43,60 @@ namespace TUGraz.VectoCommon.Models
 
 	public static class CrossWindCorrectionModeHelper
 	{
+		private const string SpeedDependentCorrectionFactor = "CdofVEng";
+		private const string DeclarationModeCorrection = "CdofVdecl";
+		private const string VAirBetaLookupTable = "CdofBeta";
+		private const string NoCorrection = "Off";
+
 		public static CrossWindCorrectionMode Parse(string correctionMode)
 		{
-			if (correctionMode.Equals("CdofVEng", StringComparison.OrdinalIgnoreCase)) {
+			if (correctionMode.Equals(SpeedDependentCorrectionFactor, StringComparison.OrdinalIgnoreCase)) {
 				return CrossWindCorrectionMode.SpeedDependentCorrectionFactor;
 			}
-			if (correctionMode.Equals("CdofVdecl", StringComparison.OrdinalIgnoreCase)) {
+			if (correctionMode.Equals(DeclarationModeCorrection, StringComparison.OrdinalIgnoreCase)) {
 				return CrossWindCorrectionMode.DeclarationModeCorrection;
 			}
-			if (correctionMode.Equals("CdofBeta", StringComparison.OrdinalIgnoreCase)) {
+			if (correctionMode.Equals(VAirBetaLookupTable, StringComparison.OrdinalIgnoreCase)) {
 				return CrossWindCorrectionMode.VAirBetaLookupTable;
 			}
-			if (correctionMode.Equals("Off", StringComparison.OrdinalIgnoreCase)) {
+			if (correctionMode.Equals(NoCorrection, StringComparison.OrdinalIgnoreCase)) {
 				return CrossWindCorrectionMode.NoCorrection;
 			}
 			LogManager.GetLogger(typeof(CrossWindCorrectionModeHelper).ToString())
 				.Warn("Invalid Crosswind correction Mode given. Ignoring Crosswind Correction!");
 			return CrossWindCorrectionMode.NoCorrection;
+		}
+
+		public static string GetName(this CrossWindCorrectionMode mode)
+		{
+			switch (mode) {
+				case CrossWindCorrectionMode.NoCorrection:
+					return NoCorrection;
+				case CrossWindCorrectionMode.SpeedDependentCorrectionFactor:
+					return SpeedDependentCorrectionFactor;
+				case CrossWindCorrectionMode.VAirBetaLookupTable:
+					return VAirBetaLookupTable;
+				case CrossWindCorrectionMode.DeclarationModeCorrection:
+					return DeclarationModeCorrection;
+				default:
+					throw new ArgumentOutOfRangeException("mode", mode, null);
+			}
+		}
+
+		public static string GetLabel(this CrossWindCorrectionMode mode)
+		{
+			switch (mode) {
+				case CrossWindCorrectionMode.NoCorrection:
+					return "No Correction";
+				case CrossWindCorrectionMode.SpeedDependentCorrectionFactor:
+					return "Speed dependend (User-defined)";
+				case CrossWindCorrectionMode.VAirBetaLookupTable:
+					return "Vair & beta Input";
+				case CrossWindCorrectionMode.DeclarationModeCorrection:
+					return "Speed dependent (Declaration Mode)";
+				default:
+					throw new ArgumentOutOfRangeException("mode", mode, null);
+			}
 		}
 	}
 }

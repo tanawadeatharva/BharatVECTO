@@ -149,14 +149,7 @@ namespace TUGraz.VectoCore.InputData.FileIO.JSON
 			get
 			{
 				var retarderType = Body.GetEx(JsonKeys.Vehicle_Retarder).GetEx<string>(JsonKeys.Vehicle_Retarder_Type);
-				switch (retarderType.ToLowerInvariant()) {
-					case "primary":
-						return RetarderType.TransmissionInputRetarder;
-					case "secondary":
-						return RetarderType.TransmissionOutputRetarder;
-					default:
-						return retarderType.ParseEnum<RetarderType>();
-				}
+				return RetarderTypeHelper.Parse(retarderType);
 			}
 		}
 

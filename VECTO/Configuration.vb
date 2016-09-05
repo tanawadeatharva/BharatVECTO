@@ -9,16 +9,14 @@
 '
 ' See the LICENSE.txt for the specific language governing permissions and limitations.
 Imports System.Collections.Generic
+Imports System.IO
+Imports TUGraz.VectoCore.Models.Declaration
 
 Public Class Configuration
 	Public FilePath As String
 	Public GnUfromCycle As Boolean
-	Public BatchMode As Boolean
 	Public ModOut As Boolean
 	Public Mod1Hz As Boolean
-	Public BATCHoutpath As String	'Output path for BATCH Mode
-	Public BATCHoutSubD As Boolean
-	Public DistCorr As Boolean
 	Public LogSize As Single
 	Public AirDensity As Single
 	Public OpenCmd As String
@@ -35,27 +33,22 @@ Public Class Configuration
 	End Sub
 
 	Public Sub DeclInit()
-		AirDensity = cDeclaration.AirDensity
-		FuelDens = cDeclaration.FuelDens
-		CO2perFC = cDeclaration.CO2perFC
-		DistCorr = True
+		AirDensity = DeclarationData.Physics.AirDensity.Value()	' cDeclaration.AirDensity
+		FuelDens = DeclarationData.Physics.FuelDensity.Value()	' cDeclaration.FuelDens
+		CO2perFC = DeclarationData.Physics.CO2PerFuelWeight		' cDeclaration.CO2perFC
 		GnUfromCycle = False
 	End Sub
 
 	Public Sub SetDefault()
 		GnUfromCycle = True
-		BatchMode = False
 		ModOut = True
 		Mod1Hz = False
-		BATCHoutpath = sKey.JobPath
-		BATCHoutSubD = False
-		DistCorr = True
 		LogSize = 2
 		AirDensity = 1.2
 		OpenCmd = "notepad"
 		OpenCmdName = "Notepad"
-		FuelDens = 0.835
-		CO2perFC = 3.153
+		FuelDens = DeclarationData.Physics.FuelDensity.Value()
+		CO2perFC = DeclarationData.Physics.CO2PerFuelWeight
 		FirstRun = True
 		DeclMode = True
 	End Sub
@@ -63,36 +56,25 @@ Public Class Configuration
 	Public Sub Load()
 		SetDefault()
 
-		If Not IO.File.Exists(FilePath) Then
+		If Not File.Exists(FilePath) Then
 			Exit Sub
 		End If
 
-		Dim json As New JSON
+		Dim json As New JSONParser
 		If Not json.ReadFile(FilePath) Then
-			GUImsg(tMsgID.Err, "Failed to load settings! Using default settings.")
+			GUImsg(MessageType.Err, "Failed to load settings! Using default settings.")
 			Exit Sub
 		End If
 
 		Try
-			Dim fileVersion As Short = json.Content("Header")("FileVersion")
-
-			If fileVersion < 2 Then
-				BatchMode = (json.Content("Body")("LastMode") = 1)
-			Else
-				BatchMode = json.Content("Body")("LastModeBatch")
-			End If
-
 			Try
 				Mod1Hz = json.Content("Body")("Mod1Hz")
 			Catch
 			End Try
 
 			ModOut = json.Content("Body")("ModOut")
-			DistCorr = json.Content("Body")("DistCorrection")
 			GnUfromCycle = json.Content("Body")("UseGnUfromCycle")
 			LogSize = json.Content("Body")("LogSize")
-			BATCHoutpath = json.Content("Body")("BATCHoutpath")
-			BATCHoutSubD = json.Content("Body")("BATCHoutSubD")
 			AirDensity = json.Content("Body")("AirDensity")
 			FuelDens = json.Content("Body")("FuelDensity")
 			CO2perFC = json.Content("Body")("CO2perFC")
@@ -101,12 +83,12 @@ Public Class Configuration
 			FirstRun = json.Content("Body")("FirstRun")
 			DeclMode = json.Content("Body")("DeclMode")
 		Catch ex As Exception
-			GUImsg(tMsgID.Err, "Error while loading settings!")
+			GUImsg(MessageType.Err, "Error while loading settings!")
 		End Try
 	End Sub
 
 	Public Sub Save()
-		Dim json As New JSON
+		Dim json As New JSONParser
 		Dim dic As Dictionary(Of String, Object)
 
 		dic = New Dictionary(Of String, Object)
@@ -117,14 +99,9 @@ Public Class Configuration
 		json.Content.Add("Header", dic)
 
 		dic = New Dictionary(Of String, Object)
-		dic.Add("LastModeBatch", BatchMode)
 		dic.Add("ModOut", ModOut)
 		dic.Add("Mod1Hz", Mod1Hz)
-		dic.Add("DistCorrection", DistCorr)
-		dic.Add("UseGnUfromCycle", GnUfromCycle)
 		dic.Add("LogSize", LogSize)
-		dic.Add("BATCHoutpath", BATCHoutpath)
-		dic.Add("BATCHoutSubD", BATCHoutSubD)
 		dic.Add("AirDensity", AirDensity)
 		dic.Add("FuelDensity", FuelDens)
 		dic.Add("CO2perFC", CO2perFC)

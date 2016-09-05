@@ -31,12 +31,13 @@
 
 using System;
 using System.Data;
+using System.Linq;
 using TUGraz.VectoCommon.Utils;
 using TUGraz.VectoCore.Utils;
 
 namespace TUGraz.VectoCore.Models.Declaration
 {
-	public sealed class Fan : LookupData<MissionType, string, Watt>
+	public sealed class Fan : LookupData<MissionType, string, Watt>, IDeclarationAuxiliaryTable
 	{
 		protected override string ResourceId
 		{
@@ -55,6 +56,7 @@ namespace TUGraz.VectoCore.Models.Declaration
 
 			foreach (DataRow row in table.Rows) {
 				var name = row.Field<string>("technology");
+
 				foreach (DataColumn col in table.Columns) {
 					if (col.Caption != "technology") {
 						Data[Tuple.Create(col.Caption.ParseEnum<MissionType>(), name)] = row.ParseDouble(col).SI<Watt>();
@@ -65,9 +67,15 @@ namespace TUGraz.VectoCore.Models.Declaration
 
 		public override Watt Lookup(MissionType mission, string technology = null)
 		{
-			if (string.IsNullOrWhiteSpace(technology))
+			if (string.IsNullOrWhiteSpace(technology)) {
 				technology = "Crankshaft mounted - Electronically controlled visco clutch";
+			}
 			return base.Lookup(mission, technology);
+		}
+
+		public string[] GetTechnologies()
+		{
+			return Data.Keys.Select(x => x.Item2).Distinct().ToArray();
 		}
 	}
 }

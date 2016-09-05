@@ -156,6 +156,30 @@ namespace TUGraz.VectoCore.Models.Declaration
 			return _instance ?? (_instance = new DeclarationData());
 		}
 
+		public static class Physics
+		{
+			/// <summary>
+			/// The standard acceleration for gravity on earth.
+			/// http://physics.nist.gov/Pubs/SP330/sp330.pdf (page 52)
+			/// </summary>
+			public static readonly MeterPerSquareSecond GravityAccelleration = 9.80665.SI<MeterPerSquareSecond>();
+
+			/// <summary>
+			/// Density of air.
+			/// </summary>
+			public static readonly KilogramPerCubicMeter AirDensity = 1.188.SI<KilogramPerCubicMeter>();
+
+			/// <summary>
+			/// Density of fuel.
+			/// </summary>
+			public static readonly KilogramPerCubicMeter FuelDensity = 832.SI<KilogramPerCubicMeter>();
+
+			/// <summary>
+			/// fuel[kg] => co2[kg]. Factor to convert from fuel weight to co2 weight.
+			/// </summary>
+			public static readonly double CO2PerFuelWeight = 3.16;
+		}
+
 		public static class Driver
 		{
 			public static class LookAhead
@@ -203,7 +227,7 @@ namespace TUGraz.VectoCore.Models.Declaration
 			public static readonly KilogramSquareMeter EngineBaseInertia = 0.41.SI<KilogramSquareMeter>();
 			public static readonly SI EngineDisplacementInertia = (0.27 * 1000).SI().Kilo.Gramm.Per.Meter; // [kg/m]
 
-			public static KilogramSquareMeter EngineInertia(SI displacement, GearboxType gbxType)
+			public static KilogramSquareMeter EngineInertia(CubicMeter displacement, GearboxType gbxType)
 			{
 				// VB Code:    Return 1.3 + 0.41 + 0.27 * (Displ / 1000)
 				return (gbxType.AutomaticTransmission() ? TorqueConverterInertia : ClutchInertia) + EngineBaseInertia +
