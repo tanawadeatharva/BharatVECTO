@@ -26,7 +26,7 @@ Public Module VECTO_Global
 
 	'to ensure correct format for backgroundworker thread
 
-	Public VECTOworkerV3 As BackgroundWorker
+	Public VectoWorkerV3 As BackgroundWorker
 
 	Public Cfg As Configuration
 
@@ -175,7 +175,7 @@ Public Module VECTO_Global
 
 
 		'Supplement Path, if not available
-		If fPATH(file) = "" Then
+		If GetPath(file) = "" Then
 
 			Return ReplPath & file
 
@@ -198,51 +198,51 @@ Public Module VECTO_Global
 	End Function
 
 	'File name without the path    "C:\temp\TEST.txt"  >>  "TEST.txt" oder "TEST"
-	Public Function fFILE(Pfad As String, MitEndung As Boolean) As String
+	Public Function GetFilenameWithoutPath(file As String, includeFileExtension As Boolean) As String
 		Dim x As Int16
-		x = Pfad.LastIndexOf("\") + 1
-		Pfad = Right(Pfad, Len(Pfad) - x)
-		If Not MitEndung Then
-			x = Pfad.LastIndexOf(".")
-			If x > 0 Then Pfad = Left(Pfad, x)
+		x = file.LastIndexOf("\", StringComparison.Ordinal) + 1
+		file = Right(file, Len(file) - x)
+		If Not includeFileExtension Then
+			x = file.LastIndexOf(".", StringComparison.Ordinal)
+			If x > 0 Then file = Left(file, x)
 		End If
-		Return Pfad
+		Return file
 	End Function
 
 	'Filename without extension   "C:\temp\TEST.txt" >> "C:\temp\TEST"
 
 	'Filename without path if Path = WorkDir or MainDir
-	Public Function fFileWoDir(file As String, Optional ByVal MainDir As String = "") As String
+	Public Function fFileWoDir(file As String, Optional ByVal mainDir As String = "") As String
 		Dim path As String
 
-		If MainDir = "" Then
+		If mainDir = "" Then
 			path = MyAppPath
 		Else
-			path = MainDir
+			path = mainDir
 		End If
 
-		If UCase(fPATH(file)) = UCase(path) Then file = fFILE(file, True)
+		If UCase(GetPath(file)) = UCase(path) Then file = GetFilenameWithoutPath(file, True)
 
 		Return file
 	End Function
 
 	'Path alone        "C:\temp\TEST.txt"  >>  "C:\temp\"
 	'                   "TEST.txt"          >>  ""
-	Public Function fPATH(Pfad As String) As String
-		Dim x As Int16
-		If Pfad Is Nothing OrElse Pfad.Length < 3 OrElse Pfad.Substring(1, 2) <> ":\" Then Return ""
-		x = Pfad.LastIndexOf("\")
-		Return Left(Pfad, x + 1)
+	Public Function GetPath(file As String) As String
+		Dim x As Integer
+		If file Is Nothing OrElse file.Length < 3 OrElse file.Substring(1, 2) <> ":\" Then Return ""
+		x = file.LastIndexOf("\", StringComparison.Ordinal)
+		Return Left(file, x + 1)
 	End Function
 
 	'Extension alone      "C:\temp\TEST.txt" >> ".txt"
-	Public Function fEXT(Pfad As String) As String
+	Public Function GetExtension(file As String) As String
 		Dim x As Int16
-		x = Pfad.LastIndexOf(".")
+		x = file.LastIndexOf(".", StringComparison.Ordinal)
 		If x = -1 Then
 			Return ""
 		Else
-			Return Right(Pfad, Len(Pfad) - x)
+			Return Right(file, Len(file) - x)
 		End If
 	End Function
 
@@ -255,17 +255,8 @@ Public Class csKey
 	Public ReadOnly AUX As csKeyAux
 
 	Public HomePath As String = "<HOME>"
-	Public JobPath As String = "<JOBPATH>"
 	Public DefVehPath As String = "<VEHDIR>"
 	Public NoFile As String = "<NOFILE>"
-	Public EmptyString As String = "<EMPTYSTRING>"
-	Public Break As String = "<//>"
-
-	Public Normed As String = "NORM"
-
-	Public PauxSply As String = "<AUX_"
-
-	Public EngDrag As String = "<DRAG>"
 
 	Public Sub New()
 

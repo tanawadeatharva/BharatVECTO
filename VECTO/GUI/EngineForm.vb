@@ -97,7 +97,7 @@ Public Class EngineForm
 			VectoJobForm.WindowState = FormWindowState.Normal
 		End If
 
-		VectoJobForm.TbENG.Text = fFileWoDir(_engFile, JobDir)
+		VectoJobForm.TbENG.Text = GetFilenameWithoutDirectory(_engFile, JobDir)
 	End Sub
 
 	Private Sub ToolStripButton1_Click(sender As Object, e As EventArgs) Handles ToolStripButton1.Click
@@ -170,9 +170,9 @@ Public Class EngineForm
 		End If
 
 		TbName.Text = ENG0.ModelName
-		TbDispl.Text = ENG0.Displ.ToString
-		TbInertia.Text = ENG0.I_mot.ToString
-		TbNleerl.Text = ENG0.Nidle.ToString
+		TbDispl.Text = ENG0.Displacement.ToString
+		TbInertia.Text = ENG0.EngineInertia.ToString
+		TbNleerl.Text = ENG0.IdleSpeed.ToString
 
 		TbMAP.Text = ENG0.PathMAP(True)
 		TbFLD.Text = ENG0.PathFLD(True)
@@ -183,7 +183,7 @@ Public Class EngineForm
 		DeclInit()
 
 		EngineFileBrowser.UpdateHistory(file)
-		Text = fFILE(file, True)
+		Text = GetFilenameWithoutPath(file, True)
 		LbStatus.Text = ""
 		_engFile = file
 		Activate()
@@ -212,9 +212,9 @@ Public Class EngineForm
 
 		engine.ModelName = TbName.Text
 		If Trim(engine.ModelName) = "" Then engine.ModelName = "Undefined"
-		engine.Displ = CSng(fTextboxToNumString(TbDispl.Text))
-		engine.I_mot = CSng(fTextboxToNumString(TbInertia.Text))
-		engine.Nidle = CSng(fTextboxToNumString(TbNleerl.Text))
+		engine.Displacement = CSng(fTextboxToNumString(TbDispl.Text))
+		engine.EngineInertia = CSng(fTextboxToNumString(TbInertia.Text))
+		engine.IdleSpeed = CSng(fTextboxToNumString(TbNleerl.Text))
 
 		engine.PathFLD = TbFLD.Text
 		engine.PathMAP = TbMAP.Text
@@ -232,13 +232,14 @@ Public Class EngineForm
 
 		If AutoSendTo Then
 			If VectoJobForm.Visible Then
-				If UCase(fFileRepl(VectoJobForm.TbENG.Text, JobDir)) <> UCase(file) Then VectoJobForm.TbENG.Text = fFileWoDir(file, JobDir)
+				If UCase(fFileRepl(VectoJobForm.TbENG.Text, JobDir)) <> UCase(file) Then _
+					VectoJobForm.TbENG.Text = GetFilenameWithoutDirectory(file, JobDir)
 				VectoJobForm.UpdatePic()
 			End If
 		End If
 
 		EngineFileBrowser.UpdateHistory(file)
-		Text = fFILE(file, True)
+		Text = GetFilenameWithoutPath(file, True)
 		LbStatus.Text = ""
 
 		_changed = False
@@ -320,8 +321,8 @@ Public Class EngineForm
 
 	'Browse for VMAP file
 	Private Sub BtMAP_Click(sender As Object, e As EventArgs) Handles BtMAP.Click
-		If FuelConsumptionMapFileBrowser.OpenDialog(fFileRepl(TbMAP.Text, fPATH(_engFile))) Then _
-			TbMAP.Text = fFileWoDir(FuelConsumptionMapFileBrowser.Files(0), fPATH(_engFile))
+		If FuelConsumptionMapFileBrowser.OpenDialog(fFileRepl(TbMAP.Text, GetPath(_engFile))) Then _
+			TbMAP.Text = GetFilenameWithoutDirectory(FuelConsumptionMapFileBrowser.Files(0), GetPath(_engFile))
 	End Sub
 
 
@@ -329,12 +330,12 @@ Public Class EngineForm
 	Private Sub BtMAPopen_Click(sender As Object, e As EventArgs) Handles BtMAPopen.Click
 		Dim fldfile As String
 
-		fldfile = fFileRepl(TbFLD.Text, fPATH(_engFile))
+		fldfile = fFileRepl(TbFLD.Text, GetPath(_engFile))
 
 		If fldfile <> sKey.NoFile AndAlso File.Exists(fldfile) Then
-			OpenFiles(fFileRepl(TbMAP.Text, fPATH(_engFile)), fldfile)
+			OpenFiles(fFileRepl(TbMAP.Text, GetPath(_engFile)), fldfile)
 		Else
-			OpenFiles(fFileRepl(TbMAP.Text, fPATH(_engFile)))
+			OpenFiles(fFileRepl(TbMAP.Text, GetPath(_engFile)))
 		End If
 	End Sub
 
@@ -353,9 +354,9 @@ Public Class EngineForm
 
 		Dim fldOK As Boolean = False
 		Dim mapOK As Boolean = False
-		Dim FLD0 As New EngineFullLoadCurve
-		Dim MAP0 As New FuelconsumptionMap
-		Dim MyChart As Chart
+		Dim fullLoadCurve As New EngineFullLoadCurve
+		Dim fcMap As New FuelconsumptionMap
+		Dim chart As Chart
 		Dim s As Series
 		Dim a As ChartArea
 		Dim img As Image
@@ -365,11 +366,11 @@ Public Class EngineForm
 		Try
 
 			'Read Files
-			FLD0.FilePath = fFileRepl(TbFLD.Text, fPATH(_engFile))
-			fldOK = FLD0.ReadFile(False, False)
+			fullLoadCurve.FilePath = fFileRepl(TbFLD.Text, GetPath(_engFile))
+			fldOK = fullLoadCurve.ReadFile(False, False)
 
-			MAP0.FilePath = fFileRepl(TbMAP.Text, fPATH(_engFile))
-			mapOK = MAP0.ReadFile(False)
+			fcMap.FilePath = fFileRepl(TbMAP.Text, GetPath(_engFile))
+			mapOK = fcMap.ReadFile(False)
 
 		Catch ex As Exception
 
@@ -379,40 +380,40 @@ Public Class EngineForm
 
 
 		'Create plot
-		MyChart = New Chart
-		MyChart.Width = PicBox.Width
-		MyChart.Height = PicBox.Height
+		chart = New Chart
+		chart.Width = PicBox.Width
+		chart.Height = PicBox.Height
 
 		a = New ChartArea
 
 		If fldOK Then
 
 			s = New Series
-			s.Points.DataBindXY(FLD0.EngineSpeedList, FLD0.MaxTorqueList)
+			s.Points.DataBindXY(fullLoadCurve.EngineSpeedList, fullLoadCurve.MaxTorqueList)
 			s.ChartType = SeriesChartType.FastLine
 			s.BorderWidth = 2
 			s.Color = Color.DarkBlue
-			s.Name = "Full load (" & fFILE(FLD0.FilePath, True) & ")"
-			MyChart.Series.Add(s)
+			s.Name = "Full load (" & GetFilenameWithoutPath(fullLoadCurve.FilePath, True) & ")"
+			chart.Series.Add(s)
 
 			s = New Series
-			s.Points.DataBindXY(FLD0.EngineSpeedList, FLD0.DragTorqueList)
+			s.Points.DataBindXY(fullLoadCurve.EngineSpeedList, fullLoadCurve.DragTorqueList)
 			s.ChartType = SeriesChartType.FastLine
 			s.BorderWidth = 2
 			s.Color = Color.Blue
-			s.Name = "Motoring (" & fFILE(FLD0.FilePath, True) & ")"
-			MyChart.Series.Add(s)
+			s.Name = "Motoring (" & GetFilenameWithoutPath(fullLoadCurve.FilePath, True) & ")"
+			chart.Series.Add(s)
 
 		End If
 
 		If mapOK Then
 			s = New Series
-			s.Points.DataBindXY(MAP0.nU, MAP0.Tq)
+			s.Points.DataBindXY(fcMap.nU, fcMap.Tq)
 			s.ChartType = SeriesChartType.Point
 			s.MarkerSize = 3
 			s.Color = Color.Red
 			s.Name = "Map"
-			MyChart.Series.Add(s)
+			chart.Series.Add(s)
 		End If
 
 		a.Name = "main"
@@ -435,12 +436,12 @@ Public Class EngineForm
 
 		a.BackColor = Color.GhostWhite
 
-		MyChart.ChartAreas.Add(a)
+		chart.ChartAreas.Add(a)
 
-		MyChart.Update()
+		chart.Update()
 
-		img = New Bitmap(MyChart.Width, MyChart.Height, PixelFormat.Format32bppArgb)
-		MyChart.DrawToBitmap(img, New Rectangle(0, 0, PicBox.Width, PicBox.Height))
+		img = New Bitmap(chart.Width, chart.Height, PixelFormat.Format32bppArgb)
+		chart.DrawToBitmap(img, New Rectangle(0, 0, PicBox.Width, PicBox.Height))
 
 
 		PicBox.Image = img
@@ -484,14 +485,14 @@ Public Class EngineForm
 
 
 	Private Sub BtFLD_Click(sender As Object, e As EventArgs) Handles BtFLD.Click
-		If FullLoadCurveFileBrowser.OpenDialog(fFileRepl(TbFLD.Text, fPATH(_engFile))) Then _
-			TbFLD.Text = fFileWoDir(FullLoadCurveFileBrowser.Files(0), fPATH(_engFile))
+		If FullLoadCurveFileBrowser.OpenDialog(fFileRepl(TbFLD.Text, GetPath(_engFile))) Then _
+			TbFLD.Text = GetFilenameWithoutDirectory(FullLoadCurveFileBrowser.Files(0), GetPath(_engFile))
 	End Sub
 
 	Private Sub BtFLDopen_Click(sender As Object, e As EventArgs) Handles BtFLDopen.Click
 		Dim fldfile As String
 
-		fldfile = fFileRepl(TbFLD.Text, fPATH(_engFile))
+		fldfile = fFileRepl(TbFLD.Text, GetPath(_engFile))
 
 		If fldfile <> sKey.NoFile AndAlso File.Exists(fldfile) Then
 			OpenFiles(fldfile)

@@ -41,12 +41,6 @@ Public Class EngineFullLoadCurve
 	Private _pt1List As List(Of Single)
 
 	''' <summary>
-	''' Last index of lists (items count - 1)
-	''' </summary>
-	''' <remarks></remarks>
-	'Private _iDim As Integer
-
-	''' <summary>
 	''' Read file. FilePath must be set before calling. 
 	''' </summary>
 	''' <returns>True if successful.</returns>

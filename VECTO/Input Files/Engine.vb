@@ -27,7 +27,7 @@ Public Class Engine
 	''' Format version of input file. Defined in ReadFile.
 	''' </summary>
 	''' <remarks></remarks>
-	Private FileVersion As Short
+	Private _fileVersion As Short
 
 	''' <summary>
 	''' Engine description (model, type, etc.). Saved in input file.
@@ -39,43 +39,43 @@ Public Class Engine
 	''' Engine displacement [ccm]. Saved in input file.
 	''' </summary>
 	''' <remarks></remarks>
-	Public Displ As Single
+	Public Displacement As Single
 
 	''' <summary>
 	''' Idling speed [1/min]. Saved in input file.
 	''' </summary>
 	''' <remarks></remarks>
-	Public Nidle As Single
+	Public IdleSpeed As Single
 
 	''' <summary>
 	''' Rotational inertia including flywheel [kgm²]. Saved in input file. Overwritten by generic value in Declaration mode.
 	''' </summary>
 	''' <remarks></remarks>
-	Public I_mot As Single
+	Public EngineInertia As Single
 
 	''' <summary>
 	''' List of full load/motoring curve files (.vfld)
 	''' </summary>
 	''' <remarks></remarks>
-	Public ReadOnly fFLD As SubPath
+	Private ReadOnly _fullLoadCurvePath As SubPath
 
 	''' <summary>
 	''' Path to fuel consumption map
 	''' </summary>
 	''' <remarks></remarks>
-	Private ReadOnly fMAP As SubPath
+	Private ReadOnly _fuelConsumptionMapPath As SubPath
 
 	''' <summary>
 	''' Directory of engine file. Defined in FilePath property (Set)
 	''' </summary>
 	''' <remarks></remarks>
-	Private MyPath As String
+	Private _myPath As String
 
 	''' <summary>
 	''' Full file path. Needs to be defined via FilePath property before calling ReadFile or SaveFile.
 	''' </summary>
 	''' <remarks></remarks>
-	Private sFilePath As String
+	Private _filePath As String
 
 
 	''' <summary>
@@ -97,7 +97,6 @@ Public Class Engine
 	Public WHTCmw As Single
 
 
-
 	Public SavedInDeclMode As Boolean
 
 
@@ -106,10 +105,10 @@ Public Class Engine
 	''' </summary>
 	''' <remarks></remarks>
 	Public Sub New()
-		MyPath = ""
-		sFilePath = ""
-		fMAP = New SubPath
-		fFLD = New SubPath
+		_myPath = ""
+		_filePath = ""
+		_fuelConsumptionMapPath = New SubPath
+		_fullLoadCurvePath = New SubPath
 		SetDefault()
 	End Sub
 
@@ -119,13 +118,13 @@ Public Class Engine
 	''' <remarks></remarks>
 	Private Sub SetDefault()
 		ModelName = "Undefined"
-		Displ = 0
-		Nidle = 0
-		I_mot = 0
+		Displacement = 0
+		IdleSpeed = 0
+		EngineInertia = 0
 
 
-		fMAP.Clear()
-		fFLD.Clear()
+		_fuelConsumptionMapPath.Clear()
+		_fullLoadCurvePath.Clear()
 
 		WHTCurban = 0
 		WHTCrural = 0
@@ -159,13 +158,13 @@ Public Class Engine
 
 		dic.Add("ModelName", ModelName)
 
-		dic.Add("Displacement", Displ)
-		dic.Add("IdlingSpeed", Nidle)
-		dic.Add("Inertia", I_mot)
+		dic.Add("Displacement", Displacement)
+		dic.Add("IdlingSpeed", IdleSpeed)
+		dic.Add("Inertia", EngineInertia)
 
-		dic.Add("FullLoadCurve", fFLD.PathOrDummy)
+		dic.Add("FullLoadCurve", _fullLoadCurvePath.PathOrDummy)
 
-		dic.Add("FuelMap", fMAP.PathOrDummy)
+		dic.Add("FuelMap", _fuelConsumptionMapPath.PathOrDummy)
 
 		dic.Add("WHTC-Urban", WHTCurban)
 		dic.Add("WHTC-Rural", WHTCrural)
@@ -175,7 +174,7 @@ Public Class Engine
 		JSON.Content.Add("Body", dic)
 
 
-		Return JSON.WriteFile(sFilePath)
+		Return JSON.WriteFile(_filePath)
 	End Function
 
 	''' <summary>
@@ -192,13 +191,13 @@ Public Class Engine
 		SetDefault()
 
 
-		If Not JSON.ReadFile(sFilePath) Then Return False
+		If Not JSON.ReadFile(_filePath) Then Return False
 
 		Try
 
-			FileVersion = JSON.Content("Header")("FileVersion")
+			_fileVersion = JSON.Content("Header")("FileVersion")
 
-			If FileVersion > 1 Then
+			If _fileVersion > 1 Then
 				SavedInDeclMode = JSON.Content("Body")("SavedInDeclMode")
 			Else
 				SavedInDeclMode = Cfg.DeclMode
@@ -206,19 +205,19 @@ Public Class Engine
 
 			ModelName = JSON.Content("Body")("ModelName")
 
-			Displ = JSON.Content("Body")("Displacement")
-			Nidle = JSON.Content("Body")("IdlingSpeed")
-			I_mot = JSON.Content("Body")("Inertia")
+			Displacement = JSON.Content("Body")("Displacement")
+			IdleSpeed = JSON.Content("Body")("IdlingSpeed")
+			EngineInertia = JSON.Content("Body")("Inertia")
 
-			If FileVersion < 3 Then
-				fFLD.Init(MyPath, JSON.Content("Body")("FullLoadCurves")(0)("Path"))
+			If _fileVersion < 3 Then
+				_fullLoadCurvePath.Init(_myPath, JSON.Content("Body")("FullLoadCurves")(0)("Path"))
 			Else
-				fFLD.Init(MyPath, JSON.Content("Body")("FullLoadCurve"))
+				_fullLoadCurvePath.Init(_myPath, JSON.Content("Body")("FullLoadCurve"))
 			End If
 
-			fMAP.Init(MyPath, JSON.Content("Body")("FuelMap"))
+			_fuelConsumptionMapPath.Init(_myPath, JSON.Content("Body")("FuelMap"))
 
-			If FileVersion > 2 AndAlso Not JSON.Content("Body")("WHTC-Urban") Is Nothing Then
+			If _fileVersion > 2 AndAlso Not JSON.Content("Body")("WHTC-Urban") Is Nothing Then
 				WHTCurban = CSng(JSON.Content("Body")("WHTC-Urban"))
 				WHTCrural = CSng(JSON.Content("Body")("WHTC-Rural"))
 				WHTCmw = CSng(JSON.Content("Body")("WHTC-Motorway"))
@@ -241,14 +240,14 @@ Public Class Engine
 	''' <remarks></remarks>
 	Public Property FilePath() As String
 		Get
-			Return sFilePath
+			Return _filePath
 		End Get
 		Set(ByVal value As String)
-			sFilePath = value
-			If sFilePath = "" Then
-				MyPath = ""
+			_filePath = value
+			If _filePath = "" Then
+				_myPath = ""
 			Else
-				MyPath = Path.GetDirectoryName(sFilePath) & "\"
+				_myPath = Path.GetDirectoryName(_filePath) & "\"
 			End If
 		End Set
 	End Property
@@ -257,13 +256,13 @@ Public Class Engine
 	Public Property PathFLD(Optional ByVal Original As Boolean = False) As String
 		Get
 			If Original Then
-				Return fFLD.OriginalPath
+				Return _fullLoadCurvePath.OriginalPath
 			Else
-				Return fFLD.FullPath
+				Return _fullLoadCurvePath.FullPath
 			End If
 		End Get
 		Set(ByVal value As String)
-			fFLD.Init(MyPath, value)
+			_fullLoadCurvePath.Init(_myPath, value)
 		End Set
 	End Property
 
@@ -277,13 +276,13 @@ Public Class Engine
 	Public Property PathMAP(Optional ByVal Original As Boolean = False) As String
 		Get
 			If Original Then
-				Return fMAP.OriginalPath
+				Return _fuelConsumptionMapPath.OriginalPath
 			Else
-				Return fMAP.FullPath
+				Return _fuelConsumptionMapPath.FullPath
 			End If
 		End Get
 		Set(ByVal value As String)
-			fMAP.Init(MyPath, value)
+			_fuelConsumptionMapPath.Init(_myPath, value)
 		End Set
 	End Property
 End Class

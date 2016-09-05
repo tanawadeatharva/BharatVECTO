@@ -1,6 +1,6 @@
 ﻿'AA-TB
 
-Public Class cAdvancedAuxiliary
+Public Class AdvancedAuxiliary
 	'Private properties. Set on Constructor
 	Private ReadOnly _auxiliaryName As String
 	Private ReadOnly _auxiliaryVersion As String
@@ -11,19 +11,19 @@ Public Class cAdvancedAuxiliary
 	'Public Readonly properties
 	Public ReadOnly Property AuxiliaryName As String
 		Get
-			Return _AuxiliaryName
+			Return _auxiliaryName
 		End Get
 	End Property
 
 	Public ReadOnly Property AuxiliaryVersion As String
 		Get
-			Return _AuxiliaryVersion
+			Return _auxiliaryVersion
 		End Get
 	End Property
 
 	Public ReadOnly Property AssemblyName As String
 		Get
-			Return _AssemblyName
+			Return _assemblyName
 		End Get
 	End Property
 
@@ -32,10 +32,10 @@ Public Class cAdvancedAuxiliary
 
 	Public Sub New()
 
-		_AuxiliaryName = "Classic Vecto Auxiliary"
-		_AuxiliaryVersion = "CLASSIC"
-		_FileName = "CLASSIC"
-		_AssemblyName = "CLASSIC"
+		_auxiliaryName = "Classic Vecto Auxiliary"
+		_auxiliaryVersion = "CLASSIC"
+		_fileName = "CLASSIC"
+		_assemblyName = "CLASSIC"
 	End Sub
 
 	Public Sub New(auxiliaryName As String, auxiliaryVersion As String, fileName As String, assemblyName As String)

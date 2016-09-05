@@ -22,18 +22,18 @@ Module AdvancedAuxiliariesModule
 	''' </summary>
 	''' <returns>List(Of cAdvancedAuxiliary)</returns>
 	''' <remarks>Target Directory would normally be the executing directory, but can be in another location.</remarks>
-	Public Function DiscoverAdvancedAuxiliaries() As List(Of cAdvancedAuxiliary)
+	Public Function DiscoverAdvancedAuxiliaries() As List(Of AdvancedAuxiliary)
 
-		Dim returnList As List(Of cAdvancedAuxiliary) = New List(Of cAdvancedAuxiliary)
+		Dim returnList As List(Of AdvancedAuxiliary) = New List(Of AdvancedAuxiliary)
 		Dim fileNameWoPath As String
 		Dim fileNameWoExtentsion As String
-		Dim advancedAuxiliary As cAdvancedAuxiliary
+		Dim advancedAuxiliary As AdvancedAuxiliary
 		Dim o As ObjectHandle
 		Dim iAdvancedAux As IAdvancedAuxiliaries
 
 
 		'Create Default
-		returnList.Add(New cAdvancedAuxiliary())
+		returnList.Add(New AdvancedAuxiliary())
 
 
 		Try
@@ -46,14 +46,14 @@ Module AdvancedAuxiliariesModule
 				If fileName.Contains("Auxiliaries.dll") Then
 
 					'Get filenamewith
-					fileNameWoPath = fFILE(fileName, True)
-					fileNameWoExtentsion = fFILE(fileName, False)
+					fileNameWoPath = GetFilenameWithoutPath(fileName, True)
+					fileNameWoExtentsion = GetFilenameWithoutPath(fileName, False)
 
 					o = Activator.CreateInstance(fileNameWoExtentsion, "VectoAuxiliaries.AdvancedAuxiliaries")
 
 					iAdvancedAux = DirectCast(o.Unwrap, IAdvancedAuxiliaries)
 
-					advancedAuxiliary = New cAdvancedAuxiliary(iAdvancedAux.AuxiliaryName, iAdvancedAux.AuxiliaryVersion,
+					advancedAuxiliary = New AdvancedAuxiliary(iAdvancedAux.AuxiliaryName, iAdvancedAux.AuxiliaryVersion,
 																fileNameWoPath, fileNameWoExtentsion)
 
 					returnList.Add(advancedAuxiliary)
@@ -84,7 +84,7 @@ Module AdvancedAuxiliariesModule
 												vectoFilePath As String) As Boolean
 
 
-		Dim auxList As List(Of cAdvancedAuxiliary) = DiscoverAdvancedAuxiliaries()
+		Dim auxList As List(Of AdvancedAuxiliary) = DiscoverAdvancedAuxiliaries()
 		Dim chosenAssembly As String
 		Dim o As ObjectHandle
 		Dim iAdvancedAux As IAdvancedAuxiliaries
@@ -146,7 +146,7 @@ Module AdvancedAuxiliariesModule
 									ByVal version As String,
 									ByRef message As String) As Boolean
 
-		Dim auxList As List(Of cAdvancedAuxiliary) = DiscoverAdvancedAuxiliaries()
+		Dim auxList As List(Of AdvancedAuxiliary) = DiscoverAdvancedAuxiliaries()
 		Dim chosenAssembly As String
 		Dim o As ObjectHandle
 		Dim iAdvancedAux As IAdvancedAuxiliaries
