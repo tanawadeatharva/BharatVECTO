@@ -45,6 +45,7 @@ Public Class VehicleForm
 		ButAxlRem.Enabled = Not Cfg.DeclMode
 		CbCdMode.Enabled = Not Cfg.DeclMode
 		PnWheelDiam.Enabled = Not Cfg.DeclMode
+		gbPTO.Enabled = Not Cfg.DeclMode
 
 		CbCdMode.ValueMember = "Value"
 		CbCdMode.DisplayMember = "Label"
@@ -76,6 +77,12 @@ Public Class VehicleForm
 			.Cast(Of AngularGearType).Select(Function(type) New With {Key .Value = type, .Label = type.GetLabel()}).ToList()
 		_axlDlog = New VehicleAxleDialog
 
+		cbPTOType.ValueMember = "Value"
+		cbPTOType.DisplayMember = "Label"
+		cbPTOType.DataSource = DeclarationData.PTOTransmission.GetTechnologies.Select(
+			Function(technology) New With {Key .Value = technology, .Label = technology}).ToList()
+		'Items.AddRange(PtoTypeStrings.Values.Cast(Of Object).ToArray())
+
 		_changed = False
 
 		NewVehicle()
@@ -87,9 +94,9 @@ Public Class VehicleForm
 			TbHDVclass.Text = "-"
 			Exit Sub
 		End If
-		Dim vehC = CbCat.SelectedValue
-		Dim axlC = CbAxleConfig.SelectedValue
-		Dim maxMass = (TbMassMass.Text.ToDouble() * 1000).SI(Of Kilogram)()
+		Dim vehC As VehicleCategory = CbCat.SelectedValue
+		Dim axlC As AxleConfiguration = CbAxleConfig.SelectedValue
+		Dim maxMass As Kilogram = (TbMassMass.Text.ToDouble() * 1000).SI(Of Kilogram)()
 
 		_hdVclass = "-"
 		Dim s0 As Segment = Nothing
@@ -284,6 +291,9 @@ Public Class VehicleForm
 		TbMassExtra.Text = ""
 		CbAxleConfig.SelectedIndex = 0
 
+		cbPTOType.SelectedIndex = 0
+		tbPTOLossMap.Text = ""
+
 		DeclInit()
 
 		_vehFile = ""
@@ -380,6 +390,10 @@ Public Class VehicleForm
 
 		TBcdA.Text = veh.CdA0
 
+		cbPTOType.SelectedValue = veh.PTOType
+		tbPTOLossMap.Text = veh.PTOLossMap.OriginalPath
+		tbPTOCycle.Text = veh.PTOCycle.OriginalPath
+
 		DeclInit()
 
 		VehicleFileBrowser.UpdateHistory(file)
@@ -429,6 +443,10 @@ Public Class VehicleForm
 			veh.Axles.Add(a0)
 		Next
 
+		veh.PTOType = cbPTOType.SelectedValue
+		veh.PTOLossMap.Init(GetPath(file), tbPTOLossMap.Text)
+		veh.PTOCycle.Init(GetPath(file), tbPTOCycle.Text)
+
 		If Not Cfg.DeclMode AndAlso Math.Abs(axleShareCheck - 1) > 0.000001 Then
 			MsgBox("Relative axle loads must sum up to 1.0. Current value: " & axleShareCheck, MsgBoxStyle.Critical)
 			Return False
@@ -447,7 +465,8 @@ Public Class VehicleForm
 
 		If AutoSendTo Then
 			If VectoJobForm.Visible Then
-				If UCase(fFileRepl(VectoJobForm.TbVEH.Text, JobDir)) <> UCase(file) Then VectoJobForm.TbVEH.Text = GetFilenameWithoutDirectory(file, JobDir)
+				If UCase(fFileRepl(VectoJobForm.TbVEH.Text, JobDir)) <> UCase(file) Then _
+					VectoJobForm.TbVEH.Text = GetFilenameWithoutDirectory(file, JobDir)
 				VectoJobForm.UpdatePic()
 			End If
 		End If
@@ -583,7 +602,7 @@ Public Class VehicleForm
 	Private Sub TBcw_TextChanged(sender As Object, e As EventArgs) _
 		Handles TbLoad.TextChanged, TBrdyn.TextChanged, TBcdA.TextChanged, TbCdFile.TextChanged, TbRtRatio.TextChanged,
 				cbAngularGearType.SelectedIndexChanged, TbRtPath.TextChanged, tbAngularGearLossMapPath.TextChanged,
-				tbAngularGearRatio.TextChanged
+				tbAngularGearRatio.TextChanged, tbPTOLossMap.TextChanged
 		Change()
 	End Sub
 
@@ -782,9 +801,34 @@ Public Class VehicleForm
 
 	Private Sub btAngularGearLossMapBrowse_Click(sender As Object, e As EventArgs) Handles btAngularGearLossMapBrowse.Click
 		If TransmissionLossMapFileBrowser.OpenDialog(fFileRepl(TbRtPath.Text, GetPath(_vehFile))) Then _
-			tbAngularGearLossMapPath.Text = GetFilenameWithoutDirectory(TransmissionLossMapFileBrowser.Files(0), GetPath(_vehFile))
+			tbAngularGearLossMapPath.Text = GetFilenameWithoutDirectory(TransmissionLossMapFileBrowser.Files(0),
+																		GetPath(_vehFile))
 	End Sub
 
 #End Region
+
+	Private Sub cbPTOType_SelectedIndexChanged(sender As Object, e As EventArgs) Handles cbPTOType.SelectedIndexChanged
+
+		If (cbPTOType.SelectedIndex = 0) Then
+			pnPTO.Enabled = False
+			tbPTOLossMap.Text = ""
+		Else
+			pnPTO.Enabled = True
+		End If
+
+		Change()
+	End Sub
+
+	Private Sub btPTOLossMapBrowse_Click(sender As Object, e As EventArgs) Handles btPTOLossMapBrowse.Click
+		If fbPTOLM.OpenDialog(fFileRepl(tbPTOLossMap.Text, GetPath(_vehFile))) Then
+			tbPTOLossMap.Text = GetFilenameWithoutDirectory(fbPTOLM.Files(0), GetPath(_vehFile))
+		End If
+	End Sub
+
+	Private Sub btPTOCycle_Click(sender As Object, e As EventArgs) Handles btPTOCycle.Click
+		If DrivingCycleFileBrowser.OpenDialog(fFileRepl(tbPTOCycle.Text, GetPath(_vehFile))) Then
+			tbPTOCycle.Text = GetFilenameWithoutDirectory(DrivingCycleFileBrowser.Files(0), GetPath(_vehFile))
+		End If
+	End Sub
 End Class
 

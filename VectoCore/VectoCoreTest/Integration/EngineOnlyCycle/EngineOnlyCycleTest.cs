@@ -74,7 +74,7 @@ namespace TUGraz.VectoCore.Tests.Integration.EngineOnlyCycle
 			var engineData = MockSimulationDataFactory.CreateEngineDataFromFile(engineFile);
 
 			var aux = new EngineAuxiliary(vehicle);
-			aux.AddDirect();
+			aux.AddCycle();
 
 			var engine = new EngineOnlyCombustionEngine(vehicle, engineData);
 			engine.Connect(aux);

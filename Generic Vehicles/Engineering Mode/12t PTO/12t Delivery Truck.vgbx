@@ -1,0 +1,76 @@
+﻿{
+  "Header": {
+    "CreatedBy": " ()",
+    "Date": "6/20/2016 1:49:34 PM",
+    "AppVersion": "2.2",
+    "FileVersion": 5
+  },
+  "Body": {
+    "SavedInDeclMode": false,
+    "ModelName": "Generic 12t Delivery Truck",
+    "Inertia": 0.0,
+    "TracInt": 2.0,
+    "Gears": [
+      {
+        "Ratio": 4.0,
+        "LossMap": "Axle.vtlm"
+      },
+      {
+        "Ratio": 6.75,
+        "LossMap": "Indirect Gear.vtlm",
+        "TCactive": false,
+        "ShiftPolygon": "-",
+        "FullLoadCurve": "<NOFILE>"
+      },
+      {
+        "Ratio": 3.6,
+        "LossMap": "Indirect Gear.vtlm",
+        "TCactive": false,
+        "ShiftPolygon": "-",
+        "FullLoadCurve": "<NOFILE>"
+      },
+      {
+        "Ratio": 2.13,
+        "LossMap": "Indirect Gear.vtlm",
+        "TCactive": false,
+        "ShiftPolygon": "-",
+        "FullLoadCurve": "<NOFILE>"
+      },
+      {
+        "Ratio": 1.39,
+        "LossMap": "Indirect Gear.vtlm",
+        "TCactive": false,
+        "ShiftPolygon": "-",
+        "FullLoadCurve": "<NOFILE>"
+      },
+      {
+        "Ratio": 1.0,
+        "LossMap": "Direct Gear.vtlm",
+        "TCactive": false,
+        "ShiftPolygon": "-",
+        "FullLoadCurve": "<NOFILE>"
+      },
+      {
+        "Ratio": 0.78,
+        "LossMap": "Indirect Gear.vtlm",
+        "TCactive": false,
+        "ShiftPolygon": "-",
+        "FullLoadCurve": "<NOFILE>"
+      }
+    ],
+    "TqReserve": 20.0,
+    "SkipGears": true,
+    "ShiftTime": 3,
+    "EaryShiftUp": false,
+    "StartTqReserve": 20.0,
+    "StartSpeed": 2.0,
+    "StartAcc": 0.6,
+    "GearboxType": "MT",
+    "TorqueConverter": {
+      "Enabled": false,
+      "File": "<NOFILE>",
+      "RefRPM": 0.0,
+      "Inertia": 0.0
+    }
+  }
+}

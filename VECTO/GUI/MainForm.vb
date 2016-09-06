@@ -119,6 +119,7 @@ Public Class MainForm
 		GearboxShiftPolygonFileBrowser = New FileBrowser("vgbs")
 		RetarderLossMapFileBrowser = New FileBrowser("vrlm")
 		TransmissionLossMapFileBrowser = New FileBrowser("vtlm")
+		fbPTOLM = New FileBrowser("vptol")
 		TorqueConverterFileBrowser = New FileBrowser("vtcc")
 		fbTCCShift = New FileBrowser("vgbs")
 		fbCDx = New FileBrowser("vcdx")
@@ -144,6 +145,7 @@ Public Class MainForm
 		GearboxShiftPolygonFileBrowser.Extensions = New String() {"vgbs"}
 		RetarderLossMapFileBrowser.Extensions = New String() {"vrlm"}
 		TransmissionLossMapFileBrowser.Extensions = New String() {"vtlm"}
+		fbPTOLM.Extensions = New String() {"vptol"}
 		TorqueConverterFileBrowser.Extensions = New String() {"vtcc"}
 		fbTCCShift.Extensions = New String() {"vgbs"}
 		fbCDx.Extensions = New String() {"vcdv", "vcdb"}
@@ -166,6 +168,7 @@ Public Class MainForm
 		GearboxShiftPolygonFileBrowser.Close()
 		RetarderLossMapFileBrowser.Close()
 		TransmissionLossMapFileBrowser.Close()
+		fbPTOLM.Close()
 		TorqueConverterFileBrowser.Close()
 		fbTCCShift.Close()
 		fbCDx.Close()
@@ -230,13 +233,13 @@ Public Class MainForm
 
 		'Initialize BackgroundWorker
 
-		VECTOworkerV3 = New BackgroundWorker()
-		AddHandler VECTOworkerV3.DoWork, AddressOf VectoWorkerV3_OnDoWork
-		AddHandler VECTOworkerV3.ProgressChanged, AddressOf VectoWorkerV3_OnProgressChanged
-		AddHandler VECTOworkerV3.RunWorkerCompleted, AddressOf VectoWorkerV3_OnRunWorkerCompleted
+		VectoWorkerV3 = New BackgroundWorker()
+		AddHandler VectoWorkerV3.DoWork, AddressOf VectoWorkerV3_OnDoWork
+		AddHandler VectoWorkerV3.ProgressChanged, AddressOf VectoWorkerV3_OnProgressChanged
+		AddHandler VectoWorkerV3.RunWorkerCompleted, AddressOf VectoWorkerV3_OnRunWorkerCompleted
 
-		VECTOworkerV3.WorkerReportsProgress = True
-		VECTOworkerV3.WorkerSupportsCancellation = True
+		VectoWorkerV3.WorkerReportsProgress = True
+		VectoWorkerV3.WorkerSupportsCancellation = True
 
 
 		'Set mode (Batch/Standard)
@@ -268,9 +271,9 @@ Public Class MainForm
 	Public Shared Sub LogMethod(level As String, message As String)
 		Try
 			If level = "Warn" Then
-				VECTOworkerV3.ReportProgress(100, New With {.Target = "ListBoxWarning", .Message = message})
+				VectoWorkerV3.ReportProgress(100, New With {.Target = "ListBoxWarning", .Message = message})
 			ElseIf level = "Error" Or level = "Fatal" Then
-				VECTOworkerV3.ReportProgress(100, New With {.Target = "ListBoxError", .Message = message})
+				VectoWorkerV3.ReportProgress(100, New With {.Target = "ListBoxError", .Message = message})
 
 			End If
 		Catch e As InvalidOperationException
@@ -561,7 +564,7 @@ Public Class MainForm
 		Dim ListViewItem0 As ListViewItem
 
 		'If VECTO runs: Cancel operation (because Mode-change during calculation is not very clever)
-		If VECTOworkerV3.IsBusy Then Exit Sub
+		If VectoWorkerV3.IsBusy Then Exit Sub
 
 		pDim = UBound(Path)
 		ReDim fList(0)	   'um Nullverweisausnahme-Warnung zu verhindern
@@ -896,7 +899,7 @@ lbFound:
 	'VECTO Start button - Calls VECTO_Launcher or aborts calculation
 
 	Private Sub btStartV3_Click(sender As Object, e As EventArgs) Handles btStartV3.Click
-		If Not VECTOworkerV3.IsBusy Then
+		If Not VectoWorkerV3.IsBusy Then
 			'Save Lists for Crash
 			SaveFileLists()
 
@@ -924,12 +927,12 @@ lbFound:
 			ToolStripProgBarOverall.Style = ProgressBarStyle.Continuous
 			ToolStripProgBarOverall.Visible = True
 
-			VECTOworkerV3.RunWorkerAsync()
+			VectoWorkerV3.RunWorkerAsync()
 		Else
 			btStartV3.Enabled = False
 			btStartV3.Text = "Aborting..."
 			btStartV3.Image = My.Resources.Play_icon_gray
-			VECTOworkerV3.CancelAsync()
+			VectoWorkerV3.CancelAsync()
 		End If
 	End Sub
 
@@ -1074,18 +1077,18 @@ lbFound:
 			Dim runName As String = String.Format("{0} {1} {2}", p.Value.RunName, p.Value.CycleName, p.Value.RunSuffix)
 
 			If Not p.Value.Error Is Nothing Then
-				VECTOworkerV3.ReportProgress(0,
+				VectoWorkerV3.ReportProgress(0,
 											New _
 												With {.Target = "ListBoxError",
 												.Message = String.Format("Finished Run {0} with ERROR: {1}", runName, p.Value.Error.Message),
 												.Link = modFilename})
 			Else
-				VECTOworkerV3.ReportProgress(0,
+				VectoWorkerV3.ReportProgress(0,
 											New With {.Target = "ListBox", .Message = String.Format("Finished Run {0} successfully.", runName)})
 			End If
 
 			If (File.Exists(modFilename)) Then
-				VECTOworkerV3.ReportProgress(0,
+				VectoWorkerV3.ReportProgress(0,
 											New _
 												With {.Target = "ListBox",
 												.Message = String.Format("Run {0}: Modal Results written to {1}", runName, modFilename), .Link = modFilename

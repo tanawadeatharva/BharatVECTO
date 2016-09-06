@@ -98,10 +98,12 @@
     <Compile Include="Models\SimulationComponentData\ValidationTest.cs" />
     <Compile Include="Models\SimulationComponent\ATGearboxTest.cs" />
     <Compile Include="Models\Simulation\FactoryTest.cs" />
+    <Compile Include="Models\Simulation\PTOIdleLossTest.cs" />
     <Compile Include="Models\Simulation\LossMapRangeValidationTest.cs" />
     <Compile Include="Models\Simulation\LACDecisionFactorTest.cs" />
     <Compile Include="Models\Simulation\GearboxInertiaTest.cs" />
     <Compile Include="Models\Simulation\MockSumWriter.cs" />
+    <Compile Include="Models\Simulation\GetSectionTest.cs" />
     <Compile Include="Reports\ModDataTest.cs" />
     <Compile Include="Models\Simulation\MeasuredSpeedModeTest.cs" />
     <Compile Include="Models\Simulation\PwheelModeTests.cs" />

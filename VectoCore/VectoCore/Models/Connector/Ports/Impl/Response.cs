@@ -63,7 +63,7 @@ namespace TUGraz.VectoCore.Models.Connector.Ports.Impl
 		{
 			var t = GetType();
 			return string.Format("{0}{{{1}}}", t.Name,
-				", ".Join(t.GetProperties().Select(p => string.Format("{0}: {1}", p.Name, p.GetValue(this)))));
+				string.Join(", ", t.GetProperties().Select(p => string.Format("{0}: {1}", p.Name, p.GetValue(this)))));
 		}
 	}
 

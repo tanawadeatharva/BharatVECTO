@@ -33,8 +33,10 @@ using TUGraz.VectoCore.Models.Connector.Ports;
 
 namespace TUGraz.VectoCore.Models.SimulationComponent
 {
-	/// <summary>
-	/// Defines interfaces for a powertrain only driving cycle.
-	/// </summary>
-	public interface IPowertrainSimulation : IDrivingCycleInfo, ISimulationOutProvider, ITnInProvider {}
+	public interface IIdleController : ITnOutPort
+	{
+		ITnOutPort RequestPort { set; }
+
+		void Reset();
+	}
 }

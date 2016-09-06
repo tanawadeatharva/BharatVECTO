@@ -47,7 +47,7 @@ namespace TUGraz.VectoCore.Utils
 	public sealed class DelaunayMap : LoggingObject
 	{
 		internal ICollection<Point> Points = new HashSet<Point>();
-		private List<Triangle> _triangles;
+		private Triangle[] _triangles;
 		private Edge[] _convexHull;
 
 		private readonly string _mapName;
@@ -137,7 +137,7 @@ namespace TUGraz.VectoCore.Utils
 				SelectMany(t => t.GetEdges()).
 				Where(e => !(superTriangle.Contains(e.P1) || superTriangle.Contains(e.P2))).ToArray();
 
-			_triangles = triangles.FindAll(t => !t.SharesVertexWith(superTriangle));
+			_triangles = triangles.FindAll(t => !t.SharesVertexWith(superTriangle)).ToArray();
 		}
 
 		private void SanitycheckInputPoints()
@@ -226,7 +226,7 @@ namespace TUGraz.VectoCore.Utils
 		/// <param name="y"></param>
 		/// <returns>a value if interpolation is successfull, 
 		///          null if interpolation has failed.</returns>
-		[MethodImpl(MethodImplOptions.Synchronized)]
+		[MethodImpl(MethodImplOptions.AggressiveInlining)]
 		public double? Interpolate(double x, double y)
 		{
 			if (_triangles == null)
@@ -236,15 +236,15 @@ namespace TUGraz.VectoCore.Utils
 			y = (y - _minY) / (_maxY - _minY);
 
 			var i = 0;
-			while (i < _triangles.Count && !_triangles[i].IsInside(x, y, true))
+			while (i < _triangles.Length && !_triangles[i].IsInside(x, y, true))
 				i++;
-			if (i == _triangles.Count) {
+			if (i == _triangles.Length) {
 				i = 0;
-				while (i < _triangles.Count && !_triangles[i].IsInside(x, y, false))
+				while (i < _triangles.Length && !_triangles[i].IsInside(x, y, false))
 					i++;
 			}
 
-			if (i == _triangles.Count)
+			if (i == _triangles.Length)
 				return null;
 
 			var tr = _triangles[i];

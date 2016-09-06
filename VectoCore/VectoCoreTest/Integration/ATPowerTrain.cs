@@ -32,7 +32,6 @@ namespace TUGraz.VectoCore.Tests.Integration
 		public const string TorqueConverterPowerSplitFile = @"TestData\Components\AT_GBX\TorqueConverterPowerSplit.vtcc";
 		public const string GearboxShiftPolygonFile = @"TestData\Components\AT_GBX\AT-Shift.vgbs";
 
-
 		public static VectoRun CreateEngineeringRun(DrivingCycleData cycleData, GearboxType gbxType, string modFileName,
 			bool overspeed = false, KilogramSquareMeter gearBoxInertia = null)
 		{
@@ -93,21 +92,21 @@ namespace TUGraz.VectoCore.Tests.Integration
 			return new GearboxData {
 				Type = gbxType == GearboxType.ATSerial ? GearboxType.ATSerial : GearboxType.ATPowerSplit,
 				Gears = ratios.Select((ratio, i) =>
-					Tuple.Create((uint)i,
-						new GearData {
-							//MaxTorque = 2300.SI<NewtonMeter>(),
-							LossMap = ratio.IsEqual(1)
-								? TransmissionLossMapReader.Create(0.96, ratio, string.Format("Gear {0}", i))
-								: TransmissionLossMapReader.Create(0.98, ratio, string.Format("Gear {0}", i)),
-							Ratio = ratio,
-							ShiftPolygon = ShiftPolygonReader.ReadFromFile(GearboxShiftPolygonFile),
-							TorqueConverterRatio = i == 0 ? (gbxType == GearboxType.ATPowerSplit ? 1.0 : ratio) : double.NaN,
-							TorqueConverterGearLossMap = i == 0
-								? TransmissionLossMapReader.Create(gbxType == GearboxType.ATPowerSplit ? 1.0 : 0.98, ratio,
-									string.Format("Gear {0}", i))
-								: null,
+						Tuple.Create((uint)i,
+							new GearData {
+								//MaxTorque = 2300.SI<NewtonMeter>(),
+								LossMap = ratio.IsEqual(1)
+									? TransmissionLossMapReader.Create(0.96, ratio, string.Format("Gear {0}", i))
+									: TransmissionLossMapReader.Create(0.98, ratio, string.Format("Gear {0}", i)),
+								Ratio = ratio,
+								ShiftPolygon = ShiftPolygonReader.ReadFromFile(GearboxShiftPolygonFile),
+								TorqueConverterRatio = i == 0 ? (gbxType == GearboxType.ATPowerSplit ? 1.0 : ratio) : double.NaN,
+								TorqueConverterGearLossMap = i == 0
+									? TransmissionLossMapReader.Create(gbxType == GearboxType.ATPowerSplit ? 1.0 : 0.98, ratio,
+										string.Format("Gear {0}", i))
+									: null,
 							TorqueConverterShiftPolygon = i == 0 ? ShiftPolygonReader.ReadFromFile(GearboxShiftPolygonFile) : null
-						}))
+							}))
 					.ToDictionary(k => k.Item1 + 1, v => v.Item2),
 				ShiftTime = 1.SI<Second>(),
 				Inertia = 0.SI<KilogramSquareMeter>(),

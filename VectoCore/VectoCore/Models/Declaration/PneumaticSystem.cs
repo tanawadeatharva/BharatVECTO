@@ -51,9 +51,6 @@ namespace TUGraz.VectoCore.Models.Declaration
 
 		protected override void ParseData(DataTable table)
 		{
-			Data.Clear();
-			NormalizeTable(table);
-
 			foreach (DataRow row in table.Rows) {
 				var technology = row.Field<string>("technology");
 				foreach (DataColumn col in table.Columns) {

@@ -134,8 +134,10 @@ namespace TUGraz.VectoCore.InputData.FileIO.JSON
 				if (!gears.Any()) {
 					throw new VectoSimulationException("At least one Gear-Entry must be defined in Gearbox!");
 				}
-				return ReadTableData(
-					gears[0].GetEx<string>(JsonKeys.Gearbox_Gear_LossMapFile), "AxleGear");
+				var lossMap = gears[0][JsonKeys.Gearbox_Gear_LossMapFile];
+				if (lossMap != null)
+					return ReadTableData(gears[0][JsonKeys.Gearbox_Gear_LossMapFile].Value<string>(), "AxleGear", required: false);
+				return null;
 			}
 		}
 

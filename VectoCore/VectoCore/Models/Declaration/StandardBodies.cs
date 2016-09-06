@@ -79,7 +79,8 @@ namespace TUGraz.VectoCore.Models.Declaration
 	/// </summary>
 	public sealed class StandardBodies : LookupData<string, StandardBody>
 	{
-		public static StandardBody Empty = new StandardBody("", 0.SI<Kilogram>(), 0.SI<Kilogram>(), 0.SI<SquareMeter>(), null);
+		public static readonly StandardBody Empty = new StandardBody("", 0.SI<Kilogram>(), 0.SI<Kilogram>(),
+			0.SI<SquareMeter>(), null);
 
 		protected override string ResourceId
 		{
@@ -98,8 +99,6 @@ namespace TUGraz.VectoCore.Models.Declaration
 
 		protected override void ParseData(DataTable table)
 		{
-			NormalizeTable(table);
-
 			Data = table.Rows.Cast<DataRow>().Select(k => new StandardBody(
 				k.Field<string>("name"),
 				k.ParseDoubleOrGetDefault("curbmass").SI<Kilogram>(),

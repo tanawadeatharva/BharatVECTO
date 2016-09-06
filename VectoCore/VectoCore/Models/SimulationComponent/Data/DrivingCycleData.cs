@@ -42,7 +42,8 @@ namespace TUGraz.VectoCore.Models.SimulationComponent.Data
 		DistanceBased,
 		PWheel,
 		MeasuredSpeed,
-		MeasuredSpeedGear
+		MeasuredSpeedGear,
+		PTO
 	}
 
 	public class DrivingCycleData : SimulationComponentData
@@ -76,28 +77,29 @@ namespace TUGraz.VectoCore.Models.SimulationComponent.Data
 				WindYawAngle = entry.WindYawAngle;
 				Torque = entry.Torque;
 				Drag = entry.Drag;
+				PTOActive = entry.PTOActive;
 				AuxiliarySupplyPower = new Dictionary<string, Watt>(entry.AuxiliarySupplyPower);
 			}
 
 			/// <summary>
 			/// Travelled distance used for distance-based cycles. If "t" is also defined this column will be ignored.
 			/// </summary>
-			public Meter Distance { get; set; }
+			public Meter Distance;
 
 			/// <summary>
 			/// Used for time-based cycles. If neither this nor the distance. "s" is defined the data will be interpreted as 1Hz.
 			/// </summary>
-			public Second Time { get; set; }
+			public Second Time;
 
 			/// <summary>
 			/// Required except for Engine Only Mode calculations.
 			/// </summary>
-			public MeterPerSecond VehicleTargetSpeed { get; set; }
+			public MeterPerSecond VehicleTargetSpeed;
 
 			/// <summary>
 			/// Optional.
 			/// </summary>
-			public Radian RoadGradient { get; set; }
+			public Radian RoadGradient;
 
 			/// <summary>
 			/// [%] Optional.
@@ -110,55 +112,55 @@ namespace TUGraz.VectoCore.Models.SimulationComponent.Data
 			/// <summary>
 			/// relative altitude of the driving cycle over distance
 			/// </summary>
-			public Meter Altitude { get; set; }
+			public Meter Altitude;
 
 			/// <summary>
 			/// Required for distance-based cycles. Not used in time based cycles. "stop" defines the time the vehicle spends in stop phases.
 			/// </summary>
-			public Second StoppingTime { get; set; }
+			public Second StoppingTime;
 
 			/// <summary>
 			/// Supply Power input for each auxiliary defined in the .vecto file where xxx matches the ID of the corresponding
 			/// Auxiliary. ID's are not case sensitive and must not contain space or special characters.
 			/// </summary>
-			public Dictionary<string, Watt> AuxiliarySupplyPower { get; set; }
+			public Dictionary<string, Watt> AuxiliarySupplyPower;
 
 			/// <summary>
 			/// If "n_eng_avg" is defined VECTO uses that instead of the calculated engine speed value.
 			/// </summary>
-			public PerSecond AngularVelocity { get; set; }
+			public PerSecond AngularVelocity;
 
 			/// <summary>
 			/// [-] Gear input. Overwrites the gear shift model.
 			/// </summary>
-			public uint Gear { get; set; }
+			public uint Gear;
 
 			/// <summary>
 			/// This power input will be directly added to the engine power in addition to possible other auxiliaries. Also used in Engine Only Mode.
 			/// </summary>
-			public Watt AdditionalAuxPowerDemand { get; set; }
+			public Watt AdditionalAuxPowerDemand;
 
 			/// <summary>
 			/// Only required if Cross Wind Correction is set to Vair and Beta Input.
 			/// </summary>
-			public MeterPerSecond AirSpeedRelativeToVehicle { get; set; }
+			public MeterPerSecond AirSpeedRelativeToVehicle;
 
 			/// <summary>
 			/// [°] Only required if Cross Wind Correction is set to Vair and Beta Input.
 			/// </summary>
-			public double WindYawAngle { get; set; }
+			public double WindYawAngle;
 
 			/// <summary>
 			/// Effective engine torque at clutch. Only required in Engine Only Mode. Alternatively power "Pe" can be defined. Use "DRAG" to define motoring operation.
 			/// </summary>
-			public NewtonMeter Torque { get; set; }
+			public NewtonMeter Torque;
 
-			public bool Drag { get; set; }
+			public bool Drag;
 
 			/// <summary>
 			/// Power on the Wheels (only used in PWheel Mode).
 			/// </summary>
-			public Watt PWheel { get; set; }
+			public Watt PWheel;
 
 			public bool? TorqueConverterActive { get; set; }
 
@@ -166,6 +168,11 @@ namespace TUGraz.VectoCore.Models.SimulationComponent.Data
 			/// The angular velocity at the wheel. only used in PWheelCycle.
 			/// </summary>
 			public PerSecond WheelAngularVelocity;
+
+			/// <summary>
+			/// Flag if PTO Cycle is active or not.
+			/// </summary>
+			public bool PTOActive;
 		}
 	}
 }

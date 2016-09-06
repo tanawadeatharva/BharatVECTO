@@ -68,11 +68,15 @@ namespace TUGraz.VectoCore.Models.Simulation.Data
 
 		public AdvancedAuxData AdvancedAux { get; internal set; }
 
+		// todo mk 2016-08-30: property is never used. Delete?
 		[ValidateObject]
 		public string AccelerationLimitingFile { get; internal set; }
 
 		[ValidateObject]
 		public RetarderData Retarder { get; internal set; }
+
+		[ValidateObject]
+		public PTOData PTO { get; internal set; }
 
 		[ValidateObject]
 		public DriverData DriverData { get; internal set; }

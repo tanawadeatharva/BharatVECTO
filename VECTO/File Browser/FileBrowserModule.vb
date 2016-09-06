@@ -36,6 +36,7 @@ Public Module FileBrowserModule
 
 	Public GearboxShiftPolygonFileBrowser As FileBrowser
 	Public TransmissionLossMapFileBrowser As FileBrowser
+	Public fbPTOLM As FileBrowser
 	Public RetarderLossMapFileBrowser As FileBrowser
 	Public TorqueConverterFileBrowser As FileBrowser
 	Public fbTCCShift As FileBrowser

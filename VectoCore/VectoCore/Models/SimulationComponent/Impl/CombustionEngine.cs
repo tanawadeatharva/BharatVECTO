@@ -72,7 +72,7 @@ namespace TUGraz.VectoCore.Models.SimulationComponent.Impl
 
 		internal readonly CombustionEngineData ModelData;
 
-		protected IEngineAuxPort EngineAux;
+		protected IAuxPort EngineAux;
 
 		public CombustionEngine(IVehicleContainer cockpit, CombustionEngineData modelData, bool pt1Disabled = false)
 			: base(cockpit)
@@ -127,11 +127,12 @@ namespace TUGraz.VectoCore.Models.SimulationComponent.Impl
 		}
 
 		public PerSecond EngineN80hSpeed
+
 		{
 			get { return ModelData.FullLoadCurve.N80hSpeed; }
 		}
 
-		public ICombustionEngineIdleController IdleController
+		public IIdleController IdleController
 		{
 			get { return EngineIdleController ?? (EngineIdleController = new CombustionEngineIdleController(this)); }
 		}
@@ -149,7 +150,7 @@ namespace TUGraz.VectoCore.Models.SimulationComponent.Impl
 
 		#endregion
 
-		public void Connect(IEngineAuxPort aux)
+		public void Connect(IAuxPort aux)
 		{
 			EngineAux = aux;
 		}
@@ -483,7 +484,7 @@ namespace TUGraz.VectoCore.Models.SimulationComponent.Impl
 			// ReSharper disable once InconsistentNaming
 		}
 
-		protected class CombustionEngineIdleController : LoggingObject, ICombustionEngineIdleController
+		protected class CombustionEngineIdleController : LoggingObject, IIdleController
 		{
 			protected readonly double PeDropSlope = -0.75;
 			protected readonly double PeDropOffset = 1.0;

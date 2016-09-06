@@ -29,26 +29,57 @@
 *   Martin Rexeis, rexeis@ivt.tugraz.at, IVT, Graz University of Technology
 */
 
+using System;
+using System.Collections.Generic;
+using NUnit.Framework;
 using TUGraz.VectoCommon.Utils;
+using TUGraz.VectoCore.Models.SimulationComponent.Data;
+using TUGraz.VectoCore.Tests.Utils;
 
-namespace TUGraz.VectoCore.Models.SimulationComponent
+namespace TUGraz.VectoCore.Tests.Models.Simulation
 {
-	public interface IEngineAuxInProvider
+	[TestFixture]
+	public class PTOIdleLossTest
 	{
-		IEngineAuxPort Port();
-	}
+		[TestCase]
+		public void PTOIdleLosses_FixPoints()
+		{
+			var entryList = new List<PTOLossMap.Entry>();
+			for (var i = 0; i < 2000; i += 200) {
+				entryList.Add(new PTOLossMap.Entry {
+					EngineSpeed = i.RPMtoRad(),
+					PTOTorque = (Math.Sqrt(i) / 10).SI<NewtonMeter>()
+				});
+			}
+			var pto = new PTOLossMap(entryList.ToArray());
 
-	public interface IEngineAuxOutProvider
-	{
-		void Connect(IEngineAuxPort aux);
-	}
+			foreach (var entry in entryList) {
+				Assert.AreEqual(entry.PTOTorque, pto.GetTorqueLoss(entry.EngineSpeed));
+			}
+		}
 
-	public interface IEngineAuxPort
-	{
-		NewtonMeter Initialize(NewtonMeter torque, PerSecond angularSpeed);
+		[TestCase]
+		public void PTOIdleLosses_Interpolate()
+		{
+			var entryList = new List<PTOLossMap.Entry>();
+			for (var i = 0; i < 2000; i += 200) {
+				entryList.Add(new PTOLossMap.Entry {
+					EngineSpeed = i.RPMtoRad(),
+					PTOTorque = (Math.Sqrt(i) / 10).SI<NewtonMeter>()
+				});
+			}
+			var pto = new PTOLossMap(entryList.ToArray());
 
-		NewtonMeter PowerDemand(Second absTime, Second dt, NewtonMeter torquePowerTrain, NewtonMeter torqueEngine,
-			PerSecond angularSpeed,
-			bool dryRun = false);
+			for (var i = 1; i < entryList.Count; i++) {
+				var v1 = entryList[i - 1];
+				var v2 = entryList[i];
+
+				for (var f = v1.EngineSpeed; f < v2.EngineSpeed; f += 10.RPMtoRad()) {
+					AssertHelper.AreRelativeEqual(
+						VectoMath.Interpolate(v1.EngineSpeed, v2.EngineSpeed, v1.PTOTorque, v2.PTOTorque, f),
+						pto.GetTorqueLoss(f));
+				}
+			}
+		}
 	}
 }

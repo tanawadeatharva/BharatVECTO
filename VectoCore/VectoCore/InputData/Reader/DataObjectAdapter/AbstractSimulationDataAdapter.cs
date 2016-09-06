@@ -140,14 +140,15 @@ namespace TUGraz.VectoCore.InputData.Reader.DataObjectAdapter
 		internal AxleGearData CreateAxleGearData(IAxleGearInputData data, bool useEfficiencyFallback)
 		{
 			TransmissionLossMap axleLossMap;
-			try {
+			if (data.LossMap == null && useEfficiencyFallback) {
+				axleLossMap = TransmissionLossMapReader.Create(data.Efficiency, data.Ratio, "AxleGear");
+			} else {
+				if (data.LossMap == null)
+					throw new Exception("LossMap for AxleGear is missing.");
 				axleLossMap = TransmissionLossMapReader.Create(data.LossMap, data.Ratio, "AxleGear");
-			} catch (InvalidFileFormatException) {
-				if (useEfficiencyFallback) {
-					axleLossMap = TransmissionLossMapReader.Create(data.Efficiency, data.Ratio, "AxleGear");
-				} else {
-					throw;
-				}
+			}
+			if (axleLossMap == null) {
+				throw new Exception("LossMap for AxleGear is missing.");
 			}
 
 			return new AxleGearData {
@@ -172,12 +173,7 @@ namespace TUGraz.VectoCore.InputData.Reader.DataObjectAdapter
 		internal AngularGearData CreateAngularGearData(IAngularGearInputData data, bool useEfficiencyFallback)
 		{
 			try {
-				var type = AngularGearType.None;
-				try {
-					type = data.Type;
-				} catch (InvalidFileFormatException) {
-					Log.Info("AngularGear not found. Assuming None.");
-				}
+				var type = data.Type;
 
 				switch (type) {
 					case AngularGearType.LossesIncludedInGearbox:

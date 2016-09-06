@@ -29,14 +29,25 @@
 *   Martin Rexeis, rexeis@ivt.tugraz.at, IVT, Graz University of Technology
 */
 
-using TUGraz.VectoCore.Models.Connector.Ports;
+using TUGraz.VectoCommon.Utils;
 
 namespace TUGraz.VectoCore.Models.SimulationComponent
 {
-	public interface ICombustionEngineIdleController : ITnOutPort
+	public interface IAuxInProvider
 	{
-		ITnOutPort RequestPort { set; }
+		IAuxPort Port();
+	}
 
-		void Reset();
+	public interface IAuxOutProvider
+	{
+		void Connect(IAuxPort aux);
+	}
+
+	public interface IAuxPort
+	{
+		NewtonMeter Initialize(NewtonMeter torque, PerSecond angularSpeed);
+
+		NewtonMeter PowerDemand(Second absTime, Second dt, NewtonMeter torquePowerTrain, NewtonMeter torqueEngine,
+			PerSecond angularSpeed, bool dryRun = false);
 	}
 }
