@@ -41,26 +41,3 @@ Public Enum MessageType
 End Enum
 
 
-
-
-Module PTOType
-	'Public ReadOnly PtoTypeStrings As New Dictionary(Of tPTOType, String) From {
-	'	{tPTOType.None, "None"},
-	'	{tPTOType.OnlyDriveShaftShiftClawSynchronizerSchieberad,
-	'	"only the drive shaft of the PTO - shift claw, synchronizer, Schieberad"},
-	'	{tPTOType.OnlyDriveShaftMultiDiscClutch, "only the drive shaft of the PTO - multi-disc clutch"},
-	'	{tPTOType.OnlyDriveShaftMultiDiscClutchOilPump, "only the drive shaft of the PTO - multi-disc clutch, oil pump"},
-	'	{tPTOType.DriveShaftUpTo2GearWheelsShiftClawSynchronizerSchieberad,
-	'	"drive shaft and/or up to 2 gear wheels - shift claw, synchronizer, Schieberad"},
-	'	{tPTOType.DriveShaftUpTo2GearWheelsMultiDiscClutch, "drive shaft and/or up to 2 gear wheels - multi-disc clutch"},
-	'	{tPTOType.DriveShaftUpTo2GearWheelsMultiDiscClutchOilPump,
-	'	"drive shaft and/or up to 2 gear wheels - multi-disc clutch, oil pump"},
-	'	{tPTOType.DriveShaftMoreThan2GearWheelsShiftClawSynchronizerSchieberad,
-	'	"drive shaft and/or more than 2 gear wheels - shift claw, synchronizer, Schieberad"},
-	'	{tPTOType.DriveShaftMoreThan2GearWheelsMultiDiscClutch,
-	'	"drive shaft and/or more than 2 gear wheels - multi-disc clutch"},
-	'	{tPTOType.DriveShaftMoreThan2GearWheelsMultiDiscClutchOilPump,
-	'	"drive shaft and/or more than 2 gear wheels - multi-disc clutch, oil pump"}
-	'	}
-
-End Module
