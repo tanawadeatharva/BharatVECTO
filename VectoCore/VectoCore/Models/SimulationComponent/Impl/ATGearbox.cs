@@ -13,14 +13,13 @@ using TUGraz.VectoCore.Utils;
 
 namespace TUGraz.VectoCore.Models.SimulationComponent.Impl
 {
-	public class ATGearbox : AbstractGearbox<ATGearbox.ATGearboxState>, IGearbox, ITnInPort,
-		IClutchInfo
+	public class ATGearbox : AbstractGearbox<ATGearbox.ATGearboxState>
 	{
 		protected internal bool Disengaged = true;
 
-		protected internal readonly IShiftStrategy Strategy;
+		private readonly IShiftStrategy Strategy;
 
-		protected internal TorqueConverter TorqueConverter;
+		protected internal readonly TorqueConverter TorqueConverter;
 
 		public Second LastShift { get; private set; }
 
@@ -33,12 +32,11 @@ namespace TUGraz.VectoCore.Models.SimulationComponent.Impl
 			TorqueConverter = new TorqueConverter(this, Strategy, container, gearboxModelData.TorqueConverterData);
 		}
 
-
-		private ICombustionEngineIdleController _idleController;
+		private IIdleController _idleController;
 
 		public bool TorqueConverterLocked { get; protected internal set; }
 
-		public ICombustionEngineIdleController IdleController
+		public IIdleController IdleController
 		{
 			get { return _idleController; }
 			set
@@ -48,10 +46,10 @@ namespace TUGraz.VectoCore.Models.SimulationComponent.Impl
 			}
 		}
 
-		public new void Connect(ITnOutPort other)
+		public override void Connect(ITnOutPort other)
 		{
-			NextComponent = other;
-			TorqueConverter.NextComponent = NextComponent;
+			base.Connect(other);
+			TorqueConverter.NextComponent = other;
 		}
 
 		public override IResponse Initialize(NewtonMeter outTorque, PerSecond outAngularVelocity)
@@ -72,7 +70,11 @@ namespace TUGraz.VectoCore.Models.SimulationComponent.Impl
 				inAngularVelocity = outAngularVelocity * effectiveRatio;
 				var torqueLossResult = effectiveLossMap.GetTorqueLoss(outAngularVelocity, outTorque);
 				CurrentState.TorqueLossResult = torqueLossResult;
-				inTorque = outTorque / effectiveRatio + torqueLossResult.Value;
+
+				//todo mk-2016-08-22: aux loss from out-direction or in-direction of the gearbox?
+				var auxTorqueLoss = Auxiliary == null ? 0.SI<NewtonMeter>() : Auxiliary.Initialize(outTorque, outAngularVelocity);
+
+				inTorque = outTorque / effectiveRatio + torqueLossResult.Value + auxTorqueLoss;
 			}
 			if (Disengaged) {
 				return NextComponent.Initialize(0.SI<NewtonMeter>(), null);
@@ -100,7 +102,11 @@ namespace TUGraz.VectoCore.Models.SimulationComponent.Impl
 			var torqueLossResult = torqueConverterLocked
 				? ModelData.Gears[gear].LossMap.GetTorqueLoss(outAngularVelocity, outTorque)
 				: ModelData.Gears[Gear].TorqueConverterGearLossMap.GetTorqueLoss(outAngularVelocity, outTorque);
-			var inTorque = outTorque / effectiveRatio + torqueLossResult.Value;
+
+			//todo mk-2016-08-22: aux loss from out-direction or in-direction of the gearbox?
+			var auxTorqueLoss = Auxiliary == null ? 0.SI<NewtonMeter>() : Auxiliary.Initialize(outTorque, outAngularVelocity);
+
+			var inTorque = outTorque / effectiveRatio + torqueLossResult.Value + auxTorqueLoss;
 
 			IResponse response;
 			if (torqueConverterLocked) {
@@ -125,7 +131,6 @@ namespace TUGraz.VectoCore.Models.SimulationComponent.Impl
 				GearboxPowerRequest = outTorque * outAngularVelocity,
 			};
 		}
-
 
 		public override IResponse Request(Second absTime, Second dt, NewtonMeter outTorque, PerSecond outAngularVelocity,
 			bool dryRun = false)
@@ -179,7 +184,13 @@ namespace TUGraz.VectoCore.Models.SimulationComponent.Impl
 			var inTorqueLossResult = effectiveLossMap.GetTorqueLoss(avgOutAngularVelocity, outTorque);
 
 			CurrentState.TorqueLossResult = inTorqueLossResult;
+
 			var inTorque = outTorque / effectiveRatio + inTorqueLossResult.Value;
+
+			if (Auxiliary != null) {
+				//todo mk-2016-08-22: aux loss from out-direction or in-direction of the gearbox?
+				inTorque += Auxiliary.PowerDemand(absTime, dt, outTorque, inTorque, outAngularVelocity, dryRun);
+			}
 
 			if (!TorqueConverterLocked && !ModelData.Gears[Gear].HasTorqueConverter) {
 				throw new VectoSimulationException("Torque converter requested by strategy for gear without torque converter!");
@@ -210,7 +221,6 @@ namespace TUGraz.VectoCore.Models.SimulationComponent.Impl
 			TorqueConverter.Locked(CurrentState.InTorque, CurrentState.InAngularVelocity);
 			return NextComponent.Request(absTime, dt, inTorque, inAngularVelocity, dryRun);
 		}
-
 
 		private IResponse RequestDisengaged(Second absTime, Second dt, NewtonMeter outTorque, PerSecond outAngularVelocity,
 			bool dryRun)
@@ -253,7 +263,6 @@ namespace TUGraz.VectoCore.Models.SimulationComponent.Impl
 			return retval;
 		}
 
-
 		protected override void DoWriteModalResults(IModalDataContainer container)
 		{
 			var avgInAngularSpeed = (PreviousState.OutAngularVelocity +
@@ -289,12 +298,10 @@ namespace TUGraz.VectoCore.Models.SimulationComponent.Impl
 			AdvanceState();
 		}
 
-
-		public bool ClutchClosed(Second absTime)
+		public override bool ClutchClosed(Second absTime)
 		{
 			return true;
 		}
-
 
 		public class ATGearboxState : GearboxState
 		{

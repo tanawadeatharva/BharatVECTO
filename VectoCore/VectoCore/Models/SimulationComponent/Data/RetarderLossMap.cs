@@ -29,7 +29,6 @@
 *   Martin Rexeis, rexeis@ivt.tugraz.at, IVT, Graz University of Technology
 */
 
-using System.Collections.Generic;
 using System.ComponentModel.DataAnnotations;
 using System.Linq;
 using TUGraz.VectoCommon.Utils;
@@ -39,13 +38,13 @@ namespace TUGraz.VectoCore.Models.SimulationComponent.Data
 	/// <summary>
 	/// LossMap for retarder.
 	/// </summary>
-	public class RetarderLossMap : SimulationComponentData
+	public class RetarderLossMap : SimulationComponentData, ILossMap
 	{
-		[ValidateObject] private readonly IReadOnlyList<RetarderLossEntry> _entries;
+		[ValidateObject] private readonly RetarderLossEntry[] _entries;
 		private PerSecond _minSpeed;
 		private PerSecond _maxSpeed;
 
-		protected internal RetarderLossMap(List<RetarderLossEntry> entries)
+		protected internal RetarderLossMap(RetarderLossEntry[] entries)
 		{
 			_entries = entries;
 		}
@@ -69,9 +68,7 @@ namespace TUGraz.VectoCore.Models.SimulationComponent.Data
 		/// <summary>
 		/// Calculates the retarder losses.
 		/// </summary>
-		/// <param name="angularVelocity"></param>
-		/// <returns></returns>
-		public NewtonMeter RetarderLoss(PerSecond angularVelocity)
+		public NewtonMeter GetTorqueLoss(PerSecond angularVelocity)
 		{
 			var s = _entries.GetSection(e => e.RetarderSpeed < angularVelocity);
 			return VectoMath.Interpolate(s.Item1.RetarderSpeed, s.Item2.RetarderSpeed, s.Item1.TorqueLoss, s.Item2.TorqueLoss,
@@ -80,11 +77,8 @@ namespace TUGraz.VectoCore.Models.SimulationComponent.Data
 
 		public class RetarderLossEntry
 		{
-			[Required, SIRange(0, double.MaxValue)]
-			public PerSecond RetarderSpeed { get; set; }
-
-			[Required, SIRange(0, 500)]
-			public NewtonMeter TorqueLoss { get; set; }
+			[Required, SIRange(0, double.MaxValue)] public PerSecond RetarderSpeed;
+			[Required, SIRange(0, 500)] public NewtonMeter TorqueLoss;
 		}
 	}
 }

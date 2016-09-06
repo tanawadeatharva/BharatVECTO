@@ -27,7 +27,7 @@ namespace TUGraz.VectoCore.Models.SimulationComponent.Data.Engine
 				LoggingObject.Logger<FuelConsumptionMap>().Warn(
 					"FuelConsumptionMap: Header Line is not valid. Expected: '{0}, {1}, {2}', Got: {3}",
 					Fields.EngineSpeed, Fields.Torque, Fields.FuelConsumption,
-					", ".Join(data.Columns.Cast<DataColumn>().Select(c => c.ColumnName)));
+					string.Join(", ", data.Columns.Cast<DataColumn>().Select(c => c.ColumnName)));
 			}
 			var delaunayMap = new DelaunayMap("FuelConsumptionMap");
 
@@ -58,8 +58,8 @@ namespace TUGraz.VectoCore.Models.SimulationComponent.Data.Engine
 				engineSpeed: row.ParseDouble(0).RPMtoRad(),
 				torque: row.ParseDouble(1).SI<NewtonMeter>(),
 				fuelConsumption:
-					row.ParseDouble(2).SI().Gramm.Per.Hour.ConvertTo().Kilo.Gramm.Per.Second.Cast<KilogramPerSecond>()
-				);
+				row.ParseDouble(2).SI().Gramm.Per.Hour.ConvertTo().Kilo.Gramm.Per.Second.Cast<KilogramPerSecond>()
+			);
 		}
 
 		private static FuelConsumptionMap.Entry CreateFromColumNames(DataRow row)
@@ -68,11 +68,11 @@ namespace TUGraz.VectoCore.Models.SimulationComponent.Data.Engine
 				engineSpeed: row.ParseDouble(Fields.EngineSpeed).SI().Rounds.Per.Minute.Cast<PerSecond>(),
 				torque: row.ParseDouble(Fields.Torque).SI<NewtonMeter>(),
 				fuelConsumption:
-					row.ParseDouble(Fields.FuelConsumption)
-						.SI()
-						.Gramm.Per.Hour.ConvertTo()
-						.Kilo.Gramm.Per.Second.Cast<KilogramPerSecond>()
-				);
+				row.ParseDouble(Fields.FuelConsumption)
+					.SI()
+					.Gramm.Per.Hour.ConvertTo()
+					.Kilo.Gramm.Per.Second.Cast<KilogramPerSecond>()
+			);
 		}
 
 		public static class Fields

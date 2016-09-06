@@ -30,7 +30,6 @@
 */
 
 using System;
-using System.Collections.Generic;
 using System.Globalization;
 using System.IO;
 using System.Linq;
@@ -40,11 +39,6 @@ namespace TUGraz.VectoCommon.Utils
 {
 	public static class StringExtensionMethods
 	{
-		public static string Join<T>(this string s, IEnumerable<T> values)
-		{
-			return string.Join(s, values);
-		}
-
 		public static double ToDouble(this string self, double? defaultValue = null)
 		{
 			try {
@@ -71,7 +65,7 @@ namespace TUGraz.VectoCommon.Utils
 				CultureInfo.InvariantCulture);
 		}
 
-		public static Stream GetStream(this string self)
+		public static Stream ToStream(this string self)
 		{
 			return new MemoryStream(Encoding.UTF8.GetBytes(self));
 		}

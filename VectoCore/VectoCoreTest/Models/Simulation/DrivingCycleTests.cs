@@ -325,13 +325,13 @@ namespace TUGraz.VectoCore.Tests.Models.Simulation
 
 		private static void TestCycleDetect(string inputData, CycleType cycleType)
 		{
-			var cycleTypeCalc = DrivingCycleDataReader.DetectCycleType(VectoCSVFile.ReadStream(inputData.GetStream()));
+			var cycleTypeCalc = DrivingCycleDataReader.DetectCycleType(VectoCSVFile.ReadStream(inputData.ToStream()));
 			Assert.AreEqual(cycleType, cycleTypeCalc);
 		}
 
 		private static void TestCycleRead(string inputData, CycleType cycleType, int entryCount = 1)
 		{
-			var drivingCycle = DrivingCycleDataReader.ReadFromStream(inputData.GetStream(), cycleType, "", false);
+			var drivingCycle = DrivingCycleDataReader.ReadFromStream(inputData.ToStream(), cycleType, "", false);
 			Assert.AreEqual(cycleType, drivingCycle.CycleType);
 			Assert.AreEqual(entryCount, drivingCycle.Entries.Count, "Driving Cycle Entry count.");
 		}

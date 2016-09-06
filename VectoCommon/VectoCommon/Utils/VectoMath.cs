@@ -33,6 +33,7 @@ using System;
 using System.Collections.Generic;
 using System.Diagnostics;
 using System.Linq;
+using System.Runtime.CompilerServices;
 using TUGraz.VectoCommon.Exceptions;
 using TUGraz.VectoCommon.Models;
 
@@ -128,11 +129,6 @@ namespace TUGraz.VectoCommon.Utils
 				return lowerBound;
 			}
 			return value;
-		}
-
-		public static T Sqrt<T>(SI si) where T : SIBase<T>
-		{
-			return si.Sqrt().Cast<T>();
 		}
 
 		/// <summary>
@@ -436,12 +432,18 @@ namespace TUGraz.VectoCommon.Utils
 		/// <param name="y"></param>
 		/// <param name="exact"></param>
 		/// <returns></returns>
+		[MethodImpl(MethodImplOptions.AggressiveInlining)]
 		public bool IsInside(double x, double y, bool exact)
 		{
-			if ((P1.Y.IsSmaller(y) && P2.Y.IsSmaller(y) && P3.Y.IsSmaller(y))
-				|| (P1.X.IsSmaller(x) && P2.X.IsSmaller(x) && P3.X.IsSmaller(x))
-				|| (P1.X.IsGreater(x) && P2.X.IsGreater(x) && P3.X.IsGreater(x))
-				|| (P1.Y.IsGreater(y) && P2.Y.IsGreater(y) && P3.Y.IsGreater(y)))
+			var smallerY = y - DoubleExtensionMethods.Tolerance;
+			var biggerY = y + DoubleExtensionMethods.Tolerance;
+			var smallerX = x - DoubleExtensionMethods.Tolerance;
+			var biggerX = x + DoubleExtensionMethods.Tolerance;
+
+			if ((P1.Y < smallerY && P2.Y < smallerY && P3.Y < smallerY)
+				|| (P1.X < smallerX && P2.X < smallerX && P3.X < smallerX)
+				|| (P1.X > biggerX && P2.X > biggerX && P3.X > biggerX)
+				|| (P1.Y > biggerY && P2.Y > biggerY && P3.Y > biggerY))
 				return false;
 
 			var v0X = P3.X - P1.X;

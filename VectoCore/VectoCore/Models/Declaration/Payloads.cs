@@ -81,8 +81,6 @@ namespace TUGraz.VectoCore.Models.Declaration
 
 		protected override void ParseData(DataTable table)
 		{
-			NormalizeTable(table);
-
 			Data = table.Rows.Cast<DataRow>()
 				.ToDictionary(
 					kv => kv.ParseDouble("grossvehicleweight").SI<Kilogram>(),

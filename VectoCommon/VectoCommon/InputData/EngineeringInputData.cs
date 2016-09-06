@@ -95,6 +95,21 @@ namespace TUGraz.VectoCommon.InputData
 		DataTable CrosswindCorrectionMap { get; }
 	}
 
+	public interface IPTOTransmissionInputData
+	{
+		/// <summary>
+		/// The transmission type for the constant pto transmission losses.
+		/// </summary>
+		string PTOTransmissionType { get; }
+
+		/// <summary>
+		/// The PTO Loss map for idling losses of the "consumer" part.
+		/// </summary>
+		DataTable PTOLossMap { get; }
+
+		DataTable PTOCycle { get; }
+	}
+
 	public interface IAxleEngineeringInputData : IAxleDeclarationInputData
 	{
 		/// <summary>

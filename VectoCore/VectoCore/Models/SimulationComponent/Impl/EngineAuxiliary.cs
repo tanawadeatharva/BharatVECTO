@@ -42,65 +42,29 @@ using TUGraz.VectoCore.OutputData;
 
 namespace TUGraz.VectoCore.Models.SimulationComponent.Impl
 {
-	public class EngineAuxiliary : StatefulVectoSimulationComponent<EngineAuxiliary.EngineAuxState>, IEngineAuxInProvider,
-		IEngineAuxPort
+	public class EngineAuxiliary : StatefulVectoSimulationComponent<EngineAuxiliary.State>, IAuxInProvider,
+		IAuxPort
 	{
-		public const string DirectAuxiliaryId = "";
+		private const string DirectAuxiliaryId = "";
 
-		private readonly Dictionary<string, Func<PerSecond, Watt>> _auxDict = new Dictionary<string, Func<PerSecond, Watt>>();
-		private Dictionary<string, Watt> _powerDemands = new Dictionary<string, Watt>();
+		private readonly Dictionary<string, Func<PerSecond, Watt>> _auxiliaries =
+			new Dictionary<string, Func<PerSecond, Watt>>();
 
 		public EngineAuxiliary(IVehicleContainer container) : base(container) {}
 
-		public IEngineAuxPort Port()
+		public IAuxPort Port()
 		{
 			return this;
 		}
 
-		public NewtonMeter PowerDemand(Second absTime, Second dt, NewtonMeter torquePowerTrain, NewtonMeter torqueEngine,
-			PerSecond angularSpeed, bool dryRun = false)
-		{
-			CurrentState.AngularSpeed = angularSpeed;
-			var avgAngularSpeed = (CurrentState.AngularSpeed + PreviousState.AngularSpeed) / 2.0;
-			return ComputePowerDemand(avgAngularSpeed) / avgAngularSpeed;
-		}
-
-		public NewtonMeter Initialize(NewtonMeter torque, PerSecond angularSpeed)
-		{
-			PreviousState.AngularSpeed = angularSpeed;
-			return ComputePowerDemand(angularSpeed) / angularSpeed;
-		}
-
-		private Watt ComputePowerDemand(PerSecond engineSpeed)
-		{
-			_powerDemands = _auxDict.ToDictionary(kv => kv.Key, kv => kv.Value(engineSpeed));
-			return _powerDemands.Values.Sum(p => p);
-		}
-
-		protected override void DoWriteModalResults(IModalDataContainer container)
-		{
-			foreach (var kv in _powerDemands.Where(kv => !string.IsNullOrWhiteSpace(kv.Key))) {
-				container[kv.Key] = kv.Value;
-			}
-			if (container[ModalResultField.P_aux] == null || container[ModalResultField.P_aux] == DBNull.Value) {
-				// don't overwrite if someone else already wrote the total aux power
-				container[ModalResultField.P_aux] = _powerDemands.Values.Sum(p => p);
-			}
-		}
-
-		protected override void DoCommitSimulationStep()
-		{
-			AdvanceState();
-		}
-
 		public void AddConstant(string auxId, Watt powerDemand)
 		{
-			_auxDict[auxId] = speed => powerDemand;
+			Add(auxId, _ => powerDemand);
 		}
 
-		public void AddDirect()
+		public void AddCycle()
 		{
-			_auxDict[DirectAuxiliaryId] = speed => DataBus.CycleData.LeftSample.AdditionalAuxPowerDemand;
+			Add(DirectAuxiliaryId, _ => DataBus.CycleData.LeftSample.AdditionalAuxPowerDemand);
 		}
 
 		public void AddMapping(string auxId, AuxiliaryData data)
@@ -112,18 +76,67 @@ namespace TUGraz.VectoCore.Models.SimulationComponent.Impl
 				throw new VectoException(error);
 			}
 
-			_auxDict[auxId] = speed => {
+			Add(auxId, speed => {
 				var powerSupply = DataBus.CycleData.LeftSample.AuxiliarySupplyPower[auxId];
 				var nAuxiliary = speed * data.TransmissionRatio;
 				var powerAuxOut = powerSupply / data.EfficiencyToSupply;
 				var powerAuxIn = data.GetPowerDemand(nAuxiliary, powerAuxOut);
 				return powerAuxIn / data.EfficiencyToEngine;
-			};
+			});
 		}
 
-		public class EngineAuxState
+		public void Add(string auxId, Func<PerSecond, Watt> powerLossFunction)
+		{
+			_auxiliaries[auxId] = powerLossFunction;
+		}
+
+		public NewtonMeter Initialize(NewtonMeter torque, PerSecond angularSpeed)
+		{
+			PreviousState.AngularSpeed = angularSpeed;
+			return ComputePowerDemand(angularSpeed) / angularSpeed;
+		}
+
+		public NewtonMeter PowerDemand(Second absTime, Second dt, NewtonMeter torquePowerTrain, NewtonMeter torqueEngine,
+			PerSecond angularSpeed, bool dryRun = false)
+		{
+			CurrentState.AngularSpeed = angularSpeed;
+			var avgAngularSpeed = (CurrentState.AngularSpeed + PreviousState.AngularSpeed) / 2.0;
+			return ComputePowerDemand(avgAngularSpeed) / avgAngularSpeed;
+		}
+
+		private Watt ComputePowerDemand(PerSecond engineSpeed)
+		{
+			CurrentState.PowerDemands = new Dictionary<string, Watt>(_auxiliaries.Count);
+			CurrentState.TotalPowerDemand = 0.SI<Watt>();
+			foreach (var item in _auxiliaries) {
+				var value = item.Value(engineSpeed);
+				CurrentState.PowerDemands[item.Key] = value;
+				CurrentState.TotalPowerDemand += value;
+			}
+			return CurrentState.TotalPowerDemand;
+		}
+
+		protected override void DoWriteModalResults(IModalDataContainer container)
+		{
+			foreach (var kv in CurrentState.PowerDemands.Where(kv => !string.IsNullOrWhiteSpace(kv.Key))) {
+				container[kv.Key] = kv.Value;
+			}
+			if (container[ModalResultField.P_aux] == null || container[ModalResultField.P_aux] == DBNull.Value) {
+				// only overwrite if nobody else already wrote the total aux power
+				container[ModalResultField.P_aux] = CurrentState.TotalPowerDemand;
+			}
+		}
+
+		protected override void DoCommitSimulationStep()
+		{
+			AdvanceState();
+		}
+
+		public class State
 		{
 			public PerSecond AngularSpeed;
+			public Dictionary<string, Watt> PowerDemands;
+			public Watt TotalPowerDemand;
 		}
 	}
 }

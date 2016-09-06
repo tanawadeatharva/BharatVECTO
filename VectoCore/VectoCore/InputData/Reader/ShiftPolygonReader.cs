@@ -72,13 +72,12 @@ namespace TUGraz.VectoCore.InputData.Reader
 					.Warn(
 						"ShiftPolygon: Header Line is not valid. Expected: '{0}, {1}, {2}', Got: '{3}'. Falling back to column index",
 						Fields.Torque, Fields.AngularSpeedUp, Fields.AngularSpeedDown,
-						", ".Join(data.Columns.Cast<DataColumn>().Select(c => c.ColumnName).Reverse()));
+						string.Join(", ", data.Columns.Cast<DataColumn>().Select(c => c.ColumnName).Reverse()));
 				entriesDown = CreateFromColumnIndizes(data, 1);
 				entriesUp = CreateFromColumnIndizes(data, 2);
 			}
 			return new ShiftPolygon(entriesDown, entriesUp);
 		}
-
 
 		private static bool HeaderIsValid(DataColumnCollection columns)
 		{
@@ -99,10 +98,10 @@ namespace TUGraz.VectoCore.InputData.Reader
 		{
 			return (from DataRow row in data.Rows
 				select
-					new ShiftPolygon.ShiftPolygonEntry {
-						Torque = row.ParseDouble(0).SI<NewtonMeter>(),
-						AngularSpeed = row.ParseDouble(column).RPMtoRad(),
-					}).ToList();
+				new ShiftPolygon.ShiftPolygonEntry {
+					Torque = row.ParseDouble(0).SI<NewtonMeter>(),
+					AngularSpeed = row.ParseDouble(column).RPMtoRad(),
+				}).ToList();
 		}
 
 		public static class Fields

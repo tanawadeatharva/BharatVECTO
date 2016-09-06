@@ -44,7 +44,7 @@ using TUGraz.VectoCore.Utils;
 
 namespace TUGraz.VectoCore.Models.SimulationComponent.Impl
 {
-	public class CycleGearbox : AbstractGearbox<GearboxState>, IGearbox, IClutchInfo
+	public class CycleGearbox : AbstractGearbox<GearboxState>
 	{
 		protected bool? TorqueConverterActive;
 
@@ -88,6 +88,11 @@ namespace TUGraz.VectoCore.Models.SimulationComponent.Impl
 					inAngularVelocity;
 
 				inTorque += torqueLossInertia;
+
+				if (Auxiliary != null) {
+					//todo mk-2016-08-17: aux loss from out-direction or in-direction of the gearbox?
+					inTorque += Auxiliary.Initialize(outTorque, outAngularVelocity);
+				}
 			} else {
 				inTorque = 0.SI<NewtonMeter>();
 				inAngularVelocity = 0.RPMtoRad();
@@ -165,6 +170,10 @@ namespace TUGraz.VectoCore.Models.SimulationComponent.Impl
 			}
 
 			// todo mk 2016-08-23: add pto auxiliaries!!
+			//todo mk-2016-08-17: aux loss from out-direction or in-direction of the gearbox?
+			if (Auxiliary != null) {
+				inTorque += Auxiliary.Initialize(outTorque, outAngularVelocity);
+			}
 
 			if (dryRun) {
 				if (TorqueConverter != null && TorqueConverterActive != null && TorqueConverterActive.Value) {
@@ -317,6 +326,7 @@ namespace TUGraz.VectoCore.Models.SimulationComponent.Impl
 			var disengagedResponse = NextComponent.Request(absTime, dt, 0.SI<NewtonMeter>(), DataBus.EngineIdleSpeed);
 			disengagedResponse.GearboxPowerRequest = outTorque * avgOutAngularVelocity;
 			return disengagedResponse;
+			//todo mk-2016-08-17: minus inTorqueLoss?? Why not plus?
 		}
 
 		private TorqueConverterOperatingPoint FindOperatingPoint(NewtonMeter outTorque,
@@ -371,7 +381,7 @@ namespace TUGraz.VectoCore.Models.SimulationComponent.Impl
 
 		#region ICluchInfo
 
-		public bool ClutchClosed(Second absTime)
+		public override bool ClutchClosed(Second absTime)
 		{
 			return DataBus.CycleData.LeftSample.Gear != 0;
 		}

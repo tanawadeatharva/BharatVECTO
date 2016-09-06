@@ -62,7 +62,6 @@ namespace TUGraz.VectoCore.Models.Declaration
 
 		protected override void ParseData(DataTable table)
 		{
-			NormalizeTable(table);
 			_segmentTable = table.Copy();
 		}
 

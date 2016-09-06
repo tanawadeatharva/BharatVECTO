@@ -37,6 +37,7 @@ using TUGraz.VectoCore.Models.Simulation;
 using TUGraz.VectoCore.Models.Simulation.DataBus;
 using TUGraz.VectoCore.Models.SimulationComponent;
 using TUGraz.VectoCore.Models.SimulationComponent.Data;
+using TUGraz.VectoCore.Models.SimulationComponent.Impl;
 using TUGraz.VectoCore.OutputData;
 
 namespace TUGraz.VectoCore.Tests.Utils
@@ -115,6 +116,11 @@ namespace TUGraz.VectoCore.Tests.Utils
 		public bool ClutchClosed(Second absTime)
 		{
 			return true;
+		}
+
+		public void Connect(IAuxPort aux)
+		{
+			throw new NotImplementedException();
 		}
 	}
 }

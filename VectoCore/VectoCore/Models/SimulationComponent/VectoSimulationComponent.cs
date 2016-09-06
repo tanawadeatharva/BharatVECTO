@@ -43,7 +43,7 @@ namespace TUGraz.VectoCore.Models.SimulationComponent
 	/// </summary>
 	public abstract class VectoSimulationComponent : LoggingObject
 	{
-		[NonSerialized] protected IDataBus DataBus;
+		[NonSerialized] protected readonly IDataBus DataBus;
 
 		/// <summary>
 		/// Constructor. Registers the component in the cockpit.
@@ -52,7 +52,11 @@ namespace TUGraz.VectoCore.Models.SimulationComponent
 		protected VectoSimulationComponent(IVehicleContainer dataBus)
 		{
 			DataBus = dataBus;
-			dataBus.AddComponent(this);
+
+			// if a component doesn't want to be registered in DataBus, it supplies null to the constructor
+			// (mk 2016-08-31: currently the only example is PTOCycleController, to not interfere with the real DrivingCycle)
+			if (dataBus != null)
+				dataBus.AddComponent(this);
 		}
 
 		public virtual void CommitSimulationStep(IModalDataContainer container)
@@ -93,7 +97,7 @@ namespace TUGraz.VectoCore.Models.SimulationComponent
 	}
 
 	public abstract class StatefulProviderComponent<TStateType, TProviderOutPort, TProviderInPort, TOutPort> :
-		StatefulVectoSimulationComponent<TStateType>
+			StatefulVectoSimulationComponent<TStateType>
 		where TStateType : new()
 		where TProviderOutPort : class
 		where TProviderInPort : class
@@ -112,7 +116,7 @@ namespace TUGraz.VectoCore.Models.SimulationComponent
 			return this as TProviderInPort;
 		}
 
-		public void Connect(TOutPort other)
+		public virtual void Connect(TOutPort other)
 		{
 			NextComponent = other;
 		}

@@ -41,16 +41,18 @@ namespace TUGraz.VectoCore.Models.Declaration
 {
 	public abstract class LookupData : LoggingObject
 	{
-		protected LookupData()
-		{
-			if (!string.IsNullOrWhiteSpace(ResourceId))
-				ParseData(ReadCsvResource(ResourceId));
-		}
-
 		protected abstract string ResourceId { get; }
 		protected abstract string ErrorMessage { get; }
-
 		protected abstract void ParseData(DataTable table);
+
+		protected LookupData()
+		{
+			if (!string.IsNullOrWhiteSpace(ResourceId)) {
+				var table = ReadCsvResource(ResourceId);
+				NormalizeTable(table);
+				ParseData(table);
+			}
+		}
 
 		protected static DataTable ReadCsvResource(string resourceId)
 		{

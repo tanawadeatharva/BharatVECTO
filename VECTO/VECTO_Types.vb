@@ -8,7 +8,10 @@
 '   WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
 '
 ' See the LICENSE.txt for the specific language governing permissions and limitations.
+Option Infer On
 
+Imports System.Collections.Generic
+Imports System.Linq
 
 ''' <summary>
 ''' Determines how file extensions are set in the File Browser
@@ -36,3 +39,5 @@ Public Enum MessageType
 	Warn
 	Err
 End Enum
+
+

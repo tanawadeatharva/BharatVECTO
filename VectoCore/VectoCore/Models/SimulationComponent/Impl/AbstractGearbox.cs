@@ -11,13 +11,16 @@ using TUGraz.VectoCore.Models.SimulationComponent.Data.Gearbox;
 namespace TUGraz.VectoCore.Models.SimulationComponent.Impl
 {
 	public abstract class AbstractGearbox<TStateType> :
-		StatefulProviderComponent<TStateType, ITnOutPort, ITnInPort, ITnOutPort>, ITnInProvider,
-		ITnOutProvider, ITnOutPort, ITnInPort, IGearboxInfo where TStateType : GearboxState, new()
+			StatefulProviderComponent<TStateType, ITnOutPort, ITnInPort, ITnOutPort>, ITnOutPort, ITnInPort, IGearbox,
+			IClutchInfo
+		where TStateType : GearboxState, new()
 	{
 		/// <summary>
 		/// The data and settings for the gearbox.
 		/// </summary>
 		[Required, ValidateObject] internal readonly GearboxData ModelData;
+
+		protected IAuxPort Auxiliary;
 
 		protected AbstractGearbox(IVehicleContainer container, GearboxData gearboxModelData) : base(container)
 		{
@@ -74,6 +77,17 @@ namespace TUGraz.VectoCore.Models.SimulationComponent.Impl
 		}
 
 		#endregion
+
+		#region IAuxPortProvider
+
+		public void Connect(IAuxPort aux)
+		{
+			Auxiliary = aux;
+		}
+
+		#endregion
+
+		public abstract bool ClutchClosed(Second absTime);
 	}
 
 	public class GearboxState : SimpleComponentState

@@ -32,6 +32,7 @@
 using System;
 using System.Collections.Generic;
 using System.Linq;
+using System.Runtime.CompilerServices;
 using TUGraz.VectoCommon.Models;
 
 namespace TUGraz.VectoCommon.Utils
@@ -43,11 +44,7 @@ namespace TUGraz.VectoCommon.Utils
 			return self.Select(s => s.ToDouble(defaultValue));
 		}
 
-		public static bool SequenceEqualFast<T>(this IEnumerable<T> self, IEnumerable<T> other) where T : IComparable
-		{
-			return self.ToArray().SequenceEqualFast(other.ToArray());
-		}
-
+		[MethodImpl(MethodImplOptions.AggressiveInlining)]
 		public static bool SequenceEqualFast<T>(this T[] self, T[] other) where T : IComparable
 		{
 			if (self.Equals(other)) {
@@ -117,8 +114,9 @@ namespace TUGraz.VectoCommon.Utils
 		}
 
 		/// <summary>
-		/// Get the first two adjacent items where the predicate changes from true to false.
-		/// If the predicate never gets true, the last 2 elements are returned.
+		/// Get the first two items where the predicate changes from true to false.
+		/// If the predicate is always true, the last 2 elements are returned.
+		/// If the predicate is always false, the first 2 elements are returned.
 		/// </summary>
 		public static Tuple<T, T> GetSection<T>(this IEnumerable<T> self, Func<T, bool> skip, out int index,
 			string message = null)
@@ -139,6 +137,26 @@ namespace TUGraz.VectoCommon.Utils
 
 		/// <summary>
 		/// Get the first two adjacent items where the predicate changes from true to false.
+		/// If the predicate is always false, the first 2 elements are returned.
+		/// If the predicate is always true, the last 2 elements are returned.
+		/// </summary>
+		public static Tuple<T, T> GetSection<T>(this T[] self, Func<T, bool> predicate)
+		{
+			var i = 0;
+			for (; i < self.Length; i++) {
+				if (!predicate(self[i]))
+					break;
+			}
+			if (i == 0) {
+				i = 1;
+			} else if (i == self.Length) {
+				i--;
+			}
+			return Tuple.Create(self[i - 1], self[i]);
+		}
+
+		/// <summary>
+		/// Get the first two adjacent items where the predicate changes from true to false.
 		/// If the predicate never gets true, the last 2 elements are returned.
 		/// </summary>
 		/// <example>GetSection(data => data.X &lt; searchedX); //returns the pair where first &lt; searchedX and second &gt;= searchedX</example>>
@@ -146,16 +164,6 @@ namespace TUGraz.VectoCommon.Utils
 		{
 			int unused;
 			return self.GetSection(predicate, out unused, message);
-		}
-
-		public static IEnumerable<T> Slice<T>(this IEnumerable<T> numerable, int from = 0, int to = int.MaxValue)
-		{
-			var s = numerable.ToList();
-			from = Math.Min(Math.Max(from, -s.Count), s.Count);
-			from = from < 0 ? from + s.Count : from;
-			to = Math.Min(Math.Max(to, -s.Count), s.Count);
-			to = to < 0 ? to + s.Count : to;
-			return s.Skip(from).Take(Math.Max(to - from, 0));
 		}
 
 		public static TSource MinBy<TSource>(this IEnumerable<TSource> source,
@@ -226,64 +234,6 @@ namespace TUGraz.VectoCommon.Utils
 		public static IEnumerable<T> Repeat<T>(this T element, int count)
 		{
 			return Enumerable.Repeat(element, count);
-		}
-
-		/// <summary>
-		/// Distinct only by a defined key function (uses GetHashCode of TKey).
-		/// </summary>
-		/// <typeparam name="T"></typeparam>
-		/// <typeparam name="TKey"></typeparam>
-		/// <param name="items"></param>
-		/// <param name="keySelector"></param>
-		/// <returns></returns>
-		public static IEnumerable<T> DistinctBy<T, TKey>(this IEnumerable<T> items, Func<T, TKey> keySelector)
-		{
-			return
-				items.Distinct(new LambdaComparer<T>(
-					equals: (x, y) => x.GetHashCode() == y.GetHashCode(),
-					getHashCode: k => keySelector(k).GetHashCode()));
-		}
-
-		/// <summary>
-		/// Distinct by a defined equals function (uses this function for checking equality. No Hash is used.)
-		/// </summary>
-		public static IEnumerable<T> DistinctBy<T>(this IEnumerable<T> items, Func<T, T, bool> equals)
-		{
-			return items.Distinct(new LambdaComparer<T>(equals));
-		}
-
-		/// <summary>
-		/// Distinct by hash function and equality function (like IEqualityComparer, but with lambdas).
-		/// </summary>
-		public static IEnumerable<T> DistinctBy<T>(this IEnumerable<T> items, Func<T, T, bool> equals,
-			Func<T, int> getHashCode)
-		{
-			return items.Distinct(new LambdaComparer<T>(equals, getHashCode));
-		}
-
-		/// <summary>
-		/// Comparer which uses lambda expressions for equality and hashcode.
-		/// </summary>
-		private class LambdaComparer<T> : IEqualityComparer<T>
-		{
-			private readonly Func<T, T, bool> _equals;
-			private readonly Func<T, int> _getHashCode;
-
-			public LambdaComparer(Func<T, T, bool> equals, Func<T, int> getHashCode = null)
-			{
-				_equals = equals;
-				_getHashCode = getHashCode ?? (o => 0);
-			}
-
-			public bool Equals(T x, T y)
-			{
-				return _equals(x, y);
-			}
-
-			public int GetHashCode(T obj)
-			{
-				return _getHashCode(obj);
-			}
 		}
 	}
 }

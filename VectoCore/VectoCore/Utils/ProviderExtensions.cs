@@ -31,7 +31,9 @@
 
 using System;
 using TUGraz.VectoCommon.Models;
+using TUGraz.VectoCore.InputData.Reader;
 using TUGraz.VectoCore.Models.Connector.Ports;
+using TUGraz.VectoCore.Models.Declaration;
 using TUGraz.VectoCore.Models.Simulation;
 using TUGraz.VectoCore.Models.Simulation.Data;
 using TUGraz.VectoCore.Models.Simulation.Impl;
@@ -90,24 +92,36 @@ namespace TUGraz.VectoCore.Utils
 			return next;
 		}
 
-		public static CombustionEngine AddComponent(this IPowerTrainComponent prev, CombustionEngine next)
+		public static CombustionEngine AddComponent(this IPowerTrainComponent prev, CombustionEngine next,
+			IIdleController idleController = null)
 		{
 			prev.InPort().Connect(next.OutPort());
 
+			if (idleController == null) {
+				idleController = next.IdleController;
+			}
+
 			var clutch = prev as IClutch;
 			if (clutch != null) {
-				clutch.IdleController = next.IdleController;
+				clutch.IdleController = idleController;
 			}
 			var atGbx = prev as ATGearbox;
 			if (atGbx != null) {
-				atGbx.IdleController = next.IdleController;
+				atGbx.IdleController = idleController;
 			}
+
 			return next;
 		}
 
-		public static IPowerTrainComponent AddRetarderAndGearbox(this IPowerTrainComponent prev, RetarderData data,
-			IGearbox gearbox, IVehicleContainer container)
+		public static IPowerTrainComponent AddComponent(this IPowerTrainComponent prev, IGearbox gearbox, RetarderData data,
+			PTOData pto, IVehicleContainer container)
 		{
+			if (pto != null) {
+				var aux = new GearboxAuxiliary(container);
+				aux.AddConstant("PTO_TRANSM", DeclarationData.PTOTransmission.Lookup(pto.TransmissionType));
+				aux.Add("PTO_IDLE", n => pto.LossMap.GetTorqueLoss(n) * n);
+			}
+
 			switch (data.Type) {
 				case RetarderType.TransmissionOutputRetarder:
 					return prev.AddComponent(new Retarder(container, data.LossMap, data.Ratio)).AddComponent(gearbox);

@@ -50,7 +50,7 @@ namespace TUGraz.VectoCore.Models.SimulationComponent.Impl
 		private const double ClutchEff = 1;
 		private ClutchState _clutchState = ClutchState.ClutchSlipping;
 
-		public ICombustionEngineIdleController IdleController
+		public IIdleController IdleController
 		{
 			get { return _idleController; }
 			set
@@ -61,7 +61,7 @@ namespace TUGraz.VectoCore.Models.SimulationComponent.Impl
 		}
 
 		private readonly SI _clutchSpeedSlippingFactor;
-		private ICombustionEngineIdleController _idleController;
+		private IIdleController _idleController;
 
 		protected Clutch(IVehicleContainer container) : base(container) {}
 

@@ -37,6 +37,7 @@ using System.Globalization;
 using System.Linq;
 using System.Linq.Expressions;
 using System.Reflection;
+using System.Runtime.CompilerServices;
 using TUGraz.VectoCommon.Exceptions;
 
 // ReSharper disable ClassNeverInstantiated.Global
@@ -832,7 +833,10 @@ namespace TUGraz.VectoCommon.Utils
 		/// <param name="val">The value of the SI object.</param>
 		public static T Create(double val)
 		{
-			return val == 0 ? ZeroPrototype : Constructor(val);
+			if (val == 0)
+				return ZeroPrototype;
+
+			return Constructor(val);
 		}
 
 		[DebuggerHidden]
@@ -1085,7 +1089,7 @@ namespace TUGraz.VectoCommon.Utils
 			Denominator = new Unit[0];
 			_exponent = 1;
 
-			if (double.IsNaN(Val)) {
+			if (double.IsNaN(val)) {
 				throw new VectoException("NaN [{0}] is not allowed for SI-Values in Vecto.", GetUnitString());
 			}
 
@@ -1103,8 +1107,7 @@ namespace TUGraz.VectoCommon.Utils
 		/// <param name="reciproc">if set to <c>true</c> then the object is in reciproc mode (1/...)</param>
 		/// <param name="reverse">if set to <c>true</c> then the object is in reverse convertion mode (e.g. rpm/min => rad/s).</param>
 		/// <param name="exponent">The exponent for further conversions (e.g. Square.Meter).</param>
-		[DebuggerHidden]
-		protected SI(double val, IEnumerable<Unit> numerator, IEnumerable<Unit> denominator, bool reciproc = false,
+		protected SI(double val, Unit[] numerator, Unit[] denominator, bool reciproc = false,
 			bool reverse = false, int exponent = 1)
 		{
 			Val = val;
@@ -1195,7 +1198,8 @@ namespace TUGraz.VectoCommon.Utils
 				if (units.Contains(fromUnit.Value)) {
 					units.Remove(fromUnit.Value);
 				} else {
-					throw new VectoException("Unit missing. Conversion not possible. [{0}] does not contain a [{1}].", ", ".Join(units),
+					throw new VectoException("Unit missing. Conversion not possible. [{0}] does not contain a [{1}].",
+						string.Join(", ", units),
 						fromUnit);
 				}
 			}
@@ -1236,16 +1240,21 @@ namespace TUGraz.VectoCommon.Utils
 		/// <summary>
 		/// Converts the derived SI units to the basic units and returns this as a new SI object.
 		/// </summary>
-		[DebuggerHidden]
 		public SI ToBasicUnits()
 		{
-			var numerator = new List<Unit>();
-			var denominator = new List<Unit>();
+			var numerator = new List<Unit>(10);
+			var denominator = new List<Unit>(10);
+
 			var numeratorFactor = 1.0;
-			Numerator.ToList().ForEach(unit => ConvertToBasicUnits(unit, numerator, denominator, ref numeratorFactor));
+			for (var i = 0; i < Numerator.Length; i++) {
+				numeratorFactor *= ConvertToBasicUnits(Numerator[i], numerator, denominator);
+			}
 			var denominatorFactor = 1.0;
-			Denominator.ToList().ForEach(unit => ConvertToBasicUnits(unit, denominator, numerator, ref denominatorFactor));
-			return new SI(Val * numeratorFactor / denominatorFactor, numerator, denominator);
+			for (var i = 0; i < Denominator.Length; i++) {
+				denominatorFactor *= ConvertToBasicUnits(Denominator[i], denominator, numerator);
+			}
+
+			return new SI(Val * numeratorFactor / denominatorFactor, numerator.ToArray(), denominator.ToArray());
 		}
 
 		/// <summary>
@@ -1254,48 +1263,33 @@ namespace TUGraz.VectoCommon.Utils
 		/// <param name="unit">The unit.</param>
 		/// <param name="numerator">The numerator.</param>
 		/// <param name="denominator">The denominator.</param>
-		/// <param name="factor">The factor.</param>
-		private static void ConvertToBasicUnits(Unit unit, ICollection<Unit> numerator,
-			ICollection<Unit> denominator, ref double factor)
+		[MethodImpl(MethodImplOptions.AggressiveInlining)]
+		private static double ConvertToBasicUnits(Unit unit, List<Unit> numerator, List<Unit> denominator)
 		{
 			switch (unit) {
 				case Unit.W:
-					numerator.Add(Unit.k);
-					numerator.Add(Unit.g);
-					numerator.Add(Unit.m);
-					numerator.Add(Unit.m);
-					denominator.Add(Unit.s);
-					denominator.Add(Unit.s);
-					denominator.Add(Unit.s);
+					numerator.AddRange(new[] { Unit.k, Unit.g, Unit.m, Unit.m });
+					denominator.AddRange(new[] { Unit.s, Unit.s, Unit.s });
 					break;
 				case Unit.N:
-					numerator.Add(Unit.k);
-					numerator.Add(Unit.g);
-					numerator.Add(Unit.m);
-					denominator.Add(Unit.s);
-					denominator.Add(Unit.s);
+					numerator.AddRange(new[] { Unit.k, Unit.g, Unit.m });
+					denominator.AddRange(new[] { Unit.s, Unit.s });
 					break;
 				case Unit.t:
-					factor *= 1000;
-					numerator.Add(Unit.k);
-					numerator.Add(Unit.g);
-					break;
+					numerator.AddRange(new[] { Unit.k, Unit.g });
+					return 1000;
 				case Unit.J:
-					numerator.Add(Unit.k);
-					numerator.Add(Unit.g);
-					numerator.Add(Unit.m);
-					numerator.Add(Unit.m);
-					denominator.Add(Unit.s);
-					denominator.Add(Unit.s);
+					numerator.AddRange(new[] { Unit.k, Unit.g, Unit.m, Unit.m });
+					denominator.AddRange(new[] { Unit.s, Unit.s });
 					break;
 				case Unit.min:
-					factor *= 60;
 					numerator.Add(Unit.s);
-					break;
+					return 60;
 				default:
 					numerator.Add(unit);
 					break;
 			}
+			return 1;
 		}
 
 		/// <summary>
@@ -1331,38 +1325,6 @@ namespace TUGraz.VectoCommon.Utils
 		public int Sign()
 		{
 			return Math.Sign(Val);
-		}
-
-		/// <summary>
-		/// Returns the Square root of value and units of the SI.
-		/// </summary>
-		public SI Sqrt()
-		{
-			var si = ToBasicUnits();
-			if (si.Numerator.Length % 2 != 0 || si.Denominator.Length % 2 != 0) {
-				throw new VectoException("The squareroot cannot be calculated because the Unit-Exponents are not even: [{0}]",
-					si.GetUnitString());
-			}
-
-			var numerator = new List<Unit>();
-			var currentNumerator = si.Numerator.ToList();
-			while (currentNumerator.Count != 0) {
-				var unit = currentNumerator.First();
-				currentNumerator.Remove(unit);
-				currentNumerator.Remove(unit);
-				numerator.Add(unit);
-			}
-
-			var denominator = new List<Unit>();
-			var currentDenominator = si.Denominator.ToList();
-			while (currentDenominator.Count != 0) {
-				var unit = currentDenominator.First();
-				currentDenominator.Remove(unit);
-				currentDenominator.Remove(unit);
-				denominator.Add(unit);
-			}
-
-			return new SI(Math.Sqrt(si.Val), numerator, denominator);
 		}
 
 		#region Unit Definitions
@@ -1614,11 +1576,16 @@ namespace TUGraz.VectoCommon.Utils
 		/// <returns>
 		/// The result of the operator.
 		/// </returns>
-		[DebuggerHidden]
 		public static SI operator *(SI si1, SI si2)
 		{
-			var numerator = si1.Numerator.Concat(si2.Numerator);
-			var denominator = si1.Denominator.Concat(si2.Denominator);
+			var numerator = new Unit[si1.Numerator.Length + si2.Numerator.Length];
+			Array.Copy(si1.Numerator, numerator, si1.Numerator.Length);
+			Array.Copy(si2.Numerator, 0, numerator, si1.Numerator.Length, si2.Numerator.Length);
+
+			var denominator = new Unit[si1.Denominator.Length + si2.Denominator.Length];
+			Array.Copy(si1.Denominator, denominator, si1.Denominator.Length);
+			Array.Copy(si2.Denominator, 0, denominator, si1.Denominator.Length, si2.Denominator.Length);
+
 			return new SI(si1.Val * si2.Val, numerator, denominator);
 		}
 
@@ -1658,7 +1625,6 @@ namespace TUGraz.VectoCommon.Utils
 		/// <returns>
 		/// The result of the operator.
 		/// </returns>
-		[DebuggerHidden]
 		public static SI operator /(SI si1, SI si2)
 		{
 			double result;
@@ -1674,8 +1640,14 @@ namespace TUGraz.VectoCommon.Utils
 					string.Format("Can not compute division by zero ([{0}] / 0[{1}])", si1.GetUnitString(), si2.GetUnitString()), ex);
 			}
 
-			var numerator = si1.Numerator.Concat(si2.Denominator);
-			var denominator = si1.Denominator.Concat(si2.Numerator);
+			var numerator = new Unit[si1.Numerator.Length + si2.Denominator.Length];
+			Array.Copy(si1.Numerator, numerator, si1.Numerator.Length);
+			Array.Copy(si2.Denominator, 0, numerator, si1.Numerator.Length, si2.Denominator.Length);
+
+			var denominator = new Unit[si1.Denominator.Length + si2.Numerator.Length];
+			Array.Copy(si1.Denominator, denominator, si1.Denominator.Length);
+			Array.Copy(si2.Numerator, 0, denominator, si1.Denominator.Length, si2.Numerator.Length);
+
 			return new SI(result, numerator, denominator);
 		}
 
@@ -1727,6 +1699,7 @@ namespace TUGraz.VectoCommon.Utils
 		/// </returns>
 		/// <exception cref="VectoException"></exception>
 		[DebuggerHidden]
+		[MethodImpl(MethodImplOptions.AggressiveInlining)]
 		public static bool operator <(SI si1, SI si2)
 		{
 			if (!si1.HasEqualUnit(si2)) {
@@ -1759,6 +1732,7 @@ namespace TUGraz.VectoCommon.Utils
 		/// </returns>
 		/// <exception cref="VectoException"></exception>
 		[DebuggerHidden]
+		[MethodImpl(MethodImplOptions.AggressiveInlining)]
 		public static bool operator >(SI si1, SI si2)
 		{
 			if (!si1.HasEqualUnit(si2)) {
@@ -1982,6 +1956,7 @@ namespace TUGraz.VectoCommon.Utils
 		/// <param name="si">The si.</param>
 		/// <returns></returns>
 		[DebuggerHidden]
+		[MethodImpl(MethodImplOptions.AggressiveInlining)]
 		public bool HasEqualUnit(SI si)
 		{
 			if (Numerator.SequenceEqualFast(si.Numerator) && Denominator.SequenceEqualFast(si.Denominator)) {

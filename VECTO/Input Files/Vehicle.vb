@@ -16,6 +16,7 @@ Imports System.Linq
 Imports TUGraz.VECTO.Input_Files
 Imports TUGraz.VectoCommon.Models
 Imports TUGraz.VectoCommon.Utils
+Imports TUGraz.VectoCore.Models.Declaration
 
 
 Public Class Vehicle
@@ -52,6 +53,9 @@ Public Class Vehicle
 	Public AngularGearRatio As Single
 	Public ReadOnly AngularGearLossMapFile As SubPath
 
+	Public PTOType As String
+	Public PTOLossMap As SubPath
+	Public PTOCycle As SubPath
 
 	Public Class Axle
 		Public RRC As Single
@@ -72,6 +76,8 @@ Public Class Vehicle
 		AngularGearLossMapFile = New SubPath()
 
 		Axles = New List(Of Axle)
+		PTOLossMap = New SubPath()
+		PTOCycle = New SubPath()
 		SetDefault()
 	End Sub
 
@@ -95,6 +101,10 @@ Public Class Vehicle
 		AngularGearType = AngularGearType.None
 		AngularGearLossMapFile.Clear()
 		AngularGearRatio = 1
+
+		PTOType = PTOTransmission.NoPTO
+		PTOLossMap.Clear()
+		PTOCycle.Clear()
 
 		Axles.Clear()
 		VehicleCategory = VehicleCategory.RigidTruck	'tVehCat.Undef
@@ -198,6 +208,30 @@ Public Class Vehicle
 				Axles.Add(axle)
 			Next
 
+			PTOType = PTOTransmission.NoPTO
+			If Not body("PTO") Is Nothing Then
+				Dim ptoStr = body("PTO")("Type")
+
+				If String.IsNullOrWhiteSpace(ptoStr) Then
+					PTOType = PTOTransmission.NoPTO
+					WorkerMsg(MessageType.Normal, "PTO automatically updated to '" + PTOType + "'", msgSrc)
+				Else
+					Try
+						DeclarationData.PTOTransmission.Lookup(ptoStr)
+						PTOType = ptoStr
+					Catch ex As Exception
+						PTOType = PTOTransmission.NoPTO
+						WorkerMsg(MessageType.Normal, "PTO '" + ptoStr + "' not found, automatically updated to '" + PTOType + "'", msgSrc)
+					End Try
+				End If
+
+			End If
+
+			If Not PTOType.Equals(PTOTransmission.NoPTO) Then
+				PTOLossMap.Init(_path, body("PTO")("LossMap"))
+				PTOCycle.Init(_path, body("PTO")("Cycle"))
+			End If
+
 		Catch ex As Exception
 			If showMsg Then WorkerMsg(MessageType.Err, "Failed to read Vehicle file! " & ex.Message, msgSrc)
 			Return False
@@ -238,6 +272,10 @@ Public Class Vehicle
 				{"Type", AngularGearType.ToString()},
 				{"Ratio", AngularGearRatio},
 				{"LossMap", AngularGearLossMapFile.PathOrDummy}}},
+			{"PTO", New Dictionary(Of String, Object) From {
+				{"Type", PTOType},
+				{"LossMap", PTOLossMap.PathOrDummy},
+				{"Cycle", PTOCycle.PathOrDummy}}},
 			{"AxleConfig", New Dictionary(Of String, Object) From {
 				{"Type", AxleConfiguration.GetName()},
 				{"Axles", (From axle In Axles Select New Dictionary(Of String, Object) From {
