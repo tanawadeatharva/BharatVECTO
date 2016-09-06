@@ -314,24 +314,46 @@ namespace TUGraz.VectoCore.Models.Simulation.Data
 		[ModalResultField(typeof(SI), outputFactor: 1e-3)] P_aux_,
 
 		/// <summary>
+		///		[-]  true/false  indicate whether torque converter is locked or not (only applicable for gears with TC)
+		/// </summary>
+		[ModalResultField(typeof(int), caption: "TC locked")] TC_Locked,
+
+		/// <summary>
 		///     [-]	    Torque converter speed ratio
 		/// </summary>
-		[ModalResultField(typeof(SI), name: "TCnu")] TCv,
+		[ModalResultField(typeof(double), name: "TCnu")] TorqueConverterSpeedRatio,
 
 		/// <summary>
 		///     [-]	    Torque converter torque ratio
 		/// </summary>
-		[ModalResultField(typeof(SI), name: "TCmu")] TCmu,
+		[ModalResultField(typeof(double), name: "TCmu")] TorqueConverterTorqueRatio,
+
+		[ModalResultField(typeof(SI), "P_TC_out [kW]", outputFactor: 1e-3)] P_TC_out,
+
+		/// <summary>
+		///     [kW]	Power loss at the torque converter.
+		/// </summary>
+		[ModalResultField(typeof(SI), "P_TC_loss [kW]", outputFactor: 1e-3)] P_TC_loss,
 
 		/// <summary>
 		///     [Nm]	Torque converter output torque
 		/// </summary>
-		[ModalResultField(typeof(SI))] TC_M_Out,
+		[ModalResultField(typeof(SI), "T_TC_out")] TC_TorqueOut,
 
 		/// <summary>
 		///     [1/min]	Torque converter output speed
 		/// </summary>
-		[ModalResultField(typeof(SI))] TC_n_Out,
+		[ModalResultField(typeof(SI), "n_TC_out")] TC_angularSpeedOut,
+
+		/// <summary>
+		///     [Nm]	Torque converter output torque
+		/// </summary>
+		[ModalResultField(typeof(SI), "T_TC_in")] TC_TorqueIn,
+
+		/// <summary>
+		///     [1/min]	Torque converter output speed
+		/// </summary>
+		[ModalResultField(typeof(SI), "n_TC_in")] TC_angularSpeedIn,
 
 		/// <summary>
 		///     [m]	Altitude

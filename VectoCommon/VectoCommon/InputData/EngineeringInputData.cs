@@ -171,7 +171,7 @@ namespace TUGraz.VectoCommon.InputData
 		/// P090, P091, P092, P127
 		/// cf. VECTO Input Parameters.xlsx
 		/// </summary>
-		ITorqueConverterInputData TorqueConverter { get; }
+		ITorqueConverterEngineeringInputData TorqueConverter { get; }
 
 		[Required, SIRange(0, double.MaxValue)]
 		Second DownshiftAferUpshiftDelay { get; }
@@ -183,6 +183,30 @@ namespace TUGraz.VectoCommon.InputData
 		MeterPerSquareSecond UpshiftMinAcceleration { get; }
 	}
 
+	public interface ITorqueConverterEngineeringInputData : ITorqueConverterDeclarationInputData
+	{
+		///// <summary>
+		///// P090
+		///// cf. VECTO Input Parameters.xlsx
+		///// </summary>
+		//bool Enabled { get; }   // deprecated
+
+		/// <summary>
+		/// P092
+		/// cf. VECTO Input Parameters.xlsx
+		/// </summary>
+		// ReSharper disable once InconsistentNaming
+		PerSecond ReferenceRPM { get; }
+
+		/// <summary>
+		/// P127
+		/// cf. VECTO Input Parameters.xlsx
+		/// </summary>
+		KilogramSquareMeter Inertia { get; }
+
+		DataTable ShiftPolygon { get; }
+	}
+
 	public interface IEngineEngineeringInputData : IEngineDeclarationInputData
 	{
 		/// <summary>
@@ -190,11 +214,16 @@ namespace TUGraz.VectoCommon.InputData
 		/// cf. VECTO Input Parameters.xlsx
 		/// </summary>
 		KilogramSquareMeter Inertia { get; }
+
+		/// <summary>
+		/// P170
+		/// </summary>
+		double WHTCEngineering { get; }
 	}
 
-	public interface IAuxiliariesEngineeringInputData : IAuxiliariesDeclarationInputData
+	public interface IAuxiliariesEngineeringInputData
 	{
-		new IList<IAuxiliaryEngineeringInputData> Auxiliaries { get; }
+		IList<IAuxiliaryEngineeringInputData> Auxiliaries { get; }
 
 		// Advanced Auxiliaries
 		AuxiliaryModel AuxiliaryAssembly { get; }
@@ -290,8 +319,19 @@ namespace TUGraz.VectoCommon.InputData
 		DataTable CoastingDecisionFactorVelocityDropLookup { get; }
 	}
 
-	public interface IAuxiliaryEngineeringInputData : IAuxiliaryDeclarationInputData
+	public interface IAuxiliaryEngineeringInputData
 	{
+		/// <summary>
+		/// P006  Aux-ID
+		/// cf. VECTO Input Parameters.xlsx
+		/// </summary>
+		string ID { get; }
+
+		/// <summary>
+		/// either mapping or constant
+		/// </summary>
+		AuxiliaryDemandType AuxiliaryType { get; }
+
 		/// <summary>
 		/// P022  Aux-InputFile: transmission ratio
 		/// cf. VECTO Input Parameters.xlsx
@@ -315,5 +355,11 @@ namespace TUGraz.VectoCommon.InputData
 		/// cf. VECTO Input Parameters.xlsx
 		/// </summary>
 		DataTable DemandMap { get; }
+
+		/// <summary>
+		/// P178
+		/// additional constant auxiliary load, similar to Padd; not specified in the cycle but as auxiliary
+		/// </summary>
+		Watt ConstantPowerDemand { get; }
 	}
 }

@@ -30,15 +30,16 @@
 */
 
 using System;
+using System.Collections.Generic;
 using System.Linq;
 using TUGraz.VectoCommon.Exceptions;
 using TUGraz.VectoCommon.InputData;
 using TUGraz.VectoCommon.Models;
 using TUGraz.VectoCommon.Utils;
+using TUGraz.VectoCore.InputData.Reader.ComponentData;
 using TUGraz.VectoCore.Models.SimulationComponent.Data;
 using TUGraz.VectoCore.Models.SimulationComponent.Data.Engine;
 using TUGraz.VectoCore.Models.SimulationComponent.Data.Gearbox;
-using TUGraz.VectoCore.Utils;
 
 namespace TUGraz.VectoCore.InputData.Reader.DataObjectAdapter
 {
@@ -60,21 +61,13 @@ namespace TUGraz.VectoCore.InputData.Reader.DataObjectAdapter
 				VehicleCategory = data.VehicleCategory,
 				AxleConfiguration = data.AxleConfiguration,
 				CurbWeight = data.CurbWeightChassis,
-				//CurbWeigthExtra = data.CurbWeightExtra.SI<Kilogram>(),
-				//Loading = data.Loading.SI<Kilogram>(),
 				GrossVehicleWeight = data.GrossVehicleMassRating,
-				//DragCoefficient = data.DragCoefficient,
-				//CrossSectionArea = data.CrossSectionArea.SI<SquareMeter>(),
-				//DragCoefficientRigidTruck = data.DragCoefficientRigidTruck,
-				//CrossSectionAreaRigidTruck = data.CrossSectionAreaRigidTruck.SI<SquareMeter>(),
-				//TyreRadius = data.TyreRadius.SI().Milli.Meter.Cast<Meter>(),
-				Rim = data.Rim,
 			};
 
 			return retVal;
 		}
 
-		internal RetarderData SetCommonRetarderData(IRetarderInputData data, IVehicleDeclarationInputData vehicle)
+		internal RetarderData SetCommonRetarderData(IRetarderInputData data)
 		{
 			try {
 				var retarder = new RetarderData {
@@ -89,9 +82,10 @@ namespace TUGraz.VectoCore.InputData.Reader.DataObjectAdapter
 					Type = data.Type,
 				};
 				switch (retarder.Type) {
-					case RetarderType.Primary:
-					case RetarderType.Secondary:
-						retarder.LossMap = RetarderLossMap.Create(data.LossMap);
+					//case RetarderType.EngineRetarder:
+					case RetarderType.TransmissionInputRetarder:
+					case RetarderType.TransmissionOutputRetarder:
+						retarder.LossMap = RetarderLossMapReader.Create(data.LossMap);
 						retarder.Ratio = data.Ratio;
 						break;
 					case RetarderType.None:
@@ -123,7 +117,7 @@ namespace TUGraz.VectoCore.InputData.Reader.DataObjectAdapter
 				IntegrityStatus = data.IntegrityStatus,
 				Displacement = data.Displacement,
 				IdleSpeed = data.IdleSpeed,
-				ConsumptionMap = FuelConsumptionMap.Create(data.FuelConsumptionMap),
+				ConsumptionMap = FuelConsumptionMapReader.Create(data.FuelConsumptionMap),
 			};
 			return retVal;
 		}
@@ -147,11 +141,11 @@ namespace TUGraz.VectoCore.InputData.Reader.DataObjectAdapter
 		{
 			TransmissionLossMap axleLossMap;
 			try {
-				axleLossMap = TransmissionLossMap.Create(data.LossMap, data.Ratio, "AxleGear");
+				axleLossMap = TransmissionLossMapReader.Create(data.LossMap, data.Ratio, "AxleGear");
 			} catch (InvalidFileFormatException) {
-				if (useEfficiencyFallback)
-					axleLossMap = TransmissionLossMap.Create(data.Efficiency, data.Ratio, "AxleGear");
-				else {
+				if (useEfficiencyFallback) {
+					axleLossMap = TransmissionLossMapReader.Create(data.Efficiency, data.Ratio, "AxleGear");
+				} else {
 					throw;
 				}
 			}
@@ -165,7 +159,7 @@ namespace TUGraz.VectoCore.InputData.Reader.DataObjectAdapter
 				TypeId = data.TypeId,
 				DigestValue = data.DigestValue,
 				IntegrityStatus = data.IntegrityStatus,
-				AxleGear = new GearData { LossMap = axleLossMap, Ratio = data.Ratio, TorqueConverterActive = false }
+				AxleGear = new GearData { LossMap = axleLossMap, Ratio = data.Ratio }
 			};
 		}
 
@@ -181,11 +175,14 @@ namespace TUGraz.VectoCore.InputData.Reader.DataObjectAdapter
 				var type = AngularGearType.None;
 				try {
 					type = data.Type;
-				} catch (Exception) {
+				} catch (InvalidFileFormatException) {
 					Log.Info("AngularGear not found. Assuming None.");
 				}
 
 				switch (type) {
+					case AngularGearType.LossesIncludedInGearbox:
+					case AngularGearType.None:
+						return null;
 					case AngularGearType.SeparateAngularGear:
 						var angularGear = new AngularGearData {
 							SavedInDeclarationMode = data.SavedInDeclarationMode,
@@ -200,23 +197,19 @@ namespace TUGraz.VectoCore.InputData.Reader.DataObjectAdapter
 							AngularGear = new TransmissionData { Ratio = data.Ratio }
 						};
 						try {
-							angularGear.AngularGear.LossMap = TransmissionLossMap.Create(data.LossMap, data.Ratio, "AngularGear");
+							angularGear.AngularGear.LossMap = TransmissionLossMapReader.Create(data.LossMap, data.Ratio, "AngularGear");
 						} catch (VectoException ex) {
 							Log.Info("AngularGear Loss Map not found.");
 							if (useEfficiencyFallback) {
 								Log.Info("AngularGear Trying with Efficiency instead of Loss Map.");
-								angularGear.AngularGear.LossMap = TransmissionLossMap.Create(data.Efficiency, data.Ratio, "AngularGear");
+								angularGear.AngularGear.LossMap = TransmissionLossMapReader.Create(data.Efficiency, data.Ratio, "AngularGear");
 							} else {
 								throw new VectoException("AngularGear: LossMap not found.", ex);
 							}
 						}
 						return angularGear;
-
-					case AngularGearType.LossesIncludedInGearbox:
-					case AngularGearType.None:
-						return null;
 					default:
-						throw new ArgumentOutOfRangeException("data", "Unknown AngularGear Type.");
+						throw new ArgumentOutOfRangeException("data", "Unknown Angulargear Type.");
 				}
 			} catch (Exception e) {
 				throw new VectoException("Error while reading AngularGear data: {0}", e.Message);
@@ -227,24 +220,55 @@ namespace TUGraz.VectoCore.InputData.Reader.DataObjectAdapter
 		/// Intersects full load curves.
 		/// </summary>
 		/// <param name="engineCurve"></param>
-		/// <param name="gearCurve"></param>
+		/// <param name="maxTorque"></param>
 		/// <returns>A combined EngineFullLoadCurve with the minimum full load torque over all inputs curves.</returns>
-		internal static EngineFullLoadCurve IntersectFullLoadCurves(EngineFullLoadCurve engineCurve, FullLoadCurve gearCurve)
+		internal static EngineFullLoadCurve IntersectFullLoadCurves(EngineFullLoadCurve engineCurve, NewtonMeter maxTorque)
 		{
-			if (gearCurve == null) {
+			if (maxTorque == null) {
 				return engineCurve;
 			}
-			// TODO mk-2016-04-18: refactor when new gearbox full load is implemented: gearbox will then only have 1 constant value as full load.
-			var entries =
-				gearCurve.FullLoadEntries.Concat(engineCurve.FullLoadEntries)
-					.OrderBy(x => x.EngineSpeed)
-					.DistinctBy((x, y) => x.EngineSpeed.Value().IsEqual(y.EngineSpeed.Value()))
-					.Select(x => new FullLoadCurve.FullLoadCurveEntry {
-						EngineSpeed = x.EngineSpeed,
-						TorqueFullLoad =
-							VectoMath.Min(engineCurve.FullLoadStationaryTorque(x.EngineSpeed),
-								gearCurve.FullLoadStationaryTorque(x.EngineSpeed))
+
+			var entries = new List<FullLoadCurve.FullLoadCurveEntry>();
+			var firstEntry = engineCurve.FullLoadEntries.First();
+			if (firstEntry.TorqueFullLoad < maxTorque) {
+				entries.Add(engineCurve.FullLoadEntries.First());
+			} else {
+				entries.Add(new FullLoadCurve.FullLoadCurveEntry {
+					EngineSpeed = firstEntry.EngineSpeed,
+					TorqueFullLoad = maxTorque,
+					TorqueDrag = firstEntry.TorqueDrag
+				});
+			}
+			foreach (var entry in engineCurve.FullLoadEntries.Pairwise(Tuple.Create)) {
+				if (entry.Item1.TorqueFullLoad <= maxTorque && entry.Item2.TorqueFullLoad <= maxTorque) {
+					// segment is below maxTorque line -> use directly
+					entries.Add(entry.Item2);
+				} else if (entry.Item1.TorqueFullLoad > maxTorque && entry.Item2.TorqueFullLoad > maxTorque) {
+					// segment is above maxTorque line -> add limited entry
+					entries.Add(new FullLoadCurve.FullLoadCurveEntry {
+						EngineSpeed = entry.Item2.EngineSpeed,
+						TorqueFullLoad = maxTorque,
+						TorqueDrag = entry.Item2.TorqueDrag
 					});
+				} else {
+					// segment intersects maxTorque line -> add new entry at intersection
+					var edgeFull = Edge.Create(new Point(entry.Item1.EngineSpeed.Value(), entry.Item1.TorqueFullLoad.Value()),
+						new Point(entry.Item2.EngineSpeed.Value(), entry.Item2.TorqueFullLoad.Value()));
+					var edgeDrag = Edge.Create(new Point(entry.Item1.EngineSpeed.Value(), entry.Item1.TorqueDrag.Value()),
+						new Point(entry.Item2.EngineSpeed.Value(), entry.Item2.TorqueDrag.Value()));
+					var intersectionX = (maxTorque.Value() - edgeFull.OffsetXY) / edgeFull.SlopeXY;
+					entries.Add(new FullLoadCurve.FullLoadCurveEntry {
+						EngineSpeed = intersectionX.SI<PerSecond>(),
+						TorqueFullLoad = maxTorque,
+						TorqueDrag = VectoMath.Interpolate(edgeDrag.P1, edgeDrag.P2, intersectionX).SI<NewtonMeter>()
+					});
+					entries.Add(new FullLoadCurve.FullLoadCurveEntry {
+						EngineSpeed = entry.Item2.EngineSpeed,
+						TorqueFullLoad = entry.Item2.TorqueFullLoad > maxTorque ? maxTorque : entry.Item2.TorqueFullLoad,
+						TorqueDrag = entry.Item2.TorqueDrag
+					});
+				}
+			}
 
 			var flc = new EngineFullLoadCurve {
 				FullLoadEntries = entries.ToList(),

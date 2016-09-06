@@ -96,6 +96,11 @@ namespace TUGraz.VectoCore.InputData.FileIO.JSON
 			get { return Body.GetEx<double>(JsonKeys.Engine_Inertia).SI<KilogramSquareMeter>(); }
 		}
 
+		public virtual double WHTCEngineering
+		{
+			get { return 1; }
+		}
+
 		public virtual double WHTCMotorway
 		{
 			get { return Body.GetEx<double>(JsonKeys.Engine_WHTC_Motorway); }

@@ -110,6 +110,7 @@ namespace TUGraz.VectoCore.Models.Simulation.Impl
 			} else {
 				var first = new Task(() => { });
 				var task = first;
+				// ReSharper disable once LoopCanBeConvertedToQuery
 				foreach (var run in Runs) {
 					var r = run;
 					task = task.ContinueWith(t => r.RunWorkerAsync().Wait(), TaskContinuationOptions.OnlyOnRanToCompletion);

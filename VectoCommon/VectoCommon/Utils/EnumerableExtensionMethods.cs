@@ -38,9 +38,9 @@ namespace TUGraz.VectoCommon.Utils
 {
 	public static class EnumerableExtensionMethods
 	{
-		public static IEnumerable<double> ToDouble(this IEnumerable<string> self)
+		public static IEnumerable<double> ToDouble(this IEnumerable<string> self, double? defaultValue = null)
 		{
-			return self.Select(s => s.ToDouble());
+			return self.Select(s => s.ToDouble(defaultValue));
 		}
 
 		public static bool SequenceEqualFast<T>(this IEnumerable<T> self, IEnumerable<T> other) where T : IComparable
@@ -98,10 +98,6 @@ namespace TUGraz.VectoCommon.Utils
 		/// <summary>
 		/// Sums up the values of selector.
 		/// </summary>
-		/// <typeparam name="TU"></typeparam>
-		/// <typeparam name="TResult"></typeparam>
-		/// <param name="values"></param>
-		/// <param name="selector"></param>
 		/// <returns></returns>
 		public static TResult Sum<TU, TResult>(this IEnumerable<TU> values, Func<TU, TResult> selector)
 			where TResult : SIBase<TResult>
@@ -118,12 +114,6 @@ namespace TUGraz.VectoCommon.Utils
 		public static SI Sum(this IEnumerable<SI> values)
 		{
 			return values.DefaultIfEmpty().Aggregate((sum, current) => sum + current);
-		}
-
-		public static Func<bool> Once()
-		{
-			var once = 0;
-			return () => once++ == 0;
 		}
 
 		/// <summary>

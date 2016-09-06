@@ -45,7 +45,6 @@ using TUGraz.VectoCore.InputData.Reader.Impl;
 using TUGraz.VectoCore.Models.SimulationComponent.Data;
 using TUGraz.VectoCore.OutputData;
 using TUGraz.VectoCore.OutputData.PDF;
-using TUGraz.VectoCore.Utils;
 
 namespace TUGraz.VectoCore.Models.Simulation.Impl
 {
@@ -151,7 +150,7 @@ namespace TUGraz.VectoCore.Models.Simulation.Impl
 						throw new ArgumentOutOfRangeException("CycleType unknown:" + data.Cycle.CycleType);
 				}
 
-				var validationErrors = run.Validate();
+				var validationErrors = run.Validate(_mode);
 				if (validationErrors.Any()) {
 					throw new VectoException("Validation of Run-Data Failed: " +
 											"\n".Join(validationErrors.Select(r => r.ErrorMessage)));

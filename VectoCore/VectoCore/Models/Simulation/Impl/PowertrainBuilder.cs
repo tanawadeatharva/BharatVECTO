@@ -52,6 +52,9 @@ namespace TUGraz.VectoCore.Models.Simulation.Impl
 
 		public PowertrainBuilder(IModalDataContainer modData, WriteSumData sumWriter = null)
 		{
+			if (modData == null) {
+				throw new VectoException("Modal Data Container can't be null");
+			}
 			_modData = modData;
 			_sumWriter = sumWriter;
 		}
@@ -73,9 +76,10 @@ namespace TUGraz.VectoCore.Models.Simulation.Impl
 
 		private VehicleContainer BuildEngineOnly(VectoRunData data)
 		{
-			if (data.Cycle.CycleType != CycleType.EngineOnly)
+			if (data.Cycle.CycleType != CycleType.EngineOnly) {
 				throw new VectoException("CycleType must be EngineOnly.");
-			
+			}
+
 			var container = new VehicleContainer(ExecutionMode.Engineering, _modData, _sumWriter) { RunData = data };
 			var cycle = new PowertrainDrivingCycle(container, data.Cycle);
 
@@ -91,8 +95,9 @@ namespace TUGraz.VectoCore.Models.Simulation.Impl
 
 		private VehicleContainer BuildPWheel(VectoRunData data)
 		{
-			if (data.Cycle.CycleType != CycleType.PWheel)
+			if (data.Cycle.CycleType != CycleType.PWheel) {
 				throw new VectoException("CycleType must be PWheel.");
+			}
 
 			var container = new VehicleContainer(ExecutionMode.Engineering, _modData, _sumWriter) { RunData = data };
 			var gearbox = new CycleGearbox(container, data.GearboxData);
@@ -103,7 +108,7 @@ namespace TUGraz.VectoCore.Models.Simulation.Impl
 				.AddComponent(new AxleGear(container, data.AxleGearData))
 				.AddComponent(data.AngularGearData != null ? new AngularGear(container, data.AngularGearData) : null)
 				.AddRetarderAndGearbox(data.Retarder, gearbox, container)
-				.AddComponent(new CycleClutch(container))
+				.AddComponent(new Clutch(container, data.EngineData))
 				.AddComponent(new CombustionEngine(container, data.EngineData, pt1Disabled: true))
 				.AddAuxiliaries(container, data);
 
@@ -112,46 +117,52 @@ namespace TUGraz.VectoCore.Models.Simulation.Impl
 
 		private VehicleContainer BuildMeasuredSpeed(VectoRunData data)
 		{
-			if (data.Cycle.CycleType != CycleType.MeasuredSpeed)
+			if (data.Cycle.CycleType != CycleType.MeasuredSpeed) {
 				throw new VectoException("CycleType must be MeasuredSpeed.");
+			}
 
 			var container = new VehicleContainer(ExecutionMode.Engineering, _modData, _sumWriter) { RunData = data };
-			var engine = new CombustionEngine(container, data.EngineData);
 
 			// MeasuredSpeedDrivingCycle --> vehicle --> wheels --> brakes 
-			// --> axleGear --> (retarder) --> CycleGearBox --> (retarder) --> CycleClutch --> engine <-- Aux
-			new MeasuredSpeedDrivingCycle(container, data.Cycle)
+			// --> axleGear --> (retarder) --> GearBox --> (retarder) --> Clutch --> engine <-- Aux
+			var powertrain = new MeasuredSpeedDrivingCycle(container, data.Cycle)
 				.AddComponent(new Vehicle(container, data.VehicleData))
 				.AddComponent(new Wheels(container, data.VehicleData.DynamicTyreRadius, data.VehicleData.WheelsInertia))
 				.AddComponent(new Brakes(container))
 				.AddComponent(new AxleGear(container, data.AxleGearData))
 				.AddComponent(data.AngularGearData != null ? new AngularGear(container, data.AngularGearData) : null)
-				.AddRetarderAndGearbox(data.Retarder, GetGearbox(container, data.GearboxData), container)
-				.AddComponent(new Clutch(container, data.EngineData, engine.IdleController))
-				.AddComponent(engine)
+				.AddRetarderAndGearbox(data.Retarder, GetGearbox(container, data.GearboxData), container);
+			if (data.GearboxData.Type.ManualTransmission()) {
+				powertrain = powertrain.AddComponent(new Clutch(container, data.EngineData));
+			}
+			powertrain.AddComponent(new CombustionEngine(container, data.EngineData))
 				.AddAuxiliaries(container, data);
+			_modData.HasTorqueConverter = data.GearboxData.Type.AutomaticTransmission();
 
 			return container;
 		}
 
 		private VehicleContainer BuildMeasuredSpeedGear(VectoRunData data)
 		{
-			if (data.Cycle.CycleType != CycleType.MeasuredSpeedGear)
+			if (data.Cycle.CycleType != CycleType.MeasuredSpeedGear) {
 				throw new VectoException("CycleType must be MeasuredSpeed with Gear.");
+			}
 
 			var container = new VehicleContainer(ExecutionMode.Engineering, _modData, _sumWriter) { RunData = data };
 
 			// MeasuredSpeedDrivingCycle --> vehicle --> wheels --> brakes 
 			// --> axleGear --> (retarder) --> CycleGearBox --> (retarder) --> CycleClutch --> engine <-- Aux
-			new MeasuredSpeedDrivingCycle(container, data.Cycle)
+			var powertrain = new MeasuredSpeedDrivingCycle(container, data.Cycle)
 				.AddComponent(new Vehicle(container, data.VehicleData))
 				.AddComponent(new Wheels(container, data.VehicleData.DynamicTyreRadius, data.VehicleData.WheelsInertia))
 				.AddComponent(new Brakes(container))
 				.AddComponent(new AxleGear(container, data.AxleGearData))
 				.AddComponent(data.AngularGearData != null ? new AngularGear(container, data.AngularGearData) : null)
-				.AddRetarderAndGearbox(data.Retarder, new CycleGearbox(container, data.GearboxData), container)
-				.AddComponent(new CycleClutch(container))
-				.AddComponent(new CombustionEngine(container, data.EngineData))
+				.AddRetarderAndGearbox(data.Retarder, new CycleGearbox(container, data.GearboxData), container);
+			if (data.GearboxData.Type.ManualTransmission()) {
+				powertrain = powertrain.AddComponent(new Clutch(container, data.EngineData));
+			}
+			powertrain.AddComponent(new CombustionEngine(container, data.EngineData))
 				.AddAuxiliaries(container, data);
 
 			return container;
@@ -165,21 +176,23 @@ namespace TUGraz.VectoCore.Models.Simulation.Impl
 
 			var container = new VehicleContainer(data.ExecutionMode, _modData, _sumWriter) { RunData = data };
 
-			var engine = new CombustionEngine(container, data.EngineData);
-
 			// DistanceBasedDrivingCycle --> driver --> vehicle --> wheels 
 			// --> axleGear --> (retarder) --> gearBox --> (retarder) --> clutch --> engine <-- Aux
-			new DistanceBasedDrivingCycle(container, data.Cycle)
+			var powertrain = new DistanceBasedDrivingCycle(container, data.Cycle)
 				.AddComponent(new Driver(container, data.DriverData, new DefaultDriverStrategy()))
 				.AddComponent(new Vehicle(container, data.VehicleData))
 				.AddComponent(new Wheels(container, data.VehicleData.DynamicTyreRadius, data.VehicleData.WheelsInertia))
 				.AddComponent(new Brakes(container))
 				.AddComponent(new AxleGear(container, data.AxleGearData))
 				.AddComponent(data.AngularGearData != null ? new AngularGear(container, data.AngularGearData) : null)
-				.AddRetarderAndGearbox(data.Retarder, GetGearbox(container, data.GearboxData), container)
-				.AddComponent(new Clutch(container, data.EngineData, engine.IdleController))
-				.AddComponent(engine)
+				.AddRetarderAndGearbox(data.Retarder, GetGearbox(container, data.GearboxData), container);
+			if (data.GearboxData.Type.ManualTransmission()) {
+				powertrain = powertrain.AddComponent(new Clutch(container, data.EngineData));
+			}
+			powertrain.AddComponent(new CombustionEngine(container, data.EngineData))
 				.AddAuxiliaries(container, data);
+
+			_modData.HasTorqueConverter = data.GearboxData.Type.AutomaticTransmission();
 
 			return container;
 		}
@@ -227,6 +240,10 @@ namespace TUGraz.VectoCore.Models.Simulation.Impl
 				case GearboxType.MT:
 					strategy = new MTShiftStrategy(data, container);
 					break;
+				case GearboxType.ATPowerSplit:
+				case GearboxType.ATSerial:
+					strategy = new ATShiftStrategy(data, container);
+					return new ATGearbox(container, data, strategy);
 				default:
 					throw new VectoSimulationException("Unknown Gearbox Type: {0}", data.Type);
 			}

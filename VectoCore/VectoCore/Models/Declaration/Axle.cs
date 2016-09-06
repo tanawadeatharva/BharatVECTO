@@ -29,6 +29,7 @@
 *   Martin Rexeis, rexeis@ivt.tugraz.at, IVT, Graz University of Technology
 */
 
+using System;
 using System.ComponentModel.DataAnnotations;
 using TUGraz.VectoCommon.Models;
 using TUGraz.VectoCommon.Utils;
@@ -49,7 +50,7 @@ namespace TUGraz.VectoCore.Models.Declaration
 		[Required, SIRange(500, 100000)]
 		public Newton TyreTestLoad { get; internal set; }
 
-		[Required, SIRange(0, 1)]
+		[Required, SIRange(Double.MinValue, 1)]
 		public double AxleWeightShare { get; internal set; }
 
 		public bool TwinTyres { get; internal set; }

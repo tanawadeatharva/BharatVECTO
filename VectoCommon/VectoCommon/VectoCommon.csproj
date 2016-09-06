@@ -44,12 +44,14 @@
     <Reference Include="System.Xml" />
   </ItemGroup>
   <ItemGroup>
+    <Compile Include="Models\AuxiliaryType.cs" />
     <Compile Include="Exceptions\VectoExceptions.cs" />
     <Compile Include="Exceptions\VectoSimulationException.cs" />
     <Compile Include="InputData\DeclarationInputData.cs" />
     <Compile Include="InputData\EngineeringInputData.cs" />
     <Compile Include="InputData\IInputDataProvider.cs" />
     <Compile Include="InputData\IntegrityStatus.cs" />
+    <Compile Include="Models\AuxiliaryDemandType.cs" />
     <Compile Include="Models\AngularGearType.cs" />
     <Compile Include="Models\AuxiliaryModel.cs" />
     <Compile Include="Models\AxleConfiguration.cs" />

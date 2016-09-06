@@ -29,10 +29,11 @@
 *   Martin Rexeis, rexeis@ivt.tugraz.at, IVT, Graz University of Technology
 */
 
-using System;
 using Microsoft.VisualStudio.TestTools.UnitTesting;
+using System;
+using TUGraz.VectoCommon.Models;
 using TUGraz.VectoCore.Configuration;
-using TUGraz.VectoCore.Models.SimulationComponent.Data;
+using TUGraz.VectoCore.Models.Declaration;
 using TUGraz.VectoCore.Tests.Utils;
 
 namespace TUGraz.VectoCore.Tests.Models.SimulationComponentData
@@ -46,9 +47,8 @@ namespace TUGraz.VectoCore.Tests.Models.SimulationComponentData
 			Assert.AreEqual(AuxiliaryType.Fan, AuxiliaryTypeHelper.Parse("Fan"));
 			Assert.AreEqual(AuxiliaryType.SteeringPump, AuxiliaryTypeHelper.Parse("Steering pump"));
 			Assert.AreEqual(AuxiliaryType.ElectricSystem, AuxiliaryTypeHelper.Parse("Electric System"));
-			Assert.AreEqual(AuxiliaryType.HeatingVentilationAirCondition, AuxiliaryTypeHelper.Parse("HVAC"));
+			Assert.AreEqual(AuxiliaryType.HVAC, AuxiliaryTypeHelper.Parse("HVAC"));
 			Assert.AreEqual(AuxiliaryType.PneumaticSystem, AuxiliaryTypeHelper.Parse("Pneumatic System"));
-			AssertHelper.Exception<ArgumentOutOfRangeException>(() => { AuxiliaryTypeHelper.Parse("Foo Bar Blupp"); });
 		}
 
 		[TestMethod]
@@ -57,7 +57,7 @@ namespace TUGraz.VectoCore.Tests.Models.SimulationComponentData
 			Assert.AreEqual(Constants.Auxiliaries.Names.Fan, AuxiliaryTypeHelper.ToString(AuxiliaryType.Fan));
 			Assert.AreEqual(Constants.Auxiliaries.Names.SteeringPump, AuxiliaryTypeHelper.ToString(AuxiliaryType.SteeringPump));
 			Assert.AreEqual(Constants.Auxiliaries.Names.HeatingVentilationAirCondition,
-				AuxiliaryTypeHelper.ToString(AuxiliaryType.HeatingVentilationAirCondition));
+				AuxiliaryTypeHelper.ToString(AuxiliaryType.HVAC));
 			Assert.AreEqual(Constants.Auxiliaries.Names.PneumaticSystem,
 				AuxiliaryTypeHelper.ToString(AuxiliaryType.PneumaticSystem));
 			Assert.AreEqual(Constants.Auxiliaries.Names.ElectricSystem,

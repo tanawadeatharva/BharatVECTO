@@ -36,12 +36,12 @@ using TUGraz.VectoCommon.Exceptions;
 using TUGraz.VectoCommon.InputData;
 using TUGraz.VectoCommon.Models;
 using TUGraz.VectoCommon.Utils;
+using TUGraz.VectoCore.InputData.Reader.ComponentData;
 using TUGraz.VectoCore.Models.Declaration;
 using TUGraz.VectoCore.Models.Simulation.Data;
 using TUGraz.VectoCore.Models.SimulationComponent.Data;
 using TUGraz.VectoCore.Models.SimulationComponent.Data.Engine;
 using TUGraz.VectoCore.Models.SimulationComponent.Data.Gearbox;
-using TUGraz.VectoCore.OutputData;
 
 namespace TUGraz.VectoCore.InputData.Reader.DataObjectAdapter
 {
@@ -102,16 +102,18 @@ namespace TUGraz.VectoCore.InputData.Reader.DataObjectAdapter
 			Log.Error("{0} is in Declaration Mode but is used for Engineering Mode!", msg);
 		}
 
-		internal CombustionEngineData CreateEngineData(IEngineEngineeringInputData engine)
+		internal CombustionEngineData CreateEngineData(IEngineEngineeringInputData engine, IGearboxEngineeringInputData gbx)
 		{
 			if (engine.SavedInDeclarationMode) {
 				WarnEngineeringMode("EngineData");
 			}
 
 			var retVal = SetCommonCombustionEngineData(engine);
-			retVal.Inertia = engine.Inertia;
+			retVal.Inertia = engine.Inertia +
+							(gbx != null && gbx.Type.AutomaticTransmission() ? gbx.TorqueConverter.Inertia : 0.SI<KilogramSquareMeter>());
 			retVal.FullLoadCurve = EngineFullLoadCurve.Create(engine.FullLoadCurve);
 			retVal.FullLoadCurve.EngineData = retVal;
+			retVal.WHTCCorrectionFactor = engine.WHTCEngineering;
 			return retVal;
 		}
 
@@ -124,8 +126,8 @@ namespace TUGraz.VectoCore.InputData.Reader.DataObjectAdapter
 
 			var retVal = SetCommonGearboxData(gearbox);
 
-			var gears = gearbox.Gears;
-			if (gears.Count < 1) {
+			//var gears = gearbox.Gears;
+			if (gearbox.Gears.Count < 1) {
 				throw new VectoSimulationException(
 					"At least one Gear-Entry must be defined in Gearbox!");
 			}
@@ -140,33 +142,77 @@ namespace TUGraz.VectoCore.InputData.Reader.DataObjectAdapter
 			retVal.StartSpeed = gearbox.StartSpeed;
 			retVal.StartAcceleration = gearbox.StartAcceleration;
 
-			retVal.HasTorqueConverter = gearbox.TorqueConverter.Enabled;
+			var gearDifferenceRatio = gearbox.Gears[0].Ratio / gearbox.Gears[1].Ratio;
 
-			retVal.Gears = gears.Select((gear, i) => {
+			var gears = new Dictionary<uint, GearData>();
+
+			for (uint i = 0; i < gearbox.Gears.Count; i++) {
+				var gear = gearbox.Gears[(int)i];
 				TransmissionLossMap lossMap;
-				if (gear.LossMap != null)
-					lossMap = TransmissionLossMap.Create(gear.LossMap, gear.Ratio, string.Format("Gear {0}", i + 1));
-				else if (useEfficiencyFallback)
-					lossMap = TransmissionLossMap.Create(gear.Efficiency, gear.Ratio, string.Format("Gear {0}", i + 1));
-				else {
+				if (gear.LossMap != null) {
+					lossMap = TransmissionLossMapReader.Create(gear.LossMap, gear.Ratio, string.Format("Gear {0}", i + 1));
+				} else if (useEfficiencyFallback) {
+					lossMap = TransmissionLossMapReader.Create(gear.Efficiency, gear.Ratio, string.Format("Gear {0}", i + 1));
+				} else {
 					throw new InvalidFileFormatException("Gear {0} LossMap or Efficiency missing.", i + 1);
 				}
-				var gearFullLoad = gear.FullLoadCurve != null
-					? FullLoadCurveReader.Create(gear.FullLoadCurve)
-					: null;
-				var fullLoadCurve = IntersectFullLoadCurves(engineData.FullLoadCurve, gearFullLoad);
+
+				var fullLoadCurve = IntersectFullLoadCurves(engineData.FullLoadCurve, gear.MaxTorque);
+				if (gearbox.Type.AutomaticTransmission() && gear.ShiftPolygon == null) {
+					throw new VectoException("Shiftpolygons are required for AT Gearboxes!");
+				}
 				var shiftPolygon = gear.ShiftPolygon != null
 					? ShiftPolygonReader.Create(gear.ShiftPolygon)
-					: DeclarationData.Gearbox.ComputeShiftPolygon(i, fullLoadCurve, gears, engineData, axlegearRatio, dynamicTyreRadius);
-
-				return new KeyValuePair<uint, GearData>((uint)(i + 1), new GearData {
-					LossMap = lossMap,
+					: DeclarationData.Gearbox.ComputeShiftPolygon((int)i, fullLoadCurve, gearbox.Gears, engineData, axlegearRatio,
+						dynamicTyreRadius);
+				var gearData = new GearData {
 					ShiftPolygon = shiftPolygon,
-					FullLoadCurve = gearFullLoad,
+					MaxTorque = gear.MaxTorque,
 					Ratio = gear.Ratio,
-					TorqueConverterActive = gear.TorqueConverterActive
-				});
-			}).ToDictionary(kv => kv.Key, kv => kv.Value);
+					LossMap = lossMap,
+				};
+
+				if (gearbox.Type == GearboxType.ATPowerSplit) {
+					if (i == 0) {
+						// powersplit transmission: torque converter already contains ratio and losses
+						gearData.TorqueConverterRatio = 1;
+						gearData.TorqueConverterGearLossMap = TransmissionLossMapReader.Create(1, 1, string.Format("TCGear {0}", i + 1));
+						gearData.TorqueConverterShiftPolygon = ShiftPolygonReader.Create(gearbox.TorqueConverter.ShiftPolygon);
+					}
+				}
+				if (gearbox.Type == GearboxType.ATSerial) {
+					if (i == 0) {
+						// torqueconverter is active in first gear - duplicate ratio and lossmap for torque converter mode
+						gearData.TorqueConverterRatio = gearData.Ratio;
+						gearData.TorqueConverterGearLossMap = gearData.LossMap;
+						gearData.TorqueConverterShiftPolygon = ShiftPolygonReader.Create(gearbox.TorqueConverter.ShiftPolygon);
+					}
+					if (i == 1 && gearDifferenceRatio >= DeclarationData.Gearbox.TorqueConverterSecondGearThreshold) {
+						// ratio between first and second gear is above threshold, torqueconverter is active in second gear as well
+						// -> duplicate ratio and lossmap for torque converter mode, remove locked transmission for previous gear
+						gearData.TorqueConverterRatio = gearData.Ratio;
+						gearData.TorqueConverterGearLossMap = gearData.LossMap;
+						gearData.TorqueConverterShiftPolygon = ShiftPolygonReader.Create(gearbox.TorqueConverter.ShiftPolygon);
+						// NOTE: the lower gear in 'gears' dictionary has index i !!
+						gears[i].Ratio = double.NaN;
+						gears[i].LossMap = null;
+					}
+				}
+				gears.Add(i + 1, gearData);
+			}
+			retVal.Gears = gears;
+
+			if (retVal.Gears.Any(g => g.Value.HasTorqueConverter)) {
+				if (!retVal.Type.AutomaticTransmission()) {
+					throw new VectoException("Torque Converter can only be used with AT gearbox model");
+				}
+				retVal.TorqueConverterData = TorqueConverterDataReader.Create(gearbox.TorqueConverter.TCData,
+					gearbox.TorqueConverter.ReferenceRPM, DeclarationData.Gearbox.TorqueConverterSpeedLimit);
+			} else {
+				if (retVal.Type.AutomaticTransmission()) {
+					throw new VectoException("AT gearbox model requires torque converter");
+				}
+			}
 
 			retVal.DownshiftAfterUpshiftDelay = gearbox.DownshiftAferUpshiftDelay;
 			retVal.UpshiftAfterDownshiftDelay = gearbox.UpshiftAfterDownshiftDelay;
@@ -176,22 +222,41 @@ namespace TUGraz.VectoCore.InputData.Reader.DataObjectAdapter
 
 		public IList<VectoRunData.AuxData> CreateAuxiliaryData(IAuxiliariesEngineeringInputData auxInputData)
 		{
-			if (auxInputData.SavedInDeclarationMode) {
-				WarnEngineeringMode("AuxData");
-			}
-
 			return auxInputData.Auxiliaries.Select(a => {
-				if (a.DemandMap == null) {
-					throw new VectoSimulationException("Demand Map for auxiliary {0} {1} required", a.ID, a.Technology);
+				switch (a.AuxiliaryType) {
+					case AuxiliaryDemandType.Mapping:
+						return CreateMappingAuxiliary(a);
+					case AuxiliaryDemandType.Constant:
+						return CreateConstantAuxiliary(a);
+					default:
+						throw new VectoException("Auxiliary type {0} not supported!", a.AuxiliaryType);
 				}
-				return new VectoRunData.AuxData {
-					ID = a.ID,
-					Technology = a.Technology,
-					TechList = a.TechList.DefaultIfNull(Enumerable.Empty<string>()).ToArray(),
-					DemandType = AuxiliaryDemandType.Mapping,
-					Data = new AuxiliaryData(a, a.ID) //AuxiliaryData.Create(a.DemandMap)
-				};
 			}).Concat(new VectoRunData.AuxData { ID = "", DemandType = AuxiliaryDemandType.Direct }.ToEnumerable()).ToList();
+		}
+
+		private static VectoRunData.AuxData CreateMappingAuxiliary(IAuxiliaryEngineeringInputData a)
+		{
+			if (a.DemandMap == null) {
+				throw new VectoSimulationException("Demand Map for auxiliary {0} required", a.ID);
+			}
+			if (a.DemandMap.Columns.Count != 3 || a.DemandMap.Rows.Count < 4) {
+				throw new VectoSimulationException(
+					"Demand Map for auxiliary {0} has to contain exactly 3 columns and at least 4 rows", a.ID);
+			}
+			return new VectoRunData.AuxData {
+				ID = a.ID,
+				DemandType = AuxiliaryDemandType.Mapping,
+				Data = AuxiliaryDataReader.Create(a)
+			};
+		}
+
+		private static VectoRunData.AuxData CreateConstantAuxiliary(IAuxiliaryEngineeringInputData a)
+		{
+			return new VectoRunData.AuxData {
+				ID = a.ID,
+				DemandType = AuxiliaryDemandType.Constant,
+				PowerDemand = a.ConstantPowerDemand
+			};
 		}
 
 		internal DriverData CreateDriverData(IDriverEngineeringInputData driver)
@@ -202,7 +267,7 @@ namespace TUGraz.VectoCore.InputData.Reader.DataObjectAdapter
 
 			AccelerationCurveData accelerationData = null;
 			if (driver.AccelerationCurve != null) {
-				accelerationData = AccelerationCurveData.Create(driver.AccelerationCurve);
+				accelerationData = AccelerationCurveReader.Create(driver.AccelerationCurve);
 			}
 
 			var lookAheadData = new DriverData.LACData {
@@ -239,7 +304,7 @@ namespace TUGraz.VectoCore.InputData.Reader.DataObjectAdapter
 		//=================================
 		public RetarderData CreateRetarderData(IRetarderInputData retarder, IVehicleEngineeringInputData vehicle)
 		{
-			return SetCommonRetarderData(retarder, vehicle);
+			return SetCommonRetarderData(retarder);
 		}
 
 		public AdvancedAuxData CreateAdvancedAuxData(IAuxiliariesEngineeringInputData auxInputData)

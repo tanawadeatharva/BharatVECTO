@@ -1,12 +1,12 @@
 ﻿{
   "Header": {
-    "CreatedBy": "Raphael Luz IVT TU-Graz (14fea510-e457-4bf6-860f-a9514dc327f1)",
-    "Date": "24.06.2015 09:43:54",
-    "AppVersion": "2.2 beta",
+    "CreatedBy": "Michael Krisper, IVT, Graz University of Technology",
+    "Date": "2016-08-10T14:14:07.6435917Z",
+    "AppVersion": "2.2",
     "FileVersion": 5
   },
   "Body": {
-    "SavedInDeclMode": true,
+    "SavedInDeclMode": false,
     "ModelName": "Generic 40t Long Haul Truck",
     "Inertia": 0.0,
     "TracInt": 1.0,
@@ -113,6 +113,9 @@
       "File": "<NOFILE>",
       "RefRPM": 0.0,
       "Inertia": 0.0
-    }
+    },
+    "DownshiftAferUpshiftDelay": 10.0,
+    "UpshiftAfterDownshiftDelay": 10.0,
+    "UpshiftMinAcceleration": 0.1
   }
 }

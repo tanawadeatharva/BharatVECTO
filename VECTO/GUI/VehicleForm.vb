@@ -1,0 +1,790 @@
+﻿' Copyright 2014 European Union.
+' Licensed under the EUPL (the 'Licence');
+'
+' * You may not use this work except in compliance with the Licence.
+' * You may obtain a copy of the Licence at: http://ec.europa.eu/idabc/eupl
+' * Unless required by applicable law or agreed to in writing,
+'   software distributed under the Licence is distributed on an "AS IS" basis,
+'   WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+'
+' See the LICENSE.txt for the specific language governing permissions and limitations.
+Option Infer On
+
+Imports System.IO
+Imports System.Linq
+Imports System.Text.RegularExpressions
+Imports TUGraz.VectoCommon.Models
+Imports TUGraz.VectoCommon.Utils
+Imports TUGraz.VectoCore.Models.Declaration
+
+''' <summary>
+''' Vehicle Editor.
+''' </summary>
+Public Class VehicleForm
+	Private _axlDlog As VehicleAxleDialog
+	Private _hdVclass As String
+	Private _vehFile As String
+	Private _changed As Boolean = False
+	Private _cmFiles As String()
+
+	Public AutoSendTo As Boolean = False
+	Public JobDir As String = ""
+
+	'Close - Check for unsaved changes
+	Private Sub F_VEH_FormClosing(sender As Object, e As FormClosingEventArgs) Handles Me.FormClosing
+		If e.CloseReason <> CloseReason.ApplicationExitCall And e.CloseReason <> CloseReason.WindowsShutDown Then
+			e.Cancel = ChangeCheckCancel()
+		End If
+	End Sub
+
+	'Initialise form
+	Private Sub F05_VEH_Load(sender As Object, e As EventArgs) Handles MyBase.Load
+		TbLoadingMax.Text = "-"
+		PnLoad.Enabled = Not Cfg.DeclMode
+		ButAxlAdd.Enabled = Not Cfg.DeclMode
+		ButAxlRem.Enabled = Not Cfg.DeclMode
+		CbCdMode.Enabled = Not Cfg.DeclMode
+		PnWheelDiam.Enabled = Not Cfg.DeclMode
+
+		CbCdMode.ValueMember = "Value"
+		CbCdMode.DisplayMember = "Label"
+		CbCdMode.DataSource = [Enum].GetValues(GetType(CrossWindCorrectionMode)) _
+			.Cast(Of CrossWindCorrectionMode) _
+			.Select(Function(mode) New With {Key .Value = mode, .Label = mode.GetLabel()}).ToList()
+
+		CbRtType.ValueMember = "Value"
+		CbRtType.DisplayMember = "Label"
+		CbRtType.DataSource = [Enum].GetValues(GetType(RetarderType)) _
+			.Cast(Of RetarderType) _
+			.Select(Function(type) New With {Key .Value = type, .Label = type.GetLabel()}).ToList()
+
+		CbAxleConfig.ValueMember = "Value"
+		CbAxleConfig.DisplayMember = "Label"
+		CbAxleConfig.DataSource = [Enum].GetValues(GetType(AxleConfiguration)) _
+			.Cast(Of AxleConfiguration) _
+			.Select(Function(category) New With {Key .Value = category, .Label = category.GetName()}).ToList()
+
+		CbCat.ValueMember = "Value"
+		CbCat.DisplayMember = "Label"
+		CbCat.DataSource = [Enum].GetValues(GetType(VehicleCategory)) _
+			.Cast(Of VehicleCategory) _
+			.Select(Function(category) New With {Key .Value = category, .label = category.GetLabel()}).ToList()
+
+		cbAngularGearType.ValueMember = "Value"
+		cbAngularGearType.DisplayMember = "Label"
+		cbAngularGearType.DataSource = [Enum].GetValues(GetType(AngularGearType)) _
+			.Cast(Of AngularGearType).Select(Function(type) New With {Key .Value = type, .Label = type.GetLabel()}).ToList()
+		_axlDlog = New VehicleAxleDialog
+
+		_changed = False
+
+		NewVehicle()
+	End Sub
+
+	'Set HDVclasss
+	Private Sub SetHdVclass()
+		If String.IsNullOrEmpty(TbMassMass.Text) Then
+			TbHDVclass.Text = "-"
+			Exit Sub
+		End If
+		Dim vehC = CbCat.SelectedValue
+		Dim axlC = CbAxleConfig.SelectedValue
+		Dim maxMass = (TbMassMass.Text.ToDouble() * 1000).SI(Of Kilogram)()
+
+		_hdVclass = "-"
+		Dim s0 As Segment = Nothing
+		Try
+			s0 = DeclarationData.Segments.Lookup(vehC, axlC, maxMass, 0.SI(Of Kilogram), True)
+
+		Catch
+			' no segment found - ignore
+		End Try
+		If Not s0 Is Nothing Then
+			_hdVclass = s0.VehicleClass
+		End If
+
+
+		TbHDVclass.Text = _hdVclass
+		PicVehicle.Image = ConvPicPath(_hdVclass, False)
+	End Sub
+
+
+	'Set generic values for Declaration mode
+	Private Sub DeclInit()
+		If Not Cfg.DeclMode Then Exit Sub
+
+		If String.IsNullOrEmpty(TbMassMass.Text) Then
+			TbHDVclass.Text = "-"
+			Exit Sub
+		End If
+		Dim vehC = CbCat.SelectedValue
+		Dim axlC = CbAxleConfig.SelectedValue
+		Dim maxMass = (TbMassMass.Text.ToDouble() * 1000).SI(Of Kilogram)()
+
+		Dim s0 As Segment = Nothing
+		Try
+			s0 = DeclarationData.Segments.Lookup(vehC, axlC, maxMass, 0.SI(Of Kilogram), True)
+		Catch
+			' no segment found - ignore
+		End Try
+		If Not s0 Is Nothing Then
+			_hdVclass = s0.VehicleClass
+			Dim axleCount As Short = s0.Missions(0).AxleWeightDistribution.Count()
+			Dim i0 = LvRRC.Items.Count
+
+			If axleCount > i0 Then
+				For i = 1 To axleCount - LvRRC.Items.Count
+					Dim lvi = New ListViewItem
+					lvi.SubItems(0).Text = (i + i0).ToString
+					lvi.SubItems.Add("-")
+					lvi.SubItems.Add("no")
+					lvi.SubItems.Add("")
+					lvi.SubItems.Add("")
+					lvi.SubItems.Add("-")
+					lvi.SubItems.Add("-")
+					LvRRC.Items.Add(lvi)
+				Next
+
+			ElseIf axleCount < LvRRC.Items.Count Then
+				For i = axleCount To LvRRC.Items.Count - 1
+					LvRRC.Items.RemoveAt(LvRRC.Items.Count - 1)
+				Next
+			End If
+
+			PnAll.Enabled = True
+
+		Else
+			PnAll.Enabled = False
+			_hdVclass = "-"
+		End If
+
+		TbMassExtra.Text = "-"
+		TbLoad.Text = "-"
+		CbCdMode.SelectedValue = CrossWindCorrectionMode.DeclarationModeCorrection
+		TbCdFile.Text = ""
+
+		Dim rdyn As Single
+		rdyn = -1
+
+		If rdyn < 0 Then
+			TBrdyn.Text = "-"
+		Else
+			TBrdyn.Text = rdyn
+		End If
+	End Sub
+
+
+#Region "Toolbar"
+
+	'New
+	Private Sub ToolStripBtNew_Click(sender As Object, e As EventArgs) Handles ToolStripBtNew.Click
+		NewVehicle()
+	End Sub
+
+	'Open
+	Private Sub ToolStripBtOpen_Click(sender As Object, e As EventArgs) Handles ToolStripBtOpen.Click
+		If VehicleFileBrowser.OpenDialog(_vehFile) Then OpenVehicle(VehicleFileBrowser.Files(0))
+	End Sub
+
+	'Save
+	Private Sub ToolStripBtSave_Click(sender As Object, e As EventArgs) Handles ToolStripBtSave.Click
+		SaveOrSaveAs(False)
+	End Sub
+
+	'Save As
+	Private Sub ToolStripBtSaveAs_Click(sender As Object, e As EventArgs) Handles ToolStripBtSaveAs.Click
+		SaveOrSaveAs(True)
+	End Sub
+
+	'Send to VECTO Editor
+	Private Sub ToolStripBtSendTo_Click(sender As Object, e As EventArgs) Handles ToolStripBtSendTo.Click
+
+		If ChangeCheckCancel() Then Exit Sub
+
+		If _vehFile = "" Then
+			If MsgBox("Save file now?", MsgBoxStyle.YesNo) = MsgBoxResult.Yes Then
+				If Not SaveOrSaveAs(True) Then Exit Sub
+			Else
+				Exit Sub
+			End If
+		End If
+
+
+		If Not VectoJobForm.Visible Then
+			JobDir = ""
+			VectoJobForm.Show()
+			VectoJobForm.VECTOnew()
+		Else
+			VectoJobForm.WindowState = FormWindowState.Normal
+		End If
+
+		VectoJobForm.TbVEH.Text = GetFilenameWithoutDirectory(_vehFile, JobDir)
+	End Sub
+
+	'Help
+	Private Sub ToolStripButton1_Click(sender As Object, e As EventArgs) Handles ToolStripButton1.Click
+		If File.Exists(MyAppPath & "User Manual\help.html") Then
+			Dim registryString = My.Computer.Registry.ClassesRoot.OpenSubKey("\http\shell\open\command\").GetValue("").ToString
+			Dim defaultBrowserPath = Regex.Match(registryString, "(\"".*?\"")").Captures(0).ToString
+			Process.Start(defaultBrowserPath, String.Format("""{0}{1}""", MyAppPath, "User Manual\help.html#vehicle-editor"))
+		Else
+			MsgBox("User Manual not found!", MsgBoxStyle.Critical)
+		End If
+	End Sub
+
+#End Region
+
+	'Save and Close
+	Private Sub ButOK_Click(sender As Object, e As EventArgs) Handles ButOK.Click
+		If SaveOrSaveAs(False) Then Close()
+	End Sub
+
+	'Cancel
+	Private Sub ButCancel_Click(sender As Object, e As EventArgs) Handles ButCancel.Click
+		Close()
+	End Sub
+
+	'Save or Save As function = true if file is saved
+	Private Function SaveOrSaveAs(saveAs As Boolean) As Boolean
+		If _vehFile = "" Or saveAs Then
+			If VehicleFileBrowser.SaveDialog(_vehFile) Then
+				_vehFile = VehicleFileBrowser.Files(0)
+			Else
+				Return False
+			End If
+		End If
+		Return SaveVehicle(_vehFile)
+	End Function
+
+	'New VEH
+	Private Sub NewVehicle()
+		If ChangeCheckCancel() Then Exit Sub
+
+		TbMass.Text = ""
+		TbLoad.Text = ""
+		TBrdyn.Text = ""
+		TBcdA.Text = ""
+
+		CbCdMode.SelectedIndex = 0
+		TbCdFile.Text = ""
+
+		CbRtType.SelectedIndex = 0
+		TbRtRatio.Text = ""
+		TbRtPath.Text = ""
+
+		CbRtType.SelectedIndex = 0
+		TbRtRatio.Text = ""
+		TbRtPath.Text = ""
+
+		CbCat.SelectedIndex = 0
+
+		LvRRC.Items.Clear()
+
+		TbMassMass.Text = ""
+		TbMassExtra.Text = ""
+		CbAxleConfig.SelectedIndex = 0
+
+		DeclInit()
+
+		_vehFile = ""
+		Text = "VEH Editor"
+		LbStatus.Text = ""
+
+		_changed = False
+	End Sub
+
+	'Open VEH
+	Sub OpenVehicle(file As String)
+		Dim inertia As Single
+
+		If ChangeCheckCancel() Then Exit Sub
+
+		Dim veh = New Vehicle
+		veh.FilePath = file
+
+		If Not veh.ReadFile Then
+			MsgBox("Cannot read " & file & "!")
+			Exit Sub
+		End If
+
+		If Cfg.DeclMode <> veh.SavedInDeclMode Then
+			Select Case WrongMode()
+				Case 1
+					Close()
+					MainForm.RbDecl.Checked = Not MainForm.RbDecl.Checked
+					MainForm.OpenVectoFile(file)
+				Case -1
+					Exit Sub
+			End Select
+		End If
+
+		TbMass.Text = veh.Mass
+		TbMassExtra.Text = veh.MassExtra
+		TbLoad.Text = veh.Loading
+		TBrdyn.Text = veh.DynamicTyreRadius
+
+		CbCdMode.SelectedValue = veh.CrossWindCorrectionMode
+		TbCdFile.Text = veh.CrossWindCorrectionFile.OriginalPath
+
+		CbRtType.SelectedValue = veh.RetarderType
+		TbRtRatio.Text = veh.RetarderRatio
+		TbRtPath.Text = veh.RetarderLossMapFile.OriginalPath
+
+		cbAngularGearType.SelectedValue = veh.AngularGearType
+		tbAngularGearRatio.Text = veh.AngularGearRatio
+		tbAngularGearLossMapPath.Text = veh.AngularGearLossMapFile.OriginalPath
+
+		CbCat.SelectedValue = veh.VehicleCategory
+
+
+		LvRRC.Items.Clear()
+		Dim i = 0
+		For Each a0 In veh.Axles
+			i += 1
+			Dim lvi = New ListViewItem
+			lvi.SubItems(0).Text = i.ToString
+
+			If Cfg.DeclMode Then
+				lvi.SubItems.Add("-")
+			Else
+				lvi.SubItems.Add(a0.Share)
+			End If
+
+			If a0.TwinTire Then
+				lvi.SubItems.Add("yes")
+			Else
+				lvi.SubItems.Add("no")
+			End If
+			lvi.SubItems.Add(a0.RRC)
+			lvi.SubItems.Add(a0.FzISO)
+			lvi.SubItems.Add(a0.Wheels)
+
+			If Cfg.DeclMode Then
+				inertia = DeclarationData.Wheels.Lookup(a0.Wheels).Inertia.Value()
+				If inertia < 0 Then
+					lvi.SubItems.Add("-")
+				Else
+					lvi.SubItems.Add(inertia)
+				End If
+			Else
+				lvi.SubItems.Add(a0.Inertia)
+			End If
+
+			LvRRC.Items.Add(lvi)
+		Next
+
+		TbMassMass.Text = veh.MassMax
+		TbMassExtra.Text = veh.MassExtra
+
+		CbAxleConfig.SelectedValue = veh.AxleConfiguration
+
+		TBcdA.Text = veh.CdA0
+
+		DeclInit()
+
+		VehicleFileBrowser.UpdateHistory(file)
+		Text = GetFilenameWithoutPath(file, True)
+		LbStatus.Text = ""
+		_vehFile = file
+		Activate()
+
+		_changed = False
+	End Sub
+
+	'Save VEH
+	Private Function SaveVehicle(file As String) As Boolean
+
+		Dim veh = New Vehicle
+		veh.FilePath = file
+
+		veh.Mass = CSng(fTextboxToNumString(TbMass.Text))
+		veh.MassExtra = CSng(fTextboxToNumString(TbMassExtra.Text))
+		veh.Loading = CSng(fTextboxToNumString(TbLoad.Text))
+
+		veh.CdA0 = CSng(fTextboxToNumString(TBcdA.Text))
+
+		veh.DynamicTyreRadius = CSng(fTextboxToNumString(TBrdyn.Text))
+		veh.CrossWindCorrectionMode = CbCdMode.SelectedValue
+		veh.CrossWindCorrectionFile.Init(GetPath(file), TbCdFile.Text)
+		veh.RetarderType = CbRtType.SelectedValue
+		veh.RetarderRatio = CSng(fTextboxToNumString(TbRtRatio.Text))
+		veh.RetarderLossMapFile.Init(GetPath(file), TbRtPath.Text)
+
+		veh.AngularGearType = cbAngularGearType.SelectedValue
+		veh.AngularGearRatio = CSng(fTextboxToNumString(tbAngularGearRatio.Text))
+		veh.AngularGearLossMapFile.Init(GetPath(file), tbAngularGearLossMapPath.Text)
+
+		veh.VehicleCategory = CbCat.SelectedValue 'CType(CbCat.SelectedIndex, tVehCat)
+
+		Dim axleShareCheck As Double
+		For Each LV0 In LvRRC.Items
+			Dim a0 = New Vehicle.Axle
+			a0.Share = fTextboxToNumString(LV0.SubItems(1).Text)
+			axleShareCheck += a0.Share
+			a0.TwinTire = (LV0.SubItems(2).Text = "yes")
+			a0.RRC = fTextboxToNumString(LV0.SubItems(3).Text)
+			a0.FzISO = fTextboxToNumString(LV0.SubItems(4).Text)
+			a0.Wheels = LV0.SubItems(5).Text
+			a0.Inertia = fTextboxToNumString(LV0.SubItems(6).Text)
+			veh.Axles.Add(a0)
+		Next
+
+		If Not Cfg.DeclMode AndAlso Math.Abs(axleShareCheck - 1) > 0.000001 Then
+			MsgBox("Relative axle loads must sum up to 1.0. Current value: " & axleShareCheck, MsgBoxStyle.Critical)
+			Return False
+		End If
+
+		veh.MassMax = CSng(fTextboxToNumString(TbMassMass.Text))
+		veh.MassExtra = CSng(fTextboxToNumString(TbMassExtra.Text))
+		veh.AxleConfiguration = CbAxleConfig.SelectedValue
+
+
+		'---------------------------------------------------------------------------------
+		If Not veh.SaveFile Then
+			MsgBox("Cannot safe to " & file, MsgBoxStyle.Critical)
+			Return False
+		End If
+
+		If AutoSendTo Then
+			If VectoJobForm.Visible Then
+				If UCase(fFileRepl(VectoJobForm.TbVEH.Text, JobDir)) <> UCase(file) Then VectoJobForm.TbVEH.Text = GetFilenameWithoutDirectory(file, JobDir)
+				VectoJobForm.UpdatePic()
+			End If
+		End If
+
+		VehicleFileBrowser.UpdateHistory(file)
+		Text = GetFilenameWithoutPath(file, True)
+		LbStatus.Text = ""
+
+		_changed = False
+
+		Return True
+	End Function
+
+#Region "Cd"
+
+	'Cd Mode Change
+	Private Sub CbCdMode_SelectedIndexChanged(sender As Object, e As EventArgs) _
+		Handles CbCdMode.SelectedIndexChanged
+		Dim bEnabled As Boolean
+
+		Select Case CType(CbCdMode.SelectedValue, CrossWindCorrectionMode)
+
+			Case CrossWindCorrectionMode.VAirBetaLookupTable
+				bEnabled = True
+				LbCdMode.Text = "Input file: Yaw Angle [°], Cd Scaling Factor [-]"
+
+			Case CrossWindCorrectionMode.SpeedDependentCorrectionFactor
+				bEnabled = True
+				LbCdMode.Text = "Input file: Vehicle Speed [km/h], Cd Scaling Factor [-]" _
+				'TODO: MQ 20160901: check if scaling factor or absolue value!
+
+			Case Else ' tCdMode.ConstCd0, tCdMode.CdOfVdecl
+				bEnabled = False
+				LbCdMode.Text = ""
+
+		End Select
+
+		If Not Cfg.DeclMode Then
+			TbCdFile.Enabled = bEnabled
+			BtCdFileBrowse.Enabled = bEnabled
+			BtCdFileOpen.Enabled = bEnabled
+		End If
+
+		Change()
+	End Sub
+
+	'Cd File Browse
+	Private Sub BtCdFileBrowse_Click(sender As Object, e As EventArgs) Handles BtCdFileBrowse.Click
+		Dim ex As String
+
+		If CbCdMode.SelectedIndex = 1 Then
+			ex = "vcdv"
+		Else
+			ex = "vcdb"
+		End If
+
+		If fbCDx.OpenDialog(fFileRepl(TbCdFile.Text, GetPath(_vehFile)), False, ex) Then _
+			TbCdFile.Text = GetFilenameWithoutDirectory(fbCDx.Files(0), GetPath(_vehFile))
+	End Sub
+
+	'Open Cd File
+	Private Sub BtCdFileOpen_Click(sender As Object, e As EventArgs) Handles BtCdFileOpen.Click
+		OpenFiles(fFileRepl(TbCdFile.Text, GetPath(_vehFile)))
+	End Sub
+
+#End Region
+
+#Region "Retarder"
+
+	'Rt Type Change
+	Private Sub CbRtType_SelectedIndexChanged(sender As Object, e As EventArgs) _
+		Handles CbRtType.SelectedIndexChanged
+		Select Case CbRtType.SelectedIndex
+			Case 1 'Primary
+				LbRtRatio.Text = "Ratio to engine speed"
+				PnRt.Enabled = True
+			Case 2 'Secondary
+				LbRtRatio.Text = "Ratio to cardan shaft speed"
+				TbRtPath.Enabled = True
+				BtRtBrowse.Enabled = True
+				PnRt.Enabled = True
+			Case Else '0 None
+				LbRtRatio.Text = "Ratio"
+				PnRt.Enabled = False
+		End Select
+
+		Change()
+	End Sub
+
+	'Rt File Browse
+	Private Sub BtRtBrowse_Click(sender As Object, e As EventArgs) Handles BtRtBrowse.Click
+		If RetarderLossMapFileBrowser.OpenDialog(fFileRepl(TbRtPath.Text, GetPath(_vehFile))) Then _
+			TbRtPath.Text = GetFilenameWithoutDirectory(RetarderLossMapFileBrowser.Files(0), GetPath(_vehFile))
+	End Sub
+
+#End Region
+
+#Region "Track changes"
+
+	Private Sub Change()
+		If Not _changed Then
+			LbStatus.Text = "Unsaved changes in current file"
+			_changed = True
+		End If
+	End Sub
+
+	' "Save changes? "... Returns True if user aborts
+	Private Function ChangeCheckCancel() As Boolean
+
+		If _changed Then
+			Select Case MsgBox("Save changes ?", MsgBoxStyle.YesNoCancel)
+				Case MsgBoxResult.Yes
+					Return Not SaveOrSaveAs(False)
+				Case MsgBoxResult.Cancel
+					Return True
+				Case Else 'MsgBoxResult.No
+					_changed = False
+					Return False
+			End Select
+
+		Else
+
+			Return False
+
+		End If
+	End Function
+
+	Private Sub TBmass_TextChanged(sender As Object, e As EventArgs) Handles TbMass.TextChanged
+		SetMaxLoad()
+		Change()
+	End Sub
+
+	Private Sub TBcw_TextChanged(sender As Object, e As EventArgs) _
+		Handles TbLoad.TextChanged, TBrdyn.TextChanged, TBcdA.TextChanged, TbCdFile.TextChanged, TbRtRatio.TextChanged,
+				cbAngularGearType.SelectedIndexChanged, TbRtPath.TextChanged, tbAngularGearLossMapPath.TextChanged,
+				tbAngularGearRatio.TextChanged
+		Change()
+	End Sub
+
+	Private Sub CbCat_SelectedIndexChanged(sender As Object, e As EventArgs) Handles CbCat.SelectedIndexChanged
+		Change()
+		SetHdVclass()
+		DeclInit()
+	End Sub
+
+	Private Sub TbMassTrailer_TextChanged(sender As Object, e As EventArgs) Handles TbMassExtra.TextChanged
+		SetMaxLoad()
+		Change()
+	End Sub
+
+	Private Sub TbMassMax_TextChanged(sender As Object, e As EventArgs) Handles TbMassMass.TextChanged
+		SetMaxLoad()
+		Change()
+		SetHdVclass()
+		DeclInit()
+	End Sub
+
+	Private Sub CbAxleConfig_SelectedIndexChanged(sender As Object, e As EventArgs) _
+		Handles CbAxleConfig.SelectedIndexChanged
+		Change()
+		SetHdVclass()
+		DeclInit()
+	End Sub
+
+#End Region
+
+	'Update maximum load when truck/trailer mass was changed
+	Private Sub SetMaxLoad()
+		If Not Cfg.DeclMode Then
+			If IsNumeric(TbMass.Text) And IsNumeric(TbMassExtra.Text) And IsNumeric(TbMassMass.Text) Then
+				TbLoadingMax.Text = CStr(CSng(TbMassMass.Text) * 1000 - CSng(TbMass.Text) - CSng(TbMassExtra.Text))
+			Else
+				TbLoadingMax.Text = ""
+			End If
+		End If
+	End Sub
+
+#Region "Axle Configuration"
+
+	Private Sub ButAxlAdd_Click(sender As Object, e As EventArgs) Handles ButAxlAdd.Click
+		Dim lv0 As ListViewItem
+
+		_axlDlog.Clear()
+
+		If _axlDlog.ShowDialog = DialogResult.OK Then
+			lv0 = New ListViewItem
+
+			lv0.SubItems(0).Text = LvRRC.Items.Count + 1
+			lv0.SubItems.Add(Trim(_axlDlog.TbAxleShare.Text))
+			If _axlDlog.CbTwinT.Checked Then
+				lv0.SubItems.Add("yes")
+			Else
+				lv0.SubItems.Add("no")
+			End If
+			lv0.SubItems.Add(Trim(_axlDlog.TbRRC.Text))
+			lv0.SubItems.Add(Trim(_axlDlog.TbFzISO.Text))
+			lv0.SubItems.Add(Trim(_axlDlog.CbWheels.Text))
+			lv0.SubItems.Add(Trim(_axlDlog.TbI_wheels.Text))
+
+			LvRRC.Items.Add(lv0)
+
+			Change()
+			DeclInit()
+
+		End If
+	End Sub
+
+	Private Sub ButAxlRem_Click(sender As Object, e As EventArgs) Handles ButAxlRem.Click
+		RemoveAxleItem()
+	End Sub
+
+	Private Sub LvAxle_DoubleClick(sender As Object, e As EventArgs) Handles LvRRC.DoubleClick
+		EditAxleItem()
+	End Sub
+
+	Private Sub LvAxle_KeyDown(sender As Object, e As KeyEventArgs) Handles LvRRC.KeyDown
+		Select Case e.KeyCode
+			Case Keys.Delete, Keys.Back
+				If Not Cfg.DeclMode Then RemoveAxleItem()
+			Case Keys.Enter
+				EditAxleItem()
+		End Select
+	End Sub
+
+	Private Sub RemoveAxleItem()
+		Dim lv0 As ListViewItem
+		Dim i As Integer
+
+		If LvRRC.SelectedItems.Count = 0 Then
+			If LvRRC.Items.Count = 0 Then
+				Exit Sub
+			Else
+				LvRRC.Items(LvRRC.Items.Count - 1).Selected = True
+			End If
+		End If
+
+		LvRRC.SelectedItems(0).Remove()
+
+		If LvRRC.Items.Count > 0 Then
+
+			i = 0
+			For Each lv0 In LvRRC.Items
+				i += 1
+				lv0.SubItems(0).Text = i.ToString
+			Next
+
+			LvRRC.Items(LvRRC.Items.Count - 1).Selected = True
+			LvRRC.Focus()
+		End If
+
+		Change()
+	End Sub
+
+	Private Sub EditAxleItem()
+		If LvRRC.SelectedItems.Count = 0 Then Exit Sub
+
+		Dim lv0 = LvRRC.SelectedItems(0)
+
+		_axlDlog.TbAxleShare.Text = lv0.SubItems(1).Text
+		_axlDlog.CbTwinT.Checked = (lv0.SubItems(2).Text = "yes")
+		_axlDlog.TbRRC.Text = lv0.SubItems(3).Text
+		_axlDlog.TbFzISO.Text = lv0.SubItems(4).Text
+		_axlDlog.TbI_wheels.Text = lv0.SubItems(6).Text
+		_axlDlog.CbWheels.Text = lv0.SubItems(5).Text
+
+		If _axlDlog.ShowDialog = DialogResult.OK Then
+			lv0.SubItems(1).Text = _axlDlog.TbAxleShare.Text
+			If _axlDlog.CbTwinT.Checked Then
+				lv0.SubItems(2).Text = "yes"
+			Else
+				lv0.SubItems(2).Text = "no"
+			End If
+			lv0.SubItems(3).Text = _axlDlog.TbRRC.Text
+			lv0.SubItems(4).Text = _axlDlog.TbFzISO.Text
+			lv0.SubItems(5).Text = _axlDlog.CbWheels.Text
+			lv0.SubItems(6).Text = _axlDlog.TbI_wheels.Text
+
+			Change()
+			DeclInit()
+		End If
+	End Sub
+
+#End Region
+
+#Region "Open File Context Menu"
+
+
+	Private Sub OpenFiles(ParamArray files() As String)
+		If files.Length = 0 Then Exit Sub
+
+		_cmFiles = files
+		OpenWithToolStripMenuItem.Text = "Open with " & Cfg.OpenCmdName
+		CmOpenFile.Show(Cursor.Position)
+	End Sub
+
+	Private Sub OpenWithToolStripMenuItem_Click(sender As Object, e As EventArgs) _
+		Handles OpenWithToolStripMenuItem.Click
+		If Not FileOpenAlt(_cmFiles(0)) Then MsgBox("Failed to open file!")
+	End Sub
+
+	Private Sub ShowInFolderToolStripMenuItem_Click(sender As Object, e As EventArgs) _
+		Handles ShowInFolderToolStripMenuItem.Click
+		If File.Exists(_cmFiles(0)) Then
+			Try
+				Process.Start("explorer", "/select,""" & _cmFiles(0) & "")
+			Catch ex As Exception
+				MsgBox("Failed to open file!")
+			End Try
+		Else
+			MsgBox("File not found!")
+		End If
+	End Sub
+
+#End Region
+
+
+#Region "Angular Gear"
+
+	Private Sub cbAngularGearType_SelectedIndexChanged(sender As Object, e As EventArgs) _
+		Handles cbAngularGearType.SelectedIndexChanged
+		Select Case CType(cbAngularGearType.SelectedValue, AngularGearType)
+			Case AngularGearType.SeparateAngularGear
+				pnAngularGearFields.Enabled = True
+				tbAngularGearRatio.Text = "1.0"
+			Case Else 'Losses included in Transmission, None
+				tbAngularGearRatio.Text = ""
+				tbAngularGearLossMapPath.Text = ""
+				pnAngularGearFields.Enabled = False
+		End Select
+		Change()
+	End Sub
+
+	Private Sub btAngularGearLossMapBrowse_Click(sender As Object, e As EventArgs) Handles btAngularGearLossMapBrowse.Click
+		If TransmissionLossMapFileBrowser.OpenDialog(fFileRepl(TbRtPath.Text, GetPath(_vehFile))) Then _
+			tbAngularGearLossMapPath.Text = GetFilenameWithoutDirectory(TransmissionLossMapFileBrowser.Files(0), GetPath(_vehFile))
+	End Sub
+
+#End Region
+End Class
+

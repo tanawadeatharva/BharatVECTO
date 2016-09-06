@@ -1,0 +1,55 @@
+﻿{
+  "Header": {
+    "CreatedBy": "Raphael Luz IVT TU-Graz (f513c787-07a6-4a67-8bd9-81abd760bcfc)",
+    "Date": "2016-08-02 14:08:15",
+    "AppVersion": "2.2",
+    "FileVersion": 7
+  },
+  "Body": {
+    "SavedInDeclMode": false,
+    "VehCat": "Citybus",
+    "CurbWeight": 17000.0,
+    "CurbWeightExtra": 0.0,
+    "Loading": 4800.0,
+    "MassMax": 22.0,
+    "CdA": 3.25,
+    "rdyn": 470.0,
+    "Rim": "-",
+    "CdCorrMode": "Off",
+    "CdCorrFile": "<NOFILE>",
+    "Retarder": {
+      "Type": "None",
+      "Ratio": 1.0,
+      "File": "<NOFILE>"
+    },
+    "AxleConfig": {
+      "Type": "6x2",
+      "Axles": [
+        {
+          "Inertia": 11.9,
+          "Wheels": "275/70 R22.5",
+          "AxleWeightShare": 0.25,
+          "TwinTyres": false,
+          "RRCISO": 0.0058,
+          "FzISO": 26265.0
+        },
+        {
+          "Inertia": 11.9,
+          "Wheels": "275/70 R22.5",
+          "AxleWeightShare": 0.28,
+          "TwinTyres": true,
+          "RRCISO": 0.0058,
+          "FzISO": 26265.0
+        },
+        {
+          "Inertia": 11.9,
+          "Wheels": "275/70 R22.5",
+          "AxleWeightShare": 0.47,
+          "TwinTyres": true,
+          "RRCISO": 0.0058,
+          "FzISO": 26265.0
+        }
+      ]
+    }
+  }
+}

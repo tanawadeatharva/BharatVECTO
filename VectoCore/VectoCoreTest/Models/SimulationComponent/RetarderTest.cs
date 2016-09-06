@@ -33,6 +33,7 @@ using Microsoft.VisualStudio.TestTools.UnitTesting;
 using TUGraz.VectoCommon.Exceptions;
 using TUGraz.VectoCommon.Models;
 using TUGraz.VectoCommon.Utils;
+using TUGraz.VectoCore.InputData.Reader.ComponentData;
 using TUGraz.VectoCore.Models.Simulation.Impl;
 using TUGraz.VectoCore.Models.SimulationComponent.Data;
 using TUGraz.VectoCore.Models.SimulationComponent.Impl;
@@ -51,7 +52,7 @@ namespace TUGraz.VectoCore.Tests.Models.SimulationComponent
 		public void RetarderBasicTest()
 		{
 			var vehicle = new VehicleContainer(ExecutionMode.Declaration);
-			var retarderData = RetarderLossMap.ReadFromFile(RetarderLossMapFile);
+			var retarderData = RetarderLossMapReader.ReadFromFile(RetarderLossMapFile);
 			var retarder = new Retarder(vehicle, retarderData, 1.0);
 
 			var nextRequest = new MockTnOutPort();
@@ -96,7 +97,7 @@ namespace TUGraz.VectoCore.Tests.Models.SimulationComponent
 		public void RetarderRatioTest()
 		{
 			var vehicle = new VehicleContainer(ExecutionMode.Engineering);
-			var retarderData = RetarderLossMap.ReadFromFile(RetarderLossMapFile);
+			var retarderData = RetarderLossMapReader.ReadFromFile(RetarderLossMapFile);
 			var retarder = new Retarder(vehicle, retarderData, 2.0);
 
 			var nextRequest = new MockTnOutPort();
@@ -132,7 +133,7 @@ namespace TUGraz.VectoCore.Tests.Models.SimulationComponent
 		[TestMethod]
 		public void RetarderDeclarationTest()
 		{
-			var retarderData = RetarderLossMap.ReadFromFile(RetarderLossMapFile);
+			var retarderData = RetarderLossMapReader.ReadFromFile(RetarderLossMapFile);
 			var declVehicle = new VehicleContainer(ExecutionMode.Declaration, null, null);
 			var retarder = new Retarder(declVehicle, retarderData, 2.0);
 			var nextRequest = new MockTnOutPort();
@@ -161,7 +162,7 @@ namespace TUGraz.VectoCore.Tests.Models.SimulationComponent
 				VectoCSVFile.ReadStream(InputDataHelper.InputDataAsStream("Retarder Speed [rpm],Loss Torque [Nm]",
 					retarderEntries));
 			var vehicle = new VehicleContainer(ExecutionMode.Engineering, null, null);
-			var retarderData = RetarderLossMap.Create(retarderTbl);
+			var retarderData = RetarderLossMapReader.Create(retarderTbl);
 			var retarder = new Retarder(vehicle, retarderData, 2.0);
 
 			var nextRequest = new MockTnOutPort();

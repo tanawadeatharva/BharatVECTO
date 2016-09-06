@@ -40,48 +40,13 @@ using TUGraz.VectoCore.OutputData;
 
 namespace TUGraz.VectoCore.Models.SimulationComponent.Impl
 {
-	public class Brakes : StatefulVectoSimulationComponent<SimpleComponentState>, IPowerTrainComponent, ITnOutPort,
+	public class Brakes : StatefulProviderComponent<SimpleComponentState, ITnOutPort, ITnInPort, ITnOutPort>,
+		IPowerTrainComponent, ITnOutPort,
 		ITnInPort, IBrakes
 	{
-		protected ITnOutPort NextComponent;
-
-		public Brakes(IVehicleContainer dataBus) : base(dataBus) {}
-
-
-		public ITnInPort InPort()
-		{
-			return this;
-		}
-
-		public ITnOutPort OutPort()
-		{
-			return this;
-		}
-
 		public Watt BrakePower { get; set; }
 
-		public IResponse Request(Second absTime, Second dt, NewtonMeter torque, PerSecond angularVelocity, bool dryRun = false)
-		{
-			var brakeTorque = 0.SI<NewtonMeter>();
-			var avgAngularSpeed = (PreviousState.OutAngularVelocity + angularVelocity) / 2.0;
-
-			if (!BrakePower.IsEqual(0)) {
-				if (avgAngularSpeed.IsEqual(0)) {
-					brakeTorque = torque;
-				} else {
-					brakeTorque = BrakePower / avgAngularSpeed;
-				}
-			}
-
-			if (!dryRun && BrakePower < 0) {
-				throw new VectoSimulationException("Negative Braking Power is not allowed!");
-			}
-			CurrentState.SetState(torque + brakeTorque, angularVelocity, torque, angularVelocity);
-
-			var retVal = NextComponent.Request(absTime, dt, torque + brakeTorque, angularVelocity, dryRun);
-			retVal.BrakePower = brakeTorque * avgAngularSpeed;
-			return retVal;
-		}
+		public Brakes(IVehicleContainer dataBus) : base(dataBus) {}
 
 		public IResponse Initialize(NewtonMeter torque, PerSecond angularVelocity)
 		{
@@ -92,10 +57,27 @@ namespace TUGraz.VectoCore.Models.SimulationComponent.Impl
 				: NextComponent.Initialize(torque, angularVelocity);
 		}
 
-
-		public void Connect(ITnOutPort other)
+		public IResponse Request(Second absTime, Second dt, NewtonMeter outTorque, PerSecond outAngularVelocity, bool dryRun = false)
 		{
-			NextComponent = other;
+			var brakeTorque = 0.SI<NewtonMeter>();
+			var avgAngularSpeed = (PreviousState.OutAngularVelocity + outAngularVelocity) / 2.0;
+
+			if (!BrakePower.IsEqual(0)) {
+				if (avgAngularSpeed.IsEqual(0)) {
+					brakeTorque = outTorque;
+				} else {
+					brakeTorque = BrakePower / avgAngularSpeed;
+				}
+			}
+
+			if (!dryRun && BrakePower < 0) {
+				throw new VectoSimulationException("Negative Braking Power is not allowed!");
+			}
+			CurrentState.SetState(outTorque + brakeTorque, outAngularVelocity, outTorque, outAngularVelocity);
+
+			var retVal = NextComponent.Request(absTime, dt, outTorque + brakeTorque, outAngularVelocity, dryRun);
+			retVal.BrakePower = brakeTorque * avgAngularSpeed;
+			return retVal;
 		}
 
 		protected override void DoWriteModalResults(IModalDataContainer container)
@@ -108,7 +90,7 @@ namespace TUGraz.VectoCore.Models.SimulationComponent.Impl
 		protected override void DoCommitSimulationStep()
 		{
 			BrakePower = 0.SI<Watt>();
-			AdvanceState();
+			base.DoCommitSimulationStep();
 		}
 	}
 }

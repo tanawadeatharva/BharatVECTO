@@ -1,7 +1,7 @@
 ﻿{
   "Header": {
     "CreatedBy": " ()",
-    "Date": "18.07.2016 10:17:04",
+    "Date": "2016-08-10T16:06:02.9031089Z",
     "AppVersion": "2.2",
     "FileVersion": 7
   },
@@ -14,14 +14,18 @@
     "MassMax": 11.9,
     "CdA": 5.28,
     "CdA2": 6.38,
-    "rdyn": 406.9297,
-    "Rim": "15° DC Rims",
+    "rdyn": 0.0,
     "CdCorrMode": "CdOfVdecl",
     "CdCorrFile": "<NOFILE>",
     "Retarder": {
       "Type": "None",
       "Ratio": 1.0,
       "File": "<NOFILE>"
+    },
+    "AngularGear": {
+      "Type": "None",
+      "Ratio": 0.0,
+      "LossMap": "<NOFILE>"
     },
     "AxleConfig": {
       "Type": "4x2",

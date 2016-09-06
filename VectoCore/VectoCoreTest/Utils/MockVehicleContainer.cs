@@ -53,10 +53,11 @@ namespace TUGraz.VectoCore.Tests.Utils
 
 		public IEngineInfo Engine { get; set; }
 
+		public GearboxType GearboxType { get; set; }
 		public uint Gear { get; set; }
 		public MeterPerSecond StartSpeed { get; set; }
 		public MeterPerSquareSecond StartAcceleration { get; set; }
-		public FullLoadCurve GearFullLoadCurve { get; set; }
+		public NewtonMeter GearMaxTorque { get; set; }
 
 		public Watt GearboxLoss()
 		{
@@ -89,6 +90,11 @@ namespace TUGraz.VectoCore.Tests.Utils
 		public PerSecond EngineN95hSpeed
 		{
 			get { return Engine.EngineN95hSpeed; }
+		}
+
+		public PerSecond EngineN80hSpeed
+		{
+			get { return Engine.EngineN80hSpeed; }
 		}
 
 		public MeterPerSecond VehicleSpeed { get; set; }
@@ -137,7 +143,10 @@ namespace TUGraz.VectoCore.Tests.Utils
 		}
 
 		public bool VehicleStopped { get; set; }
+
 		public DrivingBehavior DriverBehavior { get; set; }
+		public MeterPerSquareSecond DriverAcceleration { get; set; }
+
 		public CycleData CycleData { get; set; }
 
 		public DrivingCycleData.DrivingCycleEntry CycleLookAhead(Meter distance)

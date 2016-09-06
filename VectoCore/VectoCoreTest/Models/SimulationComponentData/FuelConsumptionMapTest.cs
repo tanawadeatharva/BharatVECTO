@@ -47,7 +47,7 @@ namespace TUGraz.VectoCore.Tests.Models.SimulationComponentData
 		[TestMethod]
 		public void TestFuelConsumption_FixedPoints()
 		{
-			var map = FuelConsumptionMap.ReadFromFile(@"TestData\Components\24t Coach.vmap");
+			var map = FuelConsumptionMapReader.ReadFromFile(@"TestData\Components\24t Coach.vmap");
 			var lines = File.ReadAllLines(@"TestData\Components\24t Coach.vmap").Skip(1).ToArray();
 			AssertMapValuesEqual(lines, map);
 		}
@@ -55,7 +55,7 @@ namespace TUGraz.VectoCore.Tests.Models.SimulationComponentData
 		[TestMethod]
 		public void TestFuelConsumption_InterpolatedPoints()
 		{
-			var map = FuelConsumptionMap.ReadFromFile(@"TestData\Components\24t Coach.vmap");
+			var map = FuelConsumptionMapReader.ReadFromFile(@"TestData\Components\24t Coach.vmap");
 			var lines = File.ReadAllLines(@"TestData\Components\24t CoachInterpolated.vmap").Skip(1).ToArray();
 			AssertMapValuesEqual(lines, map);
 		}
@@ -66,7 +66,7 @@ namespace TUGraz.VectoCore.Tests.Models.SimulationComponentData
 				var entry = lines[i].Split(',').Select(x => double.Parse(x, CultureInfo.InvariantCulture)).ToArray();
 
 				Assert.AreEqual(entry[2].SI().Gramm.Per.Hour.ConvertTo().Kilo.Gramm.Per.Second.Value(),
-					map.GetFuelConsumption(entry[1].SI<NewtonMeter>(), entry[0].RPMtoRad(), true).Value(), Tolerance);
+					map.GetFuelConsumption(entry[1].SI<NewtonMeter>(), entry[0].RPMtoRad(), true).Value.Value(), Tolerance);
 			}
 		}
 	}

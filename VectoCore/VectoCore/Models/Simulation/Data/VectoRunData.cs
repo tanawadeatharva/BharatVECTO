@@ -37,9 +37,7 @@ using TUGraz.VectoCommon.Utils;
 using TUGraz.VectoCore.Configuration;
 using TUGraz.VectoCore.Models.Declaration;
 using TUGraz.VectoCore.Models.SimulationComponent.Data;
-using TUGraz.VectoCore.Models.SimulationComponent.Data.Gearbox;
 using TUGraz.VectoCore.OutputData;
-using TUGraz.VectoCore.Utils;
 using DriverData = TUGraz.VectoCore.Models.SimulationComponent.Data.DriverData;
 
 namespace TUGraz.VectoCore.Models.Simulation.Data
@@ -102,7 +100,7 @@ namespace TUGraz.VectoCore.Models.Simulation.Data
 
 			[Required] public AuxiliaryType Type;
 
-			public string Technology;
+			public IList<string> Technology;
 
 			public string[] TechList;
 
@@ -145,14 +143,17 @@ namespace TUGraz.VectoCore.Models.Simulation.Data
 							}
 
 							if (axleGearData != null) {
+								var velocity = angularVelocity / gear.Value.Ratio / axleGearData.AxleGear.Ratio *
+												runData.VehicleData.DynamicTyreRadius;
 								var axleAngularVelocity = angularVelocity / gear.Value.Ratio;
 								try {
 									axleGearData.AxleGear.LossMap.GetOutTorque(axleAngularVelocity, axleTorque);
 								} catch (VectoException) {
 									return
 										new ValidationResult(
-											string.Format("Interpolation of AxleGear-LossMap failed with torque={0} and angularSpeed={1}", axleTorque,
-												axleAngularVelocity.ConvertTo().Rounds.Per.Minute));
+											string.Format(
+												"Interpolation of AxleGear-LossMap failed with torque={0} and angularSpeed={1} (gear={2}, velocity={3})",
+												axleTorque, axleAngularVelocity.ConvertTo().Rounds.Per.Minute, gear.Key, velocity));
 								}
 							}
 						}

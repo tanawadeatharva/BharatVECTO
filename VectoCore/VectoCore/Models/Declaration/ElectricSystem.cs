@@ -30,99 +30,91 @@
 */
 
 using System;
-using System.Collections.Generic;
 using System.Data;
-using TUGraz.VectoCommon.Exceptions;
+using System.Linq;
 using TUGraz.VectoCommon.Utils;
 using TUGraz.VectoCore.Utils;
 
 namespace TUGraz.VectoCore.Models.Declaration
 {
-	public sealed class ElectricSystem : LookupData<MissionType, string[], Watt>
+	public sealed class ElectricSystem : LookupData<MissionType, string, Watt>, IDeclarationAuxiliaryTable
 	{
 		private readonly Alternator _alternator = new Alternator();
 
-		private const string ResourceId = "TUGraz.VectoCore.Resources.Declaration.VAUX.ES-Tech.csv";
-		private const string BaseLine = "Baseline electric power consumption";
-
-		private readonly Dictionary<Tuple<MissionType, string>, Watt> _data =
-			new Dictionary<Tuple<MissionType, string>, Watt>();
-		
-		public ElectricSystem()
+		protected override string ResourceId
 		{
-			ParseData(ReadCsvResource(ResourceId));
+			get { return "TUGraz.VectoCore.Resources.Declaration.VAUX.ES-Tech.csv"; }
+		}
+
+		protected override string ErrorMessage
+		{
+			get { return "Auxiliary Lookup Error: No value found for Electric System. Mission: '{0}', Technology: '{1}'"; }
 		}
 
 		protected override void ParseData(DataTable table)
 		{
+			Data.Clear();
 			NormalizeTable(table);
 
 			foreach (DataRow row in table.Rows) {
-				var name = row.Field<string>("Technology");
-				foreach (MissionType mission in Enum.GetValues(typeof(MissionType))) {
-					_data[Tuple.Create(mission, name)] = row.ParseDouble(mission.ToString().ToLower()).SI<Watt>();
-				}
-			}
-		}
-
-		public override Watt Lookup(MissionType missionType, string[] technologies)
-		{
-			var sum = _data[Tuple.Create(missionType, BaseLine)];
-
-			if (technologies != null) {
-				foreach (var technology in technologies) {
-					try {
-						sum += _data[Tuple.Create(missionType, technology)];
-					} catch (KeyNotFoundException) {
-						throw new VectoException(
-							"Auxiliary Lookup Error: No value found for Electric System with mission '{0}' and technology '{1}'",
-							missionType, technology);
+				var name = row.Field<string>("technology");
+				foreach (DataColumn col in table.Columns) {
+					if (col.Caption != "technology") {
+						Data[Tuple.Create(col.Caption.ParseEnum<MissionType>(), name)] =
+							row.ParseDouble(col).SI<Watt>();
 					}
 				}
 			}
-
-			return sum / _alternator.Lookup(missionType, null);
 		}
 
-		private sealed class Alternator : LookupData<MissionType, string, double>
+		public override Watt Lookup(MissionType missionType, string technology = null)
 		{
-			private const string ResourceId = "TUGraz.VectoCore.Resources.Declaration.VAUX.ALT-Tech.csv";
-			private const string Default = "Standard alternator";
+			if (string.IsNullOrWhiteSpace(technology)) {
+				technology = "Standard technology";
+			}
+			var value = base.Lookup(missionType, technology);
+			return value / _alternator.Lookup(missionType);
+		}
 
-			private readonly Dictionary<Tuple<MissionType, string>, double> _data =
-				new Dictionary<Tuple<MissionType, string>, double>();
-			
-			public Alternator()
+		internal sealed class Alternator : LookupData<MissionType, string, double>
+		{
+			protected override string ResourceId
 			{
-				ParseData(ReadCsvResource(ResourceId));
+				get { return "TUGraz.VectoCore.Resources.Declaration.VAUX.ALT-Tech.csv"; }
+			}
+
+			protected override string ErrorMessage
+			{
+				get { return "Auxiliary Lookup Error: No value found for Alternator. Mission: '{0}', Technology: '{1}'"; }
 			}
 
 			protected override void ParseData(DataTable table)
 			{
+				Data.Clear();
 				NormalizeTable(table);
 
 				foreach (DataRow row in table.Rows) {
-					var name = row.Field<string>("Technology");
-					foreach (MissionType mission in Enum.GetValues(typeof(MissionType))) {
-						_data[Tuple.Create(mission, name)] = row.ParseDouble(mission.ToString().ToLower());
+					var name = row.Field<string>("technology");
+					foreach (DataColumn col in table.Columns) {
+						if (col.Caption != "technology") {
+							Data[Tuple.Create(col.Caption.ParseEnum<MissionType>(), name)] = row.ParseDouble(col);
+						}
 					}
 				}
 			}
 
-			public override double Lookup(MissionType missionType, string technology)
+			public override double Lookup(MissionType missionType, string technology = null)
 			{
 				if (string.IsNullOrWhiteSpace(technology)) {
-					technology = Default;
+					technology = "Standard alternator efficiency";
 				}
-
-				try {
-					return _data[Tuple.Create(missionType, technology)];
-				} catch (KeyNotFoundException) {
-					throw new VectoException(
-						"Auxiliary Lookup Error: No value found for Alternator with mission '{0}' and technology '{1}'",
-						missionType, technology);
-				}
+				return base.Lookup(missionType, technology);
 			}
+		}
+
+		public string[] GetTechnologies()
+		{
+			return Data.Keys.Select(x => x.Item2).Distinct().ToArray();
 		}
 	}
 }

@@ -91,11 +91,9 @@ namespace TUGraz.VectoCore.InputData.Impl
 
 		public double Efficiency { get; internal set; }
 
-		public DataTable FullLoadCurve { get; internal set; }
+		public NewtonMeter MaxTorque { get; internal set; }
 
 		public DataTable ShiftPolygon { get; internal set; }
-
-		public bool TorqueConverterActive { get; internal set; }
 	}
 
 	public class AxleInputData : IAxleEngineeringInputData
@@ -136,17 +134,21 @@ namespace TUGraz.VectoCore.InputData.Impl
 		public KilogramSquareMeter Inertia { get; internal set; }
 	}
 
-	public class AuxiliaryDataInputData : IAuxiliaryEngineeringInputData
+	public class AuxiliaryDataInputData : IAuxiliaryEngineeringInputData, IAuxiliaryDeclarationInputData
 	{
-		public bool SavedInDeclarationMode { get; internal set; }
+		public AuxiliaryDataInputData()
+		{
+			AuxiliaryType = AuxiliaryDemandType.Mapping;
+			ConstantPowerDemand = 0.SI<Watt>();
+		}
+
+		public AuxiliaryDemandType AuxiliaryType { get; internal set; }
 
 		public string ID { get; internal set; }
 
-		public string Type { get; internal set; }
+		public AuxiliaryType Type { get; internal set; }
 
-		public string Technology { get; internal set; }
-
-		public IList<string> TechList { get; internal set; }
+		public IList<string> Technology { get; internal set; }
 
 		public double TransmissionRatio { get; internal set; }
 
@@ -155,5 +157,7 @@ namespace TUGraz.VectoCore.InputData.Impl
 		public double EfficiencyToSupply { get; internal set; }
 
 		public DataTable DemandMap { get; internal set; }
+
+		public Watt ConstantPowerDemand { get; internal set; }
 	}
 }

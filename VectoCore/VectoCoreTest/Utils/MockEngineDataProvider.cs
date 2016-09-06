@@ -53,5 +53,6 @@ namespace TUGraz.VectoCore.Tests.Utils
 		public DataTable FuelConsumptionMap { get; set; }
 		public DataTable FullLoadCurve { get; set; }
 		public KilogramSquareMeter Inertia { get; set; }
+		public double WHTCEngineering { get; set; }
 	}
 }

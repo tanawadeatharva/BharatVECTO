@@ -36,6 +36,7 @@ using NLog.Config;
 using NLog.Targets;
 using TUGraz.VectoCommon.Exceptions;
 using TUGraz.VectoCommon.Utils;
+using TUGraz.VectoCore.InputData.Reader.ComponentData;
 using TUGraz.VectoCore.Models.Simulation.Data;
 using TUGraz.VectoCore.Models.SimulationComponent.Data;
 using TUGraz.VectoCore.Models.SimulationComponent.Data.Engine;
@@ -223,14 +224,14 @@ namespace TUGraz.VectoCore.Tests.Models.SimulationComponentData
 
 			var gearboxData = new GearboxData();
 			gearboxData.Gears[1] = new GearData {
-				LossMap = TransmissionLossMap.ReadFromFile(@"TestData\Components\limited.vtlm", 1, "1"),
+				LossMap = TransmissionLossMapReader.ReadFromFile(@"TestData\Components\limited.vtlm", 1, "1"),
 				Ratio = 1
 			};
 
 			var axleGearData = new AxleGearData() {
 				AxleGear = new GearData {
 					Ratio = 1,
-					LossMap = TransmissionLossMap.ReadFromFile(@"TestData\Components\limited.vtlm", 1, "1"),
+					LossMap = TransmissionLossMapReader.ReadFromFile(@"TestData\Components\limited.vtlm", 1, "1"),
 				}
 			};
 

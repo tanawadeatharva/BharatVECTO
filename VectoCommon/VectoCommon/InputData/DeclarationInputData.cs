@@ -96,11 +96,11 @@ namespace TUGraz.VectoCommon.InputData
 		/// </summary>
 		SquareMeter AirDragArea { get; } // without trailer
 
-		/// <summary>
-		/// P117  Powered axle tyres/rims
-		/// cf. VECTO Input Parameters.xlsx
-		/// </summary>
-		string Rim { get; }
+		///// <summary>
+		///// P117  Powered axle tyres/rims
+		///// cf. VECTO Input Parameters.xlsx
+		///// </summary>
+		//string Rim { get; }  // deprecated
 
 		/// <summary>
 		/// parameters for every axle
@@ -134,12 +134,24 @@ namespace TUGraz.VectoCommon.InputData
 
 	public interface IAngularGearInputData : IComponentInputData
 	{
+		/// <summary>
+		/// P180
+		/// </summary>
 		AngularGearType Type { get; }
 
+		/// <summary>
+		/// P176
+		/// </summary>
 		double Ratio { get; }
 
+		/// <summary>
+		/// P173, P174, P175
+		/// </summary>
 		DataTable LossMap { get; }
 
+		/// <summary>
+		/// P177
+		/// </summary>
 		double Efficiency { get; }
 	}
 
@@ -187,6 +199,7 @@ namespace TUGraz.VectoCommon.InputData
 		IList<ITransmissionInputData> Gears { get; }
 	}
 
+
 	public interface ITransmissionInputData
 	{
 		int Gear { get; }
@@ -210,11 +223,16 @@ namespace TUGraz.VectoCommon.InputData
 		/// </summary>
 		double Efficiency { get; }
 
+		///// <summary>
+		///// P145
+		///// cf. VECTO Input Parameters.xlsx
+		///// </summary>
+		//DataTable FullLoadCurve { get; } // deprecated
+
 		/// <summary>
-		/// P145
-		/// cf. VECTO Input Parameters.xlsx
+		/// P157
 		/// </summary>
-		DataTable FullLoadCurve { get; }
+		NewtonMeter MaxTorque { get; }
 
 		/// <summary>
 		/// P082
@@ -223,11 +241,11 @@ namespace TUGraz.VectoCommon.InputData
 		/// </summary>
 		DataTable ShiftPolygon { get; }
 
-		/// <summary>
-		/// P077
-		/// cf. VECTO Input Parameters.xlsx
-		/// </summary>
-		bool TorqueConverterActive { get; }
+		///// <summary>
+		///// P077
+		///// cf. VECTO Input Parameters.xlsx
+		///// </summary>
+		//bool HasTorqueConverter { get; }     // DEPRECATED
 	}
 
 	public interface IAxleGearInputData : IComponentInputData
@@ -252,27 +270,8 @@ namespace TUGraz.VectoCommon.InputData
 		double Efficiency { get; }
 	}
 
-	public interface ITorqueConverterInputData
+	public interface ITorqueConverterDeclarationInputData
 	{
-		/// <summary>
-		/// P090
-		/// cf. VECTO Input Parameters.xlsx
-		/// </summary>
-		bool Enabled { get; }
-
-		/// <summary>
-		/// P092
-		/// cf. VECTO Input Parameters.xlsx
-		/// </summary>
-		// ReSharper disable once InconsistentNaming
-		PerSecond ReferenceRPM { get; }
-
-		/// <summary>
-		/// P127
-		/// cf. VECTO Input Parameters.xlsx
-		/// </summary>
-		KilogramSquareMeter Inertia { get; }
-
 		/// <summary>
 		/// P091
 		/// P099, P100, P101
@@ -377,30 +376,16 @@ namespace TUGraz.VectoCommon.InputData
 
 	public interface IAuxiliaryDeclarationInputData
 	{
-		bool SavedInDeclarationMode { get; }
-
-		/// <summary>
-		/// P006  Aux-ID
-		/// cf. VECTO Input Parameters.xlsx
-		/// </summary>
-		string ID { get; }
-
 		/// <summary>
 		/// P005  Aux-Type
 		/// cf. VECTO Input Parameters.xlsx
 		/// </summary>
-		string Type { get; }
+		AuxiliaryType Type { get; }
 
 		/// <summary>
 		/// P118  Aux-Technology
 		/// cf. VECTO Input Parameters.xlsx
 		/// </summary>
-		string Technology { get; }
-
-		/// <summary>
-		/// P143  Aux-Techlist
-		/// cf. VECTO Input Parameters.xlsx
-		/// </summary>
-		IList<string> TechList { get; }
+		IList<string> Technology { get; }
 	}
 }

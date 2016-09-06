@@ -35,6 +35,7 @@ using System.IO;
 using System.Linq;
 using NUnit.Framework;
 using TUGraz.VectoCommon.InputData;
+using TUGraz.VectoCommon.Models;
 using TUGraz.VectoCommon.Utils;
 using TUGraz.VectoCore.InputData.FileIO.JSON;
 using TUGraz.VectoCore.InputData.Reader.DataObjectAdapter;
@@ -44,7 +45,7 @@ using TUGraz.VectoCore.Models.SimulationComponent.Data.Engine;
 using TUGraz.VectoCore.Models.SimulationComponent.Data.Gearbox;
 using TUGraz.VectoCore.Tests.Utils;
 using TUGraz.VectoCore.Utils;
-using Point = TUGraz.VectoCore.Utils.Point;
+using Point = TUGraz.VectoCommon.Utils.Point;
 
 namespace TUGraz.VectoCore.Tests.Models.Declaration
 {
@@ -341,7 +342,8 @@ namespace TUGraz.VectoCore.Tests.Models.Declaration
 			};
 
 			var dao = new DeclarationDataAdapter();
-			var engineData = dao.CreateEngineData(new JSONEngineDataV3(JSONInputDataFactory.ReadFile(engineFile), engineFile));
+			var engineData = dao.CreateEngineData(new JSONEngineDataV3(JSONInputDataFactory.ReadFile(engineFile), engineFile),
+				GearboxType.AMT);
 
 			var gearboxData = new JSONGearboxDataV5(JSONInputDataFactory.ReadFile(gearboxFile), gearboxFile);
 

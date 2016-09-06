@@ -36,6 +36,7 @@ using TUGraz.VectoCommon.Exceptions;
 using TUGraz.VectoCommon.Models;
 using TUGraz.VectoCommon.Utils;
 using TUGraz.VectoCore.InputData.Reader;
+using TUGraz.VectoCore.InputData.Reader.ComponentData;
 using TUGraz.VectoCore.InputData.Reader.DataObjectAdapter;
 using TUGraz.VectoCore.Models.SimulationComponent.Data.Engine;
 using TUGraz.VectoCore.Models.SimulationComponent.Data.Gearbox;
@@ -119,7 +120,7 @@ namespace TUGraz.VectoCore.Tests.Models.SimulationComponentData
 			data.Rows.Add("100", "0", "10"); //        |       \         |
 			data.Rows.Add("100", "100", "10"); //    (0,0):10  ----- (100,10):10
 
-			var map = TransmissionLossMap.Create(data, 1.0, "1");
+			var map = TransmissionLossMapReader.Create(data, 1.0, "1");
 
 			// test inside the triangles
 			AssertHelper.AreRelativeEqual(10, map.GetTorqueLoss(25.RPMtoRad(), 25.SI<NewtonMeter>()).Value);
@@ -163,7 +164,7 @@ namespace TUGraz.VectoCore.Tests.Models.SimulationComponentData
 			data.Rows.Add("100", "0", "10"); //        |       \         |
 			data.Rows.Add("100", "100", "10"); //    (0,0):10  ----- (100,10):10
 
-			var map = TransmissionLossMap.Create(data, 1.0, "1");
+			var map = TransmissionLossMapReader.Create(data, 1.0, "1");
 
 			// test inside the triangles
 			AssertHelper.AreRelativeEqual(15, map.GetOutTorque(25.RPMtoRad(), 25.SI<NewtonMeter>(), true));
@@ -207,7 +208,7 @@ namespace TUGraz.VectoCore.Tests.Models.SimulationComponentData
 			data.Rows.Add("100", "10", "10"); //        |       \       |
 			data.Rows.Add("100", "140", "40"); //    (0,0):0 ----- (100,10):10
 
-			var map = TransmissionLossMap.Create(data, 1.0, "1");
+			var map = TransmissionLossMapReader.Create(data, 1.0, "1");
 
 			// test inside the triangles
 			AssertHelper.AreRelativeEqual(5, map.GetTorqueLoss(25.RPMtoRad(), 25.SI<NewtonMeter>()).Value);
@@ -251,7 +252,7 @@ namespace TUGraz.VectoCore.Tests.Models.SimulationComponentData
 			data.Rows.Add("100", "0", "10"); //        |       \       |
 			data.Rows.Add("100", "100", "40"); //    (0,0):0 ----- (100,0):10
 
-			var map = TransmissionLossMap.Create(data, 1.0, "1");
+			var map = TransmissionLossMapReader.Create(data, 1.0, "1");
 
 			// test inside the triangles
 			AssertHelper.AreRelativeEqual(20, map.GetOutTorque(25.RPMtoRad(), 25.SI<NewtonMeter>()));
@@ -301,18 +302,12 @@ namespace TUGraz.VectoCore.Tests.Models.SimulationComponentData
 				"2000, 1352, -301",
 				"2100, 1100, -320",
 			};
-			var gbxFldString = new[] {
-				"560, 2500",
-				"2100, 2500"
-			};
 			var dataEng =
 				VectoCSVFile.ReadStream(InputDataHelper.InputDataAsStream("n [U/min],Mfull [Nm],Mdrag [Nm]", engineFldString));
 			var engineFld = EngineFullLoadCurve.Create(dataEng, true);
 
-			var dataGbx = VectoCSVFile.ReadStream(InputDataHelper.InputDataAsStream("n [U/min],Mfull [Nm]", gbxFldString));
-			var gbxFld = FullLoadCurveReader.Create(dataGbx, true);
 
-			var fullLoadCurve = AbstractSimulationDataAdapter.IntersectFullLoadCurves(engineFld, gbxFld);
+			var fullLoadCurve = AbstractSimulationDataAdapter.IntersectFullLoadCurves(engineFld, 2500.SI<NewtonMeter>());
 
 			Assert.AreEqual(10, fullLoadCurve.FullLoadEntries.Count);
 

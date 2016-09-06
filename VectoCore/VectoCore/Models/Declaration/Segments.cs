@@ -43,24 +43,37 @@ namespace TUGraz.VectoCore.Models.Declaration
 {
 	public sealed class Segments : LookupData<VehicleCategory, AxleConfiguration, Kilogram, Kilogram, Segment>
 	{
-		public Segments()
+		private DataTable _segmentTable;
+
+
+		protected override string ResourceId
 		{
-			ParseData(ReadCsvResource(RessourceHelper.Namespace + "SegmentTable.csv"));
+			get { return RessourceHelper.Namespace + "SegmentTable.csv"; }
+		}
+
+		protected override string ErrorMessage
+		{
+			get
+			{
+				return
+					"ERROR: Could not find the declaration segment for vehicle. Category: {0}, AxleConfiguration: {1}, GrossVehicleWeight: {2}";
+			}
 		}
 
 		protected override void ParseData(DataTable table)
 		{
-			// normalize column names, remove whitespaces and lowercase
-			foreach (DataColumn col in table.Columns) {
-				table.Columns[col.ColumnName].ColumnName = col.ColumnName.ToLower().RemoveWhitespace();
-			}
-			SegmentTable = table.Copy();
+			NormalizeTable(table);
+			_segmentTable = table.Copy();
 		}
-
-		private DataTable SegmentTable { get; set; }
 
 		public override Segment Lookup(VehicleCategory vehicleCategory, AxleConfiguration axleConfiguration,
 			Kilogram grossVehicleMassRating, Kilogram curbWeight)
+		{
+			return Lookup(vehicleCategory, axleConfiguration, grossVehicleMassRating, curbWeight, false);
+		}
+
+		public Segment Lookup(VehicleCategory vehicleCategory, AxleConfiguration axleConfiguration,
+			Kilogram grossVehicleMassRating, Kilogram curbWeight, bool considerInvalid)
 		{
 			if (grossVehicleMassRating == null || grossVehicleMassRating < 7.5.SI().Ton) {
 				throw new VectoException("Gross vehicle mass must be greater than 7.5 tons");
@@ -68,13 +81,13 @@ namespace TUGraz.VectoCore.Models.Declaration
 
 			DataRow row;
 			try {
-				row = SegmentTable.Rows.Cast<DataRow>().First(r => {
+				row = _segmentTable.Rows.Cast<DataRow>().First(r => {
 					var isValid = r.Field<string>("valid");
 					var category = r.Field<string>("vehiclecategory");
 					var axleConf = r.Field<string>("axleconf.");
 					var massMin = r.ParseDouble("gvw_min").SI().Ton;
 					var massMax = r.ParseDouble("gvw_max").SI().Ton;
-					return isValid == "1"
+					return (considerInvalid || isValid == "1")
 							&& category == vehicleCategory.ToString()
 							&& axleConf == axleConfiguration.GetName()
 						// MK 2016-06-07: normally the next condition should be "mass > massMin", except for 7.5t where is should be ">="
@@ -83,9 +96,7 @@ namespace TUGraz.VectoCore.Models.Declaration
 							&& grossVehicleMassRating <= massMax;
 				});
 			} catch (InvalidOperationException e) {
-				var errorMessage = string.Format(
-					"ERROR: Could not find the declaration segment for vehicle. Category: {0}, AxleConfiguration: {1}, GrossVehicleWeight: {2}",
-					vehicleCategory, axleConfiguration.GetName(), grossVehicleMassRating);
+				var errorMessage = string.Format(ErrorMessage, vehicleCategory, axleConfiguration.GetName(), grossVehicleMassRating);
 				Log.Fatal(errorMessage);
 				throw new VectoException(errorMessage, e);
 			}
@@ -117,12 +128,12 @@ namespace TUGraz.VectoCore.Models.Declaration
 					: TrailerType.None;
 				var trailer = trailerIsUsed
 					? DeclarationData.StandardBodies.Lookup(trailerField)
-					: DeclarationData.StandardBodies.Empty;
+					: StandardBodies.Empty;
 
 				var semiTrailerField = row.Field<string>("semitrailer");
 				var semiTrailer = !string.IsNullOrWhiteSpace(semiTrailerField)
 					? DeclarationData.StandardBodies.Lookup(semiTrailerField)
-					: DeclarationData.StandardBodies.Empty;
+					: StandardBodies.Empty;
 
 				trailer += semiTrailer;
 
@@ -131,7 +142,7 @@ namespace TUGraz.VectoCore.Models.Declaration
 					Constants.SimulationSettings.MaximumGrossVehicleWeight);
 				var maxLoad = gvw - curbWeight - body.CurbWeight - trailer.CurbWeight;
 
-				var refLoadValue = row.Field<string>(missionType.ToString()).ToDouble(double.NaN);
+				var refLoadValue = row.ParseDoubleOrGetDefault(missionType.ToString(), double.NaN);
 				Kilogram refLoad;
 				if (double.IsNaN(refLoadValue)) {
 					refLoad = DeclarationData.GetPayloadForGrossVehicleWeight(grossVehicleWeight, missionType) +
@@ -192,7 +203,7 @@ namespace TUGraz.VectoCore.Models.Declaration
 
 		private static string GetMissionSuffix(MissionType missionType)
 		{
-			return (missionType == MissionType.LongHaul ? "-longhaul" : "-other");
+			return missionType == MissionType.LongHaul ? "-longhaul" : "-other";
 		}
 	}
 }

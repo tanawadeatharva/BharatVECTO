@@ -29,15 +29,18 @@
 *   Martin Rexeis, rexeis@ivt.tugraz.at, IVT, Graz University of Technology
 */
 
+using Microsoft.VisualStudio.TestTools.UnitTesting;
+using System.Collections.Generic;
 using System.ComponentModel.DataAnnotations;
 using System.Data;
 using System.Diagnostics.CodeAnalysis;
 using System.Linq;
-using Microsoft.VisualStudio.TestTools.UnitTesting;
 using TUGraz.VectoCommon.Models;
 using TUGraz.VectoCommon.Utils;
 using TUGraz.VectoCore.InputData.Reader;
+using TUGraz.VectoCore.InputData.Reader.ComponentData;
 using TUGraz.VectoCore.InputData.Reader.DataObjectAdapter;
+using TUGraz.VectoCore.Models.Declaration;
 using TUGraz.VectoCore.Models.Simulation.Data;
 using TUGraz.VectoCore.Models.Simulation.Impl;
 using TUGraz.VectoCore.Models.SimulationComponent.Data;
@@ -53,7 +56,7 @@ namespace TUGraz.VectoCore.Tests.Models.SimulationComponentData
 	[TestClass]
 	[SuppressMessage("ReSharper", "InconsistentNaming")]
 	[SuppressMessage("ReSharper", "UnusedMember.Local")]
-	public class CombustionEngineDataValidationTestClass
+	public class ValidationTestClass
 	{
 		/// <summary>
 		/// VECTO-107 Check valid range of input parameters
@@ -86,11 +89,11 @@ namespace TUGraz.VectoCore.Tests.Models.SimulationComponentData
 				WHTCRural = 1,
 				WHTCMotorway = 1,
 				FullLoadCurve = EngineFullLoadCurve.Create(fullLoad),
-				ConsumptionMap = FuelConsumptionMap.Create(fuelConsumption)
+				ConsumptionMap = FuelConsumptionMapReader.Create(fuelConsumption)
 			};
 			data.FullLoadCurve.EngineData = data;
 
-			var results = data.Validate();
+			var results = data.Validate(ExecutionMode.Declaration);
 			Assert.IsFalse(results.Any(), "Validation Failed: " + "; ".Join(results.Select(r => r.ErrorMessage)));
 			Assert.IsTrue(data.IsValid());
 		}
@@ -123,9 +126,9 @@ namespace TUGraz.VectoCore.Tests.Models.SimulationComponentData
 			};
 			var dao = new EngineeringDataAdapter();
 
-			var engineData = dao.CreateEngineData(data);
+			var engineData = dao.CreateEngineData(data, null);
 
-			var results = engineData.Validate();
+			var results = engineData.Validate(ExecutionMode.Declaration);
 			Assert.IsFalse(results.Any(), "Validation failed: " + "; ".Join(results.Select(r => r.ErrorMessage)));
 			Assert.IsTrue(engineData.IsValid());
 		}
@@ -161,11 +164,121 @@ namespace TUGraz.VectoCore.Tests.Models.SimulationComponentData
 			};
 			var dao = new DeclarationDataAdapter();
 
-			var engineData = dao.CreateEngineData(data);
+			var engineData = dao.CreateEngineData(data, GearboxType.AMT);
 
-			var results = engineData.Validate();
+			var results = engineData.Validate(ExecutionMode.Declaration);
 			Assert.IsFalse(results.Any(), "Validation failed: " + "; ".Join(results.Select(r => r.ErrorMessage)));
 			Assert.IsTrue(engineData.IsValid());
+		}
+
+		[TestMethod]
+		public void ValidationModeVehicleDataTest()
+		{
+			var vehicleData = new VehicleData {
+				AxleConfiguration = AxleConfiguration.AxleConfig_4x2,
+				Creator = "Mr. Test",
+				CrossWindCorrectionMode = CrossWindCorrectionMode.NoCorrection,
+				CrossWindCorrectionCurve =
+					new CrosswindCorrectionCdxALookup(CrossWindCorrectionCurveReader.GetNoCorrectionCurve(5.SI<SquareMeter>()),
+						CrossWindCorrectionMode.NoCorrection),
+				CurbWeight = 7500.SI<Kilogram>(),
+				DynamicTyreRadius = 0.5.SI<Meter>(),
+				//CurbWeigthExtra = 0.SI<Kilogram>(),
+				Loading = 12000.SI<Kilogram>(),
+				GrossVehicleWeight = 16000.SI<Kilogram>(),
+				TrailerGrossVehicleWeight = 0.SI<Kilogram>(),
+				AxleData = new List<Axle> {
+					new Axle {
+						AxleType = AxleType.VehicleNonDriven,
+						AxleWeightShare = 0.4,
+						Inertia = 0.5.SI<KilogramSquareMeter>(),
+						RollResistanceCoefficient = 0.00555,
+						TyreTestLoad = 33000.SI<Newton>()
+					},
+					new Axle {
+						AxleType = AxleType.VehicleNonDriven,
+						AxleWeightShare = 0.6,
+						Inertia = 0.5.SI<KilogramSquareMeter>(),
+						RollResistanceCoefficient = 0.00555,
+						TyreTestLoad = 33000.SI<Newton>()
+					},
+				}
+			};
+			var result = vehicleData.Validate(ExecutionMode.Engineering);
+			Assert.IsTrue(!result.Any(), "validation should have succeded but failed." + string.Concat(result));
+
+			result = vehicleData.Validate(ExecutionMode.Declaration);
+			Assert.IsTrue(result.Any(), "validation should have failed, but succeeded.");
+		}
+
+		/// <summary>
+		/// VECTO-107 Check valid range of input parameters
+		/// </summary>
+		[TestMethod]
+		public void ValidationModeVectoRunDataTest()
+		{
+			var container = new VehicleContainer(ExecutionMode.Engineering);
+			var data = new DistanceRun(container);
+			var engineData = new CombustionEngineData {
+				FullLoadCurve = EngineFullLoadCurve.ReadFromFile(@"TestData\Components\12t Delivery Truck.vfld"),
+				IdleSpeed = 560.RPMtoRad()
+			};
+
+			var gearboxData = new GearboxData();
+			gearboxData.Gears[1] = new GearData {
+				LossMap = TransmissionLossMapReader.ReadFromFile(@"TestData\Components\Direct Gear.vtlm", 1, "1"),
+				Ratio = 1
+			};
+
+			var axleGearData = new AxleGearData {
+				AxleGear = new GearData {
+					Ratio = 1,
+					LossMap = TransmissionLossMapReader.ReadFromFile(@"TestData\Components\limited.vtlm", 1, "1"),
+				}
+			};
+			var vehicleData = new VehicleData {
+				AxleConfiguration = AxleConfiguration.AxleConfig_4x2,
+				Creator = "Mr. Test",
+				CrossWindCorrectionMode = CrossWindCorrectionMode.NoCorrection,
+				CrossWindCorrectionCurve =
+					new CrosswindCorrectionCdxALookup(CrossWindCorrectionCurveReader.GetNoCorrectionCurve(5.SI<SquareMeter>()),
+						CrossWindCorrectionMode.NoCorrection),
+				CurbWeight = 7500.SI<Kilogram>(),
+				DynamicTyreRadius = 0.5.SI<Meter>(),
+				//CurbWeigthExtra = 0.SI<Kilogram>(),
+				Loading = 12000.SI<Kilogram>(),
+				GrossVehicleWeight = 16000.SI<Kilogram>(),
+				TrailerGrossVehicleWeight = 0.SI<Kilogram>(),
+				AxleData = new List<Axle> {
+					new Axle {
+						AxleType = AxleType.VehicleNonDriven,
+						AxleWeightShare = 0.4,
+						Inertia = 0.5.SI<KilogramSquareMeter>(),
+						RollResistanceCoefficient = 0.00555,
+						TyreTestLoad = 33000.SI<Newton>()
+					},
+					new Axle {
+						AxleType = AxleType.VehicleNonDriven,
+						AxleWeightShare = 0.6,
+						Inertia = 0.5.SI<KilogramSquareMeter>(),
+						RollResistanceCoefficient = 0.00555,
+						TyreTestLoad = 33000.SI<Newton>()
+					},
+				}
+			};
+
+			container.RunData = new VectoRunData {
+				VehicleData = vehicleData,
+				GearboxData = gearboxData,
+				EngineData = engineData,
+				AxleGearData = axleGearData
+			};
+
+			var results = data.Validate(ExecutionMode.Declaration);
+			Assert.IsTrue(results.Any(), "Validation should have failed, but succeded.");
+
+			results = vehicleData.Validate(ExecutionMode.Engineering);
+			Assert.IsTrue(!results.Any());
 		}
 
 		/// <summary>
@@ -183,14 +296,14 @@ namespace TUGraz.VectoCore.Tests.Models.SimulationComponentData
 
 			var gearboxData = new GearboxData();
 			gearboxData.Gears[1] = new GearData {
-				LossMap = TransmissionLossMap.ReadFromFile(@"TestData\Components\Direct Gear.vtlm", 1, "1"),
-				Ratio = 1
+				LossMap = TransmissionLossMapReader.ReadFromFile(@"TestData\Components\Direct Gear.vtlm", 1, "1"),
+				Ratio = 1,
 			};
 
 			var axleGearData = new AxleGearData {
 				AxleGear = new GearData {
+					LossMap = TransmissionLossMapReader.ReadFromFile(@"TestData\Components\limited.vtlm", 1, "1"),
 					Ratio = 1,
-					LossMap = TransmissionLossMap.ReadFromFile(@"TestData\Components\limited.vtlm", 1, "1"),
 				}
 			};
 
@@ -200,7 +313,7 @@ namespace TUGraz.VectoCore.Tests.Models.SimulationComponentData
 				AxleGearData = axleGearData
 			};
 
-			var results = data.Validate();
+			var results = data.Validate(ExecutionMode.Declaration);
 			Assert.IsTrue(results.Any(), "Validation should have failed, but succeded.");
 		}
 
@@ -210,7 +323,7 @@ namespace TUGraz.VectoCore.Tests.Models.SimulationComponentData
 		[TestMethod]
 		public void Validation_Test()
 		{
-			var results = new DataObject().Validate();
+			var results = new DataObject().Validate(ExecutionMode.Declaration);
 
 			// every field and property should be tested except private parent fields and properties and 
 			// (4*4+1) * 2 = 17*2= 34 - 4 private parent fields (+2 public field and property which are tested twice) = 32
@@ -237,7 +350,7 @@ namespace TUGraz.VectoCore.Tests.Models.SimulationComponentData
 					VectoCSVFile.ReadStream(
 						InputDataHelper.InputDataAsStream("engine torque,downshift rpm [rpm],upshift rpm [rpm]	", vgbs)));
 
-			var results = shiftPolygon.Validate();
+			var results = shiftPolygon.Validate(ExecutionMode.Declaration);
 			Assert.IsFalse(results.Any());
 
 			shiftPolygon =
@@ -245,7 +358,7 @@ namespace TUGraz.VectoCore.Tests.Models.SimulationComponentData
 					VectoCSVFile.ReadStream(
 						InputDataHelper.InputDataAsStream("engine torque,upshift rpm [rpm], downshift rpm [rpm]	", vgbs)));
 
-			results = shiftPolygon.Validate();
+			results = shiftPolygon.Validate(ExecutionMode.Declaration);
 			Assert.IsTrue(results.Any());
 		}
 

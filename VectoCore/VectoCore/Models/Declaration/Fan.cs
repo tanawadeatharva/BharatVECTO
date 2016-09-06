@@ -30,53 +30,52 @@
 */
 
 using System;
-using System.Collections.Generic;
 using System.Data;
-using TUGraz.VectoCommon.Exceptions;
+using System.Linq;
 using TUGraz.VectoCommon.Utils;
 using TUGraz.VectoCore.Utils;
 
 namespace TUGraz.VectoCore.Models.Declaration
 {
-	public sealed class Fan : LookupData<MissionType, string, Watt>
+	public sealed class Fan : LookupData<MissionType, string, Watt>, IDeclarationAuxiliaryTable
 	{
-		private const string ResourceId = "TUGraz.VectoCore.Resources.Declaration.VAUX.Fan-Tech.csv";
-		private const string DefaultTechnology = "Crankshaft mounted - Electronically controlled visco clutch (Default)";
-		
-		private readonly Dictionary<Tuple<MissionType, string>, Watt> _data =
-			new Dictionary<Tuple<MissionType, string>, Watt>();
-		
-		public Fan()
+		protected override string ResourceId
 		{
-			ParseData(ReadCsvResource(ResourceId));
+			get { return "TUGraz.VectoCore.Resources.Declaration.VAUX.Fan-Tech.csv"; }
 		}
 
+		protected override string ErrorMessage
+		{
+			get { return "Auxiliary Lookup Error: No value found for Fan. Mission: '{0}', Technology: '{1}'"; }
+		}
 
 		protected override void ParseData(DataTable table)
 		{
+			Data.Clear();
 			NormalizeTable(table);
 
-			_data.Clear();
 			foreach (DataRow row in table.Rows) {
-				foreach (var mission in EnumHelper.GetValues<MissionType>()) {
-					_data[Tuple.Create(mission, row.Field<string>("Technology"))] =
-						row.ParseDouble(mission.ToString().ToLower()).SI<Watt>();
+				var name = row.Field<string>("technology");
+
+				foreach (DataColumn col in table.Columns) {
+					if (col.Caption != "technology") {
+						Data[Tuple.Create(col.Caption.ParseEnum<MissionType>(), name)] = row.ParseDouble(col).SI<Watt>();
+					}
 				}
 			}
 		}
 
-		public override Watt Lookup(MissionType mission, string technology)
+		public override Watt Lookup(MissionType mission, string technology = null)
 		{
 			if (string.IsNullOrWhiteSpace(technology)) {
-				technology = DefaultTechnology;
+				technology = "Crankshaft mounted - Electronically controlled visco clutch";
 			}
+			return base.Lookup(mission, technology);
+		}
 
-			try {
-				return _data[Tuple.Create(mission, technology)];
-			} catch (KeyNotFoundException) {
-				throw new VectoException("Auxiliary Lookup Error: No value found for Fan with key '{0}' in mission '{1}'",
-					technology, mission);
-			}
+		public string[] GetTechnologies()
+		{
+			return Data.Keys.Select(x => x.Item2).Distinct().ToArray();
 		}
 	}
 }

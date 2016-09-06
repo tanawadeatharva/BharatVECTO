@@ -29,41 +29,39 @@
 *   Martin Rexeis, rexeis@ivt.tugraz.at, IVT, Graz University of Technology
 */
 
-using System.Collections.Generic;
 using System.Data;
 using System.Linq;
-using TUGraz.VectoCommon.Exceptions;
 using TUGraz.VectoCommon.Utils;
 using TUGraz.VectoCore.Utils;
 
 namespace TUGraz.VectoCore.Models.Declaration
 {
-	internal sealed class StandardBody
+	public sealed class StandardBody
 	{
-		public StandardBody(Kilogram curbWeight, Kilogram grossVehicleWeight, SquareMeter deltaCrossWindArea,
-			Wheels.WheelsEntry wheels)
-		{
-			CurbWeight = curbWeight;
-			GrossVehicleWeight = grossVehicleWeight;
-			DeltaCrossWindArea = deltaCrossWindArea;
-			Wheels = wheels;
-		}
-
 		public Kilogram CurbWeight;
 		public Kilogram GrossVehicleWeight;
+		public SquareMeter DeltaCrossWindArea;
+		public string Name;
+		public Wheels.Entry Wheels;
 
 		public Kilogram MaxPayLoad
 		{
 			get { return GrossVehicleWeight - CurbWeight; }
 		}
 
-		public SquareMeter DeltaCrossWindArea;
-
-		public Wheels.WheelsEntry Wheels;
+		public StandardBody(string name, Kilogram curbWeight, Kilogram grossVehicleWeight, SquareMeter deltaCrossWindArea,
+			Wheels.Entry wheels)
+		{
+			Name = name;
+			CurbWeight = curbWeight;
+			GrossVehicleWeight = grossVehicleWeight;
+			DeltaCrossWindArea = deltaCrossWindArea;
+			Wheels = wheels;
+		}
 
 		public static StandardBody operator +(StandardBody first, StandardBody second)
 		{
-			return new StandardBody(first.CurbWeight + second.CurbWeight,
+			return new StandardBody(first.Name + second.Name, first.CurbWeight + second.CurbWeight,
 				first.GrossVehicleWeight + second.GrossVehicleWeight,
 				first.DeltaCrossWindArea + second.DeltaCrossWindArea,
 				null);
@@ -79,44 +77,38 @@ namespace TUGraz.VectoCore.Models.Declaration
 	///     DeltaCrossWindArea,
 	///     Wheels
 	/// </summary>
-	internal sealed class StandardBodies : LookupData<string, StandardBody>
+	public sealed class StandardBodies : LookupData<string, StandardBody>
 	{
-		private const string ResourceId = "TUGraz.VectoCore.Resources.Declaration.Body_Trailers_Weights.csv";
+		public static StandardBody Empty = new StandardBody("", 0.SI<Kilogram>(), 0.SI<Kilogram>(), 0.SI<SquareMeter>(), null);
 
-		public StandardBodies()
+		protected override string ResourceId
 		{
-			ParseData(ReadCsvResource(ResourceId));
+			get { return "TUGraz.VectoCore.Resources.Declaration.Body_Trailers_Weights.csv"; }
 		}
 
-		public StandardBody Empty = new StandardBody(0.SI<Kilogram>(), 0.SI<Kilogram>(), 0.SI<SquareMeter>(), null);
+		protected override string ErrorMessage
+		{
+			get { return "StandardWeigths Lookup Error: No value found for ID '{0}'"; }
+		}
 
 		public override StandardBody Lookup(string id)
 		{
-			if (string.IsNullOrWhiteSpace(id)) {
-				return Empty;
-			}
-
-			try {
-				return Data[id];
-			} catch (KeyNotFoundException) {
-				throw new VectoException("StandardWeigths Lookup Error: No value found for ID '{0}'", id);
-			}
+			return string.IsNullOrWhiteSpace(id) ? Empty : base.Lookup(id);
 		}
 
 		protected override void ParseData(DataTable table)
 		{
 			NormalizeTable(table);
 
-			Data = table.Rows.Cast<DataRow>()
-				.ToDictionary(
-					kv => kv.Field<string>("name"),
-					kv => new StandardBody(
-						kv.ParseDoubleOrGetDefault("curbmass").SI<Kilogram>(),
-						kv.ParseDoubleOrGetDefault("maxgrossmass").SI<Kilogram>(),
-						kv.ParseDoubleOrGetDefault("deltacdxafortraileroperationinlonghaul").SI<SquareMeter>(),
-						!string.IsNullOrWhiteSpace(kv.Field<string>("wheels"))
-							? DeclarationData.Wheels.Lookup(kv.Field<string>("wheels"))
-							: null));
+			Data = table.Rows.Cast<DataRow>().Select(k => new StandardBody(
+				k.Field<string>("name"),
+				k.ParseDoubleOrGetDefault("curbmass").SI<Kilogram>(),
+				k.ParseDoubleOrGetDefault("maxgrossmass").SI<Kilogram>(),
+				k.ParseDoubleOrGetDefault("deltacdxafortraileroperationinlonghaul").SI<SquareMeter>(),
+				!string.IsNullOrWhiteSpace(k.Field<string>("wheels"))
+					? DeclarationData.Wheels.Lookup(k.Field<string>("wheels"))
+					: null))
+				.ToDictionary(kv => kv.Name);
 		}
 	}
 }

@@ -35,6 +35,7 @@ using TUGraz.VectoCommon.Models;
 using TUGraz.VectoCommon.Utils;
 using TUGraz.VectoCore.Configuration;
 using TUGraz.VectoCore.InputData.Reader;
+using TUGraz.VectoCore.InputData.Reader.ComponentData;
 using TUGraz.VectoCore.Models.Connector.Ports.Impl;
 using TUGraz.VectoCore.Models.Declaration;
 using TUGraz.VectoCore.Models.Simulation.Data;
@@ -78,15 +79,12 @@ namespace TUGraz.VectoCore.Tests.Integration.SimulationRuns
 			var vehicleContainer = new VehicleContainer(ExecutionMode.Engineering, modData);
 
 			var driver = new Driver(vehicleContainer, driverData, new DefaultDriverStrategy());
-			dynamic tmp = Port.AddComponent(driver, new Vehicle(vehicleContainer, vehicleData));
-			tmp = Port.AddComponent(tmp, new Wheels(vehicleContainer, vehicleData.DynamicTyreRadius, vehicleData.WheelsInertia));
-			tmp = Port.AddComponent(tmp, new AxleGear(vehicleContainer, axleGearData));
-
 			var engine = new CombustionEngine(vehicleContainer, engineData);
-			var clutch = new Clutch(vehicleContainer, engineData, engine.IdleController);
-			tmp = Port.AddComponent(tmp, clutch);
-			Port.AddComponent(tmp, engine);
-			engine.IdleController.RequestPort = clutch.IdleControlPort;
+			driver.AddComponent(new Vehicle(vehicleContainer, vehicleData))
+				.AddComponent(new Wheels(vehicleContainer, vehicleData.DynamicTyreRadius, vehicleData.WheelsInertia))
+				.AddComponent(new AxleGear(vehicleContainer, axleGearData))
+				.AddComponent(new Clutch(vehicleContainer, engineData))
+				.AddComponent(engine);
 
 			var gbx = new MockGearbox(vehicleContainer);
 
@@ -128,16 +126,14 @@ namespace TUGraz.VectoCore.Tests.Integration.SimulationRuns
 
 			var cycle = new DistanceBasedDrivingCycle(vehicleContainer, cycleData);
 
-			dynamic tmp = Port.AddComponent(cycle, new Driver(vehicleContainer, driverData, new DefaultDriverStrategy()));
-			tmp = Port.AddComponent(tmp, new Vehicle(vehicleContainer, vehicleData));
-			tmp = Port.AddComponent(tmp, new Wheels(vehicleContainer, vehicleData.DynamicTyreRadius, vehicleData.WheelsInertia));
-			tmp = Port.AddComponent(tmp, new Brakes(vehicleContainer));
-			tmp = Port.AddComponent(tmp, new AxleGear(vehicleContainer, axleGearData));
-			var engine = new CombustionEngine(vehicleContainer, engineData);
-			var clutch = new Clutch(vehicleContainer, engineData, engine.IdleController);
-			tmp = Port.AddComponent(tmp, clutch);
-			Port.AddComponent(tmp, engine);
-			engine.IdleController.RequestPort = clutch.IdleControlPort;
+			cycle.AddComponent(new Driver(vehicleContainer, driverData, new DefaultDriverStrategy()))
+				.AddComponent(new Vehicle(vehicleContainer, vehicleData))
+				.AddComponent(new Wheels(vehicleContainer, vehicleData.DynamicTyreRadius, vehicleData.WheelsInertia))
+				.AddComponent(new Brakes(vehicleContainer))
+				.AddComponent(new AxleGear(vehicleContainer, axleGearData))
+				.AddComponent(new Clutch(vehicleContainer, engineData))
+				.AddComponent(new CombustionEngine(vehicleContainer, engineData));
+			//engine.IdleController.RequestPort = clutch.IdleControlPort;
 
 			var gbx = new MockGearbox(vehicleContainer);
 
@@ -201,17 +197,14 @@ namespace TUGraz.VectoCore.Tests.Integration.SimulationRuns
 			var vehicleContainer = new VehicleContainer(ExecutionMode.Engineering, modData);
 
 			var cycle = new DistanceBasedDrivingCycle(vehicleContainer, cycleData);
-
-			dynamic tmp = Port.AddComponent(cycle, new Driver(vehicleContainer, driverData, new DefaultDriverStrategy()));
-			tmp = Port.AddComponent(tmp, new Vehicle(vehicleContainer, vehicleData));
-			tmp = Port.AddComponent(tmp, new Wheels(vehicleContainer, vehicleData.DynamicTyreRadius, vehicleData.WheelsInertia));
-			tmp = Port.AddComponent(tmp, new Brakes(vehicleContainer));
-			tmp = Port.AddComponent(tmp, new AxleGear(vehicleContainer, axleGearData));
-			var engine = new CombustionEngine(vehicleContainer, engineData);
-			var clutch = new Clutch(vehicleContainer, engineData, engine.IdleController);
-			tmp = Port.AddComponent(tmp, clutch);
-			Port.AddComponent(tmp, engine);
-			engine.IdleController.RequestPort = clutch.IdleControlPort;
+			cycle.AddComponent(new Driver(vehicleContainer, driverData, new DefaultDriverStrategy()))
+				.AddComponent(new Vehicle(vehicleContainer, vehicleData))
+				.AddComponent(new Wheels(vehicleContainer, vehicleData.DynamicTyreRadius, vehicleData.WheelsInertia))
+				.AddComponent(new Brakes(vehicleContainer))
+				.AddComponent(new AxleGear(vehicleContainer, axleGearData))
+				.AddComponent(new Clutch(vehicleContainer, engineData))
+				.AddComponent(new CombustionEngine(vehicleContainer, engineData));
+			//engine.IdleController.RequestPort = clutch.IdleControlPort;
 
 			var gbx = new MockGearbox(vehicleContainer);
 
@@ -250,7 +243,7 @@ namespace TUGraz.VectoCore.Tests.Integration.SimulationRuns
 			return new AxleGearData() {
 				AxleGear = new GearData {
 					Ratio = 3.0 * 3.5,
-					LossMap = TransmissionLossMap.ReadFromFile(GbxLossMap, 3.0 * 3.5, "AxleGear")
+					LossMap = TransmissionLossMapReader.ReadFromFile(GbxLossMap, 3.0 * 3.5, "AxleGear")
 				}
 			};
 		}
@@ -296,7 +289,7 @@ namespace TUGraz.VectoCore.Tests.Integration.SimulationRuns
 		private static DriverData CreateDriverData(string accelerationFile)
 		{
 			return new DriverData {
-				AccelerationCurve = AccelerationCurveData.ReadFromFile(accelerationFile),
+				AccelerationCurve = AccelerationCurveReader.ReadFromFile(accelerationFile),
 				LookAheadCoasting = new DriverData.LACData {
 					Enabled = false,
 					//Deceleration = -0.5.SI<MeterPerSquareSecond>()

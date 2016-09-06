@@ -29,17 +29,12 @@
 *   Martin Rexeis, rexeis@ivt.tugraz.at, IVT, Graz University of Technology
 */
 
-using System;
 using System.Collections.Generic;
 using System.ComponentModel.DataAnnotations;
-using System.Data;
-using System.IO;
-using System.Linq;
-using System.Text;
 using TUGraz.VectoCommon.Exceptions;
-using TUGraz.VectoCommon.InputData;
 using TUGraz.VectoCommon.Models;
 using TUGraz.VectoCommon.Utils;
+using TUGraz.VectoCore.InputData.Reader.ComponentData;
 using TUGraz.VectoCore.Utils;
 
 namespace TUGraz.VectoCore.Models.SimulationComponent.Data
@@ -48,122 +43,33 @@ namespace TUGraz.VectoCore.Models.SimulationComponent.Data
 	public sealed class AuxiliaryData
 	{
 		[Required, Range(double.Epsilon, 1)]
-		public double EfficiencyToSupply { get; set; }
+		public double EfficiencyToSupply { get; private set; }
 
 		[Required, Range(double.Epsilon, double.MaxValue)]
-		public double TransmissionRatio { get; set; }
+		public double TransmissionRatio { get; private set; }
 
 		[Required, Range(double.Epsilon, 1)]
-		public double EfficiencyToEngine { get; set; }
+		public double EfficiencyToEngine { get; private set; }
 
 		[Required] private readonly DelaunayMap _map;
 
 		public Watt GetPowerDemand(PerSecond nAuxiliary, Watt powerAuxOut)
 		{
 			var value = _map.Interpolate(nAuxiliary.Value(), powerAuxOut.Value());
-			if (value.HasValue)
+			if (value.HasValue) {
 				return value.Value.SI<Watt>();
+			}
 
 			throw new VectoException("AuxiliaryData: Interpolation failed. nAux: {0}, powerOut:{1}", nAuxiliary.AsRPM,
 				powerAuxOut);
 		}
 
-		public static AuxiliaryData ReadFromFile(string fileName, string id)
+		internal AuxiliaryData(double transmissionRatio, double efficiencyToEngine, double efficiencyToSupply, DelaunayMap map)
 		{
-			var auxData = new AuxiliaryData(id);
-
-			try {
-				var stream = new StreamReader(fileName);
-				stream.ReadLine(); // skip header "Transmission ration to engine rpm [-]"
-				auxData.TransmissionRatio = stream.ReadLine().IndulgentParse();
-				stream.ReadLine(); // skip header "Efficiency to engine [-]"
-				auxData.EfficiencyToEngine = stream.ReadLine().IndulgentParse();
-				stream.ReadLine(); // skip header "Efficiency auxiliary to supply [-]"
-				auxData.EfficiencyToSupply = stream.ReadLine().IndulgentParse();
-
-				var m = new MemoryStream(Encoding.UTF8.GetBytes(stream.ReadToEnd()));
-				var table = VectoCSVFile.ReadStream(m);
-
-				if (HeaderIsValid(table.Columns)) {
-					FillFromColumnNames(table, auxData._map);
-				} else {
-					FillFromColumnIndizes(table, auxData._map);
-				}
-
-				auxData._map.Triangulate();
-
-				return auxData;
-			} catch (FileNotFoundException e) {
-				throw new VectoException("Auxiliary file not found: " + fileName, e);
-			}
-		}
-
-		private static void FillFromColumnIndizes(DataTable table, DelaunayMap map)
-		{
-			var data = table.Rows.Cast<DataRow>().Select(row => new {
-				AuxiliarySpeed = row.ParseDouble(0).RPMtoRad(),
-				MechanicalPower = row.ParseDouble(1).SI().Kilo.Watt.Cast<Watt>(),
-				SupplyPower = row.ParseDouble(2).SI().Kilo.Watt.Cast<Watt>()
-			});
-			foreach (var d in data) {
-				map.AddPoint(d.AuxiliarySpeed.Value(), d.SupplyPower.Value(), d.MechanicalPower.Value());
-			}
-		}
-
-		private static void FillFromColumnNames(DataTable table, DelaunayMap map)
-		{
-			var data = table.Rows.Cast<DataRow>().Select(row => new {
-				AuxiliarySpeed = row.ParseDouble(Fields.AuxSpeed).RPMtoRad(),
-				MechanicalPower = row.ParseDouble(Fields.MechPower).SI().Kilo.Watt.Cast<Watt>(),
-				SupplyPower = row.ParseDouble(Fields.SupplyPower).SI().Kilo.Watt.Cast<Watt>()
-			});
-			foreach (var d in data) {
-				map.AddPoint(d.AuxiliarySpeed.Value(), d.SupplyPower.Value(), d.MechanicalPower.Value());
-			}
-		}
-
-		internal AuxiliaryData(string id)
-		{
-			_map = new DelaunayMap(id);
-		}
-
-		internal AuxiliaryData(IAuxiliaryEngineeringInputData data, string id)
-		{
-			_map = new DelaunayMap("AuxiliaryData " + id);
-			TransmissionRatio = data.TransmissionRatio;
-			EfficiencyToEngine = data.EfficiencyToEngine;
-			EfficiencyToSupply = data.EfficiencyToSupply;
-			if (HeaderIsValid(data.DemandMap.Columns)) {
-				FillFromColumnNames(data.DemandMap, _map);
-			} else {
-				FillFromColumnIndizes(data.DemandMap, _map);
-			}
-
-			_map.Triangulate();
-		}
-
-		private static bool HeaderIsValid(DataColumnCollection columns)
-		{
-			return columns.Contains(Fields.AuxSpeed) && columns.Contains(Fields.MechPower) &&
-					columns.Contains(Fields.SupplyPower);
-		}
-
-		private static class Fields
-		{
-			/// <summary>
-			/// [1/min]
-			/// </summary>
-			public const string AuxSpeed = "Auxiliary speed";
-
-			/// <summary>
-			/// [kW]
-			/// </summary>
-			public const string MechPower = "Mechanical power";
-
-			/// <summary>
-			/// [kW]
-			/// </summary>
-			public const string SupplyPower = "Supply power";
+			_map = map;
+			TransmissionRatio = transmissionRatio;
+			EfficiencyToEngine = efficiencyToEngine;
+			EfficiencyToSupply = efficiencyToSupply;
 		}
 
 		/// <summary>
@@ -172,6 +78,7 @@ namespace TUGraz.VectoCore.Models.SimulationComponent.Data
 		/// <param name="data">The data.</param>
 		/// <param name="context">The validation context.</param>
 		/// <returns></returns>
+		// ReSharper disable once UnusedMember.Global
 		public static ValidationResult ValidateAuxMap(AuxiliaryData data, ValidationContext context)
 		{
 			var xValidationRules = new[] { new RangeAttribute(0, double.MaxValue) };
@@ -180,17 +87,17 @@ namespace TUGraz.VectoCore.Models.SimulationComponent.Data
 
 			var results = new List<ValidationResult>();
 			foreach (var entry in data._map.Points) {
-				context.DisplayName = Fields.AuxSpeed;
+				context.DisplayName = AuxiliaryDataReader.Fields.AuxSpeed;
 				if (!Validator.TryValidateValue(entry.X, context, results, xValidationRules)) {
 					return new ValidationResult(string.Concat(results));
 				}
 
-				context.DisplayName = Fields.SupplyPower;
+				context.DisplayName = AuxiliaryDataReader.Fields.SupplyPower;
 				if (!Validator.TryValidateValue(entry.Y, context, results, yValidationRules)) {
 					return new ValidationResult(string.Concat(results));
 				}
 
-				context.DisplayName = Fields.MechPower;
+				context.DisplayName = AuxiliaryDataReader.Fields.MechPower;
 				if (!Validator.TryValidateValue(entry.Z, context, results, zValidationRules)) {
 					return new ValidationResult(string.Concat(results));
 				}

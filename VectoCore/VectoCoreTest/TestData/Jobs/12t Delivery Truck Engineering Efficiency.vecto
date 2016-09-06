@@ -11,7 +11,7 @@
     "EngineFile": "../Components/12t Delivery Truck.veng",
     "GearboxFile": "../Components/12t Delivery Truck Efficiency.vgbx",
     "Cycles": [
-      "../Cycles/Regional_Delivery.vdri",
+      "../Cycles/Regional_Delivery.vdri"
     ],
     "AuxiliaryAssembly": "CLASSIC",
     "AuxiliaryVersion": "CLASSIC",

@@ -1,9 +1,9 @@
 ﻿{
   "Header": {
-    "CreatedBy": " ()",
-    "Date": "15.06.2016 14:58:17",
+    "CreatedBy": "Michael Krisper, IVT, Graz University of Technology",
+    "Date": "2016-08-10T14:14:07.6435917Z",
     "AppVersion": "2.2",
-    "FileVersion": 2
+    "FileVersion": 3
   },
   "Body": {
     "SavedInDeclMode": false,
@@ -21,19 +21,19 @@
         "ID": "ALT1",
         "Type": "Alternator",
         "Path": "24t_Coach_ALT.vaux",
-        "Technology": ""
+        "Technology": []
       },
       {
         "ID": "ALT2",
         "Type": "Alternator",
         "Path": "24t_Coach_ALT.vaux",
-        "Technology": ""
+        "Technology": []
       },
       {
         "ID": "ALT3",
         "Type": "Alternator",
         "Path": "24t_Coach_ALT.vaux",
-        "Technology": ""
+        "Technology": []
       }
     ],
     "VACC": "Coach.vacc",
@@ -47,7 +47,12 @@
     "LAC": {
       "Enabled": true,
       "Dec": -0.5,
-      "MinSpeed": 50.0
+      "MinSpeed": 50.0,
+      "PreviewDistanceFactor": 10.0,
+      "DF_offset": 2.5,
+      "DF_scaling": 1.5,
+      "DF_targetSpeedLookup": "",
+      "Df_velocityDropLookup": ""
     },
     "OverSpeedEcoRoll": {
       "Mode": "OverSpeed",

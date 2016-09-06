@@ -36,18 +36,15 @@ using TUGraz.VectoCommon.Exceptions;
 using TUGraz.VectoCommon.InputData;
 using TUGraz.VectoCommon.Models;
 using TUGraz.VectoCommon.Utils;
-using TUGraz.VectoCore.Configuration;
 using TUGraz.VectoCore.Models.SimulationComponent.Data;
 using TUGraz.VectoCore.Models.SimulationComponent.Data.Gearbox;
-using TUGraz.VectoCore.Utils;
 
 namespace TUGraz.VectoCore.Models.Declaration
 {
-	internal class DeclarationData
+	public sealed class DeclarationData
 	{
 		private static DeclarationData _instance;
 		private Segments _segments;
-		private Rims _rims;
 		private Wheels _wheels;
 		private PT1 _pt1;
 		private ElectricSystem _electricSystem;
@@ -57,18 +54,12 @@ namespace TUGraz.VectoCore.Models.Declaration
 		private SteeringPump _steeringPump;
 		private WHTCCorrection _whtcCorrection;
 		private AirDrag _airDrag;
-		private TorqueConverter _torqueConverter;
 		private StandardBodies _standardBodies;
 		private Payloads _payloads;
 
 		public static Wheels Wheels
 		{
 			get { return Instance()._wheels ?? (Instance()._wheels = new Wheels()); }
-		}
-
-		public static Rims Rims
-		{
-			get { return Instance()._rims ?? (Instance()._rims = new Rims()); }
 		}
 
 		public static Segments Segments
@@ -91,19 +82,10 @@ namespace TUGraz.VectoCore.Models.Declaration
 			get { return Instance()._electricSystem ?? (Instance()._electricSystem = new ElectricSystem()); }
 		}
 
-		public static Meter DynamicTyreRadius(string wheels, string rims)
+		public static Meter DynamicTyreRadius(string wheels)
 		{
 			var wheelsEntry = Wheels.Lookup(wheels.RemoveWhitespace());
-			try {
-				var rimsEntry = Rims.Lookup(rims);
-
-				var correction = wheelsEntry.SizeClass != "a" ? rimsEntry.F_b : rimsEntry.F_a;
-
-				return wheelsEntry.DynamicTyreRadius * correction / (2 * Math.PI);
-			} catch (KeyNotFoundException) {
-				throw new VectoException(
-					"Calculating Dynamic Tyre Radius not possible: Declaration Lookup could not find Key '{0}' for rim.", rims);
-			}
+			return wheelsEntry.DynamicTyreRadius * wheelsEntry.CircumferenceFactor / (2 * Math.PI);
 		}
 
 		/// <summary>
@@ -164,11 +146,6 @@ namespace TUGraz.VectoCore.Models.Declaration
 			get { return Instance()._airDrag ?? (Instance()._airDrag = new AirDrag()); }
 		}
 
-		public static TorqueConverter TorqueConverter
-		{
-			get { return Instance()._torqueConverter ?? (Instance()._torqueConverter = new TorqueConverter()); }
-		}
-
 		public static int PoweredAxle()
 		{
 			return 1;
@@ -179,29 +156,35 @@ namespace TUGraz.VectoCore.Models.Declaration
 			return _instance ?? (_instance = new DeclarationData());
 		}
 
-		//			Public Const SSspeed As Single = 5
-		//Public Const SStime As Single = 5
-		//Public Const SSdelay As Single = 5
-		//Public Const LACa As Single = -0.5
-		//Public Const LACvmin As Single = 50
-		//Public Const Overspeed As Single = 5
-		//Public Const Underspeed As Single = 5
-		//Public Const ECvmin As Single = 50
+		public static class Physics
+		{
+			/// <summary>
+			/// The standard acceleration for gravity on earth.
+			/// http://physics.nist.gov/Pubs/SP330/sp330.pdf (page 52)
+			/// </summary>
+			public static readonly MeterPerSquareSecond GravityAccelleration = 9.80665.SI<MeterPerSquareSecond>();
 
-		//Public Const AirDensity As Single = 1.188
-		//Public Const FuelDens As Single = 0.832
-		//Public Const CO2perFC As Single = 3.16
+			/// <summary>
+			/// Density of air.
+			/// </summary>
+			public static readonly KilogramPerCubicMeter AirDensity = 1.188.SI<KilogramPerCubicMeter>();
 
-		//Public Const AuxESeff As Single = 0.7
+			/// <summary>
+			/// Density of fuel.
+			/// </summary>
+			public static readonly KilogramPerCubicMeter FuelDensity = 832.SI<KilogramPerCubicMeter>();
+
+			/// <summary>
+			/// fuel[kg] => co2[kg]. Factor to convert from fuel weight to co2 weight.
+			/// </summary>
+			public static readonly double CO2PerFuelWeight = 3.16;
+		}
 
 		public static class Driver
 		{
 			public static class LookAhead
 			{
 				public const bool Enabled = true;
-
-				//public static readonly MeterPerSquareSecond Deceleration = -0.5.SI<MeterPerSquareSecond>();
-				//public static readonly MeterPerSecond MinimumSpeed = 50.KMPHtoMeterPerSecond();
 
 				public const double DecisionFactorCoastingOffset = 2.5;
 				public const double DecisionFactorCoastingScaling = 1.5;
@@ -239,13 +222,16 @@ namespace TUGraz.VectoCore.Models.Declaration
 		public static class Engine
 		{
 			public static readonly KilogramSquareMeter ClutchInertia = 1.3.SI<KilogramSquareMeter>();
+			public static readonly KilogramSquareMeter TorqueConverterInertia = 1.2.SI<KilogramSquareMeter>();
+
 			public static readonly KilogramSquareMeter EngineBaseInertia = 0.41.SI<KilogramSquareMeter>();
 			public static readonly SI EngineDisplacementInertia = (0.27 * 1000).SI().Kilo.Gramm.Per.Meter; // [kg/m]
 
-			public static KilogramSquareMeter EngineInertia(SI displacement)
+			public static KilogramSquareMeter EngineInertia(CubicMeter displacement, GearboxType gbxType)
 			{
 				// VB Code:    Return 1.3 + 0.41 + 0.27 * (Displ / 1000)
-				return ClutchInertia + EngineBaseInertia + EngineDisplacementInertia * displacement;
+				return (gbxType.AutomaticTransmission() ? TorqueConverterInertia : ClutchInertia) + EngineBaseInertia +
+						EngineDisplacementInertia * displacement;
 			}
 		}
 
@@ -258,13 +244,15 @@ namespace TUGraz.VectoCore.Models.Declaration
 			public static readonly KilogramSquareMeter Inertia = 0.SI<KilogramSquareMeter>();
 
 			public static readonly MeterPerSecond TruckMaxAllowedSpeed = 85.KMPHtoMeterPerSecond();
-			public static double ShiftPolygonRPMMargin = 7;
-			private static double ShiftPolygonEngineFldMargin = 0.98;
+			public const double ShiftPolygonRPMMargin = 7;
+			private const double ShiftPolygonEngineFldMargin = 0.98;
 
 			public static readonly Second MinTimeBetweenGearshifts = 2.SI<Second>();
 			public static readonly Second DownshiftAfterUpshiftDelay = 10.SI<Second>();
 			public static readonly Second UpshiftAfterDownshiftDelay = 10.SI<Second>();
 			public static readonly MeterPerSquareSecond UpshiftMinAcceleration = 0.1.SI<MeterPerSquareSecond>();
+			public static readonly PerSecond TorqueConverterSpeedLimit = 1600.RPMtoRad();
+			public static readonly double TorqueConverterSecondGearThreshold = 1.8;
 
 			/// <summary>
 			/// computes the shift polygons for a single gear according to the whitebook 2016
@@ -279,10 +267,12 @@ namespace TUGraz.VectoCore.Models.Declaration
 			public static ShiftPolygon ComputeShiftPolygon(int gear, FullLoadCurve fullLoadCurve,
 				IList<ITransmissionInputData> gears, CombustionEngineData engine, double axlegearRatio, Meter dynamicTyreRadius)
 			{
-				var engineSpeed85kmhLastGear = ComputeEngineSpeed85kmh(gears[gears.Count - 1], axlegearRatio, dynamicTyreRadius,
-					engine);
-				//var engineSpeed85kmhSecondToLastGear = ComputeEngineSpeed85kmh(gears[gears.Count - 2], axlegearRatio,
-				//	dynamicTyreRadius, engine);
+				if (gears.Count < 2) {
+					throw new VectoException("ComputeShiftPolygon needs at least 2 gears. {0} gears given.", gears.Count);
+				}
+
+				// ReSharper disable once InconsistentNaming
+				var engineSpeed85kmhLastGear = ComputeEngineSpeed85kmh(gears[gears.Count - 1], axlegearRatio, dynamicTyreRadius);
 
 				var nVHigh = VectoMath.Min(engineSpeed85kmhLastGear, engine.FullLoadCurve.RatedSpeed);
 
@@ -324,11 +314,13 @@ namespace TUGraz.VectoCore.Models.Declaration
 				var gearRatio = gears[gear].Ratio / gears[gear + 1].Ratio;
 				var rpmMarginFactor = 1 + ShiftPolygonRPMMargin / 100.0;
 
+				// ReSharper disable InconsistentNaming
 				var p2p = new Point(p2.X * gearRatio * rpmMarginFactor, p2.Y / gearRatio);
 				var p3p = new Point(p3.X * gearRatio * rpmMarginFactor, p3.Y / gearRatio);
 				var p6p = new Point(p6.X * gearRatio * rpmMarginFactor, p6.Y / gearRatio);
 				var edgeP6pP3p = new Edge(p6p, p3p);
 				var p3pExt = new Point((1.1 * p5.Y - edgeP6pP3p.OffsetXY) / edgeP6pP3p.SlopeXY, 1.1 * p5.Y);
+				// ReSharper restore InconsistentNaming
 
 				upShift = IntersectShiftPolygon(new[] { p4, p7, p5 }.ToList(), new[] { p2p, p6p, p3pExt }.ToList())
 					.Select(point => new ShiftPolygon.ShiftPolygonEntry() {
@@ -374,18 +366,11 @@ namespace TUGraz.VectoCore.Models.Declaration
 						.ToList();
 			}
 
-			internal static PerSecond ComputeEngineSpeed85kmh(ITransmissionInputData gear, double axleRatio,
-				Meter dynamicTyreRadius, CombustionEngineData engine)
+			// ReSharper disable once InconsistentNaming
+			private static PerSecond ComputeEngineSpeed85kmh(ITransmissionInputData gear, double axleRatio,
+				Meter dynamicTyreRadius)
 			{
 				var engineSpeed = TruckMaxAllowedSpeed / dynamicTyreRadius * axleRatio * gear.Ratio;
-				//if (engineSpeed < engine.IdleSpeed) {
-				//	throw new VectoException("engine speed at velocity {0} in gear {1} is below engine's idle speed! {2}",
-				//		DeclarationData.Gearbox.TruckMaxAllowedSpeed, gear.Gear, engineSpeed);
-				//}
-				//if (engineSpeed > engine.FullLoadCurve.FullLoadEntries.Last().EngineSpeed) {
-				//	throw new VectoException("engine speed at velocity {0} in gear {1} is above engine's max speed! {2}",
-				//		DeclarationData.Gearbox.TruckMaxAllowedSpeed, gear.Gear, engineSpeed);
-				//}
 				return engineSpeed;
 			}
 
@@ -393,7 +378,9 @@ namespace TUGraz.VectoCore.Models.Declaration
 			{
 				var intersections = new List<Point>();
 				// compute all intersection points between both line segments
+				// ReSharper disable once LoopCanBeConvertedToQuery
 				foreach (var origLine in orig.Pairwise(Edge.Create)) {
+					// ReSharper disable once LoopCanBeConvertedToQuery
 					foreach (var transformedLine in transformedDownshift.Pairwise(Edge.Create)) {
 						var isect = VectoMath.Intersect(origLine, transformedLine);
 						if (isect != null) {
@@ -454,13 +441,13 @@ namespace TUGraz.VectoCore.Models.Declaration
 			}
 		}
 
-		public static IEnumerable<string> AuxiliaryIDs()
-		{
-			return new[] {
-				Constants.Auxiliaries.IDs.Fan, Constants.Auxiliaries.IDs.SteeringPump,
-				Constants.Auxiliaries.IDs.HeatingVentilationAirCondition, Constants.Auxiliaries.IDs.ElectricSystem,
-				Constants.Auxiliaries.IDs.PneumaticSystem
-			};
-		}
+		//public static IEnumerable<string> AuxiliaryIDs()
+		//{
+		//	return new[] {
+		//		Constants.Auxiliaries.IDs.Fan, Constants.Auxiliaries.IDs.SteeringPump,
+		//		Constants.Auxiliaries.IDs.HeatingVentilationAirCondition, Constants.Auxiliaries.IDs.ElectricSystem,
+		//		Constants.Auxiliaries.IDs.PneumaticSystem
+		//	};
+		//}
 	}
 }

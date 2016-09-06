@@ -148,10 +148,8 @@ namespace TUGraz.VectoCore.InputData.FileIO.JSON
 		{
 			get
 			{
-				return
-					(RetarderType)
-						Enum.Parse(typeof(RetarderType),
-							Body.GetEx(JsonKeys.Vehicle_Retarder).GetEx<string>(JsonKeys.Vehicle_Retarder_Type), true);
+				var retarderType = Body.GetEx(JsonKeys.Vehicle_Retarder).GetEx<string>(JsonKeys.Vehicle_Retarder_Type);
+				return RetarderTypeHelper.Parse(retarderType);
 			}
 		}
 

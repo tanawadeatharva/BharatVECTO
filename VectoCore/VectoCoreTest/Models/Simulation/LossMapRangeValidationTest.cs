@@ -29,22 +29,24 @@
 *   Martin Rexeis, rexeis@ivt.tugraz.at, IVT, Graz University of Technology
 */
 
+using Microsoft.VisualStudio.TestTools.UnitTesting;
 using System;
+using System.Collections.Generic;
 using System.ComponentModel.DataAnnotations;
 using System.Linq;
-using Microsoft.VisualStudio.TestTools.UnitTesting;
 using TUGraz.VectoCommon.Exceptions;
 using TUGraz.VectoCommon.Models;
 using TUGraz.VectoCommon.Utils;
 using TUGraz.VectoCore.InputData.FileIO.JSON;
 using TUGraz.VectoCore.InputData.Reader;
+using TUGraz.VectoCore.InputData.Reader.ComponentData;
+using TUGraz.VectoCore.Models.Declaration;
 using TUGraz.VectoCore.Models.Simulation.Data;
 using TUGraz.VectoCore.Models.Simulation.Impl;
 using TUGraz.VectoCore.Models.SimulationComponent.Data;
 using TUGraz.VectoCore.Models.SimulationComponent.Data.Gearbox;
 using TUGraz.VectoCore.OutputData.FileIO;
 using TUGraz.VectoCore.Tests.Utils;
-using TUGraz.VectoCore.Utils;
 
 namespace TUGraz.VectoCore.Tests.Models.Simulation
 {
@@ -59,7 +61,7 @@ namespace TUGraz.VectoCore.Tests.Models.Simulation
 		public const string GearboxDirectLoss = @"TestData\Components\Direct Gear.vtlm";
 		public const string GearboxLimited = @"TestData\Components\limited.vtlm";
 		public const string GearboxShiftPolygonFile = @"TestData\Components\ShiftPolygons.vgbs";
-		public const string GearboxFullLoadCurveFile = @"TestData\Components\Gearbox.vfld";
+		//public const string GearboxFullLoadCurveFile = @"TestData\Components\Gearbox.vfld";
 
 		/// <summary>
 		/// VECTO-173
@@ -70,8 +72,27 @@ namespace TUGraz.VectoCore.Tests.Models.Simulation
 			var gearboxData = CreateGearboxData(GearboxDirectLoss, GearboxIndirectLoss);
 			var engineData = MockSimulationDataFactory.CreateEngineDataFromFile(EngineFile);
 			var axleGearData = CreateAxleGearData(AxleGearLossMap);
+			var vehicleData = new VehicleData {
+				DynamicTyreRadius = 0.85.SI<Meter>(),
+				Loading = 0.SI<Kilogram>(),
+				CurbWeight = 2000.SI<Kilogram>(),
+				AxleData =
+					new List<Axle> {
+						new Axle {
+							TwinTyres = false,
+							AxleWeightShare = 1,
+							TyreTestLoad = 50000.SI<Newton>(),
+							Inertia = 10.SI<KilogramSquareMeter>()
+						}
+					}
+			};
 
-			var runData = new VectoRunData { GearboxData = gearboxData, EngineData = engineData, AxleGearData = axleGearData };
+			var runData = new VectoRunData {
+				GearboxData = gearboxData,
+				EngineData = engineData,
+				AxleGearData = axleGearData,
+				VehicleData = vehicleData
+			};
 
 			var result = VectoRunData.ValidateRunData(runData, new ValidationContext(runData));
 			Assert.IsTrue(ValidationResult.Success == result);
@@ -114,7 +135,21 @@ namespace TUGraz.VectoCore.Tests.Models.Simulation
 		{
 			var gearboxData = CreateGearboxData(GearboxDirectLoss, GearboxIndirectLoss);
 			var engineData = MockSimulationDataFactory.CreateEngineDataFromFile(EngineFile);
-			var runData = new VectoRunData { GearboxData = gearboxData, EngineData = engineData };
+			var vehicleData = new VehicleData {
+				DynamicTyreRadius = 0.85.SI<Meter>(),
+				Loading = 0.SI<Kilogram>(),
+				CurbWeight = 2000.SI<Kilogram>(),
+				AxleData =
+					new List<Axle> {
+						new Axle {
+							TwinTyres = false,
+							AxleWeightShare = 1,
+							TyreTestLoad = 50000.SI<Newton>(),
+							Inertia = 10.SI<KilogramSquareMeter>()
+						}
+					}
+			};
+			var runData = new VectoRunData { GearboxData = gearboxData, EngineData = engineData, VehicleData = vehicleData };
 			var result = VectoRunData.ValidateRunData(runData, new ValidationContext(runData));
 			Assert.IsTrue(ValidationResult.Success == result);
 			Assert.IsFalse(runData.IsValid());
@@ -142,8 +177,8 @@ namespace TUGraz.VectoCore.Tests.Models.Simulation
 				Gears = ratios.Select((ratio, i) =>
 					Tuple.Create((uint)i,
 						new GearData {
-							FullLoadCurve = FullLoadCurveReader.ReadFromFile(GearboxFullLoadCurveFile),
-							LossMap = TransmissionLossMap.ReadFromFile(!ratio.IsEqual(1.0) ? directlossMap : indirectLossMap, ratio,
+							MaxTorque = 2300.SI<NewtonMeter>(),
+							LossMap = TransmissionLossMapReader.ReadFromFile(!ratio.IsEqual(1.0) ? directlossMap : indirectLossMap, ratio,
 								string.Format("Gear {0}", i)),
 							Ratio = ratio,
 							ShiftPolygon = ShiftPolygonReader.ReadFromFile(ShiftPolygonFile)
@@ -158,7 +193,7 @@ namespace TUGraz.VectoCore.Tests.Models.Simulation
 			return new AxleGearData {
 				AxleGear = new GearData {
 					Ratio = ratio,
-					LossMap = TransmissionLossMap.ReadFromFile(lossMap, ratio, "AxleGear")
+					LossMap = TransmissionLossMapReader.ReadFromFile(lossMap, ratio, "AxleGear")
 				}
 			};
 		}
@@ -169,7 +204,7 @@ namespace TUGraz.VectoCore.Tests.Models.Simulation
 		[TestMethod]
 		public void TestLossMapValuesWithEfficiency()
 		{
-			var lossMap = TransmissionLossMap.Create(0.95, 1.0, "Dummy");
+			var lossMap = TransmissionLossMapReader.Create(0.95, 1.0, "Dummy");
 
 			AssertHelper.AreRelativeEqual(0.SI<NewtonMeter>(),
 				lossMap.GetTorqueLoss(0.RPMtoRad(), 0.SI<NewtonMeter>()).Value);
