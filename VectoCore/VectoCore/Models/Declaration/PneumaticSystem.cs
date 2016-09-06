@@ -31,12 +31,13 @@
 
 using System;
 using System.Data;
+using System.Linq;
 using TUGraz.VectoCommon.Utils;
 using TUGraz.VectoCore.Utils;
 
 namespace TUGraz.VectoCore.Models.Declaration
 {
-	public sealed class PneumaticSystem : LookupData<MissionType, string, Watt>
+	public sealed class PneumaticSystem : LookupData<MissionType, string, Watt>, IDeclarationAuxiliaryTable
 	{
 		protected override string ResourceId
 		{
@@ -58,6 +59,11 @@ namespace TUGraz.VectoCore.Models.Declaration
 					}
 				}
 			}
+		}
+
+		public string[] GetTechnologies()
+		{
+			return Data.Keys.Select(x => x.Item2).Distinct().ToArray();
 		}
 	}
 }

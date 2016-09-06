@@ -85,7 +85,7 @@ namespace TUGraz.VectoCore.Models.SimulationComponent.Data
 		/// <summary>
 		/// The Gross Vehicle Weight of the Vehicle.
 		/// </summary>
-		[Required, SIRange(3500, 40000)]
+		[Required, SIRange(3500, 40000, ExecutionMode.Declaration), SIRange(0, 1000000, ExecutionMode.Engineering)]
 		public Kilogram GrossVehicleWeight { get; internal set; }
 
 		/// <summary>
@@ -170,7 +170,7 @@ namespace TUGraz.VectoCore.Models.SimulationComponent.Data
 
 		public static ValidationResult ValidateVehicleData(VehicleData vehicleData, ValidationContext validationContext)
 		{
-			var mode = SimulationComponentData.GetExecutionMode(validationContext);
+			var mode = GetExecutionMode(validationContext);
 
 			var weightShareSum = vehicleData.AxleData.Sum(axle => axle.AxleWeightShare);
 			if (!weightShareSum.IsEqual(1.0, 1E-10)) {

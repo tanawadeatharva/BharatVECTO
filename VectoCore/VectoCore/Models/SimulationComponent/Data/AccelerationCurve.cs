@@ -31,13 +31,9 @@
 
 using System;
 using System.Collections.Generic;
-using System.Data;
 using System.Diagnostics;
-using System.IO;
 using System.Linq;
-using TUGraz.VectoCommon.Exceptions;
 using TUGraz.VectoCommon.Utils;
-using TUGraz.VectoCore.Utils;
 
 namespace TUGraz.VectoCore.Models.SimulationComponent.Data
 {
@@ -54,7 +50,7 @@ namespace TUGraz.VectoCore.Models.SimulationComponent.Data
 		{
 			var index = FindIndex(key);
 
-			return new AccelerationCurveData.AccelerationEntry {
+			return new AccelerationEntry {
 				Acceleration =
 					VectoMath.Interpolate(_entries[index - 1].Key, _entries[index].Key,
 						_entries[index - 1].Value.Acceleration,

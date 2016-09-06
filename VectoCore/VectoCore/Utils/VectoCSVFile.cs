@@ -130,8 +130,9 @@ namespace TUGraz.VectoCore.Utils
 				table.Columns.Add(col);
 			}
 
-			if (p.EndOfData)
+			if (p.EndOfData) {
 				return table;
+			}
 
 			var lineNumber = 1;
 			do {

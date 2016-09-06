@@ -38,6 +38,7 @@ using TUGraz.VectoCore.Models.Simulation;
 using TUGraz.VectoCore.Models.Simulation.Data;
 using TUGraz.VectoCore.Models.Simulation.DataBus;
 using TUGraz.VectoCore.Models.SimulationComponent.Data;
+using TUGraz.VectoCore.Models.SimulationComponent.Data.Gearbox;
 using TUGraz.VectoCore.OutputData;
 using TUGraz.VectoCore.Utils;
 
@@ -45,14 +46,32 @@ namespace TUGraz.VectoCore.Models.SimulationComponent.Impl
 {
 	public class CycleGearbox : AbstractGearbox<GearboxState>
 	{
+		protected bool? TorqueConverterActive;
+
+		protected internal TorqueConverterData TorqueConverter;
+
 		public CycleGearbox(IVehicleContainer container, GearboxData gearboxModelData)
-			: base(container, gearboxModelData) {}
+			: base(container, gearboxModelData)
+		{
+			if (!gearboxModelData.Type.AutomaticTransmission()) {
+				return;
+			}
+			TorqueConverter = gearboxModelData.TorqueConverterData;
+			if (TorqueConverter == null) {
+				throw new VectoException("Torque Converter required for AT transmission!");
+			}
+		}
 
 		public override IResponse Initialize(NewtonMeter outTorque, PerSecond outAngularVelocity)
 		{
 			var dt = Constants.SimulationSettings.TargetTimeInterval;
 
 			Gear = DataBus.CycleData.LeftSample.Gear;
+			TorqueConverterActive = DataBus.CycleData.LeftSample.TorqueConverterActive;
+
+			if (TorqueConverter != null && TorqueConverterActive == null) {
+				throw new VectoSimulationException("Driving cycle does not contain information about TorqueConverter!");
+			}
 
 			PerSecond inAngularVelocity;
 			NewtonMeter inTorque;
@@ -88,55 +107,6 @@ namespace TUGraz.VectoCore.Models.SimulationComponent.Impl
 		}
 
 		/// <summary>
-		/// Special Initialize with gear as additional param. For initial Gear-Searching Purposes.
-		/// </summary>
-		/// <param name="gear"></param>
-		/// <param name="outTorque"></param>
-		/// <param name="outAngularVelocity"></param>
-		/// <returns></returns>
-		internal ResponseDryRun Initialize(uint gear, NewtonMeter outTorque, PerSecond outAngularVelocity)
-		{
-			var inAngularVelocity = outAngularVelocity * ModelData.Gears[gear].Ratio;
-			var inTorqueLossResult = ModelData.Gears[Gear].LossMap.GetTorqueLoss(outAngularVelocity, outTorque);
-			CurrentState.TorqueLossResult = inTorqueLossResult;
-			var inTorque = outTorque / ModelData.Gears[Gear].Ratio - inTorqueLossResult.Value;
-
-			if (!inAngularVelocity.IsEqual(0)) {
-				var alpha = (ModelData.Inertia.IsEqual(0))
-					? 0.SI<PerSquareSecond>()
-					: outTorque / ModelData.Inertia;
-
-				var inertiaPowerLoss = Formulas.InertiaPower(inAngularVelocity, alpha, ModelData.Inertia,
-					Constants.SimulationSettings.TargetTimeInterval);
-				inTorque += inertiaPowerLoss / inAngularVelocity;
-
-				//todo mk-2016-08-17: aux loss from out-direction or in-direction of the gearbox?
-				if (Auxiliary != null)
-					inTorque += Auxiliary.Initialize(outTorque, outAngularVelocity);
-			}
-
-			var response = NextComponent.Initialize(inTorque, inAngularVelocity);
-			response.Switch().
-				Case<ResponseSuccess>().
-				Case<ResponseOverload>().
-				Case<ResponseUnderload>().
-				Default(r => { throw new UnexpectedResponseException("Gearbox.Initialize", r); });
-
-			var fullLoadGearbox = ModelData.Gears[gear].MaxTorque * inAngularVelocity;
-			var fullLoadEngine = DataBus.EngineStationaryFullPower(inAngularVelocity);
-
-			var fullLoad = VectoMath.Min(fullLoadGearbox, fullLoadEngine);
-
-			return new ResponseDryRun {
-				Source = this,
-				EnginePowerRequest = response.EnginePowerRequest,
-				ClutchPowerRequest = response.ClutchPowerRequest,
-				GearboxPowerRequest = outTorque * outAngularVelocity,
-				DeltaFullLoad = response.EnginePowerRequest - fullLoad
-			};
-		}
-
-		/// <summary>
 		/// Requests the Gearbox to deliver torque and angularVelocity
 		/// </summary>
 		/// <returns>
@@ -154,83 +124,228 @@ namespace TUGraz.VectoCore.Models.SimulationComponent.Impl
 				? DataBus.CycleData.LeftSample.Gear
 				: DataBus.CycleData.RightSample.Gear;
 
+			TorqueConverterActive = DataBus.DriverBehavior == DrivingBehavior.Braking
+				? DataBus.CycleData.LeftSample.TorqueConverterActive
+				: DataBus.CycleData.RightSample.TorqueConverterActive;
+
+			if (TorqueConverter != null && TorqueConverterActive == null) {
+				throw new VectoSimulationException("Driving cycle does not contain information about TorqueConverter!");
+			}
+			if (Gear != 0 && !ModelData.Gears.ContainsKey(Gear)) {
+				throw new VectoSimulationException("Requested Gear {0} from driving cycle is not available", Gear);
+			}
+
+
+			return Gear == 0
+				? RequestDisengaged(absTime, dt, outTorque, outAngularVelocity, dryRun)
+				: RequestEngaged(absTime, dt, outTorque, outAngularVelocity, dryRun);
+		}
+
+		/// <summary>
+		/// Handles requests when a gear is engaged
+		/// </summary>
+		/// <param name="absTime"></param>
+		/// <param name="dt"></param>
+		/// <param name="outTorque"></param>
+		/// <param name="outAngularVelocity"></param>
+		/// <param name="dryRun"></param>
+		/// <returns></returns>
+		private IResponse RequestEngaged(Second absTime, Second dt, NewtonMeter outTorque, PerSecond outAngularVelocity,
+			bool dryRun)
+		{
 			var avgOutAngularVelocity = (PreviousState.OutAngularVelocity + outAngularVelocity) / 2.0;
+			var inTorqueLossResult = ModelData.Gears[Gear].LossMap.GetTorqueLoss(avgOutAngularVelocity, outTorque);
+			var inTorque = outTorque / ModelData.Gears[Gear].Ratio - inTorqueLossResult.Value;
+			CurrentState.TorqueLossResult = inTorqueLossResult;
+			var inAngularVelocity = outAngularVelocity * ModelData.Gears[Gear].Ratio;
 
-			if (Gear == 0) {
-				//disengaged
-				if (dryRun) {
-					// if gearbox is disengaged the 0-line is the limit for drag and full load
-					return new ResponseDryRun {
-						Source = this,
-						GearboxPowerRequest = outTorque * avgOutAngularVelocity,
-						DeltaDragLoad = outTorque * avgOutAngularVelocity,
-						DeltaFullLoad = outTorque * avgOutAngularVelocity,
-					};
-				}
-
-				if ((outTorque * avgOutAngularVelocity).IsGreater(0.SI<Watt>(),
-					Constants.SimulationSettings.LineSearchTolerance)) {
-					return new ResponseOverload {
-						Source = this,
-						Delta = outTorque * avgOutAngularVelocity,
-						GearboxPowerRequest = outTorque * avgOutAngularVelocity
-					};
-				}
-
-				if ((outTorque * avgOutAngularVelocity).IsSmaller(0.SI<Watt>(),
-					Constants.SimulationSettings.LineSearchTolerance)) {
-					return new ResponseUnderload {
-						Source = this,
-						Delta = outTorque * avgOutAngularVelocity,
-						GearboxPowerRequest = outTorque * avgOutAngularVelocity
-					};
-				}
-
-				CurrentState.SetState(0.SI<NewtonMeter>(), 0.RPMtoRad(), outTorque, outAngularVelocity);
-				CurrentState.Gear = Gear;
-
-				var disengagedResponse = NextComponent.Request(absTime, dt, 0.SI<NewtonMeter>(), null);
-				disengagedResponse.GearboxPowerRequest = outTorque * avgOutAngularVelocity;
-				return disengagedResponse;
+			if (!inAngularVelocity.IsEqual(0)) {
+				// MQ 19.2.2016: check! inertia is related to output side, torque loss accounts to input side
+				CurrentState.InertiaTorqueLossOut =
+					Formulas.InertiaPower(outAngularVelocity, PreviousState.OutAngularVelocity, ModelData.Inertia, dt) /
+					avgOutAngularVelocity;
+				inTorque += CurrentState.InertiaTorqueLossOut / ModelData.Gears[Gear].Ratio;
 			} else {
-				//engaged
-				var inTorqueLossResult = ModelData.Gears[Gear].LossMap.GetTorqueLoss(avgOutAngularVelocity, outTorque);
-				//todo mk-2016-08-17: minus inTorqueLoss?? Why not plus?
-				var inTorque = outTorque / ModelData.Gears[Gear].Ratio - inTorqueLossResult.Value;
-				CurrentState.TorqueLossResult = inTorqueLossResult;
-				var inAngularVelocity = outAngularVelocity * ModelData.Gears[Gear].Ratio;
+				CurrentState.InertiaTorqueLossOut = 0.SI<NewtonMeter>();
+			}
 
-				if (!inAngularVelocity.IsEqual(0)) {
-					// MQ 19.2.2016: check! inertia is related to output side, torque loss accounts to input side
-					CurrentState.InertiaTorqueLossOut =
-						Formulas.InertiaPower(outAngularVelocity, PreviousState.OutAngularVelocity, ModelData.Inertia, dt) /
-						avgOutAngularVelocity;
-					inTorque += CurrentState.InertiaTorqueLossOut / ModelData.Gears[Gear].Ratio;
-				} else {
-					CurrentState.InertiaTorqueLossOut = 0.SI<NewtonMeter>();
+			// todo mk 2016-08-23: add pto auxiliaries!!
+			//todo mk-2016-08-17: aux loss from out-direction or in-direction of the gearbox?
+			if (Auxiliary != null) {
+				inTorque += Auxiliary.Initialize(outTorque, outAngularVelocity);
+			}
+
+			if (dryRun) {
+				if (TorqueConverter != null && TorqueConverterActive != null && TorqueConverterActive.Value) {
+					return RequestTorqueConverter(absTime, dt, outTorque, outAngularVelocity, true);
 				}
+				var dryRunResponse = NextComponent.Request(absTime, dt, inTorque, inAngularVelocity, true);
+				dryRunResponse.GearboxPowerRequest = outTorque * avgOutAngularVelocity;
+				return dryRunResponse;
+			}
 
-				//todo mk-2016-08-17: aux loss from out-direction or in-direction of the gearbox?
-				if (Auxiliary != null)
-					inTorque += Auxiliary.PowerDemand(absTime, dt, outTorque, inTorque, outAngularVelocity, dryRun);
+			// this code has to be _after_ the check for a potential gear-shift!
+			// (the above block issues dry-run requests and thus may update the CurrentState!)
+			CurrentState.TransmissionTorqueLoss = inTorque - (outTorque / ModelData.Gears[Gear].Ratio);
 
-				if (dryRun) {
-					var dryRunResponse = NextComponent.Request(absTime, dt, inTorque, inAngularVelocity, true);
-					dryRunResponse.GearboxPowerRequest = outTorque * avgOutAngularVelocity;
-					return dryRunResponse;
+			CurrentState.SetState(inTorque, inAngularVelocity, outTorque, outAngularVelocity);
+			CurrentState.Gear = Gear;
+			// end critical section
+
+			if (TorqueConverter != null && TorqueConverterActive != null && TorqueConverterActive.Value) {
+				return RequestTorqueConverter(absTime, dt, outTorque, outAngularVelocity);
+			}
+
+			var response = NextComponent.Request(absTime, dt, inTorque, inAngularVelocity);
+			response.GearboxPowerRequest = outTorque * avgOutAngularVelocity;
+			return response;
+		}
+
+		/// <summary>
+		/// Handle Requests when Torque Converter is active
+		/// </summary>
+		/// <param name="absTime"></param>
+		/// <param name="dt"></param>
+		/// <param name="outTorque"></param>
+		/// <param name="outAngularVelocity"></param>
+		/// <param name="dryRun"></param>
+		/// <returns></returns>
+		private IResponse RequestTorqueConverter(Second absTime, Second dt, NewtonMeter outTorque,
+			PerSecond outAngularVelocity, bool dryRun = false)
+		{
+			if (dryRun) {
+				return RequestTorqueConverterDryRun(absTime, dt, outTorque, outAngularVelocity);
+			}
+			var operatingPoint = FindOperatingPoint(outTorque, outAngularVelocity);
+			if (!outAngularVelocity.IsEqual(operatingPoint.OutAngularVelocity) || !outTorque.IsEqual(operatingPoint.OutTorque)) {
+				// a different operating point was found...
+				var delta = (outTorque - operatingPoint.OutTorque) *
+							(PreviousState.OutAngularVelocity + operatingPoint.OutAngularVelocity) / 2.0;
+				if (!delta.IsEqual(0, Constants.SimulationSettings.LineSearchTolerance)) {
+					if (delta > 0) {
+						return new ResponseOverload { Source = this, Delta = delta, TorqueConverterOperatingPoint = operatingPoint };
+					}
+					return new ResponseUnderload { Source = this, Delta = delta, TorqueConverterOperatingPoint = operatingPoint };
 				}
+			}
+			var tcResponse = NextComponent.Request(absTime, dt, operatingPoint.InTorque, operatingPoint.InAngularVelocity);
+			return tcResponse;
+		}
 
-				// this code has to be _after_ the check for a potential gear-shift!
-				// (the above block issues dry-run requests and thus may update the CurrentState!)
-				CurrentState.TransmissionTorqueLoss = inTorque - (outTorque / ModelData.Gears[Gear].Ratio);
+		/// <summary>
+		/// Handle Requests when searching an operating point and torque converter is active
+		/// </summary>
+		/// <param name="absTime"></param>
+		/// <param name="dt"></param>
+		/// <param name="outTorque"></param>
+		/// <param name="outAngularVelocity"></param>
+		/// <returns></returns>
+		private IResponse RequestTorqueConverterDryRun(Second absTime, Second dt, NewtonMeter outTorque,
+			PerSecond outAngularVelocity)
+		{
+			var dryOperatingPoint = FindOperatingPoint(outTorque, outAngularVelocity);
+			var deltaTorqueConverter = (outTorque - dryOperatingPoint.OutTorque) *
+										(PreviousState.OutAngularVelocity + dryOperatingPoint.OutAngularVelocity) / 2.0;
+			// operatingPoint.inAngularVelocity is for sure between engine idle speed and max TC speed
+			var engineResponse =
+				(ResponseDryRun)
+					NextComponent.Request(absTime, dt, dryOperatingPoint.InTorque, dryOperatingPoint.InAngularVelocity,
+						true);
+			var deltaEngine = (engineResponse.DeltaFullLoad > 0 ? engineResponse.DeltaFullLoad : 0.SI<Watt>()) +
+							(engineResponse.DeltaDragLoad < 0 ? -engineResponse.DeltaDragLoad : 0.SI<Watt>());
+			if (deltaTorqueConverter.IsEqual(0) && deltaEngine.IsEqual(0)) {
+				return new ResponseDryRun {
+					Source = this,
+					DeltaFullLoad = 0.SI<Watt>(),
+					DeltaDragLoad = 0.SI<Watt>(),
+					TorqueConverterOperatingPoint = dryOperatingPoint
+				};
+			}
+			if (engineResponse.DeltaFullLoad > 0 || engineResponse.DeltaDragLoad < 0) {
+				// engine is overloaded with current operating point, reduce torque...
+				dryOperatingPoint =
+					TorqueConverter.GetOutTorqueAndSpeed(
+						outTorque > 0 ? engineResponse.EngineMaxTorqueOut : engineResponse.EngineDragTorque,
+						dryOperatingPoint.InAngularVelocity, null);
+			}
 
-				CurrentState.SetState(inTorque, inAngularVelocity, outTorque, outAngularVelocity);
-				CurrentState.Gear = Gear;
-				// end critical section
+			var delta = (outTorque - dryOperatingPoint.OutTorque) *
+						(PreviousState.OutAngularVelocity + dryOperatingPoint.OutAngularVelocity) / 2.0;
+			return new ResponseDryRun() {
+				Source = this,
+				DeltaFullLoad = delta,
+				DeltaDragLoad = delta,
+				TorqueConverterOperatingPoint = dryOperatingPoint
+			};
+		}
 
-				var response = NextComponent.Request(absTime, dt, inTorque, inAngularVelocity);
-				response.GearboxPowerRequest = outTorque * avgOutAngularVelocity;
-				return response;
+		/// <summary>
+		/// Handles Requests when no gear is engaged
+		/// </summary>
+		/// <param name="absTime"></param>
+		/// <param name="dt"></param>
+		/// <param name="outTorque"></param>
+		/// <param name="outAngularVelocity"></param>
+		/// <param name="dryRun"></param>
+		/// <returns></returns>
+		private IResponse RequestDisengaged(Second absTime, Second dt, NewtonMeter outTorque, PerSecond outAngularVelocity,
+			bool dryRun)
+		{
+			var avgOutAngularVelocity = (PreviousState.OutAngularVelocity + outAngularVelocity) / 2.0;
+			if (dryRun) {
+				// if gearbox is disengaged the 0-line is the limit for drag and full load
+				return new ResponseDryRun {
+					Source = this,
+					GearboxPowerRequest = outTorque * avgOutAngularVelocity,
+					DeltaDragLoad = outTorque * avgOutAngularVelocity,
+					DeltaFullLoad = outTorque * avgOutAngularVelocity,
+				};
+			}
+
+			if ((outTorque * avgOutAngularVelocity).IsGreater(0.SI<Watt>(),
+				Constants.SimulationSettings.LineSearchTolerance)) {
+				return new ResponseOverload {
+					Source = this,
+					Delta = outTorque * avgOutAngularVelocity,
+					GearboxPowerRequest = outTorque * avgOutAngularVelocity
+				};
+			}
+
+			if ((outTorque * avgOutAngularVelocity).IsSmaller(0.SI<Watt>(),
+				Constants.SimulationSettings.LineSearchTolerance)) {
+				return new ResponseUnderload {
+					Source = this,
+					Delta = outTorque * avgOutAngularVelocity,
+					GearboxPowerRequest = outTorque * avgOutAngularVelocity
+				};
+			}
+
+			CurrentState.SetState(0.SI<NewtonMeter>(), 0.RPMtoRad(), outTorque, outAngularVelocity);
+			CurrentState.Gear = Gear;
+
+			var disengagedResponse = NextComponent.Request(absTime, dt, 0.SI<NewtonMeter>(), DataBus.EngineIdleSpeed);
+			disengagedResponse.GearboxPowerRequest = outTorque * avgOutAngularVelocity;
+			return disengagedResponse;
+			//todo mk-2016-08-17: minus inTorqueLoss?? Why not plus?
+		}
+
+		private TorqueConverterOperatingPoint FindOperatingPoint(NewtonMeter outTorque,
+			PerSecond outAngularVelocity)
+		{
+			try {
+				var operatingPoint = TorqueConverter.FindOperatingPoint(outTorque, outAngularVelocity);
+				if (operatingPoint.InAngularVelocity.IsSmaller(DataBus.EngineIdleSpeed)) {
+					throw new VectoException("Invalid operating point, inAngularVelocity below engine's idle speed: {0}",
+						operatingPoint.InAngularVelocity);
+				}
+				if (operatingPoint.InAngularVelocity.IsGreater(TorqueConverter.TorqueConverterSpeedLimit)) {
+					operatingPoint = TorqueConverter.GetOutTorque(TorqueConverter.TorqueConverterSpeedLimit, outAngularVelocity);
+				}
+				return operatingPoint;
+			} catch (VectoException ve) {
+				Log.Debug(ve, "failed to find torque converter operating point, fallback: creeping");
+				var tqOperatingPoint = TorqueConverter.GetOutTorque(DataBus.EngineIdleSpeed, outAngularVelocity);
+				return tqOperatingPoint;
 			}
 		}
 

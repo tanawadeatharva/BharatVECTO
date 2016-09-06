@@ -159,7 +159,7 @@ namespace TUGraz.VectoCore.Models.SimulationComponent.Impl
 				var engineSpeed = VectoMath.Max(_idleSpeed, angularVelocity);
 
 				angularVelocityIn = _clutchSpeedSlippingFactor * engineSpeed + _idleSpeed;
-				torqueIn = torque * effectiveAngularVelocity / ClutchEff / ((angularVelocityIn));
+				torqueIn = torque * effectiveAngularVelocity / ClutchEff / angularVelocityIn;
 			} else {
 				_clutchState = ClutchState.ClutchClosed;
 			}

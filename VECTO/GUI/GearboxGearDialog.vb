@@ -8,8 +8,8 @@
 '   WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
 '
 ' See the LICENSE.txt for the specific language governing permissions and limitations.
-
 Imports System.Windows.Forms
+
 
 ''' <summary>
 ''' Gear Editor (Vehicle Editor sub-dialog)
@@ -76,21 +76,15 @@ Public Class GearboxGearDialog
 
 	'Browse for transmission loss map
 	Private Sub BtBrowse_Click(sender As Object, e As EventArgs) Handles BtBrowse.Click
-		If fbTLM.OpenDialog(fFileRepl(TbMapPath.Text, GbxPath)) Then
-			TbMapPath.Text = fFileWoDir(fbTLM.Files(0), GbxPath)
+		If TransmissionLossMapFileBrowser.OpenDialog(fFileRepl(TbMapPath.Text, GbxPath)) Then
+			TbMapPath.Text = GetFilenameWithoutDirectory(TransmissionLossMapFileBrowser.Files(0), GbxPath)
 		End If
 	End Sub
 
 	'Browse for shift polygons file
 	Private Sub BtShiftPolyBrowse_Click(sender As Object, e As EventArgs) Handles BtShiftPolyBrowse.Click
-		If fbGBS.OpenDialog(fFileRepl(TbShiftPolyFile.Text, GbxPath)) Then
-			TbShiftPolyFile.Text = fFileWoDir(fbGBS.Files(0), GbxPath)
-		End If
-	End Sub
-
-	Private Sub BtBrowseFld_Click(sender As Object, e As EventArgs) Handles BtBrowseFld.Click
-		If fbFLD.OpenDialog(fFileRepl(TbFld.Text, GbxPath)) Then
-			TbFld.Text = fFileWoDir(fbFLD.Files(0), GbxPath)
+		If GearboxShiftPolygonFileBrowser.OpenDialog(fFileRepl(TbShiftPolyFile.Text, GbxPath)) Then
+			TbShiftPolyFile.Text = GetFilenameWithoutDirectory(GearboxShiftPolygonFileBrowser.Files(0), GbxPath)
 		End If
 	End Sub
 

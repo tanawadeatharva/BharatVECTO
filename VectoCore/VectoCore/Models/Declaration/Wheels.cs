@@ -29,6 +29,7 @@
 *   Martin Rexeis, rexeis@ivt.tugraz.at, IVT, Graz University of Technology
 */
 
+using System.Collections.Generic;
 using System.Data;
 using System.Linq;
 using TUGraz.VectoCommon.Utils;
@@ -38,6 +39,8 @@ namespace TUGraz.VectoCore.Models.Declaration
 {
 	public sealed class Wheels : LookupData<string, Wheels.Entry>
 	{
+		private string[] _dimensions;
+
 		protected override string ResourceId
 		{
 			get { return "TUGraz.VectoCore.Resources.Declaration.Wheels.csv"; }
@@ -62,6 +65,7 @@ namespace TUGraz.VectoCore.Models.Declaration
 					DynamicTyreRadius = row.ParseDouble("d").SI().Milli.Meter.Cast<Meter>(),
 					CircumferenceFactor = row.ParseDouble("f")
 				}).ToDictionary(e => e.WheelType);
+			_dimensions = table.Rows.Cast<DataRow>().Select(row => row.Field<string>(0)).ToArray();
 		}
 
 		public class Entry
@@ -70,6 +74,11 @@ namespace TUGraz.VectoCore.Models.Declaration
 			public KilogramSquareMeter Inertia;
 			public Meter DynamicTyreRadius;
 			public double CircumferenceFactor;
+		}
+
+		public string[] GetWheelsDimensions()
+		{
+			return _dimensions;
 		}
 	}
 }

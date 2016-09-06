@@ -188,7 +188,7 @@ namespace TUGraz.VectoCore.InputData.Reader
 			var altitude = current.Altitude;
 			var lastTime = entries.First().Time;
 			foreach (var drivingCycleEntry in entries) {
-				altitude += (drivingCycleEntry.VehicleTargetSpeed * (drivingCycleEntry.Time - lastTime)) *
+				altitude += drivingCycleEntry.VehicleTargetSpeed * (drivingCycleEntry.Time - lastTime) *
 							drivingCycleEntry.RoadGradient;
 				drivingCycleEntry.Altitude = altitude;
 				lastTime = drivingCycleEntry.Time;
@@ -252,13 +252,14 @@ namespace TUGraz.VectoCore.InputData.Reader
 
 		private static void AdjustDistanceAfterStop(List<DrivingCycleData.DrivingCycleEntry> entries)
 		{
-			using (var currentIt = entries.GetEnumerator())
-			using (var nextIt = entries.GetEnumerator()) {
-				nextIt.MoveNext();
-				while (currentIt.MoveNext() && nextIt.MoveNext()) {
-					if (currentIt.Current != null && !currentIt.Current.StoppingTime.IsEqual(0)) {
-						if (nextIt.Current != null) {
-							nextIt.Current.Distance = currentIt.Current.Distance;
+			using (var currentIt = entries.GetEnumerator()) {
+				using (var nextIt = entries.GetEnumerator()) {
+					nextIt.MoveNext();
+					while (currentIt.MoveNext() && nextIt.MoveNext()) {
+						if (currentIt.Current != null && !currentIt.Current.StoppingTime.IsEqual(0)) {
+							if (nextIt.Current != null) {
+								nextIt.Current.Distance = currentIt.Current.Distance;
+							}
 						}
 					}
 				}
@@ -316,6 +317,7 @@ namespace TUGraz.VectoCore.InputData.Reader
 			public const string WindYawAngle = "vair_beta";
 			public const string EnginePower = "Pe";
 			public const string EngineTorque = "Me";
+			public const string TorqueConverterActive = "tc_active";
 			public const string PTOActive = "PTO";
 		}
 
@@ -601,7 +603,7 @@ namespace TUGraz.VectoCore.InputData.Reader
 		/// <summary>
 		/// Parser for Measured Speed Mode Option 2.
 		/// </summary>
-		// <t>, <v>, <n>, <gear>[, <grad>, <Padd>, <vair_res>, <vair_beta>, Aux_...]
+		// <t>, <v>, <n>, <gear>[, <tc_active>, <grad>, <Padd>, <vair_res>, <vair_beta>, Aux_...]
 		private class MeasuredSpeedGearDataParser : AbstractCycleDataParser
 		{
 			public override IEnumerable<DrivingCycleData.DrivingCycleEntry> Parse(DataTable table, bool crossWindRequired)
@@ -613,10 +615,14 @@ namespace TUGraz.VectoCore.InputData.Reader
 					VehicleTargetSpeed = row.ParseDouble(Fields.VehicleSpeed).KMPHtoMeterPerSecond(),
 					RoadGradient = VectoMath.InclinationToAngle(row.ParseDoubleOrGetDefault(Fields.RoadGradient) / 100.0),
 					AdditionalAuxPowerDemand = row.ParseDoubleOrGetDefault(Fields.AdditionalAuxPowerDemand).SI().Kilo.Watt.Cast<Watt>(),
-					AngularVelocity = row.ParseDouble(Fields.EngineSpeed).RPMtoRad(),
+					AngularVelocity = row.ParseDoubleOrGetDefault(Fields.EngineSpeed).RPMtoRad(),
 					Gear = (uint)row.ParseDouble(Fields.Gear),
-					AirSpeedRelativeToVehicle =
-						crossWindRequired ? row.ParseDouble(Fields.AirSpeedRelativeToVehicle).KMPHtoMeterPerSecond() : null,
+					TorqueConverterActive = table.Columns.Contains(Fields.TorqueConverterActive)
+						? row.ParseBoolean(Fields.TorqueConverterActive)
+						: (bool?)null,
+					AirSpeedRelativeToVehicle = crossWindRequired
+						? row.ParseDouble(Fields.AirSpeedRelativeToVehicle).KMPHtoMeterPerSecond()
+						: null,
 					WindYawAngle = crossWindRequired ? row.ParseDoubleOrGetDefault(Fields.WindYawAngle) : 0,
 					AuxiliarySupplyPower = row.GetAuxiliaries()
 				}).ToArray();
@@ -629,7 +635,6 @@ namespace TUGraz.VectoCore.InputData.Reader
 				var requiredCols = new[] {
 					Fields.Time,
 					Fields.VehicleSpeed,
-					Fields.EngineSpeed,
 					Fields.Gear
 				};
 				var allowedCols = new[] {
@@ -637,6 +642,7 @@ namespace TUGraz.VectoCore.InputData.Reader
 					Fields.VehicleSpeed,
 					Fields.EngineSpeed,
 					Fields.Gear,
+					Fields.TorqueConverterActive,
 					Fields.AdditionalAuxPowerDemand,
 					Fields.RoadGradient,
 					Fields.AirSpeedRelativeToVehicle,

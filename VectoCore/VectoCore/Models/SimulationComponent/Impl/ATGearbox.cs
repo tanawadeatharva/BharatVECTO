@@ -17,9 +17,9 @@ namespace TUGraz.VectoCore.Models.SimulationComponent.Impl
 	{
 		protected internal bool Disengaged = true;
 
-		protected internal readonly IShiftStrategy Strategy;
+		private readonly IShiftStrategy Strategy;
 
-		protected readonly TorqueConverter TorqueConverter;
+		protected internal readonly TorqueConverter TorqueConverter;
 
 		public Second LastShift { get; private set; }
 

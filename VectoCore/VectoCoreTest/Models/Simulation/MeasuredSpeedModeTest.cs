@@ -38,6 +38,7 @@ using TUGraz.VectoCommon.Models;
 using TUGraz.VectoCommon.Utils;
 using TUGraz.VectoCore.InputData.FileIO.JSON;
 using TUGraz.VectoCore.InputData.Reader;
+using TUGraz.VectoCore.InputData.Reader.ComponentData;
 using TUGraz.VectoCore.Models.Declaration;
 using TUGraz.VectoCore.Models.Simulation.Data;
 using TUGraz.VectoCore.Models.Simulation.Impl;
@@ -434,6 +435,26 @@ namespace TUGraz.VectoCore.Tests.Models.Simulation
 				@"TestData\MeasuredSpeed\MeasuredSpeedGearVairAux_MeasuredSpeed_Gear_Rural_VairAux.vmod",
 				@"TestData\MeasuredSpeed\Results\MeasuredSpeedGearVairAux.vsum",
 				@"TestData\MeasuredSpeed\MeasuredSpeedGearVairAux.vsum");
+		}
+
+		[TestMethod]
+		public void MeasuredSpeed_Gear_AT_PS_Run()
+		{
+			RunJob(@"TestData\MeasuredSpeed\MeasuredSpeedGearAT-PS.vecto",
+				@"TestData\MeasuredSpeed\Results\MeasuredSpeedGearAT-PS_MeasuredSpeedGear_AT-PS.vmod",
+				@"TestData\MeasuredSpeed\MeasuredSpeedGearAT-PS_MeasuredSpeedGear_AT-PS.vmod",
+				@"TestData\MeasuredSpeed\Results\MeasuredSpeedGearAT-PS.vsum",
+				@"TestData\MeasuredSpeed\MeasuredSpeedGearAT-PS.vsum");
+		}
+
+		[TestMethod]
+		public void MeasuredSpeed_Gear_AT_Ser_Run()
+		{
+			RunJob(@"TestData\MeasuredSpeed\MeasuredSpeedGearAT-Ser.vecto",
+				@"TestData\MeasuredSpeed\Results\MeasuredSpeedGearAT-Ser_MeasuredSpeedGear_AT-Ser.vmod",
+				@"TestData\MeasuredSpeed\MeasuredSpeedGearAT-Ser_MeasuredSpeedGear_AT-Ser.vmod",
+				@"TestData\MeasuredSpeed\Results\MeasuredSpeedGearAT-Ser.vsum",
+				@"TestData\MeasuredSpeed\MeasuredSpeedGearAT-Ser.vsum");
 		}
 
 		[TestMethod]

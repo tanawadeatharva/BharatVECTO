@@ -162,6 +162,30 @@ namespace TUGraz.VectoCore.Models.Declaration
 			return _instance ?? (_instance = new DeclarationData());
 		}
 
+		public static class Physics
+		{
+			/// <summary>
+			/// The standard acceleration for gravity on earth.
+			/// http://physics.nist.gov/Pubs/SP330/sp330.pdf (page 52)
+			/// </summary>
+			public static readonly MeterPerSquareSecond GravityAccelleration = 9.80665.SI<MeterPerSquareSecond>();
+
+			/// <summary>
+			/// Density of air.
+			/// </summary>
+			public static readonly KilogramPerCubicMeter AirDensity = 1.188.SI<KilogramPerCubicMeter>();
+
+			/// <summary>
+			/// Density of fuel.
+			/// </summary>
+			public static readonly KilogramPerCubicMeter FuelDensity = 832.SI<KilogramPerCubicMeter>();
+
+			/// <summary>
+			/// fuel[kg] => co2[kg]. Factor to convert from fuel weight to co2 weight.
+			/// </summary>
+			public static readonly double CO2PerFuelWeight = 3.16;
+		}
+
 		public static class Driver
 		{
 			public static class LookAhead
@@ -209,7 +233,7 @@ namespace TUGraz.VectoCore.Models.Declaration
 			public static readonly KilogramSquareMeter EngineBaseInertia = 0.41.SI<KilogramSquareMeter>();
 			public static readonly SI EngineDisplacementInertia = (0.27 * 1000).SI().Kilo.Gramm.Per.Meter; // [kg/m]
 
-			public static KilogramSquareMeter EngineInertia(SI displacement, GearboxType gbxType)
+			public static KilogramSquareMeter EngineInertia(CubicMeter displacement, GearboxType gbxType)
 			{
 				// VB Code:    Return 1.3 + 0.41 + 0.27 * (Displ / 1000)
 				return (gbxType.AutomaticTransmission() ? TorqueConverterInertia : ClutchInertia) + EngineBaseInertia +
@@ -249,8 +273,9 @@ namespace TUGraz.VectoCore.Models.Declaration
 			public static ShiftPolygon ComputeShiftPolygon(int gear, FullLoadCurve fullLoadCurve,
 				IList<ITransmissionInputData> gears, CombustionEngineData engine, double axlegearRatio, Meter dynamicTyreRadius)
 			{
-				if (gears.Count < 2)
+				if (gears.Count < 2) {
 					throw new VectoException("ComputeShiftPolygon needs at least 2 gears. {0} gears given.", gears.Count);
+				}
 
 				// ReSharper disable once InconsistentNaming
 				var engineSpeed85kmhLastGear = ComputeEngineSpeed85kmh(gears[gears.Count - 1], axlegearRatio, dynamicTyreRadius);
@@ -292,7 +317,7 @@ namespace TUGraz.VectoCore.Models.Declaration
 					return new ShiftPolygon(downShift, upShift);
 				}
 
-				var gearRatio = gears[(int)gear].Ratio / gears[(int)(gear + 1)].Ratio;
+				var gearRatio = gears[gear].Ratio / gears[gear + 1].Ratio;
 				var rpmMarginFactor = 1 + ShiftPolygonRPMMargin / 100.0;
 
 				// ReSharper disable InconsistentNaming
@@ -359,7 +384,9 @@ namespace TUGraz.VectoCore.Models.Declaration
 			{
 				var intersections = new List<Point>();
 				// compute all intersection points between both line segments
+				// ReSharper disable once LoopCanBeConvertedToQuery
 				foreach (var origLine in orig.Pairwise(Edge.Create)) {
+					// ReSharper disable once LoopCanBeConvertedToQuery
 					foreach (var transformedLine in transformedDownshift.Pairwise(Edge.Create)) {
 						var isect = VectoMath.Intersect(origLine, transformedLine);
 						if (isect != null) {

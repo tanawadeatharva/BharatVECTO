@@ -5,8 +5,10 @@ using TUGraz.VectoCore.Utils;
 
 namespace TUGraz.VectoCore.Models.Declaration
 {
-	public sealed class PTOTransmission : LookupData<string, Watt>
+	public sealed class PTOTransmission : LookupData<string, Watt>, IDeclarationAuxiliaryTable
 	{
+		public const string NoPTO = "None";
+
 		protected override string ResourceId
 		{
 			get { return "TUGraz.VectoCore.Resources.Declaration.VAUX.PTO-tech.csv"; }
@@ -22,6 +24,11 @@ namespace TUGraz.VectoCore.Models.Declaration
 			Data = table.Rows.Cast<DataRow>().ToDictionary(
 				r => r.Field<string>("technology"),
 				r => r.ParseDouble("powerloss").SI<Watt>());
+		}
+
+		public string[] GetTechnologies()
+		{
+			return Data.Keys.ToArray();
 		}
 	}
 }

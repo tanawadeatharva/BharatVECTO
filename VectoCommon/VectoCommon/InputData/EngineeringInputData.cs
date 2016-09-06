@@ -218,6 +218,8 @@ namespace TUGraz.VectoCommon.InputData
 		/// cf. VECTO Input Parameters.xlsx
 		/// </summary>
 		KilogramSquareMeter Inertia { get; }
+
+		DataTable ShiftPolygon { get; }
 	}
 
 	public interface IEngineEngineeringInputData : IEngineDeclarationInputData

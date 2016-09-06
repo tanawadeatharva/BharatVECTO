@@ -111,7 +111,7 @@ namespace TUGraz.VectoCore.InputData.Reader
 				select new FullLoadCurve.FullLoadCurveEntry {
 					EngineSpeed = row.ParseDouble(Fields.EngineSpeed).RPMtoRad(),
 					TorqueFullLoad = row.ParseDouble(Fields.TorqueFullLoad).SI<NewtonMeter>(),
-					TorqueDrag = (engineFld ? row.ParseDouble(Fields.TorqueDrag).SI<NewtonMeter>() : null)
+					TorqueDrag = engineFld ? row.ParseDouble(Fields.TorqueDrag).SI<NewtonMeter>() : null
 				}).ToList();
 		}
 
@@ -121,7 +121,7 @@ namespace TUGraz.VectoCore.InputData.Reader
 				select new FullLoadCurve.FullLoadCurveEntry {
 					EngineSpeed = row.ParseDouble(0).RPMtoRad(),
 					TorqueFullLoad = row.ParseDouble(1).SI<NewtonMeter>(),
-					TorqueDrag = (engineFld ? row.ParseDouble(2).SI<NewtonMeter>() : null)
+					TorqueDrag = engineFld ? row.ParseDouble(2).SI<NewtonMeter>() : null
 				}).ToList();
 		}
 

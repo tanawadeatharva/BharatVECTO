@@ -45,6 +45,7 @@ namespace TUGraz.VectoCore.Models.Declaration
 	{
 		private DataTable _segmentTable;
 
+
 		protected override string ResourceId
 		{
 			get { return RessourceHelper.Namespace + "SegmentTable.csv"; }
@@ -67,6 +68,12 @@ namespace TUGraz.VectoCore.Models.Declaration
 		public override Segment Lookup(VehicleCategory vehicleCategory, AxleConfiguration axleConfiguration,
 			Kilogram grossVehicleMassRating, Kilogram curbWeight)
 		{
+			return Lookup(vehicleCategory, axleConfiguration, grossVehicleMassRating, curbWeight, false);
+		}
+
+		public Segment Lookup(VehicleCategory vehicleCategory, AxleConfiguration axleConfiguration,
+			Kilogram grossVehicleMassRating, Kilogram curbWeight, bool considerInvalid)
+		{
 			if (grossVehicleMassRating == null || grossVehicleMassRating < 7.5.SI().Ton) {
 				throw new VectoException("Gross vehicle mass must be greater than 7.5 tons");
 			}
@@ -79,7 +86,7 @@ namespace TUGraz.VectoCore.Models.Declaration
 					var axleConf = r.Field<string>("axleconf.");
 					var massMin = r.ParseDouble("gvw_min").SI().Ton;
 					var massMax = r.ParseDouble("gvw_max").SI().Ton;
-					return isValid == "1"
+					return (considerInvalid || isValid == "1")
 							&& category == vehicleCategory.ToString()
 							&& axleConf == axleConfiguration.GetName()
 						// MK 2016-06-07: normally the next condition should be "mass > massMin", except for 7.5t where is should be ">="
@@ -195,7 +202,7 @@ namespace TUGraz.VectoCore.Models.Declaration
 
 		private static string GetMissionSuffix(MissionType missionType)
 		{
-			return (missionType == MissionType.LongHaul ? "-longhaul" : "-other");
+			return missionType == MissionType.LongHaul ? "-longhaul" : "-other";
 		}
 	}
 }

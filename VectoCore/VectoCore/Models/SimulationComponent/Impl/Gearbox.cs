@@ -120,7 +120,7 @@ namespace TUGraz.VectoCore.Models.SimulationComponent.Impl
 			var inTorque = outTorque / ModelData.Gears[gear].Ratio + torqueLossResult.Value;
 
 			if (!inAngularVelocity.IsEqual(0)) {
-				var alpha = (ModelData.Inertia.IsEqual(0))
+				var alpha = ModelData.Inertia.IsEqual(0)
 					? 0.SI<PerSquareSecond>()
 					: outTorque / ModelData.Inertia;
 
@@ -284,11 +284,9 @@ namespace TUGraz.VectoCore.Models.SimulationComponent.Impl
 			if (Disengaged && !outAngularVelocity.IsEqual(0)) {
 				Disengaged = false;
 				var lastGear = Gear;
-				if (DataBus.VehicleStopped) {
-					Gear = _strategy.InitGear(absTime, dt, outTorque, outAngularVelocity);
-				} else {
-					Gear = _strategy.Engage(absTime, dt, outTorque, outAngularVelocity);
-				}
+				Gear = DataBus.VehicleStopped
+					? _strategy.InitGear(absTime, dt, outTorque, outAngularVelocity)
+					: _strategy.Engage(absTime, dt, outTorque, outAngularVelocity);
 				if (Gear > lastGear) {
 					LastUpshift = absTime;
 				}

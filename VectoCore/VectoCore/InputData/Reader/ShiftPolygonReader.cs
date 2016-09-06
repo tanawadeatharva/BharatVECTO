@@ -36,7 +36,6 @@ using System.Linq;
 using TUGraz.VectoCommon.Exceptions;
 using TUGraz.VectoCommon.Models;
 using TUGraz.VectoCommon.Utils;
-using TUGraz.VectoCore.Models;
 using TUGraz.VectoCore.Models.SimulationComponent.Data.Gearbox;
 using TUGraz.VectoCore.Utils;
 
@@ -83,14 +82,14 @@ namespace TUGraz.VectoCore.InputData.Reader
 		private static bool HeaderIsValid(DataColumnCollection columns)
 		{
 			return columns.Contains(Fields.Torque) && columns.Contains(Fields.AngularSpeedUp) &&
-					columns.Contains((Fields.AngularSpeedDown));
+					columns.Contains(Fields.AngularSpeedDown);
 		}
 
 		private static List<ShiftPolygon.ShiftPolygonEntry> CreateFromColumnNames(DataTable data, string columnName)
 		{
 			return (from DataRow row in data.Rows
 				select new ShiftPolygon.ShiftPolygonEntry {
-					Torque = DataTableExtensionMethods.ParseDouble(row, (string)Fields.Torque).SI<NewtonMeter>(),
+					Torque = row.ParseDouble(Fields.Torque).SI<NewtonMeter>(),
 					AngularSpeed = row.ParseDouble(columnName).RPMtoRad(),
 				}).ToList();
 		}

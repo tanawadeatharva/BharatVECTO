@@ -162,6 +162,8 @@ namespace TUGraz.VectoCore.Models.SimulationComponent.Data
 			/// </summary>
 			public Watt PWheel;
 
+			public bool? TorqueConverterActive { get; set; }
+
 			/// <summary>
 			/// The angular velocity at the wheel. only used in PWheelCycle.
 			/// </summary>

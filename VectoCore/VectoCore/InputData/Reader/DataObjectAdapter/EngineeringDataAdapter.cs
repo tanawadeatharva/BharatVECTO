@@ -36,7 +36,6 @@ using TUGraz.VectoCommon.Exceptions;
 using TUGraz.VectoCommon.InputData;
 using TUGraz.VectoCommon.Models;
 using TUGraz.VectoCommon.Utils;
-using TUGraz.VectoCore.Configuration;
 using TUGraz.VectoCore.InputData.Reader.ComponentData;
 using TUGraz.VectoCore.Models.Declaration;
 using TUGraz.VectoCore.Models.Simulation.Data;
@@ -159,6 +158,9 @@ namespace TUGraz.VectoCore.InputData.Reader.DataObjectAdapter
 				}
 
 				var fullLoadCurve = IntersectFullLoadCurves(engineData.FullLoadCurve, gear.MaxTorque);
+				if (gearbox.Type.AutomaticTransmission() && gear.ShiftPolygon == null) {
+					throw new VectoException("Shiftpolygons are required for AT Gearboxes!");
+				}
 				var shiftPolygon = gear.ShiftPolygon != null
 					? ShiftPolygonReader.Create(gear.ShiftPolygon)
 					: DeclarationData.Gearbox.ComputeShiftPolygon((int)i, fullLoadCurve, gearbox.Gears, engineData, axlegearRatio,
@@ -175,6 +177,7 @@ namespace TUGraz.VectoCore.InputData.Reader.DataObjectAdapter
 						// powersplit transmission: torque converter already contains ratio and losses
 						gearData.TorqueConverterRatio = 1;
 						gearData.TorqueConverterGearLossMap = TransmissionLossMapReader.Create(1, 1, string.Format("TCGear {0}", i + 1));
+						gearData.TorqueConverterShiftPolygon = ShiftPolygonReader.Create(gearbox.TorqueConverter.ShiftPolygon);
 					}
 				}
 				if (gearbox.Type == GearboxType.ATSerial) {
@@ -182,12 +185,14 @@ namespace TUGraz.VectoCore.InputData.Reader.DataObjectAdapter
 						// torqueconverter is active in first gear - duplicate ratio and lossmap for torque converter mode
 						gearData.TorqueConverterRatio = gearData.Ratio;
 						gearData.TorqueConverterGearLossMap = gearData.LossMap;
+						gearData.TorqueConverterShiftPolygon = ShiftPolygonReader.Create(gearbox.TorqueConverter.ShiftPolygon);
 					}
 					if (i == 1 && gearDifferenceRatio >= DeclarationData.Gearbox.TorqueConverterSecondGearThreshold) {
 						// ratio between first and second gear is above threshold, torqueconverter is active in second gear as well
 						// -> duplicate ratio and lossmap for torque converter mode, remove locked transmission for previous gear
 						gearData.TorqueConverterRatio = gearData.Ratio;
 						gearData.TorqueConverterGearLossMap = gearData.LossMap;
+						gearData.TorqueConverterShiftPolygon = ShiftPolygonReader.Create(gearbox.TorqueConverter.ShiftPolygon);
 						// NOTE: the lower gear in 'gears' dictionary has index i !!
 						gears[i].Ratio = double.NaN;
 						gears[i].LossMap = null;

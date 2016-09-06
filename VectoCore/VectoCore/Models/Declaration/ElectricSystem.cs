@@ -31,12 +31,13 @@
 
 using System;
 using System.Data;
+using System.Linq;
 using TUGraz.VectoCommon.Utils;
 using TUGraz.VectoCore.Utils;
 
 namespace TUGraz.VectoCore.Models.Declaration
 {
-	public sealed class ElectricSystem : LookupData<MissionType, string, Watt>
+	public sealed class ElectricSystem : LookupData<MissionType, string, Watt>, IDeclarationAuxiliaryTable
 	{
 		private readonly Alternator _alternator = new Alternator();
 
@@ -65,8 +66,9 @@ namespace TUGraz.VectoCore.Models.Declaration
 
 		public override Watt Lookup(MissionType missionType, string technology = null)
 		{
-			if (string.IsNullOrWhiteSpace(technology))
+			if (string.IsNullOrWhiteSpace(technology)) {
 				technology = "Standard technology";
+			}
 			var value = base.Lookup(missionType, technology);
 			return value / _alternator.Lookup(missionType);
 		}
@@ -97,10 +99,16 @@ namespace TUGraz.VectoCore.Models.Declaration
 
 			public override double Lookup(MissionType missionType, string technology = null)
 			{
-				if (string.IsNullOrWhiteSpace(technology))
+				if (string.IsNullOrWhiteSpace(technology)) {
 					technology = "Standard alternator efficiency";
+				}
 				return base.Lookup(missionType, technology);
 			}
+		}
+
+		public string[] GetTechnologies()
+		{
+			return Data.Keys.Select(x => x.Item2).Distinct().ToArray();
 		}
 	}
 }

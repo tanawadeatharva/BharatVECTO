@@ -32,7 +32,6 @@
 using System;
 using System.Collections.Generic;
 using System.Linq;
-using iTextSharp.text.pdf.parser.clipper;
 using TUGraz.VectoCommon.Exceptions;
 using TUGraz.VectoCommon.Utils;
 
@@ -161,6 +160,7 @@ namespace TUGraz.VectoCore.Models.SimulationComponent.Data.Gearbox
 			}
 
 			var solutions = new List<double>();
+			// ReSharper disable once LoopCanBeConvertedToQuery
 			foreach (var edge in TorqueConverterEntries.Pairwise(
 				(p1, p2) => Edge.Create(new Point(p1.SpeedRatio, p1.Torque.Value()), new Point(p2.SpeedRatio, p2.Torque.Value())))) {
 				var x = (referenceTorque - edge.OffsetXY) / edge.SlopeXY;

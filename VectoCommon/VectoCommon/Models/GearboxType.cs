@@ -29,6 +29,7 @@
 *   Martin Rexeis, rexeis@ivt.tugraz.at, IVT, Graz University of Technology
 */
 
+using System;
 using System.Diagnostics.CodeAnalysis;
 using TUGraz.VectoCommon.Utils;
 
@@ -45,8 +46,31 @@ namespace TUGraz.VectoCommon.Models
 		DrivingCycle
 	}
 
-	public static class GearBoxTypeExtension
+	public static class GearBoxTypeHelper
 	{
+		public static string GetLabel(this GearboxType type)
+		{
+			switch (type) {
+				case GearboxType.MT:
+					return "Manual Transmission (MT)";
+				case GearboxType.AMT:
+					return "Automated Transmission (AMT)";
+				case GearboxType.ATSerial:
+					return "Automatic Transmission - Serial (AT-S)";
+				case GearboxType.ATPowerSplit:
+					return "Automatic Transmission - PowerSplit (AT-P)";
+				case GearboxType.DrivingCycle:
+					return "Gear from Driving Cycle";
+				default:
+					throw new ArgumentOutOfRangeException("type", type, null);
+			}
+		}
+
+		public static string ShortName(this GearboxType type)
+		{
+			return type.ToString();
+		}
+
 		public static bool AutomaticTransmission(this GearboxType type)
 		{
 			return type == GearboxType.ATPowerSplit || type == GearboxType.ATSerial;

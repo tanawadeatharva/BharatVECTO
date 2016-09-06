@@ -136,6 +136,7 @@
     <Compile Include="Models\Connector\Ports\ITnPort.cs" />
     <Compile Include="InputData\Reader\ComponentData\AccelerationCurveReader.cs" />
     <Compile Include="Models\Declaration\PTOTransmission.cs" />
+    <Compile Include="Models\Declaration\IDeclarationAuxiliaryTable.cs" />
     <Compile Include="Models\SimulationComponent\Data\AngularGearData.cs" />
     <Compile Include="InputData\Reader\ComponentData\TransmissionLossMapReader.cs" />
     <Compile Include="InputData\Reader\ComponentData\RetarderLossMapReader.cs" />
@@ -201,7 +202,6 @@
     <Compile Include="Models\SimulationComponent\Impl\DummyRetarder.cs" />
     <Compile Include="Models\SimulationComponent\Impl\EngineAuxiliary.cs" />
     <Compile Include="Models\SimulationComponent\Impl\EngineOnlyCombustionEngine.cs" />
-    <Compile Include="Models\SimulationComponent\Impl\CycleClutch.cs" />
     <Compile Include="Models\SimulationComponent\Impl\MTShiftStrategy.cs" />
     <Compile Include="Models\SimulationComponent\Impl\TransmissionComponent.cs" />
     <Compile Include="Models\SimulationComponent\IShiftStrategy.cs" />
