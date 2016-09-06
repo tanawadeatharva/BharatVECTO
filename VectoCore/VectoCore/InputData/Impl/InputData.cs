@@ -59,9 +59,9 @@ namespace TUGraz.VectoCore.InputData.Impl
 	{
 		public bool Enabled { get; internal set; }
 
-		public MeterPerSquareSecond Deceleration { get; internal set; }
+		//public MeterPerSquareSecond Deceleration { get; internal set; }
 
-		public MeterPerSecond MinSpeed { get; internal set; }
+		//public MeterPerSecond MinSpeed { get; internal set; }
 
 		public double CoastingDecisionFactorOffset { get; internal set; }
 		public double CoastingDecisionFactorScaling { get; internal set; }

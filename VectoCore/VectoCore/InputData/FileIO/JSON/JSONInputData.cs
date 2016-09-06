@@ -398,8 +398,8 @@ namespace TUGraz.VectoCore.InputData.FileIO.JSON
 					: null;
 				return new LookAheadCoastingInputData() {
 					Enabled = lac.GetEx<bool>(JsonKeys.DriverData_Lookahead_Enabled),
-					Deceleration = lac.GetEx<double>(JsonKeys.DriverData_Lookahead_Deceleration).SI<MeterPerSquareSecond>(),
-					MinSpeed = lac.GetEx<double>(JsonKeys.DriverData_Lookahead_MinSpeed).KMPHtoMeterPerSecond(),
+					//Deceleration = lac.GetEx<double>(JsonKeys.DriverData_Lookahead_Deceleration).SI<MeterPerSquareSecond>(),
+					//MinSpeed = lac.GetEx<double>(JsonKeys.DriverData_Lookahead_MinSpeed).KMPHtoMeterPerSecond(),
 					LookaheadDistanceFactor = distanceScalingFactor,
 					CoastingDecisionFactorOffset = lacDfOffset,
 					CoastingDecisionFactorScaling = lacDfScaling,
