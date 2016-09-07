@@ -641,6 +641,7 @@ namespace TUGraz.VectoCommon.Utils
 		{
 			return Val * 3.6;
 		}
+
 		/// <summary>
 		/// Implements the operator /.
 		/// </summary>
@@ -833,8 +834,9 @@ namespace TUGraz.VectoCommon.Utils
 		/// <param name="val">The value of the SI object.</param>
 		public static T Create(double val)
 		{
-			if (val == 0)
+			if (val == 0) {
 				return ZeroPrototype;
+			}
 
 			return Constructor(val);
 		}
@@ -2248,6 +2250,11 @@ namespace TUGraz.VectoCommon.Utils
 			}
 
 			return (Val * outputFactor.Value).ToString("F" + decimals.Value, CultureInfo.InvariantCulture);
+		}
+
+		public string ToGUIFormat()
+		{
+			return Val.ToGUIFormat();
 		}
 	}
 }

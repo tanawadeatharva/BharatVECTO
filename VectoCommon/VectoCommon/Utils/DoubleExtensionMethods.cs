@@ -32,6 +32,7 @@
 using System;
 using System.Collections.Generic;
 using System.Diagnostics;
+using System.Globalization;
 using System.Linq;
 
 namespace TUGraz.VectoCommon.Utils
@@ -215,6 +216,11 @@ namespace TUGraz.VectoCommon.Utils
 		{
 			return self.Select(x => x.SI<T>());
 		}
+
+		public static string ToGUIFormat(this double self)
+		{
+			return self.ToString(CultureInfo.InvariantCulture);
+		}
 	}
 
 	public static class FloatExtensionMethods
@@ -223,6 +229,14 @@ namespace TUGraz.VectoCommon.Utils
 		public static T SI<T>(this float value) where T : SIBase<T>
 		{
 			return SIBase<T>.Create(value);
+		}
+	}
+
+	public static class IntegerExtensionMethods
+	{
+		public static string ToGUIFormat(this int self)
+		{
+			return self.ToString();
 		}
 	}
 }
