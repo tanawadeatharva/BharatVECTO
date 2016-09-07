@@ -265,8 +265,8 @@ namespace TUGraz.VectoCore.Models.SimulationComponent.Impl
 
 		protected override void DoWriteModalResults(IModalDataContainer container)
 		{
-			var avgInAngularSpeed = (PreviousState.OutAngularVelocity +
-									CurrentState.OutAngularVelocity) / 2.0 * ModelData.Gears[Gear].Ratio;
+			var avgInAngularSpeed = (PreviousState.InAngularVelocity +
+									CurrentState.InAngularVelocity) / 2.0;
 
 			container[ModalResultField.Gear] = Disengaged || DataBus.VehicleStopped ? 0 : Gear;
 			container[ModalResultField.TC_Locked] = TorqueConverterLocked;
