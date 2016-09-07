@@ -343,7 +343,7 @@ namespace TUGraz.VectoCore.Models.Simulation.Data
 		/// <summary>
 		///     [1/min]	Torque converter output speed
 		/// </summary>
-		[ModalResultField(typeof(SI), "n_TC_out")] TC_angularSpeedOut,
+		[ModalResultField(typeof(SI), "n_TC_out", outputFactor: 60 / (2 * Math.PI))] TC_angularSpeedOut,
 
 		/// <summary>
 		///     [Nm]	Torque converter output torque
@@ -353,7 +353,7 @@ namespace TUGraz.VectoCore.Models.Simulation.Data
 		/// <summary>
 		///     [1/min]	Torque converter output speed
 		/// </summary>
-		[ModalResultField(typeof(SI), "n_TC_in")] TC_angularSpeedIn,
+		[ModalResultField(typeof(SI), "n_TC_in", outputFactor: 60 / (2 * Math.PI))] TC_angularSpeedIn,
 
 		/// <summary>
 		///     [m]	Altitude
