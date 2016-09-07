@@ -11,6 +11,7 @@
 Option Infer On
 
 Imports System.Collections.Generic
+Imports System.ComponentModel.DataAnnotations
 Imports System.IO
 Imports System.Linq
 Imports Newtonsoft.Json.Linq
@@ -20,7 +21,7 @@ Imports TUGraz.VectoCommon.Utils
 Imports TUGraz.VectoCore.InputData.FileIO.JSON
 Imports TUGraz.VectoCore.Models.Declaration
 
-
+<CustomValidation(GetType(Vehicle), "ValidateVehicle")>
 Public Class Vehicle
 	'V2 MassMax is now saved in [t] instead of [kg]
 	Private Const FormatVersion As Short = 7
@@ -37,7 +38,7 @@ Public Class Vehicle
 	Public CrossWindCorrectionMode As CrossWindCorrectionMode
 	Public ReadOnly CrossWindCorrectionFile As SubPath
 
-	Public RetarderType As RetarderType
+	<ValidateObject()> Public RetarderType As RetarderType
 	Public RetarderRatio As Double = 0
 	Public ReadOnly RetarderLossMapFile As SubPath
 
@@ -82,6 +83,11 @@ Public Class Vehicle
 		PTOCycle = New SubPath()
 		SetDefault()
 	End Sub
+
+
+	Public Shared Function ValidateVehicle(vehicle As Vehicle, validationContext As ValidationContext) As ValidationResult
+		Return New ValidationResult("bla")
+	End Function
 
 	Private Sub SetDefault()
 		Mass = 0
@@ -250,6 +256,13 @@ Public Class Vehicle
 
 	Public Function SaveFile() As Boolean
 		SavedInDeclMode = Cfg.DeclMode
+
+		Dim validationResults = Validate(If(Cfg.DeclMode, ExecutionMode.Declaration, ExecutionMode.Engineering))
+
+		If validationResults.Count > 0 Then
+			MsgBox(String.Format("Invalid input: \n{0}", String.Join("; ", validationResults)), MsgBoxStyle.OkOnly, "Failed to save vehicle")
+			Return False
+		End If
 
 		Dim json As New JSONParser
 		'Header
