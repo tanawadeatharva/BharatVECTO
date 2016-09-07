@@ -89,36 +89,36 @@ Public Class VectoJob
 		Dim json As New JSONParser
 
 		'Header
-		json.Content.Add("Header", JToken.FromObject(New Dictionary(Of String, Object) From {
-														{"CreatedBy", Lic.LicString & " (" & Lic.GUID & ")"},
-														{"Date", Now.ToUniversalTime().ToString("o")},
-														{"AppVersion", VECTOvers},
-														{"FileVersion", FormatVersion}}))
+		Dim header As Dictionary(Of String, Object) = New Dictionary(Of String, Object) From {
+				{"CreatedBy", Lic.LicString & " (" & Lic.GUID & ")"},
+				{"Date", Now.ToUniversalTime().ToString("o")},
+				{"AppVersion", VECTOvers},
+				{"FileVersion", FormatVersion}}
 
 		'Body
-		Dim dic0 = New Dictionary(Of String, Object)
+		Dim body = New Dictionary(Of String, Object)
 
-		dic0.Add("SavedInDeclMode", Cfg.DeclMode)
+		body.Add("SavedInDeclMode", Cfg.DeclMode)
 		SavedInDeclMode = Cfg.DeclMode
 
 		'Main Files
-		dic0.Add("VehicleFile", _vehicleFile.PathOrDummy)
-		dic0.Add("EngineFile", _engineFile.PathOrDummy)
-		dic0.Add("GearboxFile", _gearboxFile.PathOrDummy)
+		body.Add("VehicleFile", _vehicleFile.PathOrDummy)
+		body.Add("EngineFile", _engineFile.PathOrDummy)
+		body.Add("GearboxFile", _gearboxFile.PathOrDummy)
 
 		'Cycles
 		If CycleFiles.Count > 0 Then
-			dic0.Add("Cycles", CycleFiles.Select(Function(sb) sb.PathOrDummy))
+			body.Add("Cycles", CycleFiles.Select(Function(sb) sb.PathOrDummy))
 		End If
 
 		'AA-TB
 		'ADVANCED AUXILIARIES 
-		dic0.Add("AuxiliaryAssembly", AuxiliaryAssembly)
-		dic0.Add("AuxiliaryVersion", AuxiliaryVersion)
-		dic0.Add("AdvancedAuxiliaryFilePath", AdvancedAuxiliaryFilePath)
+		body.Add("AuxiliaryAssembly", AuxiliaryAssembly)
+		body.Add("AuxiliaryVersion", AuxiliaryVersion)
+		body.Add("AdvancedAuxiliaryFilePath", AdvancedAuxiliaryFilePath)
 
 		If AuxPaths.Any() Then
-			dic0.Add("Aux", AuxPaths.Select(Function(kv) New Dictionary(Of String, Object) From {
+			body.Add("Aux", AuxPaths.Select(Function(kv) New Dictionary(Of String, Object) From {
 												{"ID", Trim(UCase(kv.Key))},
 												{"Type", kv.Value.Type},
 												{"Path", kv.Value.Path.PathOrDummy},
@@ -126,14 +126,14 @@ Public Class VectoJob
 												}))
 		End If
 
-		dic0.Add("VACC", _driverAccelerationFile.PathOrDummy)
-		dic0.Add("EngineOnlyMode", EngineOnly)
-		dic0.Add("StartStop", New Dictionary(Of String, Object) From {
+		body.Add("VACC", _driverAccelerationFile.PathOrDummy)
+		body.Add("EngineOnlyMode", EngineOnly)
+		body.Add("StartStop", New Dictionary(Of String, Object) From {
 					{"Enabled", _startStop},
 					{"MaxSpeed", _startStopMaxSpeed},
 					{"MinTime", _startStopMinTime},
 					{"Delay", StartStopDelay}})
-		dic0.Add("LAC", New Dictionary(Of String, Object) From {
+		body.Add("LAC", New Dictionary(Of String, Object) From {
 					{"Enabled", LookAheadOn},
 					{"PreviewDistanceFactor", LacPreviewFactor},
 					{"DF_offset", LacDfOffset},
@@ -153,9 +153,9 @@ Public Class VectoJob
 		overspeedDic.Add("MinSpeed", VMin)
 		overspeedDic.Add("OverSpeed", OverSpeed)
 		overspeedDic.Add("UnderSpeed", UnderSpeed)
-		dic0.Add("OverSpeedEcoRoll", overspeedDic)
+		body.Add("OverSpeedEcoRoll", overspeedDic)
 
-		json.Content.Add("Body", JToken.FromObject(dic0))
+		json.Content = JToken.FromObject(New Dictionary(Of String, Object) From {{"Header", header}, {"Body", body}})
 		Return json.WriteFile(_sFilePath)
 	End Function
 

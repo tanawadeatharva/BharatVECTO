@@ -98,26 +98,25 @@ Public Class Gearbox
 	Public Function SaveFile() As Boolean
 		Dim i As Integer
 		Dim json As New JSONParser
-		Dim content As Dictionary(Of String, Object)
 
 		'Header
-		content = New Dictionary(Of String, Object)
-		content.Add("CreatedBy", Lic.LicString & " (" & Lic.GUID & ")")
-		content.Add("Date", Now.ToUniversalTime().ToString("o"))
-		content.Add("AppVersion", VECTOvers)
-		content.Add("FileVersion", FormatVersion)
-		json.Content.Add("Header", JToken.FromObject(content))
+		Dim header As Dictionary(Of String, Object) = New Dictionary(Of String, Object)
+		header.Add("CreatedBy", Lic.LicString & " (" & Lic.GUID & ")")
+		header.Add("Date", Now.ToUniversalTime().ToString("o"))
+		header.Add("AppVersion", VECTOvers)
+		header.Add("FileVersion", FormatVersion)
+
 
 		'Body
-		content = New Dictionary(Of String, Object)
+		Dim body As Dictionary(Of String, Object) = New Dictionary(Of String, Object)
 
-		content.Add("SavedInDeclMode", Cfg.DeclMode)
+		body.Add("SavedInDeclMode", Cfg.DeclMode)
 		SavedInDeclMode = Cfg.DeclMode
 
-		content.Add("ModelName", ModelName)
+		body.Add("ModelName", ModelName)
 
-		content.Add("Inertia", GbxInertia)
-		content.Add("TracInt", TracIntrSi)
+		body.Add("Inertia", GbxInertia)
+		body.Add("TracInt", TracIntrSi)
 
 		Dim ls As New List(Of Object)
 		For i = 0 To GearRatios.Count - 1
@@ -135,18 +134,18 @@ Public Class Gearbox
 
 			ls.Add(gearDict)
 		Next
-		content.Add("Gears", ls)
+		body.Add("Gears", ls)
 
-		content.Add("TqReserve", TorqueResv)
-		content.Add("SkipGears", SkipGears)
-		content.Add("ShiftTime", ShiftTime)
-		content.Add("EaryShiftUp", ShiftInside)
+		body.Add("TqReserve", TorqueResv)
+		body.Add("SkipGears", SkipGears)
+		body.Add("ShiftTime", ShiftTime)
+		body.Add("EaryShiftUp", ShiftInside)
 
-		content.Add("StartTqReserve", TorqueResvStart)
-		content.Add("StartSpeed", StartSpeed)
-		content.Add("StartAcc", StartAcc)
+		body.Add("StartTqReserve", TorqueResvStart)
+		body.Add("StartSpeed", StartSpeed)
+		body.Add("StartAcc", StartAcc)
 
-		content.Add("GearboxType", Type)
+		body.Add("GearboxType", Type)
 
 		Dim torqueConverterDict As New Dictionary(Of String, Object)
 		torqueConverterDict.Add("Enabled", TorqueConverterEnabled)
@@ -154,14 +153,14 @@ Public Class Gearbox
 		torqueConverterDict.Add("RefRPM", TorqueConverterReferenceRpm)
 		torqueConverterDict.Add("Inertia", TorqueConverterInertia)
 		torqueConverterDict.Add("ShiftPolygon", TorqueConverterShiftPolygonFile)
-		content.Add("TorqueConverter", torqueConverterDict)
+		body.Add("TorqueConverter", torqueConverterDict)
 
 
-		content.Add("DownshiftAferUpshiftDelay", DownshiftAfterUpshift)
-		content.Add("UpshiftAfterDownshiftDelay", UpshiftAfterDownshift)
-		content.Add("UpshiftMinAcceleration", UpshiftMinAcceleration)
+		body.Add("DownshiftAferUpshiftDelay", DownshiftAfterUpshift)
+		body.Add("UpshiftAfterDownshiftDelay", UpshiftAfterDownshift)
+		body.Add("UpshiftMinAcceleration", UpshiftMinAcceleration)
 
-		json.Content.Add("Body", JToken.FromObject(content))
+		json.Content = JToken.FromObject(New Dictionary(Of String, Object) From {{"Header", header}, {"Body", body}})
 
 		Return json.WriteFile(_filePath)
 	End Function
@@ -202,7 +201,7 @@ Public Class Gearbox
 				If dic("Efficiency") Is Nothing Then
 					GearLossmaps(i).Init(_myPath, dic.GetEx(Of String)("LossMap"))
 				Else
-					GearLossmaps(i).Init(_myPath, dic.GetEx(Of Double)("Efficiency"))
+					GearLossmaps(i).Init(_myPath, dic.GetEx(Of Double)("Efficiency").ToString())
 				End If
 
 				MaxTorque.Add(dic.GetEx(Of String)("MaxTorque"))

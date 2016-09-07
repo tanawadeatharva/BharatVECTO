@@ -10,6 +10,7 @@
 ' See the LICENSE.txt for the specific language governing permissions and limitations.
 Imports System.Collections.Generic
 Imports System.IO
+Imports System.Linq
 Imports Microsoft.VisualBasic.FileIO
 Imports Newtonsoft.Json
 Imports Newtonsoft.Json.Linq
@@ -19,7 +20,7 @@ Imports Newtonsoft.Json.Linq
 ''' </summary>
 ''' <remarks></remarks>
 Public Class JSONParser
-	Public Content As JObject 'Dictionary(Of String, Object)
+	Public Content As JToken 'Dictionary(Of String, Object)
 
 	Public Sub New()
 		'Content = New Dictionary(Of String, Object)
@@ -30,50 +31,11 @@ Public Class JSONParser
 			Return False
 		End If
 		Using reader As TextReader = File.OpenText(path)
-			JToken.ReadFrom(New JsonTextReader(reader))
+			Content = JToken.ReadFrom(New JsonTextReader(reader))
 		End Using
 		Return True
 	End Function
 
-	''' <summary>
-	''' Reads a JSON File into the Content variable.
-	''' </summary>
-	''' <param name="path"></param>
-	''' <returns></returns>
-	''' <remarks></remarks>
-	'Public Function ReadFile(path As String) As Boolean
-	'	Dim file As TextFieldParser
-	'	Dim str As String
-
-	'	Content.Clear()
-
-	'	If Not IO.File.Exists(path) Then
-	'		Return False
-	'	End If
-
-	'	Try
-	'		file = New TextFieldParser(path)
-	'	Catch ex As Exception
-	'		Return False
-	'	End Try
-
-	'	If file.EndOfData Then
-	'		file.Close()
-	'		Return False
-	'	End If
-
-	'	str = file.ReadToEnd
-
-	'	file.Close()
-
-	'	Try
-	'		Content = JsonConvert.DeserializeObject(str, Content.GetType)
-	'	Catch ex As Exception
-	'		Return False
-	'	End Try
-
-	'	Return True
-	'End Function
 
 	''' <summary>
 	''' Writes the Content variable into a JSON file.

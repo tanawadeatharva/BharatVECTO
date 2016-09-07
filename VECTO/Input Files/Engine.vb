@@ -141,42 +141,38 @@ Public Class Engine
 	''' <returns>True if successful.</returns>
 	''' <remarks></remarks>
 	Public Function SaveFile() As Boolean
-		Dim JSON As New JSONParser
-		Dim dic As Dictionary(Of String, Object)
+		Dim json As New JSONParser
 
 		'Header
-		dic = New Dictionary(Of String, Object)
-		dic.Add("CreatedBy", Lic.LicString & " (" & Lic.GUID & ")")
-		dic.Add("Date", Now.ToUniversalTime().ToString("o"))
-		dic.Add("AppVersion", VECTOvers)
-		dic.Add("FileVersion", FormatVersion)
-		JSON.Content.Add("Header", JToken.FromObject(dic))
+		Dim header As Dictionary(Of String, Object) = New Dictionary(Of String, Object)
+		header.Add("CreatedBy", Lic.LicString & " (" & Lic.GUID & ")")
+		header.Add("Date", Now.ToUniversalTime().ToString("o"))
+		header.Add("AppVersion", VECTOvers)
+		header.Add("FileVersion", FormatVersion)
 
 		'Body
-		dic = New Dictionary(Of String, Object)
+		Dim body As Dictionary(Of String, Object) = New Dictionary(Of String, Object)
 
-		dic.Add("SavedInDeclMode", Cfg.DeclMode)
+		body.Add("SavedInDeclMode", Cfg.DeclMode)
 		SavedInDeclMode = Cfg.DeclMode
 
-		dic.Add("ModelName", ModelName)
+		body.Add("ModelName", ModelName)
 
-		dic.Add("Displacement", Displacement)
-		dic.Add("IdlingSpeed", IdleSpeed)
-		dic.Add("Inertia", EngineInertia)
+		body.Add("Displacement", Displacement)
+		body.Add("IdlingSpeed", IdleSpeed)
+		body.Add("Inertia", EngineInertia)
 
-		dic.Add("FullLoadCurve", _fullLoadCurvePath.PathOrDummy)
+		body.Add("FullLoadCurve", _fullLoadCurvePath.PathOrDummy)
 
-		dic.Add("FuelMap", _fuelConsumptionMapPath.PathOrDummy)
+		body.Add("FuelMap", _fuelConsumptionMapPath.PathOrDummy)
 
-		dic.Add("WHTC-Urban", WHTCurban)
-		dic.Add("WHTC-Rural", WHTCrural)
-		dic.Add("WHTC-Motorway", WHTCmw)
+		body.Add("WHTC-Urban", WHTCurban)
+		body.Add("WHTC-Rural", WHTCrural)
+		body.Add("WHTC-Motorway", WHTCmw)
 
+		json.Content = JToken.FromObject(New Dictionary(Of String, Object) From {{"Header", header}, {"Body", body}})
 
-		JSON.Content.Add("Body", JToken.FromObject(dic))
-
-
-		Return JSON.WriteFile(_filePath)
+		Return json.WriteFile(_filePath)
 	End Function
 
 	''' <summary>
@@ -289,4 +285,5 @@ Public Class Engine
 		End Set
 	End Property
 End Class
+
 

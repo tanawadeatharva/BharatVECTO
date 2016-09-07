@@ -365,7 +365,11 @@ Public Class MainForm
 						If VehicleForm.WindowState = FormWindowState.Minimized Then VehicleForm.WindowState = FormWindowState.Normal
 						VehicleForm.BringToFront()
 					End If
-					VehicleForm.OpenVehicle(File)
+					Try
+						VehicleForm.OpenVehicle(File)
+					Catch ex As Exception
+						MsgBox(ex.Message, MsgBoxStyle.OkOnly, "Error loading Vehicle File")
+					End Try
 				Case ".VENG"
 					If Not EngineForm.Visible Then
 						EngineForm.Show()
@@ -939,7 +943,10 @@ lbFound:
 	End Sub
 
 
-	Private Sub VectoWorkerV3_OnDoWork(sender As BackgroundWorker, e As DoWorkEventArgs)
+	Private Sub VectoWorkerV3_OnDoWork(theSender As Object, e As DoWorkEventArgs)
+		Dim sender As BackgroundWorker = TryCast(theSender, BackgroundWorker)
+		If sender Is Nothing Then Exit Sub
+
 		AllowSleepOFF()
 
 		Dim sumFileWriter As FileOutputWriter = New FileOutputWriter(JobFileList(0))

@@ -232,7 +232,13 @@ Public Class VectoJobForm
 			VehicleForm.BringToFront()
 		End If
 
-		If Not Trim(f) = "" Then VehicleForm.OpenVehicle(f)
+		If Not Trim(f) = "" Then
+			Try
+				VehicleForm.OpenVehicle(f)
+			Catch ex As Exception
+				MsgBox(ex.Message, MsgBoxStyle.OkOnly, "Error loading Vehicle File")
+			End Try
+		End If
 	End Sub
 
 	'Open Engine Editor
@@ -1010,7 +1016,7 @@ lbDlog:
 
 		VEH0.FilePath = fFileRepl(TbVEH.Text, GetPath(VECTOfile))
 		If VEH0.ReadFile(False) Then
-			Dim maxMass = (VEH0.MassMax * 1000).SI(Of Kilogram)()				  'CSng(fTextboxToNumString(TbMassMass.Text))
+			Dim maxMass = (VEH0.MassMax * 1000).SI(Of Kilogram)()				   'CSng(fTextboxToNumString(TbMassMass.Text))
 
 			Dim s0 As Segment = Nothing
 			Try

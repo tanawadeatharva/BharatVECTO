@@ -90,28 +90,27 @@ Public Class Configuration
 
 	Public Sub Save()
 		Dim json As New JSONParser
-		Dim dic As Dictionary(Of String, Object)
 
-		dic = New Dictionary(Of String, Object)
-		dic.Add("CreatedBy", Lic.LicString & " (" & Lic.GUID & ")")
-		dic.Add("Date", Now.ToUniversalTime().ToString("o"))
-		dic.Add("AppVersion", VECTOvers)
-		dic.Add("FileVersion", FormatVersion)
-		json.Content.Add("Header", JToken.FromObject(dic))
+		Dim header As Dictionary(Of String, Object) = New Dictionary(Of String, Object)
+		header.Add("CreatedBy", Lic.LicString & " (" & Lic.GUID & ")")
+		header.Add("Date", Now.ToUniversalTime().ToString("o"))
+		header.Add("AppVersion", VECTOvers)
+		header.Add("FileVersion", FormatVersion)
 
-		dic = New Dictionary(Of String, Object)
-		dic.Add("ModOut", ModOut)
-		dic.Add("Mod1Hz", Mod1Hz)
-		dic.Add("LogSize", LogSize)
-		dic.Add("AirDensity", AirDensity)
-		dic.Add("FuelDensity", FuelDens)
-		dic.Add("CO2perFC", CO2perFC)
-		dic.Add("OpenCmd", OpenCmd)
-		dic.Add("OpenCmdName", OpenCmdName)
-		dic.Add("FirstRun", FirstRun)
-		dic.Add("DeclMode", DeclMode)
-		json.Content.Add("Body", JToken.FromObject(dic))
 
+		Dim body As Dictionary(Of String, Object) = New Dictionary(Of String, Object)
+		body.Add("ModOut", ModOut)
+		body.Add("Mod1Hz", Mod1Hz)
+		body.Add("LogSize", LogSize)
+		body.Add("AirDensity", AirDensity)
+		body.Add("FuelDensity", FuelDens)
+		body.Add("CO2perFC", CO2perFC)
+		body.Add("OpenCmd", OpenCmd)
+		body.Add("OpenCmdName", OpenCmdName)
+		body.Add("FirstRun", FirstRun)
+		body.Add("DeclMode", DeclMode)
+
+		json.Content = JToken.FromObject(New Dictionary(Of String, Object) From {{"Header", header}, {"Body", body}})
 		json.WriteFile(FilePath)
 	End Sub
 End Class

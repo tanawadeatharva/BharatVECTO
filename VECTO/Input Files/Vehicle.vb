@@ -124,7 +124,7 @@ Public Class Vehicle
 		If Not json.ReadFile(_filePath) Then Return False
 
 		Try
-			Dim header As jtoken = json.Content.GetEx("Header")
+			Dim header As JToken = json.Content.GetEx("Header")
 			Dim body As JToken = json.Content.GetEx("Body")
 
 			_fileVersion = header.GetEx(Of Integer)("FileVersion")
@@ -253,49 +253,48 @@ Public Class Vehicle
 
 		Dim json As New JSONParser
 		'Header
-		json.Content.Add("Header", JToken.FromObject(New Dictionary(Of String, Object) From {
-														{"CreatedBy", Lic.LicString & " (" & Lic.GUID & ")"},
-														{"Date", Now.ToUniversalTime().ToString("o")},
-														{"AppVersion", VECTOvers},
-														{"FileVersion", FormatVersion}}))
+		Dim header As Dictionary(Of String, Object) = New Dictionary(Of String, Object) From {
+				{"CreatedBy", Lic.LicString & " (" & Lic.GUID & ")"},
+				{"Date", Now.ToUniversalTime().ToString("o")},
+				{"AppVersion", VECTOvers},
+				{"FileVersion", FormatVersion}}
 
 		'Body
-		Dim dic As Dictionary(Of String, Object)
-		dic = New Dictionary(Of String, Object) From {
-			{"SavedInDeclMode", Cfg.DeclMode},
-			{"VehCat", VehicleCategory.ToString()},
-			{"CurbWeight", Mass},
-			{"CurbWeightExtra", MassExtra},
-			{"Loading", Loading},
-			{"MassMax", MassMax},
-			{"CdA", CdA0},
-			{"rdyn", DynamicTyreRadius},
-			{"CdCorrMode", CrossWindCorrectionMode.GetName()},
-			{"CdCorrFile", CrossWindCorrectionFile.PathOrDummy},
-			{"Retarder", New Dictionary(Of String, Object) From {
+		Dim body As Dictionary(Of String, Object) = New Dictionary(Of String, Object) From {
+				{"SavedInDeclMode", Cfg.DeclMode},
+				{"VehCat", VehicleCategory.ToString()},
+				{"CurbWeight", Mass},
+				{"CurbWeightExtra", MassExtra},
+				{"Loading", Loading},
+				{"MassMax", MassMax},
+				{"CdA", CdA0},
+				{"rdyn", DynamicTyreRadius},
+				{"CdCorrMode", CrossWindCorrectionMode.GetName()},
+				{"CdCorrFile", CrossWindCorrectionFile.PathOrDummy},
+				{"Retarder", New Dictionary(Of String, Object) From {
 				{"Type", RetarderType.GetName()},
 				{"Ratio", RetarderRatio},
 				{"File", RetarderLossMapFile.PathOrDummy}}},
-			{"AngularGear", New Dictionary(Of String, Object) From {
+				{"AngularGear", New Dictionary(Of String, Object) From {
 				{"Type", AngularGearType.ToString()},
 				{"Ratio", AngularGearRatio},
 				{"LossMap", AngularGearLossMapFile.PathOrDummy}}},
-			{"PTO", New Dictionary(Of String, Object) From {
+				{"PTO", New Dictionary(Of String, Object) From {
 				{"Type", PTOType},
 				{"LossMap", PTOLossMap.PathOrDummy},
 				{"Cycle", PTOCycle.PathOrDummy}}},
-			{"AxleConfig", New Dictionary(Of String, Object) From {
+				{"AxleConfig", New Dictionary(Of String, Object) From {
 				{"Type", AxleConfiguration.GetName()},
 				{"Axles", (From axle In Axles Select New Dictionary(Of String, Object) From {
-					{"Inertia", axle.Inertia},
-					{"Wheels", axle.Wheels},
-					{"AxleWeightShare", axle.Share},
-					{"TwinTyres", axle.TwinTire},
-					{"RRCISO", axle.RRC},
-					{"FzISO", axle.FzISO}})}}}
-			}
+				{"Inertia", axle.Inertia},
+				{"Wheels", axle.Wheels},
+				{"AxleWeightShare", axle.Share},
+				{"TwinTyres", axle.TwinTire},
+				{"RRCISO", axle.RRC},
+				{"FzISO", axle.FzISO}})}}}
+				}
 
-		json.Content.Add("Body", JToken.FromObject(dic))
+		json.Content = JToken.FromObject(New Dictionary(Of String, Object) From {{"Header", header}, {"Body", body}})
 		Return json.WriteFile(_filePath)
 	End Function
 

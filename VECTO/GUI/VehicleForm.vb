@@ -192,7 +192,14 @@ Public Class VehicleForm
 
 	'Open
 	Private Sub ToolStripBtOpen_Click(sender As Object, e As EventArgs) Handles ToolStripBtOpen.Click
-		If VehicleFileBrowser.OpenDialog(_vehFile) Then OpenVehicle(VehicleFileBrowser.Files(0))
+		If VehicleFileBrowser.OpenDialog(_vehFile) Then
+			Try
+				OpenVehicle(VehicleFileBrowser.Files(0))
+			Catch ex As Exception
+				MsgBox(ex.Message, MsgBoxStyle.OkOnly, "Error loading Vehicle File")
+			End Try
+
+		End If
 	End Sub
 
 	'Save
@@ -330,6 +337,10 @@ Public Class VehicleForm
 			End Select
 		End If
 
+		CbCat.SelectedValue = veh.VehicleCategory
+		CbAxleConfig.SelectedValue = veh.AxleConfiguration
+		TbMassMass.Text = veh.MassMax.ToGUIFormat()
+
 		TbMass.Text = veh.Mass.ToGUIFormat()
 		TbMassExtra.Text = veh.MassExtra.ToGUIFormat()
 		TbLoad.Text = veh.Loading.ToGUIFormat()
@@ -345,9 +356,6 @@ Public Class VehicleForm
 		cbAngularGearType.SelectedValue = veh.AngularGearType
 		tbAngularGearRatio.Text = veh.AngularGearRatio.ToGUIFormat()
 		tbAngularGearLossMapPath.Text = veh.AngularGearLossMapFile.OriginalPath
-
-		CbCat.SelectedValue = veh.VehicleCategory
-
 
 		LvRRC.Items.Clear()
 		Dim i = 0
@@ -365,10 +373,8 @@ Public Class VehicleForm
 
 		Next
 
-		TbMassMass.Text = veh.MassMax.ToGUIFormat()
-		TbMassExtra.Text = veh.MassExtra.ToGUIFormat()
 
-		CbAxleConfig.SelectedValue = veh.AxleConfiguration
+		TbMassExtra.Text = veh.MassExtra.ToGUIFormat()
 
 		TBcdA.Text = veh.CdA0.ToGUIFormat()
 
@@ -416,12 +422,12 @@ Public Class VehicleForm
 		veh.FilePath = file
 
 		veh.Mass = TbMass.Text.ToDouble()
-		veh.MassExtra = TbMassExtra.Text.ToDouble()
-		veh.Loading = TbLoad.Text.ToDouble()
+		veh.MassExtra = TbMassExtra.Text.ToDouble(0)
+		veh.Loading = TbLoad.Text.ToDouble(0)
 
 		veh.CdA0 = TBcdA.Text.ToDouble()
 
-		veh.DynamicTyreRadius = TBrdyn.Text.ToDouble()
+		veh.DynamicTyreRadius = TBrdyn.Text.ToDouble(0)
 		veh.CrossWindCorrectionMode = CType(CbCdMode.SelectedValue, CrossWindCorrectionMode)
 		veh.CrossWindCorrectionFile.Init(GetPath(file), TbCdFile.Text)
 		veh.RetarderType = CType(CbRtType.SelectedValue, RetarderType)
@@ -437,13 +443,13 @@ Public Class VehicleForm
 		Dim axleShareCheck As Double
 		For Each entry As ListViewItem In LvRRC.Items
 			Dim a0 = New Vehicle.Axle
-			a0.Share = entry.SubItems(AxleTbl.RelativeLoad).Text.ToDouble()
+			a0.Share = entry.SubItems(AxleTbl.RelativeLoad).Text.ToDouble(0)
 			axleShareCheck += a0.Share
 			a0.TwinTire = (entry.SubItems(AxleTbl.TwinTyres).Text = "yes")
-			a0.RRC = entry.SubItems(AxleTbl.RRC).Text.ToDouble()
-			a0.FzISO = entry.SubItems(AxleTbl.FzISO).Text.ToDouble()
+			a0.RRC = entry.SubItems(AxleTbl.RRC).Text.ToDouble(0)
+			a0.FzISO = entry.SubItems(AxleTbl.FzISO).Text.ToDouble(0)
 			a0.Wheels = entry.SubItems(AxleTbl.WheelsDimension).Text
-			a0.Inertia = entry.SubItems(AxleTbl.Inertia).Text.ToDouble()
+			a0.Inertia = entry.SubItems(AxleTbl.Inertia).Text.ToDouble(0)
 			veh.Axles.Add(a0)
 		Next
 
@@ -457,7 +463,7 @@ Public Class VehicleForm
 		End If
 
 		veh.MassMax = TbMassMass.Text.ToDouble()
-		veh.MassExtra = TbMassExtra.Text.ToDouble()
+		veh.MassExtra = TbMassExtra.Text.ToDouble(0)
 		veh.AxleConfiguration = CType(CbAxleConfig.SelectedValue, AxleConfiguration)
 
 
