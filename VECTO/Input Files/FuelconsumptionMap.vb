@@ -9,13 +9,14 @@
 '
 ' See the LICENSE.txt for the specific language governing permissions and limitations.
 Imports System.Collections.Generic
+Imports TUGraz.VectoCommon.Utils
 
 Public Class FuelconsumptionMap
 	'Implements IFuelConsumptionMap
 
-	Private _angularSpeedList As List(Of Single)
-	Private _torqueList As List(Of Single)
-	Private _fuelconsumptionList As List(Of Single)
+	Private _angularSpeedList As List(Of Double)
+	Private _torqueList As List(Of Double)
+	Private _fuelconsumptionList As List(Of Double)
 
 	Private _filePath As String
 
@@ -50,9 +51,9 @@ Public Class FuelconsumptionMap
 		file.ReadLine()
 
 		'Initi Lists (before version check so ReadOldFormat works)
-		_fuelconsumptionList = New List(Of Single)
-		_torqueList = New List(Of Single)
-		_angularSpeedList = New List(Of Single)
+		_fuelconsumptionList = New List(Of Double)
+		_torqueList = New List(Of Double)
+		_angularSpeedList = New List(Of Double)
 
 		Dim lineCount As Integer = -1
 
@@ -66,12 +67,12 @@ Public Class FuelconsumptionMap
 				lineCount += 1
 
 				'Revolutions
-				Dim rpm As Double = CDbl(line(0))
+				Dim rpm As Double = line(0).ToDouble()
 
 				_angularSpeedList.Add(rpm)
 
 				'Power
-				_torqueList.Add(line(1))
+				_torqueList.Add(line(1).ToDouble())
 
 				'FC
 				'Check sign
@@ -81,7 +82,7 @@ Public Class FuelconsumptionMap
 					Return False
 				End If
 
-				_fuelconsumptionList.Add(CSng(line(2)))
+				_fuelconsumptionList.Add(line(2).ToDouble())
 
 
 			Loop
@@ -121,13 +122,13 @@ lbEr:
 		End Set
 	End Property
 
-	Public ReadOnly Property Tq As List(Of Single)
+	Public ReadOnly Property Tq As List(Of Double)
 		Get
 			Return _torqueList
 		End Get
 	End Property
 
-	Public ReadOnly Property nU As List(Of Single)
+	Public ReadOnly Property nU As List(Of Double)
 		Get
 			Return _angularSpeedList
 		End Get

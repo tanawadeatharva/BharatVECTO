@@ -21,6 +21,16 @@ Imports TUGraz.VectoCore.Models.Declaration
 ''' Vehicle Editor.
 ''' </summary>
 Public Class VehicleForm
+	Private Enum AxleTbl
+		AxleNumber = 0
+		RelativeLoad = 1
+		TwinTyres = 2
+		RRC = 3
+		FzISO = 4
+		WheelsDimension = 5
+		Inertia = 6
+	End Enum
+
 	Private _axlDlog As VehicleAxleDialog
 	Private _hdVclass As String
 	Private _vehFile As String
@@ -94,8 +104,8 @@ Public Class VehicleForm
 			TbHDVclass.Text = "-"
 			Exit Sub
 		End If
-		Dim vehC As VehicleCategory = CbCat.SelectedValue
-		Dim axlC As AxleConfiguration = CbAxleConfig.SelectedValue
+		Dim vehC As VehicleCategory = CType(CbCat.SelectedValue, VehicleCategory)
+		Dim axlC As AxleConfiguration = CType(CbAxleConfig.SelectedValue, AxleConfiguration)
 		Dim maxMass As Kilogram = (TbMassMass.Text.ToDouble() * 1000).SI(Of Kilogram)()
 
 		_hdVclass = "-"
@@ -107,12 +117,12 @@ Public Class VehicleForm
 			' no segment found - ignore
 		End Try
 		If Not s0 Is Nothing Then
-			_hdVclass = s0.VehicleClass
+			_hdVclass = s0.VehicleClass.GetClassNumber()
 		End If
 
 
 		TbHDVclass.Text = _hdVclass
-		PicVehicle.Image = ConvPicPath(_hdVclass, False)
+		PicVehicle.Image = ConvPicPath(_hdVclass.ToInt(), False)
 	End Sub
 
 
@@ -124,9 +134,9 @@ Public Class VehicleForm
 			TbHDVclass.Text = "-"
 			Exit Sub
 		End If
-		Dim vehC = CbCat.SelectedValue
-		Dim axlC = CbAxleConfig.SelectedValue
-		Dim maxMass = (TbMassMass.Text.ToDouble() * 1000).SI(Of Kilogram)()
+		Dim vehC As VehicleCategory = CType(CbCat.SelectedValue, VehicleCategory)
+		Dim axlC As AxleConfiguration = CType(CbAxleConfig.SelectedValue, AxleConfiguration)
+		Dim maxMass As Kilogram = (TbMassMass.Text.ToDouble() * 1000).SI(Of Kilogram)()
 
 		Dim s0 As Segment = Nothing
 		Try
@@ -135,21 +145,13 @@ Public Class VehicleForm
 			' no segment found - ignore
 		End Try
 		If Not s0 Is Nothing Then
-			_hdVclass = s0.VehicleClass
-			Dim axleCount As Short = s0.Missions(0).AxleWeightDistribution.Count()
+			_hdVclass = s0.VehicleClass.GetClassNumber()
+			Dim axleCount As Integer = s0.Missions(0).AxleWeightDistribution.Count()
 			Dim i0 = LvRRC.Items.Count
 
 			If axleCount > i0 Then
 				For i = 1 To axleCount - LvRRC.Items.Count
-					Dim lvi = New ListViewItem
-					lvi.SubItems(0).Text = (i + i0).ToString
-					lvi.SubItems.Add("-")
-					lvi.SubItems.Add("no")
-					lvi.SubItems.Add("")
-					lvi.SubItems.Add("")
-					lvi.SubItems.Add("-")
-					lvi.SubItems.Add("-")
-					LvRRC.Items.Add(lvi)
+					LvRRC.Items.Add(CreateListViewItem(i + i0, Double.NaN, False, Double.NaN, Double.NaN, "", Double.NaN))
 				Next
 
 			ElseIf axleCount < LvRRC.Items.Count Then
@@ -170,13 +172,13 @@ Public Class VehicleForm
 		CbCdMode.SelectedValue = CrossWindCorrectionMode.DeclarationModeCorrection
 		TbCdFile.Text = ""
 
-		Dim rdyn As Single
+		Dim rdyn As Double
 		rdyn = -1
 
 		If rdyn < 0 Then
 			TBrdyn.Text = "-"
 		Else
-			TBrdyn.Text = rdyn
+			TBrdyn.Text = rdyn.ToGUIFormat()
 		End If
 	End Sub
 
@@ -305,7 +307,7 @@ Public Class VehicleForm
 
 	'Open VEH
 	Sub OpenVehicle(file As String)
-		Dim inertia As Single
+		Dim inertia As Double
 
 		If ChangeCheckCancel() Then Exit Sub
 
@@ -328,20 +330,20 @@ Public Class VehicleForm
 			End Select
 		End If
 
-		TbMass.Text = veh.Mass
-		TbMassExtra.Text = veh.MassExtra
-		TbLoad.Text = veh.Loading
-		TBrdyn.Text = veh.DynamicTyreRadius
+		TbMass.Text = veh.Mass.ToGUIFormat()
+		TbMassExtra.Text = veh.MassExtra.ToGUIFormat()
+		TbLoad.Text = veh.Loading.ToGUIFormat()
+		TBrdyn.Text = veh.DynamicTyreRadius.ToGUIFormat()
 
 		CbCdMode.SelectedValue = veh.CrossWindCorrectionMode
 		TbCdFile.Text = veh.CrossWindCorrectionFile.OriginalPath
 
 		CbRtType.SelectedValue = veh.RetarderType
-		TbRtRatio.Text = veh.RetarderRatio
+		TbRtRatio.Text = veh.RetarderRatio.ToGUIFormat()
 		TbRtPath.Text = veh.RetarderLossMapFile.OriginalPath
 
 		cbAngularGearType.SelectedValue = veh.AngularGearType
-		tbAngularGearRatio.Text = veh.AngularGearRatio
+		tbAngularGearRatio.Text = veh.AngularGearRatio.ToGUIFormat()
 		tbAngularGearLossMapPath.Text = veh.AngularGearLossMapFile.OriginalPath
 
 		CbCat.SelectedValue = veh.VehicleCategory
@@ -351,44 +353,24 @@ Public Class VehicleForm
 		Dim i = 0
 		For Each a0 In veh.Axles
 			i += 1
-			Dim lvi = New ListViewItem
-			lvi.SubItems(0).Text = i.ToString
 
-			If Cfg.DeclMode Then
-				lvi.SubItems.Add("-")
-			Else
-				lvi.SubItems.Add(a0.Share)
-			End If
-
-			If a0.TwinTire Then
-				lvi.SubItems.Add("yes")
-			Else
-				lvi.SubItems.Add("no")
-			End If
-			lvi.SubItems.Add(a0.RRC)
-			lvi.SubItems.Add(a0.FzISO)
-			lvi.SubItems.Add(a0.Wheels)
 
 			If Cfg.DeclMode Then
 				inertia = DeclarationData.Wheels.Lookup(a0.Wheels).Inertia.Value()
-				If inertia < 0 Then
-					lvi.SubItems.Add("-")
-				Else
-					lvi.SubItems.Add(inertia)
-				End If
+				LvRRC.Items.Add(CreateListViewItem(i, Double.NaN, a0.TwinTire, a0.RRC, a0.FzISO, a0.Wheels, inertia))
 			Else
-				lvi.SubItems.Add(a0.Inertia)
+				LvRRC.Items.Add(CreateListViewItem(i, a0.Share, a0.TwinTire, a0.RRC, a0.FzISO, a0.Wheels, a0.Inertia))
+
 			End If
 
-			LvRRC.Items.Add(lvi)
 		Next
 
-		TbMassMass.Text = veh.MassMax
-		TbMassExtra.Text = veh.MassExtra
+		TbMassMass.Text = veh.MassMax.ToGUIFormat()
+		TbMassExtra.Text = veh.MassExtra.ToGUIFormat()
 
 		CbAxleConfig.SelectedValue = veh.AxleConfiguration
 
-		TBcdA.Text = veh.CdA0
+		TBcdA.Text = veh.CdA0.ToGUIFormat()
 
 		cbPTOType.SelectedValue = veh.PTOType
 		tbPTOLossMap.Text = veh.PTOLossMap.OriginalPath
@@ -405,45 +387,67 @@ Public Class VehicleForm
 		_changed = False
 	End Sub
 
+	Private Function CreateListViewItem(axleNumber As Integer, share As Double, twinTire As Boolean, rrc As Double,
+										fzIso As Double, wheels As String, inertia As Double) As ListViewItem
+		Dim retVal As New ListViewItem
+		retVal.SubItems(0).Text = axleNumber.ToGUIFormat()
+		FillDoubleValue(retVal, share, "-")
+		retVal.SubItems.Add(If(twinTire, "yes", "no"))
+		FillDoubleValue(retVal, rrc)
+		FillDoubleValue(retVal, fzIso)
+		retVal.SubItems.Add(wheels)
+		FillDoubleValue(retVal, inertia)
+		Return retVal
+	End Function
+
+	Private Sub FillDoubleValue(listViewItem As ListViewItem, share As Double, Optional defaultValue As String = "")
+
+		If Double.IsNaN(share) Then
+			listViewItem.SubItems.Add(defaultValue)
+		Else
+			listViewItem.SubItems.Add(share.ToGUIFormat())
+		End If
+	End Sub
+
 	'Save VEH
 	Private Function SaveVehicle(file As String) As Boolean
 
 		Dim veh = New Vehicle
 		veh.FilePath = file
 
-		veh.Mass = CSng(fTextboxToNumString(TbMass.Text))
-		veh.MassExtra = CSng(fTextboxToNumString(TbMassExtra.Text))
-		veh.Loading = CSng(fTextboxToNumString(TbLoad.Text))
+		veh.Mass = TbMass.Text.ToDouble()
+		veh.MassExtra = TbMassExtra.Text.ToDouble()
+		veh.Loading = TbLoad.Text.ToDouble()
 
-		veh.CdA0 = CSng(fTextboxToNumString(TBcdA.Text))
+		veh.CdA0 = TBcdA.Text.ToDouble()
 
-		veh.DynamicTyreRadius = CSng(fTextboxToNumString(TBrdyn.Text))
-		veh.CrossWindCorrectionMode = CbCdMode.SelectedValue
+		veh.DynamicTyreRadius = TBrdyn.Text.ToDouble()
+		veh.CrossWindCorrectionMode = CType(CbCdMode.SelectedValue, CrossWindCorrectionMode)
 		veh.CrossWindCorrectionFile.Init(GetPath(file), TbCdFile.Text)
-		veh.RetarderType = CbRtType.SelectedValue
-		veh.RetarderRatio = CSng(fTextboxToNumString(TbRtRatio.Text))
+		veh.RetarderType = CType(CbRtType.SelectedValue, RetarderType)
+		veh.RetarderRatio = TbRtRatio.Text.ToDouble()
 		veh.RetarderLossMapFile.Init(GetPath(file), TbRtPath.Text)
 
-		veh.AngularGearType = cbAngularGearType.SelectedValue
-		veh.AngularGearRatio = CSng(fTextboxToNumString(tbAngularGearRatio.Text))
+		veh.AngularGearType = CType(cbAngularGearType.SelectedValue, AngularGearType)
+		veh.AngularGearRatio = tbAngularGearRatio.Text.ToDouble()
 		veh.AngularGearLossMapFile.Init(GetPath(file), tbAngularGearLossMapPath.Text)
 
-		veh.VehicleCategory = CbCat.SelectedValue 'CType(CbCat.SelectedIndex, tVehCat)
+		veh.VehicleCategory = CType(CbCat.SelectedValue, VehicleCategory) 'CType(CbCat.SelectedIndex, tVehCat)
 
 		Dim axleShareCheck As Double
-		For Each LV0 In LvRRC.Items
+		For Each entry As ListViewItem In LvRRC.Items
 			Dim a0 = New Vehicle.Axle
-			a0.Share = fTextboxToNumString(LV0.SubItems(1).Text)
+			a0.Share = entry.SubItems(AxleTbl.RelativeLoad).Text.ToDouble()
 			axleShareCheck += a0.Share
-			a0.TwinTire = (LV0.SubItems(2).Text = "yes")
-			a0.RRC = fTextboxToNumString(LV0.SubItems(3).Text)
-			a0.FzISO = fTextboxToNumString(LV0.SubItems(4).Text)
-			a0.Wheels = LV0.SubItems(5).Text
-			a0.Inertia = fTextboxToNumString(LV0.SubItems(6).Text)
+			a0.TwinTire = (entry.SubItems(AxleTbl.TwinTyres).Text = "yes")
+			a0.RRC = entry.SubItems(AxleTbl.RRC).Text.ToDouble()
+			a0.FzISO = entry.SubItems(AxleTbl.FzISO).Text.ToDouble()
+			a0.Wheels = entry.SubItems(AxleTbl.WheelsDimension).Text
+			a0.Inertia = entry.SubItems(AxleTbl.Inertia).Text.ToDouble()
 			veh.Axles.Add(a0)
 		Next
 
-		veh.PTOType = cbPTOType.SelectedValue
+		veh.PTOType = CType(cbPTOType.SelectedValue, String)
 		veh.PTOLossMap.Init(GetPath(file), tbPTOLossMap.Text)
 		veh.PTOCycle.Init(GetPath(file), tbPTOCycle.Text)
 
@@ -452,9 +456,9 @@ Public Class VehicleForm
 			Return False
 		End If
 
-		veh.MassMax = CSng(fTextboxToNumString(TbMassMass.Text))
-		veh.MassExtra = CSng(fTextboxToNumString(TbMassExtra.Text))
-		veh.AxleConfiguration = CbAxleConfig.SelectedValue
+		veh.MassMax = TbMassMass.Text.ToDouble()
+		veh.MassExtra = TbMassExtra.Text.ToDouble()
+		veh.AxleConfiguration = CType(CbAxleConfig.SelectedValue, AxleConfiguration)
 
 
 		'---------------------------------------------------------------------------------
@@ -647,27 +651,11 @@ Public Class VehicleForm
 #Region "Axle Configuration"
 
 	Private Sub ButAxlAdd_Click(sender As Object, e As EventArgs) Handles ButAxlAdd.Click
-		Dim lv0 As ListViewItem
-
 		_axlDlog.Clear()
-
 		If _axlDlog.ShowDialog = DialogResult.OK Then
-			lv0 = New ListViewItem
-
-			lv0.SubItems(0).Text = LvRRC.Items.Count + 1
-			lv0.SubItems.Add(Trim(_axlDlog.TbAxleShare.Text))
-			If _axlDlog.CbTwinT.Checked Then
-				lv0.SubItems.Add("yes")
-			Else
-				lv0.SubItems.Add("no")
-			End If
-			lv0.SubItems.Add(Trim(_axlDlog.TbRRC.Text))
-			lv0.SubItems.Add(Trim(_axlDlog.TbFzISO.Text))
-			lv0.SubItems.Add(Trim(_axlDlog.CbWheels.Text))
-			lv0.SubItems.Add(Trim(_axlDlog.TbI_wheels.Text))
-
-			LvRRC.Items.Add(lv0)
-
+			LvRRC.Items.Add(CreateListViewItem(LvRRC.Items.Count + 1, _axlDlog.TbAxleShare.Text.ToDouble(),
+												_axlDlog.CbTwinT.Checked, _axlDlog.TbRRC.Text.ToDouble(), _axlDlog.TbFzISO.Text.ToDouble(),
+												_axlDlog.CbWheels.Text, _axlDlog.TbI_wheels.Text.ToDouble()))
 			Change()
 			DeclInit()
 
@@ -710,7 +698,7 @@ Public Class VehicleForm
 			i = 0
 			For Each lv0 In LvRRC.Items
 				i += 1
-				lv0.SubItems(0).Text = i.ToString
+				lv0.SubItems(AxleTbl.AxleNumber).Text = i.ToString
 			Next
 
 			LvRRC.Items(LvRRC.Items.Count - 1).Selected = True
@@ -725,24 +713,24 @@ Public Class VehicleForm
 
 		Dim lv0 = LvRRC.SelectedItems(0)
 
-		_axlDlog.TbAxleShare.Text = lv0.SubItems(1).Text
-		_axlDlog.CbTwinT.Checked = (lv0.SubItems(2).Text = "yes")
-		_axlDlog.TbRRC.Text = lv0.SubItems(3).Text
-		_axlDlog.TbFzISO.Text = lv0.SubItems(4).Text
-		_axlDlog.TbI_wheels.Text = lv0.SubItems(6).Text
-		_axlDlog.CbWheels.Text = lv0.SubItems(5).Text
+		_axlDlog.TbAxleShare.Text = lv0.SubItems(AxleTbl.RelativeLoad).Text
+		_axlDlog.CbTwinT.Checked = (lv0.SubItems(AxleTbl.TwinTyres).Text = "yes")
+		_axlDlog.TbRRC.Text = lv0.SubItems(AxleTbl.RRC).Text
+		_axlDlog.TbFzISO.Text = lv0.SubItems(AxleTbl.FzISO).Text
+		_axlDlog.TbI_wheels.Text = lv0.SubItems(AxleTbl.Inertia).Text
+		_axlDlog.CbWheels.Text = lv0.SubItems(AxleTbl.WheelsDimension).Text
 
 		If _axlDlog.ShowDialog = DialogResult.OK Then
-			lv0.SubItems(1).Text = _axlDlog.TbAxleShare.Text
+			lv0.SubItems(AxleTbl.RelativeLoad).Text = _axlDlog.TbAxleShare.Text
 			If _axlDlog.CbTwinT.Checked Then
-				lv0.SubItems(2).Text = "yes"
+				lv0.SubItems(AxleTbl.TwinTyres).Text = "yes"
 			Else
-				lv0.SubItems(2).Text = "no"
+				lv0.SubItems(AxleTbl.TwinTyres).Text = "no"
 			End If
-			lv0.SubItems(3).Text = _axlDlog.TbRRC.Text
-			lv0.SubItems(4).Text = _axlDlog.TbFzISO.Text
-			lv0.SubItems(5).Text = _axlDlog.CbWheels.Text
-			lv0.SubItems(6).Text = _axlDlog.TbI_wheels.Text
+			lv0.SubItems(AxleTbl.RRC).Text = _axlDlog.TbRRC.Text
+			lv0.SubItems(AxleTbl.FzISO).Text = _axlDlog.TbFzISO.Text
+			lv0.SubItems(AxleTbl.WheelsDimension).Text = _axlDlog.CbWheels.Text
+			lv0.SubItems(AxleTbl.Inertia).Text = _axlDlog.TbI_wheels.Text
 
 			Change()
 			DeclInit()

@@ -17,13 +17,13 @@ Imports System.Linq
 ''' Determines how file extensions are set in the File Browser
 ''' </summary>
 ''' <remarks></remarks>
-Public Enum tFbExtMode As Integer
+Public Enum FileBrowserFileExtensionMode As Integer
 	ForceExt = 0
 	MultiExt = 1
 	SingleExt = 2
 End Enum
 
-Public Enum tWorkMsgType
+Public Enum WorkerMessageType
 	StatusBar
 	StatusListBox
 	ProgBars

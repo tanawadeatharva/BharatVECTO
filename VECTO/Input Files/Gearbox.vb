@@ -10,22 +10,24 @@
 ' See the LICENSE.txt for the specific language governing permissions and limitations.
 Imports System.Collections.Generic
 Imports System.IO
+Imports Newtonsoft.Json.Linq
 Imports TUGraz.VECTO.Input_Files
 Imports TUGraz.VectoCommon.Models
 Imports TUGraz.VectoCommon.Utils
+Imports TUGraz.VectoCore.InputData.FileIO.JSON
 
 Public Class Gearbox
 	Private Const FormatVersion As Short = 6
-	Private _fileVersion As Short
+	Private _fileVersion As Integer
 
 	Private _myPath As String
 	Private _filePath As String
 
 	Public ModelName As String
-	Public GbxInertia As Single
-	Public TracIntrSi As Single
+	Public GbxInertia As Double
+	Public TracIntrSi As Double
 
-	Public GearRatios As List(Of Single)
+	Public GearRatios As List(Of Double)
 	Public GearLossmaps As List(Of SubPath)
 
 	'Gear shift polygons
@@ -33,28 +35,28 @@ Public Class Gearbox
 
 	Public MaxTorque As List(Of String)
 
-	Public TorqueResv As Single
+	Public TorqueResv As Double
 	Public SkipGears As Boolean
-	Public ShiftTime As Integer
-	Public TorqueResvStart As Single
-	Public StartSpeed As Single
-	Public StartAcc As Single
+	Public ShiftTime As Double
+	Public TorqueResvStart As Double
+	Public StartSpeed As Double
+	Public StartAcc As Double
 	Public ShiftInside As Boolean
 
 	Public Type As GearboxType
 
 	'Torque Converter Input
 	Public TorqueConverterEnabled As Boolean
-	Public TorqueConverterReferenceRpm As Single
+	Public TorqueConverterReferenceRpm As Double
 	Private ReadOnly _torqueConverterFile As New SubPath
-	Public TorqueConverterInertia As Single
+	Public TorqueConverterInertia As Double
 	Public TorqueConverterShiftPolygonFile As String
 
 
 	Public SavedInDeclMode As Boolean
-	Public UpshiftMinAcceleration As Single
-	Public DownshiftAfterUpshift As Single
-	Public UpshiftAfterDownshift As Single
+	Public UpshiftMinAcceleration As Double
+	Public DownshiftAfterUpshift As Double
+	Public UpshiftAfterDownshift As Double
 
 
 	Public Sub New()
@@ -69,7 +71,7 @@ Public Class Gearbox
 		GbxInertia = 0
 		TracIntrSi = 0
 
-		GearRatios = New List(Of Single)
+		GearRatios = New List(Of Double)
 		GearLossmaps = New List(Of SubPath)
 		GearshiftFiles = New List(Of SubPath)
 		MaxTorque = New List(Of String)
@@ -95,7 +97,7 @@ Public Class Gearbox
 
 	Public Function SaveFile() As Boolean
 		Dim i As Integer
-		Dim writer As New JSONParser
+		Dim json As New JSONParser
 		Dim content As Dictionary(Of String, Object)
 
 		'Header
@@ -104,7 +106,7 @@ Public Class Gearbox
 		content.Add("Date", Now.ToUniversalTime().ToString("o"))
 		content.Add("AppVersion", VECTOvers)
 		content.Add("FileVersion", FormatVersion)
-		writer.Content.Add("Header", content)
+		json.Content.Add("Header", JToken.FromObject(content))
 
 		'Body
 		content = New Dictionary(Of String, Object)
@@ -159,103 +161,105 @@ Public Class Gearbox
 		content.Add("UpshiftAfterDownshiftDelay", UpshiftAfterDownshift)
 		content.Add("UpshiftMinAcceleration", UpshiftMinAcceleration)
 
-		writer.Content.Add("Body", content)
+		json.Content.Add("Body", JToken.FromObject(content))
 
-		Return writer.WriteFile(_filePath)
+		Return json.WriteFile(_filePath)
 	End Function
 
 	Public Function ReadFile(Optional ByVal showMsg As Boolean = True) As Boolean
 		Dim i As Integer
-		Dim parser As New JSONParser
-		Dim dic As Object
+		Dim json As New JSONParser
+		Dim dic As JToken
 
 		Const msgSrc As String = "GBX/ReadFile"
 
 		SetDefault()
 
-		If Not parser.ReadFile(_filePath) Then Return False
+		If Not json.ReadFile(_filePath) Then Return False
 
 		Try
 
-			_fileVersion = parser.Content("Header")("FileVersion")
+			_fileVersion = json.Content.GetEx("Header").GetEx(Of Integer)("FileVersion")
 
+			Dim body As JToken = json.Content.GetEx("Body")
 			If _fileVersion > 3 Then
-				SavedInDeclMode = parser.Content("Body")("SavedInDeclMode")
+				SavedInDeclMode = body.GetEx(Of Boolean)("SavedInDeclMode")
 			Else
 				SavedInDeclMode = Cfg.DeclMode
 			End If
 
-			ModelName = parser.Content("Body")("ModelName")
-			GbxInertia = parser.Content("Body")("Inertia")
-			TracIntrSi = parser.Content("Body")("TracInt")
+			ModelName = body.GetEx(Of String)("ModelName")
+			GbxInertia = body.GetEx(Of Double)("Inertia")
+			TracIntrSi = body.GetEx(Of Double)("TracInt")
 
 			i = -1
-			For Each dic In parser.Content("Body")("Gears")
+			For Each dic In body.GetEx("Gears")
 				i += 1
 
-				GearRatios.Add(dic("Ratio"))
+				GearRatios.Add(dic.GetEx(Of Double)("Ratio"))
 				GearLossmaps.Add(New SubPath)
 
 				If dic("Efficiency") Is Nothing Then
-					GearLossmaps(i).Init(_myPath, dic("LossMap"))
+					GearLossmaps(i).Init(_myPath, dic.GetEx(Of String)("LossMap"))
 				Else
-					GearLossmaps(i).Init(_myPath, dic("Efficiency"))
+					GearLossmaps(i).Init(_myPath, dic.GetEx(Of Double)("Efficiency"))
 				End If
 
-				MaxTorque.Add(dic("MaxTorque"))
+				MaxTorque.Add(dic.GetEx(Of String)("MaxTorque"))
 				GearshiftFiles.Add(New SubPath)
 
 				If i = 0 Then
-					GearshiftFiles(i).Init(_myPath, sKey.NoFile)
+					GearshiftFiles(i).Init(_myPath, Constants.NoFile)
 				Else
 					If _fileVersion < 2 Then
-						GearshiftFiles(i).Init(_myPath, parser.Content("Body")("ShiftPolygons"))
+						GearshiftFiles(i).Init(_myPath, body.GetEx(Of String)("ShiftPolygons"))
 					Else
-						GearshiftFiles(i).Init(_myPath, dic("ShiftPolygon"))
+						GearshiftFiles(i).Init(_myPath, dic.GetEx(Of String)("ShiftPolygon"))
 					End If
 				End If
 
 			Next
 
-			TorqueResv = parser.Content("Body")("TqReserve")
-			SkipGears = parser.Content("Body")("SkipGears")
-			ShiftTime = parser.Content("Body")("ShiftTime")
-			TorqueResvStart = parser.Content("Body")("StartTqReserve")
-			StartSpeed = parser.Content("Body")("StartSpeed")
-			StartAcc = parser.Content("Body")("StartAcc")
-			ShiftInside = parser.Content("Body")("EaryShiftUp")
+			TorqueResv = body.GetEx(Of Double)("TqReserve")
+			SkipGears = body.GetEx(Of Boolean)("SkipGears")
+			ShiftTime = body.GetEx(Of Double)("ShiftTime")
+			TorqueResvStart = body.GetEx(Of Double)("StartTqReserve")
+			StartSpeed = body.GetEx(Of Double)("StartSpeed")
+			StartAcc = body.GetEx(Of Double)("StartAcc")
+			ShiftInside = body.GetEx(Of Boolean)("EaryShiftUp")
 
-			Type = parser.Content("Body")("GearboxType").ToString.ParseEnum(Of GearboxType)()
+			Type = json.Content("Body")("GearboxType").ToString.ParseEnum(Of GearboxType)()
 
-			If parser.Content("Body")("UpshiftMinAcceleration") Is Nothing Then
+			If body("UpshiftMinAcceleration") Is Nothing Then
 				UpshiftMinAcceleration = 0.1
 			Else
-				UpshiftMinAcceleration = parser.Content("Body")("UpshiftMinAcceleration")
+				UpshiftMinAcceleration = body.GetEx(Of Double)("UpshiftMinAcceleration")
 			End If
-			If parser.Content("Body")("DownshiftAferUpshiftDelay") Is Nothing Then
+			If body("DownshiftAferUpshiftDelay") Is Nothing Then
 				DownshiftAfterUpshift = 10
 			Else
-				DownshiftAfterUpshift = parser.Content("Body")("DownshiftAferUpshiftDelay")
+				DownshiftAfterUpshift = body.GetEx(Of Double)("DownshiftAferUpshiftDelay")
 			End If
 
-			If parser.Content("Body")("UpshiftAfterDownshiftDelay") Is Nothing Then
+			If body("UpshiftAfterDownshiftDelay") Is Nothing Then
 				UpshiftAfterDownshift = 10
 			Else
-				UpshiftAfterDownshift = parser.Content("Body")("UpshiftAfterDownshiftDelay")
+				UpshiftAfterDownshift = body.GetEx(Of Double)("UpshiftAfterDownshiftDelay")
 			End If
 
 
-			If parser.Content("Body")("TorqueConverter") Is Nothing Then
+			If json.Content("Body")("TorqueConverter") Is Nothing Then
 				TorqueConverterEnabled = False
 			Else
-				TorqueConverterEnabled = parser.Content("Body")("TorqueConverter")("Enabled")
-				_torqueConverterFile.Init(_myPath, parser.Content("Body")("TorqueConverter")("File"))
-				TorqueConverterReferenceRpm = parser.Content("Body")("TorqueConverter")("RefRPM")
+				Dim torqueConverter As JToken = body.GetEx("TorqueConverter")
+				TorqueConverterEnabled = torqueConverter.GetEx(Of Boolean)("Enabled")
+				_torqueConverterFile.Init(_myPath, torqueConverter.GetEx(Of String)("File"))
+				TorqueConverterReferenceRpm = torqueConverter.GetEx(Of Double)("RefRPM")
 				If _fileVersion > 2 Then
-					TorqueConverterInertia = parser.Content("Body")("TorqueConverter")("Inertia")
+					TorqueConverterInertia = torqueConverter.GetEx(Of Double)("Inertia")
 				End If
 				If _fileVersion > 5 Then
-					TorqueConverterShiftPolygonFile = parser.Content("Body")("TorqueConverter")("ShiftPolygon")
+					TorqueConverterShiftPolygonFile = torqueConverter.GetEx(Of String)("ShiftPolygon")
 				End If
 			End If
 		Catch ex As Exception
@@ -286,9 +290,9 @@ Public Class Gearbox
 		End Set
 	End Property
 
-	Public Property GearLossMap(ByVal gearNr As Short, Optional ByVal original As Boolean = False) As String
+	Public Property GearLossMap(ByVal gearNr As Integer, Optional ByVal original As Boolean = False) As String
 		Get
-			If Original Then
+			If original Then
 				Return GearLossmaps(gearNr).OriginalPath
 			Else
 				Return GearLossmaps(gearNr).FullPath
@@ -299,7 +303,7 @@ Public Class Gearbox
 		End Set
 	End Property
 
-	Public Property ShiftPolygonFile(ByVal gearNr As Short, Optional ByVal original As Boolean = False) As String
+	Public Property ShiftPolygonFile(ByVal gearNr As Integer, Optional ByVal original As Boolean = False) As String
 		Get
 			If original Then
 				Return GearshiftFiles(gearNr).OriginalPath
@@ -314,7 +318,7 @@ Public Class Gearbox
 
 	Public Property TorqueConverterFile(Optional ByVal original As Boolean = False) As String
 		Get
-			If Original Then
+			If original Then
 				Return _torqueConverterFile.OriginalPath
 			Else
 				Return _torqueConverterFile.FullPath

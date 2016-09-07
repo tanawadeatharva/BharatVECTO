@@ -30,7 +30,7 @@ Public Module VECTO_Global
 
 	Public Cfg As Configuration
 
-	Public sKey As csKey
+	'Public sKey As csKey
 
 	Public ReadOnly FileFormat As Encoding = Encoding.UTF8
 
@@ -156,9 +156,9 @@ Public Module VECTO_Global
 		If file = "" Then Return ""
 
 		'Replace sKeys
-		file = Replace(file, sKey.DefVehPath & "\", MyAppPath & "Default Vehicles\", 1, -1,
+		file = Replace(file, Constants.DefVehPath & "\", MyAppPath & "Default Vehicles\", 1, -1,
 						CompareMethod.Text)
-		file = Replace(file, sKey.HomePath & "\", MyAppPath, 1, -1, CompareMethod.Text)
+		file = Replace(file, Constants.HomePath & "\", MyAppPath, 1, -1, CompareMethod.Text)
 
 		'Replace - Determine folder
 		If MainDir = "" Then
@@ -186,11 +186,11 @@ Public Module VECTO_Global
 
 	'Path one-level-up      "C:\temp\ordner1\"  >>  "C:\temp\"
 	Private Function fPathUp(Pfad As String) As String
-		Dim x As Int16
+		Dim x As Integer
 
 		Pfad = Pfad.Substring(0, Pfad.Length - 1)
 
-		x = Pfad.LastIndexOf("\")
+		x = Pfad.LastIndexOf("\", StringComparison.Ordinal)
 
 		If x = -1 Then Return ""
 
@@ -200,7 +200,7 @@ Public Module VECTO_Global
 	'File name without the path    "C:\temp\TEST.txt"  >>  "TEST.txt" oder "TEST"
 	Public Function GetFilenameWithoutPath(file As String, includeFileExtension As Boolean) As String _
 'GetFilenameWithoutPath
-		Dim x As Int16
+		Dim x As Integer
 		x = file.LastIndexOf("\", StringComparison.Ordinal) + 1
 		file = Right(file, Len(file) - x)
 		If Not includeFileExtension Then
@@ -239,7 +239,7 @@ Public Module VECTO_Global
 
 	'Extension alone      "C:\temp\TEST.txt" >> ".txt"
 	Public Function GetExtension(file As String) As String 'GetExtension
-		Dim x As Int16
+		Dim x As Integer
 		x = file.LastIndexOf(".", StringComparison.Ordinal)
 		If x = -1 Then
 			Return ""
@@ -253,26 +253,27 @@ Public Module VECTO_Global
 End Module
 
 
-Public Class csKey
-	Public ReadOnly AUX As csKeyAux
+Module Constants
+	'Public ReadOnly AUX As AuxiliaryKey
 
-	Public HomePath As String = "<HOME>"
-	Public DefVehPath As String = "<VEHDIR>"
-	Public NoFile As String = "<NOFILE>"
+	Public Const HomePath As String = "<HOME>"
+	Public Const DefVehPath As String = "<VEHDIR>"
+	Public Const NoFile As String = "<NOFILE>"
 
-	Public Sub New()
+	'Public Sub New()
 
-		AUX = New csKeyAux
-	End Sub
+	'	AUX = New AuxiliaryKey
+	'End Sub
 
 
-	Public Class csKeyAux
-		Public Fan As String = "FAN"
-		Public SteerPump As String = "STP"
-		Public HVAC As String = "AC"
-		Public ElecSys As String = "ES"
-		Public PneumSys As String = "PS"
+	' ReSharper disable once ClassNeverInstantiated.Global
+	Public Class AuxiliaryKey
+		Public Const Fan As String = "FAN"
+		Public Const SteerPump As String = "STP"
+		Public Const HVAC As String = "AC"
+		Public Const ElecSys As String = "ES"
+		Public Const PneumSys As String = "PS"
 	End Class
-End Class
+End Module
 
 

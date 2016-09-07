@@ -20,7 +20,7 @@ Imports TUGraz.VectoCore.Models.SimulationComponent.Data.Engine
 Module MainModule
 	Public JobFileList As List(Of String)
 
-	Public Function ConvertToEngineData(fld As EngineFullLoadCurve, nIdle As Single) As CombustionEngineData
+	Public Function ConvertToEngineData(fld As EngineFullLoadCurve, nIdle As Double) As CombustionEngineData
 
 		Dim retVal As CombustionEngineData = New CombustionEngineData()
 		retVal.FullLoadCurve = New TUGraz.VectoCore.Models.SimulationComponent.Data.Engine.EngineFullLoadCurve()
@@ -28,16 +28,16 @@ Module MainModule
 		For i As Integer = 0 To fld.EngineSpeedList.Count - 1
 			retVal.FullLoadCurve.FullLoadEntries.Add(
 				New FullLoadCurve.FullLoadCurveEntry() _
-														With {.EngineSpeed = CType(fld.EngineSpeedList(i), Double).RPMtoRad(),
-														.TorqueFullLoad = CType(fld.MaxTorqueList(i), Double).SI(Of NewtonMeter)(),
-														.TorqueDrag = CType(fld.DragTorqueList(i), Double).SI(Of NewtonMeter)()})
+														With {.EngineSpeed = fld.EngineSpeedList(i).RPMtoRad(),
+														.TorqueFullLoad = fld.MaxTorqueList(i).SI(Of NewtonMeter)(),
+														.TorqueDrag = fld.DragTorqueList(i).SI(Of NewtonMeter)()})
 		Next
 
 		retVal.IdleSpeed = CType(nIdle, Double).RPMtoRad()
 		Return retVal
 	End Function
 
-	Public Function ConvPicPath(hdVclass As String, isLongHaul As Boolean) As Bitmap
+	Public Function ConvPicPath(hdVclass As Integer, isLongHaul As Boolean) As Bitmap
 		Dim longHaulFlag As String = ""
 		If isLongHaul Then
 			longHaulFlag = "t"
@@ -61,5 +61,4 @@ Module MainModule
 				Return My.Resources.Undef  ' resourcePath & "Undef.png"
 		End Select
 	End Function
-
 End Module

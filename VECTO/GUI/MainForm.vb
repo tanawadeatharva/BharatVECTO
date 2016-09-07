@@ -271,9 +271,9 @@ Public Class MainForm
 	Public Shared Sub LogMethod(level As String, message As String)
 		Try
 			If level = "Warn" Then
-				VectoWorkerV3.ReportProgress(100, New With {.Target = "ListBoxWarning", .Message = message})
+				VectoWorkerV3.ReportProgress(100, New VectoProgress With {.Target = "ListBoxWarning", .Message = message})
 			ElseIf level = "Error" Or level = "Fatal" Then
-				VectoWorkerV3.ReportProgress(100, New With {.Target = "ListBoxError", .Message = message})
+				VectoWorkerV3.ReportProgress(100, New VectoProgress With {.Target = "ListBoxError", .Message = message})
 
 			End If
 		Catch e As InvalidOperationException
@@ -464,7 +464,7 @@ Public Class MainForm
 	Private Sub ListGEN_DragDrop(sender As Object, e As DragEventArgs) _
 		Handles LvGEN.DragDrop
 		Dim f As String()
-		f = CType(e.Data.GetData(DataFormats.FileDrop), Array)
+		f = CType(e.Data.GetData(DataFormats.FileDrop), String())
 		AddToJobListView(f)
 	End Sub
 
@@ -556,12 +556,12 @@ Public Class MainForm
 
 	'Add File to job listview (multiple files)
 	Private Sub AddToJobListView(Path As String(), Optional ByVal Txt As String = " ")
-		Dim pDim As Int16
-		Dim p As Int16
-		Dim f As Int16
+		Dim pDim As Integer
+		Dim p As Integer
+		Dim f As Integer
 		Dim fList As String()
-		Dim fListDim As Int16 = -1
-		Dim ListViewItem0 As ListViewItem
+		Dim fListDim As Integer = -1
+		Dim listViewItem As ListViewItem
 
 		'If VECTO runs: Cancel operation (because Mode-change during calculation is not very clever)
 		If VectoWorkerV3.IsBusy Then Exit Sub
@@ -609,12 +609,12 @@ Public Class MainForm
 			End If
 
 			'Otherwise: Add File (without WorkDir)
-			ListViewItem0 = New ListViewItem(Path(p))	'fFileWD(Path(p)))
-			ListViewItem0.SubItems.Add(" ")
-			ListViewItem0.Checked = True
-			ListViewItem0.Selected = True
-			LvGEN.Items.Add(ListViewItem0)
-			ListViewItem0.EnsureVisible()
+			listViewItem = New ListViewItem(Path(p))	'fFileWD(Path(p)))
+			listViewItem.SubItems.Add(" ")
+			listViewItem.Checked = True
+			listViewItem.Selected = True
+			LvGEN.Items.Add(listViewItem)
+			listViewItem.EnsureVisible()
 lbFound:
 		Next
 
@@ -912,7 +912,9 @@ lbFound:
 
 			Status("Launching VECTO ...")
 			JobFileList.Clear()
-			JobFileList.AddRange(From listViewItem In LvGEN.CheckedItems Select fFileRepl(listViewItem.SubItems(0).Text))
+			JobFileList.AddRange(
+				From listViewItem As ListViewItem In LvGEN.CheckedItems.Cast(Of ListViewItem)()
+									Select fFileRepl(listViewItem.SubItems(0).Text))
 
 			SetOptions()
 			Cfg.Save()
@@ -935,6 +937,7 @@ lbFound:
 			VectoWorkerV3.CancelAsync()
 		End If
 	End Sub
+
 
 	Private Sub VectoWorkerV3_OnDoWork(sender As BackgroundWorker, e As DoWorkEventArgs)
 		AllowSleepOFF()
@@ -961,7 +964,8 @@ lbFound:
 
 		For Each jobFile As String In JobFileList
 			Try
-				sender.ReportProgress(0, New With {.Target = "ListBox", .Message = "Reading File " + jobFile, .Link = jobFile})
+				sender.ReportProgress(0,
+									New VectoProgress With {.Target = "ListBox", .Message = "Reading File " + jobFile, .Link = jobFile})
 
 				Dim dataProvider As IInputDataProvider = JSONInputDataFactory.ReadJsonJob(jobFile)
 				Dim fileWriter As FileOutputWriter = New FileOutputWriter(jobFile)
@@ -974,11 +978,12 @@ lbFound:
 					fileWriters.Add(runId, fileWriter)
 				Next
 
-				sender.ReportProgress(0, New With {.Target = "ListBox", .Message = "Finished Reading Data for job: " + jobFile})
+				sender.ReportProgress(0,
+									New VectoProgress With {.Target = "ListBox", .Message = "Finished Reading Data for job: " + jobFile})
 
 			Catch ex As Exception
 				MsgBox(String.Format("ERROR running job {0}: {1}", jobFile, ex.Message), MsgBoxStyle.Critical)
-				sender.ReportProgress(0, New With {.Target = "ListBoxError", .Message = ex.Message})
+				sender.ReportProgress(0, New VectoProgress With {.Target = "ListBoxError", .Message = ex.Message})
 				Return
 			End Try
 		Next
@@ -986,12 +991,11 @@ lbFound:
 		'print detected cycles
 		For Each cycle As JobContainer.CycleTypeDescription In jobContainer.GetCycleTypes()
 			sender.ReportProgress(0,
-								New With {.Target = "ListBox", .Message = String.Format("Detected Cycle {0}: {1}", cycle.Name, cycle.CycleType)})
+								New VectoProgress _
+									With {.Target = "ListBox", .Message = String.Format("Detected Cycle {0}: {1}", cycle.Name, cycle.CycleType)})
 		Next
 
-		sender.ReportProgress(0,
-							New _
-								With {.Target = "ListBox",
+		sender.ReportProgress(0, New VectoProgress With {.Target = "ListBox",
 								.Message = _
 								String.Format("Starting Simulation ({0} Jobs, {1} Runs)", JobFileList.Count, jobContainer.GetProgress().Count)})
 
@@ -1010,7 +1014,8 @@ lbFound:
 			Dim sumProgress As Double = progress.Sum(Function(pair) pair.Value.Progress)
 			Dim duration As Double = (DateTime.Now() - start).TotalSeconds
 
-			sender.ReportProgress(Int((sumProgress * 100.0) / progress.Count), New With {.Target = "Status",
+			sender.ReportProgress(Convert.ToInt32((sumProgress * 100.0) / progress.Count),
+								New VectoProgress With {.Target = "Status",
 									.Message = _
 									String.Format("Duration: {0:0}s, Current Progress: {1:P} ({2})", duration, sumProgress / progress.Count,
 												String.Join(", ", progress.Select(Function(pair) String.Format("{0,4:P}", pair.Value.Progress))))})
@@ -1032,14 +1037,15 @@ lbFound:
 		fileWriters.Clear()
 
 		For Each progressEntry As KeyValuePair(Of Integer, JobContainer.ProgressEntry) In jobContainer.GetProgress()
-			sender.ReportProgress(100, New With {.Target = "ListBox",
+			sender.ReportProgress(100, New VectoProgress With {.Target = "ListBox",
 									.Message = String.Format("{0,-60} {1,8:P} {2,10:F2}s - {3}",
 															String.Format("{0} {1} {2}", progressEntry.Value.RunName, progressEntry.Value.CycleName,
 																		progressEntry.Value.RunSuffix),
 															progressEntry.Value.Progress, progressEntry.Value.ExecTime / 1000.0,
 															IIf(progressEntry.Value.Success, "Success", "Aborted"))})
 			If (Not progressEntry.Value.Success) Then
-				sender.ReportProgress(100, New With {.Target = "ListBox", .Message = progressEntry.Value.Error.Message})
+				sender.ReportProgress(100,
+									New VectoProgress With {.Target = "ListBox", .Message = progressEntry.Value.Error.Message})
 			End If
 
 		Next
@@ -1047,23 +1053,19 @@ lbFound:
 		For Each job As String In JobFileList
 			Dim report As String = New FileOutputWriter(job).PDFReportName
 			If File.Exists(report) Then
-				sender.ReportProgress(100,
-									New _
-										With {.Target = "ListBox",
+				sender.ReportProgress(100, New VectoProgress With {.Target = "ListBox",
 										.Message = String.Format("PDF-Report for '{0}' written to {1}", Path.GetFileName(job), report),
 										.Link = "<RUN>" + report})
 			End If
 		Next
 
 		If File.Exists(sumFileWriter.SumFileName) Then
-			sender.ReportProgress(100, New With {.Target = "ListBox",
+			sender.ReportProgress(100, New VectoProgress With {.Target = "ListBox",
 									.Message = String.Format("Sum File written to {0}", sumFileWriter.SumFileName),
 									.Link = sumFileWriter.SumFileName})
 		End If
 
-		sender.ReportProgress(100,
-							New _
-								With {.Target = "ListBox",
+		sender.ReportProgress(100, New VectoProgress With {.Target = "ListBox",
 								.Message = String.Format("Simulation Finished in {0:0}s", (DateTime.Now() - start).TotalSeconds)})
 	End Sub
 
@@ -1072,25 +1074,22 @@ lbFound:
 								fileWriters As Dictionary(Of Integer, FileOutputWriter))
 		For Each p As KeyValuePair(Of Integer, JobContainer.ProgressEntry) In progress
 			Dim modFilename As String = fileWriters(p.Key).GetModDataFileName(p.Value.RunName, p.Value.CycleName,
-																			p.Value.RunSuffix + IIf(Cfg.Mod1Hz, "_1Hz", ""))
+																			p.Value.RunSuffix + If(Cfg.Mod1Hz, "_1Hz", ""))
 
 			Dim runName As String = String.Format("{0} {1} {2}", p.Value.RunName, p.Value.CycleName, p.Value.RunSuffix)
 
 			If Not p.Value.Error Is Nothing Then
-				VectoWorkerV3.ReportProgress(0,
-											New _
-												With {.Target = "ListBoxError",
+				VectoWorkerV3.ReportProgress(0, New VectoProgress With {.Target = "ListBoxError",
 												.Message = String.Format("Finished Run {0} with ERROR: {1}", runName, p.Value.Error.Message),
 												.Link = modFilename})
 			Else
 				VectoWorkerV3.ReportProgress(0,
-											New With {.Target = "ListBox", .Message = String.Format("Finished Run {0} successfully.", runName)})
+											New VectoProgress _
+												With {.Target = "ListBox", .Message = String.Format("Finished Run {0} successfully.", runName)})
 			End If
 
 			If (File.Exists(modFilename)) Then
-				VectoWorkerV3.ReportProgress(0,
-											New _
-												With {.Target = "ListBox",
+				VectoWorkerV3.ReportProgress(0, New VectoProgress With {.Target = "ListBox",
 												.Message = String.Format("Run {0}: Modal Results written to {1}", runName, modFilename), .Link = modFilename
 												})
 			End If
@@ -1098,21 +1097,24 @@ lbFound:
 	End Sub
 
 	Private Sub VectoWorkerV3_OnProgressChanged(sender As Object, e As ProgressChangedEventArgs)
-		Select Case e.UserState.Target
+		Dim progress As VectoProgress = TryCast(e.UserState, VectoProgress)
+		If progress Is Nothing Then Exit Sub
+
+		Select Case progress.Target
 			Case "ListBox"
-				If e.UserState.GetType().GetProperty("Link") Is Nothing Then
-					MSGtoForm(MessageType.Normal, e.UserState.Message, "", "")
+				If progress.Link Is Nothing Then
+					MSGtoForm(MessageType.Normal, progress.Message, "", "")
 				Else
-					MSGtoForm(MessageType.Normal, e.UserState.Message, "", e.UserState.Link)
+					MSGtoForm(MessageType.Normal, progress.Message, "", progress.Link)
 				End If
 			Case "ListBoxWarning"
-				MSGtoForm(MessageType.Warn, e.UserState.Message, "", "")
+				MSGtoForm(MessageType.Warn, progress.Message, "", "")
 				Return
 			Case "ListBoxError"
-				MSGtoForm(MessageType.Err, e.UserState.Message, "", "")
+				MSGtoForm(MessageType.Err, progress.Message, "", "")
 				Return
 			Case "Status"
-				Status(e.UserState.Message)
+				Status(progress.Message)
 		End Select
 
 		ToolStripProgBarOverall.Value = e.ProgressPercentage
@@ -1535,32 +1537,32 @@ lbFound:
 	Private mouseDownOnListView As Boolean
 
 	Private Class GUItest
-		Private RowLim As Int16 = 9
-		Private ColLim As Int16 = 45
+		Private RowLim As Integer = 9
+		Private ColLim As Integer = 45
 		Public TestActive As Boolean = False
 		Private TestAborted As Boolean
-		Private xCtrl As Int16
-		Private xPanel As Int16
-		Private Scr As Int32
+		Private xCtrl As Integer
+		Private xPanel As Integer
+		Private Scr As Integer
 		Private PRbAlt As Boolean
-		Private ReadOnly Ctrls(RowLim + 1) As Int16
-		Private ReadOnly Pnls(RowLim + 1) As Int16
-		Private CtrlC As Int16
-		Private CtrlCL As Int16
-		Private PnDir As Int16
-		Private PnDirC As Int16
-		Private PnDirCL As Int16
-		Private PnDirRnd As Int16
-		Private CtrlRnd As Int16
-		Private DiffC As Int16
-		Private DiffLvl As Int16
-		Private bInit As Int16
+		Private ReadOnly Ctrls(RowLim + 1) As Integer
+		Private ReadOnly Pnls(RowLim + 1) As Integer
+		Private CtrlC As Integer
+		Private CtrlCL As Integer
+		Private PnDir As Integer
+		Private PnDirC As Integer
+		Private PnDirCL As Integer
+		Private PnDirRnd As Integer
+		Private CtrlRnd As Integer
+		Private DiffC As Integer
+		Private DiffLvl As Integer
+		Private bInit As Integer
 		Private ReadOnly MyForm As MainForm
 		Private ReadOnly KeyCode As List(Of Integer)
 
 		Private Sub TestRun()
 
-			Dim z As Int16
+			Dim z As Integer
 
 			xPanel = ColLim - 10
 			xCtrl = ColLim - 10
@@ -1763,7 +1765,7 @@ LbRace:
 		End Sub
 
 		Private Sub sSetCtrl()
-			Dim x As Int16
+			Dim x As Integer
 			If Scr < 10 Then Exit Sub
 			Ctrls(RowLim + 1) = 0
 			CtrlC += 1
@@ -1846,15 +1848,15 @@ Lb1:
 		End Sub
 
 		Private Sub sLists()
-			Dim x As Int16
+			Dim x As Integer
 			For x = 2 To RowLim + 1
 				Ctrls(x - 1) = Ctrls(x)
 				Pnls(x - 1) = Pnls(x)
 			Next
 		End Sub
 
-		Public Sub New(Form As MainForm)
-			MyForm = Form
+		Public Sub New(form As MainForm)
+			MyForm = form
 			KeyCode = New List(Of Integer)
 			KeyCode.Add(Keys.Up)
 			KeyCode.Add(Keys.Up)
@@ -1917,4 +1919,11 @@ Lb1:
 
 	Private Sub RbDev_CheckedChanged(sender As Object, e As EventArgs) Handles RbDev.CheckedChanged
 	End Sub
+
+
+	Private Class VectoProgress
+		Public Target As String
+		Public Message As String
+		Public Link As String
+	End Class
 End Class

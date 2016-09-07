@@ -29,7 +29,7 @@ Namespace Input_Files
 		End Sub
 
 		Private Function CheckFilenameGiven(f As String) As String
-			If Trim(UCase(f)) = sKey.NoFile Then
+			If Trim(UCase(f)) = Constants.NoFile Then
 				Return ""
 			Else
 				Return f
@@ -66,7 +66,7 @@ Namespace Input_Files
 				If _valid Then
 					Return _originalPath
 				Else
-					Return sKey.NoFile
+					Return Constants.NoFile
 				End If
 			End Get
 		End Property

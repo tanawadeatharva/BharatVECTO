@@ -10,6 +10,8 @@
 ' See the LICENSE.txt for the specific language governing permissions and limitations.
 Imports System.Collections.Generic
 Imports System.IO
+Imports Newtonsoft.Json.Linq
+Imports TUGraz.VectoCore.InputData.FileIO.JSON
 Imports TUGraz.VectoCore.Models.Declaration
 
 Public Class Configuration
@@ -17,12 +19,12 @@ Public Class Configuration
 	Public GnUfromCycle As Boolean
 	Public ModOut As Boolean
 	Public Mod1Hz As Boolean
-	Public LogSize As Single
-	Public AirDensity As Single
+	Public LogSize As Double
+	Public AirDensity As Double
 	Public OpenCmd As String
 	Public OpenCmdName As String
-	Public FuelDens As Single
-	Public CO2perFC As Single
+	Public FuelDens As Double
+	Public CO2perFC As Double
 	Public FirstRun As Boolean
 	Public DeclMode As Boolean
 
@@ -62,28 +64,27 @@ Public Class Configuration
 
 		Dim json As New JSONParser
 		If Not json.ReadFile(FilePath) Then
-			GUImsg(MessageType.Err, "Failed to load settings! Using default settings.")
+			GUIMsg(MessageType.Err, "Failed to load settings! Using default settings.")
 			Exit Sub
 		End If
-
 		Try
+			Dim body As JToken = json.Content.GetEx("Body")
 			Try
-				Mod1Hz = json.Content("Body")("Mod1Hz")
+				Mod1Hz = body.GetEx(Of Boolean)("Mod1Hz")
 			Catch
 			End Try
-
-			ModOut = json.Content("Body")("ModOut")
-			GnUfromCycle = json.Content("Body")("UseGnUfromCycle")
-			LogSize = json.Content("Body")("LogSize")
-			AirDensity = json.Content("Body")("AirDensity")
-			FuelDens = json.Content("Body")("FuelDensity")
-			CO2perFC = json.Content("Body")("CO2perFC")
-			OpenCmd = json.Content("Body")("OpenCmd")
-			OpenCmdName = json.Content("Body")("OpenCmdName")
-			FirstRun = json.Content("Body")("FirstRun")
-			DeclMode = json.Content("Body")("DeclMode")
+			ModOut = body.GetEx(Of Boolean)("ModOut")
+			GnUfromCycle = body.GetEx(Of Boolean)("UseGnUfromCycle")
+			LogSize = body.GetEx(Of Double)("LogSize")
+			AirDensity = body.GetEx(Of Double)("AirDensity")
+			FuelDens = body.GetEx(Of Double)("FuelDensity")
+			CO2perFC = body.GetEx(Of Double)("CO2perFC")
+			OpenCmd = body.GetEx(Of String)("OpenCmd")
+			OpenCmdName = body.GetEx(Of String)("OpenCmdName")
+			FirstRun = body.GetEx(Of Boolean)("FirstRun")
+			DeclMode = body.GetEx(Of Boolean)("DeclMode")
 		Catch ex As Exception
-			GUImsg(MessageType.Err, "Error while loading settings!")
+			GUIMsg(MessageType.Err, "Error while loading settings!")
 		End Try
 	End Sub
 
@@ -96,7 +97,7 @@ Public Class Configuration
 		dic.Add("Date", Now.ToUniversalTime().ToString("o"))
 		dic.Add("AppVersion", VECTOvers)
 		dic.Add("FileVersion", FormatVersion)
-		json.Content.Add("Header", dic)
+		json.Content.Add("Header", JToken.FromObject(dic))
 
 		dic = New Dictionary(Of String, Object)
 		dic.Add("ModOut", ModOut)
@@ -109,7 +110,7 @@ Public Class Configuration
 		dic.Add("OpenCmdName", OpenCmdName)
 		dic.Add("FirstRun", FirstRun)
 		dic.Add("DeclMode", DeclMode)
-		json.Content.Add("Body", dic)
+		json.Content.Add("Body", JToken.FromObject(dic))
 
 		json.WriteFile(FilePath)
 	End Sub

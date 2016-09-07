@@ -16,6 +16,7 @@ Imports System.IO
 Imports System.Linq
 Imports Newtonsoft.Json.Linq
 Imports TUGraz.VECTO.Input_Files
+Imports TUGraz.VectoCore.InputData.FileIO.JSON
 
 Public Class VectoJob
 	Private Const FormatVersion As Short = 3
@@ -35,9 +36,9 @@ Public Class VectoJob
 	Private ReadOnly _gearboxFile As SubPath
 
 	Private _startStop As Boolean
-	Private _startStopMaxSpeed As Single
-	Private _startStopMinTime As Single
-	Public StartStopDelay As Integer
+	Private _startStopMaxSpeed As Double
+	Private _startStopMinTime As Double
+	Public StartStopDelay As Double
 
 	Private ReadOnly _driverAccelerationFile As SubPath
 
@@ -48,11 +49,11 @@ Public Class VectoJob
 
 	Public EngineOnly As Boolean
 
-	Public VMin As Single
+	Public VMin As Double
 	Public LookAheadOn As Boolean
 	Public OverSpeedOn As Boolean
-	Public OverSpeed As Single
-	Public UnderSpeed As Single
+	Public OverSpeed As Double
+	Public UnderSpeed As Double
 	Public EcoRollOn As Boolean
 
 	Public SavedInDeclMode As Boolean
@@ -60,10 +61,11 @@ Public Class VectoJob
 	Public Class AuxEntry
 		Public Type As String
 		Public ReadOnly Path As SubPath
-		Public TechStr As String = ""
+		Public TechnologyList As List(Of String)
 
 		Public Sub New()
 			Path = New SubPath
+			TechnologyList = New List(Of String)()
 		End Sub
 	End Class
 
@@ -87,11 +89,11 @@ Public Class VectoJob
 		Dim json As New JSONParser
 
 		'Header
-		json.Content.Add("Header", New Dictionary(Of String, Object) From {
-							{"CreatedBy", Lic.LicString & " (" & Lic.GUID & ")"},
-							{"Date", Now.ToUniversalTime().ToString("o")},
-							{"AppVersion", VECTOvers},
-							{"FileVersion", FormatVersion}})
+		json.Content.Add("Header", JToken.FromObject(New Dictionary(Of String, Object) From {
+														{"CreatedBy", Lic.LicString & " (" & Lic.GUID & ")"},
+														{"Date", Now.ToUniversalTime().ToString("o")},
+														{"AppVersion", VECTOvers},
+														{"FileVersion", FormatVersion}}))
 
 		'Body
 		Dim dic0 = New Dictionary(Of String, Object)
@@ -120,7 +122,7 @@ Public Class VectoJob
 												{"ID", Trim(UCase(kv.Key))},
 												{"Type", kv.Value.Type},
 												{"Path", kv.Value.Path.PathOrDummy},
-												{"Technology", IIf(kv.Value.TechStr = "", New List(Of String), New List(Of String) From {kv.Value.TechStr})}
+												{"Technology", kv.Value.TechnologyList}
 												}))
 		End If
 
@@ -153,7 +155,7 @@ Public Class VectoJob
 		overspeedDic.Add("UnderSpeed", UnderSpeed)
 		dic0.Add("OverSpeedEcoRoll", overspeedDic)
 
-		json.Content.Add("Body", dic0)
+		json.Content.Add("Body", JToken.FromObject(dic0))
 		Return json.WriteFile(_sFilePath)
 	End Function
 
@@ -166,28 +168,29 @@ Public Class VectoJob
 		If Not json.ReadFile(_sFilePath) Then Return False
 
 		Try
-			Dim fileVersion = json.Content("Header")("FileVersion")
 
-			Dim body As JObject = json.Content("Body")
+			Dim fileVersion As Integer = json.Content.GetEx("Header").GetEx(Of Integer)("FileVersion")
+
+			Dim body As JToken = json.Content.GetEx("Body")
 
 			If fileVersion > 1 Then
-				SavedInDeclMode = body("SavedInDeclMode")
+				SavedInDeclMode = body.GetEx(Of Boolean)("SavedInDeclMode")
 			Else
 				SavedInDeclMode = Cfg.DeclMode
 			End If
 
 			If Not body("VehicleFile") Is Nothing Then _
-				_vehicleFile.Init(_myPath, body("VehicleFile"))
+				_vehicleFile.Init(_myPath, body.GetEx(Of String)("VehicleFile"))
 
-			_engineFile.Init(_myPath, body("EngineFile"))
+			_engineFile.Init(_myPath, body.GetEx(Of String)("EngineFile"))
 
 			If Not body("GearboxFile") Is Nothing Then _
-				_gearboxFile.Init(_myPath, body("GearboxFile"))
+				_gearboxFile.Init(_myPath, body.GetEx(Of String)("GearboxFile"))
 
 			If Not body("Cycles") Is Nothing Then
-				For Each str As String In body("Cycles")
+				For Each entry As JToken In body.GetEx("Cycles")
 					Dim subPath = New SubPath
-					subPath.Init(_myPath, str)
+					subPath.Init(_myPath, entry.Value(Of String))
 					CycleFiles.Add(subPath)
 				Next
 			End If
@@ -207,9 +210,9 @@ Public Class VectoJob
 
 
 			If Not body("Aux") Is Nothing Then
-				For Each dic In body("Aux")
+				For Each dic As JToken In body.GetEx("Aux")
 
-					Dim auxId As String = UCase(Trim(dic("ID").ToString))
+					Dim auxId As String = UCase(Trim(dic.GetEx(Of String)("ID")))
 
 					If AuxPaths.ContainsKey(auxId) Then
 						WorkerMsg(MessageType.Err, "Multiple definitions of the same auxiliary type (" & auxId & ")!", msgSrc)
@@ -218,27 +221,27 @@ Public Class VectoJob
 
 					Dim auxEntry = New AuxEntry
 
-					auxEntry.Type = dic("Type")
-					auxEntry.Path.Init(_myPath, dic("Path"))
+					auxEntry.Type = dic.GetEx(Of String)("Type")
+					auxEntry.Path.Init(_myPath, dic.GetEx(Of String)("Path"))
 
 					If Not dic("Technology") Is Nothing Then
 						If fileVersion = 2 Then
-							auxEntry.TechStr = dic("Technology")
+							auxEntry.TechnologyList.Add(dic.GetEx(Of String)("Technology"))
 						End If
 						If fileVersion = 3 Then
-							auxEntry.TechStr = dic("Technology").FirstOrDefault()
+							auxEntry.TechnologyList = dic.GetEx("Technology").ToObject(Of List(Of String))() '.FirstOrDefault()
 						End If
 					End If
 
-					If (auxId = sKey.AUX.HVAC) Then
-						If Not String.IsNullOrWhiteSpace(auxEntry.TechStr) Then
-							auxEntry.TechStr = ""
+					If (auxId = Constants.AuxiliaryKey.HVAC) Then
+						If auxEntry.TechnologyList.Count > 0 Then ' Not String.IsNullOrWhiteSpace(auxEntry.TechStr) Then
+							auxEntry.TechnologyList.Clear()
 							WorkerMsg(MessageType.Normal, "Aux: Automatically Upgraded HVAC to new format.", msgSrc)
 						End If
 					End If
 
-					If auxId = sKey.AUX.ElecSys Then
-						If auxEntry.TechStr = "Custom Technology List" OrElse String.IsNullOrWhiteSpace(auxEntry.TechStr) Then
+					If auxId = Constants.AuxiliaryKey.ElecSys Then
+						If auxEntry.TechnologyList.Contains("Custom Technology List") OrElse auxEntry.TechnologyList.Count > 0 Then
 							Dim hasTech = False
 
 							If Not dic("TechList") Is Nothing Then
@@ -247,41 +250,45 @@ Public Class VectoJob
 								Next
 							End If
 
+							auxEntry.TechnologyList.Clear()
 							If Not hasTech Then
-								auxEntry.TechStr = "Standard technology"
+								auxEntry.TechnologyList.Add("Standard technology")
 							Else
-								auxEntry.TechStr = "Standard technology - LED headlights, all"
+								auxEntry.TechnologyList.Add("Standard technology - LED headlights, all")
 							End If
 							WorkerMsg(MessageType.Normal,
-									"Aux: Automatically Upgraded Electric System to new format: '" + auxEntry.TechStr + "'",
+									"Aux: Automatically Upgraded Electric System to new format: '" + auxEntry.TechnologyList.FirstOrDefault() + "'",
 									msgSrc)
 						End If
 					End If
 
-					If auxId = sKey.AUX.SteerPump Then
-						Select Case auxEntry.TechStr
-							Case "Variable displacement"
-								WorkerMsg(MessageType.Warn, "Aux: Steering Pump Technology not automatically convertible. Please set new value.",
-										msgSrc)
-							Case "Hydraulic supported by electric"
-								WorkerMsg(MessageType.Warn, "Aux: Steering Pump Technology not automatically convertible. Please set new value.",
-										msgSrc)
-						End Select
+					If auxId = Constants.AuxiliaryKey.SteerPump Then
+						If _
+							auxEntry.TechnologyList.Contains("Variable displacement") OrElse
+							auxEntry.TechnologyList.Contains("Hydraulic supported by electric") Then
+							auxEntry.TechnologyList.Clear()
+							WorkerMsg(MessageType.Warn, "Aux: Steering Pump Technology not automatically convertible. Please set new value.",
+									msgSrc)
+						End If
 					End If
 
-					If auxId = sKey.AUX.Fan Then
-						Select Case auxEntry.TechStr
-							Case "Crankshaft mounted - Electronically controlled visco clutch (Default)"
-								auxEntry.TechStr = "Crankshaft mounted - Electronically controlled visco clutch"
-							Case "Crankshaft mounted - On/Off clutch"
-								auxEntry.TechStr = "Crankshaft mounted - On/off clutch"
-							Case "Belt driven or driven via transm. - On/Off clutch"
-								auxEntry.TechStr = "Belt driven or driven via transm. - On/off clutch"
-						End Select
+					If auxId = Constants.AuxiliaryKey.Fan Then
+						If auxEntry.TechnologyList.Contains("Crankshaft mounted - Electronically controlled visco clutch (Default)") Then
+							auxEntry.TechnologyList.Clear()
+							auxEntry.TechnologyList.Add("Crankshaft mounted - Electronically controlled visco clutch")
+						End If
+						If auxEntry.TechnologyList.Contains("Crankshaft mounted - On/Off clutch") Then
+							auxEntry.TechnologyList.Clear()
+							auxEntry.TechnologyList.Add("Crankshaft mounted - On/off clutch")
+						End If
+						If auxEntry.TechnologyList.Contains("Belt driven or driven via transm. - On/Off clutch") Then
+							auxEntry.TechnologyList.Clear()
+							auxEntry.TechnologyList.Add("Belt driven or driven via transm. - On/off clutch")
+						End If
 					End If
 
-					If fileVersion = 2 AndAlso auxId = sKey.AUX.PneumSys Then
-						auxEntry.TechStr = ""
+					If fileVersion = 2 AndAlso auxId = Constants.AuxiliaryKey.PneumSys Then
+						auxEntry.TechnologyList.Clear()
 						WorkerMsg(MessageType.Warn, "Aux: Pneumatic System must be updated. Please set new value.",
 								msgSrc)
 					End If
@@ -292,29 +299,31 @@ Public Class VectoJob
 			End If
 
 			If Not body("VACC") Is Nothing Then
-				_driverAccelerationFile.Init(_myPath, body("VACC"))
+				_driverAccelerationFile.Init(_myPath, body.GetEx(Of String)("VACC"))
 			End If
 
-			EngineOnly = body("EngineOnlyMode")
+			EngineOnly = body.GetEx(Of Boolean)("EngineOnlyMode")
 
 			If Not body("StartStop") Is Nothing Then
-				Dim dic = body("StartStop")
-				_startStop = dic("Enabled")
-				_startStopMaxSpeed = dic("MaxSpeed")
-				_startStopMinTime = dic("MinTime")
-				StartStopDelay = dic("Delay")
+				Dim startStop As JToken = body.GetEx("StartStop")
+				_startStop = startStop.GetEx(Of Boolean)("Enabled")
+				_startStopMaxSpeed = startStop.GetEx(Of Double)("MaxSpeed")
+				_startStopMinTime = startStop.GetEx(Of Double)("MinTime")
+				StartStopDelay = startStop.GetEx(Of Double)("Delay")
 			Else
 				_startStop = False
 			End If
 
 			If Not body("LAC") Is Nothing Then
-				Dim dic = body("LAC")
-				LookAheadOn = dic("Enabled")
-				LacPreviewFactor = If(dic("PreviewDistanceFactor") Is Nothing, 10, dic("PreviewDistanceFactor"))
-				LacDfOffset = If(dic("DF_offset") Is Nothing, 2.5, dic("DF_offset"))
-				LacDfScale = If(dic("DF_scaling") Is Nothing, 1.5, dic("DF_scaling"))
-				LacDfTargetSpeedFile = If(Not dic("DF_targetSpeedLookup") Is Nothing, dic("DF_targetSpeedLookup"), "")
-				LacDfVelocityDropFile = If(Not dic("Df_velocityDropLookup") Is Nothing, dic("Df_velocityDropLookup"), "")
+				Dim lac = body.GetEx("LAC")
+				LookAheadOn = lac.GetEx(Of Boolean)("Enabled")
+				LacPreviewFactor = If(lac("PreviewDistanceFactor") Is Nothing, 10, lac.GetEx(Of Double)("PreviewDistanceFactor"))
+				LacDfOffset = If(lac("DF_offset") Is Nothing, 2.5, lac.GetEx(Of Double)("DF_offset"))
+				LacDfScale = If(lac("DF_scaling") Is Nothing, 1.5, lac.GetEx(Of Double)("DF_scaling"))
+				LacDfTargetSpeedFile =
+					If(Not lac("DF_targetSpeedLookup") Is Nothing, lac.GetEx(Of String)("DF_targetSpeedLookup"), "")
+				LacDfVelocityDropFile =
+					If(Not lac("Df_velocityDropLookup") Is Nothing, lac.GetEx(Of String)("Df_velocityDropLookup"), "")
 			Else
 				LookAheadOn = False
 			End If
@@ -341,9 +350,9 @@ Public Class VectoJob
 						Return False
 				End Select
 
-				VMin = dic("MinSpeed")
-				OverSpeed = dic("OverSpeed")
-				If Not dic("UnderSpeed") Is Nothing Then UnderSpeed = dic("UnderSpeed")
+				VMin = dic.GetEx(Of Double)("MinSpeed")
+				OverSpeed = dic.GetEx(Of Double)("OverSpeed")
+				If Not dic("UnderSpeed") Is Nothing Then UnderSpeed = dic.GetEx(Of Double)("UnderSpeed")
 
 			Else
 				OverSpeedOn = False
@@ -462,20 +471,20 @@ Public Class VectoJob
 		End Set
 	End Property
 
-	Public Property StStV As Single
+	Public Property StStV As Double
 		Get
 			Return _startStopMaxSpeed
 		End Get
-		Set(value As Single)
+		Set(value As Double)
 			_startStopMaxSpeed = value
 		End Set
 	End Property
 
-	Public Property StStT As Single
+	Public Property StStT As Double
 		Get
 			Return _startStopMinTime
 		End Get
-		Set(value As Single)
+		Set(value As Double)
 			_startStopMinTime = value
 		End Set
 	End Property
@@ -493,9 +502,9 @@ Public Class VectoJob
 		End Set
 	End Property
 
-	Public Property LacPreviewFactor As Single
-	Public Property LacDfOffset As Single
-	Public Property LacDfScale As Single
+	Public Property LacPreviewFactor As Double
+	Public Property LacDfOffset As Double
+	Public Property LacDfScale As Double
 	Public Property LacDfTargetSpeedFile As String
 	Public Property LacDfVelocityDropFile As String
 

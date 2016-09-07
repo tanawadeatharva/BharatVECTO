@@ -95,7 +95,6 @@ Namespace My
 			End If
 
 			'Initialise Classes
-			sKey = New csKey
 			JobFileList = New List(Of String)
 
 			'DEV = New cDEV

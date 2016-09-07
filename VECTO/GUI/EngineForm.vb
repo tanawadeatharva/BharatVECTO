@@ -52,10 +52,8 @@ Public Class EngineForm
 
 		If Not Cfg.DeclMode Then Exit Sub
 
-		TbInertia.Text =
-			CStr(
-				DeclarationData.Engine.EngineInertia((fTextboxToNumString(TbDispl.Text) / 1000.0 / 1000.0).SI(Of CubicMeter),
-													GearboxType.AMT).Value())
+		TbInertia.Text = DeclarationData.Engine.EngineInertia((TbDispl.Text.ToDouble() / 1000.0 / 1000.0).SI(Of CubicMeter),
+															GearboxType.AMT).ToGUIFormat()
 	End Sub
 
 
@@ -176,9 +174,9 @@ Public Class EngineForm
 
 		TbMAP.Text = ENG0.PathMAP(True)
 		TbFLD.Text = ENG0.PathFLD(True)
-		TbWHTCurban.Text = ENG0.WHTCurban
-		TbWHTCrural.Text = ENG0.WHTCrural
-		TbWHTCmw.Text = ENG0.WHTCmw
+		TbWHTCurban.Text = ENG0.WHTCurban.ToGUIFormat()
+		TbWHTCrural.Text = ENG0.WHTCrural.ToGUIFormat()
+		TbWHTCmw.Text = ENG0.WHTCmw.ToGUIFormat()
 
 		DeclInit()
 
@@ -212,17 +210,17 @@ Public Class EngineForm
 
 		engine.ModelName = TbName.Text
 		If Trim(engine.ModelName) = "" Then engine.ModelName = "Undefined"
-		engine.Displacement = CSng(fTextboxToNumString(TbDispl.Text))
-		engine.EngineInertia = CSng(fTextboxToNumString(TbInertia.Text))
-		engine.IdleSpeed = CSng(fTextboxToNumString(TbNleerl.Text))
+		engine.Displacement = TbDispl.Text.ToDouble()
+		engine.EngineInertia = TbInertia.Text.ToDouble()
+		engine.IdleSpeed = TbNleerl.Text.ToDouble()
 
 		engine.PathFLD = TbFLD.Text
 		engine.PathMAP = TbMAP.Text
 
 
-		engine.WHTCurban = CSng(fTextboxToNumString(TbWHTCurban.Text))
-		engine.WHTCrural = CSng(fTextboxToNumString(TbWHTCrural.Text))
-		engine.WHTCmw = CSng(fTextboxToNumString(TbWHTCmw.Text))
+		engine.WHTCurban = TbWHTCurban.Text.ToDouble()
+		engine.WHTCrural = TbWHTCrural.Text.ToDouble()
+		engine.WHTCmw = TbWHTCmw.Text.ToDouble()
 
 
 		If Not engine.SaveFile Then
@@ -332,7 +330,7 @@ Public Class EngineForm
 
 		fldfile = fFileRepl(TbFLD.Text, GetPath(_engFile))
 
-		If fldfile <> sKey.NoFile AndAlso File.Exists(fldfile) Then
+		If fldfile <> Constants.NoFile AndAlso File.Exists(fldfile) Then
 			OpenFiles(fFileRepl(TbMAP.Text, GetPath(_engFile)), fldfile)
 		Else
 			OpenFiles(fFileRepl(TbMAP.Text, GetPath(_engFile)))
@@ -359,7 +357,7 @@ Public Class EngineForm
 		Dim chart As Chart
 		Dim s As Series
 		Dim a As ChartArea
-		Dim img As Image
+		Dim img As Bitmap
 
 		PicBox.Image = Nothing
 
@@ -494,7 +492,7 @@ Public Class EngineForm
 
 		fldfile = fFileRepl(TbFLD.Text, GetPath(_engFile))
 
-		If fldfile <> sKey.NoFile AndAlso File.Exists(fldfile) Then
+		If fldfile <> Constants.NoFile AndAlso File.Exists(fldfile) Then
 			OpenFiles(fldfile)
 		End If
 	End Sub

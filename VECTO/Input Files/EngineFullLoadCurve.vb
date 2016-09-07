@@ -20,25 +20,25 @@ Public Class EngineFullLoadCurve
 	''' List of full load torque values [Nm]
 	''' </summary>
 	''' <remarks></remarks>
-	Public MaxTorqueList As List(Of Single)
+	Public MaxTorqueList As List(Of Double)
 
 	''' <summary>
 	''' List of motoring torque values [Nm]
 	''' </summary>
 	''' <remarks></remarks>
-	Public DragTorqueList As List(Of Single)
+	Public DragTorqueList As List(Of Double)
 
 	''' <summary>
 	''' List of engine speed values [1/min]
 	''' </summary>
 	''' <remarks></remarks>
-	Public EngineSpeedList As List(Of Single)
+	Public EngineSpeedList As List(Of Double)
 
 	''' <summary>
 	''' List of PT1 values [s]
 	''' </summary>
 	''' <remarks></remarks>
-	Private _pt1List As List(Of Single)
+	Private _pt1List As List(Of Double)
 
 	''' <summary>
 	''' Read file. FilePath must be set before calling. 
@@ -75,10 +75,10 @@ Public Class EngineFullLoadCurve
 		file.ReadLine()
 
 		'Initialize Lists
-		MaxTorqueList = New List(Of Single)
-		DragTorqueList = New List(Of Single)
-		EngineSpeedList = New List(Of Single)
-		_pt1List = New List(Of Single)
+		MaxTorqueList = New List(Of Double)
+		DragTorqueList = New List(Of Double)
+		EngineSpeedList = New List(Of Double)
+		_pt1List = New List(Of Double)
 
 		Dim firstLine As Boolean = True
 		Try
@@ -148,7 +148,7 @@ lbEr:
 	''' <param name="nU">engine speed [1/min]</param>
 	''' <returns>stationary full load power [kW]</returns>
 	''' <remarks></remarks>
-	Public Function Pfull(nU As Single) As Single
+	Public Function Pfull(nU As Double) As Double
 		Dim i As Int32
 
 		'Extrapolation for x < x(1)
@@ -170,8 +170,7 @@ lbEr:
 
 lbInt:
 		'Interpolation
-		Return _
-			nMtoPe(nU,
+		Return nMtoPe(nU,
 					(nU - EngineSpeedList(i - 1)) * (MaxTorqueList(i) - MaxTorqueList(i - 1)) /
 					(EngineSpeedList(i) - EngineSpeedList(i - 1)) + MaxTorqueList(i - 1))
 	End Function
@@ -182,7 +181,7 @@ lbInt:
 	''' <param name="nU">engine speed [1/min]</param>
 	''' <returns>stationary full load torque [Nm]</returns>
 	''' <remarks></remarks>
-	Private Function Torque(ByVal nU As Single) As Single
+	Private Function Torque(nU As Double) As Double
 		Dim i As Int32
 
 		'Extrapolation for x < x(1)
@@ -310,16 +309,16 @@ lbInt:
 	''' </summary>
 	''' <returns>engine speed at maximum power [1/min]</returns>
 	''' <remarks></remarks>
-	Public Function EngineRatedSpeed() As Single
+	Public Function EngineRatedSpeed() As Double
 
 		Dim stepSize As Single = 1
-		Dim maxPower As Single = 0
-		Dim rpm As Single = EngineSpeedList(0)
-		Dim maxSpeed As Single = EngineSpeedList.Last()
-		Dim ratedSpeed As Single = rpm
+		Dim maxPower As Double = 0
+		Dim rpm As Double = EngineSpeedList(0)
+		Dim maxSpeed As Double = EngineSpeedList.Last()
+		Dim ratedSpeed As Double = rpm
 
 		Do
-			Dim power As Single = nMtoPe(rpm, Torque(rpm))
+			Dim power As Double = nMtoPe(rpm, Torque(rpm))
 			If power > maxPower Then
 				maxPower = power
 				ratedSpeed = rpm

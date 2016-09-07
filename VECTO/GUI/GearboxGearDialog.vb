@@ -9,6 +9,7 @@
 '
 ' See the LICENSE.txt for the specific language governing permissions and limitations.
 Imports System.Windows.Forms
+Imports TUGraz.VectoCommon.Utils
 
 
 ''' <summary>
@@ -30,7 +31,7 @@ Public Class GearboxGearDialog
 			Exit Sub
 		End If
 
-		If IsNumeric(TbMapPath.Text) AndAlso (TbMapPath.Text < 0 OrElse TbMapPath.Text > 1) Then
+		If IsNumeric(TbMapPath.Text) AndAlso (TbMapPath.Text.ToDouble() < 0 OrElse TbMapPath.Text.ToDouble() > 1) Then
 			MsgBox("Efficiency is invalid! Must be between 0 and 1.")
 			TbMapPath.Focus()
 			TbMapPath.SelectAll()
@@ -61,7 +62,7 @@ Public Class GearboxGearDialog
 			Exit Sub
 		End If
 
-		If IsNumeric(TbMapPath.Text) AndAlso (TbMapPath.Text < 0 OrElse TbMapPath.Text > 1) Then
+		If IsNumeric(TbMapPath.Text) AndAlso (TbMapPath.Text.ToDouble() < 0 OrElse TbMapPath.Text.ToDouble() > 1) Then
 			MsgBox("Efficiency is invalid! Must be between 0 and 1.")
 			TbMapPath.Focus()
 			TbMapPath.SelectAll()
@@ -96,7 +97,7 @@ Public Class GearboxGearDialog
 			Exit Sub
 		End If
 
-		If IsNumeric(TbMapPath.Text) AndAlso (TbMapPath.Text < 0 OrElse TbMapPath.Text > 1) Then
+		If IsNumeric(TbMapPath.Text) AndAlso (TbMapPath.Text.ToDouble() < 0 OrElse TbMapPath.Text.ToDouble() > 1) Then
 			MsgBox("Efficiency is invalid! Must be between 0 and 1.")
 			TbMapPath.Focus()
 			TbMapPath.SelectAll()

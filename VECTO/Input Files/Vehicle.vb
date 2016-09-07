@@ -13,57 +13,59 @@ Option Infer On
 Imports System.Collections.Generic
 Imports System.IO
 Imports System.Linq
+Imports Newtonsoft.Json.Linq
 Imports TUGraz.VECTO.Input_Files
 Imports TUGraz.VectoCommon.Models
 Imports TUGraz.VectoCommon.Utils
+Imports TUGraz.VectoCore.InputData.FileIO.JSON
 Imports TUGraz.VectoCore.Models.Declaration
 
 
 Public Class Vehicle
 	'V2 MassMax is now saved in [t] instead of [kg]
 	Private Const FormatVersion As Short = 7
-	Private _fileVersion As Short
+	Private _fileVersion As Integer
 
 	Private _filePath As String
 	Private _path As String
 
-	Public Mass As Single
-	Public Loading As Single
+	Public Mass As Double
+	Public Loading As Double
 
-	Public CdA0 As Single
+	Public CdA0 As Double
 
 	Public CrossWindCorrectionMode As CrossWindCorrectionMode
 	Public ReadOnly CrossWindCorrectionFile As SubPath
 
 	Public RetarderType As RetarderType
-	Public RetarderRatio As Single = 0
+	Public RetarderRatio As Double = 0
 	Public ReadOnly RetarderLossMapFile As SubPath
 
-	Public DynamicTyreRadius As Single
+	Public DynamicTyreRadius As Double
 	Public ReadOnly Axles As List(Of Axle)
 
 
 	Public VehicleCategory As VehicleCategory
-	Public MassExtra As Single
-	Public MassMax As Single
+	Public MassExtra As Double
+	Public MassMax As Double
 	Public AxleConfiguration As AxleConfiguration
 
 	Public SavedInDeclMode As Boolean
 	Public AngularGearType As AngularGearType
-	Public AngularGearRatio As Single
+	Public AngularGearRatio As Double
 	Public ReadOnly AngularGearLossMapFile As SubPath
 
 	Public PTOType As String
-	Public PTOLossMap As SubPath
-	Public PTOCycle As SubPath
+	Public ReadOnly PTOLossMap As SubPath
+	Public ReadOnly PTOCycle As SubPath
 
 	Public Class Axle
-		Public RRC As Single
-		Public Share As Single
+		Public RRC As Double
+		Public Share As Double
 		Public TwinTire As Boolean
-		Public FzISO As Single
+		Public FzISO As Double
 		Public Wheels As String
-		Public Inertia As Single
+		Public Inertia As Double
 	End Class
 
 
@@ -122,51 +124,52 @@ Public Class Vehicle
 		If Not json.ReadFile(_filePath) Then Return False
 
 		Try
-			Dim header = json.Content("Header")
-			Dim body = json.Content("Body")
+			Dim header As jtoken = json.Content.GetEx("Header")
+			Dim body As JToken = json.Content.GetEx("Body")
 
-			_fileVersion = header("FileVersion")
+			_fileVersion = header.GetEx(Of Integer)("FileVersion")
 			If _fileVersion > 4 Then
-				SavedInDeclMode = body("SavedInDeclMode")
+				SavedInDeclMode = body.GetEx(Of Boolean)("SavedInDeclMode")
 			Else
 				SavedInDeclMode = Cfg.DeclMode
 			End If
 
-			Mass = body("CurbWeight")
-			MassExtra = body("CurbWeightExtra")
-			Loading = body("Loading")
+			Mass = body.GetEx(Of Double)("CurbWeight")
+			MassExtra = body.GetEx(Of Double)("CurbWeightExtra")
+			Loading = body.GetEx(Of Double)("Loading")
 			VehicleCategory = body("VehCat").ToString.ParseEnum(Of VehicleCategory)() 'ConvVehCat(body("VehCat").ToString)
 			AxleConfiguration = AxleConfigurationHelper.Parse(body("AxleConfig")("Type").ToString)
 			If _fileVersion < 2 Then
 				'convert kg to ton
 				MassMax /= 1000
 			Else
-				MassMax = body("MassMax")
+				MassMax = body.GetEx(Of Double)("MassMax")
 			End If
 
 			If _fileVersion < 7 Then
 				'calc CdA from Cd and area value
-				CdA0 = CSng(body("Cd")) * CSng(body("CrossSecArea"))
+				CdA0 = (body.GetEx(Of Double)("Cd")) * (body.GetEx(Of Double)("CrossSecArea"))
 			Else
-				CdA0 = body("CdA")
+				CdA0 = body.GetEx(Of Double)("CdA")
 			End If
 
 			'CdA02 = CdA0
 
 			CrossWindCorrectionMode = CrossWindCorrectionModeHelper.Parse(body("CdCorrMode").ToString)
 			If Not body("CdCorrFile") Is Nothing Then
-				CrossWindCorrectionFile.Init(_path, body("CdCorrFile"))
+				CrossWindCorrectionFile.Init(_path, body.GetEx(Of String)("CdCorrFile"))
 			End If
 
 			If body("Retarder") Is Nothing Then
 				RetarderType = RetarderType.None
 			Else
 				RetarderType = RetarderTypeHelper.Parse(body("Retarder")("Type").ToString)
-				If Not body("Retarder")("Ratio") Is Nothing Then
-					RetarderRatio = body("Retarder")("Ratio")
+				Dim retarder As JToken = body.GetEx("Retarder")
+				If Not retarder("Ratio") Is Nothing Then
+					RetarderRatio = retarder.GetEx(Of Double)("Ratio")
 				End If
-				If Not body("Retarder")("File") Is Nothing Then
-					RetarderLossMapFile.Init(_path, body("Retarder")("File"))
+				If Not retarder("File") Is Nothing Then
+					RetarderLossMapFile.Init(_path, retarder.GetEx(Of String)("File"))
 				End If
 			End If
 
@@ -174,62 +177,67 @@ Public Class Vehicle
 				AngularGearType = AngularGearType.None
 			Else
 				AngularGearType = body("AngularGear")("Type").ToString.ParseEnum(Of AngularGearType)()
-				If Not body("AngularGear")("Ratio") Is Nothing Then
-					AngularGearRatio = body("AngularGear")("Ratio")
+				Dim angleDrive As JToken = body("AngularGear")
+				If Not angleDrive("Ratio") Is Nothing Then
+					AngularGearRatio = angleDrive.GetEx(Of Double)("Ratio")
 				End If
 				If Not body("AngularGear")("LossMap") Is Nothing Then
-					AngularGearLossMapFile.Init(_path, body("AngularGear")("LossMap"))
+					AngularGearLossMapFile.Init(_path, angleDrive.GetEx(Of String)("LossMap"))
 				End If
 			End If
 
-			Dim inertiaTemp As Single
+			Dim inertiaTemp As Double
 			If _fileVersion < 3 Then
-				inertiaTemp = body("WheelsInertia")
-				DynamicTyreRadius = 1000 * body("WheelsDiaEff") / 2
+				inertiaTemp = body.GetEx(Of Double)("WheelsInertia")
+				DynamicTyreRadius = 1000 * body.GetEx(Of Double)("WheelsDiaEff") / 2
 			Else
-				DynamicTyreRadius = body("rdyn")
+				DynamicTyreRadius = body.GetEx(Of Double)("rdyn")
 			End If
 
-			Dim axleCount = body("AxleConfig")("Axles").Count()
-			For Each axleEntry In body("AxleConfig")("Axles")
+			Dim axleCount As Integer = body("AxleConfig")("Axles").Count()
+			For Each axleEntry In body.GetEx("AxleConfig").GetEx("Axles")
 				Dim axle = New Axle With {
-						.Share = CSng(axleEntry("AxleWeightShare")),
-						.TwinTire = CBool(axleEntry("TwinTyres")),
-						.RRC = CSng(axleEntry("RRCISO")),
-						.FzISO = CSng(axleEntry("FzISO"))}
+						.Share = (axleEntry.GetEx(Of Double)("AxleWeightShare")),
+						.TwinTire = (axleEntry.GetEx(Of Boolean)("TwinTyres")),
+						.RRC = (axleEntry.GetEx(Of Double)("RRCISO")),
+						.FzISO = (axleEntry.GetEx(Of Double)("FzISO"))}
 
 				If _fileVersion < 3 Then
 					axle.Wheels = "-"
-					axle.Inertia = inertiaTemp / (IIf(axle.TwinTire, 4, 2) * axleCount)
+					Dim numWheels As Integer = 2
+					If axle.TwinTire Then numWheels = 4
+					axle.Inertia = inertiaTemp / (numWheels * axleCount)
 				Else
-					axle.Wheels = CStr(axleEntry("Wheels")).Replace("R ", "R")
-					axle.Inertia = CSng(axleEntry("Inertia"))
+					axle.Wheels = (axleEntry.GetEx(Of String)("Wheels")).Replace("R ", "R")
+					axle.Inertia = (axleEntry.GetEx(Of Double)("Inertia"))
 				End If
 				Axles.Add(axle)
 			Next
 
 			PTOType = PTOTransmission.NoPTO
 			If Not body("PTO") Is Nothing Then
-				Dim ptoStr = body("PTO")("Type")
+				Dim ptoTypeToken = body.GetEx("PTO")("Type")
 
-				If String.IsNullOrWhiteSpace(ptoStr) Then
+				If String.IsNullOrWhiteSpace(ptoTypeToken.Value(Of String)) Then
 					PTOType = PTOTransmission.NoPTO
-					WorkerMsg(MessageType.Normal, "PTO automatically updated to '" + PTOType + "'", msgSrc)
+					WorkerMsg(MessageType.Normal, "PTO automatically updated to '" + ptoTypeToken.Value(Of String)() + "'", msgSrc)
 				Else
 					Try
-						DeclarationData.PTOTransmission.Lookup(ptoStr)
-						PTOType = ptoStr
+						DeclarationData.PTOTransmission.Lookup(ptoTypeToken.Value(Of String))
+						PTOType = ptoTypeToken.Value(Of String)()
 					Catch ex As Exception
+						WorkerMsg(MessageType.Normal,
+								"PTO '" + ptoTypeToken.Value(Of String)() + "' not found, automatically updated to '" + PTOTransmission.NoPTO +
+								"'", msgSrc)
 						PTOType = PTOTransmission.NoPTO
-						WorkerMsg(MessageType.Normal, "PTO '" + ptoStr + "' not found, automatically updated to '" + PTOType + "'", msgSrc)
 					End Try
 				End If
 
 			End If
 
 			If Not PTOType.Equals(PTOTransmission.NoPTO) Then
-				PTOLossMap.Init(_path, body("PTO")("LossMap"))
-				PTOCycle.Init(_path, body("PTO")("Cycle"))
+				PTOLossMap.Init(_path, body.GetEx("PTO").GetEx(Of String)("LossMap"))
+				PTOCycle.Init(_path, body.GetEx("PTO").GetEx(Of String)("Cycle"))
 			End If
 
 		Catch ex As Exception
@@ -245,11 +253,11 @@ Public Class Vehicle
 
 		Dim json As New JSONParser
 		'Header
-		json.Content.Add("Header", New Dictionary(Of String, Object) From {
-							{"CreatedBy", Lic.LicString & " (" & Lic.GUID & ")"},
-							{"Date", Now.ToUniversalTime().ToString("o")},
-							{"AppVersion", VECTOvers},
-							{"FileVersion", FormatVersion}})
+		json.Content.Add("Header", JToken.FromObject(New Dictionary(Of String, Object) From {
+														{"CreatedBy", Lic.LicString & " (" & Lic.GUID & ")"},
+														{"Date", Now.ToUniversalTime().ToString("o")},
+														{"AppVersion", VECTOvers},
+														{"FileVersion", FormatVersion}}))
 
 		'Body
 		Dim dic As Dictionary(Of String, Object)
@@ -287,7 +295,7 @@ Public Class Vehicle
 					{"FzISO", axle.FzISO}})}}}
 			}
 
-		json.Content.Add("Body", dic)
+		json.Content.Add("Body", JToken.FromObject(dic))
 		Return json.WriteFile(_filePath)
 	End Function
 

@@ -10,6 +10,7 @@
 ' See the LICENSE.txt for the specific language governing permissions and limitations.
 Imports System.IO
 Imports System.Text.RegularExpressions
+Imports TUGraz.VectoCommon.Utils
 
 ''' <summary>
 ''' Settings form
@@ -24,7 +25,7 @@ Public Class Settings
 
 	Private Sub LoadSettings()
 
-		TextBoxLogSize.Text = Cfg.LogSize
+		TextBoxLogSize.Text = Cfg.LogSize.ToGUIFormat()
 		TbAirDensity.Text = CStr(Cfg.AirDensity)
 		TbOpenCmd.Text = Cfg.OpenCmd
 		TbOpenCmdName.Text = Cfg.OpenCmdName

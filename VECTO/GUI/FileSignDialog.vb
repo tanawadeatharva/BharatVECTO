@@ -141,7 +141,7 @@ Public Class FileSignDialog
 		Dim fb As New FileBrowser("sig", False, True)
 		fb.Extensions = New String() {"vsig"}
 
-		If fb.CustomDialog(TbSigFile.Text, False, False, tFbExtMode.ForceExt, False, "vsig") Then
+		If fb.CustomDialog(TbSigFile.Text, False, False, FileBrowserFileExtensionMode.ForceExt, False, "vsig") Then
 			TbSigFile.Text = fb.Files(0)
 		End If
 
@@ -205,7 +205,7 @@ Public Class FileSignDialog
 
 	'Remove File
 	Private Sub RemoveFile()
-		Dim i0 As Int16
+		Dim i0 As Integer
 
 		If lvFiles.Items.Count = 0 Then Exit Sub
 

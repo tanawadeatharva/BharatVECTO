@@ -10,7 +10,9 @@
 ' See the LICENSE.txt for the specific language governing permissions and limitations.
 Imports System.Collections.Generic
 Imports System.IO
+Imports Newtonsoft.Json.Linq
 Imports TUGraz.VECTO.Input_Files
+Imports TUGraz.VectoCore.InputData.FileIO.JSON
 
 ''' <summary>
 ''' Engine input file
@@ -27,7 +29,7 @@ Public Class Engine
 	''' Format version of input file. Defined in ReadFile.
 	''' </summary>
 	''' <remarks></remarks>
-	Private _fileVersion As Short
+	Private _fileVersion As Integer
 
 	''' <summary>
 	''' Engine description (model, type, etc.). Saved in input file.
@@ -39,19 +41,19 @@ Public Class Engine
 	''' Engine displacement [ccm]. Saved in input file.
 	''' </summary>
 	''' <remarks></remarks>
-	Public Displacement As Single
+	Public Displacement As Double
 
 	''' <summary>
 	''' Idling speed [1/min]. Saved in input file.
 	''' </summary>
 	''' <remarks></remarks>
-	Public IdleSpeed As Single
+	Public IdleSpeed As Double
 
 	''' <summary>
 	''' Rotational inertia including flywheel [kgm²]. Saved in input file. Overwritten by generic value in Declaration mode.
 	''' </summary>
 	''' <remarks></remarks>
-	Public EngineInertia As Single
+	Public EngineInertia As Double
 
 	''' <summary>
 	''' List of full load/motoring curve files (.vfld)
@@ -82,19 +84,19 @@ Public Class Engine
 	''' WHTC Urban test results. Saved in input file. 
 	''' </summary>
 	''' <remarks></remarks>
-	Public WHTCurban As Single
+	Public WHTCurban As Double
 
 	''' <summary>
 	''' WHTC Rural test results. Saved in input file. 
 	''' </summary>
 	''' <remarks></remarks>
-	Public WHTCrural As Single
+	Public WHTCrural As Double
 
 	''' <summary>
 	''' WHTC Motorway test results. Saved in input file. 
 	''' </summary>
 	''' <remarks></remarks>
-	Public WHTCmw As Single
+	Public WHTCmw As Double
 
 
 	Public SavedInDeclMode As Boolean
@@ -148,7 +150,7 @@ Public Class Engine
 		dic.Add("Date", Now.ToUniversalTime().ToString("o"))
 		dic.Add("AppVersion", VECTOvers)
 		dic.Add("FileVersion", FormatVersion)
-		JSON.Content.Add("Header", dic)
+		JSON.Content.Add("Header", JToken.FromObject(dic))
 
 		'Body
 		dic = New Dictionary(Of String, Object)
@@ -171,7 +173,7 @@ Public Class Engine
 		dic.Add("WHTC-Motorway", WHTCmw)
 
 
-		JSON.Content.Add("Body", dic)
+		JSON.Content.Add("Body", JToken.FromObject(dic))
 
 
 		Return JSON.WriteFile(_filePath)
@@ -182,49 +184,50 @@ Public Class Engine
 	''' </summary>
 	''' <returns>True if successful.</returns>
 	''' <remarks></remarks>
-	Public Function ReadFile(Optional ByVal ShowMsg As Boolean = True) As Boolean
-		Dim MsgSrc As String
-		Dim JSON As New JSONParser
+	Public Function ReadFile(Optional ByVal showMsg As Boolean = True) As Boolean
+		Dim msgSrc As String
+		Dim json As New JSONParser
 
-		MsgSrc = "ENG/ReadFile"
+		msgSrc = "ENG/ReadFile"
 
 		SetDefault()
 
 
-		If Not JSON.ReadFile(_filePath) Then Return False
+		If Not json.ReadFile(_filePath) Then Return False
 
 		Try
 
-			_fileVersion = JSON.Content("Header")("FileVersion")
+			_fileVersion = json.Content.GetEx("Header").GetEx(Of Integer)("FileVersion")
 
+			Dim body As JToken = json.Content.GetEx("Body")
 			If _fileVersion > 1 Then
-				SavedInDeclMode = JSON.Content("Body")("SavedInDeclMode")
+				SavedInDeclMode = body.GetEx(Of Boolean)("SavedInDeclMode")
 			Else
 				SavedInDeclMode = Cfg.DeclMode
 			End If
 
-			ModelName = JSON.Content("Body")("ModelName")
+			ModelName = body.GetEx(Of String)("ModelName")
 
-			Displacement = JSON.Content("Body")("Displacement")
-			IdleSpeed = JSON.Content("Body")("IdlingSpeed")
-			EngineInertia = JSON.Content("Body")("Inertia")
+			Displacement = body.GetEx(Of Double)("Displacement")
+			IdleSpeed = body.GetEx(Of Double)("IdlingSpeed")
+			EngineInertia = body.GetEx(Of Double)("Inertia")
 
 			If _fileVersion < 3 Then
-				_fullLoadCurvePath.Init(_myPath, JSON.Content("Body")("FullLoadCurves")(0)("Path"))
+				_fullLoadCurvePath.Init(_myPath, body.GetEx("FullLoadCurves").First.GetEx(Of String)("Path"))
 			Else
-				_fullLoadCurvePath.Init(_myPath, JSON.Content("Body")("FullLoadCurve"))
+				_fullLoadCurvePath.Init(_myPath, body.GetEx(Of String)("FullLoadCurve"))
 			End If
 
-			_fuelConsumptionMapPath.Init(_myPath, JSON.Content("Body")("FuelMap"))
+			_fuelConsumptionMapPath.Init(_myPath, body.GetEx(Of String)("FuelMap"))
 
-			If _fileVersion > 2 AndAlso Not JSON.Content("Body")("WHTC-Urban") Is Nothing Then
-				WHTCurban = CSng(JSON.Content("Body")("WHTC-Urban"))
-				WHTCrural = CSng(JSON.Content("Body")("WHTC-Rural"))
-				WHTCmw = CSng(JSON.Content("Body")("WHTC-Motorway"))
+			If _fileVersion > 2 AndAlso Not body("WHTC-Urban") Is Nothing Then
+				WHTCurban = (body.GetEx(Of Double)("WHTC-Urban"))
+				WHTCrural = (body.GetEx(Of Double)("WHTC-Rural"))
+				WHTCmw = (body.GetEx(Of Double)("WHTC-Motorway"))
 			End If
 
 		Catch ex As Exception
-			If ShowMsg Then WorkerMsg(MessageType.Err, "Failed to read VECTO file! " & ex.Message, MsgSrc)
+			If showMsg Then WorkerMsg(MessageType.Err, "Failed to read VECTO file! " & ex.Message, msgSrc)
 			Return False
 		End Try
 
@@ -286,3 +289,4 @@ Public Class Engine
 		End Set
 	End Property
 End Class
+

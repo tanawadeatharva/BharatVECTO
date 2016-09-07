@@ -136,7 +136,7 @@ Public Class FileBrowserDialog
 					'Single File
 					path = Trim(TextBoxPath.Text)
 					'Primary extension (eg for bForceExt)
-					ext = Trim(ComboBoxExt.Text.Split(",")(0))
+					ext = Trim(ComboBoxExt.Text.Split(","c)(0))
 					'If file without path then append path
 					If Mid(path, 2, 1) <> ":" Then path = _myFolder & path
 					'If instead of File a Folder is entered: Switch to Folder and Abort
@@ -186,7 +186,7 @@ Public Class FileBrowserDialog
 	End Sub
 
 	'Browse - Custom Dialog
-	Public Function Browse(path As String, fileMustExist As Boolean, overwriteCheck As Boolean, extMode As tFbExtMode,
+	Public Function Browse(path As String, fileMustExist As Boolean, overwriteCheck As Boolean, extMode As FileBrowserFileExtensionMode,
 							multiFile As Boolean, ext As String, caption As String) As Boolean
 		If Not _initialized Then Init()
 
@@ -201,7 +201,7 @@ Public Class FileBrowserDialog
 		'Options
 		_bOverwriteCheck = overwriteCheck
 		_bFileMustExist = fileMustExist
-		_bForceExt = (extMode = tFbExtMode.ForceExt)
+		_bForceExt = (extMode = FileBrowserFileExtensionMode.ForceExt)
 
 		'Form Config
 		ListViewFiles.MultiSelect = multiFile
@@ -216,13 +216,13 @@ Public Class FileBrowserDialog
 			ComboBoxExt.SelectedIndex = 0
 		Else
 			Select Case extMode
-				Case tFbExtMode.ForceExt
+				Case FileBrowserFileExtensionMode.ForceExt
 					If ext = "" Then ext = _extListSingle(0).ToString
 					ComboBoxExt.Items.AddRange(_extListSingle.ToArray)
 					ComboBoxExt.Text = ext
 					ComboBoxExt.Enabled = False
-				Case tFbExtMode.MultiExt, tFbExtMode.SingleExt
-					If extMode = tFbExtMode.MultiExt Then
+				Case FileBrowserFileExtensionMode.MultiExt, FileBrowserFileExtensionMode.SingleExt
+					If extMode = FileBrowserFileExtensionMode.MultiExt Then
 						ComboBoxExt.Items.AddRange(_extListMulti.ToArray)
 					Else
 						ComboBoxExt.Items.AddRange(_extListSingle.ToArray)
@@ -389,7 +389,7 @@ Public Class FileBrowserDialog
 			_extListMulti = New ArrayList
 			For x = 0 To UBound(_myExt)
 				_extListMulti.Add(_myExt(x))
-				For Each line In _myExt(x).Split(",")
+				For Each line In _myExt(x).Split(","c)
 					_extListSingle.Add(Trim(line))
 				Next
 			Next
@@ -643,8 +643,8 @@ Public Class FileBrowserDialog
 		If path = FavText Then
 			Dim favdlog = New FileBrowserFavoritesDialog
 			If favdlog.ShowDialog(Me) = DialogResult.OK Then
-				For x = 10 To 19
-					path = favdlog.ListBox1.Items(x - 10)
+				For x As Integer = 10 To 19
+					path = favdlog.ListBox1.Items(x - 10).ToString()
 					If path = NoFavString Then
 						FileBrowserFolderHistory(x) = EmptyText
 					Else
@@ -811,7 +811,7 @@ Public Class FileBrowserDialog
 		If Trim(ComboBoxExt.Text.ToString) = "" Then
 			extStr = New String() {"*"}
 		Else
-			extStr = ComboBoxExt.Text.ToString.Split(",")
+			extStr = ComboBoxExt.Text.ToString.Split(","c)
 		End If
 
 		'Delete File-List
