@@ -39,7 +39,7 @@ namespace TUGraz.VectoCore.Models.Declaration
 {
 	public class Axle : SimulationComponentData
 	{
-		public object WheelsDimension { get; internal set; }
+		public string WheelsDimension { get; internal set; }
 
 		[Required, SIRange(0, 100)]
 		public KilogramSquareMeter Inertia { get; internal set; }
