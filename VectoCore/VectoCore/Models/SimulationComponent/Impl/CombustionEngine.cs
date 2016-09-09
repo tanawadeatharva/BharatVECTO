@@ -216,6 +216,7 @@ namespace TUGraz.VectoCore.Models.SimulationComponent.Impl
 					DeltaFullLoad = deltaFull * avgEngineSpeed,
 					DeltaDragLoad = deltaDrag * avgEngineSpeed,
 					EnginePowerRequest = torqueOut * avgEngineSpeed,
+					DynamicFullLoadPower = dynamicFullLoadPower,
 					AuxiliariesPowerDemand = auxTorqueDemand * avgEngineSpeed,
 					EngineSpeed = angularVelocity,
 					EngineMaxTorqueOut =
@@ -252,6 +253,7 @@ namespace TUGraz.VectoCore.Models.SimulationComponent.Impl
 					AbsTime = absTime,
 					Delta = deltaFull * avgEngineSpeed,
 					EnginePowerRequest = totalTorqueDemand * avgEngineSpeed,
+					DynamicFullLoadPower = dynamicFullLoadPower,
 					Source = this,
 					AuxiliariesPowerDemand = auxTorqueDemand * avgEngineSpeed,
 					EngineSpeed = angularVelocity,
@@ -265,6 +267,7 @@ namespace TUGraz.VectoCore.Models.SimulationComponent.Impl
 					AbsTime = absTime,
 					Delta = deltaDrag * avgEngineSpeed,
 					EnginePowerRequest = totalTorqueDemand * avgEngineSpeed,
+					DynamicFullLoadPower = dynamicFullLoadPower,
 					Source = this,
 					AuxiliariesPowerDemand = auxTorqueDemand * avgEngineSpeed,
 					EngineSpeed = angularVelocity,
@@ -275,6 +278,7 @@ namespace TUGraz.VectoCore.Models.SimulationComponent.Impl
 
 			return new ResponseSuccess {
 				EnginePowerRequest = totalTorqueDemand * avgEngineSpeed,
+				DynamicFullLoadPower = dynamicFullLoadPower,
 				AuxiliariesPowerDemand = auxTorqueDemand * avgEngineSpeed,
 				EngineSpeed = angularVelocity,
 				Source = this

@@ -175,6 +175,39 @@ namespace TUGraz.VectoCore.Models.SimulationComponent.Data.Gearbox
 			}
 			return GetOutTorque(inAngularVelocity, solutions.Max().SI<PerSecond>());
 		}
+
+		public TorqueConverterOperatingPoint GetMaxPowerOperatingPoint(Watt maxPower, PerSecond prevInputSpeed,
+			PerSecond nextOutputSpeed, KilogramSquareMeter inertia, Second dt)
+		{
+			//var retVal = new TorqueConverterOperatingPoint {
+			//	OutAngularVelocity = nextOutputSpeed
+			//};
+			var solutions = new List<double>();
+			var mpNorm = ReferenceSpeed.Value();
+
+			foreach (var segment in TorqueConverterEntries.Pairwise(Tuple.Create)) {
+				var mpEdge = Edge.Create(new Point(segment.Item1.SpeedRatio, segment.Item1.Torque.Value()),
+					new Point(segment.Item2.SpeedRatio, segment.Item2.Torque.Value()));
+
+				var a = mpEdge.OffsetXY / mpNorm / mpNorm;
+				var b = inertia.Value() / 2 / dt.Value() + mpEdge.SlopeXY * nextOutputSpeed.Value() / mpNorm / mpNorm;
+				var c = 0;
+				var d = -inertia.Value() / 2 / dt.Value() * prevInputSpeed.Value() * prevInputSpeed.Value() - maxPower.Value();
+				var sol = VectoMath.CubicEquationSolver(a, b, c, d);
+
+				var selected = sol.Where(x => x > 0 && nextOutputSpeed / x >= mpEdge.P1.X && nextOutputSpeed / x < mpEdge.P2.X);
+				solutions.AddRange(selected);
+			}
+
+			if (solutions.Count == 0) {
+				throw new VectoException(
+					"Failed to find operating point for maxPower {0}, prevInputSpeed {1}, nextOutputSpeed {2}", maxPower,
+					prevInputSpeed, nextOutputSpeed);
+			}
+			solutions.Sort();
+
+			return GetOutTorque(solutions.First().SI<PerSecond>(), nextOutputSpeed);
+		}
 	}
 
 	public class TorqueConverterOperatingPoint

@@ -48,6 +48,8 @@ namespace TUGraz.VectoCore.Models.Connector.Ports.Impl
 		public PerSecond EngineSpeed { get; set; }
 
 		public Watt EnginePowerRequest { get; set; }
+		public Watt DynamicFullLoadPower { get; set; }
+
 		public Watt AngularGearPowerRequest { get; set; }
 		public Watt ClutchPowerRequest { get; set; }
 		public Watt GearboxPowerRequest { get; set; }
@@ -75,7 +77,8 @@ namespace TUGraz.VectoCore.Models.Connector.Ports.Impl
 	/// <summary>
 	/// Response when a request was successful.
 	/// </summary>
-	public class ResponseSuccess : AbstractResponse {}
+	public class ResponseSuccess : AbstractResponse {
+	}
 
 	/// <summary>
 	/// Response when the request resulted in an engine or gearbox overload. 

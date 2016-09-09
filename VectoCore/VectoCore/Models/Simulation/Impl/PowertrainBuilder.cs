@@ -33,6 +33,7 @@ using System;
 using System.Linq;
 using TUGraz.VectoCommon.Exceptions;
 using TUGraz.VectoCommon.Models;
+using TUGraz.VectoCommon.Utils;
 using TUGraz.VectoCore.Models.Simulation.Data;
 using TUGraz.VectoCore.Models.SimulationComponent;
 using TUGraz.VectoCore.Models.SimulationComponent.Data;
@@ -138,7 +139,7 @@ namespace TUGraz.VectoCore.Models.Simulation.Impl
 				.AddComponent(new Brakes(container))
 				.AddComponent(new AxleGear(container, data.AxleGearData))
 				.AddComponent(data.AngularGearData != null ? new AngularGear(container, data.AngularGearData) : null)
-				.AddComponent(GetGearbox(container, data.GearboxData), data.Retarder, data.PTO, container);
+				.AddComponent(GetGearbox(container, data.GearboxData, data.EngineData.Inertia), data.Retarder, data.PTO, container);
 			if (data.GearboxData.Type.ManualTransmission()) {
 				powertrain = powertrain.AddComponent(new Clutch(container, data.EngineData));
 			}
@@ -169,7 +170,7 @@ namespace TUGraz.VectoCore.Models.Simulation.Impl
 				.AddComponent(new Brakes(container))
 				.AddComponent(new AxleGear(container, data.AxleGearData))
 				.AddComponent(data.AngularGearData != null ? new AngularGear(container, data.AngularGearData) : null)
-				.AddComponent(GetGearbox(container, data.GearboxData), data.Retarder, data.PTO, container);
+				.AddComponent(GetGearbox(container, data.GearboxData, data.EngineData.Inertia), data.Retarder, data.PTO, container);
 			if (data.GearboxData.Type.ManualTransmission()) {
 				powertrain = powertrain.AddComponent(new Clutch(container, data.EngineData));
 			}
@@ -196,7 +197,7 @@ namespace TUGraz.VectoCore.Models.Simulation.Impl
 				.AddComponent(new Brakes(container))
 				.AddComponent(new AxleGear(container, data.AxleGearData))
 				.AddComponent(data.AngularGearData != null ? new AngularGear(container, data.AngularGearData) : null)
-				.AddComponent(GetGearbox(container, data.GearboxData), data.Retarder, data.PTO, container);
+				.AddComponent(GetGearbox(container, data.GearboxData, data.EngineData.Inertia), data.Retarder, data.PTO, container);
 			if (data.GearboxData.Type.ManualTransmission()) {
 				powertrain = powertrain.AddComponent(new Clutch(container, data.EngineData));
 			}
@@ -256,7 +257,7 @@ namespace TUGraz.VectoCore.Models.Simulation.Impl
 			return aux;
 		}
 
-		private static IGearbox GetGearbox(IVehicleContainer container, GearboxData data)
+		private static IGearbox GetGearbox(IVehicleContainer container, GearboxData data, KilogramSquareMeter engineInertia)
 		{
 			IShiftStrategy strategy;
 			switch (data.Type) {
@@ -269,7 +270,7 @@ namespace TUGraz.VectoCore.Models.Simulation.Impl
 				case GearboxType.ATPowerSplit:
 				case GearboxType.ATSerial:
 					strategy = new ATShiftStrategy(data, container);
-					return new ATGearbox(container, data, strategy);
+					return new ATGearbox(container, data, strategy, engineInertia);
 				default:
 					throw new VectoSimulationException("Unknown Gearbox Type: {0}", data.Type);
 			}
