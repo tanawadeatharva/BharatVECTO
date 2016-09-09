@@ -260,6 +260,60 @@ namespace TUGraz.VectoCommon.Utils
 		{
 			return Math.Ceiling(si.Value()).SI<T>();
 		}
+
+		public static List<double> CubicEquationSolver(double A, double B, double C, double D)
+		{
+			//var a = B / A;
+			//var b = C / A;
+			//var d = D / A;
+
+			//var p = b / a - a * a / 3;
+			//var q = 2 * a * a / 27 - a * b / 3 + C;
+
+			//var R = q * q / 4 + p * p * p / 27;
+			//if (R > 0) {
+			//	// one real and two complex solutions - we are only interested on the real solution
+
+			//} else {
+			//	// three real solutions (two may coincide)
+			//}
+			var solutions = new List<double>();
+			if (A.IsEqual(0, 1e-12)) {
+				return QuadraticEquationSolver(B, C, D);
+			}
+			var w = B / (3 * A);
+			var p = Math.Pow(C / (3 * A) - w * w, 3);
+			var q = -0.5 * (2 * (w * w * w) - (C * w - D) / A);
+			var d = q * q + p; // discriminant
+			if (d < 0.0) {
+				// 3 real solutions
+				var h = q / Math.Sqrt(-p);
+				var phi = Math.Acos(Math.Max(-1.0, Math.Min(1.0, h)));
+				p = 2 * Math.Pow(-p, 1.0 / 6.0);
+				for (var i = 0; i < 3; i++) {
+					solutions.Add(p * Math.Cos((phi + 2 * i * Math.PI) / 3.0) - w);
+				}
+			} else {
+				// only one real solution
+				d = Math.Sqrt(d);
+				solutions.Add(Cbrt(q + d) + Cbrt(q - d) - w);
+			}
+
+			// 1 Newton iteration step in order to minimize round-off errors
+			for (var i = 0; i < solutions.Count; i++) {
+				var h = C + solutions[i] * (2 * B + 3 * solutions[i] * A);
+				if (!h.IsEqual(0, 1e-12)) {
+					solutions[i] -= (D + solutions[i] * (C + solutions[i] * (B + solutions[i] * A))) / h;
+				}
+			}
+			solutions.Sort();
+			return solutions;
+		}
+
+		private static double Cbrt(double x)
+		{
+			return x < 0 ? -Math.Pow(-x, 1.0 / 3.0) : Math.Pow(x, 1.0 / 3.0);
+		}
 	}
 
 	[DebuggerDisplay("(X:{X}, Y:{Y}, Z:{Z})")]
@@ -443,8 +497,9 @@ namespace TUGraz.VectoCommon.Utils
 			if ((P1.Y < smallerY && P2.Y < smallerY && P3.Y < smallerY)
 				|| (P1.X < smallerX && P2.X < smallerX && P3.X < smallerX)
 				|| (P1.X > biggerX && P2.X > biggerX && P3.X > biggerX)
-				|| (P1.Y > biggerY && P2.Y > biggerY && P3.Y > biggerY))
+				|| (P1.Y > biggerY && P2.Y > biggerY && P3.Y > biggerY)) {
 				return false;
+			}
 
 			var v0X = P3.X - P1.X;
 			var v0Y = P3.Y - P1.Y;
