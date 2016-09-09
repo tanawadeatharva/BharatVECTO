@@ -138,7 +138,7 @@ namespace TUGraz.VectoCore.Models.SimulationComponent.Impl
 		}
 
 
-		public NewtonMeter PowerDemand(Second absTime, Second dt, NewtonMeter torquePowerTrain, NewtonMeter torqueEngine,
+		public NewtonMeter TorqueDemand(Second absTime, Second dt, NewtonMeter torquePowerTrain, NewtonMeter torqueEngine,
 			PerSecond angularSpeed, bool dryRun = false)
 		{
 			CurrentState.AngularSpeed = angularSpeed;
@@ -251,7 +251,7 @@ namespace TUGraz.VectoCore.Models.SimulationComponent.Impl
 			Auxiliaries.Signals.EngineSpeed = angularSpeed;
 			var avgAngularSpeed = (PreviousState.AngularSpeed + CurrentState.AngularSpeed) / 2;
 			Auxiliaries.Signals.PreExistingAuxPower = AdditionalAux != null
-				? AdditionalAux.PowerDemand(absTime, dt, torquePowerTrain, torqueEngine, angularSpeed, dryRun) * avgAngularSpeed
+				? AdditionalAux.TorqueDemand(absTime, dt, torquePowerTrain, torqueEngine, angularSpeed, dryRun) * avgAngularSpeed
 				: 0.SI<Watt>();
 			 //mAAUX_Global.PreExistingAuxPower;
 			Auxiliaries.Signals.Idle = DataBus.VehicleStopped;

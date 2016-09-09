@@ -191,7 +191,7 @@ namespace TUGraz.VectoCore.Models.SimulationComponent.Impl
 
 			var auxTorqueDemand = EngineAux == null
 				? 0.SI<NewtonMeter>()
-				: EngineAux.PowerDemand(absTime, dt, CurrentState.EngineTorqueOut,
+				: EngineAux.TorqueDemand(absTime, dt, CurrentState.EngineTorqueOut,
 					CurrentState.EngineTorqueOut + CurrentState.InertiaTorqueLoss, angularVelocity, dryRun);
 			// compute the torque the engine has to provide. powertrain + aux + its own inertia
 			var totalTorqueDemand = torqueOut + auxTorqueDemand + CurrentState.InertiaTorqueLoss;
@@ -207,7 +207,7 @@ namespace TUGraz.VectoCore.Models.SimulationComponent.Impl
 			// get max. torque as limited by gearbox. gearbox only limits torqueOut!
 			var gearboxFullLoad = DataBus.GearMaxTorque;
 
-			var deltaFull = ComputeDelta(torqueOut, totalTorqueDemand, CurrentState.DynamicFullLoadTorque, gearboxFullLoad, true);
+			var deltaFull = ComputeDelta(torqueOut, totalTorqueDemand + (CurrentState.InertiaTorqueLoss < 0 ? CurrentState.InertiaTorqueLoss : 0.SI<NewtonMeter>()), CurrentState.DynamicFullLoadTorque, gearboxFullLoad, true);
 			var deltaDrag = ComputeDelta(torqueOut, totalTorqueDemand, CurrentState.FullDragTorque,
 				gearboxFullLoad != null ? -gearboxFullLoad : null, false);
 

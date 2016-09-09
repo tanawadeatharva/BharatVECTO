@@ -189,7 +189,7 @@ namespace TUGraz.VectoCore.Models.SimulationComponent.Impl
 
 			if (Auxiliary != null) {
 				//todo mk-2016-08-22: aux loss from out-direction or in-direction of the gearbox?
-				inTorque += Auxiliary.PowerDemand(absTime, dt, outTorque, inTorque, outAngularVelocity, dryRun);
+				inTorque += Auxiliary.TorqueDemand(absTime, dt, outTorque, inTorque, outAngularVelocity, dryRun);
 			}
 
 			if (!TorqueConverterLocked && !ModelData.Gears[Gear].HasTorqueConverter) {
