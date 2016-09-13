@@ -49,6 +49,7 @@ namespace TUGraz.VectoCore.Models.Connector.Ports.Impl
 
 		public Watt EnginePowerRequest { get; set; }
 		public Watt DynamicFullLoadPower { get; set; }
+		public Watt DragPower { get; set; }
 
 		public Watt AngularGearPowerRequest { get; set; }
 		public Watt ClutchPowerRequest { get; set; }

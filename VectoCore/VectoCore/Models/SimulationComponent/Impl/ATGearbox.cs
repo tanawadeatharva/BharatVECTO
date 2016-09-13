@@ -23,7 +23,8 @@ namespace TUGraz.VectoCore.Models.SimulationComponent.Impl
 
 		public Second LastShift { get; private set; }
 
-		public ATGearbox(IVehicleContainer container, GearboxData gearboxModelData, IShiftStrategy strategy, KilogramSquareMeter engineInertia)
+		public ATGearbox(IVehicleContainer container, GearboxData gearboxModelData, IShiftStrategy strategy,
+			KilogramSquareMeter engineInertia)
 			: base(container, gearboxModelData)
 		{
 			Strategy = strategy;
@@ -139,8 +140,9 @@ namespace TUGraz.VectoCore.Models.SimulationComponent.Impl
 
 			Log.Debug("AT-Gearbox Power Request: torque: {0}, angularVelocity: {1}", outTorque, outAngularVelocity);
 
-			if (DataBus.VehicleStopped && outAngularVelocity > 0) {
-				Gear = Strategy.InitGear(absTime, dt, outTorque, outAngularVelocity);
+			if ((DataBus.VehicleStopped && outAngularVelocity > 0) || (Disengaged && outTorque.IsGreater(0))) {
+				Gear = 1; //Strategy.InitGear(absTime, dt, outTorque, outAngularVelocity);
+				TorqueConverterLocked = false;
 				LastShift = absTime;
 				Disengaged = false;
 			}
@@ -259,7 +261,7 @@ namespace TUGraz.VectoCore.Models.SimulationComponent.Impl
 
 			TorqueConverter.Locked(CurrentState.InTorque, CurrentState.InAngularVelocity);
 
-			CurrentState.Gear = 0;
+			CurrentState.Gear = 1;
 			return retval;
 		}
 

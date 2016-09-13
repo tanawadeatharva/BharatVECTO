@@ -63,14 +63,20 @@ namespace TUGraz.VectoCore.Models.SimulationComponent.Impl
 				NextGear.SetState(absTime, false, 1, false);
 				return true;
 			}
-			if (DataBus.DriverBehavior == DrivingBehavior.Braking &&
-				DataBus.VehicleSpeed.IsSmaller(Constants.SimulationSettings.ATGearboxDisengageWhenHaltingSpeed) &&
-				outTorque.IsSmaller(0)) {
-				// disengage before halting
+			if (DataBus.DriverBehavior == DrivingBehavior.Braking) {
+				if (DataBus.VehicleSpeed.IsSmaller(Constants.SimulationSettings.ATGearboxDisengageWhenHaltingSpeed) &&
+					outTorque.IsSmaller(0)) {
+					// disengage before halting
+					NextGear.SetState(absTime, true, 1, false);
+					return true;
+				}
+
+			}
+			if (gear == 1 && !_gearbox.TorqueConverterLocked && outTorque.IsSmaller(0) && inTorque.IsGreater(0))
+			{
 				NextGear.SetState(absTime, true, 1, false);
 				return true;
 			}
-
 			if (inAngularVelocity != null) {
 				// emergency shift to not stall the engine ------------------------
 				if (_gearbox.TorqueConverterLocked && inAngularVelocity.IsEqual(0.SI<PerSecond>())) {
