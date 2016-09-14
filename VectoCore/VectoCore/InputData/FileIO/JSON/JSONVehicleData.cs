@@ -126,9 +126,9 @@ namespace TUGraz.VectoCore.InputData.FileIO.JSON
 					});
 		}
 
-		public virtual DataTable CrosswindCorrectionMap
+		public virtual TableData CrosswindCorrectionMap
 		{
-			get { return ReadTableData(Body.GetEx<string>("CdCorrFile"), "CrosswindCorrection File"); }
+			get { return ReadTableData(Body.GetEx<string>("CdCorrFile"), "CrosswindCorrection File", false); }
 		}
 
 		#endregion
@@ -149,7 +149,7 @@ namespace TUGraz.VectoCore.InputData.FileIO.JSON
 			get { return Body.GetEx(JsonKeys.Vehicle_Retarder).GetEx<double>(JsonKeys.Vehicle_Retarder_Ratio); }
 		}
 
-		DataTable IRetarderInputData.LossMap
+		TableData IRetarderInputData.LossMap
 		{
 			get
 			{
@@ -157,7 +157,7 @@ namespace TUGraz.VectoCore.InputData.FileIO.JSON
 					ReadTableData(
 						Body.GetEx(JsonKeys.Vehicle_Retarder)
 							.GetEx<string>(JsonKeys.Vehicle_Retarder_LossMapFile),
-						"LossMap");
+						"LossMap", false);
 			}
 		}
 
@@ -170,8 +170,9 @@ namespace TUGraz.VectoCore.InputData.FileIO.JSON
 			get
 			{
 				var angleDrive = Body[JsonKeys.Vehicle_AngularGear];
-				if (angleDrive == null)
+				if (angleDrive == null) {
 					return AngularGearType.None;
+				}
 
 				return angleDrive.GetEx<string>(JsonKeys.Vehicle_AngularGear_Type).ParseEnum<AngularGearType>();
 			}
@@ -182,14 +183,14 @@ namespace TUGraz.VectoCore.InputData.FileIO.JSON
 			get { return Body.GetEx(JsonKeys.Vehicle_AngularGear).GetEx<double>(JsonKeys.Vehicle_AngularGear_Ratio); }
 		}
 
-		DataTable IAngularGearInputData.LossMap
+		TableData IAngularGearInputData.LossMap
 		{
 			get
 			{
 				return ReadTableData(
 					Body.GetEx(JsonKeys.Vehicle_AngularGear)
 						.GetEx<string>(JsonKeys.Vehicle_AngularGear_LossMapFile),
-					"LossMap");
+					"LossMap", false);
 			}
 		}
 
@@ -214,17 +215,17 @@ namespace TUGraz.VectoCore.InputData.FileIO.JSON
 			}
 		}
 
-		DataTable IPTOTransmissionInputData.PTOLossMap
+		TableData IPTOTransmissionInputData.PTOLossMap
 		{
 			get
 			{
-				return ReadTableData(Body.GetEx(JsonKeys.Vehicle_PTO).GetEx<string>(JsonKeys.Vehicle_PTO_LossMapFile), "LossMap");
+				return ReadTableData(Body.GetEx(JsonKeys.Vehicle_PTO).GetEx<string>(JsonKeys.Vehicle_PTO_LossMapFile), "LossMap", false);
 			}
 		}
 
-		public DataTable PTOCycle
+		public TableData PTOCycle
 		{
-			get { return ReadTableData(Body.GetEx(JsonKeys.Vehicle_PTO).GetEx<string>(JsonKeys.Vehicle_PTO_Cycle), "Cycle"); }
+			get { return ReadTableData(Body.GetEx(JsonKeys.Vehicle_PTO).GetEx<string>(JsonKeys.Vehicle_PTO_Cycle), "Cycle", false); }
 		}
 
 		#endregion

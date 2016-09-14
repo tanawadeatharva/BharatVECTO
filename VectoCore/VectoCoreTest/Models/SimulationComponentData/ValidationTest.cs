@@ -35,6 +35,7 @@ using System.ComponentModel.DataAnnotations;
 using System.Data;
 using System.Diagnostics.CodeAnalysis;
 using System.Linq;
+using TUGraz.VectoCommon.InputData;
 using TUGraz.VectoCommon.Models;
 using TUGraz.VectoCommon.Utils;
 using TUGraz.VectoCore.InputData.Reader;
@@ -101,7 +102,7 @@ namespace TUGraz.VectoCore.Tests.Models.SimulationComponentData
 		[TestMethod]
 		public void Validation_CombustionEngineData_Engineering()
 		{
-			var fuelConsumption = new DataTable();
+			var fuelConsumption = new TableData();
 			fuelConsumption.Columns.Add("");
 			fuelConsumption.Columns.Add("");
 			fuelConsumption.Columns.Add("");
@@ -109,7 +110,7 @@ namespace TUGraz.VectoCore.Tests.Models.SimulationComponentData
 			fuelConsumption.Rows.Add("2", "2", "2");
 			fuelConsumption.Rows.Add("3", "3", "3");
 
-			var fullLoad = new DataTable();
+			var fullLoad = new TableData();
 			fullLoad.Columns.Add("Engine speed");
 			fullLoad.Columns.Add("max torque");
 			fullLoad.Columns.Add("drag torque");
@@ -136,7 +137,7 @@ namespace TUGraz.VectoCore.Tests.Models.SimulationComponentData
 		[TestMethod]
 		public void Validation_CombustionEngineData_Declaration()
 		{
-			var fuelConsumption = new DataTable();
+			var fuelConsumption = new TableData();
 			fuelConsumption.Columns.Add("");
 			fuelConsumption.Columns.Add("");
 			fuelConsumption.Columns.Add("");
@@ -144,7 +145,7 @@ namespace TUGraz.VectoCore.Tests.Models.SimulationComponentData
 			fuelConsumption.Rows.Add("2", "2", "2");
 			fuelConsumption.Rows.Add("3", "3", "3");
 
-			var fullLoad = new DataTable();
+			var fullLoad = new TableData();
 			fullLoad.Columns.Add("Engine speed");
 			fullLoad.Columns.Add("max torque");
 			fullLoad.Columns.Add("drag torque");

@@ -81,12 +81,12 @@ namespace TUGraz.VectoCore.InputData.FileIO.JSON
 			get { return Body.GetEx<double>(JsonKeys.Engine_IdleSpeed).RPMtoRad(); }
 		}
 
-		public virtual DataTable FuelConsumptionMap
+		public virtual TableData FuelConsumptionMap
 		{
 			get { return ReadTableData(Body.GetEx<string>(JsonKeys.Engine_FuelConsumptionMap), "FuelConsumptionMap"); }
 		}
 
-		public virtual DataTable FullLoadCurve
+		public virtual TableData FullLoadCurve
 		{
 			get { return ReadTableData(Body.GetEx<string>(JsonKeys.Engine_FullLoadCurveFile), "FullLoadCurve"); }
 		}

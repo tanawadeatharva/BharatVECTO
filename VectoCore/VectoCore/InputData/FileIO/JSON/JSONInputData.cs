@@ -73,7 +73,7 @@ namespace TUGraz.VectoCore.InputData.FileIO.JSON
 			set { _basePath = Path.GetDirectoryName(Path.GetFullPath(value)); }
 		}
 
-		protected DataTable ReadTableData(string filename, string tableType, bool required = true)
+		protected TableData ReadTableData(string filename, string tableType, bool required = true)
 		{
 			if (!EmptyOrInvalidFileName(filename)) {
 				try {
@@ -86,7 +86,7 @@ namespace TUGraz.VectoCore.InputData.FileIO.JSON
 			if (required) {
 				throw new VectoException("Invalid filename for {0}: {1}", tableType, filename);
 			}
-			return null;
+			return new TableData("");
 		}
 
 		internal static bool EmptyOrInvalidFileName(string filename)
@@ -433,7 +433,7 @@ namespace TUGraz.VectoCore.InputData.FileIO.JSON
 			}
 		}
 
-		public virtual DataTable AccelerationCurve
+		public virtual TableData AccelerationCurve
 		{
 			[System.Diagnostics.CodeAnalysis.SuppressMessage("Microsoft.Design",
 				"CA1065:DoNotRaiseExceptionsInUnexpectedLocations")]

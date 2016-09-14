@@ -63,8 +63,8 @@ namespace TUGraz.VectoCore.Tests.Models.Simulation
 		{
 			var container = new VehicleContainer(ExecutionMode.Engineering);
 			var inputData = @"<t>,<Pwheel>,<gear>,<n>,<Padd>
-                               1,89,2,1748,1.300
-                               2,120,2,1400,0.4";
+							   1,89,2,1748,1.300
+							   2,120,2,1400,0.4";
 
 			var cycleFile = new MemoryStream(Encoding.UTF8.GetBytes(inputData));
 			var drivingCycle = DrivingCycleDataReader.ReadFromStream(cycleFile, CycleType.PWheel, "", false);
@@ -105,8 +105,8 @@ namespace TUGraz.VectoCore.Tests.Models.Simulation
 		{
 			// prepare input data
 			var inputData = @"<t>,<Pwheel>,<gear>,<n>,  <Padd>
-                               1,  89,      2,     1748, 1.3
-                               2,  120,     2,     1400, 0.4";
+							   1,  89,      2,     1748, 1.3
+							   2,  120,     2,     1400, 0.4";
 
 			var cycleFile = new MemoryStream(Encoding.UTF8.GetBytes(inputData));
 			var drivingCycle = DrivingCycleDataReader.ReadFromStream(cycleFile, CycleType.PWheel, "", false);

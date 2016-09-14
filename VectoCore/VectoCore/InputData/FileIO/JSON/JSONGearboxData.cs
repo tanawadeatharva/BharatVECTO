@@ -66,12 +66,12 @@ namespace TUGraz.VectoCore.InputData.FileIO.JSON
 			}
 		}
 
-		public override DataTable ShiftPolygon
+		public override TableData ShiftPolygon
 		{
 			get
 			{
 				return ReadTableData(Body.GetEx(JsonKeys.Gearbox_TorqueConverter)
-					.GetEx<string>("ShiftPolygon"), "TorqueConverter Shift Polygon");
+					.GetEx<string>("ShiftPolygon"), "TorqueConverter Shift Polygon", false);
 			}
 		}
 	}
@@ -182,12 +182,12 @@ namespace TUGraz.VectoCore.InputData.FileIO.JSON
 			get { return Body.GetEx<double>(JsonKeys.Gearbox_Inertia).SI<KilogramSquareMeter>(); }
 		}
 
-		public virtual DataTable ShiftPolygon
+		public virtual TableData ShiftPolygon
 		{
 			get
 			{
 				return ReadTableData(Body.GetEx(JsonKeys.Gearbox_Gears)[1].GetEx<string>("ShiftPolygon"),
-					"TorqueConverter Shift Polygon");
+					"TorqueConverter Shift Polygon", false);
 			}
 		}
 
@@ -365,13 +365,13 @@ namespace TUGraz.VectoCore.InputData.FileIO.JSON
 			}
 		}
 
-		public virtual DataTable TCData
+		public virtual TableData TCData
 		{
 			get
 			{
 				return
 					ReadTableData(Body.GetEx(JsonKeys.Gearbox_TorqueConverter).GetEx<string>(JsonKeys.Gearbox_TorqueConverter_TCMap),
-						"TorqueConverter Data");
+						"TorqueConverter Data", false);
 			}
 		}
 
