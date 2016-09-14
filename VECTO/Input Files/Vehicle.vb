@@ -16,13 +16,19 @@ Imports System.IO
 Imports System.Linq
 Imports Newtonsoft.Json.Linq
 Imports TUGraz.VECTO.Input_Files
+Imports TUGraz.VectoCommon.InputData
 Imports TUGraz.VectoCommon.Models
 Imports TUGraz.VectoCommon.Utils
 Imports TUGraz.VectoCore.InputData.FileIO.JSON
+Imports TUGraz.VectoCore.InputData.Impl
+Imports TUGraz.VectoCore.InputData.Reader.DataObjectAdapter
 Imports TUGraz.VectoCore.Models.Declaration
+Imports TUGraz.VectoCore.Models.SimulationComponent.Data
+Imports TUGraz.VectoCore.Utils
 
 <CustomValidation(GetType(Vehicle), "ValidateVehicle")>
 Public Class Vehicle
+	Implements IVehicleEngineeringInputData, IVehicleDeclarationInputData
 	'V2 MassMax is now saved in [t] instead of [kg]
 	Private Const FormatVersion As Short = 7
 	Private _fileVersion As Integer
@@ -86,7 +92,32 @@ Public Class Vehicle
 
 
 	Public Shared Function ValidateVehicle(vehicle As Vehicle, validationContext As ValidationContext) As ValidationResult
-		Return New ValidationResult("bla")
+
+		Dim vehicleData As VehicleData
+
+		Dim modeService As ExecutionModeServiceContainer = TryCast(validationContext.GetService(GetType(ExecutionMode)), ExecutionModeServiceContainer)
+		Dim mode = If(modeService Is Nothing, ExecutionMode.Declaration, modeService.Mode)
+
+		Try
+			If mode = ExecutionMode.Declaration Then
+				Dim doa = New DeclarationDataAdapter()
+				Dim segment = DeclarationData.Segments.Lookup(vehicle.VehicleCategory, vehicle.AxleConfiguration,
+															vehicle.GrossVehicleMassRating, vehicle.CurbWeightChassis)
+				vehicleData = doa.CreateVehicleData(vehicle, segment.Missions.First(),
+													segment.Missions.First().Loadings.First().Value)
+			Else
+				Dim doa = New EngineeringDataAdapter()
+				vehicleData = doa.CreateVehicleData(vehicle)
+			End If
+
+			Dim result = vehicleData.Validate(If(Cfg.DeclMode, ExecutionMode.Declaration, ExecutionMode.Engineering))
+
+			If Not result.Any() Then Return ValidationResult.Success
+
+			Return New ValidationResult("Vehicle Configuration is invalid", result.Select(Function(r) r.ErrorMessage).ToList())
+		Catch ex As Exception
+			Return New ValidationResult(ex.Message)
+		End Try
 	End Function
 
 	Private Sub SetDefault()
@@ -260,7 +291,9 @@ Public Class Vehicle
 		Dim validationResults = Validate(If(Cfg.DeclMode, ExecutionMode.Declaration, ExecutionMode.Engineering))
 
 		If validationResults.Count > 0 Then
-			MsgBox(String.Format("Invalid input: \n{0}", String.Join("; ", validationResults)), MsgBoxStyle.OkOnly, "Failed to save vehicle")
+			Dim messages = validationResults.Select(Function(r) r.ErrorMessage + String.Join(", ", r.MemberNames.Distinct()))
+			MsgBox(String.Format("Invalid input: \n{0}", String.Join("; ", messages)), MsgBoxStyle.OkOnly,
+					"Failed to save vehicle")
 			Return False
 		End If
 
@@ -304,7 +337,11 @@ Public Class Vehicle
 				{"AxleWeightShare", axle.Share},
 				{"TwinTyres", axle.TwinTire},
 				{"RRCISO", axle.RRC},
-				{"FzISO", axle.FzISO}})}}}
+				{"FzISO", axle.FzISO}
+				}
+				)}
+				}
+				}
 				}
 
 		json.Content = JToken.FromObject(New Dictionary(Of String, Object) From {{"Header", header}, {"Body", body}})
@@ -327,6 +364,150 @@ Public Class Vehicle
 				_path = Path.GetDirectoryName(_filePath) & "\"
 			End If
 		End Set
+	End Property
+
+#End Region
+
+#Region "IInputData"
+
+	Public ReadOnly Property SavedInDeclarationMode As Boolean Implements IComponentInputData.SavedInDeclarationMode
+		Get
+			Return Cfg.DeclMode
+		End Get
+	End Property
+
+	Public ReadOnly Property Vendor As String Implements IComponentInputData.Vendor
+		Get
+			Return "N.A."  ' TODO: MQ  20160908
+		End Get
+	End Property
+
+	Public ReadOnly Property ModelName As String Implements IComponentInputData.ModelName
+		Get
+			Return "N.A."  ' Todo: MQ 20160908
+		End Get
+	End Property
+
+	Public ReadOnly Property Creator As String Implements IComponentInputData.Creator
+		Get
+			Return Lic.LicString
+		End Get
+	End Property
+
+	Public ReadOnly Property [Date] As String Implements IComponentInputData.[Date]
+		Get
+			Now.ToUniversalTime().ToString("o")
+		End Get
+	End Property
+
+	Public ReadOnly Property TypeId As String Implements IComponentInputData.TypeId
+		Get
+			Return "N.A."	' ToDo: MQ 20160908
+		End Get
+	End Property
+
+	Public ReadOnly Property DigestValue As String Implements IComponentInputData.DigestValue
+		Get
+			Return ""
+		End Get
+	End Property
+
+	Public ReadOnly Property IntegrityStatus As IntegrityStatus Implements IComponentInputData.IntegrityStatus
+		Get
+			Return IntegrityStatus.NotChecked
+		End Get
+	End Property
+
+	Public ReadOnly Property IVehicleDeclarationInputData_VehicleCategory As VehicleCategory _
+		Implements IVehicleDeclarationInputData.VehicleCategory
+		Get
+			Return VehicleCategory
+		End Get
+	End Property
+
+	Public ReadOnly Property IVehicleDeclarationInputData_AxleConfiguration As AxleConfiguration _
+		Implements IVehicleDeclarationInputData.AxleConfiguration
+		Get
+			Return AxleConfiguration
+		End Get
+	End Property
+
+	Public ReadOnly Property CurbWeightChassis As Kilogram Implements IVehicleDeclarationInputData.CurbWeightChassis
+		Get
+			Return MassExtra.SI(Of Kilogram)()
+		End Get
+	End Property
+
+	Public ReadOnly Property GrossVehicleMassRating As Kilogram _
+		Implements IVehicleDeclarationInputData.GrossVehicleMassRating
+		Get
+			Return MassMax.SI().Ton.Cast(Of Kilogram)()
+		End Get
+	End Property
+
+	Public ReadOnly Property AirDragArea As SquareMeter Implements IVehicleDeclarationInputData.AirDragArea
+		Get
+			Return CdA0.SI(Of SquareMeter)()
+		End Get
+	End Property
+
+	Public ReadOnly Property IVehicleEngineeringInputData_Axles As IList(Of IAxleEngineeringInputData) _
+		Implements IVehicleEngineeringInputData.Axles
+		Get
+			Return AxleWheels().Cast(Of IAxleEngineeringInputData)().ToList()
+		End Get
+	End Property
+
+	Public ReadOnly Property IVehicleDeclarationInputData_Axles As IList(Of IAxleDeclarationInputData) _
+		Implements IVehicleDeclarationInputData.Axles
+		Get
+			Return AxleWheels().Cast(Of IAxleDeclarationInputData)().ToList()
+		End Get
+	End Property
+
+	Private Function AxleWheels() As IEnumerable(Of AxleInputData)
+		Return Axles.Select(Function(axle) New AxleInputData With {
+								.Inertia = axle.Inertia.SI(Of KilogramSquareMeter)(),
+								.Wheels = axle.Wheels,
+								.AxleWeightShare = axle.Share,
+								.TwinTyres = axle.TwinTire,
+								.RollResistanceCoefficient = axle.RRC,
+								.TyreTestLoad = axle.FzISO.SI(Of Newton)()
+								})
+	End Function
+
+	Public ReadOnly Property CurbWeightExtra As Kilogram Implements IVehicleEngineeringInputData.CurbWeightExtra
+		Get
+			Return Mass.SI(Of Kilogram)()
+		End Get
+	End Property
+
+	Public ReadOnly Property CrosswindCorrectionMap As DataTable _
+		Implements IVehicleEngineeringInputData.CrosswindCorrectionMap
+		Get
+			Return VectoCSVFile.Read(CrossWindCorrectionFile.FullPath)
+		End Get
+	End Property
+
+	Public ReadOnly Property IVehicleEngineeringInputData_CrossWindCorrectionMode As CrossWindCorrectionMode _
+		Implements IVehicleEngineeringInputData.CrossWindCorrectionMode
+		Get
+			Return CrossWindCorrectionMode.DeclarationModeCorrection
+		End Get
+	End Property
+
+	Public ReadOnly Property IVehicleEngineeringInputData_DynamicTyreRadius As Meter _
+		Implements IVehicleEngineeringInputData.DynamicTyreRadius
+		Get
+			Return DynamicTyreRadius.SI().Milli.Meter.Cast(Of Meter)()
+		End Get
+	End Property
+
+	Public ReadOnly Property IVehicleEngineeringInputData_Loading As Kilogram _
+		Implements IVehicleEngineeringInputData.Loading
+		Get
+			Return Loading.SI(Of Kilogram)()
+		End Get
 	End Property
 
 #End Region
