@@ -191,7 +191,7 @@ namespace TUGraz.VectoCore.Models.SimulationComponent.Impl
 
 			var auxTorqueDemand = EngineAux == null
 				? 0.SI<NewtonMeter>()
-				: EngineAux.PowerDemand(absTime, dt, CurrentState.EngineTorqueOut,
+				: EngineAux.TorqueDemand(absTime, dt, CurrentState.EngineTorqueOut,
 					CurrentState.EngineTorqueOut + CurrentState.InertiaTorqueLoss, angularVelocity, dryRun);
 			// compute the torque the engine has to provide. powertrain + aux + its own inertia
 			var totalTorqueDemand = torqueOut + auxTorqueDemand + CurrentState.InertiaTorqueLoss;
@@ -207,8 +207,8 @@ namespace TUGraz.VectoCore.Models.SimulationComponent.Impl
 			// get max. torque as limited by gearbox. gearbox only limits torqueOut!
 			var gearboxFullLoad = DataBus.GearMaxTorque;
 
-			var deltaFull = ComputeDelta(torqueOut, totalTorqueDemand, CurrentState.DynamicFullLoadTorque, gearboxFullLoad, true);
-			var deltaDrag = ComputeDelta(torqueOut, totalTorqueDemand, CurrentState.FullDragTorque,
+			var deltaFull = ComputeDelta(torqueOut, totalTorqueDemand + (CurrentState.InertiaTorqueLoss < 0 ? CurrentState.InertiaTorqueLoss : 0.SI<NewtonMeter>()), CurrentState.DynamicFullLoadTorque, gearboxFullLoad, true);
+			var deltaDrag = ComputeDelta(torqueOut, totalTorqueDemand - (CurrentState.InertiaTorqueLoss < 0 ? CurrentState.InertiaTorqueLoss : 0.SI<NewtonMeter>()), CurrentState.FullDragTorque,
 				gearboxFullLoad != null ? -gearboxFullLoad : null, false);
 
 			if (dryRun) {
@@ -216,6 +216,8 @@ namespace TUGraz.VectoCore.Models.SimulationComponent.Impl
 					DeltaFullLoad = deltaFull * avgEngineSpeed,
 					DeltaDragLoad = deltaDrag * avgEngineSpeed,
 					EnginePowerRequest = torqueOut * avgEngineSpeed,
+					DynamicFullLoadPower = dynamicFullLoadPower,
+					DragPower = CurrentState.FullDragTorque * avgEngineSpeed,
 					AuxiliariesPowerDemand = auxTorqueDemand * avgEngineSpeed,
 					EngineSpeed = angularVelocity,
 					EngineMaxTorqueOut =
@@ -252,6 +254,8 @@ namespace TUGraz.VectoCore.Models.SimulationComponent.Impl
 					AbsTime = absTime,
 					Delta = deltaFull * avgEngineSpeed,
 					EnginePowerRequest = totalTorqueDemand * avgEngineSpeed,
+					DynamicFullLoadPower = dynamicFullLoadPower,
+					DragPower = CurrentState.FullDragTorque * avgEngineSpeed,
 					Source = this,
 					AuxiliariesPowerDemand = auxTorqueDemand * avgEngineSpeed,
 					EngineSpeed = angularVelocity,
@@ -265,6 +269,8 @@ namespace TUGraz.VectoCore.Models.SimulationComponent.Impl
 					AbsTime = absTime,
 					Delta = deltaDrag * avgEngineSpeed,
 					EnginePowerRequest = totalTorqueDemand * avgEngineSpeed,
+					DynamicFullLoadPower = dynamicFullLoadPower,
+					DragPower = CurrentState.FullDragTorque * avgEngineSpeed,
 					Source = this,
 					AuxiliariesPowerDemand = auxTorqueDemand * avgEngineSpeed,
 					EngineSpeed = angularVelocity,
@@ -275,6 +281,8 @@ namespace TUGraz.VectoCore.Models.SimulationComponent.Impl
 
 			return new ResponseSuccess {
 				EnginePowerRequest = totalTorqueDemand * avgEngineSpeed,
+				DynamicFullLoadPower = dynamicFullLoadPower,
+				DragPower = CurrentState.FullDragTorque * avgEngineSpeed,
 				AuxiliariesPowerDemand = auxTorqueDemand * avgEngineSpeed,
 				EngineSpeed = angularVelocity,
 				Source = this
@@ -356,7 +364,7 @@ namespace TUGraz.VectoCore.Models.SimulationComponent.Impl
 			var result = ModelData.ConsumptionMap.GetFuelConsumption(CurrentState.EngineTorque, avgEngineSpeed,
 				DataBus.ExecutionMode != ExecutionMode.Declaration);
 			if (DataBus.ExecutionMode != ExecutionMode.Declaration && result.Extrapolated) {
-				Log.Warn("FuelConsumptionMap was extrapolated: range for FC-Map is not sufficient: n: {0}, torque: {2}",
+				Log.Warn("FuelConsumptionMap was extrapolated: range for FC-Map is not sufficient: n: {0}, torque: {1}",
 					avgEngineSpeed.Value(), CurrentState.EngineTorque.Value());
 			}
 

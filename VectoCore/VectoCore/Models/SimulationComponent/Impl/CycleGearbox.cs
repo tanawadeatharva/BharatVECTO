@@ -264,7 +264,7 @@ namespace TUGraz.VectoCore.Models.SimulationComponent.Impl
 			if (engineResponse.DeltaFullLoad > 0 || engineResponse.DeltaDragLoad < 0) {
 				// engine is overloaded with current operating point, reduce torque...
 				dryOperatingPoint =
-					TorqueConverter.GetOutTorqueAndSpeed(
+					TorqueConverter.FindOperatingPoint(
 						outTorque > 0 ? engineResponse.EngineMaxTorqueOut : engineResponse.EngineDragTorque,
 						dryOperatingPoint.InAngularVelocity, null);
 			}
@@ -339,12 +339,12 @@ namespace TUGraz.VectoCore.Models.SimulationComponent.Impl
 						operatingPoint.InAngularVelocity);
 				}
 				if (operatingPoint.InAngularVelocity.IsGreater(TorqueConverter.TorqueConverterSpeedLimit)) {
-					operatingPoint = TorqueConverter.GetOutTorque(TorqueConverter.TorqueConverterSpeedLimit, outAngularVelocity);
+					operatingPoint = TorqueConverter.FindOperatingPoint(TorqueConverter.TorqueConverterSpeedLimit, outAngularVelocity);
 				}
 				return operatingPoint;
 			} catch (VectoException ve) {
 				Log.Debug(ve, "failed to find torque converter operating point, fallback: creeping");
-				var tqOperatingPoint = TorqueConverter.GetOutTorque(DataBus.EngineIdleSpeed, outAngularVelocity);
+				var tqOperatingPoint = TorqueConverter.FindOperatingPoint(DataBus.EngineIdleSpeed, outAngularVelocity);
 				return tqOperatingPoint;
 			}
 		}
