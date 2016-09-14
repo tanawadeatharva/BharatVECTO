@@ -16,7 +16,6 @@ Imports TUGraz.VectoCore.Models.Declaration
 
 Public Class Configuration
 	Public FilePath As String
-	Public GnUfromCycle As Boolean
 	Public ModOut As Boolean
 	Public Mod1Hz As Boolean
 	Public LogSize As Double
@@ -38,11 +37,9 @@ Public Class Configuration
 		AirDensity = DeclarationData.Physics.AirDensity.Value()	' cDeclaration.AirDensity
 		FuelDens = DeclarationData.Physics.FuelDensity.Value()	' cDeclaration.FuelDens
 		CO2perFC = DeclarationData.Physics.CO2PerFuelWeight		' cDeclaration.CO2perFC
-		GnUfromCycle = False
 	End Sub
 
 	Public Sub SetDefault()
-		GnUfromCycle = True
 		ModOut = True
 		Mod1Hz = False
 		LogSize = 2
@@ -74,7 +71,6 @@ Public Class Configuration
 			Catch
 			End Try
 			ModOut = body.GetEx(Of Boolean)("ModOut")
-			GnUfromCycle = body.GetEx(Of Boolean)("UseGnUfromCycle")
 			LogSize = body.GetEx(Of Double)("LogSize")
 			AirDensity = body.GetEx(Of Double)("AirDensity")
 			FuelDens = body.GetEx(Of Double)("FuelDensity")
