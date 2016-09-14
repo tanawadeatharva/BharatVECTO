@@ -20,6 +20,7 @@ Imports TUGraz.VectoCommon.InputData
 Imports TUGraz.VectoCommon.Models
 Imports TUGraz.VectoCommon.Utils
 Imports TUGraz.VectoCore.Configuration
+Imports TUGraz.VectoCore.InputData.FileIO.JSON
 Imports TUGraz.VectoCore.InputData.Impl
 Imports TUGraz.VectoCore.Models.Declaration
 Imports TUGraz.VectoCore.Models.SimulationComponent.Data
@@ -820,11 +821,13 @@ Public Class GearboxForm
 
 		Dim vectoJob As VectoJob = New VectoJob() With {.FilePath = VectoJobForm.VECTOfile}
 		Dim vectoOk As Boolean = vectoJob.ReadFile()
-		Dim vehicle As Vehicle = New Vehicle() With {.FilePath = vectoJob.PathVeh(False)}
-		Dim vehicleOk As Boolean = vehicle.ReadFile(False)
+
+		Dim inputData As IEngineeringInputDataProvider = TryCast(JSONInputDataFactory.ReadComponentData(vectoJob.PathVeh(False)), 
+																IEngineeringInputDataProvider)
+		Dim vehicle As IVehicleEngineeringInputData = inputData.VehicleInputData
 
 		'Fld
-		If fldOk AndAlso vectoOk AndAlso vehicleOk Then
+		If fldOk AndAlso vectoOk AndAlso Not vehicle Is Nothing Then
 
 			s = New Series
 			s.Points.DataBindXY(fullLoadCurve.EngineSpeedList, fullLoadCurve.MaxTorqueList)
@@ -910,13 +913,13 @@ Public Class GearboxForm
 	End Sub
 
 
-	Private Function GetShiftLines(engineFullLoadCurve As EngineFullLoadCurve, vehicle As Vehicle,
+	Private Function GetShiftLines(engineFullLoadCurve As EngineFullLoadCurve, vehicle As IVehicleEngineeringInputData,
 									gears As IList(Of ITransmissionInputData), gear As Integer) As ShiftPolygon
 		Dim engine As CombustionEngineData = ConvertToEngineData(engineFullLoadCurve, VectoJobForm.EngineIdleSpeed)
 		If gears.Count <= 1 Then
 			Return Nothing
 		End If
-		Dim rDyn As Meter = (vehicle.DynamicTyreRadius / 1000.0).SI(Of Meter)()
+		Dim rDyn As Meter = vehicle.DynamicTyreRadius
 		If rDyn.IsEqual(0) Then
 			If (vehicle.Axles.Count < 2) Then
 				Return Nothing

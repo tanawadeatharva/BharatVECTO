@@ -9,6 +9,7 @@
 '
 ' See the LICENSE.txt for the specific language governing permissions and limitations.
 Imports System.Collections.Generic
+Imports System.IO
 Imports TUGraz.VectoCommon.Utils
 Imports TUGraz.VectoCore.Models.SimulationComponent.Data
 Imports TUGraz.VectoCore.Models.SimulationComponent.Data.Engine
@@ -60,5 +61,15 @@ Module MainModule
 			Case Else
 				Return My.Resources.Undef  ' resourcePath & "Undef.png"
 		End Select
+	End Function
+
+	Public Function GetRelativePath(filePath As String, basePath As String) As String
+		If (String.IsNullOrEmpty(filePath) OrElse String.IsNullOrEmpty(basePath)) Then
+			Return ""
+		End If
+		If (Path.GetDirectoryName(filePath).Equals(basePath, StringComparison.OrdinalIgnoreCase)) Then
+			Return Path.GetFileName(filePath)
+		End If
+		Return filePath
 	End Function
 End Module

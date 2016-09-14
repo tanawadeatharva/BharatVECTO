@@ -13,8 +13,10 @@ Option Infer On
 Imports System.IO
 Imports System.Linq
 Imports System.Text.RegularExpressions
+Imports TUGraz.VectoCommon.InputData
 Imports TUGraz.VectoCommon.Models
 Imports TUGraz.VectoCommon.Utils
+Imports TUGraz.VectoCore.InputData.FileIO.JSON
 Imports TUGraz.VectoCore.Models.Declaration
 
 ''' <summary>
@@ -100,7 +102,7 @@ Public Class VehicleForm
 
 	'Set HDVclasss
 	Private Sub SetHdVclass()
-		If String.IsNullOrEmpty(TbMassMass.Text) Then
+		If String.IsNullOrEmpty(TbMassMass.Text) OrElse Not IsNumeric(TbMassMass.Text) Then
 			TbHDVclass.Text = "-"
 			Exit Sub
 		End If
@@ -318,15 +320,14 @@ Public Class VehicleForm
 
 		If ChangeCheckCancel() Then Exit Sub
 
-		Dim veh = New Vehicle
-		veh.FilePath = file
+		Dim inputData As IEngineeringInputDataProvider = TryCast(JSONInputDataFactory.ReadComponentData(file), 
+																IEngineeringInputDataProvider)
+		Dim veh = inputData.VehicleInputData
+		Dim retarder = inputData.RetarderInputData
+		Dim angularGear = inputData.AngularGearInputData
+		Dim pto = inputData.PTOTransmissionInputData
 
-		If Not veh.ReadFile Then
-			MsgBox("Cannot read " & file & "!")
-			Exit Sub
-		End If
-
-		If Cfg.DeclMode <> veh.SavedInDeclMode Then
+		If Cfg.DeclMode <> veh.SavedInDeclarationMode Then
 			Select Case WrongMode()
 				Case 1
 					Close()
@@ -337,25 +338,27 @@ Public Class VehicleForm
 			End Select
 		End If
 
+		Dim basePath As String = Path.GetDirectoryName(file)
 		CbCat.SelectedValue = veh.VehicleCategory
 		CbAxleConfig.SelectedValue = veh.AxleConfiguration
-		TbMassMass.Text = veh.MassMax.ToGUIFormat()
+		TbMassMass.Text = (veh.GrossVehicleMassRating.Value() / 1000).ToGUIFormat()
 
-		TbMass.Text = veh.Mass.ToGUIFormat()
-		TbMassExtra.Text = veh.MassExtra.ToGUIFormat()
+		TbMass.Text = veh.CurbWeightChassis.ToGUIFormat()
+		TbMassExtra.Text = veh.CurbWeightExtra.ToGUIFormat()
 		TbLoad.Text = veh.Loading.ToGUIFormat()
 		TBrdyn.Text = veh.DynamicTyreRadius.ToGUIFormat()
 
 		CbCdMode.SelectedValue = veh.CrossWindCorrectionMode
-		TbCdFile.Text = veh.CrossWindCorrectionFile.OriginalPath
+		TbCdFile.Text = GetRelativePath(veh.CrosswindCorrectionMap.Source, basePath)
 
-		CbRtType.SelectedValue = veh.RetarderType
-		TbRtRatio.Text = veh.RetarderRatio.ToGUIFormat()
-		TbRtPath.Text = veh.RetarderLossMapFile.OriginalPath
+		CbRtType.SelectedValue = retarder.Type
+		TbRtRatio.Text = retarder.Ratio.ToGUIFormat()
+		TbRtPath.Text = GetRelativePath(retarder.LossMap.Source, basePath)
 
-		cbAngularGearType.SelectedValue = veh.AngularGearType
-		tbAngularGearRatio.Text = veh.AngularGearRatio.ToGUIFormat()
-		tbAngularGearLossMapPath.Text = veh.AngularGearLossMapFile.OriginalPath
+
+		cbAngularGearType.SelectedValue = angularGear.Type
+		tbAngularGearRatio.Text = angularGear.Ratio.ToGUIFormat()
+		tbAngularGearLossMapPath.Text = GetRelativePath(angularGear.LossMap.Source, basePath)
 
 		LvRRC.Items.Clear()
 		Dim i = 0
@@ -365,22 +368,24 @@ Public Class VehicleForm
 
 			If Cfg.DeclMode Then
 				inertia = DeclarationData.Wheels.Lookup(a0.Wheels).Inertia.Value()
-				LvRRC.Items.Add(CreateListViewItem(i, Double.NaN, a0.TwinTire, a0.RRC, a0.FzISO, a0.Wheels, inertia))
+				LvRRC.Items.Add(CreateListViewItem(i, Double.NaN, a0.TwinTyres, a0.RollResistanceCoefficient,
+													a0.TyreTestLoad.Value(), a0.Wheels, inertia))
 			Else
-				LvRRC.Items.Add(CreateListViewItem(i, a0.Share, a0.TwinTire, a0.RRC, a0.FzISO, a0.Wheels, a0.Inertia))
+				LvRRC.Items.Add(CreateListViewItem(i, a0.AxleWeightShare, a0.TwinTyres, a0.RollResistanceCoefficient,
+													a0.TyreTestLoad.Value(), a0.Wheels, a0.Inertia.Value()))
 
 			End If
 
 		Next
 
 
-		TbMassExtra.Text = veh.MassExtra.ToGUIFormat()
+		'TbMassExtra.Text = veh.MassExtra.ToGUIFormat()
 
-		TBcdA.Text = veh.CdA0.ToGUIFormat()
+		TBcdA.Text = veh.AirDragArea.ToGUIFormat()
 
-		cbPTOType.SelectedValue = veh.PTOType
-		tbPTOLossMap.Text = veh.PTOLossMap.OriginalPath
-		tbPTOCycle.Text = veh.PTOCycle.OriginalPath
+		cbPTOType.SelectedValue = pto.PTOTransmissionType
+		tbPTOLossMap.Text = GetRelativePath(pto.PTOLossMap.Source, basePath)
+		tbPTOCycle.Text = GetRelativePath(pto.PTOCycle.Source, basePath)
 
 		DeclInit()
 

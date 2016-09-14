@@ -17,8 +17,10 @@ Imports System.Linq
 Imports System.Text.RegularExpressions
 Imports System.Windows.Forms.DataVisualization.Charting
 Imports TUGraz.VECTO.Input_Files
+Imports TUGraz.VectoCommon.InputData
 Imports TUGraz.VectoCommon.Models
 Imports TUGraz.VectoCommon.Utils
+Imports TUGraz.VectoCore.InputData.FileIO.JSON
 Imports TUGraz.VectoCore.Models.Declaration
 
 ''' <summary>
@@ -984,7 +986,7 @@ lbDlog:
 #End Region
 
 	Public Sub UpdatePic()
-		Dim VEH0 As New Vehicle
+
 		Dim i As Integer
 		Dim pmax As Double
 
@@ -996,8 +998,7 @@ lbDlog:
 
 
 		Dim HDVclass As String
-		'Dim m0 As 
-
+		
 		Dim s As Series
 		Dim a As ChartArea
 		Dim img As Bitmap
@@ -1013,14 +1014,16 @@ lbDlog:
 		PicVehicle.Image = Nothing
 		PicBox.Image = Nothing
 
+		Dim inputData As IEngineeringInputDataProvider = TryCast(JSONInputDataFactory.ReadComponentData(TbVEH.Text), 
+																IEngineeringInputDataProvider)
+		Dim vehicle = inputData.VehicleInputData
 
-		VEH0.FilePath = fFileRepl(TbVEH.Text, GetPath(VECTOfile))
-		If VEH0.ReadFile(False) Then
-			Dim maxMass = (VEH0.MassMax * 1000).SI(Of Kilogram)()					'CSng(fTextboxToNumString(TbMassMass.Text))
+		If Not vehicle Is Nothing Then
+			Dim maxMass = vehicle.GrossVehicleMassRating					'CSng(fTextboxToNumString(TbMassMass.Text))
 
 			Dim s0 As Segment = Nothing
 			Try
-				s0 = DeclarationData.Segments.Lookup(VEH0.VehicleCategory, VEH0.AxleConfiguration, maxMass, 0.SI(Of Kilogram), True)
+				s0 = DeclarationData.Segments.Lookup(vehicle.VehicleCategory, vehicle.AxleConfiguration, maxMass, 0.SI(Of Kilogram), True)
 			Catch
 			End Try
 			If Not s0 Is Nothing Then
@@ -1041,9 +1044,9 @@ lbDlog:
 			'Image.FromFile(cDeclaration.ConvPicPath(HDVclass, False))
 
 			TbHVCclass.Text = "HDV Class " & HDVclass
-			TbVehCat.Text = VEH0.VehicleCategory.GetCategoryName()	'ConvVehCat(VEH0.VehCat, True)
-			TbMass.Text = VEH0.MassMax & " t"
-			TbAxleConf.Text = VEH0.AxleConfiguration.GetName() 'ConvAxleConf(VEH0.AxleConf)
+			TbVehCat.Text = vehicle.VehicleCategory.GetCategoryName()	'ConvVehCat(VEH0.VehCat, True)
+			TbMass.Text = (vehicle.GrossVehicleMassRating.Value() / 1000) & " t"
+			TbAxleConf.Text = vehicle.AxleConfiguration.GetName()	'ConvAxleConf(VEH0.AxleConf)
 
 		End If
 

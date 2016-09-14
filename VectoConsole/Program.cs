@@ -64,29 +64,29 @@ namespace VectoConsole
 Commandline Interface for Vecto.
 
 Synopsis:
-    vectocmd.exe [-h] [-v] FILE1.(vecto|xml) [FILE2.(vecto|xml) ...]
+	vectocmd.exe [-h] [-v] FILE1.(vecto|xml) [FILE2.(vecto|xml) ...]
 
 Description:
-    FILE1.vecto [FILE2.vecto ...]: A list of vecto-job files (with the 
-       extension: .vecto). At least one file must be given. Delimited by 
-       whitespace.
+	FILE1.vecto [FILE2.vecto ...]: A list of vecto-job files (with the 
+	   extension: .vecto). At least one file must be given. Delimited by 
+	   whitespace.
 
-    -t: output information about execution times
-    -mod: write mod-data in addition to sum-data
-    -1Hz: convert mod-data to 1Hz resolution
-    -eng: switch to engineering mode (implies -mod)
-    -v: Shows verbose information (errors and warnings will be displayed)
+	-t: output information about execution times
+	-mod: write mod-data in addition to sum-data
+	-1Hz: convert mod-data to 1Hz resolution
+	-eng: switch to engineering mode (implies -mod)
+	-v: Shows verbose information (errors and warnings will be displayed)
 	-vv: Shows more verbose information (infos will be displayed)
 	-vvv: Shows debug messages (slow!)
 	-vvvv: Shows all verbose information (everything, slow!)
-    -V: show version information
-    -h: Displays this help.
+	-V: show version information
+	-h: Displays this help.
 	
 Examples:
-    vecto.exe ""12t Delivery Truck.vecto"" 40t_Long_Haul_Truck.vecto
-    vecto.exe 24tCoach.vecto 40t_Long_Haul_Truck.vecto
-    vecto.exe -v 24tCoach.vecto
-    vecto.exe -v jobs\40t_Long_Haul_Truck.vecto
+	vecto.exe ""12t Delivery Truck.vecto"" 40t_Long_Haul_Truck.vecto
+	vecto.exe 24tCoach.vecto 40t_Long_Haul_Truck.vecto
+	vecto.exe -v 24tCoach.vecto
+	vecto.exe -v jobs\40t_Long_Haul_Truck.vecto
 	vecto.exe -h
 ";
 

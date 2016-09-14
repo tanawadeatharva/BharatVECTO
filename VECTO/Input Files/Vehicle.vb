@@ -154,137 +154,6 @@ Public Class Vehicle
 		SavedInDeclMode = False
 	End Sub
 
-	Public Function ReadFile(Optional showMsg As Boolean = True) As Boolean
-		Const msgSrc = "VEH/ReadFile"
-		SetDefault()
-
-		Dim json As New JSONParser
-		If Not json.ReadFile(_filePath) Then Return False
-
-		Try
-			Dim header As JToken = json.Content.GetEx("Header")
-			Dim body As JToken = json.Content.GetEx("Body")
-
-			_fileVersion = header.GetEx(Of Integer)("FileVersion")
-			If _fileVersion > 4 Then
-				SavedInDeclMode = body.GetEx(Of Boolean)("SavedInDeclMode")
-			Else
-				SavedInDeclMode = Cfg.DeclMode
-			End If
-
-			Mass = body.GetEx(Of Double)("CurbWeight")
-			MassExtra = body.GetEx(Of Double)("CurbWeightExtra")
-			Loading = body.GetEx(Of Double)("Loading")
-			VehicleCategory = body("VehCat").ToString.ParseEnum(Of VehicleCategory)() 'ConvVehCat(body("VehCat").ToString)
-			AxleConfiguration = AxleConfigurationHelper.Parse(body("AxleConfig")("Type").ToString)
-			If _fileVersion < 2 Then
-				'convert kg to ton
-				MassMax /= 1000
-			Else
-				MassMax = body.GetEx(Of Double)("MassMax")
-			End If
-
-			If _fileVersion < 7 Then
-				'calc CdA from Cd and area value
-				CdA0 = (body.GetEx(Of Double)("Cd")) * (body.GetEx(Of Double)("CrossSecArea"))
-			Else
-				CdA0 = body.GetEx(Of Double)("CdA")
-			End If
-
-			'CdA02 = CdA0
-
-			CrossWindCorrectionMode = CrossWindCorrectionModeHelper.Parse(body("CdCorrMode").ToString)
-			If Not body("CdCorrFile") Is Nothing Then
-				CrossWindCorrectionFile.Init(_path, body.GetEx(Of String)("CdCorrFile"))
-			End If
-
-			If body("Retarder") Is Nothing Then
-				RetarderType = RetarderType.None
-			Else
-				RetarderType = RetarderTypeHelper.Parse(body("Retarder")("Type").ToString)
-				Dim retarder As JToken = body.GetEx("Retarder")
-				If Not retarder("Ratio") Is Nothing Then
-					RetarderRatio = retarder.GetEx(Of Double)("Ratio")
-				End If
-				If Not retarder("File") Is Nothing Then
-					RetarderLossMapFile.Init(_path, retarder.GetEx(Of String)("File"))
-				End If
-			End If
-
-			If body("AngularGear") Is Nothing Then
-				AngularGearType = AngularGearType.None
-			Else
-				AngularGearType = body("AngularGear")("Type").ToString.ParseEnum(Of AngularGearType)()
-				Dim angleDrive As JToken = body("AngularGear")
-				If Not angleDrive("Ratio") Is Nothing Then
-					AngularGearRatio = angleDrive.GetEx(Of Double)("Ratio")
-				End If
-				If Not body("AngularGear")("LossMap") Is Nothing Then
-					AngularGearLossMapFile.Init(_path, angleDrive.GetEx(Of String)("LossMap"))
-				End If
-			End If
-
-			Dim inertiaTemp As Double
-			If _fileVersion < 3 Then
-				inertiaTemp = body.GetEx(Of Double)("WheelsInertia")
-				DynamicTyreRadius = 1000 * body.GetEx(Of Double)("WheelsDiaEff") / 2
-			Else
-				DynamicTyreRadius = body.GetEx(Of Double)("rdyn")
-			End If
-
-			Dim axleCount As Integer = body("AxleConfig")("Axles").Count()
-			For Each axleEntry In body.GetEx("AxleConfig").GetEx("Axles")
-				Dim axle = New Axle With {
-						.Share = (axleEntry.GetEx(Of Double)("AxleWeightShare")),
-						.TwinTire = (axleEntry.GetEx(Of Boolean)("TwinTyres")),
-						.RRC = (axleEntry.GetEx(Of Double)("RRCISO")),
-						.FzISO = (axleEntry.GetEx(Of Double)("FzISO"))}
-
-				If _fileVersion < 3 Then
-					axle.Wheels = "-"
-					Dim numWheels As Integer = 2
-					If axle.TwinTire Then numWheels = 4
-					axle.Inertia = inertiaTemp / (numWheels * axleCount)
-				Else
-					axle.Wheels = (axleEntry.GetEx(Of String)("Wheels")).Replace("R ", "R")
-					axle.Inertia = (axleEntry.GetEx(Of Double)("Inertia"))
-				End If
-				Axles.Add(axle)
-			Next
-
-			PTOType = PTOTransmission.NoPTO
-			If Not body("PTO") Is Nothing Then
-				Dim ptoTypeToken = body.GetEx("PTO")("Type")
-
-				If String.IsNullOrWhiteSpace(ptoTypeToken.Value(Of String)) Then
-					PTOType = PTOTransmission.NoPTO
-					WorkerMsg(MessageType.Normal, "PTO automatically updated to '" + ptoTypeToken.Value(Of String)() + "'", msgSrc)
-				Else
-					Try
-						DeclarationData.PTOTransmission.Lookup(ptoTypeToken.Value(Of String))
-						PTOType = ptoTypeToken.Value(Of String)()
-					Catch ex As Exception
-						WorkerMsg(MessageType.Normal,
-								"PTO '" + ptoTypeToken.Value(Of String)() + "' not found, automatically updated to '" + PTOTransmission.NoPTO +
-								"'", msgSrc)
-						PTOType = PTOTransmission.NoPTO
-					End Try
-				End If
-
-			End If
-
-			If Not PTOType.Equals(PTOTransmission.NoPTO) Then
-				PTOLossMap.Init(_path, body.GetEx("PTO").GetEx(Of String)("LossMap"))
-				PTOCycle.Init(_path, body.GetEx("PTO").GetEx(Of String)("Cycle"))
-			End If
-
-		Catch ex As Exception
-			If showMsg Then WorkerMsg(MessageType.Err, "Failed to read Vehicle file! " & ex.Message, msgSrc)
-			Return False
-		End Try
-
-		Return True
-	End Function
 
 	Public Function SaveFile() As Boolean
 		SavedInDeclMode = Cfg.DeclMode
@@ -483,7 +352,7 @@ Public Class Vehicle
 		End Get
 	End Property
 
-	Public ReadOnly Property CrosswindCorrectionMap As DataTable _
+	Public ReadOnly Property CrosswindCorrectionMap As TableData _
 		Implements IVehicleEngineeringInputData.CrosswindCorrectionMap
 		Get
 			Return VectoCSVFile.Read(CrossWindCorrectionFile.FullPath)
