@@ -87,19 +87,9 @@ namespace TUGraz.VectoCore.InputData.FileIO.JSON
 			get { return Body.GetEx<double>(JsonKeys.Vehicle_DragCoefficient).SI<SquareMeter>(); }
 		}
 
-		public virtual SquareMeter AirDragAreaRigidTruck
-		{
-			get { return Body.GetEx<double>(JsonKeys.Vehicle_DragCoefficientRigidTruck).SI<SquareMeter>(); }
-		}
-
 		public virtual CrossWindCorrectionMode CrossWindCorrectionMode
 		{
 			get { return CrossWindCorrectionModeHelper.Parse(Body.GetEx<string>("CdCorrMode")); }
-		}
-
-		public virtual string Rim
-		{
-			get { return Body.GetEx<string>(JsonKeys.Vehicle_Rim); }
 		}
 
 		public virtual AxleConfiguration AxleConfiguration
