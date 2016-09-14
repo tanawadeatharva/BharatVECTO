@@ -41,14 +41,14 @@ Public Class VehicleForm
 	Public JobDir As String = ""
 
 	'Close - Check for unsaved changes
-	Private Sub F_VEH_FormClosing(sender As Object, e As FormClosingEventArgs) Handles Me.FormClosing
+	Private Sub VehicleFormClosing(sender As Object, e As FormClosingEventArgs) Handles Me.FormClosing
 		If e.CloseReason <> CloseReason.ApplicationExitCall And e.CloseReason <> CloseReason.WindowsShutDown Then
 			e.Cancel = ChangeCheckCancel()
 		End If
 	End Sub
 
 	'Initialise form
-	Private Sub F05_VEH_Load(sender As Object, e As EventArgs) Handles MyBase.Load
+	Private Sub VehicleFormLoad(sender As Object, e As EventArgs) Handles MyBase.Load
 		TbLoadingMax.Text = "-"
 		PnLoad.Enabled = Not Cfg.DeclMode
 		ButAxlAdd.Enabled = Not Cfg.DeclMode
