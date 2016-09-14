@@ -30,8 +30,11 @@
 */
 
 using System;
+using System.Linq;
+using System.Windows.Forms.VisualStyles;
 using Microsoft.VisualStudio.TestTools.UnitTesting;
 using NUnit.Framework;
+using Org.BouncyCastle.Asn1;
 using TUGraz.VectoCommon.Utils;
 using TUGraz.VectoCore.Utils;
 using Assert = Microsoft.VisualStudio.TestTools.UnitTesting.Assert;
@@ -88,6 +91,24 @@ namespace TUGraz.VectoCore.Tests.Utils
 			} else {
 				Assert.IsTrue(double.IsNaN(isx));
 				Assert.IsTrue(double.IsNaN(isy));
+			}
+		}
+
+		[TestCase(1, 2, 0, 5, new[] { -2.6906474480286136 }),
+		TestCase(5, -3, 2, 10, new[] { -1.0 }),
+		TestCase(5, -30, 2, 10, new[] { -0.5238756689475912, 0.6499388479175676, 5.873936821030023 })]
+		public void CubicSolverTest(double a, double b, double c, double d, double[] expected)
+		{
+			var results = VectoMath.CubicEquationSolver(a, b, c, d);
+
+			Assert.AreEqual(expected.Length, results.Count);
+			var sorted = expected.ToList();
+			sorted.Sort();
+			results.Sort();
+
+			var comparison = sorted.Zip(results, (exp, result) => exp - result);
+			foreach (var cmp in comparison) {
+				Assert.AreEqual(0, cmp, 1e-15);
 			}
 		}
 	}

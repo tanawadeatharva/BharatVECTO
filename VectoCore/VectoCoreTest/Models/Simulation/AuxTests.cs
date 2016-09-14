@@ -95,7 +95,7 @@ namespace TUGraz.VectoCore.Tests.Models.Simulation
 
 			aux.Initialize(torque, speed);
 			for (var i = 0; i < 11; i++) {
-				aux.PowerDemand(t, dt, torque, torque, speed);
+				aux.TorqueDemand(t, dt, torque, torque, speed);
 				modData[ModalResultField.dist] = i.SI<Meter>();
 				modData[ModalResultField.P_eng_out] = 0.SI<Watt>();
 				modData[ModalResultField.acc] = 0.SI<MeterPerSquareSecond>();
@@ -130,19 +130,19 @@ namespace TUGraz.VectoCore.Tests.Models.Simulation
 			var t = 0.SI<Second>();
 
 			aux.Initialize(torque, speed);
-			var auxDemand = aux.PowerDemand(t, t, torque, torque, speed);
+			var auxDemand = aux.TorqueDemand(t, t, torque, torque, speed);
 			AssertHelper.AreRelativeEqual(constPower / speed, auxDemand);
 
 			speed = 2358.RPMtoRad();
 			torque = 1500.SI<NewtonMeter>();
 			aux.Initialize(torque, speed);
-			auxDemand = aux.PowerDemand(t, t, torque, torque, speed);
+			auxDemand = aux.TorqueDemand(t, t, torque, torque, speed);
 			AssertHelper.AreRelativeEqual(constPower / speed, auxDemand);
 
 			speed = 1500.RPMtoRad();
 			torque = 1500.SI<NewtonMeter>();
 			aux.Initialize(torque, speed);
-			auxDemand = aux.PowerDemand(t, t, torque, torque, speed);
+			auxDemand = aux.TorqueDemand(t, t, torque, torque, speed);
 			AssertHelper.AreRelativeEqual(constPower / speed, auxDemand);
 		}
 
@@ -167,7 +167,7 @@ namespace TUGraz.VectoCore.Tests.Models.Simulation
 			var expected = new[] { 6100, 3100, 2300, 4500, 6100 };
 			foreach (var e in expected) {
 				aux.Initialize(torque, speed);
-				var auxDemand = aux.PowerDemand(t, t, torque, torque, speed);
+				var auxDemand = aux.TorqueDemand(t, t, torque, torque, speed);
 
 				AssertHelper.AreRelativeEqual((e.SI<Watt>() / speed).Value(), auxDemand.Value());
 				cycle.CommitSimulationStep(null);
@@ -224,7 +224,7 @@ namespace TUGraz.VectoCore.Tests.Models.Simulation
 
 			foreach (var e in expected) {
 				aux.Initialize(torque, speed);
-				var auxDemand = aux.PowerDemand(t, t, torque, torque, speed);
+				var auxDemand = aux.TorqueDemand(t, t, torque, torque, speed);
 
 				AssertHelper.AreRelativeEqual((e.SI<Watt>() / speed).Value(), auxDemand.Value());
 
@@ -278,7 +278,7 @@ namespace TUGraz.VectoCore.Tests.Models.Simulation
 
 			foreach (var e in expected) {
 				aux.Initialize(torque, speed);
-				var auxDemand = aux.PowerDemand(t, t, torque, torque, speed);
+				var auxDemand = aux.TorqueDemand(t, t, torque, torque, speed);
 
 				AssertHelper.AreRelativeEqual((e.SI<Watt>() / speed).Value(), auxDemand);
 

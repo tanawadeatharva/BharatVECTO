@@ -23,13 +23,14 @@ namespace TUGraz.VectoCore.Models.SimulationComponent.Impl
 
 		public Second LastShift { get; private set; }
 
-		public ATGearbox(IVehicleContainer container, GearboxData gearboxModelData, IShiftStrategy strategy)
+		public ATGearbox(IVehicleContainer container, GearboxData gearboxModelData, IShiftStrategy strategy,
+			KilogramSquareMeter engineInertia)
 			: base(container, gearboxModelData)
 		{
 			Strategy = strategy;
 			Strategy.Gearbox = this;
 			LastShift = -double.MaxValue.SI<Second>();
-			TorqueConverter = new TorqueConverter(this, Strategy, container, gearboxModelData.TorqueConverterData);
+			TorqueConverter = new TorqueConverter(this, Strategy, container, gearboxModelData.TorqueConverterData, engineInertia);
 		}
 
 		private IIdleController _idleController;
@@ -139,8 +140,9 @@ namespace TUGraz.VectoCore.Models.SimulationComponent.Impl
 
 			Log.Debug("AT-Gearbox Power Request: torque: {0}, angularVelocity: {1}", outTorque, outAngularVelocity);
 
-			if (DataBus.VehicleStopped && outAngularVelocity > 0) {
-				Gear = Strategy.InitGear(absTime, dt, outTorque, outAngularVelocity);
+			if ((DataBus.VehicleStopped && outAngularVelocity > 0) || (Disengaged && outTorque.IsGreater(0))) {
+				Gear = 1; //Strategy.InitGear(absTime, dt, outTorque, outAngularVelocity);
+				TorqueConverterLocked = false;
 				LastShift = absTime;
 				Disengaged = false;
 			}
@@ -189,7 +191,7 @@ namespace TUGraz.VectoCore.Models.SimulationComponent.Impl
 
 			if (Auxiliary != null) {
 				//todo mk-2016-08-22: aux loss from out-direction or in-direction of the gearbox?
-				inTorque += Auxiliary.PowerDemand(absTime, dt, outTorque, inTorque, outAngularVelocity, dryRun);
+				inTorque += Auxiliary.TorqueDemand(absTime, dt, outTorque, inTorque, outAngularVelocity, dryRun);
 			}
 
 			if (!TorqueConverterLocked && !ModelData.Gears[Gear].HasTorqueConverter) {
@@ -259,7 +261,7 @@ namespace TUGraz.VectoCore.Models.SimulationComponent.Impl
 
 			TorqueConverter.Locked(CurrentState.InTorque, CurrentState.InAngularVelocity);
 
-			CurrentState.Gear = 0;
+			CurrentState.Gear = 1;
 			return retval;
 		}
 
