@@ -95,7 +95,8 @@ Public Class Vehicle
 
 		Dim vehicleData As VehicleData
 
-		Dim modeService As ExecutionModeServiceContainer = TryCast(validationContext.GetService(GetType(ExecutionMode)), ExecutionModeServiceContainer)
+		Dim modeService As ExecutionModeServiceContainer = TryCast(validationContext.GetService(GetType(ExecutionMode)), 
+																	ExecutionModeServiceContainer)
 		Dim mode = If(modeService Is Nothing, ExecutionMode.Declaration, modeService.Mode)
 
 		Try
@@ -114,7 +115,7 @@ Public Class Vehicle
 
 			If Not result.Any() Then Return ValidationResult.Success
 
-			Return New ValidationResult("Vehicle Configuration is invalid", result.Select(Function(r) r.ErrorMessage).ToList())
+			Return New ValidationResult("Vehicle Configuration is invalid. ", result.Select(Function(r) r.ErrorMessage).ToList())
 		Catch ex As Exception
 			Return New ValidationResult(ex.Message)
 		End Try
@@ -292,7 +293,7 @@ Public Class Vehicle
 
 		If validationResults.Count > 0 Then
 			Dim messages = validationResults.Select(Function(r) r.ErrorMessage + String.Join(", ", r.MemberNames.Distinct()))
-			MsgBox(String.Format("Invalid input: \n{0}", String.Join("; ", messages)), MsgBoxStyle.OkOnly,
+			MsgBox("Invalid input." + Environment.NewLine + String.Join("; ", messages), MsgBoxStyle.OkOnly,
 					"Failed to save vehicle")
 			Return False
 		End If
@@ -396,7 +397,7 @@ Public Class Vehicle
 
 	Public ReadOnly Property [Date] As String Implements IComponentInputData.[Date]
 		Get
-			Now.ToUniversalTime().ToString("o")
+			Return Now.ToUniversalTime().ToString("o")
 		End Get
 	End Property
 
