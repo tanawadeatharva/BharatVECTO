@@ -1907,14 +1907,13 @@ namespace TUGraz.VectoCommon.Utils
 		/// <summary>
 		///     Returns the Unit Part of the SI Unit Expression.
 		/// </summary>
-		private string GetUnitString()
+		public string GetUnitString()
 		{
 			if (Denominator.Any()) {
 				if (Numerator.Any()) {
 					return string.Concat(Numerator) + "/" + string.Concat(Denominator);
-				} else {
-					return "1/" + string.Concat(Denominator);
 				}
+				return "1/" + string.Concat(Denominator);
 			}
 
 			if (Numerator.Any()) {
