@@ -129,7 +129,7 @@ namespace TUGraz.VectoCommon.InputData
 		/// P057, P058
 		/// cf. VECTO Input Parameters.xlsx
 		/// </summary>
-		DataTable LossMap { get; }
+		TableData LossMap { get; }
 	}
 
 	public interface IAngularGearInputData : IComponentInputData
@@ -147,7 +147,7 @@ namespace TUGraz.VectoCommon.InputData
 		/// <summary>
 		/// P173, P174, P175
 		/// </summary>
-		DataTable LossMap { get; }
+		TableData LossMap { get; }
 
 		/// <summary>
 		/// P177
@@ -215,7 +215,7 @@ namespace TUGraz.VectoCommon.InputData
 		/// P096, P097, P098
 		/// cf. VECTO Input Parameters.xlsx
 		/// </summary>
-		DataTable LossMap { get; }
+		TableData LossMap { get; }
 
 		/// <summary>
 		/// P079
@@ -239,7 +239,7 @@ namespace TUGraz.VectoCommon.InputData
 		/// P093, P094, P095
 		/// cf. VECTO Input Parameters.xlsx
 		/// </summary>
-		DataTable ShiftPolygon { get; }
+		TableData ShiftPolygon { get; }
 
 		///// <summary>
 		///// P077
@@ -278,7 +278,7 @@ namespace TUGraz.VectoCommon.InputData
 		/// cf. VECTO Input Parameters.xlsx
 		/// </summary>
 		// ReSharper disable once InconsistentNaming
-		DataTable TCData { get; }
+		TableData TCData { get; }
 	}
 
 	public interface IEngineDeclarationInputData : IComponentInputData
@@ -319,14 +319,14 @@ namespace TUGraz.VectoCommon.InputData
 		/// cf. VECTO Input Parameters.xlsx
 		/// engine speed in rpm, torque in NM, fuel consumption in g/h
 		/// </summary>
-		DataTable FuelConsumptionMap { get; }
+		TableData FuelConsumptionMap { get; }
 
 		/// <summary>
 		/// P144
 		/// P068, P069, P70, P71
 		/// cf. VECTO Input Parameters.xlsx
 		/// </summary>
-		DataTable FullLoadCurve { get; }
+		TableData FullLoadCurve { get; }
 	}
 
 	public interface IAuxiliariesDeclarationInputData

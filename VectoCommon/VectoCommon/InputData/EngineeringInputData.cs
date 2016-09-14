@@ -92,7 +92,7 @@ namespace TUGraz.VectoCommon.InputData
 		/// P055, P056
 		/// cf. VECTO Input Parameters.xlsx
 		/// </summary>
-		DataTable CrosswindCorrectionMap { get; }
+		TableData CrosswindCorrectionMap { get; }
 	}
 
 	public interface IPTOTransmissionInputData
@@ -105,9 +105,9 @@ namespace TUGraz.VectoCommon.InputData
 		/// <summary>
 		/// The PTO Loss map for idling losses of the "consumer" part.
 		/// </summary>
-		DataTable PTOLossMap { get; }
+		TableData PTOLossMap { get; }
 
-		DataTable PTOCycle { get; }
+		TableData PTOCycle { get; }
 	}
 
 	public interface IAxleEngineeringInputData : IAxleDeclarationInputData
@@ -219,7 +219,7 @@ namespace TUGraz.VectoCommon.InputData
 		/// </summary>
 		KilogramSquareMeter Inertia { get; }
 
-		DataTable ShiftPolygon { get; }
+		TableData ShiftPolygon { get; }
 	}
 
 	public interface IEngineEngineeringInputData : IEngineDeclarationInputData
@@ -258,7 +258,7 @@ namespace TUGraz.VectoCommon.InputData
 		/// P009; P033, P034, P035
 		/// cf. VECTO Input Parameters.xlsx
 		/// </summary>
-		DataTable AccelerationCurve { get; }
+		TableData AccelerationCurve { get; }
 
 		ILookaheadCoastingInputData Lookahead { get; }
 	}
@@ -329,9 +329,9 @@ namespace TUGraz.VectoCommon.InputData
 
 		double LookaheadDistanceFactor { get; }
 
-		DataTable CoastingDecisionFactorTargetSpeedLookup { get; }
+		TableData CoastingDecisionFactorTargetSpeedLookup { get; }
 
-		DataTable CoastingDecisionFactorVelocityDropLookup { get; }
+		TableData CoastingDecisionFactorVelocityDropLookup { get; }
 	}
 
 	public interface IAuxiliaryEngineeringInputData
@@ -369,7 +369,7 @@ namespace TUGraz.VectoCommon.InputData
 		/// P025, P026, P027  Aux-InputFile: map
 		/// cf. VECTO Input Parameters.xlsx
 		/// </summary>
-		DataTable DemandMap { get; }
+		TableData DemandMap { get; }
 
 		/// <summary>
 		/// P178
