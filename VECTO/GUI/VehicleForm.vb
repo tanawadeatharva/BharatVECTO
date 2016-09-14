@@ -122,7 +122,7 @@ Public Class VehicleForm
 
 
 		TbHDVclass.Text = _hdVclass
-		PicVehicle.Image = ConvPicPath(_hdVclass.ToInt(), False)
+		PicVehicle.Image = ConvPicPath(If(s0 Is Nothing, -1, _hdVclass.ToInt()), False)
 	End Sub
 
 

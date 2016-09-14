@@ -1016,7 +1016,7 @@ lbDlog:
 
 		VEH0.FilePath = fFileRepl(TbVEH.Text, GetPath(VECTOfile))
 		If VEH0.ReadFile(False) Then
-			Dim maxMass = (VEH0.MassMax * 1000).SI(Of Kilogram)()				   'CSng(fTextboxToNumString(TbMassMass.Text))
+			Dim maxMass = (VEH0.MassMax * 1000).SI(Of Kilogram)()					'CSng(fTextboxToNumString(TbMassMass.Text))
 
 			Dim s0 As Segment = Nothing
 			Try
@@ -1037,7 +1037,8 @@ lbDlog:
 				HDVclass = "-"
 			End If
 
-			PicVehicle.Image = ConvPicPath(HDVclass.ToInt(), False)	'Image.FromFile(cDeclaration.ConvPicPath(HDVclass, False))
+			PicVehicle.Image = ConvPicPath(If(s0 Is Nothing, -1, HDVclass.ToInt()), False) _
+			'Image.FromFile(cDeclaration.ConvPicPath(HDVclass, False))
 
 			TbHVCclass.Text = "HDV Class " & HDVclass
 			TbVehCat.Text = VEH0.VehicleCategory.GetCategoryName()	'ConvVehCat(VEH0.VehCat, True)
