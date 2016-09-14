@@ -198,6 +198,7 @@ namespace TUGraz.VectoCommon.Utils
 	public class SIRangeAttribute : RangeAttribute
 	{
 		private ExecutionMode? _mode;
+		private string _unit = "-";
 
 		/// <summary>
 		/// Checks the Min-Max Range of SI Objects.
@@ -267,6 +268,10 @@ namespace TUGraz.VectoCommon.Utils
 		{
 			var si = value as SI;
 
+			if (si != null) {
+				_unit = si.GetUnitString();
+			}
+
 			var modeService = validationContext.GetService(typeof(ExecutionMode)) as ExecutionModeServiceContainer;
 			var mode = modeService == null ? (ExecutionMode?)null : modeService.Mode;
 			if (mode == null) {
@@ -276,6 +281,13 @@ namespace TUGraz.VectoCommon.Utils
 				return base.IsValid(si != null ? si.Value() : value, validationContext);
 			}
 			return ValidationResult.Success;
+		}
+
+		public override string FormatErrorMessage(string name)
+		{
+			const string unitString = "{0} [{1}]";
+			return string.Format(ErrorMessageString, name, string.Format(unitString, Minimum, _unit),
+				string.Format(unitString, Maximum, _unit));
 		}
 	}
 
