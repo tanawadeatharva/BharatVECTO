@@ -440,11 +440,9 @@ Public Class VehicleForm
 
 		veh.VehicleCategory = CType(CbCat.SelectedValue, VehicleCategory) 'CType(CbCat.SelectedIndex, tVehCat)
 
-		Dim axleShareCheck As Double
 		For Each entry As ListViewItem In LvRRC.Items
 			Dim a0 = New Vehicle.Axle
 			a0.Share = entry.SubItems(AxleTbl.RelativeLoad).Text.ToDouble(0)
-			axleShareCheck += a0.Share
 			a0.TwinTire = (entry.SubItems(AxleTbl.TwinTyres).Text = "yes")
 			a0.RRC = entry.SubItems(AxleTbl.RRC).Text.ToDouble(0)
 			a0.FzISO = entry.SubItems(AxleTbl.FzISO).Text.ToDouble(0)
@@ -456,11 +454,6 @@ Public Class VehicleForm
 		veh.PTOType = CType(cbPTOType.SelectedValue, String)
 		veh.PTOLossMap.Init(GetPath(file), tbPTOLossMap.Text)
 		veh.PTOCycle.Init(GetPath(file), tbPTOCycle.Text)
-
-		If Not Cfg.DeclMode AndAlso Math.Abs(axleShareCheck - 1) > 0.000001 Then
-			MsgBox("Relative axle loads must sum up to 1.0. Current value: " & axleShareCheck, MsgBoxStyle.Critical)
-			Return False
-		End If
 
 		veh.MassMax = TbMassMass.Text.ToDouble()
 		veh.MassExtra = TbMassExtra.Text.ToDouble(0)
