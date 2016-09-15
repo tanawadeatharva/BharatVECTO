@@ -194,11 +194,6 @@ Public Class Gearbox
 	End Function
 
 
-	Public Function GearCount() As Integer
-		Return GearRatios.Count - 1
-	End Function
-
-
 	Public Property FilePath() As String
 		Get
 			Return _filePath
