@@ -41,7 +41,7 @@ namespace TUGraz.VectoCore.InputData.Impl
 	{
 		public string Name { get; internal set; }
 
-		public DataTable CycleData { get; internal set; }
+		public TableData CycleData { get; internal set; }
 	}
 
 	public class StartStopInputData : IStartStopEngineeringInputData

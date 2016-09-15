@@ -261,7 +261,7 @@ namespace TUGraz.VectoCommon.InputData
 		/// P096, P097, P098
 		/// cf. VECTO Input Parameters.xlsx
 		/// </summary>
-		DataTable LossMap { get; }
+		TableData LossMap { get; }
 
 		/// <summary>
 		/// P079
@@ -344,7 +344,7 @@ namespace TUGraz.VectoCommon.InputData
 		/// P028, P029, P030, P031, P032, P119, P120, P121, P122, P123, P124, P125, P126
 		/// cf. VECTO Input Parameters.xlsx
 		/// </summary>
-		DataTable CycleData { get; }
+		TableData CycleData { get; }
 	}
 
 	public interface IDriverDeclarationInputData

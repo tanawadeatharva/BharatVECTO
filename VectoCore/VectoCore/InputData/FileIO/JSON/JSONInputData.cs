@@ -312,7 +312,7 @@ namespace TUGraz.VectoCore.InputData.FileIO.JSON
 				foreach (var cycle in Body.GetEx(JsonKeys.Job_Cycles)) {
 					//.Select(cycle => 
 					var cycleFile = Path.Combine(BasePath, cycle.Value<string>());
-					DataTable cycleData;
+					TableData cycleData;
 					if (File.Exists(cycleFile)) {
 						cycleData = VectoCSVFile.Read(cycleFile);
 					} else {

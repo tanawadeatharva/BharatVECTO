@@ -124,7 +124,7 @@ namespace TUGraz.VectoCore.InputData.FileIO.JSON
 			}
 		}
 
-		public DataTable LossMap
+		public TableData LossMap
 		{
 			[System.Diagnostics.CodeAnalysis.SuppressMessage("Microsoft.Design",
 				"CA1065:DoNotRaiseExceptionsInUnexpectedLocations")]
