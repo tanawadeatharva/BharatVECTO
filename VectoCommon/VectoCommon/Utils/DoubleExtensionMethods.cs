@@ -185,11 +185,6 @@ namespace TUGraz.VectoCommon.Utils
 			return SI<MeterPerSecond>(self / 3.6);
 		}
 
-		public static PerSecond RadToRPM(this double self)
-		{
-			return SI<PerSecond>(self * 60.0 / (2 * Math.PI));
-		}
-
 		public static double ToDegree(this double self)
 		{
 			return self * 180.0 / Math.PI;
