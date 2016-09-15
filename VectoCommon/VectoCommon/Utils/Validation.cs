@@ -167,11 +167,29 @@ namespace TUGraz.VectoCommon.Utils
 			if (enumerable != null) {
 				var i = 0;
 				foreach (var element in enumerable) {
-					var results = element.Validate(mode);
-					if (results.Any()) {
-						return new ValidationResult(
-							string.Format("{1}[{0}] in {1} invalid: {2}", i, validationContext.DisplayName,
-								string.Join("\n", results)));
+					if (element != null) {
+						var valueType = element.GetType();
+						if (valueType.IsGenericType) {
+							var baseType = valueType.GetGenericTypeDefinition();
+							if (baseType == typeof(KeyValuePair<,>)) {
+								var kvResults = new List<ValidationResult>();
+								kvResults.AddRange(valueType.GetProperty("Key").GetValue(element).Validate(mode));
+								kvResults.AddRange(valueType.GetProperty("Value").GetValue(element).Validate(mode));
+								if (kvResults.Any()) {
+									return new ValidationResult(
+										string.Format("{1}[{0}] in {1} invalid: {2}", valueType.GetProperty("Key").GetValue(element),
+											validationContext.DisplayName,
+											string.Join("\n", kvResults)));
+								}
+							}
+						}
+
+						var results = element.Validate(mode);
+						if (results.Any()) {
+							return new ValidationResult(
+								string.Format("{1}[{0}] in {1} invalid: {2}", i, validationContext.DisplayName,
+									string.Join("\n", results)));
+						}
 					}
 					i++;
 				}

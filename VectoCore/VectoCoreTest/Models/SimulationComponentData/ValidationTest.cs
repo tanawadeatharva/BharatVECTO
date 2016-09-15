@@ -333,6 +333,20 @@ namespace TUGraz.VectoCore.Tests.Models.SimulationComponentData
 				"Validation Error: " + string.Join("\n_eng_avg", results.Select(r => r.ErrorMessage)));
 		}
 
+		[TestMethod]
+		public void ValidateDictionaryTest()
+		{
+			var container = new ContainerObject() {
+				Elements = new Dictionary<int, WrapperObject>() {
+					{ 2, new WrapperObject() { Value = 41 } },
+					{ 4, new WrapperObject() { Value = -30 } }
+				}
+			};
+
+			var results = container.Validate(ExecutionMode.Declaration);
+			Assert.AreEqual(1, results.Count);
+		}
+
 		/// <summary>
 		/// VECTO-249: check upshift is above downshift
 		/// </summary>
@@ -362,6 +376,16 @@ namespace TUGraz.VectoCore.Tests.Models.SimulationComponentData
 
 			results = shiftPolygon.Validate(ExecutionMode.Declaration);
 			Assert.IsTrue(results.Any());
+		}
+
+		public class ContainerObject
+		{
+			[Required, ValidateObject] public Dictionary<int, WrapperObject> Elements;
+		}
+
+		public class WrapperObject
+		{
+			[Required, Range(0, 100)] public int Value = 0;
 		}
 
 		public class DeepDataObject
