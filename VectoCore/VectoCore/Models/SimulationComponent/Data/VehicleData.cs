@@ -170,6 +170,7 @@ namespace TUGraz.VectoCore.Models.SimulationComponent.Data
 			WheelsInertia = wheelsInertia;
 		}
 
+		// ReSharper disable once UnusedMember.Global  -- used via Validation
 		public static ValidationResult ValidateVehicleData(VehicleData vehicleData, ValidationContext validationContext)
 		{
 			var mode = GetExecutionMode(validationContext);

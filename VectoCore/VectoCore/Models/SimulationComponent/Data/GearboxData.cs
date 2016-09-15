@@ -31,6 +31,7 @@
 
 using System.Collections.Generic;
 using System.ComponentModel.DataAnnotations;
+using System.Linq;
 using System.Runtime.Serialization;
 using TUGraz.VectoCommon.Models;
 using TUGraz.VectoCommon.Utils;
@@ -42,7 +43,7 @@ namespace TUGraz.VectoCore.Models.SimulationComponent.Data
 	/// Class for Gearbox Data. Gears can be accessed via Gears-Dictionary and range from 1 upwards.
 	/// </summary>
 	/// <remarks>The Axle Gear has its own Property "AxleGearData" and is *not included* in the Gears-Dictionary.</remarks>
-	[DataContract]
+	[DataContract, CustomValidation(typeof(GearboxData), "ValidateGearboxData")]
 	public class GearboxData : SimulationComponentData
 	{
 		public GearboxType Type { get; internal set; }
@@ -112,5 +113,21 @@ namespace TUGraz.VectoCore.Models.SimulationComponent.Data
 
 		[Required, SIRange(0, double.MaxValue)]
 		public MeterPerSquareSecond UpshiftMinAcceleration { get; internal set; }
+
+		// ReSharper disable once UnusedMember.Global -- used via Validation
+		public static ValidationResult ValidateGearboxData(GearboxData gearboxData, ValidationContext validationContext)
+		{
+			var mode = GetExecutionMode(validationContext);
+
+			var result = new List<ValidationResult>();
+			if (gearboxData.Type.AutomaticTransmission()) {
+				result.AddRange(gearboxData.TorqueConverterData.Validate(mode));
+			}
+
+			if (result.Any()) {
+				return new ValidationResult("Validation of Gearbox Data failed", result.Select(x => x.ErrorMessage));
+			}
+			return ValidationResult.Success;
+		}
 	}
 }
