@@ -126,7 +126,7 @@ Public Class GearboxForm
 	End Sub
 
 	Private Sub ToolStripBtOpen_Click(sender As Object, e As EventArgs) Handles ToolStripBtOpen.Click
-		If GearboxFileBrowser.OpenDialog(GbxFile) Then openGBX(GearboxFileBrowser.Files(0))
+		If GearboxFileBrowser.OpenDialog(GbxFile) Then OpenGbx(GearboxFileBrowser.Files(0))
 	End Sub
 
 	Private Sub ToolStripBtSave_Click(sender As Object, e As EventArgs) Handles ToolStripBtSave.Click
@@ -216,23 +216,16 @@ Public Class GearboxForm
 	End Sub
 
 	'Open file
-	Public Sub openGBX(ByVal file As String)
-		Dim GBX0 As Gearbox
-		Dim i As Integer
-		'Dim lv0 As ListViewItem
+	Public Sub OpenGbx(file As String)
 
 		If ChangeCheckCancel() Then Exit Sub
 
-		GBX0 = New Gearbox
+		Dim inputData As IEngineeringInputDataProvider = TryCast(JSONInputDataFactory.ReadComponentData(file), 
+																IEngineeringInputDataProvider)
+		Dim gearbox As IGearboxEngineeringInputData = inputData.GearboxInputData
+		Dim axlegear As IAxleGearInputData = inputData.AxleGearInputData
 
-		GBX0.FilePath = file
-
-		If Not GBX0.ReadFile Then
-			MsgBox("Cannot read " & file & "!")
-			Exit Sub
-		End If
-
-		If Cfg.DeclMode <> GBX0.SavedInDeclMode Then
+		If Cfg.DeclMode <> gearbox.SavedInDeclarationMode Then
 			Select Case WrongMode()
 				Case 1
 					Close()
@@ -240,57 +233,49 @@ Public Class GearboxForm
 					MainForm.OpenVectoFile(file)
 				Case -1
 					Exit Sub
-				Case Else '0
-					'Continue...
 			End Select
 		End If
 
-		TbName.Text = GBX0.ModelName
-		TbTracInt.Text = GBX0.TracIntrSi.ToString
-		TBI_getr.Text = GBX0.GbxInertia.ToString
-
-		'ChTCon.Checked = GBX0.TorqueConverterEnabled
+		TbName.Text = gearbox.ModelName
+		TbTracInt.Text = gearbox.TractionInterruption.ToGUIFormat()
+		TBI_getr.Text = gearbox.Inertia.ToGUIFormat()
 
 		LvGears.Items.Clear()
 
-		For i = 0 To GBX0.GearRatios.Count - 1
+		LvGears.Items.Add(CreateListviewItem("Axle", "-", axlegear.Ratio, axlegear.LossMap.Source, "", ""))
 
-			If i = 0 Then
-				'lv0 = New ListViewItem("Axle")
-				LvGears.Items.Add(CreateListviewItem("Axle", "-", GBX0.GearRatios(i), GBX0.GearLossMap(i, True),
-													GBX0.ShiftPolygonFile(i, True),
-													GBX0.MaxTorque(i)))
-			Else
-				'lv0 = New ListViewItem(i.ToString("00"))
-				LvGears.Items.Add(CreateListviewItem(i.ToString("00"), "-", GBX0.GearRatios(i), GBX0.GearLossMap(i, True),
-													GBX0.ShiftPolygonFile(i, True), GBX0.MaxTorque(i)))
-			End If
-
+		For Each gear As ITransmissionInputData In gearbox.Gears
+			LvGears.Items.Add(CreateListviewItem(gear.Gear.ToString("00"), "-", gear.Ratio, gear.LossMap.Source,
+												gear.ShiftPolygon.Source, If(gear.MaxTorque Is Nothing, "", gear.MaxTorque.ToGUIFormat())))
 		Next
 
-		ChSkipGears.Checked = GBX0.SkipGears
-		TbTqResv.Text = GBX0.TorqueResv.ToString
-		TbShiftTime.Text = GBX0.ShiftTime.ToString
-		TbTqResvStart.Text = GBX0.TorqueResvStart.ToString
-		TbStartSpeed.Text = GBX0.StartSpeed.ToString
-		TbStartAcc.Text = GBX0.StartAcc.ToString
-		ChShiftInside.Checked = GBX0.ShiftInside
+		ChSkipGears.Checked = gearbox.SkipGears
+		TbTqResv.Text = gearbox.TorqueReserve.ToGUIFormat()
+		TbShiftTime.Text = gearbox.ShiftTime.ToGUIFormat()
+		TbTqResvStart.Text = gearbox.StartTorqueReserve.ToGUIFormat()
+		TbStartSpeed.Text = gearbox.StartSpeed.ToGUIFormat()
+		TbStartAcc.Text = gearbox.StartAcceleration.ToGUIFormat()
+		ChShiftInside.Checked = gearbox.EarlyShiftUp
 
-		TbTCfile.Text = GBX0.TorqueConverterFile(True)
-		TbTCrefrpm.Text = GBX0.TorqueConverterReferenceRpm.ToGUIFormat()
-		TbTCinertia.Text = GBX0.TorqueConverterInertia.ToGUIFormat()
-		TBTCShiftPolygon.Text = GBX0.TorqueConverterShiftPolygonFile
+		Dim torqueConverter As ITorqueConverterEngineeringInputData = gearbox.TorqueConverter
+		If torqueConverter Is Nothing Then
+			TbTCfile.Text = ""
+			TbTCrefrpm.Text = ""
+			TbTCinertia.Text = ""
+			TBTCShiftPolygon.Text = ""
+		Else
+			TbTCfile.Text = torqueConverter.TCData.Source
+			TbTCrefrpm.Text = torqueConverter.ReferenceRPM.AsRPM.ToGUIFormat()
+			TbTCinertia.Text = torqueConverter.Inertia.ToGUIFormat()
+			TBTCShiftPolygon.Text = torqueConverter.ShiftPolygon.Source
+		End If
 
-		tbUpshiftMinAcceleration.Text = GBX0.UpshiftMinAcceleration.ToGUIFormat()
-		tbDownshiftAfterUpshift.Text = GBX0.DownshiftAfterUpshift.ToGUIFormat()
-		tbUpshiftAfterDownshift.Text = GBX0.UpshiftAfterDownshift.ToGUIFormat()
+		tbUpshiftMinAcceleration.Text = gearbox.UpshiftMinAcceleration.ToGUIFormat()
+		tbDownshiftAfterUpshift.Text = gearbox.DownshiftAferUpshiftDelay.ToGUIFormat()
+		tbUpshiftAfterDownshift.Text = gearbox.UpshiftAfterDownshiftDelay.ToGUIFormat()
 
-		CbGStype.SelectedValue = GBX0.Type
-		'If CType(GBX0.gs_Type, Integer) <= Me.CbGStype.Items.Count - 1 Then
-		'	Me.CbGStype.SelectedIndex = CType(GBX0.gs_Type, Integer)
-		'Else
-		'	Me.CbGStype.SelectedIndex = 0
-		'End If
+		CbGStype.SelectedValue = gearbox.Type
+
 
 		DeclInit()
 
@@ -306,13 +291,13 @@ Public Class GearboxForm
 	End Sub
 
 	Private Function CreateListviewItem(gear As String, tc As String, ratio As Double, getrMap As String,
-										shiftPolygon As String, fldFile As String) As ListViewItem
+										shiftPolygon As String, maxTorque As String) As ListViewItem
 		Dim retVal As ListViewItem = New ListViewItem(gear)
 		'retVal.SubItems.Add(tc)
 		retVal.SubItems.Add(ratio.ToGUIFormat())
 		retVal.SubItems.Add(getrMap)
 		retVal.SubItems.Add(shiftPolygon)
-		retVal.SubItems.Add(fldFile)
+		retVal.SubItems.Add(maxTorque)
 		Return retVal
 	End Function
 

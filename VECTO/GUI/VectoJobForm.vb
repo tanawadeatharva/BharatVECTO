@@ -8,7 +8,7 @@
 '   WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
 '
 ' See the LICENSE.txt for the specific language governing permissions and limitations.
-Option Infer On
+'Option Infer On
 
 Imports System.Collections.Generic
 Imports System.Drawing.Imaging
@@ -21,7 +21,9 @@ Imports TUGraz.VectoCommon.InputData
 Imports TUGraz.VectoCommon.Models
 Imports TUGraz.VectoCommon.Utils
 Imports TUGraz.VectoCore.InputData.FileIO.JSON
+Imports TUGraz.VectoCore.InputData.Reader
 Imports TUGraz.VectoCore.Models.Declaration
+Imports TUGraz.VectoCore.Models.SimulationComponent.Data.Gearbox
 
 ''' <summary>
 ''' Job Editor. Create/Edit VECTO job files (.vecto)
@@ -292,7 +294,7 @@ Public Class VectoJobForm
 			GearboxForm.BringToFront()
 		End If
 
-		If Not Trim(f) = "" Then GearboxForm.openGBX(f)
+		If Not Trim(f) = "" Then GearboxForm.OpenGbx(f)
 	End Sub
 
 #End Region
@@ -365,7 +367,7 @@ Public Class VectoJobForm
 		VECTOnew()
 
 		'Read GEN
-		Dim VEC0 = New VectoJob
+		Dim VEC0 As VectoJob = New VectoJob
 		VEC0.FilePath = file
 		Try
 			If Not VEC0.ReadFile() Then
@@ -422,8 +424,9 @@ Public Class VectoJobForm
 
 
 		LvAux.Items.Clear()
+		Dim AuxEntryKV As KeyValuePair(Of String, VectoJob.AuxEntry)
 		For Each AuxEntryKV In VEC0.AuxPaths
-			Dim lv0 = New ListViewItem
+			Dim lv0 As ListViewItem = New ListViewItem
 			lv0.SubItems(0).Text = AuxEntryKV.Key
 			lv0.SubItems.Add(AuxEntryKV.Value.Type)
 			If Cfg.DeclMode Then
@@ -434,8 +437,9 @@ Public Class VectoJobForm
 			LvAux.Items.Add(lv0)
 		Next
 
+		Dim sb As SubPath
 		For Each sb In VEC0.CycleFiles
-			Dim lv0 = New ListViewItem
+			Dim lv0 As ListViewItem = New ListViewItem
 			lv0.Text = sb.OriginalPath
 			LvCycles.Items.Add(lv0)
 		Next
@@ -497,10 +501,10 @@ Public Class VectoJobForm
 		If cboAdvancedAuxiliaries.SelectedIndex > 0 Then
 
 			'resolve absolute path for auxiliary file.
-			Dim absoluteAAUxFile = ResolveAAUXFilePath(GetPath(VECTOfile), txtAdvancedAuxiliaryFile.Text)
+			Dim absoluteAAUxFile As String = ResolveAAUXFilePath(GetPath(VECTOfile), txtAdvancedAuxiliaryFile.Text)
 
-			Dim aaAssemblyName = DirectCast(cboAdvancedAuxiliaries.SelectedItem, AdvancedAuxiliary).AssemblyName
-			Dim aaAssemblyVersion = DirectCast(cboAdvancedAuxiliaries.SelectedItem, AdvancedAuxiliary).AuxiliaryVersion
+			Dim aaAssemblyName As String = DirectCast(cboAdvancedAuxiliaries.SelectedItem, AdvancedAuxiliary).AssemblyName
+			Dim aaAssemblyVersion As String = DirectCast(cboAdvancedAuxiliaries.SelectedItem, AdvancedAuxiliary).AuxiliaryVersion
 
 
 			If Not ValidateAAUXFile(absoluteAAUxFile, aaAssemblyName, aaAssemblyVersion, message) Then
@@ -513,7 +517,7 @@ Public Class VectoJobForm
 		End If
 
 
-		Dim vec0 = New VectoJob
+		Dim vec0 As VectoJob = New VectoJob
 		vec0.FilePath = file
 
 		'Files ------------------------------------------------- -----------------
@@ -522,7 +526,7 @@ Public Class VectoJobForm
 		vec0.PathEng = TbENG.Text
 
 		For Each lv0 As ListViewItem In LvCycles.Items
-			Dim sb = New SubPath
+			Dim sb As SubPath = New SubPath
 			sb.Init(GetPath(file), lv0.Text)
 			vec0.CycleFiles.Add(sb)
 		Next
@@ -545,7 +549,7 @@ Public Class VectoJobForm
 		vec0.AdvancedAuxiliaryFilePath = txtAdvancedAuxiliaryFile.Text
 
 		For Each lv0 As ListViewItem In LvAux.Items
-			Dim auxEntry = New VectoJob.AuxEntry
+			Dim auxEntry As VectoJob.AuxEntry = New VectoJob.AuxEntry
 
 			If Cfg.DeclMode Then
 				auxEntry.TechnologyList.Clear()
@@ -792,7 +796,7 @@ lbDlog:
 			Exit Sub
 		End If
 
-		Dim selItem = LvAux.SelectedItems(0)
+		Dim selItem As ListViewItem = LvAux.SelectedItems(0)
 
 		_auxDialog.VehPath = GetPath(VECTOfile)
 		_auxDialog.CbType.SelectedIndex = -1
@@ -881,6 +885,7 @@ lbDlog:
 		Dim genDir As String = GetPath(VECTOfile)
 
 		If DrivingCycleFileBrowser.OpenDialog("", True) Then
+			Dim s As String
 			For Each s In DrivingCycleFileBrowser.Files
 				LvCycles.Items.Add(GetFilenameWithoutDirectory(s, genDir))
 			Next
@@ -990,20 +995,13 @@ lbDlog:
 		Dim i As Integer
 		Dim pmax As Double
 
-		Dim f As CsvFile
-		Dim lM As List(Of Single)
-		Dim lup As List(Of Single)
-		Dim ldown As List(Of Single)
-		Dim line As String()
-
-
 		Dim HDVclass As String
-		
+
 		Dim s As Series
 		Dim a As ChartArea
 		Dim img As Bitmap
 
-		Dim EngOK = False
+		Dim EngOK As Boolean = False
 
 		TbHVCclass.Text = ""
 		TbVehCat.Text = ""
@@ -1016,14 +1014,15 @@ lbDlog:
 
 		Dim inputData As IEngineeringInputDataProvider = TryCast(JSONInputDataFactory.ReadComponentData(TbVEH.Text), 
 																IEngineeringInputDataProvider)
-		Dim vehicle = inputData.VehicleInputData
+		Dim vehicle As IVehicleEngineeringInputData = inputData.VehicleInputData
 
 		If Not vehicle Is Nothing Then
-			Dim maxMass = vehicle.GrossVehicleMassRating					'CSng(fTextboxToNumString(TbMassMass.Text))
+			Dim maxMass As Kilogram = vehicle.GrossVehicleMassRating					'CSng(fTextboxToNumString(TbMassMass.Text))
 
 			Dim s0 As Segment = Nothing
 			Try
-				s0 = DeclarationData.Segments.Lookup(vehicle.VehicleCategory, vehicle.AxleConfiguration, maxMass, 0.SI(Of Kilogram), True)
+				s0 = DeclarationData.Segments.Lookup(vehicle.VehicleCategory, vehicle.AxleConfiguration, maxMass, 0.SI(Of Kilogram),
+													True)
 			Catch
 			End Try
 			If Not s0 Is Nothing Then
@@ -1031,6 +1030,7 @@ lbDlog:
 
 				If Cfg.DeclMode Then
 					LvCycles.Items.Clear()
+					Dim m0 As Mission
 					For Each m0 In s0.Missions
 						LvCycles.Items.Add(m0.MissionType.ToString())
 					Next
@@ -1051,19 +1051,19 @@ lbDlog:
 		End If
 
 
-		Dim OkCount = 0
+		Dim OkCount As Integer = 0
 
-		Dim ENG0 = New Engine
+		Dim ENG0 As Engine = New Engine
 		ENG0.FilePath = fFileRepl(TbENG.Text, GetPath(VECTOfile))
 
 		'Create plot
-		Dim MyChart = New Chart
+		Dim MyChart As Chart = New Chart
 		MyChart.Width = PicBox.Width
 		MyChart.Height = PicBox.Height
 
 		a = New ChartArea
 
-		Dim FLD0 = New EngineFullLoadCurve
+		Dim FLD0 As EngineFullLoadCurve = New EngineFullLoadCurve
 
 		If ENG0.ReadFile(False) Then
 
@@ -1100,7 +1100,7 @@ lbDlog:
 			TbEngTxt.Text = (ENG0.Displacement / 1000).ToString("0.0") & " l " & pmax.ToString("#") & " kW  " & ENG0.ModelName
 
 
-			Dim MAP0 = New FuelconsumptionMap
+			Dim MAP0 As FuelconsumptionMap = New FuelconsumptionMap
 			MAP0.FilePath = ENG0.PathMAP
 
 			If MAP0.ReadFile(False) Then
@@ -1119,18 +1119,17 @@ lbDlog:
 
 		End If
 
-		Dim GBX0 = New Gearbox
-		GBX0.FilePath = fFileRepl(TbGBX.Text, GetPath(VECTOfile))
+		Dim gearbox As IGearboxEngineeringInputData = inputData.GearboxInputData
 
-		If GBX0.ReadFile(False) Then
+		If Not gearbox Is Nothing Then
 
-			TbGbxTxt.Text = GBX0.GearCount & "-Speed " & GBX0.Type.ShortName() & "  " & GBX0.ModelName
+			TbGbxTxt.Text = gearbox.Gears.Count & "-Speed " & gearbox.Type.ShortName() & "  " & gearbox.ModelName
 
 			If Cfg.DeclMode Then
 
 				If EngOK Then
 
-					For i = 1 To GBX0.GearCount
+					For i = 1 To gearbox.Gears.Count
 
 						FLD0.FilePath = ENG0.PathFLD
 
@@ -1179,52 +1178,27 @@ lbDlog:
 
 			Else
 
-				f = New CsvFile
-				For i = 1 To GBX0.GearCount
+				For Each gear As ITransmissionInputData In gearbox.Gears
+					Dim shiftPolygon As ShiftPolygon = ShiftPolygonReader.Create(gear.ShiftPolygon)
+					s = New Series
+					s.Points.DataBindXY(shiftPolygon.Upshift.Select(Function(x) x.AngularSpeed),
+										shiftPolygon.Upshift.Select(Function(x) x.Torque))
+					s.ChartType = SeriesChartType.FastLine
+					s.BorderWidth = 2
+					s.Color = Color.DarkRed
+					s.Name = "Upshift curve"
+					' MyChart.Series.Add(s) 'MQ 2016-06-20: do not plot shift lines in engine dialog
 
-					lM = New List(Of Single)
-					lup = New List(Of Single)
-					ldown = New List(Of Single)
+					s = New Series
+					s.Points.DataBindXY(shiftPolygon.Downshift.Select(Function(x) x.AngularSpeed),
+										shiftPolygon.Downshift.Select(Function(x) x.Torque))
+					s.ChartType = SeriesChartType.FastLine
+					s.BorderWidth = 2
+					s.Color = Color.DarkRed
+					s.Name = "Downshift curve"
+					'MyChart.Series.Add(s) 'MQ 2016-06-20:do not plot shift lines in engine dialog
 
-					If f.OpenRead(GBX0.ShiftPolygonFile(i)) Then
-
-						f.ReadLine()
-
-						Try
-
-							Do While Not f.EndOfFile
-								line = f.ReadLine
-								lM.Add(CSng(line(0)))
-								lup.Add(CSng(line(1)))
-								ldown.Add(CSng(line(2)))
-							Loop
-
-							s = New Series
-							s.Points.DataBindXY(lup, lM)
-							s.ChartType = SeriesChartType.FastLine
-							s.BorderWidth = 2
-							s.Color = Color.DarkRed
-							s.Name = "Upshift curve"
-							' MyChart.Series.Add(s) 'MQ 2016-06-20: do not plot shift lines in engine dialog
-
-							s = New Series
-							s.Points.DataBindXY(ldown, lM)
-							s.ChartType = SeriesChartType.FastLine
-							s.BorderWidth = 2
-							s.Color = Color.DarkRed
-							s.Name = "Downshift curve"
-							'MyChart.Series.Add(s) 'MQ 2016-06-20:do not plot shift lines in engine dialog
-
-							OkCount += 1
-
-							f.Close()
-
-						Catch ex As Exception
-							f.Close()
-						End Try
-
-					End If
-
+					OkCount += 1
 				Next
 
 			End If

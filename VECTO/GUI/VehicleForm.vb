@@ -8,7 +8,7 @@
 '   WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
 '
 ' See the LICENSE.txt for the specific language governing permissions and limitations.
-Option Infer On
+'Option Infer On
 
 Imports System.IO
 Imports System.Linq
@@ -149,8 +149,9 @@ Public Class VehicleForm
 		If Not s0 Is Nothing Then
 			_hdVclass = s0.VehicleClass.GetClassNumber()
 			Dim axleCount As Integer = s0.Missions(0).AxleWeightDistribution.Count()
-			Dim i0 = LvRRC.Items.Count
+			Dim i0 As Integer = LvRRC.Items.Count
 
+			Dim i As Integer
 			If axleCount > i0 Then
 				For i = 1 To axleCount - LvRRC.Items.Count
 					LvRRC.Items.Add(CreateListViewItem(i + i0, Double.NaN, False, Double.NaN, Double.NaN, "", Double.NaN))
@@ -242,8 +243,9 @@ Public Class VehicleForm
 	'Help
 	Private Sub ToolStripButton1_Click(sender As Object, e As EventArgs) Handles ToolStripButton1.Click
 		If File.Exists(MyAppPath & "User Manual\help.html") Then
-			Dim registryString = My.Computer.Registry.ClassesRoot.OpenSubKey("\http\shell\open\command\").GetValue("").ToString
-			Dim defaultBrowserPath = Regex.Match(registryString, "(\"".*?\"")").Captures(0).ToString
+			Dim registryString As String =
+					My.Computer.Registry.ClassesRoot.OpenSubKey("\http\shell\open\command\").GetValue("").ToString
+			Dim defaultBrowserPath As String = Regex.Match(registryString, "(\"".*?\"")").Captures(0).ToString
 			Process.Start(defaultBrowserPath, String.Format("""{0}{1}""", MyAppPath, "User Manual\help.html#vehicle-editor"))
 		Else
 			MsgBox("User Manual not found!", MsgBoxStyle.Critical)
@@ -316,18 +318,17 @@ Public Class VehicleForm
 
 	'Open VEH
 	Sub OpenVehicle(file As String)
-		Dim inertia As Double
 
 		If ChangeCheckCancel() Then Exit Sub
 
 		Dim inputData As IEngineeringInputDataProvider = TryCast(JSONInputDataFactory.ReadComponentData(file), 
 																IEngineeringInputDataProvider)
-		Dim veh = inputData.VehicleInputData
-		Dim retarder = inputData.RetarderInputData
-		Dim angularGear = inputData.AngularGearInputData
-		Dim pto = inputData.PTOTransmissionInputData
+		Dim vehicle As IVehicleEngineeringInputData = inputData.VehicleInputData
+		Dim retarder As IRetarderInputData = inputData.RetarderInputData
+		Dim angularGear As IAngularGearInputData = inputData.AngularGearInputData
+		Dim pto As IPTOTransmissionInputData = inputData.PTOTransmissionInputData
 
-		If Cfg.DeclMode <> veh.SavedInDeclarationMode Then
+		If Cfg.DeclMode <> vehicle.SavedInDeclarationMode Then
 			Select Case WrongMode()
 				Case 1
 					Close()
@@ -339,17 +340,17 @@ Public Class VehicleForm
 		End If
 
 		Dim basePath As String = Path.GetDirectoryName(file)
-		CbCat.SelectedValue = veh.VehicleCategory
-		CbAxleConfig.SelectedValue = veh.AxleConfiguration
-		TbMassMass.Text = (veh.GrossVehicleMassRating.Value() / 1000).ToGUIFormat()
+		CbCat.SelectedValue = vehicle.VehicleCategory
+		CbAxleConfig.SelectedValue = vehicle.AxleConfiguration
+		TbMassMass.Text = (vehicle.GrossVehicleMassRating.Value() / 1000).ToGUIFormat()
 
-		TbMass.Text = veh.CurbWeightChassis.ToGUIFormat()
-		TbMassExtra.Text = veh.CurbWeightExtra.ToGUIFormat()
-		TbLoad.Text = veh.Loading.ToGUIFormat()
-		TBrdyn.Text = veh.DynamicTyreRadius.ToGUIFormat()
+		TbMass.Text = vehicle.CurbWeightChassis.ToGUIFormat()
+		TbMassExtra.Text = vehicle.CurbWeightExtra.ToGUIFormat()
+		TbLoad.Text = vehicle.Loading.ToGUIFormat()
+		TBrdyn.Text = vehicle.DynamicTyreRadius.ToGUIFormat()
 
-		CbCdMode.SelectedValue = veh.CrossWindCorrectionMode
-		TbCdFile.Text = GetRelativePath(veh.CrosswindCorrectionMap.Source, basePath)
+		CbCdMode.SelectedValue = vehicle.CrossWindCorrectionMode
+		TbCdFile.Text = GetRelativePath(vehicle.CrosswindCorrectionMap.Source, basePath)
 
 		CbRtType.SelectedValue = retarder.Type
 		TbRtRatio.Text = retarder.Ratio.ToGUIFormat()
@@ -361,13 +362,14 @@ Public Class VehicleForm
 		tbAngularGearLossMapPath.Text = GetRelativePath(angularGear.LossMap.Source, basePath)
 
 		LvRRC.Items.Clear()
-		Dim i = 0
-		For Each a0 In veh.Axles
+		Dim i As Integer = 0
+		Dim a0 As IAxleEngineeringInputData
+		For Each a0 In vehicle.Axles
 			i += 1
 
 
 			If Cfg.DeclMode Then
-				inertia = DeclarationData.Wheels.Lookup(a0.Wheels).Inertia.Value()
+				Dim inertia As Double = DeclarationData.Wheels.Lookup(a0.Wheels).Inertia.Value()
 				LvRRC.Items.Add(CreateListViewItem(i, Double.NaN, a0.TwinTyres, a0.RollResistanceCoefficient,
 													a0.TyreTestLoad.Value(), a0.Wheels, inertia))
 			Else
@@ -381,7 +383,7 @@ Public Class VehicleForm
 
 		'TbMassExtra.Text = veh.MassExtra.ToGUIFormat()
 
-		TBcdA.Text = veh.AirDragArea.ToGUIFormat()
+		TBcdA.Text = vehicle.AirDragArea.ToGUIFormat()
 
 		cbPTOType.SelectedValue = pto.PTOTransmissionType
 		tbPTOLossMap.Text = GetRelativePath(pto.PTOLossMap.Source, basePath)
@@ -423,7 +425,7 @@ Public Class VehicleForm
 	'Save VEH
 	Private Function SaveVehicle(file As String) As Boolean
 
-		Dim veh = New Vehicle
+		Dim veh As Vehicle = New Vehicle
 		veh.FilePath = file
 
 		veh.Mass = TbMass.Text.ToDouble()
@@ -446,7 +448,7 @@ Public Class VehicleForm
 		veh.VehicleCategory = CType(CbCat.SelectedValue, VehicleCategory) 'CType(CbCat.SelectedIndex, tVehCat)
 
 		For Each entry As ListViewItem In LvRRC.Items
-			Dim a0 = New Vehicle.Axle
+			Dim a0 As Vehicle.Axle = New Vehicle.Axle
 			a0.Share = entry.SubItems(AxleTbl.RelativeLoad).Text.ToDouble(0)
 			a0.TwinTire = (entry.SubItems(AxleTbl.TwinTyres).Text = "yes")
 			a0.RRC = entry.SubItems(AxleTbl.RRC).Text.ToDouble(0)
@@ -715,7 +717,7 @@ Public Class VehicleForm
 	Private Sub EditAxleItem()
 		If LvRRC.SelectedItems.Count = 0 Then Exit Sub
 
-		Dim lv0 = LvRRC.SelectedItems(0)
+		Dim lv0 As ListViewItem = LvRRC.SelectedItems(0)
 
 		_axlDlog.TbAxleShare.Text = lv0.SubItems(AxleTbl.RelativeLoad).Text
 		_axlDlog.CbTwinT.Checked = (lv0.SubItems(AxleTbl.TwinTyres).Text = "yes")

@@ -8,7 +8,7 @@
 '   WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
 '
 ' See the LICENSE.txt for the specific language governing permissions and limitations.
-Option Infer On
+'Option Infer On
 
 Imports System.Collections.Generic
 Imports System.ComponentModel.DataAnnotations
@@ -91,27 +91,29 @@ Public Class Vehicle
 	End Sub
 
 
+	' ReSharper disable once UnusedMember.Global  -- used for Validation
 	Public Shared Function ValidateVehicle(vehicle As Vehicle, validationContext As ValidationContext) As ValidationResult
 
 		Dim vehicleData As VehicleData
 
 		Dim modeService As ExecutionModeServiceContainer = TryCast(validationContext.GetService(GetType(ExecutionMode)), 
 																	ExecutionModeServiceContainer)
-		Dim mode = If(modeService Is Nothing, ExecutionMode.Declaration, modeService.Mode)
+		Dim mode As ExecutionMode = If(modeService Is Nothing, ExecutionMode.Declaration, modeService.Mode)
 
 		Try
 			If mode = ExecutionMode.Declaration Then
-				Dim doa = New DeclarationDataAdapter()
-				Dim segment = DeclarationData.Segments.Lookup(vehicle.VehicleCategory, vehicle.AxleConfiguration,
-															vehicle.GrossVehicleMassRating, vehicle.CurbWeightChassis)
+				Dim doa As DeclarationDataAdapter = New DeclarationDataAdapter()
+				Dim segment As Segment = DeclarationData.Segments.Lookup(vehicle.VehicleCategory, vehicle.AxleConfiguration,
+																		vehicle.GrossVehicleMassRating, vehicle.CurbWeightChassis)
 				vehicleData = doa.CreateVehicleData(vehicle, segment.Missions.First(),
 													segment.Missions.First().Loadings.First().Value)
 			Else
-				Dim doa = New EngineeringDataAdapter()
+				Dim doa As EngineeringDataAdapter = New EngineeringDataAdapter()
 				vehicleData = doa.CreateVehicleData(vehicle)
 			End If
 
-			Dim result = vehicleData.Validate(If(Cfg.DeclMode, ExecutionMode.Declaration, ExecutionMode.Engineering))
+			Dim result As IList(Of ValidationResult) =
+					vehicleData.Validate(If(Cfg.DeclMode, ExecutionMode.Declaration, ExecutionMode.Engineering))
 
 			If Not result.Any() Then Return ValidationResult.Success
 
@@ -158,10 +160,11 @@ Public Class Vehicle
 	Public Function SaveFile() As Boolean
 		SavedInDeclMode = Cfg.DeclMode
 
-		Dim validationResults = Validate(If(Cfg.DeclMode, ExecutionMode.Declaration, ExecutionMode.Engineering))
+		Dim validationResults As IList(Of ValidationResult) =
+				Validate(If(Cfg.DeclMode, ExecutionMode.Declaration, ExecutionMode.Engineering))
 
 		If validationResults.Count > 0 Then
-			Dim messages = validationResults.Select(Function(r) r.ErrorMessage + String.Join(", ", r.MemberNames.Distinct()))
+			Dim messages As IEnumerable(Of String) = validationResults.Select(Function(r) r.ErrorMessage + String.Join(", ", r.MemberNames.Distinct()))
 			MsgBox("Invalid input." + Environment.NewLine + String.Join("; ", messages), MsgBoxStyle.OkOnly,
 					"Failed to save vehicle")
 			Return False
