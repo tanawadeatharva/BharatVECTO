@@ -1,12 +1,18 @@
 
 Imports System.Drawing.Imaging
 Imports System.IO
+Imports System.Linq
 Imports System.Text.RegularExpressions
 Imports System.Windows.Forms.DataVisualization.Charting
 Imports System.Xml.Linq
+Imports TUGraz.VectoCommon.InputData
 Imports TUGraz.VectoCommon.Models
 Imports TUGraz.VectoCommon.Utils
+Imports TUGraz.VectoCore.InputData.FileIO.JSON
+Imports TUGraz.VectoCore.InputData.Reader
 Imports TUGraz.VectoCore.Models.Declaration
+Imports TUGraz.VectoCore.Models.SimulationComponent.Data
+Imports TUGraz.VectoCore.Models.SimulationComponent.Data.Engine
 ' Copyright 2014 European Union.
 ' Licensed under the EUPL (the 'Licence');
 '
@@ -52,7 +58,7 @@ Public Class EngineForm
 
 		If Not Cfg.DeclMode Then Exit Sub
 
-		TbInertia.Text = DeclarationData.Engine.EngineInertia((TbDispl.Text.ToDouble() / 1000.0 / 1000.0).SI(Of CubicMeter),
+		TbInertia.Text = DeclarationData.Engine.EngineInertia((TbDispl.Text.ToDouble(0.0) / 1000.0 / 1000.0).SI(Of CubicMeter),
 															GearboxType.AMT).ToGUIFormat()
 	End Sub
 
@@ -140,21 +146,18 @@ Public Class EngineForm
 	End Sub
 
 	'Open VENG file
-	Public Sub OpenEngineFile(ByVal file As String)
-		Dim ENG0 As Engine
+	Public Sub OpenEngineFile(file As String)
+		Dim engine As IEngineEngineeringInputData
 
 		If ChangeCheckCancel() Then Exit Sub
 
-		ENG0 = New Engine
+		Dim inputData As IEngineeringInputDataProvider = TryCast(JSONInputDataFactory.ReadComponentData(file), 
+																IEngineeringInputDataProvider)
 
-		ENG0.FilePath = file
+		engine = inputData.EngineInputData
 
-		If Not ENG0.ReadFile Then
-			MsgBox("Cannot read " & file & "!")
-			Exit Sub
-		End If
 
-		If Cfg.DeclMode <> ENG0.SavedInDeclMode Then
+		If Cfg.DeclMode <> engine.SavedInDeclarationMode Then
 			Select Case WrongMode()
 				Case 1
 					Close()
@@ -167,16 +170,17 @@ Public Class EngineForm
 			End Select
 		End If
 
-		TbName.Text = ENG0.ModelName
-		TbDispl.Text = ENG0.Displacement.ToString
-		TbInertia.Text = ENG0.EngineInertia.ToString
-		TbNleerl.Text = ENG0.IdleSpeed.ToString
+		Dim basePath As String = Path.GetDirectoryName(file)
+		TbName.Text = engine.ModelName
+		TbDispl.Text = (engine.Displacement * 1000 * 1000).ToGUIFormat()
+		TbInertia.Text = engine.Inertia.ToGUIFormat()
+		TbNleerl.Text = engine.IdleSpeed.AsRPM.ToGUIFormat()
 
-		TbMAP.Text = ENG0.PathMAP(True)
-		TbFLD.Text = ENG0.PathFLD(True)
-		TbWHTCurban.Text = ENG0.WHTCurban.ToGUIFormat()
-		TbWHTCrural.Text = ENG0.WHTCrural.ToGUIFormat()
-		TbWHTCmw.Text = ENG0.WHTCmw.ToGUIFormat()
+		TbMAP.Text = GetRelativePath(engine.FuelConsumptionMap.Source, basePath)
+		TbFLD.Text = GetRelativePath(engine.FullLoadCurve.Source, basePath)
+		TbWHTCurban.Text = engine.WHTCUrban.ToGUIFormat()
+		TbWHTCrural.Text = engine.WHTCRural.ToGUIFormat()
+		TbWHTCmw.Text = engine.WHTCMotorway.ToGUIFormat()
 
 		DeclInit()
 
@@ -350,31 +354,34 @@ Public Class EngineForm
 
 	Private Sub UpdatePic()
 
-		Dim fldOK As Boolean = False
-		Dim mapOK As Boolean = False
-		Dim fullLoadCurve As New EngineFullLoadCurve
-		Dim fcMap As New FuelconsumptionMap
+		'Dim fldOK As Boolean = False
+		'Dim mapOK As Boolean = False
+		Dim fullLoadCurve As FullLoadCurve
+		Dim fcMap As FuelConsumptionMap
 		Dim chart As Chart
-		Dim s As Series
-		Dim a As ChartArea
+		Dim series As Series
+		Dim chartArea As ChartArea
 		Dim img As Bitmap
+		Dim engine As IEngineEngineeringInputData
 
 		PicBox.Image = Nothing
+
+		If Not File.Exists(_engFile) Then Exit Sub
 
 		Try
 
 			'Read Files
-			fullLoadCurve.FilePath = fFileRepl(TbFLD.Text, GetPath(_engFile))
-			fldOK = fullLoadCurve.ReadFile(False, False)
-
-			fcMap.FilePath = fFileRepl(TbMAP.Text, GetPath(_engFile))
-			mapOK = fcMap.ReadFile(False)
+			Dim inputData As IEngineeringInputDataProvider = TryCast(JSONInputDataFactory.ReadComponentData(_engFile), 
+																	IEngineeringInputDataProvider)
+			engine = inputData.EngineInputData
+			fullLoadCurve = FullLoadCurveReader.Create(engine.FullLoadCurve, engineFld:=True)
+			fcMap = FuelConsumptionMapReader.Create(engine.FuelConsumptionMap)
 
 		Catch ex As Exception
 
 		End Try
 
-		If Not fldOK And Not mapOK Then Exit Sub
+		If fullLoadCurve Is Nothing OrElse fcMap Is Nothing Then Exit Sub
 
 
 		'Create plot
@@ -382,59 +389,59 @@ Public Class EngineForm
 		chart.Width = PicBox.Width
 		chart.Height = PicBox.Height
 
-		a = New ChartArea
+		chartArea = New ChartArea
 
-		If fldOK Then
 
-			s = New Series
-			s.Points.DataBindXY(fullLoadCurve.EngineSpeedList, fullLoadCurve.MaxTorqueList)
-			s.ChartType = SeriesChartType.FastLine
-			s.BorderWidth = 2
-			s.Color = Color.DarkBlue
-			s.Name = "Full load (" & GetFilenameWithoutPath(fullLoadCurve.FilePath, True) & ")"
-			chart.Series.Add(s)
+		series = New Series
+		series.Points.DataBindXY(fullLoadCurve.FullLoadEntries.Select(Function(x) x.EngineSpeed.AsRPM).ToArray(),
+							fullLoadCurve.FullLoadEntries.Select(Function(x) x.TorqueFullLoad.Value()).ToArray())
+		series.ChartType = SeriesChartType.FastLine
+		series.BorderWidth = 2
+		series.Color = Color.DarkBlue
+		series.Name = "Full load (" & Path.GetFileNameWithoutExtension(engine.FullLoadCurve.Source) & ")"
+		chart.Series.Add(series)
 
-			s = New Series
-			s.Points.DataBindXY(fullLoadCurve.EngineSpeedList, fullLoadCurve.DragTorqueList)
-			s.ChartType = SeriesChartType.FastLine
-			s.BorderWidth = 2
-			s.Color = Color.Blue
-			s.Name = "Motoring (" & GetFilenameWithoutPath(fullLoadCurve.FilePath, True) & ")"
-			chart.Series.Add(s)
+		series = New Series
+		series.Points.DataBindXY(fullLoadCurve.FullLoadEntries.Select(Function(x) x.EngineSpeed.AsRPM).ToArray(),
+							fullLoadCurve.FullLoadEntries.Select(Function(x) x.TorqueDrag.Value()).ToArray())
+		series.ChartType = SeriesChartType.FastLine
+		series.BorderWidth = 2
+		series.Color = Color.Blue
+		series.Name = "Motoring (" & Path.GetFileNameWithoutExtension(engine.FullLoadCurve.Source) & ")"
+		chart.Series.Add(series)
 
-		End If
 
-		If mapOK Then
-			s = New Series
-			s.Points.DataBindXY(fcMap.nU, fcMap.Tq)
-			s.ChartType = SeriesChartType.Point
-			s.MarkerSize = 3
-			s.Color = Color.Red
-			s.Name = "Map"
-			chart.Series.Add(s)
-		End If
+		series = New Series
+		series.Points.DataBindXY(fcMap.Entries.Select(Function(x) x.EngineSpeed.AsRPM).ToArray(),
+							fcMap.Entries.Select(Function(x) x.Torque.Value()).ToArray())
+		series.ChartType = SeriesChartType.Point
+		series.MarkerSize = 3
+		series.Color = Color.Red
+		series.Name = "Map"
+		chart.Series.Add(series)
 
-		a.Name = "main"
 
-		a.AxisX.Title = "engine speed [1/min]"
-		a.AxisX.TitleFont = New Font("Helvetica", 10)
-		a.AxisX.LabelStyle.Font = New Font("Helvetica", 8)
-		a.AxisX.LabelAutoFitStyle = LabelAutoFitStyles.None
-		a.AxisX.MajorGrid.LineDashStyle = ChartDashStyle.Dot
+		chartArea.Name = "main"
 
-		a.AxisY.Title = "engine torque [Nm]"
-		a.AxisY.TitleFont = New Font("Helvetica", 10)
-		a.AxisY.LabelStyle.Font = New Font("Helvetica", 8)
-		a.AxisY.LabelAutoFitStyle = LabelAutoFitStyles.None
-		a.AxisY.MajorGrid.LineDashStyle = ChartDashStyle.Dot
+		chartArea.AxisX.Title = "engine speed [1/min]"
+		chartArea.AxisX.TitleFont = New Font("Helvetica", 10)
+		chartArea.AxisX.LabelStyle.Font = New Font("Helvetica", 8)
+		chartArea.AxisX.LabelAutoFitStyle = LabelAutoFitStyles.None
+		chartArea.AxisX.MajorGrid.LineDashStyle = ChartDashStyle.Dot
 
-		a.AxisX.Minimum = 300
-		a.BorderDashStyle = ChartDashStyle.Solid
-		a.BorderWidth = 1
+		chartArea.AxisY.Title = "engine torque [Nm]"
+		chartArea.AxisY.TitleFont = New Font("Helvetica", 10)
+		chartArea.AxisY.LabelStyle.Font = New Font("Helvetica", 8)
+		chartArea.AxisY.LabelAutoFitStyle = LabelAutoFitStyles.None
+		chartArea.AxisY.MajorGrid.LineDashStyle = ChartDashStyle.Dot
 
-		a.BackColor = Color.GhostWhite
+		chartArea.AxisX.Minimum = 300
+		chartArea.BorderDashStyle = ChartDashStyle.Solid
+		chartArea.BorderWidth = 1
 
-		chart.ChartAreas.Add(a)
+		chartArea.BackColor = Color.GhostWhite
+
+		chart.ChartAreas.Add(chartArea)
 
 		chart.Update()
 

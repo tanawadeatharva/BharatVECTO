@@ -21,20 +21,11 @@ Imports TUGraz.VectoCore.Models.SimulationComponent.Data.Engine
 Module MainModule
 	Public JobFileList As List(Of String)
 
-	Public Function ConvertToEngineData(fld As EngineFullLoadCurve, nIdle As Double) As CombustionEngineData
+	Public Function ConvertToEngineData(fld As EngineFullLoadCurve, nIdle As PerSecond) As CombustionEngineData
 
 		Dim retVal As CombustionEngineData = New CombustionEngineData()
-		retVal.FullLoadCurve = New TUGraz.VectoCore.Models.SimulationComponent.Data.Engine.EngineFullLoadCurve()
-		retVal.FullLoadCurve.FullLoadEntries = New List(Of FullLoadCurve.FullLoadCurveEntry)
-		For i As Integer = 0 To fld.EngineSpeedList.Count - 1
-			retVal.FullLoadCurve.FullLoadEntries.Add(
-				New FullLoadCurve.FullLoadCurveEntry() _
-														With {.EngineSpeed = fld.EngineSpeedList(i).RPMtoRad(),
-														.TorqueFullLoad = fld.MaxTorqueList(i).SI(Of NewtonMeter)(),
-														.TorqueDrag = fld.DragTorqueList(i).SI(Of NewtonMeter)()})
-		Next
-
-		retVal.IdleSpeed = CType(nIdle, Double).RPMtoRad()
+		retVal.FullLoadCurve = fld
+		retVal.IdleSpeed = nIdle
 		Return retVal
 	End Function
 

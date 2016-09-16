@@ -175,61 +175,6 @@ Public Class Engine
 		Return json.WriteFile(_filePath)
 	End Function
 
-	''' <summary>
-	''' Read file. <see cref="P:VECTO.cENG.FilePath" /> must be set before calling.
-	''' </summary>
-	''' <returns>True if successful.</returns>
-	''' <remarks></remarks>
-	Public Function ReadFile(Optional ByVal showMsg As Boolean = True) As Boolean
-		Dim msgSrc As String
-		Dim json As New JSONParser
-
-		msgSrc = "ENG/ReadFile"
-
-		SetDefault()
-
-
-		If Not json.ReadFile(_filePath) Then Return False
-
-		Try
-
-			_fileVersion = json.Content.GetEx("Header").GetEx(Of Integer)("FileVersion")
-
-			Dim body As JToken = json.Content.GetEx("Body")
-			If _fileVersion > 1 Then
-				SavedInDeclMode = body.GetEx(Of Boolean)("SavedInDeclMode")
-			Else
-				SavedInDeclMode = Cfg.DeclMode
-			End If
-
-			ModelName = body.GetEx(Of String)("ModelName")
-
-			Displacement = body.GetEx(Of Double)("Displacement")
-			IdleSpeed = body.GetEx(Of Double)("IdlingSpeed")
-			EngineInertia = body.GetEx(Of Double)("Inertia")
-
-			If _fileVersion < 3 Then
-				_fullLoadCurvePath.Init(_myPath, body.GetEx("FullLoadCurves").First.GetEx(Of String)("Path"))
-			Else
-				_fullLoadCurvePath.Init(_myPath, body.GetEx(Of String)("FullLoadCurve"))
-			End If
-
-			_fuelConsumptionMapPath.Init(_myPath, body.GetEx(Of String)("FuelMap"))
-
-			If _fileVersion > 2 AndAlso Not body("WHTC-Urban") Is Nothing Then
-				WHTCurban = (body.GetEx(Of Double)("WHTC-Urban"))
-				WHTCrural = (body.GetEx(Of Double)("WHTC-Rural"))
-				WHTCmw = (body.GetEx(Of Double)("WHTC-Motorway"))
-			End If
-
-		Catch ex As Exception
-			If showMsg Then WorkerMsg(MessageType.Err, "Failed to read VECTO file! " & ex.Message, msgSrc)
-			Return False
-		End Try
-
-		Return True
-	End Function
-
 
 	''' <summary>
 	''' Get or set Filepath before calling <see cref="M:VECTO.cENG.ReadFile" /> or <see cref="M:VECTO.cENG.SaveFile" />

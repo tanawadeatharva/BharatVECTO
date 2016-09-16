@@ -241,8 +241,6 @@
     <Compile Include="File Browser\FileBrowserFavoritesDialog.vb">
       <SubType>Form</SubType>
     </Compile>
-    <Compile Include="Input Files\EngineFullLoadCurve.vb" />
-    <Compile Include="Input Files\FuelconsumptionMap.vb" />
     <Compile Include="Input Files\VectoJob.vb" />
     <Compile Include="Input Files\Vehicle.vb" />
     <Compile Include="GUI\GearboxGearDialog.Designer.vb">

@@ -39,6 +39,7 @@ Imports TUGraz.VectoCore.InputData.FileIO.JSON
 Imports System.Text
 Imports System.Text.RegularExpressions
 Imports System.Threading
+Imports Microsoft.VisualBasic.FileIO
 Imports TUGraz.VectoCommon.InputData
 Imports TUGraz.VectoCommon.Models
 Imports TUGraz.VectoCommon.Utils
@@ -356,7 +357,7 @@ Public Class MainForm
 						If GearboxForm.WindowState = FormWindowState.Minimized Then GearboxForm.WindowState = FormWindowState.Normal
 						GearboxForm.BringToFront()
 					End If
-					GearboxForm.openGBX(File)
+					GearboxForm.OpenGbx(File)
 				Case ".VVEH"
 					If Not VehicleForm.Visible Then
 						VehicleForm.Show()
@@ -1189,24 +1190,21 @@ lbFound:
 
 		Public Sub SaveList(Optional ByVal Path As String = "")
 			Dim x As Int32
-			Dim file As CsvFile
-			'If LVbox.Items.Count = 0 Then Exit Sub
-			file = New CsvFile
 			If Path = "" Then
 				If Not LoadedDefault Then Exit Sub
 				Path = FilePath
 			End If
-			file.OpenWrite(Path, "?")
+			Dim file As StreamWriter = My.Computer.FileSystem.OpenTextFileWriter(Path, True, Encoding.UTF8)
 			For x = 1 To LVbox.Items.Count
-				file.WriteLine(LVbox.Items(x - 1).SubItems(0).Text, Math.Abs(CInt(LVbox.Items(x - 1).Checked)))
+				file.WriteLine(String.Join("?", LVbox.Items(x - 1).SubItems(0).Text, Math.Abs(CInt(LVbox.Items(x - 1).Checked))))
 			Next
 			file.Close()
 		End Sub
 
 		Public Sub LoadList(Optional ByVal Path As String = "")
-			Dim line As String()
+			'Dim line As String()
 			Dim NoCheck As Boolean
-			Dim file As CsvFile
+			'Dim file As CsvFile
 			Dim ListViewItem0 As ListViewItem
 
 			If Path = "" Then
@@ -1214,9 +1212,9 @@ lbFound:
 				LoadedDefault = True
 			End If
 
-			file = New CsvFile
+			'file = New CsvFile
 
-			If Not file.OpenRead(Path, "?") Then
+			If Not File.Exists(Path) Then
 				If Not LoadedDefault Then GUIMsg(MessageType.Err, "Cannot open file (" & Path & ")!")
 				Exit Sub
 			End If
@@ -1227,8 +1225,13 @@ lbFound:
 			LVbox.Items.Clear()
 
 			NoCheck = False
-			Do While Not file.EndOfFile
-				line = file.ReadLine
+			Dim reader As TextFieldParser = New TextFieldParser(Path, Encoding.Default)
+			reader.TextFieldType = FieldType.Delimited
+			reader.Delimiters = New String() {"?"}
+
+			Do While Not reader.EndOfData
+				Dim line As String() = reader.ReadFields()
+				If Strings.Left(Trim(line(0)), 1) = "#" Then Continue Do
 
 				ListViewItem0 = New ListViewItem(line(0))
 				ListViewItem0.SubItems.Add(" ")
@@ -1250,7 +1253,7 @@ lbFound:
 				LVbox.Items.Add(ListViewItem0)
 			Loop
 
-			file.Close()
+			reader.Close()
 
 			LVbox.EndUpdate()
 			MainForm.CheckLock = False

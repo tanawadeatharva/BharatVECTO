@@ -23,6 +23,8 @@ Imports TUGraz.VectoCommon.Utils
 Imports TUGraz.VectoCore.InputData.FileIO.JSON
 Imports TUGraz.VectoCore.InputData.Reader
 Imports TUGraz.VectoCore.Models.Declaration
+Imports TUGraz.VectoCore.Models.SimulationComponent.Data
+Imports TUGraz.VectoCore.Models.SimulationComponent.Data.Engine
 Imports TUGraz.VectoCore.Models.SimulationComponent.Data.Gearbox
 
 ''' <summary>
@@ -1053,8 +1055,8 @@ lbDlog:
 
 		Dim OkCount As Integer = 0
 
-		Dim ENG0 As Engine = New Engine
-		ENG0.FilePath = fFileRepl(TbENG.Text, GetPath(VECTOfile))
+		Dim engine As IEngineEngineeringInputData = inputData.EngineInputData
+		'engine.FilePath = fFileRepl(TbENG.Text, GetPath(VECTOfile))
 
 		'Create plot
 		Dim MyChart As Chart = New Chart
@@ -1063,59 +1065,53 @@ lbDlog:
 
 		a = New ChartArea
 
-		Dim FLD0 As EngineFullLoadCurve = New EngineFullLoadCurve
+		'Dim FLD0 As EngineFullLoadCurve = New EngineFullLoadCurve
 
-		If ENG0.ReadFile(False) Then
+		If Not engine Is Nothing Then
 
-			EngineIdleSpeed = ENG0.IdleSpeed
-			EngineFullLoadFile = ENG0.PathFLD
+			EngineIdleSpeed = engine.IdleSpeed.Value()
 
-			EngOK = True
-			FLD0.FilePath = ENG0.PathFLD
+			Dim fullLoadCurve As FullLoadCurve = FullLoadCurveReader.Create(engine.FullLoadCurve)
 
-			If FLD0.ReadFile(False, False) Then
+			s = New Series
+			s.Points.DataBindXY(fullLoadCurve.FullLoadEntries.Select(Function(x) x.EngineSpeed.AsRPM),
+								fullLoadCurve.FullLoadEntries.Select(Function(x) x.TorqueFullLoad.Value()))
+			s.ChartType = SeriesChartType.FastLine
+			s.BorderWidth = 2
+			s.Color = Color.DarkBlue
+			s.Name = "Full load"
+			MyChart.Series.Add(s)
 
-				s = New Series
-				s.Points.DataBindXY(FLD0.EngineSpeedList, FLD0.MaxTorqueList)
-				s.ChartType = SeriesChartType.FastLine
-				s.BorderWidth = 2
-				s.Color = Color.DarkBlue
-				s.Name = "Full load"
-				MyChart.Series.Add(s)
+			s = New Series
+			s.Points.DataBindXY(fullLoadCurve.FullLoadEntries.Select(Function(x) x.EngineSpeed.AsRPM),
+								fullLoadCurve.FullLoadEntries.Select(Function(x) x.TorqueDrag.Value()))
+			s.ChartType = SeriesChartType.FastLine
+			s.BorderWidth = 2
+			s.Color = Color.Blue
+			s.Name = "Motoring"
+			MyChart.Series.Add(s)
 
-				s = New Series
-				s.Points.DataBindXY(FLD0.EngineSpeedList, FLD0.DragTorqueList)
-				s.ChartType = SeriesChartType.FastLine
-				s.BorderWidth = 2
-				s.Color = Color.Blue
-				s.Name = "Motoring"
-				MyChart.Series.Add(s)
+			OkCount += 1
 
-				OkCount += 1
-
-				pmax = FLD0.Pfull(FLD0.EngineRatedSpeed)
-
-			End If
-
-			TbEngTxt.Text = (ENG0.Displacement / 1000).ToString("0.0") & " l " & pmax.ToString("#") & " kW  " & ENG0.ModelName
+			pmax = fullLoadCurve.RatedSpeed.Value() / 1000 'FLD0.Pfull(FLD0.EngineRatedSpeed)
 
 
-			Dim MAP0 As FuelconsumptionMap = New FuelconsumptionMap
-			MAP0.FilePath = ENG0.PathMAP
+			TbEngTxt.Text = (engine.Displacement.Value() / 1000).ToString("0.0") & " l " & pmax.ToString("#") & " kW  " &
+							engine.ModelName
 
-			If MAP0.ReadFile(False) Then
+			Dim fuelConsumptionMap As FuelConsumptionMap = FuelConsumptionMapReader.Create(engine.FuelConsumptionMap)
 
-				s = New Series
-				s.Points.DataBindXY(MAP0.nU, MAP0.Tq)
-				s.ChartType = SeriesChartType.Point
-				s.MarkerSize = 3
-				s.Color = Color.Red
-				s.Name = "Map"
-				MyChart.Series.Add(s)
+			s = New Series
+			s.Points.DataBindXY(fuelConsumptionMap.Entries.Select(Function(x) x.EngineSpeed.AsRPM).ToArray(),
+								fuelConsumptionMap.Entries.Select(Function(x) x.Torque.Value()).ToArray())
+			s.ChartType = SeriesChartType.Point
+			s.MarkerSize = 3
+			s.Color = Color.Red
+			s.Name = "Map"
+			MyChart.Series.Add(s)
 
-				OkCount += 1
+			OkCount += 1
 
-			End If
 
 		End If
 
@@ -1131,46 +1127,43 @@ lbDlog:
 
 					For i = 1 To gearbox.Gears.Count
 
-						FLD0.FilePath = ENG0.PathFLD
 
-						If FLD0.ReadFile(True, False) Then
+						'If FLD0.Init(ENG0.Nidle) Then '' use engine from below...
 
-							'If FLD0.Init(ENG0.Nidle) Then '' use engine from below...
+						'Dim engine As CombustionEngineData = ConvertToEngineData(FLD0, F_VECTO.n_idle)
+						'Dim shiftLines As ShiftPolygon = DeclarationData.Gearbox.ComputeShiftPolygon(Gear - 1,
+						'																			engine.FullLoadCurve, gears,
+						'																			engine,
+						'																			Double.Parse(LvGears.Items(0).SubItems(F_GBX.GearboxTbl.Ratio).Text,
+						'																						CultureInfo.InvariantCulture),
+						'																			(.rdyn / 1000.0).SI(Of Meter))
 
-							'Dim engine As CombustionEngineData = ConvertToEngineData(FLD0, F_VECTO.n_idle)
-							'Dim shiftLines As ShiftPolygon = DeclarationData.Gearbox.ComputeShiftPolygon(Gear - 1,
-							'																			engine.FullLoadCurve, gears,
-							'																			engine,
-							'																			Double.Parse(LvGears.Items(0).SubItems(F_GBX.GearboxTbl.Ratio).Text,
-							'																						CultureInfo.InvariantCulture),
-							'																			(.rdyn / 1000.0).SI(Of Meter))
+						's = New Series
+						's.Points.DataBindXY(shiftLines.Upshift.Select(Function(pt) pt.AngularSpeed.Value() / Constants.RPMToRad).ToList(),
+						'					shiftLines.Upshift.Select(Function(pt) pt.Torque.Value()).ToList())
+						's.ChartType = SeriesChartType.FastLine
+						's.BorderWidth = 2
+						's.Color = Color.DarkRed
+						's.Name = "Upshift curve (" & i & ")"
+						'MyChart.Series.Add(s)
 
-							's = New Series
-							's.Points.DataBindXY(shiftLines.Upshift.Select(Function(pt) pt.AngularSpeed.Value() / Constants.RPMToRad).ToList(),
-							'					shiftLines.Upshift.Select(Function(pt) pt.Torque.Value()).ToList())
-							's.ChartType = SeriesChartType.FastLine
-							's.BorderWidth = 2
-							's.Color = Color.DarkRed
-							's.Name = "Upshift curve (" & i & ")"
-							'MyChart.Series.Add(s)
-
-							's = New Series
-							's.Points.DataBindXY(
-							'	shiftLines.Downshift.Select(Function(pt) pt.AngularSpeed.Value() / Constants.RPMToRad).ToList(),
-							'	shiftLines.Downshift.Select(Function(pt) pt.Torque.Value()).ToList())
-							's.ChartType = SeriesChartType.FastLine
-							's.BorderWidth = 2
-							's.Color = Color.DarkRed
-							's.Name = "Downshift curve (" & i & ")"
-							'MyChart.Series.Add(s)
-							'End If
+						's = New Series
+						's.Points.DataBindXY(
+						'	shiftLines.Downshift.Select(Function(pt) pt.AngularSpeed.Value() / Constants.RPMToRad).ToList(),
+						'	shiftLines.Downshift.Select(Function(pt) pt.Torque.Value()).ToList())
+						's.ChartType = SeriesChartType.FastLine
+						's.BorderWidth = 2
+						's.Color = Color.DarkRed
+						's.Name = "Downshift curve (" & i & ")"
+						'MyChart.Series.Add(s)
+						'End If
 
 
-							OkCount += 1
+						'	OkCount += 1
 
-							pmax = FLD0.Pfull(FLD0.EngineRatedSpeed)
+						'	pmax = FLD0.Pfull(FLD0.EngineRatedSpeed)
 
-						End If
+						'End If
 
 					Next
 
