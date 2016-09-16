@@ -46,7 +46,7 @@ namespace TUGraz.VectoCore.Utils
 {
 	public sealed class DelaunayMap : LoggingObject
 	{
-		internal ICollection<Point> Points = new HashSet<Point>();
+		private ICollection<Point> Points = new HashSet<Point>();
 		private Triangle[] _triangles;
 		private Edge[] _convexHull;
 
@@ -64,6 +64,19 @@ namespace TUGraz.VectoCore.Utils
 		public void AddPoint(double x, double y, double z)
 		{
 			Points.Add(new Point(x, y, z));
+		}
+
+		public IReadOnlyCollection<Point> Entries
+		{
+			get
+			{
+				var retVal = new Point[Points.Count];
+				var i = 0;
+				foreach (var pt in Points) {
+					retVal[i++] = new Point(pt.X * (_maxX - _minX) + _minX, pt.Y * (_maxY - _minY) + _minY, pt.Z);
+				}
+				return retVal;
+			}
 		}
 
 		/// <summary>
@@ -229,23 +242,27 @@ namespace TUGraz.VectoCore.Utils
 		[MethodImpl(MethodImplOptions.AggressiveInlining)]
 		public double? Interpolate(double x, double y)
 		{
-			if (_triangles == null)
+			if (_triangles == null) {
 				throw new VectoException("Interpolation not possible. Call DelaunayMap.Triangulate first.");
+			}
 
 			x = (x - _minX) / (_maxX - _minX);
 			y = (y - _minY) / (_maxY - _minY);
 
 			var i = 0;
-			while (i < _triangles.Length && !_triangles[i].IsInside(x, y, true))
+			while (i < _triangles.Length && !_triangles[i].IsInside(x, y, true)) {
 				i++;
+			}
 			if (i == _triangles.Length) {
 				i = 0;
-				while (i < _triangles.Length && !_triangles[i].IsInside(x, y, false))
+				while (i < _triangles.Length && !_triangles[i].IsInside(x, y, false)) {
 					i++;
+				}
 			}
 
-			if (i == _triangles.Length)
+			if (i == _triangles.Length) {
 				return null;
+			}
 
 			var tr = _triangles[i];
 			var plane = new Plane(tr);
