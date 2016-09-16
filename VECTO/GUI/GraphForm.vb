@@ -15,7 +15,9 @@ Imports System.IO
 Imports System.Linq
 Imports System.Text.RegularExpressions
 Imports System.Windows.Forms.DataVisualization.Charting
+Imports TUGraz.VectoCommon.InputData
 Imports TUGraz.VectoCommon.Utils
+Imports TUGraz.VectoCore.Utils
 
 Public Class GraphForm
 	Private _filepath As String
@@ -80,70 +82,47 @@ Public Class GraphForm
 	End Sub
 
 	Private Sub LoadFile()
-		Dim file As CsvFile
-		Dim i As Integer
-		Dim sDim As Integer
-		Dim line As String()
-		Dim c0 As Channel
-		Dim l0 As List(Of String)
 
+		Try
 
-		file = New CsvFile
+			_channels.Clear()
 
-		If file.OpenRead(_filepath) Then
-
-			Try
-
-				_channels.Clear()
-
-				'Header
-				line = file.ReadLine
-
-				sDim = UBound(line)
-
-				For i = 0 To sDim
-					c0 = New Channel
-					c0.Name = line(i)
-					c0.Values = New List(Of String)
-					_channels.Add(c0)
+			Dim data As TableData = VectoCSVFile.Read(_filepath)
+			For Each column As DataColumn In data.Columns
+				Dim values As List(Of String) = New List(Of String)
+				For Each row As DataRow In data.Rows
+					values.Add(row(column).ToString())
 				Next
+				_channels.Add(New Channel() With {
+								.Name = column.ColumnName,
+								.Values = values})
+			Next
 
-				'Values
-				Do While Not file.EndOfFile
-					line = file.ReadLine
-					For i = 0 To sDim
-						_channels(i).Values.Add(line(i))
-					Next
-				Loop
 
-				file.Close()
+			_timeList = Nothing
+			_distanceList = Nothing
 
-				l0 = _channels(0).Values
-				_timeList = Nothing
-				_distanceList = Nothing
+			For Each channel As Channel In _channels
+				If (channel.Name = "time" AndAlso _timeList Is Nothing) Then
+					_timeList = channel.Values.Select(Function(x) CSng(x)).ToList()
+				End If
+				If (channel.Name = "dist" AndAlso _distanceList Is Nothing) Then
+					_distanceList = channel.Values.Select(Function(x) CSng(x)).ToList()
+				End If
+			Next
 
-				For Each channel As Channel In _channels
-					If (channel.Name = "time [s]" AndAlso _timeList Is Nothing) Then
-						_timeList = channel.Values.Select(Function(x) CSng(x)).ToList()
-					End If
-					If (channel.Name = "dist [m]" AndAlso _distanceList Is Nothing) Then
-						_distanceList = channel.Values.Select(Function(x) CSng(x)).ToList()
-					End If
-				Next
+			SetxMax0()
 
-				SetxMax0()
+			TbXmin.Text = 0.ToGUIFormat()
+			TbXmax.Text = _xMax0.ToGUIFormat()
 
-				TbXmin.Text = 0.ToGUIFormat()
-				TbXmax.Text = _xMax0.ToGUIFormat()
+			Text = GetFilenameWithoutPath(_filepath, True)
 
-				Text = GetFilenameWithoutPath(_filepath, True)
+		Catch ex As Exception
 
-			Catch ex As Exception
-				file.Close()
-				Exit Sub
-			End Try
+			Exit Sub
+		End Try
 
-		End If
 
 		UpdateGraph()
 	End Sub
