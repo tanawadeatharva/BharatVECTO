@@ -47,6 +47,10 @@ namespace TUGraz.VectoCommon.InputData
 
 	public interface IComponentInputData
 	{
+		DataSourceType SourceType { get; }
+
+		string Source { get; }
+
 		bool SavedInDeclarationMode { get; }
 
 		string Vendor { get; }

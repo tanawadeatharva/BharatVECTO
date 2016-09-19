@@ -283,7 +283,7 @@ Public Class Gearbox
 			result = axlegearData.Validate(If(Cfg.DeclMode, ExecutionMode.Declaration, ExecutionMode.Engineering))
 			If result.Any() Then
 				Return _
-					New ValidationResult("Gearbox Configuration is invalid. ", result.Select(Function(r) r.ErrorMessage).ToList())
+					New ValidationResult("Axlegear Configuration is invalid. ", result.Select(Function(r) r.ErrorMessage).ToList())
 			End If
 
 			Return ValidationResult.Success
@@ -293,6 +293,17 @@ Public Class Gearbox
 		End Try
 	End Function
 
+
+	Public ReadOnly Property SourceType As DataSourceType Implements IComponentInputData.SourceType
+		Get
+			Return DataSourceType.JSONFile
+		End Get
+	End Property
+	Public ReadOnly Property Source As String Implements IComponentInputData.Source
+		Get
+			Return FilePath
+		End Get
+	End Property
 
 	Public ReadOnly Property SavedInDeclarationMode As Boolean Implements IComponentInputData.SavedInDeclarationMode
 		Get

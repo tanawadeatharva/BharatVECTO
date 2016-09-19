@@ -28,7 +28,8 @@ Imports TUGraz.VectoCore.Utils
 
 <CustomValidation(GetType(Vehicle), "ValidateVehicle")>
 Public Class Vehicle
-	Implements IVehicleEngineeringInputData, IVehicleDeclarationInputData
+	Implements IVehicleEngineeringInputData, IVehicleDeclarationInputData, IRetarderInputData, IPTOTransmissionInputData, 
+				IAngularGearInputData
 	'V2 MassMax is now saved in [t] instead of [kg]
 	Private Const FormatVersion As Short = 7
 	Private _fileVersion As Integer
@@ -95,6 +96,9 @@ Public Class Vehicle
 	Public Shared Function ValidateVehicle(vehicle As Vehicle, validationContext As ValidationContext) As ValidationResult
 
 		Dim vehicleData As VehicleData
+		Dim retarderData As RetarderData
+		Dim ptoData As PTOData = Nothing
+		Dim angledriveData As AngularGearData
 
 		Dim modeService As ExecutionModeServiceContainer = TryCast(validationContext.GetService(GetType(ExecutionMode)), 
 																	ExecutionModeServiceContainer)
@@ -107,17 +111,45 @@ Public Class Vehicle
 																		vehicle.GrossVehicleMassRating, vehicle.CurbWeightChassis)
 				vehicleData = doa.CreateVehicleData(vehicle, segment.Missions.First(),
 													segment.Missions.First().Loadings.First().Value)
+				retarderData = doa.CreateRetarderData(vehicle)
+				angledriveData = doa.CreateAngularGearData(vehicle, False)
 			Else
 				Dim doa As EngineeringDataAdapter = New EngineeringDataAdapter()
 				vehicleData = doa.CreateVehicleData(vehicle)
+				retarderData = doa.CreateRetarderData(vehicle)
+				angledriveData = doa.CreateAngularGearData(vehicle, True)
+				ptoData = doa.CreatePTOTransmissionData(vehicle)
 			End If
 
 			Dim result As IList(Of ValidationResult) =
 					vehicleData.Validate(If(Cfg.DeclMode, ExecutionMode.Declaration, ExecutionMode.Engineering))
+			If result.Any() Then
+				Return _
+					New ValidationResult("Vehicle Configuration is invalid. ", result.Select(Function(r) r.ErrorMessage).ToList())
+			End If
 
-			If Not result.Any() Then Return ValidationResult.Success
+			result = retarderData.Validate(If(Cfg.DeclMode, ExecutionMode.Declaration, ExecutionMode.Engineering))
+			If result.Any() Then
+				Return _
+					New ValidationResult("Retarder Configuration is invalid. ", result.Select(Function(r) r.ErrorMessage).ToList())
+			End If
 
-			Return New ValidationResult("Vehicle Configuration is invalid. ", result.Select(Function(r) r.ErrorMessage).ToList())
+			result = angledriveData.Validate(If(Cfg.DeclMode, ExecutionMode.Declaration, ExecutionMode.Engineering))
+			If result.Any() Then
+				Return _
+					New ValidationResult("AngleDrive Configuration is invalid. ", result.Select(Function(r) r.ErrorMessage).ToList())
+			End If
+
+			If Not ptoData Is Nothing Then
+				result = ptoData.Validate(If(Cfg.DeclMode, ExecutionMode.Declaration, ExecutionMode.Engineering))
+				If result.Any() Then
+					Return _
+						New ValidationResult("PTO Configuration is invalid. ", result.Select(Function(r) r.ErrorMessage).ToList())
+				End If
+			End If
+
+			Return ValidationResult.Success
+
 		Catch ex As Exception
 			Return New ValidationResult(ex.Message)
 		End Try
@@ -164,7 +196,8 @@ Public Class Vehicle
 				Validate(If(Cfg.DeclMode, ExecutionMode.Declaration, ExecutionMode.Engineering))
 
 		If validationResults.Count > 0 Then
-			Dim messages As IEnumerable(Of String) = validationResults.Select(Function(r) r.ErrorMessage + String.Join(", ", r.MemberNames.Distinct()))
+			Dim messages As IEnumerable(Of String) =
+					validationResults.Select(Function(r) r.ErrorMessage + String.Join(", ", r.MemberNames.Distinct()))
 			MsgBox("Invalid input." + Environment.NewLine + String.Join("; ", messages), MsgBoxStyle.OkOnly,
 					"Failed to save vehicle")
 			Return False
@@ -242,6 +275,18 @@ Public Class Vehicle
 #End Region
 
 #Region "IInputData"
+
+	Public ReadOnly Property SourceType As DataSourceType Implements IComponentInputData.SourceType
+		Get
+			Return DataSourceType.JSONFile
+		End Get
+	End Property
+
+	Public ReadOnly Property Source As String Implements IComponentInputData.Source
+		Get
+			Return FilePath
+		End Get
+	End Property
 
 	Public ReadOnly Property SavedInDeclarationMode As Boolean Implements IComponentInputData.SavedInDeclarationMode
 		Get
@@ -340,6 +385,8 @@ Public Class Vehicle
 
 	Private Function AxleWheels() As IEnumerable(Of AxleInputData)
 		Return Axles.Select(Function(axle) New AxleInputData With {
+								.SourceType = DataSourceType.JSONFile,
+								.Source = FilePath,
 								.Inertia = axle.Inertia.SI(Of KilogramSquareMeter)(),
 								.Wheels = axle.Wheels,
 								.AxleWeightShare = axle.Share,
@@ -383,5 +430,67 @@ Public Class Vehicle
 		End Get
 	End Property
 
+
+	Public ReadOnly Property Type As RetarderType Implements IRetarderInputData.Type
+		Get
+			Return RetarderType
+		End Get
+	End Property
+
+	Public ReadOnly Property IAngularGearInputData_Ratio As Double Implements IAngularGearInputData.Ratio
+		Get
+			Return AngularGearRatio
+		End Get
+	End Property
+
+	Public ReadOnly Property IAngularGearInputData_Type As AngularGearType Implements IAngularGearInputData.Type
+		Get
+			Return AngularGearType
+		End Get
+	End Property
+
+	Public ReadOnly Property Ratio As Double Implements IRetarderInputData.Ratio
+		Get
+			Return RetarderRatio
+		End Get
+	End Property
+
+	Public ReadOnly Property IAngularGearInputData_LossMap As TableData Implements IAngularGearInputData.LossMap
+		Get
+			Return VectoCSVFile.Read(AngularGearLossMapFile.FullPath)
+		End Get
+	End Property
+
+	Public ReadOnly Property LossMap As TableData Implements IRetarderInputData.LossMap
+		Get
+			Return VectoCSVFile.Read(RetarderLossMapFile.FullPath)
+		End Get
+	End Property
+
+	Public ReadOnly Property Efficiency As Double Implements IAngularGearInputData.Efficiency
+		Get
+			Return If(IsNumeric(AngularGearLossMapFile.OriginalPath), AngularGearLossMapFile.OriginalPath.ToDouble(), -1.0)
+		End Get
+	End Property
+
 #End Region
+
+	Public ReadOnly Property PTOTransmissionType As String Implements IPTOTransmissionInputData.PTOTransmissionType
+		Get
+			Return PTOType
+		End Get
+	End Property
+
+	Public ReadOnly Property IPTOTransmissionInputData_PTOCycle As TableData Implements IPTOTransmissionInputData.PTOCycle
+		Get
+			Return VectoCSVFile.Read(PTOCycle.FullPath)
+		End Get
+	End Property
+
+	Public ReadOnly Property IPTOTransmissionInputData_PTOLossMap As TableData _
+		Implements IPTOTransmissionInputData.PTOLossMap
+		Get
+			Return VectoCSVFile.Read(PTOLossMap.FullPath)
+		End Get
+	End Property
 End Class

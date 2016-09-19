@@ -267,13 +267,7 @@ Module Constants
 
 
 	' ReSharper disable once ClassNeverInstantiated.Global
-	Public Class AuxiliaryKey
-		Public Const Fan As String = "FAN"
-		Public Const SteerPump As String = "STP"
-		Public Const HVAC As String = "AC"
-		Public Const ElecSys As String = "ES"
-		Public Const PneumSys As String = "PS"
-	End Class
+	
 End Module
 
 

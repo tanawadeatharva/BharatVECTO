@@ -4,12 +4,6 @@ namespace TUGraz.VectoCommon.InputData
 {
 	public class TableData : DataTable
 	{
-		public enum DataSourceType
-		{
-			Embedded,
-			CSVFile,
-		}
-
 		public TableData(string fileName)
 		{
 			SourceType = DataSourceType.CSVFile;

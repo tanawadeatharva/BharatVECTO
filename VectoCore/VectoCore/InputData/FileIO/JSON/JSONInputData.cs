@@ -50,7 +50,7 @@ namespace TUGraz.VectoCore.InputData.FileIO.JSON
 {
 	public abstract class JSONFile : LoggingObject
 	{
-		private string _basePath;
+		private readonly string _sourceFile;
 
 		protected readonly JObject Header;
 		protected readonly JObject Body;
@@ -59,7 +59,17 @@ namespace TUGraz.VectoCore.InputData.FileIO.JSON
 		{
 			Header = (JObject)data.GetEx(JsonKeys.JsonHeader);
 			Body = (JObject)data.GetEx(JsonKeys.JsonBody);
-			BasePath = filename;
+			_sourceFile = Path.GetFullPath(filename);
+		}
+
+		public DataSourceType SourceType
+		{
+			get { return DataSourceType.JSONFile; }
+		}
+
+		public string Source
+		{
+			get { return _sourceFile; }
 		}
 
 		public bool SavedInDeclarationMode
@@ -69,8 +79,7 @@ namespace TUGraz.VectoCore.InputData.FileIO.JSON
 
 		internal string BasePath
 		{
-			get { return _basePath; }
-			set { _basePath = Path.GetDirectoryName(Path.GetFullPath(value)); }
+			get { return Path.GetDirectoryName(_sourceFile); }
 		}
 
 		protected TableData ReadTableData(string filename, string tableType, bool required = true)

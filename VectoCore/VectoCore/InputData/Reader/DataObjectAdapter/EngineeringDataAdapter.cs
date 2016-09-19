@@ -302,7 +302,7 @@ namespace TUGraz.VectoCore.InputData.Reader.DataObjectAdapter
 		}
 
 		//=================================
-		public RetarderData CreateRetarderData(IRetarderInputData retarder, IVehicleEngineeringInputData vehicle)
+		public RetarderData CreateRetarderData(IRetarderInputData retarder)
 		{
 			return SetCommonRetarderData(retarder);
 		}

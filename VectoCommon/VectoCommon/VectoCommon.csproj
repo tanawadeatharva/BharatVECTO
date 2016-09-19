@@ -44,6 +44,7 @@
     <Reference Include="System.Xml" />
   </ItemGroup>
   <ItemGroup>
+    <Compile Include="InputData\DataSourceType.cs" />
     <Compile Include="InputData\TableData.cs">
       <SubType>Component</SubType>
     </Compile>

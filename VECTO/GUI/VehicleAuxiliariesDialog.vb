@@ -11,6 +11,7 @@
 Option Infer On
 
 Imports System.Windows.Forms
+Imports TUGraz.VectoCommon.Models
 Imports TUGraz.VectoCore.Models.Declaration
 
 
@@ -40,15 +41,15 @@ Public Class VehicleAuxiliariesDialog
 	Private Sub DeclInit()
 		CbTech.Items.Clear()
 		Select Case TbID.Text
-			Case Constants.AuxiliaryKey.Fan
+			Case VectoCore.Configuration.Constants.Auxiliaries.IDs.Fan
 				CbTech.Items.AddRange(DeclarationData.Fan.GetTechnologies())
-			Case Constants.AuxiliaryKey.SteerPump
+			Case VectoCore.Configuration.Constants.Auxiliaries.IDs.SteeringPump
 				CbTech.Items.AddRange(DeclarationData.SteeringPump.GetTechnologies())
-			Case Constants.AuxiliaryKey.HVAC
+			Case VectoCore.Configuration.Constants.Auxiliaries.IDs.HeatingVentilationAirCondition
 				CbTech.Items.AddRange(DeclarationData.HeatingVentilationAirConditioning.GetTechnologies())
-			Case Constants.AuxiliaryKey.ElecSys
+			Case VectoCore.Configuration.Constants.Auxiliaries.IDs.ElectricSystem
 				CbTech.Items.AddRange(DeclarationData.ElectricSystem.GetTechnologies())
-			Case Constants.AuxiliaryKey.PneumSys
+			Case VectoCore.Configuration.Constants.Auxiliaries.IDs.PneumaticSystem
 				CbTech.Items.AddRange(DeclarationData.PneumaticSystem.GetTechnologies())
 		End Select
 		If CbTech.Items.Count > 0 Then
@@ -107,12 +108,12 @@ Public Class VehicleAuxiliariesDialog
 			If Cfg.DeclMode Then
 				Select Case CbType.SelectedIndex
 					Case 0
-						TbID.Text = Constants.AuxiliaryKey.Fan
+						TbID.Text = VectoCore.Configuration.Constants.Auxiliaries.IDs.Fan
 					Case 1
-						TbID.Text = Constants.AuxiliaryKey.SteerPump
+						TbID.Text = VectoCore.Configuration.Constants.Auxiliaries.IDs.SteeringPump
 
 					Case Else '2
-						TbID.Text = Constants.AuxiliaryKey.HVAC
+						TbID.Text = VectoCore.Configuration.Constants.Auxiliaries.IDs.HeatingVentilationAirCondition
 
 				End Select
 			Else

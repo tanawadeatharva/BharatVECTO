@@ -285,6 +285,17 @@ Public Class Engine
 
 #Region "IInputData"
 
+	Public ReadOnly Property SourceType As DataSourceType Implements IComponentInputData.SourceType
+		Get
+			Return DataSourceType.JSONFile
+		End Get
+	End Property
+	Public ReadOnly Property Source As String Implements IComponentInputData.Source
+		Get
+			Return FilePath
+		End Get
+	End Property
+
 	Public ReadOnly Property SavedInDeclarationMode As Boolean Implements IComponentInputData.SavedInDeclarationMode
 		Get
 			Return Cfg.DeclMode

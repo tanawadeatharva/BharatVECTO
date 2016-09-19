@@ -117,6 +117,8 @@ namespace TUGraz.VectoCore.InputData.FileIO.JSON
 			return
 				Body.GetEx(JsonKeys.Vehicle_AxleConfiguration).GetEx(JsonKeys.Vehicle_AxleConfiguration_Axles).Select(
 					axle => new AxleInputData {
+						SourceType = DataSourceType.JSONFile,
+						Source = Source,
 						Inertia = axle.GetEx<double>(JsonKeys.Vehicle_Axles_Inertia).SI<KilogramSquareMeter>(),
 						Wheels = axle.GetEx<string>(JsonKeys.Vehicle_Axles_Wheels),
 						TwinTyres = axle.GetEx<bool>(JsonKeys.Vehicle_Axles_TwinTyres),

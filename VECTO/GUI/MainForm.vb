@@ -1194,7 +1194,7 @@ lbFound:
 				If Not LoadedDefault Then Exit Sub
 				Path = FilePath
 			End If
-			Dim file As StreamWriter = My.Computer.FileSystem.OpenTextFileWriter(Path, True, Encoding.UTF8)
+			Dim file As StreamWriter = My.Computer.FileSystem.OpenTextFileWriter(Path, False, Encoding.UTF8)
 			For x = 1 To LVbox.Items.Count
 				file.WriteLine(String.Join("?", LVbox.Items(x - 1).SubItems(0).Text, Math.Abs(CInt(LVbox.Items(x - 1).Checked))))
 			Next
