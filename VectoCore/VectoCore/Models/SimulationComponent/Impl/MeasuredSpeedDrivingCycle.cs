@@ -124,6 +124,9 @@ namespace TUGraz.VectoCore.Models.SimulationComponent.Impl
 			DriverBehavior = acceleration < 0
 				? DriverBehavior = DrivingBehavior.Braking
 				: DriverBehavior = DrivingBehavior.Driving;
+			if (DataBus.VehicleStopped && acceleration.IsEqual(0)) {
+				DriverBehavior = DrivingBehavior.Halted;
+			}
 
 			IResponse response;
 			var responseCount = 0;
