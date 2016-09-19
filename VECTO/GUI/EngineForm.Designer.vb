@@ -88,6 +88,8 @@ Partial Class EngineForm
 		Me.Label14 = New System.Windows.Forms.Label()
 		Me.BtFLD = New System.Windows.Forms.Button()
 		Me.BtFLDopen = New System.Windows.Forms.Button()
+		Me.lblColdHotFactor = New System.Windows.Forms.Label()
+		Me.TbColdHotFactor = New System.Windows.Forms.TextBox()
 		Me.ToolStrip1.SuspendLayout()
 		Me.StatusStrip1.SuspendLayout()
 		CType(Me.PictureBox1, System.ComponentModel.ISupportInitialize).BeginInit()
@@ -386,13 +388,15 @@ Partial Class EngineForm
 		Me.GrWHTC.Controls.Add(Me.PnWhtcEngineering)
 		Me.GrWHTC.Location = New System.Drawing.Point(12, 300)
 		Me.GrWHTC.Name = "GrWHTC"
-		Me.GrWHTC.Size = New System.Drawing.Size(481, 120)
+		Me.GrWHTC.Size = New System.Drawing.Size(481, 153)
 		Me.GrWHTC.TabIndex = 9
 		Me.GrWHTC.TabStop = False
 		Me.GrWHTC.Text = "WHTC Correction"
 		'
 		'PnWhtcDeclaration
 		'
+		Me.PnWhtcDeclaration.Controls.Add(Me.lblColdHotFactor)
+		Me.PnWhtcDeclaration.Controls.Add(Me.TbColdHotFactor)
 		Me.PnWhtcDeclaration.Controls.Add(Me.BtWHTCimport)
 		Me.PnWhtcDeclaration.Controls.Add(Me.Label4)
 		Me.PnWhtcDeclaration.Controls.Add(Me.Label7)
@@ -403,7 +407,7 @@ Partial Class EngineForm
 		Me.PnWhtcDeclaration.Controls.Add(Me.TbWHTCrural)
 		Me.PnWhtcDeclaration.Location = New System.Drawing.Point(3, 19)
 		Me.PnWhtcDeclaration.Name = "PnWhtcDeclaration"
-		Me.PnWhtcDeclaration.Size = New System.Drawing.Size(472, 60)
+		Me.PnWhtcDeclaration.Size = New System.Drawing.Size(472, 87)
 		Me.PnWhtcDeclaration.TabIndex = 8
 		'
 		'BtWHTCimport
@@ -427,7 +431,7 @@ Partial Class EngineForm
 		'Label7
 		'
 		Me.Label7.AutoSize = True
-		Me.Label7.Location = New System.Drawing.Point(149, 37)
+		Me.Label7.Location = New System.Drawing.Point(156, 37)
 		Me.Label7.Name = "Label7"
 		Me.Label7.Size = New System.Drawing.Size(32, 13)
 		Me.Label7.TabIndex = 0
@@ -467,7 +471,7 @@ Partial Class EngineForm
 		'
 		'TbWHTCrural
 		'
-		Me.TbWHTCrural.Location = New System.Drawing.Point(187, 34)
+		Me.TbWHTCrural.Location = New System.Drawing.Point(194, 34)
 		Me.TbWHTCrural.Name = "TbWHTCrural"
 		Me.TbWHTCrural.Size = New System.Drawing.Size(57, 20)
 		Me.TbWHTCrural.TabIndex = 1
@@ -476,14 +480,14 @@ Partial Class EngineForm
 		'
 		Me.PnWhtcEngineering.Controls.Add(Me.TbWHTCEngineering)
 		Me.PnWhtcEngineering.Controls.Add(Me.lblWhtcEngineering)
-		Me.PnWhtcEngineering.Location = New System.Drawing.Point(3, 85)
+		Me.PnWhtcEngineering.Location = New System.Drawing.Point(3, 112)
 		Me.PnWhtcEngineering.Name = "PnWhtcEngineering"
 		Me.PnWhtcEngineering.Size = New System.Drawing.Size(472, 30)
 		Me.PnWhtcEngineering.TabIndex = 7
 		'
 		'TbWHTCEngineering
 		'
-		Me.TbWHTCEngineering.Location = New System.Drawing.Point(187, 3)
+		Me.TbWHTCEngineering.Location = New System.Drawing.Point(194, 3)
 		Me.TbWHTCEngineering.Name = "TbWHTCEngineering"
 		Me.TbWHTCEngineering.Size = New System.Drawing.Size(57, 20)
 		Me.TbWHTCEngineering.TabIndex = 5
@@ -491,7 +495,7 @@ Partial Class EngineForm
 		'lblWhtcEngineering
 		'
 		Me.lblWhtcEngineering.AutoSize = True
-		Me.lblWhtcEngineering.Location = New System.Drawing.Point(118, 6)
+		Me.lblWhtcEngineering.Location = New System.Drawing.Point(125, 6)
 		Me.lblWhtcEngineering.Name = "lblWhtcEngineering"
 		Me.lblWhtcEngineering.Size = New System.Drawing.Size(63, 13)
 		Me.lblWhtcEngineering.TabIndex = 6
@@ -541,6 +545,22 @@ Partial Class EngineForm
 		Me.BtFLDopen.TabIndex = 7
 		Me.BtFLDopen.TabStop = False
 		Me.BtFLDopen.UseVisualStyleBackColor = True
+		'
+		'lblColdHotFactor
+		'
+		Me.lblColdHotFactor.AutoSize = True
+		Me.lblColdHotFactor.Location = New System.Drawing.Point(3, 63)
+		Me.lblColdHotFactor.Name = "lblColdHotFactor"
+		Me.lblColdHotFactor.Size = New System.Drawing.Size(185, 13)
+		Me.lblColdHotFactor.TabIndex = 5
+		Me.lblColdHotFactor.Text = "Cold/Hot Emmission Balancing Factor"
+		'
+		'TbColdHotFactor
+		'
+		Me.TbColdHotFactor.Location = New System.Drawing.Point(194, 60)
+		Me.TbColdHotFactor.Name = "TbColdHotFactor"
+		Me.TbColdHotFactor.Size = New System.Drawing.Size(57, 20)
+		Me.TbColdHotFactor.TabIndex = 6
 		'
 		'EngineForm
 		'
@@ -645,4 +665,6 @@ Partial Class EngineForm
 	Friend WithEvents lblWhtcEngineering As System.Windows.Forms.Label
 	Friend WithEvents PnWhtcDeclaration As System.Windows.Forms.Panel
 	Friend WithEvents PnWhtcEngineering As System.Windows.Forms.Panel
+	Friend WithEvents lblColdHotFactor As System.Windows.Forms.Label
+	Friend WithEvents TbColdHotFactor As System.Windows.Forms.TextBox
 End Class

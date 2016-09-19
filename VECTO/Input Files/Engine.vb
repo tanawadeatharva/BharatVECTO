@@ -113,7 +113,7 @@ Public Class Engine
 	Public WHTCEngineeringInput As Double
 
 
-	Public SavedInDeclMode As Boolean
+	Private ColdHotBalancingFactorInput As Double
 
 
 	''' <summary>
@@ -145,8 +145,6 @@ Public Class Engine
 		WHTCurbanInput = 0
 		WHTCruralInput = 0
 		WHTCmotorwayInput = 0
-
-		SavedInDeclMode = False
 	End Sub
 
 	''' <summary>
@@ -180,7 +178,6 @@ Public Class Engine
 		Dim body As Dictionary(Of String, Object) = New Dictionary(Of String, Object)
 
 		body.Add("SavedInDeclMode", Cfg.DeclMode)
-		SavedInDeclMode = Cfg.DeclMode
 
 		body.Add("ModelName", ModelName)
 
@@ -195,6 +192,7 @@ Public Class Engine
 		body.Add("WHTC-Urban", WHTCurbanInput)
 		body.Add("WHTC-Rural", WHTCruralInput)
 		body.Add("WHTC-Motorway", WHTCmotorwayInput)
+		body.Add("ColdHotBalancingFactor", ColdHotBalancingFactorInput)
 
 		json.Content = JToken.FromObject(New Dictionary(Of String, Object) From {{"Header", header}, {"Body", body}})
 
@@ -364,6 +362,12 @@ Public Class Engine
 	Public ReadOnly Property WHTCUrban As Double Implements IEngineDeclarationInputData.WHTCUrban
 		Get
 			Return WHTCurbanInput
+		End Get
+	End Property
+
+	Public ReadOnly Property ColdHotBalancingFactor As Double Implements IEngineDeclarationInputData.ColdHotBalancingFactor
+		Get
+			Return ColdHotBalancingFactorInput
 		End Get
 	End Property
 

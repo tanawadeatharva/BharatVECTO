@@ -50,6 +50,7 @@ namespace TUGraz.VectoCore.Tests.Utils
 		public double WHTCMotorway { get; set; }
 		public double WHTCRural { get; set; }
 		public double WHTCUrban { get; set; }
+		public double ColdHotBalancingFactor { get;  set; }
 		public TableData FuelConsumptionMap { get; set; }
 		public TableData FullLoadCurve { get; set; }
 		public KilogramSquareMeter Inertia { get; set; }

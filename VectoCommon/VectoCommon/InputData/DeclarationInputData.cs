@@ -314,6 +314,11 @@ namespace TUGraz.VectoCommon.InputData
 		double WHTCUrban { get; }
 
 		/// <summary>
+		/// P159
+		/// </summary>
+		double ColdHotBalancingFactor { get; }
+
+		/// <summary>
 		/// P067
 		/// P072, P073, P074
 		/// cf. VECTO Input Parameters.xlsx

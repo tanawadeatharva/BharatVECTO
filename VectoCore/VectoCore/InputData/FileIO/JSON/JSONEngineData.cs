@@ -81,6 +81,7 @@ namespace TUGraz.VectoCore.InputData.FileIO.JSON
 			get { return Body.GetEx<double>(JsonKeys.Engine_IdleSpeed).RPMtoRad(); }
 		}
 
+
 		public virtual TableData FuelConsumptionMap
 		{
 			get { return ReadTableData(Body.GetEx<string>(JsonKeys.Engine_FuelConsumptionMap), "FuelConsumptionMap"); }
@@ -114,6 +115,17 @@ namespace TUGraz.VectoCore.InputData.FileIO.JSON
 		public virtual double WHTCUrban
 		{
 			get { return Body.GetEx<double>(JsonKeys.Engine_WHTC_Urban); }
+		}
+
+		public double ColdHotBalancingFactor
+		{
+			get
+			{
+				if (Body["ColdHotBalancingFactor"] == null) {
+					return 1.0;
+				}
+				return Body.GetEx<double>("ColdHotBalancingFactor");
+			}
 		}
 
 		public string Vendor

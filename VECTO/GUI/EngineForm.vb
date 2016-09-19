@@ -182,6 +182,7 @@ Public Class EngineForm
 		TbWHTCrural.Text = engine.WHTCRural.ToGUIFormat()
 		TbWHTCmw.Text = engine.WHTCMotorway.ToGUIFormat()
 		TbWHTCEngineering.Text = engine.WHTCEngineering.ToGUIFormat()
+		TbColdHotFactor.Text = engine.ColdHotBalancingFactor.ToGUIFormat()
 
 		DeclInit()
 
@@ -395,7 +396,7 @@ Public Class EngineForm
 
 		series = New Series
 		series.Points.DataBindXY(fullLoadCurve.FullLoadEntries.Select(Function(x) x.EngineSpeed.AsRPM).ToArray(),
-							fullLoadCurve.FullLoadEntries.Select(Function(x) x.TorqueFullLoad.Value()).ToArray())
+								fullLoadCurve.FullLoadEntries.Select(Function(x) x.TorqueFullLoad.Value()).ToArray())
 		series.ChartType = SeriesChartType.FastLine
 		series.BorderWidth = 2
 		series.Color = Color.DarkBlue
@@ -404,7 +405,7 @@ Public Class EngineForm
 
 		series = New Series
 		series.Points.DataBindXY(fullLoadCurve.FullLoadEntries.Select(Function(x) x.EngineSpeed.AsRPM).ToArray(),
-							fullLoadCurve.FullLoadEntries.Select(Function(x) x.TorqueDrag.Value()).ToArray())
+								fullLoadCurve.FullLoadEntries.Select(Function(x) x.TorqueDrag.Value()).ToArray())
 		series.ChartType = SeriesChartType.FastLine
 		series.BorderWidth = 2
 		series.Color = Color.Blue
@@ -414,7 +415,7 @@ Public Class EngineForm
 
 		series = New Series
 		series.Points.DataBindXY(fcMap.Entries.Select(Function(x) x.EngineSpeed.AsRPM).ToArray(),
-							fcMap.Entries.Select(Function(x) x.Torque.Value()).ToArray())
+								fcMap.Entries.Select(Function(x) x.Torque.Value()).ToArray())
 		series.ChartType = SeriesChartType.Point
 		series.MarkerSize = 3
 		series.Color = Color.Red
@@ -526,10 +527,8 @@ Public Class EngineForm
 	End Sub
 
 	Private Sub TextBox1_TextChanged(sender As Object, e As EventArgs) Handles TbWHTCEngineering.TextChanged
-
 	End Sub
 
 	Private Sub Label9_Click(sender As Object, e As EventArgs) Handles lblWhtcEngineering.Click
-
 	End Sub
 End Class
