@@ -67,7 +67,6 @@ Public Class Gearbox
 	Public TorqueConverterShiftPolygonFile As String
 
 
-	Public SavedInDeclMode As Boolean
 	Public UpshiftMinAcceleration As Double
 	Public DownshiftAfterUpshift As Double
 	Public UpshiftAfterDownshift As Double
@@ -105,13 +104,9 @@ Public Class Gearbox
 		_torqueConverterFile.Clear()
 
 		TorqueConverterInertia = 0
-
-		SavedInDeclMode = False
 	End Sub
 
 	Public Function SaveFile() As Boolean
-
-		SavedInDeclMode = Cfg.DeclMode
 
 		Dim validationResults As IList(Of ValidationResult) =
 				Validate(If(Cfg.DeclMode, ExecutionMode.Declaration, ExecutionMode.Engineering))
@@ -139,7 +134,6 @@ Public Class Gearbox
 		Dim body As Dictionary(Of String, Object) = New Dictionary(Of String, Object)
 
 		body.Add("SavedInDeclMode", Cfg.DeclMode)
-		SavedInDeclMode = Cfg.DeclMode
 
 		body.Add("ModelName", ModelName)
 

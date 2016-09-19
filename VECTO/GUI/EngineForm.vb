@@ -46,8 +46,8 @@ Public Class EngineForm
 	Private Sub EngineFormLoad(sender As Object, e As EventArgs) Handles Me.Load
 
 		PnInertia.Enabled = Not Cfg.DeclMode
-		GrWHTC.Enabled = Cfg.DeclMode
-
+		PnWhtcDeclaration.Enabled = Cfg.DeclMode
+		PnWhtcEngineering.Enabled = Not Cfg.DeclMode
 
 		_changed = False
 		NewEngine()
@@ -181,6 +181,7 @@ Public Class EngineForm
 		TbWHTCurban.Text = engine.WHTCUrban.ToGUIFormat()
 		TbWHTCrural.Text = engine.WHTCRural.ToGUIFormat()
 		TbWHTCmw.Text = engine.WHTCMotorway.ToGUIFormat()
+		TbWHTCEngineering.Text = engine.WHTCEngineering.ToGUIFormat()
 
 		DeclInit()
 
@@ -222,9 +223,9 @@ Public Class EngineForm
 		engine.PathMAP = TbMAP.Text
 
 
-		engine.WHTCurban = TbWHTCurban.Text.ToDouble()
-		engine.WHTCrural = TbWHTCrural.Text.ToDouble()
-		engine.WHTCmw = TbWHTCmw.Text.ToDouble()
+		engine.WHTCurbanInput = TbWHTCurban.Text.ToDouble()
+		engine.WHTCruralInput = TbWHTCrural.Text.ToDouble()
+		engine.WHTCmotorwayInput = TbWHTCmw.Text.ToDouble()
 
 
 		If Not engine.SaveFile Then
@@ -522,5 +523,13 @@ Public Class EngineForm
 		Catch ex As Exception
 			MsgBox("Failed to load file! " & ex.Message, MsgBoxStyle.Critical)
 		End Try
+	End Sub
+
+	Private Sub TextBox1_TextChanged(sender As Object, e As EventArgs) Handles TbWHTCEngineering.TextChanged
+
+	End Sub
+
+	Private Sub Label9_Click(sender As Object, e As EventArgs) Handles lblWhtcEngineering.Click
+
 	End Sub
 End Class

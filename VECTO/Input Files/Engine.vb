@@ -9,16 +9,28 @@
 '
 ' See the LICENSE.txt for the specific language governing permissions and limitations.
 Imports System.Collections.Generic
+Imports System.ComponentModel.DataAnnotations
 Imports System.IO
+Imports System.Linq
 Imports Newtonsoft.Json.Linq
 Imports TUGraz.VECTO.Input_Files
+Imports TUGraz.VectoCommon.InputData
+Imports TUGraz.VectoCommon.Models
+Imports TUGraz.VectoCommon.Utils
 Imports TUGraz.VectoCore.InputData.FileIO.JSON
+Imports TUGraz.VectoCore.InputData.Reader.DataObjectAdapter
+Imports TUGraz.VectoCore.Models.Declaration
+Imports TUGraz.VectoCore.Models.SimulationComponent.Data
+Imports TUGraz.VectoCore.Utils
 
 ''' <summary>
 ''' Engine input file
 ''' </summary>
 ''' <remarks></remarks>
+<CustomValidation(GetType(Engine), "ValidateEngine")>
 Public Class Engine
+	Implements IEngineEngineeringInputData, IEngineDeclarationInputData
+
 	''' <summary>
 	''' Current format version
 	''' </summary>
@@ -84,19 +96,21 @@ Public Class Engine
 	''' WHTC Urban test results. Saved in input file. 
 	''' </summary>
 	''' <remarks></remarks>
-	Public WHTCurban As Double
+	Public WHTCurbanInput As Double
 
 	''' <summary>
 	''' WHTC Rural test results. Saved in input file. 
 	''' </summary>
 	''' <remarks></remarks>
-	Public WHTCrural As Double
+	Public WHTCruralInput As Double
 
 	''' <summary>
 	''' WHTC Motorway test results. Saved in input file. 
 	''' </summary>
 	''' <remarks></remarks>
-	Public WHTCmw As Double
+	Public WHTCmotorwayInput As Double
+
+	Public WHTCEngineeringInput As Double
 
 
 	Public SavedInDeclMode As Boolean
@@ -128,9 +142,9 @@ Public Class Engine
 		_fuelConsumptionMapPath.Clear()
 		_fullLoadCurvePath.Clear()
 
-		WHTCurban = 0
-		WHTCrural = 0
-		WHTCmw = 0
+		WHTCurbanInput = 0
+		WHTCruralInput = 0
+		WHTCmotorwayInput = 0
 
 		SavedInDeclMode = False
 	End Sub
@@ -141,6 +155,18 @@ Public Class Engine
 	''' <returns>True if successful.</returns>
 	''' <remarks></remarks>
 	Public Function SaveFile() As Boolean
+
+		Dim validationResults As IList(Of ValidationResult) =
+				Validate(If(Cfg.DeclMode, ExecutionMode.Declaration, ExecutionMode.Engineering))
+
+		If validationResults.Count > 0 Then
+			Dim messages As IEnumerable(Of String) =
+					validationResults.Select(Function(r) r.ErrorMessage + String.Join(", ", r.MemberNames.Distinct()))
+			MsgBox("Invalid input." + Environment.NewLine + String.Join("; ", messages), MsgBoxStyle.OkOnly,
+					"Failed to save gearbox")
+			Return False
+		End If
+
 		Dim json As New JSONParser
 
 		'Header
@@ -166,9 +192,9 @@ Public Class Engine
 
 		body.Add("FuelMap", _fuelConsumptionMapPath.PathOrDummy)
 
-		body.Add("WHTC-Urban", WHTCurban)
-		body.Add("WHTC-Rural", WHTCrural)
-		body.Add("WHTC-Motorway", WHTCmw)
+		body.Add("WHTC-Urban", WHTCurbanInput)
+		body.Add("WHTC-Rural", WHTCruralInput)
+		body.Add("WHTC-Motorway", WHTCmotorwayInput)
 
 		json.Content = JToken.FromObject(New Dictionary(Of String, Object) From {{"Header", header}, {"Body", body}})
 
@@ -229,6 +255,143 @@ Public Class Engine
 			_fuelConsumptionMapPath.Init(_myPath, value)
 		End Set
 	End Property
+
+
+	' ReSharper disable once UnusedMember.Global  -- used for Validation
+	Public Shared Function ValidateEngine(engine As Engine, validationContext As ValidationContext) As ValidationResult
+		Dim engineData As CombustionEngineData
+		Dim modeService As ExecutionModeServiceContainer = TryCast(validationContext.GetService(GetType(ExecutionMode)), 
+																	ExecutionModeServiceContainer)
+		Dim mode As ExecutionMode = If(modeService Is Nothing, ExecutionMode.Declaration, modeService.Mode)
+
+		Try
+			If mode = ExecutionMode.Declaration Then
+				Dim doa As DeclarationDataAdapter = New DeclarationDataAdapter()
+
+				engineData = doa.CreateEngineData(engine, GearboxType.AMT)
+			Else
+				Dim doa As EngineeringDataAdapter = New EngineeringDataAdapter()
+				engineData = doa.CreateEngineData(engine, Nothing)
+			End If
+
+			Dim result As IList(Of ValidationResult) =
+					engineData.Validate(If(Cfg.DeclMode, ExecutionMode.Declaration, ExecutionMode.Engineering))
+
+			If Not result.Any() Then Return ValidationResult.Success
+
+			Return New ValidationResult("Engine Configuration is invalid. ", result.Select(Function(r) r.ErrorMessage).ToList())
+		Catch ex As Exception
+			Return New ValidationResult(ex.Message)
+		End Try
+	End Function
+
+#Region "IInputData"
+
+	Public ReadOnly Property SavedInDeclarationMode As Boolean Implements IComponentInputData.SavedInDeclarationMode
+		Get
+			Return Cfg.DeclMode
+		End Get
+	End Property
+
+	Public ReadOnly Property Vendor As String Implements IComponentInputData.Vendor
+		Get
+			Return "N.A." ' TODO: MQ 20160919
+		End Get
+	End Property
+
+	Public ReadOnly Property Creator As String Implements IComponentInputData.Creator
+		Get
+			Return Lic.LicString
+		End Get
+	End Property
+
+	Public ReadOnly Property [Date] As String Implements IComponentInputData.[Date]
+		Get
+			Return Now.ToUniversalTime().ToString("o")
+		End Get
+	End Property
+
+	Public ReadOnly Property TypeId As String Implements IComponentInputData.TypeId
+		Get
+			Return "N.A." ' Todo: MQ 20160919
+		End Get
+	End Property
+
+	Public ReadOnly Property DigestValue As String Implements IComponentInputData.DigestValue
+		Get
+			Return ""
+		End Get
+	End Property
+
+	Public ReadOnly Property IntegrityStatus As IntegrityStatus Implements IComponentInputData.IntegrityStatus
+		Get
+			Return IntegrityStatus.NotChecked
+		End Get
+	End Property
+
+	Public ReadOnly Property IComponentInputData_ModelName As String Implements IComponentInputData.ModelName
+		Get
+			Return ModelName
+		End Get
+	End Property
+
+	Public ReadOnly Property IEngineDeclarationInputData_Displacement As CubicMeter _
+		Implements IEngineDeclarationInputData.Displacement
+		Get
+			Return (Displacement / 1000.0 / 1000.0).SI(Of CubicMeter)()
+		End Get
+	End Property
+
+	Public ReadOnly Property IEngineDeclarationInputData_IdleSpeed As PerSecond _
+		Implements IEngineDeclarationInputData.IdleSpeed
+		Get
+			Return IdleSpeed.RPMtoRad()
+		End Get
+	End Property
+
+	Public ReadOnly Property WHTCMotorway As Double Implements IEngineDeclarationInputData.WHTCMotorway
+		Get
+			Return WHTCmotorwayInput
+		End Get
+	End Property
+
+	Public ReadOnly Property WHTCRural As Double Implements IEngineDeclarationInputData.WHTCRural
+		Get
+			Return WHTCruralInput
+		End Get
+	End Property
+
+	Public ReadOnly Property WHTCUrban As Double Implements IEngineDeclarationInputData.WHTCUrban
+		Get
+			Return WHTCurbanInput
+		End Get
+	End Property
+
+	Public ReadOnly Property FuelConsumptionMap As TableData Implements IEngineDeclarationInputData.FuelConsumptionMap
+		Get
+			Return VectoCSVFile.Read(_fuelConsumptionMapPath.OriginalPath)
+		End Get
+	End Property
+
+	Public ReadOnly Property FullLoadCurve As TableData Implements IEngineDeclarationInputData.FullLoadCurve
+		Get
+			Return VectoCSVFile.Read(_fullLoadCurvePath.OriginalPath)
+		End Get
+	End Property
+
+	Public ReadOnly Property Inertia As KilogramSquareMeter Implements IEngineEngineeringInputData.Inertia
+		Get
+			Return EngineInertia.SI(Of KilogramSquareMeter)()
+		End Get
+	End Property
+
+	Public ReadOnly Property WHTCEngineering As Double Implements IEngineEngineeringInputData.WHTCEngineering
+		Get
+			Return WHTCEngineeringInput
+		End Get
+	End Property
+
+#End Region
 End Class
 
 
