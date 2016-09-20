@@ -26,16 +26,6 @@ Public Class JSONParser
 		'Content = New Dictionary(Of String, Object)
 	End Sub
 
-	Public Function ReadFile(path As String) As Boolean
-		If (Not File.Exists(path)) Then
-			Return False
-		End If
-		Using reader As TextReader = File.OpenText(path)
-			Content = JToken.ReadFrom(New JsonTextReader(reader))
-		End Using
-		Return True
-	End Function
-
 
 	''' <summary>
 	''' Writes the Content variable into a JSON file.
