@@ -24,12 +24,12 @@ Namespace Input_Files
 			Else
 				_valid = True
 				_originalPath = path
-				_fullPath = fFileRepl(path, parentDir)
+				_fullPath = FileRepl(path, parentDir)
 			End If
 		End Sub
 
 		Private Function CheckFilenameGiven(f As String) As String
-			If Trim(UCase(f)) = Constants.NoFile Then
+			If Trim(UCase(f)) = NoFile Then
 				Return ""
 			Else
 				Return f
@@ -66,7 +66,7 @@ Namespace Input_Files
 				If _valid Then
 					Return _originalPath
 				Else
-					Return Constants.NoFile
+					Return NoFile
 				End If
 			End Get
 		End Property

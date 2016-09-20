@@ -169,7 +169,7 @@
   <ItemGroup>
     <Compile Include="ApplicationEvents.vb" />
     <Compile Include="Input Files\AdvancedAuxiliary.vb" />
-    <Compile Include="JSONparser.vb" />
+    <Compile Include="JSONWriter.vb" />
     <Compile Include="GUI\FileSignDialog.Designer.vb">
       <DependentUpon>FileSignDialog.vb</DependentUpon>
     </Compile>

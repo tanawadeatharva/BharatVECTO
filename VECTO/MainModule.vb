@@ -30,17 +30,11 @@ Module MainModule
 	End Function
 
 	Public Function ConvPicPath(hdVclass As Integer, isLongHaul As Boolean) As Bitmap
-		Dim longHaulFlag As String = ""
-		If isLongHaul Then
-			longHaulFlag = "t"
-		End If
-
 		Select Case hdVclass
 			Case 1, 2, 3
 				Return My.Resources._4x2r ' resourcePath & "4x2r.png"
 			Case 4
 				If isLongHaul Then Return My.Resources._4x2rt
-
 				Return My.Resources._4x2r 'resourcePath & "4x2r" & longHaulFlag & ".png"
 			Case 5
 				Return My.Resources._4x2tt ' resourcePath & "4x2tt.png"

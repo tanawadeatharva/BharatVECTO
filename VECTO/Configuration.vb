@@ -24,7 +24,7 @@ Public Class Configuration
 	Public OpenCmd As String
 	Public OpenCmdName As String
 	Public FuelDens As Double
-	Public CO2perFC As Double
+	Public Co2PerFc As Double
 	Public FirstRun As Boolean
 	Public DeclMode As Boolean
 
@@ -85,7 +85,7 @@ Public Class Configuration
 	End Sub
 
 	Public Sub Save()
-		Dim json As New JSONParser
+		Dim json As New JSONWriter
 
 		Dim header As Dictionary(Of String, Object) = New Dictionary(Of String, Object)
 		header.Add("CreatedBy", Lic.LicString & " (" & Lic.GUID & ")")

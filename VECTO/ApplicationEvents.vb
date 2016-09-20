@@ -20,6 +20,7 @@ Namespace My
 	' UnhandledException: Raised if the application encounters an unhandled exception.
 	' StartupNextInstance: Raised when launching a single-instance application, and one is already active.
 	' NetworkAvailabilityChanged: Occurs when connecting or disconnecting to the network.
+	' ReSharper disable once ClassNeverInstantiated.Global
 	Partial Friend Class MyApplication
 		'Initialization
 		Private Sub MyApplication_Startup(sender As Object, e As Microsoft.VisualBasic.ApplicationServices.StartupEventArgs) _
@@ -35,16 +36,16 @@ Namespace My
 			FileHistoryPath = MyConfPath & "FileHistory\"
 
 			'Log
-			LogFile = New cLogFile
+			LogFile = New FileLogger
 			If Not LogFile.StartLog() Then
 				MsgBox("Error! Can't access log file. Application folder needs read/write permissions!")
 				e.Cancel = True
 			End If
 
 			'If folder does not exist: Create!
-			If Not IO.Directory.Exists(MyConfPath) Then
+			If Not Directory.Exists(MyConfPath) Then
 				Try
-					IO.Directory.CreateDirectory(MyConfPath)
+					Directory.CreateDirectory(MyConfPath)
 				Catch ex As Exception
 					MsgBox("Failed to create directory '" & MyConfPath & "'!", MsgBoxStyle.Critical)
 					LogFile.WriteToLog(MessageType.Err, "Failed to create directory '" & MyConfPath & "'!")

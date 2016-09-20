@@ -477,7 +477,7 @@ Public Class VehicleForm
 
 		If AutoSendTo Then
 			If VectoJobForm.Visible Then
-				If UCase(fFileRepl(VectoJobForm.TbVEH.Text, JobDir)) <> UCase(file) Then _
+				If UCase(FileRepl(VectoJobForm.TbVEH.Text, JobDir)) <> UCase(file) Then _
 					VectoJobForm.TbVEH.Text = GetFilenameWithoutDirectory(file, JobDir)
 				VectoJobForm.UpdatePic()
 			End If
@@ -535,13 +535,13 @@ Public Class VehicleForm
 			ex = "vcdb"
 		End If
 
-		If fbCDx.OpenDialog(fFileRepl(TbCdFile.Text, GetPath(_vehFile)), False, ex) Then _
-			TbCdFile.Text = GetFilenameWithoutDirectory(fbCDx.Files(0), GetPath(_vehFile))
+		If CrossWindCorrectionFileBrowser.OpenDialog(FileRepl(TbCdFile.Text, GetPath(_vehFile)), False, ex) Then _
+			TbCdFile.Text = GetFilenameWithoutDirectory(CrossWindCorrectionFileBrowser.Files(0), GetPath(_vehFile))
 	End Sub
 
 	'Open Cd File
 	Private Sub BtCdFileOpen_Click(sender As Object, e As EventArgs) Handles BtCdFileOpen.Click
-		OpenFiles(fFileRepl(TbCdFile.Text, GetPath(_vehFile)))
+		OpenFiles(FileRepl(TbCdFile.Text, GetPath(_vehFile)))
 	End Sub
 
 #End Region
@@ -570,7 +570,7 @@ Public Class VehicleForm
 
 	'Rt File Browse
 	Private Sub BtRtBrowse_Click(sender As Object, e As EventArgs) Handles BtRtBrowse.Click
-		If RetarderLossMapFileBrowser.OpenDialog(fFileRepl(TbRtPath.Text, GetPath(_vehFile))) Then _
+		If RetarderLossMapFileBrowser.OpenDialog(FileRepl(TbRtPath.Text, GetPath(_vehFile))) Then _
 			TbRtPath.Text = GetFilenameWithoutDirectory(RetarderLossMapFileBrowser.Files(0), GetPath(_vehFile))
 	End Sub
 
@@ -796,7 +796,7 @@ Public Class VehicleForm
 	End Sub
 
 	Private Sub btAngularGearLossMapBrowse_Click(sender As Object, e As EventArgs) Handles btAngularGearLossMapBrowse.Click
-		If TransmissionLossMapFileBrowser.OpenDialog(fFileRepl(TbRtPath.Text, GetPath(_vehFile))) Then _
+		If TransmissionLossMapFileBrowser.OpenDialog(FileRepl(TbRtPath.Text, GetPath(_vehFile))) Then _
 			tbAngularGearLossMapPath.Text = GetFilenameWithoutDirectory(TransmissionLossMapFileBrowser.Files(0),
 																		GetPath(_vehFile))
 	End Sub
@@ -816,13 +816,13 @@ Public Class VehicleForm
 	End Sub
 
 	Private Sub btPTOLossMapBrowse_Click(sender As Object, e As EventArgs) Handles btPTOLossMapBrowse.Click
-		If fbPTOLM.OpenDialog(fFileRepl(tbPTOLossMap.Text, GetPath(_vehFile))) Then
-			tbPTOLossMap.Text = GetFilenameWithoutDirectory(fbPTOLM.Files(0), GetPath(_vehFile))
+		If PtoLossMapFileBrowser.OpenDialog(FileRepl(tbPTOLossMap.Text, GetPath(_vehFile))) Then
+			tbPTOLossMap.Text = GetFilenameWithoutDirectory(PtoLossMapFileBrowser.Files(0), GetPath(_vehFile))
 		End If
 	End Sub
 
 	Private Sub btPTOCycle_Click(sender As Object, e As EventArgs) Handles btPTOCycle.Click
-		If DrivingCycleFileBrowser.OpenDialog(fFileRepl(tbPTOCycle.Text, GetPath(_vehFile))) Then
+		If DrivingCycleFileBrowser.OpenDialog(FileRepl(tbPTOCycle.Text, GetPath(_vehFile))) Then
 			tbPTOCycle.Text = GetFilenameWithoutDirectory(DrivingCycleFileBrowser.Files(0), GetPath(_vehFile))
 		End If
 	End Sub

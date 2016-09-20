@@ -77,14 +77,14 @@ Public Class GearboxGearDialog
 
 	'Browse for transmission loss map
 	Private Sub BtBrowse_Click(sender As Object, e As EventArgs) Handles BtBrowse.Click
-		If TransmissionLossMapFileBrowser.OpenDialog(fFileRepl(TbMapPath.Text, GbxPath)) Then
+		If TransmissionLossMapFileBrowser.OpenDialog(FileRepl(TbMapPath.Text, GbxPath)) Then
 			TbMapPath.Text = GetFilenameWithoutDirectory(TransmissionLossMapFileBrowser.Files(0), GbxPath)
 		End If
 	End Sub
 
 	'Browse for shift polygons file
 	Private Sub BtShiftPolyBrowse_Click(sender As Object, e As EventArgs) Handles BtShiftPolyBrowse.Click
-		If GearboxShiftPolygonFileBrowser.OpenDialog(fFileRepl(TbShiftPolyFile.Text, GbxPath)) Then
+		If GearboxShiftPolygonFileBrowser.OpenDialog(FileRepl(TbShiftPolyFile.Text, GbxPath)) Then
 			TbShiftPolyFile.Text = GetFilenameWithoutDirectory(GearboxShiftPolygonFileBrowser.Files(0), GbxPath)
 		End If
 	End Sub

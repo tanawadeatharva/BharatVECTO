@@ -20,9 +20,7 @@ Imports TUGraz.VectoCommon.Utils
 Imports TUGraz.VectoCore.InputData.FileIO.JSON
 Imports TUGraz.VectoCore.InputData.Impl
 Imports TUGraz.VectoCore.InputData.Reader.DataObjectAdapter
-Imports TUGraz.VectoCore.Models.Declaration
 Imports TUGraz.VectoCore.Models.SimulationComponent.Data
-Imports TUGraz.VectoCore.Models.SimulationComponent.Data.Gearbox
 Imports TUGraz.VectoCore.Utils
 
 <CustomValidation(GetType(Gearbox), "ValidateGearbox")>
@@ -32,7 +30,6 @@ Public Class Gearbox
 				ITorqueConverterDeclarationInputData
 
 	Private Const FormatVersion As Short = 6
-	Private _fileVersion As Integer
 
 	Private _myPath As String
 	Private _filePath As String
@@ -120,7 +117,7 @@ Public Class Gearbox
 		End If
 
 		Dim i As Integer
-		Dim json As New JSONParser
+		Dim json As New JSONWriter
 
 		'Header
 		Dim header As Dictionary(Of String, Object) = New Dictionary(Of String, Object)

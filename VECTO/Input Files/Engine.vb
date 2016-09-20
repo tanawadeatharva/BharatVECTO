@@ -17,9 +17,7 @@ Imports TUGraz.VECTO.Input_Files
 Imports TUGraz.VectoCommon.InputData
 Imports TUGraz.VectoCommon.Models
 Imports TUGraz.VectoCommon.Utils
-Imports TUGraz.VectoCore.InputData.FileIO.JSON
 Imports TUGraz.VectoCore.InputData.Reader.DataObjectAdapter
-Imports TUGraz.VectoCore.Models.Declaration
 Imports TUGraz.VectoCore.Models.SimulationComponent.Data
 Imports TUGraz.VectoCore.Utils
 
@@ -36,12 +34,6 @@ Public Class Engine
 	''' </summary>
 	''' <remarks></remarks>
 	Private Const FormatVersion As Short = 3
-
-	''' <summary>
-	''' Format version of input file. Defined in ReadFile.
-	''' </summary>
-	''' <remarks></remarks>
-	Private _fileVersion As Integer
 
 	''' <summary>
 	''' Engine description (model, type, etc.). Saved in input file.
@@ -96,24 +88,24 @@ Public Class Engine
 	''' WHTC Urban test results. Saved in input file. 
 	''' </summary>
 	''' <remarks></remarks>
-	Public WHTCurbanInput As Double
+	Public WHTCUrbanInput As Double
 
 	''' <summary>
 	''' WHTC Rural test results. Saved in input file. 
 	''' </summary>
 	''' <remarks></remarks>
-	Public WHTCruralInput As Double
+	Public WHTCRuralInput As Double
 
 	''' <summary>
 	''' WHTC Motorway test results. Saved in input file. 
 	''' </summary>
 	''' <remarks></remarks>
-	Public WHTCmotorwayInput As Double
+	Public WHTCMotorwayInput As Double
 
 	Public WHTCEngineeringInput As Double
 
 
-	Private ColdHotBalancingFactorInput As Double
+	Public ColdHotBalancingFactorInput As Double
 
 
 	''' <summary>
@@ -144,7 +136,8 @@ Public Class Engine
 
 		WHTCurbanInput = 0
 		WHTCruralInput = 0
-		WHTCmotorwayInput = 0
+		WHTCMotorwayInput = 0
+		WHTCEngineeringInput = 1
 	End Sub
 
 	''' <summary>
@@ -165,7 +158,7 @@ Public Class Engine
 			Return False
 		End If
 
-		Dim json As New JSONParser
+		Dim json As New JSONWriter
 
 		'Header
 		Dim header As Dictionary(Of String, Object) = New Dictionary(Of String, Object)
@@ -221,9 +214,9 @@ Public Class Engine
 	End Property
 
 
-	Public Property PathFLD(Optional ByVal Original As Boolean = False) As String
+	Public Property PathFld(Optional ByVal original As Boolean = False) As String
 		Get
-			If Original Then
+			If original Then
 				Return _fullLoadCurvePath.OriginalPath
 			Else
 				Return _fullLoadCurvePath.FullPath
@@ -237,13 +230,13 @@ Public Class Engine
 	''' <summary>
 	''' Get or set file path (cSubPath) to FC map (.vmap)
 	''' </summary>
-	''' <param name="Original">True= (relative) file path as saved in file; False= full file path</param>
+	''' <param name="original">True= (relative) file path as saved in file; False= full file path</param>
 	''' <value></value>
 	''' <returns>Relative or absolute file path to FC map</returns>
 	''' <remarks></remarks>
-	Public Property PathMAP(Optional ByVal Original As Boolean = False) As String
+	Public Property PathMap(Optional ByVal original As Boolean = False) As String
 		Get
-			If Original Then
+			If original Then
 				Return _fuelConsumptionMapPath.OriginalPath
 			Else
 				Return _fuelConsumptionMapPath.FullPath
@@ -290,6 +283,7 @@ Public Class Engine
 			Return DataSourceType.JSONFile
 		End Get
 	End Property
+
 	Public ReadOnly Property Source As String Implements IComponentInputData.Source
 		Get
 			Return FilePath
@@ -360,19 +354,19 @@ Public Class Engine
 
 	Public ReadOnly Property WHTCMotorway As Double Implements IEngineDeclarationInputData.WHTCMotorway
 		Get
-			Return WHTCmotorwayInput
+			Return WHTCMotorwayInput
 		End Get
 	End Property
 
 	Public ReadOnly Property WHTCRural As Double Implements IEngineDeclarationInputData.WHTCRural
 		Get
-			Return WHTCruralInput
+			Return WHTCRuralInput
 		End Get
 	End Property
 
 	Public ReadOnly Property WHTCUrban As Double Implements IEngineDeclarationInputData.WHTCUrban
 		Get
-			Return WHTCurbanInput
+			Return WHTCUrbanInput
 		End Get
 	End Property
 

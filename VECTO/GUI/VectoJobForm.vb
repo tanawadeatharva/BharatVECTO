@@ -32,7 +32,7 @@ Imports TUGraz.VectoCore.Models.SimulationComponent.Data.Gearbox
 ''' </summary>
 ''' <remarks></remarks>
 Public Class VectoJobForm
-	Public VECTOfile As String
+	Public VectoFile As String
 	Private _changed As Boolean = False
 
 	Private _pgDriver As TabPage
@@ -40,9 +40,6 @@ Public Class VectoJobForm
 	Private _pgDriverOn As Boolean = True
 
 	Private _auxDialog As VehicleAuxiliariesDialog
-
-	Public EngineIdleSpeed As Double
-	Public EngineFullLoadFile As String
 
 	'AA-TB
 	'Populate Advanced Auxiliaries
@@ -58,9 +55,6 @@ Public Class VectoJobForm
 	'Initialise form
 	Private Sub F02_GEN_Load(sender As Object, e As EventArgs) Handles Me.Load
 		Dim x As Integer
-
-		EngineIdleSpeed = -1
-		EngineFullLoadFile = ""
 
 		_auxDialog = New VehicleAuxiliariesDialog
 
@@ -151,17 +145,17 @@ Public Class VectoJobForm
 
 	Protected Function GetTechListForAux(type As AuxiliaryType, aux As IDeclarationAuxiliaryTable) _
 		As ListViewItem
-		Dim LV0 As ListViewItem
+		Dim listViewItem As ListViewItem
 
-		LV0 = New ListViewItem(type.Key())
-		LV0.SubItems.Add(type.Name())
+		listViewItem = New ListViewItem(type.Key())
+		listViewItem.SubItems.Add(type.Name())
 		Dim auxtech As String() = aux.GetTechnologies()
 		If auxtech.Count > 1 Then
-			LV0.SubItems.Add("")
+			listViewItem.SubItems.Add("")
 		Else
-			LV0.SubItems.Add(auxtech(0))
+			listViewItem.SubItems.Add(auxtech(0))
 		End If
-		Return LV0
+		Return listViewItem
 	End Function
 
 
@@ -184,31 +178,31 @@ Public Class VectoJobForm
 #Region "Browse Buttons"
 
 	Private Sub ButtonVEH_Click(sender As Object, e As EventArgs) Handles ButtonVEH.Click
-		If VehicleFileBrowser.OpenDialog(fFileRepl(TbVEH.Text, GetPath(VECTOfile))) Then
+		If VehicleFileBrowser.OpenDialog(FileRepl(TbVEH.Text, GetPath(VECTOfile))) Then
 			TbVEH.Text = GetFilenameWithoutDirectory(VehicleFileBrowser.Files(0), GetPath(VECTOfile))
 		End If
 	End Sub
 
 	Private Sub ButtonMAP_Click(sender As Object, e As EventArgs) Handles ButtonMAP.Click
-		If EngineFileBrowser.OpenDialog(fFileRepl(TbENG.Text, GetPath(VECTOfile))) Then
+		If EngineFileBrowser.OpenDialog(FileRepl(TbENG.Text, GetPath(VECTOfile))) Then
 			TbENG.Text = GetFilenameWithoutDirectory(EngineFileBrowser.Files(0), GetPath(VECTOfile))
 		End If
 	End Sub
 
 	Private Sub ButtonGBX_Click(sender As Object, e As EventArgs) Handles ButtonGBX.Click
-		If GearboxFileBrowser.OpenDialog(fFileRepl(TbGBX.Text, GetPath(VECTOfile))) Then
+		If GearboxFileBrowser.OpenDialog(FileRepl(TbGBX.Text, GetPath(VECTOfile))) Then
 			TbGBX.Text = GetFilenameWithoutDirectory(GearboxFileBrowser.Files(0), GetPath(VECTOfile))
 		End If
 	End Sub
 
 	Private Sub BtDesMaxBr_Click_1(sender As Object, e As EventArgs) Handles BtDesMaxBr.Click
-		If DriverAccelerationFileBrowser.OpenDialog(fFileRepl(TbDesMaxFile.Text, GetPath(VECTOfile))) Then
+		If DriverAccelerationFileBrowser.OpenDialog(FileRepl(TbDesMaxFile.Text, GetPath(VECTOfile))) Then
 			TbDesMaxFile.Text = GetFilenameWithoutDirectory(DriverAccelerationFileBrowser.Files(0), GetPath(VECTOfile))
 		End If
 	End Sub
 
 	Private Sub BtAccOpen_Click(sender As Object, e As EventArgs) Handles BtAccOpen.Click
-		OpenFiles(fFileRepl(TbDesMaxFile.Text, GetPath(VECTOfile)))
+		OpenFiles(FileRepl(TbDesMaxFile.Text, GetPath(VECTOfile)))
 	End Sub
 
 #End Region
@@ -218,7 +212,7 @@ Public Class VectoJobForm
 	'Open Vehicle Editor
 	Private Sub ButOpenVEH_Click(sender As Object, e As EventArgs) Handles ButOpenVEH.Click
 		Dim f As String
-		f = fFileRepl(TbVEH.Text, GetPath(VECTOfile))
+		f = FileRepl(TbVEH.Text, GetPath(VECTOfile))
 
 		'Thus Veh-file is returned
 		VehicleForm.JobDir = GetPath(VECTOfile)
@@ -250,7 +244,7 @@ Public Class VectoJobForm
 	'Open Engine Editor
 	Private Sub ButOpenENG_Click(sender As Object, e As EventArgs) Handles ButOpenENG.Click
 		Dim f As String
-		f = fFileRepl(TbENG.Text, GetPath(VECTOfile))
+		f = FileRepl(TbENG.Text, GetPath(VECTOfile))
 
 		'Thus Veh-file is returned
 		EngineForm.JobDir = GetPath(VECTOfile)
@@ -276,7 +270,7 @@ Public Class VectoJobForm
 	'Open Gearbox Editor
 	Private Sub ButOpenGBX_Click(sender As Object, e As EventArgs) Handles ButOpenGBX.Click
 		Dim f As String
-		f = fFileRepl(TbGBX.Text, GetPath(VECTOfile))
+		f = FileRepl(TbGBX.Text, GetPath(VECTOfile))
 
 		'Thus Veh-file is returned
 		GearboxForm.JobDir = GetPath(VECTOfile)
@@ -305,7 +299,7 @@ Public Class VectoJobForm
 
 	'New
 	Private Sub ToolStripBtNew_Click(sender As Object, e As EventArgs) Handles ToolStripBtNew.Click
-		VECTOnew()
+		VectoNew()
 	End Sub
 
 	'Open
@@ -336,11 +330,11 @@ Public Class VectoJobForm
 	'Help
 	Private Sub ToolStripButton1_Click(sender As Object, e As EventArgs) Handles ToolStripButton1.Click
 		If File.Exists(MyAppPath & "User Manual\help.html") Then
-			Dim BrowserRegistryString As String =
+			Dim browserRegistryString As String =
 					My.Computer.Registry.ClassesRoot.OpenSubKey("\http\shell\open\command\").GetValue("").ToString
-			Dim DefaultBrowserPath As String =
-					Regex.Match(BrowserRegistryString, "(\"".*?\"")").Captures(0).ToString
-			Process.Start(DefaultBrowserPath,
+			Dim defaultBrowserPath As String =
+					Regex.Match(browserRegistryString, "(\"".*?\"")").Captures(0).ToString
+			Process.Start(defaultBrowserPath,
 						String.Format("""{0}{1}""", MyAppPath, "User Manual\help.html#job-editor"))
 		Else
 			MsgBox("User Manual not found!", MsgBoxStyle.Critical)
@@ -367,7 +361,7 @@ Public Class VectoJobForm
 
 		If ChangeCheckCancel() Then Exit Sub
 
-		VECTOnew()
+		VectoNew()
 
 		'Read GEN
 		Dim inputData As IEngineeringInputDataProvider = TryCast(JSONInputDataFactory.ReadComponentData(file), 
@@ -382,8 +376,6 @@ Public Class VectoJobForm
 					MainForm.OpenVectoFile(file)
 				Case -1
 					Exit Sub
-				Case Else '0
-					'Continue...
 			End Select
 		End If
 
@@ -615,12 +607,9 @@ Public Class VectoJobForm
 	End Function
 
 	'New file
-	Public Sub VECTOnew()
+	Public Sub VectoNew()
 
 		If ChangeCheckCancel() Then Exit Sub
-
-		EngineIdleSpeed = -1
-		EngineFullLoadFile = ""
 
 		'Files
 		TbVEH.Text = ""
@@ -756,7 +745,7 @@ Public Class VectoJobForm
 #Region "Aux Listview"
 
 	Private Sub ButAuxAdd_Click(sender As Object, e As EventArgs) Handles ButAuxAdd.Click
-		Dim ID As String
+		Dim id As String
 
 		_auxDialog.VehPath = GetPath(VECTOfile)
 		_auxDialog.TbPath.Text = ""
@@ -767,12 +756,12 @@ Public Class VectoJobForm
 lbDlog:
 		If _auxDialog.ShowDialog = DialogResult.OK Then
 
-			ID = UCase(Trim(_auxDialog.TbID.Text))
+			id = UCase(Trim(_auxDialog.TbID.Text))
 
 			Dim lv0 As ListViewItem
 			For Each lv0 In LvAux.Items
-				If lv0.SubItems(0).Text = ID Then
-					MsgBox("ID '" & ID & "' already defined!", MsgBoxStyle.Critical)
+				If lv0.SubItems(0).Text = id Then
+					MsgBox("ID '" & id & "' already defined!", MsgBoxStyle.Critical)
 					_auxDialog.TbID.SelectAll()
 					_auxDialog.TbID.Focus()
 					GoTo lbDlog
@@ -883,7 +872,7 @@ lbDlog:
 
 	Private Sub LvCycles_DoubleClick(sender As Object, e As EventArgs) Handles LvCycles.DoubleClick
 		If LvCycles.SelectedItems.Count > 0 Then _
-			OpenFiles(fFileRepl(LvCycles.SelectedItems(0).SubItems(0).Text, GetPath(VECTOfile)))
+			OpenFiles(FileRepl(LvCycles.SelectedItems(0).SubItems(0).Text, GetPath(VECTOfile)))
 	End Sub
 
 	Private Sub LvCycles_KeyDown(sender As Object, e As KeyEventArgs) Handles LvCycles.KeyDown
@@ -950,19 +939,19 @@ lbDlog:
 	End Sub
 
 	Private Sub CheckEngOnly()
-		Dim OnOff As Boolean
+		Dim onOff As Boolean
 
-		OnOff = Not CbEngOnly.Checked
+		onOff = Not CbEngOnly.Checked
 
-		SetDrivertab(OnOff)
+		SetDrivertab(onOff)
 
-		ButOpenVEH.Enabled = OnOff
-		TbVEH.Enabled = OnOff
-		ButtonVEH.Enabled = OnOff
-		ButOpenGBX.Enabled = OnOff
-		TbGBX.Enabled = OnOff
-		ButtonGBX.Enabled = OnOff
-		GrAux.Enabled = OnOff
+		ButOpenVEH.Enabled = onOff
+		TbVEH.Enabled = onOff
+		ButtonVEH.Enabled = onOff
+		ButOpenGBX.Enabled = onOff
+		TbGBX.Enabled = onOff
+		ButtonGBX.Enabled = onOff
+		GrAux.Enabled = onOff
 	End Sub
 
 	'Start/Stop changed 
@@ -981,25 +970,25 @@ lbDlog:
 	'EcoRoll / Overspeed changed
 	Private Sub RdOff_CheckedChanged(sender As Object, e As EventArgs) _
 		Handles RdOff.CheckedChanged, RdOverspeed.CheckedChanged, RdEcoRoll.CheckedChanged
-		Dim EcoR As Boolean
-		Dim Ovr As Boolean
+		Dim ecoRoll As Boolean
+		Dim overspeed As Boolean
 
 		Change()
 
-		EcoR = RdEcoRoll.Checked
-		Ovr = RdOverspeed.Checked
+		ecoRoll = RdEcoRoll.Checked
+		overspeed = RdOverspeed.Checked
 
-		TbOverspeed.Enabled = Ovr Or EcoR
-		Label13.Enabled = Ovr Or EcoR
-		Label14.Enabled = Ovr Or EcoR
+		TbOverspeed.Enabled = overspeed Or ecoRoll
+		Label13.Enabled = overspeed Or ecoRoll
+		Label14.Enabled = overspeed Or ecoRoll
 
-		TbUnderSpeed.Enabled = EcoR
-		Label22.Enabled = EcoR
-		Label20.Enabled = EcoR
+		TbUnderSpeed.Enabled = ecoRoll
+		Label22.Enabled = ecoRoll
+		Label20.Enabled = ecoRoll
 
-		TbVmin.Enabled = Ovr Or EcoR
-		Label23.Enabled = Ovr Or EcoR
-		Label21.Enabled = Ovr Or EcoR
+		TbVmin.Enabled = overspeed Or ecoRoll
+		Label23.Enabled = overspeed Or ecoRoll
+		Label21.Enabled = overspeed Or ecoRoll
 	End Sub
 
 #End Region
@@ -1015,7 +1004,7 @@ lbDlog:
 		Dim a As ChartArea
 		Dim img As Bitmap
 
-		Dim EngOK As Boolean = False
+		Dim engOk As Boolean = False
 
 		TbHVCclass.Text = ""
 		TbVehCat.Text = ""
@@ -1065,15 +1054,15 @@ lbDlog:
 		End If
 
 
-		Dim OkCount As Integer = 0
+		Dim okCount As Integer = 0
 
 		Dim engine As IEngineEngineeringInputData = inputData.EngineInputData
 		'engine.FilePath = fFileRepl(TbENG.Text, GetPath(VECTOfile))
 
 		'Create plot
-		Dim MyChart As Chart = New Chart
-		MyChart.Width = PicBox.Width
-		MyChart.Height = PicBox.Height
+		Dim chart As Chart = New Chart
+		chart.Width = PicBox.Width
+		chart.Height = PicBox.Height
 
 		a = New ChartArea
 
@@ -1081,7 +1070,7 @@ lbDlog:
 
 		If Not engine Is Nothing Then
 
-			EngineIdleSpeed = engine.IdleSpeed.Value()
+			engine.IdleSpeed.Value()
 
 			Dim fullLoadCurve As FullLoadCurve = EngineFullLoadCurve.Create(engine.FullLoadCurve)
 
@@ -1092,7 +1081,7 @@ lbDlog:
 			s.BorderWidth = 2
 			s.Color = Color.DarkBlue
 			s.Name = "Full load"
-			MyChart.Series.Add(s)
+			chart.Series.Add(s)
 
 			s = New Series
 			s.Points.DataBindXY(fullLoadCurve.FullLoadEntries.Select(Function(x) x.EngineSpeed.AsRPM).ToArray(),
@@ -1101,9 +1090,9 @@ lbDlog:
 			s.BorderWidth = 2
 			s.Color = Color.Blue
 			s.Name = "Motoring"
-			MyChart.Series.Add(s)
+			chart.Series.Add(s)
 
-			OkCount += 1
+			okCount += 1
 
 			pmax = fullLoadCurve.MaxPower.Value() / 1000 'FLD0.Pfull(FLD0.EngineRatedSpeed)
 
@@ -1120,9 +1109,9 @@ lbDlog:
 			s.MarkerSize = 3
 			s.Color = Color.Red
 			s.Name = "Map"
-			MyChart.Series.Add(s)
+			chart.Series.Add(s)
 
-			OkCount += 1
+			okCount += 1
 
 
 		End If
@@ -1135,7 +1124,7 @@ lbDlog:
 
 			If Cfg.DeclMode Then
 
-				If EngOK Then
+				If engOk Then
 
 					For i = 1 To gearbox.Gears.Count
 
@@ -1204,14 +1193,14 @@ lbDlog:
 					s.Name = "Downshift curve"
 					'MyChart.Series.Add(s) 'MQ 2016-06-20:do not plot shift lines in engine dialog
 
-					OkCount += 1
+					okCount += 1
 				Next
 
 			End If
 
 		End If
 
-		If OkCount > 0 Then
+		If okCount > 0 Then
 
 			a.Name = "main"
 
@@ -1233,12 +1222,12 @@ lbDlog:
 
 			a.BackColor = Color.GhostWhite
 
-			MyChart.ChartAreas.Add(a)
+			chart.ChartAreas.Add(a)
 
-			MyChart.Update()
+			chart.Update()
 
-			img = New Bitmap(MyChart.Width, MyChart.Height, PixelFormat.Format32bppArgb)
-			MyChart.DrawToBitmap(img, New Rectangle(0, 0, PicBox.Width, PicBox.Height))
+			img = New Bitmap(chart.Width, chart.Height, PixelFormat.Format32bppArgb)
+			chart.DrawToBitmap(img, New Rectangle(0, 0, PicBox.Width, PicBox.Height))
 
 			PicBox.Image = img
 
@@ -1249,27 +1238,27 @@ lbDlog:
 
 #Region "Open File Context Menu"
 
-	Private CmFiles As String()
+	Private _contextMenuFiles As String()
 	Private _basePath As String = ""
 
 	Private Sub OpenFiles(ParamArray files() As String)
 		If files.Length = 0 Then Exit Sub
 
-		CmFiles = files
+		_contextMenuFiles = files
 		OpenWithToolStripMenuItem.Text = "Open with " & Cfg.OpenCmdName
 		CmOpenFile.Show(Windows.Forms.Cursor.Position)
 	End Sub
 
 	Private Sub OpenWithToolStripMenuItem_Click(sender As Object, e As EventArgs) _
 		Handles OpenWithToolStripMenuItem.Click
-		If Not FileOpenAlt(CmFiles(0)) Then MsgBox("Failed to open file!")
+		If Not FileOpenAlt(_contextMenuFiles(0)) Then MsgBox("Failed to open file!")
 	End Sub
 
 	Private Sub ShowInFolderToolStripMenuItem_Click(sender As Object, e As EventArgs) _
 		Handles ShowInFolderToolStripMenuItem.Click
-		If File.Exists(CmFiles(0)) Then
+		If File.Exists(_contextMenuFiles(0)) Then
 			Try
-				Process.Start("explorer", "/select,""" & CmFiles(0) & "")
+				Process.Start("explorer", "/select,""" & _contextMenuFiles(0) & "")
 			Catch ex As Exception
 				MsgBox("Failed to open file!")
 			End Try
@@ -1394,15 +1383,18 @@ lbDlog:
 	'AA-TB
 	Private Sub btnAAUXOpen_Click(sender As Object, e As EventArgs) Handles btnAAUXOpen.Click
 
-		OpenFiles(fFileRepl(txtAdvancedAuxiliaryFile.Text, GetPath(VECTOfile)))
+		OpenFiles(FileRepl(txtAdvancedAuxiliaryFile.Text, GetPath(VECTOfile)))
 	End Sub
 
 	Private Sub Button1_Click(sender As Object, e As EventArgs) Handles btnDfTargetSpeed.Click
-		If DriverDecisionFactorTargetSpeedFileBrowser.OpenDialog(fFileRepl(tbLacDfTargetSpeedFile.Text, GetPath(VECTOfile))) _
+		If DriverDecisionFactorTargetSpeedFileBrowser.OpenDialog(FileRepl(tbLacDfTargetSpeedFile.Text, GetPath(VECTOfile))) _
 			Then _
 			tbLacDfTargetSpeedFile.Text = GetFilenameWithoutDirectory(DriverDecisionFactorTargetSpeedFileBrowser.Files(0),
 																	GetPath(VECTOfile))
 	End Sub
 End Class
+
+
+
 
 

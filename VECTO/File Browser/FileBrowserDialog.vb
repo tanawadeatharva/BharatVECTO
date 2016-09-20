@@ -206,7 +206,7 @@ Public Class FileBrowserDialog
 		'Form Config
 		ListViewFiles.MultiSelect = multiFile
 		ButtonAll.Visible = multiFile
-		Title = caption
+		_title = caption
 		Text = caption
 
 		'Ext-Combobox
@@ -288,7 +288,7 @@ Public Class FileBrowserDialog
 		End If
 	End Function
 
-	Public Title As String
+	Private _title As String
 
 	'Close and save File / Folder History
 	Public Sub SaveAndClose()
@@ -671,7 +671,7 @@ Public Class FileBrowserDialog
 		Do While x1 > x
 			newpath = path
 			'path = Microsoft.VisualBasic.Left(path, x1 - 1)
-			path = Microsoft.VisualBasic.Left(path, path.LastIndexOf("\"))
+			path = Microsoft.VisualBasic.Left(path, path.LastIndexOf("\", StringComparison.Ordinal))
 			x1 = path.Length
 		Loop
 		SetFolder(newpath)
@@ -741,7 +741,7 @@ Public Class FileBrowserDialog
 		_myFolder = path
 		If Microsoft.VisualBasic.Right(_myFolder, 1) <> "\" Then _myFolder &= "\"
 
-		Text = Title & " " & _myFolder
+		Text = _title & " " & _myFolder
 
 		LoadListFolder()
 		LoadListFiles()
@@ -758,7 +758,7 @@ Public Class FileBrowserDialog
 	Private Sub FolderUp()
 		If _myFolder <> "" Then
 			Dim path = Microsoft.VisualBasic.Left(_myFolder, _myFolder.Length - 1)
-			Dim x = path.LastIndexOf("\")
+			Dim x = path.LastIndexOf("\", StringComparison.Ordinal)
 			If x > 0 Then SetFolder(Microsoft.VisualBasic.Left(path, x))
 		End If
 	End Sub
@@ -913,7 +913,7 @@ lb10:
 	End Sub
 
 	Private Shared Function fPATH(path As String) As String
-		Dim x = path.LastIndexOf("\")
+		Dim x = path.LastIndexOf("\", StringComparison.Ordinal)
 		If x = -1 Then
 			Return Microsoft.VisualBasic.Left(path, 0)
 		Else

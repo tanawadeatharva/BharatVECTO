@@ -96,7 +96,7 @@ Public Class EngineForm
 		If Not VectoJobForm.Visible Then
 			JobDir = ""
 			VectoJobForm.Show()
-			VectoJobForm.VECTOnew()
+			VectoJobForm.VectoNew()
 		Else
 			VectoJobForm.WindowState = FormWindowState.Normal
 		End If
@@ -106,11 +106,11 @@ Public Class EngineForm
 
 	Private Sub ToolStripButton1_Click(sender As Object, e As EventArgs) Handles ToolStripButton1.Click
 		If File.Exists(MyAppPath & "User Manual\help.html") Then
-			Dim BrowserRegistryString As String =
+			Dim browserRegistryString As String =
 					My.Computer.Registry.ClassesRoot.OpenSubKey("\http\shell\open\command\").GetValue("").ToString
-			Dim DefaultBrowserPath As String =
-					Regex.Match(BrowserRegistryString, "(\"".*?\"")").Captures(0).ToString
-			Process.Start(DefaultBrowserPath,
+			Dim defaultBrowserPath As String =
+					Regex.Match(browserRegistryString, "(\"".*?\"")").Captures(0).ToString
+			Process.Start(defaultBrowserPath,
 						String.Format("""{0}{1}""", MyAppPath, "User Manual\help.html#engine-editor"))
 		Else
 			MsgBox("User Manual not found!", MsgBoxStyle.Critical)
@@ -165,8 +165,6 @@ Public Class EngineForm
 					MainForm.OpenVectoFile(file)
 				Case -1
 					Exit Sub
-				Case Else '0
-					'Continue...
 			End Select
 		End If
 
@@ -197,8 +195,8 @@ Public Class EngineForm
 	End Sub
 
 	'Save or Save As function = true if file is saved
-	Private Function SaveOrSaveAs(ByVal SaveAs As Boolean) As Boolean
-		If _engFile = "" Or SaveAs Then
+	Private Function SaveOrSaveAs(ByVal saveAs As Boolean) As Boolean
+		If _engFile = "" Or saveAs Then
 			If EngineFileBrowser.SaveDialog(_engFile) Then
 				_engFile = EngineFileBrowser.Files(0)
 			Else
@@ -220,13 +218,16 @@ Public Class EngineForm
 		engine.EngineInertia = TbInertia.Text.ToDouble()
 		engine.IdleSpeed = TbNleerl.Text.ToDouble()
 
-		engine.PathFLD = TbFLD.Text
-		engine.PathMAP = TbMAP.Text
+		engine.PathFld = TbFLD.Text
+		engine.PathMap = TbMAP.Text
 
 
-		engine.WHTCurbanInput = TbWHTCurban.Text.ToDouble()
-		engine.WHTCruralInput = TbWHTCrural.Text.ToDouble()
-		engine.WHTCmotorwayInput = TbWHTCmw.Text.ToDouble()
+		engine.WHTCUrbanInput = TbWHTCurban.Text.ToDouble(0)
+		engine.WHTCRuralInput = TbWHTCrural.Text.ToDouble(0)
+		engine.WHTCMotorwayInput = TbWHTCmw.Text.ToDouble(0)
+		engine.WHTCEngineeringInput = TbWHTCEngineering.Text.ToDouble(0)
+
+		engine.ColdHotBalancingFactorInput = TbColdHotFactor.Text.ToDouble(0)
 
 
 		If Not engine.SaveFile Then
@@ -236,7 +237,7 @@ Public Class EngineForm
 
 		If AutoSendTo Then
 			If VectoJobForm.Visible Then
-				If UCase(fFileRepl(VectoJobForm.TbENG.Text, JobDir)) <> UCase(file) Then _
+				If UCase(FileRepl(VectoJobForm.TbENG.Text, JobDir)) <> UCase(file) Then _
 					VectoJobForm.TbENG.Text = GetFilenameWithoutDirectory(file, JobDir)
 				VectoJobForm.UpdatePic()
 			End If
@@ -325,7 +326,7 @@ Public Class EngineForm
 
 	'Browse for VMAP file
 	Private Sub BtMAP_Click(sender As Object, e As EventArgs) Handles BtMAP.Click
-		If FuelConsumptionMapFileBrowser.OpenDialog(fFileRepl(TbMAP.Text, GetPath(_engFile))) Then _
+		If FuelConsumptionMapFileBrowser.OpenDialog(FileRepl(TbMAP.Text, GetPath(_engFile))) Then _
 			TbMAP.Text = GetFilenameWithoutDirectory(FuelConsumptionMapFileBrowser.Files(0), GetPath(_engFile))
 	End Sub
 
@@ -334,12 +335,12 @@ Public Class EngineForm
 	Private Sub BtMAPopen_Click(sender As Object, e As EventArgs) Handles BtMAPopen.Click
 		Dim fldfile As String
 
-		fldfile = fFileRepl(TbFLD.Text, GetPath(_engFile))
+		fldfile = FileRepl(TbFLD.Text, GetPath(_engFile))
 
-		If fldfile <> Constants.NoFile AndAlso File.Exists(fldfile) Then
-			OpenFiles(fFileRepl(TbMAP.Text, GetPath(_engFile)), fldfile)
+		If fldfile <> NoFile AndAlso File.Exists(fldfile) Then
+			OpenFiles(FileRepl(TbMAP.Text, GetPath(_engFile)), fldfile)
 		Else
-			OpenFiles(fFileRepl(TbMAP.Text, GetPath(_engFile)))
+			OpenFiles(FileRepl(TbMAP.Text, GetPath(_engFile)))
 		End If
 	End Sub
 
@@ -359,12 +360,12 @@ Public Class EngineForm
 		'Dim fldOK As Boolean = False
 		'Dim mapOK As Boolean = False
 		Dim fullLoadCurve As FullLoadCurve = Nothing
-		Dim fcMap As FuelConsumptionMap
+		Dim fcMap As FuelConsumptionMap = Nothing
 		Dim chart As Chart
 		Dim series As Series
 		Dim chartArea As ChartArea
 		Dim img As Bitmap
-		Dim engine As IEngineEngineeringInputData
+		Dim engine As IEngineEngineeringInputData = Nothing
 
 		PicBox.Image = Nothing
 
@@ -383,7 +384,7 @@ Public Class EngineForm
 
 		End Try
 
-		If fullLoadCurve Is Nothing OrElse fcMap Is Nothing Then Exit Sub
+		If fullLoadCurve Is Nothing OrElse engine Is Nothing OrElse fcMap Is Nothing Then Exit Sub
 
 
 		'Create plot
@@ -457,13 +458,13 @@ Public Class EngineForm
 
 #Region "Open File Context Menu"
 
-	Private CmFiles As String()
+	Private _contextMenuFiles As String()
 
 	Private Sub OpenFiles(ParamArray files() As String)
 
 		If files.Length = 0 Then Exit Sub
 
-		CmFiles = files
+		_contextMenuFiles = files
 
 		OpenWithToolStripMenuItem.Text = "Open with " & Cfg.OpenCmdName
 
@@ -472,14 +473,14 @@ Public Class EngineForm
 
 	Private Sub OpenWithToolStripMenuItem_Click(sender As Object, e As EventArgs) _
 		Handles OpenWithToolStripMenuItem.Click
-		If Not FileOpenAlt(CmFiles(0)) Then MsgBox("Failed to open file!")
+		If Not FileOpenAlt(_contextMenuFiles(0)) Then MsgBox("Failed to open file!")
 	End Sub
 
 	Private Sub ShowInFolderToolStripMenuItem_Click(sender As Object, e As EventArgs) _
 		Handles ShowInFolderToolStripMenuItem.Click
-		If File.Exists(CmFiles(0)) Then
+		If File.Exists(_contextMenuFiles(0)) Then
 			Try
-				Process.Start("explorer", "/select,""" & CmFiles(0) & "")
+				Process.Start("explorer", "/select,""" & _contextMenuFiles(0) & "")
 			Catch ex As Exception
 				MsgBox("Failed to open file!")
 			End Try
@@ -492,16 +493,16 @@ Public Class EngineForm
 
 
 	Private Sub BtFLD_Click(sender As Object, e As EventArgs) Handles BtFLD.Click
-		If FullLoadCurveFileBrowser.OpenDialog(fFileRepl(TbFLD.Text, GetPath(_engFile))) Then _
+		If FullLoadCurveFileBrowser.OpenDialog(FileRepl(TbFLD.Text, GetPath(_engFile))) Then _
 			TbFLD.Text = GetFilenameWithoutDirectory(FullLoadCurveFileBrowser.Files(0), GetPath(_engFile))
 	End Sub
 
 	Private Sub BtFLDopen_Click(sender As Object, e As EventArgs) Handles BtFLDopen.Click
 		Dim fldfile As String
 
-		fldfile = fFileRepl(TbFLD.Text, GetPath(_engFile))
+		fldfile = FileRepl(TbFLD.Text, GetPath(_engFile))
 
-		If fldfile <> Constants.NoFile AndAlso File.Exists(fldfile) Then
+		If fldfile <> NoFile AndAlso File.Exists(fldfile) Then
 			OpenFiles(fldfile)
 		End If
 	End Sub

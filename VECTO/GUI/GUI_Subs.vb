@@ -8,7 +8,7 @@
 '   WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
 '
 ' See the LICENSE.txt for the specific language governing permissions and limitations.
-Imports System.Globalization
+
 
 ''' <summary>
 ''' Methods for GUI interaction
@@ -95,14 +95,14 @@ Public Module GUI_Subs
 
 	'Open File with software defined in Config
 	Public Function FileOpenAlt(ByVal file As String) As Boolean
-		Dim PSI As New ProcessStartInfo
+		Dim psi As New ProcessStartInfo
 
 		If Not IO.File.Exists(file) Then Return False
 
-		PSI.FileName = Cfg.OpenCmd
-		PSI.Arguments = ChrW(34) & file & ChrW(34)
+		psi.FileName = Cfg.OpenCmd
+		psi.Arguments = ChrW(34) & file & ChrW(34)
 		Try
-			Process.Start(PSI)
+			Process.Start(psi)
 			Return True
 		Catch ex As Exception
 			Return False

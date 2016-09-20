@@ -19,7 +19,6 @@ Imports TUGraz.VECTO.Input_Files
 Imports TUGraz.VectoCommon.InputData
 Imports TUGraz.VectoCommon.Models
 Imports TUGraz.VectoCommon.Utils
-Imports TUGraz.VectoCore.InputData.FileIO.JSON
 Imports TUGraz.VectoCore.InputData.Impl
 Imports TUGraz.VectoCore.InputData.Reader.DataObjectAdapter
 Imports TUGraz.VectoCore.Models.Declaration
@@ -32,7 +31,6 @@ Public Class Vehicle
 				IAngularGearInputData
 	'V2 MassMax is now saved in [t] instead of [kg]
 	Private Const FormatVersion As Short = 7
-	Private _fileVersion As Integer
 
 	Private _filePath As String
 	Private _path As String
@@ -63,9 +61,9 @@ Public Class Vehicle
 	Public AngularGearRatio As Double
 	Public ReadOnly AngularGearLossMapFile As SubPath
 
-	Public PTOType As String
-	Public ReadOnly PTOLossMap As SubPath
-	Public ReadOnly PTOCycle As SubPath
+	Public PtoType As String
+	Public ReadOnly PtoLossMap As SubPath
+	Public ReadOnly PtoCycle As SubPath
 
 	Public Class Axle
 		Public RRC As Double
@@ -203,7 +201,7 @@ Public Class Vehicle
 			Return False
 		End If
 
-		Dim json As New JSONParser
+		Dim json As New JSONWriter
 		'Header
 		Dim header As Dictionary(Of String, Object) = New Dictionary(Of String, Object) From {
 				{"CreatedBy", Lic.LicString & " (" & Lic.GUID & ")"},

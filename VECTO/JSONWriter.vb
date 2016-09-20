@@ -8,10 +8,9 @@
 '   WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
 '
 ' See the LICENSE.txt for the specific language governing permissions and limitations.
-Imports System.Collections.Generic
+
 Imports System.IO
 Imports System.Linq
-Imports Microsoft.VisualBasic.FileIO
 Imports Newtonsoft.Json
 Imports Newtonsoft.Json.Linq
 
@@ -19,7 +18,7 @@ Imports Newtonsoft.Json.Linq
 ''' uses JSON.NET http://json.codeplex.com/
 ''' </summary>
 ''' <remarks></remarks>
-Public Class JSONParser
+Public Class JSONWriter
 	Public Content As JToken 'Dictionary(Of String, Object)
 
 	Public Sub New()

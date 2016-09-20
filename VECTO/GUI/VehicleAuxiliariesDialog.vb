@@ -11,7 +11,6 @@
 Option Infer On
 
 Imports System.Windows.Forms
-Imports TUGraz.VectoCommon.Models
 Imports TUGraz.VectoCore.Models.Declaration
 
 
@@ -95,7 +94,7 @@ Public Class VehicleAuxiliariesDialog
 
 	'Browse for .vaux files
 	Private Sub BtBrowse_Click(sender As Object, e As EventArgs) Handles BtBrowse.Click
-		If AuxFileBrowser.OpenDialog(fFileRepl(TbPath.Text, VehPath)) Then _
+		If AuxFileBrowser.OpenDialog(FileRepl(TbPath.Text, VehPath)) Then _
 			TbPath.Text = GetFilenameWithoutDirectory(AuxFileBrowser.Files(0), VehPath)
 	End Sub
 

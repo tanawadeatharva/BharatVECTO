@@ -23,11 +23,8 @@ Imports TUGraz.VectoCommon.Models
 Imports TUGraz.VectoCommon.Utils
 Imports TUGraz.VectoCore.InputData.FileIO.JSON
 Imports TUGraz.VectoCore.InputData.Impl
-Imports TUGraz.VectoCore.InputData.Reader.DataObjectAdapter
 Imports TUGraz.VectoCore.InputData.Reader.Impl
-Imports TUGraz.VectoCore.Models.Declaration
 Imports TUGraz.VectoCore.Models.Simulation.Data
-Imports TUGraz.VectoCore.Models.SimulationComponent.Data
 Imports TUGraz.VectoCore.Utils
 
 <CustomValidation(GetType(VectoJob), "ValidateJob")>
@@ -82,7 +79,7 @@ Public Class VectoJob
 	Public Class AuxEntry
 		Public Type As String
 		Public ReadOnly Path As SubPath
-		Public TechnologyList As List(Of String)
+		Public ReadOnly TechnologyList As List(Of String)
 
 		Public Sub New()
 			Path = New SubPath
@@ -107,7 +104,7 @@ Public Class VectoJob
 	End Sub
 
 	Public Function SaveFile() As Boolean
-		Dim json As New JSONParser
+		Dim json As New JSONWriter
 
 		Dim validationResults As IList(Of ValidationResult) =
 				Validate(If(Cfg.DeclMode, ExecutionMode.Declaration, ExecutionMode.Engineering))
@@ -554,8 +551,7 @@ Public Class VectoJob
 			If Not File.Exists(_driverAccelerationFile.FullPath) Then
 				Try
 					Dim cycleDataRes As Stream =
-							RessourceHelper.ReadStream(RessourceHelper.Namespace + "VACC." + _driverAccelerationFile.OriginalPath +
-														TUGraz.VectoCore.Configuration.Constants.FileExtensions.DriverAccelerationCurve)
+							RessourceHelper.ReadStream(RessourceHelper.Namespace + "VACC." + _driverAccelerationFile.OriginalPath + VectoCore.Configuration.Constants.FileExtensions.DriverAccelerationCurve)
 					Return VectoCSVFile.ReadStream(cycleDataRes)
 				Catch ex As Exception
 					Return Nothing
