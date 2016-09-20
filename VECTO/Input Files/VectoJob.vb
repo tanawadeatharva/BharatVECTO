@@ -71,6 +71,7 @@ Public Class VectoJob
 	Private _vehicleInputData As JSONComponentInputData
 	Private _engineInputData As JSONComponentInputData
 	Private _gearboxInputData As JSONComponentInputData
+	Public LookAheadMinSpeed As Double
 
 	Public Property StartStopMaxSpeed As Double
 
@@ -568,9 +569,10 @@ Public Class VectoJob
 			Dim lacVdropLookup As TableData =
 					If(File.Exists(LacDfVelocityDropFile), VectoCSVFile.Read(LacDfVelocityDropFile), Nothing)
 			Return New LookAheadCoastingInputData With {
+				.Enabled = LookAheadOn,
+				.MinSpeed = LookAheadMinSpeed.KMPHtoMeterPerSecond(),
 				.CoastingDecisionFactorScaling = LacDfScale,
 				.CoastingDecisionFactorOffset = LacDfOffset,
-				.Enabled = LookAheadOn,
 				.LookaheadDistanceFactor = LacPreviewFactor,
 				.CoastingDecisionFactorTargetSpeedLookup = lacTargetLookup,
 				.CoastingDecisionFactorVelocityDropLookup = lacVdropLookup

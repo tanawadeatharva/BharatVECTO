@@ -61,7 +61,7 @@ namespace TUGraz.VectoCore.InputData.Impl
 
 		//public MeterPerSquareSecond Deceleration { get; internal set; }
 
-		//public MeterPerSecond MinSpeed { get; internal set; }
+		public MeterPerSecond MinSpeed { get; internal set; }
 
 		public double CoastingDecisionFactorOffset { get; internal set; }
 		public double CoastingDecisionFactorScaling { get; internal set; }
@@ -98,7 +98,6 @@ namespace TUGraz.VectoCore.InputData.Impl
 
 	public class AxleInputData : IAxleEngineeringInputData
 	{
-
 		[System.Diagnostics.CodeAnalysis.SuppressMessage("Microsoft.Design",
 			"CA1065:DoNotRaiseExceptionsInUnexpectedLocations")]
 		public bool SavedInDeclarationMode

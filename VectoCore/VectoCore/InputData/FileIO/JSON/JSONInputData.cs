@@ -412,7 +412,7 @@ namespace TUGraz.VectoCore.InputData.FileIO.JSON
 				return new LookAheadCoastingInputData() {
 					Enabled = lac.GetEx<bool>(JsonKeys.DriverData_Lookahead_Enabled),
 					//Deceleration = lac.GetEx<double>(JsonKeys.DriverData_Lookahead_Deceleration).SI<MeterPerSquareSecond>(),
-					//MinSpeed = lac.GetEx<double>(JsonKeys.DriverData_Lookahead_MinSpeed).KMPHtoMeterPerSecond(),
+					MinSpeed = lac.GetEx<double>(JsonKeys.DriverData_Lookahead_MinSpeed).KMPHtoMeterPerSecond(),
 					LookaheadDistanceFactor = distanceScalingFactor,
 					CoastingDecisionFactorOffset = lacDfOffset,
 					CoastingDecisionFactorScaling = lacDfScaling,
@@ -450,7 +450,8 @@ namespace TUGraz.VectoCore.InputData.FileIO.JSON
 			{
 				var acceleration = Body[JsonKeys.DriverData_AccelerationCurve];
 				if (acceleration == null || EmptyOrInvalidFileName(acceleration.Value<string>())) {
-					throw new VectoException("AccelerationCurve (VACC) required");
+					return null;
+//					throw new VectoException("AccelerationCurve (VACC) required");
 				}
 				try {
 					return ReadTableData(acceleration.Value<string>(), "DriverAccelerationCurve", false);

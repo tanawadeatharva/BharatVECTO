@@ -195,6 +195,7 @@ namespace TUGraz.VectoCore.Models.Declaration
 				public const double DecisionFactorCoastingOffset = 2.5;
 				public const double DecisionFactorCoastingScaling = 1.5;
 				public const double LookAheadDistanceFactor = 10;
+				public static readonly MeterPerSecond MinimumSpeed = 50.KMPHtoMeterPerSecond();
 			}
 
 			public static class OverSpeedEcoRoll

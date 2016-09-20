@@ -322,7 +322,8 @@ namespace TUGraz.VectoCommon.InputData
 		/// P021
 		/// cf. VECTO Input Parameters.xlsx
 		/// </summary>
-		//MeterPerSecond MinSpeed { get; }
+		MeterPerSecond MinSpeed { get; }
+
 		double CoastingDecisionFactorOffset { get; }
 
 		double CoastingDecisionFactorScaling { get; }
