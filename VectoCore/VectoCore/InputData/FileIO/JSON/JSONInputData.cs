@@ -95,7 +95,7 @@ namespace TUGraz.VectoCore.InputData.FileIO.JSON
 			if (required) {
 				throw new VectoException("Invalid filename for {0}: {1}", tableType, filename);
 			}
-			return new TableData("");
+			return null;
 		}
 
 		internal static bool EmptyOrInvalidFileName(string filename)

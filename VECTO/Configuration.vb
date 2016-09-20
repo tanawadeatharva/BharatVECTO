@@ -10,6 +10,7 @@
 ' See the LICENSE.txt for the specific language governing permissions and limitations.
 Imports System.Collections.Generic
 Imports System.IO
+Imports Newtonsoft.Json
 Imports Newtonsoft.Json.Linq
 Imports TUGraz.VectoCore.InputData.FileIO.JSON
 Imports TUGraz.VectoCore.Models.Declaration
@@ -59,26 +60,25 @@ Public Class Configuration
 			Exit Sub
 		End If
 
-		Dim json As New JSONParser
-		If Not json.ReadFile(FilePath) Then
-			GUIMsg(MessageType.Err, "Failed to load settings! Using default settings.")
-			Exit Sub
-		End If
 		Try
-			Dim body As JToken = json.Content.GetEx("Body")
-			Try
-				Mod1Hz = body.GetEx(Of Boolean)("Mod1Hz")
-			Catch
-			End Try
-			ModOut = body.GetEx(Of Boolean)("ModOut")
-			LogSize = body.GetEx(Of Double)("LogSize")
-			AirDensity = body.GetEx(Of Double)("AirDensity")
-			FuelDens = body.GetEx(Of Double)("FuelDensity")
-			CO2perFC = body.GetEx(Of Double)("CO2perFC")
-			OpenCmd = body.GetEx(Of String)("OpenCmd")
-			OpenCmdName = body.GetEx(Of String)("OpenCmdName")
-			FirstRun = body.GetEx(Of Boolean)("FirstRun")
-			DeclMode = body.GetEx(Of Boolean)("DeclMode")
+			Using reader As TextReader = File.OpenText(FilePath)
+				Dim content As JToken = JToken.ReadFrom(New JsonTextReader(reader))
+
+				Dim body As JToken = content.GetEx("Body")
+				Try
+					Mod1Hz = body.GetEx(Of Boolean)("Mod1Hz")
+				Catch
+				End Try
+				ModOut = body.GetEx(Of Boolean)("ModOut")
+				LogSize = body.GetEx(Of Double)("LogSize")
+				AirDensity = body.GetEx(Of Double)("AirDensity")
+				FuelDens = body.GetEx(Of Double)("FuelDensity")
+				CO2perFC = body.GetEx(Of Double)("CO2perFC")
+				OpenCmd = body.GetEx(Of String)("OpenCmd")
+				OpenCmdName = body.GetEx(Of String)("OpenCmdName")
+				FirstRun = body.GetEx(Of Boolean)("FirstRun")
+				DeclMode = body.GetEx(Of Boolean)("DeclMode")
+			End Using
 		Catch ex As Exception
 			GUIMsg(MessageType.Err, "Error while loading settings!")
 		End Try

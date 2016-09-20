@@ -17,6 +17,7 @@ Imports System.IO
 Imports System.Linq
 Imports Newtonsoft.Json.Linq
 Imports TUGraz.VECTO.Input_Files
+Imports TUGraz.VectoCommon.Exceptions
 Imports TUGraz.VectoCommon.InputData
 Imports TUGraz.VectoCommon.Models
 Imports TUGraz.VectoCommon.Utils
@@ -24,6 +25,7 @@ Imports TUGraz.VectoCore.InputData.FileIO.JSON
 Imports TUGraz.VectoCore.InputData.Impl
 Imports TUGraz.VectoCore.InputData.Reader.DataObjectAdapter
 Imports TUGraz.VectoCore.InputData.Reader.Impl
+Imports TUGraz.VectoCore.Models.Declaration
 Imports TUGraz.VectoCore.Models.Simulation.Data
 Imports TUGraz.VectoCore.Models.SimulationComponent.Data
 Imports TUGraz.VectoCore.Utils
@@ -495,6 +497,7 @@ Public Class VectoJob
 	Public ReadOnly Property IDriverDeclarationInputData_SavedInDeclarationMode As Boolean _
 		Implements IDriverDeclarationInputData.SavedInDeclarationMode
 		Get
+			Return SavedInDeclMode
 		End Get
 	End Property
 
@@ -547,19 +550,34 @@ Public Class VectoJob
 
 	Public ReadOnly Property AccelerationCurve As TableData Implements IDriverEngineeringInputData.AccelerationCurve
 		Get
+			If String.IsNullOrWhiteSpace(_driverAccelerationFile.FullPath) Then Return Nothing
+			If Not File.Exists(_driverAccelerationFile.FullPath) Then
+				Try
+					Dim cycleDataRes As Stream =
+							RessourceHelper.ReadStream(RessourceHelper.Namespace + "VACC." + _driverAccelerationFile.OriginalPath +
+														TUGraz.VectoCore.Configuration.Constants.FileExtensions.DriverAccelerationCurve)
+					Return VectoCSVFile.ReadStream(cycleDataRes)
+				Catch ex As Exception
+					Return Nothing
+				End Try
+			End If
 			Return VectoCSVFile.Read(_driverAccelerationFile.FullPath)
 		End Get
 	End Property
 
 	Public ReadOnly Property Lookahead As ILookaheadCoastingInputData Implements IDriverEngineeringInputData.Lookahead
 		Get
+			Dim lacTargetLookup As TableData =
+					If(File.Exists(LacDfTargetSpeedFile), VectoCSVFile.Read(LacDfTargetSpeedFile), Nothing)
+			Dim lacVdropLookup As TableData =
+					If(File.Exists(LacDfVelocityDropFile), VectoCSVFile.Read(LacDfVelocityDropFile), Nothing)
 			Return New LookAheadCoastingInputData With {
 				.CoastingDecisionFactorScaling = LacDfScale,
 				.CoastingDecisionFactorOffset = LacDfOffset,
 				.Enabled = LookAheadOn,
 				.LookaheadDistanceFactor = LacPreviewFactor,
-				.CoastingDecisionFactorTargetSpeedLookup = VectoCSVFile.Read(LacDfTargetSpeedFile),
-				.CoastingDecisionFactorVelocityDropLookup = VectoCSVFile.Read(LacDfVelocityDropFile)
+				.CoastingDecisionFactorTargetSpeedLookup = lacTargetLookup,
+				.CoastingDecisionFactorVelocityDropLookup = lacVdropLookup
 				}
 		End Get
 	End Property
@@ -599,17 +617,46 @@ Public Class VectoJob
 		vectoJob._engineInputData = New JSONComponentInputData(vectoJob._engineFile.FullPath)
 		vectoJob._gearboxInputData = New JSONComponentInputData(vectoJob._gearboxFile.FullPath)
 
+		Dim result As IList(Of ValidationResult) = New List(Of ValidationResult)
 		Try
 			If mode = ExecutionMode.Declaration Then
+				If Not vectoJob._vehicleInputData.VehicleInputData.SavedInDeclarationMode Then
+					result.Add(New ValidationResult("Vehicle File is not in Declaration Mode"))
+				End If
+				If Not vectoJob._engineInputData.EngineInputData.SavedInDeclarationMode Then
+					result.Add(New ValidationResult("Engine File is not in Declaration Mode"))
+				End If
+				If Not vectoJob._gearboxInputData.GearboxInputData.SavedInDeclarationMode Then
+					result.Add(New ValidationResult("Gearbox File is not in Declaration Mode"))
+				End If
+				If result.Any() Then
+					Return _
+						New ValidationResult("Vecto Job Configuration is invalid. ", result.Select(Function(r) r.ErrorMessage).ToList())
+				End If
+
 				Dim dataFactory As DeclarationModeVectoRunDataFactory = New DeclarationModeVectoRunDataFactory(vectoJob, Nothing)
+
 				jobData = dataFactory.NextRun()
 			Else
+				If vectoJob._vehicleInputData.VehicleInputData.SavedInDeclarationMode Then
+					result.Add(New ValidationResult("Vehicle File is not in Engineering Mode"))
+				End If
+				If vectoJob._engineInputData.EngineInputData.SavedInDeclarationMode Then
+					result.Add(New ValidationResult("Engine File is not in Engineering Mode"))
+				End If
+				If vectoJob._gearboxInputData.GearboxInputData.SavedInDeclarationMode Then
+					result.Add(New ValidationResult("Gearbox File is not in Engineering Mode"))
+				End If
+				If result.Any() Then
+					Return _
+						New ValidationResult("Vecto Job Configuration is invalid. ", result.Select(Function(r) r.ErrorMessage).ToList())
+				End If
 				Dim dataFactory As EngineeringModeVectoRunDataFactory = New EngineeringModeVectoRunDataFactory(vectoJob)
 				jobData = dataFactory.NextRun()
 			End If
 
-			Dim result As IList(Of ValidationResult) =
-					jobData.Validate(If(Cfg.DeclMode, ExecutionMode.Declaration, ExecutionMode.Engineering))
+
+			jobData.Validate(If(Cfg.DeclMode, ExecutionMode.Declaration, ExecutionMode.Engineering))
 			If result.Any() Then
 				Return _
 					New ValidationResult("Vecto Job Configuration is invalid. ", result.Select(Function(r) r.ErrorMessage).ToList())
@@ -626,6 +673,7 @@ Public Class VectoJob
 			vectoJob._gearboxInputData = Nothing
 		End Try
 	End Function
+
 
 #Region "IInputData"
 
@@ -800,9 +848,21 @@ Public Class VectoJob
 			Dim retVal As ICycleData() = New ICycleData(CycleFiles.Count) {}
 			Dim i As Integer = 0
 			For Each cycleFile As SubPath In CycleFiles
+				Dim cycleData As TableData
+				If (File.Exists(cycleFile.FullPath)) Then
+					cycleData = VectoCSVFile.Read(cycleFile.FullPath)
+				Else
+					Try
+						Dim cycleDataRes As Stream =
+								RessourceHelper.ReadStream(RessourceHelper.Namespace + "MissionCycles." + cycleFile.OriginalPath + ".vdri")
+						cycleData = VectoCSVFile.ReadStream(cycleDataRes)
+					Catch ex As Exception
+						Throw New VectoException("Driving Cycle could not be read: " + cycleFile.OriginalPath)
+					End Try
+				End If
 				retVal(i) = New CycleInputData With {
 					.Name = Path.GetFileNameWithoutExtension(cycleFile.FullPath),
-					.CycleData = VectoCSVFile.Read(cycleFile.FullPath)
+					.CycleData = cycleData
 					}
 				i += 1
 			Next

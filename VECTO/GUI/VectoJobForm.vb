@@ -399,7 +399,7 @@ Public Class VectoJobForm
 		'Start/Stop
 		Dim driver As IDriverEngineeringInputData = inputData.DriverInputData
 		ChBStartStop.Checked = driver.StartStop.Enabled
-		TbSSspeed.Text = driver.StartStop.MaxSpeed.ToGUIFormat()
+		TbSSspeed.Text = driver.StartStop.MaxSpeed.AsKmph().ToGUIFormat()
 		TbSStime.Text = driver.StartStop.MinTime.ToGUIFormat()
 		TbSSdelay.Text = driver.StartStop.Delay.ToGUIFormat()
 
@@ -423,11 +423,9 @@ Public Class VectoJobForm
 			Next
 		Else
 			'VACC
-			Try
-				TbDesMaxFile.Text = GetRelativePath(driver.AccelerationCurve.Source, _basePath)
-			Catch
-				TbDesMaxFile.Text = ""
-			End Try
+			TbDesMaxFile.Text =
+				If(driver.AccelerationCurve Is Nothing, "", GetRelativePath(driver.AccelerationCurve.Source, _basePath))
+
 
 			Dim auxInput As IAuxiliariesEngineeringInputData = inputData.AuxiliaryInputData()
 			For Each item As AdvancedAuxiliary In cboAdvancedAuxiliaries.Items
@@ -469,9 +467,9 @@ Public Class VectoJobForm
 		Else
 			RdOff.Checked = True
 		End If
-		TbOverspeed.Text = driver.OverSpeedEcoRoll.MinSpeed.ToGUIFormat()
-		TbUnderSpeed.Text = driver.OverSpeedEcoRoll.UnderSpeed.ToGUIFormat()
-		TbVmin.Text = driver.OverSpeedEcoRoll.MinSpeed.ToGUIFormat()
+		TbOverspeed.Text = driver.OverSpeedEcoRoll.OverSpeed.AsKmph().ToGUIFormat()
+		TbUnderSpeed.Text = driver.OverSpeedEcoRoll.UnderSpeed.AsKmph().ToGUIFormat()
+		TbVmin.Text = driver.OverSpeedEcoRoll.MinSpeed.AsKmph().ToGUIFormat()
 		CbLookAhead.Checked = driver.Lookahead.Enabled
 		'TbAlookahead.Text = CStr(VEC0.ALookahead)
 		'TbVminLA.Text = CStr(VEC0.VMinLa)
@@ -479,10 +477,10 @@ Public Class VectoJobForm
 		tbDfCoastingOffset.Text = driver.Lookahead.CoastingDecisionFactorOffset.ToGUIFormat()
 		tbDfCoastingScale.Text = driver.Lookahead.CoastingDecisionFactorScaling.ToGUIFormat()
 
-		tbLacDfTargetSpeedFile.Text = GetRelativePath(driver.Lookahead.CoastingDecisionFactorTargetSpeedLookup.Source,
-													_basePath)
-		tbLacDfVelocityDropFile.Text = GetRelativePath(driver.Lookahead.CoastingDecisionFactorVelocityDropLookup.Source,
-														_basePath)
+		tbLacDfTargetSpeedFile.Text = If(driver.Lookahead.CoastingDecisionFactorTargetSpeedLookup Is Nothing, "",
+										GetRelativePath(driver.Lookahead.CoastingDecisionFactorTargetSpeedLookup.Source, _basePath))
+		tbLacDfVelocityDropFile.Text = If(driver.Lookahead.CoastingDecisionFactorVelocityDropLookup Is Nothing, "",
+										GetRelativePath(driver.Lookahead.CoastingDecisionFactorVelocityDropLookup.Source, _basePath))
 
 		'-------------------------------------------------------------
 
@@ -1186,7 +1184,7 @@ lbDlog:
 			Else
 
 				For Each gear As ITransmissionInputData In gearbox.Gears
-					If gear.ShiftPolygon.Rows.Count = 0 Then Continue For
+					If gear.ShiftPolygon Is Nothing OrElse gear.ShiftPolygon.Rows.Count = 0 Then Continue For
 					Dim shiftPolygon As ShiftPolygon = ShiftPolygonReader.Create(gear.ShiftPolygon)
 					s = New Series
 					s.Points.DataBindXY(shiftPolygon.Upshift.Select(Function(x) x.AngularSpeed),

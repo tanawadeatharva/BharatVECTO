@@ -358,7 +358,7 @@ Public Class EngineForm
 
 		'Dim fldOK As Boolean = False
 		'Dim mapOK As Boolean = False
-		Dim fullLoadCurve As FullLoadCurve
+		Dim fullLoadCurve As FullLoadCurve = Nothing
 		Dim fcMap As FuelConsumptionMap
 		Dim chart As Chart
 		Dim series As Series

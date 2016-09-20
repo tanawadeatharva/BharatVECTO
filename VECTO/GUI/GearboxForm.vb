@@ -250,7 +250,7 @@ Public Class GearboxForm
 
 		For Each gear As ITransmissionInputData In gearbox.Gears
 			LvGears.Items.Add(CreateListviewItem(gear.Gear.ToString("00"), "-", gear.Ratio, gear.LossMap.Source,
-												GetRelativePath(gear.ShiftPolygon.Source, basePath),
+												If(gear.ShiftPolygon Is Nothing, "", GetRelativePath(gear.ShiftPolygon.Source, basePath)),
 												If(gear.MaxTorque Is Nothing, "", gear.MaxTorque.ToGUIFormat())))
 		Next
 
@@ -269,10 +269,11 @@ Public Class GearboxForm
 			TbTCinertia.Text = ""
 			TBTCShiftPolygon.Text = ""
 		Else
-			TbTCfile.Text = GetRelativePath(torqueConverter.TCData.Source, basePath)
+			TbTCfile.Text = If(torqueConverter.TCData Is Nothing, "", GetRelativePath(torqueConverter.TCData.Source, basePath))
 			TbTCrefrpm.Text = torqueConverter.ReferenceRPM.AsRPM.ToGUIFormat()
 			TbTCinertia.Text = torqueConverter.Inertia.ToGUIFormat()
-			TBTCShiftPolygon.Text = GetRelativePath(torqueConverter.ShiftPolygon.Source, basePath)
+			TBTCShiftPolygon.Text =
+				If(torqueConverter.ShiftPolygon Is Nothing, "", GetRelativePath(torqueConverter.ShiftPolygon.Source, basePath))
 		End If
 
 		tbUpshiftMinAcceleration.Text = gearbox.UpshiftMinAcceleration.ToGUIFormat()

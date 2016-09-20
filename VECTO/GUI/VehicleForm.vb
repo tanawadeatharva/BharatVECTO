@@ -350,16 +350,18 @@ Public Class VehicleForm
 		TBrdyn.Text = vehicle.DynamicTyreRadius.ToGUIFormat()
 
 		CbCdMode.SelectedValue = vehicle.CrossWindCorrectionMode
-		TbCdFile.Text = GetRelativePath(vehicle.CrosswindCorrectionMap.Source, basePath)
+		TbCdFile.Text =
+			If(vehicle.CrosswindCorrectionMap Is Nothing, "", GetRelativePath(vehicle.CrosswindCorrectionMap.Source, basePath))
 
 		CbRtType.SelectedValue = retarder.Type
 		TbRtRatio.Text = retarder.Ratio.ToGUIFormat()
-		TbRtPath.Text = GetRelativePath(retarder.LossMap.Source, basePath)
+		TbRtPath.Text = If(retarder.LossMap Is Nothing, "", GetRelativePath(retarder.LossMap.Source, basePath))
 
 
 		cbAngularGearType.SelectedValue = angularGear.Type
 		tbAngularGearRatio.Text = angularGear.Ratio.ToGUIFormat()
-		tbAngularGearLossMapPath.Text = GetRelativePath(angularGear.LossMap.Source, basePath)
+		tbAngularGearLossMapPath.Text =
+			If(angularGear.LossMap Is Nothing, "", GetRelativePath(angularGear.LossMap.Source, basePath))
 
 		LvRRC.Items.Clear()
 		Dim i As Integer = 0
@@ -386,8 +388,8 @@ Public Class VehicleForm
 		TBcdA.Text = vehicle.AirDragArea.ToGUIFormat()
 
 		cbPTOType.SelectedValue = pto.PTOTransmissionType
-		tbPTOLossMap.Text = GetRelativePath(pto.PTOLossMap.Source, basePath)
-		tbPTOCycle.Text = GetRelativePath(pto.PTOCycle.Source, basePath)
+		tbPTOLossMap.Text = If(pto.PTOLossMap Is Nothing, "", GetRelativePath(pto.PTOLossMap.Source, basePath))
+		tbPTOCycle.Text = If(pto.PTOCycle Is Nothing, "", GetRelativePath(pto.PTOCycle.Source, basePath))
 
 		DeclInit()
 
