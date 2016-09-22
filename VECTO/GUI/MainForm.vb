@@ -269,6 +269,7 @@ Public Class MainForm
 		DeclOnOff()
 	End Sub
 
+	' ReSharper disable once UnusedMember.Global -- used via Logging Framework!
 	Public Shared Sub LogMethod(level As String, message As String)
 		Try
 			If level = "Warn" Then
@@ -641,16 +642,15 @@ lbFound:
 
 	'Update job files counter in tab titel
 	Private Sub UpdateJobTabText()
-		Dim c As Integer
-		c = LvGEN.Items.Count
+		Dim count As Integer = LvGEN.Items.Count
 
-		TabPageGEN.Text = "Job Files ( " & _genChecked & " / " & c & " )"
+		TabPageGEN.Text = String.Format("Job Files ( {0} / {1} )", _genChecked, count)
 
 		_genCheckAllLock = True
 
 		If _genChecked = 0 Then
 			ChBoxAllGEN.CheckState = CheckState.Unchecked
-		ElseIf _genChecked = c Then
+		ElseIf _genChecked = count Then
 			ChBoxAllGEN.CheckState = CheckState.Checked
 		Else
 			ChBoxAllGEN.CheckState = CheckState.Indeterminate
@@ -1547,8 +1547,8 @@ lbFound:
 	Private _mouseDownOnListView As Boolean
 
 	Private Class GUItest
-		Private ReadOnly RowLim As Integer = 9
-		Private ReadOnly ColLim As Integer = 45
+		Private Const RowLim As Integer = 9
+		Private Const ColLim As Integer = 45
 		Public TestActive As Boolean = False
 		Private _testAborted As Boolean
 		Private _xCtrl As Integer

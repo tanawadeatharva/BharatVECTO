@@ -75,7 +75,7 @@ namespace TUGraz.VectoCommon.Exceptions
 			Response = (IResponse)info.GetValue("Response", typeof(IResponse));
 		}
 
-		public IResponse Response;
+		public readonly IResponse Response;
 
 		public UnexpectedResponseException(string message, IResponse resp)
 			: base(message + Environment.NewLine + "{0}", resp)

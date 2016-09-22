@@ -254,7 +254,6 @@ namespace TUGraz.VectoCommon.Utils
 		/// </summary>
 		/// <param name="minimum">The minimum.</param>
 		/// <param name="maximum">The maximum.</param>
-		/// <param name="mode">if specified the validation is only performed in the corresponding mode</param>
 		public SIRangeAttribute(double minimum, double maximum) : base(minimum, maximum) {}
 
 		/// <summary>
@@ -273,7 +272,6 @@ namespace TUGraz.VectoCommon.Utils
 		/// </summary>
 		/// <param name="minimum">The minimum.</param>
 		/// <param name="maximum">The maximum.</param>
-		/// <param name="mode">if specified the validation is only performed in the corresponding mode</param>
 		public SIRangeAttribute(SI minimum, SI maximum) : base(minimum.Value(), maximum.Value()) {}
 
 		/// <summary>

@@ -129,7 +129,7 @@ Public Class VehicleAuxiliariesDialog
 		If Trim(TbID.Text) = "" Or Cfg.DeclMode Then
 			LbIDhelp.Text = ""
 		Else
-			LbIDhelp.Text = "Header in Driving cycle: <AUX_" & Trim(TbID.Text) & ">"
+			LbIDhelp.Text = String.Format("Header in Driving cycle: <AUX_{1}>", Trim(TbID.Text))
 		End If
 	End Sub
 End Class

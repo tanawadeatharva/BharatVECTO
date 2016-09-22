@@ -611,7 +611,7 @@ namespace TUGraz.VectoCommon.Utils
 	/// <summary>
 	/// SI Class for one per second [1/s].
 	/// </summary>
-	[DebuggerDisplay("rad/s: {this} | rpm: {ConvertTo().Rounds.Per.Minute}")]
+	[DebuggerDisplay("rad/s: {Val} | rpm: {AsRPM}")]
 	public class PerSecond : SIBase<PerSecond>
 	{
 		private static readonly Unit[] DenominatorDefault = { Unit.s };
@@ -628,7 +628,7 @@ namespace TUGraz.VectoCommon.Utils
 	/// <summary>
 	/// SI Class for Meter per second [m/s].
 	/// </summary>
-	[DebuggerDisplay("{this} | {ConvertTo().Kilo.Meter.Per.Hour}")]
+	[DebuggerDisplay("{Val} | {AsKmph}")]
 	public class MeterPerSecond : SIBase<MeterPerSecond>
 	{
 		private static readonly Unit[] NumeratorDefault = { Unit.m };
@@ -637,9 +637,9 @@ namespace TUGraz.VectoCommon.Utils
 		[DebuggerHidden]
 		private MeterPerSecond(double val) : base(val, NumeratorDefault, DenominatorDefault) {}
 
-		public double AsKmph()
+		public double AsKmph
 		{
-			return Val * 3.6;
+			get { return Val * 3.6; }
 		}
 
 		/// <summary>
@@ -2194,7 +2194,7 @@ namespace TUGraz.VectoCommon.Utils
 		/// </returns>
 		public int CompareTo(object obj)
 		{
-			var si = (obj as SI);
+			var si = obj as SI;
 			if (si == null) {
 				return 1;
 			}

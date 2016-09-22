@@ -108,17 +108,17 @@ Public Class VectoJobForm
 		If Not RdEcoRoll.Checked Then RdOverspeed.Checked = True
 		CbLookAhead.Checked = True
 
-		TbSSspeed.Text = DeclarationData.Driver.StartStop.MaxSpeed.AsKmph().ToGUIFormat()	'cDeclaration.SSspeed
+		TbSSspeed.Text = DeclarationData.Driver.StartStop.MaxSpeed.AsKmph.ToGUIFormat()	'cDeclaration.SSspeed
 		TbSStime.Text = DeclarationData.Driver.StartStop.MinTime.ToGUIFormat()	 'cDeclaration.SStime
 		TbSSdelay.Text = DeclarationData.Driver.StartStop.Delay.ToGUIFormat()	 ' cDeclaration.SSdelay
 		tbLacPreviewFactor.Text = DeclarationData.Driver.LookAhead.LookAheadDistanceFactor.ToGUIFormat()
 		tbLacDfTargetSpeedFile.Text = ""
 		tbLacDfVelocityDropFile.Text = ""
 
-		TbOverspeed.Text = DeclarationData.Driver.OverSpeedEcoRoll.OverSpeed.AsKmph().ToGUIFormat()	 'cDeclaration.Overspeed
-		TbUnderSpeed.Text = DeclarationData.Driver.OverSpeedEcoRoll.UnderSpeed.AsKmph().ToGUIFormat() _
+		TbOverspeed.Text = DeclarationData.Driver.OverSpeedEcoRoll.OverSpeed.AsKmph.ToGUIFormat()	 'cDeclaration.Overspeed
+		TbUnderSpeed.Text = DeclarationData.Driver.OverSpeedEcoRoll.UnderSpeed.AsKmph.ToGUIFormat() _
 		' cDeclaration.Underspeed
-		TbVmin.Text = DeclarationData.Driver.OverSpeedEcoRoll.MinSpeed.AsKmph().ToGUIFormat()	 'cDeclaration.ECvmin
+		TbVmin.Text = DeclarationData.Driver.OverSpeedEcoRoll.MinSpeed.AsKmph.ToGUIFormat()	 'cDeclaration.ECvmin
 
 		If _
 			LvAux.Items.Count <> 5 OrElse
@@ -396,7 +396,7 @@ Public Class VectoJobForm
 		'Start/Stop
 		Dim driver As IDriverEngineeringInputData = inputData.DriverInputData
 		ChBStartStop.Checked = driver.StartStop.Enabled
-		TbSSspeed.Text = driver.StartStop.MaxSpeed.AsKmph().ToGUIFormat()
+		TbSSspeed.Text = driver.StartStop.MaxSpeed.AsKmph.ToGUIFormat()
 		TbSStime.Text = driver.StartStop.MinTime.ToGUIFormat()
 		TbSSdelay.Text = driver.StartStop.Delay.ToGUIFormat()
 
@@ -464,12 +464,12 @@ Public Class VectoJobForm
 		Else
 			RdOff.Checked = True
 		End If
-		TbOverspeed.Text = driver.OverSpeedEcoRoll.OverSpeed.AsKmph().ToGUIFormat()
-		TbUnderSpeed.Text = driver.OverSpeedEcoRoll.UnderSpeed.AsKmph().ToGUIFormat()
-		TbVmin.Text = driver.OverSpeedEcoRoll.MinSpeed.AsKmph().ToGUIFormat()
+		TbOverspeed.Text = driver.OverSpeedEcoRoll.OverSpeed.AsKmph.ToGUIFormat()
+		TbUnderSpeed.Text = driver.OverSpeedEcoRoll.UnderSpeed.AsKmph.ToGUIFormat()
+		TbVmin.Text = driver.OverSpeedEcoRoll.MinSpeed.AsKmph.ToGUIFormat()
 		CbLookAhead.Checked = driver.Lookahead.Enabled
 		'TbAlookahead.Text = CStr(VEC0.ALookahead)
-		tbLacMinSpeed.Text = driver.Lookahead.MinSpeed.AsKmph().ToGUIFormat()
+		tbLacMinSpeed.Text = driver.Lookahead.MinSpeed.AsKmph.ToGUIFormat()
 		'TbVminLA.Text = CStr(VEC0.VMinLa)
 		tbLacPreviewFactor.Text = driver.Lookahead.LookaheadDistanceFactor.ToGUIFormat()
 		tbDfCoastingOffset.Text = driver.Lookahead.CoastingDecisionFactorOffset.ToGUIFormat()
@@ -625,7 +625,7 @@ Public Class VectoJobForm
 		TbDesMaxFile.Text = ""
 
 		'Start/Stop
-		TbSSspeed.Text = DeclarationData.Driver.StartStop.MaxSpeed.AsKmph().ToGUIFormat()
+		TbSSspeed.Text = DeclarationData.Driver.StartStop.MaxSpeed.AsKmph.ToGUIFormat()
 		TbSStime.Text = DeclarationData.Driver.StartStop.MinTime.ToGUIFormat()
 		TbSSdelay.Text = DeclarationData.Driver.StartStop.Delay.ToGUIFormat()
 		ChBStartStop.Checked = False
@@ -637,12 +637,12 @@ Public Class VectoJobForm
 		RdOff.Checked = True
 		CbLookAhead.Checked = True
 		'TbAlookahead.Text = "-0.5"
-		TbOverspeed.Text = DeclarationData.Driver.OverSpeedEcoRoll.OverSpeed.AsKmph().ToGUIFormat()
-		TbUnderSpeed.Text = DeclarationData.Driver.OverSpeedEcoRoll.UnderSpeed.AsKmph().ToGUIFormat()
-		TbVmin.Text = DeclarationData.Driver.OverSpeedEcoRoll.MinSpeed.AsKmph().ToGUIFormat()
+		TbOverspeed.Text = DeclarationData.Driver.OverSpeedEcoRoll.OverSpeed.AsKmph.ToGUIFormat()
+		TbUnderSpeed.Text = DeclarationData.Driver.OverSpeedEcoRoll.UnderSpeed.AsKmph.ToGUIFormat()
+		TbVmin.Text = DeclarationData.Driver.OverSpeedEcoRoll.MinSpeed.AsKmph.ToGUIFormat()
 
 		'TbVminLA.Text = "50"
-		tbLacMinSpeed.Text = DeclarationData.Driver.LookAhead.MinimumSpeed.AsKmph().ToGUIFormat()
+		tbLacMinSpeed.Text = DeclarationData.Driver.LookAhead.MinimumSpeed.AsKmph.ToGUIFormat()
 		tbLacPreviewFactor.Text = DeclarationData.Driver.LookAhead.LookAheadDistanceFactor.ToGUIFormat()
 		tbDfCoastingOffset.Text = DeclarationData.Driver.LookAhead.DecisionFactorCoastingOffset.ToGUIFormat()
 		tbDfCoastingScale.Text = DeclarationData.Driver.LookAhead.DecisionFactorCoastingScaling.ToGUIFormat()
@@ -1005,14 +1005,7 @@ lbDlog:
 
 	Public Sub UpdatePic()
 
-		Dim i As Integer
-		Dim pmax As Double
 
-		Dim s As Series
-		Dim a As ChartArea = New ChartArea()
-		Dim img As Bitmap
-
-		Dim engOk As Boolean = False
 
 		TbHVCclass.Text = ""
 		TbVehCat.Text = ""
@@ -1033,30 +1026,31 @@ lbDlog:
 
 		If chart Is Nothing Then Return
 
-		a.Name = "main"
+		Dim chartArea As ChartArea = New ChartArea()
+		chartArea.Name = "main"
 
-		a.AxisX.Title = "engine speed [1/min]"
-		a.AxisX.TitleFont = New Font("Helvetica", 10)
-		a.AxisX.LabelStyle.Font = New Font("Helvetica", 8)
-		a.AxisX.LabelAutoFitStyle = LabelAutoFitStyles.None
-		a.AxisX.MajorGrid.LineDashStyle = ChartDashStyle.Dot
+		chartArea.AxisX.Title = "engine speed [1/min]"
+		chartArea.AxisX.TitleFont = New Font("Helvetica", 10)
+		chartArea.AxisX.LabelStyle.Font = New Font("Helvetica", 8)
+		chartArea.AxisX.LabelAutoFitStyle = LabelAutoFitStyles.None
+		chartArea.AxisX.MajorGrid.LineDashStyle = ChartDashStyle.Dot
 
-		a.AxisY.Title = "engine torque [Nm]"
-		a.AxisY.TitleFont = New Font("Helvetica", 10)
-		a.AxisY.LabelStyle.Font = New Font("Helvetica", 8)
-		a.AxisY.LabelAutoFitStyle = LabelAutoFitStyles.None
-		a.AxisY.MajorGrid.LineDashStyle = ChartDashStyle.Dot
+		chartArea.AxisY.Title = "engine torque [Nm]"
+		chartArea.AxisY.TitleFont = New Font("Helvetica", 10)
+		chartArea.AxisY.LabelStyle.Font = New Font("Helvetica", 8)
+		chartArea.AxisY.LabelAutoFitStyle = LabelAutoFitStyles.None
+		chartArea.AxisY.MajorGrid.LineDashStyle = ChartDashStyle.Dot
 
-		a.AxisX.Minimum = 300
-		a.BorderDashStyle = ChartDashStyle.Solid
-		a.BorderWidth = 1
+		chartArea.AxisX.Minimum = 300
+		chartArea.BorderDashStyle = ChartDashStyle.Solid
+		chartArea.BorderWidth = 1
 
-		a.BackColor = Color.GhostWhite
+		chartArea.BackColor = Color.GhostWhite
 
-		chart.ChartAreas.Add(a)
+		chart.ChartAreas.Add(chartArea)
 		chart.Update()
 
-		img = New Bitmap(chart.Width, chart.Height, PixelFormat.Format32bppArgb)
+		Dim img As Bitmap = New Bitmap(chart.Width, chart.Height, PixelFormat.Format32bppArgb)
 		chart.DrawToBitmap(img, New Rectangle(0, 0, PicBox.Width, PicBox.Height))
 
 		PicBox.Image = img
@@ -1080,7 +1074,7 @@ lbDlog:
 
 		If gearbox Is Nothing Then Return
 
-		TbGbxTxt.Text = gearbox.Gears.Count & "-Speed " & gearbox.Type.ShortName() & "  " & gearbox.ModelName
+		TbGbxTxt.Text = String.Format("{0}-Speed {1} {2}", gearbox.Gears.Count, gearbox.Type.ShortName(), gearbox.ModelName)
 
 		If Cfg.DeclMode Then
 			For i = 1 To gearbox.Gears.Count
@@ -1200,8 +1194,7 @@ lbDlog:
 		pmax = fullLoadCurve.MaxPower.Value() / 1000 'FLD0.Pfull(FLD0.EngineRatedSpeed)
 
 
-		TbEngTxt.Text = (engine.Displacement.Value() * 1000).ToString("0.0") & " l " & pmax.ToString("#") & " kW  " &
-						engine.ModelName
+		TbEngTxt.Text = String.Format("{0} l {1} kw {2}", (engine.Displacement.Value() * 1000).ToString("0.0"), pmax.ToString("#"), engine.ModelName)
 
 		Dim fuelConsumptionMap As FuelConsumptionMap = FuelConsumptionMapReader.Create(engine.FuelConsumptionMap)
 
@@ -1259,7 +1252,7 @@ lbDlog:
 		PicVehicle.Image = ConvPicPath(If(s0 Is Nothing, -1, HDVclass.ToInt()), False) _
 		'Image.FromFile(cDeclaration.ConvPicPath(HDVclass, False))
 
-		TbHVCclass.Text = "HDV Class " & HDVclass
+		TbHVCclass.Text = String.Format("HDV Class {0}", HDVclass)
 		TbVehCat.Text = vehicle.VehicleCategory.GetCategoryName()	'ConvVehCat(VEH0.VehCat, True)
 		TbMass.Text = (vehicle.GrossVehicleMassRating.Value() / 1000) & " t"
 		TbAxleConf.Text = vehicle.AxleConfiguration.GetName()	'ConvAxleConf(VEH0.AxleConf)

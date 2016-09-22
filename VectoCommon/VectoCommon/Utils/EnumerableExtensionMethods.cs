@@ -55,6 +55,7 @@ namespace TUGraz.VectoCommon.Utils
 				return false;
 			}
 
+			// ReSharper disable once LoopCanBeConvertedToQuery
 			for (var i = 0; i < self.Length; i++) {
 				if (self[i].CompareTo(other[i]) != 0) {
 					return self.OrderBy(x => x).SequenceEqual(other.OrderBy(x => x));

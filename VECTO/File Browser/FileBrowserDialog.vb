@@ -186,7 +186,8 @@ Public Class FileBrowserDialog
 	End Sub
 
 	'Browse - Custom Dialog
-	Public Function Browse(path As String, fileMustExist As Boolean, overwriteCheck As Boolean, extMode As FileBrowserFileExtensionMode,
+	Public Function Browse(path As String, fileMustExist As Boolean, overwriteCheck As Boolean,
+							extMode As FileBrowserFileExtensionMode,
 							multiFile As Boolean, ext As String, caption As String) As Boolean
 		If Not _initialized Then Init()
 
@@ -494,7 +495,7 @@ Public Class FileBrowserDialog
 			TextBoxPath.Text = ""
 		Else
 			If ListViewFiles.SelectedItems.Count > 1 Then
-				TextBoxPath.Text = "<" & ListViewFiles.SelectedItems.Count & " Files selected>"
+				TextBoxPath.Text = String.Format("<{0} Files selected>", ListViewFiles.SelectedItems.Count)
 			Else
 				TextBoxPath.Text = ListViewFiles.SelectedItems.Item(0).Text
 				TextBoxPath.SelectionStart = TextBoxPath.Text.Length
