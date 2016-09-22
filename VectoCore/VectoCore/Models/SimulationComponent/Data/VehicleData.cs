@@ -155,13 +155,12 @@ namespace TUGraz.VectoCore.Models.SimulationComponent.Data
 			var rrc = 0.0.SI<Scalar>();
 			var wheelsInertia = 0.0.SI<KilogramSquareMeter>();
 			foreach (var axle in _axleData) {
+				if (axle.AxleWeightShare.IsEqual(0, 1e-12)) {
+					continue;
+				}
 				var nrWheels = axle.TwinTyres ? 4 : 2;
 				var baseValue = (axle.AxleWeightShare * TotalVehicleWeight() * g / axle.TyreTestLoad / nrWheels).Value();
-				//if (baseValue.IsEqual(0)) {
-				//	throw new VectoSimulationException(
-				//		"Axle Roll Resistance Coefficient could not be calculated. One of the values is 0: AxleWeightShare: {0}, TotalVehicleWeight: {1}, TyreTestLoad: {2}, nrWheels: {3}",
-				//		axle.AxleWeightShare, TotalVehicleWeight(), axle.TyreTestLoad, nrWheels);
-				//}
+
 				rrc += axle.AxleWeightShare * axle.RollResistanceCoefficient *
 						Math.Pow(baseValue, Physics.RollResistanceExponent - 1);
 				wheelsInertia += nrWheels * axle.Inertia;
@@ -174,6 +173,10 @@ namespace TUGraz.VectoCore.Models.SimulationComponent.Data
 		public static ValidationResult ValidateVehicleData(VehicleData vehicleData, ValidationContext validationContext)
 		{
 			var mode = GetExecutionMode(validationContext);
+
+			if (vehicleData.AxleData.Count < 1) {
+				return new ValidationResult("At least two axles need to be specified");
+			}
 
 			var weightShareSum = vehicleData.AxleData.Sum(axle => axle.AxleWeightShare);
 			if (!weightShareSum.IsEqual(1.0, 1E-10)) {
@@ -202,6 +205,12 @@ namespace TUGraz.VectoCore.Models.SimulationComponent.Data
 			}
 			// vvvvvvv these checks apply only for declaration mode! vvvvvv
 
+			if (vehicleData.AxleConfiguration.NumAxles() != vehicleData.AxleData.Count) {
+				return
+					new ValidationResult(
+						string.Format("For a {0} type vehicle exactly {1} number of axles have to pe specified. Found {2}",
+							vehicleData.AxleConfiguration.GetName(), vehicleData.AxleConfiguration.NumAxles(), vehicleData.AxleData.Count));
+			}
 
 			if (vehicleData.TotalVehicleWeight() > gvwTotal) {
 				return new ValidationResult(
