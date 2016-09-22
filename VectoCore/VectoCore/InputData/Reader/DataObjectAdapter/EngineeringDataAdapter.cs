@@ -127,9 +127,9 @@ namespace TUGraz.VectoCore.InputData.Reader.DataObjectAdapter
 			var retVal = SetCommonGearboxData(gearbox);
 
 			//var gears = gearbox.Gears;
-			if (gearbox.Gears.Count < 1) {
+			if (gearbox.Gears.Count < 2) {
 				throw new VectoSimulationException(
-					"At least one Gear-Entry must be defined in Gearbox!");
+					"At least two Gear-Entries must be defined in Gearbox!");
 			}
 
 			retVal.Inertia = gearbox.Inertia;
@@ -142,7 +142,9 @@ namespace TUGraz.VectoCore.InputData.Reader.DataObjectAdapter
 			retVal.StartSpeed = gearbox.StartSpeed;
 			retVal.StartAcceleration = gearbox.StartAcceleration;
 
-			var gearDifferenceRatio = gearbox.Gears[0].Ratio / gearbox.Gears[1].Ratio;
+			var gearDifferenceRatio = gearbox.Type.AutomaticTransmission() && gearbox.Gears.Count > 2 ?
+				gearbox.Gears[0].Ratio / gearbox.Gears[1].Ratio
+				: 1.0;
 
 			var gears = new Dictionary<uint, GearData>();
 

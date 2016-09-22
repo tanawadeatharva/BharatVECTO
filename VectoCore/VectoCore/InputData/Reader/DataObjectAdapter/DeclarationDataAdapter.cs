@@ -57,7 +57,7 @@ namespace TUGraz.VectoCore.InputData.Reader.DataObjectAdapter
 			var lookAheadData = new DriverData.LACData {
 				Enabled = DeclarationData.Driver.LookAhead.Enabled,
 				//Deceleration = DeclarationData.Driver.LookAhead.Deceleration,
-				//MinSpeed = DeclarationData.Driver.LookAhead.MinimumSpeed,
+				MinSpeed = DeclarationData.Driver.LookAhead.MinimumSpeed,
 				LookAheadDecisionFactor = new LACDecisionFactor(),
 				LookAheadDistanceFactor = DeclarationData.Driver.LookAhead.LookAheadDistanceFactor,
 			};
