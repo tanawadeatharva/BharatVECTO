@@ -318,6 +318,9 @@ namespace TUGraz.VectoCore.InputData.FileIO.JSON
 			get
 			{
 				var retVal = new List<ICycleData>();
+				if (Body[JsonKeys.Job_Cycles] == null) {
+					return retVal;
+				}
 				foreach (var cycle in Body.GetEx(JsonKeys.Job_Cycles)) {
 					//.Select(cycle => 
 					var cycleFile = Path.Combine(BasePath, cycle.Value<string>());
@@ -409,10 +412,13 @@ namespace TUGraz.VectoCore.InputData.FileIO.JSON
 					? ReadTableData(lac.GetEx<string>("Df_velocityDropLookup"),
 						"Lookahead Coasting Decisionfactor - Velocity drop", false)
 					: null;
+				var minSpeed = lac["MinSpeed"] != null
+					? lac.GetEx<double>(JsonKeys.DriverData_Lookahead_MinSpeed).KMPHtoMeterPerSecond()
+					: DeclarationData.Driver.LookAhead.MinimumSpeed;
 				return new LookAheadCoastingInputData() {
 					Enabled = lac.GetEx<bool>(JsonKeys.DriverData_Lookahead_Enabled),
 					//Deceleration = lac.GetEx<double>(JsonKeys.DriverData_Lookahead_Deceleration).SI<MeterPerSquareSecond>(),
-					MinSpeed = lac.GetEx<double>(JsonKeys.DriverData_Lookahead_MinSpeed).KMPHtoMeterPerSecond(),
+					MinSpeed = minSpeed,
 					LookaheadDistanceFactor = distanceScalingFactor,
 					CoastingDecisionFactorOffset = lacDfOffset,
 					CoastingDecisionFactorScaling = lacDfScaling,
