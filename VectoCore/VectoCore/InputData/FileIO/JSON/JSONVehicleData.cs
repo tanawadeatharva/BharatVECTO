@@ -41,7 +41,7 @@ using TUGraz.VectoCore.InputData.Impl;
 
 namespace TUGraz.VectoCore.InputData.FileIO.JSON
 {
-	public class JSONVehicleDataV7 : JSONFile, IVehicleEngineeringInputData, IRetarderInputData, IAngularGearInputData,
+	public class JSONVehicleDataV7 : JSONFile, IVehicleEngineeringInputData, IRetarderInputData, IAngledriveInputData,
 		IPTOTransmissionInputData
 	{
 		public JSONVehicleDataV7(JObject data, string fileName) : base(data, fileName) {}
@@ -165,40 +165,40 @@ namespace TUGraz.VectoCore.InputData.FileIO.JSON
 
 		#endregion
 
-		#region IAngularGearInputData
+		#region IAngledriveInputData
 
-		AngularGearType IAngularGearInputData.Type
+		AngledriveType IAngledriveInputData.Type
 		{
 			get
 			{
-				var angleDrive = Body[JsonKeys.Vehicle_AngularGear];
+				var angleDrive = Body[JsonKeys.Vehicle_Angledrive];
 				if (angleDrive == null) {
-					return AngularGearType.None;
+					return AngledriveType.None;
 				}
 
-				return angleDrive.GetEx<string>(JsonKeys.Vehicle_AngularGear_Type).ParseEnum<AngularGearType>();
+				return angleDrive.GetEx<string>(JsonKeys.Vehicle_Angledrive_Type).ParseEnum<AngledriveType>();
 			}
 		}
 
-		double IAngularGearInputData.Ratio
+		double IAngledriveInputData.IAngledriveInputData_Ratio
 		{
-			get { return Body.GetEx(JsonKeys.Vehicle_AngularGear).GetEx<double>(JsonKeys.Vehicle_AngularGear_Ratio); }
+			get { return Body.GetEx(JsonKeys.Vehicle_Angledrive).GetEx<double>(JsonKeys.Vehicle_Angledrive_Ratio); }
 		}
 
-		TableData IAngularGearInputData.LossMap
+		TableData IAngledriveInputData.IAngledriveInputData_LossMap
 		{
 			get
 			{
 				return ReadTableData(
-					Body.GetEx(JsonKeys.Vehicle_AngularGear)
-						.GetEx<string>(JsonKeys.Vehicle_AngularGear_LossMapFile),
+					Body.GetEx(JsonKeys.Vehicle_Angledrive)
+						.GetEx<string>(JsonKeys.Vehicle_Angledrive_LossMapFile),
 					"LossMap", false);
 			}
 		}
 
-		double IAngularGearInputData.Efficiency
+		double IAngledriveInputData.Efficiency
 		{
-			get { return Body.GetEx(JsonKeys.Vehicle_AngularGear).GetEx<double>(JsonKeys.Vehicle_AngularGear_Efficiency); }
+			get { return Body.GetEx(JsonKeys.Vehicle_Angledrive).GetEx<double>(JsonKeys.Vehicle_Angledrive_Efficiency); }
 		}
 
 		#endregion

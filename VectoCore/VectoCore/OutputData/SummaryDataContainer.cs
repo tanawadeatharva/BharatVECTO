@@ -253,7 +253,7 @@ namespace TUGraz.VectoCore.OutputData
 			row[E_GBX_AXL_LOSS] = modData.WorkTransmission().ConvertTo().Kilo.Watt.Hour;
 			row[E_RET_LOSS] = modData.WorkRetarder().ConvertTo().Kilo.Watt.Hour;
 			row[E_TC_LOSS] = modData.WorkTorqueConverter().ConvertTo().Kilo.Watt.Hour;
-			row[E_ANGLE_LOSS] = modData.WorkAngularGear().ConvertTo().Kilo.Watt.Hour;
+			row[E_ANGLE_LOSS] = modData.WorkAngledrive().ConvertTo().Kilo.Watt.Hour;
 			row[E_CLUTCH_POS] = modData.EngineWorkPositive().ConvertTo().Kilo.Watt.Hour;
 			row[E_CLUTCH_NEG] = modData.EngineWorkNegative().ConvertTo().Kilo.Watt.Hour;
 			row[E_FCMAP_POS] = modData.TotalEngineWorkPositive().ConvertTo().Kilo.Watt.Hour;

@@ -28,7 +28,7 @@ Imports TUGraz.VectoCore.Utils
 <CustomValidation(GetType(Vehicle), "ValidateVehicle")>
 Public Class Vehicle
 	Implements IVehicleEngineeringInputData, IVehicleDeclarationInputData, IRetarderInputData, IPTOTransmissionInputData, 
-				IAngularGearInputData
+				IAngledriveInputData
 	'V2 MassMax is now saved in [t] instead of [kg]
 	Private Const FormatVersion As Short = 7
 
@@ -57,9 +57,9 @@ Public Class Vehicle
 	Public AxleConfiguration As AxleConfiguration
 
 	Public SavedInDeclMode As Boolean
-	Public AngularGearType As AngularGearType
-	Public AngularGearRatio As Double
-	Public ReadOnly AngularGearLossMapFile As SubPath
+	Public AngledriveType As AngledriveType
+	Public AngledriveRatio As Double
+	Public ReadOnly AngledriveLossMapFile As SubPath
 
 	Public PtoType As String
 	Public ReadOnly PtoLossMap As SubPath
@@ -81,7 +81,7 @@ Public Class Vehicle
 		CrossWindCorrectionFile = New SubPath
 
 		RetarderLossMapFile = New SubPath
-		AngularGearLossMapFile = New SubPath()
+		AngledriveLossMapFile = New SubPath()
 
 		Axles = New List(Of Axle)
 		PtoLossMap = New SubPath()
@@ -96,7 +96,7 @@ Public Class Vehicle
 		Dim vehicleData As VehicleData
 		Dim retarderData As RetarderData
 		Dim ptoData As PTOData = Nothing
-		Dim angledriveData As AngularGearData
+		Dim angledriveData As AngledriveData
 
 		Dim modeService As ExecutionModeServiceContainer = TryCast(validationContext.GetService(GetType(ExecutionMode)), 
 																	ExecutionModeServiceContainer)
@@ -110,12 +110,12 @@ Public Class Vehicle
 				vehicleData = doa.CreateVehicleData(vehicle, segment.Missions.First(),
 													segment.Missions.First().Loadings.First().Value)
 				retarderData = doa.CreateRetarderData(vehicle)
-				angledriveData = doa.CreateAngularGearData(vehicle, False)
+				angledriveData = doa.CreateAngledriveData(vehicle, False)
 			Else
 				Dim doa As EngineeringDataAdapter = New EngineeringDataAdapter()
 				vehicleData = doa.CreateVehicleData(vehicle)
 				retarderData = doa.CreateRetarderData(vehicle)
-				angledriveData = doa.CreateAngularGearData(vehicle, True)
+				angledriveData = doa.CreateAngledriveData(vehicle, True)
 				ptoData = doa.CreatePTOTransmissionData(vehicle)
 			End If
 
@@ -132,7 +132,7 @@ Public Class Vehicle
 					New ValidationResult("Retarder Configuration is invalid. ", result.Select(Function(r) r.ErrorMessage).ToList())
 			End If
 
-			If vehicle.AngularGearType = AngularGearType.SeparateAngularGear Then
+			If vehicle.AngledriveType = AngledriveType.SeparateAngledrive Then
 				result = angledriveData.Validate(If(Cfg.DeclMode, ExecutionMode.Declaration, ExecutionMode.Engineering))
 				If result.Any() Then
 					Return _
@@ -170,11 +170,11 @@ Public Class Vehicle
 		RetarderType = RetarderType.None
 		RetarderRatio = 1
 		RetarderLossMapFile.Clear()
-		AngularGearLossMapFile.Clear()
+		AngledriveLossMapFile.Clear()
 
-		AngularGearType = AngularGearType.None
-		AngularGearLossMapFile.Clear()
-		AngularGearRatio = 1
+		AngledriveType = AngledriveType.None
+		AngledriveLossMapFile.Clear()
+		AngledriveRatio = 1
 
 		PtoType = PTOTransmission.NoPTO
 		PtoLossMap.Clear()
@@ -227,10 +227,10 @@ Public Class Vehicle
 				{"Type", RetarderType.GetName()},
 				{"Ratio", RetarderRatio},
 				{"File", RetarderLossMapFile.PathOrDummy}}},
-				{"AngularGear", New Dictionary(Of String, Object) From {
-				{"Type", AngularGearType.ToString()},
-				{"Ratio", AngularGearRatio},
-				{"LossMap", AngularGearLossMapFile.PathOrDummy}}},
+				{"Angledrive", New Dictionary(Of String, Object) From {
+				{"Type", AngledriveType.ToString()},
+				{"Ratio", AngledriveRatio},
+				{"LossMap", AngledriveLossMapFile.PathOrDummy}}},
 				{"PTO", New Dictionary(Of String, Object) From {
 				{"Type", PtoType},
 				{"LossMap", PtoLossMap.PathOrDummy},
@@ -437,15 +437,15 @@ Public Class Vehicle
 		End Get
 	End Property
 
-	Public ReadOnly Property IAngularGearInputData_Ratio As Double Implements IAngularGearInputData.Ratio
+	Public ReadOnly Property IAngledriveInputData_Ratio As Double Implements IAngledriveInputData.IAngledriveInputData_Ratio
 		Get
-			Return AngularGearRatio
+			Return AngledriveRatio
 		End Get
 	End Property
 
-	Public ReadOnly Property IAngularGearInputData_Type As AngularGearType Implements IAngularGearInputData.Type
+	Public ReadOnly Property AngledriveInputDataType As AngledriveType Implements IAngledriveInputData.Type
 		Get
-			Return AngularGearType
+			Return AngledriveType
 		End Get
 	End Property
 
@@ -455,9 +455,9 @@ Public Class Vehicle
 		End Get
 	End Property
 
-	Public ReadOnly Property IAngularGearInputData_LossMap As TableData Implements IAngularGearInputData.LossMap
+	Public ReadOnly Property IAngledriveInputData_LossMap As TableData Implements IAngledriveInputData.IAngledriveInputData_LossMap
 		Get
-			Return VectoCSVFile.Read(AngularGearLossMapFile.FullPath)
+			Return VectoCSVFile.Read(AngledriveLossMapFile.FullPath)
 		End Get
 	End Property
 
@@ -467,9 +467,9 @@ Public Class Vehicle
 		End Get
 	End Property
 
-	Public ReadOnly Property Efficiency As Double Implements IAngularGearInputData.Efficiency
+	Public ReadOnly Property Efficiency As Double Implements IAngledriveInputData.Efficiency
 		Get
-			Return If(IsNumeric(AngularGearLossMapFile.OriginalPath), AngularGearLossMapFile.OriginalPath.ToDouble(), -1.0)
+			Return If(IsNumeric(AngledriveLossMapFile.OriginalPath), AngledriveLossMapFile.OriginalPath.ToDouble(), -1.0)
 		End Get
 	End Property
 

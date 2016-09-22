@@ -83,10 +83,10 @@ Public Class VehicleForm
 			.Cast(Of VehicleCategory) _
 			.Select(Function(category) New With {Key .Value = category, .label = category.GetLabel()}).ToList()
 
-		cbAngularGearType.ValueMember = "Value"
-		cbAngularGearType.DisplayMember = "Label"
-		cbAngularGearType.DataSource = [Enum].GetValues(GetType(AngularGearType)) _
-			.Cast(Of AngularGearType).Select(Function(type) New With {Key .Value = type, .Label = type.GetLabel()}).ToList()
+		cbAngledriveType.ValueMember = "Value"
+		cbAngledriveType.DisplayMember = "Label"
+		cbAngledriveType.DataSource = [Enum].GetValues(GetType(AngledriveType)) _
+			.Cast(Of AngledriveType).Select(Function(type) New With {Key .Value = type, .Label = type.GetLabel()}).ToList()
 		_axlDlog = New VehicleAxleDialog
 
 		cbPTOType.ValueMember = "Value"
@@ -325,7 +325,7 @@ Public Class VehicleForm
 																IEngineeringInputDataProvider)
 		Dim vehicle As IVehicleEngineeringInputData = inputData.VehicleInputData
 		Dim retarder As IRetarderInputData = inputData.RetarderInputData
-		Dim angularGear As IAngularGearInputData = inputData.AngularGearInputData
+		Dim angledrive As IAngledriveInputData = inputData.AngledriveInputData
 		Dim pto As IPTOTransmissionInputData = inputData.PTOTransmissionInputData
 
 		If Cfg.DeclMode <> vehicle.SavedInDeclarationMode Then
@@ -358,10 +358,10 @@ Public Class VehicleForm
 		TbRtPath.Text = If(retarder.LossMap Is Nothing, "", GetRelativePath(retarder.LossMap.Source, basePath))
 
 
-		cbAngularGearType.SelectedValue = angularGear.Type
-		tbAngularGearRatio.Text = angularGear.Ratio.ToGUIFormat()
-		tbAngularGearLossMapPath.Text =
-			If(angularGear.LossMap Is Nothing, "", GetRelativePath(angularGear.LossMap.Source, basePath))
+		cbAngledriveType.SelectedValue = angledrive.Type
+		tbAngledriveRatio.Text = angledrive.IAngledriveInputData_Ratio.ToGUIFormat()
+		tbAngledriveLossMapPath.Text =
+			If(angledrive.IAngledriveInputData_LossMap Is Nothing, "", GetRelativePath(angledrive.IAngledriveInputData_LossMap.Source, basePath))
 
 		LvRRC.Items.Clear()
 		Dim i As Integer = 0
@@ -443,9 +443,9 @@ Public Class VehicleForm
 		veh.RetarderRatio = TbRtRatio.Text.ToDouble(0)
 		veh.RetarderLossMapFile.Init(GetPath(file), TbRtPath.Text)
 
-		veh.AngularGearType = CType(cbAngularGearType.SelectedValue, AngularGearType)
-		veh.AngularGearRatio = tbAngularGearRatio.Text.ToDouble(0)
-		veh.AngularGearLossMapFile.Init(GetPath(file), tbAngularGearLossMapPath.Text)
+		veh.AngledriveType = CType(cbAngledriveType.SelectedValue, AngledriveType)
+		veh.AngledriveRatio = tbAngledriveRatio.Text.ToDouble(0)
+		veh.AngledriveLossMapFile.Init(GetPath(file), tbAngledriveLossMapPath.Text)
 
 		veh.VehicleCategory = CType(CbCat.SelectedValue, VehicleCategory) 'CType(CbCat.SelectedIndex, tVehCat)
 
@@ -613,8 +613,8 @@ Public Class VehicleForm
 
 	Private Sub TBcw_TextChanged(sender As Object, e As EventArgs) _
 		Handles TbLoad.TextChanged, TBrdyn.TextChanged, TBcdA.TextChanged, TbCdFile.TextChanged, TbRtRatio.TextChanged,
-				cbAngularGearType.SelectedIndexChanged, TbRtPath.TextChanged, tbAngularGearLossMapPath.TextChanged,
-				tbAngularGearRatio.TextChanged, tbPTOLossMap.TextChanged
+				cbAngledriveType.SelectedIndexChanged, TbRtPath.TextChanged, tbAngledriveLossMapPath.TextChanged,
+				tbAngledriveRatio.TextChanged, tbPTOLossMap.TextChanged
 		Change()
 	End Sub
 
@@ -781,23 +781,23 @@ Public Class VehicleForm
 
 #Region "Angular Gear"
 
-	Private Sub cbAngularGearType_SelectedIndexChanged(sender As Object, e As EventArgs) _
-		Handles cbAngularGearType.SelectedIndexChanged
-		Select Case CType(cbAngularGearType.SelectedValue, AngularGearType)
-			Case AngularGearType.SeparateAngularGear
-				pnAngularGearFields.Enabled = True
-				tbAngularGearRatio.Text = "1.0"
+	Private Sub cbAngledriveType_SelectedIndexChanged(sender As Object, e As EventArgs) _
+		Handles cbAngledriveType.SelectedIndexChanged
+		Select Case CType(cbAngledriveType.SelectedValue, AngledriveType)
+			Case AngledriveType.SeparateAngledrive
+				pnAngledriveFields.Enabled = True
+				tbAngledriveRatio.Text = "1.0"
 			Case Else 'Losses included in Transmission, None
-				tbAngularGearRatio.Text = ""
-				tbAngularGearLossMapPath.Text = ""
-				pnAngularGearFields.Enabled = False
+				tbAngledriveRatio.Text = ""
+				tbAngledriveLossMapPath.Text = ""
+				pnAngledriveFields.Enabled = False
 		End Select
 		Change()
 	End Sub
 
-	Private Sub btAngularGearLossMapBrowse_Click(sender As Object, e As EventArgs) Handles btAngularGearLossMapBrowse.Click
+	Private Sub btAngledriveLossMapBrowse_Click(sender As Object, e As EventArgs) Handles btAngledriveLossMapBrowse.Click
 		If TransmissionLossMapFileBrowser.OpenDialog(FileRepl(TbRtPath.Text, GetPath(_vehFile))) Then _
-			tbAngularGearLossMapPath.Text = GetFilenameWithoutDirectory(TransmissionLossMapFileBrowser.Files(0),
+			tbAngledriveLossMapPath.Text = GetFilenameWithoutDirectory(TransmissionLossMapFileBrowser.Files(0),
 																		GetPath(_vehFile))
 	End Sub
 

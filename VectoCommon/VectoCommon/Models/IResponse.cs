@@ -53,7 +53,7 @@ namespace TUGraz.VectoCommon.Models
 		Watt WheelsPowerRequest { get; set; }
 		Watt VehiclePowerRequest { get; set; }
 		Watt BrakePower { get; set; }
-		Watt AngularGearPowerRequest { get; set; }
+		Watt AngledrivePowerRequest { get; set; }
 
 		Watt AuxiliariesPowerDemand { get; set; }
 	}

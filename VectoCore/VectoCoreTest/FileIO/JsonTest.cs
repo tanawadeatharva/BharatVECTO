@@ -277,10 +277,10 @@ namespace TUGraz.VectoCore.Tests.FileIO
 		public void JSON_Read_AngleGear()
 		{
 			var json = (JObject)JToken.ReadFrom(new JsonTextReader(File.OpenText(TestVehicleFile)));
-			var angleGear = json["Body"]["AngularGear"];
+			var angleGear = json["Body"]["Angledrive"];
 
-			Assert.AreEqual(AngularGearType.SeparateAngularGear,
-				angleGear["Type"].Value<string>().ParseEnum<AngularGearType>());
+			Assert.AreEqual(AngledriveType.SeparateAngledrive,
+				angleGear["Type"].Value<string>().ParseEnum<AngledriveType>());
 			Assert.AreEqual(3.5, angleGear["Ratio"].Value<double>());
 			Assert.AreEqual("AngleGear.vtlm", angleGear["LossMap"].Value<string>());
 		}

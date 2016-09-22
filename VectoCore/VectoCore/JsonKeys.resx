@@ -185,19 +185,19 @@
 	<data name="Vehicle_PTO_Type" xml:space="preserve">
     <value>Type</value>
   </data>
-	<data name="Vehicle_AngularGear" xml:space="preserve">
-    <value>AngularGear</value>
+	<data name="Vehicle_Angledrive" xml:space="preserve">
+    <value>Angledrive</value>
   </data>
-	<data name="Vehicle_AngularGear_Type" xml:space="preserve">
+	<data name="Vehicle_Angledrive_Type" xml:space="preserve">
     <value>Type</value>
   </data>
-	<data name="Vehicle_AngularGear_Ratio" xml:space="preserve">
+	<data name="Vehicle_Angledrive_Ratio" xml:space="preserve">
     <value>Ratio</value>
   </data>
-	<data name="Vehicle_AngularGear_LossMapFile" xml:space="preserve">
+	<data name="Vehicle_Angledrive_LossMapFile" xml:space="preserve">
     <value>LossMap</value>
   </data>
-	<data name="Vehicle_AngularGear_Efficiency" xml:space="preserve">
+	<data name="Vehicle_Angledrive_Efficiency" xml:space="preserve">
     <value>Efficiency</value>
   </data>
 	<data name="Engine_ModelName" xml:space="preserve">

@@ -138,7 +138,7 @@
     <Compile Include="InputData\Reader\ComponentData\AccelerationCurveReader.cs" />
     <Compile Include="Models\Declaration\PTOTransmission.cs" />
     <Compile Include="Models\Declaration\IDeclarationAuxiliaryTable.cs" />
-    <Compile Include="Models\SimulationComponent\Data\AngularGearData.cs" />
+    <Compile Include="Models\SimulationComponent\Data\AngledriveData.cs" />
     <Compile Include="InputData\Reader\ComponentData\TransmissionLossMapReader.cs" />
     <Compile Include="InputData\Reader\ComponentData\RetarderLossMapReader.cs" />
     <Compile Include="InputData\Reader\ComponentData\TorqueConverterDataReader.cs" />
@@ -195,7 +195,7 @@
     <Compile Include="Models\SimulationComponent\IDrivingCycleInfo.cs" />
     <Compile Include="Models\SimulationComponent\IAuxPort.cs" />
     <Compile Include="Models\SimulationComponent\Impl\AMTShiftStrategy.cs" />
-    <Compile Include="Models\SimulationComponent\Impl\AngularGear.cs" />
+    <Compile Include="Models\SimulationComponent\Impl\Angledrive.cs" />
     <Compile Include="Models\SimulationComponent\Impl\Brakes.cs" />
     <Compile Include="Models\SimulationComponent\Impl\BusAuxiliariesAdapter.cs" />
     <Compile Include="Models\SimulationComponent\Impl\CycleGearbox.cs" />

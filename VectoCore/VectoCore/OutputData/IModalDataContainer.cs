@@ -235,7 +235,7 @@ namespace TUGraz.VectoCore.OutputData
 			return data.TimeIntegral<WattSecond>(ModalResultField.P_ret_loss);
 		}
 
-		public static WattSecond WorkAngularGear(this IModalDataContainer data)
+		public static WattSecond WorkAngledrive(this IModalDataContainer data)
 		{
 			return data.TimeIntegral<WattSecond>(ModalResultField.P_angle_loss);
 		}

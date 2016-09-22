@@ -74,7 +74,7 @@ namespace TUGraz.VectoCore.Tests.Models.SimulationComponent
 		public const string AxleGearValidRangeDataFile = @"TestData\Components\AxleGearValidRange.vgbx";
 		public const string AxleGearInvalidRangeDataFile = @"TestData\Components\AxleGearInvalidRange.vgbx";
 
-		public const string AngularGearLossMap = @"TestData\Components\AngleGear.vtlm";
+		public const string AngledriveLossMap = @"TestData\Components\AngleGear.vtlm";
 
 		private static GearboxData CreateGearboxData()
 		{
@@ -152,7 +152,7 @@ namespace TUGraz.VectoCore.Tests.Models.SimulationComponent
 		}
 
 		[TestCase(520, 20.320, 279698.4, 9401.44062, 3.240355)]
-		public void AngularGear_Losses(double rdyn, double speed, double power, double expectedLoss, double ratio)
+		public void Angledrive_Losses(double rdyn, double speed, double power, double expectedLoss, double ratio)
 		{
 			// convert to SI
 			var angSpeed = SpeedToAngularSpeed(speed, rdyn);
@@ -162,24 +162,24 @@ namespace TUGraz.VectoCore.Tests.Models.SimulationComponent
 
 			// setup components
 			var vehicle = new VehicleContainer(ExecutionMode.Engineering);
-			var angularGearData = new AngularGearData {
-				AngularGear = new TransmissionData {
-					LossMap = TransmissionLossMapReader.Create(VectoCSVFile.Read(AngularGearLossMap), ratio, "AngularGear"),
+			var angledriveData = new AngledriveData {
+				Angledrive = new TransmissionData {
+					LossMap = TransmissionLossMapReader.Create(VectoCSVFile.Read(AngledriveLossMap), ratio, "Angledrive"),
 					Ratio = ratio
 				}
 			};
 			var mockPort = new MockTnOutPort();
-			var angularGear = new AngularGear(vehicle, angularGearData);
-			angularGear.InPort().Connect(mockPort);
+			var angledrive = new Angledrive(vehicle, angledriveData);
+			angledrive.InPort().Connect(mockPort);
 
 			// issue request
-			angularGear.Request(0.SI<Second>(), 1.SI<Second>(), torqueToWheels, angSpeed);
+			angledrive.Request(0.SI<Second>(), 1.SI<Second>(), torqueToWheels, angSpeed);
 
 			// test
-			AssertHelper.AreRelativeEqual(angSpeed * angularGearData.AngularGear.Ratio, mockPort.AngularVelocity,
+			AssertHelper.AreRelativeEqual(angSpeed * angledriveData.Angledrive.Ratio, mockPort.AngularVelocity,
 				"AngularVelocity Engine Side");
 
-			AssertHelper.AreRelativeEqual((PvD + loss) / (angSpeed * angularGearData.AngularGear.Ratio), mockPort.Torque,
+			AssertHelper.AreRelativeEqual((PvD + loss) / (angSpeed * angledriveData.Angledrive.Ratio), mockPort.Torque,
 				"Torque Engine Side");
 		}
 

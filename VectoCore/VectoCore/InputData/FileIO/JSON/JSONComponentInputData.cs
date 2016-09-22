@@ -11,7 +11,7 @@ namespace TUGraz.VectoCore.InputData.FileIO.JSON
 		protected IGearboxEngineeringInputData Gearbox;
 		protected IAxleGearInputData AxleGear;
 		protected ITorqueConverterEngineeringInputData TorqueConverter;
-		protected IAngularGearInputData AngularGear;
+		protected IAngledriveInputData Angledrive;
 		protected IEngineEngineeringInputData Engine;
 		protected IVehicleEngineeringInputData VehicleData;
 		protected IRetarderInputData Retarder;
@@ -40,7 +40,7 @@ namespace TUGraz.VectoCore.InputData.FileIO.JSON
 				.If<IAxleGearInputData>(c => AxleGear = c)
 				.If<IRetarderInputData>(c => Retarder = c)
 				.If<ITorqueConverterEngineeringInputData>(c => TorqueConverter = c)
-				.If<IAngularGearInputData>(c => AngularGear = c)
+				.If<IAngledriveInputData>(c => Angledrive = c)
 				.If<IPTOTransmissionInputData>(c => PTOTransmission = c);
 		}
 
@@ -91,9 +91,9 @@ namespace TUGraz.VectoCore.InputData.FileIO.JSON
 			get { return AxleGear; }
 		}
 
-		public IAngularGearInputData AngularGearInputData
+		public IAngledriveInputData AngledriveInputData
 		{
-			get { return AngularGear; }
+			get { return Angledrive; }
 		}
 
 		IEngineDeclarationInputData IDeclarationInputDataProvider.EngineInputData

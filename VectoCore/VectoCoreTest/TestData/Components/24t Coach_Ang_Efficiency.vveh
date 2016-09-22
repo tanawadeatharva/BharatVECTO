@@ -22,8 +22,8 @@
 			"Ratio": 1.0,
 			"File": "Retarder.vrlm"
 		},
-		"AngularGear": {
-			"Type" : "SeparateAngularGear",
+		"Angledrive": {
+			"Type" : "SeparateAngledrive",
 			"Ratio": 3.5,
 			"Efficiency": "0.95"
 		},

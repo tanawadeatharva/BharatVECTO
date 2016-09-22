@@ -117,7 +117,7 @@ namespace TUGraz.VectoCore.InputData.FileIO.JSON
 		protected readonly IGearboxEngineeringInputData Gearbox;
 		protected readonly IAxleGearInputData AxleGear;
 		protected readonly ITorqueConverterEngineeringInputData TorqueConverter;
-		protected readonly IAngularGearInputData AngularGear;
+		protected readonly IAngledriveInputData Angledrive;
 		protected readonly IEngineEngineeringInputData Engine;
 		protected readonly IVehicleEngineeringInputData VehicleData;
 		protected readonly IRetarderInputData Retarder;
@@ -154,7 +154,7 @@ namespace TUGraz.VectoCore.InputData.FileIO.JSON
 					VehicleData = JSONInputDataFactory.ReadJsonVehicle(
 						Path.Combine(BasePath, vehicleFile));
 
-					AngularGear = VehicleData as IAngularGearInputData;
+					Angledrive = VehicleData as IAngledriveInputData;
 					Retarder = VehicleData as IRetarderInputData;
 					PTOTransmission = VehicleData as IPTOTransmissionInputData;
 				}
@@ -241,9 +241,9 @@ namespace TUGraz.VectoCore.InputData.FileIO.JSON
 			}
 		}
 
-		public IAngularGearInputData AngularGearInputData
+		public IAngledriveInputData AngledriveInputData
 		{
-			get { return AngularGear; }
+			get { return Angledrive; }
 		}
 
 		IEngineDeclarationInputData IDeclarationInputDataProvider.EngineInputData

@@ -110,7 +110,7 @@ namespace TUGraz.VectoCore.Models.Simulation.Impl
 			var powertrain = new PWheelCycle(container, data.Cycle, data.AxleGearData.AxleGear.Ratio,
 				gearbox.ModelData.Gears.ToDictionary(g => g.Key, g => g.Value.Ratio))
 				.AddComponent(new AxleGear(container, data.AxleGearData))
-				.AddComponent(data.AngularGearData != null ? new AngularGear(container, data.AngularGearData) : null)
+				.AddComponent(data.AngledriveData != null ? new Angledrive(container, data.AngledriveData) : null)
 				.AddComponent(gearbox, data.Retarder, data.PTO, container)
 				.AddComponent(new Clutch(container, data.EngineData));
 			var engine = new CombustionEngine(container, data.EngineData, pt1Disabled: true);
@@ -138,7 +138,7 @@ namespace TUGraz.VectoCore.Models.Simulation.Impl
 				.AddComponent(new Wheels(container, data.VehicleData.DynamicTyreRadius, data.VehicleData.WheelsInertia))
 				.AddComponent(new Brakes(container))
 				.AddComponent(new AxleGear(container, data.AxleGearData))
-				.AddComponent(data.AngularGearData != null ? new AngularGear(container, data.AngularGearData) : null)
+				.AddComponent(data.AngledriveData != null ? new Angledrive(container, data.AngledriveData) : null)
 				.AddComponent(GetGearbox(container, data.GearboxData, data.EngineData.Inertia), data.Retarder, data.PTO, container);
 			if (data.GearboxData.Type.ManualTransmission()) {
 				powertrain = powertrain.AddComponent(new Clutch(container, data.EngineData));
@@ -169,7 +169,7 @@ namespace TUGraz.VectoCore.Models.Simulation.Impl
 				.AddComponent(new Wheels(container, data.VehicleData.DynamicTyreRadius, data.VehicleData.WheelsInertia))
 				.AddComponent(new Brakes(container))
 				.AddComponent(new AxleGear(container, data.AxleGearData))
-				.AddComponent(data.AngularGearData != null ? new AngularGear(container, data.AngularGearData) : null)
+				.AddComponent(data.AngledriveData != null ? new Angledrive(container, data.AngledriveData) : null)
 				.AddComponent(GetGearbox(container, data.GearboxData, data.EngineData.Inertia), data.Retarder, data.PTO, container);
 			if (data.GearboxData.Type.ManualTransmission()) {
 				powertrain = powertrain.AddComponent(new Clutch(container, data.EngineData));
@@ -196,7 +196,7 @@ namespace TUGraz.VectoCore.Models.Simulation.Impl
 				.AddComponent(new Wheels(container, data.VehicleData.DynamicTyreRadius, data.VehicleData.WheelsInertia))
 				.AddComponent(new Brakes(container))
 				.AddComponent(new AxleGear(container, data.AxleGearData))
-				.AddComponent(data.AngularGearData != null ? new AngularGear(container, data.AngularGearData) : null)
+				.AddComponent(data.AngledriveData != null ? new Angledrive(container, data.AngledriveData) : null)
 				.AddComponent(GetGearbox(container, data.GearboxData, data.EngineData.Inertia), data.Retarder, data.PTO, container);
 			if (data.GearboxData.Type.ManualTransmission()) {
 				powertrain = powertrain.AddComponent(new Clutch(container, data.EngineData));
