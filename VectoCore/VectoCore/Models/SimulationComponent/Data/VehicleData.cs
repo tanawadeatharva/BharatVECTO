@@ -205,12 +205,12 @@ namespace TUGraz.VectoCore.Models.SimulationComponent.Data
 			}
 			// vvvvvvv these checks apply only for declaration mode! vvvvvv
 
-			if (vehicleData.AxleConfiguration.NumAxles() != vehicleData.AxleData.Count) {
-				return
-					new ValidationResult(
-						string.Format("For a {0} type vehicle exactly {1} number of axles have to pe specified. Found {2}",
-							vehicleData.AxleConfiguration.GetName(), vehicleData.AxleConfiguration.NumAxles(), vehicleData.AxleData.Count));
-			}
+			//if (vehicleData.AxleConfiguration.NumAxles() != vehicleData.AxleData.Count) {
+			//	return
+			//		new ValidationResult(
+			//			string.Format("For a {0} type vehicle exactly {1} number of axles have to pe specified. Found {2}",
+			//				vehicleData.AxleConfiguration.GetName(), vehicleData.AxleConfiguration.NumAxles(), vehicleData.AxleData.Count));
+			//}
 
 			if (vehicleData.TotalVehicleWeight() > gvwTotal) {
 				return new ValidationResult(

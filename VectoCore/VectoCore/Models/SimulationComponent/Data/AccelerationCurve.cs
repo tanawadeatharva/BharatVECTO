@@ -31,6 +31,7 @@
 
 using System;
 using System.Collections.Generic;
+using System.ComponentModel.DataAnnotations;
 using System.Diagnostics;
 using System.Linq;
 using TUGraz.VectoCommon.Utils;
@@ -100,7 +101,10 @@ namespace TUGraz.VectoCore.Models.SimulationComponent.Data
 		[DebuggerDisplay("Acceleration: {Acceleration}, Deceleration: {Deceleration}")]
 		public class AccelerationEntry
 		{
+			[Required, SIRange(0.3, 10)]
 			public MeterPerSquareSecond Acceleration { get; set; }
+
+			[Required, SIRange(-0.5, -10)]
 			public MeterPerSquareSecond Deceleration { get; set; }
 		}
 
