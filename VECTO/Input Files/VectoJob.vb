@@ -113,7 +113,7 @@ Public Class VectoJob
 		If validationResults.Count > 0 Then
 			Dim messages As IEnumerable(Of String) =
 					validationResults.Select(Function(r) r.ErrorMessage + String.Join(", ", r.MemberNames.Distinct()))
-			MsgBox("Invalid input." + Environment.NewLine + String.Join("; ", messages), MsgBoxStyle.OkOnly,
+			MsgBox("Invalid input." + Environment.NewLine + String.Join(Environment.NewLine, messages), MsgBoxStyle.OkOnly,
 					"Failed to save Vecto Job")
 			Return False
 		End If
@@ -552,7 +552,9 @@ Public Class VectoJob
 			If Not File.Exists(_driverAccelerationFile.FullPath) Then
 				Try
 					Dim cycleDataRes As Stream =
-							RessourceHelper.ReadStream(RessourceHelper.Namespace + "VACC." + _driverAccelerationFile.OriginalPath + VectoCore.Configuration.Constants.FileExtensions.DriverAccelerationCurve)
+							RessourceHelper.ReadStream(
+								RessourceHelper.Namespace + "VACC." + _driverAccelerationFile.OriginalPath +
+								VectoCore.Configuration.Constants.FileExtensions.DriverAccelerationCurve)
 					Return VectoCSVFile.ReadStream(cycleDataRes)
 				Catch ex As Exception
 					Return Nothing
@@ -615,7 +617,20 @@ Public Class VectoJob
 		vectoJob._engineInputData = New JSONComponentInputData(vectoJob._engineFile.FullPath)
 		vectoJob._gearboxInputData = New JSONComponentInputData(vectoJob._gearboxFile.FullPath)
 
+
 		Dim result As IList(Of ValidationResult) = New List(Of ValidationResult)
+
+		If vectoJob._vehicleInputData.VehicleInputData Is Nothing Then _
+			result.Add(New ValidationResult("Vehicle File is missing or invalid"))
+		If vectoJob._engineInputData.EngineInputData Is Nothing Then _
+			result.Add(New ValidationResult("Engine File is missing or invalid"))
+		If vectoJob._gearboxInputData.GearboxInputData Is Nothing Then _
+			result.Add(New ValidationResult("Gearbox File is missing or invalid"))
+
+		If result.Any() Then
+			Return _
+				New ValidationResult("Vecto Job Configuration is invalid. ", result.Select(Function(r) r.ErrorMessage).ToList())
+		End If
 		Try
 			If mode = ExecutionMode.Declaration Then
 				If Not vectoJob._vehicleInputData.VehicleInputData.SavedInDeclarationMode Then

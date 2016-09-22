@@ -353,7 +353,12 @@ Public Class VectoJobForm
 				Return False
 			End If
 		End If
-		Return VECTOsave(VectoFile)
+		Try
+			Return VECTOsave(VectoFile)
+		Catch ex As Exception
+			MsgBox("Error when saving file" + Environment.NewLine + ex.Message)
+			Return False
+		End Try
 	End Function
 
 	'Open file
@@ -524,36 +529,36 @@ Public Class VectoJobForm
 		End If
 
 
-		Dim vec0 As VectoJob = New VectoJob
-		vec0.FilePath = file
+		Dim vectoJob As VectoJob = New VectoJob
+		vectoJob.FilePath = file
 
 		'Files ------------------------------------------------- -----------------
 
-		vec0.PathVeh = TbVEH.Text
-		vec0.PathEng = TbENG.Text
+		vectoJob.PathVeh = TbVEH.Text
+		vectoJob.PathEng = TbENG.Text
 
 		For Each lv0 As ListViewItem In LvCycles.Items
 			Dim sb As SubPath = New SubPath
 			sb.Init(GetPath(file), lv0.Text)
-			vec0.CycleFiles.Add(sb)
+			vectoJob.CycleFiles.Add(sb)
 		Next
 
-		vec0.PathGbx = TbGBX.Text
+		vectoJob.PathGbx = TbGBX.Text
 
 
 		'Start/Stop
-		vec0.StartStop = ChBStartStop.Checked
-		vec0.StartStopMaxSpeed = TbSSspeed.Text.ToDouble()
-		vec0.StartStopTime = TbSStime.Text.ToDouble()
-		vec0.StartStopDelay = TbSSdelay.Text.ToDouble()
+		vectoJob.StartStop = ChBStartStop.Checked
+		vectoJob.StartStopMaxSpeed = TbSSspeed.Text.ToDouble()
+		vectoJob.StartStopTime = TbSStime.Text.ToDouble()
+		vectoJob.StartStopDelay = TbSSdelay.Text.ToDouble()
 
 		'a_DesMax
-		vec0.DesMaxFile = TbDesMaxFile.Text
+		vectoJob.DesMaxFile = TbDesMaxFile.Text
 
 		'AA-TB
-		vec0.AuxiliaryAssembly = DirectCast(cboAdvancedAuxiliaries.SelectedItem, AdvancedAuxiliary).AssemblyName
-		vec0.AuxiliaryVersion = DirectCast(cboAdvancedAuxiliaries.SelectedItem, AdvancedAuxiliary).AuxiliaryVersion
-		vec0.AdvancedAuxiliaryFilePath = txtAdvancedAuxiliaryFile.Text
+		vectoJob.AuxiliaryAssembly = DirectCast(cboAdvancedAuxiliaries.SelectedItem, AdvancedAuxiliary).AssemblyName
+		vectoJob.AuxiliaryVersion = DirectCast(cboAdvancedAuxiliaries.SelectedItem, AdvancedAuxiliary).AuxiliaryVersion
+		vectoJob.AdvancedAuxiliaryFilePath = txtAdvancedAuxiliaryFile.Text
 
 		For Each lv0 As ListViewItem In LvAux.Items
 			Dim auxEntry As VectoJob.AuxEntry = New VectoJob.AuxEntry
@@ -566,29 +571,29 @@ Public Class VectoJobForm
 			End If
 
 			auxEntry.Type = lv0.SubItems(1).Text
-			vec0.AuxPaths.Add(lv0.SubItems(0).Text, auxEntry)
+			vectoJob.AuxPaths.Add(lv0.SubItems(0).Text, auxEntry)
 		Next
 
-		vec0.EngineOnly = CbEngOnly.Checked
+		vectoJob.EngineOnly = CbEngOnly.Checked
 
-		vec0.EcoRollOn = RdEcoRoll.Checked
-		vec0.OverSpeedOn = RdOverspeed.Checked
-		vec0.OverSpeed = TbOverspeed.Text.ToDouble(0)
-		vec0.UnderSpeed = TbUnderSpeed.Text.ToDouble(0)
-		vec0.VMin = TbVmin.Text.ToDouble(0)
-		vec0.LookAheadOn = CbLookAhead.Checked
+		vectoJob.EcoRollOn = RdEcoRoll.Checked
+		vectoJob.OverSpeedOn = RdOverspeed.Checked
+		vectoJob.OverSpeed = TbOverspeed.Text.ToDouble(0)
+		vectoJob.UnderSpeed = TbUnderSpeed.Text.ToDouble(0)
+		vectoJob.VMin = TbVmin.Text.ToDouble(0)
+		vectoJob.LookAheadOn = CbLookAhead.Checked
 		'vec0.ALookahead = CSng(fTextboxToNumString(TbAlookahead.Text))
 		'vec0.VMinLa = CSng(fTextboxToNumString(TbVminLA.Text))
-		vec0.LookAheadMinSpeed = tbLacMinSpeed.Text.ToDouble(0)
-		vec0.LacPreviewFactor = tbLacPreviewFactor.Text.ToDouble(0)
-		vec0.LacDfOffset = tbDfCoastingOffset.Text.ToDouble(0)
-		vec0.LacDfScale = tbDfCoastingScale.Text.ToDouble(0)
-		vec0.LacDfTargetSpeedFile = tbLacDfTargetSpeedFile.Text
-		vec0.LacDfVelocityDropFile = tbLacDfVelocityDropFile.Text
+		vectoJob.LookAheadMinSpeed = tbLacMinSpeed.Text.ToDouble(0)
+		vectoJob.LacPreviewFactor = tbLacPreviewFactor.Text.ToDouble(0)
+		vectoJob.LacDfOffset = tbDfCoastingOffset.Text.ToDouble(0)
+		vectoJob.LacDfScale = tbDfCoastingScale.Text.ToDouble(0)
+		vectoJob.LacDfTargetSpeedFile = tbLacDfTargetSpeedFile.Text
+		vectoJob.LacDfVelocityDropFile = tbLacDfVelocityDropFile.Text
 		'------------------------------------------------------------
 
 		'SAVE
-		If Not vec0.SaveFile Then
+		If Not vectoJob.SaveFile Then
 			MsgBox("Cannot safe to " & file, MsgBoxStyle.Critical)
 			Return False
 		End If
@@ -620,8 +625,9 @@ Public Class VectoJobForm
 		TbDesMaxFile.Text = ""
 
 		'Start/Stop
-		TbSSspeed.Text = "5"
-		TbSStime.Text = "5"
+		TbSSspeed.Text = DeclarationData.Driver.StartStop.MaxSpeed.AsKmph().ToGUIFormat()
+		TbSStime.Text = DeclarationData.Driver.StartStop.MinTime.ToGUIFormat()
+		TbSSdelay.Text = DeclarationData.Driver.StartStop.Delay.ToGUIFormat()
 		ChBStartStop.Checked = False
 
 		LvAux.Items.Clear()
@@ -631,13 +637,15 @@ Public Class VectoJobForm
 		RdOff.Checked = True
 		CbLookAhead.Checked = True
 		'TbAlookahead.Text = "-0.5"
-		TbOverspeed.Text = ""
-		TbUnderSpeed.Text = ""
-		TbVmin.Text = ""
+		TbOverspeed.Text = DeclarationData.Driver.OverSpeedEcoRoll.OverSpeed.AsKmph().ToGUIFormat()
+		TbUnderSpeed.Text = DeclarationData.Driver.OverSpeedEcoRoll.UnderSpeed.AsKmph().ToGUIFormat()
+		TbVmin.Text = DeclarationData.Driver.OverSpeedEcoRoll.MinSpeed.AsKmph().ToGUIFormat()
+
 		'TbVminLA.Text = "50"
-		tbLacPreviewFactor.Text = "10"
-		tbDfCoastingOffset.Text = "2.5"
-		tbDfCoastingScale.Text = "1.5"
+		tbLacMinSpeed.Text = DeclarationData.Driver.LookAhead.MinimumSpeed.AsKmph().ToGUIFormat()
+		tbLacPreviewFactor.Text = DeclarationData.Driver.LookAhead.LookAheadDistanceFactor.ToGUIFormat()
+		tbDfCoastingOffset.Text = DeclarationData.Driver.LookAhead.DecisionFactorCoastingOffset.ToGUIFormat()
+		tbDfCoastingScale.Text = DeclarationData.Driver.LookAhead.DecisionFactorCoastingScaling.ToGUIFormat()
 		tbLacDfTargetSpeedFile.Text = ""
 		tbLacDfVelocityDropFile.Text = ""
 
@@ -1000,10 +1008,8 @@ lbDlog:
 		Dim i As Integer
 		Dim pmax As Double
 
-		Dim HDVclass As String
-
 		Dim s As Series
-		Dim a As ChartArea
+		Dim a As ChartArea = New ChartArea()
 		Dim img As Bitmap
 
 		Dim engOk As Boolean = False
@@ -1017,224 +1023,246 @@ lbDlog:
 		PicVehicle.Image = Nothing
 		PicBox.Image = Nothing
 
-		Dim inputData As IEngineeringInputDataProvider = TryCast(JSONInputDataFactory.ReadComponentData(VectoFile), 
-																IEngineeringInputDataProvider)
-		Dim vehicle As IVehicleEngineeringInputData = inputData.VehicleInputData
+		UpdateVehiclePic()
 
-		If Not vehicle Is Nothing Then
-			Dim maxMass As Kilogram = vehicle.GrossVehicleMassRating					'CSng(fTextboxToNumString(TbMassMass.Text))
+		Dim chart As Chart = Nothing
+		UpdateEnginePic(chart)
 
-			Dim s0 As Segment = Nothing
+
+		UpdateGearboxPic(chart)
+
+		If chart Is Nothing Then Return
+
+		a.Name = "main"
+
+		a.AxisX.Title = "engine speed [1/min]"
+		a.AxisX.TitleFont = New Font("Helvetica", 10)
+		a.AxisX.LabelStyle.Font = New Font("Helvetica", 8)
+		a.AxisX.LabelAutoFitStyle = LabelAutoFitStyles.None
+		a.AxisX.MajorGrid.LineDashStyle = ChartDashStyle.Dot
+
+		a.AxisY.Title = "engine torque [Nm]"
+		a.AxisY.TitleFont = New Font("Helvetica", 10)
+		a.AxisY.LabelStyle.Font = New Font("Helvetica", 8)
+		a.AxisY.LabelAutoFitStyle = LabelAutoFitStyles.None
+		a.AxisY.MajorGrid.LineDashStyle = ChartDashStyle.Dot
+
+		a.AxisX.Minimum = 300
+		a.BorderDashStyle = ChartDashStyle.Solid
+		a.BorderWidth = 1
+
+		a.BackColor = Color.GhostWhite
+
+		chart.ChartAreas.Add(a)
+		chart.Update()
+
+		img = New Bitmap(chart.Width, chart.Height, PixelFormat.Format32bppArgb)
+		chart.DrawToBitmap(img, New Rectangle(0, 0, PicBox.Width, PicBox.Height))
+
+		PicBox.Image = img
+	End Sub
+
+	Private Sub UpdateGearboxPic(ByRef chartArea As Chart)
+		Dim s As Series
+		Dim i As Integer
+
+		Dim gearbox As IGearboxEngineeringInputData = Nothing
+		Dim gearboxFile As String =
+				If(Not String.IsNullOrWhiteSpace(VectoFile), Path.Combine(Path.GetDirectoryName(VectoFile), TbGBX.Text), TbGBX.Text)
+		If File.Exists(gearboxFile) Then
 			Try
-				s0 = DeclarationData.Segments.Lookup(vehicle.VehicleCategory, vehicle.AxleConfiguration, maxMass, 0.SI(Of Kilogram),
-													True)
+				Dim inputData As IEngineeringInputDataProvider = TryCast(JSONInputDataFactory.ReadComponentData(gearboxFile), 
+																		IEngineeringInputDataProvider)
+				gearbox = inputData.GearboxInputData
 			Catch
 			End Try
-			If Not s0 Is Nothing Then
-				HDVclass = s0.VehicleClass.GetClassNumber()
-
-				If Cfg.DeclMode Then
-					LvCycles.Items.Clear()
-					Dim m0 As Mission
-					For Each m0 In s0.Missions
-						LvCycles.Items.Add(m0.MissionType.ToString())
-					Next
-				End If
-
-			Else
-				HDVclass = "-"
-			End If
-
-			PicVehicle.Image = ConvPicPath(If(s0 Is Nothing, -1, HDVclass.ToInt()), False) _
-			'Image.FromFile(cDeclaration.ConvPicPath(HDVclass, False))
-
-			TbHVCclass.Text = "HDV Class " & HDVclass
-			TbVehCat.Text = vehicle.VehicleCategory.GetCategoryName()	'ConvVehCat(VEH0.VehCat, True)
-			TbMass.Text = (vehicle.GrossVehicleMassRating.Value() / 1000) & " t"
-			TbAxleConf.Text = vehicle.AxleConfiguration.GetName()	'ConvAxleConf(VEH0.AxleConf)
-
 		End If
 
+		If gearbox Is Nothing Then Return
 
-		Dim okCount As Integer = 0
+		TbGbxTxt.Text = gearbox.Gears.Count & "-Speed " & gearbox.Type.ShortName() & "  " & gearbox.ModelName
 
-		Dim engine As IEngineEngineeringInputData = inputData.EngineInputData
+		If Cfg.DeclMode Then
+			For i = 1 To gearbox.Gears.Count
+				'If FLD0.Init(ENG0.Nidle) Then '' use engine from below...
+
+				'Dim engine As CombustionEngineData = ConvertToEngineData(FLD0, F_VECTO.n_idle)
+				'Dim shiftLines As ShiftPolygon = DeclarationData.Gearbox.ComputeShiftPolygon(Gear - 1,
+				'																			engine.FullLoadCurve, gears,
+				'																			engine,
+				'																			Double.Parse(LvGears.Items(0).SubItems(F_GBX.GearboxTbl.Ratio).Text,
+				'																						CultureInfo.InvariantCulture),
+				'																			(.rdyn / 1000.0).SI(Of Meter))
+
+				's = New Series
+				's.Points.DataBindXY(shiftLines.Upshift.Select(Function(pt) pt.AngularSpeed.Value() / Constants.RPMToRad).ToList(),
+				'					shiftLines.Upshift.Select(Function(pt) pt.Torque.Value()).ToList())
+				's.ChartType = SeriesChartType.FastLine
+				's.BorderWidth = 2
+				's.Color = Color.DarkRed
+				's.Name = "Upshift curve (" & i & ")"
+				'MyChart.Series.Add(s)
+
+				's = New Series
+				's.Points.DataBindXY(
+				'	shiftLines.Downshift.Select(Function(pt) pt.AngularSpeed.Value() / Constants.RPMToRad).ToList(),
+				'	shiftLines.Downshift.Select(Function(pt) pt.Torque.Value()).ToList())
+				's.ChartType = SeriesChartType.FastLine
+				's.BorderWidth = 2
+				's.Color = Color.DarkRed
+				's.Name = "Downshift curve (" & i & ")"
+				'MyChart.Series.Add(s)
+				'End If
+
+				'	OkCount += 1
+
+				'	pmax = FLD0.Pfull(FLD0.EngineRatedSpeed)
+
+				'End If
+			Next
+		Else
+			For Each gear As ITransmissionInputData In gearbox.Gears
+				If gear.ShiftPolygon Is Nothing OrElse gear.ShiftPolygon.Rows.Count = 0 Then Continue For
+				Dim shiftPolygon As ShiftPolygon = ShiftPolygonReader.Create(gear.ShiftPolygon)
+				s = New Series
+				s.Points.DataBindXY(shiftPolygon.Upshift.Select(Function(x) x.AngularSpeed),
+									shiftPolygon.Upshift.Select(Function(x) x.Torque))
+				s.ChartType = SeriesChartType.FastLine
+				s.BorderWidth = 2
+				s.Color = Color.DarkRed
+				s.Name = "Upshift curve"
+				' MyChart.Series.Add(s) 'MQ 2016-06-20: do not plot shift lines in engine dialog
+
+				s = New Series
+				s.Points.DataBindXY(shiftPolygon.Downshift.Select(Function(x) x.AngularSpeed),
+									shiftPolygon.Downshift.Select(Function(x) x.Torque))
+				s.ChartType = SeriesChartType.FastLine
+				s.BorderWidth = 2
+				s.Color = Color.DarkRed
+				s.Name = "Downshift curve"
+				'MyChart.Series.Add(s) 'MQ 2016-06-20:do not plot shift lines in engine dialog
+			Next
+		End If
+	End Sub
+
+	Private Sub UpdateEnginePic(ByRef chart As Chart)
+		Dim s As Series
+		Dim pmax As Double
+
+		Dim engine As IEngineEngineeringInputData = Nothing
+		Dim engineFile As String =
+				If(Not String.IsNullOrWhiteSpace(VectoFile), Path.Combine(Path.GetDirectoryName(VectoFile), TbENG.Text), TbENG.Text)
+		If File.Exists(engineFile) Then
+			Try
+				Dim inputData As IEngineeringInputDataProvider = TryCast(JSONInputDataFactory.ReadComponentData(engineFile), 
+																		IEngineeringInputDataProvider)
+				engine = inputData.EngineInputData
+			Catch
+				Return
+			End Try
+		End If
+
 		'engine.FilePath = fFileRepl(TbENG.Text, GetPath(VECTOfile))
 
 		'Create plot
-		Dim chart As Chart = New Chart
+		chart = New Chart
 		chart.Width = PicBox.Width
 		chart.Height = PicBox.Height
 
-		a = New ChartArea
 
 		'Dim FLD0 As EngineFullLoadCurve = New EngineFullLoadCurve
 
-		If Not engine Is Nothing Then
-
-			engine.IdleSpeed.Value()
-
-			Dim fullLoadCurve As FullLoadCurve = EngineFullLoadCurve.Create(engine.FullLoadCurve)
-
-			s = New Series
-			s.Points.DataBindXY(fullLoadCurve.FullLoadEntries.Select(Function(x) x.EngineSpeed.AsRPM).ToArray(),
-								fullLoadCurve.FullLoadEntries.Select(Function(x) x.TorqueFullLoad.Value()).ToArray())
-			s.ChartType = SeriesChartType.FastLine
-			s.BorderWidth = 2
-			s.Color = Color.DarkBlue
-			s.Name = "Full load"
-			chart.Series.Add(s)
-
-			s = New Series
-			s.Points.DataBindXY(fullLoadCurve.FullLoadEntries.Select(Function(x) x.EngineSpeed.AsRPM).ToArray(),
-								fullLoadCurve.FullLoadEntries.Select(Function(x) x.TorqueDrag.Value()).ToArray())
-			s.ChartType = SeriesChartType.FastLine
-			s.BorderWidth = 2
-			s.Color = Color.Blue
-			s.Name = "Motoring"
-			chart.Series.Add(s)
-
-			okCount += 1
-
-			pmax = fullLoadCurve.MaxPower.Value() / 1000 'FLD0.Pfull(FLD0.EngineRatedSpeed)
+		If engine Is Nothing Then Return
 
 
-			TbEngTxt.Text = (engine.Displacement.Value() * 1000).ToString("0.0") & " l " & pmax.ToString("#") & " kW  " &
-							engine.ModelName
+		engine.IdleSpeed.Value()
 
-			Dim fuelConsumptionMap As FuelConsumptionMap = FuelConsumptionMapReader.Create(engine.FuelConsumptionMap)
+		Dim fullLoadCurve As FullLoadCurve = EngineFullLoadCurve.Create(engine.FullLoadCurve)
 
-			s = New Series
-			s.Points.DataBindXY(fuelConsumptionMap.Entries.Select(Function(x) x.EngineSpeed.AsRPM).ToArray(),
-								fuelConsumptionMap.Entries.Select(Function(x) x.Torque.Value()).ToArray())
-			s.ChartType = SeriesChartType.Point
-			s.MarkerSize = 3
-			s.Color = Color.Red
-			s.Name = "Map"
-			chart.Series.Add(s)
+		s = New Series
+		s.Points.DataBindXY(fullLoadCurve.FullLoadEntries.Select(Function(x) x.EngineSpeed.AsRPM).ToArray(),
+							fullLoadCurve.FullLoadEntries.Select(Function(x) x.TorqueFullLoad.Value()).ToArray())
+		s.ChartType = SeriesChartType.FastLine
+		s.BorderWidth = 2
+		s.Color = Color.DarkBlue
+		s.Name = "Full load"
+		chart.Series.Add(s)
 
-			okCount += 1
+		s = New Series
+		s.Points.DataBindXY(fullLoadCurve.FullLoadEntries.Select(Function(x) x.EngineSpeed.AsRPM).ToArray(),
+							fullLoadCurve.FullLoadEntries.Select(Function(x) x.TorqueDrag.Value()).ToArray())
+		s.ChartType = SeriesChartType.FastLine
+		s.BorderWidth = 2
+		s.Color = Color.Blue
+		s.Name = "Motoring"
+		chart.Series.Add(s)
+
+		pmax = fullLoadCurve.MaxPower.Value() / 1000 'FLD0.Pfull(FLD0.EngineRatedSpeed)
 
 
+		TbEngTxt.Text = (engine.Displacement.Value() * 1000).ToString("0.0") & " l " & pmax.ToString("#") & " kW  " &
+						engine.ModelName
+
+		Dim fuelConsumptionMap As FuelConsumptionMap = FuelConsumptionMapReader.Create(engine.FuelConsumptionMap)
+
+		s = New Series
+		s.Points.DataBindXY(fuelConsumptionMap.Entries.Select(Function(x) x.EngineSpeed.AsRPM).ToArray(),
+							fuelConsumptionMap.Entries.Select(Function(x) x.Torque.Value()).ToArray())
+		s.ChartType = SeriesChartType.Point
+		s.MarkerSize = 3
+		s.Color = Color.Red
+		s.Name = "Map"
+		chart.Series.Add(s)
+	End Sub
+
+	Private Sub UpdateVehiclePic()
+		Dim HDVclass As String
+
+		Dim vehicle As IVehicleEngineeringInputData = Nothing
+
+		Dim vehicleFile As String =
+				If(Not String.IsNullOrWhiteSpace(VectoFile), Path.Combine(Path.GetDirectoryName(VectoFile), TbVEH.Text), TbVEH.Text)
+		If File.Exists(vehicleFile) Then
+			Try
+				Dim inputData As IEngineeringInputDataProvider = TryCast(JSONInputDataFactory.ReadComponentData(vehicleFile), 
+																		IEngineeringInputDataProvider)
+				vehicle = inputData.VehicleInputData
+			Catch
+			End Try
 		End If
 
-		Dim gearbox As IGearboxEngineeringInputData = inputData.GearboxInputData
+		If vehicle Is Nothing Then Return
 
-		If Not gearbox Is Nothing Then
+		Dim maxMass As Kilogram = vehicle.GrossVehicleMassRating					'CSng(fTextboxToNumString(TbMassMass.Text))
 
-			TbGbxTxt.Text = gearbox.Gears.Count & "-Speed " & gearbox.Type.ShortName() & "  " & gearbox.ModelName
+		Dim s0 As Segment = Nothing
+		Try
+			s0 = DeclarationData.Segments.Lookup(vehicle.VehicleCategory, vehicle.AxleConfiguration, maxMass, 0.SI(Of Kilogram),
+												True)
+		Catch
+		End Try
+		If s0 Is Nothing Then
+			HDVclass = "-"
+		Else
+			HDVclass = s0.VehicleClass.GetClassNumber()
 
 			If Cfg.DeclMode Then
-
-				If engOk Then
-
-					For i = 1 To gearbox.Gears.Count
-
-
-						'If FLD0.Init(ENG0.Nidle) Then '' use engine from below...
-
-						'Dim engine As CombustionEngineData = ConvertToEngineData(FLD0, F_VECTO.n_idle)
-						'Dim shiftLines As ShiftPolygon = DeclarationData.Gearbox.ComputeShiftPolygon(Gear - 1,
-						'																			engine.FullLoadCurve, gears,
-						'																			engine,
-						'																			Double.Parse(LvGears.Items(0).SubItems(F_GBX.GearboxTbl.Ratio).Text,
-						'																						CultureInfo.InvariantCulture),
-						'																			(.rdyn / 1000.0).SI(Of Meter))
-
-						's = New Series
-						's.Points.DataBindXY(shiftLines.Upshift.Select(Function(pt) pt.AngularSpeed.Value() / Constants.RPMToRad).ToList(),
-						'					shiftLines.Upshift.Select(Function(pt) pt.Torque.Value()).ToList())
-						's.ChartType = SeriesChartType.FastLine
-						's.BorderWidth = 2
-						's.Color = Color.DarkRed
-						's.Name = "Upshift curve (" & i & ")"
-						'MyChart.Series.Add(s)
-
-						's = New Series
-						's.Points.DataBindXY(
-						'	shiftLines.Downshift.Select(Function(pt) pt.AngularSpeed.Value() / Constants.RPMToRad).ToList(),
-						'	shiftLines.Downshift.Select(Function(pt) pt.Torque.Value()).ToList())
-						's.ChartType = SeriesChartType.FastLine
-						's.BorderWidth = 2
-						's.Color = Color.DarkRed
-						's.Name = "Downshift curve (" & i & ")"
-						'MyChart.Series.Add(s)
-						'End If
-
-
-						'	OkCount += 1
-
-						'	pmax = FLD0.Pfull(FLD0.EngineRatedSpeed)
-
-						'End If
-
-					Next
-
-				End If
-
-			Else
-
-				For Each gear As ITransmissionInputData In gearbox.Gears
-					If gear.ShiftPolygon Is Nothing OrElse gear.ShiftPolygon.Rows.Count = 0 Then Continue For
-					Dim shiftPolygon As ShiftPolygon = ShiftPolygonReader.Create(gear.ShiftPolygon)
-					s = New Series
-					s.Points.DataBindXY(shiftPolygon.Upshift.Select(Function(x) x.AngularSpeed),
-										shiftPolygon.Upshift.Select(Function(x) x.Torque))
-					s.ChartType = SeriesChartType.FastLine
-					s.BorderWidth = 2
-					s.Color = Color.DarkRed
-					s.Name = "Upshift curve"
-					' MyChart.Series.Add(s) 'MQ 2016-06-20: do not plot shift lines in engine dialog
-
-					s = New Series
-					s.Points.DataBindXY(shiftPolygon.Downshift.Select(Function(x) x.AngularSpeed),
-										shiftPolygon.Downshift.Select(Function(x) x.Torque))
-					s.ChartType = SeriesChartType.FastLine
-					s.BorderWidth = 2
-					s.Color = Color.DarkRed
-					s.Name = "Downshift curve"
-					'MyChart.Series.Add(s) 'MQ 2016-06-20:do not plot shift lines in engine dialog
-
-					okCount += 1
+				LvCycles.Items.Clear()
+				Dim m0 As Mission
+				For Each m0 In s0.Missions
+					LvCycles.Items.Add(m0.MissionType.ToString())
 				Next
-
 			End If
 
 		End If
 
-		If okCount > 0 Then
+		PicVehicle.Image = ConvPicPath(If(s0 Is Nothing, -1, HDVclass.ToInt()), False) _
+		'Image.FromFile(cDeclaration.ConvPicPath(HDVclass, False))
 
-			a.Name = "main"
-
-			a.AxisX.Title = "engine speed [1/min]"
-			a.AxisX.TitleFont = New Font("Helvetica", 10)
-			a.AxisX.LabelStyle.Font = New Font("Helvetica", 8)
-			a.AxisX.LabelAutoFitStyle = LabelAutoFitStyles.None
-			a.AxisX.MajorGrid.LineDashStyle = ChartDashStyle.Dot
-
-			a.AxisY.Title = "engine torque [Nm]"
-			a.AxisY.TitleFont = New Font("Helvetica", 10)
-			a.AxisY.LabelStyle.Font = New Font("Helvetica", 8)
-			a.AxisY.LabelAutoFitStyle = LabelAutoFitStyles.None
-			a.AxisY.MajorGrid.LineDashStyle = ChartDashStyle.Dot
-
-			a.AxisX.Minimum = 300
-			a.BorderDashStyle = ChartDashStyle.Solid
-			a.BorderWidth = 1
-
-			a.BackColor = Color.GhostWhite
-
-			chart.ChartAreas.Add(a)
-
-			chart.Update()
-
-			img = New Bitmap(chart.Width, chart.Height, PixelFormat.Format32bppArgb)
-			chart.DrawToBitmap(img, New Rectangle(0, 0, PicBox.Width, PicBox.Height))
-
-			PicBox.Image = img
-
-
-		End If
+		TbHVCclass.Text = "HDV Class " & HDVclass
+		TbVehCat.Text = vehicle.VehicleCategory.GetCategoryName()	'ConvVehCat(VEH0.VehCat, True)
+		TbMass.Text = (vehicle.GrossVehicleMassRating.Value() / 1000) & " t"
+		TbAxleConf.Text = vehicle.AxleConfiguration.GetName()	'ConvAxleConf(VEH0.AxleConf)
 	End Sub
 
 

@@ -13,6 +13,8 @@ Imports TUGraz.VectoCore.InputData.Reader
 Imports TUGraz.VectoCore.Models.Declaration
 Imports TUGraz.VectoCore.Models.SimulationComponent.Data
 Imports TUGraz.VectoCore.Models.SimulationComponent.Data.Engine
+Imports TUGraz.VectoCore.Utils
+Imports VectoAuxiliaries
 ' Copyright 2014 European Union.
 ' Licensed under the EUPL (the 'Licence');
 '
@@ -214,9 +216,9 @@ Public Class EngineForm
 
 		engine.ModelName = TbName.Text
 		If Trim(engine.ModelName) = "" Then engine.ModelName = "Undefined"
-		engine.Displacement = TbDispl.Text.ToDouble()
-		engine.EngineInertia = TbInertia.Text.ToDouble()
-		engine.IdleSpeed = TbNleerl.Text.ToDouble()
+		engine.Displacement = TbDispl.Text.ToDouble(0)
+		engine.EngineInertia = TbInertia.Text.ToDouble(0)
+		engine.IdleSpeed = TbNleerl.Text.ToDouble(0)
 
 		engine.PathFld = TbFLD.Text
 		engine.PathMap = TbMAP.Text
@@ -356,73 +358,68 @@ Public Class EngineForm
 	End Sub
 
 	Private Sub UpdatePic()
-
-		'Dim fldOK As Boolean = False
-		'Dim mapOK As Boolean = False
 		Dim fullLoadCurve As FullLoadCurve = Nothing
 		Dim fcMap As FuelConsumptionMap = Nothing
-		Dim chart As Chart
-		Dim series As Series
-		Dim chartArea As ChartArea
-		Dim img As Bitmap
-		Dim engine As IEngineEngineeringInputData = Nothing
+
 
 		PicBox.Image = Nothing
 
-		If Not File.Exists(_engFile) Then Exit Sub
+		'If Not File.Exists(_engFile) Then Exit Sub
 
 		Try
-
-			'Read Files
-			Dim inputData As IEngineeringInputDataProvider = TryCast(JSONInputDataFactory.ReadComponentData(_engFile), 
-																	IEngineeringInputDataProvider)
-			engine = inputData.EngineInputData
-			fullLoadCurve = FullLoadCurveReader.Create(engine.FullLoadCurve, engineFld:=True)
-			fcMap = FuelConsumptionMapReader.Create(engine.FuelConsumptionMap)
-
+			Dim fldFile As String =
+					If(Not String.IsNullOrWhiteSpace(_engFile), Path.Combine(Path.GetDirectoryName(_engFile), TbFLD.Text), TbFLD.Text)
+			fullLoadCurve = FullLoadCurveReader.Create(VectoCSVFile.Read(fldFile), engineFld:=True)
 		Catch ex As Exception
-
 		End Try
 
-		If fullLoadCurve Is Nothing OrElse engine Is Nothing OrElse fcMap Is Nothing Then Exit Sub
+		Try
+			Dim fcFile As String =
+					If(Not String.IsNullOrWhiteSpace(_engFile), Path.Combine(Path.GetDirectoryName(_engFile), TbMAP.Text), TbMAP.Text)
+			fcMap = FuelConsumptionMapReader.Create(VectoCSVFile.Read(fcFile))
+		Catch ex As Exception
+		End Try
+
+		If fullLoadCurve Is Nothing AndAlso fcMap Is Nothing Then Exit Sub
 
 
 		'Create plot
-		chart = New Chart
+		Dim chart As Chart = New Chart
 		chart.Width = PicBox.Width
 		chart.Height = PicBox.Height
 
-		chartArea = New ChartArea
+		Dim chartArea As ChartArea = New ChartArea
 
+		If Not fullLoadCurve Is Nothing Then
+			Dim series As Series = New Series
+			series.Points.DataBindXY(fullLoadCurve.FullLoadEntries.Select(Function(x) x.EngineSpeed.AsRPM).ToArray(),
+									fullLoadCurve.FullLoadEntries.Select(Function(x) x.TorqueFullLoad.Value()).ToArray())
+			series.ChartType = SeriesChartType.FastLine
+			series.BorderWidth = 2
+			series.Color = Color.DarkBlue
+			series.Name = "Full load (" & TbFLD.Text & ")"
+			chart.Series.Add(series)
 
-		series = New Series
-		series.Points.DataBindXY(fullLoadCurve.FullLoadEntries.Select(Function(x) x.EngineSpeed.AsRPM).ToArray(),
-								fullLoadCurve.FullLoadEntries.Select(Function(x) x.TorqueFullLoad.Value()).ToArray())
-		series.ChartType = SeriesChartType.FastLine
-		series.BorderWidth = 2
-		series.Color = Color.DarkBlue
-		series.Name = "Full load (" & Path.GetFileNameWithoutExtension(engine.FullLoadCurve.Source) & ")"
-		chart.Series.Add(series)
+			series = New Series
+			series.Points.DataBindXY(fullLoadCurve.FullLoadEntries.Select(Function(x) x.EngineSpeed.AsRPM).ToArray(),
+									fullLoadCurve.FullLoadEntries.Select(Function(x) x.TorqueDrag.Value()).ToArray())
+			series.ChartType = SeriesChartType.FastLine
+			series.BorderWidth = 2
+			series.Color = Color.Blue
+			series.Name = "Motoring (" & Path.GetFileNameWithoutExtension(TbMAP.Text) & ")"
+			chart.Series.Add(series)
+		End If
 
-		series = New Series
-		series.Points.DataBindXY(fullLoadCurve.FullLoadEntries.Select(Function(x) x.EngineSpeed.AsRPM).ToArray(),
-								fullLoadCurve.FullLoadEntries.Select(Function(x) x.TorqueDrag.Value()).ToArray())
-		series.ChartType = SeriesChartType.FastLine
-		series.BorderWidth = 2
-		series.Color = Color.Blue
-		series.Name = "Motoring (" & Path.GetFileNameWithoutExtension(engine.FullLoadCurve.Source) & ")"
-		chart.Series.Add(series)
-
-
-		series = New Series
-		series.Points.DataBindXY(fcMap.Entries.Select(Function(x) x.EngineSpeed.AsRPM).ToArray(),
-								fcMap.Entries.Select(Function(x) x.Torque.Value()).ToArray())
-		series.ChartType = SeriesChartType.Point
-		series.MarkerSize = 3
-		series.Color = Color.Red
-		series.Name = "Map"
-		chart.Series.Add(series)
-
+		If Not fcMap Is Nothing Then
+			Dim series As Series = New Series
+			series.Points.DataBindXY(fcMap.Entries.Select(Function(x) x.EngineSpeed.AsRPM).ToArray(),
+									fcMap.Entries.Select(Function(x) x.Torque.Value()).ToArray())
+			series.ChartType = SeriesChartType.Point
+			series.MarkerSize = 3
+			series.Color = Color.Red
+			series.Name = "Map"
+			chart.Series.Add(series)
+		End If
 
 		chartArea.Name = "main"
 
@@ -448,7 +445,7 @@ Public Class EngineForm
 
 		chart.Update()
 
-		img = New Bitmap(chart.Width, chart.Height, PixelFormat.Format32bppArgb)
+		Dim img As Bitmap = New Bitmap(chart.Width, chart.Height, PixelFormat.Format32bppArgb)
 		chart.DrawToBitmap(img, New Rectangle(0, 0, PicBox.Width, PicBox.Height))
 
 

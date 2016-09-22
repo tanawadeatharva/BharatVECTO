@@ -14,6 +14,7 @@ Imports System.IO
 Imports System.Linq
 Imports Newtonsoft.Json.Linq
 Imports TUGraz.VECTO.Input_Files
+Imports TUGraz.VectoCommon.Exceptions
 Imports TUGraz.VectoCommon.InputData
 Imports TUGraz.VectoCommon.Models
 Imports TUGraz.VectoCommon.Utils
@@ -134,8 +135,8 @@ Public Class Engine
 		_fuelConsumptionMapPath.Clear()
 		_fullLoadCurvePath.Clear()
 
-		WHTCurbanInput = 0
-		WHTCruralInput = 0
+		WHTCUrbanInput = 0
+		WHTCRuralInput = 0
 		WHTCMotorwayInput = 0
 		WHTCEngineeringInput = 1
 	End Sub
@@ -153,7 +154,7 @@ Public Class Engine
 		If validationResults.Count > 0 Then
 			Dim messages As IEnumerable(Of String) =
 					validationResults.Select(Function(r) r.ErrorMessage + String.Join(", ", r.MemberNames.Distinct()))
-			MsgBox("Invalid input." + Environment.NewLine + String.Join("; ", messages), MsgBoxStyle.OkOnly,
+			MsgBox("Invalid input." + Environment.NewLine + String.Join(Environment.NewLine, messages), MsgBoxStyle.OkOnly,
 					"Failed to save gearbox")
 			Return False
 		End If
@@ -182,9 +183,9 @@ Public Class Engine
 
 		body.Add("FuelMap", _fuelConsumptionMapPath.PathOrDummy)
 
-		body.Add("WHTC-Urban", WHTCurbanInput)
-		body.Add("WHTC-Rural", WHTCruralInput)
-		body.Add("WHTC-Motorway", WHTCmotorwayInput)
+		body.Add("WHTC-Urban", WHTCUrbanInput)
+		body.Add("WHTC-Rural", WHTCRuralInput)
+		body.Add("WHTC-Motorway", WHTCMotorwayInput)
 		body.Add("ColdHotBalancingFactor", ColdHotBalancingFactorInput)
 
 		json.Content = JToken.FromObject(New Dictionary(Of String, Object) From {{"Header", header}, {"Body", body}})
@@ -378,13 +379,17 @@ Public Class Engine
 
 	Public ReadOnly Property FuelConsumptionMap As TableData Implements IEngineDeclarationInputData.FuelConsumptionMap
 		Get
-			Return VectoCSVFile.Read(_fuelConsumptionMapPath.OriginalPath)
+			If Not File.Exists(_fuelConsumptionMapPath.FullPath) Then _
+				Throw New VectoException("FuelConsumptionMap is missing or invalid")
+			Return VectoCSVFile.Read(_fuelConsumptionMapPath.FullPath)
 		End Get
 	End Property
 
 	Public ReadOnly Property FullLoadCurve As TableData Implements IEngineDeclarationInputData.FullLoadCurve
 		Get
-			Return VectoCSVFile.Read(_fullLoadCurvePath.OriginalPath)
+			If Not File.Exists(_fullLoadCurvePath.FullPath) Then _
+				Throw New VectoException("Full-Load Curve is missing or invalid")
+			Return VectoCSVFile.Read(_fullLoadCurvePath.FullPath)
 		End Get
 	End Property
 

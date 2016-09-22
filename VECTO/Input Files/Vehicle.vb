@@ -84,8 +84,8 @@ Public Class Vehicle
 		AngularGearLossMapFile = New SubPath()
 
 		Axles = New List(Of Axle)
-		PTOLossMap = New SubPath()
-		PTOCycle = New SubPath()
+		PtoLossMap = New SubPath()
+		PtoCycle = New SubPath()
 		SetDefault()
 	End Sub
 
@@ -132,13 +132,15 @@ Public Class Vehicle
 					New ValidationResult("Retarder Configuration is invalid. ", result.Select(Function(r) r.ErrorMessage).ToList())
 			End If
 
-			result = angledriveData.Validate(If(Cfg.DeclMode, ExecutionMode.Declaration, ExecutionMode.Engineering))
-			If result.Any() Then
-				Return _
-					New ValidationResult("AngleDrive Configuration is invalid. ", result.Select(Function(r) r.ErrorMessage).ToList())
+			If vehicle.AngularGearType = AngularGearType.SeparateAngularGear Then
+				result = angledriveData.Validate(If(Cfg.DeclMode, ExecutionMode.Declaration, ExecutionMode.Engineering))
+				If result.Any() Then
+					Return _
+						New ValidationResult("AngleDrive Configuration is invalid. ", result.Select(Function(r) r.ErrorMessage).ToList())
+				End If
 			End If
 
-			If Not ptoData Is Nothing Then
+			If Not vehicle.PTOTransmissionType = "None" Then
 				result = ptoData.Validate(If(Cfg.DeclMode, ExecutionMode.Declaration, ExecutionMode.Engineering))
 				If result.Any() Then
 					Return _
@@ -174,9 +176,9 @@ Public Class Vehicle
 		AngularGearLossMapFile.Clear()
 		AngularGearRatio = 1
 
-		PTOType = PTOTransmission.NoPTO
-		PTOLossMap.Clear()
-		PTOCycle.Clear()
+		PtoType = PTOTransmission.NoPTO
+		PtoLossMap.Clear()
+		PtoCycle.Clear()
 
 		Axles.Clear()
 		VehicleCategory = VehicleCategory.RigidTruck	'tVehCat.Undef
@@ -196,7 +198,7 @@ Public Class Vehicle
 		If validationResults.Count > 0 Then
 			Dim messages As IEnumerable(Of String) =
 					validationResults.Select(Function(r) r.ErrorMessage + String.Join(", ", r.MemberNames.Distinct()))
-			MsgBox("Invalid input." + Environment.NewLine + String.Join("; ", messages), MsgBoxStyle.OkOnly,
+			MsgBox("Invalid input." + Environment.NewLine + String.Join(Environment.NewLine, messages), MsgBoxStyle.OkOnly,
 					"Failed to save vehicle")
 			Return False
 		End If
@@ -230,9 +232,9 @@ Public Class Vehicle
 				{"Ratio", AngularGearRatio},
 				{"LossMap", AngularGearLossMapFile.PathOrDummy}}},
 				{"PTO", New Dictionary(Of String, Object) From {
-				{"Type", PTOType},
-				{"LossMap", PTOLossMap.PathOrDummy},
-				{"Cycle", PTOCycle.PathOrDummy}}},
+				{"Type", PtoType},
+				{"LossMap", PtoLossMap.PathOrDummy},
+				{"Cycle", PtoCycle.PathOrDummy}}},
 				{"AxleConfig", New Dictionary(Of String, Object) From {
 				{"Type", AxleConfiguration.GetName()},
 				{"Axles", (From axle In Axles Select New Dictionary(Of String, Object) From {

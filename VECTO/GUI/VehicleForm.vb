@@ -232,7 +232,7 @@ Public Class VehicleForm
 		If Not VectoJobForm.Visible Then
 			JobDir = ""
 			VectoJobForm.Show()
-			VectoJobForm.VECTOnew()
+			VectoJobForm.VectoNew()
 		Else
 			VectoJobForm.WindowState = FormWindowState.Normal
 		End If
@@ -347,7 +347,7 @@ Public Class VehicleForm
 		TbMass.Text = vehicle.CurbWeightChassis.ToGUIFormat()
 		TbMassExtra.Text = vehicle.CurbWeightExtra.ToGUIFormat()
 		TbLoad.Text = vehicle.Loading.ToGUIFormat()
-		TBrdyn.Text = vehicle.DynamicTyreRadius.ToGUIFormat()
+		TBrdyn.Text = (vehicle.DynamicTyreRadius.Value() * 1000).ToGUIFormat()
 
 		CbCdMode.SelectedValue = vehicle.CrossWindCorrectionMode
 		TbCdFile.Text =
@@ -430,21 +430,21 @@ Public Class VehicleForm
 		Dim veh As Vehicle = New Vehicle
 		veh.FilePath = file
 
-		veh.Mass = TbMass.Text.ToDouble()
+		veh.Mass = TbMass.Text.ToDouble(0)
 		veh.MassExtra = TbMassExtra.Text.ToDouble(0)
 		veh.Loading = TbLoad.Text.ToDouble(0)
 
-		veh.CdA0 = TBcdA.Text.ToDouble()
+		veh.CdA0 = TBcdA.Text.ToDouble(0)
 
 		veh.DynamicTyreRadius = TBrdyn.Text.ToDouble(0)
 		veh.CrossWindCorrectionMode = CType(CbCdMode.SelectedValue, CrossWindCorrectionMode)
 		veh.CrossWindCorrectionFile.Init(GetPath(file), TbCdFile.Text)
 		veh.RetarderType = CType(CbRtType.SelectedValue, RetarderType)
-		veh.RetarderRatio = TbRtRatio.Text.ToDouble()
+		veh.RetarderRatio = TbRtRatio.Text.ToDouble(0)
 		veh.RetarderLossMapFile.Init(GetPath(file), TbRtPath.Text)
 
 		veh.AngularGearType = CType(cbAngularGearType.SelectedValue, AngularGearType)
-		veh.AngularGearRatio = tbAngularGearRatio.Text.ToDouble()
+		veh.AngularGearRatio = tbAngularGearRatio.Text.ToDouble(0)
 		veh.AngularGearLossMapFile.Init(GetPath(file), tbAngularGearLossMapPath.Text)
 
 		veh.VehicleCategory = CType(CbCat.SelectedValue, VehicleCategory) 'CType(CbCat.SelectedIndex, tVehCat)
@@ -460,11 +460,11 @@ Public Class VehicleForm
 			veh.Axles.Add(a0)
 		Next
 
-		veh.PTOType = CType(cbPTOType.SelectedValue, String)
-		veh.PTOLossMap.Init(GetPath(file), tbPTOLossMap.Text)
-		veh.PTOCycle.Init(GetPath(file), tbPTOCycle.Text)
+		veh.PtoType = CType(cbPTOType.SelectedValue, String)
+		veh.PtoLossMap.Init(GetPath(file), tbPTOLossMap.Text)
+		veh.PtoCycle.Init(GetPath(file), tbPTOCycle.Text)
 
-		veh.MassMax = TbMassMass.Text.ToDouble()
+		veh.MassMax = TbMassMass.Text.ToDouble(0)
 		veh.MassExtra = TbMassExtra.Text.ToDouble(0)
 		veh.AxleConfiguration = CType(CbAxleConfig.SelectedValue, AxleConfiguration)
 
@@ -661,9 +661,9 @@ Public Class VehicleForm
 	Private Sub ButAxlAdd_Click(sender As Object, e As EventArgs) Handles ButAxlAdd.Click
 		_axlDlog.Clear()
 		If _axlDlog.ShowDialog = DialogResult.OK Then
-			LvRRC.Items.Add(CreateListViewItem(LvRRC.Items.Count + 1, _axlDlog.TbAxleShare.Text.ToDouble(),
-												_axlDlog.CbTwinT.Checked, _axlDlog.TbRRC.Text.ToDouble(), _axlDlog.TbFzISO.Text.ToDouble(),
-												_axlDlog.CbWheels.Text, _axlDlog.TbI_wheels.Text.ToDouble()))
+			LvRRC.Items.Add(CreateListViewItem(LvRRC.Items.Count + 1, _axlDlog.TbAxleShare.Text.ToDouble(0),
+												_axlDlog.CbTwinT.Checked, _axlDlog.TbRRC.Text.ToDouble(0), _axlDlog.TbFzISO.Text.ToDouble(0),
+												_axlDlog.CbWheels.Text, _axlDlog.TbI_wheels.Text.ToDouble(0)))
 			Change()
 			DeclInit()
 

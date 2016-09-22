@@ -12,6 +12,7 @@ Imports System.Collections.Generic
 Imports System.ComponentModel.DataAnnotations
 Imports System.IO
 Imports System.Linq
+Imports System.Runtime.CompilerServices
 Imports Newtonsoft.Json.Linq
 Imports TUGraz.VECTO.Input_Files
 Imports TUGraz.VectoCommon.InputData
@@ -21,6 +22,7 @@ Imports TUGraz.VectoCore.InputData.FileIO.JSON
 Imports TUGraz.VectoCore.InputData.Impl
 Imports TUGraz.VectoCore.InputData.Reader.DataObjectAdapter
 Imports TUGraz.VectoCore.Models.SimulationComponent.Data
+Imports TUGraz.VectoCore.Models.SimulationComponent.Data.Engine
 Imports TUGraz.VectoCore.Utils
 
 <CustomValidation(GetType(Gearbox), "ValidateGearbox")>
@@ -250,8 +252,9 @@ Public Class Gearbox
 
 		Try
 			'Dim vectoJob As VectoJob = New VectoJob() With {.FilePath = VectoJobForm.VECTOfile}
+			Dim vectoFile As String = VectoJobForm.VectoFile
 			Dim inputData As IEngineeringInputDataProvider =
-					TryCast(JSONInputDataFactory.ReadComponentData(VectoJobForm.VECTOfile), 
+					TryCast(JSONInputDataFactory.ReadComponentData(vectoFile), 
 							IEngineeringInputDataProvider)
 			'Dim vehicle As IVehicleEngineeringInputData = inputData.VehicleInputData
 			Dim engine As CombustionEngineData
@@ -259,13 +262,22 @@ Public Class Gearbox
 			If mode = ExecutionMode.Declaration Then
 				Dim doa As DeclarationDataAdapter = New DeclarationDataAdapter()
 
-				engine = doa.CreateEngineData(inputData.EngineInputData, gearbox.Type)
+				Try
+					engine = doa.CreateEngineData(inputData.EngineInputData, gearbox.Type)
+				Catch
+					engine = GetDefaultEngine()
+				End Try
 
 				axlegearData = doa.CreateAxleGearData(gearbox, False)
 				gearboxData = doa.CreateGearboxData(gearbox, engine, axlegearData.AxleGear.Ratio, rdyn, False)
 			Else
 				Dim doa As EngineeringDataAdapter = New EngineeringDataAdapter()
-				engine = doa.CreateEngineData(inputData.EngineInputData, gearbox)
+				Try
+					engine = doa.CreateEngineData(inputData.EngineInputData, gearbox)
+				Catch
+					engine = GetDefaultEngine()
+				End Try
+
 				axlegearData = doa.CreateAxleGearData(gearbox, True)
 				gearboxData = doa.CreateGearboxData(gearbox, engine, axlegearData.AxleGear.Ratio, rdyn, True)
 			End If
@@ -290,12 +302,29 @@ Public Class Gearbox
 		End Try
 	End Function
 
+	Private Shared Function GetDefaultEngine() As CombustionEngineData
+		Dim fldData As MemoryStream = New MemoryStream()
+		Dim writer As StreamWriter = New StreamWriter(fldData)
+		writer.WriteLine("engine speed, full load torque, motoring torque")
+		writer.WriteLine(" 500, 2000, -500")
+		writer.WriteLine("2500, 2000, -500")
+		writer.Flush()
+		fldData.Seek(0, SeekOrigin.Begin)
+
+		Dim fldCurve As EngineFullLoadCurve = EngineFullLoadCurve.Create(VectoCSVFile.ReadStream(fldData))
+		Return New CombustionEngineData() With {
+			.IdleSpeed = 600.RPMtoRad(),
+			.FullLoadCurve = fldCurve
+			}
+	End Function
+
 
 	Public ReadOnly Property SourceType As DataSourceType Implements IComponentInputData.SourceType
 		Get
 			Return DataSourceType.JSONFile
 		End Get
 	End Property
+
 	Public ReadOnly Property Source As String Implements IComponentInputData.Source
 		Get
 			Return FilePath
@@ -502,13 +531,14 @@ Public Class Gearbox
 
 	Public ReadOnly Property LossMap As TableData Implements IAxleGearInputData.LossMap
 		Get
-			Return VectoCSVFile.Read(GearLossmaps(0).PathOrDummy)
+			If Not File.Exists(GearLossmaps(0).FullPath) Then Return Nothing
+			Return VectoCSVFile.Read(GearLossmaps(0).FullPath)
 		End Get
 	End Property
 
 	Public ReadOnly Property Efficiency As Double Implements IAxleGearInputData.Efficiency
 		Get
-			Return GearLossMap(0, True).ToDouble()
+			Return GearLossMap(0, True).ToDouble(0)
 		End Get
 	End Property
 End Class
