@@ -86,7 +86,7 @@ namespace TUGraz.VectoCore.Models.SimulationComponent.Data
 			var zValidationRules = new[] { new RangeAttribute(0, 100.SI().Kilo.Watt.Value()) };
 
 			var results = new List<ValidationResult>();
-			foreach (var entry in data._map.Points) {
+			foreach (var entry in data._map.Entries) {
 				context.DisplayName = AuxiliaryDataReader.Fields.AuxSpeed;
 				if (!Validator.TryValidateValue(entry.X, context, results, xValidationRules)) {
 					return new ValidationResult(string.Concat(results));

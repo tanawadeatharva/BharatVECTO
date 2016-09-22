@@ -47,7 +47,7 @@ Public Class FileSignDialog
 
 
 		For Each listViewItem In lvFiles.Items
-			Lic.FileSigning.AddFile(fFileRepl(listViewItem.SubItems(0).Text, mainDirectory))
+			Lic.FileSigning.AddFile(FileRepl(listViewItem.SubItems(0).Text, mainDirectory))
 			listViewItem.SubItems(1).Text = ""
 			listViewItem.ForeColor = Color.Black
 		Next
@@ -121,7 +121,7 @@ Public Class FileSignDialog
 	End Sub
 
 	'Clear form
-	Private Sub ClearForm(ClearFileList As Boolean)
+	Private Sub ClearForm(clearFileList As Boolean)
 		If ClearFileList Then lvFiles.Items.Clear()
 		TbLicStr.Text = ""
 		TbPubKey.Text = ""
@@ -141,7 +141,7 @@ Public Class FileSignDialog
 		Dim fb As New FileBrowser("sig", False, True)
 		fb.Extensions = New String() {"vsig"}
 
-		If fb.CustomDialog(TbSigFile.Text, False, False, tFbExtMode.ForceExt, False, "vsig") Then
+		If fb.CustomDialog(TbSigFile.Text, False, False, FileBrowserFileExtensionMode.ForceExt, False, "vsig") Then
 			TbSigFile.Text = fb.Files(0)
 		End If
 
@@ -205,7 +205,7 @@ Public Class FileSignDialog
 
 	'Remove File
 	Private Sub RemoveFile()
-		Dim i0 As Int16
+		Dim i0 As Integer
 
 		If lvFiles.Items.Count = 0 Then Exit Sub
 

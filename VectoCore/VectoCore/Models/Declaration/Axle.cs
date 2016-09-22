@@ -39,7 +39,7 @@ namespace TUGraz.VectoCore.Models.Declaration
 {
 	public class Axle : SimulationComponentData
 	{
-		public object WheelsDimension { get; internal set; }
+		public string WheelsDimension { get; internal set; }
 
 		[Required, SIRange(0, 100)]
 		public KilogramSquareMeter Inertia { get; internal set; }
@@ -50,7 +50,7 @@ namespace TUGraz.VectoCore.Models.Declaration
 		[Required, SIRange(500, 100000)]
 		public Newton TyreTestLoad { get; internal set; }
 
-		[Required, SIRange(Double.MinValue, 1)]
+		[Required, SIRange(0, 1, ExecutionMode.Engineering), SIRange(double.MinValue, 1, ExecutionMode.Declaration)]
 		public double AxleWeightShare { get; internal set; }
 
 		public bool TwinTyres { get; internal set; }

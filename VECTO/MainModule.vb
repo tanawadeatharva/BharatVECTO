@@ -9,6 +9,7 @@
 '
 ' See the LICENSE.txt for the specific language governing permissions and limitations.
 Imports System.Collections.Generic
+Imports System.IO
 Imports TUGraz.VectoCommon.Utils
 Imports TUGraz.VectoCore.Models.SimulationComponent.Data
 Imports TUGraz.VectoCore.Models.SimulationComponent.Data.Engine
@@ -20,35 +21,20 @@ Imports TUGraz.VectoCore.Models.SimulationComponent.Data.Engine
 Module MainModule
 	Public JobFileList As List(Of String)
 
-	Public Function ConvertToEngineData(fld As EngineFullLoadCurve, nIdle As Single) As CombustionEngineData
+	Public Function ConvertToEngineData(fld As EngineFullLoadCurve, nIdle As PerSecond) As CombustionEngineData
 
 		Dim retVal As CombustionEngineData = New CombustionEngineData()
-		retVal.FullLoadCurve = New TUGraz.VectoCore.Models.SimulationComponent.Data.Engine.EngineFullLoadCurve()
-		retVal.FullLoadCurve.FullLoadEntries = New List(Of FullLoadCurve.FullLoadCurveEntry)
-		For i As Integer = 0 To fld.EngineSpeedList.Count - 1
-			retVal.FullLoadCurve.FullLoadEntries.Add(
-				New FullLoadCurve.FullLoadCurveEntry() _
-														With {.EngineSpeed = CType(fld.EngineSpeedList(i), Double).RPMtoRad(),
-														.TorqueFullLoad = CType(fld.MaxTorqueList(i), Double).SI(Of NewtonMeter)(),
-														.TorqueDrag = CType(fld.DragTorqueList(i), Double).SI(Of NewtonMeter)()})
-		Next
-
-		retVal.IdleSpeed = CType(nIdle, Double).RPMtoRad()
+		retVal.FullLoadCurve = fld
+		retVal.IdleSpeed = nIdle
 		Return retVal
 	End Function
 
-	Public Function ConvPicPath(hdVclass As String, isLongHaul As Boolean) As Bitmap
-		Dim longHaulFlag As String = ""
-		If isLongHaul Then
-			longHaulFlag = "t"
-		End If
-
+	Public Function ConvPicPath(hdVclass As Integer, isLongHaul As Boolean) As Bitmap
 		Select Case hdVclass
 			Case 1, 2, 3
 				Return My.Resources._4x2r ' resourcePath & "4x2r.png"
 			Case 4
 				If isLongHaul Then Return My.Resources._4x2rt
-
 				Return My.Resources._4x2r 'resourcePath & "4x2r" & longHaulFlag & ".png"
 			Case 5
 				Return My.Resources._4x2tt ' resourcePath & "4x2tt.png"
@@ -62,4 +48,13 @@ Module MainModule
 		End Select
 	End Function
 
+	Public Function GetRelativePath(filePath As String, basePath As String) As String
+		If (String.IsNullOrEmpty(filePath) OrElse String.IsNullOrEmpty(basePath)) Then
+			Return ""
+		End If
+		If (Path.GetDirectoryName(filePath).Equals(basePath, StringComparison.OrdinalIgnoreCase)) Then
+			Return Path.GetFileName(filePath)
+		End If
+		Return filePath
+	End Function
 End Module

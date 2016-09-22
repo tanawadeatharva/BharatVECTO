@@ -54,6 +54,8 @@ namespace TUGraz.VectoCommon.Utils
 		/// <returns>Null, if the validation was successfull. Otherwise a list of ValidationResults with the ErrorMessages.</returns>
 		public static IList<ValidationResult> Validate<T>(this T entity, ExecutionMode mode)
 		{
+			if (entity == null)
+				return  new[] { new ValidationResult(string.Format("null value given for {0}", typeof(T)))};
 			var context = new ValidationContext(entity);
 			context.ServiceContainer.AddService(typeof(ExecutionMode), new ExecutionModeServiceContainer(mode));
 			var results = new List<ValidationResult>();
@@ -167,11 +169,29 @@ namespace TUGraz.VectoCommon.Utils
 			if (enumerable != null) {
 				var i = 0;
 				foreach (var element in enumerable) {
-					var results = element.Validate(mode);
-					if (results.Any()) {
-						return new ValidationResult(
-							string.Format("{1}[{0}] in {1} invalid: {2}", i, validationContext.DisplayName,
-								string.Join("\n", results)));
+					if (element != null) {
+						var valueType = element.GetType();
+						if (valueType.IsGenericType) {
+							var baseType = valueType.GetGenericTypeDefinition();
+							if (baseType == typeof(KeyValuePair<,>)) {
+								var kvResults = new List<ValidationResult>();
+								kvResults.AddRange(valueType.GetProperty("Key").GetValue(element).Validate(mode));
+								kvResults.AddRange(valueType.GetProperty("Value").GetValue(element).Validate(mode));
+								if (kvResults.Any()) {
+									return new ValidationResult(
+										string.Format("{1}[{0}] in {1} invalid: {2}", valueType.GetProperty("Key").GetValue(element),
+											validationContext.DisplayName,
+											string.Join("\n", kvResults)));
+								}
+							}
+						}
+
+						var results = element.Validate(mode);
+						if (results.Any()) {
+							return new ValidationResult(
+								string.Format("{1}[{0}] in {1} invalid: {2}", i, validationContext.DisplayName,
+									string.Join("\n", results)));
+						}
 					}
 					i++;
 				}
@@ -198,6 +218,7 @@ namespace TUGraz.VectoCommon.Utils
 	public class SIRangeAttribute : RangeAttribute
 	{
 		private ExecutionMode? _mode;
+		private string _unit = "-";
 
 		/// <summary>
 		/// Checks the Min-Max Range of SI Objects.
@@ -233,7 +254,6 @@ namespace TUGraz.VectoCommon.Utils
 		/// </summary>
 		/// <param name="minimum">The minimum.</param>
 		/// <param name="maximum">The maximum.</param>
-		/// <param name="mode">if specified the validation is only performed in the corresponding mode</param>
 		public SIRangeAttribute(double minimum, double maximum) : base(minimum, maximum) {}
 
 		/// <summary>
@@ -252,7 +272,6 @@ namespace TUGraz.VectoCommon.Utils
 		/// </summary>
 		/// <param name="minimum">The minimum.</param>
 		/// <param name="maximum">The maximum.</param>
-		/// <param name="mode">if specified the validation is only performed in the corresponding mode</param>
 		public SIRangeAttribute(SI minimum, SI maximum) : base(minimum.Value(), maximum.Value()) {}
 
 		/// <summary>
@@ -267,6 +286,10 @@ namespace TUGraz.VectoCommon.Utils
 		{
 			var si = value as SI;
 
+			if (si != null) {
+				_unit = si.GetUnitString();
+			}
+
 			var modeService = validationContext.GetService(typeof(ExecutionMode)) as ExecutionModeServiceContainer;
 			var mode = modeService == null ? (ExecutionMode?)null : modeService.Mode;
 			if (mode == null) {
@@ -276,6 +299,13 @@ namespace TUGraz.VectoCommon.Utils
 				return base.IsValid(si != null ? si.Value() : value, validationContext);
 			}
 			return ValidationResult.Success;
+		}
+
+		public override string FormatErrorMessage(string name)
+		{
+			const string unitString = "{0} [{1}]";
+			return string.Format(ErrorMessageString, name, string.Format(unitString, Minimum, _unit),
+				string.Format(unitString, Maximum, _unit));
 		}
 	}
 

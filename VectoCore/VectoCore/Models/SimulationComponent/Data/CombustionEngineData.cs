@@ -29,6 +29,7 @@
 *   Martin Rexeis, rexeis@ivt.tugraz.at, IVT, Graz University of Technology
 */
 
+using System;
 using System.ComponentModel.DataAnnotations;
 using TUGraz.VectoCommon.Utils;
 using TUGraz.VectoCore.Configuration;
@@ -61,6 +62,9 @@ namespace TUGraz.VectoCore.Models.SimulationComponent.Data
 
 		[Required, ValidateObject]
 		public EngineFullLoadCurve FullLoadCurve { get; internal set; }
+
+		[Required, Range(double.MinValue, double.MaxValue)]
+		public double ColdHotCorrectionFactor { get; internal set; }
 
 		internal double WHTCCorrectionFactor = 1;
 

@@ -189,13 +189,14 @@ namespace TUGraz.VectoCore.Models.SimulationComponent.Impl
 					var coastingDistance = ComputeCoastingDistance(currentSpeed, entry);
 					var brakingDistance = Driver.ComputeDecelerationDistance(nextTargetSpeed) + BrakingSafetyMargin;
 
-					if (coastingDistance < 0) {
+					if (!Driver.DriverData.LookAheadCoasting.Enabled || coastingDistance < 0) {
 						Log.Debug(
 							"adding 'Braking' starting at distance {0}. brakingDistance: {1}, triggerDistance: {2}, nextTargetSpeed: {3}",
 							entry.Distance - brakingDistance, brakingDistance, entry.Distance, nextTargetSpeed);
+						coastingDistance = brakingDistance;
 					} else {
 						//var coastingDistance = ComputeCoastingDistance(currentSpeed, nextTargetSpeed);
-						if (currentSpeed > 50.KMPHtoMeterPerSecond()) {
+						if (currentSpeed > Driver.DriverData.LookAheadCoasting.MinSpeed) {
 							action = DrivingBehavior.Coasting;
 
 							Log.Debug(

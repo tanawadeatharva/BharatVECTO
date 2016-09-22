@@ -154,7 +154,7 @@ namespace TUGraz.VectoCommon.Utils
 				retVal.Add((-b - Math.Sqrt(d)) / (2 * a));
 			} else {
 				// only one solution possible
-				retVal.Add((-b / (2 * a)));
+				retVal.Add(-b / (2 * a));
 			}
 			return retVal;
 		}
@@ -186,7 +186,7 @@ namespace TUGraz.VectoCommon.Utils
 			}
 			var t = tNumer / denom;
 
-			return new Point(line1.P1.X + (t * s10X), line1.P1.Y + t * s10Y);
+			return new Point(line1.P1.X + t * s10X, line1.P1.Y + t * s10Y);
 		}
 
 		/// <summary>
@@ -261,31 +261,17 @@ namespace TUGraz.VectoCommon.Utils
 			return Math.Ceiling(si.Value()).SI<T>();
 		}
 
-		public static List<double> CubicEquationSolver(double A, double B, double C, double D)
+		public static List<double> CubicEquationSolver(double a, double b, double c, double d)
 		{
-			//var a = B / A;
-			//var b = C / A;
-			//var d = D / A;
-
-			//var p = b / a - a * a / 3;
-			//var q = 2 * a * a / 27 - a * b / 3 + C;
-
-			//var R = q * q / 4 + p * p * p / 27;
-			//if (R > 0) {
-			//	// one real and two complex solutions - we are only interested on the real solution
-
-			//} else {
-			//	// three real solutions (two may coincide)
-			//}
 			var solutions = new List<double>();
-			if (A.IsEqual(0, 1e-12)) {
-				return QuadraticEquationSolver(B, C, D);
+			if (a.IsEqual(0, 1e-12)) {
+				return QuadraticEquationSolver(b, c, d);
 			}
-			var w = B / (3 * A);
-			var p = Math.Pow(C / (3 * A) - w * w, 3);
-			var q = -0.5 * (2 * (w * w * w) - (C * w - D) / A);
-			var d = q * q + p; // discriminant
-			if (d < 0.0) {
+			var w = b / (3 * a);
+			var p = Math.Pow(c / (3 * a) - w * w, 3);
+			var q = -0.5 * (2 * (w * w * w) - (c * w - d) / a);
+			var discriminant = q * q + p;
+			if (discriminant < 0.0) {
 				// 3 real solutions
 				var h = q / Math.Sqrt(-p);
 				var phi = Math.Acos(Math.Max(-1.0, Math.Min(1.0, h)));
@@ -295,15 +281,15 @@ namespace TUGraz.VectoCommon.Utils
 				}
 			} else {
 				// only one real solution
-				d = Math.Sqrt(d);
-				solutions.Add(Cbrt(q + d) + Cbrt(q - d) - w);
+				discriminant = Math.Sqrt(discriminant);
+				solutions.Add(Cbrt(q + discriminant) + Cbrt(q - discriminant) - w);
 			}
 
 			// 1 Newton iteration step in order to minimize round-off errors
 			for (var i = 0; i < solutions.Count; i++) {
-				var h = C + solutions[i] * (2 * B + 3 * solutions[i] * A);
+				var h = c + solutions[i] * (2 * b + 3 * solutions[i] * a);
 				if (!h.IsEqual(0, 1e-12)) {
-					solutions[i] -= (D + solutions[i] * (C + solutions[i] * (B + solutions[i] * A))) / h;
+					solutions[i] -= (d + solutions[i] * (c + solutions[i] * (b + solutions[i] * a))) / h;
 				}
 			}
 			solutions.Sort();
@@ -431,10 +417,10 @@ namespace TUGraz.VectoCommon.Utils
 	[DebuggerDisplay("Plane({X}, {Y}, {Z}, {W})")]
 	public class Plane
 	{
-		public double X;
-		public double Y;
-		public double Z;
-		public double W;
+		public readonly double X;
+		public readonly double Y;
+		public readonly double Z;
+		public readonly double W;
 
 		public Plane(double x, double y, double z, double w)
 		{

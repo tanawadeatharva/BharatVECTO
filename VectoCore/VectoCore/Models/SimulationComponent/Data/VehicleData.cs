@@ -85,7 +85,9 @@ namespace TUGraz.VectoCore.Models.SimulationComponent.Data
 		/// <summary>
 		/// The Gross Vehicle Weight of the Vehicle.
 		/// </summary>
-		[Required, SIRange(3500, 40000, ExecutionMode.Declaration), SIRange(0, 1000000, ExecutionMode.Engineering)]
+		[Required,
+		SIRange(3500, 40000, ExecutionMode.Declaration),
+		SIRange(0, 1000000, ExecutionMode.Engineering)]
 		public Kilogram GrossVehicleWeight { get; internal set; }
 
 		/// <summary>
@@ -109,7 +111,7 @@ namespace TUGraz.VectoCore.Models.SimulationComponent.Data
 			internal set { _wheelsInertia = value; }
 		}
 
-		[Required, SIRange(0, 1E12)]
+		//[Required, SIRange(0, 1E12)]
 		public double TotalRollResistanceCoefficient
 		{
 			get
@@ -153,13 +155,12 @@ namespace TUGraz.VectoCore.Models.SimulationComponent.Data
 			var rrc = 0.0.SI<Scalar>();
 			var wheelsInertia = 0.0.SI<KilogramSquareMeter>();
 			foreach (var axle in _axleData) {
+				if (axle.AxleWeightShare.IsEqual(0, 1e-12)) {
+					continue;
+				}
 				var nrWheels = axle.TwinTyres ? 4 : 2;
 				var baseValue = (axle.AxleWeightShare * TotalVehicleWeight() * g / axle.TyreTestLoad / nrWheels).Value();
-				if (baseValue.IsEqual(0)) {
-					throw new VectoSimulationException(
-						"Axle Roll Resistance Coefficient could not be calculated. One of the values is 0: AxleWeightShare: {0}, TotalVehicleWeight: {1}, TyreTestLoad: {2}, nrWheels: {3}",
-						axle.AxleWeightShare, TotalVehicleWeight(), axle.TyreTestLoad, nrWheels);
-				}
+
 				rrc += axle.AxleWeightShare * axle.RollResistanceCoefficient *
 						Math.Pow(baseValue, Physics.RollResistanceExponent - 1);
 				wheelsInertia += nrWheels * axle.Inertia;
@@ -168,9 +169,14 @@ namespace TUGraz.VectoCore.Models.SimulationComponent.Data
 			WheelsInertia = wheelsInertia;
 		}
 
+		// ReSharper disable once UnusedMember.Global  -- used via Validation
 		public static ValidationResult ValidateVehicleData(VehicleData vehicleData, ValidationContext validationContext)
 		{
 			var mode = GetExecutionMode(validationContext);
+
+			if (vehicleData.AxleData.Count < 1) {
+				return new ValidationResult("At least two axles need to be specified");
+			}
 
 			var weightShareSum = vehicleData.AxleData.Sum(axle => axle.AxleWeightShare);
 			if (!weightShareSum.IsEqual(1.0, 1E-10)) {
@@ -178,12 +184,32 @@ namespace TUGraz.VectoCore.Models.SimulationComponent.Data
 					string.Format("Sum of axle weight share is not 1! sum: {0}, difference: {1}",
 						weightShareSum, 1 - weightShareSum));
 			}
+			for (var i = 0; i < vehicleData.AxleData.Count; i++) {
+				if (vehicleData.AxleData[i].TyreTestLoad.IsSmallerOrEqual(0)) {
+					return new ValidationResult(string.Format("Tyre test load (FzISO) for axle {0} must be greater than 0.", i));
+				}
+			}
+
+
+			if (vehicleData.TotalRollResistanceCoefficient <= 0) {
+				return
+					new ValidationResult(string.Format("Total rolling resistance must be greater than 0! {0}",
+						vehicleData.TotalRollResistanceCoefficient));
+			}
 
 			// total gvw is limited by max gvw (40t)
 			var gvwTotal = VectoMath.Min(vehicleData.GrossVehicleWeight + vehicleData.TrailerGrossVehicleWeight,
 				Constants.SimulationSettings.MaximumGrossVehicleWeight);
 			if (mode != ExecutionMode.Declaration) {
 				return ValidationResult.Success;
+			}
+			// vvvvvvv these checks apply only for declaration mode! vvvvvv
+
+			if (vehicleData.AxleConfiguration.NumAxles() != vehicleData.AxleData.Count) {
+				return
+					new ValidationResult(
+						string.Format("For a {0} type vehicle exactly {1} number of axles have to pe specified. Found {2}",
+							vehicleData.AxleConfiguration.GetName(), vehicleData.AxleConfiguration.NumAxles(), vehicleData.AxleData.Count));
 			}
 
 			if (vehicleData.TotalVehicleWeight() > gvwTotal) {

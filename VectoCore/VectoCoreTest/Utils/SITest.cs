@@ -129,7 +129,7 @@ namespace TUGraz.VectoCore.Tests.Utils
 			var si4 = si2 * si3;
 			Assert.AreEqual("10.0000 [W/s]", si4.ToString());
 			Assert.IsTrue(si4.HasEqualUnit(new SI().Watt.Per.Second));
-			Assert.AreEqual("10.0000 [kgmm/ssss]", si4.ToBasicUnits().ToString());
+			Assert.AreEqual("10.0000 [kgm^2/s^4]", si4.ToBasicUnits().ToString());
 
 			var kg = 5.SI().Kilo.Gramm;
 			Assert.AreEqual(5.0, kg.Value());
@@ -437,6 +437,12 @@ namespace TUGraz.VectoCore.Tests.Utils
 			Assert.AreEqual("3.50 [N]", 3.5.SI<Newton>().ToOutputFormat(2, showUnit: true));
 			Assert.AreEqual("18.00 [m/s]", 5.SI<MeterPerSecond>().ToOutputFormat(2, 3.6, true));
 			Assert.AreEqual("18.0000", 5.SI<MeterPerSecond>().ToOutputFormat(outputFactor: 3.6));
+
+			Assert.AreEqual("10.0000 [m^2]", 10.SI<SquareMeter>().ToOutputFormat(showUnit: true));
+
+			Assert.AreEqual("10.0000 [m^3]", 10.SI<CubicMeter>().ToOutputFormat(showUnit: true));
+
+			Assert.AreEqual("0.5000 [m/s^2]", 0.5.SI<MeterPerSquareSecond>().ToOutputFormat(showUnit: true));
 		}
 	}
 }

@@ -40,15 +40,15 @@ Public Class VehicleAuxiliariesDialog
 	Private Sub DeclInit()
 		CbTech.Items.Clear()
 		Select Case TbID.Text
-			Case sKey.AUX.Fan
+			Case VectoCore.Configuration.Constants.Auxiliaries.IDs.Fan
 				CbTech.Items.AddRange(DeclarationData.Fan.GetTechnologies())
-			Case sKey.AUX.SteerPump
+			Case VectoCore.Configuration.Constants.Auxiliaries.IDs.SteeringPump
 				CbTech.Items.AddRange(DeclarationData.SteeringPump.GetTechnologies())
-			Case sKey.AUX.HVAC
+			Case VectoCore.Configuration.Constants.Auxiliaries.IDs.HeatingVentilationAirCondition
 				CbTech.Items.AddRange(DeclarationData.HeatingVentilationAirConditioning.GetTechnologies())
-			Case sKey.AUX.ElecSys
+			Case VectoCore.Configuration.Constants.Auxiliaries.IDs.ElectricSystem
 				CbTech.Items.AddRange(DeclarationData.ElectricSystem.GetTechnologies())
-			Case sKey.AUX.PneumSys
+			Case VectoCore.Configuration.Constants.Auxiliaries.IDs.PneumaticSystem
 				CbTech.Items.AddRange(DeclarationData.PneumaticSystem.GetTechnologies())
 		End Select
 		If CbTech.Items.Count > 0 Then
@@ -94,7 +94,8 @@ Public Class VehicleAuxiliariesDialog
 
 	'Browse for .vaux files
 	Private Sub BtBrowse_Click(sender As Object, e As EventArgs) Handles BtBrowse.Click
-		If AuxFileBrowser.OpenDialog(fFileRepl(TbPath.Text, VehPath)) Then TbPath.Text = GetFilenameWithoutDirectory(AuxFileBrowser.Files(0), VehPath)
+		If AuxFileBrowser.OpenDialog(FileRepl(TbPath.Text, VehPath)) Then _
+			TbPath.Text = GetFilenameWithoutDirectory(AuxFileBrowser.Files(0), VehPath)
 	End Sub
 
 	'Update ID when Aux Type was changed
@@ -106,12 +107,12 @@ Public Class VehicleAuxiliariesDialog
 			If Cfg.DeclMode Then
 				Select Case CbType.SelectedIndex
 					Case 0
-						TbID.Text = sKey.AUX.Fan
+						TbID.Text = VectoCore.Configuration.Constants.Auxiliaries.IDs.Fan
 					Case 1
-						TbID.Text = sKey.AUX.SteerPump
+						TbID.Text = VectoCore.Configuration.Constants.Auxiliaries.IDs.SteeringPump
 
 					Case Else '2
-						TbID.Text = sKey.AUX.HVAC
+						TbID.Text = VectoCore.Configuration.Constants.Auxiliaries.IDs.HeatingVentilationAirCondition
 
 				End Select
 			Else
@@ -128,7 +129,7 @@ Public Class VehicleAuxiliariesDialog
 		If Trim(TbID.Text) = "" Or Cfg.DeclMode Then
 			LbIDhelp.Text = ""
 		Else
-			LbIDhelp.Text = "Header in Driving cycle: <AUX_" & Trim(TbID.Text) & ">"
+			LbIDhelp.Text = String.Format("Header in Driving cycle: <AUX_{1}>", Trim(TbID.Text))
 		End If
 	End Sub
 End Class

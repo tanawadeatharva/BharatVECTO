@@ -611,7 +611,7 @@ namespace TUGraz.VectoCommon.Utils
 	/// <summary>
 	/// SI Class for one per second [1/s].
 	/// </summary>
-	[DebuggerDisplay("rad/s: {this} | rpm: {ConvertTo().Rounds.Per.Minute}")]
+	[DebuggerDisplay("rad/s: {Val} | rpm: {AsRPM}")]
 	public class PerSecond : SIBase<PerSecond>
 	{
 		private static readonly Unit[] DenominatorDefault = { Unit.s };
@@ -628,7 +628,7 @@ namespace TUGraz.VectoCommon.Utils
 	/// <summary>
 	/// SI Class for Meter per second [m/s].
 	/// </summary>
-	[DebuggerDisplay("{this} | {ConvertTo().Kilo.Meter.Per.Hour}")]
+	[DebuggerDisplay("{Val} | {AsKmph}")]
 	public class MeterPerSecond : SIBase<MeterPerSecond>
 	{
 		private static readonly Unit[] NumeratorDefault = { Unit.m };
@@ -637,10 +637,11 @@ namespace TUGraz.VectoCommon.Utils
 		[DebuggerHidden]
 		private MeterPerSecond(double val) : base(val, NumeratorDefault, DenominatorDefault) {}
 
-		public double AsKmph()
+		public double AsKmph
 		{
-			return Val * 3.6;
+			get { return Val * 3.6; }
 		}
+
 		/// <summary>
 		/// Implements the operator /.
 		/// </summary>
@@ -833,8 +834,9 @@ namespace TUGraz.VectoCommon.Utils
 		/// <param name="val">The value of the SI object.</param>
 		public static T Create(double val)
 		{
-			if (val == 0)
+			if (val == 0) {
 				return ZeroPrototype;
+			}
 
 			return Constructor(val);
 		}
@@ -1905,18 +1907,27 @@ namespace TUGraz.VectoCommon.Utils
 		/// <summary>
 		///     Returns the Unit Part of the SI Unit Expression.
 		/// </summary>
-		private string GetUnitString()
+		public string GetUnitString()
 		{
 			if (Denominator.Any()) {
 				if (Numerator.Any()) {
-					return string.Concat(Numerator) + "/" + string.Concat(Denominator);
-				} else {
-					return "1/" + string.Concat(Denominator);
+					return string.Concat(
+						Numerator.GroupBy(x => x)
+							.Select(x => x.Count() == 1 ? x.Key.ToString() : string.Format("{0}^{1}", x.Key, x.Count())))
+							+ "/"
+							+ string.Concat(
+								Denominator.GroupBy(x => x)
+									.Select(x => x.Count() == 1 ? x.Key.ToString() : string.Format("{0}^{1}", x.Key, x.Count())));
 				}
+				return "1/" + string.Concat(
+					Denominator.GroupBy(x => x)
+						.Select(x => x.Count() == 1 ? x.Key.ToString() : string.Format("{0}^{1}", x.Key, x.Count())));
 			}
 
 			if (Numerator.Any()) {
-				return string.Concat(Numerator);
+				return string.Concat(
+					Numerator.GroupBy(x => x)
+						.Select(x => x.Count() == 1 ? x.Key.ToString() : string.Format("{0}^{1}", x.Key, x.Count())));
 			}
 
 			return "-";
@@ -2183,7 +2194,7 @@ namespace TUGraz.VectoCommon.Utils
 		/// </returns>
 		public int CompareTo(object obj)
 		{
-			var si = (obj as SI);
+			var si = obj as SI;
 			if (si == null) {
 				return 1;
 			}
@@ -2248,6 +2259,11 @@ namespace TUGraz.VectoCommon.Utils
 			}
 
 			return (Val * outputFactor.Value).ToString("F" + decimals.Value, CultureInfo.InvariantCulture);
+		}
+
+		public string ToGUIFormat()
+		{
+			return Val.ToGUIFormat();
 		}
 	}
 }

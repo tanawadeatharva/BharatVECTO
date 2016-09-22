@@ -1,12 +1,20 @@
 
 Imports System.Drawing.Imaging
 Imports System.IO
+Imports System.Linq
 Imports System.Text.RegularExpressions
 Imports System.Windows.Forms.DataVisualization.Charting
 Imports System.Xml.Linq
+Imports TUGraz.VectoCommon.InputData
 Imports TUGraz.VectoCommon.Models
 Imports TUGraz.VectoCommon.Utils
+Imports TUGraz.VectoCore.InputData.FileIO.JSON
+Imports TUGraz.VectoCore.InputData.Reader
 Imports TUGraz.VectoCore.Models.Declaration
+Imports TUGraz.VectoCore.Models.SimulationComponent.Data
+Imports TUGraz.VectoCore.Models.SimulationComponent.Data.Engine
+Imports TUGraz.VectoCore.Utils
+Imports VectoAuxiliaries
 ' Copyright 2014 European Union.
 ' Licensed under the EUPL (the 'Licence');
 '
@@ -40,8 +48,8 @@ Public Class EngineForm
 	Private Sub EngineFormLoad(sender As Object, e As EventArgs) Handles Me.Load
 
 		PnInertia.Enabled = Not Cfg.DeclMode
-		GrWHTC.Enabled = Cfg.DeclMode
-
+		PnWhtcDeclaration.Enabled = Cfg.DeclMode
+		PnWhtcEngineering.Enabled = Not Cfg.DeclMode
 
 		_changed = False
 		NewEngine()
@@ -52,10 +60,8 @@ Public Class EngineForm
 
 		If Not Cfg.DeclMode Then Exit Sub
 
-		TbInertia.Text =
-			CStr(
-				DeclarationData.Engine.EngineInertia((fTextboxToNumString(TbDispl.Text) / 1000.0 / 1000.0).SI(Of CubicMeter),
-													GearboxType.AMT).Value())
+		TbInertia.Text = DeclarationData.Engine.EngineInertia((TbDispl.Text.ToDouble(0.0) / 1000.0 / 1000.0).SI(Of CubicMeter),
+															GearboxType.AMT).ToGUIFormat()
 	End Sub
 
 
@@ -92,7 +98,7 @@ Public Class EngineForm
 		If Not VectoJobForm.Visible Then
 			JobDir = ""
 			VectoJobForm.Show()
-			VectoJobForm.VECTOnew()
+			VectoJobForm.VectoNew()
 		Else
 			VectoJobForm.WindowState = FormWindowState.Normal
 		End If
@@ -102,11 +108,11 @@ Public Class EngineForm
 
 	Private Sub ToolStripButton1_Click(sender As Object, e As EventArgs) Handles ToolStripButton1.Click
 		If File.Exists(MyAppPath & "User Manual\help.html") Then
-			Dim BrowserRegistryString As String =
+			Dim browserRegistryString As String =
 					My.Computer.Registry.ClassesRoot.OpenSubKey("\http\shell\open\command\").GetValue("").ToString
-			Dim DefaultBrowserPath As String =
-					Regex.Match(BrowserRegistryString, "(\"".*?\"")").Captures(0).ToString
-			Process.Start(DefaultBrowserPath,
+			Dim defaultBrowserPath As String =
+					Regex.Match(browserRegistryString, "(\"".*?\"")").Captures(0).ToString
+			Process.Start(defaultBrowserPath,
 						String.Format("""{0}{1}""", MyAppPath, "User Manual\help.html#engine-editor"))
 		Else
 			MsgBox("User Manual not found!", MsgBoxStyle.Critical)
@@ -142,21 +148,18 @@ Public Class EngineForm
 	End Sub
 
 	'Open VENG file
-	Public Sub OpenEngineFile(ByVal file As String)
-		Dim ENG0 As Engine
+	Public Sub OpenEngineFile(file As String)
+		Dim engine As IEngineEngineeringInputData
 
 		If ChangeCheckCancel() Then Exit Sub
 
-		ENG0 = New Engine
+		Dim inputData As IEngineeringInputDataProvider = TryCast(JSONInputDataFactory.ReadComponentData(file), 
+																IEngineeringInputDataProvider)
 
-		ENG0.FilePath = file
+		engine = inputData.EngineInputData
 
-		If Not ENG0.ReadFile Then
-			MsgBox("Cannot read " & file & "!")
-			Exit Sub
-		End If
 
-		If Cfg.DeclMode <> ENG0.SavedInDeclMode Then
+		If Cfg.DeclMode <> engine.SavedInDeclarationMode Then
 			Select Case WrongMode()
 				Case 1
 					Close()
@@ -164,21 +167,22 @@ Public Class EngineForm
 					MainForm.OpenVectoFile(file)
 				Case -1
 					Exit Sub
-				Case Else '0
-					'Continue...
 			End Select
 		End If
 
-		TbName.Text = ENG0.ModelName
-		TbDispl.Text = ENG0.Displacement.ToString
-		TbInertia.Text = ENG0.EngineInertia.ToString
-		TbNleerl.Text = ENG0.IdleSpeed.ToString
+		Dim basePath As String = Path.GetDirectoryName(file)
+		TbName.Text = engine.ModelName
+		TbDispl.Text = (engine.Displacement * 1000 * 1000).ToGUIFormat()
+		TbInertia.Text = engine.Inertia.ToGUIFormat()
+		TbNleerl.Text = engine.IdleSpeed.AsRPM.ToGUIFormat()
 
-		TbMAP.Text = ENG0.PathMAP(True)
-		TbFLD.Text = ENG0.PathFLD(True)
-		TbWHTCurban.Text = ENG0.WHTCurban
-		TbWHTCrural.Text = ENG0.WHTCrural
-		TbWHTCmw.Text = ENG0.WHTCmw
+		TbMAP.Text = GetRelativePath(engine.FuelConsumptionMap.Source, basePath)
+		TbFLD.Text = GetRelativePath(engine.FullLoadCurve.Source, basePath)
+		TbWHTCurban.Text = engine.WHTCUrban.ToGUIFormat()
+		TbWHTCrural.Text = engine.WHTCRural.ToGUIFormat()
+		TbWHTCmw.Text = engine.WHTCMotorway.ToGUIFormat()
+		TbWHTCEngineering.Text = engine.WHTCEngineering.ToGUIFormat()
+		TbColdHotFactor.Text = engine.ColdHotBalancingFactor.ToGUIFormat()
 
 		DeclInit()
 
@@ -193,8 +197,8 @@ Public Class EngineForm
 	End Sub
 
 	'Save or Save As function = true if file is saved
-	Private Function SaveOrSaveAs(ByVal SaveAs As Boolean) As Boolean
-		If _engFile = "" Or SaveAs Then
+	Private Function SaveOrSaveAs(ByVal saveAs As Boolean) As Boolean
+		If _engFile = "" Or saveAs Then
 			If EngineFileBrowser.SaveDialog(_engFile) Then
 				_engFile = EngineFileBrowser.Files(0)
 			Else
@@ -212,17 +216,20 @@ Public Class EngineForm
 
 		engine.ModelName = TbName.Text
 		If Trim(engine.ModelName) = "" Then engine.ModelName = "Undefined"
-		engine.Displacement = CSng(fTextboxToNumString(TbDispl.Text))
-		engine.EngineInertia = CSng(fTextboxToNumString(TbInertia.Text))
-		engine.IdleSpeed = CSng(fTextboxToNumString(TbNleerl.Text))
+		engine.Displacement = TbDispl.Text.ToDouble(0)
+		engine.EngineInertia = TbInertia.Text.ToDouble(0)
+		engine.IdleSpeed = TbNleerl.Text.ToDouble(0)
 
-		engine.PathFLD = TbFLD.Text
-		engine.PathMAP = TbMAP.Text
+		engine.PathFld = TbFLD.Text
+		engine.PathMap = TbMAP.Text
 
 
-		engine.WHTCurban = CSng(fTextboxToNumString(TbWHTCurban.Text))
-		engine.WHTCrural = CSng(fTextboxToNumString(TbWHTCrural.Text))
-		engine.WHTCmw = CSng(fTextboxToNumString(TbWHTCmw.Text))
+		engine.WHTCUrbanInput = TbWHTCurban.Text.ToDouble(0)
+		engine.WHTCRuralInput = TbWHTCrural.Text.ToDouble(0)
+		engine.WHTCMotorwayInput = TbWHTCmw.Text.ToDouble(0)
+		engine.WHTCEngineeringInput = TbWHTCEngineering.Text.ToDouble(0)
+
+		engine.ColdHotBalancingFactorInput = TbColdHotFactor.Text.ToDouble(0)
 
 
 		If Not engine.SaveFile Then
@@ -232,7 +239,7 @@ Public Class EngineForm
 
 		If AutoSendTo Then
 			If VectoJobForm.Visible Then
-				If UCase(fFileRepl(VectoJobForm.TbENG.Text, JobDir)) <> UCase(file) Then _
+				If UCase(FileRepl(VectoJobForm.TbENG.Text, JobDir)) <> UCase(file) Then _
 					VectoJobForm.TbENG.Text = GetFilenameWithoutDirectory(file, JobDir)
 				VectoJobForm.UpdatePic()
 			End If
@@ -321,7 +328,7 @@ Public Class EngineForm
 
 	'Browse for VMAP file
 	Private Sub BtMAP_Click(sender As Object, e As EventArgs) Handles BtMAP.Click
-		If FuelConsumptionMapFileBrowser.OpenDialog(fFileRepl(TbMAP.Text, GetPath(_engFile))) Then _
+		If FuelConsumptionMapFileBrowser.OpenDialog(FileRepl(TbMAP.Text, GetPath(_engFile))) Then _
 			TbMAP.Text = GetFilenameWithoutDirectory(FuelConsumptionMapFileBrowser.Files(0), GetPath(_engFile))
 	End Sub
 
@@ -330,12 +337,12 @@ Public Class EngineForm
 	Private Sub BtMAPopen_Click(sender As Object, e As EventArgs) Handles BtMAPopen.Click
 		Dim fldfile As String
 
-		fldfile = fFileRepl(TbFLD.Text, GetPath(_engFile))
+		fldfile = FileRepl(TbFLD.Text, GetPath(_engFile))
 
-		If fldfile <> sKey.NoFile AndAlso File.Exists(fldfile) Then
-			OpenFiles(fFileRepl(TbMAP.Text, GetPath(_engFile)), fldfile)
+		If fldfile <> NoFile AndAlso File.Exists(fldfile) Then
+			OpenFiles(FileRepl(TbMAP.Text, GetPath(_engFile)), fldfile)
 		Else
-			OpenFiles(fFileRepl(TbMAP.Text, GetPath(_engFile)))
+			OpenFiles(FileRepl(TbMAP.Text, GetPath(_engFile)))
 		End If
 	End Sub
 
@@ -351,96 +358,94 @@ Public Class EngineForm
 	End Sub
 
 	Private Sub UpdatePic()
+		Dim fullLoadCurve As FullLoadCurve = Nothing
+		Dim fcMap As FuelConsumptionMap = Nothing
 
-		Dim fldOK As Boolean = False
-		Dim mapOK As Boolean = False
-		Dim fullLoadCurve As New EngineFullLoadCurve
-		Dim fcMap As New FuelconsumptionMap
-		Dim chart As Chart
-		Dim s As Series
-		Dim a As ChartArea
-		Dim img As Image
 
 		PicBox.Image = Nothing
 
+		'If Not File.Exists(_engFile) Then Exit Sub
+
 		Try
-
-			'Read Files
-			fullLoadCurve.FilePath = fFileRepl(TbFLD.Text, GetPath(_engFile))
-			fldOK = fullLoadCurve.ReadFile(False, False)
-
-			fcMap.FilePath = fFileRepl(TbMAP.Text, GetPath(_engFile))
-			mapOK = fcMap.ReadFile(False)
-
+			Dim fldFile As String =
+					If(Not String.IsNullOrWhiteSpace(_engFile), Path.Combine(Path.GetDirectoryName(_engFile), TbFLD.Text), TbFLD.Text)
+			fullLoadCurve = FullLoadCurveReader.Create(VectoCSVFile.Read(fldFile), engineFld:=True)
 		Catch ex As Exception
-
 		End Try
 
-		If Not fldOK And Not mapOK Then Exit Sub
+		Try
+			Dim fcFile As String =
+					If(Not String.IsNullOrWhiteSpace(_engFile), Path.Combine(Path.GetDirectoryName(_engFile), TbMAP.Text), TbMAP.Text)
+			fcMap = FuelConsumptionMapReader.Create(VectoCSVFile.Read(fcFile))
+		Catch ex As Exception
+		End Try
+
+		If fullLoadCurve Is Nothing AndAlso fcMap Is Nothing Then Exit Sub
 
 
 		'Create plot
-		chart = New Chart
+		Dim chart As Chart = New Chart
 		chart.Width = PicBox.Width
 		chart.Height = PicBox.Height
 
-		a = New ChartArea
+		Dim chartArea As ChartArea = New ChartArea
 
-		If fldOK Then
+		If Not fullLoadCurve Is Nothing Then
+			Dim series As Series = New Series
+			series.Points.DataBindXY(fullLoadCurve.FullLoadEntries.Select(Function(x) x.EngineSpeed.AsRPM).ToArray(),
+									fullLoadCurve.FullLoadEntries.Select(Function(x) x.TorqueFullLoad.Value()).ToArray())
+			series.ChartType = SeriesChartType.FastLine
+			series.BorderWidth = 2
+			series.Color = Color.DarkBlue
+			series.Name = "Full load (" & TbFLD.Text & ")"
+			chart.Series.Add(series)
 
-			s = New Series
-			s.Points.DataBindXY(fullLoadCurve.EngineSpeedList, fullLoadCurve.MaxTorqueList)
-			s.ChartType = SeriesChartType.FastLine
-			s.BorderWidth = 2
-			s.Color = Color.DarkBlue
-			s.Name = "Full load (" & GetFilenameWithoutPath(fullLoadCurve.FilePath, True) & ")"
-			chart.Series.Add(s)
-
-			s = New Series
-			s.Points.DataBindXY(fullLoadCurve.EngineSpeedList, fullLoadCurve.DragTorqueList)
-			s.ChartType = SeriesChartType.FastLine
-			s.BorderWidth = 2
-			s.Color = Color.Blue
-			s.Name = "Motoring (" & GetFilenameWithoutPath(fullLoadCurve.FilePath, True) & ")"
-			chart.Series.Add(s)
-
+			series = New Series
+			series.Points.DataBindXY(fullLoadCurve.FullLoadEntries.Select(Function(x) x.EngineSpeed.AsRPM).ToArray(),
+									fullLoadCurve.FullLoadEntries.Select(Function(x) x.TorqueDrag.Value()).ToArray())
+			series.ChartType = SeriesChartType.FastLine
+			series.BorderWidth = 2
+			series.Color = Color.Blue
+			series.Name = "Motoring (" & Path.GetFileNameWithoutExtension(TbMAP.Text) & ")"
+			chart.Series.Add(series)
 		End If
 
-		If mapOK Then
-			s = New Series
-			s.Points.DataBindXY(fcMap.nU, fcMap.Tq)
-			s.ChartType = SeriesChartType.Point
-			s.MarkerSize = 3
-			s.Color = Color.Red
-			s.Name = "Map"
-			chart.Series.Add(s)
+		If Not fcMap Is Nothing Then
+			Dim series As Series = New Series
+			series.Points.DataBindXY(fcMap.Entries.Select(Function(x) x.EngineSpeed.AsRPM).ToArray(),
+									fcMap.Entries.Select(Function(x) x.Torque.Value()).ToArray())
+			series.ChartType = SeriesChartType.Point
+			series.MarkerSize = 3
+			series.Color = Color.Red
+			series.Name = "Map"
+			chart.Series.Add(series)
 		End If
 
-		a.Name = "main"
+		chartArea.Name = "main"
 
-		a.AxisX.Title = "engine speed [1/min]"
-		a.AxisX.TitleFont = New Font("Helvetica", 10)
-		a.AxisX.LabelStyle.Font = New Font("Helvetica", 8)
-		a.AxisX.LabelAutoFitStyle = LabelAutoFitStyles.None
-		a.AxisX.MajorGrid.LineDashStyle = ChartDashStyle.Dot
+		chartArea.AxisX.Title = "engine speed [1/min]"
+		chartArea.AxisX.TitleFont = New Font("Helvetica", 10)
+		chartArea.AxisX.LabelStyle.Font = New Font("Helvetica", 8)
+		chartArea.AxisX.LabelAutoFitStyle = LabelAutoFitStyles.None
+		chartArea.AxisX.MajorGrid.LineDashStyle = ChartDashStyle.Dot
 
-		a.AxisY.Title = "engine torque [Nm]"
-		a.AxisY.TitleFont = New Font("Helvetica", 10)
-		a.AxisY.LabelStyle.Font = New Font("Helvetica", 8)
-		a.AxisY.LabelAutoFitStyle = LabelAutoFitStyles.None
-		a.AxisY.MajorGrid.LineDashStyle = ChartDashStyle.Dot
+		chartArea.AxisY.Title = "engine torque [Nm]"
+		chartArea.AxisY.TitleFont = New Font("Helvetica", 10)
+		chartArea.AxisY.LabelStyle.Font = New Font("Helvetica", 8)
+		chartArea.AxisY.LabelAutoFitStyle = LabelAutoFitStyles.None
+		chartArea.AxisY.MajorGrid.LineDashStyle = ChartDashStyle.Dot
 
-		a.AxisX.Minimum = 300
-		a.BorderDashStyle = ChartDashStyle.Solid
-		a.BorderWidth = 1
+		chartArea.AxisX.Minimum = 300
+		chartArea.BorderDashStyle = ChartDashStyle.Solid
+		chartArea.BorderWidth = 1
 
-		a.BackColor = Color.GhostWhite
+		chartArea.BackColor = Color.GhostWhite
 
-		chart.ChartAreas.Add(a)
+		chart.ChartAreas.Add(chartArea)
 
 		chart.Update()
 
-		img = New Bitmap(chart.Width, chart.Height, PixelFormat.Format32bppArgb)
+		Dim img As Bitmap = New Bitmap(chart.Width, chart.Height, PixelFormat.Format32bppArgb)
 		chart.DrawToBitmap(img, New Rectangle(0, 0, PicBox.Width, PicBox.Height))
 
 
@@ -450,13 +455,13 @@ Public Class EngineForm
 
 #Region "Open File Context Menu"
 
-	Private CmFiles As String()
+	Private _contextMenuFiles As String()
 
 	Private Sub OpenFiles(ParamArray files() As String)
 
 		If files.Length = 0 Then Exit Sub
 
-		CmFiles = files
+		_contextMenuFiles = files
 
 		OpenWithToolStripMenuItem.Text = "Open with " & Cfg.OpenCmdName
 
@@ -465,14 +470,14 @@ Public Class EngineForm
 
 	Private Sub OpenWithToolStripMenuItem_Click(sender As Object, e As EventArgs) _
 		Handles OpenWithToolStripMenuItem.Click
-		If Not FileOpenAlt(CmFiles(0)) Then MsgBox("Failed to open file!")
+		If Not FileOpenAlt(_contextMenuFiles(0)) Then MsgBox("Failed to open file!")
 	End Sub
 
 	Private Sub ShowInFolderToolStripMenuItem_Click(sender As Object, e As EventArgs) _
 		Handles ShowInFolderToolStripMenuItem.Click
-		If File.Exists(CmFiles(0)) Then
+		If File.Exists(_contextMenuFiles(0)) Then
 			Try
-				Process.Start("explorer", "/select,""" & CmFiles(0) & "")
+				Process.Start("explorer", "/select,""" & _contextMenuFiles(0) & "")
 			Catch ex As Exception
 				MsgBox("Failed to open file!")
 			End Try
@@ -485,16 +490,16 @@ Public Class EngineForm
 
 
 	Private Sub BtFLD_Click(sender As Object, e As EventArgs) Handles BtFLD.Click
-		If FullLoadCurveFileBrowser.OpenDialog(fFileRepl(TbFLD.Text, GetPath(_engFile))) Then _
+		If FullLoadCurveFileBrowser.OpenDialog(FileRepl(TbFLD.Text, GetPath(_engFile))) Then _
 			TbFLD.Text = GetFilenameWithoutDirectory(FullLoadCurveFileBrowser.Files(0), GetPath(_engFile))
 	End Sub
 
 	Private Sub BtFLDopen_Click(sender As Object, e As EventArgs) Handles BtFLDopen.Click
 		Dim fldfile As String
 
-		fldfile = fFileRepl(TbFLD.Text, GetPath(_engFile))
+		fldfile = FileRepl(TbFLD.Text, GetPath(_engFile))
 
-		If fldfile <> sKey.NoFile AndAlso File.Exists(fldfile) Then
+		If fldfile <> NoFile AndAlso File.Exists(fldfile) Then
 			OpenFiles(fldfile)
 		End If
 	End Sub
@@ -517,5 +522,11 @@ Public Class EngineForm
 		Catch ex As Exception
 			MsgBox("Failed to load file! " & ex.Message, MsgBoxStyle.Critical)
 		End Try
+	End Sub
+
+	Private Sub TextBox1_TextChanged(sender As Object, e As EventArgs) Handles TbWHTCEngineering.TextChanged
+	End Sub
+
+	Private Sub Label9_Click(sender As Object, e As EventArgs) Handles lblWhtcEngineering.Click
 	End Sub
 End Class

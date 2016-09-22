@@ -50,7 +50,7 @@ namespace TUGraz.VectoCore.InputData.FileIO.JSON
 {
 	public abstract class JSONFile : LoggingObject
 	{
-		private string _basePath;
+		private readonly string _sourceFile;
 
 		protected readonly JObject Header;
 		protected readonly JObject Body;
@@ -59,7 +59,17 @@ namespace TUGraz.VectoCore.InputData.FileIO.JSON
 		{
 			Header = (JObject)data.GetEx(JsonKeys.JsonHeader);
 			Body = (JObject)data.GetEx(JsonKeys.JsonBody);
-			BasePath = filename;
+			_sourceFile = Path.GetFullPath(filename);
+		}
+
+		public DataSourceType SourceType
+		{
+			get { return DataSourceType.JSONFile; }
+		}
+
+		public string Source
+		{
+			get { return _sourceFile; }
 		}
 
 		public bool SavedInDeclarationMode
@@ -69,11 +79,10 @@ namespace TUGraz.VectoCore.InputData.FileIO.JSON
 
 		internal string BasePath
 		{
-			get { return _basePath; }
-			set { _basePath = Path.GetDirectoryName(Path.GetFullPath(value)); }
+			get { return Path.GetDirectoryName(_sourceFile); }
 		}
 
-		protected DataTable ReadTableData(string filename, string tableType, bool required = true)
+		protected TableData ReadTableData(string filename, string tableType, bool required = true)
 		{
 			if (!EmptyOrInvalidFileName(filename)) {
 				try {
@@ -309,10 +318,13 @@ namespace TUGraz.VectoCore.InputData.FileIO.JSON
 			get
 			{
 				var retVal = new List<ICycleData>();
+				if (Body[JsonKeys.Job_Cycles] == null) {
+					return retVal;
+				}
 				foreach (var cycle in Body.GetEx(JsonKeys.Job_Cycles)) {
 					//.Select(cycle => 
 					var cycleFile = Path.Combine(BasePath, cycle.Value<string>());
-					DataTable cycleData;
+					TableData cycleData;
 					if (File.Exists(cycleFile)) {
 						cycleData = VectoCSVFile.Read(cycleFile);
 					} else {
@@ -400,10 +412,13 @@ namespace TUGraz.VectoCore.InputData.FileIO.JSON
 					? ReadTableData(lac.GetEx<string>("Df_velocityDropLookup"),
 						"Lookahead Coasting Decisionfactor - Velocity drop", false)
 					: null;
+				var minSpeed = lac["MinSpeed"] != null
+					? lac.GetEx<double>(JsonKeys.DriverData_Lookahead_MinSpeed).KMPHtoMeterPerSecond()
+					: DeclarationData.Driver.LookAhead.MinimumSpeed;
 				return new LookAheadCoastingInputData() {
 					Enabled = lac.GetEx<bool>(JsonKeys.DriverData_Lookahead_Enabled),
 					//Deceleration = lac.GetEx<double>(JsonKeys.DriverData_Lookahead_Deceleration).SI<MeterPerSquareSecond>(),
-					//MinSpeed = lac.GetEx<double>(JsonKeys.DriverData_Lookahead_MinSpeed).KMPHtoMeterPerSecond(),
+					MinSpeed = minSpeed,
 					LookaheadDistanceFactor = distanceScalingFactor,
 					CoastingDecisionFactorOffset = lacDfOffset,
 					CoastingDecisionFactorScaling = lacDfScaling,
@@ -433,7 +448,7 @@ namespace TUGraz.VectoCore.InputData.FileIO.JSON
 			}
 		}
 
-		public virtual DataTable AccelerationCurve
+		public virtual TableData AccelerationCurve
 		{
 			[System.Diagnostics.CodeAnalysis.SuppressMessage("Microsoft.Design",
 				"CA1065:DoNotRaiseExceptionsInUnexpectedLocations")]
@@ -441,7 +456,8 @@ namespace TUGraz.VectoCore.InputData.FileIO.JSON
 			{
 				var acceleration = Body[JsonKeys.DriverData_AccelerationCurve];
 				if (acceleration == null || EmptyOrInvalidFileName(acceleration.Value<string>())) {
-					throw new VectoException("AccelerationCurve (VACC) required");
+					return null;
+//					throw new VectoException("AccelerationCurve (VACC) required");
 				}
 				try {
 					return ReadTableData(acceleration.Value<string>(), "DriverAccelerationCurve", false);

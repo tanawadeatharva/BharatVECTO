@@ -11,7 +11,7 @@ Module AdvancedAuxiliariesModule
 									ByVal messageType As AdvancedAuxiliaryMessageType) Handles advancedAuxModel.AuxiliaryEvent
 
 
-		WorkerMsg(messageType, message, "Advanced Auxiliaries")
+		WorkerMsg(CType(messageType, MessageType), message, "Advanced Auxiliaries")
 	End Sub
 
 	'AA-TB

@@ -41,7 +41,7 @@ namespace TUGraz.VectoCore.InputData.Impl
 	{
 		public string Name { get; internal set; }
 
-		public DataTable CycleData { get; internal set; }
+		public TableData CycleData { get; internal set; }
 	}
 
 	public class StartStopInputData : IStartStopEngineeringInputData
@@ -61,13 +61,13 @@ namespace TUGraz.VectoCore.InputData.Impl
 
 		//public MeterPerSquareSecond Deceleration { get; internal set; }
 
-		//public MeterPerSecond MinSpeed { get; internal set; }
+		public MeterPerSecond MinSpeed { get; internal set; }
 
 		public double CoastingDecisionFactorOffset { get; internal set; }
 		public double CoastingDecisionFactorScaling { get; internal set; }
 		public double LookaheadDistanceFactor { get; internal set; }
-		public DataTable CoastingDecisionFactorTargetSpeedLookup { get; internal set; }
-		public DataTable CoastingDecisionFactorVelocityDropLookup { get; internal set; }
+		public TableData CoastingDecisionFactorTargetSpeedLookup { get; internal set; }
+		public TableData CoastingDecisionFactorVelocityDropLookup { get; internal set; }
 	}
 
 	public class OverSpeedEcoRollInputData : IOverSpeedEcoRollEngineeringInputData
@@ -87,13 +87,13 @@ namespace TUGraz.VectoCore.InputData.Impl
 
 		public double Ratio { get; internal set; }
 
-		public DataTable LossMap { get; internal set; }
+		public TableData LossMap { get; internal set; }
 
 		public double Efficiency { get; internal set; }
 
 		public NewtonMeter MaxTorque { get; internal set; }
 
-		public DataTable ShiftPolygon { get; internal set; }
+		public TableData ShiftPolygon { get; internal set; }
 	}
 
 	public class AxleInputData : IAxleEngineeringInputData
@@ -104,6 +104,10 @@ namespace TUGraz.VectoCore.InputData.Impl
 		{
 			get { throw new System.NotImplementedException(); }
 		}
+
+		public DataSourceType SourceType { get; internal set; }
+
+		public string Source { get; internal set; }
 
 		public string Vendor { get; internal set; }
 
@@ -156,7 +160,7 @@ namespace TUGraz.VectoCore.InputData.Impl
 
 		public double EfficiencyToSupply { get; internal set; }
 
-		public DataTable DemandMap { get; internal set; }
+		public TableData DemandMap { get; internal set; }
 
 		public Watt ConstantPowerDemand { get; internal set; }
 	}

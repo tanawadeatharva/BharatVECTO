@@ -29,11 +29,13 @@
 *   Martin Rexeis, rexeis@ivt.tugraz.at, IVT, Graz University of Technology
 */
 
+using System;
 using Newtonsoft.Json;
 using Newtonsoft.Json.Linq;
 using System.IO;
 using TUGraz.VectoCommon.Exceptions;
 using TUGraz.VectoCommon.InputData;
+using TUGraz.VectoCore.Configuration;
 
 namespace TUGraz.VectoCore.InputData.FileIO.JSON
 {
@@ -50,10 +52,19 @@ namespace TUGraz.VectoCore.InputData.FileIO.JSON
 			}
 		}
 
+		public static IInputDataProvider ReadComponentData(string filename)
+		{
+			if (Constants.FileExtensions.VectoJobFile.Equals(Path.GetExtension(filename), StringComparison.OrdinalIgnoreCase)) {
+				return ReadJsonJob(filename);
+			}
+			return new JSONComponentInputData(filename);
+		}
+
 		public static IInputDataProvider ReadJsonJob(string filename)
 		{
 			var json = ReadFile(filename);
 			var version = ReadVersion(json);
+
 			switch (version) {
 				case 2:
 					return new JSONInputDataV2(json, filename);

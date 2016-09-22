@@ -10,19 +10,21 @@
 ' See the LICENSE.txt for the specific language governing permissions and limitations.
 Imports System.Collections.Generic
 Imports System.IO
+Imports Newtonsoft.Json
+Imports Newtonsoft.Json.Linq
+Imports TUGraz.VectoCore.InputData.FileIO.JSON
 Imports TUGraz.VectoCore.Models.Declaration
 
 Public Class Configuration
 	Public FilePath As String
-	Public GnUfromCycle As Boolean
 	Public ModOut As Boolean
 	Public Mod1Hz As Boolean
-	Public LogSize As Single
-	Public AirDensity As Single
+	Public LogSize As Double
+	Public AirDensity As Double
 	Public OpenCmd As String
 	Public OpenCmdName As String
-	Public FuelDens As Single
-	Public CO2perFC As Single
+	Public FuelDens As Double
+	Public Co2PerFc As Double
 	Public FirstRun As Boolean
 	Public DeclMode As Boolean
 
@@ -36,11 +38,9 @@ Public Class Configuration
 		AirDensity = DeclarationData.Physics.AirDensity.Value()	' cDeclaration.AirDensity
 		FuelDens = DeclarationData.Physics.FuelDensity.Value()	' cDeclaration.FuelDens
 		CO2perFC = DeclarationData.Physics.CO2PerFuelWeight		' cDeclaration.CO2perFC
-		GnUfromCycle = False
 	End Sub
 
 	Public Sub SetDefault()
-		GnUfromCycle = True
 		ModOut = True
 		Mod1Hz = False
 		LogSize = 2
@@ -60,57 +60,53 @@ Public Class Configuration
 			Exit Sub
 		End If
 
-		Dim json As New JSONParser
-		If Not json.ReadFile(FilePath) Then
-			GUImsg(MessageType.Err, "Failed to load settings! Using default settings.")
-			Exit Sub
-		End If
-
 		Try
-			Try
-				Mod1Hz = json.Content("Body")("Mod1Hz")
-			Catch
-			End Try
+			Using reader As TextReader = File.OpenText(FilePath)
+				Dim content As JToken = JToken.ReadFrom(New JsonTextReader(reader))
 
-			ModOut = json.Content("Body")("ModOut")
-			GnUfromCycle = json.Content("Body")("UseGnUfromCycle")
-			LogSize = json.Content("Body")("LogSize")
-			AirDensity = json.Content("Body")("AirDensity")
-			FuelDens = json.Content("Body")("FuelDensity")
-			CO2perFC = json.Content("Body")("CO2perFC")
-			OpenCmd = json.Content("Body")("OpenCmd")
-			OpenCmdName = json.Content("Body")("OpenCmdName")
-			FirstRun = json.Content("Body")("FirstRun")
-			DeclMode = json.Content("Body")("DeclMode")
+				Dim body As JToken = content.GetEx("Body")
+				Try
+					Mod1Hz = body.GetEx(Of Boolean)("Mod1Hz")
+				Catch
+				End Try
+				ModOut = body.GetEx(Of Boolean)("ModOut")
+				LogSize = body.GetEx(Of Double)("LogSize")
+				AirDensity = body.GetEx(Of Double)("AirDensity")
+				FuelDens = body.GetEx(Of Double)("FuelDensity")
+				CO2perFC = body.GetEx(Of Double)("CO2perFC")
+				OpenCmd = body.GetEx(Of String)("OpenCmd")
+				OpenCmdName = body.GetEx(Of String)("OpenCmdName")
+				FirstRun = body.GetEx(Of Boolean)("FirstRun")
+				DeclMode = body.GetEx(Of Boolean)("DeclMode")
+			End Using
 		Catch ex As Exception
-			GUImsg(MessageType.Err, "Error while loading settings!")
+			GUIMsg(MessageType.Err, "Error while loading settings!")
 		End Try
 	End Sub
 
 	Public Sub Save()
-		Dim json As New JSONParser
-		Dim dic As Dictionary(Of String, Object)
+		Dim json As New JSONWriter
 
-		dic = New Dictionary(Of String, Object)
-		dic.Add("CreatedBy", Lic.LicString & " (" & Lic.GUID & ")")
-		dic.Add("Date", Now.ToUniversalTime().ToString("o"))
-		dic.Add("AppVersion", VECTOvers)
-		dic.Add("FileVersion", FormatVersion)
-		json.Content.Add("Header", dic)
+		Dim header As Dictionary(Of String, Object) = New Dictionary(Of String, Object)
+		header.Add("CreatedBy", Lic.LicString & " (" & Lic.GUID & ")")
+		header.Add("Date", Now.ToUniversalTime().ToString("o"))
+		header.Add("AppVersion", VECTOvers)
+		header.Add("FileVersion", FormatVersion)
 
-		dic = New Dictionary(Of String, Object)
-		dic.Add("ModOut", ModOut)
-		dic.Add("Mod1Hz", Mod1Hz)
-		dic.Add("LogSize", LogSize)
-		dic.Add("AirDensity", AirDensity)
-		dic.Add("FuelDensity", FuelDens)
-		dic.Add("CO2perFC", CO2perFC)
-		dic.Add("OpenCmd", OpenCmd)
-		dic.Add("OpenCmdName", OpenCmdName)
-		dic.Add("FirstRun", FirstRun)
-		dic.Add("DeclMode", DeclMode)
-		json.Content.Add("Body", dic)
 
+		Dim body As Dictionary(Of String, Object) = New Dictionary(Of String, Object)
+		body.Add("ModOut", ModOut)
+		body.Add("Mod1Hz", Mod1Hz)
+		body.Add("LogSize", LogSize)
+		body.Add("AirDensity", AirDensity)
+		body.Add("FuelDensity", FuelDens)
+		body.Add("CO2perFC", CO2perFC)
+		body.Add("OpenCmd", OpenCmd)
+		body.Add("OpenCmdName", OpenCmdName)
+		body.Add("FirstRun", FirstRun)
+		body.Add("DeclMode", DeclMode)
+
+		json.Content = JToken.FromObject(New Dictionary(Of String, Object) From {{"Header", header}, {"Body", body}})
 		json.WriteFile(FilePath)
 	End Sub
 End Class

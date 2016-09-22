@@ -15,6 +15,9 @@ Imports System.IO
 Imports System.Linq
 Imports System.Text.RegularExpressions
 Imports System.Windows.Forms.DataVisualization.Charting
+Imports TUGraz.VectoCommon.InputData
+Imports TUGraz.VectoCommon.Utils
+Imports TUGraz.VectoCore.Utils
 
 Public Class GraphForm
 	Private _filepath As String
@@ -22,10 +25,10 @@ Public Class GraphForm
 	Private _distanceList As List(Of Single)
 	Private _timeList As List(Of Single)
 
-	Private _xMin As Single
-	Private _xMax As Single
+	Private _xMin As Double
+	Private _xMax As Double
 
-	Private _xMax0 As Single
+	Private _xMax0 As Double
 
 
 	Public Sub New()
@@ -79,70 +82,47 @@ Public Class GraphForm
 	End Sub
 
 	Private Sub LoadFile()
-		Dim file As CsvFile
-		Dim i As Integer
-		Dim sDim As Integer
-		Dim line As String()
-		Dim c0 As Channel
-		Dim l0 As List(Of String)
 
+		Try
 
-		file = New CsvFile
+			_channels.Clear()
 
-		If file.OpenRead(_filepath) Then
-
-			Try
-
-				_channels.Clear()
-
-				'Header
-				line = file.ReadLine
-
-				sDim = UBound(line)
-
-				For i = 0 To sDim
-					c0 = New Channel
-					c0.Name = line(i)
-					c0.Values = New List(Of String)
-					_channels.Add(c0)
+			Dim data As TableData = VectoCSVFile.Read(_filepath)
+			For Each column As DataColumn In data.Columns
+				Dim values As List(Of String) = New List(Of String)
+				For Each row As DataRow In data.Rows
+					values.Add(row(column).ToString())
 				Next
+				_channels.Add(New Channel() With {
+								.Name = column.ColumnName,
+								.Values = values})
+			Next
 
-				'Values
-				Do While Not file.EndOfFile
-					line = file.ReadLine
-					For i = 0 To sDim
-						_channels(i).Values.Add(line(i))
-					Next
-				Loop
 
-				file.Close()
+			_timeList = Nothing
+			_distanceList = Nothing
 
-				l0 = _channels(0).Values
-				_timeList = Nothing
-				_distanceList = Nothing
+			For Each channel As Channel In _channels
+				If (channel.Name = "time" AndAlso _timeList Is Nothing) Then
+					_timeList = channel.Values.Select(Function(x) CSng(x)).ToList()
+				End If
+				If (channel.Name = "dist" AndAlso _distanceList Is Nothing) Then
+					_distanceList = channel.Values.Select(Function(x) CSng(x)).ToList()
+				End If
+			Next
 
-				For Each channel As Channel In _channels
-					If (channel.Name = "time [s]" AndAlso _timeList Is Nothing) Then
-						_timeList = channel.Values.Select(Function(x) CSng(x)).ToList()
-					End If
-					If (channel.Name = "dist [m]" AndAlso _distanceList Is Nothing) Then
-						_distanceList = channel.Values.Select(Function(x) CSng(x)).ToList()
-					End If
-				Next
+			SetxMax0()
 
-				SetxMax0()
+			TbXmin.Text = 0.ToGUIFormat()
+			TbXmax.Text = _xMax0.ToGUIFormat()
 
-				TbXmin.Text = 0
-				TbXmax.Text = _xMax0
+			Text = GetFilenameWithoutPath(_filepath, True)
 
-				Text = GetFilenameWithoutPath(_filepath, True)
+		Catch ex As Exception
 
-			Catch ex As Exception
-				file.Close()
-				Exit Sub
-			End Try
+			Exit Sub
+		End Try
 
-		End If
 
 		UpdateGraph()
 	End Sub
@@ -191,9 +171,9 @@ Public Class GraphForm
 			Dim chartSeries As Series = New Series
 
 			If overDist Then
-				chartSeries.Points.DataBindXY(_distanceList, _channels(listViewItem.Tag).Values)
+				chartSeries.Points.DataBindXY(_distanceList, _channels(CType(listViewItem.Tag, Integer)).Values)
 			Else
-				chartSeries.Points.DataBindXY(_timeList, _channels(listViewItem.Tag).Values)
+				chartSeries.Points.DataBindXY(_timeList, _channels(CType(listViewItem.Tag, Integer)).Values)
 			End If
 
 			chartSeries.ChartType = SeriesChartType.FastLine
@@ -289,18 +269,18 @@ Public Class GraphForm
 
 		chart.Update()
 
-		Dim img As Image = New Bitmap(chart.Width, chart.Height, PixelFormat.Format32bppArgb)
+		Dim img As Bitmap = New Bitmap(chart.Width, chart.Height, PixelFormat.Format32bppArgb)
 		chart.DrawToBitmap(img, New Rectangle(0, 0, PictureBox1.Width, PictureBox1.Height))
 
 		PictureBox1.Image = img
 	End Sub
 
-	Private Function AutoIntervalXAxis() As Single
-		Dim xyd(3) As Single
-		Dim xya(3) As Single
+	Private Function AutoIntervalXAxis() As Double
+		Dim xyd(3) As Double
+		Dim xya(3) As Double
 		Dim i As Int16
 
-		Dim inv As Single = (_xMax - _xMin) / 10
+		Dim inv As Double = (_xMax - _xMin) / 10
 
 		Dim grx As Long = 20
 		Do While 10 ^ grx > inv
@@ -315,8 +295,8 @@ Public Class GraphForm
 			xya(i) = Math.Abs(inv - xyd(i))
 		Next
 
-		Dim xyamin As Single = xya(0)
-		Dim xydmin As Single = xyd(0)
+		Dim xyamin As Double = xya(0)
+		Dim xydmin As Double = xyd(0)
 		For i = 1 To 3
 			If xya(i) < xyamin Then
 				xyamin = xya(i)
@@ -394,7 +374,7 @@ Public Class GraphForm
 			dlog.RbRight.Checked = True
 		End If
 
-		dlog.ComboBox1.SelectedIndex = lv0.Tag
+		dlog.ComboBox1.SelectedIndex = CType(lv0.Tag, Integer)
 
 		If dlog.ShowDialog = DialogResult.OK Then
 			i = dlog.ComboBox1.SelectedIndex
@@ -413,7 +393,7 @@ Public Class GraphForm
 	End Sub
 
 	Private Sub RemoveChannel()
-		Dim i0 As Int16
+		Dim i0 As Integer
 
 		If ListView1.Items.Count = 0 Then Exit Sub
 
@@ -459,31 +439,31 @@ Public Class GraphForm
 	Private Sub CbXaxis_SelectedIndexChanged(sender As Object, e As EventArgs) _
 		Handles CbXaxis.SelectedIndexChanged
 		SetxMax0()
-		TbXmin.Text = 0
-		TbXmax.Text = _xMax0
+		TbXmin.Text = 0.ToGUIFormat()
+		TbXmax.Text = _xMax0.ToGUIFormat()
 		UpdateGraph()
 	End Sub
 
 	Private Sub BtReset_Click(sender As Object, e As EventArgs) Handles BtReset.Click
 		_xMin = 0
 		_xMax = _xMax0
-		TbXmin.Text = 0
-		TbXmax.Text = _xMax0
+		TbXmin.Text = 0.ToGUIFormat()
+		TbXmax.Text = _xMax0.ToGUIFormat()
 	End Sub
 
 	Private Sub TbXmin_TextChanged(sender As Object, e As EventArgs) Handles TbXmin.TextChanged
-		If IsNumeric(TbXmin.Text) Then _xMin = TbXmin.Text
+		If IsNumeric(TbXmin.Text) Then _xMin = TbXmin.Text.ToDouble()
 		UpdateGraph()
 	End Sub
 
 	Private Sub TbXmax_TextChanged(sender As Object, e As EventArgs) Handles TbXmax.TextChanged
-		If IsNumeric(TbXmax.Text) Then _xMax = TbXmax.Text
+		If IsNumeric(TbXmax.Text) Then _xMax = TbXmax.Text.ToDouble()
 		UpdateGraph()
 	End Sub
 
 	Private Sub ToolStripButton3_Click(sender As Object, e As EventArgs) Handles ToolStripButton3.Click
-		Dim FGraph As New GraphForm
-		FGraph.Show()
+		Dim graph As New GraphForm
+		graph.Show()
 	End Sub
 
 	Private Sub F_Graph_SizeChanged(sender As Object, e As EventArgs) Handles Me.SizeChanged
@@ -491,7 +471,7 @@ Public Class GraphForm
 	End Sub
 
 	Private Sub BtZoomIn_Click(sender As Object, e As EventArgs) Handles BtZoomIn.Click
-		Dim d As Single
+		Dim d As Double
 
 		d = (_xMax - _xMin) / 10
 
@@ -504,12 +484,12 @@ Public Class GraphForm
 			_xMin = Math.Round(_xMin, 0)
 		End If
 
-		TbXmin.Text = _xMin
-		TbXmax.Text = _xMax
+		TbXmin.Text = _xMin.ToGUIFormat()
+		TbXmax.Text = _xMax.ToGUIFormat()
 	End Sub
 
 	Private Sub BtZoomOut_Click(sender As Object, e As EventArgs) Handles BtZoomOut.Click
-		Dim d As Single
+		Dim d As Double
 
 		d = (_xMax - _xMin) / 10
 
@@ -522,12 +502,12 @@ Public Class GraphForm
 			_xMin = Math.Round(_xMin, 0)
 		End If
 
-		TbXmin.Text = _xMin
-		TbXmax.Text = _xMax
+		TbXmin.Text = _xMin.ToGUIFormat()
+		TbXmax.Text = _xMax.ToGUIFormat()
 	End Sub
 
 	Private Sub BtMoveL_Click(sender As Object, e As EventArgs) Handles BtMoveL.Click
-		Dim d As Single
+		Dim d As Double
 
 		If _xMin <= 0 Then Exit Sub
 
@@ -541,12 +521,12 @@ Public Class GraphForm
 			_xMin = Math.Round(_xMin, 0)
 		End If
 
-		TbXmin.Text = _xMin
-		TbXmax.Text = _xMax
+		TbXmin.Text = _xMin.ToGUIFormat()
+		TbXmax.Text = _xMax.ToGUIFormat()
 	End Sub
 
 	Private Sub BtMoveR_Click(sender As Object, e As EventArgs) Handles BtMoveR.Click
-		Dim d As Single
+		Dim d As Double
 
 		If _xMax >= _xMax0 Then Exit Sub
 
@@ -560,17 +540,17 @@ Public Class GraphForm
 			_xMin = Math.Round(_xMin, 0)
 		End If
 
-		TbXmin.Text = _xMin
-		TbXmax.Text = _xMax
+		TbXmin.Text = _xMin.ToGUIFormat()
+		TbXmax.Text = _xMax.ToGUIFormat()
 	End Sub
 
 	Private Sub ToolStripButton1_Click(sender As Object, e As EventArgs) Handles ToolStripButton1.Click
 		If File.Exists(MyAppPath & "User Manual\help.html") Then
-			Dim BrowserRegistryString As String =
+			Dim browserRegistryString As String =
 					My.Computer.Registry.ClassesRoot.OpenSubKey("\http\shell\open\command\").GetValue("").ToString
-			Dim DefaultBrowserPath As String =
-					Regex.Match(BrowserRegistryString, "(\"".*?\"")").Captures(0).ToString
-			Process.Start(DefaultBrowserPath,
+			Dim defaultBrowserPath As String =
+					Regex.Match(browserRegistryString, "(\"".*?\"")").Captures(0).ToString
+			Process.Start(defaultBrowserPath,
 						String.Format("""{0}{1}""", MyAppPath, "User Manual\help.html#graph-window"))
 		Else
 			MsgBox("User Manual not found!", MsgBoxStyle.Critical)

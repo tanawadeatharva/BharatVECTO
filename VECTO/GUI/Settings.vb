@@ -10,6 +10,7 @@
 ' See the LICENSE.txt for the specific language governing permissions and limitations.
 Imports System.IO
 Imports System.Text.RegularExpressions
+Imports TUGraz.VectoCommon.Utils
 
 ''' <summary>
 ''' Settings form
@@ -24,7 +25,7 @@ Public Class Settings
 
 	Private Sub LoadSettings()
 
-		TextBoxLogSize.Text = Cfg.LogSize
+		TextBoxLogSize.Text = Cfg.LogSize.ToGUIFormat()
 		TbAirDensity.Text = CStr(Cfg.AirDensity)
 		TbOpenCmd.Text = Cfg.OpenCmd
 		TbOpenCmdName.Text = Cfg.OpenCmdName
@@ -72,11 +73,11 @@ Public Class Settings
 	'Help button
 	Private Sub BtHelp_Click(sender As Object, e As EventArgs) Handles BtHelp.Click
 		If File.Exists(MyAppPath & "User Manual\help.html") Then
-			Dim BrowserRegistryString As String =
+			Dim browserRegistryString As String =
 					My.Computer.Registry.ClassesRoot.OpenSubKey("\http\shell\open\command\").GetValue("").ToString
-			Dim DefaultBrowserPath As String =
-					Regex.Match(BrowserRegistryString, "(\"".*?\"")").Captures(0).ToString
-			Process.Start(DefaultBrowserPath,
+			Dim defaultBrowserPath As String =
+					Regex.Match(browserRegistryString, "(\"".*?\"")").Captures(0).ToString
+			Process.Start(defaultBrowserPath,
 											String.Format("""{0}{1}""", MyAppPath, "User Manual\help.html#settings"))
 		Else
 			MsgBox("User Manual not found!", MsgBoxStyle.Critical)

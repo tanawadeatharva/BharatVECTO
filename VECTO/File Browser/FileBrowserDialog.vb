@@ -136,7 +136,7 @@ Public Class FileBrowserDialog
 					'Single File
 					path = Trim(TextBoxPath.Text)
 					'Primary extension (eg for bForceExt)
-					ext = Trim(ComboBoxExt.Text.Split(",")(0))
+					ext = Trim(ComboBoxExt.Text.Split(","c)(0))
 					'If file without path then append path
 					If Mid(path, 2, 1) <> ":" Then path = _myFolder & path
 					'If instead of File a Folder is entered: Switch to Folder and Abort
@@ -186,7 +186,8 @@ Public Class FileBrowserDialog
 	End Sub
 
 	'Browse - Custom Dialog
-	Public Function Browse(path As String, fileMustExist As Boolean, overwriteCheck As Boolean, extMode As tFbExtMode,
+	Public Function Browse(path As String, fileMustExist As Boolean, overwriteCheck As Boolean,
+							extMode As FileBrowserFileExtensionMode,
 							multiFile As Boolean, ext As String, caption As String) As Boolean
 		If Not _initialized Then Init()
 
@@ -201,12 +202,12 @@ Public Class FileBrowserDialog
 		'Options
 		_bOverwriteCheck = overwriteCheck
 		_bFileMustExist = fileMustExist
-		_bForceExt = (extMode = tFbExtMode.ForceExt)
+		_bForceExt = (extMode = FileBrowserFileExtensionMode.ForceExt)
 
 		'Form Config
 		ListViewFiles.MultiSelect = multiFile
 		ButtonAll.Visible = multiFile
-		Title = caption
+		_title = caption
 		Text = caption
 
 		'Ext-Combobox
@@ -216,13 +217,13 @@ Public Class FileBrowserDialog
 			ComboBoxExt.SelectedIndex = 0
 		Else
 			Select Case extMode
-				Case tFbExtMode.ForceExt
+				Case FileBrowserFileExtensionMode.ForceExt
 					If ext = "" Then ext = _extListSingle(0).ToString
 					ComboBoxExt.Items.AddRange(_extListSingle.ToArray)
 					ComboBoxExt.Text = ext
 					ComboBoxExt.Enabled = False
-				Case tFbExtMode.MultiExt, tFbExtMode.SingleExt
-					If extMode = tFbExtMode.MultiExt Then
+				Case FileBrowserFileExtensionMode.MultiExt, FileBrowserFileExtensionMode.SingleExt
+					If extMode = FileBrowserFileExtensionMode.MultiExt Then
 						ComboBoxExt.Items.AddRange(_extListMulti.ToArray)
 					Else
 						ComboBoxExt.Items.AddRange(_extListSingle.ToArray)
@@ -288,7 +289,7 @@ Public Class FileBrowserDialog
 		End If
 	End Function
 
-	Public Title As String
+	Private _title As String
 
 	'Close and save File / Folder History
 	Public Sub SaveAndClose()
@@ -389,7 +390,7 @@ Public Class FileBrowserDialog
 			_extListMulti = New ArrayList
 			For x = 0 To UBound(_myExt)
 				_extListMulti.Add(_myExt(x))
-				For Each line In _myExt(x).Split(",")
+				For Each line In _myExt(x).Split(","c)
 					_extListSingle.Add(Trim(line))
 				Next
 			Next
@@ -494,7 +495,7 @@ Public Class FileBrowserDialog
 			TextBoxPath.Text = ""
 		Else
 			If ListViewFiles.SelectedItems.Count > 1 Then
-				TextBoxPath.Text = "<" & ListViewFiles.SelectedItems.Count & " Files selected>"
+				TextBoxPath.Text = String.Format("<{0} Files selected>", ListViewFiles.SelectedItems.Count)
 			Else
 				TextBoxPath.Text = ListViewFiles.SelectedItems.Item(0).Text
 				TextBoxPath.SelectionStart = TextBoxPath.Text.Length
@@ -643,8 +644,8 @@ Public Class FileBrowserDialog
 		If path = FavText Then
 			Dim favdlog = New FileBrowserFavoritesDialog
 			If favdlog.ShowDialog(Me) = DialogResult.OK Then
-				For x = 10 To 19
-					path = favdlog.ListBox1.Items(x - 10)
+				For x As Integer = 10 To 19
+					path = favdlog.ListBox1.Items(x - 10).ToString()
 					If path = NoFavString Then
 						FileBrowserFolderHistory(x) = EmptyText
 					Else
@@ -671,7 +672,7 @@ Public Class FileBrowserDialog
 		Do While x1 > x
 			newpath = path
 			'path = Microsoft.VisualBasic.Left(path, x1 - 1)
-			path = Microsoft.VisualBasic.Left(path, path.LastIndexOf("\"))
+			path = Microsoft.VisualBasic.Left(path, path.LastIndexOf("\", StringComparison.Ordinal))
 			x1 = path.Length
 		Loop
 		SetFolder(newpath)
@@ -741,7 +742,7 @@ Public Class FileBrowserDialog
 		_myFolder = path
 		If Microsoft.VisualBasic.Right(_myFolder, 1) <> "\" Then _myFolder &= "\"
 
-		Text = Title & " " & _myFolder
+		Text = _title & " " & _myFolder
 
 		LoadListFolder()
 		LoadListFiles()
@@ -758,7 +759,7 @@ Public Class FileBrowserDialog
 	Private Sub FolderUp()
 		If _myFolder <> "" Then
 			Dim path = Microsoft.VisualBasic.Left(_myFolder, _myFolder.Length - 1)
-			Dim x = path.LastIndexOf("\")
+			Dim x = path.LastIndexOf("\", StringComparison.Ordinal)
 			If x > 0 Then SetFolder(Microsoft.VisualBasic.Left(path, x))
 		End If
 	End Sub
@@ -811,7 +812,7 @@ Public Class FileBrowserDialog
 		If Trim(ComboBoxExt.Text.ToString) = "" Then
 			extStr = New String() {"*"}
 		Else
-			extStr = ComboBoxExt.Text.ToString.Split(",")
+			extStr = ComboBoxExt.Text.ToString.Split(","c)
 		End If
 
 		'Delete File-List
@@ -913,7 +914,7 @@ lb10:
 	End Sub
 
 	Private Shared Function fPATH(path As String) As String
-		Dim x = path.LastIndexOf("\")
+		Dim x = path.LastIndexOf("\", StringComparison.Ordinal)
 		If x = -1 Then
 			Return Microsoft.VisualBasic.Left(path, 0)
 		Else

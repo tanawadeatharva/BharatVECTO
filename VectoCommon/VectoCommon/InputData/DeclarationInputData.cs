@@ -30,7 +30,6 @@
 */
 
 using System.Collections.Generic;
-using System.Data;
 using TUGraz.VectoCommon.Models;
 using TUGraz.VectoCommon.Utils;
 
@@ -47,6 +46,10 @@ namespace TUGraz.VectoCommon.InputData
 
 	public interface IComponentInputData
 	{
+		DataSourceType SourceType { get; }
+
+		string Source { get; }
+
 		bool SavedInDeclarationMode { get; }
 
 		string Vendor { get; }
@@ -129,7 +132,7 @@ namespace TUGraz.VectoCommon.InputData
 		/// P057, P058
 		/// cf. VECTO Input Parameters.xlsx
 		/// </summary>
-		DataTable LossMap { get; }
+		TableData LossMap { get; }
 	}
 
 	public interface IAngularGearInputData : IComponentInputData
@@ -147,7 +150,7 @@ namespace TUGraz.VectoCommon.InputData
 		/// <summary>
 		/// P173, P174, P175
 		/// </summary>
-		DataTable LossMap { get; }
+		TableData LossMap { get; }
 
 		/// <summary>
 		/// P177
@@ -215,7 +218,7 @@ namespace TUGraz.VectoCommon.InputData
 		/// P096, P097, P098
 		/// cf. VECTO Input Parameters.xlsx
 		/// </summary>
-		DataTable LossMap { get; }
+		TableData LossMap { get; }
 
 		/// <summary>
 		/// P079
@@ -239,7 +242,7 @@ namespace TUGraz.VectoCommon.InputData
 		/// P093, P094, P095
 		/// cf. VECTO Input Parameters.xlsx
 		/// </summary>
-		DataTable ShiftPolygon { get; }
+		TableData ShiftPolygon { get; }
 
 		///// <summary>
 		///// P077
@@ -261,7 +264,7 @@ namespace TUGraz.VectoCommon.InputData
 		/// P096, P097, P098
 		/// cf. VECTO Input Parameters.xlsx
 		/// </summary>
-		DataTable LossMap { get; }
+		TableData LossMap { get; }
 
 		/// <summary>
 		/// P079
@@ -278,7 +281,7 @@ namespace TUGraz.VectoCommon.InputData
 		/// cf. VECTO Input Parameters.xlsx
 		/// </summary>
 		// ReSharper disable once InconsistentNaming
-		DataTable TCData { get; }
+		TableData TCData { get; }
 	}
 
 	public interface IEngineDeclarationInputData : IComponentInputData
@@ -314,19 +317,24 @@ namespace TUGraz.VectoCommon.InputData
 		double WHTCUrban { get; }
 
 		/// <summary>
+		/// P159
+		/// </summary>
+		double ColdHotBalancingFactor { get; }
+
+		/// <summary>
 		/// P067
 		/// P072, P073, P074
 		/// cf. VECTO Input Parameters.xlsx
 		/// engine speed in rpm, torque in NM, fuel consumption in g/h
 		/// </summary>
-		DataTable FuelConsumptionMap { get; }
+		TableData FuelConsumptionMap { get; }
 
 		/// <summary>
 		/// P144
 		/// P068, P069, P70, P71
 		/// cf. VECTO Input Parameters.xlsx
 		/// </summary>
-		DataTable FullLoadCurve { get; }
+		TableData FullLoadCurve { get; }
 	}
 
 	public interface IAuxiliariesDeclarationInputData
@@ -344,7 +352,7 @@ namespace TUGraz.VectoCommon.InputData
 		/// P028, P029, P030, P031, P032, P119, P120, P121, P122, P123, P124, P125, P126
 		/// cf. VECTO Input Parameters.xlsx
 		/// </summary>
-		DataTable CycleData { get; }
+		TableData CycleData { get; }
 	}
 
 	public interface IDriverDeclarationInputData
