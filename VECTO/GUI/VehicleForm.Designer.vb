@@ -1,4 +1,4 @@
-' Copyright 2014 European Union.
+﻿' Copyright 2014 European Union.
 ' Licensed under the EUPL (the 'Licence');
 '
 ' * You may not use this work except in compliance with the Licence.
@@ -119,14 +119,14 @@ Partial Class VehicleForm
 		Me.cbPTOType = New System.Windows.Forms.ComboBox()
 		Me.GroupBox3 = New System.Windows.Forms.GroupBox()
 		Me.GroupBox2 = New System.Windows.Forms.GroupBox()
-		Me.pnAngularGearFields = New System.Windows.Forms.Panel()
+		Me.pnAngledriveFields = New System.Windows.Forms.Panel()
 		Me.Label4 = New System.Windows.Forms.Label()
 		Me.Label12 = New System.Windows.Forms.Label()
 		Me.Label10 = New System.Windows.Forms.Label()
-		Me.tbAngularGearRatio = New System.Windows.Forms.TextBox()
-		Me.btAngularGearLossMapBrowse = New System.Windows.Forms.Button()
-		Me.tbAngularGearLossMapPath = New System.Windows.Forms.TextBox()
-		Me.cbAngularGearType = New System.Windows.Forms.ComboBox()
+		Me.tbAngledriveRatio = New System.Windows.Forms.TextBox()
+		Me.btAngledriveLossMapBrowse = New System.Windows.Forms.Button()
+		Me.tbAngledriveLossMapPath = New System.Windows.Forms.TextBox()
+		Me.cbAngledriveType = New System.Windows.Forms.ComboBox()
 		Me.PicVehicle = New System.Windows.Forms.PictureBox()
 		Me.Label8 = New System.Windows.Forms.Label()
 		Me.ToolTip1 = New System.Windows.Forms.ToolTip(Me.components)
@@ -148,7 +148,7 @@ Partial Class VehicleForm
 		Me.pnPTO.SuspendLayout()
 		Me.GroupBox3.SuspendLayout()
 		Me.GroupBox2.SuspendLayout()
-		Me.pnAngularGearFields.SuspendLayout()
+		Me.pnAngledriveFields.SuspendLayout()
 		CType(Me.PicVehicle, System.ComponentModel.ISupportInitialize).BeginInit()
 		Me.SuspendLayout()
 		'
@@ -929,8 +929,8 @@ Partial Class VehicleForm
 		'
 		'GroupBox2
 		'
-		Me.GroupBox2.Controls.Add(Me.pnAngularGearFields)
-		Me.GroupBox2.Controls.Add(Me.cbAngularGearType)
+		Me.GroupBox2.Controls.Add(Me.pnAngledriveFields)
+		Me.GroupBox2.Controls.Add(Me.cbAngledriveType)
 		Me.GroupBox2.Location = New System.Drawing.Point(290, 295)
 		Me.GroupBox2.Name = "GroupBox2"
 		Me.GroupBox2.Size = New System.Drawing.Size(280, 111)
@@ -938,18 +938,18 @@ Partial Class VehicleForm
 		Me.GroupBox2.TabStop = False
 		Me.GroupBox2.Text = "Angular Gear"
 		'
-		'pnAngularGearFields
+		'pnAngledriveFields
 		'
-		Me.pnAngularGearFields.Controls.Add(Me.Label4)
-		Me.pnAngularGearFields.Controls.Add(Me.Label12)
-		Me.pnAngularGearFields.Controls.Add(Me.Label10)
-		Me.pnAngularGearFields.Controls.Add(Me.tbAngularGearRatio)
-		Me.pnAngularGearFields.Controls.Add(Me.btAngularGearLossMapBrowse)
-		Me.pnAngularGearFields.Controls.Add(Me.tbAngularGearLossMapPath)
-		Me.pnAngularGearFields.Location = New System.Drawing.Point(3, 42)
-		Me.pnAngularGearFields.Name = "pnAngularGearFields"
-		Me.pnAngularGearFields.Size = New System.Drawing.Size(272, 63)
-		Me.pnAngularGearFields.TabIndex = 6
+		Me.pnAngledriveFields.Controls.Add(Me.Label4)
+		Me.pnAngledriveFields.Controls.Add(Me.Label12)
+		Me.pnAngledriveFields.Controls.Add(Me.Label10)
+		Me.pnAngledriveFields.Controls.Add(Me.tbAngledriveRatio)
+		Me.pnAngledriveFields.Controls.Add(Me.btAngledriveLossMapBrowse)
+		Me.pnAngledriveFields.Controls.Add(Me.tbAngledriveLossMapPath)
+		Me.pnAngledriveFields.Location = New System.Drawing.Point(3, 42)
+		Me.pnAngledriveFields.Name = "pnAngledriveFields"
+		Me.pnAngledriveFields.Size = New System.Drawing.Size(272, 63)
+		Me.pnAngledriveFields.TabIndex = 6
 		'
 		'Label4
 		'
@@ -979,41 +979,41 @@ Partial Class VehicleForm
 		Me.Label10.Text = "Ratio"
 		Me.Label10.TextAlign = System.Drawing.ContentAlignment.TopRight
 		'
-		'tbAngularGearRatio
+		'tbAngledriveRatio
 		'
-		Me.tbAngularGearRatio.Anchor = CType((System.Windows.Forms.AnchorStyles.Top Or System.Windows.Forms.AnchorStyles.Right), System.Windows.Forms.AnchorStyles)
-		Me.tbAngularGearRatio.Location = New System.Drawing.Point(193, 2)
-		Me.tbAngularGearRatio.Name = "tbAngularGearRatio"
-		Me.tbAngularGearRatio.Size = New System.Drawing.Size(56, 20)
-		Me.tbAngularGearRatio.TabIndex = 12
+		Me.tbAngledriveRatio.Anchor = CType((System.Windows.Forms.AnchorStyles.Top Or System.Windows.Forms.AnchorStyles.Right), System.Windows.Forms.AnchorStyles)
+		Me.tbAngledriveRatio.Location = New System.Drawing.Point(193, 2)
+		Me.tbAngledriveRatio.Name = "tbAngledriveRatio"
+		Me.tbAngledriveRatio.Size = New System.Drawing.Size(56, 20)
+		Me.tbAngledriveRatio.TabIndex = 12
 		'
-		'btAngularGearLossMapBrowse
+		'btAngledriveLossMapBrowse
 		'
-		Me.btAngularGearLossMapBrowse.Anchor = CType((System.Windows.Forms.AnchorStyles.Bottom Or System.Windows.Forms.AnchorStyles.Left), System.Windows.Forms.AnchorStyles)
-		Me.btAngularGearLossMapBrowse.Image = Global.TUGraz.VECTO.My.Resources.Resources.Open_icon
-		Me.btAngularGearLossMapBrowse.Location = New System.Drawing.Point(245, 39)
-		Me.btAngularGearLossMapBrowse.Name = "btAngularGearLossMapBrowse"
-		Me.btAngularGearLossMapBrowse.Size = New System.Drawing.Size(24, 24)
-		Me.btAngularGearLossMapBrowse.TabIndex = 14
-		Me.btAngularGearLossMapBrowse.UseVisualStyleBackColor = True
+		Me.btAngledriveLossMapBrowse.Anchor = CType((System.Windows.Forms.AnchorStyles.Bottom Or System.Windows.Forms.AnchorStyles.Left), System.Windows.Forms.AnchorStyles)
+		Me.btAngledriveLossMapBrowse.Image = Global.TUGraz.VECTO.My.Resources.Resources.Open_icon
+		Me.btAngledriveLossMapBrowse.Location = New System.Drawing.Point(245, 39)
+		Me.btAngledriveLossMapBrowse.Name = "btAngledriveLossMapBrowse"
+		Me.btAngledriveLossMapBrowse.Size = New System.Drawing.Size(24, 24)
+		Me.btAngledriveLossMapBrowse.TabIndex = 14
+		Me.btAngledriveLossMapBrowse.UseVisualStyleBackColor = True
 		'
-		'tbAngularGearLossMapPath
+		'tbAngledriveLossMapPath
 		'
-		Me.tbAngularGearLossMapPath.Anchor = CType((System.Windows.Forms.AnchorStyles.Bottom Or System.Windows.Forms.AnchorStyles.Left), System.Windows.Forms.AnchorStyles)
-		Me.tbAngularGearLossMapPath.Location = New System.Drawing.Point(6, 41)
-		Me.tbAngularGearLossMapPath.Name = "tbAngularGearLossMapPath"
-		Me.tbAngularGearLossMapPath.Size = New System.Drawing.Size(239, 20)
-		Me.tbAngularGearLossMapPath.TabIndex = 13
+		Me.tbAngledriveLossMapPath.Anchor = CType((System.Windows.Forms.AnchorStyles.Bottom Or System.Windows.Forms.AnchorStyles.Left), System.Windows.Forms.AnchorStyles)
+		Me.tbAngledriveLossMapPath.Location = New System.Drawing.Point(6, 41)
+		Me.tbAngledriveLossMapPath.Name = "tbAngledriveLossMapPath"
+		Me.tbAngledriveLossMapPath.Size = New System.Drawing.Size(239, 20)
+		Me.tbAngledriveLossMapPath.TabIndex = 13
 		'
-		'cbAngularGearType
+		'cbAngledriveType
 		'
-		Me.cbAngularGearType.DropDownStyle = System.Windows.Forms.ComboBoxStyle.DropDownList
-		Me.cbAngularGearType.FormattingEnabled = True
-		Me.cbAngularGearType.Items.AddRange(New Object() {"No Angular Gear", "Separate Angular Gear", "Included in Transmission Loss Maps"})
-		Me.cbAngularGearType.Location = New System.Drawing.Point(6, 19)
-		Me.cbAngularGearType.Name = "cbAngularGearType"
-		Me.cbAngularGearType.Size = New System.Drawing.Size(266, 21)
-		Me.cbAngularGearType.TabIndex = 0
+		Me.cbAngledriveType.DropDownStyle = System.Windows.Forms.ComboBoxStyle.DropDownList
+		Me.cbAngledriveType.FormattingEnabled = True
+		Me.cbAngledriveType.Items.AddRange(New Object() {"No Angular Gear", "Separate Angular Gear", "Included in Transmission Loss Maps"})
+		Me.cbAngledriveType.Location = New System.Drawing.Point(6, 19)
+		Me.cbAngledriveType.Name = "cbAngledriveType"
+		Me.cbAngledriveType.Size = New System.Drawing.Size(266, 21)
+		Me.cbAngledriveType.TabIndex = 0
 		'
 		'PicVehicle
 		'
@@ -1089,8 +1089,8 @@ Partial Class VehicleForm
 		Me.pnPTO.PerformLayout()
 		Me.GroupBox3.ResumeLayout(False)
 		Me.GroupBox2.ResumeLayout(False)
-		Me.pnAngularGearFields.ResumeLayout(False)
-		Me.pnAngularGearFields.PerformLayout()
+		Me.pnAngledriveFields.ResumeLayout(False)
+		Me.pnAngledriveFields.PerformLayout()
 		CType(Me.PicVehicle, System.ComponentModel.ISupportInitialize).EndInit()
 		Me.ResumeLayout(False)
 		Me.PerformLayout()
@@ -1170,17 +1170,17 @@ Partial Class VehicleForm
 	Friend WithEvents PnCdATrTr As System.Windows.Forms.Panel
 	Friend WithEvents Label38 As System.Windows.Forms.Label
 	Friend WithEvents GroupBox2 As System.Windows.Forms.GroupBox
-	Friend WithEvents cbAngularGearType As System.Windows.Forms.ComboBox
+	Friend WithEvents cbAngledriveType As System.Windows.Forms.ComboBox
 	Friend WithEvents Label15 As System.Windows.Forms.Label
 	Friend WithEvents BtRtBrowse As System.Windows.Forms.Button
 	Friend WithEvents TbRtPath As System.Windows.Forms.TextBox
-	Friend WithEvents pnAngularGearFields As System.Windows.Forms.Panel
+	Friend WithEvents pnAngledriveFields As System.Windows.Forms.Panel
 	Friend WithEvents Label4 As System.Windows.Forms.Label
 	Friend WithEvents Label12 As System.Windows.Forms.Label
 	Friend WithEvents Label10 As System.Windows.Forms.Label
-	Friend WithEvents tbAngularGearRatio As System.Windows.Forms.TextBox
-	Friend WithEvents btAngularGearLossMapBrowse As System.Windows.Forms.Button
-	Friend WithEvents tbAngularGearLossMapPath As System.Windows.Forms.TextBox
+	Friend WithEvents tbAngledriveRatio As System.Windows.Forms.TextBox
+	Friend WithEvents btAngledriveLossMapBrowse As System.Windows.Forms.Button
+	Friend WithEvents tbAngledriveLossMapPath As System.Windows.Forms.TextBox
 	Friend WithEvents ToolTip1 As System.Windows.Forms.ToolTip
 	Friend WithEvents GroupBox3 As System.Windows.Forms.GroupBox
 	Friend WithEvents Label7 As System.Windows.Forms.Label

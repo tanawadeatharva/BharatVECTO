@@ -58,7 +58,7 @@ namespace TUGraz.VectoCore.Models.Simulation.Data
 		public AxleGearData AxleGearData { get; internal set; }
 
 		[ValidateObject]
-		public AngularGearData AngularGearData { get; internal set; }
+		public AngledriveData AngledriveData { get; internal set; }
 
 		[Required, ValidateObject]
 		public DrivingCycleData Cycle { get; internal set; }

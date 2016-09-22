@@ -94,8 +94,8 @@ namespace TUGraz.VectoCore.Tests.FileIO
 			var json = (JObject)JToken.ReadFrom(new JsonTextReader(File.OpenText(TestJobFile)));
 			((JObject)json["Body"]).Property("Cycles").Remove();
 
-			AssertHelper.Exception<InvalidFileFormatException>(
-				() => { var tmp = new JSONInputDataV2(json, TestJobFile).Cycles; }, "Key Cycles not found");
+			var tmp = new JSONInputDataV2(json, TestJobFile).Cycles;
+			Assert.AreEqual(0, tmp.Count);
 		}
 
 		[TestMethod]
@@ -115,10 +115,9 @@ namespace TUGraz.VectoCore.Tests.FileIO
 			var json = (JObject)JToken.ReadFrom(new JsonTextReader(File.OpenText(TestJobFile)));
 			((JObject)json["Body"]).Property("VACC").Remove();
 
-			AssertHelper.Exception<VectoException>(() => {
-				IEngineeringInputDataProvider input = new JSONInputDataV2(json, TestJobFile);
-				var tmp = input.DriverInputData.AccelerationCurve;
-			}, "AccelerationCurve (VACC) required");
+			IEngineeringInputDataProvider input = new JSONInputDataV2(json, TestJobFile);
+			var tmp = input.DriverInputData.AccelerationCurve;
+			Assert.IsNull(tmp);
 		}
 
 		[TestMethod]
@@ -277,10 +276,10 @@ namespace TUGraz.VectoCore.Tests.FileIO
 		public void JSON_Read_AngleGear()
 		{
 			var json = (JObject)JToken.ReadFrom(new JsonTextReader(File.OpenText(TestVehicleFile)));
-			var angleGear = json["Body"]["AngularGear"];
+			var angleGear = json["Body"]["Angledrive"];
 
-			Assert.AreEqual(AngularGearType.SeparateAngularGear,
-				angleGear["Type"].Value<string>().ParseEnum<AngularGearType>());
+			Assert.AreEqual(AngledriveType.SeparateAngledrive,
+				angleGear["Type"].Value<string>().ParseEnum<AngledriveType>());
 			Assert.AreEqual(3.5, angleGear["Ratio"].Value<double>());
 			Assert.AreEqual("AngleGear.vtlm", angleGear["LossMap"].Value<string>());
 		}

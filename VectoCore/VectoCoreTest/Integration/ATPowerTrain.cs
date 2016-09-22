@@ -175,7 +175,7 @@ namespace TUGraz.VectoCore.Tests.Integration
 				AccelerationCurve = AccelerationCurveReader.ReadFromFile(accelerationFile),
 				LookAheadCoasting = new DriverData.LACData {
 					Enabled = true,
-					//MinSpeed = 50.KMPHtoMeterPerSecond(),
+					MinSpeed = 50.KMPHtoMeterPerSecond(),
 					//Deceleration = -0.5.SI<MeterPerSquareSecond>()
 					LookAheadDistanceFactor = DeclarationData.Driver.LookAhead.LookAheadDistanceFactor,
 					LookAheadDecisionFactor = new LACDecisionFactor()

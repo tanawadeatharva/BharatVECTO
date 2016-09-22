@@ -73,7 +73,7 @@ namespace TUGraz.VectoCore.InputData.Reader.Impl
 				segment.Missions.First().Loadings.First().Value);
 			var engineData = dao.CreateEngineData(InputDataProvider.EngineInputData, InputDataProvider.GearboxInputData.Type);
 			var axlegearData = dao.CreateAxleGearData(InputDataProvider.AxleGearInputData, false);
-			var angularGearData = dao.CreateAngularGearData(InputDataProvider.AngularGearInputData, false);
+			var angledriveData = dao.CreateAngledriveData(InputDataProvider.AngledriveInputData, false);
 			var gearboxData = dao.CreateGearboxData(InputDataProvider.GearboxInputData, engineData, axlegearData.AxleGear.Ratio,
 				tempVehicle.DynamicTyreRadius, false);
 			var retarderData = dao.CreateRetarderData(InputDataProvider.RetarderInputData);
@@ -109,7 +109,7 @@ namespace TUGraz.VectoCore.InputData.Reader.Impl
 						EngineData = engineData.Copy(),
 						GearboxData = gearboxData,
 						AxleGearData = axlegearData,
-						AngularGearData = angularGearData,
+						AngledriveData = angledriveData,
 						Aux = dao.CreateAuxiliaryData(InputDataProvider.AuxiliaryInputData(), mission.MissionType,
 							segment.VehicleClass),
 						Cycle = cycle,

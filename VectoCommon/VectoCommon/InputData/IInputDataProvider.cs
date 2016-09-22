@@ -45,7 +45,7 @@ namespace TUGraz.VectoCommon.InputData
 
 		IAxleGearInputData AxleGearInputData { get; }
 
-		IAngularGearInputData AngularGearInputData { get; }
+		IAngledriveInputData AngledriveInputData { get; }
 
 		IEngineDeclarationInputData EngineInputData { get; }
 
@@ -68,7 +68,7 @@ namespace TUGraz.VectoCommon.InputData
 
 		IAxleGearInputData AxleGearInputData { get; }
 
-		IAngularGearInputData AngularGearInputData { get; }
+		IAngledriveInputData AngledriveInputData { get; }
 
 		IEngineEngineeringInputData EngineInputData { get; }
 

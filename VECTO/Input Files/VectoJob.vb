@@ -755,17 +755,17 @@ Public Class VectoJob
 		End Get
 	End Property
 
-	Public ReadOnly Property IDeclarationInputDataProvider_AngularGearInputData As IAngularGearInputData _
-		Implements IDeclarationInputDataProvider.AngularGearInputData
+	Public ReadOnly Property DeclarationInputDataProviderAngledriveInputData As IAngledriveInputData _
+		Implements IDeclarationInputDataProvider.AngledriveInputData
 		Get
-			Return _vehicleInputData.AngularGearInputData
+			Return _vehicleInputData.AngledriveInputData
 		End Get
 	End Property
 
-	Public ReadOnly Property AngularGearInputData As IAngularGearInputData _
-		Implements IEngineeringInputDataProvider.AngularGearInputData
+	Public ReadOnly Property AngledriveInputData As IAngledriveInputData _
+		Implements IEngineeringInputDataProvider.AngledriveInputData
 		Get
-			Return _vehicleInputData.AngularGearInputData
+			Return _vehicleInputData.AngledriveInputData
 		End Get
 	End Property
 

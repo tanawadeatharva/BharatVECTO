@@ -29,16 +29,31 @@
 *   Martin Rexeis, rexeis@ivt.tugraz.at, IVT, Graz University of Technology
 */
 
-using TUGraz.VectoCommon.Models;
-using TUGraz.VectoCommon.Utils;
-using TUGraz.VectoCore.Models.SimulationComponent.Data.Gearbox;
+using System;
 
-namespace TUGraz.VectoCore.Models.SimulationComponent.Data
+namespace TUGraz.VectoCommon.Models
 {
-	public class AngularGearData : SimulationComponentData
+	public enum AngledriveType
 	{
-		[ValidateObject] public TransmissionData AngularGear;
+		None,
+		SeparateAngledrive,
+		LossesIncludedInGearbox,
+	}
 
-		public AngularGearType Type;
+	public static class AngledriveTypeHelper
+	{
+		public static string GetLabel(this AngledriveType type)
+		{
+			switch (type) {
+				case AngledriveType.None:
+					return "No Angular Gear";
+				case AngledriveType.SeparateAngledrive:
+					return "Separate Angular Gear";
+				case AngledriveType.LossesIncludedInGearbox:
+					return "Included in Transmission Loss Maps";
+				default:
+					throw new ArgumentOutOfRangeException("type", type, null);
+			}
+		}
 	}
 }

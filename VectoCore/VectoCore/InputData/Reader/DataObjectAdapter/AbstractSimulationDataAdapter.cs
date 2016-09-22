@@ -141,14 +141,15 @@ namespace TUGraz.VectoCore.InputData.Reader.DataObjectAdapter
 		{
 			TransmissionLossMap axleLossMap;
 			if (data.LossMap == null && useEfficiencyFallback) {
-				axleLossMap = TransmissionLossMapReader.Create(data.Efficiency, data.Ratio, "AxleGear");
+				axleLossMap = TransmissionLossMapReader.Create(data.Efficiency, data.Ratio, "Axlegear");
 			} else {
-				if (data.LossMap == null)
-					throw new Exception("LossMap for AxleGear is missing.");
-				axleLossMap = TransmissionLossMapReader.Create(data.LossMap, data.Ratio, "AxleGear");
+				if (data.LossMap == null) {
+					throw new InvalidFileFormatException("LossMap for Axlegear is missing.");
+				}
+				axleLossMap = TransmissionLossMapReader.Create(data.LossMap, data.Ratio, "Axlegear");
 			}
 			if (axleLossMap == null) {
-				throw new Exception("LossMap for AxleGear is missing.");
+				throw new InvalidFileFormatException("LossMap for Axlegear is missing.");
 			}
 
 			return new AxleGearData {
@@ -165,22 +166,22 @@ namespace TUGraz.VectoCore.InputData.Reader.DataObjectAdapter
 		}
 
 		/// <summary>
-		/// Creates an AngularGearData or returns null if there is no angular gear.
+		/// Creates an AngledriveData or returns null if there is no angular gear.
 		/// </summary>
 		/// <param name="data"></param>
 		/// <param name="useEfficiencyFallback">if true, the Efficiency value is used if no LossMap is found.</param>
 		/// <returns></returns>
-		internal AngularGearData CreateAngularGearData(IAngularGearInputData data, bool useEfficiencyFallback)
+		internal AngledriveData CreateAngledriveData(IAngledriveInputData data, bool useEfficiencyFallback)
 		{
 			try {
 				var type = data.Type;
 
 				switch (type) {
-					case AngularGearType.LossesIncludedInGearbox:
-					case AngularGearType.None:
+					case AngledriveType.LossesIncludedInGearbox:
+					case AngledriveType.None:
 						return null;
-					case AngularGearType.SeparateAngularGear:
-						var angularGear = new AngularGearData {
+					case AngledriveType.SeparateAngledrive:
+						var angledriveData = new AngledriveData {
 							SavedInDeclarationMode = data.SavedInDeclarationMode,
 							Vendor = data.Vendor,
 							ModelName = data.ModelName,
@@ -190,25 +191,27 @@ namespace TUGraz.VectoCore.InputData.Reader.DataObjectAdapter
 							DigestValue = data.DigestValue,
 							IntegrityStatus = data.IntegrityStatus,
 							Type = type,
-							AngularGear = new TransmissionData { Ratio = data.Ratio }
+							Angledrive = new TransmissionData { Ratio = data.IAngledriveInputData_Ratio }
 						};
 						try {
-							angularGear.AngularGear.LossMap = TransmissionLossMapReader.Create(data.LossMap, data.Ratio, "AngularGear");
+							angledriveData.Angledrive.LossMap = TransmissionLossMapReader.Create(data.IAngledriveInputData_LossMap,
+								data.IAngledriveInputData_Ratio, "Angledrive");
 						} catch (VectoException ex) {
-							Log.Info("AngularGear Loss Map not found.");
+							Log.Info("Angledrive Loss Map not found.");
 							if (useEfficiencyFallback) {
-								Log.Info("AngularGear Trying with Efficiency instead of Loss Map.");
-								angularGear.AngularGear.LossMap = TransmissionLossMapReader.Create(data.Efficiency, data.Ratio, "AngularGear");
+								Log.Info("Angledrive Trying with Efficiency instead of Loss Map.");
+								angledriveData.Angledrive.LossMap = TransmissionLossMapReader.Create(data.Efficiency,
+									data.IAngledriveInputData_Ratio, "Angledrive");
 							} else {
-								throw new VectoException("AngularGear: LossMap not found.", ex);
+								throw new VectoException("Angledrive: LossMap not found.", ex);
 							}
 						}
-						return angularGear;
+						return angledriveData;
 					default:
-						throw new ArgumentOutOfRangeException("data", "Unknown Angulargear Type.");
+						throw new ArgumentOutOfRangeException("data", "Unknown Angledrive Type.");
 				}
 			} catch (Exception e) {
-				throw new VectoException("Error while reading AngularGear data: {0}", e.Message);
+				throw new VectoException("Error while reading Angledrive data: {0}", e.Message);
 			}
 		}
 

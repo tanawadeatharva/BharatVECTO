@@ -135,22 +135,22 @@ namespace TUGraz.VectoCommon.InputData
 		TableData LossMap { get; }
 	}
 
-	public interface IAngularGearInputData : IComponentInputData
+	public interface IAngledriveInputData : IComponentInputData
 	{
 		/// <summary>
 		/// P180
 		/// </summary>
-		AngularGearType Type { get; }
+		AngledriveType Type { get; }
 
 		/// <summary>
 		/// P176
 		/// </summary>
-		double Ratio { get; }
+		double IAngledriveInputData_Ratio { get; }
 
 		/// <summary>
 		/// P173, P174, P175
 		/// </summary>
-		TableData LossMap { get; }
+		TableData IAngledriveInputData_LossMap { get; }
 
 		/// <summary>
 		/// P177

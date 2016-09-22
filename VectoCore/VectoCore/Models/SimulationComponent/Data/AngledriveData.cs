@@ -31,31 +31,14 @@
 
 using TUGraz.VectoCommon.Models;
 using TUGraz.VectoCommon.Utils;
-using TUGraz.VectoCore.Models.Simulation;
-using TUGraz.VectoCore.Models.Simulation.Data;
-using TUGraz.VectoCore.Models.SimulationComponent.Data;
-using TUGraz.VectoCore.OutputData;
+using TUGraz.VectoCore.Models.SimulationComponent.Data.Gearbox;
 
-namespace TUGraz.VectoCore.Models.SimulationComponent.Impl
+namespace TUGraz.VectoCore.Models.SimulationComponent.Data
 {
-	public class AngularGear : TransmissionComponent
+	public class AngledriveData : SimulationComponentData
 	{
-		public AngularGear(IVehicleContainer container, AngularGearData modelData) : base(container, modelData.AngularGear) {}
+		[ValidateObject] public TransmissionData Angledrive;
 
-		public override IResponse Request(Second absTime, Second dt, NewtonMeter outTorque, PerSecond outAngularVelocity,
-			bool dryRun = false)
-		{
-			var retVal = base.Request(absTime, dt, outTorque, outAngularVelocity, dryRun);
-			retVal.AngularGearPowerRequest = outTorque * (PreviousState.OutAngularVelocity + CurrentState.OutAngularVelocity) / 2.0;
-			return retVal;
-		}
-
-		protected override void DoWriteModalResults(IModalDataContainer container)
-		{
-			var avgAngularVelocity = (PreviousState.InAngularVelocity + CurrentState.InAngularVelocity) / 2.0;
-			container[ModalResultField.P_angle_loss] = (CurrentState.InTorque - CurrentState.OutTorque / ModelData.Ratio) *
-														avgAngularVelocity;
-			container[ModalResultField.P_angle_in] = CurrentState.InTorque * avgAngularVelocity;
-		}
+		public AngledriveType Type;
 	}
 }
