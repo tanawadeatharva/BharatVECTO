@@ -54,6 +54,8 @@ namespace TUGraz.VectoCommon.Utils
 		/// <returns>Null, if the validation was successfull. Otherwise a list of ValidationResults with the ErrorMessages.</returns>
 		public static IList<ValidationResult> Validate<T>(this T entity, ExecutionMode mode)
 		{
+			if (entity == null)
+				return  new[] { new ValidationResult(string.Format("null value given for {0}", typeof(T)))};
 			var context = new ValidationContext(entity);
 			context.ServiceContainer.AddService(typeof(ExecutionMode), new ExecutionModeServiceContainer(mode));
 			var results = new List<ValidationResult>();
