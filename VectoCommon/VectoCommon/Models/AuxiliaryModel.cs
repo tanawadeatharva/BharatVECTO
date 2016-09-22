@@ -37,7 +37,7 @@ namespace TUGraz.VectoCommon.Models
 		Advanced
 	}
 
-	public class AuxiliaryModelHelper
+	public static class AuxiliaryModelHelper
 	{
 		public static AuxiliaryModel Parse(string auxAssemblyStr)
 		{

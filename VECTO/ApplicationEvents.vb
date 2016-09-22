@@ -9,6 +9,8 @@
 '
 ' See the LICENSE.txt for the specific language governing permissions and limitations.
 Imports System.Collections.Generic
+Imports System.IO
+Imports System.Text
 
 Namespace My
 	' The following events are available for MyApplication:
@@ -18,14 +20,14 @@ Namespace My
 	' UnhandledException: Raised if the application encounters an unhandled exception.
 	' StartupNextInstance: Raised when launching a single-instance application, and one is already active.
 	' NetworkAvailabilityChanged: Occurs when connecting or disconnecting to the network.
+	' ReSharper disable once ClassNeverInstantiated.Global
 	Partial Friend Class MyApplication
 		'Initialization
-		Private Sub MyApplication_Startup(ByVal sender As Object,
-										ByVal e As Microsoft.VisualBasic.ApplicationServices.StartupEventArgs) Handles Me.Startup
+		Private Sub MyApplication_Startup(sender As Object, e As Microsoft.VisualBasic.ApplicationServices.StartupEventArgs) _
+			Handles Me.Startup
 
 			Dim s As String
-			Dim i As Int16
-			Dim file As CsvFile
+			Dim i As Integer
 
 			'Paths
 			MyAppPath = Application.Info.DirectoryPath & "\"
@@ -34,38 +36,38 @@ Namespace My
 			FileHistoryPath = MyConfPath & "FileHistory\"
 
 			'Log
-			LogFile = New cLogFile
+			LogFile = New FileLogger
 			If Not LogFile.StartLog() Then
 				MsgBox("Error! Can't access log file. Application folder needs read/write permissions!")
 				e.Cancel = True
 			End If
 
 			'If folder does not exist: Create!
-			If Not IO.Directory.Exists(MyConfPath) Then
+			If Not Directory.Exists(MyConfPath) Then
 				Try
-					IO.Directory.CreateDirectory(MyConfPath)
+					Directory.CreateDirectory(MyConfPath)
 				Catch ex As Exception
 					MsgBox("Failed to create directory '" & MyConfPath & "'!", MsgBoxStyle.Critical)
 					LogFile.WriteToLog(MessageType.Err, "Failed to create directory '" & MyConfPath & "'!")
 					e.Cancel = True
 				End Try
-				IO.File.Create(MyConfPath & "joblist.txt")
-				IO.File.Create(MyConfPath & "cyclelist.txt")
+				File.Create(MyConfPath & "joblist.txt")
+				File.Create(MyConfPath & "cyclelist.txt")
 			End If
-			If Not IO.Directory.Exists(FileHistoryPath) Then
+			If Not Directory.Exists(FileHistoryPath) Then
 				Try
-					IO.Directory.CreateDirectory(FileHistoryPath)
+					Directory.CreateDirectory(FileHistoryPath)
 
 					'Preconfigure Directories.txt
 					Try
-						s = IO.Directory.GetParent(Application.Info.DirectoryPath).ToString & "\"
+						s = Directory.GetParent(Application.Info.DirectoryPath).ToString & "\"
 					Catch ex As Exception
 						s = MyAppPath
 					End Try
 					Try
 
-						file = New CsvFile
-						file.OpenWrite(FileHistoryPath & "Directories.txt")
+						Dim file As StreamWriter = Computer.FileSystem.OpenTextFileWriter(FileHistoryPath & "Directories.txt", True,
+																						Encoding.UTF8)
 						file.WriteLine(s)
 						For i = 2 To 20
 							file.WriteLine(" ")
@@ -89,13 +91,12 @@ Namespace My
 					Threading.Thread.CurrentThread.CurrentUICulture = New Globalization.CultureInfo("en-US")
 					'MSGtoForm(8, "Set CurrentCulture to 'en-US'", True)
 				Catch ex As Exception
-					GUImsg(MessageType.Err,
+					GUIMsg(MessageType.Err,
 							"Failed to set Application Regional Settings to 'en-US'! Check system decimal- and group- separators!")
 				End Try
 			End If
 
 			'Initialise Classes
-			sKey = New csKey
 			JobFileList = New List(Of String)
 
 			'DEV = New cDEV

@@ -48,7 +48,7 @@ namespace TUGraz.VectoCore.Models.Declaration
 
 		protected override string ErrorMessage
 		{
-			get { return "Auxiliary Lookup Error: No value found for Wheels. Key: '{0}'"; }
+			get { return "Wheels Lookup Error: No value found for Wheels. Key: '{0}'"; }
 		}
 
 		public override Entry Lookup(string key)

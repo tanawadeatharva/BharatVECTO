@@ -64,6 +64,12 @@ namespace TUGraz.VectoCore.InputData.Reader.ComponentData
 		/// <returns></returns>
 		public static TransmissionLossMap Create(double efficiency, double gearRatio, string gearName)
 		{
+			if (efficiency <= 0) {
+				throw new VectoException("Efficiency for gear {0} must be greater than 0", gearName);
+			}
+			if (efficiency > 1) {
+				throw new VectoException("Efficiency for gear {1} must not be greater than 1", gearName);
+			}
 			var entries = new List<TransmissionLossMap.GearLossMapEntry> {
 				new TransmissionLossMap.GearLossMapEntry(0.RPMtoRad(), 1e5.SI<NewtonMeter>(),
 					(1 - efficiency) * 1e5.SI<NewtonMeter>()),

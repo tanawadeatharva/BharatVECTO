@@ -29,8 +29,10 @@
 *   Martin Rexeis, rexeis@ivt.tugraz.at, IVT, Graz University of Technology
 */
 
+using System.ComponentModel.DataAnnotations;
 using TUGraz.VectoCommon.Models;
 using TUGraz.VectoCommon.Utils;
+using TUGraz.VectoCore.Configuration;
 using TUGraz.VectoCore.Models.Declaration;
 using TUGraz.VectoCore.Models.Simulation.Data;
 
@@ -38,10 +40,13 @@ namespace TUGraz.VectoCore.Models.SimulationComponent.Data
 {
 	public class DriverData
 	{
-		public VectoRunData.StartStopData StartStop;
-		public OverSpeedEcoRollData OverSpeedEcoRoll;
-		public LACData LookAheadCoasting;
-		public AccelerationCurveData AccelerationCurve;
+		[Required, ValidateObject] public VectoRunData.StartStopData StartStop;
+
+		[Required, ValidateObject] public OverSpeedEcoRollData OverSpeedEcoRoll;
+
+		[Required, ValidateObject] public LACData LookAheadCoasting;
+
+		[Required, ValidateObject] public AccelerationCurveData AccelerationCurve;
 
 		public static DriverMode ParseDriverMode(string mode)
 		{
@@ -51,19 +56,25 @@ namespace TUGraz.VectoCore.Models.SimulationComponent.Data
 		public class OverSpeedEcoRollData
 		{
 			public DriverMode Mode;
-			public MeterPerSecond MinSpeed;
-			public MeterPerSecond OverSpeed;
-			public MeterPerSecond UnderSpeed;
+
+			[Required, SIRange(0, 120 / Constants.MeterPerSecondToKMH)] public MeterPerSecond MinSpeed;
+
+			[Required, SIRange(0, 50 / Constants.MeterPerSecondToKMH)] public MeterPerSecond OverSpeed;
+
+			[Required, SIRange(0, 50 / Constants.MeterPerSecondToKMH)] public MeterPerSecond UnderSpeed;
 		}
 
 		public class LACData
 		{
 			public bool Enabled;
-			//public MeterPerSquareSecond Deceleration;
-			//public MeterPerSecond MinSpeed;
 
-			public double LookAheadDistanceFactor;
-			public LACDecisionFactor LookAheadDecisionFactor;
+			//public MeterPerSquareSecond Deceleration;
+
+			[Required, SIRange(0, 120 / Constants.MeterPerSecondToKMH)] public MeterPerSecond MinSpeed;
+
+			[Required, Range(0, 20)] public double LookAheadDistanceFactor;
+
+			[Required, ValidateObject] public LACDecisionFactor LookAheadDecisionFactor;
 		}
 	}
 }

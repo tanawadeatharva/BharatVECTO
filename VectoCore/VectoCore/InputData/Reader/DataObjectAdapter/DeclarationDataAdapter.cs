@@ -57,7 +57,7 @@ namespace TUGraz.VectoCore.InputData.Reader.DataObjectAdapter
 			var lookAheadData = new DriverData.LACData {
 				Enabled = DeclarationData.Driver.LookAhead.Enabled,
 				//Deceleration = DeclarationData.Driver.LookAhead.Deceleration,
-				//MinSpeed = DeclarationData.Driver.LookAhead.MinimumSpeed,
+				MinSpeed = DeclarationData.Driver.LookAhead.MinimumSpeed,
 				LookAheadDecisionFactor = new LACDecisionFactor(),
 				LookAheadDistanceFactor = DeclarationData.Driver.LookAhead.LookAheadDistanceFactor,
 			};
@@ -151,6 +151,7 @@ namespace TUGraz.VectoCore.InputData.Reader.DataObjectAdapter
 			retVal.WHTCUrban = engine.WHTCUrban;
 			retVal.WHTCMotorway = engine.WHTCMotorway;
 			retVal.WHTCRural = engine.WHTCRural;
+			retVal.ColdHotCorrectionFactor = engine.ColdHotBalancingFactor;
 			retVal.Inertia = DeclarationData.Engine.EngineInertia(retVal.Displacement, gearboxType);
 			retVal.FullLoadCurve = EngineFullLoadCurve.Create(engine.FullLoadCurve, true);
 			retVal.FullLoadCurve.EngineData = retVal;

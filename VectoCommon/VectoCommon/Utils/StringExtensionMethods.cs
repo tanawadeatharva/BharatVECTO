@@ -51,6 +51,18 @@ namespace TUGraz.VectoCommon.Utils
 			}
 		}
 
+		public static int ToInt(this string self, int? defaultValue = null)
+		{
+			try {
+				return int.Parse(self, CultureInfo.InvariantCulture);
+			} catch (FormatException) {
+				if (defaultValue.HasValue) {
+					return defaultValue.Value;
+				}
+				throw;
+			}
+		}
+
 		public static bool ToBoolean(this string self)
 		{
 			if (string.IsNullOrEmpty(self)) {

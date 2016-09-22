@@ -8,62 +8,70 @@
 '   WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
 '
 ' See the LICENSE.txt for the specific language governing permissions and limitations.
-Option Infer On
+'Option Infer On
 
 Imports System.Collections.Generic
+Imports System.ComponentModel.DataAnnotations
 Imports System.IO
 Imports System.Linq
+Imports Newtonsoft.Json.Linq
 Imports TUGraz.VECTO.Input_Files
+Imports TUGraz.VectoCommon.InputData
 Imports TUGraz.VectoCommon.Models
 Imports TUGraz.VectoCommon.Utils
+Imports TUGraz.VectoCore.InputData.Impl
+Imports TUGraz.VectoCore.InputData.Reader.DataObjectAdapter
 Imports TUGraz.VectoCore.Models.Declaration
+Imports TUGraz.VectoCore.Models.SimulationComponent.Data
+Imports TUGraz.VectoCore.Utils
 
-
+<CustomValidation(GetType(Vehicle), "ValidateVehicle")>
 Public Class Vehicle
+	Implements IVehicleEngineeringInputData, IVehicleDeclarationInputData, IRetarderInputData, IPTOTransmissionInputData, 
+				IAngularGearInputData
 	'V2 MassMax is now saved in [t] instead of [kg]
 	Private Const FormatVersion As Short = 7
-	Private _fileVersion As Short
 
 	Private _filePath As String
 	Private _path As String
 
-	Public Mass As Single
-	Public Loading As Single
+	Public Mass As Double
+	Public Loading As Double
 
-	Public CdA0 As Single
+	Public CdA0 As Double
 
 	Public CrossWindCorrectionMode As CrossWindCorrectionMode
 	Public ReadOnly CrossWindCorrectionFile As SubPath
 
-	Public RetarderType As RetarderType
-	Public RetarderRatio As Single = 0
+	<ValidateObject()> Public RetarderType As RetarderType
+	Public RetarderRatio As Double = 0
 	Public ReadOnly RetarderLossMapFile As SubPath
 
-	Public DynamicTyreRadius As Single
+	Public DynamicTyreRadius As Double
 	Public ReadOnly Axles As List(Of Axle)
 
 
 	Public VehicleCategory As VehicleCategory
-	Public MassExtra As Single
-	Public MassMax As Single
+	Public MassExtra As Double
+	Public MassMax As Double
 	Public AxleConfiguration As AxleConfiguration
 
 	Public SavedInDeclMode As Boolean
 	Public AngularGearType As AngularGearType
-	Public AngularGearRatio As Single
+	Public AngularGearRatio As Double
 	Public ReadOnly AngularGearLossMapFile As SubPath
 
-	Public PTOType As String
-	Public PTOLossMap As SubPath
-	Public PTOCycle As SubPath
+	Public PtoType As String
+	Public ReadOnly PtoLossMap As SubPath
+	Public ReadOnly PtoCycle As SubPath
 
 	Public Class Axle
-		Public RRC As Single
-		Public Share As Single
+		Public RRC As Double
+		Public Share As Double
 		Public TwinTire As Boolean
-		Public FzISO As Single
+		Public FzISO As Double
 		Public Wheels As String
-		Public Inertia As Single
+		Public Inertia As Double
 	End Class
 
 
@@ -76,10 +84,76 @@ Public Class Vehicle
 		AngularGearLossMapFile = New SubPath()
 
 		Axles = New List(Of Axle)
-		PTOLossMap = New SubPath()
-		PTOCycle = New SubPath()
+		PtoLossMap = New SubPath()
+		PtoCycle = New SubPath()
 		SetDefault()
 	End Sub
+
+
+	' ReSharper disable once UnusedMember.Global  -- used for Validation
+	Public Shared Function ValidateVehicle(vehicle As Vehicle, validationContext As ValidationContext) As ValidationResult
+
+		Dim vehicleData As VehicleData
+		Dim retarderData As RetarderData
+		Dim ptoData As PTOData = Nothing
+		Dim angledriveData As AngularGearData
+
+		Dim modeService As ExecutionModeServiceContainer = TryCast(validationContext.GetService(GetType(ExecutionMode)), 
+																	ExecutionModeServiceContainer)
+		Dim mode As ExecutionMode = If(modeService Is Nothing, ExecutionMode.Declaration, modeService.Mode)
+
+		Try
+			If mode = ExecutionMode.Declaration Then
+				Dim doa As DeclarationDataAdapter = New DeclarationDataAdapter()
+				Dim segment As Segment = DeclarationData.Segments.Lookup(vehicle.VehicleCategory, vehicle.AxleConfiguration,
+																		vehicle.GrossVehicleMassRating, vehicle.CurbWeightChassis)
+				vehicleData = doa.CreateVehicleData(vehicle, segment.Missions.First(),
+													segment.Missions.First().Loadings.First().Value)
+				retarderData = doa.CreateRetarderData(vehicle)
+				angledriveData = doa.CreateAngularGearData(vehicle, False)
+			Else
+				Dim doa As EngineeringDataAdapter = New EngineeringDataAdapter()
+				vehicleData = doa.CreateVehicleData(vehicle)
+				retarderData = doa.CreateRetarderData(vehicle)
+				angledriveData = doa.CreateAngularGearData(vehicle, True)
+				ptoData = doa.CreatePTOTransmissionData(vehicle)
+			End If
+
+			Dim result As IList(Of ValidationResult) =
+					vehicleData.Validate(If(Cfg.DeclMode, ExecutionMode.Declaration, ExecutionMode.Engineering))
+			If result.Any() Then
+				Return _
+					New ValidationResult("Vehicle Configuration is invalid. ", result.Select(Function(r) r.ErrorMessage).ToList())
+			End If
+
+			result = retarderData.Validate(If(Cfg.DeclMode, ExecutionMode.Declaration, ExecutionMode.Engineering))
+			If result.Any() Then
+				Return _
+					New ValidationResult("Retarder Configuration is invalid. ", result.Select(Function(r) r.ErrorMessage).ToList())
+			End If
+
+			If vehicle.AngularGearType = AngularGearType.SeparateAngularGear Then
+				result = angledriveData.Validate(If(Cfg.DeclMode, ExecutionMode.Declaration, ExecutionMode.Engineering))
+				If result.Any() Then
+					Return _
+						New ValidationResult("AngleDrive Configuration is invalid. ", result.Select(Function(r) r.ErrorMessage).ToList())
+				End If
+			End If
+
+			If Not vehicle.PTOTransmissionType = "None" Then
+				result = ptoData.Validate(If(Cfg.DeclMode, ExecutionMode.Declaration, ExecutionMode.Engineering))
+				If result.Any() Then
+					Return _
+						New ValidationResult("PTO Configuration is invalid. ", result.Select(Function(r) r.ErrorMessage).ToList())
+				End If
+			End If
+
+			Return ValidationResult.Success
+
+		Catch ex As Exception
+			Return New ValidationResult(ex.Message)
+		End Try
+	End Function
 
 	Private Sub SetDefault()
 		Mass = 0
@@ -102,9 +176,9 @@ Public Class Vehicle
 		AngularGearLossMapFile.Clear()
 		AngularGearRatio = 1
 
-		PTOType = PTOTransmission.NoPTO
-		PTOLossMap.Clear()
-		PTOCycle.Clear()
+		PtoType = PTOTransmission.NoPTO
+		PtoLossMap.Clear()
+		PtoCycle.Clear()
 
 		Axles.Clear()
 		VehicleCategory = VehicleCategory.RigidTruck	'tVehCat.Undef
@@ -114,180 +188,69 @@ Public Class Vehicle
 		SavedInDeclMode = False
 	End Sub
 
-	Public Function ReadFile(Optional showMsg As Boolean = True) As Boolean
-		Const msgSrc = "VEH/ReadFile"
-		SetDefault()
-
-		Dim json As New JSONParser
-		If Not json.ReadFile(_filePath) Then Return False
-
-		Try
-			Dim header = json.Content("Header")
-			Dim body = json.Content("Body")
-
-			_fileVersion = header("FileVersion")
-			If _fileVersion > 4 Then
-				SavedInDeclMode = body("SavedInDeclMode")
-			Else
-				SavedInDeclMode = Cfg.DeclMode
-			End If
-
-			Mass = body("CurbWeight")
-			MassExtra = body("CurbWeightExtra")
-			Loading = body("Loading")
-			VehicleCategory = body("VehCat").ToString.ParseEnum(Of VehicleCategory)() 'ConvVehCat(body("VehCat").ToString)
-			AxleConfiguration = AxleConfigurationHelper.Parse(body("AxleConfig")("Type").ToString)
-			If _fileVersion < 2 Then
-				'convert kg to ton
-				MassMax /= 1000
-			Else
-				MassMax = body("MassMax")
-			End If
-
-			If _fileVersion < 7 Then
-				'calc CdA from Cd and area value
-				CdA0 = CSng(body("Cd")) * CSng(body("CrossSecArea"))
-			Else
-				CdA0 = body("CdA")
-			End If
-
-			'CdA02 = CdA0
-
-			CrossWindCorrectionMode = CrossWindCorrectionModeHelper.Parse(body("CdCorrMode").ToString)
-			If Not body("CdCorrFile") Is Nothing Then
-				CrossWindCorrectionFile.Init(_path, body("CdCorrFile"))
-			End If
-
-			If body("Retarder") Is Nothing Then
-				RetarderType = RetarderType.None
-			Else
-				RetarderType = RetarderTypeHelper.Parse(body("Retarder")("Type").ToString)
-				If Not body("Retarder")("Ratio") Is Nothing Then
-					RetarderRatio = body("Retarder")("Ratio")
-				End If
-				If Not body("Retarder")("File") Is Nothing Then
-					RetarderLossMapFile.Init(_path, body("Retarder")("File"))
-				End If
-			End If
-
-			If body("AngularGear") Is Nothing Then
-				AngularGearType = AngularGearType.None
-			Else
-				AngularGearType = body("AngularGear")("Type").ToString.ParseEnum(Of AngularGearType)()
-				If Not body("AngularGear")("Ratio") Is Nothing Then
-					AngularGearRatio = body("AngularGear")("Ratio")
-				End If
-				If Not body("AngularGear")("LossMap") Is Nothing Then
-					AngularGearLossMapFile.Init(_path, body("AngularGear")("LossMap"))
-				End If
-			End If
-
-			Dim inertiaTemp As Single
-			If _fileVersion < 3 Then
-				inertiaTemp = body("WheelsInertia")
-				DynamicTyreRadius = 1000 * body("WheelsDiaEff") / 2
-			Else
-				DynamicTyreRadius = body("rdyn")
-			End If
-
-			Dim axleCount = body("AxleConfig")("Axles").Count()
-			For Each axleEntry In body("AxleConfig")("Axles")
-				Dim axle = New Axle With {
-						.Share = CSng(axleEntry("AxleWeightShare")),
-						.TwinTire = CBool(axleEntry("TwinTyres")),
-						.RRC = CSng(axleEntry("RRCISO")),
-						.FzISO = CSng(axleEntry("FzISO"))}
-
-				If _fileVersion < 3 Then
-					axle.Wheels = "-"
-					axle.Inertia = inertiaTemp / (IIf(axle.TwinTire, 4, 2) * axleCount)
-				Else
-					axle.Wheels = CStr(axleEntry("Wheels")).Replace("R ", "R")
-					axle.Inertia = CSng(axleEntry("Inertia"))
-				End If
-				Axles.Add(axle)
-			Next
-
-			PTOType = PTOTransmission.NoPTO
-			If Not body("PTO") Is Nothing Then
-				Dim ptoStr = body("PTO")("Type")
-
-				If String.IsNullOrWhiteSpace(ptoStr) Then
-					PTOType = PTOTransmission.NoPTO
-					WorkerMsg(MessageType.Normal, "PTO automatically updated to '" + PTOType + "'", msgSrc)
-				Else
-					Try
-						DeclarationData.PTOTransmission.Lookup(ptoStr)
-						PTOType = ptoStr
-					Catch ex As Exception
-						PTOType = PTOTransmission.NoPTO
-						WorkerMsg(MessageType.Normal, "PTO '" + ptoStr + "' not found, automatically updated to '" + PTOType + "'", msgSrc)
-					End Try
-				End If
-
-			End If
-
-			If Not PTOType.Equals(PTOTransmission.NoPTO) Then
-				PTOLossMap.Init(_path, body("PTO")("LossMap"))
-				PTOCycle.Init(_path, body("PTO")("Cycle"))
-			End If
-
-		Catch ex As Exception
-			If showMsg Then WorkerMsg(MessageType.Err, "Failed to read Vehicle file! " & ex.Message, msgSrc)
-			Return False
-		End Try
-
-		Return True
-	End Function
 
 	Public Function SaveFile() As Boolean
 		SavedInDeclMode = Cfg.DeclMode
 
-		Dim json As New JSONParser
+		Dim validationResults As IList(Of ValidationResult) =
+				Validate(If(Cfg.DeclMode, ExecutionMode.Declaration, ExecutionMode.Engineering))
+
+		If validationResults.Count > 0 Then
+			Dim messages As IEnumerable(Of String) =
+					validationResults.Select(Function(r) r.ErrorMessage + String.Join(", ", r.MemberNames.Distinct()))
+			MsgBox("Invalid input." + Environment.NewLine + String.Join(Environment.NewLine, messages), MsgBoxStyle.OkOnly,
+					"Failed to save vehicle")
+			Return False
+		End If
+
+		Dim json As New JSONWriter
 		'Header
-		json.Content.Add("Header", New Dictionary(Of String, Object) From {
-							{"CreatedBy", Lic.LicString & " (" & Lic.GUID & ")"},
-							{"Date", Now.ToUniversalTime().ToString("o")},
-							{"AppVersion", VECTOvers},
-							{"FileVersion", FormatVersion}})
+		Dim header As Dictionary(Of String, Object) = New Dictionary(Of String, Object) From {
+				{"CreatedBy", Lic.LicString & " (" & Lic.GUID & ")"},
+				{"Date", Now.ToUniversalTime().ToString("o")},
+				{"AppVersion", VECTOvers},
+				{"FileVersion", FormatVersion}}
 
 		'Body
-		Dim dic As Dictionary(Of String, Object)
-		dic = New Dictionary(Of String, Object) From {
-			{"SavedInDeclMode", Cfg.DeclMode},
-			{"VehCat", VehicleCategory.ToString()},
-			{"CurbWeight", Mass},
-			{"CurbWeightExtra", MassExtra},
-			{"Loading", Loading},
-			{"MassMax", MassMax},
-			{"CdA", CdA0},
-			{"rdyn", DynamicTyreRadius},
-			{"CdCorrMode", CrossWindCorrectionMode.GetName()},
-			{"CdCorrFile", CrossWindCorrectionFile.PathOrDummy},
-			{"Retarder", New Dictionary(Of String, Object) From {
+		Dim body As Dictionary(Of String, Object) = New Dictionary(Of String, Object) From {
+				{"SavedInDeclMode", Cfg.DeclMode},
+				{"VehCat", VehicleCategory.ToString()},
+				{"CurbWeight", Mass},
+				{"CurbWeightExtra", MassExtra},
+				{"Loading", Loading},
+				{"MassMax", MassMax},
+				{"CdA", CdA0},
+				{"rdyn", DynamicTyreRadius},
+				{"CdCorrMode", CrossWindCorrectionMode.GetName()},
+				{"CdCorrFile", CrossWindCorrectionFile.PathOrDummy},
+				{"Retarder", New Dictionary(Of String, Object) From {
 				{"Type", RetarderType.GetName()},
 				{"Ratio", RetarderRatio},
 				{"File", RetarderLossMapFile.PathOrDummy}}},
-			{"AngularGear", New Dictionary(Of String, Object) From {
+				{"AngularGear", New Dictionary(Of String, Object) From {
 				{"Type", AngularGearType.ToString()},
 				{"Ratio", AngularGearRatio},
 				{"LossMap", AngularGearLossMapFile.PathOrDummy}}},
-			{"PTO", New Dictionary(Of String, Object) From {
-				{"Type", PTOType},
-				{"LossMap", PTOLossMap.PathOrDummy},
-				{"Cycle", PTOCycle.PathOrDummy}}},
-			{"AxleConfig", New Dictionary(Of String, Object) From {
+				{"PTO", New Dictionary(Of String, Object) From {
+				{"Type", PtoType},
+				{"LossMap", PtoLossMap.PathOrDummy},
+				{"Cycle", PtoCycle.PathOrDummy}}},
+				{"AxleConfig", New Dictionary(Of String, Object) From {
 				{"Type", AxleConfiguration.GetName()},
 				{"Axles", (From axle In Axles Select New Dictionary(Of String, Object) From {
-					{"Inertia", axle.Inertia},
-					{"Wheels", axle.Wheels},
-					{"AxleWeightShare", axle.Share},
-					{"TwinTyres", axle.TwinTire},
-					{"RRCISO", axle.RRC},
-					{"FzISO", axle.FzISO}})}}}
-			}
+				{"Inertia", axle.Inertia},
+				{"Wheels", axle.Wheels},
+				{"AxleWeightShare", axle.Share},
+				{"TwinTyres", axle.TwinTire},
+				{"RRCISO", axle.RRC},
+				{"FzISO", axle.FzISO}
+				}
+				)}
+				}
+				}
+				}
 
-		json.Content.Add("Body", dic)
+		json.Content = JToken.FromObject(New Dictionary(Of String, Object) From {{"Header", header}, {"Body", body}})
 		Return json.WriteFile(_filePath)
 	End Function
 
@@ -310,4 +273,224 @@ Public Class Vehicle
 	End Property
 
 #End Region
+
+#Region "IInputData"
+
+	Public ReadOnly Property SourceType As DataSourceType Implements IComponentInputData.SourceType
+		Get
+			Return DataSourceType.JSONFile
+		End Get
+	End Property
+
+	Public ReadOnly Property Source As String Implements IComponentInputData.Source
+		Get
+			Return FilePath
+		End Get
+	End Property
+
+	Public ReadOnly Property SavedInDeclarationMode As Boolean Implements IComponentInputData.SavedInDeclarationMode
+		Get
+			Return Cfg.DeclMode
+		End Get
+	End Property
+
+	Public ReadOnly Property Vendor As String Implements IComponentInputData.Vendor
+		Get
+			Return "N.A."  ' TODO: MQ  20160908
+		End Get
+	End Property
+
+	Public ReadOnly Property ModelName As String Implements IComponentInputData.ModelName
+		Get
+			Return "N.A."  ' Todo: MQ 20160908
+		End Get
+	End Property
+
+	Public ReadOnly Property Creator As String Implements IComponentInputData.Creator
+		Get
+			Return Lic.LicString
+		End Get
+	End Property
+
+	Public ReadOnly Property [Date] As String Implements IComponentInputData.[Date]
+		Get
+			Return Now.ToUniversalTime().ToString("o")
+		End Get
+	End Property
+
+	Public ReadOnly Property TypeId As String Implements IComponentInputData.TypeId
+		Get
+			Return "N.A."	' ToDo: MQ 20160908
+		End Get
+	End Property
+
+	Public ReadOnly Property DigestValue As String Implements IComponentInputData.DigestValue
+		Get
+			Return ""
+		End Get
+	End Property
+
+	Public ReadOnly Property IntegrityStatus As IntegrityStatus Implements IComponentInputData.IntegrityStatus
+		Get
+			Return IntegrityStatus.NotChecked
+		End Get
+	End Property
+
+	Public ReadOnly Property IVehicleDeclarationInputData_VehicleCategory As VehicleCategory _
+		Implements IVehicleDeclarationInputData.VehicleCategory
+		Get
+			Return VehicleCategory
+		End Get
+	End Property
+
+	Public ReadOnly Property IVehicleDeclarationInputData_AxleConfiguration As AxleConfiguration _
+		Implements IVehicleDeclarationInputData.AxleConfiguration
+		Get
+			Return AxleConfiguration
+		End Get
+	End Property
+
+	Public ReadOnly Property CurbWeightChassis As Kilogram Implements IVehicleDeclarationInputData.CurbWeightChassis
+		Get
+			Return MassExtra.SI(Of Kilogram)()
+		End Get
+	End Property
+
+	Public ReadOnly Property GrossVehicleMassRating As Kilogram _
+		Implements IVehicleDeclarationInputData.GrossVehicleMassRating
+		Get
+			Return MassMax.SI().Ton.Cast(Of Kilogram)()
+		End Get
+	End Property
+
+	Public ReadOnly Property AirDragArea As SquareMeter Implements IVehicleDeclarationInputData.AirDragArea
+		Get
+			Return CdA0.SI(Of SquareMeter)()
+		End Get
+	End Property
+
+	Public ReadOnly Property IVehicleEngineeringInputData_Axles As IList(Of IAxleEngineeringInputData) _
+		Implements IVehicleEngineeringInputData.Axles
+		Get
+			Return AxleWheels().Cast(Of IAxleEngineeringInputData)().ToList()
+		End Get
+	End Property
+
+	Public ReadOnly Property IVehicleDeclarationInputData_Axles As IList(Of IAxleDeclarationInputData) _
+		Implements IVehicleDeclarationInputData.Axles
+		Get
+			Return AxleWheels().Cast(Of IAxleDeclarationInputData)().ToList()
+		End Get
+	End Property
+
+	Private Function AxleWheels() As IEnumerable(Of AxleInputData)
+		Return Axles.Select(Function(axle) New AxleInputData With {
+								.SourceType = DataSourceType.JSONFile,
+								.Source = FilePath,
+								.Inertia = axle.Inertia.SI(Of KilogramSquareMeter)(),
+								.Wheels = axle.Wheels,
+								.AxleWeightShare = axle.Share,
+								.TwinTyres = axle.TwinTire,
+								.RollResistanceCoefficient = axle.RRC,
+								.TyreTestLoad = axle.FzISO.SI(Of Newton)()
+								})
+	End Function
+
+	Public ReadOnly Property CurbWeightExtra As Kilogram Implements IVehicleEngineeringInputData.CurbWeightExtra
+		Get
+			Return Mass.SI(Of Kilogram)()
+		End Get
+	End Property
+
+	Public ReadOnly Property CrosswindCorrectionMap As TableData _
+		Implements IVehicleEngineeringInputData.CrosswindCorrectionMap
+		Get
+			Return VectoCSVFile.Read(CrossWindCorrectionFile.FullPath)
+		End Get
+	End Property
+
+	Public ReadOnly Property IVehicleEngineeringInputData_CrossWindCorrectionMode As CrossWindCorrectionMode _
+		Implements IVehicleEngineeringInputData.CrossWindCorrectionMode
+		Get
+			Return CrossWindCorrectionMode.DeclarationModeCorrection
+		End Get
+	End Property
+
+	Public ReadOnly Property IVehicleEngineeringInputData_DynamicTyreRadius As Meter _
+		Implements IVehicleEngineeringInputData.DynamicTyreRadius
+		Get
+			Return DynamicTyreRadius.SI().Milli.Meter.Cast(Of Meter)()
+		End Get
+	End Property
+
+	Public ReadOnly Property IVehicleEngineeringInputData_Loading As Kilogram _
+		Implements IVehicleEngineeringInputData.Loading
+		Get
+			Return Loading.SI(Of Kilogram)()
+		End Get
+	End Property
+
+
+	Public ReadOnly Property Type As RetarderType Implements IRetarderInputData.Type
+		Get
+			Return RetarderType
+		End Get
+	End Property
+
+	Public ReadOnly Property IAngularGearInputData_Ratio As Double Implements IAngularGearInputData.Ratio
+		Get
+			Return AngularGearRatio
+		End Get
+	End Property
+
+	Public ReadOnly Property IAngularGearInputData_Type As AngularGearType Implements IAngularGearInputData.Type
+		Get
+			Return AngularGearType
+		End Get
+	End Property
+
+	Public ReadOnly Property Ratio As Double Implements IRetarderInputData.Ratio
+		Get
+			Return RetarderRatio
+		End Get
+	End Property
+
+	Public ReadOnly Property IAngularGearInputData_LossMap As TableData Implements IAngularGearInputData.LossMap
+		Get
+			Return VectoCSVFile.Read(AngularGearLossMapFile.FullPath)
+		End Get
+	End Property
+
+	Public ReadOnly Property LossMap As TableData Implements IRetarderInputData.LossMap
+		Get
+			Return VectoCSVFile.Read(RetarderLossMapFile.FullPath)
+		End Get
+	End Property
+
+	Public ReadOnly Property Efficiency As Double Implements IAngularGearInputData.Efficiency
+		Get
+			Return If(IsNumeric(AngularGearLossMapFile.OriginalPath), AngularGearLossMapFile.OriginalPath.ToDouble(), -1.0)
+		End Get
+	End Property
+
+#End Region
+
+	Public ReadOnly Property PTOTransmissionType As String Implements IPTOTransmissionInputData.PTOTransmissionType
+		Get
+			Return PTOType
+		End Get
+	End Property
+
+	Public ReadOnly Property IPTOTransmissionInputData_PTOCycle As TableData Implements IPTOTransmissionInputData.PTOCycle
+		Get
+			Return VectoCSVFile.Read(PTOCycle.FullPath)
+		End Get
+	End Property
+
+	Public ReadOnly Property IPTOTransmissionInputData_PTOLossMap As TableData _
+		Implements IPTOTransmissionInputData.PTOLossMap
+		Get
+			Return VectoCSVFile.Read(PTOLossMap.FullPath)
+		End Get
+	End Property
 End Class

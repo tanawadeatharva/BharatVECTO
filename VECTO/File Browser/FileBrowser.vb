@@ -21,28 +21,28 @@
 ''' File history is unique for each ID. Folder history is global.
 ''' </remarks>
 Public Class FileBrowser
-	Private Initialized As Boolean
-	Private ReadOnly MyID As String
-	Private MyExt As String()
-	Private Dlog As FileBrowserDialog
-	Private NoExt As Boolean
-	Private ReadOnly bFolderBrowser As Boolean
-	Private ReadOnly bLightMode As Boolean
+	Private _initialized As Boolean
+	Private ReadOnly _id As String
+	Private _extensionList As String()
+	Private _dialog As FileBrowserDialog
+	Private _noExtension As Boolean
+	Private ReadOnly _folderBrowser As Boolean
+	Private ReadOnly _lightMode As Boolean
 
 	''' <summary>
 	''' New cFileBrowser instance
 	''' </summary>
-	''' <param name="ID">Needed to save the file history when not using LightMode.</param>
-	''' <param name="FolderBrowser">Browse folders instead of files.</param>
-	''' <param name="LightMode">If enabled file history is not saved.</param>
+	''' <param name="id">Needed to save the file history when not using LightMode.</param>
+	''' <param name="folderBrowser">Browse folders instead of files.</param>
+	''' <param name="lightMode">If enabled file history is not saved.</param>
 	''' <remarks></remarks>
-	Public Sub New(ID As String, Optional ByVal FolderBrowser As Boolean = False,
-					Optional ByVal LightMode As Boolean = False)
-		Initialized = False
-		MyID = ID
-		NoExt = True
-		bFolderBrowser = FolderBrowser
-		bLightMode = LightMode
+	Public Sub New(id As String, Optional ByVal folderBrowser As Boolean = False,
+					Optional ByVal lightMode As Boolean = False)
+		_initialized = False
+		_id = ID
+		_noExtension = True
+		_folderBrowser = folderBrowser
+		_lightMode = lightMode
 	End Sub
 
 	''' <summary>
@@ -55,7 +55,7 @@ Public Class FileBrowser
 	''' <remarks></remarks>
 	Public Function OpenDialog(path As String, Optional ByVal multiFile As Boolean = False,
 								Optional ByVal ext As String = "") As Boolean
-		Return CustomDialog(path, True, False, tFbExtMode.MultiExt, multiFile, ext, "Open")
+		Return CustomDialog(path, True, False, FileBrowserFileExtensionMode.MultiExt, multiFile, ext, "Open")
 	End Function
 
 	''' <summary>
@@ -68,11 +68,11 @@ Public Class FileBrowser
 	''' <remarks></remarks>
 	Public Function SaveDialog(path As String, Optional ByVal forceExt As Boolean = True, Optional ByVal ext As String = "") _
 		As Boolean
-		Dim x As tFbExtMode
+		Dim x As FileBrowserFileExtensionMode
 		If forceExt Then
-			x = tFbExtMode.ForceExt
+			x = FileBrowserFileExtensionMode.ForceExt
 		Else
-			x = tFbExtMode.SingleExt
+			x = FileBrowserFileExtensionMode.SingleExt
 		End If
 		Return CustomDialog(path, False, True, x, False, ext, "Save As")
 	End Function
@@ -89,10 +89,10 @@ Public Class FileBrowser
 	''' <param name="title">Dialog title.</param>
 	''' <returns></returns>
 	''' <remarks></remarks>
-	Public Function CustomDialog(path As String, fileMustExist As Boolean, overwriteCheck As Boolean, extMode As tFbExtMode,
+	Public Function CustomDialog(path As String, fileMustExist As Boolean, overwriteCheck As Boolean, extMode As FileBrowserFileExtensionMode,
 								multiFile As Boolean, ext As String, Optional title As String = "File Browser") As Boolean
-		If Not Initialized Then Init()
-		Return Dlog.Browse(path, fileMustExist, overwriteCheck, extMode, multiFile, ext, title)
+		If Not _initialized Then Init()
+		Return _dialog.Browse(path, fileMustExist, overwriteCheck, extMode, multiFile, ext, title)
 	End Function
 
 	'Manually update File History
@@ -102,8 +102,8 @@ Public Class FileBrowser
 	''' <param name="path">File to be added to file history.</param>
 	''' <remarks></remarks>
 	Public Sub UpdateHistory(path As String)
-		If Not Initialized Then Init()
-		Dlog.UpdateHistory(path)
+		If Not _initialized Then Init()
+		_dialog.UpdateHistory(path)
 	End Sub
 
 	''' <summary>
@@ -111,19 +111,19 @@ Public Class FileBrowser
 	''' </summary>
 	''' <remarks></remarks>
 	Public Sub Close()
-		If Initialized Then
-			Dlog.SaveAndClose()
-			Initialized = False
+		If _initialized Then
+			_dialog.SaveAndClose()
+			_initialized = False
 		End If
-		Dlog = Nothing
+		_dialog = Nothing
 	End Sub
 
 	Private Sub Init()
-		Dlog = New FileBrowserDialog(bLightMode)
-		Dlog.ID = MyID
-		If Not NoExt Then Dlog.Extensions = MyExt
-		If bFolderBrowser Then Dlog.SetFolderBrowser()
-		Initialized = True
+		_dialog = New FileBrowserDialog(_lightMode)
+		_dialog.ID = _id
+		If Not _noExtension Then _dialog.Extensions = _extensionList
+		If _folderBrowser Then _dialog.SetFolderBrowser()
+		_initialized = True
 	End Sub
 
 	''' <summary>
@@ -134,11 +134,11 @@ Public Class FileBrowser
 	''' <remarks></remarks>
 	Public Property Extensions As String()
 		Get
-			Return MyExt
+			Return _extensionList
 		End Get
 		Set(value As String())
-			MyExt = value
-			NoExt = False
+			_extensionList = value
+			_noExtension = False
 		End Set
 	End Property
 
@@ -150,8 +150,8 @@ Public Class FileBrowser
 	''' <remarks></remarks>
 	Public ReadOnly Property Files As String()
 		Get
-			If Initialized Then
-				Return Dlog.Files
+			If _initialized Then
+				Return _dialog.Files
 			Else
 				Return New String() {""}
 			End If

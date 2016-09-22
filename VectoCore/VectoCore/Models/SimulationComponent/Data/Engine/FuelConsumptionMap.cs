@@ -29,6 +29,7 @@
 *   Martin Rexeis, rexeis@ivt.tugraz.at, IVT, Graz University of Technology
 */
 
+using System.Collections.Generic;
 using System.ComponentModel.DataAnnotations;
 using System.Diagnostics;
 using TUGraz.VectoCommon.Exceptions;
@@ -70,6 +71,20 @@ namespace TUGraz.VectoCore.Models.SimulationComponent.Data.Engine
 
 			throw new VectoException("FuelConsumptionMap: Interpolation failed. torque: {0}, n: {1}", torque.Value(),
 				angularVelocity.AsRPM);
+		}
+
+		public IReadOnlyCollection<Entry> Entries
+		{
+			get
+			{
+				var entries = _fuelMap.Entries;
+				var retVal = new Entry[entries.Count];
+				var i = 0;
+				foreach (var entry in entries) {
+					retVal[i++] = new Entry(entry.Y.SI<PerSecond>(), entry.X.SI<NewtonMeter>(), entry.Z.SI<KilogramPerSecond>());
+				}
+				return retVal;
+			}
 		}
 
 		public class Entry

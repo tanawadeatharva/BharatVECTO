@@ -22,7 +22,7 @@ Public Module VECTO_Global
 	Public MyConfPath As String
 
 
-	Public LogFile As cLogFile
+	Public LogFile As FileLogger
 
 	'to ensure correct format for backgroundworker thread
 
@@ -30,7 +30,7 @@ Public Module VECTO_Global
 
 	Public Cfg As Configuration
 
-	Public sKey As csKey
+	'Public sKey As csKey
 
 	Public ReadOnly FileFormat As Encoding = Encoding.UTF8
 
@@ -41,25 +41,14 @@ Public Module VECTO_Global
 
 	Public ProgBarCtrl As ProgressbarControl
 
-	''' <summary>
-	''' Converts engine speed and torque to power.
-	''' </summary>
-	''' <param name="nU">engine speed</param>
-	''' <param name="M">Torque</param>
-	''' <returns>Power</returns>
-	''' <remarks></remarks>
-	Public Function nMtoPe(nU As Double, M As Double) As Double
-		Return (nU * 2 * Math.PI / 60) * M / 1000
-	End Function
 
-
-	Public Class cLogFile
-		Private LOGstream As StreamWriter
+	Public Class FileLogger
+		Private _logStream As StreamWriter
 
 		Public Function StartLog() As Boolean
 			Try
-				LOGstream = My.Computer.FileSystem.OpenTextFileWriter(MyAppPath & "LOG.txt", True, FileFormat)
-				LOGstream.AutoFlush = True
+				_logStream = My.Computer.FileSystem.OpenTextFileWriter(MyAppPath & "LOG.txt", True, FileFormat)
+				_logStream.AutoFlush = True
 				WriteToLog(MessageType.Normal, "Starting Session " & Now)
 				WriteToLog(MessageType.Normal, "VECTO " & VECTOvers)
 			Catch ex As Exception
@@ -71,7 +60,7 @@ Public Module VECTO_Global
 
 		Public Function SizeCheck() As Boolean
 			Dim logfDetail As FileInfo
-			Dim BackUpError As Boolean
+			Dim backUpError As Boolean
 
 			'Start new log if file size limit reached
 			If File.Exists(MyAppPath & "LOG.txt") Then
@@ -83,20 +72,20 @@ Public Module VECTO_Global
 				If logfDetail.Length / (2 ^ 20) > Cfg.LogSize Then
 
 					WriteToLog(MessageType.Normal, "Starting new logfile")
-					LOGstream.Close()
+					_logStream.Close()
 
-					BackUpError = False
+					backUpError = False
 
 					Try
 						If File.Exists(MyAppPath & "LOG_backup.txt") Then File.Delete(MyAppPath & "LOG_backup.txt")
 						File.Move(MyAppPath & "LOG.txt", MyAppPath & "LOG_backup.txt")
 					Catch ex As Exception
-						BackUpError = True
+						backUpError = True
 					End Try
 
 					If Not StartLog() Then Return False
 
-					If BackUpError Then
+					If backUpError Then
 						WriteToLog(MessageType.Err, "Failed to backup logfile! (" & MyAppPath & "LOG_backup.txt)")
 					Else
 						WriteToLog(MessageType.Normal, "Logfile restarted. Old log saved to LOG_backup.txt")
@@ -112,7 +101,7 @@ Public Module VECTO_Global
 		Public Function CloseLog() As Boolean
 			Try
 				WriteToLog(MessageType.Normal, "Closing Session " & Now)
-				LOGstream.Close()
+				_logStream.Close()
 			Catch ex As Exception
 				Return False
 			End Try
@@ -121,20 +110,20 @@ Public Module VECTO_Global
 		End Function
 
 
-		Public Function WriteToLog(MsgType As MessageType, Msg As String) As Boolean
-			Dim MsgTypeStr As String
+		Public Function WriteToLog(msgType As MessageType, msg As String) As Boolean
+			Dim msgTypeStr As String
 
-			Select Case MsgType
+			Select Case msgType
 				Case MessageType.Err
-					MsgTypeStr = "Error"
+					msgTypeStr = "Error"
 				Case MessageType.Warn
-					MsgTypeStr = "Warning"
+					msgTypeStr = "Warning"
 				Case Else
-					MsgTypeStr = "-"
+					msgTypeStr = "-"
 			End Select
 
 			Try
-				LOGstream.WriteLine(Now.ToString("yyyy/MM/dd-HH:mm:ss") & vbTab & MsgTypeStr & vbTab & Msg)
+				_logStream.WriteLine(Now.ToString("yyyy/MM/dd-HH:mm:ss") & vbTab & msgTypeStr & vbTab & msg)
 				Return True
 			Catch ex As Exception
 				Return False
@@ -145,9 +134,9 @@ Public Module VECTO_Global
 #Region "File path functions"
 
 	'When no path is specified, then insert either HomeDir or MainDir   Special-folders
-	Public Function fFileRepl(file As String, Optional ByVal MainDir As String = "") As String
+	Public Function FileRepl(file As String, Optional ByVal mainDir As String = "") As String
 
-		Dim ReplPath As String
+		Dim replPath As String
 
 		'Trim Path
 		file = Trim(file)
@@ -156,20 +145,20 @@ Public Module VECTO_Global
 		If file = "" Then Return ""
 
 		'Replace sKeys
-		file = Replace(file, sKey.DefVehPath & "\", MyAppPath & "Default Vehicles\", 1, -1,
+		file = Replace(file, DefVehPath & "\", MyAppPath & "Default Vehicles\", 1, -1,
 						CompareMethod.Text)
-		file = Replace(file, sKey.HomePath & "\", MyAppPath, 1, -1, CompareMethod.Text)
+		file = Replace(file, HomePath & "\", MyAppPath, 1, -1, CompareMethod.Text)
 
 		'Replace - Determine folder
-		If MainDir = "" Then
-			ReplPath = MyAppPath
+		If mainDir = "" Then
+			replPath = MyAppPath
 		Else
-			ReplPath = MainDir
+			replPath = mainDir
 		End If
 
 		' "..\" => One folder-level up
-		Do While ReplPath.Length > 0 AndAlso Left(file, 3) = "..\"
-			ReplPath = fPathUp(ReplPath)
+		Do While replPath.Length > 0 AndAlso Left(file, 3) = "..\"
+			replPath = PathUp(replPath)
 			file = file.Substring(3)
 		Loop
 
@@ -177,7 +166,7 @@ Public Module VECTO_Global
 		'Supplement Path, if not available
 		If GetPath(file) = "" Then
 
-			Return ReplPath & file
+			Return replPath & file
 
 		Else
 			Return file
@@ -185,22 +174,22 @@ Public Module VECTO_Global
 	End Function
 
 	'Path one-level-up      "C:\temp\ordner1\"  >>  "C:\temp\"
-	Private Function fPathUp(Pfad As String) As String
-		Dim x As Int16
+	Private Function PathUp(pfad As String) As String
+		Dim x As Integer
 
-		Pfad = Pfad.Substring(0, Pfad.Length - 1)
+		pfad = pfad.Substring(0, pfad.Length - 1)
 
-		x = Pfad.LastIndexOf("\")
+		x = pfad.LastIndexOf("\", StringComparison.Ordinal)
 
 		If x = -1 Then Return ""
 
-		Return Pfad.Substring(0, x + 1)
+		Return pfad.Substring(0, x + 1)
 	End Function
 
 	'File name without the path    "C:\temp\TEST.txt"  >>  "TEST.txt" oder "TEST"
 	Public Function GetFilenameWithoutPath(file As String, includeFileExtension As Boolean) As String _
 'GetFilenameWithoutPath
-		Dim x As Int16
+		Dim x As Integer
 		x = file.LastIndexOf("\", StringComparison.Ordinal) + 1
 		file = Right(file, Len(file) - x)
 		If Not includeFileExtension Then
@@ -239,7 +228,7 @@ Public Module VECTO_Global
 
 	'Extension alone      "C:\temp\TEST.txt" >> ".txt"
 	Public Function GetExtension(file As String) As String 'GetExtension
-		Dim x As Int16
+		Dim x As Integer
 		x = file.LastIndexOf(".", StringComparison.Ordinal)
 		If x = -1 Then
 			Return ""
@@ -253,26 +242,42 @@ Public Module VECTO_Global
 End Module
 
 
-Public Class csKey
-	Public ReadOnly AUX As csKeyAux
+Module Constants
+	'Public ReadOnly AUX As AuxiliaryKey
 
-	Public HomePath As String = "<HOME>"
-	Public DefVehPath As String = "<VEHDIR>"
-	Public NoFile As String = "<NOFILE>"
+	Public Const HomePath As String = "<HOME>"
+	Public Const DefVehPath As String = "<VEHDIR>"
+	Public Const NoFile As String = "<NOFILE>"
 
-	Public Sub New()
+	'Public Sub New()
 
-		AUX = New csKeyAux
-	End Sub
+	'	AUX = New AuxiliaryKey
+	'End Sub
 
 
-	Public Class csKeyAux
-		Public Fan As String = "FAN"
-		Public SteerPump As String = "STP"
-		Public HVAC As String = "AC"
-		Public ElecSys As String = "ES"
-		Public PneumSys As String = "PS"
-	End Class
-End Class
+	' ReSharper disable once ClassNeverInstantiated.Global
+
+End Module
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
 
 

@@ -8,7 +8,16 @@
 '   WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
 '
 ' See the LICENSE.txt for the specific language governing permissions and limitations.
+Imports System.Collections.Generic
+Imports System.ComponentModel.DataAnnotations
+Imports System.IO
+Imports System.Linq
 Imports System.Windows.Forms
+Imports TUGraz.VectoCommon.Models
+Imports TUGraz.VectoCommon.Utils
+Imports TUGraz.VectoCore.InputData.Reader
+Imports TUGraz.VectoCore.InputData.Reader.ComponentData
+Imports TUGraz.VectoCore.Models.SimulationComponent.Data.Gearbox
 
 
 ''' <summary>
@@ -22,18 +31,10 @@ Public Class GearboxGearDialog
 
 	'Save and Close
 	Private Sub OK_Button_Click(sender As Object, e As EventArgs) Handles OK_Button.Click
-
-		If Not IsNumeric(TbRatio.Text) Then
-			MsgBox("Gear ratio is invalid!")
-			TbRatio.Focus()
-			TbRatio.SelectAll()
-			Exit Sub
-		End If
-
-		If IsNumeric(TbMapPath.Text) AndAlso (TbMapPath.Text < 0 OrElse TbMapPath.Text > 1) Then
-			MsgBox("Efficiency is invalid! Must be between 0 and 1.")
-			TbMapPath.Focus()
-			TbMapPath.SelectAll()
+		Dim results As IList(Of String) = ValidateGear()
+		If results.Any() Then
+			MsgBox("Invalid input:" + Environment.NewLine + String.Join(Environment.NewLine, results), MsgBoxStyle.OkOnly,
+					"Failed to save gear")
 			Exit Sub
 		End If
 
@@ -42,6 +43,45 @@ Public Class GearboxGearDialog
 		DialogResult = DialogResult.OK
 		Close()
 	End Sub
+
+	Private Function ValidateGear() As IList(Of String)
+		If String.IsNullOrWhiteSpace(TbMapPath.Text) Then _
+			Return New List(Of String)() From {"Loss-Map or Efficiency required"}
+		Try
+			Dim lossMapFile As String =
+					If(Not String.IsNullOrWhiteSpace(GbxPath), Path.Combine(GbxPath, TbMapPath.Text), TbMapPath.Text)
+			Dim lossmap As TransmissionLossMap
+			If File.Exists(lossMapFile) Then
+				lossmap = TransmissionLossMapReader.ReadFromFile(lossMapFile, TbRatio.Text.ToDouble(0), "gear " + TbGear.Text)
+			Else
+				lossmap = TransmissionLossMapReader.Create(TbMapPath.Text.ToDouble(0), TbRatio.Text.ToDouble(0),
+															"gear " + TbGear.Text)
+			End If
+			Dim shiftPolygon As ShiftPolygon = Nothing
+			If (Not String.IsNullOrWhiteSpace(TbShiftPolyFile.Text)) Then
+				Dim shiftPolygonFile As String =
+						If(Not String.IsNullOrWhiteSpace(GbxPath), Path.Combine(GbxPath, TbShiftPolyFile.Text), TbShiftPolyFile.Text)
+				shiftPolygon = ShiftPolygonReader.ReadFromFile(shiftPolygonFile)
+			End If
+			Dim gearData As GearData = New GearData() With {
+					.Ratio = TbRatio.Text.ToDouble(0),
+					.LossMap = lossmap,
+					.ShiftPolygon = shiftPolygon,
+					.MaxTorque =
+					If(String.IsNullOrWhiteSpace(TbMaxTorque.Text), Nothing, TbMaxTorque.Text.ToDouble().SI(Of NewtonMeter))
+					}
+			Dim results As IList(Of ValidationResult) =
+					gearData.Validate(If(Cfg.DeclMode, ExecutionMode.Declaration, ExecutionMode.Engineering))
+
+			If (results.Any()) Then
+				Return results.Select(Function(r) r.ErrorMessage + String.Join(", ", r.MemberNames.Distinct())).ToList()
+			End If
+		Catch ex As Exception
+			Return New List(Of String)() From {ex.Message}
+		End Try
+
+		Return New List(Of String)()
+	End Function
 
 	'Cancel
 	Private Sub Cancel_Button_Click(sender As Object, e As EventArgs) Handles Cancel_Button.Click
@@ -61,7 +101,7 @@ Public Class GearboxGearDialog
 			Exit Sub
 		End If
 
-		If IsNumeric(TbMapPath.Text) AndAlso (TbMapPath.Text < 0 OrElse TbMapPath.Text > 1) Then
+		If IsNumeric(TbMapPath.Text) AndAlso (TbMapPath.Text.ToDouble() < 0 OrElse TbMapPath.Text.ToDouble() > 1) Then
 			MsgBox("Efficiency is invalid! Must be between 0 and 1.")
 			TbMapPath.Focus()
 			TbMapPath.SelectAll()
@@ -76,14 +116,14 @@ Public Class GearboxGearDialog
 
 	'Browse for transmission loss map
 	Private Sub BtBrowse_Click(sender As Object, e As EventArgs) Handles BtBrowse.Click
-		If TransmissionLossMapFileBrowser.OpenDialog(fFileRepl(TbMapPath.Text, GbxPath)) Then
+		If TransmissionLossMapFileBrowser.OpenDialog(FileRepl(TbMapPath.Text, GbxPath)) Then
 			TbMapPath.Text = GetFilenameWithoutDirectory(TransmissionLossMapFileBrowser.Files(0), GbxPath)
 		End If
 	End Sub
 
 	'Browse for shift polygons file
 	Private Sub BtShiftPolyBrowse_Click(sender As Object, e As EventArgs) Handles BtShiftPolyBrowse.Click
-		If GearboxShiftPolygonFileBrowser.OpenDialog(fFileRepl(TbShiftPolyFile.Text, GbxPath)) Then
+		If GearboxShiftPolygonFileBrowser.OpenDialog(FileRepl(TbShiftPolyFile.Text, GbxPath)) Then
 			TbShiftPolyFile.Text = GetFilenameWithoutDirectory(GearboxShiftPolygonFileBrowser.Files(0), GbxPath)
 		End If
 	End Sub
@@ -96,7 +136,7 @@ Public Class GearboxGearDialog
 			Exit Sub
 		End If
 
-		If IsNumeric(TbMapPath.Text) AndAlso (TbMapPath.Text < 0 OrElse TbMapPath.Text > 1) Then
+		If IsNumeric(TbMapPath.Text) AndAlso (TbMapPath.Text.ToDouble() < 0 OrElse TbMapPath.Text.ToDouble() > 1) Then
 			MsgBox("Efficiency is invalid! Must be between 0 and 1.")
 			TbMapPath.Focus()
 			TbMapPath.SelectAll()

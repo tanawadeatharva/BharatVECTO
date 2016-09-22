@@ -12,6 +12,12 @@ Option Infer On
 Option Strict On
 Option Explicit On
 
+Imports System.Collections.Generic
+Imports System.ComponentModel.DataAnnotations
+Imports System.Linq
+Imports TUGraz.VectoCommon.Models
+Imports TUGraz.VectoCommon.Utils
+Imports TUGraz.VectoCore.InputData.Impl
 Imports TUGraz.VectoCore.Models.Declaration
 
 
@@ -43,20 +49,23 @@ Public Class VehicleAxleDialog
 	'Save and close
 	Private Sub OK_Button_Click(sender As Object, e As EventArgs) Handles OK_Button.Click
 
-		If Not Cfg.DeclMode Then
-			If Not IsNumeric(TbAxleShare.Text) OrElse Trim(TbAxleShare.Text) = "" Then
-				MsgBox("Weight input is not valid!")
-				Exit Sub
-			End If
-		End If
+		Dim axleData As Axle = New Axle With {
+				.AxleWeightShare = TbAxleShare.Text.ToDouble(0),
+				.RollResistanceCoefficient = TbRRC.Text.ToDouble(0),
+				.TyreTestLoad = TbFzISO.Text.ToDouble(0).SI(Of Newton)(),
+				.TwinTyres = CbTwinT.Checked,
+				.WheelsDimension = CbWheels.SelectedItem.ToString(),
+				.Inertia = TbI_wheels.Text.ToDouble(0).SI(Of KilogramSquareMeter)()
+				}
 
-		If Not IsNumeric(TbRRC.Text) OrElse Trim(TbRRC.Text) = "" Then
-			MsgBox("RRC input is not valid!")
-			Exit Sub
-		End If
+		Dim results As IList(Of ValidationResult) =
+				axleData.Validate(If(Cfg.DeclMode, ExecutionMode.Declaration, ExecutionMode.Engineering))
 
-		If Not IsNumeric(TbFzISO.Text) OrElse Trim(TbFzISO.Text) = "" Then
-			MsgBox("Fz ISO input is not valid!")
+		If results.Any() Then
+			Dim messages As IEnumerable(Of String) =
+					results.Select(Function(r) r.ErrorMessage + String.Join(", ", r.MemberNames.Distinct()))
+			MsgBox("Invalid input:" + Environment.NewLine + String.Join(Environment.NewLine, messages), MsgBoxStyle.OkOnly,
+					"Failed to save axle gear")
 			Exit Sub
 		End If
 

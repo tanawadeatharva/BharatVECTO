@@ -38,6 +38,7 @@ using System.Linq;
 using System.Text;
 using System.Text.RegularExpressions;
 using TUGraz.VectoCommon.Exceptions;
+using TUGraz.VectoCommon.InputData;
 using TUGraz.VectoCommon.Models;
 using TUGraz.VectoCommon.Utils;
 
@@ -69,11 +70,13 @@ namespace TUGraz.VectoCore.Utils
 		/// <param name="ignoreEmptyColumns">set true, if empty columns should be ignored. default: false.</param>
 		/// <param name="fullHeader">set true is column names should be preserved. Otherwise units are trimed away. default: false.</param>
 		/// <returns>A DataTable which represents the CSV File.</returns>
-		public static DataTable Read(string fileName, bool ignoreEmptyColumns = false, bool fullHeader = false)
+		public static TableData Read(string fileName, bool ignoreEmptyColumns = false, bool fullHeader = false)
 		{
 			try {
 				using (var fs = new FileStream(fileName, FileMode.Open)) {
-					return ReadStream(fs, ignoreEmptyColumns, fullHeader);
+					var retVal = new TableData(fileName);
+					ReadCSV(retVal, fs, ignoreEmptyColumns, fullHeader);
+					return retVal;
 				}
 			} catch (Exception e) {
 				LogManager.GetLogger(typeof(VectoCSVFile).FullName).Error(e);
@@ -88,7 +91,14 @@ namespace TUGraz.VectoCore.Utils
 		/// <param name="ignoreEmptyColumns">set true, if empty columns should be ignored. default: false.</param>
 		/// <param name="fullHeader">set true is column names should be preserved. Otherwise units are trimed away. default: false.</param>
 		/// <returns>A DataTable which represents the CSV File.</returns>
-		public static DataTable ReadStream(Stream stream, bool ignoreEmptyColumns = false, bool fullHeader = false)
+		public static TableData ReadStream(Stream stream, bool ignoreEmptyColumns = false, bool fullHeader = false)
+		{
+			var retVal = new TableData();
+			ReadCSV(retVal, stream, ignoreEmptyColumns, fullHeader);
+			return retVal;
+		}
+
+		private static void ReadCSV(DataTable table, Stream stream, bool ignoreEmptyColumns, bool fullHeader)
 		{
 			var p = new TextFieldParser(stream) {
 				TextFieldType = FieldType.Delimited,
@@ -125,13 +135,13 @@ namespace TUGraz.VectoCore.Utils
 				columns = colsWithoutComment.Select((_, i) => i.ToString()).ToList();
 			}
 
-			var table = new DataTable();
+			//var table = new DataTable();
 			foreach (var col in columns) {
 				table.Columns.Add(col);
 			}
 
 			if (p.EndOfData) {
-				return table;
+				return;
 			}
 
 			var lineNumber = 1;
@@ -158,8 +168,6 @@ namespace TUGraz.VectoCore.Utils
 				}
 				lineNumber++;
 			} while (!p.EndOfData);
-
-			return table;
 		}
 
 		/// <summary>

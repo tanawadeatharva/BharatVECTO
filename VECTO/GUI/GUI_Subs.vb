@@ -9,6 +9,7 @@
 '
 ' See the LICENSE.txt for the specific language governing permissions and limitations.
 
+
 ''' <summary>
 ''' Methods for GUI interaction
 ''' </summary>
@@ -20,7 +21,7 @@ Public Module GUI_Subs
 	'Status Message => Msg-Listview
 	Public Sub WorkerMsg(ByVal id As MessageType, ByVal msg As String, ByVal source As String,
 						Optional ByVal link As String = "")
-		Dim workProg As New BackgroundWorkerMessage(tWorkMsgType.StatusListBox)
+		Dim workProg As New BackgroundWorkerMessage(WorkerMessageType.StatusListBox)
 		workProg.ID = id
 		Select Case id
 			Case MessageType.Err
@@ -41,8 +42,8 @@ Public Module GUI_Subs
 
 	'Status message
 	' ReSharper disable once InconsistentNaming
-	Public Sub GUIMsg(ByVal ID As MessageType, ByVal Msg As String)
-		MainForm.MSGtoForm(ID, Msg, "", "")
+	Public Sub GUIMsg(ByVal id As MessageType, ByVal msg As String)
+		MainForm.MSGtoForm(id, msg, "", "")
 	End Sub
 
 	'Statusbar
@@ -59,7 +60,7 @@ Public Module GUI_Subs
 
 	'Class used to pass Messages from BackgroundWorker to GUI
 	Private Class BackgroundWorkerMessage
-		Public Sub New(msgTarget As tWorkMsgType)
+		Public Sub New(msgTarget As WorkerMessageType)
 			Source = ""
 		End Sub
 
@@ -82,27 +83,26 @@ Public Module GUI_Subs
 #Region "Textbox text conversion for file open/save operations"
 
 	'Text-to-number
-	Public Function fTextboxToNumString(ByVal txt As String) As String
-		If Not IsNumeric(txt) Then
-			Return "0"
-		Else
-			Return txt
-		End If
-	End Function
+	'Public Function ParseNumber(txt As String) As Double
+	'	If Not IsNumeric(txt) Then
+	'		Return 0
+	'	End If
+	'	Return Double.Parse(txt, CultureInfo.InvariantCulture)
+	'End Function
 
 
 #End Region
 
 	'Open File with software defined in Config
 	Public Function FileOpenAlt(ByVal file As String) As Boolean
-		Dim PSI As New ProcessStartInfo
+		Dim psi As New ProcessStartInfo
 
 		If Not IO.File.Exists(file) Then Return False
 
-		PSI.FileName = Cfg.OpenCmd
-		PSI.Arguments = ChrW(34) & file & ChrW(34)
+		psi.FileName = Cfg.OpenCmd
+		psi.Arguments = ChrW(34) & file & ChrW(34)
 		Try
-			Process.Start(PSI)
+			Process.Start(psi)
 			Return True
 		Catch ex As Exception
 			Return False
