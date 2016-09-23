@@ -38,6 +38,7 @@ using TUGraz.VectoCommon.Models;
 using TUGraz.VectoCommon.Utils;
 using TUGraz.VectoCore.Models.SimulationComponent.Data;
 using TUGraz.VectoCore.Models.SimulationComponent.Data.Gearbox;
+using TUGraz.VectoCore.Utils;
 
 namespace TUGraz.VectoCore.Models.Declaration
 {
@@ -196,6 +197,7 @@ namespace TUGraz.VectoCore.Models.Declaration
 				public const double DecisionFactorCoastingScaling = 1.5;
 				public const double LookAheadDistanceFactor = 10;
 				public static readonly MeterPerSecond MinimumSpeed = 50.KMPHtoMeterPerSecond();
+
 			}
 
 			public static class OverSpeedEcoRoll

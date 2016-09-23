@@ -359,9 +359,9 @@ Public Class VehicleForm
 
 
 		cbAngledriveType.SelectedValue = angledrive.Type
-		tbAngledriveRatio.Text = angledrive.IAngledriveInputData_Ratio.ToGUIFormat()
+		tbAngledriveRatio.Text = angledrive.Ratio.ToGUIFormat()
 		tbAngledriveLossMapPath.Text =
-			If(angledrive.IAngledriveInputData_LossMap Is Nothing, "", GetRelativePath(angledrive.IAngledriveInputData_LossMap.Source, basePath))
+			If(angledrive.LossMap Is Nothing, "", GetRelativePath(angledrive.LossMap.Source, basePath))
 
 		LvRRC.Items.Clear()
 		Dim i As Integer = 0
