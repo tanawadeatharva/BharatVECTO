@@ -45,9 +45,9 @@ Public Class VectoJobForm
 	'Populate Advanced Auxiliaries
 	Private Sub PopulateAdvancedAuxiliaries()
 		'Scan the program directory for DLL's which are AdvancedAuxiliaries and display
-		Dim aList As List(Of AdvancedAuxiliary) = DiscoverAdvancedAuxiliaries()
+		Dim aList As Dictionary(Of String, AdvancedAuxiliary) = DiscoverAdvancedAuxiliaries()
 
-		cboAdvancedAuxiliaries.DataSource = aList
+		cboAdvancedAuxiliaries.DataSource = aList.Select(Function(x) x.Value).ToList()
 		cboAdvancedAuxiliaries.DisplayMember = "AuxiliaryName"
 	End Sub
 
@@ -427,7 +427,8 @@ Public Class VectoJobForm
 			Dim auxInput As IAuxiliariesEngineeringInputData = inputData.AuxiliaryInputData()
 			For Each item As AdvancedAuxiliary In cboAdvancedAuxiliaries.Items
 				If _
-					item.AssemblyName = auxInput.AuxiliaryAssembly.ToString() AndAlso auxInput.AuxiliaryVersion = item.AuxiliaryVersion _
+					AuxiliaryModelHelper.Parse(item.AssemblyName) = auxInput.AuxiliaryAssembly AndAlso
+					auxInput.AuxiliaryVersion = item.AuxiliaryVersion _
 					Then
 					cboAdvancedAuxiliaries.SelectedItem = item
 					Exit For
@@ -1327,7 +1328,7 @@ lbDlog:
 		End If
 
 		Dim aauxFileValidated As Boolean = False
-		Dim fbAux As New FileBrowser("aaux", True, False)
+		Dim fbAux As New FileBrowser("aaux", False, False)
 		Dim message As String = String.Empty
 		Dim absoluteAuxPath As String
 		Dim assembly As AdvancedAuxiliary

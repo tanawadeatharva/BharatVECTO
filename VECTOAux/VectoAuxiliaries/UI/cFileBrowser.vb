@@ -34,15 +34,15 @@ Public Class cFileBrowser
 	''' New cFileBrowser instance
 	''' </summary>
 	''' <param name="ID">Needed to save the file history when not using LightMode.</param>
-	''' <param name="FolderBrowser">Browse folders instead of files.</param>
-	''' <param name="LightMode">If enabled file history is not saved.</param>
+	''' <param name="folderBrowser">Browse folders instead of files.</param>
+	''' <param name="lightMode">If enabled file history is not saved.</param>
 	''' <remarks></remarks>
-	Public Sub New(ByVal ID As String, Optional ByVal FolderBrowser As Boolean = False,
-					Optional ByVal LightMode As Boolean = False)
+	Public Sub New(ByVal ID As String, Optional ByVal folderBrowser As Boolean = False,
+					Optional ByVal lightMode As Boolean = False)
 		Initialized = False
 		MyID = ID
 		NoExt = True
-		bFolderBrowser = FolderBrowser
+		bFolderBrowser = folderBrowser
 		bLightMode = LightMode
 	End Sub
 
@@ -50,11 +50,11 @@ Public Class cFileBrowser
 	''' Opens dialog for OPENING files. Selected file must exist. Returns False if cancelled by user, else True.
 	''' </summary>
 	''' <param name="path">Initial selected file. If empty the last selected file is used. If file without directoy the last directory will be used.</param>
-	''' <param name="MultiFile">Allow selecting multiple files.</param>
+	''' <param name="multiFile">Allow selecting multiple files.</param>
 	''' <param name="Ext">Set extension. If not defined the first predefined extension is used.</param>
 	''' <returns></returns>
 	''' <remarks></remarks>
-	Public Function OpenDialog(ByVal path As String, Optional ByVal MultiFile As Boolean = False,
+	Public Function OpenDialog(ByVal path As String, Optional ByVal multiFile As Boolean = False,
 								Optional ByVal Ext As String = "") As Boolean
 		Return CustomDialog(path, True, False, tFbExtMode.MultiExt, MultiFile, Ext, "Open")
 	End Function
@@ -63,11 +63,11 @@ Public Class cFileBrowser
 	''' Opens dialog for SAVING files. If file already exists user will be asked to overwrite. Returns False if cancelled by user, else True.
 	''' </summary>
 	''' <param name="path">Initial selected file. If empty the last selected file is used. If file without directoy the last directory will be used.</param>
-	''' <param name="ForceExt">Force predefined file extension.</param>
+	''' <param name="forceExt">Force predefined file extension.</param>
 	''' <param name="Ext">Set extension. If not defined the first predefined extension is used.</param>
 	''' <returns></returns>
 	''' <remarks></remarks>
-	Public Function SaveDialog(ByVal path As String, Optional ByVal ForceExt As Boolean = True,
+	Public Function SaveDialog(ByVal path As String, Optional ByVal forceExt As Boolean = True,
 								Optional ByVal Ext As String = "") As Boolean
 		Dim x As tFbExtMode
 		If ForceExt Then
@@ -82,28 +82,28 @@ Public Class cFileBrowser
 	''' Custom open/save dialog. Returns False if cancelled by user, else True.
 	''' </summary>
 	''' <param name="path">Initial selected file. If empty the last selected file is used. If file without directoy the last directory will be used.</param>
-	''' <param name="FileMustExist">Selected file must exist.</param>
-	''' <param name="OverwriteCheck">If file already exists user will be asked to overwrite.</param>
-	''' <param name="ExtMode">ForceExt= First predefined extension (or Ext parameter) will be forced (Default for SaveDialog), MultiExt= All files with predefined extensions are shown (Default for OpenDialog), SingleExt= All files with the first predefined extension will be shown.</param>
-	''' <param name="MultiFile">Allow to select multiple files.</param>       
-	''' <param name="Ext">Set extension. If not defined the first predefined extension is used.</param>            
-	''' <param name="Title">Dialog title.</param>
+	''' <param name="fileMustExist">Selected file must exist.</param>
+	''' <param name="overwriteCheck">If file already exists user will be asked to overwrite.</param>
+	''' <param name="extMode">ForceExt= First predefined extension (or Ext parameter) will be forced (Default for SaveDialog), MultiExt= All files with predefined extensions are shown (Default for OpenDialog), SingleExt= All files with the first predefined extension will be shown.</param>
+	''' <param name="multiFile">Allow to select multiple files.</param>       
+	''' <param name="ext">Set extension. If not defined the first predefined extension is used.</param>            
+	''' <param name="title">Dialog title.</param>
 	''' <returns></returns>
 	''' <remarks></remarks>
-	Public Function CustomDialog(ByVal path As String, ByVal FileMustExist As Boolean, ByVal OverwriteCheck As Boolean,
-								ByVal ExtMode As tFbExtMode, ByVal MultiFile As Boolean, ByVal Ext As String,
-								Optional Title As String = "File Browser") As Boolean
+	Public Function CustomDialog(ByVal path As String, ByVal fileMustExist As Boolean, ByVal overwriteCheck As Boolean,
+								ByVal extMode As tFbExtMode, ByVal multiFile As Boolean, ByVal ext As String,
+								Optional title As String = "File Browser") As Boolean
 		If Not Initialized Then Init()
-		Return Dlog.Browse(path, FileMustExist, OverwriteCheck, ExtMode, MultiFile, Ext, Title)
+		Return Dlog.Browse(path, fileMustExist, overwriteCheck, extMode, multiFile, ext, Title)
 	End Function
 
 	'Manually update File History
 	''' <summary>
 	''' Add file to file history.
 	''' </summary>
-	''' <param name="Path">File to be added to file history.</param>
+	''' <param name="path">File to be added to file history.</param>
 	''' <remarks></remarks>
-	Public Sub UpdateHistory(ByVal Path As String)
+	Public Sub UpdateHistory(ByVal path As String)
 		If Not Initialized Then Init()
 		Dlog.UpdateHistory(Path)
 	End Sub
