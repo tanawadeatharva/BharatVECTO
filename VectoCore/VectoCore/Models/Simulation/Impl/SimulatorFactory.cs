@@ -112,7 +112,9 @@ namespace TUGraz.VectoCore.Models.Simulation.Impl
 			var i = 0;
 			var modDataFilter = ModalResults1Hz
 				? new IModalDataFilter[] { new ModalDataContainer.ModalData1HzFilter() }
-				: new IModalDataFilter[0];
+				: null;
+
+			var warning1Hz = false;
 
 			foreach (var data in DataReader.NextRun()) {
 				var d = data;
@@ -121,14 +123,18 @@ namespace TUGraz.VectoCore.Models.Simulation.Impl
 						d.Report.AddResult(d.Loading, d.Mission, writer);
 					}
 				};
+				if (!data.Cycle.CycleType.IsDistanceBased() && ModalResults1Hz && !warning1Hz) {
+					Log.Error("Output filter for 1Hz results is only available for distance-based cycles!");
+					warning1Hz = true;
+				}
 				IModalDataContainer modContainer =
 					new ModalDataContainer(data, ModWriter,
 						addReportResult: _mode == ExecutionMode.Declaration ? addReportResult : null,
 						writeEngineOnly: _engineOnlyMode,
-						filter: modDataFilter) {
-						WriteAdvancedAux = data.AdvancedAux != null && data.AdvancedAux.AuxiliaryAssembly == AuxiliaryModel.Advanced,
-						WriteModalResults = _mode != ExecutionMode.Declaration || WriteModalResults
-					};
+						filter: data.Cycle.CycleType.IsDistanceBased() ? modDataFilter : null) {
+							WriteAdvancedAux = data.AdvancedAux != null && data.AdvancedAux.AuxiliaryAssembly == AuxiliaryModel.Advanced,
+							WriteModalResults = _mode != ExecutionMode.Declaration || WriteModalResults
+						};
 				var current = i++;
 				var builder = new PowertrainBuilder(modContainer, (writer, mass, loading) =>
 					SumData.Write(modContainer, d.JobName, string.Format("{0}-{1}", JobNumber, current),
@@ -146,6 +152,8 @@ namespace TUGraz.VectoCore.Models.Simulation.Impl
 					case CycleType.MeasuredSpeedGear:
 						run = new TimeRun(builder.Build(data));
 						break;
+					case CycleType.PTO:
+						throw new VectoException("PTO Cycle can not be used as main cycle!");
 					default:
 						throw new ArgumentOutOfRangeException("CycleType unknown:" + data.Cycle.CycleType);
 				}

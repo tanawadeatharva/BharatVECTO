@@ -451,7 +451,7 @@ Public Class VectoJobForm
 		Dim sb As ICycleData
 		For Each sb In vectoJob.Cycles
 			Dim lv0 As ListViewItem = New ListViewItem
-			lv0.Text = sb.Name
+			lv0.Text = GetRelativePath(sb.CycleData.Source, Path.GetDirectoryName(Path.GetFullPath(file))) 'sb.Name
 			LvCycles.Items.Add(lv0)
 		Next
 
@@ -1006,7 +1006,6 @@ lbDlog:
 	Public Sub UpdatePic()
 
 
-
 		TbHVCclass.Text = ""
 		TbVehCat.Text = ""
 		TbMass.Text = ""
@@ -1119,8 +1118,8 @@ lbDlog:
 				If gear.ShiftPolygon Is Nothing OrElse gear.ShiftPolygon.Rows.Count = 0 Then Continue For
 				Dim shiftPolygon As ShiftPolygon = ShiftPolygonReader.Create(gear.ShiftPolygon)
 				s = New Series
-				s.Points.DataBindXY(shiftPolygon.Upshift.Select(Function(x) x.AngularSpeed),
-									shiftPolygon.Upshift.Select(Function(x) x.Torque))
+				s.Points.DataBindXY(shiftPolygon.Upshift.Select(Function(x) x.AngularSpeed.AsRPM).ToArray(),
+									shiftPolygon.Upshift.Select(Function(x) x.Torque.Value()).ToArray())
 				s.ChartType = SeriesChartType.FastLine
 				s.BorderWidth = 2
 				s.Color = Color.DarkRed
@@ -1128,8 +1127,8 @@ lbDlog:
 				' MyChart.Series.Add(s) 'MQ 2016-06-20: do not plot shift lines in engine dialog
 
 				s = New Series
-				s.Points.DataBindXY(shiftPolygon.Downshift.Select(Function(x) x.AngularSpeed),
-									shiftPolygon.Downshift.Select(Function(x) x.Torque))
+				s.Points.DataBindXY(shiftPolygon.Downshift.Select(Function(x) x.AngularSpeed.AsRPM).ToArray(),
+									shiftPolygon.Downshift.Select(Function(x) x.Torque.Value()).ToArray())
 				s.ChartType = SeriesChartType.FastLine
 				s.BorderWidth = 2
 				s.Color = Color.DarkRed
@@ -1194,7 +1193,8 @@ lbDlog:
 		pmax = fullLoadCurve.MaxPower.Value() / 1000 'FLD0.Pfull(FLD0.EngineRatedSpeed)
 
 
-		TbEngTxt.Text = String.Format("{0} l {1} kw {2}", (engine.Displacement.Value() * 1000).ToString("0.0"), pmax.ToString("#"), engine.ModelName)
+		TbEngTxt.Text = String.Format("{0} l {1} kw {2}", (engine.Displacement.Value() * 1000).ToString("0.0"),
+									pmax.ToString("#"), engine.ModelName)
 
 		Dim fuelConsumptionMap As FuelConsumptionMap = FuelConsumptionMapReader.Create(engine.FuelConsumptionMap)
 

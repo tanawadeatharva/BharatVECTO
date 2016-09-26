@@ -776,7 +776,7 @@ Partial Class MainForm
 		Me.ShowInFolderToolStripMenuItem.Size = New System.Drawing.Size(198, 22)
 		Me.ShowInFolderToolStripMenuItem.Text = "Show in Folder"
 		'
-		'F_MAINForm
+		'MainForm
 		'
 		Me.AcceptButton = Me.btStartV3
 		Me.ClientSize = New System.Drawing.Size(1045, 670)
