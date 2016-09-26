@@ -867,7 +867,7 @@ Partial Class VehicleForm
 		Me.Label16.Name = "Label16"
 		Me.Label16.Size = New System.Drawing.Size(201, 16)
 		Me.Label16.TabIndex = 18
-		Me.Label16.Text = "PTO Cycle (.vdri)"
+		Me.Label16.Text = "PTO Cycle (.vptoc)"
 		Me.Label16.TextAlign = System.Drawing.ContentAlignment.BottomLeft
 		'
 		'tbPTOCycle
