@@ -300,7 +300,7 @@ namespace TUGraz.VectoCore.InputData.Reader
 			return true;
 		}
 
-		private static class Fields
+		public static class Fields
 		{
 			public const string PTOTorque = "PTO Torque";
 			public const string EngineSpeedFull = "Engine Speed";

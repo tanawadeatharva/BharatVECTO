@@ -180,12 +180,12 @@ namespace TUGraz.VectoCore.InputData.FileIO.JSON
 			}
 		}
 
-		double IAngledriveInputData.IAngledriveInputData_Ratio
+		double IAngledriveInputData.Ratio
 		{
 			get { return Body.GetEx(JsonKeys.Vehicle_Angledrive).GetEx<double>(JsonKeys.Vehicle_Angledrive_Ratio); }
 		}
 
-		TableData IAngledriveInputData.IAngledriveInputData_LossMap
+		TableData IAngledriveInputData.LossMap
 		{
 			get
 			{

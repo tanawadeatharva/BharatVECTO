@@ -191,17 +191,17 @@ namespace TUGraz.VectoCore.InputData.Reader.DataObjectAdapter
 							DigestValue = data.DigestValue,
 							IntegrityStatus = data.IntegrityStatus,
 							Type = type,
-							Angledrive = new TransmissionData { Ratio = data.IAngledriveInputData_Ratio }
+							Angledrive = new TransmissionData { Ratio = data.Ratio }
 						};
 						try {
-							angledriveData.Angledrive.LossMap = TransmissionLossMapReader.Create(data.IAngledriveInputData_LossMap,
-								data.IAngledriveInputData_Ratio, "Angledrive");
+							angledriveData.Angledrive.LossMap = TransmissionLossMapReader.Create(data.LossMap,
+								data.Ratio, "Angledrive");
 						} catch (VectoException ex) {
 							Log.Info("Angledrive Loss Map not found.");
 							if (useEfficiencyFallback) {
 								Log.Info("Angledrive Trying with Efficiency instead of Loss Map.");
 								angledriveData.Angledrive.LossMap = TransmissionLossMapReader.Create(data.Efficiency,
-									data.IAngledriveInputData_Ratio, "Angledrive");
+									data.Ratio, "Angledrive");
 							} else {
 								throw new VectoException("Angledrive: LossMap not found.", ex);
 							}

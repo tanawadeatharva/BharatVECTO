@@ -69,7 +69,7 @@ namespace TUGraz.VectoCore.Models.Declaration
 			return _offset - _scaling * _vTarget.Lookup(targetVelocity) * _vDrop.Lookup(velocityDrop);
 		}
 
-		private sealed class LACDecisionFactorVdrop : LookupData<MeterPerSecond, double>
+		public sealed class LACDecisionFactorVdrop : LookupData<MeterPerSecond, double>
 		{
 			protected override string ResourceId
 			{
@@ -116,14 +116,14 @@ namespace TUGraz.VectoCore.Models.Declaration
 				}
 			}
 
-			private static class Fields
+			public static class Fields
 			{
 				public const string DecisionFactor = "decision_factor";
 				public const string VelocityDrop = "v_drop";
 			}
 		}
 
-		private sealed class LACDecisionFactorVTarget : LookupData<MeterPerSecond, double>
+		public sealed class LACDecisionFactorVTarget : LookupData<MeterPerSecond, double>
 		{
 			protected override string ResourceId
 			{
@@ -170,7 +170,7 @@ namespace TUGraz.VectoCore.Models.Declaration
 				}
 			}
 
-			private static class Fields
+			public static class Fields
 			{
 				public const string TargetVelocity = "v_target";
 				public const string DecisionFactor = "decision_factor";

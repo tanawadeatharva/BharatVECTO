@@ -145,12 +145,12 @@ namespace TUGraz.VectoCommon.InputData
 		/// <summary>
 		/// P176
 		/// </summary>
-		double IAngledriveInputData_Ratio { get; }
+		double Ratio { get; }
 
 		/// <summary>
 		/// P173, P174, P175
 		/// </summary>
-		TableData IAngledriveInputData_LossMap { get; }
+		TableData LossMap { get; }
 
 		/// <summary>
 		/// P177

@@ -437,9 +437,23 @@ Public Class Vehicle
 		End Get
 	End Property
 
-	Public ReadOnly Property IAngledriveInputData_Ratio As Double Implements IAngledriveInputData.IAngledriveInputData_Ratio
+	Public ReadOnly Property IRetarderInputData_Ratio As Double Implements IRetarderInputData.Ratio
+		Get
+
+			Return RetarderRatio
+		End Get
+	End Property
+
+	Public ReadOnly Property Ratio As Double Implements IAngledriveInputData.Ratio
 		Get
 			Return AngledriveRatio
+		End Get
+	End Property
+
+	Public ReadOnly Property IRetarderInputData_LossMap As TableData Implements IRetarderInputData.LossMap
+		Get
+
+			Return VectoCSVFile.Read(RetarderLossMapFile.FullPath)
 		End Get
 	End Property
 
@@ -449,23 +463,13 @@ Public Class Vehicle
 		End Get
 	End Property
 
-	Public ReadOnly Property Ratio As Double Implements IRetarderInputData.Ratio
-		Get
-			Return RetarderRatio
-		End Get
-	End Property
 
-	Public ReadOnly Property IAngledriveInputData_LossMap As TableData Implements IAngledriveInputData.IAngledriveInputData_LossMap
+	Public ReadOnly Property LossMap As TableData Implements IAngledriveInputData.LossMap
 		Get
 			Return VectoCSVFile.Read(AngledriveLossMapFile.FullPath)
 		End Get
 	End Property
 
-	Public ReadOnly Property LossMap As TableData Implements IRetarderInputData.LossMap
-		Get
-			Return VectoCSVFile.Read(RetarderLossMapFile.FullPath)
-		End Get
-	End Property
 
 	Public ReadOnly Property Efficiency As Double Implements IAngledriveInputData.Efficiency
 		Get
@@ -477,20 +481,20 @@ Public Class Vehicle
 
 	Public ReadOnly Property PTOTransmissionType As String Implements IPTOTransmissionInputData.PTOTransmissionType
 		Get
-			Return PTOType
+			Return PtoType
 		End Get
 	End Property
 
 	Public ReadOnly Property IPTOTransmissionInputData_PTOCycle As TableData Implements IPTOTransmissionInputData.PTOCycle
 		Get
-			Return VectoCSVFile.Read(PTOCycle.FullPath)
+			Return VectoCSVFile.Read(PtoCycle.FullPath)
 		End Get
 	End Property
 
 	Public ReadOnly Property IPTOTransmissionInputData_PTOLossMap As TableData _
 		Implements IPTOTransmissionInputData.PTOLossMap
 		Get
-			Return VectoCSVFile.Read(PTOLossMap.FullPath)
+			Return VectoCSVFile.Read(PtoLossMap.FullPath)
 		End Get
 	End Property
 End Class

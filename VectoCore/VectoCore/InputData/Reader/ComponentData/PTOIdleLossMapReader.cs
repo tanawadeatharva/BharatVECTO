@@ -54,7 +54,7 @@ namespace TUGraz.VectoCore.InputData.Reader.ComponentData
 				}).OrderBy(e => e.EngineSpeed).ToArray());
 		}
 
-		private static class Fields
+		public static class Fields
 		{
 			/// <summary>
 			///     [rpm]
