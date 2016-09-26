@@ -59,7 +59,7 @@ namespace TUGraz.VectoCore.InputData.Reader.ComponentData
 			/// <summary>
 			///     [rpm]
 			/// </summary>
-			public const string EngineSpeed = "Engine Speed";
+			public const string EngineSpeed = "Engine speed";
 
 			/// <summary>
 			///     [Nm]
