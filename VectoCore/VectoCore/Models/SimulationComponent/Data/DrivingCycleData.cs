@@ -46,6 +46,14 @@ namespace TUGraz.VectoCore.Models.SimulationComponent.Data
 		PTO
 	}
 
+	public static class CycleTypeHelper
+	{
+		public static bool IsDistanceBased(this CycleType type)
+		{
+			return type == CycleType.DistanceBased;
+		}
+	}
+
 	public class DrivingCycleData : SimulationComponentData
 	{
 		internal DrivingCycleData() {}

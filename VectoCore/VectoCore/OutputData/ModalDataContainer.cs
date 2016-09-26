@@ -80,7 +80,7 @@ namespace TUGraz.VectoCore.OutputData
 			_writer = writer;
 
 			_writeEngineOnly = writeEngineOnly;
-			_filters = filters;
+			_filters = filters ?? new IModalDataFilter[0];
 			_addReportResult = addReportResult ?? (x => { });
 
 			Data = new ModalResults();
