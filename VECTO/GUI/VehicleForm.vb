@@ -339,6 +339,7 @@ Public Class VehicleForm
 			End Select
 		End If
 
+		_vehFile = file
 		Dim basePath As String = Path.GetDirectoryName(file)
 		CbCat.SelectedValue = vehicle.VehicleCategory
 		CbAxleConfig.SelectedValue = vehicle.AxleConfiguration
@@ -396,7 +397,7 @@ Public Class VehicleForm
 		VehicleFileBrowser.UpdateHistory(file)
 		Text = GetFilenameWithoutPath(file, True)
 		LbStatus.Text = ""
-		_vehFile = file
+
 		Activate()
 
 		_changed = False
