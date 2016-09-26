@@ -33,14 +33,32 @@ using System;
 using System.Collections.Generic;
 using NUnit.Framework;
 using TUGraz.VectoCommon.Utils;
+using TUGraz.VectoCore.InputData.Reader.ComponentData;
 using TUGraz.VectoCore.Models.SimulationComponent.Data;
 using TUGraz.VectoCore.Tests.Utils;
+using TUGraz.VectoCore.Utils;
 
 namespace TUGraz.VectoCore.Tests.Models.Simulation
 {
 	[TestFixture]
 	public class PTOIdleLossTest
 	{
+		[TestCase]
+		public void PTOLossMapCaseSensitiveTest()
+		{
+			var data = new[] {
+				"0, 0",
+				"10, 100"
+			};
+			var tbl = VectoCSVFile.ReadStream(InputDataHelper.InputDataAsStream("pto torque, engine speed", data));
+
+			var pto = PTOIdleLossMapReader.Create(tbl);
+
+			var loss = pto.GetTorqueLoss(100.RPMtoRad());
+			Assert.AreEqual(10, loss.Value());
+		}
+
+
 		[TestCase]
 		public void PTOIdleLosses_FixPoints()
 		{
