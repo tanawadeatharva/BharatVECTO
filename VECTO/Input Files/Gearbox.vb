@@ -442,11 +442,6 @@ Public Class Gearbox
 		End Get
 	End Property
 
-	Public ReadOnly Property EarlyShiftUp As Boolean Implements IGearboxEngineeringInputData.EarlyShiftUp
-		Get
-			Return ShiftInside
-		End Get
-	End Property
 
 	Public ReadOnly Property TorqueReserve As Double Implements IGearboxEngineeringInputData.TorqueReserve
 		Get
@@ -495,12 +490,6 @@ Public Class Gearbox
 		End Get
 	End Property
 
-	Public ReadOnly Property IGearboxEngineeringInputData_SkipGears As Boolean _
-		Implements IGearboxEngineeringInputData.SkipGears
-		Get
-			Return SkipGears
-		End Get
-	End Property
 
 	Public ReadOnly Property IGearboxEngineeringInputData_StartSpeed As MeterPerSecond _
 		Implements IGearboxEngineeringInputData.StartSpeed

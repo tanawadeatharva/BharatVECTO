@@ -181,8 +181,6 @@ namespace TUGraz.VectoCore.InputData.Reader.DataObjectAdapter
 
 			retVal.Inertia = DeclarationData.Gearbox.Inertia;
 			retVal.TractionInterruption = retVal.Type.TractionInterruption();
-			retVal.SkipGears = retVal.Type.SkipGears();
-			retVal.EarlyShiftUp = retVal.Type.EarlyShiftGears();
 
 			retVal.TorqueReserve = DeclarationData.Gearbox.TorqueReserve;
 			retVal.StartTorqueReserve = DeclarationData.Gearbox.TorqueReserveStart;
@@ -215,7 +213,6 @@ namespace TUGraz.VectoCore.InputData.Reader.DataObjectAdapter
 						ShiftPolygon = shiftPolygon,
 						MaxTorque = gear.MaxTorque,
 						Ratio = gear.Ratio,
-	
 					});
 			}).ToDictionary(kv => kv.Key, kv => kv.Value);
 

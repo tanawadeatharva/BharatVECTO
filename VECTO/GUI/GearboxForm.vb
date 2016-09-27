@@ -266,13 +266,11 @@ Public Class GearboxForm
 												If(gear.MaxTorque Is Nothing, "", gear.MaxTorque.ToGUIFormat())))
 		Next
 
-		ChSkipGears.Checked = gearbox.SkipGears
 		TbTqResv.Text = gearbox.TorqueReserve.ToGUIFormat()
 		TbShiftTime.Text = gearbox.ShiftTime.ToGUIFormat()
 		TbTqResvStart.Text = gearbox.StartTorqueReserve.ToGUIFormat()
 		TbStartSpeed.Text = gearbox.StartSpeed.ToGUIFormat()
 		TbStartAcc.Text = gearbox.StartAcceleration.ToGUIFormat()
-		ChShiftInside.Checked = gearbox.EarlyShiftUp
 
 		Dim torqueConverter As ITorqueConverterEngineeringInputData = gearbox.TorqueConverter
 		If torqueConverter Is Nothing Then
@@ -358,12 +356,10 @@ Public Class GearboxForm
 		Next
 
 		gearbox.TorqueResv = TbTqResv.Text.ToDouble(0)
-		gearbox.SkipGears = ChSkipGears.Checked
 		gearbox.ShiftTime = TbShiftTime.Text.ToDouble(0)
 		gearbox.TorqueResvStart = TbTqResvStart.Text.ToDouble(0)
 		gearbox.StartSpeed = TbStartSpeed.Text.ToDouble(0)
 		gearbox.StartAcc = TbStartAcc.Text.ToDouble(0)
-		gearbox.ShiftInside = ChShiftInside.Checked
 
 		gearbox.Type = CType(CbGStype.SelectedValue, GearboxType)
 
@@ -442,18 +438,6 @@ Public Class GearboxForm
 		Change()
 	End Sub
 
-	Private Sub ChSkipGears_CheckedChanged(sender As Object, e As EventArgs) _
-		Handles ChSkipGears.CheckedChanged
-		CheckEnableTorqRes()
-		Change()
-	End Sub
-
-	Private Sub ChShiftInside_CheckedChanged(sender As Object, e As EventArgs) _
-		Handles ChShiftInside.CheckedChanged
-		CheckEnableTorqRes()
-		Change()
-	End Sub
-
 	Private Sub TbTqResv_TextChanged(sender As Object, e As EventArgs) Handles TbTqResv.TextChanged
 		Change()
 	End Sub
@@ -487,15 +471,6 @@ Public Class GearboxForm
 	End Sub
 
 
-	Private Sub CheckEnableTorqRes()
-		If ChShiftInside.Checked Or ChSkipGears.Checked Then
-			PnTorqRes.Enabled = True
-		Else
-			PnTorqRes.Enabled = False
-		End If
-	End Sub
-
-
 #End Region
 
 	'Save and close
@@ -515,8 +490,6 @@ Public Class GearboxForm
 
 		Change()
 
-		ChShiftInside.Enabled = (gStype.EarlyShiftGears())
-		ChSkipGears.Enabled = (gStype.SkipGears())
 		'ChTCon.Enabled = (GStype.AutomaticTransmission())
 		PnTC.Enabled = gStype.AutomaticTransmission()
 	End Sub
