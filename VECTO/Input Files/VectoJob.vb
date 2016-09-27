@@ -156,6 +156,9 @@ Public Class VectoJob
 												}))
 		End If
 
+		If Not Cfg.DeclMode Then
+			body.Add("Padd", AuxPAdd)
+		End If
 		body.Add("VACC", _driverAccelerationFile.PathOrDummy)
 		body.Add("EngineOnlyMode", EngineOnly)
 		body.Add("StartStop", New Dictionary(Of String, Object) From {
@@ -894,6 +897,9 @@ Public Class VectoJob
 			Return Path.GetFileNameWithoutExtension(FilePath)
 		End Get
 	End Property
+
+	Public Property AuxPAdd As Double
+
 
 #End Region
 End Class

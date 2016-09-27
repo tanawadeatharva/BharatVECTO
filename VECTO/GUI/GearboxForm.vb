@@ -244,13 +244,24 @@ Public Class GearboxForm
 
 		LvGears.Items.Clear()
 
-		LvGears.Items.Add(CreateListviewItem("Axle", axlegear.Ratio,
-											If(axlegear.LossMap Is Nothing, axlegear.Efficiency.ToGUIFormat(),
-												GetRelativePath(axlegear.LossMap.Source, basePath)), "", ""))
+		Dim lossmap As String = ""
+		Try
+			lossmap = If(axlegear.LossMap Is Nothing, axlegear.Efficiency.ToGUIFormat(),
+						GetRelativePath(axlegear.LossMap.Source, basePath))
+		Catch ex As Exception
+		End Try
+
+		LvGears.Items.Add(CreateListviewItem("Axle", axlegear.Ratio, lossmap, "", ""))
 
 		For Each gear As ITransmissionInputData In gearbox.Gears
+			lossmap = ""
+			Try
+				lossmap = If(gear.LossMap Is Nothing, gear.Efficiency.ToGUIFormat(), GetRelativePath(gear.LossMap.Source, basePath))
+			Catch ex As Exception
+
+			End Try
 			LvGears.Items.Add(CreateListviewItem(gear.Gear.ToString("00"), gear.Ratio,
-												If(gear.LossMap Is Nothing, gear.Efficiency.ToGUIFormat(), gear.LossMap.Source),
+												lossmap,
 												If(gear.ShiftPolygon Is Nothing, "", GetRelativePath(gear.ShiftPolygon.Source, basePath)),
 												If(gear.MaxTorque Is Nothing, "", gear.MaxTorque.ToGUIFormat())))
 		Next

@@ -260,7 +260,7 @@ namespace TUGraz.VectoCore.InputData.FileIO.JSON
 				LossMap =
 					gear[JsonKeys.Gearbox_Gear_LossMapFile] != null
 						? ReadTableData(gear.GetEx<string>(JsonKeys.Gearbox_Gear_LossMapFile),
-							string.Format("Gear {0} LossMap", gearNumber))
+							string.Format("Gear {0} LossMap", gearNumber), false)
 						: null,
 				Efficiency = gear[JsonKeys.Gearbox_Gear_Efficiency] != null
 					? gear[JsonKeys.Gearbox_Gear_Efficiency].Value<double>()

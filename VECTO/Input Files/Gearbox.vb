@@ -394,7 +394,7 @@ Public Class Gearbox
 						.Ratio = GearRatios(i)
 						}
 				If File.Exists(GearshiftFiles(i).OriginalPath) Then
-					gearDict.ShiftPolygon = VectoCSVFile.Read(GearshiftFiles(i).OriginalPath)
+					gearDict.ShiftPolygon = VectoCSVFile.Read(GearshiftFiles(i).FullPath)
 				End If
 				If Not String.IsNullOrWhiteSpace(MaxTorque(i)) AndAlso IsNumeric(MaxTorque(i)) Then
 					gearDict.MaxTorque = MaxTorque(i).ToDouble().SI(Of NewtonMeter)()
@@ -402,7 +402,7 @@ Public Class Gearbox
 				If IsNumeric(GearLossMap(i, True)) Then
 					gearDict.Efficiency = GearLossMap(i, True).ToDouble()
 				Else
-					gearDict.LossMap = VectoCSVFile.Read(GearLossmaps(i).PathOrDummy)
+					gearDict.LossMap = VectoCSVFile.Read(GearLossmaps(i).FullPath)
 				End If
 
 				ls.Add(gearDict)

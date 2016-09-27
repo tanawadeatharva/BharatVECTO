@@ -72,6 +72,7 @@ Public Class VectoJobForm
 		Else
 			LvAux.Columns(2).Text = "Input File"
 		End If
+		TbAuxPAdd.Enabled = Not Cfg.DeclMode
 
 		CbEngOnly.Enabled = Not Cfg.DeclMode
 		GrCycles.Enabled = Not Cfg.DeclMode
@@ -119,7 +120,7 @@ Public Class VectoJobForm
 		TbUnderSpeed.Text = DeclarationData.Driver.OverSpeedEcoRoll.UnderSpeed.AsKmph.ToGUIFormat() _
 		' cDeclaration.Underspeed
 		TbVmin.Text = DeclarationData.Driver.OverSpeedEcoRoll.MinSpeed.AsKmph.ToGUIFormat()	 'cDeclaration.ECvmin
-
+		TbAuxPAdd.Text = ""
 		If _
 			LvAux.Items.Count <> 5 OrElse
 			(LvAux.Items(0).Text <> VectoCore.Configuration.Constants.Auxiliaries.IDs.Fan OrElse
@@ -412,11 +413,15 @@ Public Class VectoJobForm
 			LvAux.Items.Clear()
 			Dim entry As IAuxiliaryDeclarationInputData
 			For Each entry In auxInput.Auxiliaries
-				Dim lv0 As ListViewItem = New ListViewItem
-				lv0.SubItems(0).Text = AuxiliaryTypeHelper.GetAuxKey(entry.Type)
-				lv0.SubItems.Add(AuxiliaryTypeHelper.ToString(entry.Type))
-				lv0.SubItems.Add(String.Join(", ", entry.Technology))
-				LvAux.Items.Add(lv0)
+				'If entry.AuxiliaryType = AuxiliaryDemandType.Constant Then Continue For
+				Try
+					Dim lv0 As ListViewItem = New ListViewItem
+					lv0.SubItems(0).Text = AuxiliaryTypeHelper.GetAuxKey(entry.Type)
+					lv0.SubItems.Add(AuxiliaryTypeHelper.ToString(entry.Type))
+					lv0.SubItems.Add(String.Join(", ", entry.Technology))
+					LvAux.Items.Add(lv0)
+				Catch ex As Exception
+				End Try
 			Next
 		Else
 			'VACC
@@ -440,6 +445,11 @@ Public Class VectoJobForm
 
 			LvAux.Items.Clear()
 			For Each entry As IAuxiliaryEngineeringInputData In auxInput.Auxiliaries
+				If entry.AuxiliaryType = AuxiliaryDemandType.Constant Then
+					TbAuxPAdd.Text = entry.ConstantPowerDemand.ToGUIFormat()
+					Continue For
+				End If
+
 				Dim lv0 As ListViewItem = New ListViewItem
 				lv0.SubItems(0).Text = entry.ID
 				lv0.SubItems.Add(entry.AuxiliaryType.ToString())
@@ -576,6 +586,7 @@ Public Class VectoJobForm
 			auxEntry.Type = lv0.SubItems(1).Text
 			vectoJob.AuxPaths.Add(lv0.SubItems(0).Text, auxEntry)
 		Next
+		vectoJob.AuxPAdd = TbAuxPAdd.Text.ToDouble(0)
 
 		vectoJob.EngineOnly = CbEngOnly.Checked
 
