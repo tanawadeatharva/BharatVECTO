@@ -358,12 +358,6 @@ Public Class VehicleForm
 		TbRtRatio.Text = retarder.Ratio.ToGUIFormat()
 		TbRtPath.Text = If(retarder.LossMap Is Nothing, "", GetRelativePath(retarder.LossMap.Source, basePath))
 
-
-		cbAngledriveType.SelectedValue = angledrive.Type
-		tbAngledriveRatio.Text = angledrive.Ratio.ToGUIFormat()
-		tbAngledriveLossMapPath.Text =
-			If(angledrive.LossMap Is Nothing, "", GetRelativePath(angledrive.LossMap.Source, basePath))
-
 		LvRRC.Items.Clear()
 		Dim i As Integer = 0
 		Dim a0 As IAxleEngineeringInputData
@@ -391,6 +385,11 @@ Public Class VehicleForm
 		cbPTOType.SelectedValue = pto.PTOTransmissionType
 		tbPTOLossMap.Text = If(pto.PTOLossMap Is Nothing, "", GetRelativePath(pto.PTOLossMap.Source, basePath))
 		tbPTOCycle.Text = If(pto.PTOCycle Is Nothing, "", GetRelativePath(pto.PTOCycle.Source, basePath))
+
+		cbAngledriveType.SelectedValue = angledrive.Type
+		tbAngledriveRatio.Text = angledrive.Ratio.ToGUIFormat()
+		tbAngledriveLossMapPath.Text =
+			If(angledrive.LossMap Is Nothing, "", GetRelativePath(angledrive.LossMap.Source, basePath))
 
 		DeclInit()
 
