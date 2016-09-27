@@ -118,7 +118,7 @@ namespace TUGraz.VectoCommon.Models
 					return 1.SI<Second>();
 				case GearboxType.ATSerial:
 				case GearboxType.ATPowerSplit:
-					return 0.8.SI<Second>();
+					return 0.0.SI<Second>();
 			}
 			return 0.SI<Second>();
 		}

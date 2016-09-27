@@ -449,13 +449,15 @@ Public Class VectoJobForm
 
 		End If
 
-		Dim sb As ICycleData
-		For Each sb In vectoJob.Cycles
-			Dim lv0 As ListViewItem = New ListViewItem
-			lv0.Text = GetRelativePath(sb.CycleData.Source, Path.GetDirectoryName(Path.GetFullPath(file))) 'sb.Name
-			LvCycles.Items.Add(lv0)
-		Next
-
+		Try
+			Dim sb As ICycleData
+			For Each sb In vectoJob.Cycles
+				Dim lv0 As ListViewItem = New ListViewItem
+				lv0.Text = GetRelativePath(sb.CycleData.Source, Path.GetDirectoryName(Path.GetFullPath(file))) 'sb.Name
+				LvCycles.Items.Add(lv0)
+			Next
+		Catch ex As Exception
+		End Try
 		CbEngOnly.Checked = vectoJob.EngineOnlyMode
 
 		If driver.OverSpeedEcoRoll.Mode = DriverMode.EcoRoll Then
