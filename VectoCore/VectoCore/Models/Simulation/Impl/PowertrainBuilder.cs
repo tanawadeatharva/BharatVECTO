@@ -104,7 +104,7 @@ namespace TUGraz.VectoCore.Models.Simulation.Impl
 			}
 
 			var container = new VehicleContainer(ExecutionMode.Engineering, _modData, _sumWriter) { RunData = data };
-			var gearbox = new CycleGearbox(container, data.GearboxData);
+			var gearbox = new CycleGearbox(container, data.GearboxData, data.EngineData.Inertia);
 
 			// PWheelCycle --> AxleGear --> CycleClutch --> Engine <-- Aux
 			var powertrain = new PWheelCycle(container, data.Cycle, data.AxleGearData.AxleGear.Ratio,
@@ -170,12 +170,14 @@ namespace TUGraz.VectoCore.Models.Simulation.Impl
 				.AddComponent(new Brakes(container))
 				.AddComponent(new AxleGear(container, data.AxleGearData))
 				.AddComponent(data.AngledriveData != null ? new Angledrive(container, data.AngledriveData) : null)
-				.AddComponent(GetGearbox(container, data.GearboxData, data.EngineData.Inertia), data.Retarder, data.PTO, container);
+				.AddComponent(new CycleGearbox(container, data.GearboxData, data.EngineData.Inertia));
 			if (data.GearboxData.Type.ManualTransmission()) {
 				powertrain = powertrain.AddComponent(new Clutch(container, data.EngineData));
 			}
 			powertrain.AddComponent(new CombustionEngine(container, data.EngineData))
 				.AddAuxiliaries(container, data);
+
+			_modData.HasTorqueConverter = data.GearboxData.Type.AutomaticTransmission();
 
 			return container;
 		}
