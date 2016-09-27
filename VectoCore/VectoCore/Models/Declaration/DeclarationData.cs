@@ -89,12 +89,6 @@ namespace TUGraz.VectoCore.Models.Declaration
 			get { return Instance()._electricSystem ?? (Instance()._electricSystem = new ElectricSystem()); }
 		}
 
-		public static Meter DynamicTyreRadius(string wheels)
-		{
-			var wheelsEntry = Wheels.Lookup(wheels.RemoveWhitespace());
-			return wheelsEntry.DynamicTyreRadius * wheelsEntry.CircumferenceFactor / (2 * Math.PI);
-		}
-
 		/// <summary>
 		/// Formula for calculating the payload for a given gross vehicle weight.
 		/// (so called "pc-formula", Whitebook Apr 2016, Part 1, p.187)
