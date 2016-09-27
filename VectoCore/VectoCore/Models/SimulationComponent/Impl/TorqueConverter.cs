@@ -19,7 +19,7 @@ namespace TUGraz.VectoCore.Models.SimulationComponent.Impl
 		protected readonly IShiftStrategy ShiftStrategy;
 
 		protected TorqueConverterData ModelData;
-		private KilogramSquareMeter EngineInertia;
+		private readonly KilogramSquareMeter _engineInertia;
 
 		//protected bool SearchingTcOperatingPoint;
 
@@ -31,7 +31,7 @@ namespace TUGraz.VectoCore.Models.SimulationComponent.Impl
 			Gearbox = gearbox;
 			ShiftStrategy = shiftStrategy;
 			ModelData = tcData;
-			EngineInertia = engineInertia;
+			_engineInertia = engineInertia;
 		}
 
 		public void Connect(ITnOutPort other)
@@ -58,23 +58,11 @@ namespace TUGraz.VectoCore.Models.SimulationComponent.Impl
 					(ResponseDryRun)NextComponent.Request(absTime, dt, dryOperatingPoint.InTorque, dryOperatingPoint.InAngularVelocity,
 						true);
 
-				//var dryOperatingPoint = FindOperatingPoint(outTorque, outAngularVelocity);
 				var deltaTorqueConverter = (outTorque - dryOperatingPoint.OutTorque) *
 											(PreviousState.OutAngularVelocity + dryOperatingPoint.OutAngularVelocity) / 2.0;
-				//// operatingPoint.inAngularVelocity is for sure between engine idle speed and max TC speed
-				//var engineResponse =
-				//	(ResponseDryRun)NextComponent.Request(absTime, dt, dryOperatingPoint.InTorque, dryOperatingPoint.InAngularVelocity,
-				//		true);
+
 				var deltaEngine = (engineResponse.DeltaFullLoad > 0 ? engineResponse.DeltaFullLoad : 0.SI<Watt>()) +
 								(engineResponse.DeltaDragLoad < 0 ? -engineResponse.DeltaDragLoad : 0.SI<Watt>());
-				//if (deltaTorqueConverter.IsEqual(0) && deltaEngine.IsEqual(0)) {
-				//	return new ResponseDryRun {
-				//		Source = this,
-				//		DeltaFullLoad = 0.SI<Watt>(),
-				//		DeltaDragLoad = 0.SI<Watt>(),
-				//		TorqueConverterOperatingPoint = dryOperatingPoint
-				//	};
-				//}
 
 				dryOperatingPoint = outTorque.IsGreater(0) && DataBus.BrakePower.IsEqual(0)
 					? GetMaxPowerOperatingPoint(dt, outAngularVelocity, engineResponse)
@@ -82,14 +70,7 @@ namespace TUGraz.VectoCore.Models.SimulationComponent.Impl
 				engineResponse = (ResponseDryRun)NextComponent.Request(absTime, dt, dryOperatingPoint.InTorque,
 					dryOperatingPoint.InAngularVelocity, true);
 
-				//if (engineResponse.DeltaFullLoad > 0 || engineResponse.DeltaDragLoad < 0)
-				//{
-				//	// engine is overloaded with current operating point, reduce torque...
-				//	dryOperatingPoint =
-				//		ModelData.GetOutTorqueAndSpeed(
-				//			outTorque > 0 ? engineResponse.EngineMaxTorqueOut : engineResponse.EngineDragTorque,
-				//			dryOperatingPoint.InAngularVelocity, null);
-				//}
+
 				var delta = (outTorque - dryOperatingPoint.OutTorque) *
 							(PreviousState.OutAngularVelocity + dryOperatingPoint.OutAngularVelocity) / 2.0;
 				//deltaTorqueConverter.Value() * (deltaEngine.IsEqual(0) ? 1 : deltaEngine.Value());
@@ -134,7 +115,7 @@ namespace TUGraz.VectoCore.Models.SimulationComponent.Impl
 			try {
 				var operatingPoint =
 					ModelData.FindOperatingPointForPowerDemand(engineResponse.DragPower - engineResponse.AuxiliariesPowerDemand,
-						DataBus.EngineSpeed, outAngularVelocity, EngineInertia, dt);
+						DataBus.EngineSpeed, outAngularVelocity, _engineInertia, dt);
 				if (operatingPoint.InAngularVelocity.IsGreater(DataBus.EngineRatedSpeed)) {
 					operatingPoint = ModelData.FindOperatingPoint(DataBus.EngineRatedSpeed, outAngularVelocity);
 				}
@@ -154,8 +135,9 @@ namespace TUGraz.VectoCore.Models.SimulationComponent.Impl
 		{
 			try {
 				var operatingPoint =
-					ModelData.FindOperatingPointForPowerDemand(engineResponse.DynamicFullLoadPower - engineResponse.AuxiliariesPowerDemand,
-						DataBus.EngineSpeed, outAngularVelocity, EngineInertia, dt);
+					ModelData.FindOperatingPointForPowerDemand(
+						engineResponse.DynamicFullLoadPower - engineResponse.AuxiliariesPowerDemand,
+						DataBus.EngineSpeed, outAngularVelocity, _engineInertia, dt);
 				if (operatingPoint.InAngularVelocity.IsGreater(DataBus.EngineRatedSpeed)) {
 					operatingPoint = ModelData.FindOperatingPoint(DataBus.EngineRatedSpeed, outAngularVelocity);
 				}
