@@ -260,6 +260,10 @@ namespace TUGraz.VectoCore.Models.SimulationComponent.Impl
 			container[ModalResultField.v_targ] = CurrentState.VehicleTargetSpeed;
 			container[ModalResultField.grad] = (Math.Tan(CurrentState.Gradient.Value()) * 100).SI<Scalar>();
 			container[ModalResultField.altitude] = CurrentState.Altitude;
+
+			if (IdleController != null) {
+				IdleController.CommitSimulationStep(container);
+			}
 		}
 
 		protected override void DoCommitSimulationStep()
@@ -272,9 +276,6 @@ namespace TUGraz.VectoCore.Models.SimulationComponent.Impl
 			CurrentState = CurrentState.Clone();
 			_intervalProlonged = false;
 
-			if (IdleController != null) {
-				IdleController.CommitSimulationStep();
-			}
 			var stopTime = Left.PTOActive && IdleController != null
 				? Left.StoppingTime + IdleController.Duration
 				: Left.StoppingTime;

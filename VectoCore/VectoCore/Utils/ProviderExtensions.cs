@@ -31,6 +31,7 @@
 
 using System;
 using TUGraz.VectoCommon.Models;
+using TUGraz.VectoCommon.Utils;
 using TUGraz.VectoCore.InputData.Reader;
 using TUGraz.VectoCore.Models.Connector.Ports;
 using TUGraz.VectoCore.Models.Declaration;
@@ -118,8 +119,10 @@ namespace TUGraz.VectoCore.Utils
 		{
 			if (pto != null) {
 				var aux = new GearboxAuxiliary(container);
-				aux.AddConstant("PTO_TRANSM", DeclarationData.PTOTransmission.Lookup(pto.TransmissionType));
-				aux.Add("PTO_IDLE", n => pto.LossMap.GetTorqueLoss(n) * n);
+				var power = DeclarationData.PTOTransmission.Lookup(pto.TransmissionType);
+				aux.Add("PTO_TRANSM", _ => power);
+				aux.Add("PTO_CONSUMER", n => pto.LossMap.GetTorqueLoss(n) * n);
+				gearbox.Connect(aux);
 			}
 
 			switch (data.Type) {

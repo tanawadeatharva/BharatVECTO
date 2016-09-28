@@ -2,6 +2,8 @@
 using TUGraz.VectoCommon.Models;
 using TUGraz.VectoCommon.Utils;
 using TUGraz.VectoCore.Models.Connector.Ports;
+using TUGraz.VectoCore.Models.Simulation;
+using TUGraz.VectoCore.OutputData;
 
 namespace TUGraz.VectoCore.Models.SimulationComponent.Impl
 {
@@ -62,9 +64,9 @@ namespace TUGraz.VectoCore.Models.SimulationComponent.Impl
 			return _ptoController.GetNextCycleTime();
 		}
 
-		public void CommitSimulationStep()
+		public void CommitSimulationStep(IModalDataContainer container)
 		{
-			_ptoController.CommitSimulationStep(null);
+			_ptoController.CommitSimulationStep(container);
 		}
 
 		public Second Duration

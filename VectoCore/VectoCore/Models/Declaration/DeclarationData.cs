@@ -197,7 +197,6 @@ namespace TUGraz.VectoCore.Models.Declaration
 				public const double DecisionFactorCoastingScaling = 1.5;
 				public const double LookAheadDistanceFactor = 10;
 				public static readonly MeterPerSecond MinimumSpeed = 50.KMPHtoMeterPerSecond();
-
 			}
 
 			public static class OverSpeedEcoRoll
@@ -371,7 +370,7 @@ namespace TUGraz.VectoCore.Models.Declaration
 					fullLoadCurve.TakeWhile(fldEntry => fldEntry.EngineSpeed < rpmLimit)
 						.Select(
 							fldEntry =>
-								new Point(fldEntry.EngineSpeed.Value(), fldEntry.TorqueFullLoad.Value() * ShiftPolygonEngineFldMargin))
+									new Point(fldEntry.EngineSpeed.Value(), fldEntry.TorqueFullLoad.Value() * ShiftPolygonEngineFldMargin))
 						.ToList();
 			}
 
@@ -449,14 +448,5 @@ namespace TUGraz.VectoCore.Models.Declaration
 				return pointSet;
 			}
 		}
-
-		//public static IEnumerable<string> AuxiliaryIDs()
-		//{
-		//	return new[] {
-		//		Constants.Auxiliaries.IDs.Fan, Constants.Auxiliaries.IDs.SteeringPump,
-		//		Constants.Auxiliaries.IDs.HeatingVentilationAirCondition, Constants.Auxiliaries.IDs.ElectricSystem,
-		//		Constants.Auxiliaries.IDs.PneumaticSystem
-		//	};
-		//}
 	}
 }

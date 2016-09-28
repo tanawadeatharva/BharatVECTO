@@ -162,6 +162,8 @@ namespace TUGraz.VectoCore.OutputData
 					ModalResultField.P_brake_loss,
 					ModalResultField.P_wheel_in,
 					ModalResultField.P_wheel_inertia,
+					ModalResultField.P_PTO_transm,
+					ModalResultField.P_PTO_consum,
 					ModalResultField.P_trac,
 					ModalResultField.P_slope,
 					ModalResultField.P_air,

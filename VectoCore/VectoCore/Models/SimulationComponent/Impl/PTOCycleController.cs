@@ -4,7 +4,9 @@ using TUGraz.VectoCommon.Models;
 using TUGraz.VectoCommon.Utils;
 using TUGraz.VectoCore.Models.Connector.Ports;
 using TUGraz.VectoCore.Models.Connector.Ports.Impl;
+using TUGraz.VectoCore.Models.Simulation.Data;
 using TUGraz.VectoCore.Models.SimulationComponent.Data;
+using TUGraz.VectoCore.OutputData;
 
 namespace TUGraz.VectoCore.Models.SimulationComponent.Impl
 {
@@ -62,6 +64,12 @@ namespace TUGraz.VectoCore.Models.SimulationComponent.Impl
 				return null;
 
 			return RightSample.Current.Time - LeftSample.Current.Time;
+		}
+
+		protected override void DoWriteModalResults(IModalDataContainer container)
+		{
+			base.DoWriteModalResults(container);
+			container[ModalResultField.P_PTO_consum] = CurrentState.InTorque * CurrentState.InAngularVelocity;
 		}
 	}
 }

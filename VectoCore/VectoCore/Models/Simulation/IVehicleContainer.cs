@@ -55,6 +55,8 @@ namespace TUGraz.VectoCore.Models.Simulation
 
 		VectoRun.Status RunStatus { get; set; }
 
+		Second AbsTime { get; set; }
+
 		/// <summary>
 		/// Adds a component to the vehicle container.
 		/// </summary>

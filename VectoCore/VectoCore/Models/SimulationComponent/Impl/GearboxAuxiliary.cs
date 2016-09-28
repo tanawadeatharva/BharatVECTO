@@ -1,4 +1,7 @@
+using System;
+using TUGraz.VectoCommon.Utils;
 using TUGraz.VectoCore.Models.Simulation;
+using TUGraz.VectoCore.Models.Simulation.Data;
 using TUGraz.VectoCore.OutputData;
 
 namespace TUGraz.VectoCore.Models.SimulationComponent.Impl
@@ -9,7 +12,18 @@ namespace TUGraz.VectoCore.Models.SimulationComponent.Impl
 
 		protected override void DoWriteModalResults(IModalDataContainer container)
 		{
-			//todo mk-2016-08-17: write gearbox auxiliaries to mod file?
+			if (CurrentState.PowerDemands != null) {
+				if (CurrentState.PowerDemands.ContainsKey("PTO_TRANSM"))
+					container[ModalResultField.P_PTO_transm] = CurrentState.PowerDemands["PTO_TRANSM"];
+
+				if (CurrentState.PowerDemands.ContainsKey("PTO_CONSUMER"))
+					container[ModalResultField.P_PTO_consum] = CurrentState.PowerDemands["PTO_CONSUMER"];
+			} else {
+				container[ModalResultField.P_PTO_transm] = 0.SI<Watt>();
+
+				if (container[ModalResultField.P_PTO_consum] == null || container[ModalResultField.P_PTO_consum] == DBNull.Value)
+					container[ModalResultField.P_PTO_consum] = 0.SI<Watt>();
+			}
 		}
 	}
 }

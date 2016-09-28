@@ -285,6 +285,9 @@ namespace TUGraz.VectoCore.Models.Simulation.Data
 		/// </summary>
 		[ModalResultField(typeof(SI), caption: "P_wheel_in [kW]", outputFactor: 1e-3)] P_wheel_in,
 
+		[ModalResultField(typeof(SI), caption: "P_PTO_transm [kW]", outputFactor: 1e-3)] P_PTO_transm,
+		[ModalResultField(typeof(SI), caption: "P_PTO_consum [kW]", outputFactor: 1e-3)] P_PTO_consum,
+
 		/// <summary>
 		///     [kW]	Brake power. Drag power is included in Pe.
 		/// </summary>

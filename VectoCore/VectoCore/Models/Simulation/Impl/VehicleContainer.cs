@@ -46,7 +46,7 @@ using TUGraz.VectoCore.Utils;
 
 namespace TUGraz.VectoCore.Models.Simulation.Impl
 {
-	public class VehicleContainer : LoggingObject, IVehicleContainer
+	public sealed class VehicleContainer : LoggingObject, IVehicleContainer
 	{
 		private List<Tuple<int, VectoSimulationComponent>> _components =
 			new List<Tuple<int, VectoSimulationComponent>>();
@@ -240,7 +240,9 @@ namespace TUGraz.VectoCore.Models.Simulation.Impl
 			return Cycle;
 		}
 
-		public virtual void AddComponent(VectoSimulationComponent component)
+		public Second AbsTime { get; set; }
+
+		public void AddComponent(VectoSimulationComponent component)
 		{
 			var commitPriority = 0;
 

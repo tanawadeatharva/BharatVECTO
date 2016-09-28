@@ -47,7 +47,7 @@ namespace TUGraz.VectoCore.Models.SimulationComponent.Impl
 	{
 		private const string DirectAuxiliaryId = "";
 
-		private readonly Dictionary<string, Func<PerSecond, Watt>> _auxiliaries =
+		protected readonly Dictionary<string, Func<PerSecond, Watt>> _auxiliaries =
 			new Dictionary<string, Func<PerSecond, Watt>>();
 
 		public EngineAuxiliary(IVehicleContainer container) : base(container) {}
@@ -100,11 +100,15 @@ namespace TUGraz.VectoCore.Models.SimulationComponent.Impl
 			PerSecond angularSpeed, bool dryRun = false)
 		{
 			CurrentState.AngularSpeed = angularSpeed;
-			var avgAngularSpeed = (CurrentState.AngularSpeed + PreviousState.AngularSpeed) / 2.0;
-			return ComputePowerDemand(avgAngularSpeed) / avgAngularSpeed;
+			var avgAngularSpeed = (PreviousState.AngularSpeed != null)
+				? (CurrentState.AngularSpeed + PreviousState.AngularSpeed) / 2.0
+				: CurrentState.AngularSpeed;
+			if (avgAngularSpeed.IsGreater(0))
+				return ComputePowerDemand(avgAngularSpeed) / avgAngularSpeed;
+			return 0.SI<NewtonMeter>();
 		}
 
-		private Watt ComputePowerDemand(PerSecond engineSpeed)
+		protected virtual Watt ComputePowerDemand(PerSecond engineSpeed)
 		{
 			CurrentState.PowerDemands = new Dictionary<string, Watt>(_auxiliaries.Count);
 			CurrentState.TotalPowerDemand = 0.SI<Watt>();
