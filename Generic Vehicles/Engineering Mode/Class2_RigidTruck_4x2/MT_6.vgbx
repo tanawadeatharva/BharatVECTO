@@ -1,12 +1,12 @@
 ﻿{
   "Header": {
     "CreatedBy": " ()",
-    "Date": "2016-09-28T14:58:48.6708857Z",
+    "Date": "2016-09-28T15:49:49.2539134Z",
     "AppVersion": "3",
     "FileVersion": 6
   },
   "Body": {
-    "SavedInDeclMode": true,
+    "SavedInDeclMode": false,
     "ModelName": "Undefined",
     "Inertia": 0.0,
     "TracInt": 2.0,
@@ -18,45 +18,45 @@
       {
         "Ratio": 6.7,
         "LossMap": "Gear_1.vtlm",
-        "ShiftPolygon": "-",
+        "ShiftPolygon": "<NOFILE>",
         "MaxTorque": ""
       },
       {
         "Ratio": 3.8,
         "LossMap": "Gear_2.vtlm",
-        "ShiftPolygon": "-",
+        "ShiftPolygon": "<NOFILE>",
         "MaxTorque": ""
       },
       {
         "Ratio": 2.29,
         "LossMap": "Gear_3.vtlm",
-        "ShiftPolygon": "-",
+        "ShiftPolygon": "<NOFILE>",
         "MaxTorque": ""
       },
       {
         "Ratio": 1.48,
         "LossMap": "Gear_4.vtlm",
-        "ShiftPolygon": "-",
+        "ShiftPolygon": "<NOFILE>",
         "MaxTorque": ""
       },
       {
         "Ratio": 1.0,
         "LossMap": "Gear_5.vtlm",
-        "ShiftPolygon": "-",
+        "ShiftPolygon": "<NOFILE>",
         "MaxTorque": ""
       },
       {
         "Ratio": 0.73,
         "LossMap": "Gear_6.vtlm",
-        "ShiftPolygon": "-",
+        "ShiftPolygon": "<NOFILE>",
         "MaxTorque": ""
       }
     ],
-    "TqReserve": 0.2,
+    "TqReserve": 0.002,
     "SkipGears": false,
     "ShiftTime": 2.0,
     "EaryShiftUp": false,
-    "StartTqReserve": 0.2,
+    "StartTqReserve": 0.002,
     "StartSpeed": 2.0,
     "StartAcc": 0.6,
     "GearboxType": 0,
