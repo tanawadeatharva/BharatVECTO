@@ -135,8 +135,9 @@ namespace TUGraz.VectoCore.InputData.FileIO.JSON
 					throw new VectoSimulationException("At least one Gear-Entry must be defined in Gearbox!");
 				}
 				var lossMap = gears[0][JsonKeys.Gearbox_Gear_LossMapFile];
-				if (lossMap != null)
+				if (lossMap != null) {
 					return ReadTableData(gears[0][JsonKeys.Gearbox_Gear_LossMapFile].Value<string>(), "AxleGear", required: false);
+				}
 				return null;
 			}
 		}
@@ -270,19 +271,9 @@ namespace TUGraz.VectoCore.InputData.FileIO.JSON
 			};
 		}
 
-		public virtual bool SkipGears
-		{
-			get { return Body.GetEx<bool>(JsonKeys.Gearbox_SkipGears); }
-		}
-
 		public virtual Second ShiftTime
 		{
 			get { return Body.GetEx<double>(JsonKeys.Gearbox_ShiftTime).SI<Second>(); }
-		}
-
-		public virtual bool EarlyShiftUp
-		{
-			get { return Body.GetEx<bool>(JsonKeys.Gearbox_EarlyShiftUp); }
 		}
 
 		public virtual double TorqueReserve
