@@ -345,7 +345,7 @@ Public Class GearboxForm
 
 		For i = 0 To LvGears.Items.Count - 1
 			'GBX0.IsTCgear.Add(Me.LvGears.Items(i).SubItems(GearboxTbl.TorqueConverter).Text = "on" And i > 0)
-			gearbox.GearRatios.Add(CSng(LvGears.Items(i).SubItems(GearboxTbl.Ratio).Text))
+			gearbox.GearRatios.Add(LvGears.Items(i).SubItems(GearboxTbl.Ratio).Text.ToDouble(0))
 			gearbox.GearLossmaps.Add(New SubPath)
 			gearbox.GearLossMap(i) = LvGears.Items(i).SubItems(GearboxTbl.LossMapEfficiency).Text
 			gearbox.GearshiftFiles.Add(New SubPath)
