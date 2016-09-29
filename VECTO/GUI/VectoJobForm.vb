@@ -441,7 +441,10 @@ Public Class VectoJobForm
 			Next
 			'AA-TB
 			'Assign any previously saved Axiliary FilePath
-			txtAdvancedAuxiliaryFile.Text = auxInput.AdvancedAuxiliaryFilePath
+			txtAdvancedAuxiliaryFile.Text =
+				If _
+					(IO.File.Exists(auxInput.AdvancedAuxiliaryFilePath), GetRelativePath(auxInput.AdvancedAuxiliaryFilePath, _basePath),
+					"")
 
 			LvAux.Items.Clear()
 			For Each entry As IAuxiliaryEngineeringInputData In auxInput.Auxiliaries
