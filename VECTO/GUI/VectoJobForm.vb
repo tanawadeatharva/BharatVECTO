@@ -14,6 +14,7 @@ Imports System.Collections.Generic
 Imports System.Drawing.Imaging
 Imports System.IO
 Imports System.Linq
+Imports System.Runtime.CompilerServices
 Imports System.Text.RegularExpressions
 Imports System.Windows.Forms.DataVisualization.Charting
 Imports TUGraz.VECTO.Input_Files
@@ -370,9 +371,17 @@ Public Class VectoJobForm
 		VectoNew()
 
 		'Read GEN
-		Dim inputData As IEngineeringInputDataProvider = TryCast(JSONInputDataFactory.ReadComponentData(file), 
-																IEngineeringInputDataProvider)
-		Dim vectoJob As IEngineeringJobInputData = inputData.JobInputData()
+		Dim vectoJob As IEngineeringJobInputData = Nothing
+		Dim inputData As IEngineeringInputDataProvider = Nothing
+		Try
+			inputData = TryCast(JSONInputDataFactory.ReadComponentData(file), 
+								IEngineeringInputDataProvider)
+			vectoJob = inputData.JobInputData()
+		Catch ex As Exception
+			MsgBox("Failed to read Job-File" + Environment.NewLine + ex.Message)
+			Return
+		End Try
+
 
 		If Cfg.DeclMode <> vectoJob.SavedInDeclarationMode Then
 			Select Case WrongMode()
