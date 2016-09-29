@@ -117,7 +117,7 @@ namespace TUGraz.VectoCore.Models.SimulationComponent.Impl
 			}
 			Logger<BusAuxiliariesAdapter>()
 				.Warn("UnServiced Cycle Name '{0}' in Pneumatics Actuations Map 0 Actuations returned", cycleName);
-			return cycle;
+			return cycleName;
 		}
 
 		public IAuxPort Port()
@@ -127,7 +127,7 @@ namespace TUGraz.VectoCore.Models.SimulationComponent.Impl
 
 		public NewtonMeter Initialize(NewtonMeter torque, PerSecond angularSpeed)
 		{
-			PreviousState.TotalFuelConsumption = 0.SI<Kilogram>();
+			//PreviousState.TotalFuelConsumption = 0.SI<Kilogram>();
 			PreviousState.AngularSpeed = angularSpeed;
 			CurrentState.AngularSpeed = angularSpeed;
 			if (AdditionalAux != null) {
@@ -253,7 +253,7 @@ namespace TUGraz.VectoCore.Models.SimulationComponent.Impl
 			Auxiliaries.Signals.PreExistingAuxPower = AdditionalAux != null
 				? AdditionalAux.TorqueDemand(absTime, dt, torquePowerTrain, torqueEngine, angularSpeed, dryRun) * avgAngularSpeed
 				: 0.SI<Watt>();
-			 //mAAUX_Global.PreExistingAuxPower;
+			//mAAUX_Global.PreExistingAuxPower;
 			Auxiliaries.Signals.Idle = DataBus.VehicleStopped;
 			Auxiliaries.Signals.InNeutral = DataBus.Gear == 0;
 			Auxiliaries.Signals.RunningCalc = true;
@@ -281,7 +281,7 @@ namespace TUGraz.VectoCore.Models.SimulationComponent.Impl
 			public Second dt;
 			public PerSecond AngularSpeed;
 			public Watt PowerDemand;
-			public Kilogram TotalFuelConsumption;
+			public Kilogram TotalFuelConsumption = 0.SI<Kilogram>();
 		}
 	}
 }
