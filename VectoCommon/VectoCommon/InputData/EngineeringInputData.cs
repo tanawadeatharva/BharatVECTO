@@ -144,11 +144,11 @@ namespace TUGraz.VectoCommon.InputData
 		/// </summary>
 		Second ShiftTime { get; }
 
-		/// <summary>
-		/// P083
-		/// cf. VECTO Input Parameters.xlsx
-		/// </summary>
-		bool EarlyShiftUp { get; }
+		///// <summary>
+		///// P083
+		///// cf. VECTO Input Parameters.xlsx
+		///// </summary>
+		//bool EarlyShiftUp { get; }
 
 		/// <summary>
 		/// P085
@@ -175,11 +175,11 @@ namespace TUGraz.VectoCommon.InputData
 		/// </summary>
 		double StartTorqueReserve { get; }
 
-		/// <summary>
-		/// P084
-		/// cf. VECTO Input Parameters.xlsx
-		/// </summary>
-		bool SkipGears { get; }
+		///// <summary>
+		///// P084
+		///// cf. VECTO Input Parameters.xlsx
+		///// </summary>
+		//bool SkipGears { get; }
 
 		/// <summary>
 		/// P090, P091, P092, P127

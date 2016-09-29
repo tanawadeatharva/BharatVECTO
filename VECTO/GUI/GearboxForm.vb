@@ -244,24 +244,33 @@ Public Class GearboxForm
 
 		LvGears.Items.Clear()
 
-		LvGears.Items.Add(CreateListviewItem("Axle", axlegear.Ratio,
-											If(axlegear.LossMap Is Nothing, axlegear.Efficiency.ToGUIFormat(),
-												GetRelativePath(axlegear.LossMap.Source, basePath)), "", ""))
+		Dim lossmap As String = ""
+		Try
+			lossmap = If(axlegear.LossMap Is Nothing, axlegear.Efficiency.ToGUIFormat(),
+						GetRelativePath(axlegear.LossMap.Source, basePath))
+		Catch ex As Exception
+		End Try
+
+		LvGears.Items.Add(CreateListviewItem("Axle", axlegear.Ratio, lossmap, "", ""))
 
 		For Each gear As ITransmissionInputData In gearbox.Gears
+			lossmap = ""
+			Try
+				lossmap = If(gear.LossMap Is Nothing, gear.Efficiency.ToGUIFormat(), GetRelativePath(gear.LossMap.Source, basePath))
+			Catch ex As Exception
+
+			End Try
 			LvGears.Items.Add(CreateListviewItem(gear.Gear.ToString("00"), gear.Ratio,
-												If(gear.LossMap Is Nothing, gear.Efficiency.ToGUIFormat(), gear.LossMap.Source),
+												lossmap,
 												If(gear.ShiftPolygon Is Nothing, "", GetRelativePath(gear.ShiftPolygon.Source, basePath)),
 												If(gear.MaxTorque Is Nothing, "", gear.MaxTorque.ToGUIFormat())))
 		Next
 
-		ChSkipGears.Checked = gearbox.SkipGears
 		TbTqResv.Text = gearbox.TorqueReserve.ToGUIFormat()
 		TbShiftTime.Text = gearbox.ShiftTime.ToGUIFormat()
 		TbTqResvStart.Text = gearbox.StartTorqueReserve.ToGUIFormat()
 		TbStartSpeed.Text = gearbox.StartSpeed.ToGUIFormat()
 		TbStartAcc.Text = gearbox.StartAcceleration.ToGUIFormat()
-		ChShiftInside.Checked = gearbox.EarlyShiftUp
 
 		Dim torqueConverter As ITorqueConverterEngineeringInputData = gearbox.TorqueConverter
 		If torqueConverter Is Nothing Then
@@ -336,7 +345,7 @@ Public Class GearboxForm
 
 		For i = 0 To LvGears.Items.Count - 1
 			'GBX0.IsTCgear.Add(Me.LvGears.Items(i).SubItems(GearboxTbl.TorqueConverter).Text = "on" And i > 0)
-			gearbox.GearRatios.Add(CSng(LvGears.Items(i).SubItems(GearboxTbl.Ratio).Text))
+			gearbox.GearRatios.Add(LvGears.Items(i).SubItems(GearboxTbl.Ratio).Text.ToDouble(0))
 			gearbox.GearLossmaps.Add(New SubPath)
 			gearbox.GearLossMap(i) = LvGears.Items(i).SubItems(GearboxTbl.LossMapEfficiency).Text
 			gearbox.GearshiftFiles.Add(New SubPath)
@@ -347,12 +356,10 @@ Public Class GearboxForm
 		Next
 
 		gearbox.TorqueResv = TbTqResv.Text.ToDouble(0)
-		gearbox.SkipGears = ChSkipGears.Checked
 		gearbox.ShiftTime = TbShiftTime.Text.ToDouble(0)
 		gearbox.TorqueResvStart = TbTqResvStart.Text.ToDouble(0)
 		gearbox.StartSpeed = TbStartSpeed.Text.ToDouble(0)
 		gearbox.StartAcc = TbStartAcc.Text.ToDouble(0)
-		gearbox.ShiftInside = ChShiftInside.Checked
 
 		gearbox.Type = CType(CbGStype.SelectedValue, GearboxType)
 
@@ -431,18 +438,6 @@ Public Class GearboxForm
 		Change()
 	End Sub
 
-	Private Sub ChSkipGears_CheckedChanged(sender As Object, e As EventArgs) _
-		Handles ChSkipGears.CheckedChanged
-		CheckEnableTorqRes()
-		Change()
-	End Sub
-
-	Private Sub ChShiftInside_CheckedChanged(sender As Object, e As EventArgs) _
-		Handles ChShiftInside.CheckedChanged
-		CheckEnableTorqRes()
-		Change()
-	End Sub
-
 	Private Sub TbTqResv_TextChanged(sender As Object, e As EventArgs) Handles TbTqResv.TextChanged
 		Change()
 	End Sub
@@ -476,15 +471,6 @@ Public Class GearboxForm
 	End Sub
 
 
-	Private Sub CheckEnableTorqRes()
-		If ChShiftInside.Checked Or ChSkipGears.Checked Then
-			PnTorqRes.Enabled = True
-		Else
-			PnTorqRes.Enabled = False
-		End If
-	End Sub
-
-
 #End Region
 
 	'Save and close
@@ -504,8 +490,6 @@ Public Class GearboxForm
 
 		Change()
 
-		ChShiftInside.Enabled = (gStype.EarlyShiftGears())
-		ChSkipGears.Enabled = (gStype.SkipGears())
 		'ChTCon.Enabled = (GStype.AutomaticTransmission())
 		PnTC.Enabled = gStype.AutomaticTransmission()
 	End Sub

@@ -134,16 +134,14 @@ namespace TUGraz.VectoCore.InputData.Reader.DataObjectAdapter
 
 			retVal.Inertia = gearbox.Inertia;
 			retVal.TractionInterruption = gearbox.TractionInterruption;
-			retVal.SkipGears = gearbox.SkipGears;
-			retVal.EarlyShiftUp = gearbox.EarlyShiftUp;
 			retVal.TorqueReserve = gearbox.TorqueReserve;
 			retVal.StartTorqueReserve = gearbox.StartTorqueReserve;
 			retVal.ShiftTime = gearbox.ShiftTime;
 			retVal.StartSpeed = gearbox.StartSpeed;
 			retVal.StartAcceleration = gearbox.StartAcceleration;
 
-			var gearDifferenceRatio = gearbox.Type.AutomaticTransmission() && gearbox.Gears.Count > 2 ?
-				gearbox.Gears[0].Ratio / gearbox.Gears[1].Ratio
+			var gearDifferenceRatio = gearbox.Type.AutomaticTransmission() && gearbox.Gears.Count > 2
+				? gearbox.Gears[0].Ratio / gearbox.Gears[1].Ratio
 				: 1.0;
 
 			var gears = new Dictionary<uint, GearData>();

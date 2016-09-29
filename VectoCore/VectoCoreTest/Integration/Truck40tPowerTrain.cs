@@ -149,8 +149,6 @@ namespace TUGraz.VectoCore.Tests.Integration
 				StartSpeed = 2.SI<MeterPerSecond>(),
 				TorqueReserve = 0.2,
 				StartTorqueReserve = 0.2,
-				SkipGears = true,
-				EarlyShiftUp = true,
 				DownshiftAfterUpshiftDelay = DeclarationData.Gearbox.DownshiftAfterUpshiftDelay,
 				UpshiftAfterDownshiftDelay = DeclarationData.Gearbox.UpshiftAfterDownshiftDelay,
 				UpshiftMinAcceleration = DeclarationData.Gearbox.UpshiftMinAcceleration
