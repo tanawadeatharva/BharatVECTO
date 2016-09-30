@@ -249,46 +249,46 @@ namespace TUGraz.VectoCore.Tests.Models.Simulation
 			// mk 2016-03-01: plain time based cycle does not exist anymore. replaced by measuredspeed, measuredspeed gear, engineonly and pwheel
 
 			// engine only
-			TestCase("<t>,<n>,<Me>,<Padd>\n1,1,1,1", CycleType.EngineOnly,1),
-			TestCase("<t>,<n>,<Me>\n1,1,1", CycleType.EngineOnly,1),
-			TestCase("<t>,<n>,<Me>,<Pe>,<Padd>\n1,1,1,1,1", CycleType.EngineOnly,1),
-			TestCase("<t>,<n>,<Pe>,<Padd>\n1,1,1,1", CycleType.EngineOnly,1),
-			TestCase("<t>,<n>,<Pe>\n1,1,1", CycleType.EngineOnly,1),
-			TestCase("<Me>,<n>,<Padd>,<t>\n1,1,1,1", CycleType.EngineOnly,1),
-			TestCase("t,n,Me,Padd\n1,1,1,1", CycleType.EngineOnly,1),
+			TestCase("<t>,<n>,<Me>,<Padd>\n1,1,1,1", CycleType.EngineOnly, 1),
+			TestCase("<t>,<n>,<Me>\n1,1,1", CycleType.EngineOnly, 1),
+			TestCase("<t>,<n>,<Me>,<Pe>,<Padd>\n1,1,1,1,1", CycleType.EngineOnly, 1),
+			TestCase("<t>,<n>,<Pe>,<Padd>\n1,1,1,1", CycleType.EngineOnly, 1),
+			TestCase("<t>,<n>,<Pe>\n1,1,1", CycleType.EngineOnly, 1),
+			TestCase("<Me>,<n>,<Padd>,<t>\n1,1,1,1", CycleType.EngineOnly, 1),
+			TestCase("t,n,Me,Padd\n1,1,1,1", CycleType.EngineOnly, 1),
 
 			// p_wheel
-			TestCase("<t>,<Pwheel>,<gear>,<n>,<Padd>\n1,1,1,1,1", CycleType.PWheel,1),
-			TestCase("<gear>,<t>,<n>,<Padd>,<Pwheel>\n1,1,1,1,1", CycleType.PWheel,1),
-			TestCase("<t>,<Pwheel>,<gear>,<n>\n1,1,1,1", CycleType.PWheel,1),
-			TestCase("t,Pwheel,gear,n,Padd\n1,1,1,1,1", CycleType.PWheel,1),
-			TestCase("Pwheel,t,gear,n,Padd\n1,1,1,1,1", CycleType.PWheel,1),
+			TestCase("<t>,<Pwheel>,<gear>,<n>,<Padd>\n1,1,1,1,1", CycleType.PWheel, 1),
+			TestCase("<gear>,<t>,<n>,<Padd>,<Pwheel>\n1,1,1,1,1", CycleType.PWheel, 1),
+			TestCase("<t>,<Pwheel>,<gear>,<n>\n1,1,1,1", CycleType.PWheel, 1),
+			TestCase("t,Pwheel,gear,n,Padd\n1,1,1,1,1", CycleType.PWheel, 1),
+			TestCase("Pwheel,t,gear,n,Padd\n1,1,1,1,1", CycleType.PWheel, 1),
 
 			// measured speed
 			TestCase("<t>,<v>,<grad>,<Padd>,<vair_res>,<vair_beta>,<Aux_ELE>,<Aux_SP>\n1,1,1,1,1,1,1,1",
-				CycleType.MeasuredSpeed,1),
+				CycleType.MeasuredSpeed, 1),
 			TestCase("<t>,<v>,<grad>,<Padd>,<vair_res>,<vair_beta>,<Aux_ALT>,<Aux_ES>\n1,1,1,1,1,1,1,1",
-				CycleType.MeasuredSpeed,1),
-			TestCase("<t>,<v>,<grad>,<Padd>,<vair_res>,<vair_beta>\n1,1,1,1,1,1", CycleType.MeasuredSpeed,1),
-			TestCase("<t>,<v>,<grad>,<Padd>\n1,1,1,1", CycleType.MeasuredSpeed,1),
-			TestCase("<t>,<v>,<grad>,<Padd>,<Aux_ALT>,<Aux_ES>\n1,1,1,1,1,1", CycleType.MeasuredSpeed,1),
-			TestCase("<t>,<v>,<grad>\n1,1,1", CycleType.MeasuredSpeed,1),
-			TestCase("<t>,<Padd>,<grad>,<v>\n1,1,1,1", CycleType.MeasuredSpeed,1),
-			TestCase("t,v,grad,Padd\n1,1,1,1", CycleType.MeasuredSpeed,1),
-			TestCase("t,v,grad\n1,1,1", CycleType.MeasuredSpeed,1),
+				CycleType.MeasuredSpeed, 1),
+			TestCase("<t>,<v>,<grad>,<Padd>,<vair_res>,<vair_beta>\n1,1,1,1,1,1", CycleType.MeasuredSpeed, 1),
+			TestCase("<t>,<v>,<grad>,<Padd>\n1,1,1,1", CycleType.MeasuredSpeed, 1),
+			TestCase("<t>,<v>,<grad>,<Padd>,<Aux_ALT>,<Aux_ES>\n1,1,1,1,1,1", CycleType.MeasuredSpeed, 1),
+			TestCase("<t>,<v>,<grad>\n1,1,1", CycleType.MeasuredSpeed, 1),
+			TestCase("<t>,<Padd>,<grad>,<v>\n1,1,1,1", CycleType.MeasuredSpeed, 1),
+			TestCase("t,v,grad,Padd\n1,1,1,1", CycleType.MeasuredSpeed, 1),
+			TestCase("t,v,grad\n1,1,1", CycleType.MeasuredSpeed, 1),
 
 			// measured speed with gear
 			TestCase("<t>,<v>,<grad>,<Padd>,<n>,<gear>,<vair_res>,<vair_beta>,<Aux_HVAC>,<Aux_HP>\n1,1,1,1,1,1,1,1,1,1",
-				CycleType.MeasuredSpeedGear,1),
+				CycleType.MeasuredSpeedGear, 1),
 			TestCase("<t>,<v>,<grad>,<Padd>,<n>,<gear>,<vair_res>,<vair_beta>\n1,1,1,1,1,1,1,1",
-				CycleType.MeasuredSpeedGear,1),
-			TestCase("<t>,<v>,<grad>,<Padd>,<n>,<gear>,<Aux_HVAC>,<Aux_HP>\n1,1,1,1,1,1,1,1", CycleType.MeasuredSpeedGear,1),
-			TestCase("<t>,<v>,<grad>,<Padd>,<n>,<gear>\n1,1,1,1,1,1", CycleType.MeasuredSpeedGear,1),
-			TestCase("<t>,<v>,<grad>,<n>,<gear>\n1,1,1,1,1", CycleType.MeasuredSpeedGear,1),
-			TestCase("<n>,<Padd>,<gear>,<v>,<grad>,<t>\n1,1,1,1,1,1", CycleType.MeasuredSpeedGear,1),
-			TestCase("t,v,grad,Padd,n,gear\n1,1,1,1,1,1", CycleType.MeasuredSpeedGear,1),
+				CycleType.MeasuredSpeedGear, 1),
+			TestCase("<t>,<v>,<grad>,<Padd>,<n>,<gear>,<Aux_HVAC>,<Aux_HP>\n1,1,1,1,1,1,1,1", CycleType.MeasuredSpeedGear, 1),
+			TestCase("<t>,<v>,<grad>,<Padd>,<n>,<gear>\n1,1,1,1,1,1", CycleType.MeasuredSpeedGear, 1),
+			TestCase("<t>,<v>,<grad>,<n>,<gear>\n1,1,1,1,1", CycleType.MeasuredSpeedGear, 1),
+			TestCase("<n>,<Padd>,<gear>,<v>,<grad>,<t>\n1,1,1,1,1,1", CycleType.MeasuredSpeedGear, 1),
+			TestCase("t,v,grad,Padd,n,gear\n1,1,1,1,1,1", CycleType.MeasuredSpeedGear, 1),
 		]
-		public void DrivingCycle_Read(string cycle, CycleType type, int entryCount )
+		public void DrivingCycle_Read(string cycle, CycleType type, int entryCount)
 		{
 			TestCycleRead(cycle, type, entryCount);
 		}
@@ -314,30 +314,66 @@ namespace TUGraz.VectoCore.Tests.Models.Simulation
 			AssertHelper.Exception<VectoException>(() => TestCycleRead(cycle, type));
 		}
 
-		[
-			TestCase(@"TestData\Cycles\Coach.vdri", CycleType.DistanceBased),
-			TestCase(@"TestData\Cycles\Engine Only1.vdri", CycleType.EngineOnly),
-			TestCase(@"TestData\Pwheel\RD_#1_Pwheel_AuxStd.vdri", CycleType.PWheel),
-			TestCase(@"TestData\MeasuredSpeed\MeasuredSpeedVairAux.vdri", CycleType.MeasuredSpeed),
-			TestCase(@"TestData\MeasuredSpeed\MeasuredSpeed_Gear_Rural_VairAux.vdri",
-				CycleType.MeasuredSpeedGear),
+		[TestCase(@"TestData\Cycles\Coach.vdri", CycleType.DistanceBased),
+		TestCase(@"TestData\Cycles\Engine Only1.vdri", CycleType.EngineOnly),
+		TestCase(@"TestData\Pwheel\RD_#1_Pwheel_AuxStd.vdri", CycleType.PWheel),
+		TestCase(@"TestData\MeasuredSpeed\MeasuredSpeedVairAux.vdri", CycleType.MeasuredSpeed),
+		TestCase(@"TestData\MeasuredSpeed\MeasuredSpeed_Gear_Rural_VairAux.vdri",
+			CycleType.MeasuredSpeedGear),
 		]
 		public void DrivingCycle_Detect_File(string filename, CycleType type)
 		{
 			TestCycleDetect(File.ReadAllText(filename), type);
 		}
 
-		[
-			TestCase(@"TestData\Cycles\Coach.vdri", CycleType.DistanceBased, 6116),
-			TestCase(@"TestData\Cycles\Engine Only1.vdri", CycleType.EngineOnly, 696),
-			TestCase(@"TestData\Pwheel\RD_#1_Pwheel_AuxStd.vdri", CycleType.PWheel, 3917),
-			TestCase(@"TestData\MeasuredSpeed\MeasuredSpeedVairAux.vdri", CycleType.MeasuredSpeed, 1300),
-			TestCase(@"TestData\MeasuredSpeed\MeasuredSpeed_Gear_Rural_VairAux.vdri",
-				CycleType.MeasuredSpeedGear, 1300),
+		[TestCase(@"TestData\Cycles\Coach.vdri", CycleType.DistanceBased, 6116),
+		TestCase(@"TestData\Cycles\Engine Only1.vdri", CycleType.EngineOnly, 696),
+		TestCase(@"TestData\Pwheel\RD_#1_Pwheel_AuxStd.vdri", CycleType.PWheel, 3917),
+		TestCase(@"TestData\MeasuredSpeed\MeasuredSpeedVairAux.vdri", CycleType.MeasuredSpeed, 1300),
+		TestCase(@"TestData\MeasuredSpeed\MeasuredSpeed_Gear_Rural_VairAux.vdri",
+			CycleType.MeasuredSpeedGear, 1300),
 		]
 		public void DrivingCycle_Read_File(string filename, CycleType type, int entryCount)
 		{
 			TestCycleRead(File.ReadAllText(filename), type, entryCount);
+		}
+
+		[
+			TestCase("t, Engine Speed, PTO Torque\n1,2,3", CycleType.PTO),
+			TestCase("t, engine speed, PTO Torque\n1,2,3", CycleType.PTO),
+			TestCase("t, Engine Speed, pto torque\n1,2,3", CycleType.PTO),
+			TestCase("t, engine speed, pto torque\n1,2,3", CycleType.PTO),
+			TestCase("T, ENGINE SPEED, PTO TORQUE\n1,2,3", CycleType.PTO),
+			TestCase("<Me>,<n>,<Padd>,<t>\n1,1,1,1", CycleType.EngineOnly),
+			TestCase("t,n,Me,Padd\n1,1,1,1", CycleType.EngineOnly),
+			TestCase("<s>,<v>,<Grad>,<STOP>\n1,0,1,1", CycleType.DistanceBased),
+			TestCase("<s>,<V>,<grad>,<stop>,<PADD>,<vAir_res>,<vAir_Beta>,<Aux_ELE>,<Aux_SP>\n1,1,1,0,1,1,1,1,1",
+				CycleType.DistanceBased),
+			TestCase("<S>,<v>,<stop>,<pAdd>,<Vair_res>,<vair_BETA>,<Aux_ELE>,<Aux_SP>\n1,1,0,1,1,1,1,1",
+				CycleType.DistanceBased)
+		]
+		public void DrivingCycleDetect_CaseInsensitive(string cycle, CycleType type)
+		{
+			TestCycleDetect(cycle, type);
+		}
+
+		[
+			TestCase("t, Engine Speed, PTO Torque\n1,2,3", CycleType.PTO, 1),
+			TestCase("t, engine speed, PTO Torque\n1,2,3", CycleType.PTO, 1),
+			TestCase("t, Engine Speed, pto torque\n1,2,3", CycleType.PTO, 1),
+			TestCase("t, engine speed, pto torque\n1,2,3", CycleType.PTO, 1),
+			TestCase("T, ENGINE SPEED, PTO TORQUE\n1,2,3", CycleType.PTO, 1),
+			TestCase("<Me>,<n>,<Padd>,<t>\n1,1,1,1", CycleType.EngineOnly, 1),
+			TestCase("t,n,Me,Padd\n1,1,1,1", CycleType.EngineOnly, 1),
+			TestCase("<s>,<v>,<Grad>,<STOP>\n1,0,1,1", CycleType.DistanceBased, 3),
+			TestCase("<s>,<V>,<grad>,<stop>,<PADD>,<vAir_res>,<vAir_Beta>,<Aux_ELE>,<Aux_SP>\n1,1,1,0,1,1,1,1,1",
+				CycleType.DistanceBased, 2),
+			TestCase("<S>,<v>,<stop>,<pAdd>,<Vair_res>,<vair_BETA>,<Aux_ELE>,<Aux_SP>\n1,1,0,1,1,1,1,1",
+				CycleType.DistanceBased, 2)
+		]
+		public void DrivingCycleRead_CaseInsensitive(string cycle, CycleType type, int entryCount)
+		{
+			TestCycleRead(cycle, type, entryCount);
 		}
 
 		private static void TestCycleDetect(string inputData, CycleType cycleType)
