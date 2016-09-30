@@ -337,10 +337,9 @@ namespace TUGraz.VectoCore.InputData.Reader
 		private abstract class AbstractCycleDataParser : LoggingObject, ICycleDataParser
 		{
 			protected static bool CheckColumns(DataColumnCollection header, IEnumerable<string> allowedCols,
-				IEnumerable<string> requiredCols,
-				bool throwExceptions, bool allowAux)
+				IEnumerable<string> requiredCols, bool throwExceptions, bool allowAux)
 			{
-				var headerStr = header.Cast<DataColumn>().Select(col => col.ColumnName).ToArray();
+				var headerStr = header.Cast<DataColumn>().Select(col => col.ColumnName.ToLowerInvariant()).ToArray();
 
 				var diff = headerStr.GroupBy(c => c).Where(g => g.Count() > 2).SelectMany(g => g).ToList();
 				if (diff.Any()) {
@@ -354,7 +353,7 @@ namespace TUGraz.VectoCore.InputData.Reader
 					headerStr = headerStr.Where(c => !c.ToUpper().StartsWith(Constants.Auxiliaries.Prefix)).ToArray();
 				}
 
-				diff = headerStr.Except(allowedCols.Select(x => x)).ToList();
+				diff = headerStr.Except(allowedCols.Select(x => x.ToLowerInvariant())).ToList();
 				if (diff.Any()) {
 					if (throwExceptions) {
 						throw new VectoException("Column(s) not allowed: " + string.Join(", ", diff));
@@ -362,7 +361,7 @@ namespace TUGraz.VectoCore.InputData.Reader
 					return false;
 				}
 
-				diff = requiredCols.Select(x => x).Except(headerStr).ToList();
+				diff = requiredCols.Select(x => x.ToLowerInvariant()).Except(headerStr).ToList();
 				if (diff.Any()) {
 					if (throwExceptions) {
 						throw new VectoException("Column(s) required: " + string.Join(", ", diff));
@@ -375,8 +374,8 @@ namespace TUGraz.VectoCore.InputData.Reader
 			protected static bool CheckComboColumns(DataColumnCollection header, string[] cols, bool throwExceptions)
 			{
 				var colCount = header.Cast<DataColumn>()
-					.Select(col => col.ColumnName)
-					.Intersect(cols.Select(x => x)).Count();
+					.Select(col => col.ColumnName.ToLowerInvariant())
+					.Intersect(cols.Select(x => x.ToLowerInvariant())).Count();
 
 				if (colCount != 0 && colCount != cols.Length) {
 					if (throwExceptions) {
