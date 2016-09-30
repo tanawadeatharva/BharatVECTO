@@ -53,7 +53,7 @@ namespace TUGraz.VectoCore.InputData.Reader
 		/// <exception cref="VectoException">CycleFile Format is unknown.</exception>
 		public static CycleType DetectCycleType(DataTable cycleData)
 		{
-			var cols = cycleData.Columns.Cast<DataColumn>().Select(c => c.ColumnName).ToArray();
+			var cols = cycleData.Columns;
 
 			if (PTOCycleDataParser.ValidateHeader(cols, false)) {
 				return CycleType.PTO;
@@ -336,10 +336,12 @@ namespace TUGraz.VectoCore.InputData.Reader
 
 		private abstract class AbstractCycleDataParser : LoggingObject, ICycleDataParser
 		{
-			protected static bool CheckColumns(string[] header, IEnumerable<string> allowedCols, IEnumerable<string> requiredCols,
-				bool throwExceptions, bool allowAux)
+			protected static bool CheckColumns(DataColumnCollection header, IEnumerable<string> allowedCols,
+				IEnumerable<string> requiredCols, bool throwExceptions, bool allowAux)
 			{
-				var diff = header.GroupBy(c => c).Where(g => g.Count() > 2).SelectMany(g => g).ToList();
+				var headerStr = header.Cast<DataColumn>().Select(col => col.ColumnName.ToLowerInvariant()).ToArray();
+
+				var diff = headerStr.GroupBy(c => c).Where(g => g.Count() > 2).SelectMany(g => g).ToList();
 				if (diff.Any()) {
 					if (throwExceptions) {
 						throw new VectoException("Column(s) defined more than once: " + string.Join(", ", diff.OrderBy(x => x)));
@@ -348,10 +350,10 @@ namespace TUGraz.VectoCore.InputData.Reader
 				}
 
 				if (allowAux) {
-					header = header.Where(c => !c.ToUpper().StartsWith(Constants.Auxiliaries.Prefix)).ToArray();
+					headerStr = headerStr.Where(c => !c.ToUpper().StartsWith(Constants.Auxiliaries.Prefix)).ToArray();
 				}
 
-				diff = header.Except(allowedCols).ToList();
+				diff = headerStr.Except(allowedCols.Select(x => x.ToLowerInvariant())).ToList();
 				if (diff.Any()) {
 					if (throwExceptions) {
 						throw new VectoException("Column(s) not allowed: " + string.Join(", ", diff));
@@ -359,7 +361,7 @@ namespace TUGraz.VectoCore.InputData.Reader
 					return false;
 				}
 
-				diff = requiredCols.Except(header).ToList();
+				diff = requiredCols.Select(x => x.ToLowerInvariant()).Except(headerStr).ToList();
 				if (diff.Any()) {
 					if (throwExceptions) {
 						throw new VectoException("Column(s) required: " + string.Join(", ", diff));
@@ -369,9 +371,12 @@ namespace TUGraz.VectoCore.InputData.Reader
 				return true;
 			}
 
-			protected static bool CheckComboColumns(string[] header, string[] cols, bool throwExceptions)
+			protected static bool CheckComboColumns(DataColumnCollection header, string[] cols, bool throwExceptions)
 			{
-				var colCount = header.Intersect(cols).Count();
+				var colCount = header.Cast<DataColumn>()
+					.Select(col => col.ColumnName.ToLowerInvariant())
+					.Intersect(cols.Select(x => x.ToLowerInvariant())).Count();
+
 				if (colCount != 0 && colCount != cols.Length) {
 					if (throwExceptions) {
 						throw new VectoException("Either all columns have to be defined or none of them: {0}", string.Join(", ", cols));
@@ -389,7 +394,7 @@ namespace TUGraz.VectoCore.InputData.Reader
 		{
 			public override IEnumerable<DrivingCycleData.DrivingCycleEntry> Parse(DataTable table, bool crossWindRequired)
 			{
-				ValidateHeader(table.Columns.Cast<DataColumn>().Select(col => col.ColumnName).ToArray());
+				ValidateHeader(table.Columns);
 
 				return table.Rows.Cast<DataRow>().Select(row => new DrivingCycleData.DrivingCycleEntry {
 					Distance = row.ParseDouble(Fields.Distance).SI<Meter>(),
@@ -407,7 +412,7 @@ namespace TUGraz.VectoCore.InputData.Reader
 				});
 			}
 
-			public static bool ValidateHeader(string[] header, bool throwExceptions = true)
+			public static bool ValidateHeader(DataColumnCollection header, bool throwExceptions = true)
 			{
 				var requiredCols = new[] {
 					Fields.Distance,
@@ -441,7 +446,7 @@ namespace TUGraz.VectoCore.InputData.Reader
 		{
 			public override IEnumerable<DrivingCycleData.DrivingCycleEntry> Parse(DataTable table, bool crossWindRequired)
 			{
-				ValidateHeader(table.Columns.Cast<DataColumn>().Select(col => col.ColumnName).ToArray());
+				ValidateHeader(table.Columns);
 
 				var absTime = 0;
 				foreach (DataRow row in table.Rows) {
@@ -472,7 +477,7 @@ namespace TUGraz.VectoCore.InputData.Reader
 				}
 			}
 
-			public static bool ValidateHeader(string[] header, bool throwExceptions = true)
+			public static bool ValidateHeader(DataColumnCollection header, bool throwExceptions = true)
 			{
 				var requiredCols = new[] {
 					//Fields.Time not needed --> if missing 1 second resolution is assumed
@@ -520,7 +525,7 @@ namespace TUGraz.VectoCore.InputData.Reader
 		{
 			public override IEnumerable<DrivingCycleData.DrivingCycleEntry> Parse(DataTable table, bool crossWindRequired)
 			{
-				ValidateHeader(table.Columns.Cast<DataColumn>().Select(col => col.ColumnName).ToArray());
+				ValidateHeader(table.Columns);
 
 				var entries = table.Rows.Cast<DataRow>().Select(row => new DrivingCycleData.DrivingCycleEntry {
 					Time = row.ParseDouble(Fields.Time).SI<Second>(),
@@ -533,7 +538,7 @@ namespace TUGraz.VectoCore.InputData.Reader
 				return entries;
 			}
 
-			public static bool ValidateHeader(string[] header, bool throwExceptions = true)
+			public static bool ValidateHeader(DataColumnCollection header, bool throwExceptions = true)
 			{
 				var requiredCols = new[] {
 					Fields.Time,
@@ -561,7 +566,7 @@ namespace TUGraz.VectoCore.InputData.Reader
 		{
 			public override IEnumerable<DrivingCycleData.DrivingCycleEntry> Parse(DataTable table, bool crossWindRequired)
 			{
-				ValidateHeader(table.Columns.Cast<DataColumn>().Select(col => col.ColumnName).ToArray());
+				ValidateHeader(table.Columns);
 
 				var entries = table.Rows.Cast<DataRow>().Select(row => new DrivingCycleData.DrivingCycleEntry {
 					Time = row.ParseDouble(Fields.Time).SI<Second>(),
@@ -577,7 +582,7 @@ namespace TUGraz.VectoCore.InputData.Reader
 				return entries;
 			}
 
-			public static bool ValidateHeader(string[] header, bool throwExceptions = true)
+			public static bool ValidateHeader(DataColumnCollection header, bool throwExceptions = true)
 			{
 				var requiredCols = new[] {
 					Fields.Time,
@@ -608,7 +613,7 @@ namespace TUGraz.VectoCore.InputData.Reader
 		{
 			public override IEnumerable<DrivingCycleData.DrivingCycleEntry> Parse(DataTable table, bool crossWindRequired)
 			{
-				ValidateHeader(table.Columns.Cast<DataColumn>().Select(col => col.ColumnName).ToArray());
+				ValidateHeader(table.Columns);
 
 				var entries = table.Rows.Cast<DataRow>().Select(row => new DrivingCycleData.DrivingCycleEntry {
 					Time = row.ParseDouble(Fields.Time).SI<Second>(),
@@ -630,7 +635,7 @@ namespace TUGraz.VectoCore.InputData.Reader
 				return entries;
 			}
 
-			public static bool ValidateHeader(string[] header, bool throwExceptions = true)
+			public static bool ValidateHeader(DataColumnCollection header, bool throwExceptions = true)
 			{
 				var requiredCols = new[] {
 					Fields.Time,
@@ -664,7 +669,7 @@ namespace TUGraz.VectoCore.InputData.Reader
 		{
 			public override IEnumerable<DrivingCycleData.DrivingCycleEntry> Parse(DataTable table, bool crossWindRequired)
 			{
-				ValidateHeader(table.Columns.Cast<DataColumn>().Select(col => col.ColumnName).ToArray());
+				ValidateHeader(table.Columns);
 
 				var entries = table.Rows.Cast<DataRow>().Select(row => new DrivingCycleData.DrivingCycleEntry {
 					Time = row.ParseDouble(Fields.Time).SI<Second>(),
@@ -675,7 +680,7 @@ namespace TUGraz.VectoCore.InputData.Reader
 				return entries;
 			}
 
-			public static bool ValidateHeader(string[] header, bool throwExceptions = true)
+			public static bool ValidateHeader(DataColumnCollection header, bool throwExceptions = true)
 			{
 				var requiredCols = new[] {
 					Fields.Time,

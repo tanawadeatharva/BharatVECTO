@@ -39,7 +39,7 @@ namespace TUGraz.VectoCore.InputData.Reader.ComponentData
 				throw new VectoException("PTO Idle LossMap must contain at least 2 entries.");
 			}
 
-			if (!data.Columns.Contains(Fields.EngineSpeed) || !data.Columns.Contains(Fields.PTOTorque)) {
+			if (!(data.Columns.Contains(Fields.EngineSpeed) && data.Columns.Contains(Fields.PTOTorque))) {
 				data.Columns[0].ColumnName = Fields.EngineSpeed;
 				data.Columns[1].ColumnName = Fields.PTOTorque;
 				LoggingObject.Logger<RetarderLossMap>().Warn(
