@@ -398,6 +398,23 @@ Public Class VectoJobForm
 		_basePath = Path.GetDirectoryName(file)
 		'Update Form
 
+		If inputData.JobInputData().EngineOnlyMode Then
+			TbENG.Text = GetRelativePath(inputData.EngineInputData.Source, _basePath)
+			CbEngOnly.Checked = True
+			Try
+				Dim sb As ICycleData
+				For Each sb In vectoJob.Cycles
+					Dim lv0 As ListViewItem = New ListViewItem
+					lv0.Text = GetRelativePath(sb.CycleData.Source, Path.GetDirectoryName(Path.GetFullPath(file))) 'sb.Name
+					LvCycles.Items.Add(lv0)
+				Next
+			Catch ex As Exception
+			End Try
+			CheckEngOnly()
+			Exit Sub
+		End If
+		CbEngOnly.Checked = False
+		CheckEngOnly()
 		'Files -----------------------------
 		TbVEH.Text = GetRelativePath(inputData.VehicleInputData.Source, _basePath)
 		TbENG.Text = GetRelativePath(inputData.EngineInputData.Source, _basePath)
@@ -480,8 +497,7 @@ Public Class VectoJobForm
 			Next
 		Catch ex As Exception
 		End Try
-		CbEngOnly.Checked = vectoJob.EngineOnlyMode
-
+		
 		If driver.OverSpeedEcoRoll.Mode = DriverMode.EcoRoll Then
 			RdEcoRoll.Checked = True
 		ElseIf driver.OverSpeedEcoRoll.Mode = DriverMode.Overspeed Then
@@ -527,6 +543,8 @@ Public Class VectoJobForm
 
 		'-------------------------------------------------------------
 	End Sub
+
+
 
 	'Save file
 	Private Function VECTOsave(file As String) As Boolean

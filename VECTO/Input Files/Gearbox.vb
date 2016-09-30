@@ -393,7 +393,7 @@ Public Class Gearbox
 				Dim gearDict As New TransmissionInputData With {
 						.Ratio = GearRatios(i)
 						}
-				If File.Exists(GearshiftFiles(i).OriginalPath) Then
+				If File.Exists(GearshiftFiles(i).FullPath) Then
 					gearDict.ShiftPolygon = VectoCSVFile.Read(GearshiftFiles(i).FullPath)
 				End If
 				If Not String.IsNullOrWhiteSpace(MaxTorque(i)) AndAlso IsNumeric(MaxTorque(i)) Then
@@ -432,7 +432,7 @@ Public Class Gearbox
 
 	Public ReadOnly Property ShiftPolygon As TableData Implements ITorqueConverterEngineeringInputData.ShiftPolygon
 		Get
-			Return VectoCSVFile.Read(TorqueConverterShiftPolygonFile)
+			Return VectoCSVFile.Read(Path.Combine(_myPath, TorqueConverterShiftPolygonFile))
 		End Get
 	End Property
 
@@ -507,7 +507,7 @@ Public Class Gearbox
 
 	Public ReadOnly Property TCData As TableData Implements ITorqueConverterDeclarationInputData.TCData
 		Get
-			Return VectoCSVFile.Read(_torqueConverterFile.OriginalPath)
+			Return VectoCSVFile.Read(_torqueConverterFile.FullPath)
 		End Get
 	End Property
 
