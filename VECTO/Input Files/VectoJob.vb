@@ -614,6 +614,30 @@ Public Class VectoJob
 																	ExecutionModeServiceContainer)
 		Dim mode As ExecutionMode = If(modeService Is Nothing, ExecutionMode.Declaration, modeService.Mode)
 
+		If mode = ExecutionMode.Engineering AndAlso vectoJob.EngineOnly Then
+			Return ValidateEngineOnlyJob(vectoJob, mode)
+		End If
+
+		Return ValidateVehicleJob(vectoJob, mode)
+	End Function
+
+	Private Shared Function ValidateEngineOnlyJob(vectoJob As VectoJob, executionMode As ExecutionMode) As ValidationResult
+		Dim result As IList(Of ValidationResult) = New List(Of ValidationResult)
+
+		vectoJob._engineInputData = New JSONComponentInputData(vectoJob._engineFile.FullPath)
+
+		If vectoJob._engineInputData.EngineInputData Is Nothing Then _
+			result.Add(New ValidationResult("Engine File is missing or invalid"))
+		If result.Any() Then
+			Return _
+				New ValidationResult("Vecto Job Configuration is invalid. ", result.Select(Function(r) r.ErrorMessage).ToList())
+		End If
+
+		Return ValidationResult.Success
+	End Function
+
+	Private Shared Function ValidateVehicleJob(vectoJob As VectoJob, mode As ExecutionMode) As ValidationResult
+
 		Dim jobData As IEnumerable(Of VectoRunData)
 
 		vectoJob._vehicleInputData = New JSONComponentInputData(vectoJob._vehicleFile.FullPath)

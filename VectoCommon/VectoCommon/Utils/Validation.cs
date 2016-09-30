@@ -54,8 +54,9 @@ namespace TUGraz.VectoCommon.Utils
 		/// <returns>Null, if the validation was successfull. Otherwise a list of ValidationResults with the ErrorMessages.</returns>
 		public static IList<ValidationResult> Validate<T>(this T entity, ExecutionMode mode)
 		{
-			if (entity == null)
-				return  new[] { new ValidationResult(string.Format("null value given for {0}", typeof(T)))};
+			if (entity == null) {
+				return new[] { new ValidationResult(string.Format("null value given for {0}", typeof(T))) };
+			}
 			var context = new ValidationContext(entity);
 			context.ServiceContainer.AddService(typeof(ExecutionMode), new ExecutionModeServiceContainer(mode));
 			var results = new List<ValidationResult>();
@@ -200,11 +201,12 @@ namespace TUGraz.VectoCommon.Utils
 				if (!results.Any()) {
 					return ValidationResult.Success;
 				}
+				var messages = results.Select(r => String.Join(", ", r.MemberNames.Distinct()));
 				if (validationContext.MemberName == "Container" || validationContext.MemberName == "RunData") {
-					return new ValidationResult(string.Join("\n", results));
+					return new ValidationResult(string.Join("\n", results), messages);
 				}
 				return new ValidationResult(
-					string.Format("{{{0}}} invalid: {1}", validationContext.DisplayName, string.Join("\n", results)));
+					string.Format("{{{0}}} invalid: {1}", validationContext.DisplayName, string.Join("\n", results)), messages);
 			}
 
 			return ValidationResult.Success;
