@@ -84,7 +84,7 @@ namespace TUGraz.VectoCore.InputData.FileIO.JSON
 
 		protected TableData ReadTableData(string filename, string tableType, bool required = true)
 		{
-			if (!EmptyOrInvalidFileName(filename)) {
+			if (!EmptyOrInvalidFileName(filename) && File.Exists(Path.Combine(BasePath, filename))) {
 				try {
 					return VectoCSVFile.Read(Path.Combine(BasePath, filename), true);
 				} catch (Exception e) {
@@ -585,6 +585,13 @@ namespace TUGraz.VectoCore.InputData.FileIO.JSON
 		protected override IList<AuxiliaryDataInputData> AuxData()
 		{
 			var retVal = new List<AuxiliaryDataInputData>();
+			if (Body["Padd"] != null) {
+				retVal.Add(new AuxiliaryDataInputData() {
+					ID = "ConstanntAux",
+					AuxiliaryType = AuxiliaryDemandType.Constant,
+					ConstantPowerDemand = Body.GetEx<double>("Padd").SI<Watt>()
+				});
+			}
 			foreach (var aux in Body["Aux"] ?? Enumerable.Empty<JToken>()) {
 				try {
 					aux.GetEx("Technology").ToObject<List<string>>();

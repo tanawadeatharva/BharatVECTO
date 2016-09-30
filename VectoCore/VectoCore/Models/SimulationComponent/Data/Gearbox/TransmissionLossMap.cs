@@ -141,13 +141,13 @@ namespace TUGraz.VectoCore.Models.SimulationComponent.Data.Gearbox
 		public class GearLossMapEntry
 		{
 			[Required, SIRange(0, 10000 * Constants.RPMToRad)]
-			public PerSecond InputSpeed { get; set; }
+			public PerSecond InputSpeed { get; private set; }
 
 			[Required, SIRange(-100000, 100000)]
-			public NewtonMeter InputTorque { get; set; }
+			public NewtonMeter InputTorque { get; private set; }
 
 			[Required, SIRange(0, 100000)]
-			public NewtonMeter TorqueLoss { get; set; }
+			public NewtonMeter TorqueLoss { get; private set; }
 
 			public GearLossMapEntry(PerSecond inputSpeed, NewtonMeter inputTorque, NewtonMeter torqueLoss)
 			{

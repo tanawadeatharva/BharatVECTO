@@ -1,0 +1,72 @@
+﻿{
+  "Header": {
+    "CreatedBy": " ()",
+    "Date": "2016-09-27T07:38:45.1598602Z",
+    "AppVersion": "3",
+    "FileVersion": 7
+  },
+  "Body": {
+    "SavedInDeclMode": false,
+    "VehCat": "RigidTruck",
+    "CurbWeight": 4670.0,
+    "CurbWeightExtra": 1900.0,
+    "Loading": 3020.0,
+    "MassMax": 11.99,
+    "CdA": 4.83,
+    "rdyn": 421.0,
+    "CdCorrMode": "CdofVdecl",
+    "CdCorrFile": "<NOFILE>",
+    "Retarder": {
+      "Type": "None",
+      "Ratio": 0.0,
+      "File": "<NOFILE>"
+    },
+    "Angledrive": {
+      "Type": "None",
+      "Ratio": 0.0,
+      "LossMap": "<NOFILE>"
+    },
+    "PTO": {
+      "Type": "None",
+      "LossMap": "<NOFILE>",
+      "Cycle": "<NOFILE>"
+    },
+    "AxleConfig": {
+      "Type": "4x2",
+      "Axles": [
+        {
+          "Inertia": 6.5,
+          "Wheels": "265/70 R19.5",
+          "AxleWeightShare": 0.2,
+          "TwinTyres": false,
+          "RRCISO": 0.0065,
+          "FzISO": 20850.0
+        },
+        {
+          "Inertia": 6.5,
+          "Wheels": "265/70 R19.5",
+          "AxleWeightShare": 0.3,
+          "TwinTyres": true,
+          "RRCISO": 0.0075,
+          "FzISO": 20850.0
+        },
+        {
+          "Inertia": 4.5,
+          "Wheels": "235/75 R17.5",
+          "AxleWeightShare": 0.25,
+          "TwinTyres": false,
+          "RRCISO": 0.0055,
+          "FzISO": 16680.0
+        },
+        {
+          "Inertia": 4.5,
+          "Wheels": "235/75 R17.5",
+          "AxleWeightShare": 0.25,
+          "TwinTyres": false,
+          "RRCISO": 0.0055,
+          "FzISO": 16680.0
+        }
+      ]
+    }
+  }
+}

@@ -52,9 +52,10 @@ namespace TUGraz.VectoCore.Models.SimulationComponent.Impl
 		public AMTShiftStrategy(GearboxData data, IDataBus dataBus) : base(data, dataBus)
 		{
 			PreviousGear = 1;
-			Data.EarlyShiftUp = true;
-			Data.SkipGears = true;
+			EarlyShiftUp = true;
+			SkipGears = true;
 		}
+
 
 		private bool SpeedTooLowForEngine(uint gear, PerSecond outAngularSpeed)
 		{
@@ -231,7 +232,7 @@ namespace TUGraz.VectoCore.Models.SimulationComponent.Impl
 			// upshift
 			while (IsAboveUpShiftCurve(currentGear, inTorque, inAngularVelocity)) {
 				currentGear++;
-				if (!Data.SkipGears) {
+				if (!SkipGears) {
 					break;
 				}
 
@@ -245,7 +246,7 @@ namespace TUGraz.VectoCore.Models.SimulationComponent.Impl
 			}
 
 			// early up shift to higher gear ---------------------------------------
-			if (Data.EarlyShiftUp && currentGear < Data.Gears.Count) {
+			if (EarlyShiftUp && currentGear < Data.Gears.Count) {
 				// try if next gear would provide enough torque reserve
 				var tryNextGear = currentGear + 1;
 				var tmpGear = Gearbox.Gear;
@@ -276,7 +277,7 @@ namespace TUGraz.VectoCore.Models.SimulationComponent.Impl
 			// down shift
 			while (IsBelowDownShiftCurve(currentGear, inTorque, inAngularVelocity)) {
 				currentGear--;
-				if (!Data.SkipGears) {
+				if (!SkipGears) {
 					break;
 				}
 				var tmpGear = Gearbox.Gear;

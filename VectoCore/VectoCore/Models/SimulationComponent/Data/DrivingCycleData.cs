@@ -31,8 +31,12 @@
 
 using System;
 using System.Collections.Generic;
+using System.ComponentModel.DataAnnotations;
 using System.Diagnostics;
+using System.Linq;
+using TUGraz.VectoCommon.Models;
 using TUGraz.VectoCommon.Utils;
+using TUGraz.VectoCore.Models.Simulation.Data;
 
 namespace TUGraz.VectoCore.Models.SimulationComponent.Data
 {
@@ -54,6 +58,7 @@ namespace TUGraz.VectoCore.Models.SimulationComponent.Data
 		}
 	}
 
+	[CustomValidation(typeof(DrivingCycleData), "ValidateCycleData")]
 	public class DrivingCycleData : SimulationComponentData
 	{
 		internal DrivingCycleData() {}
@@ -63,6 +68,42 @@ namespace TUGraz.VectoCore.Models.SimulationComponent.Data
 		public string Name { get; internal set; }
 
 		public CycleType CycleType { get; internal set; }
+
+		// ReSharper disable once UnusedMember.Global -- used by Validation
+		public static ValidationResult ValidateCycleData(DrivingCycleData cycleData, ValidationContext validationContext)
+		{
+			var mode = GetExecutionMode(validationContext);
+			if (mode == ExecutionMode.Declaration) {
+				return ValidationResult.Success;
+			}
+
+			var result = new List<string>();
+			if (cycleData.CycleType.IsDistanceBased()) {
+				var cur = cycleData.Entries[0].Distance;
+				for (var i = 1; i < cycleData.Entries.Count; i++) {
+					if (cycleData.Entries[i].Distance < cur) {
+						result.Add(
+							string.Format("distance-based cycle is not increasing strictly monotonous. entry: {0}, s_{1}: {2} s_{0}: {3}", i,
+								i - 1, cycleData.Entries[i - 1].Distance, cycleData.Entries[i].Distance));
+					}
+					cur = cycleData.Entries[i].Distance;
+				}
+			} else {
+				var cur = cycleData.Entries[0].Time;
+				for (var i = 1; i < cycleData.Entries.Count; i++) {
+					if (cycleData.Entries[i].Time < cur) {
+						result.Add(
+							string.Format("time-based cycle is not increasing strictly monotonous. entry: {0}, t_{1}: {2} t_{0}: {3}", i,
+								i - 1, cycleData.Entries[i - 1].Time, cycleData.Entries[i].Time));
+					}
+					cur = cycleData.Entries[i].Time;
+				}
+			}
+			if (result.Any()) {
+				return new ValidationResult(string.Format("Validation of Cycle {0} failed", cycleData.Name), result);
+			}
+			return ValidationResult.Success;
+		}
 
 		[DebuggerDisplay(
 			"s:{Distance}, t:{Time}, v:{VehicleTargetSpeed}, grad:{RoadGradient}, n:{AngularVelocity}, gear:{Gear}")]

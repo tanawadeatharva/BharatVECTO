@@ -47,6 +47,10 @@ namespace TUGraz.VectoCore.Models.SimulationComponent.Impl
 		protected GearboxData Data;
 		protected Gearbox _gearbox;
 
+		protected bool SkipGears;
+
+		protected bool EarlyShiftUp;
+
 		protected ShiftStrategy(GearboxData data, IDataBus dataBus)
 		{
 			DataBus = dataBus;

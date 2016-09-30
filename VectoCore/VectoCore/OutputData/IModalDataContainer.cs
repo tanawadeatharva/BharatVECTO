@@ -193,8 +193,8 @@ namespace TUGraz.VectoCore.OutputData
 		public static Scalar StopTimeShare(this IModalDataContainer data)
 		{
 			var stopTime = data.GetValues<MeterPerSecond>(ModalResultField.v_act)
-								.Zip(data.SimulationIntervals(), (v, dt) => new { v, dt })
-								.Where(x => x.v < 0.1).Sum(x => x.dt) ?? 0.SI<Second>();
+				.Zip(data.SimulationIntervals(), (v, dt) => new { v, dt })
+				.Where(x => x.v < 0.1).Sum(x => x.dt) ?? 0.SI<Second>();
 			return 100 * (stopTime / data.Duration()).Cast<Scalar>();
 		}
 
@@ -223,11 +223,14 @@ namespace TUGraz.VectoCore.OutputData
 			return paEngine + paGearbox;
 		}
 
-		public static WattSecond WorkTransmission(this IModalDataContainer data)
+		public static WattSecond WorkGearbox(this IModalDataContainer data)
 		{
-			var plossdiff = data.TimeIntegral<WattSecond>(ModalResultField.P_gbx_loss);
-			var plossgb = data.TimeIntegral<WattSecond>(ModalResultField.P_axle_loss);
-			return plossdiff + plossgb;
+			return data.TimeIntegral<WattSecond>(ModalResultField.P_gbx_loss);
+		}
+
+		public static WattSecond WorkAxlegear(this IModalDataContainer data)
+		{
+			return data.TimeIntegral<WattSecond>(ModalResultField.P_axle_loss);
 		}
 
 		public static WattSecond WorkRetarder(this IModalDataContainer data)

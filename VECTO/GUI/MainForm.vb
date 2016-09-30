@@ -959,8 +959,8 @@ lbFound:
 			mode = ExecutionMode.Declaration
 		Else
 			mode = ExecutionMode.Engineering
-			Physics.FuelDensity = New SI(Cfg.FuelDens).Kilo.Gramm.Per.Cubic.Dezi.Meter.Cast(Of KilogramPerCubicMeter)()
-			Physics.AirDensity = New SI(Cfg.AirDensity).Kilo.Gramm.Per.Cubic.Meter.Cast(Of KilogramPerCubicMeter)()
+			Physics.FuelDensity = Cfg.FuelDens.SI(Of KilogramPerCubicMeter)() 'New SI(Cfg.FuelDens).Kilo.Gramm.Per.Cubic.Dezi.Meter.Cast(Of KilogramPerCubicMeter)()
+			Physics.AirDensity = Cfg.AirDensity.SI(Of KilogramPerCubicMeter)() 'New SI(Cfg.AirDensity).Kilo.Gramm.Per.Cubic.Meter.Cast(Of KilogramPerCubicMeter)()
 			Physics.CO2PerFuelWeight = Cfg.Co2PerFc
 		End If
 

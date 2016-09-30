@@ -498,7 +498,7 @@ namespace TUGraz.VectoCore.Models.SimulationComponent.Impl
 
 		protected class CombustionEngineIdleController : LoggingObject, IIdleController
 		{
-			protected readonly double PeDropSlope = -0.75;
+			protected readonly double PeDropSlope = -5;
 			protected readonly double PeDropOffset = 1.0;
 
 			protected CombustionEngine Engine;
