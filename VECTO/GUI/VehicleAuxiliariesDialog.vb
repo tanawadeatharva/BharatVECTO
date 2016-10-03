@@ -10,7 +10,9 @@
 ' See the LICENSE.txt for the specific language governing permissions and limitations.
 Option Infer On
 
+Imports System.Linq
 Imports System.Windows.Forms
+Imports TUGraz.VectoCommon.Utils
 Imports TUGraz.VectoCore.Models.Declaration
 
 
@@ -19,6 +21,8 @@ Imports TUGraz.VectoCore.Models.Declaration
 ''' </summary>
 Public Class VehicleAuxiliariesDialog
 	Public VehPath As String = ""
+	Public NumAxles As Integer
+	Public Const AxleNotSteered As String = "Not steered"
 
 	Public Sub New()
 		InitializeComponent()
@@ -29,6 +33,15 @@ Public Class VehicleAuxiliariesDialog
 		CbType.Items.Add("Electric System")
 		PnTech.Visible = Cfg.DeclMode
 		PnFile.Visible = Not Cfg.DeclMode
+
+		CbTech.DisplayMember = "Caption"
+		CbTech.ValueMember = "Value"
+		CbTech2.DisplayMember = "Caption"
+		CbTech2.ValueMember = "Value"
+		CbTech3.DisplayMember = "Caption"
+		CbTech3.ValueMember = "Value"
+		CbTech4.DisplayMember = "Caption"
+		CbTech4.ValueMember = "Value"
 	End Sub
 
 	'Initialise form
@@ -38,21 +51,38 @@ Public Class VehicleAuxiliariesDialog
 
 	'Set generic values for Declaration mode
 	Private Sub DeclInit()
-		CbTech.Items.Clear()
+
+		CbTech2.Visible = NumAxles > 1
+		CbTech3.Visible = NumAxles > 2
+		CbTech4.Visible = NumAxles > 3
+		lbAxl2.Visible = NumAxles > 1
+		LbAxl3.Visible = NumAxles > 2
+		LbAxl4.Visible = NumAxles > 3
 		Select Case TbID.Text
 			Case VectoCore.Configuration.Constants.Auxiliaries.IDs.Fan
-				CbTech.Items.AddRange(DeclarationData.Fan.GetTechnologies())
+				CbTech.DataSource =
+					DeclarationData.Fan.GetTechnologies().Select(Function(x) New With {.Caption = x, .Value = x}).ToArray()
 			Case VectoCore.Configuration.Constants.Auxiliaries.IDs.SteeringPump
-				CbTech.Items.AddRange(DeclarationData.SteeringPump.GetTechnologies())
+				Dim notSteered = (New String() {AxleNotSteered}).Concat(DeclarationData.SteeringPump.GetTechnologies()).ToArray()
+				CbTech.DataSource =
+					DeclarationData.SteeringPump.GetTechnologies().Select(Function(x) New With {.Caption = x, .Value = x}).ToArray()
+
+				CbTech2.DataSource = notSteered.Select(Function(x) New With {.Caption = x, .Value = x}).ToArray()
+				CbTech3.DataSource = notSteered.Select(Function(x) New With {.Caption = x, .Value = x}).ToArray()
+				CbTech4.DataSource = notSteered.Select(Function(x) New With {.Caption = x, .Value = x}).ToArray()
 			Case VectoCore.Configuration.Constants.Auxiliaries.IDs.HeatingVentilationAirCondition
-				CbTech.Items.AddRange(DeclarationData.HeatingVentilationAirConditioning.GetTechnologies())
+				CbTech.DataSource =
+					DeclarationData.HeatingVentilationAirConditioning.GetTechnologies().Select(
+						Function(x) New With {.Caption = x, .Value = x}).ToArray()
 			Case VectoCore.Configuration.Constants.Auxiliaries.IDs.ElectricSystem
-				CbTech.Items.AddRange(DeclarationData.ElectricSystem.GetTechnologies())
+				CbTech.DataSource =
+					DeclarationData.ElectricSystem.GetTechnologies().Select(Function(x) New With {.Caption = x, .Value = x}).ToArray()
 			Case VectoCore.Configuration.Constants.Auxiliaries.IDs.PneumaticSystem
-				CbTech.Items.AddRange(DeclarationData.PneumaticSystem.GetTechnologies())
+				CbTech.DataSource =
+					DeclarationData.PneumaticSystem.GetTechnologies().Select(Function(x) New With {.Caption = x, .Value = x}).ToArray()
 		End Select
 		If CbTech.Items.Count > 0 Then
-			CbTech.SelectedIndex = 0
+			'CbTech.SelectedIndex = 0
 			PnTech.Enabled = True
 		Else
 			PnTech.Enabled = False
@@ -131,5 +161,18 @@ Public Class VehicleAuxiliariesDialog
 		Else
 			LbIDhelp.Text = String.Format("Header in Driving cycle: <AUX_{1}>", Trim(TbID.Text))
 		End If
+	End Sub
+
+	Private Sub CbTech_SelectedIndexChanged(sender As Object, e As EventArgs) Handles CbTech.SelectedIndexChanged
+	End Sub
+
+	Private Sub CbTech2_SelectedIndexChanged(sender As Object, e As EventArgs) Handles CbTech2.SelectedIndexChanged
+		CbTech3.Enabled = Not (CbTech2.SelectedValue.ToString() = AxleNotSteered)
+		If Not CbTech3.Enabled Then CbTech3.SelectedValue = AxleNotSteered
+	End Sub
+
+	Private Sub CbTech3_SelectedIndexChanged(sender As Object, e As EventArgs) Handles CbTech3.SelectedIndexChanged
+		CbTech4.Enabled = Not (CbTech3.SelectedValue.ToString() = AxleNotSteered)
+		If Not CbTech4.Enabled Then CbTech4.SelectedValue = AxleNotSteered
 	End Sub
 End Class
