@@ -30,7 +30,7 @@ Public Class Vehicle
 	Implements IVehicleEngineeringInputData, IVehicleDeclarationInputData, IRetarderInputData, IPTOTransmissionInputData, 
 				IAngledriveInputData
 	'V2 MassMax is now saved in [t] instead of [kg]
-	Private Const FormatVersion As Short = 7
+
 
 	Private _filePath As String
 	Private _path As String
@@ -203,55 +203,7 @@ Public Class Vehicle
 			Return False
 		End If
 
-		Dim json As New JSONWriter
-		'Header
-		Dim header As Dictionary(Of String, Object) = New Dictionary(Of String, Object) From {
-				{"CreatedBy", Lic.LicString & " (" & Lic.GUID & ")"},
-				{"Date", Now.ToUniversalTime().ToString("o")},
-				{"AppVersion", VECTOvers},
-				{"FileVersion", FormatVersion}}
-
-		'Body
-		Dim body As Dictionary(Of String, Object) = New Dictionary(Of String, Object) From {
-				{"SavedInDeclMode", Cfg.DeclMode},
-				{"VehCat", VehicleCategory.ToString()},
-				{"CurbWeight", Mass},
-				{"CurbWeightExtra", MassExtra},
-				{"Loading", Loading},
-				{"MassMax", MassMax},
-				{"CdA", CdA0},
-				{"rdyn", DynamicTyreRadius},
-				{"CdCorrMode", CrossWindCorrectionMode.GetName()},
-				{"CdCorrFile", CrossWindCorrectionFile.PathOrDummy},
-				{"Retarder", New Dictionary(Of String, Object) From {
-				{"Type", RetarderType.GetName()},
-				{"Ratio", RetarderRatio},
-				{"File", RetarderLossMapFile.PathOrDummy}}},
-				{"Angledrive", New Dictionary(Of String, Object) From {
-				{"Type", AngledriveType.ToString()},
-				{"Ratio", AngledriveRatio},
-				{"LossMap", AngledriveLossMapFile.PathOrDummy}}},
-				{"PTO", New Dictionary(Of String, Object) From {
-				{"Type", PtoType},
-				{"LossMap", PtoLossMap.PathOrDummy},
-				{"Cycle", PtoCycle.PathOrDummy}}},
-				{"AxleConfig", New Dictionary(Of String, Object) From {
-				{"Type", AxleConfiguration.GetName()},
-				{"Axles", (From axle In Axles Select New Dictionary(Of String, Object) From {
-				{"Inertia", axle.Inertia},
-				{"Wheels", axle.Wheels},
-				{"AxleWeightShare", axle.Share},
-				{"TwinTyres", axle.TwinTire},
-				{"RRCISO", axle.RRC},
-				{"FzISO", axle.FzISO}
-				}
-				)}
-				}
-				}
-				}
-
-		json.Content = JToken.FromObject(New Dictionary(Of String, Object) From {{"Header", header}, {"Body", body}})
-		Return json.WriteFile(_filePath)
+		Return JSONFileWriter.Instance.SaveVehicle(Me, Me, Me, Me, _filePath)
 	End Function
 
 

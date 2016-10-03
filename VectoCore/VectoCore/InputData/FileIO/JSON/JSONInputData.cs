@@ -587,7 +587,7 @@ namespace TUGraz.VectoCore.InputData.FileIO.JSON
 			var retVal = new List<AuxiliaryDataInputData>();
 			if (Body["Padd"] != null) {
 				retVal.Add(new AuxiliaryDataInputData() {
-					ID = "ConstanntAux",
+					ID = "ConstantAux",
 					AuxiliaryType = AuxiliaryDemandType.Constant,
 					ConstantPowerDemand = Body.GetEx<double>("Padd").SI<Watt>()
 				});

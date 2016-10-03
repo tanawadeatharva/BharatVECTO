@@ -159,38 +159,7 @@ Public Class Engine
 			Return False
 		End If
 
-		Dim json As New JSONWriter
-
-		'Header
-		Dim header As Dictionary(Of String, Object) = New Dictionary(Of String, Object)
-		header.Add("CreatedBy", Lic.LicString & " (" & Lic.GUID & ")")
-		header.Add("Date", Now.ToUniversalTime().ToString("o"))
-		header.Add("AppVersion", VECTOvers)
-		header.Add("FileVersion", FormatVersion)
-
-		'Body
-		Dim body As Dictionary(Of String, Object) = New Dictionary(Of String, Object)
-
-		body.Add("SavedInDeclMode", Cfg.DeclMode)
-
-		body.Add("ModelName", ModelName)
-
-		body.Add("Displacement", Displacement)
-		body.Add("IdlingSpeed", IdleSpeed)
-		body.Add("Inertia", EngineInertia)
-
-		body.Add("FullLoadCurve", _fullLoadCurvePath.PathOrDummy)
-
-		body.Add("FuelMap", _fuelConsumptionMapPath.PathOrDummy)
-
-		body.Add("WHTC-Urban", WHTCUrbanInput)
-		body.Add("WHTC-Rural", WHTCRuralInput)
-		body.Add("WHTC-Motorway", WHTCMotorwayInput)
-		body.Add("ColdHotBalancingFactor", ColdHotBalancingFactorInput)
-
-		json.Content = JToken.FromObject(New Dictionary(Of String, Object) From {{"Header", header}, {"Body", body}})
-
-		Return json.WriteFile(_filePath)
+		Return New JSONFileWriter().SaveEngine(Me, _filePath)
 	End Function
 
 

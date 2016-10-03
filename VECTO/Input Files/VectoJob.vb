@@ -35,8 +35,6 @@ Public Class VectoJob
 				IDeclarationJobInputData, IDriverEngineeringInputData, IDriverDeclarationInputData, IAuxiliariesEngineeringInputData, 
 				IAuxiliariesDeclarationInputData
 
-	Private Const FormatVersion As Short = 3
-
 	'AA-TB
 	'STORES THE Type and version of the chosen or default Auxiliary Type ( Classic/Original or other )
 	Public AuxiliaryAssembly As String
@@ -108,8 +106,6 @@ Public Class VectoJob
 	End Sub
 
 	Public Function SaveFile() As Boolean
-		Dim json As New JSONWriter
-
 		Dim validationResults As IList(Of ValidationResult) =
 				Validate(If(Cfg.DeclMode, ExecutionMode.Declaration, ExecutionMode.Engineering))
 
@@ -121,321 +117,8 @@ Public Class VectoJob
 			Return False
 		End If
 
-		'Header
-		Dim header As Dictionary(Of String, Object) = New Dictionary(Of String, Object) From {
-				{"CreatedBy", Lic.LicString & " (" & Lic.GUID & ")"},
-				{"Date", Now.ToUniversalTime().ToString("o")},
-				{"AppVersion", VECTOvers},
-				{"FileVersion", FormatVersion}}
-
-		'Body
-		Dim body As Dictionary(Of String, Object) = New Dictionary(Of String, Object)
-
-		body.Add("SavedInDeclMode", Cfg.DeclMode)
-		SavedInDeclMode = Cfg.DeclMode
-
-		'Main Files
-		body.Add("VehicleFile", _vehicleFile.PathOrDummy)
-		body.Add("EngineFile", _engineFile.PathOrDummy)
-		body.Add("GearboxFile", _gearboxFile.PathOrDummy)
-
-		'Cycles
-		If CycleFiles.Count > 0 Then
-			body.Add("Cycles", CycleFiles.Select(Function(sb) sb.PathOrDummy))
-		End If
-
-		'AA-TB
-		'ADVANCED AUXILIARIES 
-		body.Add("AuxiliaryAssembly", AuxiliaryAssembly)
-		body.Add("AuxiliaryVersion", AuxiliaryVersion)
-		body.Add("AdvancedAuxiliaryFilePath", AdvancedAuxiliaryFilePath)
-
-		If AuxPaths.Any() Then
-			body.Add("Aux", AuxPaths.Select(Function(kv) New Dictionary(Of String, Object) From {
-												{"ID", Trim(UCase(kv.Key))},
-												{"Type", kv.Value.Type},
-												{"Path", kv.Value.Path.PathOrDummy},
-												{"Technology", kv.Value.TechnologyList}
-												}))
-		End If
-
-		If Not Cfg.DeclMode Then
-			body.Add("Padd", AuxPAdd)
-		End If
-		body.Add("VACC", _driverAccelerationFile.PathOrDummy)
-		body.Add("EngineOnlyMode", EngineOnly)
-		body.Add("StartStop", New Dictionary(Of String, Object) From {
-					{"Enabled", _startStop},
-					{"MaxSpeed", StartStopMaxSpeed},
-					{"MinTime", StartStopTime},
-					{"Delay", StartStopDelay}})
-		body.Add("LAC", New Dictionary(Of String, Object) From {
-					{"Enabled", LookAheadOn},
-					{"PreviewDistanceFactor", LacPreviewFactor},
-					{"DF_offset", LacDfOffset},
-					{"DF_scaling", LacDfScale},
-					{"DF_targetSpeedLookup", LacDfTargetSpeedFile},
-					{"Df_velocityDropLookup", LacDfVelocityDropFile}})
-
-		'Overspeed / EcoRoll
-		Dim overspeedDic As Dictionary(Of String, Object) = New Dictionary(Of String, Object)
-		If EcoRollOn Then
-			overspeedDic.Add("Mode", "EcoRoll")
-		ElseIf OverSpeedOn Then
-			overspeedDic.Add("Mode", "OverSpeed")
-		Else
-			overspeedDic.Add("Mode", "Off")
-		End If
-		overspeedDic.Add("MinSpeed", VMin)
-		overspeedDic.Add("OverSpeed", OverSpeed)
-		overspeedDic.Add("UnderSpeed", UnderSpeed)
-		body.Add("OverSpeedEcoRoll", overspeedDic)
-
-		json.Content = JToken.FromObject(New Dictionary(Of String, Object) From {{"Header", header}, {"Body", body}})
-		Return json.WriteFile(_sFilePath)
+		Return JSONFileWriter.Instance.SaveJob(Me, _sFilePath)
 	End Function
-
-	'Public Function ReadFile() As Boolean
-	'	Const msgSrc = "Main/ReadInp/GEN"
-
-	'	SetDefault()
-
-	'	Dim json As New JSONParser
-	'	If Not json.ReadFile(_sFilePath) Then Return False
-
-	'	Try
-
-	'		Dim fileVersion As Integer = json.Content.GetEx("Header").GetEx(Of Integer)("FileVersion")
-
-	'		Dim body As JToken = json.Content.GetEx("Body")
-
-	'		If fileVersion > 1 Then
-	'			SavedInDeclMode = body.GetEx(Of Boolean)("SavedInDeclMode")
-	'		Else
-	'			SavedInDeclMode = Cfg.DeclMode
-	'		End If
-
-	'		If Not body("VehicleFile") Is Nothing Then _
-	'			_vehicleFile.Init(_myPath, body.GetEx(Of String)("VehicleFile"))
-
-	'		_engineFile.Init(_myPath, body.GetEx(Of String)("EngineFile"))
-
-	'		If Not body("GearboxFile") Is Nothing Then _
-	'			_gearboxFile.Init(_myPath, body.GetEx(Of String)("GearboxFile"))
-
-	'		If Not body("Cycles") Is Nothing Then
-	'			For Each entry As JToken In body.GetEx("Cycles")
-	'				Dim subPath = New SubPath
-	'				subPath.Init(_myPath, entry.Value(Of String))
-	'				CycleFiles.Add(subPath)
-	'			Next
-	'		End If
-
-	'		'AA-TB
-	'		'ADVANCED AUXILIARIES 
-	'		If Not body("AuxiliaryAssembly") Is Nothing AndAlso
-	'			Not body("AuxiliaryVersion") Is Nothing Then
-
-	'			AuxiliaryAssembly = body("AuxiliaryAssembly").ToString()
-	'			AuxiliaryVersion = body("AuxiliaryVersion").ToString()
-
-	'		End If
-	'		If Not body("AdvancedAuxiliaryFilePath") Is Nothing Then
-	'			AdvancedAuxiliaryFilePath = body("AdvancedAuxiliaryFilePath").ToString()
-	'		End If
-
-
-	'		If Not body("Aux") Is Nothing Then
-	'			For Each dic As JToken In body.GetEx("Aux")
-
-	'				Dim auxId As String = UCase(Trim(dic.GetEx(Of String)("ID")))
-
-	'				If AuxPaths.ContainsKey(auxId) Then
-	'					WorkerMsg(MessageType.Err, "Multiple definitions of the same auxiliary type (" & auxId & ")!", msgSrc)
-	'					Return False
-	'				End If
-
-	'				Dim auxEntry = New AuxEntry
-
-	'				auxEntry.Type = dic.GetEx(Of String)("Type")
-	'				auxEntry.Path.Init(_myPath, dic.GetEx(Of String)("Path"))
-
-	'				If Not dic("Technology") Is Nothing Then
-	'					If fileVersion = 2 Then
-	'						auxEntry.TechnologyList.Add(dic.GetEx(Of String)("Technology"))
-	'					End If
-	'					If fileVersion = 3 Then
-	'						auxEntry.TechnologyList = dic.GetEx("Technology").ToObject(Of List(Of String))() '.FirstOrDefault()
-	'					End If
-	'				End If
-
-	'				If (auxId = Constants.AuxiliaryKey.HVAC) Then
-	'					If auxEntry.TechnologyList.Count > 0 Then ' Not String.IsNullOrWhiteSpace(auxEntry.TechStr) Then
-	'						auxEntry.TechnologyList.Clear()
-	'						WorkerMsg(MessageType.Normal, "Aux: Automatically Upgraded HVAC to new format.", msgSrc)
-	'					End If
-	'				End If
-
-	'				If auxId = Constants.AuxiliaryKey.ElecSys Then
-	'					If auxEntry.TechnologyList.Contains("Custom Technology List") OrElse auxEntry.TechnologyList.Count > 0 Then
-	'						Dim hasTech = False
-
-	'						If Not dic("TechList") Is Nothing Then
-	'							For Each t In dic("TechList")
-	'								hasTech = True
-	'							Next
-	'						End If
-
-	'						auxEntry.TechnologyList.Clear()
-	'						If Not hasTech Then
-	'							auxEntry.TechnologyList.Add("Standard technology")
-	'						Else
-	'							auxEntry.TechnologyList.Add("Standard technology - LED headlights, all")
-	'						End If
-	'						WorkerMsg(MessageType.Normal,
-	'								"Aux: Automatically Upgraded Electric System to new format: '" + auxEntry.TechnologyList.FirstOrDefault() + "'",
-	'								msgSrc)
-	'					End If
-	'				End If
-
-	'				If auxId = Constants.AuxiliaryKey.SteerPump Then
-	'					If _
-	'						auxEntry.TechnologyList.Contains("Variable displacement") OrElse
-	'						auxEntry.TechnologyList.Contains("Hydraulic supported by electric") Then
-	'						auxEntry.TechnologyList.Clear()
-	'						WorkerMsg(MessageType.Warn, "Aux: Steering Pump Technology not automatically convertible. Please set new value.",
-	'								msgSrc)
-	'					End If
-	'				End If
-
-	'				If auxId = Constants.AuxiliaryKey.Fan Then
-	'					If auxEntry.TechnologyList.Contains("Crankshaft mounted - Electronically controlled visco clutch (Default)") Then
-	'						auxEntry.TechnologyList.Clear()
-	'						auxEntry.TechnologyList.Add("Crankshaft mounted - Electronically controlled visco clutch")
-	'					End If
-	'					If auxEntry.TechnologyList.Contains("Crankshaft mounted - On/Off clutch") Then
-	'						auxEntry.TechnologyList.Clear()
-	'						auxEntry.TechnologyList.Add("Crankshaft mounted - On/off clutch")
-	'					End If
-	'					If auxEntry.TechnologyList.Contains("Belt driven or driven via transm. - On/Off clutch") Then
-	'						auxEntry.TechnologyList.Clear()
-	'						auxEntry.TechnologyList.Add("Belt driven or driven via transm. - On/off clutch")
-	'					End If
-	'				End If
-
-	'				If fileVersion = 2 AndAlso auxId = Constants.AuxiliaryKey.PneumSys Then
-	'					auxEntry.TechnologyList.Clear()
-	'					WorkerMsg(MessageType.Warn, "Aux: Pneumatic System must be updated. Please set new value.",
-	'							msgSrc)
-	'				End If
-
-	'				AuxPaths.Add(auxId, auxEntry)
-
-	'			Next
-	'		End If
-
-	'		If Not body("VACC") Is Nothing Then
-	'			_driverAccelerationFile.Init(_myPath, body.GetEx(Of String)("VACC"))
-	'		End If
-
-	'		EngineOnly = body.GetEx(Of Boolean)("EngineOnlyMode")
-
-	'		If Not body("StartStop") Is Nothing Then
-	'			Dim startStop As JToken = body.GetEx("StartStop")
-	'			_startStop = startStop.GetEx(Of Boolean)("Enabled")
-	'			_startStopMaxSpeed = startStop.GetEx(Of Double)("MaxSpeed")
-	'			_startStopMinTime = startStop.GetEx(Of Double)("MinTime")
-	'			StartStopDelay = startStop.GetEx(Of Double)("Delay")
-	'		Else
-	'			_startStop = False
-	'		End If
-
-	'		If Not body("LAC") Is Nothing Then
-	'			Dim lac = body.GetEx("LAC")
-	'			LookAheadOn = lac.GetEx(Of Boolean)("Enabled")
-	'			LacPreviewFactor = If(lac("PreviewDistanceFactor") Is Nothing, 10, lac.GetEx(Of Double)("PreviewDistanceFactor"))
-	'			LacDfOffset = If(lac("DF_offset") Is Nothing, 2.5, lac.GetEx(Of Double)("DF_offset"))
-	'			LacDfScale = If(lac("DF_scaling") Is Nothing, 1.5, lac.GetEx(Of Double)("DF_scaling"))
-	'			LacDfTargetSpeedFile =
-	'				If(Not lac("DF_targetSpeedLookup") Is Nothing, lac.GetEx(Of String)("DF_targetSpeedLookup"), "")
-	'			LacDfVelocityDropFile =
-	'				If(Not lac("Df_velocityDropLookup") Is Nothing, lac.GetEx(Of String)("Df_velocityDropLookup"), "")
-	'		Else
-	'			LookAheadOn = False
-	'		End If
-
-	'		If Not body("OverSpeedEcoRoll") Is Nothing Then
-	'			Dim dic = body("OverSpeedEcoRoll")
-
-	'			Select Case UCase(dic("Mode").ToString).Trim
-	'				Case "ECOROLL"
-	'					OverSpeedOn = False
-	'					EcoRollOn = True
-
-	'				Case "OVERSPEED"
-	'					OverSpeedOn = True
-	'					EcoRollOn = False
-
-	'				Case "OFF"
-	'					OverSpeedOn = False
-	'					EcoRollOn = False
-
-	'				Case Else
-	'					WorkerMsg(MessageType.Err, "Value '" & dic("Mode").ToString() & "' is not valid for OverSpeedEcoRoll/Mode!",
-	'							msgSrc)
-	'					Return False
-	'			End Select
-
-	'			VMin = dic.GetEx(Of Double)("MinSpeed")
-	'			OverSpeed = dic.GetEx(Of Double)("OverSpeed")
-	'			If Not dic("UnderSpeed") Is Nothing Then UnderSpeed = dic.GetEx(Of Double)("UnderSpeed")
-
-	'		Else
-	'			OverSpeedOn = False
-	'			EcoRollOn = False
-	'		End If
-
-
-	'	Catch ex As Exception
-	'		WorkerMsg(MessageType.Err, "Failed to read VECTO file! " & ex.Message, msgSrc)
-	'		Return False
-	'	End Try
-
-
-	'	Return True
-	'End Function
-
-	Private Sub SetDefault()
-
-		AuxiliaryAssembly = "CLASSIC"
-		AuxiliaryVersion = "CLASSIC"
-		AdvancedAuxiliaryFilePath = String.Empty
-
-
-		_startStop = False
-		StartStopMaxSpeed = 5
-		StartStopTime = 5
-		StartStopDelay = 0
-
-		_vehicleFile.Clear()
-		_engineFile.Clear()
-		CycleFiles.Clear()
-		_gearboxFile.Clear()
-
-		_driverAccelerationFile.Clear()
-
-		AuxPaths.Clear()
-		EngineOnly = False
-
-		VMin = 0
-		LookAheadOn = True
-		OverSpeedOn = False
-		EcoRollOn = False
-		OverSpeed = 0
-		UnderSpeed = 0
-
-		SavedInDeclMode = False
-	End Sub
 
 	'This Sub reads those Input-files that do not have their own class, etc.
 
@@ -974,6 +657,13 @@ Public Class VectoJob
 	Protected Function AuxData() As IList(Of AuxiliaryDataInputData)
 		Dim retVal As List(Of AuxiliaryDataInputData) = New List(Of AuxiliaryDataInputData)
 
+		If AuxPAdd > 0 Then
+			retVal.Add(New AuxiliaryDataInputData() With {
+						.ID = "ConstantAux",
+						.AuxiliaryType = AuxiliaryDemandType.Constant,
+						.ConstantPowerDemand = AuxPAdd.SI(Of Watt)()
+						})
+		End If
 		For Each auxEntry As KeyValuePair(Of String, AuxEntry) In AuxPaths
 			Dim theAuxData As AuxiliaryDataInputData = New AuxiliaryDataInputData() With {
 					.Type = AuxiliaryTypeHelper.Parse(auxEntry.Value.Type),
