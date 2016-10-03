@@ -35,6 +35,9 @@ Partial Class VectoJobForm
 		Me.BtDRIrem = New System.Windows.Forms.Button()
 		Me.BtDRIadd = New System.Windows.Forms.Button()
 		Me.GrAux = New System.Windows.Forms.GroupBox()
+		Me.Label9 = New System.Windows.Forms.Label()
+		Me.TbAuxPAdd = New System.Windows.Forms.TextBox()
+		Me.Label8 = New System.Windows.Forms.Label()
 		Me.btnAAUXOpen = New System.Windows.Forms.Button()
 		Me.Label1 = New System.Windows.Forms.Label()
 		Me.btnBrowseAAUXFile = New System.Windows.Forms.Button()
@@ -136,9 +139,6 @@ Partial Class VectoJobForm
 		Me.TbGbxTxt = New System.Windows.Forms.TextBox()
 		Me.TbMass = New System.Windows.Forms.TextBox()
 		Me.ToolTip1 = New System.Windows.Forms.ToolTip(Me.components)
-		Me.Label8 = New System.Windows.Forms.Label()
-		Me.TbAuxPAdd = New System.Windows.Forms.TextBox()
-		Me.Label9 = New System.Windows.Forms.Label()
 		Me.TabPgGen.SuspendLayout()
 		Me.GrCycles.SuspendLayout()
 		Me.GrAux.SuspendLayout()
@@ -276,6 +276,31 @@ Partial Class VectoJobForm
 		Me.GrAux.TabIndex = 9
 		Me.GrAux.TabStop = False
 		Me.GrAux.Text = "Auxiliaries"
+		'
+		'Label9
+		'
+		Me.Label9.AutoSize = True
+		Me.Label9.Location = New System.Drawing.Point(191, 76)
+		Me.Label9.Name = "Label9"
+		Me.Label9.Size = New System.Drawing.Size(24, 13)
+		Me.Label9.TabIndex = 44
+		Me.Label9.Text = "[W]"
+		'
+		'TbAuxPAdd
+		'
+		Me.TbAuxPAdd.Location = New System.Drawing.Point(119, 73)
+		Me.TbAuxPAdd.Name = "TbAuxPAdd"
+		Me.TbAuxPAdd.Size = New System.Drawing.Size(66, 20)
+		Me.TbAuxPAdd.TabIndex = 43
+		'
+		'Label8
+		'
+		Me.Label8.AutoSize = True
+		Me.Label8.Location = New System.Drawing.Point(7, 76)
+		Me.Label8.Name = "Label8"
+		Me.Label8.Size = New System.Drawing.Size(97, 13)
+		Me.Label8.TabIndex = 42
+		Me.Label8.Text = "Constant Aux Load"
 		'
 		'btnAAUXOpen
 		'
@@ -1219,31 +1244,6 @@ Partial Class VectoJobForm
 		Me.TbMass.ReadOnly = True
 		Me.TbMass.Size = New System.Drawing.Size(50, 20)
 		Me.TbMass.TabIndex = 3
-		'
-		'Label8
-		'
-		Me.Label8.AutoSize = True
-		Me.Label8.Location = New System.Drawing.Point(7, 76)
-		Me.Label8.Name = "Label8"
-		Me.Label8.Size = New System.Drawing.Size(97, 13)
-		Me.Label8.TabIndex = 42
-		Me.Label8.Text = "Constant Aux Load"
-		'
-		'TbAuxPAdd
-		'
-		Me.TbAuxPAdd.Location = New System.Drawing.Point(119, 73)
-		Me.TbAuxPAdd.Name = "TbAuxPAdd"
-		Me.TbAuxPAdd.Size = New System.Drawing.Size(66, 20)
-		Me.TbAuxPAdd.TabIndex = 43
-		'
-		'Label9
-		'
-		Me.Label9.AutoSize = True
-		Me.Label9.Location = New System.Drawing.Point(191, 76)
-		Me.Label9.Name = "Label9"
-		Me.Label9.Size = New System.Drawing.Size(24, 13)
-		Me.Label9.TabIndex = 44
-		Me.Label9.Text = "[W]"
 		'
 		'VectoJobForm
 		'
