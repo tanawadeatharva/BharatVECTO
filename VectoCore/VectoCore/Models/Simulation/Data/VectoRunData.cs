@@ -102,11 +102,7 @@ namespace TUGraz.VectoCore.Models.Simulation.Data
 			// ReSharper disable once InconsistentNaming
 			public string ID;
 
-			[Required] public AuxiliaryType Type;
-
 			public IList<string> Technology;
-
-			public string[] TechList;
 
 			[SIRange(0, 100 * Constants.Kilo)] public Watt PowerDemand;
 
