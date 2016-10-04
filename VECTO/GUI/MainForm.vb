@@ -358,7 +358,11 @@ Public Class MainForm
 						If GearboxForm.WindowState = FormWindowState.Minimized Then GearboxForm.WindowState = FormWindowState.Normal
 						GearboxForm.BringToFront()
 					End If
-					GearboxForm.OpenGbx(file)
+					Try
+						GearboxForm.OpenGbx(file)
+					Catch ex As Exception
+						MsgBox("Failed to open Gearbox File: " + ex.Message)
+					End Try
 				Case ".VVEH"
 					If Not VehicleForm.Visible Then
 						VehicleForm.Show()
@@ -380,7 +384,11 @@ Public Class MainForm
 						If EngineForm.WindowState = FormWindowState.Minimized Then EngineForm.WindowState = FormWindowState.Normal
 						EngineForm.BringToFront()
 					End If
-					EngineForm.OpenEngineFile(file)
+					Try
+						EngineForm.OpenEngineFile(file)
+					Catch ex As Exception
+						MsgBox(ex.Message, MsgBoxStyle.OkOnly, "Error loading Engine File")
+					End Try
 				Case ".VECTO"
 					OpenVECTOeditor(file)
 				Case ".VSIG"
@@ -959,8 +967,10 @@ lbFound:
 			mode = ExecutionMode.Declaration
 		Else
 			mode = ExecutionMode.Engineering
-			Physics.FuelDensity = Cfg.FuelDens.SI(Of KilogramPerCubicMeter)() 'New SI(Cfg.FuelDens).Kilo.Gramm.Per.Cubic.Dezi.Meter.Cast(Of KilogramPerCubicMeter)()
-			Physics.AirDensity = Cfg.AirDensity.SI(Of KilogramPerCubicMeter)() 'New SI(Cfg.AirDensity).Kilo.Gramm.Per.Cubic.Meter.Cast(Of KilogramPerCubicMeter)()
+			Physics.FuelDensity = Cfg.FuelDens.SI(Of KilogramPerCubicMeter)() _
+			'New SI(Cfg.FuelDens).Kilo.Gramm.Per.Cubic.Dezi.Meter.Cast(Of KilogramPerCubicMeter)()
+			Physics.AirDensity = Cfg.AirDensity.SI(Of KilogramPerCubicMeter)() _
+			'New SI(Cfg.AirDensity).Kilo.Gramm.Per.Cubic.Meter.Cast(Of KilogramPerCubicMeter)()
 			Physics.CO2PerFuelWeight = Cfg.Co2PerFc
 		End If
 
@@ -1276,7 +1286,11 @@ lbFound:
 		If x = "<New>" Then
 			VectoJobForm.VectoNew()
 		Else
-			VectoJobForm.VECTOload2Form(x)
+			Try
+				VectoJobForm.VECTOload2Form(x)
+			Catch ex As Exception
+				MsgBox(ex.Message, MsgBoxStyle.OkOnly, "Error loading Vecto Job File")
+			End Try
 		End If
 
 		VectoJobForm.Activate()

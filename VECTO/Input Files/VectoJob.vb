@@ -15,6 +15,7 @@ Imports System.Collections.Generic
 Imports System.ComponentModel.DataAnnotations
 Imports System.IO
 Imports System.Linq
+Imports System.Runtime.Remoting.Messaging
 Imports System.Text
 Imports Newtonsoft.Json.Linq
 Imports TUGraz.VECTO.Input_Files
@@ -68,15 +69,15 @@ Public Class VectoJob
 	Public UnderSpeed As Double
 	Public EcoRollOn As Boolean
 
-	Public SavedInDeclMode As Boolean
-	Private _vehicleInputData As JSONComponentInputData
-	Private _engineInputData As JSONComponentInputData
-	Private _gearboxInputData As JSONComponentInputData
 	Public LookAheadMinSpeed As Double
 
 	Public Property StartStopMaxSpeed As Double
 
 	Public Property StartStopTime As Double
+
+	'Private _vehicleInputData As JSONComponentInputData
+	'Private _engineInputData As JSONComponentInputData
+	'Private _gearboxInputData As JSONComponentInputData
 
 	Public Class AuxEntry
 		Public Type As String
@@ -184,7 +185,7 @@ Public Class VectoJob
 	Public ReadOnly Property IDriverDeclarationInputData_SavedInDeclarationMode As Boolean _
 		Implements IDriverDeclarationInputData.SavedInDeclarationMode
 		Get
-			Return SavedInDeclMode
+			Return Cfg.DeclMode
 		End Get
 	End Property
 
@@ -310,9 +311,9 @@ Public Class VectoJob
 	Private Shared Function ValidateEngineOnlyJob(vectoJob As VectoJob, executionMode As ExecutionMode) As ValidationResult
 		Dim result As IList(Of ValidationResult) = New List(Of ValidationResult)
 
-		vectoJob._engineInputData = New JSONComponentInputData(vectoJob._engineFile.FullPath)
+		'vectoJob._engineInputData = New JSONComponentInputData(vectoJob._engineFile.FullPath)
 
-		If vectoJob._engineInputData.EngineInputData Is Nothing Then _
+		If vectoJob.EngineInputData Is Nothing Then _
 			result.Add(New ValidationResult("Engine File is missing or invalid"))
 		If result.Any() Then
 			Return _
@@ -326,18 +327,22 @@ Public Class VectoJob
 
 		Dim jobData As VectoRunData
 
-		vectoJob._vehicleInputData = New JSONComponentInputData(vectoJob._vehicleFile.FullPath)
-		vectoJob._engineInputData = New JSONComponentInputData(vectoJob._engineFile.FullPath)
-		vectoJob._gearboxInputData = New JSONComponentInputData(vectoJob._gearboxFile.FullPath)
+		'vectoJob._vehicleInputData = New JSONComponentInputData(vectoJob._vehicleFile.FullPath)
+		'vectoJob._engineInputData = New JSONComponentInputData(vectoJob._engineFile.FullPath)
+		'vectoJob._gearboxInputData = New JSONComponentInputData(vectoJob._gearboxFile.FullPath)
 
 
 		Dim result As IList(Of ValidationResult) = New List(Of ValidationResult)
 
-		If vectoJob._vehicleInputData.VehicleInputData Is Nothing Then _
+		Dim vehicleInputData As IVehicleEngineeringInputData = vectoJob.VehicleInputData
+		Dim engineInputData As IEngineEngineeringInputData = vectoJob.EngineInputData
+		Dim gearboxInputData As IGearboxEngineeringInputData = vectoJob.GearboxInputData
+
+		If vehicleInputData Is Nothing Then _
 			result.Add(New ValidationResult("Vehicle File is missing or invalid"))
-		If vectoJob._engineInputData.EngineInputData Is Nothing Then _
+		If engineInputData Is Nothing Then _
 			result.Add(New ValidationResult("Engine File is missing or invalid"))
-		If vectoJob._gearboxInputData.GearboxInputData Is Nothing Then _
+		If gearboxInputData Is Nothing Then _
 			result.Add(New ValidationResult("Gearbox File is missing or invalid"))
 
 		If result.Any() Then
@@ -346,13 +351,13 @@ Public Class VectoJob
 		End If
 		Try
 			If mode = ExecutionMode.Declaration Then
-				If Not vectoJob._vehicleInputData.VehicleInputData.SavedInDeclarationMode Then
+				If Not vehicleInputData.SavedInDeclarationMode Then
 					result.Add(New ValidationResult("Vehicle File is not in Declaration Mode"))
 				End If
-				If Not vectoJob._engineInputData.EngineInputData.SavedInDeclarationMode Then
+				If Not engineInputData.SavedInDeclarationMode Then
 					result.Add(New ValidationResult("Engine File is not in Declaration Mode"))
 				End If
-				If Not vectoJob._gearboxInputData.GearboxInputData.SavedInDeclarationMode Then
+				If Not gearboxInputData.SavedInDeclarationMode Then
 					result.Add(New ValidationResult("Gearbox File is not in Declaration Mode"))
 				End If
 				If result.Any() Then
@@ -364,13 +369,13 @@ Public Class VectoJob
 
 				jobData = dataFactory.NextRun().First()
 			Else
-				If vectoJob._vehicleInputData.VehicleInputData.SavedInDeclarationMode Then
+				If vehicleInputData.SavedInDeclarationMode Then
 					result.Add(New ValidationResult("Vehicle File is not in Engineering Mode"))
 				End If
-				If vectoJob._engineInputData.EngineInputData.SavedInDeclarationMode Then
+				If engineInputData.SavedInDeclarationMode Then
 					result.Add(New ValidationResult("Engine File is not in Engineering Mode"))
 				End If
-				If vectoJob._gearboxInputData.GearboxInputData.SavedInDeclarationMode Then
+				If gearboxInputData.SavedInDeclarationMode Then
 					result.Add(New ValidationResult("Gearbox File is not in Engineering Mode"))
 				End If
 				If result.Any() Then
@@ -393,10 +398,10 @@ Public Class VectoJob
 
 		Catch ex As Exception
 			Return New ValidationResult(ex.Message)
-		Finally
-			vectoJob._vehicleInputData = Nothing
-			vectoJob._engineInputData = Nothing
-			vectoJob._gearboxInputData = Nothing
+			'Finally
+			'	vectoJob._vehicleInputData = Nothing
+			'	vectoJob._engineInputData = Nothing
+			'	vectoJob._gearboxInputData = Nothing
 		End Try
 	End Function
 
@@ -410,96 +415,110 @@ Public Class VectoJob
 	Public ReadOnly Property IDeclarationInputDataProvider_VehicleInputData As IVehicleDeclarationInputData _
 		Implements IDeclarationInputDataProvider.VehicleInputData
 		Get
-			Return _vehicleInputData.VehicleInputData
+			If Not File.Exists(_vehicleFile.FullPath) Then Return Nothing
+			Return New JSONComponentInputData(_vehicleFile.FullPath).VehicleInputData
 		End Get
 	End Property
+
+	Public ReadOnly Property VehicleInputData As IVehicleEngineeringInputData _
+		Implements IEngineeringInputDataProvider.VehicleInputData
+		Get
+			If Not File.Exists(_vehicleFile.FullPath) Then Return Nothing
+			Return New JSONComponentInputData(_vehicleFile.FullPath).VehicleInputData
+		End Get
+	End Property
+
 
 	Public Function IDeclarationInputDataProvider_JobInputData() As IDeclarationJobInputData _
 		Implements IDeclarationInputDataProvider.JobInputData
 		Return Me
 	End Function
 
-	Public ReadOnly Property VehicleInputData As IVehicleEngineeringInputData _
-		Implements IEngineeringInputDataProvider.VehicleInputData
-		Get
-			Return _vehicleInputData.VehicleInputData
-		End Get
-	End Property
 
 	Public ReadOnly Property IDeclarationInputDataProvider_GearboxInputData As IGearboxDeclarationInputData _
 		Implements IDeclarationInputDataProvider.GearboxInputData
 		Get
-			Return _gearboxInputData.GearboxInputData
+			If Not File.Exists(_gearboxFile.FullPath) Then Return Nothing
+			Return New JSONComponentInputData(_gearboxFile.FullPath).GearboxInputData
 		End Get
 	End Property
 
 	Public ReadOnly Property GearboxInputData As IGearboxEngineeringInputData _
 		Implements IEngineeringInputDataProvider.GearboxInputData
 		Get
-			Return _gearboxInputData.GearboxInputData
+			If Not File.Exists(_gearboxFile.FullPath) Then Return Nothing
+			Return New JSONComponentInputData(_gearboxFile.FullPath).GearboxInputData
 		End Get
 	End Property
 
 	Public ReadOnly Property IDeclarationInputDataProvider_TorqueConverterInputData As ITorqueConverterDeclarationInputData _
 		Implements IDeclarationInputDataProvider.TorqueConverterInputData
 		Get
-			Return _gearboxInputData.TorqueConverterInputData
+			If Not File.Exists(_gearboxFile.FullPath) Then Return Nothing
+			Return New JSONComponentInputData(_gearboxFile.FullPath).TorqueConverterInputData
 		End Get
 	End Property
 
 	Public ReadOnly Property TorqueConverterInputData As ITorqueConverterEngineeringInputData _
 		Implements IEngineeringInputDataProvider.TorqueConverterInputData
 		Get
-			Return _gearboxInputData.TorqueConverterInputData
+			If Not File.Exists(_gearboxFile.FullPath) Then Return Nothing
+			Return New JSONComponentInputData(_gearboxFile.FullPath).TorqueConverterInputData
 		End Get
 	End Property
 
 	Public ReadOnly Property IDeclarationInputDataProvider_AxleGearInputData As IAxleGearInputData _
 		Implements IDeclarationInputDataProvider.AxleGearInputData
 		Get
-			Return _gearboxInputData.AxleGearInputData
+			If Not File.Exists(_gearboxFile.FullPath) Then Return Nothing
+			Return New JSONComponentInputData(_gearboxFile.FullPath).AxleGearInputData
 		End Get
 	End Property
 
 	Public ReadOnly Property AxleGearInputData As IAxleGearInputData _
 		Implements IEngineeringInputDataProvider.AxleGearInputData
 		Get
-			Return _gearboxInputData.AxleGearInputData
+			If Not File.Exists(_gearboxFile.FullPath) Then Return Nothing
+			Return New JSONComponentInputData(_gearboxFile.FullPath).AxleGearInputData
 		End Get
 	End Property
 
 	Public ReadOnly Property DeclarationInputDataProviderAngledriveInputData As IAngledriveInputData _
 		Implements IDeclarationInputDataProvider.AngledriveInputData
 		Get
-			Return _vehicleInputData.AngledriveInputData
+			If Not File.Exists(_vehicleFile.FullPath) Then Return Nothing
+			Return New JSONComponentInputData(_vehicleFile.FullPath).AngledriveInputData
 		End Get
 	End Property
 
 	Public ReadOnly Property AngledriveInputData As IAngledriveInputData _
 		Implements IEngineeringInputDataProvider.AngledriveInputData
 		Get
-			Return _vehicleInputData.AngledriveInputData
+			If Not File.Exists(_vehicleFile.FullPath) Then Return Nothing
+			Return New JSONComponentInputData(_vehicleFile.FullPath).AngledriveInputData
 		End Get
 	End Property
 
 	Public ReadOnly Property IDeclarationInputDataProvider_EngineInputData As IEngineDeclarationInputData _
 		Implements IDeclarationInputDataProvider.EngineInputData
 		Get
-			Return _engineInputData.EngineInputData
+			If Not File.Exists(_engineFile.FullPath) Then Return Nothing
+			Return New JSONComponentInputData(_engineFile.FullPath).EngineInputData
 		End Get
 	End Property
 
 	Public ReadOnly Property EngineInputData As IEngineEngineeringInputData _
 		Implements IEngineeringInputDataProvider.EngineInputData
 		Get
-			Return _engineInputData.EngineInputData
+			If Not File.Exists(_engineFile.FullPath) Then Return Nothing
+			Return New JSONComponentInputData(_engineFile.FullPath).EngineInputData
 		End Get
 	End Property
 
 	Public Function AuxiliaryInputData() As IAuxiliariesEngineeringInputData _
 		Implements IEngineeringInputDataProvider.AuxiliaryInputData
 
-		Return _vehicleInputData.AuxiliaryInputData()
+		Return Me
 	End Function
 
 	Public Function IDeclarationInputDataProvider_AuxiliaryInputData() As IAuxiliariesDeclarationInputData _
@@ -511,14 +530,16 @@ Public Class VectoJob
 	Public ReadOnly Property IDeclarationInputDataProvider_RetarderInputData As IRetarderInputData _
 		Implements IDeclarationInputDataProvider.RetarderInputData
 		Get
-			Return _vehicleInputData.RetarderInputData
+			If Not File.Exists(_vehicleFile.FullPath) Then Return Nothing
+			Return New JSONComponentInputData(_vehicleFile.FullPath).RetarderInputData
 		End Get
 	End Property
 
 	Public ReadOnly Property RetarderInputData As IRetarderInputData _
 		Implements IEngineeringInputDataProvider.RetarderInputData
 		Get
-			Return _vehicleInputData.RetarderInputData
+			If Not File.Exists(_vehicleFile.FullPath) Then Return Nothing
+			Return New JSONComponentInputData(_vehicleFile.FullPath).RetarderInputData
 		End Get
 	End Property
 
@@ -539,14 +560,15 @@ Public Class VectoJob
 	Public ReadOnly Property PTOTransmissionInputData As IPTOTransmissionInputData _
 		Implements IEngineeringInputDataProvider.PTOTransmissionInputData
 		Get
-			Return _vehicleInputData.PTOTransmissionInputData
+			If Not File.Exists(_vehicleFile.FullPath) Then Return Nothing
+			Return New JSONComponentInputData(_vehicleFile.FullPath).PTOTransmissionInputData
 		End Get
 	End Property
 
 
 	Public ReadOnly Property SavedInDeclarationMode As Boolean Implements IDeclarationJobInputData.SavedInDeclarationMode
 		Get
-			Return SavedInDeclMode
+			Return Cfg.DeclMode
 		End Get
 	End Property
 
@@ -561,13 +583,15 @@ Public Class VectoJob
 	Public ReadOnly Property IEngineeringJobInputData_Vehicle As IVehicleEngineeringInputData _
 		Implements IEngineeringJobInputData.Vehicle
 		Get
-			Return _vehicleInputData.VehicleInputData
+			If Not File.Exists(_vehicleFile.FullPath) Then Return Nothing
+			Return New JSONComponentInputData(_vehicleFile.FullPath).VehicleInputData
 		End Get
 	End Property
 
 	Public ReadOnly Property Vehicle As IVehicleDeclarationInputData Implements IDeclarationJobInputData.Vehicle
 		Get
-			Return _vehicleInputData.VehicleInputData
+			If Not File.Exists(_vehicleFile.FullPath) Then Return Nothing
+			Return New JSONComponentInputData(_vehicleFile.FullPath).VehicleInputData
 		End Get
 	End Property
 
@@ -615,7 +639,7 @@ Public Class VectoJob
 	Public ReadOnly Property IAuxiliariesDeclarationInputData_SavedInDeclarationMode As Boolean _
 		Implements IAuxiliariesDeclarationInputData.SavedInDeclarationMode
 		Get
-			Return SavedInDeclMode
+			Return Cfg.DeclMode
 		End Get
 	End Property
 

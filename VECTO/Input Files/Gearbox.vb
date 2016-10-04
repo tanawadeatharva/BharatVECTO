@@ -28,8 +28,7 @@ Imports TUGraz.VectoCore.Utils
 <CustomValidation(GetType(Gearbox), "ValidateGearbox")>
 Public Class Gearbox
 	Implements IGearboxEngineeringInputData, IGearboxDeclarationInputData, IAxleGearInputData, 
-				ITorqueConverterEngineeringInputData, 
-				ITorqueConverterDeclarationInputData
+				ITorqueConverterEngineeringInputData, ITorqueConverterDeclarationInputData
 
 	Private _myPath As String
 	Private _filePath As String
@@ -116,7 +115,7 @@ Public Class Gearbox
 			Return False
 		End If
 
-		Return JSONFileWriter.Instance.SaveGearbox(Me, _filePath)
+		Return JSONFileWriter.Instance.SaveGearbox(Me, Me, _filePath)
 	End Function
 
 
@@ -440,6 +439,7 @@ Public Class Gearbox
 
 	Public ReadOnly Property TCData As TableData Implements ITorqueConverterDeclarationInputData.TCData
 		Get
+			If Not File.Exists(_torqueConverterFile.FullPath) Then Return Nothing
 			Return VectoCSVFile.Read(_torqueConverterFile.FullPath)
 		End Get
 	End Property

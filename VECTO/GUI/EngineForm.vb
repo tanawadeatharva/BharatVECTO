@@ -72,7 +72,14 @@ Public Class EngineForm
 	End Sub
 
 	Private Sub ToolStripBtOpen_Click(sender As Object, e As EventArgs) Handles ToolStripBtOpen.Click
-		If EngineFileBrowser.OpenDialog(_engFile) Then OpenEngineFile(EngineFileBrowser.Files(0))
+		If EngineFileBrowser.OpenDialog(_engFile) Then
+			Try
+				OpenEngineFile(EngineFileBrowser.Files(0))
+			Catch ex As Exception
+				MsgBox(ex.Message, MsgBoxStyle.OkOnly, "Error loading Engine File")
+			End Try
+
+		End If
 	End Sub
 
 	Private Sub ToolStripBtSave_Click(sender As Object, e As EventArgs) Handles ToolStripBtSave.Click

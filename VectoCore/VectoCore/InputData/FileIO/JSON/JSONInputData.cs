@@ -394,6 +394,10 @@ namespace TUGraz.VectoCore.InputData.FileIO.JSON
 		{
 			get
 			{
+				if (Body[JsonKeys.DriverData_LookaheadCoasting] == null) {
+					return null;
+				}
+
 				var lac = Body.GetEx(JsonKeys.DriverData_LookaheadCoasting);
 				var distanceScalingFactor = lac["PreviewDistanceFactor"] != null
 					? lac.GetEx<double>("PreviewDistanceFactor")

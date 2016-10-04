@@ -122,7 +122,13 @@ Public Class GearboxForm
 	End Sub
 
 	Private Sub ToolStripBtOpen_Click(sender As Object, e As EventArgs) Handles ToolStripBtOpen.Click
-		If GearboxFileBrowser.OpenDialog(_gbxFile) Then OpenGbx(GearboxFileBrowser.Files(0))
+		If GearboxFileBrowser.OpenDialog(_gbxFile) Then
+			Try
+				OpenGbx(GearboxFileBrowser.Files(0))
+			Catch ex As Exception
+				MsgBox("Failed to open Gearbox File: " + ex.Message)
+			End Try
+		End If
 	End Sub
 
 	Private Sub ToolStripBtSave_Click(sender As Object, e As EventArgs) Handles ToolStripBtSave.Click
@@ -273,15 +279,15 @@ Public Class GearboxForm
 		TbStartAcc.Text = gearbox.StartAcceleration.ToGUIFormat()
 
 		Dim torqueConverter As ITorqueConverterEngineeringInputData = gearbox.TorqueConverter
-		If torqueConverter Is Nothing Then
+		If torqueConverter Is Nothing OrElse gearbox.Type.ManualTransmission() Then
 			TbTCfile.Text = ""
 			TbTCrefrpm.Text = ""
 			TbTCinertia.Text = ""
 			TBTCShiftPolygon.Text = ""
 		Else
 			TbTCfile.Text = If(torqueConverter.TCData Is Nothing, "", GetRelativePath(torqueConverter.TCData.Source, basePath))
-			TbTCrefrpm.Text = torqueConverter.ReferenceRPM.AsRPM.ToGUIFormat()
-			TbTCinertia.Text = torqueConverter.Inertia.ToGUIFormat()
+			TbTCrefrpm.Text = If(torqueConverter.ReferenceRPM Is Nothing, "", torqueConverter.ReferenceRPM.AsRPM.ToGUIFormat())
+			TbTCinertia.Text = If(torqueConverter.Inertia Is Nothing, "", torqueConverter.Inertia.ToGUIFormat())
 			TBTCShiftPolygon.Text =
 				If(torqueConverter.ShiftPolygon Is Nothing, "", GetRelativePath(torqueConverter.ShiftPolygon.Source, basePath))
 		End If

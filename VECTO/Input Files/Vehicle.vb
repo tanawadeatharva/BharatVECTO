@@ -304,7 +304,7 @@ Public Class Vehicle
 
 	Public ReadOnly Property CurbWeightChassis As Kilogram Implements IVehicleDeclarationInputData.CurbWeightChassis
 		Get
-			Return MassExtra.SI(Of Kilogram)()
+			Return Mass.SI(Of Kilogram)()
 		End Get
 	End Property
 
@@ -350,7 +350,7 @@ Public Class Vehicle
 
 	Public ReadOnly Property CurbWeightExtra As Kilogram Implements IVehicleEngineeringInputData.CurbWeightExtra
 		Get
-			Return Mass.SI(Of Kilogram)()
+			Return MassExtra.SI(Of Kilogram)()
 		End Get
 	End Property
 
