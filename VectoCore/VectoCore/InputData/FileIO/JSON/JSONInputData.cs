@@ -394,6 +394,10 @@ namespace TUGraz.VectoCore.InputData.FileIO.JSON
 		{
 			get
 			{
+				if (Body[JsonKeys.DriverData_LookaheadCoasting] == null) {
+					return null;
+				}
+
 				var lac = Body.GetEx(JsonKeys.DriverData_LookaheadCoasting);
 				var distanceScalingFactor = lac["PreviewDistanceFactor"] != null
 					? lac.GetEx<double>("PreviewDistanceFactor")
@@ -587,7 +591,7 @@ namespace TUGraz.VectoCore.InputData.FileIO.JSON
 			var retVal = new List<AuxiliaryDataInputData>();
 			if (Body["Padd"] != null) {
 				retVal.Add(new AuxiliaryDataInputData() {
-					ID = "ConstanntAux",
+					ID = "ConstantAux",
 					AuxiliaryType = AuxiliaryDemandType.Constant,
 					ConstantPowerDemand = Body.GetEx<double>("Padd").SI<Watt>()
 				});

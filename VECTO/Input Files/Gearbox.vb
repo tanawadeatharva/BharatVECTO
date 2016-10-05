@@ -28,10 +28,7 @@ Imports TUGraz.VectoCore.Utils
 <CustomValidation(GetType(Gearbox), "ValidateGearbox")>
 Public Class Gearbox
 	Implements IGearboxEngineeringInputData, IGearboxDeclarationInputData, IAxleGearInputData, 
-				ITorqueConverterEngineeringInputData, 
-				ITorqueConverterDeclarationInputData
-
-	Private Const FormatVersion As Short = 6
+				ITorqueConverterEngineeringInputData, ITorqueConverterDeclarationInputData
 
 	Private _myPath As String
 	Private _filePath As String
@@ -49,12 +46,12 @@ Public Class Gearbox
 	Public MaxTorque As List(Of String)
 
 	Public TorqueResv As Double
-	Public SkipGears As Boolean
+	'Public SkipGears As Boolean
 	Public ShiftTime As Double
 	Public TorqueResvStart As Double
 	Public StartSpeed As Double
 	Public StartAcc As Double
-	Public ShiftInside As Boolean
+	'Public ShiftInside As Boolean
 
 	Public Type As GearboxType
 
@@ -89,12 +86,12 @@ Public Class Gearbox
 		MaxTorque = New List(Of String)
 
 		TorqueResv = 0
-		SkipGears = False
+		'SkipGears = False
 		ShiftTime = 0
 		TorqueResvStart = 0
 		StartSpeed = 0
 		StartAcc = 0
-		ShiftInside = False
+		'ShiftInside = False
 
 		Type = GearboxType.MT
 
@@ -118,72 +115,7 @@ Public Class Gearbox
 			Return False
 		End If
 
-		Dim i As Integer
-		Dim json As New JSONWriter
-
-		'Header
-		Dim header As Dictionary(Of String, Object) = New Dictionary(Of String, Object)
-		header.Add("CreatedBy", Lic.LicString & " (" & Lic.GUID & ")")
-		header.Add("Date", Now.ToUniversalTime().ToString("o"))
-		header.Add("AppVersion", VECTOvers)
-		header.Add("FileVersion", FormatVersion)
-
-
-		'Body
-		Dim body As Dictionary(Of String, Object) = New Dictionary(Of String, Object)
-
-		body.Add("SavedInDeclMode", Cfg.DeclMode)
-
-		body.Add("ModelName", ModelName)
-
-		body.Add("Inertia", GbxInertia)
-		body.Add("TracInt", TracIntrSi)
-
-		Dim ls As New List(Of Dictionary(Of String, Object))
-		For i = 0 To GearRatios.Count - 1
-			Dim gearDict As New Dictionary(Of String, Object)
-			gearDict.Add("Ratio", GearRatios(i))
-			If IsNumeric(GearLossMap(i, True)) Then
-				gearDict.Add("Efficiency", GearLossmaps(i).PathOrDummy)
-			Else
-				gearDict.Add("LossMap", GearLossmaps(i).PathOrDummy)
-			End If
-			If i > 0 Then
-				gearDict.Add("ShiftPolygon", GearshiftFiles(i).PathOrDummy)
-				gearDict.Add("MaxTorque", MaxTorque(i))
-			End If
-
-			ls.Add(gearDict)
-		Next
-		body.Add("Gears", ls)
-
-		body.Add("TqReserve", TorqueResv)
-		body.Add("SkipGears", SkipGears)
-		body.Add("ShiftTime", ShiftTime)
-		body.Add("EaryShiftUp", ShiftInside)
-
-		body.Add("StartTqReserve", TorqueResvStart)
-		body.Add("StartSpeed", StartSpeed)
-		body.Add("StartAcc", StartAcc)
-
-		body.Add("GearboxType", Type)
-
-		Dim torqueConverterDict As New Dictionary(Of String, Object)
-		torqueConverterDict.Add("Enabled", TorqueConverterEnabled)
-		torqueConverterDict.Add("File", _torqueConverterFile.PathOrDummy)
-		torqueConverterDict.Add("RefRPM", TorqueConverterReferenceRpm)
-		torqueConverterDict.Add("Inertia", TorqueConverterInertia)
-		torqueConverterDict.Add("ShiftPolygon", TorqueConverterShiftPolygonFile)
-		body.Add("TorqueConverter", torqueConverterDict)
-
-
-		body.Add("DownshiftAferUpshiftDelay", DownshiftAfterUpshift)
-		body.Add("UpshiftAfterDownshiftDelay", UpshiftAfterDownshift)
-		body.Add("UpshiftMinAcceleration", UpshiftMinAcceleration)
-
-		json.Content = JToken.FromObject(New Dictionary(Of String, Object) From {{"Header", header}, {"Body", body}})
-
-		Return json.WriteFile(_filePath)
+		Return JSONFileWriter.Instance.SaveGearbox(Me, Me, _filePath)
 	End Function
 
 
@@ -445,7 +377,7 @@ Public Class Gearbox
 
 	Public ReadOnly Property TorqueReserve As Double Implements IGearboxEngineeringInputData.TorqueReserve
 		Get
-			Return TorqueResv
+			Return TorqueResv / 100
 		End Get
 	End Property
 
@@ -507,6 +439,7 @@ Public Class Gearbox
 
 	Public ReadOnly Property TCData As TableData Implements ITorqueConverterDeclarationInputData.TCData
 		Get
+			If Not File.Exists(_torqueConverterFile.FullPath) Then Return Nothing
 			Return VectoCSVFile.Read(_torqueConverterFile.FullPath)
 		End Get
 	End Property

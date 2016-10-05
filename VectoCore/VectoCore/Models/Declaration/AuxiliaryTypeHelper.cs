@@ -1,4 +1,5 @@
-﻿using System.Collections.Generic;
+﻿using System;
+using System.Collections.Generic;
 using System.Linq;
 using TUGraz.VectoCommon.Models;
 using TUGraz.VectoCore.Configuration;
@@ -30,6 +31,11 @@ namespace TUGraz.VectoCore.Models.Declaration
 		{
 			AuxiliaryType aux;
 			return StrToAux.TryGetValue(s, out aux) ? aux : AuxiliaryType.Fan;
+		}
+
+		public static AuxiliaryType ParseKey(string s)
+		{
+			return AuxToKey.FirstOrDefault(x => x.Value.Equals(s, StringComparison.InvariantCultureIgnoreCase)).Key;
 		}
 
 		public static string ToString(AuxiliaryType t)

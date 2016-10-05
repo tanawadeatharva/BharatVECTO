@@ -72,7 +72,13 @@ Public Class EngineForm
 	End Sub
 
 	Private Sub ToolStripBtOpen_Click(sender As Object, e As EventArgs) Handles ToolStripBtOpen.Click
-		If EngineFileBrowser.OpenDialog(_engFile) Then OpenEngineFile(EngineFileBrowser.Files(0))
+		If EngineFileBrowser.OpenDialog(_engFile) Then
+			Try
+				OpenEngineFile(EngineFileBrowser.Files(0))
+			Catch ex As Exception
+				MsgBox(ex.Message, MsgBoxStyle.OkOnly, "Error loading Engine File")
+			End Try
+		End If
 	End Sub
 
 	Private Sub ToolStripBtSave_Click(sender As Object, e As EventArgs) Handles ToolStripBtSave.Click
@@ -369,14 +375,14 @@ Public Class EngineForm
 		Try
 			Dim fldFile As String =
 					If(Not String.IsNullOrWhiteSpace(_engFile), Path.Combine(Path.GetDirectoryName(_engFile), TbFLD.Text), TbFLD.Text)
-			fullLoadCurve = FullLoadCurveReader.Create(VectoCSVFile.Read(fldFile), engineFld:=True)
+			If File.Exists(fldFile) Then fullLoadCurve = FullLoadCurveReader.Create(VectoCSVFile.Read(fldFile), engineFld:=True)
 		Catch ex As Exception
 		End Try
 
 		Try
 			Dim fcFile As String =
 					If(Not String.IsNullOrWhiteSpace(_engFile), Path.Combine(Path.GetDirectoryName(_engFile), TbMAP.Text), TbMAP.Text)
-			fcMap = FuelConsumptionMapReader.Create(VectoCSVFile.Read(fcFile))
+			if File.Exists(fcfile) then fcMap = FuelConsumptionMapReader.Create(VectoCSVFile.Read(fcFile))
 		Catch ex As Exception
 		End Try
 

@@ -271,8 +271,11 @@ Public Class VectoJobForm
 			If EngineForm.WindowState = FormWindowState.Minimized Then EngineForm.WindowState = FormWindowState.Normal
 			EngineForm.BringToFront()
 		End If
-
-		If Not Trim(f) = "" Then EngineForm.OpenEngineFile(f)
+		Try
+			If Not Trim(f) = "" Then EngineForm.OpenEngineFile(f)
+		Catch ex As Exception
+			MsgBox(ex.Message, MsgBoxStyle.OkOnly, "Error loading Engine File")
+		End Try
 	End Sub
 
 	'Open Gearbox Editor
@@ -297,8 +300,11 @@ Public Class VectoJobForm
 			If GearboxForm.WindowState = FormWindowState.Minimized Then GearboxForm.WindowState = FormWindowState.Normal
 			GearboxForm.BringToFront()
 		End If
-
-		If Not Trim(f) = "" Then GearboxForm.OpenGbx(f)
+		Try
+			If Not Trim(f) = "" Then GearboxForm.OpenGbx(f)
+		Catch ex As Exception
+			MsgBox("Failed to open Gearbox File: " + ex.Message)
+		End Try
 	End Sub
 
 #End Region
@@ -312,7 +318,14 @@ Public Class VectoJobForm
 
 	'Open
 	Private Sub ToolStripBtOpen_Click(sender As Object, e As EventArgs) Handles ToolStripBtOpen.Click
-		If JobfileFileBrowser.OpenDialog(VectoFile, False, "vecto") Then VECTOload2Form(JobfileFileBrowser.Files(0))
+		If JobfileFileBrowser.OpenDialog(VectoFile, False, "vecto") Then
+			Try
+				VECTOload2Form(JobfileFileBrowser.Files(0))
+			Catch ex As Exception
+				MsgBox(ex.Message, MsgBoxStyle.OkOnly, "Error loading Vecto Job File")
+			End Try
+
+		End If
 	End Sub
 
 	'Save
@@ -508,19 +521,20 @@ Public Class VectoJobForm
 		TbOverspeed.Text = driver.OverSpeedEcoRoll.OverSpeed.AsKmph.ToGUIFormat()
 		TbUnderSpeed.Text = driver.OverSpeedEcoRoll.UnderSpeed.AsKmph.ToGUIFormat()
 		TbVmin.Text = driver.OverSpeedEcoRoll.MinSpeed.AsKmph.ToGUIFormat()
-		CbLookAhead.Checked = driver.Lookahead.Enabled
-		'TbAlookahead.Text = CStr(VEC0.ALookahead)
-		tbLacMinSpeed.Text = driver.Lookahead.MinSpeed.AsKmph.ToGUIFormat()
-		'TbVminLA.Text = CStr(VEC0.VMinLa)
-		tbLacPreviewFactor.Text = driver.Lookahead.LookaheadDistanceFactor.ToGUIFormat()
-		tbDfCoastingOffset.Text = driver.Lookahead.CoastingDecisionFactorOffset.ToGUIFormat()
-		tbDfCoastingScale.Text = driver.Lookahead.CoastingDecisionFactorScaling.ToGUIFormat()
+		If Not driver.Lookahead Is Nothing Then
+			CbLookAhead.Checked = driver.Lookahead.Enabled
+			'TbAlookahead.Text = CStr(VEC0.ALookahead)
+			tbLacMinSpeed.Text = driver.Lookahead.MinSpeed.AsKmph.ToGUIFormat()
+			'TbVminLA.Text = CStr(VEC0.VMinLa)
+			tbLacPreviewFactor.Text = driver.Lookahead.LookaheadDistanceFactor.ToGUIFormat()
+			tbDfCoastingOffset.Text = driver.Lookahead.CoastingDecisionFactorOffset.ToGUIFormat()
+			tbDfCoastingScale.Text = driver.Lookahead.CoastingDecisionFactorScaling.ToGUIFormat()
 
-		tbLacDfTargetSpeedFile.Text = If(driver.Lookahead.CoastingDecisionFactorTargetSpeedLookup Is Nothing, "",
-										GetRelativePath(driver.Lookahead.CoastingDecisionFactorTargetSpeedLookup.Source, _basePath))
-		tbLacDfVelocityDropFile.Text = If(driver.Lookahead.CoastingDecisionFactorVelocityDropLookup Is Nothing, "",
-										GetRelativePath(driver.Lookahead.CoastingDecisionFactorVelocityDropLookup.Source, _basePath))
-
+			tbLacDfTargetSpeedFile.Text = If(driver.Lookahead.CoastingDecisionFactorTargetSpeedLookup Is Nothing, "",
+											GetRelativePath(driver.Lookahead.CoastingDecisionFactorTargetSpeedLookup.Source, _basePath))
+			tbLacDfVelocityDropFile.Text = If(driver.Lookahead.CoastingDecisionFactorVelocityDropLookup Is Nothing, "",
+											GetRelativePath(driver.Lookahead.CoastingDecisionFactorVelocityDropLookup.Source, _basePath))
+		End If
 		'-------------------------------------------------------------
 
 		DeclInit()
@@ -615,8 +629,9 @@ Public Class VectoJobForm
 
 			If Cfg.DeclMode Then
 				auxEntry.TechnologyList.Clear()
-				auxEntry.TechnologyList.AddRange(lv0.SubItems(AuxViewColumns.AuxInputOrTech).Text.Split(";"c).Select(
-					Function(x) Trim(x)))
+				auxEntry.TechnologyList.AddRange(
+					lv0.SubItems(AuxViewColumns.AuxInputOrTech).Text.Split(";"c).Select(
+						Function(x) Trim(x)))
 			Else
 				auxEntry.Path.Init(GetPath(file), lv0.SubItems(AuxViewColumns.AuxInputOrTech).Text)
 			End If
