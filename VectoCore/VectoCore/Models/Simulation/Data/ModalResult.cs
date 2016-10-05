@@ -376,14 +376,14 @@ namespace TUGraz.VectoCore.Models.Simulation.Data
 		[ModalResultField(typeof(int), caption: "AA_OverrunFlag [bool]")] AA_OverrunFlag,
 		[ModalResultField(typeof(int), caption: "AA_EngineIdleFlag [bool]")] AA_EngineIdleFlag,
 		[ModalResultField(typeof(int), caption: "AA_CompressorFlag [bool]")] AA_CompressorFlag,
-		[ModalResultField(typeof(SI), caption: "AA_TotalCycleFC_Grams [g]")] AA_TotalCycleFC_Grams,
+		[ModalResultField(typeof(SI), caption: "AA_TotalCycleFC_Grams [g]", outputFactor: 1000)] AA_TotalCycleFC_Grams,
 		[ModalResultField(typeof(SI), caption: "AA_TotalCycleFC_Litres [l]")] AA_TotalCycleFC_Litres,
 		[ModalResultField(typeof(SI), caption: "AA_AveragePowerDemandCrankHVACMechanicals [W]")] AA_AveragePowerDemandCrankHVACMechanicals,
 		[ModalResultField(typeof(SI), caption: "AA_AveragePowerDemandCrankHVACElectricals [W]")] AA_AveragePowerDemandCrankHVACElectricals,
 		[ModalResultField(typeof(SI), caption: "AA_AveragePowerDemandCrankElectrics [W]")] AA_AveragePowerDemandCrankElectrics,
 		[ModalResultField(typeof(SI), caption: "AA_AveragePowerDemandCrankPneumatics [W]")] AA_AveragePowerDemandCrankPneumatics,
-		[ModalResultField(typeof(SI), caption: "AA_TotalCycleFuelConsumptionCompressorOff [g]")] AA_TotalCycleFuelConsumptionCompressorOff,
-		[ModalResultField(typeof(SI), caption: "AA_TotalCycleFuelConsumptionCompressorOn [g]")] AA_TotalCycleFuelConsumptionCompressorOn,
+		[ModalResultField(typeof(SI), caption: "AA_TotalCycleFuelConsumptionCompressorOff [g]", outputFactor: 1000)] AA_TotalCycleFuelConsumptionCompressorOff,
+		[ModalResultField(typeof(SI), caption: "AA_TotalCycleFuelConsumptionCompressorOn [g]", outputFactor: 1000)] AA_TotalCycleFuelConsumptionCompressorOn,
 	}
 
 	[AttributeUsage(AttributeTargets.Field)]

@@ -97,7 +97,7 @@ namespace TUGraz.VectoCore.InputData.Reader.DataObjectAdapter
 			retVal.CurbWeight += mission.BodyCurbWeight + mission.TrailerCurbWeight;
 			retVal.Loading = loading;
 			retVal.DynamicTyreRadius =
-				DeclarationData.DynamicTyreRadius(data.Axles[DeclarationData.PoweredAxle()].Wheels); // TODO!
+				DeclarationData.Wheels.Lookup(data.Axles[DeclarationData.PoweredAxle()].Wheels).DynamicTyreRadius; // TODO!
 
 			var aerodynamicDragArea = data.AirDragArea + mission.DeltaCdA;
 
@@ -181,8 +181,6 @@ namespace TUGraz.VectoCore.InputData.Reader.DataObjectAdapter
 
 			retVal.Inertia = DeclarationData.Gearbox.Inertia;
 			retVal.TractionInterruption = retVal.Type.TractionInterruption();
-			retVal.SkipGears = retVal.Type.SkipGears();
-			retVal.EarlyShiftUp = retVal.Type.EarlyShiftGears();
 
 			retVal.TorqueReserve = DeclarationData.Gearbox.TorqueReserve;
 			retVal.StartTorqueReserve = DeclarationData.Gearbox.TorqueReserveStart;
@@ -215,7 +213,6 @@ namespace TUGraz.VectoCore.InputData.Reader.DataObjectAdapter
 						ShiftPolygon = shiftPolygon,
 						MaxTorque = gear.MaxTorque,
 						Ratio = gear.Ratio,
-	
 					});
 			}).ToDictionary(kv => kv.Key, kv => kv.Value);
 

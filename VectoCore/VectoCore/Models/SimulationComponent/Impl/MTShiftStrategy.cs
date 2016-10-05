@@ -38,8 +38,8 @@ namespace TUGraz.VectoCore.Models.SimulationComponent.Impl
 	{
 		public MTShiftStrategy(GearboxData data, IDataBus bus) : base(data, bus)
 		{
-			Data.EarlyShiftUp = false;
-			Data.SkipGears = true;
+			EarlyShiftUp = false;
+			SkipGears = true;
 		}
 	}
 }

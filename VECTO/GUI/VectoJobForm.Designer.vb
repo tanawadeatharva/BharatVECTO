@@ -35,6 +35,9 @@ Partial Class VectoJobForm
 		Me.BtDRIrem = New System.Windows.Forms.Button()
 		Me.BtDRIadd = New System.Windows.Forms.Button()
 		Me.GrAux = New System.Windows.Forms.GroupBox()
+		Me.Label9 = New System.Windows.Forms.Label()
+		Me.TbAuxPAdd = New System.Windows.Forms.TextBox()
+		Me.Label8 = New System.Windows.Forms.Label()
 		Me.btnAAUXOpen = New System.Windows.Forms.Button()
 		Me.Label1 = New System.Windows.Forms.Label()
 		Me.btnBrowseAAUXFile = New System.Windows.Forms.Button()
@@ -65,6 +68,23 @@ Partial Class VectoJobForm
 		Me.BtDesMaxBr = New System.Windows.Forms.Button()
 		Me.BtAccOpen = New System.Windows.Forms.Button()
 		Me.GrLAC = New System.Windows.Forms.GroupBox()
+		Me.pnLookAheadCoasting = New System.Windows.Forms.Panel()
+		Me.Label7 = New System.Windows.Forms.Label()
+		Me.Label6 = New System.Windows.Forms.Label()
+		Me.tbLacMinSpeed = New System.Windows.Forms.TextBox()
+		Me.btnDfVelocityDrop = New System.Windows.Forms.Button()
+		Me.Label12 = New System.Windows.Forms.Label()
+		Me.tbDfCoastingScale = New System.Windows.Forms.TextBox()
+		Me.Label11 = New System.Windows.Forms.Label()
+		Me.Label3 = New System.Windows.Forms.Label()
+		Me.tbDfCoastingOffset = New System.Windows.Forms.TextBox()
+		Me.tbLacDfTargetSpeedFile = New System.Windows.Forms.TextBox()
+		Me.Label10 = New System.Windows.Forms.Label()
+		Me.Label4 = New System.Windows.Forms.Label()
+		Me.Label5 = New System.Windows.Forms.Label()
+		Me.btnDfTargetSpeed = New System.Windows.Forms.Button()
+		Me.tbLacPreviewFactor = New System.Windows.Forms.TextBox()
+		Me.tbLacDfVelocityDropFile = New System.Windows.Forms.TextBox()
 		Me.CbLookAhead = New System.Windows.Forms.CheckBox()
 		Me.GroupBox1 = New System.Windows.Forms.GroupBox()
 		Me.PnEcoRoll = New System.Windows.Forms.Panel()
@@ -119,23 +139,6 @@ Partial Class VectoJobForm
 		Me.TbGbxTxt = New System.Windows.Forms.TextBox()
 		Me.TbMass = New System.Windows.Forms.TextBox()
 		Me.ToolTip1 = New System.Windows.Forms.ToolTip(Me.components)
-		Me.pnLookAheadCoasting = New System.Windows.Forms.Panel()
-		Me.btnDfVelocityDrop = New System.Windows.Forms.Button()
-		Me.Label12 = New System.Windows.Forms.Label()
-		Me.tbDfCoastingScale = New System.Windows.Forms.TextBox()
-		Me.Label11 = New System.Windows.Forms.Label()
-		Me.Label3 = New System.Windows.Forms.Label()
-		Me.tbDfCoastingOffset = New System.Windows.Forms.TextBox()
-		Me.tbLacDfTargetSpeedFile = New System.Windows.Forms.TextBox()
-		Me.Label10 = New System.Windows.Forms.Label()
-		Me.Label4 = New System.Windows.Forms.Label()
-		Me.Label5 = New System.Windows.Forms.Label()
-		Me.btnDfTargetSpeed = New System.Windows.Forms.Button()
-		Me.tbLacPreviewFactor = New System.Windows.Forms.TextBox()
-		Me.tbLacDfVelocityDropFile = New System.Windows.Forms.TextBox()
-		Me.Label6 = New System.Windows.Forms.Label()
-		Me.tbLacMinSpeed = New System.Windows.Forms.TextBox()
-		Me.Label7 = New System.Windows.Forms.Label()
 		Me.TabPgGen.SuspendLayout()
 		Me.GrCycles.SuspendLayout()
 		Me.GrAux.SuspendLayout()
@@ -144,6 +147,7 @@ Partial Class VectoJobForm
 		Me.TabPgDriver.SuspendLayout()
 		Me.GrVACC.SuspendLayout()
 		Me.GrLAC.SuspendLayout()
+		Me.pnLookAheadCoasting.SuspendLayout()
 		Me.GroupBox1.SuspendLayout()
 		Me.PnEcoRoll.SuspendLayout()
 		Me.GrStartStop.SuspendLayout()
@@ -154,7 +158,6 @@ Partial Class VectoJobForm
 		Me.CmOpenFile.SuspendLayout()
 		CType(Me.PicVehicle, System.ComponentModel.ISupportInitialize).BeginInit()
 		CType(Me.PicBox, System.ComponentModel.ISupportInitialize).BeginInit()
-		Me.pnLookAheadCoasting.SuspendLayout()
 		Me.SuspendLayout()
 		'
 		'TabPgGen
@@ -187,7 +190,7 @@ Partial Class VectoJobForm
 		Me.GrCycles.Controls.Add(Me.LvCycles)
 		Me.GrCycles.Controls.Add(Me.BtDRIrem)
 		Me.GrCycles.Controls.Add(Me.BtDRIadd)
-		Me.GrCycles.Location = New System.Drawing.Point(9, 314)
+		Me.GrCycles.Location = New System.Drawing.Point(9, 344)
 		Me.GrCycles.Name = "GrCycles"
 		Me.GrCycles.Size = New System.Drawing.Size(515, 184)
 		Me.GrCycles.TabIndex = 10
@@ -253,6 +256,9 @@ Partial Class VectoJobForm
 		Me.GrAux.Anchor = CType((((System.Windows.Forms.AnchorStyles.Top Or System.Windows.Forms.AnchorStyles.Bottom) _
 			Or System.Windows.Forms.AnchorStyles.Left) _
 			Or System.Windows.Forms.AnchorStyles.Right), System.Windows.Forms.AnchorStyles)
+		Me.GrAux.Controls.Add(Me.Label9)
+		Me.GrAux.Controls.Add(Me.TbAuxPAdd)
+		Me.GrAux.Controls.Add(Me.Label8)
 		Me.GrAux.Controls.Add(Me.btnAAUXOpen)
 		Me.GrAux.Controls.Add(Me.Label1)
 		Me.GrAux.Controls.Add(Me.btnBrowseAAUXFile)
@@ -266,10 +272,35 @@ Partial Class VectoJobForm
 		Me.GrAux.Controls.Add(Me.ButAuxAdd)
 		Me.GrAux.Location = New System.Drawing.Point(6, 87)
 		Me.GrAux.Name = "GrAux"
-		Me.GrAux.Size = New System.Drawing.Size(515, 221)
+		Me.GrAux.Size = New System.Drawing.Size(515, 251)
 		Me.GrAux.TabIndex = 9
 		Me.GrAux.TabStop = False
 		Me.GrAux.Text = "Auxiliaries"
+		'
+		'Label9
+		'
+		Me.Label9.AutoSize = True
+		Me.Label9.Location = New System.Drawing.Point(191, 76)
+		Me.Label9.Name = "Label9"
+		Me.Label9.Size = New System.Drawing.Size(24, 13)
+		Me.Label9.TabIndex = 44
+		Me.Label9.Text = "[W]"
+		'
+		'TbAuxPAdd
+		'
+		Me.TbAuxPAdd.Location = New System.Drawing.Point(119, 73)
+		Me.TbAuxPAdd.Name = "TbAuxPAdd"
+		Me.TbAuxPAdd.Size = New System.Drawing.Size(66, 20)
+		Me.TbAuxPAdd.TabIndex = 43
+		'
+		'Label8
+		'
+		Me.Label8.AutoSize = True
+		Me.Label8.Location = New System.Drawing.Point(7, 76)
+		Me.Label8.Name = "Label8"
+		Me.Label8.Size = New System.Drawing.Size(97, 13)
+		Me.Label8.TabIndex = 42
+		Me.Label8.Text = "Constant Aux Load"
 		'
 		'btnAAUXOpen
 		'
@@ -338,7 +369,7 @@ Partial Class VectoJobForm
 		'
 		Me.Label32.Anchor = CType((System.Windows.Forms.AnchorStyles.Top Or System.Windows.Forms.AnchorStyles.Right), System.Windows.Forms.AnchorStyles)
 		Me.Label32.AutoSize = True
-		Me.Label32.Location = New System.Drawing.Point(406, 189)
+		Me.Label32.Location = New System.Drawing.Point(406, 220)
 		Me.Label32.Name = "Label32"
 		Me.Label32.Size = New System.Drawing.Size(106, 13)
 		Me.Label32.TabIndex = 3
@@ -352,7 +383,7 @@ Partial Class VectoJobForm
 		Me.LvAux.FullRowSelect = True
 		Me.LvAux.GridLines = True
 		Me.LvAux.HideSelection = False
-		Me.LvAux.Location = New System.Drawing.Point(6, 72)
+		Me.LvAux.Location = New System.Drawing.Point(6, 103)
 		Me.LvAux.MultiSelect = False
 		Me.LvAux.Name = "LvAux"
 		Me.LvAux.Size = New System.Drawing.Size(503, 117)
@@ -379,7 +410,7 @@ Partial Class VectoJobForm
 		'ButAuxRem
 		'
 		Me.ButAuxRem.Image = Global.TUGraz.VECTO.My.Resources.Resources.minus_circle_icon
-		Me.ButAuxRem.Location = New System.Drawing.Point(29, 190)
+		Me.ButAuxRem.Location = New System.Drawing.Point(29, 221)
 		Me.ButAuxRem.Name = "ButAuxRem"
 		Me.ButAuxRem.Size = New System.Drawing.Size(24, 24)
 		Me.ButAuxRem.TabIndex = 2
@@ -388,7 +419,7 @@ Partial Class VectoJobForm
 		'ButAuxAdd
 		'
 		Me.ButAuxAdd.Image = Global.TUGraz.VECTO.My.Resources.Resources.plus_circle_icon
-		Me.ButAuxAdd.Location = New System.Drawing.Point(5, 190)
+		Me.ButAuxAdd.Location = New System.Drawing.Point(5, 221)
 		Me.ButAuxAdd.Name = "ButAuxAdd"
 		Me.ButAuxAdd.Size = New System.Drawing.Size(24, 24)
 		Me.ButAuxAdd.TabIndex = 1
@@ -563,6 +594,173 @@ Partial Class VectoJobForm
 		Me.GrLAC.TabIndex = 2
 		Me.GrLAC.TabStop = False
 		Me.GrLAC.Text = "Look-Ahead Coasting"
+		'
+		'pnLookAheadCoasting
+		'
+		Me.pnLookAheadCoasting.Controls.Add(Me.Label7)
+		Me.pnLookAheadCoasting.Controls.Add(Me.Label6)
+		Me.pnLookAheadCoasting.Controls.Add(Me.tbLacMinSpeed)
+		Me.pnLookAheadCoasting.Controls.Add(Me.btnDfVelocityDrop)
+		Me.pnLookAheadCoasting.Controls.Add(Me.Label12)
+		Me.pnLookAheadCoasting.Controls.Add(Me.tbDfCoastingScale)
+		Me.pnLookAheadCoasting.Controls.Add(Me.Label11)
+		Me.pnLookAheadCoasting.Controls.Add(Me.Label3)
+		Me.pnLookAheadCoasting.Controls.Add(Me.tbDfCoastingOffset)
+		Me.pnLookAheadCoasting.Controls.Add(Me.tbLacDfTargetSpeedFile)
+		Me.pnLookAheadCoasting.Controls.Add(Me.Label10)
+		Me.pnLookAheadCoasting.Controls.Add(Me.Label4)
+		Me.pnLookAheadCoasting.Controls.Add(Me.Label5)
+		Me.pnLookAheadCoasting.Controls.Add(Me.btnDfTargetSpeed)
+		Me.pnLookAheadCoasting.Controls.Add(Me.tbLacPreviewFactor)
+		Me.pnLookAheadCoasting.Controls.Add(Me.tbLacDfVelocityDropFile)
+		Me.pnLookAheadCoasting.Location = New System.Drawing.Point(16, 37)
+		Me.pnLookAheadCoasting.Name = "pnLookAheadCoasting"
+		Me.pnLookAheadCoasting.Size = New System.Drawing.Size(467, 129)
+		Me.pnLookAheadCoasting.TabIndex = 20
+		'
+		'Label7
+		'
+		Me.Label7.AutoSize = True
+		Me.Label7.Location = New System.Drawing.Point(234, 6)
+		Me.Label7.Name = "Label7"
+		Me.Label7.Size = New System.Drawing.Size(38, 13)
+		Me.Label7.TabIndex = 4
+		Me.Label7.Text = "[km/h]"
+		'
+		'Label6
+		'
+		Me.Label6.AutoSize = True
+		Me.Label6.Location = New System.Drawing.Point(91, 6)
+		Me.Label6.Name = "Label6"
+		Me.Label6.Size = New System.Drawing.Size(67, 13)
+		Me.Label6.TabIndex = 33
+		Me.Label6.Text = "Min. Velocity"
+		Me.Label6.TextAlign = System.Drawing.ContentAlignment.MiddleRight
+		'
+		'tbLacMinSpeed
+		'
+		Me.tbLacMinSpeed.Location = New System.Drawing.Point(164, 3)
+		Me.tbLacMinSpeed.Name = "tbLacMinSpeed"
+		Me.tbLacMinSpeed.Size = New System.Drawing.Size(64, 20)
+		Me.tbLacMinSpeed.TabIndex = 34
+		'
+		'btnDfVelocityDrop
+		'
+		Me.btnDfVelocityDrop.Anchor = CType((System.Windows.Forms.AnchorStyles.Top Or System.Windows.Forms.AnchorStyles.Right), System.Windows.Forms.AnchorStyles)
+		Me.btnDfVelocityDrop.Image = CType(resources.GetObject("btnDfVelocityDrop.Image"), System.Drawing.Image)
+		Me.btnDfVelocityDrop.Location = New System.Drawing.Point(435, 78)
+		Me.btnDfVelocityDrop.Name = "btnDfVelocityDrop"
+		Me.btnDfVelocityDrop.Size = New System.Drawing.Size(24, 24)
+		Me.btnDfVelocityDrop.TabIndex = 32
+		Me.btnDfVelocityDrop.TabStop = False
+		Me.btnDfVelocityDrop.UseVisualStyleBackColor = True
+		'
+		'Label12
+		'
+		Me.Label12.AutoSize = True
+		Me.Label12.Location = New System.Drawing.Point(269, 110)
+		Me.Label12.Name = "Label12"
+		Me.Label12.Size = New System.Drawing.Size(130, 13)
+		Me.Label12.TabIndex = 31
+		Me.Label12.Text = "* DF_vTarget * DF_vDrop"
+		'
+		'tbDfCoastingScale
+		'
+		Me.tbDfCoastingScale.Location = New System.Drawing.Point(226, 107)
+		Me.tbDfCoastingScale.Name = "tbDfCoastingScale"
+		Me.tbDfCoastingScale.Size = New System.Drawing.Size(37, 20)
+		Me.tbDfCoastingScale.TabIndex = 30
+		'
+		'Label11
+		'
+		Me.Label11.AutoSize = True
+		Me.Label11.Location = New System.Drawing.Point(209, 109)
+		Me.Label11.Name = "Label11"
+		Me.Label11.Size = New System.Drawing.Size(13, 13)
+		Me.Label11.TabIndex = 29
+		Me.Label11.Text = "- "
+		'
+		'Label3
+		'
+		Me.Label3.AutoSize = True
+		Me.Label3.Location = New System.Drawing.Point(40, 31)
+		Me.Label3.Name = "Label3"
+		Me.Label3.Size = New System.Drawing.Size(118, 13)
+		Me.Label3.TabIndex = 20
+		Me.Label3.Text = "Preview distance factor"
+		Me.Label3.TextAlign = System.Drawing.ContentAlignment.MiddleRight
+		'
+		'tbDfCoastingOffset
+		'
+		Me.tbDfCoastingOffset.Location = New System.Drawing.Point(165, 107)
+		Me.tbDfCoastingOffset.Name = "tbDfCoastingOffset"
+		Me.tbDfCoastingOffset.Size = New System.Drawing.Size(37, 20)
+		Me.tbDfCoastingOffset.TabIndex = 28
+		'
+		'tbLacDfTargetSpeedFile
+		'
+		Me.tbLacDfTargetSpeedFile.Anchor = CType(((System.Windows.Forms.AnchorStyles.Top Or System.Windows.Forms.AnchorStyles.Left) _
+			Or System.Windows.Forms.AnchorStyles.Right), System.Windows.Forms.AnchorStyles)
+		Me.tbLacDfTargetSpeedFile.Location = New System.Drawing.Point(164, 54)
+		Me.tbLacDfTargetSpeedFile.Name = "tbLacDfTargetSpeedFile"
+		Me.tbLacDfTargetSpeedFile.Size = New System.Drawing.Size(264, 20)
+		Me.tbLacDfTargetSpeedFile.TabIndex = 22
+		'
+		'Label10
+		'
+		Me.Label10.AutoSize = True
+		Me.Label10.Location = New System.Drawing.Point(79, 110)
+		Me.Label10.Name = "Label10"
+		Me.Label10.Size = New System.Drawing.Size(79, 13)
+		Me.Label10.TabIndex = 27
+		Me.Label10.Text = "DF_coasting = "
+		'
+		'Label4
+		'
+		Me.Label4.AutoSize = True
+		Me.Label4.Location = New System.Drawing.Point(3, 57)
+		Me.Label4.Name = "Label4"
+		Me.Label4.Size = New System.Drawing.Size(155, 13)
+		Me.Label4.TabIndex = 24
+		Me.Label4.Text = "Decision Factor - Target Speed"
+		Me.Label4.TextAlign = System.Drawing.ContentAlignment.MiddleRight
+		'
+		'Label5
+		'
+		Me.Label5.AutoSize = True
+		Me.Label5.Location = New System.Drawing.Point(5, 84)
+		Me.Label5.Name = "Label5"
+		Me.Label5.Size = New System.Drawing.Size(153, 13)
+		Me.Label5.TabIndex = 26
+		Me.Label5.Text = "Decision Factor - Velocity Drop"
+		Me.Label5.TextAlign = System.Drawing.ContentAlignment.MiddleRight
+		'
+		'btnDfTargetSpeed
+		'
+		Me.btnDfTargetSpeed.Anchor = CType((System.Windows.Forms.AnchorStyles.Top Or System.Windows.Forms.AnchorStyles.Right), System.Windows.Forms.AnchorStyles)
+		Me.btnDfTargetSpeed.Image = CType(resources.GetObject("btnDfTargetSpeed.Image"), System.Drawing.Image)
+		Me.btnDfTargetSpeed.Location = New System.Drawing.Point(434, 54)
+		Me.btnDfTargetSpeed.Name = "btnDfTargetSpeed"
+		Me.btnDfTargetSpeed.Size = New System.Drawing.Size(24, 24)
+		Me.btnDfTargetSpeed.TabIndex = 23
+		Me.btnDfTargetSpeed.TabStop = False
+		Me.btnDfTargetSpeed.UseVisualStyleBackColor = True
+		'
+		'tbLacPreviewFactor
+		'
+		Me.tbLacPreviewFactor.Location = New System.Drawing.Point(164, 28)
+		Me.tbLacPreviewFactor.Name = "tbLacPreviewFactor"
+		Me.tbLacPreviewFactor.Size = New System.Drawing.Size(64, 20)
+		Me.tbLacPreviewFactor.TabIndex = 21
+		'
+		'tbLacDfVelocityDropFile
+		'
+		Me.tbLacDfVelocityDropFile.Anchor = CType(((System.Windows.Forms.AnchorStyles.Top Or System.Windows.Forms.AnchorStyles.Left) _
+			Or System.Windows.Forms.AnchorStyles.Right), System.Windows.Forms.AnchorStyles)
+		Me.tbLacDfVelocityDropFile.Location = New System.Drawing.Point(164, 81)
+		Me.tbLacDfVelocityDropFile.Name = "tbLacDfVelocityDropFile"
+		Me.tbLacDfVelocityDropFile.Size = New System.Drawing.Size(264, 20)
+		Me.tbLacDfVelocityDropFile.TabIndex = 25
 		'
 		'CbLookAhead
 		'
@@ -1047,173 +1245,6 @@ Partial Class VectoJobForm
 		Me.TbMass.Size = New System.Drawing.Size(50, 20)
 		Me.TbMass.TabIndex = 3
 		'
-		'pnLookAheadCoasting
-		'
-		Me.pnLookAheadCoasting.Controls.Add(Me.Label7)
-		Me.pnLookAheadCoasting.Controls.Add(Me.Label6)
-		Me.pnLookAheadCoasting.Controls.Add(Me.tbLacMinSpeed)
-		Me.pnLookAheadCoasting.Controls.Add(Me.btnDfVelocityDrop)
-		Me.pnLookAheadCoasting.Controls.Add(Me.Label12)
-		Me.pnLookAheadCoasting.Controls.Add(Me.tbDfCoastingScale)
-		Me.pnLookAheadCoasting.Controls.Add(Me.Label11)
-		Me.pnLookAheadCoasting.Controls.Add(Me.Label3)
-		Me.pnLookAheadCoasting.Controls.Add(Me.tbDfCoastingOffset)
-		Me.pnLookAheadCoasting.Controls.Add(Me.tbLacDfTargetSpeedFile)
-		Me.pnLookAheadCoasting.Controls.Add(Me.Label10)
-		Me.pnLookAheadCoasting.Controls.Add(Me.Label4)
-		Me.pnLookAheadCoasting.Controls.Add(Me.Label5)
-		Me.pnLookAheadCoasting.Controls.Add(Me.btnDfTargetSpeed)
-		Me.pnLookAheadCoasting.Controls.Add(Me.tbLacPreviewFactor)
-		Me.pnLookAheadCoasting.Controls.Add(Me.tbLacDfVelocityDropFile)
-		Me.pnLookAheadCoasting.Location = New System.Drawing.Point(16, 37)
-		Me.pnLookAheadCoasting.Name = "pnLookAheadCoasting"
-		Me.pnLookAheadCoasting.Size = New System.Drawing.Size(467, 129)
-		Me.pnLookAheadCoasting.TabIndex = 20
-		'
-		'btnDfVelocityDrop
-		'
-		Me.btnDfVelocityDrop.Anchor = CType((System.Windows.Forms.AnchorStyles.Top Or System.Windows.Forms.AnchorStyles.Right), System.Windows.Forms.AnchorStyles)
-		Me.btnDfVelocityDrop.Image = CType(resources.GetObject("btnDfVelocityDrop.Image"), System.Drawing.Image)
-		Me.btnDfVelocityDrop.Location = New System.Drawing.Point(435, 78)
-		Me.btnDfVelocityDrop.Name = "btnDfVelocityDrop"
-		Me.btnDfVelocityDrop.Size = New System.Drawing.Size(24, 24)
-		Me.btnDfVelocityDrop.TabIndex = 32
-		Me.btnDfVelocityDrop.TabStop = False
-		Me.btnDfVelocityDrop.UseVisualStyleBackColor = True
-		'
-		'Label12
-		'
-		Me.Label12.AutoSize = True
-		Me.Label12.Location = New System.Drawing.Point(269, 110)
-		Me.Label12.Name = "Label12"
-		Me.Label12.Size = New System.Drawing.Size(130, 13)
-		Me.Label12.TabIndex = 31
-		Me.Label12.Text = "* DF_vTarget * DF_vDrop"
-		'
-		'tbDfCoastingScale
-		'
-		Me.tbDfCoastingScale.Location = New System.Drawing.Point(226, 107)
-		Me.tbDfCoastingScale.Name = "tbDfCoastingScale"
-		Me.tbDfCoastingScale.Size = New System.Drawing.Size(37, 20)
-		Me.tbDfCoastingScale.TabIndex = 30
-		'
-		'Label11
-		'
-		Me.Label11.AutoSize = True
-		Me.Label11.Location = New System.Drawing.Point(209, 109)
-		Me.Label11.Name = "Label11"
-		Me.Label11.Size = New System.Drawing.Size(13, 13)
-		Me.Label11.TabIndex = 29
-		Me.Label11.Text = "- "
-		'
-		'Label3
-		'
-		Me.Label3.AutoSize = True
-		Me.Label3.Location = New System.Drawing.Point(40, 31)
-		Me.Label3.Name = "Label3"
-		Me.Label3.Size = New System.Drawing.Size(118, 13)
-		Me.Label3.TabIndex = 20
-		Me.Label3.Text = "Preview distance factor"
-		Me.Label3.TextAlign = System.Drawing.ContentAlignment.MiddleRight
-		'
-		'tbDfCoastingOffset
-		'
-		Me.tbDfCoastingOffset.Location = New System.Drawing.Point(165, 107)
-		Me.tbDfCoastingOffset.Name = "tbDfCoastingOffset"
-		Me.tbDfCoastingOffset.Size = New System.Drawing.Size(37, 20)
-		Me.tbDfCoastingOffset.TabIndex = 28
-		'
-		'tbLacDfTargetSpeedFile
-		'
-		Me.tbLacDfTargetSpeedFile.Anchor = CType(((System.Windows.Forms.AnchorStyles.Top Or System.Windows.Forms.AnchorStyles.Left) _
-			Or System.Windows.Forms.AnchorStyles.Right), System.Windows.Forms.AnchorStyles)
-		Me.tbLacDfTargetSpeedFile.Location = New System.Drawing.Point(164, 54)
-		Me.tbLacDfTargetSpeedFile.Name = "tbLacDfTargetSpeedFile"
-		Me.tbLacDfTargetSpeedFile.Size = New System.Drawing.Size(264, 20)
-		Me.tbLacDfTargetSpeedFile.TabIndex = 22
-		'
-		'Label10
-		'
-		Me.Label10.AutoSize = True
-		Me.Label10.Location = New System.Drawing.Point(79, 110)
-		Me.Label10.Name = "Label10"
-		Me.Label10.Size = New System.Drawing.Size(79, 13)
-		Me.Label10.TabIndex = 27
-		Me.Label10.Text = "DF_coasting = "
-		'
-		'Label4
-		'
-		Me.Label4.AutoSize = True
-		Me.Label4.Location = New System.Drawing.Point(3, 57)
-		Me.Label4.Name = "Label4"
-		Me.Label4.Size = New System.Drawing.Size(155, 13)
-		Me.Label4.TabIndex = 24
-		Me.Label4.Text = "Decision Factor - Target Speed"
-		Me.Label4.TextAlign = System.Drawing.ContentAlignment.MiddleRight
-		'
-		'Label5
-		'
-		Me.Label5.AutoSize = True
-		Me.Label5.Location = New System.Drawing.Point(5, 84)
-		Me.Label5.Name = "Label5"
-		Me.Label5.Size = New System.Drawing.Size(153, 13)
-		Me.Label5.TabIndex = 26
-		Me.Label5.Text = "Decision Factor - Velocity Drop"
-		Me.Label5.TextAlign = System.Drawing.ContentAlignment.MiddleRight
-		'
-		'btnDfTargetSpeed
-		'
-		Me.btnDfTargetSpeed.Anchor = CType((System.Windows.Forms.AnchorStyles.Top Or System.Windows.Forms.AnchorStyles.Right), System.Windows.Forms.AnchorStyles)
-		Me.btnDfTargetSpeed.Image = CType(resources.GetObject("btnDfTargetSpeed.Image"), System.Drawing.Image)
-		Me.btnDfTargetSpeed.Location = New System.Drawing.Point(434, 54)
-		Me.btnDfTargetSpeed.Name = "btnDfTargetSpeed"
-		Me.btnDfTargetSpeed.Size = New System.Drawing.Size(24, 24)
-		Me.btnDfTargetSpeed.TabIndex = 23
-		Me.btnDfTargetSpeed.TabStop = False
-		Me.btnDfTargetSpeed.UseVisualStyleBackColor = True
-		'
-		'tbLacPreviewFactor
-		'
-		Me.tbLacPreviewFactor.Location = New System.Drawing.Point(164, 28)
-		Me.tbLacPreviewFactor.Name = "tbLacPreviewFactor"
-		Me.tbLacPreviewFactor.Size = New System.Drawing.Size(64, 20)
-		Me.tbLacPreviewFactor.TabIndex = 21
-		'
-		'tbLacDfVelocityDropFile
-		'
-		Me.tbLacDfVelocityDropFile.Anchor = CType(((System.Windows.Forms.AnchorStyles.Top Or System.Windows.Forms.AnchorStyles.Left) _
-			Or System.Windows.Forms.AnchorStyles.Right), System.Windows.Forms.AnchorStyles)
-		Me.tbLacDfVelocityDropFile.Location = New System.Drawing.Point(164, 81)
-		Me.tbLacDfVelocityDropFile.Name = "tbLacDfVelocityDropFile"
-		Me.tbLacDfVelocityDropFile.Size = New System.Drawing.Size(264, 20)
-		Me.tbLacDfVelocityDropFile.TabIndex = 25
-		'
-		'Label6
-		'
-		Me.Label6.AutoSize = True
-		Me.Label6.Location = New System.Drawing.Point(91, 6)
-		Me.Label6.Name = "Label6"
-		Me.Label6.Size = New System.Drawing.Size(67, 13)
-		Me.Label6.TabIndex = 33
-		Me.Label6.Text = "Min. Velocity"
-		Me.Label6.TextAlign = System.Drawing.ContentAlignment.MiddleRight
-		'
-		'tbLacMinSpeed
-		'
-		Me.tbLacMinSpeed.Location = New System.Drawing.Point(164, 3)
-		Me.tbLacMinSpeed.Name = "tbLacMinSpeed"
-		Me.tbLacMinSpeed.Size = New System.Drawing.Size(64, 20)
-		Me.tbLacMinSpeed.TabIndex = 34
-		'
-		'Label7
-		'
-		Me.Label7.AutoSize = True
-		Me.Label7.Location = New System.Drawing.Point(234, 6)
-		Me.Label7.Name = "Label7"
-		Me.Label7.Size = New System.Drawing.Size(38, 13)
-		Me.Label7.TabIndex = 4
-		Me.Label7.Text = "[km/h]"
-		'
 		'VectoJobForm
 		'
 		Me.AcceptButton = Me.ButOK
@@ -1252,6 +1283,8 @@ Partial Class VectoJobForm
 		Me.GrVACC.PerformLayout()
 		Me.GrLAC.ResumeLayout(False)
 		Me.GrLAC.PerformLayout()
+		Me.pnLookAheadCoasting.ResumeLayout(False)
+		Me.pnLookAheadCoasting.PerformLayout()
 		Me.GroupBox1.ResumeLayout(False)
 		Me.GroupBox1.PerformLayout()
 		Me.PnEcoRoll.ResumeLayout(False)
@@ -1268,8 +1301,6 @@ Partial Class VectoJobForm
 		Me.CmOpenFile.ResumeLayout(False)
 		CType(Me.PicVehicle, System.ComponentModel.ISupportInitialize).EndInit()
 		CType(Me.PicBox, System.ComponentModel.ISupportInitialize).EndInit()
-		Me.pnLookAheadCoasting.ResumeLayout(False)
-		Me.pnLookAheadCoasting.PerformLayout()
 		Me.ResumeLayout(False)
 		Me.PerformLayout()
 
@@ -1383,4 +1414,7 @@ Partial Class VectoJobForm
 	Friend WithEvents Label6 As System.Windows.Forms.Label
 	Friend WithEvents tbLacMinSpeed As System.Windows.Forms.TextBox
 	Friend WithEvents Label7 As System.Windows.Forms.Label
+	Friend WithEvents Label9 As System.Windows.Forms.Label
+	Friend WithEvents TbAuxPAdd As System.Windows.Forms.TextBox
+	Friend WithEvents Label8 As System.Windows.Forms.Label
 End Class

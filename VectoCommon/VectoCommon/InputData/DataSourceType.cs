@@ -1,4 +1,4 @@
-namespace TUGraz.VectoCommon.InputData
+﻿namespace TUGraz.VectoCommon.InputData
 {
 	public enum DataSourceType
 	{

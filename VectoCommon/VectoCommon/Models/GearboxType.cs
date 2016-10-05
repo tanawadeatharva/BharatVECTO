@@ -81,34 +81,6 @@ namespace TUGraz.VectoCommon.Models
 			return type == GearboxType.MT || type == GearboxType.AMT;
 		}
 
-		public static bool EarlyShiftGears(this GearboxType type)
-		{
-			switch (type) {
-				case GearboxType.MT:
-					return false;
-				case GearboxType.AMT:
-					return true;
-				case GearboxType.ATSerial:
-				case GearboxType.ATPowerSplit:
-					return false;
-			}
-			return false;
-		}
-
-		public static bool SkipGears(this GearboxType type)
-		{
-			switch (type) {
-				case GearboxType.MT:
-					return true;
-				case GearboxType.AMT:
-					return true;
-				case GearboxType.ATSerial:
-				case GearboxType.ATPowerSplit:
-					return false;
-			}
-			return false;
-		}
-
 		public static Second TractionInterruption(this GearboxType type)
 		{
 			switch (type) {
@@ -118,7 +90,7 @@ namespace TUGraz.VectoCommon.Models
 					return 1.SI<Second>();
 				case GearboxType.ATSerial:
 				case GearboxType.ATPowerSplit:
-					return 0.8.SI<Second>();
+					return 0.0.SI<Second>();
 			}
 			return 0.SI<Second>();
 		}

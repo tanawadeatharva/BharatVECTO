@@ -81,11 +81,9 @@ Partial Class GearboxForm
 		Me.Label2 = New System.Windows.Forms.Label()
 		Me.Label4 = New System.Windows.Forms.Label()
 		Me.TbTqResv = New System.Windows.Forms.TextBox()
-		Me.ChShiftInside = New System.Windows.Forms.CheckBox()
 		Me.TbShiftTime = New System.Windows.Forms.TextBox()
 		Me.Label12 = New System.Windows.Forms.Label()
 		Me.Label13 = New System.Windows.Forms.Label()
-		Me.ChSkipGears = New System.Windows.Forms.CheckBox()
 		Me.GroupBox2 = New System.Windows.Forms.GroupBox()
 		Me.TbStartAcc = New System.Windows.Forms.TextBox()
 		Me.Label11 = New System.Windows.Forms.Label()
@@ -100,11 +98,11 @@ Partial Class GearboxForm
 		Me.OpenWithToolStripMenuItem = New System.Windows.Forms.ToolStripMenuItem()
 		Me.ShowInFolderToolStripMenuItem = New System.Windows.Forms.ToolStripMenuItem()
 		Me.GroupBox3 = New System.Windows.Forms.GroupBox()
-		Me.BtTCShiftFileBrowse = New System.Windows.Forms.Button()
-		Me.LblTCShiftFile = New System.Windows.Forms.Label()
-		Me.TBTCShiftPolygon = New System.Windows.Forms.TextBox()
 		Me.PnTC = New System.Windows.Forms.Panel()
+		Me.BtTCShiftFileBrowse = New System.Windows.Forms.Button()
 		Me.Label17 = New System.Windows.Forms.Label()
+		Me.TBTCShiftPolygon = New System.Windows.Forms.TextBox()
+		Me.LblTCShiftFile = New System.Windows.Forms.Label()
 		Me.Label18 = New System.Windows.Forms.Label()
 		Me.Label15 = New System.Windows.Forms.Label()
 		Me.TbTCinertia = New System.Windows.Forms.TextBox()
@@ -121,6 +119,7 @@ Partial Class GearboxForm
 		Me.Label32 = New System.Windows.Forms.Label()
 		Me.PnInertiaTI = New System.Windows.Forms.Panel()
 		Me.PicBox = New System.Windows.Forms.PictureBox()
+		Me.Label25 = New System.Windows.Forms.Label()
 		Me.ToolStrip1.SuspendLayout()
 		Me.StatusStrip1.SuspendLayout()
 		CType(Me.PictureBox1, System.ComponentModel.ISupportInitialize).BeginInit()
@@ -381,11 +380,9 @@ Partial Class GearboxForm
 		'
 		Me.GrGearShift.Controls.Add(Me.GroupBox1)
 		Me.GrGearShift.Controls.Add(Me.PnTorqRes)
-		Me.GrGearShift.Controls.Add(Me.ChShiftInside)
 		Me.GrGearShift.Controls.Add(Me.TbShiftTime)
 		Me.GrGearShift.Controls.Add(Me.Label12)
 		Me.GrGearShift.Controls.Add(Me.Label13)
-		Me.GrGearShift.Controls.Add(Me.ChSkipGears)
 		Me.GrGearShift.Controls.Add(Me.GroupBox2)
 		Me.GrGearShift.Location = New System.Drawing.Point(12, 377)
 		Me.GrGearShift.Name = "GrGearShift"
@@ -489,19 +486,20 @@ Partial Class GearboxForm
 		'
 		'PnTorqRes
 		'
+		Me.PnTorqRes.Controls.Add(Me.Label25)
 		Me.PnTorqRes.Controls.Add(Me.Label2)
 		Me.PnTorqRes.Controls.Add(Me.Label4)
 		Me.PnTorqRes.Controls.Add(Me.TbTqResv)
-		Me.PnTorqRes.Location = New System.Drawing.Point(230, 19)
+		Me.PnTorqRes.Location = New System.Drawing.Point(9, 20)
 		Me.PnTorqRes.Name = "PnTorqRes"
-		Me.PnTorqRes.Size = New System.Drawing.Size(190, 32)
+		Me.PnTorqRes.Size = New System.Drawing.Size(426, 32)
 		Me.PnTorqRes.TabIndex = 2
 		'
 		'Label2
 		'
 		Me.Label2.Anchor = CType((System.Windows.Forms.AnchorStyles.Top Or System.Windows.Forms.AnchorStyles.Right), System.Windows.Forms.AnchorStyles)
 		Me.Label2.AutoSize = True
-		Me.Label2.Location = New System.Drawing.Point(10, 9)
+		Me.Label2.Location = New System.Drawing.Point(18, 9)
 		Me.Label2.Name = "Label2"
 		Me.Label2.Size = New System.Drawing.Size(79, 13)
 		Me.Label2.TabIndex = 0
@@ -511,7 +509,7 @@ Partial Class GearboxForm
 		'
 		Me.Label4.Anchor = CType((System.Windows.Forms.AnchorStyles.Top Or System.Windows.Forms.AnchorStyles.Right), System.Windows.Forms.AnchorStyles)
 		Me.Label4.AutoSize = True
-		Me.Label4.Location = New System.Drawing.Point(158, 9)
+		Me.Label4.Location = New System.Drawing.Point(272, 9)
 		Me.Label4.Name = "Label4"
 		Me.Label4.Size = New System.Drawing.Size(21, 13)
 		Me.Label4.TabIndex = 0
@@ -520,26 +518,14 @@ Partial Class GearboxForm
 		'TbTqResv
 		'
 		Me.TbTqResv.Anchor = CType((System.Windows.Forms.AnchorStyles.Top Or System.Windows.Forms.AnchorStyles.Right), System.Windows.Forms.AnchorStyles)
-		Me.TbTqResv.Location = New System.Drawing.Point(95, 6)
+		Me.TbTqResv.Location = New System.Drawing.Point(206, 6)
 		Me.TbTqResv.Name = "TbTqResv"
 		Me.TbTqResv.Size = New System.Drawing.Size(57, 20)
 		Me.TbTqResv.TabIndex = 0
 		'
-		'ChShiftInside
-		'
-		Me.ChShiftInside.AutoSize = True
-		Me.ChShiftInside.Checked = True
-		Me.ChShiftInside.CheckState = System.Windows.Forms.CheckState.Checked
-		Me.ChShiftInside.Location = New System.Drawing.Point(9, 27)
-		Me.ChShiftInside.Name = "ChShiftInside"
-		Me.ChShiftInside.Size = New System.Drawing.Size(195, 17)
-		Me.ChShiftInside.TabIndex = 0
-		Me.ChShiftInside.Text = "Allow shift-up inside polygons (AMT)"
-		Me.ChShiftInside.UseVisualStyleBackColor = True
-		'
 		'TbShiftTime
 		'
-		Me.TbShiftTime.Location = New System.Drawing.Point(325, 51)
+		Me.TbShiftTime.Location = New System.Drawing.Point(215, 52)
 		Me.TbShiftTime.Name = "TbShiftTime"
 		Me.TbShiftTime.Size = New System.Drawing.Size(57, 20)
 		Me.TbShiftTime.TabIndex = 3
@@ -547,7 +533,7 @@ Partial Class GearboxForm
 		'Label12
 		'
 		Me.Label12.AutoSize = True
-		Me.Label12.Location = New System.Drawing.Point(388, 54)
+		Me.Label12.Location = New System.Drawing.Point(281, 55)
 		Me.Label12.Name = "Label12"
 		Me.Label12.Size = New System.Drawing.Size(18, 13)
 		Me.Label12.TabIndex = 9
@@ -556,21 +542,11 @@ Partial Class GearboxForm
 		'Label13
 		'
 		Me.Label13.AutoSize = True
-		Me.Label13.Location = New System.Drawing.Point(227, 54)
+		Me.Label13.Location = New System.Drawing.Point(27, 55)
 		Me.Label13.Name = "Label13"
 		Me.Label13.Size = New System.Drawing.Size(92, 13)
 		Me.Label13.TabIndex = 8
 		Me.Label13.Text = "Minimum shift time"
-		'
-		'ChSkipGears
-		'
-		Me.ChSkipGears.AutoSize = True
-		Me.ChSkipGears.Location = New System.Drawing.Point(9, 53)
-		Me.ChSkipGears.Name = "ChSkipGears"
-		Me.ChSkipGears.Size = New System.Drawing.Size(132, 17)
-		Me.ChSkipGears.TabIndex = 1
-		Me.ChSkipGears.Text = "Skip Gears (MT, AMT)"
-		Me.ChSkipGears.UseVisualStyleBackColor = True
 		'
 		'GroupBox2
 		'
@@ -693,35 +669,6 @@ Partial Class GearboxForm
 		Me.GroupBox3.TabStop = False
 		Me.GroupBox3.Text = "Torque Converter"
 		'
-		'BtTCShiftFileBrowse
-		'
-		Me.BtTCShiftFileBrowse.Anchor = CType((System.Windows.Forms.AnchorStyles.Top Or System.Windows.Forms.AnchorStyles.Right), System.Windows.Forms.AnchorStyles)
-		Me.BtTCShiftFileBrowse.Image = Global.TUGraz.VECTO.My.Resources.Resources.Open_icon
-		Me.BtTCShiftFileBrowse.Location = New System.Drawing.Point(353, 104)
-		Me.BtTCShiftFileBrowse.Name = "BtTCShiftFileBrowse"
-		Me.BtTCShiftFileBrowse.Size = New System.Drawing.Size(24, 24)
-		Me.BtTCShiftFileBrowse.TabIndex = 5
-		Me.BtTCShiftFileBrowse.TabStop = False
-		Me.BtTCShiftFileBrowse.UseVisualStyleBackColor = True
-		'
-		'LblTCShiftFile
-		'
-		Me.LblTCShiftFile.AutoSize = True
-		Me.LblTCShiftFile.Location = New System.Drawing.Point(5, 78)
-		Me.LblTCShiftFile.Name = "LblTCShiftFile"
-		Me.LblTCShiftFile.Size = New System.Drawing.Size(172, 13)
-		Me.LblTCShiftFile.TabIndex = 5
-		Me.LblTCShiftFile.Text = "Torque converter shift polygons file"
-		'
-		'TBTCShiftPolygon
-		'
-		Me.TBTCShiftPolygon.Anchor = CType(((System.Windows.Forms.AnchorStyles.Top Or System.Windows.Forms.AnchorStyles.Left) _
-			Or System.Windows.Forms.AnchorStyles.Right), System.Windows.Forms.AnchorStyles)
-		Me.TBTCShiftPolygon.Location = New System.Drawing.Point(4, 104)
-		Me.TBTCShiftPolygon.Name = "TBTCShiftPolygon"
-		Me.TBTCShiftPolygon.Size = New System.Drawing.Size(343, 20)
-		Me.TBTCShiftPolygon.TabIndex = 37
-		'
 		'PnTC
 		'
 		Me.PnTC.Controls.Add(Me.BtTCShiftFileBrowse)
@@ -742,6 +689,17 @@ Partial Class GearboxForm
 		Me.PnTC.Size = New System.Drawing.Size(402, 137)
 		Me.PnTC.TabIndex = 36
 		'
+		'BtTCShiftFileBrowse
+		'
+		Me.BtTCShiftFileBrowse.Anchor = CType((System.Windows.Forms.AnchorStyles.Top Or System.Windows.Forms.AnchorStyles.Right), System.Windows.Forms.AnchorStyles)
+		Me.BtTCShiftFileBrowse.Image = Global.TUGraz.VECTO.My.Resources.Resources.Open_icon
+		Me.BtTCShiftFileBrowse.Location = New System.Drawing.Point(353, 104)
+		Me.BtTCShiftFileBrowse.Name = "BtTCShiftFileBrowse"
+		Me.BtTCShiftFileBrowse.Size = New System.Drawing.Size(24, 24)
+		Me.BtTCShiftFileBrowse.TabIndex = 5
+		Me.BtTCShiftFileBrowse.TabStop = False
+		Me.BtTCShiftFileBrowse.UseVisualStyleBackColor = True
+		'
 		'Label17
 		'
 		Me.Label17.AutoSize = True
@@ -750,6 +708,24 @@ Partial Class GearboxForm
 		Me.Label17.Size = New System.Drawing.Size(176, 13)
 		Me.Label17.TabIndex = 0
 		Me.Label17.Text = "Torque converter characteristics file"
+		'
+		'TBTCShiftPolygon
+		'
+		Me.TBTCShiftPolygon.Anchor = CType(((System.Windows.Forms.AnchorStyles.Top Or System.Windows.Forms.AnchorStyles.Left) _
+			Or System.Windows.Forms.AnchorStyles.Right), System.Windows.Forms.AnchorStyles)
+		Me.TBTCShiftPolygon.Location = New System.Drawing.Point(4, 104)
+		Me.TBTCShiftPolygon.Name = "TBTCShiftPolygon"
+		Me.TBTCShiftPolygon.Size = New System.Drawing.Size(343, 20)
+		Me.TBTCShiftPolygon.TabIndex = 37
+		'
+		'LblTCShiftFile
+		'
+		Me.LblTCShiftFile.AutoSize = True
+		Me.LblTCShiftFile.Location = New System.Drawing.Point(5, 78)
+		Me.LblTCShiftFile.Name = "LblTCShiftFile"
+		Me.LblTCShiftFile.Size = New System.Drawing.Size(172, 13)
+		Me.LblTCShiftFile.TabIndex = 5
+		Me.LblTCShiftFile.Text = "Torque converter shift polygons file"
 		'
 		'Label18
 		'
@@ -906,6 +882,16 @@ Partial Class GearboxForm
 		Me.PicBox.TabIndex = 48
 		Me.PicBox.TabStop = False
 		'
+		'Label25
+		'
+		Me.Label25.Anchor = CType((System.Windows.Forms.AnchorStyles.Top Or System.Windows.Forms.AnchorStyles.Right), System.Windows.Forms.AnchorStyles)
+		Me.Label25.AutoSize = True
+		Me.Label25.Location = New System.Drawing.Point(294, 9)
+		Me.Label25.Name = "Label25"
+		Me.Label25.Size = New System.Drawing.Size(129, 13)
+		Me.Label25.TabIndex = 1
+		Me.Label25.Text = "(Early shift-up, Skip gears)"
+		'
 		'GearboxForm
 		'
 		Me.AcceptButton = Me.ButOK
@@ -1000,8 +986,6 @@ Partial Class GearboxForm
 	Friend WithEvents TbShiftTime As TextBox
 	Friend WithEvents Label12 As Label
 	Friend WithEvents Label13 As Label
-	Friend WithEvents ChSkipGears As CheckBox
-	Friend WithEvents ChShiftInside As CheckBox
 	Friend WithEvents CmOpenFile As ContextMenuStrip
 	Friend WithEvents OpenWithToolStripMenuItem As ToolStripMenuItem
 	Friend WithEvents ShowInFolderToolStripMenuItem As ToolStripMenuItem
@@ -1041,4 +1025,5 @@ Partial Class GearboxForm
 	Friend WithEvents BtTCShiftFileBrowse As Button
 	Friend WithEvents LblTCShiftFile As Label
 	Friend WithEvents TBTCShiftPolygon As TextBox
+	Friend WithEvents Label25 As System.Windows.Forms.Label
 End Class

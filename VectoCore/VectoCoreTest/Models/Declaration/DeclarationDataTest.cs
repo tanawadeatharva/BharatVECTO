@@ -60,16 +60,17 @@ namespace TUGraz.VectoCore.Tests.Models.Declaration
 			MissionType.Construction,
 		};
 
-		[TestCase("285/60 R22.5", 10.6, 0.914, 3.03),
-		TestCase("285/70 R19.5", 7.9, 0.895, 3.05),
-		TestCase("395/85 R20", 27.9, 1.18, 3.05)]
-		public void WheelDataTest(string wheels, double inertia, double dynamicRadius, double circumferenceFactor)
+		[TestCase("285/60 R22.5", 10.6, 0.914, 3.03, 0.440766),
+		TestCase("285/70 R19.5", 7.9, 0.895, 3.05, 0.434453),
+		TestCase("395/85 R20", 27.9, 1.18, 3.05, 0.572798)]
+		public void WheelDataTest(string wheels, double inertia, double wheelsDiameter, double circumferenceFactor, double expectedDynamicRadius)
 		{
 			var tmp = DeclarationData.Wheels.Lookup(wheels);
 
 			AssertHelper.AreRelativeEqual(inertia, tmp.Inertia);
-			AssertHelper.AreRelativeEqual(dynamicRadius, tmp.DynamicTyreRadius);
+			AssertHelper.AreRelativeEqual(wheelsDiameter, tmp.WheelsDiameter);
 			AssertHelper.AreRelativeEqual(circumferenceFactor, tmp.CircumferenceFactor);
+			Assert.AreEqual(expectedDynamicRadius, tmp.DynamicTyreRadius.Value(), 1e-6);
 		}
 
 		[

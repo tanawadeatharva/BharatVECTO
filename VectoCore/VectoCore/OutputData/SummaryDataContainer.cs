@@ -35,6 +35,7 @@ using System.Linq;
 using System.Runtime.CompilerServices;
 using TUGraz.VectoCommon.Models;
 using TUGraz.VectoCommon.Utils;
+
 // ReSharper disable MemberCanBePrivate.Global  -- used by API!
 
 namespace TUGraz.VectoCore.OutputData
@@ -91,7 +92,8 @@ namespace TUGraz.VectoCore.OutputData
 		public const string E_GRAD = "E_grad [kWh]";
 		public const string E_INERTIA = "E_inertia [kWh]";
 		public const string E_BRAKE = "E_brake [kWh]";
-		public const string E_GBX_AXL_LOSS = "E_gbx_axl_loss [kWh]";
+		public const string E_GBX_LOSS = "E_gbx_loss [kWh]";
+		public const string E_AXL_LOSS = "E_axl_loss [kWh]";
 		public const string E_RET_LOSS = "E_ret_loss [kWh]";
 		public const string E_TC_LOSS = "E_tc_loss [kWh]";
 		public const string E_ANGLE_LOSS = "E_angle_loss [kWh]";
@@ -132,7 +134,7 @@ namespace TUGraz.VectoCore.OutputData
 				MASS, LOADING, TIME, DISTANCE, SPEED, ALTITUDE_DELTA, FCMAP_H, FCMAP_KM, FCAUXC_H, FCAUXC_KM, FCWHTCC_H, FCWHTCC_KM,
 				FCAAUX_H, FCAAUX_KM, FCFINAL_H, FCFINAL_KM, FCFINAL_LITERPER100KM, FCFINAL_LITERPER100TKM, CO2_KM, CO2_TKM,
 				P_WHEEL_POS, P_BRAKE_LOSS, P_ANGLE_LOSS, P_TC_LOSS, P_CLUTCH_POS, P_CLUTCH_NEG, P_FCMAP_POS, E_AUX, E_AIR, E_ROLL,
-				E_GRAD, E_INERTIA, E_BRAKE, E_GBX_AXL_LOSS, E_RET_LOSS, E_TC_LOSS, E_ANGLE_LOSS, E_CLUTCH_POS, E_CLUTCH_NEG,
+				E_GRAD, E_INERTIA, E_BRAKE, E_GBX_LOSS, E_AXL_LOSS, E_ANGLE_LOSS, E_RET_LOSS, E_TC_LOSS, E_CLUTCH_POS, E_CLUTCH_NEG,
 				E_FCMAP_POS, ACC, ACC_POS, ACC_NEG, ACC_TIMESHARE, DEC_TIMESHARE, CRUISE_TIMESHARE, STOP_TIMESHARE
 			}.Select(x => new DataColumn(x, typeof(SI))).ToArray());
 		}
@@ -250,7 +252,8 @@ namespace TUGraz.VectoCore.OutputData
 			row[E_GRAD] = modData.WorkRoadGradientResistance().ConvertTo().Kilo.Watt.Hour;
 			row[E_INERTIA] = modData.PowerAccelerations().ConvertTo().Kilo.Watt.Hour;
 			row[E_BRAKE] = modData.WorkTotalMechanicalBrake().ConvertTo().Kilo.Watt.Hour;
-			row[E_GBX_AXL_LOSS] = modData.WorkTransmission().ConvertTo().Kilo.Watt.Hour;
+			row[E_GBX_LOSS] = modData.WorkGearbox().ConvertTo().Kilo.Watt.Hour;
+			row[E_AXL_LOSS] = modData.WorkAxlegear().ConvertTo().Kilo.Watt.Hour;
 			row[E_RET_LOSS] = modData.WorkRetarder().ConvertTo().Kilo.Watt.Hour;
 			row[E_TC_LOSS] = modData.WorkTorqueConverter().ConvertTo().Kilo.Watt.Hour;
 			row[E_ANGLE_LOSS] = modData.WorkAngledrive().ConvertTo().Kilo.Watt.Hour;

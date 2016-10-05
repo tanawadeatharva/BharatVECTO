@@ -68,20 +68,10 @@ namespace TUGraz.VectoCore.Models.SimulationComponent.Data
 		public double TorqueReserve { get; internal set; }
 
 		/// <summary>
-		///	Indicates if gears can be skipped in Gear Shift Strategy.
-		/// </summary>
-		public bool SkipGears { get; internal set; }
-
-		/// <summary>
 		/// Gets the minimum time between shifts.
 		/// </summary>
 		[Required, SIRange(0, 5)]
 		public Second ShiftTime { get; internal set; }
-
-		/// <summary>
-		/// True if the gearbox should do early up shifts.
-		/// </summary>
-		public bool EarlyShiftUp { get; internal set; }
 
 		/// <summary>
 		/// [%] (0-1) The starting torque reserve for finding the starting gear after standstill.

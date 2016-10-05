@@ -15,6 +15,7 @@ Imports System.Collections.Generic
 Imports System.ComponentModel.DataAnnotations
 Imports System.IO
 Imports System.Linq
+Imports System.Text
 Imports Newtonsoft.Json.Linq
 Imports TUGraz.VECTO.Input_Files
 Imports TUGraz.VectoCommon.Exceptions
@@ -24,13 +25,15 @@ Imports TUGraz.VectoCommon.Utils
 Imports TUGraz.VectoCore.InputData.FileIO.JSON
 Imports TUGraz.VectoCore.InputData.Impl
 Imports TUGraz.VectoCore.InputData.Reader.Impl
+Imports TUGraz.VectoCore.Models.Declaration
 Imports TUGraz.VectoCore.Models.Simulation.Data
 Imports TUGraz.VectoCore.Utils
 
 <CustomValidation(GetType(VectoJob), "ValidateJob")>
 Public Class VectoJob
 	Implements IEngineeringInputDataProvider, IDeclarationInputDataProvider, IEngineeringJobInputData, 
-				IDeclarationJobInputData, IDriverEngineeringInputData, IDriverDeclarationInputData
+				IDeclarationJobInputData, IDriverEngineeringInputData, IDriverDeclarationInputData, IAuxiliariesEngineeringInputData, 
+				IAuxiliariesDeclarationInputData
 
 	Private Const FormatVersion As Short = 3
 
@@ -156,6 +159,9 @@ Public Class VectoJob
 												}))
 		End If
 
+		If Not Cfg.DeclMode Then
+			body.Add("Padd", AuxPAdd)
+		End If
 		body.Add("VACC", _driverAccelerationFile.PathOrDummy)
 		body.Add("EngineOnlyMode", EngineOnly)
 		body.Add("StartStop", New Dictionary(Of String, Object) From {
@@ -611,7 +617,31 @@ Public Class VectoJob
 																	ExecutionModeServiceContainer)
 		Dim mode As ExecutionMode = If(modeService Is Nothing, ExecutionMode.Declaration, modeService.Mode)
 
-		Dim jobData As IEnumerable(Of VectoRunData)
+		If mode = ExecutionMode.Engineering AndAlso vectoJob.EngineOnly Then
+			Return ValidateEngineOnlyJob(vectoJob, mode)
+		End If
+
+		Return ValidateVehicleJob(vectoJob, mode)
+	End Function
+
+	Private Shared Function ValidateEngineOnlyJob(vectoJob As VectoJob, executionMode As ExecutionMode) As ValidationResult
+		Dim result As IList(Of ValidationResult) = New List(Of ValidationResult)
+
+		vectoJob._engineInputData = New JSONComponentInputData(vectoJob._engineFile.FullPath)
+
+		If vectoJob._engineInputData.EngineInputData Is Nothing Then _
+			result.Add(New ValidationResult("Engine File is missing or invalid"))
+		If result.Any() Then
+			Return _
+				New ValidationResult("Vecto Job Configuration is invalid. ", result.Select(Function(r) r.ErrorMessage).ToList())
+		End If
+
+		Return ValidationResult.Success
+	End Function
+
+	Private Shared Function ValidateVehicleJob(vectoJob As VectoJob, mode As ExecutionMode) As ValidationResult
+
+		Dim jobData As VectoRunData
 
 		vectoJob._vehicleInputData = New JSONComponentInputData(vectoJob._vehicleFile.FullPath)
 		vectoJob._engineInputData = New JSONComponentInputData(vectoJob._engineFile.FullPath)
@@ -649,7 +679,7 @@ Public Class VectoJob
 
 				Dim dataFactory As DeclarationModeVectoRunDataFactory = New DeclarationModeVectoRunDataFactory(vectoJob, Nothing)
 
-				jobData = dataFactory.NextRun()
+				jobData = dataFactory.NextRun().First()
 			Else
 				If vectoJob._vehicleInputData.VehicleInputData.SavedInDeclarationMode Then
 					result.Add(New ValidationResult("Vehicle File is not in Engineering Mode"))
@@ -665,11 +695,11 @@ Public Class VectoJob
 						New ValidationResult("Vecto Job Configuration is invalid. ", result.Select(Function(r) r.ErrorMessage).ToList())
 				End If
 				Dim dataFactory As EngineeringModeVectoRunDataFactory = New EngineeringModeVectoRunDataFactory(vectoJob)
-				jobData = dataFactory.NextRun()
+				jobData = dataFactory.NextRun().First()
 			End If
 
 
-			jobData.Validate(If(Cfg.DeclMode, ExecutionMode.Declaration, ExecutionMode.Engineering))
+			result = jobData.Validate(If(Cfg.DeclMode, ExecutionMode.Declaration, ExecutionMode.Engineering))
 			If result.Any() Then
 				Return _
 					New ValidationResult("Vecto Job Configuration is invalid. ", result.Select(Function(r) r.ErrorMessage).ToList())
@@ -703,7 +733,7 @@ Public Class VectoJob
 
 	Public Function IDeclarationInputDataProvider_JobInputData() As IDeclarationJobInputData _
 		Implements IDeclarationInputDataProvider.JobInputData
-		Throw New NotImplementedException
+		Return Me
 	End Function
 
 	Public ReadOnly Property VehicleInputData As IVehicleEngineeringInputData _
@@ -786,7 +816,13 @@ Public Class VectoJob
 	Public Function AuxiliaryInputData() As IAuxiliariesEngineeringInputData _
 		Implements IEngineeringInputDataProvider.AuxiliaryInputData
 
-		Throw New NotImplementedException
+		Return _vehicleInputData.AuxiliaryInputData()
+	End Function
+
+	Public Function IDeclarationInputDataProvider_AuxiliaryInputData() As IAuxiliariesDeclarationInputData _
+		Implements IDeclarationInputDataProvider.AuxiliaryInputData
+
+		Return Me
 	End Function
 
 	Public ReadOnly Property IDeclarationInputDataProvider_RetarderInputData As IRetarderInputData _
@@ -795,11 +831,6 @@ Public Class VectoJob
 			Return _vehicleInputData.RetarderInputData
 		End Get
 	End Property
-
-	Public Function IDeclarationInputDataProvider_AuxiliaryInputData() As IAuxiliariesDeclarationInputData _
-		Implements IDeclarationInputDataProvider.AuxiliaryInputData
-		Throw New NotImplementedException
-	End Function
 
 	Public ReadOnly Property RetarderInputData As IRetarderInputData _
 		Implements IEngineeringInputDataProvider.RetarderInputData
@@ -835,6 +866,7 @@ Public Class VectoJob
 			Return SavedInDeclMode
 		End Get
 	End Property
+
 
 	Public ReadOnly Property IDriverDeclarationInputData_StartStop As IStartStopDeclarationInputData _
 		Implements IDriverDeclarationInputData.StartStop
@@ -894,6 +926,75 @@ Public Class VectoJob
 			Return Path.GetFileNameWithoutExtension(FilePath)
 		End Get
 	End Property
+
+	Public Property AuxPAdd As Double
+
+	Public ReadOnly Property IAuxiliariesDeclarationInputData_SavedInDeclarationMode As Boolean _
+		Implements IAuxiliariesDeclarationInputData.SavedInDeclarationMode
+		Get
+			Return SavedInDeclMode
+		End Get
+	End Property
+
+	Public ReadOnly Property Auxiliaries As IList(Of IAuxiliaryEngineeringInputData) _
+		Implements IAuxiliariesEngineeringInputData.Auxiliaries
+		Get
+			Return AuxData().Cast(Of IAuxiliaryEngineeringInputData).ToList()
+		End Get
+	End Property
+
+	Public ReadOnly Property IAuxiliariesEngineeringInputData_AdvancedAuxiliaryFilePath As String _
+		Implements IAuxiliariesEngineeringInputData.AdvancedAuxiliaryFilePath
+		Get
+			Return AdvancedAuxiliaryFilePath
+		End Get
+	End Property
+
+	Public ReadOnly Property IAuxiliariesEngineeringInputData_AuxiliaryVersion As String _
+		Implements IAuxiliariesEngineeringInputData.AuxiliaryVersion
+		Get
+			Return AuxiliaryVersion
+		End Get
+	End Property
+
+	Public ReadOnly Property IAuxiliariesEngineeringInputData_AuxiliaryAssembly As AuxiliaryModel _
+		Implements IAuxiliariesEngineeringInputData.AuxiliaryAssembly
+		Get
+			Return AuxiliaryModelHelper.Parse(AuxiliaryAssembly)
+		End Get
+	End Property
+
+	Public ReadOnly Property IAuxiliariesDeclarationInputData_Auxiliaries As IList(Of IAuxiliaryDeclarationInputData) _
+		Implements IAuxiliariesDeclarationInputData.Auxiliaries
+		Get
+			Return AuxData().Cast(Of IAuxiliaryDeclarationInputData).ToList()
+		End Get
+	End Property
+
+	Protected Function AuxData() As IList(Of AuxiliaryDataInputData)
+		Dim retVal As List(Of AuxiliaryDataInputData) = New List(Of AuxiliaryDataInputData)
+
+		For Each auxEntry As KeyValuePair(Of String, AuxEntry) In AuxPaths
+			Dim theAuxData As AuxiliaryDataInputData = New AuxiliaryDataInputData() With {
+					.Type = AuxiliaryTypeHelper.Parse(auxEntry.Value.Type),
+					.Technology = auxEntry.Value.TechnologyList,
+					.ID = auxEntry.Key
+					}
+			retVal.Add(theAuxData)
+			If Not File.Exists(auxEntry.Value.Path.FullPath) Then Continue For
+
+			Dim stream As StreamReader = New StreamReader(auxEntry.Value.Path.FullPath)
+			stream.ReadLine() ' skip header "Transmission ration to engine rpm [-]"
+			theAuxData.TransmissionRatio = stream.ReadLine().IndulgentParse()
+			stream.ReadLine() ' skip header "Efficiency to engine [-]"
+			theAuxData.EfficiencyToEngine = stream.ReadLine().IndulgentParse()
+			stream.ReadLine() ' skip header "Efficiency auxiliary to supply [-]"
+			theAuxData.EfficiencyToSupply = stream.ReadLine().IndulgentParse()
+			theAuxData.DemandMap = VectoCSVFile.ReadStream(New MemoryStream(Encoding.UTF8.GetBytes(stream.ReadToEnd())))
+		Next
+
+		Return retVal
+	End Function
 
 #End Region
 End Class
