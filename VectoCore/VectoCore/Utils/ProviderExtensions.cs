@@ -118,13 +118,6 @@ namespace TUGraz.VectoCore.Utils
 		public static IPowerTrainComponent AddComponent(this IPowerTrainComponent prev, IGearbox gearbox, RetarderData data,
 			PTOData pto, IVehicleContainer container)
 		{
-			if (pto != null) {
-				var aux = new GearboxAuxiliary(container);
-				aux.Add(Constants.Auxiliaries.IDs.PTOConsumer, n => pto.LossMap.GetTorqueLoss(n) * n);
-				container.ModalData.AddAuxiliary(Constants.Auxiliaries.IDs.PTOConsumer);
-				gearbox.Connect(aux);
-			}
-
 			switch (data.Type) {
 				case RetarderType.TransmissionOutputRetarder:
 					return prev.AddComponent(new Retarder(container, data.LossMap, data.Ratio)).AddComponent(gearbox);

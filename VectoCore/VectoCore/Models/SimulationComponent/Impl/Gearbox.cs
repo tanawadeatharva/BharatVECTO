@@ -95,11 +95,8 @@ namespace TUGraz.VectoCore.Models.SimulationComponent.Impl
 			var gearboxTorqueLoss = ModelData.Gears[Gear].LossMap.GetTorqueLoss(outAngularVelocity, outTorque);
 			CurrentState.TorqueLossResult = gearboxTorqueLoss;
 
-			var auxTorqueLoss = Auxiliary == null ? 0.SI<NewtonMeter>() : Auxiliary.Initialize(null, inAngularVelocity);
-
 			var inTorque = outTorque / ModelData.Gears[Gear].Ratio
-							+ gearboxTorqueLoss.Value
-							+ auxTorqueLoss;
+							+ gearboxTorqueLoss.Value;
 
 			PreviousState.SetState(inTorque, inAngularVelocity, outTorque, outAngularVelocity);
 			PreviousState.InertiaTorqueLossOut = 0.SI<NewtonMeter>();
@@ -126,10 +123,6 @@ namespace TUGraz.VectoCore.Models.SimulationComponent.Impl
 				var inertiaPowerLoss = Formulas.InertiaPower(inAngularVelocity, alpha, ModelData.Inertia,
 					Constants.SimulationSettings.TargetTimeInterval);
 				inTorque += inertiaPowerLoss / inAngularVelocity;
-
-				//todo mk-2016-08-17: aux loss from out-direction or in-direction of the gearbox?
-				if (Auxiliary != null)
-					inTorque += Auxiliary.Initialize(null, inAngularVelocity);
 			}
 
 			var response = NextComponent.Initialize(inTorque, inAngularVelocity);
@@ -304,10 +297,6 @@ namespace TUGraz.VectoCore.Models.SimulationComponent.Impl
 			var inTorque = outTorque / ModelData.Gears[Gear].Ratio + inTorqueLossResult.Value;
 
 			var inAngularVelocity = outAngularVelocity * ModelData.Gears[Gear].Ratio;
-
-			if (Auxiliary != null) {
-				inTorque += Auxiliary.TorqueDemand(absTime, dt, outTorque, inTorque, inAngularVelocity, dryRun);
-			}
 
 			if (dryRun) {
 				CurrentState.InertiaTorqueLossOut = !inAngularVelocity.IsEqual(0)

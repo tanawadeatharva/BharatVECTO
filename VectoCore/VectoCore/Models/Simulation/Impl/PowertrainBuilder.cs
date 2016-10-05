@@ -264,6 +264,10 @@ namespace TUGraz.VectoCore.Models.Simulation.Impl
 				aux.AddConstant(Constants.Auxiliaries.IDs.PTOTransmission,
 					DeclarationData.PTOTransmission.Lookup(data.PTO.TransmissionType));
 				container.ModalData.AddAuxiliary(Constants.Auxiliaries.IDs.PTOTransmission);
+
+				aux.Add(Constants.Auxiliaries.IDs.PTOConsumer,
+					n => container.CycleData.LeftSample.PTOActive ? null : data.PTO.LossMap.GetTorqueLoss(n) * n);
+				container.ModalData.AddAuxiliary(Constants.Auxiliaries.IDs.PTOConsumer);
 			}
 
 			return aux;

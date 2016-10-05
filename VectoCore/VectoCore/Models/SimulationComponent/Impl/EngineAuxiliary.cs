@@ -108,14 +108,16 @@ namespace TUGraz.VectoCore.Models.SimulationComponent.Impl
 			return 0.SI<NewtonMeter>();
 		}
 
-		protected virtual Watt ComputePowerDemand(PerSecond engineSpeed)
+		protected Watt ComputePowerDemand(PerSecond engineSpeed)
 		{
 			CurrentState.PowerDemands = new Dictionary<string, Watt>(_auxiliaries.Count);
 			CurrentState.TotalPowerDemand = 0.SI<Watt>();
 			foreach (var item in _auxiliaries) {
 				var value = item.Value(engineSpeed);
-				CurrentState.PowerDemands[item.Key] = value;
-				CurrentState.TotalPowerDemand += value;
+				if (value != null) {
+					CurrentState.PowerDemands[item.Key] = value;
+					CurrentState.TotalPowerDemand += value;
+				}
 			}
 			return CurrentState.TotalPowerDemand;
 		}
