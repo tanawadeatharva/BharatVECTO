@@ -59,6 +59,8 @@ namespace TUGraz.VectoCore.Tests.Utils
 		public MeterPerSquareSecond StartAcceleration { get; set; }
 		public NewtonMeter GearMaxTorque { get; set; }
 
+		public Second AbsTime { get; set; }
+
 		public Watt GearboxLoss()
 		{
 			throw new System.NotImplementedException();

@@ -1,7 +1,7 @@
 ﻿{
   "Header": {
     "CreatedBy": " ()",
-    "Date": "2016-09-29T06:17:38.5915264Z",
+    "Date": "2016-10-05T11:14:04.8230746Z",
     "AppVersion": "3",
     "FileVersion": 7
   },
@@ -29,7 +29,7 @@
     "PTO": {
       "Type": "only the drive shaft of the PTO - multi-disc clutch",
       "LossMap": "PTO-idle.vptol",
-      "Cycle": "PTO-cycle.vdri"
+      "Cycle": "PTO-cycle.vptoc"
     },
     "AxleConfig": {
       "Type": "4x2",
