@@ -2,6 +2,7 @@ using System.Linq;
 using TUGraz.VectoCommon.Exceptions;
 using TUGraz.VectoCommon.Models;
 using TUGraz.VectoCommon.Utils;
+using TUGraz.VectoCore.Configuration;
 using TUGraz.VectoCore.Models.Connector.Ports;
 using TUGraz.VectoCore.Models.Connector.Ports.Impl;
 using TUGraz.VectoCore.Models.Simulation.Data;
@@ -69,7 +70,7 @@ namespace TUGraz.VectoCore.Models.SimulationComponent.Impl
 		protected override void DoWriteModalResults(IModalDataContainer container)
 		{
 			base.DoWriteModalResults(container);
-			container[ModalResultField.P_PTO_consum] = CurrentState.InTorque * CurrentState.InAngularVelocity;
+			container[Constants.Auxiliaries.IDs.PTOConsumer] = CurrentState.InTorque * CurrentState.InAngularVelocity;
 		}
 	}
 }

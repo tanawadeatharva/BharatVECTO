@@ -122,8 +122,10 @@ namespace TUGraz.VectoCore.Models.SimulationComponent.Impl
 
 		protected override void DoWriteModalResults(IModalDataContainer container)
 		{
-			foreach (var kv in CurrentState.PowerDemands.Where(kv => !string.IsNullOrWhiteSpace(kv.Key))) {
-				container[kv.Key] = kv.Value;
+			if (CurrentState.PowerDemands != null) {
+				foreach (var kv in CurrentState.PowerDemands.Where(kv => !string.IsNullOrWhiteSpace(kv.Key))) {
+					container[kv.Key] = kv.Value;
+				}
 			}
 			if (container[ModalResultField.P_aux] == null || container[ModalResultField.P_aux] == DBNull.Value) {
 				// only overwrite if nobody else already wrote the total aux power

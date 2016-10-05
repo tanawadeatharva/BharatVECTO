@@ -34,12 +34,15 @@ using System.Linq;
 using TUGraz.VectoCommon.Exceptions;
 using TUGraz.VectoCommon.Models;
 using TUGraz.VectoCommon.Utils;
+using TUGraz.VectoCore.Configuration;
+using TUGraz.VectoCore.Models.Declaration;
 using TUGraz.VectoCore.Models.Simulation.Data;
 using TUGraz.VectoCore.Models.SimulationComponent;
 using TUGraz.VectoCore.Models.SimulationComponent.Data;
 using TUGraz.VectoCore.Models.SimulationComponent.Impl;
 using TUGraz.VectoCore.OutputData;
 using TUGraz.VectoCore.Utils;
+using Wheels = TUGraz.VectoCore.Models.SimulationComponent.Impl.Wheels;
 
 namespace TUGraz.VectoCore.Models.Simulation.Impl
 {
@@ -108,7 +111,7 @@ namespace TUGraz.VectoCore.Models.Simulation.Impl
 
 			// PWheelCycle --> AxleGear --> CycleClutch --> Engine <-- Aux
 			var powertrain = new PWheelCycle(container, data.Cycle, data.AxleGearData.AxleGear.Ratio,
-				gearbox.ModelData.Gears.ToDictionary(g => g.Key, g => g.Value.Ratio))
+					gearbox.ModelData.Gears.ToDictionary(g => g.Key, g => g.Value.Ratio))
 				.AddComponent(new AxleGear(container, data.AxleGearData))
 				.AddComponent(data.AngledriveData != null ? new Angledrive(container, data.AngledriveData) : null)
 				.AddComponent(gearbox, data.Retarder, data.PTO, container)
@@ -256,6 +259,13 @@ namespace TUGraz.VectoCore.Models.Simulation.Impl
 				}
 				container.ModalData.AddAuxiliary(id);
 			}
+
+			if (data.PTO != null) {
+				aux.AddConstant(Constants.Auxiliaries.IDs.PTOTransmission,
+					DeclarationData.PTOTransmission.Lookup(data.PTO.TransmissionType));
+				container.ModalData.AddAuxiliary(Constants.Auxiliaries.IDs.PTOTransmission);
+			}
+
 			return aux;
 		}
 
