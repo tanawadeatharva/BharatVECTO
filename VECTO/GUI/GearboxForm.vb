@@ -100,8 +100,8 @@ Public Class GearboxForm
 		TbTracInt.Text = gbxType.TractionInterruption().ToGUIFormat()
 		TbShiftTime.Text = DeclarationData.Gearbox.MinTimeBetweenGearshifts.ToGUIFormat()	'cDeclaration.ShiftTime(GStype)
 
-		TbTqResv.Text = DeclarationData.Gearbox.TorqueReserve.ToGUIFormat()	' cDeclaration.TqResv
-		TbTqResvStart.Text = DeclarationData.Gearbox.TorqueReserveStart.ToGUIFormat()	'cDeclaration.TqResvStart
+		TbTqResv.Text = (DeclarationData.Gearbox.TorqueReserve * 100).ToGUIFormat()	  ' cDeclaration.TqResv
+		TbTqResvStart.Text = (DeclarationData.Gearbox.TorqueReserveStart * 100).ToGUIFormat() 'cDeclaration.TqResvStart
 		TbStartSpeed.Text = DeclarationData.Gearbox.StartSpeed.ToGUIFormat()	'cDeclaration.StartSpeed
 		TbStartAcc.Text = DeclarationData.Gearbox.StartAcceleration.ToGUIFormat()	' cDeclaration.StartAcc
 
@@ -196,9 +196,9 @@ Public Class GearboxForm
 
 		'Me.ChSkipGears.Checked = False         'set by CbGStype.SelectedIndexChanged
 		'Me.ChShiftInside.Checked = False       'set by CbGStype.SelectedIndexChanged
-		TbTqResv.Text = DeclarationData.Gearbox.TorqueReserve.ToGUIFormat()
+		TbTqResv.Text = (DeclarationData.Gearbox.TorqueReserve * 100).ToGUIFormat()
 		TbShiftTime.Text = DeclarationData.Gearbox.MinTimeBetweenGearshifts.ToGUIFormat()
-		TbTqResvStart.Text = DeclarationData.Gearbox.TorqueReserveStart.ToGUIFormat()
+		TbTqResvStart.Text = (DeclarationData.Gearbox.TorqueReserveStart * 100).ToGUIFormat()
 		TbStartSpeed.Text = DeclarationData.Gearbox.StartSpeed.ToGUIFormat() ' in m/s!
 		TbStartAcc.Text = DeclarationData.Gearbox.StartAcceleration.ToGUIFormat()
 
@@ -272,9 +272,9 @@ Public Class GearboxForm
 												If(gear.MaxTorque Is Nothing, "", gear.MaxTorque.ToGUIFormat())))
 		Next
 
-		TbTqResv.Text = gearbox.TorqueReserve.ToGUIFormat()
+		TbTqResv.Text = (gearbox.TorqueReserve * 100).ToGUIFormat()
 		TbShiftTime.Text = gearbox.ShiftTime.ToGUIFormat()
-		TbTqResvStart.Text = gearbox.StartTorqueReserve.ToGUIFormat()
+		TbTqResvStart.Text = (gearbox.StartTorqueReserve * 100).ToGUIFormat()
 		TbStartSpeed.Text = gearbox.StartSpeed.ToGUIFormat()
 		TbStartAcc.Text = gearbox.StartAcceleration.ToGUIFormat()
 
@@ -712,7 +712,7 @@ Public Class GearboxForm
 				gear = 1
 			End If
 
-			shiftPolygon = ShiftPolygonReader.ReadFromFile(path)
+			If File.Exists(path) Then shiftPolygon = ShiftPolygonReader.ReadFromFile(path)
 
 		Catch ex As Exception
 

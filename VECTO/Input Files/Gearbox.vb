@@ -377,7 +377,7 @@ Public Class Gearbox
 
 	Public ReadOnly Property TorqueReserve As Double Implements IGearboxEngineeringInputData.TorqueReserve
 		Get
-			Return TorqueResv
+			Return TorqueResv / 100
 		End Get
 	End Property
 

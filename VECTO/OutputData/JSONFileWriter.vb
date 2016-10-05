@@ -4,9 +4,7 @@ Imports System.Linq
 Imports Newtonsoft.Json.Linq
 Imports TUGraz.VectoCommon.InputData
 Imports TUGraz.VectoCommon.Models
-Imports TUGraz.VectoCore.InputData.Impl
 Imports TUGraz.VectoCore.Models.Declaration
-Imports TUGraz.VectoCore.Models.SimulationComponent.Data
 
 Public Class JSONFileWriter
 	Public Const EngineFormatVersion As Short = 3
@@ -111,16 +109,16 @@ Public Class JSONFileWriter
 		Next
 		body.Add("Gears", ls)
 
-		body.Add("TqReserve", gbx.TorqueReserve)
+		body.Add("TqReserve", gbx.TorqueReserve * 100)
 		'body.Add("SkipGears", gbx.sk)
 		body.Add("ShiftTime", gbx.ShiftTime.Value())
 		'body.Add("EaryShiftUp", gbx.ShiftInside)
 
-		body.Add("StartTqReserve", gbx.StartTorqueReserve)
+		body.Add("StartTqReserve", gbx.StartTorqueReserve * 100)
 		body.Add("StartSpeed", gbx.StartSpeed.Value())
 		body.Add("StartAcc", gbx.StartAcceleration.Value())
 
-		body.Add("GearboxType", gbx.Type)
+		body.Add("GearboxType", gbx.Type.ToString())
 
 		Dim torqueConverter As ITorqueConverterEngineeringInputData = gbx.TorqueConverter
 		Dim torqueConverterDict As New Dictionary(Of String, Object)
@@ -148,6 +146,7 @@ Public Class JSONFileWriter
 
 	Public Function SaveVehicle(vehicle As IVehicleEngineeringInputData, retarder As IRetarderInputData,
 								pto As IPTOTransmissionInputData, angledrive As IAngledriveInputData, filename As String) As Boolean
+		Dim basePath As String = Path.GetDirectoryName(filename)
 		Dim json As New JSONWriter
 		'Header
 		Dim header As Dictionary(Of String, Object) = New Dictionary(Of String, Object) From {
@@ -166,7 +165,9 @@ Public Class JSONFileWriter
 			retarderOut.Add("Type", retarder.Type.GetName())
 			retarderOut.Add("Ratio", retarder.Ratio)
 			retarderOut.Add("File",
-							If(retarder.Type.IsDedicatedComponent AndAlso Not retarder.LossMap Is Nothing, retarder.LossMap.Source, ""))
+							If _
+								(retarder.Type.IsDedicatedComponent AndAlso Not retarder.LossMap Is Nothing,
+								GetRelativePath(retarder.LossMap.Source, basePath), ""))
 		End If
 
 		Dim ptoOut As Dictionary(Of String, Object) = New Dictionary(Of String, Object)
@@ -175,9 +176,13 @@ Public Class JSONFileWriter
 		Else
 			ptoOut.Add("Type", pto.PTOTransmissionType)
 			ptoOut.Add("LossMap",
-						If(pto.PTOTransmissionType <> "None" AndAlso Not pto.PTOLossMap Is Nothing, pto.PTOLossMap.Source, ""))
+						If _
+						(pto.PTOTransmissionType <> "None" AndAlso Not pto.PTOLossMap Is Nothing,
+						GetRelativePath(pto.PTOLossMap.Source, basePath), ""))
 			ptoOut.Add("Cycle",
-						If(pto.PTOTransmissionType <> "None" AndAlso Not pto.PTOCycle Is Nothing, pto.PTOCycle.Source, ""))
+						If _
+						(pto.PTOTransmissionType <> "None" AndAlso Not pto.PTOCycle Is Nothing,
+						GetRelativePath(pto.PTOCycle.Source, basePath), ""))
 		End If
 
 		Dim angledriveOut As Dictionary(Of String, Object) = New Dictionary(Of String, Object) From {
@@ -186,7 +191,7 @@ Public Class JSONFileWriter
 				{"LossMap",
 				If _
 				(angledrive.Type = AngledriveType.SeparateAngledrive AndAlso Not angledrive.LossMap Is Nothing,
-				angledrive.LossMap.Source, "")}}
+				GetRelativePath(angledrive.LossMap.Source, basePath), "")}}
 
 		Dim body As Dictionary(Of String, Object) = New Dictionary(Of String, Object) From {
 				{"SavedInDeclMode", Cfg.DeclMode},
@@ -203,7 +208,8 @@ Public Class JSONFileWriter
 				(
 					(vehicle.CrossWindCorrectionMode = CrossWindCorrectionMode.SpeedDependentCorrectionFactor OrElse
 					vehicle.CrossWindCorrectionMode = CrossWindCorrectionMode.VAirBetaLookupTable) AndAlso
-					Not vehicle.CrosswindCorrectionMap Is Nothing, vehicle.CrosswindCorrectionMap.Source, "")},
+					Not vehicle.CrosswindCorrectionMap Is Nothing, GetRelativePath(vehicle.CrosswindCorrectionMap.Source, basePath), "")
+				},
 				{"Retarder", retarderOut},
 				{"Angledrive", angledriveOut},
 				{"PTO", ptoOut},
@@ -228,7 +234,7 @@ Public Class JSONFileWriter
 
 	Public Function SaveJob(input As IEngineeringInputDataProvider, filename As String) As Boolean
 		Dim json As New JSONWriter
-
+		Dim basePath As String = Path.GetDirectoryName(filename)
 		'Header
 		Dim header As Dictionary(Of String, Object) = New Dictionary(Of String, Object) From {
 				{"CreatedBy", Lic.LicString & " (" & Lic.GUID & ")"},
@@ -250,21 +256,20 @@ Public Class JSONFileWriter
 		body.Add("EngineOnlyMode", job.EngineOnlyMode)
 
 		If job.EngineOnlyMode Then
-			body.Add("EngineFile", input.EngineInputData.Source)
-			For Each cycle As ICycleData In job.Cycles
-				body.Add("Cycles", cycle.CycleData.Source)
-			Next
+			body.Add("EngineFile", GetRelativePath(input.EngineInputData.Source, basePath))
+			body.Add("Cycles",
+					job.Cycles.Select(Function(x) GetRelativePath(x.CycleData.Source, Path.GetDirectoryName(filename))).ToArray())
 			Return True
 		End If
 
 		'Main Files
-		body.Add("VehicleFile", GetRelativePath(job.Vehicle.Source, Path.GetDirectoryName(filename)))
-		body.Add("EngineFile", GetRelativePath(input.EngineInputData.Source, Path.GetDirectoryName(filename)))
-		body.Add("GearboxFile", GetRelativePath(input.GearboxInputData.Source, Path.GetDirectoryName(filename)))
+		body.Add("VehicleFile", GetRelativePath(job.Vehicle.Source, basePath))
+		body.Add("EngineFile", GetRelativePath(input.EngineInputData.Source, basePath))
+		body.Add("GearboxFile", GetRelativePath(input.GearboxInputData.Source, basePath))
 
 		'AA-TB
 		'ADVANCED AUXILIARIES 
-		body.Add("AuxiliaryAssembly", aux.AuxiliaryAssembly)
+		body.Add("AuxiliaryAssembly", aux.AuxiliaryAssembly.ToString())
 		body.Add("AuxiliaryVersion", aux.AuxiliaryVersion)
 		body.Add("AdvancedAuxiliaryFilePath", aux.AdvancedAuxiliaryFilePath)
 
@@ -279,12 +284,12 @@ Public Class JSONFileWriter
 			Dim engineeringAuxEntry As IAuxiliaryDeclarationInputData = TryCast(auxEntry, IAuxiliaryDeclarationInputData)
 			If engineeringAuxEntry Is Nothing Then
 				auxOut.Add("Type", auxEntry.AuxiliaryType.ToString())
-				auxOut.Add("Path", auxEntry.DemandMap.Source)
+				auxOut.Add("Path", GetRelativePath(auxEntry.DemandMap.Source, basePath))
 				auxOut.Add("Technology", New String() {})
 			Else
 				auxOut.Add("ID", auxEntry.ID)
-				auxOut.Add("Technology", engineeringAuxEntry.Technology)
 				auxOut.Add("Type", AuxiliaryTypeHelper.ParseKey(auxEntry.ID).Name())
+				auxOut.Add("Technology", engineeringAuxEntry.Technology)
 			End If
 			auxList.Add(auxOut)
 		Next
@@ -295,21 +300,31 @@ Public Class JSONFileWriter
 			body.Add("Padd", pAdd)
 		End If
 		If Not job.SavedInDeclarationMode Then
-			body.Add("VACC", driver.AccelerationCurve.Source)
+			body.Add("VACC", GetRelativePath(driver.AccelerationCurve.Source, basePath))
 		End If
 		body.Add("StartStop", New Dictionary(Of String, Object) From {
 					{"Enabled", driver.StartStop.Enabled},
-					{"MaxSpeed", driver.StartStop.MaxSpeed.Value()},
+					{"MaxSpeed", driver.StartStop.MaxSpeed.AsKmph},
 					{"MinTime", driver.StartStop.MinTime.Value()},
 					{"Delay", driver.StartStop.Delay.Value()}})
 		If Not job.SavedInDeclarationMode Then
+			Dim dfTargetSpeed As String = If _
+					(
+						Not driver.Lookahead.CoastingDecisionFactorTargetSpeedLookup Is Nothing AndAlso
+						File.Exists(driver.Lookahead.CoastingDecisionFactorTargetSpeedLookup.Source),
+						GetRelativePath(driver.Lookahead.CoastingDecisionFactorTargetSpeedLookup.Source, basePath), "")
+			Dim dfVelocityDrop As String = If _
+					(
+						Not driver.Lookahead.CoastingDecisionFactorVelocityDropLookup Is Nothing AndAlso
+						File.Exists(driver.Lookahead.CoastingDecisionFactorVelocityDropLookup.Source),
+						GetRelativePath(driver.Lookahead.CoastingDecisionFactorVelocityDropLookup.Source, basePath), "")
 			body.Add("LAC", New Dictionary(Of String, Object) From {
 						{"Enabled", driver.Lookahead.Enabled},
 						{"PreviewDistanceFactor", driver.Lookahead.LookaheadDistanceFactor},
 						{"DF_offset", driver.Lookahead.CoastingDecisionFactorOffset},
 						{"DF_scaling", driver.Lookahead.CoastingDecisionFactorScaling},
-						{"DF_targetSpeedLookup", driver.Lookahead.CoastingDecisionFactorTargetSpeedLookup.Source},
-						{"Df_velocityDropLookup", driver.Lookahead.CoastingDecisionFactorVelocityDropLookup.Source}})
+						{"DF_targetSpeedLookup", dfTargetSpeed},
+						{"Df_velocityDropLookup", dfVelocityDrop}})
 		End If
 
 		'Overspeed / EcoRoll
@@ -317,9 +332,9 @@ Public Class JSONFileWriter
 
 		overspeedDic.Add("Mode", driver.OverSpeedEcoRoll.Mode.ToString())
 
-		overspeedDic.Add("MinSpeed", driver.OverSpeedEcoRoll.MinSpeed.Value())
-		overspeedDic.Add("OverSpeed", driver.OverSpeedEcoRoll.OverSpeed.Value())
-		overspeedDic.Add("UnderSpeed", driver.OverSpeedEcoRoll.UnderSpeed.Value())
+		overspeedDic.Add("MinSpeed", driver.OverSpeedEcoRoll.MinSpeed.AsKmph)
+		overspeedDic.Add("OverSpeed", driver.OverSpeedEcoRoll.OverSpeed.AsKmph)
+		overspeedDic.Add("UnderSpeed", driver.OverSpeedEcoRoll.UnderSpeed.AsKmph)
 		body.Add("OverSpeedEcoRoll", overspeedDic)
 
 		'Cycles

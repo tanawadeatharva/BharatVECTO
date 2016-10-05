@@ -597,7 +597,7 @@ Public Class VectoJob
 
 	Public ReadOnly Property Cycles As IList(Of ICycleData) Implements IEngineeringJobInputData.Cycles
 		Get
-			Dim retVal As ICycleData() = New ICycleData(CycleFiles.Count) {}
+			Dim retVal As ICycleData() = New ICycleData(CycleFiles.Count - 1) {}
 			Dim i As Integer = 0
 			For Each cycleFile As SubPath In CycleFiles
 				Dim cycleData As TableData
