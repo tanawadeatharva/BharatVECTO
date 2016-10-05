@@ -159,7 +159,15 @@ Public Class Engine
 			Return False
 		End If
 
-		Return New JSONFileWriter().SaveEngine(Me, _filePath)
+		Try
+			Dim writer As JSONFileWriter = New JSONFileWriter()
+			writer.SaveEngine(Me, _filePath)
+
+		Catch ex As Exception
+			MsgBox("Faled to write Engine file: " + ex.Message)
+			Return False
+		End Try
+		Return True
 	End Function
 
 

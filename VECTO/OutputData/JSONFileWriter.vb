@@ -4,9 +4,11 @@ Imports System.Linq
 Imports Newtonsoft.Json.Linq
 Imports TUGraz.VectoCommon.InputData
 Imports TUGraz.VectoCommon.Models
+Imports TUGraz.VectoCommon.OutputData
 Imports TUGraz.VectoCore.Models.Declaration
 
 Public Class JSONFileWriter
+	Implements IOutputFileWriter
 	Public Const EngineFormatVersion As Short = 3
 
 	Public Const GearboxFormatVersion As Short = 6
@@ -24,7 +26,8 @@ Public Class JSONFileWriter
 		End Get
 	End Property
 
-	Public Function SaveEngine(eng As IEngineEngineeringInputData, filename As String) As Boolean
+	Public Sub SaveEngine(eng As IEngineEngineeringInputData, filename As String) _
+		Implements IOutputFileWriter.SaveEngine
 		Dim json As New JSONWriter
 
 		'Header
@@ -56,11 +59,11 @@ Public Class JSONFileWriter
 
 		json.Content = JToken.FromObject(New Dictionary(Of String, Object) From {{"Header", header}, {"Body", body}})
 
-		Return json.WriteFile(filename)
-	End Function
+		json.WriteFile(filename)
+	End Sub
 
-	Public Function SaveGearbox(gbx As IGearboxEngineeringInputData, axl As IAxleGearInputData, filename As String) _
-		As Boolean
+	Public Sub SaveGearbox(gbx As IGearboxEngineeringInputData, axl As IAxleGearInputData, filename As String) _
+		 Implements IOutputFileWriter.SaveGearbox
 
 		Dim json As New JSONWriter
 
@@ -141,11 +144,12 @@ Public Class JSONFileWriter
 
 		json.Content = JToken.FromObject(New Dictionary(Of String, Object) From {{"Header", header}, {"Body", body}})
 
-		Return json.WriteFile(filename)
-	End Function
+		json.WriteFile(filename)
+	End Sub
 
-	Public Function SaveVehicle(vehicle As IVehicleEngineeringInputData, retarder As IRetarderInputData,
-								pto As IPTOTransmissionInputData, angledrive As IAngledriveInputData, filename As String) As Boolean
+	Public Sub SaveVehicle(vehicle As IVehicleEngineeringInputData, retarder As IRetarderInputData,
+								pto As IPTOTransmissionInputData, angledrive As IAngledriveInputData, filename As String) _
+		Implements IOutputFileWriter.SaveVehicle
 		Dim basePath As String = Path.GetDirectoryName(filename)
 		Dim json As New JSONWriter
 		'Header
@@ -229,10 +233,11 @@ Public Class JSONFileWriter
 				}
 
 		json.Content = JToken.FromObject(New Dictionary(Of String, Object) From {{"Header", header}, {"Body", body}})
-		Return json.WriteFile(filename)
-	End Function
+		json.WriteFile(filename)
+	End Sub
 
-	Public Function SaveJob(input As IEngineeringInputDataProvider, filename As String) As Boolean
+	Public Sub SaveJob(input As IEngineeringInputDataProvider, filename As String) _
+		Implements IOutputFileWriter.SaveJob
 		Dim json As New JSONWriter
 		Dim basePath As String = Path.GetDirectoryName(filename)
 		'Header
@@ -259,7 +264,7 @@ Public Class JSONFileWriter
 			body.Add("EngineFile", GetRelativePath(input.EngineInputData.Source, basePath))
 			body.Add("Cycles",
 					job.Cycles.Select(Function(x) GetRelativePath(x.CycleData.Source, Path.GetDirectoryName(filename))).ToArray())
-			Return True
+			Return
 		End If
 
 		'Main Files
@@ -344,6 +349,11 @@ Public Class JSONFileWriter
 		End If
 
 		json.Content = JToken.FromObject(New Dictionary(Of String, Object) From {{"Header", header}, {"Body", body}})
-		Return json.WriteFile(filename)
-	End Function
+		json.WriteFile(filename)
+	End Sub
+
+	Public Sub ExportJob(input As IEngineeringInputDataProvider, filename As String, separateFiles As Boolean) Implements IOutputFileWriter.ExportJob
+		Throw New NotImplementedException
+	End Sub
+
 End Class

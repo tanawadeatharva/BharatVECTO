@@ -31,7 +31,6 @@ Public Class Vehicle
 				IAngledriveInputData
 	'V2 MassMax is now saved in [t] instead of [kg]
 
-
 	Private _filePath As String
 	Private _path As String
 
@@ -203,7 +202,14 @@ Public Class Vehicle
 			Return False
 		End If
 
-		Return JSONFileWriter.Instance.SaveVehicle(Me, Me, Me, Me, _filePath)
+		Try
+			Dim writer As JSONFileWriter = JSONFileWriter.Instance
+			writer.SaveVehicle(Me, Me, Me, Me, _filePath)
+		Catch ex As Exception
+			MsgBox("Failed to save Vehicle file: " + ex.Message)
+			Return False
+		End Try
+		Return True
 	End Function
 
 

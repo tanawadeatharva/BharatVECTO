@@ -256,7 +256,8 @@
     <Compile Include="GUI\VectoJobForm.vb">
       <SubType>Form</SubType>
     </Compile>
-    <Compile Include="OutputData\JSONWriter.vb" />
+    <Compile Include="OutputData\JSONFileWriter.vb" />
+    <Compile Include="Plugins\PluginRegistry.vb" />
     <Compile Include="VECTO_Global.vb" />
     <Compile Include="VECTO_Types.vb" />
     <Compile Include="GUI\GUI_Subs.vb" />
@@ -906,10 +907,6 @@
     <WCFMetadata Include="Service References\" />
   </ItemGroup>
   <ItemGroup>
-    <ProjectReference Include="..\VECTOAux\VectoAuxiliaries\VectoAuxiliaries.vbproj">
-      <Project>{fdeee460-0b8a-4ef6-8d9e-72f203a50f65}</Project>
-      <Name>VectoAuxiliaries</Name>
-    </ProjectReference>
     <ProjectReference Include="..\VectoCommon\AdvancedAuxiliaryInterfaces\AdvancedAuxiliaryInterfaces.vbproj">
       <Project>{b4b9bd2f-fd8f-4bb8-82fa-e2154d2c7fbd}</Project>
       <Name>AdvancedAuxiliaryInterfaces</Name>

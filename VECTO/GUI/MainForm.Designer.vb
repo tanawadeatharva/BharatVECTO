@@ -49,7 +49,6 @@ Partial Class MainForm
 		Me.PictureBox1 = New System.Windows.Forms.PictureBox()
 		Me.BtGENdown = New System.Windows.Forms.Button()
 		Me.BtGENup = New System.Windows.Forms.Button()
-		Me.LbAutoShDown = New System.Windows.Forms.Label()
 		Me.ChBoxAllGEN = New System.Windows.Forms.CheckBox()
 		Me.LvGEN = New System.Windows.Forms.ListView()
 		Me.ColGENpath = CType(New System.Windows.Forms.ColumnHeader(), System.Windows.Forms.ColumnHeader)
@@ -113,6 +112,8 @@ Partial Class MainForm
 		Me.OpenInGraphWindowToolStripMenuItem = New System.Windows.Forms.ToolStripMenuItem()
 		Me.ShowInFolderToolStripMenuItem = New System.Windows.Forms.ToolStripMenuItem()
 		Me.ToolTip1 = New System.Windows.Forms.ToolTip(Me.components)
+		Me.btnExportXML = New System.Windows.Forms.Button()
+		Me.btnImportXML = New System.Windows.Forms.Button()
 		Me.StatusBAR.SuspendLayout()
 		Me.TabControl1.SuspendLayout()
 		Me.TabPageGEN.SuspendLayout()
@@ -184,13 +185,14 @@ Partial Class MainForm
 		'
 		'TabPageGEN
 		'
+		Me.TabPageGEN.Controls.Add(Me.btnImportXML)
+		Me.TabPageGEN.Controls.Add(Me.btnExportXML)
 		Me.TabPageGEN.Controls.Add(Me.Label6)
 		Me.TabPageGEN.Controls.Add(Me.btStartV3)
 		Me.TabPageGEN.Controls.Add(Me.LbDecl)
 		Me.TabPageGEN.Controls.Add(Me.PictureBox1)
 		Me.TabPageGEN.Controls.Add(Me.BtGENdown)
 		Me.TabPageGEN.Controls.Add(Me.BtGENup)
-		Me.TabPageGEN.Controls.Add(Me.LbAutoShDown)
 		Me.TabPageGEN.Controls.Add(Me.ChBoxAllGEN)
 		Me.TabPageGEN.Controls.Add(Me.LvGEN)
 		Me.TabPageGEN.Controls.Add(Me.ButtonGENremove)
@@ -268,19 +270,6 @@ Partial Class MainForm
 		Me.BtGENup.TabIndex = 4
 		Me.ToolTip1.SetToolTip(Me.BtGENup, "Move job up one row")
 		Me.BtGENup.UseVisualStyleBackColor = True
-		'
-		'LbAutoShDown
-		'
-		Me.LbAutoShDown.Anchor = CType((System.Windows.Forms.AnchorStyles.Bottom Or System.Windows.Forms.AnchorStyles.Left), System.Windows.Forms.AnchorStyles)
-		Me.LbAutoShDown.AutoSize = True
-		Me.LbAutoShDown.Font = New System.Drawing.Font("Microsoft Sans Serif", 8.25!, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, CType(0, Byte))
-		Me.LbAutoShDown.ForeColor = System.Drawing.Color.Red
-		Me.LbAutoShDown.Location = New System.Drawing.Point(408, 275)
-		Me.LbAutoShDown.Name = "LbAutoShDown"
-		Me.LbAutoShDown.Size = New System.Drawing.Size(225, 13)
-		Me.LbAutoShDown.TabIndex = 17
-		Me.LbAutoShDown.Text = "!!! Automatic Shutdown is activated !!!"
-		Me.LbAutoShDown.Visible = False
 		'
 		'ChBoxAllGEN
 		'
@@ -776,6 +765,27 @@ Partial Class MainForm
 		Me.ShowInFolderToolStripMenuItem.Size = New System.Drawing.Size(198, 22)
 		Me.ShowInFolderToolStripMenuItem.Text = "Show in Folder"
 		'
+		'btnExportXML
+		'
+		Me.btnExportXML.Enabled = False
+		Me.btnExportXML.Location = New System.Drawing.Point(357, 271)
+		Me.btnExportXML.Name = "btnExportXML"
+		Me.btnExportXML.Size = New System.Drawing.Size(115, 23)
+		Me.btnExportXML.TabIndex = 22
+		Me.btnExportXML.Text = "Export as XML"
+		Me.btnExportXML.UseVisualStyleBackColor = True
+		Me.btnExportXML.Visible = False
+		'
+		'btnImportXML
+		'
+		Me.btnImportXML.Location = New System.Drawing.Point(489, 271)
+		Me.btnImportXML.Name = "btnImportXML"
+		Me.btnImportXML.Size = New System.Drawing.Size(104, 23)
+		Me.btnImportXML.TabIndex = 23
+		Me.btnImportXML.Text = "Import from XML"
+		Me.btnImportXML.UseVisualStyleBackColor = True
+		Me.btnImportXML.Visible = False
+		'
 		'MainForm
 		'
 		Me.AcceptButton = Me.btStartV3
@@ -833,7 +843,6 @@ Partial Class MainForm
 	Friend WithEvents TabPgOptions As TabPage
 	Friend WithEvents ChBoxModOut As CheckBox
 	Friend WithEvents PanelOptAllg As Panel
-	Friend WithEvents LbAutoShDown As Label
 	Friend WithEvents LvMsg As ListView
 	Friend WithEvents ColumnHeader1 As ColumnHeader
 	Friend WithEvents SplitContainer1 As SplitContainer
@@ -899,5 +908,7 @@ Partial Class MainForm
 	Friend WithEvents toolStripSeparator1 As ToolStripSeparator
 	Friend WithEvents HelpToolStripButton As ToolStripButton
 	Friend WithEvents GroupBox2 As System.Windows.Forms.GroupBox
+	Friend WithEvents btnExportXML As System.Windows.Forms.Button
+	Friend WithEvents btnImportXML As System.Windows.Forms.Button
 
 End Class

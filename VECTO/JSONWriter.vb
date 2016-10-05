@@ -32,24 +32,22 @@ Public Class JSONWriter
 	''' <param name="path"></param>
 	''' <returns></returns>
 	''' <remarks></remarks>
-	Public Function WriteFile(path As String) As Boolean
+	Public Sub WriteFile(path As String)
 		Dim file As StreamWriter
 		Dim str As String
 
 		If Content.Count = 0 Then
-			Return False
+			Return
 		End If
 
 		Try
 			str = JsonConvert.SerializeObject(Content, Formatting.Indented)
 			file = My.Computer.FileSystem.OpenTextFileWriter(path, False)
 		Catch ex As Exception
-			Return False
+			Throw
 		End Try
 
 		file.Write(str)
 		file.Close()
-
-		Return True
-	End Function
+	End Sub
 End Class

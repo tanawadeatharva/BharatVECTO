@@ -42,6 +42,7 @@ Imports System.Threading
 Imports Microsoft.VisualBasic.FileIO
 Imports TUGraz.VectoCommon.InputData
 Imports TUGraz.VectoCommon.Models
+Imports TUGraz.VectoCommon.OutputData
 Imports TUGraz.VectoCommon.Utils
 Imports TUGraz.VectoCore.OutputData
 Imports TUGraz.VectoCore.OutputData.FileIO
@@ -246,6 +247,17 @@ Public Class MainForm
 		'Set mode (Batch/Standard)
 		ModeUpdate()
 
+		DetectPlugins()
+
+		'Dim exportPlugins As Dictionary(Of String, String) = PluginRegistry.Instance.GetExportPluginList()
+		Dim exportPlugin As IExportPlugin = PluginRegistry.Instance.GetExportPlugin("TUG.IVT.Vecto.XMLExport")
+		btnExportXML.Visible = Not exportPlugin Is Nothing
+		
+
+		Dim importPlugin As IImportPlugin = PluginRegistry.Instance.GetImportPlugin("TUG.IVT.Vecto.XMLImport")
+		btnImportXML.Visible = Not importPlugin Is Nothing
+
+
 #If DEBUG Then
 		Const LicCheck As Boolean = False
 #Else
@@ -315,7 +327,6 @@ Public Class MainForm
 			fwelcome = New WelcomeDialog
 			fwelcome.ShowDialog()
 		End If
-		'End If
 	End Sub
 
 	'Open file
@@ -1949,6 +1960,45 @@ Lb1:
 		Public Message As String
 		Public Link As String
 	End Class
+
+	Private Sub CbExportJob_SelectedIndexChanged(sender As Object, e As EventArgs)
+	End Sub
+
+	Private Sub btnExportXML_Click(sender As Object, e As EventArgs) Handles btnExportXML.Click
+
+		If LvGEN.SelectedItems.Count < 1 Then
+			If LvGEN.Items.Count = 1 Then
+				LvGEN.Items(0).Selected = True
+			Else
+				Exit Sub
+			End If
+		End If
+
+		Dim f As String = LvGEN.SelectedItems(0).SubItems(0).Text
+		f = FileRepl(f)
+		If Not File.Exists(f) Then
+			MsgBox(f & " not found!")
+			Return
+		End If
+		Try
+			PluginRegistry.Instance.GetExportPlugin("TUG.IVT.Vecto.XMLExport").ExportJob(JSONInputDataFactory.ReadJsonJob(f))
+		Catch ex As Exception
+			MsgBox("Exporting job failed: " + ex.Message)
+		End Try
+	End Sub
+
+	Private Sub LvGEN_SelectedIndexChanged(sender As Object, e As EventArgs) Handles LvGEN.SelectedIndexChanged
+		btnExportXML.Enabled = (LvGEN.SelectedItems.Count = 1)
+	End Sub
+
+	Private Sub btnImportXML_Click(sender As Object, e As EventArgs) Handles btnImportXML.Click
+		Try
+			Dim jobFile As String = PluginRegistry.Instance.GetImportPlugin("TUG.IVT.Vecto.XMLImport").ImportJob()
+			AddToJobListView(jobFile)
+		Catch ex As Exception
+			MsgBox("Importing job failed: " + ex.Message)
+		End Try
+	End Sub
 End Class
 
 
