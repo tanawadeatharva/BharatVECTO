@@ -352,7 +352,7 @@ namespace TUGraz.VectoCore.InputData.FileIO.JSON
 		{
 			get
 			{
-				return Body[JsonKeys.Gearbox_TorqueConverter_ReferenceRPM] != null ?
+				return Body[JsonKeys.Gearbox_TorqueConverter] != null && Body[JsonKeys.Gearbox_TorqueConverter][JsonKeys.Gearbox_TorqueConverter_ReferenceRPM] != null ?
 					Body.GetEx(JsonKeys.Gearbox_TorqueConverter)
 						.GetEx<double>(JsonKeys.Gearbox_TorqueConverter_ReferenceRPM)
 						.RPMtoRad() : null;

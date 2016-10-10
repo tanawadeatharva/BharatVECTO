@@ -139,8 +139,8 @@ namespace TUGraz.VectoCore.Models.SimulationComponent.Data.Gearbox
 				retVal.OutTorque = retVal.InTorque * retVal.TorqueRatio;
 				return retVal;
 			}
-			throw new VectoException("No solution for output speed/input speed found! n_out: {0}, n_in: {1}", outAngularVelocity,
-				inAngularVelocity);
+			throw new VectoException("No solution for output speed/input speed found! n_out: {0}, n_in: {1}, nu: {2}, nu_max: {3}", outAngularVelocity,
+				inAngularVelocity, outAngularVelocity / inAngularVelocity, TorqueConverterEntries.Last().SpeedRatio);
 		}
 
 
