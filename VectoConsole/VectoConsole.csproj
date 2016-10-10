@@ -60,9 +60,6 @@
     <Reference Include="System" />
     <Reference Include="System.Core" />
     <Reference Include="System.Xml" />
-    <Reference Include="VectoAPI">
-      <HintPath>..\..\VECTO_API\VectoAPI\bin\Release\VectoAPI.dll</HintPath>
-    </Reference>
   </ItemGroup>
   <ItemGroup>
     <Compile Include="Program.cs" />
@@ -110,6 +107,14 @@
     </None>
   </ItemGroup>
   <ItemGroup>
+    <ProjectReference Include="..\..\VECTO_API\VectoAPI\VectoAPI.csproj">
+      <Project>{512c2cd1-e5be-4f6b-943b-2bfa7e0cbd64}</Project>
+      <Name>VectoAPI</Name>
+    </ProjectReference>
+    <ProjectReference Include="..\..\VECTO_API\VectoEngineeringAPI\VectoEngineeringAPI.csproj">
+      <Project>{41314a40-ab3e-4f43-b1a4-58443f4014f2}</Project>
+      <Name>VectoEngineeringAPI</Name>
+    </ProjectReference>
     <ProjectReference Include="..\VectoCommon\VectoCommon\VectoCommon.csproj">
       <Project>{79a066ad-69a9-4223-90f6-6ed5d2d084f4}</Project>
       <Name>VectoCommon</Name>

@@ -46,6 +46,7 @@
   <ItemGroup>
     <Compile Include="InputData\DataSourceType.cs" />
     <Compile Include="InputData\IImportPlugin.cs" />
+    <Compile Include="InputData\IInputDataPlugin.cs" />
     <Compile Include="InputData\TableData.cs">
       <SubType>Component</SubType>
     </Compile>
@@ -77,6 +78,7 @@
     <Compile Include="Utils\EnumerableExtensionMethods.cs" />
     <Compile Include="Utils\EnumHelper.cs" />
     <Compile Include="Utils\IntExtensionMethods.cs" />
+    <Compile Include="Utils\PluginRegistry.cs" />
     <Compile Include="Utils\SI.cs" />
     <Compile Include="Utils\StringExtensionMethods.cs" />
     <Compile Include="Utils\Validation.cs" />

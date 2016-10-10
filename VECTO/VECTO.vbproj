@@ -19,10 +19,14 @@
     <UpgradeBackupLocation />
     <IsWebBootstrapper>false</IsWebBootstrapper>
     <TargetFrameworkProfile />
-    <SccProjectName>SAK</SccProjectName>
-    <SccLocalPath>SAK</SccLocalPath>
-    <SccAuxPath>SAK</SccAuxPath>
-    <SccProvider>SAK</SccProvider>
+    <SccProjectName>
+    </SccProjectName>
+    <SccLocalPath>
+    </SccLocalPath>
+    <SccAuxPath>
+    </SccAuxPath>
+    <SccProvider>
+    </SccProvider>
     <AutoGenerateBindingRedirects>true</AutoGenerateBindingRedirects>
     <PublishUrl>C:\Users\tb28\Documents\VectoOut\</PublishUrl>
     <Install>true</Install>
@@ -169,7 +173,7 @@
   <ItemGroup>
     <Compile Include="ApplicationEvents.vb" />
     <Compile Include="Input Files\AdvancedAuxiliary.vb" />
-    <Compile Include="JSONWriter.vb" />
+    <Compile Include="OutputData\JSONFileWriter.vb" />
     <Compile Include="GUI\FileSignDialog.Designer.vb">
       <DependentUpon>FileSignDialog.vb</DependentUpon>
     </Compile>
@@ -256,8 +260,6 @@
     <Compile Include="GUI\VectoJobForm.vb">
       <SubType>Form</SubType>
     </Compile>
-    <Compile Include="OutputData\JSONFileWriter.vb" />
-    <Compile Include="Plugins\PluginRegistry.vb" />
     <Compile Include="VECTO_Global.vb" />
     <Compile Include="VECTO_Types.vb" />
     <Compile Include="GUI\GUI_Subs.vb" />
