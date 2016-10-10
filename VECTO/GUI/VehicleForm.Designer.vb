@@ -936,7 +936,7 @@ Partial Class VehicleForm
 		Me.GroupBox2.Size = New System.Drawing.Size(280, 111)
 		Me.GroupBox2.TabIndex = 4
 		Me.GroupBox2.TabStop = False
-		Me.GroupBox2.Text = "Angular Gear"
+		Me.GroupBox2.Text = "Angledrive"
 		'
 		'pnAngledriveFields
 		'
@@ -1034,7 +1034,7 @@ Partial Class VehicleForm
 		Me.Label8.TabIndex = 10
 		Me.Label8.Text = "HDV Class"
 		'
-		'F_VEH
+		'VehicleForm
 		'
 		Me.AcceptButton = Me.ButOK
 		Me.AutoScaleDimensions = New System.Drawing.SizeF(6.0!, 13.0!)
@@ -1058,7 +1058,7 @@ Partial Class VehicleForm
 		Me.FormBorderStyle = System.Windows.Forms.FormBorderStyle.FixedSingle
 		Me.Icon = CType(resources.GetObject("$this.Icon"), System.Drawing.Icon)
 		Me.MaximizeBox = False
-		Me.Name = "F_VEH"
+		Me.Name = "VehicleForm"
 		Me.StartPosition = System.Windows.Forms.FormStartPosition.CenterParent
 		Me.Text = "F05_VEH"
 		Me.GroupBox6.ResumeLayout(False)

@@ -12,6 +12,7 @@ Imports System.Collections.Generic
 Imports System.IO
 Imports System.Reflection
 Imports System.Runtime.Remoting
+Imports TUGraz.VectoCommon
 Imports TUGraz.VectoCommon.InputData
 Imports TUGraz.VectoCommon.OutputData
 Imports TUGraz.VectoCommon.Utils
@@ -79,7 +80,8 @@ Module MainModule
 
 		Dim exportPluginType As Type = GetType(IExportPlugin)
 		Dim importPluginType As Type = GetType(IImportPlugin)
-		Dim exportPluginTypes As ICollection(Of Type) = New List(Of Type)
+		Dim inputDataPluginType As Type = GetType(IInputDataPlugin)
+
 		For Each assembly As Assembly In assemblies
 			If assembly <> Nothing Then
 				Dim types As Type() = assembly.GetTypes()
@@ -100,14 +102,17 @@ Module MainModule
 								PluginRegistry.Instance.RegisterPlugin(plugin)
 							End If
 						End If
+						If type.GetInterface(inputDataPluginType.FullName) <> Nothing Then
+							Dim plugin As IInputDataPlugin = TryCast(Activator.CreateInstance(type), IInputDataPlugin)
+							If Not plugin Is Nothing Then
+								PluginRegistry.Instance.RegisterPlugin(plugin)
+							End If
+						End If
 					End If
 				Next
 			End If
 		Next
 
 		'End If
-
-
-
 	End Sub
 End Module

@@ -43,6 +43,8 @@ Partial Class MainForm
 		Me.ToolStripProgBarOverall = New System.Windows.Forms.ToolStripProgressBar()
 		Me.TabControl1 = New System.Windows.Forms.TabControl()
 		Me.TabPageGEN = New System.Windows.Forms.TabPage()
+		Me.btnImportXML = New System.Windows.Forms.Button()
+		Me.btnExportXML = New System.Windows.Forms.Button()
 		Me.Label6 = New System.Windows.Forms.Label()
 		Me.btStartV3 = New System.Windows.Forms.Button()
 		Me.LbDecl = New System.Windows.Forms.Label()
@@ -112,8 +114,6 @@ Partial Class MainForm
 		Me.OpenInGraphWindowToolStripMenuItem = New System.Windows.Forms.ToolStripMenuItem()
 		Me.ShowInFolderToolStripMenuItem = New System.Windows.Forms.ToolStripMenuItem()
 		Me.ToolTip1 = New System.Windows.Forms.ToolTip(Me.components)
-		Me.btnExportXML = New System.Windows.Forms.Button()
-		Me.btnImportXML = New System.Windows.Forms.Button()
 		Me.StatusBAR.SuspendLayout()
 		Me.TabControl1.SuspendLayout()
 		Me.TabPageGEN.SuspendLayout()
@@ -204,6 +204,29 @@ Partial Class MainForm
 		Me.TabPageGEN.TabIndex = 0
 		Me.TabPageGEN.Text = "Job Files"
 		Me.TabPageGEN.UseVisualStyleBackColor = True
+		'
+		'btnImportXML
+		'
+		Me.btnImportXML.Anchor = CType((System.Windows.Forms.AnchorStyles.Bottom Or System.Windows.Forms.AnchorStyles.Left), System.Windows.Forms.AnchorStyles)
+		Me.btnImportXML.Location = New System.Drawing.Point(464, 271)
+		Me.btnImportXML.Name = "btnImportXML"
+		Me.btnImportXML.Size = New System.Drawing.Size(104, 23)
+		Me.btnImportXML.TabIndex = 23
+		Me.btnImportXML.Text = "Import from XML"
+		Me.btnImportXML.UseVisualStyleBackColor = True
+		Me.btnImportXML.Visible = False
+		'
+		'btnExportXML
+		'
+		Me.btnExportXML.Anchor = CType((System.Windows.Forms.AnchorStyles.Bottom Or System.Windows.Forms.AnchorStyles.Left), System.Windows.Forms.AnchorStyles)
+		Me.btnExportXML.Enabled = False
+		Me.btnExportXML.Location = New System.Drawing.Point(343, 272)
+		Me.btnExportXML.Name = "btnExportXML"
+		Me.btnExportXML.Size = New System.Drawing.Size(115, 23)
+		Me.btnExportXML.TabIndex = 22
+		Me.btnExportXML.Text = "Export as XML"
+		Me.btnExportXML.UseVisualStyleBackColor = True
+		Me.btnExportXML.Visible = False
 		'
 		'Label6
 		'
@@ -764,27 +787,6 @@ Partial Class MainForm
 		Me.ShowInFolderToolStripMenuItem.Name = "ShowInFolderToolStripMenuItem"
 		Me.ShowInFolderToolStripMenuItem.Size = New System.Drawing.Size(198, 22)
 		Me.ShowInFolderToolStripMenuItem.Text = "Show in Folder"
-		'
-		'btnExportXML
-		'
-		Me.btnExportXML.Enabled = False
-		Me.btnExportXML.Location = New System.Drawing.Point(357, 271)
-		Me.btnExportXML.Name = "btnExportXML"
-		Me.btnExportXML.Size = New System.Drawing.Size(115, 23)
-		Me.btnExportXML.TabIndex = 22
-		Me.btnExportXML.Text = "Export as XML"
-		Me.btnExportXML.UseVisualStyleBackColor = True
-		Me.btnExportXML.Visible = False
-		'
-		'btnImportXML
-		'
-		Me.btnImportXML.Location = New System.Drawing.Point(489, 271)
-		Me.btnImportXML.Name = "btnImportXML"
-		Me.btnImportXML.Size = New System.Drawing.Size(104, 23)
-		Me.btnImportXML.TabIndex = 23
-		Me.btnImportXML.Text = "Import from XML"
-		Me.btnImportXML.UseVisualStyleBackColor = True
-		Me.btnImportXML.Visible = False
 		'
 		'MainForm
 		'
