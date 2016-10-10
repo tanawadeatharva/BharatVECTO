@@ -1,7 +1,7 @@
 ﻿{
   "Header": {
     "CreatedBy": " ()",
-    "Date": "2016-09-29T06:17:38.5915264Z",
+    "Date": "2016-10-05T14:22:11.2190746Z",
     "AppVersion": "3",
     "FileVersion": 7
   },
@@ -15,16 +15,16 @@
     "CdA": 4.83,
     "rdyn": 421.0,
     "CdCorrMode": "CdofVdecl",
-    "CdCorrFile": "<NOFILE>",
+    "CdCorrFile": "",
     "Retarder": {
       "Type": "None",
       "Ratio": 0.0,
-      "File": "<NOFILE>"
+      "File": ""
     },
     "Angledrive": {
       "Type": "None",
       "Ratio": 0.0,
-      "LossMap": "<NOFILE>"
+      "LossMap": ""
     },
     "PTO": {
       "Type": "only the drive shaft of the PTO - multi-disc clutch",

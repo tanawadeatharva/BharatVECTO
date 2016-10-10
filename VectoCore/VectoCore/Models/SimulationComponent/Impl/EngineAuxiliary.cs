@@ -47,7 +47,7 @@ namespace TUGraz.VectoCore.Models.SimulationComponent.Impl
 	{
 		private const string DirectAuxiliaryId = "";
 
-		private readonly Dictionary<string, Func<PerSecond, Watt>> _auxiliaries =
+		protected readonly Dictionary<string, Func<PerSecond, Watt>> _auxiliaries =
 			new Dictionary<string, Func<PerSecond, Watt>>();
 
 		public EngineAuxiliary(IVehicleContainer container) : base(container) {}
@@ -100,26 +100,34 @@ namespace TUGraz.VectoCore.Models.SimulationComponent.Impl
 			PerSecond angularSpeed, bool dryRun = false)
 		{
 			CurrentState.AngularSpeed = angularSpeed;
-			var avgAngularSpeed = (CurrentState.AngularSpeed + PreviousState.AngularSpeed) / 2.0;
-			return ComputePowerDemand(avgAngularSpeed) / avgAngularSpeed;
+			var avgAngularSpeed = (PreviousState.AngularSpeed != null)
+				? (CurrentState.AngularSpeed + PreviousState.AngularSpeed) / 2.0
+				: CurrentState.AngularSpeed;
+			if (avgAngularSpeed.IsGreater(0))
+				return ComputePowerDemand(avgAngularSpeed) / avgAngularSpeed;
+			return 0.SI<NewtonMeter>();
 		}
 
-		private Watt ComputePowerDemand(PerSecond engineSpeed)
+		protected Watt ComputePowerDemand(PerSecond engineSpeed)
 		{
 			CurrentState.PowerDemands = new Dictionary<string, Watt>(_auxiliaries.Count);
 			CurrentState.TotalPowerDemand = 0.SI<Watt>();
 			foreach (var item in _auxiliaries) {
 				var value = item.Value(engineSpeed);
-				CurrentState.PowerDemands[item.Key] = value;
-				CurrentState.TotalPowerDemand += value;
+				if (value != null) {
+					CurrentState.PowerDemands[item.Key] = value;
+					CurrentState.TotalPowerDemand += value;
+				}
 			}
 			return CurrentState.TotalPowerDemand;
 		}
 
 		protected override void DoWriteModalResults(IModalDataContainer container)
 		{
-			foreach (var kv in CurrentState.PowerDemands.Where(kv => !string.IsNullOrWhiteSpace(kv.Key))) {
-				container[kv.Key] = kv.Value;
+			if (CurrentState.PowerDemands != null) {
+				foreach (var kv in CurrentState.PowerDemands.Where(kv => !string.IsNullOrWhiteSpace(kv.Key))) {
+					container[kv.Key] = kv.Value;
+				}
 			}
 			if (container[ModalResultField.P_aux] == null || container[ModalResultField.P_aux] == DBNull.Value) {
 				// only overwrite if nobody else already wrote the total aux power

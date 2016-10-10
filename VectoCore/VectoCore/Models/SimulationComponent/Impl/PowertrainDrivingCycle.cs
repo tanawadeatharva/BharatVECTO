@@ -48,11 +48,9 @@ namespace TUGraz.VectoCore.Models.SimulationComponent.Impl
 	/// Represents a driving cycle which directly is connected to the powertrain (e.g. engine, or axle gear).
 	/// </summary>
 	public class PowertrainDrivingCycle :
-		StatefulProviderComponent<PowertrainDrivingCycle.DummyState, ISimulationOutPort, ITnInPort, ITnOutPort>,
+		StatefulProviderComponent<SimpleComponentState, ISimulationOutPort, ITnInPort, ITnOutPort>,
 		IDrivingCycleInfo, ISimulationOutPort, ITnInProvider, ITnInPort
 	{
-		public class DummyState {}
-
 		protected readonly DrivingCycleData Data;
 		protected IEnumerator<DrivingCycleData.DrivingCycleEntry> RightSample { get; set; }
 		protected IEnumerator<DrivingCycleData.DrivingCycleEntry> LeftSample { get; set; }
@@ -111,6 +109,8 @@ namespace TUGraz.VectoCore.Models.SimulationComponent.Impl
 			var responseCount = 0;
 			do {
 				response = NextComponent.Request(absTime, dt, LeftSample.Current.Torque, angularVelocity);
+				CurrentState.InAngularVelocity = angularVelocity;
+				CurrentState.InTorque = LeftSample.Current.Torque;
 				debug.Add(response);
 				response.Switch()
 					.Case<ResponseGearShift>(
@@ -122,6 +122,7 @@ namespace TUGraz.VectoCore.Models.SimulationComponent.Impl
 							evaluateFunction: t => NextComponent.Request(absTime, dt, t, angularVelocity, true),
 							criterion: y => ((ResponseDryRun)y).DeltaDragLoad.Value());
 						response = NextComponent.Request(absTime, dt, torque, angularVelocity);
+						CurrentState.InTorque = torque;
 					})
 					.Case<ResponseOverload>(r => {
 						angularVelocity = SearchAlgorithm.Search(angularVelocity, r.Delta, 50.RPMtoRad(),
@@ -129,6 +130,7 @@ namespace TUGraz.VectoCore.Models.SimulationComponent.Impl
 							evaluateFunction: n => NextComponent.Request(absTime, dt, LeftSample.Current.Torque, n, true),
 							criterion: y => ((ResponseDryRun)y).DeltaFullLoad.Value());
 						response = NextComponent.Request(absTime, dt, LeftSample.Current.Torque, angularVelocity);
+						CurrentState.InAngularVelocity = angularVelocity;
 					})
 					.Case<ResponseFailTimeInterval>(r => { dt = r.DeltaT; })
 					.Case<ResponseSuccess>(() => { })

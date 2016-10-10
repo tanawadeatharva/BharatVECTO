@@ -260,6 +260,7 @@
     <Compile Include="GUI\VectoJobForm.vb">
       <SubType>Form</SubType>
     </Compile>
+    <Compile Include="OutputData\JSONFileWriter.vb" />
     <Compile Include="VECTO_Global.vb" />
     <Compile Include="VECTO_Types.vb" />
     <Compile Include="GUI\GUI_Subs.vb" />

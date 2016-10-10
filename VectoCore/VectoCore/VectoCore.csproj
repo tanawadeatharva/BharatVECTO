@@ -147,7 +147,6 @@
     <Compile Include="Models\SimulationComponent\Data\PTOData.cs" />
     <Compile Include="Models\SimulationComponent\ILossMap.cs" />
     <Compile Include="Models\SimulationComponent\Data\PTOLossMap.cs" />
-    <Compile Include="Models\SimulationComponent\Impl\GearboxAuxiliary.cs" />
     <Compile Include="Models\SimulationComponent\Impl\AbstractGearbox.cs" />
     <Compile Include="Models\SimulationComponent\Impl\ATGearbox.cs" />
     <Compile Include="Models\SimulationComponent\Impl\ATShiftStrategy.cs" />

@@ -72,10 +72,7 @@ namespace TUGraz.VectoCore.Models.SimulationComponent.Impl
 				var torqueLossResult = effectiveLossMap.GetTorqueLoss(outAngularVelocity, outTorque);
 				CurrentState.TorqueLossResult = torqueLossResult;
 
-				//todo mk-2016-08-22: aux loss from out-direction or in-direction of the gearbox?
-				var auxTorqueLoss = Auxiliary == null ? 0.SI<NewtonMeter>() : Auxiliary.Initialize(outTorque, outAngularVelocity);
-
-				inTorque = outTorque / effectiveRatio + torqueLossResult.Value + auxTorqueLoss;
+				inTorque = outTorque / effectiveRatio + torqueLossResult.Value;
 			}
 			if (Disengaged) {
 				return NextComponent.Initialize(0.SI<NewtonMeter>(), null);
@@ -104,10 +101,7 @@ namespace TUGraz.VectoCore.Models.SimulationComponent.Impl
 				? ModelData.Gears[gear].LossMap.GetTorqueLoss(outAngularVelocity, outTorque)
 				: ModelData.Gears[Gear].TorqueConverterGearLossMap.GetTorqueLoss(outAngularVelocity, outTorque);
 
-			//todo mk-2016-08-22: aux loss from out-direction or in-direction of the gearbox?
-			var auxTorqueLoss = Auxiliary == null ? 0.SI<NewtonMeter>() : Auxiliary.Initialize(outTorque, outAngularVelocity);
-
-			var inTorque = outTorque / effectiveRatio + torqueLossResult.Value + auxTorqueLoss;
+			var inTorque = outTorque / effectiveRatio + torqueLossResult.Value;
 
 			IResponse response;
 			if (torqueConverterLocked) {
@@ -188,11 +182,6 @@ namespace TUGraz.VectoCore.Models.SimulationComponent.Impl
 			CurrentState.TorqueLossResult = inTorqueLossResult;
 
 			var inTorque = outTorque / effectiveRatio + inTorqueLossResult.Value;
-
-			if (Auxiliary != null) {
-				//todo mk-2016-08-22: aux loss from out-direction or in-direction of the gearbox?
-				inTorque += Auxiliary.TorqueDemand(absTime, dt, outTorque, inTorque, outAngularVelocity, dryRun);
-			}
 
 			if (!TorqueConverterLocked && !ModelData.Gears[Gear].HasTorqueConverter) {
 				throw new VectoSimulationException("Torque converter requested by strategy for gear without torque converter!");
