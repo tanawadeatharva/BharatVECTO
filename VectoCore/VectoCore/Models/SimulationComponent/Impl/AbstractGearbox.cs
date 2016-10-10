@@ -20,8 +20,6 @@ namespace TUGraz.VectoCore.Models.SimulationComponent.Impl
 		/// </summary>
 		[Required, ValidateObject] internal readonly GearboxData ModelData;
 
-		protected IAuxPort Auxiliary;
-
 		protected AbstractGearbox(IVehicleContainer container, GearboxData gearboxModelData) : base(container)
 		{
 			ModelData = gearboxModelData;
@@ -74,15 +72,6 @@ namespace TUGraz.VectoCore.Models.SimulationComponent.Impl
 
 			return (PreviousState.TransmissionTorqueLoss +
 					PreviousState.InertiaTorqueLossOut / ModelData.Gears[PreviousState.Gear].Ratio) * PreviousState.InAngularVelocity;
-		}
-
-		#endregion
-
-		#region IAuxPortProvider
-
-		public void Connect(IAuxPort aux)
-		{
-			Auxiliary = aux;
 		}
 
 		#endregion

@@ -86,5 +86,10 @@ namespace TUGraz.VectoCommon.Models
 					throw new ArgumentOutOfRangeException("retarder", retarder, null);
 			}
 		}
+
+		public static bool IsDedicatedComponent(this RetarderType retarder)
+		{
+			return retarder == RetarderType.TransmissionInputRetarder || retarder == RetarderType.TransmissionOutputRetarder;
+		}
 	}
 }

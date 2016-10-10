@@ -834,7 +834,7 @@ Partial Class VehicleForm
 		Me.gbPTO.Size = New System.Drawing.Size(564, 86)
 		Me.gbPTO.TabIndex = 4
 		Me.gbPTO.TabStop = False
-		Me.gbPTO.Text = "PTO Consumer"
+		Me.gbPTO.Text = "PTO Transmission"
 		'
 		'pnPTO
 		'
@@ -867,7 +867,7 @@ Partial Class VehicleForm
 		Me.Label16.Name = "Label16"
 		Me.Label16.Size = New System.Drawing.Size(201, 16)
 		Me.Label16.TabIndex = 18
-		Me.Label16.Text = "PTO Cycle (.vdri)"
+		Me.Label16.Text = "PTO Cycle (.vptoc)"
 		Me.Label16.TextAlign = System.Drawing.ContentAlignment.BottomLeft
 		'
 		'tbPTOCycle
@@ -1034,7 +1034,7 @@ Partial Class VehicleForm
 		Me.Label8.TabIndex = 10
 		Me.Label8.Text = "HDV Class"
 		'
-		'F_VEH
+		'VehicleForm
 		'
 		Me.AcceptButton = Me.ButOK
 		Me.AutoScaleDimensions = New System.Drawing.SizeF(6.0!, 13.0!)
@@ -1058,7 +1058,7 @@ Partial Class VehicleForm
 		Me.FormBorderStyle = System.Windows.Forms.FormBorderStyle.FixedSingle
 		Me.Icon = CType(resources.GetObject("$this.Icon"), System.Drawing.Icon)
 		Me.MaximizeBox = False
-		Me.Name = "F_VEH"
+		Me.Name = "VehicleForm"
 		Me.StartPosition = System.Windows.Forms.FormStartPosition.CenterParent
 		Me.Text = "F05_VEH"
 		Me.GroupBox6.ResumeLayout(False)

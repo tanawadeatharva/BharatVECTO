@@ -47,11 +47,13 @@ namespace TUGraz.VectoCore.Configuration
 
 			public static class IDs
 			{
+				public static string PTOTransmission = "PTO_transm";
 				public const string Fan = "FAN";
 				public const string SteeringPump = "STP";
 				public const string ElectricSystem = "ES";
 				public const string HeatingVentilationAirCondition = "AC";
 				public const string PneumaticSystem = "PS";
+				public const string PTOConsumer = "PTO_consum";
 			}
 
 			public static class Names
@@ -80,7 +82,6 @@ namespace TUGraz.VectoCore.Configuration
 			public const string VehicleDataFile = ".vveh";
 
 			public const string GearboxDataFile = ".vgbx";
-
 
 			public const string CycleFile = ".vdri";
 

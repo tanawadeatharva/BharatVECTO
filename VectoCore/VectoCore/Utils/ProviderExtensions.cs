@@ -31,6 +31,8 @@
 
 using System;
 using TUGraz.VectoCommon.Models;
+using TUGraz.VectoCommon.Utils;
+using TUGraz.VectoCore.Configuration;
 using TUGraz.VectoCore.InputData.Reader;
 using TUGraz.VectoCore.Models.Connector.Ports;
 using TUGraz.VectoCore.Models.Declaration;
@@ -116,12 +118,6 @@ namespace TUGraz.VectoCore.Utils
 		public static IPowerTrainComponent AddComponent(this IPowerTrainComponent prev, IGearbox gearbox, RetarderData data,
 			PTOData pto, IVehicleContainer container)
 		{
-			if (pto != null) {
-				var aux = new GearboxAuxiliary(container);
-				aux.AddConstant("PTO_TRANSM", DeclarationData.PTOTransmission.Lookup(pto.TransmissionType));
-				aux.Add("PTO_IDLE", n => pto.LossMap.GetTorqueLoss(n) * n);
-			}
-
 			switch (data.Type) {
 				case RetarderType.TransmissionOutputRetarder:
 					return prev.AddComponent(new Retarder(container, data.LossMap, data.Ratio)).AddComponent(gearbox);

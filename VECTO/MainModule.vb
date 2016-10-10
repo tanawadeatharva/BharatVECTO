@@ -52,8 +52,8 @@ Module MainModule
 		If (String.IsNullOrEmpty(filePath) OrElse String.IsNullOrEmpty(basePath)) Then
 			Return ""
 		End If
-		If (Path.GetDirectoryName(filePath).Equals(basePath, StringComparison.OrdinalIgnoreCase)) Then
-			Return Path.GetFileName(filePath)
+		If (Path.GetDirectoryName(filePath).StartsWith(basePath, StringComparison.OrdinalIgnoreCase)) Then
+			Return Path.GetFullPath(filePath).Substring(basePath.Length + If(basePath.EndsWith("\"), 0, 1))
 		End If
 		Return filePath
 	End Function
