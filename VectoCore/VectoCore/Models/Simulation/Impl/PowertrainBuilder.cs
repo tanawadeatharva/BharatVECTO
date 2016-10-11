@@ -142,7 +142,7 @@ namespace TUGraz.VectoCore.Models.Simulation.Impl
 				.AddComponent(new Brakes(container))
 				.AddComponent(new AxleGear(container, data.AxleGearData))
 				.AddComponent(data.AngledriveData != null ? new Angledrive(container, data.AngledriveData) : null)
-				.AddComponent(GetGearbox(container, data.GearboxData, data.EngineData.Inertia), data.Retarder, data.PTO, container);
+				.AddComponent(GetGearbox(container, data.GearboxData, data.EngineData.Inertia), data.Retarder, container);
 			if (data.GearboxData.Type.ManualTransmission()) {
 				powertrain = powertrain.AddComponent(new Clutch(container, data.EngineData));
 			}
@@ -202,7 +202,7 @@ namespace TUGraz.VectoCore.Models.Simulation.Impl
 				.AddComponent(new Brakes(container))
 				.AddComponent(new AxleGear(container, data.AxleGearData))
 				.AddComponent(data.AngledriveData != null ? new Angledrive(container, data.AngledriveData) : null)
-				.AddComponent(GetGearbox(container, data.GearboxData, data.EngineData.Inertia), data.Retarder, data.PTO, container);
+				.AddComponent(GetGearbox(container, data.GearboxData, data.EngineData.Inertia), data.Retarder, container);
 			if (data.GearboxData.Type.ManualTransmission()) {
 				powertrain = powertrain.AddComponent(new Clutch(container, data.EngineData));
 			}

@@ -31,11 +31,7 @@
 
 using System;
 using TUGraz.VectoCommon.Models;
-using TUGraz.VectoCommon.Utils;
-using TUGraz.VectoCore.Configuration;
-using TUGraz.VectoCore.InputData.Reader;
 using TUGraz.VectoCore.Models.Connector.Ports;
-using TUGraz.VectoCore.Models.Declaration;
 using TUGraz.VectoCore.Models.Simulation;
 using TUGraz.VectoCore.Models.Simulation.Data;
 using TUGraz.VectoCore.Models.Simulation.Impl;
@@ -116,7 +112,7 @@ namespace TUGraz.VectoCore.Utils
 		}
 
 		public static IPowerTrainComponent AddComponent(this IPowerTrainComponent prev, IGearbox gearbox, RetarderData data,
-			PTOData pto, IVehicleContainer container)
+			IVehicleContainer container)
 		{
 			switch (data.Type) {
 				case RetarderType.TransmissionOutputRetarder:
