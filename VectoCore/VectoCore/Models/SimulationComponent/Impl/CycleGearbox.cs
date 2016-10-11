@@ -29,6 +29,8 @@
 *   Martin Rexeis, rexeis@ivt.tugraz.at, IVT, Graz University of Technology
 */
 
+using System.Collections.Generic;
+using System.Linq;
 using TUGraz.VectoCommon.Exceptions;
 using TUGraz.VectoCommon.Models;
 using TUGraz.VectoCommon.Utils;
@@ -254,20 +256,21 @@ namespace TUGraz.VectoCore.Models.SimulationComponent.Impl
 				(ResponseDryRun)NextComponent.Request(absTime, dt, dryOperatingPoint.InTorque, dryOperatingPoint.InAngularVelocity,
 					true);
 
-			var deltaTorqueConverter = (outTorque - dryOperatingPoint.OutTorque) *
-										(PreviousState.OutAngularVelocity + dryOperatingPoint.OutAngularVelocity) / 2.0;
+			//var deltaTorqueConverter = (outTorque - dryOperatingPoint.OutTorque) *
+			//							(PreviousState.OutAngularVelocity + dryOperatingPoint.OutAngularVelocity) / 2.0;
 
-			var deltaEngine = (engineResponse.DeltaFullLoad > 0 ? engineResponse.DeltaFullLoad : 0.SI<Watt>()) +
-							(engineResponse.DeltaDragLoad < 0 ? -engineResponse.DeltaDragLoad : 0.SI<Watt>());
+			//var deltaEngine = (engineResponse.DeltaFullLoad > 0 ? engineResponse.DeltaFullLoad : 0.SI<Watt>()) +
+			//				(engineResponse.DeltaDragLoad < 0 ? -engineResponse.DeltaDragLoad : 0.SI<Watt>());
 
 			dryOperatingPoint = outTorque.IsGreater(0) && DataBus.BrakePower.IsEqual(0)
 				? GetMaxPowerOperatingPoint(dt, outAngularVelocity, engineResponse)
 				: GetDragPowerOperatingPoint(dt, outAngularVelocity, engineResponse);
-			engineResponse = (ResponseDryRun)NextComponent.Request(absTime, dt, dryOperatingPoint.InTorque,
-				dryOperatingPoint.InAngularVelocity, true);
+			//engineResponse = (ResponseDryRun)NextComponent.Request(absTime, dt, dryOperatingPoint.InTorque,
+			//	dryOperatingPoint.InAngularVelocity, true);
 
 			var delta = (outTorque - dryOperatingPoint.OutTorque) *
 						(PreviousState.OutAngularVelocity + dryOperatingPoint.OutAngularVelocity) / 2.0;
+			//var tmp = FindOperatingPoint(dryOperatingPoint.OutTorque, dryOperatingPoint.OutAngularVelocity);
 			//deltaTorqueConverter.Value() * (deltaEngine.IsEqual(0) ? 1 : deltaEngine.Value());
 			return new ResponseDryRun() {
 				Source = this,
@@ -331,11 +334,8 @@ namespace TUGraz.VectoCore.Models.SimulationComponent.Impl
 			PerSecond outAngularVelocity)
 		{
 			try {
-				var operatingPoint = TorqueConverter.FindOperatingPoint(outTorque, outAngularVelocity);
-				if (operatingPoint.InAngularVelocity.IsSmaller(DataBus.EngineIdleSpeed)) {
-					throw new VectoException("Invalid operating point, inAngularVelocity below engine's idle speed: {0}",
-						operatingPoint.InAngularVelocity);
-				}
+				var operatingPointList = TorqueConverter.FindOperatingPoint(outTorque, outAngularVelocity, DataBus.EngineIdleSpeed);
+				var operatingPoint = SelectOperatingPoint(operatingPointList);
 				if (operatingPoint.InAngularVelocity.IsGreater(DataBus.EngineRatedSpeed)) {
 					operatingPoint = TorqueConverter.FindOperatingPoint(DataBus.EngineRatedSpeed, outAngularVelocity);
 				}
@@ -345,6 +345,24 @@ namespace TUGraz.VectoCore.Models.SimulationComponent.Impl
 				var tqOperatingPoint = TorqueConverter.FindOperatingPoint(DataBus.EngineIdleSpeed, outAngularVelocity);
 				return tqOperatingPoint;
 			}
+		}
+
+		private TorqueConverterOperatingPoint SelectOperatingPoint(IList<TorqueConverterOperatingPoint> operatingPointList)
+		{
+			if (operatingPointList.Count == 1) {
+				return operatingPointList[0];
+			}
+
+			var filtered = operatingPointList.Where(x =>
+				(x.InTorque * x.InAngularVelocity).IsSmallerOrEqual(DataBus.EngineStationaryFullPower(x.InAngularVelocity),
+					Constants.SimulationSettings.LineSearchTolerance.SI<Watt>()) &&
+				(x.InTorque * x.InAngularVelocity).IsGreaterOrEqual(DataBus.EngineDragPower(x.InAngularVelocity),
+					Constants.SimulationSettings.LineSearchTolerance.SI<Watt>())
+				).ToArray();
+			if (filtered.Count() == 1) {
+				return filtered.First();
+			}
+			return operatingPointList[0];
 		}
 
 		private TorqueConverterOperatingPoint GetDragPowerOperatingPoint(Second dt, PerSecond outAngularVelocity,
@@ -430,12 +448,12 @@ namespace TUGraz.VectoCore.Models.SimulationComponent.Impl
 				container[ModalResultField.TC_angularSpeedOut] = CurrentState.TorqueConverterOperatingPoint.OutAngularVelocity;
 
 				var avgOutVelocity = ((PreviousState.TorqueConverterOperatingPoint != null
-										? PreviousState.TorqueConverterOperatingPoint.OutAngularVelocity
-										: PreviousState.InAngularVelocity) +
+					? PreviousState.TorqueConverterOperatingPoint.OutAngularVelocity
+					: PreviousState.InAngularVelocity) +
 									CurrentState.TorqueConverterOperatingPoint.OutAngularVelocity) / 2.0;
 				var avgInVelocity = ((PreviousState.TorqueConverterOperatingPoint != null
-										? PreviousState.TorqueConverterOperatingPoint.InAngularVelocity
-										: PreviousState.InAngularVelocity) +
+					? PreviousState.TorqueConverterOperatingPoint.InAngularVelocity
+					: PreviousState.InAngularVelocity) +
 									CurrentState.TorqueConverterOperatingPoint.InAngularVelocity) / 2.0;
 				container[ModalResultField.P_TC_out] = CurrentState.OutTorque * avgOutVelocity;
 				container[ModalResultField.P_TC_loss] = CurrentState.InTorque * avgInVelocity -

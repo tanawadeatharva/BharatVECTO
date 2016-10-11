@@ -1,4 +1,6 @@
-﻿using TUGraz.VectoCommon.Exceptions;
+﻿using System.Collections.Generic;
+using System.Linq;
+using TUGraz.VectoCommon.Exceptions;
 using TUGraz.VectoCommon.Models;
 using TUGraz.VectoCommon.Utils;
 using TUGraz.VectoCore.Configuration;
@@ -41,13 +43,14 @@ namespace TUGraz.VectoCore.Models.SimulationComponent.Impl
 
 		public IResponse Initialize(NewtonMeter outTorque, PerSecond outAngularVelocity)
 		{
-			var operatingPoint = ModelData.FindOperatingPoint(outTorque, outAngularVelocity);
-
+			var operatingPointList = ModelData.FindOperatingPoint(outTorque, outAngularVelocity, DataBus.EngineIdleSpeed);
+			var operatingPoint = SelectOperatingPoint(operatingPointList);
 			var retVal = NextComponent.Initialize(operatingPoint.InTorque, operatingPoint.InAngularVelocity);
 			PreviousState.SetState(operatingPoint.InTorque, operatingPoint.InAngularVelocity, operatingPoint.OutTorque,
 				operatingPoint.OutAngularVelocity);
 			return retVal;
 		}
+
 
 		public IResponse Request(Second absTime, Second dt, NewtonMeter outTorque, PerSecond outAngularVelocity,
 			bool dryRun = false)
@@ -153,7 +156,8 @@ namespace TUGraz.VectoCore.Models.SimulationComponent.Impl
 			PerSecond outAngularVelocity)
 		{
 			try {
-				var operatingPoint = ModelData.FindOperatingPoint(outTorque, outAngularVelocity);
+				var operatingPointList = ModelData.FindOperatingPoint(outTorque, outAngularVelocity, DataBus.EngineIdleSpeed);
+				var operatingPoint = SelectOperatingPoint(operatingPointList);
 				if (operatingPoint.InAngularVelocity.IsSmaller(DataBus.EngineIdleSpeed)) {
 					throw new VectoException("Invalid operating point, inAngularVelocity below engine's idle speed: {0}",
 						operatingPoint.InAngularVelocity);
@@ -167,6 +171,24 @@ namespace TUGraz.VectoCore.Models.SimulationComponent.Impl
 				var tqOperatingPoint = ModelData.FindOperatingPoint(DataBus.EngineIdleSpeed, outAngularVelocity);
 				return tqOperatingPoint;
 			}
+		}
+
+
+		private TorqueConverterOperatingPoint SelectOperatingPoint(IList<TorqueConverterOperatingPoint> operatingPointList)
+		{
+			if (operatingPointList.Count == 1) {
+				return operatingPointList[0];
+			}
+			var filtered = operatingPointList.Where(x =>
+				(x.InTorque * x.InAngularVelocity).IsSmallerOrEqual(DataBus.EngineStationaryFullPower(x.InAngularVelocity),
+					Constants.SimulationSettings.LineSearchTolerance.SI<Watt>()) &&
+				(x.InTorque * x.InAngularVelocity).IsGreaterOrEqual(DataBus.EngineDragPower(x.InAngularVelocity),
+					Constants.SimulationSettings.LineSearchTolerance.SI<Watt>())
+				).ToArray();
+			if (filtered.Count() == 1) {
+				return filtered.First();
+			}
+			return operatingPointList[0];
 		}
 
 		protected override void DoWriteModalResults(IModalDataContainer container)
