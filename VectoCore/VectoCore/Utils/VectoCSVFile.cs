@@ -198,20 +198,25 @@ namespace TUGraz.VectoCore.Utils
 			var header = table.Columns.Cast<DataColumn>().Select(col => col.Caption ?? col.ColumnName);
 			writer.WriteLine(string.Join(Delimiter, header));
 
+			var columnFormatter = new Func<SI, string>[table.Columns.Count];
+			for (var i = 0; i < table.Columns.Count; i++) {
+				var col = table.Columns[i];
+				var decimals = (uint?)col.ExtendedProperties["decimals"];
+				var outputFactor = (double?)col.ExtendedProperties["outputFactor"];
+				var showUnit = (bool?)col.ExtendedProperties["showUnit"];
+
+				columnFormatter[i] = item => item.ToOutputFormat(decimals, outputFactor, showUnit);
+			}
+
 			foreach (DataRow row in table.Rows) {
-				var row1 = row;
-				var formattedList = table.Columns.Cast<DataColumn>().Select(col => {
-					var item = row1[col];
-					var decimals = (uint?)col.ExtendedProperties["decimals"];
-					var outputFactor = (double?)col.ExtendedProperties["outputFactor"];
-					var showUnit = (bool?)col.ExtendedProperties["showUnit"];
-
-					var si = item as SI;
-					return si != null
-						? si.ToOutputFormat(decimals, outputFactor, showUnit)
-						: string.Format(CultureInfo.InvariantCulture, "{0}", item);
-				});
-
+				var items = row.ItemArray;
+				var formattedList = new string[items.Length];
+				for (var i = 0; i < items.Length; i++) {
+					var si = items[i] as SI;
+					formattedList[i] = si != null
+						? columnFormatter[i](si)
+						: formattedList[i] = string.Format(CultureInfo.InvariantCulture, "{0}", items[i]);
+				}
 				writer.WriteLine(string.Join(Delimiter, formattedList));
 			}
 		}
