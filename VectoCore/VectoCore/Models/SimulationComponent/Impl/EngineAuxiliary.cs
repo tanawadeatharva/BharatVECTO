@@ -109,27 +109,31 @@ namespace TUGraz.VectoCore.Models.SimulationComponent.Impl
 		protected Watt ComputePowerDemand(PerSecond engineSpeed)
 		{
 			CurrentState.PowerDemands = new Dictionary<string, Watt>(_auxiliaries.Count);
-			CurrentState.TotalPowerDemand = 0.SI<Watt>();
 			foreach (var item in _auxiliaries) {
 				var value = item.Value(engineSpeed);
 				if (value != null) {
 					CurrentState.PowerDemands[item.Key] = value;
-					CurrentState.TotalPowerDemand += value;
 				}
 			}
-			return CurrentState.TotalPowerDemand;
+			return CurrentState.PowerDemands.Sum(kv => kv.Value);
 		}
 
 		protected override void DoWriteModalResults(IModalDataContainer container)
 		{
+			var auxPowerDemand = 0.SI<Watt>();
 			if (CurrentState.PowerDemands != null) {
 				foreach (var kv in CurrentState.PowerDemands) {
 					container[kv.Key] = kv.Value;
+					// mk 2016-10-11: pto's should not be counted in sum auxiliary power demand
+					if (kv.Key != Constants.Auxiliaries.IDs.PTOTransmission && kv.Key != Constants.Auxiliaries.IDs.PTOConsumer) {
+						auxPowerDemand += kv.Value;
+					}
 				}
 			}
 			if (container[ModalResultField.P_aux] == null || container[ModalResultField.P_aux] == DBNull.Value) {
 				// only overwrite if nobody else already wrote the total aux power
-				container[ModalResultField.P_aux] = CurrentState.TotalPowerDemand;
+
+				container[ModalResultField.P_aux] = auxPowerDemand;
 			}
 		}
 
@@ -142,7 +146,6 @@ namespace TUGraz.VectoCore.Models.SimulationComponent.Impl
 		{
 			public PerSecond AngularSpeed;
 			public Dictionary<string, Watt> PowerDemands;
-			public Watt TotalPowerDemand;
 		}
 	}
 }
