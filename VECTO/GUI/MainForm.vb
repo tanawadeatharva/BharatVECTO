@@ -581,6 +581,10 @@ Imports VectoAuxiliaries
 
 		f = LvGEN.SelectedItems(0).SubItems(0).Text
 		f = FileRepl(f)
+		If Path.GetExtension(f) <> VectoCore.Configuration.Constants.FileExtensions.VectoJobFile Then
+			MsgBox("Job File " + f + " can not be opened in Job Editor. Try importing the file.")
+			Exit Sub
+		End If
 		If Not File.Exists(f) Then
 			MsgBox(f & " not found!")
 		Else
