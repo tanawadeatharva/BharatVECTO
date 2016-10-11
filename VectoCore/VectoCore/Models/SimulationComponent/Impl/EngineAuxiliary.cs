@@ -45,8 +45,6 @@ namespace TUGraz.VectoCore.Models.SimulationComponent.Impl
 	public class EngineAuxiliary : StatefulVectoSimulationComponent<EngineAuxiliary.State>, IAuxInProvider,
 		IAuxPort
 	{
-		private const string DirectAuxiliaryId = "";
-
 		protected readonly Dictionary<string, Func<PerSecond, Watt>> _auxiliaries =
 			new Dictionary<string, Func<PerSecond, Watt>>();
 
@@ -62,9 +60,9 @@ namespace TUGraz.VectoCore.Models.SimulationComponent.Impl
 			Add(auxId, _ => powerDemand);
 		}
 
-		public void AddCycle()
+		public void AddCycle(string auxId)
 		{
-			Add(DirectAuxiliaryId, _ => DataBus.CycleData.LeftSample.AdditionalAuxPowerDemand);
+			Add(auxId, _ => DataBus.CycleData.LeftSample.AdditionalAuxPowerDemand);
 		}
 
 		public void AddMapping(string auxId, AuxiliaryData data)
@@ -125,7 +123,7 @@ namespace TUGraz.VectoCore.Models.SimulationComponent.Impl
 		protected override void DoWriteModalResults(IModalDataContainer container)
 		{
 			if (CurrentState.PowerDemands != null) {
-				foreach (var kv in CurrentState.PowerDemands.Where(kv => !string.IsNullOrWhiteSpace(kv.Key))) {
+				foreach (var kv in CurrentState.PowerDemands) {
 					container[kv.Key] = kv.Value;
 				}
 			}

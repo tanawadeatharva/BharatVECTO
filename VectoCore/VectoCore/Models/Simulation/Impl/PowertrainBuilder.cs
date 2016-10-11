@@ -91,7 +91,7 @@ namespace TUGraz.VectoCore.Models.Simulation.Impl
 			var cycle = new PowertrainDrivingCycle(container, data.Cycle);
 
 			var directAux = new EngineAuxiliary(container);
-			directAux.AddCycle();
+			directAux.AddCycle(Constants.Auxiliaries.Cycle);
 
 			var engine = new EngineOnlyCombustionEngine(container, data.EngineData);
 			engine.Connect(directAux.Port());
@@ -114,7 +114,7 @@ namespace TUGraz.VectoCore.Models.Simulation.Impl
 					gearbox.ModelData.Gears.ToDictionary(g => g.Key, g => g.Value.Ratio))
 				.AddComponent(new AxleGear(container, data.AxleGearData))
 				.AddComponent(data.AngledriveData != null ? new Angledrive(container, data.AngledriveData) : null)
-				.AddComponent(gearbox, data.Retarder, data.PTO, container)
+				.AddComponent(gearbox, data.Retarder, container)
 				.AddComponent(new Clutch(container, data.EngineData));
 			var engine = new CombustionEngine(container, data.EngineData, pt1Disabled: true);
 			var idleController = GetIdleController(data.PTO, engine);
@@ -249,7 +249,7 @@ namespace TUGraz.VectoCore.Models.Simulation.Impl
 						aux.AddConstant(id, auxData.PowerDemand);
 						break;
 					case AuxiliaryDemandType.Direct:
-						aux.AddCycle();
+						aux.AddCycle(id);
 						break;
 					case AuxiliaryDemandType.Mapping:
 						aux.AddMapping(id, auxData.Data);
@@ -263,11 +263,13 @@ namespace TUGraz.VectoCore.Models.Simulation.Impl
 			if (data.PTO != null) {
 				aux.AddConstant(Constants.Auxiliaries.IDs.PTOTransmission,
 					DeclarationData.PTOTransmission.Lookup(data.PTO.TransmissionType));
-				container.ModalData.AddAuxiliary(Constants.Auxiliaries.IDs.PTOTransmission);
+				container.ModalData.AddAuxiliary(Constants.Auxiliaries.IDs.PTOTransmission,
+					Constants.Auxiliaries.PowerPrefix + Constants.Auxiliaries.IDs.PTOTransmission);
 
 				aux.Add(Constants.Auxiliaries.IDs.PTOConsumer,
 					n => container.CycleData.LeftSample.PTOActive ? null : data.PTO.LossMap.GetTorqueLoss(n) * n);
-				container.ModalData.AddAuxiliary(Constants.Auxiliaries.IDs.PTOConsumer);
+				container.ModalData.AddAuxiliary(Constants.Auxiliaries.IDs.PTOConsumer,
+					Constants.Auxiliaries.PowerPrefix + Constants.Auxiliaries.IDs.PTOConsumer);
 			}
 
 			return aux;

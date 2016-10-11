@@ -39,21 +39,25 @@ namespace TUGraz.VectoCore.Configuration
 		public const double RPMToRad = 2 * Math.PI / 60;
 		public const double Kilo = 1000;
 		public const double MeterPerSecondToKMH = 3.6;
-		public const double SecondsPerHour = 3600;
+
+		// mk-2016-10-11: const never used. Delete?
+		[Obsolete] public const double SecondsPerHour = 3600;
 
 		public static class Auxiliaries
 		{
+			public const string Cycle = "cycle";
 			public const string Prefix = "AUX_";
+			public const string PowerPrefix = "P_";
 
 			public static class IDs
 			{
-				public static string PTOTransmission = "PTO_transm";
+				public static string PTOTransmission = "PTO_TRANSM";
 				public const string Fan = "FAN";
 				public const string SteeringPump = "STP";
 				public const string ElectricSystem = "ES";
 				public const string HeatingVentilationAirCondition = "AC";
 				public const string PneumaticSystem = "PS";
-				public const string PTOConsumer = "PTO_consum";
+				public const string PTOConsumer = "PTO_CONSUM";
 			}
 
 			public static class Names
