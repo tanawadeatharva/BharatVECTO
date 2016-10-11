@@ -35,6 +35,7 @@ using System.IO;
 using System.Linq;
 using TUGraz.VectoCommon.Models;
 using TUGraz.VectoCommon.Utils;
+using TUGraz.VectoCore.Configuration;
 using TUGraz.VectoCore.InputData.Reader;
 using TUGraz.VectoCore.InputData.Reader.ComponentData;
 using TUGraz.VectoCore.Models.Declaration;
@@ -102,7 +103,8 @@ namespace TUGraz.VectoCore.Tests.Integration
 				.AddComponent(engine);
 
 			var aux = new EngineAuxiliary(container);
-			aux.AddConstant("", 0.SI<Watt>());
+			aux.AddConstant("ZERO", 0.SI<Watt>());
+			container.ModalData.AddAuxiliary("ZERO");
 
 			engine.Connect(aux.Port());
 

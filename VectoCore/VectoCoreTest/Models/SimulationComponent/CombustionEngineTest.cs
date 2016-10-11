@@ -274,7 +274,7 @@ namespace TUGraz.VectoCore.Tests.Models.SimulationComponent
 			var d = new MockDriver(container);
 
 			var aux = new EngineAuxiliary(container);
-			aux.AddConstant("", 5000.SI<Watt>());
+			aux.AddConstant("CONST", 5000.SI<Watt>());
 
 			gearbox.Gear = 1;
 
@@ -291,6 +291,7 @@ namespace TUGraz.VectoCore.Tests.Models.SimulationComponent
 			//vehicleContainer.DataWriter = new ModalDataWriter("engine_idle_test.csv");
 			var dataWriter = new MockModalDataContainer();
 			container.ModData = dataWriter;
+			container.ModalData.AddAuxiliary("CONST");
 
 			var torque = 1200.SI<NewtonMeter>();
 			var angularVelocity = 800.RPMtoRad();
@@ -533,7 +534,7 @@ namespace TUGraz.VectoCore.Tests.Models.SimulationComponent
 			var d = new MockDriver(container);
 
 			var aux = new EngineAuxiliary(container);
-			aux.AddConstant("", 5000.SI<Watt>());
+			aux.AddConstant("CONST", 5000.SI<Watt>());
 
 			gearbox.Gear = 1;
 
@@ -550,6 +551,7 @@ namespace TUGraz.VectoCore.Tests.Models.SimulationComponent
 			//vehicleContainer.DataWriter = new ModalDataWriter("engine_idle_test.csv");
 			var dataWriter = new MockModalDataContainer();
 			container.ModData = dataWriter;
+			container.ModalData.AddAuxiliary("CONST");
 		}
 	}
 }

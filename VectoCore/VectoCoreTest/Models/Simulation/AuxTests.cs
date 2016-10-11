@@ -157,7 +157,8 @@ namespace TUGraz.VectoCore.Tests.Models.Simulation
 
 			var aux = new EngineAuxiliary(container);
 
-			aux.AddCycle();
+			aux.AddCycle("CYCLE");
+			container.ModalData.AddAuxiliary("CYCLE");
 
 			var speed = 2358.RPMtoRad();
 			var torque = 500.SI<NewtonMeter>();
@@ -198,7 +199,7 @@ namespace TUGraz.VectoCore.Tests.Models.Simulation
 			// efficiency_supply = 0.98
 
 			aux.AddMapping("ALT1", auxData);
-			aux.AddCycle();
+			aux.AddCycle("CYCLE");
 			var constPower = 1200.SI<Watt>();
 			aux.AddConstant("CONSTANT", constPower);
 
