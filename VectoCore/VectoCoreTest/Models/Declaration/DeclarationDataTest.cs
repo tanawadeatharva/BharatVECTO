@@ -63,7 +63,8 @@ namespace TUGraz.VectoCore.Tests.Models.Declaration
 		[TestCase("285/60 R22.5", 10.6, 0.914, 3.03, 0.440766),
 		TestCase("285/70 R19.5", 7.9, 0.895, 3.05, 0.434453),
 		TestCase("395/85 R20", 27.9, 1.18, 3.05, 0.572798)]
-		public void WheelDataTest(string wheels, double inertia, double wheelsDiameter, double circumferenceFactor, double expectedDynamicRadius)
+		public void WheelDataTest(string wheels, double inertia, double wheelsDiameter, double circumferenceFactor,
+			double expectedDynamicRadius)
 		{
 			var tmp = DeclarationData.Wheels.Lookup(wheels);
 
@@ -218,7 +219,7 @@ namespace TUGraz.VectoCore.Tests.Models.Declaration
 				CrossWindCorrectionMode.DeclarationModeCorrection);
 
 			AssertHelper.Exception<VectoException>(() =>
-				crossWindCorrectionCurve.EffectiveAirDragArea(kmph.KMPHtoMeterPerSecond()));
+					crossWindCorrectionCurve.EffectiveAirDragArea(kmph.KMPHtoMeterPerSecond()));
 		}
 
 		[TestCase(MissionType.LongHaul, "Standard technology", 1200, 0.7),
@@ -243,13 +244,13 @@ namespace TUGraz.VectoCore.Tests.Models.Declaration
 			AssertHelper.Exception<VectoException>(() => { DeclarationData.ElectricSystem.Lookup(mission, technology); });
 		}
 
-		[TestCase("only the drive shaft of the PTO - shift claw, synchronizer, Schieberad", 50),
+		[TestCase("only the drive shaft of the PTO - shift claw, synchronizer, sliding gearwheel", 50),
 		TestCase("only the drive shaft of the PTO - multi-disc clutch", 1000),
 		TestCase("only the drive shaft of the PTO - multi-disc clutch, oil pump", 2000),
-		TestCase("drive shaft and/or up to 2 gear wheels - shift claw, synchronizer, Schieberad", 300),
+		TestCase("drive shaft and/or up to 2 gear wheels - shift claw, synchronizer, sliding gearwheel", 300),
 		TestCase("drive shaft and/or up to 2 gear wheels - multi-disc clutch", 1500),
 		TestCase("drive shaft and/or up to 2 gear wheels - multi-disc clutch, oil pump", 3000),
-		TestCase("drive shaft and/or more than 2 gear wheels - shift claw, synchronizer, Schieberad", 600),
+		TestCase("drive shaft and/or more than 2 gear wheels - shift claw, synchronizer, sliding gearwheel", 600),
 		TestCase("drive shaft and/or more than 2 gear wheels - multi-disc clutch", 2000),
 		TestCase("drive shaft and/or more than 2 gear wheels - multi-disc clutch, oil pump", 4000),]
 		public void AuxPTOTransmissionTest(string technology, double value)
@@ -433,11 +434,11 @@ namespace TUGraz.VectoCore.Tests.Models.Declaration
 		public void SegmentWeightOutOfRange4X2(double weight)
 		{
 			AssertHelper.Exception<VectoException>(() =>
-				DeclarationData.Segments.Lookup(
-					VehicleCategory.RigidTruck,
-					AxleConfiguration.AxleConfig_4x2,
-					weight.SI<Kilogram>(),
-					0.SI<Kilogram>()),
+					DeclarationData.Segments.Lookup(
+						VehicleCategory.RigidTruck,
+						AxleConfiguration.AxleConfig_4x2,
+						weight.SI<Kilogram>(),
+						0.SI<Kilogram>()),
 				"Gross vehicle mass must be greater than 7.5 tons");
 		}
 
@@ -450,11 +451,11 @@ namespace TUGraz.VectoCore.Tests.Models.Declaration
 		public void SegmentWeightOutOfRange4X4(double weight)
 		{
 			AssertHelper.Exception<VectoException>(() =>
-				DeclarationData.Segments.Lookup(
-					VehicleCategory.RigidTruck,
-					AxleConfiguration.AxleConfig_4x4,
-					weight.SI<Kilogram>(),
-					0.SI<Kilogram>()),
+					DeclarationData.Segments.Lookup(
+						VehicleCategory.RigidTruck,
+						AxleConfiguration.AxleConfig_4x4,
+						weight.SI<Kilogram>(),
+						0.SI<Kilogram>()),
 				"Gross vehicle mass must be greater than 7.5 tons");
 		}
 
