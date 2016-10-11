@@ -49,6 +49,8 @@
 5-input-and-output-files/VGBS.md
 5-input-and-output-files/VTLM.md
 5-input-and-output-files/VTCC.md
+5-input-and-output-files/VPTOC.md
+5-input-and-output-files/VPTOI.md
 5-input-and-output-files/VAUX.md
 5-input-and-output-files/AAUX.md
 5-input-and-output-files/AALT.md
