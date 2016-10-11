@@ -936,7 +936,7 @@ Partial Class VehicleForm
 		Me.GroupBox2.Size = New System.Drawing.Size(280, 111)
 		Me.GroupBox2.TabIndex = 4
 		Me.GroupBox2.TabStop = False
-		Me.GroupBox2.Text = "Angular Gear"
+		Me.GroupBox2.Text = "Angledrive"
 		'
 		'pnAngledriveFields
 		'

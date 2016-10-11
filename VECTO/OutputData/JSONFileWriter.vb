@@ -1,19 +1,22 @@
 ﻿Imports System.Collections.Generic
 Imports System.IO
 Imports System.Linq
+Imports Newtonsoft.Json
 Imports Newtonsoft.Json.Linq
 Imports TUGraz.VectoCommon.InputData
 Imports TUGraz.VectoCommon.Models
+Imports TUGraz.VectoCommon.OutputData
 Imports TUGraz.VectoCore.Models.Declaration
 
 Public Class JSONFileWriter
-	Public Const EngineFormatVersion As Short = 3
+	Implements IOutputFileWriter
+	Public Const EngineFormatVersion As Integer = 3
 
-	Public Const GearboxFormatVersion As Short = 6
+	Public Const GearboxFormatVersion As Integer = 6
 
-	Public Const VehicleFormatVersion As Short = 7
+	Public Const VehicleFormatVersion As Integer = 7
 
-	Private Const VectoJobFormatVersion As Short = 3
+	Private Const VectoJobFormatVersion As Integer = 3
 
 	Private Shared _instance As JSONFileWriter
 
@@ -24,15 +27,11 @@ Public Class JSONFileWriter
 		End Get
 	End Property
 
-	Public Function SaveEngine(eng As IEngineEngineeringInputData, filename As String) As Boolean
-		Dim json As New JSONWriter
+	Public Sub SaveEngine(eng As IEngineEngineeringInputData, filename As String) _
+		Implements IOutputFileWriter.SaveEngine
 
 		'Header
-		Dim header As Dictionary(Of String, Object) = New Dictionary(Of String, Object)
-		header.Add("CreatedBy", Lic.LicString & " (" & Lic.GUID & ")")
-		header.Add("Date", Now.ToUniversalTime().ToString("o"))
-		header.Add("AppVersion", VECTOvers)
-		header.Add("FileVersion", EngineFormatVersion)
+		Dim header As Dictionary(Of String, Object) = GetHeader(EngineFormatVersion)
 
 		'Body
 		Dim body As Dictionary(Of String, Object) = New Dictionary(Of String, Object)
@@ -54,22 +53,24 @@ Public Class JSONFileWriter
 		body.Add("WHTC-Motorway", eng.WHTCMotorway)
 		body.Add("ColdHotBalancingFactor", eng.ColdHotBalancingFactor)
 
-		json.Content = JToken.FromObject(New Dictionary(Of String, Object) From {{"Header", header}, {"Body", body}})
+		WriteFile(header, body, filename)
+	End Sub
 
-		Return json.WriteFile(filename)
-	End Function
-
-	Public Function SaveGearbox(gbx As IGearboxEngineeringInputData, axl As IAxleGearInputData, filename As String) _
-		As Boolean
-
-		Dim json As New JSONWriter
-
-		'Header
+	Protected Function GetHeader(fileVersion As Integer) As Dictionary(Of String, Object)
 		Dim header As Dictionary(Of String, Object) = New Dictionary(Of String, Object)
+
 		header.Add("CreatedBy", Lic.LicString & " (" & Lic.GUID & ")")
 		header.Add("Date", Now.ToUniversalTime().ToString("o"))
 		header.Add("AppVersion", VECTOvers)
-		header.Add("FileVersion", GearboxFormatVersion)
+		header.Add("FileVersion", fileVersion)
+		Return header
+	End Function
+
+	Public Sub SaveGearbox(gbx As IGearboxEngineeringInputData, axl As IAxleGearInputData, filename As String) _
+		Implements IOutputFileWriter.SaveGearbox
+
+		'Header
+		Dim header As Dictionary(Of String, Object) = GetHeader(GearboxFormatVersion)
 
 
 		'Body
@@ -139,21 +140,16 @@ Public Class JSONFileWriter
 		body.Add("UpshiftAfterDownshiftDelay", gbx.UpshiftAfterDownshiftDelay.Value())
 		body.Add("UpshiftMinAcceleration", gbx.UpshiftMinAcceleration.Value())
 
-		json.Content = JToken.FromObject(New Dictionary(Of String, Object) From {{"Header", header}, {"Body", body}})
+		WriteFile(header, body, filename)
+	End Sub
 
-		Return json.WriteFile(filename)
-	End Function
-
-	Public Function SaveVehicle(vehicle As IVehicleEngineeringInputData, retarder As IRetarderInputData,
-								pto As IPTOTransmissionInputData, angledrive As IAngledriveInputData, filename As String) As Boolean
+	Public Sub SaveVehicle(vehicle As IVehicleEngineeringInputData, retarder As IRetarderInputData,
+							pto As IPTOTransmissionInputData, angledrive As IAngledriveInputData, filename As String) _
+		Implements IOutputFileWriter.SaveVehicle
 		Dim basePath As String = Path.GetDirectoryName(filename)
-		Dim json As New JSONWriter
+
 		'Header
-		Dim header As Dictionary(Of String, Object) = New Dictionary(Of String, Object) From {
-				{"CreatedBy", Lic.LicString & " (" & Lic.GUID & ")"},
-				{"Date", Now.ToUniversalTime().ToString("o")},
-				{"AppVersion", VECTOvers},
-				{"FileVersion", VehicleFormatVersion}}
+		Dim header As Dictionary(Of String, Object) = GetHeader(VehicleFormatVersion)
 
 		'Body
 
@@ -228,19 +224,14 @@ Public Class JSONFileWriter
 				}
 				}
 
-		json.Content = JToken.FromObject(New Dictionary(Of String, Object) From {{"Header", header}, {"Body", body}})
-		Return json.WriteFile(filename)
-	End Function
+		WriteFile(header, body, filename)
+	End Sub
 
-	Public Function SaveJob(input As IEngineeringInputDataProvider, filename As String) As Boolean
-		Dim json As New JSONWriter
+	Public Sub SaveJob(input As IEngineeringInputDataProvider, filename As String) _
+		Implements IOutputFileWriter.SaveJob
 		Dim basePath As String = Path.GetDirectoryName(filename)
 		'Header
-		Dim header As Dictionary(Of String, Object) = New Dictionary(Of String, Object) From {
-				{"CreatedBy", Lic.LicString & " (" & Lic.GUID & ")"},
-				{"Date", Now.ToUniversalTime().ToString("o")},
-				{"AppVersion", VECTOvers},
-				{"FileVersion", VectoJobFormatVersion}}
+		Dim header As Dictionary(Of String, Object) = GetHeader(VectoJobFormatVersion)
 
 		'Body
 		Dim body As Dictionary(Of String, Object) = New Dictionary(Of String, Object)
@@ -259,7 +250,8 @@ Public Class JSONFileWriter
 			body.Add("EngineFile", GetRelativePath(input.EngineInputData.Source, basePath))
 			body.Add("Cycles",
 					job.Cycles.Select(Function(x) GetRelativePath(x.CycleData.Source, Path.GetDirectoryName(filename))).ToArray())
-			Return True
+			WriteFile(header, body, filename)
+			Return
 		End If
 
 		'Main Files
@@ -343,7 +335,44 @@ Public Class JSONFileWriter
 					job.Cycles.Select(Function(x) GetRelativePath(x.CycleData.Source, Path.GetDirectoryName(filename))).ToArray())
 		End If
 
-		json.Content = JToken.FromObject(New Dictionary(Of String, Object) From {{"Header", header}, {"Body", body}})
-		Return json.WriteFile(filename)
-	End Function
+		WriteFile(header, body, filename)
+	End Sub
+
+	Public Sub ExportJob(input As IEngineeringInputDataProvider, filename As String, separateFiles As Boolean) _
+		Implements IOutputFileWriter.ExportJob
+		Throw New NotImplementedException
+	End Sub
+
+	''' <summary>
+	''' Writes the Content variable into a JSON file.
+	''' </summary>
+	''' <param name="path"></param>
+	''' <remarks></remarks>
+	Public Shared Sub WriteFile(content As JToken, path As String)
+		Dim file As StreamWriter
+		Dim str As String
+
+		If content.Count = 0 Then
+			Return
+		End If
+
+		Try
+			str = JsonConvert.SerializeObject(content, Formatting.Indented)
+			file = My.Computer.FileSystem.OpenTextFileWriter(path, False)
+		Catch ex As Exception
+			Throw
+		End Try
+
+		file.Write(str)
+		file.Close()
+	End Sub
+
+	Public Shared Sub WriteFile(content As Dictionary(Of String, Object), path As String)
+		WriteFile(JToken.FromObject(content), path)
+	End Sub
+
+	Protected Shared Sub WriteFile(header As Dictionary(Of String, Object), body As Dictionary(Of String, Object),
+									path As String)
+		WriteFile(JToken.FromObject(New Dictionary(Of String, Object) From {{"Header", header}, {"Body", body}}), path)
+	End Sub
 End Class

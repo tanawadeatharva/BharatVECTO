@@ -73,7 +73,7 @@ Public Class Configuration
 				LogSize = body.GetEx(Of Double)("LogSize")
 				AirDensity = body.GetEx(Of Double)("AirDensity")
 				FuelDens = body.GetEx(Of Double)("FuelDensity")
-				CO2perFC = body.GetEx(Of Double)("CO2perFC")
+				Co2PerFc = body.GetEx(Of Double)("CO2perFC")
 				OpenCmd = body.GetEx(Of String)("OpenCmd")
 				OpenCmdName = body.GetEx(Of String)("OpenCmdName")
 				FirstRun = body.GetEx(Of Boolean)("FirstRun")
@@ -85,7 +85,6 @@ Public Class Configuration
 	End Sub
 
 	Public Sub Save()
-		Dim json As New JSONWriter
 
 		Dim header As Dictionary(Of String, Object) = New Dictionary(Of String, Object)
 		header.Add("CreatedBy", Lic.LicString & " (" & Lic.GUID & ")")
@@ -93,21 +92,19 @@ Public Class Configuration
 		header.Add("AppVersion", VECTOvers)
 		header.Add("FileVersion", FormatVersion)
 
-
 		Dim body As Dictionary(Of String, Object) = New Dictionary(Of String, Object)
 		body.Add("ModOut", ModOut)
 		body.Add("Mod1Hz", Mod1Hz)
 		body.Add("LogSize", LogSize)
 		body.Add("AirDensity", AirDensity)
 		body.Add("FuelDensity", FuelDens)
-		body.Add("CO2perFC", CO2perFC)
+		body.Add("CO2perFC", Co2PerFc)
 		body.Add("OpenCmd", OpenCmd)
 		body.Add("OpenCmdName", OpenCmdName)
 		body.Add("FirstRun", FirstRun)
 		body.Add("DeclMode", DeclMode)
 
-		json.Content = JToken.FromObject(New Dictionary(Of String, Object) From {{"Header", header}, {"Body", body}})
-		json.WriteFile(FilePath)
+		JSONFileWriter.WriteFile(New Dictionary(Of String, Object) From {{"Header", header}, {"Body", body}}, FilePath)
 	End Sub
 End Class
 
