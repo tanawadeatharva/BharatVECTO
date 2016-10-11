@@ -96,7 +96,7 @@ Three options are available:
 
 ###PTO Transmission
 
-If the vehicle has an PTO consumer, a pto transmission and consumer can be defined here.
+If the vehicle has an PTO consumer, a pto transmission and consumer can be defined here. (Only in [Engineering Mode](#engineering-mode))
 
 Three settings can be set:
 

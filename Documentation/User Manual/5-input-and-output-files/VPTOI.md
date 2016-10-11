@@ -1,6 +1,6 @@
 ##PTO Idle Consumption Map (.vptoi)
 
-The pto idle consumption map defines the speed-dependent power demand when the pto cycle is not active.
+The pto idle consumption map defines the speed-dependent power demand when the pto cycle is not active. This can only be used in [Engineering Mode](#engineering-mode) when a pto transmission is defined.
 The exact demand gets linear interpolated based on the engine speed.
 It can be defined in the [Vehicle-File](#vehicle-file) and set via the [Vehicle-Editor](#vehicle-editor). 
 The basic file format is [Vecto-CSV](#csv) and the file type ending is ".vptoi".

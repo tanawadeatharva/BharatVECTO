@@ -1,6 +1,6 @@
 ##PTO Cycle (.vptoc)
 
-The PTO cycle defines the power demands during standing still and doing a pto operation. It can be defined in the [Vehicle-File](#vehicle-file) and set via the [Vehicle-Editor](#vehicle-editor). The basic file format is [Vecto-CSV](#csv) and the file type ending is ".vptoc". A PTO cycle is time-based and may have variable time steps.
+The PTO cycle defines the power demands during standing still and doing a pto operation. This can only be used in [Engineering Mode](#engineering-mode) when a pto transmission is defined. It can be set in the [Vehicle-Editor](#vehicle-editor). The basic file format is [Vecto-CSV](#csv) and the file type ending is ".vptoc". A PTO cycle is time-based and may have variable time steps.
 
 Header: **\<t>, \<Engine speed>, \<PTO Torque>**
 

@@ -2179,7 +2179,7 @@ Version: VECTO 2.2 / VectoCore 3.0.2 / VectoCmd 3.0.2</p>
 </div>
 <div id="pto-transmission" class="section level3">
 <h3>PTO Transmission</h3>
-<p>If the vehicle has an PTO consumer, a pto transmission and consumer can be defined here.</p>
+<p>If the vehicle has an PTO consumer, a pto transmission and consumer can be defined here. (Only in <a href="#engineering-mode">Engineering Mode</a>)</p>
 <p>Three settings can be set:</p>
 <ul>
 <li>PTO Transmission: Here a transmission type can be chosen (adds constant load at all times).</li>
@@ -3921,7 +3921,7 @@ Example: “Gears\Gear1.vtlm” points to the “Gears” subdirectory of the Ge
 </div>
 <div id="pto-cycle-.vptoc" class="section level2">
 <h2>PTO Cycle (.vptoc)</h2>
-<p>The PTO cycle defines the power demands during standing still and doing a pto operation. It can be defined in the <a href="#vehicle-file">Vehicle-File</a> and set via the <a href="#vehicle-editor">Vehicle-Editor</a>. The basic file format is <a href="#csv">Vecto-CSV</a> and the file type ending is “.vptoc”. A PTO cycle is time-based and may have variable time steps.</p>
+<p>The PTO cycle defines the power demands during standing still and doing a pto operation. This can only be used in <a href="#engineering-mode">Engineering Mode</a> when a pto transmission is defined. It can be set in the <a href="#vehicle-editor">Vehicle-Editor</a>. The basic file format is <a href="#csv">Vecto-CSV</a> and the file type ending is “.vptoc”. A PTO cycle is time-based and may have variable time steps.</p>
 <p>Header: <strong>&lt;t&gt;, &lt;Engine speed&gt;, &lt;PTO Torque&gt;</strong></p>
 <p><strong>Bold columns</strong> are mandatory. Only the listed columns are allowed (no other columns!).<br /> The order is not important when the headers are annotated with &lt;angle-brackets&gt; (less-than-sign “&lt;” and greater-than-sign “&gt;”).<br /> Units are optional and are enclosed in [square-brackets] after the header-column. Comments may be written with a preceding hash-sign “#”.</p>
 <table>
@@ -3961,7 +3961,7 @@ Example: “Gears\Gear1.vtlm” points to the “Gears” subdirectory of the Ge
 </div>
 <div id="pto-idle-consumption-map-.vptoi" class="section level2">
 <h2>PTO Idle Consumption Map (.vptoi)</h2>
-<p>The pto idle consumption map defines the speed-dependent power demand when the pto cycle is not active. The exact demand gets linear interpolated based on the engine speed. It can be defined in the <a href="#vehicle-file">Vehicle-File</a> and set via the <a href="#vehicle-editor">Vehicle-Editor</a>. The basic file format is <a href="#csv">Vecto-CSV</a> and the file type ending is “.vptoi”.</p>
+<p>The pto idle consumption map defines the speed-dependent power demand when the pto cycle is not active. This can only be used in <a href="#engineering-mode">Engineering Mode</a> when a pto transmission is defined. The exact demand gets linear interpolated based on the engine speed. It can be defined in the <a href="#vehicle-file">Vehicle-File</a> and set via the <a href="#vehicle-editor">Vehicle-Editor</a>. The basic file format is <a href="#csv">Vecto-CSV</a> and the file type ending is “.vptoi”.</p>
 <p>Header: <strong>&lt;Engine speed&gt;, &lt;PTO Torque&gt;</strong></p>
 <p><strong>Bold columns</strong> are mandatory. Only the listed columns are allowed (no other columns!).<br /> The order is not important when the headers are annotated with &lt;angle-brackets&gt; (less-than-sign “&lt;” and greater-than-sign “&gt;”).<br /> Units are optional and are enclosed in [square-brackets] after the header-column. Comments may be written with a preceding hash-sign “#”.</p>
 <table>
