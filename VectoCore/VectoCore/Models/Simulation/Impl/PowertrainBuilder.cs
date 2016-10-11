@@ -92,7 +92,7 @@ namespace TUGraz.VectoCore.Models.Simulation.Impl
 
 			var directAux = new EngineAuxiliary(container);
 			directAux.AddCycle(Constants.Auxiliaries.Cycle);
-
+			container.ModalData.AddAuxiliary(Constants.Auxiliaries.Cycle);
 			var engine = new EngineOnlyCombustionEngine(container, data.EngineData);
 			engine.Connect(directAux.Port());
 

@@ -74,8 +74,7 @@ namespace TUGraz.VectoCore.Tests.Integration.EngineOnlyCycle
 			var engineData = MockSimulationDataFactory.CreateEngineDataFromFile(engineFile);
 
 			var aux = new EngineAuxiliary(vehicle);
-			aux.AddCycle("CYCLE");
-			vehicle.ModalData.AddAuxiliary("CYCLE");
+			aux.AddCycle(Constants.Auxiliaries.Cycle);
 
 			var engine = new EngineOnlyCombustionEngine(vehicle, engineData);
 			engine.Connect(aux);
@@ -90,7 +89,7 @@ namespace TUGraz.VectoCore.Tests.Integration.EngineOnlyCycle
 			//Path.GetFileNameWithoutExtension(Path.GetRandomFileName()); // + ".vmod";
 			var fileWriter = new FileOutputWriter(modFile);
 			var modData = new ModalDataContainer(modFile, fileWriter, true) { WriteModalResults = true };
-
+			modData.AddAuxiliary(Constants.Auxiliaries.Cycle);
 			port.Initialize(data.Entries.First().Torque, data.Entries.First().AngularVelocity);
 			foreach (var cycleEntry in data.Entries) {
 				// ReSharper disable once UnusedVariable
