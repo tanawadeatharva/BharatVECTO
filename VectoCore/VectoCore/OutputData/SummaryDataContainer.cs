@@ -35,6 +35,7 @@ using System.Linq;
 using System.Runtime.CompilerServices;
 using TUGraz.VectoCommon.Models;
 using TUGraz.VectoCommon.Utils;
+using TUGraz.VectoCore.Configuration;
 
 // ReSharper disable MemberCanBePrivate.Global  -- used by API!
 
@@ -84,6 +85,7 @@ namespace TUGraz.VectoCore.OutputData
 		public const string P_ANGLE_LOSS = "P_angle_loss [kW]";
 		public const string P_TC_LOSS = "P_tc_loss [kW]";
 
+		public const string E_FORMAT = "E_{0} [kWh]";
 		public const string E_AUX_FORMAT = "E_aux_{0} [kWh]";
 		public const string E_AUX = "E_aux_sum [kWh]";
 
@@ -237,12 +239,19 @@ namespace TUGraz.VectoCore.OutputData
 			row[P_FCMAP_POS] = modData.TotalPowerEnginePositiveAverage().ConvertTo().Kilo.Watt;
 
 			foreach (var aux in modData.Auxiliaries) {
-				var colName = string.Format(E_AUX_FORMAT, aux.Key);
+				string colName;
+				if (aux.Key == Constants.Auxiliaries.IDs.PTOConsumer || aux.Key == Constants.Auxiliaries.IDs.PTOTransmission) {
+					colName = string.Format(E_FORMAT, aux.Key);
+				} else {
+					colName = string.Format(E_AUX_FORMAT, aux.Key);
+				}
+
 				if (!_table.Columns.Contains(colName)) {
 					var col = _table.Columns.Add(colName, typeof(SI));
 					// move the new column to correct position
 					col.SetOrdinal(_table.Columns[E_AUX].Ordinal);
 				}
+
 				row[colName] = modData.AuxiliaryWork(aux.Value).ConvertTo().Kilo.Watt.Hour;
 			}
 			row[E_AUX] = modData.WorkAuxiliaries().ConvertTo().Kilo.Watt.Hour;
