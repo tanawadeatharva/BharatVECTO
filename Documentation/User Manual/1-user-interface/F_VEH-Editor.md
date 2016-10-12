@@ -84,14 +84,14 @@ Four options are available:
 Both, primary and secondary retarders, require an [Retarder Torque Loss Input File (.vrlm)](#retarder-loss-torque-input-file-.vrlm).
 
 
-###Angular Gear
+###Angledrive
 
-If an angular gear is used in the vehicle, it can be defined here.
+If an angledrive is used in the vehicle, it can be defined here.
 Three options are available:
 
-- No angular gear (**default**)
-- Separate angular gear: Use this if the angular gear is measured separately. In this case the ratio must be set and the [Transmission Loss Map](#transmission-loss-map) (or an Efficiency value) must also be given.
-- Included in transmission: Use this if the gearbox already includes the transmission losses for the angular gear in the respective transmission loss maps.
+- None (**default**)
+- Separate Angledrive: Use this if the angledrive is measured separately. In this case the ratio must be set and the [Transmission Loss Map](#transmission-loss-map) (or an Efficiency value) must also be given.
+- Included in transmission: Use this if the gearbox already includes the transmission losses for the angledrive in the respective transmission loss maps.
 
 
 ###PTO Transmission

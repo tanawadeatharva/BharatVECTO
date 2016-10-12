@@ -8,11 +8,11 @@ Header: **\<t>, \<Engine speed>, \<PTO Torque>**
 The order is not important when the headers are annotated with \<angle-brackets\> (less-than-sign "<" and greater-than-sign ">").<br />
 Units are optional and are enclosed in [square-brackets] after the header-column. Comments may be written with a preceding hash-sign "#".
 
-|    Identifier    |  Unit |                        Description                        |
-|------------------|-------|-----------------------------------------------------------|
-| **t**            | [s]   | The time during the pto cycle. Must always be increasing. |
-| **Engine speed** | [rpm] | The engine speed.                                         |
-| **PTO Torque**   | [Nm]  | The torque demand.                                        |
+|    Identifier    |  Unit |                                                                Description                                                                 |
+|------------------|-------|--------------------------------------------------------------------------------------------------------------------------------------------|
+| **t**            | [s]   | The time during the pto cycle. Must always be increasing.                                                                                  |
+| **Engine speed** | [rpm] | Actual engine speed                                                                                                                        |
+| **PTO Torque**   | [Nm]  | The torque at the PTO consumer (including prop-shaft losses if applicable) as measured by the DIN test converted to torque at engine speed |
 
 **Example:**
 
