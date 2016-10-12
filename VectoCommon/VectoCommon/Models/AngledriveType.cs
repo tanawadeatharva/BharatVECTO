@@ -46,9 +46,9 @@ namespace TUGraz.VectoCommon.Models
 		{
 			switch (type) {
 				case AngledriveType.None:
-					return "No Angular Gear";
+					return "None";
 				case AngledriveType.SeparateAngledrive:
-					return "Separate Angular Gear";
+					return "Separate Angledrive";
 				case AngledriveType.LossesIncludedInGearbox:
 					return "Included in Transmission Loss Maps";
 				default:

@@ -166,7 +166,7 @@ namespace TUGraz.VectoCore.InputData.Reader.DataObjectAdapter
 		}
 
 		/// <summary>
-		/// Creates an AngledriveData or returns null if there is no angular gear.
+		/// Creates an AngledriveData or returns null if there is no anglegear.
 		/// </summary>
 		/// <param name="data"></param>
 		/// <param name="useEfficiencyFallback">if true, the Efficiency value is used if no LossMap is found.</param>
