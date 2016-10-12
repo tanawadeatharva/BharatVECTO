@@ -2,8 +2,6 @@
 
 ![](pics/cmd3.png)
 
-It is possible to start the VECTO simulation via command line without graphical user interface.
-
 The Vecto 3.x commandline tool can be used to start simulations from the command line and  runs without  graphical user interface. If multiple job-files are specified or a job-file contains multiple simulation runs (i.e., multiple cycles and/or loadings) these simulations are executed in parallel.
 
 ###General Notes
@@ -11,7 +9,6 @@ The Vecto 3.x commandline tool can be used to start simulations from the command
 -   The order in which the arguments are provided is arbitrary.
 -   If a file path includes space characters (e.g. "C:\\VECTO Test Files\\Demo.vecto") then double quotes have to be used (as in the picture above).
 -   If not the complete file path is defined (e.g. "file1.vecto" instead of "c:\\data\\file1.vecto") then VECTO expects the file in the application directory (where vectocmd.exe is located).
-
 
 ###Basic usage 
 

@@ -7,9 +7,6 @@ For verification tasks it is possible to manually input the power at wheels (P~w
 - Driving Cycle must include t, P~wheel~ (Pwheel), Gear (Gear) and Engine Speed (n), see [Driving Cycle (.vdri) format](#driving-cycles).
 - The driving cycle must be time-based.
 
-<div class="vecto2">
-Distance Correction must be disabled ([Options tab in Main Form](#options-tab)).
-</div>
 
 **Example driving cycle with P~wheel~ input.**
 

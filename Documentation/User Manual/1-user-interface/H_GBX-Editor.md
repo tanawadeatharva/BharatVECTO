@@ -132,4 +132,3 @@ be updated.
 
 
 ![Cancel](pics/Cancel.png) ***Cancel without saving***
-</div>

@@ -172,6 +172,4 @@ Units are optional and are enclosed in [square-brackets] after the header-column
 |        2 |       1200 |     65.344 |          1.3 |
 |        3 |       1400 |      110.1 |          1.3 |
 
-<div class="vecto2"
->To explicitly define *motoring operation* use the **\<DRAG>** keyword as power demand (column \<Pe> or \<Me>). VECTO v2 replaces the keyword with the corresponding motoring torque/power from the drag curve during calculation (see [Full Load and Drag Curve File](#full-load-and-drag-curves-.vfld)).
-</div>
+

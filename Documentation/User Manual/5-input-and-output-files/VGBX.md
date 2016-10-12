@@ -9,7 +9,6 @@ Refers to other files:
 
 * [Shift Polygon (VGBS)](#shift-polygons-input-file-.vgbs)
 * [Loss Map (VTLM)](#transmission-loss-map)
-* [Full Load Curve (VFLD)](#full-load-and-drag-curves-.vfld)
 * [Torque Converter (VTCC)](#torque-converter-characteristics-.vtcc)
 
 
