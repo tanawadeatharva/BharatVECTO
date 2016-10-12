@@ -7,13 +7,7 @@ The FC map is used to interpolate the base fuel consumption before corrections 
 - Requires at least 3 data entries
 - The map must cover the full engine range between full load and motoring curve.
 
-<div class="vecto2">
-Extrapolation of fuel consumption map is not possible.
-</div>
-
-<div class="vecto3">
 Extrapolation of fuel consumption map is possible in Engineering Mode (with warnings!). In Declaration Mode it is not allowed.
-</div>
 
 **Example:**
 

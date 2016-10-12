@@ -28,7 +28,7 @@ The Advance Auxiliaries Editor contains four tabs/sub-modules where the differen
 
 ###Important notes
 
-Note that the cycle file name used should ideally respect the following syntax to be correctly associated with the pneumatic actuations map (.apac), otherwise the number of actuations will be set at 0 by default:
+Note that the cycle file name used should ideally respect the following syntax to be correctly associated with the pneumatic actuations map (.apac), otherwise the number of actuations will be set to 0 by default:
 
 -   "AnyOtherText _X_Bus.vdri", with "X" = "Urban", "Heavy urban", “Suburban", or "Interurban"
 -   "AnyOtherText_Coach.vdri"

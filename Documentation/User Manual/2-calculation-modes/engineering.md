@@ -1,15 +1,9 @@
 ##Engineering Mode
 
-The Engineering Mode lets the user define every aspect in the components of the vehicle and the driving cycle. This is for experimenting and validation purposes.
+The Engineering Mode lets the user define every aspect in the component models of the vehicle and the driving cycle. This is for experimenting and validation purposes.
 
 In this mode the given list of job files is simulated with the respective driving cycles. Each job file defines a separate vehicle.
 
-<div class="vecto2">
-This is the default calculation mode in VECTO V2.
-</div>
-<div class="vecto3">
-In VectoCMD V3.x the default mode is Declaration Mode.
-</div>
 
 ###Requirements
 
@@ -18,7 +12,7 @@ In VectoCMD V3.x the default mode is Declaration Mode.
 
 ###Results
 
--   Modal results (.vmod). One file for each vehicle/cycle combination.
+-   Modal results (.vmod). One file for each vehicle/cycle combination. Modal results are only written if the modal output is enabled in the 'Options' tab on the [Main Window](#main-form)
 -   Sum results (.vsum). One file for each invocation of VECTO.
 
 
@@ -34,7 +28,4 @@ The Driving Cycle determines the simulation method in engineering mode. The opti
 * [Pwheel (SiCo) Mode, time-based](#engineering-mode-pwheel-sico-time-based)
 :   In Pwheel mode the measured power at the wheels is given, and the simulation takes that as input.
 
-
-
-
-
+**Note:** Time-based driving cycles support arbitrary time steps. However, certain actions are simulated within a single simulation interval (e.g. closing the clutch after a gear switch) and may thus result in artefacts during the simulation due to engine inertia, gearbox inertia, etc. Thus **the suggested minimum time interval for time-based cycles is 0.5s!**

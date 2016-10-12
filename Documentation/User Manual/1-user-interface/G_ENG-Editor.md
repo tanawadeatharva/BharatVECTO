@@ -25,7 +25,7 @@ Displacement \[ccm\]
 :   Used in [Declaration Mode](#declaration-mode) to calculate inertia.
 
 Inertia including Flywheel \[kgm²\]
-:   Inertia for rotating parts including engine flywheel. In [Declaration Mode](#declaration-mode) the inertia is calculated automatically depending on the engine's displacement and also accounts for the clutch's inertia.
+:   Inertia for rotating parts including engine flywheel. In [Declaration Mode](#declaration-mode) the inertia is calculated  depending on the engine's displacement and also accounts for the clutch's inertia.
 
 ###Full Load and Drag Curves
 
@@ -41,8 +41,15 @@ The input file (.vmap) file format is described [here](#fuel-consumption-map-.vm
 
 ###WHTC Correction Factors
 
-
+<div class="declaration">
 The WHTC Correction Factors are required in [Declaration Mode](#declaration-mode) for the [WHTC FC Correction](#fuel-consumption-calculation).
+
+The Cold/Hot Emission Balancing Factor is an additional correction factor that is used to correct the fuel consumption.
+</div>
+
+<div class="engineering">
+In engineering a single correction factor for correcting WHTC, Cold/Hot Balancing, ... can be specified. 
+</div>
 
 
 ###Chart Area

@@ -1,9 +1,8 @@
 ##CSV
 Many data files in Vecto use CSV (Comma Separated Values) as common file format. They consist of a header which defines the columns and data entries which are separated by a comma (",").
 
-<div class="vecto3">
 In Vecto 3 the order of the columns is arbitrary if the column header matches the header definitions described in this user manual. If the column header does not match, a warning is written to the log file and the columns are parsed in the sequence as described in this manual as a fall-back.
-</div>
+
 
 ###Definition###
 
@@ -15,6 +14,10 @@ In Vecto 3 the order of the columns is arbitrary if the column header matches th
 | **Thousand-Separator:** | Vecto CSV does not allow a thousand-separator.                                                                                                                                                                                                                                                                                                                                                     |
 | **Comments:**           | **#** (Number sign. Declares text coming afterwards in the current line as comment.)                                                                                                                                                                                                                                                                                                               |
 | **Whitespace:**         | Whitespaces between columns will be stripped away. Therefore it is possible to align the columns for better readability, if desired.                                                                                                                                                                                                                                                               |
+**Note:** All column headers are case insensitive.
+
+**Note:** Unit information in the column header (enclosed in "[" and "]") are just as information for the user. Vecto does **not** read the unit string nor convert between units. The values are expected to be in the units as specified in the user manual. 
+
 
 Following files use the csv:
 

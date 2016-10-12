@@ -1,8 +1,11 @@
 ##Auxiliaries
 
+<div class="declaration">
+In Declaration mode the auxiliaries are pre-defined and the power demand is defined based on the vehicle category and mission. For every type of auxiliary (fan, steering pump, HVAC, electrig system, pneumatic system) the user can select a technology from a given list.
+</div>
 
-
-In VECTO a generic map-based approach was implemented to consider all types of auxiliaries. The supply power demand for each single auxiliary is defined in the driving cycle. Hence a time/distance-dependent power demand can be defined. Based on the supply power and a pre-defined efficiency map the auxiliary input power is calculated. A constant efficiency determines the losses between auxiliary and engine.
+<div class="engineering">
+In Engineering mode VECTO uses a generic map-based approach to consider all types of auxiliaries. The supply power demand for each single auxiliary is defined in the driving cycle. Hence a time/distance-dependent power demand can be defined. Based on the supply power and a pre-defined efficiency map the auxiliary input power is calculated. A constant efficiency determines the losses between auxiliary and engine.
 
 For each auxiliary the power demand is calculated using the following steps:
 
@@ -18,7 +21,7 @@ For each auxiliary the power demand is calculated using the following steps:
 
 5.  **P~aux~ is added to the engine's power demand**
 
-
+6.  **P~supply~ is defined in the driving cycle
 
 
 |            |                                                                                                       |                                 |  
@@ -38,9 +41,11 @@ For each auxiliary the power demand is calculated using the following steps:
 
 
 
-
-
-Each auxiliary must be defined in the [Job File](#job-file) and each [driving cycle](#driving-cycles) used with this vehicle must include supply power for each auxiliary. To link the supply power in the driving cycle to the correct auxiliary in the Job File an ID is used. The corresponding supply power is then named *"&lt;Aux\_ID&gt;"*.
+Each auxiliary must be defined in the [Job File](#job-file) and each [driving cycle](#driving-cycles) used with this vehicle/auxiliary must include supply power for each auxiliary. To link the supply power in the driving cycle to the correct auxiliary in the Job File an ID is used. The corresponding supply power is then named *"&lt;Aux\_ID&gt;"*.
 
 
 ***Example:*** *The Auxiliary with the ID "ALT" (in the Job File) is linked to the supply power in the column "&lt;Aux\_ALT&gt;" in the driving cylce.*
+
+In addition to the generic map-based auxiliaries approach it is also possible to specify a constant load applied to the engine during the whole mission.
+
+</div>

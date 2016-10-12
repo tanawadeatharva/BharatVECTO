@@ -14,15 +14,4 @@ VECTO supports different calculation modes for declaring a vehicle, validation o
 
 In the GUI the Calculation Mode can be changed via the Options Tab of the [Main Form](#main-form).
 
-In the Command Line the Calculation Mode is Declaration by default, but can be changed to Engineering with the "-eng" flag.
-
-<div class="vecto2">
-A so called [Batch Mode](#batch-mode) exists in VECTO v2.2, which simulates every given job file with every given cycle file. This has nothing to do with the command line, it is just a convenience function to combine job files and cycle files.
-</div>
-
-<div class="vecto3">
-VECTO V3.x doesn't support Batch mode anymore. The same functionality can be achieved by referencing every needed cycle file in the job files.
-</div>
-
-
-
+In the Command Line the default Calculation Mode is Declaration, but can be changed to Engineering with the "-eng" flag.
