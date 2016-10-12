@@ -118,7 +118,14 @@ Public Class VectoJob
 			Return False
 		End If
 
-		Return JSONFileWriter.Instance.SaveJob(Me, _sFilePath)
+		Try
+			Dim writer As JSONFileWriter = JSONFileWriter.Instance
+			writer.SaveJob(Me, _sFilePath)
+		Catch ex As Exception
+			MsgBox("Failed to save Job file: " + ex.Message)
+			Return False
+		End Try
+		Return True
 	End Function
 
 	'This Sub reads those Input-files that do not have their own class, etc.

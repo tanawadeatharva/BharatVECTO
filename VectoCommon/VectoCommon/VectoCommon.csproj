@@ -45,6 +45,8 @@
   </ItemGroup>
   <ItemGroup>
     <Compile Include="InputData\DataSourceType.cs" />
+    <Compile Include="InputData\IImportPlugin.cs" />
+    <Compile Include="InputData\IInputDataPlugin.cs" />
     <Compile Include="InputData\TableData.cs">
       <SubType>Component</SubType>
     </Compile>
@@ -68,11 +70,15 @@
     <Compile Include="Models\OperatingPoint.cs" />
     <Compile Include="Models\RetarderType.cs" />
     <Compile Include="Models\VehicleCategory.cs" />
+    <Compile Include="OutputData\IExportPlugin.cs" />
+    <Compile Include="OutputData\IOutputFileWriter.cs" />
+    <Compile Include="OutputData\IOutputPlugin.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
     <Compile Include="Utils\DoubleExtensionMethods.cs" />
     <Compile Include="Utils\EnumerableExtensionMethods.cs" />
     <Compile Include="Utils\EnumHelper.cs" />
     <Compile Include="Utils\IntExtensionMethods.cs" />
+    <Compile Include="Utils\PluginRegistry.cs" />
     <Compile Include="Utils\SI.cs" />
     <Compile Include="Utils\StringExtensionMethods.cs" />
     <Compile Include="Utils\Validation.cs" />

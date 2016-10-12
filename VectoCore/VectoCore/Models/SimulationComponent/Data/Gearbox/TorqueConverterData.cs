@@ -62,12 +62,16 @@ namespace TUGraz.VectoCore.Models.SimulationComponent.Data.Gearbox
 		/// </summary>
 		/// <param name="torqueOut">torque provided at the TC output</param>
 		/// <param name="angularSpeedOut">angular speed at the TC output</param>
+		/// <param name="minSpeed"></param>
 		/// <returns></returns>
-		public TorqueConverterOperatingPoint FindOperatingPoint(NewtonMeter torqueOut, PerSecond angularSpeedOut)
+		public IList<TorqueConverterOperatingPoint> FindOperatingPoint(NewtonMeter torqueOut, PerSecond angularSpeedOut,
+			PerSecond minSpeed)
 		{
 			var solutions = new List<double>();
 			var mpNorm = ReferenceSpeed.Value();
 
+			var min = minSpeed == null ? 0 : minSpeed.Value();
+			
 			// Find analytic solution for torque converter operating point
 			// mu = f(nu) = f(n_out / n_in) = T_out / T_in
 			// MP1000 = f(nu) = f(n_out / n_in)
@@ -88,7 +92,7 @@ namespace TUGraz.VectoCore.Models.SimulationComponent.Data.Gearbox
 						torqueOut.Value();
 				var sol = VectoMath.QuadraticEquationSolver(a, b, c);
 
-				var selected = sol.Where(x => x > 0
+				var selected = sol.Where(x => x > min 
 											&& angularSpeedOut.Value() / x >= muEdge.P1.X && angularSpeedOut.Value() / x < muEdge.P2.X
 											&& angularSpeedOut.Value() / x >= mpEdge.P1.X && angularSpeedOut.Value() / x < mpEdge.P2.X);
 				solutions.AddRange(selected);
@@ -98,15 +102,18 @@ namespace TUGraz.VectoCore.Models.SimulationComponent.Data.Gearbox
 					torqueOut);
 			}
 
-			var retVal = new TorqueConverterOperatingPoint {
-				OutTorque = torqueOut,
-				OutAngularVelocity = angularSpeedOut,
-				InAngularVelocity = solutions.Min().SI<PerSecond>()
-			};
-			retVal.SpeedRatio = angularSpeedOut / retVal.InAngularVelocity;
-			retVal.TorqueRatio = MuLookup(angularSpeedOut / retVal.InAngularVelocity);
-			retVal.InTorque = torqueOut / retVal.TorqueRatio;
-
+			var retVal = new List<TorqueConverterOperatingPoint>();
+			foreach (var sol in solutions) {
+				var tmp = new TorqueConverterOperatingPoint {
+					OutTorque = torqueOut,
+					OutAngularVelocity = angularSpeedOut,
+					InAngularVelocity = sol.SI<PerSecond>()
+				};
+				tmp.SpeedRatio = angularSpeedOut / tmp.InAngularVelocity;
+				tmp.TorqueRatio = MuLookup(angularSpeedOut / tmp.InAngularVelocity);
+				tmp.InTorque = torqueOut / tmp.TorqueRatio;
+				retVal.Add(tmp);
+			}
 			return retVal;
 		}
 
@@ -139,8 +146,9 @@ namespace TUGraz.VectoCore.Models.SimulationComponent.Data.Gearbox
 				retVal.OutTorque = retVal.InTorque * retVal.TorqueRatio;
 				return retVal;
 			}
-			throw new VectoException("No solution for output speed/input speed found! n_out: {0}, n_in: {1}", outAngularVelocity,
-				inAngularVelocity);
+			throw new VectoException(
+				"No solution for output speed/input speed found! n_out: {0}, n_in: {1}, nu: {2}, nu_max: {3}", outAngularVelocity,
+				inAngularVelocity, outAngularVelocity / inAngularVelocity, TorqueConverterEntries.Last().SpeedRatio);
 		}
 
 
@@ -153,7 +161,7 @@ namespace TUGraz.VectoCore.Models.SimulationComponent.Data.Gearbox
 		/// <param name="inAngularVelocity"></param>
 		/// <param name="outAngularSpeedEstimated"></param>
 		/// <returns></returns>
-		public TorqueConverterOperatingPoint FindOperatingPoint(NewtonMeter inTorque, PerSecond inAngularVelocity,
+		public TorqueConverterOperatingPoint FindOperatingPointForward(NewtonMeter inTorque, PerSecond inAngularVelocity,
 			PerSecond outAngularSpeedEstimated)
 		{
 			var referenceTorque = inTorque.Value() / inAngularVelocity.Value() / inAngularVelocity.Value() *

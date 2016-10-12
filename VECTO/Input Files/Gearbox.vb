@@ -115,7 +115,14 @@ Public Class Gearbox
 			Return False
 		End If
 
-		Return JSONFileWriter.Instance.SaveGearbox(Me, Me, _filePath)
+		Try
+			Dim writer As JSONFileWriter = JSONFileWriter.Instance
+			writer.SaveGearbox(Me, Me, _filePath)
+		Catch ex As Exception
+			MsgBox("failed to write Gearbox file: " + ex.Message)
+			Return False
+		End Try
+		Return True
 	End Function
 
 
@@ -390,7 +397,7 @@ Public Class Gearbox
 
 	Public ReadOnly Property StartTorqueReserve As Double Implements IGearboxEngineeringInputData.StartTorqueReserve
 		Get
-			Return TorqueResvStart
+			Return TorqueResvStart / 100
 		End Get
 	End Property
 

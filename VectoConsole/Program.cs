@@ -36,12 +36,11 @@ using System.IO;
 using System.Linq;
 using System.Reflection;
 using System.Threading;
-using System.Xml;
 using NLog;
 using NLog.Config;
 using NLog.Targets;
-using TUGraz.VectoAPI.InputData;
 using TUGraz.VectoCommon.Models;
+using TUGraz.VectoCommon.Utils;
 using TUGraz.VectoCore.Configuration;
 using TUGraz.VectoCore.InputData.FileIO.JSON;
 using TUGraz.VectoCore.Models.Simulation.Impl;
@@ -183,6 +182,7 @@ Examples:
 					return 1;
 				}
 
+				var plugins = PluginRegistry.Instance.GetInputDataPlugins().ToArray();
 				foreach (var file in jobFiles) {
 					Console.WriteLine(@"Reading job: " + file);
 					if (Path.GetExtension(file) == Constants.FileExtensions.VectoJobFile) {
@@ -194,15 +194,20 @@ Examples:
 						};
 
 						_jobContainer.AddRuns(runsFactory);
-					}
-					if (Path.GetExtension(file) == Constants.FileExtensions.VectoXMLDeclarationFile) {
-						var dataProvider = new XMLInputDataProvider(new XmlTextReader(file), true);
-						fileWriter = new FileOutputWriter(file);
-						var runsFactory = new SimulatorFactory(ExecutionMode.Declaration, dataProvider, fileWriter);
-						if (args.Contains("-mod")) {
-							runsFactory.WriteModalResults = true;
+					} else {
+						var handled = false;
+						foreach (var plugin in plugins) {
+							if (!handled && plugin.Value.CanHandleJob(file)) {
+								var dataProvider = plugin.Value.ReadVectoJob(file);
+								fileWriter = new FileOutputWriter(file);
+								var runsFactory = new SimulatorFactory(mode, dataProvider, fileWriter);
+								runsFactory.ModalResults1Hz = args.Contains("-1Hz");
+								runsFactory.WriteModalResults = args.Contains("-mod");
+
+								_jobContainer.AddRuns(runsFactory);
+								handled = true;
+							}
 						}
-						_jobContainer.AddRuns(runsFactory);
 					}
 				}
 

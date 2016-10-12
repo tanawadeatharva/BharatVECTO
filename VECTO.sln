@@ -40,8 +40,6 @@ Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "VECTO 3", "VECTO 3", "{CC93
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "VectoCommon", "VectoCommon\VectoCommon\VectoCommon.csproj", "{79A066AD-69A9-4223-90F6-6ED5D2D084F4}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "ConsoleApplication1", "ConsoleApplication1\ConsoleApplication1.csproj", "{9CB799AC-5025-4F91-9DC5-5048F59DE004}"
-EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "ModelbasedTests", "VectoCore\ModelbasedTests\ModelbasedTests.csproj", "{A0256B2A-09F8-45AD-B46A-FD98D7AAAA0C}"
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "VectoLegacyTests", "Tools\VectoLegacyTests\VectoLegacyTests.csproj", "{49F0275A-4517-49FA-859E-77279B9C8B18}"

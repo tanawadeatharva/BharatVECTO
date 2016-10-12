@@ -117,49 +117,65 @@ namespace TUGraz.VectoCore.InputData.FileIO.JSON
 		protected readonly IGearboxEngineeringInputData Gearbox;
 		protected readonly IAxleGearInputData AxleGear;
 		protected readonly ITorqueConverterEngineeringInputData TorqueConverter;
-		protected readonly IAngledriveInputData Angledrive;
+		protected IAngledriveInputData Angledrive;
 		protected readonly IEngineEngineeringInputData Engine;
-		protected readonly IVehicleEngineeringInputData VehicleData;
-		protected readonly IRetarderInputData Retarder;
-		protected readonly IPTOTransmissionInputData PTOTransmission;
+		protected IVehicleEngineeringInputData VehicleData;
+		protected IRetarderInputData Retarder;
+		protected IPTOTransmissionInputData PTOTransmission;
 
 		private readonly string _jobname;
 
 		public JSONInputDataV2(JObject data, string filename) : base(data, filename)
 		{
 			_jobname = Path.GetFileNameWithoutExtension(filename);
+
+			Engine = ReadEngine();
+
+			if (Body.GetEx(JsonKeys.Job_EngineOnlyMode).Value<bool>()) {
+				return;
+			}
+
+			Gearbox = ReadGearbox();
+			AxleGear = Gearbox as IAxleGearInputData;
+			TorqueConverter = Gearbox as ITorqueConverterEngineeringInputData;
+
+			VehicleData = ReadVehicle();
+			Angledrive = VehicleData as IAngledriveInputData;
+			Retarder = VehicleData as IRetarderInputData;
+			PTOTransmission = VehicleData as IPTOTransmissionInputData;
+		}
+
+		private IVehicleEngineeringInputData ReadVehicle()
+		{
+			try {
+				var vehicleFile = Body.GetEx(JsonKeys.Vehicle_VehicleFile).Value<string>();
+				return JSONInputDataFactory.ReadJsonVehicle(
+					Path.Combine(BasePath, vehicleFile));
+			} catch (Exception e) {
+				throw new VectoException("JobFile: Failed to read Vehicle file '{0}': {1}", e, Body[JsonKeys.Vehicle_VehicleFile],
+					e.Message);
+			}
+		}
+
+		private IGearboxEngineeringInputData ReadGearbox()
+		{
 			try {
 				var gearboxFile = Body.GetEx(JsonKeys.Vehicle_GearboxFile).Value<string>();
-				if (!EmptyOrInvalidFileName(gearboxFile)) {
-					Gearbox = JSONInputDataFactory.ReadGearbox(Path.Combine(BasePath, gearboxFile));
-				}
-				AxleGear = Gearbox as IAxleGearInputData;
-				TorqueConverter = Gearbox as ITorqueConverterEngineeringInputData;
+
+				return JSONInputDataFactory.ReadGearbox(Path.Combine(BasePath, gearboxFile));
 			} catch (Exception e) {
 				throw new VectoException("JobFile: Failed to read Gearbox file '{0}': {1}", e, Body[JsonKeys.Vehicle_GearboxFile],
 					e.Message);
 			}
+		}
 
+		private IEngineEngineeringInputData ReadEngine()
+		{
 			try {
-				Engine = JSONInputDataFactory.ReadEngine(
+				return JSONInputDataFactory.ReadEngine(
 					Path.Combine(BasePath, Body.GetEx(JsonKeys.Vehicle_EngineFile).Value<string>()));
 			} catch (Exception e) {
 				throw new VectoException("JobFile: Failed to read Engine file '{0}': {1}", e, Body[JsonKeys.Vehicle_EngineFile],
-					e.Message);
-			}
-
-			try {
-				var vehicleFile = Body.GetEx(JsonKeys.Vehicle_VehicleFile).Value<string>();
-				if (!EmptyOrInvalidFileName(vehicleFile)) {
-					VehicleData = JSONInputDataFactory.ReadJsonVehicle(
-						Path.Combine(BasePath, vehicleFile));
-
-					Angledrive = VehicleData as IAngledriveInputData;
-					Retarder = VehicleData as IRetarderInputData;
-					PTOTransmission = VehicleData as IPTOTransmissionInputData;
-				}
-			} catch (Exception e) {
-				throw new VectoException("JobFile: Failed to read Vehicle file '{0}': {1}", e, Body[JsonKeys.Vehicle_VehicleFile],
 					e.Message);
 			}
 		}

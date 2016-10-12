@@ -42,10 +42,12 @@ Imports System.Threading
 Imports Microsoft.VisualBasic.FileIO
 Imports TUGraz.VectoCommon.InputData
 Imports TUGraz.VectoCommon.Models
+Imports TUGraz.VectoCommon.OutputData
 Imports TUGraz.VectoCommon.Utils
 Imports TUGraz.VectoCore.OutputData
 Imports TUGraz.VectoCore.OutputData.FileIO
 Imports TUGraz.VectoCore.Utils
+Imports VectoAuxiliaries
 
 ''' <summary>
 ''' Main application form. Loads at application start. Closing form ends application.
@@ -249,6 +251,17 @@ Imports TUGraz.VectoCore.Utils
 		'Set mode (Batch/Standard)
 		ModeUpdate()
 
+		DetectPlugins()
+
+		'Dim exportPlugins As Dictionary(Of String, String) = PluginRegistry.Instance.GetExportPluginList()
+		Dim exportPlugin As IExportPlugin = PluginRegistry.Instance.GetExportPlugin("TUG.IVT.Vecto.XMLExport")
+		btnExportXML.Visible = Not exportPlugin Is Nothing
+
+
+		Dim importPlugin As IImportPlugin = PluginRegistry.Instance.GetImportPlugin("TUG.IVT.Vecto.XMLImport")
+		btnImportXML.Visible = Not importPlugin Is Nothing
+
+
 #If DEBUG Then
 		Const LicCheck As Boolean = False
 #Else
@@ -318,7 +331,6 @@ Imports TUGraz.VectoCore.Utils
 			fwelcome = New WelcomeDialog
 			fwelcome.ShowDialog()
 		End If
-		'End If
 	End Sub
 
 	'Open file
@@ -541,8 +553,13 @@ Imports TUGraz.VectoCore.Utils
 
 		x = New String() {""}
 
+		Dim extensions As String = "vecto"
+		Dim inputDataExtensions As String() =
+				PluginRegistry.Instance.GetKnownInputExtensions().Select(Function(e) e.Substring(1)).ToArray()
+		If (inputDataExtensions.Any()) Then extensions = String.Join(",", extensions, String.Join(",", inputDataExtensions))
+
 		'STANDARD/BATCH
-		If JobfileFileBrowser.OpenDialog("", True, "vecto") Then
+		If JobfileFileBrowser.OpenDialog("", True, extensions) Then
 			chck = True
 			x = JobfileFileBrowser.Files
 		End If
@@ -564,6 +581,10 @@ Imports TUGraz.VectoCore.Utils
 
 		f = LvGEN.SelectedItems(0).SubItems(0).Text
 		f = FileRepl(f)
+		If Path.GetExtension(f) <> VectoCore.Configuration.Constants.FileExtensions.VectoJobFile Then
+			MsgBox("Job File " + f + " can not be opened in Job Editor. Try importing the file.")
+			Exit Sub
+		End If
 		If Not File.Exists(f) Then
 			MsgBox(f & " not found!")
 		Else
@@ -982,23 +1003,45 @@ Imports TUGraz.VectoCore.Utils
 
 		'list of finished runs
 		Dim finishedRuns As List(Of Integer) = New List(Of Integer)
-
+		Dim plugins As KeyValuePair(Of String, IInputDataPlugin)() = PluginRegistry.Instance.GetInputDataPlugins().ToArray()
 		For Each jobFile As String In JobFileList
 			Try
 				sender.ReportProgress(0,
 									New VectoProgress With {.Target = "ListBox", .Message = "Reading File " + jobFile, .Link = jobFile})
 
-				Dim dataProvider As IInputDataProvider = JSONInputDataFactory.ReadJsonJob(jobFile)
-				Dim fileWriter As FileOutputWriter = New FileOutputWriter(jobFile)
+				If (Path.GetExtension(jobFile) = VectoCore.Configuration.Constants.FileExtensions.VectoJobFile) Then
+					Dim dataProvider As IInputDataProvider = JSONInputDataFactory.ReadJsonJob(jobFile)
+					Dim fileWriter As FileOutputWriter = New FileOutputWriter(jobFile)
 
-				Dim runsFactory As SimulatorFactory = New SimulatorFactory(mode, dataProvider, fileWriter)
-				runsFactory.WriteModalResults = Cfg.ModOut
-				runsFactory.ModalResults1Hz = Cfg.Mod1Hz
+					Dim runsFactory As SimulatorFactory = New SimulatorFactory(mode, dataProvider, fileWriter)
+					runsFactory.WriteModalResults = Cfg.ModOut
+					runsFactory.ModalResults1Hz = Cfg.Mod1Hz
 
-				For Each runId As Integer In jobContainer.AddRuns(runsFactory)
-					fileWriters.Add(runId, fileWriter)
-				Next
+					For Each runId As Integer In jobContainer.AddRuns(runsFactory)
+						fileWriters.Add(runId, fileWriter)
+					Next
+				Else
+					Dim handled As Boolean = False
+					For Each entry As KeyValuePair(Of String, IInputDataPlugin) In plugins
+						If Not handled AndAlso entry.Value.CanHandleJob(jobFile) Then
+							Dim dataprovider As IInputDataProvider = entry.Value.ReadVectoJob(jobFile)
+							Dim fileWriter As FileOutputWriter = New FileOutputWriter(jobFile)
 
+							Dim runsFactory As SimulatorFactory = New SimulatorFactory(mode, dataprovider, fileWriter)
+							runsFactory.WriteModalResults = Cfg.ModOut
+							runsFactory.ModalResults1Hz = Cfg.Mod1Hz
+
+							For Each runId As Integer In jobContainer.AddRuns(runsFactory)
+								fileWriters.Add(runId, fileWriter)
+							Next
+							handled = True
+						End If
+					Next
+					If Not handled Then
+						sender.ReportProgress(0,
+											New VectoProgress With {.Target = "ListBoxError", .Message = "No Input Provider for job: " + jobFile})
+					End If
+				End If
 				sender.ReportProgress(0,
 									New VectoProgress With {.Target = "ListBox", .Message = "Finished Reading Data for job: " + jobFile})
 
@@ -1952,6 +1995,45 @@ Imports TUGraz.VectoCore.Utils
 		Public Message As String
 		Public Link As String
 	End Class
+
+	Private Sub CbExportJob_SelectedIndexChanged(sender As Object, e As EventArgs)
+	End Sub
+
+	Private Sub btnExportXML_Click(sender As Object, e As EventArgs) Handles btnExportXML.Click
+
+		If LvGEN.SelectedItems.Count < 1 Then
+			If LvGEN.Items.Count = 1 Then
+				LvGEN.Items(0).Selected = True
+			Else
+				Exit Sub
+			End If
+		End If
+
+		Dim f As String = LvGEN.SelectedItems(0).SubItems(0).Text
+		f = FileRepl(f)
+		If Not File.Exists(f) Then
+			MsgBox(f & " not found!")
+			Return
+		End If
+		Try
+			PluginRegistry.Instance.GetExportPlugin("TUG.IVT.Vecto.XMLExport").ExportJob(JSONInputDataFactory.ReadJsonJob(f))
+		Catch ex As Exception
+			MsgBox("Exporting job failed: " + ex.Message)
+		End Try
+	End Sub
+
+	Private Sub LvGEN_SelectedIndexChanged(sender As Object, e As EventArgs) Handles LvGEN.SelectedIndexChanged
+		btnExportXML.Enabled = (LvGEN.SelectedItems.Count = 1)
+	End Sub
+
+	Private Sub btnImportXML_Click(sender As Object, e As EventArgs) Handles btnImportXML.Click
+		Try
+			Dim jobFile As String = PluginRegistry.Instance.GetImportPlugin("TUG.IVT.Vecto.XMLImport").ImportJob()
+			AddToJobListView(jobFile)
+		Catch ex As Exception
+			MsgBox("Importing job failed: " + ex.Message)
+		End Try
+	End Sub
 End Class
 
 
