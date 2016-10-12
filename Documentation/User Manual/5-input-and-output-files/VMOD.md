@@ -16,6 +16,7 @@ In Vecto 3.0.2 the structure of the modal data output has been revised and re-st
 | acc				|	[m/s^2]	|	Vehicle's acceleration, constant during the current simulation interval |
 | grad				|	[%]		|	Road gradient |
 | Gear				|	[-]		|	Gear. "0" = clutch opened / neutral |
+| TC locked         |   0/1     |   For AT-Gearboxes: if the torque converter is locked or not |
 | n_eng_avg			|	[1/min]	|	Average engine speed in the current simulation interval. Used for interpolation of the engine's fuel consumption |
 | T_eng_fcmap		|	[Nm]	|	Engine torque used for interpolation of the engine's fuel consumption. T_eng_fcmap is the sum of torque demand on the output shaft, torque demand of the auxiliaries, and engine's inertia torque |
 | Tq_full			|	[Nm]	|	Engine's transient maximum torque (see [transient full load](#engine-transient-full-load)) |

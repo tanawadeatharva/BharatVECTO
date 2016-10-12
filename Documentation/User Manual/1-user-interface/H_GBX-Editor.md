@@ -35,7 +35,7 @@ Transmission Type
 :	Note: The types AT and Custom are not available in [Declaration Mode](#declaration-mode).
 
 
-For more details on the automatic transmission please see the [AT-Model](#AT-model)
+For more details on the automatic transmission please see the [AT-Model](#at-gearbox-model)
 
 Inertia \[kgm²\]
 :   Rotational inertia of the gearbox (constant for all gears). (Engineering mode only)
@@ -95,7 +95,7 @@ Inertia \[kgm²\]
 (Gearbox-side inertia is not considered in VECTO.)
 
 Torque converter shift polygon
-:   Defines the [Shift Polygons InputFile (.vgbs)](#shift-polygons-input-file-.vgbs) separately for the torque converter. For details on shifting from/to the torque converter gear please see [AT Gear Shift Strategy](#at-gear-shift-strategy).
+:   Defines the [Shift Polygons InputFile (.vgbs)](#shift-polygons-input-file-.vgbs) separately for the torque converter. For details on shifting from/to the torque converter gear please see [AT Gear Shift Strategy](#gear-shift-rules-for-at-gearbox).
 
 
 ###Chart Area
