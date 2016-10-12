@@ -34,6 +34,7 @@
 3-simulation-models/TC.md
 3-simulation-models/Auxiliaries.md
 3-simulation-models/PwheelInput.md
+3-simulation-models/PTO.md
 5-input-and-output-files/input-output.md
 5-input-and-output-files/CSV.md
 5-input-and-output-files/JSON.md
