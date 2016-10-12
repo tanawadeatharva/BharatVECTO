@@ -114,8 +114,7 @@ namespace TUGraz.VectoCore.Tests.Models.Simulation
 			var jobContainer = new JobContainer(sumWriter);
 
 			var inputData = JSONInputDataFactory.ReadJsonJob(jobFile);
-			var runsFactory = new SimulatorFactory(ExecutionMode.Engineering,
-				inputData, fileWriter);
+			var runsFactory = new SimulatorFactory(ExecutionMode.Engineering, inputData, fileWriter);
 
 			jobContainer.AddRuns(runsFactory);
 			jobContainer.Execute();
@@ -130,14 +129,14 @@ namespace TUGraz.VectoCore.Tests.Models.Simulation
 				@"TestData\Jobs\24t Coach EngineOnly.vsum");
 
 			ResultFileHelper.TestModFiles(new[] {
-				@"TestData\Results\EngineOnlyCycles\24t Coach EngineOnly_Engine Only1.vmod",
-				@"TestData\Results\EngineOnlyCycles\24t Coach EngineOnly_Engine Only2.vmod",
-				@"TestData\Results\EngineOnlyCycles\24t Coach EngineOnly_Engine Only3.vmod"
-			}, new[] {
-				@"TestData\Jobs\24t Coach EngineOnly_Engine Only1.vmod",
-				@"TestData\Jobs\24t Coach EngineOnly_Engine Only2.vmod",
-				@"TestData\Jobs\24t Coach EngineOnly_Engine Only3.vmod"
-			}, testVelocity: false)
+					@"TestData\Results\EngineOnlyCycles\24t Coach EngineOnly_Engine Only1.vmod",
+					@"TestData\Results\EngineOnlyCycles\24t Coach EngineOnly_Engine Only2.vmod",
+					@"TestData\Results\EngineOnlyCycles\24t Coach EngineOnly_Engine Only3.vmod"
+				}, new[] {
+					@"TestData\Jobs\24t Coach EngineOnly_Engine Only1.vmod",
+					@"TestData\Jobs\24t Coach EngineOnly_Engine Only2.vmod",
+					@"TestData\Jobs\24t Coach EngineOnly_Engine Only3.vmod"
+				}, testVelocity: false)
 				;
 		}
 	}

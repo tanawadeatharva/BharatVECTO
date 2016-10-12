@@ -281,20 +281,23 @@ namespace TUGraz.VectoCore.OutputData
 
 		public Dictionary<string, DataColumn> Auxiliaries { get; set; }
 
-		public void AddAuxiliary(string id)
+		/// <summary>
+		/// Adds a new auxiliary column into the mod data.
+		/// </summary>
+		/// <param name="id">The Aux-ID. This is the internal identification for the auxiliary.</param>
+		/// <param name="columnName">(Optional) The column name in the mod file. Default: "P_aux_" + id</param>
+		public void AddAuxiliary(string id, string columnName = null)
 		{
-			if (!string.IsNullOrWhiteSpace(id)) {
-				if (!Auxiliaries.ContainsKey(id)) {
-					var col = Data.Columns.Add(ModalResultField.P_aux_ + id, typeof(SI));
-					col.ExtendedProperties[ModalResults.ExtendedPropertyNames.Decimals] =
-						ModalResultField.P_aux_.GetAttribute().Decimals;
-					col.ExtendedProperties[ModalResults.ExtendedPropertyNames.OutputFactor] =
-						ModalResultField.P_aux_.GetAttribute().OutputFactor;
-					col.ExtendedProperties[ModalResults.ExtendedPropertyNames.ShowUnit] =
-						ModalResultField.P_aux_.GetAttribute().ShowUnit;
+			if (!string.IsNullOrWhiteSpace(id) && !Auxiliaries.ContainsKey(id)) {
+				var col = Data.Columns.Add(columnName ?? ModalResultField.P_aux_ + id, typeof(SI));
+				col.ExtendedProperties[ModalResults.ExtendedPropertyNames.Decimals] =
+					ModalResultField.P_aux_.GetAttribute().Decimals;
+				col.ExtendedProperties[ModalResults.ExtendedPropertyNames.OutputFactor] =
+					ModalResultField.P_aux_.GetAttribute().OutputFactor;
+				col.ExtendedProperties[ModalResults.ExtendedPropertyNames.ShowUnit] =
+					ModalResultField.P_aux_.GetAttribute().ShowUnit;
 
-					Auxiliaries[id] = col;
-				}
+				Auxiliaries[id] = col;
 			}
 		}
 

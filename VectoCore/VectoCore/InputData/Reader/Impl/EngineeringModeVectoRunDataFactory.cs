@@ -44,6 +44,7 @@ namespace TUGraz.VectoCore.InputData.Reader.Impl
 {
 	public class EngineeringModeVectoRunDataFactory : LoggingObject, IVectoRunDataFactory
 	{
+		// todo mk-2016-10-11: field is never used. Delete?
 		protected DriverData Driver;
 
 		protected readonly IEngineeringInputDataProvider InputDataProvider;

@@ -36,6 +36,7 @@ using TUGraz.VectoCommon.Exceptions;
 using TUGraz.VectoCommon.InputData;
 using TUGraz.VectoCommon.Models;
 using TUGraz.VectoCommon.Utils;
+using TUGraz.VectoCore.Configuration;
 using TUGraz.VectoCore.InputData.Reader.ComponentData;
 using TUGraz.VectoCore.Models.Declaration;
 using TUGraz.VectoCore.Models.Simulation.Data;
@@ -222,16 +223,23 @@ namespace TUGraz.VectoCore.InputData.Reader.DataObjectAdapter
 
 		public IList<VectoRunData.AuxData> CreateAuxiliaryData(IAuxiliariesEngineeringInputData auxInputData)
 		{
-			return auxInputData.Auxiliaries.Select(a => {
+			var auxList = new List<VectoRunData.AuxData>(auxInputData.Auxiliaries.Count + 1) {
+				new VectoRunData.AuxData { ID = Constants.Auxiliaries.Cycle, DemandType = AuxiliaryDemandType.Direct }
+			};
+
+			foreach (var a in auxInputData.Auxiliaries) {
 				switch (a.AuxiliaryType) {
 					case AuxiliaryDemandType.Mapping:
-						return CreateMappingAuxiliary(a);
+						auxList.Add(CreateMappingAuxiliary(a));
+						break;
 					case AuxiliaryDemandType.Constant:
-						return CreateConstantAuxiliary(a);
+						auxList.Add(CreateConstantAuxiliary(a));
+						break;
 					default:
 						throw new VectoException("Auxiliary type {0} not supported!", a.AuxiliaryType);
 				}
-			}).Concat(new VectoRunData.AuxData { ID = "", DemandType = AuxiliaryDemandType.Direct }.ToEnumerable()).ToList();
+			}
+			return auxList;
 		}
 
 		private static VectoRunData.AuxData CreateMappingAuxiliary(IAuxiliaryEngineeringInputData a)

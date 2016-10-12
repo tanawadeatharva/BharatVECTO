@@ -51,16 +51,22 @@ namespace TUGraz.VectoCore.OutputData
 		/// <summary>
 		/// Identify which run this modaldata container is for
 		/// </summary>
+		//todo mk 2016-10-11: Field is never used. Delete?
+		[Obsolete]
 		string RunName { get; }
 
 		/// <summary>
 		/// Identify which cycle is simulated 
 		/// </summary>
+		//todo mk 2016-10-11: Field is never used. Delete?
+		[Obsolete]
 		string CycleName { get; }
 
 		/// <summary>
 		/// Custom suffix for this run, typically the loading type
 		/// </summary>
+		//todo mk 2016-10-11: Field is never used. Delete?
+		[Obsolete]
 		string RunSuffix { get; }
 
 		/// <summary>
@@ -91,6 +97,8 @@ namespace TUGraz.VectoCore.OutputData
 		/// </summary>
 		void Finish(VectoRun.Status runStatus);
 
+		//todo mk 2016-10-11: Field is never used. Delete?
+		[Obsolete]
 		bool WriteModalResults { get; set; }
 
 		IEnumerable<T> GetValues<T>(ModalResultField key);
@@ -102,7 +110,7 @@ namespace TUGraz.VectoCore.OutputData
 
 		void SetDataValue(string fieldName, object value);
 
-		void AddAuxiliary(string id);
+		void AddAuxiliary(string id, string columnName = null);
 	}
 
 	public static class ModalDataContainerExtensions
@@ -117,16 +125,22 @@ namespace TUGraz.VectoCore.OutputData
 			return data.GetValues<SI>(field).Min();
 		}
 
+		//todo mk 2016-10-11: Field is never used. Delete?
+		[Obsolete]
 		public static SI Average(this IModalDataContainer data, ModalResultField field, Func<SI, bool> filter = null)
 		{
 			return data.GetValues<SI>(field).Average(filter);
 		}
 
+		//todo mk 2016-10-11: Field is never used. Delete?
+		[Obsolete]
 		public static SI Sum(this IModalDataContainer data, ModalResultField field, Func<SI, bool> filter = null)
 		{
 			return data.GetValues<SI>(field).Where(filter ?? (x => x != null)).Sum();
 		}
 
+		//todo mk 2016-10-11: Field is never used. Delete?
+		[Obsolete]
 		public static SI Sum(this IModalDataContainer data, DataColumn col, Func<SI, bool> filter = null)
 		{
 			return data.GetValues<SI>(col).Where(filter ?? (x => x != null)).Sum();
@@ -138,11 +152,13 @@ namespace TUGraz.VectoCore.OutputData
 			return values.Any() ? values.Sum() / values.Count : null;
 		}
 
+		//todo mk 2016-10-11: Field is never used. Delete?
 		public static object DefaultIfNull(this object self)
 		{
 			return self ?? DBNull.Value;
 		}
 
+		//todo mk 2016-10-11: Field is never used. Delete?
 		public static T DefaultIfNull<T>(this T self, T defaultValue) where T : class
 		{
 			return self ?? defaultValue;
@@ -193,8 +209,8 @@ namespace TUGraz.VectoCore.OutputData
 		public static Scalar StopTimeShare(this IModalDataContainer data)
 		{
 			var stopTime = data.GetValues<MeterPerSecond>(ModalResultField.v_act)
-				.Zip(data.SimulationIntervals(), (v, dt) => new { v, dt })
-				.Where(x => x.v < 0.1).Sum(x => x.dt) ?? 0.SI<Second>();
+								.Zip(data.SimulationIntervals(), (v, dt) => new { v, dt })
+								.Where(x => x.v < 0.1).Sum(x => x.dt) ?? 0.SI<Second>();
 			return 100 * (stopTime / data.Duration()).Cast<Scalar>();
 		}
 

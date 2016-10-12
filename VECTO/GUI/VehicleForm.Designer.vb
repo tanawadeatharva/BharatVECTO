@@ -219,7 +219,7 @@ Partial Class VehicleForm
 		'ButOK
 		'
 		Me.ButOK.Anchor = CType((System.Windows.Forms.AnchorStyles.Bottom Or System.Windows.Forms.AnchorStyles.Right), System.Windows.Forms.AnchorStyles)
-		Me.ButOK.Location = New System.Drawing.Point(421, 675)
+		Me.ButOK.Location = New System.Drawing.Point(421, 655)
 		Me.ButOK.Name = "ButOK"
 		Me.ButOK.Size = New System.Drawing.Size(75, 23)
 		Me.ButOK.TabIndex = 5
@@ -230,7 +230,7 @@ Partial Class VehicleForm
 		'
 		Me.ButCancel.Anchor = CType((System.Windows.Forms.AnchorStyles.Bottom Or System.Windows.Forms.AnchorStyles.Right), System.Windows.Forms.AnchorStyles)
 		Me.ButCancel.DialogResult = System.Windows.Forms.DialogResult.Cancel
-		Me.ButCancel.Location = New System.Drawing.Point(502, 675)
+		Me.ButCancel.Location = New System.Drawing.Point(502, 655)
 		Me.ButCancel.Name = "ButCancel"
 		Me.ButCancel.Size = New System.Drawing.Size(75, 23)
 		Me.ButCancel.TabIndex = 6
@@ -413,7 +413,7 @@ Partial Class VehicleForm
 		'
 		Me.GroupBox7.Controls.Add(Me.PnRt)
 		Me.GroupBox7.Controls.Add(Me.CbRtType)
-		Me.GroupBox7.Location = New System.Drawing.Point(6, 295)
+		Me.GroupBox7.Location = New System.Drawing.Point(6, 293)
 		Me.GroupBox7.Name = "GroupBox7"
 		Me.GroupBox7.Size = New System.Drawing.Size(278, 111)
 		Me.GroupBox7.TabIndex = 3
@@ -673,7 +673,7 @@ Partial Class VehicleForm
 		'StatusStrip1
 		'
 		Me.StatusStrip1.Items.AddRange(New System.Windows.Forms.ToolStripItem() {Me.LbStatus})
-		Me.StatusStrip1.Location = New System.Drawing.Point(0, 701)
+		Me.StatusStrip1.Location = New System.Drawing.Point(0, 681)
 		Me.StatusStrip1.Name = "StatusStrip1"
 		Me.StatusStrip1.Size = New System.Drawing.Size(589, 22)
 		Me.StatusStrip1.SizingGrip = False
@@ -820,16 +820,16 @@ Partial Class VehicleForm
 		Me.PnAll.Controls.Add(Me.GroupBox8)
 		Me.PnAll.Controls.Add(Me.GroupBox7)
 		Me.PnAll.Controls.Add(Me.GroupBox6)
-		Me.PnAll.Location = New System.Drawing.Point(6, 172)
+		Me.PnAll.Location = New System.Drawing.Point(6, 159)
 		Me.PnAll.Name = "PnAll"
-		Me.PnAll.Size = New System.Drawing.Size(575, 503)
+		Me.PnAll.Size = New System.Drawing.Size(575, 498)
 		Me.PnAll.TabIndex = 4
 		'
 		'gbPTO
 		'
 		Me.gbPTO.Controls.Add(Me.pnPTO)
 		Me.gbPTO.Controls.Add(Me.cbPTOType)
-		Me.gbPTO.Location = New System.Drawing.Point(6, 412)
+		Me.gbPTO.Location = New System.Drawing.Point(6, 408)
 		Me.gbPTO.Name = "gbPTO"
 		Me.gbPTO.Size = New System.Drawing.Size(564, 86)
 		Me.gbPTO.TabIndex = 4
@@ -931,7 +931,7 @@ Partial Class VehicleForm
 		'
 		Me.GroupBox2.Controls.Add(Me.pnAngledriveFields)
 		Me.GroupBox2.Controls.Add(Me.cbAngledriveType)
-		Me.GroupBox2.Location = New System.Drawing.Point(290, 295)
+		Me.GroupBox2.Location = New System.Drawing.Point(290, 293)
 		Me.GroupBox2.Name = "GroupBox2"
 		Me.GroupBox2.Size = New System.Drawing.Size(280, 111)
 		Me.GroupBox2.TabIndex = 4
@@ -1009,7 +1009,6 @@ Partial Class VehicleForm
 		'
 		Me.cbAngledriveType.DropDownStyle = System.Windows.Forms.ComboBoxStyle.DropDownList
 		Me.cbAngledriveType.FormattingEnabled = True
-		Me.cbAngledriveType.Items.AddRange(New Object() {"No Angular Gear", "Separate Angular Gear", "Included in Transmission Loss Maps"})
 		Me.cbAngledriveType.Location = New System.Drawing.Point(6, 19)
 		Me.cbAngledriveType.Name = "cbAngledriveType"
 		Me.cbAngledriveType.Size = New System.Drawing.Size(266, 21)
@@ -1018,7 +1017,7 @@ Partial Class VehicleForm
 		'PicVehicle
 		'
 		Me.PicVehicle.BackColor = System.Drawing.Color.LightGray
-		Me.PicVehicle.Location = New System.Drawing.Point(281, 74)
+		Me.PicVehicle.Location = New System.Drawing.Point(281, 70)
 		Me.PicVehicle.Name = "PicVehicle"
 		Me.PicVehicle.Size = New System.Drawing.Size(300, 88)
 		Me.PicVehicle.SizeMode = System.Windows.Forms.PictureBoxSizeMode.StretchImage
@@ -1040,7 +1039,9 @@ Partial Class VehicleForm
 		Me.AutoScaleDimensions = New System.Drawing.SizeF(6.0!, 13.0!)
 		Me.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font
 		Me.CancelButton = Me.ButCancel
-		Me.ClientSize = New System.Drawing.Size(589, 723)
+		Me.ClientSize = New System.Drawing.Size(589, 703)
+		Me.Controls.Add(Me.ButCancel)
+		Me.Controls.Add(Me.ButOK)
 		Me.Controls.Add(Me.Label8)
 		Me.Controls.Add(Me.TbHDVclass)
 		Me.Controls.Add(Me.PicVehicle)
@@ -1053,8 +1054,6 @@ Partial Class VehicleForm
 		Me.Controls.Add(Me.CbCat)
 		Me.Controls.Add(Me.Label5)
 		Me.Controls.Add(Me.ToolStrip1)
-		Me.Controls.Add(Me.ButCancel)
-		Me.Controls.Add(Me.ButOK)
 		Me.FormBorderStyle = System.Windows.Forms.FormBorderStyle.FixedSingle
 		Me.Icon = CType(resources.GetObject("$this.Icon"), System.Drawing.Icon)
 		Me.MaximizeBox = False

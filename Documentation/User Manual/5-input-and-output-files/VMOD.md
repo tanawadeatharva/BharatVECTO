@@ -71,7 +71,7 @@ In Vecto 3.0.2 the structure of the modal data output has been revised and re-st
 | P_eng_out			|	[kW]	|	Power provided at the engine's output shaft |
 | P_clutch_loss		|	[kW]	|	Power loss in the clutch due to slipping when driving off |
 | P_clutch_out		|	[kW]	|	Power at the clutch's out shaft. P_clutch_out = P_eng_out - P_clutch_loss |
-| P_aux				|	[kW]	|	Total power demand by the auxiliaries |
+| P_aux				|	[kW]	|	Total power demand from the auxiliaries |
 | P_gbx_in			|	[kW]	|	Power at the gearbox' input shaft |
 | P_gbx_loss		|	[kW]	|	Power loss at the gearbox, interpolated from the loss-map |
 | P_gbx_inertia		|	[kW]	|	Power loss due to the gearbox' inertia |
@@ -94,6 +94,9 @@ In Vecto 3.0.2 the structure of the modal data output has been revised and re-st
 | P_air				|	[kW]	|	Power loss due to air drag. |
 | P_roll			|	[kW]	|	Rolling resistance power loss. |
 | P_veh_inertia		|	[kW]	|	Power loss due to the vehicle's inertia |
+| P_aux_<XXX>		|	[kW]	|	Power demand for every individual auxiliary. Only if the run has auxiliaries. |
+| P_PTO_consum		|	[kW]	|	Power demand from the PTO consumer. Only if the vehicle has a PTO consumer. |
+| P_PTO_transmission|	[kW]	|	Power demand from the PTO transmission. Only if the vehicle has a PTO consumer. |
 | AA_NonSmartAlternatorsEfficiency     | [Fraction]  | Non-Smart Alternators Efficiency, Advance Auxiliaries Module |
 | AA_SmartIdleCurrent_Amps             | [Amps]      | Smart Idle Current in Amps, Advance Auxiliaries Module |
 | AA_SmartIdleAlternatorsEfficiency    | [Fraction]  | Smart Idle Alternators Efficiency, Advance Auxiliaries Module |
