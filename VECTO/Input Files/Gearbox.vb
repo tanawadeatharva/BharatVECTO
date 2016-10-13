@@ -314,7 +314,7 @@ Public Class Gearbox
 
 	Public ReadOnly Property IComponentInputData_ModelName As String Implements IComponentInputData.ModelName
 		Get
-			Return "N.A." ' todo MQ 20160915
+			Return ModelName
 		End Get
 	End Property
 
@@ -371,6 +371,7 @@ Public Class Gearbox
 
 	Public ReadOnly Property ShiftPolygon As TableData Implements ITorqueConverterEngineeringInputData.ShiftPolygon
 		Get
+			If Not File.Exists(Path.Combine(_myPath, TorqueConverterShiftPolygonFile)) Then Return Nothing
 			Return VectoCSVFile.Read(Path.Combine(_myPath, TorqueConverterShiftPolygonFile))
 		End Get
 	End Property

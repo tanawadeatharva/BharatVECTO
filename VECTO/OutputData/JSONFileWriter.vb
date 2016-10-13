@@ -102,7 +102,7 @@ Public Class JSONFileWriter
 				gearDict.Add("LossMap", GetRelativePath(gear.LossMap.Source, Path.GetDirectoryName(filename)))
 			End If
 			gearDict.Add("ShiftPolygon", If _
-							(gbx.SavedInDeclarationMode AndAlso Not gear.ShiftPolygon Is Nothing,
+							(Not gbx.SavedInDeclarationMode AndAlso Not gear.ShiftPolygon Is Nothing,
 							GetRelativePath(gear.ShiftPolygon.Source, Path.GetDirectoryName(filename)), ""))
 			gearDict.Add("MaxTorque", If(gear.MaxTorque Is Nothing, "", gear.MaxTorque.Value().ToString()))
 
@@ -130,7 +130,7 @@ Public Class JSONFileWriter
 			torqueConverterDict.Add("Inertia", torqueConverter.Inertia.Value())
 			torqueConverterDict.Add("ShiftPolygon",
 									If _
-										(gbx.SavedInDeclarationMode AndAlso Not torqueConverter.ShiftPolygon Is Nothing,
+										(Not gbx.SavedInDeclarationMode AndAlso Not torqueConverter.ShiftPolygon Is Nothing,
 										GetRelativePath(torqueConverter.ShiftPolygon.Source, Path.GetDirectoryName(filename)), ""))
 		End If
 		body.Add("TorqueConverter", torqueConverterDict)
@@ -261,7 +261,7 @@ Public Class JSONFileWriter
 
 		'AA-TB
 		'ADVANCED AUXILIARIES 
-		body.Add("AuxiliaryAssembly", aux.AuxiliaryAssembly.ToString())
+		body.Add("AuxiliaryAssembly", aux.AuxiliaryAssembly.GetName())
 		body.Add("AuxiliaryVersion", aux.AuxiliaryVersion)
 		body.Add("AdvancedAuxiliaryFilePath", aux.AdvancedAuxiliaryFilePath)
 
