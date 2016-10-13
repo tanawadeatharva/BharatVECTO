@@ -80,7 +80,7 @@ Public Class VectoJob
 	'Private _gearboxInputData As JSONComponentInputData
 
 	Public Class AuxEntry
-		Public Type As String
+		Public Type As AuxiliaryType
 		Public ReadOnly Path As SubPath
 		Public ReadOnly TechnologyList As List(Of String)
 
@@ -697,7 +697,7 @@ Public Class VectoJob
 		End If
 		For Each auxEntry As KeyValuePair(Of String, AuxEntry) In AuxPaths
 			Dim theAuxData As AuxiliaryDataInputData = New AuxiliaryDataInputData() With {
-					.Type = AuxiliaryTypeHelper.Parse(auxEntry.Value.Type),
+					.Type = auxEntry.Value.Type,
 					.Technology = auxEntry.Value.TechnologyList,
 					.ID = auxEntry.Key
 					}
@@ -711,8 +711,8 @@ Public Class VectoJob
 			theAuxData.EfficiencyToEngine = stream.ReadLine().IndulgentParse()
 			stream.ReadLine() ' skip header "Efficiency auxiliary to supply [-]"
 			theAuxData.EfficiencyToSupply = stream.ReadLine().IndulgentParse()
-			theAuxData.DemandMap = VectoCSVFile.ReadStream(New MemoryStream(Encoding.UTF8.GetBytes(stream.ReadToEnd())))
-		Next
+			theAuxData.DemandMap = VectoCSVFile.ReadStream(New MemoryStream(Encoding.UTF8.GetBytes(stream.ReadToEnd())), source:=auxEntry.Value.Path.FullPath)
+			Next
 
 		Return retVal
 	End Function

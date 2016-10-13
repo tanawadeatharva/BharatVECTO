@@ -90,10 +90,11 @@ namespace TUGraz.VectoCore.Utils
 		/// <param name="stream">the stream to read</param>
 		/// <param name="ignoreEmptyColumns">set true, if empty columns should be ignored. default: false.</param>
 		/// <param name="fullHeader">set true is column names should be preserved. Otherwise units are trimed away. default: false.</param>
+		/// <param name="source"></param>
 		/// <returns>A DataTable which represents the CSV File.</returns>
-		public static TableData ReadStream(Stream stream, bool ignoreEmptyColumns = false, bool fullHeader = false)
+		public static TableData ReadStream(Stream stream, bool ignoreEmptyColumns = false, bool fullHeader = false, string source = null)
 		{
-			var retVal = new TableData();
+			var retVal = new TableData(source);
 			ReadCSV(retVal, stream, ignoreEmptyColumns, fullHeader);
 			return retVal;
 		}

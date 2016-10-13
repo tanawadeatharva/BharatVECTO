@@ -50,13 +50,13 @@ Partial Class VehicleAuxiliariesDialog
 		Me.Label4 = New System.Windows.Forms.Label()
 		Me.CbTech = New System.Windows.Forms.ComboBox()
 		Me.PnTech = New System.Windows.Forms.Panel()
+		Me.LbAxl4 = New System.Windows.Forms.Label()
+		Me.LbAxl3 = New System.Windows.Forms.Label()
+		Me.lbAxl2 = New System.Windows.Forms.Label()
 		Me.CbTech4 = New System.Windows.Forms.ComboBox()
 		Me.CbTech3 = New System.Windows.Forms.ComboBox()
 		Me.CbTech2 = New System.Windows.Forms.ComboBox()
 		Me.PnFile = New System.Windows.Forms.Panel()
-		Me.lbAxl2 = New System.Windows.Forms.Label()
-		Me.LbAxl3 = New System.Windows.Forms.Label()
-		Me.LbAxl4 = New System.Windows.Forms.Label()
 		Me.TableLayoutPanel1.SuspendLayout()
 		Me.PnTech.SuspendLayout()
 		Me.PnFile.SuspendLayout()
@@ -128,6 +128,7 @@ Partial Class VehicleAuxiliariesDialog
 		'
 		Me.TbID.Location = New System.Drawing.Point(195, 7)
 		Me.TbID.Name = "TbID"
+		Me.TbID.ReadOnly = True
 		Me.TbID.Size = New System.Drawing.Size(39, 20)
 		Me.TbID.TabIndex = 5
 		'
@@ -196,6 +197,33 @@ Partial Class VehicleAuxiliariesDialog
 		Me.PnTech.Size = New System.Drawing.Size(435, 119)
 		Me.PnTech.TabIndex = 28
 		'
+		'LbAxl4
+		'
+		Me.LbAxl4.AutoSize = True
+		Me.LbAxl4.Location = New System.Drawing.Point(30, 90)
+		Me.LbAxl4.Name = "LbAxl4"
+		Me.LbAxl4.Size = New System.Drawing.Size(39, 13)
+		Me.LbAxl4.TabIndex = 33
+		Me.LbAxl4.Text = "4. Axle"
+		'
+		'LbAxl3
+		'
+		Me.LbAxl3.AutoSize = True
+		Me.LbAxl3.Location = New System.Drawing.Point(30, 63)
+		Me.LbAxl3.Name = "LbAxl3"
+		Me.LbAxl3.Size = New System.Drawing.Size(39, 13)
+		Me.LbAxl3.TabIndex = 32
+		Me.LbAxl3.Text = "3. Axle"
+		'
+		'lbAxl2
+		'
+		Me.lbAxl2.AutoSize = True
+		Me.lbAxl2.Location = New System.Drawing.Point(30, 36)
+		Me.lbAxl2.Name = "lbAxl2"
+		Me.lbAxl2.Size = New System.Drawing.Size(39, 13)
+		Me.lbAxl2.TabIndex = 31
+		Me.lbAxl2.Text = "2. Axle"
+		'
 		'CbTech4
 		'
 		Me.CbTech4.DropDownStyle = System.Windows.Forms.ComboBoxStyle.DropDownList
@@ -238,33 +266,6 @@ Partial Class VehicleAuxiliariesDialog
 		Me.PnFile.Name = "PnFile"
 		Me.PnFile.Size = New System.Drawing.Size(435, 118)
 		Me.PnFile.TabIndex = 29
-		'
-		'lbAxl2
-		'
-		Me.lbAxl2.AutoSize = True
-		Me.lbAxl2.Location = New System.Drawing.Point(30, 36)
-		Me.lbAxl2.Name = "lbAxl2"
-		Me.lbAxl2.Size = New System.Drawing.Size(39, 13)
-		Me.lbAxl2.TabIndex = 31
-		Me.lbAxl2.Text = "2. Axle"
-		'
-		'LbAxl3
-		'
-		Me.LbAxl3.AutoSize = True
-		Me.LbAxl3.Location = New System.Drawing.Point(30, 63)
-		Me.LbAxl3.Name = "LbAxl3"
-		Me.LbAxl3.Size = New System.Drawing.Size(39, 13)
-		Me.LbAxl3.TabIndex = 32
-		Me.LbAxl3.Text = "3. Axle"
-		'
-		'LbAxl4
-		'
-		Me.LbAxl4.AutoSize = True
-		Me.LbAxl4.Location = New System.Drawing.Point(30, 90)
-		Me.LbAxl4.Name = "LbAxl4"
-		Me.LbAxl4.Size = New System.Drawing.Size(39, 13)
-		Me.LbAxl4.TabIndex = 33
-		Me.LbAxl4.Text = "4. Axle"
 		'
 		'VehicleAuxiliariesDialog
 		'

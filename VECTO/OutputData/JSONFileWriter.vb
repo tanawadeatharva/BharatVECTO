@@ -274,8 +274,9 @@ Public Class JSONFileWriter
 			End If
 			Dim auxOut As Dictionary(Of String, Object) = New Dictionary(Of String, Object)
 			Dim engineeringAuxEntry As IAuxiliaryDeclarationInputData = TryCast(auxEntry, IAuxiliaryDeclarationInputData)
-			If engineeringAuxEntry Is Nothing Then
-				auxOut.Add("Type", auxEntry.AuxiliaryType.ToString())
+			If Not job.SavedInDeclarationMode Then
+				auxOut.Add("ID", auxEntry.ID)
+				auxOut.Add("Type", AuxiliaryTypeHelper.ParseKey(auxEntry.ID).Name())
 				auxOut.Add("Path", GetRelativePath(auxEntry.DemandMap.Source, basePath))
 				auxOut.Add("Technology", New String() {})
 			Else

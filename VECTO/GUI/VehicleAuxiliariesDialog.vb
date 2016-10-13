@@ -12,6 +12,7 @@ Option Infer On
 
 Imports System.Linq
 Imports System.Windows.Forms
+Imports TUGraz.VectoCommon.Models
 Imports TUGraz.VectoCommon.Utils
 Imports TUGraz.VectoCore.Models.Declaration
 
@@ -27,10 +28,17 @@ Public Class VehicleAuxiliariesDialog
 	Public Sub New()
 		InitializeComponent()
 
-		CbType.Items.Add("Fan")
-		CbType.Items.Add("Steering pump")
-		CbType.Items.Add("HVAC")
-		CbType.Items.Add("Electric System")
+		CbType.DisplayMember = "Caption"
+		CbType.ValueMember = "Value"
+
+		CbType.DataSource =
+			[Enum].GetValues(GetType(AuxiliaryType)).Cast(Of AuxiliaryType).Select(
+				Function(x) New With {Key .Caption = x.Name(), .Value = x.Key}).toarray()
+
+		'CbType.Items.Add("Fan")
+		'CbType.Items.Add("Steering pump")
+		'CbType.Items.Add("HVAC")
+		'CbType.Items.Add("Electric System")
 		PnTech.Visible = Cfg.DeclMode
 		PnFile.Visible = Not Cfg.DeclMode
 
@@ -58,7 +66,10 @@ Public Class VehicleAuxiliariesDialog
 		lbAxl2.Visible = NumAxles > 1
 		LbAxl3.Visible = NumAxles > 2
 		LbAxl4.Visible = NumAxles > 3
-		Select Case TbID.Text
+
+		If CbType.SelectedItem Is Nothing Then Exit Sub
+
+		Select Case CbType.SelectedValue.ToString()
 			Case VectoCore.Configuration.Constants.Auxiliaries.IDs.Fan
 				CbTech.DataSource =
 					DeclarationData.Fan.GetTechnologies().Select(Function(x) New With {.Caption = x, .Value = x}).ToArray()
@@ -91,35 +102,35 @@ Public Class VehicleAuxiliariesDialog
 
 	'Close form. Check if form is complete and valid
 	Private Sub F_VEH_AuxDlog_FormClosing(sender As Object, e As FormClosingEventArgs) Handles Me.FormClosing
-		If e.CloseReason <> CloseReason.WindowsShutDown And DialogResult <> DialogResult.Cancel Then
+		'If e.CloseReason <> CloseReason.WindowsShutDown And DialogResult <> DialogResult.Cancel Then
 
-			If Trim(TbID.Text) = "" Or Trim(CbType.Text) = "" Then
-				MsgBox("Form is incomplete!", MsgBoxStyle.Critical)
-				e.Cancel = True
-			End If
+		'	If Trim(TbID.Text) = "" Or Trim(CbType.Text) = "" Then
+		'		MsgBox("Form is incomplete!", MsgBoxStyle.Critical)
+		'		e.Cancel = True
+		'	End If
 
-			If TbID.Text.Contains(",") Or CbType.Text.Contains(",") Or TbPath.Text.Contains(",") Then
-				MsgBox("',' is no valid character!", MsgBoxStyle.Critical)
-				e.Cancel = True
-			End If
+		'	If TbID.Text.Contains(",") Or CbType.Text.Contains(",") Or TbPath.Text.Contains(",") Then
+		'		MsgBox("',' is no valid character!", MsgBoxStyle.Critical)
+		'		e.Cancel = True
+		'	End If
 
-			If Cfg.DeclMode Then
+		'	If Cfg.DeclMode Then
 
-				If CbTech.Items.Count > 0 AndAlso CbTech.Text = "" Then
-					MsgBox("Form is incomplete!", MsgBoxStyle.Critical)
-					e.Cancel = True
-				End If
+		'		If CbTech.Items.Count > 0 AndAlso CbTech.Text = "" Then
+		'			MsgBox("Form is incomplete!", MsgBoxStyle.Critical)
+		'			e.Cancel = True
+		'		End If
 
-			Else
+		'	Else
 
-				If Trim(TbPath.Text) = "" Then
-					MsgBox("Form is incomplete!", MsgBoxStyle.Critical)
-					e.Cancel = True
-				End If
+		'		If Trim(TbPath.Text) = "" Then
+		'			MsgBox("Form is incomplete!", MsgBoxStyle.Critical)
+		'			e.Cancel = True
+		'		End If
 
-			End If
+		'	End If
 
-		End If
+		'End If
 	End Sub
 
 	'Browse for .vaux files
@@ -134,20 +145,21 @@ Public Class VehicleAuxiliariesDialog
 		If CbType.Text = "" Then
 			TbID.Text = ""
 		Else
-			If Cfg.DeclMode Then
-				Select Case CbType.SelectedIndex
-					Case 0
-						TbID.Text = VectoCore.Configuration.Constants.Auxiliaries.IDs.Fan
-					Case 1
-						TbID.Text = VectoCore.Configuration.Constants.Auxiliaries.IDs.SteeringPump
+			TbID.Text = CbType.SelectedValue.ToString()
+			'If Cfg.DeclMode Then
+			'	'Select Case CbType.SelectedIndex
+			'	'	Case 0
+			'	'		TbID.Text = VectoCore.Configuration.Constants.Auxiliaries.IDs.Fan
+			'	'	Case 1
+			'	'		TbID.Text = VectoCore.Configuration.Constants.Auxiliaries.IDs.SteeringPump
 
-					Case Else '2
-						TbID.Text = VectoCore.Configuration.Constants.Auxiliaries.IDs.HeatingVentilationAirCondition
+			'	'	Case Else '2
+			'	'		TbID.Text = VectoCore.Configuration.Constants.Auxiliaries.IDs.HeatingVentilationAirCondition
 
-				End Select
-			Else
-				TbID.Text = Trim(UCase(CbType.Text.Substring(0, CInt(Math.Min(CbType.Text.Length, 3)))))
-			End If
+			'	'End Select
+			'Else
+			'	'TbID.Text = Trim(UCase(CbType.Text.Substring(0, CInt(Math.Min(CbType.Text.Length, 3)))))
+			'End If
 		End If
 	End Sub
 
