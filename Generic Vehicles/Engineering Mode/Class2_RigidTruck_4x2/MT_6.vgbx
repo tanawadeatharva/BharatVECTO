@@ -1,13 +1,13 @@
 ﻿{
   "Header": {
     "CreatedBy": " ()",
-    "Date": "2016-09-28T15:49:49.2539134Z",
+    "Date": "2016-10-13T08:55:11.0271885Z",
     "AppVersion": "3",
     "FileVersion": 6
   },
   "Body": {
     "SavedInDeclMode": false,
-    "ModelName": "Undefined",
+    "ModelName": "6 Speed MT GBX",
     "Inertia": 0.0,
     "TracInt": 2.0,
     "Gears": [
@@ -18,54 +18,48 @@
       {
         "Ratio": 6.7,
         "LossMap": "Gear_1.vtlm",
-        "ShiftPolygon": "<NOFILE>",
+        "ShiftPolygon": "",
         "MaxTorque": ""
       },
       {
         "Ratio": 3.8,
         "LossMap": "Gear_2.vtlm",
-        "ShiftPolygon": "<NOFILE>",
+        "ShiftPolygon": "",
         "MaxTorque": ""
       },
       {
         "Ratio": 2.29,
         "LossMap": "Gear_3.vtlm",
-        "ShiftPolygon": "<NOFILE>",
+        "ShiftPolygon": "",
         "MaxTorque": ""
       },
       {
         "Ratio": 1.48,
         "LossMap": "Gear_4.vtlm",
-        "ShiftPolygon": "<NOFILE>",
+        "ShiftPolygon": "",
         "MaxTorque": ""
       },
       {
         "Ratio": 1.0,
         "LossMap": "Gear_5.vtlm",
-        "ShiftPolygon": "<NOFILE>",
+        "ShiftPolygon": "",
         "MaxTorque": ""
       },
       {
         "Ratio": 0.73,
         "LossMap": "Gear_6.vtlm",
-        "ShiftPolygon": "<NOFILE>",
+        "ShiftPolygon": "",
         "MaxTorque": ""
       }
     ],
     "TqReserve": 0.002,
-    "SkipGears": false,
     "ShiftTime": 2.0,
-    "EaryShiftUp": false,
     "StartTqReserve": 0.002,
     "StartSpeed": 2.0,
     "StartAcc": 0.6,
-    "GearboxType": 0,
+    "GearboxType": "MT",
     "TorqueConverter": {
-      "Enabled": false,
-      "File": "<NOFILE>",
-      "RefRPM": 0.0,
-      "Inertia": 0.0,
-      "ShiftPolygon": ""
+      "Enabled": false
     },
     "DownshiftAferUpshiftDelay": 10.0,
     "UpshiftAfterDownshiftDelay": 10.0,

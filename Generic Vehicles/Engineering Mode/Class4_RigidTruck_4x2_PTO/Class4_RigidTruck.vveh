@@ -1,7 +1,7 @@
 ﻿{
   "Header": {
     "CreatedBy": " ()",
-    "Date": "2016-10-05T13:29:06.6680746Z",
+    "Date": "2016-10-13T08:55:55.2022477Z",
     "AppVersion": "3",
     "FileVersion": 7
   },
@@ -32,7 +32,7 @@
       "Cycle": "PTO-cycle.vptoc"
     },
     "AxleConfig": {
-      "Type": "4x2",
+      "Type": "6x2",
       "Axles": [
         {
           "Inertia": 14.9,

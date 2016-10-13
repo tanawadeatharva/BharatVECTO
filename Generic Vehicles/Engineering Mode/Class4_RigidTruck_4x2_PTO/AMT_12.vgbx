@@ -1,9 +1,9 @@
 ﻿{
   "Header": {
-    "CreatedBy": "Raphael Luz IVT TU-Graz (f513c787-07a6-4a67-8bd9-81abd760bcfc)",
-    "Date": "2016-07-04 17:24:04",
-    "AppVersion": "2.2",
-    "FileVersion": 5
+    "CreatedBy": " ()",
+    "Date": "2016-10-13T08:56:56.3837105Z",
+    "AppVersion": "3",
+    "FileVersion": 6
   },
   "Body": {
     "SavedInDeclMode": false,
@@ -18,101 +18,84 @@
       {
         "Ratio": 14.93,
         "LossMap": "Gear_1.vtlm",
-        "TCactive": false,
-        "ShiftPolygon": "<NOFILE>",
-        "FullLoadCurve": "<NOFILE>"
+        "ShiftPolygon": "",
+        "MaxTorque": ""
       },
       {
         "Ratio": 11.64,
         "LossMap": "Gear_2.vtlm",
-        "TCactive": false,
-        "ShiftPolygon": "<NOFILE>",
-        "FullLoadCurve": "<NOFILE>"
+        "ShiftPolygon": "",
+        "MaxTorque": ""
       },
       {
         "Ratio": 9.02,
         "LossMap": "Gear_3.vtlm",
-        "TCactive": false,
-        "ShiftPolygon": "<NOFILE>",
-        "FullLoadCurve": "<NOFILE>"
+        "ShiftPolygon": "",
+        "MaxTorque": ""
       },
       {
         "Ratio": 7.04,
         "LossMap": "Gear_4.vtlm",
-        "TCactive": false,
-        "ShiftPolygon": "<NOFILE>",
-        "FullLoadCurve": "<NOFILE>"
+        "ShiftPolygon": "",
+        "MaxTorque": ""
       },
       {
         "Ratio": 5.64,
         "LossMap": "Gear_5.vtlm",
-        "TCactive": false,
-        "ShiftPolygon": "<NOFILE>",
-        "FullLoadCurve": "<NOFILE>"
+        "ShiftPolygon": "",
+        "MaxTorque": ""
       },
       {
         "Ratio": 4.4,
         "LossMap": "Gear_6.vtlm",
-        "TCactive": false,
-        "ShiftPolygon": "<NOFILE>",
-        "FullLoadCurve": "<NOFILE>"
+        "ShiftPolygon": "",
+        "MaxTorque": ""
       },
       {
         "Ratio": 3.39,
         "LossMap": "Gear_7.vtlm",
-        "TCactive": false,
-        "ShiftPolygon": "<NOFILE>",
-        "FullLoadCurve": "<NOFILE>"
+        "ShiftPolygon": "",
+        "MaxTorque": ""
       },
       {
         "Ratio": 2.65,
         "LossMap": "Gear_8.vtlm",
-        "TCactive": false,
-        "ShiftPolygon": "<NOFILE>",
-        "FullLoadCurve": "<NOFILE>"
+        "ShiftPolygon": "",
+        "MaxTorque": ""
       },
       {
         "Ratio": 2.05,
         "LossMap": "Gear_9.vtlm",
-        "TCactive": false,
-        "ShiftPolygon": "<NOFILE>",
-        "FullLoadCurve": "<NOFILE>"
+        "ShiftPolygon": "",
+        "MaxTorque": ""
       },
       {
         "Ratio": 1.6,
         "LossMap": "Gear_10.vtlm",
-        "TCactive": false,
-        "ShiftPolygon": "<NOFILE>",
-        "FullLoadCurve": "<NOFILE>"
+        "ShiftPolygon": "",
+        "MaxTorque": ""
       },
       {
         "Ratio": 1.28,
         "LossMap": "Gear_11.vtlm",
-        "TCactive": false,
-        "ShiftPolygon": "<NOFILE>",
-        "FullLoadCurve": "<NOFILE>"
+        "ShiftPolygon": "",
+        "MaxTorque": ""
       },
       {
         "Ratio": 1.0,
         "LossMap": "Gear_12.vtlm",
-        "TCactive": false,
-        "ShiftPolygon": "<NOFILE>",
-        "FullLoadCurve": "<NOFILE>"
+        "ShiftPolygon": "",
+        "MaxTorque": ""
       }
     ],
     "TqReserve": 20.0,
-    "SkipGears": true,
-    "ShiftTime": 3,
-    "EaryShiftUp": true,
+    "ShiftTime": 3.0,
     "StartTqReserve": 20.0,
     "StartSpeed": 2.0,
     "StartAcc": 0.6,
     "GearboxType": "AMT",
     "TorqueConverter": {
-      "Enabled": false,
-      "File": "<NOFILE>",
-      "RefRPM": 0.0,
-      "Inertia": 0.0
+      "Enabled": false
     },
     "DownshiftAferUpshiftDelay": 10.0,
     "UpshiftAfterDownshiftDelay": 10.0,

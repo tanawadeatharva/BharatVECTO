@@ -1,7 +1,7 @@
 ﻿{
   "Header": {
     "CreatedBy": " ()",
-    "Date": "2016-09-29T06:53:59.3425264Z",
+    "Date": "2016-10-13T08:57:53.6836213Z",
     "AppVersion": "3",
     "FileVersion": 6
   },
@@ -18,54 +18,48 @@
       {
         "Ratio": 3.36,
         "LossMap": "Gear_1.vtlm",
-        "ShiftPolygon": "<NOFILE>",
+        "ShiftPolygon": "",
         "MaxTorque": ""
       },
       {
         "Ratio": 1.91,
         "LossMap": "Gear_2.vtlm",
-        "ShiftPolygon": "<NOFILE>",
+        "ShiftPolygon": "",
         "MaxTorque": ""
       },
       {
         "Ratio": 1.42,
         "LossMap": "Gear_3.vtlm",
-        "ShiftPolygon": "<NOFILE>",
+        "ShiftPolygon": "",
         "MaxTorque": ""
       },
       {
         "Ratio": 1.0,
         "LossMap": "Gear_4.vtlm",
-        "ShiftPolygon": "<NOFILE>",
+        "ShiftPolygon": "",
         "MaxTorque": ""
       },
       {
         "Ratio": 0.72,
         "LossMap": "Gear_5.vtlm",
-        "ShiftPolygon": "<NOFILE>",
+        "ShiftPolygon": "",
         "MaxTorque": ""
       },
       {
         "Ratio": 0.62,
         "LossMap": "Gear_6.vtlm",
-        "ShiftPolygon": "<NOFILE>",
+        "ShiftPolygon": "",
         "MaxTorque": ""
       }
     ],
     "TqReserve": 0.2,
-    "SkipGears": false,
     "ShiftTime": 3.0,
-    "EaryShiftUp": false,
     "StartTqReserve": 0.2,
     "StartSpeed": 2.0,
     "StartAcc": 0.6,
-    "GearboxType": 0,
+    "GearboxType": "MT",
     "TorqueConverter": {
-      "Enabled": false,
-      "File": "<NOFILE>",
-      "RefRPM": 0.0,
-      "Inertia": 0.0,
-      "ShiftPolygon": ""
+      "Enabled": false
     },
     "DownshiftAferUpshiftDelay": 10.0,
     "UpshiftAfterDownshiftDelay": 10.0,
