@@ -1,11 +1,15 @@
 ##Auxiliary Dialog
 
-<div class="declaration">
 
+
+<div class="declaration">
+![Auxiliary Dialog (Declaration Mode)](pics/VECTO-Editor_Aux_DECL.jpg)
 </div>
 
+
+
 <div class="engineering">
-![](pics/VECTO-Editor_Aux.png)
+![Auxiliary Dialog (Engineering Mode)](pics/VECTO-Editor_Aux_ENG.jpg)
 </div>
 
 ###Description

@@ -2,7 +2,7 @@
 
 
 
-![](pics/GBX-Editor.svg)
+![](pics/GBX-Editor.jpg)
 
 
 ###Description
@@ -60,7 +60,7 @@ Use the ![add](pics/plus-circle-icon.png) and ![remove](pics/minus-circle-icon.p
 
 Since version Vecto 3.0.3 the gearshift polygon calculation according to the ACEA White Book 2016 is implemented and since Vecto 3.0.4 the ACEA White Book 2016 shift strategy for AMT and MT is implemented. For details on this topic please see the ACEA White Book 2016.
 
-![](pics/Vecto_ShiftStrategyParameters.png)
+![](pics/Vecto_ShiftStrategyParameters.svg)
 
 
 <div class="engineering">

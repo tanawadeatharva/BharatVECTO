@@ -1,6 +1,6 @@
 ##Vehicle Editor
 
-![](pics/VEH-Editor.png)
+![](pics/VEH-Editor.jpg)
 
 ###Description
 

@@ -3,7 +3,7 @@
 <div class="engineering">
 
 
-![](pics/VECTO-Editor_AAUX.png)
+![](pics/VECTO-Editor_AAUX.svg)
 
 ###Description
 

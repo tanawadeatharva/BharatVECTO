@@ -2,7 +2,7 @@
 
 Look-Ahead Coasting is a function that aims on modelling real driver behaviour. It is a forward-looking function that detects forthcoming reductions in target speed in the mission profile (e.g. speed limit, etc.) and induces an early deceleration using engine braking before applying mechanical brakes according to the [deceleration limit](#acceleration-limiting).
 
- ![](pics/LAC.svg)
+ ![](pics/LookAheadCoasting.svg)
 
 At the resulting deceleration start point the model calculates the
 coasting trajectory until it meets the brake deceleration trajectory. The resulting deceleration consists of a coasting phase followed by combined mechanical/engine braking. If Look-Ahead Coasting is disabled only the braking phase according to the [deceleration limit](#acceleration-limiting) will be applied.
@@ -34,7 +34,7 @@ Parameters in [Job File](#job-file):
 
 In engineering mode the parameters can be freely chosen while in declaration mode the default values are used.
 
-![](pics/Vecto-UI_LAC.png)
+![](pics/Vecto-UI_LAC.svg)
 
 ####Decision Factor for target velocity lookup (DF~vel~)
 

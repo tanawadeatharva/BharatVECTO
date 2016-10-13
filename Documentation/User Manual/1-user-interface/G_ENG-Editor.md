@@ -1,6 +1,6 @@
 ##Engine Editor
 
-![](pics/ENG-Editor.svg)
+![](pics/ENG-Editor.jpg)
 
 ###Description
 
