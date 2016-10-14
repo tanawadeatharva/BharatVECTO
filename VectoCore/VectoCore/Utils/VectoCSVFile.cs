@@ -29,8 +29,8 @@
 *   Martin Rexeis, rexeis@ivt.tugraz.at, IVT, Graz University of Technology
 */
 
+using Microsoft.VisualBasic.FileIO;
 using System;
-using System.Collections.Generic;
 using System.Data;
 using System.Globalization;
 using System.IO;
@@ -38,6 +38,7 @@ using System.Linq;
 using System.Text;
 using System.Text.RegularExpressions;
 using TUGraz.VectoCommon.Exceptions;
+using TUGraz.VectoCommon.InputData;
 using TUGraz.VectoCommon.Models;
 using TUGraz.VectoCommon.Utils;
 
@@ -59,8 +60,8 @@ namespace TUGraz.VectoCore.Utils
 	public static class VectoCSVFile
 	{
 		private static readonly Regex HeaderFilter = new Regex(@"\[.*?\]|\<|\>", RegexOptions.Compiled);
-		private const char Delimiter = ',';
-		private const char Comment = '#';
+		private const string Delimiter = ",";
+		private const string Comment = "#";
 
 		/// <summary>
 		/// Reads a CSV file which is stored in Vecto-CSV-Format.
@@ -69,11 +70,13 @@ namespace TUGraz.VectoCore.Utils
 		/// <param name="ignoreEmptyColumns">set true, if empty columns should be ignored. default: false.</param>
 		/// <param name="fullHeader">set true is column names should be preserved. Otherwise units are trimed away. default: false.</param>
 		/// <returns>A DataTable which represents the CSV File.</returns>
-		public static DataTable Read(string fileName, bool ignoreEmptyColumns = false, bool fullHeader = false)
+		public static TableData Read(string fileName, bool ignoreEmptyColumns = false, bool fullHeader = false)
 		{
 			try {
 				using (var fs = new FileStream(fileName, FileMode.Open)) {
-					return ReadStream(fs, ignoreEmptyColumns, fullHeader);
+					var retVal = new TableData(fileName);
+					ReadCSV(retVal, fs, ignoreEmptyColumns, fullHeader);
+					return retVal;
 				}
 			} catch (Exception e) {
 				LogManager.GetLogger(typeof(VectoCSVFile).FullName).Error(e);
@@ -87,88 +90,74 @@ namespace TUGraz.VectoCore.Utils
 		/// <param name="stream">the stream to read</param>
 		/// <param name="ignoreEmptyColumns">set true, if empty columns should be ignored. default: false.</param>
 		/// <param name="fullHeader">set true is column names should be preserved. Otherwise units are trimed away. default: false.</param>
+		/// <param name="source"></param>
 		/// <returns>A DataTable which represents the CSV File.</returns>
-		public static DataTable ReadStream(Stream stream, bool ignoreEmptyColumns = false, bool fullHeader = false)
+		public static TableData ReadStream(Stream stream, bool ignoreEmptyColumns = false, bool fullHeader = false, string source = null)
 		{
+			var retVal = new TableData(source);
+			ReadCSV(retVal, stream, ignoreEmptyColumns, fullHeader);
+			return retVal;
+		}
+
+		private static void ReadCSV(DataTable table, Stream stream, bool ignoreEmptyColumns, bool fullHeader)
+		{
+			var p = new TextFieldParser(stream) {
+				TextFieldType = FieldType.Delimited,
+				Delimiters = new[] { Delimiter },
+				CommentTokens = new[] { Comment },
+				HasFieldsEnclosedInQuotes = true,
+				TrimWhiteSpace = true
+			};
+
+			string[] colsWithoutComment;
+
 			try {
-				return ReadData(ReadLines(stream), ignoreEmptyColumns, fullHeader);
-			} catch (Exception e) {
-				LogManager.GetLogger(typeof(VectoCSVFile).FullName).Error(e);
-				throw new VectoException("Failed to read stream: " + e.Message, e);
+				colsWithoutComment = p.ReadFields()
+					.Select(l => l.Contains(Comment) ? l.Substring(0, l.IndexOf(Comment)) : l)
+					.ToArray();
+			} catch (ArgumentNullException) {
+				throw new CSVReadException("CSV Read Error: File was empty.");
 			}
-		}
 
-		private static IEnumerable<string> ReadLines(Stream stream)
-		{
-			using (var reader = new StreamReader(stream, Encoding.UTF8)) {
-				while (!reader.EndOfStream) {
-					yield return reader.ReadLine();
-				}
-			}
-		}
-
-		/// <summary>
-		/// 
-		/// </summary>
-		/// <param name="allLines"></param>
-		/// <param name="ignoreEmptyColumns"></param>
-		/// <param name="fullHeader"></param>
-		/// <returns></returns>
-		private static DataTable ReadData(IEnumerable<string> allLines, bool ignoreEmptyColumns = false,
-			bool fullHeader = false)
-		{
-			// trim, remove comments and filter empty lines
-			var lines = allLines
-				.Select(l => l.Trim())
-				.Select(l => l.Contains(Comment) ? l.Substring(0, l.IndexOf(Comment)) : l)
-				.Where(l => !string.IsNullOrWhiteSpace(l))
-				.GetEnumerator();
-
-			// start the enumerable
-			lines.MoveNext();
-
-			// add columns
-			var line = lines.Current;
-			if (!fullHeader) {
-				line = HeaderFilter.Replace(line, "");
-			}
 			double tmp;
-			var splittedColumns = line
-				.Split(Delimiter);
-
-			var columns = splittedColumns
-				.Select(col => col.Trim())
+			var columns = colsWithoutComment
+				.Select(l => fullHeader ? l : HeaderFilter.Replace(l, ""))
+				.Select(l => l.Trim())
 				.Where(col => !double.TryParse(col, NumberStyles.Any, CultureInfo.InvariantCulture, out tmp))
+				.Distinct()
 				.ToList();
 
-			if (columns.Count > 0) {
-				// first line was a valid header: advance to first data line
-				lines.MoveNext();
-			} else {
+			var firstLineIsData = columns.Count == 0;
+
+			if (firstLineIsData) {
 				LogManager.GetLogger(typeof(VectoCSVFile).FullName)
 					.Warn("No valid Data Header found. Interpreting the first line as data line.");
 				// set the validColumns to: {"0", "1", "2", "3", ...} for all columns in first line.
-				columns = splittedColumns.Select((_, index) => index.ToString()).ToList();
+				columns = colsWithoutComment.Select((_, i) => i.ToString()).ToList();
 			}
 
-			var table = new DataTable();
+			//var table = new DataTable();
 			foreach (var col in columns) {
 				table.Columns.Add(col);
 			}
-			if (lines.Current == null) {
-				return table;
-			}
-			// read data into table
-			var i = 0;
-			do {
-				i++;
-				line = lines.Current;
 
-				var cells = line.Split(Delimiter).Select(s => s.Trim()).ToArray();
-				if (cells.Length != table.Columns.Count && !ignoreEmptyColumns) {
+			if (p.EndOfData) {
+				return;
+			}
+
+			var lineNumber = 1;
+			do {
+				var cells = firstLineIsData
+					? colsWithoutComment
+					: p.ReadFields()
+						.Select(l => l.Contains(Comment) ? l.Substring(0, l.IndexOf(Comment)) : l)
+						.Select(s => s.Trim())
+						.ToArray();
+				firstLineIsData = false;
+				if (table.Columns.Count != cells.Length && !ignoreEmptyColumns) {
 					throw new CSVReadException(
-						string.Format("Line {0}: The number of values is not correct. Expected {1} Columns, Got {2} Columns", i,
-							table.Columns.Count, cells.Length));
+						string.Format("Line {0}: The number of values is not correct. Expected {1} Columns, Got {2} Columns",
+							lineNumber, table.Columns.Count, cells.Length));
 				}
 
 				try {
@@ -176,10 +165,10 @@ namespace TUGraz.VectoCore.Utils
 					table.Rows.Add(cells);
 				} catch (InvalidCastException e) {
 					throw new CSVReadException(
-						string.Format("Line {0}: The data format of a value is not correct. {1}", i, e.Message), e);
+						string.Format("Line {0}: The data format of a value is not correct. {1}", lineNumber, e.Message), e);
 				}
-			} while (lines.MoveNext());
-			return table;
+				lineNumber++;
+			} while (!p.EndOfData);
 		}
 
 		/// <summary>
@@ -208,23 +197,28 @@ namespace TUGraz.VectoCore.Utils
 				return;
 			}
 			var header = table.Columns.Cast<DataColumn>().Select(col => col.Caption ?? col.ColumnName);
-			writer.WriteLine(Delimiter.ToString().Join(header));
+			writer.WriteLine(string.Join(Delimiter, header));
+
+			var columnFormatter = new Func<SI, string>[table.Columns.Count];
+			for (var i = 0; i < table.Columns.Count; i++) {
+				var col = table.Columns[i];
+				var decimals = (uint?)col.ExtendedProperties["decimals"];
+				var outputFactor = (double?)col.ExtendedProperties["outputFactor"];
+				var showUnit = (bool?)col.ExtendedProperties["showUnit"];
+
+				columnFormatter[i] = item => item.ToOutputFormat(decimals, outputFactor, showUnit);
+			}
 
 			foreach (DataRow row in table.Rows) {
-				var row1 = row;
-				var formattedList = table.Columns.Cast<DataColumn>().Select(col => {
-					var item = row1[col];
-					var decimals = (uint?)col.ExtendedProperties["decimals"];
-					var outputFactor = (double?)col.ExtendedProperties["outputFactor"];
-					var showUnit = (bool?)col.ExtendedProperties["showUnit"];
-
-					var si = item as SI;
-					return si != null
-						? si.ToOutputFormat(decimals, outputFactor, showUnit)
-						: string.Format(CultureInfo.InvariantCulture, "{0}", item);
-				});
-
-				writer.WriteLine(Delimiter.ToString().Join(formattedList));
+				var items = row.ItemArray;
+				var formattedList = new string[items.Length];
+				for (var i = 0; i < items.Length; i++) {
+					var si = items[i] as SI;
+					formattedList[i] = si != null
+						? columnFormatter[i](si)
+						: formattedList[i] = string.Format(CultureInfo.InvariantCulture, "{0}", items[i]);
+				}
+				writer.WriteLine(string.Join(Delimiter, formattedList));
 			}
 		}
 	}

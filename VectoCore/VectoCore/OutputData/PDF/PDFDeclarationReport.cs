@@ -36,6 +36,7 @@ using System.Drawing.Imaging;
 using System.Globalization;
 using System.IO;
 using System.Linq;
+using System.Threading.Tasks;
 using System.Windows.Forms.DataVisualization.Charting;
 using iTextSharp.text;
 using iTextSharp.text.pdf;
@@ -51,8 +52,14 @@ using Rectangle = System.Drawing.Rectangle;
 
 namespace TUGraz.VectoCore.OutputData.PDF
 {
+	/// <summary>
+	/// Class for writing a PDF Declaration report.
+	/// </summary>
 	public class PDFDeclarationReport : DeclarationReport
 	{
+		/// <summary>
+		/// the writer which actually persists the stream (either to file or somewhere else).
+		/// </summary>
 		private readonly IReportWriter _writer;
 
 		/// <summary>
@@ -90,13 +97,24 @@ namespace TUGraz.VectoCore.OutputData.PDF
 		/// </summary>
 		protected internal override void DoWriteReport()
 		{
-			ReportDate = DateTime.Now.ToString(CultureInfo.InvariantCulture);
-			var titlePage = CreateTitlePage(Missions);
-			var cyclePages = Missions.OrderBy(m => m.Key).Select((m, i) => CreateCyclePage(m.Value, i + 2, Missions.Count + 1));
+			ReportDate = DateTime.Now.ToUniversalTime().ToString(CultureInfo.InvariantCulture);
 
-			MergeDocuments(titlePage, cyclePages, _writer.WriteStream(ReportType.DeclarationReportPdf));
+			var tasks = new List<Task<Stream>> { Task.Run(() => CreateTitlePage(Missions)) };
+			tasks.AddRange(Missions
+				.OrderBy(m => m.Key)
+				.Select((m, i) => Task.Run(() => CreateCyclePage(m.Value, i + 2, Missions.Count + 1))));
+
+			Task.WaitAll(tasks.Cast<Task>().ToArray());
+			var pages = tasks.Select(t => t.Result);
+
+			MergeDocuments(pages, _writer.WriteStream(ReportType.DeclarationReportPdf));
 		}
 
+		/// <summary>
+		/// Initializes the report with the current date and some general data.
+		/// </summary>
+		/// <param name="modelData">the model data.</param>
+		/// <param name="segment">the current segment of the vehicle.</param>
 		protected override void DoInitializeReport(VectoRunData modelData, Segment segment)
 		{
 			EngineModel = modelData.EngineData.ModelName;
@@ -139,21 +157,24 @@ namespace TUGraz.VectoCore.OutputData.PDF
 
 			var i = 1;
 			foreach (var results in missions.Values.OrderBy(m => m.Mission.MissionType)) {
-				pdfFields.SetField("Mission" + i, results.Mission.MissionType.ToString());
+				var trailerSuffix = results.Mission.TrailerType != TrailerType.None
+					? string.Format(" with {0} Trailer", results.Mission.TrailerType)
+					: "";
+				pdfFields.SetField("Mission" + i, results.Mission.MissionType + trailerSuffix);
 
 				var data = results.ModData[LoadingType.ReferenceLoad];
 
 				pdfFields.SetField("Loading" + i, results.Mission.RefLoad.ConvertTo().Ton.ToOutputFormat(1) + " t");
 				pdfFields.SetField("Speed" + i, data.Speed().ConvertTo().Kilo.Meter.Per.Hour.ToOutputFormat(1) + " km/h");
 
-				var fcLiterPer100Km = data.FuelConsumptionFinalLiterPer100Kilometer();
+				var fcLiterPer100Km = data.FuelConsumptionFinalLiterPer100Kilometer() ?? 0.SI();
 				pdfFields.SetField("FC" + i, fcLiterPer100Km.ToOutputFormat(1));
 
 				var loadingTon = results.Mission.RefLoad.ConvertTo().Ton;
 				var fcLiterPer100Tonkm = fcLiterPer100Km / loadingTon;
 				pdfFields.SetField("FCt" + i, fcLiterPer100Tonkm.ToOutputFormat(1));
 
-				var co2GrammPerKm = data.CO2PerMeter().ConvertTo().Gramm.Per.Kilo.Meter;
+				var co2GrammPerKm = (data.CO2PerMeter() ?? 0.SI<KilogramPerMeter>()).ConvertTo().Gramm.Per.Kilo.Meter;
 				var co2GrammPerTonKm = co2GrammPerKm / loadingTon;
 
 				pdfFields.SetField("CO2" + i, co2GrammPerKm.ToOutputFormat(1));
@@ -173,7 +194,7 @@ namespace TUGraz.VectoCore.OutputData.PDF
 			img.SetAbsolutePosition(360, 75);
 			content.AddImage(img);
 
-			img = GetVehicleImage(Segment, MissionType.LongHaul);
+			img = GetVehicleImage(Segment, TrailerType.None);
 			img.ScaleAbsolute(180, 50);
 			img.SetAbsolutePosition(30, 475);
 			content.AddImage(img);
@@ -182,6 +203,7 @@ namespace TUGraz.VectoCore.OutputData.PDF
 			stamper.Writer.CloseStream = false;
 			stamper.Close();
 
+			stream.Position = 0;
 			return stream;
 		}
 
@@ -209,7 +231,11 @@ namespace TUGraz.VectoCore.OutputData.PDF
 					Segment.AxleConfiguration.GetName(), Segment.VehicleCategory));
 			pdfFields.SetField("HDVclass", "HDV Class " + Segment.VehicleClass.GetClassNumber());
 			pdfFields.SetField("PageNr", string.Format("Page {0} of {1}", currentPageNr, pageCount));
-			pdfFields.SetField("Mission", results.Mission.MissionType.ToString());
+
+			var trailerSuffix = results.Mission.TrailerType != TrailerType.None
+				? string.Format(" with {0} Trailer", results.Mission.TrailerType)
+				: "";
+			pdfFields.SetField("Mission", results.Mission.MissionType + trailerSuffix);
 
 			foreach (var pair in results.ModData) {
 				var loadingType = pair.Key;
@@ -221,12 +247,12 @@ namespace TUGraz.VectoCore.OutputData.PDF
 				pdfFields.SetField("Load" + loadAppendix, loadingTon.ToOutputFormat(1) + " t");
 				pdfFields.SetField("Speed" + loadAppendix, data.Speed().ConvertTo().Kilo.Meter.Per.Hour.ToOutputFormat(1));
 
-				var fcLiterPer100Km = data.FuelConsumptionFinalLiterPer100Kilometer();
+				var fcLiterPer100Km = data.FuelConsumptionFinalLiterPer100Kilometer() ?? 0.SI();
 				pdfFields.SetField("FCkm" + loadAppendix, fcLiterPer100Km.ToOutputFormat(1));
 				pdfFields.SetField("FCtkm" + loadAppendix,
 					loadingTon.IsEqual(0) ? "-" : (fcLiterPer100Km / loadingTon).ToOutputFormat(1));
 
-				var co2GrammPerKm = data.CO2PerMeter().ConvertTo().Gramm.Per.Kilo.Meter;
+				var co2GrammPerKm = (data.CO2PerMeter() ?? 0.SI<KilogramPerMeter>()).ConvertTo().Gramm.Per.Kilo.Meter;
 				pdfFields.SetField("CO2km" + loadAppendix, co2GrammPerKm.ToOutputFormat(1));
 				pdfFields.SetField("CO2tkm" + loadAppendix,
 					loadingTon.IsEqual(0) ? "-" : (co2GrammPerKm / loadingTon).ToOutputFormat(1));
@@ -234,7 +260,7 @@ namespace TUGraz.VectoCore.OutputData.PDF
 
 			var content = stamper.GetOverContent(1);
 
-			var img = GetVehicleImage(Segment, results.Mission.MissionType);
+			var img = GetVehicleImage(Segment, results.Mission.TrailerType);
 			img.ScaleAbsolute(180, 50);
 			img.SetAbsolutePosition(600, 475);
 			content.AddImage(img);
@@ -253,30 +279,27 @@ namespace TUGraz.VectoCore.OutputData.PDF
 
 			stamper.Writer.CloseStream = false;
 			stamper.Close();
+
+			stream.Position = 0;
 			return stream;
 		}
 
 		/// <summary>
 		/// Merges the given stream to one document and writes it to a file on disk.
 		/// </summary>
-		/// <param name="titlePage"></param>
 		/// <param name="pages">The pages.</param>
 		/// <param name="reportWriter"></param>
-		private static void MergeDocuments(Stream titlePage, IEnumerable<Stream> pages, Stream reportWriter)
+		private static void MergeDocuments(IEnumerable<Stream> pages, Stream reportWriter)
 		{
-			var document = new Document(PageSize.A4.Rotate(), 12, 12, 12, 12);
-			var writer = PdfWriter.GetInstance(document, reportWriter);
-
-			document.Open();
-			titlePage.Position = 0;
-			document.Add(Image.GetInstance(writer.GetImportedPage(new PdfReader(titlePage), 1)));
-
-			foreach (var cyclePage in pages) {
-				cyclePage.Position = 0;
-				document.Add(Image.GetInstance(writer.GetImportedPage(new PdfReader(cyclePage), 1)));
+			using (var document = new Document(PageSize.A4.Rotate(), 12, 12, 12, 12))
+			using (var writer = new PdfCopy(document, reportWriter)) {
+				document.Open();
+				foreach (var page in pages) {
+					using (var reader = new PdfReader(page)) {
+						writer.AddDocument(reader);
+					}
+				}
 			}
-
-			document.Close();
 		}
 
 		/// <summary>
@@ -313,7 +336,8 @@ namespace TUGraz.VectoCore.OutputData.PDF
 				var data = missionResult.Value.ModData[LoadingType.ReferenceLoad];
 
 				var loadingTon = missionResult.Value.Mission.Loadings[LoadingType.ReferenceLoad].ConvertTo().Ton;
-				var co2GrammPerTonKm = data.CO2PerMeter().ConvertTo().Gramm.Per.Kilo.Meter / loadingTon;
+				var co2GrammPerTonKm = (data.CO2PerMeter() ?? 0.SI<KilogramPerMeter>()).ConvertTo().Gramm.Per.Kilo.Meter /
+										loadingTon;
 
 				var series = new Series(missionResult.Key + " (Ref. load.)");
 				var dataPoint = new DataPoint {
@@ -355,8 +379,9 @@ namespace TUGraz.VectoCore.OutputData.PDF
 					TitleFont = new Font("Helvetica", 20),
 					LabelStyle = { Font = new Font("Helvetica", 20) },
 					LabelAutoFitStyle = LabelAutoFitStyles.None,
-					Minimum = 0,
-					Maximum = 80
+					Minimum = 20,
+					Maximum = 80,
+					Interval = 10,
 				},
 				AxisY = {
 					Title = "CO2 [g/km]",
@@ -375,7 +400,7 @@ namespace TUGraz.VectoCore.OutputData.PDF
 				foreach (var pair in missionResult.Value.ModData) {
 					var data = missionResult.Value.ModData[pair.Key];
 
-					var co2GramPerKilometer = data.CO2PerMeter().ConvertTo().Gramm.Per.Kilo.Meter;
+					var co2GramPerKilometer = (data.CO2PerMeter() ?? 0.SI<KilogramPerMeter>()).ConvertTo().Gramm.Per.Kilo.Meter;
 					var loadingTon = missionResult.Value.Mission.Loadings[pair.Key].ConvertTo().Ton;
 
 					var point = new DataPoint(data.Speed().ConvertTo().Kilo.Meter.Per.Hour.Value(), co2GramPerKilometer.Value()) {
@@ -546,26 +571,24 @@ namespace TUGraz.VectoCore.OutputData.PDF
 		/// <summary>
 		/// Gets the appropriate vehicle image.
 		/// </summary>
-		/// <param name="segment">The segment.</param>
-		/// <param name="missionType">Type of the mission.</param>
-		/// <returns></returns>
-		private static Image GetVehicleImage(Segment segment, MissionType missionType)
+		private static Image GetVehicleImage(Segment segment, TrailerType trailerType)
 		{
 			var name = "Undef.png";
+			var withTrailer = trailerType != TrailerType.None;
 			switch (segment.VehicleClass) {
 				case VehicleClass.Class1:
 				case VehicleClass.Class2:
 				case VehicleClass.Class3:
-					name = "4x2r.png";
+					name = withTrailer ? "4x2rt.png" : "4x2r.png";
 					break;
 				case VehicleClass.Class4:
-					name = missionType == MissionType.LongHaul ? "4x2rt.png" : "4x2r.png";
+					name = withTrailer ? "4x2rt.png" : "4x2r.png";
 					break;
 				case VehicleClass.Class5:
 					name = "4x2tt.png";
 					break;
 				case VehicleClass.Class9:
-					name = missionType == MissionType.LongHaul ? "6x2rt.png" : "6x2r.png";
+					name = withTrailer ? "6x2rt.png" : "6x2r.png";
 					break;
 				case VehicleClass.Class10:
 					name = "6x2tt.png";

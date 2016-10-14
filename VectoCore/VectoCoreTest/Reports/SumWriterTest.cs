@@ -36,6 +36,7 @@ using TUGraz.VectoCore.Models.Simulation.Data;
 using TUGraz.VectoCore.Models.Simulation.Impl;
 using TUGraz.VectoCore.OutputData;
 using TUGraz.VectoCore.OutputData.FileIO;
+using TUGraz.VectoCore.Tests.Models.SimulationComponent;
 using TUGraz.VectoCore.Utils;
 
 namespace TUGraz.VectoCore.Tests.Reports
@@ -50,7 +51,7 @@ namespace TUGraz.VectoCore.Tests.Reports
 			var sumWriter = new SummaryDataContainer(writer);
 
 			var modData = new ModalDataContainer("testsumcalc_fixed", writer);
-			
+
 			modData.AddAuxiliary("FAN");
 
 			for (var i = 0; i < 500; i++) {
@@ -69,6 +70,8 @@ namespace TUGraz.VectoCore.Tests.Reports
 				modData[ModalResultField.altitude] = 0.SI<Meter>();
 				modData[ModalResultField.acc] = 0.SI<MeterPerSquareSecond>();
 				modData[ModalResultField.P_eng_out] = (i % 2 == 0 ? 1 : -1) * 3000.SI<Watt>();
+
+				modData[ModalResultField.P_eng_fcmap] = 0.SI<Watt>();
 
 				modData.CommitSimulationStep();
 			}
@@ -122,6 +125,9 @@ namespace TUGraz.VectoCore.Tests.Reports
 				modData[ModalResultField.altitude] = 0.SI<Meter>();
 				modData[ModalResultField.acc] = 0.SI<MeterPerSquareSecond>();
 				modData[ModalResultField.P_eng_out] = (i % 2 == 0 ? 1 : -1) * powerDemand[i % powerDemand.Length];
+
+				modData[ModalResultField.P_eng_fcmap] = 0.SI<Watt>();
+
 				modData.CommitSimulationStep();
 			}
 

@@ -30,46 +30,42 @@
 */
 
 using System;
-using System.Collections.Generic;
 using System.Data;
-using TUGraz.VectoCommon.Exceptions;
+using Org.BouncyCastle.Asn1;
 using TUGraz.VectoCommon.Utils;
 using TUGraz.VectoCore.Utils;
 
 namespace TUGraz.VectoCore.Models.Declaration
 {
-	public sealed class HeatingVentilationAirConditioning : LookupData<MissionType, VehicleClass, Watt>
+	public sealed class HeatingVentilationAirConditioning : LookupData<MissionType, VehicleClass, Watt>,
+		IDeclarationAuxiliaryTable
 	{
-		private const string ResourceId = "TUGraz.VectoCore.Resources.Declaration.VAUX.HVAC-Table.csv";
-		private readonly Dictionary<Tuple<MissionType, VehicleClass>, Watt> _data =
-			new Dictionary<Tuple<MissionType, VehicleClass>, Watt>();
-		
-		public HeatingVentilationAirConditioning()
+		protected override string ResourceId
 		{
-			ParseData(ReadCsvResource(ResourceId));
+			get { return "TUGraz.VectoCore.Resources.Declaration.VAUX.HVAC-Table.csv"; }
 		}
 
-		public override Watt Lookup(MissionType mission, VehicleClass hdvClass)
+		protected override string ErrorMessage
 		{
-			try {
-				return _data[Tuple.Create(mission, hdvClass)];
-			} catch (KeyNotFoundException) {
-				throw new VectoException("Auxiliary Lookup Error: No value found for HVAC with mission '{0}' and HDVClass '{1}'",
-					mission, hdvClass);
-			}
+			get { return "Auxiliary Lookup Error: No value found for HVAC. Mission: '{0}', HDVClass: '{1}'"; }
 		}
 
 		protected override void ParseData(DataTable table)
 		{
-			_data.Clear();
-			NormalizeTable(table);
-
 			foreach (DataRow row in table.Rows) {
-				var hdvClass = VehicleClassHelper.Parse(row.Field<string>("hdvclass/power"));
-				foreach (MissionType mission in Enum.GetValues(typeof(MissionType))) {
-					_data[Tuple.Create(mission, hdvClass)] = row.ParseDouble(mission.ToString().ToLower()).SI<Watt>();
+				var hdvClass = VehicleClassHelper.Parse(row.Field<string>("hdvclass"));
+				foreach (DataColumn col in table.Columns) {
+					var value = row.ParseDoubleOrGetDefault(col.Caption, double.NaN);
+					if (col.Caption != "hdvclass" && !double.IsNaN(value)) {
+						Data[Tuple.Create(col.Caption.ParseEnum<MissionType>(), hdvClass)] = value.SI<Watt>();
+					}
 				}
 			}
+		}
+
+		public string[] GetTechnologies()
+		{
+			return new[] { "Default" };
 		}
 	}
 }

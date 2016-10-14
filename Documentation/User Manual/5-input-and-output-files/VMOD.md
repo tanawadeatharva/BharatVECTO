@@ -2,50 +2,6 @@
 
 Modal results are only created if enabled in the [Options](#main-form) tab. One file is created for each calculation and stored in the same directory as the .vecto file.
 
-<div class="vecto2">
-***Quantities:***
-
-| **Name**        | **Unit** | **Description** |
-| --------------- | ---------------------- | -------------------------- |
-| time            | [s]      | Time step. |
-| dist            | [km]     | Travelled distance. |
-| v_act           | [km/h]   | Actual vehicle speed. |
-| v_targ          | [km/h]   | Target vehicle speed. |
-| acc             | [m/s²]   | Vehicle acceleration. |
-| grad            | [%]      | Road gradient. |
-| n               | [1/min]  | Engine speed. |
-| Tq_eng          | [Nm]     | Engine torque. |
-| Tq_clutch       | [Nm]     | Torque at clutch (before clutch, engine-side) |
-| Tq_full         | [Nm]     | Full load torque |
-| Tq_drag         | [Nm]     | Motoring torque |
-| Pe_eng          | [kW]     | Engine power. |
-| Pe_full         | [kW]     | Engine full load power. |
-| Pe_drag         | [kW]     | Engine drag power. |
-| Pe_clutch       | [kW]     | Engine power at clutch (equals **Pe** minus loss due to rotational inertia **Pa Eng**). |
-| Gear            | [-]      | Gear. "0" = clutch opened / neutral.|
-| Ploss GB        | [kW]     | Gearbox losses. |
-| Ploss Diff      | [kW]     | Losses in differential / axle transmission. |
-| Ploss Retrader  | [kW]     | Retarder losses. |
-| Pa Eng          | [kW]     | Rotational acceleration power: Engine. |
-| Pa GB           | [kW]     | Rotational acceleration power: Gearbox. |
-| Pa Veh          | [kW]     | Vehicle acceleration power. |
-| Proll           | [kW]     | Rolling resistance power demand. |
-| Pair            | [kW]     | Air resistance power demand. |
-| Pgrad           | [kW]     | Power demand due to road gradient. |
-| Paux            | [kW]     | Total auxiliary power demand. |
-| Pwheel          | [kW]     | Total power demand at wheel = sum of rolling, air, acceleration and road gradient resistance. |
-| Pbrake          | [kW]     | Brake power. Drag power is included in **Pe**. |
-| Paux_xxx        | [kW]     | Power demand of Auxiliary with ID xxx. See also [Aux Dialog](#auxiliary-dialog) and [Driving Cycle](#driving-cycles). |
-| FC-Map          | [g/h]    | Fuel consumption interpolated from FC map. |
-| FC-AUXc         | [g/h]    | Fuel consumption after [Auxiliary-Start/Stop Correction](#fuel-consumption-calculation). (Based on FC.) |
-| FC-WHTCc        | [g/h]    | Fuel consumption after [WHTC Correction](#fuel-consumption-calculation). (Based on FC-AUXc.) |
-| TCv             | [-]      | Torque converter speed ratio |
-| TCµ             | [-]      | Torque converter torque ratio |
-| TC_M_Out        | [Nm]     | Torque converter output torque |
-| TC_n_Out        | [1/min]  | Torque converter output speed |
-</div>
-
-<div class="vecto3">
 In Vecto 3.0.2 the structure of the modal data output has been revised and re-structured. Basicaly for every powertrain component the .vmod file contains the power at the input shaft and the individual power losses for every component. For the engine the power, torque and engine speed at the output shaft is given along with the internal power and torque used for computing the fuel consumption. The following table lists the columns in the .vmod file:
 	
 ***Quantities:***
@@ -60,6 +16,7 @@ In Vecto 3.0.2 the structure of the modal data output has been revised and re-st
 | acc				|	[m/s^2]	|	Vehicle's acceleration, constant during the current simulation interval |
 | grad				|	[%]		|	Road gradient |
 | Gear				|	[-]		|	Gear. "0" = clutch opened / neutral |
+| TC locked         |   0/1     |   For AT-Gearboxes: if the torque converter is locked or not |
 | n_eng_avg			|	[1/min]	|	Average engine speed in the current simulation interval. Used for interpolation of the engine's fuel consumption |
 | T_eng_fcmap		|	[Nm]	|	Engine torque used for interpolation of the engine's fuel consumption. T_eng_fcmap is the sum of torque demand on the output shaft, torque demand of the auxiliaries, and engine's inertia torque |
 | Tq_full			|	[Nm]	|	Engine's transient maximum torque (see [transient full load](#engine-transient-full-load)) |
@@ -71,23 +28,34 @@ In Vecto 3.0.2 the structure of the modal data output has been revised and re-st
 | P_eng_out			|	[kW]	|	Power provided at the engine's output shaft |
 | P_clutch_loss		|	[kW]	|	Power loss in the clutch due to slipping when driving off |
 | P_clutch_out		|	[kW]	|	Power at the clutch's out shaft. P_clutch_out = P_eng_out - P_clutch_loss |
-| P_aux				|	[kW]	|	Total power demand by the auxiliaries |
+| P_TC_loss [kW]    |   [kW]    |   Power loss in the torque converter |
+| P_TC_out [kW]     |   [kW]    |   Power at the torque converter's out shaft. P_TC_out = P_eng_out - P_TC_loss |
+| P_aux				|	[kW]	|	Total power demand from the auxiliaries |
 | P_gbx_in			|	[kW]	|	Power at the gearbox' input shaft |
-| P_gbx_loss		|	[kW]	|	Power loss at the gerbox, interpolated from the loss-map |
+| P_gbx_loss		|	[kW]	|	Power loss at the gearbox, interpolated from the loss-map |
 | P_gbx_inertia		|	[kW]	|	Power loss due to the gearbox' inertia |
 | P_ret_in			|	[kW]	|	Power at the retarder's input shaft. P_ret_in = P_gbx_in - P_gbx_loss - P_gbx_inertia |
-| P_ret_loss		|	[kW]	|	Power loss at the retarder, interpolated from the loss-map |
-| P_axle_in			|	[kW]	|	Power at the axle-gear input shaft. P_axle_in = P_ret_in - P_ret_loss |
-| P_axle_loss		|	[kW]	|	Power loss at the axle gear, interpolated from the loss-map |
+| P_ret_loss		|	[kW]	|	Power loss at the retarder, interpolated from the loss-map. |
+| P_angle_in		|	[kW]	|	Power at the Anglegear's input shaft. Empty if no Anglegear is used. |
+| P_angle_loss		|	[kW]	|	Power loss at the Anglegear, interpolated from the loss-map. Empty if no Anglegear is used. |
+| P_axle_in			|	[kW]	|	Power at the axle-gear input shaft. P_axle_in = P_ret_in - P_ret_loss ( - P_angle_loss if an Angulargear is used). |
+| P_axle_loss		|	[kW]	|	Power loss at the axle gear, interpolated from the loss-map. |
+| P_angle_in        |   [kW]    |   Power at the angle-gear input shaft. |
+| P_angle_loss      |   [kW]    |   Power loss at the angle gear, interpolated from the loss-map. |
+| P_tc_in           |   [kW]    |   Power at the torque-converter input shaft. |
+| P_tc_loss         |   [kW]    |   Power loss at the torque-converter. |
 | P_brake_in		|	[kW]	|	Power at the brake input shaft (definition: serially mounted into the drive train between wheels and axle). P_brake_in = P_axle_in - P_axle_loss |
-| P_brake_loss		|	[kW]	|	Power loss due to braking |
+| P_brake_loss		|	[kW]	|	Power loss due to braking. |
 | P_wheel_in		|	[kW]	|	Power at the driven wheels. P_wheel_in = P_brake_in - P_brake_loss |
 | P_wheel_inertia	|	[kW]	|	Power loss due to the wheels' inertia |
 | P_trac			|	[kW]	|	Vehicle's traction power. P_trac = P_wheel_in - P_wheel_inertia |
 | P_slope			|	[kW]	|	Power loss/gain due to the road's slope |
-| P_air				|	[kW]	|	Power loss due to air drag |
-| P_roll			|	[kW]	|	Rolling resistance power loss |
+| P_air				|	[kW]	|	Power loss due to air drag. |
+| P_roll			|	[kW]	|	Rolling resistance power loss. |
 | P_veh_inertia		|	[kW]	|	Power loss due to the vehicle's inertia |
+| P_aux_<XXX>		|	[kW]	|	Power demand for every individual auxiliary. Only if the run has auxiliaries. |
+| P_PTO_consum		|	[kW]	|	Power demand from the PTO consumer. Only if the vehicle has a PTO consumer. |
+| P_PTO_transmission|	[kW]	|	Power demand from the PTO transmission. Only if the vehicle has a PTO consumer. |
 | AA_NonSmartAlternatorsEfficiency     | [Fraction]  | Non-Smart Alternators Efficiency, Advance Auxiliaries Module |
 | AA_SmartIdleCurrent_Amps             | [Amps]      | Smart Idle Current in Amps, Advance Auxiliaries Module |
 | AA_SmartIdleAlternatorsEfficiency    | [Fraction]  | Smart Idle Alternators Efficiency, Advance Auxiliaries Module |
@@ -101,9 +69,14 @@ In Vecto 3.0.2 the structure of the modal data output has been revised and re-st
 | AA_CompressorFlag                    | [Bool [0/1] | Compressor Flag (off/on), Advance Auxiliaries Module |
 | AA_TotalCycleFC_Grams                | [Grams]     | Total Cycle Fuel Consumption in grams, Advance Auxiliaries Module |
 | AA_TotalCycleFC_Litres               | [Litres]    | Total Cycle Fuel Consumption in litres, Advance Auxiliaries Module |
+| TCnu              |   [-]     |   Torque converter operating point:  speed ratio    | 
+| TCmu              |   [-]     |   Torque converter operating point:  torque ratio    |   
+| T_TC_out          |   [Nm]    |   Torque converter operating point:  output torque    | 
+| n_TC_out          |   [rpm]   |   Torque converter operating point:  output speed    |  
+| T_TC_in           |   [Nm]    |   Torque converter operating point:  input torque    |    
+| n_TC_in           |   [rpm]   |   Torque converter operating point:  input speed    |     
 | FC-Map			|	[g/h]	|	Fuel consumption interpolated from FC map. |
 | FC-AUXc			|	[g/h]	|	Fuel consumption after [Auxiliary-Start/Stop Correction](#fuel-consumption-calculation) (based on FC) |
 | FC-WHTCc			|	[g/h]	|	Fuel consumption after [WHTC Correction](#fuel-consumption-calculation) (based on FC-AUXc) |
 | FC-AAUX			|	[g/h]	|	Fuel consumption computed by the AAUX module considering smart auxiliaries |
 | FC-Final			|	[g/h]	|	Final fuel consumption value after all applicable corrections |
-</div>

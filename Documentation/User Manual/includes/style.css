@@ -45,6 +45,7 @@ body > div:not(#TOC):not(#HEADER):not(#FOOTER)  {
 	padding-top: 2em;
   padding-bottom: 2em;
 	margin-left: 1em;
+  width: 50em;
 }
 
 table {
@@ -123,6 +124,31 @@ div.vecto3:before {
   font-weight: bold;
   display: inline-block;
   font-size: smaller;
+}
+
+
+div.engineering{
+ border-right: 5px solid #d51000;
+  margin-right: -50px;
+  background-image: url("../pics/icon_engineering-mode.svg");
+  background-color: rgba(255,0,0,0.2);
+    padding: 2px 50px 2px 5px;
+        margin-bottom: 0.5em;
+    background-repeat: no-repeat;
+    background-size: 38px;
+    background-position: top right;
+}
+
+div.declaration {
+   border-right: 5px solid #08c300;
+  margin-right: -50px;
+  background-image: url("../pics/icon_declaration-mode.svg");
+  background-color: rgba(0,255,0,0.2);
+    padding: 2px 50px 2px 5px;
+        margin-bottom: 0.5em;
+    background-repeat: no-repeat;
+    background-size: 38px;
+    background-position: top right;
 }
 
 pre {

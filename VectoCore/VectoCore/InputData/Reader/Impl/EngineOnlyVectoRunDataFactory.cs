@@ -32,7 +32,7 @@
 using System.Collections.Generic;
 using TUGraz.VectoCommon.InputData;
 using TUGraz.VectoCommon.Models;
-using TUGraz.VectoCore.InputData.Reader.DataObjectAdaper;
+using TUGraz.VectoCore.InputData.Reader.DataObjectAdapter;
 using TUGraz.VectoCore.Models.Simulation.Data;
 using TUGraz.VectoCore.Models.SimulationComponent.Data;
 
@@ -52,7 +52,7 @@ namespace TUGraz.VectoCore.InputData.Reader.Impl
 			foreach (var cycle in InputDataProvider.JobInputData().Cycles) {
 				var simulationRunData = new VectoRunData {
 					JobName = InputDataProvider.JobInputData().JobName,
-					EngineData = dao.CreateEngineData(InputDataProvider.EngineInputData),
+					EngineData = dao.CreateEngineData(InputDataProvider.EngineInputData, null),
 					Cycle = DrivingCycleDataReader.ReadFromDataTable(cycle.CycleData, CycleType.EngineOnly, cycle.Name, false),
 					ExecutionMode = ExecutionMode.Engineering
 				};

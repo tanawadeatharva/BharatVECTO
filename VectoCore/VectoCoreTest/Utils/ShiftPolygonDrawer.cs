@@ -40,7 +40,7 @@ using TUGraz.VectoCommon.Utils;
 using TUGraz.VectoCore.Configuration;
 using TUGraz.VectoCore.Models.SimulationComponent.Data.Engine;
 using TUGraz.VectoCore.Models.SimulationComponent.Data.Gearbox;
-using Point = TUGraz.VectoCore.Utils.Point;
+using Point = TUGraz.VectoCommon.Utils.Point;
 
 namespace TUGraz.VectoCore.Tests.Utils
 {

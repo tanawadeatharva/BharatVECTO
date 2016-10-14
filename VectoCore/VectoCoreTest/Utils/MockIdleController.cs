@@ -37,15 +37,15 @@ using TUGraz.VectoCore.Models.SimulationComponent;
 
 namespace TUGraz.VectoCore.Tests.Utils
 {
-	public class MockIdleController : ICombustionEngineIdleController
+	public class MockIdleController : IIdleController
 	{
-		public IResponse Request(Second absTime, Second dt, NewtonMeter torque, PerSecond angularVelocity, bool dryRun = false)
+		public IResponse Request(Second absTime, Second dt, NewtonMeter outTorque, PerSecond outAngularVelocity, bool dryRun = false)
 		{
 			//throw new System.NotImplementedException();
 			return new ResponseSuccess();
 		}
 
-		public IResponse Initialize(NewtonMeter torque, PerSecond angularVelocity)
+		public IResponse Initialize(NewtonMeter outTorque, PerSecond outAngularVelocity)
 		{
 			//throw new System.NotImplementedException();
 			return new ResponseSuccess();

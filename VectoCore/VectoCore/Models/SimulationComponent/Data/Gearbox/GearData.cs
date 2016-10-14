@@ -30,25 +30,65 @@
 */
 
 using System.ComponentModel.DataAnnotations;
-using TUGraz.VectoCore.Utils;
+using System.Linq;
+using TUGraz.VectoCommon.Models;
+using TUGraz.VectoCommon.Utils;
 
 namespace TUGraz.VectoCore.Models.SimulationComponent.Data.Gearbox
 {
-	public class GearData
+	public class TransmissionData
 	{
-		[ValidateObject]
-		public ShiftPolygon ShiftPolygon { get; internal set; }
-
 		[ValidateObject]
 		public TransmissionLossMap LossMap { get; internal set; }
 
-		[ValidateObject]
-		public FullLoadCurve FullLoadCurve { get; internal set; }
-
 		[Required, Range(double.Epsilon, 25)]
 		public double Ratio { get; internal set; }
+	}
 
-		// TODO mk-2016-05-09: Refactor TorqueConverterActive Flag when implementing Torque Converter
-		public bool TorqueConverterActive { get; internal set; }
+	[CustomValidation(typeof(GearData), "ValidateGearData")]
+	public class GearData : TransmissionData
+	{
+		public GearData()
+		{
+			TorqueConverterRatio = double.NaN;
+		}
+
+		public bool HasTorqueConverter
+		{
+			get { return !double.IsNaN(TorqueConverterRatio) && TorqueConverterGearLossMap != null; }
+		}
+
+		public bool HasLockedGear
+		{
+			get { return !double.IsNaN(Ratio) && LossMap != null; }
+		}
+
+		[ValidateObject]
+		public ShiftPolygon ShiftPolygon { get; internal set; }
+
+		public double TorqueConverterRatio { get; internal set; }
+
+		public TransmissionLossMap TorqueConverterGearLossMap { get; internal set; }
+
+		public NewtonMeter MaxTorque { get; internal set; }
+
+		public ShiftPolygon TorqueConverterShiftPolygon { get; set; }
+
+		public static ValidationResult ValidateGearData(GearData gearData, ValidationContext context)
+		{
+			var modeService = context.GetService(typeof(ExecutionMode)) as ExecutionModeServiceContainer;
+			var mode = modeService == null ? ExecutionMode.Declaration : modeService.Mode;
+
+			if (gearData.HasTorqueConverter) {
+				if (gearData.TorqueConverterShiftPolygon == null) {
+					return new ValidationResult("Shift Polygon for Torque Converter Gear required!");
+				}
+				var result = gearData.TorqueConverterShiftPolygon.Validate(mode);
+				if (result.Any()) {
+					return new ValidationResult(string.Format("Validation of GearData failed"), result.Select(x => x.ErrorMessage));
+				}
+			}
+			return ValidationResult.Success;
+		}
 	}
 }

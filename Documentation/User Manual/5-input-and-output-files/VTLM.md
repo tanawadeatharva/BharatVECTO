@@ -1,5 +1,5 @@
 ##Transmission Loss Map
-This file defines losses in gearbox and axle transmission and must be provided for each gear in the [Gearbox File](#gearbox-editor). The file uses the [VECTO CSV format](#csv).
+This file defines losses in transmission components, i.e. every gear, axlegear, angledrive. The file uses the [VECTO CSV format](#csv).
 
 - Filetype: .vtlm
 - Header: **Input Speed [rpm], Input Torque [Nm], Torque Loss [Nm]**

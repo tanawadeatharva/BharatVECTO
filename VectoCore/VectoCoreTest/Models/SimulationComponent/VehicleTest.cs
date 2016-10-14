@@ -31,18 +31,16 @@
 
 using System;
 using System.IO;
-using Microsoft.VisualStudio.TestTools.UnitTesting;
 using NUnit.Framework;
 using TUGraz.VectoCommon.Models;
 using TUGraz.VectoCommon.Utils;
-using TUGraz.VectoCore.InputData.Reader.DataObjectAdaper;
+using TUGraz.VectoCore.InputData.Reader.ComponentData;
+using TUGraz.VectoCore.InputData.Reader.DataObjectAdapter;
 using TUGraz.VectoCore.Models.Simulation.Data;
 using TUGraz.VectoCore.Models.Simulation.Impl;
 using TUGraz.VectoCore.Models.SimulationComponent.Data;
 using TUGraz.VectoCore.Models.SimulationComponent.Impl;
 using TUGraz.VectoCore.Tests.Utils;
-using TUGraz.VectoCore.Utils;
-using Assert = Microsoft.VisualStudio.TestTools.UnitTesting.Assert;
 
 namespace TUGraz.VectoCore.Tests.Models.SimulationComponent
 {
@@ -77,7 +75,7 @@ namespace TUGraz.VectoCore.Tests.Models.SimulationComponent
 			var accell = -0.256231159.SI<MeterPerSquareSecond>();
 			var gradient = Math.Atan(0.00366547048).SI<Radian>();
 
-			var retVal = requestPort.Request(absTime, dt, accell, gradient);
+			requestPort.Request(absTime, dt, accell, gradient);
 
 			Assert.AreEqual(-2305.43268, mockPort.Force.Value(), 0.0001);
 			Assert.AreEqual(16.954303841, mockPort.Velocity.Value(), 0.0001);
@@ -136,12 +134,12 @@ namespace TUGraz.VectoCore.Tests.Models.SimulationComponent
 			var absTime = 0.SI<Second>();
 			var dt = 0.5.SI<Second>();
 
-			var retVal = vehicle.Request(absTime, dt, 0.SI<MeterPerSquareSecond>(), 0.SI<Radian>());
+			vehicle.Request(absTime, dt, 0.SI<MeterPerSquareSecond>(), 0.SI<Radian>());
 			vehicle.CommitSimulationStep(writer);
 
 			Assert.AreEqual(48201.2777, ((SI)writer[ModalResultField.P_air]).Value(), 0.1);
 
-			retVal = vehicle.Request(absTime, dt, 1.SI<MeterPerSquareSecond>(), 0.SI<Radian>());
+			vehicle.Request(absTime, dt, 1.SI<MeterPerSquareSecond>(), 0.SI<Radian>());
 			vehicle.CommitSimulationStep(writer);
 			Assert.AreEqual(49735.26379, ((SI)writer[ModalResultField.P_air]).Value(), 0.1);
 		}

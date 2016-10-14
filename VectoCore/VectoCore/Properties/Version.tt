@@ -32,8 +32,8 @@
 <#@ template language="C#" #>
 <#@ output extension=".cs"#>
 using System.Reflection;
-[assembly: AssemblyVersion("3.0.4.<#= this.RevisionNumber #>")]
-[assembly: AssemblyFileVersion("3.0.4.<#= this.RevisionNumber #>")]
+[assembly: AssemblyVersion("3.1.0.<#= this.RevisionNumber #>")]
+[assembly: AssemblyFileVersion("3.1.0.<#= this.RevisionNumber #>")]
 <#+ 
 	int RevisionNumber = (int)(DateTime.UtcNow - new DateTime(2015, 1, 1)).TotalDays; 
 #>

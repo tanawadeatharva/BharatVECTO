@@ -1,0 +1,44 @@
+﻿{
+  "Header": {
+    "CreatedBy": "Raphael Luz IVT TU-Graz (f513c787-07a6-4a67-8bd9-81abd760bcfc)",
+    "Date": "2016-08-02 14:42:10",
+    "AppVersion": "2.2",
+    "FileVersion": 2
+  },
+  "Body": {
+    "SavedInDeclMode": false,
+    "VehicleFile": "VehicleAT.vveh",
+    "EngineFile": "EngineAT.veng",
+    "GearboxFile": "GearboxSerial.vgbx",
+    "Cycles": [
+      "MeasuredSpeedGear_AT-Ser.vdri"
+    ],
+    "AuxiliaryAssembly": "CLASSIC",
+    "AuxiliaryVersion": "CLASSIC",
+    "AdvancedAuxiliaryFilePath": "",
+    "VACC": "Driver.vacc",
+    "EngineOnlyMode": false,
+    "StartStop": {
+      "Enabled": false,
+      "MaxSpeed": 5.0,
+      "MinTime": 5.0,
+      "Delay": 0
+    },
+    "LAC": {
+      "Enabled": false,
+      "Dec": -0.5,
+      "MinSpeed": 50.0,
+      "PreviewDistanceFactor": 10.0,
+      "DF_offset": 2.5,
+      "DF_scaling": 1.5,
+      "DF_targetSpeedLookup": "",
+      "Df_velocityDropLookup": ""
+    },
+    "OverSpeedEcoRoll": {
+      "Mode": "Off",
+      "MinSpeed": 0.0,
+      "OverSpeed": 0.0,
+      "UnderSpeed": 0.0
+    }
+  }
+}

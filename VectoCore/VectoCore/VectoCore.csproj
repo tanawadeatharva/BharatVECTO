@@ -87,6 +87,7 @@
     <Reference Include="itextsharp">
       <HintPath>..\..\packages\iTextSharp.5.5.9\lib\itextsharp.dll</HintPath>
     </Reference>
+    <Reference Include="Microsoft.VisualBasic" />
     <Reference Include="Newtonsoft.Json, Version=4.5.0.0, Culture=neutral, PublicKeyToken=30ad4fe6b2a6aeed, processorArchitecture=MSIL">
       <SpecificVersion>False</SpecificVersion>
       <HintPath>..\..\packages\Newtonsoft.Json.8.0.3\lib\net45\Newtonsoft.Json.dll</HintPath>
@@ -108,6 +109,7 @@
   </ItemGroup>
   <ItemGroup>
     <Compile Include="Configuration\Constants.cs" />
+    <Compile Include="InputData\FileIO\JSON\JSONComponentInputData.cs" />
     <Compile Include="InputData\FileIO\JSON\JsonExtensionMethods.cs" />
     <Compile Include="InputData\Impl\InputData.cs" />
     <Compile Include="InputData\FileIO\JSON\JSONEngineData.cs" />
@@ -116,6 +118,7 @@
     <Compile Include="InputData\FileIO\JSON\JSONInputDataFactory.cs" />
     <Compile Include="InputData\FileIO\JSON\JSONVehicleData.cs" />
     <Compile Include="InputData\IVectoRunDataFactory.cs" />
+    <Compile Include="InputData\Reader\ComponentData\PTOIdleLossMapReader.cs" />
     <Compile Include="InputData\Reader\DataObjectAdapter\AbstractSimulationDataAdapter.cs" />
     <Compile Include="InputData\Reader\DataObjectAdapter\DeclarationDataAdapter.cs" />
     <Compile Include="InputData\Reader\DataObjectAdapter\EngineeringDataAdapter.cs" />
@@ -126,26 +129,48 @@
     <Compile Include="InputData\Reader\Impl\EngineeringModeVectoRunDataFactory.cs" />
     <Compile Include="InputData\Reader\Impl\EngineOnlyVectoRunDataFactory.cs" />
     <Compile Include="InputData\Reader\ShiftPolygonReader.cs" />
+    <Compile Include="Models\Declaration\AuxiliaryTypeHelper.cs" />
     <Compile Include="Models\Connector\Ports\IDriverDemandPort.cs" />
     <Compile Include="Models\Connector\Ports\IDrivingCyclePort.cs" />
     <Compile Include="Models\Connector\Ports\Impl\Response.cs" />
     <Compile Include="Models\Connector\Ports\IFvPort.cs" />
     <Compile Include="Models\Connector\Ports\ITnPort.cs" />
+    <Compile Include="InputData\Reader\ComponentData\AccelerationCurveReader.cs" />
+    <Compile Include="Models\Declaration\PTOTransmission.cs" />
+    <Compile Include="Models\Declaration\IDeclarationAuxiliaryTable.cs" />
+    <Compile Include="Models\SimulationComponent\Data\AngledriveData.cs" />
+    <Compile Include="InputData\Reader\ComponentData\TransmissionLossMapReader.cs" />
+    <Compile Include="InputData\Reader\ComponentData\RetarderLossMapReader.cs" />
+    <Compile Include="InputData\Reader\ComponentData\TorqueConverterDataReader.cs" />
+    <Compile Include="InputData\Reader\ComponentData\AuxiliaryDataReader.cs" />
+    <Compile Include="Models\SimulationComponent\Data\Engine\FuelConsumptionMapReader.cs" />
+    <Compile Include="Models\SimulationComponent\Data\PTOData.cs" />
+    <Compile Include="Models\SimulationComponent\ILossMap.cs" />
+    <Compile Include="Models\SimulationComponent\Data\PTOLossMap.cs" />
+    <Compile Include="Models\SimulationComponent\Impl\AbstractGearbox.cs" />
+    <Compile Include="Models\SimulationComponent\Impl\ATGearbox.cs" />
+    <Compile Include="Models\SimulationComponent\Impl\ATShiftStrategy.cs" />
+    <Compile Include="Models\SimulationComponent\Impl\MeasuredSpeedDrivingCycle.cs" />
+    <Compile Include="Models\SimulationComponent\Impl\PTOCycleController.cs" />
+    <Compile Include="Models\SimulationComponent\Impl\PWheelCycle.cs" />
+    <Compile Include="Models\SimulationComponent\Impl\TorqueConverter.cs" />
+    <Compile Include="Models\SimulationComponent\Impl\IdleControllerSwitcher.cs" />
+    <Compile Include="Utils\ProviderExtensions.cs" />
     <Compile Include="Models\Declaration\AirDrag.cs" />
     <Compile Include="Models\Declaration\Fan.cs" />
     <Compile Include="Models\Declaration\HVAC.cs" />
     <Compile Include="Models\Declaration\LACDecisionFactor.cs" />
+    <Compile Include="Models\Declaration\Payloads.cs" />
     <Compile Include="Models\Declaration\PneumaticSystem.cs" />
     <Compile Include="Models\Declaration\PT1.cs" />
-    <Compile Include="Models\Declaration\Rims.cs" />
     <Compile Include="Models\Declaration\Segments.cs" />
+    <Compile Include="Models\Declaration\StandardBodies.cs" />
     <Compile Include="Models\Declaration\SteeringPump.cs" />
-    <Compile Include="Models\Declaration\TorqueConverter.cs" />
     <Compile Include="Models\Declaration\VehicleClass.cs" />
     <Compile Include="Models\Declaration\Wheels.cs" />
     <Compile Include="Models\Declaration\WHTCCorrection.cs" />
     <Compile Include="Models\SimulationComponent\Data\CrosswindCorrectionCdxALookup.cs" />
-    <Compile Include="Models\SimulationComponent\Data\CrossWindCorrectionCurveReader.cs" />
+    <Compile Include="InputData\Reader\ComponentData\CrossWindCorrectionCurveReader.cs" />
     <Compile Include="Models\SimulationComponent\Data\AuxiliaryData.cs" />
     <Compile Include="Models\SimulationComponent\Data\AuxSupplyPowerReader.cs" />
     <Compile Include="Models\SimulationComponent\Data\AxleGearData.cs" />
@@ -154,7 +179,6 @@
     <Compile Include="Models\Declaration\DeclarationData.cs" />
     <Compile Include="Models\Declaration\ElectricSystem.cs" />
     <Compile Include="Models\Declaration\LookupData.cs" />
-    <Compile Include="Models\Declaration\DeclarationRims.cs" />
     <Compile Include="Models\Declaration\Mission.cs" />
     <Compile Include="Models\Declaration\MissionType.cs" />
     <Compile Include="Models\SimulationComponent\Data\DriverData.cs" />
@@ -164,12 +188,13 @@
     <Compile Include="Models\SimulationComponent\IAuxiliary.cs" />
     <Compile Include="Models\SimulationComponent\IAxlegear.cs" />
     <Compile Include="Models\SimulationComponent\IBrakes.cs" />
-    <Compile Include="Models\SimulationComponent\ICombustionEngineIdleController.cs" />
+    <Compile Include="Models\SimulationComponent\IIdleController.cs" />
     <Compile Include="Models\SimulationComponent\IDriverActions.cs" />
     <Compile Include="Models\SimulationComponent\IDriverStrategy.cs" />
     <Compile Include="Models\SimulationComponent\IDrivingCycleInfo.cs" />
-    <Compile Include="Models\SimulationComponent\IEngineAuxPort.cs" />
+    <Compile Include="Models\SimulationComponent\IAuxPort.cs" />
     <Compile Include="Models\SimulationComponent\Impl\AMTShiftStrategy.cs" />
+    <Compile Include="Models\SimulationComponent\Impl\Angledrive.cs" />
     <Compile Include="Models\SimulationComponent\Impl\Brakes.cs" />
     <Compile Include="Models\SimulationComponent\Impl\BusAuxiliariesAdapter.cs" />
     <Compile Include="Models\SimulationComponent\Impl\CycleGearbox.cs" />
@@ -177,16 +202,14 @@
     <Compile Include="Models\SimulationComponent\Impl\DummyRetarder.cs" />
     <Compile Include="Models\SimulationComponent\Impl\EngineAuxiliary.cs" />
     <Compile Include="Models\SimulationComponent\Impl\EngineOnlyCombustionEngine.cs" />
-    <Compile Include="Models\SimulationComponent\Impl\CycleClutch.cs" />
     <Compile Include="Models\SimulationComponent\Impl\MTShiftStrategy.cs" />
+    <Compile Include="Models\SimulationComponent\Impl\TransmissionComponent.cs" />
     <Compile Include="Models\SimulationComponent\IShiftStrategy.cs" />
     <Compile Include="Models\SimulationComponent\Impl\ShiftStrategy.cs" />
     <Compile Include="Models\Simulation\DataBus\IAxlegearInfo.cs" />
     <Compile Include="Models\Simulation\DataBus\IClutchInfo.cs" />
     <Compile Include="Models\Simulation\DataBus\IDriverInfo.cs" />
     <Compile Include="Models\Simulation\DataBus\IWheelsInfo.cs" />
-    <Compile Include="Models\Simulation\Data\AuxiliaryDemandType.cs" />
-    <Compile Include="Models\SimulationComponent\Data\AuxiliaryType.cs" />
     <Compile Include="Models\SimulationComponent\Data\FullLoadCurve.cs" />
     <Compile Include="Models\Simulation\DataBus\IMileageCounter.cs" />
     <Compile Include="Utils\DebugData.cs" />
@@ -230,7 +253,6 @@
     <Compile Include="Models\SimulationComponent\Data\RetarderLossMap.cs" />
     <Compile Include="Models\SimulationComponent\Data\VehicleData.cs" />
     <Compile Include="Models\SimulationComponent\IClutch.cs" />
-    <Compile Include="Models\SimulationComponent\IPowertrainSimulation.cs" />
     <Compile Include="Models\SimulationComponent\IDrivingCycle.cs" />
     <Compile Include="Models\SimulationComponent\IDriver.cs" />
     <Compile Include="Models\SimulationComponent\Impl\Vehicle.cs" />
@@ -269,8 +291,8 @@
     <Compile Include="Models\Simulation\DataBus\IVehicleInfo.cs" />
     <Compile Include="Models\Simulation\IVehicleContainer.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
+    <Compile Include="Utils\StreamExtensions.cs" />
     <Compile Include="Utils\SwitchExtension.cs" />
-    <Compile Include="Utils\Validation.cs" />
     <Compile Include="Utils\VectoCSVFile.cs" />
     <Compile Include="Utils\DelaunayMap.cs" />
   </ItemGroup>
@@ -282,7 +304,6 @@
       <LastGenOutput>JsonKeys.Designer.cs</LastGenOutput>
       <SubType>Designer</SubType>
     </EmbeddedResource>
-    <EmbeddedResource Include="Resources\Declaration\Rims.csv" />
     <EmbeddedResource Include="Resources\Declaration\Wheels.csv" />
     <EmbeddedResource Include="Resources\Declaration\SegmentTable.csv" />
     <EmbeddedResource Include="Resources\Declaration\MissionCycles\HeavyUrban.vdri" />
@@ -303,7 +324,6 @@
     <EmbeddedResource Include="Resources\Declaration\VAUX\PS-Table.csv" />
     <EmbeddedResource Include="Resources\Declaration\VAUX\SP-Table.csv" />
     <EmbeddedResource Include="Resources\Declaration\VAUX\SP-Tech.csv" />
-    <EmbeddedResource Include="Resources\Declaration\DefaultTC.vtcc" />
     <EmbeddedResource Include="Resources\Declaration\VCDV\parameters.csv" />
     <EmbeddedResource Include="Resources\Declaration\WHTC-Weighting-Factors.csv" />
     <EmbeddedResource Include="Resources\Declaration\VAUX\ALT-Tech.csv" />
@@ -316,6 +336,10 @@
     </None>
     <EmbeddedResource Include="Resources\Declaration\LAC-DF-Vdrop.csv" />
     <EmbeddedResource Include="Resources\Declaration\LAC-DF-Vtarget.csv" />
+    <EmbeddedResource Include="Resources\Declaration\Body_Trailers_Weights.csv" />
+    <EmbeddedResource Include="Resources\Declaration\Payloads.csv" />
+    <EmbeddedResource Include="Resources\Declaration\VAUX\SP-Axles.csv" />
+    <EmbeddedResource Include="Resources\Declaration\VAUX\PTO-tech.csv" />
   </ItemGroup>
   <ItemGroup>
     <EmbeddedResource Include="Resources\Declaration\Report\4x2r.png" />

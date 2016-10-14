@@ -39,4 +39,43 @@ namespace TUGraz.VectoCommon.Models
 		InterurbanBus,
 		Coach
 	}
+
+	public static class VehicleCategoryHelper
+	{
+		public static string GetLabel(this VehicleCategory category)
+		{
+			switch (category)
+			{
+				case VehicleCategory.RigidTruck:
+					return "Rigid Truck";
+				case VehicleCategory.Tractor:
+					return "Tractor";
+				case VehicleCategory.CityBus:
+					return "City Bus";
+				case VehicleCategory.InterurbanBus:
+					return "Interurban Bus";
+				case VehicleCategory.Coach:
+					return "Coach";
+				default:
+					return category.ToString();
+			}
+		}
+		public static string GetCategoryName(this VehicleCategory category)
+		{
+			switch (category) {
+				case VehicleCategory.RigidTruck:
+					return "Rigid Truck";
+				case VehicleCategory.Tractor:
+					return "Semitrailer Truck";
+				case VehicleCategory.CityBus:
+					return "Citybus";
+				case VehicleCategory.InterurbanBus:
+					return "Interurban Bus";
+				case VehicleCategory.Coach:
+					return "Coach";
+				default:
+					return category.ToString();
+			}
+		}
+	}
 }

@@ -37,7 +37,6 @@ using TUGraz.VectoCommon.Models;
 using TUGraz.VectoCommon.Utils;
 using TUGraz.VectoCore.Models.Connector.Ports;
 using TUGraz.VectoCore.Models.Connector.Ports.Impl;
-using TUGraz.VectoCore.OutputData;
 using TUGraz.VectoCore.Utils;
 
 namespace TUGraz.VectoCore.Models.Simulation.Impl
@@ -53,8 +52,6 @@ namespace TUGraz.VectoCore.Models.Simulation.Impl
 		// ReSharper disable once InconsistentNaming
 		protected Second dt = 1.SI<Second>();
 		private bool _cancelled;
-		protected SummaryDataContainer SumWriter { get; set; }
-		protected string JobName { get; set; }
 		protected ISimulationOutPort CyclePort { get; set; }
 
 		[Required, ValidateObject]
@@ -103,7 +100,7 @@ namespace TUGraz.VectoCore.Models.Simulation.Impl
 
 			Log.Info("VectoJob started running.");
 
-			//var lastProgress = -1.0;
+			Container.AbsTime = AbsTime;
 
 			Initialize();
 			try {
@@ -120,6 +117,7 @@ namespace TUGraz.VectoCore.Models.Simulation.Impl
 							Container.FinishSimulation();
 							return;
 						}
+						Container.AbsTime = AbsTime;
 					}
 				} while (response is ResponseSuccess);
 			} catch (VectoSimulationException vse) {

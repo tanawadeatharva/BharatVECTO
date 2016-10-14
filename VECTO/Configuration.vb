@@ -9,22 +9,22 @@
 '
 ' See the LICENSE.txt for the specific language governing permissions and limitations.
 Imports System.Collections.Generic
+Imports System.IO
+Imports Newtonsoft.Json
+Imports Newtonsoft.Json.Linq
+Imports TUGraz.VectoCore.InputData.FileIO.JSON
+Imports TUGraz.VectoCore.Models.Declaration
 
 Public Class Configuration
 	Public FilePath As String
-	Public GnUfromCycle As Boolean
-	Public BatchMode As Boolean
 	Public ModOut As Boolean
 	Public Mod1Hz As Boolean
-	Public BATCHoutpath As String	'Output path for BATCH Mode
-	Public BATCHoutSubD As Boolean
-	Public DistCorr As Boolean
-	Public LogSize As Single
-	Public AirDensity As Single
+	Public LogSize As Double
+	Public AirDensity As Double
 	Public OpenCmd As String
 	Public OpenCmdName As String
-	Public FuelDens As Single
-	Public CO2perFC As Single
+	Public FuelDens As Double
+	Public Co2PerFc As Double
 	Public FirstRun As Boolean
 	Public DeclMode As Boolean
 
@@ -35,27 +35,20 @@ Public Class Configuration
 	End Sub
 
 	Public Sub DeclInit()
-		AirDensity = cDeclaration.AirDensity
-		FuelDens = cDeclaration.FuelDens
-		CO2perFC = cDeclaration.CO2perFC
-		DistCorr = True
-		GnUfromCycle = False
+		AirDensity = DeclarationData.Physics.AirDensity.Value()	' cDeclaration.AirDensity
+		FuelDens = DeclarationData.Physics.FuelDensity.Value()	' cDeclaration.FuelDens
+		CO2perFC = DeclarationData.Physics.CO2PerFuelWeight		' cDeclaration.CO2perFC
 	End Sub
 
 	Public Sub SetDefault()
-		GnUfromCycle = True
-		BatchMode = False
 		ModOut = True
 		Mod1Hz = False
-		BATCHoutpath = sKey.JobPath
-		BATCHoutSubD = False
-		DistCorr = True
 		LogSize = 2
 		AirDensity = 1.2
 		OpenCmd = "notepad"
 		OpenCmdName = "Notepad"
-		FuelDens = 0.835
-		CO2perFC = 3.153
+		FuelDens = DeclarationData.Physics.FuelDensity.Value()
+		CO2perFC = DeclarationData.Physics.CO2PerFuelWeight
 		FirstRun = True
 		DeclMode = True
 	End Sub
@@ -63,78 +56,55 @@ Public Class Configuration
 	Public Sub Load()
 		SetDefault()
 
-		If Not IO.File.Exists(FilePath) Then
-			Exit Sub
-		End If
-
-		Dim json As New JSON
-		If Not json.ReadFile(FilePath) Then
-			GUImsg(tMsgID.Err, "Failed to load settings! Using default settings.")
+		If Not File.Exists(FilePath) Then
 			Exit Sub
 		End If
 
 		Try
-			Dim fileVersion As Short = json.Content("Header")("FileVersion")
+			Using reader As TextReader = File.OpenText(FilePath)
+				Dim content As JToken = JToken.ReadFrom(New JsonTextReader(reader))
 
-			If fileVersion < 2 Then
-				BatchMode = (json.Content("Body")("LastMode") = 1)
-			Else
-				BatchMode = json.Content("Body")("LastModeBatch")
-			End If
-
-			Try
-				Mod1Hz = json.Content("Body")("Mod1Hz")
-			Catch
-			End Try
-
-			ModOut = json.Content("Body")("ModOut")
-			DistCorr = json.Content("Body")("DistCorrection")
-			GnUfromCycle = json.Content("Body")("UseGnUfromCycle")
-			LogSize = json.Content("Body")("LogSize")
-			BATCHoutpath = json.Content("Body")("BATCHoutpath")
-			BATCHoutSubD = json.Content("Body")("BATCHoutSubD")
-			AirDensity = json.Content("Body")("AirDensity")
-			FuelDens = json.Content("Body")("FuelDensity")
-			CO2perFC = json.Content("Body")("CO2perFC")
-			OpenCmd = json.Content("Body")("OpenCmd")
-			OpenCmdName = json.Content("Body")("OpenCmdName")
-			FirstRun = json.Content("Body")("FirstRun")
-			DeclMode = json.Content("Body")("DeclMode")
+				Dim body As JToken = content.GetEx("Body")
+				Try
+					Mod1Hz = body.GetEx(Of Boolean)("Mod1Hz")
+				Catch
+				End Try
+				ModOut = body.GetEx(Of Boolean)("ModOut")
+				LogSize = body.GetEx(Of Double)("LogSize")
+				AirDensity = body.GetEx(Of Double)("AirDensity")
+				FuelDens = body.GetEx(Of Double)("FuelDensity")
+				Co2PerFc = body.GetEx(Of Double)("CO2perFC")
+				OpenCmd = body.GetEx(Of String)("OpenCmd")
+				OpenCmdName = body.GetEx(Of String)("OpenCmdName")
+				FirstRun = body.GetEx(Of Boolean)("FirstRun")
+				DeclMode = body.GetEx(Of Boolean)("DeclMode")
+			End Using
 		Catch ex As Exception
-			GUImsg(tMsgID.Err, "Error while loading settings!")
+			GUIMsg(MessageType.Err, "Error while loading settings!")
 		End Try
 	End Sub
 
 	Public Sub Save()
-		Dim json As New JSON
-		Dim dic As Dictionary(Of String, Object)
 
-		dic = New Dictionary(Of String, Object)
-		dic.Add("CreatedBy", Lic.LicString & " (" & Lic.GUID & ")")
-		dic.Add("Date", Now.ToString)
-		dic.Add("AppVersion", VECTOvers)
-		dic.Add("FileVersion", FormatVersion)
-		json.Content.Add("Header", dic)
+		Dim header As Dictionary(Of String, Object) = New Dictionary(Of String, Object)
+		header.Add("CreatedBy", Lic.LicString & " (" & Lic.GUID & ")")
+		header.Add("Date", Now.ToUniversalTime().ToString("o"))
+		header.Add("AppVersion", VECTOvers)
+		header.Add("FileVersion", FormatVersion)
 
-		dic = New Dictionary(Of String, Object)
-		dic.Add("LastModeBatch", BatchMode)
-		dic.Add("ModOut", ModOut)
-		dic.Add("Mod1Hz", Mod1Hz)
-		dic.Add("DistCorrection", DistCorr)
-		dic.Add("UseGnUfromCycle", GnUfromCycle)
-		dic.Add("LogSize", LogSize)
-		dic.Add("BATCHoutpath", BATCHoutpath)
-		dic.Add("BATCHoutSubD", BATCHoutSubD)
-		dic.Add("AirDensity", AirDensity)
-		dic.Add("FuelDensity", FuelDens)
-		dic.Add("CO2perFC", CO2perFC)
-		dic.Add("OpenCmd", OpenCmd)
-		dic.Add("OpenCmdName", OpenCmdName)
-		dic.Add("FirstRun", FirstRun)
-		dic.Add("DeclMode", DeclMode)
-		json.Content.Add("Body", dic)
+		Dim body As Dictionary(Of String, Object) = New Dictionary(Of String, Object)
+		body.Add("ModOut", ModOut)
+		body.Add("Mod1Hz", Mod1Hz)
+		body.Add("LogSize", LogSize)
+		body.Add("AirDensity", AirDensity)
+		body.Add("FuelDensity", FuelDens)
+		body.Add("CO2perFC", Co2PerFc)
+		body.Add("OpenCmd", OpenCmd)
+		body.Add("OpenCmdName", OpenCmdName)
+		body.Add("FirstRun", FirstRun)
+		body.Add("DeclMode", DeclMode)
 
-		json.WriteFile(FilePath)
+		JSONFileWriter.WriteFile(New Dictionary(Of String, Object) From {{"Header", header}, {"Body", body}}, FilePath)
 	End Sub
 End Class
 

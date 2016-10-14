@@ -29,13 +29,67 @@
 *   Martin Rexeis, rexeis@ivt.tugraz.at, IVT, Graz University of Technology
 */
 
+using System;
+using TUGraz.VectoCommon.Utils;
+
 namespace TUGraz.VectoCommon.Models
 {
 	public enum RetarderType
 	{
 		None,
-		Primary,
-		Secondary,
+		TransmissionInputRetarder,
+		TransmissionOutputRetarder,
+		EngineRetarder,
 		LossesIncludedInTransmission
+	}
+
+	public static class RetarderTypeHelper
+	{
+		public static RetarderType Parse(string retarderType)
+		{
+			switch (retarderType.ToLowerInvariant()) {
+				case "primary":
+					return RetarderType.TransmissionInputRetarder;
+				case "secondary":
+					return RetarderType.TransmissionOutputRetarder;
+				default:
+					return retarderType.ParseEnum<RetarderType>();
+			}
+		}
+
+		public static string GetName(this RetarderType retarder)
+		{
+			switch (retarder) {
+				case RetarderType.TransmissionInputRetarder:
+					return "primary";
+				case RetarderType.TransmissionOutputRetarder:
+					return "secondary";
+				default:
+					return retarder.ToString();
+			}
+		}
+
+		public static string GetLabel(this RetarderType retarder)
+		{
+			switch (retarder) {
+				case RetarderType.None:
+					return "None";
+				case RetarderType.TransmissionInputRetarder:
+					return "Primary Retarder";
+				case RetarderType.TransmissionOutputRetarder:
+					return "Secondary Retarder";
+				case RetarderType.EngineRetarder:
+					return "Engine Retarder";
+				case RetarderType.LossesIncludedInTransmission:
+					return "Included in Transmission Loss Maps";
+				default:
+					throw new ArgumentOutOfRangeException("retarder", retarder, null);
+			}
+		}
+
+		public static bool IsDedicatedComponent(this RetarderType retarder)
+		{
+			return retarder == RetarderType.TransmissionInputRetarder || retarder == RetarderType.TransmissionOutputRetarder;
+		}
 	}
 }

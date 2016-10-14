@@ -7,6 +7,30 @@
 	},
 	"buffers":
 	[
+		{
+			"file": "6-changelog/changelog.md",
+			"settings":
+			{
+				"buffer_size": 16373,
+				"line_ending": "Windows"
+			}
+		},
+		{
+			"file": "3-simulation-models/Driver_LAC.md",
+			"settings":
+			{
+				"buffer_size": 3413,
+				"line_ending": "Windows"
+			}
+		},
+		{
+			"file": "5-input-and-output-files/VAUX.md",
+			"settings":
+			{
+				"buffer_size": 1413,
+				"line_ending": "Windows"
+			}
+		}
 	],
 	"build_system": "",
 	"build_system_choices":
@@ -40,7 +64,11 @@
 	},
 	"expanded_folders":
 	[
-		"/E/QUAM/Workspace/VECTO_quam/User Manual"
+		"/E/QUAM/Workspace/VECTO_quam_master/Documentation/User Manual",
+		"/E/QUAM/Workspace/VECTO_quam_master/Documentation/User Manual/1-user-interface",
+		"/E/QUAM/Workspace/VECTO_quam_master/Documentation/User Manual/3-simulation-models",
+		"/E/QUAM/Workspace/VECTO_quam_master/Documentation/User Manual/5-input-and-output-files",
+		"/E/QUAM/Workspace/VECTO_quam_master/Documentation/User Manual/6-changelog"
 	],
 	"file_history":
 	[
@@ -90,8 +118,95 @@
 	"groups":
 	[
 		{
+			"selected": 0,
 			"sheets":
 			[
+				{
+					"buffer": 0,
+					"file": "6-changelog/changelog.md",
+					"semi_transient": false,
+					"settings":
+					{
+						"buffer_size": 16373,
+						"regions":
+						{
+						},
+						"selection":
+						[
+							[
+								12,
+								531
+							]
+						],
+						"settings":
+						{
+							"syntax": "Packages/Markdown/Markdown.sublime-syntax",
+							"tab_size": 4,
+							"translate_tabs_to_spaces": true
+						},
+						"translation.x": 0.0,
+						"translation.y": 0.0,
+						"zoom_level": 1.0
+					},
+					"stack_index": 0,
+					"type": "text"
+				},
+				{
+					"buffer": 1,
+					"file": "3-simulation-models/Driver_LAC.md",
+					"semi_transient": false,
+					"settings":
+					{
+						"buffer_size": 3413,
+						"regions":
+						{
+						},
+						"selection":
+						[
+							[
+								0,
+								3413
+							]
+						],
+						"settings":
+						{
+							"syntax": "Packages/Markdown/Markdown.sublime-syntax"
+						},
+						"translation.x": 0.0,
+						"translation.y": 0.0,
+						"zoom_level": 1.0
+					},
+					"stack_index": 1,
+					"type": "text"
+				},
+				{
+					"buffer": 2,
+					"file": "5-input-and-output-files/VAUX.md",
+					"semi_transient": true,
+					"settings":
+					{
+						"buffer_size": 1413,
+						"regions":
+						{
+						},
+						"selection":
+						[
+							[
+								0,
+								0
+							]
+						],
+						"settings":
+						{
+							"syntax": "Packages/Markdown/Markdown.sublime-syntax"
+						},
+						"translation.x": 0.0,
+						"translation.y": 0.0,
+						"zoom_level": 1.0
+					},
+					"stack_index": 2,
+					"type": "text"
+				}
 			]
 		}
 	],
@@ -172,7 +287,7 @@
 	"show_open_files": false,
 	"show_tabs": true,
 	"side_bar_visible": true,
-	"side_bar_width": 146.0,
+	"side_bar_width": 325.0,
 	"status_bar_visible": true,
 	"template_settings":
 	{

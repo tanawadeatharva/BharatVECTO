@@ -31,11 +31,8 @@
 
 using System;
 using System.IO;
-using System.Windows.Forms.VisualStyles;
 using TUGraz.VectoCommon.Models;
 using TUGraz.VectoCommon.Utils;
-using TUGraz.VectoCore.Configuration;
-using TUGraz.VectoCore.Models.Simulation;
 using TUGraz.VectoCore.Models.Simulation.Data;
 using TUGraz.VectoCore.Models.Simulation.DataBus;
 using TUGraz.VectoCore.Models.SimulationComponent.Data.Engine;
@@ -46,23 +43,26 @@ using VectoAuxiliaries.Pneumatics;
 
 namespace TUGraz.VectoCore.Models.SimulationComponent.Impl
 {
-	public class BusAuxiliariesAdapter : LoggingObject, IEngineAuxInProvider, IEngineAuxPort
+	public class BusAuxiliariesAdapter : LoggingObject, IAuxInProvider, IAuxPort
 	{
 		protected IDataBus DataBus;
 		protected internal BusAuxState CurrentState;
 		protected internal BusAuxState PreviousState;
 
+		protected internal IAuxPort AdditionalAux;
+
 		protected IAdvancedAuxiliaries Auxiliaries;
 		private readonly FuelConsumptionAdapter _fcMapAdapter;
 
-
 		public BusAuxiliariesAdapter(IDataBus container, string aauxFile, string cycleName, Kilogram vehicleWeight,
-			FuelConsumptionMap fcMap, PerSecond engineIdleSpeed)
+			FuelConsumptionMap fcMap, PerSecond engineIdleSpeed, IAuxPort additionalAux = null)
 		{
 			//	mAAUX_Global.advancedAuxModel.Signals.DeclarationMode = Cfg.DeclMode
 			//	mAAUX_Global.advancedAuxModel.Signals.WHTC = Declaration.WHTCcorrFactor
 			CurrentState = new BusAuxState();
 			PreviousState = new BusAuxState();
+
+			AdditionalAux = additionalAux;
 
 			DataBus = container;
 			var tmpAux = new AdvancedAuxiliaries();
@@ -117,24 +117,28 @@ namespace TUGraz.VectoCore.Models.SimulationComponent.Impl
 			}
 			Logger<BusAuxiliariesAdapter>()
 				.Warn("UnServiced Cycle Name '{0}' in Pneumatics Actuations Map 0 Actuations returned", cycleName);
-			return cycle;
+			return cycleName;
 		}
 
-		public IEngineAuxPort Port()
+		public IAuxPort Port()
 		{
 			return this;
 		}
 
 		public NewtonMeter Initialize(NewtonMeter torque, PerSecond angularSpeed)
 		{
-			PreviousState.TotalFuelConsumption = 0.SI<Kilogram>();
+			//PreviousState.TotalFuelConsumption = 0.SI<Kilogram>();
 			PreviousState.AngularSpeed = angularSpeed;
+			CurrentState.AngularSpeed = angularSpeed;
+			if (AdditionalAux != null) {
+				AdditionalAux.Initialize(torque, angularSpeed);
+			}
 			PreviousState.PowerDemand = GetBusAuxPowerDemand(0.SI<Second>(), 1.SI<Second>(), torque, torque, angularSpeed);
 			return PreviousState.PowerDemand / angularSpeed;
 		}
 
 
-		public NewtonMeter PowerDemand(Second absTime, Second dt, NewtonMeter torquePowerTrain, NewtonMeter torqueEngine,
+		public NewtonMeter TorqueDemand(Second absTime, Second dt, NewtonMeter torquePowerTrain, NewtonMeter torqueEngine,
 			PerSecond angularSpeed, bool dryRun = false)
 		{
 			CurrentState.AngularSpeed = angularSpeed;
@@ -245,7 +249,11 @@ namespace TUGraz.VectoCore.Models.SimulationComponent.Impl
 			}
 			Auxiliaries.Signals.EngineMotoringPower = -DataBus.EngineDragPower(angularSpeed);
 			Auxiliaries.Signals.EngineSpeed = angularSpeed;
-			Auxiliaries.Signals.PreExistingAuxPower = 0.SI<Watt>(); //mAAUX_Global.PreExistingAuxPower;
+			var avgAngularSpeed = (PreviousState.AngularSpeed + CurrentState.AngularSpeed) / 2;
+			Auxiliaries.Signals.PreExistingAuxPower = AdditionalAux != null
+				? AdditionalAux.TorqueDemand(absTime, dt, torquePowerTrain, torqueEngine, angularSpeed, dryRun) * avgAngularSpeed
+				: 0.SI<Watt>();
+			//mAAUX_Global.PreExistingAuxPower;
 			Auxiliaries.Signals.Idle = DataBus.VehicleStopped;
 			Auxiliaries.Signals.InNeutral = DataBus.Gear == 0;
 			Auxiliaries.Signals.RunningCalc = true;
@@ -253,7 +261,7 @@ namespace TUGraz.VectoCore.Models.SimulationComponent.Impl
 			//mAAUX_Global.Internal_Engine_Power;
 			//'Power coming out of Advanced Model is in Watts.
 
-			return Auxiliaries.AuxiliaryPowerAtCrankWatts;
+			return Auxiliaries.AuxiliaryPowerAtCrankWatts + Auxiliaries.Signals.PreExistingAuxPower;
 		}
 
 		protected class FuelConsumptionAdapter : IFuelConsumptionMap
@@ -264,7 +272,7 @@ namespace TUGraz.VectoCore.Models.SimulationComponent.Impl
 
 			public KilogramPerSecond GetFuelConsumption(NewtonMeter torque, PerSecond angularVelocity)
 			{
-				return FcMap.GetFuelConsumption(torque, angularVelocity, AllowExtrapolation);
+				return FcMap.GetFuelConsumption(torque, angularVelocity, AllowExtrapolation).Value;
 			}
 		}
 
@@ -273,7 +281,7 @@ namespace TUGraz.VectoCore.Models.SimulationComponent.Impl
 			public Second dt;
 			public PerSecond AngularSpeed;
 			public Watt PowerDemand;
-			public Kilogram TotalFuelConsumption;
+			public Kilogram TotalFuelConsumption = 0.SI<Kilogram>();
 		}
 	}
 }

@@ -33,11 +33,11 @@ using System;
 using System.Collections.Generic;
 using System.Diagnostics;
 using System.Linq;
+using System.Runtime.CompilerServices;
 using TUGraz.VectoCommon.Exceptions;
 using TUGraz.VectoCommon.Models;
-using TUGraz.VectoCommon.Utils;
 
-namespace TUGraz.VectoCore.Utils
+namespace TUGraz.VectoCommon.Utils
 {
 	/// <summary>
 	/// Provides helper methods for mathematical functions.
@@ -131,11 +131,6 @@ namespace TUGraz.VectoCore.Utils
 			return value;
 		}
 
-		public static T Sqrt<T>(SI si) where T : SIBase<T>
-		{
-			return si.Sqrt().Cast<T>();
-		}
-
 		/// <summary>
 		///		converts the given inclination in percent (0-1+) into Radians
 		/// </summary>
@@ -159,7 +154,7 @@ namespace TUGraz.VectoCore.Utils
 				retVal.Add((-b - Math.Sqrt(d)) / (2 * a));
 			} else {
 				// only one solution possible
-				retVal.Add((-b / (2 * a)));
+				retVal.Add(-b / (2 * a));
 			}
 			return retVal;
 		}
@@ -191,7 +186,7 @@ namespace TUGraz.VectoCore.Utils
 			}
 			var t = tNumer / denom;
 
-			return new Point(line1.P1.X + (t * s10X), line1.P1.Y + t * s10Y);
+			return new Point(line1.P1.X + t * s10X, line1.P1.Y + t * s10Y);
 		}
 
 		/// <summary>
@@ -264,6 +259,46 @@ namespace TUGraz.VectoCore.Utils
 		public static T Ceiling<T>(T si) where T : SIBase<T>
 		{
 			return Math.Ceiling(si.Value()).SI<T>();
+		}
+
+		public static List<double> CubicEquationSolver(double a, double b, double c, double d)
+		{
+			var solutions = new List<double>();
+			if (a.IsEqual(0, 1e-12)) {
+				return QuadraticEquationSolver(b, c, d);
+			}
+			var w = b / (3 * a);
+			var p = Math.Pow(c / (3 * a) - w * w, 3);
+			var q = -0.5 * (2 * (w * w * w) - (c * w - d) / a);
+			var discriminant = q * q + p;
+			if (discriminant < 0.0) {
+				// 3 real solutions
+				var h = q / Math.Sqrt(-p);
+				var phi = Math.Acos(Math.Max(-1.0, Math.Min(1.0, h)));
+				p = 2 * Math.Pow(-p, 1.0 / 6.0);
+				for (var i = 0; i < 3; i++) {
+					solutions.Add(p * Math.Cos((phi + 2 * i * Math.PI) / 3.0) - w);
+				}
+			} else {
+				// only one real solution
+				discriminant = Math.Sqrt(discriminant);
+				solutions.Add(Cbrt(q + discriminant) + Cbrt(q - discriminant) - w);
+			}
+
+			// 1 Newton iteration step in order to minimize round-off errors
+			for (var i = 0; i < solutions.Count; i++) {
+				var h = c + solutions[i] * (2 * b + 3 * solutions[i] * a);
+				if (!h.IsEqual(0, 1e-12)) {
+					solutions[i] -= (d + solutions[i] * (c + solutions[i] * (b + solutions[i] * a))) / h;
+				}
+			}
+			solutions.Sort();
+			return solutions;
+		}
+
+		private static double Cbrt(double x)
+		{
+			return x < 0 ? -Math.Pow(-x, 1.0 / 3.0) : Math.Pow(x, 1.0 / 3.0);
 		}
 	}
 
@@ -382,10 +417,10 @@ namespace TUGraz.VectoCore.Utils
 	[DebuggerDisplay("Plane({X}, {Y}, {Z}, {W})")]
 	public class Plane
 	{
-		public double X;
-		public double Y;
-		public double Z;
-		public double W;
+		public readonly double X;
+		public readonly double Y;
+		public readonly double Z;
+		public readonly double W;
 
 		public Plane(double x, double y, double z, double w)
 		{
@@ -437,13 +472,20 @@ namespace TUGraz.VectoCore.Utils
 		/// <param name="y"></param>
 		/// <param name="exact"></param>
 		/// <returns></returns>
+		[MethodImpl(MethodImplOptions.AggressiveInlining)]
 		public bool IsInside(double x, double y, bool exact)
 		{
-			if ((P1.Y < y && P2.Y < y && P3.Y < y)
-				|| (P1.X < x && P2.X < x && P3.X < x)
-				|| (P1.X > x && P2.X > x && P3.X > x)
-				|| (P1.Y > y && P2.Y > y && P3.Y > y))
+			var smallerY = y - DoubleExtensionMethods.Tolerance;
+			var biggerY = y + DoubleExtensionMethods.Tolerance;
+			var smallerX = x - DoubleExtensionMethods.Tolerance;
+			var biggerX = x + DoubleExtensionMethods.Tolerance;
+
+			if ((P1.Y < smallerY && P2.Y < smallerY && P3.Y < smallerY)
+				|| (P1.X < smallerX && P2.X < smallerX && P3.X < smallerX)
+				|| (P1.X > biggerX && P2.X > biggerX && P3.X > biggerX)
+				|| (P1.Y > biggerY && P2.Y > biggerY && P3.Y > biggerY)) {
 				return false;
+			}
 
 			var v0X = P3.X - P1.X;
 			var v0Y = P3.Y - P1.Y;

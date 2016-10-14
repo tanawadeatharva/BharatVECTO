@@ -64,7 +64,7 @@ namespace TUGraz.VectoCore.Models.SimulationComponent.Impl
 
 			var auxTorqueDemand = EngineAux == null
 				? 0.SI<NewtonMeter>()
-				: EngineAux.PowerDemand(absTime, dt, CurrentState.EngineTorqueOut,
+				: EngineAux.TorqueDemand(absTime, dt, CurrentState.EngineTorqueOut,
 					CurrentState.EngineTorqueOut + CurrentState.InertiaTorqueLoss, angularVelocity, dryRun);
 
 			var totalTorqueDemand = CurrentState.EngineTorqueOut + auxTorqueDemand + CurrentState.InertiaTorqueLoss;

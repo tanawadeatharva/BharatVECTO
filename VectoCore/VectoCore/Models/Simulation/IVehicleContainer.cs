@@ -37,7 +37,6 @@ using TUGraz.VectoCore.Models.Simulation.DataBus;
 using TUGraz.VectoCore.Models.Simulation.Impl;
 using TUGraz.VectoCore.Models.SimulationComponent;
 using TUGraz.VectoCore.OutputData;
-using TUGraz.VectoCore.Utils;
 
 namespace TUGraz.VectoCore.Models.Simulation
 {
@@ -55,6 +54,8 @@ namespace TUGraz.VectoCore.Models.Simulation
 		ISimulationOutPort GetCycleOutPort();
 
 		VectoRun.Status RunStatus { get; set; }
+
+		Second AbsTime { get; set; }
 
 		/// <summary>
 		/// Adds a component to the vehicle container.

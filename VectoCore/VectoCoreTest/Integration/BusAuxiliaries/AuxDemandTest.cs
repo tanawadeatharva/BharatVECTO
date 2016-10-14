@@ -60,7 +60,7 @@ namespace TUGraz.VectoCore.Tests.Integration.BusAuxiliaries
 			var engineSpeed = engineSpeedRpm.RPMtoRad();
 			busAux.Initialize(engineDrivelinePower / engineSpeed, engineSpeed);
 
-			var torque = busAux.PowerDemand(0.SI<Second>(), 1.SI<Second>(), engineDrivelinePower / engineSpeed,
+			var torque = busAux.TorqueDemand(0.SI<Second>(), 1.SI<Second>(), engineDrivelinePower / engineSpeed,
 				(internalPower * 1000).SI<Watt>() / engineSpeed, engineSpeed);
 
 			Assert.AreEqual(expectedPowerDemand, (torque * engineSpeed).Value(), 1e-2);
@@ -83,7 +83,7 @@ namespace TUGraz.VectoCore.Tests.Integration.BusAuxiliaries
 			var modalData = new MockModalDataContainer();
 
 			for (int i = 0; i < 10; i++) {
-				var torque = busAux.PowerDemand(0.SI<Second>(), 1.SI<Second>(), engineDrivelinePower / engineSpeed,
+				var torque = busAux.TorqueDemand(0.SI<Second>(), 1.SI<Second>(), engineDrivelinePower / engineSpeed,
 					(internalPower * 1000).SI<Watt>() / engineSpeed, engineSpeed);
 				Assert.AreEqual(6086.9321, (torque * engineSpeed).Value(), 1e-3);
 				busAux.DoWriteModalResults(modalData);
@@ -95,7 +95,7 @@ namespace TUGraz.VectoCore.Tests.Integration.BusAuxiliaries
 			internalPower = -50;
 
 			for (int i = 0; i < 10; i++) {
-				var torque = busAux.PowerDemand(0.SI<Second>(), 1.SI<Second>(), engineDrivelinePower / engineSpeed,
+				var torque = busAux.TorqueDemand(0.SI<Second>(), 1.SI<Second>(), engineDrivelinePower / engineSpeed,
 					(internalPower * 1000).SI<Watt>() / engineSpeed, engineSpeed);
 				Assert.AreEqual(8954.1396, (torque * engineSpeed).Value(), 1e-3);
 				busAux.DoWriteModalResults(modalData);
@@ -107,7 +107,7 @@ namespace TUGraz.VectoCore.Tests.Integration.BusAuxiliaries
 			internalPower = 148;
 
 			for (int i = 0; i < 10; i++) {
-				var torque = busAux.PowerDemand(0.SI<Second>(), 1.SI<Second>(), engineDrivelinePower / engineSpeed,
+				var torque = busAux.TorqueDemand(0.SI<Second>(), 1.SI<Second>(), engineDrivelinePower / engineSpeed,
 					(internalPower * 1000).SI<Watt>() / engineSpeed, engineSpeed);
 				Assert.AreEqual(6086.9321, (torque * engineSpeed).Value(), 1e-3);
 				busAux.DoWriteModalResults(modalData);
@@ -123,7 +123,7 @@ namespace TUGraz.VectoCore.Tests.Integration.BusAuxiliaries
 			var engineFCMapFilePath = @"TestData\Integration\BusAuxiliaries\24t Coach.vmap";
 
 			var vehicle = new VehicleContainer(ExecutionMode.Engineering);
-			var fcMap = FuelConsumptionMap.ReadFromFile(engineFCMapFilePath);
+			var fcMap = FuelConsumptionMapReader.ReadFromFile(engineFCMapFilePath);
 			var fld = EngineFullLoadCurve.ReadFromFile(engineFLDFilePath);
 			var modelData = new CombustionEngineData() {
 				ConsumptionMap = fcMap,

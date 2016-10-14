@@ -10,6 +10,8 @@ This file contains the full load and drag curves and the PT1 values for the [tra
     + **PT1 [s]**: the PT1 constant for the transient full load calculation.
 - Requires at least 2 data entries
 
+**Note:** The PT1 column is not required in Declaration Mode! Pre-defined values are used.
+
 **Example:**
 
 ~~~

@@ -40,7 +40,6 @@ using TUGraz.VectoCore.Models.Connector.Ports;
 using TUGraz.VectoCore.Models.Connector.Ports.Impl;
 using TUGraz.VectoCore.Models.Simulation;
 using TUGraz.VectoCore.Models.Simulation.Data;
-using TUGraz.VectoCore.Models.Simulation.DataBus;
 using TUGraz.VectoCore.Models.SimulationComponent.Data;
 using TUGraz.VectoCore.OutputData;
 using TUGraz.VectoCore.Utils;
@@ -50,18 +49,25 @@ namespace TUGraz.VectoCore.Models.SimulationComponent.Impl
 	/// <summary>
 	///     Class representing one Distance Based Driving Cycle
 	/// </summary>
-	public sealed class DistanceBasedDrivingCycle :
-		StatefulVectoSimulationComponent<DistanceBasedDrivingCycle.DrivingCycleState>, IDrivingCycle, ISimulationOutPort,
-		IDrivingCycleInPort, IDisposable
+	public sealed class DistanceBasedDrivingCycle : StatefulProviderComponent
+		<DistanceBasedDrivingCycle.DrivingCycleState, ISimulationOutPort, IDrivingCycleInPort, IDrivingCycleOutPort>,
+		IDrivingCycle, ISimulationOutPort, IDrivingCycleInPort, IDisposable
 	{
 		private const double LookaheadTimeSafetyMargin = 1.5;
 		private readonly DrivingCycleData _data;
-
 		internal readonly DrivingCycleEnumerator CycleIntervalIterator;
-
-		private IDrivingCycleOutPort _nextComponent;
-
 		private bool _intervalProlonged;
+		internal IdleControllerSwitcher IdleController;
+
+		private DrivingCycleData.DrivingCycleEntry Left
+		{
+			get { return CycleIntervalIterator.LeftSample; }
+		}
+
+		private DrivingCycleData.DrivingCycleEntry Right
+		{
+			get { return CycleIntervalIterator.RightSample; }
+		}
 
 		public DistanceBasedDrivingCycle(IVehicleContainer container, DrivingCycleData cycle) : base(container)
 		{
@@ -79,105 +85,134 @@ namespace TUGraz.VectoCore.Models.SimulationComponent.Impl
 			CurrentState = PreviousState.Clone();
 		}
 
-		#region IDrivingCycleInProvider
-
-		public IDrivingCycleInPort InPort()
+		public IResponse Initialize()
 		{
-			return this;
+			if (Left.VehicleTargetSpeed.IsEqual(0)) {
+				var retVal = NextComponent.Initialize(DataBus.StartSpeed,
+					Left.RoadGradient, DataBus.StartAcceleration);
+				if (!(retVal is ResponseSuccess)) {
+					throw new UnexpectedResponseException("Couldn't find start gear.", retVal);
+				}
+			}
+
+			return NextComponent.Initialize(Left.VehicleTargetSpeed,
+				Left.RoadGradient);
 		}
 
-		#endregion
-
-		#region ISimulationOutProvider
-
-		public ISimulationOutPort OutPort()
+		public IResponse Request(Second absTime, Second dt)
 		{
-			return this;
+			throw new NotImplementedException("Distance Based Driving Cycle does not support time requests.");
 		}
-
-		#endregion
-
-		#region IDrivingCycleInPort
-
-		public void Connect(IDrivingCycleOutPort other)
-		{
-			_nextComponent = other;
-		}
-
-		#endregion
-
-		#region ISimulationOutPort
 
 		public IResponse Request(Second absTime, Meter ds)
 		{
-			var retVal = DoHandleRequest(absTime, ds);
-			CurrentState.Response = retVal;
-			return retVal;
-		}
+			if (Left.Distance.IsEqual(PreviousState.Distance.Value())) {
+				// we are exactly on an entry in the cycle.
+				var stopTime = Left.PTOActive && IdleController != null
+					? Left.StoppingTime + IdleController.Duration
+					: Left.StoppingTime;
 
-		/// <summary>
-		/// Does the handle request.
-		/// </summary>
-		/// <param name="absTime">The abs time.</param>
-		/// <param name="ds">The ds.</param>
-		/// <returns></returns>
-		/// <exception cref="VectoSimulationException">Stopping Time only allowed when target speed is zero!</exception>
-		private IResponse DoHandleRequest(Second absTime, Meter ds)
-		{
-			if (CycleIntervalIterator.LeftSample.Distance.IsEqual(PreviousState.Distance.Value())) {
-				// exactly on an entry in the cycle...
-				if (!CycleIntervalIterator.LeftSample.StoppingTime.IsEqual(0)
-					&& CycleIntervalIterator.LeftSample.StoppingTime > PreviousState.WaitTime) {
-					// stop for certain time unless we've already waited long enough...
-					if (!CycleIntervalIterator.LeftSample.VehicleTargetSpeed.IsEqual(0)) {
+				if (stopTime.IsGreater(0) && PreviousState.WaitTime.IsSmaller(stopTime)) {
+					// stop for certain time unless we've already waited long enough ...
+
+					// we are stopping: ensure that velocity is 0.
+					if (!Left.VehicleTargetSpeed.IsEqual(0)) {
 						Log.Warn("Stopping Time requested in cycle but target-velocity not zero. distance: {0}, target speed: {1}",
-							CycleIntervalIterator.LeftSample.StoppingTime, CycleIntervalIterator.LeftSample.VehicleTargetSpeed);
+							Left.StoppingTime, Left.VehicleTargetSpeed);
 						throw new VectoSimulationException("Stopping Time only allowed when target speed is zero!");
 					}
-					var dt = CycleIntervalIterator.LeftSample.StoppingTime - PreviousState.WaitTime;
-					if (CycleIntervalIterator.LeftSample.StoppingTime.IsGreater(3 * Constants.SimulationSettings.TargetTimeInterval)) {
-						// split into 3 parts
-						if (PreviousState.WaitTime.IsEqual(0)) {
-							dt = Constants.SimulationSettings.TargetTimeInterval;
-						} else {
-							if (dt > Constants.SimulationSettings.TargetTimeInterval) {
-								dt -= Constants.SimulationSettings.TargetTimeInterval;
-							}
-						}
-					}
-					return DriveTimeInterval(absTime, dt);
+
+					CurrentState.Response = DriveTimeInterval(absTime, GetStopTimeInterval());
+					return CurrentState.Response;
 				}
 			}
 			if (CycleIntervalIterator.LastEntry && PreviousState.Distance.IsEqual(CycleIntervalIterator.RightSample.Distance)) {
-				return new ResponseCycleFinished();
+				CurrentState.Response = new ResponseCycleFinished();
+				return CurrentState.Response;
 			}
 
 			var nextSpeedChange = GetSpeedChangeWithinSimulationInterval(ds);
 			if (nextSpeedChange == null || ds.IsSmallerOrEqual(nextSpeedChange - PreviousState.Distance)) {
 				if (nextSpeedChange == null || DataBus.VehicleSpeed.IsEqual(0.SI<MeterPerSecond>())) {
-					return DriveDistance(absTime, ds);
+					CurrentState.Response = DriveDistance(absTime, ds);
+					return CurrentState.Response;
 				}
 				var remainingDistance = nextSpeedChange - PreviousState.Distance - ds;
 				var estimatedRemainingTime = remainingDistance / DataBus.VehicleSpeed;
 				if (_intervalProlonged || remainingDistance.IsEqual(0.SI<Meter>()) ||
 					estimatedRemainingTime.IsGreater(Constants.SimulationSettings.LowerBoundTimeInterval)) {
-					return DriveDistance(absTime, ds);
+					CurrentState.Response = DriveDistance(absTime, ds);
+					return CurrentState.Response;
 				}
 				Log.Debug("Extending distance by {0} to next sample point. ds: {1} new ds: {2}", remainingDistance, ds,
 					nextSpeedChange - PreviousState.Distance);
 				_intervalProlonged = true;
-				return new ResponseDrivingCycleDistanceExceeded {
+				CurrentState.Response = new ResponseDrivingCycleDistanceExceeded {
 					Source = this,
 					MaxDistance = nextSpeedChange - PreviousState.Distance
 				};
+				return CurrentState.Response;
 			}
 			// only drive until next sample point in cycle with speed change
 			Log.Debug("Limiting distance to next sample point {0}",
 				CycleIntervalIterator.RightSample.Distance - PreviousState.Distance);
-			return new ResponseDrivingCycleDistanceExceeded {
+			CurrentState.Response = new ResponseDrivingCycleDistanceExceeded {
 				Source = this,
 				MaxDistance = nextSpeedChange - PreviousState.Distance
 			};
+			return CurrentState.Response;
+		}
+
+		private Second GetStopTimeInterval()
+		{
+			if (Left.PTOActive && IdleController != null) {
+				if (Left.StoppingTime.IsGreater(0)) {
+					// we have a pto cycle with stopping time: split into 3 parts: 1/2 stoptime, pto duration, 1/2 stoptime
+					if (PreviousState.WaitTime.IsEqual(0)) {
+						// first step: set dt to 1/2 stopping time
+						return Left.StoppingTime / 2;
+					} else {
+						if (PreviousState.WaitTime.IsEqual(Left.StoppingTime / 2)) {
+							// begining the second step: activate pto
+							IdleController.ActivatePTO();
+						}
+						// second step: drive pto cycle intervals
+						var dt = IdleController.GetNextCycleTime();
+						if (dt == null) {
+							// third step: pto has finished. activate normal idle controller and drive 1/2 stopping time again.
+							IdleController.ActivateIdle();
+							return Left.StoppingTime / 2;
+						}
+						return dt;
+					}
+				} else {
+					// we have a pto cycle without stopping time.
+					if (PreviousState.WaitTime.IsEqual(0)) {
+						// begininng: activate pto
+						IdleController.ActivatePTO();
+					}
+
+					return IdleController.GetNextCycleTime();
+				}
+			} else {
+				if (Left.StoppingTime.IsGreater(3 * Constants.SimulationSettings.TargetTimeInterval)) {
+					// split into 3 parts: targettime, stoptime-2*targettime, targettime
+					if (PreviousState.WaitTime.IsEqual(0)) {
+						// first step: just started waiting: set dt to targettime
+						return Constants.SimulationSettings.TargetTimeInterval;
+					} else {
+						// continue waiting with rest time
+						var dt = Left.StoppingTime - PreviousState.WaitTime;
+						// in second step dt is stoptime - targettime, therefore 1 targettime still has to be subtracted.
+						// in third step dt is exactly targettime.
+						if (dt.IsGreater(Constants.SimulationSettings.TargetTimeInterval)) {
+							dt -= Constants.SimulationSettings.TargetTimeInterval;
+						}
+						return dt;
+					}
+				}
+				return Left.StoppingTime;
+			}
 		}
 
 		private IResponse DriveTimeInterval(Second absTime, Second dt)
@@ -185,9 +220,9 @@ namespace TUGraz.VectoCore.Models.SimulationComponent.Impl
 			CurrentState.AbsTime = PreviousState.AbsTime + dt;
 			CurrentState.WaitTime = PreviousState.WaitTime + dt;
 			CurrentState.Gradient = ComputeGradient(0.SI<Meter>());
-			CurrentState.VehicleTargetSpeed = CycleIntervalIterator.LeftSample.VehicleTargetSpeed;
+			CurrentState.VehicleTargetSpeed = Left.VehicleTargetSpeed;
 
-			return _nextComponent.Request(absTime, dt, CycleIntervalIterator.LeftSample.VehicleTargetSpeed, CurrentState.Gradient);
+			return NextComponent.Request(absTime, dt, Left.VehicleTargetSpeed, CurrentState.Gradient);
 		}
 
 		private IResponse DriveDistance(Second absTime, Meter ds)
@@ -205,22 +240,79 @@ namespace TUGraz.VectoCore.Models.SimulationComponent.Impl
 
 			CurrentState.Distance = PreviousState.Distance + ds;
 			CurrentState.SimulationDistance = ds;
-			CurrentState.VehicleTargetSpeed = CycleIntervalIterator.LeftSample.VehicleTargetSpeed;
+			CurrentState.VehicleTargetSpeed = Left.VehicleTargetSpeed;
 			CurrentState.Gradient = ComputeGradient(ds);
 
-			var retVal = _nextComponent.Request(absTime, ds, CurrentState.VehicleTargetSpeed, CurrentState.Gradient);
+			var retVal = NextComponent.Request(absTime, ds, CurrentState.VehicleTargetSpeed, CurrentState.Gradient);
 			retVal.Switch()
 				.Case<ResponseFailTimeInterval>(
 					r => {
-						retVal = _nextComponent.Request(absTime, r.DeltaT, 0.SI<MeterPerSecond>(), CurrentState.Gradient);
-						retVal = _nextComponent.Request(absTime, ds, CurrentState.VehicleTargetSpeed, CurrentState.Gradient);
+						retVal = NextComponent.Request(absTime, r.DeltaT, 0.SI<MeterPerSecond>(), CurrentState.Gradient);
+						retVal = NextComponent.Request(absTime, ds, CurrentState.VehicleTargetSpeed, CurrentState.Gradient);
 					});
 			return retVal;
 		}
 
+		protected override void DoWriteModalResults(IModalDataContainer container)
+		{
+			container[ModalResultField.dist] = CurrentState.Distance; // (CurrentState.Distance + PreviousState.Distance) / 2.0;
+			container[ModalResultField.simulationDistance] = CurrentState.SimulationDistance;
+			container[ModalResultField.v_targ] = CurrentState.VehicleTargetSpeed;
+			container[ModalResultField.grad] = (Math.Tan(CurrentState.Gradient.Value()) * 100).SI<Scalar>();
+			container[ModalResultField.altitude] = CurrentState.Altitude;
+
+			if (IdleController != null) {
+				IdleController.CommitSimulationStep(container);
+			}
+		}
+
+		protected override void DoCommitSimulationStep()
+		{
+			if (!(CurrentState.Response is ResponseSuccess)) {
+				throw new VectoSimulationException("Previous request did not succeed!");
+			}
+
+			PreviousState = CurrentState;
+			CurrentState = CurrentState.Clone();
+			_intervalProlonged = false;
+
+			var stopTime = Left.PTOActive && IdleController != null
+				? Left.StoppingTime + IdleController.Duration
+				: Left.StoppingTime;
+
+			if (!stopTime.IsEqual(0) && stopTime.IsEqual(PreviousState.WaitTime)) {
+				// we needed to stop at the current interval in the cycle and have already waited enough time, move on..
+				if (IdleController != null)
+					IdleController.ActivateIdle();
+				CycleIntervalIterator.MoveNext();
+			}
+
+			stopTime = Left.PTOActive && IdleController != null ? Left.StoppingTime + IdleController.Duration : Left.StoppingTime;
+
+			// separately test for equality and greater than to have tolerance for equality comparison
+			if (stopTime.IsEqual(0)) {
+				while (stopTime.IsEqual(0) && CurrentState.Distance.IsGreaterOrEqual(CycleIntervalIterator.RightSample.Distance) &&
+						!CycleIntervalIterator.LastEntry) {
+					// we have reached the end of the current interval in the cycle, move on...
+					CycleIntervalIterator.MoveNext();
+
+					stopTime = Left.PTOActive && IdleController != null
+						? Left.StoppingTime + IdleController.Duration
+						: Left.StoppingTime;
+				}
+			} else {
+				if (stopTime.IsEqual(PreviousState.WaitTime)) {
+					// we needed to stop at the current interval in the cycle and have already waited enough time, move on..
+					if (IdleController != null)
+						IdleController.ActivateIdle();
+					CycleIntervalIterator.MoveNext();
+				}
+			}
+		}
+
 		private Radian ComputeGradient(Meter ds)
 		{
-			//var leftSamplePoint = CycleIntervalIterator.LeftSample;
+			//var leftSamplePoint = Left;
 
 			var cycleIterator = CycleIntervalIterator.Clone();
 			while (cycleIterator.RightSample.Distance < PreviousState.Distance + ds && !cycleIterator.LastEntry) {
@@ -239,14 +331,14 @@ namespace TUGraz.VectoCore.Models.SimulationComponent.Impl
 				leftSamplePoint.Altitude, rightSamplePoint.Altitude, PreviousState.Distance + ds);
 
 			var gradient = VectoMath.InclinationToAngle(((CurrentState.Altitude - PreviousState.Altitude) /
-														(ds)).Value());
+														ds).Value());
 			//return 0.SI<Radian>();
 			return gradient;
 		}
 
 		private Meter GetSpeedChangeWithinSimulationInterval(Meter ds)
 		{
-			var leftSamplePoint = CycleIntervalIterator.LeftSample;
+			var leftSamplePoint = Left;
 			var cycleIterator = CycleIntervalIterator.Clone();
 
 			do {
@@ -258,25 +350,6 @@ namespace TUGraz.VectoCore.Models.SimulationComponent.Impl
 				return cycleIterator.RightSample.Distance;
 			}
 			return null;
-		}
-
-		public IResponse Request(Second absTime, Second dt)
-		{
-			throw new NotImplementedException("Distance Based Driving Cycle does not support time requests.");
-		}
-
-		public IResponse Initialize()
-		{
-			if (CycleIntervalIterator.LeftSample.VehicleTargetSpeed.IsEqual(0)) {
-				var retVal = _nextComponent.Initialize(DataBus.StartSpeed,
-					CycleIntervalIterator.LeftSample.RoadGradient, DataBus.StartAcceleration);
-				if (!(retVal is ResponseSuccess)) {
-					throw new UnexpectedResponseException("Couldn't find start gear.", retVal);
-				}
-			}
-
-			return _nextComponent.Initialize(CycleIntervalIterator.LeftSample.VehicleTargetSpeed,
-				CycleIntervalIterator.LeftSample.RoadGradient);
 		}
 
 		/// <summary>
@@ -294,53 +367,6 @@ namespace TUGraz.VectoCore.Models.SimulationComponent.Impl
 		}
 
 		public Meter CycleStartDistance { get; internal set; }
-
-		#endregion
-
-		#region VectoSimulationComponent
-
-		protected override void DoWriteModalResults(IModalDataContainer container)
-		{
-			container[ModalResultField.dist] = CurrentState.Distance; // (CurrentState.Distance + PreviousState.Distance) / 2.0;
-			container[ModalResultField.simulationDistance] = CurrentState.SimulationDistance;
-			container[ModalResultField.v_targ] = CurrentState.VehicleTargetSpeed;
-			container[ModalResultField.grad] = (Math.Tan(CurrentState.Gradient.Value()) * 100).SI<Scalar>();
-			container[ModalResultField.altitude] = CurrentState.Altitude;
-		}
-
-		protected override void DoCommitSimulationStep()
-		{
-			if (!(CurrentState.Response is ResponseSuccess)) {
-				throw new VectoSimulationException("Previous request did not succeed!");
-			}
-
-			PreviousState = CurrentState;
-			CurrentState = CurrentState.Clone();
-			_intervalProlonged = false;
-
-			if (!CycleIntervalIterator.LeftSample.StoppingTime.IsEqual(0) &&
-				CycleIntervalIterator.LeftSample.StoppingTime.IsEqual(PreviousState.WaitTime)) {
-				// we needed to stop at the current interval in the cycle and have already waited enough time, move on..
-				CycleIntervalIterator.MoveNext();
-			}
-
-			// separately test for equality and greater than to have tolerance for equality comparison
-			if (CycleIntervalIterator.LeftSample.StoppingTime.IsEqual(0)) {
-				while (CycleIntervalIterator.LeftSample.StoppingTime.IsEqual(0) &&
-						CurrentState.Distance.IsGreaterOrEqual(CycleIntervalIterator.RightSample.Distance) &&
-						!CycleIntervalIterator.LastEntry) {
-					// we have reached the end of the current interval in the cycle, move on...
-					CycleIntervalIterator.MoveNext();
-				}
-			} else {
-				if (CycleIntervalIterator.LeftSample.StoppingTime.IsEqual(PreviousState.WaitTime)) {
-					// we needed to stop at the current interval in the cycle and have already waited enough time, move on..
-					CycleIntervalIterator.MoveNext();
-				}
-			}
-		}
-
-		#endregion
 
 		public IReadOnlyList<DrivingCycleData.DrivingCycleEntry> LookAhead(Meter lookaheadDistance)
 		{
@@ -389,7 +415,7 @@ namespace TUGraz.VectoCore.Models.SimulationComponent.Impl
 				return new CycleData {
 					AbsTime = CurrentState.AbsTime,
 					AbsDistance = CurrentState.Distance,
-					LeftSample = CycleIntervalIterator.LeftSample,
+					LeftSample = Left,
 					RightSample = CycleIntervalIterator.RightSample
 				};
 			}
@@ -406,7 +432,7 @@ namespace TUGraz.VectoCore.Models.SimulationComponent.Impl
 			while (myIterator.RightSample.Distance < absDistance) {
 				myIterator.MoveNext();
 			}
-			
+
 			return InterpolateCycleEntry(absDistance, myIterator.RightSample);
 		}
 
@@ -428,11 +454,9 @@ namespace TUGraz.VectoCore.Models.SimulationComponent.Impl
 		private DrivingCycleData.DrivingCycleEntry ExtrapolateCycleEntry(Meter absDistance,
 			DrivingCycleData.DrivingCycleEntry lookahead)
 		{
-			var retVal = new DrivingCycleData.DrivingCycleEntry(lookahead)
-			{
+			var retVal = new DrivingCycleData.DrivingCycleEntry(lookahead) {
 				Distance = absDistance,
 				Altitude = lookahead.Altitude + lookahead.RoadGradient * (absDistance - lookahead.Distance),
-				//VectoMath.Interpolate(CurrentState.Distance, lookahead.Distance, CurrentState.Altitude,lookahead.Altitude, absDistance)
 			};
 
 			retVal.RoadGradient =
@@ -449,7 +473,6 @@ namespace TUGraz.VectoCore.Models.SimulationComponent.Impl
 		internal void SetDriveOffDistance(Meter startDistance)
 		{
 			while (CycleIntervalIterator.MoveNext() && CycleIntervalIterator.RightSample.Distance < startDistance) {}
-			//CycleIntervalIterator.MoveNext();
 			PreviousState.Distance = startDistance;
 			CycleStartDistance = startDistance;
 		}
@@ -457,7 +480,7 @@ namespace TUGraz.VectoCore.Models.SimulationComponent.Impl
 		public sealed class DrivingCycleEnumerator : IEnumerator<DrivingCycleData.DrivingCycleEntry>
 		{
 			private int _currentCycleIndex;
-			private DrivingCycleData _data;
+			private readonly DrivingCycleData _data;
 
 			public DrivingCycleEnumerator(DrivingCycleData data)
 			{
@@ -524,7 +547,7 @@ namespace TUGraz.VectoCore.Models.SimulationComponent.Impl
 			public void Dispose() {}
 		}
 
-		public class DrivingCycleState
+		public sealed class DrivingCycleState
 		{
 			public DrivingCycleState Clone()
 			{

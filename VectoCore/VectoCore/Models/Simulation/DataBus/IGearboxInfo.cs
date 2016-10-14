@@ -29,8 +29,8 @@
 *   Martin Rexeis, rexeis@ivt.tugraz.at, IVT, Graz University of Technology
 */
 
+using TUGraz.VectoCommon.Models;
 using TUGraz.VectoCommon.Utils;
-using TUGraz.VectoCore.Models.SimulationComponent.Data;
 
 namespace TUGraz.VectoCore.Models.Simulation.DataBus
 {
@@ -39,6 +39,8 @@ namespace TUGraz.VectoCore.Models.Simulation.DataBus
 	/// </summary>
 	public interface IGearboxInfo
 	{
+		GearboxType GearboxType { get; }
+
 		/// <summary>
 		/// Returns the current gear.
 		/// </summary>
@@ -49,7 +51,7 @@ namespace TUGraz.VectoCore.Models.Simulation.DataBus
 
 		MeterPerSquareSecond StartAcceleration { get; }
 
-		FullLoadCurve GearFullLoadCurve { get; }
+		NewtonMeter GearMaxTorque { get; }
 
 		Watt GearboxLoss();
 	}

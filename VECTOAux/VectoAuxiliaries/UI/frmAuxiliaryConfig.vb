@@ -823,7 +823,7 @@ Public Class frmAuxiliaryConfig
 
 	Private Sub btnFuelMap_Click(sender As Object, e As EventArgs) Handles btnFuelMap.Click
 
-		Dim fbAux As New cFileBrowser("AAUXFuelMap", True, False)
+		Dim fbAux As New cFileBrowser("AAUXFuelMap", False, False)
 
 
 		' Dim vectoFile As String = "C:\Users\tb28\Source\Workspaces\VECTO\AuxillaryTestHarness\bin\Debug\vectopath.vecto"
@@ -916,7 +916,7 @@ Public Class frmAuxiliaryConfig
 	Private Sub btnCompressorMap_Click(sender As Object, e As EventArgs) Handles btnCompressorMap.Click
 
 
-		Dim fbAux As New cFileBrowser("AAUXComp", True, False)
+		Dim fbAux As New cFileBrowser("AAUXComp", False, False)
 
 
 		' Dim vectoFile As String = "C:\Users\tb28\Source\Workspaces\VECTO\AuxillaryTestHarness\bin\Debug\vectopath.vecto"
@@ -941,7 +941,7 @@ Public Class frmAuxiliaryConfig
 
 	Private Sub btnActuationsMap_Click(sender As Object, e As EventArgs) Handles btnActuationsMap.Click
 
-		Dim fbAux As New cFileBrowser("AAUXPneuAct", True, False)
+		Dim fbAux As New cFileBrowser("AAUXPneuAct", False, False)
 
 		' Dim vectoFile As String = "C:\Users\tb28\Source\Workspaces\VECTO\AuxillaryTestHarness\bin\Debug\vectopath.vecto"
 		Dim fname As String = fFILE(vectoFile, True)
@@ -968,7 +968,7 @@ Public Class frmAuxiliaryConfig
 
 	Private Sub btnBusDatabaseSource_Click(sender As Object, e As EventArgs) Handles btnBusDatabaseSource.Click
 
-		Dim fbAux As New cFileBrowser("AAUXBusDB", True, False)
+		Dim fbAux As New cFileBrowser("AAUXBusDB", False, False)
 		Dim message As String = String.Empty
 
 

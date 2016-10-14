@@ -43,7 +43,7 @@ namespace TUGraz.VectoCore.Models.SimulationComponent
 	/// </summary>
 	public abstract class VectoSimulationComponent : LoggingObject
 	{
-		[NonSerialized] protected IDataBus DataBus;
+		[NonSerialized] protected readonly IDataBus DataBus;
 
 		/// <summary>
 		/// Constructor. Registers the component in the cockpit.
@@ -52,7 +52,11 @@ namespace TUGraz.VectoCore.Models.SimulationComponent
 		protected VectoSimulationComponent(IVehicleContainer dataBus)
 		{
 			DataBus = dataBus;
-			dataBus.AddComponent(this);
+
+			// if a component doesn't want to be registered in DataBus, it supplies null to the constructor
+			// (mk 2016-08-31: currently the only example is PTOCycleController, to not interfere with the real DrivingCycle)
+			if (dataBus != null)
+				dataBus.AddComponent(this);
 		}
 
 		public virtual void CommitSimulationStep(IModalDataContainer container)
@@ -78,8 +82,8 @@ namespace TUGraz.VectoCore.Models.SimulationComponent
 		protected internal TStateType CurrentState;
 		protected internal TStateType PreviousState;
 
-		protected StatefulVectoSimulationComponent(IVehicleContainer contaier)
-			: base(contaier)
+		protected StatefulVectoSimulationComponent(IVehicleContainer container)
+			: base(container)
 		{
 			CurrentState = new TStateType();
 			PreviousState = new TStateType();
@@ -90,12 +94,37 @@ namespace TUGraz.VectoCore.Models.SimulationComponent
 			PreviousState = CurrentState;
 			CurrentState = new TStateType();
 		}
+	}
 
-		//protected virtual Watt GetPowerLoss(SimpleComponentState previousState, SimpleComponentState currentState)
-		//{
-		//	return (previousState.InAngularVelocity + currentState.InAngularVelocity) / 2.0 *
-		//			(currentState.InTorque - currentState.OutTorque);
-		//}
+	public abstract class StatefulProviderComponent<TStateType, TProviderOutPort, TProviderInPort, TOutPort> :
+			StatefulVectoSimulationComponent<TStateType>
+		where TStateType : new()
+		where TProviderOutPort : class
+		where TProviderInPort : class
+	{
+		protected TOutPort NextComponent;
+
+		protected StatefulProviderComponent(IVehicleContainer container) : base(container) {}
+
+		public TProviderOutPort OutPort()
+		{
+			return this as TProviderOutPort;
+		}
+
+		public TProviderInPort InPort()
+		{
+			return this as TProviderInPort;
+		}
+
+		public virtual void Connect(TOutPort other)
+		{
+			NextComponent = other;
+		}
+
+		protected override void DoCommitSimulationStep()
+		{
+			AdvanceState();
+		}
 	}
 
 	public class SimpleComponentState
@@ -106,13 +135,6 @@ namespace TUGraz.VectoCore.Models.SimulationComponent
 		public PerSecond OutAngularVelocity = 0.SI<PerSecond>();
 		public PerSecond InAngularVelocity = 0.SI<PerSecond>();
 
-		//public NewtonMeter TorqueLoss = 0.SI<NewtonMeter>();
-
-		//public Watt PowerLoss()
-		//{
-		//	return InTorque * InAngularVelocity - OutTorque * OutAngularVelocity;
-		//}
-
 		public void SetState(NewtonMeter inTorque, PerSecond inAngularVelocity, NewtonMeter outTorque,
 			PerSecond outAngularVelocity)
 		{
@@ -120,8 +142,6 @@ namespace TUGraz.VectoCore.Models.SimulationComponent
 			InAngularVelocity = inAngularVelocity;
 			OutTorque = outTorque;
 			OutAngularVelocity = outAngularVelocity;
-
-			//TorqueLoss = (inTorque * inAngularVelocity - outTorque * outAngularVelocity) / inAngularVelocity;
 		}
 	}
 }

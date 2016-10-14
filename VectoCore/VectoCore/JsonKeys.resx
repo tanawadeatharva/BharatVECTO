@@ -173,6 +173,33 @@
 	<data name="Vehicle_Retarder_LossMapFile" xml:space="preserve">
     <value>File</value>
   </data>
+	<data name="Vehicle_PTO" xml:space="preserve">
+    <value>PTO</value>
+  </data>
+	<data name="Vehicle_PTO_LossMapFile" xml:space="preserve">
+    <value>LossMap</value>
+  </data>
+	<data name="Vehicle_PTO_Cycle" xml:space="preserve">
+    <value>Cycle</value>
+  </data>
+	<data name="Vehicle_PTO_Type" xml:space="preserve">
+    <value>Type</value>
+  </data>
+	<data name="Vehicle_Angledrive" xml:space="preserve">
+    <value>Angledrive</value>
+  </data>
+	<data name="Vehicle_Angledrive_Type" xml:space="preserve">
+    <value>Type</value>
+  </data>
+	<data name="Vehicle_Angledrive_Ratio" xml:space="preserve">
+    <value>Ratio</value>
+  </data>
+	<data name="Vehicle_Angledrive_LossMapFile" xml:space="preserve">
+    <value>LossMap</value>
+  </data>
+	<data name="Vehicle_Angledrive_Efficiency" xml:space="preserve">
+    <value>Efficiency</value>
+  </data>
 	<data name="Engine_ModelName" xml:space="preserve">
     <value>ModelName</value>
   </data>

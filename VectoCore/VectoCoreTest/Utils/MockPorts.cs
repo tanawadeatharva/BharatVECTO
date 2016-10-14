@@ -47,39 +47,42 @@ namespace TUGraz.VectoCore.Tests.Utils
 		public NewtonMeter Torque;
 		public PerSecond AngularVelocity;
 
-		public IResponse Request(Second absTime, Second dt, NewtonMeter torque, PerSecond angularVelocity, bool dryRun = false)
+		public IResponse Request(Second absTime, Second dt, NewtonMeter outTorque, PerSecond outAngularVelocity,
+			bool dryRun = false)
 		{
 			AbsTime = absTime;
 			Dt = dt;
-			Torque = torque;
-			AngularVelocity = angularVelocity;
-			Log.Debug("Request: absTime: {0}, dt: {1}, torque: {2}, angularVelocity: {3}", absTime, dt, torque, angularVelocity);
+			Torque = outTorque;
+			AngularVelocity = outAngularVelocity;
+			Log.Debug("Request: absTime: {0}, dt: {1}, torque: {2}, angularVelocity: {3}", absTime, dt, outTorque,
+				outAngularVelocity);
 
 			if (dryRun) {
 				return new ResponseDryRun {
 					Source = this,
-					GearboxPowerRequest = torque * angularVelocity,
-					EnginePowerRequest = torque * angularVelocity,
-					ClutchPowerRequest = torque * angularVelocity,
-					DeltaFullLoad = (torque - 2300.SI<NewtonMeter>()) * angularVelocity,
-					DeltaDragLoad = (torque - -100.SI<NewtonMeter>()) * angularVelocity
+					GearboxPowerRequest = outTorque * outAngularVelocity,
+					EnginePowerRequest = outTorque * outAngularVelocity,
+					ClutchPowerRequest = outTorque * outAngularVelocity,
+					DeltaFullLoad = (outTorque - 2300.SI<NewtonMeter>()) * outAngularVelocity,
+					DeltaDragLoad = (outTorque - -100.SI<NewtonMeter>()) * outAngularVelocity
 				};
 			}
 
 			return new ResponseSuccess {
 				Source = this,
-				GearboxPowerRequest = torque * angularVelocity,
-				EnginePowerRequest = torque * angularVelocity,
-				ClutchPowerRequest = torque * angularVelocity,
+				GearboxPowerRequest = outTorque * outAngularVelocity,
+				EnginePowerRequest = outTorque * outAngularVelocity,
+				ClutchPowerRequest = outTorque * outAngularVelocity,
 			};
 		}
 
-		public IResponse Initialize(NewtonMeter torque, PerSecond angularVelocity)
+		public IResponse Initialize(NewtonMeter outTorque, PerSecond outAngularVelocity)
 		{
 			return new ResponseSuccess {
 				Source = this,
-				EnginePowerRequest = torque * angularVelocity,
-				ClutchPowerRequest = torque * angularVelocity,
+				EnginePowerRequest = outTorque * (outAngularVelocity ?? 0.SI<PerSecond>()),
+				ClutchPowerRequest = outTorque * (outAngularVelocity ?? 0.SI<PerSecond>()),
+				EngineSpeed = outAngularVelocity,
 			};
 		}
 
@@ -123,6 +126,7 @@ namespace TUGraz.VectoCore.Tests.Utils
 		}
 
 		public PerSecond EngineN95hSpeed { get; set; }
+		public PerSecond EngineN80hSpeed { get; set; }
 	}
 
 	public class MockDrivingCycleOutPort : LoggingObject, IDrivingCycleOutPort

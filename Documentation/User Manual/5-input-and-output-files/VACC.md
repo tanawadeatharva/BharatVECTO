@@ -11,6 +11,8 @@ vehicle speed. The filepath has to be defined in the [Job File](#job-file). The 
 - Requires at least 2 data entries
 - Data should cover the whole possible range of vehicle speeds
 
+**Note:** The deceleration should be lower than a certain threshold for low speeds in order to guarantee accurate vehicle stops during simulation. The suggested deceleration should be lower than -0.5m/s^2 for vehicle speeds below 30 km/h.
+
 **Example Data:**
 
 ~~~

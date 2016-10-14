@@ -32,47 +32,41 @@
 using System.Linq;
 using TUGraz.VectoCommon.Models;
 using TUGraz.VectoCommon.Utils;
-using TUGraz.VectoCore.Models.SimulationComponent.Impl;
+using TUGraz.VectoCore.Models.SimulationComponent.Data.Gearbox;
 
 namespace TUGraz.VectoCore.Models.Connector.Ports.Impl
 {
 	public abstract class AbstractResponse : IResponse
 	{
-		public Second SimulationInterval { get; set; }
-
-		public Meter SimulationDistance { get; set; }
-
-		public MeterPerSquareSecond Acceleration { get; set; }
-
-		public Watt EnginePowerRequest { get; set; }
-
-		public Watt AuxiliariesPowerDemand { get; set; }
-
-		public Watt ClutchPowerRequest { get; set; }
-
-		public Watt GearboxPowerRequest { get; set; }
-
-		public Watt AxlegearPowerRequest { get; set; }
-
-		public Watt WheelsPowerRequest { get; set; }
-
-		public Watt VehiclePowerRequest { get; set; }
-
-		public Watt BrakePower { get; set; }
+		public object Source { get; set; }
 
 		public Second AbsTime { get; set; }
-
+		public Second SimulationInterval { get; set; }
+		public Meter SimulationDistance { get; set; }
+		public MeterPerSquareSecond Acceleration { get; set; }
 		public OperatingPoint OperatingPoint { get; set; }
-
 		public PerSecond EngineSpeed { get; set; }
 
-		public object Source { get; set; }
+		public Watt EnginePowerRequest { get; set; }
+		public Watt DynamicFullLoadPower { get; set; }
+		public Watt DragPower { get; set; }
+
+		public Watt AngledrivePowerRequest { get; set; }
+		public Watt ClutchPowerRequest { get; set; }
+		public Watt GearboxPowerRequest { get; set; }
+		public Watt AxlegearPowerRequest { get; set; }
+		public Watt WheelsPowerRequest { get; set; }
+		public Watt VehiclePowerRequest { get; set; }
+		public Watt BrakePower { get; set; }
+		public Watt AuxiliariesPowerDemand { get; set; }
+
+		public TorqueConverterOperatingPoint TorqueConverterOperatingPoint { get; set; }
 
 		public override string ToString()
 		{
 			var t = GetType();
 			return string.Format("{0}{{{1}}}", t.Name,
-				", ".Join(t.GetProperties().Select(p => string.Format("{0}: {1}", p.Name, p.GetValue(this)))));
+				string.Join(", ", t.GetProperties().Select(p => string.Format("{0}: {1}", p.Name, p.GetValue(this)))));
 		}
 	}
 
@@ -84,9 +78,7 @@ namespace TUGraz.VectoCore.Models.Connector.Ports.Impl
 	/// <summary>
 	/// Response when a request was successful.
 	/// </summary>
-	public class ResponseSuccess : AbstractResponse
-	{
-		public ResponseSuccess() {}
+	public class ResponseSuccess : AbstractResponse {
 	}
 
 	/// <summary>
@@ -94,7 +86,6 @@ namespace TUGraz.VectoCore.Models.Connector.Ports.Impl
 	/// </summary>
 	public class ResponseOverload : AbstractResponse
 	{
-		public ResponseOverload() {}
 		public Watt Delta { get; set; }
 		public double Gradient { get; set; }
 	}
@@ -104,7 +95,6 @@ namespace TUGraz.VectoCore.Models.Connector.Ports.Impl
 	/// </summary>
 	public class ResponseUnderload : AbstractResponse
 	{
-		public ResponseUnderload() {}
 		public Watt Delta { get; set; }
 		public double Gradient { get; set; }
 	}
@@ -119,7 +109,6 @@ namespace TUGraz.VectoCore.Models.Connector.Ports.Impl
 	/// </summary>
 	public class ResponseFailTimeInterval : AbstractResponse
 	{
-		public ResponseFailTimeInterval() {}
 		public Second DeltaT { get; set; }
 	}
 
@@ -132,6 +121,8 @@ namespace TUGraz.VectoCore.Models.Connector.Ports.Impl
 	{
 		public Watt DeltaFullLoad { get; set; }
 		public Watt DeltaDragLoad { get; set; }
+		public NewtonMeter EngineMaxTorqueOut { get; set; }
+		public NewtonMeter EngineDragTorque { get; set; }
 	}
 
 	internal class ResponseGearShift : AbstractResponse {}

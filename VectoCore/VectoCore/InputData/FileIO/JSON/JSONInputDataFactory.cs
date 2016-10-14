@@ -29,18 +29,20 @@
 *   Martin Rexeis, rexeis@ivt.tugraz.at, IVT, Graz University of Technology
 */
 
-using System.IO;
+using System;
 using Newtonsoft.Json;
 using Newtonsoft.Json.Linq;
+using System.IO;
 using TUGraz.VectoCommon.Exceptions;
 using TUGraz.VectoCommon.InputData;
+using TUGraz.VectoCore.Configuration;
 
 namespace TUGraz.VectoCore.InputData.FileIO.JSON
 {
 	// ReSharper disable once InconsistentNaming
-	public class JSONInputDataFactory
+	public static class JSONInputDataFactory
 	{
-		protected internal static JObject ReadFile(string fileName)
+		internal static JObject ReadFile(string fileName)
 		{
 			if (!File.Exists(fileName)) {
 				throw new FileNotFoundException("failed to load file: " + fileName, fileName);
@@ -50,13 +52,24 @@ namespace TUGraz.VectoCore.InputData.FileIO.JSON
 			}
 		}
 
+		public static IInputDataProvider ReadComponentData(string filename)
+		{
+			if (Constants.FileExtensions.VectoJobFile.Equals(Path.GetExtension(filename), StringComparison.OrdinalIgnoreCase)) {
+				return ReadJsonJob(filename);
+			}
+			return new JSONComponentInputData(filename);
+		}
+
 		public static IInputDataProvider ReadJsonJob(string filename)
 		{
 			var json = ReadFile(filename);
 			var version = ReadVersion(json);
+
 			switch (version) {
 				case 2:
 					return new JSONInputDataV2(json, filename);
+				case 3:
+					return new JSONInputDataV3(json, filename);
 				default:
 					throw new VectoException("Job-File: Unsupported FileVersion. Got: {0} ", version);
 			}
@@ -81,6 +94,8 @@ namespace TUGraz.VectoCore.InputData.FileIO.JSON
 			switch (version) {
 				case 5:
 					return new JSONGearboxDataV5(json, filename);
+				case 6:
+					return new JSONGearboxDataV6(json, filename);
 				default:
 					throw new VectoException("Gearbox-File: Unsupported FileVersion. Got {0}", version);
 			}

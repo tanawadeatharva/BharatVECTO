@@ -42,7 +42,6 @@ namespace TUGraz.VectoCore.Models.Connector.Ports
 		/// <summary>
 		/// Returns the inport to connect it to another outport.
 		/// </summary>
-		/// <returns></returns>
 		ITnInPort InPort();
 	}
 
@@ -54,13 +53,8 @@ namespace TUGraz.VectoCore.Models.Connector.Ports
 		/// <summary>
 		/// Returns the outport to send requests to.
 		/// </summary>
-		/// <returns></returns>
 		ITnOutPort OutPort();
 	}
-
-
-	//========================================================================
-
 
 	/// <summary>
 	/// Defines a connect method to connect the inport to an outport.
@@ -81,8 +75,8 @@ namespace TUGraz.VectoCore.Models.Connector.Ports
 		/// <summary>
 		/// Requests the Outport with the given torque [Nm] and angularVelocity [rad/s].
 		/// </summary>
-		IResponse Request(Second absTime, Second dt, NewtonMeter torque, PerSecond angularVelocity, bool dryRun = false);
+		IResponse Request(Second absTime, Second dt, NewtonMeter outTorque, PerSecond outAngularVelocity, bool dryRun = false);
 
-		IResponse Initialize(NewtonMeter torque, PerSecond angularVelocity);
+		IResponse Initialize(NewtonMeter outTorque, PerSecond outAngularVelocity);
 	}
 }

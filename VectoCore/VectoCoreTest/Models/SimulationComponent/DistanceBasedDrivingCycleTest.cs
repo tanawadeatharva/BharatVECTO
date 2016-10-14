@@ -33,6 +33,7 @@ using Microsoft.VisualStudio.TestTools.UnitTesting;
 using TUGraz.VectoCommon.Exceptions;
 using TUGraz.VectoCommon.Models;
 using TUGraz.VectoCommon.Utils;
+using TUGraz.VectoCore.Configuration;
 using TUGraz.VectoCore.InputData.Reader;
 using TUGraz.VectoCore.Models.Connector.Ports.Impl;
 using TUGraz.VectoCore.Models.Simulation.Impl;
@@ -129,7 +130,8 @@ namespace TUGraz.VectoCore.Tests.Models.SimulationComponent
 			// request with 1m (18 -> 19m) => response exceeded, drive up to next sample point (at least 5m)
 			response = cycle.OutPort().Request(absTime, 1.SI<Meter>());
 			Assert.IsInstanceOfType(response, typeof(ResponseDrivingCycleDistanceExceeded));
-			Assert.AreEqual(5, ((ResponseDrivingCycleDistanceExceeded)response).MaxDistance.Value());
+			Assert.AreEqual(Constants.SimulationSettings.BrakeNextTargetDistance.Value(),
+				((ResponseDrivingCycleDistanceExceeded)response).MaxDistance.Value(), 1e-6);
 
 			// next request with 5m, as suggested => distance exceeded. maxDistance == 2m (next speed change)....
 			response = cycle.OutPort().Request(absTime, ((ResponseDrivingCycleDistanceExceeded)response).MaxDistance);

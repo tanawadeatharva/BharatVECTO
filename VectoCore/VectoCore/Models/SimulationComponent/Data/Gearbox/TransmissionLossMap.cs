@@ -29,12 +29,9 @@
 *   Martin Rexeis, rexeis@ivt.tugraz.at, IVT, Graz University of Technology
 */
 
-using System;
 using System.Collections.Generic;
 using System.ComponentModel.DataAnnotations;
-using System.Data;
 using System.Diagnostics;
-using System.Linq;
 using TUGraz.VectoCommon.Exceptions;
 using TUGraz.VectoCommon.Models;
 using TUGraz.VectoCommon.Utils;
@@ -45,7 +42,7 @@ namespace TUGraz.VectoCore.Models.SimulationComponent.Data.Gearbox
 {
 	public sealed class TransmissionLossMap : LoggingObject
 	{
-		[ValidateObject] private readonly List<GearLossMapEntry> _entries;
+		[ValidateObject] private readonly IReadOnlyList<GearLossMapEntry> _entries;
 
 		private readonly double _ratio;
 
@@ -59,103 +56,9 @@ namespace TUGraz.VectoCore.Models.SimulationComponent.Data.Gearbox
 		/// </summary>
 		private readonly DelaunayMap _invertedLossMap;
 
-		public void DrawGraph()
-		{
-			_lossMap.DrawGraph();
-		}
-
 		public string GearName { get; private set; }
 
-		public static TransmissionLossMap ReadFromFile(string fileName, double gearRatio, string gearName)
-		{
-			try {
-				var data = VectoCSVFile.Read(fileName, true);
-				return Create(data, gearRatio, gearName);
-			} catch (Exception ex) {
-				throw new VectoException("ERROR while reading TransmissionLossMap: " + ex.Message);
-			}
-		}
-
-		/// <summary>
-		/// Create a TransmissionLoss Map from a DataTable.
-		/// </summary>
-		/// <param name="data"></param>
-		/// <param name="gearRatio"></param>
-		/// <param name="gearName"></param>
-		/// <returns></returns>
-		public static TransmissionLossMap Create(DataTable data, double gearRatio, string gearName)
-		{
-			if (data.Columns.Count < 3) {
-				throw new VectoException("TransmissionLossMap Data File for {0} must consist of at least 3 columns.", gearName);
-			}
-
-			if (data.Rows.Count < 4) {
-				throw new VectoException(
-					"TransmissionLossMap for {0} must consist of at least four lines with numeric values (below file header", gearName);
-			}
-
-			List<GearLossMapEntry> entries;
-			if (HeaderIsValid(data.Columns)) {
-				entries = CreateFromColumnNames(data);
-			} else {
-				Logger<TransmissionLossMap>().Warn(
-					"TransmissionLossMap {5}: Header line is not valid. Expected: '{0}, {1}, {2}, <{3}>'. Got: '{4}'. Falling back to column index.",
-					Fields.InputSpeed, Fields.InputTorque, Fields.TorqeLoss, Fields.Efficiency,
-					", ".Join(data.Columns.Cast<DataColumn>().Select(c => c.ColumnName).Reverse()), gearName);
-
-				entries = CreateFromColumIndizes(data);
-			}
-
-			return new TransmissionLossMap(entries, gearRatio, gearName);
-		}
-
-		/// <summary>
-		/// Create a DataTable from an efficiency value.
-		/// </summary>
-		/// <param name="efficiency"></param>
-		/// <param name="gearRatio"></param>
-		/// <param name="gearName"></param>
-		/// <returns></returns>
-		public static TransmissionLossMap Create(double efficiency, double gearRatio, string gearName)
-		{
-			var entries = new List<GearLossMapEntry> {
-				new GearLossMapEntry(0.RPMtoRad(), 1e5.SI<NewtonMeter>(), (1 - efficiency) * 1e5.SI<NewtonMeter>()),
-				new GearLossMapEntry(0.RPMtoRad(), -1e5.SI<NewtonMeter>(), (1 - efficiency) * 1e5.SI<NewtonMeter>()),
-				new GearLossMapEntry(0.RPMtoRad(), 0.SI<NewtonMeter>(), 0.SI<NewtonMeter>()),
-				new GearLossMapEntry(5000.RPMtoRad(), 0.SI<NewtonMeter>(), 0.SI<NewtonMeter>()),
-				new GearLossMapEntry(5000.RPMtoRad(), -1e5.SI<NewtonMeter>(), (1 - efficiency) * 1e5.SI<NewtonMeter>()),
-				new GearLossMapEntry(5000.RPMtoRad(), 1e5.SI<NewtonMeter>(), (1 - efficiency) * 1e5.SI<NewtonMeter>()),
-			};
-			return new TransmissionLossMap(entries, gearRatio, gearName);
-		}
-
-		private static bool HeaderIsValid(DataColumnCollection columns)
-		{
-			return columns.Contains(Fields.InputSpeed) && columns.Contains(Fields.InputTorque) &&
-					columns.Contains(Fields.TorqeLoss);
-		}
-
-		private static List<GearLossMapEntry> CreateFromColumnNames(DataTable data)
-		{
-			return (from DataRow row in data.Rows
-				select new GearLossMapEntry(
-					inputSpeed: row.ParseDouble(Fields.InputSpeed).RPMtoRad(),
-					inputTorque: row.ParseDouble(Fields.InputTorque).SI<NewtonMeter>(),
-					torqueLoss: row.ParseDouble(Fields.TorqeLoss).SI<NewtonMeter>()))
-				.ToList();
-		}
-
-		private static List<GearLossMapEntry> CreateFromColumIndizes(DataTable data)
-		{
-			return (from DataRow row in data.Rows
-				select new GearLossMapEntry(
-					inputSpeed: row.ParseDouble(0).RPMtoRad(),
-					inputTorque: row.ParseDouble(1).SI<NewtonMeter>(),
-					torqueLoss: row.ParseDouble(2).SI<NewtonMeter>()))
-				.ToList();
-		}
-
-		private TransmissionLossMap(List<GearLossMapEntry> entries, double gearRatio, string gearName)
+		public TransmissionLossMap(IReadOnlyList<GearLossMapEntry> entries, double gearRatio, string gearName)
 		{
 			GearName = gearName;
 			_ratio = gearRatio;
@@ -163,10 +66,8 @@ namespace TUGraz.VectoCore.Models.SimulationComponent.Data.Gearbox
 			_lossMap = new DelaunayMap("TransmissionLossMap " + GearName);
 			_invertedLossMap = new DelaunayMap("TransmissionLossMapInv. " + GearName);
 			foreach (var entry in _entries) {
-				_lossMap.AddPoint(entry.InputSpeed.ConvertTo().Rounds.Per.Minute.Value(),
-					(entry.InputTorque - entry.TorqueLoss).Value(), entry.TorqueLoss.Value());
-				_invertedLossMap.AddPoint(entry.InputSpeed.ConvertTo().Rounds.Per.Minute.Value(), entry.InputTorque.Value(),
-					entry.TorqueLoss.Value());
+				_lossMap.AddPoint(entry.InputSpeed.Value(), (entry.InputTorque - entry.TorqueLoss).Value(), entry.TorqueLoss.Value());
+				_invertedLossMap.AddPoint(entry.InputSpeed.Value(), entry.InputTorque.Value(), entry.TorqueLoss.Value());
 			}
 
 			_lossMap.Triangulate();
@@ -182,12 +83,10 @@ namespace TUGraz.VectoCore.Models.SimulationComponent.Data.Gearbox
 		public LossMapResult GetTorqueLoss(PerSecond outAngularVelocity, NewtonMeter outTorque)
 		{
 			var result = new LossMapResult();
-			var torqueLoss = _lossMap.Interpolate(outAngularVelocity.ConvertTo().Rounds.Per.Minute.Value() * _ratio,
-				outTorque.Value() / _ratio);
+			var torqueLoss = _lossMap.Interpolate(outAngularVelocity.Value() * _ratio, outTorque.Value() / _ratio);
 
 			if (!torqueLoss.HasValue) {
-				torqueLoss = _lossMap.Extrapolate(outAngularVelocity.ConvertTo().Rounds.Per.Minute.Value() * _ratio,
-					outTorque.Value() / _ratio);
+				torqueLoss = _lossMap.Extrapolate(outAngularVelocity.Value() * _ratio, outTorque.Value() / _ratio);
 				result.Extrapolated = true;
 			}
 
@@ -198,6 +97,7 @@ namespace TUGraz.VectoCore.Models.SimulationComponent.Data.Gearbox
 			return result;
 		}
 
+		[DebuggerDisplay("{Value} (extrapolated: {Extrapolated})")]
 		public class LossMapResult
 		{
 			public bool Extrapolated;
@@ -213,14 +113,13 @@ namespace TUGraz.VectoCore.Models.SimulationComponent.Data.Gearbox
 		/// <returns>Torque needed at output side (towards the wheels).</returns>
 		public NewtonMeter GetOutTorque(PerSecond inAngularVelocity, NewtonMeter inTorque, bool allowExtrapolation = false)
 		{
-			var torqueLoss = _invertedLossMap.Interpolate(inAngularVelocity.ConvertTo().Rounds.Per.Minute.Value(),
-				inTorque.Value());
+			var torqueLoss = _invertedLossMap.Interpolate(inAngularVelocity.Value(), inTorque.Value());
 			if (torqueLoss.HasValue) {
 				return (inTorque - torqueLoss.Value.SI<NewtonMeter>()) / _ratio;
 			}
 
 			if (allowExtrapolation) {
-				torqueLoss = _invertedLossMap.Extrapolate(inAngularVelocity.ConvertTo().Rounds.Per.Minute.Value(), inTorque.Value());
+				torqueLoss = _invertedLossMap.Extrapolate(inAngularVelocity.Value(), inTorque.Value());
 				return (inTorque - torqueLoss.Value.SI<NewtonMeter>()) / _ratio;
 			}
 
@@ -233,17 +132,22 @@ namespace TUGraz.VectoCore.Models.SimulationComponent.Data.Gearbox
 			get { return _entries[i]; }
 		}
 
+		public void DrawGraph()
+		{
+			_lossMap.DrawGraph();
+		}
+
 		[DebuggerDisplay("GearLossMapEntry({InputSpeed}, {InputTorque}, {TorqueLoss})")]
 		public class GearLossMapEntry
 		{
 			[Required, SIRange(0, 10000 * Constants.RPMToRad)]
-			public PerSecond InputSpeed { get; set; }
+			public PerSecond InputSpeed { get; private set; }
 
 			[Required, SIRange(-100000, 100000)]
-			public NewtonMeter InputTorque { get; set; }
+			public NewtonMeter InputTorque { get; private set; }
 
 			[Required, SIRange(0, 100000)]
-			public NewtonMeter TorqueLoss { get; set; }
+			public NewtonMeter TorqueLoss { get; private set; }
 
 			public GearLossMapEntry(PerSecond inputSpeed, NewtonMeter inputTorque, NewtonMeter torqueLoss)
 			{
@@ -251,21 +155,6 @@ namespace TUGraz.VectoCore.Models.SimulationComponent.Data.Gearbox
 				InputTorque = inputTorque;
 				TorqueLoss = torqueLoss;
 			}
-		}
-
-		private static class Fields
-		{
-			/// <summary>[rpm]</summary>
-			public const string InputSpeed = "Input Speed";
-
-			/// <summary>[Nm]</summary>
-			public const string InputTorque = "Input Torque";
-
-			/// <summary>[Nm]</summary>
-			public const string TorqeLoss = "Torque Loss";
-
-			/// <summary>[-]</summary>
-			public const string Efficiency = "Eff";
 		}
 	}
 }

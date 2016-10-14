@@ -41,7 +41,8 @@ using TUGraz.VectoCore.InputData.Impl;
 
 namespace TUGraz.VectoCore.InputData.FileIO.JSON
 {
-	public class JSONVehicleDataV7 : JSONFile, IVehicleEngineeringInputData, IRetarderInputData
+	public class JSONVehicleDataV7 : JSONFile, IVehicleEngineeringInputData, IRetarderInputData, IAngledriveInputData,
+		IPTOTransmissionInputData
 	{
 		public JSONVehicleDataV7(JObject data, string fileName) : base(data, fileName) {}
 
@@ -86,19 +87,9 @@ namespace TUGraz.VectoCore.InputData.FileIO.JSON
 			get { return Body.GetEx<double>(JsonKeys.Vehicle_DragCoefficient).SI<SquareMeter>(); }
 		}
 
-		public virtual SquareMeter AirDragAreaRigidTruck
-		{
-			get { return Body.GetEx<double>(JsonKeys.Vehicle_DragCoefficientRigidTruck).SI<SquareMeter>(); }
-		}
-
 		public virtual CrossWindCorrectionMode CrossWindCorrectionMode
 		{
 			get { return CrossWindCorrectionModeHelper.Parse(Body.GetEx<string>("CdCorrMode")); }
-		}
-
-		public virtual string Rim
-		{
-			get { return Body.GetEx<string>(JsonKeys.Vehicle_Rim); }
 		}
 
 		public virtual AxleConfiguration AxleConfiguration
@@ -126,6 +117,8 @@ namespace TUGraz.VectoCore.InputData.FileIO.JSON
 			return
 				Body.GetEx(JsonKeys.Vehicle_AxleConfiguration).GetEx(JsonKeys.Vehicle_AxleConfiguration_Axles).Select(
 					axle => new AxleInputData {
+						SourceType = DataSourceType.JSONFile,
+						Source = Source,
 						Inertia = axle.GetEx<double>(JsonKeys.Vehicle_Axles_Inertia).SI<KilogramSquareMeter>(),
 						Wheels = axle.GetEx<string>(JsonKeys.Vehicle_Axles_Wheels),
 						TwinTyres = axle.GetEx<bool>(JsonKeys.Vehicle_Axles_TwinTyres),
@@ -135,40 +128,123 @@ namespace TUGraz.VectoCore.InputData.FileIO.JSON
 					});
 		}
 
-		public virtual DataTable CrosswindCorrectionMap
+		public virtual TableData CrosswindCorrectionMap
 		{
-			get { return ReadTableData(Body.GetEx<string>("CdCorrFile"), "CrosswindCorrection File"); }
-		}
-
-
-		public virtual double RetarderRatio
-		{
-			get { return Body.GetEx(JsonKeys.Vehicle_Retarder).GetEx<double>(JsonKeys.Vehicle_Retarder_Ratio); }
+			get { return ReadTableData(Body.GetEx<string>("CdCorrFile"), "CrosswindCorrection File", false); }
 		}
 
 		#endregion
 
 		#region IRetarderInputData
 
-		public virtual RetarderType Type
+		RetarderType IRetarderInputData.Type
 		{
 			get
 			{
-				return
-					(RetarderType)
-						Enum.Parse(typeof(RetarderType),
-							Body.GetEx(JsonKeys.Vehicle_Retarder).GetEx<string>(JsonKeys.Vehicle_Retarder_Type), true);
+				var retarderType = Body.GetEx(JsonKeys.Vehicle_Retarder).GetEx<string>(JsonKeys.Vehicle_Retarder_Type);
+				return RetarderTypeHelper.Parse(retarderType);
 			}
 		}
 
+		double IRetarderInputData.Ratio
+		{
+			get { return Body.GetEx(JsonKeys.Vehicle_Retarder).GetEx<double>(JsonKeys.Vehicle_Retarder_Ratio); }
+		}
 
-		public virtual DataTable LossMap
+		TableData IRetarderInputData.LossMap
 		{
 			get
 			{
 				return
-					ReadTableData(Body.GetEx(JsonKeys.Vehicle_Retarder).GetEx<string>(JsonKeys.Vehicle_Retarder_LossMapFile),
-						"LossMap");
+					ReadTableData(
+						Body.GetEx(JsonKeys.Vehicle_Retarder)
+							.GetEx<string>(JsonKeys.Vehicle_Retarder_LossMapFile),
+						"LossMap", false);
+			}
+		}
+
+		#endregion
+
+		#region IAngledriveInputData
+
+		AngledriveType IAngledriveInputData.Type
+		{
+			get
+			{
+				var angleDrive = Body[JsonKeys.Vehicle_Angledrive];
+				if (angleDrive == null) {
+					return AngledriveType.None;
+				}
+
+				return angleDrive.GetEx<string>(JsonKeys.Vehicle_Angledrive_Type).ParseEnum<AngledriveType>();
+			}
+		}
+
+		double IAngledriveInputData.Ratio
+		{
+			get
+			{
+				var angleDrive = Body[JsonKeys.Vehicle_Angledrive];
+				if (angleDrive == null)
+					return double.NaN;
+				return Body.GetEx(JsonKeys.Vehicle_Angledrive).GetEx<double>(JsonKeys.Vehicle_Angledrive_Ratio);
+			}
+		}
+
+		TableData IAngledriveInputData.LossMap
+		{
+			get
+			{
+				var angleDrive = Body[JsonKeys.Vehicle_Angledrive];
+				if (angleDrive == null)
+					return null;
+				return ReadTableData(
+					Body.GetEx(JsonKeys.Vehicle_Angledrive)
+						.GetEx<string>(JsonKeys.Vehicle_Angledrive_LossMapFile),
+					"LossMap", false);
+			}
+		}
+
+		double IAngledriveInputData.Efficiency
+		{
+			get { return Body.GetEx(JsonKeys.Vehicle_Angledrive).GetEx<double>(JsonKeys.Vehicle_Angledrive_Efficiency); }
+		}
+
+		#endregion
+
+		#region IPTOTransmissionInputData
+
+		string IPTOTransmissionInputData.PTOTransmissionType
+		{
+			get
+			{
+				var pto = Body[JsonKeys.Vehicle_PTO];
+				if (pto == null)
+					return "None";
+				return pto[JsonKeys.Vehicle_PTO_Type].Value<string>();
+			}
+		}
+
+		TableData IPTOTransmissionInputData.PTOLossMap
+		{
+			get
+			{
+				var pto = Body[JsonKeys.Vehicle_PTO];
+				if (pto == null)
+					return null;
+				return ReadTableData(Body.GetEx(JsonKeys.Vehicle_PTO).GetEx<string>(JsonKeys.Vehicle_PTO_LossMapFile), "LossMap",
+					false);
+			}
+		}
+
+		public TableData PTOCycle
+		{
+			get
+			{
+				var pto = Body[JsonKeys.Vehicle_PTO];
+				if (pto == null)
+					return null;
+				return ReadTableData(Body.GetEx(JsonKeys.Vehicle_PTO).GetEx<string>(JsonKeys.Vehicle_PTO_Cycle), "Cycle", false);
 			}
 		}
 

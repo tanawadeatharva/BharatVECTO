@@ -33,8 +33,8 @@ using Microsoft.VisualStudio.TestTools.UnitTesting;
 using TUGraz.VectoCommon.Exceptions;
 using TUGraz.VectoCommon.Models;
 using TUGraz.VectoCommon.Utils;
+using TUGraz.VectoCore.InputData.Reader.ComponentData;
 using TUGraz.VectoCore.Models.Simulation.Impl;
-using TUGraz.VectoCore.Models.SimulationComponent.Data;
 using TUGraz.VectoCore.Models.SimulationComponent.Impl;
 using TUGraz.VectoCore.Tests.Utils;
 using TUGraz.VectoCore.Utils;
@@ -51,7 +51,7 @@ namespace TUGraz.VectoCore.Tests.Models.SimulationComponent
 		public void RetarderBasicTest()
 		{
 			var vehicle = new VehicleContainer(ExecutionMode.Declaration);
-			var retarderData = RetarderLossMap.ReadFromFile(RetarderLossMapFile);
+			var retarderData = RetarderLossMapReader.ReadFromFile(RetarderLossMapFile);
 			var retarder = new Retarder(vehicle, retarderData, 1.0);
 
 			var nextRequest = new MockTnOutPort();
@@ -77,18 +77,26 @@ namespace TUGraz.VectoCore.Tests.Models.SimulationComponent
 			Assert.AreEqual(112, nextRequest.Torque.Value(), Delta);
 
 			// --------
-			outPort.Initialize(50.SI<NewtonMeter>(), 1550.RPMtoRad());
+			outPort.Initialize(50.SI<NewtonMeter>(), 650.RPMtoRad());
 			outPort.Request(absTime, dt, 50.SI<NewtonMeter>(), 1550.RPMtoRad());
-
+			retarder.CommitSimulationStep(new MockModalDataContainer());
 			Assert.AreEqual(1550.RPMtoRad().Value(), nextRequest.AngularVelocity.Value(), Delta);
-			Assert.AreEqual(50 + 14.81, nextRequest.Torque.Value(), Delta);
+
+			// (650+1550)/2 = 1100 => 12.42Nm
+			Assert.AreEqual(50 + 12.42, nextRequest.Torque.Value(), Delta);
+
+			//VECTO-307: added an additional request after a commit
+			outPort.Request(absTime, dt, 50.SI<NewtonMeter>(), 450.RPMtoRad());
+			Assert.AreEqual(450.RPMtoRad().Value(), nextRequest.AngularVelocity.Value(), Delta);
+			// avg: (1550+450)/2 = 1000 rpm => 12Nm
+			Assert.AreEqual(50 + 12, nextRequest.Torque.Value(), Delta);
 		}
 
 		[TestMethod]
 		public void RetarderRatioTest()
 		{
-			var vehicle = new VehicleContainer(ExecutionMode.Engineering, null, null);
-			var retarderData = RetarderLossMap.ReadFromFile(RetarderLossMapFile);
+			var vehicle = new VehicleContainer(ExecutionMode.Engineering);
+			var retarderData = RetarderLossMapReader.ReadFromFile(RetarderLossMapFile);
 			var retarder = new Retarder(vehicle, retarderData, 2.0);
 
 			var nextRequest = new MockTnOutPort();
@@ -124,20 +132,18 @@ namespace TUGraz.VectoCore.Tests.Models.SimulationComponent
 		[TestMethod]
 		public void RetarderDeclarationTest()
 		{
-			var retarderData = RetarderLossMap.ReadFromFile(RetarderLossMapFile);
-			var declVehicle = new VehicleContainer(ExecutionMode.Declaration, null, null);
+			var retarderData = RetarderLossMapReader.ReadFromFile(RetarderLossMapFile);
+			var declVehicle = new VehicleContainer(ExecutionMode.Declaration);
 			var retarder = new Retarder(declVehicle, retarderData, 2.0);
 			var nextRequest = new MockTnOutPort();
 
 			retarder.InPort().Connect(nextRequest);
 			var outPort = retarder.OutPort();
 
-			var absTime = 0.SI<Second>();
-			var dt = 0.SI<Second>();
-
-			// --------
-			AssertHelper.Exception<VectoSimulationException>(() => outPort.Initialize(50.SI<NewtonMeter>(), 1550.RPMtoRad()),
-				"angular velocity 324.6312 [1/s] above max. entry in retarder loss map (240.8554 [1/s])");
+			outPort.Initialize(50.SI<NewtonMeter>(), 2550.RPMtoRad());
+			outPort.Request(0.SI<Second>(), 0.SI<Second>(), 50.SI<NewtonMeter>(), 2550.RPMtoRad());
+			AssertHelper.Exception<VectoException>(() => retarder.CommitSimulationStep(new MockModalDataContainer()),
+				"Retarder LossMap data was extrapolated in Declaration mode: range for loss map is not sufficient: n:2550 (min:0, max:2300), ratio:2");
 		}
 
 		[TestMethod]
@@ -154,8 +160,8 @@ namespace TUGraz.VectoCore.Tests.Models.SimulationComponent
 			var retarderTbl =
 				VectoCSVFile.ReadStream(InputDataHelper.InputDataAsStream("Retarder Speed [rpm],Loss Torque [Nm]",
 					retarderEntries));
-			var vehicle = new VehicleContainer(ExecutionMode.Engineering, null, null);
-			var retarderData = RetarderLossMap.Create(retarderTbl);
+			var vehicle = new VehicleContainer(ExecutionMode.Engineering);
+			var retarderData = RetarderLossMapReader.Create(retarderTbl);
 			var retarder = new Retarder(vehicle, retarderData, 2.0);
 
 			var nextRequest = new MockTnOutPort();

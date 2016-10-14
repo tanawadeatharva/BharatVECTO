@@ -34,36 +34,27 @@ using TUGraz.VectoCommon.Utils;
 namespace TUGraz.VectoCommon.Models
 {
 	/// <summary>
-	/// Defines an interface for a Response.
+	/// The Interface for a Response. Carries over result data to higher components.
 	/// </summary>
 	public interface IResponse
 	{
-		Second SimulationInterval { get; set; }
-
-		MeterPerSquareSecond Acceleration { get; set; }
-
+		Second AbsTime { get; set; }
 		Meter SimulationDistance { get; set; }
+		Second SimulationInterval { get; set; }
+		MeterPerSquareSecond Acceleration { get; set; }
+		PerSecond EngineSpeed { get; set; }
+		OperatingPoint OperatingPoint { get; set; }
+		object Source { get; set; }
 
 		Watt EnginePowerRequest { get; set; }
+		Watt ClutchPowerRequest { get; set; }
+		Watt GearboxPowerRequest { get; set; }
+		Watt AxlegearPowerRequest { get; set; }
+		Watt WheelsPowerRequest { get; set; }
+		Watt VehiclePowerRequest { get; set; }
+		Watt BrakePower { get; set; }
+		Watt AngledrivePowerRequest { get; set; }
 
 		Watt AuxiliariesPowerDemand { get; set; }
-
-		Watt ClutchPowerRequest { get; set; }
-
-		Watt GearboxPowerRequest { get; set; }
-
-		Watt AxlegearPowerRequest { get; set; }
-
-		Watt WheelsPowerRequest { get; set; }
-
-		Watt VehiclePowerRequest { get; set; }
-
-		Watt BrakePower { get; set; }
-
-		PerSecond EngineSpeed { get; set; }
-
-		Second AbsTime { get; set; }
-
-		OperatingPoint OperatingPoint { get; set; }
 	}
 }

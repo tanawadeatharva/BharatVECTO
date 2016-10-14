@@ -36,30 +36,43 @@ using System.Linq;
 using TUGraz.VectoCommon.Exceptions;
 using TUGraz.VectoCommon.Models;
 using TUGraz.VectoCommon.Utils;
+using TUGraz.VectoCore.Configuration;
 using TUGraz.VectoCore.Utils;
 
 namespace TUGraz.VectoCore.Models.Declaration
 {
 	public sealed class Segments : LookupData<VehicleCategory, AxleConfiguration, Kilogram, Kilogram, Segment>
 	{
-		public Segments()
+		private DataTable _segmentTable;
+
+
+		protected override string ResourceId
 		{
-			ParseData(ReadCsvResource(RessourceHelper.Namespace + "SegmentTable.csv"));
+			get { return RessourceHelper.Namespace + "SegmentTable.csv"; }
+		}
+
+		protected override string ErrorMessage
+		{
+			get
+			{
+				return
+					"ERROR: Could not find the declaration segment for vehicle. Category: {0}, AxleConfiguration: {1}, GrossVehicleWeight: {2}";
+			}
 		}
 
 		protected override void ParseData(DataTable table)
 		{
-			// normalize column names, remove whitespaces and lowercase
-			foreach (DataColumn col in table.Columns) {
-				table.Columns[col.ColumnName].ColumnName = col.ColumnName.ToLower().RemoveWhitespace();
-			}
-			SegmentTable = table.Copy();
+			_segmentTable = table.Copy();
 		}
-
-		private DataTable SegmentTable { get; set; }
 
 		public override Segment Lookup(VehicleCategory vehicleCategory, AxleConfiguration axleConfiguration,
 			Kilogram grossVehicleMassRating, Kilogram curbWeight)
+		{
+			return Lookup(vehicleCategory, axleConfiguration, grossVehicleMassRating, curbWeight, false);
+		}
+
+		public Segment Lookup(VehicleCategory vehicleCategory, AxleConfiguration axleConfiguration,
+			Kilogram grossVehicleMassRating, Kilogram curbWeight, bool considerInvalid)
 		{
 			if (grossVehicleMassRating == null || grossVehicleMassRating < 7.5.SI().Ton) {
 				throw new VectoException("Gross vehicle mass must be greater than 7.5 tons");
@@ -67,13 +80,13 @@ namespace TUGraz.VectoCore.Models.Declaration
 
 			DataRow row;
 			try {
-				row = SegmentTable.Rows.Cast<DataRow>().First(r => {
+				row = _segmentTable.Rows.Cast<DataRow>().First(r => {
 					var isValid = r.Field<string>("valid");
 					var category = r.Field<string>("vehiclecategory");
 					var axleConf = r.Field<string>("axleconf.");
 					var massMin = r.ParseDouble("gvw_min").SI().Ton;
 					var massMax = r.ParseDouble("gvw_max").SI().Ton;
-					return isValid == "1"
+					return (considerInvalid || isValid == "1")
 							&& category == vehicleCategory.ToString()
 							&& axleConf == axleConfiguration.GetName()
 						// MK 2016-06-07: normally the next condition should be "mass > massMin", except for 7.5t where is should be ">="
@@ -82,9 +95,7 @@ namespace TUGraz.VectoCore.Models.Declaration
 							&& grossVehicleMassRating <= massMax;
 				});
 			} catch (InvalidOperationException e) {
-				var errorMessage = string.Format(
-					"ERROR: Could not find the declaration segment for vehicle. Category: {0}, AxleConfiguration: {1}, GrossVehicleMassRating: {2}",
-					vehicleCategory, axleConfiguration.GetName(), grossVehicleMassRating);
+				var errorMessage = string.Format(ErrorMessage, vehicleCategory, axleConfiguration.GetName(), grossVehicleMassRating);
 				Log.Fatal(errorMessage);
 				throw new VectoException(errorMessage, e);
 			}
@@ -95,84 +106,103 @@ namespace TUGraz.VectoCore.Models.Declaration
 				AxleConfiguration = axleConfiguration,
 				VehicleClass = VehicleClassHelper.Parse(row.Field<string>("hdvclass")),
 				AccelerationFile = RessourceHelper.ReadStream(RessourceHelper.Namespace + "VACC." + row.Field<string>(".vaccfile")),
-				Missions = CreateMissions(grossVehicleMassRating, curbWeight, row).ToArray(),
+				Missions = CreateMissions(ref grossVehicleMassRating, curbWeight, row),
 				GrossVehicleMassRating = grossVehicleMassRating
 			};
 
 			return segment;
 		}
 
-		private static IEnumerable<Mission> CreateMissions(Kilogram grossVehicleMassRating, Kilogram curbWeight, DataRow row)
+		private static Mission[] CreateMissions(ref Kilogram grossVehicleWeight, Kilogram curbWeight, DataRow row)
 		{
-			var trailerOnlyInLongHaul = row.Field<string>("vehiclecategory") == VehicleCategory.RigidTruck.ToString() &&
-										row.Field<string>("traileraxles-longhaul") != "-" &&
-										row.Field<string>("traileraxles-other") == "-";
-
 			var missionTypes = Enum.GetValues(typeof(MissionType)).Cast<MissionType>();
-			foreach (var missionType in missionTypes.Where(m => row.Field<string>(m.ToString()) == "1")) {
-				string vcdvField;
-				string axleField;
-				string trailerField;
+			var missions = new List<Mission>();
+			foreach (var missionType in missionTypes.Where(m => row.Field<string>(m.ToString()) != "-")) {
+				var body = DeclarationData.StandardBodies.Lookup(row.Field<string>("body"));
 
-				if (missionType == MissionType.LongHaul) {
-					vcdvField = "crosswindcorrection-longhaul";
-					axleField = "truckaxles-longhaul";
-					trailerField = "traileraxles-longhaul";
+				var trailerIsUsed = ShouldTrailerBeUsed(row, missionType);
+				var trailerField = row.Field<string>("trailer");
+				var trailerType = trailerIsUsed && !string.IsNullOrWhiteSpace(trailerField)
+					? trailerField.ParseEnum<TrailerType>()
+					: TrailerType.None;
+				var trailer = trailerIsUsed
+					? DeclarationData.StandardBodies.Lookup(trailerField)
+					: StandardBodies.Empty;
+
+				var semiTrailerField = row.Field<string>("semitrailer");
+				var semiTrailer = !string.IsNullOrWhiteSpace(semiTrailerField)
+					? DeclarationData.StandardBodies.Lookup(semiTrailerField)
+					: StandardBodies.Empty;
+
+				trailer += semiTrailer;
+
+				// limit gvw to MaxGVW (40t)
+				var gvw = VectoMath.Min(grossVehicleWeight + trailer.GrossVehicleWeight,
+					Constants.SimulationSettings.MaximumGrossVehicleWeight);
+				var maxLoad = gvw - curbWeight - body.CurbWeight - trailer.CurbWeight;
+
+				var refLoadValue = row.ParseDoubleOrGetDefault(missionType.ToString(), double.NaN);
+				Kilogram refLoad;
+				if (double.IsNaN(refLoadValue)) {
+					refLoad = DeclarationData.GetPayloadForGrossVehicleWeight(grossVehicleWeight, missionType) +
+							DeclarationData.GetPayloadForTrailerWeight(trailer.GrossVehicleWeight, trailer.CurbWeight);
 				} else {
-					vcdvField = "crosswindcorrection-other";
-					axleField = "truckaxles-other";
-					trailerField = "traileraxles-other";
+					refLoad = refLoadValue.SI<Kilogram>();
 				}
+
+				refLoad = VectoMath.Min(refLoad, maxLoad);
 
 				var mission = new Mission {
 					MissionType = missionType,
-					CrossWindCorrection = row.Field<string>(vcdvField),
-					MassExtra = row.ParseDouble("massextra-" + missionType.ToString().ToLower()).SI<Kilogram>(),
+					CrossWindCorrection = row.Field<string>("crosswindcorrection" + GetMissionSuffix(missionType)),
 					CycleFile = RessourceHelper.ReadStream(RessourceHelper.Namespace + "MissionCycles." + missionType + ".vdri"),
-					AxleWeightDistribution = row.Field<string>(axleField).Split('/').ToDouble().Select(x => x / 100.0).ToArray(),
-					UseCdA2 = trailerOnlyInLongHaul && missionType != MissionType.LongHaul,
+					AxleWeightDistribution = GetAxleWeightDistribution(row, missionType),
+					CurbWeight = curbWeight,
+					BodyCurbWeight = body.CurbWeight,
+					BodyGrossVehicleWeight = grossVehicleWeight,
+					TrailerType = trailerType,
+					TrailerCurbWeight = trailer.CurbWeight,
+					TrailerGrossVehicleWeight = trailer.GrossVehicleWeight,
+					DeltaCdA = trailer.DeltaCrossWindArea,
+					MinLoad = 0.SI<Kilogram>(),
+					MaxLoad = maxLoad,
+					RefLoad = refLoad,
+					TrailerAxleWeightDistribution = GetTrailerAxleWeightDistribution(row, missionType),
 				};
-
-				var trailerAxles = row.Field<string>(trailerField).Split('/');
-				var count = 0;
-				var weightPercent = 0.0;
-
-				if (trailerAxles[0] != "-") {
-					count = int.Parse(trailerAxles[1]);
-					weightPercent = trailerAxles[0].ToDouble();
-				}
-				mission.TrailerAxleWeightDistribution = Enumerable.Repeat(weightPercent / count / 100.0, count).ToArray();
-
-				mission.MinLoad = 0.SI<Kilogram>();
-				mission.MaxLoad = grossVehicleMassRating - mission.MassExtra - curbWeight;
-
-				var refLoadField = row.Field<string>("payload-" + missionType.ToString().ToLower());
-				mission.RefLoad = CalculateRefLoad(grossVehicleMassRating, refLoadField, missionType, mission.MaxLoad);
-
-				yield return mission;
+				missions.Add(mission);
 			}
+			return missions.ToArray();
 		}
 
-		private static Kilogram CalculateRefLoad(Kilogram grossVehicleMassRating, string refLoadField, MissionType missionType,
-			Kilogram maxLoad)
+		/// <summary>
+		/// Checks if a trailer should be used for the current missionType.
+		/// </summary>
+		private static bool ShouldTrailerBeUsed(DataRow row, MissionType missionType)
 		{
-			const double longHaulFactor = 0.5882;
-			const double otherFactor = 0.3941;
-			var longHaulWeightDeduction = 2511.8.SI<Kilogram>();
-			var otherWeightDeduction = 1705.9.SI<Kilogram>();
+			return !string.IsNullOrWhiteSpace(row.Field<string>("traileraxles" + GetMissionSuffix(missionType)));
+		}
 
-			Kilogram refLoad;
-			if (refLoadField == "f") {
-				if (missionType == MissionType.LongHaul) {
-					refLoad = longHaulFactor * grossVehicleMassRating - longHaulWeightDeduction;
-				} else {
-					refLoad = otherFactor * grossVehicleMassRating - otherWeightDeduction;
-				}
-			} else {
-				refLoad = refLoadField.ToDouble().SI<Kilogram>();
+		private static double[] GetTrailerAxleWeightDistribution(DataRow row, MissionType missionType)
+		{
+			var trailerAxles =
+				row.Field<string>("traileraxles" + GetMissionSuffix(missionType)).Split('/');
+			if (!string.IsNullOrWhiteSpace(trailerAxles[0])) {
+				var count = int.Parse(trailerAxles[1]);
+				return (trailerAxles[0].ToDouble() / 100.0 / count).Repeat(count).ToArray();
 			}
+			return new double[0];
+		}
 
-			return VectoMath.Min(refLoad, maxLoad);
+		private static double[] GetAxleWeightDistribution(DataRow row, MissionType missionType)
+		{
+			return
+				row.Field<string>("truckaxles" + GetMissionSuffix(missionType))
+					.Split('/').ToDouble().Select(x => x / 100.0).ToArray();
+		}
+
+		private static string GetMissionSuffix(MissionType missionType)
+		{
+			return missionType == MissionType.LongHaul ? "-longhaul" : "-other";
 		}
 	}
 }

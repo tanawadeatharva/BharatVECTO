@@ -29,6 +29,7 @@
 *   Martin Rexeis, rexeis@ivt.tugraz.at, IVT, Graz University of Technology
 */
 
+using TUGraz.VectoCommon.Exceptions;
 using TUGraz.VectoCommon.Models;
 using TUGraz.VectoCommon.Utils;
 using TUGraz.VectoCore.Models.Connector.Ports;
@@ -39,42 +40,33 @@ using TUGraz.VectoCore.OutputData;
 
 namespace TUGraz.VectoCore.Models.SimulationComponent.Impl
 {
-	public class Retarder : StatefulVectoSimulationComponent<SimpleComponentState>, IPowerTrainComponent, ITnInPort,
+	/// <summary>
+	/// Retarder component.
+	/// </summary>
+	public class Retarder : StatefulProviderComponent<SimpleComponentState, ITnOutPort, ITnInPort, ITnOutPort>,
+		IPowerTrainComponent, ITnInPort,
 		ITnOutPort
 	{
-		protected ITnOutPort NextComponent;
-
 		private readonly RetarderLossMap _lossMap;
-		private double _ratio;
+		private readonly double _ratio;
 
-		public Retarder(IVehicleContainer cockpit, RetarderLossMap lossMap, double ratio) : base(cockpit)
+		/// <summary>
+		/// Creates a new Retarder.
+		/// </summary>
+		/// <param name="container"></param>
+		/// <param name="lossMap"></param>
+		/// <param name="ratio"></param>
+		public Retarder(IVehicleContainer container, RetarderLossMap lossMap, double ratio) : base(container)
 		{
 			_lossMap = lossMap;
 			_ratio = ratio;
 		}
 
-		protected override void DoWriteModalResults(IModalDataContainer container)
+		public IResponse Initialize(NewtonMeter torque, PerSecond angularVelocity)
 		{
-			var avgAngularSpeed = (PreviousState.InAngularVelocity + CurrentState.InAngularVelocity) / 2.0;
-			container[ModalResultField.P_ret_loss] = (PreviousState.InTorque - PreviousState.OutTorque) * avgAngularSpeed;
-			container[ModalResultField.P_retarder_in] = CurrentState.InTorque * avgAngularSpeed;
-		}
-
-		protected override void DoCommitSimulationStep() {}
-
-		public ITnInPort InPort()
-		{
-			return this;
-		}
-
-		public ITnOutPort OutPort()
-		{
-			return this;
-		}
-
-		public void Connect(ITnOutPort other)
-		{
-			NextComponent = other;
+			var retarderTorqueLoss = _lossMap.GetTorqueLoss(angularVelocity * _ratio) / _ratio;
+			PreviousState.SetState(torque + retarderTorqueLoss, angularVelocity, torque, angularVelocity);
+			return NextComponent.Initialize(PreviousState.InTorque, PreviousState.InAngularVelocity);
 		}
 
 		public IResponse Request(Second absTime, Second dt, NewtonMeter torque, PerSecond angularVelocity, bool dryRun = false)
@@ -83,20 +75,32 @@ namespace TUGraz.VectoCore.Models.SimulationComponent.Impl
 				return NextComponent.Request(absTime, dt, torque, null, dryRun);
 			}
 			var avgAngularSpeed = (PreviousState.InAngularVelocity + angularVelocity) / 2.0;
-			var retarderTorqueLoss =
-				_lossMap.RetarderLoss(avgAngularSpeed * _ratio, DataBus.ExecutionMode != ExecutionMode.Declaration) / _ratio;
+			var retarderTorqueLoss = _lossMap.GetTorqueLoss(avgAngularSpeed * _ratio) / _ratio;
 			CurrentState.SetState(torque + retarderTorqueLoss, angularVelocity, torque, angularVelocity);
-
-			return NextComponent.Request(absTime, dt, torque + retarderTorqueLoss, angularVelocity, dryRun);
+			return NextComponent.Request(absTime, dt, CurrentState.InTorque, CurrentState.InAngularVelocity, dryRun);
 		}
 
-		public IResponse Initialize(NewtonMeter torque, PerSecond angularVelocity)
+		protected override void DoWriteModalResults(IModalDataContainer container)
 		{
-			var retarderTorqueLoss =
-				_lossMap.RetarderLoss(angularVelocity * _ratio, DataBus.ExecutionMode != ExecutionMode.Declaration) / _ratio;
-			PreviousState.SetState(torque + retarderTorqueLoss, angularVelocity, torque, angularVelocity);
+			var avgAngularSpeed = (PreviousState.InAngularVelocity + CurrentState.InAngularVelocity) / 2.0;
+			container[ModalResultField.P_ret_loss] = (CurrentState.InTorque - CurrentState.OutTorque) * avgAngularSpeed;
+			container[ModalResultField.P_retarder_in] = CurrentState.InTorque * avgAngularSpeed;
+		}
 
-			return NextComponent.Initialize(torque + retarderTorqueLoss, angularVelocity);
+		protected override void DoCommitSimulationStep()
+		{
+			var avgAngularSpeed = (PreviousState.InAngularVelocity + CurrentState.InAngularVelocity) / 2.0;
+			if (!avgAngularSpeed.IsBetween(_lossMap.MinSpeed, _lossMap.MaxSpeed)) {
+				Log.Warn(
+					"Retarder LossMap data was extrapolated: range for loss map is not sufficient: n:{0} (min:{1}, max:{2}), ratio:{3}",
+					CurrentState.OutAngularVelocity.AsRPM, _lossMap.MinSpeed.AsRPM, _lossMap.MaxSpeed.AsRPM, _ratio);
+				if (DataBus.ExecutionMode == ExecutionMode.Declaration) {
+					throw new VectoException(
+						"Retarder LossMap data was extrapolated in Declaration mode: range for loss map is not sufficient: n:{0} (min:{1}, max:{2}), ratio:{3}",
+						CurrentState.OutAngularVelocity.AsRPM, _lossMap.MinSpeed.AsRPM, _lossMap.MaxSpeed.AsRPM, _ratio);
+				}
+			}
+			base.DoCommitSimulationStep();
 		}
 	}
 }

@@ -29,6 +29,7 @@
 *   Martin Rexeis, rexeis@ivt.tugraz.at, IVT, Graz University of Technology
 */
 
+using System;
 using System.Diagnostics.CodeAnalysis;
 using TUGraz.VectoCommon.Utils;
 
@@ -39,37 +40,45 @@ namespace TUGraz.VectoCommon.Models
 	{
 		MT, // Manual Transmission
 		AMT, // Automated Manual Transmission
-		AT, // Automatic Transmission
-		Custom,
+		ATSerial, // Automatic Transmission
+		ATPowerSplit,
+		//Custom,
 		DrivingCycle
 	}
 
-	public static class GearBoxTypeExtension
+	public static class GearBoxTypeHelper
 	{
-		public static bool EarlyShiftGears(this GearboxType type)
+		public static string GetLabel(this GearboxType type)
 		{
 			switch (type) {
 				case GearboxType.MT:
-					return false;
+					return "Manual Transmission (MT)";
 				case GearboxType.AMT:
-					return true;
-				case GearboxType.AT:
-					return false;
+					return "Automated Transmission (AMT)";
+				case GearboxType.ATSerial:
+					return "Automatic Transmission - Serial (AT-S)";
+				case GearboxType.ATPowerSplit:
+					return "Automatic Transmission - PowerSplit (AT-P)";
+				case GearboxType.DrivingCycle:
+					return "Gear from Driving Cycle";
+				default:
+					throw new ArgumentOutOfRangeException("type", type, null);
 			}
-			return false;
 		}
 
-		public static bool SkipGears(this GearboxType type)
+		public static string ShortName(this GearboxType type)
 		{
-			switch (type) {
-				case GearboxType.MT:
-					return true;
-				case GearboxType.AMT:
-					return true;
-				case GearboxType.AT:
-					return false;
-			}
-			return false;
+			return type.ToString();
+		}
+
+		public static bool AutomaticTransmission(this GearboxType type)
+		{
+			return type == GearboxType.ATPowerSplit || type == GearboxType.ATSerial;
+		}
+
+		public static bool ManualTransmission(this GearboxType type)
+		{
+			return type == GearboxType.MT || type == GearboxType.AMT;
 		}
 
 		public static Second TractionInterruption(this GearboxType type)
@@ -79,8 +88,9 @@ namespace TUGraz.VectoCommon.Models
 					return 2.SI<Second>();
 				case GearboxType.AMT:
 					return 1.SI<Second>();
-				case GearboxType.AT:
-					return 0.8.SI<Second>();
+				case GearboxType.ATSerial:
+				case GearboxType.ATPowerSplit:
+					return 0.0.SI<Second>();
 			}
 			return 0.SI<Second>();
 		}

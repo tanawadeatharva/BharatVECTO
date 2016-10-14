@@ -81,12 +81,13 @@ namespace TUGraz.VectoCore.InputData.FileIO.JSON
 			get { return Body.GetEx<double>(JsonKeys.Engine_IdleSpeed).RPMtoRad(); }
 		}
 
-		public virtual DataTable FuelConsumptionMap
+
+		public virtual TableData FuelConsumptionMap
 		{
 			get { return ReadTableData(Body.GetEx<string>(JsonKeys.Engine_FuelConsumptionMap), "FuelConsumptionMap"); }
 		}
 
-		public virtual DataTable FullLoadCurve
+		public virtual TableData FullLoadCurve
 		{
 			get { return ReadTableData(Body.GetEx<string>(JsonKeys.Engine_FullLoadCurveFile), "FullLoadCurve"); }
 		}
@@ -94,6 +95,11 @@ namespace TUGraz.VectoCore.InputData.FileIO.JSON
 		public virtual KilogramSquareMeter Inertia
 		{
 			get { return Body.GetEx<double>(JsonKeys.Engine_Inertia).SI<KilogramSquareMeter>(); }
+		}
+
+		public virtual double WHTCEngineering
+		{
+			get { return 1; }
 		}
 
 		public virtual double WHTCMotorway
@@ -109,6 +115,17 @@ namespace TUGraz.VectoCore.InputData.FileIO.JSON
 		public virtual double WHTCUrban
 		{
 			get { return Body.GetEx<double>(JsonKeys.Engine_WHTC_Urban); }
+		}
+
+		public double ColdHotBalancingFactor
+		{
+			get
+			{
+				if (Body["ColdHotBalancingFactor"] == null) {
+					return 1.0;
+				}
+				return Body.GetEx<double>("ColdHotBalancingFactor");
+			}
 		}
 
 		public string Vendor

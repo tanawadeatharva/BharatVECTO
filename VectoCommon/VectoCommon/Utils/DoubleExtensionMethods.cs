@@ -32,6 +32,7 @@
 using System;
 using System.Collections.Generic;
 using System.Diagnostics;
+using System.Globalization;
 using System.Linq;
 
 namespace TUGraz.VectoCommon.Utils
@@ -184,11 +185,6 @@ namespace TUGraz.VectoCommon.Utils
 			return SI<MeterPerSecond>(self / 3.6);
 		}
 
-		public static PerSecond RadToRPM(this double self)
-		{
-			return SI<PerSecond>(self * 60.0 / (2 * Math.PI));
-		}
-
 		public static double ToDegree(this double self)
 		{
 			return self * 180.0 / Math.PI;
@@ -215,6 +211,11 @@ namespace TUGraz.VectoCommon.Utils
 		{
 			return self.Select(x => x.SI<T>());
 		}
+
+		public static string ToGUIFormat(this double self)
+		{
+			return self.ToString(CultureInfo.InvariantCulture);
+		}
 	}
 
 	public static class FloatExtensionMethods
@@ -223,6 +224,14 @@ namespace TUGraz.VectoCommon.Utils
 		public static T SI<T>(this float value) where T : SIBase<T>
 		{
 			return SIBase<T>.Create(value);
+		}
+	}
+
+	public static class IntegerExtensionMethods
+	{
+		public static string ToGUIFormat(this int self)
+		{
+			return self.ToString();
 		}
 	}
 }

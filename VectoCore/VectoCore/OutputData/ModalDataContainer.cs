@@ -35,7 +35,6 @@ using System.Data;
 using System.Globalization;
 using System.Linq;
 using System.Runtime.CompilerServices;
-using TUGraz.VectoCommon.Models;
 using TUGraz.VectoCommon.Utils;
 using TUGraz.VectoCore.Models.Simulation.Data;
 using TUGraz.VectoCore.Models.Simulation.Impl;
@@ -50,7 +49,6 @@ namespace TUGraz.VectoCore.OutputData
 		private readonly Action<ModalDataContainer> _addReportResult;
 		internal ModalResults Data { get; set; }
 		private DataRow CurrentRow { get; set; }
-		//private readonly VectoRunData _runData;
 
 		private readonly IModalDataWriter _writer;
 		private readonly List<string> _additionalColumns = new List<string>();
@@ -82,7 +80,7 @@ namespace TUGraz.VectoCore.OutputData
 			_writer = writer;
 
 			_writeEngineOnly = writeEngineOnly;
-			_filters = filters;
+			_filters = filters ?? new IModalDataFilter[0];
 			_addReportResult = addReportResult ?? (x => { });
 
 			Data = new ModalResults();
@@ -119,6 +117,9 @@ namespace TUGraz.VectoCore.OutputData
 				dataColumns.AddRange(new[] {
 					ModalResultField.Gear,
 				});
+				if (HasTorqueConverter) {
+					dataColumns.AddRange(new[] { ModalResultField.TC_Locked });
+				}
 			}
 			dataColumns.AddRange(new[] {
 				ModalResultField.n_eng_avg,
@@ -130,8 +131,19 @@ namespace TUGraz.VectoCore.OutputData
 				ModalResultField.P_eng_drag,
 				ModalResultField.P_eng_inertia,
 				ModalResultField.P_eng_out,
-				ModalResultField.P_clutch_loss,
-				ModalResultField.P_clutch_out,
+			});
+			if (HasTorqueConverter) {
+				dataColumns.AddRange(new[] {
+					ModalResultField.P_TC_loss,
+					ModalResultField.P_TC_out,
+				});
+			} else {
+				dataColumns.AddRange(new[] {
+					ModalResultField.P_clutch_loss,
+					ModalResultField.P_clutch_out,
+				});
+			}
+			dataColumns.AddRange(new[] {
 				ModalResultField.P_aux
 			});
 
@@ -142,6 +154,8 @@ namespace TUGraz.VectoCore.OutputData
 					ModalResultField.P_gbx_inertia,
 					ModalResultField.P_retarder_in,
 					ModalResultField.P_ret_loss,
+					ModalResultField.P_angle_in,
+					ModalResultField.P_angle_loss,
 					ModalResultField.P_axle_in,
 					ModalResultField.P_axle_loss,
 					ModalResultField.P_brake_in,
@@ -157,10 +171,12 @@ namespace TUGraz.VectoCore.OutputData
 
 				if (HasTorqueConverter) {
 					dataColumns.AddRange(new[] {
-						ModalResultField.TCv,
-						ModalResultField.TCmu,
-						ModalResultField.TC_M_Out,
-						ModalResultField.TC_n_Out
+						ModalResultField.TorqueConverterSpeedRatio,
+						ModalResultField.TorqueConverterTorqueRatio,
+						ModalResultField.TC_TorqueOut,
+						ModalResultField.TC_angularSpeedOut,
+						ModalResultField.TC_TorqueIn,
+						ModalResultField.TC_angularSpeedIn,
 					});
 				}
 			}
@@ -195,7 +211,9 @@ namespace TUGraz.VectoCore.OutputData
 						ModalResultField.FCMap, ModalResultField.FCAUXc, ModalResultField.FCWHTCc,
 						ModalResultField.FCAAUX, ModalResultField.FCFinal
 					}.Select(x => x.GetName()));
-
+#if TRACE
+			strCols = strCols.Concat(_additionalColumns);
+#endif
 			if (WriteModalResults) {
 				var filteredData = Data;
 				foreach (var filter in _filters) {
@@ -211,6 +229,23 @@ namespace TUGraz.VectoCore.OutputData
 		public IEnumerable<T> GetValues<T>(DataColumn col)
 		{
 			return Data.Rows.Cast<DataRow>().Select(x => x.Field<T>(col));
+		}
+
+		public T TimeIntegral<T>(ModalResultField field, Func<SI, bool> filter = null)
+			where T : SIBase<T>
+		{
+			var result = 0.0;
+			for (var i = 0; i < Data.Rows.Count; i++) {
+				var value = Data.Rows[i][(int)field];
+				if (value != null && value != DBNull.Value) {
+					var siValue = (SI)value;
+					if (filter == null || filter(siValue)) {
+						result += siValue.Value() * ((Second)Data.Rows[i][(int)ModalResultField.simulationInterval]).Value();
+					}
+				}
+			}
+
+			return result.SI<T>();
 		}
 
 		public IEnumerable<T> GetValues<T>(ModalResultField key)
@@ -246,20 +281,23 @@ namespace TUGraz.VectoCore.OutputData
 
 		public Dictionary<string, DataColumn> Auxiliaries { get; set; }
 
-		public void AddAuxiliary(string id)
+		/// <summary>
+		/// Adds a new auxiliary column into the mod data.
+		/// </summary>
+		/// <param name="id">The Aux-ID. This is the internal identification for the auxiliary.</param>
+		/// <param name="columnName">(Optional) The column name in the mod file. Default: "P_aux_" + id</param>
+		public void AddAuxiliary(string id, string columnName = null)
 		{
-			if (!string.IsNullOrWhiteSpace(id)) {
-				if (!Auxiliaries.ContainsKey(id)) {
-					var col = Data.Columns.Add(ModalResultField.P_aux_ + id, typeof(SI));
-					col.ExtendedProperties[ModalResults.ExtendedPropertyNames.Decimals] =
-						ModalResultField.P_aux_.GetAttribute().Decimals;
-					col.ExtendedProperties[ModalResults.ExtendedPropertyNames.OutputFactor] =
-						ModalResultField.P_aux_.GetAttribute().OutputFactor;
-					col.ExtendedProperties[ModalResults.ExtendedPropertyNames.ShowUnit] =
-						ModalResultField.P_aux_.GetAttribute().ShowUnit;
+			if (!string.IsNullOrWhiteSpace(id) && !Auxiliaries.ContainsKey(id)) {
+				var col = Data.Columns.Add(columnName ?? ModalResultField.P_aux_ + id, typeof(SI));
+				col.ExtendedProperties[ModalResults.ExtendedPropertyNames.Decimals] =
+					ModalResultField.P_aux_.GetAttribute().Decimals;
+				col.ExtendedProperties[ModalResults.ExtendedPropertyNames.OutputFactor] =
+					ModalResultField.P_aux_.GetAttribute().OutputFactor;
+				col.ExtendedProperties[ModalResults.ExtendedPropertyNames.ShowUnit] =
+					ModalResultField.P_aux_.GetAttribute().ShowUnit;
 
-					Auxiliaries[id] = col;
-				}
+				Auxiliaries[id] = col;
 			}
 		}
 
@@ -275,7 +313,7 @@ namespace TUGraz.VectoCore.OutputData
 
 				object[] remainingRow = null;
 				var gearsList = new Dictionary<object, Second>(3);
-				var v_act = data.Rows.Cast<DataRow>().First().Field<MeterPerSecond>((int)ModalResultField.v_act);
+				var vAct = data.Rows.Cast<DataRow>().First().Field<MeterPerSecond>((int)ModalResultField.v_act);
 
 				foreach (DataRow row in data.Rows) {
 					var currentDt = row.Field<Second>((int)ModalResultField.simulationInterval);
@@ -289,8 +327,8 @@ namespace TUGraz.VectoCore.OutputData
 						var gear = row[(int)ModalResultField.Gear];
 						gearsList[gear] = gearsList.GetValueOrZero(gear) + diffDt;
 
-						distance += diffDt * v_act + diffDt * diffDt * (MeterPerSquareSecond)row[(int)ModalResultField.acc] / 2;
-						v_act += diffDt * (MeterPerSquareSecond)row[(int)ModalResultField.acc];
+						distance += diffDt * vAct + diffDt * diffDt * (MeterPerSquareSecond)row[(int)ModalResultField.acc] / 2;
+						vAct += diffDt * (MeterPerSquareSecond)row[(int)ModalResultField.acc];
 						r.ItemArray = AddRow(remainingRow, MultiplyRow(row.ItemArray, diffDt));
 						absTime += diffDt;
 
@@ -298,7 +336,7 @@ namespace TUGraz.VectoCore.OutputData
 						r[(int)ModalResultField.simulationInterval] = 1.SI<Second>();
 						r[(int)ModalResultField.Gear] = gearsList.MaxBy(kv => kv.Value).Key;
 						r[(int)ModalResultField.dist] = distance;
-						r[(int)ModalResultField.v_act] = v_act;
+						r[(int)ModalResultField.v_act] = vAct;
 
 						gearsList.Clear();
 						results.Rows.Add(r);
@@ -314,13 +352,13 @@ namespace TUGraz.VectoCore.OutputData
 						var r = results.NewRow();
 						r.ItemArray = row.ItemArray;
 						absTime += dt;
-						distance += dt * v_act + dt * dt * (MeterPerSquareSecond)row[(int)ModalResultField.acc] / 2;
-						v_act += dt * (MeterPerSquareSecond)row[(int)ModalResultField.acc];
+						distance += dt * vAct + dt * dt * (MeterPerSquareSecond)row[(int)ModalResultField.acc] / 2;
+						vAct += dt * (MeterPerSquareSecond)row[(int)ModalResultField.acc];
 
 						r[(int)ModalResultField.time] = absTime;
 						r[(int)ModalResultField.simulationInterval] = dt;
 						r[(int)ModalResultField.dist] = distance;
-						r[(int)ModalResultField.v_act] = v_act;
+						r[(int)ModalResultField.v_act] = vAct;
 						results.Rows.Add(r);
 					}
 
@@ -329,8 +367,8 @@ namespace TUGraz.VectoCore.OutputData
 						var gear = row[(int)ModalResultField.Gear];
 						gearsList[gear] = gearsList.GetValueOrZero(gear) + currentDt;
 
-						distance += currentDt * v_act + currentDt * currentDt * (MeterPerSquareSecond)row[(int)ModalResultField.acc] / 2;
-						v_act += currentDt * (MeterPerSquareSecond)row[(int)ModalResultField.acc];
+						distance += currentDt * vAct + currentDt * currentDt * (MeterPerSquareSecond)row[(int)ModalResultField.acc] / 2;
+						vAct += currentDt * (MeterPerSquareSecond)row[(int)ModalResultField.acc];
 						remainingRow = AddRow(remainingRow, MultiplyRow(row.ItemArray, currentDt));
 						remainingDt += currentDt;
 						absTime += currentDt;
@@ -348,15 +386,15 @@ namespace TUGraz.VectoCore.OutputData
 					var r = results.NewRow();
 
 					r.ItemArray = MultiplyRow(remainingRow, 1 / remainingDt).ToArray();
-					distance += remainingDt * v_act +
+					distance += remainingDt * vAct +
 								remainingDt * remainingDt * (MeterPerSquareSecond)last[(int)ModalResultField.acc] / 2;
-					v_act += remainingDt * (MeterPerSquareSecond)last[(int)ModalResultField.acc];
+					vAct += remainingDt * (MeterPerSquareSecond)last[(int)ModalResultField.acc];
 
 					r[(int)ModalResultField.time] = VectoMath.Ceiling(absTime);
 					r[(int)ModalResultField.simulationInterval] = 1.SI<Second>();
 					r[(int)ModalResultField.Gear] = gearsList.MaxBy(kv => kv.Value).Key;
 					r[(int)ModalResultField.dist] = distance;
-					r[(int)ModalResultField.v_act] = v_act;
+					r[(int)ModalResultField.v_act] = vAct;
 					results.Rows.Add(r);
 				}
 

@@ -2,6 +2,7 @@
 
 In this chapter the used component models for the simulation are described.
 
+* [Powertrain and Components Structure](#powertrain-and-components-structure)
 * [Driver: Acceleration Limiting](#acceleration-limiting)
 * [Driver: Look-Ahead Coasting](#look-ahead-coasting)
 * [ADAS: Overspeed / Eco-Roll](#overspeed-eco-roll)

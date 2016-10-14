@@ -39,17 +39,25 @@ namespace TUGraz.VectoCore.Configuration
 		public const double RPMToRad = 2 * Math.PI / 60;
 		public const double Kilo = 1000;
 		public const double MeterPerSecondToKMH = 3.6;
-		public const double SecondsPerHour = 3600;
+
+		// mk-2016-10-11: const never used. Delete?
+		[Obsolete] public const double SecondsPerHour = 3600;
 
 		public static class Auxiliaries
 		{
+			public const string Cycle = "cycle";
+			public const string Prefix = "AUX_";
+			public const string PowerPrefix = "P_";
+
 			public static class IDs
 			{
+				public static string PTOTransmission = "PTO_TRANSM";
 				public const string Fan = "FAN";
 				public const string SteeringPump = "STP";
 				public const string ElectricSystem = "ES";
 				public const string HeatingVentilationAirCondition = "AC";
 				public const string PneumaticSystem = "PS";
+				public const string PTOConsumer = "PTO_CONSUM";
 			}
 
 			public static class Names
@@ -75,6 +83,10 @@ namespace TUGraz.VectoCore.Configuration
 
 			public const string EngineDataFile = ".veng";
 
+			public const string VehicleDataFile = ".vveh";
+
+			public const string GearboxDataFile = ".vgbx";
+
 			public const string CycleFile = ".vdri";
 
 			public const string DriverAccelerationCurve = ".vacc";
@@ -86,7 +98,6 @@ namespace TUGraz.VectoCore.Configuration
 			/// base time interval for the simulation. the distance is estimated to reach this time interval as good as possible
 			/// </summary>
 			public static readonly Second TargetTimeInterval = 0.5.SI<Second>();
-
 
 			/// <summary>
 			/// maximum time interval for the simulation in measured speed mode.
@@ -103,7 +114,7 @@ namespace TUGraz.VectoCore.Configuration
 			/// </summary>
 			public static readonly Meter DriveOffDistance = 1.SI<Meter>();
 
-			public static readonly Meter BrakeNextTargetDistance = 5.SI<Meter>();
+			public static readonly Meter BrakeNextTargetDistance = 2.5.SI<Meter>();
 
 			public static readonly MeterPerSecond MinVelocityForCoast = 5.KMPHtoMeterPerSecond();
 
@@ -128,7 +139,10 @@ namespace TUGraz.VectoCore.Configuration
 			public const double InterpolateSearchTolerance = 1e-3;
 
 			public const double ClutchClosingSpeedNorm = 0.03;
+
 			public static readonly MeterPerSecond ClutchDisengageWhenHaltingSpeed = 15.KMPHtoMeterPerSecond();
+
+			public static readonly MeterPerSecond ATGearboxDisengageWhenHaltingSpeed = 5.KMPHtoMeterPerSecond();
 
 			public static readonly MeterPerSquareSecond MinimumAcceleration = 0.1.SI<MeterPerSquareSecond>();
 
@@ -151,6 +165,8 @@ namespace TUGraz.VectoCore.Configuration
 			public static readonly MeterPerSecond VehicleStopClutchDisengageSpeed = 10.KMPHtoMeterPerSecond();
 
 			public static readonly Meter GearboxLookaheadForAccelerationEstimation = 100.SI<Meter>();
+
+			public static Kilogram MaximumGrossVehicleWeight = 40000.SI<Kilogram>();
 		}
 	}
 }

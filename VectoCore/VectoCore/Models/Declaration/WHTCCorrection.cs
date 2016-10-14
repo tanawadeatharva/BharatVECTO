@@ -30,7 +30,6 @@
 */
 
 using System;
-using System.Collections.Generic;
 using System.Data;
 using System.Linq;
 using TUGraz.VectoCommon.Utils;
@@ -38,39 +37,42 @@ using TUGraz.VectoCore.Utils;
 
 namespace TUGraz.VectoCore.Models.Declaration
 {
-	public sealed class WHTCCorrection : LookupData<MissionType, double, double, double, double>
+	public sealed class WHTCCorrection
 	{
-		private const string ResourceId = "TUGraz.VectoCore.Resources.Declaration.WHTC-Weighting-Factors.csv";
-		private readonly Dictionary<MissionType, WHTCCorrectionEntry> _data =
-			new Dictionary<MissionType, WHTCCorrectionEntry>();
-		
-		public WHTCCorrection()
-		{
-			ParseData(ReadCsvResource(ResourceId));
-		}
+		private readonly WHTCCorrectionData _data = new WHTCCorrectionData();
 
-		public override double Lookup(MissionType mission, double rural, double urban, double motorway)
+		public double Lookup(MissionType mission, double rural, double urban, double motorway)
 		{
-			var entry = _data[mission];
+			var entry = _data.Lookup(mission);
 			return rural * entry.Rural + urban * entry.Urban + motorway * entry.Motorway;
 		}
 
-
-		protected override void ParseData(DataTable table)
+		private sealed class WHTCCorrectionData : LookupData<MissionType, Entry>
 		{
-			_data.Clear();
-			NormalizeTable(table);
-			foreach (MissionType mission in Enum.GetValues(typeof(MissionType))) {
-				var values = table.Columns[mission.ToString().ToLower()].Values<string>().ToDouble().ToArray();
-				_data[mission] = new WHTCCorrectionEntry { Urban = values[0], Rural = values[1], Motorway = values[2] };
+			protected override string ResourceId
+			{
+				get { return "TUGraz.VectoCore.Resources.Declaration.WHTC-Weighting-Factors.csv"; }
+			}
+
+			protected override string ErrorMessage
+			{
+				get { return "WHTC Correction Lookup Error: no value found. Mission: '{0}'"; }
+			}
+
+			protected override void ParseData(DataTable table)
+			{
+				foreach (MissionType mission in Enum.GetValues(typeof(MissionType))) {
+					var values = table.Columns[mission.ToString().ToLower()].Values<string>().ToDouble().ToArray();
+					Data[mission] = new Entry { Urban = values[0], Rural = values[1], Motorway = values[2] };
+				}
 			}
 		}
 
-		private class WHTCCorrectionEntry
+		private class Entry
 		{
-			public double Rural { get; set; }
-			public double Urban { get; set; }
-			public double Motorway { get; set; }
+			public double Rural;
+			public double Urban;
+			public double Motorway;
 		}
 	}
 }

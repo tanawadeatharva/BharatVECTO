@@ -246,6 +246,11 @@ namespace TUGraz.VectoCore.Models.Simulation.Data
 		[ModalResultField(typeof(SI), name: "Ploss Diff", caption: "P_axle_loss [kW]", outputFactor: 1e-3)] P_axle_loss,
 
 		/// <summary>
+		///     [kW]	Losses in angle transmission.
+		/// </summary>
+		[ModalResultField(typeof(SI), name: "Ploss Angle", caption: "P_angle_loss [kW]", outputFactor: 1e-3)] P_angle_loss,
+
+		/// <summary>
 		///     [kW]	Retarder losses.
 		/// </summary>
 		[ModalResultField(typeof(SI), name: "P_ret_loss", caption: "P_ret_loss [kW]", outputFactor: 1e-3)] P_ret_loss,
@@ -291,6 +296,8 @@ namespace TUGraz.VectoCore.Models.Simulation.Data
 
 		[ModalResultField(typeof(SI), caption: "P_axle_in [kW]", outputFactor: 1e-3)] P_axle_in,
 
+		[ModalResultField(typeof(SI), caption: "P_angle_in [kW]", outputFactor: 1e-3)] P_angle_in,
+
 		[ModalResultField(typeof(SI), caption: "P_ret_in [kW]", outputFactor: 1e-3)] P_retarder_in,
 
 		[ModalResultField(typeof(SI), caption: "P_gbx_in [kW]", outputFactor: 1e-3)] P_gbx_in,
@@ -307,24 +314,46 @@ namespace TUGraz.VectoCore.Models.Simulation.Data
 		[ModalResultField(typeof(SI), outputFactor: 1e-3)] P_aux_,
 
 		/// <summary>
+		///		[-]  true/false  indicate whether torque converter is locked or not (only applicable for gears with TC)
+		/// </summary>
+		[ModalResultField(typeof(int), caption: "TC locked")] TC_Locked,
+
+		/// <summary>
 		///     [-]	    Torque converter speed ratio
 		/// </summary>
-		[ModalResultField(typeof(SI), name: "TCnu")] TCv,
+		[ModalResultField(typeof(double), name: "TCnu")] TorqueConverterSpeedRatio,
 
 		/// <summary>
 		///     [-]	    Torque converter torque ratio
 		/// </summary>
-		[ModalResultField(typeof(SI), name: "TCmu")] TCmu,
+		[ModalResultField(typeof(double), name: "TCmu")] TorqueConverterTorqueRatio,
+
+		[ModalResultField(typeof(SI), "P_TC_out [kW]", outputFactor: 1e-3)] P_TC_out,
+
+		/// <summary>
+		///     [kW]	Power loss at the torque converter.
+		/// </summary>
+		[ModalResultField(typeof(SI), "P_TC_loss [kW]", outputFactor: 1e-3)] P_TC_loss,
 
 		/// <summary>
 		///     [Nm]	Torque converter output torque
 		/// </summary>
-		[ModalResultField(typeof(SI))] TC_M_Out,
+		[ModalResultField(typeof(SI), "T_TC_out")] TC_TorqueOut,
 
 		/// <summary>
 		///     [1/min]	Torque converter output speed
 		/// </summary>
-		[ModalResultField(typeof(SI))] TC_n_Out,
+		[ModalResultField(typeof(SI), "n_TC_out", outputFactor: 60 / (2 * Math.PI))] TC_angularSpeedOut,
+
+		/// <summary>
+		///     [Nm]	Torque converter output torque
+		/// </summary>
+		[ModalResultField(typeof(SI), "T_TC_in")] TC_TorqueIn,
+
+		/// <summary>
+		///     [1/min]	Torque converter output speed
+		/// </summary>
+		[ModalResultField(typeof(SI), "n_TC_in", outputFactor: 60 / (2 * Math.PI))] TC_angularSpeedIn,
 
 		/// <summary>
 		///     [m]	Altitude
@@ -344,14 +373,14 @@ namespace TUGraz.VectoCore.Models.Simulation.Data
 		[ModalResultField(typeof(int), caption: "AA_OverrunFlag [bool]")] AA_OverrunFlag,
 		[ModalResultField(typeof(int), caption: "AA_EngineIdleFlag [bool]")] AA_EngineIdleFlag,
 		[ModalResultField(typeof(int), caption: "AA_CompressorFlag [bool]")] AA_CompressorFlag,
-		[ModalResultField(typeof(SI), caption: "AA_TotalCycleFC_Grams [g]")] AA_TotalCycleFC_Grams,
+		[ModalResultField(typeof(SI), caption: "AA_TotalCycleFC_Grams [g]", outputFactor: 1000)] AA_TotalCycleFC_Grams,
 		[ModalResultField(typeof(SI), caption: "AA_TotalCycleFC_Litres [l]")] AA_TotalCycleFC_Litres,
 		[ModalResultField(typeof(SI), caption: "AA_AveragePowerDemandCrankHVACMechanicals [W]")] AA_AveragePowerDemandCrankHVACMechanicals,
 		[ModalResultField(typeof(SI), caption: "AA_AveragePowerDemandCrankHVACElectricals [W]")] AA_AveragePowerDemandCrankHVACElectricals,
 		[ModalResultField(typeof(SI), caption: "AA_AveragePowerDemandCrankElectrics [W]")] AA_AveragePowerDemandCrankElectrics,
 		[ModalResultField(typeof(SI), caption: "AA_AveragePowerDemandCrankPneumatics [W]")] AA_AveragePowerDemandCrankPneumatics,
-		[ModalResultField(typeof(SI), caption: "AA_TotalCycleFuelConsumptionCompressorOff [g]")] AA_TotalCycleFuelConsumptionCompressorOff,
-		[ModalResultField(typeof(SI), caption: "AA_TotalCycleFuelConsumptionCompressorOn [g]")] AA_TotalCycleFuelConsumptionCompressorOn,
+		[ModalResultField(typeof(SI), caption: "AA_TotalCycleFuelConsumptionCompressorOff [g]", outputFactor: 1000)] AA_TotalCycleFuelConsumptionCompressorOff,
+		[ModalResultField(typeof(SI), caption: "AA_TotalCycleFuelConsumptionCompressorOn [g]", outputFactor: 1000)] AA_TotalCycleFuelConsumptionCompressorOn,
 	}
 
 	[AttributeUsage(AttributeTargets.Field)]

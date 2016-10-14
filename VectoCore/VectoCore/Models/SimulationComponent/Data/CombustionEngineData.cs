@@ -29,11 +29,11 @@
 *   Martin Rexeis, rexeis@ivt.tugraz.at, IVT, Graz University of Technology
 */
 
+using System;
 using System.ComponentModel.DataAnnotations;
 using TUGraz.VectoCommon.Utils;
 using TUGraz.VectoCore.Configuration;
 using TUGraz.VectoCore.Models.SimulationComponent.Data.Engine;
-using TUGraz.VectoCore.Utils;
 
 namespace TUGraz.VectoCore.Models.SimulationComponent.Data
 {
@@ -63,6 +63,9 @@ namespace TUGraz.VectoCore.Models.SimulationComponent.Data
 		[Required, ValidateObject]
 		public EngineFullLoadCurve FullLoadCurve { get; internal set; }
 
+		[Required, Range(double.MinValue, double.MaxValue)]
+		public double ColdHotCorrectionFactor { get; internal set; }
+
 		internal double WHTCCorrectionFactor = 1;
 
 		public CombustionEngineData()
@@ -86,47 +89,5 @@ namespace TUGraz.VectoCore.Models.SimulationComponent.Data
 				WHTCCorrectionFactor = WHTCCorrectionFactor,
 			};
 		}
-
-		#region Equality Member
-
-		protected bool Equals(CombustionEngineData other)
-		{
-			return Equals(FullLoadCurve, other.FullLoadCurve) && string.Equals(ModelName, other.ModelName) &&
-					Equals(Displacement, other.Displacement) && Equals(IdleSpeed, other.IdleSpeed) && Equals(Inertia, other.Inertia) &&
-					Equals(WHTCUrban, other.WHTCUrban) && Equals(WHTCRural, other.WHTCRural) &&
-					Equals(WHTCMotorway, other.WHTCMotorway) && Equals(ConsumptionMap, other.ConsumptionMap);
-		}
-
-		public override bool Equals(object obj)
-		{
-			if (ReferenceEquals(null, obj)) {
-				return false;
-			}
-			if (ReferenceEquals(this, obj)) {
-				return true;
-			}
-			if (obj.GetType() != this.GetType()) {
-				return false;
-			}
-			return Equals((CombustionEngineData)obj);
-		}
-
-		public override int GetHashCode()
-		{
-			unchecked {
-				var hashCode = (FullLoadCurve != null ? FullLoadCurve.GetHashCode() : 0);
-				hashCode = (hashCode * 397) ^ (ModelName != null ? ModelName.GetHashCode() : 0);
-				hashCode = (hashCode * 397) ^ (Displacement != null ? Displacement.GetHashCode() : 0);
-				hashCode = (hashCode * 397) ^ (IdleSpeed != null ? IdleSpeed.GetHashCode() : 0);
-				hashCode = (hashCode * 397) ^ (Inertia != null ? Inertia.GetHashCode() : 0);
-				hashCode = (hashCode * 397) ^ (WHTCUrban.GetHashCode());
-				hashCode = (hashCode * 397) ^ (WHTCRural.GetHashCode());
-				hashCode = (hashCode * 397) ^ (WHTCMotorway.GetHashCode());
-				hashCode = (hashCode * 397) ^ (ConsumptionMap != null ? ConsumptionMap.GetHashCode() : 0);
-				return hashCode;
-			}
-		}
-
-		#endregion
 	}
 }

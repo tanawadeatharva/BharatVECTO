@@ -29,8 +29,6 @@
 *   Martin Rexeis, rexeis@ivt.tugraz.at, IVT, Graz University of Technology
 */
 
-using TUGraz.VectoCore.Models.Connector.Ports;
-
 namespace TUGraz.VectoCore.Models.SimulationComponent
 {
 	public enum ClutchState
@@ -42,6 +40,7 @@ namespace TUGraz.VectoCore.Models.SimulationComponent
 
 	public interface IClutch : IPowerTrainComponent
 	{
-		ITnOutPort IdleControlPort { get; }
+		//ITnOutPort IdleControlPort { get; }
+		IIdleController IdleController { get; set; }
 	}
 }

@@ -47,6 +47,7 @@ namespace TUGraz.VectoCore.Models.SimulationComponent.Data.Engine
 		private PerSecond _engineSpeedLo; // 55% of Pmax
 		private PerSecond _engineSpeedHi; // 70% of Pmax
 		private PerSecond _n95hSpeed; // 95% of Pmax
+		private PerSecond _n80hSpeed; // 80% of Pmax
 
 		public static EngineFullLoadCurve ReadFromFile(string fileName, bool declarationMode = false)
 		{
@@ -92,6 +93,11 @@ namespace TUGraz.VectoCore.Models.SimulationComponent.Data.Engine
 				}
 				return _preferredSpeed;
 			}
+		}
+
+		public PerSecond N80hSpeed
+		{
+			get { return _n80hSpeed ?? (_n80hSpeed = FindEngineSpeedForPower(0.8 * MaxPower).Last()); }
 		}
 
 		public PerSecond N95hSpeed
@@ -234,7 +240,7 @@ namespace TUGraz.VectoCore.Models.SimulationComponent.Data.Engine
 			if (ReferenceEquals(this, obj)) {
 				return true;
 			}
-			if (obj.GetType() != this.GetType()) {
+			if (obj.GetType() != GetType()) {
 				return false;
 			}
 			return Equals((EngineFullLoadCurve)obj);

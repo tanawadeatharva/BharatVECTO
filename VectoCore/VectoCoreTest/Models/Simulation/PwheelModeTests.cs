@@ -63,8 +63,8 @@ namespace TUGraz.VectoCore.Tests.Models.Simulation
 		{
 			var container = new VehicleContainer(ExecutionMode.Engineering);
 			var inputData = @"<t>,<Pwheel>,<gear>,<n>,<Padd>
-                               1,89,2,1748,1.300
-                               2,120,2,1400,0.4";
+							   1,89,2,1748,1.300
+							   2,120,2,1400,0.4";
 
 			var cycleFile = new MemoryStream(Encoding.UTF8.GetBytes(inputData));
 			var drivingCycle = DrivingCycleDataReader.ReadFromStream(cycleFile, CycleType.PWheel, "", false);
@@ -72,7 +72,7 @@ namespace TUGraz.VectoCore.Tests.Models.Simulation
 			var gearbox = new CycleGearbox(container,
 				new GearboxData {
 					Gears = new Dictionary<uint, GearData> { { 1, new GearData { Ratio = 2.0 } }, { 2, new GearData { Ratio = 3.5 } } }
-				});
+				}, 0.SI<KilogramSquareMeter>());
 
 			var cycle = new PWheelCycle(container, drivingCycle, 2.3,
 				gearbox.ModelData.Gears.ToDictionary(g => g.Key, g => g.Value.Ratio));
@@ -105,8 +105,8 @@ namespace TUGraz.VectoCore.Tests.Models.Simulation
 		{
 			// prepare input data
 			var inputData = @"<t>,<Pwheel>,<gear>,<n>,  <Padd>
-                               1,  89,      2,     1748, 1.3
-                               2,  120,     2,     1400, 0.4";
+							   1,  89,      2,     1748, 1.3
+							   2,  120,     2,     1400, 0.4";
 
 			var cycleFile = new MemoryStream(Encoding.UTF8.GetBytes(inputData));
 			var drivingCycle = DrivingCycleDataReader.ReadFromStream(cycleFile, CycleType.PWheel, "", false);
@@ -137,7 +137,7 @@ namespace TUGraz.VectoCore.Tests.Models.Simulation
 			};
 
 			// call builder (actual test)
-			var builder = new PowertrainBuilder(null);
+			var builder = new PowertrainBuilder(new MockModalDataContainer());
 			var jobContainer = builder.Build(data);
 		}
 

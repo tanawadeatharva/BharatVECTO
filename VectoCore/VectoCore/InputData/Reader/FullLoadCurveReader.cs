@@ -55,7 +55,6 @@ namespace TUGraz.VectoCore.InputData.Reader
 			}
 		}
 
-
 		public static FullLoadCurve Create(DataTable data, bool declarationMode = false, bool engineFld = false)
 		{
 			if (engineFld) {
@@ -80,7 +79,7 @@ namespace TUGraz.VectoCore.InputData.Reader
 				Logger<FullLoadCurve>().Warn(
 					"FullLoadCurve: Header Line is not valid. Expected: '{0}, {1}, {2}', Got: '{3}'. Falling back to column index.",
 					Fields.EngineSpeed, Fields.TorqueFullLoad,
-					Fields.TorqueDrag, ", ".Join(data.Columns.Cast<DataColumn>().Select(c => c.ColumnName)));
+					Fields.TorqueDrag, string.Join(", ", data.Columns.Cast<DataColumn>().Select(c => c.ColumnName)));
 
 				entriesFld = CreateFromColumnIndizes(data, engineFld);
 			}
@@ -89,7 +88,11 @@ namespace TUGraz.VectoCore.InputData.Reader
 			if (declarationMode) {
 				tmp = new PT1();
 			} else {
-				tmp = PT1Curve.Create(data);
+				if (data.Columns.Count > 3) {
+					tmp = PT1Curve.Create(data);
+				} else {
+					tmp = new PT1();
+				}
 			}
 			entriesFld.Sort((entry1, entry2) => entry1.EngineSpeed.Value().CompareTo(entry2.EngineSpeed.Value()));
 			return new FullLoadCurve { FullLoadEntries = entriesFld, PT1Data = tmp };
@@ -108,7 +111,7 @@ namespace TUGraz.VectoCore.InputData.Reader
 				select new FullLoadCurve.FullLoadCurveEntry {
 					EngineSpeed = row.ParseDouble(Fields.EngineSpeed).RPMtoRad(),
 					TorqueFullLoad = row.ParseDouble(Fields.TorqueFullLoad).SI<NewtonMeter>(),
-					TorqueDrag = (engineFld ? row.ParseDouble(Fields.TorqueDrag).SI<NewtonMeter>() : null)
+					TorqueDrag = engineFld ? row.ParseDouble(Fields.TorqueDrag).SI<NewtonMeter>() : null
 				}).ToList();
 		}
 
@@ -118,12 +121,11 @@ namespace TUGraz.VectoCore.InputData.Reader
 				select new FullLoadCurve.FullLoadCurveEntry {
 					EngineSpeed = row.ParseDouble(0).RPMtoRad(),
 					TorqueFullLoad = row.ParseDouble(1).SI<NewtonMeter>(),
-					TorqueDrag = (engineFld ? row.ParseDouble(2).SI<NewtonMeter>() : null)
+					TorqueDrag = engineFld ? row.ParseDouble(2).SI<NewtonMeter>() : null
 				}).ToList();
 		}
 
-
-		private static class Fields
+		public static class Fields
 		{
 			/// <summary>
 			/// [rpm] engine speed

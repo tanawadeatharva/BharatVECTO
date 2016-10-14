@@ -29,6 +29,7 @@
 *   Martin Rexeis, rexeis@ivt.tugraz.at, IVT, Graz University of Technology
 */
 
+using System;
 using System.Data;
 using System.Linq;
 using Microsoft.VisualStudio.TestTools.UnitTesting;
@@ -85,7 +86,7 @@ namespace TUGraz.VectoCore.Tests.Reports
 				// check fuel consumption interpolation
 				var fuelConsumption = (SI)row[(int)ModalResultField.FCMap];
 				Assert.AreEqual(fuelConsumption.Value(),
-					engineData.ConsumptionMap.GetFuelConsumption(tqEngFcmap, nEngFcMap).Value(), 1E-3, "time: {0}  distance: {1}",
+					engineData.ConsumptionMap.GetFuelConsumption(tqEngFcmap, nEngFcMap).Value.Value(), 1E-3, "time: {0}  distance: {1}",
 					time, distance);
 
 				// check P_eng_FCmap = T_eng_fcmap * n_eng
@@ -110,7 +111,8 @@ namespace TUGraz.VectoCore.Tests.Reports
 				var pRetIn = (Watt)row[(int)ModalResultField.P_retarder_in];
 				var pGbxInertia = (Watt)row[(int)ModalResultField.P_gbx_inertia];
 				var pEngInertia = (Watt)row[(int)ModalResultField.P_eng_inertia];
-				var pAux = (Watt)row[(int)ModalResultField.P_aux];
+				var pAux =
+					(Watt)(row[(int)ModalResultField.P_aux] != DBNull.Value ? row[(int)ModalResultField.P_aux] : 0.SI<Watt>());
 				var pBrakeLoss = (Watt)row[(int)ModalResultField.P_brake_loss];
 				var pBrakeIn = (Watt)row[(int)ModalResultField.P_brake_in];
 				var pClutchLoss = (Watt)row[(int)ModalResultField.P_clutch_loss];
@@ -129,7 +131,6 @@ namespace TUGraz.VectoCore.Tests.Reports
 				Assert.AreEqual(pAxleIn.Value(), (pBrakeIn + pLossAxle).Value(), 1E-3, "time: {0}  distance: {1}", time, distance);
 
 				Assert.AreEqual(pRetIn.Value(), (pAxleIn + pLossRet).Value(), 1E-3, "time: {0}  distance: {1}", time, distance);
-
 
 				Assert.AreEqual(pGbxIn.Value(), pClutchOut.Value(), 1E-3, "time: {0}  distance: {1}", time, distance);
 

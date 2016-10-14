@@ -46,7 +46,7 @@ using TUGraz.VectoCore.Utils;
 
 namespace TUGraz.VectoCore.Models.Simulation.Impl
 {
-	public class VehicleContainer : LoggingObject, IVehicleContainer
+	public sealed class VehicleContainer : LoggingObject, IVehicleContainer
 	{
 		private List<Tuple<int, VectoSimulationComponent>> _components =
 			new List<Tuple<int, VectoSimulationComponent>>();
@@ -72,6 +72,11 @@ namespace TUGraz.VectoCore.Models.Simulation.Impl
 		internal WriteSumData WriteSumData;
 
 		#region IGearCockpit
+
+		public GearboxType GearboxType
+		{
+			get { return Gearbox.GearboxType; }
+		}
 
 		public uint Gear
 		{
@@ -112,9 +117,9 @@ namespace TUGraz.VectoCore.Models.Simulation.Impl
 			}
 		}
 
-		public FullLoadCurve GearFullLoadCurve
+		public NewtonMeter GearMaxTorque
 		{
-			get { return Gearbox != null ? Gearbox.GearFullLoadCurve : null; }
+			get { return Gearbox != null ? Gearbox.GearMaxTorque : null; }
 		}
 
 		public Watt GearboxLoss()
@@ -167,6 +172,11 @@ namespace TUGraz.VectoCore.Models.Simulation.Impl
 		public PerSecond EngineN95hSpeed
 		{
 			get { return Engine.EngineN95hSpeed; }
+		}
+
+		public PerSecond EngineN80hSpeed
+		{
+			get { return Engine.EngineN80hSpeed; }
 		}
 
 		#endregion
@@ -230,7 +240,9 @@ namespace TUGraz.VectoCore.Models.Simulation.Impl
 			return Cycle;
 		}
 
-		public virtual void AddComponent(VectoSimulationComponent component)
+		public Second AbsTime { get; set; }
+
+		public void AddComponent(VectoSimulationComponent component)
 		{
 			var commitPriority = 0;
 
@@ -266,7 +278,7 @@ namespace TUGraz.VectoCore.Models.Simulation.Impl
 		public void CommitSimulationStep(Second time, Second simulationInterval)
 		{
 			Log.Info("VehicleContainer committing simulation. time: {0}, dist: {1}, speed: {2}", time,
-				 Distance, VehicleSpeed);
+				Distance, VehicleSpeed);
 
 			foreach (var component in _components) {
 				component.Item2.CommitSimulationStep(ModData);
@@ -341,6 +353,11 @@ namespace TUGraz.VectoCore.Models.Simulation.Impl
 		public DrivingBehavior DriverBehavior
 		{
 			get { return Driver.DriverBehavior; }
+		}
+
+		public MeterPerSquareSecond DriverAcceleration
+		{
+			get { return Driver.DriverAcceleration; }
 		}
 
 		public Meter CycleStartDistance

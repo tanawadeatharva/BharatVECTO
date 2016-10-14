@@ -29,6 +29,7 @@
 *   Martin Rexeis, rexeis@ivt.tugraz.at, IVT, Graz University of Technology
 */
 
+using System;
 using System.Collections.Generic;
 using System.Data;
 using System.Linq;
@@ -40,9 +41,18 @@ namespace TUGraz.VectoCore.Models.Declaration
 {
 	public sealed class PT1 : LookupData<PerSecond, Second>
 	{
-		private const string ResourceId = "TUGraz.VectoCore.Resources.Declaration.PT1.csv";
+		protected override string ResourceId
+		{
+			get { return "TUGraz.VectoCore.Resources.Declaration.PT1.csv"; }
+		}
+
+		protected override string ErrorMessage
+		{
+			get { throw new InvalidOperationException("ErrorMessage not applicable."); }
+		}
+
 		private List<KeyValuePair<PerSecond, Second>> _entries;
-		
+
 		public PT1()
 		{
 			ParseData(ReadCsvResource(ResourceId));
@@ -59,13 +69,13 @@ namespace TUGraz.VectoCore.Models.Declaration
 		public override Second Lookup(PerSecond key)
 		{
 			var index = 1;
-			if (key < _entries[0].Key) {
+			if (key.IsSmaller(_entries[0].Key)) {
 				Log.Error("requested rpm below minimum rpm in pt1 - extrapolating. n_eng_avg: {0}, rpm_min: {1}",
 					key.ConvertTo().Rounds.Per.Minute, _entries[0].Key.ConvertTo().Rounds.Per.Minute);
 			} else {
-				index = _entries.FindIndex(x => x.Key > key);
+				index = _entries.FindIndex(x => x.Key.IsGreater(key));
 				if (index <= 0) {
-					index = (key > _entries[0].Key) ? _entries.Count - 1 : 1;
+					index = key.IsGreater(_entries[0].Key) ? _entries.Count - 1 : 1;
 				}
 			}
 

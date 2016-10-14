@@ -44,14 +44,16 @@ namespace TUGraz.VectoCore.Models.SimulationComponent.Data.Engine
 	{
 		private List<KeyValuePair<PerSecond, Second>> _entries;
 
-		public static PT1Curve ReadFromFile(string fileName)
+		// just for Lookup-inheritance compatibility
+		protected override string ResourceId
 		{
-			return new PT1Curve(fileName);
+			get { return null; }
 		}
 
-		public static PT1Curve Create(DataTable data)
+		// just for Lookup-inheritance compatibility
+		protected override string ErrorMessage
 		{
-			return new PT1Curve(data);
+			get { throw new InvalidOperationException(); }
 		}
 
 		private PT1Curve(DataTable data)
@@ -71,10 +73,19 @@ namespace TUGraz.VectoCore.Models.SimulationComponent.Data.Engine
 			ParseData(data);
 		}
 
+		public static PT1Curve ReadFromFile(string fileName)
+		{
+			return new PT1Curve(fileName);
+		}
+
+		public static PT1Curve Create(DataTable data)
+		{
+			return new PT1Curve(data);
+		}
 
 		protected override void ParseData(DataTable data)
 		{
-			if (data.Columns.Count < 4) {
+			if (data.Columns.Count < 3) {
 				throw new VectoException("FullLoadCurve/PT1 Data File must consist of at least 4 columns.");
 			}
 
@@ -83,43 +94,28 @@ namespace TUGraz.VectoCore.Models.SimulationComponent.Data.Engine
 					"FullLoadCurve/PT1 must consist of at least two lines with numeric values (below file header)");
 			}
 
-			if (HeaderIsValid(data.Columns)) {
+			if (data.Columns.Contains(Fields.EngineSpeed) && data.Columns.Contains(Fields.PT1)) {
 				_entries = data.Rows.Cast<DataRow>()
-					.Select(
-						r =>
-							new KeyValuePair<PerSecond, Second>(r.ParseDouble(Fields.EngineSpeed).RPMtoRad(),
-								r.ParseDouble(Fields.PT1).SI<Second>()))
-					.OrderBy(x => x.Key)
-					.ToList();
+					.Select(r => new KeyValuePair<PerSecond, Second>(r.ParseDouble(Fields.EngineSpeed).RPMtoRad(),
+						r.ParseDouble(Fields.PT1).SI<Second>()))
+					.OrderBy(x => x.Key).ToList();
 			} else {
 				_entries = data.Rows.Cast<DataRow>()
-					.Select(
-						r => new KeyValuePair<PerSecond, Second>(r.ParseDouble(0).RPMtoRad(), r.ParseDouble(3).SI<Second>()))
-					.OrderBy(x => x.Key)
-					.ToList();
+					.Select(r => new KeyValuePair<PerSecond, Second>(r.ParseDouble(0).RPMtoRad(), r.ParseDouble(3).SI<Second>()))
+					.OrderBy(x => x.Key).ToList();
 			}
 		}
 
-		private bool HeaderIsValid(DataColumnCollection columns)
-		{
-			return columns.Contains(Fields.EngineSpeed) && columns.Contains(Fields.PT1);
-		}
-
-		/// <summary>
-		///     [rad/s] => [s]
-		/// </summary>
-		/// <param name="key">[rad/s]</param>
-		/// <returns>[s]</returns>
 		public override Second Lookup(PerSecond key)
 		{
 			var index = 1;
-			if (key < _entries[0].Key) {
+			if (key.IsSmaller(_entries[0].Key)) {
 				Log.Error("requested rpm below minimum rpm in pt1 - extrapolating. n_eng_avg: {0}, rpm_min: {1}",
 					key.ConvertTo().Rounds.Per.Minute, _entries[0].Key.ConvertTo().Rounds.Per.Minute);
 			} else {
-				index = _entries.FindIndex(x => x.Key > key);
+				index = _entries.FindIndex(x => x.Key.IsGreater(key));
 				if (index <= 0) {
-					index = (key > _entries[0].Key) ? _entries.Count - 1 : 1;
+					index = key.IsGreater(_entries[0].Key) ? _entries.Count - 1 : 1;
 				}
 			}
 
@@ -133,15 +129,8 @@ namespace TUGraz.VectoCore.Models.SimulationComponent.Data.Engine
 
 		private static class Fields
 		{
-			/// <summary>
-			///     [rpm] engine speed
-			/// </summary>
-			public const string EngineSpeed = "engine speed";
-
-			/// <summary>
-			///     [s] time constant
-			/// </summary>
 			public const string PT1 = "PT1";
+			public const string EngineSpeed = "engine speed";
 		}
 	}
 }

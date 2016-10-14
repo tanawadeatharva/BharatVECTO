@@ -37,16 +37,15 @@ using TUGraz.VectoCommon.InputData;
 using TUGraz.VectoCommon.Models;
 using TUGraz.VectoCommon.Utils;
 using TUGraz.VectoCore.Configuration;
+using TUGraz.VectoCore.InputData.Reader.ComponentData;
 using TUGraz.VectoCore.Models.Declaration;
 using TUGraz.VectoCore.Models.Simulation.Data;
 using TUGraz.VectoCore.Models.SimulationComponent.Data;
 using TUGraz.VectoCore.Models.SimulationComponent.Data.Engine;
 using TUGraz.VectoCore.Models.SimulationComponent.Data.Gearbox;
-using TUGraz.VectoCore.OutputData;
 using TUGraz.VectoCore.Utils;
-using DriverData = TUGraz.VectoCore.Models.SimulationComponent.Data.DriverData;
 
-namespace TUGraz.VectoCore.InputData.Reader.DataObjectAdaper
+namespace TUGraz.VectoCore.InputData.Reader.DataObjectAdapter
 {
 	public class DeclarationDataAdapter : AbstractSimulationDataAdapter
 	{
@@ -58,7 +57,7 @@ namespace TUGraz.VectoCore.InputData.Reader.DataObjectAdaper
 			var lookAheadData = new DriverData.LACData {
 				Enabled = DeclarationData.Driver.LookAhead.Enabled,
 				//Deceleration = DeclarationData.Driver.LookAhead.Deceleration,
-				//MinSpeed = DeclarationData.Driver.LookAhead.MinimumSpeed,
+				MinSpeed = DeclarationData.Driver.LookAhead.MinimumSpeed,
 				LookAheadDecisionFactor = new LACDecisionFactor(),
 				LookAheadDistanceFactor = DeclarationData.Driver.LookAhead.LookAheadDistanceFactor,
 			};
@@ -94,25 +93,21 @@ namespace TUGraz.VectoCore.InputData.Reader.DataObjectAdaper
 			}
 
 			var retVal = SetCommonVehicleData(data);
-
-			retVal.GrossVehicleMassRating = data.GrossVehicleMassRating;
-
-			retVal.CurbWeigthExtra = mission.MassExtra;
+			retVal.TrailerGrossVehicleWeight = mission.TrailerGrossVehicleWeight;
+			retVal.CurbWeight += mission.BodyCurbWeight + mission.TrailerCurbWeight;
 			retVal.Loading = loading;
 			retVal.DynamicTyreRadius =
-				DeclarationData.DynamicTyreRadius(data.Axles[DeclarationData.PoweredAxle()].Wheels, data.Rim);
+				DeclarationData.Wheels.Lookup(data.Axles[DeclarationData.PoweredAxle()].Wheels).DynamicTyreRadius; // TODO!
 
-			var aerodynamicDragAera = mission.UseCdA2
-				? data.AirDragAreaRigidTruck
-				: data.AirDragArea;
+			var aerodynamicDragArea = data.AirDragArea + mission.DeltaCdA;
 
 			retVal.CrossWindCorrectionCurve =
-				new CrosswindCorrectionCdxALookup(GetDeclarationAirResistanceCurve(retVal.VehicleCategory, aerodynamicDragAera),
+				new CrosswindCorrectionCdxALookup(GetDeclarationAirResistanceCurve(retVal.VehicleCategory, aerodynamicDragArea),
 					CrossWindCorrectionMode.DeclarationModeCorrection);
 			var axles = data.Axles;
 			if (axles.Count < mission.AxleWeightDistribution.Length) {
 				throw new VectoException("Vehicle does not contain sufficient axles. {0} axles defined, {1} axles required",
-					data.Axles.Count, mission.AxleWeightDistribution.Count());
+					data.Axles.Count, mission.AxleWeightDistribution.Length);
 			}
 			var axleData = new List<Axle>();
 			for (var i = 0; i < mission.AxleWeightDistribution.Length; i++) {
@@ -129,19 +124,24 @@ namespace TUGraz.VectoCore.InputData.Reader.DataObjectAdaper
 				axleData.Add(axle);
 			}
 
-			axleData.AddRange(mission.TrailerAxleWeightDistribution.Select(tmp => new Axle {
-				AxleType = AxleType.Trailer,
-				AxleWeightShare = tmp,
-				TwinTyres = DeclarationData.Trailer.TwinTyres,
-				RollResistanceCoefficient = DeclarationData.Trailer.RollResistanceCoefficient,
-				TyreTestLoad = DeclarationData.Trailer.TyreTestLoad.SI<Newton>(),
-				Inertia = DeclarationData.Wheels.Lookup(DeclarationData.Trailer.WheelsType).Inertia
+			axleData.AddRange(mission.TrailerAxleWeightDistribution.Select(tmp => {
+				var wheel = mission.TrailerType != TrailerType.None
+					? DeclarationData.StandardBodies.Lookup(mission.TrailerType.ToString()).Wheels
+					: DeclarationData.Wheels.Lookup(DeclarationData.Trailer.WheelsType);
+				return new Axle {
+					AxleType = AxleType.Trailer,
+					AxleWeightShare = tmp,
+					TwinTyres = DeclarationData.Trailer.TwinTyres,
+					RollResistanceCoefficient = DeclarationData.Trailer.RollResistanceCoefficient,
+					TyreTestLoad = DeclarationData.Trailer.TyreTestLoad.SI<Newton>(),
+					Inertia = wheel.Inertia
+				};
 			}));
 			retVal.AxleData = axleData;
 			return retVal;
 		}
 
-		internal CombustionEngineData CreateEngineData(IEngineDeclarationInputData engine)
+		internal CombustionEngineData CreateEngineData(IEngineDeclarationInputData engine, GearboxType gearboxType)
 		{
 			if (!engine.SavedInDeclarationMode) {
 				WarnDeclarationMode("EngineData");
@@ -151,7 +151,8 @@ namespace TUGraz.VectoCore.InputData.Reader.DataObjectAdaper
 			retVal.WHTCUrban = engine.WHTCUrban;
 			retVal.WHTCMotorway = engine.WHTCMotorway;
 			retVal.WHTCRural = engine.WHTCRural;
-			retVal.Inertia = DeclarationData.Engine.EngineInertia(retVal.Displacement);
+			retVal.ColdHotCorrectionFactor = engine.ColdHotBalancingFactor;
+			retVal.Inertia = DeclarationData.Engine.EngineInertia(retVal.Displacement, gearboxType);
 			retVal.FullLoadCurve = EngineFullLoadCurve.Create(engine.FullLoadCurve, true);
 			retVal.FullLoadCurve.EngineData = retVal;
 			return retVal;
@@ -165,11 +166,12 @@ namespace TUGraz.VectoCore.InputData.Reader.DataObjectAdaper
 			}
 			var retVal = SetCommonGearboxData(gearbox);
 			switch (retVal.Type) {
-				case GearboxType.AT:
+				case GearboxType.ATPowerSplit:
+				case GearboxType.ATSerial:
 					throw new VectoSimulationException(
 						"Automatic Transmission currently not supported in DeclarationMode!");
-				case GearboxType.Custom:
-					throw new VectoSimulationException("Custom Transmission not supported in DeclarationMode!");
+				//case GearboxType.Custom:
+				//	throw new VectoSimulationException("Custom Transmission not supported in DeclarationMode!");
 			}
 			var gears = gearbox.Gears;
 			if (gears.Count < 1) {
@@ -179,8 +181,6 @@ namespace TUGraz.VectoCore.InputData.Reader.DataObjectAdaper
 
 			retVal.Inertia = DeclarationData.Gearbox.Inertia;
 			retVal.TractionInterruption = retVal.Type.TractionInterruption();
-			retVal.SkipGears = retVal.Type.SkipGears();
-			retVal.EarlyShiftUp = retVal.Type.EarlyShiftGears();
 
 			retVal.TorqueReserve = DeclarationData.Gearbox.TorqueReserve;
 			retVal.StartTorqueReserve = DeclarationData.Gearbox.TorqueReserveStart;
@@ -188,27 +188,22 @@ namespace TUGraz.VectoCore.InputData.Reader.DataObjectAdaper
 			retVal.StartSpeed = DeclarationData.Gearbox.StartSpeed;
 			retVal.StartAcceleration = DeclarationData.Gearbox.StartAcceleration;
 
-			retVal.HasTorqueConverter = false;
-
 			TransmissionLossMap gearLossMap;
 			retVal.Gears = gears.Select((gear, i) => {
 				try {
 					if (gear.LossMap == null) {
 						throw new InvalidFileFormatException(string.Format("LossMap for Gear {0} is missing.", i + 1));
 					}
-					gearLossMap = TransmissionLossMap.Create(gear.LossMap, gear.Ratio, string.Format("Gear {0}", i + 1));
+					gearLossMap = TransmissionLossMapReader.Create(gear.LossMap, gear.Ratio, string.Format("Gear {0}", i + 1));
 				} catch (InvalidFileFormatException) {
 					if (useEfficiencyFallback) {
-						gearLossMap = TransmissionLossMap.Create(gear.Efficiency, gear.Ratio, string.Format("Gear {0}", i + 1));
+						gearLossMap = TransmissionLossMapReader.Create(gear.Efficiency, gear.Ratio, string.Format("Gear {0}", i + 1));
 					} else {
 						throw;
 					}
 				}
-				var gearFullLoad = gear.FullLoadCurve == null
-					? null
-					: FullLoadCurveReader.Create(gear.FullLoadCurve, true);
 
-				var fullLoadCurve = IntersectFullLoadCurves(engine.FullLoadCurve, gearFullLoad);
+				var fullLoadCurve = IntersectFullLoadCurves(engine.FullLoadCurve, gear.MaxTorque);
 				var shiftPolygon = DeclarationData.Gearbox.ComputeShiftPolygon(i, fullLoadCurve, gears, engine, axlegearRatio,
 					dynamicTyreRadius);
 
@@ -216,15 +211,14 @@ namespace TUGraz.VectoCore.InputData.Reader.DataObjectAdaper
 					new GearData {
 						LossMap = gearLossMap,
 						ShiftPolygon = shiftPolygon,
-						FullLoadCurve = gearFullLoad,
+						MaxTorque = gear.MaxTorque,
 						Ratio = gear.Ratio,
-						TorqueConverterActive = false
 					});
 			}).ToDictionary(kv => kv.Key, kv => kv.Value);
 
 			retVal.DownshiftAfterUpshiftDelay = DeclarationData.Gearbox.DownshiftAfterUpshiftDelay;
 			retVal.UpshiftAfterDownshiftDelay = DeclarationData.Gearbox.UpshiftAfterDownshiftDelay;
-			retVal.UpshiftMinAcceleration =DeclarationData.Gearbox.UpshiftMinAcceleration;
+			retVal.UpshiftMinAcceleration = DeclarationData.Gearbox.UpshiftMinAcceleration;
 			return retVal;
 		}
 
@@ -244,7 +238,7 @@ namespace TUGraz.VectoCore.InputData.Reader.DataObjectAdaper
 			}
 
 			foreach (var auxType in EnumHelper.GetValues<AuxiliaryType>()) {
-				var auxData = auxInputData.Auxiliaries.FirstOrDefault(a => AuxiliaryTypeHelper.Parse(a.Type) == auxType);
+				var auxData = auxInputData.Auxiliaries.FirstOrDefault(a => a.Type == auxType);
 				if (auxData == null) {
 					throw new VectoException("Auxiliary {0} not found.", auxType);
 				}
@@ -254,26 +248,24 @@ namespace TUGraz.VectoCore.InputData.Reader.DataObjectAdaper
 				};
 				switch (auxType) {
 					case AuxiliaryType.Fan:
-						aux.PowerDemand = DeclarationData.Fan.Lookup(mission, auxData.Technology);
+						aux.PowerDemand = DeclarationData.Fan.Lookup(mission, auxData.Technology.FirstOrDefault());
 						aux.ID = Constants.Auxiliaries.IDs.Fan;
 						break;
 					case AuxiliaryType.SteeringPump:
 						aux.PowerDemand = DeclarationData.SteeringPump.Lookup(mission, hvdClass, auxData.Technology);
 						aux.ID = Constants.Auxiliaries.IDs.SteeringPump;
 						break;
-					case AuxiliaryType.HeatingVentilationAirCondition:
+					case AuxiliaryType.HVAC:
 						aux.PowerDemand = DeclarationData.HeatingVentilationAirConditioning.Lookup(mission, hvdClass);
 						aux.ID = Constants.Auxiliaries.IDs.HeatingVentilationAirCondition;
 						break;
 					case AuxiliaryType.PneumaticSystem:
-						aux.PowerDemand = DeclarationData.PneumaticSystem.Lookup(mission, hvdClass);
+						aux.PowerDemand = DeclarationData.PneumaticSystem.Lookup(mission, auxData.Technology.FirstOrDefault());
 						aux.ID = Constants.Auxiliaries.IDs.PneumaticSystem;
 						break;
 					case AuxiliaryType.ElectricSystem:
-						aux.PowerDemand = DeclarationData.ElectricSystem.Lookup(mission,
-							auxData.TechList.DefaultIfNull(Enumerable.Empty<string>()).ToArray());
+						aux.PowerDemand = DeclarationData.ElectricSystem.Lookup(mission, auxData.Technology.FirstOrDefault());
 						aux.ID = Constants.Auxiliaries.IDs.ElectricSystem;
-						aux.TechList = auxData.TechList.DefaultIfNull(Enumerable.Empty<string>()).ToArray();
 						break;
 					default:
 						continue;
@@ -288,9 +280,9 @@ namespace TUGraz.VectoCore.InputData.Reader.DataObjectAdaper
 			Log.Warn("{0} not in Declaration Mode!", inputData);
 		}
 
-		public RetarderData CreateRetarderData(IRetarderInputData retarder, IVehicleDeclarationInputData vehicle)
+		public RetarderData CreateRetarderData(IRetarderInputData retarder)
 		{
-			return SetCommonRetarderData(retarder, vehicle);
+			return SetCommonRetarderData(retarder);
 		}
 
 		public static List<CrossWindCorrectionCurveReader.CrossWindCorrectionEntry> GetDeclarationAirResistanceCurve(
@@ -316,11 +308,9 @@ namespace TUGraz.VectoCore.InputData.Reader.DataObjectAdaper
 				var cdASum = 0.0.SI<SquareMeter>();
 
 				for (var alpha = 0; alpha <= maxAlpha; alpha += alphaStep) {
-					var vWindX = Physics.BaseWindSpeed * Math.Cos(alpha.ToRadian());
-					var vWindY = Physics.BaseWindSpeed * Math.Sin(alpha.ToRadian());
-					var vAirX = vVeh + vWindX;
-					var vAirY = vWindY;
-					var beta = Math.Atan((vAirY / vAirX).Value()).ToDegree();
+					var vAirX = vVeh + Physics.BaseWindSpeed * Math.Cos(alpha.ToRadian());
+					var vAirY = Physics.BaseWindSpeed * Math.Sin(alpha.ToRadian());
+					var beta = Math.Atan(vAirY / vAirX).ToDegree();
 					var deltaCdA = ComputeDeltaCd(beta, values);
 					var cdA = aerodynamicDragAera + deltaCdA;
 
@@ -341,7 +331,7 @@ namespace TUGraz.VectoCore.InputData.Reader.DataObjectAdaper
 			return points;
 		}
 
-		protected static SquareMeter ComputeDeltaCd(double beta, AirDrag.AirDragEntry values)
+		protected static SquareMeter ComputeDeltaCd(double beta, AirDrag.Entry values)
 		{
 			return (values.A1 * beta + values.A2 * beta * beta + values.A3 * beta * beta * beta).SI<SquareMeter>();
 		}

@@ -12,15 +12,9 @@ The basic file format is [Vecto-CSV](#csv) and the file type ending is ".vdri". 
 	- [Pwheel (SiCo) Mode, time-based](#engineering-mode-pwheel-sico-time-based)
 - **Engine Only Mode**: [Engine Only Mode, time-based](#engine-only-mode-engine-only-driving-cycle)
 
-<div class="vecto2">
-- Distance-based cycles must have at least a resolution of 1[m].
-- Time-based cycles must have exactly a resolution of 1[s].
-</div>
 
-<div class="vecto3">
 - Distance-based cycles can be defined in any distance resolution, including variable distance steps.
 - Time-based cycles can be defined in any time resolution, including variable time steps.
-</div>
 
 ###Declaration Mode Cycles
 In Declaration Mode driving cycles are automatically chosen depending on vehicle category and cannot be changed by the user. These predefined cycles are of type target-speed, distance-based.
@@ -39,18 +33,23 @@ In Declaration Mode driving cycles are automatically chosen depending on vehicle
 ###Engineering Mode: Target-Speed, Distance-Based Cycle
 This driving cycle defines the target speed over distance. Vecto tries to achieve and maintain this target speed.
 
-Header: **\<s>, \<v>, \<stop>***\[, \<Padd>]\[, \<grad>]\[, \<vair\_res>, \<vair\_beta>]\[, \<Aux\_ID>]*
+Header: **\<s>, \<v>, \<stop>***\[, \<Padd>]\[, \<grad>]\[, \<PTO>]\[, \<vair\_res>, \<vair\_beta>]\[, \<Aux\_ID>]*
 
-|  Identifier |  Unit  |                                                                                                                                      Description                                                                                                                                      |
-| ----------- | ------ | ------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- |
-| **s**       | [m]    | Traveled distance. Must always be increasing.                                                                                                                                                                                                                                         |
-| **v**       | [km/h] | The target vehicle velocity.  Must be >= 0 km/h.                                                                                                                                                                                                                                      |
-| **stop**    | [s]    | Stopping Time. Defines the time span the vehicle is standing still (time the vehicle spending in a stop phase). After this time, the vehicle tries to accelerate to \<v>.                                                                                                             |
-| *Padd*      | [kW]   | Additional auxiliary power demand. This power demand will be directly added to the engine power in addition to possible other auxiliaries. Must be >= 0 kW.                                                                                                                                            |
-| *grad*      | [%]    | The road gradient.                                                                                                                                                                                                                                                                    |
-| *vair_res*  | [km/h] | Air speed relative to vehicle for cross wind correction. Only required if [**Cross Wind Correction**](#cross-wind-correction) is set to **Vair & Beta Input**.                                                                                                                        |
-| *vair_beta* | [°]    | Wind Yaw Angle for cross wind correction. Only required if [**Cross Wind Correction**](#cross-wind-correction) is set to **Vair & Beta Input**.                                                                                                                                       |
+**Bold columns** are mandatory. *Italic columns* are optional. Only the listed columns are allowed (no other columns!).<br />
+Units are optional and are enclosed in [square-brackets] after the header-column. Comments may be written with a preceding hash-sign "#".
+
+|  Identifier |  Unit  |                                                                                                                                             Description                                                                                                                                              |
+|-------------|--------|------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------|
+| **s**       | [m]    | Traveled distance. Must always be increasing.                                                                                                                                                                                                                                                        |
+| **v**       | [km/h] | The target vehicle velocity.  Must be >= 0 km/h.                                                                                                                                                                                                                                                     |
+| **stop**    | [s]    | Stopping Time. Defines the time span the vehicle is standing still (time the vehicle spending in a stop phase). After this time, the vehicle tries to accelerate to \<v>.                                                                                                                            |
+| *Padd*      | [kW]   | Additional auxiliary power demand. This power demand will be directly added to the engine power in addition to possible other auxiliaries. Must be >= 0 kW.                                                                                                                                          |
+| *grad*      | [%]    | The road gradient.                                                                                                                                                                                                                                                                                   |
+| *PTO*       | [0/1]  | "0"=disabled or "1"=enabled. If at a vehicle stop (defined by target velocity=0) "1" is specified, the PTO cycle as specified in the *.vptoc–File is simulated. The PTO activation is added to the simulation time in the middle of the stopping time as defined by the cycle parameter "stop". The PTO Cycle can be specified in the [**Vehicle Editor**](#vehicle-editor).                                                                                                                                                                                                                                                                                                     |
+| *vair_res*  | [km/h] | Air speed relative to vehicle for cross wind correction. Only required if [**Cross Wind Correction**](#cross-wind-correction) is set to **Vair & Beta Input**.                                                                                                                                       |
+| *vair_beta* | [°]    | Wind Yaw Angle for cross wind correction. Only required if [**Cross Wind Correction**](#cross-wind-correction) is set to **Vair & Beta Input**.                                                                                                                                                      |
 | *Aux_ID*    | [kW]   | Auxiliary Supply Power. Can be defined multiple times with different Identifiers. The supply power input for each auxiliary defined in the [.vecto file](#job-file) with the corresponding ID. ID's are not case sensitive and must only contain letters and numbers [a-z,A-Z,0-9]. Must be >= 0 kW. |
+
 
 **Example:**
 
@@ -63,9 +62,12 @@ Header: **\<s>, \<v>, \<stop>***\[, \<Padd>]\[, \<grad>]\[, \<vair\_res>, \<vair
 
 ###Engineering Mode: Measured-Speed, Time-Based Cycle
 This driving cycle defines the actual measured speed over time. Vecto tries to simulate the vehicle model using this speed as the actual vehicle speed.
-Due to differences in the real and simulated shift strategies a short difference in speed could occur, but Vecto immediately tries to catch up after the gear is engaged again.
+Due to differences in the real and simulated shift strategies a small difference in speed can occur, but Vecto immediately tries to catch up after the gear is engaged again.
 
 Header: **\<t>, \<v>***\[, \<grad>]\[, \<Padd>]\[, \<vair\_res>, \<vair\_beta>\]\[, \<Aux\_ID>]*
+
+**Bold columns** are mandatory. *Italic columns* are optional. Only the listed columns are allowed (no other columns!).<br />
+Units are optional and are enclosed in [square-brackets] after the header-column. Comments may be written with a preceding hash-sign "#".
 
 |  Identifier |  Unit  |                                                                                                                                              Description                                                                                                                                               |
 | ----------- | ------ | ------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------ |
@@ -88,16 +90,20 @@ Header: **\<t>, \<v>***\[, \<grad>]\[, \<Padd>]\[, \<vair\_res>, \<vair\_beta>\]
 
 
 ###Engineering Mode: Measured-Speed With Gear, Time-Based Cycle
+
 This driving cycle defines the actual measured speed of the vehicle, the gear, and the engine speed over time.
 It overrides the shift strategy of Vecto and also directly sets the engine speed.
 
-Header: **\<t>, \<v>, \<n>, \<gear>***\[, \<grad>]\[, \<Padd>]\[, \<vair\_res>, \<vair\_beta>]\[, \<Aux\_ID>\]*
+
+Header: **\<t>, \<v>, \<gear>***\[, \<grad>]\[, \<Padd>]\[, \<vair\_res>, \<vair\_beta>]\[, \<Aux\_ID>\]*
+
+**Bold columns** are mandatory. *Italic columns* are optional. Only the listed columns are allowed (no other columns!).<br />
+Units are optional and are enclosed in [square-brackets] after the header-column. Comments may be written with a preceding hash-sign "#".
 
 |  Identifier |  Unit  |                                                                                                                                              Description                                                                                                                                               |
 | ----------- | ------ | ------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------ |
 | **t**       | [s]    | The absolute time. Must always be increasing.                                                                                                                                                                                                                                                          |
 | **v**       | [km/h] | The actual velocity of the vehicle. Must be >= 0 km/h.                                                                                                                                                                                                                                                 |
-| **n**       | [rpm]  | The actual engine speed. Must always be >= 0 rpm.                                                                                                                                                                                                                                                      |
 | **gear**    | [-]    | The current gear. Must be >= 0 (0 is neutral).                                                                                                                                                                                                                                                         |
 | *Padd*      | [kW]   | Additional auxiliary power demand. This power demand will be directly added to the engine power in addition to possible other auxiliaries. Must be >= 0 kW.                                                                                                                                            |
 | *grad*      | [%]    | The road gradient.                                                                                                                                                                                                                                                                                     |
@@ -107,17 +113,20 @@ Header: **\<t>, \<v>, \<n>, \<gear>***\[, \<grad>]\[, \<Padd>]\[, \<vair\_res>, 
 
 **Example:**
 
-| \<t> [s] | \<v> [km/h] | \<n> [rpm] | \<gear> [-] | \<grad> [%] | \<Padd> [kW] |
-| -------- | ----------- | ---------- | ----------- | ----------- | ------------ |
-|        0 |           0 |        600 |           0 |        2.95 |          1.5 |
-|        1 |         0.6 |        950 |           3 |        2.97 |          1.3 |
-|        2 |         1.2 |       1200 |           3 |        3.03 |          1.3 |
-|        3 |         2.4 |       1400 |           3 |        2.99 |          1.3 |
+| \<t> [s] | \<v> [km/h] | \<gear> [-] | \<grad> [%] | \<Padd> [kW] |
+| -------- | ----------- | ----------- | ----------- | ------------ |
+|        0 |           0 |           0 |        2.95 |          1.5 |
+|        1 |         0.6 |           3 |        2.97 |          1.3 |
+|        2 |         1.2 |           3 |        3.03 |          1.3 |
+|        3 |         2.4 |           3 |        2.99 |          1.3 |
 
 ###Engineering Mode: Pwheel (SiCo), Time-Based
 This driving cycle defines the power measured at the wheels over time. Vecto tries to simulate the vehicle with this power requirement.
 
 Header: **\<t>, \<Pwheel>, \<gear>, \<n>***\[, \<Padd>]*
+
+**Bold columns** are mandatory. *Italic columns* are optional. Only the listed columns are allowed (no other columns!).<br />
+Units are optional and are enclosed in [square-brackets] after the header-column. Comments may be written with a preceding hash-sign "#".
 
 | Identifier |  Unit |                      Quantity                                                    Description                      |
 | ---------- | ----- | ----------------------------------------------------------------------------------------------------------------- |
@@ -138,9 +147,13 @@ Header: **\<t>, \<Pwheel>, \<gear>, \<n>***\[, \<Padd>]*
 
 
 ###Engine Only Mode: Engine Only Driving Cycle
-This driving cycle directly defines the power or torque at the output shaft of the engine over time. Vecto add the engine's inertia to the given power demand and simulates the engine.
+
+This driving cycle directly defines the engine's power or torque at the output shaft over time. Vecto adds the engine's inertia to the given power demand and simulates the engine.
 
 Header: **\<t>, \<n>, (\<Pe>|\<Me>)***\[, \<Padd>]*
+
+**Bold columns** are mandatory. *Italic columns* are optional. Only the listed columns are allowed (no other columns!).<br />
+Units are optional and are enclosed in [square-brackets] after the header-column. Comments may be written with a preceding hash-sign "#".
 
 | Identifier |  Unit |                                                    Description                                                    |
 | ---------- | ----- | ----------------------------------------------------------------------------------------------------------------- |
@@ -159,6 +172,4 @@ Header: **\<t>, \<n>, (\<Pe>|\<Me>)***\[, \<Padd>]*
 |        2 |       1200 |     65.344 |          1.3 |
 |        3 |       1400 |      110.1 |          1.3 |
 
-<div class="vecto2"
->To explicitly define *motoring operation* use the **\<DRAG>** keyword as power demand (column \<Pe> or \<Me>). VECTO v2 replaces the keyword with the corresponding motoring torque/power from the drag curve during calculation (see [Full Load and Drag Curve File](#full-load-and-drag-curves-.vfld)).
-</div>
+

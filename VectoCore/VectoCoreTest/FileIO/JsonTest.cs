@@ -29,14 +29,16 @@
 *   Martin Rexeis, rexeis@ivt.tugraz.at, IVT, Graz University of Technology
 */
 
-using System.IO;
-using System.Linq;
 using Microsoft.VisualStudio.TestTools.UnitTesting;
 using Newtonsoft.Json;
 using Newtonsoft.Json.Linq;
+using System.IO;
 using TUGraz.VectoCommon.Exceptions;
 using TUGraz.VectoCommon.InputData;
+using TUGraz.VectoCommon.Models;
+using TUGraz.VectoCommon.Utils;
 using TUGraz.VectoCore.InputData.FileIO.JSON;
+using TUGraz.VectoCore.InputData.Reader.DataObjectAdapter;
 using TUGraz.VectoCore.Tests.Utils;
 
 namespace TUGraz.VectoCore.Tests.FileIO
@@ -45,6 +47,7 @@ namespace TUGraz.VectoCore.Tests.FileIO
 	public class JsonTest
 	{
 		private const string TestJobFile = @"Testdata\Jobs\40t_Long_Haul_Truck.vecto";
+		private const string TestVehicleFile = @"Testdata\Components\24t Coach.vveh";
 
 		[TestMethod]
 		public void ReadJobTest()
@@ -52,7 +55,7 @@ namespace TUGraz.VectoCore.Tests.FileIO
 			var job = JSONInputDataFactory.ReadJsonJob(TestJobFile);
 
 			Assert.IsNotNull(job);
-//			AssertHelper.Exception<InvalidFileFormatException>(() => );
+			//			AssertHelper.Exception<InvalidFileFormatException>(() => );
 		}
 
 		[TestMethod]
@@ -62,7 +65,7 @@ namespace TUGraz.VectoCore.Tests.FileIO
 			((JObject)json["Body"]).Property("EngineFile").Remove();
 
 			AssertHelper.Exception<VectoException>(() => new JSONInputDataV2(json, TestJobFile),
-				"Failed to read input data: Key EngineFile not found");
+				"JobFile: Failed to read Engine file '': Key EngineFile not found");
 		}
 
 		[TestMethod]
@@ -72,7 +75,7 @@ namespace TUGraz.VectoCore.Tests.FileIO
 			((JObject)json["Body"]).Property("GearboxFile").Remove();
 
 			AssertHelper.Exception<VectoException>(() => new JSONInputDataV2(json, TestJobFile),
-				"Failed to read input data: Key GearboxFile not found");
+				"JobFile: Failed to read Gearbox file '': Key GearboxFile not found");
 		}
 
 		[TestMethod]
@@ -82,7 +85,7 @@ namespace TUGraz.VectoCore.Tests.FileIO
 			((JObject)json["Body"]).Property("VehicleFile").Remove();
 
 			AssertHelper.Exception<VectoException>(() => new JSONInputDataV2(json, TestJobFile),
-				"Failed to read input data: Key VehicleFile not found");
+				"JobFile: Failed to read Vehicle file '': Key VehicleFile not found");
 		}
 
 		[TestMethod]
@@ -91,8 +94,8 @@ namespace TUGraz.VectoCore.Tests.FileIO
 			var json = (JObject)JToken.ReadFrom(new JsonTextReader(File.OpenText(TestJobFile)));
 			((JObject)json["Body"]).Property("Cycles").Remove();
 
-			AssertHelper.Exception<InvalidFileFormatException>(
-				() => { var tmp = new JSONInputDataV2(json, TestJobFile).Cycles; }, "Key Cycles not found");
+			var tmp = new JSONInputDataV2(json, TestJobFile).Cycles;
+			Assert.AreEqual(0, tmp.Count);
 		}
 
 		[TestMethod]
@@ -102,7 +105,7 @@ namespace TUGraz.VectoCore.Tests.FileIO
 			((JObject)json["Body"]).Property("Aux").Remove();
 
 			// MK,2016-01-20: Changed for PWheel: aux entry may be missing, and that is ok.
-			var tmp = new JSONInputDataV2(json, TestJobFile).Auxiliaries;
+			var tmp = new JSONInputDataV2(json, TestJobFile).AuxiliaryInputData().Auxiliaries;
 			Assert.IsTrue(tmp.Count == 0);
 		}
 
@@ -112,12 +115,10 @@ namespace TUGraz.VectoCore.Tests.FileIO
 			var json = (JObject)JToken.ReadFrom(new JsonTextReader(File.OpenText(TestJobFile)));
 			((JObject)json["Body"]).Property("VACC").Remove();
 
-			AssertHelper.Exception<VectoException>(() => {
-				IEngineeringInputDataProvider input = new JSONInputDataV2(json, TestJobFile);
-				var tmp = input.DriverInputData.AccelerationCurve;
-			}, "AccelerationCurve (VACC) required");
+			IEngineeringInputDataProvider input = new JSONInputDataV2(json, TestJobFile);
+			var tmp = input.DriverInputData.AccelerationCurve;
+			Assert.IsNull(tmp);
 		}
-
 
 		[TestMethod]
 		public void UseDeclarationDriverAccCurveTest()
@@ -136,11 +137,9 @@ namespace TUGraz.VectoCore.Tests.FileIO
 			var json = (JObject)JToken.ReadFrom(new JsonTextReader(File.OpenText(TestJobFile)));
 			((JObject)json["Body"]).Property("LAC").Remove();
 
-			AssertHelper.Exception<VectoException>(
-				() => {
-					IEngineeringInputDataProvider input = new JSONInputDataV2(json, TestJobFile);
-					var tmp = input.DriverInputData.Lookahead;
-				}, "Key LAC not found");
+			IEngineeringInputDataProvider input = new JSONInputDataV2(json, TestJobFile);
+			var tmp = input.DriverInputData.Lookahead;
+			Assert.IsNull(tmp);
 		}
 
 		[TestMethod]
@@ -154,182 +153,292 @@ namespace TUGraz.VectoCore.Tests.FileIO
 				"Key OverSpeedEcoRoll not found");
 		}
 
+		[TestMethod]
+		public void ReadGearboxV5()
+		{
+			var inputProvider = JSONInputDataFactory.ReadGearbox(@"TestData\Components\AT_GBX\Gearbox_v5.vgbx");
+
+			var ratios = new[] { 3.0, 1.0, 0.8 };
+			Assert.AreEqual(ratios.Length, inputProvider.Gears.Count);
+			for (int i = 0; i < ratios.Length; i++) {
+				Assert.AreEqual(ratios[i], inputProvider.Gears[i].Ratio);
+			}
+			var gbxData = new EngineeringDataAdapter().CreateGearboxData(inputProvider,
+				MockSimulationDataFactory.CreateEngineDataFromFile(@"TestData\Components\AT_GBX\Engine.veng"), 2.1, 0.5.SI<Meter>(),
+				true);
+			Assert.AreEqual(ratios.Length, gbxData.Gears.Count);
+
+			// interpreted as gearbox with first and second gear using TC (due to gear ratios)
+			Assert.IsFalse(gbxData.Gears[1].HasLockedGear);
+			Assert.IsTrue(gbxData.Gears[1].HasTorqueConverter);
+			Assert.IsTrue(gbxData.Gears[2].HasLockedGear);
+			Assert.IsTrue(gbxData.Gears[2].HasTorqueConverter);
+			Assert.IsTrue(gbxData.Gears[3].HasLockedGear);
+			Assert.IsFalse(gbxData.Gears[3].HasTorqueConverter);
+		}
 
 		[TestMethod]
-		public void TestReadingElectricTechlist()
+		public void ReadGearboxSerialTC()
 		{
-			var json = (JObject)JToken.ReadFrom(new JsonTextReader(File.OpenText(TestJobFile)));
-			((JArray)json["Body"]["Aux"][3]["TechList"]).Add("LED lights");
+			var inputProvider = JSONInputDataFactory.ReadGearbox(@"TestData\Components\AT_GBX\GearboxSerial.vgbx");
 
-			var job = new JSONInputDataV2(json, TestJobFile);
-			foreach (var aux in job.Auxiliaries) {
-				if (aux.ID == "ES") {
-					Assert.AreEqual(1, aux.TechList.Count);
-					Assert.AreEqual("LED lights", aux.TechList.First());
-				}
+			var ratios = new[] { 3.4, 1.9, 1.42, 1.0, 0.7, 0.62 };
+			Assert.AreEqual(ratios.Length, inputProvider.Gears.Count);
+			for (int i = 0; i < ratios.Length; i++) {
+				Assert.AreEqual(ratios[i], inputProvider.Gears[i].Ratio);
 			}
+			var gbxData = new EngineeringDataAdapter().CreateGearboxData(inputProvider,
+				MockSimulationDataFactory.CreateEngineDataFromFile(@"TestData\Components\AT_GBX\Engine.veng"), 2.1, 0.5.SI<Meter>(),
+				true);
+			Assert.AreEqual(ratios.Length, gbxData.Gears.Count);
+
+			Assert.IsTrue(gbxData.Gears[1].HasLockedGear);
+			Assert.IsTrue(gbxData.Gears[1].HasTorqueConverter);
+			Assert.IsTrue(gbxData.Gears[2].HasLockedGear);
+			Assert.IsFalse(gbxData.Gears[2].HasTorqueConverter);
+			Assert.IsTrue(gbxData.Gears[3].HasLockedGear);
+			Assert.IsFalse(gbxData.Gears[3].HasTorqueConverter);
+
+			var gear = gbxData.Gears[1];
+			Assert.AreEqual(gear.Ratio, gear.TorqueConverterRatio);
+		}
+
+		[TestMethod]
+		public void ReadGearboxPowersplitTC()
+		{
+			var inputProvider = JSONInputDataFactory.ReadGearbox(@"TestData\Components\AT_GBX\GearboxPowerSplit.vgbx");
+
+			var ratios = new[] { 1.35, 1.0, 0.73 };
+			Assert.AreEqual(ratios.Length, inputProvider.Gears.Count);
+			for (int i = 0; i < ratios.Length; i++) {
+				Assert.AreEqual(ratios[i], inputProvider.Gears[i].Ratio);
+			}
+			var gbxData = new EngineeringDataAdapter().CreateGearboxData(inputProvider,
+				MockSimulationDataFactory.CreateEngineDataFromFile(@"TestData\Components\AT_GBX\Engine.veng"), 2.1, 0.5.SI<Meter>(),
+				true);
+			Assert.AreEqual(ratios.Length, gbxData.Gears.Count);
+
+			Assert.IsTrue(gbxData.Gears[1].HasLockedGear);
+			Assert.IsTrue(gbxData.Gears[1].HasTorqueConverter);
+			Assert.IsTrue(gbxData.Gears[2].HasLockedGear);
+			Assert.IsFalse(gbxData.Gears[2].HasTorqueConverter);
+			Assert.IsTrue(gbxData.Gears[3].HasLockedGear);
+			Assert.IsFalse(gbxData.Gears[3].HasTorqueConverter);
+
+			Assert.AreEqual(1, gbxData.Gears[1].TorqueConverterRatio);
+		}
+
+		[TestMethod]
+		public void ReadGearboxDualTC()
+		{
+			var inputProvider = JSONInputDataFactory.ReadGearbox(@"TestData\Components\AT_GBX\GearboxSerialDualTC.vgbx");
+
+			var ratios = new[] { 4.35, 2.4, 1.8, 1.3, 1.0 };
+			Assert.AreEqual(ratios.Length, inputProvider.Gears.Count);
+			for (int i = 0; i < ratios.Length; i++) {
+				Assert.AreEqual(ratios[i], inputProvider.Gears[i].Ratio);
+			}
+			var gbxData = new EngineeringDataAdapter().CreateGearboxData(inputProvider,
+				MockSimulationDataFactory.CreateEngineDataFromFile(@"TestData\Components\AT_GBX\Engine.veng"), 2.1, 0.5.SI<Meter>(),
+				true);
+			Assert.AreEqual(ratios.Length, gbxData.Gears.Count);
+
+			Assert.IsFalse(gbxData.Gears[1].HasLockedGear);
+			Assert.IsTrue(gbxData.Gears[1].HasTorqueConverter);
+			Assert.IsTrue(gbxData.Gears[2].HasLockedGear);
+			Assert.IsTrue(gbxData.Gears[2].HasTorqueConverter);
+			Assert.IsTrue(gbxData.Gears[3].HasLockedGear);
+			Assert.IsFalse(gbxData.Gears[3].HasTorqueConverter);
+
+
+			var gear = gbxData.Gears[2];
+			Assert.AreEqual(gear.Ratio, gear.TorqueConverterRatio);
+		}
+
+		//[TestMethod]
+		//public void TestReadingElectricTechlist()
+		//{
+		//	var json = (JObject)JToken.ReadFrom(new JsonTextReader(File.OpenText(TestJobFile)));
+		//	((JArray)json["Body"]["Aux"][3]["TechList"]).Add("LED lights");
+
+		//	var job = new JSONInputDataV2(json, TestJobFile);
+		//	foreach (var aux in job.Auxiliaries) {
+		//		if (aux.ID == "ES") {
+		//			Assert.AreEqual(1, aux.TechList.Count);
+		//			Assert.AreEqual("LED lights", aux.TechList.First());
+		//		}
+		//	}
+		//}
+
+		[TestMethod]
+		public void JSON_Read_AngleGear()
+		{
+			var json = (JObject)JToken.ReadFrom(new JsonTextReader(File.OpenText(TestVehicleFile)));
+			var angleGear = json["Body"]["Angledrive"];
+
+			Assert.AreEqual(AngledriveType.SeparateAngledrive,
+				angleGear["Type"].Value<string>().ParseEnum<AngledriveType>());
+			Assert.AreEqual(3.5, angleGear["Ratio"].Value<double>());
+			Assert.AreEqual("AngleGear.vtlm", angleGear["LossMap"].Value<string>());
 		}
 	}
 
+	//	[TestClass]
+	//	public class JsonTest
+	//	{
+	//		private const string jsonExpected = @"{
+	//  ""CreatedBy"": ""Michael Krisper"",
+	//  ""Date"": ""2015-11-17T11:49:03Z"",
+	//  ""AppVersion"": ""3.0.1.320"",
+	//  ""FileVersion"": 7
+	//}";
 
-//	[TestClass]
-//	public class JsonTest
-//	{
-//		private const string jsonExpected = @"{
-//  ""CreatedBy"": ""Michael Krisper"",
-//  ""Date"": ""2015-11-17T11:49:03Z"",
-//  ""AppVersion"": ""3.0.1.320"",
-//  ""FileVersion"": 7
-//}";
+	//		private const string jsonExpected2 = @"{
+	//  ""CreatedBy"": ""Michael Krisper"",
+	//  ""Date"": ""2015-01-07T11:49:03Z"",
+	//  ""AppVersion"": ""3.0.1.320"",
+	//  ""FileVersion"": 7
+	//}";
 
-//		private const string jsonExpected2 = @"{
-//  ""CreatedBy"": ""Michael Krisper"",
-//  ""Date"": ""2015-01-07T11:49:03Z"",
-//  ""AppVersion"": ""3.0.1.320"",
-//  ""FileVersion"": 7
-//}";
+	//		[TestMethod]
+	//		public void TestJsonHeaderEquality()
+	//		{
+	//			var h1 = new JsonDataHeader {
+	//				AppVersion = "MyVecto3",
+	//				CreatedBy = "UnitTest",
+	//				Date = new DateTime(1970, 1, 1),
+	//				FileVersion = 3
+	//			};
+	//			var h2 = new JsonDataHeader {
+	//				AppVersion = "MyVecto3",
+	//				CreatedBy = "UnitTest",
+	//				Date = new DateTime(1970, 1, 1),
+	//				FileVersion = 3
+	//			};
+	//			Assert.AreEqual(h1, h1);
+	//			Assert.AreEqual(h1, h2);
+	//			Assert.AreNotEqual(h1, null);
+	//			Assert.AreNotEqual(h1, "hello world");
+	//		}
 
+	//		[TestMethod]
+	//		public void Test_Json_DateFormat_German()
+	//		{
+	//			var json = @"{
+	//  ""CreatedBy"": ""Michael Krisper"",
+	//  ""Date"": ""17.11.2015 11:49:03"",
+	//  ""AppVersion"": ""3.0.1.320"",
+	//  ""FileVersion"": 7
+	//}";
+	//			var header = JsonConvert.DeserializeObject<JsonDataHeader>(json);
 
-//		[TestMethod]
-//		public void TestJsonHeaderEquality()
-//		{
-//			var h1 = new JsonDataHeader {
-//				AppVersion = "MyVecto3",
-//				CreatedBy = "UnitTest",
-//				Date = new DateTime(1970, 1, 1),
-//				FileVersion = 3
-//			};
-//			var h2 = new JsonDataHeader {
-//				AppVersion = "MyVecto3",
-//				CreatedBy = "UnitTest",
-//				Date = new DateTime(1970, 1, 1),
-//				FileVersion = 3
-//			};
-//			Assert.AreEqual(h1, h1);
-//			Assert.AreEqual(h1, h2);
-//			Assert.AreNotEqual(h1, null);
-//			Assert.AreNotEqual(h1, "hello world");
-//		}
+	//			Assert.AreEqual("3.0.1.320", header.AppVersion);
+	//			Assert.AreEqual(7u, header.FileVersion);
+	//			Assert.AreEqual("Michael Krisper", header.CreatedBy);
+	//			Assert.AreEqual(new DateTime(2015, 11, 17, 11, 49, 3, DateTimeKind.Utc), header.Date);
 
-//		[TestMethod]
-//		public void Test_Json_DateFormat_German()
-//		{
-//			var json = @"{
-//  ""CreatedBy"": ""Michael Krisper"",
-//  ""Date"": ""17.11.2015 11:49:03"",
-//  ""AppVersion"": ""3.0.1.320"",
-//  ""FileVersion"": 7
-//}";
-//			var header = JsonConvert.DeserializeObject<JsonDataHeader>(json);
+	//			var jsonCompare = JsonConvert.SerializeObject(header, Formatting.Indented);
+	//			Assert.AreEqual(jsonExpected, jsonCompare);
+	//		}
 
-//			Assert.AreEqual("3.0.1.320", header.AppVersion);
-//			Assert.AreEqual(7u, header.FileVersion);
-//			Assert.AreEqual("Michael Krisper", header.CreatedBy);
-//			Assert.AreEqual(new DateTime(2015, 11, 17, 11, 49, 3, DateTimeKind.Utc), header.Date);
+	//		[TestMethod]
+	//		public void Test_Json_DateFormat_German2()
+	//		{
+	//			var json = @"{
+	//  ""CreatedBy"": ""Michael Krisper"",
+	//  ""Date"": ""7.1.2015 11:49:03"",
+	//  ""AppVersion"": ""3.0.1.320"",
+	//  ""FileVersion"": 7
+	//}";
+	//			var header = JsonConvert.DeserializeObject<JsonDataHeader>(json);
 
-//			var jsonCompare = JsonConvert.SerializeObject(header, Formatting.Indented);
-//			Assert.AreEqual(jsonExpected, jsonCompare);
-//		}
+	//			Assert.AreEqual("3.0.1.320", header.AppVersion);
+	//			Assert.AreEqual(7u, header.FileVersion);
+	//			Assert.AreEqual("Michael Krisper", header.CreatedBy);
+	//			Assert.AreEqual(new DateTime(2015, 1, 7, 11, 49, 3, DateTimeKind.Utc), header.Date);
 
-//		[TestMethod]
-//		public void Test_Json_DateFormat_German2()
-//		{
-//			var json = @"{
-//  ""CreatedBy"": ""Michael Krisper"",
-//  ""Date"": ""7.1.2015 11:49:03"",
-//  ""AppVersion"": ""3.0.1.320"",
-//  ""FileVersion"": 7
-//}";
-//			var header = JsonConvert.DeserializeObject<JsonDataHeader>(json);
+	//			var jsonCompare = JsonConvert.SerializeObject(header, Formatting.Indented);
+	//			Assert.AreEqual(jsonExpected2, jsonCompare);
+	//		}
 
-//			Assert.AreEqual("3.0.1.320", header.AppVersion);
-//			Assert.AreEqual(7u, header.FileVersion);
-//			Assert.AreEqual("Michael Krisper", header.CreatedBy);
-//			Assert.AreEqual(new DateTime(2015, 1, 7, 11, 49, 3, DateTimeKind.Utc), header.Date);
+	//		[TestMethod]
+	//		public void Test_Json_DateFormat_English()
+	//		{
+	//			var json = @"{
+	//  ""CreatedBy"": ""Michael Krisper"",
+	//  ""Date"": ""11/17/2015 11:49:03 AM"",
+	//  ""AppVersion"": ""3.0.1.320"",
+	//  ""FileVersion"": 7
+	//}";
+	//			var header = JsonConvert.DeserializeObject<JsonDataHeader>(json);
 
-//			var jsonCompare = JsonConvert.SerializeObject(header, Formatting.Indented);
-//			Assert.AreEqual(jsonExpected2, jsonCompare);
-//		}
+	//			Assert.AreEqual("3.0.1.320", header.AppVersion);
+	//			Assert.AreEqual(7u, header.FileVersion);
+	//			Assert.AreEqual("Michael Krisper", header.CreatedBy);
+	//			Assert.AreEqual(new DateTime(2015, 11, 17, 11, 49, 3, DateTimeKind.Utc), header.Date);
 
-//		[TestMethod]
-//		public void Test_Json_DateFormat_English()
-//		{
-//			var json = @"{
-//  ""CreatedBy"": ""Michael Krisper"",
-//  ""Date"": ""11/17/2015 11:49:03 AM"",
-//  ""AppVersion"": ""3.0.1.320"",
-//  ""FileVersion"": 7
-//}";
-//			var header = JsonConvert.DeserializeObject<JsonDataHeader>(json);
+	//			var jsonCompare = JsonConvert.SerializeObject(header, Formatting.Indented);
+	//			Assert.AreEqual(jsonExpected, jsonCompare);
+	//		}
 
-//			Assert.AreEqual("3.0.1.320", header.AppVersion);
-//			Assert.AreEqual(7u, header.FileVersion);
-//			Assert.AreEqual("Michael Krisper", header.CreatedBy);
-//			Assert.AreEqual(new DateTime(2015, 11, 17, 11, 49, 3, DateTimeKind.Utc), header.Date);
+	//		[TestMethod]
+	//		public void Test_Json_DateFormat_English2()
+	//		{
+	//			var json = @"{
+	//  ""CreatedBy"": ""Michael Krisper"",
+	//  ""Date"": ""1/7/2015 11:49:03 AM"",
+	//  ""AppVersion"": ""3.0.1.320"",
+	//  ""FileVersion"": 7
+	//}";
+	//			var header = JsonConvert.DeserializeObject<JsonDataHeader>(json);
 
-//			var jsonCompare = JsonConvert.SerializeObject(header, Formatting.Indented);
-//			Assert.AreEqual(jsonExpected, jsonCompare);
-//		}
+	//			Assert.AreEqual("3.0.1.320", header.AppVersion);
+	//			Assert.AreEqual(7u, header.FileVersion);
+	//			Assert.AreEqual("Michael Krisper", header.CreatedBy);
+	//			Assert.AreEqual(new DateTime(2015, 1, 7, 11, 49, 3, DateTimeKind.Utc), header.Date);
 
-//		[TestMethod]
-//		public void Test_Json_DateFormat_English2()
-//		{
-//			var json = @"{
-//  ""CreatedBy"": ""Michael Krisper"",
-//  ""Date"": ""1/7/2015 11:49:03 AM"",
-//  ""AppVersion"": ""3.0.1.320"",
-//  ""FileVersion"": 7
-//}";
-//			var header = JsonConvert.DeserializeObject<JsonDataHeader>(json);
+	//			var jsonCompare = JsonConvert.SerializeObject(header, Formatting.Indented);
+	//			Assert.AreEqual(jsonExpected2, jsonCompare);
+	//		}
 
-//			Assert.AreEqual("3.0.1.320", header.AppVersion);
-//			Assert.AreEqual(7u, header.FileVersion);
-//			Assert.AreEqual("Michael Krisper", header.CreatedBy);
-//			Assert.AreEqual(new DateTime(2015, 1, 7, 11, 49, 3, DateTimeKind.Utc), header.Date);
+	//		[TestMethod]
+	//		public void Test_Json_DateFormat_ISO8601()
+	//		{
+	//			var json = @"{
+	//  ""CreatedBy"": ""Michael Krisper"",
+	//  ""Date"": ""2015-11-17T11:49:03Z"",
+	//  ""AppVersion"": ""3.0.1.320"",
+	//  ""FileVersion"": 7
+	//}";
+	//			var header = JsonConvert.DeserializeObject<JsonDataHeader>(json);
 
-//			var jsonCompare = JsonConvert.SerializeObject(header, Formatting.Indented);
-//			Assert.AreEqual(jsonExpected2, jsonCompare);
-//		}
+	//			Assert.AreEqual("3.0.1.320", header.AppVersion);
+	//			Assert.AreEqual(7u, header.FileVersion);
+	//			Assert.AreEqual("Michael Krisper", header.CreatedBy);
+	//			Assert.AreEqual(new DateTime(2015, 11, 17, 11, 49, 3, DateTimeKind.Utc), header.Date);
 
+	//			var jsonCompare = JsonConvert.SerializeObject(header, Formatting.Indented);
+	//			Assert.AreEqual(json, jsonCompare);
+	//		}
 
-//		[TestMethod]
-//		public void Test_Json_DateFormat_ISO8601()
-//		{
-//			var json = @"{
-//  ""CreatedBy"": ""Michael Krisper"",
-//  ""Date"": ""2015-11-17T11:49:03Z"",
-//  ""AppVersion"": ""3.0.1.320"",
-//  ""FileVersion"": 7
-//}";
-//			var header = JsonConvert.DeserializeObject<JsonDataHeader>(json);
+	//		[TestMethod]
+	//		public void Test_Json_DateFormat_ISO8601_CET()
+	//		{
+	//			var json = @"{
+	//  ""CreatedBy"": ""Michael Krisper"",
+	//  ""Date"": ""2015-11-17T11:49:03+01:00"",
+	//  ""AppVersion"": ""3.0.1.320"",
+	//  ""FileVersion"": 7
+	//}";
+	//			var header = JsonConvert.DeserializeObject<JsonDataHeader>(json);
 
-//			Assert.AreEqual("3.0.1.320", header.AppVersion);
-//			Assert.AreEqual(7u, header.FileVersion);
-//			Assert.AreEqual("Michael Krisper", header.CreatedBy);
-//			Assert.AreEqual(new DateTime(2015, 11, 17, 11, 49, 3, DateTimeKind.Utc), header.Date);
+	//			Assert.AreEqual("3.0.1.320", header.AppVersion);
+	//			Assert.AreEqual(7u, header.FileVersion);
+	//			Assert.AreEqual("Michael Krisper", header.CreatedBy);
+	//			Assert.AreEqual(new DateTime(2015, 11, 17, 11, 49, 3, DateTimeKind.Utc), header.Date);
 
-//			var jsonCompare = JsonConvert.SerializeObject(header, Formatting.Indented);
-//			Assert.AreEqual(json, jsonCompare);
-//		}
-
-//		[TestMethod]
-//		public void Test_Json_DateFormat_ISO8601_CET()
-//		{
-//			var json = @"{
-//  ""CreatedBy"": ""Michael Krisper"",
-//  ""Date"": ""2015-11-17T11:49:03+01:00"",
-//  ""AppVersion"": ""3.0.1.320"",
-//  ""FileVersion"": 7
-//}";
-//			var header = JsonConvert.DeserializeObject<JsonDataHeader>(json);
-
-//			Assert.AreEqual("3.0.1.320", header.AppVersion);
-//			Assert.AreEqual(7u, header.FileVersion);
-//			Assert.AreEqual("Michael Krisper", header.CreatedBy);
-//			Assert.AreEqual(new DateTime(2015, 11, 17, 11, 49, 3, DateTimeKind.Utc), header.Date);
-
-//			var jsonCompare = JsonConvert.SerializeObject(header, Formatting.Indented);
-//			Assert.AreEqual(json, jsonCompare);
-//		}
-//	}
+	//			var jsonCompare = JsonConvert.SerializeObject(header, Formatting.Indented);
+	//			Assert.AreEqual(json, jsonCompare);
+	//		}
+	//	}
 }

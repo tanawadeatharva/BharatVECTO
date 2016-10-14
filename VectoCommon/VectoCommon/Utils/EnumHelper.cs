@@ -32,7 +32,6 @@
 using System;
 using System.Collections.Generic;
 using System.Linq;
-using System.Runtime.CompilerServices;
 
 namespace TUGraz.VectoCommon.Utils
 {
@@ -46,23 +45,6 @@ namespace TUGraz.VectoCommon.Utils
 		public static IEnumerable<T> GetValues<T>()
 		{
 			return Enum.GetValues(typeof(T)).Cast<T>();
-		}
-
-		private static readonly Dictionary<Type, Dictionary<Enum, string>> Names =
-			new Dictionary<Type, Dictionary<Enum, string>>();
-
-		[MethodImpl(MethodImplOptions.Synchronized)]
-		public static string AsString(this Enum e)
-		{
-			var t = e.GetType();
-			if (!Names.ContainsKey(t)) {
-				Names[t] = new Dictionary<Enum, string> { { e, e.ToString() } };
-			}
-			if (!Names[t].ContainsKey(e)) {
-				Names[t][e] = e.ToString();
-			}
-
-			return Names[t][e];
 		}
 	}
 }

@@ -29,141 +29,56 @@
 *   Martin Rexeis, rexeis@ivt.tugraz.at, IVT, Graz University of Technology
 */
 
-using System;
-using System.Collections.Generic;
 using System.ComponentModel.DataAnnotations;
-using System.Data;
 using System.Linq;
-using TUGraz.VectoCommon.Exceptions;
 using TUGraz.VectoCommon.Utils;
-using TUGraz.VectoCore.Utils;
 
 namespace TUGraz.VectoCore.Models.SimulationComponent.Data
 {
-	public class RetarderLossMap : SimulationComponentData
+	/// <summary>
+	/// LossMap for retarder.
+	/// </summary>
+	public class RetarderLossMap : SimulationComponentData, ILossMap
 	{
-		[ValidateObject] private List<RetarderLossEntry> _entries;
+		[ValidateObject] private readonly RetarderLossEntry[] _entries;
+		private PerSecond _minSpeed;
+		private PerSecond _maxSpeed;
 
-		public static RetarderLossMap ReadFromFile(string fileName)
+		protected internal RetarderLossMap(RetarderLossEntry[] entries)
 		{
-			try {
-				DataTable data;
-				data = VectoCSVFile.Read(fileName);
-				return Create(data);
-			} catch (Exception ex) {
-				throw new VectoException("ERROR while loading RetarderLossMap: " + ex.Message);
-			}
+			_entries = entries;
 		}
 
-		public static RetarderLossMap Create(DataTable data)
+		/// <summary>
+		/// Gets the minimal defined speed of the retarder loss map.
+		/// </summary>
+		public PerSecond MinSpeed
 		{
-			if (data.Columns.Count != 2) {
-				throw new VectoException("RetarderLossMap Data File must consist of 2 columns.");
-			}
-
-			if (data.Rows.Count < 2) {
-				throw new VectoException("RetarderLossMap must consist of at least two entries.");
-			}
-
-			List<RetarderLossEntry> entries;
-			if (HeaderIsValid(data.Columns)) {
-				entries = CreateFromColumnNames(data);
-			} else {
-				Logger<RetarderLossMap>().Warn(
-					"RetarderLossMap: Header Line is not valid. Expected: '{0}, {1}', Got: '{2}'. Falling back to column index.",
-					Fields.RetarderSpeed, Fields.TorqueLoss,
-					", ".Join(data.Columns.Cast<DataColumn>().Select(c => c.ColumnName).Reverse()));
-				entries = CreateFromColumnIndizes(data);
-			}
-			entries.Sort((entry1, entry2) => entry1.RetarderSpeed.Value().CompareTo(entry2.RetarderSpeed.Value()));
-			return new RetarderLossMap { _entries = entries };
+			get { return _minSpeed ?? (_minSpeed = _entries.Min(e => e.RetarderSpeed)); }
 		}
 
-		public NewtonMeter RetarderLoss(PerSecond angularVelocity, bool allowExtrapolation)
+		/// <summary>
+		/// Gets the maximal defined speed of the retarder loss map.
+		/// </summary>
+		public PerSecond MaxSpeed
 		{
-			if (angularVelocity < _entries.First().RetarderSpeed) {
-				if (!allowExtrapolation) {
-					throw new VectoSimulationException("angular velocity {0} below min. entry in retarder loss map ({1})",
-						angularVelocity, _entries.First().RetarderSpeed);
-				}
-				Log.Warn("Extrapolating retarder losses! Angular velocity {0} below min. entry in retarder loss map ({1})",
-					angularVelocity, _entries.First().RetarderSpeed);
-			}
-			if (angularVelocity > _entries.Last().RetarderSpeed) {
-				if (!allowExtrapolation) {
-					throw new VectoSimulationException("angular velocity {0} above max. entry in retarder loss map ({1})",
-						angularVelocity, _entries.Last().RetarderSpeed);
-				}
-				Log.Warn("Extrapolating retarder losses! Angular velocity {0} above max. entry in retarder loss map ({1})",
-					angularVelocity, _entries.Last().RetarderSpeed);
-			}
-
-			var idx = FindIndex(angularVelocity);
-			return VectoMath.Interpolate(_entries[idx - 1].RetarderSpeed, _entries[idx].RetarderSpeed,
-				_entries[idx - 1].TorqueLoss, _entries[idx].TorqueLoss, angularVelocity);
+			get { return _maxSpeed ?? (_maxSpeed = _entries.Max(e => e.RetarderSpeed)); }
 		}
 
-		protected int FindIndex(PerSecond angularVelocity)
+		/// <summary>
+		/// Calculates the retarder losses.
+		/// </summary>
+		public NewtonMeter GetTorqueLoss(PerSecond angularVelocity)
 		{
-			int idx;
-			if (angularVelocity < _entries[0].RetarderSpeed) {
-				Log.Info("requested rpm below minimum rpm in retarder loss map - extrapolating. n_eng_avg: {0}, rpm_min: {1}",
-					angularVelocity.ConvertTo().Rounds.Per.Minute,
-					_entries[0].RetarderSpeed.ConvertTo().Rounds.Per.Minute);
-				idx = 1;
-			} else {
-				idx = _entries.FindIndex(x => x.RetarderSpeed > angularVelocity);
-			}
-			if (idx <= 0) {
-				idx = angularVelocity > _entries[0].RetarderSpeed ? _entries.Count - 1 : 1;
-			}
-			return idx;
+			var s = _entries.GetSection(e => e.RetarderSpeed < angularVelocity);
+			return VectoMath.Interpolate(s.Item1.RetarderSpeed, s.Item2.RetarderSpeed, s.Item1.TorqueLoss, s.Item2.TorqueLoss,
+				angularVelocity);
 		}
 
-		private static List<RetarderLossEntry> CreateFromColumnNames(DataTable data)
+		public class RetarderLossEntry
 		{
-			return (from DataRow row in data.Rows
-				select new RetarderLossEntry {
-					RetarderSpeed = row.ParseDouble(Fields.RetarderSpeed).RPMtoRad(),
-					TorqueLoss = row.ParseDouble(Fields.TorqueLoss).SI<NewtonMeter>()
-				}).ToList();
-		}
-
-		private static bool HeaderIsValid(DataColumnCollection columns)
-		{
-			return columns.Contains(Fields.RetarderSpeed) && columns.Contains(Fields.TorqueLoss);
-		}
-
-		private static List<RetarderLossEntry> CreateFromColumnIndizes(DataTable data)
-		{
-			return (from DataRow row in data.Rows
-				select
-					new RetarderLossEntry {
-						RetarderSpeed = row.ParseDouble(0).RPMtoRad(),
-						TorqueLoss = row.ParseDouble(1).SI<NewtonMeter>()
-					}).ToList();
-		}
-
-		private class RetarderLossEntry
-		{
-			[Required, SIRange(0, double.MaxValue)]
-			public PerSecond RetarderSpeed { get; set; }
-
-			[Required, SIRange(0, 500)]
-			public NewtonMeter TorqueLoss { get; set; }
-		}
-
-		private static class Fields
-		{
-			/// <summary>
-			///     [rpm]
-			/// </summary>
-			public const string RetarderSpeed = "Retarder Speed";
-
-			/// <summary>
-			///     [Nm]
-			/// </summary>
-			public const string TorqueLoss = "Torque Loss";
+			[Required, SIRange(0, double.MaxValue)] public PerSecond RetarderSpeed;
+			[Required, SIRange(0, 500)] public NewtonMeter TorqueLoss;
 		}
 	}
 }

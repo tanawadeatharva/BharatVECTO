@@ -31,11 +31,11 @@
 
 using System.Collections.Generic;
 using System.ComponentModel.DataAnnotations;
+using System.Linq;
 using System.Runtime.Serialization;
 using TUGraz.VectoCommon.Models;
 using TUGraz.VectoCommon.Utils;
 using TUGraz.VectoCore.Models.SimulationComponent.Data.Gearbox;
-using TUGraz.VectoCore.Utils;
 
 namespace TUGraz.VectoCore.Models.SimulationComponent.Data
 {
@@ -43,37 +43,21 @@ namespace TUGraz.VectoCore.Models.SimulationComponent.Data
 	/// Class for Gearbox Data. Gears can be accessed via Gears-Dictionary and range from 1 upwards.
 	/// </summary>
 	/// <remarks>The Axle Gear has its own Property "AxleGearData" and is *not included* in the Gears-Dictionary.</remarks>
-	[DataContract]
+	[DataContract, CustomValidation(typeof(GearboxData), "ValidateGearboxData")]
 	public class GearboxData : SimulationComponentData
 	{
+		public GearboxType Type { get; internal set; }
+
 		/// <summary>
 		/// The gear data.
 		/// </summary>
 		[Required, ValidateObject] public Dictionary<uint, GearData> Gears = new Dictionary<uint, GearData>();
 
-		/// <summary>
-		/// Gets the type.
-		/// </summary>
-		/// <value>
-		/// The type.
-		/// </value>
-		public GearboxType Type { get; internal set; }
+		public TorqueConverterData TorqueConverterData { get; internal set; }
 
-		/// <summary>
-		/// Gets the inertia.
-		/// </summary>
-		/// <value>
-		/// The inertia.
-		/// </value>
 		[Required, SIRange(0, 10)]
 		public KilogramSquareMeter Inertia { get; internal set; }
 
-		/// <summary>
-		/// Gets the traction interruption.
-		/// </summary>
-		/// <value>
-		/// The traction interruption.
-		/// </value>
 		[Required, SIRange(0, 5)]
 		public Second TractionInterruption { get; internal set; }
 
@@ -84,20 +68,10 @@ namespace TUGraz.VectoCore.Models.SimulationComponent.Data
 		public double TorqueReserve { get; internal set; }
 
 		/// <summary>
-		///	Indicates if gears can be skipped in Gear Shift Strategy.
-		/// </summary>
-		public bool SkipGears { get; internal set; }
-
-		/// <summary>
 		/// Gets the minimum time between shifts.
 		/// </summary>
 		[Required, SIRange(0, 5)]
 		public Second ShiftTime { get; internal set; }
-
-		/// <summary>
-		/// True if the gearbox should do early up shifts.
-		/// </summary>
-		public bool EarlyShiftUp { get; internal set; }
 
 		/// <summary>
 		/// [%] (0-1) The starting torque reserve for finding the starting gear after standstill.
@@ -105,34 +79,45 @@ namespace TUGraz.VectoCore.Models.SimulationComponent.Data
 		[Required, Range(0, 0.5)]
 		public double StartTorqueReserve { get; internal set; }
 
-		/// <summary>
-		/// Gets the start speed.
-		/// </summary>
-		/// <value>
-		/// The start speed.
-		/// </value>
+		// MQ: TODO: move to Driver Data ?
 		[Required, SIRange(double.Epsilon, 5)]
 		public MeterPerSecond StartSpeed { get; internal set; }
 
-		/// <summary>
-		/// Gets the start acceleration.
-		/// </summary>
-		/// <value>
-		/// The start acceleration.
-		/// </value>
+		// MQ: TODO: move to Driver Data ?
 		[Required, SIRange(double.Epsilon, 2)]
 		public MeterPerSquareSecond StartAcceleration { get; internal set; }
 
-		/// <summary>
-		/// Gets a value indicating whether this instance has torque converter.
-		/// </summary>
-		/// <value>
-		/// <c>true</c> if this instance has torque converter; otherwise, <c>false</c>.
-		/// </value>
-		public bool HasTorqueConverter { get; internal set; }
+		///// <summary>
+		///// Gets a value indicating whether this instance has torque converter.
+		///// </summary>
+		///// <value>
+		///// <c>true</c> if this instance has torque converter; otherwise, <c>false</c>.
+		///// </value>
+		//public bool HasTorqueConverter { get; internal set; }
 
+		[Required, SIRange(0, double.MaxValue)]
 		public Second UpshiftAfterDownshiftDelay { get; internal set; }
+
+		[Required, SIRange(0, double.MaxValue)]
 		public Second DownshiftAfterUpshiftDelay { get; internal set; }
+
+		[Required, SIRange(0, double.MaxValue)]
 		public MeterPerSquareSecond UpshiftMinAcceleration { get; internal set; }
+
+		// ReSharper disable once UnusedMember.Global -- used via Validation
+		public static ValidationResult ValidateGearboxData(GearboxData gearboxData, ValidationContext validationContext)
+		{
+			var mode = GetExecutionMode(validationContext);
+
+			var result = new List<ValidationResult>();
+			if (gearboxData.Type.AutomaticTransmission()) {
+				result.AddRange(gearboxData.TorqueConverterData.Validate(mode));
+			}
+
+			if (result.Any()) {
+				return new ValidationResult("Validation of Gearbox Data failed", result.Select(x => x.ErrorMessage));
+			}
+			return ValidationResult.Success;
+		}
 	}
 }

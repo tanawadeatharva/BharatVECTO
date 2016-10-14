@@ -81,6 +81,7 @@
     <Compile Include="FileIO\JsonTest.cs" />
     <Compile Include="FileIO\SimulationDataReaderTest.cs" />
     <Compile Include="GraphProgram.cs" />
+    <Compile Include="Integration\ATPowerTrain.cs" />
     <Compile Include="Integration\BusAuxiliaries\AuxDemandTest.cs" />
     <Compile Include="Integration\BusAuxiliaries\BusAdapterTest.cs" />
     <Compile Include="Integration\BusAuxiliaries\AAuxTests.cs" />
@@ -93,12 +94,16 @@
     <Compile Include="Integration\DeclarationReportTest.cs" />
     <Compile Include="Integration\ShiftStrategy\ShiftStrategyTest.cs" />
     <Compile Include="Models\Declaration\ShiftPolygonTest.cs" />
+    <Compile Include="Models\SimulationComponentData\TorqueConverterDataTest.cs" />
     <Compile Include="Models\SimulationComponentData\ValidationTest.cs" />
+    <Compile Include="Models\SimulationComponent\ATGearboxTest.cs" />
     <Compile Include="Models\Simulation\FactoryTest.cs" />
+    <Compile Include="Models\Simulation\PTOIdleLossTest.cs" />
     <Compile Include="Models\Simulation\LossMapRangeValidationTest.cs" />
     <Compile Include="Models\Simulation\LACDecisionFactorTest.cs" />
     <Compile Include="Models\Simulation\GearboxInertiaTest.cs" />
     <Compile Include="Models\Simulation\MockSumWriter.cs" />
+    <Compile Include="Models\Simulation\GetSectionTest.cs" />
     <Compile Include="Reports\ModDataTest.cs" />
     <Compile Include="Models\Simulation\MeasuredSpeedModeTest.cs" />
     <Compile Include="Models\Simulation\PwheelModeTests.cs" />
@@ -115,7 +120,6 @@
     <Compile Include="Utils\MockIdleController.cs" />
     <Compile Include="Utils\MockSimulationDataFactory.cs" />
     <Compile Include="Utils\MockVehicleContainer.cs" />
-    <Compile Include="Utils\Port.cs" />
     <Compile Include="Models\SimulationComponentData\AuxiliaryTypeHelperTest.cs" />
     <Compile Include="Models\Simulation\AuxTests.cs" />
     <Compile Include="Utils\MockAuxiliaryDemand.cs" />
@@ -196,7 +200,58 @@
     <None Include="TestData\Components\12t Delivery Truck Efficiency.vgbx">
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
     </None>
+    <None Include="TestData\Components\24t Coach_Ang_Efficiency.vveh">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </None>
+    <None Include="TestData\Components\24t Coach_NoAng.vveh">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </None>
+    <None Include="TestData\Components\24t CoachNoAng.vveh">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </None>
     <None Include="TestData\Components\24t Coach_smallLossMap.vgbx">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </None>
+    <None Include="TestData\Components\40t_Long_Haul_Truck AngleEfficiency.vveh">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </None>
+    <None Include="TestData\Components\40t_Long_Haul_Truck_NoAng.vveh">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </None>
+    <None Include="TestData\Components\AT_GBX\AT-Shift.vgbs">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </None>
+    <None Include="TestData\Components\AT_GBX\Engine.veng">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </None>
+    <None Include="TestData\Components\AT_GBX\FCMap.vmap">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </None>
+    <None Include="TestData\Components\AT_GBX\FullLoad.vfld">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </None>
+    <None Include="TestData\Components\AT_GBX\Gearbox.vgbx">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </None>
+    <None Include="TestData\Components\AT_GBX\GearboxPowerSplit.vgbx">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </None>
+    <None Include="TestData\Components\AT_GBX\GearboxSerial.vgbx">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </None>
+    <None Include="TestData\Components\AT_GBX\GearboxSerialDualTC.vgbx">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </None>
+    <None Include="TestData\Components\AT_GBX\Gearbox_v5.vgbx">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </None>
+    <None Include="TestData\Components\AT_GBX\TorqueConverterPowerSplit.vtcc">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </None>
+    <None Include="TestData\Components\AT_GBX\TorqueConverter.vtcc">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </None>
+    <None Include="TestData\Components\Class4_40t_Long_Haul_Truck.vveh">
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
     </None>
     <None Include="TestData\Components\40t_Long_Haul_Truck AxleEfficiency.vgbx">
@@ -288,6 +343,9 @@
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
     </None>
     <None Include="TestData\Components\Indirect Gear.vtlm" />
+    <None Include="TestData\Components\AngleGear.vtlm">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </None>
     <None Include="TestData\Components\Retarder.vrlm">
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
     </None>
@@ -927,7 +985,22 @@
     <None Include="TestData\Jobs\12t Delivery Truck Engineering Efficiency.vecto">
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
     </None>
+    <None Include="TestData\Jobs\24t Coach_Ang_Efficiency.vecto">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </None>
+    <None Include="TestData\Jobs\24t CoachNoAng.vecto">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </None>
     <None Include="TestData\Jobs\24t Coach Efficiency.vecto">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </None>
+    <None Include="TestData\Jobs\40t_Long_Haul_Truck with AngleEfficiency.vecto">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </None>
+    <None Include="TestData\Jobs\40t_Long_Haul_Truck_NoAng.vecto">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </None>
+    <None Include="TestData\Jobs\Class4_40t_Long_Haul_Truck.vecto">
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
     </None>
     <None Include="TestData\Jobs\40t_Long_Haul_Truck with AxleEfficiency.vecto">
@@ -1038,6 +1111,15 @@
     <None Include="TestData\MeasuredSpeed\Engine.veng">
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
     </None>
+    <None Include="TestData\MeasuredSpeed\EngineAT.veng">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </None>
+    <None Include="TestData\MeasuredSpeed\EngineAT.vfld">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </None>
+    <None Include="TestData\MeasuredSpeed\EngineAT.vmap">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </None>
     <None Include="TestData\MeasuredSpeed\FuelConsumption.vmap">
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
     </None>
@@ -1045,6 +1127,12 @@
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
     </None>
     <None Include="TestData\MeasuredSpeed\Gearbox.vgbx">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </None>
+    <None Include="TestData\MeasuredSpeed\GearboxPowerSplit.vgbx">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </None>
+    <None Include="TestData\MeasuredSpeed\GearboxSerial.vgbx">
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
     </None>
     <None Include="TestData\MeasuredSpeed\Gear_Axle_loss.vtlm">
@@ -1071,6 +1159,15 @@
     <None Include="TestData\MeasuredSpeed\MeasuredSpeed.vecto">
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
     </None>
+    <None Include="TestData\MeasuredSpeed\MeasuredSpeedGearAT-PS.vecto">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </None>
+    <None Include="TestData\MeasuredSpeed\MeasuredSpeedGear_AT-Ser.vdri">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </None>
+    <None Include="TestData\MeasuredSpeed\MeasuredSpeedGearAT-Ser.vecto">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </None>
     <None Include="TestData\MeasuredSpeed\MeasuredSpeedGearAux.vecto">
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
     </None>
@@ -1078,6 +1175,9 @@
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
     </None>
     <None Include="TestData\MeasuredSpeed\MeasuredSpeedGearVairAux.vecto">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </None>
+    <None Include="TestData\MeasuredSpeed\MeasuredSpeedGear_AT-PS.vdri">
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
     </None>
     <None Include="TestData\MeasuredSpeed\MeasuredSpeedVair.vdri">
@@ -1132,6 +1232,18 @@
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
     </None>
     <None Include="TestData\MeasuredSpeed\Results\MeasuredSpeedGear.vsum">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </None>
+    <None Include="TestData\MeasuredSpeed\Results\MeasuredSpeedGearAT-PS.vsum">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </None>
+    <None Include="TestData\MeasuredSpeed\Results\MeasuredSpeedGearAT-PS_MeasuredSpeedGear_AT-PS.vmod">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </None>
+    <None Include="TestData\MeasuredSpeed\Results\MeasuredSpeedGearAT-Ser.vsum">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </None>
+    <None Include="TestData\MeasuredSpeed\Results\MeasuredSpeedGearAT-Ser_MeasuredSpeedGear_AT-Ser.vmod">
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
     </None>
     <None Include="TestData\MeasuredSpeed\Results\MeasuredSpeedGearAux.vsum">
@@ -1191,6 +1303,15 @@
     <None Include="TestData\MeasuredSpeed\ShiftPolygons.vgbs">
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
     </None>
+    <None Include="TestData\MeasuredSpeed\ShiftPolygonsAT.vgbs">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </None>
+    <None Include="TestData\MeasuredSpeed\TorqueConverter.vtcc">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </None>
+    <None Include="TestData\MeasuredSpeed\TorqueConverterPowerSplit.vtcc">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </None>
     <None Include="TestData\MeasuredSpeed\VairBeta.vcdb">
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
     </None>
@@ -1198,6 +1319,9 @@
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
     </None>
     <None Include="TestData\MeasuredSpeed\Vehicle.vveh">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </None>
+    <None Include="TestData\MeasuredSpeed\VehicleAT.vveh">
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
     </None>
     <None Include="TestData\MeasuredSpeed\VehicleVair.vveh">
@@ -1287,6 +1411,9 @@
     <None Include="TestData\Results\EngineFullLoadJumps\EngineFLJ_1000rpm_10Hz_IncPT1.csv">
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
     </None>
+    <None Include="TestData\Results\EngineOnlyCycles\24t Coach EngineOnly.vsum">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </None>
     <None Include="TestData\Results\EngineOnlyCycles\24t Coach EngineOnly_Engine Only1.vmod">
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
     </None>
@@ -1333,6 +1460,9 @@
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
     </None>
     <None Include="TestData\Results\EngineOnlyCycles\24tCoach_EngineOnlyPaux.vmod">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </None>
+    <None Include="TestData\Results\EngineOnlyCycles\AuxWriteModFileSumFile.vmod">
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
     </None>
     <None Include="TestData\Results\EngineOnlyCycles\AuxWriteModFileSumFile.vsum">

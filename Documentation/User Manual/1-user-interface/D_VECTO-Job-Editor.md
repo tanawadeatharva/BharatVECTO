@@ -13,7 +13,7 @@ The [job file (.vecto)](#job-file) includes all informations to run a VECTO calc
 -   Filepath ot the [Gearbox File (.vgbx)](#gearbox-editor) which defines gear ratios and transmission losses
 -   Auxiliaries
 -   Driver Assist parameters
--   Driving Cycles (not used in Batch Mode)
+-   Driving Cycles (only in Engineering Mode)
 
 
 ###Relative File Paths
@@ -42,16 +42,27 @@ Filepath to the Engine File (.veng)
 Filepath ot the Gearbox File(.vgbx)
 :	Files can be created and edited using the [Gearbox Editor](#gearbox-editor).
 
+<div class="declaration">
 Auxiliaries
-:	This list contains all auxiliaries used for calculation. The auxiliaries are configured using the [Auxiliary Dialog](#auxiliary-dialog). 
-In Declaration Mode the set of auxiliaries and their power-demand is pre-defined, depending on the vehicle category and driving cycle. 
-In Engineering Mode the set of auxiliaries can be freely defined. For each auxiliary an [Auxiliary Input File (.vaux)](#auxiliary-input-file-.vaux) must be provided and the [driving cycle](#driving-cycles) must include the corresponding supply power.
+:	This group contains input elements to define the vehicle's load from the auxiliaries.
+In Declaration Mode only the pre-defined auxiliaries are available and their power-demand is also pre-defined, depending on the vehicle category and driving cycle. This means the Auxiliary Type is set to 'Classic: Vecto Auxiliary' and no 'Constant Aux Load' can be specified.
+The following list contains the pre-defined auxiliaries where the concrete technology for each auxiliary can be configured using the [Auxiliary Dialog](#auxiliary-dialog). 
 **Double-click** entries to edit with the [Auxiliary Dialog](#auxiliary-dialog).
+</div>
 
+<div class="engineering">
+Auxiliaries
+:	In Engineering Mode the set of auxiliaries can be freely defined.
+First, the Auxiliary Type can be selected. If the Bus Auxiliaries are selected a configuration file for the Advanced Auxiliaries has to be specified. When using the Bus Auxiliaries, the standard auxiliaries can  be added as well in the list below to take into account the steering pump, etc.
+The 'Constant Aux Load' can be used to define a constant power demand from the auxiliaries (similar to P_add in the driving cycle, but constant over the whole cycle).
+The following list can be used to define the auxiliary load in more detail via a separate input file. The auxiliaries are configured using the [Auxiliary Dialog](#auxiliary-dialog). 
+ For each auxiliary an [Auxiliary Input File (.vaux)](#auxiliary-input-file-.vaux) must be provided and the [driving cycle](#driving-cycles) must include the corresponding supply power.
+**Double-click** entries to edit with the [Auxiliary Dialog](#auxiliary-dialog).
 : ![addaux](pics/plus-circle-icon.png) Add new Auxiliary
 : ![remaux](pics/minus-circle-icon.png) Remove the selected Auxiliary from the list
+</div>
 
-: See [Auxiliaries](#auxiliaries) for details.
+See [Auxiliaries](#auxiliaries) for details.
 
 Cycles
 :	List of cycles used for calculation. The .vdri format is described [here](#driving-cycles).
@@ -81,7 +92,7 @@ Acceleration Limiting
 
 ###Chart Area
 
-If a valid [Vehicle File](#vehicle-editor), [Engine File](#engine-file) and [Gearbox File](#gearbox-file) is loaded into the Editor the main vehicle parameters like HDV class and axle configuration are shown here. The plot shows the full load curve(s) and shift polygons. In [Declaration Mode](#declaration-mode) the **generic**  shift polygons are shown, not the ones from the Gearbox File.
+If a valid [Vehicle File](#vehicle-editor), [Engine File](#engine-file) and [Gearbox File](#gearbox-file) is loaded into the Editor the main vehicle parameters like HDV class and axle configuration are shown here. The plot shows the full load curve(s) and sampling points of the fuel consumption map. 
 
 ###Controls
 

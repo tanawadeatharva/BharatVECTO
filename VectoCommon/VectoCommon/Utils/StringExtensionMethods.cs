@@ -29,7 +29,7 @@
 *   Martin Rexeis, rexeis@ivt.tugraz.at, IVT, Graz University of Technology
 */
 
-using System.Collections.Generic;
+using System;
 using System.Globalization;
 using System.IO;
 using System.Linq;
@@ -39,14 +39,36 @@ namespace TUGraz.VectoCommon.Utils
 {
 	public static class StringExtensionMethods
 	{
-		public static string Join<T>(this string s, IEnumerable<T> values)
+		public static double ToDouble(this string self, double? defaultValue = null)
 		{
-			return string.Join(s, values);
+			try {
+				return double.Parse(self, CultureInfo.InvariantCulture);
+			} catch (FormatException) {
+				if (defaultValue.HasValue) {
+					return defaultValue.Value;
+				}
+				throw;
+			}
 		}
 
-		public static double ToDouble(this string self)
+		public static int ToInt(this string self, int? defaultValue = null)
 		{
-			return double.Parse(self, CultureInfo.InvariantCulture);
+			try {
+				return int.Parse(self, CultureInfo.InvariantCulture);
+			} catch (FormatException) {
+				if (defaultValue.HasValue) {
+					return defaultValue.Value;
+				}
+				throw;
+			}
+		}
+
+		public static bool ToBoolean(this string self)
+		{
+			if (string.IsNullOrEmpty(self)) {
+				return false;
+			}
+			return int.Parse(self) != 0;
 		}
 
 		public static double IndulgentParse(this string self)
@@ -55,7 +77,7 @@ namespace TUGraz.VectoCommon.Utils
 				CultureInfo.InvariantCulture);
 		}
 
-		public static Stream GetStream(this string self)
+		public static Stream ToStream(this string self)
 		{
 			return new MemoryStream(Encoding.UTF8.GetBytes(self));
 		}

@@ -37,6 +37,8 @@ namespace TUGraz.VectoCore.Tests.Utils
 {
 	public class MockEngineDataProvider : IEngineEngineeringInputData
 	{
+		public DataSourceType SourceType { get; set; }
+		public string Source { get; set; }
 		public bool SavedInDeclarationMode { get; set; }
 		public string Vendor { get; set; }
 		public string ModelName { get; set; }
@@ -50,8 +52,10 @@ namespace TUGraz.VectoCore.Tests.Utils
 		public double WHTCMotorway { get; set; }
 		public double WHTCRural { get; set; }
 		public double WHTCUrban { get; set; }
-		public DataTable FuelConsumptionMap { get; set; }
-		public DataTable FullLoadCurve { get; set; }
+		public double ColdHotBalancingFactor { get; set; }
+		public TableData FuelConsumptionMap { get; set; }
+		public TableData FullLoadCurve { get; set; }
 		public KilogramSquareMeter Inertia { get; set; }
+		public double WHTCEngineering { get; set; }
 	}
 }

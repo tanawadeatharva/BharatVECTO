@@ -36,12 +36,12 @@ using System.IO;
 using System.Linq;
 using System.Reflection;
 using System.Threading;
-using System.Xml;
 using NLog;
 using NLog.Config;
 using NLog.Targets;
-using TUGraz.VectoAPI.InputData;
+using TUGraz.VectoCommon.InputData;
 using TUGraz.VectoCommon.Models;
+using TUGraz.VectoCommon.Utils;
 using TUGraz.VectoCore.Configuration;
 using TUGraz.VectoCore.InputData.FileIO.JSON;
 using TUGraz.VectoCore.Models.Simulation.Impl;
@@ -64,29 +64,29 @@ namespace VectoConsole
 Commandline Interface for Vecto.
 
 Synopsis:
-    vectocmd.exe [-h] [-v] FILE1.(vecto|xml) [FILE2.(vecto|xml) ...]
+	vectocmd.exe [-h] [-v] FILE1.(vecto|xml) [FILE2.(vecto|xml) ...]
 
 Description:
-    FILE1.vecto [FILE2.vecto ...]: A list of vecto-job files (with the 
-       extension: .vecto). At least one file must be given. Delimited by 
-       whitespace.
+	FILE1.vecto [FILE2.vecto ...]: A list of vecto-job files (with the 
+	   extension: .vecto). At least one file must be given. Delimited by 
+	   whitespace.
 
-    -t: output information about execution times
-    -mod: write mod-data in addition to sum-data
-    -1Hz: convert mod-data to 1Hz resolution
-    -eng: switch to engineering mode (implies -mod)
-    -v: Shows verbose information (errors and warnings will be displayed)
+	-t: output information about execution times
+	-mod: write mod-data in addition to sum-data
+	-1Hz: convert mod-data to 1Hz resolution
+	-eng: switch to engineering mode (implies -mod)
+	-v: Shows verbose information (errors and warnings will be displayed)
 	-vv: Shows more verbose information (infos will be displayed)
 	-vvv: Shows debug messages (slow!)
 	-vvvv: Shows all verbose information (everything, slow!)
-    -V: show version information
-    -h: Displays this help.
+	-V: show version information
+	-h: Displays this help.
 	
 Examples:
-    vecto.exe ""12t Delivery Truck.vecto"" 40t_Long_Haul_Truck.vecto
-    vecto.exe 24tCoach.vecto 40t_Long_Haul_Truck.vecto
-    vecto.exe -v 24tCoach.vecto
-    vecto.exe -v jobs\40t_Long_Haul_Truck.vecto
+	vecto.exe ""12t Delivery Truck.vecto"" 40t_Long_Haul_Truck.vecto
+	vecto.exe 24tCoach.vecto 40t_Long_Haul_Truck.vecto
+	vecto.exe -v 24tCoach.vecto
+	vecto.exe -v jobs\40t_Long_Haul_Truck.vecto
 	vecto.exe -h
 ";
 
@@ -183,6 +183,8 @@ Examples:
 					return 1;
 				}
 
+				DetectPlugins();
+				var plugins = PluginRegistry.Instance.GetInputDataPlugins().ToArray();
 				foreach (var file in jobFiles) {
 					Console.WriteLine(@"Reading job: " + file);
 					if (Path.GetExtension(file) == Constants.FileExtensions.VectoJobFile) {
@@ -194,15 +196,22 @@ Examples:
 						};
 
 						_jobContainer.AddRuns(runsFactory);
-					}
-					if (Path.GetExtension(file) == Constants.FileExtensions.VectoXMLDeclarationFile) {
-						var dataProvider = new XMLInputDataProvider(new XmlTextReader(file), true);
-						fileWriter = new FileOutputWriter(file);
-						var runsFactory = new SimulatorFactory(ExecutionMode.Declaration, dataProvider, fileWriter);
-						if (args.Contains("-mod")) {
-							runsFactory.WriteModalResults = true;
+					} else {
+						var handled = false;
+						foreach (var plugin in plugins) {
+							if (!handled && plugin.Value.CanHandleJob(file)) {
+								Console.WriteLine("using plugin: " + plugin.Value.Name);
+								var dataProvider = plugin.Value.ReadVectoJob(file);
+								fileWriter = new FileOutputWriter(file);
+								var runsFactory = new SimulatorFactory(mode, dataProvider, fileWriter) {
+									ModalResults1Hz = args.Contains("-1Hz"),
+									WriteModalResults = args.Contains("-mod")
+								};
+
+								_jobContainer.AddRuns(runsFactory);
+								handled = true;
+							}
 						}
-						_jobContainer.AddRuns(runsFactory);
 					}
 				}
 
@@ -267,6 +276,33 @@ Examples:
 			Console.ReadKey();
 
 			return Environment.ExitCode;
+		}
+
+		private static void DetectPlugins()
+		{
+			var assemblies = new List<Assembly>();
+			var dllFileNames = Directory.GetFiles(".", "*.dll");
+			foreach (var dllFileName in dllFileNames) {
+				var assemblyName = AssemblyName.GetAssemblyName(dllFileName);
+				var assembly = Assembly.Load(assemblyName);
+				assemblies.Add(assembly);
+			}
+			var inputDataPluginType = typeof(IInputDataPlugin);
+			foreach (var assembly in assemblies) {
+				if (assembly == null) {
+					continue;
+				}
+				var types = assembly.GetTypes();
+				foreach (var type in types) {
+					if (type.IsInterface || type.IsAbstract || type.GetInterface(inputDataPluginType.FullName) == null) {
+						continue;
+					}
+					var plugin = (IInputDataPlugin)Activator.CreateInstance(type);
+					if (plugin != null) {
+						PluginRegistry.Instance.RegisterPlugin(plugin);
+					}
+				}
+			}
 		}
 
 		private static void DisplayWarnings()

@@ -29,25 +29,27 @@
 *   Martin Rexeis, rexeis@ivt.tugraz.at, IVT, Graz University of Technology
 */
 
+using Microsoft.VisualStudio.TestTools.UnitTesting;
+using System.Collections.Generic;
 using System.Data;
 using System.Linq;
-using TUGraz.VectoCore.Utils;
-using System.Collections.Generic;
-using TUGraz.VectoCore.OutputData;
-using TUGraz.VectoCore.InputData.Reader;
-using TUGraz.VectoCore.OutputData.FileIO;
-using TUGraz.VectoCore.InputData.FileIO.JSON;
-using TUGraz.VectoCore.Models.Simulation.Data;
-using TUGraz.VectoCore.Models.Simulation.Impl;
-using Microsoft.VisualStudio.TestTools.UnitTesting;
 using TUGraz.VectoCommon.Exceptions;
 using TUGraz.VectoCommon.Models;
 using TUGraz.VectoCommon.Utils;
-using TUGraz.VectoCore.Models.SimulationComponent.Impl;
+using TUGraz.VectoCore.InputData.FileIO.JSON;
+using TUGraz.VectoCore.InputData.Reader;
+using TUGraz.VectoCore.InputData.Reader.ComponentData;
+using TUGraz.VectoCore.Models.Declaration;
+using TUGraz.VectoCore.Models.Simulation.Data;
+using TUGraz.VectoCore.Models.Simulation.Impl;
 using TUGraz.VectoCore.Models.SimulationComponent.Data;
 using TUGraz.VectoCore.Models.SimulationComponent.Data.Engine;
 using TUGraz.VectoCore.Models.SimulationComponent.Data.Gearbox;
+using TUGraz.VectoCore.Models.SimulationComponent.Impl;
+using TUGraz.VectoCore.OutputData;
+using TUGraz.VectoCore.OutputData.FileIO;
 using TUGraz.VectoCore.Tests.Utils;
+using TUGraz.VectoCore.Utils;
 
 // ReSharper disable UnusedVariable
 
@@ -114,7 +116,7 @@ namespace TUGraz.VectoCore.Tests.Models.Simulation
 			inputData = @"<t>,<grad>,<Padd>,<n>,<gear>
 						  0  ,0";
 			AssertHelper.Exception<VectoException>(() => TestCycleRead(inputData, CycleType.MeasuredSpeedGear),
-				"Failed to read stream: Line 1: The number of values is not correct. Expected 5 Columns, Got 2 Columns");
+				"Line 1: The number of values is not correct. Expected 5 Columns, Got 2 Columns");
 		}
 
 		/// <summary>
@@ -171,7 +173,7 @@ namespace TUGraz.VectoCore.Tests.Models.Simulation
 			inputData = @"<t>,<v>,<grad>,<Padd>,<vair_res>,<vair_beta>,<Aux_Alt>
 						  0  ,0";
 			AssertHelper.Exception<VectoException>(() => TestCycleRead(inputData, CycleType.MeasuredSpeed),
-				"Failed to read stream: Line 1: The number of values is not correct. Expected 7 Columns, Got 2 Columns");
+				"Line 1: The number of values is not correct. Expected 7 Columns, Got 2 Columns");
 		}
 
 		private static void TestCycleRead(string inputData, CycleType cycleType, bool autoCycle = true,
@@ -180,10 +182,10 @@ namespace TUGraz.VectoCore.Tests.Models.Simulation
 			var container = new VehicleContainer(ExecutionMode.Engineering);
 
 			if (autoCycle) {
-				var cycleTypeCalc = DrivingCycleDataReader.DetectCycleType(VectoCSVFile.ReadStream(inputData.GetStream()));
+				var cycleTypeCalc = DrivingCycleDataReader.DetectCycleType(VectoCSVFile.ReadStream(inputData.ToStream()));
 				Assert.AreEqual(cycleType, cycleTypeCalc);
 			}
-			var drivingCycle = DrivingCycleDataReader.ReadFromStream(inputData.GetStream(), cycleType, "", crossWindRequired);
+			var drivingCycle = DrivingCycleDataReader.ReadFromStream(inputData.ToStream(), cycleType, "", crossWindRequired);
 			Assert.AreEqual(cycleType, drivingCycle.CycleType);
 
 			var cycle = new MeasuredSpeedDrivingCycle(container, drivingCycle);
@@ -203,7 +205,7 @@ namespace TUGraz.VectoCore.Tests.Models.Simulation
 							  3  ,5.2782 ,-0.041207832,2.453370264,723.75 ,1
 							  4  ,10.5768,-0.049730127,3.520827362,1223.25,1";
 
-			var drivingCycle = DrivingCycleDataReader.ReadFromStream(inputData.GetStream(), CycleType.MeasuredSpeedGear, "",
+			var drivingCycle = DrivingCycleDataReader.ReadFromStream(inputData.ToStream(), CycleType.MeasuredSpeedGear, "",
 				false);
 
 			var fuelConsumption = new DataTable();
@@ -231,7 +233,14 @@ namespace TUGraz.VectoCore.Tests.Models.Simulation
 						CrossWindCorrectionCurve =
 							new CrosswindCorrectionCdxALookup(
 								CrossWindCorrectionCurveReader.GetNoCorrectionCurve(6.16498344.SI<SquareMeter>()),
-								CrossWindCorrectionMode.NoCorrection)
+								CrossWindCorrectionMode.NoCorrection),
+						GrossVehicleWeight = 12000.SI<Kilogram>(),
+						CurbWeight = 3400.SI<Kilogram>(),
+						DynamicTyreRadius = 0.5.SI<Meter>(),
+						AxleData =
+							new List<Axle> {
+								new Axle { AxleWeightShare = 1.0, TyreTestLoad = 52532.SI<Newton>(), Inertia = 10.SI<KilogramSquareMeter>() }
+							}
 					},
 				AxleGearData = new AxleGearData { AxleGear = new GearData { Ratio = 2.3 } },
 				EngineData = new CombustionEngineData { IdleSpeed = 560.RPMtoRad(), FullLoadCurve = fullLoadCurve },
@@ -240,7 +249,7 @@ namespace TUGraz.VectoCore.Tests.Models.Simulation
 			};
 
 			// call builder (actual test)
-			var builder = new PowertrainBuilder(null);
+			var builder = new PowertrainBuilder(new MockModalDataContainer());
 			builder.Build(data);
 		}
 
@@ -258,7 +267,7 @@ namespace TUGraz.VectoCore.Tests.Models.Simulation
 							  3  ,5.2782 ,-0.041207832,2.453370264
 							  4  ,10.5768,-0.049730127,3.520827362";
 
-			var drivingCycle = DrivingCycleDataReader.ReadFromStream(inputData.GetStream(), CycleType.MeasuredSpeed, "", false);
+			var drivingCycle = DrivingCycleDataReader.ReadFromStream(inputData.ToStream(), CycleType.MeasuredSpeed, "", false);
 
 			var fuelConsumption = new DataTable();
 			fuelConsumption.Columns.Add("");
@@ -302,7 +311,7 @@ namespace TUGraz.VectoCore.Tests.Models.Simulation
 			};
 
 			// call builder (actual test)
-			var builder = new PowertrainBuilder(null);
+			var builder = new PowertrainBuilder(new MockModalDataContainer());
 			var jobContainer = builder.Build(data);
 		}
 
@@ -426,6 +435,26 @@ namespace TUGraz.VectoCore.Tests.Models.Simulation
 				@"TestData\MeasuredSpeed\MeasuredSpeedGearVairAux_MeasuredSpeed_Gear_Rural_VairAux.vmod",
 				@"TestData\MeasuredSpeed\Results\MeasuredSpeedGearVairAux.vsum",
 				@"TestData\MeasuredSpeed\MeasuredSpeedGearVairAux.vsum");
+		}
+
+		[TestMethod]
+		public void MeasuredSpeed_Gear_AT_PS_Run()
+		{
+			RunJob(@"TestData\MeasuredSpeed\MeasuredSpeedGearAT-PS.vecto",
+				@"TestData\MeasuredSpeed\Results\MeasuredSpeedGearAT-PS_MeasuredSpeedGear_AT-PS.vmod",
+				@"TestData\MeasuredSpeed\MeasuredSpeedGearAT-PS_MeasuredSpeedGear_AT-PS.vmod",
+				@"TestData\MeasuredSpeed\Results\MeasuredSpeedGearAT-PS.vsum",
+				@"TestData\MeasuredSpeed\MeasuredSpeedGearAT-PS.vsum");
+		}
+
+		[TestMethod]
+		public void MeasuredSpeed_Gear_AT_Ser_Run()
+		{
+			RunJob(@"TestData\MeasuredSpeed\MeasuredSpeedGearAT-Ser.vecto",
+				@"TestData\MeasuredSpeed\Results\MeasuredSpeedGearAT-Ser_MeasuredSpeedGear_AT-Ser.vmod",
+				@"TestData\MeasuredSpeed\MeasuredSpeedGearAT-Ser_MeasuredSpeedGear_AT-Ser.vmod",
+				@"TestData\MeasuredSpeed\Results\MeasuredSpeedGearAT-Ser.vsum",
+				@"TestData\MeasuredSpeed\MeasuredSpeedGearAT-Ser.vsum");
 		}
 
 		[TestMethod]

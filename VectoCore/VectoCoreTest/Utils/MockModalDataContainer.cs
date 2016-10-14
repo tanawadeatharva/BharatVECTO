@@ -29,6 +29,7 @@
 *   Martin Rexeis, rexeis@ivt.tugraz.at, IVT, Graz University of Technology
 */
 
+using System;
 using System.Collections.Generic;
 using System.Data;
 using System.Linq;
@@ -92,6 +93,11 @@ namespace TUGraz.VectoCore.Tests.Utils
 			return Data.Rows.Cast<DataRow>().Select(x => x.Field<T>(col));
 		}
 
+		public T TimeIntegral<T>(ModalResultField field, Func<SI, bool> filter = null) where T : SIBase<T>
+		{
+			throw new NotImplementedException();
+		}
+
 		public Dictionary<string, DataColumn> Auxiliaries { get; set; }
 
 		public void SetDataValue(string fieldName, object value)
@@ -99,9 +105,9 @@ namespace TUGraz.VectoCore.Tests.Utils
 			throw new System.NotImplementedException();
 		}
 
-		public void AddAuxiliary(string id)
+		public void AddAuxiliary(string id, string columnName = null)
 		{
-			var auxColName = ModalResultField.P_aux_ + id;
+			var auxColName = columnName ?? ModalResultField.P_aux_ + id;
 			if (!Data.Columns.Contains(auxColName)) {
 				Auxiliaries[id] = Data.Columns.Add(auxColName, typeof(Watt));
 			}

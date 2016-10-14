@@ -41,7 +41,11 @@ namespace TUGraz.VectoCommon.InputData
 
 		IGearboxDeclarationInputData GearboxInputData { get; }
 
+		ITorqueConverterDeclarationInputData TorqueConverterInputData { get; }
+
 		IAxleGearInputData AxleGearInputData { get; }
+
+		IAngledriveInputData AngledriveInputData { get; }
 
 		IEngineDeclarationInputData EngineInputData { get; }
 
@@ -52,7 +56,6 @@ namespace TUGraz.VectoCommon.InputData
 		IDriverDeclarationInputData DriverInputData { get; }
 	}
 
-
 	public interface IEngineeringInputDataProvider : IInputDataProvider
 	{
 		IEngineeringJobInputData JobInputData();
@@ -61,7 +64,11 @@ namespace TUGraz.VectoCommon.InputData
 
 		IGearboxEngineeringInputData GearboxInputData { get; }
 
+		ITorqueConverterEngineeringInputData TorqueConverterInputData { get; }
+
 		IAxleGearInputData AxleGearInputData { get; }
+
+		IAngledriveInputData AngledriveInputData { get; }
 
 		IEngineEngineeringInputData EngineInputData { get; }
 
@@ -70,5 +77,7 @@ namespace TUGraz.VectoCommon.InputData
 		IRetarderInputData RetarderInputData { get; }
 
 		IDriverEngineeringInputData DriverInputData { get; }
+
+		IPTOTransmissionInputData PTOTransmissionInputData { get; }
 	}
 }
