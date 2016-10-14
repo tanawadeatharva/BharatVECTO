@@ -137,11 +137,9 @@ namespace TUGraz.VectoCore.Tests.FileIO
 			var json = (JObject)JToken.ReadFrom(new JsonTextReader(File.OpenText(TestJobFile)));
 			((JObject)json["Body"]).Property("LAC").Remove();
 
-			AssertHelper.Exception<VectoException>(
-				() => {
-					IEngineeringInputDataProvider input = new JSONInputDataV2(json, TestJobFile);
-					var tmp = input.DriverInputData.Lookahead;
-				}, "Key LAC not found");
+			IEngineeringInputDataProvider input = new JSONInputDataV2(json, TestJobFile);
+			var tmp = input.DriverInputData.Lookahead;
+			Assert.IsNull(tmp);
 		}
 
 		[TestMethod]
