@@ -480,7 +480,7 @@ namespace TUGraz.VectoCore.InputData.FileIO.JSON
 //					throw new VectoException("AccelerationCurve (VACC) required");
 				}
 				try {
-					return ReadTableData(acceleration.Value<string>(), "DriverAccelerationCurve", false);
+					return ReadTableData(acceleration.Value<string>(), "DriverAccelerationCurve", true);
 				} catch (VectoException e) {
 					Log.Warn("Could not find file for acceleration curve. Trying lookup in declaration data.");
 					try {
