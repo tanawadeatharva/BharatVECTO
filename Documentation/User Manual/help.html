@@ -5766,6 +5766,33 @@ CycleTime,UnknownCycleName,3600</code></pre>
 </div>
 <div id="changelog" class="section level1">
 <h1>Changelog</h1>
+<p><strong>VECTO 3.1.0</strong></p>
+<p><strong><em>Build 652 (2016-10-14)</em></strong></p>
+<ul>
+<li>Main Updates
+<ul>
+<li>Removed VECTO Core 2.2</li>
+<li>Refactoring of the User-Interface Backend: loading, saving files and validating user input uses Vecto 3 models</li>
+<li>AT-Gearbox Model: differentiate between AT gearbox with serial torque converter and AT gearbox using powersplit</li>
+<li>Numbering of gears with AT gearbox corresponds to mechanical gears, new column TC_locked in .vmod file to indicate if torque converter is active</li>
+<li>Torque converter gear no longer allowed in input (added by Vecto depending on the AT model)</li>
+<li>New implementation of torque converter model (analytic solutions)</li>
+<li>Added PTO option for municipal utility vehicles: PTO idle losses, separate PTO cycle during standstill</li>
+<li>Added Angledrive Component</li>
+<li>Option for constant Auxiliary Power Demand in Job-File</li>
+<li>Normalize x/y values before triangulating Delaunay map (transmission loss-maps, fuel consumption loss map)</li>
+<li>Additional fuel consumption correction factor in declaration mode: cold/hot balancing factor</li>
+<li>Added fuel consumption correction factor (WHTC, Cold/Hot balancing, …) in engineering mode</li>
+<li>Update auxiliaries power demand according to latest whitebook</li>
+<li>Allow multiple steered axles</li>
+<li>Adapted engine idle controller (during declutch) – engine speed decreases faster</li>
+<li>SUM-File: split E_axl_gbx into two columns, E_axl and E_gbx</li>
+<li>New columns in mod-file: PTO, torque converter</li>
+<li>Removed full-load curve per gear, only single value MaxTorque</li>
+<li>Removed rims (dynamic wheel radius depends on wheel type)</li>
+<li>Fixes in AAUX module: open correct file-browser, save selected files</li>
+</ul></li>
+</ul>
 <p><strong>VECTO 3.0.4</strong></p>
 <p><strong><em>Build 565 (2016-07-19)</em></strong></p>
 <ul>
