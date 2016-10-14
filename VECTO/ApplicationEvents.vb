@@ -51,8 +51,8 @@ Namespace My
 					LogFile.WriteToLog(MessageType.Err, "Failed to create directory '" & MyConfPath & "'!")
 					e.Cancel = True
 				End Try
-				File.Create(MyConfPath & "joblist.txt")
-				File.Create(MyConfPath & "cyclelist.txt")
+				File.Create(MyConfPath & "joblist.txt").Close()
+				File.Create(MyConfPath & "cyclelist.txt").Close()
 			End If
 			If Not Directory.Exists(FileHistoryPath) Then
 				Try
