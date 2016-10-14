@@ -1,25 +1,22 @@
 ﻿{
   "Header": {
     "CreatedBy": " ()",
-    "Date": "2016-09-29T09:04:26.9015264Z",
+    "Date": "2016-10-13T10:06:19.6886564Z",
     "AppVersion": "3",
     "FileVersion": 3
   },
   "Body": {
     "SavedInDeclMode": false,
+    "EngineOnlyMode": false,
     "VehicleFile": "CityBus_AT_Ser.vveh",
     "EngineFile": "Engine_175kW_6.8l.veng",
     "GearboxFile": "GearboxSerial.vgbx",
-    "Cycles": [
-      "RegionalDelivery.vdri",
-      "UrbanDelivery.vdri"
-    ],
-    "AuxiliaryAssembly": "CLASSIC",
+    "AuxiliaryAssembly": "Classic",
     "AuxiliaryVersion": "CLASSIC",
     "AdvancedAuxiliaryFilePath": "",
+    "Aux": [],
     "Padd": 3540.0,
     "VACC": "Driver.vacc",
-    "EngineOnlyMode": false,
     "StartStop": {
       "Enabled": false,
       "MaxSpeed": 5.0,
@@ -39,6 +36,10 @@
       "MinSpeed": 50.0,
       "OverSpeed": 5.0,
       "UnderSpeed": 5.0
-    }
+    },
+    "Cycles": [
+      "RegionalDelivery.vdri",
+      "UrbanDelivery.vdri"
+    ]
   }
 }

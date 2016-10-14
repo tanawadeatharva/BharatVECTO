@@ -25,15 +25,5 @@ The interpolation is based on [Delaunay Triangulation ![](pics/external-icon%20
 *Delaunay Triangulation Example*
 
 
-###Auxiliary - Start/Stop Correction
 
-<div class="vecto2">
-For vehicles with [Start/Stop](#engine-startstop) the fuel consumption needs to be corrected to consider the wrong auxiliary energy balance caused by engine stops because VECTO uses a constant power demand for auxiliaries for the whole mission profile. The correction consists of the following steps:
-
-1.  From all 1Hz data points of the VECTO simulation, a linear regression curve (y=k\*x+d) for fuel consumption (unit: grams per hour) over engine power (unit: kilo-watt) is calculated (see figure below).
-2.  From the difference between the energy consumed by the auxiliaries in the simulation with Start/Stop function and the target value (unit kilowatt-hours), a cycle average change in mechanical power “ΔPe” (unit kilowatt) of the internal combustion engine is calculated (using an average alternator efficiency and the cycle time with running engine).
-3.  The correction of the fuel consumption is performed for all 1Hz time steps using: ΔFC (unit: grams per hour) = ΔPe \* k where k = gradient in the regression. If the engine is running in motoring conditions ΔFC is set to zero.
-
-![Example of a linear regression between engine power and fuel consumption](pics/StartStopCorrection.svg)
-</div>
 

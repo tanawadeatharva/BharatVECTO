@@ -219,7 +219,7 @@ namespace TUGraz.VectoCore.Tests.Models.Declaration
 				CrossWindCorrectionMode.DeclarationModeCorrection);
 
 			AssertHelper.Exception<VectoException>(() =>
-					crossWindCorrectionCurve.EffectiveAirDragArea(kmph.KMPHtoMeterPerSecond()));
+				crossWindCorrectionCurve.EffectiveAirDragArea(kmph.KMPHtoMeterPerSecond()));
 		}
 
 		[TestCase(MissionType.LongHaul, "Standard technology", 1200, 0.7),
@@ -434,11 +434,11 @@ namespace TUGraz.VectoCore.Tests.Models.Declaration
 		public void SegmentWeightOutOfRange4X2(double weight)
 		{
 			AssertHelper.Exception<VectoException>(() =>
-					DeclarationData.Segments.Lookup(
-						VehicleCategory.RigidTruck,
-						AxleConfiguration.AxleConfig_4x2,
-						weight.SI<Kilogram>(),
-						0.SI<Kilogram>()),
+				DeclarationData.Segments.Lookup(
+					VehicleCategory.RigidTruck,
+					AxleConfiguration.AxleConfig_4x2,
+					weight.SI<Kilogram>(),
+					0.SI<Kilogram>()),
 				"Gross vehicle mass must be greater than 7.5 tons");
 		}
 
@@ -451,11 +451,11 @@ namespace TUGraz.VectoCore.Tests.Models.Declaration
 		public void SegmentWeightOutOfRange4X4(double weight)
 		{
 			AssertHelper.Exception<VectoException>(() =>
-					DeclarationData.Segments.Lookup(
-						VehicleCategory.RigidTruck,
-						AxleConfiguration.AxleConfig_4x4,
-						weight.SI<Kilogram>(),
-						0.SI<Kilogram>()),
+				DeclarationData.Segments.Lookup(
+					VehicleCategory.RigidTruck,
+					AxleConfiguration.AxleConfig_4x4,
+					weight.SI<Kilogram>(),
+					0.SI<Kilogram>()),
 				"Gross vehicle mass must be greater than 7.5 tons");
 		}
 
@@ -519,7 +519,7 @@ namespace TUGraz.VectoCore.Tests.Models.Declaration
 			AssertMission(segment.Missions[0], vehicleData: vehicleData, missionType: MissionType.LongHaul,
 				cosswindCorrection: "RigidTrailer", axleWeightDistribution: new[] { 0.225, 0.325 },
 				trailerAxleWeightDistribution: new[] { 0.45 }, bodyCurbWeight: 1900, trailerCurbWeight: 3400,
-				trailerType: TrailerType.T1, minLoad: 0, refLoad: 9813.2353, trailerGrossVehicleWeight: 10500, deltaCdA: 1.1,
+				trailerType: TrailerType.T1, minLoad: 0, refLoad: 9813.2353, trailerGrossVehicleWeight: 10500, deltaCdA: 0.6,
 				maxLoad: 11250);
 
 			AssertMission(segment.Missions[1], vehicleData: vehicleData, missionType: MissionType.RegionalDelivery,

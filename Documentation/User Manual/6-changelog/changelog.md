@@ -1,5 +1,33 @@
 #Changelog
 
+**VECTO 3.1.0**
+
+***Build 652 (2016-10-14)***
+
+- Main Updates
+    + Removed VECTO Core 2.2
+    + Refactoring of the User-Interface Backend: loading, saving files and validating user input uses Vecto 3 models
+    + AT-Gearbox Model: differentiate between AT gearbox with serial torque converter and AT gearbox using powersplit
+    + Numbering of gears with AT gearbox corresponds to mechanical gears, new column TC_locked in .vmod file to indicate if torque converter is active
+    + Torque converter gear no longer allowed in input (added by Vecto depending on the AT model)
+    + New implementation of torque converter model (analytic solutions)
+    + Added PTO option for municipal utility vehicles: PTO idle losses, separate PTO cycle during standstill
+    + Added Angledrive Component
+    + Option for constant Auxiliary Power Demand in Job-File
+    + Normalize x/y values before triangulating Delaunay map (transmission loss-maps, fuel consumption loss map)
+    + Additional fuel consumption correction factor in declaration mode: cold/hot balancing factor
+    + Added fuel consumption correction factor (WHTC, Cold/Hot balancing, …) in engineering mode
+    + Update auxiliaries power demand according to latest whitebook
+    + Allow multiple steered axles
+    + Adapted engine idle controller (during declutch) – engine speed decreases faster
+    + SUM-File: split E_axl_gbx into two columns, E_axl and E_gbx
+    + New columns in mod-file: PTO, torque converter
+    + Removed full-load curve per gear, only single value MaxTorque
+    + Removed rims (dynamic wheel radius depends on wheel type)
+    + Fixes in AAUX module: open correct file-browser, save selected files
+
+
+
 **VECTO 3.0.4**
 
 ***Build 565 (2016-07-19)***

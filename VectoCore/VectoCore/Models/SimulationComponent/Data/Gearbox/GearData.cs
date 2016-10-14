@@ -30,6 +30,8 @@
 */
 
 using System.ComponentModel.DataAnnotations;
+using System.Linq;
+using TUGraz.VectoCommon.Models;
 using TUGraz.VectoCommon.Utils;
 
 namespace TUGraz.VectoCore.Models.SimulationComponent.Data.Gearbox
@@ -43,6 +45,7 @@ namespace TUGraz.VectoCore.Models.SimulationComponent.Data.Gearbox
 		public double Ratio { get; internal set; }
 	}
 
+	[CustomValidation(typeof(GearData), "ValidateGearData")]
 	public class GearData : TransmissionData
 	{
 		public GearData()
@@ -70,5 +73,22 @@ namespace TUGraz.VectoCore.Models.SimulationComponent.Data.Gearbox
 		public NewtonMeter MaxTorque { get; internal set; }
 
 		public ShiftPolygon TorqueConverterShiftPolygon { get; set; }
+
+		public static ValidationResult ValidateGearData(GearData gearData, ValidationContext context)
+		{
+			var modeService = context.GetService(typeof(ExecutionMode)) as ExecutionModeServiceContainer;
+			var mode = modeService == null ? ExecutionMode.Declaration : modeService.Mode;
+
+			if (gearData.HasTorqueConverter) {
+				if (gearData.TorqueConverterShiftPolygon == null) {
+					return new ValidationResult("Shift Polygon for Torque Converter Gear required!");
+				}
+				var result = gearData.TorqueConverterShiftPolygon.Validate(mode);
+				if (result.Any()) {
+					return new ValidationResult(string.Format("Validation of GearData failed"), result.Select(x => x.ErrorMessage));
+				}
+			}
+			return ValidationResult.Success;
+		}
 	}
 }

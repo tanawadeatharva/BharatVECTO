@@ -1,7 +1,7 @@
 ﻿{
   "Header": {
     "CreatedBy": " ()",
-    "Date": "2016-09-29T06:39:04.0725264Z",
+    "Date": "2016-10-13T08:57:32.3951093Z",
     "AppVersion": "3",
     "FileVersion": 7
   },
@@ -15,7 +15,7 @@
     "CdA": 4.115,
     "rdyn": 507.0,
     "CdCorrMode": "CdofVdecl",
-    "CdCorrFile": "<NOFILE>",
+    "CdCorrFile": "",
     "Retarder": {
       "Type": "secondary",
       "Ratio": 1.0,
@@ -24,12 +24,12 @@
     "Angledrive": {
       "Type": "None",
       "Ratio": 0.0,
-      "LossMap": "<NOFILE>"
+      "LossMap": ""
     },
     "PTO": {
       "Type": "None",
-      "LossMap": "<NOFILE>",
-      "Cycle": "<NOFILE>"
+      "LossMap": "",
+      "Cycle": ""
     },
     "AxleConfig": {
       "Type": "6x2",

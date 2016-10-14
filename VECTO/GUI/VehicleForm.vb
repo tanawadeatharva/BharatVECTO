@@ -173,6 +173,7 @@ Public Class VehicleForm
 		TbMassExtra.Text = "-"
 		TbLoad.Text = "-"
 		CbCdMode.SelectedValue = CrossWindCorrectionMode.DeclarationModeCorrection
+
 		TbCdFile.Text = ""
 
 		Dim rdyn As Double

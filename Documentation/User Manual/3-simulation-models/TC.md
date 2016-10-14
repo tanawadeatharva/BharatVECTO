@@ -1,9 +1,8 @@
 ##Torque Converter Model
 
-**!!! The Torque Converter Model is still in development and at the moment only available in Vecto 2.2 !!!**
+The torque converter is defined as (virtual) separate gear. Independent of the chosen AT gearbox type (serial or power split), Vecto uses a powertrain architecture with a serial torque converter. The mechanical gear ratios and gears with torque converter are created by Vecto depending on the gearbox type and gear configuration.
 
-<div class="vecto2">
-The torque converter is defined as (virtual) separate gear. While TC active: Iterative calculation of engine torque and speed based on TC characteristic. Creeping: Engine speed set to idling. Brakes engaged to absorb surplus torque.
+While the torque converter is active engine torque and speed are computed based on TC characteristic. 
 
  ![](pics/GBX-TC.svg)
 
@@ -22,36 +21,17 @@ The Input Torque at  reference engine speed is needed to calculate the actual e
 
 $T_{in} = T_{ref}(v) \cdot ( \frac{n_{in}}{n_{ref}} )^{2}$
 
+$μ(ν) = \frac{T_{out}}{T_{in}}$
+
 with:
 
 -   T~in~ = engine torque \[Nm\]
--   T~ref(ν)~ = reference torque at reference rpm (form .vtcc file) \[Nm\]
+-   T~ref(ν)~ = reference torque at reference rpm (from .vtcc file) \[Nm\]
 -   n~in~ = engine speed \[1/min\]
 -   n~ref~ = reference rpm \[1/min\] (see below)
 
-The torque converter characteristics must also be defined for speed ratios of more than one (ν&gt;1) in order to calculate overrun conditions (torque&lt;0).
+The torque converter characteristics must also be defined for speed ratios of greater than one (ν&gt;1) in order to calculate overrun conditions or engine drag (torque&lt;0).
+
+The torque converter has a separate [Shift Polygon](#shift-polygon-file-.vgbs) which defines the conditions for switching from torque converter gear to locked gear.
 
 
-
-###Setup for Conventional AT gearboxes 
-Torque converter file is defined for **torque converter only**
-
-![](pics/GBX-TC-Setup-1-1.svg)
-
--   Define TC gear with ratio of first (mechanical) gear
--   Set transmission losses of first gear (map or constant efficiency)
-
-![](pics/GBX-TC-Setup-1-2.svg)
-
-
-###Setup for Power-distributed AT gearboxes
-Torque converter file is defined for the **whole gearbox**
-
-![](pics/GBX-TC-Setup-2-1.svg)
-
--   Define TC gear with ratio = 1
--   Set transmission efficiency to 1 (= 100%) because losses are covered  by the .vtcc file.
-
-![](pics/GBX-TC-Setup-2-2.svg)
-
-</div>

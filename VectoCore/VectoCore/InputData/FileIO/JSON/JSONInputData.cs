@@ -480,7 +480,7 @@ namespace TUGraz.VectoCore.InputData.FileIO.JSON
 //					throw new VectoException("AccelerationCurve (VACC) required");
 				}
 				try {
-					return ReadTableData(acceleration.Value<string>(), "DriverAccelerationCurve", false);
+					return ReadTableData(acceleration.Value<string>(), "DriverAccelerationCurve", true);
 				} catch (VectoException e) {
 					Log.Warn("Could not find file for acceleration curve. Trying lookup in declaration data.");
 					try {
@@ -563,7 +563,7 @@ namespace TUGraz.VectoCore.InputData.FileIO.JSON
 				auxData.EfficiencyToEngine = stream.ReadLine().IndulgentParse();
 				stream.ReadLine(); // skip header "Efficiency auxiliary to supply [-]"
 				auxData.EfficiencyToSupply = stream.ReadLine().IndulgentParse();
-				auxData.DemandMap = VectoCSVFile.ReadStream(new MemoryStream(Encoding.UTF8.GetBytes(stream.ReadToEnd())));
+				auxData.DemandMap = VectoCSVFile.ReadStream(new MemoryStream(Encoding.UTF8.GetBytes(stream.ReadToEnd())), source: Path.Combine(BasePath, auxFile.Value<string>()));
 			}
 			return retVal;
 		}
@@ -642,7 +642,7 @@ namespace TUGraz.VectoCore.InputData.FileIO.JSON
 				auxData.EfficiencyToEngine = stream.ReadLine().IndulgentParse();
 				stream.ReadLine(); // skip header "Efficiency auxiliary to supply [-]"
 				auxData.EfficiencyToSupply = stream.ReadLine().IndulgentParse();
-				auxData.DemandMap = VectoCSVFile.ReadStream(new MemoryStream(Encoding.UTF8.GetBytes(stream.ReadToEnd())));
+				auxData.DemandMap = VectoCSVFile.ReadStream(new MemoryStream(Encoding.UTF8.GetBytes(stream.ReadToEnd())), source: Path.Combine(BasePath, auxFile.Value<string>()));
 			}
 			return retVal;
 		}

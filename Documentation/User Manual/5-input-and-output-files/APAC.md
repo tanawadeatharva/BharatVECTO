@@ -10,6 +10,8 @@ Note that the cycle file name used should ideally respect this syntax to be corr
  
 Some flexibility in syntax is allowable (the model looks for ‘Bus’, ‘Coach’, ‘Urban’, etc. in the file name), meaning that the standard default cycles are fully/correctly supported. However, for newly created cycles (i.e. for use in Engineering Mode) it is recommended to follow the above convention to guarantee correct functionality.
 
+This file contains also the estimated time required for a cycle which is required to estimate the air demand for certain actuations.
+
 ###File Format
 
 The file uses the VECTO CSV format, with an example provided below, with the default values based on the methodology agreed with the European Commission and the project Steering Group.
@@ -38,5 +40,11 @@ Kneeling, Suburban, 6
 Kneeling, Interurban, 0
 Kneeling, Coach, 0
 Kneeling, UnknownCycleName, 0,
+CycleTime,Heavy urban,8912
+CycleTime,Urban,8149
+CycleTime,Suburban,3283
+CycleTime,Interurban,12962
+CycleTime,Coach,15086
+CycleTime,UnknownCycleName,3600
 ~~~
 

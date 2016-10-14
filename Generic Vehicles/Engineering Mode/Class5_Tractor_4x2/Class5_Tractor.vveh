@@ -1,7 +1,7 @@
 ﻿{
   "Header": {
     "CreatedBy": " ()",
-    "Date": "2016-09-27T09:07:45.4508941Z",
+    "Date": "2016-10-13T08:52:01.3737990Z",
     "AppVersion": "3",
     "FileVersion": 7
   },
@@ -15,21 +15,21 @@
     "CdA": 5.3,
     "rdyn": 492.0,
     "CdCorrMode": "CdofVdecl",
-    "CdCorrFile": "<NOFILE>",
+    "CdCorrFile": "",
     "Retarder": {
       "Type": "secondary",
       "Ratio": 1.0,
-      "File": "E:\\QUAM\\Workspace\\Projekt HUGO\\Generic\\ToJSON\\Class5_Tractor_4x2\\Default.vrlm"
+      "File": "Default.vrlm"
     },
     "Angledrive": {
       "Type": "None",
       "Ratio": 0.0,
-      "LossMap": "<NOFILE>"
+      "LossMap": ""
     },
     "PTO": {
       "Type": "None",
-      "LossMap": "<NOFILE>",
-      "Cycle": "<NOFILE>"
+      "LossMap": "",
+      "Cycle": ""
     },
     "AxleConfig": {
       "Type": "4x2",

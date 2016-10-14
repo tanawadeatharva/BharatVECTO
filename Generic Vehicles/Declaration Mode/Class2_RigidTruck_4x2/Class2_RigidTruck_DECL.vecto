@@ -1,36 +1,30 @@
 ﻿{
   "Header": {
     "CreatedBy": " ()",
-    "Date": "2016-09-28T14:59:23.9224105Z",
+    "Date": "2016-10-13T15:21:02.8206564Z",
     "AppVersion": "3",
     "FileVersion": 3
   },
   "Body": {
     "SavedInDeclMode": true,
+    "EngineOnlyMode": false,
     "VehicleFile": "Class2_RigidTruck.vveh",
     "EngineFile": "Engine_175kW_6.8l.veng",
     "GearboxFile": "MT_6.vgbx",
-    "Cycles": [
-      "LongHaul",
-      "RegionalDelivery",
-      "UrbanDelivery"
-    ],
-    "AuxiliaryAssembly": "CLASSIC",
+    "AuxiliaryAssembly": "Classic",
     "AuxiliaryVersion": "CLASSIC",
     "AdvancedAuxiliaryFilePath": "",
     "Aux": [
       {
         "ID": "FAN",
         "Type": "Fan",
-        "Path": "<NOFILE>",
         "Technology": [
-          "Crankshaft mounted - Bimetallic controlled visco clutch"
+          "Belt driven or driven via transm. - Electronically controlled visco clutch"
         ]
       },
       {
         "ID": "STP",
         "Type": "Steering pump",
-        "Path": "<NOFILE>",
         "Technology": [
           "Fixed displacement with elec. control"
         ]
@@ -38,7 +32,6 @@
       {
         "ID": "AC",
         "Type": "HVAC",
-        "Path": "<NOFILE>",
         "Technology": [
           "Default"
         ]
@@ -46,7 +39,6 @@
       {
         "ID": "ES",
         "Type": "Electric System",
-        "Path": "<NOFILE>",
         "Technology": [
           "Standard technology"
         ]
@@ -54,30 +46,19 @@
       {
         "ID": "PS",
         "Type": "Pneumatic System",
-        "Path": "<NOFILE>",
         "Technology": [
           "Medium Supply 1-stage + ESS + AMS"
         ]
       }
     ],
-    "VACC": "<NOFILE>",
-    "EngineOnlyMode": false,
     "StartStop": {
       "Enabled": false,
       "MaxSpeed": 5.0,
       "MinTime": 5.0,
       "Delay": 5.0
     },
-    "LAC": {
-      "Enabled": true,
-      "PreviewDistanceFactor": 10.0,
-      "DF_offset": 2.5,
-      "DF_scaling": 1.5,
-      "DF_targetSpeedLookup": "",
-      "Df_velocityDropLookup": ""
-    },
     "OverSpeedEcoRoll": {
-      "Mode": "OverSpeed",
+      "Mode": "Overspeed",
       "MinSpeed": 50.0,
       "OverSpeed": 5.0,
       "UnderSpeed": 5.0

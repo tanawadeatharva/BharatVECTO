@@ -26,10 +26,13 @@ with the correction factor CF~urb~, CF~rur~, CF~mot~ coming from the [Engine](#e
 | Interurban bus     | 45%     | 36%     | 19%     |
 | Coach              | 0%      | 22%     | 78%     |
 
-The whtc fuel consumption is then calculated with: $FC_{whtc} = FC \cdot CF_{total}$
+In order to balance the trade-off between emissions and fuel consumption during cold and hot starting conditions an additional balancing factor $CF_{C/H}$ is determined from the overall specific fuel consumption over the cold start and hot start WHTC test. This value is part of the output from the engine component tool.
+
+The WHTC-corrected fuel consumption is then calculated with: $FC_{whtc} = FC \cdot CF_{total} \cdot CF_{C/H}$
 </div>
 
 <div class="engineering">
-In engineering mode no WHTC correction is applied by Vecto. For an arbitrary cycle the weighting factors are not known, hence the total correction factor CF~total~ can not be computed.
-WHTC correction can be applied manually as a post-processing step.
+In engineering mode a single correction is applied by Vecto. The fuel consumption interpolated from the FC map is multiplied by the engineering correction factor. 
+
+$FC_{whtc} = FC \cdot CF_{Engineering}$
 </div>

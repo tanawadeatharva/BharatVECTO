@@ -39,6 +39,7 @@ using System.Threading;
 using NLog;
 using NLog.Config;
 using NLog.Targets;
+using TUGraz.VectoCommon.InputData;
 using TUGraz.VectoCommon.Models;
 using TUGraz.VectoCommon.Utils;
 using TUGraz.VectoCore.Configuration;
@@ -182,6 +183,7 @@ Examples:
 					return 1;
 				}
 
+				DetectPlugins();
 				var plugins = PluginRegistry.Instance.GetInputDataPlugins().ToArray();
 				foreach (var file in jobFiles) {
 					Console.WriteLine(@"Reading job: " + file);
@@ -198,11 +200,13 @@ Examples:
 						var handled = false;
 						foreach (var plugin in plugins) {
 							if (!handled && plugin.Value.CanHandleJob(file)) {
+								Console.WriteLine("using plugin: " + plugin.Value.Name);
 								var dataProvider = plugin.Value.ReadVectoJob(file);
 								fileWriter = new FileOutputWriter(file);
-								var runsFactory = new SimulatorFactory(mode, dataProvider, fileWriter);
-								runsFactory.ModalResults1Hz = args.Contains("-1Hz");
-								runsFactory.WriteModalResults = args.Contains("-mod");
+								var runsFactory = new SimulatorFactory(mode, dataProvider, fileWriter) {
+									ModalResults1Hz = args.Contains("-1Hz"),
+									WriteModalResults = args.Contains("-mod")
+								};
 
 								_jobContainer.AddRuns(runsFactory);
 								handled = true;
@@ -272,6 +276,33 @@ Examples:
 			Console.ReadKey();
 
 			return Environment.ExitCode;
+		}
+
+		private static void DetectPlugins()
+		{
+			var assemblies = new List<Assembly>();
+			var dllFileNames = Directory.GetFiles(".", "*.dll");
+			foreach (var dllFileName in dllFileNames) {
+				var assemblyName = AssemblyName.GetAssemblyName(dllFileName);
+				var assembly = Assembly.Load(assemblyName);
+				assemblies.Add(assembly);
+			}
+			var inputDataPluginType = typeof(IInputDataPlugin);
+			foreach (var assembly in assemblies) {
+				if (assembly == null) {
+					continue;
+				}
+				var types = assembly.GetTypes();
+				foreach (var type in types) {
+					if (type.IsInterface || type.IsAbstract || type.GetInterface(inputDataPluginType.FullName) == null) {
+						continue;
+					}
+					var plugin = (IInputDataPlugin)Activator.CreateInstance(type);
+					if (plugin != null) {
+						PluginRegistry.Instance.RegisterPlugin(plugin);
+					}
+				}
+			}
 		}
 
 		private static void DisplayWarnings()

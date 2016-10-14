@@ -454,7 +454,7 @@ Public Class VectoJobForm
 			Dim auxInput As IAuxiliariesDeclarationInputData = declarationInput.AuxiliaryInputData()
 
 			cboAdvancedAuxiliaries.SelectedIndex = 0
-
+			cboAdvancedAuxiliaries.Enabled = False
 			LvAux.Items.Clear()
 			Dim entry As IAuxiliaryDeclarationInputData
 			For Each entry In auxInput.Auxiliaries
@@ -470,7 +470,7 @@ Public Class VectoJobForm
 			TbDesMaxFile.Text =
 				If(driver.AccelerationCurve Is Nothing, "", GetRelativePath(driver.AccelerationCurve.Source, _basePath))
 
-
+			cboAdvancedAuxiliaries.Enabled = True
 			Dim auxInput As IAuxiliariesEngineeringInputData = inputData.AuxiliaryInputData()
 			For Each item As AdvancedAuxiliary In cboAdvancedAuxiliaries.Items
 				If _
@@ -495,8 +495,8 @@ Public Class VectoJobForm
 					Continue For
 				End If
 
-				LvAux.Items.Add(CreateAuxListEntry(entry.ID, entry.AuxiliaryType.ToString(),
-													If(entry.DemandMap Is Nothing, "", entry.DemandMap.Source)))
+				LvAux.Items.Add(CreateAuxListEntry(entry.ID, AuxiliaryTypeHelper.ParseKey(entry.ID).Name,
+													If(entry.DemandMap Is Nothing, "", GetRelativePath(entry.DemandMap.Source, _basePath))))
 			Next
 
 		End If
@@ -636,7 +636,7 @@ Public Class VectoJobForm
 				auxEntry.Path.Init(GetPath(file), lv0.SubItems(AuxViewColumns.AuxInputOrTech).Text)
 			End If
 
-			auxEntry.Type = lv0.SubItems(AuxViewColumns.AuxType).Text
+			auxEntry.Type = AuxiliaryTypeHelper.ParseKey(lv0.SubItems(AuxViewColumns.AuxID).Text)
 			vectoJob.AuxPaths.Add(lv0.SubItems(AuxViewColumns.AuxID).Text, auxEntry)
 		Next
 		vectoJob.AuxPAdd = TbAuxPAdd.Text.ToDouble(0)
@@ -716,6 +716,7 @@ Public Class VectoJobForm
 		tbLacDfTargetSpeedFile.Text = ""
 		tbLacDfVelocityDropFile.Text = ""
 
+		cboAdvancedAuxiliaries.Enabled = Not Cfg.DeclMode
 		'---------------------------------------------------
 
 		DeclInit()
@@ -825,8 +826,8 @@ Public Class VectoJobForm
 
 		_auxDialog.VehPath = GetPath(VectoFile)
 		_auxDialog.TbPath.Text = ""
-		_auxDialog.CbType.SelectedIndex = -1
-		_auxDialog.CbType.Text = ""
+		'_auxDialog.CbType.SelectedIndex = -1
+		'_auxDialog.CbType.Text = ""
 		_auxDialog.TbID.Text = ""	'!!! Set Type before ID, because changing the type will overwrite the id !!!
 
 lbDlog:
@@ -872,15 +873,19 @@ lbDlog:
 		End If
 
 		Dim selItem As ListViewItem = LvAux.SelectedItems(0)
-
 		_auxDialog.VehPath = GetPath(VectoFile)
-		_auxDialog.CbType.SelectedIndex = -1
-		_auxDialog.CbType.Text = selItem.SubItems(AuxViewColumns.AuxType).Text
-		_auxDialog.NumAxles = AxleConfigurationHelper.Parse(TbAxleConf.Text).NumAxles()
-		_auxDialog.TbID.Text = selItem.SubItems(AuxViewColumns.AuxID).Text	' last call, updates GUI
+		'_auxDialog.CbType.SelectedIndex = -1
 
+		If selItem.SubItems(AuxViewColumns.AuxID).Text <> AuxiliaryTypeHelper.GetAuxKey(AuxiliaryType.SteeringPump) Then
+			_auxDialog.NumAxles = 0
+		Else
+			_auxDialog.NumAxles = If(String.IsNullOrWhiteSpace(TbAxleConf.Text), 1, AxleConfigurationHelper.Parse(TbAxleConf.Text).NumAxles())
+
+		End If
+
+		_auxDialog.CbType.SelectedValue = selItem.SubItems(AuxViewColumns.AuxID).Text	' last call, updates GUI
 		If Cfg.DeclMode Then
-			If _auxDialog.TbID.Text = AuxiliaryTypeHelper.GetAuxKey(AuxiliaryType.SteeringPump) Then
+			If selItem.SubItems(AuxViewColumns.AuxID).Text = AuxiliaryTypeHelper.GetAuxKey(AuxiliaryType.SteeringPump) Then
 				Dim parts As String() = selItem.SubItems(AuxViewColumns.AuxInputOrTech).Text.Split(";"c)
 				_auxDialog.CbTech2.SelectedItem = VehicleAuxiliariesDialog.AxleNotSteered
 				_auxDialog.CbTech3.SelectedItem = VehicleAuxiliariesDialog.AxleNotSteered
@@ -890,17 +895,20 @@ lbDlog:
 				If parts.Length > 2 Then _auxDialog.CbTech3.SelectedValue = Trim(parts(2))
 				If parts.Length > 3 Then _auxDialog.CbTech4.SelectedValue = Trim(parts(3))
 			Else
-				_auxDialog.CbTech.SelectedItem = selItem.SubItems(AuxViewColumns.AuxInputOrTech).Text
+				_auxDialog.CbTech.SelectedValue = selItem.SubItems(AuxViewColumns.AuxInputOrTech).Text
 				_auxDialog.TbPath.Text = ""
+
 			End If
 		Else
 			_auxDialog.CbTech.SelectedIndex = -1
 			_auxDialog.TbPath.Text = selItem.SubItems(AuxViewColumns.AuxInputOrTech).Text
 		End If
 
+		'_auxDialog.TbID.Text = selItem.SubItems(AuxViewColumns.AuxID).Text	
+
 		If _auxDialog.ShowDialog = DialogResult.OK Then
-			selItem.SubItems(AuxViewColumns.AuxID).Text = UCase(Trim(_auxDialog.TbID.Text))
-			selItem.SubItems(AuxViewColumns.AuxType).Text = Trim(_auxDialog.CbType.Text)
+			selItem.SubItems(AuxViewColumns.AuxID).Text = _auxDialog.CbType.SelectedValue.ToString() 'UCase(Trim(_auxDialog.TbID.Text))
+			selItem.SubItems(AuxViewColumns.AuxType).Text = _auxDialog.CbType.Text
 
 			If Cfg.DeclMode Then
 				If _auxDialog.TbID.Text = AuxiliaryTypeHelper.GetAuxKey(AuxiliaryType.SteeringPump) Then

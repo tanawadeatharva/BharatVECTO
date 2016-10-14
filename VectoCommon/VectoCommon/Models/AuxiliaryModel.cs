@@ -29,6 +29,8 @@
 *   Martin Rexeis, rexeis@ivt.tugraz.at, IVT, Graz University of Technology
 */
 
+using System;
+
 namespace TUGraz.VectoCommon.Models
 {
 	public enum AuxiliaryModel
@@ -49,6 +51,15 @@ namespace TUGraz.VectoCommon.Models
 					return AuxiliaryModel.Advanced;
 			}
 			return AuxiliaryModel.Classic;
+		}
+
+		public static string GetName(this AuxiliaryModel model)
+		{
+			switch (model) {
+				case AuxiliaryModel.Advanced:
+					return "BusAuxiliaries";
+			}
+			return model.ToString();
 		}
 	}
 }
