@@ -58,13 +58,11 @@ The 'Constant Aux Load' can be used to define a constant power demand from the a
 The following list can be used to define the auxiliary load in more detail via a separate input file. The auxiliaries are configured using the [Auxiliary Dialog](#auxiliary-dialog). 
  For each auxiliary an [Auxiliary Input File (.vaux)](#auxiliary-input-file-.vaux) must be provided and the [driving cycle](#driving-cycles) must include the corresponding supply power.
 **Double-click** entries to edit with the [Auxiliary Dialog](#auxiliary-dialog).
-
-
 : ![addaux](pics/plus-circle-icon.png) Add new Auxiliary
 : ![remaux](pics/minus-circle-icon.png) Remove the selected Auxiliary from the list
 </div>
 
-: See [Auxiliaries](#auxiliaries) for details.
+See [Auxiliaries](#auxiliaries) for details.
 
 Cycles
 :	List of cycles used for calculation. The .vdri format is described [here](#driving-cycles).
