@@ -89,7 +89,7 @@ namespace TUGraz.VectoCore.InputData.Reader
 				tmp = new PT1();
 			} else {
 				if (data.Columns.Count > 3) {
-					tmp = PT1Curve.Create(data);
+					tmp = new PT1(data);
 				} else {
 					tmp = new PT1();
 				}
