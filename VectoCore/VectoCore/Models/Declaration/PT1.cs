@@ -34,7 +34,9 @@ using System.Collections.Generic;
 using System.Data;
 using System.Linq;
 using TUGraz.VectoCommon.Exceptions;
+using TUGraz.VectoCommon.InputData;
 using TUGraz.VectoCommon.Utils;
+using TUGraz.VectoCore.Models.SimulationComponent.Data.Engine;
 using TUGraz.VectoCore.Utils;
 
 namespace TUGraz.VectoCore.Models.Declaration
@@ -58,12 +60,41 @@ namespace TUGraz.VectoCore.Models.Declaration
 			ParseData(ReadCsvResource(ResourceId));
 		}
 
+		public PT1(DataTable data)
+		{
+			ParseDataFromFld(data);
+		}
+
 		protected override void ParseData(DataTable table)
 		{
 			_entries = table.Rows.Cast<DataRow>()
 				.Select(r => new KeyValuePair<PerSecond, Second>(r.ParseDouble("rpm").RPMtoRad(), r.ParseDouble("PT1").SI<Second>()))
 				.OrderBy(x => x.Key)
 				.ToList();
+		}
+
+		private void ParseDataFromFld(DataTable data)
+		{
+			if (data.Columns.Count < 3) {
+				throw new VectoException("FullLoadCurve/PT1 Data File must consist of at least 4 columns.");
+			}
+
+			if (data.Rows.Count < 2) {
+				throw new VectoException(
+					"FullLoadCurve/PT1 must consist of at least two lines with numeric values (below file header)");
+			}
+
+			if (data.Columns.Contains(Fields.EngineSpeed) && data.Columns.Contains(Fields.PT1)) {
+				_entries = data.Rows.Cast<DataRow>()
+					.Select(
+						r => new KeyValuePair<PerSecond, Second>(DataTableExtensionMethods.ParseDouble(r, Fields.EngineSpeed).RPMtoRad(),
+							DataTableExtensionMethods.ParseDouble(r, Fields.PT1).SI<Second>()))
+					.OrderBy(x => x.Key).ToList();
+			} else {
+				_entries = data.Rows.Cast<DataRow>()
+					.Select(r => new KeyValuePair<PerSecond, Second>(r.ParseDouble(0).RPMtoRad(), r.ParseDouble(3).SI<Second>()))
+					.OrderBy(x => x.Key).ToList();
+			}
 		}
 
 		public override Second Lookup(PerSecond key)
@@ -85,6 +116,12 @@ namespace TUGraz.VectoCore.Models.Declaration
 				throw new VectoException("The calculated pt1 value must not be smaller than 0. Value: " + pt1);
 			}
 			return pt1;
+		}
+
+		private static class Fields
+		{
+			public const string PT1 = "PT1";
+			public const string EngineSpeed = "engine speed";
 		}
 	}
 }
