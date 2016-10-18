@@ -31,17 +31,15 @@ namespace TUGraz.VectoCore.Models.SimulationComponent.Impl
 			{
 				return new DrivingCycleState {
 					Distance = Distance,
-					VehicleSpeed = VehicleSpeed,
 				};
 			}
 
 			public Meter Distance;
-			public MeterPerSecond VehicleSpeed;
 			public Meter SimulationDistance;
 			public MeterPerSquareSecond Acceleration;
 		}
 
-		protected DrivingCycleData Data;
+		protected readonly DrivingCycleData Data;
 		private bool _isInitializing;
 		protected IEnumerator<DrivingCycleData.DrivingCycleEntry> RightSample { get; set; }
 		protected IEnumerator<DrivingCycleData.DrivingCycleEntry> LeftSample { get; set; }
@@ -64,10 +62,8 @@ namespace TUGraz.VectoCore.Models.SimulationComponent.Impl
 			RightSample.MoveNext();
 			RightSample.MoveNext();
 
-			var first = LeftSample.Current;
 			PreviousState = new DrivingCycleState {
 				Distance = 0.SI<Meter>(),
-				VehicleSpeed = first.VehicleTargetSpeed,
 			};
 			CurrentState = PreviousState.Clone();
 		}
@@ -118,6 +114,15 @@ namespace TUGraz.VectoCore.Models.SimulationComponent.Impl
 			// calc acceleration from speed diff vehicle to cycle
 			var deltaV = RightSample.Current.VehicleTargetSpeed - DataBus.VehicleSpeed;
 			var deltaT = RightSample.Current.Time - LeftSample.Current.Time;
+
+			if (DataBus.VehicleSpeed.IsSmaller(0)) {
+				throw new VectoSimulationException("vehicle velocity is smaller than zero");
+			}
+
+			if (deltaT.IsSmaller(0)) {
+				throw new VectoSimulationException("deltaT is smaller than zero");
+			}
+
 			var acceleration = deltaV / deltaT;
 			var gradient = LeftSample.Current.RoadGradient;
 			DriverAcceleration = acceleration;
@@ -190,9 +195,8 @@ namespace TUGraz.VectoCore.Models.SimulationComponent.Impl
 			response.Acceleration = acceleration;
 			debug.Add(response);
 
-			CurrentState.SimulationDistance = acceleration / 2 * dt * dt + PreviousState.VehicleSpeed * dt;
+			CurrentState.SimulationDistance = acceleration / 2 * dt * dt + DataBus.VehicleSpeed * dt;
 			CurrentState.Distance = CurrentState.SimulationDistance + PreviousState.Distance;
-			CurrentState.VehicleSpeed = acceleration * dt + PreviousState.VehicleSpeed;
 			CurrentState.Acceleration = acceleration;
 
 			return response;
