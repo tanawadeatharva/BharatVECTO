@@ -166,7 +166,7 @@ namespace TUGraz.VectoCore.Tests.Models.Simulation
 			ResultFileHelper.TestSumFile(@"TestData\Pwheel\Results\Pwheel.vsum", @"TestData\Pwheel\Pwheel.vsum");
 
 			ResultFileHelper.TestModFile(@"TestData\Pwheel\Results\Pwheel_Gear2_pt1_rep1_actual.vmod",
-				@"TestData\Pwheel\Pwheel_Gear2_pt1_rep1_actual.vmod", testVelocity: false);
+				@"TestData\Pwheel\Pwheel_Gear2_pt1_rep1_actual.vmod");
 		}
 
 		/// <summary>
@@ -194,7 +194,7 @@ namespace TUGraz.VectoCore.Tests.Models.Simulation
 			ResultFileHelper.TestSumFile(@"TestData\Pwheel\Results\Pwheel_ultimate.vsum", @"TestData\Pwheel\Pwheel_ultimate.vsum");
 
 			ResultFileHelper.TestModFile(@"TestData\Pwheel\Results\Pwheel_ultimate_RD_#1_Pwheel_AuxStd.vmod",
-				@"TestData\Pwheel\Pwheel_ultimate_RD_#1_Pwheel_AuxStd.vmod", testVelocity: false);
+				@"TestData\Pwheel\Pwheel_ultimate_RD_#1_Pwheel_AuxStd.vmod");
 		}
 	}
 }

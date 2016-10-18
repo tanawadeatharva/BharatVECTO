@@ -69,7 +69,7 @@ namespace TUGraz.VectoCore.Tests.Models.Simulation
 
 			Assert.IsTrue(job.FinishedWithoutErrors);
 
-			ResultFileHelper.TestModFile(expected, actual, testVelocity: false);
+			ResultFileHelper.TestModFile(expected, actual);
 		}
 
 		[TestMethod]
@@ -89,7 +89,7 @@ namespace TUGraz.VectoCore.Tests.Models.Simulation
 				Assert.IsTrue(r.Run.FinishedWithoutErrors, string.Format("{0}", r.ExecException));
 			}
 
-			ResultFileHelper.TestModFile(expected, actual, testVelocity: false);
+			ResultFileHelper.TestModFile(expected, actual);
 		}
 
 		public IVectoRun CreateRun(string resultFileName)
@@ -136,7 +136,7 @@ namespace TUGraz.VectoCore.Tests.Models.Simulation
 					@"TestData\Jobs\24t Coach EngineOnly_Engine Only1.vmod",
 					@"TestData\Jobs\24t Coach EngineOnly_Engine Only2.vmod",
 					@"TestData\Jobs\24t Coach EngineOnly_Engine Only3.vmod"
-				}, testVelocity: false)
+				})
 				;
 		}
 	}

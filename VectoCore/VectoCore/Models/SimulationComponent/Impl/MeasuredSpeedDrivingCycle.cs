@@ -196,6 +196,10 @@ namespace TUGraz.VectoCore.Models.SimulationComponent.Impl
 			debug.Add(response);
 
 			CurrentState.SimulationDistance = acceleration / 2 * dt * dt + DataBus.VehicleSpeed * dt;
+			if (CurrentState.SimulationDistance.IsSmaller(0))
+				throw new VectoSimulationException(
+					"MeasuredSpeed: Simulation Distance must not be negative. Driving Backward is not allowed.");
+
 			CurrentState.Distance = CurrentState.SimulationDistance + PreviousState.Distance;
 			CurrentState.Acceleration = acceleration;
 
