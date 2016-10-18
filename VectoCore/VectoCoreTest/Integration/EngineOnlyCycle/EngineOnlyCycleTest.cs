@@ -104,7 +104,7 @@ namespace TUGraz.VectoCore.Tests.Integration.EngineOnlyCycle
 			}
 			modData.Finish(VectoRun.Status.Success);
 
-			ResultFileHelper.TestModFile(modalResultFile, modFile + Constants.FileExtensions.ModDataFile, testVelocity: false);
+			ResultFileHelper.TestModFile(modalResultFile, modFile + Constants.FileExtensions.ModDataFile);
 		}
 
 		[TestCase]

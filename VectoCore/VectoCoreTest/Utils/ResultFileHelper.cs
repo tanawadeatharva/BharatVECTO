@@ -43,13 +43,13 @@ namespace TUGraz.VectoCore.Tests.Utils
 	public static class ResultFileHelper
 	{
 		public static void TestModFile(string expectedFile, string actualFile, string[] testColumns = null,
-			bool testRowCount = true, bool testVelocity = true)
+			bool testRowCount = true)
 		{
-			TestModFiles(new[] { expectedFile }, new[] { actualFile }, testColumns, testRowCount, testVelocity);
+			TestModFiles(new[] { expectedFile }, new[] { actualFile }, testColumns, testRowCount);
 		}
 
 		public static void TestModFiles(IEnumerable<string> expectedFiles, IEnumerable<string> actualFiles,
-			string[] testColumns = null, bool testRowcount = true, bool testVelocity = true)
+			string[] testColumns = null, bool testRowcount = true)
 		{
 			var resultFiles = expectedFiles.ZipAll(actualFiles, (expectedFile, actualFile) => new { expectedFile, actualFile });
 			foreach (var result in resultFiles) {
@@ -59,15 +59,29 @@ namespace TUGraz.VectoCore.Tests.Utils
 				var expected = VectoCSVFile.Read(result.expectedFile);
 				var actual = VectoCSVFile.Read(result.actualFile);
 
-				if (testVelocity) {
-					Assert.IsTrue(
-						actual.Rows.Cast<DataRow>()
+				if (actual.Columns.Contains(ModalResultField.v_act.GetShortCaption()) &&
+					!double.IsNaN(actual.Rows[0].Field<string>(ModalResultField.v_act.GetShortCaption()).ToDouble(double.NaN))) {
+					// test v_act >= 0
+					Assert.IsTrue(actual.Rows.Cast<DataRow>()
 							.All(r => r.ParseDouble(ModalResultField.v_act.GetShortCaption()).IsGreaterOrEqual(0)),
 						"v_act must not be negative.");
-					Assert.IsTrue(
-						actual.Rows.Cast<DataRow>()
+
+					// test v_targ >= 0
+					Assert.IsTrue(actual.Rows.Cast<DataRow>()
 							.All(r => r.ParseDouble(ModalResultField.v_targ.GetShortCaption()).IsGreaterOrEqual(0)),
 						"v_targ must not be negative.");
+				}
+
+				if (actual.Columns.Contains(ModalResultField.dist.GetShortCaption()) &&
+					!double.IsNaN(actual.Rows[0].Field<string>(ModalResultField.dist.GetShortCaption()).ToDouble(double.NaN))) {
+					// test distance monotonous increasing
+
+					var distPrev = actual.Rows[0].ParseDouble(ModalResultField.dist.GetShortCaption());
+					for (var i = 1; i < actual.Rows.Count; i++) {
+						var dist = actual.Rows[i].ParseDouble(ModalResultField.dist.GetShortCaption());
+						Assert.IsTrue(distPrev.IsSmallerOrEqual(dist), "distance must not decrease.");
+						distPrev = dist;
+					}
 				}
 
 				if (testRowcount) {
