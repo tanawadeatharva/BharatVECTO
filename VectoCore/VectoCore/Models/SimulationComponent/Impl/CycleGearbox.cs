@@ -281,7 +281,7 @@ namespace TUGraz.VectoCore.Models.SimulationComponent.Impl
 		}
 
 		/// <summary>
-		/// Handles Requests when no gear is engaged
+		/// Handles Requests when no gear is disengaged
 		/// </summary>
 		/// <param name="absTime"></param>
 		/// <param name="dt"></param>
@@ -303,8 +303,8 @@ namespace TUGraz.VectoCore.Models.SimulationComponent.Impl
 				};
 			}
 
-			if ((outTorque * avgOutAngularVelocity).IsGreater(0.SI<Watt>(),
-				Constants.SimulationSettings.LineSearchTolerance)) {
+			if ((outTorque * avgOutAngularVelocity).IsGreater(0.SI<Watt>(), Constants.SimulationSettings.LineSearchTolerance) &&
+				!outAngularVelocity.IsEqual(0)) {
 				return new ResponseOverload {
 					Source = this,
 					Delta = outTorque * avgOutAngularVelocity,
@@ -312,8 +312,7 @@ namespace TUGraz.VectoCore.Models.SimulationComponent.Impl
 				};
 			}
 
-			if ((outTorque * avgOutAngularVelocity).IsSmaller(0.SI<Watt>(),
-				Constants.SimulationSettings.LineSearchTolerance)) {
+			if ((outTorque * avgOutAngularVelocity).IsSmaller(0.SI<Watt>(), Constants.SimulationSettings.LineSearchTolerance)) {
 				return new ResponseUnderload {
 					Source = this,
 					Delta = outTorque * avgOutAngularVelocity,
@@ -321,13 +320,12 @@ namespace TUGraz.VectoCore.Models.SimulationComponent.Impl
 				};
 			}
 
-			CurrentState.SetState(0.SI<NewtonMeter>(), 0.RPMtoRad(), outTorque, outAngularVelocity);
+			CurrentState.SetState(0.SI<NewtonMeter>(), 0.SI<PerSecond>(), outTorque, outAngularVelocity);
 			CurrentState.Gear = Gear;
 
 			var disengagedResponse = NextComponent.Request(absTime, dt, 0.SI<NewtonMeter>(), DataBus.EngineIdleSpeed);
 			disengagedResponse.GearboxPowerRequest = outTorque * avgOutAngularVelocity;
 			return disengagedResponse;
-			//todo mk-2016-08-17: minus inTorqueLoss?? Why not plus?
 		}
 
 		private TorqueConverterOperatingPoint FindOperatingPoint(NewtonMeter outTorque,
@@ -359,7 +357,7 @@ namespace TUGraz.VectoCore.Models.SimulationComponent.Impl
 				(x.InTorque * x.InAngularVelocity).IsGreaterOrEqual(DataBus.EngineDragPower(x.InAngularVelocity),
 					Constants.SimulationSettings.LineSearchTolerance.SI<Watt>())
 				).ToArray();
-			if (filtered.Count() == 1) {
+			if (filtered.Length == 1) {
 				return filtered.First();
 			}
 			return operatingPointList[0];
@@ -482,7 +480,9 @@ namespace TUGraz.VectoCore.Models.SimulationComponent.Impl
 
 		public override bool ClutchClosed(Second absTime)
 		{
-			return DataBus.CycleData.LeftSample.Gear != 0;
+			return (DataBus.DriverBehavior == DrivingBehavior.Braking
+				? DataBus.CycleData.LeftSample.Gear
+				: DataBus.CycleData.RightSample.Gear) != 0;
 		}
 
 		#endregion

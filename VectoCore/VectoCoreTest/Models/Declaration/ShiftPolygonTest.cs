@@ -389,25 +389,30 @@ namespace TUGraz.VectoCore.Tests.Models.Declaration
 			};
 			engineData.FullLoadCurve.EngineData = engineData;
 
-			var gearboxData = new JSONGearboxDataV5(JSONInputDataFactory.ReadFile(gearboxFile), gearboxFile);
+			var gearboxData = new JSONGearboxDataV6(JSONInputDataFactory.ReadFile(gearboxFile), gearboxFile);
 
 			var shiftPolygons = new List<ShiftPolygon>();
 			var downshiftTransformed = new List<List<Point>>();
 			var downshiftOrig = new List<List<Point>>();
 			var upshiftOrig = new List<List<Point>>();
+			var fullLoadCurves = new List<EngineFullLoadCurve>();
 			for (var i = 0; i < gearboxData.Gears.Count; i++) {
-				shiftPolygons.Add(DeclarationData.Gearbox.ComputeShiftPolygon(i, engineData.FullLoadCurve, gearboxData.Gears,
+				var fullLoadCurve = AbstractSimulationDataAdapter.IntersectFullLoadCurves(engineData.FullLoadCurve,
+					gearboxData.Gears[i].MaxTorque);
+				shiftPolygons.Add(DeclarationData.Gearbox.ComputeShiftPolygon(i, fullLoadCurve, gearboxData.Gears,
 					engineData, axlegearRatio, rdyn));
 				List<Point> tmp1, tmp2, tmp3;
-				ShiftPolygonComparison.ComputShiftPolygonPoints(i, engineData.FullLoadCurve, gearboxData.Gears,
+
+				ShiftPolygonComparison.ComputShiftPolygonPoints(i, fullLoadCurve, gearboxData.Gears,
 					engineData, axlegearRatio, rdyn, out tmp1, out tmp2, out tmp3);
 				upshiftOrig.Add(tmp1);
 				downshiftTransformed.Add(tmp2);
 				downshiftOrig.Add(tmp3);
+				fullLoadCurves.Add(fullLoadCurve);
 			}
 
-			ShiftPolygonDrawer.DrawShiftPolygons(Path.GetDirectoryName(gearboxFile), engineData.FullLoadCurve, shiftPolygons,
-				"scania_fullload_shiftpolygon-test.png",
+			ShiftPolygonDrawer.DrawShiftPolygons(Path.GetDirectoryName(gearboxFile), fullLoadCurves, shiftPolygons,
+				"daimler_fullload_shiftpolygon-test_3.png",
 				DeclarationData.Gearbox.TruckMaxAllowedSpeed / rdyn * axlegearRatio * gearboxData.Gears.Last().Ratio, upshiftOrig,
 				downshiftTransformed, downshiftOrig);
 		}
@@ -458,22 +463,26 @@ namespace TUGraz.VectoCore.Tests.Models.Declaration
 			var shiftPolygons = new List<ShiftPolygon>();
 			var downshiftTransformed = new List<List<Point>>();
 			var upshiftOrig = new List<List<Point>>();
+			var fullLoadCurves = new List<EngineFullLoadCurve>();
 			for (var i = 0; i < gearboxData.Gears.Count; i++) {
+				var fullLoadCurve = AbstractSimulationDataAdapter.IntersectFullLoadCurves(engineData.FullLoadCurve,
+					gearboxData.Gears[i].MaxTorque);
 				shiftPolygons.Add(
-					DeclarationData.Gearbox.ComputeShiftPolygon(i, engineData.FullLoadCurve, gearboxData.Gears,
+					DeclarationData.Gearbox.ComputeShiftPolygon(i, fullLoadCurve, gearboxData.Gears,
 						engineData, axlegearRatio, rdyn.SI<Meter>())
 					);
 				List<Point> tmp1, tmp2, tmp3;
-				ComputShiftPolygonPoints(i, engineData.FullLoadCurve, gearboxData.Gears,
+				ComputShiftPolygonPoints(i, fullLoadCurve, gearboxData.Gears,
 					engineData, axlegearRatio, rdyn.SI<Meter>(), out tmp1, out tmp2, out tmp3);
 				upshiftOrig.Add(tmp1);
 				downshiftTransformed.Add(tmp2);
+				fullLoadCurves.Add(fullLoadCurve);
 			}
 
 			var imageFile = Path.GetDirectoryName(gearboxFile) + "_" + Path.GetFileNameWithoutExtension(gearboxFile) + "_" +
 							Path.GetFileNameWithoutExtension(engineFldFile) +
 							".png";
-			ShiftPolygonDrawer.DrawShiftPolygons(Path.GetDirectoryName(gearboxFile), engineData.FullLoadCurve, shiftPolygons,
+			ShiftPolygonDrawer.DrawShiftPolygons(Path.GetDirectoryName(gearboxFile), fullLoadCurves, shiftPolygons,
 				imageFile,
 				DeclarationData.Gearbox.TruckMaxAllowedSpeed / rdyn.SI<Meter>() * axlegearRatio * gearboxData.Gears.Last().Ratio,
 				upshiftOrig, downshiftTransformed);
