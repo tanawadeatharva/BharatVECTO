@@ -352,11 +352,11 @@ namespace TUGraz.VectoCore.Models.SimulationComponent.Impl
 			}
 
 			var filtered = operatingPointList.Where(x =>
-					(x.InTorque * x.InAngularVelocity).IsSmallerOrEqual(DataBus.EngineStationaryFullPower(x.InAngularVelocity),
-						Constants.SimulationSettings.LineSearchTolerance.SI<Watt>()) &&
-					(x.InTorque * x.InAngularVelocity).IsGreaterOrEqual(DataBus.EngineDragPower(x.InAngularVelocity),
-						Constants.SimulationSettings.LineSearchTolerance.SI<Watt>())
-			).ToArray();
+				(x.InTorque * x.InAngularVelocity).IsSmallerOrEqual(DataBus.EngineStationaryFullPower(x.InAngularVelocity),
+					Constants.SimulationSettings.LineSearchTolerance.SI<Watt>()) &&
+				(x.InTorque * x.InAngularVelocity).IsGreaterOrEqual(DataBus.EngineDragPower(x.InAngularVelocity),
+					Constants.SimulationSettings.LineSearchTolerance.SI<Watt>())
+				).ToArray();
 			if (filtered.Length == 1) {
 				return filtered.First();
 			}
@@ -446,12 +446,12 @@ namespace TUGraz.VectoCore.Models.SimulationComponent.Impl
 				container[ModalResultField.TC_angularSpeedOut] = CurrentState.TorqueConverterOperatingPoint.OutAngularVelocity;
 
 				var avgOutVelocity = ((PreviousState.TorqueConverterOperatingPoint != null
-										? PreviousState.TorqueConverterOperatingPoint.OutAngularVelocity
-										: PreviousState.InAngularVelocity) +
+					? PreviousState.TorqueConverterOperatingPoint.OutAngularVelocity
+					: PreviousState.InAngularVelocity) +
 									CurrentState.TorqueConverterOperatingPoint.OutAngularVelocity) / 2.0;
 				var avgInVelocity = ((PreviousState.TorqueConverterOperatingPoint != null
-										? PreviousState.TorqueConverterOperatingPoint.InAngularVelocity
-										: PreviousState.InAngularVelocity) +
+					? PreviousState.TorqueConverterOperatingPoint.InAngularVelocity
+					: PreviousState.InAngularVelocity) +
 									CurrentState.TorqueConverterOperatingPoint.InAngularVelocity) / 2.0;
 				container[ModalResultField.P_TC_out] = CurrentState.OutTorque * avgOutVelocity;
 				container[ModalResultField.P_TC_loss] = CurrentState.InTorque * avgInVelocity -
@@ -480,7 +480,9 @@ namespace TUGraz.VectoCore.Models.SimulationComponent.Impl
 
 		public override bool ClutchClosed(Second absTime)
 		{
-			return DataBus.CycleData.LeftSample.Gear != 0;
+			return (DataBus.DriverBehavior == DrivingBehavior.Braking
+				? DataBus.CycleData.LeftSample.Gear
+				: DataBus.CycleData.RightSample.Gear) != 0;
 		}
 
 		#endregion
