@@ -35,6 +35,8 @@ using System.Data;
 using System.Globalization;
 using System.Linq;
 using System.Runtime.CompilerServices;
+using TUGraz.VectoCommon.Exceptions;
+using TUGraz.VectoCommon.Models;
 using TUGraz.VectoCommon.Utils;
 using TUGraz.VectoCore.Models.Simulation.Data;
 using TUGraz.VectoCore.Models.Simulation.Impl;
@@ -71,7 +73,6 @@ namespace TUGraz.VectoCore.OutputData
 
 		protected ModalDataContainer(string runName, string cycleName, string runSuffix, IModalDataWriter writer,
 			Action<ModalDataContainer> addReportResult, bool writeEngineOnly, params IModalDataFilter[] filters)
-
 		{
 			HasTorqueConverter = false;
 			RunName = runName;
@@ -305,74 +306,101 @@ namespace TUGraz.VectoCore.OutputData
 		{
 			public ModalResults Filter(ModalResults data)
 			{
-				var absTime = 0.SI<Second>();
-				var distance = 0.SI<Meter>();
 				var results = (ModalResults)data.Clone();
-
-				var remainingDt = 0.SI<Second>();
 
 				object[] remainingRow = null;
 				var gearsList = new Dictionary<object, Second>(3);
-				var vAct = data.Rows.Cast<DataRow>().First().Field<MeterPerSecond>((int)ModalResultField.v_act);
 
-				foreach (DataRow row in data.Rows) {
+				var absTime = 0.SI<Second>();
+				var distance = 0.SI<Meter>();
+				var v = data.Rows[0].Field<MeterPerSecond>((int)ModalResultField.v_act);
+				var remainingDt = 0.SI<Second>();
+				var vPrevious = v;
+
+				for (var i = 0; i < data.Rows.Count; i++) {
+					var row = data.Rows[i];
+
 					var currentDt = row.Field<Second>((int)ModalResultField.simulationInterval);
-					distance = row.Field<Meter>((int)ModalResultField.dist);
 
-					// if current + remaining time >= 1 second: take remaining row and split up currentRow to fill up 1 second.
+					if (row.Field<Meter>((int)ModalResultField.dist).IsSmaller(distance, 1e-3))
+						LogManager.GetLogger(typeof(ModalData1HzFilter).FullName).Error("1Hz-Filter: distance must always be increasing.");
+
+					// if a remainder and currentDt would exceed 1 second: take remainder and take current row to fill up to 1 second.
 					if (remainingDt > 0 && remainingDt + currentDt >= 1) {
-						var diffDt = 1.SI<Second>() - remainingDt;
-						var r = results.NewRow();
-
+						// calculate values
+						var dt = 1.SI<Second>() - remainingDt;
 						var gear = row[(int)ModalResultField.Gear];
-						gearsList[gear] = gearsList.GetValueOrZero(gear) + diffDt;
+						gearsList[gear] = gearsList.GetValueOrZero(gear) + dt;
+						var a = (MeterPerSquareSecond)row[(int)ModalResultField.acc];
+						var ds = dt * v + a / 2 * dt * dt;
+						if (ds.IsSmaller(0))
+							throw new VectoSimulationException("1Hz-Filter: simulation distance must not be negative.");
+						absTime += dt;
+						v += dt * a;
+						distance += ds;
 
-						distance += diffDt * vAct + diffDt * diffDt * (MeterPerSquareSecond)row[(int)ModalResultField.acc] / 2;
-						vAct += diffDt * (MeterPerSquareSecond)row[(int)ModalResultField.acc];
-						r.ItemArray = AddRow(remainingRow, MultiplyRow(row.ItemArray, diffDt));
-						absTime += diffDt;
-
+						// write a new row for the combined 1 second
+						var r = results.NewRow();
+						r.ItemArray = AddRow(remainingRow, MultiplyRow(row.ItemArray, dt));
 						r[(int)ModalResultField.time] = absTime;
 						r[(int)ModalResultField.simulationInterval] = 1.SI<Second>();
 						r[(int)ModalResultField.Gear] = gearsList.MaxBy(kv => kv.Value).Key;
 						r[(int)ModalResultField.dist] = distance;
-						r[(int)ModalResultField.v_act] = vAct;
-
-						gearsList.Clear();
+						r[(int)ModalResultField.v_act] = (v + vPrevious) / 2;
+						vPrevious = v;
 						results.Rows.Add(r);
-						currentDt -= diffDt;
+
+						// reset remainder
+						// reduce current dt by already taken diff
+						gearsList.Clear();
+						currentDt -= dt;
 						remainingDt = 0.SI<Second>();
 						remainingRow = null;
 					}
 
 					// if current row still longer than 1 second: split it to 1 second slices until it is < 1 second
 					while (currentDt >= 1) {
-						currentDt = currentDt - 1.SI<Second>();
+						// calculate values
 						var dt = 1.SI<Second>();
+						currentDt = currentDt - 1.SI<Second>();
+						var a = (MeterPerSquareSecond)row[(int)ModalResultField.acc];
+						var ds = v * dt + a / 2 * dt * dt;
+						if (ds.IsSmaller(0))
+							throw new VectoSimulationException("1Hz-Filter: simulation distance must not be negative.");
+						absTime += dt;
+						v += a * dt;
+						distance += ds;
+
+						// write a new row for the sliced 1 second
 						var r = results.NewRow();
 						r.ItemArray = row.ItemArray;
-						absTime += dt;
-						distance += dt * vAct + dt * dt * (MeterPerSquareSecond)row[(int)ModalResultField.acc] / 2;
-						vAct += dt * (MeterPerSquareSecond)row[(int)ModalResultField.acc];
-
 						r[(int)ModalResultField.time] = absTime;
 						r[(int)ModalResultField.simulationInterval] = dt;
 						r[(int)ModalResultField.dist] = distance;
-						r[(int)ModalResultField.v_act] = vAct;
+						r[(int)ModalResultField.v_act] = (v + vPrevious) / 2;
+						vPrevious = v;
 						results.Rows.Add(r);
 					}
 
-					// if the there still is something left in current row: add the weighted values to remainder-buffer
+					// if there still is something left in current row: add to weighted values to remainder
 					if (currentDt > 0) {
+						// calculate values
+						var dt = currentDt;
 						var gear = row[(int)ModalResultField.Gear];
-						gearsList[gear] = gearsList.GetValueOrZero(gear) + currentDt;
+						gearsList[gear] = gearsList.GetValueOrZero(gear) + dt;
+						var a = (MeterPerSquareSecond)row[(int)ModalResultField.acc];
+						var ds = v * dt + a / 2 * dt * dt;
+						if (ds.IsSmaller(0))
+							throw new VectoSimulationException("1Hz-Filter: simulation distance must not be negative.");
+						absTime += dt;
+						v += a * dt;
+						distance += ds;
 
-						distance += currentDt * vAct + currentDt * currentDt * (MeterPerSquareSecond)row[(int)ModalResultField.acc] / 2;
-						vAct += currentDt * (MeterPerSquareSecond)row[(int)ModalResultField.acc];
-						remainingRow = AddRow(remainingRow, MultiplyRow(row.ItemArray, currentDt));
-						remainingDt += currentDt;
-						absTime += currentDt;
+						// add to remainder
+						remainingRow = AddRow(remainingRow, MultiplyRow(row.ItemArray, dt));
+						remainingDt += dt;
 					} else {
+						// reset remainder (just to be sure!)
 						remainingRow = null;
 						remainingDt = 0.SI<Second>();
 						gearsList.Clear();
@@ -380,21 +408,25 @@ namespace TUGraz.VectoCore.OutputData
 				}
 
 				// if last row was not enough to full second: take last row as whole second
-
 				if (remainingDt > 0) {
+					// calculate values
 					var last = data.Rows.Cast<DataRow>().Last();
+					var dt = remainingDt;
+					var a = (MeterPerSquareSecond)last[(int)ModalResultField.acc];
+					var ds = v * dt + a / 2 * dt * dt;
+					if (ds.IsSmaller(0))
+						throw new VectoSimulationException("1Hz-Filter: simulation distance must not be negative.");
+					v += a * dt;
+					distance += ds;
+
+					// write a new row for the last second
 					var r = results.NewRow();
-
-					r.ItemArray = MultiplyRow(remainingRow, 1 / remainingDt).ToArray();
-					distance += remainingDt * vAct +
-								remainingDt * remainingDt * (MeterPerSquareSecond)last[(int)ModalResultField.acc] / 2;
-					vAct += remainingDt * (MeterPerSquareSecond)last[(int)ModalResultField.acc];
-
+					r.ItemArray = MultiplyRow(remainingRow, 1 / dt).ToArray();
 					r[(int)ModalResultField.time] = VectoMath.Ceiling(absTime);
 					r[(int)ModalResultField.simulationInterval] = 1.SI<Second>();
 					r[(int)ModalResultField.Gear] = gearsList.MaxBy(kv => kv.Value).Key;
 					r[(int)ModalResultField.dist] = distance;
-					r[(int)ModalResultField.v_act] = vAct;
+					r[(int)ModalResultField.v_act] = (v + vPrevious) / 2;
 					results.Rows.Add(r);
 				}
 
