@@ -100,7 +100,7 @@ Public Class GearboxForm
 		TbTracInt.Text = gbxType.TractionInterruption().ToGUIFormat()
 		TbShiftTime.Text = DeclarationData.Gearbox.MinTimeBetweenGearshifts.ToGUIFormat()	'cDeclaration.ShiftTime(GStype)
 
-		TbTqResv.Text = (DeclarationData.Gearbox.TorqueReserve * 100).ToGUIFormat()	  ' cDeclaration.TqResv
+		TbTqResv.Text = (DeclarationData.Gearbox.TorqueReserve * 100).ToGUIFormat()		' cDeclaration.TqResv
 		TbTqResvStart.Text = (DeclarationData.Gearbox.TorqueReserveStart * 100).ToGUIFormat() 'cDeclaration.TqResvStart
 		TbStartSpeed.Text = DeclarationData.Gearbox.StartSpeed.ToGUIFormat()	'cDeclaration.StartSpeed
 		TbStartAcc.Text = DeclarationData.Gearbox.StartAcceleration.ToGUIFormat()	' cDeclaration.StartAcc
@@ -111,7 +111,7 @@ Public Class GearboxForm
 
 		'ChTCon.Checked = GStype.AutomaticTransmission()
 		For Each lv0 In LvGears.Items
-			lv0.SubItems(GearboxTbl.ShiftPolygons).Text = "-"
+			lv0.SubItems(GearboxTbl.ShiftPolygons).Text = ""
 		Next
 	End Sub
 
