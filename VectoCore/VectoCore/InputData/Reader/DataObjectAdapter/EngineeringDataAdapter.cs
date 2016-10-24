@@ -318,11 +318,13 @@ namespace TUGraz.VectoCore.InputData.Reader.DataObjectAdapter
 		public PTOData CreatePTOTransmissionData(IPTOTransmissionInputData pto)
 		{
 			if (pto.PTOTransmissionType != "None") {
-				return new PTOData {
+				var ptoData = new PTOData {
 					TransmissionType = pto.PTOTransmissionType,
 					LossMap = PTOIdleLossMapReader.Create(pto.PTOLossMap),
-					PTOCycle = DrivingCycleDataReader.ReadFromDataTable(pto.PTOCycle, CycleType.PTO, "PTO", false)
 				};
+				if (pto.PTOCycle != null)
+					ptoData.PTOCycle = DrivingCycleDataReader.ReadFromDataTable(pto.PTOCycle, CycleType.PTO, "PTO", false);
+				return ptoData;
 			}
 
 			return null;
