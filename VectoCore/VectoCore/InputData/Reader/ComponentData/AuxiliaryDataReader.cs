@@ -31,7 +31,6 @@
 
 using System.Data;
 using System.IO;
-using System.Linq;
 using System.Text;
 using TUGraz.VectoCommon.Exceptions;
 using TUGraz.VectoCommon.InputData;
@@ -41,30 +40,47 @@ using TUGraz.VectoCore.Utils;
 
 namespace TUGraz.VectoCore.InputData.Reader.ComponentData
 {
+	/// <summary>
+	/// Reads the auxiliary demand map.
+	/// </summary>
 	public static class AuxiliaryDataReader
 	{
+		/// <summary>
+		/// Factory method.
+		/// </summary>
+		/// <param name="data"></param>
+		/// <returns></returns>
 		public static AuxiliaryData Create(IAuxiliaryEngineeringInputData data)
 		{
 			var map = ReadAuxMap(data.ID, data.DemandMap);
 			return new AuxiliaryData(data.TransmissionRatio, data.EfficiencyToEngine, data.EfficiencyToSupply, map);
 		}
 
+		/// <summary>
+		/// Reads the demand map from a file.
+		/// </summary>
+		/// <param name="fileName"></param>
+		/// <param name="id"></param>
+		/// <returns></returns>
 		public static AuxiliaryData ReadFromFile(string fileName, string id)
 		{
 			try {
-				var stream = new StreamReader(fileName);
-				stream.ReadLine(); // skip header "Transmission ration to engine rpm [-]"
-				var transmissionRatio = stream.ReadLine().IndulgentParse();
-				stream.ReadLine(); // skip header "Efficiency to engine [-]"
-				var efficiencyToEngine = stream.ReadLine().IndulgentParse();
-				stream.ReadLine(); // skip header "Efficiency auxiliary to supply [-]"
-				var efficiencyToSupply = stream.ReadLine().IndulgentParse();
+				using (var reader = new StreamReader(fileName)) {
+					reader.ReadLine(); // skip header "Transmission ration to engine rpm [-]"
+					var transmissionRatio = reader.ReadLine().IndulgentParse();
+					reader.ReadLine(); // skip header "Efficiency to engine [-]"
+					var efficiencyToEngine = reader.ReadLine().IndulgentParse();
+					reader.ReadLine(); // skip header "Efficiency auxiliary to supply [-]"
+					var efficiencyToSupply = reader.ReadLine().IndulgentParse();
 
-				var m = new MemoryStream(Encoding.UTF8.GetBytes(stream.ReadToEnd()));
-				var table = VectoCSVFile.ReadStream(m);
-				var map = ReadAuxMap(id, table);
+					var m = new MemoryStream(Encoding.UTF8.GetBytes(reader.ReadToEnd()));
+					reader.Close();
 
-				return new AuxiliaryData(transmissionRatio, efficiencyToEngine, efficiencyToSupply, map);
+					var table = VectoCSVFile.ReadStream(m);
+					var map = ReadAuxMap(id, table);
+
+					return new AuxiliaryData(transmissionRatio, efficiencyToEngine, efficiencyToSupply, map);
+				}
 			} catch (FileNotFoundException e) {
 				throw new VectoException("Auxiliary file not found: " + fileName, e);
 			}
@@ -85,25 +101,21 @@ namespace TUGraz.VectoCore.InputData.Reader.ComponentData
 
 		private static void FillFromColumnIndizes(DataTable table, DelaunayMap map)
 		{
-			var data = table.Rows.Cast<DataRow>().Select(row => new {
-				AuxiliarySpeed = row.ParseDouble(0).RPMtoRad(),
-				MechanicalPower = row.ParseDouble(1).SI().Kilo.Watt.Cast<Watt>(),
-				SupplyPower = row.ParseDouble(2).SI().Kilo.Watt.Cast<Watt>()
-			});
-			foreach (var d in data) {
-				map.AddPoint(d.AuxiliarySpeed.Value(), d.SupplyPower.Value(), d.MechanicalPower.Value());
+			for (var i = 0; i < table.Rows.Count; i++) {
+				var row = table.Rows[i];
+				map.AddPoint(row.ParseDouble(0).RPMtoRad().Value(),
+					row.ParseDouble(1).SI().Kilo.Watt.Cast<Watt>().Value(),
+					row.ParseDouble(2).SI().Kilo.Watt.Cast<Watt>().Value());
 			}
 		}
 
 		private static void FillFromColumnNames(DataTable table, DelaunayMap map)
 		{
-			var data = table.Rows.Cast<DataRow>().Select(row => new {
-				AuxiliarySpeed = row.ParseDouble(Fields.AuxSpeed).RPMtoRad(),
-				MechanicalPower = row.ParseDouble(Fields.MechPower).SI().Kilo.Watt.Cast<Watt>(),
-				SupplyPower = row.ParseDouble(Fields.SupplyPower).SI().Kilo.Watt.Cast<Watt>()
-			});
-			foreach (var d in data) {
-				map.AddPoint(d.AuxiliarySpeed.Value(), d.SupplyPower.Value(), d.MechanicalPower.Value());
+			for (var i = 0; i < table.Rows.Count; i++) {
+				var row = table.Rows[i];
+				map.AddPoint(row.ParseDouble(Fields.AuxSpeed).RPMtoRad().Value(),
+					row.ParseDouble(Fields.MechPower).SI().Kilo.Watt.Cast<Watt>().Value(),
+					row.ParseDouble(Fields.SupplyPower).SI().Kilo.Watt.Cast<Watt>().Value());
 			}
 		}
 
@@ -113,7 +125,7 @@ namespace TUGraz.VectoCore.InputData.Reader.ComponentData
 					columns.Contains(Fields.SupplyPower);
 		}
 
-		public static class Fields
+		internal static class Fields
 		{
 			/// <summary>[1/min]</summary>
 			public const string AuxSpeed = "Auxiliary speed";
