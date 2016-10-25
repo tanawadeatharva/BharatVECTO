@@ -31,6 +31,7 @@
 
 using System.Collections.Generic;
 using System.ComponentModel.DataAnnotations;
+using System.Linq;
 using TUGraz.VectoCommon.Exceptions;
 using TUGraz.VectoCommon.Models;
 using TUGraz.VectoCommon.Utils;
@@ -146,7 +147,6 @@ namespace TUGraz.VectoCore.Models.Simulation.Data
 							continue;
 						}
 
-
 						for (var inTorque = engineData.FullLoadCurve.FullLoadStationaryTorque(angularVelocity) / 3;
 							inTorque < engineData.FullLoadCurve.FullLoadStationaryTorque(angularVelocity);
 							inTorque += 2.0 / 3.0 * engineData.FullLoadCurve.FullLoadStationaryTorque(angularVelocity) / 10.0) {
@@ -189,6 +189,11 @@ namespace TUGraz.VectoCore.Models.Simulation.Data
 						}
 					}
 				}
+			}
+
+			if (runData.Cycle != null && runData.Cycle.Entries.Any(e => e.PTOActive)) {
+				if (runData.PTO == null || runData.PTO.PTOCycle == null)
+					return new ValidationResult("PTOCycle is used in DrivingCycle, but is not defined in Vehicle-Data.");
 			}
 
 			return ValidationResult.Success;

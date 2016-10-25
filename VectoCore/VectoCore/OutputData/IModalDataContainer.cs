@@ -478,8 +478,14 @@ namespace TUGraz.VectoCore.OutputData
 
 		public static WattSecond AuxiliaryWork(this IModalDataContainer data, DataColumn auxCol)
 		{
-			var simulationIntervals = data.GetValues<Second>(ModalResultField.simulationInterval);
-			return data.GetValues<Watt>(auxCol).Zip(simulationIntervals, (value, dt) => value * dt).Sum().Cast<WattSecond>();
+			var simulationIntervals = data.GetValues<Second>(ModalResultField.simulationInterval).ToArray();
+			var auxValues = data.GetValues<Watt>(auxCol).ToArray();
+			var sum = 0.SI<WattSecond>();
+			for (var i = 0; i < simulationIntervals.Length; i++) {
+				if (auxValues[i] != null && simulationIntervals[i] != null)
+					sum += auxValues[i] * simulationIntervals[i];
+			}
+			return sum;
 		}
 
 		public static MeterPerSquareSecond[] AccelerationPer3Seconds(this IModalDataContainer data)
