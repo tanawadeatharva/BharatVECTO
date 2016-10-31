@@ -195,10 +195,8 @@ namespace TUGraz.VectoCore.InputData.Reader.DataObjectAdapter
 						gearData.TorqueConverterGearLossMap = gearData.LossMap;
 						gearData.TorqueConverterShiftPolygon = gearbox.TorqueConverter.ShiftPolygon == null ? null : ShiftPolygonReader.Create(gearbox.TorqueConverter.ShiftPolygon);
 						// NOTE: the lower gear in 'gears' dictionary has index i !!
-
-						// todo mk-2016-10-27: do not set to NaN -- validation fails! but how to remove locked transmission for previous gear?
-						//gears[i].Ratio = double.NaN;
-						//gears[i].LossMap = null;
+						gears[i].Ratio = double.NaN;
+						gears[i].LossMap = null;
 					}
 				}
 				gears.Add(i + 1, gearData);
