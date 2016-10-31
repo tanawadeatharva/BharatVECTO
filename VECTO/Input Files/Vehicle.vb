@@ -370,7 +370,7 @@ Public Class Vehicle
 	Public ReadOnly Property IVehicleEngineeringInputData_CrossWindCorrectionMode As CrossWindCorrectionMode _
 		Implements IVehicleEngineeringInputData.CrossWindCorrectionMode
 		Get
-			Return CrossWindCorrectionMode.DeclarationModeCorrection
+			Return CrossWindCorrectionMode
 		End Get
 	End Property
 
