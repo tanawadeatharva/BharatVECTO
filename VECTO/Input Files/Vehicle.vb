@@ -14,7 +14,6 @@ Imports System.Collections.Generic
 Imports System.ComponentModel.DataAnnotations
 Imports System.IO
 Imports System.Linq
-Imports Newtonsoft.Json.Linq
 Imports TUGraz.VECTO.Input_Files
 Imports TUGraz.VectoCommon.InputData
 Imports TUGraz.VectoCommon.Models
@@ -29,7 +28,6 @@ Imports TUGraz.VectoCore.Utils
 Public Class Vehicle
 	Implements IVehicleEngineeringInputData, IVehicleDeclarationInputData, IRetarderInputData, IPTOTransmissionInputData,
 				IAngledriveInputData
-	'V2 MassMax is now saved in [t] instead of [kg]
 
 	Private _filePath As String
 	Private _path As String
@@ -42,7 +40,7 @@ Public Class Vehicle
 	Public CrossWindCorrectionMode As CrossWindCorrectionMode
 	Public ReadOnly CrossWindCorrectionFile As SubPath
 
-	<ValidateObject()> Public RetarderType As RetarderType
+	<ValidateObject> Public RetarderType As RetarderType
 	Public RetarderRatio As Double = 0
 	Public ReadOnly RetarderLossMapFile As SubPath
 
@@ -54,8 +52,8 @@ Public Class Vehicle
 	Public MassExtra As Double
 	Public MassMax As Double
 	Public AxleConfiguration As AxleConfiguration
-
 	Public SavedInDeclMode As Boolean
+
 	Public AngledriveType As AngledriveType
 	Public AngledriveRatio As Double
 	Public ReadOnly AngledriveLossMapFile As SubPath
@@ -159,8 +157,6 @@ Public Class Vehicle
 		MassExtra = 0
 		Loading = 0
 		CdA0 = 0
-		'		CdA0Act = CdA0
-		'		CdA02 = 0
 		CrossWindCorrectionFile.Clear()
 		CrossWindCorrectionMode = CrossWindCorrectionMode.NoCorrection
 
@@ -180,9 +176,9 @@ Public Class Vehicle
 		PtoCycle.Clear()
 
 		Axles.Clear()
-		VehicleCategory = VehicleCategory.RigidTruck	'tVehCat.Undef
+		VehicleCategory = VehicleCategory.RigidTruck
 		MassMax = 0
-		AxleConfiguration = AxleConfiguration.AxleConfig_4x2	 'tAxleConf.Undef
+		AxleConfiguration = AxleConfiguration.AxleConfig_4x2
 
 		SavedInDeclMode = False
 	End Sub
@@ -397,7 +393,6 @@ Public Class Vehicle
 
 	Public ReadOnly Property IRetarderInputData_Ratio As Double Implements IRetarderInputData.Ratio
 		Get
-
 			Return RetarderRatio
 		End Get
 	End Property
@@ -410,7 +405,6 @@ Public Class Vehicle
 
 	Public ReadOnly Property IRetarderInputData_LossMap As TableData Implements IRetarderInputData.LossMap
 		Get
-
 			Return VectoCSVFile.Read(RetarderLossMapFile.FullPath)
 		End Get
 	End Property
