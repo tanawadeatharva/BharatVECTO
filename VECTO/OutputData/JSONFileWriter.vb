@@ -51,6 +51,7 @@ Public Class JSONFileWriter
 		body.Add("WHTC-Urban", eng.WHTCUrban)
 		body.Add("WHTC-Rural", eng.WHTCRural)
 		body.Add("WHTC-Motorway", eng.WHTCMotorway)
+		body.Add("WHTC-Engineering", eng.WHTCEngineering)
 		body.Add("ColdHotBalancingFactor", eng.ColdHotBalancingFactor)
 
 		WriteFile(header, body, filename)
