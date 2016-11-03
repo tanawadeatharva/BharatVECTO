@@ -99,7 +99,13 @@ namespace TUGraz.VectoCore.InputData.FileIO.JSON
 
 		public virtual double WHTCEngineering
 		{
-			get { return 1; }
+			get
+			{
+				if (Body["WHTC-Engineering"] == null) {
+					return 1;
+				}
+				return Body.GetEx<double>("WHTC-Engineering");
+			}
 		}
 
 		public virtual double WHTCMotorway
