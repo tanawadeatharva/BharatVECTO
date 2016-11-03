@@ -186,10 +186,10 @@ namespace TUGraz.VectoCore.Models.SimulationComponent.Impl
 			}
 			if (!_gearbox.TorqueConverterLocked && Data.Gears.ContainsKey(gear + 1) && Data.Gears[gear + 1].HasTorqueConverter) {
 				// C -> C upshift
-				var gearRatio = Data.Gears[gear + 1].Ratio / Data.Gears[gear].Ratio;
+				var gearRatio = Data.Gears[gear + 1].TorqueConverterRatio / Data.Gears[gear].TorqueConverterRatio;
 				var minEnginseSpeed = VectoMath.Min(700.RPMtoRad(), gearRatio * (DataBus.EngineN80hSpeed - 150.RPMtoRad()));
-				var nextGbxInSpeed = outAngularVelocity * Data.Gears[gear + 1].Ratio;
-				var nextGbxInTorque = outTorque / Data.Gears[gear + 1].Ratio;
+				var nextGbxInSpeed = outAngularVelocity * Data.Gears[gear + 1].TorqueConverterRatio;
+				var nextGbxInTorque = outTorque / Data.Gears[gear + 1].TorqueConverterRatio;
 				var tcOperatingPoint = _gearbox.TorqueConverter.FindOperatingPoint(nextGbxInTorque, nextGbxInSpeed);
 				if (tcOperatingPoint.InAngularVelocity.IsGreater(minEnginseSpeed) &&
 					DataBus.EngineStationaryFullPower(tcOperatingPoint.InAngularVelocity)
