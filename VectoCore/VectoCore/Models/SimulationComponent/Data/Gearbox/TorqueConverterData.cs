@@ -146,11 +146,19 @@ namespace TUGraz.VectoCore.Models.SimulationComponent.Data.Gearbox
 				retVal.OutTorque = retVal.InTorque * retVal.TorqueRatio;
 				return retVal;
 			}
-			throw new VectoException(
-				"No solution for output speed/input speed found! n_out: {0}, n_in: {1}, nu: {2}, nu_max: {3}", outAngularVelocity,
-				inAngularVelocity, outAngularVelocity / inAngularVelocity, TorqueConverterEntries.Last().SpeedRatio);
-		}
+			var nu = outAngularVelocity / inAngularVelocity;
+			var nuMax = TorqueConverterEntries.Last().SpeedRatio;
 
+			if (nu.IsGreater(nuMax)) {
+				throw new VectoException(
+					"Torque Converter: Range of torque converter data is not sufficient. Needed nu: {0}, Got nu_max: {1}", nu,
+					nuMax);
+			} else {
+				throw new VectoException(
+					"Torque Converter: No solution for output speed/input speed found! n_out: {0}, n_in: {1}, nu: {2}, nu_max: {3}",
+					outAngularVelocity, inAngularVelocity, nu, nuMax);
+			}
+		}
 
 		/// <summary>
 		/// find an operating point for the torque converter
