@@ -31,12 +31,14 @@
 
 using System;
 using System.Collections.Generic;
+using System.ComponentModel.DataAnnotations;
 using System.Linq;
 using TUGraz.VectoCommon.Exceptions;
 using TUGraz.VectoCommon.Utils;
 
 namespace TUGraz.VectoCore.Models.SimulationComponent.Data.Gearbox
 {
+	[CustomValidation(typeof(TorqueConverterData), "ValidateData")]
 	public class TorqueConverterData
 	{
 		protected List<TorqueConverterEntry> TorqueConverterEntries;
@@ -250,6 +252,18 @@ namespace TUGraz.VectoCore.Models.SimulationComponent.Data.Gearbox
 				TorqueConverterEntries[index + 1].SpeedRatio, TorqueConverterEntries[index].Torque,
 				TorqueConverterEntries[index + 1].Torque, speedRatio);
 			return retVal;
+		}
+
+		public static ValidationResult ValidateData(TorqueConverterData data, ValidationContext validationContext)
+		{
+			if (data.TorqueConverterEntries.Min(e => e.SpeedRatio) > 0 ||
+				data.TorqueConverterEntries.Max(e => e.SpeedRatio) < 2.2) {
+				return
+					new ValidationResult(
+						"Torque Converter Data invalid - Speedratio range has to at least cover 0.0 to 2.2");
+			}
+
+			return ValidationResult.Success;
 		}
 	}
 
