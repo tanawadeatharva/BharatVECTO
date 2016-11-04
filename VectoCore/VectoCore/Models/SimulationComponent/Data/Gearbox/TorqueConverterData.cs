@@ -243,7 +243,6 @@ namespace TUGraz.VectoCore.Models.SimulationComponent.Data.Gearbox
 			return retVal;
 		}
 
-
 		private NewtonMeter ReferenceTorqueLookup(double speedRatio)
 		{
 			int index;
@@ -256,11 +255,12 @@ namespace TUGraz.VectoCore.Models.SimulationComponent.Data.Gearbox
 
 		public static ValidationResult ValidateData(TorqueConverterData data, ValidationContext validationContext)
 		{
-			if (data.TorqueConverterEntries.Min(e => e.SpeedRatio) > 0 ||
-				data.TorqueConverterEntries.Max(e => e.SpeedRatio) < 2.2) {
-				return
-					new ValidationResult(
-						"Torque Converter Data invalid - Speedratio range has to at least cover 0.0 to 2.2");
+			var min = data.TorqueConverterEntries.Min(e => e.SpeedRatio);
+			var max = data.TorqueConverterEntries.Max(e => e.SpeedRatio);
+			if (min > 0 || max < 2.2) {
+				return new ValidationResult(string.Format(
+					"Torque Converter Data invalid - Speedratio has to cover the range from 0.0 to 2.2: given data only goes from {0} to {1}",
+					min, max));
 			}
 
 			return ValidationResult.Success;
