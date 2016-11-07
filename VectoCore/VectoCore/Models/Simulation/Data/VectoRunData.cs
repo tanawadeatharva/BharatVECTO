@@ -141,6 +141,9 @@ namespace TUGraz.VectoCore.Models.Simulation.Data
 					for (var angularVelocity = engineData.IdleSpeed;
 						angularVelocity < engineData.FullLoadCurve.RatedSpeed;
 						angularVelocity += 2.0 / 3.0 * (engineData.FullLoadCurve.RatedSpeed - engineData.IdleSpeed) / 10.0) {
+						if (!gear.Value.HasLockedGear)
+							continue;
+
 						var velocity = angularVelocity / gear.Value.Ratio / angledriveRatio / axlegearRatio * dynamicTyreRadius;
 
 						if (velocity > maxSpeed) {

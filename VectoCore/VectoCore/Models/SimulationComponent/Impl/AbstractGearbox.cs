@@ -96,13 +96,12 @@ namespace TUGraz.VectoCore.Models.SimulationComponent.Impl
 
 		public Watt GearboxLoss()
 		{
-			//var outTorque = ModelData.Gears[Gear].LossMap.GetOutTorque(inAngularVelocity, inTorque, true);
-			//var torqueLoss = inTorque - outTorque * ModelData.Gears[Gear].Ratio;
-
-			//return torqueLoss * inAngularVelocity;
+			var ratio = ModelData.Gears[PreviousState.Gear].HasLockedGear
+				? ModelData.Gears[PreviousState.Gear].Ratio
+				: ModelData.Gears[PreviousState.Gear].TorqueConverterRatio;
 
 			return (PreviousState.TransmissionTorqueLoss +
-					PreviousState.InertiaTorqueLossOut / ModelData.Gears[PreviousState.Gear].Ratio) * PreviousState.InAngularVelocity;
+					PreviousState.InertiaTorqueLossOut / ratio) * PreviousState.InAngularVelocity;
 		}
 
 		#endregion
