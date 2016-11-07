@@ -17,8 +17,8 @@ Refers to other files:
 {
   "Header": {
     "CreatedBy": "Michael Krisper (Graz University of Technology",
-    "Date": "2016-03-18T14:48:38+01:00",
-    "AppVersion": "3.0.2",
+    "Date": "2016-10-03T15:25:00+01:00",
+    "AppVersion": "3.1.0",
     "FileVersion": 3
   },
   "Body": {
@@ -29,9 +29,7 @@ Refers to other files:
     "Inertia": 3.789,
     "FullLoadCurve": "EngineFullLoadCurve.vfld",
     "FuelMap": "FuelConsumptionMap.vmap",
-    "WHTC-Urban": 0.97,
-    "WHTC-Rural": 0.99,
-    "WHTC-Motorway": 1.05
+    "WHTC-Engineering": 1.03
   }
 }
 ~~~

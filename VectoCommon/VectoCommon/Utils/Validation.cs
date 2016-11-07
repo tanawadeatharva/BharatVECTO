@@ -213,6 +213,17 @@ namespace TUGraz.VectoCommon.Utils
 		}
 	}
 
+	[AttributeUsage(AttributeTargets.Property | AttributeTargets.Field, AllowMultiple = true)]
+	public class RangeOrNaN : RangeAttribute
+	{
+		public override bool IsValid(object value)
+		{
+			return double.IsNaN((double)value) || base.IsValid(value);
+		}
+
+		public RangeOrNaN(double minimum, double maximum) : base(minimum, maximum) {}
+	}
+
 	/// <summary>
 	/// Attribute which validates the Min-Max Range of an SI Object.
 	/// </summary>
