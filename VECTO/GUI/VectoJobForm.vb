@@ -1519,7 +1519,13 @@ lbDlog:
 																		GetPath(VectoFile))
 	End Sub
 
-	Private Sub Label6_Click(sender As Object, e As EventArgs) Handles Label6.Click
+	Private Sub LvCycles_MouseClick(sender As Object, e As MouseEventArgs) Handles LvCycles.MouseClick
+		If e.Button = MouseButtons.Right AndAlso LvCycles.SelectedItems.Count > 0 Then
+			OpenFiles(FileRepl(LvCycles.SelectedItems(0).SubItems(0).Text, GetPath(VectoFile)))
+		End If
+	End Sub
+
+	Private Sub LvCycles_SelectedIndexChanged(sender As Object, e As EventArgs) Handles LvCycles.SelectedIndexChanged
 	End Sub
 End Class
 
