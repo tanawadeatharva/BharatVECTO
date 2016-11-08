@@ -140,7 +140,7 @@ namespace TUGraz.VectoCore.Models.SimulationComponent.Impl
 					Log.Debug("engine speed would fall below idle speed - shift down");
 					return true;
 				}
-				if (inAngularVelocity.IsGreaterOrEqual(DataBus.EngineRatedSpeed) && Data.Gears.ContainsKey(gear + 1)) {
+				if (inAngularVelocity.IsGreater(DataBus.EngineRatedSpeed) && Data.Gears.ContainsKey(gear + 1)) {
 					NextGear.SetState(absTime, false, gear + 1, Data.Gears[gear + 1].HasLockedGear);
 					Log.Debug("engine speed would be above rated speed - shift up");
 					return true;
