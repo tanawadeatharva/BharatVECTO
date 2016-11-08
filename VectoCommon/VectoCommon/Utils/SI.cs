@@ -611,7 +611,7 @@ namespace TUGraz.VectoCommon.Utils
 	/// <summary>
 	/// SI Class for one per second [1/s].
 	/// </summary>
-	[DebuggerDisplay(@"{Val} | rpm: {AsRPM}")]
+	[DebuggerDisplay("rad/s: {Val} | rpm: {AsRPM}")]
 	public class PerSecond : SIBase<PerSecond>
 	{
 		private static readonly Unit[] DenominatorDefault = { Unit.s };
@@ -628,7 +628,7 @@ namespace TUGraz.VectoCommon.Utils
 	/// <summary>
 	/// SI Class for Meter per second [m/s].
 	/// </summary>
-	[DebuggerDisplay(@"{Val} | {AsKmph}")]
+	[DebuggerDisplay("{Val} | {AsKmph}")]
 	public class MeterPerSecond : SIBase<MeterPerSecond>
 	{
 		private static readonly Unit[] NumeratorDefault = { Unit.m };
