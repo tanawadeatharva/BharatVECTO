@@ -611,7 +611,7 @@ namespace TUGraz.VectoCommon.Utils
 	/// <summary>
 	/// SI Class for one per second [1/s].
 	/// </summary>
-	[DebuggerDisplay("rad/s: {Val} | rpm: {AsRPM}")]
+	[DebuggerDisplay(@"{Val} | rpm: {AsRPM}")]
 	public class PerSecond : SIBase<PerSecond>
 	{
 		private static readonly Unit[] DenominatorDefault = { Unit.s };
@@ -628,7 +628,7 @@ namespace TUGraz.VectoCommon.Utils
 	/// <summary>
 	/// SI Class for Meter per second [m/s].
 	/// </summary>
-	[DebuggerDisplay("{Val} | {AsKmph}")]
+	[DebuggerDisplay(@"{Val} | {AsKmph}")]
 	public class MeterPerSecond : SIBase<MeterPerSecond>
 	{
 		private static readonly Unit[] NumeratorDefault = { Unit.m };
@@ -756,9 +756,6 @@ namespace TUGraz.VectoCommon.Utils
 		private NewtonMeterSecond(double val) : base(val, NumeratorDefault) {}
 	}
 
-	/// <summary>
-	/// 
-	/// </summary>
 	public class Ampere : SIBase<Ampere>
 	{
 		private static readonly Unit[] NumeratorDefault = { Unit.Ampere };
@@ -785,9 +782,6 @@ namespace TUGraz.VectoCommon.Utils
 		}
 	}
 
-	/// <summary>
-	/// 
-	/// </summary>
 	public class Volt : SIBase<Volt>
 	{
 		private static readonly Unit[] NumeratorDefault = { Unit.Volt };
@@ -1018,6 +1012,7 @@ namespace TUGraz.VectoCommon.Utils
 	/// <remarks>
 	/// Usage: new SI(1.0).Newton.Meter, new SI(2.3).Rounds.Per.Minute
 	/// </remarks>
+	[DebuggerDisplay("{Val}")]
 	public class SI : IComparable
 	{
 		/// <summary>
