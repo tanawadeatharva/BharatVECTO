@@ -408,7 +408,8 @@ namespace TUGraz.VectoCore.Models.SimulationComponent.Impl
 								response = Driver.DrivingActionBrake(absTime, ds, velocity, gradient);
 							}).
 							Case<ResponseSpeedLimitExceeded>(() => { response = Driver.DrivingActionBrake(absTime, ds, velocity, gradient); });
-					});
+					}).
+					Case<ResponseOverload>(r => { response = Driver.DrivingActionCoast(absTime, ds, velocity, gradient); });
 			} else {
 				if (DataBus.VehicleSpeed.IsSmallerOrEqual(0.SI<MeterPerSecond>())) {
 					// the clutch is disengaged, and the vehicle stopped - we can't perform a roll action. wait for the clutch to be engaged
