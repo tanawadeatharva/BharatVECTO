@@ -626,23 +626,30 @@ namespace TUGraz.VectoCore.Models.SimulationComponent.Impl
 						gradient, targetDistance: targetDistance);
 					response.Switch().
 						Case<ResponseOverload>(r => {
-							Log.Info("Got OverloadResponse during brake action - desired deceleration could not be reached! response: {0}", r);
+							Log.Info(
+								"Brake -> Got OverloadResponse during brake action - desired deceleration could not be reached! response: {0}",
+								r);
 							if (!DataBus.ClutchClosed(absTime)) {
-								Log.Info("Clutch is open - trying RollAction");
+								Log.Info("Brake -> Overload -> Clutch is open - Trying roll action");
 								response = Driver.DrivingActionRoll(absTime, ds, targetVelocity, gradient);
 							} else {
-								Log.Info("Clutch is closed - trying AccelerateAction");
-								response = Driver.DrivingActionAccelerate(absTime, ds, DriverStrategy.BrakeTrigger.NextTargetSpeed, gradient);
-								response.Switch().Case<ResponseGearShift>(
-									rs => {
-										Log.Info("Got GearShift response, performing roll action...");
-										response = Driver.DrivingActionRoll(absTime, ds, DriverStrategy.BrakeTrigger.NextTargetSpeed, gradient);
-									}
-									);
+								Log.Info("Brake -> Overload -> Clutch is closed - Trying brake action again");
+								response = Driver.DrivingActionBrake(absTime, ds, DriverStrategy.BrakeTrigger.NextTargetSpeed, gradient,
+									targetDistance: targetDistance);
+								response.Switch().
+									Case<ResponseOverload>(r1 => {
+										Log.Info("Brake -> Overload -> 2nd Brake -> Overload -> Trying accelerate action");
+										response = Driver.DrivingActionAccelerate(absTime, ds, DriverStrategy.BrakeTrigger.NextTargetSpeed, gradient);
+										response.Switch().Case<ResponseGearShift>(
+											rs => {
+												Log.Info("Brake -> Overload -> 2nd Brake -> Accelerate -> Got GearShift response, performing roll action");
+												response = Driver.DrivingActionRoll(absTime, ds, DriverStrategy.BrakeTrigger.NextTargetSpeed, gradient);
+											});
+									});
 							}
 						}).
 						Case<ResponseGearShift>(r => {
-							Log.Info("Got GearShift response, performing roll action...");
+							Log.Info("Brake -> Got GearShift response, performing roll action");
 							response = Driver.DrivingActionRoll(absTime, ds, DriverStrategy.BrakeTrigger.NextTargetSpeed, gradient);
 						});
 					break;
