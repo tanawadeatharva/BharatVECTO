@@ -287,16 +287,14 @@ Imports VectoAuxiliaries
 
 	' ReSharper disable once UnusedMember.Global -- used via Logging Framework!
 	Public Shared Sub LogMethod(level As String, message As String)
-		Try
+		If VectoWorkerV3.IsBusy AndAlso Not VectoWorkerV3.CancellationPending Then
 			If level = "Warn" Then
 				VectoWorkerV3.ReportProgress(100, New VectoProgress With {.Target = "ListBoxWarning", .Message = message})
 			ElseIf level = "Error" Or level = "Fatal" Then
 				VectoWorkerV3.ReportProgress(100, New VectoProgress With {.Target = "ListBoxError", .Message = message})
 
 			End If
-		Catch e As InvalidOperationException
-
-		End Try
+		End If
 	End Sub
 
 	'Declaration mode GUI settings
