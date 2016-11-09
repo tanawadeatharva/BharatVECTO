@@ -268,8 +268,7 @@ namespace TUGraz.VectoCore.Models.SimulationComponent.Impl
 
 		public bool OverspeedAllowed(Radian gradient, MeterPerSecond velocity)
 		{
-			return Driver.DriverData.OverSpeedEcoRoll.Mode == DriverMode.Overspeed &&
-					gradient < 0 && velocity > Driver.DriverData.OverSpeedEcoRoll.MinSpeed;
+			return Driver.DriverData.OverSpeedEcoRoll.Mode == DriverMode.Overspeed && velocity > Driver.DriverData.OverSpeedEcoRoll.MinSpeed;
 		}
 	}
 
