@@ -181,7 +181,7 @@ namespace TUGraz.VectoCore.Models.SimulationComponent.Impl
 			Log.Debug("Lookahead distance: {0} @ current speed {1}", lookaheadDistance, currentSpeed);
 			var nextActions = new List<DrivingBehaviorEntry>();
 			foreach (var entry in lookaheadData) {
-				var nextTargetSpeed = OverspeedAllowed(entry.RoadGradient, entry.VehicleTargetSpeed)
+				var nextTargetSpeed = OverspeedAllowed(entry.VehicleTargetSpeed)
 					? entry.VehicleTargetSpeed + Driver.DriverData.OverSpeedEcoRoll.OverSpeed
 					: entry.VehicleTargetSpeed;
 				if (nextTargetSpeed < currentSpeed) {
@@ -234,7 +234,7 @@ namespace TUGraz.VectoCore.Models.SimulationComponent.Impl
 		protected internal virtual Meter ComputeCoastingDistance(MeterPerSecond vehicleSpeed,
 			DrivingCycleData.DrivingCycleEntry actionEntry)
 		{
-			var targetSpeed = OverspeedAllowed(actionEntry.RoadGradient, actionEntry.VehicleTargetSpeed)
+			var targetSpeed = OverspeedAllowed(actionEntry.VehicleTargetSpeed)
 				? actionEntry.VehicleTargetSpeed + Driver.DriverData.OverSpeedEcoRoll.OverSpeed
 				: actionEntry.VehicleTargetSpeed;
 
@@ -266,10 +266,9 @@ namespace TUGraz.VectoCore.Models.SimulationComponent.Impl
 			return coastingDistance;
 		}
 
-		public bool OverspeedAllowed(Radian gradient, MeterPerSecond velocity)
+		public bool OverspeedAllowed(MeterPerSecond velocity)
 		{
-			return Driver.DriverData.OverSpeedEcoRoll.Mode == DriverMode.Overspeed &&
-					gradient < 0 && velocity > Driver.DriverData.OverSpeedEcoRoll.MinSpeed;
+			return Driver.DriverData.OverSpeedEcoRoll.Mode == DriverMode.Overspeed && velocity > Driver.DriverData.OverSpeedEcoRoll.MinSpeed;
 		}
 	}
 
@@ -374,12 +373,12 @@ namespace TUGraz.VectoCore.Models.SimulationComponent.Impl
 
 			Driver.DriverBehavior = DrivingBehavior.Driving;
 			var velocity = targetVelocity;
-			if (DriverStrategy.OverspeedAllowed(gradient, targetVelocity)) {
+			if (DriverStrategy.OverspeedAllowed(targetVelocity)) {
 				velocity += DriverData.OverSpeedEcoRoll.OverSpeed;
 			}
 			if (DataBus.ClutchClosed(absTime)) {
 				// drive along
-				if (DriverStrategy.OverspeedAllowed(gradient, targetVelocity) && DataBus.VehicleSpeed.IsEqual(targetVelocity)) {
+				if (DriverStrategy.OverspeedAllowed(targetVelocity) && DataBus.VehicleSpeed.IsEqual(targetVelocity)) {
 					response = Driver.DrivingActionCoast(absTime, ds, velocity, gradient);
 					if (response is ResponseSuccess && response.Acceleration < 0) {
 						response = Driver.DrivingActionAccelerate(absTime, ds, targetVelocity, gradient);
@@ -389,7 +388,7 @@ namespace TUGraz.VectoCore.Models.SimulationComponent.Impl
 				}
 				response.Switch().
 					Case<ResponseUnderload>(r => {
-						if (DriverStrategy.OverspeedAllowed(gradient, targetVelocity)) {
+						if (DriverStrategy.OverspeedAllowed(targetVelocity)) {
 							response = Driver.DrivingActionCoast(absTime, ds, velocity, gradient);
 							if (response is ResponseUnderload || response is ResponseSpeedLimitExceeded) {
 								response = Driver.DrivingActionBrake(absTime, ds, velocity, gradient);
