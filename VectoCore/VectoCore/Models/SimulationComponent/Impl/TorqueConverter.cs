@@ -133,10 +133,6 @@ namespace TUGraz.VectoCore.Models.SimulationComponent.Impl
 				}
 			}
 
-			if (ShiftStrategy.ShiftRequired(absTime, dt, outTorque * ratio, outAngularVelocity / ratio, operatingPoint.InTorque,
-				operatingPoint.InAngularVelocity, Gearbox.Gear, Gearbox.LastShift)) {
-				return new ResponseGearShift() { Source = this };
-			}
 			CurrentState.SetState(operatingPoint.InTorque, operatingPoint.InAngularVelocity, outTorque, outAngularVelocity);
 			CurrentState.OperatingPoint = operatingPoint;
 			var retVal = NextComponent.Request(absTime, dt, operatingPoint.InTorque, operatingPoint.InAngularVelocity);
