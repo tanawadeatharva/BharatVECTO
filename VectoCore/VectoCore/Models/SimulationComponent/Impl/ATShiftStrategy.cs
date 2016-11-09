@@ -140,10 +140,22 @@ namespace TUGraz.VectoCore.Models.SimulationComponent.Impl
 					Log.Debug("engine speed would fall below idle speed - shift down");
 					return true;
 				}
-				if (inAngularVelocity.IsGreater(DataBus.EngineRatedSpeed) && Data.Gears.ContainsKey(gear + 1)) {
-					NextGear.SetState(absTime, false, gear + 1, Data.Gears[gear + 1].HasLockedGear);
+				if (inAngularVelocity.IsGreaterOrEqual(DataBus.EngineRatedSpeed)) {
 					Log.Debug("engine speed would be above rated speed - shift up");
-					return true;
+					if (Data.Gears.ContainsKey(gear + 1) && (_gearbox.TorqueConverterLocked || Data.Gears[gear + 1].HasTorqueConverter)) {
+						// 1L -> 2C/L  OR  1C -> 2C
+						NextGear.SetState(absTime, false, gear + 1, !Data.Gears[gear + 1].HasTorqueConverter);
+						return true;
+					}
+					if (Data.Gears[gear].HasLockedGear) {
+						// 1C -> 1L
+						NextGear.SetState(absTime, false, gear, true);
+						return true;
+					}
+
+					// 1C -> ?
+					throw new VectoSimulationException(
+						"AngularVelocity is higher than EngineRatedSpeed, Current gear has active torque converter (1C) but no locked gear (no 1L) and shifting directly to 2L is not allowed.");
 				}
 			}
 
