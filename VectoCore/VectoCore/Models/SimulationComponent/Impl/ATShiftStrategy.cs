@@ -101,10 +101,8 @@ namespace TUGraz.VectoCore.Models.SimulationComponent.Impl
 					NextGear.SetState(absTime, true, 1, false);
 					return true;
 				}
-
 			}
-			if (gear == 1 && !_gearbox.TorqueConverterLocked && outTorque.IsSmaller(0) && inTorque.IsGreater(0))
-			{
+			if (gear == 1 && !_gearbox.TorqueConverterLocked && outTorque.IsSmaller(0) && inTorque.IsGreater(0)) {
 				NextGear.SetState(absTime, true, 1, false);
 				return true;
 			}
@@ -114,7 +112,10 @@ namespace TUGraz.VectoCore.Models.SimulationComponent.Impl
 					NextGear.SetState(absTime, false, 1, false);
 					return true;
 				}
+
+				// Emergency Shift if lower than engine idle speed
 				if (inAngularVelocity.IsSmaller(DataBus.EngineIdleSpeed)) {
+					Log.Debug("engine speed would fall below idle speed - shift down");
 					if (_gearbox.TorqueConverterLocked) {
 						// downshift L -> L / C
 						if (Data.Gears[gear].HasTorqueConverter) {
@@ -137,9 +138,10 @@ namespace TUGraz.VectoCore.Models.SimulationComponent.Impl
 						return true;
 					}
 					NextGear.SetState(absTime, false, gear - 1, !Data.Gears[gear - 1].HasTorqueConverter);
-					Log.Debug("engine speed would fall below idle speed - shift down");
 					return true;
 				}
+
+				// Emergency shift if higher than engine rated speed
 				if (inAngularVelocity.IsGreaterOrEqual(DataBus.EngineRatedSpeed)) {
 					Log.Debug("engine speed would be above rated speed - shift up");
 					if (Data.Gears.ContainsKey(gear + 1) && (_gearbox.TorqueConverterLocked || Data.Gears[gear + 1].HasTorqueConverter)) {
@@ -153,7 +155,7 @@ namespace TUGraz.VectoCore.Models.SimulationComponent.Impl
 						return true;
 					}
 
-					// 1C -> ?
+					// 1C -> ? -- switching directly from 1C to 2L is not allowed
 					throw new VectoSimulationException(
 						"AngularVelocity is higher than EngineRatedSpeed, Current gear has active torque converter (1C) but no locked gear (no 1L) and shifting directly to 2L is not allowed.");
 				}
@@ -230,11 +232,24 @@ namespace TUGraz.VectoCore.Models.SimulationComponent.Impl
 				}
 			} else {
 				// already in converter mode
+
+				// check not possible
+				if (inAngularVelocity == null)
+					return false;
+
+				// downshift not possible
 				if (!Data.Gears.ContainsKey(gear - 1)) {
-					// downshift not possible
 					return false;
 				}
-				if (inAngularVelocity != null && inAngularVelocity.IsSmaller(DataBus.EngineIdleSpeed)) {
+
+				// emergency down shift
+				if (inAngularVelocity.IsSmaller(DataBus.EngineIdleSpeed)) {
+					NextGear.SetState(absTime, false, gear - 1, false);
+					return true;
+				}
+
+				// 2C -> 1C: shift also down if below downshiftcurve of 2L
+				if (IsBelowDownShiftCurve(gear - 1, inTorque, inAngularVelocity)) {
 					NextGear.SetState(absTime, false, gear - 1, false);
 					return true;
 				}
