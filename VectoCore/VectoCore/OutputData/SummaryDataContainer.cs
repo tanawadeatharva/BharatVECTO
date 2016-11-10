@@ -283,12 +283,14 @@ namespace TUGraz.VectoCore.OutputData
 			row[CRUISE_TIMESHARE] = cruiseTimeShare;
 			row[STOP_TIMESHARE] = modData.StopTimeShare();
 
-			var shareSum = accTimeShare + decTimeShare + cruiseTimeShare;
-			if (!shareSum.IsEqual(100)) {
-				Log.Error(
-					"Sumfile Error: driving behavior timeshares must sum up to 100%: acc: {0}%, dec: {1}%, cruise: {2}%, sum: {3}%",
-					accTimeShare.ToOutputFormat(1, null, false), decTimeShare.ToOutputFormat(1, null, false),
-					cruiseTimeShare.ToOutputFormat(1, null, false), shareSum.ToOutputFormat(1, null, false));
+			if (accTimeShare != null && decTimeShare != null && cruiseTimeShare != null) {
+				var shareSum = accTimeShare + decTimeShare + cruiseTimeShare;
+				if (!shareSum.IsEqual(100)) {
+					Log.Error(
+						"Sumfile Error: driving behavior timeshares must sum up to 100%: acc: {0}%, dec: {1}%, cruise: {2}%, sum: {3}%",
+						accTimeShare.ToOutputFormat(1, null, false), decTimeShare.ToOutputFormat(1, null, false),
+						cruiseTimeShare.ToOutputFormat(1, null, false), shareSum.ToOutputFormat(1, null, false));
+				}
 			}
 		}
 
