@@ -47,3 +47,5 @@ using System.Runtime.InteropServices;
 [assembly: System.Runtime.CompilerServices.InternalsVisibleTo("VECTO")]
 [assembly: System.Runtime.CompilerServices.InternalsVisibleTo("VectoCoreTest")]
 [assembly: System.Runtime.CompilerServices.InternalsVisibleTo("VectoAPITest")]
+[assembly: System.Runtime.CompilerServices.InternalsVisibleTo("VectoXML")]
+[assembly: System.Runtime.CompilerServices.InternalsVisibleTo("XMLTest")]
