@@ -31,12 +31,14 @@
 
 using System;
 using System.Collections.Generic;
+using System.ComponentModel.DataAnnotations;
 using System.Linq;
 using TUGraz.VectoCommon.Exceptions;
 using TUGraz.VectoCommon.Utils;
 
 namespace TUGraz.VectoCore.Models.SimulationComponent.Data.Gearbox
 {
+	[CustomValidation(typeof(TorqueConverterData), "ValidateData")]
 	public class TorqueConverterData
 	{
 		protected List<TorqueConverterEntry> TorqueConverterEntries;
@@ -146,11 +148,19 @@ namespace TUGraz.VectoCore.Models.SimulationComponent.Data.Gearbox
 				retVal.OutTorque = retVal.InTorque * retVal.TorqueRatio;
 				return retVal;
 			}
-			throw new VectoException(
-				"No solution for output speed/input speed found! n_out: {0}, n_in: {1}, nu: {2}, nu_max: {3}", outAngularVelocity,
-				inAngularVelocity, outAngularVelocity / inAngularVelocity, TorqueConverterEntries.Last().SpeedRatio);
-		}
+			var nu = outAngularVelocity / inAngularVelocity;
+			var nuMax = TorqueConverterEntries.Last().SpeedRatio;
 
+			if (nu.IsGreater(nuMax)) {
+				throw new VectoException(
+					"Torque Converter: Range of torque converter data is not sufficient. Needed nu: {0}, Got nu_max: {1}", nu,
+					nuMax);
+			} else {
+				throw new VectoException(
+					"Torque Converter: No solution for output speed/input speed found! n_out: {0}, n_in: {1}, nu: {2}, nu_max: {3}",
+					outAngularVelocity, inAngularVelocity, nu, nuMax);
+			}
+		}
 
 		/// <summary>
 		/// find an operating point for the torque converter
@@ -233,7 +243,6 @@ namespace TUGraz.VectoCore.Models.SimulationComponent.Data.Gearbox
 			return retVal;
 		}
 
-
 		private NewtonMeter ReferenceTorqueLookup(double speedRatio)
 		{
 			int index;
@@ -242,6 +251,19 @@ namespace TUGraz.VectoCore.Models.SimulationComponent.Data.Gearbox
 				TorqueConverterEntries[index + 1].SpeedRatio, TorqueConverterEntries[index].Torque,
 				TorqueConverterEntries[index + 1].Torque, speedRatio);
 			return retVal;
+		}
+
+		public static ValidationResult ValidateData(TorqueConverterData data, ValidationContext validationContext)
+		{
+			var min = data.TorqueConverterEntries.Min(e => e.SpeedRatio);
+			var max = data.TorqueConverterEntries.Max(e => e.SpeedRatio);
+			if (min > 0 || max < 2.2) {
+				return new ValidationResult(string.Format(
+					"Torque Converter Data invalid - Speedratio has to cover the range from 0.0 to 2.2: given data only goes from {0} to {1}",
+					min, max));
+			}
+
+			return ValidationResult.Success;
 		}
 	}
 

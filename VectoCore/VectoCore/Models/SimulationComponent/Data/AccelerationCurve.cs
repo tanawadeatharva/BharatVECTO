@@ -45,6 +45,14 @@ namespace TUGraz.VectoCore.Models.SimulationComponent.Data
 		protected internal AccelerationCurveData(List<KeyValuePair<MeterPerSecond, AccelerationEntry>> entries)
 		{
 			_entries = entries;
+			var smallValues = _entries.Where(e => e.Key < 5.KMPHtoMeterPerSecond()).OrderBy(e => e.Key).ToList();
+			if (smallValues.Count >= 2) {
+				Log.Error("Found small velocity entries in Driver-Acceleration/Deceleration file. Values dismissed:" +
+						string.Join(", ", smallValues.Skip(1).Select(e => e.Key.AsKmph.ToString("F1"))));
+				foreach (var kv in smallValues.Skip(1)) {
+					_entries.Remove(kv);
+				}
+			}
 		}
 
 		public AccelerationEntry Lookup(MeterPerSecond key)
