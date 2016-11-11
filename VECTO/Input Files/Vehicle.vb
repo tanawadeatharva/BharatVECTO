@@ -120,20 +120,23 @@ Public Class Vehicle
 					vehicleData.Validate(If(Cfg.DeclMode, ExecutionMode.Declaration, ExecutionMode.Engineering))
 			If result.Any() Then
 				Return _
-					New ValidationResult("Vehicle Configuration is invalid. ", result.Select(Function(r) r.ErrorMessage).ToList())
+					New ValidationResult("Vehicle Configuration is invalid. ",
+										result.Select(Function(r) r.ErrorMessage + String.Join(Environment.NewLine, r.MemberNames)).ToList())
 			End If
 
 			result = retarderData.Validate(If(Cfg.DeclMode, ExecutionMode.Declaration, ExecutionMode.Engineering))
 			If result.Any() Then
 				Return _
-					New ValidationResult("Retarder Configuration is invalid. ", result.Select(Function(r) r.ErrorMessage).ToList())
+					New ValidationResult("Retarder Configuration is invalid. ",
+										result.Select(Function(r) r.ErrorMessage + String.Join(Environment.NewLine, r.MemberNames)).ToList())
 			End If
 
 			If vehicle.AngledriveType = AngledriveType.SeparateAngledrive Then
 				result = angledriveData.Validate(If(Cfg.DeclMode, ExecutionMode.Declaration, ExecutionMode.Engineering))
 				If result.Any() Then
 					Return _
-						New ValidationResult("AngleDrive Configuration is invalid. ", result.Select(Function(r) r.ErrorMessage).ToList())
+						New ValidationResult("AngleDrive Configuration is invalid. ",
+											result.Select(Function(r) r.ErrorMessage + String.Join(Environment.NewLine, r.MemberNames)).ToList())
 				End If
 			End If
 
@@ -141,7 +144,8 @@ Public Class Vehicle
 				result = ptoData.Validate(If(Cfg.DeclMode, ExecutionMode.Declaration, ExecutionMode.Engineering))
 				If result.Any() Then
 					Return _
-						New ValidationResult("PTO Configuration is invalid. ", result.Select(Function(r) r.ErrorMessage).ToList())
+						New ValidationResult("PTO Configuration is invalid. ",
+											result.Select(Function(r) r.ErrorMessage + String.Join(Environment.NewLine, r.MemberNames)).ToList())
 				End If
 			End If
 

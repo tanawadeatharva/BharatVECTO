@@ -225,13 +225,15 @@ Public Class Gearbox
 					gearboxData.Validate(If(Cfg.DeclMode, ExecutionMode.Declaration, ExecutionMode.Engineering))
 			If result.Any() Then
 				Return _
-					New ValidationResult("Gearbox Configuration is invalid. ", result.Select(Function(r) r.ErrorMessage).ToList())
+					New ValidationResult("Gearbox Configuration is invalid. ",
+										result.Select(Function(r) r.ErrorMessage + String.Join(Environment.NewLine, r.MemberNames)).ToList())
 			End If
 
 			result = axlegearData.Validate(If(Cfg.DeclMode, ExecutionMode.Declaration, ExecutionMode.Engineering))
 			If result.Any() Then
 				Return _
-					New ValidationResult("Axlegear Configuration is invalid. ", result.Select(Function(r) r.ErrorMessage).ToList())
+					New ValidationResult("Axlegear Configuration is invalid. ",
+										result.Select(Function(r) r.ErrorMessage + String.Join(Environment.NewLine, r.MemberNames)).ToList())
 			End If
 
 			Return ValidationResult.Success
