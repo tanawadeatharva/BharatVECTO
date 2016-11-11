@@ -29,12 +29,14 @@
 *   Martin Rexeis, rexeis@ivt.tugraz.at, IVT, Graz University of Technology
 */
 
+using System;
 using System.Collections.Generic;
 using System.ComponentModel.DataAnnotations;
 using System.Linq;
 using System.Runtime.Serialization;
 using TUGraz.VectoCommon.Models;
 using TUGraz.VectoCommon.Utils;
+using TUGraz.VectoCore.Configuration;
 using TUGraz.VectoCore.Models.SimulationComponent.Data.Gearbox;
 
 namespace TUGraz.VectoCore.Models.SimulationComponent.Data
@@ -111,6 +113,9 @@ namespace TUGraz.VectoCore.Models.SimulationComponent.Data
 
 			var result = new List<ValidationResult>();
 			if (gearboxData.Type.AutomaticTransmission()) {
+				gearboxData.TorqueConverterData.RequiredSpeedRatio =
+					Math.Round(Constants.SimulationSettings.RequiredTorqueConverterSpeedRatio / gearboxData.Gears[1].Ratio *
+								gearboxData.Gears[1].TorqueConverterRatio, 4);
 				result.AddRange(gearboxData.TorqueConverterData.Validate(mode));
 			}
 
