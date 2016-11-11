@@ -1,5 +1,5 @@
 ##Transmission Loss Map
-This file defines losses in transmission components, i.e. every gear, axlegear, angledrive. The file uses the [VECTO CSV format](#csv).
+This file defines losses in transmission components, i.e. every gear, axlegear, angledrive. See [Transmission Losses] (#transmission-losses) for the formula how the losses are accounted in the components. The file uses the [VECTO CSV format](#csv).
 
 - Filetype: .vtlm
 - Header: **Input Speed [rpm], Input Torque [Nm], Torque Loss [Nm]**
@@ -24,21 +24,6 @@ Input Speed [rpm],Input Torque [Nm],Torque Loss [Nm]
 
 * Input Torque >0 means normal driving operation.
 * Input Torque \<0 means motoring operation. **The Torque Loss Map must include negative torque values for engine motoring operation!**
-* Torque Loss is always positive!
-
-####Calculation of Output Torque
-
-VECTO calculates the output torque using this formula, independent from the current operation mode (driving/braking):
-
-$T_{output} = (T_{input} - T_{loss}) * r_{gear}$
-
-with:
-
-* T~output~ ... Output torque
-* T~input~ ... Input torque
-* T~loss~ ... Torque loss
-* r~gear~ ... The tranmission ratio for the gurrent gear
-
-
+* Torque Loss must always be positive!
 
 

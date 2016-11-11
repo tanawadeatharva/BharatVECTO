@@ -164,18 +164,41 @@ namespace TUGraz.VectoCore.Models.SimulationComponent.Impl
 		private IResponse RequestEngaged(Second absTime, Second dt, NewtonMeter outTorque, PerSecond outAngularVelocity,
 			bool dryRun)
 		{
+			var TorqueConverterLocked = TorqueConverterActive != null && !TorqueConverterActive.Value;
+
+			var effectiveRatio = ModelData.Gears[Gear].Ratio;
+			var effectiveLossMap = ModelData.Gears[Gear].LossMap;
+			if (!TorqueConverterLocked) {
+				effectiveRatio = ModelData.Gears[Gear].TorqueConverterRatio;
+				effectiveLossMap = ModelData.Gears[Gear].TorqueConverterGearLossMap;
+			}
+
 			var avgOutAngularVelocity = (PreviousState.OutAngularVelocity + outAngularVelocity) / 2.0;
-			var inTorqueLossResult = ModelData.Gears[Gear].LossMap.GetTorqueLoss(avgOutAngularVelocity, outTorque);
-			var inTorque = outTorque / ModelData.Gears[Gear].Ratio + inTorqueLossResult.Value;
+			var inTorqueLossResult = effectiveLossMap.GetTorqueLoss(avgOutAngularVelocity, outTorque);
 			CurrentState.TorqueLossResult = inTorqueLossResult;
-			var inAngularVelocity = outAngularVelocity * ModelData.Gears[Gear].Ratio;
+			var inTorque = outTorque / effectiveRatio + inTorqueLossResult.Value;
+			CurrentState.TorqueLossResult = inTorqueLossResult;
+
+			if (!TorqueConverterLocked && !ModelData.Gears[Gear].HasTorqueConverter) {
+				throw new VectoSimulationException("Torque converter requested by strategy for gear without torque converter!");
+			}
+
+			var inAngularVelocity = outAngularVelocity * effectiveRatio;
+
+			if (ModelData.Type.AutomaticTransmission() && TorqueConverterLocked &&
+				inAngularVelocity.IsSmaller(DataBus.EngineIdleSpeed)) {
+				Log.Error(
+					"ERROR: EngineSpeed is lower than Idlespeed in Measuredspeed-Cycle with given Gear (Automatic Transmission). AbsTime: {0}, Gear: {1} TC-Active: {2}, EngineSpeed: {3}",
+					absTime, Gear, !TorqueConverterLocked, inAngularVelocity.AsRPM);
+				return new ResponseEngineSpeedTooLow { Source = this };
+			}
 
 			if (!inAngularVelocity.IsEqual(0)) {
 				// MQ 19.2.2016: check! inertia is related to output side, torque loss accounts to input side
 				CurrentState.InertiaTorqueLossOut =
 					Formulas.InertiaPower(outAngularVelocity, PreviousState.OutAngularVelocity, ModelData.Inertia, dt) /
 					avgOutAngularVelocity;
-				inTorque += CurrentState.InertiaTorqueLossOut / ModelData.Gears[Gear].Ratio;
+				inTorque += CurrentState.InertiaTorqueLossOut / effectiveRatio;
 			} else {
 				CurrentState.InertiaTorqueLossOut = 0.SI<NewtonMeter>();
 			}
@@ -197,7 +220,7 @@ namespace TUGraz.VectoCore.Models.SimulationComponent.Impl
 
 			// this code has to be _after_ the check for a potential gear-shift!
 			// (the above block issues dry-run requests and thus may update the CurrentState!)
-			CurrentState.TransmissionTorqueLoss = inTorque - (outTorque / ModelData.Gears[Gear].Ratio);
+			CurrentState.TransmissionTorqueLoss = inTorque - (outTorque / effectiveRatio);
 
 			CurrentState.SetState(inTorque, inAngularVelocity, outTorque, outAngularVelocity);
 			CurrentState.Gear = Gear;
@@ -362,11 +385,11 @@ namespace TUGraz.VectoCore.Models.SimulationComponent.Impl
 			}
 
 			var filtered = operatingPointList.Where(x =>
-				(x.InTorque * x.InAngularVelocity).IsSmallerOrEqual(DataBus.EngineStationaryFullPower(x.InAngularVelocity),
-					Constants.SimulationSettings.LineSearchTolerance.SI<Watt>()) &&
-				(x.InTorque * x.InAngularVelocity).IsGreaterOrEqual(DataBus.EngineDragPower(x.InAngularVelocity),
-					Constants.SimulationSettings.LineSearchTolerance.SI<Watt>())
-				).ToArray();
+					(x.InTorque * x.InAngularVelocity).IsSmallerOrEqual(DataBus.EngineStationaryFullPower(x.InAngularVelocity),
+						Constants.SimulationSettings.LineSearchTolerance.SI<Watt>()) &&
+					(x.InTorque * x.InAngularVelocity).IsGreaterOrEqual(DataBus.EngineDragPower(x.InAngularVelocity),
+						Constants.SimulationSettings.LineSearchTolerance.SI<Watt>())
+			).ToArray();
 			if (filtered.Length == 1) {
 				return filtered.First();
 			}
@@ -416,18 +439,15 @@ namespace TUGraz.VectoCore.Models.SimulationComponent.Impl
 
 		protected override void DoWriteModalResults(IModalDataContainer container)
 		{
+			var avgInAngularSpeed = (PreviousState.InAngularVelocity + CurrentState.InAngularVelocity) / 2.0;
 			container[ModalResultField.Gear] = Gear;
-			if (ModelData.Type.AutomaticTransmission()) {
-				container[ModalResultField.TC_Locked] = !CurrentState.TorqueConverterActive;
-			}
-			var avgInAngularSpeed = Gear != 0
-				? (PreviousState.OutAngularVelocity + CurrentState.OutAngularVelocity) / 2.0 * ModelData.Gears[Gear].Ratio
-				: 0.RPMtoRad();
-
 			container[ModalResultField.P_gbx_loss] = CurrentState.TransmissionTorqueLoss * avgInAngularSpeed;
 			container[ModalResultField.P_gbx_inertia] = CurrentState.InertiaTorqueLossOut * avgInAngularSpeed;
 			container[ModalResultField.P_gbx_in] = CurrentState.InTorque * avgInAngularSpeed;
 
+			if (ModelData.Type.AutomaticTransmission()) {
+				container[ModalResultField.TC_Locked] = !CurrentState.TorqueConverterActive;
+			}
 			if (TorqueConverter != null) {
 				DoWriteTorqueConverterModalResults(container, avgInAngularSpeed);
 			}
@@ -456,12 +476,12 @@ namespace TUGraz.VectoCore.Models.SimulationComponent.Impl
 				container[ModalResultField.TC_angularSpeedOut] = CurrentState.TorqueConverterOperatingPoint.OutAngularVelocity;
 
 				var avgOutVelocity = ((PreviousState.TorqueConverterOperatingPoint != null
-					? PreviousState.TorqueConverterOperatingPoint.OutAngularVelocity
-					: PreviousState.InAngularVelocity) +
+										? PreviousState.TorqueConverterOperatingPoint.OutAngularVelocity
+										: PreviousState.InAngularVelocity) +
 									CurrentState.TorqueConverterOperatingPoint.OutAngularVelocity) / 2.0;
 				var avgInVelocity = ((PreviousState.TorqueConverterOperatingPoint != null
-					? PreviousState.TorqueConverterOperatingPoint.InAngularVelocity
-					: PreviousState.InAngularVelocity) +
+										? PreviousState.TorqueConverterOperatingPoint.InAngularVelocity
+										: PreviousState.InAngularVelocity) +
 									CurrentState.TorqueConverterOperatingPoint.InAngularVelocity) / 2.0;
 				container[ModalResultField.P_TC_out] = CurrentState.OutTorque * avgOutVelocity;
 				container[ModalResultField.P_TC_loss] = CurrentState.InTorque * avgInVelocity -
@@ -491,8 +511,8 @@ namespace TUGraz.VectoCore.Models.SimulationComponent.Impl
 		public override bool ClutchClosed(Second absTime)
 		{
 			return (DataBus.DriverBehavior == DrivingBehavior.Braking
-				? DataBus.CycleData.LeftSample.Gear
-				: DataBus.CycleData.RightSample.Gear) != 0;
+						? DataBus.CycleData.LeftSample.Gear
+						: DataBus.CycleData.RightSample.Gear) != 0;
 		}
 
 		#endregion
