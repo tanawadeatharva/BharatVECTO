@@ -92,6 +92,16 @@ namespace TUGraz.VectoCore.Models.SimulationComponent.Impl
 					inAngularVelocity;
 
 				inTorque += torqueLossInertia;
+
+				if (TorqueConverterActive != null && TorqueConverterActive.Value) {
+					var operatingPoint = FindOperatingPoint(inTorque, inAngularVelocity);
+					if (inTorque.IsGreater(operatingPoint.OutTorque)) {
+						//Log.Warn("torque converter operating point does not match!");
+						throw new VectoException("Failed to initialize: Torque Converter can't provide requested torque.");
+					}
+					inTorque = operatingPoint.InTorque;
+					inAngularVelocity = operatingPoint.InAngularVelocity;
+				}
 			} else {
 				inTorque = 0.SI<NewtonMeter>();
 				inAngularVelocity = DataBus.EngineIdleSpeed;
