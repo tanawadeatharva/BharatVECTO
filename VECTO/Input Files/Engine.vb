@@ -248,7 +248,8 @@ Public Class Engine
 
 			If Not result.Any() Then Return ValidationResult.Success
 
-			Return New ValidationResult("Engine Configuration is invalid. ", result.Select(Function(r) r.ErrorMessage).ToList())
+			Return New ValidationResult("Engine Configuration is invalid. ",
+										result.Select(Function(r) r.ErrorMessage + String.Join(Environment.NewLine, r.MemberNames)).ToList())
 		Catch ex As Exception
 			Return New ValidationResult(ex.Message)
 		End Try
