@@ -542,6 +542,7 @@ Public Class GearboxForm
 		Do
 
 			'GearDia.ChIsTCgear.Enabled = (Me.ChTCon.Checked And Me.LvGears.SelectedIndices(0) > 0)
+			_gearDialog.GearboxType = CType(CbGStype.SelectedValue, GearboxType)
 			_gearDialog.PnShiftPoly.Enabled = (Not Cfg.DeclMode And LvGears.SelectedIndices(0) > 0)
 			_gearDialog.PnFld.Enabled = (LvGears.SelectedIndices(0) > 0)
 			_gearDialog.GbxPath = GetPath(_gbxFile)

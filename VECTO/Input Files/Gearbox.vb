@@ -105,7 +105,7 @@ Public Class Gearbox
 	Public Function SaveFile() As Boolean
 
 		Dim validationResults As IList(Of ValidationResult) =
-				Validate(If(Cfg.DeclMode, ExecutionMode.Declaration, ExecutionMode.Engineering))
+				Validate(If(Cfg.DeclMode, ExecutionMode.Declaration, ExecutionMode.Engineering), Type)
 
 		If validationResults.Count > 0 Then
 			Dim messages As IEnumerable(Of String) =
@@ -222,14 +222,14 @@ Public Class Gearbox
 			End If
 
 			Dim result As IList(Of ValidationResult) =
-					gearboxData.Validate(If(Cfg.DeclMode, ExecutionMode.Declaration, ExecutionMode.Engineering))
+					gearboxData.Validate(If(Cfg.DeclMode, ExecutionMode.Declaration, ExecutionMode.Engineering), gearbox.Type)
 			If result.Any() Then
 				Return _
 					New ValidationResult("Gearbox Configuration is invalid. ",
 										result.Select(Function(r) r.ErrorMessage + String.Join(Environment.NewLine, r.MemberNames)).ToList())
 			End If
 
-			result = axlegearData.Validate(If(Cfg.DeclMode, ExecutionMode.Declaration, ExecutionMode.Engineering))
+			result = axlegearData.Validate(If(Cfg.DeclMode, ExecutionMode.Declaration, ExecutionMode.Engineering), gearbox.Type)
 			If result.Any() Then
 				Return _
 					New ValidationResult("Axlegear Configuration is invalid. ",

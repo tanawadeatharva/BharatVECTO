@@ -110,13 +110,14 @@ namespace TUGraz.VectoCore.Models.SimulationComponent.Data
 		public static ValidationResult ValidateGearboxData(GearboxData gearboxData, ValidationContext validationContext)
 		{
 			var mode = GetExecutionMode(validationContext);
+			//var gbxType = GetGearboxType(validationContext);
 
 			var result = new List<ValidationResult>();
 			if (gearboxData.Type.AutomaticTransmission()) {
 				gearboxData.TorqueConverterData.RequiredSpeedRatio =
 					Math.Round(Constants.SimulationSettings.RequiredTorqueConverterSpeedRatio / gearboxData.Gears[1].Ratio *
 								gearboxData.Gears[1].TorqueConverterRatio, 4);
-				result.AddRange(gearboxData.TorqueConverterData.Validate(mode));
+				result.AddRange(gearboxData.TorqueConverterData.Validate(mode, gearboxData.Type));
 			}
 
 			if (result.Any()) {

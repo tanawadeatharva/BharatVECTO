@@ -35,6 +35,7 @@ using System.Collections.ObjectModel;
 using System.ComponentModel.DataAnnotations;
 using System.Diagnostics;
 using System.Linq;
+using TUGraz.VectoCommon.Models;
 using TUGraz.VectoCommon.Utils;
 
 namespace TUGraz.VectoCore.Models.SimulationComponent.Data.Gearbox
@@ -121,8 +122,16 @@ namespace TUGraz.VectoCore.Models.SimulationComponent.Data.Gearbox
 			return z.IsSmaller(0);
 		}
 
+
+		// ReSharper disable once UnusedMember.Global -- used via validation
 		public static ValidationResult ValidateShiftPolygon(ShiftPolygon shiftPolygon, ValidationContext validationContext)
 		{
+			var gbxTypeService = validationContext.GetService(typeof(GearboxTypeServiceContainer)) as GearboxTypeServiceContainer;
+			var gbxType = gbxTypeService == null ? null : gbxTypeService.Type;
+
+			if (gbxType == null || gbxType.Value.AutomaticTransmission())
+				return ValidationResult.Success;
+
 			return shiftPolygon.Downshift.Pairwise(Tuple.Create)
 				.Any(
 					downshiftLine =>
