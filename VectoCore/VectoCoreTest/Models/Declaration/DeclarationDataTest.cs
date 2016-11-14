@@ -164,7 +164,7 @@ namespace TUGraz.VectoCore.Tests.Models.Declaration
 
 		[TestCase("RigidSolo", 0.013526, 0.017746, -0.000666),
 		TestCase("RigidTrailer", 0.017125, 0.072275, -0.004148),
-		TestCase("TractorSemitrailer", 0.034767, 0.039367, -0.001897),
+		TestCase("TractorSemitrailer", 0.030042, 0.040817, -0.00213),
 		TestCase("CoachBus", -0.000794, 0.02109, -0.00109)]
 		public void AirDrag_WithStringKey(string key, double a1, double a2, double a3)
 		{
@@ -175,7 +175,7 @@ namespace TUGraz.VectoCore.Tests.Models.Declaration
 		}
 
 		[TestCase(VehicleCategory.RigidTruck, 0.013526, 0.017746, -0.000666),
-		TestCase(VehicleCategory.Tractor, 0.034767, 0.039367, -0.001897),
+		TestCase(VehicleCategory.Tractor, 0.030042, 0.040817, -0.00213),
 		TestCase(VehicleCategory.CityBus, -0.000794, 0.02109, -0.00109),
 		TestCase(VehicleCategory.Coach, -0.000794, 0.02109, -0.00109),
 		TestCase(VehicleCategory.InterurbanBus, -0.000794, 0.02109, -0.00109)]
@@ -187,18 +187,18 @@ namespace TUGraz.VectoCore.Tests.Models.Declaration
 			Assert.AreEqual(a3, value.A3);
 		}
 
-		[TestCase(VehicleCategory.Tractor, 6.46, 0, 8.12204),
-		TestCase(VehicleCategory.Tractor, 6.46, 60, 8.12204),
-		TestCase(VehicleCategory.Tractor, 6.46, 75, 7.67058),
-		TestCase(VehicleCategory.Tractor, 6.46, 100, 7.23735),
-		TestCase(VehicleCategory.Tractor, 6.46, 52.1234, 8.12196),
-		TestCase(VehicleCategory.Tractor, 6.46, 73.5432, 7.70815),
-		TestCase(VehicleCategory.Tractor, 6.46, 92.8765, 7.33443),
-		TestCase(VehicleCategory.Tractor, 6.46, 100.449, 7.2321466),
-		TestCase(VehicleCategory.Tractor, 6.46, 103, 7.2025564),
-		TestCase(VehicleCategory.Tractor, 6.46, 105, 7.17936),
-		TestCase(VehicleCategory.Tractor, 6.46, 115, 7.08174),
-		TestCase(VehicleCategory.Tractor, 6.46, 130, 6.96979),]
+		[TestCase(VehicleCategory.Tractor, 6.46, 0, 8.05913),
+		TestCase(VehicleCategory.Tractor, 6.46, 60, 8.05913),
+		TestCase(VehicleCategory.Tractor, 6.46, 75, 7.639436),
+		TestCase(VehicleCategory.Tractor, 6.46, 100, 7.22305),
+		TestCase(VehicleCategory.Tractor, 6.46, 52.1234, 8.059126),
+		TestCase(VehicleCategory.Tractor, 6.46, 73.5432, 7.67487),
+		TestCase(VehicleCategory.Tractor, 6.46, 92.8765, 7.317215),
+		TestCase(VehicleCategory.Tractor, 6.46, 100.449, 7.217975),
+		TestCase(VehicleCategory.Tractor, 6.46, 103, 7.18915),
+		TestCase(VehicleCategory.Tractor, 6.46, 105, 7.166555),
+		TestCase(VehicleCategory.Tractor, 6.46, 115, 7.071136),
+		TestCase(VehicleCategory.Tractor, 6.46, 130, 6.961237),]
 		public void CrossWindCorrectionTest(VehicleCategory vehicleCategory, double crossSectionArea, double kmph,
 			double expected)
 		{
@@ -219,7 +219,7 @@ namespace TUGraz.VectoCore.Tests.Models.Declaration
 				CrossWindCorrectionMode.DeclarationModeCorrection);
 
 			AssertHelper.Exception<VectoException>(() =>
-				crossWindCorrectionCurve.EffectiveAirDragArea(kmph.KMPHtoMeterPerSecond()));
+					crossWindCorrectionCurve.EffectiveAirDragArea(kmph.KMPHtoMeterPerSecond()));
 		}
 
 		[TestCase(MissionType.LongHaul, "Standard technology", 1200, 0.7),
@@ -434,11 +434,11 @@ namespace TUGraz.VectoCore.Tests.Models.Declaration
 		public void SegmentWeightOutOfRange4X2(double weight)
 		{
 			AssertHelper.Exception<VectoException>(() =>
-				DeclarationData.Segments.Lookup(
-					VehicleCategory.RigidTruck,
-					AxleConfiguration.AxleConfig_4x2,
-					weight.SI<Kilogram>(),
-					0.SI<Kilogram>()),
+					DeclarationData.Segments.Lookup(
+						VehicleCategory.RigidTruck,
+						AxleConfiguration.AxleConfig_4x2,
+						weight.SI<Kilogram>(),
+						0.SI<Kilogram>()),
 				"Gross vehicle mass must be greater than 7.5 tons");
 		}
 
@@ -451,11 +451,11 @@ namespace TUGraz.VectoCore.Tests.Models.Declaration
 		public void SegmentWeightOutOfRange4X4(double weight)
 		{
 			AssertHelper.Exception<VectoException>(() =>
-				DeclarationData.Segments.Lookup(
-					VehicleCategory.RigidTruck,
-					AxleConfiguration.AxleConfig_4x4,
-					weight.SI<Kilogram>(),
-					0.SI<Kilogram>()),
+					DeclarationData.Segments.Lookup(
+						VehicleCategory.RigidTruck,
+						AxleConfiguration.AxleConfig_4x4,
+						weight.SI<Kilogram>(),
+						0.SI<Kilogram>()),
 				"Gross vehicle mass must be greater than 7.5 tons");
 		}
 
