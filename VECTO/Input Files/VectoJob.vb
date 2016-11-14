@@ -390,7 +390,10 @@ Public Class VectoJob
 						New ValidationResult("Vecto Job Configuration is invalid. ", result.Select(Function(r) r.ErrorMessage).ToList())
 				End If
 				Dim dataFactory As EngineeringModeVectoRunDataFactory = New EngineeringModeVectoRunDataFactory(vectoJob)
-				jobData = dataFactory.NextRun().First()
+				jobData = dataFactory.NextRun().FirstOrDefault()
+				If jobData Is Nothing Then
+					Return New ValidationResult("No cycles selected in Vecto Job.", result.Select(Function(r) r.ErrorMessage).ToList())
+				End If
 			End If
 
 
