@@ -9,16 +9,17 @@ Gears are shifted sequentially:
 
 ###Upshift rules
 
-- If engine speed in the next gear (see shift sequence) is above the upshift line AND
-- The engine can provide at least the same power as currently required (i.e., can keep the current acceleration)
++ If engine speed in the next gear (see shift sequence) is above the upshift line AND
++ The engine can provide at least the same power as currently required (i.e., can keep the current acceleration)
 
 ###Downshift
 
-- If the engien speed falls below engine's idle speed
+* If the engine speed falls below engine's idle speed
 
-- Drivetrain in "Neutral" when either
-  - velocity < 5 km/h
-  - During deceleration phase when the torque converter is active and the engine speed would fall below idle speed
+* Drivetrain in "Neutral" when either
+   	- velocity < 5 km/h
+    - OR during deceleration phase when the torque converter is active and the engine speed would fall below idle speed
+
 
 ###Shift parameters
 

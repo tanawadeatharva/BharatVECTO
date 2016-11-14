@@ -74,16 +74,20 @@ namespace TUGraz.VectoCore.Models.SimulationComponent.Data.Gearbox
 
 		public ShiftPolygon TorqueConverterShiftPolygon { get; set; }
 
+		// ReSharper disable once UnusedMember.Global -- used via validation
 		public static ValidationResult ValidateGearData(GearData gearData, ValidationContext context)
 		{
 			var modeService = context.GetService(typeof(ExecutionMode)) as ExecutionModeServiceContainer;
 			var mode = modeService == null ? ExecutionMode.Declaration : modeService.Mode;
 
+			var gbxTypeService = context.GetService(typeof(GearboxTypeServiceContainer)) as GearboxTypeServiceContainer;
+			var gbxType = gbxTypeService == null ? GearboxType.MT : gbxTypeService.Type;
+
 			if (gearData.HasTorqueConverter) {
 				if (gearData.TorqueConverterShiftPolygon == null) {
 					return new ValidationResult("Shift Polygon for Torque Converter Gear required!");
 				}
-				var result = gearData.TorqueConverterShiftPolygon.Validate(mode);
+				var result = gearData.TorqueConverterShiftPolygon.Validate(mode, gbxType);
 				if (result.Any()) {
 					return new ValidationResult(string.Format("Validation of GearData failed"), result.Select(x => x.ErrorMessage));
 				}

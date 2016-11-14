@@ -29,6 +29,8 @@ Public Class GearboxGearDialog
 	Public PreviousGear As Boolean
 	Public GbxPath As String
 
+	Public GearboxType As GearboxType
+
 	'Save and Close
 	Private Sub OK_Button_Click(sender As Object, e As EventArgs) Handles OK_Button.Click
 		Dim results As IList(Of String) = ValidateGear()
@@ -71,7 +73,7 @@ Public Class GearboxGearDialog
 					If(String.IsNullOrWhiteSpace(TbMaxTorque.Text), Nothing, TbMaxTorque.Text.ToDouble().SI(Of NewtonMeter))
 					}
 			Dim results As IList(Of ValidationResult) =
-					gearData.Validate(If(Cfg.DeclMode, ExecutionMode.Declaration, ExecutionMode.Engineering))
+					gearData.Validate(If(Cfg.DeclMode, ExecutionMode.Declaration, ExecutionMode.Engineering), GearboxType)
 
 			If (results.Any()) Then
 				Return results.Select(Function(r) r.ErrorMessage + String.Join(", ", r.MemberNames.Distinct())).ToList()
