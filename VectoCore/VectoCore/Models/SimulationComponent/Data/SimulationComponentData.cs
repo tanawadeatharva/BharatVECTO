@@ -33,6 +33,8 @@ using System.ComponentModel.DataAnnotations;
 using TUGraz.VectoCommon.InputData;
 using TUGraz.VectoCommon.Models;
 using TUGraz.VectoCommon.Utils;
+using TUGraz.VectoCore.Models.Simulation.Data;
+using TUGraz.VectoCore.Utils;
 
 namespace TUGraz.VectoCore.Models.SimulationComponent.Data
 {
@@ -58,5 +60,6 @@ namespace TUGraz.VectoCore.Models.SimulationComponent.Data
 			var modeService = context.GetService(typeof(ExecutionMode)) as ExecutionModeServiceContainer;
 			return modeService == null ? ExecutionMode.Declaration : modeService.Mode;
 		}
+
 	}
 }

@@ -51,14 +51,16 @@ namespace TUGraz.VectoCommon.Utils
 		/// <typeparam name="T"></typeparam>
 		/// <param name="entity">The entity.</param>
 		/// <param name="mode">validate the entity for the given execution mode</param>
+		/// <param name="gbxType"></param>
 		/// <returns>Null, if the validation was successfull. Otherwise a list of ValidationResults with the ErrorMessages.</returns>
-		public static IList<ValidationResult> Validate<T>(this T entity, ExecutionMode mode)
+		public static IList<ValidationResult> Validate<T>(this T entity, ExecutionMode mode, GearboxType? gbxType)
 		{
 			if (entity == null) {
 				return new[] { new ValidationResult(string.Format("null value given for {0}", typeof(T))) };
 			}
 			var context = new ValidationContext(entity);
 			context.ServiceContainer.AddService(typeof(ExecutionMode), new ExecutionModeServiceContainer(mode));
+			context.ServiceContainer.AddService(typeof(GearboxTypeServiceContainer), new GearboxTypeServiceContainer(gbxType));
 			var results = new List<ValidationResult>();
 			Validator.TryValidateObject(entity, context, results, true);
 
@@ -144,6 +146,17 @@ namespace TUGraz.VectoCommon.Utils
 		public ExecutionMode Mode { get; protected set; }
 	}
 
+	public class GearboxTypeServiceContainer
+	{
+		public GearboxTypeServiceContainer(GearboxType? type)
+		{
+			Type = type;
+		}
+
+
+		public GearboxType? Type { get; protected set; }
+	}
+
 	/// <summary>
 	/// Determines that the attributed object should be validated recursively.
 	/// </summary>
@@ -166,6 +179,9 @@ namespace TUGraz.VectoCommon.Utils
 			var modeService = validationContext.GetService(typeof(ExecutionMode)) as ExecutionModeServiceContainer;
 			var mode = modeService != null ? modeService.Mode : ExecutionMode.Declaration;
 
+			var gbxTypeService = validationContext.GetService(typeof(GearboxTypeServiceContainer)) as GearboxTypeServiceContainer;
+			var gbxType = gbxTypeService != null ? gbxTypeService.Type : GearboxType.MT;
+
 			var enumerable = value as IEnumerable;
 			if (enumerable != null) {
 				var i = 0;
@@ -176,8 +192,8 @@ namespace TUGraz.VectoCommon.Utils
 							var baseType = valueType.GetGenericTypeDefinition();
 							if (baseType == typeof(KeyValuePair<,>)) {
 								var kvResults = new List<ValidationResult>();
-								kvResults.AddRange(valueType.GetProperty("Key").GetValue(element).Validate(mode));
-								kvResults.AddRange(valueType.GetProperty("Value").GetValue(element).Validate(mode));
+								kvResults.AddRange(valueType.GetProperty("Key").GetValue(element).Validate(mode, gbxType));
+								kvResults.AddRange(valueType.GetProperty("Value").GetValue(element).Validate(mode, gbxType));
 								if (kvResults.Any()) {
 									return new ValidationResult(
 										string.Format("{1}[{0}] in {1} invalid: {2}", valueType.GetProperty("Key").GetValue(element),
@@ -187,7 +203,7 @@ namespace TUGraz.VectoCommon.Utils
 							}
 						}
 
-						var results = element.Validate(mode);
+						var results = element.Validate(mode, gbxType);
 						if (results.Any()) {
 							return new ValidationResult(
 								string.Format("{1}[{0}] in {1} invalid: {2}", i, validationContext.DisplayName,
@@ -197,7 +213,7 @@ namespace TUGraz.VectoCommon.Utils
 					i++;
 				}
 			} else {
-				var results = value.Validate(mode);
+				var results = value.Validate(mode, gbxType);
 				if (!results.Any()) {
 					return ValidationResult.Success;
 				}
