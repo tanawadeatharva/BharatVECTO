@@ -50,7 +50,7 @@ namespace TUGraz.VectoCore.Models.SimulationComponent.Impl
 	{
 		protected bool? TorqueConverterActive;
 
-		protected internal TorqueConverterData TorqueConverter;
+		protected internal readonly TorqueConverterData TorqueConverter;
 		private readonly KilogramSquareMeter _engineInertia;
 
 		public CycleGearbox(IVehicleContainer container, GearboxData gearboxModelData, KilogramSquareMeter engineInertia)
@@ -164,11 +164,11 @@ namespace TUGraz.VectoCore.Models.SimulationComponent.Impl
 		private IResponse RequestEngaged(Second absTime, Second dt, NewtonMeter outTorque, PerSecond outAngularVelocity,
 			bool dryRun)
 		{
-			var TorqueConverterLocked = TorqueConverterActive != null && !TorqueConverterActive.Value;
+			var torqueConverterLocked = TorqueConverterActive == null || !TorqueConverterActive.Value;
 
 			var effectiveRatio = ModelData.Gears[Gear].Ratio;
 			var effectiveLossMap = ModelData.Gears[Gear].LossMap;
-			if (!TorqueConverterLocked) {
+			if (!torqueConverterLocked) {
 				effectiveRatio = ModelData.Gears[Gear].TorqueConverterRatio;
 				effectiveLossMap = ModelData.Gears[Gear].TorqueConverterGearLossMap;
 			}
@@ -179,17 +179,17 @@ namespace TUGraz.VectoCore.Models.SimulationComponent.Impl
 			var inTorque = outTorque / effectiveRatio + inTorqueLossResult.Value;
 			CurrentState.TorqueLossResult = inTorqueLossResult;
 
-			if (!TorqueConverterLocked && !ModelData.Gears[Gear].HasTorqueConverter) {
+			if (!torqueConverterLocked && !ModelData.Gears[Gear].HasTorqueConverter) {
 				throw new VectoSimulationException("Torque converter requested by strategy for gear without torque converter!");
 			}
 
 			var inAngularVelocity = outAngularVelocity * effectiveRatio;
 
-			if (ModelData.Type.AutomaticTransmission() && TorqueConverterLocked &&
+			if (ModelData.Type.AutomaticTransmission() && torqueConverterLocked &&
 				inAngularVelocity.IsSmaller(DataBus.EngineIdleSpeed)) {
 				Log.Error(
 					"ERROR: EngineSpeed is lower than Idlespeed in Measuredspeed-Cycle with given Gear (Automatic Transmission). AbsTime: {0}, Gear: {1} TC-Active: {2}, EngineSpeed: {3}",
-					absTime, Gear, !TorqueConverterLocked, inAngularVelocity.AsRPM);
+					absTime, Gear, !torqueConverterLocked, inAngularVelocity.AsRPM);
 				return new ResponseEngineSpeedTooLow { Source = this };
 			}
 
@@ -204,7 +204,7 @@ namespace TUGraz.VectoCore.Models.SimulationComponent.Impl
 			}
 
 			if (dryRun) {
-				if (TorqueConverter != null && TorqueConverterActive != null && TorqueConverterActive.Value) {
+				if (TorqueConverter != null && !torqueConverterLocked) {
 					return RequestTorqueConverter(absTime, dt, inTorque, inAngularVelocity, true);
 				}
 				if (outTorque.IsSmaller(0) && inAngularVelocity.IsSmaller(DataBus.EngineIdleSpeed)) {
@@ -226,7 +226,7 @@ namespace TUGraz.VectoCore.Models.SimulationComponent.Impl
 			CurrentState.Gear = Gear;
 			// end critical section
 
-			if (TorqueConverter != null && TorqueConverterActive != null && TorqueConverterActive.Value) {
+			if (TorqueConverter != null && !torqueConverterLocked) {
 				CurrentState.TorqueConverterActive = true;
 				return RequestTorqueConverter(absTime, dt, inTorque, inAngularVelocity);
 			}

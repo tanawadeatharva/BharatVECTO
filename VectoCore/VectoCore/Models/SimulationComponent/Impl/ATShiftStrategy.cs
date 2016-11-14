@@ -126,7 +126,7 @@ namespace TUGraz.VectoCore.Models.SimulationComponent.Impl
 			}
 
 			// Emergency Upshift: if higher than engine rated speed
-			if (inAngularVelocity.IsGreaterOrEqual(DataBus.EngineRatedSpeed)) {
+			if (inAngularVelocity.IsGreaterOrEqual(DataBus.EngineRatedSpeed) && Data.Gears.ContainsKey(gear + 1)) {
 				Log.Debug("engine speed would be above rated speed - shift up");
 				Upshift(absTime, gear);
 				return true;
