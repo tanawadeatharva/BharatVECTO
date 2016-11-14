@@ -369,6 +369,7 @@ namespace TUGraz.VectoCore.Tests.Models.SimulationComponentData
 			var results = shiftPolygon.Validate(ExecutionMode.Declaration, GearboxType.MT);
 			Assert.IsFalse(results.Any());
 
+			// change columns
 			shiftPolygon =
 				ShiftPolygonReader.Create(
 					VectoCSVFile.ReadStream(
@@ -394,9 +395,10 @@ namespace TUGraz.VectoCore.Tests.Models.SimulationComponentData
 					VectoCSVFile.ReadStream(
 						InputDataHelper.InputDataAsStream("engine torque,downshift rpm [rpm],upshift rpm [rpm]	", vgbs)));
 
-			var results = shiftPolygon.Validate(ExecutionMode.Declaration, GearboxType.MT);
+			var results = shiftPolygon.Validate(ExecutionMode.Declaration, GearboxType.ATSerial);
 			Assert.IsFalse(results.Any());
 
+			// change columns
 			shiftPolygon =
 				ShiftPolygonReader.Create(
 					VectoCSVFile.ReadStream(
