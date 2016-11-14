@@ -275,10 +275,23 @@ namespace TUGraz.VectoCore.OutputData
 			row[ACC] = modData.AccelerationAverage();
 			row[ACC_POS] = acc.AccelerationsPositive();
 			row[ACC_NEG] = acc.AccelerationsNegative();
-			row[ACC_TIMESHARE] = acc.AccelerationTimeShare();
-			row[DEC_TIMESHARE] = acc.DecelerationTimeShare();
-			row[CRUISE_TIMESHARE] = acc.CruiseTimeShare();
+			var accTimeShare = acc.AccelerationTimeShare();
+			row[ACC_TIMESHARE] = accTimeShare;
+			var decTimeShare = acc.DecelerationTimeShare();
+			row[DEC_TIMESHARE] = decTimeShare;
+			var cruiseTimeShare = acc.CruiseTimeShare();
+			row[CRUISE_TIMESHARE] = cruiseTimeShare;
 			row[STOP_TIMESHARE] = modData.StopTimeShare();
+
+			if (accTimeShare != null && decTimeShare != null && cruiseTimeShare != null) {
+				var shareSum = accTimeShare + decTimeShare + cruiseTimeShare;
+				if (!shareSum.IsEqual(100)) {
+					Log.Error(
+						"Sumfile Error: driving behavior timeshares must sum up to 100%: acc: {0}%, dec: {1}%, cruise: {2}%, sum: {3}%",
+						accTimeShare.ToOutputFormat(1, null, false), decTimeShare.ToOutputFormat(1, null, false),
+						cruiseTimeShare.ToOutputFormat(1, null, false), shareSum.ToOutputFormat(1, null, false));
+				}
+			}
 		}
 
 		private static string ReplaceNotAllowedCharacters(string text)

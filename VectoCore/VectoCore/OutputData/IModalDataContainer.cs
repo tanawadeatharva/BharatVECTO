@@ -200,7 +200,7 @@ namespace TUGraz.VectoCore.OutputData
 		public static Scalar CruiseTimeShare(this MeterPerSquareSecond[] acceleration3SecondAverage)
 		{
 			if (acceleration3SecondAverage.Length > 0) {
-				return 100.SI<Scalar>() * acceleration3SecondAverage.Count(x => x.IsBetween(-0.125, -0.125)) /
+				return 100.SI<Scalar>() * acceleration3SecondAverage.Count(x => x.IsBetween(-0.125, 0.125)) /
 						acceleration3SecondAverage.Length;
 			}
 			return null;

@@ -1,7 +1,7 @@
 ##Job Editor
 
 
-![](pics/VECTO-Editor.svg)
+![](pics/VECTO-Editor.png)
 
 
 ###Description
@@ -75,13 +75,16 @@ Cycles
 
 ###Driver Assist Tab
 
+![](pics/VECTO-Editor-DriverAssist.png)
+
+
 In this tab the driver assistance functions are enabled and parameterised.
 
 Engine Start/Stop
 :	See [Engine Start/Stop](#engine-startstop) for details.
 
-Overspeed / Eco-Roll
-:	See [Overspeed / Eco-Roll](#overspeed-eco-roll) for details.
+Overspeed
+:	See [Overspeed](#overspeed) for details.
 
 Look-Ahead Coasting
 :	See [Look-Ahead Coasting](#look-ahead-coasting) for details.

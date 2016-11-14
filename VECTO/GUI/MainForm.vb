@@ -40,6 +40,7 @@ Imports System.Text
 Imports System.Text.RegularExpressions
 Imports System.Threading
 Imports Microsoft.VisualBasic.FileIO
+Imports TUGraz.VectoCommon.Exceptions
 Imports TUGraz.VectoCommon.InputData
 Imports TUGraz.VectoCommon.Models
 Imports TUGraz.VectoCommon.OutputData
@@ -287,16 +288,14 @@ Imports VectoAuxiliaries
 
 	' ReSharper disable once UnusedMember.Global -- used via Logging Framework!
 	Public Shared Sub LogMethod(level As String, message As String)
-		Try
+		If VectoWorkerV3.IsBusy AndAlso Not VectoWorkerV3.CancellationPending Then
 			If level = "Warn" Then
 				VectoWorkerV3.ReportProgress(100, New VectoProgress With {.Target = "ListBoxWarning", .Message = message})
 			ElseIf level = "Error" Or level = "Fatal" Then
 				VectoWorkerV3.ReportProgress(100, New VectoProgress With {.Target = "ListBoxError", .Message = message})
 
 			End If
-		Catch e As InvalidOperationException
-
-		End Try
+		End If
 	End Sub
 
 	'Declaration mode GUI settings
@@ -2016,7 +2015,20 @@ Imports VectoAuxiliaries
 			Return
 		End If
 		Try
-			PluginRegistry.Instance.GetExportPlugin("TUG.IVT.Vecto.XMLExport").ExportJob(JSONInputDataFactory.ReadJsonJob(f))
+			Dim input As IInputDataProvider = Nothing
+			If Path.GetExtension(f) = ".vecto" Then
+				input = JSONInputDataFactory.ReadJsonJob(f)
+			Else
+				For Each plugin As KeyValuePair(Of String, IInputDataPlugin) In PluginRegistry.Instance.GetInputDataPlugins()
+
+					If plugin.Value.CanHandleJob(f) Then
+						input = plugin.Value.ReadVectoJob(f)
+						Exit For
+					End If
+				Next
+			End If
+			If input Is Nothing Then Throw New VectoException("No InputDataProvider for file {0} found!", f)
+			PluginRegistry.Instance.GetExportPlugin("TUG.IVT.Vecto.XMLExport").ExportJob(input)
 		Catch ex As Exception
 			MsgBox("Exporting job failed: " + ex.Message)
 		End Try

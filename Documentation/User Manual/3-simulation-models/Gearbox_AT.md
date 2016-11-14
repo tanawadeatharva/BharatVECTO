@@ -2,9 +2,9 @@
 
 Vecto supports both, AT gearboxes with serial torque converter and AT gearboxes with power split. Internally, both gearbox types are simulated using a power train architecture with the torque converter in series.
 
-!(Automatic transmission with torque converter in series)[pics/AT-S.png]
+![Automatic transmission with torque converter in series](pics/AT-S.svg)
 
-!(Automatic transmission with parallel torque converter)[pics/AT-P.png]
+![Automatic transmission with parallel torque converter](pics/AT-P.svg)
 
 In the input data [Gearbox File](#gearbox-file-.vgbx) **only the mechanical gears need to be specified**. Depending on the gearbox type (AT-S or AT-P) Vecto adds the correct virtual 'torque converter gear'.
 
