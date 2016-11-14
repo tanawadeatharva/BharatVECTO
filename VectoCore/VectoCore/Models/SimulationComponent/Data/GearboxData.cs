@@ -32,12 +32,14 @@
 using System;
 using System.Collections.Generic;
 using System.ComponentModel.DataAnnotations;
+using System.Diagnostics;
 using System.Linq;
 using System.Runtime.Serialization;
 using TUGraz.VectoCommon.Models;
 using TUGraz.VectoCommon.Utils;
 using TUGraz.VectoCore.Configuration;
 using TUGraz.VectoCore.Models.SimulationComponent.Data.Gearbox;
+using TUGraz.VectoCore.Utils;
 
 namespace TUGraz.VectoCore.Models.SimulationComponent.Data
 {
@@ -46,13 +48,11 @@ namespace TUGraz.VectoCore.Models.SimulationComponent.Data
 	/// </summary>
 	/// <remarks>The Axle Gear has its own Property "AxleGearData" and is *not included* in the Gears-Dictionary.</remarks>
 	[DataContract, CustomValidation(typeof(GearboxData), "ValidateGearboxData")]
+	[DebuggerDisplay("GearboxData({Type}, #Gears: {Gears.Count}, ...)")]
 	public class GearboxData : SimulationComponentData
 	{
 		public GearboxType Type { get; internal set; }
 
-		/// <summary>
-		/// The gear data.
-		/// </summary>
 		[Required, ValidateObject] public Dictionary<uint, GearData> Gears = new Dictionary<uint, GearData>();
 
 		public TorqueConverterData TorqueConverterData { get; internal set; }
@@ -88,14 +88,6 @@ namespace TUGraz.VectoCore.Models.SimulationComponent.Data
 		// MQ: TODO: move to Driver Data ?
 		[Required, SIRange(double.Epsilon, 2)]
 		public MeterPerSquareSecond StartAcceleration { get; internal set; }
-
-		///// <summary>
-		///// Gets a value indicating whether this instance has torque converter.
-		///// </summary>
-		///// <value>
-		///// <c>true</c> if this instance has torque converter; otherwise, <c>false</c>.
-		///// </value>
-		//public bool HasTorqueConverter { get; internal set; }
 
 		[Required, SIRange(0, double.MaxValue)]
 		public Second UpshiftAfterDownshiftDelay { get; internal set; }

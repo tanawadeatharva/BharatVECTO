@@ -107,8 +107,9 @@ namespace TUGraz.VectoCore.Tests.FileIO
 			Assert.AreEqual(downshiftSpeeds.Length, runData.GearboxData.Gears[2].ShiftPolygon.Downshift.Count);
 			for (var i = 0; i < downshiftSpeeds.Length; i++) {
 				Assert.AreEqual(downshiftSpeeds[i].RPMtoRad().Value(),
-					runData.GearboxData.Gears[2].ShiftPolygon.Downshift[i].AngularSpeed.Value(), Tolerance);
-				Assert.AreEqual(downshiftTorque[i], runData.GearboxData.Gears[2].ShiftPolygon.Downshift[i].Torque.Value(), Tolerance);
+					runData.GearboxData.Gears[2].ShiftPolygon.Downshift[i].AngularSpeed.Value(), Tolerance, "i: " + i);
+				Assert.AreEqual(downshiftTorque[i], runData.GearboxData.Gears[2].ShiftPolygon.Downshift[i].Torque.Value(), Tolerance,
+					"i: " + i);
 			}
 
 			var upshiftSpeed = new[] { 1889.6633, 1889.6633, 606.64575 / Constants.RPMToRad };
