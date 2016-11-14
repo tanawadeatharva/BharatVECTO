@@ -2,6 +2,35 @@
 
 **VECTO 3.1.0**
 
+***Build 683 (2016-11-14)***
+
+- Bugfixes:
+    + [VECTO-375] Fixed bug when braking during slope change from negative to positive values.
+    + [VECTO-372] Added check for unusual acceleration/deceleration data which could lead to error when halting.
+    + [VECTO-371] Added additional behavior to overcome such situations
+    + [VECTO-370] Added additional behavior to overcome such situations
+    + [VECTO-369] CrosswindCorrection is now saved and read again from JSON files
+    + [VECTO-373] WHTC-Engineering correction factor now correctly read/write in JSON files
+    + [VECTO-368] Fixed validation for specific cases when values are intentionally invalid.
+    + [VECTO-357] Updated GUI to not show ECO-Roll option to avoid confusion
+    + Fixed numerous bugs in AT-ShiftStrategy regarding the Torque Converter
+    + Fixed numerous bugs in MeasuredSpeed Mode (and MeasuredSpeed with Gear) in connection with AT-Gearbox and TorqueConverter
+    + Fixed a bug when PTO-Cycle was missing
+    + Corrected axle loss maps for Generic Vehicles in Declaration Mode to match technical annex
+    + Corrected SumFile Cruise Time Share. Added checks that timeshares must add up to 100%
+
+- Improvements:
+    + [VECTO-355] Updated documentation, added powertrain schematics in chapter "Simulation Models"
+    + [VECTO-374] Check range for Torque Converter speed ratio input data to be at least between 0 and 2.2
+    + Updated many error messages to be more explicit about the reason of error
+    + Added "Mission Profiles" Directory with driving cycles publicly available in the application root directory.
+    + Added "Declaration" directory with the declaration data files in the application root directory.
+	+ Added warning when engine inertia is 0
+    + Added check that engine speed must not fall below idle speed (even in measured speed mode)
+    + Shift curve validation for AT gearboxes: shift curves may now overlap due to different shift logic in AutomaticTransmissions.
+    + Updated Crosswind Coefficients for Tractor+Semitrailer
+
+
 ***Build 662 (2016-10-24)***
 
 - Bugfixes:
