@@ -108,7 +108,7 @@ Public Class VectoJob
 
 	Public Function SaveFile() As Boolean
 		Dim validationResults As IList(Of ValidationResult) =
-				Validate(If(Cfg.DeclMode, ExecutionMode.Declaration, ExecutionMode.Engineering))
+				Validate(If(Cfg.DeclMode, ExecutionMode.Declaration, ExecutionMode.Engineering), If(GearboxInputData Is Nothing, GearboxType.MT, GearboxInputData.Type))
 
 		If validationResults.Count > 0 Then
 			Dim messages As IEnumerable(Of String) =
@@ -390,11 +390,15 @@ Public Class VectoJob
 						New ValidationResult("Vecto Job Configuration is invalid. ", result.Select(Function(r) r.ErrorMessage).ToList())
 				End If
 				Dim dataFactory As EngineeringModeVectoRunDataFactory = New EngineeringModeVectoRunDataFactory(vectoJob)
-				jobData = dataFactory.NextRun().First()
+				jobData = dataFactory.NextRun().FirstOrDefault()
+				If jobData Is Nothing Then
+					Return New ValidationResult("No cycles selected in Vecto Job.", result.Select(Function(r) r.ErrorMessage).ToList())
+				End If
 			End If
 
 
-			result = jobData.Validate(If(Cfg.DeclMode, ExecutionMode.Declaration, ExecutionMode.Engineering))
+			result = jobData.Validate(If(Cfg.DeclMode, ExecutionMode.Declaration, ExecutionMode.Engineering),
+									jobData.GearboxData.Type)
 			If result.Any() Then
 				Return _
 					New ValidationResult("Vecto Job Configuration is invalid. ", result.Select(Function(r) r.ErrorMessage).ToList())
@@ -711,8 +715,9 @@ Public Class VectoJob
 			theAuxData.EfficiencyToEngine = stream.ReadLine().IndulgentParse()
 			stream.ReadLine() ' skip header "Efficiency auxiliary to supply [-]"
 			theAuxData.EfficiencyToSupply = stream.ReadLine().IndulgentParse()
-			theAuxData.DemandMap = VectoCSVFile.ReadStream(New MemoryStream(Encoding.UTF8.GetBytes(stream.ReadToEnd())), source:=auxEntry.Value.Path.FullPath)
-			Next
+			theAuxData.DemandMap = VectoCSVFile.ReadStream(New MemoryStream(Encoding.UTF8.GetBytes(stream.ReadToEnd())),
+															source:=auxEntry.Value.Path.FullPath)
+		Next
 
 		Return retVal
 	End Function

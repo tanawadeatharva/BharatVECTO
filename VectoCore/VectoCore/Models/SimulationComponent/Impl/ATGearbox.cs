@@ -282,6 +282,7 @@ namespace TUGraz.VectoCore.Models.SimulationComponent.Impl
 			TorqueConverter.Locked(CurrentState.InTorque, CurrentState.InAngularVelocity);
 
 			CurrentState.Gear = 1;
+			CurrentState.TorqueConverterLocked = !ModelData.Gears[Gear].HasTorqueConverter;
 			return retval;
 		}
 

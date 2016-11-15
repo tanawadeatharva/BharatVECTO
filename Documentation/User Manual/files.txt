@@ -29,6 +29,7 @@
 3-simulation-models/Engine_FC.md
 3-simulation-models/Engine_DynamicFullLoad.md
 3-simulation-models/Engine_WHTC.md
+3-simulation-models/Transmission_Losses.md
 3-simulation-models/Gearbox_AT.md
 3-simulation-models/GearShift.md
 3-simulation-models/Gearshift_AT.md

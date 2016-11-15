@@ -1,0 +1,1 @@
+CSCRIPT ConvertPPTXtoPDF.vbs "%~dp0Release Notes Vecto3.x.pptx" "%~dp0Release Notes Vecto3.x.pdf"

@@ -149,7 +149,7 @@ Public Class Engine
 	Public Function SaveFile() As Boolean
 
 		Dim validationResults As IList(Of ValidationResult) =
-				Validate(If(Cfg.DeclMode, ExecutionMode.Declaration, ExecutionMode.Engineering))
+				Validate(If(Cfg.DeclMode, ExecutionMode.Declaration, ExecutionMode.Engineering), Nothing)
 
 		If validationResults.Count > 0 Then
 			Dim messages As IEnumerable(Of String) =
@@ -233,6 +233,10 @@ Public Class Engine
 																	ExecutionModeServiceContainer)
 		Dim mode As ExecutionMode = If(modeService Is Nothing, ExecutionMode.Declaration, modeService.Mode)
 
+		Dim gbxtypeService As GearboxTypeServiceContainer =
+				TryCast(validationContext.GetService(GetType(GearboxTypeServiceContainer)), GearboxTypeServiceContainer)
+		Dim gbxType As GearboxType? = If(gbxtypeService Is Nothing, GearboxType.MT, gbxtypeService.Type)
+
 		Try
 			If mode = ExecutionMode.Declaration Then
 				Dim doa As DeclarationDataAdapter = New DeclarationDataAdapter()
@@ -244,11 +248,12 @@ Public Class Engine
 			End If
 
 			Dim result As IList(Of ValidationResult) =
-					engineData.Validate(If(Cfg.DeclMode, ExecutionMode.Declaration, ExecutionMode.Engineering))
+					engineData.Validate(If(Cfg.DeclMode, ExecutionMode.Declaration, ExecutionMode.Engineering), gbxType)
 
 			If Not result.Any() Then Return ValidationResult.Success
 
-			Return New ValidationResult("Engine Configuration is invalid. ", result.Select(Function(r) r.ErrorMessage).ToList())
+			Return New ValidationResult("Engine Configuration is invalid. ",
+										result.Select(Function(r) r.ErrorMessage + String.Join(Environment.NewLine, r.MemberNames)).ToList())
 		Catch ex As Exception
 			Return New ValidationResult(ex.Message)
 		End Try

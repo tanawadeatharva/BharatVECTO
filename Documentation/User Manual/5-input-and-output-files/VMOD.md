@@ -2,7 +2,9 @@
 
 Modal results are only created if enabled in the [Options](#main-form) tab. One file is created for each calculation and stored in the same directory as the .vecto file.
 
-In Vecto 3.0.2 the structure of the modal data output has been revised and re-structured. Basicaly for every powertrain component the .vmod file contains the power at the input shaft and the individual power losses for every component. For the engine the power, torque and engine speed at the output shaft is given along with the internal power and torque used for computing the fuel consumption. The following table lists the columns in the .vmod file:
+In Vecto 3 the structure of the modal data output has been revised and re-structured. Basically for every powertrain component the .vmod file contains the power at the input shaft and the individual power losses for every component. For the engine the power, torque and engine speed at the output shaft is given along with the internal power and torque used for computing the fuel consumption. See [Powertrain and Components Structure](#powertrain-and-components-structure) for schematics how the powertrain looks like and which positions in the powertrain the values represent.
+
+ The following table lists the columns in the .vmod file:
 	
 ***Quantities:***
 
