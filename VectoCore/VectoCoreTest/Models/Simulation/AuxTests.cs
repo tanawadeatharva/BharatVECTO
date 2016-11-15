@@ -35,6 +35,7 @@ using TUGraz.VectoCommon.Exceptions;
 using TUGraz.VectoCommon.InputData;
 using TUGraz.VectoCommon.Models;
 using TUGraz.VectoCommon.Utils;
+using TUGraz.VectoCore.InputData;
 using TUGraz.VectoCore.InputData.FileIO.JSON;
 using TUGraz.VectoCore.InputData.Impl;
 using TUGraz.VectoCore.InputData.Reader;
@@ -197,13 +198,13 @@ namespace TUGraz.VectoCore.Tests.Models.Simulation
 			var aux = new EngineAuxiliary(container);
 
 			var auxDataInputData = new AuxiliaryDataInputData {
-					ID = "ALT1",
-					Type = AuxiliaryType.ElectricSystem,
-					Technology = new List<string>(),
-				};
-			JSONInputDataV3.FillAuxiliaryDataInputData(auxDataInputData, @"TestData\Components\24t_Coach_ALT.vaux");
+				ID = "ALT1",
+				Type = AuxiliaryType.ElectricSystem,
+				Technology = new List<string>(),
+			};
+			AuxiliaryFileHelper.FillAuxiliaryDataInputData(auxDataInputData, @"TestData\Components\24t_Coach_ALT.vaux");
 			var auxData = AuxiliaryDataReader.Create(auxDataInputData);
-			
+
 			// ratio = 4.078
 			// efficiency_engine = 0.96
 			// efficiency_supply = 0.98
@@ -267,7 +268,7 @@ namespace TUGraz.VectoCore.Tests.Models.Simulation
 				Type = AuxiliaryType.ElectricSystem,
 				Technology = new List<string>(),
 			};
-			JSONInputDataV3.FillAuxiliaryDataInputData(auxDataInputData, @"TestData\Components\24t_Coach_ALT.vaux");
+			AuxiliaryFileHelper.FillAuxiliaryDataInputData(auxDataInputData, @"TestData\Components\24t_Coach_ALT.vaux");
 			var auxData = AuxiliaryDataReader.Create(auxDataInputData);
 
 			// ratio = 4.078
@@ -321,9 +322,9 @@ namespace TUGraz.VectoCore.Tests.Models.Simulation
 		public void AuxFileMissing()
 		{
 			AssertHelper.Exception<VectoException>(() => {
-					var auxDataInputData = new AuxiliaryDataInputData();
-					JSONInputDataV3.FillAuxiliaryDataInputData(auxDataInputData, @"NOT_EXISTING_AUX_FILE.vaux");
-				},"Auxiliary file not found: NOT_EXISTING_AUX_FILE.vaux");
+				var auxDataInputData = new AuxiliaryDataInputData();
+				AuxiliaryFileHelper.FillAuxiliaryDataInputData(auxDataInputData, @"NOT_EXISTING_AUX_FILE.vaux");
+			}, "Auxiliary file not found: NOT_EXISTING_AUX_FILE.vaux");
 		}
 
 		[TestMethod]
