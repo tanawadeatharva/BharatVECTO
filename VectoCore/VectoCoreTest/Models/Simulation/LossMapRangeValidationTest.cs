@@ -91,7 +91,8 @@ namespace TUGraz.VectoCore.Tests.Models.Simulation
 				GearboxData = gearboxData,
 				EngineData = engineData,
 				AxleGearData = axleGearData,
-				VehicleData = vehicleData
+				VehicleData = vehicleData,
+				Cycle = new DrivingCycleData { Entries = new List<DrivingCycleData.DrivingCycleEntry>() }
 			};
 
 			var result = VectoRunData.ValidateRunData(runData, new ValidationContext(runData));
@@ -149,7 +150,12 @@ namespace TUGraz.VectoCore.Tests.Models.Simulation
 						}
 					}
 			};
-			var runData = new VectoRunData { GearboxData = gearboxData, EngineData = engineData, VehicleData = vehicleData };
+			var runData = new VectoRunData {
+				GearboxData = gearboxData,
+				EngineData = engineData,
+				VehicleData = vehicleData,
+				Cycle = new DrivingCycleData { Entries = new List<DrivingCycleData.DrivingCycleEntry>() }
+			};
 			var result = VectoRunData.ValidateRunData(runData, new ValidationContext(runData));
 			Assert.IsTrue(ValidationResult.Success == result);
 			Assert.IsFalse(runData.IsValid());
@@ -164,7 +170,11 @@ namespace TUGraz.VectoCore.Tests.Models.Simulation
 			var engineData = MockSimulationDataFactory.CreateEngineDataFromFile(EngineFile);
 			var axleGearData = CreateAxleGearData(AxleGearLossMap);
 
-			var runData = new VectoRunData { EngineData = engineData, AxleGearData = axleGearData };
+			var runData = new VectoRunData {
+				EngineData = engineData,
+				AxleGearData = axleGearData,
+				Cycle = new DrivingCycleData { Entries = new List<DrivingCycleData.DrivingCycleEntry>() }
+			};
 			var result = VectoRunData.ValidateRunData(runData, new ValidationContext(runData));
 			Assert.IsTrue(ValidationResult.Success == result);
 			Assert.IsFalse(runData.IsValid());

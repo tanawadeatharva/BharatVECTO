@@ -113,7 +113,7 @@ Public Class VectoJobForm
 		LvCycles.Items.Clear()
 		CbEngOnly.Checked = False
 		TbDesMaxFile.Text = ""
-		If Not RdEcoRoll.Checked Then RdOverspeed.Checked = True
+		RdOverspeed.Checked = True
 		CbLookAhead.Checked = True
 
 		TbSSspeed.Text = DeclarationData.Driver.StartStop.MaxSpeed.AsKmph.ToGUIFormat()	'cDeclaration.SSspeed
@@ -512,7 +512,9 @@ Public Class VectoJobForm
 		End Try
 
 		If driver.OverSpeedEcoRoll.Mode = DriverMode.EcoRoll Then
-			RdEcoRoll.Checked = True
+			'mk 2016-11-10: removed eco roll - instead automatically overspeed is used
+			'RdEcoRoll.Checked = True
+			RdOverspeed.Checked = True
 		ElseIf driver.OverSpeedEcoRoll.Mode = DriverMode.Overspeed Then
 			RdOverspeed.Checked = True
 		Else
@@ -643,7 +645,7 @@ Public Class VectoJobForm
 
 		vectoJob.EngineOnly = CbEngOnly.Checked
 
-		vectoJob.EcoRollOn = RdEcoRoll.Checked
+		vectoJob.EcoRollOn = False 'RdEcoRoll.Checked
 		vectoJob.OverSpeedOn = RdOverspeed.Checked
 		vectoJob.OverSpeed = TbOverspeed.Text.ToDouble(0)
 		vectoJob.UnderSpeed = TbUnderSpeed.Text.ToDouble(0)
@@ -1072,13 +1074,13 @@ lbDlog:
 
 	'EcoRoll / Overspeed changed
 	Private Sub RdOff_CheckedChanged(sender As Object, e As EventArgs) _
-		Handles RdOff.CheckedChanged, RdOverspeed.CheckedChanged, RdEcoRoll.CheckedChanged
+		Handles RdOff.CheckedChanged, RdOverspeed.CheckedChanged
 		Dim ecoRoll As Boolean
 		Dim overspeed As Boolean
 
 		Change()
 
-		ecoRoll = RdEcoRoll.Checked
+		ecoRoll = False	'RdEcoRoll.Checked
 		overspeed = RdOverspeed.Checked
 
 		TbOverspeed.Enabled = overspeed Or ecoRoll

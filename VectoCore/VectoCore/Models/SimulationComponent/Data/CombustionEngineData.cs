@@ -31,12 +31,14 @@
 
 using System;
 using System.ComponentModel.DataAnnotations;
+using TUGraz.VectoCommon.Models;
 using TUGraz.VectoCommon.Utils;
 using TUGraz.VectoCore.Configuration;
 using TUGraz.VectoCore.Models.SimulationComponent.Data.Engine;
 
 namespace TUGraz.VectoCore.Models.SimulationComponent.Data
 {
+	[CustomValidation(typeof(CombustionEngineData), "ValidateData")]
 	public class CombustionEngineData : SimulationComponentData
 	{
 		[Required, SIRange(1000 * 1E-6, 20000 * 1E-6)]
@@ -88,6 +90,15 @@ namespace TUGraz.VectoCore.Models.SimulationComponent.Data
 				FullLoadCurve = FullLoadCurve,
 				WHTCCorrectionFactor = WHTCCorrectionFactor,
 			};
+		}
+
+		// ReSharper disable once UnusedMember.Global -- used in CustomValidation
+		public static ValidationResult ValidateData(CombustionEngineData data, ValidationContext context)
+		{
+			if (data.Inertia.IsEqual(0)) {
+				LogManager.GetLogger(typeof(CombustionEngineData).FullName).Error("Warning: Engine Inertia is 0!");
+			}
+			return ValidationResult.Success;
 		}
 	}
 }

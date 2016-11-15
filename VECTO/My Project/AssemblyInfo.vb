@@ -12,7 +12,7 @@ Imports System.Runtime.InteropServices
 <Assembly: AssemblyDescription("Vehicle Energy Consumption Calculation Tool")> 
 <Assembly: AssemblyCompany("")> 
 <Assembly: AssemblyProduct("VECTO")> 
-<Assembly: AssemblyCopyright("© European Commission 2014")> 
+<Assembly: AssemblyCopyright("© European Commission 2016")> 
 <Assembly: AssemblyTrademark("")> 
 
 <Assembly: ComVisible(False)>

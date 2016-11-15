@@ -26,7 +26,7 @@ Imports TUGraz.VectoCore.Utils
 
 <CustomValidation(GetType(Vehicle), "ValidateVehicle")>
 Public Class Vehicle
-	Implements IVehicleEngineeringInputData, IVehicleDeclarationInputData, IRetarderInputData, IPTOTransmissionInputData,
+	Implements IVehicleEngineeringInputData, IVehicleDeclarationInputData, IRetarderInputData, IPTOTransmissionInputData, 
 				IAngledriveInputData
 
 	Private _filePath As String
@@ -95,9 +95,12 @@ Public Class Vehicle
 		Dim ptoData As PTOData = Nothing
 		Dim angledriveData As AngledriveData
 
-		Dim modeService As ExecutionModeServiceContainer = TryCast(validationContext.GetService(GetType(ExecutionMode)),
+		Dim modeService As ExecutionModeServiceContainer = TryCast(validationContext.GetService(GetType(ExecutionMode)), 
 																	ExecutionModeServiceContainer)
 		Dim mode As ExecutionMode = If(modeService Is Nothing, ExecutionMode.Declaration, modeService.Mode)
+		Dim gbxtypeService As GearboxTypeServiceContainer =
+				TryCast(validationContext.GetService(GetType(GearboxTypeServiceContainer)), GearboxTypeServiceContainer)
+		Dim gbxType As GearboxType? = If(gbxtypeService Is Nothing, Nothing, gbxtypeService.Type)
 
 		Try
 			If mode = ExecutionMode.Declaration Then
@@ -117,31 +120,35 @@ Public Class Vehicle
 			End If
 
 			Dim result As IList(Of ValidationResult) =
-					vehicleData.Validate(If(Cfg.DeclMode, ExecutionMode.Declaration, ExecutionMode.Engineering))
+					vehicleData.Validate(If(Cfg.DeclMode, ExecutionMode.Declaration, ExecutionMode.Engineering), gbxType)
 			If result.Any() Then
 				Return _
-					New ValidationResult("Vehicle Configuration is invalid. ", result.Select(Function(r) r.ErrorMessage).ToList())
+					New ValidationResult("Vehicle Configuration is invalid. ",
+										result.Select(Function(r) r.ErrorMessage + String.Join(Environment.NewLine, r.MemberNames)).ToList())
 			End If
 
-			result = retarderData.Validate(If(Cfg.DeclMode, ExecutionMode.Declaration, ExecutionMode.Engineering))
+			result = retarderData.Validate(If(Cfg.DeclMode, ExecutionMode.Declaration, ExecutionMode.Engineering), gbxType)
 			If result.Any() Then
 				Return _
-					New ValidationResult("Retarder Configuration is invalid. ", result.Select(Function(r) r.ErrorMessage).ToList())
+					New ValidationResult("Retarder Configuration is invalid. ",
+										result.Select(Function(r) r.ErrorMessage + String.Join(Environment.NewLine, r.MemberNames)).ToList())
 			End If
 
 			If vehicle.AngledriveType = AngledriveType.SeparateAngledrive Then
-				result = angledriveData.Validate(If(Cfg.DeclMode, ExecutionMode.Declaration, ExecutionMode.Engineering))
+				result = angledriveData.Validate(If(Cfg.DeclMode, ExecutionMode.Declaration, ExecutionMode.Engineering), gbxType)
 				If result.Any() Then
 					Return _
-						New ValidationResult("AngleDrive Configuration is invalid. ", result.Select(Function(r) r.ErrorMessage).ToList())
+						New ValidationResult("AngleDrive Configuration is invalid. ",
+											result.Select(Function(r) r.ErrorMessage + String.Join(Environment.NewLine, r.MemberNames)).ToList())
 				End If
 			End If
 
 			If Not vehicle.PTOTransmissionType = "None" Then
-				result = ptoData.Validate(If(Cfg.DeclMode, ExecutionMode.Declaration, ExecutionMode.Engineering))
+				result = ptoData.Validate(If(Cfg.DeclMode, ExecutionMode.Declaration, ExecutionMode.Engineering), gbxType)
 				If result.Any() Then
 					Return _
-						New ValidationResult("PTO Configuration is invalid. ", result.Select(Function(r) r.ErrorMessage).ToList())
+						New ValidationResult("PTO Configuration is invalid. ",
+											result.Select(Function(r) r.ErrorMessage + String.Join(Environment.NewLine, r.MemberNames)).ToList())
 				End If
 			End If
 
@@ -188,7 +195,7 @@ Public Class Vehicle
 		SavedInDeclMode = Cfg.DeclMode
 
 		Dim validationResults As IList(Of ValidationResult) =
-				Validate(If(Cfg.DeclMode, ExecutionMode.Declaration, ExecutionMode.Engineering))
+				Validate(If(Cfg.DeclMode, ExecutionMode.Declaration, ExecutionMode.Engineering), Nothing)
 
 		If validationResults.Count > 0 Then
 			Dim messages As IEnumerable(Of String) =
@@ -306,34 +313,34 @@ Public Class Vehicle
 
 	Public ReadOnly Property CurbWeightChassis As Kilogram Implements IVehicleDeclarationInputData.CurbWeightChassis
 		Get
-			Return Mass.SI (Of Kilogram)()
+			Return Mass.SI(Of Kilogram)()
 		End Get
 	End Property
 
 	Public ReadOnly Property GrossVehicleMassRating As Kilogram _
 		Implements IVehicleDeclarationInputData.GrossVehicleMassRating
 		Get
-			Return MassMax.SI().Ton.Cast (Of Kilogram)()
+			Return MassMax.SI().Ton.Cast(Of Kilogram)()
 		End Get
 	End Property
 
 	Public ReadOnly Property AirDragArea As SquareMeter Implements IVehicleDeclarationInputData.AirDragArea
 		Get
-			Return CdA0.SI (Of SquareMeter)()
+			Return CdA0.SI(Of SquareMeter)()
 		End Get
 	End Property
 
 	Public ReadOnly Property IVehicleEngineeringInputData_Axles As IList(Of IAxleEngineeringInputData) _
 		Implements IVehicleEngineeringInputData.Axles
 		Get
-			Return AxleWheels().Cast (Of IAxleEngineeringInputData)().ToList()
+			Return AxleWheels().Cast(Of IAxleEngineeringInputData)().ToList()
 		End Get
 	End Property
 
 	Public ReadOnly Property IVehicleDeclarationInputData_Axles As IList(Of IAxleDeclarationInputData) _
 		Implements IVehicleDeclarationInputData.Axles
 		Get
-			Return AxleWheels().Cast (Of IAxleDeclarationInputData)().ToList()
+			Return AxleWheels().Cast(Of IAxleDeclarationInputData)().ToList()
 		End Get
 	End Property
 
@@ -341,18 +348,18 @@ Public Class Vehicle
 		Return Axles.Select(Function(axle) New AxleInputData With {
 								.SourceType = DataSourceType.JSONFile,
 								.Source = FilePath,
-								.Inertia = axle.Inertia.SI (Of KilogramSquareMeter)(),
+								.Inertia = axle.Inertia.SI(Of KilogramSquareMeter)(),
 								.Wheels = axle.Wheels,
 								.AxleWeightShare = axle.Share,
 								.TwinTyres = axle.TwinTire,
 								.RollResistanceCoefficient = axle.RRC,
-								.TyreTestLoad = axle.FzISO.SI (Of Newton)()
+								.TyreTestLoad = axle.FzISO.SI(Of Newton)()
 								})
 	End Function
 
 	Public ReadOnly Property CurbWeightExtra As Kilogram Implements IVehicleEngineeringInputData.CurbWeightExtra
 		Get
-			Return MassExtra.SI (Of Kilogram)()
+			Return MassExtra.SI(Of Kilogram)()
 		End Get
 	End Property
 
@@ -373,14 +380,14 @@ Public Class Vehicle
 	Public ReadOnly Property IVehicleEngineeringInputData_DynamicTyreRadius As Meter _
 		Implements IVehicleEngineeringInputData.DynamicTyreRadius
 		Get
-			Return DynamicTyreRadius.SI().Milli.Meter.Cast (Of Meter)()
+			Return DynamicTyreRadius.SI().Milli.Meter.Cast(Of Meter)()
 		End Get
 	End Property
 
 	Public ReadOnly Property IVehicleEngineeringInputData_Loading As Kilogram _
 		Implements IVehicleEngineeringInputData.Loading
 		Get
-			Return Loading.SI (Of Kilogram)()
+			Return Loading.SI(Of Kilogram)()
 		End Get
 	End Property
 
@@ -425,7 +432,7 @@ Public Class Vehicle
 
 	Public ReadOnly Property Efficiency As Double Implements IAngledriveInputData.Efficiency
 		Get
-			Return If(IsNumeric(AngledriveLossMapFile.OriginalPath), AngledriveLossMapFile.OriginalPath.ToDouble(), - 1.0)
+			Return If(IsNumeric(AngledriveLossMapFile.OriginalPath), AngledriveLossMapFile.OriginalPath.ToDouble(), -1.0)
 		End Get
 	End Property
 

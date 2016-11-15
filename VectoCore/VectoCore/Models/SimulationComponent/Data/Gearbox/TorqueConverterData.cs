@@ -49,6 +49,9 @@ namespace TUGraz.VectoCore.Models.SimulationComponent.Data.Gearbox
 
 		public PerSecond TorqueConverterSpeedLimit { get; protected internal set; }
 
+		// only used for validation!
+		internal double RequiredSpeedRatio { get; set; }
+
 		protected internal TorqueConverterData(List<TorqueConverterEntry> torqueConverterEntries, PerSecond referenceSpeed,
 			PerSecond maxRpm)
 		{
@@ -73,7 +76,7 @@ namespace TUGraz.VectoCore.Models.SimulationComponent.Data.Gearbox
 			var mpNorm = ReferenceSpeed.Value();
 
 			var min = minSpeed == null ? 0 : minSpeed.Value();
-			
+
 			// Find analytic solution for torque converter operating point
 			// mu = f(nu) = f(n_out / n_in) = T_out / T_in
 			// MP1000 = f(nu) = f(n_out / n_in)
@@ -94,7 +97,7 @@ namespace TUGraz.VectoCore.Models.SimulationComponent.Data.Gearbox
 						torqueOut.Value();
 				var sol = VectoMath.QuadraticEquationSolver(a, b, c);
 
-				var selected = sol.Where(x => x > min 
+				var selected = sol.Where(x => x > min
 											&& angularSpeedOut.Value() / x >= muEdge.P1.X && angularSpeedOut.Value() / x < muEdge.P2.X
 											&& angularSpeedOut.Value() / x >= mpEdge.P1.X && angularSpeedOut.Value() / x < mpEdge.P2.X);
 				solutions.AddRange(selected);
@@ -253,14 +256,15 @@ namespace TUGraz.VectoCore.Models.SimulationComponent.Data.Gearbox
 			return retVal;
 		}
 
+		// ReSharper disable once UnusedMember.Global -- used by validation
 		public static ValidationResult ValidateData(TorqueConverterData data, ValidationContext validationContext)
 		{
 			var min = data.TorqueConverterEntries.Min(e => e.SpeedRatio);
 			var max = data.TorqueConverterEntries.Max(e => e.SpeedRatio);
-			if (min > 0 || max < 2.2) {
+			if (min > 0 || max < data.RequiredSpeedRatio) {
 				return new ValidationResult(string.Format(
-					"Torque Converter Data invalid - Speedratio has to cover the range from 0.0 to 2.2: given data only goes from {0} to {1}",
-					min, max));
+					"Torque Converter Data invalid - Speedratio has to cover the range from 0.0 to {2}: given data only goes from {0} to {1}",
+					min, max, data.RequiredSpeedRatio));
 			}
 
 			return ValidationResult.Success;

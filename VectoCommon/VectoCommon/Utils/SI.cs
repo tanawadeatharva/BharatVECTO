@@ -756,9 +756,6 @@ namespace TUGraz.VectoCommon.Utils
 		private NewtonMeterSecond(double val) : base(val, NumeratorDefault) {}
 	}
 
-	/// <summary>
-	/// 
-	/// </summary>
 	public class Ampere : SIBase<Ampere>
 	{
 		private static readonly Unit[] NumeratorDefault = { Unit.Ampere };
@@ -785,9 +782,6 @@ namespace TUGraz.VectoCommon.Utils
 		}
 	}
 
-	/// <summary>
-	/// 
-	/// </summary>
 	public class Volt : SIBase<Volt>
 	{
 		private static readonly Unit[] NumeratorDefault = { Unit.Volt };
@@ -1018,6 +1012,7 @@ namespace TUGraz.VectoCommon.Utils
 	/// <remarks>
 	/// Usage: new SI(1.0).Newton.Meter, new SI(2.3).Rounds.Per.Minute
 	/// </remarks>
+	[DebuggerDisplay("{Val}")]
 	public class SI : IComparable
 	{
 		/// <summary>

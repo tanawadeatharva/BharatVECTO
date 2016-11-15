@@ -83,12 +83,12 @@ namespace TUGraz.VectoCore.Tests.Models.SimulationComponent
 
 		[Test,
 		TestCase(0, 0, 0.5, 0),
-		TestCase(0, 1, 0.5, 0.603055),
-		TestCase(60, 0, 0.5, 1340.12357),
-		TestCase(60, 1, 0.5, 1375.63226),
-		TestCase(60, 0.5, 0.5, 1357.76658),
-		TestCase(72, 0.5, 0.5, 1861.2734),
-		TestCase(72, 1, 3, 2101.63000)]
+		TestCase(0, 1, 0.5, 0.59839),
+		TestCase(60, 0, 0.5, 1329.7558),
+		TestCase(60, 1, 0.5, 1365.386),
+		TestCase(60, 0.5, 0.5, 1347.457494),
+		TestCase(72, 0.5, 0.5, 1852.8837),
+		TestCase(72, 1, 3, 2093.7506)]
 		public void VehicleAirResistanceTest(double vehicleSpeed, double acceleration, double dt, double expected)
 		{
 			var container = new VehicleContainer(ExecutionMode.Declaration);
@@ -137,11 +137,11 @@ namespace TUGraz.VectoCore.Tests.Models.SimulationComponent
 			vehicle.Request(absTime, dt, 0.SI<MeterPerSquareSecond>(), 0.SI<Radian>());
 			vehicle.CommitSimulationStep(writer);
 
-			Assert.AreEqual(48201.2777, ((SI)writer[ModalResultField.P_air]).Value(), 0.1);
+			Assert.AreEqual(48033.405, ((SI)writer[ModalResultField.P_air]).Value(), 0.1);
 
 			vehicle.Request(absTime, dt, 1.SI<MeterPerSquareSecond>(), 0.SI<Radian>());
 			vehicle.CommitSimulationStep(writer);
-			Assert.AreEqual(49735.26379, ((SI)writer[ModalResultField.P_air]).Value(), 0.1);
+			Assert.AreEqual(49566.561, ((SI)writer[ModalResultField.P_air]).Value(), 0.1);
 		}
 
 		[Test,

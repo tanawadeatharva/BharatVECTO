@@ -112,6 +112,9 @@ namespace TUGraz.VectoCore.Models.SimulationComponent.Impl
 		public NewtonMeter Initialize(NewtonMeter torque, PerSecond angularSpeed)
 		{
 			PreviousState.AngularSpeed = angularSpeed;
+			if (angularSpeed.IsEqual(0))
+				return 0.SI<NewtonMeter>();
+
 			return ComputePowerDemand(angularSpeed) / angularSpeed;
 		}
 
