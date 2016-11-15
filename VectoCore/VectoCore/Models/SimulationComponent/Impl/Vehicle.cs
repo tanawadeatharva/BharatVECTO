@@ -94,7 +94,7 @@ namespace TUGraz.VectoCore.Models.SimulationComponent.Impl
 			CurrentState.SimulationInterval = dt;
 			CurrentState.Acceleration = acceleration;
 			CurrentState.Velocity = PreviousState.Velocity + acceleration * dt;
-			if (CurrentState.Velocity.IsSmallerOrEqual(0.SI<MeterPerSecond>(),
+			if (CurrentState.Velocity.IsEqual(0.SI<MeterPerSecond>(),
 				Constants.SimulationSettings.VehicleSpeedHaltTolerance)) {
 				CurrentState.Velocity = 0.SI<MeterPerSecond>();
 			}
