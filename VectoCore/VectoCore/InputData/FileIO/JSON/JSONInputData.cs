@@ -42,6 +42,7 @@ using TUGraz.VectoCommon.Models;
 using TUGraz.VectoCommon.Utils;
 using TUGraz.VectoCore.Configuration;
 using TUGraz.VectoCore.InputData.Impl;
+using TUGraz.VectoCore.InputData.Reader.ComponentData;
 using TUGraz.VectoCore.Models.Declaration;
 using TUGraz.VectoCore.Models.SimulationComponent.Data;
 using TUGraz.VectoCore.Utils;
@@ -556,16 +557,35 @@ namespace TUGraz.VectoCore.InputData.FileIO.JSON
 				if (auxFile == null || EmptyOrInvalidFileName(auxFile.Value<string>())) {
 					continue;
 				}
-				var stream = new StreamReader(Path.Combine(BasePath, auxFile.Value<string>()));
-				stream.ReadLine(); // skip header "Transmission ration to engine rpm [-]"
-				auxData.TransmissionRatio = stream.ReadLine().IndulgentParse();
-				stream.ReadLine(); // skip header "Efficiency to engine [-]"
-				auxData.EfficiencyToEngine = stream.ReadLine().IndulgentParse();
-				stream.ReadLine(); // skip header "Efficiency auxiliary to supply [-]"
-				auxData.EfficiencyToSupply = stream.ReadLine().IndulgentParse();
-				auxData.DemandMap = VectoCSVFile.ReadStream(new MemoryStream(Encoding.UTF8.GetBytes(stream.ReadToEnd())), source: Path.Combine(BasePath, auxFile.Value<string>()));
+
+				FillAuxiliaryDataInputData(auxData, Path.Combine(BasePath, auxFile.Value<string>()));
 			}
 			return retVal;
+		}
+
+		internal static void FillAuxiliaryDataInputData(AuxiliaryDataInputData auxData, string auxFile)
+		{
+			var stream = new StreamReader(auxFile);
+			stream.ReadLine(); // skip header "Transmission ration to engine rpm [-]"
+			auxData.TransmissionRatio = stream.ReadLine().IndulgentParse();
+			stream.ReadLine(); // skip header "Efficiency to engine [-]"
+			auxData.EfficiencyToEngine = stream.ReadLine().IndulgentParse();
+			stream.ReadLine(); // skip header "Efficiency auxiliary to supply [-]"
+			auxData.EfficiencyToSupply = stream.ReadLine().IndulgentParse();
+
+			var table = VectoCSVFile.ReadStream(new MemoryStream(Encoding.UTF8.GetBytes(stream.ReadToEnd())), source: auxFile);
+			foreach (DataRow row in table.Rows) {
+				if (AuxiliaryDataReader.HeaderIsValid(table.Columns)) {
+					row[AuxiliaryDataReader.Fields.MechPower] =
+						row.ParseDouble(AuxiliaryDataReader.Fields.MechPower).SI().Kilo.Watt.Value();
+					row[AuxiliaryDataReader.Fields.SupplyPower] =
+						row.ParseDouble(AuxiliaryDataReader.Fields.SupplyPower).SI().Kilo.Watt.Value();
+				} else {
+					row[1] = row.ParseDouble(1).SI().Kilo.Watt.Value();
+					row[2] = row.ParseDouble(2).SI().Kilo.Watt.Value();
+				}
+			}
+			auxData.DemandMap = table;
 		}
 
 		#endregion
@@ -635,14 +655,7 @@ namespace TUGraz.VectoCore.InputData.FileIO.JSON
 				if (auxFile == null || EmptyOrInvalidFileName(auxFile.Value<string>())) {
 					continue;
 				}
-				var stream = new StreamReader(Path.Combine(BasePath, auxFile.Value<string>()));
-				stream.ReadLine(); // skip header "Transmission ration to engine rpm [-]"
-				auxData.TransmissionRatio = stream.ReadLine().IndulgentParse();
-				stream.ReadLine(); // skip header "Efficiency to engine [-]"
-				auxData.EfficiencyToEngine = stream.ReadLine().IndulgentParse();
-				stream.ReadLine(); // skip header "Efficiency auxiliary to supply [-]"
-				auxData.EfficiencyToSupply = stream.ReadLine().IndulgentParse();
-				auxData.DemandMap = VectoCSVFile.ReadStream(new MemoryStream(Encoding.UTF8.GetBytes(stream.ReadToEnd())), source: Path.Combine(BasePath, auxFile.Value<string>()));
+				FillAuxiliaryDataInputData(auxData, auxFile.Value<string>());
 			}
 			return retVal;
 		}
