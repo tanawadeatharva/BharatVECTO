@@ -266,9 +266,13 @@ namespace TUGraz.VectoCore.Models.SimulationComponent.Impl
 			return coastingDistance;
 		}
 
-		public bool OverspeedAllowed(MeterPerSecond velocity)
+		public bool OverspeedAllowed(MeterPerSecond velocity, bool prohibitOverspeed = false)
 		{
-			return Driver.DriverData.OverSpeedEcoRoll.Mode == DriverMode.Overspeed && velocity > Driver.DriverData.OverSpeedEcoRoll.MinSpeed;
+			if (prohibitOverspeed) {
+				return false;
+			}
+			return Driver.DriverData.OverSpeedEcoRoll.Mode == DriverMode.Overspeed &&
+					velocity > Driver.DriverData.OverSpeedEcoRoll.MinSpeed;
 		}
 	}
 
@@ -344,7 +348,7 @@ namespace TUGraz.VectoCore.Models.SimulationComponent.Impl
 			if (newOperatingPoint.SimulationInterval.IsSmaller(Constants.SimulationSettings.LowerBoundTimeInterval)) {
 				// the next time interval will be too short, this may lead to issues with inertia etc. 
 				// instead of accelerating, drive at constant speed.
-				response = DoHandleRequest(absTime, ds, Driver.DataBus.VehicleSpeed, gradient);
+				response = DoHandleRequest(absTime, ds, Driver.DataBus.VehicleSpeed, gradient, true);
 				return response;
 			}
 			Log.Debug("Exceeding next ActionDistance at {0}. Reducing max Distance from {2} to {1}",
@@ -355,7 +359,8 @@ namespace TUGraz.VectoCore.Models.SimulationComponent.Impl
 			};
 		}
 
-		protected abstract IResponse DoHandleRequest(Second absTime, Meter ds, MeterPerSecond targetVelocity, Radian gradient);
+		protected abstract IResponse DoHandleRequest(Second absTime, Meter ds, MeterPerSecond targetVelocity, Radian gradient,
+			bool prohibitOverspeed = false);
 
 		protected abstract IResponse CheckRequestDoesNotExceedNextAction(Second absTime, Meter ds,
 			MeterPerSecond targetVelocity, Radian gradient, IResponse response, out Meter newSimulationDistance);
@@ -367,18 +372,20 @@ namespace TUGraz.VectoCore.Models.SimulationComponent.Impl
 
 	public class DriverModeDrive : AbstractDriverMode
 	{
-		protected override IResponse DoHandleRequest(Second absTime, Meter ds, MeterPerSecond targetVelocity, Radian gradient)
+		protected override IResponse DoHandleRequest(Second absTime, Meter ds, MeterPerSecond targetVelocity, Radian gradient,
+			bool prohibitOverspeed = false)
 		{
 			IResponse response;
 
 			Driver.DriverBehavior = DrivingBehavior.Driving;
 			var velocity = targetVelocity;
-			if (DriverStrategy.OverspeedAllowed(targetVelocity)) {
+			if (DriverStrategy.OverspeedAllowed(targetVelocity, prohibitOverspeed)) {
 				velocity += DriverData.OverSpeedEcoRoll.OverSpeed;
 			}
 			if (DataBus.ClutchClosed(absTime)) {
 				// drive along
-				if (DriverStrategy.OverspeedAllowed(targetVelocity) && DataBus.VehicleSpeed.IsEqual(targetVelocity)) {
+				if (DriverStrategy.OverspeedAllowed(targetVelocity, prohibitOverspeed) &&
+					DataBus.VehicleSpeed.IsEqual(targetVelocity)) {
 					response = Driver.DrivingActionCoast(absTime, ds, velocity, gradient);
 					if (response is ResponseSuccess && response.Acceleration < 0) {
 						response = Driver.DrivingActionAccelerate(absTime, ds, targetVelocity, gradient);
@@ -388,7 +395,7 @@ namespace TUGraz.VectoCore.Models.SimulationComponent.Impl
 				}
 				response.Switch().
 					Case<ResponseUnderload>(r => {
-						if (DriverStrategy.OverspeedAllowed(targetVelocity)) {
+						if (DriverStrategy.OverspeedAllowed(targetVelocity, prohibitOverspeed)) {
 							response = Driver.DrivingActionCoast(absTime, ds, velocity, gradient);
 							if (response is ResponseUnderload || response is ResponseSpeedLimitExceeded) {
 								response = Driver.DrivingActionBrake(absTime, ds, velocity, gradient);
@@ -488,7 +495,8 @@ namespace TUGraz.VectoCore.Models.SimulationComponent.Impl
 		protected BrakingPhase Phase;
 		protected bool RetryDistanceExceeded;
 
-		protected override IResponse DoHandleRequest(Second absTime, Meter ds, MeterPerSecond targetVelocity, Radian gradient)
+		protected override IResponse DoHandleRequest(Second absTime, Meter ds, MeterPerSecond targetVelocity, Radian gradient,
+			bool prohibitOverspeed = false)
 		{
 			IResponse response = null;
 			if (DataBus.VehicleSpeed <= DriverStrategy.BrakeTrigger.NextTargetSpeed) {
