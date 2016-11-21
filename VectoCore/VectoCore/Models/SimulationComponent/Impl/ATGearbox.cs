@@ -165,7 +165,8 @@ namespace TUGraz.VectoCore.Models.SimulationComponent.Impl
 
 			Log.Debug("AT-Gearbox Power Request: torque: {0}, angularVelocity: {1}", outTorque, outAngularVelocity);
 
-			if ((DataBus.VehicleStopped && outAngularVelocity > 0) || (Disengaged && outTorque.IsGreater(0))) {
+			if (!dryRun &&
+				((DataBus.VehicleStopped && outAngularVelocity > 0) || (CurrentState.Disengaged && outTorque.IsGreater(0)))) {
 				Gear = 1; //Strategy.InitGear(absTime, dt, outTorque, outAngularVelocity);
 				TorqueConverterLocked = false;
 				LastShift = absTime;
