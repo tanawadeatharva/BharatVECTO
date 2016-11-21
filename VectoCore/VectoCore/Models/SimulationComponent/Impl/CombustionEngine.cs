@@ -248,7 +248,7 @@ namespace TUGraz.VectoCore.Models.SimulationComponent.Impl
 				maxTorque = VectoMath.Min(maxTorque, gearboxFullLoad);
 			}
 
-			CurrentState.EngineTorque = totalTorqueDemand.Limit(minTorque, maxTorque);
+			CurrentState.EngineTorque = totalTorqueDemand.LimitTo(minTorque, maxTorque);
 			CurrentState.EnginePower = CurrentState.EngineTorque * avgEngineSpeed;
 
 			if (totalTorqueDemand.IsGreater(0) &&

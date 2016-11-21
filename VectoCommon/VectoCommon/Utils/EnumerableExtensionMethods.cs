@@ -225,6 +225,11 @@ namespace TUGraz.VectoCommon.Utils
 			}
 		}
 
+		public static IEnumerable<Tuple<TSource, TSource>> Pairwise<TSource>(this IEnumerable<TSource> source)
+		{
+			return Pairwise(source, Tuple.Create);
+		}
+
 		/// <summary>
 		/// Repeats the element and returns an Enumerable.
 		/// </summary>

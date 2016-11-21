@@ -55,23 +55,68 @@ namespace TUGraz.VectoCommon.Utils
 		/// <param name="y2">Second Value on the Y-Axis.</param>
 		/// <param name="xint">Value on the X-Axis, for which the Y-Value should be interpolated.</param>
 		/// <returns></returns>
+		[MethodImpl(MethodImplOptions.AggressiveInlining)]
 		public static TResult Interpolate<T, TResult>(T x1, T x2, TResult y1, TResult y2, T xint) where T : SI
 			where TResult : SIBase<TResult>
 		{
 			return Interpolate(x1.Value(), x2.Value(), y1.Value(), y2.Value(), xint.Value()).SI<TResult>();
 		}
 
+		[MethodImpl(MethodImplOptions.AggressiveInlining)]
+		public static TResult Interpolate<TInput, T, TResult>(this Tuple<TInput, TInput> self, Func<TInput, T> x,
+			Func<TInput, TResult> y, T xInterpolate)
+			where T : SIBase<T>
+			where TResult : SIBase<TResult>
+		{
+			return Interpolate(x(self.Item1).Value(), x(self.Item2).Value(), y(self.Item1).Value(), y(self.Item2).Value(),
+				xInterpolate.Value()).SI<TResult>();
+		}
+
+		[MethodImpl(MethodImplOptions.AggressiveInlining)]
+		public static TResult Interpolate<TInput, TResult>(this Tuple<TInput, TInput> self, Func<TInput, double> x,
+			Func<TInput, TResult> y, double xInterpolate)
+			where TResult : SIBase<TResult>
+		{
+			return
+				Interpolate(x(self.Item1), x(self.Item2), y(self.Item1).Value(), y(self.Item2).Value(), xInterpolate).SI<TResult>();
+		}
+
+		[MethodImpl(MethodImplOptions.AggressiveInlining)]
+		public static TResult Interpolate<TInput, TResult>(this IEnumerable<TInput> self, Func<TInput, double> x,
+			Func<TInput, TResult> y, double xInterpolate)
+			where TResult : SIBase<TResult>
+		{
+			return self.GetSection(elem => x(elem) < xInterpolate).Interpolate(x, y, xInterpolate);
+		}
+
+		[MethodImpl(MethodImplOptions.AggressiveInlining)]
+		public static double Interpolate<TInput>(this IEnumerable<TInput> self, Func<TInput, double> x,
+			Func<TInput, double> y, double xInterpolate)
+		{
+			return self.GetSection(elem => x(elem) < xInterpolate).Interpolate(x, y, xInterpolate);
+		}
+
+		[MethodImpl(MethodImplOptions.AggressiveInlining)]
+		public static double Interpolate<TInput>(this Tuple<TInput, TInput> self, Func<TInput, double> x,
+			Func<TInput, double> y, double xInterpolate)
+		{
+			return Interpolate(x(self.Item1), x(self.Item2), y(self.Item1), y(self.Item2), xInterpolate);
+		}
+
+		[MethodImpl(MethodImplOptions.AggressiveInlining)]
 		public static double Interpolate<T>(T x1, T x2, double y1, double y2, T xint) where T : SI
 		{
 			return Interpolate(x1.Value(), x2.Value(), y1, y2, xint.Value());
 		}
 
+		[MethodImpl(MethodImplOptions.AggressiveInlining)]
 		public static TResult Interpolate<TResult>(double x1, double x2, TResult y1, TResult y2, double xint)
 			where TResult : SIBase<TResult>
 		{
 			return Interpolate(x1, x2, y1.Value(), y2.Value(), xint).SI<TResult>();
 		}
 
+		[MethodImpl(MethodImplOptions.AggressiveInlining)]
 		public static double Interpolate(Point p1, Point p2, double x)
 		{
 			return Interpolate(p1.X, p2.X, p1.Y, p2.Y, x);
@@ -80,6 +125,7 @@ namespace TUGraz.VectoCommon.Utils
 		/// <summary>
 		/// Linearly interpolates a value between two points.
 		/// </summary>
+		[MethodImpl(MethodImplOptions.AggressiveInlining)]
 		public static double Interpolate(double x1, double x2, double y1, double y2, double xint)
 		{
 			return (xint - x1) * (y2 - y1) / (x2 - x1) + y1;
@@ -88,6 +134,8 @@ namespace TUGraz.VectoCommon.Utils
 		/// <summary>
 		/// Returns the absolute value.
 		/// </summary>
+		[DebuggerStepThrough]
+		[MethodImpl(MethodImplOptions.AggressiveInlining)]
 		public static SI Abs(SI si)
 		{
 			return si.Abs();
@@ -96,6 +144,8 @@ namespace TUGraz.VectoCommon.Utils
 		/// <summary>
 		/// Returns the minimum of two values.
 		/// </summary>
+		[DebuggerStepThrough]
+		[MethodImpl(MethodImplOptions.AggressiveInlining)]
 		public static T Min<T>(T c1, T c2) where T : IComparable
 		{
 			return c1.CompareTo(c2) <= 0 ? c1 : c2;
@@ -104,59 +154,67 @@ namespace TUGraz.VectoCommon.Utils
 		/// <summary>
 		/// Returns the maximum of two values.
 		/// </summary>
+		[DebuggerStepThrough]
+		[MethodImpl(MethodImplOptions.AggressiveInlining)]
 		public static T Max<T>(T c1, T c2) where T : IComparable
 		{
 			return c1.CompareTo(c2) >= 0 ? c1 : c2;
 		}
 
+		[DebuggerStepThrough]
+		[MethodImpl(MethodImplOptions.AggressiveInlining)]
 		public static T Max<T>(T c1, T c2, T c3) where T : IComparable
 		{
 			return Max(Max(c1, c2), c3);
 		}
 
-		public static T Limit<T>(this T value, T lowerBound, T upperBound) where T : IComparable
+		[DebuggerStepThrough]
+		[MethodImpl(MethodImplOptions.AggressiveInlining)]
+		public static T LimitTo<T>(this T value, T lowerBound, T upperBound) where T : IComparable
 		{
 			if (lowerBound.CompareTo(upperBound) > 0) {
 				throw new VectoException(
-					"VectoMath.Limit: lowerBound must not be greater than upperBound. lowerBound: {0}, upperBound: {1}", lowerBound,
+					"VectoMath.LimitTo: lowerBound must not be greater than upperBound. lowerBound: {0}, upperBound: {1}", lowerBound,
 					upperBound);
 			}
 
 			if (value.CompareTo(upperBound) > 0) {
 				return upperBound;
 			}
+
 			if (value.CompareTo(lowerBound) < 0) {
 				return lowerBound;
 			}
+
 			return value;
 		}
 
 		/// <summary>
-		///		converts the given inclination in percent (0-1+) into Radians
+		///	converts the given inclination in percent (0-1+) into Radians
 		/// </summary>
-		/// <param name="inclinationPercent"></param>
-		/// <returns></returns>
+		[DebuggerStepThrough]
+		[MethodImpl(MethodImplOptions.AggressiveInlining)]
 		public static Radian InclinationToAngle(double inclinationPercent)
 		{
 			return Math.Atan(inclinationPercent).SI<Radian>();
 		}
 
-		public static List<double> QuadraticEquationSolver(double a, double b, double c)
+		public static double[] QuadraticEquationSolver(double a, double b, double c)
 		{
-			var retVal = new List<double>();
 			var d = b * b - 4 * a * c;
 
+			// no real solution
 			if (d < 0) {
-				return retVal;
-			} else if (d > 0) {
-				// two solutions possible
-				retVal.Add((-b + Math.Sqrt(d)) / (2 * a));
-				retVal.Add((-b - Math.Sqrt(d)) / (2 * a));
-			} else {
-				// only one solution possible
-				retVal.Add(-b / (2 * a));
+				return new double[0];
 			}
-			return retVal;
+
+			if (d > 0) {
+				// two solutions
+				return new[] { (-b + Math.Sqrt(d)) / (2 * a), (-b - Math.Sqrt(d)) / (2 * a) };
+			}
+
+			// one real solution
+			return new[] { -b / (2 * a) };
 		}
 
 		public static Point Intersect(Edge line1, Edge line2)
@@ -221,10 +279,10 @@ namespace TUGraz.VectoCommon.Utils
 
 			// we need to accelerate / decelerate. solve quadratic equation...
 			// ds = acceleration / 2 * dt^2 + currentSpeed * dt   => solve for dt
-			var solutions = VectoMath.QuadraticEquationSolver(acceleration.Value() / 2.0, currentSpeed.Value(),
+			var solutions = QuadraticEquationSolver(acceleration.Value() / 2.0, currentSpeed.Value(),
 				-ds.Value());
 
-			if (solutions.Count == 0) {
+			if (solutions.Length == 0) {
 				// no real-valued solutions: acceleration is so negative that vehicle stops already before the required distance can be reached.
 				// adapt ds to the halting-point.
 				// t = v / a
@@ -256,12 +314,14 @@ namespace TUGraz.VectoCommon.Utils
 			return retVal;
 		}
 
+		[DebuggerStepThrough]
+		[MethodImpl(MethodImplOptions.AggressiveInlining)]
 		public static T Ceiling<T>(T si) where T : SIBase<T>
 		{
 			return Math.Ceiling(si.Value()).SI<T>();
 		}
 
-		public static List<double> CubicEquationSolver(double a, double b, double c, double d)
+		public static double[] CubicEquationSolver(double a, double b, double c, double d)
 		{
 			var solutions = new List<double>();
 			if (a.IsEqual(0, 1e-12)) {
@@ -280,7 +340,7 @@ namespace TUGraz.VectoCommon.Utils
 					solutions.Add(p * Math.Cos((phi + 2 * i * Math.PI) / 3.0) - w);
 				}
 			} else {
-				// only one real solution
+				// one real solution
 				discriminant = Math.Sqrt(discriminant);
 				solutions.Add(Cbrt(q + discriminant) + Cbrt(q - discriminant) - w);
 			}
@@ -293,7 +353,7 @@ namespace TUGraz.VectoCommon.Utils
 				}
 			}
 			solutions.Sort();
-			return solutions;
+			return solutions.ToArray();
 		}
 
 		private static double Cbrt(double x)
@@ -336,25 +396,9 @@ namespace TUGraz.VectoCommon.Utils
 			return new Point(p1.X * scalar, p1.Y * scalar, p1.Z * scalar);
 		}
 
-		/// <summary>
-		/// 
-		/// </summary>
-		/// <param name="scalar"></param>
-		/// <param name="p1"></param>
-		/// <returns></returns>
 		public static Point operator *(double scalar, Point p1)
 		{
 			return p1 * scalar;
-		}
-
-		/// <summary>
-		/// Calculates cross product between two 3d-vectors.
-		/// </summary>
-		/// <param name="other"></param>
-		/// <returns></returns>
-		public Point Cross(Point other)
-		{
-			return new Point(Y * other.Z - Z * other.Y, Z * other.X - X * other.Z, X * other.Y - Y * other.X);
 		}
 
 		/// <summary>
@@ -422,14 +466,6 @@ namespace TUGraz.VectoCommon.Utils
 		public readonly double Z;
 		public readonly double W;
 
-		public Plane(double x, double y, double z, double w)
-		{
-			X = x;
-			Y = y;
-			Z = z;
-			W = w;
-		}
-
 		public Plane(Triangle tr)
 		{
 			var abX = tr.P2.X - tr.P1.X;
@@ -466,13 +502,8 @@ namespace TUGraz.VectoCommon.Utils
 		}
 
 		/// <summary>
-		/// Barycentric Technique: http://www.blackpawn.com/texts/pointinpoly/default.html
+		/// Check if Point is inside of Triangle. Barycentric Technique: http://www.blackpawn.com/texts/pointinpoly/default.html
 		/// </summary>
-		/// <param name="x"></param>
-		/// <param name="y"></param>
-		/// <param name="exact"></param>
-		/// <returns></returns>
-		[MethodImpl(MethodImplOptions.AggressiveInlining)]
 		public bool IsInside(double x, double y, bool exact)
 		{
 			var smallerY = y - DoubleExtensionMethods.Tolerance;
@@ -530,17 +561,6 @@ namespace TUGraz.VectoCommon.Utils
 
 			var result = p0Square * det12 + p1Square * det20 + p2Square * det01;
 			return result > 0;
-
-			//double[,] m = { { P1.X - p.X, P1.Y - p.Y, (P1.X * P1.X - p.X*p.X) + (P1.Y * P1.Y - p.Y*p.Y) }, 
-			//				{ P2.X - p.X, P2.Y - p.Y, (P2.X * P2.X - p.X*p.X) + (P2.Y * P2.Y - p.Y*p.Y) }, 
-			//				{ P3.X - p.X, P3.Y - p.Y, (P3.X * P3.X - p.X*p.X) + (P3.Y * P3.Y - p.Y*p.Y) } };
-			//var det = m[0, 0] * m[1, 1] * m[2, 2]
-			//		+ m[0, 1] * m[1, 2] * m[2, 0]
-			//		+ m[0, 2] * m[1, 0] * m[2, 1]
-			//		- m[0, 0] * m[1, 2] * m[2, 1]
-			//		- m[0, 1] * m[1, 0] * m[2, 2]
-			//		- m[0, 2] * m[1, 1] * m[2, 0];
-			//return det > 0;
 		}
 
 		public bool Contains(Point p)
@@ -553,7 +573,7 @@ namespace TUGraz.VectoCommon.Utils
 			return Contains(t.P1) || Contains(t.P2) || Contains(t.P3);
 		}
 
-		public Edge[] GetEdges()
+		public IEnumerable<Edge> GetEdges()
 		{
 			return new[] { new Edge(P1, P2), new Edge(P2, P3), new Edge(P3, P1) };
 		}

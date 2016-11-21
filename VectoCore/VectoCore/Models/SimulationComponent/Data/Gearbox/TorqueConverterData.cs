@@ -97,31 +97,32 @@ namespace TUGraz.VectoCore.Models.SimulationComponent.Data.Gearbox
 						torqueOut.Value();
 				var sol = VectoMath.QuadraticEquationSolver(a, b, c);
 
-				var selected = sol.Where(x => x > min
-											&& angularSpeedOut.Value() / x >= muEdge.P1.X && angularSpeedOut.Value() / x < muEdge.P2.X
-											&& angularSpeedOut.Value() / x >= mpEdge.P1.X && angularSpeedOut.Value() / x < mpEdge.P2.X);
-				solutions.AddRange(selected);
+				foreach (var x in sol) {
+					var ratio = angularSpeedOut.Value() / x;
+					if (x > min && muEdge.P1.X <= ratio && ratio < muEdge.P2.X)
+						solutions.Add(x);
+				}
 			}
 			if (solutions.Count == 0) {
 				throw new VectoException("No solution for input torque/input speed found! n_out: {0}, tq_out: {1}", angularSpeedOut,
 					torqueOut);
 			}
 
-			var retVal = new List<TorqueConverterOperatingPoint>();
+			var retVal = new List<TorqueConverterOperatingPoint>(solutions.Count);
 			foreach (var sol in solutions) {
+				var s = sol.SI<PerSecond>();
 				var tmp = new TorqueConverterOperatingPoint {
 					OutTorque = torqueOut,
 					OutAngularVelocity = angularSpeedOut,
-					InAngularVelocity = sol.SI<PerSecond>()
+					InAngularVelocity = s,
+					SpeedRatio = angularSpeedOut / s,
+					TorqueRatio = MuLookup(angularSpeedOut / s)
 				};
-				tmp.SpeedRatio = angularSpeedOut / tmp.InAngularVelocity;
-				tmp.TorqueRatio = MuLookup(angularSpeedOut / tmp.InAngularVelocity);
 				tmp.InTorque = torqueOut / tmp.TorqueRatio;
 				retVal.Add(tmp);
 			}
 			return retVal;
 		}
-
 
 		/// <summary>
 		/// find an operating point for the torque converter
@@ -139,30 +140,29 @@ namespace TUGraz.VectoCore.Models.SimulationComponent.Data.Gearbox
 				OutAngularVelocity = outAngularVelocity,
 				SpeedRatio = outAngularVelocity.Value() / inAngularVelocity.Value(),
 			};
-			foreach (var segment in TorqueConverterEntries.Pairwise(Tuple.Create)) {
-				if (!(retVal.SpeedRatio >= segment.Item1.SpeedRatio) || !(retVal.SpeedRatio < segment.Item2.SpeedRatio)) {
-					continue;
+
+			foreach (var segment in TorqueConverterEntries.Pairwise()) {
+				if (retVal.SpeedRatio.IsBetween(segment.Item1.SpeedRatio, segment.Item2.SpeedRatio)) {
+					var mpTorque = segment.Interpolate(x => x.SpeedRatio, y => y.Torque, retVal.SpeedRatio);
+					retVal.TorqueRatio = segment.Interpolate(x => x.SpeedRatio, y => y.TorqueRatio, retVal.SpeedRatio);
+					retVal.InTorque = mpTorque * (inAngularVelocity * inAngularVelocity / ReferenceSpeed / ReferenceSpeed).Value();
+					retVal.OutTorque = retVal.InTorque * retVal.TorqueRatio;
+					return retVal;
 				}
-				var mpTorque = VectoMath.Interpolate(segment.Item1.SpeedRatio, segment.Item2.SpeedRatio, segment.Item1.Torque,
-					segment.Item2.Torque, retVal.SpeedRatio);
-				retVal.TorqueRatio = VectoMath.Interpolate(segment.Item1.SpeedRatio, segment.Item2.SpeedRatio,
-					segment.Item1.TorqueRatio, segment.Item2.TorqueRatio, retVal.SpeedRatio);
-				retVal.InTorque = mpTorque * (inAngularVelocity * inAngularVelocity / ReferenceSpeed / ReferenceSpeed).Value();
-				retVal.OutTorque = retVal.InTorque * retVal.TorqueRatio;
-				return retVal;
 			}
+
+			// No solution found. Throw Errror
 			var nu = outAngularVelocity / inAngularVelocity;
 			var nuMax = TorqueConverterEntries.Last().SpeedRatio;
 
 			if (nu.IsGreater(nuMax)) {
 				throw new VectoException(
-					"Torque Converter: Range of torque converter data is not sufficient. Needed nu: {0}, Got nu_max: {1}", nu,
-					nuMax);
-			} else {
-				throw new VectoException(
-					"Torque Converter: No solution for output speed/input speed found! n_out: {0}, n_in: {1}, nu: {2}, nu_max: {3}",
-					outAngularVelocity, inAngularVelocity, nu, nuMax);
+					"Torque Converter: Range of torque converter data is not sufficient. Needed nu: {0}, Got nu_max: {1}", nu, nuMax);
 			}
+
+			throw new VectoException(
+				"Torque Converter: No solution for output speed/input speed found! n_out: {0}, n_in: {1}, nu: {2}, nu_max: {3}",
+				outAngularVelocity, inAngularVelocity, nu, nuMax);
 		}
 
 		/// <summary>
@@ -238,22 +238,12 @@ namespace TUGraz.VectoCore.Models.SimulationComponent.Data.Gearbox
 
 		private double MuLookup(double speedRatio)
 		{
-			int index;
-			TorqueConverterEntries.GetSection(x => x.SpeedRatio < speedRatio, out index);
-			var retVal = VectoMath.Interpolate(TorqueConverterEntries[index].SpeedRatio,
-				TorqueConverterEntries[index + 1].SpeedRatio, TorqueConverterEntries[index].TorqueRatio,
-				TorqueConverterEntries[index + 1].TorqueRatio, speedRatio);
-			return retVal;
+			return TorqueConverterEntries.Interpolate(x => x.SpeedRatio, y => y.TorqueRatio, speedRatio);
 		}
 
 		private NewtonMeter ReferenceTorqueLookup(double speedRatio)
 		{
-			int index;
-			TorqueConverterEntries.GetSection(x => x.SpeedRatio < speedRatio, out index);
-			var retVal = VectoMath.Interpolate(TorqueConverterEntries[index].SpeedRatio,
-				TorqueConverterEntries[index + 1].SpeedRatio, TorqueConverterEntries[index].Torque,
-				TorqueConverterEntries[index + 1].Torque, speedRatio);
-			return retVal;
+			return TorqueConverterEntries.Interpolate(x => x.SpeedRatio, y => y.Torque, speedRatio);
 		}
 
 		// ReSharper disable once UnusedMember.Global -- used by validation
