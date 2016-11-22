@@ -222,9 +222,6 @@
     <None Include="TestData\Bugs\Kies-20161115\job.vsum">
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
     </None>
-    <None Include="TestData\Bugs\Kies-20161115\job_cycle.vmod">
-      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
-    </None>
     <None Include="TestData\Bugs\Kies-20161115\shift.vgbs">
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
     </None>
