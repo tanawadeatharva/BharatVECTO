@@ -76,7 +76,7 @@ namespace TUGraz.VectoCore.Models.Simulation.Impl
 		{
 			return
 				Runs.Select(
-					r => new CycleTypeDescription { Name = r.Run.CycleName, CycleType = r.Run.GetContainer().RunData.Cycle.CycleType })
+						r => new CycleTypeDescription { Name = r.Run.CycleName, CycleType = r.Run.GetContainer().RunData.Cycle.CycleType })
 					.Distinct();
 		}
 
@@ -210,7 +210,7 @@ namespace TUGraz.VectoCore.Models.Simulation.Impl
 						ExecException = ex;
 					}
 					stopWatch.Stop();
-					Success = Run.FinishedWithoutErrors;
+					Success = Run.FinishedWithoutErrors && ExecException == null;
 					Done = true;
 					ExecTime = stopWatch.Elapsed.TotalMilliseconds;
 					JobContainer.JobCompleted();

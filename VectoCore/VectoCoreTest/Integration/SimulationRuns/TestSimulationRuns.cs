@@ -3,7 +3,9 @@ using NUnit.Framework;
 using TUGraz.VectoCommon.Models;
 using TUGraz.VectoCore.InputData.FileIO.JSON;
 using TUGraz.VectoCore.Models.Simulation.Impl;
+using TUGraz.VectoCore.OutputData.FileIO;
 using TUGraz.VectoCore.Tests.Models.Simulation;
+using TUGraz.VectoCore.Tests.Utils;
 
 namespace TUGraz.VectoCore.Tests.Integration.SimulationRuns
 {
@@ -16,8 +18,9 @@ namespace TUGraz.VectoCore.Tests.Integration.SimulationRuns
 		TestCase("Silberholz-20161121")]
 		public static void RunJob_Eng(string jobName)
 		{
+			var writer = new FileOutputWriter(jobName);
 			var inputData = JSONInputDataFactory.ReadJsonJob("TestData\\Bugs\\" + jobName + "\\job.vecto");
-			var factory = new SimulatorFactory(ExecutionMode.Engineering, inputData, null);
+			var factory = new SimulatorFactory(ExecutionMode.Engineering, inputData, writer);
 			var jobContainer = new JobContainer(new MockSumWriter());
 			jobContainer.AddRuns(factory);
 			jobContainer.Execute();
