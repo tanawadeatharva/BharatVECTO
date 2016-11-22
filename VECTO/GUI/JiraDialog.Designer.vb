@@ -118,7 +118,7 @@ Partial Class JiraDialog
 		Me.MinimizeBox = False
 		Me.Name = "JiraDialog"
 		Me.ShowInTaskbar = False
-		Me.StartPosition = System.Windows.Forms.FormStartPosition.CenterParent
+		Me.StartPosition = System.Windows.Forms.FormStartPosition.CenterScreen
 		Me.Text = "Report Issue via CITnet"
 		Me.GroupBox1.ResumeLayout(False)
 		Me.GroupBox1.PerformLayout()

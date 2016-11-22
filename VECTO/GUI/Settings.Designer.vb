@@ -85,7 +85,7 @@ Partial Class Settings
 		Me.GroupBox3.Controls.Add(Me.Label16)
 		Me.GroupBox3.Location = New System.Drawing.Point(5, 6)
 		Me.GroupBox3.Name = "GroupBox3"
-		Me.GroupBox3.Size = New System.Drawing.Size(268, 129)
+		Me.GroupBox3.Size = New System.Drawing.Size(287, 129)
 		Me.GroupBox3.TabIndex = 0
 		Me.GroupBox3.TabStop = False
 		Me.GroupBox3.Text = "Interface"
@@ -98,7 +98,7 @@ Partial Class Settings
 		Me.GroupBox5.Controls.Add(Me.Label12)
 		Me.GroupBox5.Location = New System.Drawing.Point(7, 45)
 		Me.GroupBox5.Name = "GroupBox5"
-		Me.GroupBox5.Size = New System.Drawing.Size(253, 76)
+		Me.GroupBox5.Size = New System.Drawing.Size(274, 76)
 		Me.GroupBox5.TabIndex = 1
 		Me.GroupBox5.TabStop = False
 		Me.GroupBox5.Text = "File Open Command"
@@ -107,7 +107,7 @@ Partial Class Settings
 		'
 		Me.TbOpenCmdName.Location = New System.Drawing.Point(66, 19)
 		Me.TbOpenCmdName.Name = "TbOpenCmdName"
-		Me.TbOpenCmdName.Size = New System.Drawing.Size(174, 20)
+		Me.TbOpenCmdName.Size = New System.Drawing.Size(202, 20)
 		Me.TbOpenCmdName.TabIndex = 0
 		'
 		'Label7
@@ -123,7 +123,7 @@ Partial Class Settings
 		'
 		Me.TbOpenCmd.Location = New System.Drawing.Point(66, 45)
 		Me.TbOpenCmd.Name = "TbOpenCmd"
-		Me.TbOpenCmd.Size = New System.Drawing.Size(174, 20)
+		Me.TbOpenCmd.Size = New System.Drawing.Size(202, 20)
 		Me.TbOpenCmd.TabIndex = 1
 		'
 		'Label12
@@ -188,7 +188,7 @@ Partial Class Settings
 		Me.GrCalc.Controls.Add(Me.Label2)
 		Me.GrCalc.Location = New System.Drawing.Point(6, 141)
 		Me.GrCalc.Name = "GrCalc"
-		Me.GrCalc.Size = New System.Drawing.Size(267, 107)
+		Me.GrCalc.Size = New System.Drawing.Size(286, 107)
 		Me.GrCalc.TabIndex = 1
 		Me.GrCalc.TabStop = False
 		Me.GrCalc.Text = "Calculation"
@@ -302,6 +302,7 @@ Partial Class Settings
 		Me.MaximizeBox = False
 		Me.MinimizeBox = False
 		Me.Name = "Settings"
+		Me.StartPosition = System.Windows.Forms.FormStartPosition.CenterScreen
 		Me.Text = "Settings"
 		Me.GroupBox3.ResumeLayout(False)
 		Me.GroupBox3.PerformLayout()

@@ -190,7 +190,7 @@ Partial Class AboutBox
 		Me.Controls.Add(Me.Label8)
 		Me.FormBorderStyle = System.Windows.Forms.FormBorderStyle.FixedToolWindow
 		Me.Name = "AboutBox"
-		Me.StartPosition = System.Windows.Forms.FormStartPosition.CenterParent
+		Me.StartPosition = System.Windows.Forms.FormStartPosition.CenterScreen
 		Me.Text = "About VECTO"
 		Me.Panel1.ResumeLayout(False)
 		Me.Panel1.PerformLayout()

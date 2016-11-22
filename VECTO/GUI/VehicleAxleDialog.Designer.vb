@@ -276,7 +276,7 @@ Partial Class VehicleAxleDialog
 		Me.MinimizeBox = False
 		Me.Name = "VehicleAxleDialog"
 		Me.ShowInTaskbar = False
-		Me.StartPosition = System.Windows.Forms.FormStartPosition.CenterParent
+		Me.StartPosition = System.Windows.Forms.FormStartPosition.CenterScreen
 		Me.Text = "Axle configuration"
 		Me.TableLayoutPanel1.ResumeLayout(False)
 		Me.PnAxle.ResumeLayout(False)

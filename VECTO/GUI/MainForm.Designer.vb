@@ -209,9 +209,9 @@ Partial Class MainForm
 		'btnImportXML
 		'
 		Me.btnImportXML.Anchor = CType((System.Windows.Forms.AnchorStyles.Bottom Or System.Windows.Forms.AnchorStyles.Left), System.Windows.Forms.AnchorStyles)
-		Me.btnImportXML.Location = New System.Drawing.Point(464, 271)
+		Me.btnImportXML.Location = New System.Drawing.Point(460, 267)
 		Me.btnImportXML.Name = "btnImportXML"
-		Me.btnImportXML.Size = New System.Drawing.Size(104, 23)
+		Me.btnImportXML.Size = New System.Drawing.Size(115, 30)
 		Me.btnImportXML.TabIndex = 23
 		Me.btnImportXML.Text = "Import from XML"
 		Me.btnImportXML.UseVisualStyleBackColor = True
@@ -221,9 +221,9 @@ Partial Class MainForm
 		'
 		Me.btnExportXML.Anchor = CType((System.Windows.Forms.AnchorStyles.Bottom Or System.Windows.Forms.AnchorStyles.Left), System.Windows.Forms.AnchorStyles)
 		Me.btnExportXML.Enabled = False
-		Me.btnExportXML.Location = New System.Drawing.Point(343, 272)
+		Me.btnExportXML.Location = New System.Drawing.Point(344, 267)
 		Me.btnExportXML.Name = "btnExportXML"
-		Me.btnExportXML.Size = New System.Drawing.Size(115, 23)
+		Me.btnExportXML.Size = New System.Drawing.Size(115, 30)
 		Me.btnExportXML.TabIndex = 22
 		Me.btnExportXML.Text = "Export as XML"
 		Me.btnExportXML.UseVisualStyleBackColor = True
@@ -783,19 +783,19 @@ Partial Class MainForm
 		'OpenWithToolStripMenuItem
 		'
 		Me.OpenWithToolStripMenuItem.Name = "OpenWithToolStripMenuItem"
-		Me.OpenWithToolStripMenuItem.Size = New System.Drawing.Size(198, 22)
+		Me.OpenWithToolStripMenuItem.Size = New System.Drawing.Size(173, 22)
 		Me.OpenWithToolStripMenuItem.Text = "Open with ..."
 		'
 		'OpenInGraphWindowToolStripMenuItem
 		'
 		Me.OpenInGraphWindowToolStripMenuItem.Name = "OpenInGraphWindowToolStripMenuItem"
-		Me.OpenInGraphWindowToolStripMenuItem.Size = New System.Drawing.Size(198, 22)
+		Me.OpenInGraphWindowToolStripMenuItem.Size = New System.Drawing.Size(173, 22)
 		Me.OpenInGraphWindowToolStripMenuItem.Text = "Open in Graph Window"
 		'
 		'ShowInFolderToolStripMenuItem
 		'
 		Me.ShowInFolderToolStripMenuItem.Name = "ShowInFolderToolStripMenuItem"
-		Me.ShowInFolderToolStripMenuItem.Size = New System.Drawing.Size(198, 22)
+		Me.ShowInFolderToolStripMenuItem.Size = New System.Drawing.Size(173, 22)
 		Me.ShowInFolderToolStripMenuItem.Text = "Show in Folder"
 		'
 		'MainForm
@@ -808,6 +808,7 @@ Partial Class MainForm
 		Me.Icon = CType(resources.GetObject("$this.Icon"), System.Drawing.Icon)
 		Me.MinimumSize = New System.Drawing.Size(785, 485)
 		Me.Name = "MainForm"
+		Me.StartPosition = System.Windows.Forms.FormStartPosition.CenterScreen
 		Me.Text = "VECTO"
 		Me.StatusBAR.ResumeLayout(False)
 		Me.StatusBAR.PerformLayout()

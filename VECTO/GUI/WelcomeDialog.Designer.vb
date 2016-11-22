@@ -46,7 +46,7 @@ Partial Class WelcomeDialog
 		'
 		Me.Cancel_Button.Anchor = CType((System.Windows.Forms.AnchorStyles.Bottom Or System.Windows.Forms.AnchorStyles.Right), System.Windows.Forms.AnchorStyles)
 		Me.Cancel_Button.DialogResult = System.Windows.Forms.DialogResult.Cancel
-		Me.Cancel_Button.Location = New System.Drawing.Point(239, 152)
+		Me.Cancel_Button.Location = New System.Drawing.Point(239, 133)
 		Me.Cancel_Button.Name = "Cancel_Button"
 		Me.Cancel_Button.Size = New System.Drawing.Size(67, 23)
 		Me.Cancel_Button.TabIndex = 1
@@ -56,7 +56,7 @@ Partial Class WelcomeDialog
 		'
 		Me.Label1.AutoSize = True
 		Me.Label1.Font = New System.Drawing.Font("Microsoft Sans Serif", 9.75!, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, CType(0, Byte))
-		Me.Label1.Location = New System.Drawing.Point(12, 18)
+		Me.Label1.Location = New System.Drawing.Point(123, 19)
 		Me.Label1.Name = "Label1"
 		Me.Label1.Size = New System.Drawing.Size(77, 16)
 		Me.Label1.TabIndex = 1
@@ -83,7 +83,7 @@ Partial Class WelcomeDialog
 		'WelcomeDialog
 		'
 		Me.CancelButton = Me.Cancel_Button
-		Me.ClientSize = New System.Drawing.Size(318, 187)
+		Me.ClientSize = New System.Drawing.Size(318, 168)
 		Me.Controls.Add(Me.Button2)
 		Me.Controls.Add(Me.Cancel_Button)
 		Me.Controls.Add(Me.Button1)
@@ -92,7 +92,7 @@ Partial Class WelcomeDialog
 		Me.MinimizeBox = False
 		Me.Name = "WelcomeDialog"
 		Me.ShowInTaskbar = False
-		Me.StartPosition = System.Windows.Forms.FormStartPosition.CenterParent
+		Me.StartPosition = System.Windows.Forms.FormStartPosition.CenterScreen
 		Me.Text = "Welcome"
 		Me.ResumeLayout(False)
 		Me.PerformLayout()

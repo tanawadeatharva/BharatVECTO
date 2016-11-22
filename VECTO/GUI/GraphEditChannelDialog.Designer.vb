@@ -126,7 +126,7 @@ Partial Class GraphEditChannelDialog
 		Me.MinimizeBox = False
 		Me.Name = "GraphEditChannelDialog"
 		Me.ShowInTaskbar = False
-		Me.StartPosition = System.Windows.Forms.FormStartPosition.CenterParent
+		Me.StartPosition = System.Windows.Forms.FormStartPosition.CenterScreen
 		Me.Text = "Edit Channel"
 		Me.TableLayoutPanel1.ResumeLayout(False)
 		Me.GroupBox1.ResumeLayout(False)

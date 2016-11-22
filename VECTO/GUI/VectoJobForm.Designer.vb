@@ -284,7 +284,7 @@ Partial Class VectoJobForm
 		'Label9
 		'
 		Me.Label9.AutoSize = True
-		Me.Label9.Location = New System.Drawing.Point(187, 74)
+		Me.Label9.Location = New System.Drawing.Point(191, 74)
 		Me.Label9.Name = "Label9"
 		Me.Label9.Size = New System.Drawing.Size(24, 13)
 		Me.Label9.TabIndex = 44
@@ -309,7 +309,7 @@ Partial Class VectoJobForm
 		'btnAAUXOpen
 		'
 		Me.btnAAUXOpen.Image = Global.TUGraz.VECTO.My.Resources.Resources.application_export_icon_small
-		Me.btnAAUXOpen.Location = New System.Drawing.Point(465, 43)
+		Me.btnAAUXOpen.Location = New System.Drawing.Point(485, 43)
 		Me.btnAAUXOpen.Name = "btnAAUXOpen"
 		Me.btnAAUXOpen.Size = New System.Drawing.Size(24, 24)
 		Me.btnAAUXOpen.TabIndex = 41
@@ -327,7 +327,7 @@ Partial Class VectoJobForm
 		'btnBrowseAAUXFile
 		'
 		Me.btnBrowseAAUXFile.Image = Global.TUGraz.VECTO.My.Resources.Resources.Open_icon
-		Me.btnBrowseAAUXFile.Location = New System.Drawing.Point(441, 43)
+		Me.btnBrowseAAUXFile.Location = New System.Drawing.Point(461, 43)
 		Me.btnBrowseAAUXFile.Name = "btnBrowseAAUXFile"
 		Me.btnBrowseAAUXFile.Size = New System.Drawing.Size(24, 24)
 		Me.btnBrowseAAUXFile.TabIndex = 39
@@ -338,14 +338,14 @@ Partial Class VectoJobForm
 		'
 		Me.txtAdvancedAuxiliaryFile.Location = New System.Drawing.Point(109, 45)
 		Me.txtAdvancedAuxiliaryFile.Name = "txtAdvancedAuxiliaryFile"
-		Me.txtAdvancedAuxiliaryFile.Size = New System.Drawing.Size(331, 20)
+		Me.txtAdvancedAuxiliaryFile.Size = New System.Drawing.Size(351, 20)
 		Me.txtAdvancedAuxiliaryFile.TabIndex = 38
 		'
 		'picAuxInfo
 		'
 		Me.picAuxInfo.Image = Global.TUGraz.VECTO.My.Resources.Resources.Information_icon
 		Me.picAuxInfo.InitialImage = Global.TUGraz.VECTO.My.Resources.Resources.Information_icon
-		Me.picAuxInfo.Location = New System.Drawing.Point(443, 19)
+		Me.picAuxInfo.Location = New System.Drawing.Point(463, 19)
 		Me.picAuxInfo.Name = "picAuxInfo"
 		Me.picAuxInfo.Size = New System.Drawing.Size(16, 16)
 		Me.picAuxInfo.SizeMode = System.Windows.Forms.PictureBoxSizeMode.AutoSize
@@ -357,7 +357,7 @@ Partial Class VectoJobForm
 		Me.cboAdvancedAuxiliaries.FormattingEnabled = True
 		Me.cboAdvancedAuxiliaries.Location = New System.Drawing.Point(109, 18)
 		Me.cboAdvancedAuxiliaries.Name = "cboAdvancedAuxiliaries"
-		Me.cboAdvancedAuxiliaries.Size = New System.Drawing.Size(331, 21)
+		Me.cboAdvancedAuxiliaries.Size = New System.Drawing.Size(351, 21)
 		Me.cboAdvancedAuxiliaries.TabIndex = 36
 		'
 		'lbAdvancedAuxiliaries
@@ -1294,10 +1294,11 @@ Partial Class VectoJobForm
 		Me.Controls.Add(Me.TabControl1)
 		Me.Controls.Add(Me.ButOK)
 		Me.Controls.Add(Me.StatusStrip1)
+		Me.FormBorderStyle = System.Windows.Forms.FormBorderStyle.FixedSingle
 		Me.Icon = CType(resources.GetObject("$this.Icon"), System.Drawing.Icon)
 		Me.MaximizeBox = False
 		Me.Name = "VectoJobForm"
-		Me.StartPosition = System.Windows.Forms.FormStartPosition.CenterParent
+		Me.StartPosition = System.Windows.Forms.FormStartPosition.CenterScreen
 		Me.Text = "Job Editor"
 		Me.TabPgGen.ResumeLayout(False)
 		Me.TabPgGen.PerformLayout()

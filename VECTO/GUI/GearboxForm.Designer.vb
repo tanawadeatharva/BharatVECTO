@@ -217,7 +217,7 @@ Partial Class GearboxForm
 		'StatusStrip1
 		'
 		Me.StatusStrip1.Items.AddRange(New System.Windows.Forms.ToolStripItem() {Me.LbStatus})
-		Me.StatusStrip1.Location = New System.Drawing.Point(0, 684)
+		Me.StatusStrip1.Location = New System.Drawing.Point(0, 680)
 		Me.StatusStrip1.Name = "StatusStrip1"
 		Me.StatusStrip1.Size = New System.Drawing.Size(877, 22)
 		Me.StatusStrip1.SizingGrip = False
@@ -234,7 +234,7 @@ Partial Class GearboxForm
 		'
 		Me.ButCancel.Anchor = CType((System.Windows.Forms.AnchorStyles.Bottom Or System.Windows.Forms.AnchorStyles.Right), System.Windows.Forms.AnchorStyles)
 		Me.ButCancel.DialogResult = System.Windows.Forms.DialogResult.Cancel
-		Me.ButCancel.Location = New System.Drawing.Point(790, 658)
+		Me.ButCancel.Location = New System.Drawing.Point(790, 654)
 		Me.ButCancel.Name = "ButCancel"
 		Me.ButCancel.Size = New System.Drawing.Size(75, 23)
 		Me.ButCancel.TabIndex = 7
@@ -244,7 +244,7 @@ Partial Class GearboxForm
 		'ButOK
 		'
 		Me.ButOK.Anchor = CType((System.Windows.Forms.AnchorStyles.Bottom Or System.Windows.Forms.AnchorStyles.Right), System.Windows.Forms.AnchorStyles)
-		Me.ButOK.Location = New System.Drawing.Point(709, 658)
+		Me.ButOK.Location = New System.Drawing.Point(709, 654)
 		Me.ButOK.Name = "ButOK"
 		Me.ButOK.Size = New System.Drawing.Size(75, 23)
 		Me.ButOK.TabIndex = 6
@@ -361,9 +361,9 @@ Partial Class GearboxForm
 		'
 		Me.PictureBox1.BackColor = System.Drawing.Color.White
 		Me.PictureBox1.Image = Global.TUGraz.VECTO.My.Resources.Resources.VECTO_GBX
-		Me.PictureBox1.Location = New System.Drawing.Point(12, 28)
+		Me.PictureBox1.Location = New System.Drawing.Point(0, 28)
 		Me.PictureBox1.Name = "PictureBox1"
-		Me.PictureBox1.Size = New System.Drawing.Size(441, 40)
+		Me.PictureBox1.Size = New System.Drawing.Size(461, 40)
 		Me.PictureBox1.TabIndex = 43
 		Me.PictureBox1.TabStop = False
 		'
@@ -886,6 +886,7 @@ Partial Class GearboxForm
 		'PicBox
 		'
 		Me.PicBox.BackColor = System.Drawing.Color.LightGray
+		Me.PicBox.BorderStyle = System.Windows.Forms.BorderStyle.FixedSingle
 		Me.PicBox.Location = New System.Drawing.Point(459, 28)
 		Me.PicBox.Name = "PicBox"
 		Me.PicBox.Size = New System.Drawing.Size(406, 372)
@@ -896,7 +897,7 @@ Partial Class GearboxForm
 		'
 		Me.AcceptButton = Me.ButOK
 		Me.CancelButton = Me.ButCancel
-		Me.ClientSize = New System.Drawing.Size(877, 706)
+		Me.ClientSize = New System.Drawing.Size(877, 702)
 		Me.Controls.Add(Me.PicBox)
 		Me.Controls.Add(Me.PnInertiaTI)
 		Me.Controls.Add(Me.GroupBox4)
@@ -911,10 +912,11 @@ Partial Class GearboxForm
 		Me.Controls.Add(Me.ButOK)
 		Me.Controls.Add(Me.StatusStrip1)
 		Me.Controls.Add(Me.ToolStrip1)
+		Me.FormBorderStyle = System.Windows.Forms.FormBorderStyle.FixedSingle
 		Me.Icon = CType(resources.GetObject("$this.Icon"), System.Drawing.Icon)
 		Me.MaximizeBox = False
 		Me.Name = "GearboxForm"
-		Me.StartPosition = System.Windows.Forms.FormStartPosition.CenterParent
+		Me.StartPosition = System.Windows.Forms.FormStartPosition.CenterScreen
 		Me.Text = "F_GBX"
 		Me.ToolStrip1.ResumeLayout(False)
 		Me.ToolStrip1.PerformLayout()
