@@ -75,7 +75,19 @@ namespace TUGraz.VectoCore.Models.SimulationComponent.Impl
 		public IResponse Initialize(NewtonMeter outTorque, PerSecond outAngularVelocity)
 		{
 			var operatingPointList = ModelData.FindOperatingPoint(outTorque, outAngularVelocity, DataBus.EngineIdleSpeed);
-			var operatingPoint = SelectOperatingPoint(operatingPointList);
+			TorqueConverterOperatingPoint operatingPoint;
+			if (operatingPointList.Count > 0) {
+				operatingPoint = SelectOperatingPoint(operatingPointList);
+			} else {
+				Log.Warn(
+					"TorqueConverter Initialize: No operating point found. Using output as input values as fallback for initialize.");
+				operatingPoint = new TorqueConverterOperatingPoint {
+					OutAngularVelocity = outAngularVelocity,
+					OutTorque = outTorque,
+					InAngularVelocity = outAngularVelocity,
+					InTorque = outTorque
+				};
+			}
 			var retVal = NextComponent.Initialize(operatingPoint.InTorque, operatingPoint.InAngularVelocity);
 			PreviousState.SetState(operatingPoint.InTorque, operatingPoint.InAngularVelocity, operatingPoint.OutTorque,
 				operatingPoint.OutAngularVelocity);
