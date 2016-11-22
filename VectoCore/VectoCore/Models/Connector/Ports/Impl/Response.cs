@@ -121,8 +121,6 @@ namespace TUGraz.VectoCore.Models.Connector.Ports.Impl
 	{
 		public Watt DeltaFullLoad { get; set; }
 		public Watt DeltaDragLoad { get; set; }
-		public NewtonMeter EngineMaxTorqueOut { get; set; }
-		public NewtonMeter EngineDragTorque { get; set; }
 	}
 
 	internal class ResponseGearShift : AbstractResponse
