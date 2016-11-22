@@ -112,6 +112,12 @@ namespace TUGraz.VectoCore.Models.SimulationComponent.Impl
 				return false;
 			}
 
+			// L -> 0: disengage if inAngularVelocity == 0
+			if (_gearbox.TorqueConverterLocked && inAngularVelocity.IsEqual(0.SI<PerSecond>())) {
+				NextGear.SetState(absTime, true, 1, false);
+				return true;
+			}
+
 			// Emergency Downshift: if lower than engine idle speed
 			if (inAngularVelocity.IsSmaller(DataBus.EngineIdleSpeed)) {
 				Log.Debug("engine speed would fall below idle speed - shift down");
