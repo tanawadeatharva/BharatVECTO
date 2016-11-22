@@ -112,9 +112,9 @@ namespace TUGraz.VectoCore.Models.SimulationComponent.Impl
 				return false;
 			}
 
-			// _ -> 1C: if n_eng == 0
+			// L -> 0: disengage if inAngularVelocity == 0
 			if (_gearbox.TorqueConverterLocked && inAngularVelocity.IsEqual(0.SI<PerSecond>())) {
-				NextGear.SetState(absTime, false, 1, false);
+				NextGear.SetState(absTime, true, 1, false);
 				return true;
 			}
 

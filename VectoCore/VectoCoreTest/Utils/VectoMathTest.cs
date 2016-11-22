@@ -58,7 +58,6 @@ namespace TUGraz.VectoCore.Tests.Utils
 			Assert.AreEqual(positive, VectoMath.Abs(negative));
 			Assert.AreEqual(positive, VectoMath.Abs(positive));
 
-
 			var smallerWatt = 0.SI<Watt>();
 			var biggerWatt = 5.SI<Watt>();
 			var negativeWatt = -10.SI<Watt>();
@@ -68,11 +67,9 @@ namespace TUGraz.VectoCore.Tests.Utils
 
 			Assert.AreEqual(biggerWatt, VectoMath.Max(smallerWatt, biggerWatt));
 
-
 			Assert.AreEqual(positiveWatt, VectoMath.Abs(negativeWatt));
 			Assert.AreEqual(positiveWatt, VectoMath.Abs(positiveWatt));
 		}
-
 
 		[TestCase(0, -1, 0, 1, -1, 0, 1, 0, 0, 0),
 		TestCase(0, 0, 10, 0, 0, 5, 10, 5, double.NaN, double.NaN),
@@ -101,10 +98,10 @@ namespace TUGraz.VectoCore.Tests.Utils
 		{
 			var results = VectoMath.CubicEquationSolver(a, b, c, d);
 
-			Assert.AreEqual(expected.Length, results.Count);
+			Assert.AreEqual(expected.Length, results.Length);
 			var sorted = expected.ToList();
 			sorted.Sort();
-			results.Sort();
+			Array.Sort(results);
 
 			var comparison = sorted.Zip(results, (exp, result) => exp - result);
 			foreach (var cmp in comparison) {

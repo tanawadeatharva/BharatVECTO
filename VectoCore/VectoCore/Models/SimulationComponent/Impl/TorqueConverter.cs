@@ -82,21 +82,13 @@ namespace TUGraz.VectoCore.Models.SimulationComponent.Impl
 			return retVal;
 		}
 
-
 		public IResponse Request(Second absTime, Second dt, NewtonMeter outTorque, PerSecond outAngularVelocity,
 			bool dryRun = false)
 		{
 			if (dryRun) {
 				var dryOperatingPoint = FindOperatingPoint(outTorque, outAngularVelocity);
-				var engineResponse =
-					(ResponseDryRun)NextComponent.Request(absTime, dt, dryOperatingPoint.InTorque, dryOperatingPoint.InAngularVelocity,
-						true);
-
-				var deltaTorqueConverter = (outTorque - dryOperatingPoint.OutTorque) *
-											(PreviousState.OutAngularVelocity + dryOperatingPoint.OutAngularVelocity) / 2.0;
-
-				var deltaEngine = (engineResponse.DeltaFullLoad > 0 ? engineResponse.DeltaFullLoad : 0.SI<Watt>()) +
-								(engineResponse.DeltaDragLoad < 0 ? -engineResponse.DeltaDragLoad : 0.SI<Watt>());
+				var engineResponse = (ResponseDryRun)
+					NextComponent.Request(absTime, dt, dryOperatingPoint.InTorque, dryOperatingPoint.InAngularVelocity, true);
 
 				dryOperatingPoint = outTorque.IsGreater(0) && DataBus.BrakePower.IsEqual(0)
 					? GetMaxPowerOperatingPoint(dt, outAngularVelocity, engineResponse)
@@ -104,10 +96,9 @@ namespace TUGraz.VectoCore.Models.SimulationComponent.Impl
 				engineResponse = (ResponseDryRun)NextComponent.Request(absTime, dt, dryOperatingPoint.InTorque,
 					dryOperatingPoint.InAngularVelocity, true);
 
-
 				var delta = (outTorque - dryOperatingPoint.OutTorque) *
 							(PreviousState.OutAngularVelocity + dryOperatingPoint.OutAngularVelocity) / 2.0;
-				//deltaTorqueConverter.Value() * (deltaEngine.IsEqual(0) ? 1 : deltaEngine.Value());
+
 				return new ResponseDryRun() {
 					Source = this,
 					DeltaFullLoad = delta,
@@ -182,39 +173,41 @@ namespace TUGraz.VectoCore.Models.SimulationComponent.Impl
 		protected internal TorqueConverterOperatingPoint FindOperatingPoint(NewtonMeter outTorque,
 			PerSecond outAngularVelocity)
 		{
-			try {
-				var operatingPointList = ModelData.FindOperatingPoint(outTorque, outAngularVelocity, DataBus.EngineIdleSpeed);
-				var operatingPoint = SelectOperatingPoint(operatingPointList);
-				if (operatingPoint.InAngularVelocity.IsSmaller(DataBus.EngineIdleSpeed)) {
-					throw new VectoException("Invalid operating point, inAngularVelocity below engine's idle speed: {0}",
-						operatingPoint.InAngularVelocity);
-				}
-				if (operatingPoint.InAngularVelocity.IsGreater(DataBus.EngineRatedSpeed)) {
-					operatingPoint = ModelData.FindOperatingPoint(DataBus.EngineRatedSpeed, outAngularVelocity);
-				}
-				return operatingPoint;
-			} catch (VectoException ve) {
-				Log.Debug(ve, "failed to find torque converter operating point, fallback: creeping");
+			var operatingPointList = ModelData.FindOperatingPoint(outTorque, outAngularVelocity, DataBus.EngineIdleSpeed);
+			if (operatingPointList.Count == 0) {
+				Log.Debug("TorqueConverter: Failed to find torque converter operating point, fallback: creeping");
 				var tqOperatingPoint = ModelData.FindOperatingPoint(DataBus.EngineIdleSpeed, outAngularVelocity);
 				return tqOperatingPoint;
 			}
-		}
 
+			var operatingPoint = SelectOperatingPoint(operatingPointList);
+			if (operatingPoint.InAngularVelocity.IsSmaller(DataBus.EngineIdleSpeed)) {
+				throw new VectoException("Invalid operating point, inAngularVelocity below engine's idle speed: {0}",
+					operatingPoint.InAngularVelocity);
+			}
+			if (operatingPoint.InAngularVelocity.IsGreater(DataBus.EngineRatedSpeed)) {
+				operatingPoint = ModelData.FindOperatingPoint(DataBus.EngineRatedSpeed, outAngularVelocity);
+			}
+			return operatingPoint;
+		}
 
 		private TorqueConverterOperatingPoint SelectOperatingPoint(IList<TorqueConverterOperatingPoint> operatingPointList)
 		{
 			if (operatingPointList.Count == 1) {
 				return operatingPointList[0];
 			}
+
 			var filtered = operatingPointList.Where(x =>
-				(x.InTorque * x.InAngularVelocity).IsSmallerOrEqual(DataBus.EngineStationaryFullPower(x.InAngularVelocity),
-					Constants.SimulationSettings.LineSearchTolerance.SI<Watt>()) &&
-				(x.InTorque * x.InAngularVelocity).IsGreaterOrEqual(DataBus.EngineDragPower(x.InAngularVelocity),
-					Constants.SimulationSettings.LineSearchTolerance.SI<Watt>())
-				).ToArray();
-			if (filtered.Count() == 1) {
+					(x.InTorque * x.InAngularVelocity).IsSmallerOrEqual(DataBus.EngineStationaryFullPower(x.InAngularVelocity),
+						Constants.SimulationSettings.LineSearchTolerance.SI<Watt>()) &&
+					(x.InTorque * x.InAngularVelocity).IsGreaterOrEqual(DataBus.EngineDragPower(x.InAngularVelocity),
+						Constants.SimulationSettings.LineSearchTolerance.SI<Watt>())
+			).ToList();
+
+			if (filtered.Count == 1) {
 				return filtered.First();
 			}
+
 			return operatingPointList[0];
 		}
 

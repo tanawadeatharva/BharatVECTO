@@ -29,11 +29,15 @@
 *   Martin Rexeis, rexeis@ivt.tugraz.at, IVT, Graz University of Technology
 */
 
+using System.Collections.Generic;
 using Microsoft.VisualStudio.TestTools.UnitTesting;
 using TUGraz.VectoCommon.Exceptions;
+using TUGraz.VectoCommon.InputData;
 using TUGraz.VectoCommon.Models;
 using TUGraz.VectoCommon.Utils;
+using TUGraz.VectoCore.InputData;
 using TUGraz.VectoCore.InputData.FileIO.JSON;
+using TUGraz.VectoCore.InputData.Impl;
 using TUGraz.VectoCore.InputData.Reader;
 using TUGraz.VectoCore.InputData.Reader.ComponentData;
 using TUGraz.VectoCore.Models.Declaration;
@@ -193,7 +197,14 @@ namespace TUGraz.VectoCore.Tests.Models.Simulation
 
 			var aux = new EngineAuxiliary(container);
 
-			var auxData = AuxiliaryDataReader.ReadFromFile(@"TestData\Components\24t_Coach_ALT.vaux", "ALT");
+			var auxDataInputData = new AuxiliaryDataInputData {
+				ID = "ALT1",
+				Type = AuxiliaryType.ElectricSystem,
+				Technology = new List<string>(),
+			};
+			AuxiliaryFileHelper.FillAuxiliaryDataInputData(auxDataInputData, @"TestData\Components\24t_Coach_ALT.vaux");
+			var auxData = AuxiliaryDataReader.Create(auxDataInputData);
+
 			// ratio = 4.078
 			// efficiency_engine = 0.96
 			// efficiency_supply = 0.98
@@ -252,7 +263,14 @@ namespace TUGraz.VectoCore.Tests.Models.Simulation
 
 			var aux = new EngineAuxiliary(container);
 
-			var auxData = AuxiliaryDataReader.ReadFromFile(@"TestData\Components\24t_Coach_ALT.vaux", "ALT");
+			var auxDataInputData = new AuxiliaryDataInputData {
+				ID = "ALT1",
+				Type = AuxiliaryType.ElectricSystem,
+				Technology = new List<string>(),
+			};
+			AuxiliaryFileHelper.FillAuxiliaryDataInputData(auxDataInputData, @"TestData\Components\24t_Coach_ALT.vaux");
+			var auxData = AuxiliaryDataReader.Create(auxDataInputData);
+
 			// ratio = 4.078
 			// efficiency_engine = 0.96
 			// efficiency_supply = 0.98
@@ -303,8 +321,10 @@ namespace TUGraz.VectoCore.Tests.Models.Simulation
 		[TestMethod]
 		public void AuxFileMissing()
 		{
-			AssertHelper.Exception<VectoException>(() => AuxiliaryDataReader.ReadFromFile(@"NOT_EXISTING_AUX_FILE.vaux", "N.A."),
-				"Auxiliary file not found: NOT_EXISTING_AUX_FILE.vaux");
+			AssertHelper.Exception<VectoException>(() => {
+				var auxDataInputData = new AuxiliaryDataInputData();
+				AuxiliaryFileHelper.FillAuxiliaryDataInputData(auxDataInputData, @"NOT_EXISTING_AUX_FILE.vaux");
+			}, "Auxiliary file not found: NOT_EXISTING_AUX_FILE.vaux");
 		}
 
 		[TestMethod]
