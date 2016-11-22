@@ -34,6 +34,7 @@ using System.Collections.Generic;
 using System.Diagnostics;
 using System.Globalization;
 using System.Linq;
+using System.Runtime.CompilerServices;
 
 namespace TUGraz.VectoCommon.Utils
 {
@@ -59,19 +60,22 @@ namespace TUGraz.VectoCommon.Utils
 		/// <param name="other">The other.</param>
 		/// <param name="tolerance">The tolerance.</param>
 		/// <returns></returns>
-		[DebuggerHidden]
+		[DebuggerStepThrough]
+		[MethodImpl(MethodImplOptions.AggressiveInlining)]
 		public static bool IsEqual(this double self, double other, double tolerance = Tolerance)
 		{
 			return Math.Abs(self - other) < tolerance;
 		}
 
-		[DebuggerHidden]
+		[DebuggerStepThrough]
+		[MethodImpl(MethodImplOptions.AggressiveInlining)]
 		public static bool IsRelativeEqual(this SI expected, SI actual, double toleranceFactor = ToleranceFactor)
 		{
 			return IsRelativeEqual(expected.Value(), actual.Value(), toleranceFactor: toleranceFactor);
 		}
 
-		[DebuggerHidden]
+		[DebuggerStepThrough]
+		[MethodImpl(MethodImplOptions.AggressiveInlining)]
 		public static bool IsRelativeEqual(this double expected, double actual,
 			double toleranceFactor = DoubleExtensionMethods.ToleranceFactor)
 		{
@@ -90,7 +94,8 @@ namespace TUGraz.VectoCommon.Utils
 		/// <param name="other">The other.</param>
 		/// <param name="tolerance">The tolerance.</param>
 		/// <returns></returns>
-		[DebuggerHidden]
+		[DebuggerStepThrough]
+		[MethodImpl(MethodImplOptions.AggressiveInlining)]
 		public static bool IsSmaller(this double self, double other, double tolerance = Tolerance)
 		{
 			return self < other - tolerance;
@@ -103,6 +108,8 @@ namespace TUGraz.VectoCommon.Utils
 		/// <param name="other">The other.</param>
 		/// <param name="tolerance">The tolerance.</param>
 		/// <returns></returns>
+		[DebuggerStepThrough]
+		[MethodImpl(MethodImplOptions.AggressiveInlining)]
 		public static bool IsSmallerOrEqual(this double self, double other, double tolerance = Tolerance)
 		{
 			return self <= other + tolerance;
@@ -115,6 +122,8 @@ namespace TUGraz.VectoCommon.Utils
 		/// <param name="other">The other.</param>
 		/// <param name="tolerance">The tolerance.</param>
 		/// <returns></returns>
+		[DebuggerStepThrough]
+		[MethodImpl(MethodImplOptions.AggressiveInlining)]
 		public static bool IsGreater(this double self, double other, double tolerance = Tolerance)
 		{
 			return self > other + tolerance;
@@ -127,6 +136,8 @@ namespace TUGraz.VectoCommon.Utils
 		/// <param name="other">The other.</param>
 		/// <param name="tolerance">The tolerance.</param>
 		/// <returns></returns>
+		[DebuggerStepThrough]
+		[MethodImpl(MethodImplOptions.AggressiveInlining)]
 		public static bool IsGreaterOrEqual(this double self, double other, double tolerance = Tolerance)
 		{
 			return self >= other - tolerance;
@@ -137,17 +148,39 @@ namespace TUGraz.VectoCommon.Utils
 		/// </summary>
 		/// <param name="self">The self.</param>
 		/// <param name="tolerance">The tolerance.</param>
-		/// <returns></returns>
+		[DebuggerStepThrough]
+		[MethodImpl(MethodImplOptions.AggressiveInlining)]
 		public static bool IsPositive(this double self, double tolerance = Tolerance)
 		{
 			return self >= -tolerance;
 		}
 
 		/// <summary>
+		/// Checks if a value is between min and max (min &lt;= value &lt;= max)
+		/// </summary>
+		[DebuggerStepThrough]
+		[MethodImpl(MethodImplOptions.AggressiveInlining)]
+		public static bool IsBetween(this double self, double min, double max)
+		{
+			return min <= self && self <= max;
+		}
+
+		/// <summary>
+		/// Checks if a value is between min and max (min &lt;= value &lt;= max)
+		/// </summary>
+		[DebuggerStepThrough]
+		[MethodImpl(MethodImplOptions.AggressiveInlining)]
+		public static bool IsBetween(this double self, SI min, SI max)
+		{
+			return min <= self && self <= max;
+		}
+
+		/// <summary>
 		/// Converts the double-value from RPM (rounds per minute) to the SI Unit PerSecond.
 		/// </summary>
 		/// <param name="self"></param>
-		/// <returns></returns>
+		[DebuggerStepThrough]
+		[MethodImpl(MethodImplOptions.AggressiveInlining)]
 		public static PerSecond RPMtoRad(this double self)
 		{
 			return SI<PerSecond>(self * 2 * Math.PI / 60.0);
@@ -156,8 +189,8 @@ namespace TUGraz.VectoCommon.Utils
 		/// <summary>
 		/// Converts the double-value from RPM (rounds per minute) to the SI Unit PerSecond.
 		/// </summary>
-		/// <param name="self"></param>
-		/// <returns></returns>
+		[DebuggerStepThrough]
+		[MethodImpl(MethodImplOptions.AggressiveInlining)]
 		public static PerSecond RPMtoRad(this float self)
 		{
 			return SI<PerSecond>(self * 2 * Math.PI / 60.0);
@@ -166,25 +199,29 @@ namespace TUGraz.VectoCommon.Utils
 		/// <summary>
 		/// Converts the value from rounds per minute to the SI Unit PerSecond
 		/// </summary>
-		/// <param name="self"></param>
-		/// <returns></returns>
-		[DebuggerHidden]
+		[DebuggerStepThrough]
+		[MethodImpl(MethodImplOptions.AggressiveInlining)]
 		public static PerSecond RPMtoRad(this int self)
 		{
 			return SI<PerSecond>(self * 2.0 * Math.PI / 60.0);
 		}
 
+		[DebuggerStepThrough]
+		[MethodImpl(MethodImplOptions.AggressiveInlining)]
 		public static MeterPerSecond KMPHtoMeterPerSecond(this double self)
 		{
 			return SI<MeterPerSecond>(self / 3.6);
 		}
 
-		[DebuggerHidden]
+		[DebuggerStepThrough]
+		[MethodImpl(MethodImplOptions.AggressiveInlining)]
 		public static MeterPerSecond KMPHtoMeterPerSecond(this int self)
 		{
 			return SI<MeterPerSecond>(self / 3.6);
 		}
 
+		[DebuggerStepThrough]
+		[MethodImpl(MethodImplOptions.AggressiveInlining)]
 		public static double ToDegree(this double self)
 		{
 			return self * 180.0 / Math.PI;
@@ -193,6 +230,8 @@ namespace TUGraz.VectoCommon.Utils
 		/// <summary>
 		/// Creates an SI object for the number (unit-less: [-]).
 		/// </summary>
+		[DebuggerStepThrough]
+		[MethodImpl(MethodImplOptions.AggressiveInlining)]
 		public static SI SI(this double value)
 		{
 			return new SI(value);
@@ -201,17 +240,22 @@ namespace TUGraz.VectoCommon.Utils
 		/// <summary>
 		/// Creates an templated SI object for the number.
 		/// </summary>
-		[DebuggerHidden]
+		[DebuggerStepThrough]
+		[MethodImpl(MethodImplOptions.AggressiveInlining)]
 		public static T SI<T>(this double value) where T : SIBase<T>
 		{
 			return SIBase<T>.Create(value);
 		}
 
+		[DebuggerStepThrough]
+		[MethodImpl(MethodImplOptions.AggressiveInlining)]
 		public static IEnumerable<T> SI<T>(this IEnumerable<double> self) where T : SIBase<T>
 		{
 			return self.Select(x => x.SI<T>());
 		}
 
+		[DebuggerStepThrough]
+		[MethodImpl(MethodImplOptions.AggressiveInlining)]
 		public static string ToGUIFormat(this double self)
 		{
 			return self.ToString(CultureInfo.InvariantCulture);
@@ -220,7 +264,8 @@ namespace TUGraz.VectoCommon.Utils
 
 	public static class FloatExtensionMethods
 	{
-		[DebuggerHidden]
+		[DebuggerStepThrough]
+		[MethodImpl(MethodImplOptions.AggressiveInlining)]
 		public static T SI<T>(this float value) where T : SIBase<T>
 		{
 			return SIBase<T>.Create(value);
@@ -229,6 +274,8 @@ namespace TUGraz.VectoCommon.Utils
 
 	public static class IntegerExtensionMethods
 	{
+		[DebuggerStepThrough]
+		[MethodImpl(MethodImplOptions.AggressiveInlining)]
 		public static string ToGUIFormat(this int self)
 		{
 			return self.ToString();

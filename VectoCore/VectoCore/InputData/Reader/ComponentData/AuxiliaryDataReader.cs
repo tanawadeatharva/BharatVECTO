@@ -56,36 +56,6 @@ namespace TUGraz.VectoCore.InputData.Reader.ComponentData
 			return new AuxiliaryData(data.TransmissionRatio, data.EfficiencyToEngine, data.EfficiencyToSupply, map);
 		}
 
-		/// <summary>
-		/// Reads the demand map from a file.
-		/// </summary>
-		/// <param name="fileName"></param>
-		/// <param name="id"></param>
-		/// <returns></returns>
-		public static AuxiliaryData ReadFromFile(string fileName, string id)
-		{
-			try {
-				using (var reader = new StreamReader(fileName)) {
-					reader.ReadLine(); // skip header "Transmission ration to engine rpm [-]"
-					var transmissionRatio = reader.ReadLine().IndulgentParse();
-					reader.ReadLine(); // skip header "Efficiency to engine [-]"
-					var efficiencyToEngine = reader.ReadLine().IndulgentParse();
-					reader.ReadLine(); // skip header "Efficiency auxiliary to supply [-]"
-					var efficiencyToSupply = reader.ReadLine().IndulgentParse();
-
-					var m = new MemoryStream(Encoding.UTF8.GetBytes(reader.ReadToEnd()));
-					reader.Close();
-
-					var table = VectoCSVFile.ReadStream(m);
-					var map = ReadAuxMap(id, table);
-
-					return new AuxiliaryData(transmissionRatio, efficiencyToEngine, efficiencyToSupply, map);
-				}
-			} catch (FileNotFoundException e) {
-				throw new VectoException("Auxiliary file not found: " + fileName, e);
-			}
-		}
-
 		private static DelaunayMap ReadAuxMap(string id, DataTable table)
 		{
 			var map = new DelaunayMap(id);
@@ -103,9 +73,7 @@ namespace TUGraz.VectoCore.InputData.Reader.ComponentData
 		{
 			for (var i = 0; i < table.Rows.Count; i++) {
 				var row = table.Rows[i];
-				map.AddPoint(row.ParseDouble(0).RPMtoRad().Value(),
-					row.ParseDouble(1).SI().Kilo.Watt.Cast<Watt>().Value(),
-					row.ParseDouble(2).SI().Kilo.Watt.Cast<Watt>().Value());
+				map.AddPoint(row.ParseDouble(0).RPMtoRad().Value(),row.ParseDouble(2),row.ParseDouble(1));
 			}
 		}
 
@@ -113,13 +81,11 @@ namespace TUGraz.VectoCore.InputData.Reader.ComponentData
 		{
 			for (var i = 0; i < table.Rows.Count; i++) {
 				var row = table.Rows[i];
-				map.AddPoint(row.ParseDouble(Fields.AuxSpeed).RPMtoRad().Value(),
-					row.ParseDouble(Fields.MechPower).SI().Kilo.Watt.Cast<Watt>().Value(),
-					row.ParseDouble(Fields.SupplyPower).SI().Kilo.Watt.Cast<Watt>().Value());
+				map.AddPoint(row.ParseDouble(Fields.AuxSpeed).RPMtoRad().Value(),row.ParseDouble(Fields.SupplyPower),row.ParseDouble(Fields.MechPower));
 			}
 		}
 
-		private static bool HeaderIsValid(DataColumnCollection columns)
+		public static bool HeaderIsValid(DataColumnCollection columns)
 		{
 			return columns.Contains(Fields.AuxSpeed) && columns.Contains(Fields.MechPower) &&
 					columns.Contains(Fields.SupplyPower);

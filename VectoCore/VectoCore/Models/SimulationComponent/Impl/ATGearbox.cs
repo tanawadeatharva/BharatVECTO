@@ -46,27 +46,28 @@ namespace TUGraz.VectoCore.Models.SimulationComponent.Impl
 {
 	public class ATGearbox : AbstractGearbox<ATGearbox.ATGearboxState>
 	{
-		protected internal bool Disengaged = true;
-
-		private readonly IShiftStrategy Strategy;
-
+		private readonly IShiftStrategy _strategy;
 		protected internal readonly TorqueConverter TorqueConverter;
+		private IIdleController _idleController;
 
+		// state overlapping property
 		public Second LastShift { get; private set; }
+
+		public bool TorqueConverterLocked
+		{
+			get { return CurrentState.TorqueConverterLocked; }
+			set { CurrentState.TorqueConverterLocked = value; }
+		}
 
 		public ATGearbox(IVehicleContainer container, GearboxData gearboxModelData, IShiftStrategy strategy,
 			KilogramSquareMeter engineInertia)
 			: base(container, gearboxModelData)
 		{
-			Strategy = strategy;
-			Strategy.Gearbox = this;
+			_strategy = strategy;
+			_strategy.Gearbox = this;
 			LastShift = -double.MaxValue.SI<Second>();
-			TorqueConverter = new TorqueConverter(this, Strategy, container, gearboxModelData.TorqueConverterData, engineInertia);
+			TorqueConverter = new TorqueConverter(this, _strategy, container, gearboxModelData.TorqueConverterData, engineInertia);
 		}
-
-		private IIdleController _idleController;
-
-		public bool TorqueConverterLocked { get; protected internal set; }
 
 		public IIdleController IdleController
 		{
@@ -78,23 +79,34 @@ namespace TUGraz.VectoCore.Models.SimulationComponent.Impl
 			}
 		}
 
+		public bool Disengaged
+		{
+			get { return CurrentState.Disengaged; }
+			set { CurrentState.Disengaged = value; }
+		}
+
 		public override void Connect(ITnOutPort other)
 		{
 			base.Connect(other);
 			TorqueConverter.NextComponent = other;
 		}
 
+		public override bool ClutchClosed(Second absTime)
+		{
+			return true;
+		}
+
 		public override IResponse Initialize(NewtonMeter outTorque, PerSecond outAngularVelocity)
 		{
-			if (Disengaged) {
-				Gear = Strategy.InitGear(0.SI<Second>(), Constants.SimulationSettings.TargetTimeInterval, outTorque,
+			if (CurrentState.Disengaged) {
+				Gear = _strategy.InitGear(0.SI<Second>(), Constants.SimulationSettings.TargetTimeInterval, outTorque,
 					outAngularVelocity);
 			}
 			var inAngularVelocity = 0.SI<PerSecond>();
 			var inTorque = 0.SI<NewtonMeter>();
 			var effectiveRatio = ModelData.Gears[Gear].Ratio;
 			var effectiveLossMap = ModelData.Gears[Gear].LossMap;
-			if (!TorqueConverterLocked) {
+			if (!CurrentState.TorqueConverterLocked) {
 				effectiveRatio = ModelData.Gears[Gear].TorqueConverterRatio;
 				effectiveLossMap = ModelData.Gears[Gear].TorqueConverterGearLossMap;
 			}
@@ -105,20 +117,20 @@ namespace TUGraz.VectoCore.Models.SimulationComponent.Impl
 
 				inTorque = outTorque / effectiveRatio + torqueLossResult.Value;
 			}
-			if (Disengaged) {
+			if (CurrentState.Disengaged) {
 				return NextComponent.Initialize(0.SI<NewtonMeter>(), null);
 			}
 
-			if (!TorqueConverterLocked && !ModelData.Gears[Gear].HasTorqueConverter) {
+			if (!CurrentState.TorqueConverterLocked && !ModelData.Gears[Gear].HasTorqueConverter) {
 				throw new VectoSimulationException("Torque converter requested by strategy for gear without torque converter!");
 			}
-			var response = TorqueConverterLocked
+			var response = CurrentState.TorqueConverterLocked
 				? NextComponent.Initialize(inTorque, inAngularVelocity)
 				: TorqueConverter.Initialize(inTorque, inAngularVelocity);
 
 			PreviousState.SetState(inTorque, inAngularVelocity, outTorque, outAngularVelocity);
 			PreviousState.Gear = Gear;
-			PreviousState.TorqueConverterLocked = TorqueConverterLocked;
+			PreviousState.TorqueConverterLocked = CurrentState.TorqueConverterLocked;
 			return response;
 		}
 
@@ -150,7 +162,7 @@ namespace TUGraz.VectoCore.Models.SimulationComponent.Impl
 				Case<ResponseOverload>().
 				Default(r => { throw new UnexpectedResponseException("AT-Gearbox.Initialize", r); });
 
-			return new ResponseDryRun() {
+			return new ResponseDryRun {
 				Source = this,
 				EngineSpeed = response.EngineSpeed,
 				EnginePowerRequest = response.EnginePowerRequest,
@@ -165,29 +177,30 @@ namespace TUGraz.VectoCore.Models.SimulationComponent.Impl
 
 			Log.Debug("AT-Gearbox Power Request: torque: {0}, angularVelocity: {1}", outTorque, outAngularVelocity);
 
-			if ((DataBus.VehicleStopped && outAngularVelocity > 0) || (Disengaged && outTorque.IsGreater(0))) {
+			if (!dryRun &&
+				((DataBus.VehicleStopped && outAngularVelocity > 0) || (CurrentState.Disengaged && outTorque.IsGreater(0)))) {
 				Gear = 1; //Strategy.InitGear(absTime, dt, outTorque, outAngularVelocity);
-				TorqueConverterLocked = false;
+				CurrentState.TorqueConverterLocked = false;
 				LastShift = absTime;
-				Disengaged = false;
+				CurrentState.Disengaged = false;
 			}
 
 			IResponse retVal;
 			var count = 0;
 			var loop = false;
 			do {
-				if (Disengaged || (DataBus.DriverBehavior == DrivingBehavior.Halted)) {
+				if (CurrentState.Disengaged || (DataBus.DriverBehavior == DrivingBehavior.Halted)) {
 					// only when vehicle is halted or close before halting
 					retVal = RequestDisengaged(absTime, dt, outTorque, outAngularVelocity, dryRun);
 				} else {
-					Disengaged = false;
+					CurrentState.Disengaged = false;
 					retVal = RequestEngaged(absTime, dt, outTorque, outAngularVelocity, dryRun);
 					IdleController.Reset();
 				}
 				retVal.Switch()
 					.Case<ResponseGearShift>(r => {
 						loop = true;
-						Gear = Strategy.Engage(absTime, dt, outTorque, outAngularVelocity);
+						Gear = _strategy.Engage(absTime, dt, outTorque, outAngularVelocity);
 						LastShift = absTime;
 					});
 			} while (loop && ++count < 2);
@@ -201,7 +214,7 @@ namespace TUGraz.VectoCore.Models.SimulationComponent.Impl
 		{
 			var effectiveRatio = ModelData.Gears[Gear].Ratio;
 			var effectiveLossMap = ModelData.Gears[Gear].LossMap;
-			if (!TorqueConverterLocked) {
+			if (!CurrentState.TorqueConverterLocked) {
 				effectiveRatio = ModelData.Gears[Gear].TorqueConverterRatio;
 				effectiveLossMap = ModelData.Gears[Gear].TorqueConverterGearLossMap;
 			}
@@ -214,7 +227,7 @@ namespace TUGraz.VectoCore.Models.SimulationComponent.Impl
 
 			var inTorque = outTorque / effectiveRatio + inTorqueLossResult.Value;
 
-			if (!TorqueConverterLocked && !ModelData.Gears[Gear].HasTorqueConverter) {
+			if (!CurrentState.TorqueConverterLocked && !ModelData.Gears[Gear].HasTorqueConverter) {
 				throw new VectoSimulationException("Torque converter requested by strategy for gear without torque converter!");
 			}
 			var inAngularVelocity = outAngularVelocity * effectiveRatio;
@@ -227,14 +240,13 @@ namespace TUGraz.VectoCore.Models.SimulationComponent.Impl
 
 			CurrentState.SetState(inTorque, inAngularVelocity, outTorque, outAngularVelocity);
 			CurrentState.Gear = Gear;
-			CurrentState.TorqueConverterLocked = TorqueConverterLocked;
 			CurrentState.TransmissionTorqueLoss = inTorque - outTorque / effectiveRatio;
 
-			if (!TorqueConverterLocked) {
+			if (!CurrentState.TorqueConverterLocked) {
 				return TorqueConverter.Request(absTime, dt, inTorque, inAngularVelocity, dryRun);
 			}
 			if (!dryRun &&
-				Strategy.ShiftRequired(absTime, dt, outTorque, outAngularVelocity, inTorque, inAngularVelocity, Gear, LastShift)) {
+				_strategy.ShiftRequired(absTime, dt, outTorque, outAngularVelocity, inTorque, inAngularVelocity, Gear, LastShift)) {
 				return new ResponseGearShift() {
 					Source = this
 				};
@@ -291,9 +303,8 @@ namespace TUGraz.VectoCore.Models.SimulationComponent.Impl
 			var avgInAngularSpeed = (PreviousState.InAngularVelocity +
 									CurrentState.InAngularVelocity) / 2.0;
 
-			container[ModalResultField.Gear] = Disengaged || DataBus.VehicleStopped ? 0 : Gear;
-			container[ModalResultField.TC_Locked] = TorqueConverterLocked;
-
+			container[ModalResultField.Gear] = CurrentState.Disengaged || DataBus.VehicleStopped ? 0 : Gear;
+			container[ModalResultField.TC_Locked] = CurrentState.TorqueConverterLocked;
 			container[ModalResultField.P_gbx_loss] = CurrentState.TransmissionTorqueLoss * avgInAngularSpeed;
 			container[ModalResultField.P_gbx_inertia] = CurrentState.InertiaTorqueLossOut * avgInAngularSpeed;
 			container[ModalResultField.P_gbx_in] = CurrentState.InTorque * avgInAngularSpeed;
@@ -301,40 +312,32 @@ namespace TUGraz.VectoCore.Models.SimulationComponent.Impl
 
 		protected override void DoCommitSimulationStep()
 		{
-			if (!Disengaged) {
-				if (CurrentState.TorqueLossResult != null && CurrentState.TorqueLossResult.Extrapolated) {
-					Log.Warn(
-						"Gear {0} LossMap data was extrapolated: range for loss map is not sufficient: n:{1}, torque:{2}, ratio:{3}",
-						Gear, CurrentState.OutAngularVelocity.ConvertTo().Rounds.Per.Minute, CurrentState.OutTorque,
+			if (!CurrentState.Disengaged && CurrentState.TorqueLossResult != null && CurrentState.TorqueLossResult.Extrapolated) {
+				Log.Warn(
+					"Gear {0} LossMap data was extrapolated: range for loss map is not sufficient: n:{1}, torque:{2}, ratio:{3}",
+					Gear, CurrentState.OutAngularVelocity.ConvertTo().Rounds.Per.Minute, CurrentState.OutTorque,
+					ModelData.Gears[Gear].Ratio);
+				if (DataBus.ExecutionMode == ExecutionMode.Declaration) {
+					throw new VectoException(
+						"Gear {0} LossMap data was extrapolated in Declaration Mode: range for loss map is not sufficient: n:{1}, torque:{2}, ratio:{3}",
+						Gear, CurrentState.InAngularVelocity.ConvertTo().Rounds.Per.Minute, CurrentState.InTorque,
 						ModelData.Gears[Gear].Ratio);
-					if (DataBus.ExecutionMode == ExecutionMode.Declaration) {
-						throw new VectoException(
-							"Gear {0} LossMap data was extrapolated in Declaration Mode: range for loss map is not sufficient: n:{1}, torque:{2}, ratio:{3}",
-							Gear, CurrentState.InAngularVelocity.ConvertTo().Rounds.Per.Minute, CurrentState.InTorque,
-							ModelData.Gears[Gear].Ratio);
-					}
 				}
 			}
 			if (DataBus.VehicleStopped) {
-				Disengaged = true;
+				CurrentState.Disengaged = true;
 			}
-			AdvanceState();
-		}
 
-		public override bool ClutchClosed(Second absTime)
-		{
-			return true;
+			AdvanceState();
+
+			CurrentState.TorqueConverterLocked = PreviousState.TorqueConverterLocked;
+			CurrentState.Disengaged = PreviousState.Disengaged;
 		}
 
 		public class ATGearboxState : GearboxState
 		{
 			public bool TorqueConverterLocked;
-
-			//public PerSecond TorqueConverterTorqueOut;
-			//public PerSecond TorqueConverterAngularSpeedOut;
-
-			//public double TorqueConverterSpeedRatio;
-			//public double TorqueConverterTorqueRatio;
+			public bool Disengaged = true;
 		}
 	}
 }

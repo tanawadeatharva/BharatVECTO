@@ -364,18 +364,18 @@ namespace TUGraz.VectoCore.Models.SimulationComponent.Impl
 		private TorqueConverterOperatingPoint FindOperatingPoint(NewtonMeter outTorque,
 			PerSecond outAngularVelocity)
 		{
-			try {
-				var operatingPointList = TorqueConverter.FindOperatingPoint(outTorque, outAngularVelocity, DataBus.EngineIdleSpeed);
-				var operatingPoint = SelectOperatingPoint(operatingPointList);
-				if (operatingPoint.InAngularVelocity.IsGreater(DataBus.EngineRatedSpeed)) {
-					operatingPoint = TorqueConverter.FindOperatingPoint(DataBus.EngineRatedSpeed, outAngularVelocity);
-				}
-				return operatingPoint;
-			} catch (VectoException ve) {
-				Log.Debug(ve, "failed to find torque converter operating point, fallback: creeping");
+			var operatingPointList = TorqueConverter.FindOperatingPoint(outTorque, outAngularVelocity, DataBus.EngineIdleSpeed);
+			if (operatingPointList.Count == 0) {
+				Log.Debug("CycleGearbox: Failed to find torque converter operating point, fallback: creeping");
 				var tqOperatingPoint = TorqueConverter.FindOperatingPoint(DataBus.EngineIdleSpeed, outAngularVelocity);
 				return tqOperatingPoint;
 			}
+
+			var operatingPoint = SelectOperatingPoint(operatingPointList);
+			if (operatingPoint.InAngularVelocity.IsGreater(DataBus.EngineRatedSpeed)) {
+				operatingPoint = TorqueConverter.FindOperatingPoint(DataBus.EngineRatedSpeed, outAngularVelocity);
+			}
+			return operatingPoint;
 		}
 
 		private TorqueConverterOperatingPoint SelectOperatingPoint(IList<TorqueConverterOperatingPoint> operatingPointList)
