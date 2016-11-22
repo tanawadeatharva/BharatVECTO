@@ -275,6 +275,7 @@ Partial Class VehicleAuxiliariesDialog
 		Me.Controls.Add(Me.PnFile)
 		Me.Controls.Add(Me.PnTech)
 		Me.Controls.Add(Me.TableLayoutPanel1)
+		Me.FormBorderStyle = System.Windows.Forms.FormBorderStyle.FixedToolWindow
 		Me.MaximizeBox = False
 		Me.MinimizeBox = False
 		Me.Name = "VehicleAuxiliariesDialog"

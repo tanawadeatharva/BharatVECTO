@@ -203,11 +203,11 @@ Partial Class VectoJobForm
 		Me.Label2.Anchor = CType(((System.Windows.Forms.AnchorStyles.Bottom Or System.Windows.Forms.AnchorStyles.Left) _
 			Or System.Windows.Forms.AnchorStyles.Right), System.Windows.Forms.AnchorStyles)
 		Me.Label2.AutoSize = True
-		Me.Label2.Location = New System.Drawing.Point(379, 108)
+		Me.Label2.Location = New System.Drawing.Point(391, 109)
 		Me.Label2.Name = "Label2"
-		Me.Label2.Size = New System.Drawing.Size(133, 13)
+		Me.Label2.Size = New System.Drawing.Size(118, 13)
 		Me.Label2.TabIndex = 3
-		Me.Label2.Text = "(Double-Click to Open File)"
+		Me.Label2.Text = "(Right-Click for Options)"
 		'
 		'LvCycles
 		'
@@ -374,7 +374,7 @@ Partial Class VectoJobForm
 		Me.Label32.Anchor = CType(((System.Windows.Forms.AnchorStyles.Bottom Or System.Windows.Forms.AnchorStyles.Left) _
 			Or System.Windows.Forms.AnchorStyles.Right), System.Windows.Forms.AnchorStyles)
 		Me.Label32.AutoSize = True
-		Me.Label32.Location = New System.Drawing.Point(406, 216)
+		Me.Label32.Location = New System.Drawing.Point(403, 217)
 		Me.Label32.Name = "Label32"
 		Me.Label32.Size = New System.Drawing.Size(106, 13)
 		Me.Label32.TabIndex = 3
@@ -547,7 +547,7 @@ Partial Class VectoJobForm
 		Me.TabPgDriver.Location = New System.Drawing.Point(4, 22)
 		Me.TabPgDriver.Name = "TabPgDriver"
 		Me.TabPgDriver.Padding = New System.Windows.Forms.Padding(3)
-		Me.TabPgDriver.Size = New System.Drawing.Size(527, 477)
+		Me.TabPgDriver.Size = New System.Drawing.Size(527, 487)
 		Me.TabPgDriver.TabIndex = 7
 		Me.TabPgDriver.Text = "Driver Assist"
 		Me.TabPgDriver.UseVisualStyleBackColor = True
@@ -1190,18 +1190,19 @@ Partial Class VectoJobForm
 		'
 		Me.CmOpenFile.Items.AddRange(New System.Windows.Forms.ToolStripItem() {Me.OpenWithToolStripMenuItem, Me.ShowInFolderToolStripMenuItem})
 		Me.CmOpenFile.Name = "CmOpenFile"
-		Me.CmOpenFile.Size = New System.Drawing.Size(153, 48)
+		Me.CmOpenFile.ShowImageMargin = False
+		Me.CmOpenFile.Size = New System.Drawing.Size(128, 48)
 		'
 		'OpenWithToolStripMenuItem
 		'
 		Me.OpenWithToolStripMenuItem.Name = "OpenWithToolStripMenuItem"
-		Me.OpenWithToolStripMenuItem.Size = New System.Drawing.Size(152, 22)
+		Me.OpenWithToolStripMenuItem.Size = New System.Drawing.Size(127, 22)
 		Me.OpenWithToolStripMenuItem.Text = "Open with ..."
 		'
 		'ShowInFolderToolStripMenuItem
 		'
 		Me.ShowInFolderToolStripMenuItem.Name = "ShowInFolderToolStripMenuItem"
-		Me.ShowInFolderToolStripMenuItem.Size = New System.Drawing.Size(152, 22)
+		Me.ShowInFolderToolStripMenuItem.Size = New System.Drawing.Size(127, 22)
 		Me.ShowInFolderToolStripMenuItem.Text = "Show in Folder"
 		'
 		'PicVehicle

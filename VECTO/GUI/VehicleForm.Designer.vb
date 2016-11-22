@@ -796,18 +796,19 @@ Partial Class VehicleForm
 		'
 		Me.CmOpenFile.Items.AddRange(New System.Windows.Forms.ToolStripItem() {Me.OpenWithToolStripMenuItem, Me.ShowInFolderToolStripMenuItem})
 		Me.CmOpenFile.Name = "CmOpenFile"
-		Me.CmOpenFile.Size = New System.Drawing.Size(153, 48)
+		Me.CmOpenFile.ShowImageMargin = False
+		Me.CmOpenFile.Size = New System.Drawing.Size(128, 48)
 		'
 		'OpenWithToolStripMenuItem
 		'
 		Me.OpenWithToolStripMenuItem.Name = "OpenWithToolStripMenuItem"
-		Me.OpenWithToolStripMenuItem.Size = New System.Drawing.Size(152, 22)
+		Me.OpenWithToolStripMenuItem.Size = New System.Drawing.Size(127, 22)
 		Me.OpenWithToolStripMenuItem.Text = "Open with ..."
 		'
 		'ShowInFolderToolStripMenuItem
 		'
 		Me.ShowInFolderToolStripMenuItem.Name = "ShowInFolderToolStripMenuItem"
-		Me.ShowInFolderToolStripMenuItem.Size = New System.Drawing.Size(152, 22)
+		Me.ShowInFolderToolStripMenuItem.Size = New System.Drawing.Size(127, 22)
 		Me.ShowInFolderToolStripMenuItem.Text = "Show in Folder"
 		'
 		'PnAll

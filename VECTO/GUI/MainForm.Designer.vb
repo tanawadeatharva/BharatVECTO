@@ -521,7 +521,7 @@ Partial Class MainForm
 		Me.ConMenFilelist.Items.AddRange(New System.Windows.Forms.ToolStripItem() {Me.ShowInFolderMenuItem, Me.SaveListToolStripMenuItem, Me.LoadListToolStripMenuItem, Me.LoadDefaultListToolStripMenuItem, Me.ClearListToolStripMenuItem})
 		Me.ConMenFilelist.Name = "ConMenFilelist"
 		Me.ConMenFilelist.ShowImageMargin = False
-		Me.ConMenFilelist.Size = New System.Drawing.Size(151, 136)
+		Me.ConMenFilelist.Size = New System.Drawing.Size(151, 114)
 		'
 		'ShowInFolderMenuItem
 		'
@@ -766,7 +766,8 @@ Partial Class MainForm
 		'CmDEV
 		'
 		Me.CmDEV.Name = "CmDEV"
-		Me.CmDEV.Size = New System.Drawing.Size(61, 4)
+		Me.CmDEV.ShowImageMargin = False
+		Me.CmDEV.Size = New System.Drawing.Size(36, 4)
 		'
 		'TmProgSec
 		'
@@ -776,7 +777,8 @@ Partial Class MainForm
 		'
 		Me.CmOpenFile.Items.AddRange(New System.Windows.Forms.ToolStripItem() {Me.OpenWithToolStripMenuItem, Me.OpenInGraphWindowToolStripMenuItem, Me.ShowInFolderToolStripMenuItem})
 		Me.CmOpenFile.Name = "CmOpenFile"
-		Me.CmOpenFile.Size = New System.Drawing.Size(199, 70)
+		Me.CmOpenFile.ShowImageMargin = False
+		Me.CmOpenFile.Size = New System.Drawing.Size(174, 70)
 		'
 		'OpenWithToolStripMenuItem
 		'

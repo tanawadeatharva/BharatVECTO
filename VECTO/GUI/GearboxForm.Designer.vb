@@ -78,6 +78,7 @@ Partial Class GearboxForm
 		Me.Label20 = New System.Windows.Forms.Label()
 		Me.Label19 = New System.Windows.Forms.Label()
 		Me.PnTorqRes = New System.Windows.Forms.Panel()
+		Me.Label25 = New System.Windows.Forms.Label()
 		Me.Label2 = New System.Windows.Forms.Label()
 		Me.Label4 = New System.Windows.Forms.Label()
 		Me.TbTqResv = New System.Windows.Forms.TextBox()
@@ -119,7 +120,6 @@ Partial Class GearboxForm
 		Me.Label32 = New System.Windows.Forms.Label()
 		Me.PnInertiaTI = New System.Windows.Forms.Panel()
 		Me.PicBox = New System.Windows.Forms.PictureBox()
-		Me.Label25 = New System.Windows.Forms.Label()
 		Me.ToolStrip1.SuspendLayout()
 		Me.StatusStrip1.SuspendLayout()
 		CType(Me.PictureBox1, System.ComponentModel.ISupportInitialize).BeginInit()
@@ -495,6 +495,16 @@ Partial Class GearboxForm
 		Me.PnTorqRes.Size = New System.Drawing.Size(426, 32)
 		Me.PnTorqRes.TabIndex = 2
 		'
+		'Label25
+		'
+		Me.Label25.Anchor = CType((System.Windows.Forms.AnchorStyles.Top Or System.Windows.Forms.AnchorStyles.Right), System.Windows.Forms.AnchorStyles)
+		Me.Label25.AutoSize = True
+		Me.Label25.Location = New System.Drawing.Point(294, 9)
+		Me.Label25.Name = "Label25"
+		Me.Label25.Size = New System.Drawing.Size(129, 13)
+		Me.Label25.TabIndex = 1
+		Me.Label25.Text = "(Early shift-up, Skip gears)"
+		'
 		'Label2
 		'
 		Me.Label2.Anchor = CType((System.Windows.Forms.AnchorStyles.Top Or System.Windows.Forms.AnchorStyles.Right), System.Windows.Forms.AnchorStyles)
@@ -693,7 +703,7 @@ Partial Class GearboxForm
 		'
 		Me.BtTCShiftFileBrowse.Anchor = CType((System.Windows.Forms.AnchorStyles.Top Or System.Windows.Forms.AnchorStyles.Right), System.Windows.Forms.AnchorStyles)
 		Me.BtTCShiftFileBrowse.Image = Global.TUGraz.VECTO.My.Resources.Resources.Open_icon
-		Me.BtTCShiftFileBrowse.Location = New System.Drawing.Point(353, 104)
+		Me.BtTCShiftFileBrowse.Location = New System.Drawing.Point(348, 102)
 		Me.BtTCShiftFileBrowse.Name = "BtTCShiftFileBrowse"
 		Me.BtTCShiftFileBrowse.Size = New System.Drawing.Size(24, 24)
 		Me.BtTCShiftFileBrowse.TabIndex = 5
@@ -721,7 +731,7 @@ Partial Class GearboxForm
 		'LblTCShiftFile
 		'
 		Me.LblTCShiftFile.AutoSize = True
-		Me.LblTCShiftFile.Location = New System.Drawing.Point(5, 78)
+		Me.LblTCShiftFile.Location = New System.Drawing.Point(4, 88)
 		Me.LblTCShiftFile.Name = "LblTCShiftFile"
 		Me.LblTCShiftFile.Size = New System.Drawing.Size(172, 13)
 		Me.LblTCShiftFile.TabIndex = 5
@@ -881,16 +891,6 @@ Partial Class GearboxForm
 		Me.PicBox.Size = New System.Drawing.Size(406, 372)
 		Me.PicBox.TabIndex = 48
 		Me.PicBox.TabStop = False
-		'
-		'Label25
-		'
-		Me.Label25.Anchor = CType((System.Windows.Forms.AnchorStyles.Top Or System.Windows.Forms.AnchorStyles.Right), System.Windows.Forms.AnchorStyles)
-		Me.Label25.AutoSize = True
-		Me.Label25.Location = New System.Drawing.Point(294, 9)
-		Me.Label25.Name = "Label25"
-		Me.Label25.Size = New System.Drawing.Size(129, 13)
-		Me.Label25.TabIndex = 1
-		Me.Label25.Text = "(Early shift-up, Skip gears)"
 		'
 		'GearboxForm
 		'
