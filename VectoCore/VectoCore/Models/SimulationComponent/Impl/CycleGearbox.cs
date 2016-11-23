@@ -284,32 +284,22 @@ namespace TUGraz.VectoCore.Models.SimulationComponent.Impl
 		private IResponse RequestTorqueConverterDryRun(Second absTime, Second dt, NewtonMeter outTorque,
 			PerSecond outAngularVelocity)
 		{
-			var dryOperatingPoint = FindOperatingPoint(outTorque, outAngularVelocity);
-			var engineResponse =
-				(ResponseDryRun)NextComponent.Request(absTime, dt, dryOperatingPoint.InTorque, dryOperatingPoint.InAngularVelocity,
-					true);
+			var dryOperatingPoint1 = FindOperatingPoint(outTorque, outAngularVelocity);
+			var engineResponse = (ResponseDryRun)
+				NextComponent.Request(absTime, dt, dryOperatingPoint1.InTorque, dryOperatingPoint1.InAngularVelocity, true);
 
-			//var deltaTorqueConverter = (outTorque - dryOperatingPoint.OutTorque) *
-			//							(PreviousState.OutAngularVelocity + dryOperatingPoint.OutAngularVelocity) / 2.0;
-
-			//var deltaEngine = (engineResponse.DeltaFullLoad > 0 ? engineResponse.DeltaFullLoad : 0.SI<Watt>()) +
-			//				(engineResponse.DeltaDragLoad < 0 ? -engineResponse.DeltaDragLoad : 0.SI<Watt>());
-
-			dryOperatingPoint = outTorque.IsGreater(0) && DataBus.BrakePower.IsEqual(0)
+			var dryOperatingPoint2 = outTorque.IsGreater(0) && DataBus.BrakePower.IsEqual(0)
 				? GetMaxPowerOperatingPoint(dt, outAngularVelocity, engineResponse)
 				: GetDragPowerOperatingPoint(dt, outAngularVelocity, engineResponse);
-			//engineResponse = (ResponseDryRun)NextComponent.Request(absTime, dt, dryOperatingPoint.InTorque,
-			//	dryOperatingPoint.InAngularVelocity, true);
 
-			var delta = (outTorque - dryOperatingPoint.OutTorque) *
-						(PreviousState.OutAngularVelocity + dryOperatingPoint.OutAngularVelocity) / 2.0;
-			//var tmp = FindOperatingPoint(dryOperatingPoint.OutTorque, dryOperatingPoint.OutAngularVelocity);
-			//deltaTorqueConverter.Value() * (deltaEngine.IsEqual(0) ? 1 : deltaEngine.Value());
+			var delta = (outTorque - dryOperatingPoint2.OutTorque) *
+						(PreviousState.OutAngularVelocity + dryOperatingPoint2.OutAngularVelocity) / 2.0;
+
 			return new ResponseDryRun() {
 				Source = this,
 				DeltaFullLoad = delta,
 				DeltaDragLoad = delta,
-				TorqueConverterOperatingPoint = dryOperatingPoint
+				TorqueConverterOperatingPoint = dryOperatingPoint2
 			};
 		}
 

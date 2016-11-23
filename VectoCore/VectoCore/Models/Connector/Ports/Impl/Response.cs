@@ -95,6 +95,8 @@ namespace TUGraz.VectoCore.Models.Connector.Ports.Impl
 	/// </summary>
 	public class ResponseUnderload : AbstractResponse
 	{
+		public ResponseUnderload() {}
+
 		public Watt Delta { get; set; }
 		public double Gradient { get; set; }
 	}
