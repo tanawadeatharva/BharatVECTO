@@ -70,17 +70,8 @@ namespace TUGraz.VectoCore.InputData.Reader.DataObjectAdapter
 		internal RetarderData SetCommonRetarderData(IRetarderInputData data)
 		{
 			try {
-				var retarder = new RetarderData {
-					SavedInDeclarationMode = data.SavedInDeclarationMode,
-					Vendor = data.Vendor,
-					ModelName = data.ModelName,
-					Creator = data.Creator,
-					Date = data.Date,
-					TypeId = data.TypeId,
-					DigestValue = data.DigestValue,
-					IntegrityStatus = data.IntegrityStatus,
-					Type = data.Type,
-				};
+				var retarder = new RetarderData { Type = data.Type };
+
 				switch (retarder.Type) {
 					//case RetarderType.EngineRetarder:
 					case RetarderType.TransmissionInputRetarder:
@@ -97,6 +88,18 @@ namespace TUGraz.VectoCore.InputData.Reader.DataObjectAdapter
 						// ReSharper disable once LocalizableElement
 						throw new ArgumentOutOfRangeException("retarder.Type", "RetarderType unknown");
 				}
+
+				if (!retarder.Type.IsDedicatedComponent()) {
+					return retarder;
+				}
+				retarder.SavedInDeclarationMode = data.SavedInDeclarationMode;
+				retarder.Vendor = data.Vendor;
+				retarder.ModelName = data.ModelName;
+				retarder.Creator = data.Creator;
+				retarder.Date = data.Date;
+				retarder.TypeId = data.TypeId;
+				retarder.DigestValue = data.DigestValue;
+				retarder.IntegrityStatus = data.IntegrityStatus;
 
 				return retarder;
 			} catch (Exception e) {
