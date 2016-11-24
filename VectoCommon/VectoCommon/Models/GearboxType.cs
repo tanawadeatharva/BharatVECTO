@@ -30,6 +30,7 @@
 */
 
 using System;
+using System.Diagnostics;
 using System.Diagnostics.CodeAnalysis;
 using TUGraz.VectoCommon.Utils;
 
@@ -66,16 +67,19 @@ namespace TUGraz.VectoCommon.Models
 			}
 		}
 
+		[DebuggerStepThrough]
 		public static string ShortName(this GearboxType type)
 		{
 			return type.ToString();
 		}
 
+		[DebuggerStepThrough]
 		public static bool AutomaticTransmission(this GearboxType type)
 		{
 			return type == GearboxType.ATPowerSplit || type == GearboxType.ATSerial;
 		}
 
+		[DebuggerStepThrough]
 		public static bool ManualTransmission(this GearboxType type)
 		{
 			return type == GearboxType.MT || type == GearboxType.AMT;

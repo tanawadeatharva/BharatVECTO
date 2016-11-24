@@ -207,12 +207,8 @@ namespace TUGraz.VectoCore.Models.SimulationComponent.Impl
 			// get max. torque as limited by gearbox. gearbox only limits torqueOut!
 			var gearboxFullLoad = DataBus.GearMaxTorque;
 
-			var deltaFull = ComputeDelta(torqueOut,
-				totalTorqueDemand + (CurrentState.InertiaTorqueLoss < 0 ? CurrentState.InertiaTorqueLoss : 0.SI<NewtonMeter>()),
-				CurrentState.DynamicFullLoadTorque, gearboxFullLoad, true);
-			var deltaDrag = ComputeDelta(torqueOut,
-				totalTorqueDemand - (CurrentState.InertiaTorqueLoss < 0 ? CurrentState.InertiaTorqueLoss : 0.SI<NewtonMeter>()),
-				CurrentState.FullDragTorque,
+			var deltaFull = ComputeDelta(torqueOut, totalTorqueDemand, CurrentState.DynamicFullLoadTorque, gearboxFullLoad, true);
+			var deltaDrag = ComputeDelta(torqueOut, totalTorqueDemand, CurrentState.FullDragTorque,
 				gearboxFullLoad != null ? -gearboxFullLoad : null, false);
 
 			if (dryRun) {
@@ -224,10 +220,6 @@ namespace TUGraz.VectoCore.Models.SimulationComponent.Impl
 					DragPower = CurrentState.FullDragTorque * avgEngineSpeed,
 					AuxiliariesPowerDemand = auxTorqueDemand * avgEngineSpeed,
 					EngineSpeed = angularVelocity,
-					EngineMaxTorqueOut =
-						VectoMath.Max(CurrentState.DynamicFullLoadTorque - auxTorqueDemand - CurrentState.InertiaTorqueLoss,
-							gearboxFullLoad ?? 0.SI<NewtonMeter>()),
-					EngineDragTorque = CurrentState.FullDragTorque - auxTorqueDemand - CurrentState.InertiaTorqueLoss,
 					Source = this,
 				};
 			}
@@ -248,7 +240,7 @@ namespace TUGraz.VectoCore.Models.SimulationComponent.Impl
 				maxTorque = VectoMath.Min(maxTorque, gearboxFullLoad);
 			}
 
-			CurrentState.EngineTorque = totalTorqueDemand.Limit(minTorque, maxTorque);
+			CurrentState.EngineTorque = totalTorqueDemand.LimitTo(minTorque, maxTorque);
 			CurrentState.EnginePower = CurrentState.EngineTorque * avgEngineSpeed;
 
 			if (totalTorqueDemand.IsGreater(0) &&

@@ -278,6 +278,9 @@ namespace TUGraz.VectoCore.InputData.Reader.DataObjectAdapter
 				accelerationData = AccelerationCurveReader.Create(driver.AccelerationCurve);
 			}
 
+			if (driver.Lookahead == null) {
+				throw new VectoSimulationException("Error: Lookahead Data is missing.");
+			}
 			var lookAheadData = new DriverData.LACData {
 				Enabled = driver.Lookahead.Enabled,
 				//Deceleration = driver.Lookahead.Deceleration,

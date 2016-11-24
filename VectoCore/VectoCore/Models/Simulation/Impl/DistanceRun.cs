@@ -79,6 +79,7 @@ namespace TUGraz.VectoCore.Models.Simulation.Impl
 			IterationStatistics.Increment(this, "Distance", Container.Distance.Value());
 			IterationStatistics.Increment(this, "Time", AbsTime.Value());
 			IterationStatistics.FinishIteration(AbsTime);
+			response.AbsTime = AbsTime;
 			return response;
 		}
 

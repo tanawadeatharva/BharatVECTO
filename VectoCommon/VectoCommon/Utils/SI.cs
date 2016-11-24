@@ -826,6 +826,7 @@ namespace TUGraz.VectoCommon.Utils
 		/// Creates the specified special SI object.
 		/// </summary>
 		/// <param name="val">The value of the SI object.</param>
+		[DebuggerStepThrough]
 		public static T Create(double val)
 		{
 			if (val == 0) {
@@ -835,22 +836,23 @@ namespace TUGraz.VectoCommon.Utils
 			return Constructor(val);
 		}
 
-		[DebuggerHidden]
+		[DebuggerStepThrough]
 		protected SIBase(double value) : base(value) {}
 
-		[DebuggerHidden]
+		[DebuggerStepThrough]
 		protected SIBase(double value, Unit[] numerator) : base(value)
 		{
 			Numerator = numerator;
 		}
 
+		[DebuggerStepThrough]
 		protected SIBase(double value, Unit[] numerator, Unit[] denominator) : base(value)
 		{
 			Numerator = numerator;
 			Denominator = denominator;
 		}
 
-		[DebuggerHidden]
+		[DebuggerStepThrough]
 		public new T Abs()
 		{
 			return Create(Math.Abs(Val));
@@ -1907,16 +1909,16 @@ namespace TUGraz.VectoCommon.Utils
 			if (Denominator.Any()) {
 				if (Numerator.Any()) {
 					return string.Concat(
-						Numerator.GroupBy(x => x)
-							.Select(x => x.Count() == 1 ? x.Key.ToString() : string.Format("{0}^{1}", x.Key, x.Count())))
+								Numerator.GroupBy(x => x)
+									.Select(x => x.Count() == 1 ? x.Key.ToString() : string.Format("{0}^{1}", x.Key, x.Count())))
 							+ "/"
 							+ string.Concat(
 								Denominator.GroupBy(x => x)
 									.Select(x => x.Count() == 1 ? x.Key.ToString() : string.Format("{0}^{1}", x.Key, x.Count())));
 				}
 				return "1/" + string.Concat(
-					Denominator.GroupBy(x => x)
-						.Select(x => x.Count() == 1 ? x.Key.ToString() : string.Format("{0}^{1}", x.Key, x.Count())));
+							Denominator.GroupBy(x => x)
+								.Select(x => x.Count() == 1 ? x.Key.ToString() : string.Format("{0}^{1}", x.Key, x.Count())));
 			}
 
 			if (Numerator.Any()) {
@@ -2092,6 +2094,7 @@ namespace TUGraz.VectoCommon.Utils
 		/// <param name="si">The si.</param>
 		/// <param name="tolerance">The tolerance.</param>
 		/// <returns></returns>
+		[DebuggerStepThrough]
 		public bool IsGreater(SI si, double tolerance)
 		{
 			if (!HasEqualUnit(si)) {
@@ -2107,6 +2110,7 @@ namespace TUGraz.VectoCommon.Utils
 		/// <param name="si">The si.</param>
 		/// <param name="tolerance">The tolerance.</param>
 		/// <returns></returns>
+		[DebuggerStepThrough]
 		public bool IsGreaterOrEqual(SI si, SI tolerance = null)
 		{
 			if (!HasEqualUnit(si)) {
@@ -2125,6 +2129,7 @@ namespace TUGraz.VectoCommon.Utils
 		/// <param name="val">The value.</param>
 		/// <param name="tolerance">The tolerance.</param>
 		/// <returns></returns>
+		[DebuggerStepThrough]
 		public bool IsSmaller(double val, double tolerance = DoubleExtensionMethods.Tolerance)
 		{
 			return Val.IsSmaller(val, tolerance);
@@ -2136,6 +2141,7 @@ namespace TUGraz.VectoCommon.Utils
 		/// <param name="val">The value.</param>
 		/// <param name="tolerance">The tolerance.</param>
 		/// <returns></returns>
+		[DebuggerStepThrough]
 		public bool IsSmallerOrEqual(double val, double tolerance = DoubleExtensionMethods.Tolerance)
 		{
 			return Val.IsSmallerOrEqual(val, tolerance);
@@ -2147,6 +2153,7 @@ namespace TUGraz.VectoCommon.Utils
 		/// <param name="val">The value.</param>
 		/// <param name="tolerance">The tolerance.</param>
 		/// <returns></returns>
+		[DebuggerStepThrough]
 		public bool IsGreater(double val, double tolerance = DoubleExtensionMethods.Tolerance)
 		{
 			return Val.IsGreater(val, tolerance);
@@ -2158,6 +2165,7 @@ namespace TUGraz.VectoCommon.Utils
 		/// <param name="val">The value.</param>
 		/// <param name="tolerance">The tolerance.</param>
 		/// <returns></returns>
+		[DebuggerStepThrough]
 		public bool IsGreaterOrEqual(double val, double tolerance = DoubleExtensionMethods.Tolerance)
 		{
 			return Val.IsGreaterOrEqual(val, tolerance);

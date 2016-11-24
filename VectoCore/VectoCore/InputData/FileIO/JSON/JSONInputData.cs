@@ -32,10 +32,8 @@
 using Newtonsoft.Json.Linq;
 using System;
 using System.Collections.Generic;
-using System.Data;
 using System.IO;
 using System.Linq;
-using System.Text;
 using TUGraz.VectoCommon.Exceptions;
 using TUGraz.VectoCommon.InputData;
 using TUGraz.VectoCommon.Models;
@@ -477,7 +475,7 @@ namespace TUGraz.VectoCore.InputData.FileIO.JSON
 				var acceleration = Body[JsonKeys.DriverData_AccelerationCurve];
 				if (acceleration == null || EmptyOrInvalidFileName(acceleration.Value<string>())) {
 					return null;
-//					throw new VectoException("AccelerationCurve (VACC) required");
+					//					throw new VectoException("AccelerationCurve (VACC) required");
 				}
 				try {
 					return ReadTableData(acceleration.Value<string>(), "DriverAccelerationCurve", true);
@@ -556,14 +554,8 @@ namespace TUGraz.VectoCore.InputData.FileIO.JSON
 				if (auxFile == null || EmptyOrInvalidFileName(auxFile.Value<string>())) {
 					continue;
 				}
-				var stream = new StreamReader(Path.Combine(BasePath, auxFile.Value<string>()));
-				stream.ReadLine(); // skip header "Transmission ration to engine rpm [-]"
-				auxData.TransmissionRatio = stream.ReadLine().IndulgentParse();
-				stream.ReadLine(); // skip header "Efficiency to engine [-]"
-				auxData.EfficiencyToEngine = stream.ReadLine().IndulgentParse();
-				stream.ReadLine(); // skip header "Efficiency auxiliary to supply [-]"
-				auxData.EfficiencyToSupply = stream.ReadLine().IndulgentParse();
-				auxData.DemandMap = VectoCSVFile.ReadStream(new MemoryStream(Encoding.UTF8.GetBytes(stream.ReadToEnd())), source: Path.Combine(BasePath, auxFile.Value<string>()));
+
+				AuxiliaryFileHelper.FillAuxiliaryDataInputData(auxData, Path.Combine(BasePath, auxFile.Value<string>()));
 			}
 			return retVal;
 		}
@@ -635,14 +627,7 @@ namespace TUGraz.VectoCore.InputData.FileIO.JSON
 				if (auxFile == null || EmptyOrInvalidFileName(auxFile.Value<string>())) {
 					continue;
 				}
-				var stream = new StreamReader(Path.Combine(BasePath, auxFile.Value<string>()));
-				stream.ReadLine(); // skip header "Transmission ration to engine rpm [-]"
-				auxData.TransmissionRatio = stream.ReadLine().IndulgentParse();
-				stream.ReadLine(); // skip header "Efficiency to engine [-]"
-				auxData.EfficiencyToEngine = stream.ReadLine().IndulgentParse();
-				stream.ReadLine(); // skip header "Efficiency auxiliary to supply [-]"
-				auxData.EfficiencyToSupply = stream.ReadLine().IndulgentParse();
-				auxData.DemandMap = VectoCSVFile.ReadStream(new MemoryStream(Encoding.UTF8.GetBytes(stream.ReadToEnd())), source: Path.Combine(BasePath, auxFile.Value<string>()));
+				AuxiliaryFileHelper.FillAuxiliaryDataInputData(auxData, Path.Combine(BasePath, auxFile.Value<string>()));
 			}
 			return retVal;
 		}

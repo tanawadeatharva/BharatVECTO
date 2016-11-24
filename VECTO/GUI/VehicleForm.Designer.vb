@@ -786,9 +786,9 @@ Partial Class VehicleForm
 		'
 		Me.PictureBox1.BackColor = System.Drawing.Color.White
 		Me.PictureBox1.Image = Global.TUGraz.VECTO.My.Resources.Resources.VECTO_VEH
-		Me.PictureBox1.Location = New System.Drawing.Point(12, 28)
+		Me.PictureBox1.Location = New System.Drawing.Point(0, 28)
 		Me.PictureBox1.Name = "PictureBox1"
-		Me.PictureBox1.Size = New System.Drawing.Size(569, 40)
+		Me.PictureBox1.Size = New System.Drawing.Size(589, 40)
 		Me.PictureBox1.TabIndex = 37
 		Me.PictureBox1.TabStop = False
 		'
@@ -796,18 +796,19 @@ Partial Class VehicleForm
 		'
 		Me.CmOpenFile.Items.AddRange(New System.Windows.Forms.ToolStripItem() {Me.OpenWithToolStripMenuItem, Me.ShowInFolderToolStripMenuItem})
 		Me.CmOpenFile.Name = "CmOpenFile"
-		Me.CmOpenFile.Size = New System.Drawing.Size(153, 48)
+		Me.CmOpenFile.ShowImageMargin = False
+		Me.CmOpenFile.Size = New System.Drawing.Size(128, 48)
 		'
 		'OpenWithToolStripMenuItem
 		'
 		Me.OpenWithToolStripMenuItem.Name = "OpenWithToolStripMenuItem"
-		Me.OpenWithToolStripMenuItem.Size = New System.Drawing.Size(152, 22)
+		Me.OpenWithToolStripMenuItem.Size = New System.Drawing.Size(127, 22)
 		Me.OpenWithToolStripMenuItem.Text = "Open with ..."
 		'
 		'ShowInFolderToolStripMenuItem
 		'
 		Me.ShowInFolderToolStripMenuItem.Name = "ShowInFolderToolStripMenuItem"
-		Me.ShowInFolderToolStripMenuItem.Size = New System.Drawing.Size(152, 22)
+		Me.ShowInFolderToolStripMenuItem.Size = New System.Drawing.Size(127, 22)
 		Me.ShowInFolderToolStripMenuItem.Text = "Show in Folder"
 		'
 		'PnAll
@@ -1017,6 +1018,7 @@ Partial Class VehicleForm
 		'PicVehicle
 		'
 		Me.PicVehicle.BackColor = System.Drawing.Color.LightGray
+		Me.PicVehicle.BorderStyle = System.Windows.Forms.BorderStyle.FixedSingle
 		Me.PicVehicle.Location = New System.Drawing.Point(281, 70)
 		Me.PicVehicle.Name = "PicVehicle"
 		Me.PicVehicle.Size = New System.Drawing.Size(300, 88)
@@ -1058,7 +1060,7 @@ Partial Class VehicleForm
 		Me.Icon = CType(resources.GetObject("$this.Icon"), System.Drawing.Icon)
 		Me.MaximizeBox = False
 		Me.Name = "VehicleForm"
-		Me.StartPosition = System.Windows.Forms.FormStartPosition.CenterParent
+		Me.StartPosition = System.Windows.Forms.FormStartPosition.CenterScreen
 		Me.Text = "F05_VEH"
 		Me.GroupBox6.ResumeLayout(False)
 		Me.GroupBox6.PerformLayout()
