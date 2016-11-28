@@ -50,9 +50,6 @@ namespace TUGraz.VectoCore.Models.SimulationComponent.Impl
 		protected internal readonly TorqueConverter TorqueConverter;
 		private IIdleController _idleController;
 
-		// state overlapping property
-		public Second LastShift { get; private set; }
-
 		public bool TorqueConverterLocked
 		{
 			get { return CurrentState.TorqueConverterLocked; }
@@ -291,7 +288,7 @@ namespace TUGraz.VectoCore.Models.SimulationComponent.Impl
 			retval.ClutchPowerRequest = 0.SI<Watt>();
 			CurrentState.SetState(0.SI<NewtonMeter>(), 0.SI<PerSecond>(), outTorque, outAngularVelocity);
 
-			TorqueConverter.Locked(CurrentState.InTorque, CurrentState.InAngularVelocity);
+			TorqueConverter.Locked(CurrentState.InTorque, DataBus.EngineIdleSpeed);
 
 			CurrentState.Gear = 1;
 			CurrentState.TorqueConverterLocked = !ModelData.Gears[Gear].HasTorqueConverter;

@@ -201,8 +201,7 @@ namespace TUGraz.VectoCore.Models.SimulationComponent.Data.Gearbox
 			return FindOperatingPoint(inAngularVelocity, solutions.Max().SI<PerSecond>());
 		}
 
-		public TorqueConverterOperatingPoint FindOperatingPointForPowerDemand(Watt power, PerSecond prevInputSpeed,
-			PerSecond nextOutputSpeed, KilogramSquareMeter inertia, Second dt)
+		public TorqueConverterOperatingPoint FindOperatingPointForPowerDemand(Watt power, PerSecond prevInputSpeed, PerSecond nextOutputSpeed, KilogramSquareMeter inertia, Second dt, Watt previousPower)
 		{
 			var solutions = new List<double>();
 			var mpNorm = ReferenceSpeed.Value();
@@ -211,10 +210,10 @@ namespace TUGraz.VectoCore.Models.SimulationComponent.Data.Gearbox
 				var mpEdge = Edge.Create(new Point(segment.Item1.SpeedRatio, segment.Item1.Torque.Value()),
 					new Point(segment.Item2.SpeedRatio, segment.Item2.Torque.Value()));
 
-				var a = mpEdge.OffsetXY / mpNorm / mpNorm;
-				var b = inertia.Value() / 2 / dt.Value() + mpEdge.SlopeXY * nextOutputSpeed.Value() / mpNorm / mpNorm;
+				var a = mpEdge.OffsetXY / (2 * mpNorm * mpNorm);
+				var b = inertia.Value() / (2 * dt.Value()) + mpEdge.SlopeXY * nextOutputSpeed.Value() / (2*mpNorm * mpNorm);
 				var c = 0;
-				var d = -inertia.Value() / 2 / dt.Value() * prevInputSpeed.Value() * prevInputSpeed.Value() - power.Value();
+				var d = -inertia.Value()* prevInputSpeed.Value() * prevInputSpeed.Value() / (2 * dt.Value())  - power.Value() + previousPower.Value() / 2;
 				var sol = VectoMath.CubicEquationSolver(a, b, c, d);
 
 				var selected = sol.Where(x => x > 0 && nextOutputSpeed / x >= mpEdge.P1.X && nextOutputSpeed / x < mpEdge.P2.X);
