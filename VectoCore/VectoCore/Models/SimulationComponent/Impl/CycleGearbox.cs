@@ -57,8 +57,7 @@ namespace TUGraz.VectoCore.Models.SimulationComponent.Impl
 			if (!gearboxModelData.Type.AutomaticTransmission()) {
 				return;
 			}
-			var strategy = new CycleShiftStrategy();
-			strategy.Gearbox = this;
+			var strategy = new CycleShiftStrategy { Gearbox = this };
 			TorqueConverter = new TorqueConverter(this, strategy, container, gearboxModelData.TorqueConverterData, engineInertia);
 			if (TorqueConverter == null) {
 				throw new VectoException("Torque Converter required for AT transmission!");
@@ -68,7 +67,8 @@ namespace TUGraz.VectoCore.Models.SimulationComponent.Impl
 		public override void Connect(ITnOutPort other)
 		{
 			base.Connect(other);
-			TorqueConverter.NextComponent = other;
+			if (TorqueConverter != null)
+				TorqueConverter.NextComponent = other;
 		}
 
 		public override IResponse Initialize(NewtonMeter outTorque, PerSecond outAngularVelocity)
