@@ -41,7 +41,7 @@ namespace TUGraz.VectoCore.Models.Declaration
 	{
 		protected override string ResourceId
 		{
-			get { return "TUGraz.VectoCore.Resources.Declaration.VAUX.Fan-Tech.csv"; }
+			get { return DeclarationData.DeclarationDataResourcePrefix + ".VAUX.Fan-Tech.csv"; }
 		}
 
 		protected override string ErrorMessage

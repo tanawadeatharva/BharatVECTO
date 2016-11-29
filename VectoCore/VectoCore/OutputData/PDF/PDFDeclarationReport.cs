@@ -134,7 +134,8 @@ namespace TUGraz.VectoCore.OutputData.PDF
 		private Stream CreateTitlePage(Dictionary<MissionType, ResultContainer> missions)
 		{
 			var stream = new MemoryStream();
-			var resourceName = string.Format("{0}Report.title{1}CyclesTemplate.pdf", RessourceHelper.Namespace, missions.Count);
+			var resourceName = string.Format("{0}.Report.title{1}CyclesTemplate.pdf",
+				DeclarationData.DeclarationDataResourcePrefix, missions.Count);
 			var inputStream = RessourceHelper.ReadStream(resourceName);
 			var reader = new PdfReader(inputStream);
 			var stamper = new PdfStamper(reader, stream);
@@ -218,7 +219,9 @@ namespace TUGraz.VectoCore.OutputData.PDF
 		{
 			var stream = new MemoryStream();
 
-			var reader = new PdfReader(RessourceHelper.ReadStream(RessourceHelper.Namespace + "Report.cyclePageTemplate.pdf"));
+			var reader =
+				new PdfReader(
+					RessourceHelper.ReadStream(DeclarationData.DeclarationDataResourcePrefix + ".Report.cyclePageTemplate.pdf"));
 			var stamper = new PdfStamper(reader, stream);
 
 			var pdfFields = stamper.AcroFields;
@@ -291,12 +294,13 @@ namespace TUGraz.VectoCore.OutputData.PDF
 		/// <param name="reportWriter"></param>
 		private static void MergeDocuments(IEnumerable<Stream> pages, Stream reportWriter)
 		{
-			using (var document = new Document(PageSize.A4.Rotate(), 12, 12, 12, 12))
-			using (var writer = new PdfCopy(document, reportWriter)) {
-				document.Open();
-				foreach (var page in pages) {
-					using (var reader = new PdfReader(page)) {
-						writer.AddDocument(reader);
+			using (var document = new Document(PageSize.A4.Rotate(), 12, 12, 12, 12)) {
+				using (var writer = new PdfCopy(document, reportWriter)) {
+					document.Open();
+					foreach (var page in pages) {
+						using (var reader = new PdfReader(page)) {
+							writer.AddDocument(reader);
+						}
 					}
 				}
 			}
@@ -595,7 +599,7 @@ namespace TUGraz.VectoCore.OutputData.PDF
 					break;
 			}
 
-			var hdvClassImagePath = RessourceHelper.Namespace + "Report." + name;
+			var hdvClassImagePath = DeclarationData.DeclarationDataResourcePrefix + ".Report." + name;
 			var hdvClassImage = RessourceHelper.ReadStream(hdvClassImagePath);
 			return Image.GetInstance(hdvClassImage);
 		}

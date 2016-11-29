@@ -84,7 +84,7 @@ namespace TUGraz.VectoCore.Models.Declaration
 
 		protected override string ResourceId
 		{
-			get { return "TUGraz.VectoCore.Resources.Declaration.Body_Trailers_Weights.csv"; }
+			get { return DeclarationData.DeclarationDataResourcePrefix + ".Body_Trailers_Weights.csv"; }
 		}
 
 		protected override string ErrorMessage

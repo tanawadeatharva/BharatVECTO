@@ -73,7 +73,7 @@ namespace TUGraz.VectoCore.Models.Declaration
 		{
 			protected override string ResourceId
 			{
-				get { return "TUGraz.VectoCore.Resources.Declaration.LAC-DF-Vdrop.csv"; }
+				get { return DeclarationData.DeclarationDataResourcePrefix + ".LAC-DF-Vdrop.csv"; }
 			}
 
 			protected override string ErrorMessage
@@ -127,7 +127,7 @@ namespace TUGraz.VectoCore.Models.Declaration
 		{
 			protected override string ResourceId
 			{
-				get { return "TUGraz.VectoCore.Resources.Declaration.LAC-DF-Vtarget.csv"; }
+				get { return DeclarationData.DeclarationDataResourcePrefix + ".LAC-DF-Vtarget.csv"; }
 			}
 
 			protected override string ErrorMessage
