@@ -42,21 +42,23 @@ namespace TUGraz.VectoCore.Models.SimulationComponent.Data.Gearbox
 	[CustomValidation(typeof(TorqueConverterData), "ValidateData")]
 	public class TorqueConverterData : LoggingObject
 	{
-		protected List<TorqueConverterEntry> TorqueConverterEntries;
+		protected internal readonly TorqueConverterEntry[] TorqueConverterEntries;
 
 		public PerSecond ReferenceSpeed { get; protected internal set; }
 
-		public KilogramSquareMeter Inertia { get; protected internal set; }
+		// the inertia is added to the engine's inertia and not considered separately
+		//public KilogramSquareMeter Inertia { get; protected internal set; }
 
 		public PerSecond TorqueConverterSpeedLimit { get; protected internal set; }
 
 		// only used for validation!
 		internal double RequiredSpeedRatio { get; set; }
 
-		protected internal TorqueConverterData(List<TorqueConverterEntry> torqueConverterEntries, PerSecond referenceSpeed,
+		protected internal TorqueConverterData(IEnumerable<TorqueConverterEntry> torqueConverterEntries,
+			PerSecond referenceSpeed,
 			PerSecond maxRpm)
 		{
-			TorqueConverterEntries = torqueConverterEntries;
+			TorqueConverterEntries = torqueConverterEntries.ToArray();
 			ReferenceSpeed = referenceSpeed;
 			TorqueConverterSpeedLimit = maxRpm;
 		}
