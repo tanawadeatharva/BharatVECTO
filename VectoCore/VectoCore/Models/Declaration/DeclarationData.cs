@@ -31,11 +31,13 @@
 
 using System;
 using System.Collections.Generic;
+using System.Data;
 using System.Linq;
 using TUGraz.VectoCommon.Exceptions;
 using TUGraz.VectoCommon.InputData;
 using TUGraz.VectoCommon.Models;
 using TUGraz.VectoCommon.Utils;
+using TUGraz.VectoCore.InputData.Reader.ComponentData;
 using TUGraz.VectoCore.Models.SimulationComponent.Data;
 using TUGraz.VectoCore.Models.SimulationComponent.Data.Gearbox;
 using TUGraz.VectoCore.Utils;
@@ -44,6 +46,8 @@ namespace TUGraz.VectoCore.Models.Declaration
 {
 	public sealed class DeclarationData
 	{
+		public const string DeclarationDataResourcePrefix = "TUGraz.VectoCore.Resources.Declaration";
+
 		private static DeclarationData _instance;
 		private Segments _segments;
 		private Wheels _wheels;
@@ -364,7 +368,7 @@ namespace TUGraz.VectoCore.Models.Declaration
 					fullLoadCurve.TakeWhile(fldEntry => fldEntry.EngineSpeed < rpmLimit)
 						.Select(
 							fldEntry =>
-									new Point(fldEntry.EngineSpeed.Value(), fldEntry.TorqueFullLoad.Value() * ShiftPolygonEngineFldMargin))
+								new Point(fldEntry.EngineSpeed.Value(), fldEntry.TorqueFullLoad.Value() * ShiftPolygonEngineFldMargin))
 						.ToList();
 			}
 
@@ -440,6 +444,24 @@ namespace TUGraz.VectoCore.Models.Declaration
 					pointSet.AddRange(points.Select(point => new Point(point.X, point.X * k + d)));
 				}
 				return pointSet;
+			}
+
+			public static IEnumerable<TorqueConverterEntry> GetTorqueConverterDragCurve(double ratio)
+			{
+				var resourceId = DeclarationData.DeclarationDataResourcePrefix + ".TorqueConverter.csv";
+				var data = VectoCSVFile.ReadStream(RessourceHelper.ReadStream(resourceId));
+				var characteristicTorque = (from DataRow row in data.Rows
+					select
+						new TorqueConverterEntry() {
+							SpeedRatio = row.ParseDouble(TorqueConverterDataReader.Fields.SpeedRatio),
+							Torque = row.ParseDouble(TorqueConverterDataReader.Fields.CharacteristicTorque).SI<NewtonMeter>(),
+							TorqueRatio = row.ParseDouble(TorqueConverterDataReader.Fields.TorqueRatio)
+						}).ToArray();
+				foreach (var torqueConverterEntry in characteristicTorque) {
+					torqueConverterEntry.SpeedRatio = torqueConverterEntry.SpeedRatio * ratio;
+					torqueConverterEntry.TorqueRatio = torqueConverterEntry.TorqueRatio / ratio;
+				}
+				return characteristicTorque.Where(x => x.SpeedRatio >= ratio).ToArray();
 			}
 		}
 	}

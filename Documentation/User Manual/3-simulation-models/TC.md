@@ -30,7 +30,25 @@ with:
 -   n~in~ = engine speed \[1/min\]
 -   n~ref~ = reference rpm \[1/min\] (see below)
 
-The torque converter characteristics must also be defined for speed ratios of greater than one (ν&gt;1) in order to calculate overrun conditions or engine drag (torque&lt;0).
+The torque converter characteristics must also be defined for speed ratios  greater than one (ν&gt;1) in order to calculate overrun conditions or engine drag (torque&lt;0).
+
+**Note:** The torque converter characteristics must not contain parts where either the torque ratio or the input torque are constant!
+
+<div class="declaration">
+In declaration mode, the torque converter for drag points is automatically appended by VECTO. Input data with a speed ratio &geq; 1 are skipped.
+
+For Power Split transmissions, where the torque converter characteristics already contains the gearbox losses and transmission ratio, the generic drag points are adapted according to the following equations:
+
+$ν_{PS} = ν / ratio_i$
+
+$μ_{PS} = μ \cdot ratio_i$
+</div>
+
+<div class="engineering">
+In engineering mode the drag points for the torque converter can be specified. If so, the input data has to cover at least the speed ratio up to 2.2.
+
+If the torque converter characteristics for drag are not specified, the generic points are appended as described above for declaration mode.
+</div>
 
 The torque converter has a separate [Shift Polygon](#shift-polygon-file-.vgbs) which defines the conditions for switching from torque converter gear to locked gear.
 
