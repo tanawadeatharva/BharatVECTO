@@ -32,8 +32,8 @@ Imports TUGraz.VectoCore.Utils
 
 <CustomValidation(GetType(VectoJob), "ValidateJob")>
 Public Class VectoJob
-	Implements IEngineeringInputDataProvider, IDeclarationInputDataProvider, IEngineeringJobInputData, 
-				IDeclarationJobInputData, IDriverEngineeringInputData, IDriverDeclarationInputData, IAuxiliariesEngineeringInputData, 
+	Implements IEngineeringInputDataProvider, IDeclarationInputDataProvider, IEngineeringJobInputData,
+				IDeclarationJobInputData, IDriverEngineeringInputData, IDriverDeclarationInputData, IAuxiliariesEngineeringInputData,
 				IAuxiliariesDeclarationInputData
 
 	'AA-TB
@@ -108,7 +108,8 @@ Public Class VectoJob
 
 	Public Function SaveFile() As Boolean
 		Dim validationResults As IList(Of ValidationResult) =
-				Validate(If(Cfg.DeclMode, ExecutionMode.Declaration, ExecutionMode.Engineering), If(GearboxInputData Is Nothing, GearboxType.MT, GearboxInputData.Type))
+				Validate(If(Cfg.DeclMode, ExecutionMode.Declaration, ExecutionMode.Engineering),
+						If(GearboxInputData Is Nothing, GearboxType.MT, GearboxInputData.Type))
 
 		If validationResults.Count > 0 Then
 			Dim messages As IEnumerable(Of String) =
@@ -230,8 +231,8 @@ Public Class VectoJob
 			Return New StartStopInputData With {
 				.Enabled = _startStop,
 				.MaxSpeed = StartStopMaxSpeed.KMPHtoMeterPerSecond(),
-				.MinTime = StartStopTime.SI(Of Second)(),
-				.Delay = StartStopDelay.SI(Of Second)()
+				.MinTime = StartStopTime.SI (Of Second)(),
+				.Delay = StartStopDelay.SI (Of Second)()
 				}
 		End Get
 	End Property
@@ -250,7 +251,7 @@ Public Class VectoJob
 				Try
 					Dim cycleDataRes As Stream =
 							RessourceHelper.ReadStream(
-								RessourceHelper.Namespace + "VACC." + _driverAccelerationFile.OriginalPath +
+								DeclarationData.DeclarationDataResourcePrefix + ".VACC." + _driverAccelerationFile.OriginalPath +
 								VectoCore.Configuration.Constants.FileExtensions.DriverAccelerationCurve)
 					Return VectoCSVFile.ReadStream(cycleDataRes)
 				Catch ex As Exception
@@ -304,7 +305,7 @@ Public Class VectoJob
 
 	' ReSharper disable once UnusedMember.Global -- used by Validation
 	Public Shared Function ValidateJob(vectoJob As VectoJob, validationContext As ValidationContext) As ValidationResult
-		Dim modeService As ExecutionModeServiceContainer = TryCast(validationContext.GetService(GetType(ExecutionMode)), 
+		Dim modeService As ExecutionModeServiceContainer = TryCast(validationContext.GetService(GetType(ExecutionMode)),
 																	ExecutionModeServiceContainer)
 		Dim mode As ExecutionMode = If(modeService Is Nothing, ExecutionMode.Declaration, modeService.Mode)
 
@@ -617,7 +618,8 @@ Public Class VectoJob
 				Else
 					Try
 						Dim cycleDataRes As Stream =
-								RessourceHelper.ReadStream(RessourceHelper.Namespace + "MissionCycles." + cycleFile.OriginalPath + ".vdri")
+								RessourceHelper.ReadStream(
+									DeclarationData.DeclarationDataResourcePrefix + ".MissionCycles." + cycleFile.OriginalPath + ".vdri")
 						cycleData = VectoCSVFile.ReadStream(cycleDataRes)
 					Catch ex As Exception
 						Throw New VectoException("Driving Cycle could not be read: " + cycleFile.OriginalPath)
@@ -657,7 +659,7 @@ Public Class VectoJob
 	Public ReadOnly Property Auxiliaries As IList(Of IAuxiliaryEngineeringInputData) _
 		Implements IAuxiliariesEngineeringInputData.Auxiliaries
 		Get
-			Return AuxData().Cast(Of IAuxiliaryEngineeringInputData).ToList()
+			Return AuxData().Cast (Of IAuxiliaryEngineeringInputData).ToList()
 		End Get
 	End Property
 
@@ -685,7 +687,7 @@ Public Class VectoJob
 	Public ReadOnly Property IAuxiliariesDeclarationInputData_Auxiliaries As IList(Of IAuxiliaryDeclarationInputData) _
 		Implements IAuxiliariesDeclarationInputData.Auxiliaries
 		Get
-			Return AuxData().Cast(Of IAuxiliaryDeclarationInputData).ToList()
+			Return AuxData().Cast (Of IAuxiliaryDeclarationInputData).ToList()
 		End Get
 	End Property
 
@@ -696,7 +698,7 @@ Public Class VectoJob
 			retVal.Add(New AuxiliaryDataInputData() With {
 						.ID = "ConstantAux",
 						.AuxiliaryType = AuxiliaryDemandType.Constant,
-						.ConstantPowerDemand = AuxPAdd.SI(Of Watt)()
+						.ConstantPowerDemand = AuxPAdd.SI (Of Watt)()
 						})
 		End If
 		For Each auxEntry As KeyValuePair(Of String, AuxEntry) In AuxPaths
@@ -716,7 +718,7 @@ Public Class VectoJob
 			stream.ReadLine() ' skip header "Efficiency auxiliary to supply [-]"
 			theAuxData.EfficiencyToSupply = stream.ReadLine().IndulgentParse()
 			theAuxData.DemandMap = VectoCSVFile.ReadStream(New MemoryStream(Encoding.UTF8.GetBytes(stream.ReadToEnd())),
-															source:=auxEntry.Value.Path.FullPath)
+															source := auxEntry.Value.Path.FullPath)
 		Next
 
 		Return retVal
