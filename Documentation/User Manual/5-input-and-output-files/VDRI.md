@@ -95,7 +95,7 @@ This driving cycle defines the actual measured speed of the vehicle, the gear, a
 It overrides the shift strategy of Vecto and also directly sets the engine speed.
 
 
-Header: **\<t>, \<v>, \<gear>***\[, \<grad>]\[, \<Padd>]\[, \<vair\_res>, \<vair\_beta>]\[, \<Aux\_ID>\]*
+Header: **\<t>, \<v>, \<gear>***\[, \<tc\_active>, \<grad>]\[, \<Padd>]\[, \<vair\_res>, \<vair\_beta>]\[, \<Aux\_ID>\]*
 
 **Bold columns** are mandatory. *Italic columns* are optional. Only the listed columns are allowed (no other columns!).<br />
 Units are optional and are enclosed in [square-brackets] after the header-column. Comments may be written with a preceding hash-sign "#".
@@ -105,6 +105,7 @@ Units are optional and are enclosed in [square-brackets] after the header-column
 | **t**       | [s]    | The absolute time. Must always be increasing.                                                                                                                                                                                                                                                          |
 | **v**       | [km/h] | The actual velocity of the vehicle. Must be >= 0 km/h.                                                                                                                                                                                                                                                 |
 | **gear**    | [-]    | The current gear. Must be >= 0 (0 is neutral).                                                                                                                                                                                                                                                         |
+| **tc_active**| [-]    | For AT gearboxes mandatory! Indicate if the torque converter is active or locked. Depending on the gearbox type only allowed for 1st gear or 1st and 2nd gear.                                                                                                                                                                                                                                                       |
 | *Padd*      | [kW]   | Additional auxiliary power demand. This power demand will be directly added to the engine power in addition to possible other auxiliaries. Must be >= 0 kW.                                                                                                                                            |
 | *grad*      | [%]    | The road gradient.                                                                                                                                                                                                                                                                                     |
 | *vair_res*  | [km/h] | Air speed relative to vehicle for cross wind correction. Only required if [**Cross Wind Correction**](#cross-wind-correction) is set to **Vair & Beta Input**.                                                                                                                                         |
