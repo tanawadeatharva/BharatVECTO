@@ -152,7 +152,7 @@ namespace TUGraz.VectoCore.Tests.Integration
 				UpshiftMinAcceleration = DeclarationData.Gearbox.UpshiftMinAcceleration,
 				TorqueConverterData =
 					TorqueConverterDataReader.ReadFromFile(torqueConverterFile, 1000.RPMtoRad(),
-						DeclarationData.Gearbox.TorqueConverterSpeedLimit, ExecutionMode.Engineering, gbxType == GearboxType.ATSerial ? 1 : 1/ratios[0])
+						1800.RPMtoRad(), ExecutionMode.Engineering, gbxType == GearboxType.ATSerial ? 1 : 1/ratios[0])
 			};
 		}
 

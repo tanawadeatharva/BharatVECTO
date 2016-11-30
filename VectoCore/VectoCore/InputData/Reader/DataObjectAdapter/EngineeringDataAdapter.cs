@@ -209,7 +209,7 @@ namespace TUGraz.VectoCore.InputData.Reader.DataObjectAdapter
 				}
 				var ratio = double.IsNaN(retVal.Gears[1].Ratio) ? 1 : retVal.Gears[1].TorqueConverterRatio / retVal.Gears[1].Ratio;
 				retVal.TorqueConverterData = TorqueConverterDataReader.Create(gearbox.TorqueConverter.TCData,
-					gearbox.TorqueConverter.ReferenceRPM, DeclarationData.Gearbox.TorqueConverterSpeedLimit, ExecutionMode.Engineering, ratio);
+					gearbox.TorqueConverter.ReferenceRPM, gearbox.TorqueConverter.MaxInputSpeed, ExecutionMode.Engineering, ratio);
 			} else {
 				if (retVal.Type.AutomaticTransmission()) {
 					throw new VectoException("AT gearbox model requires torque converter");

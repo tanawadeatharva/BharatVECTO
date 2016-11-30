@@ -257,7 +257,7 @@ namespace TUGraz.VectoCore.Models.Declaration
 			public static readonly Second DownshiftAfterUpshiftDelay = 10.SI<Second>();
 			public static readonly Second UpshiftAfterDownshiftDelay = 10.SI<Second>();
 			public static readonly MeterPerSquareSecond UpshiftMinAcceleration = 0.1.SI<MeterPerSquareSecond>();
-			public static readonly PerSecond TorqueConverterSpeedLimit = 1600.RPMtoRad();
+			//public static readonly PerSecond TorqueConverterSpeedLimit = 1600.RPMtoRad();
 			public static readonly double TorqueConverterSecondGearThreshold = 1.8;
 
 			/// <summary>

@@ -55,8 +55,7 @@ namespace TUGraz.VectoCore.Models.SimulationComponent.Data.Gearbox
 		internal double RequiredSpeedRatio { get; set; }
 
 		protected internal TorqueConverterData(IEnumerable<TorqueConverterEntry> torqueConverterEntries,
-			PerSecond referenceSpeed,
-			PerSecond maxRpm)
+			PerSecond referenceSpeed, PerSecond maxRpm)
 		{
 			TorqueConverterEntries = torqueConverterEntries.ToArray();
 			ReferenceSpeed = referenceSpeed;
