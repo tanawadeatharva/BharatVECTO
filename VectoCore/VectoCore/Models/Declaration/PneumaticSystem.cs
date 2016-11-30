@@ -41,7 +41,7 @@ namespace TUGraz.VectoCore.Models.Declaration
 	{
 		protected override string ResourceId
 		{
-			get { return "TUGraz.VectoCore.Resources.Declaration.VAUX.PS-Table.csv"; }
+			get { return DeclarationData.DeclarationDataResourcePrefix + ".VAUX.PS-Table.csv"; }
 		}
 
 		protected override string ErrorMessage

@@ -42,7 +42,7 @@ namespace TUGraz.VectoCore.Models.Declaration
 
 		protected override string ResourceId
 		{
-			get { return "TUGraz.VectoCore.Resources.Declaration.VAUX.PTO-tech.csv"; }
+			get { return DeclarationData.DeclarationDataResourcePrefix + ".VAUX.PTO-tech.csv"; }
 		}
 
 		protected override string ErrorMessage

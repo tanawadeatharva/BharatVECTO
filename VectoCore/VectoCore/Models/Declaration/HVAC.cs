@@ -42,7 +42,7 @@ namespace TUGraz.VectoCore.Models.Declaration
 	{
 		protected override string ResourceId
 		{
-			get { return "TUGraz.VectoCore.Resources.Declaration.VAUX.HVAC-Table.csv"; }
+			get { return DeclarationData.DeclarationDataResourcePrefix + ".VAUX.HVAC-Table.csv"; }
 		}
 
 		protected override string ErrorMessage

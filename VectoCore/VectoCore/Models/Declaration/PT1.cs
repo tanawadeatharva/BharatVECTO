@@ -45,7 +45,7 @@ namespace TUGraz.VectoCore.Models.Declaration
 	{
 		protected override string ResourceId
 		{
-			get { return "TUGraz.VectoCore.Resources.Declaration.PT1.csv"; }
+			get { return DeclarationData.DeclarationDataResourcePrefix + ".PT1.csv"; }
 		}
 
 		protected override string ErrorMessage

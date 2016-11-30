@@ -344,7 +344,8 @@ namespace TUGraz.VectoCore.InputData.FileIO.JSON
 					} else {
 						try {
 							var cycleDataRes =
-								RessourceHelper.ReadStream(RessourceHelper.Namespace + "MissionCycles." + cycle.Value<string>() + ".vdri");
+								RessourceHelper.ReadStream(DeclarationData.DeclarationDataResourcePrefix + ".MissionCycles." +
+															cycle.Value<string>() + ".vdri");
 							cycleData = VectoCSVFile.ReadStream(cycleDataRes);
 						} catch {
 							Log.Debug("Driving Cycle could not be read: " + cycleFile);
@@ -482,8 +483,10 @@ namespace TUGraz.VectoCore.InputData.FileIO.JSON
 				} catch (VectoException e) {
 					Log.Warn("Could not find file for acceleration curve. Trying lookup in declaration data.");
 					try {
-						var cycleDataRes = RessourceHelper.ReadStream(RessourceHelper.Namespace + "VACC." + acceleration.Value<string>() +
-																	Constants.FileExtensions.DriverAccelerationCurve);
+						var cycleDataRes =
+							RessourceHelper.ReadStream(DeclarationData.DeclarationDataResourcePrefix + ".VACC." +
+														acceleration.Value<string>() +
+														Constants.FileExtensions.DriverAccelerationCurve);
 						return VectoCSVFile.ReadStream(cycleDataRes);
 					} catch (Exception) {
 						throw new VectoException("Failed to read Driver Acceleration Curve: " + e.Message, e);

@@ -43,7 +43,7 @@ namespace TUGraz.VectoCore.Models.Declaration
 
 		protected override string ResourceId
 		{
-			get { return "TUGraz.VectoCore.Resources.Declaration.VAUX.ES-Tech.csv"; }
+			get { return DeclarationData.DeclarationDataResourcePrefix + ".VAUX.ES-Tech.csv"; }
 		}
 
 		protected override string ErrorMessage
@@ -77,7 +77,7 @@ namespace TUGraz.VectoCore.Models.Declaration
 		{
 			protected override string ResourceId
 			{
-				get { return "TUGraz.VectoCore.Resources.Declaration.VAUX.ALT-Tech.csv"; }
+				get { return DeclarationData.DeclarationDataResourcePrefix + ".VAUX.ALT-Tech.csv"; }
 			}
 
 			protected override string ErrorMessage

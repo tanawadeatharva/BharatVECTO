@@ -35,6 +35,7 @@ using System.Diagnostics;
 using System.Linq;
 using NLog.Targets;
 using NUnit.Framework;
+using TUGraz.VectoCommon.Models;
 using TUGraz.VectoCommon.Utils;
 using TUGraz.VectoCore.Configuration;
 using TUGraz.VectoCore.InputData.Reader.ComponentData;
@@ -45,6 +46,190 @@ namespace TUGraz.VectoCore.Tests.Models.SimulationComponentData
 	[TestFixture]
 	public class TorqueConverterDataTest
 	{
+		[Test]
+		public void TestTorqueConverterDataDeclarationMode()
+		{
+			var tqInput = new[] {
+				"0.0,1.80,377.80		",
+				"0.1,1.71,365.21		",
+				"0.2,1.61,352.62		",
+				"0.3,1.52,340.02		",
+				"0.4,1.42,327.43		",
+				"0.5,1.33,314.84		",
+				"0.6,1.23,302.24		",
+				"0.7,1.14,264.46		",
+				"0.8,1.04,226.68		",
+				"0.9,0.95,188.90		",
+				"1.0,0.95,0.00			",
+				"1.100,0.99,-40.34		",
+				"1.222,0.98,-80.34		",
+				"1.375,0.97,-136.11	",
+				"1.571,0.96,-216.52	",
+				"1.833,0.95,-335.19	",
+				"2.200,0.94,-528.77	",
+				"2.750,0.93,-883.40	",
+				"4.400,0.92,-2462.17	",
+				"11.000,0.91,-16540.98	",
+			};
+			var tqData =
+				TorqueConverterDataReader.ReadFromStream(InputDataHelper.InputDataAsStream("Speed Ratio, Torque Ratio, MP1000",
+					tqInput), 1000.RPMtoRad(), 1600.RPMtoRad(), ExecutionMode.Declaration, 1);
+
+			// check input data
+			Assert.AreEqual(1.8, tqData.TorqueConverterEntries[0].TorqueRatio, 1e-9);
+			Assert.AreEqual(377.8, tqData.TorqueConverterEntries[0].Torque.Value(), 1e-9);
+			Assert.AreEqual(0, tqData.TorqueConverterEntries[0].SpeedRatio, 1e-9);
+
+			Assert.AreEqual(0.95, tqData.TorqueConverterEntries[9].TorqueRatio, 1e-9);
+			Assert.AreEqual(188.90, tqData.TorqueConverterEntries[9].Torque.Value(), 1e-9);
+			Assert.AreEqual(0.9, tqData.TorqueConverterEntries[9].SpeedRatio, 1e-9);
+
+			// check appended data
+			Assert.AreEqual(0.999, tqData.TorqueConverterEntries[10].TorqueRatio, 1e-9);
+			Assert.AreEqual(0, tqData.TorqueConverterEntries[10].Torque.Value(), 1e-9);
+			Assert.AreEqual(1, tqData.TorqueConverterEntries[10].SpeedRatio, 1e-9);
+
+			Assert.AreEqual(0.959, tqData.TorqueConverterEntries[50].TorqueRatio, 1e-9);
+			Assert.AreEqual(-2290, tqData.TorqueConverterEntries[50].Torque.Value(), 1e-9);
+			Assert.AreEqual(5, tqData.TorqueConverterEntries[50].SpeedRatio, 1e-9);
+		}
+
+		[Test]
+		public void TestTorqueConverterExtendPowersplit()
+		{
+			var tqInput = new[] {
+				"0.0,1.80,377.80		",
+				"0.1,1.71,365.21		",
+				"0.2,1.61,352.62		",
+				"0.3,1.52,340.02		",
+				"0.4,1.42,327.43		",
+				"0.5,1.33,314.84		",
+				"0.6,1.23,302.24		",
+				"0.7,1.14,264.46		",
+				"0.8,1.04,226.68		",
+				"0.9,0.95,188.90		",
+				"1.0,0.95,0.00			",
+				"1.100,0.99,-40.34		",
+				"1.222,0.98,-80.34		",
+				"1.375,0.97,-136.11	",
+				"1.571,0.96,-216.52	",
+				"1.833,0.95,-335.19	",
+				"2.200,0.94,-528.77	",
+				"2.750,0.93,-883.40	",
+				"4.400,0.92,-2462.17	",
+				"11.000,0.91,-16540.98	",
+			};
+
+			var ratio = 0.75;
+			var tqData =
+				TorqueConverterDataReader.ReadFromStream(InputDataHelper.InputDataAsStream("Speed Ratio, Torque Ratio, MP1000",
+					tqInput), 1000.RPMtoRad(), 1600.RPMtoRad(), ExecutionMode.Declaration, ratio);
+
+			// check input data
+			Assert.AreEqual(1.8, tqData.TorqueConverterEntries[0].TorqueRatio, 1e-9);
+			Assert.AreEqual(377.8, tqData.TorqueConverterEntries[0].Torque.Value(), 1e-9);
+			Assert.AreEqual(0, tqData.TorqueConverterEntries[0].SpeedRatio, 1e-9);
+
+			Assert.AreEqual(1.14, tqData.TorqueConverterEntries[7].TorqueRatio, 1e-9);
+			Assert.AreEqual(264.46, tqData.TorqueConverterEntries[7].Torque.Value(), 1e-9);
+			Assert.AreEqual(0.7, tqData.TorqueConverterEntries[7].SpeedRatio, 1e-9);
+
+			// check appended data
+			Assert.AreEqual(0.999 / ratio, tqData.TorqueConverterEntries[8].TorqueRatio, 1e-9);
+			Assert.AreEqual(0, tqData.TorqueConverterEntries[8].Torque.Value(), 1e-9);
+			Assert.AreEqual(1 * ratio, tqData.TorqueConverterEntries[8].SpeedRatio, 1e-9);
+
+			Assert.AreEqual(0.959 / ratio, tqData.TorqueConverterEntries[48].TorqueRatio, 1e-9);
+			Assert.AreEqual(-2290, tqData.TorqueConverterEntries[48].Torque.Value(), 1e-9);
+			Assert.AreEqual(5 * ratio, tqData.TorqueConverterEntries[48].SpeedRatio, 1e-9);
+		}
+
+		[Test]
+		public void TestTorqueConverterDataEngneeringMode_Append()
+		{
+			var tqInput = new[] {
+				"0.0,1.80,377.80		",
+				"0.1,1.71,365.21		",
+				"0.2,1.61,352.62		",
+				"0.3,1.52,340.02		",
+				"0.4,1.42,327.43		",
+				"0.5,1.33,314.84		",
+				"0.6,1.23,302.24		",
+				"0.7,1.14,264.46		",
+				"0.8,1.04,226.68		",
+				"0.9,0.95,188.90		",
+			};
+			var tqData =
+				TorqueConverterDataReader.ReadFromStream(InputDataHelper.InputDataAsStream("Speed Ratio, Torque Ratio, MP1000",
+					tqInput), 1000.RPMtoRad(), 1600.RPMtoRad(), ExecutionMode.Engineering, 1);
+
+			// check input data
+			Assert.AreEqual(1.8, tqData.TorqueConverterEntries[0].TorqueRatio, 1e-9);
+			Assert.AreEqual(377.8, tqData.TorqueConverterEntries[0].Torque.Value(), 1e-9);
+			Assert.AreEqual(0, tqData.TorqueConverterEntries[0].SpeedRatio, 1e-9);
+
+			Assert.AreEqual(0.95, tqData.TorqueConverterEntries[9].TorqueRatio, 1e-9);
+			Assert.AreEqual(188.90, tqData.TorqueConverterEntries[9].Torque.Value(), 1e-9);
+			Assert.AreEqual(0.9, tqData.TorqueConverterEntries[9].SpeedRatio, 1e-9);
+
+			// check appended data
+			Assert.AreEqual(0.999, tqData.TorqueConverterEntries[10].TorqueRatio, 1e-9);
+			Assert.AreEqual(0, tqData.TorqueConverterEntries[10].Torque.Value(), 1e-9);
+			Assert.AreEqual(1, tqData.TorqueConverterEntries[10].SpeedRatio, 1e-9);
+
+			Assert.AreEqual(0.959, tqData.TorqueConverterEntries[50].TorqueRatio, 1e-9);
+			Assert.AreEqual(-2290, tqData.TorqueConverterEntries[50].Torque.Value(), 1e-9);
+			Assert.AreEqual(5, tqData.TorqueConverterEntries[50].SpeedRatio, 1e-9);
+		}
+
+		[Test]
+		public void TestTorqueConverterDataEngineeringMode_Unmodified()
+		{
+			var tqInput = new[] {
+				"0.0,1.80,377.80		",
+				"0.1,1.71,365.21		",
+				"0.2,1.61,352.62		",
+				"0.3,1.52,340.02		",
+				"0.4,1.42,327.43		",
+				"0.5,1.33,314.84		",
+				"0.6,1.23,302.24		",
+				"0.7,1.14,264.46		",
+				"0.8,1.04,226.68		",
+				"0.9,0.95,188.90		",
+				"1.0,0.95,0.00			",
+				"1.100,0.99,-40.34		",
+				"1.222,0.98,-80.34		",
+				"1.375,0.97,-136.11	",
+				"1.571,0.96,-216.52	",
+				"1.833,0.95,-335.19	",
+				"2.200,0.94,-528.77	",
+				"2.750,0.93,-883.40	",
+				"4.400,0.92,-2462.17	",
+				"11.000,0.91,-16540.98	",
+			};
+			var tqData =
+				TorqueConverterDataReader.ReadFromStream(InputDataHelper.InputDataAsStream("Speed Ratio, Torque Ratio, MP1000",
+					tqInput), 1000.RPMtoRad(), 1600.RPMtoRad(), ExecutionMode.Engineering, 1);
+
+			// check input data
+			Assert.AreEqual(1.8, tqData.TorqueConverterEntries[0].TorqueRatio, 1e-9);
+			Assert.AreEqual(377.8, tqData.TorqueConverterEntries[0].Torque.Value(), 1e-9);
+			Assert.AreEqual(0, tqData.TorqueConverterEntries[0].SpeedRatio, 1e-9);
+
+			Assert.AreEqual(0.95, tqData.TorqueConverterEntries[9].TorqueRatio, 1e-9);
+			Assert.AreEqual(188.90, tqData.TorqueConverterEntries[9].Torque.Value(), 1e-9);
+			Assert.AreEqual(0.9, tqData.TorqueConverterEntries[9].SpeedRatio, 1e-9);
+
+
+			Assert.AreEqual(0.95, tqData.TorqueConverterEntries[10].TorqueRatio, 1e-9);
+			Assert.AreEqual(0, tqData.TorqueConverterEntries[10].Torque.Value(), 1e-9);
+			Assert.AreEqual(1, tqData.TorqueConverterEntries[10].SpeedRatio, 1e-9);
+
+			Assert.AreEqual(0.91, tqData.TorqueConverterEntries[19].TorqueRatio, 1e-9);
+			Assert.AreEqual(-16540.98, tqData.TorqueConverterEntries[19].Torque.Value(), 1e-9);
+			Assert.AreEqual(11, tqData.TorqueConverterEntries[19].SpeedRatio, 1e-9);
+		}
+
 		[Test,
 		TestCase(30, 10, 227.8707, 1780.6630),
 		TestCase(40, 10, 197.9536, 1340.4737),
@@ -81,7 +266,7 @@ namespace TUGraz.VectoCore.Tests.Models.SimulationComponentData
 
 			var tqData =
 				TorqueConverterDataReader.ReadFromStream(InputDataHelper.InputDataAsStream("Speed Ratio, Torque Ratio,MP1000",
-					tqInput), 1000.RPMtoRad(), tqLimit.RPMtoRad());
+					tqInput), 1000.RPMtoRad(), tqLimit.RPMtoRad(), ExecutionMode.Engineering, 1);
 
 			var outAngularSpeed = nOut.RPMtoRad();
 			var outTorque = (Pout * 1000).SI<Watt>() / outAngularSpeed;
@@ -117,7 +302,7 @@ namespace TUGraz.VectoCore.Tests.Models.SimulationComponentData
 
 			var tqData =
 				TorqueConverterDataReader.ReadFromStream(InputDataHelper.InputDataAsStream("Speed Ratio, Torque Ratio,MP1000",
-					tqInput), 1000.RPMtoRad(), tqLimit.RPMtoRad());
+					tqInput), 1000.RPMtoRad(), tqLimit.RPMtoRad(), ExecutionMode.Engineering, 1);
 
 
 			var operatingPoint = tqData.FindOperatingPointForward(tqIn.SI<NewtonMeter>(), nIn.RPMtoRad(), null);
@@ -164,7 +349,7 @@ namespace TUGraz.VectoCore.Tests.Models.SimulationComponentData
 			};
 			var tqData =
 				TorqueConverterDataReader.ReadFromStream(InputDataHelper.InputDataAsStream("Speed Ratio, Torque Ratio,MP1000",
-					tqInput), 1000.RPMtoRad(), tqLimit.RPMtoRad());
+					tqInput), 1000.RPMtoRad(), tqLimit.RPMtoRad(), ExecutionMode.Engineering, 1);
 
 			foreach (var entry in testData) {
 				var torqueTCOut = entry.Item1.SI<NewtonMeter>();
@@ -210,7 +395,7 @@ namespace TUGraz.VectoCore.Tests.Models.SimulationComponentData
 
 			var tqData =
 				TorqueConverterDataReader.ReadFromStream(InputDataHelper.InputDataAsStream("Speed Ratio, Torque Ratio,MP1000",
-					tqInput), 1000.RPMtoRad(), tqLimit);
+					tqInput), 1000.RPMtoRad(), tqLimit, ExecutionMode.Engineering, 1);
 
 			var outAngularSpeed = nOut.RPMtoRad();
 			var outTorque = (Pout * 1000).SI<Watt>() / outAngularSpeed;
@@ -270,7 +455,7 @@ namespace TUGraz.VectoCore.Tests.Models.SimulationComponentData
 			};
 			var tqData =
 				TorqueConverterDataReader.ReadFromStream(InputDataHelper.InputDataAsStream("Speed Ratio, Torque Ratio,MP1000",
-					tqInput), 1000.RPMtoRad(), tqLimit);
+					tqInput), 1000.RPMtoRad(), tqLimit, ExecutionMode.Engineering, 1);
 
 			var operatingPoint = tqData.FindOperatingPointForPowerDemand(20000.SI<Watt>(), 113.5.SI<PerSecond>(),
                 1200.RPMtoRad(), 4.SI<KilogramSquareMeter>(), 0.5.SI<Second>(), 20000.SI<Watt>());
