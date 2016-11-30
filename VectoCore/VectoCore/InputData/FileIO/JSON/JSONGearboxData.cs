@@ -195,11 +195,6 @@ namespace TUGraz.VectoCore.InputData.FileIO.JSON
 			}
 		}
 
-		public PerSecond MaxInputSpeed
-		{
-			get { return Body["MaxTCSpeed"] == null ? 5000.RPMtoRad() : Body.GetEx<double>("MaxTCSpeed").RPMtoRad(); }
-		}
-
 		public Second TractionInterruption
 		{
 			get { return Body.GetEx<double>(JsonKeys.Gearbox_TractionInterruption).SI<Second>(); }
@@ -368,6 +363,10 @@ namespace TUGraz.VectoCore.InputData.FileIO.JSON
 			}
 		}
 
+        public PerSecond MaxInputSpeed
+        {
+            get { return Body[JsonKeys.Gearbox_TorqueConverter] != null && Body["MaxTCSpeed"] != null ? Body.GetEx(JsonKeys.Gearbox_TorqueConverter).GetEx<double>("MaxTCSpeed").RPMtoRad() : 5000.RPMtoRad(); }
+        }
 		public virtual TableData TCData
 		{
 			get

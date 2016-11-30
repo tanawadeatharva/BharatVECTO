@@ -128,11 +128,11 @@ Public Class JSONFileWriter
 		If gbx.Type.AutomaticTransmission() AndAlso Not torqueConverter Is Nothing Then
 			torqueConverterDict.Add("File", GetRelativePath(torqueConverter.TCData.Source, Path.GetDirectoryName(filename)))
 			torqueConverterDict.Add("RefRPM", torqueConverter.ReferenceRPM.AsRPM)
-			torqueConverterDict.Add("Inertia", torqueConverter.Inertia.Value())
-			torqueConverterDict.Add("ShiftPolygon",
-									If _
-										(Not gbx.SavedInDeclarationMode AndAlso Not torqueConverter.ShiftPolygon Is Nothing,
-										GetRelativePath(torqueConverter.ShiftPolygon.Source, Path.GetDirectoryName(filename)), ""))
+            torqueConverterDict.Add("Inertia", torqueConverter.Inertia.Value())
+            torqueConverterDict.Add("MaxTCSpeed", torqueConverter.MaxInputSpeed.AsRPM)
+            torqueConverterDict.Add("ShiftPolygon", If _
+                                        (Not gbx.SavedInDeclarationMode AndAlso Not torqueConverter.ShiftPolygon Is Nothing,
+                                        GetRelativePath(torqueConverter.ShiftPolygon.Source, Path.GetDirectoryName(filename)), ""))
 		End If
 		body.Add("TorqueConverter", torqueConverterDict)
 
