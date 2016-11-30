@@ -142,7 +142,8 @@ namespace TUGraz.VectoCore.Models.SimulationComponent.Impl
 				throw new VectoSimulationException("Requested Gear {0} from driving cycle is not available", Gear);
 			}
 
-			var retVal = Gear == 0
+			// mk 2016-11-30: added additional check for outAngularVelocity due to failing test: MeasuredSpeed_Gear_AT_PS_Run
+			var retVal = Gear == 0 || outAngularVelocity.IsEqual(0)
 				? RequestDisengaged(absTime, dt, outTorque, outAngularVelocity, dryRun)
 				: RequestEngaged(absTime, dt, outTorque, outAngularVelocity, dryRun);
 
