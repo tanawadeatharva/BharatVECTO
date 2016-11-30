@@ -456,8 +456,6 @@ namespace TUGraz.VectoCore.Models.SimulationComponent.Impl
 		{
 			public EngineOperationMode OperationMode { get; set; }
 
-			//public Second AbsTime { get; set; }
-
 			// ReSharper disable once InconsistentNaming
 			public Second dt { get; set; }
 
@@ -471,21 +469,11 @@ namespace TUGraz.VectoCore.Models.SimulationComponent.Impl
 
 			public NewtonMeter InertiaTorqueLoss { get; set; }
 
-			// public Watt EnginePowerLoss { get; set; }
-
-			//public Watt StationaryFullLoadPower { get; set; }
-
-			//public Watt DynamicFullLoadPower { get; set; }
-
 			public NewtonMeter StationaryFullLoadTorque { get; set; }
 
 			public NewtonMeter DynamicFullLoadTorque { get; set; }
 
-			//public Watt FullDragPower { get; set; }
-
 			public NewtonMeter FullDragTorque { get; set; }
-
-			// ReSharper disable once InconsistentNaming
 		}
 
 		protected class CombustionEngineIdleController : LoggingObject, IIdleController
@@ -493,7 +481,7 @@ namespace TUGraz.VectoCore.Models.SimulationComponent.Impl
 			protected readonly double PeDropSlope = -5;
 			protected readonly double PeDropOffset = 1.0;
 
-			protected CombustionEngine Engine;
+			protected readonly CombustionEngine Engine;
 
 			protected Second IdleStart;
 			protected Watt LastEnginePower;
