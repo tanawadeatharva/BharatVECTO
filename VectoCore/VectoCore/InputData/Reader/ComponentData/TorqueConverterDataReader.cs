@@ -56,6 +56,9 @@ namespace TUGraz.VectoCore.InputData.Reader.ComponentData
 
 		public static TorqueConverterData Create(DataTable data, PerSecond referenceRpm, PerSecond maxRpm, ExecutionMode mode, double ratio)
 		{
+			if (data == null)
+				throw new VectoException("TorqueConverter Characteristics data is missing.");
+
 			if (data.Columns.Count != 3) {
 				throw new VectoException("TorqueConverter Characteristics data must consist of 3 columns");
 			}
