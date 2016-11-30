@@ -95,11 +95,15 @@ namespace TUGraz.VectoCore.InputData.Reader.ComponentData
 		/// <returns></returns>
 		public static TransmissionLossMap Create(double efficiency, double gearRatio, string gearName)
 		{
+			if (double.IsNaN(efficiency)) {
+				throw new VectoException("TransmissionLossMap: Efficiency is not a number.");
+			}
+
 			if (efficiency <= 0) {
-				throw new VectoException("Efficiency for gear {0} must be greater than 0", gearName);
+				throw new VectoException("TransmissionLossMap: Efficiency for gear {0} must be greater than 0", gearName);
 			}
 			if (efficiency > 1) {
-				throw new VectoException("Efficiency for gear {1} must not be greater than 1", gearName);
+				throw new VectoException("TransmissionLossMap: Efficiency for gear {1} must not be greater than 1", gearName);
 			}
 			var entries = new List<TransmissionLossMap.GearLossMapEntry> {
 				new TransmissionLossMap.GearLossMapEntry(0.RPMtoRad(), 1e5.SI<NewtonMeter>(),
@@ -126,20 +130,20 @@ namespace TUGraz.VectoCore.InputData.Reader.ComponentData
 		private static List<TransmissionLossMap.GearLossMapEntry> CreateFromColumnNames(DataTable data)
 		{
 			return (from DataRow row in data.Rows
-				select new TransmissionLossMap.GearLossMapEntry(
-					inputSpeed: row.ParseDouble(Fields.InputSpeed).RPMtoRad(),
-					inputTorque: row.ParseDouble(Fields.InputTorque).SI<NewtonMeter>(),
-					torqueLoss: row.ParseDouble(Fields.TorqeLoss).SI<NewtonMeter>()))
+					select new TransmissionLossMap.GearLossMapEntry(
+						inputSpeed: row.ParseDouble(Fields.InputSpeed).RPMtoRad(),
+						inputTorque: row.ParseDouble(Fields.InputTorque).SI<NewtonMeter>(),
+						torqueLoss: row.ParseDouble(Fields.TorqeLoss).SI<NewtonMeter>()))
 				.ToList();
 		}
 
 		private static List<TransmissionLossMap.GearLossMapEntry> CreateFromColumIndizes(DataTable data)
 		{
 			return (from DataRow row in data.Rows
-				select new TransmissionLossMap.GearLossMapEntry(
-					inputSpeed: row.ParseDouble(0).RPMtoRad(),
-					inputTorque: row.ParseDouble(1).SI<NewtonMeter>(),
-					torqueLoss: row.ParseDouble(2).SI<NewtonMeter>()))
+					select new TransmissionLossMap.GearLossMapEntry(
+						inputSpeed: row.ParseDouble(0).RPMtoRad(),
+						inputTorque: row.ParseDouble(1).SI<NewtonMeter>(),
+						torqueLoss: row.ParseDouble(2).SI<NewtonMeter>()))
 				.ToList();
 		}
 

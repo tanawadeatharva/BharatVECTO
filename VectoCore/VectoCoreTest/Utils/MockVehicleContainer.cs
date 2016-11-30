@@ -39,6 +39,7 @@ using TUGraz.VectoCore.Models.Simulation.DataBus;
 using TUGraz.VectoCore.Models.Simulation.Impl;
 using TUGraz.VectoCore.Models.SimulationComponent;
 using TUGraz.VectoCore.Models.SimulationComponent.Data;
+using TUGraz.VectoCore.Models.SimulationComponent.Data.Gearbox;
 using TUGraz.VectoCore.OutputData;
 
 namespace TUGraz.VectoCore.Tests.Utils
@@ -66,7 +67,13 @@ namespace TUGraz.VectoCore.Tests.Utils
 			throw new System.NotImplementedException();
 		}
 
-		public PerSecond EngineSpeed { get; set; }
+	    public Second LastShift { get; private set; }
+	    public GearData GetGearData(uint gear)
+	    {
+	        throw new System.NotImplementedException();
+	    }
+
+	    public PerSecond EngineSpeed { get; set; }
 		public NewtonMeter EngineTorque { get; set; }
 
 		public Watt EngineStationaryFullPower(PerSecond angularSpeed)

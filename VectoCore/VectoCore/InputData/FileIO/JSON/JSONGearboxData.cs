@@ -365,7 +365,7 @@ namespace TUGraz.VectoCore.InputData.FileIO.JSON
 
         public PerSecond MaxInputSpeed
         {
-            get { return Body[JsonKeys.Gearbox_TorqueConverter] != null && Body["MaxTCSpeed"] != null ? Body.GetEx(JsonKeys.Gearbox_TorqueConverter).GetEx<double>("MaxTCSpeed").RPMtoRad() : 5000.RPMtoRad(); }
+            get { return Body[JsonKeys.Gearbox_TorqueConverter] != null && Body[JsonKeys.Gearbox_TorqueConverter]["MaxTCSpeed"] != null ? Body.GetEx(JsonKeys.Gearbox_TorqueConverter).GetEx<double>("MaxTCSpeed").RPMtoRad() : 5000.RPMtoRad(); }
         }
 		public virtual TableData TCData
 		{

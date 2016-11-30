@@ -207,12 +207,8 @@ namespace TUGraz.VectoCore.Models.SimulationComponent.Impl
 			// get max. torque as limited by gearbox. gearbox only limits torqueOut!
 			var gearboxFullLoad = DataBus.GearMaxTorque;
 
-			var deltaFull = ComputeDelta(torqueOut,
-				totalTorqueDemand + (CurrentState.InertiaTorqueLoss < 0 ? CurrentState.InertiaTorqueLoss : 0.SI<NewtonMeter>()),
-				CurrentState.DynamicFullLoadTorque, gearboxFullLoad, true);
-			var deltaDrag = ComputeDelta(torqueOut,
-				totalTorqueDemand - (CurrentState.InertiaTorqueLoss < 0 ? CurrentState.InertiaTorqueLoss : 0.SI<NewtonMeter>()),
-				CurrentState.FullDragTorque,
+			var deltaFull = ComputeDelta(torqueOut, totalTorqueDemand, CurrentState.DynamicFullLoadTorque, gearboxFullLoad, true);
+			var deltaDrag = ComputeDelta(torqueOut, totalTorqueDemand, CurrentState.FullDragTorque,
 				gearboxFullLoad != null ? -gearboxFullLoad : null, false);
 
 			if (dryRun) {
@@ -224,10 +220,6 @@ namespace TUGraz.VectoCore.Models.SimulationComponent.Impl
 					DragPower = CurrentState.FullDragTorque * avgEngineSpeed,
 					AuxiliariesPowerDemand = auxTorqueDemand * avgEngineSpeed,
 					EngineSpeed = angularVelocity,
-					EngineMaxTorqueOut =
-						VectoMath.Max(CurrentState.DynamicFullLoadTorque - auxTorqueDemand - CurrentState.InertiaTorqueLoss,
-							gearboxFullLoad ?? 0.SI<NewtonMeter>()),
-					EngineDragTorque = CurrentState.FullDragTorque - auxTorqueDemand - CurrentState.InertiaTorqueLoss,
 					Source = this,
 				};
 			}
@@ -464,8 +456,6 @@ namespace TUGraz.VectoCore.Models.SimulationComponent.Impl
 		{
 			public EngineOperationMode OperationMode { get; set; }
 
-			//public Second AbsTime { get; set; }
-
 			// ReSharper disable once InconsistentNaming
 			public Second dt { get; set; }
 
@@ -479,21 +469,11 @@ namespace TUGraz.VectoCore.Models.SimulationComponent.Impl
 
 			public NewtonMeter InertiaTorqueLoss { get; set; }
 
-			// public Watt EnginePowerLoss { get; set; }
-
-			//public Watt StationaryFullLoadPower { get; set; }
-
-			//public Watt DynamicFullLoadPower { get; set; }
-
 			public NewtonMeter StationaryFullLoadTorque { get; set; }
 
 			public NewtonMeter DynamicFullLoadTorque { get; set; }
 
-			//public Watt FullDragPower { get; set; }
-
 			public NewtonMeter FullDragTorque { get; set; }
-
-			// ReSharper disable once InconsistentNaming
 		}
 
 		protected class CombustionEngineIdleController : LoggingObject, IIdleController
@@ -501,7 +481,7 @@ namespace TUGraz.VectoCore.Models.SimulationComponent.Impl
 			protected readonly double PeDropSlope = -5;
 			protected readonly double PeDropOffset = 1.0;
 
-			protected CombustionEngine Engine;
+			protected readonly CombustionEngine Engine;
 
 			protected Second IdleStart;
 			protected Watt LastEnginePower;

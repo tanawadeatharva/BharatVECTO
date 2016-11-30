@@ -75,6 +75,7 @@ Partial Class MainForm
 		Me.ColumnHeader8 = CType(New System.Windows.Forms.ColumnHeader(), System.Windows.Forms.ColumnHeader)
 		Me.ColumnHeader9 = CType(New System.Windows.Forms.ColumnHeader(), System.Windows.Forms.ColumnHeader)
 		Me.ConMenFilelist = New System.Windows.Forms.ContextMenuStrip(Me.components)
+		Me.ShowInFolderMenuItem = New System.Windows.Forms.ToolStripMenuItem()
 		Me.SaveListToolStripMenuItem = New System.Windows.Forms.ToolStripMenuItem()
 		Me.LoadListToolStripMenuItem = New System.Windows.Forms.ToolStripMenuItem()
 		Me.LoadDefaultListToolStripMenuItem = New System.Windows.Forms.ToolStripMenuItem()
@@ -208,9 +209,9 @@ Partial Class MainForm
 		'btnImportXML
 		'
 		Me.btnImportXML.Anchor = CType((System.Windows.Forms.AnchorStyles.Bottom Or System.Windows.Forms.AnchorStyles.Left), System.Windows.Forms.AnchorStyles)
-		Me.btnImportXML.Location = New System.Drawing.Point(464, 271)
+		Me.btnImportXML.Location = New System.Drawing.Point(460, 267)
 		Me.btnImportXML.Name = "btnImportXML"
-		Me.btnImportXML.Size = New System.Drawing.Size(104, 23)
+		Me.btnImportXML.Size = New System.Drawing.Size(115, 30)
 		Me.btnImportXML.TabIndex = 23
 		Me.btnImportXML.Text = "Import from XML"
 		Me.btnImportXML.UseVisualStyleBackColor = True
@@ -220,9 +221,9 @@ Partial Class MainForm
 		'
 		Me.btnExportXML.Anchor = CType((System.Windows.Forms.AnchorStyles.Bottom Or System.Windows.Forms.AnchorStyles.Left), System.Windows.Forms.AnchorStyles)
 		Me.btnExportXML.Enabled = False
-		Me.btnExportXML.Location = New System.Drawing.Point(343, 272)
+		Me.btnExportXML.Location = New System.Drawing.Point(344, 267)
 		Me.btnExportXML.Name = "btnExportXML"
-		Me.btnExportXML.Size = New System.Drawing.Size(115, 23)
+		Me.btnExportXML.Size = New System.Drawing.Size(115, 30)
 		Me.btnExportXML.TabIndex = 22
 		Me.btnExportXML.Text = "Export as XML"
 		Me.btnExportXML.UseVisualStyleBackColor = True
@@ -517,32 +518,39 @@ Partial Class MainForm
 		'
 		'ConMenFilelist
 		'
-		Me.ConMenFilelist.Items.AddRange(New System.Windows.Forms.ToolStripItem() {Me.SaveListToolStripMenuItem, Me.LoadListToolStripMenuItem, Me.LoadDefaultListToolStripMenuItem, Me.ClearListToolStripMenuItem})
+		Me.ConMenFilelist.Items.AddRange(New System.Windows.Forms.ToolStripItem() {Me.ShowInFolderMenuItem, Me.SaveListToolStripMenuItem, Me.LoadListToolStripMenuItem, Me.LoadDefaultListToolStripMenuItem, Me.ClearListToolStripMenuItem})
 		Me.ConMenFilelist.Name = "ConMenFilelist"
-		Me.ConMenFilelist.Size = New System.Drawing.Size(176, 92)
+		Me.ConMenFilelist.ShowImageMargin = False
+		Me.ConMenFilelist.Size = New System.Drawing.Size(151, 114)
+		'
+		'ShowInFolderMenuItem
+		'
+		Me.ShowInFolderMenuItem.Name = "ShowInFolderMenuItem"
+		Me.ShowInFolderMenuItem.Size = New System.Drawing.Size(150, 22)
+		Me.ShowInFolderMenuItem.Text = "Show in Folder"
 		'
 		'SaveListToolStripMenuItem
 		'
 		Me.SaveListToolStripMenuItem.Name = "SaveListToolStripMenuItem"
-		Me.SaveListToolStripMenuItem.Size = New System.Drawing.Size(175, 22)
+		Me.SaveListToolStripMenuItem.Size = New System.Drawing.Size(150, 22)
 		Me.SaveListToolStripMenuItem.Text = "Save List..."
 		'
 		'LoadListToolStripMenuItem
 		'
 		Me.LoadListToolStripMenuItem.Name = "LoadListToolStripMenuItem"
-		Me.LoadListToolStripMenuItem.Size = New System.Drawing.Size(175, 22)
+		Me.LoadListToolStripMenuItem.Size = New System.Drawing.Size(150, 22)
 		Me.LoadListToolStripMenuItem.Text = "Load List..."
 		'
 		'LoadDefaultListToolStripMenuItem
 		'
 		Me.LoadDefaultListToolStripMenuItem.Name = "LoadDefaultListToolStripMenuItem"
-		Me.LoadDefaultListToolStripMenuItem.Size = New System.Drawing.Size(175, 22)
+		Me.LoadDefaultListToolStripMenuItem.Size = New System.Drawing.Size(150, 22)
 		Me.LoadDefaultListToolStripMenuItem.Text = "Load Autosave-List"
 		'
 		'ClearListToolStripMenuItem
 		'
 		Me.ClearListToolStripMenuItem.Name = "ClearListToolStripMenuItem"
-		Me.ClearListToolStripMenuItem.Size = New System.Drawing.Size(175, 22)
+		Me.ClearListToolStripMenuItem.Size = New System.Drawing.Size(150, 22)
 		Me.ClearListToolStripMenuItem.Text = "Clear List"
 		'
 		'LvMsg
@@ -758,7 +766,8 @@ Partial Class MainForm
 		'CmDEV
 		'
 		Me.CmDEV.Name = "CmDEV"
-		Me.CmDEV.Size = New System.Drawing.Size(61, 4)
+		Me.CmDEV.ShowImageMargin = False
+		Me.CmDEV.Size = New System.Drawing.Size(36, 4)
 		'
 		'TmProgSec
 		'
@@ -768,24 +777,25 @@ Partial Class MainForm
 		'
 		Me.CmOpenFile.Items.AddRange(New System.Windows.Forms.ToolStripItem() {Me.OpenWithToolStripMenuItem, Me.OpenInGraphWindowToolStripMenuItem, Me.ShowInFolderToolStripMenuItem})
 		Me.CmOpenFile.Name = "CmOpenFile"
-		Me.CmOpenFile.Size = New System.Drawing.Size(199, 70)
+		Me.CmOpenFile.ShowImageMargin = False
+		Me.CmOpenFile.Size = New System.Drawing.Size(174, 70)
 		'
 		'OpenWithToolStripMenuItem
 		'
 		Me.OpenWithToolStripMenuItem.Name = "OpenWithToolStripMenuItem"
-		Me.OpenWithToolStripMenuItem.Size = New System.Drawing.Size(198, 22)
+		Me.OpenWithToolStripMenuItem.Size = New System.Drawing.Size(173, 22)
 		Me.OpenWithToolStripMenuItem.Text = "Open with ..."
 		'
 		'OpenInGraphWindowToolStripMenuItem
 		'
 		Me.OpenInGraphWindowToolStripMenuItem.Name = "OpenInGraphWindowToolStripMenuItem"
-		Me.OpenInGraphWindowToolStripMenuItem.Size = New System.Drawing.Size(198, 22)
+		Me.OpenInGraphWindowToolStripMenuItem.Size = New System.Drawing.Size(173, 22)
 		Me.OpenInGraphWindowToolStripMenuItem.Text = "Open in Graph Window"
 		'
 		'ShowInFolderToolStripMenuItem
 		'
 		Me.ShowInFolderToolStripMenuItem.Name = "ShowInFolderToolStripMenuItem"
-		Me.ShowInFolderToolStripMenuItem.Size = New System.Drawing.Size(198, 22)
+		Me.ShowInFolderToolStripMenuItem.Size = New System.Drawing.Size(173, 22)
 		Me.ShowInFolderToolStripMenuItem.Text = "Show in Folder"
 		'
 		'MainForm
@@ -798,6 +808,7 @@ Partial Class MainForm
 		Me.Icon = CType(resources.GetObject("$this.Icon"), System.Drawing.Icon)
 		Me.MinimumSize = New System.Drawing.Size(785, 485)
 		Me.Name = "MainForm"
+		Me.StartPosition = System.Windows.Forms.FormStartPosition.CenterScreen
 		Me.Text = "VECTO"
 		Me.StatusBAR.ResumeLayout(False)
 		Me.StatusBAR.PerformLayout()
@@ -912,5 +923,6 @@ Partial Class MainForm
 	Friend WithEvents GroupBox2 As System.Windows.Forms.GroupBox
 	Friend WithEvents btnExportXML As System.Windows.Forms.Button
 	Friend WithEvents btnImportXML As System.Windows.Forms.Button
+	Friend WithEvents ShowInFolderMenuItem As System.Windows.Forms.ToolStripMenuItem
 
 End Class

@@ -41,6 +41,7 @@ using TUGraz.VectoCore.Models.Simulation.Data;
 using TUGraz.VectoCore.Models.Simulation.DataBus;
 using TUGraz.VectoCore.Models.SimulationComponent;
 using TUGraz.VectoCore.Models.SimulationComponent.Data;
+using TUGraz.VectoCore.Models.SimulationComponent.Data.Gearbox;
 using TUGraz.VectoCore.OutputData;
 using TUGraz.VectoCore.Utils;
 
@@ -127,7 +128,17 @@ namespace TUGraz.VectoCore.Models.Simulation.Impl
 			return Gearbox.GearboxLoss();
 		}
 
-		#endregion
+	    public Second LastShift
+	    {
+	        get { return Gearbox.LastShift; }
+	    }
+
+	    public GearData GetGearData(uint gear)
+	    {
+	        return Gearbox.GetGearData(gear);
+	    }
+
+	    #endregion
 
 		#region IEngineCockpit
 

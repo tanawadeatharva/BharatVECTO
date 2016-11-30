@@ -1,0 +1,48 @@
+﻿{
+  "Header": {
+    "CreatedBy": " ()",
+    "Date": "2016-11-22T08:14:05.5129150Z",
+    "AppVersion": "3",
+    "FileVersion": 6
+  },
+  "Body": {
+    "SavedInDeclMode": false,
+    "ModelName": "-",
+    "Inertia": 0.0,
+    "TracInt": 2.0,
+    "Gears": [
+      {
+        "Ratio": 5.77,
+        "LossMap": "axle.vtlm"
+      },
+      {
+        "Ratio": 3.364,
+        "LossMap": "indirect.vtlm",
+        "ShiftPolygon": "AT-Shift_1000rpm.vgbs",
+        "MaxTorque": ""
+      },
+      {
+        "Ratio": 1.909,
+        "LossMap": "indirect.vtlm",
+        "ShiftPolygon": "AT-Shift_1000rpm.vgbs",
+        "MaxTorque": ""
+      }
+    ],
+    "TqReserve": 0.2,
+    "ShiftTime": 1.0,
+    "StartTqReserve": 0.2,
+    "StartSpeed": 2.0,
+    "StartAcc": 0.6,
+    "GearboxType": "ATSerial",
+    "TorqueConverter": {
+      "Enabled": true,
+      "File": "tq.vtcc",
+      "RefRPM": 999.999999999999,
+      "Inertia": 1.2,
+      "ShiftPolygon": "AT-Shift_1000rpm.vgbs"
+    },
+    "DownshiftAferUpshiftDelay": 10.0,
+    "UpshiftAfterDownshiftDelay": 10.0,
+    "UpshiftMinAcceleration": 0.1
+  }
+}

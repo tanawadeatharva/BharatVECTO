@@ -37,6 +37,7 @@ using TUGraz.VectoCore.Models.Simulation;
 using TUGraz.VectoCore.Models.Simulation.DataBus;
 using TUGraz.VectoCore.Models.SimulationComponent;
 using TUGraz.VectoCore.Models.SimulationComponent.Data;
+using TUGraz.VectoCore.Models.SimulationComponent.Data.Gearbox;
 using TUGraz.VectoCore.Models.SimulationComponent.Impl;
 using TUGraz.VectoCore.OutputData;
 
@@ -81,7 +82,13 @@ namespace TUGraz.VectoCore.Tests.Utils
 			return 0.SI<Watt>();
 		}
 
-		public void Connect(ITnOutPort other)
+	    public Second LastShift { get; private set; }
+	    public GearData GetGearData(uint gear)
+	    {
+	        throw new NotImplementedException();
+	    }
+
+	    public void Connect(ITnOutPort other)
 		{
 			_outPort = other;
 		}
