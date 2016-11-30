@@ -72,6 +72,8 @@ Partial Class EngineForm
 		Me.PnInertia = New System.Windows.Forms.Panel()
 		Me.GrWHTC = New System.Windows.Forms.GroupBox()
 		Me.PnWhtcDeclaration = New System.Windows.Forms.Panel()
+		Me.lblColdHotFactor = New System.Windows.Forms.Label()
+		Me.TbColdHotFactor = New System.Windows.Forms.TextBox()
 		Me.BtWHTCimport = New System.Windows.Forms.Button()
 		Me.Label4 = New System.Windows.Forms.Label()
 		Me.Label7 = New System.Windows.Forms.Label()
@@ -88,8 +90,6 @@ Partial Class EngineForm
 		Me.Label14 = New System.Windows.Forms.Label()
 		Me.BtFLD = New System.Windows.Forms.Button()
 		Me.BtFLDopen = New System.Windows.Forms.Button()
-		Me.lblColdHotFactor = New System.Windows.Forms.Label()
-		Me.TbColdHotFactor = New System.Windows.Forms.TextBox()
 		Me.ToolStrip1.SuspendLayout()
 		Me.StatusStrip1.SuspendLayout()
 		CType(Me.PictureBox1, System.ComponentModel.ISupportInitialize).BeginInit()
@@ -155,7 +155,7 @@ Partial Class EngineForm
 		'
 		Me.ButCancel.Anchor = CType((System.Windows.Forms.AnchorStyles.Bottom Or System.Windows.Forms.AnchorStyles.Right), System.Windows.Forms.AnchorStyles)
 		Me.ButCancel.DialogResult = System.Windows.Forms.DialogResult.Cancel
-		Me.ButCancel.Location = New System.Drawing.Point(898, 469)
+		Me.ButCancel.Location = New System.Drawing.Point(898, 460)
 		Me.ButCancel.Name = "ButCancel"
 		Me.ButCancel.Size = New System.Drawing.Size(75, 23)
 		Me.ButCancel.TabIndex = 13
@@ -165,7 +165,7 @@ Partial Class EngineForm
 		'ButOK
 		'
 		Me.ButOK.Anchor = CType((System.Windows.Forms.AnchorStyles.Bottom Or System.Windows.Forms.AnchorStyles.Right), System.Windows.Forms.AnchorStyles)
-		Me.ButOK.Location = New System.Drawing.Point(817, 469)
+		Me.ButOK.Location = New System.Drawing.Point(817, 460)
 		Me.ButOK.Name = "ButOK"
 		Me.ButOK.Size = New System.Drawing.Size(75, 23)
 		Me.ButOK.TabIndex = 12
@@ -254,7 +254,7 @@ Partial Class EngineForm
 		'StatusStrip1
 		'
 		Me.StatusStrip1.Items.AddRange(New System.Windows.Forms.ToolStripItem() {Me.LbStatus})
-		Me.StatusStrip1.Location = New System.Drawing.Point(0, 495)
+		Me.StatusStrip1.Location = New System.Drawing.Point(0, 486)
 		Me.StatusStrip1.Name = "StatusStrip1"
 		Me.StatusStrip1.Size = New System.Drawing.Size(985, 22)
 		Me.StatusStrip1.SizingGrip = False
@@ -338,9 +338,9 @@ Partial Class EngineForm
 		'
 		Me.PictureBox1.BackColor = System.Drawing.Color.White
 		Me.PictureBox1.Image = Global.TUGraz.VECTO.My.Resources.Resources.VECTO_ENG
-		Me.PictureBox1.Location = New System.Drawing.Point(12, 28)
+		Me.PictureBox1.Location = New System.Drawing.Point(0, 28)
 		Me.PictureBox1.Name = "PictureBox1"
-		Me.PictureBox1.Size = New System.Drawing.Size(481, 40)
+		Me.PictureBox1.Size = New System.Drawing.Size(502, 40)
 		Me.PictureBox1.TabIndex = 39
 		Me.PictureBox1.TabStop = False
 		'
@@ -409,6 +409,22 @@ Partial Class EngineForm
 		Me.PnWhtcDeclaration.Name = "PnWhtcDeclaration"
 		Me.PnWhtcDeclaration.Size = New System.Drawing.Size(472, 87)
 		Me.PnWhtcDeclaration.TabIndex = 8
+		'
+		'lblColdHotFactor
+		'
+		Me.lblColdHotFactor.AutoSize = True
+		Me.lblColdHotFactor.Location = New System.Drawing.Point(3, 63)
+		Me.lblColdHotFactor.Name = "lblColdHotFactor"
+		Me.lblColdHotFactor.Size = New System.Drawing.Size(185, 13)
+		Me.lblColdHotFactor.TabIndex = 5
+		Me.lblColdHotFactor.Text = "Cold/Hot Emmission Balancing Factor"
+		'
+		'TbColdHotFactor
+		'
+		Me.TbColdHotFactor.Location = New System.Drawing.Point(194, 60)
+		Me.TbColdHotFactor.Name = "TbColdHotFactor"
+		Me.TbColdHotFactor.Size = New System.Drawing.Size(57, 20)
+		Me.TbColdHotFactor.TabIndex = 6
 		'
 		'BtWHTCimport
 		'
@@ -504,6 +520,7 @@ Partial Class EngineForm
 		'PicBox
 		'
 		Me.PicBox.BackColor = System.Drawing.Color.LightGray
+		Me.PicBox.BorderStyle = System.Windows.Forms.BorderStyle.FixedSingle
 		Me.PicBox.Location = New System.Drawing.Point(499, 28)
 		Me.PicBox.Name = "PicBox"
 		Me.PicBox.Size = New System.Drawing.Size(474, 425)
@@ -546,27 +563,11 @@ Partial Class EngineForm
 		Me.BtFLDopen.TabStop = False
 		Me.BtFLDopen.UseVisualStyleBackColor = True
 		'
-		'lblColdHotFactor
-		'
-		Me.lblColdHotFactor.AutoSize = True
-		Me.lblColdHotFactor.Location = New System.Drawing.Point(3, 63)
-		Me.lblColdHotFactor.Name = "lblColdHotFactor"
-		Me.lblColdHotFactor.Size = New System.Drawing.Size(185, 13)
-		Me.lblColdHotFactor.TabIndex = 5
-		Me.lblColdHotFactor.Text = "Cold/Hot Emmission Balancing Factor"
-		'
-		'TbColdHotFactor
-		'
-		Me.TbColdHotFactor.Location = New System.Drawing.Point(194, 60)
-		Me.TbColdHotFactor.Name = "TbColdHotFactor"
-		Me.TbColdHotFactor.Size = New System.Drawing.Size(57, 20)
-		Me.TbColdHotFactor.TabIndex = 6
-		'
 		'EngineForm
 		'
 		Me.AcceptButton = Me.ButOK
 		Me.CancelButton = Me.ButCancel
-		Me.ClientSize = New System.Drawing.Size(985, 517)
+		Me.ClientSize = New System.Drawing.Size(985, 508)
 		Me.Controls.Add(Me.PicBox)
 		Me.Controls.Add(Me.GrWHTC)
 		Me.Controls.Add(Me.PnInertia)
@@ -591,10 +592,12 @@ Partial Class EngineForm
 		Me.Controls.Add(Me.Label40)
 		Me.Controls.Add(Me.Label1)
 		Me.Controls.Add(Me.TbName)
+		Me.FormBorderStyle = System.Windows.Forms.FormBorderStyle.FixedSingle
 		Me.Icon = CType(resources.GetObject("$this.Icon"), System.Drawing.Icon)
 		Me.MaximizeBox = False
 		Me.Name = "EngineForm"
-		Me.StartPosition = System.Windows.Forms.FormStartPosition.CenterParent
+		Me.SizeGripStyle = System.Windows.Forms.SizeGripStyle.Hide
+		Me.StartPosition = System.Windows.Forms.FormStartPosition.CenterScreen
 		Me.Text = "F_ENG"
 		Me.ToolStrip1.ResumeLayout(False)
 		Me.ToolStrip1.PerformLayout()

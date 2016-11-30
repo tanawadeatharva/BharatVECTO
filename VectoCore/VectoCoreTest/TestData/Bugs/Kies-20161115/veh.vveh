@@ -1,0 +1,64 @@
+﻿{
+  "Header": {
+    "CreatedBy": "Raphael Luz IVT TU-Graz (f513c787-07a6-4a67-8bd9-81abd760bcfc)",
+    "Date": "2016-10-31T10:06:58.7269088Z",
+    "AppVersion": "3",
+    "FileVersion": 7
+  },
+  "Body": {
+    "SavedInDeclMode": false,
+    "VehCat": "CityBus",
+    "CurbWeight": 16500.0,
+    "CurbWeightExtra": 0.0,
+    "Loading": 8840.0,
+    "MassMax": 28.0,
+    "CdA": 5.12,
+    "rdyn": 465.0,
+    "CdCorrMode": "CdofVdecl",
+    "CdCorrFile": "",
+    "Retarder": {
+      "Type": "None",
+      "Ratio": 0.0,
+      "File": ""
+    },
+    "Angledrive": {
+      "Type": "None",
+      "Ratio": 0.0,
+      "LossMap": ""
+    },
+    "PTO": {
+      "Type": "None",
+      "LossMap": "",
+      "Cycle": ""
+    },
+    "AxleConfig": {
+      "Type": "6x2",
+      "Axles": [
+        {
+          "Inertia": 11.9,
+          "Wheels": "275/70 R22.5",
+          "AxleWeightShare": 0.24,
+          "TwinTyres": false,
+          "RRCISO": 0.0061,
+          "FzISO": 29602.0
+        },
+        {
+          "Inertia": 11.9,
+          "Wheels": "275/70 R22.5",
+          "AxleWeightShare": 0.35,
+          "TwinTyres": true,
+          "RRCISO": 0.0061,
+          "FzISO": 29602.0
+        },
+        {
+          "Inertia": 11.9,
+          "Wheels": "275/70 R22.5",
+          "AxleWeightShare": 0.41,
+          "TwinTyres": true,
+          "RRCISO": 0.0061,
+          "FzISO": 29602.0
+        }
+      ]
+    }
+  }
+}

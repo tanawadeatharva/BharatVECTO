@@ -78,9 +78,9 @@ namespace TUGraz.VectoCore.Tests.Models.Simulation
 
 			Assert.AreEqual(660.RPMtoRad().Value(), gearbox.ModelData.Gears[2].ShiftPolygon.Downshift[1].AngularSpeed.Value(),
 				0.0001);
-			Assert.AreEqual(207.4205, gearbox.ModelData.Gears[2].ShiftPolygon.Downshift[1].Torque.Value(), 0.1);
+			Assert.AreEqual(257.9742, gearbox.ModelData.Gears[2].ShiftPolygon.Downshift[1].Torque.Value(), 0.1);
 
-			Assert.AreEqual(1750.70139.RPMtoRad().Value(),
+			Assert.AreEqual(1679.9982.RPMtoRad().Value(),
 				gearbox.ModelData.Gears[2].ShiftPolygon.Downshift[2].AngularSpeed.Value(),
 				0.1);
 			Assert.AreEqual(988.9, gearbox.ModelData.Gears[2].ShiftPolygon.Downshift[2].Torque.Value(), 0.0001);

@@ -31,6 +31,7 @@
 
 using TUGraz.VectoCommon.Models;
 using TUGraz.VectoCommon.Utils;
+using TUGraz.VectoCore.Models.SimulationComponent.Data.Gearbox;
 
 namespace TUGraz.VectoCore.Models.Simulation.DataBus
 {
@@ -54,5 +55,9 @@ namespace TUGraz.VectoCore.Models.Simulation.DataBus
 		NewtonMeter GearMaxTorque { get; }
 
 		Watt GearboxLoss();
+
+        Second LastShift { get; }
+
+	    GearData GetGearData(uint gear);
 	}
 }

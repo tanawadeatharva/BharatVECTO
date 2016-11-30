@@ -293,7 +293,6 @@ Imports VectoAuxiliaries
 				VectoWorkerV3.ReportProgress(100, New VectoProgress With {.Target = "ListBoxWarning", .Message = message})
 			ElseIf level = "Error" Or level = "Fatal" Then
 				VectoWorkerV3.ReportProgress(100, New VectoProgress With {.Target = "ListBoxError", .Message = message})
-
 			End If
 		End If
 	End Sub
@@ -1971,20 +1970,6 @@ Imports VectoAuxiliaries
 		_mouseDownOnListView = False
 	End Sub
 
-	Private Sub LvGEN_MouseUp(sender As Object, e As MouseEventArgs) Handles LvGEN.MouseUp
-		If e.Button = MouseButtons.Right Then
-			_conMenTarget = LvGEN
-			_conMenTarJob = True
-
-			'Locked functions show/hide
-			LoadListToolStripMenuItem.Enabled = Not _guIlocked
-			LoadDefaultListToolStripMenuItem.Enabled = Not _guIlocked
-			ClearListToolStripMenuItem.Enabled = Not _guIlocked
-
-			ConMenFilelist.Show(MousePosition)
-		End If
-	End Sub
-
 	Private Sub RbDev_CheckedChanged(sender As Object, e As EventArgs) Handles RbDev.CheckedChanged
 	End Sub
 
@@ -1994,9 +1979,6 @@ Imports VectoAuxiliaries
 		Public Message As String
 		Public Link As String
 	End Class
-
-	Private Sub CbExportJob_SelectedIndexChanged(sender As Object, e As EventArgs)
-	End Sub
 
 	Private Sub btnExportXML_Click(sender As Object, e As EventArgs) Handles btnExportXML.Click
 
@@ -2045,6 +2027,36 @@ Imports VectoAuxiliaries
 		Catch ex As Exception
 			MsgBox("Importing job failed: " + ex.Message)
 		End Try
+	End Sub
+
+	Private Sub LvGEN_MouseClick(sender As Object, e As MouseEventArgs) Handles LvGEN.MouseClick
+		If e.Button = MouseButtons.Right Then
+			_conMenTarget = LvGEN
+			_conMenTarJob = True
+
+			'Locked functions show/hide
+			LoadListToolStripMenuItem.Enabled = Not _guIlocked
+			LoadDefaultListToolStripMenuItem.Enabled = Not _guIlocked
+			ClearListToolStripMenuItem.Enabled = Not _guIlocked
+
+			ConMenFilelist.Show(MousePosition)
+		End If
+	End Sub
+
+	Private Sub ShowInFolderMenuItem_Click(sender As Object, e As EventArgs) Handles ShowInFolderMenuItem.Click
+
+		For Each item As ListViewItem In LvGEN.SelectedItems
+			Dim fileName As String = FileRepl(item.SubItems(0).Text)
+			If File.Exists(fileName) Then
+				Try
+					Process.Start("explorer", "/select,""" & fileName & "")
+				Catch ex As Exception
+					MsgBox("Failed to open file!")
+				End Try
+			Else
+				MsgBox("File not found: " & fileName)
+			End If
+		Next
 	End Sub
 End Class
 

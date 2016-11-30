@@ -275,11 +275,12 @@ Partial Class VehicleAuxiliariesDialog
 		Me.Controls.Add(Me.PnFile)
 		Me.Controls.Add(Me.PnTech)
 		Me.Controls.Add(Me.TableLayoutPanel1)
+		Me.FormBorderStyle = System.Windows.Forms.FormBorderStyle.FixedToolWindow
 		Me.MaximizeBox = False
 		Me.MinimizeBox = False
 		Me.Name = "VehicleAuxiliariesDialog"
 		Me.ShowInTaskbar = False
-		Me.StartPosition = System.Windows.Forms.FormStartPosition.CenterParent
+		Me.StartPosition = System.Windows.Forms.FormStartPosition.CenterScreen
 		Me.Text = "Auxiliary"
 		Me.TableLayoutPanel1.ResumeLayout(False)
 		Me.PnTech.ResumeLayout(False)

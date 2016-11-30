@@ -836,22 +836,23 @@ namespace TUGraz.VectoCommon.Utils
 			return Constructor(val);
 		}
 
-		[DebuggerHidden]
+		[DebuggerStepThrough]
 		protected SIBase(double value) : base(value) {}
 
-		[DebuggerHidden]
+		[DebuggerStepThrough]
 		protected SIBase(double value, Unit[] numerator) : base(value)
 		{
 			Numerator = numerator;
 		}
 
+		[DebuggerStepThrough]
 		protected SIBase(double value, Unit[] numerator, Unit[] denominator) : base(value)
 		{
 			Numerator = numerator;
 			Denominator = denominator;
 		}
 
-		[DebuggerHidden]
+		[DebuggerStepThrough]
 		public new T Abs()
 		{
 			return Create(Math.Abs(Val));

@@ -128,17 +128,17 @@ namespace TUGraz.VectoCore.Models.SimulationComponent.Data
 
 		public Kilogram TotalVehicleWeight()
 		{
-			var retVal = 0.SI<Kilogram>();
-			retVal += CurbWeight ?? 0.SI<Kilogram>();
-			retVal += Loading ?? 0.SI<Kilogram>();
-			return retVal;
+			var retVal = 0.0;
+			if (CurbWeight != null)
+				retVal += CurbWeight.Value();
+			if (Loading != null)
+				retVal += Loading.Value();
+			return retVal.SI<Kilogram>();
 		}
 
 		public Kilogram TotalCurbWeight()
 		{
-			var retVal = 0.SI<Kilogram>();
-			retVal += CurbWeight ?? 0.SI<Kilogram>();
-			return retVal;
+			return CurbWeight ?? 0.SI<Kilogram>();
 		}
 
 		protected void ComputeRollResistanceAndReducedMassWheels()
@@ -189,7 +189,6 @@ namespace TUGraz.VectoCore.Models.SimulationComponent.Data
 					return new ValidationResult(string.Format("Tyre test load (FzISO) for axle {0} must be greater than 0.", i));
 				}
 			}
-
 
 			if (vehicleData.TotalRollResistanceCoefficient <= 0) {
 				return

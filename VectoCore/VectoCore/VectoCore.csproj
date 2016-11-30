@@ -340,6 +340,7 @@
     <EmbeddedResource Include="Resources\Declaration\Payloads.csv" />
     <EmbeddedResource Include="Resources\Declaration\VAUX\SP-Axles.csv" />
     <EmbeddedResource Include="Resources\Declaration\VAUX\PTO-tech.csv" />
+    <EmbeddedResource Include="Resources\Declaration\TorqueConverter.csv" />
   </ItemGroup>
   <ItemGroup>
     <EmbeddedResource Include="Resources\Declaration\Report\4x2r.png" />

@@ -458,7 +458,7 @@ namespace TUGraz.VectoCore.Tests.Models.SimulationComponentData
 					tqInput), 1000.RPMtoRad(), tqLimit, ExecutionMode.Engineering, 1);
 
 			var operatingPoint = tqData.FindOperatingPointForPowerDemand(20000.SI<Watt>(), 113.5.SI<PerSecond>(),
-				1200.RPMtoRad(), 4.SI<KilogramSquareMeter>(), 0.5.SI<Second>());
+                1200.RPMtoRad(), 4.SI<KilogramSquareMeter>(), 0.5.SI<Second>(), 20000.SI<Watt>());
 
 			var tmp = tqData.FindOperatingPoint(operatingPoint.OutTorque, operatingPoint.OutAngularVelocity, 0.RPMtoRad());
 			var backward = tmp.First();

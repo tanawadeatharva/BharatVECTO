@@ -134,7 +134,6 @@ namespace TUGraz.VectoCore.Tests.Integration.DriverStrategy
 					v1, v2, GetSlopeString(slope)), gbxType: GearboxType.MT);
 		}
 
-
 		[Category("ComparisonV2"),
 		TestCase(22, 20, -5),
 		TestCase(45, 0, -5),
@@ -150,7 +149,7 @@ namespace TUGraz.VectoCore.Tests.Integration.DriverStrategy
 		TestCase(80, 0, -25),
 		TestCase(80, 0, -5),
 		TestCase(80, 0, 0),
-		TestCase(80, 0, 20),
+		TestCase(80, 0, 18),
 		TestCase(80, 0, 15),
 		TestCase(80, 0, 3),
 		TestCase(80, 0, 5),
