@@ -374,6 +374,7 @@ Public Class GearboxForm
 		gearbox.TorqueConverterReferenceRpm = TbTCrefrpm.Text.ToDouble(0)
 		gearbox.TorqueConverterInertia = TbTCinertia.Text.ToDouble(0)
 		gearbox.TorqueConverterShiftPolygonFile = TBTCShiftPolygon.Text
+		gearbox.TorqueConverterMaxSpeed = tbTCmaxSpeed.Text.ToDouble(0)
 
 		gearbox.DownshiftAfterUpshift = tbDownshiftAfterUpshift.Text.ToDouble(0)
 		gearbox.UpshiftAfterDownshift = tbUpshiftAfterDownshift.Text.ToDouble(0)

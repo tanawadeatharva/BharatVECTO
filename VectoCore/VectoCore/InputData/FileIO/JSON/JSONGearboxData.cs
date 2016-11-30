@@ -70,9 +70,11 @@ namespace TUGraz.VectoCore.InputData.FileIO.JSON
 		{
 			get
 			{
-				return Body[JsonKeys.Gearbox_TorqueConverter] != null && Body[JsonKeys.Gearbox_TorqueConverter]["ShiftPolygon"] != null ? 
-					ReadTableData(Body.GetEx(JsonKeys.Gearbox_TorqueConverter)
-					.GetEx<string>("ShiftPolygon"), "TorqueConverter Shift Polygon", false):null;
+				return Body[JsonKeys.Gearbox_TorqueConverter] != null &&
+						Body[JsonKeys.Gearbox_TorqueConverter]["ShiftPolygon"] != null
+					? ReadTableData(Body.GetEx(JsonKeys.Gearbox_TorqueConverter)
+						.GetEx<string>("ShiftPolygon"), "TorqueConverter Shift Polygon", false)
+					: null;
 			}
 		}
 	}
@@ -352,13 +354,19 @@ namespace TUGraz.VectoCore.InputData.FileIO.JSON
 		{
 			get
 			{
-				return Body[JsonKeys.Gearbox_TorqueConverter] != null && Body[JsonKeys.Gearbox_TorqueConverter][JsonKeys.Gearbox_TorqueConverter_ReferenceRPM] != null ?
-					Body.GetEx(JsonKeys.Gearbox_TorqueConverter)
+				return Body[JsonKeys.Gearbox_TorqueConverter] != null &&
+						Body[JsonKeys.Gearbox_TorqueConverter][JsonKeys.Gearbox_TorqueConverter_ReferenceRPM] != null
+					? Body.GetEx(JsonKeys.Gearbox_TorqueConverter)
 						.GetEx<double>(JsonKeys.Gearbox_TorqueConverter_ReferenceRPM)
-						.RPMtoRad() : null;
+						.RPMtoRad()
+					: null;
 			}
 		}
 
+        public PerSecond MaxInputSpeed
+        {
+            get { return Body[JsonKeys.Gearbox_TorqueConverter] != null && Body[JsonKeys.Gearbox_TorqueConverter]["MaxTCSpeed"] != null ? Body.GetEx(JsonKeys.Gearbox_TorqueConverter).GetEx<double>("MaxTCSpeed").RPMtoRad() : 5000.RPMtoRad(); }
+        }
 		public virtual TableData TCData
 		{
 			get
@@ -375,10 +383,12 @@ namespace TUGraz.VectoCore.InputData.FileIO.JSON
 		{
 			get
 			{
-				return Body[JsonKeys.Gearbox_TorqueConverter] != null && Body[JsonKeys.Gearbox_TorqueConverter][JsonKeys.Gearbox_TorqueConverter_Inertia] != null ?
-					Body.GetEx(JsonKeys.Gearbox_TorqueConverter)
+				return Body[JsonKeys.Gearbox_TorqueConverter] != null &&
+						Body[JsonKeys.Gearbox_TorqueConverter][JsonKeys.Gearbox_TorqueConverter_Inertia] != null
+					? Body.GetEx(JsonKeys.Gearbox_TorqueConverter)
 						.GetEx<double>(JsonKeys.Gearbox_TorqueConverter_Inertia)
-						.SI<KilogramSquareMeter>() : null;
+						.SI<KilogramSquareMeter>()
+					: null;
 			}
 		}
 

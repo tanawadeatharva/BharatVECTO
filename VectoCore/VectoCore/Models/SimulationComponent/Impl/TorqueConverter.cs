@@ -156,9 +156,8 @@ namespace TUGraz.VectoCore.Models.SimulationComponent.Impl
 				var operatingPoint = ModelData.FindOperatingPointForPowerDemand(
 					engineResponse.DragPower - engineResponse.AuxiliariesPowerDemand,
 					DataBus.EngineSpeed, outAngularVelocity, _engineInertia, dt, previousPower);
-
-				if (operatingPoint.InAngularVelocity.IsGreater(DataBus.EngineRatedSpeed)) {
-					operatingPoint = ModelData.FindOperatingPoint(DataBus.EngineRatedSpeed, outAngularVelocity);
+				if (operatingPoint.InAngularVelocity.IsGreater(ModelData.TorqueConverterSpeedLimit)) {
+					operatingPoint = ModelData.FindOperatingPoint(ModelData.TorqueConverterSpeedLimit, outAngularVelocity);
 				}
 				if (operatingPoint.InAngularVelocity.IsSmaller(DataBus.EngineIdleSpeed)) {
 					operatingPoint = ModelData.FindOperatingPoint(DataBus.EngineIdleSpeed, outAngularVelocity);
@@ -177,9 +176,8 @@ namespace TUGraz.VectoCore.Models.SimulationComponent.Impl
 				var operatingPoint = ModelData.FindOperatingPointForPowerDemand(
 					engineResponse.DynamicFullLoadPower - engineResponse.AuxiliariesPowerDemand,
 					DataBus.EngineSpeed, outAngularVelocity, _engineInertia, dt, previousPower);
-
-				if (operatingPoint.InAngularVelocity.IsGreater(DataBus.EngineRatedSpeed)) {
-					operatingPoint = ModelData.FindOperatingPoint(DataBus.EngineRatedSpeed, outAngularVelocity);
+				if (operatingPoint.InAngularVelocity.IsGreater(ModelData.TorqueConverterSpeedLimit)) {
+					operatingPoint = ModelData.FindOperatingPoint(ModelData.TorqueConverterSpeedLimit, outAngularVelocity);
 				}
 				return operatingPoint;
 			} catch (VectoException ve) {
@@ -205,8 +203,8 @@ namespace TUGraz.VectoCore.Models.SimulationComponent.Impl
 					"TorqueConverter: Invalid operating point, inAngularVelocity would be below engine's idle speed: {0}",
 					operatingPoint.InAngularVelocity);
 			}
-			if (operatingPoint.InAngularVelocity.IsGreater(DataBus.EngineRatedSpeed)) {
-				operatingPoint = ModelData.FindOperatingPoint(DataBus.EngineRatedSpeed, outAngularVelocity);
+			if (operatingPoint.InAngularVelocity.IsGreater(ModelData.TorqueConverterSpeedLimit)) {
+				operatingPoint = ModelData.FindOperatingPoint(ModelData.TorqueConverterSpeedLimit, outAngularVelocity);
 			}
 			return operatingPoint;
 		}

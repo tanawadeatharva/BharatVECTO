@@ -78,7 +78,7 @@ Partial Class GearboxForm
 		Me.Label20 = New System.Windows.Forms.Label()
 		Me.Label19 = New System.Windows.Forms.Label()
 		Me.PnTorqRes = New System.Windows.Forms.Panel()
-		Me.Label25 = New System.Windows.Forms.Label()
+        'Me.Label25 = New System.Windows.Forms.Label()
 		Me.Label2 = New System.Windows.Forms.Label()
 		Me.Label4 = New System.Windows.Forms.Label()
 		Me.TbTqResv = New System.Windows.Forms.TextBox()
@@ -120,6 +120,10 @@ Partial Class GearboxForm
 		Me.Label32 = New System.Windows.Forms.Label()
 		Me.PnInertiaTI = New System.Windows.Forms.Panel()
 		Me.PicBox = New System.Windows.Forms.PictureBox()
+		Me.Label25 = New System.Windows.Forms.Label()
+		Me.Label26 = New System.Windows.Forms.Label()
+		Me.tbTCmaxSpeed = New System.Windows.Forms.TextBox()
+		Me.Label27 = New System.Windows.Forms.Label()
 		Me.ToolStrip1.SuspendLayout()
 		Me.StatusStrip1.SuspendLayout()
 		CType(Me.PictureBox1, System.ComponentModel.ISupportInitialize).BeginInit()
@@ -674,13 +678,16 @@ Partial Class GearboxForm
 		Me.GroupBox3.Controls.Add(Me.PnTC)
 		Me.GroupBox3.Location = New System.Drawing.Point(459, 440)
 		Me.GroupBox3.Name = "GroupBox3"
-		Me.GroupBox3.Size = New System.Drawing.Size(414, 162)
+		Me.GroupBox3.Size = New System.Drawing.Size(414, 188)
 		Me.GroupBox3.TabIndex = 5
 		Me.GroupBox3.TabStop = False
 		Me.GroupBox3.Text = "Torque Converter"
 		'
 		'PnTC
 		'
+		Me.PnTC.Controls.Add(Me.Label26)
+		Me.PnTC.Controls.Add(Me.tbTCmaxSpeed)
+		Me.PnTC.Controls.Add(Me.Label27)
 		Me.PnTC.Controls.Add(Me.BtTCShiftFileBrowse)
 		Me.PnTC.Controls.Add(Me.Label17)
 		Me.PnTC.Controls.Add(Me.TBTCShiftPolygon)
@@ -696,14 +703,14 @@ Partial Class GearboxForm
 		Me.PnTC.Controls.Add(Me.TbTCrefrpm)
 		Me.PnTC.Location = New System.Drawing.Point(6, 19)
 		Me.PnTC.Name = "PnTC"
-		Me.PnTC.Size = New System.Drawing.Size(402, 137)
+		Me.PnTC.Size = New System.Drawing.Size(402, 163)
 		Me.PnTC.TabIndex = 36
 		'
 		'BtTCShiftFileBrowse
 		'
 		Me.BtTCShiftFileBrowse.Anchor = CType((System.Windows.Forms.AnchorStyles.Top Or System.Windows.Forms.AnchorStyles.Right), System.Windows.Forms.AnchorStyles)
 		Me.BtTCShiftFileBrowse.Image = Global.TUGraz.VECTO.My.Resources.Resources.Open_icon
-		Me.BtTCShiftFileBrowse.Location = New System.Drawing.Point(348, 102)
+		Me.BtTCShiftFileBrowse.Location = New System.Drawing.Point(353, 126)
 		Me.BtTCShiftFileBrowse.Name = "BtTCShiftFileBrowse"
 		Me.BtTCShiftFileBrowse.Size = New System.Drawing.Size(24, 24)
 		Me.BtTCShiftFileBrowse.TabIndex = 5
@@ -723,7 +730,7 @@ Partial Class GearboxForm
 		'
 		Me.TBTCShiftPolygon.Anchor = CType(((System.Windows.Forms.AnchorStyles.Top Or System.Windows.Forms.AnchorStyles.Left) _
 			Or System.Windows.Forms.AnchorStyles.Right), System.Windows.Forms.AnchorStyles)
-		Me.TBTCShiftPolygon.Location = New System.Drawing.Point(4, 104)
+		Me.TBTCShiftPolygon.Location = New System.Drawing.Point(4, 126)
 		Me.TBTCShiftPolygon.Name = "TBTCShiftPolygon"
 		Me.TBTCShiftPolygon.Size = New System.Drawing.Size(343, 20)
 		Me.TBTCShiftPolygon.TabIndex = 37
@@ -731,7 +738,7 @@ Partial Class GearboxForm
 		'LblTCShiftFile
 		'
 		Me.LblTCShiftFile.AutoSize = True
-		Me.LblTCShiftFile.Location = New System.Drawing.Point(4, 88)
+		Me.LblTCShiftFile.Location = New System.Drawing.Point(5, 100)
 		Me.LblTCShiftFile.Name = "LblTCShiftFile"
 		Me.LblTCShiftFile.Size = New System.Drawing.Size(172, 13)
 		Me.LblTCShiftFile.TabIndex = 5
@@ -750,7 +757,7 @@ Partial Class GearboxForm
 		'
 		Me.Label15.Anchor = CType((System.Windows.Forms.AnchorStyles.Top Or System.Windows.Forms.AnchorStyles.Right), System.Windows.Forms.AnchorStyles)
 		Me.Label15.AutoSize = True
-		Me.Label15.Location = New System.Drawing.Point(185, 50)
+		Me.Label15.Location = New System.Drawing.Point(197, 50)
 		Me.Label15.Name = "Label15"
 		Me.Label15.Size = New System.Drawing.Size(77, 13)
 		Me.Label15.TabIndex = 0
@@ -758,7 +765,7 @@ Partial Class GearboxForm
 		'
 		'TbTCinertia
 		'
-		Me.TbTCinertia.Location = New System.Drawing.Point(47, 47)
+		Me.TbTCinertia.Location = New System.Drawing.Point(75, 45)
 		Me.TbTCinertia.Name = "TbTCinertia"
 		Me.TbTCinertia.Size = New System.Drawing.Size(67, 20)
 		Me.TbTCinertia.TabIndex = 3
@@ -766,7 +773,7 @@ Partial Class GearboxForm
 		'Label1
 		'
 		Me.Label1.AutoSize = True
-		Me.Label1.Location = New System.Drawing.Point(120, 50)
+		Me.Label1.Location = New System.Drawing.Point(148, 48)
 		Me.Label1.Name = "Label1"
 		Me.Label1.Size = New System.Drawing.Size(36, 13)
 		Me.Label1.TabIndex = 2
@@ -776,7 +783,7 @@ Partial Class GearboxForm
 		'
 		Me.Label14.Anchor = CType((System.Windows.Forms.AnchorStyles.Top Or System.Windows.Forms.AnchorStyles.Right), System.Windows.Forms.AnchorStyles)
 		Me.Label14.AutoSize = True
-		Me.Label14.Location = New System.Drawing.Point(341, 50)
+		Me.Label14.Location = New System.Drawing.Point(353, 50)
 		Me.Label14.Name = "Label14"
 		Me.Label14.Size = New System.Drawing.Size(40, 13)
 		Me.Label14.TabIndex = 0
@@ -816,7 +823,7 @@ Partial Class GearboxForm
 		'TbTCrefrpm
 		'
 		Me.TbTCrefrpm.Anchor = CType((System.Windows.Forms.AnchorStyles.Top Or System.Windows.Forms.AnchorStyles.Right), System.Windows.Forms.AnchorStyles)
-		Me.TbTCrefrpm.Location = New System.Drawing.Point(268, 47)
+		Me.TbTCrefrpm.Location = New System.Drawing.Point(280, 47)
 		Me.TbTCrefrpm.Name = "TbTCrefrpm"
 		Me.TbTCrefrpm.Size = New System.Drawing.Size(67, 20)
 		Me.TbTCrefrpm.TabIndex = 4
@@ -893,6 +900,37 @@ Partial Class GearboxForm
 		Me.PicBox.TabIndex = 48
 		Me.PicBox.TabStop = False
 		'
+		'Label25
+		'Label26
+		Me.Label25.Anchor = CType((System.Windows.Forms.AnchorStyles.Top Or System.Windows.Forms.AnchorStyles.Right), System.Windows.Forms.AnchorStyles)
+		Me.Label25.AutoSize = True
+		Me.Label25.Location = New System.Drawing.Point(294, 9)
+		Me.Label25.Name = "Label25"
+		Me.Label25.Size = New System.Drawing.Size(129, 13)
+		Me.Label25.TabIndex = 1
+		Me.Label25.Text = "(Early shift-up, Skip gears)"
+		Me.Label26.AutoSize = True
+		Me.Label26.Location = New System.Drawing.Point(5, 77)
+		Me.Label26.Name = "Label26"
+		Me.Label26.Size = New System.Drawing.Size(64, 13)
+		Me.Label26.TabIndex = 38
+		Me.Label26.Text = "Max. Speed"
+		'
+		'tbTCmaxSpeed
+		'
+		Me.tbTCmaxSpeed.Location = New System.Drawing.Point(75, 71)
+		Me.tbTCmaxSpeed.Name = "tbTCmaxSpeed"
+		Me.tbTCmaxSpeed.Size = New System.Drawing.Size(67, 20)
+		Me.tbTCmaxSpeed.TabIndex = 40
+		'
+		'Label27
+		'
+		Me.Label27.AutoSize = True
+		Me.Label27.Location = New System.Drawing.Point(148, 74)
+		Me.Label27.Name = "Label27"
+		Me.Label27.Size = New System.Drawing.Size(30, 13)
+		Me.Label27.TabIndex = 39
+		Me.Label27.Text = "[rpm]"
 		'GearboxForm
 		'
 		Me.AcceptButton = Me.ButOK
@@ -1028,4 +1066,7 @@ Partial Class GearboxForm
 	Friend WithEvents LblTCShiftFile As Label
 	Friend WithEvents TBTCShiftPolygon As TextBox
 	Friend WithEvents Label25 As System.Windows.Forms.Label
+	Friend WithEvents Label26 As System.Windows.Forms.Label
+	Friend WithEvents tbTCmaxSpeed As System.Windows.Forms.TextBox
+	Friend WithEvents Label27 As System.Windows.Forms.Label
 End Class

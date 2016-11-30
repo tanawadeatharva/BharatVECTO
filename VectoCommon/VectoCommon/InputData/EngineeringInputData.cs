@@ -219,6 +219,8 @@ namespace TUGraz.VectoCommon.InputData
 		KilogramSquareMeter Inertia { get; }
 
 		TableData ShiftPolygon { get; }
+
+		PerSecond MaxInputSpeed { get; }
 	}
 
 	public interface IEngineEngineeringInputData : IEngineDeclarationInputData
