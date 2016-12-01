@@ -11,28 +11,28 @@
     "Inertia": 0.0,
     "TracInt": 0.0,
     "Gears": [
-      {
-        "Ratio": 5.8,
-        "Efficiency": "0.98"
-      },
-      {
-        "Ratio": 1.35,
-        "Efficiency": "0.98",
-        "ShiftPolygon": "AT-Shift.vgbs",
-        "FullLoadCurve": "<NOFILE>"
-      },
-      {
-        "Ratio": 1.0,
-        "Efficiency": "0.98",
-        "ShiftPolygon": "AT-Shift.vgbs",
-        "FullLoadCurve": "<NOFILE>"
-      },
-      {
-        "Ratio": 0.73,
-        "Efficiency": "0.98",
-        "ShiftPolygon": "AT-Shift.vgbs",
-        "FullLoadCurve": "<NOFILE>"
-      },
+	    {
+		    "Ratio": 5.8,
+		    "Efficiency": "0.98"
+	    },
+	    {
+		    "Ratio": 1.35,
+		    "Efficiency": "0.98",
+		    "ShiftPolygon": "AT-Shift.vgbs",
+		    "FullLoadCurve": "<NOFILE>"
+	    },
+	    {
+		    "Ratio": 1.0,
+		    "Efficiency": "0.98",
+		    "ShiftPolygon": "AT-Shift.vgbs",
+		    "FullLoadCurve": "<NOFILE>"
+	    },
+	    {
+		    "Ratio": 0.73,
+		    "Efficiency": "0.98",
+		    "ShiftPolygon": "AT-Shift.vgbs",
+		    "FullLoadCurve": "<NOFILE>"
+	    }
     ],
     "TqReserve": 0.0,
     "SkipGears": false,

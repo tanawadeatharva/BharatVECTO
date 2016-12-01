@@ -244,7 +244,7 @@ namespace TUGraz.VectoCore.Tests.Models.SimulationComponentData
 		TestCase(190, 30, 164.3260, 892.7507),
 		TestCase(190, 50, 209.6016, 1465.6611),
 		TestCase(190, 70, 246.4829, 2036.7399),
-		TestCase(530.517, 1.930, 59.1449, 36.5684),
+		TestCase(530.517, 1.930, 59.0758, 35.8217),
 		]
 		public void TestTorqueConverterOperatingPoint(double nOut, double Pout, double nInExpected, double tqInExpected)
 		{
