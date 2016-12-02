@@ -47,7 +47,7 @@ namespace TUGraz.VectoCore.Models.SimulationComponent.Impl
 		/// </summary>
 		protected uint PreviousGear;
 
-		public uint NextGear { get; set; }
+		protected uint _nextGear { get; set; }
 
 		public AMTShiftStrategy(GearboxData data, IDataBus dataBus) : base(data, dataBus)
 		{
@@ -71,16 +71,21 @@ namespace TUGraz.VectoCore.Models.SimulationComponent.Impl
 				(outAngularSpeed * Data.Gears[gear].Ratio).IsGreaterOrEqual(DataBus.EngineN95hSpeed);
 		}
 
-		public override uint Engage(Second absTime, Second dt, NewtonMeter outTorque, PerSecond outAngularVelocity)
+	    public override GearInfo NextGear
+	    {
+	        get { return new GearInfo(){Gear = _nextGear, TorqueConverterLocked = false}; }
+	    }
+
+	    public override uint Engage(Second absTime, Second dt, NewtonMeter outTorque, PerSecond outAngularVelocity)
 		{
-			while (NextGear > 1 && SpeedTooLowForEngine(NextGear, outAngularVelocity)) {
-				NextGear--;
+			while (_nextGear > 1 && SpeedTooLowForEngine(_nextGear, outAngularVelocity)) {
+				_nextGear--;
 			}
-			while (NextGear < Data.Gears.Count && SpeedTooHighForEngine(NextGear, outAngularVelocity)) {
-				NextGear++;
+			while (_nextGear < Data.Gears.Count && SpeedTooHighForEngine(_nextGear, outAngularVelocity)) {
+				_nextGear++;
 			}
 
-			return NextGear;
+			return _nextGear;
 		}
 
 		public override void Disengage(Second absTime, Second dt, NewtonMeter outTorque, PerSecond outEngineSpeed)
@@ -151,14 +156,14 @@ namespace TUGraz.VectoCore.Models.SimulationComponent.Impl
 			}
 
 			// emergency shift to not stall the engine ------------------------
-			NextGear = gear;
-			while (NextGear > 1 && SpeedTooLowForEngine(NextGear, outAngularVelocity)) {
-				NextGear--;
+			_nextGear = gear;
+			while (_nextGear > 1 && SpeedTooLowForEngine(_nextGear, outAngularVelocity)) {
+				_nextGear--;
 			}
-			while (NextGear < Data.Gears.Count && SpeedTooHighForEngine(NextGear, outAngularVelocity)) {
-				NextGear++;
+			while (_nextGear < Data.Gears.Count && SpeedTooHighForEngine(_nextGear, outAngularVelocity)) {
+				_nextGear++;
 			}
-			if (NextGear != gear) {
+			if (_nextGear != gear) {
 				return true;
 			}
 
@@ -168,20 +173,20 @@ namespace TUGraz.VectoCore.Models.SimulationComponent.Impl
 				return false;
 			}
 
-			NextGear = CheckDownshift(absTime, dt, outTorque, outAngularVelocity, inTorque, inAngularVelocity, gear);
-			if (NextGear != gear) {
+			_nextGear = CheckDownshift(absTime, dt, outTorque, outAngularVelocity, inTorque, inAngularVelocity, gear);
+			if (_nextGear != gear) {
 				return true;
 			}
 
-			NextGear = CheckUpshift(absTime, dt, outTorque, outAngularVelocity, inTorque, inAngularVelocity, gear);
+			_nextGear = CheckUpshift(absTime, dt, outTorque, outAngularVelocity, inTorque, inAngularVelocity, gear);
 
-			if ((Data.Gears[NextGear].Ratio * outAngularVelocity - DataBus.EngineIdleSpeed) /
+			if ((Data.Gears[_nextGear].Ratio * outAngularVelocity - DataBus.EngineIdleSpeed) /
 				(DataBus.EngineRatedSpeed - DataBus.EngineIdleSpeed) <
-				Constants.SimulationSettings.ClutchClosingSpeedNorm && NextGear > 1) {
-				NextGear--;
+				Constants.SimulationSettings.ClutchClosingSpeedNorm && _nextGear > 1) {
+				_nextGear--;
 			}
 
-			return NextGear != gear;
+			return _nextGear != gear;
 		}
 
 		protected virtual uint CheckUpshift(Second absTime, Second dt, NewtonMeter outTorque, PerSecond outAngularVelocity,

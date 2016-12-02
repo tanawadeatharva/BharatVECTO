@@ -49,6 +49,8 @@ namespace TUGraz.VectoCore.Models.SimulationComponent.Impl
 		private readonly IShiftStrategy _strategy;
 		protected internal readonly TorqueConverter TorqueConverter;
 		private IIdleController _idleController;
+		protected bool RequestAfterGearshift;
+		protected KilogramSquareMeter EngineInertia;
 
 		public bool TorqueConverterLocked
 		{
@@ -63,6 +65,7 @@ namespace TUGraz.VectoCore.Models.SimulationComponent.Impl
 			_strategy = strategy;
 			_strategy.Gearbox = this;
 			LastShift = -double.MaxValue.SI<Second>();
+			EngineInertia = engineInertia;
 			TorqueConverter = new TorqueConverter(this, _strategy, container, gearboxModelData.TorqueConverterData, engineInertia);
 		}
 
@@ -185,6 +188,12 @@ namespace TUGraz.VectoCore.Models.SimulationComponent.Impl
 			IResponse retVal;
 			var count = 0;
 			var loop = false;
+			if (RequestAfterGearshift) {
+				LastShift = absTime;
+				Gear = _strategy.Engage(absTime, dt, outTorque, outAngularVelocity);
+				RequestAfterGearshift = false;
+				CurrentState.PowershiftLosses = ComputeShiftLosses(dt, outTorque, outAngularVelocity);
+			}
 			do {
 				if (CurrentState.Disengaged || (DataBus.DriverBehavior == DrivingBehavior.Halted)) {
 					// only when vehicle is halted or close before halting
@@ -196,14 +205,48 @@ namespace TUGraz.VectoCore.Models.SimulationComponent.Impl
 				}
 				retVal.Switch()
 					.Case<ResponseGearShift>(r => {
-						loop = true;
-						Gear = _strategy.Engage(absTime, dt, outTorque, outAngularVelocity);
-						LastShift = absTime;
+						if (ConsiderShiftLosses(_strategy.NextGear, outTorque)) {
+							retVal = new ResponseFailTimeInterval() {
+								Source = this,
+								DeltaT = ModelData.PowershiftShiftTime,
+								GearboxPowerRequest = outTorque * (PreviousState.OutAngularVelocity + outAngularVelocity) / 2.0
+							};
+							RequestAfterGearshift = true;
+						} else {
+							loop = true;
+							Gear = _strategy.Engage(absTime, dt, outTorque, outAngularVelocity);
+							LastShift = absTime;
+						}
 					});
 			} while (loop && ++count < 2);
 
 			retVal.GearboxPowerRequest = outTorque * (PreviousState.OutAngularVelocity + outAngularVelocity) / 2.0;
 			return retVal;
+		}
+
+		protected internal NewtonMeter ComputeShiftLosses(Second dt, NewtonMeter outTorque, PerSecond outAngularVelocity)
+		{
+			var torqueGbxIn = outTorque / ModelData.Gears[Gear].Ratio;
+			var deltaEngineSpeed = DataBus.EngineSpeed - outAngularVelocity * ModelData.Gears[Gear].Ratio;
+			var deltaClutchSpeed = (DataBus.EngineSpeed - PreviousState.OutAngularVelocity * ModelData.Gears[Gear].Ratio) / 2;
+			var torqueInertia = EngineInertia * deltaEngineSpeed / dt;
+			var averageEngineSpeed = (DataBus.EngineSpeed + outAngularVelocity * ModelData.Gears[Gear].Ratio) / 2;
+			var torqueLoss = (torqueGbxIn + torqueInertia) * deltaClutchSpeed / averageEngineSpeed;
+
+			return torqueLoss.Abs();
+		}
+
+		private bool ConsiderShiftLosses(GearInfo nextGear, NewtonMeter torqueOut)
+		{
+			if (torqueOut.IsSmaller(0)) {
+				return false;
+			}
+			if (nextGear.Gear == 0)
+				return false;
+			if (ModelData.Gears[2].HasTorqueConverter) {
+				return false; // nextGear.TorqueConverterLocked || nextGear.Gear == 2;
+			}
+			return nextGear.TorqueConverterLocked;
 		}
 
 		private IResponse RequestEngaged(Second absTime, Second dt, NewtonMeter outTorque, PerSecond outAngularVelocity,
@@ -234,6 +277,10 @@ namespace TUGraz.VectoCore.Models.SimulationComponent.Impl
 				avgOutAngularVelocity
 				: 0.SI<NewtonMeter>();
 			inTorque += CurrentState.InertiaTorqueLossOut / effectiveRatio;
+
+			if (CurrentState.PowershiftLosses != null) {
+				inTorque += CurrentState.PowershiftLosses;
+			}
 
 			CurrentState.SetState(inTorque, inAngularVelocity, outTorque, outAngularVelocity);
 			CurrentState.Gear = Gear;
@@ -305,6 +352,9 @@ namespace TUGraz.VectoCore.Models.SimulationComponent.Impl
 			container[ModalResultField.P_gbx_loss] = CurrentState.TransmissionTorqueLoss * avgInAngularSpeed;
 			container[ModalResultField.P_gbx_inertia] = CurrentState.InertiaTorqueLossOut * avgInAngularSpeed;
 			container[ModalResultField.P_gbx_in] = CurrentState.InTorque * avgInAngularSpeed;
+			container[ModalResultField.P_gbx_shift_loss] = CurrentState.PowershiftLosses == null
+				? 0.SI<Watt>()
+				: CurrentState.PowershiftLosses * avgInAngularSpeed;
 		}
 
 		protected override void DoCommitSimulationStep()
@@ -335,6 +385,7 @@ namespace TUGraz.VectoCore.Models.SimulationComponent.Impl
 		{
 			public bool TorqueConverterLocked;
 			public bool Disengaged = true;
+			public NewtonMeter PowershiftLosses;
 		}
 	}
 }

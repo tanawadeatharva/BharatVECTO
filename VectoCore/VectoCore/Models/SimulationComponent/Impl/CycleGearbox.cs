@@ -342,8 +342,8 @@ namespace TUGraz.VectoCore.Models.SimulationComponent.Impl
 		public override bool ClutchClosed(Second absTime)
 		{
 			return (DataBus.DriverBehavior == DrivingBehavior.Braking
-						? DataBus.CycleData.LeftSample.Gear
-						: DataBus.CycleData.RightSample.Gear) != 0;
+				? DataBus.CycleData.LeftSample.Gear
+				: DataBus.CycleData.RightSample.Gear) != 0;
 		}
 
 		#endregion
@@ -378,6 +378,7 @@ namespace TUGraz.VectoCore.Models.SimulationComponent.Impl
 			}
 
 			public IGearbox Gearbox { get; set; }
+			public GearInfo NextGear { get; set; }
 		}
 	}
 }

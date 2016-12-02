@@ -57,6 +57,8 @@ namespace TUGraz.VectoCore.Models.SimulationComponent.Impl
 			Data = data;
 		}
 
+        public abstract GearInfo NextGear { get; }
+
 		public abstract uint Engage(Second absTime, Second dt, NewtonMeter outTorque, PerSecond outAngularVelocity);
 
 		public abstract void Disengage(Second absTime, Second dt, NewtonMeter outTorque, PerSecond outEngineSpeed);
@@ -79,7 +81,7 @@ namespace TUGraz.VectoCore.Models.SimulationComponent.Impl
 			}
 		}
 
-		protected MeterPerSquareSecond EstimateAccelerationForGear(uint gear, PerSecond gbxAngularVelocityOut)
+	    protected MeterPerSquareSecond EstimateAccelerationForGear(uint gear, PerSecond gbxAngularVelocityOut)
 		{
 			if (gear == 0 || gear > _gearbox.ModelData.Gears.Count) {
 				throw new VectoSimulationException("invalid gear: {0}", gear);
