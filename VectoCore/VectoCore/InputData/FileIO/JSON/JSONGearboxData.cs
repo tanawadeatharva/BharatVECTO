@@ -276,7 +276,7 @@ namespace TUGraz.VectoCore.InputData.FileIO.JSON
 			};
 		}
 
-		public virtual Second ShiftTime
+		public virtual Second MinTimeBetweenGearshift
 		{
 			get { return Body.GetEx<double>(JsonKeys.Gearbox_ShiftTime).SI<Second>(); }
 		}
@@ -336,7 +336,22 @@ namespace TUGraz.VectoCore.InputData.FileIO.JSON
 			}
 		}
 
-		#endregion
+	    public Second PowershiftShiftTime
+	    {
+	        get
+	        {
+	            return Body["PowershiftShiftTime"] == null
+	                ? 0.8.SI<Second>()
+	                : Body.GetEx<double>("PowershiftShiftTime").SI<Second>();
+	        }
+	    }
+
+	    public double PowerShiftInertiaFactor
+	    {
+	        get { return Body["PowershiftInertiaFactor"] == null ? 1 : Body.GetEx<double>("PowershiftInertiaFactor"); }
+	    }
+
+	    #endregion
 
 		#region ITorqueConverterInputData
 

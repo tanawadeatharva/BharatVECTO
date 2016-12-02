@@ -135,6 +135,7 @@ namespace TUGraz.VectoCore.OutputData
 			});
 			if (HasTorqueConverter) {
 				dataColumns.AddRange(new[] {
+					ModalResultField.P_gbx_shift_loss,
 					ModalResultField.P_TC_loss,
 					ModalResultField.P_TC_out,
 				});

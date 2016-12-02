@@ -137,7 +137,7 @@ namespace TUGraz.VectoCore.InputData.Reader.DataObjectAdapter
 			retVal.TractionInterruption = gearbox.TractionInterruption;
 			retVal.TorqueReserve = gearbox.TorqueReserve;
 			retVal.StartTorqueReserve = gearbox.StartTorqueReserve;
-			retVal.ShiftTime = gearbox.ShiftTime;
+			retVal.ShiftTime = gearbox.MinTimeBetweenGearshift;
 			retVal.StartSpeed = gearbox.StartSpeed;
 			retVal.StartAcceleration = gearbox.StartAcceleration;
 
@@ -215,6 +215,11 @@ namespace TUGraz.VectoCore.InputData.Reader.DataObjectAdapter
 					throw new VectoException("AT gearbox model requires torque converter");
 				}
 			}
+
+		    if (retVal.Type.AutomaticTransmission()) {
+		        retVal.PowershiftShiftTime = gearbox.PowershiftShiftTime;
+		        retVal.PowershiftInertiaFactor = gearbox.PowerShiftInertiaFactor;
+		    }
 
 			retVal.DownshiftAfterUpshiftDelay = gearbox.DownshiftAferUpshiftDelay;
 			retVal.UpshiftAfterDownshiftDelay = gearbox.UpshiftAfterDownshiftDelay;
