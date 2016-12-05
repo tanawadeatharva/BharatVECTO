@@ -39,23 +39,21 @@ namespace TUGraz.VectoCore.Tests.Utils
 {
 	public class MockIdleController : IIdleController
 	{
-		public IResponse Request(Second absTime, Second dt, NewtonMeter outTorque, PerSecond outAngularVelocity, bool dryRun = false)
+		public IResponse Request(Second absTime, Second dt, NewtonMeter outTorque, PerSecond outAngularVelocity,
+			bool dryRun = false)
 		{
-			//throw new System.NotImplementedException();
 			return new ResponseSuccess();
 		}
 
 		public IResponse Initialize(NewtonMeter outTorque, PerSecond outAngularVelocity)
 		{
-			//throw new System.NotImplementedException();
 			return new ResponseSuccess();
 		}
 
 		public ITnOutPort RequestPort { get; set; }
 
-		public void Reset()
-		{
-			//throw new System.NotImplementedException();
-		}
+		public void Reset() {}
+
+		public void ActivateDoubleClutch(Second shiftTime, PerSecond targetVelocity) {}
 	}
 }

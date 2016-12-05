@@ -90,6 +90,12 @@ namespace TUGraz.VectoCore.Models.SimulationComponent.Impl
 			IdleStart = null;
 		}
 
+		public void ActivateDoubleClutch(Second shiftTime, PerSecond targetVelocity)
+		{
+			// todo mk 20161205: use double clutching during pto controller?
+			return;
+		}
+
 		public Second GetNextCycleTime()
 		{
 			if (RightSample.Current == null)

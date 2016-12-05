@@ -33,7 +33,6 @@ using System;
 using TUGraz.VectoCommon.Models;
 using TUGraz.VectoCommon.Utils;
 using TUGraz.VectoCore.Models.Connector.Ports;
-using TUGraz.VectoCore.Models.Simulation;
 using TUGraz.VectoCore.OutputData;
 
 namespace TUGraz.VectoCore.Models.SimulationComponent.Impl
@@ -78,6 +77,11 @@ namespace TUGraz.VectoCore.Models.SimulationComponent.Impl
 			_idleController.Reset();
 			_ptoController.Reset();
 			_currentController = _idleController;
+		}
+
+		public void ActivateDoubleClutch(Second shiftTime, PerSecond targetVelocity)
+		{
+			_currentController.ActivateDoubleClutch(shiftTime, targetVelocity);
 		}
 
 		public void ActivatePTO()
