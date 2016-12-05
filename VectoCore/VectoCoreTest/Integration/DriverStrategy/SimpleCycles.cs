@@ -78,7 +78,8 @@ namespace TUGraz.VectoCore.Tests.Integration.DriverStrategy
 		public void TestGraph()
 		{
 			var imgV3 = @"TestData\Results\Integration\40t_Long_Haul_Truck_Cycle_Drive_50_Dec_Increasing_Slope_v3.vmod";
-			var imgv22 = @"TestData\Results\Integration\40t_Long_Haul_Truck_Cycle_Drive_50_Dec_Increasing_Slope_v22.vmod";
+			var imgv22 =
+				@"TestData\Results\Integration\40t_Long_Haul_Truck_Cycle_Drive_50_Dec_Increasing_Slope_v22.vmod";
 
 			GraphWriter.Write(imgV3, imgv22);
 		}
@@ -115,7 +116,8 @@ namespace TUGraz.VectoCore.Tests.Integration.DriverStrategy
 		public void Truck_Accelerate(double v1, double v2, double slope)
 		{
 			Assert.IsTrue(v2 > v1);
-			var cycle = string.Format(CultureInfo.InvariantCulture, "0, {0}, {1}, {2}\n100, {3}, {4}, 0\n1000, {3}, {4}, {5}", v1,
+			var cycle = string.Format(CultureInfo.InvariantCulture,
+				"0, {0}, {1}, {2}\n100, {3}, {4}, 0\n1000, {3}, {4}, {5}", v1,
 				slope, v1.IsEqual(0) ? 2 : 0, v2, slope, v2.IsEqual(0) ? 2 : 0);
 
 			Truck_Special(cycle,
@@ -129,7 +131,8 @@ namespace TUGraz.VectoCore.Tests.Integration.DriverStrategy
 		public void Truck_Accelerate_MT(double v1, double v2, double slope)
 		{
 			Assert.IsTrue(v2 > v1);
-			var cycle = string.Format(CultureInfo.InvariantCulture, "0, {0}, {1}, {2}\n100, {3}, {4}, 0\n1000, {3}, {4}, {5}", v1,
+			var cycle = string.Format(CultureInfo.InvariantCulture,
+				"0, {0}, {1}, {2}\n100, {3}, {4}, 0\n1000, {3}, {4}, {5}", v1,
 				slope, v1.IsEqual(0) ? 2 : 0, v2, slope, v2.IsEqual(0) ? 2 : 0);
 
 			Truck_Special(cycle,
@@ -190,8 +193,9 @@ namespace TUGraz.VectoCore.Tests.Integration.DriverStrategy
 			var cycle = string.Format(CultureInfo.InvariantCulture, "0, {0}, {1}, {2}\n1000, {3}, {4}, {5}", v1, slope,
 				v1.IsEqual(0) ? 2 : 0, v2, slope, v2.IsEqual(0) ? 2 : 0);
 
-			Truck_Special(cycle, string.Format(CultureInfo.InvariantCulture, "40t_Long_Haul_Truck_Cycle_Drive_{0}_{1}_{2}.vmod",
-				v1, v2, GetSlopeString(slope)));
+			Truck_Special(cycle,
+				string.Format(CultureInfo.InvariantCulture, "40t_Long_Haul_Truck_Cycle_Drive_{0}_{1}_{2}.vmod",
+					v1, v2, GetSlopeString(slope)));
 		}
 
 		[Category("ComparisonV2"),
@@ -234,9 +238,11 @@ namespace TUGraz.VectoCore.Tests.Integration.DriverStrategy
 		TestCase(SimpleDrivingCycles.CycleAccelerateBeforeBrake_80_0_level,
 			"40t_Long_Haul_Truck_Cycle_AccelerateBeforeBrake_80_0_level.vmod", GearboxType.AMT,
 			TestName = "TruckSpecial CycleAccelerateBeforeBrake_80_0_level"),
-		TestCase(SimpleDrivingCycles.CycleDrive_stop_85_stop_85_level, "24t Truck_Cycle_Drive_stop_85_stop_85_level.vmod",
+		TestCase(SimpleDrivingCycles.CycleDrive_stop_85_stop_85_level,
+			"24t Truck_Cycle_Drive_stop_85_stop_85_level.vmod",
 			GearboxType.AMT, TestName = "TruckSpecial CycleDrive_stop_85_stop_85_level"),
-		TestCase(SimpleDrivingCycles.CycleDrive_SlopeChangeBeforeStop, "Truck_DriverStrategy_SlopeChangeBeforeStop.vmod",
+		TestCase(SimpleDrivingCycles.CycleDrive_SlopeChangeBeforeStop,
+			"Truck_DriverStrategy_SlopeChangeBeforeStop.vmod",
 			GearboxType.AMT, TestName = "TruckSpecial CycleDrive_SlopeChangeBeforeStop"),
 		TestCase(SimpleDrivingCycles.CycleDriver_FrequentSlopChange, "Truck_DriverStrategy_SlopeChangeBeforeStop.vmod",
 			GearboxType.AMT, TestName = "TruckSpecial CycleDriver_FrequentSlopChange"),
@@ -249,7 +255,8 @@ namespace TUGraz.VectoCore.Tests.Integration.DriverStrategy
 			run.Run();
 			Assert.IsTrue(run.FinishedWithoutErrors);
 
-			GraphWriter.Write(modFileName, @"..\..\TestData\Integration\DriverStrategy\Vecto2.2\40t Truck\" + modFileName);
+			GraphWriter.Write(modFileName,
+				@"..\..\TestData\Integration\DriverStrategy\Vecto2.2\40t Truck\" + modFileName);
 		}
 
 		[Category("ComparisonV2"),
@@ -308,8 +315,9 @@ namespace TUGraz.VectoCore.Tests.Integration.DriverStrategy
 			var cycle = string.Format(CultureInfo.InvariantCulture, "0, {0}, {1}, {2}\n1000, {3}, {4}, {5}", v1, slope,
 				v1.IsEqual(0) ? 2 : 0, v2, slope, v2.IsEqual(0) ? 2 : 0);
 
-			Coach_Special(cycle, string.Format(CultureInfo.InvariantCulture, "24t Coach_Cycle_Accelerate_{0}_{1}_{2}.vmod",
-				v1, v2, GetSlopeString(slope)));
+			Coach_Special(cycle,
+				string.Format(CultureInfo.InvariantCulture, "24t Coach_Cycle_Accelerate_{0}_{1}_{2}.vmod",
+					v1, v2, GetSlopeString(slope)));
 		}
 
 		[Category("ComparisonV2"),
@@ -382,11 +390,14 @@ namespace TUGraz.VectoCore.Tests.Integration.DriverStrategy
 		TestCase(SimpleDrivingCycles.CycleDrive_30_Decreasing_Slope,
 			"24t Coach_Cycle_Drive_30_Decreasing_Slope.vmod", TestName = "CoachSpecial CycleDrive_30_Decreasing_Slope"),
 		TestCase(SimpleDrivingCycles.CycleDrive_80_Dec_Increasing_Slope,
-			"24t Coach_Cycle_Drive_80_Dec_Increasing_Slope.vmod", TestName = "CoachSpecial CycleDrive_80_Dec_Increasing_Slope"),
+			"24t Coach_Cycle_Drive_80_Dec_Increasing_Slope.vmod",
+			TestName = "CoachSpecial CycleDrive_80_Dec_Increasing_Slope"),
 		TestCase(SimpleDrivingCycles.CycleDrive_50_Dec_Increasing_Slope,
-			"24t Coach_Cycle_Drive_50_Dec_Increasing_Slope.vmod", TestName = "CoachSpecial CycleDrive_50_Dec_Increasing_Slope"),
+			"24t Coach_Cycle_Drive_50_Dec_Increasing_Slope.vmod",
+			TestName = "CoachSpecial CycleDrive_50_Dec_Increasing_Slope"),
 		TestCase(SimpleDrivingCycles.CycleDrive_30_Dec_Increasing_Slope,
-			"24t Coach_Cycle_Drive_30_Dec_Increasing_Slope.vmod", TestName = "CoachSpecialCycleDrive_30_Dec_Increasing_Slope "),
+			"24t Coach_Cycle_Drive_30_Dec_Increasing_Slope.vmod",
+			TestName = "CoachSpecialCycleDrive_30_Dec_Increasing_Slope "),
 		TestCase(SimpleDrivingCycles.CycleDecelerateWhileBrake_80_0_level,
 			"24t Coach_Cycle_DecelerateWhileBrake_80_0_level.vmod",
 			TestName = "CoachSpecial CycleDecelerateWhileBrake_80_0_level"),
@@ -394,15 +405,19 @@ namespace TUGraz.VectoCore.Tests.Integration.DriverStrategy
 			"24t Coach_Cycle_AccelerateWhileBrake_80_0_level.vmod",
 			TestName = "CoachSpecial CycleAccelerateWhileBrake_80_0_level"),
 		TestCase(SimpleDrivingCycles.CycleAccelerateAtBrake_80_0_level,
-			"24t Coach_Cycle_AccelerateAtBrake_80_0_level.vmod", TestName = "CoachSpecial CycleAccelerateAtBrake_80_0_level"),
+			"24t Coach_Cycle_AccelerateAtBrake_80_0_level.vmod",
+			TestName = "CoachSpecial CycleAccelerateAtBrake_80_0_level"),
 		TestCase(SimpleDrivingCycles.CycleAccelerateBeforeBrake_80_0_level,
 			"24t Coach_Cycle_AccelerateBeforeBrake_80_0_level.vmod",
 			TestName = "CoachSpecial CycleAccelerateBeforeBrake_80_0_level"),
-		TestCase(SimpleDrivingCycles.CycleDrive_stop_85_stop_85_level, "24t Coach_Cycle_Drive_stop_85_stop_85_level.vmod",
+		TestCase(SimpleDrivingCycles.CycleDrive_stop_85_stop_85_level,
+			"24t Coach_Cycle_Drive_stop_85_stop_85_level.vmod",
 			TestName = "CoachSpecial CycleDrive_stop_85_stop_85_level"),
-		TestCase(SimpleDrivingCycles.CycleDrive_SlopeChangeBeforeStop, "24t Coach_DriverStrategy_SlopeChangeBeforeStop.vmod",
+		TestCase(SimpleDrivingCycles.CycleDrive_SlopeChangeBeforeStop,
+			"24t Coach_DriverStrategy_SlopeChangeBeforeStop.vmod",
 			TestName = "CoachSpecial CycleDrive_SlopeChangeBeforeStop"),
-		TestCase(SimpleDrivingCycles.CycleDriver_FrequentSlopChange, "24t Coach_DriverStrategy_SlopeChangeBeforeStop.vmod",
+		TestCase(SimpleDrivingCycles.CycleDriver_FrequentSlopChange,
+			"24t Coach_DriverStrategy_SlopeChangeBeforeStop.vmod",
 			TestName = "CoachSpecial CycleDriver_FrequentSlopChange"),
 		]
 		public void Coach_Special(string cycleData, string modFileName)
@@ -471,7 +486,8 @@ namespace TUGraz.VectoCore.Tests.Integration.DriverStrategy
 		]
 		public void AT_Gearbox_Accelerate(double v1, double v2, double slope)
 		{
-			var cycle = string.Format(CultureInfo.InvariantCulture, "0, {0}, {1}, {2}\n1000, {3}, {4}, {5}", v1, slope,
+			var cycle = string.Format(CultureInfo.InvariantCulture,
+				"0, {0}, {1}, {2}\n100, {3}, {4}, {5}\n1000, {3}, {4}, {5}", v1, slope,
 				v1.IsEqual(0) ? 2 : 0, v2, slope, v2.IsEqual(0) ? 2 : 0);
 
 			AT_Gearbox_Special(cycle,
@@ -567,9 +583,11 @@ namespace TUGraz.VectoCore.Tests.Integration.DriverStrategy
 			TestName = "AT-Gearbox CycleAccelerateBeforeBrake_80_0_level"),
 		TestCase(SimpleDrivingCycles.CycleDrive_stop_85_stop_85_level, "AT-Gbx Drive_stop_85_stop_85_level.vmod",
 			TestName = "AT-Gearbox CycleDrive_stop_85_stop_85_level"),
-		TestCase(SimpleDrivingCycles.CycleDrive_SlopeChangeBeforeStop, "24t Coach_DriverStrategy_SlopeChangeBeforeStop.vmod",
+		TestCase(SimpleDrivingCycles.CycleDrive_SlopeChangeBeforeStop,
+			"24t Coach_DriverStrategy_SlopeChangeBeforeStop.vmod",
 			TestName = "AT-Gearbox CycleDrive_SlopeChangeBeforeStop"),
-		TestCase(SimpleDrivingCycles.CycleDriver_FrequentSlopChange, "24t Coach_DriverStrategy_SlopeChangeBeforeStop.vmod",
+		TestCase(SimpleDrivingCycles.CycleDriver_FrequentSlopChange,
+			"24t Coach_DriverStrategy_SlopeChangeBeforeStop.vmod",
 			TestName = "AT-Gearbox CycleDriver_FrequentSlopChange"),
 		]
 		public void AT_Gearbox_Special(string cycleData, string modFileName)
