@@ -31,10 +31,13 @@
 
 using System;
 using System.Globalization;
+using System.Linq;
 using NUnit.Framework;
+using TUGraz.IVT.VectoAPI;
 using TUGraz.VectoCommon.Models;
 using TUGraz.VectoCommon.Utils;
 using TUGraz.VectoCore.Models.Simulation.Data;
+using TUGraz.VectoCore.OutputData.FileIO;
 using TUGraz.VectoCore.Tests.Utils;
 
 namespace TUGraz.VectoCore.Tests.Integration.DriverStrategy
@@ -578,6 +581,30 @@ namespace TUGraz.VectoCore.Tests.Integration.DriverStrategy
 			Assert.IsTrue(run.FinishedWithoutErrors);
 
 			//GraphWriter.Write(modFileName, @"..\..\TestData\Integration\DriverStrategy\Vecto2.2\Coach\" + modFileName);
+		}
+
+		[TestCase()]
+		public void HugoTest()
+		{
+			//var source = @"E:\QUAM\Workspace\Projekt HUGO\Jobs generated\Tractor_4x4_vehicle-class-8_EURO6_2018_CO.xml";
+			var source = @"E:\QUAM\Workspace\Projekt HUGO\Jobs generated\Rigid Truck_4x2_vehicle-class-4_EURO1_LH.xml";
+			//@"E:\QUAM\Workspace\Projekt HUGO\Jobs generated\Rigid Truck_4x2_vehicle-class-4_EURO1_LH.xml";
+			var writer = new FileOutputWriter(source);
+			var apiRun = VectoEngineeringApi.VectoInstance(source, writer);
+			try {
+				apiRun.RunSimulation();
+				var status = apiRun.GetProgress();
+				foreach (var progressEntry in status) {
+					if (!progressEntry.Value.Success) {
+						Console.WriteLine("error executing run {0} in job {1}: error: {2}", progressEntry.Key, source,
+							progressEntry.Value.Error.Message);
+						Console.WriteLine(progressEntry.Value.Error.StackTrace);
+					}
+				}
+				Assert.IsFalse(apiRun.GetProgress().Any(x => !x.Value.Success));
+			} catch (Exception e) {
+				Console.WriteLine("Simulation failed: " + e.Message);
+			}
 		}
 	}
 }

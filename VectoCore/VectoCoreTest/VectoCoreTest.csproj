@@ -165,6 +165,10 @@
     <Compile Include="Utils\VectoMathTest.cs" />
   </ItemGroup>
   <ItemGroup>
+    <ProjectReference Include="..\..\..\VECTO_API\VectoEngineeringAPI\VectoEngineeringAPI.csproj">
+      <Project>{41314a40-ab3e-4f43-b1a4-58443f4014f2}</Project>
+      <Name>VectoEngineeringAPI</Name>
+    </ProjectReference>
     <ProjectReference Include="..\..\VectoCommon\VectoCommon\VectoCommon.csproj">
       <Project>{79a066ad-69a9-4223-90f6-6ed5d2d084f4}</Project>
       <Name>VectoCommon</Name>
