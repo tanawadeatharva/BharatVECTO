@@ -339,6 +339,11 @@ namespace TUGraz.VectoCore.Models.SimulationComponent.Impl
 
 		#region ICluchInfo
 
+		public override uint NextGear
+		{
+			get { return DataBus.CycleData.RightSample.Gear; }
+		}
+
 		public override bool ClutchClosed(Second absTime)
 		{
 			return (DataBus.DriverBehavior == DrivingBehavior.Braking
@@ -378,6 +383,11 @@ namespace TUGraz.VectoCore.Models.SimulationComponent.Impl
 			}
 
 			public IGearbox Gearbox { get; set; }
+
+			public uint NextGear
+			{
+				get { throw new System.NotImplementedException(); }
+			}
 		}
 	}
 }
