@@ -353,6 +353,7 @@ namespace TUGraz.VectoCore.Models.SimulationComponent.Impl
 			container[ModalResultField.T_eng_fcmap] = CurrentState.EngineTorque;
 
 			container[ModalResultField.P_eng_full] = CurrentState.DynamicFullLoadTorque * avgEngineSpeed;
+			container[ModalResultField.P_eng_full_stat] = CurrentState.StationaryFullLoadTorque * avgEngineSpeed;
 			container[ModalResultField.P_eng_drag] = CurrentState.FullDragTorque * avgEngineSpeed;
 			container[ModalResultField.Tq_full] = CurrentState.DynamicFullLoadTorque;
 			container[ModalResultField.Tq_drag] = CurrentState.FullDragTorque;
@@ -436,11 +437,15 @@ namespace TUGraz.VectoCore.Models.SimulationComponent.Impl
 				var tStarPrev = pt1 * Math.Log(1.0 / (1 - powerRatio), Math.E).SI<Second>();
 				var tStar = tStarPrev + PreviousState.dt;
 				dynFullPowerCalculated = stationaryFullLoadPower * (1 - Math.Exp((-tStar / pt1).Value()));
+				dynFullPowerCalculated = VectoMath.Max(PreviousState.EnginePower, dynFullPowerCalculated);
 			}
 
 			// new check in vecto 3.x (according to Martin Rexeis)
 			if (dynFullPowerCalculated < StationaryIdleFullLoadPower) {
 				dynFullPowerCalculated = StationaryIdleFullLoadPower;
+			}
+			if (dynFullPowerCalculated > stationaryFullLoadPower) {
+				dynFullPowerCalculated = stationaryFullLoadPower;
 			}
 
 			return dynFullPowerCalculated;
