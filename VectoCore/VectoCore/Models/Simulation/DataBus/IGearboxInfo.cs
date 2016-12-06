@@ -56,8 +56,15 @@ namespace TUGraz.VectoCore.Models.Simulation.DataBus
 
 		Watt GearboxLoss();
 
-        Second LastShift { get; }
+		Second LastShift { get; }
 
-	    GearData GetGearData(uint gear);
+		GearData GetGearData(uint gear);
+
+		/// <summary>
+		/// Returns the next gear during shifting operations
+		/// </summary>
+		uint NextGear { get; }
+
+		Second TractionInterruption { get; }
 	}
 }

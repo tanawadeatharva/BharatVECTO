@@ -29,6 +29,7 @@
 *   Martin Rexeis, rexeis@ivt.tugraz.at, IVT, Graz University of Technology
 */
 
+using System;
 using System.Linq;
 using TUGraz.VectoCommon.Exceptions;
 using TUGraz.VectoCommon.Models;
@@ -88,12 +89,6 @@ namespace TUGraz.VectoCore.Models.SimulationComponent.Impl
 			RightSample.MoveNext();
 
 			IdleStart = null;
-		}
-
-		public void ActivateDoubleClutch(Second shiftTime, PerSecond targetVelocity)
-		{
-			// todo mk 20161205: use double clutching during pto controller?
-			return;
 		}
 
 		public Second GetNextCycleTime()

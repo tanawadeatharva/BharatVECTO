@@ -79,11 +79,6 @@ namespace TUGraz.VectoCore.Models.SimulationComponent.Impl
 			_currentController = _idleController;
 		}
 
-		public void ActivateDoubleClutch(Second shiftTime, PerSecond targetVelocity)
-		{
-			_currentController.ActivateDoubleClutch(shiftTime, targetVelocity);
-		}
-
 		public void ActivatePTO()
 		{
 			_currentController = _ptoController;
@@ -110,9 +105,7 @@ namespace TUGraz.VectoCore.Models.SimulationComponent.Impl
 			{
 				if (_ptoController != null)
 					return _ptoController.Duration;
-				else {
-					return 0.SI<Second>();
-				}
+				return 0.SI<Second>();
 			}
 		}
 	}

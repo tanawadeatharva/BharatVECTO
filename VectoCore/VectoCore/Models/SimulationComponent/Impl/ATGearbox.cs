@@ -88,6 +88,11 @@ namespace TUGraz.VectoCore.Models.SimulationComponent.Impl
 			TorqueConverter.NextComponent = other;
 		}
 
+		public override uint NextGear
+		{
+			get { return _strategy.NextGear; }
+		}
+
 		public override bool ClutchClosed(Second absTime)
 		{
 			return true;

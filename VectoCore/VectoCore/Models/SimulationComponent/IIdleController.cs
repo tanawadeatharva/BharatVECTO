@@ -37,8 +37,6 @@ namespace TUGraz.VectoCore.Models.SimulationComponent
 	public interface IIdleController : ITnOutPort
 	{
 		ITnOutPort RequestPort { set; }
-
 		void Reset();
-		void ActivateDoubleClutch(Second shiftTime, PerSecond targetVelocity);
 	}
 }
