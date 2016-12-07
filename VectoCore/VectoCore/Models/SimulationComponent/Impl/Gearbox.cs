@@ -223,7 +223,7 @@ namespace TUGraz.VectoCore.Models.SimulationComponent.Impl
 			var shiftTimeExceeded = absTime.IsSmaller(_engageTime) &&
 									_engageTime.IsSmaller(absTime + dt, Constants.SimulationSettings.LowerBoundTimeInterval);
 			// allow 5% tolerance of shift time
-			if (shiftTimeExceeded && (_engageTime - absTime) > Constants.SimulationSettings.LowerBoundTimeInterval/2) {
+			if (shiftTimeExceeded && (_engageTime - absTime) > Constants.SimulationSettings.LowerBoundTimeInterval / 2) {
 				return new ResponseFailTimeInterval {
 					Source = this,
 					DeltaT = _engageTime - absTime,
@@ -374,6 +374,9 @@ namespace TUGraz.VectoCore.Models.SimulationComponent.Impl
 			container[ModalResultField.P_gbx_loss] = CurrentState.TransmissionTorqueLoss * avgInAngularSpeed;
 			container[ModalResultField.P_gbx_inertia] = CurrentState.InertiaTorqueLossOut * avgInAngularSpeed;
 			container[ModalResultField.P_gbx_in] = CurrentState.InTorque * avgInAngularSpeed;
+			container[ModalResultField.n_gbx_out_avg] = (PreviousState.OutAngularVelocity +
+														CurrentState.OutAngularVelocity) / 2.0;
+			container[ModalResultField.T_gbx_out] = CurrentState.OutTorque;
 		}
 
 		protected override void DoCommitSimulationStep()

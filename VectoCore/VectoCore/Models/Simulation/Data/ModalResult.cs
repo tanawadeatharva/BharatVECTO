@@ -235,6 +235,10 @@ namespace TUGraz.VectoCore.Models.Simulation.Data
 		/// </summary>
 		[ModalResultField(typeof(uint), caption: "Gear [-]")] Gear,
 
+		[ModalResultField(typeof(SI), caption: "n_gbx_out_avg [1/min]", outputFactor: 60 / (2 * Math.PI))] n_gbx_out_avg,
+
+		[ModalResultField(typeof(SI), caption: "T_gbx_out [Nm]")] T_gbx_out,
+
 		/// <summary>
 		///     [kW]	Gearbox losses.
 		/// </summary>
