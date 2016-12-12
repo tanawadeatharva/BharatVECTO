@@ -308,6 +308,8 @@ namespace TUGraz.VectoCore.Models.Simulation.Data
 
 		[ModalResultField(typeof(SI), caption: "P_eng_fcmap [kW]", outputFactor: 1e-3)] P_eng_fcmap,
 
+		[ModalResultField(typeof(SI), caption: "P_eng_full_stat [kW]", outputFactor: 1e-3)] P_eng_full_stat,
+
 		/// <summary>
 		///     [kW]	Power demand of Auxiliary with ID xxx. See also Aux Dialog and Driving Cycle.
 		/// </summary>
