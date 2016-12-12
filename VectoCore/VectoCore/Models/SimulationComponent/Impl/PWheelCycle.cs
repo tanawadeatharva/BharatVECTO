@@ -65,6 +65,15 @@ namespace TUGraz.VectoCore.Models.SimulationComponent.Impl
 			}
 		}
 
+		public override IResponse Initialize()
+		{
+			var first = Data.Entries[0];
+			AbsTime = first.Time;
+			var response = NextComponent.Initialize(first.Torque, first.WheelAngularVelocity);
+			response.AbsTime = AbsTime;
+			return response;
+		}
+
 		public override IResponse Request(Second absTime, Second dt)
 		{
 			if (RightSample.Current == null) {
