@@ -132,7 +132,13 @@ namespace TUGraz.VectoCore.Models.Simulation.Impl
 				Log.Error("SIMULATION RUN ABORTED! ========================");
 				Log.Error(ve);
 				Container.RunStatus = Status.Aborted;
-				Container.FinishSimulation();
+				try {
+					Container.FinishSimulation();
+				} catch (Exception ve2) {
+					ve = new VectoException("Multiple Exceptions occured.",
+						new AggregateException(ve, new VectoException("Exception during finishing Simulation.", ve2)));
+				}
+
 				throw new VectoSimulationException("{6} - absTime: {0}, distance: {1}, dt: {2}, v: {3}, Gear: {4} | {5}", ve,
 					AbsTime, Container.Distance, dt, Container.VehicleSpeed, TryCatch(() => Container.Gear), ve.Message,
 					RunIdentifier);
