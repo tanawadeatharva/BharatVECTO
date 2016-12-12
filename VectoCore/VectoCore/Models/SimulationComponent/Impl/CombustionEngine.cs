@@ -534,8 +534,9 @@ namespace TUGraz.VectoCore.Models.SimulationComponent.Impl
 									_dataBus.GetGearData(_dataBus.NextGear).Ratio;
 				var velocitySlope = (targetVelocity - _engine.PreviousState.EngineSpeed) / _dataBus.TractionInterruption;
 
-				var nextAngularSpeed = (velocitySlope * dt + _engine.PreviousState.EngineSpeed)
-					.LimitTo(_engine.ModelData.IdleSpeed, _engine.EngineRatedSpeed);
+				var nextAngularSpeed = (velocitySlope * dt + _engine.PreviousState.EngineSpeed);
+				if (nextAngularSpeed < _engine.ModelData.IdleSpeed)
+					nextAngularSpeed = _engine.ModelData.IdleSpeed;
 
 				var retVal = RequestPort.Request(absTime, dt, 0.SI<NewtonMeter>(), nextAngularSpeed);
 				retVal.Switch().
@@ -548,7 +549,9 @@ namespace TUGraz.VectoCore.Models.SimulationComponent.Impl
 							criterion: result => ((ResponseDryRun)result).DeltaDragLoad.Value());
 						Log.Debug("Found operating point for idling. absTime: {0}, dt: {1}, torque: {2}, angularSpeed: {3}", absTime, dt,
 							0.SI<NewtonMeter>(), angularSpeed);
-						angularSpeed = angularSpeed.LimitTo(_engine.ModelData.IdleSpeed, _engine.EngineRatedSpeed);
+						if (angularSpeed < _engine.ModelData.IdleSpeed)
+							angularSpeed = _engine.ModelData.IdleSpeed;
+
 						retVal = RequestPort.Request(absTime, dt, 0.SI<NewtonMeter>(), angularSpeed);
 					}).
 					Case<ResponseOverload>(r => {
