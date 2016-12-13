@@ -328,13 +328,13 @@ namespace TUGraz.VectoCore.Models.SimulationComponent.Impl
 		protected virtual void ValidatePowerDemand(NewtonMeter torqueDemand)
 		{
 			if (CurrentState.FullDragTorque >= 0 && torqueDemand < 0) {
-				throw new VectoSimulationException("P_engine_drag > 0! Tq_drag: {1}, Tq_eng: {2},  n_eng_avg: {0} [1/min] ",
-					CurrentState.EngineSpeed.AsRPM, CurrentState.FullDragTorque, CurrentState.EngineTorque);
+				throw new VectoSimulationException("P_engine_drag > 0! Tq_drag: {0}, Tq_eng: {1},  n_eng_avg: {2} [1/min] ",
+					CurrentState.FullDragTorque, torqueDemand, CurrentState.EngineSpeed.AsRPM);
 			}
 
 			if (CurrentState.DynamicFullLoadTorque <= 0 && torqueDemand > 0) {
-				throw new VectoSimulationException("P_engine_full < 0! Tq_drag: {1}, Tq_eng: {2},  n_eng_avg: {0} [1/min] ",
-					CurrentState.EngineSpeed.AsRPM, CurrentState.FullDragTorque, CurrentState.EngineTorque);
+				throw new VectoSimulationException("P_engine_full < 0! Tq_full: {0}, Tq_eng: {1},  n_eng_avg: {2} [1/min] ",
+					CurrentState.DynamicFullLoadTorque, torqueDemand, CurrentState.EngineSpeed.AsRPM);
 			}
 		}
 
@@ -514,7 +514,7 @@ namespace TUGraz.VectoCore.Models.SimulationComponent.Impl
 			public IResponse Request(Second absTime, Second dt, NewtonMeter outTorque, PerSecond outAngularVelocity,
 				bool dryRun = false)
 			{
-				if (_dataBus.Gear != _dataBus.NextGear && _dataBus.Gear != 0 && _dataBus.NextGear != 0)
+				if (!_dataBus.VehicleStopped && _dataBus.Gear != _dataBus.NextGear && _dataBus.Gear != 0 && _dataBus.NextGear != 0)
 					return RequestDoubleClutch(absTime, dt, outTorque, outAngularVelocity, dryRun);
 				else {
 					return RequestIdling(absTime, dt, outTorque, outAngularVelocity, dryRun);

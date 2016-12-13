@@ -167,7 +167,6 @@ namespace TUGraz.VectoCore.Models.SimulationComponent.Impl
 			IResponse response;
 			var responseCount = 0;
 			do {
-				DataBus.BrakePower = 0.SI<Watt>();
 				response = NextComponent.Request(absTime, dt, acceleration, gradient);
 				debug.Add(response);
 				response.Switch()

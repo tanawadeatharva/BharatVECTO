@@ -30,6 +30,7 @@
 */
 
 using System;
+using System.Diagnostics;
 using TUGraz.VectoCommon.Exceptions;
 using TUGraz.VectoCommon.Models;
 using TUGraz.VectoCommon.Utils;
@@ -143,7 +144,7 @@ namespace TUGraz.VectoCore.Models.SimulationComponent.Impl
 			}
 
 			// mk 2016-11-30: added additional check for outAngularVelocity due to failing test: MeasuredSpeed_Gear_AT_PS_Run
-			var retVal = Gear == 0 || outAngularVelocity.IsEqual(0)
+			var retVal = Gear == 0 || outAngularVelocity.IsEqual(0, 1)
 				? RequestDisengaged(absTime, dt, outTorque, outAngularVelocity, dryRun)
 				: RequestEngaged(absTime, dt, outTorque, outAngularVelocity, dryRun);
 
@@ -185,10 +186,11 @@ namespace TUGraz.VectoCore.Models.SimulationComponent.Impl
 			var inAngularVelocity = outAngularVelocity * effectiveRatio;
 
 			if (ModelData.Type.AutomaticTransmission() && torqueConverterLocked &&
-				inAngularVelocity.IsSmaller(DataBus.EngineIdleSpeed)) {
+				inAngularVelocity.IsSmaller(DataBus.EngineIdleSpeed) && !dryRun) {
 				Log.Error(
 					"ERROR: EngineSpeed is lower than Idlespeed in Measuredspeed-Cycle with given Gear (Automatic Transmission). AbsTime: {0}, Gear: {1} TC-Active: {2}, EngineSpeed: {3}",
 					absTime, Gear, !torqueConverterLocked, inAngularVelocity.AsRPM);
+
 				return new ResponseEngineSpeedTooLow { Source = this };
 			}
 
@@ -206,12 +208,13 @@ namespace TUGraz.VectoCore.Models.SimulationComponent.Impl
 				if (TorqueConverter != null && !torqueConverterLocked) {
 					return TorqueConverter.Request(absTime, dt, inTorque, inAngularVelocity, true);
 				}
-				if (outTorque.IsSmaller(0) && inAngularVelocity.IsSmaller(DataBus.EngineIdleSpeed)) {
-					//Log.Warn("engine speed would fall below idle speed - disengage! gear from cycle: {0}, vehicle speed: {1}", Gear,
-					//	DataBus.VehicleSpeed);
-					Gear = 0;
-					return RequestDisengaged(absTime, dt, outTorque, outAngularVelocity, dryRun);
-				}
+				// mk 2016-12-13
+				//if (outTorque.IsSmaller(0) && inAngularVelocity.IsSmaller(DataBus.EngineIdleSpeed)) {
+				//	//Log.Warn("engine speed would fall below idle speed - disengage! gear from cycle: {0}, vehicle speed: {1}", Gear,
+				//	//	DataBus.VehicleSpeed);
+				//	Gear = 0;
+				//	return RequestDisengaged(absTime, dt, outTorque, outAngularVelocity, dryRun);
+				//}
 				var dryRunResponse = NextComponent.Request(absTime, dt, inTorque, inAngularVelocity, true);
 				dryRunResponse.GearboxPowerRequest = outTorque * avgOutAngularVelocity;
 				return dryRunResponse;
@@ -229,12 +232,13 @@ namespace TUGraz.VectoCore.Models.SimulationComponent.Impl
 				CurrentState.TorqueConverterActive = true;
 				return TorqueConverter.Request(absTime, dt, inTorque, inAngularVelocity);
 			}
-			if (outTorque.IsSmaller(0) && inAngularVelocity.IsSmaller(DataBus.EngineIdleSpeed)) {
-				Log.Warn("engine speed would fall below idle speed - disengage! gear from cycle: {0}, vehicle speed: {1}", Gear,
-					DataBus.VehicleSpeed);
-				Gear = 0;
-				return RequestDisengaged(absTime, dt, outTorque, outAngularVelocity, dryRun);
-			}
+			// mk 2016-12-13
+			//if (outTorque.IsSmaller(0) && inAngularVelocity.IsSmaller(DataBus.EngineIdleSpeed)) {
+			//	Log.Warn("engine speed would fall below idle speed - disengage! gear from cycle: {0}, vehicle speed: {1}", Gear,
+			//		DataBus.VehicleSpeed);
+			//	Gear = 0;
+			//	return RequestDisengaged(absTime, dt, outTorque, outAngularVelocity, dryRun);
+			//}
 			if (TorqueConverter != null)
 				TorqueConverter.Locked(CurrentState.InTorque, CurrentState.InAngularVelocity);
 			var response = NextComponent.Request(absTime, dt, inTorque, inAngularVelocity);
@@ -282,26 +286,31 @@ namespace TUGraz.VectoCore.Models.SimulationComponent.Impl
 				};
 			}
 
-			CurrentState.SetState(0.SI<NewtonMeter>(), 0.SI<PerSecond>(), outTorque, outAngularVelocity);
+			CurrentState.SetState(0.SI<NewtonMeter>(), 0.SI<PerSecond>(), 0.SI<NewtonMeter>(), outAngularVelocity);
 			CurrentState.Gear = Gear;
 
-			var motoringSpeed = DataBus.EngineSpeed;
-			var first = (ResponseDryRun)NextComponent.Request(absTime, dt, outTorque, motoringSpeed, true);
-			try {
-				motoringSpeed = SearchAlgorithm.Search(motoringSpeed, first.DeltaDragLoad,
-					Constants.SimulationSettings.EngineIdlingSearchInterval,
-					getYValue: result => ((ResponseDryRun)result).DeltaDragLoad,
-					evaluateFunction: n => NextComponent.Request(absTime, dt, 0.SI<NewtonMeter>(), n, true),
-					criterion: result => ((ResponseDryRun)result).DeltaDragLoad.Value());
-			} catch (VectoException) {
-				Log.Warn("CycleGearbox could not find motoring speed for disengaged state.");
+			var motoringSpeed = DataBus.EngineIdleSpeed;
+			var disengagedResponse = NextComponent.Request(absTime, dt, 0.SI<NewtonMeter>(), DataBus.EngineIdleSpeed);
+			if (!(disengagedResponse is ResponseSuccess)) {
+				motoringSpeed = DataBus.EngineSpeed;
+				if (motoringSpeed.IsGreater(DataBus.EngineIdleSpeed)) {
+					var first = (ResponseDryRun)NextComponent.Request(absTime, dt, 0.SI<NewtonMeter>(), motoringSpeed, true);
+					try {
+						motoringSpeed = SearchAlgorithm.Search(motoringSpeed, first.DeltaDragLoad,
+							Constants.SimulationSettings.EngineIdlingSearchInterval,
+							getYValue: result => ((ResponseDryRun)result).DeltaDragLoad,
+							evaluateFunction: n => NextComponent.Request(absTime, dt, 0.SI<NewtonMeter>(), n, true),
+							criterion: result => ((ResponseDryRun)result).DeltaDragLoad.Value());
+					} catch (VectoException) {
+						Log.Warn("CycleGearbox could not find motoring speed for disengaged state.");
+					}
+					motoringSpeed = motoringSpeed.LimitTo(DataBus.EngineIdleSpeed, DataBus.EngineSpeed);
+				}
+				if (TorqueConverter != null)
+					TorqueConverter.Locked(CurrentState.InTorque, motoringSpeed);
+
+				disengagedResponse = NextComponent.Request(absTime, dt, 0.SI<NewtonMeter>(), motoringSpeed);
 			}
-			motoringSpeed = motoringSpeed.LimitTo(DataBus.EngineIdleSpeed, DataBus.EngineSpeed);
-
-			if (TorqueConverter != null)
-				TorqueConverter.Locked(CurrentState.InTorque, motoringSpeed);
-
-			var disengagedResponse = NextComponent.Request(absTime, dt, 0.SI<NewtonMeter>(), motoringSpeed);
 			disengagedResponse.GearboxPowerRequest = outTorque * avgOutAngularVelocity;
 			return disengagedResponse;
 		}
