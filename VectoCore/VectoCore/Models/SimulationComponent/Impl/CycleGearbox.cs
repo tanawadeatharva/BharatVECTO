@@ -184,12 +184,12 @@ namespace TUGraz.VectoCore.Models.SimulationComponent.Impl
 
 			var inAngularVelocity = outAngularVelocity * effectiveRatio;
 
-			if (ModelData.Type.AutomaticTransmission() && torqueConverterLocked &&
+			if (!dryRun && ModelData.Type.AutomaticTransmission() && torqueConverterLocked &&
 				inAngularVelocity.IsSmaller(DataBus.EngineIdleSpeed)) {
 				Log.Error(
 					"ERROR: EngineSpeed is lower than Idlespeed in Measuredspeed-Cycle with given Gear (Automatic Transmission). AbsTime: {0}, Gear: {1} TC-Active: {2}, EngineSpeed: {3}",
 					absTime, Gear, !torqueConverterLocked, inAngularVelocity.AsRPM);
-				return new ResponseEngineSpeedTooLow { Source = this };
+				return new ResponseEngineSpeedTooLow { Source = this, EngineSpeed = inAngularVelocity };
 			}
 
 			if (!inAngularVelocity.IsEqual(0)) {
