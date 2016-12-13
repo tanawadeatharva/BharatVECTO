@@ -128,17 +128,27 @@ namespace TUGraz.VectoCore.Models.Simulation.Impl
 			return Gearbox.GearboxLoss();
 		}
 
-	    public Second LastShift
-	    {
-	        get { return Gearbox.LastShift; }
-	    }
+		public Second LastShift
+		{
+			get { return Gearbox.LastShift; }
+		}
 
-	    public GearData GetGearData(uint gear)
-	    {
-	        return Gearbox.GetGearData(gear);
-	    }
+		public GearData GetGearData(uint gear)
+		{
+			return Gearbox.GetGearData(gear);
+		}
 
-	    #endregion
+		public uint NextGear
+		{
+			get { return Gearbox.NextGear; }
+		}
+
+		public Second TractionInterruption
+		{
+			get { return Gearbox.TractionInterruption; }
+		}
+
+		#endregion
 
 		#region IEngineCockpit
 

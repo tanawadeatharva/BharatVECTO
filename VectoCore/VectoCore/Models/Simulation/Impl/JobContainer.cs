@@ -185,6 +185,7 @@ namespace TUGraz.VectoCore.Models.Simulation.Impl
 			public string RunSuffix;
 		}
 
+		[DebuggerDisplay("{Run.RunIdentifier}: {Run.RunName}, {Run.CycleName}")]
 		internal class RunEntry : LoggingObject
 		{
 			public IVectoRun Run;

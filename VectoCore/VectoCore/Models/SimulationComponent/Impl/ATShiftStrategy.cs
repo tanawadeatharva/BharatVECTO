@@ -44,13 +44,13 @@ namespace TUGraz.VectoCore.Models.SimulationComponent.Impl
 		protected readonly GearboxData Data;
 		protected readonly IDataBus DataBus;
 		private ATGearbox _gearbox;
-		protected readonly NextGearState NextGear;
+		internal readonly NextGearState nextGearState;
 
 		public ATShiftStrategy(GearboxData data, IDataBus dataBus)
 		{
 			Data = data;
 			DataBus = dataBus;
-			NextGear = new NextGearState();
+			nextGearState = new NextGearState();
 		}
 
 		//public ATGearbox Gearbox { get; protected internal set; }
@@ -91,20 +91,20 @@ namespace TUGraz.VectoCore.Models.SimulationComponent.Impl
 			// 0 -> 1C: drive off after stop - engage first gear
 			if (_gearbox.Disengaged && outAngularVelocity.IsGreater(0.SI<PerSecond>())) {
 				Log.Debug("shift requried: drive off after vehicle stopped");
-				NextGear.SetState(absTime, false, 1, false);
+				nextGearState.SetState(absTime, false, 1, false);
 				return true;
 			}
 
 			// _ -> 0: disengage before halting
 			if (DataBus.DriverBehavior == DrivingBehavior.Braking && outTorque.IsSmaller(0) &&
 				DataBus.VehicleSpeed.IsSmaller(Constants.SimulationSettings.ATGearboxDisengageWhenHaltingSpeed)) {
-				NextGear.SetState(absTime, true, 1, false);
+				nextGearState.SetState(absTime, true, 1, false);
 				return true;
 			}
 
 			// 1C -> 0: disengange when negative T_out and positive T_in
 			if (gear == 1 && !_gearbox.TorqueConverterLocked && outTorque.IsSmaller(0) && inTorque.IsGreater(0)) {
-				NextGear.SetState(absTime, true, 1, false);
+				nextGearState.SetState(absTime, true, 1, false);
 				return true;
 			}
 
@@ -114,7 +114,7 @@ namespace TUGraz.VectoCore.Models.SimulationComponent.Impl
 
 			// L -> 0: disengage if inAngularVelocity == 0
 			if (_gearbox.TorqueConverterLocked && inAngularVelocity.IsEqual(0.SI<PerSecond>())) {
-				NextGear.SetState(absTime, true, 1, false);
+				nextGearState.SetState(absTime, true, 1, false);
 				return true;
 			}
 
@@ -151,14 +151,14 @@ namespace TUGraz.VectoCore.Models.SimulationComponent.Impl
 		{
 			// C -> L: switch from torque converter to locked gear
 			if (!_gearbox.TorqueConverterLocked && Data.Gears[gear].HasLockedGear) {
-				NextGear.SetState(absTime, false, gear, true);
+				nextGearState.SetState(absTime, false, gear, true);
 				return;
 			}
 
 			// L -> L+1
 			// C -> C+1
 			if (Data.Gears.ContainsKey(gear + 1)) {
-				NextGear.SetState(absTime, false, gear + 1, _gearbox.TorqueConverterLocked);
+				nextGearState.SetState(absTime, false, gear + 1, _gearbox.TorqueConverterLocked);
 				return;
 			}
 
@@ -171,22 +171,16 @@ namespace TUGraz.VectoCore.Models.SimulationComponent.Impl
 		{
 			// L -> C
 			if (_gearbox.TorqueConverterLocked && Data.Gears[gear].HasTorqueConverter) {
-				NextGear.SetState(absTime, false, gear, false);
+				nextGearState.SetState(absTime, false, gear, false);
 				return;
 			}
 
 			// L -> L-1
 			// C -> C-1
 			if (Data.Gears.ContainsKey(gear - 1)) {
-				NextGear.SetState(absTime, false, gear - 1, _gearbox.TorqueConverterLocked);
+				nextGearState.SetState(absTime, false, gear - 1, _gearbox.TorqueConverterLocked);
 				return;
 			}
-
-			// C -> 0
-			//if (!_gearbox.TorqueConverterLocked && gear == 1) {
-			//	NextGear.SetState(absTime, true, 1, false);
-			//	return;
-			//}
 
 			// L -> 0 -- not allowed!!
 			throw new VectoSimulationException(
@@ -252,13 +246,13 @@ namespace TUGraz.VectoCore.Models.SimulationComponent.Impl
 
 		public uint Engage(Second absTime, Second dt, NewtonMeter outTorque, PerSecond outAngularVelocity)
 		{
-			if (NextGear.AbsTime != null && NextGear.AbsTime.IsEqual(absTime)) {
-				_gearbox.TorqueConverterLocked = NextGear.TorqueConverterLocked;
-				_gearbox.Disengaged = NextGear.Disengaged;
-				NextGear.AbsTime = null;
-				return NextGear.Gear;
+			if (nextGearState.AbsTime != null && nextGearState.AbsTime.IsEqual(absTime)) {
+				_gearbox.TorqueConverterLocked = nextGearState.TorqueConverterLocked;
+				_gearbox.Disengaged = nextGearState.Disengaged;
+				nextGearState.AbsTime = null;
+				return nextGearState.Gear;
 			}
-			NextGear.AbsTime = null;
+			nextGearState.AbsTime = null;
 			return _gearbox.Gear;
 		}
 
@@ -278,6 +272,11 @@ namespace TUGraz.VectoCore.Models.SimulationComponent.Impl
 				}
 				_gearbox = myGearbox;
 			}
+		}
+
+		public uint NextGear
+		{
+			get { return nextGearState.Gear; }
 		}
 
 		/// <summary>
@@ -310,7 +309,7 @@ namespace TUGraz.VectoCore.Models.SimulationComponent.Impl
 					Data.Gears[gear].TorqueConverterShiftPolygon.IsAboveUpshiftCurve(inTorque, inEngineSpeed);
 		}
 
-		protected class NextGearState
+		public class NextGearState
 		{
 			public Second AbsTime;
 			public bool Disengaged;

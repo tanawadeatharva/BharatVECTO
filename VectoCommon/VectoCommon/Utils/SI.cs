@@ -619,6 +619,12 @@ namespace TUGraz.VectoCommon.Utils
 		[DebuggerHidden]
 		private PerSecond(double val) : base(val, new Unit[0], DenominatorDefault) {}
 
+		[DebuggerHidden]
+		public static PerSquareSecond operator /(PerSecond perSecond, Second second)
+		{
+			return SIBase<PerSquareSecond>.Create(perSecond.Val / second.Value());
+		}
+
 		public double AsRPM
 		{
 			get { return Val * 60 / (2 * Math.PI); }

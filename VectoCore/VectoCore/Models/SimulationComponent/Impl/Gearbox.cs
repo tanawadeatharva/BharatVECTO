@@ -64,6 +64,11 @@ namespace TUGraz.VectoCore.Models.SimulationComponent.Impl
 
 		public Second LastDownshift { get; private set; }
 
+		public override uint NextGear
+		{
+			get { return _strategy.NextGear; }
+		}
+
 		public override bool ClutchClosed(Second absTime)
 		{
 			return _engageTime.IsSmallerOrEqual(absTime);
@@ -84,8 +89,7 @@ namespace TUGraz.VectoCore.Models.SimulationComponent.Impl
 			var absTime = 0.SI<Second>();
 			var dt = Constants.SimulationSettings.TargetTimeInterval;
 
-			// MK 2016-02-10: SI doesn't allow inifinity anymore -- therefore simply a very negative value is used.
-			_engageTime = -double.MaxValue.SI<Second>(); //double.NegativeInfinity.SI<Second>();
+			_engageTime = -double.MaxValue.SI<Second>();
 
 			if (Disengaged) {
 				Gear = _strategy.InitGear(absTime, dt, outTorque, outAngularVelocity);
@@ -364,9 +368,6 @@ namespace TUGraz.VectoCore.Models.SimulationComponent.Impl
 
 		protected override void DoWriteModalResults(IModalDataContainer container)
 		{
-			//var avgAngularSpeed = ((PreviousState.InAngularVelocity * ModelData.Gears[CurrentState.Gear].Ratio /
-			//						ModelData.Gears[PreviousState.Gear].Ratio) +
-			//						CurrentState.InAngularVelocity) / 2.0;
 			var avgInAngularSpeed = (PreviousState.OutAngularVelocity +
 									CurrentState.OutAngularVelocity) / 2.0 * ModelData.Gears[Gear].Ratio;
 
