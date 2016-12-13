@@ -166,6 +166,8 @@ namespace TUGraz.VectoCore.OutputData
 					ModalResultField.P_air,
 					ModalResultField.P_roll,
 					ModalResultField.P_veh_inertia,
+					ModalResultField.n_gbx_out_avg,
+					ModalResultField.T_gbx_out
 				});
 
 				if (HasTorqueConverter) {

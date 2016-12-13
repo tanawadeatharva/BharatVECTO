@@ -71,6 +71,7 @@ namespace TUGraz.VectoCore.OutputData.ModFilter
 					ModalResultField.P_gbx_inertia,
 					ModalResultField.P_gbx_loss,
 					ModalResultField.P_angle_loss,
+					ModalResultField.P_retarder_in,
 					ModalResultField.P_ret_loss,
 					ModalResultField.P_veh_inertia,
 					ModalResultField.P_roll,
@@ -86,7 +87,12 @@ namespace TUGraz.VectoCore.OutputData.ModFilter
 					ModalResultField.P_angle_loss,
 					ModalResultField.P_trac);
 
-				SetConstantValues(current, start, end, ModalResultField.FCMap);
+				SetConstantValues(current, start, end, 
+					ModalResultField.FCMap,
+					ModalResultField.FCAUXc,
+					ModalResultField.FCAAUX,
+					ModalResultField.FCWHTCc,
+					ModalResultField.FCFinal);
 
 				//---
 				results.Rows.Add(start);
@@ -111,6 +117,9 @@ namespace TUGraz.VectoCore.OutputData.ModFilter
 				} else if (field.GetDataType() == typeof(int)) {
 					start[(int)field] = current.Field<int>((int)field);
 					end[(int)field] = current.Field<int>((int)field);
+				} else if (field.GetDataType() == typeof(uint)) {
+					start[(int)field] = current.Field<uint>((int)field);
+					end[(int)field] = current.Field<uint>((int)field);
 				}
 			}
 		}
