@@ -304,7 +304,7 @@ namespace TUGraz.VectoCore.Models.SimulationComponent.Impl
 			}
 			var auxDemand = EngineAux == null ? 0.SI<NewtonMeter>() : EngineAux.Initialize(outTorque, outAngularVelocity);
 			PreviousState = new EngineState {
-				EngineSpeed = outAngularVelocity,
+				EngineSpeed = PreviousState.EngineSpeed,
 				dt = 1.SI<Second>(),
 				InertiaTorqueLoss = 0.SI<NewtonMeter>(),
 				StationaryFullLoadTorque = ModelData.FullLoadCurve.FullLoadStationaryTorque(outAngularVelocity),
