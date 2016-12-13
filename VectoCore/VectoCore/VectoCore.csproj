@@ -156,6 +156,9 @@
     <Compile Include="Models\SimulationComponent\Impl\PWheelCycle.cs" />
     <Compile Include="Models\SimulationComponent\Impl\TorqueConverter.cs" />
     <Compile Include="Models\SimulationComponent\Impl\IdleControllerSwitcher.cs" />
+    <Compile Include="Models\Simulation\Data\ModalResultField.cs" />
+    <Compile Include="OutputData\ModFilter\ActualModalDataFilter.cs" />
+    <Compile Include="OutputData\ModFilter\ModalData1HzFilter.cs" />
     <Compile Include="Utils\ProviderExtensions.cs" />
     <Compile Include="Models\Declaration\AirDrag.cs" />
     <Compile Include="Models\Declaration\Fan.cs" />
