@@ -158,7 +158,7 @@ namespace TUGraz.VectoCore.Tests.Models.SimulationComponent
 			vehicleContainer.CommitSimulationStep(absTime, response.SimulationInterval);
 			absTime += response.SimulationInterval;
 
-			Assert.AreEqual(4.9812, vehicleContainer.VehicleSpeed.Value(), Tolerance);
+			Assert.AreEqual(4.9816, vehicleContainer.VehicleSpeed.Value(), Tolerance);
 			Assert.AreEqual(0.2004, response.SimulationInterval.Value(), Tolerance);
 			Assert.AreEqual(engine.PreviousState.FullDragTorque.Value(), engine.PreviousState.EngineTorque.Value(),
 				Constants.SimulationSettings.LineSearchTolerance);

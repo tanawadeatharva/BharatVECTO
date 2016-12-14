@@ -75,14 +75,14 @@ namespace TUGraz.VectoCore.Models.SimulationComponent.Impl
 
 		protected IAuxPort EngineAux;
 
-		public CombustionEngine(IVehicleContainer cockpit, CombustionEngineData modelData, bool pt1Disabled = false)
-			: base(cockpit)
+		public CombustionEngine(IVehicleContainer container, CombustionEngineData modelData, bool pt1Disabled = false)
+			: base(container)
 		{
 			PT1Disabled = pt1Disabled;
 			ModelData = modelData;
 
-			PreviousState.OperationMode = EngineOperationMode.Idle;
-			//PreviousState.EnginePower = 0.SI<Watt>();
+			PreviousState.OperationMode = EngineOperationMode.Undef;
+			PreviousState.EnginePower = 0.SI<Watt>();
 			PreviousState.EngineSpeed = ModelData.IdleSpeed;
 			PreviousState.dt = 1.SI<Second>();
 
@@ -305,7 +305,7 @@ namespace TUGraz.VectoCore.Models.SimulationComponent.Impl
 			}
 			var auxDemand = EngineAux == null ? 0.SI<NewtonMeter>() : EngineAux.Initialize(outTorque, outAngularVelocity);
 			PreviousState = new EngineState {
-				EngineSpeed = PreviousState.EngineSpeed,
+				EngineSpeed = outAngularVelocity,
 				dt = 1.SI<Second>(),
 				InertiaTorqueLoss = 0.SI<NewtonMeter>(),
 				StationaryFullLoadTorque = ModelData.FullLoadCurve.FullLoadStationaryTorque(outAngularVelocity),
@@ -514,9 +514,9 @@ namespace TUGraz.VectoCore.Models.SimulationComponent.Impl
 			public IResponse Request(Second absTime, Second dt, NewtonMeter outTorque, PerSecond outAngularVelocity,
 				bool dryRun = false)
 			{
-				if (!_dataBus.VehicleStopped && _dataBus.Gear != _dataBus.NextGear && _dataBus.Gear != 0 && _dataBus.NextGear != 0)
+				if (!_dataBus.VehicleStopped && _dataBus.Gear != _dataBus.NextGear && _dataBus.Gear != 0 && _dataBus.NextGear != 0) {
 					return RequestDoubleClutch(absTime, dt, outTorque, outAngularVelocity, dryRun);
-				else {
+				} else {
 					return RequestIdling(absTime, dt, outTorque, outAngularVelocity, dryRun);
 				}
 			}
@@ -535,8 +535,9 @@ namespace TUGraz.VectoCore.Models.SimulationComponent.Impl
 				var velocitySlope = (targetVelocity - _engine.PreviousState.EngineSpeed) / _dataBus.TractionInterruption;
 
 				var nextAngularSpeed = (velocitySlope * dt + _engine.PreviousState.EngineSpeed);
-				if (nextAngularSpeed < _engine.ModelData.IdleSpeed)
+				if (nextAngularSpeed < _engine.ModelData.IdleSpeed) {
 					nextAngularSpeed = _engine.ModelData.IdleSpeed;
+				}
 
 				var retVal = RequestPort.Request(absTime, dt, 0.SI<NewtonMeter>(), nextAngularSpeed);
 				retVal.Switch().
@@ -549,8 +550,9 @@ namespace TUGraz.VectoCore.Models.SimulationComponent.Impl
 							criterion: result => ((ResponseDryRun)result).DeltaDragLoad.Value());
 						Log.Debug("Found operating point for idling. absTime: {0}, dt: {1}, torque: {2}, angularSpeed: {3}", absTime, dt,
 							0.SI<NewtonMeter>(), angularSpeed);
-						if (angularSpeed < _engine.ModelData.IdleSpeed)
+						if (angularSpeed < _engine.ModelData.IdleSpeed) {
 							angularSpeed = _engine.ModelData.IdleSpeed;
+						}
 
 						retVal = RequestPort.Request(absTime, dt, 0.SI<NewtonMeter>(), angularSpeed);
 					}).

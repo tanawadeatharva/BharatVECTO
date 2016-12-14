@@ -61,6 +61,7 @@ namespace TUGraz.VectoCore.Models.SimulationComponent.Impl
 			//	mAAUX_Global.advancedAuxModel.Signals.WHTC = Declaration.WHTCcorrFactor
 			CurrentState = new BusAuxState();
 			PreviousState = new BusAuxState();
+			PreviousState.AngularSpeed = engineIdleSpeed;
 
 			AdditionalAux = additionalAux;
 

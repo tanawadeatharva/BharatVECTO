@@ -88,7 +88,7 @@ namespace TUGraz.VectoCore.Models.SimulationComponent.Impl
 
 					var response = _gearbox.Initialize(gear, outTorque, outAngularVelocity);
 
-					var fullLoadPower = response.EnginePowerRequest - response.DeltaFullLoad;
+					var fullLoadPower = response.DynamicFullLoadPower; //EnginePowerRequest - response.DeltaFullLoad;
 					var reserve = 1 - response.EnginePowerRequest / fullLoadPower;
 					var inTorque = response.ClutchPowerRequest / inAngularSpeed;
 
