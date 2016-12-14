@@ -264,6 +264,8 @@ namespace TUGraz.VectoCore.Models.SimulationComponent.Impl
 
 			var response = NextComponent.Request(absTime, dt, inTorque, null);
 
+			CurrentState.InAngularVelocity = response.EngineSpeed;
+
 			response.GearboxPowerRequest = outTorque * avgAngularVelocity;
 
 			return response;
