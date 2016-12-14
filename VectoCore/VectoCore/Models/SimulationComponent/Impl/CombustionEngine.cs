@@ -179,37 +179,35 @@ namespace TUGraz.VectoCore.Models.SimulationComponent.Impl
 				CurrentState.OperationMode = EngineOperationMode.Stopped;
 			}
 
-			CurrentState.dt = dt;
-			CurrentState.EngineSpeed = angularVelocity;
-			var avgEngineSpeed = (PreviousState.EngineSpeed + CurrentState.EngineSpeed) / 2.0;
-			CurrentState.EngineTorqueOut = torqueOut;
-			CurrentState.FullDragTorque = ModelData.FullLoadCurve.DragLoadStationaryTorque(avgEngineSpeed);
+
+			var avgEngineSpeed = (PreviousState.EngineSpeed + angularVelocity) / 2.0;
+
+			var fullDragTorque = ModelData.FullLoadCurve.DragLoadStationaryTorque(avgEngineSpeed);
 			var dynamicFullLoadPower = ComputeFullLoadPower(avgEngineSpeed, dt);
-			CurrentState.DynamicFullLoadTorque = dynamicFullLoadPower / avgEngineSpeed;
-			CurrentState.InertiaTorqueLoss =
+			var dynamicFullLoadTorque = dynamicFullLoadPower / avgEngineSpeed;
+			var inertiaTorqueLoss =
 				Formulas.InertiaPower(angularVelocity, PreviousState.EngineSpeed, ModelData.Inertia, dt) /
 				avgEngineSpeed;
 
 			var auxTorqueDemand = EngineAux == null
 				? 0.SI<NewtonMeter>()
-				: EngineAux.TorqueDemand(absTime, dt, CurrentState.EngineTorqueOut,
-					CurrentState.EngineTorqueOut + CurrentState.InertiaTorqueLoss, angularVelocity, dryRun);
+				: EngineAux.TorqueDemand(absTime, dt, torqueOut,
+					torqueOut + inertiaTorqueLoss, angularVelocity, dryRun);
 			// compute the torque the engine has to provide. powertrain + aux + its own inertia
-			var totalTorqueDemand = torqueOut + auxTorqueDemand + CurrentState.InertiaTorqueLoss;
+			var totalTorqueDemand = torqueOut + auxTorqueDemand + inertiaTorqueLoss;
 
-			Log.Debug("EngineInertiaTorque: {0}", CurrentState.InertiaTorqueLoss);
-			Log.Debug("Drag Curve: torque: {0}, power: {1}", CurrentState.FullDragTorque,
-				CurrentState.FullDragTorque * avgEngineSpeed);
+			Log.Debug("EngineInertiaTorque: {0}", inertiaTorqueLoss);
+			Log.Debug("Drag Curve: torque: {0}, power: {1}", fullDragTorque, fullDragTorque * avgEngineSpeed);
 
-			Log.Debug("Dynamic FullLoad: torque: {0}, power: {1}", CurrentState.DynamicFullLoadTorque, dynamicFullLoadPower);
+			Log.Debug("Dynamic FullLoad: torque: {0}, power: {1}", dynamicFullLoadTorque, dynamicFullLoadPower);
 
 			ValidatePowerDemand(totalTorqueDemand); // requires CurrentState.FullDragTorque and DynamicfullLoad to be set!
 
 			// get max. torque as limited by gearbox. gearbox only limits torqueOut!
 			var gearboxFullLoad = DataBus.GearMaxTorque;
 
-			var deltaFull = ComputeDelta(torqueOut, totalTorqueDemand, CurrentState.DynamicFullLoadTorque, gearboxFullLoad, true);
-			var deltaDrag = ComputeDelta(torqueOut, totalTorqueDemand, CurrentState.FullDragTorque,
+			var deltaFull = ComputeDelta(torqueOut, totalTorqueDemand, dynamicFullLoadTorque, gearboxFullLoad, true);
+			var deltaDrag = ComputeDelta(torqueOut, totalTorqueDemand, fullDragTorque,
 				gearboxFullLoad != null ? -gearboxFullLoad : null, false);
 
 			if (dryRun) {
@@ -218,12 +216,18 @@ namespace TUGraz.VectoCore.Models.SimulationComponent.Impl
 					DeltaDragLoad = deltaDrag * avgEngineSpeed,
 					EnginePowerRequest = torqueOut * avgEngineSpeed,
 					DynamicFullLoadPower = dynamicFullLoadPower,
-					DragPower = CurrentState.FullDragTorque * avgEngineSpeed,
+					DragPower =fullDragTorque * avgEngineSpeed,
 					AuxiliariesPowerDemand = auxTorqueDemand * avgEngineSpeed,
 					EngineSpeed = angularVelocity,
 					Source = this,
 				};
 			}
+			CurrentState.dt = dt;
+			CurrentState.EngineSpeed = angularVelocity;
+			CurrentState.EngineTorqueOut = torqueOut;
+			CurrentState.FullDragTorque = fullDragTorque;
+			CurrentState.DynamicFullLoadTorque = dynamicFullLoadTorque;
+			CurrentState.InertiaTorqueLoss = inertiaTorqueLoss;
 
 			if (
 				(deltaFull * avgEngineSpeed).IsGreater(0.SI<Watt>(), Constants.SimulationSettings.LineSearchTolerance) &&
