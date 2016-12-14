@@ -129,12 +129,15 @@ namespace TUGraz.VectoCore.Models.SimulationComponent.Impl
 				inTorque += inertiaPowerLoss / inAngularVelocity;
 			}
 
-			var response = NextComponent.Initialize(inTorque, inAngularVelocity);
-			response.Switch().
-				Case<ResponseSuccess>().
-				Case<ResponseOverload>().
-				Case<ResponseUnderload>().
-				Default(r => { throw new UnexpectedResponseException("Gearbox.Initialize", r); });
+			var response =
+				(ResponseDryRun)
+					NextComponent.Request(0.SI<Second>(), Constants.SimulationSettings.TargetTimeInterval, inTorque,
+						inAngularVelocity, true); //NextComponent.Initialize(inTorque, inAngularVelocity);
+			//response.Switch().
+			//	Case<ResponseSuccess>().
+			//	Case<ResponseOverload>().
+			//	Case<ResponseUnderload>().
+			//	Default(r => { throw new UnexpectedResponseException("Gearbox.Initialize", r); });
 
 			var fullLoad = DataBus.EngineStationaryFullPower(inAngularVelocity);
 			if (ModelData.Gears[gear].MaxTorque != null) {
@@ -145,6 +148,8 @@ namespace TUGraz.VectoCore.Models.SimulationComponent.Impl
 			return new ResponseDryRun {
 				Source = this,
 				EnginePowerRequest = response.EnginePowerRequest,
+				EngineSpeed = response.EngineSpeed,
+				DynamicFullLoadPower = response.DynamicFullLoadPower,
 				ClutchPowerRequest = response.ClutchPowerRequest,
 				GearboxPowerRequest = outTorque * outAngularVelocity,
 				DeltaFullLoad = response.EnginePowerRequest - fullLoad
