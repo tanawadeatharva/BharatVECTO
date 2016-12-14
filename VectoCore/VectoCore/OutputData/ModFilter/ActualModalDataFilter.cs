@@ -41,6 +41,7 @@ namespace TUGraz.VectoCore.OutputData.ModFilter
 				v_act = 2 * current.Field<MeterPerSecond>((int)ModalResultField.v_act) - v_act;
 				end[(int)ModalResultField.v_act] = v_act;
 
+				SetConstantValues(current, start, end, ModalResultField.v_targ);
 
 				start[(int)ModalResultField.dist] = dist;
 				dist = current.Field<Meter>((int)ModalResultField.dist);
@@ -87,7 +88,7 @@ namespace TUGraz.VectoCore.OutputData.ModFilter
 					ModalResultField.P_angle_loss,
 					ModalResultField.P_trac);
 
-				SetConstantValues(current, start, end, 
+				SetConstantValues(current, start, end,
 					ModalResultField.FCMap,
 					ModalResultField.FCAUXc,
 					ModalResultField.FCAAUX,
