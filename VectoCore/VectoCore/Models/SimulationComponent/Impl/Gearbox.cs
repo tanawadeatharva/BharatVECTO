@@ -325,9 +325,10 @@ namespace TUGraz.VectoCore.Models.SimulationComponent.Impl
 				return dryRunResponse;
 			}
 
+			var response = NextComponent.Request(absTime, dt, inTorque, inAngularVelocity);
 			var shiftAllowed = !inAngularVelocity.IsEqual(0) && !DataBus.VehicleSpeed.IsEqual(0);
 
-			if (shiftAllowed) {
+			if (response is ResponseSuccess && shiftAllowed) {
 				var shiftRequired = _strategy.ShiftRequired(absTime, dt, outTorque, outAngularVelocity, inTorque, inAngularVelocity,
 					Gear, _engageTime);
 
@@ -367,7 +368,7 @@ namespace TUGraz.VectoCore.Models.SimulationComponent.Impl
 			CurrentState.Gear = Gear;
 			// end critical section
 
-			var response = NextComponent.Request(absTime, dt, inTorque, inAngularVelocity);
+			
 			response.GearboxPowerRequest = outTorque * (PreviousState.OutAngularVelocity + CurrentState.OutAngularVelocity) / 2.0;
 
 			return response;
