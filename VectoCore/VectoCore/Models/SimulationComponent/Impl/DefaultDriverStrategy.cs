@@ -478,7 +478,7 @@ namespace TUGraz.VectoCore.Models.SimulationComponent.Impl
 			}
 			var v2 = Driver.DataBus.VehicleSpeed + response.Acceleration * response.SimulationInterval;
 			var newBrakingDistance = Driver.DriverData.AccelerationCurve.ComputeAccelerationDistance(v2,
-										nextAction.NextTargetSpeed) + DefaultDriverStrategy.BrakingSafetyMargin;
+				nextAction.NextTargetSpeed) + DefaultDriverStrategy.BrakingSafetyMargin;
 			switch (DriverStrategy.NextDrivingAction.Action) {
 				case DrivingBehavior.Coasting:
 					var coastingDistance = DriverStrategy.ComputeCoastingDistance(v2, nextAction.CycleEntry);
@@ -491,7 +491,7 @@ namespace TUGraz.VectoCore.Models.SimulationComponent.Impl
 					// if the distance at the end of the simulation interval is smaller than the new ActionDistance
 					// we are safe - go ahead...
 					if ((Driver.DataBus.Distance + ds).IsSmallerOrEqual(nextAction.TriggerDistance - newActionDistance,
-							Constants.SimulationSettings.DriverActionDistanceTolerance * safetyFactor) &&
+						Constants.SimulationSettings.DriverActionDistanceTolerance * safetyFactor) &&
 						(Driver.DataBus.Distance + ds).IsSmallerOrEqual(nextAction.TriggerDistance - newBrakingDistance)) {
 						return response;
 					}
@@ -650,7 +650,7 @@ namespace TUGraz.VectoCore.Models.SimulationComponent.Impl
 
 					Log.Debug("Phase: BRAKE. breaking distance: {0} start braking @ {1}", brakingDistance,
 						DriverStrategy.BrakeTrigger.BrakingStartDistance);
-					if (DriverStrategy.BrakeTrigger.BrakingStartDistance < currentDistance) {
+					if (DriverStrategy.BrakeTrigger.BrakingStartDistance.IsSmaller(currentDistance, Constants.SimulationSettings.DriverActionDistanceTolerance / 2)) {
 						Log.Info("Expected Braking Deceleration could not be reached! {0}",
 							DriverStrategy.BrakeTrigger.BrakingStartDistance - currentDistance);
 					}
@@ -688,8 +688,10 @@ namespace TUGraz.VectoCore.Models.SimulationComponent.Impl
 							}
 						}).
 						Case<ResponseGearShift>(r => {
-							Log.Info("Brake -> Got GearShift response, performing roll action");
-							response = Driver.DrivingActionRoll(absTime, ds, DriverStrategy.BrakeTrigger.NextTargetSpeed, gradient);
+							Log.Info("Brake -> Got GearShift response, performing roll action + brakes");
+							//response = Driver.DrivingActionRoll(absTime, ds, DriverStrategy.BrakeTrigger.NextTargetSpeed, gradient);
+							response = Driver.DrivingActionBrake(absTime, ds, DriverStrategy.BrakeTrigger.NextTargetSpeed,
+								gradient, targetDistance: targetDistance);
 						});
 					break;
 			}
