@@ -114,10 +114,12 @@ namespace TUGraz.VectoCore.Models.SimulationComponent.Impl
 			}
 			Log.Debug("to Engine:   torque: {0}, angularVelocity: {1}, power {2}", torqueIn, angularVelocityIn,
 				Formulas.TorqueToPower(torqueIn, angularVelocityIn));
-			CurrentState.SetState(torqueIn, angularVelocityIn, outTorque, outAngularVelocity);
+
 
 			var retVal = NextComponent.Request(absTime, dt, torqueIn, angularVelocityIn, dryRun);
-
+			if (!dryRun) {
+				CurrentState.SetState(torqueIn, angularVelocityIn, outTorque, outAngularVelocity);
+			}
 			retVal.ClutchPowerRequest = outTorque *
 										((PreviousState.OutAngularVelocity ?? 0.SI<PerSecond>()) + CurrentState.OutAngularVelocity) / 2.0;
 			return retVal;
