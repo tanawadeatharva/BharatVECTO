@@ -14,7 +14,8 @@ namespace TUGraz.VectoCore.Tests.Integration.SimulationRuns
 		[Category("UserBugs"),
 		TestCase("Kies-20161115"),
 		TestCase("Mandl-20161115"),
-		TestCase("Silberholz-20161121")]
+		TestCase("Silberholz-20161121"),
+		TestCase("Kies-20161212_ObjectReference")]
 		public static void RunJob_Eng(string jobName)
 		{
 			var writer = new FileOutputWriter(jobName);

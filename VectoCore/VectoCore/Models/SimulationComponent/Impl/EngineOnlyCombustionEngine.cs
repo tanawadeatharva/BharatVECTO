@@ -43,8 +43,8 @@ namespace TUGraz.VectoCore.Models.SimulationComponent.Impl
 	{
 		protected readonly List<Second> EnginePowerCorrections = new List<Second>();
 
-		public EngineOnlyCombustionEngine(IVehicleContainer cockpit, CombustionEngineData modelData)
-			: base(cockpit, modelData) {}
+		public EngineOnlyCombustionEngine(IVehicleContainer container, CombustionEngineData modelData)
+			: base(container, modelData) {}
 
 		// the behavior in engine-only mode differs a little bit from normal driving cycle simulation: in engine-only mode
 		// certain amount of overload is tolerated.
@@ -71,7 +71,7 @@ namespace TUGraz.VectoCore.Models.SimulationComponent.Impl
 			CurrentState.EngineTorque = totalTorqueDemand;
 
 			CurrentState.FullDragTorque = ModelData.FullLoadCurve.DragLoadStationaryTorque(avgEngineSpeed);
-			var dynamicFullLoadPower = ComputeFullLoadPower(angularVelocity, dt);
+			var dynamicFullLoadPower = ComputeFullLoadPower(avgEngineSpeed, dt);
 			CurrentState.DynamicFullLoadTorque = dynamicFullLoadPower / avgEngineSpeed;
 
 			ValidatePowerDemand(totalTorqueDemand);

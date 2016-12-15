@@ -268,7 +268,8 @@ namespace TUGraz.VectoCore.Tests.Models.SimulationComponent
 			var container = new VehicleContainer(ExecutionMode.Engineering);
 			var gearbox = new MockGearbox(container);
 			var engineData = MockSimulationDataFactory.CreateEngineDataFromFile(CoachEngine);
-
+			var vehicle = new MockVehicle(container);
+			vehicle.MyVehicleSpeed = 0.SI<MeterPerSecond>();
 			var engine = new CombustionEngine(container, engineData);
 			var clutch = new Clutch(container, engineData);
 
@@ -533,7 +534,8 @@ namespace TUGraz.VectoCore.Tests.Models.SimulationComponent
 			aux.AddConstant("CONST", 5000.SI<Watt>());
 
 			gearbox.Gear = 1;
-
+			var vehicle = new MockVehicle(container);
+			vehicle.MyVehicleSpeed = 0.SI<MeterPerSecond>();
 			//gearbox.InPort().Connect(engine.OutPort());
 			gearbox.InPort().Connect(clutch.OutPort());
 			clutch.InPort().Connect(engine.OutPort());

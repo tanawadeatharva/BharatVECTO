@@ -89,5 +89,7 @@ namespace TUGraz.VectoCore.Models.SimulationComponent
 		/// The gearbox.
 		/// </value>
 		IGearbox Gearbox { get; set; }
+
+		uint NextGear { get; }
 	}
 }

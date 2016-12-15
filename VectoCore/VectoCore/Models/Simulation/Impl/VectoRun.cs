@@ -125,25 +125,34 @@ namespace TUGraz.VectoCore.Models.Simulation.Impl
 				Log.Error(vse);
 				Container.RunStatus = Status.Aborted;
 				Container.FinishSimulation();
-				throw new VectoSimulationException("{6} - absTime: {0}, distance: {1}, dt: {2}, v: {3}, Gear: {4} | {5}", vse,
+				throw new VectoSimulationException("{6} ({7} {8}) - absTime: {0}, distance: {1}, dt: {2}, v: {3}, Gear: {4} | {5}",
+					vse,
 					AbsTime, Container.Distance, dt, Container.VehicleSpeed, TryCatch(() => Container.Gear),
-					vse.Message, RunIdentifier);
+					vse.Message, RunIdentifier, CycleName, RunSuffix);
 			} catch (VectoException ve) {
 				Log.Error("SIMULATION RUN ABORTED! ========================");
 				Log.Error(ve);
 				Container.RunStatus = Status.Aborted;
-				Container.FinishSimulation();
-				throw new VectoSimulationException("{6} - absTime: {0}, distance: {1}, dt: {2}, v: {3}, Gear: {4} | {5}", ve,
+				try {
+					Container.FinishSimulation();
+				} catch (Exception ve2) {
+					ve = new VectoException("Multiple Exceptions occured.",
+						new AggregateException(ve, new VectoException("Exception during finishing Simulation.", ve2)));
+				}
+
+				throw new VectoSimulationException("{6} ({7} {8}) - absTime: {0}, distance: {1}, dt: {2}, v: {3}, Gear: {4} | {5}",
+					ve,
 					AbsTime, Container.Distance, dt, Container.VehicleSpeed, TryCatch(() => Container.Gear), ve.Message,
-					RunIdentifier);
+					RunIdentifier, CycleName, RunSuffix);
 			} catch (Exception e) {
 				Log.Error("SIMULATION RUN ABORTED! ========================");
 				Log.Error(e);
 				Container.RunStatus = Status.Aborted;
 				Container.FinishSimulation();
-				throw new VectoSimulationException("{6} - absTime: {0}, distance: {1}, dt: {2}, v: {3}, Gear: {4} | {5}", e, AbsTime,
+				throw new VectoSimulationException("{6} ({7} {8}) - absTime: {0}, distance: {1}, dt: {2}, v: {3}, Gear: {4} | {5}",
+					e, AbsTime,
 					Container.Distance, dt, Container.VehicleSpeed, TryCatch(() => Container.Gear), e.Message,
-					RunIdentifier);
+					RunIdentifier, CycleName, RunSuffix);
 			}
 			Container.RunStatus = Status.Success;
 			Container.FinishSimulation();

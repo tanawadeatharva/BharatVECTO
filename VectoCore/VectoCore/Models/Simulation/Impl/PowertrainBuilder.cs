@@ -221,12 +221,14 @@ namespace TUGraz.VectoCore.Models.Simulation.Impl
 
 		private static IIdleController GetIdleController(PTOData pto, ICombustionEngine engine)
 		{
-			if (pto == null) {
-				return engine.IdleController;
-			} else {
+			var controller = engine.IdleController;
+
+			if (pto != null) {
 				var ptoController = new PTOCycleController(pto.PTOCycle);
-				return new IdleControllerSwitcher(engine.IdleController, ptoController);
+				controller = new IdleControllerSwitcher(engine.IdleController, ptoController);
 			}
+
+			return controller;
 		}
 
 		internal static IAuxInProvider CreateAdvancedAuxiliaries(VectoRunData data, IVehicleContainer container)

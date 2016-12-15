@@ -105,6 +105,7 @@
     <Compile Include="Models\Simulation\GearboxInertiaTest.cs" />
     <Compile Include="Models\Simulation\MockSumWriter.cs" />
     <Compile Include="Models\Simulation\GetSectionTest.cs" />
+    <Compile Include="Reports\ActualModalSimulationDataTest.cs" />
     <Compile Include="Reports\ModDataTest.cs" />
     <Compile Include="Models\Simulation\MeasuredSpeedModeTest.cs" />
     <Compile Include="Models\Simulation\PwheelModeTests.cs" />

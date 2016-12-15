@@ -113,10 +113,10 @@ namespace TUGraz.VectoCore.Tests.Models.SimulationComponent
 			var container = Truck40tPowerTrain.CreatePowerTrain(cycle, "Gearbox_Initialize", 7500.0.SI<Kilogram>(),
 				19300.SI<Kilogram>());
 			var retVal = container.Cycle.Initialize();
-			Assert.AreEqual(11u, container.Gear);
+			Assert.AreEqual(12u, container.Gear);
 			Assert.IsInstanceOfType(retVal, typeof(ResponseSuccess));
 
-			AssertHelper.AreRelativeEqual(1530.263.RPMtoRad(), container.EngineSpeed, toleranceFactor: 1e-3);
+			AssertHelper.AreRelativeEqual(1195.996.RPMtoRad(), container.EngineSpeed, toleranceFactor: 1e-3);
 
 			var absTime = 0.SI<Second>();
 			var ds = 1.SI<Meter>();

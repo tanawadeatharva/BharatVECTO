@@ -430,8 +430,9 @@ namespace TUGraz.VectoCore.Models.SimulationComponent.Impl
 				operatingPoint.SimulationInterval,
 				operatingPoint.Acceleration, DataBus.BrakePower);
 			if (DataBus.BrakePower < 0) {
+				var overload = new ResponseOverload { Source = this, BrakePower =  DataBus.BrakePower, Acceleration = operatingPoint.Acceleration};
 				DataBus.BrakePower = 0.SI<Watt>();
-				return new ResponseOverload { Source = this };
+				return overload;
 			}
 
 			DriverAcceleration = operatingPoint.Acceleration;
