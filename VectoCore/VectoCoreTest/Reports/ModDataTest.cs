@@ -74,7 +74,8 @@ namespace TUGraz.VectoCore.Tests.Reports
 				var gear = (uint)row[(int)ModalResultField.Gear];
 				var time = (Second)row[(int)ModalResultField.time];
 
-				if ((lastGear == 0 && gear != 0) || (lastGear != 0 && gear == 0)) {
+				if ((lastGear == 0 && gear != 0) || (lastGear != 0 && gear == 0))
+				{
 					//skipNext = (uint)row[(int)ModalResultField.Gear] == 0;
 					lastGear = gear;
 					continue;
