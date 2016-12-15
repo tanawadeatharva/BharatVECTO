@@ -144,11 +144,11 @@ namespace TUGraz.VectoCore.Models.SimulationComponent.Impl
 			}
 
 			// mk 2016-11-30: added additional check for outAngularVelocity due to failing test: MeasuredSpeed_Gear_AT_PS_Run
-			var retVal = Gear == 0 || outAngularVelocity.IsEqual(0, 1)
+			var retVal = Gear == 0 || (outAngularVelocity.IsSmallerOrEqual(0, 1) && outTorque.IsSmallerOrEqual(0, 1))
 				? RequestDisengaged(absTime, dt, outTorque, outAngularVelocity, dryRun)
 				: RequestEngaged(absTime, dt, outTorque, outAngularVelocity, dryRun);
 
-			retVal.GearboxPowerRequest = outTorque * outAngularVelocity;
+			retVal.GearboxPowerRequest = outTorque * (PreviousState.OutAngularVelocity + outAngularVelocity) /2;
 			return retVal;
 		}
 
