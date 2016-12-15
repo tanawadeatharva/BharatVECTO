@@ -41,7 +41,9 @@
     "StartTqReserve": 0.0,
     "StartSpeed": 2.0,
     "StartAcc": 0.6,
-    "GearboxType": "ATPowerSplit",
+	"GearboxType": "ATPowerSplit",
+	"PowershiftShiftTime": 0.8,
+	"PowershiftInertiaFactor":  0.7,
     "TorqueConverter": {
       "Enabled": true,
       "File": "TorqueConverterPowerSplit.vtcc",

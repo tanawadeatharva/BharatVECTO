@@ -104,14 +104,21 @@ namespace TUGraz.VectoCore.Models.SimulationComponent.Impl
 					PreviousState.InertiaTorqueLossOut / ratio) * PreviousState.InAngularVelocity;
 		}
 
-	    public Second LastShift { get; protected set; }
+		public Second LastShift { get; protected set; }
 
-	    public GearData GetGearData(uint gear)
-	    {
-	        return ModelData.Gears[gear];
-	    }
+		public GearData GetGearData(uint gear)
+		{
+			return ModelData.Gears[gear];
+		}
 
-	    #endregion
+		public abstract GearInfo NextGear { get; }
+
+		public Second TractionInterruption
+		{
+			get { return ModelData.TractionInterruption; }
+		}
+
+		#endregion
 
 		public abstract bool ClutchClosed(Second absTime);
 	}

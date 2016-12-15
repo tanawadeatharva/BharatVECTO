@@ -36,9 +36,7 @@ using TUGraz.VectoCore.Models.Connector.Ports;
 using TUGraz.VectoCore.Models.Simulation;
 using TUGraz.VectoCore.Models.Simulation.DataBus;
 using TUGraz.VectoCore.Models.SimulationComponent;
-using TUGraz.VectoCore.Models.SimulationComponent.Data;
 using TUGraz.VectoCore.Models.SimulationComponent.Data.Gearbox;
-using TUGraz.VectoCore.Models.SimulationComponent.Impl;
 using TUGraz.VectoCore.OutputData;
 
 namespace TUGraz.VectoCore.Tests.Utils
@@ -61,6 +59,12 @@ namespace TUGraz.VectoCore.Tests.Utils
 
 		public GearboxType GearboxType { get; set; }
 		public uint Gear { get; set; }
+		public GearInfo NextGear { get; private set; }
+
+		public Second TractionInterruption
+		{
+			get { return 1.SI<Second>(); }
+		}
 
 		public MeterPerSecond StartSpeed
 		{
@@ -82,13 +86,14 @@ namespace TUGraz.VectoCore.Tests.Utils
 			return 0.SI<Watt>();
 		}
 
-	    public Second LastShift { get; private set; }
-	    public GearData GetGearData(uint gear)
-	    {
-	        throw new NotImplementedException();
-	    }
+		public Second LastShift { get; private set; }
 
-	    public void Connect(ITnOutPort other)
+		public GearData GetGearData(uint gear)
+		{
+			throw new NotImplementedException();
+		}
+
+		public void Connect(ITnOutPort other)
 		{
 			_outPort = other;
 		}

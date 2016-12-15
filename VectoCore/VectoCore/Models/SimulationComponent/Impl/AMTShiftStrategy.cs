@@ -42,29 +42,19 @@ namespace TUGraz.VectoCore.Models.SimulationComponent.Impl
 	/// </summary>
 	public class AMTShiftStrategy : ShiftStrategy
 	{
-		/// <summary>
-		/// The previous gear before the disengagement. Used for GetGear() when skipGears is false.
-		/// </summary>
-		protected uint PreviousGear;
-
 		protected uint _nextGear { get; set; }
 
 		public AMTShiftStrategy(GearboxData data, IDataBus dataBus) : base(data, dataBus)
 		{
-			PreviousGear = 1;
 			EarlyShiftUp = true;
 			SkipGears = true;
 		}
-
 
 		private bool SpeedTooLowForEngine(uint gear, PerSecond outAngularSpeed)
 		{
 			return (outAngularSpeed * Data.Gears[gear].Ratio).IsSmaller(DataBus.EngineIdleSpeed);
 		}
 
-		// original vecto2.2: (inAngularSpeed - IdleSpeed) / (RatedSpeed - IdleSpeed) >= 1.2
-		//                  =  inAngularSpeed - IdleSpeed >= 1.2*(RatedSpeed - IdleSpeed)
-		//                  =  inAngularSpeed >= 1.2*RatedSpeed - 0.2*IdleSpeed
 		private bool SpeedTooHighForEngine(uint gear, PerSecond outAngularSpeed)
 		{
 			return
@@ -88,10 +78,7 @@ namespace TUGraz.VectoCore.Models.SimulationComponent.Impl
 			return _nextGear;
 		}
 
-		public override void Disengage(Second absTime, Second dt, NewtonMeter outTorque, PerSecond outEngineSpeed)
-		{
-			PreviousGear = Gearbox.Gear;
-		}
+		public override void Disengage(Second absTime, Second dt, NewtonMeter outTorque, PerSecond outEngineSpeed) {}
 
 		public override uint InitGear(Second absTime, Second dt, NewtonMeter outTorque, PerSecond outAngularVelocity)
 		{
@@ -106,7 +93,7 @@ namespace TUGraz.VectoCore.Models.SimulationComponent.Impl
 
 					var response = _gearbox.Initialize(gear, outTorque, outAngularVelocity);
 
-					var fullLoadPower = response.EnginePowerRequest - response.DeltaFullLoad;
+					var fullLoadPower = response.DynamicFullLoadPower; //EnginePowerRequest - response.DeltaFullLoad;
 					var reserve = 1 - response.EnginePowerRequest / fullLoadPower;
 					var inTorque = response.ClutchPowerRequest / inAngularSpeed;
 

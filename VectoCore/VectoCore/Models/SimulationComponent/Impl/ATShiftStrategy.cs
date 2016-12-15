@@ -186,12 +186,6 @@ namespace TUGraz.VectoCore.Models.SimulationComponent.Impl
 				return;
 			}
 
-			// C -> 0
-			//if (!_gearbox.TorqueConverterLocked && gear == 1) {
-			//	_nextGear.SetState(absTime, true, 1, false);
-			//	return;
-			//}
-
 			// L -> 0 -- not allowed!!
 			throw new VectoSimulationException(
 				"ShiftStrategy wanted to shift down but current gear is locked (L) and has no torque converter (C) and disenganging directly from (L) is not allowed.");
@@ -326,7 +320,7 @@ namespace TUGraz.VectoCore.Models.SimulationComponent.Impl
 					Data.Gears[gear].TorqueConverterShiftPolygon.IsAboveUpshiftCurve(inTorque, inEngineSpeed);
 		}
 
-		protected class NextGearState
+		public class NextGearState
 		{
 			public Second AbsTime;
 			public bool Disengaged;

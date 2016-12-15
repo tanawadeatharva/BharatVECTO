@@ -75,6 +75,15 @@ namespace TUGraz.VectoCore.Models.SimulationComponent.Impl
 			AbsTime = 0.SI<Second>();
 		}
 
+		public virtual IResponse Initialize()
+		{
+			var first = Data.Entries[0];
+			AbsTime = first.Time;
+			var response = NextComponent.Initialize(first.Torque, first.AngularVelocity);
+			response.AbsTime = AbsTime;
+			return response;
+		}
+
 		#region ISimulationOutPort
 
 		public IResponse Request(Second absTime, Meter ds)
@@ -141,16 +150,6 @@ namespace TUGraz.VectoCore.Models.SimulationComponent.Impl
 			AbsTime = absTime + dt;
 			response.SimulationInterval = dt;
 			debug.Add(response);
-			return response;
-		}
-
-		public IResponse Initialize()
-		{
-			var first = Data.Entries.First();
-
-			AbsTime = first.Time;
-			var response = NextComponent.Initialize(first.Torque, first.AngularVelocity);
-			response.AbsTime = AbsTime;
 			return response;
 		}
 

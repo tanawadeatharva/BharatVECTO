@@ -44,6 +44,7 @@ using TUGraz.VectoCore.InputData;
 using TUGraz.VectoCore.InputData.Reader.Impl;
 using TUGraz.VectoCore.Models.SimulationComponent.Data;
 using TUGraz.VectoCore.OutputData;
+using TUGraz.VectoCore.OutputData.ModFilter;
 using TUGraz.VectoCore.OutputData.PDF;
 
 namespace TUGraz.VectoCore.Models.Simulation.Impl
@@ -102,6 +103,7 @@ namespace TUGraz.VectoCore.Models.Simulation.Impl
 
 		public bool WriteModalResults { get; set; }
 		public bool ModalResults1Hz { get; set; }
+		public bool ActualModalData { get; set; }
 
 		/// <summary>
 		/// Creates powertrain and initializes it with the component's data.
@@ -111,8 +113,13 @@ namespace TUGraz.VectoCore.Models.Simulation.Impl
 		{
 			var i = 0;
 			var modDataFilter = ModalResults1Hz
-				? new IModalDataFilter[] { new ModalDataContainer.ModalData1HzFilter() }
+				? new IModalDataFilter[] { new ModalData1HzFilter() }
 				: null;
+
+			if (ActualModalData) {
+				modDataFilter = new[] { new ActualModalDataFilter(), };
+			}
+
 
 			var warning1Hz = false;
 
@@ -167,5 +174,7 @@ namespace TUGraz.VectoCore.Models.Simulation.Impl
 				yield return run;
 			}
 		}
+
+
 	}
 }

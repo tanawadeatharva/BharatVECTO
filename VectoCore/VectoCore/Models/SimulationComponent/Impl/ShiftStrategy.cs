@@ -57,7 +57,7 @@ namespace TUGraz.VectoCore.Models.SimulationComponent.Impl
 			Data = data;
 		}
 
-        public abstract GearInfo NextGear { get; }
+		public abstract GearInfo NextGear { get; }
 
 		public abstract uint Engage(Second absTime, Second dt, NewtonMeter outTorque, PerSecond outAngularVelocity);
 
@@ -81,7 +81,7 @@ namespace TUGraz.VectoCore.Models.SimulationComponent.Impl
 			}
 		}
 
-	    protected MeterPerSquareSecond EstimateAccelerationForGear(uint gear, PerSecond gbxAngularVelocityOut)
+		protected MeterPerSquareSecond EstimateAccelerationForGear(uint gear, PerSecond gbxAngularVelocityOut)
 		{
 			if (gear == 0 || gear > _gearbox.ModelData.Gears.Count) {
 				throw new VectoSimulationException("invalid gear: {0}", gear);
@@ -110,7 +110,6 @@ namespace TUGraz.VectoCore.Models.SimulationComponent.Impl
 
 			return acceleration.Cast<MeterPerSquareSecond>();
 		}
-
 
 		/// <summary>
 		/// Tests if the operating point is below the down-shift curve (=outside of shift curve).
