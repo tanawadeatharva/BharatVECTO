@@ -307,11 +307,12 @@ namespace TUGraz.VectoCore.Models.SimulationComponent.Impl
 					}
 					motoringSpeed = motoringSpeed.LimitTo(DataBus.EngineIdleSpeed, DataBus.EngineSpeed);
 				}
-				if (TorqueConverter != null) {
-					TorqueConverter.Locked(CurrentState.InTorque, motoringSpeed);
-				}
+
 
 				disengagedResponse = NextComponent.Request(absTime, dt, 0.SI<NewtonMeter>(), motoringSpeed);
+			}
+			if (TorqueConverter != null) {
+				TorqueConverter.Locked(CurrentState.InTorque, motoringSpeed);
 			}
 			disengagedResponse.GearboxPowerRequest = outTorque * avgOutAngularVelocity;
 			return disengagedResponse;
