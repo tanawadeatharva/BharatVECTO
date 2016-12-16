@@ -35,6 +35,7 @@ using NUnit.Framework;
 using Org.BouncyCastle.Asn1.Esf;
 using TUGraz.VectoCommon.Models;
 using TUGraz.VectoCommon.Utils;
+using TUGraz.VectoCore.Models.Simulation;
 using TUGraz.VectoCore.Models.Simulation.Data;
 using TUGraz.VectoCore.Models.Simulation.DataBus;
 using TUGraz.VectoCore.Models.Simulation.Impl;
@@ -151,7 +152,7 @@ namespace TUGraz.VectoCore.Tests.Models.SimulationComponent
 
 	public class MockEngine : VectoSimulationComponent, IEngineInfo
 	{
-		public MockEngine(VehicleContainer container) : base(container) {}
+		public MockEngine(IVehicleContainer container) : base(container) {}
 
 		public PerSecond EngineSpeed { get; set; }
 		public NewtonMeter EngineTorque { get; set; }

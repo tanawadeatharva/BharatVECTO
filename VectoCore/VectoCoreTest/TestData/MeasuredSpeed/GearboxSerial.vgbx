@@ -60,6 +60,8 @@
 	"StartSpeed": 2.0,
 	"StartAcc": 0.6,
 	"GearboxType": "ATSerial",
+		"PowershiftShiftTime": 0.8,
+	"PowershiftInertiaFactor":  0.7,
 	"TorqueConverter": {
 	  "Enabled": true,
 	  "File": "TorqueConverter.vtcc",

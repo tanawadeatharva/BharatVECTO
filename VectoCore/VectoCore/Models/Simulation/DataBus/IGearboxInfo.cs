@@ -31,6 +31,7 @@
 
 using TUGraz.VectoCommon.Models;
 using TUGraz.VectoCommon.Utils;
+using TUGraz.VectoCore.Models.SimulationComponent;
 using TUGraz.VectoCore.Models.SimulationComponent.Data.Gearbox;
 
 namespace TUGraz.VectoCore.Models.Simulation.DataBus
@@ -63,7 +64,7 @@ namespace TUGraz.VectoCore.Models.Simulation.DataBus
 		/// <summary>
 		/// Returns the next gear during shifting operations
 		/// </summary>
-		uint NextGear { get; }
+		GearInfo NextGear { get; }
 
 		Second TractionInterruption { get; }
 	}

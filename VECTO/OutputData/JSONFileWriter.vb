@@ -6,6 +6,7 @@ Imports Newtonsoft.Json.Linq
 Imports TUGraz.VectoCommon.InputData
 Imports TUGraz.VectoCommon.Models
 Imports TUGraz.VectoCommon.OutputData
+Imports TUGraz.VectoCore
 Imports TUGraz.VectoCore.Models.Declaration
 
 Public Class JSONFileWriter
@@ -77,69 +78,72 @@ Public Class JSONFileWriter
 		'Body
 		Dim body As Dictionary(Of String, Object) = New Dictionary(Of String, Object)
 
-		body.Add("SavedInDeclMode", Cfg.DeclMode)
+        body.Add(JsonKeys.SavedInDeclMode, Cfg.DeclMode)
 
-		body.Add("ModelName", gbx.ModelName)
+        body.Add(JsonKeys.Gearbox_ModelName, gbx.ModelName)
 
-		body.Add("Inertia", gbx.Inertia.Value())
-		body.Add("TracInt", gbx.TractionInterruption.Value())
+        body.Add(JsonKeys.Gearbox_Inertia, gbx.Inertia.Value())
+        body.Add(JsonKeys.Gearbox_TractionInterruption, gbx.TractionInterruption.Value())
 
 		Dim ls As New List(Of Dictionary(Of String, Object))
 		Dim axlgDict As New Dictionary(Of String, Object)
-		axlgDict.Add("Ratio", axl.Ratio)
+        axlgDict.Add(JsonKeys.Gearbox_Gear_Ratio, axl.Ratio)
 		If axl.LossMap Is Nothing Then
-			axlgDict.Add("Efficiency", axl.Efficiency)
+            axlgDict.Add(JsonKeys.Gearbox_Gear_Efficiency, axl.Efficiency)
 		Else
-			axlgDict.Add("LossMap", GetRelativePath(axl.LossMap.Source, Path.GetDirectoryName(filename)))
+            axlgDict.Add(JsonKeys.Gearbox_Gear_LossMapFile, GetRelativePath(axl.LossMap.Source, Path.GetDirectoryName(filename)))
 		End If
 		ls.Add(axlgDict)
 
 		For Each gear As ITransmissionInputData In gbx.Gears
 			Dim gearDict As New Dictionary(Of String, Object)
-			gearDict.Add("Ratio", gear.Ratio)
+            gearDict.Add(JsonKeys.Gearbox_Gear_Ratio, gear.Ratio)
 			If gear.LossMap Is Nothing Then
-				gearDict.Add("Efficiency", gear.Efficiency)
+                gearDict.Add(JsonKeys.Gearbox_Gear_Efficiency, gear.Efficiency)
 			Else
-				gearDict.Add("LossMap", GetRelativePath(gear.LossMap.Source, Path.GetDirectoryName(filename)))
+                gearDict.Add(JsonKeys.Gearbox_Gear_LossMapFile, GetRelativePath(gear.LossMap.Source, Path.GetDirectoryName(filename)))
 			End If
-			gearDict.Add("ShiftPolygon", If _
-							(Not gbx.SavedInDeclarationMode AndAlso Not gear.ShiftPolygon Is Nothing,
-							GetRelativePath(gear.ShiftPolygon.Source, Path.GetDirectoryName(filename)), ""))
-			gearDict.Add("MaxTorque", If(gear.MaxTorque Is Nothing, "", gear.MaxTorque.Value().ToString()))
+            gearDict.Add(JsonKeys.Gearbox_Gear_ShiftPolygonFile, If _
+                            (Not gbx.SavedInDeclarationMode AndAlso Not gear.ShiftPolygon Is Nothing,
+                            GetRelativePath(gear.ShiftPolygon.Source, Path.GetDirectoryName(filename)), ""))
+            gearDict.Add("MaxTorque", If(gear.MaxTorque Is Nothing, "", gear.MaxTorque.Value().ToString()))
 
 			ls.Add(gearDict)
 		Next
-		body.Add("Gears", ls)
+        body.Add(JsonKeys.Gearbox_Gears, ls)
 
-		body.Add("TqReserve", gbx.TorqueReserve * 100)
+        body.Add(JsonKeys.Gearbox_TorqueReserve, gbx.TorqueReserve * 100)
 		'body.Add("SkipGears", gbx.sk)
-		body.Add("ShiftTime", gbx.ShiftTime.Value())
+        body.Add(JsonKeys.Gearbox_ShiftTime, gbx.MinTimeBetweenGearshift.Value())
 		'body.Add("EaryShiftUp", gbx.ShiftInside)
 
-		body.Add("StartTqReserve", gbx.StartTorqueReserve * 100)
-		body.Add("StartSpeed", gbx.StartSpeed.Value())
-		body.Add("StartAcc", gbx.StartAcceleration.Value())
+        body.Add(JsonKeys.Gearbox_StartTorqueReserve, gbx.StartTorqueReserve * 100)
+        body.Add(JsonKeys.Gearbox_StartSpeed, gbx.StartSpeed.Value())
+        body.Add(JsonKeys.Gearbox_StartAcceleration, gbx.StartAcceleration.Value())
 
-		body.Add("GearboxType", gbx.Type.ToString())
+        body.Add(JsonKeys.Gearbox_GearboxType, gbx.Type.ToString())
 
 		Dim torqueConverter As ITorqueConverterEngineeringInputData = gbx.TorqueConverter
 		Dim torqueConverterDict As New Dictionary(Of String, Object)
 		torqueConverterDict.Add("Enabled", Not torqueConverter Is Nothing AndAlso gbx.Type.AutomaticTransmission())
 		If gbx.Type.AutomaticTransmission() AndAlso Not torqueConverter Is Nothing Then
 			torqueConverterDict.Add("File", GetRelativePath(torqueConverter.TCData.Source, Path.GetDirectoryName(filename)))
-			torqueConverterDict.Add("RefRPM", torqueConverter.ReferenceRPM.AsRPM)
-            torqueConverterDict.Add("Inertia", torqueConverter.Inertia.Value())
+            torqueConverterDict.Add(JsonKeys.Gearbox_TorqueConverter_ReferenceRPM, torqueConverter.ReferenceRPM.AsRPM)
+            torqueConverterDict.Add(JsonKeys.Gearbox_TorqueConverter_Inertia, torqueConverter.Inertia.Value())
             torqueConverterDict.Add("MaxTCSpeed", torqueConverter.MaxInputSpeed.AsRPM)
             torqueConverterDict.Add("ShiftPolygon", If _
                                         (Not gbx.SavedInDeclarationMode AndAlso Not torqueConverter.ShiftPolygon Is Nothing,
                                         GetRelativePath(torqueConverter.ShiftPolygon.Source, Path.GetDirectoryName(filename)), ""))
 		End If
-		body.Add("TorqueConverter", torqueConverterDict)
+        body.Add(JsonKeys.Gearbox_TorqueConverter, torqueConverterDict)
 
 
 		body.Add("DownshiftAferUpshiftDelay", gbx.DownshiftAferUpshiftDelay.Value())
 		body.Add("UpshiftAfterDownshiftDelay", gbx.UpshiftAfterDownshiftDelay.Value())
-		body.Add("UpshiftMinAcceleration", gbx.UpshiftMinAcceleration.Value())
+        body.Add("UpshiftMinAcceleration", gbx.UpshiftMinAcceleration.Value())
+
+        body.Add("PowershiftShiftTime", gbx.PowershiftShiftTime.Value())
+        body.Add("PowershiftInertiaFactor", gbx.PowerShiftInertiaFactor)
 
 		WriteFile(header, body, filename)
 	End Sub

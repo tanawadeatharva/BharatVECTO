@@ -216,7 +216,7 @@ namespace TUGraz.VectoCore.Models.SimulationComponent.Impl
 					DeltaDragLoad = deltaDrag * avgEngineSpeed,
 					EnginePowerRequest = torqueOut * avgEngineSpeed,
 					DynamicFullLoadPower = dynamicFullLoadPower,
-					DragPower =fullDragTorque * avgEngineSpeed,
+					DragPower = fullDragTorque * avgEngineSpeed,
 					AuxiliariesPowerDemand = auxTorqueDemand * avgEngineSpeed,
 					EngineSpeed = angularVelocity,
 					Source = this,
@@ -518,7 +518,8 @@ namespace TUGraz.VectoCore.Models.SimulationComponent.Impl
 			public IResponse Request(Second absTime, Second dt, NewtonMeter outTorque, PerSecond outAngularVelocity,
 				bool dryRun = false)
 			{
-				if (!_dataBus.VehicleStopped && _dataBus.Gear != _dataBus.NextGear && _dataBus.Gear != 0 && _dataBus.NextGear != 0) {
+				if (!_dataBus.VehicleStopped && _dataBus.Gear != _dataBus.NextGear.Gear && _dataBus.Gear != 0 &&
+					_dataBus.NextGear.Gear != 0) {
 					return RequestDoubleClutch(absTime, dt, outTorque, outAngularVelocity, dryRun);
 				} else {
 					return RequestIdling(absTime, dt, outTorque, outAngularVelocity, dryRun);
@@ -535,7 +536,7 @@ namespace TUGraz.VectoCore.Models.SimulationComponent.Impl
 					throw new VectoException("Torque has to be 0 for idle requests!");
 				}
 				var targetVelocity = _engine.PreviousState.EngineSpeed / _dataBus.GetGearData(_dataBus.Gear).Ratio *
-									_dataBus.GetGearData(_dataBus.NextGear).Ratio;
+									_dataBus.GetGearData(_dataBus.NextGear.Gear).Ratio;
 				var velocitySlope = (targetVelocity - _engine.PreviousState.EngineSpeed) / _dataBus.TractionInterruption;
 
 				var nextAngularSpeed = (velocitySlope * dt + _engine.PreviousState.EngineSpeed);

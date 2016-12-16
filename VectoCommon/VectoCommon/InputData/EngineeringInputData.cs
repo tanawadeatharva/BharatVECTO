@@ -142,7 +142,7 @@ namespace TUGraz.VectoCommon.InputData
 		/// P086
 		/// cf. VECTO Input Parameters.xlsx
 		/// </summary>
-		Second ShiftTime { get; }
+		Second MinTimeBetweenGearshift { get; }
 
 		///// <summary>
 		///// P083
@@ -187,14 +187,15 @@ namespace TUGraz.VectoCommon.InputData
 		/// </summary>
 		ITorqueConverterEngineeringInputData TorqueConverter { get; }
 
-		[Required, SIRange(0, double.MaxValue)]
 		Second DownshiftAferUpshiftDelay { get; }
 
-		[Required, SIRange(0, double.MaxValue)]
 		Second UpshiftAfterDownshiftDelay { get; }
 
-		[Required, SIRange(0, double.MaxValue)]
 		MeterPerSquareSecond UpshiftMinAcceleration { get; }
+
+        Second PowershiftShiftTime { get; }
+
+        double PowerShiftInertiaFactor { get; }
 	}
 
 	public interface ITorqueConverterEngineeringInputData : ITorqueConverterDeclarationInputData

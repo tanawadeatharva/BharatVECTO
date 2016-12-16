@@ -115,7 +115,7 @@ namespace TUGraz.VectoCore.Tests.Integration
 			return container;
 		}
 
-		private static GearboxData CreateGearboxData(GearboxType gbxType)
+		public static GearboxData CreateGearboxData(GearboxType gbxType)
 		{
 			var ratios = gbxType == GearboxType.ATSerial
 				? new[] { 3.4, 1.9, 1.42, 1.0, 0.7, 0.62 }
@@ -152,6 +152,8 @@ namespace TUGraz.VectoCore.Tests.Integration
 				DownshiftAfterUpshiftDelay = DeclarationData.Gearbox.DownshiftAfterUpshiftDelay,
 				UpshiftAfterDownshiftDelay = DeclarationData.Gearbox.UpshiftAfterDownshiftDelay,
 				UpshiftMinAcceleration = DeclarationData.Gearbox.UpshiftMinAcceleration,
+				PowershiftShiftTime = 0.8.SI<Second>(),
+				PowershiftInertiaFactor = 0.7,
 				TorqueConverterData =
 					TorqueConverterDataReader.ReadFromFile(torqueConverterFile, 1000.RPMtoRad(),
 						MaxTcSpeed, ExecutionMode.Engineering, gbxType == GearboxType.ATSerial ? 1 : 1/ratios[0])

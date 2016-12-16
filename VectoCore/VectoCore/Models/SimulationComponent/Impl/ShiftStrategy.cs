@@ -57,6 +57,8 @@ namespace TUGraz.VectoCore.Models.SimulationComponent.Impl
 			Data = data;
 		}
 
+		public abstract GearInfo NextGear { get; }
+
 		public abstract uint Engage(Second absTime, Second dt, NewtonMeter outTorque, PerSecond outAngularVelocity);
 
 		public abstract void Disengage(Second absTime, Second dt, NewtonMeter outTorque, PerSecond outEngineSpeed);
@@ -79,8 +81,6 @@ namespace TUGraz.VectoCore.Models.SimulationComponent.Impl
 			}
 		}
 
-		public abstract uint NextGear { get; set; }
-
 		protected MeterPerSquareSecond EstimateAccelerationForGear(uint gear, PerSecond gbxAngularVelocityOut)
 		{
 			if (gear == 0 || gear > _gearbox.ModelData.Gears.Count) {
@@ -93,13 +93,13 @@ namespace TUGraz.VectoCore.Models.SimulationComponent.Impl
 			var maxEnginePower = DataBus.EngineStationaryFullPower(nextEngineSpeed);
 
 			var avgSlope =
-			((DataBus.CycleLookAhead(Constants.SimulationSettings.GearboxLookaheadForAccelerationEstimation).Altitude -
-			DataBus.Altitude) / Constants.SimulationSettings.GearboxLookaheadForAccelerationEstimation).Value().SI<Radian>();
+				((DataBus.CycleLookAhead(Constants.SimulationSettings.GearboxLookaheadForAccelerationEstimation).Altitude -
+				DataBus.Altitude) / Constants.SimulationSettings.GearboxLookaheadForAccelerationEstimation).Value().SI<Radian>();
 
 			var airDragLoss = DataBus.AirDragResistance(vehicleSpeed, vehicleSpeed) * DataBus.VehicleSpeed;
 			var rollResistanceLoss = DataBus.RollingResistance(avgSlope) * DataBus.VehicleSpeed;
 			var gearboxLoss = _gearbox.ModelData.Gears[gear].LossMap.GetTorqueLoss(gbxAngularVelocityOut,
-								maxEnginePower / nextEngineSpeed * _gearbox.ModelData.Gears[gear].Ratio).Value * nextEngineSpeed;
+				maxEnginePower / nextEngineSpeed * _gearbox.ModelData.Gears[gear].Ratio).Value * nextEngineSpeed;
 			//DataBus.GearboxLoss();
 			var slopeLoss = DataBus.SlopeResistance(avgSlope) * DataBus.VehicleSpeed;
 			var axleLoss = DataBus.AxlegearLoss();

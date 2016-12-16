@@ -111,7 +111,7 @@ namespace TUGraz.VectoCore.Models.SimulationComponent.Impl
 			return ModelData.Gears[gear];
 		}
 
-		public abstract uint NextGear { get; }
+		public abstract GearInfo NextGear { get; }
 
 		public Second TractionInterruption
 		{

@@ -138,7 +138,7 @@ namespace TUGraz.VectoCore.Models.Simulation.Impl
 			return Gearbox.GetGearData(gear);
 		}
 
-		public uint NextGear
+		public GearInfo NextGear
 		{
 			get { return Gearbox.NextGear; }
 		}

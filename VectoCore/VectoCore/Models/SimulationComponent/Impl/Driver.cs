@@ -68,7 +68,8 @@ namespace TUGraz.VectoCore.Models.SimulationComponent.Impl
 			return NextComponent.Initialize(vehicleSpeed, roadGradient);
 		}
 
-		public IResponse Initialize(MeterPerSecond vehicleSpeed, Radian roadGradient, MeterPerSquareSecond startAcceleration)
+		public IResponse Initialize(MeterPerSecond vehicleSpeed, Radian roadGradient,
+			MeterPerSquareSecond startAcceleration)
 		{
 			DriverBehavior = vehicleSpeed.IsEqual(0) ? DrivingBehavior.Halted : DrivingBehavior.Driving;
 			var retVal = NextComponent.Initialize(vehicleSpeed, roadGradient, startAcceleration);
@@ -101,7 +102,8 @@ namespace TUGraz.VectoCore.Models.SimulationComponent.Impl
 			Log.Debug("==== DRIVER Request (time) ====");
 			Log.Debug(
 				"Request: absTime: {0},  dt: {1}, targetVelocity: {2}, gradient: {3} | distance: {4}, velocity: {5} gear: {6}: vehicle stopped: {7}",
-				absTime, dt, targetVelocity, gradient, DataBus.Distance, DataBus.VehicleSpeed, DataBus.Gear, DataBus.VehicleStopped);
+				absTime, dt, targetVelocity, gradient, DataBus.Distance, DataBus.VehicleSpeed, DataBus.Gear,
+				DataBus.VehicleStopped);
 
 			var retVal = DriverStrategy.Request(absTime, dt, targetVelocity, gradient);
 
@@ -126,7 +128,8 @@ namespace TUGraz.VectoCore.Models.SimulationComponent.Impl
 		/// <param name="gradient"></param>
 		/// <param name="previousResponse"></param>
 		/// <returns></returns>
-		public IResponse DrivingActionAccelerate(Second absTime, Meter ds, MeterPerSecond targetVelocity, Radian gradient,
+		public IResponse DrivingActionAccelerate(Second absTime, Meter ds, MeterPerSecond targetVelocity,
+			Radian gradient,
 			IResponse previousResponse = null)
 		{
 			CurrentAction = "ACCELERATE";
@@ -137,16 +140,24 @@ namespace TUGraz.VectoCore.Models.SimulationComponent.Impl
 			IResponse retVal = null;
 			DriverAcceleration = operatingPoint.Acceleration;
 			var response = previousResponse ??
-							NextComponent.Request(absTime, operatingPoint.SimulationInterval, operatingPoint.Acceleration, gradient);
+							NextComponent.Request(absTime, operatingPoint.SimulationInterval, operatingPoint.Acceleration,
+								gradient);
+			response.Acceleration = operatingPoint.Acceleration;
 
 			response.Switch().
-				Case<ResponseSuccess>(r => {
-					retVal = r; // => return
+				Case<ResponseSuccess>(r => { retVal = r; // => return
 				}).
 				Case<ResponseOverload>(). // do nothing, searchOperatingPoint is called later on
 				Case<ResponseUnderload>(r => {
 					// Delta is negative we are already below the Drag-load curve. activate brakes
 					retVal = r; // => return, strategy should brake
+				}).
+				Case<ResponseFailTimeInterval>(r => {
+					// occurs only with AT gearboxes - extend time interval after gearshift!
+					retVal = new ResponseDrivingCycleDistanceExceeded {
+						Source = this,
+						MaxDistance = r.Acceleration / 2 * r.DeltaT * r.DeltaT + DataBus.VehicleSpeed * r.DeltaT
+					};
 				}).
 				Case<ResponseGearShift>(r => { retVal = r; }).
 				Default(r => { throw new UnexpectedResponseException("DrivingAction Accelerate.", r); });
@@ -156,10 +167,12 @@ namespace TUGraz.VectoCore.Models.SimulationComponent.Impl
 
 				OperatingPoint nextOperatingPoint;
 				try {
-					nextOperatingPoint = SearchOperatingPoint(absTime, ds, gradient, operatingPoint.Acceleration, response);
+					nextOperatingPoint = SearchOperatingPoint(absTime, ds, gradient, operatingPoint.Acceleration,
+						response);
 				} catch (VectoEngineSpeedTooLowException) {
 					// in case of an exception during search the engine-speed got too low - gear disengaged, try roll action.
-					nextOperatingPoint = SearchOperatingPoint(absTime, ds, gradient, operatingPoint.Acceleration, response);
+					nextOperatingPoint = SearchOperatingPoint(absTime, ds, gradient, operatingPoint.Acceleration,
+						response);
 				}
 
 				var limitedOperatingPoint = LimitAccelerationByDriverModel(nextOperatingPoint,
@@ -168,8 +181,10 @@ namespace TUGraz.VectoCore.Models.SimulationComponent.Impl
 					limitedOperatingPoint.SimulationInterval, limitedOperatingPoint.Acceleration);
 
 				DriverAcceleration = limitedOperatingPoint.Acceleration;
-				retVal = NextComponent.Request(absTime, limitedOperatingPoint.SimulationInterval, limitedOperatingPoint.Acceleration,
+				retVal = NextComponent.Request(absTime, limitedOperatingPoint.SimulationInterval,
+					limitedOperatingPoint.Acceleration,
 					gradient);
+				retVal.Acceleration = limitedOperatingPoint.Acceleration;
 				retVal.Switch().
 					Case<ResponseUnderload>(() => operatingPoint = limitedOperatingPoint)
 					. // acceleration is limited by driver model, operating point moves below drag curve
@@ -179,8 +194,10 @@ namespace TUGraz.VectoCore.Models.SimulationComponent.Impl
 						if (DataBus.GearboxType.AutomaticTransmission()) {
 							Log.Info("AT Gearbox - Operating point resulted in an overload, searching again...");
 							// search again for operating point, transmission may have shifted inbetween
-							nextOperatingPoint = SearchOperatingPoint(absTime, ds, gradient, operatingPoint.Acceleration, response);
-							limitedOperatingPoint = LimitAccelerationByDriverModel(nextOperatingPoint, LimitationMode.LimitDecelerationDriver);
+							nextOperatingPoint = SearchOperatingPoint(absTime, ds, gradient, operatingPoint.Acceleration,
+								response);
+							limitedOperatingPoint = LimitAccelerationByDriverModel(nextOperatingPoint,
+								LimitationMode.LimitDecelerationDriver);
 							DriverAcceleration = limitedOperatingPoint.Acceleration;
 							retVal = NextComponent.Request(absTime, limitedOperatingPoint.SimulationInterval,
 								limitedOperatingPoint.Acceleration,
@@ -190,17 +207,30 @@ namespace TUGraz.VectoCore.Models.SimulationComponent.Impl
 								"Operating point with limited acceleration resulted in an overload! trying again with original acceleration {0}",
 								nextOperatingPoint.Acceleration);
 							DriverAcceleration = nextOperatingPoint.Acceleration;
-							retVal = NextComponent.Request(absTime, nextOperatingPoint.SimulationInterval, nextOperatingPoint.Acceleration,
+							retVal = NextComponent.Request(absTime, nextOperatingPoint.SimulationInterval,
+								nextOperatingPoint.Acceleration,
 								gradient);
 						}
 						retVal.Switch().
 							Case<ResponseSuccess>(() => operatingPoint = nextOperatingPoint).
 							Case<ResponseGearShift>(() => operatingPoint = nextOperatingPoint).
-							Default(r => { throw new UnexpectedResponseException("DrivingAction Accelerate after Overload", r); });
+							Default(
+								r => { throw new UnexpectedResponseException("DrivingAction Accelerate after Overload", r); });
 					}).
 					Case<ResponseGearShift>(() => operatingPoint = limitedOperatingPoint).
+					Case<ResponseFailTimeInterval>(r => {
+						// occurs only with AT gearboxes - extend time interval after gearshift!
+						retVal = new ResponseDrivingCycleDistanceExceeded {
+							Source = this,
+							MaxDistance = r.Acceleration / 2 * r.DeltaT * r.DeltaT + DataBus.VehicleSpeed * r.DeltaT
+						};
+					}).
 					Case<ResponseSuccess>(() => operatingPoint = limitedOperatingPoint).
-					Default(r => { throw new UnexpectedResponseException("DrivingAction Accelerate after SearchOperatingPoint.", r); });
+					Default(
+						r => {
+							throw new UnexpectedResponseException(
+								"DrivingAction Accelerate after SearchOperatingPoint.", r);
+						});
 			}
 			CurrentState.Acceleration = operatingPoint.Acceleration;
 			CurrentState.dt = operatingPoint.SimulationInterval;
@@ -248,7 +278,10 @@ namespace TUGraz.VectoCore.Models.SimulationComponent.Impl
 			var retVal = CoastOrRollAction(absTime, ds, maxVelocity, gradient, true);
 			retVal.Switch().
 				Case<ResponseGearShift>(
-					() => { throw new UnexpectedResponseException("DrivingAction Roll: Gearshift during Roll action.", retVal); });
+					() => {
+						throw new UnexpectedResponseException("DrivingAction Roll: Gearshift during Roll action.",
+							retVal);
+					});
 			return retVal;
 		}
 
@@ -278,17 +311,20 @@ namespace TUGraz.VectoCore.Models.SimulationComponent.Impl
 
 			OperatingPoint searchedOperatingPoint;
 			try {
-				searchedOperatingPoint = SearchOperatingPoint(absTime, requestedOperatingPoint.SimulationDistance, gradient,
+				searchedOperatingPoint = SearchOperatingPoint(absTime, requestedOperatingPoint.SimulationDistance,
+					gradient,
 					requestedOperatingPoint.Acceleration, initialResponse, coastingOrRoll: true);
 			} catch (VectoEngineSpeedTooLowException) {
 				// in case of an exception during search the engine-speed got too low - gear disengaged --> try again with disengaged gear.
-				searchedOperatingPoint = SearchOperatingPoint(absTime, requestedOperatingPoint.SimulationDistance, gradient,
+				searchedOperatingPoint = SearchOperatingPoint(absTime, requestedOperatingPoint.SimulationDistance,
+					gradient,
 					requestedOperatingPoint.Acceleration, initialResponse, coastingOrRoll: true);
 			}
 
 			if (!ds.IsEqual(searchedOperatingPoint.SimulationDistance)) {
 				// vehicle is at low speed, coasting would lead to stop before ds is reached: reduce simulated distance to stop distance.
-				Log.Debug("SearchOperatingPoint reduced the max. distance: {0} -> {1}. Issue new request from driving cycle!",
+				Log.Debug(
+					"SearchOperatingPoint reduced the max. distance: {0} -> {1}. Issue new request from driving cycle!",
 					searchedOperatingPoint.SimulationDistance, ds);
 				CurrentState.Response = new ResponseDrivingCycleDistanceExceeded {
 					Source = this,
@@ -300,14 +336,16 @@ namespace TUGraz.VectoCore.Models.SimulationComponent.Impl
 				return CurrentState.Response;
 			}
 
-			Log.Debug("Found operating point for {2}. dt: {0}, acceleration: {1}", searchedOperatingPoint.SimulationInterval,
+			Log.Debug("Found operating point for {2}. dt: {0}, acceleration: {1}",
+				searchedOperatingPoint.SimulationInterval,
 				searchedOperatingPoint.Acceleration, rollAction ? "ROLL" : "COAST");
 
 			var limitedOperatingPoint = LimitAccelerationByDriverModel(searchedOperatingPoint,
 				rollAction ? LimitationMode.NoLimitation : LimitationMode.LimitDecelerationDriver);
 
 			// compute speed at the end of the simulation interval. if it exceeds the limit -> return
-			var v2 = DataBus.VehicleSpeed + limitedOperatingPoint.Acceleration * limitedOperatingPoint.SimulationInterval;
+			var v2 = DataBus.VehicleSpeed +
+					limitedOperatingPoint.Acceleration * limitedOperatingPoint.SimulationInterval;
 			if (v2 > maxVelocity && limitedOperatingPoint.Acceleration.IsGreaterOrEqual(0)) {
 				Log.Debug("vehicle's velocity would exceed given max speed. v2: {0}, max speed: {1}", v2, maxVelocity);
 				return new ResponseSpeedLimitExceeded() { Source = this };
@@ -325,7 +363,8 @@ namespace TUGraz.VectoCore.Models.SimulationComponent.Impl
 				Case<ResponseSuccess>().
 				Case<ResponseUnderload>(). // driver limits acceleration, operating point may be below engine's 
 				//drag load resp. below 0
-				Case<ResponseOverload>(). // driver limits acceleration, operating point may be above 0 (GBX), use brakes
+				Case<ResponseOverload>()
+				. // driver limits acceleration, operating point may be above 0 (GBX), use brakes
 				Case<ResponseGearShift>().
 				Case<ResponseFailTimeInterval>(r => {
 					response = new ResponseDrivingCycleDistanceExceeded {
@@ -335,7 +374,8 @@ namespace TUGraz.VectoCore.Models.SimulationComponent.Impl
 				}).
 				Default(
 					() => {
-						throw new UnexpectedResponseException("CoastOrRoll Action: unhandled response from powertrain.", response);
+						throw new UnexpectedResponseException(
+							"CoastOrRoll Action: unhandled response from powertrain.", response);
 					});
 
 			CurrentState.Response = response;
@@ -357,7 +397,9 @@ namespace TUGraz.VectoCore.Models.SimulationComponent.Impl
 
 			//if (operatingPoint.Acceleration.IsSmaller(0)) {
 			// if we should brake with the max. deceleration and the deceleration changes within the current interval, take the larger deceleration...
-			if (operatingPoint.Acceleration.IsEqual(DriverData.AccelerationCurve.Lookup(DataBus.VehicleSpeed).Deceleration)) {
+			if (
+				operatingPoint.Acceleration.IsEqual(
+					DriverData.AccelerationCurve.Lookup(DataBus.VehicleSpeed).Deceleration)) {
 				var v2 = DataBus.VehicleSpeed + operatingPoint.Acceleration * operatingPoint.SimulationInterval;
 				var nextAcceleration = DriverData.AccelerationCurve.Lookup(v2).Deceleration;
 				var tmp = ComputeTimeInterval(VectoMath.Min(operatingPoint.Acceleration, nextAcceleration),
@@ -378,7 +420,8 @@ namespace TUGraz.VectoCore.Models.SimulationComponent.Impl
 					if (!ds.IsEqual(operatingPoint.SimulationDistance)) {
 						Log.Error(
 							"Unexpected Condition: Distance has been adjusted from {0} to {1}, currentVelocity: {2} acceleration: {3}, targetVelocity: {4}",
-							operatingPoint.SimulationDistance, ds, DataBus.VehicleSpeed, operatingPoint.Acceleration, nextTargetSpeed);
+							operatingPoint.SimulationDistance, ds, DataBus.VehicleSpeed, operatingPoint.Acceleration,
+							nextTargetSpeed);
 						throw new VectoSimulationException("Simulation distance unexpectedly adjusted! {0} -> {1}", ds,
 							operatingPoint.SimulationDistance);
 					}
@@ -387,7 +430,8 @@ namespace TUGraz.VectoCore.Models.SimulationComponent.Impl
 
 			DriverAcceleration = operatingPoint.Acceleration;
 			var response = previousResponse ??
-							NextComponent.Request(absTime, operatingPoint.SimulationInterval, operatingPoint.Acceleration, gradient);
+							NextComponent.Request(absTime, operatingPoint.SimulationInterval, operatingPoint.Acceleration,
+								gradient);
 
 			var point = operatingPoint;
 			response.Switch().
@@ -436,7 +480,8 @@ namespace TUGraz.VectoCore.Models.SimulationComponent.Impl
 			}
 
 			DriverAcceleration = operatingPoint.Acceleration;
-			retVal = NextComponent.Request(absTime, operatingPoint.SimulationInterval, operatingPoint.Acceleration, gradient);
+			retVal = NextComponent.Request(absTime, operatingPoint.SimulationInterval, operatingPoint.Acceleration,
+				gradient);
 
 			retVal.Switch().
 				Case<ResponseSuccess>().
@@ -444,19 +489,22 @@ namespace TUGraz.VectoCore.Models.SimulationComponent.Impl
 				Case<ResponseFailTimeInterval>(r =>
 					retVal = new ResponseDrivingCycleDistanceExceeded() {
 						Source = this,
-						MaxDistance = DataBus.VehicleSpeed * r.DeltaT + operatingPoint.Acceleration / 2 * r.DeltaT * r.DeltaT
+						MaxDistance =
+							DataBus.VehicleSpeed * r.DeltaT + operatingPoint.Acceleration / 2 * r.DeltaT * r.DeltaT
 					}).
 				Case<ResponseUnderload>(r => {
 					if (DataBus.GearboxType.AutomaticTransmission()) {
 						operatingPoint = SearchBrakingPower(absTime, operatingPoint.SimulationDistance, gradient,
 							operatingPoint.Acceleration, response);
 						DriverAcceleration = operatingPoint.Acceleration;
-						retVal = NextComponent.Request(absTime, operatingPoint.SimulationInterval, operatingPoint.Acceleration, gradient);
+						retVal = NextComponent.Request(absTime, operatingPoint.SimulationInterval,
+							operatingPoint.Acceleration, gradient);
 					}
 				}).
 				Default(
 					r => {
-						throw new UnexpectedResponseException("DrivingAction Brake: request failed after braking power was found.", r);
+						throw new UnexpectedResponseException(
+							"DrivingAction Brake: request failed after braking power was found.", r);
 					});
 			CurrentState.Acceleration = operatingPoint.Acceleration;
 			CurrentState.dt = operatingPoint.SimulationInterval;
@@ -498,7 +546,8 @@ namespace TUGraz.VectoCore.Models.SimulationComponent.Impl
 			}
 			if (limitApplied) {
 				operatingPoint.SimulationInterval =
-					ComputeTimeInterval(operatingPoint.Acceleration, operatingPoint.SimulationDistance).SimulationInterval;
+					ComputeTimeInterval(operatingPoint.Acceleration, operatingPoint.SimulationDistance)
+						.SimulationInterval;
 				Log.Debug("Limiting acceleration from {0} to {1}, dt: {2}", originalAcceleration,
 					operatingPoint.Acceleration, operatingPoint.SimulationInterval);
 			}
@@ -522,13 +571,15 @@ namespace TUGraz.VectoCore.Models.SimulationComponent.Impl
 				Case<ResponseGearShift>(r => {
 					IterationStatistics.Increment(this, "SearchBrakingPower");
 					DriverAcceleration = operatingPoint.Acceleration;
-					var nextResp = NextComponent.Request(absTime, operatingPoint.SimulationInterval, operatingPoint.Acceleration,
+					var nextResp = NextComponent.Request(absTime, operatingPoint.SimulationInterval,
+						operatingPoint.Acceleration,
 						gradient, true);
 					deltaPower = nextResp.GearboxPowerRequest;
 				}).
 				Case<ResponseUnderload>(r =>
 					deltaPower = DataBus.ClutchClosed(absTime) ? r.Delta : r.GearboxPowerRequest).
-				Default(r => { throw new UnexpectedResponseException("cannot use response for searching braking power!", r); });
+				Default(
+					r => { throw new UnexpectedResponseException("cannot use response for searching braking power!", r); });
 
 			try {
 				DataBus.BrakePower = SearchAlgorithm.Search(DataBus.BrakePower, deltaPower,
@@ -543,12 +594,15 @@ namespace TUGraz.VectoCore.Models.SimulationComponent.Impl
 
 						IterationStatistics.Increment(this, "SearchBrakingPower");
 						DriverAcceleration = operatingPoint.Acceleration;
-						return NextComponent.Request(absTime, operatingPoint.SimulationInterval, operatingPoint.Acceleration, gradient,
+						return NextComponent.Request(absTime, operatingPoint.SimulationInterval,
+							operatingPoint.Acceleration, gradient,
 							true);
 					},
 					criterion: result => {
 						var response = (ResponseDryRun)result;
-						var delta = DataBus.ClutchClosed(absTime) ? response.DeltaDragLoad : response.GearboxPowerRequest;
+						var delta = DataBus.ClutchClosed(absTime)
+							? response.DeltaDragLoad
+							: response.GearboxPowerRequest;
 						return delta.Value();
 					});
 
@@ -576,7 +630,8 @@ namespace TUGraz.VectoCore.Models.SimulationComponent.Impl
 					Default(r => { throw new UnexpectedResponseException("Unknown response type.", r); });
 			} else {
 				initialResponse.Switch().
-					Case<ResponseOverload>(r => origDelta = r.Delta). // search operating point in drive action after overload
+					Case<ResponseOverload>(r => origDelta = r.Delta)
+					. // search operating point in drive action after overload
 					Case<ResponseDryRun>(r => origDelta = coastingOrRoll ? r.DeltaDragLoad : r.DeltaFullLoad).
 					Default(r => { throw new UnexpectedResponseException("Unknown response type.", r); });
 			}
@@ -595,7 +650,8 @@ namespace TUGraz.VectoCore.Models.SimulationComponent.Impl
 							if (!(acc.IsEqual(0) && DataBus.VehicleSpeed.IsEqual(0))) {
 								var tmp = ComputeTimeInterval(acc, ds);
 								if (tmp.SimulationInterval.IsEqual(0.SI<Second>(), 1e-9.SI<Second>())) {
-									throw new VectoSearchAbortedException("next TimeInterval is 0. a: {0}, v: {1}, dt: {2}", acc,
+									throw new VectoSearchAbortedException(
+										"next TimeInterval is 0. a: {0}, v: {1}, dt: {2}", acc,
 										DataBus.VehicleSpeed, tmp.SimulationInterval);
 								}
 								retVal.Acceleration = tmp.Acceleration;
@@ -610,7 +666,9 @@ namespace TUGraz.VectoCore.Models.SimulationComponent.Impl
 						},
 					criterion: response => {
 						var r = (ResponseDryRun)response;
-						delta = actionRoll ? r.GearboxPowerRequest : (coastingOrRoll ? r.DeltaDragLoad : r.DeltaFullLoad);
+						delta = actionRoll
+							? r.GearboxPowerRequest
+							: (coastingOrRoll ? r.DeltaDragLoad : r.DeltaFullLoad);
 						return delta.Value();
 					},
 					abortCriterion:
@@ -646,7 +704,8 @@ namespace TUGraz.VectoCore.Models.SimulationComponent.Impl
 		/// <param name="ds">distance to reach the next target speed</param>
 		/// <param name="targetVelocity">next vehicle speed to decelerate to</param>
 		/// <param name="limitByDriverModel">if set to false the required acceleration will be computed, regardless of the driver's acceleration curve</param>
-		public OperatingPoint ComputeAcceleration(Meter ds, MeterPerSecond targetVelocity, bool limitByDriverModel = true)
+		public OperatingPoint ComputeAcceleration(Meter ds, MeterPerSecond targetVelocity,
+			bool limitByDriverModel = true)
 		{
 			var currentSpeed = DataBus.VehicleSpeed;
 			var retVal = new OperatingPoint() { SimulationDistance = ds };
@@ -723,10 +782,12 @@ namespace TUGraz.VectoCore.Models.SimulationComponent.Impl
 		{
 			CurrentAction = "HALT";
 			if (!targetVelocity.IsEqual(0) || !DataBus.VehicleStopped) {
-				Log.Error("TargetVelocity ({0}) and VehicleVelocity ({1}) must be zero when vehicle is halting!", targetVelocity,
+				Log.Error("TargetVelocity ({0}) and VehicleVelocity ({1}) must be zero when vehicle is halting!",
+					targetVelocity,
 					DataBus.VehicleSpeed);
 				throw new VectoSimulationException(
-					"TargetVelocity ({0}) and VehicleVelocity ({1}) must be zero when vehicle is halting!", targetVelocity,
+					"TargetVelocity ({0}) and VehicleVelocity ({1}) must be zero when vehicle is halting!",
+					targetVelocity,
 					DataBus.VehicleSpeed);
 			}
 

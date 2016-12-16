@@ -136,6 +136,9 @@ namespace TUGraz.VectoCore.Models.Simulation.Data
 		/// </summary>
 		[ModalResultField(typeof(SI), name: "P_gbx_loss", caption: "P_gbx_loss [kW]", outputFactor: 1e-3)] P_gbx_loss,
 
+
+		[ModalResultField(typeof(SI), name: "P_gbx_shift_loss", caption: "P_gbx_shift_loss [kW]", outputFactor: 1e-3)] P_gbx_shift_loss,
+
 		/// <summary>
 		///     [kW]	Losses in differential / axle transmission.
 		/// </summary>
