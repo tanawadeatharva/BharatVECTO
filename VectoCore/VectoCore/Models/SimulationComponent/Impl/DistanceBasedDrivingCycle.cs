@@ -282,8 +282,9 @@ namespace TUGraz.VectoCore.Models.SimulationComponent.Impl
 
 			if (!stopTime.IsEqual(0) && stopTime.IsEqual(PreviousState.WaitTime)) {
 				// we needed to stop at the current interval in the cycle and have already waited enough time, move on..
-				if (IdleController != null)
+				if (IdleController != null) {
 					IdleController.ActivateIdle();
+				}
 				CycleIntervalIterator.MoveNext();
 			}
 
@@ -303,8 +304,9 @@ namespace TUGraz.VectoCore.Models.SimulationComponent.Impl
 			} else {
 				if (stopTime.IsEqual(PreviousState.WaitTime)) {
 					// we needed to stop at the current interval in the cycle and have already waited enough time, move on..
-					if (IdleController != null)
+					if (IdleController != null) {
 						IdleController.ActivateIdle();
+					}
 					CycleIntervalIterator.MoveNext();
 				}
 			}

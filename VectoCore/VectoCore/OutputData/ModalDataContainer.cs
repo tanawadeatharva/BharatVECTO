@@ -302,5 +302,10 @@ namespace TUGraz.VectoCore.OutputData
 				Auxiliaries[id] = col;
 			}
 		}
+
+		public void Dispose()
+		{
+			Data.Rows.Clear();
+		}
 	}
 }

@@ -114,6 +114,11 @@ namespace TUGraz.VectoCore.Tests.Utils
 			Auxiliaries[id] = Data.Columns[auxColName];
 		}
 
+		public void Dispose()
+		{
+			Data.Rows.Clear();
+		}
+
 		public string RunName { get; set; }
 		public string CycleName { get; set; }
 		public string RunSuffix { get; set; }
