@@ -75,6 +75,7 @@ Description:
 	-mod: write mod-data in addition to sum-data
 	-1Hz: convert mod-data to 1Hz resolution
 	-eng: switch to engineering mode (implies -mod)
+	-q: quiet - disables console output unless verbose information is enabled
 	-v: Shows verbose information (errors and warnings will be displayed)
 	-vv: Shows more verbose information (infos will be displayed)
 	-vvv: Shows debug messages (slow!)
@@ -91,6 +92,8 @@ Examples:
 ";
 
 		private static JobContainer _jobContainer;
+		private static bool _quiet;
+		private static bool _debugEnabled;
 
 		private static int Main(string[] args)
 		{
@@ -102,28 +105,31 @@ Examples:
 					return 0;
 				}
 
+				if (args.Contains("-q")) {
+					_quiet = true;
+				}
+
 				// on -v: activate verbose console logger
 				var logLevel = LogLevel.Fatal;
 
 				// Fatal > Error > Warn > Info > Debug > Trace
-				var debugEnabled = false;
 
 				if (args.Contains("-v")) {
 					// display errors, warnings
 					logLevel = LogLevel.Warn;
-					debugEnabled = true;
+					_debugEnabled = true;
 				} else if (args.Contains("-vv")) {
 					// also display info
 					logLevel = LogLevel.Info;
-					debugEnabled = true;
+					_debugEnabled = true;
 				} else if (args.Contains("-vvv")) {
 					// display debug messages
 					logLevel = LogLevel.Debug;
-					debugEnabled = true;
+					_debugEnabled = true;
 				} else if (args.Contains("-vvvv")) {
 					// display everything!
 					logLevel = LogLevel.Trace;
-					debugEnabled = true;
+					_debugEnabled = true;
 				}
 
 				var config = LogManager.Configuration;
@@ -141,11 +147,12 @@ Examples:
 				}
 				LogManager.Configuration = config;
 
-				if (args.Contains("-V") || debugEnabled) {
+				if (args.Contains("-V") || _debugEnabled) {
 					ShowVersionInformation();
 				}
 
-				var fileList = args.Except(new[] { "-v", "-vv", "-vvv", "-vvvv", "-V", "-mod", "-eng", "-t", "-1Hz" }).ToArray();
+				var fileList =
+					args.Except(new[] { "-v", "-vv", "-vvv", "-vvvv", "-V", "-mod", "-eng", "-t", "-1Hz", "-q", "-act" }).ToArray();
 				var jobFiles =
 					fileList.Where(
 						f =>
@@ -169,30 +176,28 @@ Examples:
 				var mode = ExecutionMode.Declaration;
 				if (args.Contains("-eng")) {
 					mode = ExecutionMode.Engineering;
-					Console.ForegroundColor = ConsoleColor.White;
-					Console.WriteLine(@"Switching to Engineering Mode. Make sure the job-file is saved in engineering mode!");
-					Console.ResetColor();
+					WriteLine(@"Switching to Engineering Mode. Make sure the job-file is saved in engineering mode!",
+						ConsoleColor.White);
 				}
 
 				stopWatch.Start();
 
 				if (!jobFiles.Any()) {
-					Console.ForegroundColor = ConsoleColor.Red;
-					Console.WriteLine(@"No Job files found. Please restart the application with a valid '.vecto' file.");
-					Console.ResetColor();
+					WriteLine(@"No Job files found. Please restart the application with a valid '.vecto' file.", ConsoleColor.Red);
 					return 1;
 				}
 
 				DetectPlugins();
 				var plugins = PluginRegistry.Instance.GetInputDataPlugins().ToArray();
 				foreach (var file in jobFiles) {
-					Console.WriteLine(@"Reading job: " + file);
+					WriteLine(@"Reading job: " + file);
 					if (Path.GetExtension(file) == Constants.FileExtensions.VectoJobFile) {
 						var dataProvider = JSONInputDataFactory.ReadJsonJob(file);
 						fileWriter = new FileOutputWriter(file);
 						var runsFactory = new SimulatorFactory(mode, dataProvider, fileWriter) {
 							ModalResults1Hz = args.Contains("-1Hz"),
-							WriteModalResults = args.Contains("-mod")
+							WriteModalResults = args.Contains("-mod"),
+							ActualModalData = args.Contains("-act")
 						};
 
 						_jobContainer.AddRuns(runsFactory);
@@ -200,12 +205,13 @@ Examples:
 						var handled = false;
 						foreach (var plugin in plugins) {
 							if (!handled && plugin.Value.CanHandleJob(file)) {
-								Console.WriteLine("using plugin: " + plugin.Value.Name);
+								WriteLine("using plugin: " + plugin.Value.Name);
 								var dataProvider = plugin.Value.ReadVectoJob(file);
 								fileWriter = new FileOutputWriter(file);
 								var runsFactory = new SimulatorFactory(mode, dataProvider, fileWriter) {
 									ModalResults1Hz = args.Contains("-1Hz"),
-									WriteModalResults = args.Contains("-mod")
+									WriteModalResults = args.Contains("-mod"),
+									ActualModalData = args.Contains("-act")
 								};
 
 								_jobContainer.AddRuns(runsFactory);
@@ -215,32 +221,29 @@ Examples:
 					}
 				}
 
-				Console.WriteLine();
-				Console.ForegroundColor = ConsoleColor.White;
-				Console.WriteLine(@"Detected cycles:");
-				Console.ResetColor();
+				WriteLine();
+				WriteLine(@"Detected cycles:", ConsoleColor.White);
+
 				foreach (var cycle in _jobContainer.GetCycleTypes()) {
-					Console.WriteLine(@"  {0}: {1}", cycle.Name, cycle.CycleType);
+					WriteLine(string.Format(@"  {0}: {1}", cycle.Name, cycle.CycleType));
 				}
-				Console.WriteLine();
+				WriteLine();
 
 				stopWatch.Stop();
 				timings.Add("Reading input files", stopWatch.Elapsed.TotalMilliseconds);
 				stopWatch.Reset();
 
-				Console.ForegroundColor = ConsoleColor.White;
-				Console.WriteLine(@"Starting simulation runs");
-				if (debugEnabled) {
-					Console.ForegroundColor = ConsoleColor.Yellow;
-					Console.WriteLine(@"Debug-Output is enabled, executing simulation runs sequentially");
+
+				WriteLine(@"Starting simulation runs", ConsoleColor.White);
+				if (_debugEnabled) {
+					WriteLine(@"Debug-Output is enabled, executing simulation runs sequentially", ConsoleColor.Yellow);
 				}
-				Console.ResetColor();
-				Console.WriteLine();
+				WriteLine();
 
 				DisplayWarnings();
-				Console.WriteLine();
+				WriteLine();
 				stopWatch.Start();
-				_jobContainer.Execute(!debugEnabled);
+				_jobContainer.Execute(!_debugEnabled);
 
 				Console.CancelKeyPress += (sender, e) => {
 					if (e.SpecialKey == ConsoleSpecialKey.ControlC) {
@@ -264,18 +267,39 @@ Examples:
 
 				DisplayWarnings();
 			} catch (Exception e) {
-				Console.ForegroundColor = ConsoleColor.Red;
-				Console.Error.WriteLine(e.Message);
-				Console.ResetColor();
+				if (!_quiet) {
+					Console.ForegroundColor = ConsoleColor.Red;
+					Console.Error.WriteLine(e.Message);
+					Console.ResetColor();
 
-				Console.Error.WriteLine("Please see log-file for further details (logs/log.txt)");
-
+					Console.Error.WriteLine("Please see log-file for further details (logs/log.txt)");
+				}
 				Environment.ExitCode = Environment.ExitCode != 0 ? Environment.ExitCode : 1;
 			}
 
+#if DEBUG
+			Console.WriteLine("done.");
 			Console.ReadKey();
-
+#endif
 			return Environment.ExitCode;
+		}
+
+		private static void WriteLine()
+		{
+			if (_quiet && !_debugEnabled) {
+				return;
+			}
+			Console.WriteLine();
+		}
+
+		private static void WriteLine(string message, ConsoleColor foregroundColor = ConsoleColor.Gray)
+		{
+			if (_quiet && !_debugEnabled) {
+				return;
+			}
+			Console.ForegroundColor = foregroundColor;
+			Console.WriteLine(message);
+			Console.ResetColor();
 		}
 
 		private static void DetectPlugins()
@@ -307,6 +331,10 @@ Examples:
 
 		private static void DisplayWarnings()
 		{
+			if (_quiet) {
+				return;
+			}
+
 			if (WarningMessages.Any()) {
 				Console.ForegroundColor = ConsoleColor.Yellow;
 				foreach (var message in WarningMessages) {
@@ -327,13 +355,17 @@ Examples:
 		private static void ShowVersionInformation()
 		{
 			var vectodll = AssemblyName.GetAssemblyName("VectoCore.dll");
-			Console.WriteLine(@"VectoConsole: {0}", Assembly.GetExecutingAssembly().GetName().Version);
-			Console.WriteLine(@"VectoCore: {0}", vectodll.Version);
+			WriteLine(string.Format(@"VectoConsole: {0}", Assembly.GetExecutingAssembly().GetName().Version));
+			WriteLine(string.Format(@"VectoCore: {0}", vectodll.Version));
 		}
 
 		private static void PrintProgress(Dictionary<int, JobContainer.ProgressEntry> progessData,
 			bool showTiming = true)
 		{
+			if (_quiet) {
+				return;
+			}
+
 			Console.SetCursorPosition(0, Console.CursorTop - _numLines);
 			_numLines = 0;
 			var sumProgress = 0.0;
