@@ -196,7 +196,8 @@ Examples:
 						fileWriter = new FileOutputWriter(file);
 						var runsFactory = new SimulatorFactory(mode, dataProvider, fileWriter) {
 							ModalResults1Hz = args.Contains("-1Hz"),
-							WriteModalResults = args.Contains("-mod")
+							WriteModalResults = args.Contains("-mod"),
+							ActualModalData = args.Contains("-act")
 						};
 
 						_jobContainer.AddRuns(runsFactory);
@@ -209,7 +210,8 @@ Examples:
 								fileWriter = new FileOutputWriter(file);
 								var runsFactory = new SimulatorFactory(mode, dataProvider, fileWriter) {
 									ModalResults1Hz = args.Contains("-1Hz"),
-									WriteModalResults = args.Contains("-mod")
+									WriteModalResults = args.Contains("-mod"),
+									ActualModalData = args.Contains("-act")
 								};
 
 								_jobContainer.AddRuns(runsFactory);
