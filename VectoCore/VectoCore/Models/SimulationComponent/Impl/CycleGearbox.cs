@@ -29,8 +29,6 @@
 *   Martin Rexeis, rexeis@ivt.tugraz.at, IVT, Graz University of Technology
 */
 
-using System;
-using System.Diagnostics;
 using TUGraz.VectoCommon.Exceptions;
 using TUGraz.VectoCommon.Models;
 using TUGraz.VectoCommon.Utils;
@@ -310,7 +308,6 @@ namespace TUGraz.VectoCore.Models.SimulationComponent.Impl
 					motoringSpeed = motoringSpeed.LimitTo(DataBus.EngineIdleSpeed, DataBus.EngineSpeed);
 				}
 
-
 				disengagedResponse = NextComponent.Request(absTime, dt, 0.SI<NewtonMeter>(), motoringSpeed);
 			}
 			if (TorqueConverter != null) {
@@ -370,8 +367,8 @@ namespace TUGraz.VectoCore.Models.SimulationComponent.Impl
 		public override bool ClutchClosed(Second absTime)
 		{
 			return (DataBus.DriverBehavior == DrivingBehavior.Braking
-				? DataBus.CycleData.LeftSample.Gear
-				: DataBus.CycleData.RightSample.Gear) != 0;
+						? DataBus.CycleData.LeftSample.Gear
+						: DataBus.CycleData.RightSample.Gear) != 0;
 		}
 
 		#endregion

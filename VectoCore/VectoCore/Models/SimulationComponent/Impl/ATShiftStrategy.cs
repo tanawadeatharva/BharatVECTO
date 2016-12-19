@@ -44,7 +44,7 @@ namespace TUGraz.VectoCore.Models.SimulationComponent.Impl
 		protected readonly GearboxData Data;
 		protected readonly IDataBus DataBus;
 		private ATGearbox _gearbox;
-		protected readonly NextGearState _nextGear;
+		private readonly NextGearState _nextGear;
 
 		public ATShiftStrategy(GearboxData data, IDataBus dataBus)
 		{
@@ -73,9 +73,7 @@ namespace TUGraz.VectoCore.Models.SimulationComponent.Impl
 					continue;
 				}
 
-				if (
-					!IsBelowDownShiftCurve(gear, response.EnginePowerRequest / response.EngineSpeed,
-						response.EngineSpeed)) {
+				if (!IsBelowDownShiftCurve(gear, response.EnginePowerRequest / response.EngineSpeed, response.EngineSpeed)) {
 					_gearbox.TorqueConverterLocked = torqueConverterLocked;
 					_gearbox.Disengaged = false;
 					return gear;
@@ -266,7 +264,7 @@ namespace TUGraz.VectoCore.Models.SimulationComponent.Impl
 
 		public void Disengage(Second absTime, Second dt, NewtonMeter outTorque, PerSecond outEngineSpeed)
 		{
-			throw new System.NotImplementedException();
+			throw new System.NotImplementedException("AT Shift Strategy does not support disengaging.");
 		}
 
 		public IGearbox Gearbox
@@ -287,7 +285,6 @@ namespace TUGraz.VectoCore.Models.SimulationComponent.Impl
 		{
 			get { return new GearInfo() { Gear = _nextGear.Gear, TorqueConverterLocked = _nextGear.TorqueConverterLocked }; }
 		}
-
 
 		/// <summary>
 		/// Tests if the operating point is below the down-shift curve (=outside of shift curve).
@@ -320,7 +317,7 @@ namespace TUGraz.VectoCore.Models.SimulationComponent.Impl
 					Data.Gears[gear].TorqueConverterShiftPolygon.IsAboveUpshiftCurve(inTorque, inEngineSpeed);
 		}
 
-		public class NextGearState
+		private class NextGearState
 		{
 			public Second AbsTime;
 			public bool Disengaged;
