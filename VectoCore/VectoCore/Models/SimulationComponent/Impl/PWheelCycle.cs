@@ -53,7 +53,7 @@ namespace TUGraz.VectoCore.Models.SimulationComponent.Impl
 		/// <param name="cycle">The cycle.</param>
 		/// <param name="axleRatio">The axle ratio.</param>
 		/// <param name="gearRatios"></param>
-		public PWheelCycle(IVehicleContainer container, DrivingCycleData cycle, double axleRatio,
+		public PWheelCycle(IVehicleContainer container, IDrivingCycleData cycle, double axleRatio,
 			IDictionary<uint, double> gearRatios) : base(container, cycle)
 		{
 			// just to ensure that null-gear has ratio 1

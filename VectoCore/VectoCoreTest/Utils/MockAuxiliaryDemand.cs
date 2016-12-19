@@ -115,5 +115,7 @@ namespace TUGraz.VectoCore.Tests.Utils
 		{
 			return new List<DrivingCycleData.DrivingCycleEntry>();
 		}
+
+		public void FinishSimulation() {}
 	}
 }

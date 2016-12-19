@@ -52,9 +52,9 @@ namespace TUGraz.VectoCore.InputData.Reader.Impl
 
 		protected IDeclarationInputDataProvider InputDataProvider;
 
-		protected DeclarationReport Report;
+		protected IDeclarationReport Report;
 
-		internal DeclarationModeVectoRunDataFactory(IDeclarationInputDataProvider dataProvider, DeclarationReport report)
+		internal DeclarationModeVectoRunDataFactory(IDeclarationInputDataProvider dataProvider, IDeclarationReport report)
 		{
 			InputDataProvider = dataProvider;
 			Report = report;
@@ -112,7 +112,7 @@ namespace TUGraz.VectoCore.InputData.Reader.Impl
 						AngledriveData = angledriveData,
 						Aux = dao.CreateAuxiliaryData(InputDataProvider.AuxiliaryInputData(), mission.MissionType,
 							segment.VehicleClass),
-						Cycle = cycle,
+						Cycle = new DrivingCycleProxy(cycle, mission.MissionType.ToString()),
 						Retarder = retarderData,
 						DriverData = driverdata,
 						ExecutionMode = ExecutionMode.Declaration,
@@ -123,7 +123,7 @@ namespace TUGraz.VectoCore.InputData.Reader.Impl
 					};
 					simulationRunData.EngineData.WHTCCorrectionFactor = DeclarationData.WHTCCorrection.Lookup(mission.MissionType,
 						engineData.WHTCRural, engineData.WHTCUrban, engineData.WHTCMotorway) * engineData.ColdHotCorrectionFactor;
-					simulationRunData.Cycle.Name = mission.MissionType.ToString();
+					//simulationRunData.Cycle.Name = mission.MissionType.ToString();
 					simulationRunData.VehicleData.VehicleClass = segment.VehicleClass;
 					yield return simulationRunData;
 				}

@@ -46,7 +46,7 @@ namespace TUGraz.VectoCore.OutputData
 		private readonly bool _writeEngineOnly;
 		private readonly IModalDataFilter[] _filters;
 		private readonly Action<ModalDataContainer> _addReportResult;
-		internal ModalResults Data { get; set; }
+		protected internal ModalResults Data { get; set; }
 		private DataRow CurrentRow { get; set; }
 
 		private readonly IModalDataWriter _writer;
@@ -301,6 +301,14 @@ namespace TUGraz.VectoCore.OutputData
 
 				Auxiliaries[id] = col;
 			}
+		}
+
+		public void FinishSimulation()
+		{
+			Data.Clear(); //.Rows.Clear();
+			Data = null;
+			CurrentRow = null;
+			Auxiliaries.Clear();
 		}
 	}
 }

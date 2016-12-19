@@ -318,6 +318,9 @@ namespace TUGraz.VectoCore.Models.Simulation.Impl
 			ModData.Finish(RunStatus);
 
 			WriteSumData(ModData, VehicleMass, VehicleLoading);
+
+			ModData.FinishSimulation();
+			DrivingCycle.FinishSimulation();
 		}
 
 		public VectoRun.Status RunStatus { get; set; }

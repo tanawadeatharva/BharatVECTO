@@ -58,8 +58,16 @@ namespace TUGraz.VectoCore.Models.SimulationComponent.Data
 		}
 	}
 
+	public interface IDrivingCycleData
+	{
+		List<DrivingCycleData.DrivingCycleEntry> Entries { get; }
+		string Name { get; }
+		CycleType CycleType { get; }
+		void Finish();
+	}
+
 	[CustomValidation(typeof(DrivingCycleData), "ValidateCycleData")]
-	public class DrivingCycleData : SimulationComponentData
+	public class DrivingCycleData : SimulationComponentData, IDrivingCycleData
 	{
 		internal DrivingCycleData() {}
 
@@ -68,6 +76,8 @@ namespace TUGraz.VectoCore.Models.SimulationComponent.Data
 		public string Name { get; internal set; }
 
 		public CycleType CycleType { get; internal set; }
+
+		public void Finish() {}
 
 		// ReSharper disable once UnusedMember.Global -- used by Validation
 		public static ValidationResult ValidateCycleData(DrivingCycleData cycleData, ValidationContext validationContext)

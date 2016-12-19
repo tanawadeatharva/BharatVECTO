@@ -54,7 +54,7 @@ namespace TUGraz.VectoCore.Models.SimulationComponent.Impl
 		IDrivingCycle, ISimulationOutPort, IDrivingCycleInPort, IDisposable
 	{
 		private const double LookaheadTimeSafetyMargin = 1.5;
-		private readonly DrivingCycleData _data;
+		private readonly IDrivingCycleData _data;
 		internal readonly DrivingCycleEnumerator CycleIntervalIterator;
 		private bool _intervalProlonged;
 		internal IdleControllerSwitcher IdleController;
@@ -69,7 +69,7 @@ namespace TUGraz.VectoCore.Models.SimulationComponent.Impl
 			get { return CycleIntervalIterator.RightSample; }
 		}
 
-		public DistanceBasedDrivingCycle(IVehicleContainer container, DrivingCycleData cycle) : base(container)
+		public DistanceBasedDrivingCycle(IVehicleContainer container, IDrivingCycleData cycle) : base(container)
 		{
 			_data = cycle;
 			CycleIntervalIterator = new DrivingCycleEnumerator(_data);
@@ -282,8 +282,9 @@ namespace TUGraz.VectoCore.Models.SimulationComponent.Impl
 
 			if (!stopTime.IsEqual(0) && stopTime.IsEqual(PreviousState.WaitTime)) {
 				// we needed to stop at the current interval in the cycle and have already waited enough time, move on..
-				if (IdleController != null)
+				if (IdleController != null) {
 					IdleController.ActivateIdle();
+				}
 				CycleIntervalIterator.MoveNext();
 			}
 
@@ -303,8 +304,9 @@ namespace TUGraz.VectoCore.Models.SimulationComponent.Impl
 			} else {
 				if (stopTime.IsEqual(PreviousState.WaitTime)) {
 					// we needed to stop at the current interval in the cycle and have already waited enough time, move on..
-					if (IdleController != null)
+					if (IdleController != null) {
 						IdleController.ActivateIdle();
+					}
 					CycleIntervalIterator.MoveNext();
 				}
 			}
@@ -408,6 +410,11 @@ namespace TUGraz.VectoCore.Models.SimulationComponent.Impl
 			return LookAhead(LookaheadTimeSafetyMargin * DataBus.VehicleSpeed * time);
 		}
 
+		public void FinishSimulation()
+		{
+			_data.Finish();
+		}
+
 		public CycleData CycleData
 		{
 			get
@@ -480,9 +487,9 @@ namespace TUGraz.VectoCore.Models.SimulationComponent.Impl
 		public sealed class DrivingCycleEnumerator : IEnumerator<DrivingCycleData.DrivingCycleEntry>
 		{
 			private int _currentCycleIndex;
-			private readonly DrivingCycleData _data;
+			private readonly IDrivingCycleData _data;
 
-			public DrivingCycleEnumerator(DrivingCycleData data)
+			public DrivingCycleEnumerator(IDrivingCycleData data)
 			{
 				_currentCycleIndex = 0;
 				_data = data;

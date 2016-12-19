@@ -111,6 +111,12 @@ namespace TUGraz.VectoCore.OutputData
 		void SetDataValue(string fieldName, object value);
 
 		void AddAuxiliary(string id, string columnName = null);
+
+		/// <summary>
+		/// clear the modal data after the simulation
+		/// called after the simulation is finished and the sum-entries have been written
+		/// </summary>
+		void FinishSimulation();
 	}
 
 	public static class ModalDataContainerExtensions
@@ -209,8 +215,8 @@ namespace TUGraz.VectoCore.OutputData
 		public static Scalar StopTimeShare(this IModalDataContainer data)
 		{
 			var stopTime = data.GetValues<MeterPerSecond>(ModalResultField.v_act)
-								.Zip(data.SimulationIntervals(), (v, dt) => new { v, dt })
-								.Where(x => x.v < 0.1).Sum(x => x.dt) ?? 0.SI<Second>();
+				.Zip(data.SimulationIntervals(), (v, dt) => new { v, dt })
+				.Where(x => x.v < 0.1).Sum(x => x.dt) ?? 0.SI<Second>();
 			return 100 * (stopTime / data.Duration()).Cast<Scalar>();
 		}
 
@@ -482,8 +488,9 @@ namespace TUGraz.VectoCore.OutputData
 			var auxValues = data.GetValues<Watt>(auxCol).ToArray();
 			var sum = 0.SI<WattSecond>();
 			for (var i = 0; i < simulationIntervals.Length; i++) {
-				if (auxValues[i] != null && simulationIntervals[i] != null)
+				if (auxValues[i] != null && simulationIntervals[i] != null) {
 					sum += auxValues[i] * simulationIntervals[i];
+				}
 			}
 			return sum;
 		}

@@ -253,7 +253,10 @@ Public Class VectoJob
 							RessourceHelper.ReadStream(
 								DeclarationData.DeclarationDataResourcePrefix + ".VACC." + _driverAccelerationFile.OriginalPath +
 								VectoCore.Configuration.Constants.FileExtensions.DriverAccelerationCurve)
-					Return VectoCSVFile.ReadStream(cycleDataRes)
+					Return _
+						VectoCSVFile.ReadStream(cycleDataRes,
+												source:=DeclarationData.DeclarationDataResourcePrefix + ".VACC." + _driverAccelerationFile.OriginalPath +
+														VectoCore.Configuration.Constants.FileExtensions.DriverAccelerationCurve)
 				Catch ex As Exception
 					Return Nothing
 				End Try
@@ -305,7 +308,7 @@ Public Class VectoJob
 
 	' ReSharper disable once UnusedMember.Global -- used by Validation
 	Public Shared Function ValidateJob(vectoJob As VectoJob, validationContext As ValidationContext) As ValidationResult
-		Dim modeService As ExecutionModeServiceContainer = TryCast(validationContext.GetService(GetType(ExecutionMode)),
+		Dim modeService As ExecutionModeServiceContainer = TryCast(validationContext.GetService(GetType(ExecutionMode)), 
 																	ExecutionModeServiceContainer)
 		Dim mode As ExecutionMode = If(modeService Is Nothing, ExecutionMode.Declaration, modeService.Mode)
 
@@ -617,10 +620,10 @@ Public Class VectoJob
 					cycleData = VectoCSVFile.Read(cycleFile.FullPath)
 				Else
 					Try
-						Dim cycleDataRes As Stream =
-								RessourceHelper.ReadStream(
-									DeclarationData.DeclarationDataResourcePrefix + ".MissionCycles." + cycleFile.OriginalPath + ".vdri")
-						cycleData = VectoCSVFile.ReadStream(cycleDataRes)
+						Dim resourceName As String = DeclarationData.DeclarationDataResourcePrefix + ".MissionCycles." +
+													cycleFile.OriginalPath + TUGraz.VectoCore.Configuration.Constants.FileExtensions.CycleFile
+						Dim cycleDataRes As Stream = RessourceHelper.ReadStream(resourceName)
+						cycleData = VectoCSVFile.ReadStream(cycleDataRes, source:=resourceName)
 					Catch ex As Exception
 						Throw New VectoException("Driving Cycle could not be read: " + cycleFile.OriginalPath)
 					End Try
@@ -659,7 +662,7 @@ Public Class VectoJob
 	Public ReadOnly Property Auxiliaries As IList(Of IAuxiliaryEngineeringInputData) _
 		Implements IAuxiliariesEngineeringInputData.Auxiliaries
 		Get
-			Return AuxData().Cast (Of IAuxiliaryEngineeringInputData).ToList()
+			Return AuxData().Cast(Of IAuxiliaryEngineeringInputData).ToList()
 		End Get
 	End Property
 
@@ -687,7 +690,7 @@ Public Class VectoJob
 	Public ReadOnly Property IAuxiliariesDeclarationInputData_Auxiliaries As IList(Of IAuxiliaryDeclarationInputData) _
 		Implements IAuxiliariesDeclarationInputData.Auxiliaries
 		Get
-			Return AuxData().Cast (Of IAuxiliaryDeclarationInputData).ToList()
+			Return AuxData().Cast(Of IAuxiliaryDeclarationInputData).ToList()
 		End Get
 	End Property
 
@@ -698,7 +701,7 @@ Public Class VectoJob
 			retVal.Add(New AuxiliaryDataInputData() With {
 						.ID = "ConstantAux",
 						.AuxiliaryType = AuxiliaryDemandType.Constant,
-						.ConstantPowerDemand = AuxPAdd.SI (Of Watt)()
+						.ConstantPowerDemand = AuxPAdd.SI(Of Watt)()
 						})
 		End If
 		For Each auxEntry As KeyValuePair(Of String, AuxEntry) In AuxPaths
@@ -718,7 +721,7 @@ Public Class VectoJob
 			stream.ReadLine() ' skip header "Efficiency auxiliary to supply [-]"
 			theAuxData.EfficiencyToSupply = stream.ReadLine().IndulgentParse()
 			theAuxData.DemandMap = VectoCSVFile.ReadStream(New MemoryStream(Encoding.UTF8.GetBytes(stream.ReadToEnd())),
-															source := auxEntry.Value.Path.FullPath)
+															source:=auxEntry.Value.Path.FullPath)
 		Next
 
 		Return retVal
