@@ -57,7 +57,7 @@ namespace TUGraz.VectoCore.Models.Simulation.Impl
 		private readonly bool _engineOnlyMode;
 
 		public SimulatorFactory(ExecutionMode mode, IInputDataProvider dataProvider, IOutputDataWriter writer,
-			DeclarationReport declarationReport = null)
+			IDeclarationReport declarationReport = null)
 		{
 			Log.Info("########## VectoCore Version {0} ##########", Assembly.GetExecutingAssembly().GetName().Version);
 			JobNumber = Interlocked.Increment(ref _jobNumberCounter);
@@ -125,6 +125,9 @@ namespace TUGraz.VectoCore.Models.Simulation.Impl
 
 			foreach (var data in DataReader.NextRun()) {
 				var d = data;
+				if (d.Report != null) {
+					d.Report.PrepareResult(d.Loading, d.Mission);
+				}
 				Action<ModalDataContainer> addReportResult = writer => {
 					if (d.Report != null) {
 						d.Report.AddResult(d.Loading, d.Mission, writer);
@@ -174,7 +177,5 @@ namespace TUGraz.VectoCore.Models.Simulation.Impl
 				yield return run;
 			}
 		}
-
-
 	}
 }

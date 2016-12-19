@@ -114,10 +114,9 @@ namespace TUGraz.VectoCore.OutputData
 
 		/// <summary>
 		/// clear the modal data after the simulation
-		/// 
 		/// called after the simulation is finished and the sum-entries have been written
 		/// </summary>
-		void Dispose();
+		void FinishSimulation();
 	}
 
 	public static class ModalDataContainerExtensions

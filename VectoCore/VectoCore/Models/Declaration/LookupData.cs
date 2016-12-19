@@ -56,7 +56,7 @@ namespace TUGraz.VectoCore.Models.Declaration
 
 		protected static DataTable ReadCsvResource(string resourceId)
 		{
-			return VectoCSVFile.ReadStream(RessourceHelper.ReadStream(resourceId));
+			return VectoCSVFile.ReadStream(RessourceHelper.ReadStream(resourceId), source: resourceId);
 		}
 
 		protected static void NormalizeTable(DataTable table)

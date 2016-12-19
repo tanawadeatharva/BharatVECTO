@@ -116,6 +116,11 @@ namespace TUGraz.VectoCore.Tests.Utils
 
 		public void Dispose()
 		{
+			throw new NotImplementedException();
+		}
+
+		public void FinishSimulation()
+		{
 			Data.Rows.Clear();
 		}
 

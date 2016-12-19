@@ -449,7 +449,7 @@ namespace TUGraz.VectoCore.Models.Declaration
 			public static IEnumerable<TorqueConverterEntry> GetTorqueConverterDragCurve(double ratio)
 			{
 				var resourceId = DeclarationData.DeclarationDataResourcePrefix + ".TorqueConverter.csv";
-				var data = VectoCSVFile.ReadStream(RessourceHelper.ReadStream(resourceId));
+				var data = VectoCSVFile.ReadStream(RessourceHelper.ReadStream(resourceId), source: resourceId);
 				var characteristicTorque = (from DataRow row in data.Rows
 					select
 						new TorqueConverterEntry() {

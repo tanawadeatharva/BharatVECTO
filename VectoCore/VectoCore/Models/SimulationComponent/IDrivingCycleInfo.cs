@@ -61,5 +61,7 @@ namespace TUGraz.VectoCore.Models.SimulationComponent
 		IReadOnlyList<DrivingCycleData.DrivingCycleEntry> LookAhead(Meter lookaheadDistance);
 
 		IReadOnlyList<DrivingCycleData.DrivingCycleEntry> LookAhead(Second time);
+
+		void FinishSimulation();
 	}
 }

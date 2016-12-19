@@ -48,7 +48,7 @@ namespace TUGraz.VectoCore.Models.Declaration
 
 		protected override string ResourceId
 		{
-			get { return DeclarationData.DeclarationDataResourcePrefix +".SegmentTable.csv"; }
+			get { return DeclarationData.DeclarationDataResourcePrefix + ".SegmentTable.csv"; }
 		}
 
 		protected override string ErrorMessage
@@ -105,7 +105,9 @@ namespace TUGraz.VectoCore.Models.Declaration
 				VehicleCategory = vehicleCategory,
 				AxleConfiguration = axleConfiguration,
 				VehicleClass = VehicleClassHelper.Parse(row.Field<string>("hdvclass")),
-				AccelerationFile = RessourceHelper.ReadStream(DeclarationData.DeclarationDataResourcePrefix + ".VACC." + row.Field<string>(".vaccfile")),
+				AccelerationFile =
+					RessourceHelper.ReadStream(DeclarationData.DeclarationDataResourcePrefix + ".VACC." +
+												row.Field<string>(".vaccfile")),
 				Missions = CreateMissions(ref grossVehicleMassRating, curbWeight, row),
 				GrossVehicleMassRating = grossVehicleMassRating
 			};
@@ -155,7 +157,9 @@ namespace TUGraz.VectoCore.Models.Declaration
 				var mission = new Mission {
 					MissionType = missionType,
 					CrossWindCorrection = row.Field<string>("crosswindcorrection" + GetMissionSuffix(missionType)),
-					CycleFile = RessourceHelper.ReadStream(DeclarationData.DeclarationDataResourcePrefix + ".MissionCycles." + missionType + ".vdri"),
+					CycleFile =
+						RessourceHelper.ReadStream(DeclarationData.DeclarationDataResourcePrefix + ".MissionCycles." + missionType +
+													Constants.FileExtensions.CycleFile),
 					AxleWeightDistribution = GetAxleWeightDistribution(row, missionType),
 					CurbWeight = curbWeight,
 					BodyCurbWeight = body.CurbWeight,
