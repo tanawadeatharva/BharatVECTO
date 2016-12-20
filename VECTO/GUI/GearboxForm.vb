@@ -70,12 +70,12 @@ Public Class GearboxForm
 
 		If Cfg.DeclMode Then
 			CbGStype.DataSource = [Enum].GetValues(GetType(GearboxType)) _
-				.Cast(Of GearboxType)() _
+				.Cast (Of GearboxType)() _
 				.Where(Function(type) type.ManualTransmission()) _
 				.Select(Function(type) New With {Key .Value = type, .Label = type.GetLabel()}).ToList()
 		Else
 			CbGStype.DataSource = [Enum].GetValues(GetType(GearboxType)) _
-				.Cast(Of GearboxType) _
+				.Cast (Of GearboxType) _
 				.Where(Function(type) type.AutomaticTransmission() OrElse type.ManualTransmission()) _
 				.Select(Function(type) New With {Key .Value = type, .Label = type.GetLabel()}).ToList()
 		End If
@@ -98,392 +98,373 @@ Public Class GearboxForm
 		gbxType = CType(CbGStype.SelectedValue, GearboxType)	'CType(Me.CbGStype.SelectedIndex, tGearbox)
 
 		TbTracInt.Text = gbxType.TractionInterruption().ToGUIFormat()
-        TbMinTimeBetweenShifts.Text = DeclarationData.Gearbox.MinTimeBetweenGearshifts.ToGUIFormat()    'cDeclaration.MinTimeBetweenGearshift(GStype)
+		TbMinTimeBetweenShifts.Text = DeclarationData.Gearbox.MinTimeBetweenGearshifts.ToGUIFormat()
+		'cDeclaration.MinTimeBetweenGearshift(GStype)
 
-        TbTqResv.Text = (DeclarationData.Gearbox.TorqueReserve * 100).ToGUIFormat()     ' cDeclaration.TqResv
-        TbTqResvStart.Text = (DeclarationData.Gearbox.TorqueReserveStart * 100).ToGUIFormat() 'cDeclaration.TqResvStart
-        TbStartSpeed.Text = DeclarationData.Gearbox.StartSpeed.ToGUIFormat()    'cDeclaration.StartSpeed
-        TbStartAcc.Text = DeclarationData.Gearbox.StartAcceleration.ToGUIFormat()   ' cDeclaration.StartAcc
+		TbTqResv.Text = (DeclarationData.Gearbox.TorqueReserve*100).ToGUIFormat()     ' cDeclaration.TqResv
+		TbTqResvStart.Text = (DeclarationData.Gearbox.TorqueReserveStart*100).ToGUIFormat() 'cDeclaration.TqResvStart
+		TbStartSpeed.Text = DeclarationData.Gearbox.StartSpeed.ToGUIFormat()    'cDeclaration.StartSpeed
+		TbStartAcc.Text = DeclarationData.Gearbox.StartAcceleration.ToGUIFormat()   ' cDeclaration.StartAcc
 
-        tbUpshiftMinAcceleration.Text = DeclarationData.Gearbox.UpshiftMinAcceleration.ToGUIFormat()
-        tbDownshiftAfterUpshift.Text = DeclarationData.Gearbox.DownshiftAfterUpshiftDelay.ToGUIFormat()
-        tbUpshiftAfterDownshift.Text = DeclarationData.Gearbox.UpshiftAfterDownshiftDelay.ToGUIFormat()
+		tbUpshiftMinAcceleration.Text = DeclarationData.Gearbox.UpshiftMinAcceleration.ToGUIFormat()
+		tbTCCUpshiftMinAcceleration.Text = ""
+		tbTCLUpshiftMinAcceleration.Text = ""
 
-        'ChTCon.Checked = GStype.AutomaticTransmission()
-        For Each lv0 In LvGears.Items
-            lv0.SubItems(GearboxTbl.ShiftPolygons).Text = ""
-        Next
-    End Sub
+		tbDownshiftAfterUpshift.Text = DeclarationData.Gearbox.DownshiftAfterUpshiftDelay.ToGUIFormat()
+		tbUpshiftAfterDownshift.Text = DeclarationData.Gearbox.UpshiftAfterDownshiftDelay.ToGUIFormat()
+
+		'ChTCon.Checked = GStype.AutomaticTransmission()
+		For Each lv0 In LvGears.Items
+			lv0.SubItems(GearboxTbl.ShiftPolygons).Text = ""
+		Next
+	End Sub
 
 #Region "Toolbar"
 
-    Private Sub ToolStripBtNew_Click(sender As Object, e As EventArgs) Handles ToolStripBtNew.Click
-        NewGbx()
-    End Sub
+	Private Sub ToolStripBtNew_Click(sender As Object, e As EventArgs) Handles ToolStripBtNew.Click
+		NewGbx()
+	End Sub
 
-    Private Sub ToolStripBtOpen_Click(sender As Object, e As EventArgs) Handles ToolStripBtOpen.Click
-        If GearboxFileBrowser.OpenDialog(_gbxFile) Then
-            Try
-                OpenGbx(GearboxFileBrowser.Files(0))
-            Catch ex As Exception
-                MsgBox("Failed to open Gearbox File: " + ex.Message)
-            End Try
-        End If
-    End Sub
+	Private Sub ToolStripBtOpen_Click(sender As Object, e As EventArgs) Handles ToolStripBtOpen.Click
+		If GearboxFileBrowser.OpenDialog(_gbxFile) Then
+			Try
+				OpenGbx(GearboxFileBrowser.Files(0))
+			Catch ex As Exception
+				MsgBox("Failed to open Gearbox File: " + ex.Message)
+			End Try
+		End If
+	End Sub
 
-    Private Sub ToolStripBtSave_Click(sender As Object, e As EventArgs) Handles ToolStripBtSave.Click
-        SaveOrSaveAs(False)
-    End Sub
+	Private Sub ToolStripBtSave_Click(sender As Object, e As EventArgs) Handles ToolStripBtSave.Click
+		SaveOrSaveAs(False)
+	End Sub
 
-    Private Sub ToolStripBtSaveAs_Click(sender As Object, e As EventArgs) Handles ToolStripBtSaveAs.Click
-        SaveOrSaveAs(True)
-    End Sub
+	Private Sub ToolStripBtSaveAs_Click(sender As Object, e As EventArgs) Handles ToolStripBtSaveAs.Click
+		SaveOrSaveAs(True)
+	End Sub
 
-    Private Sub ToolStripBtSendTo_Click(sender As Object, e As EventArgs) Handles ToolStripBtSendTo.Click
+	Private Sub ToolStripBtSendTo_Click(sender As Object, e As EventArgs) Handles ToolStripBtSendTo.Click
 
-        If ChangeCheckCancel() Then Exit Sub
+		If ChangeCheckCancel() Then Exit Sub
 
-        If _gbxFile = "" Then
-            If MsgBox("Save file now?", MsgBoxStyle.YesNo) = MsgBoxResult.Yes Then
-                If Not SaveOrSaveAs(True) Then Exit Sub
-            Else
-                Exit Sub
-            End If
-        End If
+		If _gbxFile = "" Then
+			If MsgBox("Save file now?", MsgBoxStyle.YesNo) = MsgBoxResult.Yes Then
+				If Not SaveOrSaveAs(True) Then Exit Sub
+			Else
+				Exit Sub
+			End If
+		End If
 
-        If Not VectoJobForm.Visible Then
-            JobDir = ""
-            VectoJobForm.Show()
-            VectoJobForm.VectoNew()
-        Else
-            VectoJobForm.WindowState = FormWindowState.Normal
-        End If
+		If Not VectoJobForm.Visible Then
+			JobDir = ""
+			VectoJobForm.Show()
+			VectoJobForm.VectoNew()
+		Else
+			VectoJobForm.WindowState = FormWindowState.Normal
+		End If
 
-        VectoJobForm.TbGBX.Text = GetFilenameWithoutDirectory(_gbxFile, JobDir)
-    End Sub
+		VectoJobForm.TbGBX.Text = GetFilenameWithoutDirectory(_gbxFile, JobDir)
+	End Sub
 
-    'Help
-    Private Sub ToolStripButton1_Click(sender As Object, e As EventArgs) Handles ToolStripButton1.Click
-        If File.Exists(MyAppPath & "User Manual\help.html") Then
-            Dim browserRegistryString As String =
-                    My.Computer.Registry.ClassesRoot.OpenSubKey("\http\shell\open\command\").GetValue("").ToString
-            Dim defaultBrowserPath As String =
-                    Regex.Match(browserRegistryString, "(\"".*?\"")").Captures(0).ToString
-            Process.Start(defaultBrowserPath,
-                        String.Format("""{0}{1}""", MyAppPath, "User Manual\help.html#gearbox-editor"))
-        Else
-            MsgBox("User Manual not found!", MsgBoxStyle.Critical)
-        End If
-    End Sub
+	'Help
+	Private Sub ToolStripButton1_Click(sender As Object, e As EventArgs) Handles ToolStripButton1.Click
+		If File.Exists(MyAppPath & "User Manual\help.html") Then
+			Dim browserRegistryString As String =
+					My.Computer.Registry.ClassesRoot.OpenSubKey("\http\shell\open\command\").GetValue("").ToString
+			Dim defaultBrowserPath As String =
+					Regex.Match(browserRegistryString, "(\"".*?\"")").Captures(0).ToString
+			Process.Start(defaultBrowserPath,
+						String.Format("""{0}{1}""", MyAppPath, "User Manual\help.html#gearbox-editor"))
+		Else
+			MsgBox("User Manual not found!", MsgBoxStyle.Critical)
+		End If
+	End Sub
 
 #End Region
 
-    'New file
-    Private Sub NewGbx()
-        'Dim lvi As ListViewItem
+	'New file
+	Private Sub NewGbx()
+		'Dim lvi As ListViewItem
 
-        If ChangeCheckCancel() Then Exit Sub
+		If ChangeCheckCancel() Then Exit Sub
 
-        'CbGStype.SelectedIndex = 0
+		'CbGStype.SelectedIndex = 0
 
-        TbName.Text = ""
-        TbTracInt.Text = ""
-        TBI_getr.Text = ""
+		TbName.Text = ""
+		TbTracInt.Text = ""
+		TBI_getr.Text = ""
 
-        LvGears.Items.Clear()
+		LvGears.Items.Clear()
 
-        LvGears.Items.Add(CreateListviewItem("Axle", 1, "1", "", ""))
+		LvGears.Items.Add(CreateListviewItem("Axle", 1, "1", "", ""))
 
-        'Me.ChSkipGears.Checked = False         'set by CbGStype.SelectedIndexChanged
-        'Me.ChShiftInside.Checked = False       'set by CbGStype.SelectedIndexChanged
-        TbTqResv.Text = (DeclarationData.Gearbox.TorqueReserve * 100).ToGUIFormat()
-        TbMinTimeBetweenShifts.Text = DeclarationData.Gearbox.MinTimeBetweenGearshifts.ToGUIFormat()
-        TbTqResvStart.Text = (DeclarationData.Gearbox.TorqueReserveStart * 100).ToGUIFormat()
-        TbStartSpeed.Text = DeclarationData.Gearbox.StartSpeed.ToGUIFormat() ' in m/s!
-        TbStartAcc.Text = DeclarationData.Gearbox.StartAcceleration.ToGUIFormat()
+		'Me.ChSkipGears.Checked = False         'set by CbGStype.SelectedIndexChanged
+		'Me.ChShiftInside.Checked = False       'set by CbGStype.SelectedIndexChanged
+		TbTqResv.Text = (DeclarationData.Gearbox.TorqueReserve*100).ToGUIFormat()
+		TbMinTimeBetweenShifts.Text = DeclarationData.Gearbox.MinTimeBetweenGearshifts.ToGUIFormat()
+		TbTqResvStart.Text = (DeclarationData.Gearbox.TorqueReserveStart*100).ToGUIFormat()
+		TbStartSpeed.Text = DeclarationData.Gearbox.StartSpeed.ToGUIFormat() ' in m/s!
+		TbStartAcc.Text = DeclarationData.Gearbox.StartAcceleration.ToGUIFormat()
 
-        tbUpshiftMinAcceleration.Text = DeclarationData.Gearbox.UpshiftMinAcceleration.ToGUIFormat()
-        tbDownshiftAfterUpshift.Text = DeclarationData.Gearbox.DownshiftAfterUpshiftDelay.ToGUIFormat()
-        tbUpshiftAfterDownshift.Text = DeclarationData.Gearbox.UpshiftAfterDownshiftDelay.ToGUIFormat()
+		tbUpshiftMinAcceleration.Text = DeclarationData.Gearbox.UpshiftMinAcceleration.ToGUIFormat()
+		tbTCLUpshiftMinAcceleration.Text = ""
+		tbTCCUpshiftMinAcceleration.Text = ""
 
-        'ChTCon.Checked = False				'set by CbGStype.SelectedIndexChanged
-        TbTCfile.Text = ""
-        TbTCrefrpm.Text = ""
-        TbTCinertia.Text = ""
+		tbDownshiftAfterUpshift.Text = DeclarationData.Gearbox.DownshiftAfterUpshiftDelay.ToGUIFormat()
+		tbUpshiftAfterDownshift.Text = DeclarationData.Gearbox.UpshiftAfterDownshiftDelay.ToGUIFormat()
 
-        DeclInit()
+		'ChTCon.Checked = False				'set by CbGStype.SelectedIndexChanged
+		TbTCfile.Text = ""
+		TbTCrefrpm.Text = ""
+		TbTCinertia.Text = ""
 
-        _gbxFile = ""
-        Text = "GBX Editor"
-        LbStatus.Text = ""
+		DeclInit()
 
-
-        _changed = False
-        UpdatePic()
-    End Sub
-
-    'Open file
-    Public Sub OpenGbx(file As String)
-
-        If ChangeCheckCancel() Then Exit Sub
-
-        Dim inputData As IEngineeringInputDataProvider = TryCast(JSONInputDataFactory.ReadComponentData(file), 
-                                                                IEngineeringInputDataProvider)
-        Dim gearbox As IGearboxEngineeringInputData = inputData.GearboxInputData
-        Dim axlegear As IAxleGearInputData = inputData.AxleGearInputData
-
-        If Cfg.DeclMode <> gearbox.SavedInDeclarationMode Then
-            Select Case WrongMode()
-                Case 1
-                    Close()
-                    MainForm.RbDecl.Checked = Not MainForm.RbDecl.Checked
-                    MainForm.OpenVectoFile(file)
-                Case -1
-                    Exit Sub
-            End Select
-        End If
-
-        Dim basePath As String = Path.GetDirectoryName(file)
-        TbName.Text = gearbox.ModelName
-        TbTracInt.Text = gearbox.TractionInterruption.ToGUIFormat()
-        TBI_getr.Text = gearbox.Inertia.ToGUIFormat()
-
-        LvGears.Items.Clear()
-
-        Dim lossmap As String = ""
-        Try
-            lossmap = If(axlegear.LossMap Is Nothing, axlegear.Efficiency.ToGUIFormat(),
-                        GetRelativePath(axlegear.LossMap.Source, basePath))
-        Catch ex As Exception
-        End Try
-
-        LvGears.Items.Add(CreateListviewItem("Axle", axlegear.Ratio, lossmap, "", ""))
-
-        For Each gear As ITransmissionInputData In gearbox.Gears
-            lossmap = ""
-            Try
-                lossmap = If(gear.LossMap Is Nothing, gear.Efficiency.ToGUIFormat(), GetRelativePath(gear.LossMap.Source, basePath))
-            Catch ex As Exception
-
-            End Try
-            LvGears.Items.Add(CreateListviewItem(gear.Gear.ToString("00"), gear.Ratio,
-                                                lossmap,
-                                                If(gear.ShiftPolygon Is Nothing, "", GetRelativePath(gear.ShiftPolygon.Source, basePath)),
-                                                If(gear.MaxTorque Is Nothing, "", gear.MaxTorque.ToGUIFormat())))
-        Next
-
-        TbTqResv.Text = (gearbox.TorqueReserve * 100).ToGUIFormat()
-        TbMinTimeBetweenShifts.Text = gearbox.MinTimeBetweenGearshift.ToGUIFormat()
-        TbTqResvStart.Text = (gearbox.StartTorqueReserve * 100).ToGUIFormat()
-        TbStartSpeed.Text = gearbox.StartSpeed.ToGUIFormat()
-        TbStartAcc.Text = gearbox.StartAcceleration.ToGUIFormat()
-
-        Dim torqueConverter As ITorqueConverterEngineeringInputData = gearbox.TorqueConverter
-        If torqueConverter Is Nothing OrElse gearbox.Type.ManualTransmission() Then
-            TbTCfile.Text = ""
-            TbTCrefrpm.Text = ""
-            TbTCinertia.Text = ""
-            TBTCShiftPolygon.Text = ""
-        Else
-            TbTCfile.Text = If(torqueConverter.TCData Is Nothing, "", GetRelativePath(torqueConverter.TCData.Source, basePath))
-            TbTCrefrpm.Text = If(torqueConverter.ReferenceRPM Is Nothing, "", torqueConverter.ReferenceRPM.AsRPM.ToGUIFormat())
-            TbTCinertia.Text = If(torqueConverter.Inertia Is Nothing, "", torqueConverter.Inertia.ToGUIFormat())
-            TBTCShiftPolygon.Text =
-                If(torqueConverter.ShiftPolygon Is Nothing, "", GetRelativePath(torqueConverter.ShiftPolygon.Source, basePath))
-        End If
-
-        tbUpshiftMinAcceleration.Text = gearbox.UpshiftMinAcceleration.ToGUIFormat()
-        tbDownshiftAfterUpshift.Text = gearbox.DownshiftAferUpshiftDelay.ToGUIFormat()
-        tbUpshiftAfterDownshift.Text = gearbox.UpshiftAfterDownshiftDelay.ToGUIFormat()
-
-        tbATInertiaFactor.Text = gearbox.PowerShiftInertiaFactor.ToGUIFormat()
-        tbATShiftTime.Text = gearbox.PowershiftShiftTime.ToGUIFormat()
-
-        CbGStype.SelectedValue = gearbox.Type
+		_gbxFile = ""
+		Text = "GBX Editor"
+		LbStatus.Text = ""
 
 
-        DeclInit()
+		_changed = False
+		UpdatePic()
+	End Sub
+
+	'Open file
+	Public Sub OpenGbx(file As String)
+
+		If ChangeCheckCancel() Then Exit Sub
+
+		Dim inputData As IEngineeringInputDataProvider = TryCast(JSONInputDataFactory.ReadComponentData(file),
+																IEngineeringInputDataProvider)
+		Dim gearbox As IGearboxEngineeringInputData = inputData.GearboxInputData
+		Dim axlegear As IAxleGearInputData = inputData.AxleGearInputData
+
+		If Cfg.DeclMode <> gearbox.SavedInDeclarationMode Then
+			Select Case WrongMode()
+				Case 1
+					Close()
+					MainForm.RbDecl.Checked = Not MainForm.RbDecl.Checked
+					MainForm.OpenVectoFile(file)
+				Case - 1
+					Exit Sub
+			End Select
+		End If
+
+		Dim basePath As String = Path.GetDirectoryName(file)
+		TbName.Text = gearbox.ModelName
+		TbTracInt.Text = gearbox.TractionInterruption.ToGUIFormat()
+		TBI_getr.Text = gearbox.Inertia.ToGUIFormat()
+
+		LvGears.Items.Clear()
+
+		Dim lossmap As String = ""
+		Try
+			lossmap = If(axlegear.LossMap Is Nothing, axlegear.Efficiency.ToGUIFormat(),
+						GetRelativePath(axlegear.LossMap.Source, basePath))
+		Catch ex As Exception
+		End Try
+
+		LvGears.Items.Add(CreateListviewItem("Axle", axlegear.Ratio, lossmap, "", ""))
+
+		For Each gear As ITransmissionInputData In gearbox.Gears
+			lossmap = ""
+			Try
+				lossmap = If(gear.LossMap Is Nothing, gear.Efficiency.ToGUIFormat(), GetRelativePath(gear.LossMap.Source, basePath))
+			Catch ex As Exception
+
+			End Try
+			LvGears.Items.Add(CreateListviewItem(gear.Gear.ToString("00"), gear.Ratio,
+												lossmap,
+												If(gear.ShiftPolygon Is Nothing, "", GetRelativePath(gear.ShiftPolygon.Source, basePath)),
+												If(gear.MaxTorque Is Nothing, "", gear.MaxTorque.ToGUIFormat())))
+		Next
+
+		TbTqResv.Text = (gearbox.TorqueReserve*100).ToGUIFormat()
+		TbMinTimeBetweenShifts.Text = gearbox.MinTimeBetweenGearshift.ToGUIFormat()
+		TbTqResvStart.Text = (gearbox.StartTorqueReserve*100).ToGUIFormat()
+		TbStartSpeed.Text = gearbox.StartSpeed.ToGUIFormat()
+		TbStartAcc.Text = gearbox.StartAcceleration.ToGUIFormat()
+
+		Dim torqueConverter As ITorqueConverterEngineeringInputData = gearbox.TorqueConverter
+		If torqueConverter Is Nothing OrElse gearbox.Type.ManualTransmission() Then
+			TbTCfile.Text = ""
+			TbTCrefrpm.Text = ""
+			TbTCinertia.Text = ""
+			TBTCShiftPolygon.Text = ""
+			tbTCmaxSpeed.Text = ""
+			tbTCLUpshiftMinAcceleration.Text = ""
+			tbTCCUpshiftMinAcceleration.Text = ""
+
+		Else
+			TbTCfile.Text = If(torqueConverter.TCData Is Nothing, "", GetRelativePath(torqueConverter.TCData.Source, basePath))
+			TbTCrefrpm.Text = If(torqueConverter.ReferenceRPM Is Nothing, "", torqueConverter.ReferenceRPM.AsRPM.ToGUIFormat())
+			TbTCinertia.Text = If(torqueConverter.Inertia Is Nothing, "", torqueConverter.Inertia.ToGUIFormat())
+			TBTCShiftPolygon.Text =
+				If(torqueConverter.ShiftPolygon Is Nothing, "", GetRelativePath(torqueConverter.ShiftPolygon.Source, basePath))
+			tbTCmaxSpeed.Text =
+				If(torqueConverter.MaxInputSpeed Is Nothing, "", torqueConverter.MaxInputSpeed.AsRPM.ToGUIFormat())
+			tbTCLUpshiftMinAcceleration.Text = torqueConverter.CLUpshiftMinAcceleration.ToGUIFormat()
+			tbTCCUpshiftMinAcceleration.Text = torqueConverter.CCUpshiftMinAcceleration.ToGUIFormat()
+		End If
+
+		tbUpshiftMinAcceleration.Text = gearbox.UpshiftMinAcceleration.ToGUIFormat()
+		tbDownshiftAfterUpshift.Text = gearbox.DownshiftAfterUpshiftDelay.ToGUIFormat()
+		tbUpshiftAfterDownshift.Text = gearbox.UpshiftAfterDownshiftDelay.ToGUIFormat()
+
+		tbATInertiaFactor.Text = gearbox.PowerShiftInertiaFactor.ToGUIFormat()
+		tbATShiftTime.Text = gearbox.PowershiftShiftTime.ToGUIFormat()
+
+		CbGStype.SelectedValue = gearbox.Type
 
 
-        GearboxFileBrowser.UpdateHistory(file)
-        Text = GetFilenameWithoutPath(file, True)
-        LbStatus.Text = ""
-        _gbxFile = file
-        Activate()
-
-        _changed = False
-        UpdatePic()
-    End Sub
-
-    Private Function CreateListviewItem(gear As String, ratio As Double, getrMap As String,
-                                        shiftPolygon As String, maxTorque As String) As ListViewItem
-        Dim retVal As ListViewItem = New ListViewItem(gear)
-        'retVal.SubItems.Add(tc)
-        retVal.SubItems.Add(ratio.ToGUIFormat())
-        retVal.SubItems.Add(getrMap)
-        retVal.SubItems.Add(shiftPolygon)
-        retVal.SubItems.Add(maxTorque)
-        Return retVal
-    End Function
-
-    'Save or Save As function = true if file is saved
-    Private Function SaveOrSaveAs(saveAs As Boolean) As Boolean
-        If _gbxFile = "" Or saveAs Then
-            If GearboxFileBrowser.SaveDialog(_gbxFile) Then
-                _gbxFile = GearboxFileBrowser.Files(0)
-            Else
-                Return False
-            End If
-        End If
-        Return SaveGbx(_gbxFile)
-    End Function
-
-    'Save file
-    Private Function SaveGbx(file As String) As Boolean
-        Dim gearbox As Gearbox
-        Dim i As Integer
-
-        gearbox = New Gearbox
-        gearbox.FilePath = file
-
-        gearbox.ModelName = TbName.Text
-        If Trim(gearbox.ModelName) = "" Then gearbox.ModelName = "Undefined"
-
-        gearbox.TracIntrSi = TbTracInt.Text.ToDouble(0)
-        gearbox.GbxInertia = TBI_getr.Text.ToDouble(0)
-
-        For i = 0 To LvGears.Items.Count - 1
-            'GBX0.IsTCgear.Add(Me.LvGears.Items(i).SubItems(GearboxTbl.TorqueConverter).Text = "on" And i > 0)
-            gearbox.GearRatios.Add(LvGears.Items(i).SubItems(GearboxTbl.Ratio).Text.ToDouble(0))
-            gearbox.GearLossmaps.Add(New SubPath)
-            gearbox.GearLossMap(i) = LvGears.Items(i).SubItems(GearboxTbl.LossMapEfficiency).Text
-            gearbox.GearshiftFiles.Add(New SubPath)
-            gearbox.ShiftPolygonFile(i) = LvGears.Items(i).SubItems(GearboxTbl.ShiftPolygons).Text
-            'GBX0.FldFiles.Add(New cSubPath)
-            'GBX0.FldFile(i) = Me.LvGears.Items(i).SubItems(GearboxTbl.MaxTorque).Text
-            gearbox.MaxTorque.Add(LvGears.Items(i).SubItems(GearboxTbl.MaxTorque).Text)
-        Next
-
-        gearbox.TorqueResv = TbTqResv.Text.ToDouble(0)
-        gearbox.ShiftTime = TbMinTimeBetweenShifts.Text.ToDouble(0)
-        gearbox.TorqueResvStart = TbTqResvStart.Text.ToDouble(0)
-        gearbox.StartSpeed = TbStartSpeed.Text.ToDouble(0)
-        gearbox.StartAcc = TbStartAcc.Text.ToDouble(0)
-
-        gearbox.Type = CType(CbGStype.SelectedValue, GearboxType)
-
-        gearbox.Type.AutomaticTransmission()
-        gearbox.TorqueConverterFile = TbTCfile.Text
-        gearbox.TorqueConverterReferenceRpm = TbTCrefrpm.Text.ToDouble(0)
-        gearbox.TorqueConverterInertia = TbTCinertia.Text.ToDouble(0)
-        gearbox.TorqueConverterShiftPolygonFile = TBTCShiftPolygon.Text
-        gearbox.TorqueConverterMaxSpeed = tbTCmaxSpeed.Text.ToDouble(0)
-
-        gearbox.DownshiftAfterUpshift = tbDownshiftAfterUpshift.Text.ToDouble(0)
-        gearbox.UpshiftAfterDownshift = tbUpshiftAfterDownshift.Text.ToDouble(0)
-        gearbox.UpshiftMinAcceleration = tbUpshiftMinAcceleration.Text.ToDouble(0)
-
-        gearbox.PSInertiaFactor = tbATInertiaFactor.Text.ToDouble(0)
-        gearbox.PSShiftTime = tbATShiftTime.Text.ToDouble(0)
+		DeclInit()
 
 
-        If Not gearbox.SaveFile Then
-            MsgBox("Cannot safe to " & file, MsgBoxStyle.Critical)
-            Return False
-        End If
+		GearboxFileBrowser.UpdateHistory(file)
+		Text = GetFilenameWithoutPath(file, True)
+		LbStatus.Text = ""
+		_gbxFile = file
+		Activate()
 
-        If AutoSendTo Then
-            If VectoJobForm.Visible Then
-                If UCase(FileRepl(VectoJobForm.TbGBX.Text, JobDir)) <> UCase(file) Then _
-                    VectoJobForm.TbGBX.Text = GetFilenameWithoutDirectory(file, JobDir)
-                VectoJobForm.UpdatePic()
-            End If
-        End If
+		_changed = False
+		UpdatePic()
+	End Sub
 
-        GearboxFileBrowser.UpdateHistory(file)
-        Text = GetFilenameWithoutPath(file, True)
-        LbStatus.Text = ""
+	Private Function CreateListviewItem(gear As String, ratio As Double, getrMap As String,
+										shiftPolygon As String, maxTorque As String) As ListViewItem
+		Dim retVal As ListViewItem = New ListViewItem(gear)
+		'retVal.SubItems.Add(tc)
+		retVal.SubItems.Add(ratio.ToGUIFormat())
+		retVal.SubItems.Add(getrMap)
+		retVal.SubItems.Add(shiftPolygon)
+		retVal.SubItems.Add(maxTorque)
+		Return retVal
+	End Function
 
-        _changed = False
+	'Save or Save As function = true if file is saved
+	Private Function SaveOrSaveAs(saveAs As Boolean) As Boolean
+		If _gbxFile = "" Or saveAs Then
+			If GearboxFileBrowser.SaveDialog(_gbxFile) Then
+				_gbxFile = GearboxFileBrowser.Files(0)
+			Else
+				Return False
+			End If
+		End If
+		Return SaveGbx(_gbxFile)
+	End Function
 
-        Return True
-    End Function
+	'Save file
+	Private Function SaveGbx(file As String) As Boolean
+		Dim gearbox As Gearbox
+		Dim i As Integer
+
+		gearbox = New Gearbox
+		gearbox.FilePath = file
+
+		gearbox.ModelName = TbName.Text
+		If Trim(gearbox.ModelName) = "" Then gearbox.ModelName = "Undefined"
+
+		gearbox.TracIntrSi = TbTracInt.Text.ToDouble(0)
+		gearbox.GbxInertia = TBI_getr.Text.ToDouble(0)
+
+		For i = 0 To LvGears.Items.Count - 1
+			'GBX0.IsTCgear.Add(Me.LvGears.Items(i).SubItems(GearboxTbl.TorqueConverter).Text = "on" And i > 0)
+			gearbox.GearRatios.Add(LvGears.Items(i).SubItems(GearboxTbl.Ratio).Text.ToDouble(0))
+			gearbox.GearLossmaps.Add(New SubPath)
+			gearbox.GearLossMap(i) = LvGears.Items(i).SubItems(GearboxTbl.LossMapEfficiency).Text
+			gearbox.GearshiftFiles.Add(New SubPath)
+			gearbox.ShiftPolygonFile(i) = LvGears.Items(i).SubItems(GearboxTbl.ShiftPolygons).Text
+			'GBX0.FldFiles.Add(New cSubPath)
+			'GBX0.FldFile(i) = Me.LvGears.Items(i).SubItems(GearboxTbl.MaxTorque).Text
+			gearbox.MaxTorque.Add(LvGears.Items(i).SubItems(GearboxTbl.MaxTorque).Text)
+		Next
+
+		gearbox.TorqueResv = TbTqResv.Text.ToDouble(0)
+		gearbox.ShiftTime = TbMinTimeBetweenShifts.Text.ToDouble(0)
+		gearbox.TorqueResvStart = TbTqResvStart.Text.ToDouble(0)
+		gearbox.StartSpeed = TbStartSpeed.Text.ToDouble(0)
+		gearbox.StartAcc = TbStartAcc.Text.ToDouble(0)
+
+		gearbox.Type = CType(CbGStype.SelectedValue, GearboxType)
+
+		gearbox.Type.AutomaticTransmission()
+		gearbox.TorqueConverterFile = TbTCfile.Text
+		gearbox.TorqueConverterReferenceRpm = TbTCrefrpm.Text.ToDouble(0)
+		gearbox.TorqueConverterInertia = TbTCinertia.Text.ToDouble(0)
+		gearbox.TorqueConverterShiftPolygonFile = TBTCShiftPolygon.Text
+		gearbox.TorqueConverterMaxSpeed = tbTCmaxSpeed.Text.ToDouble(0)
+
+		gearbox.DownshiftAfterUpshift = tbDownshiftAfterUpshift.Text.ToDouble(0)
+		gearbox.UpshiftAfterDownshift = tbUpshiftAfterDownshift.Text.ToDouble(0)
+
+		gearbox.UpshiftMinAcceleration = tbUpshiftMinAcceleration.Text.ToDouble(0)
+		gearbox.TCLUpshiftMinAcceleration = tbTCLUpshiftMinAcceleration.Text.ToDouble(0)
+		gearbox.TCCUpshiftMinAcceleration = tbTCCUpshiftMinAcceleration.Text.ToDouble(0)
+
+		gearbox.PSInertiaFactor = tbATInertiaFactor.Text.ToDouble(0)
+		gearbox.PSShiftTime = tbATShiftTime.Text.ToDouble(0)
+
+
+		If Not gearbox.SaveFile Then
+			MsgBox("Cannot safe to " & file, MsgBoxStyle.Critical)
+			Return False
+		End If
+
+		If AutoSendTo Then
+			If VectoJobForm.Visible Then
+				If UCase(FileRepl(VectoJobForm.TbGBX.Text, JobDir)) <> UCase(file) Then _
+					VectoJobForm.TbGBX.Text = GetFilenameWithoutDirectory(file, JobDir)
+				VectoJobForm.UpdatePic()
+			End If
+		End If
+
+		GearboxFileBrowser.UpdateHistory(file)
+		Text = GetFilenameWithoutPath(file, True)
+		LbStatus.Text = ""
+
+		_changed = False
+
+		Return True
+	End Function
 
 #Region "Change Events"
 
-    'Change Status ändern |@@| Change Status change
-    Private Sub Change()
-        If Not _changed Then
-            LbStatus.Text = "Unsaved changes in current file"
-            _changed = True
-        End If
-    End Sub
+	'Change Status ändern |@@| Change Status change
+	Private Sub Change()
+		If Not _changed Then
+			LbStatus.Text = "Unsaved changes in current file"
+			_changed = True
+		End If
+	End Sub
 
-    ' "Save changes ?" ...liefert True wenn User Vorgang abbricht |@@| Save changes? "... Returns True if user aborts
-    Private Function ChangeCheckCancel() As Boolean
+	' "Save changes ?" ...liefert True wenn User Vorgang abbricht |@@| Save changes? "... Returns True if user aborts
+	Private Function ChangeCheckCancel() As Boolean
 
-        If _changed Then
-            Select Case MsgBox("Save changes ?", MsgBoxStyle.YesNoCancel)
-                Case MsgBoxResult.Yes
-                    Return Not SaveOrSaveAs(False)
-                Case MsgBoxResult.Cancel
-                    Return True
-                Case Else 'MsgBoxResult.No
-                    _changed = False
-                    Return False
-            End Select
+		If _changed Then
+			Select Case MsgBox("Save changes ?", MsgBoxStyle.YesNoCancel)
+				Case MsgBoxResult.Yes
+					Return Not SaveOrSaveAs(False)
+				Case MsgBoxResult.Cancel
+					Return True
+				Case Else 'MsgBoxResult.No
+					_changed = False
+					Return False
+			End Select
 
-        Else
+		Else
 
-            Return False
+			Return False
 
-        End If
-    End Function
+		End If
+	End Function
 
-    Private Sub TbName_TextChanged(sender As Object, e As EventArgs) Handles TbName.TextChanged
-        Change()
-    End Sub
-
-    Private Sub TBI_getr_TextChanged(sender As Object, e As EventArgs) Handles TBI_getr.TextChanged
-        Change()
-    End Sub
-
-    Private Sub TbTracInt_TextChanged(sender As Object, e As EventArgs) Handles TbTracInt.TextChanged
-        Change()
-    End Sub
-
-    Private Sub TbTqResv_TextChanged(sender As Object, e As EventArgs) Handles TbTqResv.TextChanged
-        Change()
-    End Sub
-
-    Private Sub TbShiftTime_TextChanged(sender As Object, e As EventArgs) Handles TbMinTimeBetweenShifts.TextChanged
-        Change()
-    End Sub
-
-    Private Sub TbTqResvStart_TextChanged(sender As Object, e As EventArgs) Handles TbTqResvStart.TextChanged
-        Change()
-    End Sub
-
-    Private Sub TbStartSpeed_TextChanged(sender As Object, e As EventArgs) Handles TbStartSpeed.TextChanged
-        Change()
-    End Sub
-
-    Private Sub TbStartAcc_TextChanged(sender As Object, e As EventArgs) Handles TbStartAcc.TextChanged
-        Change()
-    End Sub
-
-    Private Sub TbTCfile_TextChanged(sender As Object, e As EventArgs) Handles TbTCfile.TextChanged
-        Change()
-    End Sub
-
-    Private Sub TbTCrefrpm_TextChanged(sender As Object, e As EventArgs) Handles TbTCrefrpm.TextChanged
-        Change()
-    End Sub
-
-    Private Sub TbTCinertia_TextChanged(sender As Object, e As EventArgs) Handles TbTCinertia.TextChanged
-        Change()
-    End Sub
-
+	Private Sub TbName_TextChanged(sender As Object, e As EventArgs) _
+		Handles TbName.TextChanged, TBI_getr.TextChanged, TbTracInt.TextChanged, TbTqResv.TextChanged,
+				TbMinTimeBetweenShifts.TextChanged, TbTqResvStart.TextChanged, TbStartSpeed.TextChanged, TbStartAcc.TextChanged,
+				TbTCfile.TextChanged, TbTCrefrpm.TextChanged, TbTCinertia.TextChanged, tbTCmaxSpeed.TextChanged,
+				tbTCCUpshiftMinAcceleration.TextChanged, tbTCLUpshiftMinAcceleration.TextChanged
+		Change()
+	End Sub
 
 #End Region
 
@@ -505,7 +486,8 @@ Public Class GearboxForm
 		Change()
 
 		'ChTCon.Enabled = (GStype.AutomaticTransmission())
-		PnTC.Enabled = gStype.AutomaticTransmission()
+		gbTC.Enabled = gStype.AutomaticTransmission()
+		gbTCAccMin.Enabled = gStype.AutomaticTransmission()
 		TbStartAcc.Enabled = Not gStype.AutomaticTransmission()
 		TbStartSpeed.Enabled = Not gStype.AutomaticTransmission()
 		TbTqResv.Enabled = Not gStype.AutomaticTransmission()
@@ -765,7 +747,7 @@ Public Class GearboxForm
 		Dim jobFile As String = VectoJobForm.VectoFile
 		If Not jobFile Is Nothing AndAlso File.Exists(jobFile) Then
 
-			Dim inputData As IEngineeringInputDataProvider = TryCast(JSONInputDataFactory.ReadJsonJob(jobFile), 
+			Dim inputData As IEngineeringInputDataProvider = TryCast(JSONInputDataFactory.ReadJsonJob(jobFile),
 																	IEngineeringInputDataProvider)
 			If (inputData Is Nothing) Then
 				Exit Sub

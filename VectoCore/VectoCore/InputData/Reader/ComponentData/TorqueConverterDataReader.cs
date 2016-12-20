@@ -44,17 +44,21 @@ namespace TUGraz.VectoCore.InputData.Reader.ComponentData
 {
 	public class TorqueConverterDataReader
 	{
-		public static TorqueConverterData ReadFromFile(string filename, PerSecond referenceRpm, PerSecond maxRpm, ExecutionMode mode, double ratio)
+		public static TorqueConverterData ReadFromFile(string filename, PerSecond referenceRpm, PerSecond maxRpm,
+			ExecutionMode mode, double ratio, MeterPerSquareSecond lcMinAcceleration, MeterPerSquareSecond ccMinAcceleration)
 		{
-			return Create(VectoCSVFile.Read(filename), referenceRpm, maxRpm, mode, ratio);
+			return Create(VectoCSVFile.Read(filename), referenceRpm, maxRpm, mode, ratio, lcMinAcceleration, ccMinAcceleration);
 		}
 
-		public static TorqueConverterData ReadFromStream(Stream stream, PerSecond referenceRpm, PerSecond maxRpm, ExecutionMode mode, double ratio)
+		public static TorqueConverterData ReadFromStream(Stream stream, PerSecond referenceRpm, PerSecond maxRpm,
+			ExecutionMode mode, double ratio, MeterPerSquareSecond lcMinAcceleration, MeterPerSquareSecond ccMinAcceleration)
 		{
-			return Create(VectoCSVFile.ReadStream(stream), referenceRpm, maxRpm, mode, ratio);
+			return Create(VectoCSVFile.ReadStream(stream), referenceRpm, maxRpm, mode, ratio, lcMinAcceleration,
+				ccMinAcceleration);
 		}
 
-		public static TorqueConverterData Create(DataTable data, PerSecond referenceRpm, PerSecond maxRpm, ExecutionMode mode, double ratio)
+		public static TorqueConverterData Create(DataTable data, PerSecond referenceRpm, PerSecond maxRpm, ExecutionMode mode,
+			double ratio, MeterPerSquareSecond lcMinAcceleration, MeterPerSquareSecond ccMinAcceleration)
 		{
 			if (data == null)
 				throw new VectoException("TorqueConverter Characteristics data is missing.");
@@ -70,28 +74,34 @@ namespace TUGraz.VectoCore.InputData.Reader.ComponentData
 			if (HeaderIsValid(data.Columns)) {
 				characteristicTorque = (from DataRow row in data.Rows
 					select
-						new TorqueConverterEntry() {
-							SpeedRatio = row.ParseDouble(Fields.SpeedRatio),
-							Torque = row.ParseDouble(Fields.CharacteristicTorque).SI<NewtonMeter>(),
-							TorqueRatio = row.ParseDouble(Fields.TorqueRatio)
-						}).ToArray();
+					new TorqueConverterEntry() {
+						SpeedRatio = row.ParseDouble(Fields.SpeedRatio),
+						Torque = row.ParseDouble(Fields.CharacteristicTorque).SI<NewtonMeter>(),
+						TorqueRatio = row.ParseDouble(Fields.TorqueRatio)
+					}).ToArray();
 			} else {
 				characteristicTorque = (from DataRow row in data.Rows
 					select
-						new TorqueConverterEntry() {
-							SpeedRatio = row.ParseDouble(0),
-							Torque = row.ParseDouble(2).SI<NewtonMeter>(),
-							TorqueRatio = row.ParseDouble(1)
-						}).ToArray();
+					new TorqueConverterEntry() {
+						SpeedRatio = row.ParseDouble(0),
+						Torque = row.ParseDouble(2).SI<NewtonMeter>(),
+						TorqueRatio = row.ParseDouble(1)
+					}).ToArray();
 			}
 			if (mode == ExecutionMode.Declaration) {
-				characteristicTorque = characteristicTorque.Where(x => x.SpeedRatio < ratio).Concat(DeclarationData.Gearbox.GetTorqueConverterDragCurve(ratio)).ToArray();
+				characteristicTorque =
+					characteristicTorque.Where(x => x.SpeedRatio < ratio)
+						.Concat(DeclarationData.Gearbox.GetTorqueConverterDragCurve(ratio))
+						.ToArray();
 			} else {
 				if (!characteristicTorque.Any(x => x.SpeedRatio > ratio)) {
-					characteristicTorque = characteristicTorque.Where(x => x.SpeedRatio < ratio).Concat(DeclarationData.Gearbox.GetTorqueConverterDragCurve(ratio)).ToArray();
+					characteristicTorque =
+						characteristicTorque.Where(x => x.SpeedRatio < ratio)
+							.Concat(DeclarationData.Gearbox.GetTorqueConverterDragCurve(ratio))
+							.ToArray();
 				}
 			}
-			return new TorqueConverterData(characteristicTorque, referenceRpm, maxRpm);
+			return new TorqueConverterData(characteristicTorque, referenceRpm, maxRpm, lcMinAcceleration, ccMinAcceleration);
 		}
 
 		private static bool HeaderIsValid(DataColumnCollection columns)

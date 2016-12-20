@@ -207,13 +207,11 @@ namespace TUGraz.VectoCore.Models.SimulationComponent.Impl
 				var nextEnginePower = currentEnginePower / nextEngineSpeed;
 				var isAboveUpShift = IsAboveUpShiftCurve(gear, nextEnginePower, nextEngineSpeed, _gearbox.TorqueConverterLocked);
 
-				//var engineCanSupplyPower =
-				//	currentEnginePower.IsSmallerOrEqual(DataBus.EngineStationaryFullPower(nextEngineSpeed));
-
 				var reachableAcceleration = EstimateAccelerationForGear(nextGear, outAngularVelocity);
 				var minAcceleration = _gearbox.TorqueConverterLocked
 					? ModelData.UpshiftMinAcceleration
-					: ModelData.TorqueConverterData.UpshiftMinAcceleration;
+					: ModelData.TorqueConverterData.CLUpshiftMinAcceleration;
+				minAcceleration = VectoMath.Min(minAcceleration, DataBus.DriverAcceleration);
 				var minAccelerationReachable = reachableAcceleration.IsGreaterOrEqual(minAcceleration);
 
 				// todo mk-2016-12-19: check that accMin can be reached!
@@ -241,10 +239,11 @@ namespace TUGraz.VectoCore.Models.SimulationComponent.Impl
 				var engineSpeedOverMin = tcOperatingPoint.InAngularVelocity.IsGreater(minEngineSpeed);
 
 				// todo mk-2016-12-19: calculate accelerationReachable with param TCCaccMin: acc > min(driver-demand-acc, TCCaccMin)
-				//var engineCanSupplyPower = DataBus.EngineStationaryFullPower(tcOperatingPoint.InAngularVelocity)
-				//	.IsGreater(0.7 * DataBus.EngineStationaryFullPower(inAngularVelocity));
 
-				var minAccelerationReachable = true;
+				var reachableAcceleration = EstimateAccelerationForGear(gear + 1, outAngularVelocity);
+				var minAcceleration = VectoMath.Min(ModelData.TorqueConverterData.CCUpshiftMinAcceleration,
+					DataBus.DriverAcceleration);
+				var minAccelerationReachable = reachableAcceleration.IsGreaterOrEqual(minAcceleration);
 
 				if (shiftTimeReached && engineSpeedOverMin && minAccelerationReachable) {
 					Upshift(absTime, gear);

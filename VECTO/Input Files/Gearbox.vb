@@ -55,55 +55,56 @@ Public Class Gearbox
 
 	Public Type As GearboxType
 
-    'Torque Converter Input
-    Public TorqueConverterReferenceRpm As Double
-    Private ReadOnly _torqueConverterFile As New SubPath
-    Public TorqueConverterInertia As Double
-    Public TorqueConverterShiftPolygonFile As String
+	'Torque Converter Input
+	Public TorqueConverterReferenceRpm As Double
+	Private ReadOnly _torqueConverterFile As New SubPath
+	Public TorqueConverterInertia As Double
+	Public TorqueConverterShiftPolygonFile As String
+	Public TCLUpshiftMinAcceleration As Double
+	Public TCCUpshiftMinAcceleration As Double
+
+	Public UpshiftMinAcceleration As Double
+	Public DownshiftAfterUpshift As Double
+	Public UpshiftAfterDownshift As Double
+	Public TorqueConverterMaxSpeed As Double
+
+	Public PSInertiaFactor As Double
+
+	Public PSShiftTime As Double
 
 
-    Public UpshiftMinAcceleration As Double
-    Public DownshiftAfterUpshift As Double
-    Public UpshiftAfterDownshift As Double
-    Public TorqueConverterMaxSpeed As Double
+	Public Sub New()
+		_myPath = ""
+		_filePath = ""
+		SetDefault()
+	End Sub
 
-    Public PSInertiaFactor As Double
+	Private Sub SetDefault()
 
-    Public PSShiftTime As Double
+		ModelName = ""
+		GbxInertia = 0
+		TracIntrSi = 0
 
+		GearRatios = New List(Of Double)
+		GearLossmaps = New List(Of SubPath)
+		GearshiftFiles = New List(Of SubPath)
+		MaxTorque = New List(Of String)
 
-    Public Sub New()
-        _myPath = ""
-        _filePath = ""
-        SetDefault()
-    End Sub
+		TorqueResv = 0
+		'SkipGears = False
+		ShiftTime = 0
+		TorqueResvStart = 0
+		StartSpeed = 0
+		StartAcc = 0
+		'ShiftInside = False
 
-    Private Sub SetDefault()
+		Type = GearboxType.MT
 
-        ModelName = ""
-        GbxInertia = 0
-        TracIntrSi = 0
+		TorqueConverterReferenceRpm = 0
+		_torqueConverterFile.Clear()
 
-        GearRatios = New List(Of Double)
-        GearLossmaps = New List(Of SubPath)
-        GearshiftFiles = New List(Of SubPath)
-        MaxTorque = New List(Of String)
-
-        TorqueResv = 0
-        'SkipGears = False
-        ShiftTime = 0
-        TorqueResvStart = 0
-        StartSpeed = 0
-        StartAcc = 0
-        'ShiftInside = False
-
-        Type = GearboxType.MT
-
-        TorqueConverterReferenceRpm = 0
-        _torqueConverterFile.Clear()
-
-        TorqueConverterInertia = 0
-    End Sub
+		TorqueConverterInertia = 0
+	End Sub
 
 	Public Function SaveFile() As Boolean
 
@@ -387,6 +388,21 @@ Public Class Gearbox
 		End Get
 	End Property
 
+	Public ReadOnly Property CLUpshiftMinAcceleration As MeterPerSquareSecond _
+		Implements ITorqueConverterEngineeringInputData.CLUpshiftMinAcceleration
+		Get
+			Return TCLUpshiftMinAcceleration.SI (Of MeterPerSquareSecond)()
+		End Get
+	End Property
+
+	Public ReadOnly Property CCUpshiftMinAcceleration As MeterPerSquareSecond _
+		Implements ITorqueConverterEngineeringInputData.CCUpshiftMinAcceleration
+		Get
+			Return TCCUpshiftMinAcceleration.SI (Of MeterPerSquareSecond)()
+		End Get
+	End Property
+
+
 	Public ReadOnly Property TractionInterruption As Second Implements IGearboxEngineeringInputData.TractionInterruption
 		Get
 			Return TracIntrSi.SI (Of Second)()
@@ -421,7 +437,7 @@ Public Class Gearbox
 	End Property
 
 	Public ReadOnly Property DownshiftAferUpshiftDelay As Second _
-		Implements IGearboxEngineeringInputData.DownshiftAferUpshiftDelay
+		Implements IGearboxEngineeringInputData.DownshiftAfterUpshiftDelay
 		Get
 			Return DownshiftAfterUpshift.SI (Of Second)()
 		End Get
@@ -432,66 +448,68 @@ Public Class Gearbox
 		Get
 			Return UpshiftAfterDownshift.SI (Of Second)()
 		End Get
-    End Property
+	End Property
 
-    Public ReadOnly Property PowershiftShiftTime As Second Implements IGearboxEngineeringInputData.PowershiftShiftTime
-        Get
-            Return PSShiftTime.SI(Of Second)()
-        End Get
-    End Property
-    Public ReadOnly Property PowerShiftInertiaFactor As Double Implements IGearboxEngineeringInputData.PowerShiftInertiaFactor
-        Get
-            Return PSInertiaFactor
-        End Get
-    End Property
+	Public ReadOnly Property PowershiftShiftTime As Second Implements IGearboxEngineeringInputData.PowershiftShiftTime
+		Get
+			Return PSShiftTime.SI (Of Second)()
+		End Get
+	End Property
 
-    Public ReadOnly Property IGearboxEngineeringInputData_UpshiftMinAcceleration As MeterPerSquareSecond _
-        Implements IGearboxEngineeringInputData.UpshiftMinAcceleration
-        Get
-            Return UpshiftMinAcceleration.SI(Of MeterPerSquareSecond)()
-        End Get
-    End Property
+	Public ReadOnly Property PowerShiftInertiaFactor As Double _
+		Implements IGearboxEngineeringInputData.PowerShiftInertiaFactor
+		Get
+			Return PSInertiaFactor
+		End Get
+	End Property
 
-
-    Public ReadOnly Property IGearboxEngineeringInputData_StartSpeed As MeterPerSecond _
-        Implements IGearboxEngineeringInputData.StartSpeed
-        Get
-            Return StartSpeed.SI(Of MeterPerSecond)()
-        End Get
-    End Property
-
-    Public ReadOnly Property MinTimeBetweenGearshift As Second _
-        Implements IGearboxEngineeringInputData.MinTimeBetweenGearshift
-        Get
-            Return ShiftTime.SI(Of Second)()
-        End Get
-    End Property
-
-    Public ReadOnly Property TCData As TableData Implements ITorqueConverterDeclarationInputData.TCData
-        Get
-            If Not File.Exists(_torqueConverterFile.FullPath) Then Return Nothing
-            Return VectoCSVFile.Read(_torqueConverterFile.FullPath)
-        End Get
-    End Property
+	Public ReadOnly Property IGearboxEngineeringInputData_UpshiftMinAcceleration As MeterPerSquareSecond _
+		Implements IGearboxEngineeringInputData.UpshiftMinAcceleration
+		Get
+			Return UpshiftMinAcceleration.SI (Of MeterPerSquareSecond)()
+		End Get
+	End Property
 
 
-    Public ReadOnly Property Ratio As Double Implements IAxleGearInputData.Ratio
-        Get
-            Return GearRatios(0)
-        End Get
-    End Property
+	Public ReadOnly Property IGearboxEngineeringInputData_StartSpeed As MeterPerSecond _
+		Implements IGearboxEngineeringInputData.StartSpeed
+		Get
+			Return StartSpeed.SI (Of MeterPerSecond)()
+		End Get
+	End Property
 
-    Public ReadOnly Property LossMap As TableData Implements IAxleGearInputData.LossMap
-        Get
-            If Not File.Exists(GearLossmaps(0).FullPath) Then Return Nothing
-            Return VectoCSVFile.Read(GearLossmaps(0).FullPath)
-        End Get
-    End Property
+	Public ReadOnly Property MinTimeBetweenGearshift As Second _
+		Implements IGearboxEngineeringInputData.MinTimeBetweenGearshift
+		Get
+			Return ShiftTime.SI (Of Second)()
+		End Get
+	End Property
 
-    Public ReadOnly Property Efficiency As Double Implements IAxleGearInputData.Efficiency
-        Get
-            Return GearLossMap(0, True).ToDouble(0)
-        End Get
-    End Property
+	Public ReadOnly Property TCData As TableData Implements ITorqueConverterDeclarationInputData.TCData
+		Get
+			If Not File.Exists(_torqueConverterFile.FullPath) Then Return Nothing
+			Return VectoCSVFile.Read(_torqueConverterFile.FullPath)
+		End Get
+	End Property
+
+
+	Public ReadOnly Property Ratio As Double Implements IAxleGearInputData.Ratio
+		Get
+			Return GearRatios(0)
+		End Get
+	End Property
+
+	Public ReadOnly Property LossMap As TableData Implements IAxleGearInputData.LossMap
+		Get
+			If Not File.Exists(GearLossmaps(0).FullPath) Then Return Nothing
+			Return VectoCSVFile.Read(GearLossmaps(0).FullPath)
+		End Get
+	End Property
+
+	Public ReadOnly Property Efficiency As Double Implements IAxleGearInputData.Efficiency
+		Get
+			Return GearLossMap(0, True).ToDouble(0)
+		End Get
+	End Property
 End Class
 

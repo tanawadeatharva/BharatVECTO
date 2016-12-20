@@ -54,7 +54,7 @@ namespace TUGraz.VectoCore.Models.SimulationComponent.Impl
 			CurrentState.dt = dt;
 			CurrentState.EngineSpeed = angularVelocity;
 			CurrentState.EngineTorqueOut = torque;
-//			var requestedEnginePower = ComputeRequestedEnginePower(absTime, dt, torque, angularVelocity);
+			//			var requestedEnginePower = ComputeRequestedEnginePower(absTime, dt, torque, angularVelocity);
 
 			var avgEngineSpeed = (PreviousState.EngineSpeed + CurrentState.EngineSpeed) / 2.0;
 
@@ -71,7 +71,7 @@ namespace TUGraz.VectoCore.Models.SimulationComponent.Impl
 			CurrentState.EngineTorque = totalTorqueDemand;
 
 			CurrentState.FullDragTorque = ModelData.FullLoadCurve.DragLoadStationaryTorque(avgEngineSpeed);
-			var dynamicFullLoadPower = ComputeFullLoadPower(avgEngineSpeed, dt);
+			var dynamicFullLoadPower = ComputeFullLoadPower(avgEngineSpeed, dt, dryRun);
 			CurrentState.DynamicFullLoadTorque = dynamicFullLoadPower / avgEngineSpeed;
 
 			ValidatePowerDemand(totalTorqueDemand);
@@ -91,7 +91,7 @@ namespace TUGraz.VectoCore.Models.SimulationComponent.Impl
 			// = requestedEnginePower; //todo + _currentState.EnginePowerLoss;
 			CurrentState.EngineTorque = CurrentState.EnginePower / CurrentState.EngineSpeed;
 
-			return new ResponseSuccess() { Source = this }; 
+			return new ResponseSuccess() { Source = this };
 		}
 
 		protected NewtonMeter LimitEnginePower(NewtonMeter requestedEngineTorque, PerSecond avgEngineSpeed, Second AbsTime)

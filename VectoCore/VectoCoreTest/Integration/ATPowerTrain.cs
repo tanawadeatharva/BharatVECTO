@@ -54,9 +54,9 @@ namespace TUGraz.VectoCore.Tests.Integration
 {
 	public class ATPowerTrain
 	{
-	    protected static readonly PerSecond MaxTcSpeed = 1500.RPMtoRad();
+		protected static readonly PerSecond MaxTcSpeed = 1500.RPMtoRad();
 
-	    public const string AccelerationFile = @"TestData\Components\Truck.vacc";
+		public const string AccelerationFile = @"TestData\Components\Truck.vacc";
 		public const string EngineFile = @"TestData\Components\AT_GBX\Engine.veng";
 		//public const string AxleGearLossMap = @"TestData\Components\AT_GBX\Axle.vtlm";
 		//public const string GearboxIndirectLoss = @"TestData\Components\AT_GBX\Indirect Gear.vtlm";
@@ -156,7 +156,8 @@ namespace TUGraz.VectoCore.Tests.Integration
 				PowershiftInertiaFactor = 0.7,
 				TorqueConverterData =
 					TorqueConverterDataReader.ReadFromFile(torqueConverterFile, 1000.RPMtoRad(),
-						MaxTcSpeed, ExecutionMode.Engineering, gbxType == GearboxType.ATSerial ? 1 : 1/ratios[0])
+						MaxTcSpeed, ExecutionMode.Engineering, gbxType == GearboxType.ATSerial ? 1 : 1 / ratios[0],
+						DeclarationData.Gearbox.UpshiftMinAcceleration, DeclarationData.Gearbox.UpshiftMinAcceleration)
 			};
 		}
 

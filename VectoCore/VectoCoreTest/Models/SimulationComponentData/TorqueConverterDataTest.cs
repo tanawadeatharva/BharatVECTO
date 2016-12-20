@@ -73,7 +73,8 @@ namespace TUGraz.VectoCore.Tests.Models.SimulationComponentData
 			};
 			var tqData =
 				TorqueConverterDataReader.ReadFromStream(InputDataHelper.InputDataAsStream("Speed Ratio, Torque Ratio, MP1000",
-					tqInput), 1000.RPMtoRad(), 1600.RPMtoRad(), ExecutionMode.Declaration, 1);
+						tqInput), 1000.RPMtoRad(), 1600.RPMtoRad(), ExecutionMode.Declaration, 1, 0.1.SI<MeterPerSquareSecond>(),
+					0.1.SI<MeterPerSquareSecond>());
 
 			// check input data
 			Assert.AreEqual(1.8, tqData.TorqueConverterEntries[0].TorqueRatio, 1e-9);
@@ -123,7 +124,8 @@ namespace TUGraz.VectoCore.Tests.Models.SimulationComponentData
 			var ratio = 0.75;
 			var tqData =
 				TorqueConverterDataReader.ReadFromStream(InputDataHelper.InputDataAsStream("Speed Ratio, Torque Ratio, MP1000",
-					tqInput), 1000.RPMtoRad(), 1600.RPMtoRad(), ExecutionMode.Declaration, ratio);
+						tqInput), 1000.RPMtoRad(), 1600.RPMtoRad(), ExecutionMode.Declaration, ratio, 0.1.SI<MeterPerSquareSecond>(),
+					0.1.SI<MeterPerSquareSecond>());
 
 			// check input data
 			Assert.AreEqual(1.8, tqData.TorqueConverterEntries[0].TorqueRatio, 1e-9);
@@ -161,7 +163,8 @@ namespace TUGraz.VectoCore.Tests.Models.SimulationComponentData
 			};
 			var tqData =
 				TorqueConverterDataReader.ReadFromStream(InputDataHelper.InputDataAsStream("Speed Ratio, Torque Ratio, MP1000",
-					tqInput), 1000.RPMtoRad(), 1600.RPMtoRad(), ExecutionMode.Engineering, 1);
+						tqInput), 1000.RPMtoRad(), 1600.RPMtoRad(), ExecutionMode.Engineering, 1, 0.1.SI<MeterPerSquareSecond>(),
+					0.1.SI<MeterPerSquareSecond>());
 
 			// check input data
 			Assert.AreEqual(1.8, tqData.TorqueConverterEntries[0].TorqueRatio, 1e-9);
@@ -209,7 +212,8 @@ namespace TUGraz.VectoCore.Tests.Models.SimulationComponentData
 			};
 			var tqData =
 				TorqueConverterDataReader.ReadFromStream(InputDataHelper.InputDataAsStream("Speed Ratio, Torque Ratio, MP1000",
-					tqInput), 1000.RPMtoRad(), 1600.RPMtoRad(), ExecutionMode.Engineering, 1);
+						tqInput), 1000.RPMtoRad(), 1600.RPMtoRad(), ExecutionMode.Engineering, 1, 0.1.SI<MeterPerSquareSecond>(),
+					0.1.SI<MeterPerSquareSecond>());
 
 			// check input data
 			Assert.AreEqual(1.8, tqData.TorqueConverterEntries[0].TorqueRatio, 1e-9);
@@ -219,7 +223,6 @@ namespace TUGraz.VectoCore.Tests.Models.SimulationComponentData
 			Assert.AreEqual(0.95, tqData.TorqueConverterEntries[9].TorqueRatio, 1e-9);
 			Assert.AreEqual(188.90, tqData.TorqueConverterEntries[9].Torque.Value(), 1e-9);
 			Assert.AreEqual(0.9, tqData.TorqueConverterEntries[9].SpeedRatio, 1e-9);
-
 
 			Assert.AreEqual(0.95, tqData.TorqueConverterEntries[10].TorqueRatio, 1e-9);
 			Assert.AreEqual(0, tqData.TorqueConverterEntries[10].Torque.Value(), 1e-9);
@@ -266,7 +269,8 @@ namespace TUGraz.VectoCore.Tests.Models.SimulationComponentData
 
 			var tqData =
 				TorqueConverterDataReader.ReadFromStream(InputDataHelper.InputDataAsStream("Speed Ratio, Torque Ratio,MP1000",
-					tqInput), 1000.RPMtoRad(), tqLimit.RPMtoRad(), ExecutionMode.Engineering, 1);
+						tqInput), 1000.RPMtoRad(), tqLimit.RPMtoRad(), ExecutionMode.Engineering, 1, 0.1.SI<MeterPerSquareSecond>(),
+					0.1.SI<MeterPerSquareSecond>());
 
 			var outAngularSpeed = nOut.RPMtoRad();
 			var outTorque = (Pout * 1000).SI<Watt>() / outAngularSpeed;
@@ -302,14 +306,13 @@ namespace TUGraz.VectoCore.Tests.Models.SimulationComponentData
 
 			var tqData =
 				TorqueConverterDataReader.ReadFromStream(InputDataHelper.InputDataAsStream("Speed Ratio, Torque Ratio,MP1000",
-					tqInput), 1000.RPMtoRad(), tqLimit.RPMtoRad(), ExecutionMode.Engineering, 1);
-
+						tqInput), 1000.RPMtoRad(), tqLimit.RPMtoRad(), ExecutionMode.Engineering, 1, 0.1.SI<MeterPerSquareSecond>(),
+					0.1.SI<MeterPerSquareSecond>());
 
 			var operatingPoint = tqData.FindOperatingPointForward(tqIn.SI<NewtonMeter>(), nIn.RPMtoRad(), null);
 
 			Assert.AreEqual(operatingPoint.InTorque.Value(), tqIn, 1e-6);
 			Assert.AreEqual(operatingPoint.InAngularVelocity.Value(), nIn.RPMtoRad().Value(), 1e-6);
-
 
 			var resultList = tqData.FindOperatingPoint(operatingPoint.OutTorque, operatingPoint.OutAngularVelocity,
 				0.SI<PerSecond>());
@@ -349,7 +352,8 @@ namespace TUGraz.VectoCore.Tests.Models.SimulationComponentData
 			};
 			var tqData =
 				TorqueConverterDataReader.ReadFromStream(InputDataHelper.InputDataAsStream("Speed Ratio, Torque Ratio,MP1000",
-					tqInput), 1000.RPMtoRad(), tqLimit.RPMtoRad(), ExecutionMode.Engineering, 1);
+						tqInput), 1000.RPMtoRad(), tqLimit.RPMtoRad(), ExecutionMode.Engineering, 1, 0.1.SI<MeterPerSquareSecond>(),
+					0.1.SI<MeterPerSquareSecond>());
 
 			foreach (var entry in testData) {
 				var torqueTCOut = entry.Item1.SI<NewtonMeter>();
@@ -359,7 +363,6 @@ namespace TUGraz.VectoCore.Tests.Models.SimulationComponentData
 					torqueTCOut.Value(), result.InAngularVelocity.Value() / Constants.RPMToRad, result.InTorque.Value());
 			}
 		}
-
 
 		[Test,
 		TestCase(10, 110),
@@ -395,7 +398,8 @@ namespace TUGraz.VectoCore.Tests.Models.SimulationComponentData
 
 			var tqData =
 				TorqueConverterDataReader.ReadFromStream(InputDataHelper.InputDataAsStream("Speed Ratio, Torque Ratio,MP1000",
-					tqInput), 1000.RPMtoRad(), tqLimit, ExecutionMode.Engineering, 1);
+						tqInput), 1000.RPMtoRad(), tqLimit, ExecutionMode.Engineering, 1, 0.1.SI<MeterPerSquareSecond>(),
+					0.1.SI<MeterPerSquareSecond>());
 
 			var outAngularSpeed = nOut.RPMtoRad();
 			var outTorque = (Pout * 1000).SI<Watt>() / outAngularSpeed;
@@ -405,7 +409,6 @@ namespace TUGraz.VectoCore.Tests.Models.SimulationComponentData
 
 			Assert.IsTrue(result.InAngularVelocity.Value() > tqLimit.Value());
 		}
-
 
 		[TestCase()]
 		public void TestForwardBackward()
@@ -455,10 +458,11 @@ namespace TUGraz.VectoCore.Tests.Models.SimulationComponentData
 			};
 			var tqData =
 				TorqueConverterDataReader.ReadFromStream(InputDataHelper.InputDataAsStream("Speed Ratio, Torque Ratio,MP1000",
-					tqInput), 1000.RPMtoRad(), tqLimit, ExecutionMode.Engineering, 1);
+						tqInput), 1000.RPMtoRad(), tqLimit, ExecutionMode.Engineering, 1, 0.1.SI<MeterPerSquareSecond>(),
+					0.1.SI<MeterPerSquareSecond>());
 
 			var operatingPoint = tqData.FindOperatingPointForPowerDemand(20000.SI<Watt>(), 113.5.SI<PerSecond>(),
-                1200.RPMtoRad(), 4.SI<KilogramSquareMeter>(), 0.5.SI<Second>(), 20000.SI<Watt>());
+				1200.RPMtoRad(), 4.SI<KilogramSquareMeter>(), 0.5.SI<Second>(), 20000.SI<Watt>());
 
 			var tmp = tqData.FindOperatingPoint(operatingPoint.OutTorque, operatingPoint.OutAngularVelocity, 0.RPMtoRad());
 			var backward = tmp.First();
