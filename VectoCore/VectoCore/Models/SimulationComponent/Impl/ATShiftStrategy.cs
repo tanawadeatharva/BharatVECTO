@@ -214,10 +214,6 @@ namespace TUGraz.VectoCore.Models.SimulationComponent.Impl
 				minAcceleration = VectoMath.Min(minAcceleration, DataBus.DriverAcceleration);
 				var minAccelerationReachable = reachableAcceleration.IsGreaterOrEqual(minAcceleration);
 
-				// todo mk-2016-12-19: check that accMin can be reached!
-				// todo l->l+1 LaccMin must be reachable
-				// todo C->l   TCLaccMin must be reachable
-				// todo acc > min(driver-demand-acc, accMin)
 				if (isAboveUpShift && minAccelerationReachable) {
 					Upshift(absTime, gear);
 					return true;
@@ -238,14 +234,12 @@ namespace TUGraz.VectoCore.Models.SimulationComponent.Impl
 
 				var engineSpeedOverMin = tcOperatingPoint.InAngularVelocity.IsGreater(minEngineSpeed);
 
-				// todo mk-2016-12-19: calculate accelerationReachable with param TCCaccMin: acc > min(driver-demand-acc, TCCaccMin)
-
 				var reachableAcceleration = EstimateAccelerationForGear(gear + 1, outAngularVelocity);
 				var minAcceleration = VectoMath.Min(ModelData.TorqueConverterData.CCUpshiftMinAcceleration,
 					DataBus.DriverAcceleration);
 				var minAccelerationReachable = reachableAcceleration.IsGreaterOrEqual(minAcceleration);
 
-				if (shiftTimeReached && engineSpeedOverMin && minAccelerationReachable) {
+				if (engineSpeedOverMin && minAccelerationReachable) {
 					Upshift(absTime, gear);
 					return true;
 				}
@@ -296,10 +290,8 @@ namespace TUGraz.VectoCore.Models.SimulationComponent.Impl
 			NewtonMeter inTorque, PerSecond inAngularVelocity, uint gear, Second lastShiftTime)
 		{
 			var shiftTimeReached = (absTime - lastShiftTime).IsGreaterOrEqual(ModelData.ShiftTime);
-			if (!shiftTimeReached)
-				return false;
 
-			if (IsBelowDownShiftCurve(gear, inTorque, inAngularVelocity)) {
+			if (shiftTimeReached && IsBelowDownShiftCurve(gear, inTorque, inAngularVelocity)) {
 				Downshift(absTime, gear);
 				return true;
 			}

@@ -29,7 +29,6 @@
 *   Martin Rexeis, rexeis@ivt.tugraz.at, IVT, Graz University of Technology
 */
 
-using System.Collections.Generic;
 using TUGraz.VectoCommon.Models;
 using TUGraz.VectoCommon.Utils;
 using TUGraz.VectoCore.Models.Connector.Ports.Impl;
@@ -41,8 +40,6 @@ namespace TUGraz.VectoCore.Models.SimulationComponent.Impl
 {
 	public class EngineOnlyCombustionEngine : CombustionEngine
 	{
-		protected readonly List<Second> EnginePowerCorrections = new List<Second>();
-
 		public EngineOnlyCombustionEngine(IVehicleContainer container, CombustionEngineData modelData)
 			: base(container, modelData) {}
 
@@ -88,39 +85,29 @@ namespace TUGraz.VectoCore.Models.SimulationComponent.Impl
 
 			UpdateEngineState(CurrentState.EnginePower, avgEngineSpeed);
 
-			// = requestedEnginePower; //todo + _currentState.EnginePowerLoss;
 			CurrentState.EngineTorque = CurrentState.EnginePower / CurrentState.EngineSpeed;
 
-			return new ResponseSuccess() { Source = this };
+			return new ResponseSuccess { Source = this };
 		}
 
-		protected NewtonMeter LimitEnginePower(NewtonMeter requestedEngineTorque, PerSecond avgEngineSpeed, Second AbsTime)
+		protected NewtonMeter LimitEnginePower(NewtonMeter requestedEngineTorque, PerSecond avgEngineSpeed, Second absTime)
 		{
 			if (requestedEngineTorque > CurrentState.DynamicFullLoadTorque) {
 				if (requestedEngineTorque / CurrentState.DynamicFullLoadTorque > MaxTorqueExceededThreshold) {
-					EnginePowerCorrections.Add(AbsTime);
 					Log.Warn("t: {0}  requested power > P_engine_full * 1.05 - corrected. P_request: {1}  P_engine_full: {2}",
-						AbsTime, requestedEngineTorque * avgEngineSpeed, CurrentState.DynamicFullLoadTorque * avgEngineSpeed);
+						absTime, requestedEngineTorque * avgEngineSpeed, CurrentState.DynamicFullLoadTorque * avgEngineSpeed);
 				}
 				return CurrentState.DynamicFullLoadTorque;
 			}
 			if (requestedEngineTorque < CurrentState.FullDragTorque) {
 				if (requestedEngineTorque / CurrentState.FullDragTorque > MaxTorqueExceededThreshold &&
 					requestedEngineTorque > -99999) {
-					EnginePowerCorrections.Add(AbsTime);
 					Log.Warn("t: {0}  requested power < P_engine_drag * 1.05 - corrected. P_request: {1}  P_engine_drag: {2}",
-						AbsTime, requestedEngineTorque * avgEngineSpeed, CurrentState.FullDragTorque * avgEngineSpeed);
+						absTime, requestedEngineTorque * avgEngineSpeed, CurrentState.FullDragTorque * avgEngineSpeed);
 				}
 				return CurrentState.FullDragTorque;
 			}
 			return requestedEngineTorque;
-		}
-
-		public IList<string> Warnings()
-		{
-			IList<string> retVal = new List<string>();
-			retVal.Add(string.Format("Engine power corrected (>5%) in {0} time steps ", EnginePowerCorrections.Count));
-			return retVal;
 		}
 	}
 }

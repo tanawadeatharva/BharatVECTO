@@ -49,27 +49,6 @@ namespace TUGraz.VectoCore.OutputData
 	public interface IModalDataContainer
 	{
 		/// <summary>
-		/// Identify which run this modaldata container is for
-		/// </summary>
-		//todo mk 2016-10-11: Field is never used. Delete?
-		[Obsolete]
-		string RunName { get; }
-
-		/// <summary>
-		/// Identify which cycle is simulated 
-		/// </summary>
-		//todo mk 2016-10-11: Field is never used. Delete?
-		[Obsolete]
-		string CycleName { get; }
-
-		/// <summary>
-		/// Custom suffix for this run, typically the loading type
-		/// </summary>
-		//todo mk 2016-10-11: Field is never used. Delete?
-		[Obsolete]
-		string RunSuffix { get; }
-
-		/// <summary>
 		/// Indexer for fields of the DataWriter. Accesses the data of the current step.
 		/// </summary>
 		/// <param name="key"></param>
@@ -121,36 +100,10 @@ namespace TUGraz.VectoCore.OutputData
 			return data.GetValues<SI>(field).Min();
 		}
 
-		//todo mk 2016-10-11: Field is never used. Delete?
-		[Obsolete]
-		public static SI Average(this IModalDataContainer data, ModalResultField field, Func<SI, bool> filter = null)
-		{
-			return data.GetValues<SI>(field).Average(filter);
-		}
-
-		//todo mk 2016-10-11: Field is never used. Delete?
-		[Obsolete]
-		public static SI Sum(this IModalDataContainer data, ModalResultField field, Func<SI, bool> filter = null)
-		{
-			return data.GetValues<SI>(field).Where(filter ?? (x => x != null)).Sum();
-		}
-
-		//todo mk 2016-10-11: Field is never used. Delete?
-		[Obsolete]
-		public static SI Sum(this IModalDataContainer data, DataColumn col, Func<SI, bool> filter = null)
-		{
-			return data.GetValues<SI>(col).Where(filter ?? (x => x != null)).Sum();
-		}
-
 		public static SI Average(this IEnumerable<SI> self, Func<SI, bool> filter)
 		{
 			var values = self.Where(filter ?? (x => x != null && !double.IsNaN(x.Value()))).ToList();
 			return values.Any() ? values.Sum() / values.Count : null;
-		}
-
-		public static T DefaultIfNull<T>(this T self, T defaultValue) where T : class
-		{
-			return self ?? defaultValue;
 		}
 
 		/// <summary>

@@ -36,7 +36,6 @@ using TUGraz.VectoCommon.InputData;
 using TUGraz.VectoCommon.Models;
 using TUGraz.VectoCore.InputData.Reader.DataObjectAdapter;
 using TUGraz.VectoCore.Models.Simulation.Data;
-using TUGraz.VectoCore.Models.SimulationComponent.Data;
 
 [assembly: InternalsVisibleTo("VectoCoreTest")]
 
@@ -44,9 +43,6 @@ namespace TUGraz.VectoCore.InputData.Reader.Impl
 {
 	public class EngineeringModeVectoRunDataFactory : LoggingObject, IVectoRunDataFactory
 	{
-		// todo mk-2016-10-11: field is never used. Delete?
-		protected DriverData Driver;
-
 		protected readonly IEngineeringInputDataProvider InputDataProvider;
 
 		internal EngineeringModeVectoRunDataFactory(IEngineeringInputDataProvider dataProvider)
