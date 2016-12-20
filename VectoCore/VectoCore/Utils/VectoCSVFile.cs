@@ -95,7 +95,7 @@ namespace TUGraz.VectoCore.Utils
 		public static TableData ReadStream(Stream stream, bool ignoreEmptyColumns = false, bool fullHeader = false,
 			string source = null)
 		{
-			var retVal = new TableData(source);
+			var retVal = new TableData(source, DataSourceType.Embedded);
 			ReadCSV(retVal, stream, ignoreEmptyColumns, fullHeader);
 			return retVal;
 		}

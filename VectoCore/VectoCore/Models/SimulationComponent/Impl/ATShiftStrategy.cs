@@ -58,7 +58,7 @@ namespace TUGraz.VectoCore.Models.SimulationComponent.Impl
 
 		public override GearInfo NextGear
 		{
-			get { return new GearInfo { Gear = _nextGear.Gear, TorqueConverterLocked = _nextGear.TorqueConverterLocked }; }
+			get { return new GearInfo(_nextGear.Gear, _nextGear.TorqueConverterLocked); }
 		}
 
 		public ATShiftStrategy(GearboxData data, IDataBus dataBus) : base(data, dataBus) {}
@@ -191,7 +191,7 @@ namespace TUGraz.VectoCore.Models.SimulationComponent.Impl
 
 			if (_gearbox.TorqueConverterLocked || currentGear.HasLockedGear) {
 				// UPSHIFT - General Rule
-				// L -> L+1
+				// L -> L+1 
 				// C -> L
 				var nextGear = _gearbox.TorqueConverterLocked ? gear + 1 : gear;
 				if (!ModelData.Gears.ContainsKey(nextGear)) {

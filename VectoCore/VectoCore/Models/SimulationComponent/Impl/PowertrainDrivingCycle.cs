@@ -51,7 +51,7 @@ namespace TUGraz.VectoCore.Models.SimulationComponent.Impl
 		StatefulProviderComponent<SimpleComponentState, ISimulationOutPort, ITnInPort, ITnOutPort>,
 		IDrivingCycleInfo, ISimulationOutPort, ITnInProvider, ITnInPort
 	{
-		protected readonly DrivingCycleData Data;
+		protected readonly IDrivingCycleData Data;
 		protected IEnumerator<DrivingCycleData.DrivingCycleEntry> RightSample { get; set; }
 		protected IEnumerator<DrivingCycleData.DrivingCycleEntry> LeftSample { get; set; }
 
@@ -62,7 +62,7 @@ namespace TUGraz.VectoCore.Models.SimulationComponent.Impl
 		/// </summary>
 		/// <param name="container">The container.</param>
 		/// <param name="cycle">The cycle.</param>
-		public PowertrainDrivingCycle(IVehicleContainer container, DrivingCycleData cycle) : base(container)
+		public PowertrainDrivingCycle(IVehicleContainer container, IDrivingCycleData cycle) : base(container)
 		{
 			Data = cycle;
 			LeftSample = Data.Entries.GetEnumerator();
@@ -217,6 +217,11 @@ namespace TUGraz.VectoCore.Models.SimulationComponent.Impl
 		public IReadOnlyList<DrivingCycleData.DrivingCycleEntry> LookAhead(Second time)
 		{
 			throw new NotImplementedException();
+		}
+
+		public void FinishSimulation()
+		{
+			Data.Finish();
 		}
 	}
 }

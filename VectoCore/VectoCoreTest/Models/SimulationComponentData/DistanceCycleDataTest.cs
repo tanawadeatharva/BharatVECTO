@@ -31,6 +31,7 @@
 
 using Microsoft.VisualStudio.TestTools.UnitTesting;
 using TUGraz.VectoCommon.Exceptions;
+using TUGraz.VectoCore.Configuration;
 using TUGraz.VectoCore.InputData.Reader;
 using TUGraz.VectoCore.Models.SimulationComponent.Data;
 using TUGraz.VectoCore.Tests.Integration;
@@ -125,7 +126,8 @@ namespace TUGraz.VectoCore.Tests.Models.SimulationComponentData
 		public void CycleAltitudeTest()
 		{
 			var missionType = "LongHaul";
-			var stream = RessourceHelper.ReadStream(ResourceNamespace + "MissionCycles." + missionType + ".vdri");
+			var stream =
+				RessourceHelper.ReadStream(ResourceNamespace + "MissionCycles." + missionType + Constants.FileExtensions.CycleFile);
 
 			var cycleData = DrivingCycleDataReader.ReadFromStream(stream, CycleType.DistanceBased, "", false);
 			foreach (var entry in cycleData.Entries) {

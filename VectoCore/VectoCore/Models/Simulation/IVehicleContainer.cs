@@ -71,6 +71,6 @@ namespace TUGraz.VectoCore.Models.Simulation
 		/// <summary>
 		/// Finishes the simulation.
 		/// </summary>
-		void FinishSimulation();
+		new void FinishSimulation();
 	}
 }

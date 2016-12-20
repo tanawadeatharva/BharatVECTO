@@ -127,6 +127,7 @@
     <Compile Include="InputData\Reader\FullLoadCurveReader.cs" />
     <Compile Include="InputData\Reader\Impl\AbstractVectoRunDataFactory.cs" />
     <Compile Include="InputData\Reader\Impl\DeclarationModeVectoRunDataFactory.cs" />
+    <Compile Include="InputData\Reader\Impl\DrivingCycleProxy.cs" />
     <Compile Include="InputData\Reader\Impl\EngineeringModeVectoRunDataFactory.cs" />
     <Compile Include="InputData\Reader\Impl\EngineOnlyVectoRunDataFactory.cs" />
     <Compile Include="InputData\Reader\ShiftPolygonReader.cs" />

@@ -27,7 +27,7 @@ Imports TUGraz.VectoCore.Utils
 
 <CustomValidation(GetType(Gearbox), "ValidateGearbox")>
 Public Class Gearbox
-	Implements IGearboxEngineeringInputData, IGearboxDeclarationInputData, IAxleGearInputData,
+	Implements IGearboxEngineeringInputData, IGearboxDeclarationInputData, IAxleGearInputData, 
 				ITorqueConverterEngineeringInputData, ITorqueConverterDeclarationInputData
 
 	Private _myPath As String
@@ -186,7 +186,7 @@ Public Class Gearbox
 
 	' ReSharper disable once UnusedMember.Global -- used by Validation
 	Public Shared Function ValidateGearbox(gearbox As Gearbox, validationContext As ValidationContext) As ValidationResult
-		Dim modeService As ExecutionModeServiceContainer = TryCast(validationContext.GetService(GetType(ExecutionMode)),
+		Dim modeService As ExecutionModeServiceContainer = TryCast(validationContext.GetService(GetType(ExecutionMode)), 
 																	ExecutionModeServiceContainer)
 		Dim mode As ExecutionMode = If(modeService Is Nothing, ExecutionMode.Declaration, modeService.Mode)
 
@@ -197,11 +197,11 @@ Public Class Gearbox
 			'Dim vectoJob As VectoJob = New VectoJob() With {.FilePath = VectoJobForm.VECTOfile}
 			Dim vectoFile As String = VectoJobForm.VectoFile
 			Dim inputData As IEngineeringInputDataProvider =
-					TryCast(JSONInputDataFactory.ReadComponentData(vectoFile),
+					TryCast(JSONInputDataFactory.ReadComponentData(vectoFile), 
 							IEngineeringInputDataProvider)
 			'Dim vehicle As IVehicleEngineeringInputData = inputData.VehicleInputData
 			Dim engine As CombustionEngineData
-			Dim rdyn As Meter = 0.5.SI (Of Meter)()
+			Dim rdyn As Meter = 0.5.SI(Of Meter)()
 			If mode = ExecutionMode.Declaration Then
 				Dim doa As DeclarationDataAdapter = New DeclarationDataAdapter()
 
@@ -342,7 +342,7 @@ Public Class Gearbox
 					gearDict.ShiftPolygon = VectoCSVFile.Read(GearshiftFiles(i).FullPath)
 				End If
 				If Not String.IsNullOrWhiteSpace(MaxTorque(i)) AndAlso IsNumeric(MaxTorque(i)) Then
-					gearDict.MaxTorque = MaxTorque(i).ToDouble().SI (Of NewtonMeter)()
+					gearDict.MaxTorque = MaxTorque(i).ToDouble().SI(Of NewtonMeter)()
 				End If
 				If IsNumeric(GearLossMap(i, True)) Then
 					gearDict.Efficiency = GearLossMap(i, True).ToDouble()
@@ -365,13 +365,13 @@ Public Class Gearbox
 	Public ReadOnly Property ITorqueConverterEngineeringInputData_Inertia As KilogramSquareMeter _
 		Implements ITorqueConverterEngineeringInputData.Inertia
 		Get
-			Return TorqueConverterInertia.SI (Of KilogramSquareMeter)()
+			Return TorqueConverterInertia.SI(Of KilogramSquareMeter)()
 		End Get
 	End Property
 
 	Public ReadOnly Property Inertia As KilogramSquareMeter Implements IGearboxEngineeringInputData.Inertia
 		Get
-			Return GbxInertia.SI (Of KilogramSquareMeter)()
+			Return GbxInertia.SI(Of KilogramSquareMeter)()
 		End Get
 	End Property
 
@@ -391,41 +391,41 @@ Public Class Gearbox
 	Public ReadOnly Property CLUpshiftMinAcceleration As MeterPerSquareSecond _
 		Implements ITorqueConverterEngineeringInputData.CLUpshiftMinAcceleration
 		Get
-			Return TCLUpshiftMinAcceleration.SI (Of MeterPerSquareSecond)()
+			Return TCLUpshiftMinAcceleration.SI(Of MeterPerSquareSecond)()
 		End Get
 	End Property
 
 	Public ReadOnly Property CCUpshiftMinAcceleration As MeterPerSquareSecond _
 		Implements ITorqueConverterEngineeringInputData.CCUpshiftMinAcceleration
 		Get
-			Return TCCUpshiftMinAcceleration.SI (Of MeterPerSquareSecond)()
+			Return TCCUpshiftMinAcceleration.SI(Of MeterPerSquareSecond)()
 		End Get
 	End Property
 
 
 	Public ReadOnly Property TractionInterruption As Second Implements IGearboxEngineeringInputData.TractionInterruption
 		Get
-			Return TracIntrSi.SI (Of Second)()
+			Return TracIntrSi.SI(Of Second)()
 		End Get
 	End Property
 
 
 	Public ReadOnly Property TorqueReserve As Double Implements IGearboxEngineeringInputData.TorqueReserve
 		Get
-			Return TorqueResv/100
+			Return TorqueResv / 100
 		End Get
 	End Property
 
 	Public ReadOnly Property StartAcceleration As MeterPerSquareSecond _
 		Implements IGearboxEngineeringInputData.StartAcceleration
 		Get
-			Return StartAcc.SI (Of MeterPerSquareSecond)()
+			Return StartAcc.SI(Of MeterPerSquareSecond)()
 		End Get
 	End Property
 
 	Public ReadOnly Property StartTorqueReserve As Double Implements IGearboxEngineeringInputData.StartTorqueReserve
 		Get
-			Return TorqueResvStart/100
+			Return TorqueResvStart / 100
 		End Get
 	End Property
 
@@ -439,20 +439,20 @@ Public Class Gearbox
 	Public ReadOnly Property DownshiftAferUpshiftDelay As Second _
 		Implements IGearboxEngineeringInputData.DownshiftAfterUpshiftDelay
 		Get
-			Return DownshiftAfterUpshift.SI (Of Second)()
+			Return DownshiftAfterUpshift.SI(Of Second)()
 		End Get
 	End Property
 
 	Public ReadOnly Property UpshiftAfterDownshiftDelay As Second _
 		Implements IGearboxEngineeringInputData.UpshiftAfterDownshiftDelay
 		Get
-			Return UpshiftAfterDownshift.SI (Of Second)()
+			Return UpshiftAfterDownshift.SI(Of Second)()
 		End Get
 	End Property
 
 	Public ReadOnly Property PowershiftShiftTime As Second Implements IGearboxEngineeringInputData.PowershiftShiftTime
 		Get
-			Return PSShiftTime.SI (Of Second)()
+			Return PSShiftTime.SI(Of Second)()
 		End Get
 	End Property
 
@@ -466,7 +466,7 @@ Public Class Gearbox
 	Public ReadOnly Property IGearboxEngineeringInputData_UpshiftMinAcceleration As MeterPerSquareSecond _
 		Implements IGearboxEngineeringInputData.UpshiftMinAcceleration
 		Get
-			Return UpshiftMinAcceleration.SI (Of MeterPerSquareSecond)()
+			Return UpshiftMinAcceleration.SI(Of MeterPerSquareSecond)()
 		End Get
 	End Property
 
@@ -474,14 +474,14 @@ Public Class Gearbox
 	Public ReadOnly Property IGearboxEngineeringInputData_StartSpeed As MeterPerSecond _
 		Implements IGearboxEngineeringInputData.StartSpeed
 		Get
-			Return StartSpeed.SI (Of MeterPerSecond)()
+			Return StartSpeed.SI(Of MeterPerSecond)()
 		End Get
 	End Property
 
 	Public ReadOnly Property MinTimeBetweenGearshift As Second _
 		Implements IGearboxEngineeringInputData.MinTimeBetweenGearshift
 		Get
-			Return ShiftTime.SI (Of Second)()
+			Return ShiftTime.SI(Of Second)()
 		End Get
 	End Property
 

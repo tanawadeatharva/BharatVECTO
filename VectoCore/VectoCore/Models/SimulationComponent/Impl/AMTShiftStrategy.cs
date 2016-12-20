@@ -63,7 +63,7 @@ namespace TUGraz.VectoCore.Models.SimulationComponent.Impl
 
 		public override GearInfo NextGear
 		{
-			get { return new GearInfo() { Gear = _nextGear, TorqueConverterLocked = false }; }
+			get { return new GearInfo(_nextGear, false); }
 		}
 
 		public override uint Engage(Second absTime, Second dt, NewtonMeter outTorque, PerSecond outAngularVelocity)

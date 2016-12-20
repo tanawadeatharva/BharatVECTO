@@ -49,8 +49,7 @@ namespace TUGraz.VectoCore.Models.SimulationComponent.Impl
 		private readonly IShiftStrategy _strategy;
 		protected internal readonly TorqueConverter TorqueConverter;
 		private IIdleController _idleController;
-		private bool _requestAfterGearshift;
-		private readonly KilogramSquareMeter _engineInertia;
+		protected bool _requestAfterGearshift;
 
 		public bool TorqueConverterLocked
 		{
@@ -60,12 +59,11 @@ namespace TUGraz.VectoCore.Models.SimulationComponent.Impl
 
 		public ATGearbox(IVehicleContainer container, GearboxData gearboxModelData, IShiftStrategy strategy,
 			KilogramSquareMeter engineInertia)
-			: base(container, gearboxModelData)
+			: base(container, gearboxModelData, engineInertia)
 		{
 			_strategy = strategy;
 			_strategy.Gearbox = this;
-			LastShift = double.MinValue.SI<Second>();
-			_engineInertia = engineInertia;
+			LastShift = -double.MaxValue.SI<Second>();
 			TorqueConverter = new TorqueConverter(this, _strategy, container, gearboxModelData.TorqueConverterData,
 				engineInertia);
 		}
@@ -232,32 +230,6 @@ namespace TUGraz.VectoCore.Models.SimulationComponent.Impl
 
 			retVal.GearboxPowerRequest = outTorque * (PreviousState.OutAngularVelocity + outAngularVelocity) / 2.0;
 			return retVal;
-		}
-
-		protected internal NewtonMeter ComputeShiftLosses(Second dt, NewtonMeter outTorque, PerSecond outAngularVelocity)
-		{
-			var torqueGbxIn = outTorque / ModelData.Gears[Gear].Ratio;
-			var deltaEngineSpeed = DataBus.EngineSpeed - outAngularVelocity * ModelData.Gears[Gear].Ratio;
-			var deltaClutchSpeed = (DataBus.EngineSpeed - PreviousState.OutAngularVelocity * ModelData.Gears[Gear].Ratio) / 2;
-			var torqueInertia = _engineInertia * deltaEngineSpeed / dt;
-			var averageEngineSpeed = (DataBus.EngineSpeed + outAngularVelocity * ModelData.Gears[Gear].Ratio) / 2;
-			var torqueLoss = (torqueGbxIn + torqueInertia) * deltaClutchSpeed / averageEngineSpeed;
-
-			return torqueLoss.Abs();
-		}
-
-		private bool ConsiderShiftLosses(GearInfo nextGear, NewtonMeter torqueOut)
-		{
-			if (torqueOut.IsSmaller(0)) {
-				return false;
-			}
-			if (nextGear.Gear == 0) {
-				return false;
-			}
-			if (ModelData.Gears[2].HasTorqueConverter) {
-				return false; // nextGear.TorqueConverterLocked || nextGear.Gear == 2;
-			}
-			return nextGear.TorqueConverterLocked;
 		}
 
 		private IResponse RequestEngaged(Second absTime, Second dt, NewtonMeter outTorque, PerSecond outAngularVelocity,

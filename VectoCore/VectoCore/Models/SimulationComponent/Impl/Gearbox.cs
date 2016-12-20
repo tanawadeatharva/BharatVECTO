@@ -74,8 +74,8 @@ namespace TUGraz.VectoCore.Models.SimulationComponent.Impl
 			return _engageTime.IsSmallerOrEqual(absTime);
 		}
 
-		public Gearbox(IVehicleContainer container, GearboxData gearboxModelData, IShiftStrategy strategy)
-			: base(container, gearboxModelData)
+		public Gearbox(IVehicleContainer container, GearboxData gearboxModelData, IShiftStrategy strategy, KilogramSquareMeter engineInertia)
+			: base(container, gearboxModelData, engineInertia)
 		{
 			_strategy = strategy;
 			_strategy.Gearbox = this;

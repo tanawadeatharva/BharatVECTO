@@ -35,9 +35,9 @@ namespace TUGraz.VectoCommon.InputData
 {
 	public class TableData : DataTable
 	{
-		public TableData(string fileName)
+		public TableData(string fileName, DataSourceType sourceType = DataSourceType.CSVFile)
 		{
-			SourceType = DataSourceType.CSVFile;
+			SourceType = sourceType;
 			Source = fileName;
 		}
 

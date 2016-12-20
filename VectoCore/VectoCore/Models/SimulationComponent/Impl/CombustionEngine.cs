@@ -430,7 +430,7 @@ namespace TUGraz.VectoCore.Models.SimulationComponent.Impl
 
 			CurrentState.StationaryFullLoadTorque = ModelData.FullLoadCurve.FullLoadStationaryTorque(angularVelocity);
 			var stationaryFullLoadPower = CurrentState.StationaryFullLoadTorque * angularVelocity;
-			Watt dynFullPowerCalculated;
+			Watt dynFullPowerCalculated = 0.SI<Watt>();
 
 			// disable pt1 behaviour if PT1Disabled is true, or if the previous enginepower is greater than the current stationary fullload power (in this case the pt1 calculation fails)
 			if (PT1Disabled || PreviousState.EnginePower.IsGreaterOrEqual(stationaryFullLoadPower)) {

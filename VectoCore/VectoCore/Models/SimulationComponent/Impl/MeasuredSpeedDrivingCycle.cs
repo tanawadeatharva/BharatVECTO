@@ -52,7 +52,7 @@ namespace TUGraz.VectoCore.Models.SimulationComponent.Impl
 	/// </summary>
 	public class MeasuredSpeedDrivingCycle :
 		StatefulProviderComponent
-		<MeasuredSpeedDrivingCycle.DrivingCycleState, ISimulationOutPort, IDriverDemandInPort, IDriverDemandOutPort>,
+			<MeasuredSpeedDrivingCycle.DrivingCycleState, ISimulationOutPort, IDriverDemandInPort, IDriverDemandOutPort>,
 		IDriverInfo, IDrivingCycleInfo, IMileageCounter, IDriverDemandInProvider, IDriverDemandInPort, ISimulationOutProvider,
 		ISimulationOutPort
 	{
@@ -70,7 +70,7 @@ namespace TUGraz.VectoCore.Models.SimulationComponent.Impl
 			public MeterPerSquareSecond Acceleration;
 		}
 
-		protected readonly DrivingCycleData Data;
+		protected readonly IDrivingCycleData Data;
 		private bool _isInitializing;
 		protected IEnumerator<DrivingCycleData.DrivingCycleEntry> RightSample { get; set; }
 		protected IEnumerator<DrivingCycleData.DrivingCycleEntry> LeftSample { get; set; }
@@ -82,7 +82,7 @@ namespace TUGraz.VectoCore.Models.SimulationComponent.Impl
 		/// </summary>
 		/// <param name="container">The container.</param>
 		/// <param name="cycle">The cycle.</param>
-		public MeasuredSpeedDrivingCycle(IVehicleContainer container, DrivingCycleData cycle)
+		public MeasuredSpeedDrivingCycle(IVehicleContainer container, IDrivingCycleData cycle)
 			: base(container)
 		{
 			Data = cycle;
@@ -207,7 +207,7 @@ namespace TUGraz.VectoCore.Models.SimulationComponent.Impl
 							getYValue: result => ((ResponseDryRun)result).DeltaFullLoad,
 							evaluateFunction: x => NextComponent.Request(absTime, dt, x, gradient, true),
 							criterion:
-							y => ((ResponseDryRun)y).DeltaFullLoad.Value());
+								y => ((ResponseDryRun)y).DeltaFullLoad.Value());
 						Log.Info(
 							"Found operating point for driver acceleration. absTime: {0}, dt: {1}, acceleration: {2}, gradient: {3}",
 							absTime,
@@ -227,9 +227,10 @@ namespace TUGraz.VectoCore.Models.SimulationComponent.Impl
 			debug.Add(response);
 
 			CurrentState.SimulationDistance = acceleration / 2 * dt * dt + DataBus.VehicleSpeed * dt;
-			if (CurrentState.SimulationDistance.IsSmaller(0))
+			if (CurrentState.SimulationDistance.IsSmaller(0)) {
 				throw new VectoSimulationException(
 					"MeasuredSpeed: Simulation Distance must not be negative. Driving Backward is not allowed.");
+			}
 
 			CurrentState.Distance = CurrentState.SimulationDistance + PreviousState.Distance;
 			CurrentState.Acceleration = acceleration;
@@ -305,6 +306,11 @@ namespace TUGraz.VectoCore.Models.SimulationComponent.Impl
 		public IReadOnlyList<DrivingCycleData.DrivingCycleEntry> LookAhead(Second time)
 		{
 			throw new NotImplementedException();
+		}
+
+		public void FinishSimulation()
+		{
+			Data.Finish();
 		}
 
 		public bool VehicleStopped

@@ -118,7 +118,7 @@ namespace TUGraz.VectoCore.Tests.Integration
 				.AddComponent(new Brakes(container))
 				.AddComponent(new AxleGear(container, axleGearData))
 				.AddComponent(new DummyRetarder(container))
-				.AddComponent(new Gearbox(container, gearboxData, gbxStrategy))
+				.AddComponent(new Gearbox(container, gearboxData, gbxStrategy, engineData.Inertia))
 				.AddComponent(clutch)
 				.AddComponent(engine);
 
