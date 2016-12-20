@@ -488,18 +488,18 @@ Partial Class GearboxForm
 		Me.Label20.AutoSize = True
 		Me.Label20.Location = New System.Drawing.Point(20, 48)
 		Me.Label20.Name = "Label20"
-		Me.Label20.Size = New System.Drawing.Size(137, 13)
+		Me.Label20.Size = New System.Drawing.Size(140, 13)
 		Me.Label20.TabIndex = 1
-		Me.Label20.Text = "Upshift afer downshift delay"
+		Me.Label20.Text = "Upshift after downshift delay"
 		'
 		'Label19
 		'
 		Me.Label19.AutoSize = True
 		Me.Label19.Location = New System.Drawing.Point(20, 25)
 		Me.Label19.Name = "Label19"
-		Me.Label19.Size = New System.Drawing.Size(137, 13)
+		Me.Label19.Size = New System.Drawing.Size(140, 13)
 		Me.Label19.TabIndex = 0
-		Me.Label19.Text = "Downshift afer upshift delay"
+		Me.Label19.Text = "Downshift after upshift delay"
 		'
 		'PnTorqRes
 		'
