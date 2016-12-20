@@ -104,13 +104,14 @@ namespace TUGraz.VectoCore.Models.SimulationComponent.Impl
 				response = (TorqueConverterActive != null && TorqueConverterActive.Value)
 					? TorqueConverter.Initialize(inTorque, inAngularVelocity)
 					: NextComponent.Initialize(inTorque, inAngularVelocity);
+			} else {
+				response = NextComponent.Initialize(inTorque, inAngularVelocity);
 			}
 			CurrentState.SetState(inTorque, inAngularVelocity, outTorque, outAngularVelocity);
 			PreviousState.SetState(inTorque, inAngularVelocity, outTorque, outAngularVelocity);
 			PreviousState.InertiaTorqueLossOut = 0.SI<NewtonMeter>();
 			PreviousState.Gear = Gear;
 
-			response = NextComponent.Initialize(inTorque, inAngularVelocity);
 			response.GearboxPowerRequest = inTorque * inAngularVelocity;
 			return response;
 		}
