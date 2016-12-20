@@ -566,6 +566,8 @@ Partial Class EngineForm
 		'EngineForm
 		'
 		Me.AcceptButton = Me.ButOK
+		Me.AutoScaleDimensions = New System.Drawing.SizeF(6.0!, 13.0!)
+		Me.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font
 		Me.CancelButton = Me.ButCancel
 		Me.ClientSize = New System.Drawing.Size(985, 508)
 		Me.Controls.Add(Me.PicBox)
