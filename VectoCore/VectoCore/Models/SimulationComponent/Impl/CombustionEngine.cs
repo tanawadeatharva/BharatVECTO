@@ -431,18 +431,22 @@ namespace TUGraz.VectoCore.Models.SimulationComponent.Impl
 
 			CurrentState.StationaryFullLoadTorque = ModelData.FullLoadCurve.FullLoadStationaryTorque(angularVelocity);
 			var stationaryFullLoadPower = CurrentState.StationaryFullLoadTorque * angularVelocity;
-			Watt dynFullPowerCalculated;
+			Watt dynFullPowerCalculated = 0.SI<Watt>();
 
 			// disable pt1 behaviour if PT1Disabled is true, or if the previous enginepower is greater than the current stationary fullload power (in this case the pt1 calculation fails)
 			if (PT1Disabled || PreviousState.EnginePower.IsGreaterOrEqual(stationaryFullLoadPower)) {
 				dynFullPowerCalculated = stationaryFullLoadPower;
 			} else {
-				var pt1 = ModelData.FullLoadCurve.PT1(angularVelocity).Value();
-				var powerRatio = (PreviousState.EnginePower / stationaryFullLoadPower).Value();
-				var tStarPrev = pt1 * Math.Log(1.0 / (1 - powerRatio), Math.E).SI<Second>();
-				var tStar = tStarPrev + PreviousState.dt;
-				dynFullPowerCalculated = stationaryFullLoadPower * (1 - Math.Exp((-tStar / pt1).Value()));
-				dynFullPowerCalculated = VectoMath.Max(PreviousState.EnginePower, dynFullPowerCalculated);
+				try {
+					var pt1 = ModelData.FullLoadCurve.PT1(angularVelocity).Value();
+					var powerRatio = (PreviousState.EnginePower / stationaryFullLoadPower).Value();
+					var tStarPrev = pt1 * Math.Log(1.0 / (1 - powerRatio), Math.E).SI<Second>();
+					var tStar = tStarPrev + PreviousState.dt;
+					dynFullPowerCalculated = stationaryFullLoadPower * (1 - Math.Exp((-tStar / pt1).Value()));
+					dynFullPowerCalculated = VectoMath.Max(PreviousState.EnginePower, dynFullPowerCalculated);
+				} catch (Exception ) {
+					Log.Error("failed to calculate dynamic full-load power - using stationary idle full-load. n: {0}", angularVelocity);
+				}
 			}
 
 			// new check in vecto 3.x (according to Martin Rexeis)
