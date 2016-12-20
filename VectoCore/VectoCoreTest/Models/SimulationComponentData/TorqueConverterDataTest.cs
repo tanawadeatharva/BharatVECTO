@@ -281,7 +281,7 @@ namespace TUGraz.VectoCore.Tests.Models.SimulationComponentData
 			Assert.AreEqual(outAngularSpeed.Value(), result.OutAngularVelocity.Value(), 1e-3);
 			Assert.AreEqual(outTorque.Value(), result.OutTorque.Value(), 1e-3);
 
-			Debug.WriteLine("n_in: {0}, tq_in: {1}", result.InAngularVelocity.AsRPM, result.InTorque.Value());
+			//Debug.WriteLine("n_in: {0}, tq_in: {1}", result.InAngularVelocity.AsRPM, result.InTorque.Value());
 			//Assert.IsTrue(result.InAngularVelocity.Value() < 1600.RPMtoRad().Value());
 			Assert.AreEqual(nInExpected, result.InAngularVelocity.Value(), 1e-3);
 			Assert.AreEqual(tqInExpected, result.InTorque.Value(), 1e-3);
@@ -359,8 +359,8 @@ namespace TUGraz.VectoCore.Tests.Models.SimulationComponentData
 				var torqueTCOut = entry.Item1.SI<NewtonMeter>();
 				var angularSpeedOut = entry.Item2.RPMtoRad();
 				var result = tqData.FindOperatingPoint(torqueTCOut, angularSpeedOut, 0.SI<PerSecond>()).First();
-				Debug.WriteLine("n_out: {0}, tq_out: {1}, n_in: {2}, Tq_in: {3}", angularSpeedOut.Value() / Constants.RPMToRad,
-					torqueTCOut.Value(), result.InAngularVelocity.Value() / Constants.RPMToRad, result.InTorque.Value());
+				//Debug.WriteLine("n_out: {0}, tq_out: {1}, n_in: {2}, Tq_in: {3}", angularSpeedOut.Value() / Constants.RPMToRad,
+				//	torqueTCOut.Value(), result.InAngularVelocity.Value() / Constants.RPMToRad, result.InTorque.Value());
 			}
 		}
 
