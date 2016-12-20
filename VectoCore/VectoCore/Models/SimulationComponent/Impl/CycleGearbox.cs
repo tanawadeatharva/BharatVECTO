@@ -104,13 +104,14 @@ namespace TUGraz.VectoCore.Models.SimulationComponent.Impl
 				response = (TorqueConverterActive != null && TorqueConverterActive.Value)
 					? TorqueConverter.Initialize(inTorque, inAngularVelocity)
 					: NextComponent.Initialize(inTorque, inAngularVelocity);
+			} else {
+				response = NextComponent.Initialize(inTorque, inAngularVelocity);
 			}
 			CurrentState.SetState(inTorque, inAngularVelocity, outTorque, outAngularVelocity);
 			PreviousState.SetState(inTorque, inAngularVelocity, outTorque, outAngularVelocity);
 			PreviousState.InertiaTorqueLossOut = 0.SI<NewtonMeter>();
 			PreviousState.Gear = Gear;
 
-			response = NextComponent.Initialize(inTorque, inAngularVelocity);
 			response.GearboxPowerRequest = inTorque * inAngularVelocity;
 			return response;
 		}
@@ -174,6 +175,11 @@ namespace TUGraz.VectoCore.Models.SimulationComponent.Impl
 			if (!torqueConverterLocked) {
 				effectiveRatio = ModelData.Gears[Gear].TorqueConverterRatio;
 				effectiveLossMap = ModelData.Gears[Gear].TorqueConverterGearLossMap;
+			}
+
+			if (effectiveLossMap == null || double.IsNaN(effectiveRatio)) {
+				throw new VectoSimulationException("Ratio or loss-map for gear {0}{1} invalid. Please check input data", Gear,
+					torqueConverterLocked ? "L" : "C");
 			}
 
 			var avgOutAngularVelocity = (PreviousState.OutAngularVelocity + outAngularVelocity) / 2.0;
