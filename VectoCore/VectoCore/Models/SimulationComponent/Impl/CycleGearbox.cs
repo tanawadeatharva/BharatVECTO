@@ -176,6 +176,11 @@ namespace TUGraz.VectoCore.Models.SimulationComponent.Impl
 				effectiveLossMap = ModelData.Gears[Gear].TorqueConverterGearLossMap;
 			}
 
+			if (effectiveLossMap == null || double.IsNaN(effectiveRatio)) {
+				throw new VectoSimulationException("Ratio or loss-map for gear {0}{1} invalid. Please check input data", Gear,
+					torqueConverterLocked ? "L" : "C");
+			}
+
 			var avgOutAngularVelocity = (PreviousState.OutAngularVelocity + outAngularVelocity) / 2.0;
 			var inTorqueLossResult = effectiveLossMap.GetTorqueLoss(avgOutAngularVelocity, outTorque);
 			CurrentState.TorqueLossResult = inTorqueLossResult;
