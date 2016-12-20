@@ -51,9 +51,13 @@ namespace TUGraz.VectoCore.Models.SimulationComponent.Impl
 		/// </summary>
 		[Required, ValidateObject] internal readonly GearboxData ModelData;
 
-		protected AbstractGearbox(IVehicleContainer container, GearboxData gearboxModelData) : base(container)
+		protected KilogramSquareMeter EngineInertia;
+
+		protected AbstractGearbox(IVehicleContainer container, GearboxData gearboxModelData, KilogramSquareMeter engineInertia)
+			: base(container)
 		{
 			ModelData = gearboxModelData;
+			EngineInertia = engineInertia;
 		}
 
 		#region ITnOutPort

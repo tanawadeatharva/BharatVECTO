@@ -50,7 +50,7 @@ namespace TUGraz.VectoCore.Models.SimulationComponent.Impl
 		protected internal readonly TorqueConverter TorqueConverter;
 		private IIdleController _idleController;
 		protected bool RequestAfterGearshift;
-		protected KilogramSquareMeter EngineInertia;
+
 
 		public bool TorqueConverterLocked
 		{
@@ -60,12 +60,11 @@ namespace TUGraz.VectoCore.Models.SimulationComponent.Impl
 
 		public ATGearbox(IVehicleContainer container, GearboxData gearboxModelData, IShiftStrategy strategy,
 			KilogramSquareMeter engineInertia)
-			: base(container, gearboxModelData)
+			: base(container, gearboxModelData, engineInertia)
 		{
 			_strategy = strategy;
 			_strategy.Gearbox = this;
 			LastShift = -double.MaxValue.SI<Second>();
-			EngineInertia = engineInertia;
 			TorqueConverter = new TorqueConverter(this, _strategy, container, gearboxModelData.TorqueConverterData,
 				engineInertia);
 		}

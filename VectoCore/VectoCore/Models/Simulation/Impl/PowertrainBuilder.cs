@@ -111,7 +111,7 @@ namespace TUGraz.VectoCore.Models.Simulation.Impl
 
 			// PWheelCycle --> AxleGear --> CycleClutch --> Engine <-- Aux
 			var powertrain = new PWheelCycle(container, data.Cycle, data.AxleGearData.AxleGear.Ratio,
-					gearbox.ModelData.Gears.ToDictionary(g => g.Key, g => g.Value.Ratio))
+				gearbox.ModelData.Gears.ToDictionary(g => g.Key, g => g.Value.Ratio))
 				.AddComponent(new AxleGear(container, data.AxleGearData))
 				.AddComponent(data.AngledriveData != null ? new Angledrive(container, data.AngledriveData) : null)
 				.AddComponent(gearbox, data.Retarder, container)
@@ -294,7 +294,7 @@ namespace TUGraz.VectoCore.Models.Simulation.Impl
 				default:
 					throw new VectoSimulationException("Unknown Gearbox Type: {0}", data.Type);
 			}
-			return new Gearbox(container, data, strategy);
+			return new Gearbox(container, data, strategy, engineInertia);
 		}
 	}
 }
