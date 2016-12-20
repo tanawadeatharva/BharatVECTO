@@ -285,7 +285,7 @@ namespace TUGraz.VectoCore.Models.SimulationComponent.Impl
 
 		public GearInfo NextGear
 		{
-			get { return new GearInfo() { Gear = _nextGear.Gear, TorqueConverterLocked = _nextGear.TorqueConverterLocked }; }
+			get { return new GearInfo(_nextGear.Gear,  _nextGear.TorqueConverterLocked ); }
 		}
 
 

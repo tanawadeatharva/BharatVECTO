@@ -366,10 +366,7 @@ namespace TUGraz.VectoCore.Models.SimulationComponent.Impl
 		{
 			get
 			{
-				return new GearInfo() {
-					Gear = DataBus.CycleData.RightSample.Gear,
-					TorqueConverterLocked = !DataBus.CycleData.RightSample.TorqueConverterActive ?? true
-				};
+				return new GearInfo(DataBus.CycleData.RightSample.Gear, !DataBus.CycleData.RightSample.TorqueConverterActive ?? true);
 			}
 		}
 
