@@ -53,7 +53,7 @@ namespace TUGraz.VectoCore.Models.SimulationComponent.Impl
 		protected internal readonly TorqueConverter TorqueConverter;
 
 		public CycleGearbox(IVehicleContainer container, GearboxData gearboxModelData, KilogramSquareMeter engineInertia)
-			: base(container, gearboxModelData)
+			: base(container, gearboxModelData, engineInertia)
 		{
 			if (!gearboxModelData.Type.AutomaticTransmission()) {
 				return;
@@ -228,10 +228,13 @@ namespace TUGraz.VectoCore.Models.SimulationComponent.Impl
 				return dryRunResponse;
 			}
 
-			// this code has to be _after_ the check for a potential gear-shift!
-			// (the above block issues dry-run requests and thus may update the CurrentState!)
 			CurrentState.TransmissionTorqueLoss = inTorque - (outTorque / effectiveRatio);
 
+			if (Gear != PreviousState.Gear &&
+				ConsiderShiftLosses(new GearInfo(Gear, torqueConverterLocked), outTorque)) {
+				CurrentState.PowershiftLosses = ComputeShiftLosses(dt, outTorque, outAngularVelocity);
+			}
+			inTorque += CurrentState.PowershiftLosses ?? 0.SI<NewtonMeter>();
 			CurrentState.SetState(inTorque, inAngularVelocity, outTorque, outAngularVelocity);
 			CurrentState.Gear = Gear;
 			// end critical section
@@ -339,6 +342,9 @@ namespace TUGraz.VectoCore.Models.SimulationComponent.Impl
 
 			if (ModelData.Type.AutomaticTransmission()) {
 				container[ModalResultField.TC_Locked] = !CurrentState.TorqueConverterActive;
+				container[ModalResultField.P_gbx_shift_loss] = CurrentState.PowershiftLosses == null
+					? 0.SI<Watt>()
+					: CurrentState.PowershiftLosses * avgInAngularSpeed;
 			}
 			// torque converter fields are written by TorqueConverter (if present), called from Vehicle container 
 		}
@@ -366,10 +372,7 @@ namespace TUGraz.VectoCore.Models.SimulationComponent.Impl
 		{
 			get
 			{
-				return new GearInfo() {
-					Gear = DataBus.CycleData.RightSample.Gear,
-					TorqueConverterLocked = !DataBus.CycleData.RightSample.TorqueConverterActive ?? true
-				};
+				return new GearInfo(DataBus.CycleData.RightSample.Gear, !DataBus.CycleData.RightSample.TorqueConverterActive ?? true);
 			}
 		}
 
@@ -385,6 +388,7 @@ namespace TUGraz.VectoCore.Models.SimulationComponent.Impl
 		public class CycleGearboxState : GearboxState
 		{
 			public bool TorqueConverterActive;
+			public NewtonMeter PowershiftLosses { get; set; }
 		}
 
 		public class CycleShiftStrategy : IShiftStrategy
