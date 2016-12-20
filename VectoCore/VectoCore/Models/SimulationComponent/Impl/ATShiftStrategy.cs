@@ -155,8 +155,8 @@ namespace TUGraz.VectoCore.Models.SimulationComponent.Impl
 			}
 			// Emergency Upshift: if higher than engine rated speed
 			if (inAngularVelocity.IsGreaterOrEqual(DataBus.EngineRatedSpeed)) {
-				// upshift is not possible
-				if (ModelData.Gears.ContainsKey(gear + 1)) {
+				// check if upshift is possible
+				if (!ModelData.Gears.ContainsKey(gear + 1)) {
 					return false;
 				}
 				Log.Debug("engine speed would be above rated speed - shift up");
@@ -207,12 +207,15 @@ namespace TUGraz.VectoCore.Models.SimulationComponent.Impl
 				var nextEnginePower = currentEnginePower / nextEngineSpeed;
 				var isAboveUpShift = IsAboveUpShiftCurve(gear, nextEnginePower, nextEngineSpeed, _gearbox.TorqueConverterLocked);
 
-				var reachableAcceleration = EstimateAccelerationForGear(nextGear, outAngularVelocity);
-				var minAcceleration = _gearbox.TorqueConverterLocked
-					? ModelData.UpshiftMinAcceleration
-					: ModelData.TorqueConverterData.CLUpshiftMinAcceleration;
-				minAcceleration = VectoMath.Min(minAcceleration, DataBus.DriverAcceleration);
-				var minAccelerationReachable = reachableAcceleration.IsGreaterOrEqual(minAcceleration);
+				var minAccelerationReachable = true;
+				if (!DataBus.VehicleSpeed.IsEqual(0)) {
+					var reachableAcceleration = EstimateAccelerationForGear(nextGear, outAngularVelocity);
+					var minAcceleration = _gearbox.TorqueConverterLocked
+						? ModelData.UpshiftMinAcceleration
+						: ModelData.TorqueConverterData.CLUpshiftMinAcceleration;
+					minAcceleration = VectoMath.Min(minAcceleration, DataBus.DriverAcceleration);
+					minAccelerationReachable = reachableAcceleration.IsGreaterOrEqual(minAcceleration);
+				}
 
 				if (isAboveUpShift && minAccelerationReachable) {
 					Upshift(absTime, gear);
