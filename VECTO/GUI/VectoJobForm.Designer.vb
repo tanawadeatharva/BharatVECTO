@@ -1277,6 +1277,8 @@ Partial Class VectoJobForm
 		'VectoJobForm
 		'
 		Me.AcceptButton = Me.ButOK
+		Me.AutoScaleDimensions = New System.Drawing.SizeF(6.0!, 13.0!)
+		Me.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font
 		Me.CancelButton = Me.ButCancel
 		Me.ClientSize = New System.Drawing.Size(944, 646)
 		Me.Controls.Add(Me.TbHVCclass)

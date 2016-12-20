@@ -1521,6 +1521,10 @@ Public Class VectoJobForm
 			OpenFiles(FileRepl(LvCycles.SelectedItems(0).SubItems(0).Text, GetPath(VectoFile)))
 		End If
 	End Sub
+
+	Private Sub LvAux_SelectedIndexChanged(sender As Object, e As EventArgs) Handles LvAux.SelectedIndexChanged
+
+	End Sub
 End Class
 
 
