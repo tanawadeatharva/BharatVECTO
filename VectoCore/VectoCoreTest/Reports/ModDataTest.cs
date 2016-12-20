@@ -61,21 +61,20 @@ namespace TUGraz.VectoCore.Tests.Reports
 
 			var engineData = MockSimulationDataFactory.CreateEngineDataFromFile(Truck40tPowerTrain.EngineFile);
 
-			var modData = (ModalDataContainer)run.GetContainer().ModalData;
+			var modData = ((ModalDataContainer)run.GetContainer().ModalData).Data;
 
 			run.Run();
 			Assert.IsTrue(run.FinishedWithoutErrors);
 
 			var lastGear = 0u;
-			foreach (DataRow row in modData.Data.Rows) {
+			foreach (DataRow row in modData.Rows) {
 				if (cycle.Entries.Last().Distance.IsEqual(((Meter)row[(int)ModalResultField.dist]))) {
 					continue;
 				}
 				var gear = (uint)row[(int)ModalResultField.Gear];
 				var time = (Second)row[(int)ModalResultField.time];
 
-				if ((lastGear == 0 && gear != 0) || (lastGear != 0 && gear == 0))
-				{
+				if ((lastGear == 0 && gear != 0) || (lastGear != 0 && gear == 0)) {
 					//skipNext = (uint)row[(int)ModalResultField.Gear] == 0;
 					lastGear = gear;
 					continue;
@@ -143,8 +142,8 @@ namespace TUGraz.VectoCore.Tests.Reports
 						"time: {0}  distance: {1}", time,
 						distance);
 					Assert.AreEqual(pEngFcmap.Value(),
-						(pTrac + pWheelInertia + pBrakeLoss + pLossAxle + pLossRet + pLossGbx + pGbxInertia + pEngInertia + pAux +
-						pClutchLoss).Value(), 0.5, "time: {0}  distance: {1}", time, distance);
+					(pTrac + pWheelInertia + pBrakeLoss + pLossAxle + pLossRet + pLossGbx + pGbxInertia + pEngInertia + pAux +
+					pClutchLoss).Value(), 0.5, "time: {0}  distance: {1}", time, distance);
 				}
 				lastGear = gear;
 			}

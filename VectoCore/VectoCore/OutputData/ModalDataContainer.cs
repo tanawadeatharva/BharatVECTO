@@ -304,7 +304,7 @@ namespace TUGraz.VectoCore.OutputData
 
 		public void FinishSimulation()
 		{
-			Data.Clear(); //.Rows.Clear();
+			//Data.Clear(); //.Rows.Clear();
 			Data = null;
 			CurrentRow = null;
 			Auxiliaries.Clear();
