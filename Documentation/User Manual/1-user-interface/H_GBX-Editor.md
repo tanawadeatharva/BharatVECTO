@@ -58,7 +58,7 @@ Use the ![add](pics/plus-circle-icon.png) and ![remove](pics/minus-circle-icon.p
 
 ###Gear shift strategy parameters
 
-Since version Vecto 3.0.3 the gearshift polygon calculation according to the ACEA White Book 2016 is implemented and since Vecto 3.0.4 the ACEA White Book 2016 shift strategy for AMT and MT is implemented. For details on this topic please see the ACEA White Book 2016.
+Since version Vecto 3.0.3 the gearshift polygon calculation according to the ACEA White Book 2016 is implemented and since Vecto 3.0.4 the ACEA White Book 2016 shift strategy for AMT and MT is implemented. The AT-S and AT-P strategies are implemented since Version 3.1.0. For details on this topic please see the ACEA White Book 2016.
 
 ![](pics/Vecto_ShiftStrategyParameters.svg)
 
@@ -72,30 +72,73 @@ The user interface contains input fields for the following parameters:
 Torque Reserve \[%\]
 :   This parameter is required for the **Allow shift-up inside polygons** and **Skip Gears** options.
 
-
 Minimum shift time \[s\]
-:   Limits the time between two gear shifts. This rule will be ignored if rpms are too high or too low. 
+:   Limits the time between two gear shifts. This rule will be ignored if rpms are too high or too low.
 
 
-Start Gear
-:   In order to calculate an appropriate gear for vehicle start (first gear after vehicle standstill) a fictional load case is calculated using a specified **reference vehicle speed** and **reference acceleration** together with the actual road gradient, transmission losses and auxiliary power demand. This way the start gear is independent from the target speed. VECTO uses the highest possible gear which provides the defined **torque reserve**.
+###Shift Strategy Parameters
+
+Downshift after upshift delay \[s\]
+:   Minimal duration between an upshift and a consecutive downshift.
+
+Upshift after downshift delay \[s\]
+:   Minimal duration between an downshift and a consecutive upshift.
+
+Min. acceleration after upshift \[m/s²\]
+:   Limit for the minimal achievable acceleration to test if an upshift is reasonable.
+
+###Start Gear
+
+In order to calculate an appropriate gear for vehicle start (first gear after vehicle standstill) a fictional load case is calculated using a specified **reference vehicle speed** and **reference acceleration** together with the actual road gradient, transmission losses and auxiliary power demand. This way the start gear is independent from the target speed. VECTO uses the highest possible gear which provides the defined **torque reserve**.
+
+Torque reserve
+:   The minimal torque reserve which has to be provided.
+
+Reference vehicle speed at clutch-in
+:   The reference vehicle speed
+
+Reference acceleration at clutch-in
+:   The reference acceleration
+
 </div>
-
 
 ###Torque Converter
 
 Torque converter characteristics file
 :   Defines the [Torque converter characteristics file](#torque-converter-characteristics-.vtcc) containing the torque ratio and reference torque over the speed ratio.
 
-Reference RPM
-:   Defines the reference speed at which the torque converter characteristics file was measured.
-
 Inertia \[kgm²\]
 :   Rotational inertia of the engine-side part of the torque converter.
 (Gearbox-side inertia is not considered in VECTO.)
 
+Reference RPM
+:   Defines the reference speed at which the torque converter characteristics file was measured.
+
+Max. Speed
+:   Defines the maximum input speed the torque converter can handle.
+
 Torque converter shift polygon
 :   Defines the [Shift Polygons InputFile (.vgbs)](#shift-polygons-input-file-.vgbs) separately for the torque converter. For details on shifting from/to the torque converter gear please see [AT Gear Shift Strategy](#gear-shift-rules-for-at-gearbox).
+
+
+###Torque Converter: Minimal acceleration after upshift
+
+Here the minimal achievable accelerations before upshifts can be defined.
+
+Acc. for C->L \[m/s²\]
+:   The minimal achievable acceleration for shifts from torque converter gear to locked gear.
+
+Acc. for C->C \[m/s²\]
+:   The minimal achievable acceleration for shifts from first torque converter gear to second torque converter gear (1C->2C)
+
+
+###Power shift losses
+
+Shift time \[s\]
+:   The shift time for powershift losses.
+
+Inertia factor \[-\]
+:   The inertia factor for powershift losses.
 
 
 ###Chart Area
