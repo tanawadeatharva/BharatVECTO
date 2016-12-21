@@ -109,7 +109,8 @@ namespace TUGraz.VectoCore.Models.Declaration
 					RessourceHelper.ReadStream(DeclarationData.DeclarationDataResourcePrefix + ".VACC." +
 												row.Field<string>(".vaccfile")),
 				Missions = CreateMissions(ref grossVehicleMassRating, curbWeight, row),
-				GrossVehicleMassRating = grossVehicleMassRating
+				GrossVehicleMassRating = grossVehicleMassRating,
+				CdAConstruction = row.ParseDouble("cdxa construction").SI<SquareMeter>()
 			};
 
 			return segment;
@@ -156,7 +157,7 @@ namespace TUGraz.VectoCore.Models.Declaration
 
 				var mission = new Mission {
 					MissionType = missionType,
-					CrossWindCorrection = row.Field<string>("crosswindcorrection" + GetMissionSuffix(missionType)),
+					CrossWindCorrectionParameters = row.Field<string>("crosswindcorrection" + GetMissionSuffix(missionType)),
 					CycleFile =
 						RessourceHelper.ReadStream(DeclarationData.DeclarationDataResourcePrefix + ".MissionCycles." + missionType +
 													Constants.FileExtensions.CycleFile),
