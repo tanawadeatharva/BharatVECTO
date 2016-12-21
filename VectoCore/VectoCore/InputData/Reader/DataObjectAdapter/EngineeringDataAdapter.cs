@@ -61,6 +61,7 @@ namespace TUGraz.VectoCore.InputData.Reader.DataObjectAdapter
 			retVal.Loading = data.Loading;
 			retVal.DynamicTyreRadius = data.DynamicTyreRadius;
 			retVal.CrossWindCorrectionMode = data.CrossWindCorrectionMode;
+			var axles = data.Axles;
 			switch (data.CrossWindCorrectionMode) {
 				case CrossWindCorrectionMode.NoCorrection:
 					retVal.CrossWindCorrectionCurve =
@@ -79,14 +80,14 @@ namespace TUGraz.VectoCore.InputData.Reader.DataObjectAdapter
 				case CrossWindCorrectionMode.DeclarationModeCorrection:
 					retVal.CrossWindCorrectionCurve =
 						new CrosswindCorrectionCdxALookup(
-							DeclarationDataAdapter.GetDeclarationAirResistanceCurve(GetAirdragParameterSet(retVal.VehicleCategory),
+							DeclarationDataAdapter.GetDeclarationAirResistanceCurve(GetAirdragParameterSet(retVal.VehicleCategory, data.AxleConfiguration, axles.Count),
 								data.AirDragArea), CrossWindCorrectionMode.DeclarationModeCorrection);
 					break;
 				default:
 					throw new ArgumentOutOfRangeException();
 			}
 
-			var axles = data.Axles;
+			
 			retVal.AxleData = axles.Select(axle => new Axle {
 				WheelsDimension = axle.Wheels,
 				Inertia = axle.Inertia,
