@@ -102,7 +102,8 @@ namespace TUGraz.VectoCore.InputData.Reader.DataObjectAdapter
 			var aerodynamicDragArea = data.AirDragArea + mission.DeltaCdA;
 
 			retVal.CrossWindCorrectionCurve =
-				new CrosswindCorrectionCdxALookup(GetDeclarationAirResistanceCurve(retVal.VehicleCategory, aerodynamicDragArea),
+				new CrosswindCorrectionCdxALookup(
+					GetDeclarationAirResistanceCurve(mission.CrossWindCorrectionParameters, aerodynamicDragArea),
 					CrossWindCorrectionMode.DeclarationModeCorrection);
 			var axles = data.Axles;
 			if (axles.Count < mission.AxleWeightDistribution.Length) {
@@ -286,7 +287,7 @@ namespace TUGraz.VectoCore.InputData.Reader.DataObjectAdapter
 		}
 
 		public static List<CrossWindCorrectionCurveReader.CrossWindCorrectionEntry> GetDeclarationAirResistanceCurve(
-			VehicleCategory vehicleCategory, SquareMeter aerodynamicDragAera)
+			string crosswindCorrectionParameters, SquareMeter aerodynamicDragAera)
 		{
 			const int startSpeed = 60;
 			const int maxSpeed = 130;
@@ -295,7 +296,7 @@ namespace TUGraz.VectoCore.InputData.Reader.DataObjectAdapter
 			const int maxAlpha = 180;
 			const int alphaStep = 10;
 
-			var values = DeclarationData.AirDrag.Lookup(vehicleCategory);
+			var values = DeclarationData.AirDrag.Lookup(crosswindCorrectionParameters);
 			var points = new List<CrossWindCorrectionCurveReader.CrossWindCorrectionEntry> {
 				new CrossWindCorrectionCurveReader.CrossWindCorrectionEntry {
 					Velocity = 0.SI<MeterPerSecond>(),

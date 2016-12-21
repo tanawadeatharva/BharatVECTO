@@ -174,52 +174,51 @@ namespace TUGraz.VectoCore.Tests.Models.Declaration
 			Assert.AreEqual(a3, value.A3);
 		}
 
-		[TestCase(VehicleCategory.RigidTruck, 0.013526, 0.017746, -0.000666),
-		TestCase(VehicleCategory.Tractor, 0.030042, 0.040817, -0.00213),
-		TestCase(VehicleCategory.CityBus, -0.000794, 0.02109, -0.00109),
-		TestCase(VehicleCategory.Coach, -0.000794, 0.02109, -0.00109),
-		TestCase(VehicleCategory.InterurbanBus, -0.000794, 0.02109, -0.00109)]
-		public void AirDrag_WithVehicleCategory(VehicleCategory cat, double a1, double a2, double a3)
+		[TestCase("RigidSolo", 0.013526, 0.017746, -0.000666),
+		TestCase("TractorSemitrailer", 0.030042, 0.040817, -0.00213),
+		TestCase("RigidTrailer", 0.017125, 0.072275, -0.004148),
+		TestCase("CoachBus", -0.000794, 0.02109, -0.00109)]
+		public void AirDrag_WithVehicleCategory(string parameterSet, double a1, double a2, double a3)
 		{
-			var value = DeclarationData.AirDrag.Lookup(cat);
+			var value = DeclarationData.AirDrag.Lookup(parameterSet);
 			Assert.AreEqual(a1, value.A1);
 			Assert.AreEqual(a2, value.A2);
 			Assert.AreEqual(a3, value.A3);
 		}
 
-		[TestCase(VehicleCategory.Tractor, 6.46, 0, 8.05913),
-		TestCase(VehicleCategory.Tractor, 6.46, 60, 8.05913),
-		TestCase(VehicleCategory.Tractor, 6.46, 75, 7.639436),
-		TestCase(VehicleCategory.Tractor, 6.46, 100, 7.22305),
-		TestCase(VehicleCategory.Tractor, 6.46, 52.1234, 8.059126),
-		TestCase(VehicleCategory.Tractor, 6.46, 73.5432, 7.67487),
-		TestCase(VehicleCategory.Tractor, 6.46, 92.8765, 7.317215),
-		TestCase(VehicleCategory.Tractor, 6.46, 100.449, 7.217975),
-		TestCase(VehicleCategory.Tractor, 6.46, 103, 7.18915),
-		TestCase(VehicleCategory.Tractor, 6.46, 105, 7.166555),
-		TestCase(VehicleCategory.Tractor, 6.46, 115, 7.071136),
-		TestCase(VehicleCategory.Tractor, 6.46, 130, 6.961237),]
-		public void CrossWindCorrectionTest(VehicleCategory vehicleCategory, double crossSectionArea, double kmph,
+		[TestCase("TractorSemitrailer", 6.46, 0, 8.05913),
+		TestCase("TractorSemitrailer", 6.46, 60, 8.05913),
+		TestCase("TractorSemitrailer", 6.46, 75, 7.639436),
+		TestCase("TractorSemitrailer", 6.46, 100, 7.22305),
+		TestCase("TractorSemitrailer", 6.46, 52.1234, 8.059126),
+		TestCase("TractorSemitrailer", 6.46, 73.5432, 7.67487),
+		TestCase("TractorSemitrailer", 6.46, 92.8765, 7.317215),
+		TestCase("TractorSemitrailer", 6.46, 100.449, 7.217975),
+		TestCase("TractorSemitrailer", 6.46, 103, 7.18915),
+		TestCase("TractorSemitrailer", 6.46, 105, 7.166555),
+		TestCase("TractorSemitrailer", 6.46, 115, 7.071136),
+		TestCase("TractorSemitrailer", 6.46, 130, 6.961237),]
+		public void CrossWindCorrectionTest(string parameterSet, double crossSectionArea, double kmph,
 			double expected)
 		{
 			var crossWindCorrectionCurve = new CrosswindCorrectionCdxALookup(
-				DeclarationDataAdapter.GetDeclarationAirResistanceCurve(vehicleCategory, crossSectionArea.SI<SquareMeter>()),
+				DeclarationDataAdapter.GetDeclarationAirResistanceCurve(parameterSet, crossSectionArea.SI<SquareMeter>()),
 				CrossWindCorrectionMode.DeclarationModeCorrection);
 
 			var tmp = crossWindCorrectionCurve.EffectiveAirDragArea(kmph.KMPHtoMeterPerSecond());
 			Assert.AreEqual(expected, tmp.Value(), Tolerance);
 		}
 
-		[TestCase(VehicleCategory.Tractor, 6.46, -0.1),
-		TestCase(VehicleCategory.Tractor, 6.46, 130.1),]
-		public void CrossWindCorrectionExceptionTest(VehicleCategory vehicleCategory, double crossSectionArea, double kmph)
+		[TestCase("TractorSemitrailer", 6.46, -0.1),
+		TestCase("TractorSemitrailer", 6.46, 130.1),]
+		public void CrossWindCorrectionExceptionTest(string parameterSet, double crossSectionArea, double kmph)
 		{
 			var crossWindCorrectionCurve = new CrosswindCorrectionCdxALookup(
-				DeclarationDataAdapter.GetDeclarationAirResistanceCurve(vehicleCategory, crossSectionArea.SI<SquareMeter>()),
+				DeclarationDataAdapter.GetDeclarationAirResistanceCurve(parameterSet, crossSectionArea.SI<SquareMeter>()),
 				CrossWindCorrectionMode.DeclarationModeCorrection);
 
 			AssertHelper.Exception<VectoException>(() =>
-					crossWindCorrectionCurve.EffectiveAirDragArea(kmph.KMPHtoMeterPerSecond()));
+				crossWindCorrectionCurve.EffectiveAirDragArea(kmph.KMPHtoMeterPerSecond()));
 		}
 
 		[TestCase(MissionType.LongHaul, "Standard technology", 1200, 0.7),
@@ -434,11 +433,11 @@ namespace TUGraz.VectoCore.Tests.Models.Declaration
 		public void SegmentWeightOutOfRange4X2(double weight)
 		{
 			AssertHelper.Exception<VectoException>(() =>
-					DeclarationData.Segments.Lookup(
-						VehicleCategory.RigidTruck,
-						AxleConfiguration.AxleConfig_4x2,
-						weight.SI<Kilogram>(),
-						0.SI<Kilogram>()),
+				DeclarationData.Segments.Lookup(
+					VehicleCategory.RigidTruck,
+					AxleConfiguration.AxleConfig_4x2,
+					weight.SI<Kilogram>(),
+					0.SI<Kilogram>()),
 				"Gross vehicle mass must be greater than 7.5 tons");
 		}
 
@@ -451,11 +450,11 @@ namespace TUGraz.VectoCore.Tests.Models.Declaration
 		public void SegmentWeightOutOfRange4X4(double weight)
 		{
 			AssertHelper.Exception<VectoException>(() =>
-					DeclarationData.Segments.Lookup(
-						VehicleCategory.RigidTruck,
-						AxleConfiguration.AxleConfig_4x4,
-						weight.SI<Kilogram>(),
-						0.SI<Kilogram>()),
+				DeclarationData.Segments.Lookup(
+					VehicleCategory.RigidTruck,
+					AxleConfiguration.AxleConfig_4x4,
+					weight.SI<Kilogram>(),
+					0.SI<Kilogram>()),
 				"Gross vehicle mass must be greater than 7.5 tons");
 		}
 
@@ -650,7 +649,7 @@ namespace TUGraz.VectoCore.Tests.Models.Declaration
 			double trailerGrossVehicleWeight, double deltaCdA)
 		{
 			Assert.AreEqual(missionType, m.MissionType);
-			Assert.AreEqual(cosswindCorrection, m.CrossWindCorrection);
+			Assert.AreEqual(cosswindCorrection, m.CrossWindCorrectionParameters);
 			CollectionAssert.AreEqual(axleWeightDistribution, m.AxleWeightDistribution,
 				"Axle distribution not equal.\nexpected: {0}\nactual: {1}", string.Join(",", axleWeightDistribution),
 				string.Join(",", m.AxleWeightDistribution));

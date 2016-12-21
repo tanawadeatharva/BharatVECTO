@@ -56,22 +56,6 @@ namespace TUGraz.VectoCore.Models.Declaration
 				row => new Entry(row.ParseDouble("a1"), row.ParseDouble("a2"), row.ParseDouble("a3")));
 		}
 
-		public Entry Lookup(VehicleCategory category)
-		{
-			switch (category) {
-				case VehicleCategory.CityBus:
-				case VehicleCategory.InterurbanBus:
-				case VehicleCategory.Coach:
-					return Lookup("CoachBus");
-				case VehicleCategory.Tractor:
-					return Lookup("TractorSemitrailer");
-				case VehicleCategory.RigidTruck:
-					return Lookup("RigidSolo");
-				default:
-					throw new ArgumentOutOfRangeException("category", category, null);
-			}
-		}
-
 		public class Entry
 		{
 			public double A1;
