@@ -48,6 +48,11 @@ namespace TUGraz.VectoCore.Models.SimulationComponent.Impl
 {
 	public class CycleGearbox : AbstractGearbox<CycleGearbox.CycleGearboxState>
 	{
+		/// <summary>
+		/// True if gearbox is disengaged (no gear is set).
+		/// </summary>
+		protected internal Second Disengaged = null;
+
 		protected bool? TorqueConverterActive;
 
 		protected internal readonly TorqueConverter TorqueConverter;
@@ -130,9 +135,7 @@ namespace TUGraz.VectoCore.Models.SimulationComponent.Impl
 			bool dryRun = false)
 		{
 			Log.Debug("Gearbox Power Request: torque: {0}, angularVelocity: {1}", outTorque, outAngularVelocity);
-			Gear = DataBus.DriverBehavior == DrivingBehavior.Braking
-				? DataBus.CycleData.LeftSample.Gear
-				: DataBus.CycleData.RightSample.Gear;
+			var gear = GetGearFromCycle();
 
 			TorqueConverterActive = DataBus.DriverBehavior == DrivingBehavior.Braking
 				? DataBus.CycleData.LeftSample.TorqueConverterActive
@@ -141,19 +144,26 @@ namespace TUGraz.VectoCore.Models.SimulationComponent.Impl
 			if (TorqueConverter != null && TorqueConverterActive == null) {
 				throw new VectoSimulationException("Driving cycle does not contain information about TorqueConverter!");
 			}
-			if (Gear != 0 && !ModelData.Gears.ContainsKey(Gear)) {
-				throw new VectoSimulationException("Requested Gear {0} from driving cycle is not available", Gear);
+			if (gear != 0 && !ModelData.Gears.ContainsKey(gear)) {
+				throw new VectoSimulationException("Requested Gear {0} from driving cycle is not available", gear);
 			}
 
 			// mk 2016-11-30: added additional check for outAngularVelocity due to failing test: MeasuredSpeed_Gear_AT_PS_Run
 			// mq 2016-12-16: changed check to vehicle halted due to failing test: MeasuredSpeed_Gear_AT_*
-			var retVal = Gear == 0 || DataBus.DriverBehavior == DrivingBehavior.Halted
+			var retVal = gear == 0 || DataBus.DriverBehavior == DrivingBehavior.Halted
 				//|| (outAngularVelocity.IsSmallerOrEqual(0, 1) && outTorque.IsSmallerOrEqual(0, 1))
 				? RequestDisengaged(absTime, dt, outTorque, outAngularVelocity, dryRun)
 				: RequestEngaged(absTime, dt, outTorque, outAngularVelocity, dryRun);
 
 			retVal.GearboxPowerRequest = outTorque * (PreviousState.OutAngularVelocity + outAngularVelocity) / 2;
 			return retVal;
+		}
+
+		private uint GetGearFromCycle()
+		{
+			return DataBus.DriverBehavior == DrivingBehavior.Braking
+				? DataBus.CycleData.LeftSample.Gear
+				: DataBus.CycleData.RightSample.Gear;
 		}
 
 		/// <summary>
@@ -168,6 +178,10 @@ namespace TUGraz.VectoCore.Models.SimulationComponent.Impl
 		private IResponse RequestEngaged(Second absTime, Second dt, NewtonMeter outTorque, PerSecond outAngularVelocity,
 			bool dryRun)
 		{
+			Disengaged = null;
+
+			Gear = GetGearFromCycle();
+
 			var torqueConverterLocked = TorqueConverterActive == null || !TorqueConverterActive.Value;
 
 			var effectiveRatio = ModelData.Gears[Gear].Ratio;
@@ -270,6 +284,10 @@ namespace TUGraz.VectoCore.Models.SimulationComponent.Impl
 		private IResponse RequestDisengaged(Second absTime, Second dt, NewtonMeter outTorque, PerSecond outAngularVelocity,
 			bool dryRun)
 		{
+			if (Disengaged == null) {
+				Disengaged = absTime;
+			}
+
 			var avgOutAngularVelocity = (PreviousState.OutAngularVelocity + outAngularVelocity) / 2.0;
 			if (dryRun) {
 				// if gearbox is disengaged the 0-line is the limit for drag and full load
@@ -298,41 +316,41 @@ namespace TUGraz.VectoCore.Models.SimulationComponent.Impl
 				};
 			}
 
-			CurrentState.SetState(0.SI<NewtonMeter>(), 0.SI<PerSecond>(), 0.SI<NewtonMeter>(), outAngularVelocity);
-			CurrentState.Gear = Gear;
 
-			var motoringSpeed = DataBus.EngineIdleSpeed;
-			var disengagedResponse = NextComponent.Request(absTime, dt, 0.SI<NewtonMeter>(), DataBus.EngineIdleSpeed);
-			if (!(disengagedResponse is ResponseSuccess)) {
-				motoringSpeed = DataBus.EngineSpeed;
-				if (motoringSpeed.IsGreater(DataBus.EngineIdleSpeed)) {
-					var first = (ResponseDryRun)NextComponent.Request(absTime, dt, 0.SI<NewtonMeter>(), motoringSpeed, true);
-					try {
-						motoringSpeed = SearchAlgorithm.Search(motoringSpeed, first.DeltaDragLoad,
-							Constants.SimulationSettings.EngineIdlingSearchInterval,
-							getYValue: result => ((ResponseDryRun)result).DeltaDragLoad,
-							evaluateFunction: n => NextComponent.Request(absTime, dt, 0.SI<NewtonMeter>(), n, true),
-							criterion: result => ((ResponseDryRun)result).DeltaDragLoad.Value());
-					} catch (VectoException) {
-						Log.Warn("CycleGearbox could not find motoring speed for disengaged state.");
-					}
-					motoringSpeed = motoringSpeed.LimitTo(DataBus.EngineIdleSpeed, DataBus.EngineSpeed);
-				}
-
-
-				disengagedResponse = NextComponent.Request(absTime, dt, 0.SI<NewtonMeter>(), motoringSpeed);
-			}
+			//var motoringSpeed = DataBus.EngineIdleSpeed;
+			//var disengagedResponse = NextComponent.Request(absTime, dt, 0.SI<NewtonMeter>(), DataBus.EngineIdleSpeed);
+			//if (!(disengagedResponse is ResponseSuccess)) {
+			//	motoringSpeed = DataBus.EngineSpeed;
+			//	if (motoringSpeed.IsGreater(DataBus.EngineIdleSpeed)) {
+			//		var first = (ResponseDryRun)NextComponent.Request(absTime, dt, 0.SI<NewtonMeter>(), motoringSpeed, true);
+			//		try {
+			//			motoringSpeed = SearchAlgorithm.Search(motoringSpeed, first.DeltaDragLoad,
+			//				Constants.SimulationSettings.EngineIdlingSearchInterval,
+			//				getYValue: result => ((ResponseDryRun)result).DeltaDragLoad,
+			//				evaluateFunction: n => NextComponent.Request(absTime, dt, 0.SI<NewtonMeter>(), n, true),
+			//				criterion: result => ((ResponseDryRun)result).DeltaDragLoad.Value());
+			//		} catch (VectoException) {
+			//			Log.Warn("CycleGearbox could not find motoring speed for disengaged state.");
+			//		}
+			//		motoringSpeed = motoringSpeed.LimitTo(DataBus.EngineIdleSpeed, DataBus.EngineSpeed);
+			//	}
+			//	disengagedResponse = NextComponent.Request(absTime, dt, 0.SI<NewtonMeter>(), motoringSpeed);
+			//}
+			var disengagedResponse = NextComponent.Request(absTime, dt, 0.SI<NewtonMeter>(), null);
 			if (TorqueConverter != null) {
-				TorqueConverter.Locked(CurrentState.InTorque, motoringSpeed);
+				TorqueConverter.Locked(CurrentState.InTorque, disengagedResponse.EngineSpeed);
 			}
 			disengagedResponse.GearboxPowerRequest = outTorque * avgOutAngularVelocity;
+			CurrentState.SetState(0.SI<NewtonMeter>(), disengagedResponse.EngineSpeed, 0.SI<NewtonMeter>(), outAngularVelocity);
+			CurrentState.Gear = Gear;
+
 			return disengagedResponse;
 		}
 
 		protected override void DoWriteModalResults(IModalDataContainer container)
 		{
 			var avgInAngularSpeed = (PreviousState.InAngularVelocity + CurrentState.InAngularVelocity) / 2.0;
-			container[ModalResultField.Gear] = Gear;
+			container[ModalResultField.Gear] = Disengaged != null ? 0 : Gear;
 			container[ModalResultField.P_gbx_loss] = CurrentState.TransmissionTorqueLoss * avgInAngularSpeed;
 			container[ModalResultField.P_gbx_inertia] = CurrentState.InertiaTorqueLossOut * avgInAngularSpeed;
 			container[ModalResultField.P_gbx_in] = CurrentState.InTorque * avgInAngularSpeed;
@@ -372,7 +390,47 @@ namespace TUGraz.VectoCore.Models.SimulationComponent.Impl
 		{
 			get
 			{
-				return new GearInfo(DataBus.CycleData.RightSample.Gear, !DataBus.CycleData.RightSample.TorqueConverterActive ?? true);
+				if (Disengaged == null) {
+					return new GearInfo(Gear, !TorqueConverterActive ?? true);
+				}
+				var future = DataBus.LookAhead(ModelData.TractionInterruption * 5);
+				var nextGear = 0u;
+				var torqueConverterLocked = true;
+				foreach (var entry in future) {
+					if (entry.VehicleTargetSpeed.IsEqual(0)) {
+						// vehicle is stopped, no next gear, engine should go to idle
+						break;
+					}
+					if (entry.Gear == 0) {
+						continue;
+					}
+					nextGear = entry.Gear;
+					torqueConverterLocked = !entry.TorqueConverterActive ?? false;
+					break;
+				}
+				return new GearInfo(nextGear, torqueConverterLocked);
+			}
+		}
+
+		public override Second TractionInterruption
+		{
+			get
+			{
+				if (Disengaged == null) {
+					return ModelData.TractionInterruption;
+				}
+				var future = DataBus.LookAhead(ModelData.TractionInterruption * 5);
+				foreach (var entry in future) {
+					if (entry.VehicleTargetSpeed.IsEqual(0)) {
+						// vehicle is stopped, no next gear, engine should go to idle
+						break;
+					}
+					if (entry.Gear == 0) {
+						continue;
+					}
+					return entry.Time - Disengaged;
+				}
+				return ModelData.TractionInterruption;
 			}
 		}
 
