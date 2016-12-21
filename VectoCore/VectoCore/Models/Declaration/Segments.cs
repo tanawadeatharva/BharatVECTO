@@ -110,7 +110,10 @@ namespace TUGraz.VectoCore.Models.Declaration
 												row.Field<string>(".vaccfile")),
 				Missions = CreateMissions(ref grossVehicleMassRating, curbWeight, row),
 				GrossVehicleMassRating = grossVehicleMassRating,
-				CdAConstruction = row.ParseDouble("cdxa construction").SI<SquareMeter>()
+				CdAConstruction =
+					string.IsNullOrEmpty(row["cdxa_construction"].ToString())
+						? null
+						: row.ParseDouble("cdxa_construction").SI<SquareMeter>()
 			};
 
 			return segment;
