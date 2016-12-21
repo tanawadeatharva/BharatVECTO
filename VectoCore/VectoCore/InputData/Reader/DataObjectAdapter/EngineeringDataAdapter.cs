@@ -61,6 +61,7 @@ namespace TUGraz.VectoCore.InputData.Reader.DataObjectAdapter
 			retVal.Loading = data.Loading;
 			retVal.DynamicTyreRadius = data.DynamicTyreRadius;
 			retVal.CrossWindCorrectionMode = data.CrossWindCorrectionMode;
+			var axles = data.Axles;
 			switch (data.CrossWindCorrectionMode) {
 				case CrossWindCorrectionMode.NoCorrection:
 					retVal.CrossWindCorrectionCurve =
@@ -78,14 +79,15 @@ namespace TUGraz.VectoCore.InputData.Reader.DataObjectAdapter
 					break;
 				case CrossWindCorrectionMode.DeclarationModeCorrection:
 					retVal.CrossWindCorrectionCurve =
-						new CrosswindCorrectionCdxALookup(DeclarationDataAdapter.GetDeclarationAirResistanceCurve(retVal.VehicleCategory,
-							data.AirDragArea), CrossWindCorrectionMode.DeclarationModeCorrection);
+						new CrosswindCorrectionCdxALookup(
+							DeclarationDataAdapter.GetDeclarationAirResistanceCurve(GetAirdragParameterSet(retVal.VehicleCategory, data.AxleConfiguration, axles.Count),
+								data.AirDragArea), CrossWindCorrectionMode.DeclarationModeCorrection);
 					break;
 				default:
 					throw new ArgumentOutOfRangeException();
 			}
 
-			var axles = data.Axles;
+			
 			retVal.AxleData = axles.Select(axle => new Axle {
 				WheelsDimension = axle.Wheels,
 				Inertia = axle.Inertia,
@@ -96,6 +98,22 @@ namespace TUGraz.VectoCore.InputData.Reader.DataObjectAdapter
 				//Wheels = axle.WheelsStr
 			}).ToList();
 			return retVal;
+		}
+
+		private string GetAirdragParameterSet(VehicleCategory vehicleCategory, AxleConfiguration axles, int numAxles)
+		{
+			switch (vehicleCategory) {
+				case VehicleCategory.RigidTruck:
+					return (numAxles > axles.NumAxles()) ? "RigidTrailer" : "RigidSolo";
+				case VehicleCategory.Tractor:
+					return "TractorSemitrailer";
+				case VehicleCategory.CityBus:
+				case VehicleCategory.InterurbanBus:
+				case VehicleCategory.Coach:
+					return "CoachBus";
+				default:
+					throw new ArgumentOutOfRangeException("vehicleCategory", vehicleCategory, null);
+			}
 		}
 
 		private void WarnEngineeringMode(string msg)
@@ -129,8 +147,7 @@ namespace TUGraz.VectoCore.InputData.Reader.DataObjectAdapter
 
 			//var gears = gearbox.Gears;
 			if (gearbox.Gears.Count < 2) {
-				throw new VectoSimulationException(
-					"At least two Gear-Entries must be defined in Gearbox!");
+				throw new VectoSimulationException("At least two Gear-Entries must be defined in Gearbox!");
 			}
 
 			retVal.Inertia = gearbox.Inertia;
@@ -222,10 +239,10 @@ namespace TUGraz.VectoCore.InputData.Reader.DataObjectAdapter
 				}
 			}
 
-		    if (retVal.Type.AutomaticTransmission()) {
-		        retVal.PowershiftShiftTime = gearbox.PowershiftShiftTime;
-		        retVal.PowershiftInertiaFactor = gearbox.PowerShiftInertiaFactor;
-		    }
+			if (retVal.Type.AutomaticTransmission()) {
+				retVal.PowershiftShiftTime = gearbox.PowershiftShiftTime;
+				retVal.PowershiftInertiaFactor = gearbox.PowerShiftInertiaFactor;
+			}
 
 			retVal.DownshiftAfterUpshiftDelay = gearbox.DownshiftAferUpshiftDelay;
 			retVal.UpshiftAfterDownshiftDelay = gearbox.UpshiftAfterDownshiftDelay;
