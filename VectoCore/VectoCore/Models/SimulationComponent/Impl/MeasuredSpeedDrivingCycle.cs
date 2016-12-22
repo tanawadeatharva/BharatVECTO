@@ -72,9 +72,7 @@ namespace TUGraz.VectoCore.Models.SimulationComponent.Impl
 
 		protected readonly IDrivingCycleData Data;
 		private bool _isInitializing;
-		//protected IEnumerator<DrivingCycleData.DrivingCycleEntry> RightSample { get; set; }
-		//protected IEnumerator<DrivingCycleData.DrivingCycleEntry> LeftSample { get; set; }
-		protected internal readonly DistanceBasedDrivingCycle.DrivingCycleEnumerator CycleIterator;
+		protected internal readonly DrivingCycleEnumerator CycleIterator;
 
 		protected Second AbsTime { get; set; }
 
@@ -87,7 +85,7 @@ namespace TUGraz.VectoCore.Models.SimulationComponent.Impl
 			: base(container)
 		{
 			Data = cycle;
-			CycleIterator = new DistanceBasedDrivingCycle.DrivingCycleEnumerator(cycle);
+			CycleIterator = new DrivingCycleEnumerator(cycle);
 
 			PreviousState = new DrivingCycleState {
 				Distance = 0.SI<Meter>(),
@@ -125,7 +123,7 @@ namespace TUGraz.VectoCore.Models.SimulationComponent.Impl
 			var debug = new DebugData();
 
 			// cycle finished
-			if (CycleIterator.LastEntry && absTime > CycleIterator.RightSample.Time) {
+			if (CycleIterator.LastEntry && absTime >= CycleIterator.RightSample.Time) {
 				return new ResponseCycleFinished { AbsTime = absTime, Source = this };
 			}
 
