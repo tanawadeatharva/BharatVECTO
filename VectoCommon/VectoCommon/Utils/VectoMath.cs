@@ -164,12 +164,22 @@ namespace TUGraz.VectoCommon.Utils
 		[MethodImpl(MethodImplOptions.AggressiveInlining)]
 		public static T Max<T>(T c1, T c2) where T : IComparable
 		{
-			return c1.CompareTo(c2) >= 0 ? c1 : c2;
+			return c1.CompareTo(c2) > 0 ? c1 : c2;
+		}
+
+		/// <summary>
+		/// Returns the maximum of two values.
+		/// </summary>
+		[DebuggerStepThrough]
+		[MethodImpl(MethodImplOptions.AggressiveInlining)]
+		public static T Max<T>(double c1, T c2) where T : SIBase<T>
+		{
+			return c1 > c2.Value() ? c1.SI<T>() : c2;
 		}
 
 		[DebuggerStepThrough]
 		[MethodImpl(MethodImplOptions.AggressiveInlining)]
-		public static T Max<T>(T c1, T c2, T c3) where T : IComparable
+		public static T Max<T>(T c1, T c2, T c3) where T : SIBase<T>
 		{
 			return Max(Max(c1, c2), c3);
 		}

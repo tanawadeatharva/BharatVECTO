@@ -605,8 +605,8 @@ namespace TUGraz.VectoCore.Models.SimulationComponent.Impl
 				var prevEngineSpeed = _engine.PreviousState.EngineSpeed;
 				var dragLoad = _engine.ModelData.FullLoadCurve.DragLoadStationaryPower(prevEngineSpeed);
 
-				var nextEnginePower = (_lastEnginePower - dragLoad) *
-									VectoMath.Max(idleTime.Value() * PeDropSlope + PeDropOffset, 0) + dragLoad;
+				var nextEnginePower = (_lastEnginePower - dragLoad) * Math.Max(0, idleTime.Value() * PeDropSlope + PeDropOffset) +
+									dragLoad;
 
 				var auxDemandResponse = RequestPort.Request(absTime, dt, 0.SI<NewtonMeter>(), prevEngineSpeed, true);
 

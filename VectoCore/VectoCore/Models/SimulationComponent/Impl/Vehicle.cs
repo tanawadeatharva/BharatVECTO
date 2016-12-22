@@ -30,6 +30,7 @@
 */
 
 using System;
+using TUGraz.VectoCommon.Exceptions;
 using TUGraz.VectoCommon.Models;
 using TUGraz.VectoCommon.Utils;
 using TUGraz.VectoCore.Configuration;
@@ -102,7 +103,14 @@ namespace TUGraz.VectoCore.Models.SimulationComponent.Impl
 
 			CurrentState.DriverAcceleration = DriverAcceleration(acceleration);
 			CurrentState.RollingResistance = RollingResistance(gradient);
-			CurrentState.AirDragResistance = AirDragResistance(PreviousState.Velocity, CurrentState.Velocity);
+			try {
+				CurrentState.AirDragResistance = AirDragResistance(PreviousState.Velocity, CurrentState.Velocity);
+			} catch (VectoException ex) {
+				Log.Warn("Exception during calculation of AirDragResistance: absTime: {0}, dist: {1}, v: {2}. {3}", absTime,
+					CurrentState.Distance, CurrentState.Velocity, ex);
+				CurrentState.AirDragResistance = AirDragResistance(VectoMath.Max(0, PreviousState.Velocity),
+					VectoMath.Max(0, CurrentState.Velocity));
+			}
 			CurrentState.SlopeResistance = SlopeResistance(gradient);
 
 			// DriverAcceleration = vehicleTractionForce - RollingResistance - AirDragResistance - SlopeResistance
