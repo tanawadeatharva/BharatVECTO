@@ -336,7 +336,12 @@ namespace TUGraz.VectoCore.Models.SimulationComponent.Impl
 			//	}
 			//	disengagedResponse = NextComponent.Request(absTime, dt, 0.SI<NewtonMeter>(), motoringSpeed);
 			//}
-			var disengagedResponse = NextComponent.Request(absTime, dt, 0.SI<NewtonMeter>(), null);
+			IResponse disengagedResponse;
+			if (GearboxType.AutomaticTransmission()) {
+				disengagedResponse = EngineIdleRequest(absTime, dt);
+			} else {
+				disengagedResponse = NextComponent.Request(absTime, dt, 0.SI<NewtonMeter>(), null);
+			}
 			if (TorqueConverter != null) {
 				TorqueConverter.Locked(CurrentState.InTorque, disengagedResponse.EngineSpeed);
 			}
@@ -344,6 +349,30 @@ namespace TUGraz.VectoCore.Models.SimulationComponent.Impl
 			CurrentState.SetState(0.SI<NewtonMeter>(), disengagedResponse.EngineSpeed, 0.SI<NewtonMeter>(), outAngularVelocity);
 			CurrentState.Gear = Gear;
 
+			return disengagedResponse;
+		}
+
+		private IResponse EngineIdleRequest(Second absTime, Second dt)
+		{
+			var disengagedResponse = NextComponent.Request(absTime, dt, 0.SI<NewtonMeter>(), DataBus.EngineIdleSpeed);
+			if (disengagedResponse is ResponseSuccess) {
+				return disengagedResponse;
+			}
+			var motoringSpeed = DataBus.EngineSpeed;
+			if (motoringSpeed.IsGreater(DataBus.EngineIdleSpeed)) {
+				var first = (ResponseDryRun)NextComponent.Request(absTime, dt, 0.SI<NewtonMeter>(), motoringSpeed, true);
+				try {
+					motoringSpeed = SearchAlgorithm.Search(motoringSpeed, first.DeltaDragLoad,
+						Constants.SimulationSettings.EngineIdlingSearchInterval,
+						getYValue: result => ((ResponseDryRun)result).DeltaDragLoad,
+						evaluateFunction: n => NextComponent.Request(absTime, dt, 0.SI<NewtonMeter>(), n, true),
+						criterion: result => ((ResponseDryRun)result).DeltaDragLoad.Value());
+				} catch (VectoException) {
+					Log.Warn("CycleGearbox could not find motoring speed for disengaged state.");
+				}
+				motoringSpeed = motoringSpeed.LimitTo(DataBus.EngineIdleSpeed, DataBus.EngineSpeed);
+			}
+			disengagedResponse = NextComponent.Request(absTime, dt, 0.SI<NewtonMeter>(), motoringSpeed);
 			return disengagedResponse;
 		}
 
@@ -397,7 +426,7 @@ namespace TUGraz.VectoCore.Models.SimulationComponent.Impl
 				var nextGear = 0u;
 				var torqueConverterLocked = true;
 				foreach (var entry in future) {
-					if (entry.VehicleTargetSpeed.IsEqual(0)) {
+					if (entry.WheelAngularVelocity.IsEqual(0)) {
 						// vehicle is stopped, no next gear, engine should go to idle
 						break;
 					}
@@ -421,7 +450,11 @@ namespace TUGraz.VectoCore.Models.SimulationComponent.Impl
 				}
 				var future = DataBus.LookAhead(ModelData.TractionInterruption * 5);
 				foreach (var entry in future) {
-					if (entry.VehicleTargetSpeed.IsEqual(0)) {
+					if (entry.VehicleTargetSpeed != null && entry.VehicleTargetSpeed.IsEqual(0)) {
+						// vehicle is stopped, no next gear, engine should go to idle
+						break;
+					}
+					if (entry.WheelAngularVelocity != null && entry.WheelAngularVelocity.IsEqual(0)) {
 						// vehicle is stopped, no next gear, engine should go to idle
 						break;
 					}

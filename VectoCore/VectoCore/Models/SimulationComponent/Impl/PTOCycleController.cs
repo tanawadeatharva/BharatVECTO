@@ -81,22 +81,18 @@ namespace TUGraz.VectoCore.Models.SimulationComponent.Impl
 
 		public void Reset()
 		{
-			LeftSample.Reset();
-			LeftSample.MoveNext();
-
-			RightSample.Reset();
-			RightSample.MoveNext();
-			RightSample.MoveNext();
+			CycleIterator.Reset();
 
 			IdleStart = null;
 		}
 
 		public Second GetNextCycleTime()
 		{
-			if (RightSample.Current == null)
+			if (CycleIterator.RightSample == null) {
 				return null;
+			}
 
-			return RightSample.Current.Time - LeftSample.Current.Time;
+			return CycleIterator.RightSample.Time - CycleIterator.LeftSample.Time;
 		}
 
 		protected override void DoWriteModalResults(IModalDataContainer container)
