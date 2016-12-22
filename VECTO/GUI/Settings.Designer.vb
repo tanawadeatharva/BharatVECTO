@@ -291,6 +291,8 @@ Partial Class Settings
 		'Settings
 		'
 		Me.AcceptButton = Me.ButtonOK
+		Me.AutoScaleDimensions = New System.Drawing.SizeF(6.0!, 13.0!)
+		Me.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font
 		Me.CancelButton = Me.ButtonCancel
 		Me.ClientSize = New System.Drawing.Size(313, 320)
 		Me.Controls.Add(Me.BtHelp)

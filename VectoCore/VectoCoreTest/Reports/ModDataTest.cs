@@ -61,10 +61,13 @@ namespace TUGraz.VectoCore.Tests.Reports
 
 			var engineData = MockSimulationDataFactory.CreateEngineDataFromFile(Truck40tPowerTrain.EngineFile);
 
+			// get a reference to the mod-data because the modaldata container clears it after simulation
 			var modData = ((ModalDataContainer)run.GetContainer().ModalData).Data;
 
 			run.Run();
 			Assert.IsTrue(run.FinishedWithoutErrors);
+
+			Assert.IsTrue(modData.Rows.Count > 0);
 
 			var lastGear = 0u;
 			foreach (DataRow row in modData.Rows) {
@@ -142,8 +145,8 @@ namespace TUGraz.VectoCore.Tests.Reports
 						"time: {0}  distance: {1}", time,
 						distance);
 					Assert.AreEqual(pEngFcmap.Value(),
-					(pTrac + pWheelInertia + pBrakeLoss + pLossAxle + pLossRet + pLossGbx + pGbxInertia + pEngInertia + pAux +
-					pClutchLoss).Value(), 0.5, "time: {0}  distance: {1}", time, distance);
+						(pTrac + pWheelInertia + pBrakeLoss + pLossAxle + pLossRet + pLossGbx + pGbxInertia + pEngInertia + pAux +
+						pClutchLoss).Value(), 0.5, "time: {0}  distance: {1}", time, distance);
 				}
 				lastGear = gear;
 			}
