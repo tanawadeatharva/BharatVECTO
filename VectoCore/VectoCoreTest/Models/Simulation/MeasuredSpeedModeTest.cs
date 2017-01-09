@@ -407,7 +407,7 @@ namespace TUGraz.VectoCore.Tests.Models.Simulation
 			RunJob(@"TestData\MeasuredSpeed\MeasuredSpeedGear.vecto",
 				@"TestData\MeasuredSpeed\Results\MeasuredSpeedGear_MeasuredSpeed_Gear_Rural.vmod",
 				@"TestData\MeasuredSpeed\MeasuredSpeedGear_MeasuredSpeed_Gear_Rural.vmod",
-				@"TestData\MeasuredSpeed\Results\MeasuredSpeedGear.vsum", @"TestData\MeasuredSpeed\MeasuredSpeedGear.vsum");
+				@"TestData\MeasuredSpeed\Results\MeasuredSpeedGear.vsum", @"TestData\MeasuredSpeed\MeasuredSpeedGear.vsum", true);
 		}
 
 		[TestMethod]
