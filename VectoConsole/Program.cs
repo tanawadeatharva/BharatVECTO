@@ -277,10 +277,10 @@ Examples:
 				Environment.ExitCode = Environment.ExitCode != 0 ? Environment.ExitCode : 1;
 			}
 
-//#if DEBUG
+#if DEBUG
 			Console.WriteLine("done.");
 			Console.ReadKey();
-//#endif
+#endif
 			return Environment.ExitCode;
 		}
 

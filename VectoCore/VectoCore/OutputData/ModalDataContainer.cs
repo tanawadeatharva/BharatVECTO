@@ -233,8 +233,7 @@ namespace TUGraz.VectoCore.OutputData
 			return Data.Rows.Cast<DataRow>().Select(x => x.Field<T>(col));
 		}
 
-		public T TimeIntegral<T>(ModalResultField field, Func<SI, bool> filter = null)
-			where T : SIBase<T>
+		public T TimeIntegral<T>(ModalResultField field, Func<SI, bool> filter = null) where T : SIBase<T>
 		{
 			var result = 0.0;
 			for (var i = 0; i < Data.Rows.Count; i++) {
@@ -305,7 +304,7 @@ namespace TUGraz.VectoCore.OutputData
 
 		public void FinishSimulation()
 		{
-			Data.Clear(); //.Rows.Clear();
+			//Data.Clear(); //.Rows.Clear();
 			Data = null;
 			CurrentRow = null;
 			Auxiliaries.Clear();

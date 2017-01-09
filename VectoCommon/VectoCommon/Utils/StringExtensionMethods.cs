@@ -41,6 +41,13 @@ namespace TUGraz.VectoCommon.Utils
 	{
 		public static double ToDouble(this string self, double? defaultValue = null)
 		{
+			if (string.IsNullOrWhiteSpace(self)) {
+				if (defaultValue.HasValue) {
+					return defaultValue.Value;
+				}
+				throw new FormatException("Cannot convert an empty string to a number.");
+			}
+
 			try {
 				return double.Parse(self, CultureInfo.InvariantCulture);
 			} catch (FormatException) {

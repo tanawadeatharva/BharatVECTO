@@ -30,7 +30,6 @@
 */
 
 using System.Collections.Generic;
-using System.Data;
 using System.Linq;
 using Newtonsoft.Json.Linq;
 using TUGraz.VectoCommon.Exceptions;
@@ -306,7 +305,7 @@ namespace TUGraz.VectoCore.InputData.FileIO.JSON
 			get { return this; }
 		}
 
-		public Second DownshiftAferUpshiftDelay
+		public Second DownshiftAfterUpshiftDelay
 		{
 			get
 			{
@@ -336,34 +335,46 @@ namespace TUGraz.VectoCore.InputData.FileIO.JSON
 			}
 		}
 
-	    public Second PowershiftShiftTime
-	    {
-	        get
-	        {
-	            return Body["PowershiftShiftTime"] == null
-	                ? 0.8.SI<Second>()
-	                : Body.GetEx<double>("PowershiftShiftTime").SI<Second>();
-	        }
-	    }
+		public Second PowershiftShiftTime
+		{
+			get
+			{
+				return Body["PowershiftShiftTime"] == null
+					? 0.8.SI<Second>()
+					: Body.GetEx<double>("PowershiftShiftTime").SI<Second>();
+			}
+		}
 
-	    public double PowerShiftInertiaFactor
-	    {
-	        get { return Body["PowershiftInertiaFactor"] == null ? 1 : Body.GetEx<double>("PowershiftInertiaFactor"); }
-	    }
+		public double PowerShiftInertiaFactor
+		{
+			get { return Body["PowershiftInertiaFactor"] == null ? 1 : Body.GetEx<double>("PowershiftInertiaFactor"); }
+		}
 
-	    #endregion
+		#endregion
 
 		#region ITorqueConverterInputData
 
-		// deprecated: AT transmission has to have a torque converter. 
-		//public virtual bool Enabled
-		//{
-		//	get
-		//	{
-		//		return false;
-		//		// TODO mk-2016-05-09: JSON ITorqueConverterInputData.Enabled always true --> as soon as TC is implemented, set to correct value!
-		//	}
-		//}
+		public MeterPerSquareSecond CLUpshiftMinAcceleration
+		{
+			get
+			{
+				return Body[JsonKeys.Gearbox_TorqueConverter] != null &&
+						Body[JsonKeys.Gearbox_TorqueConverter]["CLUpshiftMinAcceleration"] != null
+					? Body.GetEx(JsonKeys.Gearbox_TorqueConverter).GetEx<double>("CLUpshiftMinAcceleration").SI<MeterPerSquareSecond>()
+					: UpshiftMinAcceleration;
+			}
+		}
+
+		public MeterPerSquareSecond CCUpshiftMinAcceleration
+		{
+			get
+			{
+				return Body[JsonKeys.Gearbox_TorqueConverter] != null &&
+						Body[JsonKeys.Gearbox_TorqueConverter]["CCUpshiftMinAcceleration"] != null
+					? Body.GetEx(JsonKeys.Gearbox_TorqueConverter).GetEx<double>("CCUpshiftMinAcceleration").SI<MeterPerSquareSecond>()
+					: UpshiftMinAcceleration;
+			}
+		}
 
 		public virtual PerSecond ReferenceRPM
 		{
@@ -378,10 +389,17 @@ namespace TUGraz.VectoCore.InputData.FileIO.JSON
 			}
 		}
 
-        public PerSecond MaxInputSpeed
-        {
-            get { return Body[JsonKeys.Gearbox_TorqueConverter] != null && Body[JsonKeys.Gearbox_TorqueConverter]["MaxTCSpeed"] != null ? Body.GetEx(JsonKeys.Gearbox_TorqueConverter).GetEx<double>("MaxTCSpeed").RPMtoRad() : 5000.RPMtoRad(); }
-        }
+		public PerSecond MaxInputSpeed
+		{
+			get
+			{
+				return Body[JsonKeys.Gearbox_TorqueConverter] != null &&
+						Body[JsonKeys.Gearbox_TorqueConverter]["MaxTCSpeed"] != null
+					? Body.GetEx(JsonKeys.Gearbox_TorqueConverter).GetEx<double>("MaxTCSpeed").RPMtoRad()
+					: 5000.RPMtoRad();
+			}
+		}
+
 		public virtual TableData TCData
 		{
 			get

@@ -90,11 +90,11 @@ namespace TUGraz.VectoCore.Models.SimulationComponent
 		/// </value>
 		IGearbox Gearbox { get; set; }
 
-		GearInfo NextGear { get; }
+        GearInfo NextGear { get; }
 	}
 
-	public class GearInfo
-	{
+    public class GearInfo
+    {
 		public GearInfo(uint gear, bool tcLocked)
 		{
 			Gear = gear;
@@ -103,5 +103,5 @@ namespace TUGraz.VectoCore.Models.SimulationComponent
 
 		public uint Gear { get; private set; }
 		public bool TorqueConverterLocked { get; private set; }
-	}
+    }
 }

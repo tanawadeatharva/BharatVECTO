@@ -325,6 +325,7 @@ namespace TUGraz.VectoCore.Tests.Models.Simulation
 			var inputData = JSONInputDataFactory.ReadJsonJob(jobFile);
 			var runsFactory = new SimulatorFactory(ExecutionMode.Engineering, inputData, fileWriter);
 			runsFactory.ActualModalData = actualModData;
+			runsFactory.WriteModalResults = true;
 
 			jobContainer.AddRuns(runsFactory);
 			jobContainer.Execute();
@@ -407,7 +408,7 @@ namespace TUGraz.VectoCore.Tests.Models.Simulation
 			RunJob(@"TestData\MeasuredSpeed\MeasuredSpeedGear.vecto",
 				@"TestData\MeasuredSpeed\Results\MeasuredSpeedGear_MeasuredSpeed_Gear_Rural.vmod",
 				@"TestData\MeasuredSpeed\MeasuredSpeedGear_MeasuredSpeed_Gear_Rural.vmod",
-				@"TestData\MeasuredSpeed\Results\MeasuredSpeedGear.vsum", @"TestData\MeasuredSpeed\MeasuredSpeedGear.vsum", true);
+				@"TestData\MeasuredSpeed\Results\MeasuredSpeedGear.vsum", @"TestData\MeasuredSpeed\MeasuredSpeedGear.vsum");
 		}
 
 		[TestMethod]
@@ -417,7 +418,7 @@ namespace TUGraz.VectoCore.Tests.Models.Simulation
 				@"TestData\MeasuredSpeed\Results\MeasuredSpeedGear_TractionInterruption_MeasuredSpeed_Gear_Rural_TractionInterruption.vmod",
 				@"TestData\MeasuredSpeed\MeasuredSpeedGear_TractionInterruption_MeasuredSpeed_Gear_Rural_TractionInterruption.vmod",
 				@"TestData\MeasuredSpeed\Results\MeasuredSpeedGear_TractionInterruption.vsum",
-				@"TestData\MeasuredSpeed\MeasuredSpeedGear_TractionInterruption.vsum", true);
+				@"TestData\MeasuredSpeed\MeasuredSpeedGear_TractionInterruption.vsum");
 		}
 
 		[TestMethod]

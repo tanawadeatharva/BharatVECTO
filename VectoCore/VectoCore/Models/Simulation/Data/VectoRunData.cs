@@ -170,7 +170,7 @@ namespace TUGraz.VectoCore.Models.Simulation.Data
 								}
 							} catch (VectoException) {
 								return new ValidationResult(
-									string.Format("Interpolation of Angledrive-LossMap failed with torque={1} and angularSpeed={2}", gear.Key,
+									string.Format("Interpolation of Angledrive-LossMap failed with torque={0} and angularSpeed={1}",
 										angledriveTorque, (angularVelocity / gear.Value.Ratio).ConvertTo().Rounds.Per.Minute));
 							}
 

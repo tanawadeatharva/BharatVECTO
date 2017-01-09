@@ -29,8 +29,6 @@
 *   Martin Rexeis, rexeis@ivt.tugraz.at, IVT, Graz University of Technology
 */
 
-using System;
-using System.Diagnostics;
 using TUGraz.VectoCommon.Exceptions;
 using TUGraz.VectoCommon.Models;
 using TUGraz.VectoCommon.Utils;
@@ -63,7 +61,7 @@ namespace TUGraz.VectoCore.Models.SimulationComponent.Impl
 			if (!gearboxModelData.Type.AutomaticTransmission()) {
 				return;
 			}
-			var strategy = new CycleShiftStrategy { Gearbox = this };
+			var strategy = new CycleShiftStrategy(ModelData, null);
 			TorqueConverter = new TorqueConverter(this, strategy, container, gearboxModelData.TorqueConverterData, engineInertia);
 			if (TorqueConverter == null) {
 				throw new VectoException("Torque Converter required for AT transmission!");
@@ -474,8 +472,8 @@ namespace TUGraz.VectoCore.Models.SimulationComponent.Impl
 		public override bool ClutchClosed(Second absTime)
 		{
 			return (DataBus.DriverBehavior == DrivingBehavior.Braking
-				? DataBus.CycleData.LeftSample.Gear
-				: DataBus.CycleData.RightSample.Gear) != 0;
+						? DataBus.CycleData.LeftSample.Gear
+						: DataBus.CycleData.RightSample.Gear) != 0;
 		}
 
 		#endregion
@@ -486,33 +484,35 @@ namespace TUGraz.VectoCore.Models.SimulationComponent.Impl
 			public NewtonMeter PowershiftLosses { get; set; }
 		}
 
-		public class CycleShiftStrategy : IShiftStrategy
+		public class CycleShiftStrategy : BaseShiftStrategy
 		{
-			public bool ShiftRequired(Second absTime, Second dt, NewtonMeter outTorque, PerSecond outAngularVelocity,
+			public CycleShiftStrategy(GearboxData data, IDataBus dataBus) : base(data, dataBus) {}
+
+			public override IGearbox Gearbox { get; set; }
+
+			public override bool ShiftRequired(Second absTime, Second dt, NewtonMeter outTorque, PerSecond outAngularVelocity,
 				NewtonMeter inTorque,
 				PerSecond inAngularVelocity, uint gear, Second lastShiftTime)
 			{
 				return false;
 			}
 
-			public uint InitGear(Second absTime, Second dt, NewtonMeter torque, PerSecond outAngularVelocity)
+			public override uint InitGear(Second absTime, Second dt, NewtonMeter torque, PerSecond outAngularVelocity)
 			{
 				throw new System.NotImplementedException();
 			}
 
-			public uint Engage(Second absTime, Second dt, NewtonMeter outTorque, PerSecond outAngularVelocity)
+			public override uint Engage(Second absTime, Second dt, NewtonMeter outTorque, PerSecond outAngularVelocity)
 			{
 				throw new System.NotImplementedException();
 			}
 
-			public void Disengage(Second absTime, Second dt, NewtonMeter outTorque, PerSecond outEngineSpeed)
+			public override void Disengage(Second absTime, Second dt, NewtonMeter outTorque, PerSecond outEngineSpeed)
 			{
 				throw new System.NotImplementedException();
 			}
 
-			public IGearbox Gearbox { get; set; }
-
-			public GearInfo NextGear
+			public override GearInfo NextGear
 			{
 				get { throw new System.NotImplementedException(); }
 			}

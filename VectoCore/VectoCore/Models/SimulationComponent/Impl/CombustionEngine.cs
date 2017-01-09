@@ -179,11 +179,10 @@ namespace TUGraz.VectoCore.Models.SimulationComponent.Impl
 				CurrentState.OperationMode = EngineOperationMode.Stopped;
 			}
 
-
 			var avgEngineSpeed = (PreviousState.EngineSpeed + angularVelocity) / 2.0;
 
 			var fullDragTorque = ModelData.FullLoadCurve.DragLoadStationaryTorque(avgEngineSpeed);
-			var dynamicFullLoadPower = ComputeFullLoadPower(avgEngineSpeed, dt);
+			var dynamicFullLoadPower = ComputeFullLoadPower(avgEngineSpeed, dt, dryRun);
 			var dynamicFullLoadTorque = dynamicFullLoadPower / avgEngineSpeed;
 			var inertiaTorqueLoss =
 				Formulas.InertiaPower(angularVelocity, PreviousState.EngineSpeed, ModelData.Inertia, dt) /
@@ -423,7 +422,7 @@ namespace TUGraz.VectoCore.Models.SimulationComponent.Impl
 		/// <summary>
 		///     computes full load power from gear [-], angularVelocity [rad/s] and dt [s].
 		/// </summary>
-		protected Watt ComputeFullLoadPower(PerSecond angularVelocity, Second dt)
+		protected Watt ComputeFullLoadPower(PerSecond angularVelocity, Second dt, bool dryRun)
 		{
 			if (dt <= 0) {
 				throw new VectoException("ComputeFullLoadPower cannot compute for simulation interval length 0.");
@@ -443,10 +442,16 @@ namespace TUGraz.VectoCore.Models.SimulationComponent.Impl
 					var tStarPrev = pt1 * Math.Log(1.0 / (1 - powerRatio), Math.E).SI<Second>();
 					var tStar = tStarPrev + PreviousState.dt;
 					dynFullPowerCalculated = stationaryFullLoadPower * (1 - Math.Exp((-tStar / pt1).Value()));
-					dynFullPowerCalculated = VectoMath.Max(PreviousState.EnginePower, dynFullPowerCalculated);
-				} catch (Exception) {
-					Log.Error("failed to calculate dynamic full-load power - using stationary idle full-load. n: {0}", angularVelocity);
+				} catch (VectoException e) {
+					Log.Warn("PT1 calculation failed (dryRun: {0}): {1}", dryRun, e.Message);
+					if (dryRun) {
+						dynFullPowerCalculated = stationaryFullLoadPower;
+					} else {
+						throw;
+					}
 				}
+
+				dynFullPowerCalculated = VectoMath.Max(PreviousState.EnginePower, dynFullPowerCalculated);
 			}
 
 			// new check in vecto 3.x (according to Martin Rexeis)
@@ -606,8 +611,8 @@ namespace TUGraz.VectoCore.Models.SimulationComponent.Impl
 				var prevEngineSpeed = _engine.PreviousState.EngineSpeed;
 				var dragLoad = _engine.ModelData.FullLoadCurve.DragLoadStationaryPower(prevEngineSpeed);
 
-				var nextEnginePower = (_lastEnginePower - dragLoad) *
-									VectoMath.Max(idleTime.Value() * PeDropSlope + PeDropOffset, 0) + dragLoad;
+				var nextEnginePower = (_lastEnginePower - dragLoad) * Math.Max(0, idleTime.Value() * PeDropSlope + PeDropOffset) +
+									dragLoad;
 
 				var auxDemandResponse = RequestPort.Request(absTime, dt, 0.SI<NewtonMeter>(), prevEngineSpeed, true);
 

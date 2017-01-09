@@ -474,7 +474,11 @@ namespace TUGraz.VectoCore.Models.SimulationComponent.Impl
 				operatingPoint.SimulationInterval,
 				operatingPoint.Acceleration, DataBus.BrakePower);
 			if (DataBus.BrakePower < 0) {
-				var overload = new ResponseOverload { Source = this, BrakePower =  DataBus.BrakePower, Acceleration = operatingPoint.Acceleration};
+				var overload = new ResponseOverload {
+					Source = this,
+					BrakePower = DataBus.BrakePower,
+					Acceleration = operatingPoint.Acceleration
+				};
 				DataBus.BrakePower = 0.SI<Watt>();
 				return overload;
 			}
@@ -644,26 +648,26 @@ namespace TUGraz.VectoCore.Models.SimulationComponent.Impl
 						return actionRoll ? r.GearboxPowerRequest : (coastingOrRoll ? r.DeltaDragLoad : r.DeltaFullLoad);
 					},
 					evaluateFunction:
-						acc => {
-							// calculate new time interval only when vehiclespeed and acceleration are != 0
-							// else: use same timeinterval as before.
-							if (!(acc.IsEqual(0) && DataBus.VehicleSpeed.IsEqual(0))) {
-								var tmp = ComputeTimeInterval(acc, ds);
-								if (tmp.SimulationInterval.IsEqual(0.SI<Second>(), 1e-9.SI<Second>())) {
-									throw new VectoSearchAbortedException(
-										"next TimeInterval is 0. a: {0}, v: {1}, dt: {2}", acc,
-										DataBus.VehicleSpeed, tmp.SimulationInterval);
-								}
-								retVal.Acceleration = tmp.Acceleration;
-								retVal.SimulationInterval = tmp.SimulationInterval;
-								retVal.SimulationDistance = tmp.SimulationDistance;
+					acc => {
+						// calculate new time interval only when vehiclespeed and acceleration are != 0
+						// else: use same timeinterval as before.
+						if (!(acc.IsEqual(0) && DataBus.VehicleSpeed.IsEqual(0))) {
+							var tmp = ComputeTimeInterval(acc, ds);
+							if (tmp.SimulationInterval.IsEqual(0.SI<Second>(), 1e-9.SI<Second>())) {
+								throw new VectoSearchAbortedException(
+									"next TimeInterval is 0. a: {0}, v: {1}, dt: {2}", acc,
+									DataBus.VehicleSpeed, tmp.SimulationInterval);
 							}
-							IterationStatistics.Increment(this, "SearchOperatingPoint");
-							DriverAcceleration = acc;
-							var response = NextComponent.Request(absTime, retVal.SimulationInterval, acc, gradient, true);
-							response.OperatingPoint = retVal;
-							return response;
-						},
+							retVal.Acceleration = tmp.Acceleration;
+							retVal.SimulationInterval = tmp.SimulationInterval;
+							retVal.SimulationDistance = tmp.SimulationDistance;
+						}
+						IterationStatistics.Increment(this, "SearchOperatingPoint");
+						DriverAcceleration = acc;
+						var response = NextComponent.Request(absTime, retVal.SimulationInterval, acc, gradient, true);
+						response.OperatingPoint = retVal;
+						return response;
+					},
 					criterion: response => {
 						var r = (ResponseDryRun)response;
 						delta = actionRoll
@@ -672,14 +676,14 @@ namespace TUGraz.VectoCore.Models.SimulationComponent.Impl
 						return delta.Value();
 					},
 					abortCriterion:
-						(response, cnt) => {
-							var r = (ResponseDryRun)response;
-							if (r == null) {
-								return false;
-							}
+					(response, cnt) => {
+						var r = (ResponseDryRun)response;
+						if (r == null) {
+							return false;
+						}
 
-							return !actionRoll && !ds.IsEqual(r.OperatingPoint.SimulationDistance);
-						});
+						return !actionRoll && !ds.IsEqual(r.OperatingPoint.SimulationDistance);
+					});
 			} catch (VectoSearchAbortedException) {
 				// search aborted, try to go ahead with the last acceleration
 			} catch (Exception) {

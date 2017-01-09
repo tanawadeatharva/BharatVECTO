@@ -49,27 +49,6 @@ namespace TUGraz.VectoCore.OutputData
 	public interface IModalDataContainer
 	{
 		/// <summary>
-		/// Identify which run this modaldata container is for
-		/// </summary>
-		//todo mk 2016-10-11: Field is never used. Delete?
-		[Obsolete]
-		string RunName { get; }
-
-		/// <summary>
-		/// Identify which cycle is simulated 
-		/// </summary>
-		//todo mk 2016-10-11: Field is never used. Delete?
-		[Obsolete]
-		string CycleName { get; }
-
-		/// <summary>
-		/// Custom suffix for this run, typically the loading type
-		/// </summary>
-		//todo mk 2016-10-11: Field is never used. Delete?
-		[Obsolete]
-		string RunSuffix { get; }
-
-		/// <summary>
 		/// Indexer for fields of the DataWriter. Accesses the data of the current step.
 		/// </summary>
 		/// <param name="key"></param>
@@ -96,10 +75,6 @@ namespace TUGraz.VectoCore.OutputData
 		/// Finishes the writing of the DataWriter.
 		/// </summary>
 		void Finish(VectoRun.Status runStatus);
-
-		//todo mk 2016-10-11: Field is never used. Delete?
-		[Obsolete]
-		bool WriteModalResults { get; set; }
 
 		IEnumerable<T> GetValues<T>(ModalResultField key);
 
@@ -131,43 +106,26 @@ namespace TUGraz.VectoCore.OutputData
 			return data.GetValues<SI>(field).Min();
 		}
 
-		//todo mk 2016-10-11: Field is never used. Delete?
-		[Obsolete]
-		public static SI Average(this IModalDataContainer data, ModalResultField field, Func<SI, bool> filter = null)
-		{
-			return data.GetValues<SI>(field).Average(filter);
-		}
-
-		//todo mk 2016-10-11: Field is never used. Delete?
-		[Obsolete]
-		public static SI Sum(this IModalDataContainer data, ModalResultField field, Func<SI, bool> filter = null)
-		{
-			return data.GetValues<SI>(field).Where(filter ?? (x => x != null)).Sum();
-		}
-
-		//todo mk 2016-10-11: Field is never used. Delete?
-		[Obsolete]
-		public static SI Sum(this IModalDataContainer data, DataColumn col, Func<SI, bool> filter = null)
-		{
-			return data.GetValues<SI>(col).Where(filter ?? (x => x != null)).Sum();
-		}
-
 		public static SI Average(this IEnumerable<SI> self, Func<SI, bool> filter)
 		{
 			var values = self.Where(filter ?? (x => x != null && !double.IsNaN(x.Value()))).ToList();
 			return values.Any() ? values.Sum() / values.Count : null;
 		}
 
-		//todo mk 2016-10-11: Field is never used. Delete?
-		public static object DefaultIfNull(this object self)
+		/// <summary>
+		/// Returns a default value if the SI object is null.
+		/// </summary>
+		/// <typeparam name="T">The SI Type.</typeparam>
+		/// <param name="self">The SI Instance.</param>
+		/// <param name="defaultValue">The default value.</param>
+		/// <returns>If self is null, the default value as SI-Type is returned. Otherwise self is returned.</returns>
+		/// <code>
+		/// NewtonMeter t = null;
+		/// var x = t.DefaultIfNull(0);
+		/// </code>
+		public static T DefaultIfNull<T>(this T self, double defaultValue) where T : SIBase<T>
 		{
-			return self ?? DBNull.Value;
-		}
-
-		//todo mk 2016-10-11: Field is never used. Delete?
-		public static T DefaultIfNull<T>(this T self, T defaultValue) where T : class
-		{
-			return self ?? defaultValue;
+			return self ?? defaultValue.SI<T>();
 		}
 
 		public static MeterPerSquareSecond AccelerationsPositive(this MeterPerSquareSecond[] acceleration3SecondAverage)

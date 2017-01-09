@@ -78,72 +78,67 @@ Public Class JSONFileWriter
 		'Body
 		Dim body As Dictionary(Of String, Object) = New Dictionary(Of String, Object)
 
-        body.Add(JsonKeys.SavedInDeclMode, Cfg.DeclMode)
-
-        body.Add(JsonKeys.Gearbox_ModelName, gbx.ModelName)
-
-        body.Add(JsonKeys.Gearbox_Inertia, gbx.Inertia.Value())
-        body.Add(JsonKeys.Gearbox_TractionInterruption, gbx.TractionInterruption.Value())
+		body.Add(JsonKeys.SavedInDeclMode, Cfg.DeclMode)
+		body.Add(JsonKeys.Gearbox_ModelName, gbx.ModelName)
+		body.Add(JsonKeys.Gearbox_Inertia, gbx.Inertia.Value())
+		body.Add(JsonKeys.Gearbox_TractionInterruption, gbx.TractionInterruption.Value())
 
 		Dim ls As New List(Of Dictionary(Of String, Object))
 		Dim axlgDict As New Dictionary(Of String, Object)
-        axlgDict.Add(JsonKeys.Gearbox_Gear_Ratio, axl.Ratio)
+		axlgDict.Add(JsonKeys.Gearbox_Gear_Ratio, axl.Ratio)
 		If axl.LossMap Is Nothing Then
-            axlgDict.Add(JsonKeys.Gearbox_Gear_Efficiency, axl.Efficiency)
+			axlgDict.Add(JsonKeys.Gearbox_Gear_Efficiency, axl.Efficiency)
 		Else
-            axlgDict.Add(JsonKeys.Gearbox_Gear_LossMapFile, GetRelativePath(axl.LossMap.Source, Path.GetDirectoryName(filename)))
+			axlgDict.Add(JsonKeys.Gearbox_Gear_LossMapFile, GetRelativePath(axl.LossMap.Source, Path.GetDirectoryName(filename)))
 		End If
 		ls.Add(axlgDict)
 
 		For Each gear As ITransmissionInputData In gbx.Gears
 			Dim gearDict As New Dictionary(Of String, Object)
-            gearDict.Add(JsonKeys.Gearbox_Gear_Ratio, gear.Ratio)
+			gearDict.Add(JsonKeys.Gearbox_Gear_Ratio, gear.Ratio)
 			If gear.LossMap Is Nothing Then
-                gearDict.Add(JsonKeys.Gearbox_Gear_Efficiency, gear.Efficiency)
+				gearDict.Add(JsonKeys.Gearbox_Gear_Efficiency, gear.Efficiency)
 			Else
-                gearDict.Add(JsonKeys.Gearbox_Gear_LossMapFile, GetRelativePath(gear.LossMap.Source, Path.GetDirectoryName(filename)))
+				gearDict.Add(JsonKeys.Gearbox_Gear_LossMapFile,
+							GetRelativePath(gear.LossMap.Source, Path.GetDirectoryName(filename)))
 			End If
-            gearDict.Add(JsonKeys.Gearbox_Gear_ShiftPolygonFile, If _
-                            (Not gbx.SavedInDeclarationMode AndAlso Not gear.ShiftPolygon Is Nothing,
-                            GetRelativePath(gear.ShiftPolygon.Source, Path.GetDirectoryName(filename)), ""))
-            gearDict.Add("MaxTorque", If(gear.MaxTorque Is Nothing, "", gear.MaxTorque.Value().ToString()))
+			gearDict.Add(JsonKeys.Gearbox_Gear_ShiftPolygonFile, If _
+							(Not gbx.SavedInDeclarationMode AndAlso Not gear.ShiftPolygon Is Nothing,
+							GetRelativePath(gear.ShiftPolygon.Source, Path.GetDirectoryName(filename)), ""))
+			gearDict.Add("MaxTorque", If(gear.MaxTorque Is Nothing, "", gear.MaxTorque.Value().ToString()))
 
 			ls.Add(gearDict)
 		Next
-        body.Add(JsonKeys.Gearbox_Gears, ls)
-
-        body.Add(JsonKeys.Gearbox_TorqueReserve, gbx.TorqueReserve * 100)
-		'body.Add("SkipGears", gbx.sk)
-        body.Add(JsonKeys.Gearbox_ShiftTime, gbx.MinTimeBetweenGearshift.Value())
-		'body.Add("EaryShiftUp", gbx.ShiftInside)
-
-        body.Add(JsonKeys.Gearbox_StartTorqueReserve, gbx.StartTorqueReserve * 100)
-        body.Add(JsonKeys.Gearbox_StartSpeed, gbx.StartSpeed.Value())
-        body.Add(JsonKeys.Gearbox_StartAcceleration, gbx.StartAcceleration.Value())
-
-        body.Add(JsonKeys.Gearbox_GearboxType, gbx.Type.ToString())
+		body.Add(JsonKeys.Gearbox_Gears, ls)
+		body.Add(JsonKeys.Gearbox_TorqueReserve, gbx.TorqueReserve*100)
+		body.Add(JsonKeys.Gearbox_ShiftTime, gbx.MinTimeBetweenGearshift.Value())
+		body.Add(JsonKeys.Gearbox_StartTorqueReserve, gbx.StartTorqueReserve*100)
+		body.Add(JsonKeys.Gearbox_StartSpeed, gbx.StartSpeed.Value())
+		body.Add(JsonKeys.Gearbox_StartAcceleration, gbx.StartAcceleration.Value())
+		body.Add(JsonKeys.Gearbox_GearboxType, gbx.Type.ToString())
 
 		Dim torqueConverter As ITorqueConverterEngineeringInputData = gbx.TorqueConverter
 		Dim torqueConverterDict As New Dictionary(Of String, Object)
 		torqueConverterDict.Add("Enabled", Not torqueConverter Is Nothing AndAlso gbx.Type.AutomaticTransmission())
 		If gbx.Type.AutomaticTransmission() AndAlso Not torqueConverter Is Nothing Then
 			torqueConverterDict.Add("File", GetRelativePath(torqueConverter.TCData.Source, Path.GetDirectoryName(filename)))
-            torqueConverterDict.Add(JsonKeys.Gearbox_TorqueConverter_ReferenceRPM, torqueConverter.ReferenceRPM.AsRPM)
-            torqueConverterDict.Add(JsonKeys.Gearbox_TorqueConverter_Inertia, torqueConverter.Inertia.Value())
-            torqueConverterDict.Add("MaxTCSpeed", torqueConverter.MaxInputSpeed.AsRPM)
-            torqueConverterDict.Add("ShiftPolygon", If _
-                                        (Not gbx.SavedInDeclarationMode AndAlso Not torqueConverter.ShiftPolygon Is Nothing,
-                                        GetRelativePath(torqueConverter.ShiftPolygon.Source, Path.GetDirectoryName(filename)), ""))
+			torqueConverterDict.Add(JsonKeys.Gearbox_TorqueConverter_ReferenceRPM, torqueConverter.ReferenceRPM.AsRPM)
+			torqueConverterDict.Add(JsonKeys.Gearbox_TorqueConverter_Inertia, torqueConverter.Inertia.Value())
+			torqueConverterDict.Add("MaxTCSpeed", torqueConverter.MaxInputSpeed.AsRPM)
+			torqueConverterDict.Add("ShiftPolygon",
+									If (Not gbx.SavedInDeclarationMode AndAlso Not torqueConverter.ShiftPolygon Is Nothing,
+										GetRelativePath(torqueConverter.ShiftPolygon.Source, Path.GetDirectoryName(filename)), ""))
+			torqueConverterDict.Add("CLUpshiftMinAcceleration", torqueConverter.CLUpshiftMinAcceleration.Value())
+			torqueConverterDict.Add("CCUpshiftMinAcceleration", torqueConverter.CCUpshiftMinAcceleration.Value())
 		End If
-        body.Add(JsonKeys.Gearbox_TorqueConverter, torqueConverterDict)
+		body.Add(JsonKeys.Gearbox_TorqueConverter, torqueConverterDict)
 
-
-		body.Add("DownshiftAferUpshiftDelay", gbx.DownshiftAferUpshiftDelay.Value())
+		body.Add("DownshiftAfterUpshiftDelay", gbx.DownshiftAfterUpshiftDelay.Value())
 		body.Add("UpshiftAfterDownshiftDelay", gbx.UpshiftAfterDownshiftDelay.Value())
-        body.Add("UpshiftMinAcceleration", gbx.UpshiftMinAcceleration.Value())
+		body.Add("UpshiftMinAcceleration", gbx.UpshiftMinAcceleration.Value())
 
-        body.Add("PowershiftShiftTime", gbx.PowershiftShiftTime.Value())
-        body.Add("PowershiftInertiaFactor", gbx.PowerShiftInertiaFactor)
+		body.Add("PowershiftShiftTime", gbx.PowershiftShiftTime.Value())
+		body.Add("PowershiftInertiaFactor", gbx.PowerShiftInertiaFactor)
 
 		WriteFile(header, body, filename)
 	End Sub
@@ -157,8 +152,6 @@ Public Class JSONFileWriter
 		Dim header As Dictionary(Of String, Object) = GetHeader(VehicleFormatVersion)
 
 		'Body
-
-
 		Dim retarderOut As Dictionary(Of String, Object) = New Dictionary(Of String, Object)()
 		If retarder Is Nothing Then
 			retarderOut.Add("Type", RetarderType.None.GetName())
@@ -205,29 +198,24 @@ Public Class JSONFileWriter
 				{"rdyn", vehicle.DynamicTyreRadius.ConvertTo().Milli.Meter.Value()},
 				{"CdCorrMode", vehicle.CrossWindCorrectionMode.GetName()},
 				{"CdCorrFile",
-				If _
-				(
-					(vehicle.CrossWindCorrectionMode = CrossWindCorrectionMode.SpeedDependentCorrectionFactor OrElse
+				If((vehicle.CrossWindCorrectionMode = CrossWindCorrectionMode.SpeedDependentCorrectionFactor OrElse
 					vehicle.CrossWindCorrectionMode = CrossWindCorrectionMode.VAirBetaLookupTable) AndAlso
-					Not vehicle.CrosswindCorrectionMap Is Nothing, GetRelativePath(vehicle.CrosswindCorrectionMap.Source, basePath), "")
+					Not vehicle.CrosswindCorrectionMap Is Nothing, GetRelativePath(vehicle.CrosswindCorrectionMap.Source, basePath),
+					"")
 				},
 				{"Retarder", retarderOut},
 				{"Angledrive", angledriveOut},
 				{"PTO", ptoOut},
 				{"AxleConfig", New Dictionary(Of String, Object) From {
 				{"Type", vehicle.AxleConfiguration.GetName()},
-				{"Axles", (From axle In vehicle.Axles Select New Dictionary(Of String, Object) From {
+				{"Axles", From axle In vehicle.Axles Select New Dictionary(Of String, Object) From {
 				{"Inertia", axle.Inertia.Value()},
 				{"Wheels", axle.Wheels},
 				{"AxleWeightShare", axle.AxleWeightShare},
 				{"TwinTyres", axle.TwinTyres},
 				{"RRCISO", axle.RollResistanceCoefficient},
 				{"FzISO", axle.TyreTestLoad.Value()}
-				}
-				)}
-				}
-				}
-				}
+				}}}}}
 
 		WriteFile(header, body, filename)
 	End Sub
@@ -306,16 +294,14 @@ Public Class JSONFileWriter
 					{"MinTime", driver.StartStop.MinTime.Value()},
 					{"Delay", driver.StartStop.Delay.Value()}})
 		If Not job.SavedInDeclarationMode Then
-			Dim dfTargetSpeed As String = If _
-					(
-						Not driver.Lookahead.CoastingDecisionFactorTargetSpeedLookup Is Nothing AndAlso
-						File.Exists(driver.Lookahead.CoastingDecisionFactorTargetSpeedLookup.Source),
-						GetRelativePath(driver.Lookahead.CoastingDecisionFactorTargetSpeedLookup.Source, basePath), "")
-			Dim dfVelocityDrop As String = If _
-					(
-						Not driver.Lookahead.CoastingDecisionFactorVelocityDropLookup Is Nothing AndAlso
-						File.Exists(driver.Lookahead.CoastingDecisionFactorVelocityDropLookup.Source),
-						GetRelativePath(driver.Lookahead.CoastingDecisionFactorVelocityDropLookup.Source, basePath), "")
+			Dim dfTargetSpeed As String = If(
+				Not driver.Lookahead.CoastingDecisionFactorTargetSpeedLookup Is Nothing AndAlso
+				File.Exists(driver.Lookahead.CoastingDecisionFactorTargetSpeedLookup.Source),
+				GetRelativePath(driver.Lookahead.CoastingDecisionFactorTargetSpeedLookup.Source, basePath), "")
+			Dim dfVelocityDrop As String = If(
+				Not driver.Lookahead.CoastingDecisionFactorVelocityDropLookup Is Nothing AndAlso
+				File.Exists(driver.Lookahead.CoastingDecisionFactorVelocityDropLookup.Source),
+				GetRelativePath(driver.Lookahead.CoastingDecisionFactorVelocityDropLookup.Source, basePath), "")
 			body.Add("LAC", New Dictionary(Of String, Object) From {
 						{"Enabled", driver.Lookahead.Enabled},
 						{"PreviewDistanceFactor", driver.Lookahead.LookaheadDistanceFactor},

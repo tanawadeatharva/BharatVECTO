@@ -30,7 +30,6 @@
 */
 
 using System.Collections.Generic;
-using System.ComponentModel.DataAnnotations;
 using TUGraz.VectoCommon.Models;
 using TUGraz.VectoCommon.Utils;
 
@@ -187,15 +186,15 @@ namespace TUGraz.VectoCommon.InputData
 		/// </summary>
 		ITorqueConverterEngineeringInputData TorqueConverter { get; }
 
-		Second DownshiftAferUpshiftDelay { get; }
+		Second DownshiftAfterUpshiftDelay { get; }
 
 		Second UpshiftAfterDownshiftDelay { get; }
 
 		MeterPerSquareSecond UpshiftMinAcceleration { get; }
 
-        Second PowershiftShiftTime { get; }
+		Second PowershiftShiftTime { get; }
 
-        double PowerShiftInertiaFactor { get; }
+		double PowerShiftInertiaFactor { get; }
 	}
 
 	public interface ITorqueConverterEngineeringInputData : ITorqueConverterDeclarationInputData
@@ -222,6 +221,16 @@ namespace TUGraz.VectoCommon.InputData
 		TableData ShiftPolygon { get; }
 
 		PerSecond MaxInputSpeed { get; }
+
+		/// <summary>
+		/// Min Acceleration after C->L upshifts.
+		/// </summary>
+		MeterPerSquareSecond CLUpshiftMinAcceleration { get; }
+
+		/// <summary>
+		/// Min Acceleration after C->C upshifts.
+		/// </summary>
+		MeterPerSquareSecond CCUpshiftMinAcceleration { get; }
 	}
 
 	public interface IEngineEngineeringInputData : IEngineDeclarationInputData

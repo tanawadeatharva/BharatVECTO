@@ -80,12 +80,12 @@ namespace TUGraz.VectoCore.Tests.Models.Simulation
 				var sw = Stopwatch.StartNew();
 				var s = entries.GetSection(e => val < e.EngineSpeed);
 				sw.Stop();
-				Console.WriteLine("Iterator: " + sw.Elapsed);
+				//Console.WriteLine("Iterator: " + sw.Elapsed);
 
 				sw.Restart();
 				var s1 = entryArr.GetSection(e => val < e.EngineSpeed);
 				sw.Stop();
-				Console.WriteLine("Array:    " + sw.Elapsed);
+				//Console.WriteLine("Array:    " + sw.Elapsed);
 
 				Assert.AreSame(s.Item1, s1.Item1);
 				Assert.AreSame(s.Item2, s1.Item2);
