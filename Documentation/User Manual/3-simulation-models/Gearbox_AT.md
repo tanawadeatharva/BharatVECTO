@@ -14,3 +14,27 @@ For AT gearboxes using power split the torque converter characteristics already 
 
 The .vmod file for vehicles with AT gearboxes contains an additional column that indicates if the torque converter is locked or not.
 
+###Gearshift losses for AT Gearboxes
+
+For AT gearboxes the losses during a power-shift are modeled according to the following equations
+
+####Basic assumptions
+
++ Only power-shifts with positive power at gearbox output side are considered. 
++ Both upshifts and downshifts with positive power at gearbox output side have to be considered.
++ The power at gearbox output side is assumed to be constant during a power-shift
+
+
+####Power-shift loss computation
+
+Model parameters: shift time ($t_s$), inertia factor ($f_I$)
+
+![Engine speed, clutch speed during power-shift](pics/powershiftlosses.png)
+
+$T_{PS,loss} = |(T_{GBX,in} + T_{inertia}) * \Delta\omega_F| * t_s / dt$
+
+$T_{inertia} = f_I * I_{engine} * \Delta\omega_I / dt$
+
+$\Delta\omega_I = \omega_{engine,1} - \omega_{engine,2}$
+
+$\Delta\omega_F = (\omega_{engine,1} - \omega_{engine,1^*}) / 2$
