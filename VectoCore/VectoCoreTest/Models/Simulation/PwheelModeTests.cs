@@ -74,7 +74,7 @@ namespace TUGraz.VectoCore.Tests.Models.Simulation
 					Gears = new Dictionary<uint, GearData> { { 1, new GearData { Ratio = 2.0 } }, { 2, new GearData { Ratio = 3.5 } } }
 				}, 0.SI<KilogramSquareMeter>());
 
-			var cycle = new PWheelCycle(container, drivingCycle, 2.3,
+			var cycle = new PWheelCycle(container, drivingCycle, 2.3, null,
 				gearbox.ModelData.Gears.ToDictionary(g => g.Key, g => g.Value.Ratio));
 
 			Assert.AreEqual(container.CycleData.LeftSample.Time, 1.SI<Second>());

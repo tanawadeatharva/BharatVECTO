@@ -150,7 +150,7 @@ namespace TUGraz.VectoCore.Models.SimulationComponent.Impl
 
 		public Newton RollingResistance(Radian gradient)
 		{
-			var weight = ModelData.TotalVehicleWeight();
+			var weight = ModelData.TotalVehicleWeight;
 			var gravity = Physics.GravityAccelleration;
 			var rollCoefficient = ModelData.TotalRollResistanceCoefficient;
 
@@ -161,14 +161,14 @@ namespace TUGraz.VectoCore.Models.SimulationComponent.Impl
 
 		protected internal Newton DriverAcceleration(MeterPerSquareSecond accelleration)
 		{
-			var retVal = ModelData.TotalVehicleWeight() * accelleration;
+			var retVal = ModelData.TotalVehicleWeight * accelleration;
 			Log.Debug("DriverAcceleration: {0}", retVal);
 			return retVal;
 		}
 
 		public Newton SlopeResistance(Radian gradient)
 		{
-			var retVal = ModelData.TotalVehicleWeight() * Physics.GravityAccelleration * Math.Sin(gradient.Value());
+			var retVal = ModelData.TotalVehicleWeight * Physics.GravityAccelleration * Math.Sin(gradient.Value());
 			Log.Debug("SlopeResistance: {0}", retVal);
 			return retVal;
 		}
@@ -207,7 +207,7 @@ namespace TUGraz.VectoCore.Models.SimulationComponent.Impl
 
 		public Kilogram VehicleMass
 		{
-			get { return ModelData.TotalCurbWeight(); }
+			get { return ModelData.TotalCurbWeight; }
 		}
 
 		public Kilogram VehicleLoading
@@ -217,7 +217,7 @@ namespace TUGraz.VectoCore.Models.SimulationComponent.Impl
 
 		public Kilogram TotalMass
 		{
-			get { return ModelData.TotalVehicleWeight(); }
+			get { return ModelData.TotalVehicleWeight; }
 		}
 
 		public class VehicleState
