@@ -444,7 +444,7 @@ namespace TUGraz.VectoCore.Models.SimulationComponent.Impl
 					var tStar = tStarPrev + PreviousState.dt;
 					dynFullPowerCalculated = stationaryFullLoadPower * (1 - Math.Exp((-tStar / pt1).Value()));
 					dynFullPowerCalculated = VectoMath.Max(PreviousState.EnginePower, dynFullPowerCalculated);
-				} catch (Exception ) {
+				} catch (Exception) {
 					Log.Error("failed to calculate dynamic full-load power - using stationary idle full-load. n: {0}", angularVelocity);
 				}
 			}
@@ -500,6 +500,7 @@ namespace TUGraz.VectoCore.Models.SimulationComponent.Impl
 
 			private Second _idleStart;
 			private Watt _lastEnginePower;
+			private PerSecond _engineTargetSpeed;
 
 			public ITnOutPort RequestPort { private get; set; }
 
@@ -539,11 +540,16 @@ namespace TUGraz.VectoCore.Models.SimulationComponent.Impl
 				if (!outTorque.IsEqual(0)) {
 					throw new VectoException("Torque has to be 0 for idle requests!");
 				}
-				var targetVelocity = _engine.PreviousState.EngineSpeed / _dataBus.GetGearData(_dataBus.Gear).Ratio *
+				if (_idleStart == null) {
+					_idleStart = absTime;
+					_engineTargetSpeed = _engine.PreviousState.EngineSpeed / _dataBus.GetGearData(_dataBus.Gear).Ratio *
 									_dataBus.GetGearData(_dataBus.NextGear.Gear).Ratio;
-				var velocitySlope = (targetVelocity - _engine.PreviousState.EngineSpeed) / _dataBus.TractionInterruption;
+				}
 
-				var nextAngularSpeed = (velocitySlope * dt + _engine.PreviousState.EngineSpeed);
+				
+				var velocitySlope = (_engineTargetSpeed - _engine.PreviousState.EngineSpeed) / (_dataBus.TractionInterruption - (absTime - _idleStart));
+
+				var nextAngularSpeed = (velocitySlope *  dt + _engine.PreviousState.EngineSpeed);
 				if (nextAngularSpeed < _engine.ModelData.IdleSpeed) {
 					nextAngularSpeed = _engine.ModelData.IdleSpeed;
 				}
