@@ -99,7 +99,7 @@ namespace TUGraz.VectoCore.Tests.Integration
 				.AddComponent(engine);
 
 			var aux = new BusAuxiliariesAdapter(container, AdvancedAuxFile, "Coach",
-				vehicleData.TotalVehicleWeight(), engineData.ConsumptionMap, engineData.IdleSpeed);
+				vehicleData.TotalVehicleWeight, engineData.ConsumptionMap, engineData.IdleSpeed);
 
 			engine.Connect(aux.Port());
 

@@ -180,6 +180,9 @@ namespace TUGraz.VectoCore.Models.SimulationComponent.Data.Engine
 			if (k.IsEqual(0, 0.0001)) {
 				// constant torque: solve linear equation
 				// power = M * n_eng_avg
+				if (d.IsEqual(0, 0.0001)) {
+					return new List<PerSecond>();
+				}
 				return (power / d).ToEnumerable();
 			}
 

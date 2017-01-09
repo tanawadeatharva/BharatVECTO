@@ -411,6 +411,16 @@ namespace TUGraz.VectoCore.Tests.Models.Simulation
 		}
 
 		[TestMethod]
+		public void MeasuredSpeed_Gear_TractionInterruption_Run()
+		{
+			RunJob(@"TestData\MeasuredSpeed\MeasuredSpeedGear_TractionInterruption.vecto",
+				@"TestData\MeasuredSpeed\Results\MeasuredSpeedGear_TractionInterruption_MeasuredSpeed_Gear_Rural_TractionInterruption.vmod",
+				@"TestData\MeasuredSpeed\MeasuredSpeedGear_TractionInterruption_MeasuredSpeed_Gear_Rural_TractionInterruption.vmod",
+				@"TestData\MeasuredSpeed\Results\MeasuredSpeedGear_TractionInterruption.vsum",
+				@"TestData\MeasuredSpeed\MeasuredSpeedGear_TractionInterruption.vsum", true);
+		}
+
+		[TestMethod]
 		public void MeasuredSpeed_Gear_Aux_Run()
 		{
 			RunJob(@"TestData\MeasuredSpeed\MeasuredSpeedGearAux.vecto",
