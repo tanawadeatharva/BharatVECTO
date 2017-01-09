@@ -125,7 +125,7 @@ Partial Class GearboxForm
 		Me.Label32 = New System.Windows.Forms.Label()
 		Me.PnInertiaTI = New System.Windows.Forms.Panel()
 		Me.PicBox = New System.Windows.Forms.PictureBox()
-		Me.GroupBox5 = New System.Windows.Forms.GroupBox()
+		Me.gbPowershiftLosses = New System.Windows.Forms.GroupBox()
 		Me.Label29 = New System.Windows.Forms.Label()
 		Me.lbAtShiftTime = New System.Windows.Forms.Label()
 		Me.tbATShiftTime = New System.Windows.Forms.TextBox()
@@ -148,7 +148,7 @@ Partial Class GearboxForm
 		Me.GroupBox4.SuspendLayout()
 		Me.PnInertiaTI.SuspendLayout()
 		CType(Me.PicBox, System.ComponentModel.ISupportInitialize).BeginInit()
-		Me.GroupBox5.SuspendLayout()
+		Me.gbPowershiftLosses.SuspendLayout()
 		Me.gbTCAccMin.SuspendLayout()
 		Me.SuspendLayout()
 		'
@@ -955,20 +955,20 @@ Partial Class GearboxForm
 		Me.PicBox.TabIndex = 48
 		Me.PicBox.TabStop = False
 		'
-		'GroupBox5
+		'gbPowershiftLosses
 		'
-		Me.GroupBox5.Controls.Add(Me.Label29)
-		Me.GroupBox5.Controls.Add(Me.lbAtShiftTime)
-		Me.GroupBox5.Controls.Add(Me.tbATShiftTime)
-		Me.GroupBox5.Controls.Add(Me.tbATInertiaFactor)
-		Me.GroupBox5.Controls.Add(Me.Label28)
-		Me.GroupBox5.Controls.Add(Me.lbATInertiaFactor)
-		Me.GroupBox5.Location = New System.Drawing.Point(459, 598)
-		Me.GroupBox5.Name = "GroupBox5"
-		Me.GroupBox5.Size = New System.Drawing.Size(414, 47)
-		Me.GroupBox5.TabIndex = 49
-		Me.GroupBox5.TabStop = False
-		Me.GroupBox5.Text = "Power shift losses"
+		Me.gbPowershiftLosses.Controls.Add(Me.Label29)
+		Me.gbPowershiftLosses.Controls.Add(Me.lbAtShiftTime)
+		Me.gbPowershiftLosses.Controls.Add(Me.tbATShiftTime)
+		Me.gbPowershiftLosses.Controls.Add(Me.tbATInertiaFactor)
+		Me.gbPowershiftLosses.Controls.Add(Me.Label28)
+		Me.gbPowershiftLosses.Controls.Add(Me.lbATInertiaFactor)
+		Me.gbPowershiftLosses.Location = New System.Drawing.Point(459, 598)
+		Me.gbPowershiftLosses.Name = "gbPowershiftLosses"
+		Me.gbPowershiftLosses.Size = New System.Drawing.Size(414, 47)
+		Me.gbPowershiftLosses.TabIndex = 49
+		Me.gbPowershiftLosses.TabStop = False
+		Me.gbPowershiftLosses.Text = "Power shift losses"
 		'
 		'Label29
 		'
@@ -1041,9 +1041,9 @@ Partial Class GearboxForm
 		Me.Label35.AutoSize = True
 		Me.Label35.Location = New System.Drawing.Point(211, 22)
 		Me.Label35.Name = "Label35"
-		Me.Label35.Size = New System.Drawing.Size(82, 13)
+		Me.Label35.Size = New System.Drawing.Size(70, 13)
 		Me.Label35.TabIndex = 44
-		Me.Label35.Text = "Acc. for 1C->2C"
+		Me.Label35.Text = "Acc. for C->C"
 		'
 		'gbTCAccMin
 		'
@@ -1068,7 +1068,7 @@ Partial Class GearboxForm
 		Me.CancelButton = Me.ButCancel
 		Me.ClientSize = New System.Drawing.Size(877, 696)
 		Me.Controls.Add(Me.gbTCAccMin)
-		Me.Controls.Add(Me.GroupBox5)
+		Me.Controls.Add(Me.gbPowershiftLosses)
 		Me.Controls.Add(Me.PicBox)
 		Me.Controls.Add(Me.PnInertiaTI)
 		Me.Controls.Add(Me.GroupBox4)
@@ -1110,8 +1110,8 @@ Partial Class GearboxForm
 		Me.PnInertiaTI.ResumeLayout(False)
 		Me.PnInertiaTI.PerformLayout()
 		CType(Me.PicBox, System.ComponentModel.ISupportInitialize).EndInit()
-		Me.GroupBox5.ResumeLayout(False)
-		Me.GroupBox5.PerformLayout()
+		Me.gbPowershiftLosses.ResumeLayout(False)
+		Me.gbPowershiftLosses.PerformLayout()
 		Me.gbTCAccMin.ResumeLayout(False)
 		Me.gbTCAccMin.PerformLayout()
 		Me.ResumeLayout(False)
@@ -1204,7 +1204,7 @@ Partial Class GearboxForm
 	Friend WithEvents Label26 As System.Windows.Forms.Label
 	Friend WithEvents tbTCmaxSpeed As System.Windows.Forms.TextBox
 	Friend WithEvents Label27 As System.Windows.Forms.Label
-	Friend WithEvents GroupBox5 As System.Windows.Forms.GroupBox
+	Friend WithEvents gbPowershiftLosses As System.Windows.Forms.GroupBox
 	Friend WithEvents Label29 As System.Windows.Forms.Label
 	Friend WithEvents tbATInertiaFactor As System.Windows.Forms.TextBox
 	Friend WithEvents lbATInertiaFactor As System.Windows.Forms.Label
