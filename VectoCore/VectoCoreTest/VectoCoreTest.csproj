@@ -1279,6 +1279,9 @@
     <None Include="TestData\MeasuredSpeed\GearboxSerial.vgbx">
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
     </None>
+    <None Include="TestData\MeasuredSpeed\Gearbox_TractionInterruption.vgbx">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </None>
     <None Include="TestData\MeasuredSpeed\Gear_Axle_loss.vtlm">
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
     </None>
@@ -1324,6 +1327,9 @@
     <None Include="TestData\MeasuredSpeed\MeasuredSpeedGear_AT-PS.vdri">
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
     </None>
+    <None Include="TestData\MeasuredSpeed\MeasuredSpeedGear_TractionInterruption.vecto">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </None>
     <None Include="TestData\MeasuredSpeed\MeasuredSpeedVair.vdri">
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
     </None>
@@ -1358,6 +1364,9 @@
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
     </None>
     <None Include="TestData\MeasuredSpeed\MeasuredSpeed_Gear_Rural_Aux.vdri">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </None>
+    <None Include="TestData\MeasuredSpeed\MeasuredSpeed_Gear_Rural_TractionInterruption.vdri">
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
     </None>
     <None Include="TestData\MeasuredSpeed\MeasuredSpeed_Gear_Rural_Vair.vdri">
@@ -1409,6 +1418,12 @@
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
     </None>
     <None Include="TestData\MeasuredSpeed\Results\MeasuredSpeedGear_MeasuredSpeed_Gear_Rural.vmod">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </None>
+    <None Include="TestData\MeasuredSpeed\Results\MeasuredSpeedGear_TractionInterruption.vsum">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </None>
+    <None Include="TestData\MeasuredSpeed\Results\MeasuredSpeedGear_TractionInterruption_MeasuredSpeed_Gear_Rural_TractionInterruption.vmod">
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
     </None>
     <None Include="TestData\MeasuredSpeed\Results\MeasuredSpeedVair.vsum">

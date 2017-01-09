@@ -88,7 +88,7 @@ namespace TUGraz.VectoCore.Models.SimulationComponent.Impl
 		public virtual IResponse Request(Second absTime, Second dt)
 		{
 			// cycle finished (no more entries in cycle)
-			if (CycleIterator.LastEntry) {
+			if (CycleIterator.LastEntry && CycleIterator.RightSample.Time == absTime) {
 				return new ResponseCycleFinished { Source = this };
 			}
 

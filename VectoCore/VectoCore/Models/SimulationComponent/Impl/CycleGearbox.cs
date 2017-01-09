@@ -426,7 +426,11 @@ namespace TUGraz.VectoCore.Models.SimulationComponent.Impl
 				var nextGear = 0u;
 				var torqueConverterLocked = true;
 				foreach (var entry in future) {
-					if (entry.WheelAngularVelocity.IsEqual(0)) {
+					if (entry.VehicleTargetSpeed != null && entry.VehicleTargetSpeed.IsEqual(0)) {
+						// vehicle is stopped, no next gear, engine should go to idle
+						break;
+					}
+					if (entry.WheelAngularVelocity != null && entry.WheelAngularVelocity.IsEqual(0)) {
 						// vehicle is stopped, no next gear, engine should go to idle
 						break;
 					}
