@@ -141,7 +141,7 @@ namespace TUGraz.VectoCore.Models.Simulation.Impl
 					new ModalDataContainer(data, ModWriter,
 						addReportResult: _mode == ExecutionMode.Declaration ? addReportResult : null,
 						writeEngineOnly: _engineOnlyMode,
-						filter: data.Cycle.CycleType.IsDistanceBased() ? modDataFilter : null) {
+						filter: data.Cycle.CycleType.IsDistanceBased() && ModalResults1Hz || ActualModalData ? modDataFilter : null) {
 							WriteAdvancedAux = data.AdvancedAux != null && data.AdvancedAux.AuxiliaryAssembly == AuxiliaryModel.Advanced,
 							WriteModalResults = _mode != ExecutionMode.Declaration || WriteModalResults
 						};
