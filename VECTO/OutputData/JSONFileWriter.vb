@@ -256,7 +256,7 @@ Public Class JSONFileWriter
 		'ADVANCED AUXILIARIES 
 		body.Add("AuxiliaryAssembly", aux.AuxiliaryAssembly.GetName())
 		body.Add("AuxiliaryVersion", aux.AuxiliaryVersion)
-		body.Add("AdvancedAuxiliaryFilePath", aux.AdvancedAuxiliaryFilePath)
+		body.Add("AdvancedAuxiliaryFilePath", GetRelativePath(aux.AdvancedAuxiliaryFilePath, basePath))
 
 		Dim pAdd As Double = 0.0
 		Dim auxList As List(Of Object) = New List(Of Object)

@@ -488,6 +488,7 @@ Public Class GearboxForm
 		'ChTCon.Enabled = (GStype.AutomaticTransmission())
 		gbTC.Enabled = gStype.AutomaticTransmission()
 		gbTCAccMin.Enabled = gStype.AutomaticTransmission()
+		gbPowershiftLosses.Enabled = gStype.AutomaticTransmission()
 		TbStartAcc.Enabled = Not gStype.AutomaticTransmission()
 		TbStartSpeed.Enabled = Not gStype.AutomaticTransmission()
 		TbTqResv.Enabled = Not gStype.AutomaticTransmission()

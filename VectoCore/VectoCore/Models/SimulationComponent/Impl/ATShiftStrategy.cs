@@ -204,8 +204,8 @@ namespace TUGraz.VectoCore.Models.SimulationComponent.Impl
 				}
 
 				var currentEnginePower = inTorque * inAngularVelocity;
-				var nextEnginePower = currentEnginePower / nextEngineSpeed;
-				var isAboveUpShift = IsAboveUpShiftCurve(gear, nextEnginePower, nextEngineSpeed, _gearbox.TorqueConverterLocked);
+				var nextEngineTorque = currentEnginePower / nextEngineSpeed;
+				var isAboveUpShift = IsAboveUpShiftCurve(gear, nextEngineTorque, nextEngineSpeed, _gearbox.TorqueConverterLocked);
 
 				var minAccelerationReachable = true;
 				if (!DataBus.VehicleSpeed.IsEqual(0)) {

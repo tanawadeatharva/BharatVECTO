@@ -8,6 +8,7 @@
 '   WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
 '
 ' See the LICENSE.txt for the specific language governing permissions and limitations.
+Imports System.IO
 
 ''' <summary>
 ''' Global File Brower properties and cFilebrowser instances.
@@ -57,6 +58,18 @@ Module FB_Global
 	Private PauxSply As String = "<AUX_"
 
 #Region "File path functions"
+
+
+	Public Function GetRelativePath(filePath As String, basePath As String) As String
+		If (String.IsNullOrEmpty(filePath) OrElse String.IsNullOrEmpty(basePath)) Then
+			Return ""
+		End If
+		If (Path.GetDirectoryName(filePath).StartsWith(basePath, StringComparison.OrdinalIgnoreCase)) Then
+			Return Path.GetFullPath(filePath).Substring(basePath.Length + If(basePath.EndsWith("\"), 0, 1))
+		End If
+		Return filePath
+	End Function
+
 
 	'When no path is specified, then insert either HomeDir or MainDir   Special-folders
 	Public Function fFileRepl(ByVal file As String, Optional ByVal MainDir As String = "") As String
