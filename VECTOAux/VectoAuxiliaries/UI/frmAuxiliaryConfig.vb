@@ -844,7 +844,7 @@ Public Class frmAuxiliaryConfig
 		fbAux.Extensions = New String() {"AALT"}
 
 		Dim suppliedAALTPath As String = txtAlternatorMapPath.Text
-		Dim absoluteAALTPath As String = FilePathUtils.ResolveFilePath(fPATH(vectoFile), suppliedAALTPath)
+		Dim absoluteAALTPath As String = FilePathUtils.ResolveFilePath(aauxPath, suppliedAALTPath)
 		Dim message As String = String.Empty
 		Dim newFile As Boolean = False
 
@@ -923,9 +923,9 @@ Public Class frmAuxiliaryConfig
 		Dim fname As String = fFILE(vectoFile, True)
 
 		fbAux.Extensions = New String() {"ACMP"}
-		If fbAux.OpenDialog(fPATH(vectoFile)) Then
+		If fbAux.OpenDialog(Path.Combine(aauxPath, txtCompressorMap.Text)) Then
 
-			txtCompressorMap.Text = fFileWoDir(fbAux.Files(0), fPATH(vectoFile))
+			txtCompressorMap.Text = GetRelativePath(fbAux.Files(0), aauxPath)
 
 		End If
 
@@ -947,9 +947,9 @@ Public Class frmAuxiliaryConfig
 		Dim fname As String = fFILE(vectoFile, True)
 
 		fbAux.Extensions = New String() {"APAC"}
-		If fbAux.OpenDialog(fPATH(vectoFile)) Then
+		If fbAux.OpenDialog(Path.Combine(aauxPath, txtActuationsMap.Text)) Then
 
-			txtActuationsMap.Text = fFileWoDir(fbAux.Files(0), fPATH(vectoFile))
+			txtActuationsMap.Text = GetRelativePath(fbAux.Files(0), aauxPath)
 
 		End If
 
@@ -974,10 +974,10 @@ Public Class frmAuxiliaryConfig
 
 		fbAux.Extensions = New String() {"abdb"}
 
-		If fbAux.OpenDialog(fPATH(vectoFile)) Then
+		If fbAux.OpenDialog(Path.Combine(Path.GetDirectoryName(auxFile), txtBusDatabaseFilePath.Text)) Then
 
 			txtBusDatabaseFilePath.Focus()
-			txtBusDatabaseFilePath.Text = fFileWoDir(fbAux.Files(0), fPATH(vectoFile))
+			txtBusDatabaseFilePath.Text = GetRelativePath(fbAux.Files(0), Path.GetDirectoryName(auxFile))
 
 			Dim busDB As New BusDatabase()
 
@@ -1001,8 +1001,8 @@ Public Class frmAuxiliaryConfig
 		fbAux.Extensions = New String() {"AHSM"}
 
 		Dim suppliedSSMPath As String = txtSSMFilePath.Text.Trim()
-		Dim absoluteSSMPath As String = FilePathUtils.ResolveFilePath(fPATH(vectoFile), suppliedSSMPath)
-		Dim absoluteBusDatabasePath As String = FilePathUtils.ResolveFilePath(fPATH(vectoFile),
+		Dim absoluteSSMPath As String = FilePathUtils.ResolveFilePath(aauxPath, suppliedSSMPath)
+		Dim absoluteBusDatabasePath As String = FilePathUtils.ResolveFilePath(aauxPath,
 																			Me.txtBusDatabaseFilePath.Text.Trim())
 		Dim message As String = String.Empty
 		Dim newFile As Boolean = False
@@ -1035,9 +1035,9 @@ Public Class frmAuxiliaryConfig
 
 				'Find / Create  file and configure.
 				If fbAux.CustomDialog(absoluteSSMPath, False, False, tFbExtMode.ForceExt, False, String.Empty) Then
-					txtSSMFilePath.Text = fFileWoDir(fbAux.Files(0), fPATH(vectoFile))
+					txtSSMFilePath.Text = GetRelativePath(fbAux.Files(0), aauxPath)
 					suppliedSSMPath = txtSSMFilePath.Text
-					absoluteSSMPath = FilePathUtils.ResolveFilePath(fPATH(vectoFile), suppliedSSMPath)
+					absoluteSSMPath = FilePathUtils.ResolveFilePath(aauxPath, suppliedSSMPath)
 					If _
 						IO.File.Exists(absoluteSSMPath) OrElse
 						MsgBox("Do you want to create a new .AHSM file?", MsgBoxStyle.YesNo) = MsgBoxResult.Yes Then
