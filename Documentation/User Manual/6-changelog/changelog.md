@@ -1,5 +1,27 @@
 #Changelog
 
+**VECTO 3.1.1**
+
+***Build 740 (2017-01-10)***
+
+- Improvements:
+    + [VECTO-390, VECTO-400] Adapt engine speed to estimated engine speed after gear shift during traction interruption (double clutching)
+    + [VECTO-396, VECTO-388] Add shift losses for AT power shifts
+    + [VECTO-389] new gear shift rules for AT gearboxes
+    + [VECTO-387] added max input speed for torque converter
+    + [VECTO-385] Automatically add generic torque converter data for drag
+    + [VECTO-399] Add missions and loadings for vehicle categories 11, 12, and 16 (declaration mode)
+    + [VECTO-384] cleanup memory after simulation run
+    + [VECTO-394] new option for vectocmd to disable all output
+    + [VECTO-392] make the GUI scale depending on the Windows font size
+    + [VECTO-391] Gearbox output speed and output torque added to .vmod files
+    + [VECTO-386] Gearbox window: disable input fields not applicable for the selected gearbox type
+- Bugfixes:
+    + [VECTO-401] Computation of n_95h etc. fails if engine’s max torque is constant 0 
+Lookup of Airdrag parameters in declaration mode
+    + [VECTO-378] Improved file-handling in AAUX module
+
+
 **VECTO 3.1.0**
 
 ***Build 683 (2016-11-14)***
