@@ -83,9 +83,9 @@ Module FB_Global
 		If file = "" Then Return ""
 
 		'Replace sKeys
-		file = Microsoft.VisualBasic.Strings.Replace(file, DefVehPath & "\", MyAppPath & "Default Vehicles\", 1, - 1,
+		file = Microsoft.VisualBasic.Strings.Replace(file, DefVehPath & "\", MyAppPath & "Default Vehicles\", 1, -1,
 													CompareMethod.Text)
-		file = Microsoft.VisualBasic.Strings.Replace(file, DefVehPath & "\", MyAppPath, 1, - 1, CompareMethod.Text)
+		file = Microsoft.VisualBasic.Strings.Replace(file, DefVehPath & "\", MyAppPath, 1, -1, CompareMethod.Text)
 
 		'Replace - Determine folder
 		If MainDir = "" Then
@@ -119,7 +119,7 @@ Module FB_Global
 
 		x = Pfad.LastIndexOf("\")
 
-		If x = - 1 Then Return ""
+		If x = -1 Then Return ""
 
 		Return Pfad.Substring(0, x + 1)
 	End Function
@@ -169,7 +169,7 @@ Module FB_Global
 	Public Function fEXT(ByVal Pfad As String) As String
 		Dim x As Integer
 		x = Pfad.LastIndexOf(".")
-		If x = - 1 Then
+		If x = -1 Then
 			Return ""
 		Else
 			Return Microsoft.VisualBasic.Right(Pfad, Microsoft.VisualBasic.Len(Pfad) - x)
