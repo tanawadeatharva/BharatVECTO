@@ -105,12 +105,16 @@ namespace TUGraz.VectoCore.Models.SimulationComponent.Impl
 				var engineResponse = (ResponseDryRun)
 					NextComponent.Request(absTime, dt, inTorque, operatingPoint.InAngularVelocity, true);
 
-				var dryOperatingPoint = outTorque.IsGreater(0) && DataBus.BrakePower.IsEqual(0)
-					? GetMaxPowerOperatingPoint(dt, outAngularVelocity, engineResponse,
-						PreviousState.InTorque * PreviousState.InAngularVelocity)
-					: GetDragPowerOperatingPoint(dt, outAngularVelocity, engineResponse,
-						PreviousState.InTorque * PreviousState.InAngularVelocity);
-
+				TorqueConverterOperatingPoint dryOperatingPoint;
+				if (DataBus.VehicleStopped && outTorque.IsGreater(0)) {
+					dryOperatingPoint = ModelData.FindOperatingPoint(DataBus.EngineIdleSpeed, outAngularVelocity);
+				} else {
+					dryOperatingPoint = outTorque.IsGreater(0) && DataBus.BrakePower.IsEqual(0)
+						? GetMaxPowerOperatingPoint(dt, outAngularVelocity, engineResponse,
+							PreviousState.InTorque * PreviousState.InAngularVelocity)
+						: GetDragPowerOperatingPoint(dt, outAngularVelocity, engineResponse,
+							PreviousState.InTorque * PreviousState.InAngularVelocity);
+				}
 				var avgOutSpeed = (PreviousState.OutAngularVelocity + dryOperatingPoint.OutAngularVelocity) / 2.0;
 				var delta = (outTorque - dryOperatingPoint.OutTorque) * avgOutSpeed;
 
@@ -218,7 +222,7 @@ namespace TUGraz.VectoCore.Models.SimulationComponent.Impl
 
 			foreach (var x in operatingPointList) {
 				if ((x.InTorque * x.InAngularVelocity).IsSmallerOrEqual(DataBus.EngineStationaryFullPower(x.InAngularVelocity),
-						Constants.SimulationSettings.LineSearchTolerance.SI<Watt>()) &&
+					Constants.SimulationSettings.LineSearchTolerance.SI<Watt>()) &&
 					(x.InTorque * x.InAngularVelocity).IsGreaterOrEqual(DataBus.EngineDragPower(x.InAngularVelocity),
 						Constants.SimulationSettings.LineSearchTolerance.SI<Watt>())) {
 					return x;
