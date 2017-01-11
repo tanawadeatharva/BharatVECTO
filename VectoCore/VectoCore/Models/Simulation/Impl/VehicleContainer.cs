@@ -76,7 +76,7 @@ namespace TUGraz.VectoCore.Models.Simulation.Impl
 
 		public GearboxType GearboxType
 		{
-			get { return Gearbox.GearboxType; }
+			get { return Gearbox == null ? GearboxType.MT : Gearbox.GearboxType; }
 		}
 
 		public uint Gear

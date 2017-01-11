@@ -382,7 +382,7 @@ namespace TUGraz.VectoCore.Models.SimulationComponent.Impl
 			if (DriverStrategy.OverspeedAllowed(targetVelocity, prohibitOverspeed)) {
 				velocity += DriverData.OverSpeedEcoRoll.OverSpeed;
 			}
-			if (DataBus.ClutchClosed(absTime)) {
+			if (DataBus.GearboxType.AutomaticTransmission() || DataBus.ClutchClosed(absTime)) {
 				// drive along
 				IResponse first;
 				if (DriverStrategy.OverspeedAllowed(targetVelocity, prohibitOverspeed) &&
@@ -531,7 +531,7 @@ namespace TUGraz.VectoCore.Models.SimulationComponent.Impl
 		{
 			IResponse response = null;
 			if (DataBus.VehicleSpeed <= DriverStrategy.BrakeTrigger.NextTargetSpeed) {
-				if (DataBus.ClutchClosed(absTime)) {
+				if (DataBus.GearboxType.AutomaticTransmission() || DataBus.ClutchClosed(absTime)) {
 					if (DataBus.VehicleSpeed.IsGreater(0)) {
 						response = Driver.DrivingActionAccelerate(absTime, ds, DriverStrategy.BrakeTrigger.NextTargetSpeed, gradient);
 					} else {
@@ -650,7 +650,8 @@ namespace TUGraz.VectoCore.Models.SimulationComponent.Impl
 
 					Log.Debug("Phase: BRAKE. breaking distance: {0} start braking @ {1}", brakingDistance,
 						DriverStrategy.BrakeTrigger.BrakingStartDistance);
-					if (DriverStrategy.BrakeTrigger.BrakingStartDistance.IsSmaller(currentDistance, Constants.SimulationSettings.DriverActionDistanceTolerance / 2)) {
+					if (DriverStrategy.BrakeTrigger.BrakingStartDistance.IsSmaller(currentDistance,
+						Constants.SimulationSettings.DriverActionDistanceTolerance / 2)) {
 						Log.Info("Expected Braking Deceleration could not be reached! {0}",
 							DriverStrategy.BrakeTrigger.BrakingStartDistance - currentDistance);
 					}

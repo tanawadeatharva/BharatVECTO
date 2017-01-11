@@ -97,7 +97,8 @@ namespace TUGraz.VectoCore.Models.SimulationComponent.Impl
 
 		public override bool ClutchClosed(Second absTime)
 		{
-			return true;
+			return absTime.IsGreater(DataBus.AbsTime) ||
+					!(CurrentState.Disengaged || (DataBus.DriverBehavior == DrivingBehavior.Halted));
 		}
 
 		public override IResponse Initialize(NewtonMeter outTorque, PerSecond outAngularVelocity)

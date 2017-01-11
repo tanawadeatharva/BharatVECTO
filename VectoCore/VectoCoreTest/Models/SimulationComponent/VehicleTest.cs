@@ -37,6 +37,7 @@ using TUGraz.VectoCommon.Utils;
 using TUGraz.VectoCore.InputData.Reader.ComponentData;
 using TUGraz.VectoCore.InputData.Reader.DataObjectAdapter;
 using TUGraz.VectoCore.Models.Simulation.Data;
+using TUGraz.VectoCore.Models.Simulation.DataBus;
 using TUGraz.VectoCore.Models.Simulation.Impl;
 using TUGraz.VectoCore.Models.SimulationComponent.Data;
 using TUGraz.VectoCore.Models.SimulationComponent.Impl;
@@ -61,7 +62,7 @@ namespace TUGraz.VectoCore.Tests.Models.SimulationComponent
 			//VehicleData.ReadFromFile(VehicleDataFile);
 			//vehicleData.CrossWindCorrectionMode = CrossWindCorrectionMode.NoCorrection;
 			var vehicle = new Vehicle(container, vehicleData);
-
+			var driver = new MockDriver(container) { DriverBehavior = DrivingBehavior.Driving };
 			var mockPort = new MockFvOutPort();
 			vehicle.InPort().Connect(mockPort);
 
@@ -123,7 +124,7 @@ namespace TUGraz.VectoCore.Tests.Models.SimulationComponent
 					6.2985.SI<SquareMeter>()), CrossWindCorrectionMode.DeclarationModeCorrection);
 
 			var vehicle = new Vehicle(container, vehicleData);
-
+			var driver = new MockDriver(container) { DriverBehavior = DrivingBehavior.Driving };
 			var mockPort = new MockFvOutPort();
 			vehicle.InPort().Connect(mockPort);
 

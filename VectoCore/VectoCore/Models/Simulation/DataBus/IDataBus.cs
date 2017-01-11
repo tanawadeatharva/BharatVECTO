@@ -42,5 +42,7 @@ namespace TUGraz.VectoCore.Models.Simulation.DataBus
 		IBrakes, IWheelsInfo, IDriverInfo, IDrivingCycleInfo
 	{
 		ExecutionMode ExecutionMode { get; }
+
+		Second AbsTime { get; set; }
 	}
 }
