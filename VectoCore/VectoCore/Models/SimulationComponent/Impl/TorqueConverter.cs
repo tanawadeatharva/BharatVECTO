@@ -106,15 +106,15 @@ namespace TUGraz.VectoCore.Models.SimulationComponent.Impl
 					NextComponent.Request(absTime, dt, inTorque, operatingPoint.InAngularVelocity, true);
 
 				TorqueConverterOperatingPoint dryOperatingPoint;
-				if (DataBus.VehicleStopped && outTorque.IsGreater(0)) {
-					dryOperatingPoint = ModelData.FindOperatingPoint(DataBus.EngineIdleSpeed, outAngularVelocity);
-				} else {
-					dryOperatingPoint = outTorque.IsGreater(0) && DataBus.BrakePower.IsEqual(0)
-						? GetMaxPowerOperatingPoint(dt, outAngularVelocity, engineResponse,
-							PreviousState.InTorque * PreviousState.InAngularVelocity)
-						: GetDragPowerOperatingPoint(dt, outAngularVelocity, engineResponse,
-							PreviousState.InTorque * PreviousState.InAngularVelocity);
-				}
+				//if (false && DataBus.VehicleStopped && DataBus.DriverBehavior == DrivingBehavior.Driving && outTorque.IsGreater(0)) {
+				//	dryOperatingPoint = ModelData.FindOperatingPoint(DataBus.EngineIdleSpeed, outAngularVelocity);
+				//} else {
+				dryOperatingPoint = outTorque.IsGreater(0) && DataBus.BrakePower.IsEqual(0)
+					? GetMaxPowerOperatingPoint(dt, outAngularVelocity, engineResponse,
+						PreviousState.InTorque * PreviousState.InAngularVelocity)
+					: GetDragPowerOperatingPoint(dt, outAngularVelocity, engineResponse,
+						PreviousState.InTorque * PreviousState.InAngularVelocity);
+				//}
 				var avgOutSpeed = (PreviousState.OutAngularVelocity + dryOperatingPoint.OutAngularVelocity) / 2.0;
 				var delta = (outTorque - dryOperatingPoint.OutTorque) * avgOutSpeed;
 
@@ -161,8 +161,9 @@ namespace TUGraz.VectoCore.Models.SimulationComponent.Impl
 				var operatingPoint = ModelData.FindOperatingPointForPowerDemand(
 					engineResponse.DragPower - engineResponse.AuxiliariesPowerDemand,
 					DataBus.EngineSpeed, outAngularVelocity, _engineInertia, dt, previousPower);
-				if (operatingPoint.InAngularVelocity.IsGreater(ModelData.TorqueConverterSpeedLimit)) {
-					operatingPoint = ModelData.FindOperatingPoint(ModelData.TorqueConverterSpeedLimit, outAngularVelocity);
+				var maxInputSpeed = VectoMath.Min<PerSecond>(ModelData.TorqueConverterSpeedLimit, DataBus.EngineRatedSpeed);
+				if (operatingPoint.InAngularVelocity.IsGreater(maxInputSpeed)) {
+					operatingPoint = ModelData.FindOperatingPoint(maxInputSpeed, outAngularVelocity);
 				}
 				if (operatingPoint.InAngularVelocity.IsSmaller(DataBus.EngineIdleSpeed)) {
 					operatingPoint = ModelData.FindOperatingPoint(DataBus.EngineIdleSpeed, outAngularVelocity);
@@ -181,8 +182,9 @@ namespace TUGraz.VectoCore.Models.SimulationComponent.Impl
 				var operatingPoint = ModelData.FindOperatingPointForPowerDemand(
 					engineResponse.DynamicFullLoadPower - engineResponse.AuxiliariesPowerDemand,
 					DataBus.EngineSpeed, outAngularVelocity, _engineInertia, dt, previousPower);
-				if (operatingPoint.InAngularVelocity.IsGreater(ModelData.TorqueConverterSpeedLimit)) {
-					operatingPoint = ModelData.FindOperatingPoint(ModelData.TorqueConverterSpeedLimit, outAngularVelocity);
+				var maxInputSpeed = VectoMath.Min<PerSecond>(ModelData.TorqueConverterSpeedLimit, DataBus.EngineRatedSpeed);
+				if (operatingPoint.InAngularVelocity.IsGreater(maxInputSpeed)) {
+					operatingPoint = ModelData.FindOperatingPoint(maxInputSpeed, outAngularVelocity);
 				}
 				return operatingPoint;
 			} catch (VectoException ve) {
@@ -208,8 +210,9 @@ namespace TUGraz.VectoCore.Models.SimulationComponent.Impl
 					"TorqueConverter: Invalid operating point, inAngularVelocity would be below engine's idle speed: {0}",
 					operatingPoint.InAngularVelocity);
 			}
-			if (operatingPoint.InAngularVelocity.IsGreater(ModelData.TorqueConverterSpeedLimit)) {
-				operatingPoint = ModelData.FindOperatingPoint(ModelData.TorqueConverterSpeedLimit, outAngularVelocity);
+			var maxInputSpeed = VectoMath.Min<PerSecond>(ModelData.TorqueConverterSpeedLimit, DataBus.EngineRatedSpeed);
+			if (operatingPoint.InAngularVelocity.IsGreater(maxInputSpeed)) {
+				operatingPoint = ModelData.FindOperatingPoint(maxInputSpeed, outAngularVelocity);
 			}
 			return operatingPoint;
 		}
