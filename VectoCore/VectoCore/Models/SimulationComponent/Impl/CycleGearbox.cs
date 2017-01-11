@@ -206,13 +206,14 @@ namespace TUGraz.VectoCore.Models.SimulationComponent.Impl
 
 			var inAngularVelocity = outAngularVelocity * effectiveRatio;
 
-			if (!dryRun && ModelData.Type.AutomaticTransmission() && torqueConverterLocked &&
-				inAngularVelocity.IsSmaller(DataBus.EngineIdleSpeed) && !dryRun) {
-				Log.Error(
-					"ERROR: EngineSpeed is lower than Idlespeed in Measuredspeed-Cycle with given Gear (Automatic Transmission). AbsTime: {0}, Gear: {1} TC-Active: {2}, EngineSpeed: {3}",
-					absTime, Gear, !torqueConverterLocked, inAngularVelocity.AsRPM);
-				return new ResponseEngineSpeedTooLow { Source = this, EngineSpeed = inAngularVelocity };
-			}
+			// TODO: MQ 20170111 - disabled this check, caused more problems than it actually solved... -- re-think
+			//if (!dryRun && ModelData.Type.AutomaticTransmission() && torqueConverterLocked &&
+			//	inAngularVelocity.IsSmaller(DataBus.EngineIdleSpeed) && !dryRun) {
+			//	Log.Error(
+			//		"ERROR: EngineSpeed is lower than Idlespeed in Measuredspeed-Cycle with given Gear (Automatic Transmission). AbsTime: {0}, Gear: {1} TC-Active: {2}, EngineSpeed: {3}",
+			//		absTime, Gear, !torqueConverterLocked, inAngularVelocity.AsRPM);
+			//	return new ResponseEngineSpeedTooLow { Source = this, EngineSpeed = inAngularVelocity };
+			//}
 
 			if (!inAngularVelocity.IsEqual(0)) {
 				// MQ 19.2.2016: check! inertia is related to output side, torque loss accounts to input side
