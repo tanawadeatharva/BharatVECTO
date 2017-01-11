@@ -224,7 +224,11 @@ namespace TUGraz.VectoCore.Models.SimulationComponent.Impl
 			} else {
 				CurrentState.InertiaTorqueLossOut = 0.SI<NewtonMeter>();
 			}
-
+			if (Gear != PreviousState.Gear &&
+				ConsiderShiftLosses(new GearInfo(Gear, torqueConverterLocked), outTorque)) {
+				CurrentState.PowershiftLosses = ComputeShiftLosses(dt, outTorque, outAngularVelocity);
+			}
+			inTorque += CurrentState.PowershiftLosses ?? 0.SI<NewtonMeter>();
 			if (dryRun) {
 				if (TorqueConverter != null && !torqueConverterLocked) {
 					return TorqueConverter.Request(absTime, dt, inTorque, inAngularVelocity, true);
@@ -243,11 +247,7 @@ namespace TUGraz.VectoCore.Models.SimulationComponent.Impl
 
 			CurrentState.TransmissionTorqueLoss = inTorque - (outTorque / effectiveRatio);
 
-			if (Gear != PreviousState.Gear &&
-				ConsiderShiftLosses(new GearInfo(Gear, torqueConverterLocked), outTorque)) {
-				CurrentState.PowershiftLosses = ComputeShiftLosses(dt, outTorque, outAngularVelocity);
-			}
-			inTorque += CurrentState.PowershiftLosses ?? 0.SI<NewtonMeter>();
+
 			CurrentState.SetState(inTorque, inAngularVelocity, outTorque, outAngularVelocity);
 			CurrentState.Gear = Gear;
 			// end critical section
@@ -473,8 +473,8 @@ namespace TUGraz.VectoCore.Models.SimulationComponent.Impl
 		public override bool ClutchClosed(Second absTime)
 		{
 			return (DataBus.DriverBehavior == DrivingBehavior.Braking
-						? DataBus.CycleData.LeftSample.Gear
-						: DataBus.CycleData.RightSample.Gear) != 0;
+				? DataBus.CycleData.LeftSample.Gear
+				: DataBus.CycleData.RightSample.Gear) != 0;
 		}
 
 		#endregion
