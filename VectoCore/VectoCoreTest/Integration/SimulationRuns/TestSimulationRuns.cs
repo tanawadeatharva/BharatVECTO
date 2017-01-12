@@ -29,50 +29,34 @@
 *   Martin Rexeis, rexeis@ivt.tugraz.at, IVT, Graz University of Technology
 */
 
-using System;
-using System.Text.RegularExpressions;
+using System.Linq;
+using NUnit.Framework;
 using TUGraz.VectoCommon.Models;
-using TUGraz.VectoCore.Configuration;
+using TUGraz.VectoCore.InputData.FileIO.JSON;
+using TUGraz.VectoCore.Models.Simulation.Impl;
+using TUGraz.VectoCore.OutputData.FileIO;
+using TUGraz.VectoCore.Tests.Models.Simulation;
 
-namespace TUGraz.VectoCore.Utils
+namespace TUGraz.VectoCore.Tests.Integration.SimulationRuns
 {
-	public static class AuxiliaryTypeHelper
+	[TestFixture]
+	public class TestSimulationRuns
 	{
-		public static AuxiliaryType Parse(string s)
+		[Category("UserBugs"),
+		TestCase("Kies-20161115"),
+		TestCase("Mandl-20161115"),
+		TestCase("Silberholz-20161121"),
+		]
+		public static void RunJob_Eng(string jobName)
 		{
-			
-			switch (Regex.Replace(s, @"\s+", "")){
-				case Constants.Auxiliaries.Names.Fan:
-					return AuxiliaryType.Fan;
-				case Constants.Auxiliaries.Names.SteeringPump:
-					return AuxiliaryType.SteeringPump;
-				case Constants.Auxiliaries.Names.HeatingVentilationAirCondition:
-					return AuxiliaryType.HVAC;
-				case Constants.Auxiliaries.Names.ElectricSystem:
-					return AuxiliaryType.ElectricSystem;
-				case Constants.Auxiliaries.Names.PneumaticSystem:
-					return AuxiliaryType.PneumaticSystem;
-				default:
-					throw new ArgumentOutOfRangeException("s", s, "Could not parse auxiliary type string.");
-			}
-		}
-
-		public static string ToString(AuxiliaryType t)
-		{
-			switch (t) {
-				case AuxiliaryType.Fan:
-					return Constants.Auxiliaries.Names.Fan;
-				case AuxiliaryType.SteeringPump:
-					return Constants.Auxiliaries.Names.SteeringPump;
-				case AuxiliaryType.HVAC:
-					return Constants.Auxiliaries.Names.HeatingVentilationAirCondition;
-				case AuxiliaryType.PneumaticSystem:
-					return Constants.Auxiliaries.Names.PneumaticSystem;
-				case AuxiliaryType.ElectricSystem:
-					return Constants.Auxiliaries.Names.ElectricSystem;
-				default:
-					throw new ArgumentOutOfRangeException();
-			}
+			var writer = new FileOutputWriter(jobName);
+			var inputData = JSONInputDataFactory.ReadJsonJob("TestData\\Bugs\\" + jobName + "\\job.vecto");
+			var factory = new SimulatorFactory(ExecutionMode.Engineering, inputData, writer) { WriteModalResults = true };
+			var jobContainer = new JobContainer(new MockSumWriter());
+			jobContainer.AddRuns(factory);
+			jobContainer.Execute();
+			jobContainer.WaitFinished();
+			Assert.IsTrue(jobContainer.Runs.All(r => r.Success), string.Concat(jobContainer.Runs.Select(r => r.ExecException)));
 		}
 	}
 }

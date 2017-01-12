@@ -203,11 +203,11 @@ Partial Class VectoJobForm
 		Me.Label2.Anchor = CType(((System.Windows.Forms.AnchorStyles.Bottom Or System.Windows.Forms.AnchorStyles.Left) _
 			Or System.Windows.Forms.AnchorStyles.Right), System.Windows.Forms.AnchorStyles)
 		Me.Label2.AutoSize = True
-		Me.Label2.Location = New System.Drawing.Point(379, 108)
+		Me.Label2.Location = New System.Drawing.Point(391, 109)
 		Me.Label2.Name = "Label2"
-		Me.Label2.Size = New System.Drawing.Size(133, 13)
+		Me.Label2.Size = New System.Drawing.Size(118, 13)
 		Me.Label2.TabIndex = 3
-		Me.Label2.Text = "(Double-Click to Open File)"
+		Me.Label2.Text = "(Right-Click for Options)"
 		'
 		'LvCycles
 		'
@@ -284,7 +284,7 @@ Partial Class VectoJobForm
 		'Label9
 		'
 		Me.Label9.AutoSize = True
-		Me.Label9.Location = New System.Drawing.Point(187, 74)
+		Me.Label9.Location = New System.Drawing.Point(191, 74)
 		Me.Label9.Name = "Label9"
 		Me.Label9.Size = New System.Drawing.Size(24, 13)
 		Me.Label9.TabIndex = 44
@@ -309,7 +309,7 @@ Partial Class VectoJobForm
 		'btnAAUXOpen
 		'
 		Me.btnAAUXOpen.Image = Global.TUGraz.VECTO.My.Resources.Resources.application_export_icon_small
-		Me.btnAAUXOpen.Location = New System.Drawing.Point(465, 43)
+		Me.btnAAUXOpen.Location = New System.Drawing.Point(485, 43)
 		Me.btnAAUXOpen.Name = "btnAAUXOpen"
 		Me.btnAAUXOpen.Size = New System.Drawing.Size(24, 24)
 		Me.btnAAUXOpen.TabIndex = 41
@@ -327,7 +327,7 @@ Partial Class VectoJobForm
 		'btnBrowseAAUXFile
 		'
 		Me.btnBrowseAAUXFile.Image = Global.TUGraz.VECTO.My.Resources.Resources.Open_icon
-		Me.btnBrowseAAUXFile.Location = New System.Drawing.Point(441, 43)
+		Me.btnBrowseAAUXFile.Location = New System.Drawing.Point(461, 43)
 		Me.btnBrowseAAUXFile.Name = "btnBrowseAAUXFile"
 		Me.btnBrowseAAUXFile.Size = New System.Drawing.Size(24, 24)
 		Me.btnBrowseAAUXFile.TabIndex = 39
@@ -338,14 +338,14 @@ Partial Class VectoJobForm
 		'
 		Me.txtAdvancedAuxiliaryFile.Location = New System.Drawing.Point(109, 45)
 		Me.txtAdvancedAuxiliaryFile.Name = "txtAdvancedAuxiliaryFile"
-		Me.txtAdvancedAuxiliaryFile.Size = New System.Drawing.Size(331, 20)
+		Me.txtAdvancedAuxiliaryFile.Size = New System.Drawing.Size(351, 20)
 		Me.txtAdvancedAuxiliaryFile.TabIndex = 38
 		'
 		'picAuxInfo
 		'
 		Me.picAuxInfo.Image = Global.TUGraz.VECTO.My.Resources.Resources.Information_icon
 		Me.picAuxInfo.InitialImage = Global.TUGraz.VECTO.My.Resources.Resources.Information_icon
-		Me.picAuxInfo.Location = New System.Drawing.Point(443, 19)
+		Me.picAuxInfo.Location = New System.Drawing.Point(463, 19)
 		Me.picAuxInfo.Name = "picAuxInfo"
 		Me.picAuxInfo.Size = New System.Drawing.Size(16, 16)
 		Me.picAuxInfo.SizeMode = System.Windows.Forms.PictureBoxSizeMode.AutoSize
@@ -357,7 +357,7 @@ Partial Class VectoJobForm
 		Me.cboAdvancedAuxiliaries.FormattingEnabled = True
 		Me.cboAdvancedAuxiliaries.Location = New System.Drawing.Point(109, 18)
 		Me.cboAdvancedAuxiliaries.Name = "cboAdvancedAuxiliaries"
-		Me.cboAdvancedAuxiliaries.Size = New System.Drawing.Size(331, 21)
+		Me.cboAdvancedAuxiliaries.Size = New System.Drawing.Size(351, 21)
 		Me.cboAdvancedAuxiliaries.TabIndex = 36
 		'
 		'lbAdvancedAuxiliaries
@@ -374,7 +374,7 @@ Partial Class VectoJobForm
 		Me.Label32.Anchor = CType(((System.Windows.Forms.AnchorStyles.Bottom Or System.Windows.Forms.AnchorStyles.Left) _
 			Or System.Windows.Forms.AnchorStyles.Right), System.Windows.Forms.AnchorStyles)
 		Me.Label32.AutoSize = True
-		Me.Label32.Location = New System.Drawing.Point(406, 216)
+		Me.Label32.Location = New System.Drawing.Point(403, 217)
 		Me.Label32.Name = "Label32"
 		Me.Label32.Size = New System.Drawing.Size(106, 13)
 		Me.Label32.TabIndex = 3
@@ -547,7 +547,7 @@ Partial Class VectoJobForm
 		Me.TabPgDriver.Location = New System.Drawing.Point(4, 22)
 		Me.TabPgDriver.Name = "TabPgDriver"
 		Me.TabPgDriver.Padding = New System.Windows.Forms.Padding(3)
-		Me.TabPgDriver.Size = New System.Drawing.Size(527, 477)
+		Me.TabPgDriver.Size = New System.Drawing.Size(527, 487)
 		Me.TabPgDriver.TabIndex = 7
 		Me.TabPgDriver.Text = "Driver Assist"
 		Me.TabPgDriver.UseVisualStyleBackColor = True
@@ -1190,18 +1190,19 @@ Partial Class VectoJobForm
 		'
 		Me.CmOpenFile.Items.AddRange(New System.Windows.Forms.ToolStripItem() {Me.OpenWithToolStripMenuItem, Me.ShowInFolderToolStripMenuItem})
 		Me.CmOpenFile.Name = "CmOpenFile"
-		Me.CmOpenFile.Size = New System.Drawing.Size(153, 48)
+		Me.CmOpenFile.ShowImageMargin = False
+		Me.CmOpenFile.Size = New System.Drawing.Size(128, 48)
 		'
 		'OpenWithToolStripMenuItem
 		'
 		Me.OpenWithToolStripMenuItem.Name = "OpenWithToolStripMenuItem"
-		Me.OpenWithToolStripMenuItem.Size = New System.Drawing.Size(152, 22)
+		Me.OpenWithToolStripMenuItem.Size = New System.Drawing.Size(127, 22)
 		Me.OpenWithToolStripMenuItem.Text = "Open with ..."
 		'
 		'ShowInFolderToolStripMenuItem
 		'
 		Me.ShowInFolderToolStripMenuItem.Name = "ShowInFolderToolStripMenuItem"
-		Me.ShowInFolderToolStripMenuItem.Size = New System.Drawing.Size(152, 22)
+		Me.ShowInFolderToolStripMenuItem.Size = New System.Drawing.Size(127, 22)
 		Me.ShowInFolderToolStripMenuItem.Text = "Show in Folder"
 		'
 		'PicVehicle
@@ -1276,6 +1277,8 @@ Partial Class VectoJobForm
 		'VectoJobForm
 		'
 		Me.AcceptButton = Me.ButOK
+		Me.AutoScaleDimensions = New System.Drawing.SizeF(6.0!, 13.0!)
+		Me.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font
 		Me.CancelButton = Me.ButCancel
 		Me.ClientSize = New System.Drawing.Size(944, 646)
 		Me.Controls.Add(Me.TbHVCclass)
@@ -1293,10 +1296,11 @@ Partial Class VectoJobForm
 		Me.Controls.Add(Me.TabControl1)
 		Me.Controls.Add(Me.ButOK)
 		Me.Controls.Add(Me.StatusStrip1)
+		Me.FormBorderStyle = System.Windows.Forms.FormBorderStyle.FixedSingle
 		Me.Icon = CType(resources.GetObject("$this.Icon"), System.Drawing.Icon)
 		Me.MaximizeBox = False
 		Me.Name = "VectoJobForm"
-		Me.StartPosition = System.Windows.Forms.FormStartPosition.CenterParent
+		Me.StartPosition = System.Windows.Forms.FormStartPosition.CenterScreen
 		Me.Text = "Job Editor"
 		Me.TabPgGen.ResumeLayout(False)
 		Me.TabPgGen.PerformLayout()

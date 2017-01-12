@@ -32,38 +32,75 @@
 using System.Collections.Generic;
 using System.Linq;
 using System.Runtime.CompilerServices;
+using TUGraz.VectoCommon.Exceptions;
+using TUGraz.VectoCommon.Utils;
 using TUGraz.VectoCore.Models.Declaration;
 using TUGraz.VectoCore.Models.Simulation.Data;
 using TUGraz.VectoCore.Models.Simulation.Impl;
 using TUGraz.VectoCore.Models.SimulationComponent.Data;
+using TUGraz.VectoCore.OutputData.PDF;
 
 namespace TUGraz.VectoCore.OutputData
 {
+	public interface IDeclarationReport
+	{
+		void PrepareResult(LoadingType loading, Mission mission);
+		void AddResult(LoadingType loadingType, Mission mission, IModalDataContainer modData);
+		void InitializeReport(VectoRunData modelData, Segment segment);
+		string Creator { get; set; }
+		string JobName { get; set; }
+	}
+
 	/// <summary>
 	/// Class for creating a declaration report.
 	/// </summary>
-	public abstract class DeclarationReport
+	public abstract class DeclarationReport<T> : IDeclarationReport where T : new()
 	{
-		/// <summary>
-		/// Container class for one mission and the modData for the different loadings.
-		/// </summary>
-		protected class ResultContainer
+		///// <summary>
+		///// Container class for one mission and the modData for the different loadings.
+		///// </summary>
+		//protected class ResultContainer<TResultEntry>
+		//{
+		//	/// <summary>
+		//	/// The mission
+		//	/// </summary>
+		//	public Mission Mission;
+
+		//	/// <summary>
+		//	/// Dictionary of LoadingTypes and DeclarationResults
+		//	/// </summary>
+		//	public Dictionary<LoadingType, TResultEntry> ModData;
+		//}
+		public class ResultContainer<TEntry>
 		{
-			/// <summary>
-			/// The mission
-			/// </summary>
+			//public Stream PDFPage;
 			public Mission Mission;
 
-			/// <summary>
-			/// Dictionary of LoadingTypes and their resulting Modal Data
-			/// </summary>
-			public Dictionary<LoadingType, IModalDataContainer> ModData;
+			public MissionProfile MissionProfile;
+
+			public Dictionary<LoadingType, TEntry> ModData;
+		}
+
+		public class MissionProfile
+		{
+			public readonly IList<double> DistanceKm;
+			public readonly IList<double> TargetSpeed;
+			public readonly IList<double> Altitude;
+
+			public MissionProfile(IModalDataContainer m)
+			{
+				DistanceKm = m.GetValues<Meter>(ModalResultField.dist).Select(v => v.ConvertTo().Kilo.Meter).ToDouble();
+				TargetSpeed =
+					m.GetValues<MeterPerSecond>(ModalResultField.v_targ).Select(v => v.ConvertTo().Kilo.Meter.Per.Hour).ToDouble();
+				Altitude = m.GetValues<Meter>(ModalResultField.altitude).ToDouble();
+			}
 		}
 
 		/// <summary>
 		/// Dictionary of MissionTypes and their corresponding results.
 		/// </summary>
-		protected readonly Dictionary<MissionType, ResultContainer> Missions = new Dictionary<MissionType, ResultContainer>();
+		protected readonly Dictionary<MissionType, ResultContainer<T>> Missions =
+			new Dictionary<MissionType, ResultContainer<T>>();
 
 		/// <summary>
 		/// The full load curve.
@@ -78,7 +115,7 @@ namespace TUGraz.VectoCore.OutputData
 		/// <summary>
 		/// The creator name for the report.
 		/// </summary>
-		public string Creator { get; internal set; }
+		public string Creator { get; set; }
 
 		/// <summary>
 		/// The name of the job file (report name will be the same)
@@ -88,44 +125,66 @@ namespace TUGraz.VectoCore.OutputData
 		/// <summary>
 		/// The result count determines how many results must be given before the report gets written.
 		/// </summary>
-		public int ResultCount { get; set; }
+		private int _resultCount;
 
-		/// <summary>
-		/// Adds the result of one run for the specific mission and loading. If all runs finished (given by the resultCount) the report will be written.
-		/// </summary>
-		/// <param name="loadingType">Type of the loading.</param>
-		/// <param name="mission">The mission.</param>
-		/// <param name="modData">The mod data.</param>
+		[MethodImpl(MethodImplOptions.Synchronized)]
+		public void PrepareResult(LoadingType loading, Mission mission)
+		{
+			if (!Missions.ContainsKey(mission.MissionType)) {
+				Missions[mission.MissionType] = new ResultContainer<T>() {
+					Mission = mission,
+					ModData = new Dictionary<LoadingType, T>()
+				};
+			}
+			Missions[mission.MissionType].ModData[loading] = new T();
+		}
+
+
 		[MethodImpl(MethodImplOptions.Synchronized)]
 		public void AddResult(LoadingType loadingType, Mission mission, IModalDataContainer modData)
 		{
 			if (modData.RunStatus != VectoRun.Status.Success) {
-				Missions.Clear();
+				//Missions.Clear();
 				return;
 			}
-
 			if (!Missions.ContainsKey(mission.MissionType)) {
-				Missions[mission.MissionType] = new ResultContainer {
-					Mission = mission,
-					ModData = new Dictionary<LoadingType, IModalDataContainer>()
-				};
+				throw new VectoException("Unknown mission type {0} for generating declaration report", mission.MissionType);
 			}
-			Missions[mission.MissionType].ModData[loadingType] = modData;
+			if (!Missions[mission.MissionType].ModData.ContainsKey(loadingType)) {
+				throw new VectoException("Unknown loading type {0} for mission {1}", loadingType, mission.MissionType);
+			}
+			if (Missions[mission.MissionType].MissionProfile == null) {
+				Missions[mission.MissionType].MissionProfile = new MissionProfile(modData);
+			}
+			_resultCount--;
 
-			if (ResultCount == Missions.Sum(v => v.Value.ModData.Count)) {
+			DoAddResult(Missions[mission.MissionType].ModData[loadingType], loadingType, mission, modData);
+
+			if (_resultCount == 0) {
 				DoWriteReport();
-				Missions.Clear();
 				Flc = null;
 				Segment = null;
 			}
 		}
 
+		/// <summary>
+		/// Adds the result of one run for the specific mission and loading. If all runs finished (given by the resultCount) the report will be written.
+		/// </summary>
+		/// <param name="entry"></param>
+		/// <param name="loadingType">Type of the loading.</param>
+		/// <param name="mission">The mission.</param>
+		/// <param name="modData">The mod data.</param>
+		[MethodImpl(MethodImplOptions.Synchronized)]
+		protected abstract void DoAddResult(T entry, LoadingType loadingType, Mission mission, IModalDataContainer modData);
+
+
 		protected internal abstract void DoWriteReport();
+
 
 		public void InitializeReport(VectoRunData modelData, Segment segment)
 		{
 			Segment = segment;
-			ResultCount = segment.Missions.Sum(m => m.Loadings.Count);
+			_resultCount = segment.Missions.Sum(m => m.Loadings.Count);
 
 			DoInitializeReport(modelData, segment);
 		}

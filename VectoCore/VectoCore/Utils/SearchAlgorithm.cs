@@ -130,7 +130,7 @@ namespace TUGraz.VectoCore.Utils
 					var result = evaluateFunction(x);
 					y = getYValue(result);
 					debug.Add(new { x = x.Value(), y = y.Value(), delta = criterion(result), result });
-					if (criterion(result).IsEqual(0, Constants.SimulationSettings.LineSearchTolerance)) {
+					if (criterion(result).IsEqual(0, Constants.SimulationSettings.LineSearchTolerance / 2)) {
 						LogManager.EnableLogging();
 						log.Debug("LineSearch found an operating point after {0} function calls.", count);
 						//iterationCount += count;

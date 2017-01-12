@@ -39,6 +39,7 @@ using TUGraz.VectoCore.Models.Simulation.DataBus;
 using TUGraz.VectoCore.Models.Simulation.Impl;
 using TUGraz.VectoCore.Models.SimulationComponent;
 using TUGraz.VectoCore.Models.SimulationComponent.Data;
+using TUGraz.VectoCore.Models.SimulationComponent.Data.Gearbox;
 using TUGraz.VectoCore.OutputData;
 
 namespace TUGraz.VectoCore.Tests.Utils
@@ -54,7 +55,15 @@ namespace TUGraz.VectoCore.Tests.Utils
 		public IEngineInfo Engine { get; set; }
 
 		public GearboxType GearboxType { get; set; }
+
 		public uint Gear { get; set; }
+		public GearInfo NextGear { get; private set; }
+
+		public Second TractionInterruption
+		{
+			get { return 1.SI<Second>(); }
+		}
+
 		public MeterPerSecond StartSpeed { get; set; }
 		public MeterPerSquareSecond StartAcceleration { get; set; }
 		public NewtonMeter GearMaxTorque { get; set; }
@@ -62,6 +71,13 @@ namespace TUGraz.VectoCore.Tests.Utils
 		public Second AbsTime { get; set; }
 
 		public Watt GearboxLoss()
+		{
+			throw new System.NotImplementedException();
+		}
+
+		public Second LastShift { get; private set; }
+
+		public GearData GetGearData(uint gear)
 		{
 			throw new System.NotImplementedException();
 		}

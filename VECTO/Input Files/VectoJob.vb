@@ -32,8 +32,8 @@ Imports TUGraz.VectoCore.Utils
 
 <CustomValidation(GetType(VectoJob), "ValidateJob")>
 Public Class VectoJob
-	Implements IEngineeringInputDataProvider, IDeclarationInputDataProvider, IEngineeringJobInputData, 
-				IDeclarationJobInputData, IDriverEngineeringInputData, IDriverDeclarationInputData, IAuxiliariesEngineeringInputData, 
+	Implements IEngineeringInputDataProvider, IDeclarationInputDataProvider, IEngineeringJobInputData,
+				IDeclarationJobInputData, IDriverEngineeringInputData, IDriverDeclarationInputData, IAuxiliariesEngineeringInputData,
 				IAuxiliariesDeclarationInputData
 
 	'AA-TB
@@ -108,7 +108,8 @@ Public Class VectoJob
 
 	Public Function SaveFile() As Boolean
 		Dim validationResults As IList(Of ValidationResult) =
-				Validate(If(Cfg.DeclMode, ExecutionMode.Declaration, ExecutionMode.Engineering), If(GearboxInputData Is Nothing, GearboxType.MT, GearboxInputData.Type))
+				Validate(If(Cfg.DeclMode, ExecutionMode.Declaration, ExecutionMode.Engineering),
+						If(GearboxInputData Is Nothing, GearboxType.MT, GearboxInputData.Type))
 
 		If validationResults.Count > 0 Then
 			Dim messages As IEnumerable(Of String) =
@@ -230,8 +231,8 @@ Public Class VectoJob
 			Return New StartStopInputData With {
 				.Enabled = _startStop,
 				.MaxSpeed = StartStopMaxSpeed.KMPHtoMeterPerSecond(),
-				.MinTime = StartStopTime.SI(Of Second)(),
-				.Delay = StartStopDelay.SI(Of Second)()
+				.MinTime = StartStopTime.SI (Of Second)(),
+				.Delay = StartStopDelay.SI (Of Second)()
 				}
 		End Get
 	End Property
@@ -250,9 +251,12 @@ Public Class VectoJob
 				Try
 					Dim cycleDataRes As Stream =
 							RessourceHelper.ReadStream(
-								RessourceHelper.Namespace + "VACC." + _driverAccelerationFile.OriginalPath +
+								DeclarationData.DeclarationDataResourcePrefix + ".VACC." + _driverAccelerationFile.OriginalPath +
 								VectoCore.Configuration.Constants.FileExtensions.DriverAccelerationCurve)
-					Return VectoCSVFile.ReadStream(cycleDataRes)
+					Return _
+						VectoCSVFile.ReadStream(cycleDataRes,
+												source:=DeclarationData.DeclarationDataResourcePrefix + ".VACC." + _driverAccelerationFile.OriginalPath +
+														VectoCore.Configuration.Constants.FileExtensions.DriverAccelerationCurve)
 				Catch ex As Exception
 					Return Nothing
 				End Try
@@ -390,7 +394,10 @@ Public Class VectoJob
 						New ValidationResult("Vecto Job Configuration is invalid. ", result.Select(Function(r) r.ErrorMessage).ToList())
 				End If
 				Dim dataFactory As EngineeringModeVectoRunDataFactory = New EngineeringModeVectoRunDataFactory(vectoJob)
-				jobData = dataFactory.NextRun().First()
+				jobData = dataFactory.NextRun().FirstOrDefault()
+				If jobData Is Nothing Then
+					Return New ValidationResult("No cycles selected in Vecto Job.", result.Select(Function(r) r.ErrorMessage).ToList())
+				End If
 			End If
 
 
@@ -613,9 +620,10 @@ Public Class VectoJob
 					cycleData = VectoCSVFile.Read(cycleFile.FullPath)
 				Else
 					Try
-						Dim cycleDataRes As Stream =
-								RessourceHelper.ReadStream(RessourceHelper.Namespace + "MissionCycles." + cycleFile.OriginalPath + ".vdri")
-						cycleData = VectoCSVFile.ReadStream(cycleDataRes)
+						Dim resourceName As String = DeclarationData.DeclarationDataResourcePrefix + ".MissionCycles." +
+													cycleFile.OriginalPath + TUGraz.VectoCore.Configuration.Constants.FileExtensions.CycleFile
+						Dim cycleDataRes As Stream = RessourceHelper.ReadStream(resourceName)
+						cycleData = VectoCSVFile.ReadStream(cycleDataRes, source:=resourceName)
 					Catch ex As Exception
 						Throw New VectoException("Driving Cycle could not be read: " + cycleFile.OriginalPath)
 					End Try

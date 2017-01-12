@@ -31,7 +31,6 @@
 
 using System;
 using System.Collections.Generic;
-using System.Linq;
 using TUGraz.VectoCommon.Exceptions;
 using TUGraz.VectoCommon.Utils;
 using TUGraz.VectoCore.Configuration;
@@ -42,10 +41,13 @@ using TUGraz.VectoCore.OutputData;
 
 namespace TUGraz.VectoCore.Models.SimulationComponent.Impl
 {
+	/// <summary>
+	/// Container Class for Auxiliaries which are connected to the Engine.
+	/// </summary>
 	public class EngineAuxiliary : StatefulVectoSimulationComponent<EngineAuxiliary.State>, IAuxInProvider,
 		IAuxPort
 	{
-		protected readonly Dictionary<string, Func<PerSecond, Watt>> _auxiliaries =
+		protected readonly Dictionary<string, Func<PerSecond, Watt>> Auxiliaries =
 			new Dictionary<string, Func<PerSecond, Watt>>();
 
 		public EngineAuxiliary(IVehicleContainer container) : base(container) {}
@@ -55,16 +57,30 @@ namespace TUGraz.VectoCore.Models.SimulationComponent.Impl
 			return this;
 		}
 
+		/// <summary>
+		/// Adds a constant power demand auxiliary.
+		/// </summary>
+		/// <param name="auxId"></param>
+		/// <param name="powerDemand"></param>
 		public void AddConstant(string auxId, Watt powerDemand)
 		{
 			Add(auxId, _ => powerDemand);
 		}
 
+		/// <summary>
+		/// Adds an auxiliary which gets its power demand from the driving cycle.
+		/// </summary>
+		/// <param name="auxId"></param>
 		public void AddCycle(string auxId)
 		{
 			Add(auxId, _ => DataBus.CycleData.LeftSample.AdditionalAuxPowerDemand);
 		}
 
+		/// <summary>
+		/// Adds an auxiliary which calculates the demand based on a aux-map and the engine speed.
+		/// </summary>
+		/// <param name="auxId"></param>
+		/// <param name="data"></param>
 		public void AddMapping(string auxId, AuxiliaryData data)
 		{
 			if (!DataBus.CycleData.LeftSample.AuxiliarySupplyPower.ContainsKey(auxId)) {
@@ -83,9 +99,14 @@ namespace TUGraz.VectoCore.Models.SimulationComponent.Impl
 			});
 		}
 
+		/// <summary>
+		/// Adds an auxiliary with a function returning the power demand based on the engine speed.
+		/// </summary>
+		/// <param name="auxId"></param>
+		/// <param name="powerLossFunction"></param>
 		public void Add(string auxId, Func<PerSecond, Watt> powerLossFunction)
 		{
-			_auxiliaries[auxId] = powerLossFunction;
+			Auxiliaries[auxId] = powerLossFunction;
 		}
 
 		public NewtonMeter Initialize(NewtonMeter torque, PerSecond angularSpeed)
@@ -97,6 +118,16 @@ namespace TUGraz.VectoCore.Models.SimulationComponent.Impl
 			return ComputePowerDemand(angularSpeed) / angularSpeed;
 		}
 
+		/// <summary>
+		/// Calculates the torque demand for all registered auxiliaries for the the current engine 
+		/// </summary>
+		/// <param name="absTime"></param>
+		/// <param name="dt"></param>
+		/// <param name="torquePowerTrain"></param>
+		/// <param name="torqueEngine"></param>
+		/// <param name="angularSpeed"></param>
+		/// <param name="dryRun"></param>
+		/// <returns></returns>
 		public NewtonMeter TorqueDemand(Second absTime, Second dt, NewtonMeter torquePowerTrain, NewtonMeter torqueEngine,
 			PerSecond angularSpeed, bool dryRun = false)
 		{
@@ -111,8 +142,8 @@ namespace TUGraz.VectoCore.Models.SimulationComponent.Impl
 
 		protected Watt ComputePowerDemand(PerSecond engineSpeed)
 		{
-			CurrentState.PowerDemands = new Dictionary<string, Watt>(_auxiliaries.Count);
-			foreach (var item in _auxiliaries) {
+			CurrentState.PowerDemands = new Dictionary<string, Watt>(Auxiliaries.Count);
+			foreach (var item in Auxiliaries) {
 				var value = item.Value(engineSpeed);
 				if (value != null) {
 					CurrentState.PowerDemands[item.Key] = value;
@@ -135,7 +166,6 @@ namespace TUGraz.VectoCore.Models.SimulationComponent.Impl
 			}
 			if (container[ModalResultField.P_aux] == null || container[ModalResultField.P_aux] == DBNull.Value) {
 				// only overwrite if nobody else already wrote the total aux power
-
 				container[ModalResultField.P_aux] = auxPowerDemand;
 			}
 		}

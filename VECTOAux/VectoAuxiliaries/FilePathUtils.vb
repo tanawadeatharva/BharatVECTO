@@ -8,6 +8,7 @@
 '   WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
 '
 ' See the LICENSE.txt for the specific language governing permissions and limitations.
+Imports System.IO
 
 Public Class FilePathUtils
 	Public Shared Function ValidateFilePath(ByVal filePath As String, ByVal expectedExtension As String,
@@ -21,7 +22,7 @@ Public Class FilePathUtils
 		Dim fileNameOnlyNoExtension As String = fileNameOnly(filePath, False)
 
 		'Is this filePath empty
-		If filePath.trim.Length = 0 OrElse Right(filePath, 1) = "\" Then
+		If filePath.Trim.Length = 0 OrElse Right(filePath, 1) = "\" Then
 			message = "A filename cannot be empty"
 			Return False
 		End If
@@ -86,7 +87,7 @@ Public Class FilePathUtils
 			'Filepath is already absolute
 			Return filename
 		Else
-			Return vectoPath & filename
+			Return Path.Combine(vectoPath, filename)	'vectoPath & filename
 		End If
 	End Function
 
@@ -119,7 +120,7 @@ Public Class FilePathUtils
 	Public Shared Function fileExtentionOnly(ByVal filePath As String) As String
 		Dim x As Integer
 		x = filePath.LastIndexOf(".")
-		If x = - 1 Then
+		If x = -1 Then
 			Return ""
 		Else
 			Return Microsoft.VisualBasic.Right(filePath, Microsoft.VisualBasic.Len(filePath) - x)

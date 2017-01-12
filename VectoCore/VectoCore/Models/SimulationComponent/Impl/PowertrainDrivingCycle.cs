@@ -51,9 +51,8 @@ namespace TUGraz.VectoCore.Models.SimulationComponent.Impl
 		StatefulProviderComponent<SimpleComponentState, ISimulationOutPort, ITnInPort, ITnOutPort>,
 		IDrivingCycleInfo, ISimulationOutPort, ITnInProvider, ITnInPort
 	{
-		protected readonly DrivingCycleData Data;
-		protected IEnumerator<DrivingCycleData.DrivingCycleEntry> RightSample { get; set; }
-		protected IEnumerator<DrivingCycleData.DrivingCycleEntry> LeftSample { get; set; }
+		protected readonly IDrivingCycleData Data;
+		protected internal readonly DrivingCycleEnumerator CycleIterator;
 
 		protected Second AbsTime { get; set; }
 
@@ -62,17 +61,21 @@ namespace TUGraz.VectoCore.Models.SimulationComponent.Impl
 		/// </summary>
 		/// <param name="container">The container.</param>
 		/// <param name="cycle">The cycle.</param>
-		public PowertrainDrivingCycle(IVehicleContainer container, DrivingCycleData cycle) : base(container)
+		public PowertrainDrivingCycle(IVehicleContainer container, IDrivingCycleData cycle) : base(container)
 		{
 			Data = cycle;
-			LeftSample = Data.Entries.GetEnumerator();
-			LeftSample.MoveNext();
-
-			RightSample = Data.Entries.GetEnumerator();
-			RightSample.MoveNext();
-			RightSample.MoveNext();
+			CycleIterator = new DrivingCycleEnumerator(Data);
 
 			AbsTime = 0.SI<Second>();
+		}
+
+		public virtual IResponse Initialize()
+		{
+			var first = Data.Entries[0];
+			AbsTime = first.Time;
+			var response = NextComponent.Initialize(first.Torque, first.AngularVelocity);
+			response.AbsTime = AbsTime;
+			return response;
 		}
 
 		#region ISimulationOutPort
@@ -85,20 +88,20 @@ namespace TUGraz.VectoCore.Models.SimulationComponent.Impl
 		public virtual IResponse Request(Second absTime, Second dt)
 		{
 			// cycle finished (no more entries in cycle)
-			if (LeftSample.Current == null) {
+			if (CycleIterator.LastEntry && CycleIterator.RightSample.Time == absTime) {
 				return new ResponseCycleFinished { Source = this };
 			}
 
 			// interval exceeded
-			if (RightSample.Current != null && (absTime + dt).IsGreater(RightSample.Current.Time)) {
+			if (CycleIterator.RightSample != null && (absTime + dt).IsGreater(CycleIterator.RightSample.Time)) {
 				return new ResponseFailTimeInterval {
 					AbsTime = absTime,
 					Source = this,
-					DeltaT = RightSample.Current.Time - absTime
+					DeltaT = CycleIterator.RightSample.Time - absTime
 				};
 			}
 
-			return DoHandleRequest(absTime, dt, LeftSample.Current.AngularVelocity);
+			return DoHandleRequest(absTime, dt, CycleIterator.LeftSample.AngularVelocity);
 		}
 
 		protected IResponse DoHandleRequest(Second absTime, Second dt, PerSecond angularVelocity)
@@ -108,16 +111,16 @@ namespace TUGraz.VectoCore.Models.SimulationComponent.Impl
 			IResponse response;
 			var responseCount = 0;
 			do {
-				response = NextComponent.Request(absTime, dt, LeftSample.Current.Torque, angularVelocity);
+				response = NextComponent.Request(absTime, dt, CycleIterator.LeftSample.Torque, angularVelocity);
 				CurrentState.InAngularVelocity = angularVelocity;
-				CurrentState.InTorque = LeftSample.Current.Torque;
+				CurrentState.InTorque = CycleIterator.LeftSample.Torque;
 				debug.Add(response);
 				response.Switch()
 					.Case<ResponseGearShift>(
-						() => response = NextComponent.Request(absTime, dt, LeftSample.Current.Torque, angularVelocity))
+						() => response = NextComponent.Request(absTime, dt, CycleIterator.LeftSample.Torque, angularVelocity))
 					.Case<ResponseUnderload>(r => {
 						var torqueInterval = -r.Delta / (angularVelocity.IsEqual(0) ? 10.RPMtoRad() : angularVelocity);
-						var torque = SearchAlgorithm.Search(LeftSample.Current.Torque, r.Delta, torqueInterval,
+						var torque = SearchAlgorithm.Search(CycleIterator.LeftSample.Torque, r.Delta, torqueInterval,
 							getYValue: result => ((ResponseDryRun)result).DeltaDragLoad,
 							evaluateFunction: t => NextComponent.Request(absTime, dt, t, angularVelocity, true),
 							criterion: y => ((ResponseDryRun)y).DeltaDragLoad.Value());
@@ -127,9 +130,9 @@ namespace TUGraz.VectoCore.Models.SimulationComponent.Impl
 					.Case<ResponseOverload>(r => {
 						angularVelocity = SearchAlgorithm.Search(angularVelocity, r.Delta, 50.RPMtoRad(),
 							getYValue: result => ((ResponseDryRun)result).DeltaFullLoad,
-							evaluateFunction: n => NextComponent.Request(absTime, dt, LeftSample.Current.Torque, n, true),
+							evaluateFunction: n => NextComponent.Request(absTime, dt, CycleIterator.LeftSample.Torque, n, true),
 							criterion: y => ((ResponseDryRun)y).DeltaFullLoad.Value());
-						response = NextComponent.Request(absTime, dt, LeftSample.Current.Torque, angularVelocity);
+						response = NextComponent.Request(absTime, dt, CycleIterator.LeftSample.Torque, angularVelocity);
 						CurrentState.InAngularVelocity = angularVelocity;
 					})
 					.Case<ResponseFailTimeInterval>(r => { dt = r.DeltaT; })
@@ -141,16 +144,6 @@ namespace TUGraz.VectoCore.Models.SimulationComponent.Impl
 			AbsTime = absTime + dt;
 			response.SimulationInterval = dt;
 			debug.Add(response);
-			return response;
-		}
-
-		public IResponse Initialize()
-		{
-			var first = Data.Entries.First();
-
-			AbsTime = first.Time;
-			var response = NextComponent.Initialize(first.Torque, first.AngularVelocity);
-			response.AbsTime = AbsTime;
 			return response;
 		}
 
@@ -172,10 +165,7 @@ namespace TUGraz.VectoCore.Models.SimulationComponent.Impl
 
 		protected override void DoCommitSimulationStep()
 		{
-			if ((RightSample.Current == null) || AbsTime.IsGreaterOrEqual(RightSample.Current.Time)) {
-				RightSample.MoveNext();
-				LeftSample.MoveNext();
-			}
+			CycleIterator.MoveNext();
 		}
 
 		#endregion
@@ -185,10 +175,10 @@ namespace TUGraz.VectoCore.Models.SimulationComponent.Impl
 			get
 			{
 				return new CycleData {
-					AbsTime = LeftSample.Current.Time,
+					AbsTime = CycleIterator.LeftSample.Time,
 					AbsDistance = null,
-					LeftSample = LeftSample.Current,
-					RightSample = RightSample.Current,
+					LeftSample = CycleIterator.LeftSample,
+					RightSample = CycleIterator.RightSample,
 				};
 			}
 		}
@@ -217,7 +207,19 @@ namespace TUGraz.VectoCore.Models.SimulationComponent.Impl
 
 		public IReadOnlyList<DrivingCycleData.DrivingCycleEntry> LookAhead(Second time)
 		{
-			throw new NotImplementedException();
+			var retVal = new List<DrivingCycleData.DrivingCycleEntry>();
+
+			var iterator = CycleIterator.Clone();
+			do {
+				retVal.Add(iterator.RightSample);
+			} while (iterator.MoveNext() && iterator.RightSample.Time < AbsTime + time);
+
+			return retVal;
+		}
+
+		public void FinishSimulation()
+		{
+			Data.Finish();
 		}
 	}
 }

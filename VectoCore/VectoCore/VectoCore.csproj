@@ -109,6 +109,7 @@
   </ItemGroup>
   <ItemGroup>
     <Compile Include="Configuration\Constants.cs" />
+    <Compile Include="InputData\AuxiliaryFileHelper.cs" />
     <Compile Include="InputData\FileIO\JSON\JSONComponentInputData.cs" />
     <Compile Include="InputData\FileIO\JSON\JsonExtensionMethods.cs" />
     <Compile Include="InputData\Impl\InputData.cs" />
@@ -126,6 +127,7 @@
     <Compile Include="InputData\Reader\FullLoadCurveReader.cs" />
     <Compile Include="InputData\Reader\Impl\AbstractVectoRunDataFactory.cs" />
     <Compile Include="InputData\Reader\Impl\DeclarationModeVectoRunDataFactory.cs" />
+    <Compile Include="InputData\Reader\Impl\DrivingCycleProxy.cs" />
     <Compile Include="InputData\Reader\Impl\EngineeringModeVectoRunDataFactory.cs" />
     <Compile Include="InputData\Reader\Impl\EngineOnlyVectoRunDataFactory.cs" />
     <Compile Include="InputData\Reader\ShiftPolygonReader.cs" />
@@ -150,11 +152,16 @@
     <Compile Include="Models\SimulationComponent\Impl\AbstractGearbox.cs" />
     <Compile Include="Models\SimulationComponent\Impl\ATGearbox.cs" />
     <Compile Include="Models\SimulationComponent\Impl\ATShiftStrategy.cs" />
+    <Compile Include="Models\SimulationComponent\Impl\BaseShiftStrategy.cs" />
+    <Compile Include="Models\SimulationComponent\Impl\DrivingCycleEnumerator.cs" />
     <Compile Include="Models\SimulationComponent\Impl\MeasuredSpeedDrivingCycle.cs" />
     <Compile Include="Models\SimulationComponent\Impl\PTOCycleController.cs" />
     <Compile Include="Models\SimulationComponent\Impl\PWheelCycle.cs" />
     <Compile Include="Models\SimulationComponent\Impl\TorqueConverter.cs" />
     <Compile Include="Models\SimulationComponent\Impl\IdleControllerSwitcher.cs" />
+    <Compile Include="Models\Simulation\Data\ModalResultField.cs" />
+    <Compile Include="OutputData\ModFilter\ActualModalDataFilter.cs" />
+    <Compile Include="OutputData\ModFilter\ModalData1HzFilter.cs" />
     <Compile Include="Utils\ProviderExtensions.cs" />
     <Compile Include="Models\Declaration\AirDrag.cs" />
     <Compile Include="Models\Declaration\Fan.cs" />
@@ -182,7 +189,6 @@
     <Compile Include="Models\Declaration\Mission.cs" />
     <Compile Include="Models\Declaration\MissionType.cs" />
     <Compile Include="Models\SimulationComponent\Data\DriverData.cs" />
-    <Compile Include="Models\SimulationComponent\Data\Engine\PT1Curve.cs" />
     <Compile Include="Models\SimulationComponent\Data\ICrossWindCorrection.cs" />
     <Compile Include="Models\SimulationComponent\Data\CrosswindCorrectionVAirBeta.cs" />
     <Compile Include="Models\SimulationComponent\IAuxiliary.cs" />
@@ -340,6 +346,7 @@
     <EmbeddedResource Include="Resources\Declaration\Payloads.csv" />
     <EmbeddedResource Include="Resources\Declaration\VAUX\SP-Axles.csv" />
     <EmbeddedResource Include="Resources\Declaration\VAUX\PTO-tech.csv" />
+    <EmbeddedResource Include="Resources\Declaration\TorqueConverter.csv" />
   </ItemGroup>
   <ItemGroup>
     <EmbeddedResource Include="Resources\Declaration\Report\4x2r.png" />

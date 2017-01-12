@@ -29,7 +29,7 @@ Public Class frmAuxiliaryConfig
 	Private processing As Boolean = False
 	Private SecondsIntoCycle As Integer = 0
 	Private vectoFile As String = ""
-	Private vectoPath As String = ""
+	Private aauxPath As String = ""
 	Private auxFile As String
 	Private cmFilesList As String()
 	Private SaveClicked As Boolean
@@ -60,18 +60,18 @@ Public Class frmAuxiliaryConfig
 
 
 		Me.vectoFile = vectoFileName
-		Me.vectoPath = FilePathUtils.filePathOnly(vectoFileName)
+		Me.aauxPath = Path.GetDirectoryName(Path.Combine(FilePathUtils.filePathOnly(vectoFileName), fileName))
 
 		' This call is required by the designer.
 		InitializeComponent()
 
 		' Add any initialization after the InitializeComponent() call.
-		auxFile = fileName
+		auxFile = Path.Combine(FilePathUtils.filePathOnly(vectoFileName), fileName)
 
 		Try
 
-			auxConfig = New AuxiliaryConfig(FilePathUtils.ResolveFilePath(vectoPath, auxFile))
-			originalConfig = New AuxiliaryConfig(FilePathUtils.ResolveFilePath(vectoPath, auxFile))
+			auxConfig = New AuxiliaryConfig(auxFile)
+			originalConfig = New AuxiliaryConfig(FilePathUtils.ResolveFilePath(aauxPath, auxFile))
 
 		Catch ex As Exception
 
@@ -287,7 +287,7 @@ Public Class frmAuxiliaryConfig
 		Dim comp As CompressorMap
 		Try
 
-			comp = New CompressorMap(FilePathUtils.ResolveFilePath(vectoPath, txtCompressorMap.Text))
+			comp = New CompressorMap(FilePathUtils.ResolveFilePath(aauxPath, txtCompressorMap.Text))
 			comp.Initialise()
 			ErrorProvider.SetError(txtCompressorMap, String.Empty)
 		Catch ex As Exception
@@ -324,7 +324,7 @@ Public Class frmAuxiliaryConfig
 		Dim actuations As PneumaticActuationsMAP
 		Try
 
-			actuations = New PneumaticActuationsMAP(FilePathUtils.ResolveFilePath(vectoPath, txtActuationsMap.Text))
+			actuations = New PneumaticActuationsMAP(FilePathUtils.ResolveFilePath(aauxPath, txtActuationsMap.Text))
 			actuations.Initialise()
 			ErrorProvider.SetError(txtActuationsMap, String.Empty)
 		Catch ex As Exception
@@ -415,7 +415,7 @@ Public Class frmAuxiliaryConfig
 		'Test File is valid
 		Dim alt As ICombinedAlternator
 		Try
-			alt = New CombinedAlternator(FilePathUtils.ResolveFilePath(vectoPath, txtAlternatorMapPath.Text))
+			alt = New CombinedAlternator(FilePathUtils.ResolveFilePath(aauxPath, txtAlternatorMapPath.Text))
 			ErrorProvider.SetError(txtAlternatorMapPath, String.Empty)
 		Catch ex As Exception
 			ErrorProvider.SetError(txtAlternatorMapPath,
@@ -469,7 +469,7 @@ Public Class frmAuxiliaryConfig
 		Dim message As String = ""
 
 		'Validate abdb -  Bus Database 
-		Dim abdbFile As String = FilePathUtils.ResolveFilePath(vectoPath, txtBusDatabaseFilePath.Text)
+		Dim abdbFile As String = FilePathUtils.ResolveFilePath(aauxPath, txtBusDatabaseFilePath.Text)
 		Dim bdb As New BusDatabase()
 		If bdb.Initialise(abdbFile) Then
 			ErrorProvider.SetError(txtBusDatabaseFilePath, String.Empty)
@@ -482,7 +482,7 @@ Public Class frmAuxiliaryConfig
 		'Try ahsm - HVac Steady State Model
 		Try
 
-			Dim ahsmFile As String = FilePathUtils.ResolveFilePath(vectoPath, txtSSMFilePath.Text)
+			Dim ahsmFile As String = FilePathUtils.ResolveFilePath(aauxPath, txtSSMFilePath.Text)
 			Dim ssmTool As SSMTOOL = New SSMTOOL(ahsmFile, New HVACConstants, False)
 
 			If ssmTool.Load(ahsmFile) Then
@@ -568,7 +568,7 @@ Public Class frmAuxiliaryConfig
 
 		Dim result As DialogResult
 
-		If Not File.Exists(FilePathUtils.ResolveFilePath(vectoPath, auxFile)) OrElse
+		If Not File.Exists(FilePathUtils.ResolveFilePath(aauxPath, auxFile)) OrElse
 			Not auxConfig.ConfigValuesAreTheSameAs(originalConfig) Then
 
 			result =
@@ -795,7 +795,7 @@ Public Class frmAuxiliaryConfig
 			End If
 		End If
 
-		result = auxConfig.Save(FilePathUtils.ResolveFilePath(vectoPath, auxFile))
+		result = auxConfig.Save(FilePathUtils.ResolveFilePath(aauxPath, auxFile))
 
 		If Not result Then MessageBox.Show(String.Format("Unable to Save the file '{0}'", auxFile))
 
@@ -810,7 +810,7 @@ Public Class frmAuxiliaryConfig
 		'Release existing databindings
 		UnbindAllControls(Me)
 
-		result = auxConfig.Load(FilePathUtils.ResolveFilePath(vectoPath, auxFile))
+		result = auxConfig.Load(FilePathUtils.ResolveFilePath(aauxPath, auxFile))
 
 		If Not result Then
 			MessageBox.Show(String.Format("Unable to load the file '{0}'", auxFile))
@@ -844,7 +844,7 @@ Public Class frmAuxiliaryConfig
 		fbAux.Extensions = New String() {"AALT"}
 
 		Dim suppliedAALTPath As String = txtAlternatorMapPath.Text
-		Dim absoluteAALTPath As String = FilePathUtils.ResolveFilePath(fPATH(vectoFile), suppliedAALTPath)
+		Dim absoluteAALTPath As String = FilePathUtils.ResolveFilePath(aauxPath, suppliedAALTPath)
 		Dim message As String = String.Empty
 		Dim newFile As Boolean = False
 
@@ -859,7 +859,7 @@ Public Class frmAuxiliaryConfig
 		'If file Exists, Check validity, else fire up a default SSM Config.
 		If fileExists Then
 			Try
-				Dim aaltFile As String = FilePathUtils.ResolveFilePath(vectoPath, absoluteAALTPath)
+				Dim aaltFile As String = FilePathUtils.ResolveFilePath(aauxPath, absoluteAALTPath)
 				Dim combinedAlt As ICombinedAlternator = New CombinedAlternator(aaltFile)
 			Catch ex As Exception
 				MessageBox.Show("The supplied .AALT File was invalid, aborting.")
@@ -897,9 +897,9 @@ Public Class frmAuxiliaryConfig
 			Using frm As New frmCombinedAlternators(absoluteAALTPath, New CombinedAlternatorSignals)
 				'If Dialog result is OK, then take action else bail
 				If frm.ShowDialog() = Windows.Forms.DialogResult.OK Then
-					If suppliedAALTPath.Contains(":\") AndAlso Not String.IsNullOrEmpty(vectoPath) Then
+					If suppliedAALTPath.Contains(":\") AndAlso Not String.IsNullOrEmpty(aauxPath) Then
 						txtAlternatorMapPath.Text =
-							If(suppliedAALTPath.Contains(vectoPath), suppliedAALTPath.Replace(vectoPath, ""), suppliedAALTPath)
+							If(suppliedAALTPath.Contains(aauxPath), suppliedAALTPath.Replace(aauxPath, ""), suppliedAALTPath)
 					Else
 						txtAlternatorMapPath.Text = fFileWoDir(suppliedAALTPath)
 					End If
@@ -923,9 +923,9 @@ Public Class frmAuxiliaryConfig
 		Dim fname As String = fFILE(vectoFile, True)
 
 		fbAux.Extensions = New String() {"ACMP"}
-		If fbAux.OpenDialog(fPATH(vectoFile)) Then
+		If fbAux.OpenDialog(Path.Combine(aauxPath, txtCompressorMap.Text)) Then
 
-			txtCompressorMap.Text = fFileWoDir(fbAux.Files(0), fPATH(vectoFile))
+			txtCompressorMap.Text = GetRelativePath(fbAux.Files(0), aauxPath)
 
 		End If
 
@@ -947,9 +947,9 @@ Public Class frmAuxiliaryConfig
 		Dim fname As String = fFILE(vectoFile, True)
 
 		fbAux.Extensions = New String() {"APAC"}
-		If fbAux.OpenDialog(fPATH(vectoFile)) Then
+		If fbAux.OpenDialog(Path.Combine(aauxPath, txtActuationsMap.Text)) Then
 
-			txtActuationsMap.Text = fFileWoDir(fbAux.Files(0), fPATH(vectoFile))
+			txtActuationsMap.Text = GetRelativePath(fbAux.Files(0), aauxPath)
 
 		End If
 
@@ -974,14 +974,14 @@ Public Class frmAuxiliaryConfig
 
 		fbAux.Extensions = New String() {"abdb"}
 
-		If fbAux.OpenDialog(fPATH(vectoFile)) Then
+		If fbAux.OpenDialog(Path.Combine(Path.GetDirectoryName(auxFile), txtBusDatabaseFilePath.Text)) Then
 
 			txtBusDatabaseFilePath.Focus()
-			txtBusDatabaseFilePath.Text = fFileWoDir(fbAux.Files(0), fPATH(vectoFile))
+			txtBusDatabaseFilePath.Text = GetRelativePath(fbAux.Files(0), Path.GetDirectoryName(auxFile))
 
 			Dim busDB As New BusDatabase()
 
-			If Not busDB.Initialise(FilePathUtils.ResolveFilePath(vectoPath, txtBusDatabaseFilePath.Text)) Then
+			If Not busDB.Initialise(FilePathUtils.ResolveFilePath(aauxPath, txtBusDatabaseFilePath.Text)) Then
 
 				MessageBox.Show("Unable to load")
 
@@ -1001,8 +1001,8 @@ Public Class frmAuxiliaryConfig
 		fbAux.Extensions = New String() {"AHSM"}
 
 		Dim suppliedSSMPath As String = txtSSMFilePath.Text.Trim()
-		Dim absoluteSSMPath As String = FilePathUtils.ResolveFilePath(fPATH(vectoFile), suppliedSSMPath)
-		Dim absoluteBusDatabasePath As String = FilePathUtils.ResolveFilePath(fPATH(vectoFile),
+		Dim absoluteSSMPath As String = FilePathUtils.ResolveFilePath(aauxPath, suppliedSSMPath)
+		Dim absoluteBusDatabasePath As String = FilePathUtils.ResolveFilePath(aauxPath,
 																			Me.txtBusDatabaseFilePath.Text.Trim())
 		Dim message As String = String.Empty
 		Dim newFile As Boolean = False
@@ -1019,7 +1019,7 @@ Public Class frmAuxiliaryConfig
 		If File.Exists(absoluteSSMPath) Then
 			'is file valid Try ahsm - HVac Steady State Model
 			Try
-				Dim ahsmFile As String = FilePathUtils.ResolveFilePath(vectoPath, absoluteSSMPath)
+				Dim ahsmFile As String = FilePathUtils.ResolveFilePath(aauxPath, absoluteSSMPath)
 				Dim ssmTool As SSMTOOL = New SSMTOOL(ahsmFile, New HVACConstants, False)
 				ssmTool.Load(ahsmFile)
 			Catch ex As Exception
@@ -1035,9 +1035,9 @@ Public Class frmAuxiliaryConfig
 
 				'Find / Create  file and configure.
 				If fbAux.CustomDialog(absoluteSSMPath, False, False, tFbExtMode.ForceExt, False, String.Empty) Then
-					txtSSMFilePath.Text = fFileWoDir(fbAux.Files(0), fPATH(vectoFile))
+					txtSSMFilePath.Text = GetRelativePath(fbAux.Files(0), aauxPath)
 					suppliedSSMPath = txtSSMFilePath.Text
-					absoluteSSMPath = FilePathUtils.ResolveFilePath(fPATH(vectoFile), suppliedSSMPath)
+					absoluteSSMPath = FilePathUtils.ResolveFilePath(aauxPath, suppliedSSMPath)
 					If _
 						IO.File.Exists(absoluteSSMPath) OrElse
 						MsgBox("Do you want to create a new .AHSM file?", MsgBoxStyle.YesNo) = MsgBoxResult.Yes Then
@@ -1056,9 +1056,9 @@ Public Class frmAuxiliaryConfig
 
 			Using frm As New frmHVACTool(absoluteBusDatabasePath, absoluteSSMPath, vectoFile, Not fileExists)
 				If frm.ShowDialog() = Windows.Forms.DialogResult.OK Then
-					If suppliedSSMPath.Contains(":\") AndAlso Not String.IsNullOrEmpty(vectoPath) Then
+					If suppliedSSMPath.Contains(":\") AndAlso Not String.IsNullOrEmpty(aauxPath) Then
 						txtSSMFilePath.Text =
-							If(suppliedSSMPath.Contains(vectoPath), suppliedSSMPath.Replace(vectoPath, ""), suppliedSSMPath)
+							If(suppliedSSMPath.Contains(aauxPath), suppliedSSMPath.Replace(aauxPath, ""), suppliedSSMPath)
 					Else
 						txtSSMFilePath.Text = fFileWoDir(suppliedSSMPath)
 					End If
@@ -1233,7 +1233,7 @@ Public Class frmAuxiliaryConfig
 
 		Try
 
-			If ssmMap.SetValuesFromMap(FilePathUtils.ResolveFilePath(vectoPath, txtSSMFilePath.Text), message) Then
+			If ssmMap.SetValuesFromMap(FilePathUtils.ResolveFilePath(aauxPath, txtSSMFilePath.Text), message) Then
 
 				Return ssmMap
 

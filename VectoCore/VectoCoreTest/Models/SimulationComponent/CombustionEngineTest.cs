@@ -268,7 +268,8 @@ namespace TUGraz.VectoCore.Tests.Models.SimulationComponent
 			var container = new VehicleContainer(ExecutionMode.Engineering);
 			var gearbox = new MockGearbox(container);
 			var engineData = MockSimulationDataFactory.CreateEngineDataFromFile(CoachEngine);
-
+			var vehicle = new MockVehicle(container);
+			vehicle.MyVehicleSpeed = 0.SI<MeterPerSecond>();
 			var engine = new CombustionEngine(container, engineData);
 			var clutch = new Clutch(container, engineData);
 
@@ -391,7 +392,7 @@ namespace TUGraz.VectoCore.Tests.Models.SimulationComponent
 			ITnOutPort requestPort;
 			VehicleContainer(TruckEngine, out container, out engine, out requestPort);
 
-			//var dataWriter = new ModalDataWriter("EngienIdle.vmod");
+			//var dataWriter = new ModalDataWriter("EngineIdle.vmod");
 			//container.DataWriter = dataWriter;
 
 			var absTime = 0.SI<Second>();
@@ -408,11 +409,13 @@ namespace TUGraz.VectoCore.Tests.Models.SimulationComponent
 			absTime += dt;
 
 			var engineSpeed = new[] {
-				1424.880363, 1201.792595, 998.6912421, 805.9863296, 612.5096277, 560, 560, 560, 560, 560, 560, 560, 560, 560, 560, 560, 560, 560, 560, 560
+				1439.5773, 1225.5363, 1026.6696, 834.1936, 641.1360, 560, 560, 560, 560, 560, 560, 560, 560, 560, 560, 560, 560, 560,
+				560, 560
 			};
 
 			var enginePower = new[] {
-				 -36967.12485, -26488.767985,  -19531.94034,  -14611.27653,  -10490.89891, 1524.83684282497, 5000, 5000, 5000, 5000, 5000, 5000, 5000, 5000, 5000, 5000, 5000, 5000, 5000, 5000
+				-37334.1588, -27198.2777, -20280.7550, -15216.7221, -11076.6656, -500.7991, 5000, 5000, 5000, 5000, 5000, 5000, 5000,
+				5000, 5000, 5000, 5000, 5000, 5000, 5000
 			};
 
 			var fld = engine.ModelData.FullLoadCurve;
@@ -428,9 +431,6 @@ namespace TUGraz.VectoCore.Tests.Models.SimulationComponent
 				engSpeedResults.Add(new { absTime, engine.PreviousState.EngineSpeed, engine.PreviousState.EnginePower });
 				Assert.AreEqual(engineSpeed[i], engine.PreviousState.EngineSpeed.AsRPM, Tolerance, string.Format("entry {0}", i));
 				Assert.AreEqual(enginePower[i], engine.PreviousState.EnginePower.Value(), Tolerance, string.Format("entry {0}", i));
-
-				//Debug.WriteLine("{0} / {1}", engine.PreviousState.EngineSpeed.AsRPM, engine.PreviousState.EnginePower.Value());
-
 				absTime += dt;
 			}
 			//dataWriter.Finish();
@@ -534,7 +534,8 @@ namespace TUGraz.VectoCore.Tests.Models.SimulationComponent
 			aux.AddConstant("CONST", 5000.SI<Watt>());
 
 			gearbox.Gear = 1;
-
+			var vehicle = new MockVehicle(container);
+			vehicle.MyVehicleSpeed = 0.SI<MeterPerSecond>();
 			//gearbox.InPort().Connect(engine.OutPort());
 			gearbox.InPort().Connect(clutch.OutPort());
 			clutch.InPort().Connect(engine.OutPort());

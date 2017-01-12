@@ -41,7 +41,7 @@ namespace TUGraz.VectoCore.Models.Declaration
 	{
 		protected override string ResourceId
 		{
-			get { return "TUGraz.VectoCore.Resources.Declaration.VCDV.parameters.csv"; }
+			get { return DeclarationData.DeclarationDataResourcePrefix + ".VCDV.parameters.csv"; }
 		}
 
 		protected override string ErrorMessage
@@ -54,22 +54,6 @@ namespace TUGraz.VectoCore.Models.Declaration
 			Data = table.Rows.Cast<DataRow>().ToDictionary(
 				row => row.Field<string>("Parameters"),
 				row => new Entry(row.ParseDouble("a1"), row.ParseDouble("a2"), row.ParseDouble("a3")));
-		}
-
-		public Entry Lookup(VehicleCategory category)
-		{
-			switch (category) {
-				case VehicleCategory.CityBus:
-				case VehicleCategory.InterurbanBus:
-				case VehicleCategory.Coach:
-					return Lookup("CoachBus");
-				case VehicleCategory.Tractor:
-					return Lookup("TractorSemitrailer");
-				case VehicleCategory.RigidTruck:
-					return Lookup("RigidSolo");
-				default:
-					throw new ArgumentOutOfRangeException("category", category, null);
-			}
 		}
 
 		public class Entry

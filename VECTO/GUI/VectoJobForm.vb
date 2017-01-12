@@ -71,7 +71,7 @@ Public Class VectoJobForm
 			TabControl1.TabPages(x).Show()
 		Next
 
-		LvAux.Columns(AuxViewColumns.AuxInputOrTech).Width = -2
+		LvAux.Columns(AuxViewColumns.AuxInputOrTech).Width = - 2
 
 		'Declaration Mode
 		If Cfg.DeclMode Then
@@ -393,7 +393,7 @@ Public Class VectoJobForm
 		Dim vectoJob As IEngineeringJobInputData = Nothing
 		Dim inputData As IEngineeringInputDataProvider = Nothing
 		Try
-			inputData = TryCast(JSONInputDataFactory.ReadComponentData(file), 
+			inputData = TryCast(JSONInputDataFactory.ReadComponentData(file),
 								IEngineeringInputDataProvider)
 			vectoJob = inputData.JobInputData()
 		Catch ex As Exception
@@ -408,7 +408,7 @@ Public Class VectoJobForm
 					Close()
 					MainForm.RbDecl.Checked = Not MainForm.RbDecl.Checked
 					MainForm.OpenVectoFile(file)
-				Case -1
+				Case - 1
 					Exit Sub
 			End Select
 		End If
@@ -832,7 +832,7 @@ Public Class VectoJobForm
 		'_auxDialog.CbType.Text = ""
 		_auxDialog.TbID.Text = ""	'!!! Set Type before ID, because changing the type will overwrite the id !!!
 
-lbDlog:
+		lbDlog:
 		If _auxDialog.ShowDialog = DialogResult.OK Then
 
 			id = UCase(Trim(_auxDialog.TbID.Text))
@@ -881,7 +881,8 @@ lbDlog:
 		If selItem.SubItems(AuxViewColumns.AuxID).Text <> AuxiliaryTypeHelper.GetAuxKey(AuxiliaryType.SteeringPump) Then
 			_auxDialog.NumAxles = 0
 		Else
-			_auxDialog.NumAxles = If(String.IsNullOrWhiteSpace(TbAxleConf.Text), 1, AxleConfigurationHelper.Parse(TbAxleConf.Text).NumAxles())
+			_auxDialog.NumAxles =
+				If(String.IsNullOrWhiteSpace(TbAxleConf.Text), 1, AxleConfigurationHelper.Parse(TbAxleConf.Text).NumAxles())
 
 		End If
 
@@ -902,14 +903,15 @@ lbDlog:
 
 			End If
 		Else
-			_auxDialog.CbTech.SelectedIndex = -1
+			_auxDialog.CbTech.SelectedIndex = - 1
 			_auxDialog.TbPath.Text = selItem.SubItems(AuxViewColumns.AuxInputOrTech).Text
 		End If
 
 		'_auxDialog.TbID.Text = selItem.SubItems(AuxViewColumns.AuxID).Text	
 
 		If _auxDialog.ShowDialog = DialogResult.OK Then
-			selItem.SubItems(AuxViewColumns.AuxID).Text = _auxDialog.CbType.SelectedValue.ToString() 'UCase(Trim(_auxDialog.TbID.Text))
+			selItem.SubItems(AuxViewColumns.AuxID).Text = _auxDialog.CbType.SelectedValue.ToString() _
+			'UCase(Trim(_auxDialog.TbID.Text))
 			selItem.SubItems(AuxViewColumns.AuxType).Text = _auxDialog.CbType.Text
 
 			If Cfg.DeclMode Then
@@ -973,11 +975,6 @@ lbDlog:
 	End Sub
 
 #Region "Cycle list"
-
-	Private Sub LvCycles_DoubleClick(sender As Object, e As EventArgs) Handles LvCycles.DoubleClick
-		If LvCycles.SelectedItems.Count > 0 Then _
-			OpenFiles(FileRepl(LvCycles.SelectedItems(0).SubItems(0).Text, GetPath(VectoFile)))
-	End Sub
 
 	Private Sub LvCycles_KeyDown(sender As Object, e As KeyEventArgs) Handles LvCycles.KeyDown
 		Select Case e.KeyCode
@@ -1159,7 +1156,7 @@ lbDlog:
 				If(Not String.IsNullOrWhiteSpace(VectoFile), Path.Combine(Path.GetDirectoryName(VectoFile), TbGBX.Text), TbGBX.Text)
 		If File.Exists(gearboxFile) Then
 			Try
-				Dim inputData As IEngineeringInputDataProvider = TryCast(JSONInputDataFactory.ReadComponentData(gearboxFile), 
+				Dim inputData As IEngineeringInputDataProvider = TryCast(JSONInputDataFactory.ReadComponentData(gearboxFile),
 																		IEngineeringInputDataProvider)
 				gearbox = inputData.GearboxInputData
 			Catch
@@ -1242,7 +1239,7 @@ lbDlog:
 				If(Not String.IsNullOrWhiteSpace(VectoFile), Path.Combine(Path.GetDirectoryName(VectoFile), TbENG.Text), TbENG.Text)
 		If File.Exists(engineFile) Then
 			Try
-				Dim inputData As IEngineeringInputDataProvider = TryCast(JSONInputDataFactory.ReadComponentData(engineFile), 
+				Dim inputData As IEngineeringInputDataProvider = TryCast(JSONInputDataFactory.ReadComponentData(engineFile),
 																		IEngineeringInputDataProvider)
 				engine = inputData.EngineInputData
 			Catch
@@ -1285,10 +1282,10 @@ lbDlog:
 		s.Name = "Motoring"
 		chart.Series.Add(s)
 
-		pmax = fullLoadCurve.MaxPower.Value() / 1000 'FLD0.Pfull(FLD0.EngineRatedSpeed)
+		pmax = fullLoadCurve.MaxPower.Value()/1000 'FLD0.Pfull(FLD0.EngineRatedSpeed)
 
 
-		TbEngTxt.Text = String.Format("{0} l {1} kw {2}", (engine.Displacement.Value() * 1000).ToString("0.0"),
+		TbEngTxt.Text = String.Format("{0} l {1} kw {2}", (engine.Displacement.Value()*1000).ToString("0.0"),
 									pmax.ToString("#"), engine.ModelName)
 
 		Dim fuelConsumptionMap As FuelConsumptionMap = FuelConsumptionMapReader.Create(engine.FuelConsumptionMap)
@@ -1312,7 +1309,7 @@ lbDlog:
 				If(Not String.IsNullOrWhiteSpace(VectoFile), Path.Combine(Path.GetDirectoryName(VectoFile), TbVEH.Text), TbVEH.Text)
 		If File.Exists(vehicleFile) Then
 			Try
-				Dim inputData As IEngineeringInputDataProvider = TryCast(JSONInputDataFactory.ReadComponentData(vehicleFile), 
+				Dim inputData As IEngineeringInputDataProvider = TryCast(JSONInputDataFactory.ReadComponentData(vehicleFile),
 																		IEngineeringInputDataProvider)
 				vehicle = inputData.VehicleInputData
 			Catch
@@ -1325,7 +1322,7 @@ lbDlog:
 
 		Dim s0 As Segment = Nothing
 		Try
-			s0 = DeclarationData.Segments.Lookup(vehicle.VehicleCategory, vehicle.AxleConfiguration, maxMass, 0.SI(Of Kilogram),
+			s0 = DeclarationData.Segments.Lookup(vehicle.VehicleCategory, vehicle.AxleConfiguration, maxMass, 0.SI (Of Kilogram),
 												True)
 		Catch
 		End Try
@@ -1344,12 +1341,12 @@ lbDlog:
 
 		End If
 
-		PicVehicle.Image = ConvPicPath(If(s0 Is Nothing, -1, HDVclass.ToInt()), False) _
+		PicVehicle.Image = ConvPicPath(If(s0 Is Nothing, - 1, HDVclass.ToInt()), False) _
 		'Image.FromFile(cDeclaration.ConvPicPath(HDVclass, False))
 
 		TbHVCclass.Text = String.Format("HDV Class {0}", HDVclass)
 		TbVehCat.Text = vehicle.VehicleCategory.GetCategoryName()	'ConvVehCat(VEH0.VehCat, True)
-		TbMass.Text = (vehicle.GrossVehicleMassRating.Value() / 1000) & " t"
+		TbMass.Text = (vehicle.GrossVehicleMassRating.Value()/1000) & " t"
 		TbAxleConf.Text = vehicle.AxleConfiguration.GetName()	'ConvAxleConf(VEH0.AxleConf)
 	End Sub
 
@@ -1392,7 +1389,7 @@ lbDlog:
 	Private Sub picAuxInfo_MouseEnter(sender As Object, e As EventArgs) Handles picAuxInfo.MouseEnter
 
 
-		If cboAdvancedAuxiliaries.SelectedIndex = -1 Then Exit Sub
+		If cboAdvancedAuxiliaries.SelectedIndex = - 1 Then Exit Sub
 
 		'Get tooltip
 		Dim item As AdvancedAuxiliary
@@ -1519,7 +1516,14 @@ lbDlog:
 																		GetPath(VectoFile))
 	End Sub
 
-	Private Sub Label6_Click(sender As Object, e As EventArgs) Handles Label6.Click
+	Private Sub LvCycles_MouseClick(sender As Object, e As MouseEventArgs) Handles LvCycles.MouseClick
+		If e.Button = MouseButtons.Right AndAlso LvCycles.SelectedItems.Count > 0 Then
+			OpenFiles(FileRepl(LvCycles.SelectedItems(0).SubItems(0).Text, GetPath(VectoFile)))
+		End If
+	End Sub
+
+	Private Sub LvAux_SelectedIndexChanged(sender As Object, e As EventArgs) Handles LvAux.SelectedIndexChanged
+
 	End Sub
 End Class
 

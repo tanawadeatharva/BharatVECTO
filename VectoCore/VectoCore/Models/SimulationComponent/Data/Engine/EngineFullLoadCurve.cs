@@ -71,15 +71,12 @@ namespace TUGraz.VectoCore.Models.SimulationComponent.Data.Engine
 			return Formulas.TorqueToPower(DragLoadStationaryTorque(angularVelocity), angularVelocity);
 		}
 
-
 		public CombustionEngineData EngineData { get; internal set; }
-
 
 		public Second PT1(PerSecond angularVelocity)
 		{
 			return PT1Data.Lookup(angularVelocity);
 		}
-
 
 		/// <summary>
 		///	Get the engine's preferred speed from the given full-load curve (i.e. Speed at 51% torque/speed-integral between idling and N95h.)
@@ -105,7 +102,6 @@ namespace TUGraz.VectoCore.Models.SimulationComponent.Data.Engine
 			get { return _n95hSpeed ?? (_n95hSpeed = FindEngineSpeedForPower(0.95 * MaxPower).Last()); }
 		}
 
-
 		public PerSecond LoSpeed
 		{
 			get { return _engineSpeedLo ?? (_engineSpeedLo = FindEngineSpeedForPower(0.55 * MaxPower).First()); }
@@ -116,7 +112,6 @@ namespace TUGraz.VectoCore.Models.SimulationComponent.Data.Engine
 			get { return _engineSpeedHi ?? (_engineSpeedHi = FindEngineSpeedForPower(0.7 * MaxPower).Last()); }
 		}
 
-
 		public NewtonMeter MaxLoadTorque
 		{
 			get { return FullLoadEntries.Max(x => x.TorqueFullLoad); }
@@ -126,7 +121,6 @@ namespace TUGraz.VectoCore.Models.SimulationComponent.Data.Engine
 		{
 			get { return FullLoadEntries.Min(x => x.TorqueDrag); }
 		}
-
 
 		private void ComputePreferredSpeed()
 		{
@@ -161,10 +155,10 @@ namespace TUGraz.VectoCore.Models.SimulationComponent.Data.Engine
 			// area = (M(n1) + M(n2))/2 * (n2 - n1) => solve for n2
 			var retVal = VectoMath.QuadraticEquationSolver(k.Value() / 2.0, d.Value(),
 				(-k * p1.EngineSpeed * p1.EngineSpeed / 2 - p1.EngineSpeed * d - area).Value());
-			if (retVal.Count == 0) {
+			if (retVal.Length == 0) {
 				Log.Info("No real solution found for requested area: P: {0}, p1: {1}, p2: {2}", area, p1, p2);
 			}
-			return retVal.First(x => x >= p1.EngineSpeed && x <= p2.EngineSpeed).SI<PerSecond>();
+			return retVal.First(x => x.IsBetween(p1.EngineSpeed, p2.EngineSpeed)).SI<PerSecond>();
 		}
 
 		private List<PerSecond> FindEngineSpeedForPower(Watt power)
@@ -178,26 +172,27 @@ namespace TUGraz.VectoCore.Models.SimulationComponent.Data.Engine
 			return retVal;
 		}
 
-		private List<PerSecond> FindEngineSpeedForPower(FullLoadCurveEntry p1, FullLoadCurveEntry p2, Watt power)
+		private IEnumerable<PerSecond> FindEngineSpeedForPower(FullLoadCurveEntry p1, FullLoadCurveEntry p2, Watt power)
 		{
 			var k = (p2.TorqueFullLoad - p1.TorqueFullLoad) / (p2.EngineSpeed - p1.EngineSpeed);
 			var d = p2.TorqueFullLoad - k * p2.EngineSpeed;
 
-			var retVal = new List<PerSecond>();
 			if (k.IsEqual(0, 0.0001)) {
-				// constant torque, solve linear equation
+				// constant torque: solve linear equation
 				// power = M * n_eng_avg
-				retVal.Add(power / d);
-			} else {
-				// non-constant torque, solve quadratic equation for engine speed (n_eng_avg)
-				// power = M(n_eng_avg) * n_eng_avg = (k * n_eng_avg + d) * n_eng_avg =  k * n_eng_avg^2 + d * n_eng_avg
-				retVal = VectoMath.QuadraticEquationSolver(k.Value(), d.Value(), -power.Value()).SI<PerSecond>().ToList();
-				if (retVal.Count == 0) {
-					Log.Info("No real solution found for requested power demand: P: {0}, p1: {1}, p2: {2}", power, p1, p2);
+				if (d.IsEqual(0, 0.0001)) {
+					return new List<PerSecond>();
 				}
+				return (power / d).ToEnumerable();
 			}
-			retVal = retVal.Where(x => x >= p1.EngineSpeed && x <= p2.EngineSpeed).ToList();
-			return retVal;
+
+			// non-constant torque: solve quadratic equation for engine speed (n_eng_avg)
+			// power = M(n_eng_avg) * n_eng_avg = (k * n_eng_avg + d) * n_eng_avg =  k * n_eng_avg^2 + d * n_eng_avg
+			var retVal = VectoMath.QuadraticEquationSolver(k.Value(), d.Value(), -power.Value());
+			if (retVal.Length == 0) {
+				Log.Info("No real solution found for requested power demand: P: {0}, p1: {1}, p2: {2}", power, p1, p2);
+			}
+			return retVal.Where(x => x >= p1.EngineSpeed && x <= p2.EngineSpeed).Select(x => x.SI<PerSecond>());
 		}
 
 		protected internal Watt ComputeArea(PerSecond lowEngineSpeed, PerSecond highEngineSpeed)

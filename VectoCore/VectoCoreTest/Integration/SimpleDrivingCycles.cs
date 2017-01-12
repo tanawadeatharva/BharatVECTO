@@ -30,7 +30,9 @@
 */
 
 using System.Diagnostics.CodeAnalysis;
+using TUGraz.VectoCore.Configuration;
 using TUGraz.VectoCore.InputData.Reader;
+using TUGraz.VectoCore.Models.Declaration;
 using TUGraz.VectoCore.Models.SimulationComponent.Data;
 using TUGraz.VectoCore.Tests.Utils;
 using TUGraz.VectoCore.Utils;
@@ -277,7 +279,9 @@ namespace TUGraz.VectoCore.Tests.Integration
 
 		public static DrivingCycleData ReadDeclarationCycle(string missionType)
 		{
-			var cycleData = RessourceHelper.ReadStream(RessourceHelper.Namespace + "MissionCycles." + missionType + ".vdri");
+			var cycleData =
+				RessourceHelper.ReadStream(DeclarationData.DeclarationDataResourcePrefix + ".MissionCycles." + missionType +
+											Constants.FileExtensions.CycleFile);
 			var cycle = DrivingCycleDataReader.ReadFromStream(cycleData, CycleType.DistanceBased, "", false);
 			return cycle;
 		}

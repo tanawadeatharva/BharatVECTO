@@ -270,16 +270,19 @@ Partial Class VehicleAuxiliariesDialog
 		'VehicleAuxiliariesDialog
 		'
 		Me.AcceptButton = Me.OK_Button
+		Me.AutoScaleDimensions = New System.Drawing.SizeF(6.0!, 13.0!)
+		Me.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font
 		Me.CancelButton = Me.Cancel_Button
 		Me.ClientSize = New System.Drawing.Size(459, 174)
 		Me.Controls.Add(Me.PnFile)
 		Me.Controls.Add(Me.PnTech)
 		Me.Controls.Add(Me.TableLayoutPanel1)
+		Me.FormBorderStyle = System.Windows.Forms.FormBorderStyle.FixedToolWindow
 		Me.MaximizeBox = False
 		Me.MinimizeBox = False
 		Me.Name = "VehicleAuxiliariesDialog"
 		Me.ShowInTaskbar = False
-		Me.StartPosition = System.Windows.Forms.FormStartPosition.CenterParent
+		Me.StartPosition = System.Windows.Forms.FormStartPosition.CenterScreen
 		Me.Text = "Auxiliary"
 		Me.TableLayoutPanel1.ResumeLayout(False)
 		Me.PnTech.ResumeLayout(False)

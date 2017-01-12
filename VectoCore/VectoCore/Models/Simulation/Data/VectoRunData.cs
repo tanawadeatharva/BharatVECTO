@@ -62,16 +62,12 @@ namespace TUGraz.VectoCore.Models.Simulation.Data
 		public AngledriveData AngledriveData { get; internal set; }
 
 		[Required, ValidateObject]
-		public DrivingCycleData Cycle { get; internal set; }
+		public IDrivingCycleData Cycle { get; internal set; }
 
 		[ValidateObject]
 		public IEnumerable<AuxData> Aux { get; internal set; }
 
 		public AdvancedAuxData AdvancedAux { get; internal set; }
-
-		// todo mk 2016-08-30: property is never used. Delete?
-		[ValidateObject]
-		public string AccelerationLimitingFile { get; internal set; }
 
 		[ValidateObject]
 		public RetarderData Retarder { get; internal set; }
@@ -90,7 +86,7 @@ namespace TUGraz.VectoCore.Models.Simulation.Data
 		public string ModFileSuffix { get; set; }
 
 		[ValidateObject]
-		public DeclarationReport Report { get; set; }
+		public IDeclarationReport Report { get; set; }
 
 		[Required, ValidateObject]
 		public LoadingType Loading { get; set; }
@@ -141,8 +137,9 @@ namespace TUGraz.VectoCore.Models.Simulation.Data
 					for (var angularVelocity = engineData.IdleSpeed;
 						angularVelocity < engineData.FullLoadCurve.RatedSpeed;
 						angularVelocity += 2.0 / 3.0 * (engineData.FullLoadCurve.RatedSpeed - engineData.IdleSpeed) / 10.0) {
-						if (!gear.Value.HasLockedGear)
+						if (!gear.Value.HasLockedGear) {
 							continue;
+						}
 
 						var velocity = angularVelocity / gear.Value.Ratio / angledriveRatio / axlegearRatio * dynamicTyreRadius;
 
@@ -173,7 +170,7 @@ namespace TUGraz.VectoCore.Models.Simulation.Data
 								}
 							} catch (VectoException) {
 								return new ValidationResult(
-									string.Format("Interpolation of Angledrive-LossMap failed with torque={1} and angularSpeed={2}", gear.Key,
+									string.Format("Interpolation of Angledrive-LossMap failed with torque={0} and angularSpeed={1}",
 										angledriveTorque, (angularVelocity / gear.Value.Ratio).ConvertTo().Rounds.Per.Minute));
 							}
 
@@ -185,8 +182,8 @@ namespace TUGraz.VectoCore.Models.Simulation.Data
 									return
 										new ValidationResult(
 											string.Format(
-										"Interpolation of AxleGear-LossMap failed with torque={0} and angularSpeed={1} (gear={2}, velocity={3})",
-										axlegearTorque, axleAngularVelocity.ConvertTo().Rounds.Per.Minute, gear.Key, velocity));
+												"Interpolation of AxleGear-LossMap failed with torque={0} and angularSpeed={1} (gear={2}, velocity={3})",
+												axlegearTorque, axleAngularVelocity.ConvertTo().Rounds.Per.Minute, gear.Key, velocity));
 								}
 							}
 						}
@@ -194,9 +191,10 @@ namespace TUGraz.VectoCore.Models.Simulation.Data
 				}
 			}
 
-			if (runData.Cycle.Entries.Any(e => e.PTOActive)) {
-				if (runData.PTO == null || runData.PTO.PTOCycle == null)
+			if (runData.Cycle != null && runData.Cycle.Entries.Any(e => e.PTOActive)) {
+				if (runData.PTO == null || runData.PTO.PTOCycle == null) {
 					return new ValidationResult("PTOCycle is used in DrivingCycle, but is not defined in Vehicle-Data.");
+				}
 			}
 
 			return ValidationResult.Success;

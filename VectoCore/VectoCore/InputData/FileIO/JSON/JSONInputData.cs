@@ -32,10 +32,8 @@
 using Newtonsoft.Json.Linq;
 using System;
 using System.Collections.Generic;
-using System.Data;
 using System.IO;
 using System.Linq;
-using System.Text;
 using TUGraz.VectoCommon.Exceptions;
 using TUGraz.VectoCommon.InputData;
 using TUGraz.VectoCommon.Models;
@@ -345,9 +343,9 @@ namespace TUGraz.VectoCore.InputData.FileIO.JSON
 						cycleData = VectoCSVFile.Read(cycleFile);
 					} else {
 						try {
-							var cycleDataRes =
-								RessourceHelper.ReadStream(RessourceHelper.Namespace + "MissionCycles." + cycle.Value<string>() + ".vdri");
-							cycleData = VectoCSVFile.ReadStream(cycleDataRes);
+							var resourceName = DeclarationData.DeclarationDataResourcePrefix + ".MissionCycles." +
+												cycle.Value<string>() + Constants.FileExtensions.CycleFile;
+							cycleData = VectoCSVFile.ReadStream(RessourceHelper.ReadStream(resourceName), source: resourceName);
 						} catch {
 							Log.Debug("Driving Cycle could not be read: " + cycleFile);
 							throw new VectoException("Driving Cycle could not be read: " + cycleFile);
@@ -477,16 +475,17 @@ namespace TUGraz.VectoCore.InputData.FileIO.JSON
 				var acceleration = Body[JsonKeys.DriverData_AccelerationCurve];
 				if (acceleration == null || EmptyOrInvalidFileName(acceleration.Value<string>())) {
 					return null;
-//					throw new VectoException("AccelerationCurve (VACC) required");
+					//					throw new VectoException("AccelerationCurve (VACC) required");
 				}
 				try {
 					return ReadTableData(acceleration.Value<string>(), "DriverAccelerationCurve", true);
 				} catch (VectoException e) {
 					Log.Warn("Could not find file for acceleration curve. Trying lookup in declaration data.");
 					try {
-						var cycleDataRes = RessourceHelper.ReadStream(RessourceHelper.Namespace + "VACC." + acceleration.Value<string>() +
-																	Constants.FileExtensions.DriverAccelerationCurve);
-						return VectoCSVFile.ReadStream(cycleDataRes);
+						var resourceName = DeclarationData.DeclarationDataResourcePrefix + ".VACC." +
+											acceleration.Value<string>() +
+											Constants.FileExtensions.DriverAccelerationCurve;
+						return VectoCSVFile.ReadStream(RessourceHelper.ReadStream(resourceName), source: resourceName);
 					} catch (Exception) {
 						throw new VectoException("Failed to read Driver Acceleration Curve: " + e.Message, e);
 					}
@@ -556,14 +555,8 @@ namespace TUGraz.VectoCore.InputData.FileIO.JSON
 				if (auxFile == null || EmptyOrInvalidFileName(auxFile.Value<string>())) {
 					continue;
 				}
-				var stream = new StreamReader(Path.Combine(BasePath, auxFile.Value<string>()));
-				stream.ReadLine(); // skip header "Transmission ration to engine rpm [-]"
-				auxData.TransmissionRatio = stream.ReadLine().IndulgentParse();
-				stream.ReadLine(); // skip header "Efficiency to engine [-]"
-				auxData.EfficiencyToEngine = stream.ReadLine().IndulgentParse();
-				stream.ReadLine(); // skip header "Efficiency auxiliary to supply [-]"
-				auxData.EfficiencyToSupply = stream.ReadLine().IndulgentParse();
-				auxData.DemandMap = VectoCSVFile.ReadStream(new MemoryStream(Encoding.UTF8.GetBytes(stream.ReadToEnd())), source: Path.Combine(BasePath, auxFile.Value<string>()));
+
+				AuxiliaryFileHelper.FillAuxiliaryDataInputData(auxData, Path.Combine(BasePath, auxFile.Value<string>()));
 			}
 			return retVal;
 		}
@@ -635,14 +628,7 @@ namespace TUGraz.VectoCore.InputData.FileIO.JSON
 				if (auxFile == null || EmptyOrInvalidFileName(auxFile.Value<string>())) {
 					continue;
 				}
-				var stream = new StreamReader(Path.Combine(BasePath, auxFile.Value<string>()));
-				stream.ReadLine(); // skip header "Transmission ration to engine rpm [-]"
-				auxData.TransmissionRatio = stream.ReadLine().IndulgentParse();
-				stream.ReadLine(); // skip header "Efficiency to engine [-]"
-				auxData.EfficiencyToEngine = stream.ReadLine().IndulgentParse();
-				stream.ReadLine(); // skip header "Efficiency auxiliary to supply [-]"
-				auxData.EfficiencyToSupply = stream.ReadLine().IndulgentParse();
-				auxData.DemandMap = VectoCSVFile.ReadStream(new MemoryStream(Encoding.UTF8.GetBytes(stream.ReadToEnd())), source: Path.Combine(BasePath, auxFile.Value<string>()));
+				AuxiliaryFileHelper.FillAuxiliaryDataInputData(auxData, Path.Combine(BasePath, auxFile.Value<string>()));
 			}
 			return retVal;
 		}

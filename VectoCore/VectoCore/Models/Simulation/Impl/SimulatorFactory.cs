@@ -44,6 +44,7 @@ using TUGraz.VectoCore.InputData;
 using TUGraz.VectoCore.InputData.Reader.Impl;
 using TUGraz.VectoCore.Models.SimulationComponent.Data;
 using TUGraz.VectoCore.OutputData;
+using TUGraz.VectoCore.OutputData.ModFilter;
 using TUGraz.VectoCore.OutputData.PDF;
 
 namespace TUGraz.VectoCore.Models.Simulation.Impl
@@ -56,7 +57,7 @@ namespace TUGraz.VectoCore.Models.Simulation.Impl
 		private readonly bool _engineOnlyMode;
 
 		public SimulatorFactory(ExecutionMode mode, IInputDataProvider dataProvider, IOutputDataWriter writer,
-			DeclarationReport declarationReport = null)
+			IDeclarationReport declarationReport = null)
 		{
 			Log.Info("########## VectoCore Version {0} ##########", Assembly.GetExecutingAssembly().GetName().Version);
 			JobNumber = Interlocked.Increment(ref _jobNumberCounter);
@@ -102,6 +103,7 @@ namespace TUGraz.VectoCore.Models.Simulation.Impl
 
 		public bool WriteModalResults { get; set; }
 		public bool ModalResults1Hz { get; set; }
+		public bool ActualModalData { get; set; }
 
 		/// <summary>
 		/// Creates powertrain and initializes it with the component's data.
@@ -111,13 +113,21 @@ namespace TUGraz.VectoCore.Models.Simulation.Impl
 		{
 			var i = 0;
 			var modDataFilter = ModalResults1Hz
-				? new IModalDataFilter[] { new ModalDataContainer.ModalData1HzFilter() }
+				? new IModalDataFilter[] { new ModalData1HzFilter() }
 				: null;
+
+			if (ActualModalData) {
+				modDataFilter = new[] { new ActualModalDataFilter(), };
+			}
+
 
 			var warning1Hz = false;
 
 			foreach (var data in DataReader.NextRun()) {
 				var d = data;
+				if (d.Report != null) {
+					d.Report.PrepareResult(d.Loading, d.Mission);
+				}
 				Action<ModalDataContainer> addReportResult = writer => {
 					if (d.Report != null) {
 						d.Report.AddResult(d.Loading, d.Mission, writer);
@@ -131,7 +141,7 @@ namespace TUGraz.VectoCore.Models.Simulation.Impl
 					new ModalDataContainer(data, ModWriter,
 						addReportResult: _mode == ExecutionMode.Declaration ? addReportResult : null,
 						writeEngineOnly: _engineOnlyMode,
-						filter: data.Cycle.CycleType.IsDistanceBased() ? modDataFilter : null) {
+						filter: data.Cycle.CycleType.IsDistanceBased() && ModalResults1Hz || ActualModalData ? modDataFilter : null) {
 							WriteAdvancedAux = data.AdvancedAux != null && data.AdvancedAux.AuxiliaryAssembly == AuxiliaryModel.Advanced,
 							WriteModalResults = _mode != ExecutionMode.Declaration || WriteModalResults
 						};

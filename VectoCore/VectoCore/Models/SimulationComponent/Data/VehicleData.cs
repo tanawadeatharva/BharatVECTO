@@ -126,24 +126,29 @@ namespace TUGraz.VectoCore.Models.SimulationComponent.Data
 
 		public CrossWindCorrectionMode CrossWindCorrectionMode { get; set; }
 
-		public Kilogram TotalVehicleWeight()
+		public Kilogram TotalVehicleWeight
 		{
-			var retVal = 0.SI<Kilogram>();
-			retVal += CurbWeight ?? 0.SI<Kilogram>();
-			retVal += Loading ?? 0.SI<Kilogram>();
-			return retVal;
+			get
+			{
+				var retVal = 0.0;
+				if (CurbWeight != null) {
+					retVal += CurbWeight.Value();
+				}
+				if (Loading != null) {
+					retVal += Loading.Value();
+				}
+				return retVal.SI<Kilogram>();
+			}
 		}
 
-		public Kilogram TotalCurbWeight()
+		public Kilogram TotalCurbWeight
 		{
-			var retVal = 0.SI<Kilogram>();
-			retVal += CurbWeight ?? 0.SI<Kilogram>();
-			return retVal;
+			get { return CurbWeight ?? 0.SI<Kilogram>(); }
 		}
 
 		protected void ComputeRollResistanceAndReducedMassWheels()
 		{
-			if (TotalVehicleWeight() == 0.SI<Kilogram>()) {
+			if (TotalVehicleWeight == 0.SI<Kilogram>()) {
 				throw new VectoException("Total vehicle weight must be greater than 0! Set CurbWeight and Loading before!");
 			}
 			if (DynamicTyreRadius == null) {
@@ -159,7 +164,7 @@ namespace TUGraz.VectoCore.Models.SimulationComponent.Data
 					continue;
 				}
 				var nrWheels = axle.TwinTyres ? 4 : 2;
-				var baseValue = (axle.AxleWeightShare * TotalVehicleWeight() * g / axle.TyreTestLoad / nrWheels).Value();
+				var baseValue = (axle.AxleWeightShare * TotalVehicleWeight * g / axle.TyreTestLoad / nrWheels).Value();
 
 				rrc += axle.AxleWeightShare * axle.RollResistanceCoefficient *
 						Math.Pow(baseValue, Physics.RollResistanceExponent - 1);
@@ -190,7 +195,6 @@ namespace TUGraz.VectoCore.Models.SimulationComponent.Data
 				}
 			}
 
-
 			if (vehicleData.TotalRollResistanceCoefficient <= 0) {
 				return
 					new ValidationResult(string.Format("Total rolling resistance must be greater than 0! {0}",
@@ -212,10 +216,10 @@ namespace TUGraz.VectoCore.Models.SimulationComponent.Data
 			//				vehicleData.AxleConfiguration.GetName(), vehicleData.AxleConfiguration.NumAxles(), vehicleData.AxleData.Count));
 			//}
 
-			if (vehicleData.TotalVehicleWeight() > gvwTotal) {
+			if (vehicleData.TotalVehicleWeight > gvwTotal) {
 				return new ValidationResult(
 					string.Format("Total Vehicle Weight is greater than GrossVehicleWeight! Weight: {0},  GVW: {1}",
-						vehicleData.TotalVehicleWeight(), gvwTotal));
+						vehicleData.TotalVehicleWeight, gvwTotal));
 			}
 			return ValidationResult.Success;
 		}

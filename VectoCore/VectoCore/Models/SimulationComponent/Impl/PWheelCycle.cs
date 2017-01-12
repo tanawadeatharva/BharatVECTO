@@ -44,59 +44,103 @@ namespace TUGraz.VectoCore.Models.SimulationComponent.Impl
 	/// <summary>
 	/// Driving Cycle for the PWheel driving cycle.
 	/// </summary>
-	public class PWheelCycle : PowertrainDrivingCycle, IDriverInfo
+	public class PWheelCycle : PowertrainDrivingCycle, IDriverInfo, IVehicleInfo
 	{
+		private VehicleData _vehicleData;
+
 		/// <summary>
 		/// Initializes a new instance of the <see cref="PWheelCycle"/> class.
 		/// </summary>
 		/// <param name="container">The container.</param>
 		/// <param name="cycle">The cycle.</param>
 		/// <param name="axleRatio">The axle ratio.</param>
+		/// <param name="vehicleData"></param>
 		/// <param name="gearRatios"></param>
-		public PWheelCycle(IVehicleContainer container, DrivingCycleData cycle, double axleRatio,
+		public PWheelCycle(IVehicleContainer container, IDrivingCycleData cycle, double axleRatio, VehicleData vehicleData,
 			IDictionary<uint, double> gearRatios) : base(container, cycle)
 		{
 			// just to ensure that null-gear has ratio 1
 			gearRatios[0] = 1;
-
+			_vehicleData = vehicleData;
 			foreach (var entry in Data.Entries) {
 				entry.WheelAngularVelocity = entry.AngularVelocity / (axleRatio * gearRatios[entry.Gear]);
 				entry.Torque = entry.PWheel / entry.WheelAngularVelocity;
 			}
 		}
 
+		public override IResponse Initialize()
+		{
+			var first = Data.Entries[0];
+			AbsTime = first.Time;
+			var response = NextComponent.Initialize(first.Torque, first.WheelAngularVelocity);
+			response.AbsTime = AbsTime;
+			return response;
+		}
+
 		public override IResponse Request(Second absTime, Second dt)
 		{
-			if (RightSample.Current == null) {
+			if (CycleIterator.LastEntry && CycleIterator.RightSample.Time == absTime) {
 				return new ResponseCycleFinished { Source = this };
 			}
 
 			// interval exceeded
-			if ((absTime + dt).IsGreater(RightSample.Current.Time)) {
+			if (CycleIterator.RightSample != null && (absTime + dt).IsGreater(CycleIterator.RightSample.Time)) {
 				return new ResponseFailTimeInterval {
 					AbsTime = absTime,
 					Source = this,
-					DeltaT = RightSample.Current.Time - absTime
+					DeltaT = CycleIterator.RightSample.Time - absTime
 				};
 			}
 
-			return DoHandleRequest(absTime, dt, LeftSample.Current.WheelAngularVelocity);
+			return DoHandleRequest(absTime, dt, CycleIterator.LeftSample.WheelAngularVelocity);
 		}
 
 		protected override void DoWriteModalResults(IModalDataContainer container)
 		{
-			container[ModalResultField.P_wheel_in] = LeftSample.Current.PWheel;
+			container[ModalResultField.P_wheel_in] = CycleIterator.LeftSample.PWheel;
 			base.DoWriteModalResults(container);
 		}
 
 		#region IDriverInfo
+
+		public MeterPerSecond VehicleSpeed { get; private set; }
 
 		/// <summary>
 		/// True if the angularVelocity at the wheels is 0.
 		/// </summary>
 		public bool VehicleStopped
 		{
-			get { return false; }
+			get { return CycleIterator.LeftSample.WheelAngularVelocity.IsEqual(0); }
+		}
+
+		public Kilogram VehicleMass
+		{
+			get { return _vehicleData.TotalCurbWeight; }
+		}
+
+		public Kilogram VehicleLoading
+		{
+			get { return _vehicleData.Loading; }
+		}
+
+		public Kilogram TotalMass
+		{
+			get { return _vehicleData.TotalVehicleWeight; }
+		}
+
+		public Newton AirDragResistance(MeterPerSecond previousVelocity, MeterPerSecond nextVelocity)
+		{
+			throw new System.NotImplementedException();
+		}
+
+		public Newton RollingResistance(Radian gradient)
+		{
+			throw new System.NotImplementedException();
+		}
+
+		public Newton SlopeResistance(Radian gradient)
+		{
+			throw new System.NotImplementedException();
 		}
 
 		/// <summary>

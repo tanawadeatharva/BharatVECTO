@@ -41,6 +41,7 @@ using TUGraz.VectoCore.Models.Simulation.Data;
 using TUGraz.VectoCore.Models.Simulation.DataBus;
 using TUGraz.VectoCore.Models.SimulationComponent;
 using TUGraz.VectoCore.Models.SimulationComponent.Data;
+using TUGraz.VectoCore.Models.SimulationComponent.Data.Gearbox;
 using TUGraz.VectoCore.OutputData;
 using TUGraz.VectoCore.Utils;
 
@@ -75,7 +76,7 @@ namespace TUGraz.VectoCore.Models.Simulation.Impl
 
 		public GearboxType GearboxType
 		{
-			get { return Gearbox.GearboxType; }
+			get { return Gearbox == null ? GearboxType.MT : Gearbox.GearboxType; }
 		}
 
 		public uint Gear
@@ -125,6 +126,26 @@ namespace TUGraz.VectoCore.Models.Simulation.Impl
 		public Watt GearboxLoss()
 		{
 			return Gearbox.GearboxLoss();
+		}
+
+		public Second LastShift
+		{
+			get { return Gearbox.LastShift; }
+		}
+
+		public GearData GetGearData(uint gear)
+		{
+			return Gearbox.GetGearData(gear);
+		}
+
+		public GearInfo NextGear
+		{
+			get { return Gearbox.NextGear; }
+		}
+
+		public Second TractionInterruption
+		{
+			get { return Gearbox.TractionInterruption; }
 		}
 
 		#endregion
@@ -297,6 +318,9 @@ namespace TUGraz.VectoCore.Models.Simulation.Impl
 			ModData.Finish(RunStatus);
 
 			WriteSumData(ModData, VehicleMass, VehicleLoading);
+
+			ModData.FinishSimulation();
+			DrivingCycle.FinishSimulation();
 		}
 
 		public VectoRun.Status RunStatus { get; set; }

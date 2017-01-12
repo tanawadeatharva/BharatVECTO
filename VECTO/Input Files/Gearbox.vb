@@ -56,16 +56,21 @@ Public Class Gearbox
 	Public Type As GearboxType
 
 	'Torque Converter Input
-	Public TorqueConverterEnabled As Boolean
 	Public TorqueConverterReferenceRpm As Double
 	Private ReadOnly _torqueConverterFile As New SubPath
 	Public TorqueConverterInertia As Double
 	Public TorqueConverterShiftPolygonFile As String
-
+	Public TCLUpshiftMinAcceleration As Double
+	Public TCCUpshiftMinAcceleration As Double
 
 	Public UpshiftMinAcceleration As Double
 	Public DownshiftAfterUpshift As Double
 	Public UpshiftAfterDownshift As Double
+	Public TorqueConverterMaxSpeed As Double
+
+	Public PSInertiaFactor As Double
+
+	Public PSShiftTime As Double
 
 
 	Public Sub New()
@@ -95,7 +100,6 @@ Public Class Gearbox
 
 		Type = GearboxType.MT
 
-		TorqueConverterEnabled = False
 		TorqueConverterReferenceRpm = 0
 		_torqueConverterFile.Clear()
 
@@ -378,6 +382,27 @@ Public Class Gearbox
 		End Get
 	End Property
 
+	Public ReadOnly Property MaxInputSpeed As PerSecond Implements ITorqueConverterEngineeringInputData.MaxInputSpeed
+		Get
+			Return TorqueConverterMaxSpeed.RPMtoRad()
+		End Get
+	End Property
+
+	Public ReadOnly Property CLUpshiftMinAcceleration As MeterPerSquareSecond _
+		Implements ITorqueConverterEngineeringInputData.CLUpshiftMinAcceleration
+		Get
+			Return TCLUpshiftMinAcceleration.SI(Of MeterPerSquareSecond)()
+		End Get
+	End Property
+
+	Public ReadOnly Property CCUpshiftMinAcceleration As MeterPerSquareSecond _
+		Implements ITorqueConverterEngineeringInputData.CCUpshiftMinAcceleration
+		Get
+			Return TCCUpshiftMinAcceleration.SI(Of MeterPerSquareSecond)()
+		End Get
+	End Property
+
+
 	Public ReadOnly Property TractionInterruption As Second Implements IGearboxEngineeringInputData.TractionInterruption
 		Get
 			Return TracIntrSi.SI(Of Second)()
@@ -412,7 +437,7 @@ Public Class Gearbox
 	End Property
 
 	Public ReadOnly Property DownshiftAferUpshiftDelay As Second _
-		Implements IGearboxEngineeringInputData.DownshiftAferUpshiftDelay
+		Implements IGearboxEngineeringInputData.DownshiftAfterUpshiftDelay
 		Get
 			Return DownshiftAfterUpshift.SI(Of Second)()
 		End Get
@@ -422,6 +447,19 @@ Public Class Gearbox
 		Implements IGearboxEngineeringInputData.UpshiftAfterDownshiftDelay
 		Get
 			Return UpshiftAfterDownshift.SI(Of Second)()
+		End Get
+	End Property
+
+	Public ReadOnly Property PowershiftShiftTime As Second Implements IGearboxEngineeringInputData.PowershiftShiftTime
+		Get
+			Return PSShiftTime.SI(Of Second)()
+		End Get
+	End Property
+
+	Public ReadOnly Property PowerShiftInertiaFactor As Double _
+		Implements IGearboxEngineeringInputData.PowerShiftInertiaFactor
+		Get
+			Return PSInertiaFactor
 		End Get
 	End Property
 
@@ -440,8 +478,8 @@ Public Class Gearbox
 		End Get
 	End Property
 
-	Public ReadOnly Property IGearboxEngineeringInputData_ShiftTime As Second _
-		Implements IGearboxEngineeringInputData.ShiftTime
+	Public ReadOnly Property MinTimeBetweenGearshift As Second _
+		Implements IGearboxEngineeringInputData.MinTimeBetweenGearshift
 		Get
 			Return ShiftTime.SI(Of Second)()
 		End Get

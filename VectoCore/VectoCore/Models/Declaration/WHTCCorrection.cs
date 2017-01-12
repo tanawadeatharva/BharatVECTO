@@ -51,7 +51,7 @@ namespace TUGraz.VectoCore.Models.Declaration
 		{
 			protected override string ResourceId
 			{
-				get { return "TUGraz.VectoCore.Resources.Declaration.WHTC-Weighting-Factors.csv"; }
+				get { return DeclarationData.DeclarationDataResourcePrefix + ".WHTC-Weighting-Factors.csv"; }
 			}
 
 			protected override string ErrorMessage

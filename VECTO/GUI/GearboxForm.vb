@@ -70,12 +70,12 @@ Public Class GearboxForm
 
 		If Cfg.DeclMode Then
 			CbGStype.DataSource = [Enum].GetValues(GetType(GearboxType)) _
-				.Cast(Of GearboxType)() _
+				.Cast (Of GearboxType)() _
 				.Where(Function(type) type.ManualTransmission()) _
 				.Select(Function(type) New With {Key .Value = type, .Label = type.GetLabel()}).ToList()
 		Else
 			CbGStype.DataSource = [Enum].GetValues(GetType(GearboxType)) _
-				.Cast(Of GearboxType) _
+				.Cast (Of GearboxType) _
 				.Where(Function(type) type.AutomaticTransmission() OrElse type.ManualTransmission()) _
 				.Select(Function(type) New With {Key .Value = type, .Label = type.GetLabel()}).ToList()
 		End If
@@ -98,14 +98,18 @@ Public Class GearboxForm
 		gbxType = CType(CbGStype.SelectedValue, GearboxType)	'CType(Me.CbGStype.SelectedIndex, tGearbox)
 
 		TbTracInt.Text = gbxType.TractionInterruption().ToGUIFormat()
-		TbShiftTime.Text = DeclarationData.Gearbox.MinTimeBetweenGearshifts.ToGUIFormat()	'cDeclaration.ShiftTime(GStype)
+		TbMinTimeBetweenShifts.Text = DeclarationData.Gearbox.MinTimeBetweenGearshifts.ToGUIFormat()
+		'cDeclaration.MinTimeBetweenGearshift(GStype)
 
-		TbTqResv.Text = (DeclarationData.Gearbox.TorqueReserve * 100).ToGUIFormat()		' cDeclaration.TqResv
-		TbTqResvStart.Text = (DeclarationData.Gearbox.TorqueReserveStart * 100).ToGUIFormat() 'cDeclaration.TqResvStart
-		TbStartSpeed.Text = DeclarationData.Gearbox.StartSpeed.ToGUIFormat()	'cDeclaration.StartSpeed
-		TbStartAcc.Text = DeclarationData.Gearbox.StartAcceleration.ToGUIFormat()	' cDeclaration.StartAcc
+		TbTqResv.Text = (DeclarationData.Gearbox.TorqueReserve*100).ToGUIFormat()     ' cDeclaration.TqResv
+		TbTqResvStart.Text = (DeclarationData.Gearbox.TorqueReserveStart*100).ToGUIFormat() 'cDeclaration.TqResvStart
+		TbStartSpeed.Text = DeclarationData.Gearbox.StartSpeed.ToGUIFormat()    'cDeclaration.StartSpeed
+		TbStartAcc.Text = DeclarationData.Gearbox.StartAcceleration.ToGUIFormat()   ' cDeclaration.StartAcc
 
 		tbUpshiftMinAcceleration.Text = DeclarationData.Gearbox.UpshiftMinAcceleration.ToGUIFormat()
+		tbTCCUpshiftMinAcceleration.Text = ""
+		tbTCLUpshiftMinAcceleration.Text = ""
+
 		tbDownshiftAfterUpshift.Text = DeclarationData.Gearbox.DownshiftAfterUpshiftDelay.ToGUIFormat()
 		tbUpshiftAfterDownshift.Text = DeclarationData.Gearbox.UpshiftAfterDownshiftDelay.ToGUIFormat()
 
@@ -196,13 +200,16 @@ Public Class GearboxForm
 
 		'Me.ChSkipGears.Checked = False         'set by CbGStype.SelectedIndexChanged
 		'Me.ChShiftInside.Checked = False       'set by CbGStype.SelectedIndexChanged
-		TbTqResv.Text = (DeclarationData.Gearbox.TorqueReserve * 100).ToGUIFormat()
-		TbShiftTime.Text = DeclarationData.Gearbox.MinTimeBetweenGearshifts.ToGUIFormat()
-		TbTqResvStart.Text = (DeclarationData.Gearbox.TorqueReserveStart * 100).ToGUIFormat()
+		TbTqResv.Text = (DeclarationData.Gearbox.TorqueReserve*100).ToGUIFormat()
+		TbMinTimeBetweenShifts.Text = DeclarationData.Gearbox.MinTimeBetweenGearshifts.ToGUIFormat()
+		TbTqResvStart.Text = (DeclarationData.Gearbox.TorqueReserveStart*100).ToGUIFormat()
 		TbStartSpeed.Text = DeclarationData.Gearbox.StartSpeed.ToGUIFormat() ' in m/s!
 		TbStartAcc.Text = DeclarationData.Gearbox.StartAcceleration.ToGUIFormat()
 
 		tbUpshiftMinAcceleration.Text = DeclarationData.Gearbox.UpshiftMinAcceleration.ToGUIFormat()
+		tbTCLUpshiftMinAcceleration.Text = ""
+		tbTCCUpshiftMinAcceleration.Text = ""
+
 		tbDownshiftAfterUpshift.Text = DeclarationData.Gearbox.DownshiftAfterUpshiftDelay.ToGUIFormat()
 		tbUpshiftAfterDownshift.Text = DeclarationData.Gearbox.UpshiftAfterDownshiftDelay.ToGUIFormat()
 
@@ -227,7 +234,7 @@ Public Class GearboxForm
 
 		If ChangeCheckCancel() Then Exit Sub
 
-		Dim inputData As IEngineeringInputDataProvider = TryCast(JSONInputDataFactory.ReadComponentData(file), 
+		Dim inputData As IEngineeringInputDataProvider = TryCast(JSONInputDataFactory.ReadComponentData(file),
 																IEngineeringInputDataProvider)
 		Dim gearbox As IGearboxEngineeringInputData = inputData.GearboxInputData
 		Dim axlegear As IAxleGearInputData = inputData.AxleGearInputData
@@ -238,7 +245,7 @@ Public Class GearboxForm
 					Close()
 					MainForm.RbDecl.Checked = Not MainForm.RbDecl.Checked
 					MainForm.OpenVectoFile(file)
-				Case -1
+				Case - 1
 					Exit Sub
 			End Select
 		End If
@@ -272,9 +279,9 @@ Public Class GearboxForm
 												If(gear.MaxTorque Is Nothing, "", gear.MaxTorque.ToGUIFormat())))
 		Next
 
-		TbTqResv.Text = (gearbox.TorqueReserve * 100).ToGUIFormat()
-		TbShiftTime.Text = gearbox.ShiftTime.ToGUIFormat()
-		TbTqResvStart.Text = (gearbox.StartTorqueReserve * 100).ToGUIFormat()
+		TbTqResv.Text = (gearbox.TorqueReserve*100).ToGUIFormat()
+		TbMinTimeBetweenShifts.Text = gearbox.MinTimeBetweenGearshift.ToGUIFormat()
+		TbTqResvStart.Text = (gearbox.StartTorqueReserve*100).ToGUIFormat()
 		TbStartSpeed.Text = gearbox.StartSpeed.ToGUIFormat()
 		TbStartAcc.Text = gearbox.StartAcceleration.ToGUIFormat()
 
@@ -284,17 +291,28 @@ Public Class GearboxForm
 			TbTCrefrpm.Text = ""
 			TbTCinertia.Text = ""
 			TBTCShiftPolygon.Text = ""
+			tbTCmaxSpeed.Text = ""
+			tbTCLUpshiftMinAcceleration.Text = ""
+			tbTCCUpshiftMinAcceleration.Text = ""
+
 		Else
 			TbTCfile.Text = If(torqueConverter.TCData Is Nothing, "", GetRelativePath(torqueConverter.TCData.Source, basePath))
 			TbTCrefrpm.Text = If(torqueConverter.ReferenceRPM Is Nothing, "", torqueConverter.ReferenceRPM.AsRPM.ToGUIFormat())
 			TbTCinertia.Text = If(torqueConverter.Inertia Is Nothing, "", torqueConverter.Inertia.ToGUIFormat())
 			TBTCShiftPolygon.Text =
 				If(torqueConverter.ShiftPolygon Is Nothing, "", GetRelativePath(torqueConverter.ShiftPolygon.Source, basePath))
+			tbTCmaxSpeed.Text =
+				If(torqueConverter.MaxInputSpeed Is Nothing, "", torqueConverter.MaxInputSpeed.AsRPM.ToGUIFormat())
+			tbTCLUpshiftMinAcceleration.Text = torqueConverter.CLUpshiftMinAcceleration.ToGUIFormat()
+			tbTCCUpshiftMinAcceleration.Text = torqueConverter.CCUpshiftMinAcceleration.ToGUIFormat()
 		End If
 
 		tbUpshiftMinAcceleration.Text = gearbox.UpshiftMinAcceleration.ToGUIFormat()
-		tbDownshiftAfterUpshift.Text = gearbox.DownshiftAferUpshiftDelay.ToGUIFormat()
+		tbDownshiftAfterUpshift.Text = gearbox.DownshiftAfterUpshiftDelay.ToGUIFormat()
 		tbUpshiftAfterDownshift.Text = gearbox.UpshiftAfterDownshiftDelay.ToGUIFormat()
+
+		tbATInertiaFactor.Text = gearbox.PowerShiftInertiaFactor.ToGUIFormat()
+		tbATShiftTime.Text = gearbox.PowershiftShiftTime.ToGUIFormat()
 
 		CbGStype.SelectedValue = gearbox.Type
 
@@ -362,22 +380,30 @@ Public Class GearboxForm
 		Next
 
 		gearbox.TorqueResv = TbTqResv.Text.ToDouble(0)
-		gearbox.ShiftTime = TbShiftTime.Text.ToDouble(0)
+		gearbox.ShiftTime = TbMinTimeBetweenShifts.Text.ToDouble(0)
 		gearbox.TorqueResvStart = TbTqResvStart.Text.ToDouble(0)
 		gearbox.StartSpeed = TbStartSpeed.Text.ToDouble(0)
 		gearbox.StartAcc = TbStartAcc.Text.ToDouble(0)
 
 		gearbox.Type = CType(CbGStype.SelectedValue, GearboxType)
 
-		gearbox.TorqueConverterEnabled = gearbox.Type.AutomaticTransmission()
+		gearbox.Type.AutomaticTransmission()
 		gearbox.TorqueConverterFile = TbTCfile.Text
 		gearbox.TorqueConverterReferenceRpm = TbTCrefrpm.Text.ToDouble(0)
 		gearbox.TorqueConverterInertia = TbTCinertia.Text.ToDouble(0)
 		gearbox.TorqueConverterShiftPolygonFile = TBTCShiftPolygon.Text
+		gearbox.TorqueConverterMaxSpeed = tbTCmaxSpeed.Text.ToDouble(0)
 
 		gearbox.DownshiftAfterUpshift = tbDownshiftAfterUpshift.Text.ToDouble(0)
 		gearbox.UpshiftAfterDownshift = tbUpshiftAfterDownshift.Text.ToDouble(0)
+
 		gearbox.UpshiftMinAcceleration = tbUpshiftMinAcceleration.Text.ToDouble(0)
+		gearbox.TCLUpshiftMinAcceleration = tbTCLUpshiftMinAcceleration.Text.ToDouble(0)
+		gearbox.TCCUpshiftMinAcceleration = tbTCCUpshiftMinAcceleration.Text.ToDouble(0)
+
+		gearbox.PSInertiaFactor = tbATInertiaFactor.Text.ToDouble(0)
+		gearbox.PSShiftTime = tbATShiftTime.Text.ToDouble(0)
+
 
 		If Not gearbox.SaveFile Then
 			MsgBox("Cannot safe to " & file, MsgBoxStyle.Critical)
@@ -432,50 +458,13 @@ Public Class GearboxForm
 		End If
 	End Function
 
-	Private Sub TbName_TextChanged(sender As Object, e As EventArgs) Handles TbName.TextChanged
+	Private Sub TbName_TextChanged(sender As Object, e As EventArgs) _
+		Handles TbName.TextChanged, TBI_getr.TextChanged, TbTracInt.TextChanged, TbTqResv.TextChanged,
+				TbMinTimeBetweenShifts.TextChanged, TbTqResvStart.TextChanged, TbStartSpeed.TextChanged, TbStartAcc.TextChanged,
+				TbTCfile.TextChanged, TbTCrefrpm.TextChanged, TbTCinertia.TextChanged, tbTCmaxSpeed.TextChanged,
+				tbTCCUpshiftMinAcceleration.TextChanged, tbTCLUpshiftMinAcceleration.TextChanged
 		Change()
 	End Sub
-
-	Private Sub TBI_getr_TextChanged(sender As Object, e As EventArgs) Handles TBI_getr.TextChanged
-		Change()
-	End Sub
-
-	Private Sub TbTracInt_TextChanged(sender As Object, e As EventArgs) Handles TbTracInt.TextChanged
-		Change()
-	End Sub
-
-	Private Sub TbTqResv_TextChanged(sender As Object, e As EventArgs) Handles TbTqResv.TextChanged
-		Change()
-	End Sub
-
-	Private Sub TbShiftTime_TextChanged(sender As Object, e As EventArgs) Handles TbShiftTime.TextChanged
-		Change()
-	End Sub
-
-	Private Sub TbTqResvStart_TextChanged(sender As Object, e As EventArgs) Handles TbTqResvStart.TextChanged
-		Change()
-	End Sub
-
-	Private Sub TbStartSpeed_TextChanged(sender As Object, e As EventArgs) Handles TbStartSpeed.TextChanged
-		Change()
-	End Sub
-
-	Private Sub TbStartAcc_TextChanged(sender As Object, e As EventArgs) Handles TbStartAcc.TextChanged
-		Change()
-	End Sub
-
-	Private Sub TbTCfile_TextChanged(sender As Object, e As EventArgs) Handles TbTCfile.TextChanged
-		Change()
-	End Sub
-
-	Private Sub TbTCrefrpm_TextChanged(sender As Object, e As EventArgs) Handles TbTCrefrpm.TextChanged
-		Change()
-	End Sub
-
-	Private Sub TbTCinertia_TextChanged(sender As Object, e As EventArgs) Handles TbTCinertia.TextChanged
-		Change()
-	End Sub
-
 
 #End Region
 
@@ -497,7 +486,17 @@ Public Class GearboxForm
 		Change()
 
 		'ChTCon.Enabled = (GStype.AutomaticTransmission())
-		PnTC.Enabled = gStype.AutomaticTransmission()
+		gbTC.Enabled = gStype.AutomaticTransmission()
+		gbTCAccMin.Enabled = gStype.AutomaticTransmission()
+		gbPowershiftLosses.Enabled = gStype.AutomaticTransmission()
+		TbStartAcc.Enabled = Not gStype.AutomaticTransmission()
+		TbStartSpeed.Enabled = Not gStype.AutomaticTransmission()
+		TbTqResv.Enabled = Not gStype.AutomaticTransmission()
+		GroupBox2.Enabled = Not gStype.AutomaticTransmission()
+		TBI_getr.Enabled = Not gStype.AutomaticTransmission()
+		TbTracInt.Enabled = Not gStype.AutomaticTransmission()
+		tbDownshiftAfterUpshift.Enabled = Not gStype.AutomaticTransmission()
+		tbUpshiftAfterDownshift.Enabled = Not gStype.AutomaticTransmission()
 	End Sub
 
 
@@ -752,7 +751,7 @@ Public Class GearboxForm
 		Dim jobFile As String = VectoJobForm.VectoFile
 		If Not jobFile Is Nothing AndAlso File.Exists(jobFile) Then
 
-			Dim inputData As IEngineeringInputDataProvider = TryCast(JSONInputDataFactory.ReadJsonJob(jobFile), 
+			Dim inputData As IEngineeringInputDataProvider = TryCast(JSONInputDataFactory.ReadJsonJob(jobFile),
 																	IEngineeringInputDataProvider)
 			If (inputData Is Nothing) Then
 				Exit Sub

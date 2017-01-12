@@ -46,253 +46,255 @@ using Wheels = TUGraz.VectoCore.Models.SimulationComponent.Impl.Wheels;
 
 namespace TUGraz.VectoCore.Models.Simulation.Impl
 {
-	/// <summary>
-	/// Provides Methods to build a simulator with a powertrain step by step.
-	/// </summary>
-	public class PowertrainBuilder
-	{
-		private readonly IModalDataContainer _modData;
-		private readonly WriteSumData _sumWriter;
+    /// <summary>
+    /// Provides Methods to build a simulator with a powertrain step by step.
+    /// </summary>
+    public class PowertrainBuilder
+    {
+        private readonly IModalDataContainer _modData;
+        private readonly WriteSumData _sumWriter;
 
-		public PowertrainBuilder(IModalDataContainer modData, WriteSumData sumWriter = null)
-		{
-			if (modData == null) {
-				throw new VectoException("Modal Data Container can't be null");
-			}
-			_modData = modData;
-			_sumWriter = sumWriter;
-		}
+        public PowertrainBuilder(IModalDataContainer modData, WriteSumData sumWriter = null)
+        {
+            if (modData == null) {
+                throw new VectoException("Modal Data Container can't be null");
+            }
+            _modData = modData;
+            _sumWriter = sumWriter;
+        }
 
-		public VehicleContainer Build(VectoRunData data)
-		{
-			switch (data.Cycle.CycleType) {
-				case CycleType.EngineOnly:
-					return BuildEngineOnly(data);
-				case CycleType.PWheel:
-					return BuildPWheel(data);
-				case CycleType.MeasuredSpeed:
-					return BuildMeasuredSpeed(data);
-				case CycleType.MeasuredSpeedGear:
-					return BuildMeasuredSpeedGear(data);
-				case CycleType.DistanceBased:
-					return BuildFullPowertrain(data);
-				default:
-					throw new VectoException("Powertrain Builder cannot build Powertrain for CycleType: {0}", data.Cycle.CycleType);
-			}
-		}
+        public VehicleContainer Build(VectoRunData data)
+        {
+            switch (data.Cycle.CycleType) {
+                case CycleType.EngineOnly:
+                    return BuildEngineOnly(data);
+                case CycleType.PWheel:
+                    return BuildPWheel(data);
+                case CycleType.MeasuredSpeed:
+                    return BuildMeasuredSpeed(data);
+                case CycleType.MeasuredSpeedGear:
+                    return BuildMeasuredSpeedGear(data);
+                case CycleType.DistanceBased:
+                    return BuildFullPowertrain(data);
+                default:
+                    throw new VectoException("Powertrain Builder cannot build Powertrain for CycleType: {0}", data.Cycle.CycleType);
+            }
+        }
 
-		private VehicleContainer BuildEngineOnly(VectoRunData data)
-		{
-			if (data.Cycle.CycleType != CycleType.EngineOnly) {
-				throw new VectoException("CycleType must be EngineOnly.");
-			}
+        private VehicleContainer BuildEngineOnly(VectoRunData data)
+        {
+            if (data.Cycle.CycleType != CycleType.EngineOnly) {
+                throw new VectoException("CycleType must be EngineOnly.");
+            }
 
-			var container = new VehicleContainer(ExecutionMode.Engineering, _modData, _sumWriter) { RunData = data };
-			var cycle = new PowertrainDrivingCycle(container, data.Cycle);
+            var container = new VehicleContainer(ExecutionMode.Engineering, _modData, _sumWriter) { RunData = data };
+            var cycle = new PowertrainDrivingCycle(container, data.Cycle);
 
-			var directAux = new EngineAuxiliary(container);
-			directAux.AddCycle(Constants.Auxiliaries.Cycle);
-			container.ModalData.AddAuxiliary(Constants.Auxiliaries.Cycle);
-			var engine = new EngineOnlyCombustionEngine(container, data.EngineData);
-			engine.Connect(directAux.Port());
+            var directAux = new EngineAuxiliary(container);
+            directAux.AddCycle(Constants.Auxiliaries.Cycle);
+            container.ModalData.AddAuxiliary(Constants.Auxiliaries.Cycle);
+            var engine = new EngineOnlyCombustionEngine(container, data.EngineData);
+            engine.Connect(directAux.Port());
 
-			cycle.InPort().Connect(engine.OutPort());
-			return container;
-		}
+            cycle.InPort().Connect(engine.OutPort());
+            return container;
+        }
 
-		private VehicleContainer BuildPWheel(VectoRunData data)
-		{
-			if (data.Cycle.CycleType != CycleType.PWheel) {
-				throw new VectoException("CycleType must be PWheel.");
-			}
+        private VehicleContainer BuildPWheel(VectoRunData data)
+        {
+            if (data.Cycle.CycleType != CycleType.PWheel) {
+                throw new VectoException("CycleType must be PWheel.");
+            }
 
-			var container = new VehicleContainer(ExecutionMode.Engineering, _modData, _sumWriter) { RunData = data };
-			var gearbox = new CycleGearbox(container, data.GearboxData, data.EngineData.Inertia);
+            var container = new VehicleContainer(ExecutionMode.Engineering, _modData, _sumWriter) { RunData = data };
+            var gearbox = new CycleGearbox(container, data.GearboxData, data.EngineData.Inertia);
 
-			// PWheelCycle --> AxleGear --> CycleClutch --> Engine <-- Aux
-			var powertrain = new PWheelCycle(container, data.Cycle, data.AxleGearData.AxleGear.Ratio,
-					gearbox.ModelData.Gears.ToDictionary(g => g.Key, g => g.Value.Ratio))
-				.AddComponent(new AxleGear(container, data.AxleGearData))
-				.AddComponent(data.AngledriveData != null ? new Angledrive(container, data.AngledriveData) : null)
-				.AddComponent(gearbox, data.Retarder, container)
-				.AddComponent(new Clutch(container, data.EngineData));
-			var engine = new CombustionEngine(container, data.EngineData, pt1Disabled: true);
-			var idleController = GetIdleController(data.PTO, engine);
+            // PWheelCycle --> AxleGear --> CycleClutch --> Engine <-- Aux
+            var powertrain = new PWheelCycle(container, data.Cycle, data.AxleGearData.AxleGear.Ratio, data.VehicleData,
+                gearbox.ModelData.Gears.ToDictionary(g => g.Key, g => g.Value.Ratio))
+                .AddComponent(new AxleGear(container, data.AxleGearData))
+                .AddComponent(data.AngledriveData != null ? new Angledrive(container, data.AngledriveData) : null)
+                .AddComponent(gearbox, data.Retarder, container)
+                .AddComponent(new Clutch(container, data.EngineData));
+            var engine = new CombustionEngine(container, data.EngineData, pt1Disabled: true);
+            var idleController = GetIdleController(data.PTO, engine);
 
-			powertrain.AddComponent(engine, idleController)
-				.AddAuxiliaries(container, data);
+            powertrain.AddComponent(engine, idleController)
+                .AddAuxiliaries(container, data);
 
-			return container;
-		}
+            return container;
+        }
 
-		private VehicleContainer BuildMeasuredSpeed(VectoRunData data)
-		{
-			if (data.Cycle.CycleType != CycleType.MeasuredSpeed) {
-				throw new VectoException("CycleType must be MeasuredSpeed.");
-			}
+        private VehicleContainer BuildMeasuredSpeed(VectoRunData data)
+        {
+            if (data.Cycle.CycleType != CycleType.MeasuredSpeed) {
+                throw new VectoException("CycleType must be MeasuredSpeed.");
+            }
 
-			var container = new VehicleContainer(ExecutionMode.Engineering, _modData, _sumWriter) { RunData = data };
+            var container = new VehicleContainer(ExecutionMode.Engineering, _modData, _sumWriter) { RunData = data };
 
-			// MeasuredSpeedDrivingCycle --> vehicle --> wheels --> brakes 
-			// --> axleGear --> (retarder) --> GearBox --> (retarder) --> Clutch --> engine <-- Aux
-			var cycle = new MeasuredSpeedDrivingCycle(container, data.Cycle);
-			var powertrain = cycle
-				.AddComponent(new Vehicle(container, data.VehicleData))
-				.AddComponent(new Wheels(container, data.VehicleData.DynamicTyreRadius, data.VehicleData.WheelsInertia))
-				.AddComponent(new Brakes(container))
-				.AddComponent(new AxleGear(container, data.AxleGearData))
-				.AddComponent(data.AngledriveData != null ? new Angledrive(container, data.AngledriveData) : null)
-				.AddComponent(GetGearbox(container, data.GearboxData, data.EngineData.Inertia), data.Retarder, container);
-			if (data.GearboxData.Type.ManualTransmission()) {
-				powertrain = powertrain.AddComponent(new Clutch(container, data.EngineData));
-			}
+            // MeasuredSpeedDrivingCycle --> vehicle --> wheels --> brakes 
+            // --> axleGear --> (retarder) --> GearBox --> (retarder) --> Clutch --> engine <-- Aux
+            var cycle = new MeasuredSpeedDrivingCycle(container, data.Cycle);
+            var powertrain = cycle
+                .AddComponent(new Vehicle(container, data.VehicleData))
+                .AddComponent(new Wheels(container, data.VehicleData.DynamicTyreRadius, data.VehicleData.WheelsInertia))
+                .AddComponent(new Brakes(container))
+                .AddComponent(new AxleGear(container, data.AxleGearData))
+                .AddComponent(data.AngledriveData != null ? new Angledrive(container, data.AngledriveData) : null)
+                .AddComponent(GetGearbox(container, data.GearboxData, data.EngineData.Inertia), data.Retarder, container);
+            if (data.GearboxData.Type.ManualTransmission()) {
+                powertrain = powertrain.AddComponent(new Clutch(container, data.EngineData));
+            }
 
-			var engine = new CombustionEngine(container, data.EngineData);
-			var idleController = GetIdleController(data.PTO, engine);
+            var engine = new CombustionEngine(container, data.EngineData);
+            var idleController = GetIdleController(data.PTO, engine);
 
-			powertrain.AddComponent(engine, idleController)
-				.AddAuxiliaries(container, data);
-			_modData.HasTorqueConverter = data.GearboxData.Type.AutomaticTransmission();
+            powertrain.AddComponent(engine, idleController)
+                .AddAuxiliaries(container, data);
+            _modData.HasTorqueConverter = data.GearboxData.Type.AutomaticTransmission();
 
-			return container;
-		}
+            return container;
+        }
 
-		private VehicleContainer BuildMeasuredSpeedGear(VectoRunData data)
-		{
-			if (data.Cycle.CycleType != CycleType.MeasuredSpeedGear) {
-				throw new VectoException("CycleType must be MeasuredSpeed with Gear.");
-			}
+        private VehicleContainer BuildMeasuredSpeedGear(VectoRunData data)
+        {
+            if (data.Cycle.CycleType != CycleType.MeasuredSpeedGear) {
+                throw new VectoException("CycleType must be MeasuredSpeed with Gear.");
+            }
 
-			var container = new VehicleContainer(ExecutionMode.Engineering, _modData, _sumWriter) { RunData = data };
+            var container = new VehicleContainer(ExecutionMode.Engineering, _modData, _sumWriter) { RunData = data };
 
-			// MeasuredSpeedDrivingCycle --> vehicle --> wheels --> brakes 
-			// --> axleGear --> (retarder) --> CycleGearBox --> (retarder) --> CycleClutch --> engine <-- Aux
-			var powertrain = new MeasuredSpeedDrivingCycle(container, data.Cycle)
-				.AddComponent(new Vehicle(container, data.VehicleData))
-				.AddComponent(new Wheels(container, data.VehicleData.DynamicTyreRadius, data.VehicleData.WheelsInertia))
-				.AddComponent(new Brakes(container))
-				.AddComponent(new AxleGear(container, data.AxleGearData))
-				.AddComponent(data.AngledriveData != null ? new Angledrive(container, data.AngledriveData) : null)
-				.AddComponent(new CycleGearbox(container, data.GearboxData, data.EngineData.Inertia));
-			if (data.GearboxData.Type.ManualTransmission()) {
-				powertrain = powertrain.AddComponent(new Clutch(container, data.EngineData));
-			}
-			powertrain.AddComponent(new CombustionEngine(container, data.EngineData))
-				.AddAuxiliaries(container, data);
+            // MeasuredSpeedDrivingCycle --> vehicle --> wheels --> brakes 
+            // --> axleGear --> (retarder) --> CycleGearBox --> (retarder) --> CycleClutch --> engine <-- Aux
+            var powertrain = new MeasuredSpeedDrivingCycle(container, data.Cycle)
+                .AddComponent(new Vehicle(container, data.VehicleData))
+                .AddComponent(new Wheels(container, data.VehicleData.DynamicTyreRadius, data.VehicleData.WheelsInertia))
+                .AddComponent(new Brakes(container))
+                .AddComponent(new AxleGear(container, data.AxleGearData))
+                .AddComponent(data.AngledriveData != null ? new Angledrive(container, data.AngledriveData) : null)
+                .AddComponent(new CycleGearbox(container, data.GearboxData, data.EngineData.Inertia));
+            if (data.GearboxData.Type.ManualTransmission()) {
+                powertrain = powertrain.AddComponent(new Clutch(container, data.EngineData));
+            }
+            powertrain.AddComponent(new CombustionEngine(container, data.EngineData))
+                .AddAuxiliaries(container, data);
 
-			_modData.HasTorqueConverter = data.GearboxData.Type.AutomaticTransmission();
+            _modData.HasTorqueConverter = data.GearboxData.Type.AutomaticTransmission();
 
-			return container;
-		}
+            return container;
+        }
 
-		private VehicleContainer BuildFullPowertrain(VectoRunData data)
-		{
-			if (data.Cycle.CycleType != CycleType.DistanceBased) {
-				throw new VectoException("CycleType must be DistanceBased");
-			}
+        private VehicleContainer BuildFullPowertrain(VectoRunData data)
+        {
+            if (data.Cycle.CycleType != CycleType.DistanceBased) {
+                throw new VectoException("CycleType must be DistanceBased");
+            }
 
-			var container = new VehicleContainer(data.ExecutionMode, _modData, _sumWriter) { RunData = data };
+            var container = new VehicleContainer(data.ExecutionMode, _modData, _sumWriter) { RunData = data };
 
-			// DistanceBasedDrivingCycle --> driver --> vehicle --> wheels 
-			// --> axleGear --> (retarder) --> gearBox --> (retarder) --> clutch --> engine <-- Aux
-			var cycle = new DistanceBasedDrivingCycle(container, data.Cycle);
-			var powertrain = cycle.AddComponent(new Driver(container, data.DriverData, new DefaultDriverStrategy()))
-				.AddComponent(new Vehicle(container, data.VehicleData))
-				.AddComponent(new Wheels(container, data.VehicleData.DynamicTyreRadius, data.VehicleData.WheelsInertia))
-				.AddComponent(new Brakes(container))
-				.AddComponent(new AxleGear(container, data.AxleGearData))
-				.AddComponent(data.AngledriveData != null ? new Angledrive(container, data.AngledriveData) : null)
-				.AddComponent(GetGearbox(container, data.GearboxData, data.EngineData.Inertia), data.Retarder, container);
-			if (data.GearboxData.Type.ManualTransmission()) {
-				powertrain = powertrain.AddComponent(new Clutch(container, data.EngineData));
-			}
+            // DistanceBasedDrivingCycle --> driver --> vehicle --> wheels 
+            // --> axleGear --> (retarder) --> gearBox --> (retarder) --> clutch --> engine <-- Aux
+            var cycle = new DistanceBasedDrivingCycle(container, data.Cycle);
+            var powertrain = cycle.AddComponent(new Driver(container, data.DriverData, new DefaultDriverStrategy()))
+                .AddComponent(new Vehicle(container, data.VehicleData))
+                .AddComponent(new Wheels(container, data.VehicleData.DynamicTyreRadius, data.VehicleData.WheelsInertia))
+                .AddComponent(new Brakes(container))
+                .AddComponent(new AxleGear(container, data.AxleGearData))
+                .AddComponent(data.AngledriveData != null ? new Angledrive(container, data.AngledriveData) : null)
+                .AddComponent(GetGearbox(container, data.GearboxData, data.EngineData.Inertia), data.Retarder, container);
+            if (data.GearboxData.Type.ManualTransmission()) {
+                powertrain = powertrain.AddComponent(new Clutch(container, data.EngineData));
+            }
 
-			var engine = new CombustionEngine(container, data.EngineData);
-			var idleController = GetIdleController(data.PTO, engine);
-			cycle.IdleController = idleController as IdleControllerSwitcher;
+            var engine = new CombustionEngine(container, data.EngineData);
+            var idleController = GetIdleController(data.PTO, engine);
+            cycle.IdleController = idleController as IdleControllerSwitcher;
 
-			powertrain.AddComponent(engine, idleController)
-				.AddAuxiliaries(container, data);
+            powertrain.AddComponent(engine, idleController)
+                .AddAuxiliaries(container, data);
 
-			_modData.HasTorqueConverter = data.GearboxData.Type.AutomaticTransmission();
+            _modData.HasTorqueConverter = data.GearboxData.Type.AutomaticTransmission();
 
-			return container;
-		}
+            return container;
+        }
 
-		private static IIdleController GetIdleController(PTOData pto, ICombustionEngine engine)
-		{
-			if (pto == null) {
-				return engine.IdleController;
-			} else {
-				var ptoController = new PTOCycleController(pto.PTOCycle);
-				return new IdleControllerSwitcher(engine.IdleController, ptoController);
-			}
-		}
+        private static IIdleController GetIdleController(PTOData pto, ICombustionEngine engine)
+        {
+            var controller = engine.IdleController;
 
-		internal static IAuxInProvider CreateAdvancedAuxiliaries(VectoRunData data, IVehicleContainer container)
-		{
-			var conventionalAux = CreateAuxiliaries(data, container);
-			var busAux = new BusAuxiliariesAdapter(container, data.AdvancedAux.AdvancedAuxiliaryFilePath, data.Cycle.Name,
-				data.VehicleData.TotalVehicleWeight(), data.EngineData.ConsumptionMap, data.EngineData.IdleSpeed, conventionalAux);
-			return busAux;
-		}
+            if (pto != null) {
+                var ptoController = new PTOCycleController(pto.PTOCycle);
+                controller = new IdleControllerSwitcher(engine.IdleController, ptoController);
+            }
 
-		internal static EngineAuxiliary CreateAuxiliaries(VectoRunData data, IVehicleContainer container)
-		{
-			var aux = new EngineAuxiliary(container);
-			foreach (var auxData in data.Aux) {
-				// id's in upper case
-				var id = auxData.ID.ToUpper();
+            return controller;
+        }
 
-				switch (auxData.DemandType) {
-					case AuxiliaryDemandType.Constant:
-						aux.AddConstant(id, auxData.PowerDemand);
-						break;
-					case AuxiliaryDemandType.Direct:
-						aux.AddCycle(id);
-						break;
-					case AuxiliaryDemandType.Mapping:
-						aux.AddMapping(id, auxData.Data);
-						break;
-					default:
-						throw new ArgumentOutOfRangeException();
-				}
-				container.ModalData.AddAuxiliary(id);
-			}
+        internal static IAuxInProvider CreateAdvancedAuxiliaries(VectoRunData data, IVehicleContainer container)
+        {
+            var conventionalAux = CreateAuxiliaries(data, container);
+            var busAux = new BusAuxiliariesAdapter(container, data.AdvancedAux.AdvancedAuxiliaryFilePath, data.Cycle.Name,
+                data.VehicleData.TotalVehicleWeight, data.EngineData.ConsumptionMap, data.EngineData.IdleSpeed, conventionalAux);
+            return busAux;
+        }
 
-			if (data.PTO != null) {
-				aux.AddConstant(Constants.Auxiliaries.IDs.PTOTransmission,
-					DeclarationData.PTOTransmission.Lookup(data.PTO.TransmissionType));
-				container.ModalData.AddAuxiliary(Constants.Auxiliaries.IDs.PTOTransmission,
-					Constants.Auxiliaries.PowerPrefix + Constants.Auxiliaries.IDs.PTOTransmission);
+        internal static EngineAuxiliary CreateAuxiliaries(VectoRunData data, IVehicleContainer container)
+        {
+            var aux = new EngineAuxiliary(container);
+            foreach (var auxData in data.Aux) {
+                // id's in upper case
+                var id = auxData.ID.ToUpper();
 
-				aux.Add(Constants.Auxiliaries.IDs.PTOConsumer,
-					n => container.CycleData.LeftSample.PTOActive ? null : data.PTO.LossMap.GetTorqueLoss(n) * n);
-				container.ModalData.AddAuxiliary(Constants.Auxiliaries.IDs.PTOConsumer,
-					Constants.Auxiliaries.PowerPrefix + Constants.Auxiliaries.IDs.PTOConsumer);
-			}
+                switch (auxData.DemandType) {
+                    case AuxiliaryDemandType.Constant:
+                        aux.AddConstant(id, auxData.PowerDemand);
+                        break;
+                    case AuxiliaryDemandType.Direct:
+                        aux.AddCycle(id);
+                        break;
+                    case AuxiliaryDemandType.Mapping:
+                        aux.AddMapping(id, auxData.Data);
+                        break;
+                    default:
+                        throw new ArgumentOutOfRangeException();
+                }
+                container.ModalData.AddAuxiliary(id);
+            }
 
-			return aux;
-		}
+            if (data.PTO != null) {
+                aux.AddConstant(Constants.Auxiliaries.IDs.PTOTransmission,
+                    DeclarationData.PTOTransmission.Lookup(data.PTO.TransmissionType));
+                container.ModalData.AddAuxiliary(Constants.Auxiliaries.IDs.PTOTransmission,
+                    Constants.Auxiliaries.PowerPrefix + Constants.Auxiliaries.IDs.PTOTransmission);
 
-		private static IGearbox GetGearbox(IVehicleContainer container, GearboxData data, KilogramSquareMeter engineInertia)
-		{
-			IShiftStrategy strategy;
-			switch (data.Type) {
-				case GearboxType.AMT:
-					strategy = new AMTShiftStrategy(data, container);
-					break;
-				case GearboxType.MT:
-					strategy = new MTShiftStrategy(data, container);
-					break;
-				case GearboxType.ATPowerSplit:
-				case GearboxType.ATSerial:
-					strategy = new ATShiftStrategy(data, container);
-					return new ATGearbox(container, data, strategy, engineInertia);
-				default:
-					throw new VectoSimulationException("Unknown Gearbox Type: {0}", data.Type);
-			}
-			return new Gearbox(container, data, strategy);
-		}
-	}
+                aux.Add(Constants.Auxiliaries.IDs.PTOConsumer,
+                    n => container.CycleData.LeftSample.PTOActive ? null : data.PTO.LossMap.GetTorqueLoss(n) * n);
+                container.ModalData.AddAuxiliary(Constants.Auxiliaries.IDs.PTOConsumer,
+                    Constants.Auxiliaries.PowerPrefix + Constants.Auxiliaries.IDs.PTOConsumer);
+            }
+
+            return aux;
+        }
+
+        private static IGearbox GetGearbox(IVehicleContainer container, GearboxData data, KilogramSquareMeter engineInertia)
+        {
+            IShiftStrategy strategy;
+            switch (data.Type) {
+                case GearboxType.AMT:
+                    strategy = new AMTShiftStrategy(data, container);
+                    break;
+                case GearboxType.MT:
+                    strategy = new MTShiftStrategy(data, container);
+                    break;
+                case GearboxType.ATPowerSplit:
+                case GearboxType.ATSerial:
+                    strategy = new ATShiftStrategy(data, container);
+                    return new ATGearbox(container, data, strategy, engineInertia);
+                default:
+                    throw new VectoSimulationException("Unknown Gearbox Type: {0}", data.Type);
+            }
+            return new Gearbox(container, data, strategy, engineInertia);
+        }
+    }
 }

@@ -61,13 +61,16 @@ namespace TUGraz.VectoCore.Tests.Reports
 
 			var engineData = MockSimulationDataFactory.CreateEngineDataFromFile(Truck40tPowerTrain.EngineFile);
 
-			var modData = (ModalDataContainer)run.GetContainer().ModalData;
+			// get a reference to the mod-data because the modaldata container clears it after simulation
+			var modData = ((ModalDataContainer)run.GetContainer().ModalData).Data;
 
 			run.Run();
 			Assert.IsTrue(run.FinishedWithoutErrors);
 
+			Assert.IsTrue(modData.Rows.Count > 0);
+
 			var lastGear = 0u;
-			foreach (DataRow row in modData.Data.Rows) {
+			foreach (DataRow row in modData.Rows) {
 				if (cycle.Entries.Last().Distance.IsEqual(((Meter)row[(int)ModalResultField.dist]))) {
 					continue;
 				}

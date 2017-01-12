@@ -8,6 +8,7 @@
 '   WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
 '
 ' See the LICENSE.txt for the specific language governing permissions and limitations.
+Imports System.IO
 
 ''' <summary>
 ''' Global File Brower properties and cFilebrowser instances.
@@ -58,6 +59,18 @@ Module FB_Global
 
 #Region "File path functions"
 
+
+	Public Function GetRelativePath(filePath As String, basePath As String) As String
+		If (String.IsNullOrEmpty(filePath) OrElse String.IsNullOrEmpty(basePath)) Then
+			Return ""
+		End If
+		If (Path.GetDirectoryName(filePath).StartsWith(basePath, StringComparison.OrdinalIgnoreCase)) Then
+			Return Path.GetFullPath(filePath).Substring(basePath.Length + If(basePath.EndsWith("\"), 0, 1))
+		End If
+		Return filePath
+	End Function
+
+
 	'When no path is specified, then insert either HomeDir or MainDir   Special-folders
 	Public Function fFileRepl(ByVal file As String, Optional ByVal MainDir As String = "") As String
 
@@ -70,9 +83,9 @@ Module FB_Global
 		If file = "" Then Return ""
 
 		'Replace sKeys
-		file = Microsoft.VisualBasic.Strings.Replace(file, DefVehPath & "\", MyAppPath & "Default Vehicles\", 1, - 1,
+		file = Microsoft.VisualBasic.Strings.Replace(file, DefVehPath & "\", MyAppPath & "Default Vehicles\", 1, -1,
 													CompareMethod.Text)
-		file = Microsoft.VisualBasic.Strings.Replace(file, DefVehPath & "\", MyAppPath, 1, - 1, CompareMethod.Text)
+		file = Microsoft.VisualBasic.Strings.Replace(file, DefVehPath & "\", MyAppPath, 1, -1, CompareMethod.Text)
 
 		'Replace - Determine folder
 		If MainDir = "" Then
@@ -106,7 +119,7 @@ Module FB_Global
 
 		x = Pfad.LastIndexOf("\")
 
-		If x = - 1 Then Return ""
+		If x = -1 Then Return ""
 
 		Return Pfad.Substring(0, x + 1)
 	End Function
@@ -156,7 +169,7 @@ Module FB_Global
 	Public Function fEXT(ByVal Pfad As String) As String
 		Dim x As Integer
 		x = Pfad.LastIndexOf(".")
-		If x = - 1 Then
+		If x = -1 Then
 			Return ""
 		Else
 			Return Microsoft.VisualBasic.Right(Pfad, Microsoft.VisualBasic.Len(Pfad) - x)

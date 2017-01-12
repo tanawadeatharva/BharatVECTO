@@ -93,10 +93,12 @@
     </Compile>
     <Compile Include="Integration\DeclarationReportTest.cs" />
     <Compile Include="Integration\ShiftStrategy\ShiftStrategyTest.cs" />
+    <Compile Include="Integration\SimulationRuns\TestSimulationRuns.cs" />
     <Compile Include="Models\Declaration\ShiftPolygonTest.cs" />
     <Compile Include="Models\SimulationComponentData\TorqueConverterDataTest.cs" />
     <Compile Include="Models\SimulationComponentData\ValidationTest.cs" />
     <Compile Include="Models\SimulationComponent\ATGearboxTest.cs" />
+    <Compile Include="Models\SimulationComponent\GearboxShiftLossesTest.cs" />
     <Compile Include="Models\Simulation\FactoryTest.cs" />
     <Compile Include="Models\Simulation\PTOIdleLossTest.cs" />
     <Compile Include="Models\Simulation\LossMapRangeValidationTest.cs" />
@@ -104,6 +106,7 @@
     <Compile Include="Models\Simulation\GearboxInertiaTest.cs" />
     <Compile Include="Models\Simulation\MockSumWriter.cs" />
     <Compile Include="Models\Simulation\GetSectionTest.cs" />
+    <Compile Include="Reports\ActualModalSimulationDataTest.cs" />
     <Compile Include="Reports\ModDataTest.cs" />
     <Compile Include="Models\Simulation\MeasuredSpeedModeTest.cs" />
     <Compile Include="Models\Simulation\PwheelModeTests.cs" />
@@ -116,6 +119,7 @@
     <Compile Include="Models\SimulationComponent\GearboxPowertrainTest.cs" />
     <Compile Include="Utils\InputDataHelper.cs" />
     <Compile Include="Utils\MockBrakes.cs" />
+    <Compile Include="Utils\MockComponent.cs" />
     <Compile Include="Utils\MockEngineDataProvider.cs" />
     <Compile Include="Utils\MockIdleController.cs" />
     <Compile Include="Utils\MockSimulationDataFactory.cs" />
@@ -181,6 +185,147 @@
     <None Include="Properties\Settings.settings">
       <Generator>SettingsSingleFileGenerator</Generator>
       <LastGenOutput>Settings.Designer.cs</LastGenOutput>
+    </None>
+    <None Include="TestData\Bugs\Kies-20161115\acc.vacc">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </None>
+    <None Include="TestData\Bugs\Kies-20161115\alt.vaux">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </None>
+    <None Include="TestData\Bugs\Kies-20161115\comp.vaux">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </None>
+    <None Include="TestData\Bugs\Kies-20161115\cycle.vdri">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </None>
+    <None Include="TestData\Bugs\Kies-20161115\eng.veng">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </None>
+    <None Include="TestData\Bugs\Kies-20161115\fuel.vmap">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </None>
+    <None Include="TestData\Bugs\Kies-20161115\full.vfld">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </None>
+    <None Include="TestData\Bugs\Kies-20161115\gbx.vgbx">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </None>
+    <None Include="TestData\Bugs\Kies-20161115\gear1.vtlm">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </None>
+    <None Include="TestData\Bugs\Kies-20161115\gear2.vtlm">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </None>
+    <None Include="TestData\Bugs\Kies-20161115\gear3.vtlm">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </None>
+    <None Include="TestData\Bugs\Kies-20161115\job.vecto">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </None>
+    <None Include="TestData\Bugs\Kies-20161115\shift.vgbs">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </None>
+    <None Include="TestData\Bugs\Kies-20161115\tq.vtcc">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </None>
+    <None Include="TestData\Bugs\Kies-20161115\tq_shift.vgbs">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </None>
+    <None Include="TestData\Bugs\Kies-20161115\veh.vveh">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </None>
+    <None Include="TestData\Bugs\Mandl-20161115\axle.vtlm">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </None>
+    <None Include="TestData\Bugs\Mandl-20161115\cycle.vdri">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </None>
+    <None Include="TestData\Bugs\Mandl-20161115\eng.veng">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </None>
+    <None Include="TestData\Bugs\Mandl-20161115\fuel.vmap">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </None>
+    <None Include="TestData\Bugs\Mandl-20161115\fullload.vfld">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </None>
+    <None Include="TestData\Bugs\Mandl-20161115\gbx.vgbx">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </None>
+    <None Include="TestData\Bugs\Mandl-20161115\gear1.vtlm">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </None>
+    <None Include="TestData\Bugs\Mandl-20161115\gear2.vtlm">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </None>
+    <None Include="TestData\Bugs\Mandl-20161115\gear3.vtlm">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </None>
+    <None Include="TestData\Bugs\Mandl-20161115\gear4.vtlm">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </None>
+    <None Include="TestData\Bugs\Mandl-20161115\gear5.vtlm">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </None>
+    <None Include="TestData\Bugs\Mandl-20161115\gear6.vtlm">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </None>
+    <None Include="TestData\Bugs\Mandl-20161115\job.vecto">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </None>
+    <None Include="TestData\Bugs\Mandl-20161115\shift.vgbs">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </None>
+    <None Include="TestData\Bugs\Mandl-20161115\tq.vtcc">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </None>
+    <None Include="TestData\Bugs\Mandl-20161115\Truck.vacc">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </None>
+    <None Include="TestData\Bugs\Mandl-20161115\veh.vveh">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </None>
+    <None Include="TestData\Bugs\Silberholz-20161121\220kW.csv">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </None>
+    <None Include="TestData\Bugs\Silberholz-20161121\220kW.vfld">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </None>
+    <None Include="TestData\Bugs\Silberholz-20161121\220kW.vmap">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </None>
+    <None Include="TestData\Bugs\Silberholz-20161121\6g_AT_ser.vgbx">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </None>
+    <None Include="TestData\Bugs\Silberholz-20161121\AT-Shift_1000rpm.vgbs">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </None>
+    <None Include="TestData\Bugs\Silberholz-20161121\axle.vtlm">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </None>
+    <None Include="TestData\Bugs\Silberholz-20161121\cycle.vdri">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </None>
+    <None Include="TestData\Bugs\Silberholz-20161121\dummy.vmap">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </None>
+    <None Include="TestData\Bugs\Silberholz-20161121\eng.veng">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </None>
+    <None Include="TestData\Bugs\Silberholz-20161121\indirect.vtlm">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </None>
+    <None Include="TestData\Bugs\Silberholz-20161121\job.vecto">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </None>
+    <None Include="TestData\Bugs\Silberholz-20161121\tq.vtcc">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </None>
+    <None Include="TestData\Bugs\Silberholz-20161121\Truck.vacc">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </None>
+    <None Include="TestData\Bugs\Silberholz-20161121\veh.vveh">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
     </None>
     <None Include="TestData\Components\12t Delivery Truck.veng">
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
@@ -1135,6 +1280,9 @@
     <None Include="TestData\MeasuredSpeed\GearboxSerial.vgbx">
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
     </None>
+    <None Include="TestData\MeasuredSpeed\Gearbox_TractionInterruption.vgbx">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </None>
     <None Include="TestData\MeasuredSpeed\Gear_Axle_loss.vtlm">
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
     </None>
@@ -1180,6 +1328,9 @@
     <None Include="TestData\MeasuredSpeed\MeasuredSpeedGear_AT-PS.vdri">
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
     </None>
+    <None Include="TestData\MeasuredSpeed\MeasuredSpeedGear_TractionInterruption.vecto">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </None>
     <None Include="TestData\MeasuredSpeed\MeasuredSpeedVair.vdri">
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
     </None>
@@ -1214,6 +1365,9 @@
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
     </None>
     <None Include="TestData\MeasuredSpeed\MeasuredSpeed_Gear_Rural_Aux.vdri">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </None>
+    <None Include="TestData\MeasuredSpeed\MeasuredSpeed_Gear_Rural_TractionInterruption.vdri">
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
     </None>
     <None Include="TestData\MeasuredSpeed\MeasuredSpeed_Gear_Rural_Vair.vdri">
@@ -1265,6 +1419,12 @@
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
     </None>
     <None Include="TestData\MeasuredSpeed\Results\MeasuredSpeedGear_MeasuredSpeed_Gear_Rural.vmod">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </None>
+    <None Include="TestData\MeasuredSpeed\Results\MeasuredSpeedGear_TractionInterruption.vsum">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </None>
+    <None Include="TestData\MeasuredSpeed\Results\MeasuredSpeedGear_TractionInterruption_MeasuredSpeed_Gear_Rural_TractionInterruption.vmod">
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
     </None>
     <None Include="TestData\MeasuredSpeed\Results\MeasuredSpeedVair.vsum">
@@ -1503,6 +1663,13 @@
   </ItemGroup>
   <ItemGroup>
     <Folder Include="Integration\FullPowertrain\" />
+  </ItemGroup>
+  <ItemGroup>
+    <Content Include="TestData\Bugs\Kies-20161115\readme.txt" />
+    <Content Include="TestData\Bugs\Mandl-20161115\readme.txt" />
+    <Content Include="TestData\Bugs\Silberholz-20161121\readme.txt">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </Content>
   </ItemGroup>
   <Choose>
     <When Condition="'$(VisualStudioVersion)' == '10.0' And '$(IsCodedUITest)' == 'True'">

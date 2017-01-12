@@ -123,7 +123,7 @@ namespace TUGraz.VectoCore.Tests.Models.SimulationComponentData
 			Assert.AreEqual((0.51 * totalArea).Value(),
 				fldCurve.ComputeArea(fldCurve.EngineData.IdleSpeed, fldCurve.PreferredSpeed).Value(), 1E-3);
 			AssertHelper.AreRelativeEqual(194.515816596908.SI<PerSecond>(), fldCurve.N95hSpeed);
-			AssertHelper.AreRelativeEqual(94.2463966015023.SI<PerSecond>(), fldCurve.LoSpeed);
+			AssertHelper.AreRelativeEqual(83.81645.SI<PerSecond>(), fldCurve.LoSpeed);
 			AssertHelper.AreRelativeEqual(219.084329211505.SI<PerSecond>(), fldCurve.HiSpeed);
 			AssertHelper.AreRelativeEqual(2300.SI<NewtonMeter>(), fldCurve.MaxLoadTorque);
 			AssertHelper.AreRelativeEqual(-320.SI<NewtonMeter>(), fldCurve.MaxDragTorque);

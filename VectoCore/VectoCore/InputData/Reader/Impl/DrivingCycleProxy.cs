@@ -29,32 +29,33 @@
 *   Martin Rexeis, rexeis@ivt.tugraz.at, IVT, Graz University of Technology
 */
 
-using System;
-using System.Diagnostics;
+using System.Collections.Generic;
+using System.Linq;
+using TUGraz.VectoCore.Models.SimulationComponent.Data;
 
-namespace TUGraz.VectoCore.Utils
+namespace TUGraz.VectoCore.InputData.Reader.Impl
 {
-	/// <summary>
-	/// StopWatch which works like an IDisposable-Context.
-	/// Usage: using(new ContextStopWatch("main")) { ... }
-	/// </summary>
-	public class ContextStopWatch : Stopwatch, IDisposable
+	public class DrivingCycleProxy : IDrivingCycleData
 	{
-		private readonly string _name;
-
-		public ContextStopWatch(string name = null)
+		public DrivingCycleProxy(DrivingCycleData cycle, string name)
 		{
-			Start();
-			_name = name;
+			Name = name;
+			CycleType = cycle.CycleType;
+			Entries = cycle.Entries;
 		}
 
-		public void Dispose()
+		public List<DrivingCycleData.DrivingCycleEntry> Entries { get; private set; }
+
+		public string Name { get; private set; }
+
+		public CycleType CycleType { get; private set; }
+
+		public void Finish()
 		{
-			Stop();
-			if (_name != null)
-				Console.WriteLine("{0}: {1}", _name, Elapsed);
-			else
-				Console.WriteLine(Elapsed);
+			Entries = new List<DrivingCycleData.DrivingCycleEntry>() {
+				Entries.First(),
+				Entries.Last()
+			};
 		}
 	}
 }

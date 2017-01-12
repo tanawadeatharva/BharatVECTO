@@ -111,12 +111,30 @@ Namespace My.Resources
         End Property
         
         '''<summary>
+        '''  Looks up a localized string similar to MaxTCSpeed.
+        '''</summary>
+        Friend ReadOnly Property Gearbox_MaxTCSpeed() As String
+            Get
+                Return ResourceManager.GetString("Gearbox_MaxTCSpeed", resourceCulture)
+            End Get
+        End Property
+        
+        '''<summary>
         '''  Looks up a localized resource of type System.Drawing.Bitmap.
         '''</summary>
         Friend ReadOnly Property Info() As System.Drawing.Bitmap
             Get
                 Dim obj As Object = ResourceManager.GetObject("Info", resourceCulture)
                 Return CType(obj,System.Drawing.Bitmap)
+            End Get
+        End Property
+        
+        '''<summary>
+        '''  Looks up a localized string similar to MaxTCSpeed.
+        '''</summary>
+        Friend ReadOnly Property MaxTCSpeed() As String
+            Get
+                Return ResourceManager.GetString("MaxTCSpeed", resourceCulture)
             End Get
         End Property
         

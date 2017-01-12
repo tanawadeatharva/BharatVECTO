@@ -78,14 +78,14 @@ namespace TUGraz.VectoCore.Models.Connector.Ports.Impl
 	/// <summary>
 	/// Response when a request was successful.
 	/// </summary>
-	public class ResponseSuccess : AbstractResponse {
-	}
+	public class ResponseSuccess : AbstractResponse {}
 
 	/// <summary>
 	/// Response when the request resulted in an engine or gearbox overload. 
 	/// </summary>
 	public class ResponseOverload : AbstractResponse
 	{
+		public ResponseOverload() {}
 		public Watt Delta { get; set; }
 		public double Gradient { get; set; }
 	}
@@ -95,6 +95,8 @@ namespace TUGraz.VectoCore.Models.Connector.Ports.Impl
 	/// </summary>
 	public class ResponseUnderload : AbstractResponse
 	{
+		public ResponseUnderload() {}
+
 		public Watt Delta { get; set; }
 		public double Gradient { get; set; }
 	}
@@ -121,11 +123,12 @@ namespace TUGraz.VectoCore.Models.Connector.Ports.Impl
 	{
 		public Watt DeltaFullLoad { get; set; }
 		public Watt DeltaDragLoad { get; set; }
-		public NewtonMeter EngineMaxTorqueOut { get; set; }
-		public NewtonMeter EngineDragTorque { get; set; }
 	}
 
-	internal class ResponseGearShift : AbstractResponse {}
+	internal class ResponseGearShift : AbstractResponse
+	{
+		public ResponseGearShift() {}
+	}
 
 	internal class ResponseEngineSpeedTooLow : ResponseDryRun {}
 }

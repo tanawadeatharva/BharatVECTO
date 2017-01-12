@@ -33,7 +33,6 @@ using System;
 using TUGraz.VectoCommon.Models;
 using TUGraz.VectoCommon.Utils;
 using TUGraz.VectoCore.Models.Connector.Ports;
-using TUGraz.VectoCore.Models.Simulation;
 using TUGraz.VectoCore.OutputData;
 
 namespace TUGraz.VectoCore.Models.SimulationComponent.Impl
@@ -106,9 +105,7 @@ namespace TUGraz.VectoCore.Models.SimulationComponent.Impl
 			{
 				if (_ptoController != null)
 					return _ptoController.Duration;
-				else {
-					return 0.SI<Second>();
-				}
+				return 0.SI<Second>();
 			}
 		}
 	}

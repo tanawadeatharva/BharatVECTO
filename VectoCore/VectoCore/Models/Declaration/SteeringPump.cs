@@ -74,7 +74,7 @@ namespace TUGraz.VectoCore.Models.Declaration
 		{
 			protected override string ResourceId
 			{
-				get { return "TUGraz.VectoCore.Resources.Declaration.VAUX.SP-Table.csv"; }
+				get { return DeclarationData.DeclarationDataResourcePrefix + ".VAUX.SP-Table.csv"; }
 			}
 
 			protected override string ErrorMessage
@@ -103,7 +103,7 @@ namespace TUGraz.VectoCore.Models.Declaration
 		{
 			protected override string ResourceId
 			{
-				get { return "TUGraz.VectoCore.Resources.Declaration.VAUX.SP-Tech.csv"; }
+				get { return DeclarationData.DeclarationDataResourcePrefix + ".VAUX.SP-Tech.csv"; }
 			}
 
 			protected override string ErrorMessage
@@ -150,7 +150,7 @@ namespace TUGraz.VectoCore.Models.Declaration
 		{
 			protected override string ResourceId
 			{
-				get { return "TUGraz.VectoCore.Resources.Declaration.VAUX.SP-Axles.csv"; }
+				get { return DeclarationData.DeclarationDataResourcePrefix + ".VAUX.SP-Axles.csv"; }
 			}
 
 			protected override string ErrorMessage

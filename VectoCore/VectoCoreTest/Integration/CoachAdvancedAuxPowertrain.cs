@@ -94,12 +94,12 @@ namespace TUGraz.VectoCore.Tests.Integration
 				.AddComponent(new Brakes(container))
 				.AddComponent(new AxleGear(container, axleGearData))
 				.AddComponent(new DummyRetarder(container))
-				.AddComponent(new Gearbox(container, gearboxData, new AMTShiftStrategy(gearboxData, container)))
+				.AddComponent(new Gearbox(container, gearboxData, new AMTShiftStrategy(gearboxData, container), engineData.Inertia))
 				.AddComponent(new Clutch(container, engineData))
 				.AddComponent(engine);
 
 			var aux = new BusAuxiliariesAdapter(container, AdvancedAuxFile, "Coach",
-				vehicleData.TotalVehicleWeight(), engineData.ConsumptionMap, engineData.IdleSpeed);
+				vehicleData.TotalVehicleWeight, engineData.ConsumptionMap, engineData.IdleSpeed);
 
 			engine.Connect(aux.Port());
 
@@ -112,15 +112,15 @@ namespace TUGraz.VectoCore.Tests.Integration
 
 			return new GearboxData {
 				Gears = ratios.Select((ratio, i) =>
-						Tuple.Create((uint)i,
-							new GearData {
-								//MaxTorque = 2300.SI<NewtonMeter>(),
-								LossMap = ratio.IsEqual(1)
-									? TransmissionLossMapReader.ReadFromFile(GearboxIndirectLoss, ratio, string.Format("Gear {0}", i))
-									: TransmissionLossMapReader.ReadFromFile(GearboxDirectLoss, ratio, string.Format("Gear {0}", i)),
-								Ratio = ratio,
-								ShiftPolygon = ShiftPolygonReader.ReadFromFile(GearboxShiftPolygonFile)
-							}))
+					Tuple.Create((uint)i,
+						new GearData {
+							//MaxTorque = 2300.SI<NewtonMeter>(),
+							LossMap = ratio.IsEqual(1)
+								? TransmissionLossMapReader.ReadFromFile(GearboxIndirectLoss, ratio, string.Format("Gear {0}", i))
+								: TransmissionLossMapReader.ReadFromFile(GearboxDirectLoss, ratio, string.Format("Gear {0}", i)),
+							Ratio = ratio,
+							ShiftPolygon = ShiftPolygonReader.ReadFromFile(GearboxShiftPolygonFile)
+						}))
 					.ToDictionary(k => k.Item1 + 1, v => v.Item2),
 				ShiftTime = 2.SI<Second>(),
 				Inertia = 0.SI<KilogramSquareMeter>(),

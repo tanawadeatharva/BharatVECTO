@@ -164,7 +164,7 @@ namespace TUGraz.VectoCore.Tests.Models.Declaration
 
 		[TestCase("RigidSolo", 0.013526, 0.017746, -0.000666),
 		TestCase("RigidTrailer", 0.017125, 0.072275, -0.004148),
-		TestCase("TractorSemitrailer", 0.034767, 0.039367, -0.001897),
+		TestCase("TractorSemitrailer", 0.030042, 0.040817, -0.00213),
 		TestCase("CoachBus", -0.000794, 0.02109, -0.00109)]
 		public void AirDrag_WithStringKey(string key, double a1, double a2, double a3)
 		{
@@ -174,48 +174,47 @@ namespace TUGraz.VectoCore.Tests.Models.Declaration
 			Assert.AreEqual(a3, value.A3);
 		}
 
-		[TestCase(VehicleCategory.RigidTruck, 0.013526, 0.017746, -0.000666),
-		TestCase(VehicleCategory.Tractor, 0.034767, 0.039367, -0.001897),
-		TestCase(VehicleCategory.CityBus, -0.000794, 0.02109, -0.00109),
-		TestCase(VehicleCategory.Coach, -0.000794, 0.02109, -0.00109),
-		TestCase(VehicleCategory.InterurbanBus, -0.000794, 0.02109, -0.00109)]
-		public void AirDrag_WithVehicleCategory(VehicleCategory cat, double a1, double a2, double a3)
+		[TestCase("RigidSolo", 0.013526, 0.017746, -0.000666),
+		TestCase("TractorSemitrailer", 0.030042, 0.040817, -0.00213),
+		TestCase("RigidTrailer", 0.017125, 0.072275, -0.004148),
+		TestCase("CoachBus", -0.000794, 0.02109, -0.00109)]
+		public void AirDrag_WithVehicleCategory(string parameterSet, double a1, double a2, double a3)
 		{
-			var value = DeclarationData.AirDrag.Lookup(cat);
+			var value = DeclarationData.AirDrag.Lookup(parameterSet);
 			Assert.AreEqual(a1, value.A1);
 			Assert.AreEqual(a2, value.A2);
 			Assert.AreEqual(a3, value.A3);
 		}
 
-		[TestCase(VehicleCategory.Tractor, 6.46, 0, 8.12204),
-		TestCase(VehicleCategory.Tractor, 6.46, 60, 8.12204),
-		TestCase(VehicleCategory.Tractor, 6.46, 75, 7.67058),
-		TestCase(VehicleCategory.Tractor, 6.46, 100, 7.23735),
-		TestCase(VehicleCategory.Tractor, 6.46, 52.1234, 8.12196),
-		TestCase(VehicleCategory.Tractor, 6.46, 73.5432, 7.70815),
-		TestCase(VehicleCategory.Tractor, 6.46, 92.8765, 7.33443),
-		TestCase(VehicleCategory.Tractor, 6.46, 100.449, 7.2321466),
-		TestCase(VehicleCategory.Tractor, 6.46, 103, 7.2025564),
-		TestCase(VehicleCategory.Tractor, 6.46, 105, 7.17936),
-		TestCase(VehicleCategory.Tractor, 6.46, 115, 7.08174),
-		TestCase(VehicleCategory.Tractor, 6.46, 130, 6.96979),]
-		public void CrossWindCorrectionTest(VehicleCategory vehicleCategory, double crossSectionArea, double kmph,
+		[TestCase("TractorSemitrailer", 6.46, 0, 8.05913),
+		TestCase("TractorSemitrailer", 6.46, 60, 8.05913),
+		TestCase("TractorSemitrailer", 6.46, 75, 7.639436),
+		TestCase("TractorSemitrailer", 6.46, 100, 7.22305),
+		TestCase("TractorSemitrailer", 6.46, 52.1234, 8.059126),
+		TestCase("TractorSemitrailer", 6.46, 73.5432, 7.67487),
+		TestCase("TractorSemitrailer", 6.46, 92.8765, 7.317215),
+		TestCase("TractorSemitrailer", 6.46, 100.449, 7.217975),
+		TestCase("TractorSemitrailer", 6.46, 103, 7.18915),
+		TestCase("TractorSemitrailer", 6.46, 105, 7.166555),
+		TestCase("TractorSemitrailer", 6.46, 115, 7.071136),
+		TestCase("TractorSemitrailer", 6.46, 130, 6.961237),]
+		public void CrossWindCorrectionTest(string parameterSet, double crossSectionArea, double kmph,
 			double expected)
 		{
 			var crossWindCorrectionCurve = new CrosswindCorrectionCdxALookup(
-				DeclarationDataAdapter.GetDeclarationAirResistanceCurve(vehicleCategory, crossSectionArea.SI<SquareMeter>()),
+				DeclarationDataAdapter.GetDeclarationAirResistanceCurve(parameterSet, crossSectionArea.SI<SquareMeter>()),
 				CrossWindCorrectionMode.DeclarationModeCorrection);
 
 			var tmp = crossWindCorrectionCurve.EffectiveAirDragArea(kmph.KMPHtoMeterPerSecond());
 			Assert.AreEqual(expected, tmp.Value(), Tolerance);
 		}
 
-		[TestCase(VehicleCategory.Tractor, 6.46, -0.1),
-		TestCase(VehicleCategory.Tractor, 6.46, 130.1),]
-		public void CrossWindCorrectionExceptionTest(VehicleCategory vehicleCategory, double crossSectionArea, double kmph)
+		[TestCase("TractorSemitrailer", 6.46, -0.1),
+		TestCase("TractorSemitrailer", 6.46, 130.1),]
+		public void CrossWindCorrectionExceptionTest(string parameterSet, double crossSectionArea, double kmph)
 		{
 			var crossWindCorrectionCurve = new CrosswindCorrectionCdxALookup(
-				DeclarationDataAdapter.GetDeclarationAirResistanceCurve(vehicleCategory, crossSectionArea.SI<SquareMeter>()),
+				DeclarationDataAdapter.GetDeclarationAirResistanceCurve(parameterSet, crossSectionArea.SI<SquareMeter>()),
 				CrossWindCorrectionMode.DeclarationModeCorrection);
 
 			AssertHelper.Exception<VectoException>(() =>
@@ -650,7 +649,7 @@ namespace TUGraz.VectoCore.Tests.Models.Declaration
 			double trailerGrossVehicleWeight, double deltaCdA)
 		{
 			Assert.AreEqual(missionType, m.MissionType);
-			Assert.AreEqual(cosswindCorrection, m.CrossWindCorrection);
+			Assert.AreEqual(cosswindCorrection, m.CrossWindCorrectionParameters);
 			CollectionAssert.AreEqual(axleWeightDistribution, m.AxleWeightDistribution,
 				"Axle distribution not equal.\nexpected: {0}\nactual: {1}", string.Join(",", axleWeightDistribution),
 				string.Join(",", m.AxleWeightDistribution));
