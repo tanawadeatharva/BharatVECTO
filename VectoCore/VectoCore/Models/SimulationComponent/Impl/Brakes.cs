@@ -57,14 +57,15 @@ namespace TUGraz.VectoCore.Models.SimulationComponent.Impl
 				: NextComponent.Initialize(torque, angularVelocity);
 		}
 
-		public IResponse Request(Second absTime, Second dt, NewtonMeter outTorque, PerSecond outAngularVelocity, bool dryRun = false)
+		public IResponse Request(Second absTime, Second dt, NewtonMeter outTorque, PerSecond outAngularVelocity,
+			bool dryRun = false)
 		{
 			var brakeTorque = 0.SI<NewtonMeter>();
 			var avgAngularSpeed = (PreviousState.OutAngularVelocity + outAngularVelocity) / 2.0;
 
 			if (!BrakePower.IsEqual(0)) {
 				if (avgAngularSpeed.IsEqual(0)) {
-					brakeTorque = outTorque;
+					brakeTorque = -outTorque;
 				} else {
 					brakeTorque = BrakePower / avgAngularSpeed;
 				}

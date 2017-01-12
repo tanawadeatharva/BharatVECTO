@@ -79,7 +79,7 @@ namespace TUGraz.VectoCore.InputData.Reader.Impl
 					drivingCycle = CyclesCache[cycle.CycleData.Source];
 				} else {
 					drivingCycle = DrivingCycleDataReader.ReadFromDataTable(cycle.CycleData, cycle.Name, crossWindRequired);
-					CyclesCache.Add(cycle.CycleData.Source, drivingCycle);
+					//CyclesCache.Add(cycle.CycleData.Source, drivingCycle);
 				}
 				return new VectoRunData {
 					JobName = InputDataProvider.JobInputData().JobName,

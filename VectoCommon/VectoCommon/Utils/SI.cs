@@ -1915,16 +1915,16 @@ namespace TUGraz.VectoCommon.Utils
 			if (Denominator.Any()) {
 				if (Numerator.Any()) {
 					return string.Concat(
-								Numerator.GroupBy(x => x)
-									.Select(x => x.Count() == 1 ? x.Key.ToString() : string.Format("{0}^{1}", x.Key, x.Count())))
+						Numerator.GroupBy(x => x)
+							.Select(x => x.Count() == 1 ? x.Key.ToString() : string.Format("{0}^{1}", x.Key, x.Count())))
 							+ "/"
 							+ string.Concat(
 								Denominator.GroupBy(x => x)
 									.Select(x => x.Count() == 1 ? x.Key.ToString() : string.Format("{0}^{1}", x.Key, x.Count())));
 				}
 				return "1/" + string.Concat(
-							Denominator.GroupBy(x => x)
-								.Select(x => x.Count() == 1 ? x.Key.ToString() : string.Format("{0}^{1}", x.Key, x.Count())));
+					Denominator.GroupBy(x => x)
+						.Select(x => x.Count() == 1 ? x.Key.ToString() : string.Format("{0}^{1}", x.Key, x.Count())));
 			}
 
 			if (Numerator.Any()) {

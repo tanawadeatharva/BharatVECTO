@@ -492,6 +492,9 @@ Public Class GearboxForm
 		TbStartAcc.Enabled = Not gStype.AutomaticTransmission()
 		TbStartSpeed.Enabled = Not gStype.AutomaticTransmission()
 		TbTqResv.Enabled = Not gStype.AutomaticTransmission()
+		GroupBox2.Enabled = Not gStype.AutomaticTransmission()
+		TBI_getr.Enabled = Not gStype.AutomaticTransmission()
+		TbTracInt.Enabled = Not gStype.AutomaticTransmission()
 		tbDownshiftAfterUpshift.Enabled = Not gStype.AutomaticTransmission()
 		tbUpshiftAfterDownshift.Enabled = Not gStype.AutomaticTransmission()
 	End Sub
