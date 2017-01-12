@@ -137,7 +137,13 @@ namespace TUGraz.VectoCore.Models.SimulationComponent.Impl
 			}
 
 			// calc acceleration from speed diff vehicle to cycle
-			var deltaV = CycleIterator.RightSample.VehicleTargetSpeed - DataBus.VehicleSpeed;
+			var targetSpeed = CycleIterator.RightSample == null
+				? 0.KMPHtoMeterPerSecond()
+				: CycleIterator.RightSample.VehicleTargetSpeed;
+			if (targetSpeed.IsEqual(0.KMPHtoMeterPerSecond(), 0.5.KMPHtoMeterPerSecond())) {
+				targetSpeed = 0.KMPHtoMeterPerSecond();
+			}
+			var deltaV = targetSpeed - DataBus.VehicleSpeed;
 			var deltaT = CycleIterator.RightSample.Time - CycleIterator.LeftSample.Time;
 
 			if (DataBus.VehicleSpeed.IsSmaller(0)) {

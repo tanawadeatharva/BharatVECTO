@@ -102,22 +102,16 @@ namespace TUGraz.VectoCore.Models.SimulationComponent.Impl
 			CurrentState.Distance = PreviousState.Distance + PreviousState.Velocity * dt + acceleration * dt * dt / 2;
 
 			CurrentState.DriverAcceleration = DriverAcceleration(acceleration);
-			CurrentState.RollingResistance = DataBus.DriverBehavior == DrivingBehavior.Halted
-				? 0.SI<Newton>()
-				: RollingResistance(gradient);
+			CurrentState.RollingResistance = RollingResistance(gradient);
 			try {
-				CurrentState.AirDragResistance = DataBus.DriverBehavior == DrivingBehavior.Halted
-					? 0.SI<Newton>()
-					: AirDragResistance(PreviousState.Velocity, CurrentState.Velocity);
+				CurrentState.AirDragResistance = AirDragResistance(PreviousState.Velocity, CurrentState.Velocity);
 			} catch (VectoException ex) {
 				Log.Warn("Exception during calculation of AirDragResistance: absTime: {0}, dist: {1}, v: {2}. {3}", absTime,
 					CurrentState.Distance, CurrentState.Velocity, ex);
 				CurrentState.AirDragResistance = AirDragResistance(VectoMath.Max(0, PreviousState.Velocity),
 					VectoMath.Max(0, CurrentState.Velocity));
 			}
-			CurrentState.SlopeResistance = DataBus.DriverBehavior == DrivingBehavior.Halted
-				? 0.SI<Newton>()
-				: SlopeResistance(gradient);
+			CurrentState.SlopeResistance = SlopeResistance(gradient);
 
 			// DriverAcceleration = vehicleTractionForce - RollingResistance - AirDragResistance - SlopeResistance
 			CurrentState.VehicleTractionForce = CurrentState.DriverAcceleration
