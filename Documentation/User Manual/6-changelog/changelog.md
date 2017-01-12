@@ -2,7 +2,7 @@
 
 **VECTO 3.1.1**
 
-***Build 740 (2017-01-10)***
+***Build 742 (2017-01-12)***
 
 - Improvements:
     + [VECTO-390, VECTO-400] Adapt engine speed to estimated engine speed after gear shift during traction interruption (double clutching)
