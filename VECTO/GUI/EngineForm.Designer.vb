@@ -415,9 +415,9 @@ Partial Class EngineForm
 		Me.lblColdHotFactor.AutoSize = True
 		Me.lblColdHotFactor.Location = New System.Drawing.Point(3, 63)
 		Me.lblColdHotFactor.Name = "lblColdHotFactor"
-		Me.lblColdHotFactor.Size = New System.Drawing.Size(185, 13)
+		Me.lblColdHotFactor.Size = New System.Drawing.Size(177, 13)
 		Me.lblColdHotFactor.TabIndex = 5
-		Me.lblColdHotFactor.Text = "Cold/Hot Emmission Balancing Factor"
+		Me.lblColdHotFactor.Text = "Cold/Hot Emission Balancing Factor"
 		'
 		'TbColdHotFactor
 		'
