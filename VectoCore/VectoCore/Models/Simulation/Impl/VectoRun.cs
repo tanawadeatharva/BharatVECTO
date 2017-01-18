@@ -154,8 +154,13 @@ namespace TUGraz.VectoCore.Models.Simulation.Impl
 					Container.Distance, dt, Container.VehicleSpeed, TryCatch(() => Container.Gear), e.Message,
 					RunIdentifier, CycleName, RunSuffix);
 			}
-			Container.RunStatus = Status.Success;
+			Container.RunStatus = Progress < 1 ? Status.Aborted : Status.Success;
 			Container.FinishSimulation();
+			if (Progress < 1) {
+				throw new VectoSimulationException("{6} ({7} {8}) - absTime: {0}, distance: {1}, dt: {2}, v: {3}, Gear: {4}",
+					AbsTime, Container.Distance, dt, Container.VehicleSpeed, TryCatch(() => Container.Gear), RunIdentifier, CycleName,
+					RunSuffix);
+			}
 			IterationStatistics.FinishSimulation(RunName + CycleName + RunSuffix + RunIdentifier);
 
 			Log.Info("VectoJob finished.");
