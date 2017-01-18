@@ -217,7 +217,7 @@ namespace TUGraz.VectoCore.Models.SimulationComponent.Impl
 
 		private IResponse DriveTimeInterval(Second absTime, Second dt)
 		{
-			CurrentState.AbsTime = PreviousState.AbsTime + dt;
+			CurrentState.AbsTime = absTime;
 			CurrentState.WaitTime = PreviousState.WaitTime + dt;
 			CurrentState.Gradient = ComputeGradient(0.SI<Meter>());
 			CurrentState.VehicleTargetSpeed = Left.VehicleTargetSpeed;
@@ -250,6 +250,7 @@ namespace TUGraz.VectoCore.Models.SimulationComponent.Impl
 						retVal = NextComponent.Request(absTime, r.DeltaT, 0.SI<MeterPerSecond>(), CurrentState.Gradient);
 						retVal = NextComponent.Request(absTime, ds, CurrentState.VehicleTargetSpeed, CurrentState.Gradient);
 					});
+			CurrentState.AbsTime = absTime;
 			return retVal;
 		}
 
