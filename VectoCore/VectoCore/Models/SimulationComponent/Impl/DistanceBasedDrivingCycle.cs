@@ -195,6 +195,7 @@ namespace TUGraz.VectoCore.Models.SimulationComponent.Impl
 					CurrentState.WaitPhase++;
 					return Constants.SimulationSettings.TargetTimeInterval;
 				case 2:
+					CurrentState.WaitPhase++;
 					return Left.StoppingTime - 2 * Constants.SimulationSettings.TargetTimeInterval;
 			}
 			return null;
