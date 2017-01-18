@@ -156,10 +156,11 @@ namespace TUGraz.VectoCore.Models.Simulation.Impl
 			}
 			Container.RunStatus = Progress < 1 ? Status.Aborted : Status.Success;
 			Container.FinishSimulation();
-			if (Progress < 1) {
-				throw new VectoSimulationException("{6} ({7} {8}) - absTime: {0}, distance: {1}, dt: {2}, v: {3}, Gear: {4}",
+			if (Progress.IsSmaller(1, 1e-9)) {
+				throw new VectoSimulationException(
+					"{5} ({6} {7}) Progress: {8} - absTime: {0}, distance: {1}, dt: {2}, v: {3}, Gear: {4}",
 					AbsTime, Container.Distance, dt, Container.VehicleSpeed, TryCatch(() => Container.Gear), RunIdentifier, CycleName,
-					RunSuffix);
+					RunSuffix, Progress);
 			}
 			IterationStatistics.FinishSimulation(RunName + CycleName + RunSuffix + RunIdentifier);
 
