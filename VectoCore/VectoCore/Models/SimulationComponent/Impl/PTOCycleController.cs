@@ -88,7 +88,7 @@ namespace TUGraz.VectoCore.Models.SimulationComponent.Impl
 
 		public Second GetNextCycleTime()
 		{
-			if (CycleIterator.RightSample == null) {
+			if (CycleIterator.LastEntry && AbsTime.IsEqual(CycleIterator.RightSample.Time)) {
 				return null;
 			}
 
