@@ -1,6 +1,14 @@
 #Changelog
 
+
+
 **VECTO 3.1.1**
+
+***Build 748 (2017-01-18)***
+
+- Bugfixes:
+    + [VECTO-404] Driving Cycle with PTO stopped simulation after first PTO activation
+
 
 ***Build 742 (2017-01-12)***
 
