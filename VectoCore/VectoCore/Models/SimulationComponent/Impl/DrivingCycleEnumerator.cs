@@ -99,6 +99,7 @@ namespace TUGraz.VectoCore.Models.SimulationComponent.Impl
 		public void Reset()
 		{
 			_currentCycleIndex = 0;
+			LastEntry = false;
 		}
 
 		public void Dispose() {}

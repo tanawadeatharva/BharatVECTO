@@ -96,15 +96,18 @@ namespace TUGraz.VectoCore.Models.SimulationComponent.Impl
 
 		public void CommitSimulationStep(IModalDataContainer container)
 		{
-			_ptoController.CommitSimulationStep(container);
+			if (_currentController == _ptoController) {
+				_ptoController.CommitSimulationStep(container);
+			}
 		}
 
 		public Second Duration
 		{
 			get
 			{
-				if (_ptoController != null)
+				if (_ptoController != null) {
 					return _ptoController.Duration;
+				}
 				return 0.SI<Second>();
 			}
 		}

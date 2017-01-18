@@ -121,8 +121,12 @@ namespace TUGraz.VectoCore.Models.SimulationComponent.Impl
 							Left.StoppingTime, Left.VehicleTargetSpeed);
 						throw new VectoSimulationException("Stopping Time only allowed when target speed is zero!");
 					}
-
-					CurrentState.Response = DriveTimeInterval(absTime, GetStopTimeInterval());
+					var dt = GetStopTimeInterval();
+					if (dt == null) {
+						CurrentState.WaitPhase++;
+						dt = GetStopTimeInterval();
+					}
+					CurrentState.Response = DriveTimeInterval(absTime, dt);
 					return CurrentState.Response;
 				}
 			}
@@ -165,59 +169,79 @@ namespace TUGraz.VectoCore.Models.SimulationComponent.Impl
 
 		private Second GetStopTimeInterval()
 		{
-			if (Left.PTOActive && IdleController != null) {
-				if (Left.StoppingTime.IsGreater(0)) {
-					// we have a pto cycle with stopping time: split into 3 parts: 1/2 stoptime, pto duration, 1/2 stoptime
-					if (PreviousState.WaitTime.IsEqual(0)) {
-						// first step: set dt to 1/2 stopping time
-						return Left.StoppingTime / 2;
-					} else {
-						if (PreviousState.WaitTime.IsEqual(Left.StoppingTime / 2)) {
-							// begining the second step: activate pto
-							IdleController.ActivatePTO();
-						}
-						// second step: drive pto cycle intervals
-						var dt = IdleController.GetNextCycleTime();
-						if (dt == null) {
-							// third step: pto has finished. activate normal idle controller and drive 1/2 stopping time again.
-							IdleController.ActivateIdle();
-							return Left.StoppingTime / 2;
-						}
-						return dt;
-					}
-				} else {
-					// we have a pto cycle without stopping time.
-					if (PreviousState.WaitTime.IsEqual(0)) {
-						// begininng: activate pto
-						IdleController.ActivatePTO();
-					}
-
-					return IdleController.GetNextCycleTime();
-				}
-			} else {
-				if (Left.StoppingTime.IsGreater(3 * Constants.SimulationSettings.TargetTimeInterval)) {
-					// split into 3 parts: targettime, stoptime-2*targettime, targettime
-					if (PreviousState.WaitTime.IsEqual(0)) {
-						// first step: just started waiting: set dt to targettime
-						return Constants.SimulationSettings.TargetTimeInterval;
-					} else {
-						// continue waiting with rest time
-						var dt = Left.StoppingTime - PreviousState.WaitTime;
-						// in second step dt is stoptime - targettime, therefore 1 targettime still has to be subtracted.
-						// in third step dt is exactly targettime.
-						if (dt.IsGreater(Constants.SimulationSettings.TargetTimeInterval)) {
-							dt -= Constants.SimulationSettings.TargetTimeInterval;
-						}
-						return dt;
-					}
-				}
-				return Left.StoppingTime;
+			if (!Left.PTOActive || IdleController == null) {
+				return Left.StoppingTime.IsGreater(3 * Constants.SimulationSettings.TargetTimeInterval)
+					? GetStopTimeIntervalThreePhases()
+					: Left.StoppingTime;
 			}
+			if (Left.StoppingTime.IsGreater(6 * Constants.SimulationSettings.TargetTimeInterval)) {
+				// 7 pahses
+				return GetStopTimeIntervalSevenPhasesPTO();
+			}
+			if (Left.StoppingTime.IsGreater(0)) {
+				// 3 phases
+				return GetStopTimeIntervalThreePhasesPTO();
+			}
+			// we have a pto cycle without stopping time.
+			IdleController.ActivatePTO();
+			return IdleController.GetNextCycleTime();
+		}
+
+		private Second GetStopTimeIntervalThreePhases()
+		{
+			switch (CurrentState.WaitPhase) {
+				case 1:
+				case 3:
+					CurrentState.WaitPhase++;
+					return Constants.SimulationSettings.TargetTimeInterval;
+				case 2:
+					CurrentState.WaitPhase++;
+					return Left.StoppingTime - 2 * Constants.SimulationSettings.TargetTimeInterval;
+			}
+			return null;
+		}
+
+		private Second GetStopTimeIntervalThreePhasesPTO()
+		{
+			switch (CurrentState.WaitPhase) {
+				case 1:
+				case 3:
+					CurrentState.WaitPhase++;
+					IdleController.ActivateIdle();
+					return Left.StoppingTime / 2;
+				case 2:
+					IdleController.ActivatePTO();
+					return IdleController.GetNextCycleTime();
+			}
+			return null;
+		}
+
+		private Second GetStopTimeIntervalSevenPhasesPTO()
+		{
+			switch (CurrentState.WaitPhase) {
+				case 1:
+				case 5:
+					CurrentState.WaitPhase++;
+					IdleController.ActivateIdle();
+					return Constants.SimulationSettings.TargetTimeInterval;
+				case 3:
+				case 7:
+					CurrentState.WaitPhase++;
+					return Constants.SimulationSettings.TargetTimeInterval;
+				case 2:
+				case 6:
+					CurrentState.WaitPhase++;
+					return Left.StoppingTime / 2 - 2 * Constants.SimulationSettings.TargetTimeInterval;
+				case 4:
+					IdleController.ActivatePTO();
+					return IdleController.GetNextCycleTime();
+			}
+			return null;
 		}
 
 		private IResponse DriveTimeInterval(Second absTime, Second dt)
 		{
-			CurrentState.AbsTime = PreviousState.AbsTime + dt;
+			CurrentState.AbsTime = absTime;
 			CurrentState.WaitTime = PreviousState.WaitTime + dt;
 			CurrentState.Gradient = ComputeGradient(0.SI<Meter>());
 			CurrentState.VehicleTargetSpeed = Left.VehicleTargetSpeed;
@@ -238,6 +262,7 @@ namespace TUGraz.VectoCore.Models.SimulationComponent.Impl
 				};
 			}
 
+			CurrentState.WaitPhase = 0;
 			CurrentState.Distance = PreviousState.Distance + ds;
 			CurrentState.SimulationDistance = ds;
 			CurrentState.VehicleTargetSpeed = Left.VehicleTargetSpeed;
@@ -250,6 +275,7 @@ namespace TUGraz.VectoCore.Models.SimulationComponent.Impl
 						retVal = NextComponent.Request(absTime, r.DeltaT, 0.SI<MeterPerSecond>(), CurrentState.Gradient);
 						retVal = NextComponent.Request(absTime, ds, CurrentState.VehicleTargetSpeed, CurrentState.Gradient);
 					});
+			CurrentState.AbsTime = absTime;
 			return retVal;
 		}
 
@@ -493,6 +519,7 @@ namespace TUGraz.VectoCore.Models.SimulationComponent.Impl
 					Distance = Distance,
 					VehicleTargetSpeed = VehicleTargetSpeed,
 					Altitude = Altitude,
+					WaitPhase = WaitPhase,
 					// WaitTime is not cloned on purpose!
 					WaitTime = 0.SI<Second>(),
 					Response = null
@@ -504,6 +531,8 @@ namespace TUGraz.VectoCore.Models.SimulationComponent.Impl
 			public Meter Distance;
 
 			public Second WaitTime;
+
+			public uint WaitPhase;
 
 			public MeterPerSecond VehicleTargetSpeed;
 
