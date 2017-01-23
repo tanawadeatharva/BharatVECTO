@@ -100,9 +100,11 @@ namespace TUGraz.VectoCore.Models.SimulationComponent.Impl
 					// if in shift curve and above idle speed and torque reserve is provided.
 					if (!IsBelowDownShiftCurve(gear, inTorque, inAngularSpeed) && inAngularSpeed > DataBus.EngineIdleSpeed &&
 						reserve >= ModelData.StartTorqueReserve) {
+						_nextGear = gear;
 						return gear;
 					}
 				}
+				_nextGear = 1;
 				return 1;
 			}
 			for (var gear = (uint)ModelData.Gears.Count; gear > 1; gear--) {
@@ -120,17 +122,19 @@ namespace TUGraz.VectoCore.Models.SimulationComponent.Impl
 						Constants.SimulationSettings.ClutchClosingSpeedNorm && gear > 1) {
 						gear--;
 					}
-
+					_nextGear = gear;
 					return gear;
 				}
 
 				// if over the up shift curve: return the previous gear (even thou it did not provide the required torque reserve)
 				if (IsAboveUpShiftCurve(gear, inTorque, inAngularSpeed) && gear < ModelData.Gears.Count) {
+					_nextGear = gear;
 					return gear + 1;
 				}
 			}
 
 			// fallback: return first gear
+			_nextGear = 1;
 			return 1;
 		}
 
