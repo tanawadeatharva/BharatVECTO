@@ -90,11 +90,11 @@ namespace TUGraz.VectoCore.Models.SimulationComponent.Impl
 		public IResponse Request(Second absTime, Second dt, NewtonMeter outTorque, PerSecond outAngularVelocity,
 			bool dryRun = false)
 		{
-			if (outAngularVelocity == null) {
+			if (!DataBus.ClutchClosed(absTime) && !dryRun) {
 				Log.Debug("Invoking IdleController...");
 				var retval = IdleController.Request(absTime, dt, outTorque, null, dryRun);
 				retval.ClutchPowerRequest = 0.SI<Watt>();
-				CurrentState.SetState(0.SI<NewtonMeter>(), retval.EngineSpeed, outTorque, retval.EngineSpeed);
+				CurrentState.SetState(0.SI<NewtonMeter>(), retval.EngineSpeed, outTorque, outAngularVelocity);
 				return retval;
 			}
 			if (IdleController != null) {
