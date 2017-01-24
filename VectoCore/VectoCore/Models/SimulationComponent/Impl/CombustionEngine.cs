@@ -548,16 +548,22 @@ namespace TUGraz.VectoCore.Models.SimulationComponent.Impl
 				if (_idleStart == null) {
 					_idleStart = absTime;
 					_engineTargetSpeed = _engine.PreviousState.EngineSpeed / _dataBus.GetGearData(_dataBus.Gear).Ratio *
-									_dataBus.GetGearData(_dataBus.NextGear.Gear).Ratio;
+										_dataBus.GetGearData(_dataBus.NextGear.Gear).Ratio;
 				}
 
-				
-				var velocitySlope = (_engineTargetSpeed - _engine.PreviousState.EngineSpeed) / (_dataBus.TractionInterruption - (absTime - _idleStart));
 
-				var nextAngularSpeed = (velocitySlope *  dt + _engine.PreviousState.EngineSpeed);
+				var velocitySlope = (_engineTargetSpeed - _engine.PreviousState.EngineSpeed) /
+									(_dataBus.TractionInterruption - (absTime - _idleStart));
+
+				var nextAngularSpeed = (velocitySlope * dt + _engine.PreviousState.EngineSpeed);
+
+				nextAngularSpeed = velocitySlope < 0
+					? VectoMath.Max(_engineTargetSpeed, nextAngularSpeed)
+					: VectoMath.Min(_engineTargetSpeed, nextAngularSpeed);
 				if (nextAngularSpeed < _engine.ModelData.IdleSpeed) {
 					nextAngularSpeed = _engine.ModelData.IdleSpeed;
 				}
+
 
 				var retVal = RequestPort.Request(absTime, dt, 0.SI<NewtonMeter>(), nextAngularSpeed);
 				retVal.Switch().

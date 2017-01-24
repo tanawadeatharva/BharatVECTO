@@ -115,6 +115,13 @@ namespace TUGraz.VectoCore.Models.SimulationComponent.Impl
 			Log.Debug("to Engine:   torque: {0}, angularVelocity: {1}, power {2}", torqueIn, angularVelocityIn,
 				Formulas.TorqueToPower(torqueIn, angularVelocityIn));
 
+			var avgOutAngularVelocity = (PreviousState.OutAngularVelocity + outAngularVelocity) / 2.0;
+			var avgInAngularVelocity = (PreviousState.InAngularVelocity + angularVelocityIn) / 2.0;
+			var clutchLoss = torqueIn * avgInAngularVelocity - outTorque * avgOutAngularVelocity;
+			if (clutchLoss < 0) {
+				// we don't want to have negative clutch losses, so adapt input torque to match the average output power
+				torqueIn = outTorque * avgOutAngularVelocity / avgInAngularVelocity;
+			}
 
 			var retVal = NextComponent.Request(absTime, dt, torqueIn, angularVelocityIn, dryRun);
 			if (!dryRun) {
