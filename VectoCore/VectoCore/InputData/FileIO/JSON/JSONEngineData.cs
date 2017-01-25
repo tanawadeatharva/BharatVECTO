@@ -29,7 +29,9 @@
 *   Martin Rexeis, rexeis@ivt.tugraz.at, IVT, Graz University of Technology
 */
 
+using System;
 using System.Data;
+using System.IO;
 using Newtonsoft.Json.Linq;
 using TUGraz.VectoCommon.InputData;
 using TUGraz.VectoCommon.Utils;
@@ -68,7 +70,8 @@ namespace TUGraz.VectoCore.InputData.FileIO.JSON
 	/// </code>
 	public class JSONEngineDataV3 : JSONFile, IEngineEngineeringInputData
 	{
-		public JSONEngineDataV3(JObject data, string fileName) : base(data, fileName) {}
+		public JSONEngineDataV3(JObject data, string fileName, bool tolerateMissing = false)
+			: base(data, fileName, tolerateMissing) {}
 
 		public virtual CubicMeter Displacement
 		{
@@ -84,12 +87,33 @@ namespace TUGraz.VectoCore.InputData.FileIO.JSON
 
 		public virtual TableData FuelConsumptionMap
 		{
-			get { return ReadTableData(Body.GetEx<string>(JsonKeys.Engine_FuelConsumptionMap), "FuelConsumptionMap"); }
+			get
+			{
+				try {
+					return ReadTableData(Body.GetEx<string>(JsonKeys.Engine_FuelConsumptionMap), "FuelConsumptionMap");
+				} catch (Exception) {
+					if (!TolerateMissing) {
+						throw;
+					}
+					return
+						new TableData(Path.Combine(BasePath, Body[JsonKeys.Engine_FuelConsumptionMap].ToString()) + MissingFileSuffix);
+				}
+			}
 		}
 
 		public virtual TableData FullLoadCurve
 		{
-			get { return ReadTableData(Body.GetEx<string>(JsonKeys.Engine_FullLoadCurveFile), "FullLoadCurve"); }
+			get
+			{
+				try {
+					return ReadTableData(Body.GetEx<string>(JsonKeys.Engine_FullLoadCurveFile), "FullLoadCurve");
+				} catch (Exception) {
+					if (!TolerateMissing) {
+						throw;
+					}
+					return new TableData(Path.Combine(BasePath, Body[JsonKeys.Engine_FullLoadCurveFile].ToString()) + MissingFileSuffix);
+				}
+			}
 		}
 
 		public virtual KilogramSquareMeter Inertia
