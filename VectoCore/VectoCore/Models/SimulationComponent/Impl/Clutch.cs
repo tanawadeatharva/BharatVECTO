@@ -90,11 +90,11 @@ namespace TUGraz.VectoCore.Models.SimulationComponent.Impl
 		public IResponse Request(Second absTime, Second dt, NewtonMeter outTorque, PerSecond outAngularVelocity,
 			bool dryRun = false)
 		{
-			if (outAngularVelocity == null) {
+			if (!DataBus.ClutchClosed(absTime) && !dryRun) {
 				Log.Debug("Invoking IdleController...");
 				var retval = IdleController.Request(absTime, dt, outTorque, null, dryRun);
 				retval.ClutchPowerRequest = 0.SI<Watt>();
-				CurrentState.SetState(0.SI<NewtonMeter>(), retval.EngineSpeed, outTorque, retval.EngineSpeed);
+				CurrentState.SetState(0.SI<NewtonMeter>(), retval.EngineSpeed, outTorque, outAngularVelocity);
 				return retval;
 			}
 			if (IdleController != null) {
@@ -115,6 +115,13 @@ namespace TUGraz.VectoCore.Models.SimulationComponent.Impl
 			Log.Debug("to Engine:   torque: {0}, angularVelocity: {1}, power {2}", torqueIn, angularVelocityIn,
 				Formulas.TorqueToPower(torqueIn, angularVelocityIn));
 
+			var avgOutAngularVelocity = (PreviousState.OutAngularVelocity + outAngularVelocity) / 2.0;
+			var avgInAngularVelocity = (PreviousState.InAngularVelocity + angularVelocityIn) / 2.0;
+			var clutchLoss = torqueIn * avgInAngularVelocity - outTorque * avgOutAngularVelocity;
+			if (clutchLoss < 0) {
+				// we don't want to have negative clutch losses, so adapt input torque to match the average output power
+				torqueIn = outTorque * avgOutAngularVelocity / avgInAngularVelocity;
+			}
 
 			var retVal = NextComponent.Request(absTime, dt, torqueIn, angularVelocityIn, dryRun);
 			if (!dryRun) {
@@ -144,7 +151,7 @@ namespace TUGraz.VectoCore.Models.SimulationComponent.Impl
 				var engineSpeed = VectoMath.Max(_idleSpeed, angularVelocity);
 
 				angularVelocityIn = _clutchSpeedSlippingFactor * engineSpeed + _idleSpeed;
-				torqueIn = torque * effectiveAngularVelocity / ClutchEff / angularVelocityIn;
+				//torqueIn = torque * effectiveAngularVelocity / ClutchEff / angularVelocityIn;
 			}
 		}
 

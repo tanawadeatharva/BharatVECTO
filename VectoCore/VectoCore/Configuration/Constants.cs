@@ -112,7 +112,7 @@ namespace TUGraz.VectoCore.Configuration
 			/// <summary>
 			/// simulation interval if the vehicle stands still
 			/// </summary>
-			public static readonly Meter DriveOffDistance = 1.SI<Meter>();
+			public static readonly Meter DriveOffDistance = 0.25.SI<Meter>();
 
 			public static readonly Meter BrakeNextTargetDistance = 2.5.SI<Meter>();
 
@@ -138,7 +138,7 @@ namespace TUGraz.VectoCore.Configuration
 			/// </summary>
 			public const double InterpolateSearchTolerance = 1e-3;
 
-			public const double ClutchClosingSpeedNorm = 0.03;
+			public const double ClutchClosingSpeedNorm = 0.065;
 
 			public static readonly MeterPerSecond ClutchDisengageWhenHaltingSpeed = 15.KMPHtoMeterPerSecond();
 

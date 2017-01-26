@@ -215,6 +215,7 @@ namespace TUGraz.VectoCore.Models.SimulationComponent.Impl
 		private IResponse RequestGearDisengaged(Second absTime, Second dt, NewtonMeter outTorque, PerSecond outAngularVelocity,
 			bool dryRun)
 		{
+			Disengaged = true;
 			Log.Debug("Current Gear: Neutral");
 
 			var avgAngularVelocity = (PreviousState.OutAngularVelocity + outAngularVelocity) / 2.0;
@@ -257,12 +258,12 @@ namespace TUGraz.VectoCore.Models.SimulationComponent.Impl
 			}
 
 			var inTorque = 0.SI<NewtonMeter>();
-
-			CurrentState.SetState(inTorque, outAngularVelocity * ModelData.Gears[PreviousState.Gear].Ratio, outTorque,
+			var inAngularSpeed = outAngularVelocity * ModelData.Gears[NextGear.Gear].Ratio;
+			CurrentState.SetState(inTorque, inAngularSpeed, outTorque,
 				outAngularVelocity);
 			CurrentState.Gear = PreviousState.Gear;
 
-			var response = NextComponent.Request(absTime, dt, inTorque, null);
+			var response = NextComponent.Request(absTime, dt, inTorque, inAngularSpeed);
 
 			CurrentState.InAngularVelocity = response.EngineSpeed;
 
