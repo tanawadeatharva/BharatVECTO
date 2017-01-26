@@ -226,7 +226,10 @@ Public Class GearboxForm
 
 
 		_changed = False
-		UpdatePic()
+		Try
+			UpdatePic()
+		Catch
+		End Try
 	End Sub
 
 	'Open file
@@ -327,7 +330,10 @@ Public Class GearboxForm
 		Activate()
 
 		_changed = False
-		UpdatePic()
+		Try
+			UpdatePic()
+		Catch
+		End Try
 	End Sub
 
 	Private Function CreateListviewItem(gear As String, ratio As Double, getrMap As String,
@@ -502,7 +508,10 @@ Public Class GearboxForm
 
 	Private Sub LvGears_SelectedIndexChanged(sender As Object, e As EventArgs) _
 		Handles LvGears.SelectedIndexChanged
-		UpdatePic()
+		Try
+			UpdatePic()
+		Catch
+		End Try
 	End Sub
 
 #Region "Gears"
@@ -571,8 +580,11 @@ Public Class GearboxForm
 				LvGears.SelectedItems(0).SubItems(GearboxTbl.LossMapEfficiency).Text = _gearDialog.TbMapPath.Text
 				LvGears.SelectedItems(0).SubItems(GearboxTbl.ShiftPolygons).Text = _gearDialog.TbShiftPolyFile.Text
 				LvGears.SelectedItems(0).SubItems(GearboxTbl.MaxTorque).Text = _gearDialog.TbMaxTorque.Text
+				Try
+					UpdatePic()
+				Catch
+				End Try
 
-				UpdatePic()
 				Change()
 
 			Else
@@ -638,7 +650,10 @@ Public Class GearboxForm
 		End If
 
 		LvGears.Focus()
-		UpdatePic()
+		Try
+			UpdatePic()
+		Catch
+		End Try
 
 		If Not noChange Then Change()
 	End Sub
