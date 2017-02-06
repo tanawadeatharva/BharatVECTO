@@ -171,11 +171,11 @@ namespace TUGraz.VectoCore.Models.SimulationComponent.Impl
 
 			_nextGear = CheckUpshift(absTime, dt, outTorque, outAngularVelocity, inTorque, inAngularVelocity, gear);
 
-			if ((ModelData.Gears[_nextGear].Ratio * outAngularVelocity - DataBus.EngineIdleSpeed) /
-				(DataBus.EngineRatedSpeed - DataBus.EngineIdleSpeed) <
-				Constants.SimulationSettings.ClutchClosingSpeedNorm && _nextGear > 1) {
-				_nextGear--;
-			}
+			//if ((ModelData.Gears[_nextGear].Ratio * outAngularVelocity - DataBus.EngineIdleSpeed) /
+			//	(DataBus.EngineRatedSpeed - DataBus.EngineIdleSpeed) <
+			//	Constants.SimulationSettings.ClutchClosingSpeedNorm && _nextGear > 1) {
+			//	_nextGear--;
+			//}
 
 			return _nextGear != gear;
 		}
