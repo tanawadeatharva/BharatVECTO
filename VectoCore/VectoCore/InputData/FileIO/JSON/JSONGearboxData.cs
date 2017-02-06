@@ -456,7 +456,7 @@ namespace TUGraz.VectoCore.InputData.FileIO.JSON
 				}
 				var tcFile = Body.GetEx(JsonKeys.Gearbox_TorqueConverter).GetEx<string>(JsonKeys.Gearbox_TorqueConverter_TCMap);
 				try {
-					ReadTableData(tcFile,
+					return ReadTableData(tcFile,
 						"TorqueConverter Data");
 				} catch (Exception) {
 					if (TolerateMissing) {
