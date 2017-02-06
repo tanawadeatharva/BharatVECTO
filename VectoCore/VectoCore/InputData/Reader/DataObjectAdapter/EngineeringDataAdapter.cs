@@ -179,7 +179,7 @@ namespace TUGraz.VectoCore.InputData.Reader.DataObjectAdapter
 				if (gearbox.Type.AutomaticTransmission() && gear.ShiftPolygon == null) {
 					throw new VectoException("Shiftpolygons are required for AT Gearboxes!");
 				}
-				var shiftPolygon = gear.ShiftPolygon != null
+				var shiftPolygon = gear.ShiftPolygon != null && gear.ShiftPolygon.SourceType != DataSourceType.Missing
 					? ShiftPolygonReader.Create(gear.ShiftPolygon)
 					: DeclarationData.Gearbox.ComputeShiftPolygon((int)i, fullLoadCurve, gearbox.Gears, engineData, axlegearRatio,
 						dynamicTyreRadius);

@@ -62,7 +62,7 @@ namespace TUGraz.VectoCore.InputData.Reader.ComponentData
 		/// <returns></returns>
 		public static TransmissionLossMap Create(DataTable data, double gearRatio, string gearName)
 		{
-			if (data.Columns.Count < 3) {
+			if (data == null || data.Columns.Count < 3) {
 				throw new VectoException("TransmissionLossMap Data File for {0} must consist of 3 columns.", gearName);
 			}
 

@@ -140,7 +140,7 @@ namespace TUGraz.VectoCore.InputData.FileIO.JSON
 					if (!TolerateMissing) {
 						throw;
 					}
-					return new TableData(Path.Combine(BasePath, Body["CdCorrFile"].ToString()) + MissingFileSuffix);
+					return new TableData(Path.Combine(BasePath, Body["CdCorrFile"].ToString()) + MissingFileSuffix, DataSourceType.Missing);
 				}
 			}
 		}
@@ -179,7 +179,7 @@ namespace TUGraz.VectoCore.InputData.FileIO.JSON
 						if (!TolerateMissing) {
 							throw;
 						}
-						return new TableData(Path.Combine(BasePath, lossmapFile.Value<string>()) + MissingFileSuffix);
+						return new TableData(Path.Combine(BasePath, lossmapFile.Value<string>()) + MissingFileSuffix, DataSourceType.Missing);
 					}
 				}
 				return null;
@@ -233,7 +233,7 @@ namespace TUGraz.VectoCore.InputData.FileIO.JSON
 					if (!TolerateMissing) {
 						throw;
 					}
-					return new TableData(Path.Combine(BasePath, lossmapFile.Value<string>()) + MissingFileSuffix);
+					return new TableData(Path.Combine(BasePath, lossmapFile.Value<string>()) + MissingFileSuffix, DataSourceType.Missing);
 				}
 			}
 		}
@@ -277,7 +277,7 @@ namespace TUGraz.VectoCore.InputData.FileIO.JSON
 					if (!TolerateMissing) {
 						throw;
 					}
-					return new TableData(Path.Combine(BasePath, lossmapFile.Value<string>()) + MissingFileSuffix);
+					return new TableData(Path.Combine(BasePath, lossmapFile.Value<string>()) + MissingFileSuffix, DataSourceType.Missing);
 				}
 			}
 		}
@@ -300,7 +300,7 @@ namespace TUGraz.VectoCore.InputData.FileIO.JSON
 					if (!TolerateMissing) {
 						throw;
 					}
-					return new TableData(Path.Combine(BasePath, cycle.Value<string>()) + MissingFileSuffix);
+					return new TableData(Path.Combine(BasePath, cycle.Value<string>()) + MissingFileSuffix, DataSourceType.Missing);
 				}
 			}
 		}

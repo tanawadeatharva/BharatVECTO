@@ -81,7 +81,7 @@ namespace TUGraz.VectoCore.InputData.FileIO.JSON
 					return ReadTableData(shiftpolygonFile, "TorqueConverter Shift Polygon");
 				} catch (Exception) {
 					if (TolerateMissing) {
-						return new TableData(Path.Combine(BasePath, shiftpolygonFile) + MissingFileSuffix);
+						return new TableData(Path.Combine(BasePath, shiftpolygonFile) + MissingFileSuffix, DataSourceType.Missing);
 					}
 				}
 				return null;
@@ -156,7 +156,7 @@ namespace TUGraz.VectoCore.InputData.FileIO.JSON
 						if (!TolerateMissing) {
 							throw;
 						}
-						return new TableData(Path.Combine(BasePath, lossMap.Value<string>()) + MissingFileSuffix);
+						return new TableData(Path.Combine(BasePath, lossMap.Value<string>()) + MissingFileSuffix, DataSourceType.Missing);
 					}
 				}
 				return null;
@@ -217,7 +217,7 @@ namespace TUGraz.VectoCore.InputData.FileIO.JSON
 					}
 					return
 						new TableData(Path.Combine(BasePath, Body[JsonKeys.Gearbox_Gears][1]["ShiftPolygon"].ToString()) +
-									MissingFileSuffix);
+									MissingFileSuffix, DataSourceType.Missing);
 				}
 			}
 		}
@@ -298,7 +298,7 @@ namespace TUGraz.VectoCore.InputData.FileIO.JSON
 					if (!TolerateMissing) {
 						throw;
 					}
-					retVal.LossMap = new TableData(Path.Combine(BasePath, lossMap.ToString()) + MissingFileSuffix);
+					retVal.LossMap = new TableData(Path.Combine(BasePath, lossMap.ToString()) + MissingFileSuffix, DataSourceType.Missing);
 				}
 			} else {
 				retVal.Efficiency = gear[JsonKeys.Gearbox_Gear_Efficiency] != null
@@ -311,7 +311,7 @@ namespace TUGraz.VectoCore.InputData.FileIO.JSON
 					retVal.ShiftPolygon = ReadTableData(gear.GetEx<string>(JsonKeys.Gearbox_Gear_ShiftPolygonFile),
 						string.Format("Gear {0} shiftPolygon", gearNumber));
 				} catch (Exception) {
-					retVal.ShiftPolygon = new TableData(Path.Combine(BasePath, shiftPolygonFile.Value<string>()) + MissingFileSuffix);
+					retVal.ShiftPolygon = new TableData(Path.Combine(BasePath, shiftPolygonFile.Value<string>()) + MissingFileSuffix, DataSourceType.Missing);
 				}
 			}
 			//retVal.ShiftPolygon = gear[JsonKeys.Gearbox_Gear_ShiftPolygonFile] != null
@@ -460,7 +460,7 @@ namespace TUGraz.VectoCore.InputData.FileIO.JSON
 						"TorqueConverter Data");
 				} catch (Exception) {
 					if (TolerateMissing) {
-						return new TableData(Path.Combine(BasePath, tcFile) + MissingFileSuffix);
+						return new TableData(Path.Combine(BasePath, tcFile) + MissingFileSuffix, DataSourceType.Missing);
 					}
 				}
 				return null;

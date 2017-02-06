@@ -379,7 +379,7 @@ namespace TUGraz.VectoCore.InputData.FileIO.JSON
 							if (!TolerateMissing) {
 								throw new VectoException("Driving Cycle could not be read: " + cycleFile);
 							}
-							cycleData = new TableData(cycleFile + MissingFileSuffix);
+							cycleData = new TableData(cycleFile + MissingFileSuffix, DataSourceType.Missing);
 						}
 					}
 					retVal.Add(new CycleInputData() {
@@ -461,7 +461,7 @@ namespace TUGraz.VectoCore.InputData.FileIO.JSON
 					} catch (Exception) {
 						if (TolerateMissing) {
 							speedDependentLookup =
-								new TableData(Path.Combine(BasePath, lac["DF_targetSpeedLookup"].Value<string>()) + MissingFileSuffix);
+								new TableData(Path.Combine(BasePath, lac["DF_targetSpeedLookup"].Value<string>()) + MissingFileSuffix, DataSourceType.Missing);
 						}
 					}
 				}
@@ -473,7 +473,7 @@ namespace TUGraz.VectoCore.InputData.FileIO.JSON
 					} catch (Exception) {
 						if (TolerateMissing) {
 							velocityDropLookup =
-								new TableData(Path.Combine(BasePath, lac["Df_velocityDropLookup"].Value<string>()) + MissingFileSuffix);
+								new TableData(Path.Combine(BasePath, lac["Df_velocityDropLookup"].Value<string>()) + MissingFileSuffix, DataSourceType.Missing);
 						}
 					}
 				}
@@ -537,7 +537,7 @@ namespace TUGraz.VectoCore.InputData.FileIO.JSON
 						if (!TolerateMissing) {
 							throw new VectoException("Failed to read Driver Acceleration Curve: " + e.Message, e);
 						}
-						return new TableData(Path.Combine(BasePath, acceleration.Value<string>()) + MissingFileSuffix);
+						return new TableData(Path.Combine(BasePath, acceleration.Value<string>()) + MissingFileSuffix, DataSourceType.Missing);
 					}
 				}
 			}

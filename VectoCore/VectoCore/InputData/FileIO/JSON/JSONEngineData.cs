@@ -96,7 +96,8 @@ namespace TUGraz.VectoCore.InputData.FileIO.JSON
 						throw;
 					}
 					return
-						new TableData(Path.Combine(BasePath, Body[JsonKeys.Engine_FuelConsumptionMap].ToString()) + MissingFileSuffix);
+						new TableData(Path.Combine(BasePath, Body[JsonKeys.Engine_FuelConsumptionMap].ToString()) + MissingFileSuffix,
+							DataSourceType.Missing);
 				}
 			}
 		}
@@ -111,7 +112,9 @@ namespace TUGraz.VectoCore.InputData.FileIO.JSON
 					if (!TolerateMissing) {
 						throw;
 					}
-					return new TableData(Path.Combine(BasePath, Body[JsonKeys.Engine_FullLoadCurveFile].ToString()) + MissingFileSuffix);
+					return new TableData(
+						Path.Combine(BasePath, Body[JsonKeys.Engine_FullLoadCurveFile].ToString()) + MissingFileSuffix,
+						DataSourceType.Missing);
 				}
 			}
 		}
