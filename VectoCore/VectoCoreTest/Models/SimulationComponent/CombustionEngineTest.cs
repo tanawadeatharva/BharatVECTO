@@ -319,6 +319,7 @@ namespace TUGraz.VectoCore.Tests.Models.SimulationComponent
 			// actual test...
 
 			gearbox.Gear = 0;
+			gearbox.SetClutchClosed = false;
 			torque = 0.SI<NewtonMeter>();
 
 			response = (ResponseSuccess)gearbox.Request(absTime, dt, torque, angularVelocity);
@@ -355,10 +356,12 @@ namespace TUGraz.VectoCore.Tests.Models.SimulationComponent
 			var engineSpeed = new[] { 560.RPMtoRad(), 560.RPMtoRad(), 560.RPMtoRad(), 560.RPMtoRad() };
 			var enginePower = new[] { -8601.6308.SI<Watt>(), 5000.SI<Watt>(), 5000.SI<Watt>(), 5000.SI<Watt>() };
 
-			for (var i = 0; i < engineSpeed.Length; i++) {
+			((MockGearbox)container.Gearbox).SetClutchClosed = false;
+			for (var i = 0; i < engineSpeed.Length; i++)
+			{
 				torque = 0.SI<NewtonMeter>();
 
-				response = (ResponseSuccess)requestPort.Request(absTime, dt, torque, null);
+				response = (ResponseSuccess)requestPort.Request(absTime, dt, torque, 0.SI<PerSecond>());
 				container.CommitSimulationStep(absTime, dt);
 				absTime += dt;
 
@@ -420,11 +423,12 @@ namespace TUGraz.VectoCore.Tests.Models.SimulationComponent
 
 			var fld = engine.ModelData.FullLoadCurve;
 
+			((MockGearbox)container.Gearbox).SetClutchClosed = false;
 			var engSpeedResults = new List<dynamic>();
 			for (var i = 0; i < 20; i++) {
 				torque = 0.SI<NewtonMeter>();
 
-				response = (ResponseSuccess)requestPort.Request(absTime, dt, torque, null);
+				response = (ResponseSuccess)requestPort.Request(absTime, dt, torque, 0.SI<PerSecond>());
 
 				container.CommitSimulationStep(absTime, dt);
 
@@ -476,10 +480,11 @@ namespace TUGraz.VectoCore.Tests.Models.SimulationComponent
 			//	5000.SI<Watt>(), 5000.SI<Watt>(), 5000.SI<Watt>(), 5000.SI<Watt>()
 			//};
 
+			((MockGearbox)container.Gearbox).SetClutchClosed = false;
 			var engSpeedResults = new List<dynamic>();
 			torque = 0.SI<NewtonMeter>();
 			for (var i = 0; i < engineSpeed.Length; i++) {
-				response = (ResponseSuccess)requestPort.Request(absTime, dt, torque, null);
+				response = (ResponseSuccess)requestPort.Request(absTime, dt, torque, 0.SI<PerSecond>());
 
 				container.CommitSimulationStep(absTime, dt);
 

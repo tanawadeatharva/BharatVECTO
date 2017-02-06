@@ -44,6 +44,7 @@ namespace TUGraz.VectoCore.Tests.Utils
 	public class MockGearbox : VectoSimulationComponent, IGearbox, ITnInPort, ITnOutPort, IClutchInfo
 	{
 		private ITnOutPort _outPort;
+		private bool _clutchClosed = true;
 
 		public MockGearbox(IVehicleContainer cockpit) : base(cockpit) {}
 
@@ -102,10 +103,10 @@ namespace TUGraz.VectoCore.Tests.Utils
 			bool dryRun = false)
 		{
 			if (_outPort != null) {
-				if (Gear > 0) {
+				//if (Gear > 0) {
 					return _outPort.Request(absTime, dt, outTorque, outAngularVelocity, dryRun);
-				}
-				return _outPort.Request(absTime, dt, 0.SI<NewtonMeter>(), null, dryRun);
+				//}
+				//return _outPort.Request(absTime, dt, 0.SI<NewtonMeter>(), null, dryRun);
 			}
 			throw new NotImplementedException();
 		}
@@ -125,9 +126,14 @@ namespace TUGraz.VectoCore.Tests.Utils
 
 		protected override void DoCommitSimulationStep() {}
 
+		public bool SetClutchClosed
+		{
+			set { _clutchClosed = value; }
+		}
+
 		public bool ClutchClosed(Second absTime)
 		{
-			return true;
+			return _clutchClosed;
 		}
 
 		public void Connect(IAuxPort aux)

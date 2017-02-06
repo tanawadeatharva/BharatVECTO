@@ -339,7 +339,7 @@ namespace TUGraz.VectoCore.Models.SimulationComponent.Impl
 			if (GearboxType.AutomaticTransmission()) {
 				disengagedResponse = EngineIdleRequest(absTime, dt);
 			} else {
-				disengagedResponse = NextComponent.Request(absTime, dt, 0.SI<NewtonMeter>(), null);
+				disengagedResponse = NextComponent.Request(absTime, dt, 0.SI<NewtonMeter>(), outAngularVelocity);
 			}
 			if (TorqueConverter != null) {
 				TorqueConverter.Locked(CurrentState.InTorque, disengagedResponse.EngineSpeed);
