@@ -67,7 +67,8 @@ namespace TUGraz.VectoCore.OutputData.ModFilter
 					ModalResultField.simulationDistance,
 					ModalResultField.acc,
 					ModalResultField.grad,
-					ModalResultField.Gear);
+					ModalResultField.Gear,
+					ModalResultField.TC_Locked);
 
 				start[(int)ModalResultField.v_act] = v_act;
 				v_act = 2 * current.Field<MeterPerSecond>((int)ModalResultField.v_act) - v_act;
