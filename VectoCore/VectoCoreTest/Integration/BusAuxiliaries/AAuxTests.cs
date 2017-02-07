@@ -117,12 +117,12 @@ namespace TUGraz.VectoCore.Tests.Integration.BusAuxiliaries
 		}
 
 		[Category("ComparisonAAUX"),
-		TestCase(40, 0, 25), TestCase(40, 0, 20), TestCase(40, 0, 15),
+		TestCase(40, 0, 20), TestCase(40, 0, 15),
 		TestCase(40, 0, 10), TestCase(40, 0, 5), TestCase(40, 0, 1),
 		TestCase(40, 0, 0),
 		TestCase(40, 0, -1), TestCase(40, 0, -5), TestCase(40, 0, -10),
 		TestCase(40, 0, -15), TestCase(40, 0, -20), TestCase(40, 0, -25),
-		TestCase(60, 0, 25), TestCase(60, 0, 20), TestCase(60, 0, 15),
+		TestCase(60, 0, 20), TestCase(60, 0, 15),
 		TestCase(60, 0, 10), TestCase(60, 0, 5), TestCase(60, 0, 1),
 		TestCase(60, 0, 0),
 		TestCase(60, 0, -1), TestCase(60, 0, -5), TestCase(60, 0, -10),
@@ -132,7 +132,7 @@ namespace TUGraz.VectoCore.Tests.Integration.BusAuxiliaries
 		TestCase(85, 0, 0),
 		TestCase(85, 0, -1), TestCase(85, 0, -5), TestCase(85, 0, -10),
 		TestCase(85, 0, -15), TestCase(85, 0, -20), TestCase(85, 0, -25),
-		TestCase(80, 0, 3), TestCase(80, 0, 5), TestCase(80, 0, 15), TestCase(80, 0, 25),
+		TestCase(80, 0, 3), TestCase(80, 0, 5), TestCase(80, 0, 15),
 		TestCase(22, 20, -5),
 		]
 		public void Coach_Decelerate_AAux(double v1, double v2, double slope)
@@ -148,7 +148,24 @@ namespace TUGraz.VectoCore.Tests.Integration.BusAuxiliaries
 		}
 
 		[Category("ComparisonAAUX"),
-		TestCase(10, 10, 25), TestCase(10, 10, 20), TestCase(10, 10, 15),
+		TestCase(40, 0, 25),
+		TestCase(60, 0, 25),
+		TestCase(80, 0, 25)]
+		public void Coach_Decelerate_AAux_Low(double v1, double v2, double slope)
+		{
+			var cycle = string.Format(CultureInfo.InvariantCulture, "0, {0}, {1}, {2}\n1000, {3}, {4}, {5}", v1, slope,
+				v1.IsEqual(0) ? 2 : 0, v2, slope, v2.IsEqual(0) ? 2 : 0);
+
+			var slopeStr = GetSlopeString(slope);
+			var modFileName = string.Format(CultureInfo.InvariantCulture, @"Coach_{0}_{1}_{2}.vmod", v1, v2, slopeStr);
+
+			Coach_BusAuxiliaries(cycle, modFileName,
+				string.Format(CultureInfo.InvariantCulture, "24t Coach_AAux_Cycle_Decelerate_{0}_{1}_{2}.vmod", v1, v2, slopeStr),
+				false);
+		}
+
+		[Category("ComparisonAAUX"),
+		TestCase(10, 10, 20), TestCase(10, 10, 15),
 		TestCase(10, 10, 10), TestCase(10, 10, 5), TestCase(10, 10, 1),
 		TestCase(10, 10, 0),
 		TestCase(10, 10, -1), TestCase(10, 10, -5), TestCase(10, 10, -10),
@@ -163,7 +180,7 @@ namespace TUGraz.VectoCore.Tests.Integration.BusAuxiliaries
 		TestCase(30, 30, 0),
 		TestCase(30, 30, -1), TestCase(30, 30, -5), TestCase(30, 30, -10),
 		TestCase(30, 30, -15), TestCase(30, 30, -20), TestCase(30, 30, -25),
-		TestCase(40, 40, 25), TestCase(40, 40, 20), TestCase(40, 40, 15),
+		TestCase(40, 40, 20), TestCase(40, 40, 15),
 		TestCase(40, 40, 10), TestCase(40, 40, 5), TestCase(40, 40, 1),
 		TestCase(40, 40, 0),
 		TestCase(40, 40, -1), TestCase(40, 40, -5), TestCase(40, 40, -10),
@@ -173,12 +190,12 @@ namespace TUGraz.VectoCore.Tests.Integration.BusAuxiliaries
 		TestCase(50, 50, 0),
 		TestCase(50, 50, -1), TestCase(50, 50, -5), TestCase(50, 50, -10),
 		TestCase(50, 50, -15), TestCase(50, 50, -20), TestCase(50, 50, -25),
-		TestCase(60, 60, 25), TestCase(60, 60, 20), TestCase(60, 60, 15),
+		TestCase(60, 60, 20), TestCase(60, 60, 15),
 		TestCase(60, 60, 10), TestCase(60, 60, 5), TestCase(60, 60, 1),
 		TestCase(60, 60, 0),
 		TestCase(60, 60, -1), TestCase(60, 60, -5), TestCase(60, 60, -10),
 		TestCase(60, 60, -15), TestCase(60, 60, -20), TestCase(60, 60, -25),
-		TestCase(80, 80, 25), TestCase(80, 80, 20), TestCase(80, 80, 15),
+		TestCase(80, 80, 20), TestCase(80, 80, 15),
 		TestCase(80, 80, 10), TestCase(80, 80, 5), TestCase(80, 80, 1),
 		TestCase(80, 80, 0),
 		TestCase(80, 80, -1), TestCase(80, 80, -5), TestCase(80, 80, -10),
@@ -199,6 +216,25 @@ namespace TUGraz.VectoCore.Tests.Integration.BusAuxiliaries
 
 			Coach_BusAuxiliaries(cycle, modFileName,
 				string.Format(CultureInfo.InvariantCulture, "24t Coach_AAux_Cycle_Drive_{0}_{1}_{2}.vmod", v1, v2, slopeStr));
+		}
+
+		[Category("ComparisonAAUX"),
+		TestCase(10, 10, 25),
+		TestCase(40, 40, 25),
+		TestCase(60, 60, 25),
+		TestCase(80, 80, 25),
+		]
+		public void Coach_Drive_AAux_Low(double v1, double v2, double slope)
+		{
+			var cycle = string.Format(CultureInfo.InvariantCulture, "0, {0}, {1}, {2}\n1000, {3}, {4}, {5}", v1, slope,
+				v1.IsEqual(0) ? 2 : 0, v2, slope, v2.IsEqual(0) ? 2 : 0);
+
+			var slopeStr = GetSlopeString(slope);
+			var modFileName = string.Format(CultureInfo.InvariantCulture, @"Coach_{0}_{1}_{2}.vmod", v1, v2, slopeStr);
+
+			Coach_BusAuxiliaries(cycle, modFileName,
+				string.Format(CultureInfo.InvariantCulture, "24t Coach_AAux_Cycle_Drive_{0}_{1}_{2}.vmod", v1, v2, slopeStr),
+				false);
 		}
 
 		[Category("ComparisonAAUX"),
@@ -246,10 +282,16 @@ namespace TUGraz.VectoCore.Tests.Integration.BusAuxiliaries
 			"Coach_AAux_Drive_stop_85_stop_85_level.vmod", "24t Coach_AAux_Cycle_Drive_stop_85_stop_85_level.vmod",
 			TestName = "CoachBusAux CycleDrive_stop_85_stop_85_level"),
 		]
-		public void Coach_BusAuxiliaries(string cycleData, string modFileName, string compareFileName)
+		public void Coach_AAux_Special(string cycleData, string modFileName, string compareFileName)
+		{
+			Coach_BusAuxiliaries(cycleData, modFileName, compareFileName);
+		}
+
+		private void Coach_BusAuxiliaries(string cycleData, string modFileName, string compareFileName,
+			bool highEnginePower = true)
 		{
 			var cycle = SimpleDrivingCycles.CreateCycleData(cycleData);
-			var run = CoachAdvancedAuxPowertrain.CreateEngineeringRun(cycle, modFileName);
+			var run = CoachAdvancedAuxPowertrain.CreateEngineeringRun(cycle, modFileName, highEnginePower: highEnginePower);
 
 			run.Run();
 			Assert.IsTrue(run.FinishedWithoutErrors);
