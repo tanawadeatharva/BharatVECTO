@@ -57,6 +57,7 @@ namespace TUGraz.VectoCore.Tests.Models.SimulationComponent
 	{
 		public const string JobFile = @"TestData\Jobs\24t Coach EngineOnly.vecto";
 		public const string EngineFile = @"TestData\Components\24t Coach.veng";
+		public const string EngineFileHigh = @"TestData\Components\24t Coach_high.veng";
 		public const string AccelerationFile = @"TestData\Components\Coach.vacc";
 		public const double Tolerance = 0.001;
 
@@ -178,7 +179,7 @@ namespace TUGraz.VectoCore.Tests.Models.SimulationComponent
 		[TestMethod]
 		public void DriverOverloadTest()
 		{
-			var engineData = MockSimulationDataFactory.CreateEngineDataFromFile(EngineFile);
+			var engineData = MockSimulationDataFactory.CreateEngineDataFromFile(EngineFileHigh);
 
 			var vehicleData = CreateVehicleData(33000.SI<Kilogram>());
 

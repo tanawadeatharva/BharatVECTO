@@ -319,6 +319,7 @@ namespace TUGraz.VectoCore.Tests.Models.SimulationComponent
 			// actual test...
 
 			gearbox.Gear = 0;
+			gearbox.SetClutch(false);
 			torque = 0.SI<NewtonMeter>();
 
 			response = (ResponseSuccess)gearbox.Request(absTime, dt, torque, angularVelocity);
