@@ -354,7 +354,6 @@ namespace TUGraz.VectoCore.Tests.Integration.DriverStrategy
 		TestCase(10, 10, -5),
 		TestCase(10, 10, 0),
 		TestCase(10, 10, 15),
-		TestCase(10, 10, 25),
 		TestCase(10, 10, 5),
 		TestCase(20, 20, -15),
 		TestCase(30, 30, -15),
@@ -370,8 +369,20 @@ namespace TUGraz.VectoCore.Tests.Integration.DriverStrategy
 			var cycle = string.Format(CultureInfo.InvariantCulture, "0, {0}, {1}, {2}\n1000, {3}, {4}, {5}", v1, slope,
 				v1.IsEqual(0) ? 2 : 0, v2, slope, v2.IsEqual(0) ? 2 : 0);
 
-			Coach_Special(cycle, string.Format(CultureInfo.InvariantCulture, "24t Coach_Cycle_Drive_{0}_{1}_{2}.vmod",
-				v1, v2, GetSlopeString(slope)));
+			Coach(cycle, string.Format(CultureInfo.InvariantCulture, "24t Coach_Cycle_Drive_{0}_{1}_{2}.vmod",
+				v1, v2, GetSlopeString(slope)), true);
+		}
+
+		[Category("ComparisonV2"),
+		TestCase(10, 10, 25)
+		]
+		public void Coach_Drive_low(double v1, double v2, double slope)
+		{
+			var cycle = string.Format(CultureInfo.InvariantCulture, "0, {0}, {1}, {2}\n1000, {3}, {4}, {5}", v1, slope,
+				v1.IsEqual(0) ? 2 : 0, v2, slope, v2.IsEqual(0) ? 2 : 0);
+
+			Coach(cycle, string.Format(CultureInfo.InvariantCulture, "24t Coach_Cycle_Drive_{0}_{1}_{2}.vmod",
+				v1, v2, GetSlopeString(slope)), false);
 		}
 
 		[Category("ComparisonV2"),
@@ -420,8 +431,13 @@ namespace TUGraz.VectoCore.Tests.Integration.DriverStrategy
 		]
 		public void Coach_Special(string cycleData, string modFileName)
 		{
+			Coach(cycleData, modFileName, true);
+		}
+
+		private void Coach(string cycleData, string modFileName, bool highEnginePower)
+		{
 			var cycle = SimpleDrivingCycles.CreateCycleData(cycleData);
-			var run = CoachPowerTrain.CreateEngineeringRun(cycle, modFileName);
+			var run = CoachPowerTrain.CreateEngineeringRun(cycle, modFileName, highEnginePower: highEnginePower);
 
 			run.Run();
 			Assert.IsTrue(run.FinishedWithoutErrors);
