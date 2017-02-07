@@ -203,7 +203,13 @@
     <None Include="TestData\Components\12t Delivery Truck Efficiency.vgbx">
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
     </None>
+    <None Include="TestData\Components\24t Coach_high.veng">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </None>
     <None Include="TestData\Components\24t Coach_Ang_Efficiency.vveh">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </None>
+    <None Include="TestData\Components\24t Coach_high.vfld">
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
     </None>
     <None Include="TestData\Components\24t Coach_NoAng.vveh">

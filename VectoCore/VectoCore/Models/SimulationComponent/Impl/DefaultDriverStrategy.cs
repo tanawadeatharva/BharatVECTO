@@ -175,7 +175,7 @@ namespace TUGraz.VectoCore.Models.SimulationComponent.Impl
 			var lookaheadDistance =
 				(currentSpeed.Value() * 3.6 * Driver.DriverData.LookAheadCoasting.LookAheadDistanceFactor).SI<Meter>();
 			var stopDistance = Driver.ComputeDecelerationDistance(0.SI<MeterPerSecond>());
-			lookaheadDistance = VectoMath.Max(2 * ds, lookaheadDistance, 1.2 * stopDistance);
+			lookaheadDistance = VectoMath.Max(2 * ds, lookaheadDistance, 1.2 * stopDistance + ds);
 			var lookaheadData = Driver.DataBus.LookAhead(lookaheadDistance);
 
 			Log.Debug("Lookahead distance: {0} @ current speed {1}", lookaheadDistance, currentSpeed);
