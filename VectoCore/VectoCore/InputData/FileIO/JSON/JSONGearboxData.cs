@@ -29,7 +29,9 @@
 *   Martin Rexeis, rexeis@ivt.tugraz.at, IVT, Graz University of Technology
 */
 
+using System;
 using System.Collections.Generic;
+using System.IO;
 using System.Linq;
 using Newtonsoft.Json.Linq;
 using TUGraz.VectoCommon.Exceptions;
@@ -43,7 +45,8 @@ namespace TUGraz.VectoCore.InputData.FileIO.JSON
 {
 	public class JSONGearboxDataV6 : JSONGearboxDataV5
 	{
-		public JSONGearboxDataV6(JObject data, string filename) : base(data, filename) {}
+		public JSONGearboxDataV6(JObject data, string filename, bool tolerateMissing = false)
+			: base(data, filename, tolerateMissing) {}
 
 		public override GearboxType Type
 		{
@@ -69,11 +72,19 @@ namespace TUGraz.VectoCore.InputData.FileIO.JSON
 		{
 			get
 			{
-				return Body[JsonKeys.Gearbox_TorqueConverter] != null &&
-						Body[JsonKeys.Gearbox_TorqueConverter]["ShiftPolygon"] != null
-					? ReadTableData(Body.GetEx(JsonKeys.Gearbox_TorqueConverter)
-						.GetEx<string>("ShiftPolygon"), "TorqueConverter Shift Polygon", false)
-					: null;
+				if (Body[JsonKeys.Gearbox_TorqueConverter] == null || Body[JsonKeys.Gearbox_TorqueConverter]["ShiftPolygon"] == null) {
+					return null;
+				}
+				var shiftpolygonFile = Body.GetEx(JsonKeys.Gearbox_TorqueConverter)
+					.GetEx<string>("ShiftPolygon");
+				try {
+					return ReadTableData(shiftpolygonFile, "TorqueConverter Shift Polygon");
+				} catch (Exception) {
+					if (TolerateMissing) {
+						return new TableData(Path.Combine(BasePath, shiftpolygonFile) + MissingFileSuffix, DataSourceType.Missing);
+					}
+				}
+				return null;
 			}
 		}
 	}
@@ -108,7 +119,8 @@ namespace TUGraz.VectoCore.InputData.FileIO.JSON
 	public class JSONGearboxDataV5 : JSONFile, IGearboxEngineeringInputData, IAxleGearInputData,
 		ITorqueConverterEngineeringInputData
 	{
-		public JSONGearboxDataV5(JObject data, string filename) : base(data, filename) {}
+		public JSONGearboxDataV5(JObject data, string filename, bool tolerateMissing = false)
+			: base(data, filename, tolerateMissing) {}
 
 		#region IAxleGearInputData
 
@@ -138,7 +150,14 @@ namespace TUGraz.VectoCore.InputData.FileIO.JSON
 				}
 				var lossMap = gears[0][JsonKeys.Gearbox_Gear_LossMapFile];
 				if (lossMap != null) {
-					return ReadTableData(gears[0][JsonKeys.Gearbox_Gear_LossMapFile].Value<string>(), "AxleGear", required: false);
+					try {
+						return ReadTableData(gears[0][JsonKeys.Gearbox_Gear_LossMapFile].Value<string>(), "AxleGear");
+					} catch (Exception) {
+						if (!TolerateMissing) {
+							throw;
+						}
+						return new TableData(Path.Combine(BasePath, lossMap.Value<string>()) + MissingFileSuffix, DataSourceType.Missing);
+					}
 				}
 				return null;
 			}
@@ -189,8 +208,17 @@ namespace TUGraz.VectoCore.InputData.FileIO.JSON
 		{
 			get
 			{
-				return ReadTableData(Body.GetEx(JsonKeys.Gearbox_Gears)[1].GetEx<string>("ShiftPolygon"),
-					"TorqueConverter Shift Polygon", false);
+				try {
+					return ReadTableData(Body.GetEx(JsonKeys.Gearbox_Gears)[1].GetEx<string>("ShiftPolygon"),
+						"TorqueConverter Shift Polygon", false);
+				} catch (Exception) {
+					if (!TolerateMissing) {
+						throw;
+					}
+					return
+						new TableData(Path.Combine(BasePath, Body[JsonKeys.Gearbox_Gears][1]["ShiftPolygon"].ToString()) +
+									MissingFileSuffix, DataSourceType.Missing);
+				}
 			}
 		}
 
@@ -253,26 +281,44 @@ namespace TUGraz.VectoCore.InputData.FileIO.JSON
 
 		protected TransmissionInputData CreateGear(int gearNumber, JToken gear)
 		{
-			return new TransmissionInputData {
+			var retVal = new TransmissionInputData {
 				Gear = gearNumber,
 				Ratio = gear.GetEx<double>(JsonKeys.Gearbox_Gear_Ratio),
 				MaxTorque =
 					gear["MaxTorque"] != null && !string.IsNullOrEmpty(gear["MaxTorque"].ToString())
 						? gear["MaxTorque"].Value<double>().SI<NewtonMeter>()
 						: null,
-				LossMap =
-					gear[JsonKeys.Gearbox_Gear_LossMapFile] != null
-						? ReadTableData(gear.GetEx<string>(JsonKeys.Gearbox_Gear_LossMapFile),
-							string.Format("Gear {0} LossMap", gearNumber), false)
-						: null,
-				Efficiency = gear[JsonKeys.Gearbox_Gear_Efficiency] != null
-					? gear[JsonKeys.Gearbox_Gear_Efficiency].Value<double>()
-					: double.NaN,
-				ShiftPolygon = gear[JsonKeys.Gearbox_Gear_ShiftPolygonFile] != null
-					? ReadTableData(gear.GetEx<string>(JsonKeys.Gearbox_Gear_ShiftPolygonFile),
-						string.Format("Gear {0} shiftPolygon", gearNumber), false)
-					: null,
 			};
+			var lossMap = gear[JsonKeys.Gearbox_Gear_LossMapFile];
+			if (lossMap != null) {
+				try {
+					retVal.LossMap = ReadTableData(gear.GetEx<string>(JsonKeys.Gearbox_Gear_LossMapFile),
+						string.Format("Gear {0} LossMap", gearNumber));
+				} catch (Exception) {
+					if (!TolerateMissing) {
+						throw;
+					}
+					retVal.LossMap = new TableData(Path.Combine(BasePath, lossMap.ToString()) + MissingFileSuffix, DataSourceType.Missing);
+				}
+			} else {
+				retVal.Efficiency = gear[JsonKeys.Gearbox_Gear_Efficiency] != null
+					? gear[JsonKeys.Gearbox_Gear_Efficiency].Value<double>()
+					: double.NaN;
+			}
+			var shiftPolygonFile = gear[JsonKeys.Gearbox_Gear_ShiftPolygonFile];
+			if (shiftPolygonFile != null && !string.IsNullOrWhiteSpace(shiftPolygonFile.Value<string>())) {
+				try {
+					retVal.ShiftPolygon = ReadTableData(gear.GetEx<string>(JsonKeys.Gearbox_Gear_ShiftPolygonFile),
+						string.Format("Gear {0} shiftPolygon", gearNumber));
+				} catch (Exception) {
+					retVal.ShiftPolygon = new TableData(Path.Combine(BasePath, shiftPolygonFile.Value<string>()) + MissingFileSuffix, DataSourceType.Missing);
+				}
+			}
+			//retVal.ShiftPolygon = gear[JsonKeys.Gearbox_Gear_ShiftPolygonFile] != null
+			//	? ReadTableData(gear.GetEx<string>(JsonKeys.Gearbox_Gear_ShiftPolygonFile),
+			//		string.Format("Gear {0} shiftPolygon", gearNumber), false)
+			//	: null;
+			return retVal;
 		}
 
 		public virtual Second MinTimeBetweenGearshift
@@ -404,11 +450,20 @@ namespace TUGraz.VectoCore.InputData.FileIO.JSON
 		{
 			get
 			{
-				return Body[JsonKeys.Gearbox_TorqueConverter] != null &&
-						Body[JsonKeys.Gearbox_TorqueConverter][JsonKeys.Gearbox_TorqueConverter_TCMap] != null
-					? ReadTableData(Body.GetEx(JsonKeys.Gearbox_TorqueConverter).GetEx<string>(JsonKeys.Gearbox_TorqueConverter_TCMap),
-						"TorqueConverter Data", false)
-					: null;
+				if (Body[JsonKeys.Gearbox_TorqueConverter] == null ||
+					Body[JsonKeys.Gearbox_TorqueConverter][JsonKeys.Gearbox_TorqueConverter_TCMap] == null) {
+					return null;
+				}
+				var tcFile = Body.GetEx(JsonKeys.Gearbox_TorqueConverter).GetEx<string>(JsonKeys.Gearbox_TorqueConverter_TCMap);
+				try {
+					return ReadTableData(tcFile,
+						"TorqueConverter Data");
+				} catch (Exception) {
+					if (TolerateMissing) {
+						return new TableData(Path.Combine(BasePath, tcFile) + MissingFileSuffix, DataSourceType.Missing);
+					}
+				}
+				return null;
 			}
 		}
 

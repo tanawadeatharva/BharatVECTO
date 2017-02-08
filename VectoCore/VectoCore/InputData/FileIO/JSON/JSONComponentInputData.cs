@@ -49,19 +49,19 @@ namespace TUGraz.VectoCore.InputData.FileIO.JSON
 		protected IPTOTransmissionInputData PTOTransmission;
 
 
-		public JSONComponentInputData(string filename)
+		public JSONComponentInputData(string filename, bool tolerateMissing = false)
 		{
 			var extension = Path.GetExtension(filename);
 			object tmp = null;
 			switch (extension) {
 				case Constants.FileExtensions.VehicleDataFile:
-					tmp = JSONInputDataFactory.ReadJsonVehicle(filename);
+					tmp = JSONInputDataFactory.ReadJsonVehicle(filename, tolerateMissing);
 					break;
 				case Constants.FileExtensions.EngineDataFile:
-					tmp = JSONInputDataFactory.ReadEngine(filename);
+					tmp = JSONInputDataFactory.ReadEngine(filename, tolerateMissing);
 					break;
 				case Constants.FileExtensions.GearboxDataFile:
-					tmp = JSONInputDataFactory.ReadGearbox(filename);
+					tmp = JSONInputDataFactory.ReadGearbox(filename, tolerateMissing);
 					break;
 			}
 			tmp.Switch()

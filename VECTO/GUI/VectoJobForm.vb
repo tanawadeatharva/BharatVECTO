@@ -1107,44 +1107,47 @@ Public Class VectoJobForm
 		PicVehicle.Image = Nothing
 		PicBox.Image = Nothing
 
-		UpdateVehiclePic()
+		Try
+			UpdateVehiclePic()
 
-		Dim chart As Chart = Nothing
-		UpdateEnginePic(chart)
+			Dim chart As Chart = Nothing
+			UpdateEnginePic(chart)
 
 
-		UpdateGearboxPic(chart)
+			UpdateGearboxPic(chart)
 
-		If chart Is Nothing Then Return
+			If chart Is Nothing Then Return
 
-		Dim chartArea As ChartArea = New ChartArea()
-		chartArea.Name = "main"
+			Dim chartArea As ChartArea = New ChartArea()
+			chartArea.Name = "main"
 
-		chartArea.AxisX.Title = "engine speed [1/min]"
-		chartArea.AxisX.TitleFont = New Font("Helvetica", 10)
-		chartArea.AxisX.LabelStyle.Font = New Font("Helvetica", 8)
-		chartArea.AxisX.LabelAutoFitStyle = LabelAutoFitStyles.None
-		chartArea.AxisX.MajorGrid.LineDashStyle = ChartDashStyle.Dot
+			chartArea.AxisX.Title = "engine speed [1/min]"
+			chartArea.AxisX.TitleFont = New Font("Helvetica", 10)
+			chartArea.AxisX.LabelStyle.Font = New Font("Helvetica", 8)
+			chartArea.AxisX.LabelAutoFitStyle = LabelAutoFitStyles.None
+			chartArea.AxisX.MajorGrid.LineDashStyle = ChartDashStyle.Dot
 
-		chartArea.AxisY.Title = "engine torque [Nm]"
-		chartArea.AxisY.TitleFont = New Font("Helvetica", 10)
-		chartArea.AxisY.LabelStyle.Font = New Font("Helvetica", 8)
-		chartArea.AxisY.LabelAutoFitStyle = LabelAutoFitStyles.None
-		chartArea.AxisY.MajorGrid.LineDashStyle = ChartDashStyle.Dot
+			chartArea.AxisY.Title = "engine torque [Nm]"
+			chartArea.AxisY.TitleFont = New Font("Helvetica", 10)
+			chartArea.AxisY.LabelStyle.Font = New Font("Helvetica", 8)
+			chartArea.AxisY.LabelAutoFitStyle = LabelAutoFitStyles.None
+			chartArea.AxisY.MajorGrid.LineDashStyle = ChartDashStyle.Dot
 
-		chartArea.AxisX.Minimum = 300
-		chartArea.BorderDashStyle = ChartDashStyle.Solid
-		chartArea.BorderWidth = 1
+			chartArea.AxisX.Minimum = 300
+			chartArea.BorderDashStyle = ChartDashStyle.Solid
+			chartArea.BorderWidth = 1
 
-		chartArea.BackColor = Color.GhostWhite
+			chartArea.BackColor = Color.GhostWhite
 
-		chart.ChartAreas.Add(chartArea)
-		chart.Update()
+			chart.ChartAreas.Add(chartArea)
+			chart.Update()
 
-		Dim img As Bitmap = New Bitmap(chart.Width, chart.Height, PixelFormat.Format32bppArgb)
-		chart.DrawToBitmap(img, New Rectangle(0, 0, PicBox.Width, PicBox.Height))
+			Dim img As Bitmap = New Bitmap(chart.Width, chart.Height, PixelFormat.Format32bppArgb)
+			chart.DrawToBitmap(img, New Rectangle(0, 0, PicBox.Width, PicBox.Height))
 
-		PicBox.Image = img
+			PicBox.Image = img
+		Catch
+		End Try
 	End Sub
 
 	Private Sub UpdateGearboxPic(ByRef chartArea As Chart)
