@@ -691,6 +691,7 @@ namespace TUGraz.VectoCore.Models.SimulationComponent.Impl
 						Case<ResponseGearShift>(r => {
 							Log.Info("Brake -> Got GearShift response, performing roll action + brakes");
 							//response = Driver.DrivingActionRoll(absTime, ds, DriverStrategy.BrakeTrigger.NextTargetSpeed, gradient);
+							DataBus.BrakePower = 0.SI<Watt>();
 							response = Driver.DrivingActionBrake(absTime, ds, DriverStrategy.BrakeTrigger.NextTargetSpeed,
 								gradient, targetDistance: targetDistance);
 						});
