@@ -355,9 +355,9 @@ namespace TUGraz.VectoCore.InputData.FileIO.JSON
 		{
 			get
 			{
-				return Body["DownshiftAferUpshiftDelay"] == null
+				return Body["DownshiftAfterUpshiftDelay"] == null
 					? DeclarationData.Gearbox.DownshiftAfterUpshiftDelay
-					: Body.GetEx<double>("DownshiftAferUpshiftDelay").SI<Second>();
+					: Body.GetEx<double>("DownshiftAfterUpshiftDelay").SI<Second>();
 			}
 		}
 
