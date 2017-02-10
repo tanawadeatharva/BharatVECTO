@@ -552,7 +552,8 @@ namespace TUGraz.VectoCore.Models.SimulationComponent.Impl
 				}
 
 
-				var velocitySlope = (_engineTargetSpeed - _engine.PreviousState.EngineSpeed) /
+				var velocitySlope = (_dataBus.TractionInterruption - (absTime - _idleStart)).IsEqual(0) ? 0.SI<PerSquareSecond>() :
+					(_engineTargetSpeed - _engine.PreviousState.EngineSpeed) /
 									(_dataBus.TractionInterruption - (absTime - _idleStart));
 
 				var nextAngularSpeed = (velocitySlope * dt + _engine.PreviousState.EngineSpeed);
