@@ -112,8 +112,9 @@ namespace TUGraz.VectoCore.Models.SimulationComponent.Impl
 		public NewtonMeter Initialize(NewtonMeter torque, PerSecond angularSpeed)
 		{
 			PreviousState.AngularSpeed = angularSpeed;
-			if (angularSpeed.IsEqual(0))
+			if (angularSpeed.IsEqual(0)) {
 				return 0.SI<NewtonMeter>();
+			}
 
 			return ComputePowerDemand(angularSpeed) / angularSpeed;
 		}
@@ -131,12 +132,15 @@ namespace TUGraz.VectoCore.Models.SimulationComponent.Impl
 		public NewtonMeter TorqueDemand(Second absTime, Second dt, NewtonMeter torquePowerTrain, NewtonMeter torqueEngine,
 			PerSecond angularSpeed, bool dryRun = false)
 		{
-			CurrentState.AngularSpeed = angularSpeed;
 			var avgAngularSpeed = (PreviousState.AngularSpeed != null)
-				? (CurrentState.AngularSpeed + PreviousState.AngularSpeed) / 2.0
-				: CurrentState.AngularSpeed;
-			if (avgAngularSpeed.IsGreater(0))
+				? (angularSpeed + PreviousState.AngularSpeed) / 2.0
+				: angularSpeed;
+			if (!dryRun) {
+				CurrentState.AngularSpeed = angularSpeed;
+			}
+			if (avgAngularSpeed.IsGreater(0)) {
 				return ComputePowerDemand(avgAngularSpeed) / avgAngularSpeed;
+			}
 			return 0.SI<NewtonMeter>();
 		}
 
