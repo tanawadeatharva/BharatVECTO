@@ -51,8 +51,7 @@ namespace TUGraz.VectoCore.Models.SimulationComponent.Impl
 		private IIdleController _idleController;
 		protected bool _requestAfterGearshift;
 
-		public bool TorqueConverterLocked
-		{
+		public bool TorqueConverterLocked {
 			get { return CurrentState.TorqueConverterLocked; }
 			set { CurrentState.TorqueConverterLocked = value; }
 		}
@@ -68,18 +67,15 @@ namespace TUGraz.VectoCore.Models.SimulationComponent.Impl
 				engineInertia);
 		}
 
-		public IIdleController IdleController
-		{
+		public IIdleController IdleController {
 			get { return _idleController; }
-			set
-			{
+			set {
 				_idleController = value;
 				_idleController.RequestPort = NextComponent;
 			}
 		}
 
-		public bool Disengaged
-		{
+		public bool Disengaged {
 			get { return CurrentState.Disengaged; }
 			set { CurrentState.Disengaged = value; }
 		}
@@ -90,8 +86,7 @@ namespace TUGraz.VectoCore.Models.SimulationComponent.Impl
 			TorqueConverter.NextComponent = other;
 		}
 
-		public override GearInfo NextGear
-		{
+		public override GearInfo NextGear {
 			get { return _strategy.NextGear; }
 		}
 
@@ -267,7 +262,7 @@ namespace TUGraz.VectoCore.Models.SimulationComponent.Impl
 				CurrentState.TorqueLossResult = inTorqueLossResult;
 				CurrentState.SetState(inTorque, inAngularVelocity, outTorque, outAngularVelocity);
 				CurrentState.Gear = Gear;
-				CurrentState.TransmissionTorqueLoss = inTorque - outTorque / effectiveRatio;
+				CurrentState.TransmissionTorqueLoss = inTorque * effectiveRatio - outTorque;
 				TorqueConverter.Locked(CurrentState.InTorque, CurrentState.InAngularVelocity);
 			}
 
@@ -335,8 +330,8 @@ namespace TUGraz.VectoCore.Models.SimulationComponent.Impl
 
 			container[ModalResultField.Gear] = CurrentState.Disengaged || DataBus.VehicleStopped ? 0 : Gear;
 			container[ModalResultField.TC_Locked] = CurrentState.TorqueConverterLocked;
-			container[ModalResultField.P_gbx_loss] = CurrentState.TransmissionTorqueLoss * avgInAngularSpeed;
-			container[ModalResultField.P_gbx_inertia] = CurrentState.InertiaTorqueLossOut * avgInAngularSpeed;
+			container[ModalResultField.P_gbx_loss] = CurrentState.TransmissionTorqueLoss * avgOutAngularSpeed;
+			container[ModalResultField.P_gbx_inertia] = CurrentState.InertiaTorqueLossOut * avgOutAngularSpeed;
 			container[ModalResultField.P_gbx_in] = CurrentState.InTorque * avgInAngularSpeed;
 			container[ModalResultField.P_gbx_shift_loss] = CurrentState.PowershiftLosses.DefaultIfNull(0) * avgInAngularSpeed;
 			container[ModalResultField.n_gbx_out_avg] = avgOutAngularSpeed;

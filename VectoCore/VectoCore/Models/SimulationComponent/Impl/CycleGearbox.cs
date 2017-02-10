@@ -245,7 +245,7 @@ namespace TUGraz.VectoCore.Models.SimulationComponent.Impl
 				return dryRunResponse;
 			}
 
-			CurrentState.TransmissionTorqueLoss = inTorque - (outTorque / effectiveRatio);
+			CurrentState.TransmissionTorqueLoss = inTorque * effectiveRatio - (outTorque);
 
 
 			CurrentState.SetState(inTorque, inAngularVelocity, outTorque, outAngularVelocity);
@@ -339,7 +339,8 @@ namespace TUGraz.VectoCore.Models.SimulationComponent.Impl
 			if (GearboxType.AutomaticTransmission()) {
 				disengagedResponse = EngineIdleRequest(absTime, dt);
 			} else {
-				disengagedResponse = NextComponent.Request(absTime, dt, 0.SI<NewtonMeter>(), outAngularVelocity * ModelData.Gears[NextGear.Gear].Ratio);
+				disengagedResponse = NextComponent.Request(absTime, dt, 0.SI<NewtonMeter>(),
+					outAngularVelocity * ModelData.Gears[NextGear.Gear].Ratio);
 			}
 			if (TorqueConverter != null) {
 				TorqueConverter.Locked(CurrentState.InTorque, disengagedResponse.EngineSpeed);
@@ -378,9 +379,10 @@ namespace TUGraz.VectoCore.Models.SimulationComponent.Impl
 		protected override void DoWriteModalResults(IModalDataContainer container)
 		{
 			var avgInAngularSpeed = (PreviousState.InAngularVelocity + CurrentState.InAngularVelocity) / 2.0;
+			var avgOutAngularSpeed = (PreviousState.OutAngularVelocity + CurrentState.OutAngularVelocity) / 2.0;
 			container[ModalResultField.Gear] = Disengaged != null ? 0 : Gear;
-			container[ModalResultField.P_gbx_loss] = CurrentState.TransmissionTorqueLoss * avgInAngularSpeed;
-			container[ModalResultField.P_gbx_inertia] = CurrentState.InertiaTorqueLossOut * avgInAngularSpeed;
+			container[ModalResultField.P_gbx_loss] = CurrentState.TransmissionTorqueLoss * avgOutAngularSpeed;
+			container[ModalResultField.P_gbx_inertia] = CurrentState.InertiaTorqueLossOut * avgOutAngularSpeed;
 			container[ModalResultField.P_gbx_in] = CurrentState.InTorque * avgInAngularSpeed;
 			container[ModalResultField.n_gbx_out_avg] = (PreviousState.OutAngularVelocity +
 														CurrentState.OutAngularVelocity) / 2.0;
@@ -414,10 +416,8 @@ namespace TUGraz.VectoCore.Models.SimulationComponent.Impl
 
 		#region ICluchInfo
 
-		public override GearInfo NextGear
-		{
-			get
-			{
+		public override GearInfo NextGear {
+			get {
 				if (Disengaged == null) {
 					return new GearInfo(Gear, !TorqueConverterActive ?? true);
 				}
@@ -444,10 +444,8 @@ namespace TUGraz.VectoCore.Models.SimulationComponent.Impl
 			}
 		}
 
-		public override Second TractionInterruption
-		{
-			get
-			{
+		public override Second TractionInterruption {
+			get {
 				if (Disengaged == null) {
 					return ModelData.TractionInterruption;
 				}
@@ -513,8 +511,7 @@ namespace TUGraz.VectoCore.Models.SimulationComponent.Impl
 				throw new System.NotImplementedException();
 			}
 
-			public override GearInfo NextGear
-			{
+			public override GearInfo NextGear {
 				get { throw new System.NotImplementedException(); }
 			}
 		}
