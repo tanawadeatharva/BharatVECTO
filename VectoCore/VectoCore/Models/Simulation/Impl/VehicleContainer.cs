@@ -42,6 +42,7 @@ using TUGraz.VectoCore.Models.Simulation.DataBus;
 using TUGraz.VectoCore.Models.SimulationComponent;
 using TUGraz.VectoCore.Models.SimulationComponent.Data;
 using TUGraz.VectoCore.Models.SimulationComponent.Data.Gearbox;
+using TUGraz.VectoCore.Models.SimulationComponent.Impl;
 using TUGraz.VectoCore.OutputData;
 using TUGraz.VectoCore.Utils;
 
@@ -74,17 +75,14 @@ namespace TUGraz.VectoCore.Models.Simulation.Impl
 
 		#region IGearCockpit
 
-		public GearboxType GearboxType
-		{
+		public GearboxType GearboxType {
 			get { return Gearbox == null ? GearboxType.MT : Gearbox.GearboxType; }
 		}
 
-		public uint Gear
-		{
+		public uint Gear {
 			[System.Diagnostics.CodeAnalysis.SuppressMessage("Microsoft.Design",
 				"CA1065:DoNotRaiseExceptionsInUnexpectedLocations")]
-			get
-			{
+			get {
 				if (Gearbox == null) {
 					throw new VectoException("no gearbox available!");
 				}
@@ -92,12 +90,10 @@ namespace TUGraz.VectoCore.Models.Simulation.Impl
 			}
 		}
 
-		public MeterPerSecond StartSpeed
-		{
+		public MeterPerSecond StartSpeed {
 			[System.Diagnostics.CodeAnalysis.SuppressMessage("Microsoft.Design",
 				"CA1065:DoNotRaiseExceptionsInUnexpectedLocations")]
-			get
-			{
+			get {
 				if (Gearbox == null) {
 					throw new VectoException("No Gearbox available. StartSpeed unkown");
 				}
@@ -105,12 +101,10 @@ namespace TUGraz.VectoCore.Models.Simulation.Impl
 			}
 		}
 
-		public MeterPerSquareSecond StartAcceleration
-		{
+		public MeterPerSquareSecond StartAcceleration {
 			[System.Diagnostics.CodeAnalysis.SuppressMessage("Microsoft.Design",
 				"CA1065:DoNotRaiseExceptionsInUnexpectedLocations")]
-			get
-			{
+			get {
 				if (Gearbox == null) {
 					throw new VectoException("No Gearbox available. StartAcceleration unknown.");
 				}
@@ -118,8 +112,7 @@ namespace TUGraz.VectoCore.Models.Simulation.Impl
 			}
 		}
 
-		public NewtonMeter GearMaxTorque
-		{
+		public NewtonMeter GearMaxTorque {
 			get { return Gearbox != null ? Gearbox.GearMaxTorque : null; }
 		}
 
@@ -128,8 +121,7 @@ namespace TUGraz.VectoCore.Models.Simulation.Impl
 			return Gearbox.GearboxLoss();
 		}
 
-		public Second LastShift
-		{
+		public Second LastShift {
 			get { return Gearbox.LastShift; }
 		}
 
@@ -138,13 +130,11 @@ namespace TUGraz.VectoCore.Models.Simulation.Impl
 			return Gearbox.GetGearData(gear);
 		}
 
-		public GearInfo NextGear
-		{
+		public GearInfo NextGear {
 			get { return Gearbox.NextGear; }
 		}
 
-		public Second TractionInterruption
-		{
+		public Second TractionInterruption {
 			get { return Gearbox.TractionInterruption; }
 		}
 
@@ -152,12 +142,10 @@ namespace TUGraz.VectoCore.Models.Simulation.Impl
 
 		#region IEngineCockpit
 
-		public PerSecond EngineSpeed
-		{
+		public PerSecond EngineSpeed {
 			[System.Diagnostics.CodeAnalysis.SuppressMessage("Microsoft.Design",
 				"CA1065:DoNotRaiseExceptionsInUnexpectedLocations")]
-			get
-			{
+			get {
 				if (Engine == null) {
 					throw new VectoException("no engine available!");
 				}
@@ -165,8 +153,7 @@ namespace TUGraz.VectoCore.Models.Simulation.Impl
 			}
 		}
 
-		public NewtonMeter EngineTorque
-		{
+		public NewtonMeter EngineTorque {
 			get { return Engine.EngineTorque; }
 		}
 
@@ -180,23 +167,19 @@ namespace TUGraz.VectoCore.Models.Simulation.Impl
 			return Engine.EngineDragPower(angularSpeed);
 		}
 
-		public PerSecond EngineIdleSpeed
-		{
+		public PerSecond EngineIdleSpeed {
 			get { return Engine.EngineIdleSpeed; }
 		}
 
-		public PerSecond EngineRatedSpeed
-		{
+		public PerSecond EngineRatedSpeed {
 			get { return Engine.EngineRatedSpeed; }
 		}
 
-		public PerSecond EngineN95hSpeed
-		{
+		public PerSecond EngineN95hSpeed {
 			get { return Engine.EngineN95hSpeed; }
 		}
 
-		public PerSecond EngineN80hSpeed
-		{
+		public PerSecond EngineN80hSpeed {
 			get { return Engine.EngineN80hSpeed; }
 		}
 
@@ -204,23 +187,19 @@ namespace TUGraz.VectoCore.Models.Simulation.Impl
 
 		#region IVehicleCockpit
 
-		public MeterPerSecond VehicleSpeed
-		{
+		public MeterPerSecond VehicleSpeed {
 			get { return Vehicle != null ? Vehicle.VehicleSpeed : 0.SI<MeterPerSecond>(); }
 		}
 
-		public Kilogram VehicleMass
-		{
+		public Kilogram VehicleMass {
 			get { return Vehicle != null ? Vehicle.VehicleMass : 0.SI<Kilogram>(); }
 		}
 
-		public Kilogram VehicleLoading
-		{
+		public Kilogram VehicleLoading {
 			get { return Vehicle != null ? Vehicle.VehicleLoading : 0.SI<Kilogram>(); }
 		}
 
-		public Kilogram TotalMass
-		{
+		public Kilogram TotalMass {
 			get { return Vehicle != null ? Vehicle.TotalMass : 0.SI<Kilogram>(); }
 		}
 
@@ -251,8 +230,7 @@ namespace TUGraz.VectoCore.Models.Simulation.Impl
 
 		#region IVehicleContainer
 
-		public IModalDataContainer ModalData
-		{
+		public IModalDataContainer ModalData {
 			get { return ModData; }
 		}
 
@@ -290,7 +268,8 @@ namespace TUGraz.VectoCore.Models.Simulation.Impl
 				.If<IDrivingCycleInfo>(c => {
 					DrivingCycle = c;
 					commitPriority = 6;
-				});
+				})
+				.If<PTOCycleController>(c => { commitPriority = 99; });
 
 			_components.Add(Tuple.Create(commitPriority, component));
 			_components = _components.OrderBy(x => x.Item1).Reverse().ToList();
@@ -332,10 +311,8 @@ namespace TUGraz.VectoCore.Models.Simulation.Impl
 			return new ReadOnlyCollection<VectoSimulationComponent>(_components.Select(x => x.Item2).ToList());
 		}
 
-		public Meter Distance
-		{
-			get
-			{
+		public Meter Distance {
+			get {
 				if (MilageCounter == null) {
 					Log.Warn("No MileageCounter in VehicleContainer. Distance cannot be measured.");
 					return 0.SI<Meter>();
@@ -354,8 +331,7 @@ namespace TUGraz.VectoCore.Models.Simulation.Impl
 			return DrivingCycle.LookAhead(time);
 		}
 
-		public Watt BrakePower
-		{
+		public Watt BrakePower {
 			get { return Brakes.BrakePower; }
 			set { Brakes.BrakePower = value; }
 		}
@@ -369,31 +345,26 @@ namespace TUGraz.VectoCore.Models.Simulation.Impl
 			return Clutch.ClutchClosed(absTime);
 		}
 
-		public bool VehicleStopped
-		{
+		public bool VehicleStopped {
 			get { return Vehicle.VehicleStopped; }
 		}
 
-		public DrivingBehavior DriverBehavior
-		{
+		public DrivingBehavior DriverBehavior {
 			get { return Driver.DriverBehavior; }
 		}
 
-		public MeterPerSquareSecond DriverAcceleration
-		{
+		public MeterPerSquareSecond DriverAcceleration {
 			get { return Driver.DriverAcceleration; }
 		}
 
-		public Meter CycleStartDistance
-		{
+		public Meter CycleStartDistance {
 			get { return DrivingCycle == null ? 0.SI<Meter>() : DrivingCycle.CycleStartDistance; }
 		}
 
 		public VectoRunData RunData { get; set; }
 		public ExecutionMode ExecutionMode { get; set; }
 
-		public CycleData CycleData
-		{
+		public CycleData CycleData {
 			get { return DrivingCycle.CycleData; }
 		}
 
@@ -402,8 +373,7 @@ namespace TUGraz.VectoCore.Models.Simulation.Impl
 			return DrivingCycle.CycleLookAhead(distance);
 		}
 
-		public Meter Altitude
-		{
+		public Meter Altitude {
 			get { return DrivingCycle.Altitude; }
 		}
 
@@ -412,8 +382,7 @@ namespace TUGraz.VectoCore.Models.Simulation.Impl
 			return Axlegear.AxlegearLoss();
 		}
 
-		public Kilogram ReducedMassWheels
-		{
+		public Kilogram ReducedMassWheels {
 			get { return Wheels.ReducedMassWheels; }
 		}
 	}

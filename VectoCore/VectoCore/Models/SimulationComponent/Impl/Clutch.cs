@@ -79,7 +79,6 @@ namespace TUGraz.VectoCore.Models.SimulationComponent.Impl
 				AddClutchLoss(outTorque, outAngularVelocity, out torqueIn, out engineSpeedIn);
 			}
 			PreviousState.SetState(torqueIn, outAngularVelocity, outTorque, outAngularVelocity);
-			PreviousState.ClutchLoss = 0.SI<Watt>();
 
 			var retVal = NextComponent.Initialize(torqueIn, engineSpeedIn);
 			retVal.ClutchPowerRequest = outTorque * outAngularVelocity;
@@ -173,7 +172,7 @@ namespace TUGraz.VectoCore.Models.SimulationComponent.Impl
 
 		public class ClutchState : SimpleComponentState
 		{
-			public Watt ClutchLoss;
+			public Watt ClutchLoss = 0.SI<Watt>();
 		}
 	}
 }

@@ -54,18 +54,16 @@ namespace TUGraz.VectoCore.Models.SimulationComponent.Impl
 		IDrivingCycle, ISimulationOutPort, IDrivingCycleInPort, IDisposable
 	{
 		private const double LookaheadTimeSafetyMargin = 1.5;
-		private readonly IDrivingCycleData _data;
+		internal readonly IDrivingCycleData _data;
 		internal readonly DrivingCycleEnumerator CycleIntervalIterator;
 		private bool _intervalProlonged;
 		internal IdleControllerSwitcher IdleController;
 
-		private DrivingCycleData.DrivingCycleEntry Left
-		{
+		private DrivingCycleData.DrivingCycleEntry Left {
 			get { return CycleIntervalIterator.LeftSample; }
 		}
 
-		private DrivingCycleData.DrivingCycleEntry Right
-		{
+		private DrivingCycleData.DrivingCycleEntry Right {
 			get { return CycleIntervalIterator.RightSample; }
 		}
 
@@ -383,10 +381,8 @@ namespace TUGraz.VectoCore.Models.SimulationComponent.Impl
 		/// <summary>
 		/// Progress of the distance in the driving cycle.
 		/// </summary>
-		public double Progress
-		{
-			get
-			{
+		public double Progress {
+			get {
 				return _data.Entries.Count > 0
 					? (CurrentState.Distance.Value() - _data.Entries.First().Distance.Value()) /
 					(_data.Entries.Last().Distance.Value() - _data.Entries.First().Distance.Value())
@@ -441,10 +437,8 @@ namespace TUGraz.VectoCore.Models.SimulationComponent.Impl
 			_data.Finish();
 		}
 
-		public CycleData CycleData
-		{
-			get
-			{
+		public CycleData CycleData {
+			get {
 				return new CycleData {
 					AbsTime = CurrentState.AbsTime,
 					AbsDistance = CurrentState.Distance,
@@ -498,8 +492,7 @@ namespace TUGraz.VectoCore.Models.SimulationComponent.Impl
 			return retVal;
 		}
 
-		public Meter Altitude
-		{
+		public Meter Altitude {
 			get { return PreviousState.Altitude; }
 		}
 
