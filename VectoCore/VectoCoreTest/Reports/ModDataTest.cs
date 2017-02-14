@@ -213,7 +213,7 @@ namespace TUGraz.VectoCore.Tests.Reports
 				var pVehInertia = (Watt)row[(int)ModalResultField.P_veh_inertia];
 				var pTrac = (Watt)row[(int)ModalResultField.P_trac];
 
-				// Pe_﻿eng = P﻿_wheel + P_loss﻿gearbox + P_loss﻿axle + P_loss﻿retarder + P_a﻿gbx + Pa_﻿eng + P_aux - P_brake_loss
+				// P_﻿eng_out = P﻿_wheel + P_loss﻿gearbox + P_loss﻿axle + P_loss﻿retarder + P_a﻿gbx + Pa_﻿eng + P_aux - P_brake_loss
 				var pEngOut = (Watt)row[(int)ModalResultField.P_eng_out];
 				var pLossGbx = (Watt)row[(int)ModalResultField.P_gbx_loss];
 				var pGbxIn = (Watt)row[(int)ModalResultField.P_gbx_in];
