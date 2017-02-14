@@ -39,6 +39,7 @@ using TUGraz.VectoCore.Models.Simulation;
 using TUGraz.VectoCore.Models.Simulation.Data;
 using TUGraz.VectoCore.Models.Simulation.DataBus;
 using TUGraz.VectoCore.Models.SimulationComponent.Data;
+using TUGraz.VectoCore.Models.SimulationComponent.Data.Gearbox;
 using TUGraz.VectoCore.OutputData;
 using TUGraz.VectoCore.Utils;
 
@@ -128,6 +129,11 @@ namespace TUGraz.VectoCore.Models.SimulationComponent.Impl
 			var response = CurrentState.TorqueConverterLocked
 				? NextComponent.Initialize(inTorque, inAngularVelocity)
 				: TorqueConverter.Initialize(inTorque, inAngularVelocity);
+
+			CurrentState.TorqueLossResult = new TransmissionLossMap.LossMapResult() {
+				Value = 0.SI<NewtonMeter>(),
+				Extrapolated = false
+			};
 
 			PreviousState.SetState(inTorque, inAngularVelocity, outTorque, outAngularVelocity);
 			PreviousState.Gear = Gear;
@@ -243,10 +249,12 @@ namespace TUGraz.VectoCore.Models.SimulationComponent.Impl
 				effectiveLossMap = ModelData.Gears[Gear].TorqueConverterGearLossMap;
 			}
 
-			var avgOutAngularVelocity = (PreviousState.OutAngularVelocity + outAngularVelocity) / 2.0;
-			var inTorqueLossResult = effectiveLossMap.GetTorqueLoss(avgOutAngularVelocity, outTorque);
-			var inTorque = outTorque / effectiveRatio + inTorqueLossResult.Value;
 			var inAngularVelocity = outAngularVelocity * effectiveRatio;
+			var avgOutAngularVelocity = (PreviousState.OutAngularVelocity + outAngularVelocity) / 2.0;
+			var avgInAngularVelocity = (PreviousState.InAngularVelocity + inAngularVelocity) / 2.0;
+			var inTorqueLossResult = effectiveLossMap.GetTorqueLoss(avgOutAngularVelocity, outTorque);
+			var inTorque = outTorque * (avgOutAngularVelocity / avgInAngularVelocity) + inTorqueLossResult.Value;
+
 			var inertiaTorqueLossOut = !inAngularVelocity.IsEqual(0)
 				? Formulas.InertiaPower(outAngularVelocity, PreviousState.OutAngularVelocity, ModelData.Inertia, dt) /
 				avgOutAngularVelocity
@@ -263,7 +271,8 @@ namespace TUGraz.VectoCore.Models.SimulationComponent.Impl
 				CurrentState.SetState(inTorque, inAngularVelocity, outTorque, outAngularVelocity);
 				CurrentState.Gear = Gear;
 				CurrentState.TransmissionTorqueLoss = inTorque * effectiveRatio - outTorque;
-				TorqueConverter.Locked(CurrentState.InTorque, CurrentState.InAngularVelocity);
+				TorqueConverter.Locked(CurrentState.InTorque, CurrentState.InAngularVelocity, CurrentState.InTorque,
+					CurrentState.InAngularVelocity);
 			}
 
 			if (!CurrentState.TorqueConverterLocked) {
@@ -315,10 +324,21 @@ namespace TUGraz.VectoCore.Models.SimulationComponent.Impl
 			retval.ClutchPowerRequest = 0.SI<Watt>();
 
 			if (!dryRun) {
-				CurrentState.SetState(0.SI<NewtonMeter>(), 0.SI<PerSecond>(), outTorque, outAngularVelocity);
+				CurrentState.SetState(0.SI<NewtonMeter>(), outAngularVelocity * ModelData.Gears[Gear].Ratio, outTorque,
+					outAngularVelocity);
 				CurrentState.Gear = 1;
 				CurrentState.TorqueConverterLocked = !ModelData.Gears[Gear].HasTorqueConverter;
-				TorqueConverter.Locked(CurrentState.InTorque, retval.EngineSpeed);
+				CurrentState.TorqueLossResult = new TransmissionLossMap.LossMapResult() {
+					Extrapolated = false,
+					Value = 0.SI<NewtonMeter>()
+				};
+				if (DataBus.VehicleStopped) {
+					TorqueConverter.Locked(0.SI<NewtonMeter>(), retval.EngineSpeed, CurrentState.InTorque,
+						outAngularVelocity * ModelData.Gears[Gear].Ratio);
+				} else {
+					TorqueConverter.Locked(CurrentState.InTorque, retval.EngineSpeed, CurrentState.InTorque,
+						outAngularVelocity * ModelData.Gears[Gear].Ratio);
+				}
 			}
 			return retval;
 		}
@@ -330,7 +350,8 @@ namespace TUGraz.VectoCore.Models.SimulationComponent.Impl
 
 			container[ModalResultField.Gear] = CurrentState.Disengaged || DataBus.VehicleStopped ? 0 : Gear;
 			container[ModalResultField.TC_Locked] = CurrentState.TorqueConverterLocked;
-			container[ModalResultField.P_gbx_loss] = CurrentState.TransmissionTorqueLoss * avgOutAngularSpeed;
+			container[ModalResultField.P_gbx_loss] = CurrentState.InTorque * avgInAngularSpeed -
+													CurrentState.OutTorque * avgOutAngularSpeed;
 			container[ModalResultField.P_gbx_inertia] = CurrentState.InertiaTorqueLossOut * avgOutAngularSpeed;
 			container[ModalResultField.P_gbx_in] = CurrentState.InTorque * avgInAngularSpeed;
 			container[ModalResultField.P_gbx_shift_loss] = CurrentState.PowershiftLosses.DefaultIfNull(0) * avgInAngularSpeed;

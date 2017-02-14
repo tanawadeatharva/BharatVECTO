@@ -264,7 +264,7 @@ namespace TUGraz.VectoCore.Models.SimulationComponent.Impl
 			//	return RequestDisengaged(absTime, dt, outTorque, outAngularVelocity, dryRun);
 			//}
 			if (TorqueConverter != null) {
-				TorqueConverter.Locked(CurrentState.InTorque, CurrentState.InAngularVelocity);
+				TorqueConverter.Locked(CurrentState.InTorque, CurrentState.InAngularVelocity, CurrentState.InTorque, CurrentState.InAngularVelocity);
 			}
 			var response = NextComponent.Request(absTime, dt, inTorque, inAngularVelocity);
 			response.GearboxPowerRequest = outTorque * avgOutAngularVelocity;
@@ -343,7 +343,10 @@ namespace TUGraz.VectoCore.Models.SimulationComponent.Impl
 					outAngularVelocity * ModelData.Gears[NextGear.Gear].Ratio);
 			}
 			if (TorqueConverter != null) {
-				TorqueConverter.Locked(CurrentState.InTorque, disengagedResponse.EngineSpeed);
+				if (DataBus.VehicleStopped)
+					TorqueConverter.Locked(0.SI<NewtonMeter>(), disengagedResponse.EngineSpeed, CurrentState.InTorque, outAngularVelocity);
+				else
+					TorqueConverter.Locked(CurrentState.InTorque, disengagedResponse.EngineSpeed, CurrentState.InTorque, disengagedResponse.EngineSpeed);
 			}
 			disengagedResponse.GearboxPowerRequest = outTorque * avgOutAngularVelocity;
 			CurrentState.SetState(0.SI<NewtonMeter>(), disengagedResponse.EngineSpeed, 0.SI<NewtonMeter>(), outAngularVelocity);

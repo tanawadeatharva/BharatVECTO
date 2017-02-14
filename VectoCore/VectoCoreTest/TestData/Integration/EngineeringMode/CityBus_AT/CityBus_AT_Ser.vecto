@@ -38,8 +38,7 @@
       "UnderSpeed": 5.0
     },
     "Cycles": [
-      "RegionalDelivery.vdri",
-      "UrbanDelivery.vdri"
+      "RegionalDelivery.vdri"
     ]
   }
 }
