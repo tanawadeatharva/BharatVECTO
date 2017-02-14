@@ -323,23 +323,24 @@ namespace TUGraz.VectoCore.Models.SimulationComponent.Impl
 			var retval = IdleController.Request(absTime, dt, 0.SI<NewtonMeter>(), null);
 			retval.ClutchPowerRequest = 0.SI<Watt>();
 
-			if (!dryRun) {
-				CurrentState.SetState(0.SI<NewtonMeter>(), outAngularVelocity * ModelData.Gears[Gear].Ratio, outTorque,
-					outAngularVelocity);
-				CurrentState.Gear = 1;
-				CurrentState.TorqueConverterLocked = !ModelData.Gears[Gear].HasTorqueConverter;
-				CurrentState.TorqueLossResult = new TransmissionLossMap.LossMapResult() {
-					Extrapolated = false,
-					Value = 0.SI<NewtonMeter>()
-				};
-				if (DataBus.VehicleStopped) {
-					TorqueConverter.Locked(0.SI<NewtonMeter>(), retval.EngineSpeed, CurrentState.InTorque,
-						outAngularVelocity * ModelData.Gears[Gear].Ratio);
-				} else {
-					TorqueConverter.Locked(CurrentState.InTorque, retval.EngineSpeed, CurrentState.InTorque,
-						outAngularVelocity * ModelData.Gears[Gear].Ratio);
-				}
+			// no dry-run - update state
+			var effectiveRatio = ModelData.Gears[Gear].Ratio;
+			if (!CurrentState.TorqueConverterLocked) {
+				effectiveRatio = ModelData.Gears[Gear].TorqueConverterRatio;
 			}
+			CurrentState.SetState(0.SI<NewtonMeter>(), outAngularVelocity * effectiveRatio, outTorque,
+				outAngularVelocity);
+			CurrentState.Gear = 1;
+			CurrentState.TorqueConverterLocked = !ModelData.Gears[Gear].HasTorqueConverter;
+			CurrentState.TorqueLossResult = new TransmissionLossMap.LossMapResult() {
+				Extrapolated = false,
+				Value = 0.SI<NewtonMeter>()
+			};
+			TorqueConverter.Locked(DataBus.VehicleStopped ? 0.SI<NewtonMeter>() : CurrentState.InTorque, retval.EngineSpeed,
+				CurrentState.InTorque,
+				outAngularVelocity * effectiveRatio);
+
+
 			return retval;
 		}
 

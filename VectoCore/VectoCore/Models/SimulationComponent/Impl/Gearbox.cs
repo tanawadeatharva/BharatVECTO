@@ -326,7 +326,10 @@ namespace TUGraz.VectoCore.Models.SimulationComponent.Impl
 			var avgInAngularVelocity = (PreviousState.InAngularVelocity + inAngularVelocity) / 2.0;
 			var avgOutAngularVelocity = (PreviousState.OutAngularVelocity + outAngularVelocity) / 2.0;
 			var inTorqueLossResult = ModelData.Gears[Gear].LossMap.GetTorqueLoss(avgOutAngularVelocity, outTorque);
-			var inTorque = outTorque * (avgOutAngularVelocity / avgInAngularVelocity) + inTorqueLossResult.Value;
+			var inTorque = !avgInAngularVelocity.IsEqual(0)
+				? outTorque * (avgOutAngularVelocity / avgInAngularVelocity)
+				: outTorque / ModelData.Gears[Gear].Ratio;
+			inTorque += inTorqueLossResult.Value;
 
 			var inertiaTorqueLossOut = !inAngularVelocity.IsEqual(0)
 				? Formulas.InertiaPower(outAngularVelocity, PreviousState.OutAngularVelocity, ModelData.Inertia, dt) /
