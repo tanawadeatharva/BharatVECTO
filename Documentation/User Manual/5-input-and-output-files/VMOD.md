@@ -4,6 +4,10 @@ Modal results are only created if enabled in the [Options](#main-form) tab. One 
 
 In Vecto 3 the structure of the modal data output has been revised and re-structured. Basically for every powertrain component the .vmod file contains the power at the input shaft and the individual power losses for every component. For the engine the power, torque and engine speed at the output shaft is given along with the internal power and torque used for computing the fuel consumption. See [Powertrain and Components Structure](#powertrain-and-components-structure) for schematics how the powertrain looks like and which positions in the powertrain the values represent.
 
+Every line in the .vmod file represents the simulation interval from time - dt/2 to time + dt/2. All values represent the average power/torque/angular velocity during this simulation interval. If a certain power value can be described as function of the vehicle's acceleration the average power is calculated by
+$P_{avg} = \frac{1}{simulation interval} \int{P(t) dt}$. 
+**Note:** Columns for the torque converter operating point represent the torque/angular speed at the end of the simulation interval!
+
  The following table lists the columns in the .vmod file:
 	
 ***Quantities:***
@@ -30,22 +34,19 @@ In Vecto 3 the structure of the modal data output has been revised and re-struct
 | P_eng_out			|	[kW]	|	Power provided at the engine's output shaft |
 | P_clutch_loss		|	[kW]	|	Power loss in the clutch due to slipping when driving off |
 | P_clutch_out		|	[kW]	|	Power at the clutch's out shaft. P_clutch_out = P_eng_out - P_clutch_loss |
-| P_TC_loss [kW]    |   [kW]    |   Power loss in the torque converter |
-| P_TC_out [kW]     |   [kW]    |   Power at the torque converter's out shaft. P_TC_out = P_eng_out - P_TC_loss |
+| P_TC_out          |   [kW]    |   Power at the torque converter's out shaft. P_TC_out = P_eng_out - P_TC_loss |
+| P_TC_loss         |   [kW]    |   Power loss in the torque converter |
 | P_aux				|	[kW]	|	Total power demand from the auxiliaries |
 | P_gbx_in			|	[kW]	|	Power at the gearbox' input shaft |
-| P_gbx_loss		|	[kW]	|	Power loss at the gearbox, interpolated from the loss-map |
+| P_gbx_loss		|	[kW]	|	Power loss at the gearbox, interpolated from the loss-map + shift losses + inertia losses |
+| P_gbx_shift       |   [kW]    |   Power loss due to gearshifts (AT gearbox) |
 | P_gbx_inertia		|	[kW]	|	Power loss due to the gearbox' inertia |
 | P_ret_in			|	[kW]	|	Power at the retarder's input shaft. P_ret_in = P_gbx_in - P_gbx_loss - P_gbx_inertia |
 | P_ret_loss		|	[kW]	|	Power loss at the retarder, interpolated from the loss-map. |
-| P_angle_in		|	[kW]	|	Power at the Anglegear's input shaft. Empty if no Anglegear is used. |
-| P_angle_loss		|	[kW]	|	Power loss at the Anglegear, interpolated from the loss-map. Empty if no Anglegear is used. |
+| P_angle_in		|	[kW]	|	Power at the anglegear's input shaft. Empty if no Anglegear is used. |
+| P_angle_loss		|	[kW]	|	Power loss at the anglegear, interpolated from the loss-map. Empty if no Anglegear is used. |
 | P_axle_in			|	[kW]	|	Power at the axle-gear input shaft. P_axle_in = P_ret_in - P_ret_loss ( - P_angle_loss if an Angulargear is used). |
 | P_axle_loss		|	[kW]	|	Power loss at the axle gear, interpolated from the loss-map. |
-| P_angle_in        |   [kW]    |   Power at the angle-gear input shaft. |
-| P_angle_loss      |   [kW]    |   Power loss at the angle gear, interpolated from the loss-map. |
-| P_tc_in           |   [kW]    |   Power at the torque-converter input shaft. |
-| P_tc_loss         |   [kW]    |   Power loss at the torque-converter. |
 | P_brake_in		|	[kW]	|	Power at the brake input shaft (definition: serially mounted into the drive train between wheels and axle). P_brake_in = P_axle_in - P_axle_loss |
 | P_brake_loss		|	[kW]	|	Power loss due to braking. |
 | P_wheel_in		|	[kW]	|	Power at the driven wheels. P_wheel_in = P_brake_in - P_brake_loss |
@@ -82,3 +83,14 @@ In Vecto 3 the structure of the modal data output has been revised and re-struct
 | FC-WHTCc			|	[g/h]	|	Fuel consumption after [WHTC Correction](#fuel-consumption-calculation) (based on FC-AUXc) |
 | FC-AAUX			|	[g/h]	|	Fuel consumption computed by the AAUX module considering smart auxiliaries |
 | FC-Final			|	[g/h]	|	Final fuel consumption value after all applicable corrections |
+
+
+P_eng_FCmap = T_eng_fcmap * n_eng_avg
+
+P_eng_fcmap = P_eng_out + P_AUX + P_eng_inertia ( + P_PTO_Transm + P_PTO_Consumer ) = P_loss_total + P_AUX + P_eng_inertia
+
+P_loss_total = P_clutch_loss + P_gbx_loss + P_ret_loss + P_gbx_inertia + P_angle_loss + P_axle_loss + P_brake_loss +
+								P_wheel_inertia + P_air + P_roll + P_grad + P_veh_inertia (+ P_PTOconsumer + P_PTO_transm)
+
+P_trac = P_veh_inertia + P_roll + P_air + P_slope
+

@@ -5287,6 +5287,7 @@ CycleTime,UnknownCycleName,3600</code></pre>
 <h2>Modal Results (.vmod)</h2>
 <p>Modal results are only created if enabled in the <a href="#main-form">Options</a> tab. One file is created for each calculation and stored in the same directory as the .vecto file.</p>
 <p>In Vecto 3 the structure of the modal data output has been revised and re-structured. Basically for every powertrain component the .vmod file contains the power at the input shaft and the individual power losses for every component. For the engine the power, torque and engine speed at the output shaft is given along with the internal power and torque used for computing the fuel consumption. See <a href="#powertrain-and-components-structure">Powertrain and Components Structure</a> for schematics how the powertrain looks like and which positions in the powertrain the values represent.</p>
+<p>Every line in the .vmod file represents the simulation interval from time - dt/2 to time + dt/2. All values represent the average power/torque/angular velocity during this simulation interval. If a certain power value can be described as function of the vehicle’s acceleration the average power is calculated by <span class="math inline">\(P_{avg} = \frac{1}{simulation interval} \int{P(t) dt}\)</span>. <strong>Note:</strong> Columns for the torque converter operating point represent the torque/angular speed at the end of the simulation interval!</p>
 <p>The following table lists the columns in the .vmod file:</p>
 <p><strong><em>Quantities:</em></strong></p>
 <table style="width:94%;">
@@ -5404,14 +5405,14 @@ CycleTime,UnknownCycleName,3600</code></pre>
 <td>Power at the clutch’s out shaft. P_clutch_out = P_eng_out - P_clutch_loss</td>
 </tr>
 <tr class="odd">
-<td>P_TC_loss [kW]</td>
-<td>[kW]</td>
-<td>Power loss in the torque converter</td>
-</tr>
-<tr class="even">
-<td>P_TC_out [kW]</td>
+<td>P_TC_out</td>
 <td>[kW]</td>
 <td>Power at the torque converter’s out shaft. P_TC_out = P_eng_out - P_TC_loss</td>
+</tr>
+<tr class="even">
+<td>P_TC_loss</td>
+<td>[kW]</td>
+<td>Power loss in the torque converter</td>
 </tr>
 <tr class="odd">
 <td>P_aux</td>
@@ -5426,245 +5427,234 @@ CycleTime,UnknownCycleName,3600</code></pre>
 <tr class="odd">
 <td>P_gbx_loss</td>
 <td>[kW]</td>
-<td>Power loss at the gearbox, interpolated from the loss-map</td>
+<td>Power loss at the gearbox, interpolated from the loss-map + shift losses + inertia losses</td>
 </tr>
 <tr class="even">
+<td>P_gbx_shift</td>
+<td>[kW]</td>
+<td>Power loss due to gearshifts (AT gearbox)</td>
+</tr>
+<tr class="odd">
 <td>P_gbx_inertia</td>
 <td>[kW]</td>
 <td>Power loss due to the gearbox’ inertia</td>
 </tr>
-<tr class="odd">
+<tr class="even">
 <td>P_ret_in</td>
 <td>[kW]</td>
 <td>Power at the retarder’s input shaft. P_ret_in = P_gbx_in - P_gbx_loss - P_gbx_inertia</td>
 </tr>
-<tr class="even">
+<tr class="odd">
 <td>P_ret_loss</td>
 <td>[kW]</td>
 <td>Power loss at the retarder, interpolated from the loss-map.</td>
 </tr>
-<tr class="odd">
+<tr class="even">
 <td>P_angle_in</td>
 <td>[kW]</td>
-<td>Power at the Anglegear’s input shaft. Empty if no Anglegear is used.</td>
-</tr>
-<tr class="even">
-<td>P_angle_loss</td>
-<td>[kW]</td>
-<td>Power loss at the Anglegear, interpolated from the loss-map. Empty if no Anglegear is used.</td>
+<td>Power at the anglegear’s input shaft. Empty if no Anglegear is used.</td>
 </tr>
 <tr class="odd">
+<td>P_angle_loss</td>
+<td>[kW]</td>
+<td>Power loss at the anglegear, interpolated from the loss-map. Empty if no Anglegear is used.</td>
+</tr>
+<tr class="even">
 <td>P_axle_in</td>
 <td>[kW]</td>
 <td>Power at the axle-gear input shaft. P_axle_in = P_ret_in - P_ret_loss ( - P_angle_loss if an Angulargear is used).</td>
 </tr>
-<tr class="even">
+<tr class="odd">
 <td>P_axle_loss</td>
 <td>[kW]</td>
 <td>Power loss at the axle gear, interpolated from the loss-map.</td>
 </tr>
-<tr class="odd">
-<td>P_angle_in</td>
-<td>[kW]</td>
-<td>Power at the angle-gear input shaft.</td>
-</tr>
 <tr class="even">
-<td>P_angle_loss</td>
-<td>[kW]</td>
-<td>Power loss at the angle gear, interpolated from the loss-map.</td>
-</tr>
-<tr class="odd">
-<td>P_tc_in</td>
-<td>[kW]</td>
-<td>Power at the torque-converter input shaft.</td>
-</tr>
-<tr class="even">
-<td>P_tc_loss</td>
-<td>[kW]</td>
-<td>Power loss at the torque-converter.</td>
-</tr>
-<tr class="odd">
 <td>P_brake_in</td>
 <td>[kW]</td>
 <td>Power at the brake input shaft (definition: serially mounted into the drive train between wheels and axle). P_brake_in = P_axle_in - P_axle_loss</td>
 </tr>
-<tr class="even">
+<tr class="odd">
 <td>P_brake_loss</td>
 <td>[kW]</td>
 <td>Power loss due to braking.</td>
 </tr>
-<tr class="odd">
+<tr class="even">
 <td>P_wheel_in</td>
 <td>[kW]</td>
 <td>Power at the driven wheels. P_wheel_in = P_brake_in - P_brake_loss</td>
 </tr>
-<tr class="even">
+<tr class="odd">
 <td>P_wheel_inertia</td>
 <td>[kW]</td>
 <td>Power loss due to the wheels’ inertia</td>
 </tr>
-<tr class="odd">
+<tr class="even">
 <td>P_trac</td>
 <td>[kW]</td>
 <td>Vehicle’s traction power. P_trac = P_wheel_in - P_wheel_inertia</td>
 </tr>
-<tr class="even">
+<tr class="odd">
 <td>P_slope</td>
 <td>[kW]</td>
 <td>Power loss/gain due to the road’s slope</td>
 </tr>
-<tr class="odd">
+<tr class="even">
 <td>P_air</td>
 <td>[kW]</td>
 <td>Power loss due to air drag.</td>
 </tr>
-<tr class="even">
+<tr class="odd">
 <td>P_roll</td>
 <td>[kW]</td>
 <td>Rolling resistance power loss.</td>
 </tr>
-<tr class="odd">
+<tr class="even">
 <td>P_veh_inertia</td>
 <td>[kW]</td>
 <td>Power loss due to the vehicle’s inertia</td>
 </tr>
-<tr class="even">
+<tr class="odd">
 <td>P_aux_<XXX></td>
 <td>[kW]</td>
 <td>Power demand for every individual auxiliary. Only if the run has auxiliaries.</td>
 </tr>
-<tr class="odd">
+<tr class="even">
 <td>P_PTO_consum</td>
 <td>[kW]</td>
 <td>Power demand from the PTO consumer. Only if the vehicle has a PTO consumer.</td>
 </tr>
-<tr class="even">
+<tr class="odd">
 <td>P_PTO_transmission</td>
 <td>[kW]</td>
 <td>Power demand from the PTO transmission. Only if the vehicle has a PTO consumer.</td>
 </tr>
-<tr class="odd">
+<tr class="even">
 <td>AA_NonSmartAlternatorsEfficiency</td>
 <td>[Fraction]</td>
 <td>Non-Smart Alternators Efficiency, Advance Auxiliaries Module</td>
 </tr>
-<tr class="even">
+<tr class="odd">
 <td>AA_SmartIdleCurrent_Amps</td>
 <td>[Amps]</td>
 <td>Smart Idle Current in Amps, Advance Auxiliaries Module</td>
 </tr>
-<tr class="odd">
+<tr class="even">
 <td>AA_SmartIdleAlternatorsEfficiency</td>
 <td>[Fraction]</td>
 <td>Smart Idle Alternators Efficiency, Advance Auxiliaries Module</td>
 </tr>
-<tr class="even">
+<tr class="odd">
 <td>AA_SmartTractionCurrent_Amps</td>
 <td>[Amps]</td>
 <td>Smart Traction Current in Amps, Advance Auxiliaries Module</td>
 </tr>
-<tr class="odd">
+<tr class="even">
 <td>AA_SmartTractionAlternatorEfficiency</td>
 <td>[Fraction]</td>
 <td>Smart Traction Alternator Efficiency, Advance Auxiliaries Module</td>
 </tr>
-<tr class="even">
+<tr class="odd">
 <td>AA_SmartOverrunCurrent_Amps</td>
 <td>[Amps]</td>
 <td>Smart Overrun Current in Amps, Advance Auxiliaries Module</td>
 </tr>
-<tr class="odd">
+<tr class="even">
 <td>AA_SmartOverrunAlternatorEfficiency</td>
 <td>[Fraction]</td>
 <td>Smart Overrun Alternator Efficiency, Advance Auxiliaries Module</td>
 </tr>
-<tr class="even">
+<tr class="odd">
 <td>AA_CompressorFlowRate_LitrePerSec</td>
 <td>[Ni L/S]</td>
 <td>Compressor Flow Rate in litres per second, Advance Auxiliaries Module</td>
 </tr>
-<tr class="odd">
+<tr class="even">
 <td>AA_OverrunFlag</td>
 <td>[Bool [0/1]</td>
 <td>Overrun Flag (yes/no), Advance Auxiliaries Module</td>
 </tr>
-<tr class="even">
+<tr class="odd">
 <td>AA_EngineIdleFlag</td>
 <td>[Bool [0/1]</td>
 <td>Engine Idle Flag (yes/no), Advance Auxiliaries Module</td>
 </tr>
-<tr class="odd">
+<tr class="even">
 <td>AA_CompressorFlag</td>
 <td>[Bool [0/1]</td>
 <td>Compressor Flag (off/on), Advance Auxiliaries Module</td>
 </tr>
-<tr class="even">
+<tr class="odd">
 <td>AA_TotalCycleFC_Grams</td>
 <td>[Grams]</td>
 <td>Total Cycle Fuel Consumption in grams, Advance Auxiliaries Module</td>
 </tr>
-<tr class="odd">
+<tr class="even">
 <td>AA_TotalCycleFC_Litres</td>
 <td>[Litres]</td>
 <td>Total Cycle Fuel Consumption in litres, Advance Auxiliaries Module</td>
 </tr>
-<tr class="even">
+<tr class="odd">
 <td>TCnu</td>
 <td>[-]</td>
 <td>Torque converter operating point: speed ratio</td>
 </tr>
-<tr class="odd">
+<tr class="even">
 <td>TCmu</td>
 <td>[-]</td>
 <td>Torque converter operating point: torque ratio</td>
 </tr>
-<tr class="even">
+<tr class="odd">
 <td>T_TC_out</td>
 <td>[Nm]</td>
 <td>Torque converter operating point: output torque</td>
 </tr>
-<tr class="odd">
+<tr class="even">
 <td>n_TC_out</td>
 <td>[rpm]</td>
 <td>Torque converter operating point: output speed</td>
 </tr>
-<tr class="even">
+<tr class="odd">
 <td>T_TC_in</td>
 <td>[Nm]</td>
 <td>Torque converter operating point: input torque</td>
 </tr>
-<tr class="odd">
+<tr class="even">
 <td>n_TC_in</td>
 <td>[rpm]</td>
 <td>Torque converter operating point: input speed</td>
 </tr>
-<tr class="even">
+<tr class="odd">
 <td>FC-Map</td>
 <td>[g/h]</td>
 <td>Fuel consumption interpolated from FC map.</td>
 </tr>
-<tr class="odd">
+<tr class="even">
 <td>FC-AUXc</td>
 <td>[g/h]</td>
 <td>Fuel consumption after <a href="#fuel-consumption-calculation">Auxiliary-Start/Stop Correction</a> (based on FC)</td>
 </tr>
-<tr class="even">
+<tr class="odd">
 <td>FC-WHTCc</td>
 <td>[g/h]</td>
 <td>Fuel consumption after <a href="#fuel-consumption-calculation">WHTC Correction</a> (based on FC-AUXc)</td>
 </tr>
-<tr class="odd">
+<tr class="even">
 <td>FC-AAUX</td>
 <td>[g/h]</td>
 <td>Fuel consumption computed by the AAUX module considering smart auxiliaries</td>
 </tr>
-<tr class="even">
+<tr class="odd">
 <td>FC-Final</td>
 <td>[g/h]</td>
 <td>Final fuel consumption value after all applicable corrections</td>
 </tr>
 </tbody>
 </table>
+<p>P_eng_FCmap = T_eng_fcmap * n_eng_avg</p>
+<p>P_eng_fcmap = P_eng_out + P_AUX + P_eng_inertia ( + P_PTO_Transm + P_PTO_Consumer ) = P_loss_total + P_AUX + P_eng_inertia</p>
+<p>P_loss_total = P_clutch_loss + P_gbx_loss + P_ret_loss + P_gbx_inertia + P_angle_loss + P_axle_loss + P_brake_loss + P_wheel_inertia + P_air + P_roll + P_grad + P_veh_inertia (+ P_PTOconsumer + P_PTO_transm)</p>
+<p>P_trac = P_veh_inertia + P_roll + P_air + P_slope</p>
 </div>
 <div id="summary-results-.vsum" class="section level2">
 <h2>Summary Results (.vsum)</h2>
@@ -5770,19 +5760,19 @@ CycleTime,UnknownCycleName,3600</code></pre>
 <td>Average positive power at the wheels</td>
 </tr>
 <tr class="even">
-<td>P_brake_loss</td>
-<td>[kW]</td>
-<td>Average brake power losses (not including engine drag)</td>
+<td>E_fcmap_pos</td>
+<td>[kWh]</td>
+<td>Total positive work provided by the combustion engine.</td>
 </tr>
 <tr class="odd">
-<td>P_clutch_pos</td>
-<td>[kW]</td>
-<td>Average positive power at clutch (coming from engine) (all non-negative values averaged over the whole cycle duration)</td>
+<td>E_fcmap_neg</td>
+<td>[kWh]</td>
+<td>Total energy</td>
 </tr>
 <tr class="even">
-<td>P_clutch_neg</td>
-<td>[kW]</td>
-<td>Average negative power at clutch (coming from engine) (all non-positive values averaged over the whole cycle duration)</td>
+<td>E_powertrain_inertia</td>
+<td>[kWh]</td>
+<td>Total work of engine, torqueconverter, and gearbox inertia</td>
 </tr>
 <tr class="odd">
 <td>E_aux_xxx</td>
@@ -5795,6 +5785,66 @@ CycleTime,UnknownCycleName,3600</code></pre>
 <td>Total energy demand of all auxiliaries</td>
 </tr>
 <tr class="odd">
+<td>E_clutch_loss</td>
+<td>[kWh]</td>
+<td>Total energy loss in the clutch</td>
+</tr>
+<tr class="even">
+<td>E_tc_loss</td>
+<td>[kWh]</td>
+<td>Total torque converter energy loss</td>
+</tr>
+<tr class="odd">
+<td>E_gbx_loss</td>
+<td>[kWh]</td>
+<td>Total transmission energy losses at gearbox (includes loss-map, inertia, gear-shifts)</td>
+</tr>
+<tr class="even">
+<td>E_shift_loss</td>
+<td>[kWh]</td>
+<td>Total energy losses due to gearshifts</td>
+</tr>
+<tr class="odd">
+<td>E_ret_loss</td>
+<td>[kWh]</td>
+<td>Total retarder energy loss</td>
+</tr>
+<tr class="even">
+<td>E_angle_loss</td>
+<td>[kWh]</td>
+<td>Total torque converter energy loss</td>
+</tr>
+<tr class="odd">
+<td>E_axl_loss</td>
+<td>[kWh]</td>
+<td>Total transmission energy losses at the axlegear</td>
+</tr>
+<tr class="even">
+<td>E_brake</td>
+<td>[kWh]</td>
+<td>Total work dissipated in mechanical braking (sum of service brakes, retader and additional engine exhaust brakes)</td>
+</tr>
+<tr class="odd">
+<td>E_vehicle_inertia</td>
+<td>[kWh]</td>
+<td>Total work of wheels inertia and vehicle mass</td>
+</tr>
+<tr class="even">
+<td>E_air</td>
+<td>[kWh]</td>
+<td>Total work of air resistance</td>
+</tr>
+<tr class="odd">
+<td>E_roll</td>
+<td>[kWh]</td>
+<td>Total work of rolling resistance</td>
+</tr>
+<tr class="even">
+<td>E_grad</td>
+<td>[kWh]</td>
+<td>Total work of gradient resistance</td>
+</tr>
+<tr class="odd">
 <td>E_PTO_CONSUM</td>
 <td>[kWh]</td>
 <td>Total energy demand of the pto consumer (if a pto consumer was used).</td>
@@ -5803,66 +5853,6 @@ CycleTime,UnknownCycleName,3600</code></pre>
 <td>E_PTO_TRANSM</td>
 <td>[kWh]</td>
 <td>Total energy demand of the pto transmission (if a pto transmission was used).</td>
-</tr>
-<tr class="odd">
-<td>E_air</td>
-<td>[kWh]</td>
-<td>Total work of air resistance</td>
-</tr>
-<tr class="even">
-<td>E_roll</td>
-<td>[kWh]</td>
-<td>Total work of rolling resistance</td>
-</tr>
-<tr class="odd">
-<td>E_grad</td>
-<td>[kWh]</td>
-<td>Total work of gradient resistance</td>
-</tr>
-<tr class="even">
-<td>E_inertia</td>
-<td>[kWh]</td>
-<td>Total work of gearbox and engine inertia</td>
-</tr>
-<tr class="odd">
-<td>E_brake</td>
-<td>[kWh]</td>
-<td>Total work dissipated in mechanical braking (sum of service brakes, retader and additional engine exhaust brakes)</td>
-</tr>
-<tr class="even">
-<td>E_gbx_loss</td>
-<td>[kWh]</td>
-<td>Total transmission energy losses at gearbox</td>
-</tr>
-<tr class="odd">
-<td>E_axl_loss</td>
-<td>[kWh]</td>
-<td>Total transmission energy losses at the axlegear</td>
-</tr>
-<tr class="even">
-<td>E_angle_loss</td>
-<td>[kWh]</td>
-<td>Total torque converter energy loss</td>
-</tr>
-<tr class="odd">
-<td>E_ret_loss</td>
-<td>[kWh]</td>
-<td>Total retarder energy loss</td>
-</tr>
-<tr class="even">
-<td>E_tc_loss</td>
-<td>[kWh]</td>
-<td>Total torque converter energy loss</td>
-</tr>
-<tr class="odd">
-<td>E_clutch_pos</td>
-<td>[kWh]</td>
-<td>Total positive work at clutch input (produced by engine) (all non-negative values averaged over the whole cycle duration)</td>
-</tr>
-<tr class="even">
-<td>E_clutch_neg</td>
-<td>[kWh]</td>
-<td>Total negative work at clutch input (produced by engine drag) (all non-positive values averaged over the whole cycle duration)</td>
 </tr>
 <tr class="odd">
 <td>a</td>
@@ -5901,6 +5891,7 @@ CycleTime,UnknownCycleName,3600</code></pre>
 </tr>
 </tbody>
 </table>
+<p>E_fcmap_pos = E_fcmap_neg + E_powertrain_inertia + E_aux_xxx + E_aux_sum + E_clutch_loss + E_tc_loss + E_gbx_loss + E_ret_loss + E_angle_loss + E_axl_loss + E_brake + E_vehicle_inertia + E_air + E_roll + E_grad + E_PTO_CONSUM + E_PTO_TRANSM</p>
 </div>
 <div id="application-files" class="section level2">
 <h2>Application Files</h2>
