@@ -133,7 +133,7 @@ namespace TUGraz.VectoCore.Models.SimulationComponent.Impl
 				return false;
 			}
 			if (ModelData.Gears[2].HasTorqueConverter) {
-				return false; // nextGear.TorqueConverterLocked || nextGear.Gear == 2;
+				return nextGear.TorqueConverterLocked; // || nextGear.Gear == 2;
 			}
 			return nextGear.TorqueConverterLocked;
 		}
@@ -143,9 +143,10 @@ namespace TUGraz.VectoCore.Models.SimulationComponent.Impl
 			var torqueGbxIn = outTorque / ModelData.Gears[Gear].Ratio;
 			var deltaEngineSpeed = DataBus.EngineSpeed - outAngularVelocity * ModelData.Gears[Gear].Ratio;
 			var deltaClutchSpeed = (DataBus.EngineSpeed - PreviousState.OutAngularVelocity * ModelData.Gears[Gear].Ratio) / 2;
-			var torqueInertia = EngineInertia * deltaEngineSpeed / dt;
+			var torqueInertia = ModelData.PowershiftInertiaFactor * EngineInertia * deltaEngineSpeed / dt;
 			var averageEngineSpeed = (DataBus.EngineSpeed + outAngularVelocity * ModelData.Gears[Gear].Ratio) / 2;
-			var torqueLoss = (torqueGbxIn + torqueInertia) * deltaClutchSpeed / averageEngineSpeed;
+			var torqueLoss = (torqueGbxIn + torqueInertia) * deltaClutchSpeed / averageEngineSpeed *
+							(ModelData.PowershiftShiftTime / dt);
 
 			return torqueLoss.Abs();
 		}
