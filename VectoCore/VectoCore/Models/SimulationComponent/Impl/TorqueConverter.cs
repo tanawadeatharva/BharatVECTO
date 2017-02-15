@@ -130,7 +130,7 @@ namespace TUGraz.VectoCore.Models.SimulationComponent.Impl
 			var ratio = Gearbox.GetGearData(Gearbox.Gear).TorqueConverterRatio;
 
 			// check if shift is required
-			if (ShiftStrategy.ShiftRequired(absTime, dt, outTorque * ratio, outAngularVelocity / ratio, operatingPoint.InTorque,
+			if (ShiftStrategy.ShiftRequired(absTime, dt, outTorque * ratio, outAngularVelocity / ratio, inTorque,
 				operatingPoint.InAngularVelocity, Gearbox.Gear, Gearbox.LastShift)) {
 				return new ResponseGearShift { Source = this };
 			}
@@ -148,8 +148,9 @@ namespace TUGraz.VectoCore.Models.SimulationComponent.Impl
 				}
 			}
 
-			CurrentState.SetState(operatingPoint.InTorque, operatingPoint.InAngularVelocity, outTorque, outAngularVelocity);
+			CurrentState.SetState(inTorque, operatingPoint.InAngularVelocity, outTorque, outAngularVelocity);
 			CurrentState.OperatingPoint = operatingPoint;
+
 			var retVal = NextComponent.Request(absTime, dt, inTorque, operatingPoint.InAngularVelocity);
 			return retVal;
 		}
@@ -261,9 +262,10 @@ namespace TUGraz.VectoCore.Models.SimulationComponent.Impl
 			AdvanceState();
 		}
 
-		public void Locked(NewtonMeter outTorque, PerSecond outAngularVelocity)
+		public void Locked(NewtonMeter inTorque, PerSecond inAngularVelocity, NewtonMeter outTorque,
+			PerSecond outAngularVelocity)
 		{
-			CurrentState.SetState(outTorque, outAngularVelocity, outTorque, outAngularVelocity);
+			CurrentState.SetState(inTorque, inAngularVelocity, outTorque, outAngularVelocity);
 		}
 
 		public class TorqueConverterComponentState : SimpleComponentState

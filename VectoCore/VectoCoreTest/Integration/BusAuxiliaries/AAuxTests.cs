@@ -110,7 +110,7 @@ namespace TUGraz.VectoCore.Tests.Integration.BusAuxiliaries
 				v1.IsEqual(0) ? 2 : 0, v2, slope, v2.IsEqual(0) ? 2 : 0);
 
 			var slopeStr = GetSlopeString(slope);
-			var modFileName = string.Format(CultureInfo.InvariantCulture, @"Coach_{0}_{1}_{2}.vmod", v1, v2, slopeStr);
+			var modFileName = string.Format(CultureInfo.InvariantCulture, @"CoachAAUX_{0}_{1}_{2}.vmod", v1, v2, slopeStr);
 
 			Coach_BusAuxiliaries(cycle, modFileName,
 				string.Format(CultureInfo.InvariantCulture, "24t Coach_AAux_Cycle_Accelerate_{0}_{1}_{2}.vmod", v1, v2, slopeStr));
@@ -141,7 +141,7 @@ namespace TUGraz.VectoCore.Tests.Integration.BusAuxiliaries
 				v1.IsEqual(0) ? 2 : 0, v2, slope, v2.IsEqual(0) ? 2 : 0);
 
 			var slopeStr = GetSlopeString(slope);
-			var modFileName = string.Format(CultureInfo.InvariantCulture, @"Coach_{0}_{1}_{2}.vmod", v1, v2, slopeStr);
+			var modFileName = string.Format(CultureInfo.InvariantCulture, @"CoachAAUX_{0}_{1}_{2}.vmod", v1, v2, slopeStr);
 
 			Coach_BusAuxiliaries(cycle, modFileName,
 				string.Format(CultureInfo.InvariantCulture, "24t Coach_AAux_Cycle_Decelerate_{0}_{1}_{2}.vmod", v1, v2, slopeStr));
@@ -157,7 +157,7 @@ namespace TUGraz.VectoCore.Tests.Integration.BusAuxiliaries
 				v1.IsEqual(0) ? 2 : 0, v2, slope, v2.IsEqual(0) ? 2 : 0);
 
 			var slopeStr = GetSlopeString(slope);
-			var modFileName = string.Format(CultureInfo.InvariantCulture, @"Coach_{0}_{1}_{2}.vmod", v1, v2, slopeStr);
+			var modFileName = string.Format(CultureInfo.InvariantCulture, @"CoachAAUX_{0}_{1}_{2}.vmod", v1, v2, slopeStr);
 
 			Coach_BusAuxiliaries(cycle, modFileName,
 				string.Format(CultureInfo.InvariantCulture, "24t Coach_AAux_Cycle_Decelerate_{0}_{1}_{2}.vmod", v1, v2, slopeStr),
@@ -212,7 +212,7 @@ namespace TUGraz.VectoCore.Tests.Integration.BusAuxiliaries
 				v1.IsEqual(0) ? 2 : 0, v2, slope, v2.IsEqual(0) ? 2 : 0);
 
 			var slopeStr = GetSlopeString(slope);
-			var modFileName = string.Format(CultureInfo.InvariantCulture, @"Coach_{0}_{1}_{2}.vmod", v1, v2, slopeStr);
+			var modFileName = string.Format(CultureInfo.InvariantCulture, @"CoachAAUX_{0}_{1}_{2}.vmod", v1, v2, slopeStr);
 
 			Coach_BusAuxiliaries(cycle, modFileName,
 				string.Format(CultureInfo.InvariantCulture, "24t Coach_AAux_Cycle_Drive_{0}_{1}_{2}.vmod", v1, v2, slopeStr));
@@ -230,7 +230,7 @@ namespace TUGraz.VectoCore.Tests.Integration.BusAuxiliaries
 				v1.IsEqual(0) ? 2 : 0, v2, slope, v2.IsEqual(0) ? 2 : 0);
 
 			var slopeStr = GetSlopeString(slope);
-			var modFileName = string.Format(CultureInfo.InvariantCulture, @"Coach_{0}_{1}_{2}.vmod", v1, v2, slopeStr);
+			var modFileName = string.Format(CultureInfo.InvariantCulture, @"CoachAAUX_{0}_{1}_{2}.vmod", v1, v2, slopeStr);
 
 			Coach_BusAuxiliaries(cycle, modFileName,
 				string.Format(CultureInfo.InvariantCulture, "24t Coach_AAux_Cycle_Drive_{0}_{1}_{2}.vmod", v1, v2, slopeStr),

@@ -54,7 +54,7 @@ namespace TUGraz.VectoCore.Tests.Reports
 
 			modData.AddAuxiliary("FAN");
 
-			for (var i = 0; i < 500; i++) {
+			for (var i = 0; i < 499; i++) {
 				modData[ModalResultField.simulationInterval] = 1.SI<Second>();
 				modData[ModalResultField.time] = i.SI<Second>();
 				modData[ModalResultField.dist] = i.SI<Meter>();
@@ -91,8 +91,8 @@ namespace TUGraz.VectoCore.Tests.Reports
 			Assert.AreEqual(500.0 * 3000.0 / 1000 / 3600, sumData.Rows[0].ParseDouble("E_aux_sum [kWh]"), 1e-3);
 			Assert.AreEqual(500.0 * 3000.0 / 1000 / 3600, sumData.Rows[0].ParseDouble("E_brake [kWh]"), 1e-3);
 
-			// 500s * 1e-4 kg/s = 0.05kg  => 0.05kg / 499s => to g/h
-			Assert.AreEqual((500.0 * 1e-4) * 1000 * 3600 / 499.0, sumData.Rows[0].ParseDouble("FC-Map [g/h]"), 1e-3);
+			// 500s * 1e-4 kg/s = 0.05kg  => 0.05kg / 500 => to g/h
+			Assert.AreEqual((500.0 * 1e-4) * 1000 * 3600 / 500.0, sumData.Rows[0].ParseDouble("FC-Map [g/h]"), 1e-3);
 			// 500s * 1e-4 kg/s = 0.05kg => 0.05kg / 499m => to g/km
 			Assert.AreEqual((500.0 * 1e-4) * 1000 * 1000 / 499.0, sumData.Rows[0].ParseDouble("FC-Map [g/km]"), 1e-3);
 		}

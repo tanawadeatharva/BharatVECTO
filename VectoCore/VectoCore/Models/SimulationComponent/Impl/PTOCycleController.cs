@@ -45,8 +45,7 @@ namespace TUGraz.VectoCore.Models.SimulationComponent.Impl
 {
 	public class PTOCycleController : PowertrainDrivingCycle, IIdleController
 	{
-		public ITnOutPort RequestPort
-		{
+		public ITnOutPort RequestPort {
 			set { NextComponent = value; }
 		}
 
@@ -82,7 +81,7 @@ namespace TUGraz.VectoCore.Models.SimulationComponent.Impl
 		public void Reset()
 		{
 			CycleIterator.Reset();
-
+			PreviousState.InAngularVelocity = CycleIterator.LeftSample.AngularVelocity;
 			IdleStart = null;
 		}
 
@@ -98,7 +97,9 @@ namespace TUGraz.VectoCore.Models.SimulationComponent.Impl
 		protected override void DoWriteModalResults(IModalDataContainer container)
 		{
 			base.DoWriteModalResults(container);
-			container[Constants.Auxiliaries.IDs.PTOConsumer] = CurrentState.InTorque * CurrentState.InAngularVelocity;
+			container[Constants.Auxiliaries.IDs.PTOConsumer] = CurrentState.InTorque *
+																(PreviousState.InAngularVelocity + CurrentState.InAngularVelocity) / 2;
+			container[ModalResultField.P_eng_out] = 0.SI<Watt>();
 		}
 	}
 }

@@ -55,8 +55,8 @@ namespace TUGraz.VectoCore.Tests.Models.SimulationComponent
 
 		[Test,
 		// clutch slipping
-		TestCase(DrivingBehavior.Driving, 100, 0, 100, 65.6889),
-		TestCase(DrivingBehavior.Driving, 100, 30, 100, 65.6889),
+		TestCase(DrivingBehavior.Driving, 100, 0, 0, 65.6889),
+		TestCase(DrivingBehavior.Driving, 100, 30, 45.6697, 65.6889),
 		// clutch opened - would cause neg. clutch losses (which is not possible), torque is adapted
 		TestCase(DrivingBehavior.Halted, 100, 30, 51.1569, 58.643062),
 		// clutch closed
@@ -72,6 +72,8 @@ namespace TUGraz.VectoCore.Tests.Models.SimulationComponent
 			var engineData = MockSimulationDataFactory.CreateEngineDataFromFile(CoachEngine);
 			var gearbox = new MockGearbox(container);
 			var clutch = new Clutch(container, engineData) { IdleController = new MockIdleController() };
+			var vehicle = new MockVehicle(container);
+			vehicle.MyVehicleSpeed = 50.KMPHtoMeterPerSecond();
 
 			var inPort = clutch.InPort();
 			var outPort = new MockTnOutPort();

@@ -71,8 +71,7 @@ namespace TUGraz.VectoCore.Models.SimulationComponent.Impl
 
 		#region IGearboxCockpit
 
-		public GearboxType GearboxType
-		{
+		public GearboxType GearboxType {
 			get { return ModelData.Type; }
 		}
 
@@ -82,19 +81,16 @@ namespace TUGraz.VectoCore.Models.SimulationComponent.Impl
 		public uint Gear { get; protected internal set; }
 
 		[DebuggerHidden]
-		public MeterPerSecond StartSpeed
-		{
+		public MeterPerSecond StartSpeed {
 			get { return ModelData.StartSpeed; }
 		}
 
 		[DebuggerHidden]
-		public MeterPerSquareSecond StartAcceleration
-		{
+		public MeterPerSquareSecond StartAcceleration {
 			get { return ModelData.StartAcceleration; }
 		}
 
-		public NewtonMeter GearMaxTorque
-		{
+		public NewtonMeter GearMaxTorque {
 			get { return Gear == 0 || !ModelData.Gears.ContainsKey(Gear) ? null : ModelData.Gears[Gear].MaxTorque; }
 		}
 
@@ -105,7 +101,7 @@ namespace TUGraz.VectoCore.Models.SimulationComponent.Impl
 				: ModelData.Gears[PreviousState.Gear].TorqueConverterRatio;
 
 			return (PreviousState.TransmissionTorqueLoss +
-					PreviousState.InertiaTorqueLossOut / ratio) * PreviousState.InAngularVelocity;
+					PreviousState.InertiaTorqueLossOut) / ratio * PreviousState.InAngularVelocity;
 		}
 
 		public Second LastShift { get; protected set; }
@@ -117,8 +113,7 @@ namespace TUGraz.VectoCore.Models.SimulationComponent.Impl
 
 		public abstract GearInfo NextGear { get; }
 
-		public virtual Second TractionInterruption
-		{
+		public virtual Second TractionInterruption {
 			get { return ModelData.TractionInterruption; }
 		}
 

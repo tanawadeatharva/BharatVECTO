@@ -198,7 +198,8 @@ namespace TUGraz.VectoCore.Tests.Models.SimulationComponent
 		{
 			var gearboxData = MockSimulationDataFactory.CreateGearboxDataFromFile(gbxFile, engineFile);
 			var container = new VehicleContainer(ExecutionMode.Engineering);
-			var gearbox = new Gearbox(container, gearboxData, new AMTShiftStrategy(gearboxData, container), 0.SI<KilogramSquareMeter>());
+			var gearbox = new Gearbox(container, gearboxData, new AMTShiftStrategy(gearboxData, container),
+				0.SI<KilogramSquareMeter>());
 			var driver = new MockDriver(container);
 			var vehicle = new MockVehicle(container) { MyVehicleSpeed = 0.KMPHtoMeterPerSecond() };
 
@@ -231,7 +232,8 @@ namespace TUGraz.VectoCore.Tests.Models.SimulationComponent
 		{
 			var gearboxData = MockSimulationDataFactory.CreateGearboxDataFromFile(gbxFile, engineFile);
 			var container = new VehicleContainer(ExecutionMode.Declaration);
-			var gearbox = new Gearbox(container, gearboxData, new AMTShiftStrategy(gearboxData, container), 0.SI<KilogramSquareMeter>());
+			var gearbox = new Gearbox(container, gearboxData, new AMTShiftStrategy(gearboxData, container),
+				0.SI<KilogramSquareMeter>());
 			var driver = new MockDriver(container);
 			var vehicle = new MockVehicle(container) { MyVehicleSpeed = 0.KMPHtoMeterPerSecond() };
 
@@ -264,7 +266,8 @@ namespace TUGraz.VectoCore.Tests.Models.SimulationComponent
 		{
 			var gearboxData = MockSimulationDataFactory.CreateGearboxDataFromFile(GearboxDataFile, EngineDataFile);
 			var container = new VehicleContainer(executionMode: ExecutionMode.Engineering);
-			var gearbox = new Gearbox(container, gearboxData, new AMTShiftStrategy(gearboxData, container), 0.SI<KilogramSquareMeter>());
+			var gearbox = new Gearbox(container, gearboxData, new AMTShiftStrategy(gearboxData, container),
+				0.SI<KilogramSquareMeter>());
 			var driver = new MockDriver(container);
 			var vehicle = new MockVehicle(container) { MyVehicleSpeed = 0.KMPHtoMeterPerSecond() };
 
@@ -298,7 +301,8 @@ namespace TUGraz.VectoCore.Tests.Models.SimulationComponent
 		{
 			var gearboxData = MockSimulationDataFactory.CreateGearboxDataFromFile(GearboxDataFile, EngineDataFile);
 			var container = new VehicleContainer(ExecutionMode.Engineering);
-			var gearbox = new Gearbox(container, gearboxData, new AMTShiftStrategy(gearboxData, container), 0.SI<KilogramSquareMeter>());
+			var gearbox = new Gearbox(container, gearboxData, new AMTShiftStrategy(gearboxData, container),
+				0.SI<KilogramSquareMeter>());
 			var driver = new MockDriver(container);
 			var vehicle = new MockVehicle(container) { MyVehicleSpeed = 0.KMPHtoMeterPerSecond() };
 
@@ -329,7 +333,8 @@ namespace TUGraz.VectoCore.Tests.Models.SimulationComponent
 		{
 			var container = new VehicleContainer(ExecutionMode.Engineering);
 			var gearboxData = MockSimulationDataFactory.CreateGearboxDataFromFile(GearboxDataFile, EngineDataFile);
-			var gearbox = new Gearbox(container, gearboxData, new AMTShiftStrategy(gearboxData, container), 0.SI<KilogramSquareMeter>());
+			var gearbox = new Gearbox(container, gearboxData, new AMTShiftStrategy(gearboxData, container),
+				0.SI<KilogramSquareMeter>());
 			var vehicle = new MockVehicle(container) { MyVehicleSpeed = 0.KMPHtoMeterPerSecond() };
 			var driver = new MockDriver(container);
 
@@ -391,7 +396,8 @@ namespace TUGraz.VectoCore.Tests.Models.SimulationComponent
 		{
 			var container = new VehicleContainer(ExecutionMode.Engineering);
 			var gearboxData = CreateGearboxData();
-			var gearbox = new Gearbox(container, gearboxData, new AMTShiftStrategy(gearboxData, container), 0.SI<KilogramSquareMeter>());
+			var gearbox = new Gearbox(container, gearboxData, new AMTShiftStrategy(gearboxData, container),
+				0.SI<KilogramSquareMeter>());
 
 			var driver = new MockDriver(container);
 			var vehicle = new MockVehicle(container) { MyVehicleSpeed = 0.KMPHtoMeterPerSecond() };
@@ -426,12 +432,12 @@ namespace TUGraz.VectoCore.Tests.Models.SimulationComponent
 			}
 		}
 
-		[TestCase(8, 7, 1500, 750, typeof(ResponseGearShift)),
-		TestCase(7, 6, 1500, 750, typeof(ResponseGearShift)),
-		TestCase(6, 5, 1500, 750, typeof(ResponseGearShift)),
-		TestCase(5, 4, 1500, 750, typeof(ResponseGearShift)),
-		TestCase(4, 3, 1500, 750, typeof(ResponseGearShift)),
-		TestCase(3, 2, 1500, 750, typeof(ResponseGearShift)),
+		[TestCase(8, 7, 1800, 750, typeof(ResponseGearShift)),
+		TestCase(7, 6, 1800, 750, typeof(ResponseGearShift)),
+		TestCase(6, 5, 1800, 750, typeof(ResponseGearShift)),
+		TestCase(5, 4, 1800, 750, typeof(ResponseGearShift)),
+		TestCase(4, 3, 1800, 750, typeof(ResponseGearShift)),
+		TestCase(3, 2, 1800, 750, typeof(ResponseGearShift)),
 		TestCase(2, 1, 1500, 750, typeof(ResponseGearShift)),
 		TestCase(1, 1, 1200, 700, typeof(ResponseSuccess)),
 		TestCase(8, 1, 15000, 50, typeof(ResponseGearShift)),]
@@ -439,7 +445,8 @@ namespace TUGraz.VectoCore.Tests.Models.SimulationComponent
 		{
 			var container = new VehicleContainer(ExecutionMode.Engineering);
 			var gearboxData = MockSimulationDataFactory.CreateGearboxDataFromFile(GearboxDataFile, EngineDataFile);
-			var gearbox = new Gearbox(container, gearboxData, new AMTShiftStrategy(gearboxData, container), 0.SI<KilogramSquareMeter>());
+			var gearbox = new Gearbox(container, gearboxData, new AMTShiftStrategy(gearboxData, container),
+				0.SI<KilogramSquareMeter>());
 
 			var driver = new MockDriver(container);
 			var port = new MockTnOutPort() { EngineN95hSpeed = 2000.RPMtoRad() };
@@ -490,7 +497,8 @@ namespace TUGraz.VectoCore.Tests.Models.SimulationComponent
 				TotalMass = 19000.SI<Kilogram>()
 			};
 			var gearboxData = MockSimulationDataFactory.CreateGearboxDataFromFile(GearboxDataFile, EngineDataFile);
-			var gearbox = new Gearbox(container, gearboxData, new AMTShiftStrategy(gearboxData, container), 0.SI<KilogramSquareMeter>());
+			var gearbox = new Gearbox(container, gearboxData, new AMTShiftStrategy(gearboxData, container),
+				0.SI<KilogramSquareMeter>());
 			var port = new MockTnOutPort() { EngineN95hSpeed = 2000.RPMtoRad() };
 			container.Engine = port;
 			gearbox.InPort().Connect(port);

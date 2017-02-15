@@ -166,6 +166,7 @@ namespace TUGraz.VectoCore.Models.SimulationComponent.Impl
 		protected override void DoCommitSimulationStep()
 		{
 			CycleIterator.MoveNext();
+			AdvanceState();
 		}
 
 		#endregion

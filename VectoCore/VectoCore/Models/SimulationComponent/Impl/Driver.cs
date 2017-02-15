@@ -203,13 +203,23 @@ namespace TUGraz.VectoCore.Models.SimulationComponent.Impl
 								limitedOperatingPoint.Acceleration,
 								gradient);
 						} else {
-							Log.Info(
-								"Operating point with limited acceleration resulted in an overload! trying again with original acceleration {0}",
-								nextOperatingPoint.Acceleration);
-							DriverAcceleration = nextOperatingPoint.Acceleration;
-							retVal = NextComponent.Request(absTime, nextOperatingPoint.SimulationInterval,
-								nextOperatingPoint.Acceleration,
-								gradient);
+							if (absTime > 0 && DataBus.VehicleStopped) {
+								Log.Info(
+									"Operating point with limited acceleration resulted in an overload! Vehicle stopped! trying HALT action {0}",
+									nextOperatingPoint.Acceleration);
+								DataBus.BrakePower = 1.SI<Watt>();
+								retVal = DrivingActionHalt(absTime, nextOperatingPoint.SimulationInterval, 0.SI<MeterPerSecond>(), gradient);
+								ds = 0.SI<Meter>();
+								//retVal.Acceleration = 0.SI<MeterPerSquareSecond>();
+							} else {
+								Log.Info(
+									"Operating point with limited acceleration resulted in an overload! trying again with original acceleration {0}",
+									nextOperatingPoint.Acceleration);
+								DriverAcceleration = nextOperatingPoint.Acceleration;
+								retVal = NextComponent.Request(absTime, nextOperatingPoint.SimulationInterval,
+									nextOperatingPoint.Acceleration,
+									gradient);
+							}
 						}
 						retVal.Switch().
 							Case<ResponseSuccess>(() => operatingPoint = nextOperatingPoint).
@@ -238,6 +248,7 @@ namespace TUGraz.VectoCore.Models.SimulationComponent.Impl
 
 			retVal.Acceleration = operatingPoint.Acceleration;
 			retVal.SimulationInterval = operatingPoint.SimulationInterval;
+			retVal.SimulationDistance = ds;
 			retVal.OperatingPoint = operatingPoint;
 
 			return retVal;
@@ -282,6 +293,7 @@ namespace TUGraz.VectoCore.Models.SimulationComponent.Impl
 						throw new UnexpectedResponseException("DrivingAction Roll: Gearshift during Roll action.",
 							retVal);
 					});
+
 			return retVal;
 		}
 
@@ -356,6 +368,7 @@ namespace TUGraz.VectoCore.Models.SimulationComponent.Impl
 				limitedOperatingPoint.Acceleration, gradient);
 
 			response.SimulationInterval = limitedOperatingPoint.SimulationInterval;
+			response.SimulationDistance = ds;
 			response.Acceleration = limitedOperatingPoint.Acceleration;
 			response.OperatingPoint = limitedOperatingPoint;
 
@@ -453,6 +466,7 @@ namespace TUGraz.VectoCore.Models.SimulationComponent.Impl
 				CurrentState.Response = retVal;
 				retVal.Acceleration = operatingPoint.Acceleration;
 				retVal.SimulationInterval = operatingPoint.SimulationInterval;
+				retVal.SimulationDistance = ds;
 				retVal.OperatingPoint = operatingPoint;
 				return retVal;
 			}
@@ -515,6 +529,7 @@ namespace TUGraz.VectoCore.Models.SimulationComponent.Impl
 			CurrentState.Response = retVal;
 			retVal.Acceleration = operatingPoint.Acceleration;
 			retVal.SimulationInterval = operatingPoint.SimulationInterval;
+			retVal.SimulationDistance = ds;
 			retVal.OperatingPoint = operatingPoint;
 
 			return retVal;
@@ -648,26 +663,26 @@ namespace TUGraz.VectoCore.Models.SimulationComponent.Impl
 						return actionRoll ? r.GearboxPowerRequest : (coastingOrRoll ? r.DeltaDragLoad : r.DeltaFullLoad);
 					},
 					evaluateFunction:
-					acc => {
-						// calculate new time interval only when vehiclespeed and acceleration are != 0
-						// else: use same timeinterval as before.
-						if (!(acc.IsEqual(0) && DataBus.VehicleSpeed.IsEqual(0))) {
-							var tmp = ComputeTimeInterval(acc, ds);
-							if (tmp.SimulationInterval.IsEqual(0.SI<Second>(), 1e-9.SI<Second>())) {
-								throw new VectoSearchAbortedException(
-									"next TimeInterval is 0. a: {0}, v: {1}, dt: {2}", acc,
-									DataBus.VehicleSpeed, tmp.SimulationInterval);
+						acc => {
+							// calculate new time interval only when vehiclespeed and acceleration are != 0
+							// else: use same timeinterval as before.
+							if (!(acc.IsEqual(0) && DataBus.VehicleSpeed.IsEqual(0))) {
+								var tmp = ComputeTimeInterval(acc, ds);
+								if (tmp.SimulationInterval.IsEqual(0.SI<Second>(), 1e-9.SI<Second>())) {
+									throw new VectoSearchAbortedException(
+										"next TimeInterval is 0. a: {0}, v: {1}, dt: {2}", acc,
+										DataBus.VehicleSpeed, tmp.SimulationInterval);
+								}
+								retVal.Acceleration = tmp.Acceleration;
+								retVal.SimulationInterval = tmp.SimulationInterval;
+								retVal.SimulationDistance = tmp.SimulationDistance;
 							}
-							retVal.Acceleration = tmp.Acceleration;
-							retVal.SimulationInterval = tmp.SimulationInterval;
-							retVal.SimulationDistance = tmp.SimulationDistance;
-						}
-						IterationStatistics.Increment(this, "SearchOperatingPoint");
-						DriverAcceleration = acc;
-						var response = NextComponent.Request(absTime, retVal.SimulationInterval, acc, gradient, true);
-						response.OperatingPoint = retVal;
-						return response;
-					},
+							IterationStatistics.Increment(this, "SearchOperatingPoint");
+							DriverAcceleration = acc;
+							var response = NextComponent.Request(absTime, retVal.SimulationInterval, acc, gradient, true);
+							response.OperatingPoint = retVal;
+							return response;
+						},
 					criterion: response => {
 						var r = (ResponseDryRun)response;
 						delta = actionRoll
@@ -676,14 +691,14 @@ namespace TUGraz.VectoCore.Models.SimulationComponent.Impl
 						return delta.Value();
 					},
 					abortCriterion:
-					(response, cnt) => {
-						var r = (ResponseDryRun)response;
-						if (r == null) {
-							return false;
-						}
+						(response, cnt) => {
+							var r = (ResponseDryRun)response;
+							if (r == null) {
+								return false;
+							}
 
-						return !actionRoll && !ds.IsEqual(r.OperatingPoint.SimulationDistance);
-					});
+							return !actionRoll && !ds.IsEqual(r.OperatingPoint.SimulationDistance);
+						});
 			} catch (VectoSearchAbortedException) {
 				// search aborted, try to go ahead with the last acceleration
 			} catch (Exception) {

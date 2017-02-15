@@ -203,6 +203,16 @@ namespace TUGraz.VectoCore.OutputData
 			return paEngine + paGearbox;
 		}
 
+		public static WattSecond WorkClutch(this IModalDataContainer data)
+		{
+			return data.TimeIntegral<WattSecond>(ModalResultField.P_clutch_loss);
+		}
+
+		public static WattSecond WorkGearshift(this IModalDataContainer data)
+		{
+			return data.TimeIntegral<WattSecond>(ModalResultField.P_gbx_shift_loss);
+		}
+
 		public static WattSecond WorkGearbox(this IModalDataContainer data)
 		{
 			return data.TimeIntegral<WattSecond>(ModalResultField.P_gbx_loss);
@@ -231,10 +241,11 @@ namespace TUGraz.VectoCore.OutputData
 		public static Second Duration(this IModalDataContainer data)
 		{
 			var time = data.GetValues<Second>(ModalResultField.time).ToList();
+			var dt = data.GetValues<Second>(ModalResultField.simulationInterval).ToList();
 			if (time.Count == 1) {
 				return time.First();
 			}
-			return time.Max() - time.Min();
+			return time.Max() - time.Min() + dt.First() / 2 + dt.Last() / 2;
 		}
 
 		public static Meter Distance(this IModalDataContainer data)
@@ -247,6 +258,12 @@ namespace TUGraz.VectoCore.OutputData
 		public static WattSecond WorkTotalMechanicalBrake(this IModalDataContainer data)
 		{
 			return data.TimeIntegral<WattSecond>(ModalResultField.P_brake_loss);
+		}
+
+		public static WattSecond WorkVehicleInertia(this IModalDataContainer data)
+		{
+			return data.TimeIntegral<WattSecond>(ModalResultField.P_veh_inertia) +
+					data.TimeIntegral<WattSecond>(ModalResultField.P_wheel_inertia);
 		}
 
 		public static WattSecond WorkAuxiliaries(this IModalDataContainer data)
@@ -274,30 +291,35 @@ namespace TUGraz.VectoCore.OutputData
 			return data.TimeIntegral<WattSecond>(ModalResultField.P_eng_out, x => x > 0);
 		}
 
-		public static WattSecond TotalEngineWorkPositive(this IModalDataContainer data)
-		{
-			return data.TimeIntegral<WattSecond>(ModalResultField.P_eng_fcmap, x => x > 0);
-		}
-
 		public static WattSecond EngineWorkNegative(this IModalDataContainer data)
 		{
 			return data.TimeIntegral<WattSecond>(ModalResultField.P_eng_out, x => x < 0);
 		}
 
-		public static Watt PowerBrake(this IModalDataContainer data)
+		public static WattSecond TotalEngineWorkPositive(this IModalDataContainer data)
 		{
-			return data.TimeIntegral<WattSecond>(ModalResultField.P_brake_loss) / data.Duration();
+			return data.TimeIntegral<WattSecond>(ModalResultField.P_eng_fcmap, x => x > 0);
 		}
 
-		public static Watt PowerAngle(this IModalDataContainer data)
+		public static WattSecond TotalEngineWorkNegative(this IModalDataContainer data)
 		{
-			return data.TimeIntegral<WattSecond>(ModalResultField.P_angle_loss) / data.Duration();
+			return data.TimeIntegral<WattSecond>(ModalResultField.P_eng_fcmap, x => x < 0);
 		}
 
-		public static Watt PowerTorqueConverter(this IModalDataContainer data)
-		{
-			return data.TimeIntegral<WattSecond>(ModalResultField.P_TC_loss) / data.Duration();
-		}
+		//public static Watt PowerBrake(this IModalDataContainer data)
+		//{
+		//	return data.TimeIntegral<WattSecond>(ModalResultField.P_brake_loss) / data.Duration();
+		//}
+
+		//public static Watt PowerAngle(this IModalDataContainer data)
+		//{
+		//	return data.TimeIntegral<WattSecond>(ModalResultField.P_angle_loss) / data.Duration();
+		//}
+
+		//public static Watt PowerTorqueConverter(this IModalDataContainer data)
+		//{
+		//	return data.TimeIntegral<WattSecond>(ModalResultField.P_TC_loss) / data.Duration();
+		//}
 
 		public static Watt PowerWheelPositive(this IModalDataContainer data)
 		{
@@ -394,29 +416,29 @@ namespace TUGraz.VectoCore.OutputData
 			return data.TimeIntegral<Kilogram>(ModalResultField.FCMap) / distance;
 		}
 
-		public static Watt EnginePowerNegativeAverage(this IModalDataContainer data)
-		{
-			var simulationIntervals = data.GetValues<Second>(ModalResultField.simulationInterval);
-			var values = data.GetValues<Watt>(ModalResultField.P_eng_out)
-				.Zip(simulationIntervals, (value, dt) => new { Dt = dt, Value = value * dt })
-				.Where(v => v.Value < 0).ToList();
-			if (values.Any()) {
-				return values.Sum(v => v.Value) / values.Sum(v => v.Dt);
-			}
-			return 0.SI<Watt>();
-		}
+		//public static Watt EnginePowerNegativeAverage(this IModalDataContainer data)
+		//{
+		//	var simulationIntervals = data.GetValues<Second>(ModalResultField.simulationInterval);
+		//	var values = data.GetValues<Watt>(ModalResultField.P_eng_out)
+		//		.Zip(simulationIntervals, (value, dt) => new { Dt = dt, Value = value * dt })
+		//		.Where(v => v.Value < 0).ToList();
+		//	if (values.Any()) {
+		//		return values.Sum(v => v.Value) / values.Sum(v => v.Dt);
+		//	}
+		//	return 0.SI<Watt>();
+		//}
 
-		public static Watt EnginePowerPositiveAverage(this IModalDataContainer data)
-		{
-			var simulationIntervals = data.GetValues<Second>(ModalResultField.simulationInterval);
-			var values = data.GetValues<Watt>(ModalResultField.P_eng_out)
-				.Zip(simulationIntervals, (value, dt) => new { Dt = dt, Value = value * dt })
-				.Where(v => v.Value > 0).ToList();
-			if (values.Any()) {
-				return values.Sum(v => v.Value) / values.Sum(v => v.Dt);
-			}
-			return 0.SI<Watt>();
-		}
+		//public static Watt EnginePowerPositiveAverage(this IModalDataContainer data)
+		//{
+		//	var simulationIntervals = data.GetValues<Second>(ModalResultField.simulationInterval);
+		//	var values = data.GetValues<Watt>(ModalResultField.P_eng_out)
+		//		.Zip(simulationIntervals, (value, dt) => new { Dt = dt, Value = value * dt })
+		//		.Where(v => v.Value > 0).ToList();
+		//	if (values.Any()) {
+		//		return values.Sum(v => v.Value) / values.Sum(v => v.Dt);
+		//	}
+		//	return 0.SI<Watt>();
+		//}
 
 		public static Watt TotalPowerEnginePositiveAverage(this IModalDataContainer data)
 		{
@@ -425,7 +447,7 @@ namespace TUGraz.VectoCore.OutputData
 				.Zip(simulationIntervals, (value, dt) => new { Dt = dt, Value = value * dt })
 				.Where(v => v.Value > 0).ToList();
 			if (values.Any()) {
-				return values.Sum(v => v.Value) / values.Sum(v => v.Dt);
+				return values.Sum(v => v.Value) / Duration(data);
 			}
 			return 0.SI<Watt>();
 		}

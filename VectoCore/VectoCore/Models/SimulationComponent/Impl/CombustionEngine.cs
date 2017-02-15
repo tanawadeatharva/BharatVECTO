@@ -350,7 +350,7 @@ namespace TUGraz.VectoCore.Models.SimulationComponent.Impl
 			var avgEngineSpeed = (PreviousState.EngineSpeed + CurrentState.EngineSpeed) / 2.0;
 
 			container[ModalResultField.P_eng_fcmap] = CurrentState.EngineTorque * avgEngineSpeed;
-			container[ModalResultField.P_eng_out] = CurrentState.EngineTorqueOut * avgEngineSpeed;
+			container[ModalResultField.P_eng_out] = container[ModalResultField.P_eng_out] is DBNull ? CurrentState.EngineTorqueOut * avgEngineSpeed : container[ModalResultField.P_eng_out];
 			container[ModalResultField.P_eng_inertia] = CurrentState.InertiaTorqueLoss * avgEngineSpeed;
 
 			container[ModalResultField.n_eng_avg] = avgEngineSpeed;
@@ -552,7 +552,8 @@ namespace TUGraz.VectoCore.Models.SimulationComponent.Impl
 				}
 
 
-				var velocitySlope = (_engineTargetSpeed - _engine.PreviousState.EngineSpeed) /
+				var velocitySlope = (_dataBus.TractionInterruption - (absTime - _idleStart)).IsEqual(0) ? 0.SI<PerSquareSecond>() :
+					(_engineTargetSpeed - _engine.PreviousState.EngineSpeed) /
 									(_dataBus.TractionInterruption - (absTime - _idleStart));
 
 				var nextAngularSpeed = (velocitySlope * dt + _engine.PreviousState.EngineSpeed);

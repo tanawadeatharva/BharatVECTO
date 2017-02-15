@@ -112,10 +112,11 @@ namespace TUGraz.VectoCore.Models.SimulationComponent.Impl
 		public NewtonMeter Initialize(NewtonMeter torque, PerSecond angularSpeed)
 		{
 			PreviousState.AngularSpeed = angularSpeed;
-			if (angularSpeed.IsEqual(0))
+			if (angularSpeed.IsEqual(0)) {
 				return 0.SI<NewtonMeter>();
+			}
 
-			return ComputePowerDemand(angularSpeed) / angularSpeed;
+			return ComputePowerDemand(angularSpeed, false) / angularSpeed;
 		}
 
 		/// <summary>
@@ -131,25 +132,31 @@ namespace TUGraz.VectoCore.Models.SimulationComponent.Impl
 		public NewtonMeter TorqueDemand(Second absTime, Second dt, NewtonMeter torquePowerTrain, NewtonMeter torqueEngine,
 			PerSecond angularSpeed, bool dryRun = false)
 		{
-			CurrentState.AngularSpeed = angularSpeed;
 			var avgAngularSpeed = (PreviousState.AngularSpeed != null)
-				? (CurrentState.AngularSpeed + PreviousState.AngularSpeed) / 2.0
-				: CurrentState.AngularSpeed;
-			if (avgAngularSpeed.IsGreater(0))
-				return ComputePowerDemand(avgAngularSpeed) / avgAngularSpeed;
+				? (angularSpeed + PreviousState.AngularSpeed) / 2.0
+				: angularSpeed;
+			if (!dryRun) {
+				CurrentState.AngularSpeed = angularSpeed;
+			}
+			if (avgAngularSpeed.IsGreater(0)) {
+				return ComputePowerDemand(avgAngularSpeed, dryRun) / avgAngularSpeed;
+			}
 			return 0.SI<NewtonMeter>();
 		}
 
-		protected Watt ComputePowerDemand(PerSecond engineSpeed)
+		protected Watt ComputePowerDemand(PerSecond engineSpeed, bool dryRun)
 		{
-			CurrentState.PowerDemands = new Dictionary<string, Watt>(Auxiliaries.Count);
+			var powerDemands = new Dictionary<string, Watt>(Auxiliaries.Count);
 			foreach (var item in Auxiliaries) {
 				var value = item.Value(engineSpeed);
 				if (value != null) {
-					CurrentState.PowerDemands[item.Key] = value;
+					powerDemands[item.Key] = value;
 				}
 			}
-			return CurrentState.PowerDemands.Sum(kv => kv.Value);
+			if (!dryRun) {
+				CurrentState.PowerDemands = powerDemands;
+			}
+			return powerDemands.Sum(kv => kv.Value);
 		}
 
 		protected override void DoWriteModalResults(IModalDataContainer container)

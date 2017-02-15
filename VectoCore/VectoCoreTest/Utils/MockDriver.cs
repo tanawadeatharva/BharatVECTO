@@ -70,7 +70,7 @@ namespace TUGraz.VectoCore.Tests.Utils
 			LastRequest = new RequestData { AbsTime = absTime, ds = ds, Gradient = gradient, TargetVelocity = targetVelocity };
 			var acc = 0.SI<MeterPerSquareSecond>();
 			var dt = 1.SI<Second>();
-			return new ResponseSuccess { SimulationInterval = dt, Source = this };
+			return new ResponseSuccess { SimulationInterval = dt, SimulationDistance = ds, Source = this };
 		}
 
 		public IResponse Request(Second absTime, Second dt, MeterPerSecond targetVelocity, Radian gradient)
