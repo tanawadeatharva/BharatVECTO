@@ -261,7 +261,7 @@ namespace TUGraz.VectoCore.Models.SimulationComponent.Impl
 			}
 
 			CurrentState.WaitPhase = 0;
-			CurrentState.Distance = PreviousState.Distance + ds;
+			//CurrentState.Distance = PreviousState.Distance + ds;
 			CurrentState.SimulationDistance = ds;
 			CurrentState.VehicleTargetSpeed = Left.VehicleTargetSpeed;
 			CurrentState.Gradient = ComputeGradient(ds);
@@ -274,6 +274,9 @@ namespace TUGraz.VectoCore.Models.SimulationComponent.Impl
 						retVal = NextComponent.Request(absTime, ds, CurrentState.VehicleTargetSpeed, CurrentState.Gradient);
 					});
 			CurrentState.AbsTime = absTime;
+			if (retVal is ResponseSuccess) {
+				CurrentState.Distance = PreviousState.Distance + retVal.SimulationDistance;
+			}
 			return retVal;
 		}
 
