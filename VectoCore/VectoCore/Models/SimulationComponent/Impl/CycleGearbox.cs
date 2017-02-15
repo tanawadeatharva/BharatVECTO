@@ -264,7 +264,8 @@ namespace TUGraz.VectoCore.Models.SimulationComponent.Impl
 			//	return RequestDisengaged(absTime, dt, outTorque, outAngularVelocity, dryRun);
 			//}
 			if (TorqueConverter != null) {
-				TorqueConverter.Locked(CurrentState.InTorque, CurrentState.InAngularVelocity, CurrentState.InTorque, CurrentState.InAngularVelocity);
+				TorqueConverter.Locked(CurrentState.InTorque, CurrentState.InAngularVelocity, CurrentState.InTorque,
+					CurrentState.InAngularVelocity);
 			}
 			var response = NextComponent.Request(absTime, dt, inTorque, inAngularVelocity);
 			response.GearboxPowerRequest = outTorque * avgOutAngularVelocity;
@@ -339,14 +340,19 @@ namespace TUGraz.VectoCore.Models.SimulationComponent.Impl
 			if (GearboxType.AutomaticTransmission()) {
 				disengagedResponse = EngineIdleRequest(absTime, dt);
 			} else {
-				disengagedResponse = NextComponent.Request(absTime, dt, 0.SI<NewtonMeter>(),
-					outAngularVelocity * ModelData.Gears[NextGear.Gear].Ratio);
+				disengagedResponse = NextGear.Gear > 0
+					? NextComponent.Request(absTime, dt, 0.SI<NewtonMeter>(),
+						outAngularVelocity * ModelData.Gears[NextGear.Gear].Ratio)
+					: EngineIdleRequest(absTime, dt);
 			}
 			if (TorqueConverter != null) {
-				if (DataBus.VehicleStopped)
-					TorqueConverter.Locked(0.SI<NewtonMeter>(), disengagedResponse.EngineSpeed, CurrentState.InTorque, outAngularVelocity);
-				else
-					TorqueConverter.Locked(CurrentState.InTorque, disengagedResponse.EngineSpeed, CurrentState.InTorque, disengagedResponse.EngineSpeed);
+				if (DataBus.VehicleStopped) {
+					TorqueConverter.Locked(0.SI<NewtonMeter>(), disengagedResponse.EngineSpeed, CurrentState.InTorque,
+						outAngularVelocity);
+				} else {
+					TorqueConverter.Locked(CurrentState.InTorque, disengagedResponse.EngineSpeed, CurrentState.InTorque,
+						disengagedResponse.EngineSpeed);
+				}
 			}
 			disengagedResponse.GearboxPowerRequest = outTorque * avgOutAngularVelocity;
 			CurrentState.SetState(0.SI<NewtonMeter>(), disengagedResponse.EngineSpeed, 0.SI<NewtonMeter>(), outAngularVelocity);
@@ -419,14 +425,15 @@ namespace TUGraz.VectoCore.Models.SimulationComponent.Impl
 
 		#region ICluchInfo
 
-		public override GearInfo NextGear {
+		public override GearInfo NextGear
+		{
 			get {
 				if (Disengaged == null) {
 					return new GearInfo(Gear, !TorqueConverterActive ?? true);
 				}
 				var future = DataBus.LookAhead(ModelData.TractionInterruption * 5);
-				var nextGear = 1u;
-				var torqueConverterLocked = true;
+				var nextGear = 0u;
+				var torqueConverterLocked = false;
 				foreach (var entry in future) {
 					if (entry.VehicleTargetSpeed != null && entry.VehicleTargetSpeed.IsEqual(0)) {
 						// vehicle is stopped, no next gear, engine should go to idle
@@ -447,7 +454,8 @@ namespace TUGraz.VectoCore.Models.SimulationComponent.Impl
 			}
 		}
 
-		public override Second TractionInterruption {
+		public override Second TractionInterruption
+		{
 			get {
 				if (Disengaged == null) {
 					return ModelData.TractionInterruption;
@@ -514,7 +522,8 @@ namespace TUGraz.VectoCore.Models.SimulationComponent.Impl
 				throw new System.NotImplementedException();
 			}
 
-			public override GearInfo NextGear {
+			public override GearInfo NextGear
+			{
 				get { throw new System.NotImplementedException(); }
 			}
 		}
