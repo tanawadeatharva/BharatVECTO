@@ -64,7 +64,8 @@ namespace TUGraz.VectoCore.Models.SimulationComponent.Impl
 
 		public Second LastDownshift { get; private set; }
 
-		public override GearInfo NextGear {
+		public override GearInfo NextGear
+		{
 			get { return _strategy.NextGear; }
 		}
 
@@ -179,10 +180,7 @@ namespace TUGraz.VectoCore.Models.SimulationComponent.Impl
 				_engageTime = absTime + dt;
 			}
 
-			var engineSpeedNorm = (outAngularVelocity - DataBus.EngineIdleSpeed) /
-								(DataBus.EngineRatedSpeed - DataBus.EngineIdleSpeed);
-			if (DataBus.DriverBehavior == DrivingBehavior.Braking && DataBus.BrakePower.IsGreater(0) &&
-				engineSpeedNorm < Constants.SimulationSettings.ClutchClosingSpeedNorm &&
+			if (DataBus.DriverBehavior == DrivingBehavior.Braking && DataBus.BrakePower.IsGreater(0) && outTorque < 0 &&
 				DataBus.VehicleSpeed.IsSmaller(Constants.SimulationSettings.ClutchDisengageWhenHaltingSpeed)) {
 				_engageTime = absTime + dt;
 				Disengaged = true;
