@@ -59,11 +59,13 @@ namespace TUGraz.VectoCore.Models.SimulationComponent.Impl
 		private bool _intervalProlonged;
 		internal IdleControllerSwitcher IdleController;
 
-		private DrivingCycleData.DrivingCycleEntry Left {
+		private DrivingCycleData.DrivingCycleEntry Left
+		{
 			get { return CycleIntervalIterator.LeftSample; }
 		}
 
-		private DrivingCycleData.DrivingCycleEntry Right {
+		private DrivingCycleData.DrivingCycleEntry Right
+		{
 			get { return CycleIntervalIterator.RightSample; }
 		}
 
@@ -89,7 +91,7 @@ namespace TUGraz.VectoCore.Models.SimulationComponent.Impl
 				var retVal = NextComponent.Initialize(DataBus.StartSpeed,
 					Left.RoadGradient, DataBus.StartAcceleration);
 				if (!(retVal is ResponseSuccess)) {
-					throw new UnexpectedResponseException("Couldn't find start gear.", retVal);
+					throw new UnexpectedResponseException("DistanceBasedDrivingCycle.Initialize: Couldn't find start gear.", retVal);
 				}
 			}
 
@@ -384,7 +386,8 @@ namespace TUGraz.VectoCore.Models.SimulationComponent.Impl
 		/// <summary>
 		/// Progress of the distance in the driving cycle.
 		/// </summary>
-		public double Progress {
+		public double Progress
+		{
 			get {
 				return _data.Entries.Count > 0
 					? (CurrentState.Distance.Value() - _data.Entries.First().Distance.Value()) /
@@ -440,7 +443,8 @@ namespace TUGraz.VectoCore.Models.SimulationComponent.Impl
 			_data.Finish();
 		}
 
-		public CycleData CycleData {
+		public CycleData CycleData
+		{
 			get {
 				return new CycleData {
 					AbsTime = CurrentState.AbsTime,
@@ -495,7 +499,8 @@ namespace TUGraz.VectoCore.Models.SimulationComponent.Impl
 			return retVal;
 		}
 
-		public Meter Altitude {
+		public Meter Altitude
+		{
 			get { return PreviousState.Altitude; }
 		}
 

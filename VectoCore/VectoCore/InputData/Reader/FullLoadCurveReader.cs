@@ -51,7 +51,7 @@ namespace TUGraz.VectoCore.InputData.Reader
 				var data = VectoCSVFile.Read(fileName);
 				return Create(data, declarationMode, engineFld);
 			} catch (Exception ex) {
-				throw new VectoException("ERROR while reading FullLoadCurve File: " + ex.Message);
+				throw new VectoException("ERROR while reading FullLoadCurve File: " + ex.Message, ex);
 			}
 		}
 

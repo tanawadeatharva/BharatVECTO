@@ -60,7 +60,8 @@ namespace TUGraz.VectoCore.InputData.Reader.ComponentData
 		public static RetarderLossMap Create(DataTable data)
 		{
 			if (data.Columns.Count != 2) {
-				throw new VectoException("RetarderLossMap Data File must consist of 2 columns: Retarder Speed, Torque Loss");
+				throw new VectoException("RetarderLossMap Data File must consist of 2 columns: {0}, {1}", Fields.RetarderSpeed,
+					Fields.TorqueLoss);
 			}
 
 			if (data.Rows.Count < 2) {

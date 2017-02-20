@@ -103,7 +103,7 @@ namespace TUGraz.VectoCore.Models.SimulationComponent.Impl
 
 			var response = NextComponent.Initialize(first.VehicleTargetSpeed, first.RoadGradient);
 			if (!(response is ResponseSuccess)) {
-				throw new UnexpectedResponseException("Couldn't find start gear.", response);
+				throw new UnexpectedResponseException("MeasuredSpeedDrivingCycle: Couldn't find start gear.", response);
 			}
 
 			_isInitializing = false;
@@ -297,8 +297,7 @@ namespace TUGraz.VectoCore.Models.SimulationComponent.Impl
 
 		public CycleData CycleData
 		{
-			get
-			{
+			get {
 				return new CycleData {
 					AbsTime = CycleIterator.LeftSample.Time,
 					AbsDistance = null,

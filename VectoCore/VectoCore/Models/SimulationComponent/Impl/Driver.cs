@@ -646,13 +646,13 @@ namespace TUGraz.VectoCore.Models.SimulationComponent.Impl
 				initialResponse.Switch().
 					Case<ResponseDryRun>(r => origDelta = r.GearboxPowerRequest).
 					Case<ResponseFailTimeInterval>(r => origDelta = r.GearboxPowerRequest).
-					Default(r => { throw new UnexpectedResponseException("Unknown response type.", r); });
+					Default(r => { throw new UnexpectedResponseException("SearchOperatingPoint: Unknown response type.", r); });
 			} else {
 				initialResponse.Switch().
 					Case<ResponseOverload>(r => origDelta = r.Delta)
 					. // search operating point in drive action after overload
 					Case<ResponseDryRun>(r => origDelta = coastingOrRoll ? r.DeltaDragLoad : r.DeltaFullLoad).
-					Default(r => { throw new UnexpectedResponseException("Unknown response type.", r); });
+					Default(r => { throw new UnexpectedResponseException("SearchOperatingPoint: Unknown response type.", r); });
 			}
 			var delta = origDelta;
 			try {

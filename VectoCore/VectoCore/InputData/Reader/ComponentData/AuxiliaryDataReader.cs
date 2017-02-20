@@ -53,7 +53,7 @@ namespace TUGraz.VectoCore.InputData.Reader.ComponentData
 		public static AuxiliaryData Create(IAuxiliaryEngineeringInputData data)
 		{
 			var map = ReadAuxMap(data.ID, data.DemandMap);
-			return new AuxiliaryData(data.TransmissionRatio, data.EfficiencyToEngine, data.EfficiencyToSupply, map);
+			return new AuxiliaryData(data.ID, data.TransmissionRatio, data.EfficiencyToEngine, data.EfficiencyToSupply, map);
 		}
 
 		private static DelaunayMap ReadAuxMap(string id, DataTable table)
@@ -73,7 +73,7 @@ namespace TUGraz.VectoCore.InputData.Reader.ComponentData
 		{
 			for (var i = 0; i < table.Rows.Count; i++) {
 				var row = table.Rows[i];
-				map.AddPoint(row.ParseDouble(0).RPMtoRad().Value(),row.ParseDouble(2),row.ParseDouble(1));
+				map.AddPoint(row.ParseDouble(0).RPMtoRad().Value(), row.ParseDouble(2), row.ParseDouble(1));
 			}
 		}
 
@@ -81,7 +81,8 @@ namespace TUGraz.VectoCore.InputData.Reader.ComponentData
 		{
 			for (var i = 0; i < table.Rows.Count; i++) {
 				var row = table.Rows[i];
-				map.AddPoint(row.ParseDouble(Fields.AuxSpeed).RPMtoRad().Value(),row.ParseDouble(Fields.SupplyPower),row.ParseDouble(Fields.MechPower));
+				map.AddPoint(row.ParseDouble(Fields.AuxSpeed).RPMtoRad().Value(), row.ParseDouble(Fields.SupplyPower),
+					row.ParseDouble(Fields.MechPower));
 			}
 		}
 

@@ -164,7 +164,7 @@ namespace TUGraz.VectoCore.Models.SimulationComponent.Data.Gearbox
 
 			if (nu.IsGreater(nuMax)) {
 				throw new VectoException(
-					"Torque Converter: Range of torque converter data is not sufficient. Needed nu: {0}, Got nu_max: {1}", nu, nuMax);
+					"Torque Converter: Range of torque converter data is not sufficient. Required nu: {0}, Got nu_max: {1}", nu, nuMax);
 			}
 
 			throw new VectoException(
@@ -203,7 +203,7 @@ namespace TUGraz.VectoCore.Models.SimulationComponent.Data.Gearbox
 			}
 			if (solutions.Count == 0) {
 				throw new VectoSimulationException(
-					"Failed to find torque converter Operating Point for inputTorque/inputSpeed! n_in: {0}, tq_in: {1}",
+					"Torque Converter: Failed to find operating point for inputTorque/inputSpeed! n_in: {0}, tq_in: {1}",
 					inAngularVelocity, inTorque);
 			}
 			return FindOperatingPoint(inAngularVelocity, solutions.Max().SI<PerSecond>());

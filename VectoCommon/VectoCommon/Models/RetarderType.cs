@@ -83,7 +83,7 @@ namespace TUGraz.VectoCommon.Models
 				case RetarderType.LossesIncludedInTransmission:
 					return "Included in Transmission Loss Maps";
 				default:
-					throw new ArgumentOutOfRangeException("retarder", retarder, null);
+					throw new ArgumentOutOfRangeException("RetarderType", retarder, null);
 			}
 		}
 

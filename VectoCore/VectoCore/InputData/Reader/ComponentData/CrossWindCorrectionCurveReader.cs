@@ -97,7 +97,7 @@ namespace TUGraz.VectoCore.InputData.Reader.ComponentData
 				throw new VectoException("Crosswind correction file must consist of 2 columns.");
 			}
 			if (data.Rows.Count < 2) {
-				throw new VectoException("Crosswind correction file must consist of at least two entries");
+				throw new VectoException("Crosswind correction file must consist of at least 2 rows");
 			}
 
 			if (SpeedDependentHeaderIsValid(data.Columns)) {
@@ -140,20 +140,20 @@ namespace TUGraz.VectoCore.InputData.Reader.ComponentData
 		{
 			return (from DataRow row in betaTable.Rows
 				select
-				new AirDragBetaEntry() {
-					Beta = row.ParseDouble(0),
-					DeltaCdA = row.ParseDouble(1).SI<SquareMeter>()
-				}).ToList();
+					new AirDragBetaEntry() {
+						Beta = row.ParseDouble(0),
+						DeltaCdA = row.ParseDouble(1).SI<SquareMeter>()
+					}).ToList();
 		}
 
 		private static List<AirDragBetaEntry> ParseCdxABetaFromColumnNames(DataTable betaTable)
 		{
 			return (from DataRow row in betaTable.Rows
 				select
-				new AirDragBetaEntry() {
-					Beta = row.ParseDouble(FieldsCdxABeta.Beta),
-					DeltaCdA = row.ParseDouble(FieldsCdxABeta.DeltaCdxA).SI<SquareMeter>()
-				}).ToList();
+					new AirDragBetaEntry() {
+						Beta = row.ParseDouble(FieldsCdxABeta.Beta),
+						DeltaCdA = row.ParseDouble(FieldsCdxABeta.DeltaCdxA).SI<SquareMeter>()
+					}).ToList();
 		}
 
 		private static bool HeaderIsValid(DataColumnCollection columns)

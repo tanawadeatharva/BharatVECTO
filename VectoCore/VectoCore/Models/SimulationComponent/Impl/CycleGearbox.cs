@@ -201,7 +201,7 @@ namespace TUGraz.VectoCore.Models.SimulationComponent.Impl
 			CurrentState.TorqueLossResult = inTorqueLossResult;
 
 			if (!torqueConverterLocked && !ModelData.Gears[Gear].HasTorqueConverter) {
-				throw new VectoSimulationException("Torque converter requested by strategy for gear without torque converter!");
+				throw new VectoSimulationException("Torque converter requested by cycle for gear without torque converter!");
 			}
 
 			var inAngularVelocity = outAngularVelocity * effectiveRatio;
