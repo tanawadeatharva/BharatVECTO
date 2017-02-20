@@ -176,6 +176,7 @@ namespace TUGraz.VectoCore.Models.Declaration
 					MaxLoad = maxLoad,
 					RefLoad = refLoad,
 					TrailerAxleWeightDistribution = GetTrailerAxleWeightDistribution(row, missionType),
+					CargoVolume = body.CargoVolume + trailer.CargoVolume,
 				};
 				missions.Add(mission);
 			}
