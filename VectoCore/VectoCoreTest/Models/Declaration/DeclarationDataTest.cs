@@ -483,6 +483,12 @@ namespace TUGraz.VectoCore.Tests.Models.Declaration
 		TestCase(VehicleCategory.Tractor, AxleConfiguration.AxleConfig_6x2, 16000, 0, VehicleClass.Class10),
 		TestCase(VehicleCategory.Tractor, AxleConfiguration.AxleConfig_6x2, 40000, 0, VehicleClass.Class10),
 		TestCase(VehicleCategory.Tractor, AxleConfiguration.AxleConfig_6x2, 99000, 0, VehicleClass.Class10),
+		TestCase(VehicleCategory.RigidTruck, AxleConfiguration.AxleConfig_6x4, 7500, 0, VehicleClass.Class11),
+		TestCase(VehicleCategory.RigidTruck, AxleConfiguration.AxleConfig_6x4, 40000, 0, VehicleClass.Class11),
+		TestCase(VehicleCategory.Tractor, AxleConfiguration.AxleConfig_6x4, 7500, 0, VehicleClass.Class12),
+		TestCase(VehicleCategory.Tractor, AxleConfiguration.AxleConfig_6x4, 99000, 0, VehicleClass.Class12),
+		TestCase(VehicleCategory.RigidTruck, AxleConfiguration.AxleConfig_8x4, 7500, 0, VehicleClass.Class16),
+		TestCase(VehicleCategory.RigidTruck, AxleConfiguration.AxleConfig_8x4, 99000, 0, VehicleClass.Class16)
 		]
 		public void SegmentLookupTest(VehicleCategory category, AxleConfiguration axleConfiguration, double grossWeight,
 			double curbWeight, VehicleClass expectedClass)
@@ -490,6 +496,51 @@ namespace TUGraz.VectoCore.Tests.Models.Declaration
 			var segment = DeclarationData.Segments.Lookup(category, axleConfiguration, grossWeight.SI<Kilogram>(),
 				curbWeight.SI<Kilogram>());
 			Assert.AreEqual(expectedClass, segment.VehicleClass);
+		}
+
+		[Test,
+		TestCase(VehicleCategory.RigidTruck, AxleConfiguration.AxleConfig_4x2, 10000, 0, VehicleClass.Class1, 1600, null,
+			TestName = "SegmentLookupBodyWeight Class1 Rigid"),
+		TestCase(VehicleCategory.Tractor, AxleConfiguration.AxleConfig_4x2, 10000, 0, VehicleClass.Class1, 1600, null,
+			TestName = "SegmentLookupBodyWeight Class1 Tractor"),
+		TestCase(VehicleCategory.RigidTruck, AxleConfiguration.AxleConfig_4x2, 12000, 0, VehicleClass.Class2, 1900, 3400,
+			TestName = "SegmentLookupBodyWeight Class2 Rigid"),
+		TestCase(VehicleCategory.Tractor, AxleConfiguration.AxleConfig_4x2, 12000, 0, VehicleClass.Class2, 1900, 3400,
+			TestName = "SegmentLookupBodyWeight Class2 Tractor"),
+		TestCase(VehicleCategory.RigidTruck, AxleConfiguration.AxleConfig_4x2, 16000, 0, VehicleClass.Class3, 2000, null,
+			TestName = "SegmentLookupBodyWeight Class3 Rigid"),
+		TestCase(VehicleCategory.Tractor, AxleConfiguration.AxleConfig_4x2, 16000, 0, VehicleClass.Class3, 2000, null,
+			TestName = "SegmentLookupBodyWeight Class3 Tractor"),
+		TestCase(VehicleCategory.RigidTruck, AxleConfiguration.AxleConfig_4x2, 18000, 0, VehicleClass.Class4, 2100, 5400,
+			TestName = "SegmentLookupBodyWeight Class4"),
+		TestCase(VehicleCategory.Tractor, AxleConfiguration.AxleConfig_4x2, 18000, 0, VehicleClass.Class5, null, 7500,
+			TestName = "SegmentLookupBodyWeight Class5"),
+		TestCase(VehicleCategory.RigidTruck, AxleConfiguration.AxleConfig_6x2, 40000, 0, VehicleClass.Class9, 2200, 5400,
+			TestName = "SegmentLookupBodyWeight Class9"),
+		TestCase(VehicleCategory.Tractor, AxleConfiguration.AxleConfig_6x2, 40000, 0, VehicleClass.Class10, null, 7500,
+			TestName = "SegmentLookupBodyWeight Class10"),
+		TestCase(VehicleCategory.RigidTruck, AxleConfiguration.AxleConfig_6x4, 12000, 0, VehicleClass.Class11, 2200, 5400,
+			TestName = "SegmentLookupBodyWeight Class11"),
+		TestCase(VehicleCategory.Tractor, AxleConfiguration.AxleConfig_6x4, 12000, 0, VehicleClass.Class12, null, 7500,
+			TestName = "SegmentLookupBodyWeight Class12"),
+		TestCase(VehicleCategory.RigidTruck, AxleConfiguration.AxleConfig_8x4, 12000, 0, VehicleClass.Class16, null, null,
+			TestName = "SegmentLookupBodyWeight Class16")]
+		public void SegmentLookupBodyTest(VehicleCategory category, AxleConfiguration axleConfiguration, double grossWeight,
+			double curbWeight, VehicleClass expectedClass, int? expectedBodyWeight, int? expectedTrailerWeight)
+		{
+			var segment = DeclarationData.Segments.Lookup(category, axleConfiguration, grossWeight.SI<Kilogram>(),
+				curbWeight.SI<Kilogram>());
+			Assert.AreEqual(expectedClass, segment.VehicleClass);
+
+			if (expectedBodyWeight.HasValue) {
+				Assert.AreEqual(expectedBodyWeight, segment.Missions[0].BodyCurbWeight.Value());
+			}
+			if (expectedTrailerWeight.HasValue) {
+				var trailerMission = segment.Missions.Where(m => m.TrailerType != TrailerType.None).ToList();
+				if (trailerMission.Count > 0) {
+					Assert.AreEqual(expectedTrailerWeight, trailerMission.First().TrailerCurbWeight.Value());
+				}
+			}
 		}
 
 		/// <summary>
