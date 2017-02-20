@@ -63,7 +63,7 @@ namespace TUGraz.VectoCommon.Models
 				case GearboxType.DrivingCycle:
 					return "Gear from Driving Cycle";
 				default:
-					throw new ArgumentOutOfRangeException("type", type, null);
+					throw new ArgumentOutOfRangeException("GearboxType", type, null);
 			}
 		}
 

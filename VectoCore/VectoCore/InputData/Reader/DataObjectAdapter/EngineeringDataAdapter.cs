@@ -85,7 +85,7 @@ namespace TUGraz.VectoCore.InputData.Reader.DataObjectAdapter
 								data.AirDragArea), CrossWindCorrectionMode.DeclarationModeCorrection);
 					break;
 				default:
-					throw new ArgumentOutOfRangeException();
+					throw new ArgumentOutOfRangeException("CrosswindCorrection", data.CrossWindCorrectionMode.ToString());
 			}
 
 

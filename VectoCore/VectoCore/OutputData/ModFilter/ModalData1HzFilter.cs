@@ -74,7 +74,7 @@ namespace TUGraz.VectoCore.OutputData.ModFilter
 					var a = (MeterPerSquareSecond)row[(int)ModalResultField.acc];
 					var ds = dt * v + a / 2 * dt * dt;
 					if (ds.IsSmaller(0)) {
-						throw new VectoSimulationException("1Hz-Filter: simulation distance must not be negative.");
+						throw new VectoSimulationException("1Hz-Filter: simulation distance must not be negative. ds: {0}  {1}", ds, "1");
 					}
 					absTime += dt;
 					v += dt * a;
@@ -107,7 +107,7 @@ namespace TUGraz.VectoCore.OutputData.ModFilter
 					var a = (MeterPerSquareSecond)row[(int)ModalResultField.acc];
 					var ds = v * dt + a / 2 * dt * dt;
 					if (ds.IsSmaller(0)) {
-						throw new VectoSimulationException("1Hz-Filter: simulation distance must not be negative.");
+						throw new VectoSimulationException("1Hz-Filter: simulation distance must not be negative. ds: {0}  {1}", ds, "2");
 					}
 					absTime += dt;
 					v += a * dt;
@@ -133,7 +133,7 @@ namespace TUGraz.VectoCore.OutputData.ModFilter
 					var a = (MeterPerSquareSecond)row[(int)ModalResultField.acc];
 					var ds = v * dt + a / 2 * dt * dt;
 					if (ds.IsSmaller(0)) {
-						throw new VectoSimulationException("1Hz-Filter: simulation distance must not be negative.");
+						throw new VectoSimulationException("1Hz-Filter: simulation distance must not be negative. ds: {0}  {1}", ds, "3");
 					}
 					absTime += dt;
 					v += a * dt;
@@ -158,7 +158,7 @@ namespace TUGraz.VectoCore.OutputData.ModFilter
 				var a = (MeterPerSquareSecond)last[(int)ModalResultField.acc];
 				var ds = v * dt + a / 2 * dt * dt;
 				if (ds.IsSmaller(0)) {
-					throw new VectoSimulationException("1Hz-Filter: simulation distance must not be negative.");
+					throw new VectoSimulationException("1Hz-Filter: simulation distance must not be negative. ds: {0}  {1}", ds, "4");
 				}
 				v += a * dt;
 				distance += ds;

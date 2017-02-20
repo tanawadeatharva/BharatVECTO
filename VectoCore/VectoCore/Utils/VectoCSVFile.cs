@@ -80,7 +80,7 @@ namespace TUGraz.VectoCore.Utils
 				}
 			} catch (Exception e) {
 				LogManager.GetLogger(typeof(VectoCSVFile).FullName).Error(e);
-				throw new VectoException("Error File {0}: {1}", fileName, e.Message);
+				throw new VectoException("Error reading file {0}: {1}", fileName, e.Message);
 			}
 		}
 

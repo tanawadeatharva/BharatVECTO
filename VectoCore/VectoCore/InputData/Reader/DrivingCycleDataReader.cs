@@ -93,7 +93,7 @@ namespace TUGraz.VectoCore.InputData.Reader
 				case CycleType.PTO:
 					return new PTOCycleDataParser();
 				default:
-					throw new ArgumentOutOfRangeException("type");
+					throw new ArgumentOutOfRangeException("Cycle Type", type.ToString());
 			}
 		}
 
@@ -111,7 +111,7 @@ namespace TUGraz.VectoCore.InputData.Reader
 				var stream = File.OpenRead(fileName);
 				return ReadFromStream(stream, type, Path.GetFileNameWithoutExtension(fileName), crossWindRequired);
 			} catch (Exception ex) {
-				throw new VectoException("ERROR while opening DrivingCycle File: " + ex.Message);
+				throw new VectoException("ERROR while opening DrivingCycle File: " + ex.Message, ex);
 			}
 		}
 
@@ -128,7 +128,7 @@ namespace TUGraz.VectoCore.InputData.Reader
 			try {
 				return ReadFromDataTable(VectoCSVFile.ReadStream(stream), type, name, crossWindRequired);
 			} catch (Exception ex) {
-				throw new VectoException("ERROR while reading DrivingCycle Stream: " + ex.Message);
+				throw new VectoException("ERROR while reading DrivingCycle Stream: " + ex.Message, ex);
 			}
 		}
 

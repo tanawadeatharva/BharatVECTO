@@ -52,7 +52,7 @@ namespace TUGraz.VectoCommon.Models
 				case AngledriveType.LossesIncludedInGearbox:
 					return "Included in Transmission Loss Maps";
 				default:
-					throw new ArgumentOutOfRangeException("type", type, null);
+					throw new ArgumentOutOfRangeException("AngledriveType", type, null);
 			}
 		}
 	}

@@ -62,7 +62,7 @@ namespace TUGraz.VectoCore.Models.SimulationComponent.Impl
 		protected MeterPerSquareSecond EstimateAccelerationForGear(uint gear, PerSecond gbxAngularVelocityOut)
 		{
 			if (gear == 0 || gear > ModelData.Gears.Count) {
-				throw new VectoSimulationException("invalid gear: {0}", gear);
+				throw new VectoSimulationException("EstimateAccelerationForGear: invalid gear: {0}", gear);
 			}
 
 			var vehicleSpeed = DataBus.VehicleSpeed;
@@ -71,13 +71,13 @@ namespace TUGraz.VectoCore.Models.SimulationComponent.Impl
 			var maxEnginePower = DataBus.EngineStationaryFullPower(nextEngineSpeed);
 
 			var avgSlope =
-			((DataBus.CycleLookAhead(Constants.SimulationSettings.GearboxLookaheadForAccelerationEstimation).Altitude -
-			DataBus.Altitude) / Constants.SimulationSettings.GearboxLookaheadForAccelerationEstimation).Value().SI<Radian>();
+				((DataBus.CycleLookAhead(Constants.SimulationSettings.GearboxLookaheadForAccelerationEstimation).Altitude -
+				DataBus.Altitude) / Constants.SimulationSettings.GearboxLookaheadForAccelerationEstimation).Value().SI<Radian>();
 
 			var airDragLoss = DataBus.AirDragResistance(vehicleSpeed, vehicleSpeed) * DataBus.VehicleSpeed;
 			var rollResistanceLoss = DataBus.RollingResistance(avgSlope) * DataBus.VehicleSpeed;
 			var gearboxLoss = ModelData.Gears[gear].LossMap.GetTorqueLoss(gbxAngularVelocityOut,
-								maxEnginePower / nextEngineSpeed * ModelData.Gears[gear].Ratio).Value * nextEngineSpeed;
+				maxEnginePower / nextEngineSpeed * ModelData.Gears[gear].Ratio).Value * nextEngineSpeed;
 			//DataBus.GearboxLoss();
 			var slopeLoss = DataBus.SlopeResistance(avgSlope) * DataBus.VehicleSpeed;
 			var axleLoss = DataBus.AxlegearLoss();

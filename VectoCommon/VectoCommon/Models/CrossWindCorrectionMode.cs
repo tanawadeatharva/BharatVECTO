@@ -79,7 +79,7 @@ namespace TUGraz.VectoCommon.Models
 				case CrossWindCorrectionMode.DeclarationModeCorrection:
 					return DeclarationModeCorrection;
 				default:
-					throw new ArgumentOutOfRangeException("mode", mode, null);
+					throw new ArgumentOutOfRangeException("CrosswindCorrectionMode", mode, null);
 			}
 		}
 
@@ -95,7 +95,7 @@ namespace TUGraz.VectoCommon.Models
 				case CrossWindCorrectionMode.DeclarationModeCorrection:
 					return "Speed dependent (Declaration Mode)";
 				default:
-					throw new ArgumentOutOfRangeException("mode", mode, null);
+					throw new ArgumentOutOfRangeException("CrosswindCorrectionMode", mode, null);
 			}
 		}
 	}

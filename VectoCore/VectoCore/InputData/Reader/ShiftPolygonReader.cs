@@ -49,7 +49,7 @@ namespace TUGraz.VectoCore.InputData.Reader
 				var data = VectoCSVFile.Read(fileName);
 				return Create(data);
 			} catch (Exception ex) {
-				throw new VectoException("ERROR while reading ShiftPolygon: " + ex.Message);
+				throw new VectoException("ERROR while reading ShiftPolygon: " + ex.Message, ex);
 			}
 		}
 
@@ -98,10 +98,10 @@ namespace TUGraz.VectoCore.InputData.Reader
 		{
 			return (from DataRow row in data.Rows
 				select
-				new ShiftPolygon.ShiftPolygonEntry {
-					Torque = row.ParseDouble(0).SI<NewtonMeter>(),
-					AngularSpeed = row.ParseDouble(column).RPMtoRad(),
-				}).ToList();
+					new ShiftPolygon.ShiftPolygonEntry {
+						Torque = row.ParseDouble(0).SI<NewtonMeter>(),
+						AngularSpeed = row.ParseDouble(column).RPMtoRad(),
+					}).ToList();
 		}
 
 		public static class Fields
