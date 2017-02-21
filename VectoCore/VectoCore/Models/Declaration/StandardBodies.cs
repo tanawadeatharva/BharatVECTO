@@ -43,6 +43,7 @@ namespace TUGraz.VectoCore.Models.Declaration
 		public SquareMeter DeltaCrossWindArea;
 		public string Name;
 		public Wheels.Entry Wheels;
+		public CubicMeter CargoVolume;
 
 		public Kilogram MaxPayLoad
 		{
@@ -50,21 +51,23 @@ namespace TUGraz.VectoCore.Models.Declaration
 		}
 
 		public StandardBody(string name, Kilogram curbWeight, Kilogram grossVehicleWeight, SquareMeter deltaCrossWindArea,
-			Wheels.Entry wheels)
+			Wheels.Entry wheels, CubicMeter volume)
 		{
 			Name = name;
 			CurbWeight = curbWeight;
 			GrossVehicleWeight = grossVehicleWeight;
 			DeltaCrossWindArea = deltaCrossWindArea;
 			Wheels = wheels;
+			CargoVolume = volume;
 		}
+
 
 		public static StandardBody operator +(StandardBody first, StandardBody second)
 		{
 			return new StandardBody(first.Name + second.Name, first.CurbWeight + second.CurbWeight,
 				first.GrossVehicleWeight + second.GrossVehicleWeight,
 				first.DeltaCrossWindArea + second.DeltaCrossWindArea,
-				null);
+				null, first.CargoVolume + second.CargoVolume);
 		}
 	}
 
@@ -80,7 +83,7 @@ namespace TUGraz.VectoCore.Models.Declaration
 	public sealed class StandardBodies : LookupData<string, StandardBody>
 	{
 		public static readonly StandardBody Empty = new StandardBody("", 0.SI<Kilogram>(), 0.SI<Kilogram>(),
-			0.SI<SquareMeter>(), null);
+			0.SI<SquareMeter>(), null, 0.SI<CubicMeter>());
 
 		protected override string ResourceId
 		{
@@ -106,7 +109,8 @@ namespace TUGraz.VectoCore.Models.Declaration
 				k.ParseDoubleOrGetDefault("deltacdxafortraileroperationinlonghaul").SI<SquareMeter>(),
 				!string.IsNullOrWhiteSpace(k.Field<string>("wheels"))
 					? DeclarationData.Wheels.Lookup(k.Field<string>("wheels"))
-					: null))
+					: null,
+				k.ParseDouble("cargovolume").SI<CubicMeter>()))
 				.ToDictionary(kv => kv.Name);
 		}
 	}

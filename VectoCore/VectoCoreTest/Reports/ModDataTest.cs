@@ -85,10 +85,21 @@ namespace TUGraz.VectoCore.Tests.Reports
 			AssertModDataIntegrity(modData, auxKeys, cycle.Entries.Last().Distance, engineData.ConsumptionMap);
 		}
 
+		[TestCase(@"TestData\Integration\DeclarationMode\Class2_RigidTruck_4x2\Class2_RigidTruck_DECL.vecto")]
+		public void TestFullCycleModDataIntegrityDeclMT(string jobName)
+		{
+			RunSimulation(jobName, ExecutionMode.Declaration);
+		}
+
 		[TestCase(@"TestData\Integration\EngineeringMode\Class2_RigidTruck_4x2\Class2_RigidTruck_ENG.vecto"),
 		TestCase(@"TestData\Integration\EngineeringMode\Class5_Tractor_4x2\Class5_Tractor_ENG.vecto"),
 		TestCase(@"TestData\Integration\EngineeringMode\Class9_RigidTruck_6x2_PTO\Class9_RigidTruck_ENG_PTO.vecto")]
 		public void TestFullCycleModDataIntegrityMT(string jobName)
+		{
+			RunSimulation(jobName, ExecutionMode.Engineering);
+		}
+
+		private static void RunSimulation(string jobName, ExecutionMode mode)
 		{
 			var fileWriter = new FileOutputWriter(jobName);
 			var sumData = new SummaryDataContainer(fileWriter);
@@ -96,7 +107,7 @@ namespace TUGraz.VectoCore.Tests.Reports
 			var jobContainer = new JobContainer(sumData);
 			var inputData = JSONInputDataFactory.ReadJsonJob(jobName);
 
-			var runsFactory = new SimulatorFactory(ExecutionMode.Engineering, inputData, fileWriter) { WriteModalResults = true };
+			var runsFactory = new SimulatorFactory(mode, inputData, fileWriter) { WriteModalResults = true };
 
 			jobContainer.AddRuns(runsFactory);
 			var modData = new List<Tuple<ModalResults, Meter>>();
@@ -115,11 +126,11 @@ namespace TUGraz.VectoCore.Tests.Reports
 					FuelConsumptionMapReader.Create(((IEngineeringInputDataProvider)inputData).EngineInputData.FuelConsumptionMap));
 			}
 
-			AssertSumDataIntegrity(sumData);
+			AssertSumDataIntegrity(sumData, mode);
 		}
 
 
-		private static void AssertSumDataIntegrity(SummaryDataContainer sumData)
+		private static void AssertSumDataIntegrity(SummaryDataContainer sumData, ExecutionMode mode)
 		{
 			Assert.IsTrue(sumData._table.Rows.Count > 0);
 
@@ -153,6 +164,17 @@ namespace TUGraz.VectoCore.Tests.Reports
 				var eAir = ((SI)row[SummaryDataContainer.E_AIR]).Value();
 				var eRoll = ((SI)row[SummaryDataContainer.E_ROLL]).Value();
 				var eGrad = ((SI)row[SummaryDataContainer.E_GRAD]).Value();
+				var cargoVolume = mode == ExecutionMode.Engineering ? 0 : ((SI)row[SummaryDataContainer.VOLUME]).Value();
+
+				var loadingValue = ((SI)row[SummaryDataContainer.LOADING]).Value() / 1000;
+				var fcPer100km = ((SI)row[SummaryDataContainer.FCFINAL_LITERPER100KM]).Value();
+				var fcPerVolume = mode == ExecutionMode.Engineering
+					? 0
+					: ((SI)row[SummaryDataContainer.FCFINAL_LiterPer100M3KM]).Value();
+				var fcPerLoad = loadingValue > 0 ? ((SI)row[SummaryDataContainer.FCFINAL_LITERPER100TKM]).Value() : 0;
+				var co2Per100km = ((SI)row[SummaryDataContainer.CO2_KM]).Value();
+				var co2PerVolume = mode == ExecutionMode.Engineering ? 0 : ((SI)row[SummaryDataContainer.CO2_M3KM]).Value();
+				var co2PerLoad = loadingValue > 0 ? ((SI)row[SummaryDataContainer.CO2_TKM]).Value() : 0;
 
 				var ePTOtransm = ptoTransmissionColumn != null ? ((SI)row[ptoTransmissionColumn]).Value() : 0;
 				var ePTOconsumer = ptoConsumerColumn != null ? ((SI)row[ptoConsumerColumn]).Value() : 0;
@@ -170,6 +192,22 @@ namespace TUGraz.VectoCore.Tests.Reports
 				// E_fcmap_pos = P_fcmap_pos * t
 				Assert.AreEqual(eFcMapPos, pFcmapPos * (time / 3600), 1e-3, "input file: {0}  cycle: {1} loading: {2}", inputFile,
 					cycle, loading);
+
+				if (cargoVolume > 0) {
+					Assert.AreEqual(fcPerVolume, fcPer100km / cargoVolume, 1e-3, "input file: {0}  cycle: {1} loading: {2}", inputFile,
+						cycle, loading);
+
+					Assert.AreEqual(co2PerVolume, co2Per100km / cargoVolume, 1e-3, "input file: {0}  cycle: {1} loading: {2}",
+						inputFile,
+						cycle, loading);
+				}
+
+				if (loadingValue > 0) {
+					Assert.AreEqual(co2PerLoad, co2Per100km / loadingValue, 1e-3, "input file: {0}  cycle: {1} loading: {2}",
+						inputFile, cycle, loading);
+					Assert.AreEqual(fcPerLoad, fcPer100km / loadingValue, 1e-3, "input file: {0}  cycle: {1} loading: {2}",
+						inputFile, cycle, loading);
+				}
 			}
 		}
 
@@ -315,7 +353,7 @@ namespace TUGraz.VectoCore.Tests.Reports
 					FuelConsumptionMapReader.Create(((IEngineeringInputDataProvider)inputData).EngineInputData.FuelConsumptionMap));
 			}
 
-			AssertSumDataIntegrity(sumData);
+			AssertSumDataIntegrity(sumData, ExecutionMode.Engineering);
 		}
 
 		private static void AssertModDataIntegrityAT(ModalResults modData, Dictionary<string, DataColumn> auxKeys,

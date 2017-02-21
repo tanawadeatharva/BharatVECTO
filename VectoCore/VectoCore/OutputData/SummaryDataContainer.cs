@@ -41,7 +41,8 @@ using TUGraz.VectoCore.Configuration;
 
 namespace TUGraz.VectoCore.OutputData
 {
-	public delegate void WriteSumData(IModalDataContainer data, Kilogram vehicleMass, Kilogram loading);
+	public delegate void WriteSumData(
+		IModalDataContainer data, Kilogram vehicleMass, Kilogram loading, CubicMeter cargoVolume);
 
 	/// <summary>
 	/// Class for the sum file in vecto.
@@ -55,6 +56,7 @@ namespace TUGraz.VectoCore.OutputData
 		public const string STATUS = "Status";
 		public const string MASS = "Mass [kg]";
 		public const string LOADING = "Loading [kg]";
+		public const string VOLUME = "Cargo Volume [m³]";
 		public const string TIME = "time [s]";
 		public const string DISTANCE = "distance [km]";
 		public const string SPEED = "speed [km/h]";
@@ -73,17 +75,14 @@ namespace TUGraz.VectoCore.OutputData
 		public const string FCFINAL_KM = "FC-Final [g/km]";
 		public const string FCFINAL_LITERPER100KM = "FC-Final [l/100km]";
 		public const string FCFINAL_LITERPER100TKM = "FC-Final [l/100tkm]";
+		public const string FCFINAL_LiterPer100M3KM = "FC-Final [l/100m³km]";
 
 		public const string CO2_KM = "CO2 [g/km]";
 		public const string CO2_TKM = "CO2 [g/tkm]";
+		public const string CO2_M3KM = "CO2 [g/m³km]";
 
 		public const string P_WHEEL_POS = "P_wheel_in_pos [kW]";
-		//public const string P_BRAKE_LOSS = "P_brake_loss [kW]";
-		//public const string P_CLUTCH_POS = "P_clutch_pos [kW]";
-		//public const string P_CLUTCH_NEG = "P_clutch_neg [kW]";
 		public const string P_FCMAP_POS = "P_fcmap_pos [kW]";
-		//public const string P_ANGLE_LOSS = "P_angle_loss [kW]";
-		//public const string P_TC_LOSS = "P_tc_loss [kW]";
 
 		public const string E_FORMAT = "E_{0} [kWh]";
 		public const string E_AUX_FORMAT = "E_aux_{0} [kWh]";
@@ -101,8 +100,6 @@ namespace TUGraz.VectoCore.OutputData
 		public const string E_RET_LOSS = "E_ret_loss [kWh]";
 		public const string E_TC_LOSS = "E_tc_loss [kWh]";
 		public const string E_ANGLE_LOSS = "E_angle_loss [kWh]";
-		//public const string E_CLUTCH_POS = "E_clutch_pos [kWh]";
-		//public const string E_CLUTCH_NEG = "E_clutch_neg [kWh]";
 		public const string E_CLUTCH_LOSS = "E_clutch_loss [kWh]";
 		public const string E_FCMAP_POS = "E_fcmap_pos [kWh]";
 		public const string E_FCMAP_NEG = "E_fcmap_neg [kWh]";
@@ -137,8 +134,10 @@ namespace TUGraz.VectoCore.OutputData
 			_table.Columns.Add(STATUS, typeof(string));
 
 			_table.Columns.AddRange(new[] {
-				MASS, LOADING, TIME, DISTANCE, SPEED, ALTITUDE_DELTA, FCMAP_H, FCMAP_KM, FCAUXC_H, FCAUXC_KM, FCWHTCC_H, FCWHTCC_KM,
-				FCAAUX_H, FCAAUX_KM, FCFINAL_H, FCFINAL_KM, FCFINAL_LITERPER100KM, FCFINAL_LITERPER100TKM, CO2_KM, CO2_TKM,
+				MASS, LOADING, VOLUME, TIME, DISTANCE, SPEED, ALTITUDE_DELTA, FCMAP_H, FCMAP_KM, FCAUXC_H, FCAUXC_KM, FCWHTCC_H,
+				FCWHTCC_KM,
+				FCAAUX_H, FCAAUX_KM, FCFINAL_H, FCFINAL_KM, FCFINAL_LITERPER100KM, FCFINAL_LITERPER100TKM, FCFINAL_LiterPer100M3KM,
+				CO2_KM, CO2_TKM, CO2_M3KM,
 				P_WHEEL_POS, P_FCMAP_POS,
 				E_FCMAP_POS, E_FCMAP_NEG, E_POWERTRAIN_INERTIA, E_AUX, E_CLUTCH_LOSS, E_TC_LOSS, E_SHIFT_LOSS, E_GBX_LOSS,
 				E_RET_LOSS, E_ANGLE_LOSS, E_AXL_LOSS, E_BRAKE, E_VEHICLE_INERTIA, E_AIR, E_ROLL, E_GRAD,
@@ -161,7 +160,7 @@ namespace TUGraz.VectoCore.OutputData
 		/// </summary>
 		[MethodImpl(MethodImplOptions.Synchronized)]
 		public virtual void Write(IModalDataContainer modData, string jobFileName, string jobName, string cycleFileName,
-			Kilogram vehicleMass, Kilogram vehicleLoading)
+			Kilogram vehicleMass, Kilogram vehicleLoading, CubicMeter cargoVolume)
 		{
 			var row = _table.NewRow();
 			_table.Rows.Add(row);
@@ -173,6 +172,7 @@ namespace TUGraz.VectoCore.OutputData
 
 			row[MASS] = vehicleMass;
 			row[LOADING] = vehicleLoading;
+			row[VOLUME] = cargoVolume;
 
 			row[TIME] = modData.Duration();
 
@@ -222,12 +222,18 @@ namespace TUGraz.VectoCore.OutputData
 				row[FCFINAL_LITERPER100TKM] = (modData.FuelConsumptionFinalLiterPer100Kilometer() ?? 0.SI()) /
 											vehicleLoading.ConvertTo().Ton;
 			}
+			if (cargoVolume > 0) {
+				row[FCFINAL_LiterPer100M3KM] = (modData.FuelConsumptionFinalLiterPer100Kilometer() ?? 0.SI()) / cargoVolume;
+			}
 
 			var kilogramPerMeter = modData.CO2PerMeter();
 			if (kilogramPerMeter != null) {
 				row[CO2_KM] = kilogramPerMeter.ConvertTo().Gramm.Per.Kilo.Meter;
 				if (vehicleLoading != null && !vehicleLoading.IsEqual(0)) {
 					row[CO2_TKM] = kilogramPerMeter.ConvertTo().Gramm.Per.Kilo.Meter / vehicleLoading.ConvertTo().Ton;
+				}
+				if (cargoVolume > 0) {
+					row[CO2_M3KM] = kilogramPerMeter.ConvertTo().Gramm.Per.Kilo.Meter / cargoVolume;
 				}
 			}
 

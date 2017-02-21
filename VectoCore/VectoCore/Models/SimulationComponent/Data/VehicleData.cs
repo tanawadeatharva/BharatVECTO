@@ -63,8 +63,7 @@ namespace TUGraz.VectoCore.Models.SimulationComponent.Data
 		public List<Axle> AxleData
 		{
 			get { return _axleData; }
-			internal set
-			{
+			internal set {
 				_axleData = value;
 				_wheelsInertia = null;
 				_totalRollResistanceCoefficient = null;
@@ -81,6 +80,9 @@ namespace TUGraz.VectoCore.Models.SimulationComponent.Data
 
 		[Required, SIRange(0, 40000)]
 		public Kilogram Loading { get; internal set; }
+
+		[SIRange(0, 500)]
+		public CubicMeter CargoVolume { get; internal set; }
 
 		/// <summary>
 		/// The Gross Vehicle Weight of the Vehicle.
@@ -101,8 +103,7 @@ namespace TUGraz.VectoCore.Models.SimulationComponent.Data
 
 		public KilogramSquareMeter WheelsInertia
 		{
-			get
-			{
+			get {
 				if (_wheelsInertia == null) {
 					ComputeRollResistanceAndReducedMassWheels();
 				}
@@ -114,8 +115,7 @@ namespace TUGraz.VectoCore.Models.SimulationComponent.Data
 		//[Required, SIRange(0, 1E12)]
 		public double TotalRollResistanceCoefficient
 		{
-			get
-			{
+			get {
 				if (_totalRollResistanceCoefficient == null) {
 					ComputeRollResistanceAndReducedMassWheels();
 				}
@@ -128,8 +128,7 @@ namespace TUGraz.VectoCore.Models.SimulationComponent.Data
 
 		public Kilogram TotalVehicleWeight
 		{
-			get
-			{
+			get {
 				var retVal = 0.0;
 				if (CurbWeight != null) {
 					retVal += CurbWeight.Value();
@@ -145,6 +144,7 @@ namespace TUGraz.VectoCore.Models.SimulationComponent.Data
 		{
 			get { return CurbWeight ?? 0.SI<Kilogram>(); }
 		}
+
 
 		protected void ComputeRollResistanceAndReducedMassWheels()
 		{
