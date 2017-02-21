@@ -88,6 +88,8 @@ namespace TUGraz.VectoCore.Tests.Utils
 			get { return VehicleMass; }
 		}
 
+		public CubicMeter CargoVolume { get;  set; }
+
 		public Newton AirDragResistance(MeterPerSecond previousVelocity, MeterPerSecond nextVelocity)
 		{
 			return 0.SI<Newton>();

@@ -119,6 +119,7 @@ namespace TUGraz.VectoCore.Tests.Utils
 		public Kilogram VehicleMass { get; set; }
 		public Kilogram VehicleLoading { get; set; }
 		public Kilogram TotalMass { get; set; }
+		public CubicMeter CargoVolume { get;  set; }
 
 		public Newton AirDragResistance(MeterPerSecond previousVelocity, MeterPerSecond nextVelocity)
 		{

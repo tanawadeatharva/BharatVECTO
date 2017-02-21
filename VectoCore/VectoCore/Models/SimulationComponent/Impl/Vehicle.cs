@@ -220,6 +220,11 @@ namespace TUGraz.VectoCore.Models.SimulationComponent.Impl
 			get { return ModelData.TotalVehicleWeight; }
 		}
 
+		public CubicMeter CargoVolume
+		{
+			get { return ModelData.CargoVolume; }
+		}
+
 		public class VehicleState
 		{
 			public Meter Distance = 0.SI<Meter>();
