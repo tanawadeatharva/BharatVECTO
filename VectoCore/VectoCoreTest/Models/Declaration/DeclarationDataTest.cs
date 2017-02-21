@@ -546,8 +546,8 @@ namespace TUGraz.VectoCore.Tests.Models.Declaration
 		[Test,
 		TestCase(VehicleCategory.RigidTruck, AxleConfiguration.AxleConfig_4x2, 7500, 0, VehicleClass.Class1,
 			new[] { 36.5, 36.5 }),
-		TestCase(VehicleCategory.Tractor, AxleConfiguration.AxleConfig_4x2, 7500, 0, VehicleClass.Class1, new[] { 36.5, 36.5 }
-			),
+		TestCase(VehicleCategory.Tractor, AxleConfiguration.AxleConfig_4x2, 7500, 0, VehicleClass.Class1,
+			new[] { 36.5, 36.5 }),
 		TestCase(VehicleCategory.RigidTruck, AxleConfiguration.AxleConfig_4x2, 12000, 0, VehicleClass.Class2,
 			new[] { 85.0, 45.2, 45.2 }),
 		TestCase(VehicleCategory.Tractor, AxleConfiguration.AxleConfig_4x2, 12000, 0, VehicleClass.Class2,
@@ -568,7 +568,8 @@ namespace TUGraz.VectoCore.Tests.Models.Declaration
 			new[] { 101.4, 51.9, 51.9, 51.9 }),
 		TestCase(VehicleCategory.Tractor, AxleConfiguration.AxleConfig_6x4, 99000, 0, VehicleClass.Class12,
 			new[] { 91.0, 91.0, 91.0, 91.0 }),
-		TestCase(VehicleCategory.RigidTruck, AxleConfiguration.AxleConfig_8x4, 99000, 0, VehicleClass.Class16, new[] { 0.0 })
+		TestCase(VehicleCategory.RigidTruck, AxleConfiguration.AxleConfig_8x4, 99000, 0, VehicleClass.Class16,
+			new[] { 0.0 })
 		]
 		public void SegmentLookupCargoVolumeTest(VehicleCategory category, AxleConfiguration axleConfiguration,
 			double grossWeight,
