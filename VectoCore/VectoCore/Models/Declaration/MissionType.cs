@@ -34,7 +34,9 @@ namespace TUGraz.VectoCore.Models.Declaration
 	public enum MissionType
 	{
 		LongHaul,
+		LongHaulEMS,
 		RegionalDelivery,
+		RegionalDeliveryEMS,
 		UrbanDelivery,
 		MunicipalUtility,
 		Construction,
@@ -50,6 +52,22 @@ namespace TUGraz.VectoCore.Models.Declaration
 		public static string GetName(this MissionType self)
 		{
 			return self.ToString().ToLowerInvariant();
+		}
+
+		public static bool IsEMS(this MissionType self)
+		{
+			return self == MissionType.LongHaulEMS || self == MissionType.RegionalDeliveryEMS;
+		}
+
+		public static MissionType GetNonEMSMissionType(this MissionType self)
+		{
+			if (self == MissionType.LongHaulEMS) {
+				return MissionType.LongHaul;
+			}
+			if (self == MissionType.RegionalDeliveryEMS) {
+				return MissionType.RegionalDelivery;
+			}
+			return self;
 		}
 	}
 }

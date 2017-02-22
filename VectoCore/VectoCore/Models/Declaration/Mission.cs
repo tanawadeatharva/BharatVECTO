@@ -65,23 +65,21 @@ namespace TUGraz.VectoCore.Models.Declaration
 		public MissionType MissionType;
 		public string CrossWindCorrectionParameters;
 		public double[] AxleWeightDistribution;
-		public double TrailerAxleWeightShare;
+
 
 		public Kilogram CurbWeight;
 		public Kilogram BodyCurbWeight;
 		public Kilogram BodyGrossVehicleWeight;
-		public TrailerType TrailerType;
-		public Kilogram TrailerCurbWeight;
-		public Kilogram TrailerGrossVehicleWeight;
-		public List<Wheels.Entry> TrailerWheels;
+
 		public Stream CycleFile;
-		public SquareMeter DeltaCdA;
+
+		public List<MissionTrailer> Trailer;
 
 		public Kilogram MinLoad;
 		public Kilogram RefLoad;
 		public Kilogram MaxLoad;
 
-		public CubicMeter CargoVolume;
+		public CubicMeter TotalCargoVolume;
 
 		public Dictionary<LoadingType, Kilogram> Loadings
 		{
@@ -95,11 +93,34 @@ namespace TUGraz.VectoCore.Models.Declaration
 		}
 	}
 
+	public class MissionTrailer
+	{
+		public TrailerType TrailerType;
+		public Kilogram TrailerCurbWeight;
+		public Kilogram TrailerGrossVehicleWeight;
+		public List<Wheels.Entry> TrailerWheels;
+		public double TrailerAxleWeightShare;
+		public SquareMeter DeltaCdA;
+		public CubicMeter CargoVolume;
+	}
+
 	public enum TrailerType
 	{
-		None,
+		//None,
 		T1,
 		T2,
-		ST1
+		ST1,
+		Dolly
+	}
+
+	public static class TrailterTypeHelper
+	{
+		public static TrailerType Parse(string trailer)
+		{
+			if ("d".Equals(trailer, StringComparison.InvariantCultureIgnoreCase)) {
+				return TrailerType.Dolly;
+			}
+			return trailer.ParseEnum<TrailerType>();
+		}
 	}
 }
