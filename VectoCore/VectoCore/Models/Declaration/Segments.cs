@@ -53,8 +53,7 @@ namespace TUGraz.VectoCore.Models.Declaration
 
 		protected override string ErrorMessage
 		{
-			get
-			{
+			get {
 				return
 					"ERROR: Could not find the declaration segment for vehicle. Category: {0}, AxleConfiguration: {1}, GrossVehicleWeight: {2}";
 			}
@@ -135,12 +134,12 @@ namespace TUGraz.VectoCore.Models.Declaration
 					? DeclarationData.StandardBodies.Lookup(trailerField)
 					: StandardBodies.Empty;
 
-				var semiTrailerField = row.Field<string>("semitrailer");
-				var semiTrailer = !string.IsNullOrWhiteSpace(semiTrailerField)
-					? DeclarationData.StandardBodies.Lookup(semiTrailerField)
-					: StandardBodies.Empty;
+				//var semiTrailerField = row.Field<string>("semitrailer");
+				//var semiTrailer = !string.IsNullOrWhiteSpace(semiTrailerField)
+				//	? DeclarationData.StandardBodies.Lookup(semiTrailerField)
+				//	: StandardBodies.Empty;
 
-				trailer += semiTrailer;
+				//trailer += semiTrailer;
 
 				// limit gvw to MaxGVW (40t)
 				var gvw = VectoMath.Min(grossVehicleWeight + trailer.GrossVehicleWeight,
@@ -171,11 +170,12 @@ namespace TUGraz.VectoCore.Models.Declaration
 					TrailerType = trailerType,
 					TrailerCurbWeight = trailer.CurbWeight,
 					TrailerGrossVehicleWeight = trailer.GrossVehicleWeight,
+					TrailerWheels = trailer.Wheels,
+					TrailerAxleWeightShare = GetTrailerAxleWeightDistribution(row, missionType),
 					DeltaCdA = trailer.DeltaCrossWindArea,
 					MinLoad = 0.SI<Kilogram>(),
 					MaxLoad = maxLoad,
 					RefLoad = refLoad,
-					TrailerAxleWeightDistribution = GetTrailerAxleWeightDistribution(row, missionType),
 					CargoVolume = body.CargoVolume + trailer.CargoVolume,
 				};
 				missions.Add(mission);
@@ -191,15 +191,14 @@ namespace TUGraz.VectoCore.Models.Declaration
 			return !string.IsNullOrWhiteSpace(row.Field<string>("traileraxles" + GetMissionSuffix(missionType)));
 		}
 
-		private static double[] GetTrailerAxleWeightDistribution(DataRow row, MissionType missionType)
+		private static double GetTrailerAxleWeightDistribution(DataRow row, MissionType missionType)
 		{
 			var trailerAxles =
-				row.Field<string>("traileraxles" + GetMissionSuffix(missionType)).Split('/');
-			if (!string.IsNullOrWhiteSpace(trailerAxles[0])) {
-				var count = int.Parse(trailerAxles[1]);
-				return (trailerAxles[0].ToDouble() / 100.0 / count).Repeat(count).ToArray();
+				row.Field<string>("traileraxles" + GetMissionSuffix(missionType));
+			if (!string.IsNullOrWhiteSpace(trailerAxles)) {
+				return trailerAxles.ToDouble() / 100.0;
 			}
-			return new double[0];
+			return 0;
 		}
 
 		private static double[] GetAxleWeightDistribution(DataRow row, MissionType missionType)

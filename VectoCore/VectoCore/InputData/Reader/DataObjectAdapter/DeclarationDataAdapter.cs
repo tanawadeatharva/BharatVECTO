@@ -126,19 +126,15 @@ namespace TUGraz.VectoCore.InputData.Reader.DataObjectAdapter
 				axleData.Add(axle);
 			}
 
-			axleData.AddRange(mission.TrailerAxleWeightDistribution.Select(tmp => {
-				var wheel = mission.TrailerType != TrailerType.None
-					? DeclarationData.StandardBodies.Lookup(mission.TrailerType.ToString()).Wheels
-					: DeclarationData.Wheels.Lookup(DeclarationData.Trailer.WheelsType);
-				return new Axle {
-					AxleType = AxleType.Trailer,
-					AxleWeightShare = tmp,
-					TwinTyres = DeclarationData.Trailer.TwinTyres,
-					RollResistanceCoefficient = DeclarationData.Trailer.RollResistanceCoefficient,
-					TyreTestLoad = DeclarationData.Trailer.TyreTestLoad.SI<Newton>(),
-					Inertia = wheel.Inertia
-				};
+			axleData.AddRange(mission.TrailerWheels.Select(trailerWheel => new Axle {
+				AxleType = AxleType.Trailer,
+				AxleWeightShare = mission.TrailerAxleWeightShare / mission.TrailerWheels.Count,
+				TwinTyres = DeclarationData.Trailer.TwinTyres,
+				RollResistanceCoefficient = DeclarationData.Trailer.RollResistanceCoefficient,
+				TyreTestLoad = DeclarationData.Trailer.TyreTestLoad.SI<Newton>(),
+				Inertia = trailerWheel.Inertia
 			}));
+
 			retVal.AxleData = axleData;
 			return retVal;
 		}

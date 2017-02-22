@@ -29,6 +29,8 @@
 *   Martin Rexeis, rexeis@ivt.tugraz.at, IVT, Graz University of Technology
 */
 
+using System;
+using System.Collections.Generic;
 using System.Data;
 using System.Linq;
 using TUGraz.VectoCommon.Utils;
@@ -42,7 +44,7 @@ namespace TUGraz.VectoCore.Models.Declaration
 		public Kilogram GrossVehicleWeight;
 		public SquareMeter DeltaCrossWindArea;
 		public string Name;
-		public Wheels.Entry Wheels;
+		public List<Wheels.Entry> Wheels;
 		public CubicMeter CargoVolume;
 
 		public Kilogram MaxPayLoad
@@ -51,7 +53,12 @@ namespace TUGraz.VectoCore.Models.Declaration
 		}
 
 		public StandardBody(string name, Kilogram curbWeight, Kilogram grossVehicleWeight, SquareMeter deltaCrossWindArea,
-			Wheels.Entry wheels, CubicMeter volume)
+			Wheels.Entry wheels, int axleCount, CubicMeter volume) :
+				this(name, curbWeight, grossVehicleWeight, deltaCrossWindArea,
+					wheels == null ? new List<Wheels.Entry>() : Enumerable.Repeat(wheels, axleCount).ToList(), volume) {}
+
+		private StandardBody(string name, Kilogram curbWeight, Kilogram grossVehicleWeight, SquareMeter deltaCrossWindArea,
+			List<Wheels.Entry> wheels, CubicMeter volume)
 		{
 			Name = name;
 			CurbWeight = curbWeight;
@@ -61,13 +68,14 @@ namespace TUGraz.VectoCore.Models.Declaration
 			CargoVolume = volume;
 		}
 
-
 		public static StandardBody operator +(StandardBody first, StandardBody second)
 		{
+			var wheels = new List<Wheels.Entry>(first.Wheels);
+			wheels.AddRange(second.Wheels);
 			return new StandardBody(first.Name + second.Name, first.CurbWeight + second.CurbWeight,
 				first.GrossVehicleWeight + second.GrossVehicleWeight,
 				first.DeltaCrossWindArea + second.DeltaCrossWindArea,
-				null, first.CargoVolume + second.CargoVolume);
+				wheels, first.CargoVolume + second.CargoVolume);
 		}
 	}
 
@@ -83,7 +91,7 @@ namespace TUGraz.VectoCore.Models.Declaration
 	public sealed class StandardBodies : LookupData<string, StandardBody>
 	{
 		public static readonly StandardBody Empty = new StandardBody("", 0.SI<Kilogram>(), 0.SI<Kilogram>(),
-			0.SI<SquareMeter>(), null, 0.SI<CubicMeter>());
+			0.SI<SquareMeter>(), null, 0, 0.SI<CubicMeter>());
 
 		protected override string ResourceId
 		{
@@ -110,6 +118,7 @@ namespace TUGraz.VectoCore.Models.Declaration
 				!string.IsNullOrWhiteSpace(k.Field<string>("wheels"))
 					? DeclarationData.Wheels.Lookup(k.Field<string>("wheels"))
 					: null,
+				Int32.Parse(k.Field<string>("axlecount")),
 				k.ParseDouble("cargovolume").SI<CubicMeter>()))
 				.ToDictionary(kv => kv.Name);
 		}

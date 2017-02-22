@@ -119,8 +119,7 @@ namespace TUGraz.VectoCore.Models.Declaration
 
 		public static HeatingVentilationAirConditioning HeatingVentilationAirConditioning
 		{
-			get
-			{
+			get {
 				return Instance()._heatingVentilationAirConditioning ??
 						(Instance()._heatingVentilationAirConditioning = new HeatingVentilationAirConditioning());
 			}
@@ -222,7 +221,7 @@ namespace TUGraz.VectoCore.Models.Declaration
 			public const double RollResistanceCoefficient = 0.00555;
 			public const double TyreTestLoad = 37500;
 			public const bool TwinTyres = false;
-			public const string WheelsType = "385/65 R 22.5";
+			//public const string WheelsType = "385/65 R 22.5";
 		}
 
 		public static class Engine

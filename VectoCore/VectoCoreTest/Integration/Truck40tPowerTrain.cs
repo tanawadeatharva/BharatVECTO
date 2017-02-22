@@ -169,6 +169,7 @@ namespace TUGraz.VectoCore.Tests.Integration
 
 		private static VehicleData CreateVehicleData(Kilogram massExtra, Kilogram loading)
 		{
+			var wheelsType = "385/65 R 22.5";
 			var axles = new List<Axle> {
 				new Axle {
 					AxleWeightShare = 0.2,
@@ -191,21 +192,21 @@ namespace TUGraz.VectoCore.Tests.Integration
 					TwinTyres = DeclarationData.Trailer.TwinTyres,
 					RollResistanceCoefficient = DeclarationData.Trailer.RollResistanceCoefficient,
 					TyreTestLoad = DeclarationData.Trailer.TyreTestLoad.SI<Newton>(),
-					Inertia = DeclarationData.Wheels.Lookup(DeclarationData.Trailer.WheelsType).Inertia
+					Inertia = DeclarationData.Wheels.Lookup(wheelsType).Inertia
 				},
 				new Axle {
 					AxleWeightShare = 0.55 / 3,
 					TwinTyres = DeclarationData.Trailer.TwinTyres,
 					RollResistanceCoefficient = DeclarationData.Trailer.RollResistanceCoefficient,
 					TyreTestLoad = DeclarationData.Trailer.TyreTestLoad.SI<Newton>(),
-					Inertia = DeclarationData.Wheels.Lookup(DeclarationData.Trailer.WheelsType).Inertia
+					Inertia = DeclarationData.Wheels.Lookup(wheelsType).Inertia
 				},
 				new Axle {
 					AxleWeightShare = 0.55 / 3,
 					TwinTyres = DeclarationData.Trailer.TwinTyres,
 					RollResistanceCoefficient = DeclarationData.Trailer.RollResistanceCoefficient,
 					TyreTestLoad = DeclarationData.Trailer.TyreTestLoad.SI<Newton>(),
-					Inertia = DeclarationData.Wheels.Lookup(DeclarationData.Trailer.WheelsType).Inertia
+					Inertia = DeclarationData.Wheels.Lookup(wheelsType).Inertia
 				}
 			};
 			return new VehicleData {

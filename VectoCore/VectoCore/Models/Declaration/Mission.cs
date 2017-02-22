@@ -65,7 +65,7 @@ namespace TUGraz.VectoCore.Models.Declaration
 		public MissionType MissionType;
 		public string CrossWindCorrectionParameters;
 		public double[] AxleWeightDistribution;
-		public double[] TrailerAxleWeightDistribution;
+		public double TrailerAxleWeightShare;
 
 		public Kilogram CurbWeight;
 		public Kilogram BodyCurbWeight;
@@ -73,6 +73,7 @@ namespace TUGraz.VectoCore.Models.Declaration
 		public TrailerType TrailerType;
 		public Kilogram TrailerCurbWeight;
 		public Kilogram TrailerGrossVehicleWeight;
+		public List<Wheels.Entry> TrailerWheels;
 		public Stream CycleFile;
 		public SquareMeter DeltaCdA;
 
@@ -98,6 +99,7 @@ namespace TUGraz.VectoCore.Models.Declaration
 	{
 		None,
 		T1,
-		T2
+		T2,
+		ST1
 	}
 }
