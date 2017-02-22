@@ -121,8 +121,9 @@ namespace TUGraz.VectoCore.InputData.Reader.Impl
 						Report = Report,
 						Mission = mission,
 					};
-					simulationRunData.EngineData.WHTCCorrectionFactor = DeclarationData.WHTCCorrection.Lookup(mission.MissionType,
-						engineData.WHTCRural, engineData.WHTCUrban, engineData.WHTCMotorway) * engineData.ColdHotCorrectionFactor;
+					simulationRunData.EngineData.WHTCCorrectionFactor = DeclarationData.WHTCCorrection.Lookup(
+						mission.MissionType.GetNonEMSMissionType(), engineData.WHTCRural, engineData.WHTCUrban, engineData.WHTCMotorway) *
+																		engineData.ColdHotCorrectionFactor;
 					//simulationRunData.Cycle.Name = mission.MissionType.ToString();
 					simulationRunData.VehicleData.VehicleClass = segment.VehicleClass;
 					yield return simulationRunData;

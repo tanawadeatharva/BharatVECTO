@@ -43,6 +43,7 @@ using TUGraz.VectoCore.Models.Simulation.Data;
 using TUGraz.VectoCore.Models.SimulationComponent.Data;
 using TUGraz.VectoCore.Models.SimulationComponent.Data.Engine;
 using TUGraz.VectoCore.Models.SimulationComponent.Data.Gearbox;
+using TUGraz.VectoCore.OutputData;
 using TUGraz.VectoCore.Utils;
 
 namespace TUGraz.VectoCore.InputData.Reader.DataObjectAdapter
@@ -93,14 +94,15 @@ namespace TUGraz.VectoCore.InputData.Reader.DataObjectAdapter
 			}
 
 			var retVal = SetCommonVehicleData(data);
-			retVal.TrailerGrossVehicleWeight = mission.TrailerGrossVehicleWeight;
-			retVal.CurbWeight += mission.BodyCurbWeight + mission.TrailerCurbWeight;
+			retVal.TrailerGrossVehicleWeight = mission.Trailer.Sum(t => t.TrailerGrossVehicleWeight).DefaultIfNull(0);
+			retVal.CurbWeight += mission.BodyCurbWeight + mission.Trailer.Sum(t => t.TrailerCurbWeight).DefaultIfNull(0);
 			retVal.Loading = loading;
+			var drivenIndex = DrivenAxleIndex(data.Axles);
 			retVal.DynamicTyreRadius =
-				DeclarationData.Wheels.Lookup(data.Axles[DeclarationData.PoweredAxle()].Wheels).DynamicTyreRadius; // TODO!
-			retVal.CargoVolume = mission.CargoVolume;
+				DeclarationData.Wheels.Lookup(data.Axles[drivenIndex].Wheels).DynamicTyreRadius;
+			retVal.CargoVolume = mission.TotalCargoVolume;
 
-			var aerodynamicDragArea = data.AirDragArea + mission.DeltaCdA;
+			var aerodynamicDragArea = data.AirDragArea + mission.Trailer.Sum(t => t.DeltaCdA).DefaultIfNull(0);
 
 			retVal.CrossWindCorrectionCurve =
 				new CrosswindCorrectionCdxALookup(
@@ -126,17 +128,29 @@ namespace TUGraz.VectoCore.InputData.Reader.DataObjectAdapter
 				axleData.Add(axle);
 			}
 
-			axleData.AddRange(mission.TrailerWheels.Select(trailerWheel => new Axle {
-				AxleType = AxleType.Trailer,
-				AxleWeightShare = mission.TrailerAxleWeightShare / mission.TrailerWheels.Count,
-				TwinTyres = DeclarationData.Trailer.TwinTyres,
-				RollResistanceCoefficient = DeclarationData.Trailer.RollResistanceCoefficient,
-				TyreTestLoad = DeclarationData.Trailer.TyreTestLoad.SI<Newton>(),
-				Inertia = trailerWheel.Inertia
-			}));
-
+			foreach (var trailer in mission.Trailer) {
+				axleData.AddRange(trailer.TrailerWheels.Select(trailerWheel => new Axle {
+					AxleType = AxleType.Trailer,
+					AxleWeightShare = trailer.TrailerAxleWeightShare / trailer.TrailerWheels.Count,
+					TwinTyres = DeclarationData.Trailer.TwinTyres,
+					RollResistanceCoefficient = DeclarationData.Trailer.RollResistanceCoefficient,
+					TyreTestLoad = DeclarationData.Trailer.TyreTestLoad.SI<Newton>(),
+					Inertia = trailerWheel.Inertia
+				}));
+			}
 			retVal.AxleData = axleData;
 			return retVal;
+		}
+
+		private static int DrivenAxleIndex(IList<IAxleDeclarationInputData> axles)
+		{
+			for (var i = 0; i < axles.Count; i++) {
+				if (axles[i].AxleType != AxleType.VehicleDriven) {
+					continue;
+				}
+				return i;
+			}
+			return DeclarationData.PoweredAxle();
 		}
 
 		internal CombustionEngineData CreateEngineData(IEngineDeclarationInputData engine, GearboxType gearboxType)
@@ -244,6 +258,8 @@ namespace TUGraz.VectoCore.InputData.Reader.DataObjectAdapter
 					DemandType = AuxiliaryDemandType.Constant,
 					Technology = auxData.Technology
 				};
+
+				mission = mission.GetNonEMSMissionType();
 				switch (auxType) {
 					case AuxiliaryType.Fan:
 						aux.PowerDemand = DeclarationData.Fan.Lookup(mission, auxData.Technology.FirstOrDefault());
