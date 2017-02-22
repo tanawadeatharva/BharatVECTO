@@ -62,6 +62,9 @@ namespace TUGraz.VectoCore.Models.Declaration
 			protected override void ParseData(DataTable table)
 			{
 				foreach (MissionType mission in Enum.GetValues(typeof(MissionType))) {
+					if (mission.IsEMS()) {
+						continue;
+					}
 					var values = table.Columns[mission.ToString().ToLower()].Values<string>().ToDouble().ToArray();
 					Data[mission] = new Entry { Urban = values[0], Rural = values[1], Motorway = values[2] };
 				}
