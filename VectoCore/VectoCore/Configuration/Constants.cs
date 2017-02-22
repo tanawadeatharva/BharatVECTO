@@ -167,6 +167,7 @@ namespace TUGraz.VectoCore.Configuration
 			public static readonly Meter GearboxLookaheadForAccelerationEstimation = 100.SI<Meter>();
 
 			public static Kilogram MaximumGrossVehicleWeight = 40000.SI<Kilogram>();
+			public static Kilogram MaximumGrossVehicleWeightEMS = 60000.SI<Kilogram>();
 
 			// the torque converter characteristics curve has to be defined up to this speed ratio
 			public const double RequiredTorqueConverterSpeedRatio = 2.2;
