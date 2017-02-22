@@ -209,8 +209,9 @@ namespace TUGraz.VectoCore.OutputData.PDF
 
 			var i = 1;
 			foreach (var results in missions.Values.OrderBy(m => m.Mission.MissionType)) {
-				var trailerSuffix = results.Mission.TrailerType != TrailerType.None
-					? string.Format(" with {0} Trailer", results.Mission.TrailerType)
+				var trailerSuffix = results.Mission.Trailer.Count > 0
+					? string.Format(" with {0} Trailer",
+						string.Join(" + ", results.Mission.Trailer.Select(t => t.TrailerType.ToString())))
 					: "";
 				pdfFields.SetField("Mission" + i, results.Mission.MissionType + trailerSuffix);
 
@@ -244,7 +245,7 @@ namespace TUGraz.VectoCore.OutputData.PDF
 			img.SetAbsolutePosition(360, 75);
 			content.AddImage(img);
 
-			img = GetVehicleImage(Segment, TrailerType.None);
+			img = GetVehicleImage(Segment, new List<MissionTrailer>());
 			img.ScaleAbsolute(180, 50);
 			img.SetAbsolutePosition(30, 475);
 			content.AddImage(img);
@@ -284,8 +285,9 @@ namespace TUGraz.VectoCore.OutputData.PDF
 			pdfFields.SetField("HDVclass", "HDV Class " + Segment.VehicleClass.GetClassNumber());
 			pdfFields.SetField("PageNr", string.Format("Page {0} of {1}", currentPageNr, pageCount));
 
-			var trailerSuffix = results.Mission.TrailerType != TrailerType.None
-				? string.Format(" with {0} Trailer", results.Mission.TrailerType)
+			var trailerSuffix = results.Mission.Trailer.Count > 0
+				? string.Format(" with {0} Trailer",
+					string.Join(" + ", results.Mission.Trailer.Select(t => t.TrailerType.ToString())))
 				: "";
 			pdfFields.SetField("Mission", results.Mission.MissionType + trailerSuffix);
 
@@ -310,7 +312,7 @@ namespace TUGraz.VectoCore.OutputData.PDF
 
 			var content = stamper.GetOverContent(1);
 
-			var img = GetVehicleImage(Segment, results.Mission.TrailerType);
+			var img = GetVehicleImage(Segment, results.Mission.Trailer);
 			img.ScaleAbsolute(180, 50);
 			img.SetAbsolutePosition(600, 475);
 			content.AddImage(img);
@@ -613,31 +615,34 @@ namespace TUGraz.VectoCore.OutputData.PDF
 		/// <summary>
 		/// Gets the appropriate vehicle image.
 		/// </summary>
-		private static Image GetVehicleImage(Segment segment, TrailerType trailerType)
+		private static Image GetVehicleImage(Segment segment, List<MissionTrailer> trailerType)
 		{
-			var name = "Undef.png";
-			var withTrailer = trailerType != TrailerType.None;
+			var name = "Undef";
+			var withTrailer = trailerType.Count > 0;
+			var emsTrailer = trailerType.Count > 1;
 			switch (segment.VehicleClass) {
 				case VehicleClass.Class1:
 				case VehicleClass.Class2:
 				case VehicleClass.Class3:
-					name = withTrailer ? "4x2rt.png" : "4x2r.png";
+					name = withTrailer ? "4x2rt" : "4x2r";
 					break;
 				case VehicleClass.Class4:
-					name = withTrailer ? "4x2rt.png" : "4x2r.png";
+					name = withTrailer ? "4x2rt" : "4x2r";
 					break;
 				case VehicleClass.Class5:
-					name = "4x2tt.png";
+					name = "4x2tt" + (emsTrailer ? "_ems" : "");
 					break;
 				case VehicleClass.Class9:
-					name = withTrailer ? "6x2rt.png" : "6x2r.png";
+				case VehicleClass.Class11:
+					name = withTrailer ? "6x2rt" : "6x2r" + (emsTrailer ? "_ems" : "");
 					break;
 				case VehicleClass.Class10:
-					name = "6x2tt.png";
+				case VehicleClass.Class12:
+					name = "6x2tt" + (emsTrailer ? "_ems" : "");
 					break;
 			}
 
-			var hdvClassImagePath = DeclarationData.DeclarationDataResourcePrefix + ".Report." + name;
+			var hdvClassImagePath = DeclarationData.DeclarationDataResourcePrefix + ".Report." + name + ".png";
 			var hdvClassImage = RessourceHelper.ReadStream(hdvClassImagePath);
 			return Image.GetInstance(hdvClassImage);
 		}
