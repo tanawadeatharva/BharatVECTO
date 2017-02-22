@@ -43,6 +43,7 @@ using TUGraz.VectoCore.InputData.Reader.DataObjectAdapter;
 using TUGraz.VectoCore.InputData.Reader.Impl;
 using TUGraz.VectoCore.Models.Declaration;
 using TUGraz.VectoCore.Models.SimulationComponent.Data;
+using TUGraz.VectoCore.OutputData;
 using TUGraz.VectoCore.Tests.Utils;
 
 namespace TUGraz.VectoCore.Tests.Models.Declaration
@@ -536,9 +537,9 @@ namespace TUGraz.VectoCore.Tests.Models.Declaration
 				Assert.AreEqual(expectedBodyWeight, segment.Missions[0].BodyCurbWeight.Value());
 			}
 			if (expectedTrailerWeight.HasValue) {
-				var trailerMission = segment.Missions.Where(m => m.TrailerType != TrailerType.None).ToList();
+				var trailerMission = segment.Missions.Where(m => m.Trailer.Count > 0).ToList();
 				if (trailerMission.Count > 0) {
-					Assert.AreEqual(expectedTrailerWeight, trailerMission.First().TrailerCurbWeight.Value());
+					Assert.AreEqual(expectedTrailerWeight, trailerMission.First().Trailer.First().TrailerCurbWeight.Value());
 				}
 			}
 		}
@@ -559,15 +560,15 @@ namespace TUGraz.VectoCore.Tests.Models.Declaration
 		TestCase(VehicleCategory.RigidTruck, AxleConfiguration.AxleConfig_4x2, 18000, 0, VehicleClass.Class4,
 			new[] { 98.9, 49.4, 49.4 }),
 		TestCase(VehicleCategory.Tractor, AxleConfiguration.AxleConfig_4x2, 18000, 0, VehicleClass.Class5,
-			new[] { 91.0, 91.0 }),
+			new[] { 91.0, 140.5, 91.0, 140.5 }),
 		TestCase(VehicleCategory.RigidTruck, AxleConfiguration.AxleConfig_6x2, 16000, 0, VehicleClass.Class9,
-			new[] { 101.4, 51.9, 51.9 }),
+			new[] { 101.4, 142.9, 51.9, 142.9, 51.9 }),
 		TestCase(VehicleCategory.Tractor, AxleConfiguration.AxleConfig_6x2, 16000, 0, VehicleClass.Class10,
-			new[] { 91.0, 91.0 }),
+			new[] { 91.0, 140.5, 91.0, 140.5 }),
 		TestCase(VehicleCategory.RigidTruck, AxleConfiguration.AxleConfig_6x4, 40000, 0, VehicleClass.Class11,
-			new[] { 101.4, 51.9, 51.9, 51.9 }),
+			new[] { 101.4, 142.9, 51.9, 142.9, 51.9, 51.9 }),
 		TestCase(VehicleCategory.Tractor, AxleConfiguration.AxleConfig_6x4, 99000, 0, VehicleClass.Class12,
-			new[] { 91.0, 91.0, 91.0, 91.0 }),
+			new[] { 91.0, 140.5, 91.0, 140.5, 91.0, 91.0 }),
 		TestCase(VehicleCategory.RigidTruck, AxleConfiguration.AxleConfig_8x4, 99000, 0, VehicleClass.Class16,
 			new[] { 0.0 })
 		]
@@ -580,7 +581,7 @@ namespace TUGraz.VectoCore.Tests.Models.Declaration
 			Assert.AreEqual(expectedClass, segment.VehicleClass);
 			Assert.AreEqual(expectedCargoVolume.Length, segment.Missions.Length);
 			for (var i = 0; i < expectedCargoVolume.Length; i++) {
-				Assert.AreEqual(expectedCargoVolume[i], segment.Missions[i].CargoVolume.Value());
+				Assert.AreEqual(expectedCargoVolume[i], segment.Missions[i].TotalCargoVolume.Value());
 			}
 		}
 
@@ -609,20 +610,26 @@ namespace TUGraz.VectoCore.Tests.Models.Declaration
 
 			AssertMission(segment.Missions[0], vehicleData: vehicleData, missionType: MissionType.LongHaul,
 				cosswindCorrection: "RigidTrailer", axleWeightDistribution: new[] { 0.225, 0.325 },
-				trailerAxleWeightDistribution: 0.45, trailerAxleCount: 1, bodyCurbWeight: 1900, trailerCurbWeight: 3400,
-				trailerType: TrailerType.T1, minLoad: 0, refLoad: 9813.2353, trailerGrossVehicleWeight: 10500, deltaCdA: 0.6,
+				trailerAxleWeightDistribution: new[] { 0.45 }, trailerAxleCount: new[] { 1 }, bodyCurbWeight: 1900,
+				trailerCurbWeight: new[] { 3400.0 },
+				trailerType: new[] { TrailerType.T1 }, minLoad: 0, refLoad: 9813.2353, trailerGrossVehicleWeight: new[] { 10500.0 },
+				deltaCdA: 0.6,
 				maxLoad: 11250);
 
 			AssertMission(segment.Missions[1], vehicleData: vehicleData, missionType: MissionType.RegionalDelivery,
 				cosswindCorrection: "RigidSolo", axleWeightDistribution: new[] { 0.45, 0.55 },
-				trailerAxleWeightDistribution: 0, trailerAxleCount: 0, bodyCurbWeight: 1900, trailerCurbWeight: 0,
-				trailerType: TrailerType.None, minLoad: 0, refLoad: 2984.1176, trailerGrossVehicleWeight: 0, deltaCdA: 0,
+				trailerAxleWeightDistribution: new double[] { }, trailerAxleCount: new int[] { }, bodyCurbWeight: 1900,
+				trailerCurbWeight: new double[] { },
+				trailerType: new TrailerType[] { }, minLoad: 0, refLoad: 2984.1176, trailerGrossVehicleWeight: new double[] { },
+				deltaCdA: 0,
 				maxLoad: 4150);
 
 			AssertMission(segment.Missions[2], vehicleData: vehicleData, missionType: MissionType.UrbanDelivery,
 				cosswindCorrection: "RigidSolo", axleWeightDistribution: new[] { 0.45, 0.55 },
-				trailerAxleWeightDistribution: 0, trailerAxleCount: 0, bodyCurbWeight: 1900, trailerCurbWeight: 0,
-				trailerType: TrailerType.None, minLoad: 0, refLoad: 2984.1176, trailerGrossVehicleWeight: 0, deltaCdA: 0,
+				trailerAxleWeightDistribution: new double[] { }, trailerAxleCount: new int[] { }, bodyCurbWeight: 1900,
+				trailerCurbWeight: new double[] { },
+				trailerType: new TrailerType[] { }, minLoad: 0, refLoad: 2984.1176, trailerGrossVehicleWeight: new double[] { },
+				deltaCdA: 0,
 				maxLoad: 4150);
 		}
 
@@ -648,15 +655,15 @@ namespace TUGraz.VectoCore.Tests.Models.Declaration
 
 			AssertMission(segment.Missions[0], vehicleData: vehicleData, missionType: MissionType.RegionalDelivery,
 				cosswindCorrection: "RigidSolo", axleWeightDistribution: new[] { 0.4, 0.6 },
-				trailerAxleWeightDistribution: 0, trailerAxleCount: 0, bodyCurbWeight: 2000, trailerCurbWeight: 0,
-				trailerType: TrailerType.None, minLoad: 0, refLoad: 3811.7647, trailerGrossVehicleWeight: 0, deltaCdA: 0,
-				maxLoad: 6150);
+				trailerAxleWeightDistribution: new double[] { }, trailerAxleCount: new int[] { }, bodyCurbWeight: 2000,
+				trailerCurbWeight: new double[] { }, trailerType: new TrailerType[] { }, minLoad: 0, refLoad: 3811.7647,
+				trailerGrossVehicleWeight: new double[] { }, deltaCdA: 0, maxLoad: 6150);
 
 			AssertMission(segment.Missions[1], vehicleData: vehicleData, missionType: MissionType.UrbanDelivery,
 				cosswindCorrection: "RigidSolo", axleWeightDistribution: new[] { 0.4, 0.6 },
-				trailerAxleWeightDistribution: 0, trailerAxleCount: 0, bodyCurbWeight: 2000, trailerCurbWeight: 0,
-				trailerType: TrailerType.None, minLoad: 0, refLoad: 3811.7647, trailerGrossVehicleWeight: 0, deltaCdA: 0,
-				maxLoad: 6150);
+				trailerAxleWeightDistribution: new double[] { }, trailerAxleCount: new int[] { }, bodyCurbWeight: 2000,
+				trailerCurbWeight: new double[] { }, trailerType: new TrailerType[] { }, minLoad: 0, refLoad: 3811.7647,
+				trailerGrossVehicleWeight: new double[] { }, deltaCdA: 0, maxLoad: 6150);
 		}
 
 		/// <summary>
@@ -684,19 +691,22 @@ namespace TUGraz.VectoCore.Tests.Models.Declaration
 
 			AssertMission(segment.Missions[0], vehicleData: vehicleData, missionType: MissionType.LongHaul,
 				cosswindCorrection: "RigidTrailer", axleWeightDistribution: new[] { 0.2, 0.3 },
-				trailerAxleWeightDistribution: .5, trailerAxleCount: 3, bodyCurbWeight: 2100, trailerCurbWeight: 5400,
-				trailerType: TrailerType.T2, minLoad: 0, refLoad: 14000, trailerGrossVehicleWeight: 18000, deltaCdA: 0.6,
-				maxLoad: 21000);
+				trailerAxleWeightDistribution: new[] { 0.5 }, trailerAxleCount: new[] { 3 }, bodyCurbWeight: 2100,
+				trailerCurbWeight: new[] { 5400.0 }, trailerType: new[] { TrailerType.T2 }, minLoad: 0, refLoad: 14000,
+				trailerGrossVehicleWeight: new[] { 18000.0 }, deltaCdA: 0.6, maxLoad: 21000);
 
 			AssertMission(segment.Missions[1], vehicleData: vehicleData, missionType: MissionType.RegionalDelivery,
 				cosswindCorrection: "RigidSolo", axleWeightDistribution: new[] { 0.45, 0.55 },
-				trailerAxleWeightDistribution: 0, trailerAxleCount: 0, bodyCurbWeight: 2100, trailerCurbWeight: 0,
-				trailerType: TrailerType.None, minLoad: 0, refLoad: 4400, trailerGrossVehicleWeight: 0, deltaCdA: 0, maxLoad: 8400);
+				trailerAxleWeightDistribution: new double[] { }, trailerAxleCount: new int[] { }, bodyCurbWeight: 2100,
+				trailerCurbWeight: new double[] { }, trailerType: new TrailerType[] { }, minLoad: 0, refLoad: 4400,
+				trailerGrossVehicleWeight: new double[] { },
+				deltaCdA: 0, maxLoad: 8400);
 
 			AssertMission(segment.Missions[2], vehicleData: vehicleData, missionType: MissionType.MunicipalUtility,
 				cosswindCorrection: "RigidSolo", axleWeightDistribution: new[] { 0.45, 0.55 },
-				trailerAxleWeightDistribution: 0, trailerAxleCount: 0, bodyCurbWeight: 2100, trailerCurbWeight: 0,
-				trailerType: TrailerType.None, minLoad: 0, refLoad: 4400, trailerGrossVehicleWeight: 0, deltaCdA: 0, maxLoad: 8400);
+				trailerAxleWeightDistribution: new double[] { }, trailerAxleCount: new int[] { }, bodyCurbWeight: 2100,
+				trailerCurbWeight: new double[] { }, trailerType: new TrailerType[] { }, minLoad: 0, refLoad: 4400,
+				trailerGrossVehicleWeight: new double[] { }, deltaCdA: 0, maxLoad: 8400);
 		}
 
 		/// <summary>
@@ -720,48 +730,278 @@ namespace TUGraz.VectoCore.Tests.Models.Declaration
 			var data = AccelerationCurveReader.ReadFromStream(segment.AccelerationFile);
 			TestAcceleration(data);
 
-			Assert.AreEqual(2, segment.Missions.Length);
+			Assert.AreEqual(4, segment.Missions.Length);
 
 			AssertMission(segment.Missions[0], vehicleData: vehicleData, missionType: MissionType.LongHaul,
 				cosswindCorrection: "TractorSemitrailer", axleWeightDistribution: new[] { 0.2, 0.25 },
-				trailerAxleWeightDistribution: 0.55, trailerAxleCount: 3, bodyCurbWeight: 0, trailerCurbWeight: 7500,
-				trailerType: TrailerType.ST1, minLoad: 0, refLoad: 19300, trailerGrossVehicleWeight: 24000, deltaCdA: 0,
-				maxLoad: 25000);
+				trailerAxleWeightDistribution: new[] { 0.55 }, trailerAxleCount: new[] { 3 }, bodyCurbWeight: 0,
+				trailerCurbWeight: new[] { 7500.0 }, trailerType: new[] { TrailerType.ST1 }, minLoad: 0, refLoad: 19300,
+				trailerGrossVehicleWeight: new[] { 24000.0 }, deltaCdA: 0, maxLoad: 25000);
 
-			AssertMission(segment.Missions[1], vehicleData: vehicleData, missionType: MissionType.RegionalDelivery,
+			AssertMission(segment.Missions[1], vehicleData: vehicleData, missionType: MissionType.LongHaulEMS,
+				cosswindCorrection: "TractorSemitrailer", axleWeightDistribution: new[] { 0.15, 0.2 },
+				trailerAxleWeightDistribution: new[] { 0.40, 0.25 }, trailerAxleCount: new[] { 3, 2 }, bodyCurbWeight: 0,
+				trailerCurbWeight: new[] { 7500.0, 5400 }, trailerType: new[] { TrailerType.ST1, TrailerType.T2 }, minLoad: 0,
+				refLoad: 26500, trailerGrossVehicleWeight: new[] { 24000.0, 18000 }, deltaCdA: 0.6, maxLoad: 39600, ems: true);
+
+			AssertMission(segment.Missions[2], vehicleData: vehicleData, missionType: MissionType.RegionalDelivery,
 				cosswindCorrection: "TractorSemitrailer", axleWeightDistribution: new[] { 0.25, 0.25 },
-				trailerAxleWeightDistribution: 0.5, trailerAxleCount: 3, bodyCurbWeight: 0, trailerCurbWeight: 7500,
-				trailerType: TrailerType.ST1, minLoad: 0, refLoad: 12900, trailerGrossVehicleWeight: 24000, deltaCdA: 0,
-				maxLoad: 25000);
+				trailerAxleWeightDistribution: new[] { 0.5 }, trailerAxleCount: new[] { 3 }, bodyCurbWeight: 0,
+				trailerCurbWeight: new[] { 7500.0 }, trailerType: new[] { TrailerType.ST1 }, minLoad: 0, refLoad: 12900,
+				trailerGrossVehicleWeight: new[] { 24000.0 }, deltaCdA: 0, maxLoad: 25000);
+
+			AssertMission(segment.Missions[3], vehicleData: vehicleData, missionType: MissionType.RegionalDeliveryEMS,
+				cosswindCorrection: "TractorSemitrailer", axleWeightDistribution: new[] { 0.175, 0.25 },
+				trailerAxleWeightDistribution: new[] { 0.35, 0.225 }, trailerAxleCount: new[] { 3, 2 }, bodyCurbWeight: 0,
+				trailerCurbWeight: new[] { 7500.0, 5400 }, trailerType: new[] { TrailerType.ST1, TrailerType.T2 }, minLoad: 0,
+				refLoad: 17500, trailerGrossVehicleWeight: new[] { 24000.0, 18000 }, deltaCdA: 0.6, maxLoad: 39600, ems: true);
+		}
+
+
+		/// <summary>
+		/// Segment 9: fixed reference weight, trailer always used
+		/// </summary>
+		[TestCase]
+		public void Segment9Test()
+		{
+			var vehicleData = new {
+				VehicleCategory = VehicleCategory.RigidTruck,
+				AxleConfiguration = AxleConfiguration.AxleConfig_6x2,
+				GrossVehicleMassRating = 18000.SI<Kilogram>(),
+				CurbWeight = 7500.SI<Kilogram>()
+			};
+
+			var segment = DeclarationData.Segments.Lookup(vehicleData.VehicleCategory, vehicleData.AxleConfiguration,
+				vehicleData.GrossVehicleMassRating, vehicleData.CurbWeight);
+
+			Assert.AreEqual(VehicleClass.Class9, segment.VehicleClass);
+
+			var data = AccelerationCurveReader.ReadFromStream(segment.AccelerationFile);
+			TestAcceleration(data);
+
+			Assert.AreEqual(5, segment.Missions.Length);
+
+			AssertMission(segment.Missions[0], vehicleData: vehicleData, missionType: MissionType.LongHaul,
+				cosswindCorrection: "RigidTrailer", axleWeightDistribution: new[] { 0.2, 0.3, 0.15 },
+				trailerAxleWeightDistribution: new[] { 0.35 }, trailerAxleCount: new[] { 2 }, bodyCurbWeight: 2200,
+				trailerCurbWeight: new[] { 5400.0 }, trailerType: new[] { TrailerType.T2 }, minLoad: 0, refLoad: 19300,
+				trailerGrossVehicleWeight: new[] { 18000.0 }, deltaCdA: 0.6, maxLoad: 20900);
+
+			AssertMission(segment.Missions[1], vehicleData: vehicleData, missionType: MissionType.LongHaulEMS,
+				cosswindCorrection: "RigidTrailer", axleWeightDistribution: new[] { 0.15, 0.2, 0.1 },
+				trailerAxleWeightDistribution: new[] { 0.225, 0.325 }, trailerAxleCount: new[] { 2, 3 }, bodyCurbWeight: 2200,
+				trailerCurbWeight: new[] { 2500, 7500.0 }, trailerType: new[] { TrailerType.Dolly, TrailerType.ST1 }, minLoad: 0,
+				refLoad: 22300, trailerGrossVehicleWeight: new[] { 0.0, 24000 }, deltaCdA: 1.2, maxLoad: 22300, ems: true);
+
+			AssertMission(segment.Missions[2], vehicleData: vehicleData, missionType: MissionType.RegionalDelivery,
+				cosswindCorrection: "RigidSolo", axleWeightDistribution: new[] { 0.35, 0.4, 0.25 },
+				trailerAxleWeightDistribution: new double[] { }, trailerAxleCount: new int[] { }, bodyCurbWeight: 2200,
+				trailerCurbWeight: new double[] { }, trailerType: new TrailerType[] { }, minLoad: 0,
+				refLoad: 7100, trailerGrossVehicleWeight: new double[] { }, deltaCdA: 0, maxLoad: 8300);
+
+			AssertMission(segment.Missions[3], vehicleData: vehicleData, missionType: MissionType.RegionalDeliveryEMS,
+				cosswindCorrection: "RigidSolo", axleWeightDistribution: new[] { 0.175, 0.2, 0.1 },
+				trailerAxleWeightDistribution: new[] { 0.225, 0.3 }, trailerAxleCount: new[] { 2, 3 }, bodyCurbWeight: 2200,
+				trailerCurbWeight: new[] { 2500, 7500.0 }, trailerType: new[] { TrailerType.Dolly, TrailerType.ST1 }, minLoad: 0,
+				refLoad: 17500, trailerGrossVehicleWeight: new[] { 0.0, 24000 }, deltaCdA: 1.2, maxLoad: 22300, ems: true);
+
+			AssertMission(segment.Missions[4], vehicleData: vehicleData, missionType: MissionType.MunicipalUtility,
+				cosswindCorrection: "RigidSolo", axleWeightDistribution: new[] { 0.35, 0.4, 0.25 },
+				trailerAxleWeightDistribution: new double[] { }, trailerAxleCount: new int[] { }, bodyCurbWeight: 2200,
+				trailerCurbWeight: new double[] { }, trailerType: new TrailerType[] { }, minLoad: 0,
+				refLoad: 7100, trailerGrossVehicleWeight: new double[] { }, deltaCdA: 0, maxLoad: 8300);
+		}
+
+		/// <summary>
+		/// Segment 10: fixed reference weight, trailer always used
+		/// </summary>
+		[TestCase]
+		public void Segment10Test()
+		{
+			var vehicleData = new {
+				VehicleCategory = VehicleCategory.Tractor,
+				AxleConfiguration = AxleConfiguration.AxleConfig_6x2,
+				GrossVehicleMassRating = 18000.SI<Kilogram>(),
+				CurbWeight = 7500.SI<Kilogram>()
+			};
+
+			var segment = DeclarationData.Segments.Lookup(vehicleData.VehicleCategory, vehicleData.AxleConfiguration,
+				vehicleData.GrossVehicleMassRating, vehicleData.CurbWeight);
+
+			Assert.AreEqual(VehicleClass.Class10, segment.VehicleClass);
+
+			var data = AccelerationCurveReader.ReadFromStream(segment.AccelerationFile);
+			TestAcceleration(data);
+
+			Assert.AreEqual(4, segment.Missions.Length);
+
+			AssertMission(segment.Missions[0], vehicleData: vehicleData, missionType: MissionType.LongHaul,
+				cosswindCorrection: "TractorSemitrailer", axleWeightDistribution: new[] { 0.2, 0.25 },
+				trailerAxleWeightDistribution: new[] { 0.55 }, trailerAxleCount: new[] { 3 }, bodyCurbWeight: 0,
+				trailerCurbWeight: new[] { 7500.0 }, trailerType: new[] { TrailerType.ST1 }, minLoad: 0, refLoad: 19300,
+				trailerGrossVehicleWeight: new[] { 24000.0 }, deltaCdA: 0, maxLoad: 25000);
+
+			AssertMission(segment.Missions[1], vehicleData: vehicleData, missionType: MissionType.LongHaulEMS,
+				cosswindCorrection: "TractorSemitrailer", axleWeightDistribution: new[] { 0.15, 0.2 },
+				trailerAxleWeightDistribution: new[] { 0.40, 0.25 }, trailerAxleCount: new[] { 3, 2 }, bodyCurbWeight: 0,
+				trailerCurbWeight: new[] { 7500.0, 5400 }, trailerType: new[] { TrailerType.ST1, TrailerType.T2 }, minLoad: 0,
+				refLoad: 26500, trailerGrossVehicleWeight: new[] { 24000.0, 18000 }, deltaCdA: 0.6, maxLoad: 39600, ems: true);
+
+			AssertMission(segment.Missions[2], vehicleData: vehicleData, missionType: MissionType.RegionalDelivery,
+				cosswindCorrection: "TractorSemitrailer", axleWeightDistribution: new[] { 0.25, 0.25 },
+				trailerAxleWeightDistribution: new[] { 0.5 }, trailerAxleCount: new[] { 3 }, bodyCurbWeight: 0,
+				trailerCurbWeight: new[] { 7500.0 }, trailerType: new[] { TrailerType.ST1 }, minLoad: 0, refLoad: 12900,
+				trailerGrossVehicleWeight: new[] { 24000.0 }, deltaCdA: 0, maxLoad: 25000);
+
+			AssertMission(segment.Missions[3], vehicleData: vehicleData, missionType: MissionType.RegionalDeliveryEMS,
+				cosswindCorrection: "TractorSemitrailer", axleWeightDistribution: new[] { 0.175, 0.25 },
+				trailerAxleWeightDistribution: new[] { 0.35, 0.225 }, trailerAxleCount: new[] { 3, 2 }, bodyCurbWeight: 0,
+				trailerCurbWeight: new[] { 7500.0, 5400 }, trailerType: new[] { TrailerType.ST1, TrailerType.T2 }, minLoad: 0,
+				refLoad: 17500, trailerGrossVehicleWeight: new[] { 24000.0, 18000 }, deltaCdA: 0.6, maxLoad: 39600, ems: true);
+		}
+
+		/// <summary>
+		/// Segment 11: fixed reference weight, trailer always used
+		/// </summary>
+		[TestCase]
+		public void Segment11Test()
+		{
+			var vehicleData = new {
+				VehicleCategory = VehicleCategory.RigidTruck,
+				AxleConfiguration = AxleConfiguration.AxleConfig_6x4,
+				GrossVehicleMassRating = 18000.SI<Kilogram>(),
+				CurbWeight = 7500.SI<Kilogram>()
+			};
+
+			var segment = DeclarationData.Segments.Lookup(vehicleData.VehicleCategory, vehicleData.AxleConfiguration,
+				vehicleData.GrossVehicleMassRating, vehicleData.CurbWeight);
+
+			Assert.AreEqual(VehicleClass.Class11, segment.VehicleClass);
+
+			var data = AccelerationCurveReader.ReadFromStream(segment.AccelerationFile);
+			TestAcceleration(data);
+
+			Assert.AreEqual(6, segment.Missions.Length);
+
+			AssertMission(segment.Missions[0], vehicleData: vehicleData, missionType: MissionType.LongHaul,
+				cosswindCorrection: "RigidTrailer", axleWeightDistribution: new[] { 0.2, 0.225, 0.225 },
+				trailerAxleWeightDistribution: new[] { 0.35 }, trailerAxleCount: new[] { 2 }, bodyCurbWeight: 2200,
+				trailerCurbWeight: new[] { 5400.0 }, trailerType: new[] { TrailerType.T2 }, minLoad: 0, refLoad: 19300,
+				trailerGrossVehicleWeight: new[] { 18000.0 }, deltaCdA: 0.6, maxLoad: 20900);
+
+			AssertMission(segment.Missions[1], vehicleData: vehicleData, missionType: MissionType.LongHaulEMS,
+				cosswindCorrection: "RigidTrailer", axleWeightDistribution: new[] { 0.15, 0.2, 0.1 },
+				trailerAxleWeightDistribution: new[] { 0.225, 0.325 }, trailerAxleCount: new[] { 2, 3 }, bodyCurbWeight: 2200,
+				trailerCurbWeight: new[] { 2500, 7500.0 }, trailerType: new[] { TrailerType.Dolly, TrailerType.ST1 }, minLoad: 0,
+				refLoad: 22300, trailerGrossVehicleWeight: new[] { 0.0, 24000 }, deltaCdA: 1.2, maxLoad: 22300, ems: true);
+
+			AssertMission(segment.Missions[2], vehicleData: vehicleData, missionType: MissionType.RegionalDelivery,
+				cosswindCorrection: "RigidSolo", axleWeightDistribution: new[] { 0.35, 0.35, 0.3 },
+				trailerAxleWeightDistribution: new double[] { }, trailerAxleCount: new int[] { }, bodyCurbWeight: 2200,
+				trailerCurbWeight: new double[] { }, trailerType: new TrailerType[] { }, minLoad: 0,
+				refLoad: 7100, trailerGrossVehicleWeight: new double[] { }, deltaCdA: 0, maxLoad: 8300);
+
+			AssertMission(segment.Missions[3], vehicleData: vehicleData, missionType: MissionType.RegionalDeliveryEMS,
+				cosswindCorrection: "RigidSolo", axleWeightDistribution: new[] { 0.175, 0.2, 0.1 },
+				trailerAxleWeightDistribution: new[] { 0.225, 0.3 }, trailerAxleCount: new[] { 2, 3 }, bodyCurbWeight: 2200,
+				trailerCurbWeight: new[] { 2500, 7500.0 }, trailerType: new[] { TrailerType.Dolly, TrailerType.ST1 }, minLoad: 0,
+				refLoad: 17500, trailerGrossVehicleWeight: new[] { 0.0, 24000 }, deltaCdA: 1.2, maxLoad: 22300, ems: true);
+
+			AssertMission(segment.Missions[4], vehicleData: vehicleData, missionType: MissionType.MunicipalUtility,
+				cosswindCorrection: "RigidSolo", axleWeightDistribution: new[] { 0.35, 0.35, 0.3 },
+				trailerAxleWeightDistribution: new double[] { }, trailerAxleCount: new int[] { }, bodyCurbWeight: 2200,
+				trailerCurbWeight: new double[] { }, trailerType: new TrailerType[] { }, minLoad: 0,
+				refLoad: 7100, trailerGrossVehicleWeight: new double[] { }, deltaCdA: 0, maxLoad: 8300);
+
+			AssertMission(segment.Missions[5], vehicleData: vehicleData, missionType: MissionType.Construction,
+				cosswindCorrection: "RigidSolo", axleWeightDistribution: new[] { 0.35, 0.35, 0.3 },
+				trailerAxleWeightDistribution: new double[] { }, trailerAxleCount: new int[] { }, bodyCurbWeight: 2200,
+				trailerCurbWeight: new double[] { }, trailerType: new TrailerType[] { }, minLoad: 0,
+				refLoad: 7100, trailerGrossVehicleWeight: new double[] { }, deltaCdA: 0, maxLoad: 8300);
+		}
+
+		/// <summary>
+		/// Segment 9: fixed reference weight, trailer always used
+		/// </summary>
+		[TestCase]
+		public void Segment16Test()
+		{
+			var vehicleData = new {
+				VehicleCategory = VehicleCategory.Tractor,
+				AxleConfiguration = AxleConfiguration.AxleConfig_4x2,
+				GrossVehicleMassRating = 18000.SI<Kilogram>(),
+				CurbWeight = 7500.SI<Kilogram>()
+			};
+
+			var segment = DeclarationData.Segments.Lookup(vehicleData.VehicleCategory, vehicleData.AxleConfiguration,
+				vehicleData.GrossVehicleMassRating, vehicleData.CurbWeight);
+
+			Assert.AreEqual(VehicleClass.Class5, segment.VehicleClass);
+
+			var data = AccelerationCurveReader.ReadFromStream(segment.AccelerationFile);
+			TestAcceleration(data);
+
+			Assert.AreEqual(4, segment.Missions.Length);
+
+			AssertMission(segment.Missions[0], vehicleData: vehicleData, missionType: MissionType.LongHaul,
+				cosswindCorrection: "TractorSemitrailer", axleWeightDistribution: new[] { 0.2, 0.25 },
+				trailerAxleWeightDistribution: new[] { 0.55 }, trailerAxleCount: new[] { 3 }, bodyCurbWeight: 0,
+				trailerCurbWeight: new[] { 7500.0 }, trailerType: new[] { TrailerType.ST1 }, minLoad: 0, refLoad: 19300,
+				trailerGrossVehicleWeight: new[] { 24000.0 }, deltaCdA: 0, maxLoad: 25000);
+
+			AssertMission(segment.Missions[1], vehicleData: vehicleData, missionType: MissionType.LongHaulEMS,
+				cosswindCorrection: "TractorSemitrailer", axleWeightDistribution: new[] { 0.15, 0.2 },
+				trailerAxleWeightDistribution: new[] { 0.40, 0.25 }, trailerAxleCount: new[] { 3, 2 }, bodyCurbWeight: 0,
+				trailerCurbWeight: new[] { 7500.0, 5400 }, trailerType: new[] { TrailerType.ST1, TrailerType.T2 }, minLoad: 0,
+				refLoad: 26500, trailerGrossVehicleWeight: new[] { 24000.0, 18000 }, deltaCdA: 0.6, maxLoad: 39600, ems: true);
+
+			AssertMission(segment.Missions[2], vehicleData: vehicleData, missionType: MissionType.RegionalDelivery,
+				cosswindCorrection: "TractorSemitrailer", axleWeightDistribution: new[] { 0.25, 0.25 },
+				trailerAxleWeightDistribution: new[] { 0.5 }, trailerAxleCount: new[] { 3 }, bodyCurbWeight: 0,
+				trailerCurbWeight: new[] { 7500.0 }, trailerType: new[] { TrailerType.ST1 }, minLoad: 0, refLoad: 12900,
+				trailerGrossVehicleWeight: new[] { 24000.0 }, deltaCdA: 0, maxLoad: 25000);
+
+			AssertMission(segment.Missions[3], vehicleData: vehicleData, missionType: MissionType.RegionalDeliveryEMS,
+				cosswindCorrection: "TractorSemitrailer", axleWeightDistribution: new[] { 0.175, 0.25 },
+				trailerAxleWeightDistribution: new[] { 0.35, 0.225 }, trailerAxleCount: new[] { 3, 2 }, bodyCurbWeight: 0,
+				trailerCurbWeight: new[] { 7500.0, 5400 }, trailerType: new[] { TrailerType.ST1, TrailerType.T2 }, minLoad: 0,
+				refLoad: 17500, trailerGrossVehicleWeight: new[] { 24000.0, 18000 }, deltaCdA: 0.6, maxLoad: 39600, ems: true);
 		}
 
 		public static void AssertMission(Mission m, dynamic vehicleData, MissionType missionType, string cosswindCorrection,
-			double[] axleWeightDistribution, double trailerAxleWeightDistribution, int trailerAxleCount, double bodyCurbWeight,
-			double trailerCurbWeight, TrailerType trailerType, double minLoad, double refLoad, double maxLoad,
-			double trailerGrossVehicleWeight, double deltaCdA)
+			double[] axleWeightDistribution, double[] trailerAxleWeightDistribution, int[] trailerAxleCount,
+			double bodyCurbWeight,
+			double[] trailerCurbWeight, TrailerType[] trailerType, double minLoad, double refLoad, double maxLoad,
+			double[] trailerGrossVehicleWeight, double deltaCdA, bool ems = false)
 		{
 			Assert.AreEqual(missionType, m.MissionType);
 			Assert.AreEqual(cosswindCorrection, m.CrossWindCorrectionParameters);
 			CollectionAssert.AreEqual(axleWeightDistribution, m.AxleWeightDistribution,
 				"Axle distribution not equal.\nexpected: {0}\nactual: {1}", string.Join(",", axleWeightDistribution),
 				string.Join(",", m.AxleWeightDistribution));
-			Assert.AreEqual(trailerAxleWeightDistribution, m.TrailerAxleWeightShare,
+			CollectionAssert.AreEqual(trailerAxleWeightDistribution, m.Trailer.Select(t => t.TrailerAxleWeightShare),
 				"Trailer axle distribution not equal.\nexpected: {0}\nactual: {1}", string.Join(",", trailerAxleWeightDistribution),
-				string.Join(",", m.TrailerAxleWeightShare));
+				string.Join(",", m.Trailer.Select(t => t.TrailerAxleWeightShare)));
 			Assert.AreEqual(bodyCurbWeight.SI<Kilogram>(), m.BodyCurbWeight);
-			Assert.AreEqual(trailerCurbWeight.SI<Kilogram>(), m.TrailerCurbWeight);
-			Assert.AreEqual(trailerType, m.TrailerType);
+			CollectionAssert.AreEqual(trailerCurbWeight, m.Trailer.Select(t => t.TrailerCurbWeight.Value()));
+			CollectionAssert.AreEqual(trailerType, m.Trailer.Select(t => t.TrailerType));
 
 			Assert.IsNotNull(m.CycleFile);
 			Assert.IsTrue(!string.IsNullOrEmpty(new StreamReader(m.CycleFile).ReadLine()));
 			Assert.AreEqual(minLoad.SI<Kilogram>(), m.MinLoad);
 			AssertHelper.AreRelativeEqual(refLoad, m.RefLoad);
 			Assert.AreEqual(maxLoad.SI<Kilogram>(), m.MaxLoad);
-			Assert.AreEqual(trailerGrossVehicleWeight.SI<Kilogram>(), m.TrailerGrossVehicleWeight);
-			Assert.AreEqual(VectoMath.Min(vehicleData.GrossVehicleMassRating + m.TrailerGrossVehicleWeight, 40000.SI<Kilogram>())
-							- m.BodyCurbWeight - m.TrailerCurbWeight - vehicleData.CurbWeight,
+			CollectionAssert.AreEqual(trailerGrossVehicleWeight, m.Trailer.Select(t => t.TrailerGrossVehicleWeight.Value()));
+			Assert.AreEqual(
+				VectoMath.Min(
+					vehicleData.GrossVehicleMassRating +
+					m.Trailer.Sum(t => t.TrailerGrossVehicleWeight).DefaultIfNull(0),
+					ems ? 60000.SI<Kilogram>() : 40000.SI<Kilogram>())
+				- m.BodyCurbWeight - m.Trailer.Sum(t => t.TrailerCurbWeight).DefaultIfNull(0) -
+				vehicleData.CurbWeight,
 				m.MaxLoad);
-			Assert.AreEqual(deltaCdA.SI<SquareMeter>(), m.DeltaCdA);
+			Assert.AreEqual(deltaCdA.SI<SquareMeter>(),
+				m.Trailer.Sum(t => t.DeltaCdA).DefaultIfNull(0));
 		}
 
 		private static void EqualAcceleration(AccelerationCurveData data, double velocity, double acceleration,
@@ -847,16 +1087,29 @@ namespace TUGraz.VectoCore.Tests.Models.Declaration
 			var dataReader = new DeclarationModeVectoRunDataFactory(dataProvider, null);
 
 			var runs = dataReader.NextRun().ToList();
-			Assert.AreEqual(6, runs.Count);
-			var withT1 = new[] { 14.9, 14.9, 19.2, 19.2, 19.2 };
-			CollectionAssert.AreEqual(withT1, runs[0].VehicleData.AxleData.Select(a => a.Inertia.Value()));
-			CollectionAssert.AreEqual(withT1, runs[1].VehicleData.AxleData.Select(a => a.Inertia.Value()));
-			CollectionAssert.AreEqual(withT1, runs[2].VehicleData.AxleData.Select(a => a.Inertia.Value()));
 
-			var bodyOnly = new[] { 14.9, 14.9, 19.2, 19.2, 19.2 };
-			CollectionAssert.AreEqual(bodyOnly, runs[3].VehicleData.AxleData.Select(a => a.Inertia.Value()));
-			CollectionAssert.AreEqual(bodyOnly, runs[4].VehicleData.AxleData.Select(a => a.Inertia.Value()));
-			CollectionAssert.AreEqual(bodyOnly, runs[5].VehicleData.AxleData.Select(a => a.Inertia.Value()));
+			Assert.AreEqual(VehicleClass.Class5, runs[0].VehicleData.VehicleClass);
+			Assert.AreEqual(12, runs.Count);
+
+			//var bodyOnly = new[] { 14.9, 14.9 };
+			var withST1 = new[] { 14.9, 14.9, 19.2, 19.2, 19.2 };
+			var withST1andT2 = new[] { 14.9, 14.9, 19.2, 19.2, 19.2, 19.2, 19.2 };
+
+			CollectionAssert.AreEqual(withST1, runs[0].VehicleData.AxleData.Select(a => a.Inertia.Value()));
+			CollectionAssert.AreEqual(withST1, runs[1].VehicleData.AxleData.Select(a => a.Inertia.Value()));
+			CollectionAssert.AreEqual(withST1, runs[2].VehicleData.AxleData.Select(a => a.Inertia.Value()));
+
+			CollectionAssert.AreEqual(withST1andT2, runs[3].VehicleData.AxleData.Select(a => a.Inertia.Value()));
+			CollectionAssert.AreEqual(withST1andT2, runs[4].VehicleData.AxleData.Select(a => a.Inertia.Value()));
+			CollectionAssert.AreEqual(withST1andT2, runs[5].VehicleData.AxleData.Select(a => a.Inertia.Value()));
+
+			CollectionAssert.AreEqual(withST1, runs[6].VehicleData.AxleData.Select(a => a.Inertia.Value()));
+			CollectionAssert.AreEqual(withST1, runs[7].VehicleData.AxleData.Select(a => a.Inertia.Value()));
+			CollectionAssert.AreEqual(withST1, runs[8].VehicleData.AxleData.Select(a => a.Inertia.Value()));
+
+			CollectionAssert.AreEqual(withST1andT2, runs[9].VehicleData.AxleData.Select(a => a.Inertia.Value()));
+			CollectionAssert.AreEqual(withST1andT2, runs[10].VehicleData.AxleData.Select(a => a.Inertia.Value()));
+			CollectionAssert.AreEqual(withST1andT2, runs[11].VehicleData.AxleData.Select(a => a.Inertia.Value()));
 		}
 	}
 }
