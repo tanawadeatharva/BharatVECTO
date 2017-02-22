@@ -37,6 +37,7 @@ using TUGraz.VectoCommon.Exceptions;
 using TUGraz.VectoCommon.Models;
 using TUGraz.VectoCommon.Utils;
 using TUGraz.VectoCore.Configuration;
+using TUGraz.VectoCore.OutputData;
 using TUGraz.VectoCore.Utils;
 
 namespace TUGraz.VectoCore.Models.Declaration
@@ -125,14 +126,27 @@ namespace TUGraz.VectoCore.Models.Declaration
 			foreach (var missionType in missionTypes.Where(m => row.Field<string>(m.ToString()) != "-")) {
 				var body = DeclarationData.StandardBodies.Lookup(row.Field<string>("body"));
 
-				var trailerIsUsed = ShouldTrailerBeUsed(row, missionType);
-				var trailerField = row.Field<string>("trailer");
-				var trailerType = trailerIsUsed && !string.IsNullOrWhiteSpace(trailerField)
-					? trailerField.ParseEnum<TrailerType>()
-					: TrailerType.None;
-				var trailer = trailerIsUsed
-					? DeclarationData.StandardBodies.Lookup(trailerField)
-					: StandardBodies.Empty;
+				var maxGVW = Constants.SimulationSettings.MaximumGrossVehicleWeight;
+				var trailers = new List<MissionTrailer>();
+				if (missionType.IsEMS()) {
+					maxGVW = Constants.SimulationSettings.MaximumGrossVehicleWeightEMS;
+					var trailerList = row.Field<string>("ems").Split('+');
+					var trailerWeightShares = row.Field<string>("traileraxles" + GetMissionSuffix(missionType)).Split('/');
+					if (trailerList.Length != trailerWeightShares.Length) {
+						throw new VectoException(
+							"Error in segmentation table: number of trailers and list of weight shares does not match!");
+					}
+					trailers.AddRange(trailerWeightShares.Select((t, i) => CreateTrailer(trailerList[i], t.ToDouble() / 100.0, i == 0)));
+				} else {
+					if (ShouldTrailerBeUsed(row, missionType)) {
+						var trailerValue = row.Field<string>("trailer");
+						if (string.IsNullOrWhiteSpace(trailerValue)) {
+							throw new VectoException("Error in segmentation table: trailer weight share is defined but not trailer type!");
+						}
+						trailers.Add(CreateTrailer(trailerValue, GetTrailerAxleWeightDistribution(row, missionType), true));
+					}
+				}
+
 
 				//var semiTrailerField = row.Field<string>("semitrailer");
 				//var semiTrailer = !string.IsNullOrWhiteSpace(semiTrailerField)
@@ -142,15 +156,19 @@ namespace TUGraz.VectoCore.Models.Declaration
 				//trailer += semiTrailer;
 
 				// limit gvw to MaxGVW (40t)
-				var gvw = VectoMath.Min(grossVehicleWeight + trailer.GrossVehicleWeight,
-					Constants.SimulationSettings.MaximumGrossVehicleWeight);
-				var maxLoad = gvw - curbWeight - body.CurbWeight - trailer.CurbWeight;
+				var gvw =
+					VectoMath.Min(
+						grossVehicleWeight + trailers.Sum(t => t.TrailerGrossVehicleWeight).DefaultIfNull(0),
+						maxGVW);
+				var maxLoad = gvw - curbWeight - body.CurbWeight -
+							trailers.Sum(t => t.TrailerCurbWeight).DefaultIfNull(0);
 
 				var refLoadValue = row.ParseDoubleOrGetDefault(missionType.ToString(), double.NaN);
 				Kilogram refLoad;
 				if (double.IsNaN(refLoadValue)) {
 					refLoad = DeclarationData.GetPayloadForGrossVehicleWeight(grossVehicleWeight, missionType) +
-							DeclarationData.GetPayloadForTrailerWeight(trailer.GrossVehicleWeight, trailer.CurbWeight);
+							trailers.Sum(t => DeclarationData.GetPayloadForTrailerWeight(t.TrailerGrossVehicleWeight, t.TrailerCurbWeight))
+								.DefaultIfNull(0);
 				} else {
 					refLoad = refLoadValue.SI<Kilogram>();
 				}
@@ -159,24 +177,20 @@ namespace TUGraz.VectoCore.Models.Declaration
 
 				var mission = new Mission {
 					MissionType = missionType,
-					CrossWindCorrectionParameters = row.Field<string>("crosswindcorrection" + GetMissionSuffix(missionType)),
+					CrossWindCorrectionParameters = row.Field<string>("crosswindcorrection" + GetMissionSuffix(missionType, true)),
 					CycleFile =
-						RessourceHelper.ReadStream(DeclarationData.DeclarationDataResourcePrefix + ".MissionCycles." + missionType +
+						RessourceHelper.ReadStream(DeclarationData.DeclarationDataResourcePrefix + ".MissionCycles." +
+													missionType.ToString().Replace("EMS", "") +
 													Constants.FileExtensions.CycleFile),
 					AxleWeightDistribution = GetAxleWeightDistribution(row, missionType),
 					CurbWeight = curbWeight,
 					BodyCurbWeight = body.CurbWeight,
 					BodyGrossVehicleWeight = grossVehicleWeight,
-					TrailerType = trailerType,
-					TrailerCurbWeight = trailer.CurbWeight,
-					TrailerGrossVehicleWeight = trailer.GrossVehicleWeight,
-					TrailerWheels = trailer.Wheels,
-					TrailerAxleWeightShare = GetTrailerAxleWeightDistribution(row, missionType),
-					DeltaCdA = trailer.DeltaCrossWindArea,
+					Trailer = trailers,
 					MinLoad = 0.SI<Kilogram>(),
 					MaxLoad = maxLoad,
 					RefLoad = refLoad,
-					CargoVolume = body.CargoVolume + trailer.CargoVolume,
+					TotalCargoVolume = body.CargoVolume + trailers.Sum(t => t.CargoVolume).DefaultIfNull(0),
 				};
 				missions.Add(mission);
 			}
@@ -208,9 +222,25 @@ namespace TUGraz.VectoCore.Models.Declaration
 					.Split('/').ToDouble().Select(x => x / 100.0).ToArray();
 		}
 
-		private static string GetMissionSuffix(MissionType missionType)
+		private static string GetMissionSuffix(MissionType missionType, bool ignoreEMS = false)
 		{
-			return missionType == MissionType.LongHaul ? "-longhaul" : "-other";
+			return (missionType.GetNonEMSMissionType() == MissionType.LongHaul ? "-longhaul" : "-other") +
+					(!ignoreEMS && missionType.IsEMS() ? "ems" : "");
+		}
+
+		private static MissionTrailer CreateTrailer(string trailerValue, double axleWeightShare, bool firstTrailer)
+		{
+			var trailerType = TrailterTypeHelper.Parse(trailerValue);
+			var trailer = DeclarationData.StandardBodies.Lookup(trailerType.ToString());
+			return new MissionTrailer {
+				TrailerType = trailerType,
+				TrailerWheels = trailer.Wheels,
+				TrailerAxleWeightShare = axleWeightShare,
+				TrailerCurbWeight = trailer.CurbWeight,
+				TrailerGrossVehicleWeight = trailer.GrossVehicleWeight,
+				DeltaCdA = trailer.DeltaCrossWindArea[firstTrailer ? 0 : 1],
+				CargoVolume = trailer.CargoVolume
+			};
 		}
 	}
 }

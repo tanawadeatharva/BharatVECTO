@@ -42,7 +42,7 @@ namespace TUGraz.VectoCore.Models.Declaration
 	{
 		public Kilogram CurbWeight;
 		public Kilogram GrossVehicleWeight;
-		public SquareMeter DeltaCrossWindArea;
+		public SquareMeter[] DeltaCrossWindArea;
 		public string Name;
 		public List<Wheels.Entry> Wheels;
 		public CubicMeter CargoVolume;
@@ -52,12 +52,12 @@ namespace TUGraz.VectoCore.Models.Declaration
 			get { return GrossVehicleWeight - CurbWeight; }
 		}
 
-		public StandardBody(string name, Kilogram curbWeight, Kilogram grossVehicleWeight, SquareMeter deltaCrossWindArea,
+		public StandardBody(string name, Kilogram curbWeight, Kilogram grossVehicleWeight, SquareMeter[] deltaCrossWindArea,
 			Wheels.Entry wheels, int axleCount, CubicMeter volume) :
 				this(name, curbWeight, grossVehicleWeight, deltaCrossWindArea,
 					wheels == null ? new List<Wheels.Entry>() : Enumerable.Repeat(wheels, axleCount).ToList(), volume) {}
 
-		private StandardBody(string name, Kilogram curbWeight, Kilogram grossVehicleWeight, SquareMeter deltaCrossWindArea,
+		private StandardBody(string name, Kilogram curbWeight, Kilogram grossVehicleWeight, SquareMeter[] deltaCrossWindArea,
 			List<Wheels.Entry> wheels, CubicMeter volume)
 		{
 			Name = name;
@@ -68,15 +68,15 @@ namespace TUGraz.VectoCore.Models.Declaration
 			CargoVolume = volume;
 		}
 
-		public static StandardBody operator +(StandardBody first, StandardBody second)
-		{
-			var wheels = new List<Wheels.Entry>(first.Wheels);
-			wheels.AddRange(second.Wheels);
-			return new StandardBody(first.Name + second.Name, first.CurbWeight + second.CurbWeight,
-				first.GrossVehicleWeight + second.GrossVehicleWeight,
-				first.DeltaCrossWindArea + second.DeltaCrossWindArea,
-				wheels, first.CargoVolume + second.CargoVolume);
-		}
+		//public static StandardBody operator +(StandardBody first, StandardBody second)
+		//{
+		//	var wheels = new List<Wheels.Entry>(first.Wheels);
+		//	wheels.AddRange(second.Wheels);
+		//	return new StandardBody(first.Name + second.Name, first.CurbWeight + second.CurbWeight,
+		//		first.GrossVehicleWeight + second.GrossVehicleWeight,
+		//		first.DeltaCrossWindArea + second.DeltaCrossWindArea,
+		//		wheels, first.CargoVolume + second.TotalCargoVolume);
+		//}
 	}
 
 	/// <summary>
@@ -90,8 +90,8 @@ namespace TUGraz.VectoCore.Models.Declaration
 	/// </summary>
 	public sealed class StandardBodies : LookupData<string, StandardBody>
 	{
-		public static readonly StandardBody Empty = new StandardBody("", 0.SI<Kilogram>(), 0.SI<Kilogram>(),
-			0.SI<SquareMeter>(), null, 0, 0.SI<CubicMeter>());
+		//public static readonly StandardBody Empty = new StandardBody("", 0.SI<Kilogram>(), 0.SI<Kilogram>(),
+		//	new[] { 0.SI<SquareMeter>(), 0.SI<SquareMeter>() }, null, 0, 0.SI<CubicMeter>());
 
 		protected override string ResourceId
 		{
@@ -103,23 +103,30 @@ namespace TUGraz.VectoCore.Models.Declaration
 			get { return "StandardWeigths Lookup Error: No value found for ID '{0}'"; }
 		}
 
-		public override StandardBody Lookup(string id)
-		{
-			return string.IsNullOrWhiteSpace(id) ? Empty : base.Lookup(id);
-		}
+		//public override StandardBody Lookup(string id)
+		//{
+		//	return string.IsNullOrWhiteSpace(id) ? Empty : base.Lookup(id);
+		//}
 
 		protected override void ParseData(DataTable table)
 		{
-			Data = table.Rows.Cast<DataRow>().Select(k => new StandardBody(
-				k.Field<string>("name"),
-				k.ParseDoubleOrGetDefault("curbmass").SI<Kilogram>(),
-				k.ParseDoubleOrGetDefault("maxgrossmass").SI<Kilogram>(),
-				k.ParseDoubleOrGetDefault("deltacdxafortraileroperationinlonghaul").SI<SquareMeter>(),
-				!string.IsNullOrWhiteSpace(k.Field<string>("wheels"))
-					? DeclarationData.Wheels.Lookup(k.Field<string>("wheels"))
-					: null,
-				Int32.Parse(k.Field<string>("axlecount")),
-				k.ParseDouble("cargovolume").SI<CubicMeter>()))
+			Data = table.Rows.Cast<DataRow>().Select(k => {
+				var deltaCdxAStr = k.Field<string>("deltacdxafortraileroperationinlonghaul");
+				var deltaCdxA = new[] { 0.SI<SquareMeter>(), 0.SI<SquareMeter>() };
+				if (!deltaCdxAStr.Equals("-")) {
+					deltaCdxA = deltaCdxAStr.Split('/').Select(x => x.ToDouble().SI<SquareMeter>()).ToArray();
+				}
+				return new StandardBody(
+					k.Field<string>("name"),
+					k.ParseDoubleOrGetDefault("curbmass").SI<Kilogram>(),
+					k.ParseDoubleOrGetDefault("maxgrossmass").SI<Kilogram>(),
+					deltaCdxA,
+					!string.IsNullOrWhiteSpace(k.Field<string>("wheels"))
+						? DeclarationData.Wheels.Lookup(k.Field<string>("wheels"))
+						: null,
+					Int32.Parse(k.Field<string>("axlecount")),
+					k.ParseDouble("cargovolume").SI<CubicMeter>());
+			})
 				.ToDictionary(kv => kv.Name);
 		}
 	}
