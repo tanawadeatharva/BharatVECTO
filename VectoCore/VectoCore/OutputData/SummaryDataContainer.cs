@@ -174,7 +174,8 @@ namespace TUGraz.VectoCore.OutputData
 			row[LOADING] = vehicleLoading;
 			row[VOLUME] = cargoVolume;
 
-			row[TIME] = modData.Duration();
+			var totalTime = modData.Duration();
+			row[TIME] = totalTime;
 
 			var distance = modData.Distance();
 			if (distance != null) {
@@ -282,26 +283,34 @@ namespace TUGraz.VectoCore.OutputData
 			row[E_ROLL] = modData.WorkRollingResistance().ConvertTo().Kilo.Watt.Hour;
 			row[E_GRAD] = modData.WorkRoadGradientResistance().ConvertTo().Kilo.Watt.Hour;
 
-			var acc = modData.AccelerationPer3Seconds();
+			//var acc = modData.AccelerationPer3Seconds();
+
 
 			row[ACC] = modData.AccelerationAverage();
-			row[ACC_POS] = acc.AccelerationsPositive();
-			row[ACC_NEG] = acc.AccelerationsNegative();
-			var accTimeShare = acc.AccelerationTimeShare();
+			var modal = modData as ModalDataContainer;
+			if (modal == null) {
+				Log.Error("unknown modal data container!");
+				return;
+			}
+			row[ACC_POS] = modal.AccelerationsPositive();
+			row[ACC_NEG] = modal.AccelerationsNegative();
+			var accTimeShare = modal.AccelerationTimeShare();
 			row[ACC_TIMESHARE] = accTimeShare;
-			var decTimeShare = acc.DecelerationTimeShare();
+			var decTimeShare = modal.DecelerationTimeShare();
 			row[DEC_TIMESHARE] = decTimeShare;
-			var cruiseTimeShare = acc.CruiseTimeShare();
+			var cruiseTimeShare = modal.CruiseTimeShare();
 			row[CRUISE_TIMESHARE] = cruiseTimeShare;
-			row[STOP_TIMESHARE] = modData.StopTimeShare();
+			var stopTimeShare = modal.StopTimeShare();
+			row[STOP_TIMESHARE] = stopTimeShare;
 
 			if (accTimeShare != null && decTimeShare != null && cruiseTimeShare != null) {
-				var shareSum = accTimeShare + decTimeShare + cruiseTimeShare;
+				var shareSum = accTimeShare + decTimeShare + cruiseTimeShare + stopTimeShare;
 				if (!shareSum.IsEqual(100)) {
 					Log.Error(
-						"Sumfile Error: driving behavior timeshares must sum up to 100%: acc: {0}%, dec: {1}%, cruise: {2}%, sum: {3}%",
+						"Sumfile Error: driving behavior timeshares must sum up to 100%: acc: {0}%, dec: {1}%, cruise: {2}%, stop: {3}%, sum: {4}%",
 						accTimeShare.ToOutputFormat(1, null, false), decTimeShare.ToOutputFormat(1, null, false),
-						cruiseTimeShare.ToOutputFormat(1, null, false), shareSum.ToOutputFormat(1, null, false));
+						cruiseTimeShare.ToOutputFormat(1, null, false), stopTimeShare.ToOutputFormat(1, null, false),
+						shareSum.ToOutputFormat(1, null, false));
 				}
 			}
 		}
