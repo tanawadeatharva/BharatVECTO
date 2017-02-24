@@ -52,7 +52,8 @@ namespace TUGraz.VectoCore.Models.SimulationComponent.Impl
 		private IIdleController _idleController;
 		protected bool _requestAfterGearshift;
 
-		public bool TorqueConverterLocked {
+		public bool TorqueConverterLocked
+		{
 			get { return CurrentState.TorqueConverterLocked; }
 			set { CurrentState.TorqueConverterLocked = value; }
 		}
@@ -68,7 +69,8 @@ namespace TUGraz.VectoCore.Models.SimulationComponent.Impl
 				engineInertia);
 		}
 
-		public IIdleController IdleController {
+		public IIdleController IdleController
+		{
 			get { return _idleController; }
 			set {
 				_idleController = value;
@@ -76,7 +78,8 @@ namespace TUGraz.VectoCore.Models.SimulationComponent.Impl
 			}
 		}
 
-		public bool Disengaged {
+		public bool Disengaged
+		{
 			get { return CurrentState.Disengaged; }
 			set { CurrentState.Disengaged = value; }
 		}
@@ -87,7 +90,8 @@ namespace TUGraz.VectoCore.Models.SimulationComponent.Impl
 			TorqueConverter.NextComponent = other;
 		}
 
-		public override GearInfo NextGear {
+		public override GearInfo NextGear
+		{
 			get { return _strategy.NextGear; }
 		}
 
@@ -278,13 +282,14 @@ namespace TUGraz.VectoCore.Models.SimulationComponent.Impl
 			if (!CurrentState.TorqueConverterLocked) {
 				return TorqueConverter.Request(absTime, dt, inTorque, inAngularVelocity, dryRun);
 			}
-			if (!dryRun &&
+			var retVal = NextComponent.Request(absTime, dt, inTorque, inAngularVelocity, dryRun);
+			if (!dryRun && retVal is ResponseSuccess &&
 				_strategy.ShiftRequired(absTime, dt, outTorque, outAngularVelocity, inTorque, inAngularVelocity, Gear,
 					LastShift)) {
 				return new ResponseGearShift { Source = this };
 			}
 
-			return NextComponent.Request(absTime, dt, inTorque, inAngularVelocity, dryRun);
+			return retVal;
 		}
 
 		private IResponse RequestDisengaged(Second absTime, Second dt, NewtonMeter outTorque, PerSecond outAngularVelocity,

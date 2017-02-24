@@ -129,11 +129,6 @@ namespace TUGraz.VectoCore.Models.SimulationComponent.Impl
 			// normal request
 			var ratio = Gearbox.GetGearData(Gearbox.Gear).TorqueConverterRatio;
 
-			// check if shift is required
-			if (ShiftStrategy.ShiftRequired(absTime, dt, outTorque * ratio, outAngularVelocity / ratio, inTorque,
-				operatingPoint.InAngularVelocity, Gearbox.Gear, Gearbox.LastShift)) {
-				return new ResponseGearShift { Source = this };
-			}
 
 			// check if out-side of the operating point is equal to requested values
 			if (!outAngularVelocity.IsEqual(operatingPoint.OutAngularVelocity) || !outTorque.IsEqual(operatingPoint.OutTorque)) {
@@ -152,6 +147,13 @@ namespace TUGraz.VectoCore.Models.SimulationComponent.Impl
 			CurrentState.OperatingPoint = operatingPoint;
 
 			var retVal = NextComponent.Request(absTime, dt, inTorque, operatingPoint.InAngularVelocity);
+
+			// check if shift is required
+			if (retVal is ResponseSuccess &&
+				ShiftStrategy.ShiftRequired(absTime, dt, outTorque * ratio, outAngularVelocity / ratio, inTorque,
+					operatingPoint.InAngularVelocity, Gearbox.Gear, Gearbox.LastShift)) {
+				return new ResponseGearShift { Source = this };
+			}
 			return retVal;
 		}
 
