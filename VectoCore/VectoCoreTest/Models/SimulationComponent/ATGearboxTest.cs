@@ -155,9 +155,9 @@ namespace TUGraz.VectoCore.Tests.Models.SimulationComponent
 			var sumWriter =
 				new SummaryDataContainer(
 					new FileOutputWriter(string.Format("AT_Vehicle_Drive-TC_{0}-{1}", cycleName, gbxType == GearboxType.ATSerial ? "ser" : "ps")));
-			((VehicleContainer)run.GetContainer()).WriteSumData = (writer, mass, loading, volume) =>
+			((VehicleContainer)run.GetContainer()).WriteSumData = (writer, mass, loading, volume, gearCount) =>
 				sumWriter.Write(run.GetContainer().ModalData, cycleName, string.Format("{0}-{1}", 0, 0),
-					cycleName + Constants.FileExtensions.CycleFile, mass, loading, 0.SI<CubicMeter>());
+					cycleName + Constants.FileExtensions.CycleFile, mass, loading, 0.SI<CubicMeter>(), gearCount);
 			run.Run();
 			sumWriter.Finish();
 			Assert.IsTrue(run.FinishedWithoutErrors);

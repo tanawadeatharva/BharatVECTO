@@ -326,7 +326,7 @@ namespace TUGraz.VectoCore.Models.Simulation.Impl
 			Log.Info("VehicleContainer finishing simulation.");
 			ModData.Finish(RunStatus);
 
-			WriteSumData(ModData, VehicleMass, VehicleLoading, Vehicle != null ? Vehicle.CargoVolume : 0.SI<CubicMeter>());
+			WriteSumData(ModData, VehicleMass, VehicleLoading, Vehicle != null ? Vehicle.CargoVolume : 0.SI<CubicMeter>(), Gearbox.NumGears);
 
 			ModData.FinishSimulation();
 			DrivingCycle.FinishSimulation();
