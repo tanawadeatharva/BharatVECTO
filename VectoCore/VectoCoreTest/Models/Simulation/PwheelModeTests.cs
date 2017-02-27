@@ -68,11 +68,8 @@ namespace TUGraz.VectoCore.Tests.Models.Simulation
 
 			var cycleFile = new MemoryStream(Encoding.UTF8.GetBytes(inputData));
 			var drivingCycle = DrivingCycleDataReader.ReadFromStream(cycleFile, CycleType.PWheel, "", false);
-
-			var gearbox = new CycleGearbox(container,
-				new GearboxData {
-					Gears = new Dictionary<uint, GearData> { { 1, new GearData { Ratio = 2.0 } }, { 2, new GearData { Ratio = 3.5 } } }
-				}, 0.SI<KilogramSquareMeter>());
+			
+			var gearbox = new CycleGearbox(container, new VectoRunData());
 
 			var cycle = new PWheelCycle(container, drivingCycle, 2.3, null,
 				gearbox.ModelData.Gears.ToDictionary(g => g.Key, g => g.Value.Ratio));

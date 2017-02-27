@@ -72,7 +72,7 @@ namespace TUGraz.VectoCore.Tests.Models.SimulationComponent
 			var engineData = MockSimulationDataFactory.CreateEngineDataFromFile(EngineDataFile);
 			vehicleContainer.Engine = new CombustionEngine(vehicleContainer,engineData);
 			var gearboxData = MockSimulationDataFactory.CreateGearboxDataFromFile(GearboxDataFile, EngineDataFile, false);
-			var gearbox = new ATGearbox(vehicleContainer, gearboxData, new ATShiftStrategy(gearboxData, vehicleContainer), engineData.Inertia);
+			var gearbox = new ATGearbox(vehicleContainer, new ATShiftStrategy(gearboxData, vehicleContainer), null);
 
 			vehicleContainer.VehicleSpeed = vehicleSpeed.KMPHtoMeterPerSecond();
 
