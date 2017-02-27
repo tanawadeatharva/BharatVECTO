@@ -54,11 +54,10 @@ namespace TUGraz.VectoCore.Models.SimulationComponent.Impl
 
 		protected KilogramSquareMeter EngineInertia;
 
-		protected AbstractGearbox(IVehicleContainer container, GearboxData gearboxModelData, VectoRunData runData)
-			: base(container)
+		protected AbstractGearbox(IVehicleContainer container, VectoRunData runData): base(container)
 		{
-			ModelData = gearboxModelData;
-			EngineInertia = runData != null && runData.EngineData != null
+			ModelData = runData.GearboxData;
+			EngineInertia = runData.EngineData != null
 				? runData.EngineData.Inertia
 				: 0.SI<KilogramSquareMeter>();
 		}

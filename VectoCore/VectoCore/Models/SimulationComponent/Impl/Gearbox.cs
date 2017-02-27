@@ -37,7 +37,6 @@ using TUGraz.VectoCore.Models.Connector.Ports.Impl;
 using TUGraz.VectoCore.Models.Simulation;
 using TUGraz.VectoCore.Models.Simulation.Data;
 using TUGraz.VectoCore.Models.Simulation.DataBus;
-using TUGraz.VectoCore.Models.SimulationComponent.Data;
 using TUGraz.VectoCore.OutputData;
 using TUGraz.VectoCore.Utils;
 
@@ -74,9 +73,7 @@ namespace TUGraz.VectoCore.Models.SimulationComponent.Impl
 			return _engageTime.IsSmallerOrEqual(absTime);
 		}
 
-		public Gearbox(IVehicleContainer container, GearboxData gearboxModelData, IShiftStrategy strategy,
-			KilogramSquareMeter engineInertia)
-			: base(container, gearboxModelData, engineInertia)
+		public Gearbox(IVehicleContainer container, IShiftStrategy strategy, VectoRunData runData) : base(container, runData)
 		{
 			_strategy = strategy;
 			_strategy.Gearbox = this;
@@ -349,7 +346,8 @@ namespace TUGraz.VectoCore.Models.SimulationComponent.Impl
 			var shiftAllowed = !inAngularVelocity.IsEqual(0) && !DataBus.VehicleSpeed.IsEqual(0);
 
 			if (response is ResponseSuccess && shiftAllowed) {
-				var shiftRequired = _strategy.ShiftRequired(absTime, dt, outTorque, outAngularVelocity, inTorque, response.EngineSpeed,
+				var shiftRequired = _strategy.ShiftRequired(absTime, dt, outTorque, outAngularVelocity, inTorque,
+					response.EngineSpeed,
 					Gear, _engageTime);
 
 				if (shiftRequired) {
