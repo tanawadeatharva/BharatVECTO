@@ -350,7 +350,9 @@ namespace TUGraz.VectoCore.Models.SimulationComponent.Impl
 			var avgEngineSpeed = (PreviousState.EngineSpeed + CurrentState.EngineSpeed) / 2.0;
 
 			container[ModalResultField.P_eng_fcmap] = CurrentState.EngineTorque * avgEngineSpeed;
-			container[ModalResultField.P_eng_out] = container[ModalResultField.P_eng_out] is DBNull ? CurrentState.EngineTorqueOut * avgEngineSpeed : container[ModalResultField.P_eng_out];
+			container[ModalResultField.P_eng_out] = container[ModalResultField.P_eng_out] is DBNull
+				? CurrentState.EngineTorqueOut * avgEngineSpeed
+				: container[ModalResultField.P_eng_out];
 			container[ModalResultField.P_eng_inertia] = CurrentState.InertiaTorqueLoss * avgEngineSpeed;
 
 			container[ModalResultField.n_eng_avg] = avgEngineSpeed;
@@ -367,6 +369,11 @@ namespace TUGraz.VectoCore.Models.SimulationComponent.Impl
 			if (DataBus.ExecutionMode != ExecutionMode.Declaration && result.Extrapolated) {
 				Log.Warn("FuelConsumptionMap was extrapolated: range for FC-Map is not sufficient: n: {0}, torque: {1}",
 					avgEngineSpeed.Value(), CurrentState.EngineTorque.Value());
+			}
+			var pt1 = ModelData.FullLoadCurve.PT1(avgEngineSpeed);
+			if (DataBus.ExecutionMode == ExecutionMode.Declaration && pt1.Extrapolated) {
+				Log.Error("requested rpm below minimum rpm in pt1 - extrapolating. n_eng_avg: {0}",
+					avgEngineSpeed);
 			}
 
 			var fc = result.Value;
@@ -437,7 +444,7 @@ namespace TUGraz.VectoCore.Models.SimulationComponent.Impl
 				dynFullPowerCalculated = stationaryFullLoadPower;
 			} else {
 				try {
-					var pt1 = ModelData.FullLoadCurve.PT1(angularVelocity).Value();
+					var pt1 = ModelData.FullLoadCurve.PT1(angularVelocity).Value.Value();
 					var powerRatio = (PreviousState.EnginePower / stationaryFullLoadPower).Value();
 					var tStarPrev = pt1 * Math.Log(1.0 / (1 - powerRatio), Math.E).SI<Second>();
 					var tStar = tStarPrev + PreviousState.dt;
@@ -552,9 +559,10 @@ namespace TUGraz.VectoCore.Models.SimulationComponent.Impl
 				}
 
 
-				var velocitySlope = (_dataBus.TractionInterruption - (absTime - _idleStart)).IsEqual(0) ? 0.SI<PerSquareSecond>() :
-					(_engineTargetSpeed - _engine.PreviousState.EngineSpeed) /
-									(_dataBus.TractionInterruption - (absTime - _idleStart));
+				var velocitySlope = (_dataBus.TractionInterruption - (absTime - _idleStart)).IsEqual(0)
+					? 0.SI<PerSquareSecond>()
+					: (_engineTargetSpeed - _engine.PreviousState.EngineSpeed) /
+					(_dataBus.TractionInterruption - (absTime - _idleStart));
 
 				var nextAngularSpeed = (velocitySlope * dt + _engine.PreviousState.EngineSpeed);
 

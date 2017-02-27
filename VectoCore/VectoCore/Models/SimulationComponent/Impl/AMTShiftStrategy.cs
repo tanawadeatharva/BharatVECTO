@@ -44,7 +44,7 @@ namespace TUGraz.VectoCore.Models.SimulationComponent.Impl
 	{
 		protected uint _nextGear { get; set; }
 
-		public AMTShiftStrategy(GearboxData data, IDataBus dataBus) : base(data, dataBus)
+		public AMTShiftStrategy(VectoRunData runData, IDataBus dataBus) : base(runData.GearboxData, dataBus)
 		{
 			EarlyShiftUp = true;
 			SkipGears = true;

@@ -59,14 +59,14 @@ namespace TUGraz.VectoCore.Models.SimulationComponent.Impl
 		}
 
 		public ATGearbox(IVehicleContainer container, GearboxData gearboxModelData, IShiftStrategy strategy,
-			KilogramSquareMeter engineInertia)
-			: base(container, gearboxModelData, engineInertia)
+			VectoRunData runData)
+			: base(container, gearboxModelData, runData)
 		{
 			_strategy = strategy;
 			_strategy.Gearbox = this;
 			LastShift = -double.MaxValue.SI<Second>();
 			TorqueConverter = new TorqueConverter(this, _strategy, container, gearboxModelData.TorqueConverterData,
-				engineInertia);
+				runData);
 		}
 
 		public IIdleController IdleController

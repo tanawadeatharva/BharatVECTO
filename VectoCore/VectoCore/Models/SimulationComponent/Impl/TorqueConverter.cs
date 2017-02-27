@@ -55,12 +55,14 @@ namespace TUGraz.VectoCore.Models.SimulationComponent.Impl
 		public ITnOutPort NextComponent { protected internal get; set; }
 
 		public TorqueConverter(IGearboxInfo gearbox, IShiftStrategy shiftStrategy, IVehicleContainer container,
-			TorqueConverterData tcData, KilogramSquareMeter engineInertia) : base(container)
+			TorqueConverterData tcData, VectoRunData runData) : base(container)
 		{
 			Gearbox = gearbox;
 			ShiftStrategy = shiftStrategy;
 			ModelData = tcData;
-			_engineInertia = engineInertia;
+			_engineInertia = runData != null && runData.EngineData != null
+				? runData.EngineData.Inertia
+				: 0.SI<KilogramSquareMeter>();
 		}
 
 		public void Connect(ITnOutPort other)
