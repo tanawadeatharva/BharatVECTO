@@ -76,7 +76,7 @@ namespace TUGraz.VectoCore.Models.SimulationComponent.Impl
 				engineSpeedIn = _idleSpeed;
 				torqueIn = 0.SI<NewtonMeter>();
 			} else {
-				AddClutchLoss(outTorque, outAngularVelocity, out torqueIn, out engineSpeedIn);
+				AddClutchLoss(outTorque, outAngularVelocity, true, out torqueIn, out engineSpeedIn);
 			}
 			PreviousState.SetState(torqueIn, outAngularVelocity, outTorque, outAngularVelocity);
 
@@ -110,7 +110,7 @@ namespace TUGraz.VectoCore.Models.SimulationComponent.Impl
 				angularVelocityIn = _idleSpeed;
 				torqueIn = 0.SI<NewtonMeter>();
 			} else {
-				AddClutchLoss(outTorque, outAngularVelocity, out torqueIn, out angularVelocityIn);
+				AddClutchLoss(outTorque, outAngularVelocity, startClutch || outAngularVelocity.IsEqual(0), out torqueIn, out angularVelocityIn);
 			}
 			Log.Debug("to Engine:   torque: {0}, angularVelocity: {1}, power {2}", torqueIn, angularVelocityIn,
 				Formulas.TorqueToPower(torqueIn, angularVelocityIn));
@@ -133,14 +133,13 @@ namespace TUGraz.VectoCore.Models.SimulationComponent.Impl
 			return retVal;
 		}
 
-		private void AddClutchLoss(NewtonMeter torque, PerSecond angularVelocity, out NewtonMeter torqueIn,
-			out PerSecond angularVelocityIn)
+		private void AddClutchLoss(NewtonMeter torque, PerSecond angularVelocity, bool startClutch, out NewtonMeter torqueIn, out PerSecond angularVelocityIn)
 		{
 			torqueIn = torque;
 			angularVelocityIn = angularVelocity;
 
 			var engineSpeedNorm = (angularVelocity - _idleSpeed) / (_ratedSpeed - _idleSpeed);
-			if (engineSpeedNorm < Constants.SimulationSettings.ClutchClosingSpeedNorm) {
+			if (startClutch && engineSpeedNorm < Constants.SimulationSettings.ClutchClosingSpeedNorm) {
 				// MQ: 27.5.2016: when angularVelocity is 0 (at the end of the simulation interval) don't use the 
 				//     angularVelocity but average angular velocity
 				//     Reason: if angularVelocity = 0 also the power (torque * angularVelocity) is 0 and then
