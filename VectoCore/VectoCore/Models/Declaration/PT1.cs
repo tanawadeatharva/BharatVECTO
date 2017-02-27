@@ -41,7 +41,7 @@ using TUGraz.VectoCore.Utils;
 
 namespace TUGraz.VectoCore.Models.Declaration
 {
-	public sealed class PT1 : LookupData<PerSecond, Second>
+	public sealed class PT1 : LookupData<PerSecond, PT1.PT1Result>
 	{
 		protected override string ResourceId
 		{
@@ -97,17 +97,14 @@ namespace TUGraz.VectoCore.Models.Declaration
 			}
 		}
 
-		public override Second Lookup(PerSecond key)
+		public override PT1Result Lookup(PerSecond key)
 		{
 			var index = 1;
-			if (key.IsSmaller(_entries[0].Key)) {
-				Log.Error("requested rpm below minimum rpm in pt1 - extrapolating. n_eng_avg: {0}, rpm_min: {1}",
-					key.ConvertTo().Rounds.Per.Minute, _entries[0].Key.ConvertTo().Rounds.Per.Minute);
-			} else {
-				index = _entries.FindIndex(x => x.Key.IsGreater(key));
-				if (index <= 0) {
-					index = key.IsGreater(_entries[0].Key) ? _entries.Count - 1 : 1;
-				}
+			bool extrapolated = key.IsSmaller(_entries[0].Key) || key.IsGreater(_entries.Last().Key);
+
+			index = _entries.FindIndex(x => x.Key.IsGreater(key));
+			if (index <= 0) {
+				index = key.IsGreater(_entries[0].Key) ? _entries.Count - 1 : 1;
 			}
 
 			var pt1 = VectoMath.Interpolate(_entries[index - 1].Key, _entries[index].Key, _entries[index - 1].Value,
@@ -115,13 +112,19 @@ namespace TUGraz.VectoCore.Models.Declaration
 			if (pt1 < 0) {
 				throw new VectoException("The calculated pt1 value must not be smaller than 0. Value: " + pt1);
 			}
-			return pt1;
+			return new PT1Result() { Value = pt1, Extrapolated = extrapolated };
 		}
 
 		private static class Fields
 		{
 			public const string PT1 = "PT1";
 			public const string EngineSpeed = "engine speed";
+		}
+
+		public class PT1Result
+		{
+			public Second Value;
+			public bool Extrapolated;
 		}
 	}
 }

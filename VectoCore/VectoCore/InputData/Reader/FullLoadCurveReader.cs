@@ -84,7 +84,7 @@ namespace TUGraz.VectoCore.InputData.Reader
 				entriesFld = CreateFromColumnIndizes(data, engineFld);
 			}
 
-			LookupData<PerSecond, Second> tmp;
+			LookupData<PerSecond, PT1.PT1Result> tmp;
 			if (declarationMode) {
 				tmp = new PT1();
 			} else {

@@ -101,7 +101,7 @@ namespace TUGraz.VectoCore.Tests.Models.Declaration
 		]
 		public void PT1Test(double rpm, double expectedPt1)
 		{
-			Assert.AreEqual(expectedPt1, DeclarationData.PT1.Lookup(rpm.RPMtoRad()).Value(), Tolerance);
+			Assert.AreEqual(expectedPt1, DeclarationData.PT1.Lookup(rpm.RPMtoRad()).Value.Value(), Tolerance);
 		}
 
 		[TestCase]
