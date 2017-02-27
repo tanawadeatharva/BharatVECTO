@@ -64,6 +64,8 @@ namespace TUGraz.VectoCore.Tests.Utils
 			get { return 1.SI<Second>(); }
 		}
 
+		public uint NumGears { get; set; }
+
 		public MeterPerSecond StartSpeed { get; set; }
 		public MeterPerSquareSecond StartAcceleration { get; set; }
 		public NewtonMeter GearMaxTorque { get; set; }

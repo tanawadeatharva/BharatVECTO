@@ -146,6 +146,11 @@ namespace TUGraz.VectoCore.Models.Simulation.Impl
 			get { return Gearbox.TractionInterruption; }
 		}
 
+		public uint NumGears
+		{
+			get { return Gearbox.NumGears; }
+		}
+
 		#endregion
 
 		#region IEngineCockpit
