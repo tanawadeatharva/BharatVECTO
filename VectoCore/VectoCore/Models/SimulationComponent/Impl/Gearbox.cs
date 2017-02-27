@@ -60,9 +60,9 @@ namespace TUGraz.VectoCore.Models.SimulationComponent.Impl
 		/// </summary>
 		protected internal bool Disengaged = true;
 
-		public Second LastUpshift { get; private set; }
+		public Second LastUpshift { get; protected internal set; }
 
-		public Second LastDownshift { get; private set; }
+		public Second LastDownshift { get; protected internal set; }
 
 		public override GearInfo NextGear
 		{
@@ -349,7 +349,7 @@ namespace TUGraz.VectoCore.Models.SimulationComponent.Impl
 			var shiftAllowed = !inAngularVelocity.IsEqual(0) && !DataBus.VehicleSpeed.IsEqual(0);
 
 			if (response is ResponseSuccess && shiftAllowed) {
-				var shiftRequired = _strategy.ShiftRequired(absTime, dt, outTorque, outAngularVelocity, inTorque, inAngularVelocity,
+				var shiftRequired = _strategy.ShiftRequired(absTime, dt, outTorque, outAngularVelocity, inTorque, response.EngineSpeed,
 					Gear, _engageTime);
 
 				if (shiftRequired) {

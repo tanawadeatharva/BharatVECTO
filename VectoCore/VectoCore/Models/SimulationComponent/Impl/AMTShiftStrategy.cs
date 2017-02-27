@@ -98,9 +98,11 @@ namespace TUGraz.VectoCore.Models.SimulationComponent.Impl
 					var inTorque = response.ClutchPowerRequest / inAngularSpeed;
 
 					// if in shift curve and above idle speed and torque reserve is provided.
-					if (!IsBelowDownShiftCurve(gear, inTorque, inAngularSpeed) && inAngularSpeed > DataBus.EngineIdleSpeed &&
+					if (/*!IsBelowDownShiftCurve(gear, inTorque, response.EngineSpeed) &&*/ response.EngineSpeed > DataBus.EngineIdleSpeed &&
 						reserve >= ModelData.StartTorqueReserve) {
 						_nextGear = gear;
+						_gearbox.LastUpshift = absTime;
+						_gearbox.LastDownshift = absTime;
 						return gear;
 					}
 				}
@@ -148,10 +150,11 @@ namespace TUGraz.VectoCore.Models.SimulationComponent.Impl
 
 			// emergency shift to not stall the engine ------------------------
 			_nextGear = gear;
-			while (_nextGear > 1 && SpeedTooLowForEngine(_nextGear, outAngularVelocity)) {
+			while (_nextGear > 1 && SpeedTooLowForEngine(_nextGear, inAngularVelocity / ModelData.Gears[gear].Ratio)) {
 				_nextGear--;
 			}
-			while (_nextGear < ModelData.Gears.Count && SpeedTooHighForEngine(_nextGear, outAngularVelocity)) {
+			while (_nextGear < ModelData.Gears.Count &&
+					SpeedTooHighForEngine(_nextGear, inAngularVelocity / ModelData.Gears[gear].Ratio)) {
 				_nextGear++;
 			}
 			if (_nextGear != gear) {
