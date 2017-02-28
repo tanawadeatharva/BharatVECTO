@@ -83,8 +83,7 @@ namespace TUGraz.VectoCore.Models.SimulationComponent.Data.Engine
 		/// </summary>
 		public PerSecond PreferredSpeed
 		{
-			get
-			{
+			get {
 				if (_preferredSpeed == null) {
 					ComputePreferredSpeed();
 				}

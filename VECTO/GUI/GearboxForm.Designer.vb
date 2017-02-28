@@ -136,6 +136,7 @@ Partial Class GearboxForm
 		Me.Label34 = New System.Windows.Forms.Label()
 		Me.Label35 = New System.Windows.Forms.Label()
 		Me.gbTCAccMin = New System.Windows.Forms.GroupBox()
+		Me.lblGbxInfo = New System.Windows.Forms.Label()
 		Me.ToolStrip1.SuspendLayout()
 		Me.StatusStrip1.SuspendLayout()
 		CType(Me.PictureBox1, System.ComponentModel.ISupportInitialize).BeginInit()
@@ -361,7 +362,7 @@ Partial Class GearboxForm
 		'Label3
 		'
 		Me.Label3.AutoSize = True
-		Me.Label3.Location = New System.Drawing.Point(26, 85)
+		Me.Label3.Location = New System.Drawing.Point(26, 79)
 		Me.Label3.Name = "Label3"
 		Me.Label3.Size = New System.Drawing.Size(87, 13)
 		Me.Label3.TabIndex = 42
@@ -369,7 +370,7 @@ Partial Class GearboxForm
 		'
 		'TbName
 		'
-		Me.TbName.Location = New System.Drawing.Point(119, 82)
+		Me.TbName.Location = New System.Drawing.Point(119, 76)
 		Me.TbName.Name = "TbName"
 		Me.TbName.Size = New System.Drawing.Size(334, 20)
 		Me.TbName.TabIndex = 0
@@ -886,7 +887,7 @@ Partial Class GearboxForm
 		'Label16
 		'
 		Me.Label16.AutoSize = True
-		Me.Label16.Location = New System.Drawing.Point(18, 111)
+		Me.Label16.Location = New System.Drawing.Point(18, 105)
 		Me.Label16.Name = "Label16"
 		Me.Label16.Size = New System.Drawing.Size(95, 13)
 		Me.Label16.TabIndex = 45
@@ -896,7 +897,7 @@ Partial Class GearboxForm
 		'
 		Me.CbGStype.DropDownStyle = System.Windows.Forms.ComboBoxStyle.DropDownList
 		Me.CbGStype.FormattingEnabled = True
-		Me.CbGStype.Location = New System.Drawing.Point(119, 108)
+		Me.CbGStype.Location = New System.Drawing.Point(119, 102)
 		Me.CbGStype.Name = "CbGStype"
 		Me.CbGStype.Size = New System.Drawing.Size(227, 21)
 		Me.CbGStype.TabIndex = 1
@@ -1060,6 +1061,14 @@ Partial Class GearboxForm
 		Me.gbTCAccMin.TabStop = False
 		Me.gbTCAccMin.Text = "Torque Converter: Min. acceleration after upshift"
 		'
+		'lblGbxInfo
+		'
+		Me.lblGbxInfo.AutoSize = True
+		Me.lblGbxInfo.Location = New System.Drawing.Point(121, 126)
+		Me.lblGbxInfo.Name = "lblGbxInfo"
+		Me.lblGbxInfo.Size = New System.Drawing.Size(0, 13)
+		Me.lblGbxInfo.TabIndex = 51
+		'
 		'GearboxForm
 		'
 		Me.AcceptButton = Me.ButOK
@@ -1067,6 +1076,7 @@ Partial Class GearboxForm
 		Me.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font
 		Me.CancelButton = Me.ButCancel
 		Me.ClientSize = New System.Drawing.Size(877, 696)
+		Me.Controls.Add(Me.lblGbxInfo)
 		Me.Controls.Add(Me.gbTCAccMin)
 		Me.Controls.Add(Me.gbPowershiftLosses)
 		Me.Controls.Add(Me.PicBox)
@@ -1218,4 +1228,5 @@ Partial Class GearboxForm
 	Friend WithEvents Label34 As System.Windows.Forms.Label
 	Friend WithEvents Label35 As System.Windows.Forms.Label
 	Friend WithEvents gbTCAccMin As System.Windows.Forms.GroupBox
+	Friend WithEvents lblGbxInfo As System.Windows.Forms.Label
 End Class
