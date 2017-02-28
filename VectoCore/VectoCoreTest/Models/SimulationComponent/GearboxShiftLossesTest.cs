@@ -110,7 +110,10 @@ namespace TUGraz.VectoCore.Tests.Models.SimulationComponent
 			var engine = new CombustionEngine(container,
 				MockSimulationDataFactory.CreateEngineDataFromFile(ATPowerTrain.EngineFile));
 			container.Engine = engine;
-			var runData = new VectoRunData(){GearboxData = gearboxData};
+			var runData = new VectoRunData() {
+				GearboxData = gearboxData,
+				EngineData = new CombustionEngineData() { Inertia = 5.SI<KilogramSquareMeter>() }
+			};
 			var gbx = new ATGearbox(container, new ATShiftStrategy(gearboxData, container), runData);
 			gbx.Connect(engine);
 			gbx.IdleController = new MockIdleController();
