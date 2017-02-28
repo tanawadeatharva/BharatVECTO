@@ -94,7 +94,7 @@ namespace TUGraz.VectoCore.Tests.Models.SimulationComponentData
 			};
 			data.FullLoadCurve.EngineData = data;
 
-			var results = data.Validate(ExecutionMode.Declaration, null);
+			var results = data.Validate(ExecutionMode.Declaration, null, false);
 			Assert.IsFalse(results.Any(), "Validation Failed: " + string.Join("; ", results.Select(r => r.ErrorMessage)));
 			Assert.IsTrue(data.IsValid());
 		}
@@ -129,7 +129,7 @@ namespace TUGraz.VectoCore.Tests.Models.SimulationComponentData
 
 			var engineData = dao.CreateEngineData(data, null);
 
-			var results = engineData.Validate(ExecutionMode.Declaration, null);
+			var results = engineData.Validate(ExecutionMode.Declaration, null, false);
 			Assert.IsFalse(results.Any(), "Validation failed: " + string.Join("; ", results.Select(r => r.ErrorMessage)));
 			Assert.IsTrue(engineData.IsValid());
 		}
@@ -167,7 +167,7 @@ namespace TUGraz.VectoCore.Tests.Models.SimulationComponentData
 
 			var engineData = dao.CreateEngineData(data, GearboxType.AMT);
 
-			var results = engineData.Validate(ExecutionMode.Declaration, null);
+			var results = engineData.Validate(ExecutionMode.Declaration, null, false);
 			Assert.IsFalse(results.Any(), "Validation failed: " + string.Join("; ", results.Select(r => r.ErrorMessage)));
 
 			Assert.IsTrue(engineData.IsValid());
@@ -206,10 +206,10 @@ namespace TUGraz.VectoCore.Tests.Models.SimulationComponentData
 					},
 				}
 			};
-			var result = vehicleData.Validate(ExecutionMode.Engineering, null);
+			var result = vehicleData.Validate(ExecutionMode.Engineering, null, false);
 			Assert.IsTrue(!result.Any(), "validation should have succeded but failed." + string.Concat(result));
 
-			result = vehicleData.Validate(ExecutionMode.Declaration, null);
+			result = vehicleData.Validate(ExecutionMode.Declaration, null, false);
 			Assert.IsTrue(result.Any(), "validation should have failed, but succeeded.");
 		}
 
@@ -276,10 +276,10 @@ namespace TUGraz.VectoCore.Tests.Models.SimulationComponentData
 				AxleGearData = axleGearData
 			};
 
-			var results = data.Validate(ExecutionMode.Declaration, null);
+			var results = data.Validate(ExecutionMode.Declaration, null, false);
 			Assert.IsTrue(results.Any(), "Validation should have failed, but succeded.");
 
-			results = vehicleData.Validate(ExecutionMode.Engineering, null);
+			results = vehicleData.Validate(ExecutionMode.Engineering, null, false);
 			Assert.IsTrue(!results.Any());
 		}
 
@@ -315,7 +315,7 @@ namespace TUGraz.VectoCore.Tests.Models.SimulationComponentData
 				AxleGearData = axleGearData
 			};
 
-			var results = data.Validate(ExecutionMode.Declaration, null);
+			var results = data.Validate(ExecutionMode.Declaration, null, false);
 			Assert.IsTrue(results.Any(), "Validation should have failed, but succeded.");
 		}
 
@@ -325,7 +325,7 @@ namespace TUGraz.VectoCore.Tests.Models.SimulationComponentData
 		[TestMethod]
 		public void Validation_Test()
 		{
-			var results = new DataObject().Validate(ExecutionMode.Declaration, null);
+			var results = new DataObject().Validate(ExecutionMode.Declaration, null, false);
 
 			// every field and property should be tested except private parent fields and properties and 
 			// (4*4+1) * 2 = 17*2= 34 - 4 private parent fields (+2 public field and property which are tested twice) = 32
@@ -343,7 +343,7 @@ namespace TUGraz.VectoCore.Tests.Models.SimulationComponentData
 				}
 			};
 
-			var results = container.Validate(ExecutionMode.Declaration, null);
+			var results = container.Validate(ExecutionMode.Declaration, null, false);
 			Assert.AreEqual(1, results.Count);
 		}
 
@@ -366,7 +366,7 @@ namespace TUGraz.VectoCore.Tests.Models.SimulationComponentData
 					VectoCSVFile.ReadStream(
 						InputDataHelper.InputDataAsStream("engine torque,downshift rpm [rpm],upshift rpm [rpm]	", vgbs)));
 
-			var results = shiftPolygon.Validate(ExecutionMode.Declaration, GearboxType.MT);
+			var results = shiftPolygon.Validate(ExecutionMode.Declaration, GearboxType.MT, false);
 			Assert.IsFalse(results.Any());
 
 			// change columns
@@ -375,7 +375,7 @@ namespace TUGraz.VectoCore.Tests.Models.SimulationComponentData
 					VectoCSVFile.ReadStream(
 						InputDataHelper.InputDataAsStream("engine torque,upshift rpm [rpm], downshift rpm [rpm]	", vgbs)));
 
-			results = shiftPolygon.Validate(ExecutionMode.Declaration, GearboxType.MT);
+			results = shiftPolygon.Validate(ExecutionMode.Declaration, GearboxType.MT, false);
 			Assert.IsTrue(results.Any());
 		}
 
@@ -395,7 +395,7 @@ namespace TUGraz.VectoCore.Tests.Models.SimulationComponentData
 					VectoCSVFile.ReadStream(
 						InputDataHelper.InputDataAsStream("engine torque,downshift rpm [rpm],upshift rpm [rpm]	", vgbs)));
 
-			var results = shiftPolygon.Validate(ExecutionMode.Declaration, GearboxType.ATSerial);
+			var results = shiftPolygon.Validate(ExecutionMode.Declaration, GearboxType.ATSerial, false);
 			Assert.IsFalse(results.Any());
 
 			// change columns
@@ -404,7 +404,7 @@ namespace TUGraz.VectoCore.Tests.Models.SimulationComponentData
 					VectoCSVFile.ReadStream(
 						InputDataHelper.InputDataAsStream("engine torque,upshift rpm [rpm], downshift rpm [rpm]	", vgbs)));
 
-			results = shiftPolygon.Validate(ExecutionMode.Declaration, GearboxType.ATSerial);
+			results = shiftPolygon.Validate(ExecutionMode.Declaration, GearboxType.ATSerial, false);
 			Assert.IsFalse(results.Any());
 		}
 

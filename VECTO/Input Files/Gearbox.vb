@@ -109,7 +109,7 @@ Public Class Gearbox
 	Public Function SaveFile() As Boolean
 
 		Dim validationResults As IList(Of ValidationResult) =
-				Validate(If(Cfg.DeclMode, ExecutionMode.Declaration, ExecutionMode.Engineering), Type)
+				Validate(If(Cfg.DeclMode, ExecutionMode.Declaration, ExecutionMode.Engineering), Type, False)
 
 		If validationResults.Count > 0 Then
 			Dim messages As IEnumerable(Of String) =
@@ -190,6 +190,11 @@ Public Class Gearbox
 																	ExecutionModeServiceContainer)
 		Dim mode As ExecutionMode = If(modeService Is Nothing, ExecutionMode.Declaration, modeService.Mode)
 
+		Dim emsCycleService As EmsCycleServiceContainer =
+				TryCast(validationContext.GetService(GetType(EmsCycleServiceContainer)), 
+						EmsCycleServiceContainer)
+		Dim emsCycle As Boolean = (emsCycleService IsNot Nothing) AndAlso emsCycleService.IsEmsCycle
+
 		Dim axlegearData As AxleGearData
 		Dim gearboxData As GearboxData
 
@@ -226,14 +231,14 @@ Public Class Gearbox
 			End If
 
 			Dim result As IList(Of ValidationResult) =
-					gearboxData.Validate(If(Cfg.DeclMode, ExecutionMode.Declaration, ExecutionMode.Engineering), gearbox.Type)
+					gearboxData.Validate(If(Cfg.DeclMode, ExecutionMode.Declaration, ExecutionMode.Engineering), gearbox.Type, emsCycle)
 			If result.Any() Then
 				Return _
 					New ValidationResult("Gearbox Configuration is invalid. ",
 										result.Select(Function(r) r.ErrorMessage + String.Join(Environment.NewLine, r.MemberNames)).ToList())
 			End If
 
-			result = axlegearData.Validate(If(Cfg.DeclMode, ExecutionMode.Declaration, ExecutionMode.Engineering), gearbox.Type)
+			result = axlegearData.Validate(If(Cfg.DeclMode, ExecutionMode.Declaration, ExecutionMode.Engineering), gearbox.Type, emsCycle)
 			If result.Any() Then
 				Return _
 					New ValidationResult("Axlegear Configuration is invalid. ",

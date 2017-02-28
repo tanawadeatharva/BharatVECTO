@@ -75,10 +75,12 @@ namespace TUGraz.VectoCore.Models.SimulationComponent.Data
 		/// (+ Curb Weight of Standard-Body if it has one)
 		/// (+ Curb Weight of Trailer if it has one)
 		/// </summary>
-		[Required, SIRange(500, 40000)]
+		[Required, SIRange(500, 40000, emsMission: false),
+		SIRange(0, 60000, emsMission: true)]
 		public Kilogram CurbWeight { get; internal set; }
 
-		[Required, SIRange(0, 40000)]
+		[Required, SIRange(0, 40000, emsMission: false),
+		SIRange(0, 60000, emsMission: true)]
 		public Kilogram Loading { get; internal set; }
 
 		[SIRange(0, 500)]
@@ -88,14 +90,16 @@ namespace TUGraz.VectoCore.Models.SimulationComponent.Data
 		/// The Gross Vehicle Weight of the Vehicle.
 		/// </summary>
 		[Required,
-		SIRange(3500, 40000, ExecutionMode.Declaration),
+		SIRange(3500, 40000, ExecutionMode.Declaration, emsMission: false),
+		SIRange(0, 60000, ExecutionMode.Declaration, emsMission: true),
 		SIRange(0, 1000000, ExecutionMode.Engineering)]
 		public Kilogram GrossVehicleWeight { get; internal set; }
 
 		/// <summary>
 		/// The Gross Vehicle Weight of the Trailer (if the vehicle has one).
 		/// </summary>
-		[Required, SIRange(0, 40000)]
+		[Required, SIRange(0, 40000, emsMission: false),
+		SIRange(0, 60000, emsMission: true)]
 		public Kilogram TrailerGrossVehicleWeight { get; internal set; }
 
 		[Required, SIRange(0.1, 0.7)]
@@ -178,6 +182,7 @@ namespace TUGraz.VectoCore.Models.SimulationComponent.Data
 		public static ValidationResult ValidateVehicleData(VehicleData vehicleData, ValidationContext validationContext)
 		{
 			var mode = GetExecutionMode(validationContext);
+			var emsCycle = GetEmsMode(validationContext);
 
 			if (vehicleData.AxleData.Count < 1) {
 				return new ValidationResult("At least two axles need to be specified");
@@ -203,7 +208,9 @@ namespace TUGraz.VectoCore.Models.SimulationComponent.Data
 
 			// total gvw is limited by max gvw (40t)
 			var gvwTotal = VectoMath.Min(vehicleData.GrossVehicleWeight + vehicleData.TrailerGrossVehicleWeight,
-				Constants.SimulationSettings.MaximumGrossVehicleWeight);
+				emsCycle
+					? Constants.SimulationSettings.MaximumGrossVehicleWeightEMS
+					: Constants.SimulationSettings.MaximumGrossVehicleWeight);
 			if (mode != ExecutionMode.Declaration) {
 				return ValidationResult.Success;
 			}

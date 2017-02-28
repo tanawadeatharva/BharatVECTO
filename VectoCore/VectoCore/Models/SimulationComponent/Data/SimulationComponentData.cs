@@ -61,5 +61,10 @@ namespace TUGraz.VectoCore.Models.SimulationComponent.Data
 			return modeService == null ? ExecutionMode.Declaration : modeService.Mode;
 		}
 
+		protected static bool GetEmsMode(ValidationContext context)
+		{
+			var emsService = context.GetService(typeof(EmsCycleServiceContainer)) as EmsCycleServiceContainer;
+			return emsService != null && emsService.IsEmsCycle;
+		}
 	}
 }

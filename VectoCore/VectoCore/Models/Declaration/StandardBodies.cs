@@ -90,8 +90,8 @@ namespace TUGraz.VectoCore.Models.Declaration
 	/// </summary>
 	public sealed class StandardBodies : LookupData<string, StandardBody>
 	{
-		//public static readonly StandardBody Empty = new StandardBody("", 0.SI<Kilogram>(), 0.SI<Kilogram>(),
-		//	new[] { 0.SI<SquareMeter>(), 0.SI<SquareMeter>() }, null, 0, 0.SI<CubicMeter>());
+		public static readonly StandardBody Empty = new StandardBody("", 0.SI<Kilogram>(), 0.SI<Kilogram>(),
+			new[] { 0.SI<SquareMeter>(), 0.SI<SquareMeter>() }, null, 0, 0.SI<CubicMeter>());
 
 		protected override string ResourceId
 		{
@@ -103,10 +103,10 @@ namespace TUGraz.VectoCore.Models.Declaration
 			get { return "StandardWeigths Lookup Error: No value found for ID '{0}'"; }
 		}
 
-		//public override StandardBody Lookup(string id)
-		//{
-		//	return string.IsNullOrWhiteSpace(id) ? Empty : base.Lookup(id);
-		//}
+		public override StandardBody Lookup(string id)
+		{
+			return string.IsNullOrWhiteSpace(id) ? Empty : base.Lookup(id);
+		}
 
 		protected override void ParseData(DataTable table)
 		{

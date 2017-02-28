@@ -83,11 +83,14 @@ namespace TUGraz.VectoCore.Models.SimulationComponent.Data.Gearbox
 			var gbxTypeService = context.GetService(typeof(GearboxTypeServiceContainer)) as GearboxTypeServiceContainer;
 			var gbxType = gbxTypeService == null ? GearboxType.MT : gbxTypeService.Type;
 
+			var emsTypeService = context.GetService(typeof(EmsCycleServiceContainer)) as EmsCycleServiceContainer;
+			var emsMission = emsTypeService != null && emsTypeService.IsEmsCycle;
+
 			if (gearData.HasTorqueConverter) {
 				if (gearData.TorqueConverterShiftPolygon == null) {
 					return new ValidationResult("Shift Polygon for Torque Converter Gear required!");
 				}
-				var result = gearData.TorqueConverterShiftPolygon.Validate(mode, gbxType);
+				var result = gearData.TorqueConverterShiftPolygon.Validate(mode, gbxType, emsMission);
 				if (result.Any()) {
 					return new ValidationResult(string.Format("Validation of GearData failed"), result.Select(x => x.ErrorMessage));
 				}

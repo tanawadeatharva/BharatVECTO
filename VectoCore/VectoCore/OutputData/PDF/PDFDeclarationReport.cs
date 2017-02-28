@@ -152,7 +152,7 @@ namespace TUGraz.VectoCore.OutputData.PDF
 				CreateTitlePage(Missions)
 			};
 			//tasks.AddRange(
-			pages.AddRange(Missions.OrderBy(m => m.Key)
+			pages.AddRange(Missions.Where(m => !m.Key.IsEMS()).OrderBy(m => m.Key)
 				.Select((m, i) => CreateCyclePage(m.Value, i + 2, Missions.Count + 1)));
 
 			//Task.WaitAll(tasks.Cast<Task>().ToArray());
@@ -186,7 +186,7 @@ namespace TUGraz.VectoCore.OutputData.PDF
 		{
 			var stream = new MemoryStream();
 			var resourceName = string.Format("{0}.Report.title{1}CyclesTemplate.pdf",
-				DeclarationData.DeclarationDataResourcePrefix, missions.Count);
+				DeclarationData.DeclarationDataResourcePrefix, missions.Count(m => !m.Key.IsEMS()));
 			var inputStream = RessourceHelper.ReadStream(resourceName);
 			var reader = new PdfReader(inputStream);
 			var stamper = new PdfStamper(reader, stream);
@@ -208,7 +208,7 @@ namespace TUGraz.VectoCore.OutputData.PDF
 			pdfFields.SetField("PageNr", string.Format("Page {0} of {1}", 1, missions.Count + 1));
 
 			var i = 1;
-			foreach (var results in missions.Values.OrderBy(m => m.Mission.MissionType)) {
+			foreach (var results in missions.Where(m => !m.Key.IsEMS()).Select(m => m.Value).OrderBy(m => m.Mission.MissionType)) {
 				var trailerSuffix = results.Mission.Trailer.Count > 0
 					? string.Format(" with {0} Trailer",
 						string.Join(" + ", results.Mission.Trailer.Select(t => t.TrailerType.ToString())))
