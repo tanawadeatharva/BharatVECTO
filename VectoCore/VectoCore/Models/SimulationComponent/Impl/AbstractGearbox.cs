@@ -117,6 +117,8 @@ namespace TUGraz.VectoCore.Models.SimulationComponent.Impl
 			get { return ModelData.TractionInterruption; }
 		}
 
+		public uint NumGears { get { return (uint)ModelData.Gears.Count;  } }
+
 		#endregion
 
 		public abstract bool ClutchClosed(Second absTime);
