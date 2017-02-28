@@ -448,7 +448,7 @@ namespace TUGraz.VectoCore.Models.SimulationComponent.Impl
 					var powerRatio = (PreviousState.EnginePower / stationaryFullLoadPower).Value();
 					var tStarPrev = pt1 * Math.Log(1.0 / (1 - powerRatio), Math.E).SI<Second>();
 					var tStar = tStarPrev + PreviousState.dt;
-					dynFullPowerCalculated = stationaryFullLoadPower * (1 - Math.Exp((-tStar / pt1).Value()));
+					dynFullPowerCalculated = stationaryFullLoadPower * (pt1.IsEqual(0) ? 1 : (1 - Math.Exp((-tStar / pt1).Value())));
 				} catch (VectoException e) {
 					Log.Warn("PT1 calculation failed (dryRun: {0}): {1}", dryRun, e.Message);
 					if (dryRun) {

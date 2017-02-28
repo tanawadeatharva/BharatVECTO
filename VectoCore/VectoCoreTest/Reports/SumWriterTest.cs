@@ -33,6 +33,7 @@ using Microsoft.VisualStudio.TestTools.UnitTesting;
 using TUGraz.VectoCommon.Models;
 using TUGraz.VectoCommon.Utils;
 using TUGraz.VectoCore.Models.Simulation.Data;
+using TUGraz.VectoCore.Models.Simulation.DataBus;
 using TUGraz.VectoCore.Models.Simulation.Impl;
 using TUGraz.VectoCore.OutputData;
 using TUGraz.VectoCore.OutputData.FileIO;
@@ -56,6 +57,8 @@ namespace TUGraz.VectoCore.Tests.Reports
 
 			for (var i = 0; i < 499; i++) {
 				modData[ModalResultField.simulationInterval] = 1.SI<Second>();
+				modData[ModalResultField.n_eng_avg] = 600.RPMtoRad();
+				modData[ModalResultField.drivingBehavior] = DrivingBehavior.Driving;
 				modData[ModalResultField.time] = i.SI<Second>();
 				modData[ModalResultField.dist] = i.SI<Meter>();
 				modData["FAN"] = 3000.SI<Watt>();
@@ -76,7 +79,7 @@ namespace TUGraz.VectoCore.Tests.Reports
 				modData.CommitSimulationStep();
 			}
 
-			sumWriter.Write(modData, "testSumCalc", "--", "--", 0.SI<Kilogram>(), 0.SI<Kilogram>(), 0.SI<CubicMeter>());
+			sumWriter.Write(modData, "testSumCalc", "--", "--", 0.SI<Kilogram>(), 0.SI<Kilogram>(), 0.SI<CubicMeter>(), 0);
 
 			modData.Finish(VectoRun.Status.Success);
 			sumWriter.Finish();
@@ -115,6 +118,8 @@ namespace TUGraz.VectoCore.Tests.Reports
 				modData[ModalResultField.simulationInterval] = timeSteps[i % timeSteps.Length];
 				modData[ModalResultField.time] = i.SI<Second>();
 				modData[ModalResultField.dist] = i.SI<Meter>();
+				modData[ModalResultField.n_eng_avg] = 600.RPMtoRad();
+				modData[ModalResultField.drivingBehavior] = DrivingBehavior.Driving;
 				modData["FAN"] = powerDemand[i % powerDemand.Length];
 				modData[ModalResultField.P_air] = powerDemand[i % powerDemand.Length];
 				modData[ModalResultField.P_roll] = powerDemand[i % powerDemand.Length];
@@ -131,7 +136,7 @@ namespace TUGraz.VectoCore.Tests.Reports
 				modData.CommitSimulationStep();
 			}
 
-			sumWriter.Write(modData, "testSumCalc", "--", "--", 0.SI<Kilogram>(), 0.SI<Kilogram>(), 0.SI<CubicMeter>());
+			sumWriter.Write(modData, "testSumCalc", "--", "--", 0.SI<Kilogram>(), 0.SI<Kilogram>(), 0.SI<CubicMeter>(), 0);
 
 			modData.Finish(VectoRun.Status.Success);
 			sumWriter.Finish();
