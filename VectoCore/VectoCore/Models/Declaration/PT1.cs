@@ -111,6 +111,7 @@ namespace TUGraz.VectoCore.Models.Declaration
 				_entries[index].Value, key);
 			if (pt1 < 0) {
 				pt1 = 0.SI<Second>();
+				extrapolated = true;
 				//throw new VectoException("The calculated pt1 value must not be smaller than 0. Value: " + pt1);
 			}
 			return new PT1Result() { Value = pt1, Extrapolated = extrapolated };
