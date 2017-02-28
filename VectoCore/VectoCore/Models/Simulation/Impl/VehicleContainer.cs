@@ -309,12 +309,13 @@ namespace TUGraz.VectoCore.Models.Simulation.Impl
 			Log.Info("VehicleContainer committing simulation. time: {0}, dist: {1}, speed: {2}", time,
 				Distance, VehicleSpeed);
 
-			ModData[ModalResultField.drivingBehavior] = DriverBehavior;
+
 			foreach (var component in _components) {
 				component.Item2.CommitSimulationStep(ModData);
 			}
 
 			if (ModData != null) {
+				ModData[ModalResultField.drivingBehavior] = DriverBehavior;
 				ModData[ModalResultField.time] = time + simulationInterval / 2;
 				ModData[ModalResultField.simulationInterval] = simulationInterval;
 				ModData.CommitSimulationStep();
@@ -326,7 +327,8 @@ namespace TUGraz.VectoCore.Models.Simulation.Impl
 			Log.Info("VehicleContainer finishing simulation.");
 			ModData.Finish(RunStatus);
 
-			WriteSumData(ModData, VehicleMass, VehicleLoading, Vehicle != null ? Vehicle.CargoVolume : 0.SI<CubicMeter>(), Gearbox.NumGears);
+			WriteSumData(ModData, VehicleMass, VehicleLoading, Vehicle != null ? Vehicle.CargoVolume : 0.SI<CubicMeter>(),
+				Gearbox != null ? Gearbox.NumGears : 0u);
 
 			ModData.FinishSimulation();
 			DrivingCycle.FinishSimulation();
@@ -384,12 +386,12 @@ namespace TUGraz.VectoCore.Models.Simulation.Impl
 
 		public DrivingBehavior DriverBehavior
 		{
-			get { return Driver.DriverBehavior; }
+			get { return Driver != null ? Driver.DriverBehavior : DrivingBehavior.Driving; }
 		}
 
 		public MeterPerSquareSecond DriverAcceleration
 		{
-			get { return Driver.DriverAcceleration; }
+			get { return Driver != null ? Driver.DriverAcceleration : 0.SI<MeterPerSquareSecond>(); }
 		}
 
 		public Meter CycleStartDistance

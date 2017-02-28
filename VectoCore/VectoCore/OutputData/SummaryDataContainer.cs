@@ -317,28 +317,31 @@ namespace TUGraz.VectoCore.OutputData
 			row[MAX_DECELERATION] = modal.MaxDeceleration();
 			row[AVG_ENGINE_SPEED] = modal.AvgEngineSpeed().AsRPM.SI<Scalar>();
 			row[MAX_ENGINE_SPEED] = modData.MaxEngineSpeed().AsRPM.SI<Scalar>();
-			row[NUM_GEARSHIFTS] = modal.GearshiftCount();
+
 			row[ENGINE_FULL_LOAD_TIME_SHARE] = modal.EngineMaxLoadTimeShare();
 			row[COASTING_TIME_SHARE] = modal.CoastingTimeShare();
 			row[BRAKING_TIME_SHARE] = modal.BrakingTimeShare();
 
-			var timeSharePerGear = modal.TimeSharePerGear(gearCount);
+			if (gearCount > 0) {
+				row[NUM_GEARSHIFTS] = modal.GearshiftCount();
+				var timeSharePerGear = modal.TimeSharePerGear(gearCount);
 
-			for (uint i = 0; i <= gearCount; i++) {
-				var colName = string.Format(TIME_SHARE_PER_GEAR_FORMAT, i);
-				if (!_table.Columns.Contains(colName)) {
-					_table.Columns.Add(colName, typeof(SI));
+				for (uint i = 0; i <= gearCount; i++) {
+					var colName = string.Format(TIME_SHARE_PER_GEAR_FORMAT, i);
+					if (!_table.Columns.Contains(colName)) {
+						_table.Columns.Add(colName, typeof(SI));
+					}
+					row[colName] = timeSharePerGear[i];
 				}
-				row[colName] = timeSharePerGear[i];
-			}
-			if (accTimeShare != null && decTimeShare != null && cruiseTimeShare != null) {
-				var shareSum = accTimeShare + decTimeShare + cruiseTimeShare + stopTimeShare;
-				if (!shareSum.IsEqual(100)) {
-					Log.Error(
-						"Sumfile Error: driving behavior timeshares must sum up to 100%: acc: {0}%, dec: {1}%, cruise: {2}%, stop: {3}%, sum: {4}%",
-						accTimeShare.ToOutputFormat(1, null, false), decTimeShare.ToOutputFormat(1, null, false),
-						cruiseTimeShare.ToOutputFormat(1, null, false), stopTimeShare.ToOutputFormat(1, null, false),
-						shareSum.ToOutputFormat(1, null, false));
+				if (accTimeShare != null && decTimeShare != null && cruiseTimeShare != null) {
+					var shareSum = accTimeShare + decTimeShare + cruiseTimeShare + stopTimeShare;
+					if (!shareSum.IsEqual(100)) {
+						Log.Error(
+							"Sumfile Error: driving behavior timeshares must sum up to 100%: acc: {0}%, dec: {1}%, cruise: {2}%, stop: {3}%, sum: {4}%",
+							accTimeShare.ToOutputFormat(1, null, false), decTimeShare.ToOutputFormat(1, null, false),
+							cruiseTimeShare.ToOutputFormat(1, null, false), stopTimeShare.ToOutputFormat(1, null, false),
+							shareSum.ToOutputFormat(1, null, false));
+					}
 				}
 			}
 		}

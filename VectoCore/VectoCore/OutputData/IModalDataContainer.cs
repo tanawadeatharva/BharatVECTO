@@ -451,12 +451,12 @@ namespace TUGraz.VectoCore.OutputData
 
 		public static MeterPerSquareSecond MaxAcceleration(this ModalDataContainer data)
 		{
-			return data.Max<MeterPerSquareSecond>(ModalResultField.acc);
+			return data.Max<MeterPerSquareSecond>(ModalResultField.acc).DefaultIfNull(0);
 		}
 
 		public static MeterPerSquareSecond MaxDeceleration(this ModalDataContainer data)
 		{
-			return -data.Min<MeterPerSquareSecond>(ModalResultField.acc);
+			return -data.Min<MeterPerSquareSecond>(ModalResultField.acc).DefaultIfNull(0);
 		}
 
 		public static PerSecond AvgEngineSpeed(this ModalDataContainer data)
@@ -476,8 +476,8 @@ namespace TUGraz.VectoCore.OutputData
 		{
 			var sum = data.Data.Rows.Cast<DataRow>()
 				.Select(x => new {
-					tMax = x.Field<NewtonMeter>((int)ModalResultField.Tq_full),
-					tEng = x.Field<NewtonMeter>((int)ModalResultField.T_eng_fcmap),
+					tMax = x.Field<NewtonMeter>((int)ModalResultField.Tq_full).DefaultIfNull(-1),
+					tEng = x.Field<NewtonMeter>((int)ModalResultField.T_eng_fcmap).DefaultIfNull(0),
 					dt = x.Field<Second>((int)ModalResultField.simulationInterval)
 				})
 				.Sum(x => x.tMax.IsEqual(x.tEng, 5.SI<NewtonMeter>()) ? x.dt : 0.SI<Second>()) ?? 0.SI<Second>();
@@ -491,7 +491,7 @@ namespace TUGraz.VectoCore.OutputData
 			foreach (DataRow row in data.Data.Rows) {
 				var gear = row.Field<uint>((int)ModalResultField.Gear);
 				var speed = row.Field<MeterPerSecond>((int)ModalResultField.v_act);
-				if (speed.IsSmallerOrEqual(0.1)) {
+				if (speed != null && speed.IsSmallerOrEqual(0.1)) {
 					prevGear = 0;
 					gearCount++;
 					continue;
