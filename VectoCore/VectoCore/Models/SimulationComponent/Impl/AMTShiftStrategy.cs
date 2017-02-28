@@ -112,10 +112,8 @@ namespace TUGraz.VectoCore.Models.SimulationComponent.Impl
 					var reserve = 1 - response.EnginePowerRequest / fullLoadPower;
 					var inTorque = response.ClutchPowerRequest / inAngularSpeed;
 
-					// if in shift curve and above idle speed and torque reserve is provided.
-					if ( /*!IsBelowDownShiftCurve(gear, inTorque, response.EngineSpeed) &&*/ response.EngineSpeed >
-																							DataBus.EngineIdleSpeed &&
-																							reserve >= ModelData.StartTorqueReserve) {
+
+					if (response.EngineSpeed > DataBus.EngineIdleSpeed && reserve >= ModelData.StartTorqueReserve) {
 						_nextGear = gear;
 						_gearbox.LastUpshift = absTime;
 						_gearbox.LastDownshift = absTime;
