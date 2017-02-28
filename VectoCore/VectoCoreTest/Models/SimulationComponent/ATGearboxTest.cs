@@ -34,6 +34,7 @@ using TUGraz.VectoCommon.Models;
 using TUGraz.VectoCommon.Utils;
 using TUGraz.VectoCore.Configuration;
 using TUGraz.VectoCore.Models.Connector.Ports.Impl;
+using TUGraz.VectoCore.Models.Simulation.Data;
 using TUGraz.VectoCore.Models.Simulation.Impl;
 using TUGraz.VectoCore.Models.SimulationComponent.Data;
 using TUGraz.VectoCore.Models.SimulationComponent.Impl;
@@ -72,7 +73,8 @@ namespace TUGraz.VectoCore.Tests.Models.SimulationComponent
 			var engineData = MockSimulationDataFactory.CreateEngineDataFromFile(EngineDataFile);
 			vehicleContainer.Engine = new CombustionEngine(vehicleContainer,engineData);
 			var gearboxData = MockSimulationDataFactory.CreateGearboxDataFromFile(GearboxDataFile, EngineDataFile, false);
-			var gearbox = new ATGearbox(vehicleContainer, new ATShiftStrategy(gearboxData, vehicleContainer), null);
+			var runData = new VectoRunData() {GearboxData = gearboxData};
+			var gearbox = new ATGearbox(vehicleContainer, new ATShiftStrategy(gearboxData, vehicleContainer), runData);
 
 			vehicleContainer.VehicleSpeed = vehicleSpeed.KMPHtoMeterPerSecond();
 

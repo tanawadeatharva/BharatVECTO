@@ -44,6 +44,7 @@ using TUGraz.VectoCore.Models.Simulation.Data;
 using TUGraz.VectoCore.Models.Simulation.DataBus;
 using TUGraz.VectoCore.Models.Simulation.Impl;
 using TUGraz.VectoCore.Models.SimulationComponent.Data;
+using TUGraz.VectoCore.Models.SimulationComponent.Data.Engine;
 using TUGraz.VectoCore.Models.SimulationComponent.Data.Gearbox;
 using TUGraz.VectoCore.Models.SimulationComponent.Impl;
 using TUGraz.VectoCore.Tests.Utils;
@@ -97,7 +98,8 @@ namespace TUGraz.VectoCore.Tests.Models.SimulationComponent
 				TractionInterruption = 1.SI<Second>(),
 				DownshiftAfterUpshiftDelay = DeclarationData.Gearbox.DownshiftAfterUpshiftDelay,
 				UpshiftAfterDownshiftDelay = DeclarationData.Gearbox.UpshiftAfterDownshiftDelay,
-				UpshiftMinAcceleration = DeclarationData.Gearbox.UpshiftMinAcceleration
+				UpshiftMinAcceleration = DeclarationData.Gearbox.UpshiftMinAcceleration,
+				StartSpeed = 2.SI<MeterPerSecond>()
 			};
 		}
 
@@ -228,6 +230,18 @@ namespace TUGraz.VectoCore.Tests.Models.SimulationComponent
 
 		private static VectoRunData GetDummyRunData(GearboxData gearboxData)
 		{
+			var fld = new[] {
+				"560,1180,-149,0.6		   ",
+				"600,1282,-148,0.6		   ",
+				"799.9999999,1791,-149,0.6 ",
+				"1000,2300,-160,0.6		   ",
+				"1200,2300,-179,0.6		   ",
+				"1400,2300,-203,0.6		   ",
+				"1599.999999,2079,-235,0.49",
+				"1800,1857,-264,0.25	   ",
+				"2000.000001,1352,-301,0.25",
+				"2100,1100,-320,0.25	   ",
+			};
 			return new VectoRunData() {
 				VehicleData = new VehicleData() {
 					DynamicTyreRadius = 0.492.SI<Meter>()
@@ -239,7 +253,11 @@ namespace TUGraz.VectoCore.Tests.Models.SimulationComponent
 				},
 				EngineData = new CombustionEngineData() {
 					IdleSpeed = 600.RPMtoRad(),
-					Inertia = 0.SI<KilogramSquareMeter>()
+					Inertia = 0.SI<KilogramSquareMeter>(),
+					FullLoadCurve =
+						EngineFullLoadCurve.Create(
+							VectoCSVFile.ReadStream(
+								InputDataHelper.InputDataAsStream("engine speed [1/min],full load torque [Nm],motoring torque [Nm],PT1 [s]", fld)))
 				},
 				GearboxData = gearboxData
 			};

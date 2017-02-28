@@ -35,6 +35,7 @@ using TUGraz.VectoCommon.Models;
 using TUGraz.VectoCommon.Utils;
 using TUGraz.VectoCore.InputData.Reader.ComponentData;
 using TUGraz.VectoCore.Models.Connector.Ports.Impl;
+using TUGraz.VectoCore.Models.Simulation.Data;
 using TUGraz.VectoCore.Models.Simulation.DataBus;
 using TUGraz.VectoCore.Models.Simulation.Impl;
 using TUGraz.VectoCore.Models.SimulationComponent.Data;
@@ -109,7 +110,8 @@ namespace TUGraz.VectoCore.Tests.Models.SimulationComponent
 			var engine = new CombustionEngine(container,
 				MockSimulationDataFactory.CreateEngineDataFromFile(ATPowerTrain.EngineFile));
 			container.Engine = engine;
-			var gbx = new ATGearbox(container, new ATShiftStrategy(gearboxData, container), null);
+			var runData = new VectoRunData(){GearboxData = gearboxData};
+			var gbx = new ATGearbox(container, new ATShiftStrategy(gearboxData, container), runData);
 			gbx.Connect(engine);
 			gbx.IdleController = new MockIdleController();
 
