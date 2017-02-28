@@ -519,6 +519,20 @@ namespace TUGraz.VectoCore.Models.SimulationComponent.Impl
 							operatingPoint.Acceleration, gradient);
 					}
 				}).
+				Case<ResponseOverload>(r => {
+					if (DataBus.GearboxType.AutomaticTransmission()) {
+						// overload may happen because of gearshift between search and actual request, search again
+						DataBus.BrakePower = 0.SI<Watt>();
+						operatingPoint = SearchBrakingPower(absTime, operatingPoint.SimulationDistance, gradient,
+							operatingPoint.Acceleration, response);
+						DriverAcceleration = operatingPoint.Acceleration;
+						retVal = NextComponent.Request(absTime, operatingPoint.SimulationInterval,
+							operatingPoint.Acceleration, gradient);
+					} else {
+						throw new UnexpectedResponseException(
+							"DrivingAction Brake: request failed after braking power was found.", r);
+					}
+				}).
 				Default(
 					r => {
 						throw new UnexpectedResponseException(
