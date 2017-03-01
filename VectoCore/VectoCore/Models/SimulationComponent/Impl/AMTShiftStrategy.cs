@@ -163,6 +163,9 @@ namespace TUGraz.VectoCore.Models.SimulationComponent.Impl
 			}
 
 			// emergency shift to not stall the engine ------------------------
+			if (gear == 1 && SpeedTooLowForEngine(_nextGear, inAngularVelocity / ModelData.Gears[gear].Ratio)) {
+				return true;
+			}
 			_nextGear = gear;
 			while (_nextGear > 1 && SpeedTooLowForEngine(_nextGear, inAngularVelocity / ModelData.Gears[gear].Ratio)) {
 				_nextGear--;

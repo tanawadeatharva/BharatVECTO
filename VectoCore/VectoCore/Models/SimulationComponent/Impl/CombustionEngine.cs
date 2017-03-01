@@ -348,7 +348,9 @@ namespace TUGraz.VectoCore.Models.SimulationComponent.Impl
 		protected override void DoWriteModalResults(IModalDataContainer container)
 		{
 			var avgEngineSpeed = (PreviousState.EngineSpeed + CurrentState.EngineSpeed) / 2.0;
-
+			if (avgEngineSpeed.IsSmaller(EngineIdleSpeed, DataBus.ExecutionMode == ExecutionMode.Engineering ? 20.RPMtoRad():1e-3.RPMtoRad())) {
+				Log.Warn("EngineSpeed below idling speed! n_eng_avg: {0}, n_idle: {1}", avgEngineSpeed, EngineIdleSpeed);
+			}
 			container[ModalResultField.P_eng_fcmap] = CurrentState.EngineTorque * avgEngineSpeed;
 			container[ModalResultField.P_eng_out] = container[ModalResultField.P_eng_out] is DBNull
 				? CurrentState.EngineTorqueOut * avgEngineSpeed
