@@ -109,7 +109,7 @@ namespace TUGraz.VectoCore.Models.Simulation.Impl
 			var container = new VehicleContainer(ExecutionMode.Engineering, _modData, _sumWriter) { RunData = data };
 			var gearbox = new CycleGearbox(container, data);
 
-			// PWheelCycle --> AxleGear --> CycleClutch --> Engine <-- Aux
+			// PWheelCycle --> AxleGear --> Clutch --> Engine <-- Aux
 			var powertrain = new PWheelCycle(container, data.Cycle, data.AxleGearData.AxleGear.Ratio, data.VehicleData,
 				gearbox.ModelData.Gears.ToDictionary(g => g.Key, g => g.Value.Ratio))
 				.AddComponent(new AxleGear(container, data.AxleGearData))
