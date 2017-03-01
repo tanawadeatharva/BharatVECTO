@@ -110,7 +110,7 @@ namespace TUGraz.VectoCore.Models.SimulationComponent.Impl
 				angularVelocityIn = _idleSpeed;
 				torqueIn = 0.SI<NewtonMeter>();
 			} else {
-				AddClutchLoss(outTorque, outAngularVelocity, startClutch || outAngularVelocity.IsEqual(0), out torqueIn, out angularVelocityIn);
+				AddClutchLoss(outTorque, outAngularVelocity, (DataBus.Gear == 1 && outTorque > 0) ||startClutch || outAngularVelocity.IsEqual(0), out torqueIn, out angularVelocityIn);
 			}
 			Log.Debug("to Engine:   torque: {0}, angularVelocity: {1}, power {2}", torqueIn, angularVelocityIn,
 				Formulas.TorqueToPower(torqueIn, angularVelocityIn));
