@@ -178,7 +178,8 @@ namespace TUGraz.VectoCore.OutputData
 					a = x.Field<MeterPerSquareSecond>((int)ModalResultField.acc),
 					dt = x.Field<Second>((int)ModalResultField.simulationInterval)
 				})
-				.Sum(x => x.v >= 0.1 && x.a.IsBetween(-0.125, 0.125) ? x.dt : 0.SI<Second>()).DefaultIfNull(0);
+				.Sum(x => x.v >= 0.1.KMPHtoMeterPerSecond() && x.a.IsBetween(-0.125, 0.125) ? x.dt : 0.SI<Second>())
+				.DefaultIfNull(0);
 			return 100 * (cruiseTime / data.Duration()).Cast<Scalar>();
 		}
 
@@ -189,7 +190,7 @@ namespace TUGraz.VectoCore.OutputData
 					v = x.Field<MeterPerSecond>((int)ModalResultField.v_act),
 					dt = x.Field<Second>((int)ModalResultField.simulationInterval)
 				})
-				.Sum(x => x.v < 0.1 ? x.dt : 0.SI<Second>()) ?? 0.SI<Second>();
+				.Sum(x => x.v < 0.1.KMPHtoMeterPerSecond() ? x.dt : 0.SI<Second>()) ?? 0.SI<Second>();
 			return 100 * (stopTime / data.Duration()).Cast<Scalar>();
 		}
 
