@@ -481,7 +481,7 @@ namespace TUGraz.VectoCore.Tests.Models.SimulationComponent
 		TestCase(3, 2, 1800, 750, typeof(ResponseGearShift)),
 		TestCase(2, 1, 1500, 750, typeof(ResponseGearShift)),
 		TestCase(1, 1, 1200, 700, typeof(ResponseSuccess)),
-		TestCase(8, 1, 15000, 50, typeof(ResponseGearShift)),]
+		TestCase(8, 4, 15000, 200, typeof(ResponseGearShift)),]
 		public void Gearbox_ShiftDown(int gear, int newGear, double t, double n, Type responseType)
 		{
 			var container = new VehicleContainer(ExecutionMode.Engineering);
