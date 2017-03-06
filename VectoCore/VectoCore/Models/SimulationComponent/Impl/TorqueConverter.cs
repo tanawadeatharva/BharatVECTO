@@ -111,7 +111,8 @@ namespace TUGraz.VectoCore.Models.SimulationComponent.Impl
 				//if (false && DataBus.VehicleStopped && DataBus.DriverBehavior == DrivingBehavior.Driving && outTorque.IsGreater(0)) {
 				//	dryOperatingPoint = ModelData.FindOperatingPoint(DataBus.EngineIdleSpeed, outAngularVelocity);
 				//} else {
-				dryOperatingPoint = (DataBus.DriverBehavior != DrivingBehavior.Braking) || (outTorque.IsGreater(0) && DataBus.BrakePower.IsEqual(0))
+				dryOperatingPoint = (DataBus.DriverBehavior != DrivingBehavior.Braking) ||
+									(outTorque.IsGreater(0) && DataBus.BrakePower.IsEqual(0))
 					? GetMaxPowerOperatingPoint(dt, outAngularVelocity, engineResponse,
 						PreviousState.InTorque * PreviousState.InAngularVelocity)
 					: GetDragPowerOperatingPoint(dt, outAngularVelocity, engineResponse,
@@ -122,15 +123,13 @@ namespace TUGraz.VectoCore.Models.SimulationComponent.Impl
 
 				return new ResponseDryRun {
 					Source = this,
-					DeltaFullLoad = delta,
-					DeltaDragLoad = delta,
+					DeltaFullLoad = 2 * delta,
+					DeltaDragLoad = 2 * delta,
 					TorqueConverterOperatingPoint = dryOperatingPoint
 				};
 			}
 
 			// normal request
-			var ratio = Gearbox.GetGearData(Gearbox.Gear).TorqueConverterRatio;
-
 
 			// check if out-side of the operating point is equal to requested values
 			if (!outAngularVelocity.IsEqual(operatingPoint.OutAngularVelocity) || !outTorque.IsEqual(operatingPoint.OutTorque)) {
@@ -151,6 +150,7 @@ namespace TUGraz.VectoCore.Models.SimulationComponent.Impl
 			var retVal = NextComponent.Request(absTime, dt, inTorque, operatingPoint.InAngularVelocity);
 
 			// check if shift is required
+			var ratio = Gearbox.GetGearData(Gearbox.Gear).TorqueConverterRatio;
 			if (retVal is ResponseSuccess &&
 				ShiftStrategy.ShiftRequired(absTime, dt, outTorque * ratio, outAngularVelocity / ratio, inTorque,
 					operatingPoint.InAngularVelocity, Gearbox.Gear, Gearbox.LastShift)) {
