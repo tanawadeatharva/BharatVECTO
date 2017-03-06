@@ -67,6 +67,7 @@ namespace TUGraz.VectoCore.Tests.Models.SimulationComponent
 			var engineData = MockSimulationDataFactory.CreateEngineDataFromFile(EngineFile);
 
 			var vehicleData = CreateVehicleData(33000.SI<Kilogram>());
+			vehicleData.DynamicTyreRadius = 0.026372213.SI<Meter>(); // take into account axle ratio, gear ratio
 
 			var driverData = CreateDriverData();
 
@@ -100,12 +101,12 @@ namespace TUGraz.VectoCore.Tests.Models.SimulationComponent
 			vehicleContainer.CommitSimulationStep(absTime, response.SimulationInterval);
 			absTime += response.SimulationInterval;
 
-			Assert.AreEqual(4.9842, vehicleContainer.VehicleSpeed.Value(), Tolerance);
+			Assert.AreEqual(4.9877, vehicleContainer.VehicleSpeed.Value(), Tolerance);
 			Assert.AreEqual(0.2004, response.SimulationInterval.Value(), Tolerance);
 			Assert.AreEqual(engine.PreviousState.FullDragTorque.Value(), engine.PreviousState.EngineTorque.Value(),
 				Constants.SimulationSettings.LineSearchTolerance);
 
-			while (vehicleContainer.VehicleSpeed > 1) {
+			while (vehicleContainer.VehicleSpeed > 1.7) {
 				response = driver.DrivingActionCoast(absTime, 1.SI<Meter>(), velocity, 0.SI<Radian>());
 
 				Assert.IsInstanceOfType(response, typeof(ResponseSuccess));
@@ -123,7 +124,7 @@ namespace TUGraz.VectoCore.Tests.Models.SimulationComponent
 			var engineData = MockSimulationDataFactory.CreateEngineDataFromFile(EngineFile);
 
 			var vehicleData = CreateVehicleData(33000.SI<Kilogram>());
-
+			vehicleData.DynamicTyreRadius = 0.026372213.SI<Meter>(); // take into account axle ratio, gear ratio
 			var driverData = CreateDriverData();
 
 			var fileWriter = new FileOutputWriter("Coach_MinimalPowertrain_Coasting");
@@ -159,12 +160,12 @@ namespace TUGraz.VectoCore.Tests.Models.SimulationComponent
 			vehicleContainer.CommitSimulationStep(absTime, response.SimulationInterval);
 			absTime += response.SimulationInterval;
 
-			Assert.AreEqual(4.9846, vehicleContainer.VehicleSpeed.Value(), Tolerance);
+			Assert.AreEqual(4.9878, vehicleContainer.VehicleSpeed.Value(), Tolerance);
 			Assert.AreEqual(0.2004, response.SimulationInterval.Value(), Tolerance);
 			Assert.AreEqual(engine.PreviousState.FullDragTorque.Value(), engine.PreviousState.EngineTorque.Value(),
 				Constants.SimulationSettings.LineSearchTolerance);
 
-			while (vehicleContainer.VehicleSpeed > 1) {
+			while (vehicleContainer.VehicleSpeed > 1.7) {
 				response = driver.DrivingActionCoast(absTime, 1.SI<Meter>(), velocity, gradient);
 
 				Assert.IsInstanceOfType(response, typeof(ResponseSuccess));

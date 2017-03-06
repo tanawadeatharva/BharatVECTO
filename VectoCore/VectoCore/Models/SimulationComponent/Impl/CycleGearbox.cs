@@ -55,14 +55,14 @@ namespace TUGraz.VectoCore.Models.SimulationComponent.Impl
 
 		protected internal readonly TorqueConverter TorqueConverter;
 
-		public CycleGearbox(IVehicleContainer container, GearboxData gearboxModelData, KilogramSquareMeter engineInertia)
-			: base(container, gearboxModelData, engineInertia)
+		public CycleGearbox(IVehicleContainer container, VectoRunData runData)
+			: base(container, runData)
 		{
-			if (!gearboxModelData.Type.AutomaticTransmission()) {
+			if (!ModelData.Type.AutomaticTransmission()) {
 				return;
 			}
 			var strategy = new CycleShiftStrategy(ModelData, null);
-			TorqueConverter = new TorqueConverter(this, strategy, container, gearboxModelData.TorqueConverterData, engineInertia);
+			TorqueConverter = new TorqueConverter(this, strategy, container, ModelData.TorqueConverterData, runData);
 			if (TorqueConverter == null) {
 				throw new VectoException("Torque Converter required for AT transmission!");
 			}
@@ -95,7 +95,7 @@ namespace TUGraz.VectoCore.Models.SimulationComponent.Impl
 				inAngularVelocity = outAngularVelocity * ModelData.Gears[Gear].Ratio;
 				var inTorqueLossResult = ModelData.Gears[Gear].LossMap.GetTorqueLoss(outAngularVelocity, outTorque);
 				CurrentState.TorqueLossResult = inTorqueLossResult;
-				inTorque = outTorque / ModelData.Gears[Gear].Ratio - inTorqueLossResult.Value;
+				inTorque = outTorque / ModelData.Gears[Gear].Ratio + inTorqueLossResult.Value;
 
 				var torqueLossInertia = outAngularVelocity.IsEqual(0)
 					? 0.SI<NewtonMeter>()

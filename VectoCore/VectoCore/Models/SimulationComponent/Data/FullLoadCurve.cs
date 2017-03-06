@@ -51,7 +51,7 @@ namespace TUGraz.VectoCore.Models.SimulationComponent.Data
 
 		private SortedList<PerSecond, int> _quickLookup;
 
-		[Required] internal LookupData<PerSecond, Second> PT1Data;
+		[Required] internal LookupData<PerSecond, PT1.PT1Result> PT1Data;
 
 		/// <summary>
 		/// Get the rated speed from the given full-load curve (i.e. speed with max. power)
@@ -90,7 +90,7 @@ namespace TUGraz.VectoCore.Models.SimulationComponent.Data
 			return VectoMath.Interpolate(FullLoadEntries[idx - 1].EngineSpeed, FullLoadEntries[idx].EngineSpeed,
 				FullLoadEntries[idx - 1].TorqueDrag, FullLoadEntries[idx].TorqueDrag,
 				angularVelocity);
-			}
+		}
 
 		private NewtonMeter FindMaxTorque()
 		{

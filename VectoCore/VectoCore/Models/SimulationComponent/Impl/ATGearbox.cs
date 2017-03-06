@@ -38,7 +38,6 @@ using TUGraz.VectoCore.Models.Connector.Ports.Impl;
 using TUGraz.VectoCore.Models.Simulation;
 using TUGraz.VectoCore.Models.Simulation.Data;
 using TUGraz.VectoCore.Models.Simulation.DataBus;
-using TUGraz.VectoCore.Models.SimulationComponent.Data;
 using TUGraz.VectoCore.Models.SimulationComponent.Data.Gearbox;
 using TUGraz.VectoCore.OutputData;
 using TUGraz.VectoCore.Utils;
@@ -58,15 +57,14 @@ namespace TUGraz.VectoCore.Models.SimulationComponent.Impl
 			set { CurrentState.TorqueConverterLocked = value; }
 		}
 
-		public ATGearbox(IVehicleContainer container, GearboxData gearboxModelData, IShiftStrategy strategy,
-			KilogramSquareMeter engineInertia)
-			: base(container, gearboxModelData, engineInertia)
+		public ATGearbox(IVehicleContainer container, IShiftStrategy strategy, VectoRunData runData)
+			: base(container, runData)
 		{
 			_strategy = strategy;
 			_strategy.Gearbox = this;
 			LastShift = -double.MaxValue.SI<Second>();
-			TorqueConverter = new TorqueConverter(this, _strategy, container, gearboxModelData.TorqueConverterData,
-				engineInertia);
+			TorqueConverter = new TorqueConverter(this, _strategy, container, ModelData.TorqueConverterData,
+				runData);
 		}
 
 		public IIdleController IdleController

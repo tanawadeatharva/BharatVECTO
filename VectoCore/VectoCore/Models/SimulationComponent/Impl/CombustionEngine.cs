@@ -348,7 +348,9 @@ namespace TUGraz.VectoCore.Models.SimulationComponent.Impl
 		protected override void DoWriteModalResults(IModalDataContainer container)
 		{
 			var avgEngineSpeed = (PreviousState.EngineSpeed + CurrentState.EngineSpeed) / 2.0;
-
+			if (avgEngineSpeed.IsSmaller(EngineIdleSpeed, DataBus.ExecutionMode == ExecutionMode.Engineering ? 20.RPMtoRad():1e-3.RPMtoRad())) {
+				Log.Warn("EngineSpeed below idling speed! n_eng_avg: {0}, n_idle: {1}", avgEngineSpeed, EngineIdleSpeed);
+			}
 			container[ModalResultField.P_eng_fcmap] = CurrentState.EngineTorque * avgEngineSpeed;
 			container[ModalResultField.P_eng_out] = container[ModalResultField.P_eng_out] is DBNull
 				? CurrentState.EngineTorqueOut * avgEngineSpeed
@@ -369,6 +371,11 @@ namespace TUGraz.VectoCore.Models.SimulationComponent.Impl
 			if (DataBus.ExecutionMode != ExecutionMode.Declaration && result.Extrapolated) {
 				Log.Warn("FuelConsumptionMap was extrapolated: range for FC-Map is not sufficient: n: {0}, torque: {1}",
 					avgEngineSpeed.Value(), CurrentState.EngineTorque.Value());
+			}
+			var pt1 = ModelData.FullLoadCurve.PT1(avgEngineSpeed);
+			if (DataBus.ExecutionMode == ExecutionMode.Declaration && pt1.Extrapolated) {
+				Log.Error("requested rpm below minimum rpm in pt1 - extrapolating. n_eng_avg: {0}",
+					avgEngineSpeed);
 			}
 
 			var fc = result.Value;
@@ -439,7 +446,7 @@ namespace TUGraz.VectoCore.Models.SimulationComponent.Impl
 				dynFullPowerCalculated = stationaryFullLoadPower;
 			} else {
 				try {
-					var pt1 = ModelData.FullLoadCurve.PT1(angularVelocity).Value();
+					var pt1 = ModelData.FullLoadCurve.PT1(angularVelocity).Value.Value();
 					var powerRatio = (PreviousState.EnginePower / stationaryFullLoadPower).Value();
 					var tStarPrev = pt1 * Math.Log(1.0 / (1 - powerRatio), Math.E).SI<Second>();
 					var tStar = tStarPrev + PreviousState.dt;

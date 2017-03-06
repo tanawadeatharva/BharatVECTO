@@ -56,12 +56,12 @@ namespace TUGraz.VectoCore.Tests.Models.SimulationComponent
 		[Test,
 		// clutch slipping
 		TestCase(DrivingBehavior.Driving, 100, 0, 0, 65.6889),
-		TestCase(DrivingBehavior.Driving, 100, 30, 45.6697, 65.6889),
 		// clutch opened - would cause neg. clutch losses (which is not possible), torque is adapted
 		TestCase(DrivingBehavior.Halted, 100, 30, 51.1569, 58.643062),
 		// clutch closed
 		TestCase(DrivingBehavior.Driving, 100, 80, 100, 80),
 		TestCase(DrivingBehavior.Braking, 100, 80, 100, 80),
+		TestCase(DrivingBehavior.Driving, 100, 30, 100, 30),
 			// clutch opened due to braking
 			//TestCase(DrivingBehavior.Braking, 0, 55, null, null),
 		]
