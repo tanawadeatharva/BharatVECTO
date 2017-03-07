@@ -64,6 +64,14 @@ namespace TUGraz.VectoCore.Models.Simulation.Impl
 			_mode = mode;
 			ModWriter = writer;
 
+			int workerThreads;
+			int completionThreads;
+			ThreadPool.GetMinThreads(out workerThreads, out completionThreads);
+			if (workerThreads < 12) {
+				workerThreads = 12;
+			}
+			ThreadPool.SetMinThreads(workerThreads, completionThreads);
+
 			switch (mode) {
 				case ExecutionMode.Declaration:
 					var declDataProvider = dataProvider as IDeclarationInputDataProvider;
