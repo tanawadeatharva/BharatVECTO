@@ -58,6 +58,7 @@ namespace TUGraz.VectoCore.Tests.Reports
 			for (var i = 0; i < 499; i++) {
 				modData[ModalResultField.simulationInterval] = 1.SI<Second>();
 				modData[ModalResultField.n_eng_avg] = 600.RPMtoRad();
+				modData[ModalResultField.v_act] = 20.KMPHtoMeterPerSecond();
 				modData[ModalResultField.drivingBehavior] = DrivingBehavior.Driving;
 				modData[ModalResultField.time] = i.SI<Second>();
 				modData[ModalResultField.dist] = i.SI<Meter>();
@@ -119,6 +120,7 @@ namespace TUGraz.VectoCore.Tests.Reports
 				modData[ModalResultField.time] = i.SI<Second>();
 				modData[ModalResultField.dist] = i.SI<Meter>();
 				modData[ModalResultField.n_eng_avg] = 600.RPMtoRad();
+				modData[ModalResultField.v_act] = 20.KMPHtoMeterPerSecond();
 				modData[ModalResultField.drivingBehavior] = DrivingBehavior.Driving;
 				modData["FAN"] = powerDemand[i % powerDemand.Length];
 				modData[ModalResultField.P_air] = powerDemand[i % powerDemand.Length];

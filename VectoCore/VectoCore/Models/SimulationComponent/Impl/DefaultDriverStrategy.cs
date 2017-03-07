@@ -674,6 +674,7 @@ namespace TUGraz.VectoCore.Models.SimulationComponent.Impl
 								response = Driver.DrivingActionRoll(absTime, ds, targetVelocity, gradient);
 							} else {
 								Log.Info("Brake -> Overload -> Clutch is closed - Trying brake action again");
+								DataBus.BrakePower = 0.SI<Watt>();
 								response = Driver.DrivingActionBrake(absTime, ds, DriverStrategy.BrakeTrigger.NextTargetSpeed, gradient,
 									targetDistance: targetDistance);
 								response.Switch().
@@ -745,8 +746,7 @@ namespace TUGraz.VectoCore.Models.SimulationComponent.Impl
 
 		public Meter ActionDistance
 		{
-			get
-			{
+			get {
 				return VectoMath.Min(CoastingStartDistance ?? double.MaxValue.SI<Meter>(),
 					BrakingStartDistance ?? double.MaxValue.SI<Meter>());
 			}

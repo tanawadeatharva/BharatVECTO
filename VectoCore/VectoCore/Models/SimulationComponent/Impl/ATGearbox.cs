@@ -191,7 +191,7 @@ namespace TUGraz.VectoCore.Models.SimulationComponent.Impl
 
 			if (!dryRun &&
 				((DataBus.VehicleStopped && outAngularVelocity > 0) ||
-				(CurrentState.Disengaged && outTorque.IsGreater(0)))) {
+				(CurrentState.Disengaged && outTorque.IsGreater(0, 1e-3)))) {
 				Gear = 1;
 				CurrentState.TorqueConverterLocked = false;
 				LastShift = absTime;
@@ -224,6 +224,7 @@ namespace TUGraz.VectoCore.Models.SimulationComponent.Impl
 								outTorque * (PreviousState.OutAngularVelocity + outAngularVelocity) / 2.0
 						};
 						_requestAfterGearshift = true;
+						LastShift = absTime;
 					} else {
 						loop = true;
 						Gear = _strategy.Engage(absTime, dt, outTorque, outAngularVelocity);
