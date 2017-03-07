@@ -569,7 +569,7 @@ namespace TUGraz.VectoCore.Tests.Models.Declaration
 		TestCase(VehicleCategory.RigidTruck, AxleConfiguration.AxleConfig_6x4, 40000, 0, VehicleClass.Class11,
 			new[] { 101.4, 51.9, 51.9, 51.9 }),
 		TestCase(VehicleCategory.Tractor, AxleConfiguration.AxleConfig_6x4, 99000, 0, VehicleClass.Class12,
-			new[] { 91.0, 91.0, 91.0, 91.0 }),
+			new[] { 91.0, 91.0, 91.0 }),
 		TestCase(VehicleCategory.RigidTruck, AxleConfiguration.AxleConfig_8x4, 99000, 0, VehicleClass.Class16,
 			new[] { 0.0 })
 		]
