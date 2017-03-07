@@ -100,13 +100,20 @@ namespace TUGraz.VectoCore.Tests.Integration
 			var engine = new CombustionEngine(container, engineData);
 			var clutch = new Clutch(container, engineData);
 
+			var runData = new VectoRunData() {
+				EngineData = engineData,
+				VehicleData = vehicleData,
+				AxleGearData = axleGearData,
+				GearboxData = gearboxData
+			};
+
 			IShiftStrategy gbxStrategy;
 			switch (gbxType) {
 				case GearboxType.MT:
-					gbxStrategy = new MTShiftStrategy(gearboxData, container);
+					gbxStrategy = new MTShiftStrategy(runData, container);
 					break;
 				case GearboxType.AMT:
-					gbxStrategy = new AMTShiftStrategy(gearboxData, container);
+					gbxStrategy = new AMTShiftStrategy(runData, container);
 					break;
 				default:
 					throw new ArgumentOutOfRangeException("gbxType", gbxType, null);
@@ -118,7 +125,7 @@ namespace TUGraz.VectoCore.Tests.Integration
 				.AddComponent(new Brakes(container))
 				.AddComponent(new AxleGear(container, axleGearData))
 				.AddComponent(new DummyRetarder(container))
-				.AddComponent(new Gearbox(container, gearboxData, gbxStrategy, engineData.Inertia))
+				.AddComponent(new Gearbox(container, gbxStrategy, runData))
 				.AddComponent(clutch)
 				.AddComponent(engine);
 

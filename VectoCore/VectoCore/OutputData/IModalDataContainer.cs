@@ -152,7 +152,7 @@ namespace TUGraz.VectoCore.OutputData
 		{
 			var accelerationTimeShare = data.Data.Rows.Cast<DataRow>()
 				.Select(x => new {
-					a = x.Field<MeterPerSquareSecond>((int)ModalResultField.acc),
+					a = x.Field<MeterPerSquareSecond>((int)ModalResultField.acc).DefaultIfNull(0),
 					dt = x.Field<Second>((int)ModalResultField.simulationInterval)
 				})
 				.Sum(x => x.a > 0.125 ? x.dt : 0.SI<Second>()).DefaultIfNull(0);
@@ -163,7 +163,7 @@ namespace TUGraz.VectoCore.OutputData
 		{
 			var decelerationTimeShare = data.Data.Rows.Cast<DataRow>()
 				.Select(x => new {
-					a = x.Field<MeterPerSquareSecond>((int)ModalResultField.acc),
+					a = x.Field<MeterPerSquareSecond>((int)ModalResultField.acc).DefaultIfNull(0),
 					dt = x.Field<Second>((int)ModalResultField.simulationInterval)
 				})
 				.Sum(x => x.a < -0.125 ? x.dt : 0.SI<Second>()).DefaultIfNull(0);
@@ -174,11 +174,12 @@ namespace TUGraz.VectoCore.OutputData
 		{
 			var cruiseTime = data.Data.Rows.Cast<DataRow>()
 				.Select(x => new {
-					v = x.Field<MeterPerSecond>((int)ModalResultField.v_act),
-					a = x.Field<MeterPerSquareSecond>((int)ModalResultField.acc),
+					v = x.Field<MeterPerSecond>((int)ModalResultField.v_act).DefaultIfNull(0),
+					a = x.Field<MeterPerSquareSecond>((int)ModalResultField.acc).DefaultIfNull(0),
 					dt = x.Field<Second>((int)ModalResultField.simulationInterval)
 				})
-				.Sum(x => x.v >= 0.1 && x.a.IsBetween(-0.125, 0.125) ? x.dt : 0.SI<Second>()).DefaultIfNull(0);
+				.Sum(x => x.v >= 0.1.KMPHtoMeterPerSecond() && x.a.IsBetween(-0.125, 0.125) ? x.dt : 0.SI<Second>())
+				.DefaultIfNull(0);
 			return 100 * (cruiseTime / data.Duration()).Cast<Scalar>();
 		}
 
@@ -186,10 +187,10 @@ namespace TUGraz.VectoCore.OutputData
 		{
 			var stopTime = data.Data.Rows.Cast<DataRow>()
 				.Select(x => new {
-					v = x.Field<MeterPerSecond>((int)ModalResultField.v_act),
+					v = x.Field<MeterPerSecond>((int)ModalResultField.v_act).DefaultIfNull(0),
 					dt = x.Field<Second>((int)ModalResultField.simulationInterval)
 				})
-				.Sum(x => x.v < 0.1 ? x.dt : 0.SI<Second>()) ?? 0.SI<Second>();
+				.Sum(x => x.v < 0.1.KMPHtoMeterPerSecond() ? x.dt : 0.SI<Second>()) ?? 0.SI<Second>();
 			return 100 * (stopTime / data.Duration()).Cast<Scalar>();
 		}
 

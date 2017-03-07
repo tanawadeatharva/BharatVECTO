@@ -41,7 +41,7 @@
     </Reference>
     <Reference Include="System" />
     <Reference Include="VectoCore">
-      <HintPath>..\VectoCore\bin\Release\VectoCore.dll</HintPath>
+      <HintPath>..\VectoCore\bin\Debug\VectoCore.dll</HintPath>
     </Reference>
   </ItemGroup>
   <Choose>

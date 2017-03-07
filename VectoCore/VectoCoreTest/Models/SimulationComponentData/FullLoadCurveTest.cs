@@ -108,9 +108,9 @@ namespace TUGraz.VectoCore.Tests.Models.SimulationComponentData
 		{
 			var fldCurve = EngineFullLoadCurve.ReadFromFile(CoachEngineFLD);
 
-			Assert.AreEqual(0.6, fldCurve.PT1(560.RPMtoRad()).Value(), Tolerance);
-			Assert.AreEqual(0.25, fldCurve.PT1(2000.RPMtoRad()).Value(), Tolerance);
-			Assert.AreEqual(0.37, fldCurve.PT1(1700.RPMtoRad()).Value(), Tolerance);
+			Assert.AreEqual(0.6, fldCurve.PT1(560.RPMtoRad()).Value.Value(), Tolerance);
+			Assert.AreEqual(0.25, fldCurve.PT1(2000.RPMtoRad()).Value.Value(), Tolerance);
+			Assert.AreEqual(0.37, fldCurve.PT1(1700.RPMtoRad()).Value.Value(), Tolerance);
 		}
 
 		[TestMethod]

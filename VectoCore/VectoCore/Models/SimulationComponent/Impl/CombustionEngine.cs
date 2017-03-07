@@ -200,7 +200,7 @@ namespace TUGraz.VectoCore.Models.SimulationComponent.Impl
 
 			Log.Debug("Dynamic FullLoad: torque: {0}, power: {1}", dynamicFullLoadTorque, dynamicFullLoadPower);
 
-			ValidatePowerDemand(totalTorqueDemand); // requires CurrentState.FullDragTorque and DynamicfullLoad to be set!
+			//ValidatePowerDemand(totalTorqueDemand, dynamicFullLoadTorque, fullDragTorque); 
 
 			// get max. torque as limited by gearbox. gearbox only limits torqueOut!
 			var gearboxFullLoad = DataBus.GearMaxTorque;
@@ -277,7 +277,7 @@ namespace TUGraz.VectoCore.Models.SimulationComponent.Impl
 				};
 			}
 
-			UpdateEngineState(CurrentState.EnginePower, avgEngineSpeed);
+			//UpdateEngineState(CurrentState.EnginePower, avgEngineSpeed);
 
 			return new ResponseSuccess {
 				EnginePowerRequest = totalTorqueDemand * avgEngineSpeed,
@@ -328,16 +328,17 @@ namespace TUGraz.VectoCore.Models.SimulationComponent.Impl
 		/// <summary>
 		/// Validates the requested power demand [W].
 		/// </summary>
-		protected virtual void ValidatePowerDemand(NewtonMeter torqueDemand)
+		protected virtual void ValidatePowerDemand(NewtonMeter torqueDemand, NewtonMeter dynamicFullLoadTorque,
+			NewtonMeter fullDragTorque)
 		{
-			if (CurrentState.FullDragTorque >= 0 && torqueDemand < 0) {
+			if (fullDragTorque.IsGreater(0) && torqueDemand < 0) {
 				throw new VectoSimulationException("P_engine_drag > 0! Tq_drag: {0}, Tq_eng: {1},  n_eng_avg: {2} [1/min] ",
-					CurrentState.FullDragTorque, torqueDemand, CurrentState.EngineSpeed.AsRPM);
+					fullDragTorque, torqueDemand, CurrentState.EngineSpeed.AsRPM);
 			}
 
-			if (CurrentState.DynamicFullLoadTorque <= 0 && torqueDemand > 0) {
+			if (dynamicFullLoadTorque <= 0 && torqueDemand > 0) {
 				throw new VectoSimulationException("P_engine_full < 0! Tq_full: {0}, Tq_eng: {1},  n_eng_avg: {2} [1/min] ",
-					CurrentState.DynamicFullLoadTorque, torqueDemand, CurrentState.EngineSpeed.AsRPM);
+					dynamicFullLoadTorque, torqueDemand, CurrentState.EngineSpeed.AsRPM);
 			}
 		}
 
@@ -347,8 +348,13 @@ namespace TUGraz.VectoCore.Models.SimulationComponent.Impl
 
 		protected override void DoWriteModalResults(IModalDataContainer container)
 		{
-			var avgEngineSpeed = (PreviousState.EngineSpeed + CurrentState.EngineSpeed) / 2.0;
+			ValidatePowerDemand(CurrentState.EngineTorque, CurrentState.DynamicFullLoadTorque, CurrentState.FullDragTorque);
 
+			var avgEngineSpeed = (PreviousState.EngineSpeed + CurrentState.EngineSpeed) / 2.0;
+			if (avgEngineSpeed.IsSmaller(EngineIdleSpeed,
+				DataBus.ExecutionMode == ExecutionMode.Engineering ? 20.RPMtoRad() : 1e-3.RPMtoRad())) {
+				Log.Warn("EngineSpeed below idling speed! n_eng_avg: {0}, n_idle: {1}", avgEngineSpeed, EngineIdleSpeed);
+			}
 			container[ModalResultField.P_eng_fcmap] = CurrentState.EngineTorque * avgEngineSpeed;
 			container[ModalResultField.P_eng_out] = container[ModalResultField.P_eng_out] is DBNull
 				? CurrentState.EngineTorqueOut * avgEngineSpeed
@@ -369,6 +375,11 @@ namespace TUGraz.VectoCore.Models.SimulationComponent.Impl
 			if (DataBus.ExecutionMode != ExecutionMode.Declaration && result.Extrapolated) {
 				Log.Warn("FuelConsumptionMap was extrapolated: range for FC-Map is not sufficient: n: {0}, torque: {1}",
 					avgEngineSpeed.Value(), CurrentState.EngineTorque.Value());
+			}
+			var pt1 = ModelData.FullLoadCurve.PT1(avgEngineSpeed);
+			if (DataBus.ExecutionMode == ExecutionMode.Declaration && pt1.Extrapolated) {
+				Log.Error("requested rpm below minimum rpm in pt1 - extrapolating. n_eng_avg: {0}",
+					avgEngineSpeed);
 			}
 
 			var fc = result.Value;
@@ -439,7 +450,7 @@ namespace TUGraz.VectoCore.Models.SimulationComponent.Impl
 				dynFullPowerCalculated = stationaryFullLoadPower;
 			} else {
 				try {
-					var pt1 = ModelData.FullLoadCurve.PT1(angularVelocity).Value();
+					var pt1 = ModelData.FullLoadCurve.PT1(angularVelocity).Value.Value();
 					var powerRatio = (PreviousState.EnginePower / stationaryFullLoadPower).Value();
 					var tStarPrev = pt1 * Math.Log(1.0 / (1 - powerRatio), Math.E).SI<Second>();
 					var tStar = tStarPrev + PreviousState.dt;

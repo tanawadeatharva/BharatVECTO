@@ -34,6 +34,7 @@ using System.Data;
 using System.Linq;
 using TUGraz.VectoCommon.Utils;
 using TUGraz.VectoCore.InputData.Reader;
+using TUGraz.VectoCore.Models.Declaration;
 using TUGraz.VectoCore.Utils;
 
 namespace TUGraz.VectoCore.Models.SimulationComponent.Data.Engine
@@ -73,7 +74,7 @@ namespace TUGraz.VectoCore.Models.SimulationComponent.Data.Engine
 
 		public CombustionEngineData EngineData { get; internal set; }
 
-		public Second PT1(PerSecond angularVelocity)
+		public PT1.PT1Result PT1(PerSecond angularVelocity)
 		{
 			return PT1Data.Lookup(angularVelocity);
 		}

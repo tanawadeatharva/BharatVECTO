@@ -89,13 +89,20 @@ namespace TUGraz.VectoCore.Tests.Integration
 			var cycle = new DistanceBasedDrivingCycle(container, cycleData);
 			var engine = new CombustionEngine(container, engineData);
 
+			var runData = new VectoRunData() {
+				AxleGearData = axleGearData,
+				VehicleData = vehicleData,
+				GearboxData = gearboxData,
+				EngineData = engineData
+			};
+
 			cycle.AddComponent(new Driver(container, driverData, new DefaultDriverStrategy()))
 				.AddComponent(new Vehicle(container, vehicleData))
 				.AddComponent(new Wheels(container, vehicleData.DynamicTyreRadius, vehicleData.WheelsInertia))
 				.AddComponent(new Brakes(container))
 				.AddComponent(new AxleGear(container, axleGearData))
 				.AddComponent(new DummyRetarder(container))
-				.AddComponent(new Gearbox(container, gearboxData, new AMTShiftStrategy(gearboxData, container), engineData.Inertia))
+				.AddComponent(new Gearbox(container, new AMTShiftStrategy(runData, container), runData))
 				.AddComponent(new Clutch(container, engineData))
 				.AddComponent(engine);
 

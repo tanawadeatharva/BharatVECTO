@@ -52,19 +52,6 @@ namespace TUGraz.VectoCore.Utils
 			return power / angularVelocity;
 		}
 
-		public static Meter DecelerationDistance(MeterPerSecond v1, MeterPerSecond v2,
-			MeterPerSquareSecond deceleration)
-		{
-			if (deceleration >= 0) {
-				throw new VectoException("Deceleration must be negative! a: {0}", deceleration);
-			}
-			if (v2 > v1) {
-				throw new VectoException("v2 must not be greater than v1 v1: {0} v2: {1}", v1.Value(), v2.Value());
-			}
-
-			return ((v2.Value() - v1.Value()) * (v1.Value() + v2.Value()) / deceleration.Value() / 2.0).SI<Meter>();
-		}
-
 		/// <summary>
 		/// Calculates power loss caused by inertia.
 		/// https://en.wikipedia.org/wiki/Angular_acceleration
