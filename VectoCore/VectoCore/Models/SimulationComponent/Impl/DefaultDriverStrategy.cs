@@ -175,7 +175,7 @@ namespace TUGraz.VectoCore.Models.SimulationComponent.Impl
 			var lookaheadDistance =
 				(currentSpeed.Value() * 3.6 * Driver.DriverData.LookAheadCoasting.LookAheadDistanceFactor).SI<Meter>();
 			var stopDistance = Driver.ComputeDecelerationDistance(0.SI<MeterPerSecond>());
-			lookaheadDistance = VectoMath.Max(2 * ds, lookaheadDistance, 1.2 * stopDistance);
+			lookaheadDistance = VectoMath.Max(2 * ds, lookaheadDistance, 1.2 * stopDistance + ds);
 			var lookaheadData = Driver.DataBus.LookAhead(lookaheadDistance);
 
 			Log.Debug("Lookahead distance: {0} @ current speed {1}", lookaheadDistance, currentSpeed);
@@ -674,6 +674,7 @@ namespace TUGraz.VectoCore.Models.SimulationComponent.Impl
 								response = Driver.DrivingActionRoll(absTime, ds, targetVelocity, gradient);
 							} else {
 								Log.Info("Brake -> Overload -> Clutch is closed - Trying brake action again");
+								DataBus.BrakePower = 0.SI<Watt>();
 								response = Driver.DrivingActionBrake(absTime, ds, DriverStrategy.BrakeTrigger.NextTargetSpeed, gradient,
 									targetDistance: targetDistance);
 								response.Switch().
@@ -691,6 +692,7 @@ namespace TUGraz.VectoCore.Models.SimulationComponent.Impl
 						Case<ResponseGearShift>(r => {
 							Log.Info("Brake -> Got GearShift response, performing roll action + brakes");
 							//response = Driver.DrivingActionRoll(absTime, ds, DriverStrategy.BrakeTrigger.NextTargetSpeed, gradient);
+							DataBus.BrakePower = 0.SI<Watt>();
 							response = Driver.DrivingActionBrake(absTime, ds, DriverStrategy.BrakeTrigger.NextTargetSpeed,
 								gradient, targetDistance: targetDistance);
 						});
@@ -744,8 +746,7 @@ namespace TUGraz.VectoCore.Models.SimulationComponent.Impl
 
 		public Meter ActionDistance
 		{
-			get
-			{
+			get {
 				return VectoMath.Min(CoastingStartDistance ?? double.MaxValue.SI<Meter>(),
 					BrakingStartDistance ?? double.MaxValue.SI<Meter>());
 			}

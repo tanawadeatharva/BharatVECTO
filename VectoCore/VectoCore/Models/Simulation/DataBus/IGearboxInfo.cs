@@ -67,5 +67,6 @@ namespace TUGraz.VectoCore.Models.Simulation.DataBus
 		GearInfo NextGear { get; }
 
 		Second TractionInterruption { get; }
+		uint NumGears { get; }
 	}
 }

@@ -55,12 +55,14 @@ namespace TUGraz.VectoCore.Models.SimulationComponent.Impl
 		public ITnOutPort NextComponent { protected internal get; set; }
 
 		public TorqueConverter(IGearboxInfo gearbox, IShiftStrategy shiftStrategy, IVehicleContainer container,
-			TorqueConverterData tcData, KilogramSquareMeter engineInertia) : base(container)
+			TorqueConverterData tcData, VectoRunData runData) : base(container)
 		{
 			Gearbox = gearbox;
 			ShiftStrategy = shiftStrategy;
 			ModelData = tcData;
-			_engineInertia = engineInertia;
+			_engineInertia = runData != null && runData.EngineData != null
+				? runData.EngineData.Inertia
+				: 0.SI<KilogramSquareMeter>();
 		}
 
 		public void Connect(ITnOutPort other)
@@ -109,7 +111,8 @@ namespace TUGraz.VectoCore.Models.SimulationComponent.Impl
 				//if (false && DataBus.VehicleStopped && DataBus.DriverBehavior == DrivingBehavior.Driving && outTorque.IsGreater(0)) {
 				//	dryOperatingPoint = ModelData.FindOperatingPoint(DataBus.EngineIdleSpeed, outAngularVelocity);
 				//} else {
-				dryOperatingPoint = outTorque.IsGreater(0) && DataBus.BrakePower.IsEqual(0)
+				dryOperatingPoint = (DataBus.DriverBehavior != DrivingBehavior.Braking && DataBus.BrakePower.IsEqual(0)) ||
+									(outTorque.IsGreater(0) && DataBus.BrakePower.IsEqual(0))
 					? GetMaxPowerOperatingPoint(dt, outAngularVelocity, engineResponse,
 						PreviousState.InTorque * PreviousState.InAngularVelocity)
 					: GetDragPowerOperatingPoint(dt, outAngularVelocity, engineResponse,
@@ -120,20 +123,13 @@ namespace TUGraz.VectoCore.Models.SimulationComponent.Impl
 
 				return new ResponseDryRun {
 					Source = this,
-					DeltaFullLoad = delta,
-					DeltaDragLoad = delta,
+					DeltaFullLoad = 2 * delta,
+					DeltaDragLoad = 2 * delta,
 					TorqueConverterOperatingPoint = dryOperatingPoint
 				};
 			}
 
 			// normal request
-			var ratio = Gearbox.GetGearData(Gearbox.Gear).TorqueConverterRatio;
-
-			// check if shift is required
-			if (ShiftStrategy.ShiftRequired(absTime, dt, outTorque * ratio, outAngularVelocity / ratio, operatingPoint.InTorque,
-				operatingPoint.InAngularVelocity, Gearbox.Gear, Gearbox.LastShift)) {
-				return new ResponseGearShift { Source = this };
-			}
 
 			// check if out-side of the operating point is equal to requested values
 			if (!outAngularVelocity.IsEqual(operatingPoint.OutAngularVelocity) || !outTorque.IsEqual(operatingPoint.OutTorque)) {
@@ -148,9 +144,18 @@ namespace TUGraz.VectoCore.Models.SimulationComponent.Impl
 				}
 			}
 
-			CurrentState.SetState(operatingPoint.InTorque, operatingPoint.InAngularVelocity, outTorque, outAngularVelocity);
+			CurrentState.SetState(inTorque, operatingPoint.InAngularVelocity, outTorque, outAngularVelocity);
 			CurrentState.OperatingPoint = operatingPoint;
+
 			var retVal = NextComponent.Request(absTime, dt, inTorque, operatingPoint.InAngularVelocity);
+
+			// check if shift is required
+			var ratio = Gearbox.GetGearData(Gearbox.Gear).TorqueConverterRatio;
+			if (retVal is ResponseSuccess &&
+				ShiftStrategy.ShiftRequired(absTime, dt, outTorque * ratio, outAngularVelocity / ratio, inTorque,
+					operatingPoint.InAngularVelocity, Gearbox.Gear, Gearbox.LastShift)) {
+				return new ResponseGearShift { Source = this };
+			}
 			return retVal;
 		}
 
@@ -261,9 +266,10 @@ namespace TUGraz.VectoCore.Models.SimulationComponent.Impl
 			AdvanceState();
 		}
 
-		public void Locked(NewtonMeter outTorque, PerSecond outAngularVelocity)
+		public void Locked(NewtonMeter inTorque, PerSecond inAngularVelocity, NewtonMeter outTorque,
+			PerSecond outAngularVelocity)
 		{
-			CurrentState.SetState(outTorque, outAngularVelocity, outTorque, outAngularVelocity);
+			CurrentState.SetState(inTorque, inAngularVelocity, outTorque, outAngularVelocity);
 		}
 
 		public class TorqueConverterComponentState : SimpleComponentState

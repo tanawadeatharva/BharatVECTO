@@ -32,6 +32,7 @@
 using System;
 using System.Collections.Generic;
 using System.Data;
+using System.IO;
 using System.Linq;
 using Newtonsoft.Json.Linq;
 using TUGraz.VectoCommon.InputData;
@@ -44,7 +45,8 @@ namespace TUGraz.VectoCore.InputData.FileIO.JSON
 	public class JSONVehicleDataV7 : JSONFile, IVehicleEngineeringInputData, IRetarderInputData, IAngledriveInputData,
 		IPTOTransmissionInputData
 	{
-		public JSONVehicleDataV7(JObject data, string fileName) : base(data, fileName) {}
+		public JSONVehicleDataV7(JObject data, string fileName, bool tolerateMissing = false)
+			: base(data, fileName, tolerateMissing) {}
 
 		#region IVehicleInputData
 
@@ -130,7 +132,17 @@ namespace TUGraz.VectoCore.InputData.FileIO.JSON
 
 		public virtual TableData CrosswindCorrectionMap
 		{
-			get { return ReadTableData(Body.GetEx<string>("CdCorrFile"), "CrosswindCorrection File", false); }
+			get
+			{
+				try {
+					return ReadTableData(Body.GetEx<string>("CdCorrFile"), "CrosswindCorrection File");
+				} catch (Exception) {
+					if (!TolerateMissing) {
+						throw;
+					}
+					return new TableData(Path.Combine(BasePath, Body["CdCorrFile"].ToString()) + MissingFileSuffix, DataSourceType.Missing);
+				}
+			}
 		}
 
 		#endregion
@@ -155,11 +167,22 @@ namespace TUGraz.VectoCore.InputData.FileIO.JSON
 		{
 			get
 			{
-				return
-					ReadTableData(
-						Body.GetEx(JsonKeys.Vehicle_Retarder)
-							.GetEx<string>(JsonKeys.Vehicle_Retarder_LossMapFile),
-						"LossMap", false);
+				if (Body[JsonKeys.Vehicle_Retarder] != null &&
+					Body.GetEx(JsonKeys.Vehicle_Retarder)[JsonKeys.Vehicle_Retarder_LossMapFile] != null) {
+					var lossmapFile = Body.GetEx(JsonKeys.Vehicle_Retarder)[JsonKeys.Vehicle_Retarder_LossMapFile];
+					if (string.IsNullOrWhiteSpace(lossmapFile.Value<string>())) {
+						return null;
+					}
+					try {
+						return ReadTableData(lossmapFile.Value<string>(), "LossMap");
+					} catch (Exception) {
+						if (!TolerateMissing) {
+							throw;
+						}
+						return new TableData(Path.Combine(BasePath, lossmapFile.Value<string>()) + MissingFileSuffix, DataSourceType.Missing);
+					}
+				}
+				return null;
 			}
 		}
 
@@ -185,8 +208,9 @@ namespace TUGraz.VectoCore.InputData.FileIO.JSON
 			get
 			{
 				var angleDrive = Body[JsonKeys.Vehicle_Angledrive];
-				if (angleDrive == null)
+				if (angleDrive == null) {
 					return double.NaN;
+				}
 				return Body.GetEx(JsonKeys.Vehicle_Angledrive).GetEx<double>(JsonKeys.Vehicle_Angledrive_Ratio);
 			}
 		}
@@ -196,12 +220,21 @@ namespace TUGraz.VectoCore.InputData.FileIO.JSON
 			get
 			{
 				var angleDrive = Body[JsonKeys.Vehicle_Angledrive];
-				if (angleDrive == null)
+				if (angleDrive == null || angleDrive[JsonKeys.Vehicle_Angledrive_LossMapFile] == null) {
 					return null;
-				return ReadTableData(
-					Body.GetEx(JsonKeys.Vehicle_Angledrive)
-						.GetEx<string>(JsonKeys.Vehicle_Angledrive_LossMapFile),
-					"LossMap", false);
+				}
+				var lossmapFile = angleDrive[JsonKeys.Vehicle_Angledrive_LossMapFile];
+				if (string.IsNullOrWhiteSpace(lossmapFile.Value<string>())) {
+					return null;
+				}
+				try {
+					return ReadTableData(lossmapFile.Value<string>(), "LossMap");
+				} catch (Exception) {
+					if (!TolerateMissing) {
+						throw;
+					}
+					return new TableData(Path.Combine(BasePath, lossmapFile.Value<string>()) + MissingFileSuffix, DataSourceType.Missing);
+				}
 			}
 		}
 
@@ -219,8 +252,9 @@ namespace TUGraz.VectoCore.InputData.FileIO.JSON
 			get
 			{
 				var pto = Body[JsonKeys.Vehicle_PTO];
-				if (pto == null)
+				if (pto == null) {
 					return "None";
+				}
 				return pto[JsonKeys.Vehicle_PTO_Type].Value<string>();
 			}
 		}
@@ -230,10 +264,21 @@ namespace TUGraz.VectoCore.InputData.FileIO.JSON
 			get
 			{
 				var pto = Body[JsonKeys.Vehicle_PTO];
-				if (pto == null)
+				if (pto == null || pto[JsonKeys.Vehicle_PTO_LossMapFile] == null) {
 					return null;
-				return ReadTableData(Body.GetEx(JsonKeys.Vehicle_PTO).GetEx<string>(JsonKeys.Vehicle_PTO_LossMapFile), "LossMap",
-					false);
+				}
+				var lossmapFile = pto[JsonKeys.Vehicle_PTO_LossMapFile];
+				if (string.IsNullOrWhiteSpace(lossmapFile.Value<string>())) {
+					return null;
+				}
+				try {
+					return ReadTableData(Body.GetEx(JsonKeys.Vehicle_PTO).GetEx<string>(JsonKeys.Vehicle_PTO_LossMapFile), "LossMap");
+				} catch (Exception) {
+					if (!TolerateMissing) {
+						throw;
+					}
+					return new TableData(Path.Combine(BasePath, lossmapFile.Value<string>()) + MissingFileSuffix, DataSourceType.Missing);
+				}
 			}
 		}
 
@@ -242,9 +287,21 @@ namespace TUGraz.VectoCore.InputData.FileIO.JSON
 			get
 			{
 				var pto = Body[JsonKeys.Vehicle_PTO];
-				if (pto == null)
+				if (pto == null || pto[JsonKeys.Vehicle_PTO_Cycle] == null) {
 					return null;
-				return ReadTableData(Body.GetEx(JsonKeys.Vehicle_PTO).GetEx<string>(JsonKeys.Vehicle_PTO_Cycle), "Cycle", false);
+				}
+				var cycle = pto[JsonKeys.Vehicle_PTO_Cycle];
+				if (string.IsNullOrWhiteSpace(cycle.Value<string>())) {
+					return null;
+				}
+				try {
+					return ReadTableData(Body.GetEx(JsonKeys.Vehicle_PTO).GetEx<string>(JsonKeys.Vehicle_PTO_Cycle), "Cycle");
+				} catch (Exception) {
+					if (!TolerateMissing) {
+						throw;
+					}
+					return new TableData(Path.Combine(BasePath, cycle.Value<string>()) + MissingFileSuffix, DataSourceType.Missing);
+				}
 			}
 		}
 

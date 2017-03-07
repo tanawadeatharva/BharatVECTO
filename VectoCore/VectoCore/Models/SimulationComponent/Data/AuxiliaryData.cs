@@ -53,19 +53,26 @@ namespace TUGraz.VectoCore.Models.SimulationComponent.Data
 
 		[Required] private readonly DelaunayMap _map;
 
+		private string auxId;
+
 		public Watt GetPowerDemand(PerSecond nAuxiliary, Watt powerAuxOut)
 		{
 			var value = _map.Interpolate(nAuxiliary.Value(), powerAuxOut.Value());
 			if (value.HasValue) {
 				return value.Value.SI<Watt>();
 			}
-
-			throw new VectoException("AuxiliaryData: Interpolation failed. nAux: {0}, powerOut:{1}", nAuxiliary.AsRPM,
-				powerAuxOut);
+			value = _map.Extrapolate(nAuxiliary.Value(), powerAuxOut.Value());
+			if (value.HasValue) {
+				return value.Value.SI<Watt>();
+			}
+			throw new VectoException("AuxiliaryData {2}: Interpolation failed. nAux: {0}, powerOut:{1}", nAuxiliary.AsRPM,
+				powerAuxOut, auxId);
 		}
 
-		internal AuxiliaryData(double transmissionRatio, double efficiencyToEngine, double efficiencyToSupply, DelaunayMap map)
+		internal AuxiliaryData(string id, double transmissionRatio, double efficiencyToEngine, double efficiencyToSupply,
+			DelaunayMap map)
 		{
+			auxId = id;
 			_map = map;
 			TransmissionRatio = transmissionRatio;
 			EfficiencyToEngine = efficiencyToEngine;

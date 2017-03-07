@@ -49,6 +49,7 @@ namespace TUGraz.VectoCore.OutputData.ModFilter
 			var v_act = init.Field<MeterPerSecond>((int)ModalResultField.v_act);
 			var n_engine = init.Field<PerSecond>((int)ModalResultField.n_eng_avg);
 			var dist = init.Field<Meter>((int)ModalResultField.dist);
+			var n_gbx_out = init.Field<PerSecond>((int)ModalResultField.n_gbx_out_avg);
 
 			for (var i = 1; i < data.Rows.Count; i++) {
 				//var prev = data.Rows[i - 1];
@@ -66,7 +67,8 @@ namespace TUGraz.VectoCore.OutputData.ModFilter
 					ModalResultField.simulationDistance,
 					ModalResultField.acc,
 					ModalResultField.grad,
-					ModalResultField.Gear);
+					ModalResultField.Gear,
+					ModalResultField.TC_Locked);
 
 				start[(int)ModalResultField.v_act] = v_act;
 				v_act = 2 * current.Field<MeterPerSecond>((int)ModalResultField.v_act) - v_act;
@@ -81,6 +83,10 @@ namespace TUGraz.VectoCore.OutputData.ModFilter
 				start[(int)ModalResultField.n_eng_avg] = n_engine;
 				n_engine = 2 * current.Field<PerSecond>((int)ModalResultField.n_eng_avg) - n_engine;
 				end[(int)ModalResultField.n_eng_avg] = n_engine;
+
+				start[(int)ModalResultField.n_gbx_out_avg] = n_gbx_out;
+				n_gbx_out = 2 * current.Field<PerSecond>((int)ModalResultField.n_gbx_out_avg) - n_gbx_out;
+				end[(int)ModalResultField.n_gbx_out_avg] = n_gbx_out;
 
 				SetConstantValues(current, start, end,
 					ModalResultField.T_eng_fcmap,

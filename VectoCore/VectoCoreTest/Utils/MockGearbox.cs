@@ -44,8 +44,12 @@ namespace TUGraz.VectoCore.Tests.Utils
 	public class MockGearbox : VectoSimulationComponent, IGearbox, ITnInPort, ITnOutPort, IClutchInfo
 	{
 		private ITnOutPort _outPort;
+		private bool _clutchClosed;
 
-		public MockGearbox(IVehicleContainer cockpit) : base(cockpit) {}
+		public MockGearbox(IVehicleContainer cockpit) : base(cockpit)
+		{
+			_clutchClosed = true;
+		}
 
 		public ITnInPort InPort()
 		{
@@ -65,6 +69,8 @@ namespace TUGraz.VectoCore.Tests.Utils
 		{
 			get { return 1.SI<Second>(); }
 		}
+
+		public uint NumGears { get;  set; }
 
 		public MeterPerSecond StartSpeed
 		{
@@ -102,10 +108,10 @@ namespace TUGraz.VectoCore.Tests.Utils
 			bool dryRun = false)
 		{
 			if (_outPort != null) {
-				if (Gear > 0) {
-					return _outPort.Request(absTime, dt, outTorque, outAngularVelocity, dryRun);
-				}
-				return _outPort.Request(absTime, dt, 0.SI<NewtonMeter>(), null, dryRun);
+				//if (Gear > 0) {
+				return _outPort.Request(absTime, dt, outTorque, outAngularVelocity, dryRun);
+				//}
+				//return _outPort.Request(absTime, dt, 0.SI<NewtonMeter>(), 0.RPMtoRad(), dryRun);
 			}
 			throw new NotImplementedException();
 		}
@@ -127,7 +133,12 @@ namespace TUGraz.VectoCore.Tests.Utils
 
 		public bool ClutchClosed(Second absTime)
 		{
-			return true;
+			return _clutchClosed;
+		}
+
+		public void SetClutch(bool closed)
+		{
+			_clutchClosed = closed;
 		}
 
 		public void Connect(IAuxPort aux)

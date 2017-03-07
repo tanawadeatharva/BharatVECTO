@@ -214,7 +214,7 @@ namespace TUGraz.VectoCore.InputData.Reader.DataObjectAdapter
 						throw new ArgumentOutOfRangeException("data", "Unknown Angledrive Type.");
 				}
 			} catch (Exception e) {
-				throw new VectoException("Error while reading Angledrive data: {0}", e.Message);
+				throw new VectoException("Error while reading Angledrive data: {0}", e.Message, e);
 			}
 		}
 

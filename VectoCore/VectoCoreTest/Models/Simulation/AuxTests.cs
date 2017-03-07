@@ -71,7 +71,7 @@ namespace TUGraz.VectoCore.Tests.Models.Simulation
 
 			var sumWriter = new SummaryDataContainer(fileWriter);
 			var container = new VehicleContainer(ExecutionMode.Declaration, modData,
-				(writer, mass, loading) => sumWriter.Write(modData, "", "", "", null, null));
+				(writer, mass, loading, volume, gearCount) => sumWriter.Write(modData, "", "", "", null, null, null, gearCount));
 			var data = DrivingCycleDataReader.ReadFromFile(@"TestData\Cycles\LongHaul_short.vdri", CycleType.DistanceBased, false);
 			new MockDrivingCycle(container, data);
 

@@ -36,5 +36,6 @@ namespace TUGraz.VectoCommon.InputData
 		Embedded,
 		CSVFile,
 		JSONFile,
+		Missing
 	}
 }

@@ -54,6 +54,7 @@ namespace TUGraz.VectoCore.Tests.Integration
 	{
 		public const string AccelerationFile = @"TestData\Components\Truck.vacc";
 		public const string EngineFile = @"TestData\Components\24t Coach.veng";
+		public const string EngineFileHigh = @"TestData\Components\24t Coach_high.veng";
 		public const string AxleGearLossMap = @"TestData\Components\Axle.vtlm";
 		public const string GearboxIndirectLoss = @"TestData\Components\Indirect Gear.vtlm";
 		public const string GearboxDirectLoss = @"TestData\Components\Direct Gear.vtlm";
@@ -63,23 +64,23 @@ namespace TUGraz.VectoCore.Tests.Integration
 		public const string AdvancedAuxFile = @"Testdata\Integration\BusAuxiliaries\AdvAuxTest.aaux";
 
 		public static VectoRun CreateEngineeringRun(DrivingCycleData cycleData, string modFileName,
-			bool overspeed = false)
+			bool overspeed = false, bool highEnginePower = true)
 		{
-			var container = CreatePowerTrain(cycleData, modFileName.Replace(".vmod", ""), overspeed);
+			var container = CreatePowerTrain(cycleData, modFileName.Replace(".vmod", ""), overspeed, highEnginePower);
 
 			return new DistanceRun(container);
 		}
 
-		public static VehicleContainer CreatePowerTrain(DrivingCycleData cycleData, string modFileName,
-			bool overspeed = false)
+		public static VehicleContainer CreatePowerTrain(DrivingCycleData cycleData, string modFileName, bool overspeed = false,
+			bool highEnginePower = true)
 		{
 			var fileWriter = new FileOutputWriter(modFileName);
-			var modData = new ModalDataContainer(modFileName, fileWriter) { WriteAdvancedAux = true };
+			var modData = new ModalDataContainer(modFileName, fileWriter) { WriteAdvancedAux = true, WriteModalResults = true };
 			var container = new VehicleContainer(ExecutionMode.Engineering, modData) {
 				RunData = new VectoRunData { JobName = modFileName, Cycle = cycleData }
 			};
 
-			var engineData = MockSimulationDataFactory.CreateEngineDataFromFile(EngineFile);
+			var engineData = MockSimulationDataFactory.CreateEngineDataFromFile(highEnginePower ? EngineFileHigh : EngineFile);
 			var axleGearData = CreateAxleGearData();
 			var gearboxData = CreateGearboxData();
 			var vehicleData = CreateVehicleData(3300.SI<Kilogram>());
@@ -88,13 +89,20 @@ namespace TUGraz.VectoCore.Tests.Integration
 			var cycle = new DistanceBasedDrivingCycle(container, cycleData);
 			var engine = new CombustionEngine(container, engineData);
 
+			var runData = new VectoRunData() {
+				AxleGearData = axleGearData,
+				VehicleData = vehicleData,
+				GearboxData = gearboxData,
+				EngineData = engineData
+			};
+
 			cycle.AddComponent(new Driver(container, driverData, new DefaultDriverStrategy()))
 				.AddComponent(new Vehicle(container, vehicleData))
 				.AddComponent(new Wheels(container, vehicleData.DynamicTyreRadius, vehicleData.WheelsInertia))
 				.AddComponent(new Brakes(container))
 				.AddComponent(new AxleGear(container, axleGearData))
 				.AddComponent(new DummyRetarder(container))
-				.AddComponent(new Gearbox(container, gearboxData, new AMTShiftStrategy(gearboxData, container), engineData.Inertia))
+				.AddComponent(new Gearbox(container, new AMTShiftStrategy(runData, container), runData))
 				.AddComponent(new Clutch(container, engineData))
 				.AddComponent(engine);
 

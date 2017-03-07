@@ -49,7 +49,7 @@ namespace TUGraz.VectoCore.InputData.Reader.ComponentData
 				var data = VectoCSVFile.Read(fileName, true);
 				return Create(data, gearRatio, gearName);
 			} catch (Exception ex) {
-				throw new VectoException("ERROR while reading TransmissionLossMap: " + ex.Message);
+				throw new VectoException("ERROR while reading TransmissionLossMap " + gearName + ": " + ex.Message, ex);
 			}
 		}
 
@@ -62,7 +62,7 @@ namespace TUGraz.VectoCore.InputData.Reader.ComponentData
 		/// <returns></returns>
 		public static TransmissionLossMap Create(DataTable data, double gearRatio, string gearName)
 		{
-			if (data.Columns.Count < 3) {
+			if (data == null || data.Columns.Count < 3) {
 				throw new VectoException("TransmissionLossMap Data File for {0} must consist of 3 columns.", gearName);
 			}
 
@@ -130,20 +130,20 @@ namespace TUGraz.VectoCore.InputData.Reader.ComponentData
 		private static List<TransmissionLossMap.GearLossMapEntry> CreateFromColumnNames(DataTable data)
 		{
 			return (from DataRow row in data.Rows
-					select new TransmissionLossMap.GearLossMapEntry(
-						inputSpeed: row.ParseDouble(Fields.InputSpeed).RPMtoRad(),
-						inputTorque: row.ParseDouble(Fields.InputTorque).SI<NewtonMeter>(),
-						torqueLoss: row.ParseDouble(Fields.TorqeLoss).SI<NewtonMeter>()))
+				select new TransmissionLossMap.GearLossMapEntry(
+					inputSpeed: row.ParseDouble(Fields.InputSpeed).RPMtoRad(),
+					inputTorque: row.ParseDouble(Fields.InputTorque).SI<NewtonMeter>(),
+					torqueLoss: row.ParseDouble(Fields.TorqeLoss).SI<NewtonMeter>()))
 				.ToList();
 		}
 
 		private static List<TransmissionLossMap.GearLossMapEntry> CreateFromColumIndizes(DataTable data)
 		{
 			return (from DataRow row in data.Rows
-					select new TransmissionLossMap.GearLossMapEntry(
-						inputSpeed: row.ParseDouble(0).RPMtoRad(),
-						inputTorque: row.ParseDouble(1).SI<NewtonMeter>(),
-						torqueLoss: row.ParseDouble(2).SI<NewtonMeter>()))
+				select new TransmissionLossMap.GearLossMapEntry(
+					inputSpeed: row.ParseDouble(0).RPMtoRad(),
+					inputTorque: row.ParseDouble(1).SI<NewtonMeter>(),
+					torqueLoss: row.ParseDouble(2).SI<NewtonMeter>()))
 				.ToList();
 		}
 

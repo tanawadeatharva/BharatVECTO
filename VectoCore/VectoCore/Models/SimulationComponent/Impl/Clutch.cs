@@ -42,18 +42,16 @@ using TUGraz.VectoCore.Utils;
 
 namespace TUGraz.VectoCore.Models.SimulationComponent.Impl
 {
-	public class Clutch : StatefulProviderComponent<SimpleComponentState, ITnOutPort, ITnInPort, ITnOutPort>, IClutch,
+	public class Clutch : StatefulProviderComponent<Clutch.ClutchState, ITnOutPort, ITnInPort, ITnOutPort>, IClutch,
 		ITnOutPort, ITnInPort
 	{
 		private readonly PerSecond _idleSpeed;
 		private readonly PerSecond _ratedSpeed;
 		private const double ClutchEff = 1;
 
-		public IIdleController IdleController
-		{
+		public IIdleController IdleController {
 			get { return _idleController; }
-			set
-			{
+			set {
 				_idleController = value;
 				_idleController.RequestPort = NextComponent;
 			}
@@ -78,7 +76,7 @@ namespace TUGraz.VectoCore.Models.SimulationComponent.Impl
 				engineSpeedIn = _idleSpeed;
 				torqueIn = 0.SI<NewtonMeter>();
 			} else {
-				AddClutchLoss(outTorque, outAngularVelocity, out torqueIn, out engineSpeedIn);
+				AddClutchLoss(outTorque, outAngularVelocity, true, out torqueIn, out engineSpeedIn);
 			}
 			PreviousState.SetState(torqueIn, outAngularVelocity, outTorque, outAngularVelocity);
 
@@ -90,11 +88,13 @@ namespace TUGraz.VectoCore.Models.SimulationComponent.Impl
 		public IResponse Request(Second absTime, Second dt, NewtonMeter outTorque, PerSecond outAngularVelocity,
 			bool dryRun = false)
 		{
-			if (outAngularVelocity == null) {
+			var startClutch = DataBus.VehicleStopped || !PreviousState.ClutchLoss.IsEqual(0);
+			if (!DataBus.ClutchClosed(absTime) && !dryRun) {
 				Log.Debug("Invoking IdleController...");
 				var retval = IdleController.Request(absTime, dt, outTorque, null, dryRun);
 				retval.ClutchPowerRequest = 0.SI<Watt>();
-				CurrentState.SetState(0.SI<NewtonMeter>(), retval.EngineSpeed, outTorque, retval.EngineSpeed);
+				CurrentState.SetState(0.SI<NewtonMeter>(), retval.EngineSpeed, outTorque, outAngularVelocity);
+				CurrentState.ClutchLoss = 0.SI<Watt>();
 				return retval;
 			}
 			if (IdleController != null) {
@@ -110,29 +110,36 @@ namespace TUGraz.VectoCore.Models.SimulationComponent.Impl
 				angularVelocityIn = _idleSpeed;
 				torqueIn = 0.SI<NewtonMeter>();
 			} else {
-				AddClutchLoss(outTorque, outAngularVelocity, out torqueIn, out angularVelocityIn);
+				AddClutchLoss(outTorque, outAngularVelocity, (DataBus.Gear == 1 && outTorque > 0) ||startClutch || outAngularVelocity.IsEqual(0), out torqueIn, out angularVelocityIn);
 			}
 			Log.Debug("to Engine:   torque: {0}, angularVelocity: {1}, power {2}", torqueIn, angularVelocityIn,
 				Formulas.TorqueToPower(torqueIn, angularVelocityIn));
 
+			var avgOutAngularVelocity = (PreviousState.OutAngularVelocity + outAngularVelocity) / 2.0;
+			var avgInAngularVelocity = (PreviousState.InAngularVelocity + angularVelocityIn) / 2.0;
+			var clutchLoss = torqueIn * avgInAngularVelocity - outTorque * avgOutAngularVelocity;
+			if (!startClutch && !clutchLoss.IsEqual(0)) {
+				// we don't want to have negative clutch losses, so adapt input torque to match the average output power
+				torqueIn = outTorque * avgOutAngularVelocity / avgInAngularVelocity;
+			}
 
 			var retVal = NextComponent.Request(absTime, dt, torqueIn, angularVelocityIn, dryRun);
 			if (!dryRun) {
 				CurrentState.SetState(torqueIn, angularVelocityIn, outTorque, outAngularVelocity);
+				CurrentState.ClutchLoss = torqueIn * avgInAngularVelocity - outTorque * avgOutAngularVelocity;
 			}
 			retVal.ClutchPowerRequest = outTorque *
 										((PreviousState.OutAngularVelocity ?? 0.SI<PerSecond>()) + CurrentState.OutAngularVelocity) / 2.0;
 			return retVal;
 		}
 
-		private void AddClutchLoss(NewtonMeter torque, PerSecond angularVelocity, out NewtonMeter torqueIn,
-			out PerSecond angularVelocityIn)
+		private void AddClutchLoss(NewtonMeter torque, PerSecond angularVelocity, bool startClutch, out NewtonMeter torqueIn, out PerSecond angularVelocityIn)
 		{
 			torqueIn = torque;
 			angularVelocityIn = angularVelocity;
 
 			var engineSpeedNorm = (angularVelocity - _idleSpeed) / (_ratedSpeed - _idleSpeed);
-			if (engineSpeedNorm < Constants.SimulationSettings.ClutchClosingSpeedNorm) {
+			if (startClutch && engineSpeedNorm < Constants.SimulationSettings.ClutchClosingSpeedNorm) {
 				// MQ: 27.5.2016: when angularVelocity is 0 (at the end of the simulation interval) don't use the 
 				//     angularVelocity but average angular velocity
 				//     Reason: if angularVelocity = 0 also the power (torque * angularVelocity) is 0 and then
@@ -144,7 +151,7 @@ namespace TUGraz.VectoCore.Models.SimulationComponent.Impl
 				var engineSpeed = VectoMath.Max(_idleSpeed, angularVelocity);
 
 				angularVelocityIn = _clutchSpeedSlippingFactor * engineSpeed + _idleSpeed;
-				torqueIn = torque * effectiveAngularVelocity / ClutchEff / angularVelocityIn;
+				//torqueIn = torque * effectiveAngularVelocity / ClutchEff / angularVelocityIn;
 			}
 		}
 
@@ -160,6 +167,11 @@ namespace TUGraz.VectoCore.Models.SimulationComponent.Impl
 				container[ModalResultField.P_clutch_loss] = CurrentState.InTorque * avgInAngularVelocity -
 															CurrentState.OutTorque * avgOutAngularVelocity;
 			}
+		}
+
+		public class ClutchState : SimpleComponentState
+		{
+			public Watt ClutchLoss = 0.SI<Watt>();
 		}
 	}
 }

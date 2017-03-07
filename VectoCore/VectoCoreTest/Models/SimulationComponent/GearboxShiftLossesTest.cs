@@ -35,6 +35,7 @@ using TUGraz.VectoCommon.Models;
 using TUGraz.VectoCommon.Utils;
 using TUGraz.VectoCore.InputData.Reader.ComponentData;
 using TUGraz.VectoCore.Models.Connector.Ports.Impl;
+using TUGraz.VectoCore.Models.Simulation.Data;
 using TUGraz.VectoCore.Models.Simulation.DataBus;
 using TUGraz.VectoCore.Models.Simulation.Impl;
 using TUGraz.VectoCore.Models.SimulationComponent.Data;
@@ -59,19 +60,31 @@ namespace TUGraz.VectoCore.Tests.Models.SimulationComponent
 		}
 
 		[Test,
-		TestCase(200, 2u, 562, 620, 36.4855),
-		TestCase(400, 2u, 562, 620, 55.9878),
-		TestCase(600, 2u, 562, 620, 75.4901),
-		TestCase(800, 2u, 562, 620, 94.9924),
-		TestCase(200, 2u, 562, 600, 39.6371),
-		TestCase(400, 2u, 562, 600, 59.4279),
-		TestCase(600, 2u, 562, 600, 79.218),
-		TestCase(800, 2u, 562, 600, 99.0095),
-		TestCase(400, 3u, 500, 490, 9.6354),
-		TestCase(400, 3u, 550, 490, 17.325),
-		TestCase(600, 3u, 550, 490, 33.5574),
+		TestCase(200, 2u, 1, 562, 620, 36.4855),
+		TestCase(400, 2u, 1, 562, 620, 55.9878),
+		TestCase(600, 2u, 1, 562, 620, 75.4901),
+		TestCase(800, 2u, 1, 562, 620, 94.9924),
+		TestCase(200, 2u, 1, 562, 600, 39.6371),
+		TestCase(400, 2u, 1, 562, 600, 59.4279),
+		TestCase(600, 2u, 1, 562, 600, 79.218),
+		TestCase(800, 2u, 1, 562, 600, 99.0095),
+		TestCase(400, 3u, 1, 500, 490, 9.6354),
+		TestCase(400, 3u, 1, 550, 490, 17.325),
+		TestCase(600, 3u, 1, 550, 490, 33.5574),
+		TestCase(200, 2u, 0.7, 562, 620, 31.3906),
+		TestCase(400, 2u, 0.7, 562, 620, 50.8929),
+		TestCase(600, 2u, 0.7, 562, 620, 70.3952),
+		TestCase(800, 2u, 0.7, 562, 620, 89.8975),
+		TestCase(200, 2u, 0.7, 562, 600, 33.6832),
+		TestCase(400, 2u, 0.7, 562, 600, 53.4741),
+		TestCase(600, 2u, 0.7, 562, 600, 73.2648),
+		TestCase(800, 2u, 0.7, 562, 600, 93.0557),
+		TestCase(400, 3u, 0.7, 500, 490, 15.9818),
+		TestCase(400, 3u, 0.7, 550, 490, 21.8670),
+		TestCase(600, 3u, 0.7, 550, 490, 38.0991),
 		]
-		public void TestShiftLossComputation(double torqueDemand, uint gear, double preShiftRpm, double postShiftRpm,
+		public void TestShiftLossComputation(double torqueDemand, uint gear, double inertiaFactor, double preShiftRpm,
+			double postShiftRpm,
 			double expectedShiftLoss)
 		{
 			var engineInertia = 5.SI<KilogramSquareMeter>();
@@ -79,6 +92,7 @@ namespace TUGraz.VectoCore.Tests.Models.SimulationComponent
 			var gearboxData = ATPowerTrain.CreateGearboxData(GearboxType.ATSerial);
 
 			var container = new VehicleContainer(ExecutionMode.Engineering);
+			gearboxData.PowershiftInertiaFactor = inertiaFactor;
 
 			var cycleDataStr = "0, 0, 0, 2\n100, 20, 0, 0\n1000, 50, 0, 0";
 			var cycleData = SimpleDrivingCycles.CreateCycleData(cycleDataStr);
@@ -96,7 +110,11 @@ namespace TUGraz.VectoCore.Tests.Models.SimulationComponent
 			var engine = new CombustionEngine(container,
 				MockSimulationDataFactory.CreateEngineDataFromFile(ATPowerTrain.EngineFile));
 			container.Engine = engine;
-			var gbx = new ATGearbox(container, gearboxData, new ATShiftStrategy(gearboxData, container), engineInertia);
+			var runData = new VectoRunData() {
+				GearboxData = gearboxData,
+				EngineData = new CombustionEngineData() { Inertia = 5.SI<KilogramSquareMeter>() }
+			};
+			var gbx = new ATGearbox(container, new ATShiftStrategy(gearboxData, container), runData);
 			gbx.Connect(engine);
 			gbx.IdleController = new MockIdleController();
 

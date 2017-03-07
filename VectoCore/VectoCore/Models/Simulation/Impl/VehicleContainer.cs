@@ -42,6 +42,7 @@ using TUGraz.VectoCore.Models.Simulation.DataBus;
 using TUGraz.VectoCore.Models.SimulationComponent;
 using TUGraz.VectoCore.Models.SimulationComponent.Data;
 using TUGraz.VectoCore.Models.SimulationComponent.Data.Gearbox;
+using TUGraz.VectoCore.Models.SimulationComponent.Impl;
 using TUGraz.VectoCore.OutputData;
 using TUGraz.VectoCore.Utils;
 
@@ -83,8 +84,7 @@ namespace TUGraz.VectoCore.Models.Simulation.Impl
 		{
 			[System.Diagnostics.CodeAnalysis.SuppressMessage("Microsoft.Design",
 				"CA1065:DoNotRaiseExceptionsInUnexpectedLocations")]
-			get
-			{
+			get {
 				if (Gearbox == null) {
 					throw new VectoException("no gearbox available!");
 				}
@@ -96,8 +96,7 @@ namespace TUGraz.VectoCore.Models.Simulation.Impl
 		{
 			[System.Diagnostics.CodeAnalysis.SuppressMessage("Microsoft.Design",
 				"CA1065:DoNotRaiseExceptionsInUnexpectedLocations")]
-			get
-			{
+			get {
 				if (Gearbox == null) {
 					throw new VectoException("No Gearbox available. StartSpeed unkown");
 				}
@@ -109,8 +108,7 @@ namespace TUGraz.VectoCore.Models.Simulation.Impl
 		{
 			[System.Diagnostics.CodeAnalysis.SuppressMessage("Microsoft.Design",
 				"CA1065:DoNotRaiseExceptionsInUnexpectedLocations")]
-			get
-			{
+			get {
 				if (Gearbox == null) {
 					throw new VectoException("No Gearbox available. StartAcceleration unknown.");
 				}
@@ -148,6 +146,11 @@ namespace TUGraz.VectoCore.Models.Simulation.Impl
 			get { return Gearbox.TractionInterruption; }
 		}
 
+		public uint NumGears
+		{
+			get { return Gearbox.NumGears; }
+		}
+
 		#endregion
 
 		#region IEngineCockpit
@@ -156,8 +159,7 @@ namespace TUGraz.VectoCore.Models.Simulation.Impl
 		{
 			[System.Diagnostics.CodeAnalysis.SuppressMessage("Microsoft.Design",
 				"CA1065:DoNotRaiseExceptionsInUnexpectedLocations")]
-			get
-			{
+			get {
 				if (Engine == null) {
 					throw new VectoException("no engine available!");
 				}
@@ -222,6 +224,11 @@ namespace TUGraz.VectoCore.Models.Simulation.Impl
 		public Kilogram TotalMass
 		{
 			get { return Vehicle != null ? Vehicle.TotalMass : 0.SI<Kilogram>(); }
+		}
+
+		public CubicMeter CargoVolume
+		{
+			get { return Vehicle != null ? Vehicle.CargoVolume : 0.SI<CubicMeter>(); }
 		}
 
 		public Newton AirDragResistance(MeterPerSecond previousVelocity, MeterPerSecond nextVelocity)
@@ -290,7 +297,8 @@ namespace TUGraz.VectoCore.Models.Simulation.Impl
 				.If<IDrivingCycleInfo>(c => {
 					DrivingCycle = c;
 					commitPriority = 6;
-				});
+				})
+				.If<PTOCycleController>(c => { commitPriority = 99; });
 
 			_components.Add(Tuple.Create(commitPriority, component));
 			_components = _components.OrderBy(x => x.Item1).Reverse().ToList();
@@ -301,11 +309,13 @@ namespace TUGraz.VectoCore.Models.Simulation.Impl
 			Log.Info("VehicleContainer committing simulation. time: {0}, dist: {1}, speed: {2}", time,
 				Distance, VehicleSpeed);
 
+
 			foreach (var component in _components) {
 				component.Item2.CommitSimulationStep(ModData);
 			}
 
 			if (ModData != null) {
+				ModData[ModalResultField.drivingBehavior] = DriverBehavior;
 				ModData[ModalResultField.time] = time + simulationInterval / 2;
 				ModData[ModalResultField.simulationInterval] = simulationInterval;
 				ModData.CommitSimulationStep();
@@ -317,7 +327,8 @@ namespace TUGraz.VectoCore.Models.Simulation.Impl
 			Log.Info("VehicleContainer finishing simulation.");
 			ModData.Finish(RunStatus);
 
-			WriteSumData(ModData, VehicleMass, VehicleLoading);
+			WriteSumData(ModData, VehicleMass, VehicleLoading, Vehicle != null ? Vehicle.CargoVolume : 0.SI<CubicMeter>(),
+				Gearbox != null ? Gearbox.NumGears : 0u);
 
 			ModData.FinishSimulation();
 			DrivingCycle.FinishSimulation();
@@ -334,8 +345,7 @@ namespace TUGraz.VectoCore.Models.Simulation.Impl
 
 		public Meter Distance
 		{
-			get
-			{
+			get {
 				if (MilageCounter == null) {
 					Log.Warn("No MileageCounter in VehicleContainer. Distance cannot be measured.");
 					return 0.SI<Meter>();
@@ -376,12 +386,12 @@ namespace TUGraz.VectoCore.Models.Simulation.Impl
 
 		public DrivingBehavior DriverBehavior
 		{
-			get { return Driver.DriverBehavior; }
+			get { return Driver != null ? Driver.DriverBehavior : DrivingBehavior.Driving; }
 		}
 
 		public MeterPerSquareSecond DriverAcceleration
 		{
-			get { return Driver.DriverAcceleration; }
+			get { return Driver != null ? Driver.DriverAcceleration : 0.SI<MeterPerSquareSecond>(); }
 		}
 
 		public Meter CycleStartDistance

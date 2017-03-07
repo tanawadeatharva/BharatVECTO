@@ -57,6 +57,7 @@ namespace TUGraz.VectoCore.Tests.Models.SimulationComponent
 	{
 		public const string JobFile = @"TestData\Jobs\24t Coach EngineOnly.vecto";
 		public const string EngineFile = @"TestData\Components\24t Coach.veng";
+		public const string EngineFileHigh = @"TestData\Components\24t Coach_high.veng";
 		public const string AccelerationFile = @"TestData\Components\Coach.vacc";
 		public const double Tolerance = 0.001;
 
@@ -66,6 +67,7 @@ namespace TUGraz.VectoCore.Tests.Models.SimulationComponent
 			var engineData = MockSimulationDataFactory.CreateEngineDataFromFile(EngineFile);
 
 			var vehicleData = CreateVehicleData(33000.SI<Kilogram>());
+			vehicleData.DynamicTyreRadius = 0.026372213.SI<Meter>(); // take into account axle ratio, gear ratio
 
 			var driverData = CreateDriverData();
 
@@ -99,12 +101,12 @@ namespace TUGraz.VectoCore.Tests.Models.SimulationComponent
 			vehicleContainer.CommitSimulationStep(absTime, response.SimulationInterval);
 			absTime += response.SimulationInterval;
 
-			Assert.AreEqual(4.9812, vehicleContainer.VehicleSpeed.Value(), Tolerance);
+			Assert.AreEqual(4.9877, vehicleContainer.VehicleSpeed.Value(), Tolerance);
 			Assert.AreEqual(0.2004, response.SimulationInterval.Value(), Tolerance);
 			Assert.AreEqual(engine.PreviousState.FullDragTorque.Value(), engine.PreviousState.EngineTorque.Value(),
 				Constants.SimulationSettings.LineSearchTolerance);
 
-			while (vehicleContainer.VehicleSpeed > 1) {
+			while (vehicleContainer.VehicleSpeed > 1.7) {
 				response = driver.DrivingActionCoast(absTime, 1.SI<Meter>(), velocity, 0.SI<Radian>());
 
 				Assert.IsInstanceOfType(response, typeof(ResponseSuccess));
@@ -122,7 +124,7 @@ namespace TUGraz.VectoCore.Tests.Models.SimulationComponent
 			var engineData = MockSimulationDataFactory.CreateEngineDataFromFile(EngineFile);
 
 			var vehicleData = CreateVehicleData(33000.SI<Kilogram>());
-
+			vehicleData.DynamicTyreRadius = 0.026372213.SI<Meter>(); // take into account axle ratio, gear ratio
 			var driverData = CreateDriverData();
 
 			var fileWriter = new FileOutputWriter("Coach_MinimalPowertrain_Coasting");
@@ -158,12 +160,12 @@ namespace TUGraz.VectoCore.Tests.Models.SimulationComponent
 			vehicleContainer.CommitSimulationStep(absTime, response.SimulationInterval);
 			absTime += response.SimulationInterval;
 
-			Assert.AreEqual(4.9816, vehicleContainer.VehicleSpeed.Value(), Tolerance);
+			Assert.AreEqual(4.9878, vehicleContainer.VehicleSpeed.Value(), Tolerance);
 			Assert.AreEqual(0.2004, response.SimulationInterval.Value(), Tolerance);
 			Assert.AreEqual(engine.PreviousState.FullDragTorque.Value(), engine.PreviousState.EngineTorque.Value(),
 				Constants.SimulationSettings.LineSearchTolerance);
 
-			while (vehicleContainer.VehicleSpeed > 1) {
+			while (vehicleContainer.VehicleSpeed > 1.7) {
 				response = driver.DrivingActionCoast(absTime, 1.SI<Meter>(), velocity, gradient);
 
 				Assert.IsInstanceOfType(response, typeof(ResponseSuccess));
@@ -178,9 +180,12 @@ namespace TUGraz.VectoCore.Tests.Models.SimulationComponent
 		[TestMethod]
 		public void DriverOverloadTest()
 		{
-			var engineData = MockSimulationDataFactory.CreateEngineDataFromFile(EngineFile);
+			var engineData = MockSimulationDataFactory.CreateEngineDataFromFile(EngineFileHigh);
 
 			var vehicleData = CreateVehicleData(33000.SI<Kilogram>());
+
+			// take into account the axle ratio and 1st-gear ratio
+			vehicleData.DynamicTyreRadius /= (3.24 * 6.38);
 
 			var driverData = CreateDriverData();
 
@@ -215,7 +220,7 @@ namespace TUGraz.VectoCore.Tests.Models.SimulationComponent
 			vehicleContainer.CommitSimulationStep(absTime, response.SimulationInterval);
 			absTime += response.SimulationInterval;
 
-			Assert.AreEqual(0.9748, modData.GetValues<SI>(ModalResultField.acc).Last().Value(), Tolerance);
+			Assert.AreEqual(0.24182, modData.GetValues<SI>(ModalResultField.acc).Last().Value(), Tolerance);
 
 			response = driverPort.Request(absTime, 1.SI<Meter>(), 20.SI<MeterPerSecond>(), 0.SI<Radian>());
 
@@ -224,7 +229,7 @@ namespace TUGraz.VectoCore.Tests.Models.SimulationComponent
 			vehicleContainer.CommitSimulationStep(absTime, response.SimulationInterval);
 			absTime += response.SimulationInterval;
 
-			Assert.AreEqual(0.78766, modData.GetValues<SI>(ModalResultField.acc).Last().Value(), Tolerance);
+			Assert.AreEqual(0.2900, modData.GetValues<SI>(ModalResultField.acc).Last().Value(), Tolerance);
 		}
 
 		[TestMethod]

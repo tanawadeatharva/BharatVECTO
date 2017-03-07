@@ -80,14 +80,15 @@ namespace TUGraz.VectoCore.InputData.Reader.DataObjectAdapter
 				case CrossWindCorrectionMode.DeclarationModeCorrection:
 					retVal.CrossWindCorrectionCurve =
 						new CrosswindCorrectionCdxALookup(
-							DeclarationDataAdapter.GetDeclarationAirResistanceCurve(GetAirdragParameterSet(retVal.VehicleCategory, data.AxleConfiguration, axles.Count),
+							DeclarationDataAdapter.GetDeclarationAirResistanceCurve(
+								GetAirdragParameterSet(retVal.VehicleCategory, data.AxleConfiguration, axles.Count),
 								data.AirDragArea), CrossWindCorrectionMode.DeclarationModeCorrection);
 					break;
 				default:
-					throw new ArgumentOutOfRangeException();
+					throw new ArgumentOutOfRangeException("CrosswindCorrection", data.CrossWindCorrectionMode.ToString());
 			}
 
-			
+
 			retVal.AxleData = axles.Select(axle => new Axle {
 				WheelsDimension = axle.Wheels,
 				Inertia = axle.Inertia,
@@ -150,7 +151,7 @@ namespace TUGraz.VectoCore.InputData.Reader.DataObjectAdapter
 				throw new VectoSimulationException("At least two Gear-Entries must be defined in Gearbox!");
 			}
 
-			retVal.Inertia = gearbox.Inertia;
+			retVal.Inertia = gearbox.Type.ManualTransmission() ? gearbox.Inertia : 0.SI<KilogramSquareMeter>();
 			retVal.TractionInterruption = gearbox.TractionInterruption;
 			retVal.TorqueReserve = gearbox.TorqueReserve;
 			retVal.StartTorqueReserve = gearbox.StartTorqueReserve;
@@ -179,7 +180,7 @@ namespace TUGraz.VectoCore.InputData.Reader.DataObjectAdapter
 				if (gearbox.Type.AutomaticTransmission() && gear.ShiftPolygon == null) {
 					throw new VectoException("Shiftpolygons are required for AT Gearboxes!");
 				}
-				var shiftPolygon = gear.ShiftPolygon != null
+				var shiftPolygon = gear.ShiftPolygon != null && gear.ShiftPolygon.SourceType != DataSourceType.Missing
 					? ShiftPolygonReader.Create(gear.ShiftPolygon)
 					: DeclarationData.Gearbox.ComputeShiftPolygon((int)i, fullLoadCurve, gearbox.Gears, engineData, axlegearRatio,
 						dynamicTyreRadius);

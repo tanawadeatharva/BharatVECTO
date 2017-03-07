@@ -128,11 +128,11 @@ namespace TUGraz.VectoCore.Models.SimulationComponent.Impl
 						CurrentState.InTorque = torque;
 					})
 					.Case<ResponseOverload>(r => {
-						angularVelocity = SearchAlgorithm.Search(angularVelocity, r.Delta, 50.RPMtoRad(),
+						var torque = SearchAlgorithm.Search(CycleIterator.LeftSample.Torque, r.Delta, 50.SI<NewtonMeter>(),
 							getYValue: result => ((ResponseDryRun)result).DeltaFullLoad,
-							evaluateFunction: n => NextComponent.Request(absTime, dt, CycleIterator.LeftSample.Torque, n, true),
+							evaluateFunction: t => NextComponent.Request(absTime, dt, t, angularVelocity, true),
 							criterion: y => ((ResponseDryRun)y).DeltaFullLoad.Value());
-						response = NextComponent.Request(absTime, dt, CycleIterator.LeftSample.Torque, angularVelocity);
+						response = NextComponent.Request(absTime, dt, torque, angularVelocity);
 						CurrentState.InAngularVelocity = angularVelocity;
 					})
 					.Case<ResponseFailTimeInterval>(r => { dt = r.DeltaT; })
@@ -166,14 +166,14 @@ namespace TUGraz.VectoCore.Models.SimulationComponent.Impl
 		protected override void DoCommitSimulationStep()
 		{
 			CycleIterator.MoveNext();
+			AdvanceState();
 		}
 
 		#endregion
 
 		public CycleData CycleData
 		{
-			get
-			{
+			get {
 				return new CycleData {
 					AbsTime = CycleIterator.LeftSample.Time,
 					AbsDistance = null,

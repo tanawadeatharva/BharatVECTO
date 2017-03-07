@@ -33,6 +33,7 @@ using System;
 using System.Data;
 using System.Linq;
 using System.Runtime.CompilerServices;
+using Org.BouncyCastle.Asn1;
 using TUGraz.VectoCommon.Models;
 using TUGraz.VectoCommon.Utils;
 using TUGraz.VectoCore.Configuration;
@@ -41,7 +42,8 @@ using TUGraz.VectoCore.Configuration;
 
 namespace TUGraz.VectoCore.OutputData
 {
-	public delegate void WriteSumData(IModalDataContainer data, Kilogram vehicleMass, Kilogram loading);
+	public delegate void WriteSumData(
+		IModalDataContainer data, Kilogram vehicleMass, Kilogram loading, CubicMeter cargoVolume, uint gearCount);
 
 	/// <summary>
 	/// Class for the sum file in vecto.
@@ -55,6 +57,7 @@ namespace TUGraz.VectoCore.OutputData
 		public const string STATUS = "Status";
 		public const string MASS = "Mass [kg]";
 		public const string LOADING = "Loading [kg]";
+		public const string VOLUME = "Cargo Volume [m³]";
 		public const string TIME = "time [s]";
 		public const string DISTANCE = "distance [km]";
 		public const string SPEED = "speed [km/h]";
@@ -73,17 +76,14 @@ namespace TUGraz.VectoCore.OutputData
 		public const string FCFINAL_KM = "FC-Final [g/km]";
 		public const string FCFINAL_LITERPER100KM = "FC-Final [l/100km]";
 		public const string FCFINAL_LITERPER100TKM = "FC-Final [l/100tkm]";
+		public const string FCFINAL_LiterPer100M3KM = "FC-Final [l/100m³km]";
 
 		public const string CO2_KM = "CO2 [g/km]";
 		public const string CO2_TKM = "CO2 [g/tkm]";
+		public const string CO2_M3KM = "CO2 [g/m³km]";
 
 		public const string P_WHEEL_POS = "P_wheel_in_pos [kW]";
-		public const string P_BRAKE_LOSS = "P_brake_loss [kW]";
-		public const string P_CLUTCH_POS = "P_clutch_pos [kW]";
-		public const string P_CLUTCH_NEG = "P_clutch_neg [kW]";
 		public const string P_FCMAP_POS = "P_fcmap_pos [kW]";
-		public const string P_ANGLE_LOSS = "P_angle_loss [kW]";
-		public const string P_TC_LOSS = "P_tc_loss [kW]";
 
 		public const string E_FORMAT = "E_{0} [kWh]";
 		public const string E_AUX_FORMAT = "E_aux_{0} [kWh]";
@@ -92,16 +92,18 @@ namespace TUGraz.VectoCore.OutputData
 		public const string E_AIR = "E_air [kWh]";
 		public const string E_ROLL = "E_roll [kWh]";
 		public const string E_GRAD = "E_grad [kWh]";
-		public const string E_INERTIA = "E_inertia [kWh]";
+		public const string E_VEHICLE_INERTIA = "E_vehi_inertia [kWh]";
+		public const string E_POWERTRAIN_INERTIA = "E_powertrain_inertia [kWh]";
 		public const string E_BRAKE = "E_brake [kWh]";
 		public const string E_GBX_LOSS = "E_gbx_loss [kWh]";
+		public const string E_SHIFT_LOSS = "E_shift_loss [kWh]";
 		public const string E_AXL_LOSS = "E_axl_loss [kWh]";
 		public const string E_RET_LOSS = "E_ret_loss [kWh]";
 		public const string E_TC_LOSS = "E_tc_loss [kWh]";
 		public const string E_ANGLE_LOSS = "E_angle_loss [kWh]";
-		public const string E_CLUTCH_POS = "E_clutch_pos [kWh]";
-		public const string E_CLUTCH_NEG = "E_clutch_neg [kWh]";
+		public const string E_CLUTCH_LOSS = "E_clutch_loss [kWh]";
 		public const string E_FCMAP_POS = "E_fcmap_pos [kWh]";
+		public const string E_FCMAP_NEG = "E_fcmap_neg [kWh]";
 
 		public const string ACC = "a [m/s^2]";
 		public const string ACC_POS = "a_pos [m/s^2]";
@@ -111,9 +113,22 @@ namespace TUGraz.VectoCore.OutputData
 		public const string DEC_TIMESHARE = "DecelerationTimeShare [%]";
 		public const string CRUISE_TIMESHARE = "CruiseTimeShare [%]";
 		public const string STOP_TIMESHARE = "StopTimeShare [%]";
+
+		public const string MAX_SPEED = "max. speed [km/h";
+		public const string MAX_ACCELERATION = "max. acc [m/s²]";
+		public const string MAX_DECELERATION = "max. dec [m/s²]";
+		public const string AVG_ENGINE_SPEED = "n_eng_avg [rpm]";
+		public const string MAX_ENGINE_SPEED = "n_eng_max [rpm]";
+		public const string NUM_GEARSHIFTS = "gear shifts [-]";
+		public const string ENGINE_FULL_LOAD_TIME_SHARE = "Engine max. Load time share [%]";
+		public const string COASTING_TIME_SHARE = "CoastingTimeShare [%]";
+		public const string BRAKING_TIME_SHARE = "BrakingTImeShare [%]";
+
+		public const string TIME_SHARE_PER_GEAR_FORMAT = "Gear {0} TimeShare [%]";
+
 		// ReSharper restore InconsistentNaming
 
-		private readonly DataTable _table;
+		internal readonly DataTable _table;
 		private readonly ISummaryWriter _sumWriter;
 
 		protected SummaryDataContainer() {}
@@ -133,11 +148,16 @@ namespace TUGraz.VectoCore.OutputData
 			_table.Columns.Add(STATUS, typeof(string));
 
 			_table.Columns.AddRange(new[] {
-				MASS, LOADING, TIME, DISTANCE, SPEED, ALTITUDE_DELTA, FCMAP_H, FCMAP_KM, FCAUXC_H, FCAUXC_KM, FCWHTCC_H, FCWHTCC_KM,
-				FCAAUX_H, FCAAUX_KM, FCFINAL_H, FCFINAL_KM, FCFINAL_LITERPER100KM, FCFINAL_LITERPER100TKM, CO2_KM, CO2_TKM,
-				P_WHEEL_POS, P_BRAKE_LOSS, P_ANGLE_LOSS, P_TC_LOSS, P_CLUTCH_POS, P_CLUTCH_NEG, P_FCMAP_POS, E_AUX, E_AIR, E_ROLL,
-				E_GRAD, E_INERTIA, E_BRAKE, E_GBX_LOSS, E_AXL_LOSS, E_ANGLE_LOSS, E_RET_LOSS, E_TC_LOSS, E_CLUTCH_POS, E_CLUTCH_NEG,
-				E_FCMAP_POS, ACC, ACC_POS, ACC_NEG, ACC_TIMESHARE, DEC_TIMESHARE, CRUISE_TIMESHARE, STOP_TIMESHARE
+				MASS, LOADING, VOLUME, TIME, DISTANCE, SPEED, ALTITUDE_DELTA, FCMAP_H, FCMAP_KM, FCAUXC_H, FCAUXC_KM, FCWHTCC_H,
+				FCWHTCC_KM,
+				FCAAUX_H, FCAAUX_KM, FCFINAL_H, FCFINAL_KM, FCFINAL_LITERPER100KM, FCFINAL_LITERPER100TKM, FCFINAL_LiterPer100M3KM,
+				CO2_KM, CO2_TKM, CO2_M3KM,
+				P_WHEEL_POS, P_FCMAP_POS,
+				E_FCMAP_POS, E_FCMAP_NEG, E_POWERTRAIN_INERTIA, E_AUX, E_CLUTCH_LOSS, E_TC_LOSS, E_SHIFT_LOSS, E_GBX_LOSS,
+				E_RET_LOSS, E_ANGLE_LOSS, E_AXL_LOSS, E_BRAKE, E_VEHICLE_INERTIA, E_AIR, E_ROLL, E_GRAD,
+				ACC, ACC_POS, ACC_NEG, ACC_TIMESHARE, DEC_TIMESHARE, CRUISE_TIMESHARE, STOP_TIMESHARE,
+				MAX_SPEED, MAX_ACCELERATION, MAX_DECELERATION, AVG_ENGINE_SPEED, MAX_ENGINE_SPEED, NUM_GEARSHIFTS,
+				ENGINE_FULL_LOAD_TIME_SHARE, COASTING_TIME_SHARE, BRAKING_TIME_SHARE
 			}.Select(x => new DataColumn(x, typeof(SI))).ToArray());
 		}
 
@@ -156,7 +176,7 @@ namespace TUGraz.VectoCore.OutputData
 		/// </summary>
 		[MethodImpl(MethodImplOptions.Synchronized)]
 		public virtual void Write(IModalDataContainer modData, string jobFileName, string jobName, string cycleFileName,
-			Kilogram vehicleMass, Kilogram vehicleLoading)
+			Kilogram vehicleMass, Kilogram vehicleLoading, CubicMeter cargoVolume, uint gearCount)
 		{
 			var row = _table.NewRow();
 			_table.Rows.Add(row);
@@ -168,8 +188,10 @@ namespace TUGraz.VectoCore.OutputData
 
 			row[MASS] = vehicleMass;
 			row[LOADING] = vehicleLoading;
+			row[VOLUME] = cargoVolume;
 
-			row[TIME] = modData.Duration();
+			var totalTime = modData.Duration();
+			row[TIME] = totalTime;
 
 			var distance = modData.Distance();
 			if (distance != null) {
@@ -217,6 +239,9 @@ namespace TUGraz.VectoCore.OutputData
 				row[FCFINAL_LITERPER100TKM] = (modData.FuelConsumptionFinalLiterPer100Kilometer() ?? 0.SI()) /
 											vehicleLoading.ConvertTo().Ton;
 			}
+			if (cargoVolume > 0) {
+				row[FCFINAL_LiterPer100M3KM] = (modData.FuelConsumptionFinalLiterPer100Kilometer() ?? 0.SI()) / cargoVolume;
+			}
 
 			var kilogramPerMeter = modData.CO2PerMeter();
 			if (kilogramPerMeter != null) {
@@ -224,17 +249,12 @@ namespace TUGraz.VectoCore.OutputData
 				if (vehicleLoading != null && !vehicleLoading.IsEqual(0)) {
 					row[CO2_TKM] = kilogramPerMeter.ConvertTo().Gramm.Per.Kilo.Meter / vehicleLoading.ConvertTo().Ton;
 				}
+				if (cargoVolume > 0) {
+					row[CO2_M3KM] = kilogramPerMeter.ConvertTo().Gramm.Per.Kilo.Meter / cargoVolume;
+				}
 			}
 
 			row[P_WHEEL_POS] = modData.PowerWheelPositive().ConvertTo().Kilo.Watt;
-			row[P_BRAKE_LOSS] = modData.PowerBrake().ConvertTo().Kilo.Watt;
-
-			row[P_ANGLE_LOSS] = modData.PowerAngle().ConvertTo().Kilo.Watt;
-
-			row[P_TC_LOSS] = modData.PowerTorqueConverter().ConvertTo().Kilo.Watt;
-
-			row[P_CLUTCH_POS] = modData.EnginePowerPositiveAverage().ConvertTo().Kilo.Watt;
-			row[P_CLUTCH_NEG] = modData.EnginePowerNegativeAverage().ConvertTo().Kilo.Watt;
 
 			row[P_FCMAP_POS] = modData.TotalPowerEnginePositiveAverage().ConvertTo().Kilo.Watt;
 
@@ -254,42 +274,74 @@ namespace TUGraz.VectoCore.OutputData
 
 				row[colName] = modData.AuxiliaryWork(aux.Value).ConvertTo().Kilo.Watt.Hour;
 			}
-			row[E_AUX] = modData.WorkAuxiliaries().ConvertTo().Kilo.Watt.Hour;
 
+			row[E_FCMAP_POS] = modData.TotalEngineWorkPositive().ConvertTo().Kilo.Watt.Hour;
+			row[E_FCMAP_NEG] = -modData.TotalEngineWorkNegative().ConvertTo().Kilo.Watt.Hour;
+			row[E_POWERTRAIN_INERTIA] = modData.PowerAccelerations().ConvertTo().Kilo.Watt.Hour;
+			row[E_AUX] = modData.WorkAuxiliaries().ConvertTo().Kilo.Watt.Hour;
+			row[E_CLUTCH_LOSS] = modData.WorkClutch().ConvertTo().Kilo.Watt.Hour;
+			row[E_TC_LOSS] = modData.WorkTorqueConverter().ConvertTo().Kilo.Watt.Hour;
+			row[E_SHIFT_LOSS] = modData.WorkGearshift().ConvertTo().Kilo.Watt.Hour;
+			row[E_GBX_LOSS] = modData.WorkGearbox().ConvertTo().Kilo.Watt.Hour;
+			row[E_RET_LOSS] = modData.WorkRetarder().ConvertTo().Kilo.Watt.Hour;
+			row[E_AXL_LOSS] = modData.WorkAxlegear().ConvertTo().Kilo.Watt.Hour;
+			row[E_ANGLE_LOSS] = modData.WorkAngledrive().ConvertTo().Kilo.Watt.Hour;
+			row[E_BRAKE] = modData.WorkTotalMechanicalBrake().ConvertTo().Kilo.Watt.Hour;
+			row[E_VEHICLE_INERTIA] = modData.WorkVehicleInertia().ConvertTo().Kilo.Watt.Hour;
 			row[E_AIR] = modData.WorkAirResistance().ConvertTo().Kilo.Watt.Hour;
 			row[E_ROLL] = modData.WorkRollingResistance().ConvertTo().Kilo.Watt.Hour;
 			row[E_GRAD] = modData.WorkRoadGradientResistance().ConvertTo().Kilo.Watt.Hour;
-			row[E_INERTIA] = modData.PowerAccelerations().ConvertTo().Kilo.Watt.Hour;
-			row[E_BRAKE] = modData.WorkTotalMechanicalBrake().ConvertTo().Kilo.Watt.Hour;
-			row[E_GBX_LOSS] = modData.WorkGearbox().ConvertTo().Kilo.Watt.Hour;
-			row[E_AXL_LOSS] = modData.WorkAxlegear().ConvertTo().Kilo.Watt.Hour;
-			row[E_RET_LOSS] = modData.WorkRetarder().ConvertTo().Kilo.Watt.Hour;
-			row[E_TC_LOSS] = modData.WorkTorqueConverter().ConvertTo().Kilo.Watt.Hour;
-			row[E_ANGLE_LOSS] = modData.WorkAngledrive().ConvertTo().Kilo.Watt.Hour;
-			row[E_CLUTCH_POS] = modData.EngineWorkPositive().ConvertTo().Kilo.Watt.Hour;
-			row[E_CLUTCH_NEG] = modData.EngineWorkNegative().ConvertTo().Kilo.Watt.Hour;
-			row[E_FCMAP_POS] = modData.TotalEngineWorkPositive().ConvertTo().Kilo.Watt.Hour;
 
-			var acc = modData.AccelerationPer3Seconds();
+			//var acc = modData.AccelerationPer3Seconds();
+
 
 			row[ACC] = modData.AccelerationAverage();
-			row[ACC_POS] = acc.AccelerationsPositive();
-			row[ACC_NEG] = acc.AccelerationsNegative();
-			var accTimeShare = acc.AccelerationTimeShare();
+			var modal = modData as ModalDataContainer;
+			if (modal == null) {
+				Log.Error("unknown modal data container!");
+				return;
+			}
+			row[ACC_POS] = modal.AccelerationsPositive();
+			row[ACC_NEG] = modal.AccelerationsNegative();
+			var accTimeShare = modal.AccelerationTimeShare();
 			row[ACC_TIMESHARE] = accTimeShare;
-			var decTimeShare = acc.DecelerationTimeShare();
+			var decTimeShare = modal.DecelerationTimeShare();
 			row[DEC_TIMESHARE] = decTimeShare;
-			var cruiseTimeShare = acc.CruiseTimeShare();
+			var cruiseTimeShare = modal.CruiseTimeShare();
 			row[CRUISE_TIMESHARE] = cruiseTimeShare;
-			row[STOP_TIMESHARE] = modData.StopTimeShare();
+			var stopTimeShare = modal.StopTimeShare();
+			row[STOP_TIMESHARE] = stopTimeShare;
 
-			if (accTimeShare != null && decTimeShare != null && cruiseTimeShare != null) {
-				var shareSum = accTimeShare + decTimeShare + cruiseTimeShare;
-				if (!shareSum.IsEqual(100)) {
-					Log.Error(
-						"Sumfile Error: driving behavior timeshares must sum up to 100%: acc: {0}%, dec: {1}%, cruise: {2}%, sum: {3}%",
-						accTimeShare.ToOutputFormat(1, null, false), decTimeShare.ToOutputFormat(1, null, false),
-						cruiseTimeShare.ToOutputFormat(1, null, false), shareSum.ToOutputFormat(1, null, false));
+			row[MAX_SPEED] = modal.MaxSpeed().AsKmph.SI<Scalar>();
+			row[MAX_ACCELERATION] = modal.MaxAcceleration();
+			row[MAX_DECELERATION] = modal.MaxDeceleration();
+			row[AVG_ENGINE_SPEED] = modal.AvgEngineSpeed().AsRPM.SI<Scalar>();
+			row[MAX_ENGINE_SPEED] = modData.MaxEngineSpeed().AsRPM.SI<Scalar>();
+
+			row[ENGINE_FULL_LOAD_TIME_SHARE] = modal.EngineMaxLoadTimeShare();
+			row[COASTING_TIME_SHARE] = modal.CoastingTimeShare();
+			row[BRAKING_TIME_SHARE] = modal.BrakingTimeShare();
+
+			if (gearCount > 0) {
+				row[NUM_GEARSHIFTS] = modal.GearshiftCount();
+				var timeSharePerGear = modal.TimeSharePerGear(gearCount);
+
+				for (uint i = 0; i <= gearCount; i++) {
+					var colName = string.Format(TIME_SHARE_PER_GEAR_FORMAT, i);
+					if (!_table.Columns.Contains(colName)) {
+						_table.Columns.Add(colName, typeof(SI));
+					}
+					row[colName] = timeSharePerGear[i];
+				}
+				if (accTimeShare != null && decTimeShare != null && cruiseTimeShare != null) {
+					var shareSum = accTimeShare + decTimeShare + cruiseTimeShare + stopTimeShare;
+					if (!shareSum.IsEqual(100)) {
+						Log.Error(
+							"Sumfile Error: driving behavior timeshares must sum up to 100%: acc: {0}%, dec: {1}%, cruise: {2}%, stop: {3}%, sum: {4}%",
+							accTimeShare.ToOutputFormat(1, null, false), decTimeShare.ToOutputFormat(1, null, false),
+							cruiseTimeShare.ToOutputFormat(1, null, false), stopTimeShare.ToOutputFormat(1, null, false),
+							shareSum.ToOutputFormat(1, null, false));
+					}
 				}
 			}
 		}

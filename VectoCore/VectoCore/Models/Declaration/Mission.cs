@@ -80,10 +80,11 @@ namespace TUGraz.VectoCore.Models.Declaration
 		public Kilogram RefLoad;
 		public Kilogram MaxLoad;
 
+		public CubicMeter CargoVolume;
+
 		public Dictionary<LoadingType, Kilogram> Loadings
 		{
-			get
-			{
+			get {
 				return new Dictionary<LoadingType, Kilogram> {
 					{ LoadingType.EmptyLoading, MinLoad },
 					{ LoadingType.ReferenceLoad, RefLoad },

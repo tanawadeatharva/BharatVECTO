@@ -128,6 +128,11 @@ namespace TUGraz.VectoCore.Models.SimulationComponent.Impl
 			get { return _vehicleData.TotalVehicleWeight; }
 		}
 
+		public CubicMeter CargoVolume
+		{
+			get { return _vehicleData.CargoVolume; }
+		}
+
 		public Newton AirDragResistance(MeterPerSecond previousVelocity, MeterPerSecond nextVelocity)
 		{
 			throw new System.NotImplementedException();

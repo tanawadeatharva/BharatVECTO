@@ -1,12 +1,12 @@
-name,curb mass,max gross mass,delta CdxA for trailer operation in long haul,Wheels,remark
-#,[kg],[kg],[m²],,
-B1,1600,-,-,,---
-B2,1900,-,-,,---
-B3,2000,-,-,,---
-B4,2100,-,-,,---
-B5,2200,-,-,,"""B6"" changed to ""B5"" as ""old B5"" not applicable anymore"
-T1,3400,10500,0.6,235/75 R17.5,
-T2,5400,18000,0.6,385/65 R22.5,
-ST1,7500,24000,-,,relevant for fully loaded is GVM of tractor semitrailer combination = 40000kg
-ST1-v2,7500,-,-,,
-Dolly,2500,-,-,,only relevant for EMS
+name,curb mass,max gross mass,delta CdxA for trailer operation in long haul,Wheels,cargo volume,remark
+#,[kg],[kg],[m²],,[m³],
+B1,1600,-,-,,36.5,---
+B2,1900,-,-,,45.2,---
+B3,2000,-,-,,47.7,---
+B4,2100,-,-,,49.4,---
+B5,2200,-,-,,51.9,"""B6"" changed to ""B5"" as ""old B5"" not applicable anymore"
+T1,3400,10500,0.6,235/75 R17.5,39.8,
+T2,5400,18000,0.6,385/65 R22.5,49.5,
+ST1,7500,24000,-,,91.0,relevant for fully loaded is GVM of tractor semitrailer combination = 40000kg
+ST1-v2,7500,-,-,,91.0,
+Dolly,2500,-,-,,0.0,only relevant for EMS

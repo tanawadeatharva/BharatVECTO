@@ -64,6 +64,8 @@ namespace TUGraz.VectoCore.Tests.Utils
 			get { return 1.SI<Second>(); }
 		}
 
+		public uint NumGears { get; set; }
+
 		public MeterPerSecond StartSpeed { get; set; }
 		public MeterPerSquareSecond StartAcceleration { get; set; }
 		public NewtonMeter GearMaxTorque { get; set; }
@@ -119,6 +121,7 @@ namespace TUGraz.VectoCore.Tests.Utils
 		public Kilogram VehicleMass { get; set; }
 		public Kilogram VehicleLoading { get; set; }
 		public Kilogram TotalMass { get; set; }
+		public CubicMeter CargoVolume { get; set; }
 
 		public Newton AirDragResistance(MeterPerSecond previousVelocity, MeterPerSecond nextVelocity)
 		{

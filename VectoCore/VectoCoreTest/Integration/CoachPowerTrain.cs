@@ -56,6 +56,7 @@ namespace TUGraz.VectoCore.Tests.Integration
 	{
 		public const string AccelerationFile = @"TestData\Components\Truck.vacc";
 		public const string EngineFile = @"TestData\Components\24t Coach.veng";
+		public const string EngineFileHigh = @"TestData\Components\24t Coach_high.veng";
 		public const string AxleGearLossMap = @"TestData\Components\Axle.vtlm";
 		public const string GearboxIndirectLoss = @"TestData\Components\Indirect Gear.vtlm";
 		public const string GearboxDirectLoss = @"TestData\Components\Direct Gear.vtlm";
@@ -63,22 +64,23 @@ namespace TUGraz.VectoCore.Tests.Integration
 		//public const string GearboxFullLoadCurveFile = @"TestData\Components\Gearbox.vfld";
 
 		public static VectoRun CreateEngineeringRun(DrivingCycleData cycleData, string modFileName,
-			bool overspeed = false, KilogramSquareMeter gearBoxInertia = null)
+			bool overspeed = false, KilogramSquareMeter gearBoxInertia = null, bool highEnginePower = true)
 		{
-			var container = CreatePowerTrain(cycleData, Path.GetFileNameWithoutExtension(modFileName), overspeed, gearBoxInertia);
+			var container = CreatePowerTrain(cycleData, Path.GetFileNameWithoutExtension(modFileName), overspeed, gearBoxInertia,
+				highEnginePower);
 			return new DistanceRun(container);
 		}
 
-		public static VehicleContainer CreatePowerTrain(DrivingCycleData cycleData, string modFileName,
-			bool overspeed = false, KilogramSquareMeter gearBoxInertia = null)
+		public static VehicleContainer CreatePowerTrain(DrivingCycleData cycleData, string modFileName, bool overspeed = false,
+			KilogramSquareMeter gearBoxInertia = null, bool engineHighPower = true)
 		{
 			var fileWriter = new FileOutputWriter(modFileName);
-			var modData = new ModalDataContainer(modFileName, fileWriter);
+			var modData = new ModalDataContainer(modFileName, fileWriter) { WriteModalResults = true };
 			var container = new VehicleContainer(ExecutionMode.Engineering, modData) {
 				RunData = new VectoRunData { JobName = modFileName, Cycle = cycleData }
 			};
 
-			var engineData = MockSimulationDataFactory.CreateEngineDataFromFile(EngineFile);
+			var engineData = MockSimulationDataFactory.CreateEngineDataFromFile(engineHighPower ? EngineFileHigh : EngineFile);
 			var axleGearData = CreateAxleGearData();
 			var gearboxData = CreateGearboxData();
 			if (gearBoxInertia != null) {
@@ -92,13 +94,20 @@ namespace TUGraz.VectoCore.Tests.Integration
 			var engine = new CombustionEngine(container, engineData);
 			var clutch = new Clutch(container, engineData);
 
+			var runData = new VectoRunData() {
+				VehicleData = vehicleData,
+				AxleGearData = axleGearData,
+				GearboxData = gearboxData,
+				EngineData = engineData
+			};
+
 			var tmp = cycle.AddComponent(new Driver(container, driverData, new DefaultDriverStrategy()))
 				.AddComponent(new Vehicle(container, vehicleData))
 				.AddComponent(new Wheels(container, vehicleData.DynamicTyreRadius, vehicleData.WheelsInertia))
 				.AddComponent(new Brakes(container))
 				.AddComponent(new AxleGear(container, axleGearData))
 				.AddComponent(new DummyRetarder(container))
-				.AddComponent(new Gearbox(container, gearboxData, new AMTShiftStrategy(gearboxData, container), engineData.Inertia))
+				.AddComponent(new Gearbox(container, new AMTShiftStrategy(runData, container), runData))
 				.AddComponent(clutch)
 				.AddComponent(engine);
 
@@ -117,15 +126,15 @@ namespace TUGraz.VectoCore.Tests.Integration
 
 			return new GearboxData {
 				Gears = ratios.Select((ratio, i) =>
-						Tuple.Create((uint)i,
-							new GearData {
-								//MaxTorque = 2300.SI<NewtonMeter>(),
-								LossMap = ratio.IsEqual(1)
-									? TransmissionLossMapReader.ReadFromFile(GearboxIndirectLoss, ratio, string.Format("Gear {0}", i))
-									: TransmissionLossMapReader.ReadFromFile(GearboxDirectLoss, ratio, string.Format("Gear {0}", i)),
-								Ratio = ratio,
-								ShiftPolygon = ShiftPolygonReader.ReadFromFile(GearboxShiftPolygonFile)
-							}))
+					Tuple.Create((uint)i,
+						new GearData {
+							//MaxTorque = 2300.SI<NewtonMeter>(),
+							LossMap = ratio.IsEqual(1)
+								? TransmissionLossMapReader.ReadFromFile(GearboxIndirectLoss, ratio, string.Format("Gear {0}", i))
+								: TransmissionLossMapReader.ReadFromFile(GearboxDirectLoss, ratio, string.Format("Gear {0}", i)),
+							Ratio = ratio,
+							ShiftPolygon = ShiftPolygonReader.ReadFromFile(GearboxShiftPolygonFile)
+						}))
 					.ToDictionary(k => k.Item1 + 1, v => v.Item2),
 				ShiftTime = 2.SI<Second>(),
 				Inertia = 0.SI<KilogramSquareMeter>(),
