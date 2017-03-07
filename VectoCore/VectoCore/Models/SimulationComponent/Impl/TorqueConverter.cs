@@ -111,7 +111,7 @@ namespace TUGraz.VectoCore.Models.SimulationComponent.Impl
 				//if (false && DataBus.VehicleStopped && DataBus.DriverBehavior == DrivingBehavior.Driving && outTorque.IsGreater(0)) {
 				//	dryOperatingPoint = ModelData.FindOperatingPoint(DataBus.EngineIdleSpeed, outAngularVelocity);
 				//} else {
-				dryOperatingPoint = (DataBus.DriverBehavior != DrivingBehavior.Braking) ||
+				dryOperatingPoint = (DataBus.DriverBehavior != DrivingBehavior.Braking && DataBus.BrakePower.IsEqual(0)) ||
 									(outTorque.IsGreater(0) && DataBus.BrakePower.IsEqual(0))
 					? GetMaxPowerOperatingPoint(dt, outAngularVelocity, engineResponse,
 						PreviousState.InTorque * PreviousState.InAngularVelocity)

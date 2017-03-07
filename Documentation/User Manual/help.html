@@ -5705,59 +5705,69 @@ CycleTime,UnknownCycleName,3600</code></pre>
 <td>Vehicle loading (see <a href="#vehicle-editor">Vehicle Editor</a>)</td>
 </tr>
 <tr class="odd">
+<td>Cargo Volume</td>
+<td>[m^3]</td>
+<td>Vehicle cargo volume (Declaration Mode only!)</td>
+</tr>
+<tr class="even">
 <td>time</td>
 <td>[s]</td>
 <td>Total simulation time</td>
 </tr>
-<tr class="even">
+<tr class="odd">
 <td>distance</td>
 <td>[km]</td>
 <td>Total traveled distance</td>
 </tr>
-<tr class="odd">
+<tr class="even">
 <td>speed</td>
 <td>[km/h]</td>
 <td>Average vehicle speed</td>
 </tr>
-<tr class="even">
+<tr class="odd">
 <td>altitudeDelta</td>
 <td>[m]</td>
 <td>Altitude difference between start and end of cycle</td>
 </tr>
-<tr class="odd">
+<tr class="even">
 <td>FC-Map</td>
 <td>[g/h], [g/km]</td>
 <td>Average fuel consumption before all corrections, interpolated from <a href="#fuel-consumption-calculation">Fuel Map</a>, based on torque and engine speed.</td>
 </tr>
-<tr class="even">
+<tr class="odd">
 <td>FC-AUXc</td>
 <td>[g/h], [g/km]</td>
 <td>Average fuel consumption after <a href="#fuel-consumption-calculation">Auxiliary-Start/Stop Correction</a> (Based on FC-Map)</td>
 </tr>
-<tr class="odd">
+<tr class="even">
 <td>FC-WHTCc</td>
 <td>[g/h], [g/km]</td>
 <td>Average fuel consumption after <a href="#fuel-consumption-calculation">WHTC Correction</a> (Based on FC-AUXc)</td>
 </tr>
-<tr class="even">
+<tr class="odd">
 <td>FC-AAUX</td>
 <td>[g/h], [g/km]</td>
 <td>Average fuel consumption after Smart Auxiliary Correction (<em>still in development</em>) (Based on FC-WHTCc)</td>
 </tr>
-<tr class="odd">
+<tr class="even">
 <td>FC-Final</td>
-<td>[g/h], [g/km], [l/100km], [l/100tkm]</td>
+<td>[g/h], [g/km], [l/100km], [l/100tkm], [l/100m^3km]</td>
 <td>Final average fuel consumption after ALL corrections. Value for calculation of CO<sub>2</sub> value. If Loading = 0[kg] the column [l/100tkm] is left empty.</td>
 </tr>
-<tr class="even">
+<tr class="odd">
 <td>CO2</td>
-<td>[g/km], [g/tkm]</td>
+<td>[g/km], [g/tkm], [g/m^3km]</td>
 <td>Average CO<sub>2</sub> emissions (based on FC-Final value). Output for [l/100tkm] is empty when Loading = 0[kg].</td>
 </tr>
-<tr class="odd">
+<tr class="even">
 <td>P_wheel_in_pos</td>
 <td>[kW]</td>
 <td>Average positive power at the wheels</td>
+</tr>
+<tr class="odd">
+<td>P_fcmap_pos</td>
+<td>[kW]</td>
+<td>Average positive power at engine (all non-negative values averaged over the whole cycle duration)</td>
 </tr>
 <tr class="even">
 <td>E_fcmap_pos</td>
@@ -5892,6 +5902,7 @@ CycleTime,UnknownCycleName,3600</code></pre>
 </tbody>
 </table>
 <p>E_fcmap_pos = E_fcmap_neg + E_powertrain_inertia + E_aux_xxx + E_aux_sum + E_clutch_loss + E_tc_loss + E_gbx_loss + E_ret_loss + E_angle_loss + E_axl_loss + E_brake + E_vehicle_inertia + E_air + E_roll + E_grad + E_PTO_CONSUM + E_PTO_TRANSM</p>
+<p>E_fcmap_pos = P_fcmap_pos * time</p>
 </div>
 <div id="application-files" class="section level2">
 <h2>Application Files</h2>
@@ -5918,6 +5929,32 @@ CycleTime,UnknownCycleName,3600</code></pre>
 </div>
 <div id="changelog" class="section level1">
 <h1>Changelog</h1>
+<p><strong>VECTO 3.1.2</strong></p>
+<p><strong><em>Build 796 (2017-03-07)</em></strong></p>
+<ul>
+<li>Improvements:
+<ul>
+<li>[VECTO-405] Adding clutch-losses for AMT/MT gearboxes during drive-off, reduce drive-off distance after stop from 1m to 0.25m, set clutch closing speed (normalized) to 6.5%, changes in clutch model</li>
+<li>[VECTO-379] Make GUI more tolerant against missing files. Instead of aborting reading the input data the GUI shows a suffix for missing input files</li>
+<li>[VECTO-411] Allow a traction interruption of 0s for AMT/MT gearboxes</li>
+<li>[VECTO-408] Gearbox Inertia for AT gearboxes set to 0</li>
+<li>[VECTO-419] Adapted error messages, added list of errors</li>
+<li>[VECTO-421,VECTO-439] Added volume-related results to vsum file (volume is computed based on default bodies)</li>
+<li>[] Energy balance (vsum) and balance of engine power output and power consumers (vmod) level</li>
+<li>[VECTO-430] AT shift strategy: upshifts may happen too early</li>
+<li>[VECTO-431] AMT shift strategy always started in first gear due to changes in clutch model</li>
+<li>[VECTO-433] adapt generic vehicles: use typical WHTC correction factors</li>
+<li>[VECTO-437] set vehicle speed at clutch-closed to 1.3 m/s</li>
+<li>[VECTO-436] fix simulation aborts with AT gearbox (neg. braking power, unexpected response, underload)</li>
+</ul></li>
+<li>Bugfixes:
+<ul>
+<li>[VECTO-415] Powershift Losses were not considered for AT gearboxes with PowerSplit</li>
+<li>[VECTO-416] Measured Speed with gear failed when cycle contained parts with eco-roll (computation of next gear failed)</li>
+<li>[VECTO-428] Sum of timeshares adds up to 100%</li>
+<li>[VECTO-429] Min Velocity for lookahead coasting was not written to JSON file</li>
+</ul></li>
+</ul>
 <p><strong>VECTO 3.1.1</strong></p>
 <p><strong><em>Build 748 (2017-01-18)</em></strong></p>
 <ul>

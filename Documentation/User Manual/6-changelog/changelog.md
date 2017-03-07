@@ -1,5 +1,27 @@
 #Changelog
 
+**VECTO 3.1.2**
+
+***Build 796 (2017-03-07)***
+
+- Improvements:
+    + [VECTO-405] Adding clutch-losses for AMT/MT gearboxes during drive-off, reduce drive-off distance after stop from 1m to 0.25m, set clutch closing speed (normalized) to 6.5%, changes in clutch model
+    + [VECTO-379] Make GUI more tolerant against missing files. Instead of aborting reading the input data the GUI shows a suffix for missing input files
+    + [VECTO-411] Allow a traction interruption of 0s for AMT/MT gearboxes
+    + [VECTO-408] Gearbox Inertia for AT gearboxes set to 0
+    + [VECTO-419] Adapted error messages, added list of errors
+    + [VECTO-421,VECTO-439] Added volume-related results to vsum file (volume is computed based on default bodies)
+    + [] Energy balance (vsum) and balance of engine power output and power consumers (vmod) level
+    + [VECTO-430] AT shift strategy: upshifts may happen too early
+    + [VECTO-431] AMT shift strategy always started in first gear due to changes in clutch model
+    + [VECTO-433] adapt generic vehicles: use typical WHTC correction factors
+    + [VECTO-437] set vehicle speed at clutch-closed to 1.3 m/s
+    + [VECTO-436] fix simulation aborts with AT gearbox (neg. braking power, unexpected response, underload)
+- Bugfixes:
+    + [VECTO-415] Powershift Losses were not considered for AT gearboxes with PowerSplit
+    + [VECTO-416] Measured Speed with gear failed when cycle contained parts with eco-roll (computation of next gear failed)
+    + [VECTO-428] Sum of timeshares adds up to 100%
+    + [VECTO-429] Min Velocity for lookahead coasting was not written to JSON file
 
 
 **VECTO 3.1.1**
