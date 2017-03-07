@@ -40,7 +40,7 @@ namespace TUGraz.VectoCore.Models.SimulationComponent.Data
 {
 	public class AccelerationCurveData : SimulationComponentData
 	{
-		private readonly List<KeyValuePair<MeterPerSecond, AccelerationEntry>> _entries;
+		[Required, ValidateObject] private readonly List<KeyValuePair<MeterPerSecond, AccelerationEntry>> _entries;
 
 		protected internal AccelerationCurveData(List<KeyValuePair<MeterPerSecond, AccelerationEntry>> entries)
 		{
@@ -109,10 +109,10 @@ namespace TUGraz.VectoCore.Models.SimulationComponent.Data
 		[DebuggerDisplay("Acceleration: {Acceleration}, Deceleration: {Deceleration}")]
 		public class AccelerationEntry
 		{
-			[Required, SIRange(0.3, 10)]
+			[Required, SIRange(0.05, 20)]
 			public MeterPerSquareSecond Acceleration { get; set; }
 
-			[Required, SIRange(-0.5, -10)]
+			[Required, SIRange(-20, -0.05)]
 			public MeterPerSquareSecond Deceleration { get; set; }
 		}
 
