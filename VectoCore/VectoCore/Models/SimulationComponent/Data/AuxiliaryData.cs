@@ -61,7 +61,10 @@ namespace TUGraz.VectoCore.Models.SimulationComponent.Data
 			if (value.HasValue) {
 				return value.Value.SI<Watt>();
 			}
-
+			value = _map.Extrapolate(nAuxiliary.Value(), powerAuxOut.Value());
+			if (value.HasValue) {
+				return value.Value.SI<Watt>();
+			}
 			throw new VectoException("AuxiliaryData {2}: Interpolation failed. nAux: {0}, powerOut:{1}", nAuxiliary.AsRPM,
 				powerAuxOut, auxId);
 		}
