@@ -600,6 +600,7 @@ Partial Class GearboxForm
 		Me.TbStartAcc.Name = "TbStartAcc"
 		Me.TbStartAcc.Size = New System.Drawing.Size(57, 20)
 		Me.TbStartAcc.TabIndex = 2
+		Me.TbStartAcc.Visible = False
 		'
 		'Label11
 		'
@@ -609,6 +610,7 @@ Partial Class GearboxForm
 		Me.Label11.Size = New System.Drawing.Size(173, 13)
 		Me.Label11.TabIndex = 0
 		Me.Label11.Text = "Reference acceleration at clutch-in"
+		Me.Label11.Visible = False
 		'
 		'TbStartSpeed
 		'
@@ -634,6 +636,7 @@ Partial Class GearboxForm
 		Me.Label10.Size = New System.Drawing.Size(34, 13)
 		Me.Label10.TabIndex = 0
 		Me.Label10.Text = "[m/s²]"
+		Me.Label10.Visible = False
 		'
 		'TbTqResvStart
 		'
