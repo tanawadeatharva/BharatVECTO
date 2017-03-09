@@ -107,25 +107,32 @@ namespace TUGraz.VectoCore.Models.SimulationComponent.Impl
 				var engineResponse = (ResponseDryRun)
 					NextComponent.Request(absTime, dt, inTorque, operatingPoint.InAngularVelocity, true);
 
-				TorqueConverterOperatingPoint dryOperatingPoint;
+				//TorqueConverterOperatingPoint dryOperatingPoint;
 				//if (false && DataBus.VehicleStopped && DataBus.DriverBehavior == DrivingBehavior.Driving && outTorque.IsGreater(0)) {
 				//	dryOperatingPoint = ModelData.FindOperatingPoint(DataBus.EngineIdleSpeed, outAngularVelocity);
 				//} else {
-				dryOperatingPoint = (DataBus.DriverBehavior != DrivingBehavior.Braking && DataBus.BrakePower.IsEqual(0)) ||
-									(outTorque.IsGreater(0) && DataBus.BrakePower.IsEqual(0))
-					? GetMaxPowerOperatingPoint(dt, outAngularVelocity, engineResponse,
-						PreviousState.InTorque * PreviousState.InAngularVelocity)
-					: GetDragPowerOperatingPoint(dt, outAngularVelocity, engineResponse,
-						PreviousState.InTorque * PreviousState.InAngularVelocity);
+				//dryOperatingPoint = (DataBus.DriverBehavior != DrivingBehavior.Braking && DataBus.BrakePower.IsEqual(0)) ||
+				//					(outTorque.IsGreater(0) && DataBus.BrakePower.IsEqual(0))
+				//	? GetMaxPowerOperatingPoint(dt, outAngularVelocity, engineResponse,
+				//		PreviousState.InTorque * PreviousState.InAngularVelocity)
+				//	: GetDragPowerOperatingPoint(dt, outAngularVelocity, engineResponse,
+				//		PreviousState.InTorque * PreviousState.InAngularVelocity);
 				//}
-				var avgOutSpeed = (PreviousState.OutAngularVelocity + dryOperatingPoint.OutAngularVelocity) / 2.0;
-				var delta = (outTorque - dryOperatingPoint.OutTorque) * avgOutSpeed;
+				var dryOperatingPointMax = GetMaxPowerOperatingPoint(dt, outAngularVelocity, engineResponse,
+					PreviousState.InTorque * PreviousState.InAngularVelocity);
+				var avgOutSpeedMax = (PreviousState.OutAngularVelocity + dryOperatingPointMax.OutAngularVelocity) / 2.0;
+				var deltaMax = (outTorque - dryOperatingPointMax.OutTorque) * avgOutSpeedMax;
+
+				var dryOperatingPointMin = GetDragPowerOperatingPoint(dt, outAngularVelocity, engineResponse,
+					PreviousState.InTorque * PreviousState.InAngularVelocity);
+				var avgOutSpeedMin = (PreviousState.OutAngularVelocity + dryOperatingPointMin.OutAngularVelocity) / 2.0;
+				var deltaMin = (outTorque - dryOperatingPointMin.OutTorque) * avgOutSpeedMin;
 
 				return new ResponseDryRun {
 					Source = this,
-					DeltaFullLoad = 2 * delta,
-					DeltaDragLoad = 2 * delta,
-					TorqueConverterOperatingPoint = dryOperatingPoint
+					DeltaFullLoad = 2 * deltaMax,
+					DeltaDragLoad = 2 * deltaMin,
+					TorqueConverterOperatingPoint = dryOperatingPointMax
 				};
 			}
 
