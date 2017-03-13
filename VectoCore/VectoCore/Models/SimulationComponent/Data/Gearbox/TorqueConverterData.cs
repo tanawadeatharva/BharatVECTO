@@ -275,6 +275,7 @@ namespace TUGraz.VectoCore.Models.SimulationComponent.Data.Gearbox
 
 		public double SpeedRatio;
 		public double TorqueRatio;
+		public bool Creeping;
 
 		public override string ToString()
 		{
