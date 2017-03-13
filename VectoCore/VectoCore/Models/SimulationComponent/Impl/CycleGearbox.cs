@@ -226,9 +226,12 @@ namespace TUGraz.VectoCore.Models.SimulationComponent.Impl
 			}
 			if (Gear != PreviousState.Gear &&
 				ConsiderShiftLosses(new GearInfo(Gear, torqueConverterLocked), outTorque)) {
-				CurrentState.PowershiftLosses = ComputeShiftLosses(dt, outTorque, outAngularVelocity);
+				CurrentState.PowershiftLosses = ComputeShiftLosses(outTorque, outAngularVelocity);
 			}
-			inTorque += CurrentState.PowershiftLosses ?? 0.SI<NewtonMeter>();
+			if (CurrentState.PowershiftLosses != null) {
+				var averageEngineSpeed = (DataBus.EngineSpeed + outAngularVelocity * ModelData.Gears[Gear].Ratio) / 2;
+				inTorque += CurrentState.PowershiftLosses / dt / averageEngineSpeed;
+			}
 			if (dryRun) {
 				if (TorqueConverter != null && !torqueConverterLocked) {
 					return TorqueConverter.Request(absTime, dt, inTorque, inAngularVelocity, true);
@@ -491,7 +494,7 @@ namespace TUGraz.VectoCore.Models.SimulationComponent.Impl
 		public class CycleGearboxState : GearboxState
 		{
 			public bool TorqueConverterActive;
-			public NewtonMeter PowershiftLosses { get; set; }
+			public WattSecond PowershiftLosses { get; set; }
 		}
 
 		public class CycleShiftStrategy : BaseShiftStrategy

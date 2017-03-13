@@ -54,7 +54,7 @@ namespace TUGraz.VectoCore.Models.SimulationComponent.Impl
 
 		protected KilogramSquareMeter EngineInertia;
 
-		protected AbstractGearbox(IVehicleContainer container, VectoRunData runData): base(container)
+		protected AbstractGearbox(IVehicleContainer container, VectoRunData runData) : base(container)
 		{
 			ModelData = runData.GearboxData;
 			EngineInertia = runData.EngineData != null
@@ -124,7 +124,10 @@ namespace TUGraz.VectoCore.Models.SimulationComponent.Impl
 			get { return ModelData.TractionInterruption; }
 		}
 
-		public uint NumGears { get { return (uint)ModelData.Gears.Count;  } }
+		public uint NumGears
+		{
+			get { return (uint)ModelData.Gears.Count; }
+		}
 
 		#endregion
 
@@ -147,17 +150,16 @@ namespace TUGraz.VectoCore.Models.SimulationComponent.Impl
 			return nextGear.TorqueConverterLocked;
 		}
 
-		protected internal NewtonMeter ComputeShiftLosses(Second dt, NewtonMeter outTorque, PerSecond outAngularVelocity)
+		protected internal WattSecond ComputeShiftLosses(NewtonMeter outTorque, PerSecond outAngularVelocity)
 		{
 			var torqueGbxIn = outTorque / ModelData.Gears[Gear].Ratio;
 			var deltaEngineSpeed = DataBus.EngineSpeed - outAngularVelocity * ModelData.Gears[Gear].Ratio;
 			var deltaClutchSpeed = (DataBus.EngineSpeed - PreviousState.OutAngularVelocity * ModelData.Gears[Gear].Ratio) / 2;
-			var torqueInertia = ModelData.PowershiftInertiaFactor * EngineInertia * deltaEngineSpeed / dt;
-			var averageEngineSpeed = (DataBus.EngineSpeed + outAngularVelocity * ModelData.Gears[Gear].Ratio) / 2;
-			var torqueLoss = (torqueGbxIn + torqueInertia) * deltaClutchSpeed / averageEngineSpeed *
-							(ModelData.PowershiftShiftTime / dt);
+			var torqueInertia = ModelData.PowershiftInertiaFactor * EngineInertia * deltaEngineSpeed /
+								ModelData.PowershiftShiftTime;
+			var shiftLossEnergy = (torqueGbxIn + torqueInertia) * deltaClutchSpeed * ModelData.PowershiftShiftTime;
 
-			return torqueLoss.Abs();
+			return shiftLossEnergy.Abs();
 		}
 	}
 
