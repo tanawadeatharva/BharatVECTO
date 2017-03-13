@@ -308,7 +308,8 @@ Public Class JSONFileWriter
 						{"DF_offset", driver.Lookahead.CoastingDecisionFactorOffset},
 						{"DF_scaling", driver.Lookahead.CoastingDecisionFactorScaling},
 						{"DF_targetSpeedLookup", dfTargetSpeed},
-						{"Df_velocityDropLookup", dfVelocityDrop}})
+						{"Df_velocityDropLookup", dfVelocityDrop},
+						{"MinSpeed", driver.Lookahead.MinSpeed.AsKmph}})
 		End If
 
 		'Overspeed / EcoRoll

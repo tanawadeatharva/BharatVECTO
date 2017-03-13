@@ -231,8 +231,8 @@ Public Class VectoJob
 			Return New StartStopInputData With {
 				.Enabled = _startStop,
 				.MaxSpeed = StartStopMaxSpeed.KMPHtoMeterPerSecond(),
-				.MinTime = StartStopTime.SI (Of Second)(),
-				.Delay = StartStopDelay.SI (Of Second)()
+				.MinTime = StartStopTime.SI(Of Second)(),
+				.Delay = StartStopDelay.SI(Of Second)()
 				}
 		End Get
 	End Property

@@ -57,6 +57,8 @@ namespace TUGraz.VectoCore.Tests.Reports
 	[TestFixture]
 	public class ModDataTest
 	{
+
+
 		[TestCase()]
 		public void ModDataIntegritySimpleTest()
 		{
@@ -208,6 +210,14 @@ namespace TUGraz.VectoCore.Tests.Reports
 					Assert.AreEqual(fcPerLoad, fcPer100km / loadingValue, 1e-3, "input file: {0}  cycle: {1} loading: {2}",
 						inputFile, cycle, loading);
 				}
+
+				var stopTimeShare = ((SI)row[SummaryDataContainer.STOP_TIMESHARE]).Value();
+				var accTimeShare = ((SI)row[SummaryDataContainer.ACC_TIMESHARE]).Value();
+				var decTimeShare = ((SI)row[SummaryDataContainer.DEC_TIMESHARE]).Value();
+				var cruiseTimeShare = ((SI)row[SummaryDataContainer.CRUISE_TIMESHARE]).Value();
+
+				Assert.AreEqual(100, stopTimeShare + accTimeShare + decTimeShare + cruiseTimeShare, 1e-3,
+					"input file: {0}  cycle: {1} loading: {2}", inputFile, cycle, loading);
 			}
 		}
 

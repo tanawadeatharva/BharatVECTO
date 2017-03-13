@@ -70,12 +70,12 @@ Public Class GearboxForm
 
 		If Cfg.DeclMode Then
 			CbGStype.DataSource = [Enum].GetValues(GetType(GearboxType)) _
-				.Cast (Of GearboxType)() _
+				.Cast(Of GearboxType)() _
 				.Where(Function(type) type.ManualTransmission()) _
 				.Select(Function(type) New With {Key .Value = type, .Label = type.GetLabel()}).ToList()
 		Else
 			CbGStype.DataSource = [Enum].GetValues(GetType(GearboxType)) _
-				.Cast (Of GearboxType) _
+				.Cast(Of GearboxType) _
 				.Where(Function(type) type.AutomaticTransmission() OrElse type.ManualTransmission()) _
 				.Select(Function(type) New With {Key .Value = type, .Label = type.GetLabel()}).ToList()
 		End If
@@ -101,10 +101,10 @@ Public Class GearboxForm
 		TbMinTimeBetweenShifts.Text = DeclarationData.Gearbox.MinTimeBetweenGearshifts.ToGUIFormat()
 		'cDeclaration.MinTimeBetweenGearshift(GStype)
 
-		TbTqResv.Text = (DeclarationData.Gearbox.TorqueReserve*100).ToGUIFormat()     ' cDeclaration.TqResv
-		TbTqResvStart.Text = (DeclarationData.Gearbox.TorqueReserveStart*100).ToGUIFormat() 'cDeclaration.TqResvStart
-		TbStartSpeed.Text = DeclarationData.Gearbox.StartSpeed.ToGUIFormat()    'cDeclaration.StartSpeed
-		TbStartAcc.Text = DeclarationData.Gearbox.StartAcceleration.ToGUIFormat()   ' cDeclaration.StartAcc
+		TbTqResv.Text = (DeclarationData.Gearbox.TorqueReserve * 100).ToGUIFormat()			  ' cDeclaration.TqResv
+		TbTqResvStart.Text = (DeclarationData.Gearbox.TorqueReserveStart * 100).ToGUIFormat() 'cDeclaration.TqResvStart
+		TbStartSpeed.Text = DeclarationData.Gearbox.StartSpeed.ToGUIFormat()	'cDeclaration.StartSpeed
+		TbStartAcc.Text = DeclarationData.Gearbox.StartAcceleration.ToGUIFormat()	' cDeclaration.StartAcc
 
 		tbUpshiftMinAcceleration.Text = DeclarationData.Gearbox.UpshiftMinAcceleration.ToGUIFormat()
 		tbTCCUpshiftMinAcceleration.Text = ""
@@ -200,9 +200,9 @@ Public Class GearboxForm
 
 		'Me.ChSkipGears.Checked = False         'set by CbGStype.SelectedIndexChanged
 		'Me.ChShiftInside.Checked = False       'set by CbGStype.SelectedIndexChanged
-		TbTqResv.Text = (DeclarationData.Gearbox.TorqueReserve*100).ToGUIFormat()
+		TbTqResv.Text = (DeclarationData.Gearbox.TorqueReserve * 100).ToGUIFormat()
 		TbMinTimeBetweenShifts.Text = DeclarationData.Gearbox.MinTimeBetweenGearshifts.ToGUIFormat()
-		TbTqResvStart.Text = (DeclarationData.Gearbox.TorqueReserveStart*100).ToGUIFormat()
+		TbTqResvStart.Text = (DeclarationData.Gearbox.TorqueReserveStart * 100).ToGUIFormat()
 		TbStartSpeed.Text = DeclarationData.Gearbox.StartSpeed.ToGUIFormat() ' in m/s!
 		TbStartAcc.Text = DeclarationData.Gearbox.StartAcceleration.ToGUIFormat()
 
@@ -237,7 +237,7 @@ Public Class GearboxForm
 
 		If ChangeCheckCancel() Then Exit Sub
 
-		Dim inputData As IEngineeringInputDataProvider = TryCast(JSONInputDataFactory.ReadComponentData(file),
+		Dim inputData As IEngineeringInputDataProvider = TryCast(JSONInputDataFactory.ReadComponentData(file), 
 																IEngineeringInputDataProvider)
 		Dim gearbox As IGearboxEngineeringInputData = inputData.GearboxInputData
 		Dim axlegear As IAxleGearInputData = inputData.AxleGearInputData
@@ -248,7 +248,7 @@ Public Class GearboxForm
 					Close()
 					MainForm.RbDecl.Checked = Not MainForm.RbDecl.Checked
 					MainForm.OpenVectoFile(file)
-				Case - 1
+				Case -1
 					Exit Sub
 			End Select
 		End If
@@ -282,9 +282,9 @@ Public Class GearboxForm
 												If(gear.MaxTorque Is Nothing, "", gear.MaxTorque.ToGUIFormat())))
 		Next
 
-		TbTqResv.Text = (gearbox.TorqueReserve*100).ToGUIFormat()
+		TbTqResv.Text = (gearbox.TorqueReserve * 100).ToGUIFormat()
 		TbMinTimeBetweenShifts.Text = gearbox.MinTimeBetweenGearshift.ToGUIFormat()
-		TbTqResvStart.Text = (gearbox.StartTorqueReserve*100).ToGUIFormat()
+		TbTqResvStart.Text = (gearbox.StartTorqueReserve * 100).ToGUIFormat()
 		TbStartSpeed.Text = gearbox.StartSpeed.ToGUIFormat()
 		TbStartAcc.Text = gearbox.StartAcceleration.ToGUIFormat()
 
@@ -326,6 +326,7 @@ Public Class GearboxForm
 		GearboxFileBrowser.UpdateHistory(file)
 		Text = GetFilenameWithoutPath(file, True)
 		LbStatus.Text = ""
+		UpdateGearboxInfoText()
 		_gbxFile = file
 		Activate()
 
@@ -503,6 +504,25 @@ Public Class GearboxForm
 		TbTracInt.Enabled = Not gStype.AutomaticTransmission()
 		tbDownshiftAfterUpshift.Enabled = Not gStype.AutomaticTransmission()
 		tbUpshiftAfterDownshift.Enabled = Not gStype.AutomaticTransmission()
+		UpdateGearboxInfoText()
+	End Sub
+
+	Private Sub UpdateGearboxInfoText()
+		Dim gStype As GearboxType = CType(CbGStype.SelectedValue, GearboxType)
+
+		Dim text As String = ""
+		If (gStype = GearboxType.ATSerial) Then
+			If LvGears.Items.Count > 2 Then
+				Dim ratio1 As Double = LvGears.Items.Item(1).SubItems(GearboxTbl.Ratio).Text.ToDouble(0)
+				Dim ratio2 As Double = LvGears.Items.Item(2).SubItems(GearboxTbl.Ratio).Text.ToDouble(0)
+				If ratio1 / ratio2 >= DeclarationData.Gearbox.TorqueConverterSecondGearThreshold Then
+					text = "Torque converter is used in 1st and 2nd gear"
+				Else
+					text = "Torque converter is used in 1st gear only"
+				End If
+			End If
+		End If
+		lblGbxInfo.Text = text
 	End Sub
 
 
@@ -580,6 +600,7 @@ Public Class GearboxForm
 				LvGears.SelectedItems(0).SubItems(GearboxTbl.LossMapEfficiency).Text = _gearDialog.TbMapPath.Text
 				LvGears.SelectedItems(0).SubItems(GearboxTbl.ShiftPolygons).Text = _gearDialog.TbShiftPolyFile.Text
 				LvGears.SelectedItems(0).SubItems(GearboxTbl.MaxTorque).Text = _gearDialog.TbMaxTorque.Text
+				UpdateGearboxInfoText()
 				Try
 					UpdatePic()
 				Catch
@@ -615,7 +636,7 @@ Public Class GearboxForm
 		LvGears.Items.Add(lvi)
 
 		lvi.EnsureVisible()
-
+		UpdateGearboxInfoText()
 		LvGears.Focus()
 
 		'Change() => NO! Change() is already handled by EditGear
@@ -648,7 +669,7 @@ Public Class GearboxForm
 			LvGears.Items(i0).Selected = True
 			LvGears.Items(i0).EnsureVisible()
 		End If
-
+		UpdateGearboxInfoText()
 		LvGears.Focus()
 		Try
 			UpdatePic()
@@ -766,7 +787,7 @@ Public Class GearboxForm
 		Dim jobFile As String = VectoJobForm.VectoFile
 		If Not jobFile Is Nothing AndAlso File.Exists(jobFile) Then
 
-			Dim inputData As IEngineeringInputDataProvider = TryCast(JSONInputDataFactory.ReadJsonJob(jobFile),
+			Dim inputData As IEngineeringInputDataProvider = TryCast(JSONInputDataFactory.ReadJsonJob(jobFile), 
 																	IEngineeringInputDataProvider)
 			If (inputData Is Nothing) Then
 				Exit Sub

@@ -13,9 +13,9 @@
     "Inertia": 3.56517,
     "FullLoadCurve": "175kW.vfld",
     "FuelMap": "175kW.vmap",
-    "WHTC-Urban": 1.0,
-    "WHTC-Rural": 1.0,
-    "WHTC-Motorway": 1.0,
+    "WHTC-Urban": 1.04,
+    "WHTC-Rural": 1.01,
+    "WHTC-Motorway": 1.00,
     "ColdHotBalancingFactor": 1.0
   }
 }

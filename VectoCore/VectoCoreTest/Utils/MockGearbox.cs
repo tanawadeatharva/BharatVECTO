@@ -70,6 +70,8 @@ namespace TUGraz.VectoCore.Tests.Utils
 			get { return 1.SI<Second>(); }
 		}
 
+		public uint NumGears { get;  set; }
+
 		public MeterPerSecond StartSpeed
 		{
 			get { return 2.SI<MeterPerSecond>(); }

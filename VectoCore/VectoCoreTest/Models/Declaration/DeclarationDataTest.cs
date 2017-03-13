@@ -97,20 +97,22 @@ namespace TUGraz.VectoCore.Tests.Models.Declaration
 			TestCase(1775, 0.21),
 			TestCase(1900, 0.155),
 			TestCase(2250, 0.11),
-			// extrapolate
-			TestCase(3000, 0.11),
 		]
 		public void PT1Test(double rpm, double expectedPt1)
 		{
-			Assert.AreEqual(expectedPt1, DeclarationData.PT1.Lookup(rpm.RPMtoRad()).Value(), Tolerance);
+			var pt1 = DeclarationData.PT1.Lookup(rpm.RPMtoRad());
+			Assert.AreEqual(expectedPt1, pt1.Value.Value(), Tolerance);
+			Assert.IsFalse(pt1.Extrapolated);
 		}
 
-		[TestCase]
-		public void PT1ExceptionsTest()
+		[TestCase(200),
+		TestCase(0),
+		TestCase(3000),]
+		public void PT1ExceptionsTest(double rpm)
 		{
 			// EXTRAPOLATE 
-			AssertHelper.Exception<VectoException>(() => DeclarationData.PT1.Lookup(200.RPMtoRad()));
-			AssertHelper.Exception<VectoException>(() => DeclarationData.PT1.Lookup(0.RPMtoRad()));
+			var tmp = DeclarationData.PT1.Lookup(rpm.RPMtoRad());
+			Assert.IsTrue(tmp.Extrapolated);
 		}
 
 		[TestCase]

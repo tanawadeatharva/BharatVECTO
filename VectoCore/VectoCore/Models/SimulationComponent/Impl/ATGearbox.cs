@@ -38,7 +38,6 @@ using TUGraz.VectoCore.Models.Connector.Ports.Impl;
 using TUGraz.VectoCore.Models.Simulation;
 using TUGraz.VectoCore.Models.Simulation.Data;
 using TUGraz.VectoCore.Models.Simulation.DataBus;
-using TUGraz.VectoCore.Models.SimulationComponent.Data;
 using TUGraz.VectoCore.Models.SimulationComponent.Data.Gearbox;
 using TUGraz.VectoCore.OutputData;
 using TUGraz.VectoCore.Utils;
@@ -52,23 +51,24 @@ namespace TUGraz.VectoCore.Models.SimulationComponent.Impl
 		private IIdleController _idleController;
 		protected bool _requestAfterGearshift;
 
-		public bool TorqueConverterLocked {
+		public bool TorqueConverterLocked
+		{
 			get { return CurrentState.TorqueConverterLocked; }
 			set { CurrentState.TorqueConverterLocked = value; }
 		}
 
-		public ATGearbox(IVehicleContainer container, GearboxData gearboxModelData, IShiftStrategy strategy,
-			KilogramSquareMeter engineInertia)
-			: base(container, gearboxModelData, engineInertia)
+		public ATGearbox(IVehicleContainer container, IShiftStrategy strategy, VectoRunData runData)
+			: base(container, runData)
 		{
 			_strategy = strategy;
 			_strategy.Gearbox = this;
 			LastShift = -double.MaxValue.SI<Second>();
-			TorqueConverter = new TorqueConverter(this, _strategy, container, gearboxModelData.TorqueConverterData,
-				engineInertia);
+			TorqueConverter = new TorqueConverter(this, _strategy, container, ModelData.TorqueConverterData,
+				runData);
 		}
 
-		public IIdleController IdleController {
+		public IIdleController IdleController
+		{
 			get { return _idleController; }
 			set {
 				_idleController = value;
@@ -76,7 +76,8 @@ namespace TUGraz.VectoCore.Models.SimulationComponent.Impl
 			}
 		}
 
-		public bool Disengaged {
+		public bool Disengaged
+		{
 			get { return CurrentState.Disengaged; }
 			set { CurrentState.Disengaged = value; }
 		}
@@ -87,7 +88,8 @@ namespace TUGraz.VectoCore.Models.SimulationComponent.Impl
 			TorqueConverter.NextComponent = other;
 		}
 
-		public override GearInfo NextGear {
+		public override GearInfo NextGear
+		{
 			get { return _strategy.NextGear; }
 		}
 
@@ -189,7 +191,7 @@ namespace TUGraz.VectoCore.Models.SimulationComponent.Impl
 
 			if (!dryRun &&
 				((DataBus.VehicleStopped && outAngularVelocity > 0) ||
-				(CurrentState.Disengaged && outTorque.IsGreater(0)))) {
+				(CurrentState.Disengaged && outTorque.IsGreater(0, 1e-3)))) {
 				Gear = 1;
 				CurrentState.TorqueConverterLocked = false;
 				LastShift = absTime;
@@ -202,7 +204,11 @@ namespace TUGraz.VectoCore.Models.SimulationComponent.Impl
 			if (_requestAfterGearshift) {
 				LastShift = absTime;
 				Gear = _strategy.Engage(absTime, dt, outTorque, outAngularVelocity);
-				CurrentState.PowershiftLosses = ComputeShiftLosses(dt, outTorque, outAngularVelocity);
+				CurrentState.PowershiftLossEnergy = ComputeShiftLosses(outTorque, outAngularVelocity);
+			} else {
+				if (PreviousState.PowershiftLossEnergy != null && PreviousState.PowershiftLossEnergy.IsGreater(0)) {
+					CurrentState.PowershiftLossEnergy = PreviousState.PowershiftLossEnergy;
+				}
 			}
 			do {
 				if (CurrentState.Disengaged || (DataBus.DriverBehavior == DrivingBehavior.Halted)) {
@@ -222,6 +228,7 @@ namespace TUGraz.VectoCore.Models.SimulationComponent.Impl
 								outTorque * (PreviousState.OutAngularVelocity + outAngularVelocity) / 2.0
 						};
 						_requestAfterGearshift = true;
+						LastShift = absTime;
 					} else {
 						loop = true;
 						Gear = _strategy.Engage(absTime, dt, outTorque, outAngularVelocity);
@@ -261,8 +268,16 @@ namespace TUGraz.VectoCore.Models.SimulationComponent.Impl
 				: 0.SI<NewtonMeter>();
 			inTorque += inertiaTorqueLossOut / effectiveRatio;
 
-			if (CurrentState.PowershiftLosses != null) {
-				inTorque += CurrentState.PowershiftLosses;
+			if (CurrentState.PowershiftLossEnergy != null) {
+				var remainingShiftLossLime = ModelData.PowershiftShiftTime - (absTime - LastShift);
+				if (remainingShiftLossLime.IsGreater(0)) {
+					var aliquotEnergyLoss = CurrentState.PowershiftLossEnergy * VectoMath.Min(1.0, dt / remainingShiftLossLime);
+					var avgEngineSpeed = (DataBus.EngineSpeed + outAngularVelocity * ModelData.Gears[Gear].Ratio) / 2;
+					CurrentState.PowershiftLoss = aliquotEnergyLoss / dt / avgEngineSpeed;
+					inTorque += CurrentState.PowershiftLoss;
+					CurrentState.PowershiftLossEnergy -= aliquotEnergyLoss;
+					//inTorque += CurrentState.PowershiftLossEnergy;
+				}
 			}
 
 			if (!dryRun) {
@@ -278,13 +293,14 @@ namespace TUGraz.VectoCore.Models.SimulationComponent.Impl
 			if (!CurrentState.TorqueConverterLocked) {
 				return TorqueConverter.Request(absTime, dt, inTorque, inAngularVelocity, dryRun);
 			}
-			if (!dryRun &&
+			var retVal = NextComponent.Request(absTime, dt, inTorque, inAngularVelocity, dryRun);
+			if (!dryRun && retVal is ResponseSuccess &&
 				_strategy.ShiftRequired(absTime, dt, outTorque, outAngularVelocity, inTorque, inAngularVelocity, Gear,
 					LastShift)) {
 				return new ResponseGearShift { Source = this };
 			}
 
-			return NextComponent.Request(absTime, dt, inTorque, inAngularVelocity, dryRun);
+			return retVal;
 		}
 
 		private IResponse RequestDisengaged(Second absTime, Second dt, NewtonMeter outTorque, PerSecond outAngularVelocity,
@@ -355,7 +371,7 @@ namespace TUGraz.VectoCore.Models.SimulationComponent.Impl
 													CurrentState.OutTorque * avgOutAngularSpeed;
 			container[ModalResultField.P_gbx_inertia] = CurrentState.InertiaTorqueLossOut * avgOutAngularSpeed;
 			container[ModalResultField.P_gbx_in] = CurrentState.InTorque * avgInAngularSpeed;
-			container[ModalResultField.P_gbx_shift_loss] = CurrentState.PowershiftLosses.DefaultIfNull(0) * avgInAngularSpeed;
+			container[ModalResultField.P_gbx_shift_loss] = CurrentState.PowershiftLoss.DefaultIfNull(0) * avgInAngularSpeed;
 			container[ModalResultField.n_gbx_out_avg] = avgOutAngularSpeed;
 			container[ModalResultField.T_gbx_out] = CurrentState.OutTorque;
 		}
@@ -391,7 +407,8 @@ namespace TUGraz.VectoCore.Models.SimulationComponent.Impl
 		{
 			public bool TorqueConverterLocked;
 			public bool Disengaged = true;
-			public NewtonMeter PowershiftLosses;
+			public WattSecond PowershiftLossEnergy;
+			public NewtonMeter PowershiftLoss;
 		}
 	}
 }

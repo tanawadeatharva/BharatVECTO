@@ -196,12 +196,9 @@ namespace TUGraz.VectoCore.Models.SimulationComponent.Impl
 							// search again for operating point, transmission may have shifted inbetween
 							nextOperatingPoint = SearchOperatingPoint(absTime, ds, gradient, operatingPoint.Acceleration,
 								response);
-							limitedOperatingPoint = LimitAccelerationByDriverModel(nextOperatingPoint,
-								LimitationMode.LimitDecelerationDriver);
-							DriverAcceleration = limitedOperatingPoint.Acceleration;
-							retVal = NextComponent.Request(absTime, limitedOperatingPoint.SimulationInterval,
-								limitedOperatingPoint.Acceleration,
-								gradient);
+							DriverAcceleration = nextOperatingPoint.Acceleration;
+							retVal = NextComponent.Request(absTime, nextOperatingPoint.SimulationInterval,
+								nextOperatingPoint.Acceleration, gradient);
 						} else {
 							if (absTime > 0 && DataBus.VehicleStopped) {
 								Log.Info(
@@ -517,6 +514,25 @@ namespace TUGraz.VectoCore.Models.SimulationComponent.Impl
 						DriverAcceleration = operatingPoint.Acceleration;
 						retVal = NextComponent.Request(absTime, operatingPoint.SimulationInterval,
 							operatingPoint.Acceleration, gradient);
+					}
+				}).
+				Case<ResponseOverload>(r => {
+					if (DataBus.GearboxType.AutomaticTransmission()) {
+						// overload may happen because of gearshift between search and actual request, search again
+						DataBus.BrakePower = 0.SI<Watt>();
+						operatingPoint = SearchBrakingPower(absTime, operatingPoint.SimulationDistance, gradient,
+							operatingPoint.Acceleration, response);
+						DriverAcceleration = operatingPoint.Acceleration;
+						if (DataBus.BrakePower.IsSmaller(0)) {
+							DataBus.BrakePower = 0.SI<Watt>();
+
+							operatingPoint = SearchOperatingPoint(absTime, ds, gradient, 0.SI<MeterPerSquareSecond>(), r);
+						}
+						retVal = NextComponent.Request(absTime, operatingPoint.SimulationInterval,
+							operatingPoint.Acceleration, gradient);
+					} else {
+						throw new UnexpectedResponseException(
+							"DrivingAction Brake: request failed after braking power was found.", r);
 					}
 				}).
 				Default(

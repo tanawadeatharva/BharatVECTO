@@ -55,12 +55,14 @@ namespace TUGraz.VectoCore.Models.SimulationComponent.Impl
 		public ITnOutPort NextComponent { protected internal get; set; }
 
 		public TorqueConverter(IGearboxInfo gearbox, IShiftStrategy shiftStrategy, IVehicleContainer container,
-			TorqueConverterData tcData, KilogramSquareMeter engineInertia) : base(container)
+			TorqueConverterData tcData, VectoRunData runData) : base(container)
 		{
 			Gearbox = gearbox;
 			ShiftStrategy = shiftStrategy;
 			ModelData = tcData;
-			_engineInertia = engineInertia;
+			_engineInertia = runData != null && runData.EngineData != null
+				? runData.EngineData.Inertia
+				: 0.SI<KilogramSquareMeter>();
 		}
 
 		public void Connect(ITnOutPort other)
@@ -105,35 +107,51 @@ namespace TUGraz.VectoCore.Models.SimulationComponent.Impl
 				var engineResponse = (ResponseDryRun)
 					NextComponent.Request(absTime, dt, inTorque, operatingPoint.InAngularVelocity, true);
 
-				TorqueConverterOperatingPoint dryOperatingPoint;
+				//TorqueConverterOperatingPoint dryOperatingPoint;
 				//if (false && DataBus.VehicleStopped && DataBus.DriverBehavior == DrivingBehavior.Driving && outTorque.IsGreater(0)) {
 				//	dryOperatingPoint = ModelData.FindOperatingPoint(DataBus.EngineIdleSpeed, outAngularVelocity);
 				//} else {
-				dryOperatingPoint = outTorque.IsGreater(0) && DataBus.BrakePower.IsEqual(0)
-					? GetMaxPowerOperatingPoint(dt, outAngularVelocity, engineResponse,
-						PreviousState.InTorque * PreviousState.InAngularVelocity)
-					: GetDragPowerOperatingPoint(dt, outAngularVelocity, engineResponse,
-						PreviousState.InTorque * PreviousState.InAngularVelocity);
+				//dryOperatingPoint = (DataBus.DriverBehavior != DrivingBehavior.Braking && DataBus.BrakePower.IsEqual(0)) ||
+				//					(outTorque.IsGreater(0) && DataBus.BrakePower.IsEqual(0))
+				//	? GetMaxPowerOperatingPoint(dt, outAngularVelocity, engineResponse,
+				//		PreviousState.InTorque * PreviousState.InAngularVelocity)
+				//	: GetDragPowerOperatingPoint(dt, outAngularVelocity, engineResponse,
+				//		PreviousState.InTorque * PreviousState.InAngularVelocity);
 				//}
-				var avgOutSpeed = (PreviousState.OutAngularVelocity + dryOperatingPoint.OutAngularVelocity) / 2.0;
-				var delta = (outTorque - dryOperatingPoint.OutTorque) * avgOutSpeed;
+				var condition1 = (DataBus.DriverBehavior != DrivingBehavior.Braking && DataBus.BrakePower.IsEqual(0));
+				var condition2 = (outTorque.IsGreater(0) && DataBus.BrakePower.IsEqual(0));
+
+				var engineOK = engineResponse.DeltaDragLoad.IsGreaterOrEqual(0) && engineResponse.DeltaFullLoad.IsSmallerOrEqual(0);
+				if (DataBus.DriverBehavior != DrivingBehavior.Braking && engineOK && operatingPoint.Creeping) {
+					var delta = (outTorque - operatingPoint.OutTorque) *
+								(PreviousState.OutAngularVelocity + operatingPoint.OutAngularVelocity) / 2.0;
+					return new ResponseDryRun() {
+						Source = this,
+						DeltaFullLoad = delta,
+						DeltaDragLoad = delta,
+						TorqueConverterOperatingPoint = operatingPoint
+					};
+				}
+
+				var dryOperatingPointMax = GetMaxPowerOperatingPoint(dt, outAngularVelocity, engineResponse,
+					PreviousState.InTorque * PreviousState.InAngularVelocity);
+				var avgOutSpeedMax = (PreviousState.OutAngularVelocity + dryOperatingPointMax.OutAngularVelocity) / 2.0;
+				var deltaMax = (outTorque - dryOperatingPointMax.OutTorque) * avgOutSpeedMax;
+
+				var dryOperatingPointMin = GetDragPowerOperatingPoint(dt, outAngularVelocity, engineResponse,
+					PreviousState.InTorque * PreviousState.InAngularVelocity);
+				var avgOutSpeedMin = (PreviousState.OutAngularVelocity + dryOperatingPointMin.OutAngularVelocity) / 2.0;
+				var deltaMin = (outTorque - dryOperatingPointMin.OutTorque) * avgOutSpeedMin;
 
 				return new ResponseDryRun {
 					Source = this,
-					DeltaFullLoad = delta,
-					DeltaDragLoad = delta,
-					TorqueConverterOperatingPoint = dryOperatingPoint
+					DeltaFullLoad = 2 * deltaMax,
+					DeltaDragLoad = 2 * deltaMin,
+					TorqueConverterOperatingPoint = dryOperatingPointMax
 				};
 			}
 
 			// normal request
-			var ratio = Gearbox.GetGearData(Gearbox.Gear).TorqueConverterRatio;
-
-			// check if shift is required
-			if (ShiftStrategy.ShiftRequired(absTime, dt, outTorque * ratio, outAngularVelocity / ratio, inTorque,
-				operatingPoint.InAngularVelocity, Gearbox.Gear, Gearbox.LastShift)) {
-				return new ResponseGearShift { Source = this };
-			}
 
 			// check if out-side of the operating point is equal to requested values
 			if (!outAngularVelocity.IsEqual(operatingPoint.OutAngularVelocity) || !outTorque.IsEqual(operatingPoint.OutTorque)) {
@@ -152,6 +170,14 @@ namespace TUGraz.VectoCore.Models.SimulationComponent.Impl
 			CurrentState.OperatingPoint = operatingPoint;
 
 			var retVal = NextComponent.Request(absTime, dt, inTorque, operatingPoint.InAngularVelocity);
+
+			// check if shift is required
+			var ratio = Gearbox.GetGearData(Gearbox.Gear).TorqueConverterRatio;
+			if (retVal is ResponseSuccess &&
+				ShiftStrategy.ShiftRequired(absTime, dt, outTorque * ratio, outAngularVelocity / ratio, inTorque,
+					operatingPoint.InAngularVelocity, Gearbox.Gear, Gearbox.LastShift)) {
+				return new ResponseGearShift { Source = this };
+			}
 			return retVal;
 		}
 
@@ -172,7 +198,9 @@ namespace TUGraz.VectoCore.Models.SimulationComponent.Impl
 				return operatingPoint;
 			} catch (VectoException ve) {
 				Log.Error(ve, "TorqueConverter: Failed to find operating point for DragPower {0}", engineResponse.DragPower);
-				return ModelData.FindOperatingPoint(engineResponse.EngineSpeed, outAngularVelocity);
+				var retVal = ModelData.FindOperatingPoint(engineResponse.EngineSpeed, outAngularVelocity);
+				retVal.Creeping = true;
+				return retVal;
 			}
 		}
 
@@ -191,7 +219,9 @@ namespace TUGraz.VectoCore.Models.SimulationComponent.Impl
 			} catch (VectoException ve) {
 				Log.Error(ve, "TorqueConverter: Failed to find operating point for MaxPower {0}",
 					engineResponse.DynamicFullLoadPower);
-				throw;
+				var tqOperatingPoint = ModelData.FindOperatingPoint(DataBus.EngineIdleSpeed, outAngularVelocity);
+				tqOperatingPoint.Creeping = true;
+				return tqOperatingPoint;
 			}
 		}
 
@@ -202,6 +232,7 @@ namespace TUGraz.VectoCore.Models.SimulationComponent.Impl
 			if (operatingPointList.Count == 0) {
 				Log.Debug("TorqueConverter: Failed to find torque converter operating point, fallback: creeping");
 				var tqOperatingPoint = ModelData.FindOperatingPoint(DataBus.EngineIdleSpeed, outAngularVelocity);
+				tqOperatingPoint.Creeping = true;
 				return tqOperatingPoint;
 			}
 

@@ -34,6 +34,7 @@ using TUGraz.VectoCommon.Models;
 using TUGraz.VectoCommon.Utils;
 using TUGraz.VectoCore.Configuration;
 using TUGraz.VectoCore.Models.Connector.Ports.Impl;
+using TUGraz.VectoCore.Models.Simulation.Data;
 using TUGraz.VectoCore.Models.Simulation.Impl;
 using TUGraz.VectoCore.Models.SimulationComponent.Data;
 using TUGraz.VectoCore.Models.SimulationComponent.Impl;
@@ -72,7 +73,8 @@ namespace TUGraz.VectoCore.Tests.Models.SimulationComponent
 			var engineData = MockSimulationDataFactory.CreateEngineDataFromFile(EngineDataFile);
 			vehicleContainer.Engine = new CombustionEngine(vehicleContainer,engineData);
 			var gearboxData = MockSimulationDataFactory.CreateGearboxDataFromFile(GearboxDataFile, EngineDataFile, false);
-			var gearbox = new ATGearbox(vehicleContainer, gearboxData, new ATShiftStrategy(gearboxData, vehicleContainer), engineData.Inertia);
+			var runData = new VectoRunData() {GearboxData = gearboxData};
+			var gearbox = new ATGearbox(vehicleContainer, new ATShiftStrategy(gearboxData, vehicleContainer), runData);
 
 			vehicleContainer.VehicleSpeed = vehicleSpeed.KMPHtoMeterPerSecond();
 
@@ -155,9 +157,9 @@ namespace TUGraz.VectoCore.Tests.Models.SimulationComponent
 			var sumWriter =
 				new SummaryDataContainer(
 					new FileOutputWriter(string.Format("AT_Vehicle_Drive-TC_{0}-{1}", cycleName, gbxType == GearboxType.ATSerial ? "ser" : "ps")));
-			((VehicleContainer)run.GetContainer()).WriteSumData = (writer, mass, loading, volume) =>
+			((VehicleContainer)run.GetContainer()).WriteSumData = (writer, mass, loading, volume, gearCount) =>
 				sumWriter.Write(run.GetContainer().ModalData, cycleName, string.Format("{0}-{1}", 0, 0),
-					cycleName + Constants.FileExtensions.CycleFile, mass, loading, 0.SI<CubicMeter>());
+					cycleName + Constants.FileExtensions.CycleFile, mass, loading, 0.SI<CubicMeter>(), gearCount);
 			run.Run();
 			sumWriter.Finish();
 			Assert.IsTrue(run.FinishedWithoutErrors);

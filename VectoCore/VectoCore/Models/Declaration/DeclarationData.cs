@@ -244,7 +244,7 @@ namespace TUGraz.VectoCore.Models.Declaration
 		{
 			public const double TorqueReserve = 0.2;
 			public const double TorqueReserveStart = 0.2;
-			public static readonly MeterPerSecond StartSpeed = 2.SI<MeterPerSecond>();
+			public static readonly MeterPerSecond StartSpeed = 1.3.SI<MeterPerSecond>();
 			public static readonly MeterPerSquareSecond StartAcceleration = 0.6.SI<MeterPerSquareSecond>();
 			public static readonly KilogramSquareMeter Inertia = 0.SI<KilogramSquareMeter>();
 

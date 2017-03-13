@@ -35,11 +35,13 @@ using TUGraz.VectoCommon.Models;
 using TUGraz.VectoCommon.Utils;
 using TUGraz.VectoCore.InputData.Reader.ComponentData;
 using TUGraz.VectoCore.Models.Connector.Ports.Impl;
+using TUGraz.VectoCore.Models.Simulation.Data;
 using TUGraz.VectoCore.Models.Simulation.DataBus;
 using TUGraz.VectoCore.Models.Simulation.Impl;
 using TUGraz.VectoCore.Models.SimulationComponent.Data;
 using TUGraz.VectoCore.Models.SimulationComponent.Data.Gearbox;
 using TUGraz.VectoCore.Models.SimulationComponent.Impl;
+using TUGraz.VectoCore.OutputData;
 using TUGraz.VectoCore.Tests.Integration;
 using TUGraz.VectoCore.Tests.Utils;
 
@@ -92,6 +94,7 @@ namespace TUGraz.VectoCore.Tests.Models.SimulationComponent
 
 			var container = new VehicleContainer(ExecutionMode.Engineering);
 			gearboxData.PowershiftInertiaFactor = inertiaFactor;
+			gearboxData.PowershiftShiftTime = 0.8.SI<Second>();
 
 			var cycleDataStr = "0, 0, 0, 2\n100, 20, 0, 0\n1000, 50, 0, 0";
 			var cycleData = SimpleDrivingCycles.CreateCycleData(cycleDataStr);
@@ -109,7 +112,11 @@ namespace TUGraz.VectoCore.Tests.Models.SimulationComponent
 			var engine = new CombustionEngine(container,
 				MockSimulationDataFactory.CreateEngineDataFromFile(ATPowerTrain.EngineFile));
 			container.Engine = engine;
-			var gbx = new ATGearbox(container, gearboxData, new ATShiftStrategy(gearboxData, container), engineInertia);
+			var runData = new VectoRunData() {
+				GearboxData = gearboxData,
+				EngineData = new CombustionEngineData() { Inertia = 5.SI<KilogramSquareMeter>() }
+			};
+			var gbx = new ATGearbox(container, new ATShiftStrategy(gearboxData, container), runData);
 			gbx.Connect(engine);
 			gbx.IdleController = new MockIdleController();
 
@@ -133,7 +140,7 @@ namespace TUGraz.VectoCore.Tests.Models.SimulationComponent
 			response = gbx.Request(absTime, dt, torqueDemand.SI<NewtonMeter>(), postShiftRpm.RPMtoRad());
 
 			Assert.IsInstanceOf<ResponseSuccess>(response);
-			Assert.AreEqual(expectedShiftLoss, gbx.CurrentState.PowershiftLosses.Value(), 1e-3);
+			Assert.AreEqual(expectedShiftLoss, gbx.CurrentState.PowershiftLoss.Value(), 1e-3);
 			Assert.AreEqual(gear + (postShiftRpm > preShiftRpm ? 1 : -1), gbx.Gear);
 		}
 	}

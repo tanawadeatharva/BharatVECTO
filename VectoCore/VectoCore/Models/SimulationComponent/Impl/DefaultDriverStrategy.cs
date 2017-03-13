@@ -401,7 +401,7 @@ namespace TUGraz.VectoCore.Models.SimulationComponent.Impl
 				var second = first;
 				first.Switch().
 					Case<ResponseUnderload>(r => {
-						if (DriverStrategy.OverspeedAllowed(targetVelocity, prohibitOverspeed)) {
+						if (DataBus.VehicleSpeed.IsGreater(0) && DriverStrategy.OverspeedAllowed(targetVelocity, prohibitOverspeed)) {
 							second = Driver.DrivingActionCoast(absTime, ds, velocity, gradient);
 							debug.Add(new { action = "first:(Underload & Overspeed)-> Coast", second });
 							if (second is ResponseUnderload || second is ResponseSpeedLimitExceeded) {
@@ -674,6 +674,7 @@ namespace TUGraz.VectoCore.Models.SimulationComponent.Impl
 								response = Driver.DrivingActionRoll(absTime, ds, targetVelocity, gradient);
 							} else {
 								Log.Info("Brake -> Overload -> Clutch is closed - Trying brake action again");
+								DataBus.BrakePower = 0.SI<Watt>();
 								response = Driver.DrivingActionBrake(absTime, ds, DriverStrategy.BrakeTrigger.NextTargetSpeed, gradient,
 									targetDistance: targetDistance);
 								response.Switch().
@@ -745,8 +746,7 @@ namespace TUGraz.VectoCore.Models.SimulationComponent.Impl
 
 		public Meter ActionDistance
 		{
-			get
-			{
+			get {
 				return VectoMath.Min(CoastingStartDistance ?? double.MaxValue.SI<Meter>(),
 					BrakingStartDistance ?? double.MaxValue.SI<Meter>());
 			}

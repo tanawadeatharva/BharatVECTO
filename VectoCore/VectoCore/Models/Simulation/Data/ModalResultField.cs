@@ -33,6 +33,7 @@ using System;
 using System.Reflection;
 using System.Text.RegularExpressions;
 using TUGraz.VectoCommon.Utils;
+using TUGraz.VectoCore.Models.Simulation.DataBus;
 
 namespace TUGraz.VectoCore.Models.Simulation.Data
 {
@@ -293,6 +294,8 @@ namespace TUGraz.VectoCore.Models.Simulation.Data
 		[ModalResultField(typeof(SI))] altitude,
 
 		[ModalResultField(typeof(SI), name: "ds [m]")] simulationDistance,
+
+		[ModalResultField(typeof(DrivingBehavior))] drivingBehavior,
 
 		[ModalResultField(typeof(double), caption: "AA_NonSmartAlternatorsEfficiency [%]")] AA_NonSmartAlternatorsEfficiency,
 		[ModalResultField(typeof(SI), caption: "AA_SmartIdleCurrent_Amps [A]")] AA_SmartIdleCurrent_Amps,

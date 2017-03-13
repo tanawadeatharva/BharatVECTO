@@ -100,7 +100,7 @@ namespace TUGraz.VectoCore.InputData.Reader.DataObjectAdapter
 			var drivenIndex = DrivenAxleIndex(data.Axles);
 			retVal.DynamicTyreRadius =
 				DeclarationData.Wheels.Lookup(data.Axles[drivenIndex].Wheels).DynamicTyreRadius;
-			retVal.CargoVolume = mission.TotalCargoVolume;
+			retVal.CargoVolume = mission.MissionType != MissionType.Construction ? mission.TotalCargoVolume : 0.SI<CubicMeter>();
 
 			var aerodynamicDragArea = data.AirDragArea + mission.Trailer.Sum(t => t.DeltaCdA).DefaultIfNull(0);
 
