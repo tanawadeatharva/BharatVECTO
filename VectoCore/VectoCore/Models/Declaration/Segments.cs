@@ -224,8 +224,11 @@ namespace TUGraz.VectoCore.Models.Declaration
 
 		private static string GetMissionSuffix(MissionType missionType, bool ignoreEMS = false)
 		{
-			return (missionType.GetNonEMSMissionType() == MissionType.LongHaul ? "-longhaul" : "-other") +
-					(!ignoreEMS && missionType.IsEMS() ? "ems" : "");
+			return "-" +
+					(missionType.IsEMS() && ignoreEMS
+						? ""
+						: (missionType.GetNonEMSMissionType() == MissionType.LongHaul ? "longhaul" : "other")) +
+					(missionType.IsEMS() ? "ems" : "");
 		}
 
 		private static MissionTrailer CreateTrailer(string trailerValue, double axleWeightShare, bool firstTrailer)
