@@ -249,10 +249,10 @@ namespace TUGraz.VectoCore.Models.Declaration
 			public static readonly KilogramSquareMeter Inertia = 0.SI<KilogramSquareMeter>();
 
 			public static readonly MeterPerSecond TruckMaxAllowedSpeed = 85.KMPHtoMeterPerSecond();
-			public const double ShiftPolygonRPMMargin = 7;
+			public const double ShiftPolygonRPMMargin = 7; // %
 			private const double ShiftPolygonEngineFldMargin = 0.98;
 
-			public static readonly Second MinTimeBetweenGearshifts = 2.SI<Second>();
+			public static readonly Second MinTimeBetweenGearshifts = 1.5.SI<Second>();
 			public static readonly Second DownshiftAfterUpshiftDelay = 10.SI<Second>();
 			public static readonly Second UpshiftAfterDownshiftDelay = 10.SI<Second>();
 			public static readonly MeterPerSquareSecond UpshiftMinAcceleration = 0.1.SI<MeterPerSquareSecond>();
