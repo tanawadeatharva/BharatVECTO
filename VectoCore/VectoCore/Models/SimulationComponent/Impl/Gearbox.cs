@@ -231,11 +231,12 @@ namespace TUGraz.VectoCore.Models.SimulationComponent.Impl
 
 			if (dryRun) {
 				// if gearbox is disengaged the 0[W]-line is the limit for drag and full load.
+				var delta = inTorque * avgInAngularVelocity;
 				return new ResponseDryRun {
 					Source = this,
-					GearboxPowerRequest = inTorque * avgInAngularVelocity,
-					DeltaDragLoad = inTorque * avgInAngularVelocity,
-					DeltaFullLoad = inTorque * avgInAngularVelocity,
+					GearboxPowerRequest = delta,
+					DeltaDragLoad = delta,
+					DeltaFullLoad = delta,
 				};
 			}
 
@@ -347,8 +348,7 @@ namespace TUGraz.VectoCore.Models.SimulationComponent.Impl
 
 			if (response is ResponseSuccess && shiftAllowed) {
 				var shiftRequired = _strategy.ShiftRequired(absTime, dt, outTorque, outAngularVelocity, inTorque,
-					response.EngineSpeed,
-					Gear, _engageTime);
+					response.EngineSpeed, Gear, _engageTime);
 
 				if (shiftRequired) {
 					_engageTime = absTime + ModelData.TractionInterruption;
