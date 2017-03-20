@@ -37,13 +37,15 @@ using Org.BouncyCastle.Asn1;
 using TUGraz.VectoCommon.Models;
 using TUGraz.VectoCommon.Utils;
 using TUGraz.VectoCore.Configuration;
+using TUGraz.VectoCore.Models.Declaration;
+using TUGraz.VectoCore.Models.Simulation.Data;
+using TUGraz.VectoCore.Models.SimulationComponent.Data;
 
 // ReSharper disable MemberCanBePrivate.Global  -- used by API!
 
 namespace TUGraz.VectoCore.OutputData
 {
-	public delegate void WriteSumData(
-		IModalDataContainer data, Kilogram vehicleMass, Kilogram loading, CubicMeter cargoVolume, uint gearCount);
+	public delegate void WriteSumData(IModalDataContainer data);
 
 	/// <summary>
 	/// Class for the sum file in vecto.
@@ -55,8 +57,24 @@ namespace TUGraz.VectoCore.OutputData
 		public const string INPUTFILE = "Input File [-]";
 		public const string CYCLE = "Cycle [-]";
 		public const string STATUS = "Status";
-		public const string MASS = "Mass [kg]";
+		public const string CURB_MASS = "Chassis curb mass [kg]";
 		public const string LOADING = "Loading [kg]";
+
+		public const string HDV_CO2_VEHICLE_CLASS = "HDV CO2 vehicle class [-]";
+		public const string TOTAL_VEHICLE_MASS = "Total vehicle mass [kg]";
+		public const string ENGINE_RATED_POWER = "Engine rated power [kW]";
+		public const string ENGINE_IDLING_SPEED = "Engine idling speed [rpm]";
+		public const string ENGINE_RATED_SPEED = "Engine rated speed [rpm]";
+		public const string ENGINE_DISPLACEMENT = "Engine displacement [ccm]";
+		public const string CD_x_A = "CdxA [m²]";
+		public const string ROLLING_RESISTANCE_COEFFICIENT = "weighed RRC [-]";
+		public const string TRANSMISSION_TYPE = "Transmission type [-]";
+		public const string GEAR_RATIO_FIRST_GEAR = "Gear ratio first gear [-]";
+		public const string GEAR_RATIO_LAST_GEAR = "Gear ratio last gear [-]";
+		public const string AXLE_GEAR_RATIO = "Axle gear ratio [-]";
+		public const string R_DYN = "r_dyn [m]";
+		public const string RETARDER_TYPE = "Retarder type [-]";
+
 		public const string VOLUME = "Cargo Volume [m³]";
 		public const string TIME = "time [s]";
 		public const string DISTANCE = "distance [km]";
@@ -146,9 +164,21 @@ namespace TUGraz.VectoCore.OutputData
 			_table.Columns.Add(INPUTFILE, typeof(string));
 			_table.Columns.Add(CYCLE, typeof(string));
 			_table.Columns.Add(STATUS, typeof(string));
+			_table.Columns.Add(HDV_CO2_VEHICLE_CLASS, typeof(string));
 
 			_table.Columns.AddRange(new[] {
-				MASS, LOADING, VOLUME, TIME, DISTANCE, SPEED, ALTITUDE_DELTA, FCMAP_H, FCMAP_KM, FCAUXC_H, FCAUXC_KM, FCWHTCC_H,
+				CURB_MASS, LOADING, TOTAL_VEHICLE_MASS, ENGINE_RATED_POWER, ENGINE_IDLING_SPEED, ENGINE_RATED_SPEED,
+				ENGINE_DISPLACEMENT, CD_x_A,
+				ROLLING_RESISTANCE_COEFFICIENT
+			}.Select(x => new DataColumn(x, typeof(SI))).ToArray());
+			_table.Columns.Add(TRANSMISSION_TYPE, typeof(string));
+			_table.Columns.AddRange(new[] {
+				GEAR_RATIO_FIRST_GEAR, GEAR_RATIO_LAST_GEAR, AXLE_GEAR_RATIO, R_DYN
+			}.Select(x => new DataColumn(x, typeof(SI))).ToArray());
+			_table.Columns.Add(RETARDER_TYPE, typeof(string));
+			_table.Columns.AddRange(new[] {
+				VOLUME, TIME, DISTANCE, SPEED, ALTITUDE_DELTA, FCMAP_H, FCMAP_KM, FCAUXC_H, FCAUXC_KM,
+				FCWHTCC_H,
 				FCWHTCC_KM,
 				FCAAUX_H, FCAAUX_KM, FCFINAL_H, FCFINAL_KM, FCFINAL_LITERPER100KM, FCFINAL_LITERPER100TKM, FCFINAL_LiterPer100M3KM,
 				CO2_KM, CO2_TKM, CO2_M3KM,
@@ -175,20 +205,51 @@ namespace TUGraz.VectoCore.OutputData
 		/// Writes the result of one run into the summary data container.
 		/// </summary>
 		[MethodImpl(MethodImplOptions.Synchronized)]
-		public virtual void Write(IModalDataContainer modData, string jobFileName, string jobName, string cycleFileName,
-			Kilogram vehicleMass, Kilogram vehicleLoading, CubicMeter cargoVolume, uint gearCount)
+		//public virtual void Write(IModalDataContainer modData, string jobFileName, string jobName, string cycleFileName,
+		//	Kilogram vehicleMass, Kilogram vehicleLoading, CubicMeter cargoVolume, uint gearCount)
+		public virtual void Write(IModalDataContainer modData, string current, VectoRunData runData)
 		{
 			var row = _table.NewRow();
 			_table.Rows.Add(row);
 
-			row[JOB] = ReplaceNotAllowedCharacters(jobName);
-			row[INPUTFILE] = ReplaceNotAllowedCharacters(jobFileName);
-			row[CYCLE] = ReplaceNotAllowedCharacters(cycleFileName);
+			row[JOB] = ReplaceNotAllowedCharacters(current);
+			row[INPUTFILE] = ReplaceNotAllowedCharacters(runData.JobName);
+			row[CYCLE] = ReplaceNotAllowedCharacters(runData.Cycle.Name + Constants.FileExtensions.CycleFile);
 			row[STATUS] = modData.RunStatus;
 
-			row[MASS] = vehicleMass;
-			row[LOADING] = vehicleLoading;
-			row[VOLUME] = cargoVolume;
+			var vehicleLoading = 0.SI<Kilogram>();
+			var cargoVolume = 0.SI<CubicMeter>();
+			uint gearCount = 0u;
+			if (runData.Cycle.CycleType != CycleType.EngineOnly) {
+				row[HDV_CO2_VEHICLE_CLASS] = runData.VehicleData.VehicleClass.GetClassNumber();
+				row[CURB_MASS] = runData.VehicleData.CurbWeight - (runData.VehicleData.BodyAndTrailerWeight ?? 0.SI<Kilogram>());
+				row[LOADING] = runData.VehicleData.Loading;
+				row[VOLUME] = runData.VehicleData.CargoVolume;
+
+				row[TOTAL_VEHICLE_MASS] = runData.VehicleData.TotalVehicleWeight;
+				row[ENGINE_RATED_POWER] =
+					runData.EngineData.FullLoadCurve.FullLoadStationaryPower(runData.EngineData.FullLoadCurve.RatedSpeed)
+						.ConvertTo().Kilo.Watt;
+				row[ENGINE_IDLING_SPEED] = runData.EngineData.IdleSpeed.AsRPM.SI<Scalar>();
+				row[ENGINE_RATED_SPEED] = runData.EngineData.FullLoadCurve.RatedSpeed.AsRPM.SI<Scalar>();
+				row[ENGINE_DISPLACEMENT] = runData.EngineData.Displacement.ConvertTo().Cubic.Centi.Meter;
+				row[CD_x_A] = runData.VehicleData.CrossWindCorrectionCurve.AirDragArea;
+				row[ROLLING_RESISTANCE_COEFFICIENT] = runData.VehicleData.TotalRollResistanceCoefficient.SI<Scalar>();
+				row[TRANSMISSION_TYPE] = runData.GearboxData.Type;
+				row[GEAR_RATIO_FIRST_GEAR] = runData.GearboxData.Gears.Count > 0
+					? runData.GearboxData.Gears.First().Value.Ratio.SI<Scalar>()
+					: 0.SI<Scalar>();
+				row[GEAR_RATIO_LAST_GEAR] = runData.GearboxData.Gears.Count > 0
+					? runData.GearboxData.Gears.Last().Value.Ratio.SI<Scalar>()
+					: 0.SI<Scalar>();
+				row[AXLE_GEAR_RATIO] = runData.AxleGearData.AxleGear.Ratio.SI<Scalar>();
+				row[R_DYN] = runData.VehicleData.DynamicTyreRadius;
+				row[RETARDER_TYPE] = runData.Retarder.Type;
+				vehicleLoading = runData.VehicleData.Loading;
+				cargoVolume = runData.VehicleData.CargoVolume;
+				gearCount = (uint)runData.GearboxData.Gears.Count;
+			}
+
 
 			var totalTime = modData.Duration();
 			row[TIME] = totalTime;

@@ -231,7 +231,7 @@ namespace TUGraz.VectoCore.Tests.Models.Simulation
 					new VehicleData {
 						VehicleCategory = VehicleCategory.RigidTruck,
 						CrossWindCorrectionCurve =
-							new CrosswindCorrectionCdxALookup(
+							new CrosswindCorrectionCdxALookup(6.16498344.SI<SquareMeter>(),
 								CrossWindCorrectionCurveReader.GetNoCorrectionCurve(6.16498344.SI<SquareMeter>()),
 								CrossWindCorrectionMode.NoCorrection),
 						GrossVehicleWeight = 12000.SI<Kilogram>(),
@@ -294,7 +294,7 @@ namespace TUGraz.VectoCore.Tests.Models.Simulation
 						WheelsInertia = 2.SI<KilogramSquareMeter>(),
 						DynamicTyreRadius = 0.85.SI<Meter>(),
 						CrossWindCorrectionCurve =
-							new CrosswindCorrectionCdxALookup(
+							new CrosswindCorrectionCdxALookup(6.16498344.SI<SquareMeter>(),
 								CrossWindCorrectionCurveReader.GetNoCorrectionCurve(6.16498344.SI<SquareMeter>()),
 								CrossWindCorrectionMode.NoCorrection)
 					},
