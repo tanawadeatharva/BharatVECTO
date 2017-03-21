@@ -519,17 +519,20 @@ namespace TUGraz.VectoCore.Models.SimulationComponent.Impl
 				Case<ResponseOverload>(r => {
 					if (DataBus.GearboxType.AutomaticTransmission()) {
 						// overload may happen because of gearshift between search and actual request, search again
-						DataBus.BrakePower = 0.SI<Watt>();
-						operatingPoint = SearchBrakingPower(absTime, operatingPoint.SimulationDistance, gradient,
-							operatingPoint.Acceleration, response);
-						DriverAcceleration = operatingPoint.Acceleration;
-						if (DataBus.BrakePower.IsSmaller(0)) {
+						var i = 5;
+						while (i-- > 0 && !(retVal is ResponseSuccess)) {
 							DataBus.BrakePower = 0.SI<Watt>();
+							operatingPoint = SearchBrakingPower(absTime, operatingPoint.SimulationDistance, gradient,
+								operatingPoint.Acceleration, response);
+							DriverAcceleration = operatingPoint.Acceleration;
+							if (DataBus.BrakePower.IsSmaller(0)) {
+								DataBus.BrakePower = 0.SI<Watt>();
 
-							operatingPoint = SearchOperatingPoint(absTime, ds, gradient, 0.SI<MeterPerSquareSecond>(), r);
+								operatingPoint = SearchOperatingPoint(absTime, ds, gradient, 0.SI<MeterPerSquareSecond>(), r);
+							}
+							retVal = NextComponent.Request(absTime, operatingPoint.SimulationInterval,
+								operatingPoint.Acceleration, gradient);
 						}
-						retVal = NextComponent.Request(absTime, operatingPoint.SimulationInterval,
-							operatingPoint.Acceleration, gradient);
 					} else {
 						throw new UnexpectedResponseException(
 							"DrivingAction Brake: request failed after braking power was found.", r);
