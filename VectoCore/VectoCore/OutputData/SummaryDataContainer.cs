@@ -236,12 +236,23 @@ namespace TUGraz.VectoCore.OutputData
 				row[CD_x_A] = runData.VehicleData.CrossWindCorrectionCurve.AirDragArea;
 				row[ROLLING_RESISTANCE_COEFFICIENT] = runData.VehicleData.TotalRollResistanceCoefficient.SI<Scalar>();
 				row[TRANSMISSION_TYPE] = runData.GearboxData.Type;
-				row[GEAR_RATIO_FIRST_GEAR] = runData.GearboxData.Gears.Count > 0
-					? runData.GearboxData.Gears.First().Value.Ratio.SI<Scalar>()
-					: 0.SI<Scalar>();
-				row[GEAR_RATIO_LAST_GEAR] = runData.GearboxData.Gears.Count > 0
-					? runData.GearboxData.Gears.Last().Value.Ratio.SI<Scalar>()
-					: 0.SI<Scalar>();
+				if (runData.GearboxData.Type.AutomaticTransmission()) {
+					row[GEAR_RATIO_FIRST_GEAR] = runData.GearboxData.Gears.Count > 0
+						? (double.IsNaN(runData.GearboxData.Gears.First().Value.Ratio)
+							? runData.GearboxData.Gears.First().Value.TorqueConverterRatio.SI<Scalar>()
+							: runData.GearboxData.Gears.First().Value.Ratio.SI<Scalar>())
+						: 0.SI<Scalar>();
+					row[GEAR_RATIO_LAST_GEAR] = runData.GearboxData.Gears.Count > 0
+						? runData.GearboxData.Gears.Last().Value.Ratio.SI<Scalar>()
+						: 0.SI<Scalar>();
+				} else {
+					row[GEAR_RATIO_FIRST_GEAR] = runData.GearboxData.Gears.Count > 0
+						? runData.GearboxData.Gears.First().Value.Ratio.SI<Scalar>()
+						: 0.SI<Scalar>();
+					row[GEAR_RATIO_LAST_GEAR] = runData.GearboxData.Gears.Count > 0
+						? runData.GearboxData.Gears.Last().Value.Ratio.SI<Scalar>()
+						: 0.SI<Scalar>();
+				}
 				row[AXLE_GEAR_RATIO] = runData.AxleGearData.AxleGear.Ratio.SI<Scalar>();
 				row[R_DYN] = runData.VehicleData.DynamicTyreRadius;
 				row[RETARDER_TYPE] = runData.Retarder.Type;
