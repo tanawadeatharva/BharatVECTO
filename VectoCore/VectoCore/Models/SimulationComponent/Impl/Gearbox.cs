@@ -172,6 +172,8 @@ namespace TUGraz.VectoCore.Models.SimulationComponent.Impl
 			Log.Debug("Gearbox Power Request: torque: {0}, angularVelocity: {1}", outTorque, outAngularVelocity);
 			if (DataBus.VehicleStopped) {
 				_engageTime = absTime;
+				LastDownshift = -double.MaxValue.SI<Second>();
+				LastUpshift = -double.MaxValue.SI<Second>();
 			}
 			if (DataBus.DriverBehavior == DrivingBehavior.Halted) {
 				_engageTime = absTime + dt;
@@ -180,7 +182,7 @@ namespace TUGraz.VectoCore.Models.SimulationComponent.Impl
 			if (DataBus.DriverBehavior == DrivingBehavior.Braking && (DataBus.BrakePower.IsGreater(0) || outTorque < 0) &&
 				DataBus.VehicleSpeed.IsSmaller(Constants.SimulationSettings.ClutchDisengageWhenHaltingSpeed)) {
 				_engageTime = VectoMath.Max(_engageTime, absTime + dt);
-				
+
 				return RequestGearDisengaged(absTime, dt, outTorque, outAngularVelocity, dryRun);
 			}
 
@@ -309,11 +311,13 @@ namespace TUGraz.VectoCore.Models.SimulationComponent.Impl
 				Gear = DataBus.VehicleStopped
 					? _strategy.InitGear(absTime, dt, outTorque, outAngularVelocity)
 					: _strategy.Engage(absTime, dt, outTorque, outAngularVelocity);
-				if (Gear > lastGear) {
-					LastUpshift = absTime;
-				}
-				if (Gear < lastGear) {
-					LastDownshift = absTime;
+				if (!DataBus.VehicleStopped) {
+					if (Gear > lastGear) {
+						LastUpshift = absTime;
+					}
+					if (Gear < lastGear) {
+						LastDownshift = absTime;
+					}
 				}
 				Log.Debug("Gearbox engaged gear {0}", Gear);
 			}
