@@ -314,13 +314,13 @@ namespace TUGraz.VectoCore.Tests.Integration.SimulationRuns
 
 			return new GearboxData {
 				Gears = ratios.Select((ratio, i) =>
-						Tuple.Create((uint)i,
-							new GearData {
-								MaxTorque = ratio > 5 ? 2300.SI<NewtonMeter>() : null,
-								LossMap = TransmissionLossMapReader.ReadFromFile(GearboxLossMap, ratio, string.Format("Gear {0}", i)),
-								Ratio = ratio,
-								ShiftPolygon = ShiftPolygonReader.ReadFromFile(GearboxShiftPolygonFile)
-							}))
+					Tuple.Create((uint)i,
+						new GearData {
+							MaxTorque = ratio > 5 ? 2300.SI<NewtonMeter>() : null,
+							LossMap = TransmissionLossMapReader.ReadFromFile(GearboxLossMap, ratio, string.Format("Gear {0}", i)),
+							Ratio = ratio,
+							ShiftPolygon = ShiftPolygonReader.ReadFromFile(GearboxShiftPolygonFile)
+						}))
 					.ToDictionary(k => k.Item1 + 1, v => v.Item2),
 				ShiftTime = 2.SI<Second>(),
 				Inertia = 0.SI<KilogramSquareMeter>(),
@@ -401,7 +401,8 @@ namespace TUGraz.VectoCore.Tests.Integration.SimulationRuns
 			return new VehicleData {
 				AxleConfiguration = AxleConfiguration.AxleConfig_6x2,
 				CrossWindCorrectionCurve =
-					new CrosswindCorrectionCdxALookup(CrossWindCorrectionCurveReader.GetNoCorrectionCurve(3.2634.SI<SquareMeter>()),
+					new CrosswindCorrectionCdxALookup(3.2634.SI<SquareMeter>(),
+						CrossWindCorrectionCurveReader.GetNoCorrectionCurve(3.2634.SI<SquareMeter>()),
 						CrossWindCorrectionMode.NoCorrection),
 				CurbWeight = 15700.SI<Kilogram>(),
 				Loading = loading,

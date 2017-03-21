@@ -81,9 +81,7 @@ namespace TUGraz.VectoCore.Tests.Integration
 				WriteModalResults = true,
 				HasTorqueConverter = true
 			};
-			var container = new VehicleContainer(ExecutionMode.Engineering, modData) {
-				RunData = new VectoRunData { JobName = modFileName, Cycle = cycleData },
-			};
+
 			var engineData = MockSimulationDataFactory.CreateEngineDataFromFile(EngineFile);
 			var axleGearData = CreateAxleGearData(gbxType);
 			var gearboxData = CreateGearboxData(gbxType);
@@ -94,15 +92,20 @@ namespace TUGraz.VectoCore.Tests.Integration
 			var vehicleData = CreateVehicleData(3300.SI<Kilogram>());
 			var driverData = CreateDriverData(AccelerationFile, overspeed);
 
-			var cycle = new DistanceBasedDrivingCycle(container, cycleData);
-			var engine = new CombustionEngine(container, engineData);
-
 			var runData = new VectoRunData() {
 				AxleGearData = axleGearData,
 				VehicleData = vehicleData,
 				GearboxData = gearboxData,
-				EngineData = engineData
+				EngineData = engineData,
+				JobName = modFileName,
+				Cycle = cycleData,
+				Retarder = new RetarderData() { Type = RetarderType.None }
 			};
+			var container = new VehicleContainer(ExecutionMode.Engineering, modData) {
+				RunData = runData,
+			};
+			var cycle = new DistanceBasedDrivingCycle(container, cycleData);
+			var engine = new CombustionEngine(container, engineData);
 			var tmp = cycle.AddComponent(new Driver(container, driverData, new DefaultDriverStrategy()))
 				.AddComponent(new Vehicle(container, vehicleData))
 				.AddComponent(new Wheels(container, vehicleData.DynamicTyreRadius, vehicleData.WheelsInertia))
@@ -132,21 +135,21 @@ namespace TUGraz.VectoCore.Tests.Integration
 			return new GearboxData {
 				Type = gbxType == GearboxType.ATSerial ? GearboxType.ATSerial : GearboxType.ATPowerSplit,
 				Gears = ratios.Select((ratio, i) =>
-						Tuple.Create((uint)i,
-							new GearData {
-								//MaxTorque = 2300.SI<NewtonMeter>(),
-								LossMap = ratio.IsEqual(1)
-									? TransmissionLossMapReader.Create(0.96, ratio, string.Format("Gear {0}", i))
-									: TransmissionLossMapReader.Create(0.98, ratio, string.Format("Gear {0}", i)),
-								Ratio = ratio,
-								ShiftPolygon = ShiftPolygonReader.ReadFromFile(GearboxShiftPolygonFile),
-								TorqueConverterRatio = i == 0 ? (gbxType == GearboxType.ATPowerSplit ? 1.0 : ratio) : double.NaN,
-								TorqueConverterGearLossMap = i == 0
-									? TransmissionLossMapReader.Create(gbxType == GearboxType.ATPowerSplit ? 1.0 : 0.98, ratio,
-										string.Format("Gear {0}", i))
-									: null,
-								TorqueConverterShiftPolygon = i == 0 ? ShiftPolygonReader.ReadFromFile(GearboxShiftPolygonFile) : null
-							}))
+					Tuple.Create((uint)i,
+						new GearData {
+							//MaxTorque = 2300.SI<NewtonMeter>(),
+							LossMap = ratio.IsEqual(1)
+								? TransmissionLossMapReader.Create(0.96, ratio, string.Format("Gear {0}", i))
+								: TransmissionLossMapReader.Create(0.98, ratio, string.Format("Gear {0}", i)),
+							Ratio = ratio,
+							ShiftPolygon = ShiftPolygonReader.ReadFromFile(GearboxShiftPolygonFile),
+							TorqueConverterRatio = i == 0 ? (gbxType == GearboxType.ATPowerSplit ? 1.0 : ratio) : double.NaN,
+							TorqueConverterGearLossMap = i == 0
+								? TransmissionLossMapReader.Create(gbxType == GearboxType.ATPowerSplit ? 1.0 : 0.98, ratio,
+									string.Format("Gear {0}", i))
+								: null,
+							TorqueConverterShiftPolygon = i == 0 ? ShiftPolygonReader.ReadFromFile(GearboxShiftPolygonFile) : null
+						}))
 					.ToDictionary(k => k.Item1 + 1, v => v.Item2),
 				ShiftTime = 1.SI<Second>(),
 				Inertia = 0.SI<KilogramSquareMeter>(),
@@ -201,7 +204,8 @@ namespace TUGraz.VectoCore.Tests.Integration
 				//AerodynamicDragAera = 3.2634.SI<SquareMeter>(),
 				//CrossWindCorrectionMode = CrossWindCorrectionMode.NoCorrection,
 				CrossWindCorrectionCurve =
-					new CrosswindCorrectionCdxALookup(CrossWindCorrectionCurveReader.GetNoCorrectionCurve(3.2634.SI<SquareMeter>()),
+					new CrosswindCorrectionCdxALookup(3.2634.SI<SquareMeter>(),
+						CrossWindCorrectionCurveReader.GetNoCorrectionCurve(3.2634.SI<SquareMeter>()),
 						CrossWindCorrectionMode.NoCorrection),
 				CurbWeight = 11500.SI<Kilogram>(),
 				Loading = loading,

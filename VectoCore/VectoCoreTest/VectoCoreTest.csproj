@@ -121,6 +121,7 @@
     <Compile Include="Utils\MockComponent.cs" />
     <Compile Include="Utils\MockEngineDataProvider.cs" />
     <Compile Include="Utils\MockIdleController.cs" />
+    <Compile Include="Utils\MockRunData.cs" />
     <Compile Include="Utils\MockSimulationDataFactory.cs" />
     <Compile Include="Utils\MockVehicleContainer.cs" />
     <Compile Include="Models\SimulationComponentData\AuxiliaryTypeHelperTest.cs" />

@@ -154,10 +154,11 @@ namespace TUGraz.VectoCore.Models.Simulation.Impl
 							WriteModalResults = _mode != ExecutionMode.Declaration || WriteModalResults
 						};
 				var current = i++;
-				var builder = new PowertrainBuilder(modContainer, (writer, mass, loading, volume, gearCount) => {
+				var builder = new PowertrainBuilder(modContainer, (modData) => {
 					if (SumData != null) {
-						SumData.Write(modContainer, d.JobName, string.Format("{0}-{1}", JobNumber, current),
-							d.Cycle.Name + Constants.FileExtensions.CycleFile, mass, loading, volume ?? 0.SI<CubicMeter>(), gearCount);
+						SumData.Write(modData, string.Format("{0}-{1}", JobNumber, current), d);
+						//SumData.Write(modContainer, d.JobName, string.Format("{0}-{1}", JobNumber, current),
+						//	d.Cycle.Name + Constants.FileExtensions.CycleFile, mass, loading, volume ?? 0.SI<CubicMeter>(), gearCount);
 					}
 				});
 

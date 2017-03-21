@@ -71,9 +71,9 @@ namespace TUGraz.VectoCore.Tests.Models.SimulationComponent
 		{
 			var vehicleContainer = new MockVehicleContainer(); //(ExecutionMode.Engineering);
 			var engineData = MockSimulationDataFactory.CreateEngineDataFromFile(EngineDataFile);
-			vehicleContainer.Engine = new CombustionEngine(vehicleContainer,engineData);
+			vehicleContainer.Engine = new CombustionEngine(vehicleContainer, engineData);
 			var gearboxData = MockSimulationDataFactory.CreateGearboxDataFromFile(GearboxDataFile, EngineDataFile, false);
-			var runData = new VectoRunData() {GearboxData = gearboxData};
+			var runData = new VectoRunData() { GearboxData = gearboxData };
 			var gearbox = new ATGearbox(vehicleContainer, new ATShiftStrategy(gearboxData, vehicleContainer), runData);
 
 			vehicleContainer.VehicleSpeed = vehicleSpeed.KMPHtoMeterPerSecond();
@@ -100,7 +100,7 @@ namespace TUGraz.VectoCore.Tests.Models.SimulationComponent
 							   200,  0, 0,    2";
 			var cycle = SimpleDrivingCycles.CreateCycleData(cycleData);
 			var run = ATPowerTrain.CreateEngineeringRun(cycle, gbxType,
-				string.Format("AT_Vehicle_Drive-TC-{0}.vmod", gbxType==GearboxType.ATSerial ? "ser" : "ps"));
+				string.Format("AT_Vehicle_Drive-TC-{0}.vmod", gbxType == GearboxType.ATSerial ? "ser" : "ps"));
 
 			run.Run();
 			Assert.IsTrue(run.FinishedWithoutErrors);
@@ -115,7 +115,7 @@ namespace TUGraz.VectoCore.Tests.Models.SimulationComponent
 							  500, 40, 0,    0";
 			var cycle = SimpleDrivingCycles.CreateCycleData(cycleData);
 			var run = ATPowerTrain.CreateEngineeringRun(cycle, gbxType,
-				string.Format("AT_Vehicle_Drive-TC_shiftup-{0}.vmod", gbxType==GearboxType.ATSerial ? "ser" : "ps"));
+				string.Format("AT_Vehicle_Drive-TC_shiftup-{0}.vmod", gbxType == GearboxType.ATSerial ? "ser" : "ps"));
 
 			run.Run();
 			Assert.IsTrue(run.FinishedWithoutErrors);
@@ -130,7 +130,7 @@ namespace TUGraz.VectoCore.Tests.Models.SimulationComponent
 							  500,  0, 0,    2";
 			var cycle = SimpleDrivingCycles.CreateCycleData(cycleData);
 			var run = ATPowerTrain.CreateEngineeringRun(cycle, gbxType,
-				string.Format("AT_Vehicle_Drive-TC_shiftdown-{0}.vmod", gbxType==GearboxType.ATSerial ? "ser" : "ps"));
+				string.Format("AT_Vehicle_Drive-TC_shiftdown-{0}.vmod", gbxType == GearboxType.ATSerial ? "ser" : "ps"));
 
 			run.Run();
 			Assert.IsTrue(run.FinishedWithoutErrors);
@@ -152,14 +152,14 @@ namespace TUGraz.VectoCore.Tests.Models.SimulationComponent
 			Assert.IsTrue(gbxType.AutomaticTransmission());
 			var cycle = SimpleDrivingCycles.ReadDeclarationCycle(cycleName);
 			var run = ATPowerTrain.CreateEngineeringRun(cycle, gbxType,
-				string.Format("AT_Vehicle_Drive-TC_{0}-{1}.vmod", cycleName, gbxType==GearboxType.ATSerial ? "ser" : "ps"));
+				string.Format("AT_Vehicle_Drive-TC_{0}-{1}.vmod", cycleName, gbxType == GearboxType.ATSerial ? "ser" : "ps"));
 
 			var sumWriter =
 				new SummaryDataContainer(
-					new FileOutputWriter(string.Format("AT_Vehicle_Drive-TC_{0}-{1}", cycleName, gbxType == GearboxType.ATSerial ? "ser" : "ps")));
-			((VehicleContainer)run.GetContainer()).WriteSumData = (writer, mass, loading, volume, gearCount) =>
-				sumWriter.Write(run.GetContainer().ModalData, cycleName, string.Format("{0}-{1}", 0, 0),
-					cycleName + Constants.FileExtensions.CycleFile, mass, loading, 0.SI<CubicMeter>(), gearCount);
+					new FileOutputWriter(string.Format("AT_Vehicle_Drive-TC_{0}-{1}", cycleName,
+						gbxType == GearboxType.ATSerial ? "ser" : "ps")));
+			((VehicleContainer)run.GetContainer()).WriteSumData = (modData) =>
+				sumWriter.Write(run.GetContainer().ModalData, string.Format("{0}-{1}", 0, 0), run.GetContainer().RunData);
 			run.Run();
 			sumWriter.Finish();
 			Assert.IsTrue(run.FinishedWithoutErrors);

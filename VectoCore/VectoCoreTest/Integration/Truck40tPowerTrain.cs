@@ -220,7 +220,7 @@ namespace TUGraz.VectoCore.Tests.Integration
 				//AerodynamicDragAera = 6.2985.SI<SquareMeter>(),
 				//CrossWindCorrectionMode = CrossWindCorrectionMode.NoCorrection,
 				CrossWindCorrectionCurve =
-					new CrosswindCorrectionCdxALookup(CrossWindCorrectionCurveReader.GetNoCorrectionCurve(6.2985.SI<SquareMeter>()),
+					new CrosswindCorrectionCdxALookup(6.2985.SI<SquareMeter>(), CrossWindCorrectionCurveReader.GetNoCorrectionCurve(6.2985.SI<SquareMeter>()),
 						CrossWindCorrectionMode.NoCorrection),
 				CurbWeight = 7100.SI<Kilogram>() + massExtra,
 				Loading = loading,

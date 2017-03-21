@@ -43,7 +43,7 @@ namespace TUGraz.VectoCore.Models.SimulationComponent.Data
 {
 	internal class CrosswindCorrectionVAirBeta : LoggingObject, ICrossWindCorrection
 	{
-		protected SquareMeter AirDragArea { get; set; }
+		public SquareMeter AirDragArea { get; protected set; }
 
 		protected List<CrossWindCorrectionCurveReader.AirDragBetaEntry> AirDragEntries;
 		protected IDataBus DataBus;

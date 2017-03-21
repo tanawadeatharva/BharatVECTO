@@ -55,7 +55,7 @@ namespace TUGraz.VectoCore.InputData.Reader.DataObjectAdapter
 			}
 
 			var retVal = SetCommonVehicleData(data);
-
+			retVal.BodyAndTrailerWeight = data.CurbWeightExtra;
 			retVal.CurbWeight += data.CurbWeightExtra;
 			retVal.TrailerGrossVehicleWeight = 0.SI<Kilogram>();
 			retVal.Loading = data.Loading;
@@ -65,11 +65,12 @@ namespace TUGraz.VectoCore.InputData.Reader.DataObjectAdapter
 			switch (data.CrossWindCorrectionMode) {
 				case CrossWindCorrectionMode.NoCorrection:
 					retVal.CrossWindCorrectionCurve =
-						new CrosswindCorrectionCdxALookup(CrossWindCorrectionCurveReader.GetNoCorrectionCurve(data.AirDragArea),
+						new CrosswindCorrectionCdxALookup(data.AirDragArea,
+							CrossWindCorrectionCurveReader.GetNoCorrectionCurve(data.AirDragArea),
 							CrossWindCorrectionMode.NoCorrection);
 					break;
 				case CrossWindCorrectionMode.SpeedDependentCorrectionFactor:
-					retVal.CrossWindCorrectionCurve = new CrosswindCorrectionCdxALookup(
+					retVal.CrossWindCorrectionCurve = new CrosswindCorrectionCdxALookup(data.AirDragArea,
 						CrossWindCorrectionCurveReader.ReadSpeedDependentCorrectionCurve(data.CrosswindCorrectionMap,
 							data.AirDragArea), CrossWindCorrectionMode.SpeedDependentCorrectionFactor);
 					break;
@@ -79,7 +80,7 @@ namespace TUGraz.VectoCore.InputData.Reader.DataObjectAdapter
 					break;
 				case CrossWindCorrectionMode.DeclarationModeCorrection:
 					retVal.CrossWindCorrectionCurve =
-						new CrosswindCorrectionCdxALookup(
+						new CrosswindCorrectionCdxALookup(data.AirDragArea,
 							DeclarationDataAdapter.GetDeclarationAirResistanceCurve(
 								GetAirdragParameterSet(retVal.VehicleCategory, data.AxleConfiguration, axles.Count),
 								data.AirDragArea), CrossWindCorrectionMode.DeclarationModeCorrection);
