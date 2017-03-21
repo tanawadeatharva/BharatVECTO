@@ -2,6 +2,18 @@
 
 **VECTO 3.1.2**
 
+***Build 810 (2017-03-21)***
+
+- Improvements
+    + [VECTO-445] Additional columns in vsum file
+    + Allow splitting shift losses among multiple simulation intervals
+    + Allow coasting overspeed only if vehicle speed > 0
+    + Torque converter: better handling of ‘creeping’ situations
+
+- Bugfixes:
+    + [VECTO-443] Bugfix in AMT shift strategy: skip gears not working correctly
+
+
 ***Build 796 (2017-03-07)***
 
 - Improvements:
