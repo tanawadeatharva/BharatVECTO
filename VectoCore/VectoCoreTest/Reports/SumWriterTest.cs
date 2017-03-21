@@ -38,6 +38,7 @@ using TUGraz.VectoCore.Models.Simulation.Impl;
 using TUGraz.VectoCore.OutputData;
 using TUGraz.VectoCore.OutputData.FileIO;
 using TUGraz.VectoCore.Tests.Models.SimulationComponent;
+using TUGraz.VectoCore.Tests.Utils;
 using TUGraz.VectoCore.Utils;
 
 namespace TUGraz.VectoCore.Tests.Reports
@@ -80,7 +81,7 @@ namespace TUGraz.VectoCore.Tests.Reports
 				modData.CommitSimulationStep();
 			}
 
-			sumWriter.Write(modData, "testSumCalc", "--", "--", 0.SI<Kilogram>(), 0.SI<Kilogram>(), 0.SI<CubicMeter>(), 0);
+			sumWriter.Write(modData, "testSumCalc", new MockRunData());
 
 			modData.Finish(VectoRun.Status.Success);
 			sumWriter.Finish();
@@ -138,7 +139,7 @@ namespace TUGraz.VectoCore.Tests.Reports
 				modData.CommitSimulationStep();
 			}
 
-			sumWriter.Write(modData, "testSumCalc", "--", "--", 0.SI<Kilogram>(), 0.SI<Kilogram>(), 0.SI<CubicMeter>(), 0);
+			sumWriter.Write(modData, "testSumCalc", new MockRunData());
 
 			modData.Finish(VectoRun.Status.Success);
 			sumWriter.Finish();

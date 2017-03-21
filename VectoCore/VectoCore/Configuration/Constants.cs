@@ -140,7 +140,7 @@ namespace TUGraz.VectoCore.Configuration
 
 			public const double ClutchClosingSpeedNorm = 0.065;
 
-			public static readonly MeterPerSecond ClutchDisengageWhenHaltingSpeed = 15.KMPHtoMeterPerSecond();
+			public static readonly MeterPerSecond ClutchDisengageWhenHaltingSpeed = 10.KMPHtoMeterPerSecond();
 
 			public static readonly MeterPerSecond ATGearboxDisengageWhenHaltingSpeed = 5.KMPHtoMeterPerSecond();
 

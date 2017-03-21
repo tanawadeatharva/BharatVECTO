@@ -401,7 +401,7 @@ namespace TUGraz.VectoCore.Models.SimulationComponent.Impl
 				var second = first;
 				first.Switch().
 					Case<ResponseUnderload>(r => {
-						if (DriverStrategy.OverspeedAllowed(targetVelocity, prohibitOverspeed)) {
+						if (DataBus.VehicleSpeed.IsGreater(0) && DriverStrategy.OverspeedAllowed(targetVelocity, prohibitOverspeed)) {
 							second = Driver.DrivingActionCoast(absTime, ds, velocity, gradient);
 							debug.Add(new { action = "first:(Underload & Overspeed)-> Coast", second });
 							if (second is ResponseUnderload || second is ResponseSpeedLimitExceeded) {

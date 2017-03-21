@@ -203,7 +203,7 @@ namespace TUGraz.VectoCore.Tests.Models.Declaration
 		public void CrossWindCorrectionTest(string parameterSet, double crossSectionArea, double kmph,
 			double expected)
 		{
-			var crossWindCorrectionCurve = new CrosswindCorrectionCdxALookup(
+			var crossWindCorrectionCurve = new CrosswindCorrectionCdxALookup(crossSectionArea.SI<SquareMeter>(),
 				DeclarationDataAdapter.GetDeclarationAirResistanceCurve(parameterSet, crossSectionArea.SI<SquareMeter>()),
 				CrossWindCorrectionMode.DeclarationModeCorrection);
 
@@ -215,7 +215,7 @@ namespace TUGraz.VectoCore.Tests.Models.Declaration
 		TestCase("TractorSemitrailer", 6.46, 130.1),]
 		public void CrossWindCorrectionExceptionTest(string parameterSet, double crossSectionArea, double kmph)
 		{
-			var crossWindCorrectionCurve = new CrosswindCorrectionCdxALookup(
+			var crossWindCorrectionCurve = new CrosswindCorrectionCdxALookup(crossSectionArea.SI<SquareMeter>(),
 				DeclarationDataAdapter.GetDeclarationAirResistanceCurve(parameterSet, crossSectionArea.SI<SquareMeter>()),
 				CrossWindCorrectionMode.DeclarationModeCorrection);
 
