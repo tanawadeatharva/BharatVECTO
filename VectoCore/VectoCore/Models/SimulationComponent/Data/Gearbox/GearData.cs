@@ -77,14 +77,11 @@ namespace TUGraz.VectoCore.Models.SimulationComponent.Data.Gearbox
 		// ReSharper disable once UnusedMember.Global -- used via validation
 		public static ValidationResult ValidateGearData(GearData gearData, ValidationContext context)
 		{
-			var modeService = context.GetService(typeof(ExecutionMode)) as ExecutionModeServiceContainer;
-			var mode = modeService == null ? ExecutionMode.Declaration : modeService.Mode;
-
-			var gbxTypeService = context.GetService(typeof(GearboxTypeServiceContainer)) as GearboxTypeServiceContainer;
-			var gbxType = gbxTypeService == null ? GearboxType.MT : gbxTypeService.Type;
-
-			var emsTypeService = context.GetService(typeof(EmsCycleServiceContainer)) as EmsCycleServiceContainer;
-			var emsMission = emsTypeService != null && emsTypeService.IsEmsCycle;
+			var validationService =
+				context.GetService(typeof(VectoValidationModeServiceContainer)) as VectoValidationModeServiceContainer;
+			var mode = validationService != null ? validationService.Mode : ExecutionMode.Declaration;
+			var gbxType = validationService != null ? validationService.GearboxType : GearboxType.MT;
+			var emsMission = validationService != null && validationService.IsEMSCycle;
 
 			if (gearData.HasTorqueConverter) {
 				if (gearData.TorqueConverterShiftPolygon == null) {

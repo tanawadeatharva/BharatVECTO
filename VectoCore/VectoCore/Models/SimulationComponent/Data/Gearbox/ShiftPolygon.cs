@@ -145,11 +145,13 @@ namespace TUGraz.VectoCore.Models.SimulationComponent.Data.Gearbox
 		// ReSharper disable once UnusedMember.Global -- used via validation
 		public static ValidationResult ValidateShiftPolygon(ShiftPolygon shiftPolygon, ValidationContext validationContext)
 		{
-			var gbxTypeService = validationContext.GetService(typeof(GearboxTypeServiceContainer)) as GearboxTypeServiceContainer;
-			var gbxType = gbxTypeService == null ? null : gbxTypeService.Type;
+			var validationService =
+				validationContext.GetService(typeof(VectoValidationModeServiceContainer)) as VectoValidationModeServiceContainer;
+			var gbxType = validationService != null ? validationService.GearboxType : null;
 
-			if (gbxType == null || gbxType.Value.AutomaticTransmission())
+			if (gbxType == null || gbxType.Value.AutomaticTransmission()) {
 				return ValidationResult.Success;
+			}
 
 			return shiftPolygon.Downshift.Pairwise(Tuple.Create)
 				.Any(
@@ -182,7 +184,7 @@ namespace TUGraz.VectoCore.Models.SimulationComponent.Data.Gearbox
 				// vertical line
 				return double.MaxValue.SI<NewtonMeter>();
 			}
-			return VectoMath.Interpolate(section.Item1.AngularSpeed, section.Item2.AngularSpeed, section.Item1.Torque, 
+			return VectoMath.Interpolate(section.Item1.AngularSpeed, section.Item2.AngularSpeed, section.Item1.Torque,
 				section.Item2.Torque, inAngularVelocity);
 		}
 	}

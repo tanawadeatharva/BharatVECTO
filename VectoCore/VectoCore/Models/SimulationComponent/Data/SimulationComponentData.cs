@@ -57,14 +57,16 @@ namespace TUGraz.VectoCore.Models.SimulationComponent.Data
 
 		protected static ExecutionMode GetExecutionMode(ValidationContext context)
 		{
-			var modeService = context.GetService(typeof(ExecutionMode)) as ExecutionModeServiceContainer;
-			return modeService == null ? ExecutionMode.Declaration : modeService.Mode;
+			var validationService =
+				context.GetService(typeof(VectoValidationModeServiceContainer)) as VectoValidationModeServiceContainer;
+			return validationService == null ? ExecutionMode.Declaration : validationService.Mode;
 		}
 
 		protected static bool GetEmsMode(ValidationContext context)
 		{
-			var emsService = context.GetService(typeof(EmsCycleServiceContainer)) as EmsCycleServiceContainer;
-			return emsService != null && emsService.IsEmsCycle;
+			var validationService =
+				context.GetService(typeof(VectoValidationModeServiceContainer)) as VectoValidationModeServiceContainer;
+			return validationService != null && validationService.IsEMSCycle;
 		}
 	}
 }

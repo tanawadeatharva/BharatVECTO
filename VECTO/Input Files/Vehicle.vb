@@ -95,17 +95,12 @@ Public Class Vehicle
 		Dim ptoData As PTOData = Nothing
 		Dim angledriveData As AngledriveData
 
-		Dim modeService As ExecutionModeServiceContainer = TryCast(validationContext.GetService(GetType(ExecutionMode)), 
-																	ExecutionModeServiceContainer)
+		Dim modeService As VectoValidationModeServiceContainer =
+				TryCast(validationContext.GetService(GetType(VectoValidationModeServiceContainer)), 
+						VectoValidationModeServiceContainer)
 		Dim mode As ExecutionMode = If(modeService Is Nothing, ExecutionMode.Declaration, modeService.Mode)
-		Dim emsCycleService As EmsCycleServiceContainer =
-				TryCast(validationContext.GetService(GetType(EmsCycleServiceContainer)), 
-						EmsCycleServiceContainer)
-		Dim emsCycle As Boolean = (emsCycleService IsNot Nothing) AndAlso emsCycleService.IsEmsCycle
-
-		Dim gbxtypeService As GearboxTypeServiceContainer =
-				TryCast(validationContext.GetService(GetType(GearboxTypeServiceContainer)), GearboxTypeServiceContainer)
-		Dim gbxType As GearboxType? = If(gbxtypeService Is Nothing, Nothing, gbxtypeService.Type)
+		Dim emsCycle As Boolean = (modeService IsNot Nothing) AndAlso modeService.IsEMSCycle
+		Dim gbxType As GearboxType? = If(modeService Is Nothing, Nothing, modeService.GearboxType)
 
 		Try
 			If mode = ExecutionMode.Declaration Then
@@ -132,7 +127,8 @@ Public Class Vehicle
 										result.Select(Function(r) r.ErrorMessage + String.Join(Environment.NewLine, r.MemberNames)).ToList())
 			End If
 
-			result = retarderData.Validate(If(Cfg.DeclMode, ExecutionMode.Declaration, ExecutionMode.Engineering), gbxType, emsCycle)
+			result = retarderData.Validate(If(Cfg.DeclMode, ExecutionMode.Declaration, ExecutionMode.Engineering), gbxType,
+											emsCycle)
 			If result.Any() Then
 				Return _
 					New ValidationResult("Retarder Configuration is invalid. ",
@@ -140,7 +136,8 @@ Public Class Vehicle
 			End If
 
 			If vehicle.AngledriveType = AngledriveType.SeparateAngledrive Then
-				result = angledriveData.Validate(If(Cfg.DeclMode, ExecutionMode.Declaration, ExecutionMode.Engineering), gbxType, emsCycle)
+				result = angledriveData.Validate(If(Cfg.DeclMode, ExecutionMode.Declaration, ExecutionMode.Engineering), gbxType,
+												emsCycle)
 				If result.Any() Then
 					Return _
 						New ValidationResult("AngleDrive Configuration is invalid. ",

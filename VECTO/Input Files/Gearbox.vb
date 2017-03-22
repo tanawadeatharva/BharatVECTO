@@ -186,14 +186,11 @@ Public Class Gearbox
 
 	' ReSharper disable once UnusedMember.Global -- used by Validation
 	Public Shared Function ValidateGearbox(gearbox As Gearbox, validationContext As ValidationContext) As ValidationResult
-		Dim modeService As ExecutionModeServiceContainer = TryCast(validationContext.GetService(GetType(ExecutionMode)), 
-																	ExecutionModeServiceContainer)
+		Dim modeService As VectoValidationModeServiceContainer =
+				TryCast(validationContext.GetService(GetType(VectoValidationModeServiceContainer)), 
+						VectoValidationModeServiceContainer)
 		Dim mode As ExecutionMode = If(modeService Is Nothing, ExecutionMode.Declaration, modeService.Mode)
-
-		Dim emsCycleService As EmsCycleServiceContainer =
-				TryCast(validationContext.GetService(GetType(EmsCycleServiceContainer)), 
-						EmsCycleServiceContainer)
-		Dim emsCycle As Boolean = (emsCycleService IsNot Nothing) AndAlso emsCycleService.IsEmsCycle
+		Dim emsCycle As Boolean = (modeService IsNot Nothing) AndAlso modeService.IsEMSCycle
 
 		Dim axlegearData As AxleGearData
 		Dim gearboxData As GearboxData
@@ -238,7 +235,8 @@ Public Class Gearbox
 										result.Select(Function(r) r.ErrorMessage + String.Join(Environment.NewLine, r.MemberNames)).ToList())
 			End If
 
-			result = axlegearData.Validate(If(Cfg.DeclMode, ExecutionMode.Declaration, ExecutionMode.Engineering), gearbox.Type, emsCycle)
+			result = axlegearData.Validate(If(Cfg.DeclMode, ExecutionMode.Declaration, ExecutionMode.Engineering), gearbox.Type,
+											emsCycle)
 			If result.Any() Then
 				Return _
 					New ValidationResult("Axlegear Configuration is invalid. ",

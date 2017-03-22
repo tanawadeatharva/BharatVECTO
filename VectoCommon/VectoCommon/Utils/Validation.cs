@@ -61,9 +61,8 @@ namespace TUGraz.VectoCommon.Utils
 				return new[] { new ValidationResult(string.Format("null value given for {0}", typeof(T))) };
 			}
 			var context = new ValidationContext(entity);
-			context.ServiceContainer.AddService(typeof(ExecutionMode), new ExecutionModeServiceContainer(mode));
-			context.ServiceContainer.AddService(typeof(GearboxTypeServiceContainer), new GearboxTypeServiceContainer(gbxType));
-			context.ServiceContainer.AddService(typeof(EmsCycleServiceContainer), new EmsCycleServiceContainer(emsCycle));
+			context.ServiceContainer.AddService(typeof(VectoValidationModeServiceContainer),
+				new VectoValidationModeServiceContainer(mode, gbxType, emsCycle));
 
 			var results = new List<ValidationResult>();
 			Validator.TryValidateObject(entity, context, results, true);
@@ -140,36 +139,20 @@ namespace TUGraz.VectoCommon.Utils
 		}
 	}
 
-	public class ExecutionModeServiceContainer
+	public class VectoValidationModeServiceContainer
 	{
-		public ExecutionModeServiceContainer(ExecutionMode mode)
+		public ExecutionMode Mode { get; protected set; }
+		public GearboxType? GearboxType { get; protected set; }
+		public bool IsEMSCycle { get; protected set; }
+
+		public VectoValidationModeServiceContainer(ExecutionMode mode, GearboxType? gbxType, bool isEMSCycle = false)
 		{
 			Mode = mode;
+			GearboxType = gbxType;
+			IsEMSCycle = isEMSCycle;
 		}
-
-		public ExecutionMode Mode { get; protected set; }
 	}
 
-	public class GearboxTypeServiceContainer
-	{
-		public GearboxTypeServiceContainer(GearboxType? type)
-		{
-			Type = type;
-		}
-
-
-		public GearboxType? Type { get; protected set; }
-	}
-
-	public class EmsCycleServiceContainer
-	{
-		public EmsCycleServiceContainer(bool isEmsCycle)
-		{
-			IsEmsCycle = isEmsCycle;
-		}
-
-		public bool IsEmsCycle { get; protected set; }
-	}
 
 	/// <summary>
 	/// Determines that the attributed object should be validated recursively.
@@ -190,14 +173,11 @@ namespace TUGraz.VectoCommon.Utils
 				return ValidationResult.Success;
 			}
 
-			var modeService = validationContext.GetService(typeof(ExecutionMode)) as ExecutionModeServiceContainer;
-			var mode = modeService != null ? modeService.Mode : ExecutionMode.Declaration;
-
-			var gbxTypeService = validationContext.GetService(typeof(GearboxTypeServiceContainer)) as GearboxTypeServiceContainer;
-			var gbxType = gbxTypeService != null ? gbxTypeService.Type : GearboxType.MT;
-
-			var emsTypeService = validationContext.GetService(typeof(EmsCycleServiceContainer)) as EmsCycleServiceContainer;
-			var isEmsCycle = emsTypeService != null && emsTypeService.IsEmsCycle;
+			var validationService =
+				validationContext.GetService(typeof(VectoValidationModeServiceContainer)) as VectoValidationModeServiceContainer;
+			var mode = validationService != null ? validationService.Mode : ExecutionMode.Declaration;
+			var gbxType = validationService != null ? validationService.GearboxType : GearboxType.MT;
+			var isEmsCycle = validationService != null && validationService.IsEMSCycle;
 
 			var enumerable = value as IEnumerable;
 			if (enumerable != null) {
@@ -417,11 +397,10 @@ namespace TUGraz.VectoCommon.Utils
 			if (si != null) {
 				_unit = si.GetUnitString();
 			}
-			var emsService = validationContext.GetService(typeof(EmsCycleServiceContainer)) as EmsCycleServiceContainer;
-			var emsMode = emsService != null && emsService.IsEmsCycle;
-
-			var modeService = validationContext.GetService(typeof(ExecutionMode)) as ExecutionModeServiceContainer;
-			var mode = modeService == null ? (ExecutionMode?)null : modeService.Mode;
+			var validationService =
+				validationContext.GetService(typeof(VectoValidationModeServiceContainer)) as VectoValidationModeServiceContainer;
+			var mode = validationService != null ? validationService.Mode : (ExecutionMode?)null;
+			var emsMode = validationService != null && validationService.IsEMSCycle;
 
 			if (!_emsMission.HasValue || _emsMission.Value == emsMode) {
 				if (mode == null) {
