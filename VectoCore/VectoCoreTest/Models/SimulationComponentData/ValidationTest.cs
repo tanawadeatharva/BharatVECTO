@@ -181,7 +181,8 @@ namespace TUGraz.VectoCore.Tests.Models.SimulationComponentData
 				Creator = "Mr. Test",
 				CrossWindCorrectionMode = CrossWindCorrectionMode.NoCorrection,
 				CrossWindCorrectionCurve =
-					new CrosswindCorrectionCdxALookup(CrossWindCorrectionCurveReader.GetNoCorrectionCurve(5.SI<SquareMeter>()),
+					new CrosswindCorrectionCdxALookup(5.SI<SquareMeter>(),
+						CrossWindCorrectionCurveReader.GetNoCorrectionCurve(5.SI<SquareMeter>()),
 						CrossWindCorrectionMode.NoCorrection),
 				CurbWeight = 7500.SI<Kilogram>(),
 				DynamicTyreRadius = 0.5.SI<Meter>(),
@@ -243,7 +244,7 @@ namespace TUGraz.VectoCore.Tests.Models.SimulationComponentData
 				Creator = "Mr. Test",
 				CrossWindCorrectionMode = CrossWindCorrectionMode.NoCorrection,
 				CrossWindCorrectionCurve =
-					new CrosswindCorrectionCdxALookup(CrossWindCorrectionCurveReader.GetNoCorrectionCurve(5.SI<SquareMeter>()),
+					new CrosswindCorrectionCdxALookup(5.SI<SquareMeter>(),CrossWindCorrectionCurveReader.GetNoCorrectionCurve(5.SI<SquareMeter>()),
 						CrossWindCorrectionMode.NoCorrection),
 				CurbWeight = 7500.SI<Kilogram>(),
 				DynamicTyreRadius = 0.5.SI<Meter>(),

@@ -30,14 +30,14 @@
 */
 
 using TUGraz.VectoCommon.Utils;
+using TUGraz.VectoCore.Models.Simulation.Data;
 using TUGraz.VectoCore.OutputData;
 
 namespace TUGraz.VectoCore.Tests.Models.Simulation
 {
 	public class MockSumWriter : SummaryDataContainer
 	{
-		public override void Write(IModalDataContainer modData, string jobFileName, string jobName,
-			string cycleFileName, Kilogram vehicleMass, Kilogram vehicleLoading, CubicMeter cargoVolume, uint gearCount) {}
+		public override void Write(IModalDataContainer modData, string jobFileName, VectoRunData runData) {}
 
 		public override void Finish() {}
 	}

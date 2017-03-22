@@ -43,14 +43,18 @@ namespace TUGraz.VectoCore.Models.SimulationComponent.Data
 	{
 		protected List<CrossWindCorrectionCurveReader.CrossWindCorrectionEntry> Entries;
 
-		public CrosswindCorrectionCdxALookup(List<CrossWindCorrectionCurveReader.CrossWindCorrectionEntry> entries,
+		public CrosswindCorrectionCdxALookup(SquareMeter airDragArea,
+			List<CrossWindCorrectionCurveReader.CrossWindCorrectionEntry> entries,
 			CrossWindCorrectionMode correctionMode)
 		{
+			AirDragArea = airDragArea;
 			CorrectionMode = correctionMode;
 			Entries = entries;
 		}
 
 		public CrossWindCorrectionMode CorrectionMode { get; internal set; }
+
+		public SquareMeter AirDragArea { get; internal set; }
 
 		public void SetDataBus(IDataBus dataBus) {}
 

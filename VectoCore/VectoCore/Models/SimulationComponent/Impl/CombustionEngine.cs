@@ -626,6 +626,9 @@ namespace TUGraz.VectoCore.Models.SimulationComponent.Impl
 					_idleStart = absTime;
 					_lastEnginePower = _engine.PreviousState.EnginePower;
 				}
+				if (_lastEnginePower == null) {
+					_lastEnginePower = _engine.PreviousState.EnginePower;
+				}
 				IResponse retVal;
 
 				var idleTime = absTime - _idleStart + dt;

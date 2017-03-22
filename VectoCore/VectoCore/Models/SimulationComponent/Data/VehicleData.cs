@@ -79,6 +79,12 @@ namespace TUGraz.VectoCore.Models.SimulationComponent.Data
 		SIRange(0, 60000, emsMission: true)]
 		public Kilogram CurbWeight { get; internal set; }
 
+		/// <summary>
+		/// Curb Weight of Standard-Body (if it has one)
+		/// + Curb Weight of Trailer (if it has one)
+		/// </summary>
+		public Kilogram BodyAndTrailerWeight { get; internal set; }
+
 		[Required, SIRange(0, 40000, emsMission: false),
 		SIRange(0, 60000, emsMission: true)]
 		public Kilogram Loading { get; internal set; }
@@ -125,7 +131,7 @@ namespace TUGraz.VectoCore.Models.SimulationComponent.Data
 				}
 				return _totalRollResistanceCoefficient.GetValueOrDefault();
 			}
-			private set { _totalRollResistanceCoefficient = value; }
+			protected internal set { _totalRollResistanceCoefficient = value; }
 		}
 
 		public CrossWindCorrectionMode CrossWindCorrectionMode { get; set; }

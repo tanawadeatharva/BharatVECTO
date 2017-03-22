@@ -536,7 +536,8 @@ namespace TUGraz.VectoCore.Tests.Models.SimulationComponent
 				Altitude = 0.SI<Meter>(),
 				VehicleMass = 10000.SI<Kilogram>(),
 				ReducedMassWheels = 100.SI<Kilogram>(),
-				TotalMass = 19000.SI<Kilogram>()
+				TotalMass = 19000.SI<Kilogram>(),
+				EngineSpeed = n.SI<PerSecond>()
 			};
 			var gearboxData = MockSimulationDataFactory.CreateGearboxDataFromFile(GearboxDataFile, EngineDataFile);
 			var runData = GetDummyRunData(gearboxData);

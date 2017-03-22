@@ -72,6 +72,25 @@ namespace TUGraz.VectoCore.Models.SimulationComponent.Data.Gearbox
 			return IsLeftOf(inAngularVelocity, inTorque, section);
 		}
 
+		public bool IsBelowUpshiftCurve(NewtonMeter inTorque, PerSecond inAngularVelocity)
+		{
+			var section = Upshift.GetSection(entry => entry.AngularSpeed < inAngularVelocity);
+			if (section.Item2.AngularSpeed < inAngularVelocity) {
+				return false;
+			}
+			return IsLeftOf(inAngularVelocity, inTorque, section);
+		}
+
+		public bool IsAboveDownshiftCurve(NewtonMeter inTorque, PerSecond inAngularVelocity)
+		{
+			var section = Downshift.GetSection(entry => entry.AngularSpeed < inAngularVelocity);
+
+			if (section.Item2.AngularSpeed < inAngularVelocity) {
+				return true;
+			}
+			return IsRightOf(inAngularVelocity, inTorque, section);
+		}
+
 		public bool IsAboveUpshiftCurve(NewtonMeter inTorque, PerSecond inAngularVelocity)
 		{
 			var section = Upshift.GetSection(entry => entry.AngularSpeed < inAngularVelocity);
@@ -153,6 +172,18 @@ namespace TUGraz.VectoCore.Models.SimulationComponent.Data.Gearbox
 			///		[1/s] angular velocity threshold
 			/// </summary>
 			public PerSecond AngularSpeed { get; set; }
+		}
+
+		public NewtonMeter InterpolateDownshift(PerSecond inAngularVelocity)
+		{
+			var section = Downshift.GetSection(entry => entry.AngularSpeed < inAngularVelocity);
+
+			if (section.Item1.AngularSpeed.IsEqual(section.Item2.AngularSpeed)) {
+				// vertical line
+				return double.MaxValue.SI<NewtonMeter>();
+			}
+			return VectoMath.Interpolate(section.Item1.AngularSpeed, section.Item2.AngularSpeed, section.Item1.Torque, 
+				section.Item2.Torque, inAngularVelocity);
 		}
 	}
 }

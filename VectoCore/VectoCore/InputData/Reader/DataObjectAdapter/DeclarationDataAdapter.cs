@@ -95,7 +95,9 @@ namespace TUGraz.VectoCore.InputData.Reader.DataObjectAdapter
 
 			var retVal = SetCommonVehicleData(data);
 			retVal.TrailerGrossVehicleWeight = mission.Trailer.Sum(t => t.TrailerGrossVehicleWeight).DefaultIfNull(0);
-			retVal.CurbWeight += mission.BodyCurbWeight + mission.Trailer.Sum(t => t.TrailerCurbWeight).DefaultIfNull(0);
+			retVal.BodyAndTrailerWeight = mission.BodyCurbWeight + mission.Trailer.Sum(t => t.TrailerCurbWeight).DefaultIfNull(0);
+			retVal.CurbWeight += retVal.BodyAndTrailerWeight;
+
 			retVal.Loading = loading;
 			var drivenIndex = DrivenAxleIndex(data.Axles);
 			retVal.DynamicTyreRadius =
@@ -105,7 +107,7 @@ namespace TUGraz.VectoCore.InputData.Reader.DataObjectAdapter
 			var aerodynamicDragArea = data.AirDragArea + mission.Trailer.Sum(t => t.DeltaCdA).DefaultIfNull(0);
 
 			retVal.CrossWindCorrectionCurve =
-				new CrosswindCorrectionCdxALookup(
+				new CrosswindCorrectionCdxALookup(aerodynamicDragArea,
 					GetDeclarationAirResistanceCurve(mission.CrossWindCorrectionParameters, aerodynamicDragArea),
 					CrossWindCorrectionMode.DeclarationModeCorrection);
 			var axles = data.Axles;

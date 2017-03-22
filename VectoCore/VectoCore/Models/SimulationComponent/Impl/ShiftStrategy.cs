@@ -50,8 +50,7 @@ namespace TUGraz.VectoCore.Models.SimulationComponent.Impl
 		public override IGearbox Gearbox
 		{
 			get { return _gearbox; }
-			set
-			{
+			set {
 				var myGearbox = value as Gearbox;
 				if (myGearbox == null) {
 					throw new VectoException("This shift strategy can't handle gearbox of type {0}", value.GetType());
@@ -75,6 +74,15 @@ namespace TUGraz.VectoCore.Models.SimulationComponent.Impl
 			return ModelData.Gears[gear].ShiftPolygon.IsBelowDownshiftCurve(inTorque, inEngineSpeed);
 		}
 
+		protected bool IsAboveDownShiftCurve(uint gear, NewtonMeter inTorque, PerSecond inEngineSpeed)
+		{
+			if (gear <= 1) {
+				return true;
+			}
+			return ModelData.Gears[gear].ShiftPolygon.IsAboveDownshiftCurve(inTorque, inEngineSpeed);
+		}
+
+
 		/// <summary>
 		/// Tests if the operating point is above the up-shift curve (=outside of shift curve).
 		/// </summary>
@@ -88,6 +96,14 @@ namespace TUGraz.VectoCore.Models.SimulationComponent.Impl
 				return false;
 			}
 			return ModelData.Gears[gear].ShiftPolygon.IsAboveUpshiftCurve(inTorque, inEngineSpeed);
+		}
+
+		protected bool IsBelowUpShiftCurve(uint gear, NewtonMeter inTorque, PerSecond inEngineSpeed)
+		{
+			if (gear >= ModelData.Gears.Count) {
+				return true;
+			}
+			return ModelData.Gears[gear].ShiftPolygon.IsBelowUpshiftCurve(inTorque, inEngineSpeed);
 		}
 	}
 }

@@ -42,6 +42,7 @@ namespace TUGraz.VectoCore.Models.SimulationComponent.Data
 		void SetDataBus(IDataBus dataBus);
 
 		CrossWindCorrectionMode CorrectionMode { get; }
+		SquareMeter AirDragArea { get; }
 
 		Watt AverageAirDragPowerLoss(MeterPerSecond v1, MeterPerSecond v2);
 	}

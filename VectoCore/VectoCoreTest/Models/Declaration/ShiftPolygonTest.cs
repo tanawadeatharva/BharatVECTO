@@ -457,7 +457,7 @@ namespace TUGraz.VectoCore.Tests.Models.Declaration
 			};
 			engineData.FullLoadCurve.EngineData = engineData;
 
-			var gearboxData = new JSONGearboxDataV5(JSONInputDataFactory.ReadFile(Path.Combine(BasePath, gearboxFile)),
+			var gearboxData = new JSONGearboxDataV6(JSONInputDataFactory.ReadFile(Path.Combine(BasePath, gearboxFile)),
 				Path.Combine(BasePath, gearboxFile));
 
 			var shiftPolygons = new List<ShiftPolygon>();
@@ -486,6 +486,20 @@ namespace TUGraz.VectoCore.Tests.Models.Declaration
 				imageFile,
 				DeclarationData.Gearbox.TruckMaxAllowedSpeed / rdyn.SI<Meter>() * axlegearRatio * gearboxData.Gears.Last().Ratio,
 				upshiftOrig, downshiftTransformed);
+			var str = "";
+			var g = 1;
+			foreach (var shiftPolygon in shiftPolygons) {
+				str += "Gear " + g + "\n";
+				str += "downshift\n";
+				foreach (var entry in shiftPolygon.Downshift) {
+					str += string.Format("{0} {1}\n", entry.AngularSpeed.AsRPM, entry.Torque.Value());
+				}
+				str += "upshift\n";
+				foreach (var entry in shiftPolygon.Upshift) {
+					str += string.Format("{0} {1}\n", entry.AngularSpeed.AsRPM, entry.Torque.Value());
+				}
+				g++;
+			}
 		}
 
 		public static void ComputShiftPolygonPoints(int gear, FullLoadCurve fullLoadCurve,
