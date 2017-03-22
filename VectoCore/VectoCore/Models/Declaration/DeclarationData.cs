@@ -48,6 +48,8 @@ namespace TUGraz.VectoCore.Models.Declaration
 	{
 		public const string DeclarationDataResourcePrefix = "TUGraz.VectoCore.Resources.Declaration";
 
+		public static readonly Watt MinEnginePowerForEMS = 300e3.SI<Watt>();
+
 		private static DeclarationData _instance;
 		private Segments _segments;
 		private Wheels _wheels;
@@ -63,6 +65,7 @@ namespace TUGraz.VectoCore.Models.Declaration
 		private Payloads _payloads;
 		private PTOTransmission _pto;
 
+		
 		public static PTOTransmission PTOTransmission
 		{
 			get { return Instance()._pto ?? (Instance()._pto = new PTOTransmission()); }
