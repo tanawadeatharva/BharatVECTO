@@ -73,7 +73,7 @@ Public Class GearboxGearDialog
 					If(String.IsNullOrWhiteSpace(TbMaxTorque.Text), Nothing, TbMaxTorque.Text.ToDouble().SI(Of NewtonMeter))
 					}
 			Dim results As IList(Of ValidationResult) =
-					gearData.Validate(If(Cfg.DeclMode, ExecutionMode.Declaration, ExecutionMode.Engineering), GearboxType)
+					gearData.Validate(If(Cfg.DeclMode, ExecutionMode.Declaration, ExecutionMode.Engineering), GearboxType, False)
 
 			If (results.Any()) Then
 				Return results.Select(Function(r) r.ErrorMessage + String.Join(", ", r.MemberNames.Distinct())).ToList()

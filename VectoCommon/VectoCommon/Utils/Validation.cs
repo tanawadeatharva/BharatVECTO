@@ -52,15 +52,18 @@ namespace TUGraz.VectoCommon.Utils
 		/// <param name="entity">The entity.</param>
 		/// <param name="mode">validate the entity for the given execution mode</param>
 		/// <param name="gbxType"></param>
+		/// <param name="cycleType"></param>
 		/// <returns>Null, if the validation was successfull. Otherwise a list of ValidationResults with the ErrorMessages.</returns>
-		public static IList<ValidationResult> Validate<T>(this T entity, ExecutionMode mode, GearboxType? gbxType)
+		public static IList<ValidationResult> Validate<T>(this T entity, ExecutionMode mode, GearboxType? gbxType,
+			bool emsCycle)
 		{
 			if (entity == null) {
 				return new[] { new ValidationResult(string.Format("null value given for {0}", typeof(T))) };
 			}
 			var context = new ValidationContext(entity);
-			context.ServiceContainer.AddService(typeof(ExecutionMode), new ExecutionModeServiceContainer(mode));
-			context.ServiceContainer.AddService(typeof(GearboxTypeServiceContainer), new GearboxTypeServiceContainer(gbxType));
+			context.ServiceContainer.AddService(typeof(VectoValidationModeServiceContainer),
+				new VectoValidationModeServiceContainer(mode, gbxType, emsCycle));
+
 			var results = new List<ValidationResult>();
 			Validator.TryValidateObject(entity, context, results, true);
 
@@ -136,26 +139,20 @@ namespace TUGraz.VectoCommon.Utils
 		}
 	}
 
-	public class ExecutionModeServiceContainer
+	public class VectoValidationModeServiceContainer
 	{
-		public ExecutionModeServiceContainer(ExecutionMode mode)
+		public ExecutionMode Mode { get; protected set; }
+		public GearboxType? GearboxType { get; protected set; }
+		public bool IsEMSCycle { get; protected set; }
+
+		public VectoValidationModeServiceContainer(ExecutionMode mode, GearboxType? gbxType, bool isEMSCycle = false)
 		{
 			Mode = mode;
+			GearboxType = gbxType;
+			IsEMSCycle = isEMSCycle;
 		}
-
-		public ExecutionMode Mode { get; protected set; }
 	}
 
-	public class GearboxTypeServiceContainer
-	{
-		public GearboxTypeServiceContainer(GearboxType? type)
-		{
-			Type = type;
-		}
-
-
-		public GearboxType? Type { get; protected set; }
-	}
 
 	/// <summary>
 	/// Determines that the attributed object should be validated recursively.
@@ -176,11 +173,11 @@ namespace TUGraz.VectoCommon.Utils
 				return ValidationResult.Success;
 			}
 
-			var modeService = validationContext.GetService(typeof(ExecutionMode)) as ExecutionModeServiceContainer;
-			var mode = modeService != null ? modeService.Mode : ExecutionMode.Declaration;
-
-			var gbxTypeService = validationContext.GetService(typeof(GearboxTypeServiceContainer)) as GearboxTypeServiceContainer;
-			var gbxType = gbxTypeService != null ? gbxTypeService.Type : GearboxType.MT;
+			var validationService =
+				validationContext.GetService(typeof(VectoValidationModeServiceContainer)) as VectoValidationModeServiceContainer;
+			var mode = validationService != null ? validationService.Mode : ExecutionMode.Declaration;
+			var gbxType = validationService != null ? validationService.GearboxType : GearboxType.MT;
+			var isEmsCycle = validationService != null && validationService.IsEMSCycle;
 
 			var enumerable = value as IEnumerable;
 			if (enumerable != null) {
@@ -192,8 +189,8 @@ namespace TUGraz.VectoCommon.Utils
 							var baseType = valueType.GetGenericTypeDefinition();
 							if (baseType == typeof(KeyValuePair<,>)) {
 								var kvResults = new List<ValidationResult>();
-								kvResults.AddRange(valueType.GetProperty("Key").GetValue(element).Validate(mode, gbxType));
-								kvResults.AddRange(valueType.GetProperty("Value").GetValue(element).Validate(mode, gbxType));
+								kvResults.AddRange(valueType.GetProperty("Key").GetValue(element).Validate(mode, gbxType, isEmsCycle));
+								kvResults.AddRange(valueType.GetProperty("Value").GetValue(element).Validate(mode, gbxType, isEmsCycle));
 								if (kvResults.Any()) {
 									return new ValidationResult(
 										string.Format("{1}[{0}] in {1} invalid: {2}", valueType.GetProperty("Key").GetValue(element),
@@ -203,7 +200,7 @@ namespace TUGraz.VectoCommon.Utils
 							}
 						}
 
-						var results = element.Validate(mode, gbxType);
+						var results = element.Validate(mode, gbxType, isEmsCycle);
 						if (results.Any()) {
 							return new ValidationResult(
 								string.Format("{1}[{0}] in {1} invalid: {2}", i, validationContext.DisplayName,
@@ -213,7 +210,7 @@ namespace TUGraz.VectoCommon.Utils
 					i++;
 				}
 			} else {
-				var results = value.Validate(mode, gbxType);
+				var results = value.Validate(mode, gbxType, isEmsCycle);
 				if (!results.Any()) {
 					return ValidationResult.Success;
 				}
@@ -247,6 +244,7 @@ namespace TUGraz.VectoCommon.Utils
 	public class SIRangeAttribute : RangeAttribute
 	{
 		private ExecutionMode? _mode;
+		private bool? _emsMission;
 		private string _unit = "-";
 
 		/// <summary>
@@ -255,7 +253,8 @@ namespace TUGraz.VectoCommon.Utils
 		/// <param name="minimum">The minimum.</param>
 		/// <param name="maximum">The maximum.</param>
 		/// <param name="mode">if specified the validation is only performed in the corresponding mode</param>
-		public SIRangeAttribute(int minimum, int maximum, ExecutionMode mode) : base(minimum, maximum)
+		public SIRangeAttribute(int minimum, int maximum, ExecutionMode mode)
+			: base(minimum, maximum)
 		{
 			_mode = mode;
 		}
@@ -265,7 +264,8 @@ namespace TUGraz.VectoCommon.Utils
 		/// </summary>
 		/// <param name="minimum">The minimum.</param>
 		/// <param name="maximum">The maximum.</param>
-		public SIRangeAttribute(int minimum, int maximum) : base(minimum, maximum) {}
+		public SIRangeAttribute(int minimum, int maximum)
+			: base(minimum, maximum) {}
 
 		/// <summary>
 		/// Checks the Min-Max Range of SI Objects.
@@ -273,7 +273,8 @@ namespace TUGraz.VectoCommon.Utils
 		/// <param name="minimum">The minimum.</param>
 		/// <param name="maximum">The maximum.</param>
 		/// <param name="mode">if specified the validation is only performed in the corresponding mode</param>
-		public SIRangeAttribute(double minimum, double maximum, ExecutionMode mode) : base(minimum, maximum)
+		public SIRangeAttribute(double minimum, double maximum, ExecutionMode mode)
+			: base(minimum, maximum)
 		{
 			_mode = mode;
 		}
@@ -283,7 +284,8 @@ namespace TUGraz.VectoCommon.Utils
 		/// </summary>
 		/// <param name="minimum">The minimum.</param>
 		/// <param name="maximum">The maximum.</param>
-		public SIRangeAttribute(double minimum, double maximum) : base(minimum, maximum) {}
+		public SIRangeAttribute(double minimum, double maximum)
+			: base(minimum, maximum) {}
 
 		/// <summary>
 		/// Checks the Min-Max Range of SI Objects.
@@ -291,7 +293,8 @@ namespace TUGraz.VectoCommon.Utils
 		/// <param name="minimum">The minimum.</param>
 		/// <param name="maximum">The maximum.</param>
 		/// <param name="mode">if specified the validation is only performed in the corresponding mode</param>
-		public SIRangeAttribute(SI minimum, SI maximum, ExecutionMode mode) : base(minimum.Value(), maximum.Value())
+		public SIRangeAttribute(SI minimum, SI maximum, ExecutionMode mode)
+			: base(minimum.Value(), maximum.Value())
 		{
 			_mode = mode;
 		}
@@ -301,7 +304,83 @@ namespace TUGraz.VectoCommon.Utils
 		/// </summary>
 		/// <param name="minimum">The minimum.</param>
 		/// <param name="maximum">The maximum.</param>
-		public SIRangeAttribute(SI minimum, SI maximum) : base(minimum.Value(), maximum.Value()) {}
+		public SIRangeAttribute(SI minimum, SI maximum)
+			: base(minimum.Value(), maximum.Value()) {}
+
+		/// <summary>
+		/// Checks the Min-Max Range of SI Objects.
+		/// </summary>
+		/// <param name="minimum">The minimum.</param>
+		/// <param name="maximum">The maximum.</param>
+		/// <param name="mode">if specified the validation is only performed in the corresponding mode</param>
+		/// <param name="emsMission">Validation only applies if the mission is an EMS mission</param>
+		public SIRangeAttribute(int minimum, int maximum, ExecutionMode mode, bool emsMission)
+			: base(minimum, maximum)
+		{
+			_mode = mode;
+			_emsMission = emsMission;
+		}
+
+		/// <summary>
+		/// Checks the Min-Max Range of SI Objects.
+		/// </summary>
+		/// <param name="minimum">The minimum.</param>
+		/// <param name="maximum">The maximum.</param>
+		/// <param name="emsMission">Validation only applies if the mission is an EMS mission</param>
+		public SIRangeAttribute(int minimum, int maximum, bool emsMission) : base(minimum, maximum)
+		{
+			_emsMission = emsMission;
+		}
+
+		/// <summary>
+		/// Checks the Min-Max Range of SI Objects.
+		/// </summary>
+		/// <param name="minimum">The minimum.</param>
+		/// <param name="maximum">The maximum.</param>
+		/// <param name="mode">if specified the validation is only performed in the corresponding mode</param>
+		/// <param name="emsMission">Validation only applies if the mission is an EMS mission</param>
+		public SIRangeAttribute(double minimum, double maximum, ExecutionMode mode, bool emsMission)
+			: base(minimum, maximum)
+		{
+			_mode = mode;
+			_emsMission = emsMission;
+		}
+
+		/// <summary>
+		/// Checks the Min-Max Range of SI Objects.
+		/// </summary>
+		/// <param name="minimum">The minimum.</param>
+		/// <param name="maximum">The maximum.</param>
+		/// <param name="emsMission">Validation only applies if the mission is an EMS mission</param>
+		public SIRangeAttribute(double minimum, double maximum, bool emsMission) : base(minimum, maximum)
+		{
+			_emsMission = emsMission;
+		}
+
+		/// <summary>
+		/// Checks the Min-Max Range of SI Objects.
+		/// </summary>
+		/// <param name="minimum">The minimum.</param>
+		/// <param name="maximum">The maximum.</param>
+		/// <param name="mode">if specified the validation is only performed in the corresponding mode</param>
+		/// <param name="emsMission">Validation only applies if the mission is an EMS mission</param>
+		public SIRangeAttribute(SI minimum, SI maximum, ExecutionMode mode, bool emsMission)
+			: base(minimum.Value(), maximum.Value())
+		{
+			_mode = mode;
+			_emsMission = emsMission;
+		}
+
+		/// <summary>
+		/// Checks the Min-Max Range of SI Objects.
+		/// </summary>
+		/// <param name="minimum">The minimum.</param>
+		/// <param name="maximum">The maximum.</param>
+		/// <param name="emsMission">Validation only applies if the mission is an EMS mission</param>
+		public SIRangeAttribute(SI minimum, SI maximum, bool emsMission) : base(minimum.Value(), maximum.Value())
+		{
+			_emsMission = emsMission;
+		}
 
 		/// <summary>
 		/// Validates that an SI Object is inside the min-max range.
@@ -318,14 +397,19 @@ namespace TUGraz.VectoCommon.Utils
 			if (si != null) {
 				_unit = si.GetUnitString();
 			}
+			var validationService =
+				validationContext.GetService(typeof(VectoValidationModeServiceContainer)) as VectoValidationModeServiceContainer;
+			var mode = validationService != null ? validationService.Mode : (ExecutionMode?)null;
+			var emsMode = validationService != null && validationService.IsEMSCycle;
 
-			var modeService = validationContext.GetService(typeof(ExecutionMode)) as ExecutionModeServiceContainer;
-			var mode = modeService == null ? (ExecutionMode?)null : modeService.Mode;
-			if (mode == null) {
-				return base.IsValid(si != null ? si.Value() : value, validationContext);
-			}
-			if (_mode == null || (_mode != null && (_mode.Value == mode))) {
-				return base.IsValid(si != null ? si.Value() : value, validationContext);
+			if (!_emsMission.HasValue || _emsMission.Value == emsMode) {
+				if (mode == null) {
+					return base.IsValid(si != null ? si.Value() : value, validationContext);
+				}
+				if (_mode == null || (_mode != null && (_mode.Value == mode))) {
+					return base.IsValid(si != null ? si.Value() : value, validationContext);
+				}
+				return ValidationResult.Success;
 			}
 			return ValidationResult.Success;
 		}
@@ -333,6 +417,7 @@ namespace TUGraz.VectoCommon.Utils
 		public override string FormatErrorMessage(string name)
 		{
 			const string unitString = "{0} [{1}]";
+
 			return string.Format(ErrorMessageString, name, string.Format(unitString, Minimum, _unit),
 				string.Format(unitString, Maximum, _unit));
 		}

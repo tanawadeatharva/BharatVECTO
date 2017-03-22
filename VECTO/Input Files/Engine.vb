@@ -149,7 +149,7 @@ Public Class Engine
 	Public Function SaveFile() As Boolean
 
 		Dim validationResults As IList(Of ValidationResult) =
-				Validate(If(Cfg.DeclMode, ExecutionMode.Declaration, ExecutionMode.Engineering), Nothing)
+				Validate(If(Cfg.DeclMode, ExecutionMode.Declaration, ExecutionMode.Engineering), Nothing, False)
 
 		If validationResults.Count > 0 Then
 			Dim messages As IEnumerable(Of String) =
@@ -229,13 +229,14 @@ Public Class Engine
 	' ReSharper disable once UnusedMember.Global  -- used for Validation
 	Public Shared Function ValidateEngine(engine As Engine, validationContext As ValidationContext) As ValidationResult
 		Dim engineData As CombustionEngineData
-		Dim modeService As ExecutionModeServiceContainer = TryCast(validationContext.GetService(GetType(ExecutionMode)), 
-																	ExecutionModeServiceContainer)
-		Dim mode As ExecutionMode = If(modeService Is Nothing, ExecutionMode.Declaration, modeService.Mode)
 
-		Dim gbxtypeService As GearboxTypeServiceContainer =
-				TryCast(validationContext.GetService(GetType(GearboxTypeServiceContainer)), GearboxTypeServiceContainer)
-		Dim gbxType As GearboxType? = If(gbxtypeService Is Nothing, GearboxType.MT, gbxtypeService.Type)
+
+		Dim modeService As VectoValidationModeServiceContainer =
+				TryCast(validationContext.GetService(GetType(VectoValidationModeServiceContainer)), 
+						VectoValidationModeServiceContainer)
+		Dim mode As ExecutionMode = If(modeService Is Nothing, ExecutionMode.Declaration, modeService.Mode)
+		Dim emsCycle As Boolean = (modeService IsNot Nothing) AndAlso modeService.IsEMSCycle
+		Dim gbxType As GearboxType? = If(modeService Is Nothing, GearboxType.MT, modeService.GearboxType)
 
 		Try
 			If mode = ExecutionMode.Declaration Then
@@ -248,7 +249,7 @@ Public Class Engine
 			End If
 
 			Dim result As IList(Of ValidationResult) =
-					engineData.Validate(If(Cfg.DeclMode, ExecutionMode.Declaration, ExecutionMode.Engineering), gbxType)
+					engineData.Validate(If(Cfg.DeclMode, ExecutionMode.Declaration, ExecutionMode.Engineering), gbxType, emsCycle)
 
 			If Not result.Any() Then Return ValidationResult.Success
 

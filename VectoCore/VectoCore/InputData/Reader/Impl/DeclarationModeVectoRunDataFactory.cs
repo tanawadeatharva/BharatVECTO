@@ -34,6 +34,7 @@ using System.Linq;
 using TUGraz.VectoCommon.InputData;
 using TUGraz.VectoCommon.Models;
 using TUGraz.VectoCommon.Utils;
+using TUGraz.VectoCore.Configuration;
 using TUGraz.VectoCore.InputData.Reader.ComponentData;
 using TUGraz.VectoCore.InputData.Reader.DataObjectAdapter;
 using TUGraz.VectoCore.Models.Declaration;
@@ -91,8 +92,11 @@ namespace TUGraz.VectoCore.InputData.Reader.Impl
 				};
 				Report.InitializeReport(powertrainConfig, segment);
 			}
-
+			var maxEnginePower = engineData.FullLoadCurve.FullLoadStationaryPower(engineData.FullLoadCurve.PreferredSpeed);
 			foreach (var mission in segment.Missions) {
+				if (mission.MissionType.IsEMS() && maxEnginePower.IsSmaller(DeclarationData.MinEnginePowerForEMS)) {
+					continue;
+				}
 				DrivingCycleData cycle;
 				lock (CyclesCacheLock) {
 					if (CyclesCache.ContainsKey(mission.MissionType)) {
@@ -121,8 +125,9 @@ namespace TUGraz.VectoCore.InputData.Reader.Impl
 						Report = Report,
 						Mission = mission,
 					};
-					simulationRunData.EngineData.WHTCCorrectionFactor = DeclarationData.WHTCCorrection.Lookup(mission.MissionType,
-						engineData.WHTCRural, engineData.WHTCUrban, engineData.WHTCMotorway) * engineData.ColdHotCorrectionFactor;
+					simulationRunData.EngineData.WHTCCorrectionFactor = DeclarationData.WHTCCorrection.Lookup(
+						mission.MissionType.GetNonEMSMissionType(), engineData.WHTCRural, engineData.WHTCUrban, engineData.WHTCMotorway) *
+																		engineData.ColdHotCorrectionFactor;
 					//simulationRunData.Cycle.Name = mission.MissionType.ToString();
 					simulationRunData.VehicleData.VehicleClass = segment.VehicleClass;
 					yield return simulationRunData;

@@ -59,7 +59,7 @@ Public Class VehicleAxleDialog
 				}
 
 		Dim results As IList(Of ValidationResult) =
-				axleData.Validate(If(Cfg.DeclMode, ExecutionMode.Declaration, ExecutionMode.Engineering), Nothing)
+				axleData.Validate(If(Cfg.DeclMode, ExecutionMode.Declaration, ExecutionMode.Engineering), Nothing, False)
 
 		If results.Any() Then
 			Dim messages As IEnumerable(Of String) =

@@ -208,7 +208,7 @@ namespace TUGraz.VectoCore.Tests.Integration
 			var jobContainer = new JobContainer(sumData);
 			jobContainer.AddRuns(factory);
 
-			var i = 5;
+			var i = 8;
 			jobContainer.Runs[i].Run.Run();
 			Assert.IsTrue(jobContainer.Runs[i].Run.FinishedWithoutErrors,
 				string.Format("{0}", jobContainer.Runs[i].ExecException));

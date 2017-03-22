@@ -75,7 +75,7 @@ namespace TUGraz.VectoCore.Tests.FileIO
 			AssertHelper.AreRelativeEqual(0.40726954, runData.VehicleData.DynamicTyreRadius);
 
 			Assert.AreEqual(VehicleClass.Class2, runData.VehicleData.VehicleClass);
-			Assert.AreEqual(3, runData.VehicleData.AxleData.Count);
+			Assert.AreEqual(4, runData.VehicleData.AxleData.Count);
 			Assert.AreEqual(6, runData.VehicleData.AxleData[0].Inertia.Value(), Tolerance);
 
 			Assert.AreEqual(true, runData.DriverData.LookAheadCoasting.Enabled);

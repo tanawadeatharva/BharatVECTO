@@ -109,13 +109,14 @@ namespace TUGraz.VectoCore.Models.SimulationComponent.Data
 		{
 			var mode = GetExecutionMode(validationContext);
 			//var gbxType = GetGearboxType(validationContext);
+			var emsMission = GetEmsMode(validationContext);
 
 			var result = new List<ValidationResult>();
 			if (gearboxData.Type.AutomaticTransmission()) {
 				gearboxData.TorqueConverterData.RequiredSpeedRatio =
 					Math.Round(Constants.SimulationSettings.RequiredTorqueConverterSpeedRatio / gearboxData.Gears[1].Ratio *
 								gearboxData.Gears[1].TorqueConverterRatio, 4);
-				result.AddRange(gearboxData.TorqueConverterData.Validate(mode, gearboxData.Type));
+				result.AddRange(gearboxData.TorqueConverterData.Validate(mode, gearboxData.Type, emsMission));
 				//result.AddRange(gearboxData.PowershiftShiftTime.Validate(mode, gearboxData.Type));
 				//result.AddRange(gearboxData.PowershiftInertiaFactor.Validate(mode, gearboxData.Type));
 				validationContext.MemberName = "PowershiftInertiaFactor";

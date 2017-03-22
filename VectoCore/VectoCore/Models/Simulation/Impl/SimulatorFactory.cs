@@ -42,6 +42,7 @@ using TUGraz.VectoCommon.Utils;
 using TUGraz.VectoCore.Configuration;
 using TUGraz.VectoCore.InputData;
 using TUGraz.VectoCore.InputData.Reader.Impl;
+using TUGraz.VectoCore.Models.Declaration;
 using TUGraz.VectoCore.Models.SimulationComponent.Data;
 using TUGraz.VectoCore.OutputData;
 using TUGraz.VectoCore.OutputData.ModFilter;
@@ -180,7 +181,7 @@ namespace TUGraz.VectoCore.Models.Simulation.Impl
 						throw new ArgumentOutOfRangeException("CycleType unknown:" + data.Cycle.CycleType);
 				}
 
-				var validationErrors = run.Validate(_mode, data.GearboxData == null ? (GearboxType?)null : data.GearboxData.Type);
+				var validationErrors = run.Validate(_mode, data.GearboxData == null ? (GearboxType?)null : data.GearboxData.Type, data.Mission != null && data.Mission.MissionType.IsEMS());
 				if (validationErrors.Any()) {
 					throw new VectoException("Validation of Run-Data Failed: " +
 											string.Join("\n", validationErrors.Select(r => r.ErrorMessage + string.Join("; ", r.MemberNames))));
