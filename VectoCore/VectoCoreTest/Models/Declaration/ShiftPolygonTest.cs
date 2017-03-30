@@ -412,9 +412,23 @@ namespace TUGraz.VectoCore.Tests.Models.Declaration
 			}
 
 			ShiftPolygonDrawer.DrawShiftPolygons(Path.GetDirectoryName(gearboxFile), fullLoadCurves, shiftPolygons,
-				"daimler_fullload_shiftpolygon-test_3.png",
+				"Generic_Class5-shiftlines.png",
 				DeclarationData.Gearbox.TruckMaxAllowedSpeed / rdyn * axlegearRatio * gearboxData.Gears.Last().Ratio, upshiftOrig,
 				downshiftTransformed, downshiftOrig);
+
+			var shiftLines = "";
+			var gear = 1;
+			foreach (var shiftPolygon in shiftPolygons) {
+				shiftLines += "Gear " + gear + "\n";
+				shiftLines += "Upshift\n";
+				foreach (var shiftPolygonEntry in shiftPolygon.Upshift) {
+					shiftLines += string.Format("{0} {1}\n", shiftPolygonEntry.AngularSpeed.AsRPM, shiftPolygonEntry.Torque.Value());
+				}
+				shiftLines += "Downshift\n";
+				foreach (var shiftPolygonEntry in shiftPolygon.Downshift) {
+					shiftLines += string.Format("{0} {1}\n", shiftPolygonEntry.AngularSpeed.AsRPM, shiftPolygonEntry.Torque.Value());
+				}
+			}
 		}
 	}
 
