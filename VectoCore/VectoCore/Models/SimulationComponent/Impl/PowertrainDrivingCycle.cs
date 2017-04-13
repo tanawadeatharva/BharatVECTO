@@ -183,6 +183,11 @@ namespace TUGraz.VectoCore.Models.SimulationComponent.Impl
 			}
 		}
 
+		public bool PTOActive
+		{
+			get { return true; }
+		}
+
 		public DrivingCycleData.DrivingCycleEntry CycleLookAhead(Meter distance)
 		{
 			return new DrivingCycleData.DrivingCycleEntry() {

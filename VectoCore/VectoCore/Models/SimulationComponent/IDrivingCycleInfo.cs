@@ -46,6 +46,8 @@ namespace TUGraz.VectoCore.Models.SimulationComponent
 		/// </summary>
 		CycleData CycleData { get; }
 
+		bool PTOActive { get; }
+
 		/// <summary>
 		/// get a single driving-cycle entry at a certain distance ahead
 		/// altitude is interpolated between sampling points, slope is averaged
