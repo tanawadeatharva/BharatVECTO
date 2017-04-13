@@ -32,6 +32,7 @@
 using System;
 using TUGraz.VectoCommon.Models;
 using TUGraz.VectoCommon.Utils;
+using TUGraz.VectoCore.Configuration;
 using TUGraz.VectoCore.Models.Connector.Ports;
 using TUGraz.VectoCore.OutputData;
 
@@ -65,8 +66,7 @@ namespace TUGraz.VectoCore.Models.SimulationComponent.Impl
 
 		public ITnOutPort RequestPort
 		{
-			set
-			{
+			set {
 				_idleController.RequestPort = value;
 				_ptoController.RequestPort = value;
 			}
@@ -103,8 +103,7 @@ namespace TUGraz.VectoCore.Models.SimulationComponent.Impl
 
 		public Second Duration
 		{
-			get
-			{
+			get {
 				if (_ptoController != null) {
 					return _ptoController.Duration;
 				}

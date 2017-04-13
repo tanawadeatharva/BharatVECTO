@@ -208,8 +208,10 @@ namespace TUGraz.VectoCore.Models.SimulationComponent.Impl
 				case 3:
 					CurrentState.WaitPhase++;
 					IdleController.ActivateIdle();
+					PTOActive = false;
 					return Left.StoppingTime / 2;
 				case 2:
+					PTOActive = true;
 					IdleController.ActivatePTO();
 					return IdleController.GetNextCycleTime();
 			}
@@ -223,6 +225,7 @@ namespace TUGraz.VectoCore.Models.SimulationComponent.Impl
 				case 5:
 					CurrentState.WaitPhase++;
 					IdleController.ActivateIdle();
+					PTOActive = false;
 					return Constants.SimulationSettings.TargetTimeInterval;
 				case 3:
 				case 7:
@@ -233,6 +236,7 @@ namespace TUGraz.VectoCore.Models.SimulationComponent.Impl
 					CurrentState.WaitPhase++;
 					return Left.StoppingTime / 2 - 2 * Constants.SimulationSettings.TargetTimeInterval;
 				case 4:
+					PTOActive = true;
 					IdleController.ActivatePTO();
 					return IdleController.GetNextCycleTime();
 			}
@@ -454,6 +458,8 @@ namespace TUGraz.VectoCore.Models.SimulationComponent.Impl
 				};
 			}
 		}
+
+		public bool PTOActive { get; private set; }
 
 		public DrivingCycleData.DrivingCycleEntry CycleLookAhead(Meter distance)
 		{

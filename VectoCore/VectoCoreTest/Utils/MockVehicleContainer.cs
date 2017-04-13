@@ -190,6 +190,8 @@ namespace TUGraz.VectoCore.Tests.Utils
 
 		public VectoRun.Status RunStatus { get; set; }
 
+		public bool PTOActive { get; private set; }
+
 		public void AddComponent(VectoSimulationComponent component)
 		{
 			Components.Add(component);
