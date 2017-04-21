@@ -27,3 +27,4 @@ Large Supply + mech. clutch                , 800       , 800               , 700
 Large Supply + ESS + AMS                   , 1100      , 1000              , 1000            , 1000              , 1000
 Large Supply + visco clutch + AMS          , 800       , 800               , 800             , 800               , 700
 Large Supply + mech. clutch + AMS          , 300       , 500               , 500             , 500               , 400
+Vacuum pump                                , 190       , 160               , 130             , 130               , 130

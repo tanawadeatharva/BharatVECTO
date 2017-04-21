@@ -350,6 +350,7 @@ namespace TUGraz.VectoCore.Tests.Models.Declaration
 		TestCase("Large Supply + ESS + AMS", new[] { 1100, 1000, 1000, 1000, 1000 }),
 		TestCase("Large Supply + visco clutch + AMS", new[] { 800, 800, 800, 800, 700 }),
 		TestCase("Large Supply + mech. clutch + AMS", new[] { 300, 500, 500, 500, 400 }),
+		TestCase("Vacuum pump", new[] { 190, 160, 130, 130, 130 }),
 		]
 		public void AuxPneumaticSystemTest(string technology, int[] expected)
 		{
