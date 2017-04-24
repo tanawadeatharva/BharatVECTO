@@ -189,18 +189,18 @@ namespace TUGraz.VectoCore.Tests.Models.Declaration
 			AssertHelper.AreRelativeEqual(a3, value.A3);
 		}
 
-		[TestCase("TractorSemitrailer", 6.46, 0, 3.0, 8.05913),
-		TestCase("TractorSemitrailer", 6.46, 60, 3.0, 8.05913),
-		TestCase("TractorSemitrailer", 6.46, 75, 3.0, 7.639436),
-		TestCase("TractorSemitrailer", 6.46, 100, 3.0, 7.22305),
-		TestCase("TractorSemitrailer", 6.46, 52.1234, 3.0, 8.059126),
-		TestCase("TractorSemitrailer", 6.46, 73.5432, 3.0, 7.67487),
-		TestCase("TractorSemitrailer", 6.46, 92.8765, 3.0, 7.317215),
-		TestCase("TractorSemitrailer", 6.46, 100.449, 3.0, 7.217975),
-		TestCase("TractorSemitrailer", 6.46, 103, 3.0, 7.18915),
-		TestCase("TractorSemitrailer", 6.46, 105, 3.0, 7.166555),
-		TestCase("TractorSemitrailer", 6.46, 115, 3.0, 7.071136),
-		TestCase("TractorSemitrailer", 6.46, 130, 3.0, 6.961237),]
+		[TestCase("TractorSemitrailer", 6.46, 0, 2.9, 7.60836548037213),
+		TestCase("TractorSemitrailer", 6.46, 60, 2.9, 7.60836548037213),
+		TestCase("TractorSemitrailer", 6.46, 75, 2.9, 7.28397041412),
+		TestCase("TractorSemitrailer", 6.46, 100, 2.9, 6.9828675026507),
+		TestCase("TractorSemitrailer", 6.46, 52.1234, 2.9, 7.608365),
+		TestCase("TractorSemitrailer", 6.46, 73.5432, 2.9, 7.310589),
+		TestCase("TractorSemitrailer", 6.46, 92.8765, 2.9, 7.049659),
+		TestCase("TractorSemitrailer", 6.46, 100.449, 2.9, 6.9790977232936),
+		TestCase("TractorSemitrailer", 6.46, 103, 2.9, 6.9584590862826),
+		TestCase("TractorSemitrailer", 6.46, 105, 2.9, 6.94315658143895),
+		TestCase("TractorSemitrailer", 6.46, 115, 2.9, 6.876603284338),
+		TestCase("TractorSemitrailer", 6.46, 130, 2.9, 6.80069890446746),]
 		public void CrossWindCorrectionTest(string parameterSet, double crossSectionArea, double kmph, double height,
 			double expected)
 		{
@@ -210,7 +210,7 @@ namespace TUGraz.VectoCore.Tests.Models.Declaration
 				CrossWindCorrectionMode.DeclarationModeCorrection);
 
 			var tmp = crossWindCorrectionCurve.EffectiveAirDragArea(kmph.KMPHtoMeterPerSecond());
-			Assert.AreEqual(expected, tmp.Value(), Tolerance);
+			AssertHelper.AreRelativeEqual(expected, tmp.Value(), toleranceFactor: Tolerance);
 		}
 
 		[TestCase("TractorSemitrailer", 5.8, 3)]

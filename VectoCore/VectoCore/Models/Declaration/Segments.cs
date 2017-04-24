@@ -120,6 +120,33 @@ namespace TUGraz.VectoCore.Models.Declaration
 			return segment;
 		}
 
+		public Meter LookupHeight(VehicleCategory vehicleCategory, AxleConfiguration axleConfiguration,
+			Kilogram grossVehicleMassRating)
+		{
+			DataRow row;
+			try {
+				row = _segmentTable.Rows.Cast<DataRow>().First(r => {
+					var category = r.Field<string>("vehiclecategory");
+					var axleConf = r.Field<string>("axleconf.");
+					var massMin = r.ParseDouble("gvw_min").SI().Ton;
+					var massMax = r.ParseDouble("gvw_max").SI().Ton;
+					return category == vehicleCategory.ToString()
+							&& axleConf == axleConfiguration.GetName()
+							// MK 2016-06-07: normally the next condition should be "mass > massMin", except for 7.5t where is should be ">="
+							// in any case ">=" is also correct, because the segment table is sorted by weight.
+							&& grossVehicleMassRating >= massMin
+							&& grossVehicleMassRating <= massMax;
+				});
+			} catch (InvalidOperationException e) {
+				var errorMessage = string.Format(ErrorMessage, vehicleCategory, axleConfiguration.GetName(),
+					grossVehicleMassRating);
+				Log.Fatal(errorMessage);
+				throw new VectoException(errorMessage, e);
+			}
+
+			return row.ParseDouble("height").SI<Meter>();
+		}
+
 		private static Mission[] CreateMissions(ref Kilogram grossVehicleWeight, Kilogram curbWeight, DataRow row)
 		{
 			var missionTypes = Enum.GetValues(typeof(MissionType)).Cast<MissionType>();
