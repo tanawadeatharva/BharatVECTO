@@ -244,7 +244,6 @@ namespace TUGraz.VectoCore.InputData.Reader.DataObjectAdapter
 
 			if (retVal.Type.AutomaticTransmission()) {
 				retVal.PowershiftShiftTime = gearbox.PowershiftShiftTime;
-				retVal.PowershiftInertiaFactor = gearbox.PowerShiftInertiaFactor;
 			}
 
 			retVal.DownshiftAfterUpshiftDelay = gearbox.DownshiftAfterUpshiftDelay;

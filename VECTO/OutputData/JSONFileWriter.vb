@@ -138,7 +138,6 @@ Public Class JSONFileWriter
 		body.Add("UpshiftMinAcceleration", gbx.UpshiftMinAcceleration.Value())
 
 		body.Add("PowershiftShiftTime", gbx.PowershiftShiftTime.Value())
-		body.Add("PowershiftInertiaFactor", gbx.PowerShiftInertiaFactor)
 
 		WriteFile(header, body, filename)
 	End Sub

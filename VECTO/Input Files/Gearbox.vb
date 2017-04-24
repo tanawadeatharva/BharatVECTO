@@ -68,8 +68,6 @@ Public Class Gearbox
 	Public UpshiftAfterDownshift As Double
 	Public TorqueConverterMaxSpeed As Double
 
-	Public PSInertiaFactor As Double
-
 	Public PSShiftTime As Double
 
 
@@ -459,12 +457,7 @@ Public Class Gearbox
 		End Get
 	End Property
 
-	Public ReadOnly Property PowerShiftInertiaFactor As Double _
-		Implements IGearboxEngineeringInputData.PowerShiftInertiaFactor
-		Get
-			Return PSInertiaFactor
-		End Get
-	End Property
+
 
 	Public ReadOnly Property IGearboxEngineeringInputData_UpshiftMinAcceleration As MeterPerSquareSecond _
 		Implements IGearboxEngineeringInputData.UpshiftMinAcceleration

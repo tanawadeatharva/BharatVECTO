@@ -101,9 +101,6 @@ namespace TUGraz.VectoCore.Models.SimulationComponent.Data
 		[SIRange(0.5, 1)]
 		public Second PowershiftShiftTime { get; internal set; }
 
-		[Range(0, 1)]
-		public double PowershiftInertiaFactor { get; internal set; }
-
 		// ReSharper disable once UnusedMember.Global -- used via Validation
 		public static ValidationResult ValidateGearboxData(GearboxData gearboxData, ValidationContext validationContext)
 		{
@@ -118,8 +115,6 @@ namespace TUGraz.VectoCore.Models.SimulationComponent.Data
 				result.AddRange(gearboxData.TorqueConverterData.Validate(mode, gearboxData.Type, emsMission));
 				//result.AddRange(gearboxData.PowershiftShiftTime.Validate(mode, gearboxData.Type));
 				//result.AddRange(gearboxData.PowershiftInertiaFactor.Validate(mode, gearboxData.Type));
-				validationContext.MemberName = "PowershiftInertiaFactor";
-				Validator.TryValidateProperty(gearboxData.PowershiftInertiaFactor, validationContext, result);
 				validationContext.MemberName = "PowershiftShiftTime";
 				Validator.TryValidateProperty(gearboxData.PowershiftShiftTime, validationContext, result);
 			}

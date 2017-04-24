@@ -101,7 +101,7 @@ Public Class GearboxForm
 		TbMinTimeBetweenShifts.Text = DeclarationData.Gearbox.MinTimeBetweenGearshifts.ToGUIFormat()
 		'cDeclaration.MinTimeBetweenGearshift(GStype)
 
-		TbTqResv.Text = (DeclarationData.Gearbox.TorqueReserve * 100).ToGUIFormat()			  ' cDeclaration.TqResv
+		TbTqResv.Text = (DeclarationData.Gearbox.TorqueReserve * 100).ToGUIFormat()				  ' cDeclaration.TqResv
 		TbTqResvStart.Text = (DeclarationData.Gearbox.TorqueReserveStart * 100).ToGUIFormat() 'cDeclaration.TqResvStart
 		TbStartSpeed.Text = DeclarationData.Gearbox.StartSpeed.ToGUIFormat()	'cDeclaration.StartSpeed
 		TbStartAcc.Text = DeclarationData.Gearbox.StartAcceleration.ToGUIFormat()	' cDeclaration.StartAcc
@@ -314,7 +314,6 @@ Public Class GearboxForm
 		tbDownshiftAfterUpshift.Text = gearbox.DownshiftAfterUpshiftDelay.ToGUIFormat()
 		tbUpshiftAfterDownshift.Text = gearbox.UpshiftAfterDownshiftDelay.ToGUIFormat()
 
-		tbATInertiaFactor.Text = gearbox.PowerShiftInertiaFactor.ToGUIFormat()
 		tbATShiftTime.Text = gearbox.PowershiftShiftTime.ToGUIFormat()
 
 		CbGStype.SelectedValue = gearbox.Type
@@ -408,7 +407,6 @@ Public Class GearboxForm
 		gearbox.TCLUpshiftMinAcceleration = tbTCLUpshiftMinAcceleration.Text.ToDouble(0)
 		gearbox.TCCUpshiftMinAcceleration = tbTCCUpshiftMinAcceleration.Text.ToDouble(0)
 
-		gearbox.PSInertiaFactor = tbATInertiaFactor.Text.ToDouble(0)
 		gearbox.PSShiftTime = tbATShiftTime.Text.ToDouble(0)
 
 

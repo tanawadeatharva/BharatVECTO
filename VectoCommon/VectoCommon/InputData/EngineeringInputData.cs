@@ -193,8 +193,6 @@ namespace TUGraz.VectoCommon.InputData
 		MeterPerSquareSecond UpshiftMinAcceleration { get; }
 
 		Second PowershiftShiftTime { get; }
-
-		double PowerShiftInertiaFactor { get; }
 	}
 
 	public interface ITorqueConverterEngineeringInputData : ITorqueConverterDeclarationInputData
