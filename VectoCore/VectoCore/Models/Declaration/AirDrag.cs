@@ -56,11 +56,11 @@ namespace TUGraz.VectoCore.Models.Declaration
 				row => new Entry(row.ParseDouble("a1"), row.ParseDouble("a2"), row.ParseDouble("a3")));
 		}
 
-		public class Entry
+		public struct Entry
 		{
-			public double A1;
-			public double A2;
-			public double A3;
+			public readonly double A1;
+			public readonly double A2;
+			public readonly double A3;
 
 			public Entry(double a1, double a2, double a3)
 			{
