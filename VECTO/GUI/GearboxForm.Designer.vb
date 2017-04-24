@@ -126,12 +126,9 @@ Partial Class GearboxForm
 		Me.PnInertiaTI = New System.Windows.Forms.Panel()
 		Me.PicBox = New System.Windows.Forms.PictureBox()
 		Me.gbPowershiftLosses = New System.Windows.Forms.GroupBox()
-		Me.Label29 = New System.Windows.Forms.Label()
 		Me.lbAtShiftTime = New System.Windows.Forms.Label()
 		Me.tbATShiftTime = New System.Windows.Forms.TextBox()
-		Me.tbATInertiaFactor = New System.Windows.Forms.TextBox()
 		Me.Label28 = New System.Windows.Forms.Label()
-		Me.lbATInertiaFactor = New System.Windows.Forms.Label()
 		Me.tbTCCUpshiftMinAcceleration = New System.Windows.Forms.TextBox()
 		Me.Label34 = New System.Windows.Forms.Label()
 		Me.Label35 = New System.Windows.Forms.Label()
@@ -961,27 +958,15 @@ Partial Class GearboxForm
 		'
 		'gbPowershiftLosses
 		'
-		Me.gbPowershiftLosses.Controls.Add(Me.Label29)
 		Me.gbPowershiftLosses.Controls.Add(Me.lbAtShiftTime)
 		Me.gbPowershiftLosses.Controls.Add(Me.tbATShiftTime)
-		Me.gbPowershiftLosses.Controls.Add(Me.tbATInertiaFactor)
 		Me.gbPowershiftLosses.Controls.Add(Me.Label28)
-		Me.gbPowershiftLosses.Controls.Add(Me.lbATInertiaFactor)
 		Me.gbPowershiftLosses.Location = New System.Drawing.Point(459, 598)
 		Me.gbPowershiftLosses.Name = "gbPowershiftLosses"
 		Me.gbPowershiftLosses.Size = New System.Drawing.Size(414, 47)
 		Me.gbPowershiftLosses.TabIndex = 49
 		Me.gbPowershiftLosses.TabStop = False
 		Me.gbPowershiftLosses.Text = "Power shift losses"
-		'
-		'Label29
-		'
-		Me.Label29.AutoSize = True
-		Me.Label29.Location = New System.Drawing.Point(362, 22)
-		Me.Label29.Name = "Label29"
-		Me.Label29.Size = New System.Drawing.Size(16, 13)
-		Me.Label29.TabIndex = 44
-		Me.Label29.Text = "[-]"
 		'
 		'lbAtShiftTime
 		'
@@ -999,13 +984,6 @@ Partial Class GearboxForm
 		Me.tbATShiftTime.Size = New System.Drawing.Size(57, 20)
 		Me.tbATShiftTime.TabIndex = 4
 		'
-		'tbATInertiaFactor
-		'
-		Me.tbATInertiaFactor.Location = New System.Drawing.Point(299, 19)
-		Me.tbATInertiaFactor.Name = "tbATInertiaFactor"
-		Me.tbATInertiaFactor.Size = New System.Drawing.Size(57, 20)
-		Me.tbATInertiaFactor.TabIndex = 43
-		'
 		'Label28
 		'
 		Me.Label28.AutoSize = True
@@ -1014,15 +992,6 @@ Partial Class GearboxForm
 		Me.Label28.Size = New System.Drawing.Size(18, 13)
 		Me.Label28.TabIndex = 41
 		Me.Label28.Text = "[s]"
-		'
-		'lbATInertiaFactor
-		'
-		Me.lbATInertiaFactor.AutoSize = True
-		Me.lbATInertiaFactor.Location = New System.Drawing.Point(227, 22)
-		Me.lbATInertiaFactor.Name = "lbATInertiaFactor"
-		Me.lbATInertiaFactor.Size = New System.Drawing.Size(66, 13)
-		Me.lbATInertiaFactor.TabIndex = 42
-		Me.lbATInertiaFactor.Text = "Inertia factor"
 		'
 		'tbTCCUpshiftMinAcceleration
 		'
@@ -1218,9 +1187,6 @@ Partial Class GearboxForm
 	Friend WithEvents tbTCmaxSpeed As System.Windows.Forms.TextBox
 	Friend WithEvents Label27 As System.Windows.Forms.Label
 	Friend WithEvents gbPowershiftLosses As System.Windows.Forms.GroupBox
-	Friend WithEvents Label29 As System.Windows.Forms.Label
-	Friend WithEvents tbATInertiaFactor As System.Windows.Forms.TextBox
-	Friend WithEvents lbATInertiaFactor As System.Windows.Forms.Label
 	Friend WithEvents Label28 As System.Windows.Forms.Label
 	Friend WithEvents tbATShiftTime As System.Windows.Forms.TextBox
 	Friend WithEvents lbAtShiftTime As System.Windows.Forms.Label

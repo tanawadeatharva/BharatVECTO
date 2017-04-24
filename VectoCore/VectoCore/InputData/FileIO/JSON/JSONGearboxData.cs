@@ -55,8 +55,7 @@ namespace TUGraz.VectoCore.InputData.FileIO.JSON
 
 		public override IList<ITransmissionInputData> Gears
 		{
-			get
-			{
+			get {
 				var resultGears = new List<ITransmissionInputData>();
 				var gears = Body.GetEx(JsonKeys.Gearbox_Gears);
 				for (var i = 1; i < gears.Count(); i++) {
@@ -70,8 +69,7 @@ namespace TUGraz.VectoCore.InputData.FileIO.JSON
 
 		public override TableData ShiftPolygon
 		{
-			get
-			{
+			get {
 				if (Body[JsonKeys.Gearbox_TorqueConverter] == null || Body[JsonKeys.Gearbox_TorqueConverter]["ShiftPolygon"] == null) {
 					return null;
 				}
@@ -128,8 +126,7 @@ namespace TUGraz.VectoCore.InputData.FileIO.JSON
 		{
 			[System.Diagnostics.CodeAnalysis.SuppressMessage("Microsoft.Design",
 				"CA1065:DoNotRaiseExceptionsInUnexpectedLocations")]
-			get
-			{
+			get {
 				var gears = Body.GetEx(JsonKeys.Gearbox_Gears);
 				if (!gears.Any()) {
 					throw new VectoSimulationException("At least one Gear-Entry must be defined in Gearbox!");
@@ -142,8 +139,7 @@ namespace TUGraz.VectoCore.InputData.FileIO.JSON
 		{
 			[System.Diagnostics.CodeAnalysis.SuppressMessage("Microsoft.Design",
 				"CA1065:DoNotRaiseExceptionsInUnexpectedLocations")]
-			get
-			{
+			get {
 				var gears = Body.GetEx(JsonKeys.Gearbox_Gears);
 				if (!gears.Any()) {
 					throw new VectoSimulationException("At least one Gear-Entry must be defined in Gearbox!");
@@ -167,8 +163,7 @@ namespace TUGraz.VectoCore.InputData.FileIO.JSON
 		{
 			[System.Diagnostics.CodeAnalysis.SuppressMessage("Microsoft.Design",
 				"CA1065:DoNotRaiseExceptionsInUnexpectedLocations")]
-			get
-			{
+			get {
 				var gears = Body.GetEx(JsonKeys.Gearbox_Gears);
 				if (!gears.Any()) {
 					throw new VectoSimulationException("At least one Gear-Entry must be defined in Gearbox!");
@@ -183,8 +178,7 @@ namespace TUGraz.VectoCore.InputData.FileIO.JSON
 
 		public virtual GearboxType Type
 		{
-			get
-			{
+			get {
 				//return Body.GetEx<string>(JsonKeys.Gearbox_GearboxType).ParseEnum<GearboxType>(); 
 				var typeString = Body.GetEx<string>(JsonKeys.Gearbox_GearboxType);
 				if (!"AT".Equals(typeString)) {
@@ -206,8 +200,7 @@ namespace TUGraz.VectoCore.InputData.FileIO.JSON
 
 		public virtual TableData ShiftPolygon
 		{
-			get
-			{
+			get {
 				try {
 					return ReadTableData(Body.GetEx(JsonKeys.Gearbox_Gears)[1].GetEx<string>("ShiftPolygon"),
 						"TorqueConverter Shift Polygon", false);
@@ -229,8 +222,7 @@ namespace TUGraz.VectoCore.InputData.FileIO.JSON
 
 		public virtual IList<ITransmissionInputData> Gears
 		{
-			get
-			{
+			get {
 				var resultGears = new List<ITransmissionInputData>();
 				var gears = Body.GetEx(JsonKeys.Gearbox_Gears);
 				var gearNr = 1;
@@ -298,7 +290,8 @@ namespace TUGraz.VectoCore.InputData.FileIO.JSON
 					if (!TolerateMissing) {
 						throw;
 					}
-					retVal.LossMap = new TableData(Path.Combine(BasePath, lossMap.ToString()) + MissingFileSuffix, DataSourceType.Missing);
+					retVal.LossMap = new TableData(Path.Combine(BasePath, lossMap.ToString()) + MissingFileSuffix,
+						DataSourceType.Missing);
 				}
 			} else {
 				retVal.Efficiency = gear[JsonKeys.Gearbox_Gear_Efficiency] != null
@@ -311,7 +304,8 @@ namespace TUGraz.VectoCore.InputData.FileIO.JSON
 					retVal.ShiftPolygon = ReadTableData(gear.GetEx<string>(JsonKeys.Gearbox_Gear_ShiftPolygonFile),
 						string.Format("Gear {0} shiftPolygon", gearNumber));
 				} catch (Exception) {
-					retVal.ShiftPolygon = new TableData(Path.Combine(BasePath, shiftPolygonFile.Value<string>()) + MissingFileSuffix, DataSourceType.Missing);
+					retVal.ShiftPolygon = new TableData(Path.Combine(BasePath, shiftPolygonFile.Value<string>()) + MissingFileSuffix,
+						DataSourceType.Missing);
 				}
 			}
 			//retVal.ShiftPolygon = gear[JsonKeys.Gearbox_Gear_ShiftPolygonFile] != null
@@ -353,8 +347,7 @@ namespace TUGraz.VectoCore.InputData.FileIO.JSON
 
 		public Second DownshiftAfterUpshiftDelay
 		{
-			get
-			{
+			get {
 				return Body["DownshiftAfterUpshiftDelay"] == null
 					? DeclarationData.Gearbox.DownshiftAfterUpshiftDelay
 					: Body.GetEx<double>("DownshiftAfterUpshiftDelay").SI<Second>();
@@ -363,8 +356,7 @@ namespace TUGraz.VectoCore.InputData.FileIO.JSON
 
 		public Second UpshiftAfterDownshiftDelay
 		{
-			get
-			{
+			get {
 				return Body["UpshiftAfterDownshiftDelay"] == null
 					? DeclarationData.Gearbox.UpshiftAfterDownshiftDelay
 					: Body.GetEx<double>("UpshiftAfterDownshiftDelay").SI<Second>();
@@ -373,8 +365,7 @@ namespace TUGraz.VectoCore.InputData.FileIO.JSON
 
 		public MeterPerSquareSecond UpshiftMinAcceleration
 		{
-			get
-			{
+			get {
 				return Body["UpshiftMinAcceleration"] == null
 					? DeclarationData.Gearbox.UpshiftMinAcceleration
 					: Body.GetEx<double>("UpshiftMinAcceleration").SI<MeterPerSquareSecond>();
@@ -383,17 +374,11 @@ namespace TUGraz.VectoCore.InputData.FileIO.JSON
 
 		public Second PowershiftShiftTime
 		{
-			get
-			{
+			get {
 				return Body["PowershiftShiftTime"] == null
 					? 0.8.SI<Second>()
 					: Body.GetEx<double>("PowershiftShiftTime").SI<Second>();
 			}
-		}
-
-		public double PowerShiftInertiaFactor
-		{
-			get { return Body["PowershiftInertiaFactor"] == null ? 1 : Body.GetEx<double>("PowershiftInertiaFactor"); }
 		}
 
 		#endregion
@@ -402,8 +387,7 @@ namespace TUGraz.VectoCore.InputData.FileIO.JSON
 
 		public MeterPerSquareSecond CLUpshiftMinAcceleration
 		{
-			get
-			{
+			get {
 				return Body[JsonKeys.Gearbox_TorqueConverter] != null &&
 						Body[JsonKeys.Gearbox_TorqueConverter]["CLUpshiftMinAcceleration"] != null
 					? Body.GetEx(JsonKeys.Gearbox_TorqueConverter).GetEx<double>("CLUpshiftMinAcceleration").SI<MeterPerSquareSecond>()
@@ -413,8 +397,7 @@ namespace TUGraz.VectoCore.InputData.FileIO.JSON
 
 		public MeterPerSquareSecond CCUpshiftMinAcceleration
 		{
-			get
-			{
+			get {
 				return Body[JsonKeys.Gearbox_TorqueConverter] != null &&
 						Body[JsonKeys.Gearbox_TorqueConverter]["CCUpshiftMinAcceleration"] != null
 					? Body.GetEx(JsonKeys.Gearbox_TorqueConverter).GetEx<double>("CCUpshiftMinAcceleration").SI<MeterPerSquareSecond>()
@@ -424,8 +407,7 @@ namespace TUGraz.VectoCore.InputData.FileIO.JSON
 
 		public virtual PerSecond ReferenceRPM
 		{
-			get
-			{
+			get {
 				return Body[JsonKeys.Gearbox_TorqueConverter] != null &&
 						Body[JsonKeys.Gearbox_TorqueConverter][JsonKeys.Gearbox_TorqueConverter_ReferenceRPM] != null
 					? Body.GetEx(JsonKeys.Gearbox_TorqueConverter)
@@ -437,8 +419,7 @@ namespace TUGraz.VectoCore.InputData.FileIO.JSON
 
 		public PerSecond MaxInputSpeed
 		{
-			get
-			{
+			get {
 				return Body[JsonKeys.Gearbox_TorqueConverter] != null &&
 						Body[JsonKeys.Gearbox_TorqueConverter]["MaxTCSpeed"] != null
 					? Body.GetEx(JsonKeys.Gearbox_TorqueConverter).GetEx<double>("MaxTCSpeed").RPMtoRad()
@@ -448,8 +429,7 @@ namespace TUGraz.VectoCore.InputData.FileIO.JSON
 
 		public virtual TableData TCData
 		{
-			get
-			{
+			get {
 				if (Body[JsonKeys.Gearbox_TorqueConverter] == null ||
 					Body[JsonKeys.Gearbox_TorqueConverter][JsonKeys.Gearbox_TorqueConverter_TCMap] == null) {
 					return null;
@@ -469,8 +449,7 @@ namespace TUGraz.VectoCore.InputData.FileIO.JSON
 
 		KilogramSquareMeter ITorqueConverterEngineeringInputData.Inertia
 		{
-			get
-			{
+			get {
 				return Body[JsonKeys.Gearbox_TorqueConverter] != null &&
 						Body[JsonKeys.Gearbox_TorqueConverter][JsonKeys.Gearbox_TorqueConverter_Inertia] != null
 					? Body.GetEx(JsonKeys.Gearbox_TorqueConverter)

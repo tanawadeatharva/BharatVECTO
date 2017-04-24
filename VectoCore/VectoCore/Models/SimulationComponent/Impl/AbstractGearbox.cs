@@ -155,9 +155,7 @@ namespace TUGraz.VectoCore.Models.SimulationComponent.Impl
 			var torqueGbxIn = outTorque / ModelData.Gears[Gear].Ratio;
 			var deltaEngineSpeed = DataBus.EngineSpeed - outAngularVelocity * ModelData.Gears[Gear].Ratio;
 			var deltaClutchSpeed = (DataBus.EngineSpeed - PreviousState.OutAngularVelocity * ModelData.Gears[Gear].Ratio) / 2;
-			var torqueInertia = ModelData.PowershiftInertiaFactor * EngineInertia * deltaEngineSpeed /
-								ModelData.PowershiftShiftTime;
-			var shiftLossEnergy = (torqueGbxIn + torqueInertia) * deltaClutchSpeed * ModelData.PowershiftShiftTime;
+			var shiftLossEnergy = torqueGbxIn * deltaClutchSpeed * ModelData.PowershiftShiftTime;
 
 			return shiftLossEnergy.Abs();
 		}
