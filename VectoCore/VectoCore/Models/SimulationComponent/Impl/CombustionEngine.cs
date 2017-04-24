@@ -184,7 +184,7 @@ namespace TUGraz.VectoCore.Models.SimulationComponent.Impl
 			var fullDragTorque = ModelData.FullLoadCurve.DragLoadStationaryTorque(avgEngineSpeed);
 			var dynamicFullLoadPower = ComputeFullLoadPower(avgEngineSpeed, dt, dryRun);
 			if (dynamicFullLoadPower < 0) {
-				dynamicFullLoadPower = 0.SI<Watt>();
+				dynamicFullLoadPower = double.MinValue.SI<Watt>();
 			}
 			var dynamicFullLoadTorque = dynamicFullLoadPower / avgEngineSpeed;
 			var inertiaTorqueLoss =
