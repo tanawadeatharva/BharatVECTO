@@ -44,57 +44,28 @@ using TUGraz.VectoCore.Utils;
 
 namespace TUGraz.VectoCore.Models.Declaration
 {
-	public sealed class DeclarationData
+	public static class DeclarationData
 	{
 		public const string DeclarationDataResourcePrefix = "TUGraz.VectoCore.Resources.Declaration";
 
 		public static readonly Watt MinEnginePowerForEMS = 300e3.SI<Watt>();
 
-		private static DeclarationData _instance;
-		private Segments _segments;
-		private Wheels _wheels;
-		private PT1 _pt1;
-		private ElectricSystem _electricSystem;
-		private Fan _fan;
-		private HeatingVentilationAirConditioning _heatingVentilationAirConditioning;
-		private PneumaticSystem _pneumaticSystem;
-		private SteeringPump _steeringPump;
-		private WHTCCorrection _whtcCorrection;
-		private AirDrag _airDrag;
-		private StandardBodies _standardBodies;
-		private Payloads _payloads;
-		private PTOTransmission _pto;
+		public static readonly Segments Segments = new Segments();
+		public static readonly Wheels Wheels = new Wheels();
+		public static readonly PT1 PT1 = new PT1();
+		public static readonly ElectricSystem ElectricSystem = new ElectricSystem();
+		public static readonly Fan Fan = new Fan();
 
-		
-		public static PTOTransmission PTOTransmission
-		{
-			get { return Instance()._pto ?? (Instance()._pto = new PTOTransmission()); }
-		}
+		public static readonly HeatingVentilationAirConditioning HeatingVentilationAirConditioning =
+			new HeatingVentilationAirConditioning();
 
-		public static Wheels Wheels
-		{
-			get { return Instance()._wheels ?? (Instance()._wheels = new Wheels()); }
-		}
-
-		public static Segments Segments
-		{
-			get { return Instance()._segments ?? (Instance()._segments = new Segments()); }
-		}
-
-		public static PT1 PT1
-		{
-			get { return Instance()._pt1 ?? (Instance()._pt1 = new PT1()); }
-		}
-
-		public static Payloads Payloads
-		{
-			get { return Instance()._payloads ?? (Instance()._payloads = new Payloads()); }
-		}
-
-		public static ElectricSystem ElectricSystem
-		{
-			get { return Instance()._electricSystem ?? (Instance()._electricSystem = new ElectricSystem()); }
-		}
+		public static readonly PneumaticSystem PneumaticSystem = new PneumaticSystem();
+		public static readonly SteeringPump SteeringPump = new SteeringPump();
+		public static readonly WHTCCorrection WHTCCorrection = new WHTCCorrection();
+		public static readonly AirDrag AirDrag = new AirDrag();
+		public static readonly StandardBodies StandardBodies = new StandardBodies();
+		public static readonly Payloads Payloads = new Payloads();
+		public static readonly PTOTransmission PTOTransmission = new PTOTransmission();
 
 		/// <summary>
 		/// Formula for calculating the payload for a given gross vehicle weight.
@@ -115,52 +86,9 @@ namespace TUGraz.VectoCore.Models.Declaration
 			return Payloads.LookupTrailer(grossVehicleWeight, curbWeight);
 		}
 
-		public static Fan Fan
-		{
-			get { return Instance()._fan ?? (Instance()._fan = new Fan()); }
-		}
-
-		public static HeatingVentilationAirConditioning HeatingVentilationAirConditioning
-		{
-			get {
-				return Instance()._heatingVentilationAirConditioning ??
-						(Instance()._heatingVentilationAirConditioning = new HeatingVentilationAirConditioning());
-			}
-		}
-
-		public static StandardBodies StandardBodies
-		{
-			get { return Instance()._standardBodies ?? (Instance()._standardBodies = new StandardBodies()); }
-		}
-
-		public static PneumaticSystem PneumaticSystem
-		{
-			get { return Instance()._pneumaticSystem ?? (Instance()._pneumaticSystem = new PneumaticSystem()); }
-		}
-
-		public static SteeringPump SteeringPump
-		{
-			get { return Instance()._steeringPump ?? (Instance()._steeringPump = new SteeringPump()); }
-		}
-
-		public static WHTCCorrection WHTCCorrection
-		{
-			get { return Instance()._whtcCorrection ?? (Instance()._whtcCorrection = new WHTCCorrection()); }
-		}
-
-		public static AirDrag AirDrag
-		{
-			get { return Instance()._airDrag ?? (Instance()._airDrag = new AirDrag()); }
-		}
-
 		public static int PoweredAxle()
 		{
 			return 1;
-		}
-
-		private static DeclarationData Instance()
-		{
-			return _instance ?? (_instance = new DeclarationData());
 		}
 
 		public static class Physics
@@ -223,6 +151,7 @@ namespace TUGraz.VectoCore.Models.Declaration
 		{
 			public const double RollResistanceCoefficient = 0.00555;
 			public const double TyreTestLoad = 37500;
+
 			public const bool TwinTyres = false;
 			//public const string WheelsType = "385/65 R 22.5";
 		}
@@ -258,7 +187,9 @@ namespace TUGraz.VectoCore.Models.Declaration
 			public static readonly Second MinTimeBetweenGearshifts = 1.5.SI<Second>();
 			public static readonly Second DownshiftAfterUpshiftDelay = 10.SI<Second>();
 			public static readonly Second UpshiftAfterDownshiftDelay = 10.SI<Second>();
+
 			public static readonly MeterPerSquareSecond UpshiftMinAcceleration = 0.1.SI<MeterPerSquareSecond>();
+
 			//public static readonly PerSecond TorqueConverterSpeedLimit = 1600.RPMtoRad();
 			public static readonly double TorqueConverterSecondGearThreshold = 1.8;
 
@@ -307,10 +238,11 @@ namespace TUGraz.VectoCore.Models.Declaration
 				if (gear > 0) {
 					downShift =
 						new[] { p2, downshiftCorr.P1, downshiftCorr.P2 }.Select(
-							point => new ShiftPolygon.ShiftPolygonEntry() {
-								AngularSpeed = point.X.SI<PerSecond>(),
-								Torque = point.Y.SI<NewtonMeter>()
-							}).ToList();
+								point => new ShiftPolygon.ShiftPolygonEntry() {
+									AngularSpeed = point.X.SI<PerSecond>(),
+									Torque = point.Y.SI<NewtonMeter>()
+								})
+							.ToList();
 
 					downShift[0].Torque = maxDragTorque;
 				}
@@ -334,7 +266,8 @@ namespace TUGraz.VectoCore.Models.Declaration
 					.Select(point => new ShiftPolygon.ShiftPolygonEntry() {
 						AngularSpeed = point.X.SI<PerSecond>(),
 						Torque = point.Y.SI<NewtonMeter>()
-					}).ToList();
+					})
+					.ToList();
 				upShift[0].Torque = maxDragTorque;
 				return new ShiftPolygon(downShift, upShift);
 			}
@@ -454,11 +387,11 @@ namespace TUGraz.VectoCore.Models.Declaration
 				var data = VectoCSVFile.ReadStream(RessourceHelper.ReadStream(resourceId), source: resourceId);
 				var characteristicTorque = (from DataRow row in data.Rows
 					select
-						new TorqueConverterEntry() {
-							SpeedRatio = row.ParseDouble(TorqueConverterDataReader.Fields.SpeedRatio),
-							Torque = row.ParseDouble(TorqueConverterDataReader.Fields.CharacteristicTorque).SI<NewtonMeter>(),
-							TorqueRatio = row.ParseDouble(TorqueConverterDataReader.Fields.TorqueRatio)
-						}).ToArray();
+					new TorqueConverterEntry() {
+						SpeedRatio = row.ParseDouble(TorqueConverterDataReader.Fields.SpeedRatio),
+						Torque = row.ParseDouble(TorqueConverterDataReader.Fields.CharacteristicTorque).SI<NewtonMeter>(),
+						TorqueRatio = row.ParseDouble(TorqueConverterDataReader.Fields.TorqueRatio)
+					}).ToArray();
 				foreach (var torqueConverterEntry in characteristicTorque) {
 					torqueConverterEntry.SpeedRatio = torqueConverterEntry.SpeedRatio * ratio;
 					torqueConverterEntry.TorqueRatio = torqueConverterEntry.TorqueRatio / ratio;
