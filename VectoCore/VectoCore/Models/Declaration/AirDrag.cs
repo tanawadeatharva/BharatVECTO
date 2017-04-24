@@ -30,7 +30,9 @@
 */
 
 using System.Data;
+using System.Diagnostics;
 using System.Linq;
+using TUGraz.VectoCommon.Utils;
 using TUGraz.VectoCore.Utils;
 
 namespace TUGraz.VectoCore.Models.Declaration
@@ -51,16 +53,19 @@ namespace TUGraz.VectoCore.Models.Declaration
 		{
 			Data = table.Rows.Cast<DataRow>().ToDictionary(
 				row => row.Field<string>("Parameters"),
-				row => new Entry(row.ParseDouble("a1"), row.ParseDouble("a2"), row.ParseDouble("a3")));
+				row => new Entry(row.ParseDouble("a1").SI<SquareMeter>(),
+					row.ParseDouble("a2").SI<SquareMeter>(),
+					row.ParseDouble("a3").SI<SquareMeter>()));
 		}
 
+		[DebuggerDisplay("A1: {A1}, A2: {A2}, A3: {A3}")]
 		public struct Entry
 		{
-			public readonly double A1;
-			public readonly double A2;
-			public readonly double A3;
+			public readonly SquareMeter A1;
+			public readonly SquareMeter A2;
+			public readonly SquareMeter A3;
 
-			public Entry(double a1, double a2, double a3)
+			public Entry(SquareMeter a1, SquareMeter a2, SquareMeter a3)
 			{
 				A1 = a1;
 				A2 = a2;
