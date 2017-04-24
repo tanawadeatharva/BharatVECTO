@@ -109,6 +109,7 @@ namespace TUGraz.VectoCore.Models.Declaration
 					RessourceHelper.ReadStream(DeclarationData.DeclarationDataResourcePrefix + ".VACC." +
 												row.Field<string>(".vaccfile")),
 				Missions = CreateMissions(ref grossVehicleMassRating, curbWeight, row),
+				VehicleHeight = row.ParseDouble("height").SI<Meter>(),
 				GrossVehicleMassRating = grossVehicleMassRating,
 				CdAConstruction =
 					string.IsNullOrEmpty(row["cdxa_construction"].ToString())
@@ -183,9 +184,7 @@ namespace TUGraz.VectoCore.Models.Declaration
 													missionType.ToString().Replace("EMS", "") +
 													Constants.FileExtensions.CycleFile),
 					AxleWeightDistribution = GetAxleWeightDistribution(row, missionType),
-					CurbWeight = curbWeight,
 					BodyCurbWeight = body.CurbWeight,
-					BodyGrossVehicleWeight = grossVehicleWeight,
 					Trailer = trailers,
 					MinLoad = 0.SI<Kilogram>(),
 					MaxLoad = maxLoad,
