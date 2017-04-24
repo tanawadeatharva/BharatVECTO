@@ -66,10 +66,7 @@ namespace TUGraz.VectoCore.Models.Declaration
 		public string CrossWindCorrectionParameters;
 		public double[] AxleWeightDistribution;
 
-
-		public Kilogram CurbWeight;
 		public Kilogram BodyCurbWeight;
-		public Kilogram BodyGrossVehicleWeight;
 
 		public Stream CycleFile;
 
