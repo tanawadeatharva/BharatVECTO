@@ -65,7 +65,7 @@ namespace TUGraz.VectoCore.Models.Declaration
 		private Payloads _payloads;
 		private PTOTransmission _pto;
 
-		
+
 		public static PTOTransmission PTOTransmission
 		{
 			get { return Instance()._pto ?? (Instance()._pto = new PTOTransmission()); }
@@ -221,7 +221,7 @@ namespace TUGraz.VectoCore.Models.Declaration
 
 		public static class Trailer
 		{
-			public const double RollResistanceCoefficient = 0.00555;
+			public const double RollResistanceCoefficient = 0.0055;
 			public const double TyreTestLoad = 37500;
 			public const bool TwinTyres = false;
 			//public const string WheelsType = "385/65 R 22.5";
