@@ -87,7 +87,8 @@ namespace TUGraz.VectoCore.InputData.Reader.DataObjectAdapter
 			return retVal;
 		}
 
-		internal VehicleData CreateVehicleData(IVehicleDeclarationInputData data, Mission mission, Kilogram loading)
+		internal VehicleData CreateVehicleData(IVehicleDeclarationInputData data, Mission mission, Kilogram loading,
+			Meter vehicleHeight)
 		{
 			if (!data.SavedInDeclarationMode) {
 				WarnDeclarationMode("VehicleData");
@@ -108,7 +109,7 @@ namespace TUGraz.VectoCore.InputData.Reader.DataObjectAdapter
 
 			retVal.CrossWindCorrectionCurve =
 				new CrosswindCorrectionCdxALookup(aerodynamicDragArea,
-					GetDeclarationAirResistanceCurve(mission.CrossWindCorrectionParameters, aerodynamicDragArea),
+					GetDeclarationAirResistanceCurve(mission.CrossWindCorrectionParameters, aerodynamicDragArea, vehicleHeight),
 					CrossWindCorrectionMode.DeclarationModeCorrection);
 			var axles = data.Axles;
 			if (axles.Count < mission.AxleWeightDistribution.Length) {
@@ -302,7 +303,7 @@ namespace TUGraz.VectoCore.InputData.Reader.DataObjectAdapter
 		}
 
 		public static List<CrossWindCorrectionCurveReader.CrossWindCorrectionEntry> GetDeclarationAirResistanceCurve(
-			string crosswindCorrectionParameters, SquareMeter aerodynamicDragAera)
+			string crosswindCorrectionParameters, SquareMeter aerodynamicDragAera, Meter vehicleHeight)
 		{
 			const int startSpeed = 60;
 			const int maxSpeed = 130;
@@ -311,7 +312,14 @@ namespace TUGraz.VectoCore.InputData.Reader.DataObjectAdapter
 			const int maxAlpha = 180;
 			const int alphaStep = 10;
 
+			const int startHeightPercent = 5;
+			const int maxHeightPercent = 100;
+			const int heightPercentStep = 10;
+			const double heightShare = (double)heightPercentStep / maxHeightPercent;
+
 			var values = DeclarationData.AirDrag.Lookup(crosswindCorrectionParameters);
+
+			// first entry (0m/s) will get CdxA of second entry.
 			var points = new List<CrossWindCorrectionCurveReader.CrossWindCorrectionEntry> {
 				new CrossWindCorrectionCurveReader.CrossWindCorrectionEntry {
 					Velocity = 0.SI<MeterPerSecond>(),
@@ -321,21 +329,31 @@ namespace TUGraz.VectoCore.InputData.Reader.DataObjectAdapter
 
 			for (var speed = startSpeed; speed <= maxSpeed; speed += speedStep) {
 				var vVeh = speed.KMPHtoMeterPerSecond();
-				var cdASum = 0.0.SI<SquareMeter>();
 
-				for (var alpha = 0; alpha <= maxAlpha; alpha += alphaStep) {
-					var vAirX = vVeh + Physics.BaseWindSpeed * Math.Cos(alpha.ToRadian());
-					var vAirY = Physics.BaseWindSpeed * Math.Sin(alpha.ToRadian());
-					var beta = Math.Atan(vAirY / vAirX).ToDegree();
-					var deltaCdA = ComputeDeltaCd(beta, values);
-					var cdA = aerodynamicDragAera + deltaCdA;
+				var cdASum = 0.SI<SquareMeter>();
 
-					var degreeShare = (double)alphaStep / maxAlpha;
-					if (alpha == 0 || alpha == maxAlpha) {
-						degreeShare /= 2;
+				for (var heightPercent = startHeightPercent; heightPercent < maxHeightPercent; heightPercent += heightPercentStep) {
+					var height = (heightPercent / 100.0) * vehicleHeight;
+					var vWind = Physics.BaseWindSpeed * Math.Pow(height / Physics.BaseWindHeight, Physics.HellmannExponent);
+
+					for (var alpha = 0; alpha <= maxAlpha; alpha += alphaStep) {
+						var vAirX = vVeh + vWind * Math.Cos(alpha.ToRadian());
+						var vAirY = vWind * Math.Sin(alpha.ToRadian());
+
+						var beta = Math.Atan(vAirY / vAirX).ToDegree();
+
+						// ΔCdxA = A1β + A2β² + A3β³
+						var deltaCdA = values.A1 * beta + values.A2 * beta * beta + values.A3 * beta * beta * beta;
+
+						// CdxA(β) = CdxA(0) + ΔCdxA(β)
+						var cdA = aerodynamicDragAera + deltaCdA;
+
+						var share = (alpha == 0 || alpha == maxAlpha ? alphaStep / 2.0 : alphaStep) / maxAlpha;
+
+						// v_air = sqrt(v_airX²+vAirY²)
+						// cdASum = CdxA(β) * v_air²/v_veh²
+						cdASum += heightShare * share * cdA * (vAirX * vAirX + vAirY * vAirY) / (vVeh * vVeh);
 					}
-
-					cdASum += degreeShare * cdA * ((vAirX * vAirX + vAirY * vAirY) / (vVeh * vVeh)).Cast<Scalar>();
 				}
 				points.Add(new CrossWindCorrectionCurveReader.CrossWindCorrectionEntry {
 					Velocity = vVeh,
@@ -345,11 +363,6 @@ namespace TUGraz.VectoCore.InputData.Reader.DataObjectAdapter
 
 			points[0].EffectiveCrossSectionArea = points[1].EffectiveCrossSectionArea;
 			return points;
-		}
-
-		protected static SquareMeter ComputeDeltaCd(double beta, AirDrag.Entry values)
-		{
-			return (values.A1 * beta + values.A2 * beta * beta + values.A3 * beta * beta * beta).SI<SquareMeter>();
 		}
 	}
 }
