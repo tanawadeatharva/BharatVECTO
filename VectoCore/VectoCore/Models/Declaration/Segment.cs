@@ -55,6 +55,8 @@ namespace TUGraz.VectoCore.Models.Declaration
 
 		public Meter VehicleHeight { get; internal set; }
 
+		public MeterPerSecond DesignSpeed { get; internal set; }
+
 		public SquareMeter CdAConstruction { get; internal set; }
 	}
 }

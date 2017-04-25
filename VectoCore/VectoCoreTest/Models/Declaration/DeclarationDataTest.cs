@@ -419,9 +419,11 @@ namespace TUGraz.VectoCore.Tests.Models.Declaration
 				null,
 				null),
 			TestCase(MissionType.RegionalDelivery, VehicleClass.Class2, 289, "Dual displacement", null, null, null),
-			TestCase(MissionType.RegionalDelivery, VehicleClass.Class2, 255, "Variable displacement mech. controlled", null, null,
+			TestCase(MissionType.RegionalDelivery, VehicleClass.Class2, 255, "Variable displacement mech. controlled", null,
+				null,
 				null),
-			TestCase(MissionType.RegionalDelivery, VehicleClass.Class2, 204, "Variable displacement elec. controlled", null, null,
+			TestCase(MissionType.RegionalDelivery, VehicleClass.Class2, 204, "Variable displacement elec. controlled", null,
+				null,
 				null),
 			TestCase(MissionType.RegionalDelivery, VehicleClass.Class2, 92.8571, "Electric", null, null, null),
 			TestCase(MissionType.RegionalDelivery, VehicleClass.Class2, 665, "Fixed displacement", "Fixed displacement", null,
@@ -465,11 +467,11 @@ namespace TUGraz.VectoCore.Tests.Models.Declaration
 		public void SegmentWeightOutOfRange4X2(double weight)
 		{
 			AssertHelper.Exception<VectoException>(() =>
-				DeclarationData.Segments.Lookup(
-					VehicleCategory.RigidTruck,
-					AxleConfiguration.AxleConfig_4x2,
-					weight.SI<Kilogram>(),
-					0.SI<Kilogram>()),
+					DeclarationData.Segments.Lookup(
+						VehicleCategory.RigidTruck,
+						AxleConfiguration.AxleConfig_4x2,
+						weight.SI<Kilogram>(),
+						0.SI<Kilogram>()),
 				"Gross vehicle mass must be greater than 7.5 tons");
 		}
 
@@ -482,11 +484,11 @@ namespace TUGraz.VectoCore.Tests.Models.Declaration
 		public void SegmentWeightOutOfRange4X4(double weight)
 		{
 			AssertHelper.Exception<VectoException>(() =>
-				DeclarationData.Segments.Lookup(
-					VehicleCategory.RigidTruck,
-					AxleConfiguration.AxleConfig_4x4,
-					weight.SI<Kilogram>(),
-					0.SI<Kilogram>()),
+					DeclarationData.Segments.Lookup(
+						VehicleCategory.RigidTruck,
+						AxleConfiguration.AxleConfig_4x4,
+						weight.SI<Kilogram>(),
+						0.SI<Kilogram>()),
 				"Gross vehicle mass must be greater than 7.5 tons");
 		}
 
@@ -528,6 +530,26 @@ namespace TUGraz.VectoCore.Tests.Models.Declaration
 			var segment = DeclarationData.Segments.Lookup(category, axleConfiguration, grossWeight.SI<Kilogram>(),
 				curbWeight.SI<Kilogram>());
 			Assert.AreEqual(expectedClass, segment.VehicleClass);
+		}
+
+		[TestCase(VehicleCategory.RigidTruck, AxleConfiguration.AxleConfig_4x2, 7500, 0, VehicleClass.Class1, 85),
+		TestCase(VehicleCategory.RigidTruck, AxleConfiguration.AxleConfig_4x2, 10001, 0, VehicleClass.Class2, 85),
+		TestCase(VehicleCategory.RigidTruck, AxleConfiguration.AxleConfig_4x2, 12001, 0, VehicleClass.Class3, 85),
+		TestCase(VehicleCategory.RigidTruck, AxleConfiguration.AxleConfig_4x2, 16001, 0, VehicleClass.Class4, 85),
+		TestCase(VehicleCategory.Tractor, AxleConfiguration.AxleConfig_4x2, 16001, 0, VehicleClass.Class5, 85),
+		TestCase(VehicleCategory.RigidTruck, AxleConfiguration.AxleConfig_6x2, 7500, 0, VehicleClass.Class9, 85),
+		TestCase(VehicleCategory.Tractor, AxleConfiguration.AxleConfig_6x2, 7500, 0, VehicleClass.Class10, 85),
+		TestCase(VehicleCategory.RigidTruck, AxleConfiguration.AxleConfig_6x4, 7500, 0, VehicleClass.Class11, 85),
+		TestCase(VehicleCategory.Tractor, AxleConfiguration.AxleConfig_6x4, 7500, 0, VehicleClass.Class12, 85),
+		TestCase(VehicleCategory.RigidTruck, AxleConfiguration.AxleConfig_8x4, 7500, 0, VehicleClass.Class16, 85),
+		]
+		public void SegmentDesignSpeedTest(VehicleCategory category, AxleConfiguration axleConfiguration, double grossWeight,
+			double curbWeight, VehicleClass expectedClass, double speed)
+		{
+			var segment = DeclarationData.Segments.Lookup(category, axleConfiguration, grossWeight.SI<Kilogram>(),
+				curbWeight.SI<Kilogram>());
+
+			Assert.AreEqual(speed.KMPHtoMeterPerSecond(), segment.DesignSpeed);
 		}
 
 		[Test,
@@ -783,7 +805,6 @@ namespace TUGraz.VectoCore.Tests.Models.Declaration
 				trailerCurbWeight: new[] { 7500.0, 5400 }, trailerType: new[] { TrailerType.ST1, TrailerType.T2 }, minLoad: 0,
 				refLoad: 17500, trailerGrossVehicleWeight: new[] { 24000.0, 18000 }, deltaCdA: 0.6, maxLoad: 39600, ems: true);
 		}
-
 
 		/// <summary>
 		/// Segment 9: fixed reference weight, trailer always used
@@ -1117,7 +1138,8 @@ namespace TUGraz.VectoCore.Tests.Models.Declaration
 		public void Declaration_WheelsForT2_Class4()
 		{
 			var dataProvider =
-				JSONInputDataFactory.ReadJsonJob(@"TestData\Jobs\Class4_40t_Long_Haul_Truck.vecto") as IDeclarationInputDataProvider;
+				JSONInputDataFactory.ReadJsonJob(
+					@"TestData\Jobs\Class4_40t_Long_Haul_Truck.vecto") as IDeclarationInputDataProvider;
 			var dataReader = new DeclarationModeVectoRunDataFactory(dataProvider, null);
 
 			var runs = dataReader.NextRun().ToList();

@@ -46,7 +46,6 @@ namespace TUGraz.VectoCore.Models.Declaration
 	{
 		private DataTable _segmentTable;
 
-
 		protected override string ResourceId
 		{
 			get { return DeclarationData.DeclarationDataResourcePrefix + ".SegmentTable.csv"; }
@@ -54,7 +53,8 @@ namespace TUGraz.VectoCore.Models.Declaration
 
 		protected override string ErrorMessage
 		{
-			get {
+			get
+			{
 				return
 					"ERROR: Could not find the declaration segment for vehicle. Category: {0}, AxleConfiguration: {1}, GrossVehicleWeight: {2}";
 			}
@@ -89,13 +89,14 @@ namespace TUGraz.VectoCore.Models.Declaration
 					return (considerInvalid || isValid == "1")
 							&& category == vehicleCategory.ToString()
 							&& axleConf == axleConfiguration.GetName()
-						// MK 2016-06-07: normally the next condition should be "mass > massMin", except for 7.5t where is should be ">="
-						// in any case ">=" is also correct, because the segment table is sorted by weight.
+							// MK 2016-06-07: normally the next condition should be "mass > massMin", except for 7.5t where is should be ">="
+							// in any case ">=" is also correct, because the segment table is sorted by weight.
 							&& grossVehicleMassRating >= massMin
 							&& grossVehicleMassRating <= massMax;
 				});
 			} catch (InvalidOperationException e) {
-				var errorMessage = string.Format(ErrorMessage, vehicleCategory, axleConfiguration.GetName(), grossVehicleMassRating);
+				var errorMessage = string.Format(ErrorMessage, vehicleCategory, axleConfiguration.GetName(),
+					grossVehicleMassRating);
 				Log.Fatal(errorMessage);
 				throw new VectoException(errorMessage, e);
 			}
@@ -110,6 +111,7 @@ namespace TUGraz.VectoCore.Models.Declaration
 												row.Field<string>(".vaccfile")),
 				Missions = CreateMissions(ref grossVehicleMassRating, curbWeight, row),
 				VehicleHeight = row.ParseDouble("height").SI<Meter>(),
+				DesignSpeed = row.ParseDouble("designspeed").KMPHtoMeterPerSecond(),
 				GrossVehicleMassRating = grossVehicleMassRating,
 				CdAConstruction =
 					string.IsNullOrEmpty(row["cdxa_construction"].ToString())
@@ -164,7 +166,8 @@ namespace TUGraz.VectoCore.Models.Declaration
 						throw new VectoException(
 							"Error in segmentation table: number of trailers and list of weight shares does not match!");
 					}
-					trailers.AddRange(trailerWeightShares.Select((t, i) => CreateTrailer(trailerList[i], t.ToDouble() / 100.0, i == 0)));
+					trailers.AddRange(
+						trailerWeightShares.Select((t, i) => CreateTrailer(trailerList[i], t.ToDouble() / 100.0, i == 0)));
 				} else {
 					if (ShouldTrailerBeUsed(row, missionType)) {
 						var trailerValue = row.Field<string>("trailer");
@@ -174,7 +177,6 @@ namespace TUGraz.VectoCore.Models.Declaration
 						trailers.Add(CreateTrailer(trailerValue, GetTrailerAxleWeightDistribution(row, missionType), true));
 					}
 				}
-
 
 				//var semiTrailerField = row.Field<string>("semitrailer");
 				//var semiTrailer = !string.IsNullOrWhiteSpace(semiTrailerField)
