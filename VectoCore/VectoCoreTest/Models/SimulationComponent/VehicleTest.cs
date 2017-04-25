@@ -78,18 +78,18 @@ namespace TUGraz.VectoCore.Tests.Models.SimulationComponent
 
 			requestPort.Request(absTime, dt, accell, gradient);
 
-			Assert.AreEqual(-2305.43268, mockPort.Force.Value(), 0.0001);
+			Assert.AreEqual(-2340.2558, mockPort.Force.Value(), 0.0001);
 			Assert.AreEqual(16.954303841, mockPort.Velocity.Value(), 0.0001);
 		}
 
 		[
 			TestCase(0, 0, 0.5, 3.0, 0),
-			TestCase(0, 1, 0.5, 3.0, 0.59839),
-			TestCase(60, 0, 0.5, 3.0, 1329.7558),
-			TestCase(60, 1, 0.5, 3.0, 1365.386),
-			TestCase(60, 0.5, 0.5, 3.0, 1347.457494),
-			TestCase(72, 0.5, 0.5, 3.0, 1852.8837),
-			TestCase(72, 1, 3, 3.0, 2093.7506)
+			TestCase(0, 1, 0.5, 3.0, 0.5657),
+			TestCase(60, 0, 0.5, 3.0, 1257.2212),
+			TestCase(60, 1, 0.5, 3.0, 1291.6202),
+			TestCase(60, 0.5, 0.5, 3.0, 1274.3082),
+			TestCase(72, 0.5, 0.5, 3.0, 1765.8214),
+			TestCase(72, 1, 3, 3.0, 2001.6463)
 		]
 		public void VehicleAirResistanceTest(double vehicleSpeed, double acceleration, double dt, double height,
 			double expected)
@@ -113,7 +113,7 @@ namespace TUGraz.VectoCore.Tests.Models.SimulationComponent
 			var avgForce = vehicle.AirDragResistance(vehicleSpeed.KMPHtoMeterPerSecond(), nextSpeed);
 			Assert.AreEqual(expected, avgForce.Value(), Tolerance);
 		}
-		
+
 		[Test]
 		public void VehicleAirDragPowerLossDeclarationTest()
 		{
@@ -139,11 +139,11 @@ namespace TUGraz.VectoCore.Tests.Models.SimulationComponent
 			vehicle.Request(absTime, dt, 0.SI<MeterPerSquareSecond>(), 0.SI<Radian>());
 			vehicle.CommitSimulationStep(writer);
 
-			Assert.AreEqual(48033.405, ((SI)writer[ModalResultField.P_air]).Value(), 0.1);
+			Assert.AreEqual(45956.3024, ((SI)writer[ModalResultField.P_air]).Value(), 0.1);
 
 			vehicle.Request(absTime, dt, 1.SI<MeterPerSquareSecond>(), 0.SI<Radian>());
 			vehicle.CommitSimulationStep(writer);
-			Assert.AreEqual(49566.561, ((SI)writer[ModalResultField.P_air]).Value(), 0.1);
+			Assert.AreEqual(47448.0989, ((SI)writer[ModalResultField.P_air]).Value(), 0.1);
 		}
 
 		[Test,
