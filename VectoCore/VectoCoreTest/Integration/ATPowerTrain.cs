@@ -162,7 +162,6 @@ namespace TUGraz.VectoCore.Tests.Integration
 				UpshiftAfterDownshiftDelay = DeclarationData.Gearbox.UpshiftAfterDownshiftDelay,
 				UpshiftMinAcceleration = DeclarationData.Gearbox.UpshiftMinAcceleration,
 				PowershiftShiftTime = 0.8.SI<Second>(),
-				PowershiftInertiaFactor = 0.7,
 				TorqueConverterData =
 					TorqueConverterDataReader.ReadFromFile(torqueConverterFile, 1000.RPMtoRad(),
 						MaxTcSpeed, ExecutionMode.Engineering, gbxType == GearboxType.ATSerial ? 1 : 1 / ratios[0],
