@@ -78,7 +78,7 @@ namespace TUGraz.VectoCore.Tests.Models.SimulationComponent
 
 			requestPort.Request(absTime, dt, accell, gradient);
 
-			Assert.AreEqual(-2340.2558, mockPort.Force.Value(), 0.0001);
+			Assert.AreEqual(-2332.5362, mockPort.Force.Value(), 0.0001);
 			Assert.AreEqual(16.954303841, mockPort.Velocity.Value(), 0.0001);
 		}
 

@@ -314,25 +314,23 @@ namespace TUGraz.VectoCore.Tests.Reports
 				Assert.AreEqual(pEngOut.Value(), (pClutchOut + pClutchLoss).Value(), 1E-3,
 					"time: {0}  distance: {1}", time, distance);
 
-				// P_eng_fcmap = P_eng_out + P_AUX + P_eng_inertia ( + P_PTO_Transm + P_PTO_Consumer )
-				Assert.AreEqual(pEngFcmap.Value(), (pEngOut + pAux + pEngInertia + pPTOtransm + pPTOconsumer).Value(), 1E-3,
-					"time: {0}  distance: {1}", time,
-					distance);
-
-				// P_eng_fcmap = sum(Losses Powertrain)
-				var pLossTot = pClutchLoss + pLossGbx + pLossRet + pGbxInertia + pLossAngle + pLossAxle + pBrakeLoss +
-								pWheelInertia + pAir + pRoll + pGrad + pVehInertia + pPTOconsumer + pPTOtransm;
-
-				var pEngFcmapCalc = (pLossTot + pEngInertia + pAux).Value();
-
-				Assert.AreEqual(pEngFcmap.Value(), pEngFcmapCalc, 1E-2, "time: {0}  distance: {1}", time, distance);
-
 				Assert.IsTrue(pLossGbx.IsGreaterOrEqual(pShiftLoss + pGbxInertia), "time: {0}  distance: {1}", time,
 					distance);
 
 				Assert.AreEqual(pGbxIn.Value(), (pRetIn + pLossGbx + pGbxInertia).Value(), gear != 0 ? 1E-3 : 0.5,
 					"time: {0}  distance: {1}", time,
 					distance);
+
+				// P_eng_fcmap = P_eng_out + P_AUX + P_eng_inertia ( + P_PTO_Transm + P_PTO_Consumer )
+				Assert.AreEqual(pEngFcmap.Value(), (pEngOut + pAux + pEngInertia + pPTOtransm + pPTOconsumer).Value(), 0.5,
+					"time: {0}  distance: {1}", time, distance);
+
+				// P_eng_fcmap = sum(Losses Powertrain)
+				var pLossTot = pClutchLoss + pLossGbx + pLossRet + pGbxInertia + pLossAngle + pLossAxle + pBrakeLoss +
+								pWheelInertia + pAir + pRoll + pGrad + pVehInertia + pPTOconsumer + pPTOtransm;
+				var pEngFcmapCalc = (pLossTot + pEngInertia + pAux).Value();
+				Assert.AreEqual(pEngFcmap.Value(), pEngFcmapCalc, 0.5, "time: {0}  distance: {1}", time, distance);
+
 				Assert.AreEqual(pEngFcmap.Value(),
 					(pTrac + pWheelInertia + pBrakeLoss + pLossAxle + pLossRet + pLossGbx + pGbxInertia + pEngInertia + pAux +
 					pClutchLoss + pPTOtransm + pPTOconsumer).Value(), 0.5, "time: {0}  distance: {1}", time, distance);
