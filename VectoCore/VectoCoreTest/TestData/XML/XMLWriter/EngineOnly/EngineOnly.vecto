@@ -1,0 +1,16 @@
+﻿{
+  "Header": {
+    "CreatedBy": " ()",
+    "Date": "2016-10-14T08:06:35.5420151Z",
+    "AppVersion": "3",
+    "FileVersion": 3
+  },
+  "Body": {
+    "SavedInDeclMode": false,
+    "EngineOnlyMode": true,
+    "EngineFile": "Engine_175kW_6.8l.veng",
+    "Cycles": [
+      "EngineOnly.vdri"
+    ]
+  }
+}

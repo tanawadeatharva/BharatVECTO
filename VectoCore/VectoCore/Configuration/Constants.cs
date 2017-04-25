@@ -172,5 +172,27 @@ namespace TUGraz.VectoCore.Configuration
 			// the torque converter characteristics curve has to be defined up to this speed ratio
 			public const double RequiredTorqueConverterSpeedRatio = 2.2;
 		}
+
+		public static class XML
+		{
+			public const string XSDDeclarationVersion = "0.6";
+			public const string XSDEngineeringVersion = "0.7";
+
+			public const string DeclarationNSPrefix = "vdd";
+
+			public const string EngineeringNSPrefix = "ved";
+
+			public const string RootNSPrefix = "tns";
+
+			public const string VectoDeclarationDefinitionsNS =
+				"urn:tugraz:ivt:VectoAPI:DeclarationDefinitions:v" + XSDDeclarationVersion;
+
+			public const string VectoEngineeringDefinitionsNS =
+				"urn:tugraz:ivt:VectoAPI:EngineeringDefinitions:v" + XSDEngineeringVersion;
+
+			public const string VectoDeclarationInputNS = "urn:tugraz:ivt:VectoAPI:DeclarationInput:v" + XSDDeclarationVersion;
+
+			public const string VectoEngineeringInputNS = "urn:tugraz:ivt:VectoAPI:EngineeringInput:v" + XSDEngineeringVersion;
+		}
 	}
 }

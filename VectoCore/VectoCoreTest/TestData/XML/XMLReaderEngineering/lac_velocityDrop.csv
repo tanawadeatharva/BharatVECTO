@@ -1,0 +1,5 @@
+v_target [km/h], decision_factor [-]
+0              , 0
+58             , 0
+62             , 1
+100            , 1

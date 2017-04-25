@@ -1,0 +1,30 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<tns:VectoComponentEngineering xmlns="urn:tugraz:ivt:VectoAPI:EngineeringDefinitions:v0.7"
+															xmlns:tns="urn:tugraz:ivt:VectoAPI:EngineeringInput:v0.7"
+															xmlns:vdecdef="urn:tugraz:ivt:VectoAPI:DeclarationDefinitions:v0.6" schemaVersion="0.6"
+															xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+															xsi:schemaLocation="urn:tugraz:ivt:VectoAPI:EngineeringInput:v0.7 VectoEngineeringInput.xsd">
+	<Engine>
+		<Data id="ENG-gooZah3D">
+			<Vendor>Generic Engine Vendor</Vendor>
+			<Creator>Markus Quaritsch, TUG IVT</Creator>
+			<Date>2016-02-15T11:00:00Z</Date>
+			<MakeAndModel>Generic 40t Long Haul Truck Engine</MakeAndModel>
+			<TypeId>ENG-gooZah3D</TypeId>
+			<Displacement>12730.0</Displacement>
+			<IdlingSpeed>560</IdlingSpeed>
+			<Inertia>0.77</Inertia>
+			<WHTCEngineering>1</WHTCEngineering>
+			<FuelConsumptionMap>
+				<Resource type="csv" file="engine.vmap" />
+			</FuelConsumptionMap>
+			<FullLoadAndDragCurve>
+				<Resource type="csv" file="engine.vfld" />
+			</FullLoadAndDragCurve>
+		</Data>
+		<Signature>
+			<ComponentDataHash>e0c253b643f7f8f09b963aca4a264d06fbfa599f</ComponentDataHash>
+		</Signature>
+	</Engine>
+</tns:VectoComponentEngineering>
