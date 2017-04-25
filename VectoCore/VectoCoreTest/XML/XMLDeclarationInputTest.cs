@@ -310,7 +310,7 @@ namespace TUGraz.VectoCore.Tests.XML
 
 			jobContainer.AddRuns(runsFactory);
 
-			Assert.AreEqual(6, jobContainer.Runs.Count);
+			Assert.AreEqual(12, jobContainer.Runs.Count);
 		}
 
 		[TestMethod]
