@@ -15,6 +15,9 @@ Imports System.IO
 Imports System.Linq
 Imports System.Text.RegularExpressions
 Imports System.Windows.Forms.DataVisualization.Charting
+Imports System.Xml.Linq
+Imports Microsoft.WindowsAPICodePack.Dialogs
+Imports TUGraz.IVT.VectoXML.Writer
 Imports TUGraz.VECTO.Input_Files
 Imports TUGraz.VectoCommon.InputData
 Imports TUGraz.VectoCommon.Models
@@ -101,7 +104,7 @@ Public Class GearboxForm
 		TbMinTimeBetweenShifts.Text = DeclarationData.Gearbox.MinTimeBetweenGearshifts.ToGUIFormat()
 		'cDeclaration.MinTimeBetweenGearshift(GStype)
 
-		TbTqResv.Text = (DeclarationData.Gearbox.TorqueReserve * 100).ToGUIFormat()				  ' cDeclaration.TqResv
+		TbTqResv.Text = (DeclarationData.Gearbox.TorqueReserve * 100).ToGUIFormat()					  ' cDeclaration.TqResv
 		TbTqResvStart.Text = (DeclarationData.Gearbox.TorqueReserveStart * 100).ToGUIFormat() 'cDeclaration.TqResvStart
 		TbStartSpeed.Text = DeclarationData.Gearbox.StartSpeed.ToGUIFormat()	'cDeclaration.StartSpeed
 		TbStartAcc.Text = DeclarationData.Gearbox.StartAcceleration.ToGUIFormat()	' cDeclaration.StartAcc
@@ -361,6 +364,34 @@ Public Class GearboxForm
 
 	'Save file
 	Private Function SaveGbx(file As String) As Boolean
+
+		Dim gearbox As Gearbox = FillGearboxData(file)
+
+
+
+		If Not gearbox.SaveFile Then
+			MsgBox("Cannot safe to " & file, MsgBoxStyle.Critical)
+			Return False
+		End If
+
+		If AutoSendTo Then
+			If VectoJobForm.Visible Then
+				If UCase(FileRepl(VectoJobForm.TbGBX.Text, JobDir)) <> UCase(file) Then _
+					VectoJobForm.TbGBX.Text = GetFilenameWithoutDirectory(file, JobDir)
+				VectoJobForm.UpdatePic()
+			End If
+		End If
+
+		GearboxFileBrowser.UpdateHistory(file)
+		Text = GetFilenameWithoutPath(file, True)
+		LbStatus.Text = ""
+
+		_changed = False
+
+		Return True
+	End Function
+
+	Private Function FillGearboxData(file As String) As Gearbox
 		Dim gearbox As Gearbox
 		Dim i As Integer
 
@@ -408,28 +439,7 @@ Public Class GearboxForm
 		gearbox.TCCUpshiftMinAcceleration = tbTCCUpshiftMinAcceleration.Text.ToDouble(0)
 
 		gearbox.PSShiftTime = tbATShiftTime.Text.ToDouble(0)
-
-
-		If Not gearbox.SaveFile Then
-			MsgBox("Cannot safe to " & file, MsgBoxStyle.Critical)
-			Return False
-		End If
-
-		If AutoSendTo Then
-			If VectoJobForm.Visible Then
-				If UCase(FileRepl(VectoJobForm.TbGBX.Text, JobDir)) <> UCase(file) Then _
-					VectoJobForm.TbGBX.Text = GetFilenameWithoutDirectory(file, JobDir)
-				VectoJobForm.UpdatePic()
-			End If
-		End If
-
-		GearboxFileBrowser.UpdateHistory(file)
-		Text = GetFilenameWithoutPath(file, True)
-		LbStatus.Text = ""
-
-		_changed = False
-
-		Return True
+		Return gearbox
 	End Function
 
 #Region "Change Events"
@@ -954,6 +964,21 @@ Public Class GearboxForm
 		If TorqueConverterShiftPolygonFileBrowser.OpenDialog(FileRepl(TBTCShiftPolygon.Text, GetPath(_gbxFile))) Then
 			TBTCShiftPolygon.Text = GetFilenameWithoutDirectory(TorqueConverterShiftPolygonFileBrowser.Files(0),
 																GetPath(_gbxFile))
+		End If
+	End Sub
+
+	Private Sub btnExportXML_Click(sender As Object, e As EventArgs) Handles btnExportXML.Click
+
+		If (Cfg.DeclMode) Then
+			Dim dialog As CommonOpenFileDialog = New CommonOpenFileDialog()
+			dialog.IsFolderPicker = True
+			If (dialog.ShowDialog() = CommonFileDialogResult.Cancel) Then
+				Exit Sub
+			End If
+			Dim data As Gearbox = FillGearboxData(_gbxFile)
+
+			Dim export As XDocument = New XMLDeclarationWriter(data.Vendor).GenerateVectoComponent(data, data)
+			export.Save(Path.Combine(dialog.FileName, data.ModelName + ".xml"))
 		End If
 	End Sub
 End Class

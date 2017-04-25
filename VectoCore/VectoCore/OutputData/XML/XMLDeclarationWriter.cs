@@ -1,4 +1,5 @@
-﻿using System.Collections.Generic;
+﻿using System;
+using System.Collections.Generic;
 using System.Linq;
 using System.Xml.Linq;
 using TUGraz.VectoCommon.InputData;
@@ -12,7 +13,7 @@ namespace TUGraz.IVT.VectoXML.Writer
 		//private readonly XNamespace _vectoNs = @"../../../API/VectoInput.xsd";
 
 
-		public XMLDeclarationWriter(string basePath, string vendor) : base(basePath, vendor)
+		public XMLDeclarationWriter(string vendor) : base(null, vendor)
 		{
 			tns = "urn:tugraz:ivt:VectoAPI:DeclarationDefinitions:v0.6";
 			rootNamespace = "urn:tugraz:ivt:VectoAPI:DeclarationInput:v0.6";
@@ -38,6 +39,33 @@ namespace TUGraz.IVT.VectoXML.Writer
 				CreateDeclarationJob(data))
 				);
 			return job;
+		}
+
+		public XDocument GenerateVectoComponent(IGearboxDeclarationInputData data,
+			ITorqueConverterDeclarationInputData torqueConverter)
+		{
+			return GenerateComponentDocument(CreateGearbox(data, torqueConverter));
+		}
+
+		public XDocument GenerateVectoComponent(IAxleGearInputData data)
+		{
+			return GenerateComponentDocument(CreateAxlegear(data));
+		}
+
+		protected XDocument GenerateComponentDocument(XElement content)
+		{
+			var xsi = XNamespace.Get("http://www.w3.org/2001/XMLSchema-instance");
+			var component = new XDocument();
+			component.Add(new XElement(rootNamespace + XMLNames.VectoInputDeclaration,
+				new XAttribute("schemaVersion", SchemaVersion),
+				new XAttribute(XNamespace.Xmlns + "xsi", xsi.NamespaceName),
+				new XAttribute("xmlns", tns),
+				new XAttribute(XNamespace.Xmlns + "tns", rootNamespace),
+				new XAttribute(xsi + "schemaLocation",
+					string.Format("{0} {1}VectoInput.xsd", rootNamespace, SchemaLocationBaseUrl)),
+				content)
+				);
+			return component;
 		}
 
 		protected XElement[] CreateDeclarationJob(IDeclarationInputDataProvider data)
@@ -73,7 +101,7 @@ namespace TUGraz.IVT.VectoXML.Writer
 				new XElement(tns + XMLNames.Vehicle_PTOType, "None"),
 				new XElement(tns + XMLNames.Vehicle_Components,
 					CreateEngine(data.EngineInputData),
-					CreateGearbox(gearbox, data),
+					CreateGearbox(gearbox, gearbox.Type.AutomaticTransmission() ? data.TorqueConverterInputData : null),
 					angledrive.Type == AngledriveType.SeparateAngledrive ? CreateAngleDrive(angledrive) : null,
 					retarder.Type.IsDedicatedComponent() ? CreateRetarder(retarder) : null,
 					CreateAxlegear(data.AxleGearInputData),
@@ -109,7 +137,8 @@ namespace TUGraz.IVT.VectoXML.Writer
 				);
 		}
 
-		protected XElement CreateGearbox(IGearboxDeclarationInputData gbxData, IDeclarationInputDataProvider inputData)
+		protected XElement CreateGearbox(IGearboxDeclarationInputData gbxData,
+			ITorqueConverterDeclarationInputData torqueConverter)
 		{
 			var gears = new XElement(tns + XMLNames.Gearbox_Gears);
 			var i = 1;
@@ -132,12 +161,15 @@ namespace TUGraz.IVT.VectoXML.Writer
 					new XElement(tns + XMLNames.Gearbox_TransmissionType, GearboxtypeToXML(gbxData.Type)),
 					gears
 					),
-				gbxData.Type.AutomaticTransmission() ? CreateTorqueConverter(inputData.TorqueConverterInputData) : null);
+				gbxData.Type.AutomaticTransmission() ? CreateTorqueConverter(torqueConverter) : null);
 		}
 
 
 		private XElement CreateTorqueConverter(ITorqueConverterDeclarationInputData data)
 		{
+			if (data == null) {
+				throw new Exception("Torque Converter is required!");
+			}
 			return new XElement(tns + XMLNames.Component_TorqueConverter,
 				new XElement(tns + XMLNames.ComponentDataWrapper,
 					new XElement(tns + XMLNames.TorqueConverter_Characteristics,

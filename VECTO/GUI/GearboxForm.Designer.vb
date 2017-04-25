@@ -134,6 +134,7 @@ Partial Class GearboxForm
 		Me.Label35 = New System.Windows.Forms.Label()
 		Me.gbTCAccMin = New System.Windows.Forms.GroupBox()
 		Me.lblGbxInfo = New System.Windows.Forms.Label()
+		Me.btnExportXML = New System.Windows.Forms.Button()
 		Me.ToolStrip1.SuspendLayout()
 		Me.StatusStrip1.SuspendLayout()
 		CType(Me.PictureBox1, System.ComponentModel.ISupportInitialize).BeginInit()
@@ -1041,6 +1042,15 @@ Partial Class GearboxForm
 		Me.lblGbxInfo.Size = New System.Drawing.Size(0, 13)
 		Me.lblGbxInfo.TabIndex = 51
 		'
+		'btnExportXML
+		'
+		Me.btnExportXML.Location = New System.Drawing.Point(468, 648)
+		Me.btnExportXML.Name = "btnExportXML"
+		Me.btnExportXML.Size = New System.Drawing.Size(102, 23)
+		Me.btnExportXML.TabIndex = 52
+		Me.btnExportXML.Text = "Export as XML"
+		Me.btnExportXML.UseVisualStyleBackColor = True
+		'
 		'GearboxForm
 		'
 		Me.AcceptButton = Me.ButOK
@@ -1048,6 +1058,7 @@ Partial Class GearboxForm
 		Me.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font
 		Me.CancelButton = Me.ButCancel
 		Me.ClientSize = New System.Drawing.Size(877, 696)
+		Me.Controls.Add(Me.btnExportXML)
 		Me.Controls.Add(Me.lblGbxInfo)
 		Me.Controls.Add(Me.gbTCAccMin)
 		Me.Controls.Add(Me.gbPowershiftLosses)
@@ -1198,4 +1209,5 @@ Partial Class GearboxForm
 	Friend WithEvents Label35 As System.Windows.Forms.Label
 	Friend WithEvents gbTCAccMin As System.Windows.Forms.GroupBox
 	Friend WithEvents lblGbxInfo As System.Windows.Forms.Label
+	Friend WithEvents btnExportXML As System.Windows.Forms.Button
 End Class

@@ -70,7 +70,7 @@ Public Class XMLExportJobDialog
 				Throw New Exception("Input data is not in declaration mode")
 			End If
 			Dim document As XDocument =
-					New XMLDeclarationWriter(tbDestination.Text, tbVendor.Text).GenerateVectoJob(declarationData)
+					New XMLDeclarationWriter(tbVendor.Text).GenerateVectoJob(declarationData)
 			document.Save(Path.Combine(tbDestination.Text, declarationData.JobInputData().JobName + ".xml"))
 			MessageBox.Show("Successfully exported")
 			Close()
