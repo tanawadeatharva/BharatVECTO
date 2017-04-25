@@ -39,14 +39,19 @@ Imports TUGraz.VectoCore.InputData.FileIO.JSON
 Imports System.Text
 Imports System.Text.RegularExpressions
 Imports System.Threading
+Imports System.Xml
+Imports System.Xml.Linq
 Imports Microsoft.VisualBasic.FileIO
 Imports TUGraz.VectoCommon.Exceptions
 Imports TUGraz.VectoCommon.InputData
 Imports TUGraz.VectoCommon.Models
 Imports TUGraz.VectoCommon.OutputData
 Imports TUGraz.VectoCommon.Utils
+Imports TUGraz.VectoCore.InputData.FileIO.XML.Declaration
+Imports TUGraz.VectoCore.InputData.FileIO.XML.Engineering
 Imports TUGraz.VectoCore.OutputData
 Imports TUGraz.VectoCore.OutputData.FileIO
+Imports TUGraz.VectoCore.Resources
 Imports TUGraz.VectoCore.Utils
 Imports VectoAuxiliaries
 
@@ -55,7 +60,7 @@ Imports VectoAuxiliaries
 ''' </summary>
 ''' <remarks></remarks>
 
-	Public Class MainForm
+Public Class MainForm
 	Private _jobListView As FileListView
 	Private _cycleListView As FileListView
 
@@ -73,7 +78,7 @@ Imports VectoAuxiliaries
 
 #Region "SLEEP Control - Prevent sleep while VECTO is running"
 
-	Private Declare Function SetThreadExecutionState Lib "kernel32"(esFlags As Long) As Long
+	Private Declare Function SetThreadExecutionState Lib "kernel32" (esFlags As Long) As Long
 
 	Private Shared Sub AllowSleepOff()
 #If Not PLATFORM = "x86" Then
@@ -235,8 +240,8 @@ Imports VectoAuxiliaries
 		LoadOptions()
 
 		'Resize columns ... after Loading the @file-lists
-		LvGEN.Columns(1).Width = - 2
-		LvMsg.Columns(2).Width = - 2
+		LvGEN.Columns(1).Width = -2
+		LvMsg.Columns(2).Width = -2
 
 		'Initialize BackgroundWorker
 
@@ -251,16 +256,6 @@ Imports VectoAuxiliaries
 
 		'Set mode (Batch/Standard)
 		ModeUpdate()
-
-		DetectPlugins()
-
-		'Dim exportPlugins As Dictionary(Of String, String) = PluginRegistry.Instance.GetExportPluginList()
-		Dim exportPlugin As IExportPlugin = PluginRegistry.Instance.GetExportPlugin("TUG.IVT.Vecto.XMLExport")
-		btnExportXML.Visible = Not exportPlugin Is Nothing
-
-
-		Dim importPlugin As IImportPlugin = PluginRegistry.Instance.GetImportPlugin("TUG.IVT.Vecto.XMLImport")
-		btnImportXML.Visible = Not importPlugin Is Nothing
 
 
 #If DEBUG Then
@@ -527,7 +522,7 @@ Imports VectoAuxiliaries
 
 		lastindx = LvGEN.SelectedIndices(LvGEN.SelectedItems.Count - 1)
 
-		For i = UBound(selIx) To 0 Step - 1
+		For i = UBound(selIx) To 0 Step -1
 			LvGEN.Items.RemoveAt(selIx(i))
 		Next
 
@@ -552,8 +547,7 @@ Imports VectoAuxiliaries
 		x = New String() {""}
 
 		Dim extensions As String = "vecto"
-		Dim inputDataExtensions As String() =
-				PluginRegistry.Instance.GetKnownInputExtensions().Select(Function(e) e.Substring(1)).ToArray()
+		Dim inputDataExtensions As String() = New String() {"xml"}
 		If (inputDataExtensions.Any()) Then extensions = String.Join(",", extensions, String.Join(",", inputDataExtensions))
 
 		'STANDARD/BATCH
@@ -596,7 +590,7 @@ Imports VectoAuxiliaries
 		Dim p As Integer
 		Dim f As Integer
 		Dim fList As String()
-		Dim fListDim As Integer = - 1
+		Dim fListDim As Integer = -1
 		Dim listViewItem As ListViewItem
 
 		'If VECTO runs: Cancel operation (because Mode-change during calculation is not very clever)
@@ -651,7 +645,7 @@ Imports VectoAuxiliaries
 			listViewItem.Selected = True
 			LvGEN.Items.Add(listViewItem)
 			listViewItem.EnsureVisible()
-			lbFound:
+lbFound:
 		Next
 
 		LvGEN.EndUpdate()
@@ -948,7 +942,7 @@ Imports VectoAuxiliaries
 			Status("Launching VECTO ...")
 			JobFileList.Clear()
 			JobFileList.AddRange(
-				From listViewItem As ListViewItem In LvGEN.CheckedItems.Cast (Of ListViewItem)()
+				From listViewItem As ListViewItem In LvGEN.CheckedItems.Cast(Of ListViewItem)()
 									Select fFileRepl = FileRepl(listViewItem.SubItems(0).Text))
 
 			SetOptions()
@@ -989,9 +983,9 @@ Imports VectoAuxiliaries
 			mode = ExecutionMode.Declaration
 		Else
 			mode = ExecutionMode.Engineering
-			Physics.FuelDensity = Cfg.FuelDens.SI (Of KilogramPerCubicMeter)() _
+			Physics.FuelDensity = Cfg.FuelDens.SI(Of KilogramPerCubicMeter)() _
 			'New SI(Cfg.FuelDens).Kilo.Gramm.Per.Cubic.Dezi.Meter.Cast(Of KilogramPerCubicMeter)()
-			Physics.AirDensity = Cfg.AirDensity.SI (Of KilogramPerCubicMeter)() _
+			Physics.AirDensity = Cfg.AirDensity.SI(Of KilogramPerCubicMeter)() _
 			'New SI(Cfg.AirDensity).Kilo.Gramm.Per.Cubic.Meter.Cast(Of KilogramPerCubicMeter)()
 			Physics.CO2PerFuelWeight = Cfg.Co2PerFc
 		End If
@@ -1001,45 +995,44 @@ Imports VectoAuxiliaries
 
 		'list of finished runs
 		Dim finishedRuns As List(Of Integer) = New List(Of Integer)
-		Dim plugins As KeyValuePair(Of String, IInputDataPlugin)() = PluginRegistry.Instance.GetInputDataPlugins().ToArray()
 		For Each jobFile As String In JobFileList
 			Try
 				sender.ReportProgress(0,
 									New VectoProgress With {.Target = "ListBox", .Message = "Reading File " + jobFile, .Link = jobFile})
 
-				If (Path.GetExtension(jobFile) = VectoCore.Configuration.Constants.FileExtensions.VectoJobFile) Then
-					Dim dataProvider As IInputDataProvider = JSONInputDataFactory.ReadJsonJob(jobFile)
-					Dim fileWriter As FileOutputWriter = New FileOutputWriter(jobFile)
+				Dim extension As String = Path.GetExtension(jobFile)
+				Dim input As IInputDataProvider = Nothing
+				Select Case extension
+					Case VectoCore.Configuration.Constants.FileExtensions.VectoJobFile
+						input = JSONInputDataFactory.ReadJsonJob(jobFile)
+					Case ".xml"
+						Dim xDocument As XDocument = xDocument.Load(jobFile)
+						Dim rootNode As String = If(xDocument Is Nothing, "", xDocument.Root.Name.LocalName)
+						Select Case rootNode
+							Case XMLNames.VectoInputEngineering
+								input = New XMLEngineeringInputDataProvider(jobFile, True)
+							Case XMLNames.VectoInputDeclaration
+								input = New XMLInputDataProvider(XmlReader.Create(jobFile), True)
+						End Select
+				End Select
 
-					Dim runsFactory As SimulatorFactory = New SimulatorFactory(mode, dataProvider, fileWriter)
-					runsFactory.WriteModalResults = Cfg.ModOut
-					runsFactory.ModalResults1Hz = Cfg.Mod1Hz
-
-					For Each runId As Integer In jobContainer.AddRuns(runsFactory)
-						fileWriters.Add(runId, fileWriter)
-					Next
-				Else
-					Dim handled As Boolean = False
-					For Each entry As KeyValuePair(Of String, IInputDataPlugin) In plugins
-						If Not handled AndAlso entry.Value.CanHandleJob(jobFile) Then
-							Dim dataprovider As IInputDataProvider = entry.Value.ReadVectoJob(jobFile)
-							Dim fileWriter As FileOutputWriter = New FileOutputWriter(jobFile)
-
-							Dim runsFactory As SimulatorFactory = New SimulatorFactory(mode, dataprovider, fileWriter)
-							runsFactory.WriteModalResults = Cfg.ModOut
-							runsFactory.ModalResults1Hz = Cfg.Mod1Hz
-
-							For Each runId As Integer In jobContainer.AddRuns(runsFactory)
-								fileWriters.Add(runId, fileWriter)
-							Next
-							handled = True
-						End If
-					Next
-					If Not handled Then
-						sender.ReportProgress(0,
-											New VectoProgress With {.Target = "ListBoxError", .Message = "No Input Provider for job: " + jobFile})
-					End If
+				If input Is Nothing Then
+					sender.ReportProgress(0,
+										New VectoProgress With {.Target = "ListBoxError", .Message = "No Input Provider for job: " + jobFile})
+					Continue For
 				End If
+
+				Dim fileWriter As FileOutputWriter = New FileOutputWriter(jobFile)
+
+				Dim runsFactory As SimulatorFactory = New SimulatorFactory(mode, input, fileWriter)
+				runsFactory.WriteModalResults = Cfg.ModOut
+				runsFactory.ModalResults1Hz = Cfg.Mod1Hz
+
+				For Each runId As Integer In jobContainer.AddRuns(runsFactory)
+					fileWriters.Add(runId, fileWriter)
+				Next
+
+
 				sender.ReportProgress(0,
 									New VectoProgress With {.Target = "ListBox", .Message = "Finished Reading Data for job: " + jobFile})
 
@@ -1076,10 +1069,10 @@ Imports VectoAuxiliaries
 			Dim sumProgress As Double = progress.Sum(Function(pair) pair.Value.Progress)
 			Dim duration As Double = (DateTime.Now() - start).TotalSeconds
 
-			sender.ReportProgress(Convert.ToInt32((sumProgress*100.0)/progress.Count),
+			sender.ReportProgress(Convert.ToInt32((sumProgress * 100.0) / progress.Count),
 								New VectoProgress With {.Target = "Status",
 									.Message = _
-									String.Format("Duration: {0:0}s, Current Progress: {1:P} ({2})", duration, sumProgress/progress.Count,
+									String.Format("Duration: {0:0}s, Current Progress: {1:P} ({2})", duration, sumProgress / progress.Count,
 												String.Join(", ", progress.Select(Function(pair) String.Format("{0,4:P}", pair.Value.Progress))))})
 
 			Dim justFinished As Dictionary(Of Integer, JobContainer.ProgressEntry) =
@@ -1103,7 +1096,7 @@ Imports VectoAuxiliaries
 									.Message = String.Format("{0,-60} {1,8:P} {2,10:F2}s - {3}",
 															String.Format("{0} {1} {2}", progressEntry.Value.RunName, progressEntry.Value.CycleName,
 																		progressEntry.Value.RunSuffix),
-															progressEntry.Value.Progress, progressEntry.Value.ExecTime/1000.0,
+															progressEntry.Value.Progress, progressEntry.Value.ExecTime / 1000.0,
 															IIf(progressEntry.Value.Success, "Success", "Aborted"))})
 			If (Not progressEntry.Value.Success) Then
 				sender.ReportProgress(100,
@@ -1397,9 +1390,9 @@ Imports VectoAuxiliaries
 
 			ToolStripProgBarJob.Value = .ProgJobInt
 
-			If .ProgOverallStartInt > - 1 Then
+			If .ProgOverallStartInt > -1 Then
 				ToolStripProgBarOverall.Value =
-					CInt(.ProgOverallStartInt + (.PgroOverallEndInt - .ProgOverallStartInt)*.ProgJobInt/100)
+					CInt(.ProgOverallStartInt + (.PgroOverallEndInt - .ProgOverallStartInt) * .ProgJobInt / 100)
 			End If
 
 		End With
@@ -1716,7 +1709,7 @@ Imports VectoAuxiliaries
 					_mainForm.LvMsg.Items.Insert(RowLim - 4, Space(ColLim - 30) & "         " & Space(10) & "*|       |*")
 			End Select
 			Exit Sub
-			LbRace:
+LbRace:
 
 			_pRbAlt = Not _pRbAlt
 
@@ -1744,17 +1737,17 @@ Imports VectoAuxiliaries
 					Abort()
 					Exit Sub
 				End If
-				_scr += 5*_diffLvl
+				_scr += 5 * _diffLvl
 			End If
 
 			_scr += _diffLvl
 			_diffC += 1
 
 			'Erhöhe Schwierigkeitsgrad
-			If _diffC = (_diffLvl + 3)*4 Then
+			If _diffC = (_diffLvl + 3) * 4 Then
 				_diffC = 0
 				_diffLvl += 1
-				If _diffLvl > 2 And _diffLvl < 7 Then _mainForm.TmProgSec.Interval = 300 - (_diffLvl)*30
+				If _diffLvl > 2 And _diffLvl < 7 Then _mainForm.TmProgSec.Interval = 300 - (_diffLvl) * 30
 				_scr += 100
 				Select Case _diffLvl
 					Case 3
@@ -1838,10 +1831,10 @@ Imports VectoAuxiliaries
 			_ctrls(RowLim + 1) = 0
 			_ctrlC += 1
 			If _ctrlC < _ctrlCl Then Exit Sub
-			Select Case CInt(Int((_ctrlRnd*Rnd()) + 1))
+			Select Case CInt(Int((_ctrlRnd * Rnd()) + 1))
 				Case 1, 2
 					_ctrlC = 0
-					x = CInt(Int((7*Rnd()) + 1))
+					x = CInt(Int((7 * Rnd()) + 1))
 					_ctrls(RowLim + 1) = x
 			End Select
 		End Sub
@@ -1884,7 +1877,7 @@ Imports VectoAuxiliaries
 				s = s.Insert(_ctrls(RowLim + 1) + 1, "X")
 			End If
 			Select Case _xPanel - _pnls(RowLim)
-				Case - 1
+				Case -1
 					s = Replace(s, "|", "\")
 				Case 1
 					s = Replace(s, "|", "/")
@@ -1896,15 +1889,15 @@ Imports VectoAuxiliaries
 			_pnDirC += 1
 			If _pnDirC < _pnDirCl Then GoTo Lb1
 			_pnDirC = 0
-			Select Case CInt(Int((_pnDirRnd*Rnd()) + 1))
+			Select Case CInt(Int((_pnDirRnd * Rnd()) + 1))
 				Case 1
 					_pnDir = 1
 				Case 2
-					_pnDir = - 1
+					_pnDir = -1
 				Case Else
 					_pnDir = 0
 			End Select
-			Lb1:
+Lb1:
 			_xPanel += _pnDir
 			If _xPanel > ColLim Then
 				_xPanel = ColLim
@@ -1955,7 +1948,7 @@ Imports VectoAuxiliaries
 			Dim builder As StringBuilder = New StringBuilder()
 			For Each selectedItem As ListViewItem In LvMsg.SelectedItems
 				builder.AppendLine(String.Join(", ",
-												selectedItem.SubItems.Cast (Of ListViewItem.ListViewSubItem).Select(
+												selectedItem.SubItems.Cast(Of ListViewItem.ListViewSubItem).Select(
 													Function(item) item.Text)))
 			Next
 			Clipboard.SetText(builder.ToString())
@@ -1998,19 +1991,25 @@ Imports VectoAuxiliaries
 		End If
 		Try
 			Dim input As IInputDataProvider = Nothing
-			If Path.GetExtension(f) = ".vecto" Then
-				input = JSONInputDataFactory.ReadJsonJob(f)
-			Else
-				For Each plugin As KeyValuePair(Of String, IInputDataPlugin) In PluginRegistry.Instance.GetInputDataPlugins()
+			Dim extension As String = Path.GetExtension(f)
+			Select Case extension
+				Case ".vecto"
+					input = JSONInputDataFactory.ReadJsonJob(f)
+				Case ".xml"
+					Dim xDocument As XDocument = xDocument.Load(f)
+					Dim rootNode As String = If(xDocument Is Nothing, "", xDocument.Root.Name.LocalName)
+					Select Case rootNode
+						Case XMLNames.VectoInputEngineering
+							input = New XMLEngineeringInputDataProvider(f, True)
+						Case XMLNames.VectoInputDeclaration
+							input = New XMLInputDataProvider(XmlReader.Create(f), True)
+					End Select
+			End Select
 
-					If plugin.Value.CanHandleJob(f) Then
-						input = plugin.Value.ReadVectoJob(f)
-						Exit For
-					End If
-				Next
-			End If
 			If input Is Nothing Then Throw New VectoException("No InputDataProvider for file {0} found!", f)
-			PluginRegistry.Instance.GetExportPlugin("TUG.IVT.Vecto.XMLExport").ExportJob(input)
+
+			XMLExportJobDialog.Initialize(input)
+			XMLExportJobDialog.ShowDialog()
 		Catch ex As Exception
 			MsgBox("Exporting job failed: " + ex.Message)
 		End Try
@@ -2021,12 +2020,12 @@ Imports VectoAuxiliaries
 	End Sub
 
 	Private Sub btnImportXML_Click(sender As Object, e As EventArgs) Handles btnImportXML.Click
-		Try
-			Dim jobFile As String = PluginRegistry.Instance.GetImportPlugin("TUG.IVT.Vecto.XMLImport").ImportJob()
-			AddToJobListView(jobFile)
-		Catch ex As Exception
-			MsgBox("Importing job failed: " + ex.Message)
-		End Try
+		'Try
+		'	Dim jobFile As String = PluginRegistry.Instance.GetImportPlugin("TUG.IVT.Vecto.XMLImport").ImportJob()
+		'	AddToJobListView(jobFile)
+		'Catch ex As Exception
+		'	MsgBox("Importing job failed: " + ex.Message)
+		'End Try
 	End Sub
 
 	Private Sub LvGEN_MouseClick(sender As Object, e As MouseEventArgs) Handles LvGEN.MouseClick

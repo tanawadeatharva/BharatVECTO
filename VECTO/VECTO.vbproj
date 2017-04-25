@@ -136,6 +136,14 @@
       <HintPath>..\packages\iTextSharp.5.5.9\lib\itextsharp.dll</HintPath>
     </Reference>
     <Reference Include="Microsoft.Build.Framework" />
+    <Reference Include="Microsoft.WindowsAPICodePack, Version=1.1.0.0, Culture=neutral, PublicKeyToken=31bf3856ad364e35, processorArchitecture=MSIL">
+      <SpecificVersion>False</SpecificVersion>
+      <HintPath>..\packages\Microsoft.WindowsAPICodePack.Core.1.1.0\lib\Microsoft.WindowsAPICodePack.dll</HintPath>
+    </Reference>
+    <Reference Include="Microsoft.WindowsAPICodePack.Shell, Version=1.1.0.0, Culture=neutral, PublicKeyToken=31bf3856ad364e35, processorArchitecture=MSIL">
+      <SpecificVersion>False</SpecificVersion>
+      <HintPath>..\packages\Microsoft.WindowsAPICodePack.Shell.1.1.0\lib\Microsoft.WindowsAPICodePack.Shell.dll</HintPath>
+    </Reference>
     <Reference Include="Newtonsoft.Json, Version=4.5.0.0, Culture=neutral, PublicKeyToken=30ad4fe6b2a6aeed, processorArchitecture=MSIL">
       <SpecificVersion>False</SpecificVersion>
       <HintPath>..\packages\Newtonsoft.Json.8.0.3\lib\net45\Newtonsoft.Json.dll</HintPath>
@@ -172,6 +180,18 @@
   </ItemGroup>
   <ItemGroup>
     <Compile Include="ApplicationEvents.vb" />
+    <Compile Include="GUI\XMLExportJobDialog.Designer.vb">
+      <DependentUpon>XMLExportJobDialog.vb</DependentUpon>
+    </Compile>
+    <Compile Include="GUI\XMLExportJobDialog.vb">
+      <SubType>Form</SubType>
+    </Compile>
+    <Compile Include="GUI\XMLImportJobDialog.Designer.vb">
+      <DependentUpon>XMLImportJobDialog.vb</DependentUpon>
+    </Compile>
+    <Compile Include="GUI\XMLImportJobDialog.vb">
+      <SubType>Form</SubType>
+    </Compile>
     <Compile Include="Input Files\AdvancedAuxiliary.vb" />
     <Compile Include="GUI\FileSignDialog.Designer.vb">
       <DependentUpon>FileSignDialog.vb</DependentUpon>
@@ -363,6 +383,12 @@
     </EmbeddedResource>
     <EmbeddedResource Include="GUI\GearboxGearDialog.resx">
       <DependentUpon>GearboxGearDialog.vb</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="GUI\XMLExportJobDialog.resx">
+      <DependentUpon>XMLExportJobDialog.vb</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="GUI\XMLImportJobDialog.resx">
+      <DependentUpon>XMLImportJobDialog.vb</DependentUpon>
     </EmbeddedResource>
     <EmbeddedResource Include="My Project\Resources.resx">
       <Generator>VbMyResourcesResXFileCodeGenerator</Generator>

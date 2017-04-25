@@ -190,6 +190,7 @@
     <Compile Include="OutputData\ModFilter\ModalData1HzFilter.cs" />
     <Compile Include="OutputData\XML\AbstractXMLWriter.cs" />
     <Compile Include="OutputData\XML\AttributeMappings.cs" />
+    <Compile Include="OutputData\XML\XMLDeclarationReport.cs" />
     <Compile Include="OutputData\XML\XMLDeclarationWriter.cs" />
     <Compile Include="OutputData\XML\XMLEngineeringWriter.cs" />
     <Compile Include="Resources\XMLNames.Designer.cs" />
@@ -336,7 +337,9 @@
     <Compile Include="Utils\XPathHelper.cs" />
   </ItemGroup>
   <ItemGroup>
-    <EmbeddedResource Include="Resources\XMLNames.resx" />
+    <EmbeddedResource Include="Resources\XMLNames.resx">
+      <SubType>Designer</SubType>
+    </EmbeddedResource>
     <None Include="app.config" />
     <None Include="packages.config" />
     <EmbeddedResource Include="JsonKeys.resx">
@@ -408,6 +411,9 @@
     <EmbeddedResource Include="Resources\XSD\VectoInput.xsd">
       <SubType>Designer</SubType>
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </EmbeddedResource>
+    <EmbeddedResource Include="Resources\XSD\VectoOutput.xsd">
+      <SubType>Designer</SubType>
     </EmbeddedResource>
   </ItemGroup>
   <ItemGroup>

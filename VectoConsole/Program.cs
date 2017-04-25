@@ -36,6 +36,8 @@ using System.IO;
 using System.Linq;
 using System.Reflection;
 using System.Threading;
+using System.Xml;
+using System.Xml.Linq;
 using NLog;
 using NLog.Config;
 using NLog.Targets;
@@ -44,9 +46,12 @@ using TUGraz.VectoCommon.Models;
 using TUGraz.VectoCommon.Utils;
 using TUGraz.VectoCore.Configuration;
 using TUGraz.VectoCore.InputData.FileIO.JSON;
+using TUGraz.VectoCore.InputData.FileIO.XML.Declaration;
+using TUGraz.VectoCore.InputData.FileIO.XML.Engineering;
 using TUGraz.VectoCore.Models.Simulation.Impl;
 using TUGraz.VectoCore.OutputData;
 using TUGraz.VectoCore.OutputData.FileIO;
+using TUGraz.VectoCore.Resources;
 using LogManager = NLog.LogManager;
 
 namespace VectoConsole
@@ -187,38 +192,41 @@ Examples:
 					return 1;
 				}
 
-				DetectPlugins();
-				var plugins = PluginRegistry.Instance.GetInputDataPlugins().ToArray();
 				foreach (var file in jobFiles) {
 					WriteLine(@"Reading job: " + file);
-					if (Path.GetExtension(file) == Constants.FileExtensions.VectoJobFile) {
-						var dataProvider = JSONInputDataFactory.ReadJsonJob(file);
-						fileWriter = new FileOutputWriter(file);
-						var runsFactory = new SimulatorFactory(mode, dataProvider, fileWriter) {
-							ModalResults1Hz = args.Contains("-1Hz"),
-							WriteModalResults = args.Contains("-mod"),
-							ActualModalData = args.Contains("-act")
-						};
-
-						_jobContainer.AddRuns(runsFactory);
-					} else {
-						var handled = false;
-						foreach (var plugin in plugins) {
-							if (!handled && plugin.Value.CanHandleJob(file)) {
-								WriteLine("using plugin: " + plugin.Value.Name);
-								var dataProvider = plugin.Value.ReadVectoJob(file);
-								fileWriter = new FileOutputWriter(file);
-								var runsFactory = new SimulatorFactory(mode, dataProvider, fileWriter) {
-									ModalResults1Hz = args.Contains("-1Hz"),
-									WriteModalResults = args.Contains("-mod"),
-									ActualModalData = args.Contains("-act")
-								};
-
-								_jobContainer.AddRuns(runsFactory);
-								handled = true;
+					var extension = Path.GetExtension(file);
+					IInputDataProvider dataProvider = null;
+					switch (extension) {
+						case Constants.FileExtensions.VectoJobFile:
+							dataProvider = JSONInputDataFactory.ReadJsonJob(file);
+							break;
+						case ".xml":
+							var xDocument = XDocument.Load(file);
+							var rootNode = xDocument == null ? "" : xDocument.Root.Name.LocalName;
+							switch (rootNode) {
+								case "VectoInputEngineering":
+									dataProvider = new XMLEngineeringInputDataProvider(file, true);
+									break;
+								case "VectoInputDeclaration":
+									dataProvider = new XMLInputDataProvider(XmlReader.Create(file), true);
+									break;
 							}
-						}
+							break;
 					}
+
+					if (dataProvider == null) {
+						WriteLine(string.Format(@"failed to read job: '{0}'", file));
+						continue;
+					}
+
+					fileWriter = new FileOutputWriter(file);
+					var runsFactory = new SimulatorFactory(mode, dataProvider, fileWriter) {
+						ModalResults1Hz = args.Contains("-1Hz"),
+						WriteModalResults = args.Contains("-mod"),
+						ActualModalData = args.Contains("-act")
+					};
+
+					_jobContainer.AddRuns(runsFactory);
 				}
 
 				WriteLine();
@@ -300,33 +308,6 @@ Examples:
 			Console.ForegroundColor = foregroundColor;
 			Console.WriteLine(message);
 			Console.ResetColor();
-		}
-
-		private static void DetectPlugins()
-		{
-			var assemblies = new List<Assembly>();
-			var dllFileNames = Directory.GetFiles(".", "*.dll");
-			foreach (var dllFileName in dllFileNames) {
-				var assemblyName = AssemblyName.GetAssemblyName(dllFileName);
-				var assembly = Assembly.Load(assemblyName);
-				assemblies.Add(assembly);
-			}
-			var inputDataPluginType = typeof(IInputDataPlugin);
-			foreach (var assembly in assemblies) {
-				if (assembly == null) {
-					continue;
-				}
-				var types = assembly.GetTypes();
-				foreach (var type in types) {
-					if (type.IsInterface || type.IsAbstract || type.GetInterface(inputDataPluginType.FullName) == null) {
-						continue;
-					}
-					var plugin = (IInputDataPlugin)Activator.CreateInstance(type);
-					if (plugin != null) {
-						PluginRegistry.Instance.RegisterPlugin(plugin);
-					}
-				}
-			}
 		}
 
 		private static void DisplayWarnings()
