@@ -78,28 +78,8 @@ namespace TUGraz.VectoCore.Models.Declaration
 				throw new VectoException("Gross vehicle mass must be greater than 7.5 tons");
 			}
 
-			DataRow row;
-			try {
-				row = _segmentTable.Rows.Cast<DataRow>().First(r => {
-					var isValid = r.Field<string>("valid");
-					var category = r.Field<string>("vehiclecategory");
-					var axleConf = r.Field<string>("axleconf.");
-					var massMin = r.ParseDouble("gvw_min").SI().Ton;
-					var massMax = r.ParseDouble("gvw_max").SI().Ton;
-					return (considerInvalid || isValid == "1")
-							&& category == vehicleCategory.ToString()
-							&& axleConf == axleConfiguration.GetName()
-							// MK 2016-06-07: normally the next condition should be "mass > massMin", except for 7.5t where is should be ">="
-							// in any case ">=" is also correct, because the segment table is sorted by weight.
-							&& grossVehicleMassRating >= massMin
-							&& grossVehicleMassRating <= massMax;
-				});
-			} catch (InvalidOperationException e) {
-				var errorMessage = string.Format(ErrorMessage, vehicleCategory, axleConfiguration.GetName(),
-					grossVehicleMassRating);
-				Log.Fatal(errorMessage);
-				throw new VectoException(errorMessage, e);
-			}
+			var row = GetSegmentDataRow(vehicleCategory, axleConfiguration, grossVehicleMassRating, considerInvalid);
+
 			var segment = new Segment {
 				GrossVehicleWeightMin = row.ParseDouble("gvw_min").SI().Ton.Cast<Kilogram>(),
 				GrossVehicleWeightMax = row.ParseDouble("gvw_max").SI().Ton.Cast<Kilogram>(),
@@ -110,7 +90,7 @@ namespace TUGraz.VectoCore.Models.Declaration
 					RessourceHelper.ReadStream(DeclarationData.DeclarationDataResourcePrefix + ".VACC." +
 												row.Field<string>(".vaccfile")),
 				Missions = CreateMissions(ref grossVehicleMassRating, curbWeight, row),
-				VehicleHeight = row.ParseDouble("height").SI<Meter>(),
+				VehicleHeight = LookupHeight(vehicleCategory, axleConfiguration, grossVehicleMassRating),
 				DesignSpeed = row.ParseDouble("designspeed").KMPHtoMeterPerSecond(),
 				GrossVehicleMassRating = grossVehicleMassRating,
 				CdAConstruction =
@@ -122,22 +102,23 @@ namespace TUGraz.VectoCore.Models.Declaration
 			return segment;
 		}
 
-		public Meter LookupHeight(VehicleCategory vehicleCategory, AxleConfiguration axleConfiguration,
-			Kilogram grossVehicleMassRating)
+		private DataRow GetSegmentDataRow(VehicleCategory vehicleCategory, AxleConfiguration axleConfiguration,
+			Kilogram grossVehicleMassRating, bool considerInvalid)
 		{
 			DataRow row;
 			try {
-				row = _segmentTable.Rows.Cast<DataRow>().First(r => {
+				row = _segmentTable.AsEnumerable().First(r => {
+					var isValid = r.Field<string>("valid");
 					var category = r.Field<string>("vehiclecategory");
 					var axleConf = r.Field<string>("axleconf.");
 					var massMin = r.ParseDouble("gvw_min").SI().Ton;
 					var massMax = r.ParseDouble("gvw_max").SI().Ton;
-					return category == vehicleCategory.ToString()
+					return (considerInvalid || isValid == "1")
+							&& category == vehicleCategory.ToString()
 							&& axleConf == axleConfiguration.GetName()
 							// MK 2016-06-07: normally the next condition should be "mass > massMin", except for 7.5t where is should be ">="
 							// in any case ">=" is also correct, because the segment table is sorted by weight.
-							&& grossVehicleMassRating >= massMin
-							&& grossVehicleMassRating <= massMax;
+							&& massMin <= grossVehicleMassRating && grossVehicleMassRating <= massMax;
 				});
 			} catch (InvalidOperationException e) {
 				var errorMessage = string.Format(ErrorMessage, vehicleCategory, axleConfiguration.GetName(),
@@ -145,8 +126,30 @@ namespace TUGraz.VectoCore.Models.Declaration
 				Log.Fatal(errorMessage);
 				throw new VectoException(errorMessage, e);
 			}
+			return row;
+		}
 
-			return row.ParseDouble("height").SI<Meter>();
+		public Meter LookupHeight(VehicleCategory vehicleCategory, AxleConfiguration axleConfiguration,
+			Kilogram grossVehicleMassRating)
+		{
+			var row = GetSegmentDataRow(vehicleCategory, axleConfiguration, grossVehicleMassRating, true);
+
+			var vehicleHeight = row.ParseDouble("height").SI<Meter>();
+			var vehicleClass = VehicleClassHelper.Parse(row.Field<string>("hdvclass"));
+
+			if (vehicleClass == VehicleClass.Class9) {
+				// VECTO-471: for class 9 take similar height than rigid with same maximum gross vehicle weight (class 1, 2, 3 or 4).
+				var rigidGVWrow = _segmentTable.AsEnumerable().FirstOrDefault(r => {
+					var massMin = r.ParseDouble("gvw_min").SI().Ton;
+					var massMax = r.ParseDouble("gvw_max").SI().Ton;
+					return new[] { "1", "2", "3", "4" }.Contains(r.Field<string>("vehiclecategory"))
+							&& massMin <= grossVehicleMassRating && grossVehicleMassRating <= massMax;
+				});
+				if (rigidGVWrow != null)
+					vehicleHeight = rigidGVWrow.ParseDouble("height").SI<Meter>();
+			}
+
+			return vehicleHeight;
 		}
 
 		private static Mission[] CreateMissions(ref Kilogram grossVehicleWeight, Kilogram curbWeight, DataRow row)
