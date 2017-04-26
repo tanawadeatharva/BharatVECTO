@@ -115,7 +115,7 @@ namespace TUGraz.VectoCore.Tests.Reports
 			foreach (var run in jobContainer.Runs) {
 				modData.Add(Tuple.Create(((ModalDataContainer)run.Run.GetContainer().ModalData).Data,
 					((DistanceBasedDrivingCycle)((VehicleContainer)run.Run.GetContainer()).DrivingCycle)._data.Entries.Last()
-					.Distance));
+						.Distance));
 			}
 			var auxKeys =
 				new Dictionary<string, DataColumn>(
@@ -222,6 +222,9 @@ namespace TUGraz.VectoCore.Tests.Reports
 
 				Assert.AreEqual(100, stopTimeShare + accTimeShare + decTimeShare + cruiseTimeShare, 1e-3,
 					"input file: {0}  cycle: {1} loading: {2}", inputFile, cycle, loading);
+
+				Assert.IsTrue(((SI)row[SummaryDataContainer.ACC_POS]).Value() > 0);
+				Assert.IsTrue(((SI)row[SummaryDataContainer.ACC_NEG]).Value() < 0);
 			}
 		}
 
@@ -356,7 +359,7 @@ namespace TUGraz.VectoCore.Tests.Reports
 			foreach (var run in jobContainer.Runs) {
 				modData.Add(Tuple.Create(((ModalDataContainer)run.Run.GetContainer().ModalData).Data,
 					((DistanceBasedDrivingCycle)((VehicleContainer)run.Run.GetContainer()).DrivingCycle)._data.Entries.Last()
-					.Distance));
+						.Distance));
 			}
 			var auxKeys =
 				new Dictionary<string, DataColumn>(
