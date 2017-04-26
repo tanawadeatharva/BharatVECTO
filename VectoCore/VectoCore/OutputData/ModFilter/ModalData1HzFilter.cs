@@ -157,6 +157,10 @@ namespace TUGraz.VectoCore.OutputData.ModFilter
 				var dt = remainingDt;
 				var a = (MeterPerSquareSecond)last[(int)ModalResultField.acc];
 				var ds = v * dt + a / 2 * dt * dt;
+				if (v.IsEqual(0)) {
+					ds = 0.SI<Meter>();
+					a = 0.SI<MeterPerSquareSecond>();
+				}
 				if (ds.IsSmaller(0)) {
 					throw new VectoSimulationException("1Hz-Filter: simulation distance must not be negative. ds: {0}  {1}", ds, "4");
 				}
