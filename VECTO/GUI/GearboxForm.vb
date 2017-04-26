@@ -29,6 +29,7 @@ Imports TUGraz.VectoCore.Models.Declaration
 Imports TUGraz.VectoCore.Models.SimulationComponent.Data
 Imports TUGraz.VectoCore.Models.SimulationComponent.Data.Engine
 Imports TUGraz.VectoCore.Models.SimulationComponent.Data.Gearbox
+Imports TUGraz.VectoCore.OutputData.XML
 
 ''' <summary>
 ''' Gearbox Editor

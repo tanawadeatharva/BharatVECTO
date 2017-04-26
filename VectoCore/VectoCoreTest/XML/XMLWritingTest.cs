@@ -6,6 +6,7 @@ using TUGraz.VectoCommon.InputData;
 using TUGraz.VectoCore.InputData.FileIO.JSON;
 using TUGraz.VectoCore.InputData.FileIO.XML.Declaration;
 using TUGraz.VectoCore.InputData.FileIO.XML.Engineering;
+using TUGraz.VectoCore.OutputData.XML;
 
 namespace TUGraz.VectoCore.Tests.XML
 {

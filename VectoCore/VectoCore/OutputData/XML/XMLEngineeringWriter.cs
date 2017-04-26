@@ -4,13 +4,15 @@ using System.Data;
 using System.IO;
 using System.Text.RegularExpressions;
 using System.Xml.Linq;
+using TUGraz.IVT.VectoXML;
+using TUGraz.IVT.VectoXML.Writer;
 using TUGraz.VectoCommon.InputData;
 using TUGraz.VectoCommon.Models;
 using TUGraz.VectoCore.Configuration;
 using TUGraz.VectoCore.Resources;
 using TUGraz.VectoCore.Utils;
 
-namespace TUGraz.IVT.VectoXML.Writer
+namespace TUGraz.VectoCore.OutputData.XML
 {
 	public class XMLEngineeringWriter : AbstractXMLWriter
 	{
@@ -31,14 +33,7 @@ namespace TUGraz.IVT.VectoXML.Writer
 		public XDocument GenerateVectoJob(IEngineeringInputDataProvider data)
 		{
 			var xsi = XNamespace.Get("http://www.w3.org/2001/XMLSchema-instance");
-			var xsd = XNamespace.Get("http://www.w3.org/2001/XMLSchema");
 
-			// <tns:VectoInputEngineering 
-			//    xmlns="urn:tugraz:ivt:VectoAPI:EngineeringDefinitions:v0.6" 
-			//    xmlns:tns="urn:tugraz:ivt:VectoAPI:EngineeringInput:v0.6" 
-			//    xmlns:vdecdef="urn:tugraz:ivt:VectoAPI:DeclarationDefinitions:v0.6" 
-			//    schemaVersion="0.6" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" 
-			//    xsi:schemaLocation="urn:tugraz:ivt:VectoAPI:EngineeringInput:v0.6 VectoEngineeringInput.xsd">
 			var job = new XDocument();
 			job.Add(new XElement(rootNamespace + XMLNames.VectoInputEngineering,
 				new XAttribute("schemaVersion", SchemaVersion),
@@ -356,7 +351,7 @@ namespace TUGraz.IVT.VectoXML.Writer
 
 		public XElement CreateAxlegear(IAxleGearInputData data)
 		{
-			var typeId = string.Format((string)"AXLGEAR-{0:0.000}", data.Ratio);
+			var typeId = string.Format("AXLGEAR-{0:0.000}", data.Ratio);
 			var axl = new XElement(tns + XMLNames.Component_Axlegear,
 				new XElement(tns + XMLNames.ComponentDataWrapper, new XAttribute(XMLNames.Component_ID_Attr, typeId),
 					GetDefaultComponentElements(typeId, "N.A."), new XElement(tns + XMLNames.Axlegear_Ratio, data.Ratio),

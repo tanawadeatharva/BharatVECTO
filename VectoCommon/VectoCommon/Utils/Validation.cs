@@ -52,7 +52,7 @@ namespace TUGraz.VectoCommon.Utils
 		/// <param name="entity">The entity.</param>
 		/// <param name="mode">validate the entity for the given execution mode</param>
 		/// <param name="gbxType"></param>
-		/// <param name="cycleType"></param>
+		/// <param name="emsCycle"></param>
 		/// <returns>Null, if the validation was successfull. Otherwise a list of ValidationResults with the ErrorMessages.</returns>
 		public static IList<ValidationResult> Validate<T>(this T entity, ExecutionMode mode, GearboxType? gbxType,
 			bool emsCycle)

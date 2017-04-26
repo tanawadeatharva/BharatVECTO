@@ -2,11 +2,13 @@
 using System.Collections.Generic;
 using System.Linq;
 using System.Xml.Linq;
+using TUGraz.IVT.VectoXML;
+using TUGraz.IVT.VectoXML.Writer;
 using TUGraz.VectoCommon.InputData;
 using TUGraz.VectoCommon.Models;
 using TUGraz.VectoCore.Resources;
 
-namespace TUGraz.IVT.VectoXML.Writer
+namespace TUGraz.VectoCore.OutputData.XML
 {
 	public class XMLDeclarationWriter : AbstractXMLWriter
 	{

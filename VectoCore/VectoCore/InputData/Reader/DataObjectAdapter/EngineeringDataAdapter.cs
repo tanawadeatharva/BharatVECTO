@@ -106,7 +106,7 @@ namespace TUGraz.VectoCore.InputData.Reader.DataObjectAdapter
 		{
 			switch (vehicleCategory) {
 				case VehicleCategory.RigidTruck:
-					return (numAxles > axles.NumAxles()) ? "RigidTrailer" : "RigidSolo";
+					return numAxles > axles.NumAxles() ? "RigidTrailer" : "RigidSolo";
 				case VehicleCategory.Tractor:
 					return "TractorSemitrailer";
 				case VehicleCategory.CityBus:

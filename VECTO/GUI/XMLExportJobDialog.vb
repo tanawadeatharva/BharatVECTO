@@ -6,6 +6,7 @@ Imports TUGraz.VectoCommon.Exceptions
 Imports TUGraz.VectoCommon.InputData
 Imports TUGraz.VectoCommon.Models
 Imports TUGraz.VectoCore.Models.Declaration
+Imports TUGraz.VectoCore.OutputData.XML
 
 Public Class XMLExportJobDialog
 	Private _mode As ExecutionMode
