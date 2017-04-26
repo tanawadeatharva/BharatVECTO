@@ -70,6 +70,7 @@ namespace TUGraz.VectoCore.Tests.Models.SimulationComponent
 
 		public const string IndirectLossMap = @"TestData\Components\Indirect Gear.vtlm";
 		public const string DirectLossMap = @"TestData\Components\Direct Gear.vtlm";
+
 		public const string GearboxShiftPolygonFile = @"TestData\Components\ShiftPolygons.vgbs";
 		//public const string GearboxFullLoadCurveFile = @"TestData\Components\Gearbox.vfld";
 
@@ -84,14 +85,14 @@ namespace TUGraz.VectoCore.Tests.Models.SimulationComponent
 
 			return new GearboxData {
 				Gears = ratios.Select((ratio, i) =>
-					Tuple.Create((uint)i,
-						new GearData {
-							MaxTorque = 2300.SI<NewtonMeter>(),
-							LossMap = TransmissionLossMapReader.ReadFromFile(i != 6 ? IndirectLossMap : DirectLossMap, ratio,
-								string.Format("Gear {0}", i)),
-							Ratio = ratio,
-							ShiftPolygon = ShiftPolygonReader.ReadFromFile(GearboxShiftPolygonFile)
-						}))
+						Tuple.Create((uint)i,
+							new GearData {
+								MaxTorque = 2300.SI<NewtonMeter>(),
+								LossMap = TransmissionLossMapReader.ReadFromFile(i != 6 ? IndirectLossMap : DirectLossMap, ratio,
+									string.Format("Gear {0}", i)),
+								Ratio = ratio,
+								ShiftPolygon = ShiftPolygonReader.ReadFromFile(GearboxShiftPolygonFile)
+							}))
 					.ToDictionary(k => k.Item1 + 1, v => v.Item2),
 				ShiftTime = 2.SI<Second>(),
 				Inertia = 0.SI<KilogramSquareMeter>(),
@@ -180,10 +181,10 @@ namespace TUGraz.VectoCore.Tests.Models.SimulationComponent
 
 			// test
 			AssertHelper.AreRelativeEqual(angSpeed * angledriveData.Angledrive.Ratio, mockPort.AngularVelocity,
-				"AngularVelocity Engine Side");
+				message: "AngularVelocity Engine Side");
 
 			AssertHelper.AreRelativeEqual((PvD + loss) / (angSpeed * angledriveData.Angledrive.Ratio), mockPort.Torque,
-				"Torque Engine Side");
+				message: "Torque Engine Side");
 		}
 
 		[TestCase(@"TestData\Components\24t Coach LessThanTwoGears.vgbx")]
@@ -257,7 +258,8 @@ namespace TUGraz.VectoCore.Tests.Models.SimulationComponent
 					FullLoadCurve =
 						EngineFullLoadCurve.Create(
 							VectoCSVFile.ReadStream(
-								InputDataHelper.InputDataAsStream("engine speed [1/min],full load torque [Nm],motoring torque [Nm],PT1 [s]", fld)))
+								InputDataHelper.InputDataAsStream("engine speed [1/min],full load torque [Nm],motoring torque [Nm],PT1 [s]",
+									fld)))
 				},
 				GearboxData = gearboxData
 			};
@@ -413,7 +415,6 @@ namespace TUGraz.VectoCore.Tests.Models.SimulationComponent
 			}
 		}
 
-
 		[TestCase(1, -1000, 600, 28.096, typeof(ResponseSuccess)),
 		TestCase(2, -1000, 600, 28.096, typeof(ResponseSuccess)),
 		TestCase(1, 50, 600, 9.096, typeof(ResponseSuccess)),
@@ -422,9 +423,7 @@ namespace TUGraz.VectoCore.Tests.Models.SimulationComponent
 		TestCase(1, 850, 200, 23.07, typeof(ResponseSuccess)),
 		TestCase(2, 50, 600, 9.096, typeof(ResponseSuccess)),
 		TestCase(2, 2050, 1200, 52.132, typeof(ResponseSuccess)),
-		TestCase(2, 850, 800, 26.11, typeof(ResponseSuccess)),
 		TestCase(2, 850, 600, 25.096, typeof(ResponseSuccess)),
-		TestCase(1, 850, 0, 22.06, typeof(ResponseSuccess)),
 		TestCase(1, 850, 0, 22.06, typeof(ResponseSuccess)),
 		]
 		public void Gearbox_Request_engaged(int gear, double t, double n, double loss, Type responseType)

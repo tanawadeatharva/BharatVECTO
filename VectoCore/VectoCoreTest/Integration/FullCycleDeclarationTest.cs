@@ -273,7 +273,7 @@ namespace TUGraz.VectoCore.Tests.Integration
 			// last v_act entry must be the same as original
 			var vAct = modFile.Rows.Cast<DataRow>().Last().ParseDouble((int)ModalResultField.v_act).SI<MeterPerSecond>();
 			var vAct1Hz = modFile1Hz.Rows.Cast<DataRow>().Last().ParseDouble((int)ModalResultField.v_act).SI<MeterPerSecond>();
-			AssertHelper.AreRelativeEqual(vAct, vAct1Hz, "end velocity is not equal", 1e-4);
+			AssertHelper.AreRelativeEqual(vAct, vAct1Hz, 1e-4, "end velocity is not equal");
 		}
 
 		[TestMethod, TestCategory("LongRunning")]

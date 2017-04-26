@@ -26,7 +26,7 @@ Imports TUGraz.VectoCore.Utils
 
 <CustomValidation(GetType(Vehicle), "ValidateVehicle")>
 Public Class Vehicle
-	Implements IVehicleEngineeringInputData, IVehicleDeclarationInputData, IRetarderInputData, IPTOTransmissionInputData, 
+	Implements IVehicleEngineeringInputData, IVehicleDeclarationInputData, IRetarderInputData, IPTOTransmissionInputData,
 				IAngledriveInputData
 
 	Private _filePath As String
@@ -96,7 +96,7 @@ Public Class Vehicle
 		Dim angledriveData As AngledriveData
 
 		Dim modeService As VectoValidationModeServiceContainer =
-				TryCast(validationContext.GetService(GetType(VectoValidationModeServiceContainer)), 
+				TryCast(validationContext.GetService(GetType(VectoValidationModeServiceContainer)),
 						VectoValidationModeServiceContainer)
 		Dim mode As ExecutionMode = If(modeService Is Nothing, ExecutionMode.Declaration, modeService.Mode)
 		Dim emsCycle As Boolean = (modeService IsNot Nothing) AndAlso modeService.IsEMSCycle
@@ -108,7 +108,7 @@ Public Class Vehicle
 				Dim segment As Segment = DeclarationData.Segments.Lookup(vehicle.VehicleCategory, vehicle.AxleConfiguration,
 																		vehicle.GrossVehicleMassRating, vehicle.CurbWeightChassis)
 				vehicleData = doa.CreateVehicleData(vehicle, segment.Missions.First(),
-													segment.Missions.First().Loadings.First().Value)
+													segment.Missions.First().Loadings.First().Value, segment.VehicleHeight)
 				retarderData = doa.CreateRetarderData(vehicle)
 				angledriveData = doa.CreateAngledriveData(vehicle, False)
 			Else
@@ -315,34 +315,34 @@ Public Class Vehicle
 
 	Public ReadOnly Property CurbWeightChassis As Kilogram Implements IVehicleDeclarationInputData.CurbWeightChassis
 		Get
-			Return Mass.SI(Of Kilogram)()
+			Return Mass.SI (Of Kilogram)()
 		End Get
 	End Property
 
 	Public ReadOnly Property GrossVehicleMassRating As Kilogram _
 		Implements IVehicleDeclarationInputData.GrossVehicleMassRating
 		Get
-			Return MassMax.SI().Ton.Cast(Of Kilogram)()
+			Return MassMax.SI().Ton.Cast (Of Kilogram)()
 		End Get
 	End Property
 
 	Public ReadOnly Property AirDragArea As SquareMeter Implements IVehicleDeclarationInputData.AirDragArea
 		Get
-			Return CdA0.SI(Of SquareMeter)()
+			Return CdA0.SI (Of SquareMeter)()
 		End Get
 	End Property
 
 	Public ReadOnly Property IVehicleEngineeringInputData_Axles As IList(Of IAxleEngineeringInputData) _
 		Implements IVehicleEngineeringInputData.Axles
 		Get
-			Return AxleWheels().Cast(Of IAxleEngineeringInputData)().ToList()
+			Return AxleWheels().Cast (Of IAxleEngineeringInputData)().ToList()
 		End Get
 	End Property
 
 	Public ReadOnly Property IVehicleDeclarationInputData_Axles As IList(Of IAxleDeclarationInputData) _
 		Implements IVehicleDeclarationInputData.Axles
 		Get
-			Return AxleWheels().Cast(Of IAxleDeclarationInputData)().ToList()
+			Return AxleWheels().Cast (Of IAxleDeclarationInputData)().ToList()
 		End Get
 	End Property
 
@@ -350,18 +350,18 @@ Public Class Vehicle
 		Return Axles.Select(Function(axle) New AxleInputData With {
 								.SourceType = DataSourceType.JSONFile,
 								.Source = FilePath,
-								.Inertia = axle.Inertia.SI(Of KilogramSquareMeter)(),
+								.Inertia = axle.Inertia.SI (Of KilogramSquareMeter)(),
 								.Wheels = axle.Wheels,
 								.AxleWeightShare = axle.Share,
 								.TwinTyres = axle.TwinTire,
 								.RollResistanceCoefficient = axle.RRC,
-								.TyreTestLoad = axle.FzISO.SI(Of Newton)()
+								.TyreTestLoad = axle.FzISO.SI (Of Newton)()
 								})
 	End Function
 
 	Public ReadOnly Property CurbWeightExtra As Kilogram Implements IVehicleEngineeringInputData.CurbWeightExtra
 		Get
-			Return MassExtra.SI(Of Kilogram)()
+			Return MassExtra.SI (Of Kilogram)()
 		End Get
 	End Property
 
@@ -382,14 +382,14 @@ Public Class Vehicle
 	Public ReadOnly Property IVehicleEngineeringInputData_DynamicTyreRadius As Meter _
 		Implements IVehicleEngineeringInputData.DynamicTyreRadius
 		Get
-			Return DynamicTyreRadius.SI().Milli.Meter.Cast(Of Meter)()
+			Return DynamicTyreRadius.SI().Milli.Meter.Cast (Of Meter)()
 		End Get
 	End Property
 
 	Public ReadOnly Property IVehicleEngineeringInputData_Loading As Kilogram _
 		Implements IVehicleEngineeringInputData.Loading
 		Get
-			Return Loading.SI(Of Kilogram)()
+			Return Loading.SI (Of Kilogram)()
 		End Get
 	End Property
 
@@ -434,7 +434,7 @@ Public Class Vehicle
 
 	Public ReadOnly Property Efficiency As Double Implements IAngledriveInputData.Efficiency
 		Get
-			Return If(IsNumeric(AngledriveLossMapFile.OriginalPath), AngledriveLossMapFile.OriginalPath.ToDouble(), -1.0)
+			Return If(IsNumeric(AngledriveLossMapFile.OriginalPath), AngledriveLossMapFile.OriginalPath.ToDouble(), - 1.0)
 		End Get
 	End Property
 

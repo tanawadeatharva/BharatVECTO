@@ -32,6 +32,7 @@
 using System;
 using System.Collections.Generic;
 using System.Data;
+using System.IO;
 using System.Linq;
 using Microsoft.VisualStudio.TestTools.UnitTesting;
 using NUnit.Framework;
@@ -57,8 +58,6 @@ namespace TUGraz.VectoCore.Tests.Reports
 	[TestFixture]
 	public class ModDataTest
 	{
-
-
 		[TestCase()]
 		public void ModDataIntegritySimpleTest()
 		{
@@ -115,13 +114,19 @@ namespace TUGraz.VectoCore.Tests.Reports
 			var modData = new List<Tuple<ModalResults, Meter>>();
 			foreach (var run in jobContainer.Runs) {
 				modData.Add(Tuple.Create(((ModalDataContainer)run.Run.GetContainer().ModalData).Data,
-					((DistanceBasedDrivingCycle)((VehicleContainer)run.Run.GetContainer()).DrivingCycle)._data.Entries.Last().Distance));
+					((DistanceBasedDrivingCycle)((VehicleContainer)run.Run.GetContainer()).DrivingCycle)._data.Entries.Last()
+					.Distance));
 			}
 			var auxKeys =
 				new Dictionary<string, DataColumn>(
 					((ModalDataContainer)jobContainer.Runs.First().Run.GetContainer().ModalData).Auxiliaries);
 			jobContainer.Execute();
 			jobContainer.WaitFinished();
+
+			// mod files will be stored in e.g. 
+			// VectoCoreTest\bin\Debug\TestData\Integration\EngineeringMode\Class2_RigidTruck_4x2\Class2_RigidTruck_ENG.vecto_00.vmod
+			//fileWriter.WriteModData(Path.GetFileName(jobName), "0", "0", modData[0].Item1);
+			//fileWriter.WriteModData(Path.GetFileName(jobName), "1", "1", modData[1].Item1);
 
 			foreach (var modalResults in modData) {
 				AssertModDataIntegrity(modalResults.Item1, auxKeys, modalResults.Item2,
@@ -130,7 +135,6 @@ namespace TUGraz.VectoCore.Tests.Reports
 
 			AssertSumDataIntegrity(sumData, mode);
 		}
-
 
 		private static void AssertSumDataIntegrity(SummaryDataContainer sumData, ExecutionMode mode)
 		{
@@ -295,9 +299,11 @@ namespace TUGraz.VectoCore.Tests.Reports
 					distance);
 
 				// P_wheel_in = P_trac + P_wheel_inertia
-				Assert.AreEqual(pWheelIn.Value(), (pTrac + pWheelInertia).Value(), 1E-3, "time: {0}  distance: {1}", time, distance);
+				Assert.AreEqual(pWheelIn.Value(), (pTrac + pWheelInertia).Value(), 1E-3, "time: {0}  distance: {1}", time,
+					distance);
 
-				Assert.AreEqual(pBrakeIn.Value(), (pWheelIn + pBrakeLoss).Value(), 1E-3, "time: {0}  distance: {1}", time, distance);
+				Assert.AreEqual(pBrakeIn.Value(), (pWheelIn + pBrakeLoss).Value(), 1E-3, "time: {0}  distance: {1}", time,
+					distance);
 
 				Assert.AreEqual(pAxleIn.Value(), (pBrakeIn + pLossAxle).Value(), 1E-3, "time: {0}  distance: {1}", time, distance);
 
@@ -308,30 +314,28 @@ namespace TUGraz.VectoCore.Tests.Reports
 				Assert.AreEqual(pEngOut.Value(), (pClutchOut + pClutchLoss).Value(), 1E-3,
 					"time: {0}  distance: {1}", time, distance);
 
-				// P_eng_fcmap = P_eng_out + P_AUX + P_eng_inertia ( + P_PTO_Transm + P_PTO_Consumer )
-				Assert.AreEqual(pEngFcmap.Value(), (pEngOut + pAux + pEngInertia + pPTOtransm + pPTOconsumer).Value(), 1E-3,
-					"time: {0}  distance: {1}", time,
-					distance);
-
-				// P_eng_fcmap = sum(Losses Powertrain)
-				var pLossTot = pClutchLoss + pLossGbx + pLossRet + pGbxInertia + pLossAngle + pLossAxle + pBrakeLoss +
-								pWheelInertia + pAir + pRoll + pGrad + pVehInertia + pPTOconsumer + pPTOtransm;
-
-				Assert.AreEqual(pEngFcmap.Value(), (pLossTot + pEngInertia + pAux).Value(), 1E-3, "time: {0}  distance: {1}", time,
-					distance);
-
 				Assert.IsTrue(pLossGbx.IsGreaterOrEqual(pShiftLoss + pGbxInertia), "time: {0}  distance: {1}", time,
 					distance);
 
 				Assert.AreEqual(pGbxIn.Value(), (pRetIn + pLossGbx + pGbxInertia).Value(), gear != 0 ? 1E-3 : 0.5,
 					"time: {0}  distance: {1}", time,
 					distance);
+
+				// P_eng_fcmap = P_eng_out + P_AUX + P_eng_inertia ( + P_PTO_Transm + P_PTO_Consumer )
+				Assert.AreEqual(pEngFcmap.Value(), (pEngOut + pAux + pEngInertia + pPTOtransm + pPTOconsumer).Value(), 0.5,
+					"time: {0}  distance: {1}", time, distance);
+
+				// P_eng_fcmap = sum(Losses Powertrain)
+				var pLossTot = pClutchLoss + pLossGbx + pLossRet + pGbxInertia + pLossAngle + pLossAxle + pBrakeLoss +
+								pWheelInertia + pAir + pRoll + pGrad + pVehInertia + pPTOconsumer + pPTOtransm;
+				var pEngFcmapCalc = (pLossTot + pEngInertia + pAux).Value();
+				Assert.AreEqual(pEngFcmap.Value(), pEngFcmapCalc, 0.5, "time: {0}  distance: {1}", time, distance);
+
 				Assert.AreEqual(pEngFcmap.Value(),
 					(pTrac + pWheelInertia + pBrakeLoss + pLossAxle + pLossRet + pLossGbx + pGbxInertia + pEngInertia + pAux +
 					pClutchLoss + pPTOtransm + pPTOconsumer).Value(), 0.5, "time: {0}  distance: {1}", time, distance);
 			}
 		}
-
 
 		[
 			TestCase(@"TestData\Integration\EngineeringMode\CityBus_AT\CityBus_AT_Ser.vecto"),
@@ -344,13 +348,15 @@ namespace TUGraz.VectoCore.Tests.Reports
 			var jobContainer = new JobContainer(sumData);
 			var inputData = JSONInputDataFactory.ReadJsonJob(jobName);
 
-			var runsFactory = new SimulatorFactory(ExecutionMode.Engineering, inputData, fileWriter) { WriteModalResults = true };
+			var runsFactory =
+				new SimulatorFactory(ExecutionMode.Engineering, inputData, fileWriter) { WriteModalResults = true };
 
 			jobContainer.AddRuns(runsFactory);
 			var modData = new List<Tuple<ModalResults, Meter>>();
 			foreach (var run in jobContainer.Runs) {
 				modData.Add(Tuple.Create(((ModalDataContainer)run.Run.GetContainer().ModalData).Data,
-					((DistanceBasedDrivingCycle)((VehicleContainer)run.Run.GetContainer()).DrivingCycle)._data.Entries.Last().Distance));
+					((DistanceBasedDrivingCycle)((VehicleContainer)run.Run.GetContainer()).DrivingCycle)._data.Entries.Last()
+					.Distance));
 			}
 			var auxKeys =
 				new Dictionary<string, DataColumn>(
@@ -440,9 +446,11 @@ namespace TUGraz.VectoCore.Tests.Reports
 					distance);
 
 				// P_wheel_in = P_trac + P_wheel_inertia
-				Assert.AreEqual(pWheelIn.Value(), (pTrac + pWheelInertia).Value(), 1E-3, "time: {0}  distance: {1}", time, distance);
+				Assert.AreEqual(pWheelIn.Value(), (pTrac + pWheelInertia).Value(), 1E-3, "time: {0}  distance: {1}", time,
+					distance);
 
-				Assert.AreEqual(pBrakeIn.Value(), (pWheelIn + pBrakeLoss).Value(), 1E-3, "time: {0}  distance: {1}", time, distance);
+				Assert.AreEqual(pBrakeIn.Value(), (pWheelIn + pBrakeLoss).Value(), 1E-3, "time: {0}  distance: {1}", time,
+					distance);
 
 				Assert.AreEqual(pAxleIn.Value(), (pBrakeIn + pLossAxle).Value(), 1E-3, "time: {0}  distance: {1}", time, distance);
 
