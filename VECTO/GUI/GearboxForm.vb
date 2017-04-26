@@ -104,7 +104,7 @@ Public Class GearboxForm
 		TbMinTimeBetweenShifts.Text = DeclarationData.Gearbox.MinTimeBetweenGearshifts.ToGUIFormat()
 		'cDeclaration.MinTimeBetweenGearshift(GStype)
 
-		TbTqResv.Text = (DeclarationData.Gearbox.TorqueReserve * 100).ToGUIFormat()					  ' cDeclaration.TqResv
+		TbTqResv.Text = (DeclarationData.Gearbox.TorqueReserve * 100).ToGUIFormat()						' cDeclaration.TqResv
 		TbTqResvStart.Text = (DeclarationData.Gearbox.TorqueReserveStart * 100).ToGUIFormat() 'cDeclaration.TqResvStart
 		TbStartSpeed.Text = DeclarationData.Gearbox.StartSpeed.ToGUIFormat()	'cDeclaration.StartSpeed
 		TbStartAcc.Text = DeclarationData.Gearbox.StartAcceleration.ToGUIFormat()	' cDeclaration.StartAcc
@@ -366,7 +366,6 @@ Public Class GearboxForm
 	Private Function SaveGbx(file As String) As Boolean
 
 		Dim gearbox As Gearbox = FillGearboxData(file)
-
 
 
 		If Not gearbox.SaveFile Then
@@ -968,16 +967,33 @@ Public Class GearboxForm
 	End Sub
 
 	Private Sub btnExportXML_Click(sender As Object, e As EventArgs) Handles btnExportXML.Click
-
+		Dim dialog As CommonOpenFileDialog = New CommonOpenFileDialog()
+		dialog.IsFolderPicker = True
+		If (dialog.ShowDialog() = CommonFileDialogResult.Cancel) Then
+			Exit Sub
+		End If
+		Dim data As Gearbox = FillGearboxData(_gbxFile)
 		If (Cfg.DeclMode) Then
-			Dim dialog As CommonOpenFileDialog = New CommonOpenFileDialog()
-			dialog.IsFolderPicker = True
-			If (dialog.ShowDialog() = CommonFileDialogResult.Cancel) Then
-				Exit Sub
-			End If
-			Dim data As Gearbox = FillGearboxData(_gbxFile)
-
 			Dim export As XDocument = New XMLDeclarationWriter(data.Vendor).GenerateVectoComponent(data, data)
+			export.Save(Path.Combine(dialog.FileName, data.ModelName + ".xml"))
+		Else
+			Dim export As XDocument = New XMLEngineeringWriter(_gbxFile, True, data.Vendor).GenerateVectoComponent(data, data)
+			export.Save(Path.Combine(dialog.FileName, data.ModelName + ".xml"))
+		End If
+	End Sub
+
+	Private Sub btnExportAxlGearXML_Click(sender As Object, e As EventArgs) Handles btnExportAxlGearXML.Click
+		Dim dialog As CommonOpenFileDialog = New CommonOpenFileDialog()
+		dialog.IsFolderPicker = True
+		If (dialog.ShowDialog() = CommonFileDialogResult.Cancel) Then
+			Exit Sub
+		End If
+		Dim data As Gearbox = FillGearboxData(_gbxFile)
+		If (Cfg.DeclMode) Then
+			Dim export As XDocument = New XMLDeclarationWriter(data.Vendor).GenerateVectoComponent(data)
+			export.Save(Path.Combine(dialog.FileName, data.ModelName + ".xml"))
+		Else
+			Dim export As XDocument = New XMLEngineeringWriter(_gbxFile, True, data.Vendor).GenerateVectoComponent(data)
 			export.Save(Path.Combine(dialog.FileName, data.ModelName + ".xml"))
 		End If
 	End Sub

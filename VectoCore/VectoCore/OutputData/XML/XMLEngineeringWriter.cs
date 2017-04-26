@@ -55,6 +55,35 @@ namespace TUGraz.IVT.VectoXML.Writer
 			return job;
 		}
 
+		public XDocument GenerateVectoComponent(IGearboxEngineeringInputData gearbox,
+			ITorqueConverterEngineeringInputData torqueConverter)
+		{
+			return GenerateComponentDocument(CreateGearbox(gearbox, torqueConverter));
+		}
+
+		public XDocument GenerateVectoComponent(IAxleGearInputData data)
+		{
+			return GenerateComponentDocument(CreateAxlegear(data));
+		}
+
+		protected XDocument GenerateComponentDocument(XElement content)
+		{
+			var xsi = XNamespace.Get("http://www.w3.org/2001/XMLSchema-instance");
+
+			var component = new XDocument();
+			component.Add(new XElement(rootNamespace + XMLNames.VectoComponentEngineering,
+				new XAttribute("schemaVersion", SchemaVersion),
+				new XAttribute(XNamespace.Xmlns + "xsi", xsi.NamespaceName),
+				new XAttribute("xmlns", tns),
+				new XAttribute(XNamespace.Xmlns + "tns", rootNamespace),
+				new XAttribute(XNamespace.Xmlns + "vdecdef", _declarationNamespace),
+				new XAttribute(xsi + "schemaLocation",
+					string.Format("{0} {1}VectoEngineeringInput.xsd", rootNamespace, SchemaLocationBaseUrl)),
+				content)
+				);
+			return component;
+		}
+
 		protected XElement[] CreateEngineOnly(IEngineeringInputDataProvider data)
 		{
 			return new[] {
@@ -180,7 +209,7 @@ namespace TUGraz.IVT.VectoXML.Writer
 				GetCrossWindCorrectionData(vehicle),
 				new XElement(tns + XMLNames.Vehicle_Components,
 					CreateEngine(data.EngineInputData),
-					CreateGearbox(gearbox),
+					CreateGearbox(gearbox, gearbox.TorqueConverter),
 					angledrive.Type == AngledriveType.SeparateAngledrive ? CreateAngleDrive(angledrive) : null,
 					retarder.Type.IsDedicatedComponent() ? CreateRetarder(retarder) : null,
 					CreateAxlegear(data.AxleGearInputData),
@@ -357,7 +386,7 @@ namespace TUGraz.IVT.VectoXML.Writer
 			//	string.Format("RET_{0}.xml", RemoveInvalidFileCharacters(data.ModelName)));
 		}
 
-		protected XElement CreateGearbox(IGearboxEngineeringInputData data)
+		protected XElement CreateGearbox(IGearboxEngineeringInputData data, ITorqueConverterEngineeringInputData tcData)
 		{
 			var gears = new XElement(tns + XMLNames.Gearbox_Gears);
 			var i = 1;
@@ -386,7 +415,7 @@ namespace TUGraz.IVT.VectoXML.Writer
 					new XElement(tns + XMLNames.Gearbox_TransmissionType, GearboxtypeToXML(data.Type)),
 					new XElement(tns + XMLNames.Gearbox_Inertia, data.Inertia.Value()),
 					new XElement(tns + XMLNames.Gearbox_TractionInterruption, data.TractionInterruption.Value()), gears),
-				data.Type.AutomaticTransmission() ? CreateTorqueConverter(data) : null);
+				data.Type.AutomaticTransmission() ? CreateTorqueConverter(tcData) : null);
 
 			if (_singleFile) {
 				return gbx;
@@ -394,9 +423,8 @@ namespace TUGraz.IVT.VectoXML.Writer
 			return ExtComponent(XMLNames.Component_Gearbox, gbx, string.Format("GBX-{0}.xml", data.ModelName));
 		}
 
-		private XElement CreateTorqueConverter(IGearboxEngineeringInputData data)
+		private XElement CreateTorqueConverter(ITorqueConverterEngineeringInputData torqueConverterData)
 		{
-			var torqueConverterData = data.TorqueConverter;
 			var tc = new XElement(tns + XMLNames.Component_TorqueConverter,
 				new XElement(tns + XMLNames.ComponentDataWrapper,
 					new XElement(tns + XMLNames.TorqueConverter_ReferenceRPM, torqueConverterData.ReferenceRPM.AsRPM),
@@ -446,21 +474,9 @@ namespace TUGraz.IVT.VectoXML.Writer
 			return ExtComponent(XMLNames.Component_Engine, engine, string.Format("ENG-{0}.xml", data.ModelName));
 		}
 
-		private XElement ExtComponent(string component, XElement engine, string filename)
+		private XElement ExtComponent(string component, XElement componentXML, string filename)
 		{
-			var xsi = XNamespace.Get("http://www.w3.org/2001/XMLSchema-instance");
-			var xsd = XNamespace.Get("http://www.w3.org/2001/XMLSchema");
-
-
-			var xml = new XDocument();
-			xml.Add(new XElement(rootNamespace + XMLNames.VectoComponentEngineering,
-				new XAttribute("schemaVersion", SchemaVersion), new XAttribute(XNamespace.Xmlns + "xsi", xsi.NamespaceName),
-				new XAttribute("xmlns", tns), new XAttribute(XNamespace.Xmlns + "tns", rootNamespace),
-				new XAttribute(XNamespace.Xmlns + "vdecdef", _declarationNamespace),
-				new XAttribute(xsi + "schemaLocation",
-					string.Format("{0} {1}VectoEngineeringInput.xsd", rootNamespace, SchemaLocationBaseUrl)), engine));
-
-			xml.Save(Path.Combine(BasePath, filename));
+			GenerateComponentDocument(componentXML).Save(Path.Combine(BasePath, filename));
 
 			var retVal = new XElement(tns + XMLNames.ExternalResource,
 				new XAttribute(XMLNames.ExtResource_Type_Attr, XMLNames.ExtResource_Type_Value_XML),

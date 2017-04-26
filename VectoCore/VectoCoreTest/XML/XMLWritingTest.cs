@@ -122,7 +122,7 @@ namespace TUGraz.VectoCore.Tests.XML
 
 			var inputData = JSONInputDataFactory.ReadJsonJob(DeclarationJob);
 
-			var job = new XMLDeclarationWriter(".", "TUG_IVT").GenerateVectoJob((IDeclarationInputDataProvider)inputData);
+			var job = new XMLDeclarationWriter("TUG_IVT").GenerateVectoJob((IDeclarationInputDataProvider)inputData);
 
 			job.Save(outputFile);
 
@@ -144,7 +144,7 @@ namespace TUGraz.VectoCore.Tests.XML
 
 			var inputData = JSONInputDataFactory.ReadJsonJob(DeclarationJobFull);
 
-			var job = new XMLDeclarationWriter(".", "TUG_IVT").GenerateVectoJob((IDeclarationInputDataProvider)inputData);
+			var job = new XMLDeclarationWriter( "TUG_IVT").GenerateVectoJob((IDeclarationInputDataProvider)inputData);
 
 			job.Save(outputFile);
 

@@ -10,6 +10,7 @@ namespace TUGraz.IVT.VectoXML.Writer
 {
 	public class XMLDeclarationWriter : AbstractXMLWriter
 	{
+		private XNamespace componentNamespace;
 		//private readonly XNamespace _vectoNs = @"../../../API/VectoInput.xsd";
 
 
@@ -17,6 +18,7 @@ namespace TUGraz.IVT.VectoXML.Writer
 		{
 			tns = "urn:tugraz:ivt:VectoAPI:DeclarationDefinitions:v0.6";
 			rootNamespace = "urn:tugraz:ivt:VectoAPI:DeclarationInput:v0.6";
+			componentNamespace = "urn:tugraz:ivt:VectoAPI:DeclarationComponent:v0.6";
 		}
 
 		public XDocument GenerateVectoJob(IDeclarationInputDataProvider data)
@@ -56,13 +58,13 @@ namespace TUGraz.IVT.VectoXML.Writer
 		{
 			var xsi = XNamespace.Get("http://www.w3.org/2001/XMLSchema-instance");
 			var component = new XDocument();
-			component.Add(new XElement(rootNamespace + XMLNames.VectoInputDeclaration,
+			component.Add(new XElement(componentNamespace + XMLNames.VectoInputDeclaration,
 				new XAttribute("schemaVersion", SchemaVersion),
 				new XAttribute(XNamespace.Xmlns + "xsi", xsi.NamespaceName),
 				new XAttribute("xmlns", tns),
-				new XAttribute(XNamespace.Xmlns + "tns", rootNamespace),
+				new XAttribute(XNamespace.Xmlns + "tns", componentNamespace),
 				new XAttribute(xsi + "schemaLocation",
-					string.Format("{0} {1}VectoInput.xsd", rootNamespace, SchemaLocationBaseUrl)),
+					string.Format("{0} {1}VectoComponent.xsd", componentNamespace, SchemaLocationBaseUrl)),
 				content)
 				);
 			return component;

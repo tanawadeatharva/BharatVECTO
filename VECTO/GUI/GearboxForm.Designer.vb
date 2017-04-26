@@ -135,6 +135,7 @@ Partial Class GearboxForm
 		Me.gbTCAccMin = New System.Windows.Forms.GroupBox()
 		Me.lblGbxInfo = New System.Windows.Forms.Label()
 		Me.btnExportXML = New System.Windows.Forms.Button()
+		Me.btnExportAxlGearXML = New System.Windows.Forms.Button()
 		Me.ToolStrip1.SuspendLayout()
 		Me.StatusStrip1.SuspendLayout()
 		CType(Me.PictureBox1, System.ComponentModel.ISupportInitialize).BeginInit()
@@ -250,7 +251,7 @@ Partial Class GearboxForm
 		'
 		Me.ButCancel.Anchor = CType((System.Windows.Forms.AnchorStyles.Bottom Or System.Windows.Forms.AnchorStyles.Right), System.Windows.Forms.AnchorStyles)
 		Me.ButCancel.DialogResult = System.Windows.Forms.DialogResult.Cancel
-		Me.ButCancel.Location = New System.Drawing.Point(790, 648)
+		Me.ButCancel.Location = New System.Drawing.Point(798, 648)
 		Me.ButCancel.Name = "ButCancel"
 		Me.ButCancel.Size = New System.Drawing.Size(75, 23)
 		Me.ButCancel.TabIndex = 7
@@ -260,7 +261,7 @@ Partial Class GearboxForm
 		'ButOK
 		'
 		Me.ButOK.Anchor = CType((System.Windows.Forms.AnchorStyles.Bottom Or System.Windows.Forms.AnchorStyles.Right), System.Windows.Forms.AnchorStyles)
-		Me.ButOK.Location = New System.Drawing.Point(709, 648)
+		Me.ButOK.Location = New System.Drawing.Point(717, 648)
 		Me.ButOK.Name = "ButOK"
 		Me.ButOK.Size = New System.Drawing.Size(75, 23)
 		Me.ButOK.TabIndex = 6
@@ -1044,12 +1045,21 @@ Partial Class GearboxForm
 		'
 		'btnExportXML
 		'
-		Me.btnExportXML.Location = New System.Drawing.Point(468, 648)
+		Me.btnExportXML.Location = New System.Drawing.Point(459, 648)
 		Me.btnExportXML.Name = "btnExportXML"
-		Me.btnExportXML.Size = New System.Drawing.Size(102, 23)
+		Me.btnExportXML.Size = New System.Drawing.Size(119, 23)
 		Me.btnExportXML.TabIndex = 52
-		Me.btnExportXML.Text = "Export as XML"
+		Me.btnExportXML.Text = "Exp. Gearbox as XML"
 		Me.btnExportXML.UseVisualStyleBackColor = True
+		'
+		'btnExportAxlGearXML
+		'
+		Me.btnExportAxlGearXML.Location = New System.Drawing.Point(584, 648)
+		Me.btnExportAxlGearXML.Name = "btnExportAxlGearXML"
+		Me.btnExportAxlGearXML.Size = New System.Drawing.Size(118, 23)
+		Me.btnExportAxlGearXML.TabIndex = 53
+		Me.btnExportAxlGearXML.Text = "Exp. AxlGear as XML"
+		Me.btnExportAxlGearXML.UseVisualStyleBackColor = True
 		'
 		'GearboxForm
 		'
@@ -1058,6 +1068,7 @@ Partial Class GearboxForm
 		Me.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font
 		Me.CancelButton = Me.ButCancel
 		Me.ClientSize = New System.Drawing.Size(877, 696)
+		Me.Controls.Add(Me.btnExportAxlGearXML)
 		Me.Controls.Add(Me.btnExportXML)
 		Me.Controls.Add(Me.lblGbxInfo)
 		Me.Controls.Add(Me.gbTCAccMin)
@@ -1210,4 +1221,5 @@ Partial Class GearboxForm
 	Friend WithEvents gbTCAccMin As System.Windows.Forms.GroupBox
 	Friend WithEvents lblGbxInfo As System.Windows.Forms.Label
 	Friend WithEvents btnExportXML As System.Windows.Forms.Button
+	Friend WithEvents btnExportAxlGearXML As System.Windows.Forms.Button
 End Class
