@@ -30,7 +30,6 @@
 */
 
 using System;
-using System.Data;
 using System.IO;
 using Newtonsoft.Json.Linq;
 using TUGraz.VectoCommon.InputData;

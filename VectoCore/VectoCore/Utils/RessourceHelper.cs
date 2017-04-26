@@ -29,6 +29,7 @@
 *   Martin Rexeis, rexeis@ivt.tugraz.at, IVT, Graz University of Technology
 */
 
+using System;
 using System.IO;
 using System.Reflection;
 using TUGraz.VectoCommon.Exceptions;
@@ -45,6 +46,24 @@ namespace TUGraz.VectoCore.Utils
 				throw new VectoException("Resource file not found: " + resourceName);
 			}
 			return resource;
+		}
+
+		public enum ResourceType
+		{
+			XMLSchema = 1,
+		}
+
+		public static Stream LoadResourceAsStream(ResourceType type, string resourceName)
+		{
+			var resourceBase = "";
+			switch (type) {
+				case ResourceType.XMLSchema:
+					resourceBase = "TUGraz.VectoCore.Resources.XSD.";
+					break;
+				default:
+					throw new ArgumentOutOfRangeException("type", type, null);
+			}
+			return ReadStream(resourceBase + resourceName);
 		}
 	}
 }

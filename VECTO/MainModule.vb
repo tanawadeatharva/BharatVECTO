@@ -64,55 +64,5 @@ Module MainModule
 		Return filePath
 	End Function
 
-	Public Sub DetectPlugins()
-
-		Dim dllFileNames As String()
-		Dim Path As String = "."
-		'If Directory.Exists(Path) Then
-		dllFileNames = Directory.GetFiles(Path, "*.dll")
-
-		Dim assemblies As ICollection(Of Assembly) = New List(Of Assembly)(dllFileNames.Length)
-		For Each dllFile As String In dllFileNames
-			Dim an As AssemblyName = AssemblyName.GetAssemblyName(dllFile)
-			Dim assembly As Assembly = assembly.Load(an)
-			assemblies.Add(assembly)
-		Next
-
-		Dim exportPluginType As Type = GetType(IExportPlugin)
-		Dim importPluginType As Type = GetType(IImportPlugin)
-		Dim inputDataPluginType As Type = GetType(IInputDataPlugin)
-
-		For Each assembly As Assembly In assemblies
-			If assembly <> Nothing Then
-				Dim types As Type() = assembly.GetTypes()
-
-				For Each type As Type In types
-					If type.IsInterface Or type.IsAbstract Then
-						Continue For
-					Else
-						If type.GetInterface(exportPluginType.FullName) <> Nothing Then
-							Dim plugin As IExportPlugin = TryCast(Activator.CreateInstance(type), IExportPlugin)
-							If Not plugin Is Nothing Then
-								PluginRegistry.Instance.RegisterPlugin(plugin)
-							End If
-						End If
-						If type.GetInterface(importPluginType.FullName) <> Nothing Then
-							Dim plugin As IImportPlugin = TryCast(Activator.CreateInstance(type), IImportPlugin)
-							If Not plugin Is Nothing Then
-								PluginRegistry.Instance.RegisterPlugin(plugin)
-							End If
-						End If
-						If type.GetInterface(inputDataPluginType.FullName) <> Nothing Then
-							Dim plugin As IInputDataPlugin = TryCast(Activator.CreateInstance(type), IInputDataPlugin)
-							If Not plugin Is Nothing Then
-								PluginRegistry.Instance.RegisterPlugin(plugin)
-							End If
-						End If
-					End If
-				Next
-			End If
-		Next
-
-		'End If
-	End Sub
+	
 End Module

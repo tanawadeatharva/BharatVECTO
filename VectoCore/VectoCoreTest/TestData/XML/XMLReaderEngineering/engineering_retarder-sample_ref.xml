@@ -1,0 +1,24 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<tns:VectoComponentEngineering xmlns="urn:tugraz:ivt:VectoAPI:EngineeringDefinitions:v0.7"
+															xmlns:tns="urn:tugraz:ivt:VectoAPI:EngineeringInput:v0.7"
+															xmlns:vdecdef="urn:tugraz:ivt:VectoAPI:DeclarationDefinitions:v0.6" schemaVersion="0.6"
+															xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+															xsi:schemaLocation="urn:tugraz:ivt:VectoAPI:EngineeringInput:v0.7 VectoEngineeringInput.xsd">
+	<Retarder>
+		<Data id="RET-Shai9imi">
+			<Vendor>Generic Retarder Vendor</Vendor>
+			<Creator>Markus Quaritsch, TUG ITI</Creator>
+			<Date>2016-01-11T11:00:00Z</Date>
+			<MakeAndModel>Generic Retarder</MakeAndModel>
+			<TypeId>RET-Shai9imi</TypeId>
+			<AppVersion>3.0.1</AppVersion>
+			<RetarderLossMap>
+				<Resource type="csv" file="Retarder.vrlm" />
+			</RetarderLossMap>
+		</Data>
+		<Signature>
+			<ComponentDataHash>da830e08360407c5168f1a37e9760e0cbbf8a17d</ComponentDataHash>
+		</Signature>
+	</Retarder>
+</tns:VectoComponentEngineering>

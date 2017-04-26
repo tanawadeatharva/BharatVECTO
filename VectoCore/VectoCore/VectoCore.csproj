@@ -107,12 +107,37 @@
     <Reference Include="Microsoft.CSharp" />
     <Reference Include="System.Data" />
     <Reference Include="System.Xml" />
+    <Reference Include="System.Xml.Linq" />
   </ItemGroup>
   <ItemGroup>
     <Compile Include="Configuration\Constants.cs" />
     <Compile Include="InputData\AuxiliaryFileHelper.cs" />
     <Compile Include="InputData\FileIO\JSON\JSONComponentInputData.cs" />
     <Compile Include="InputData\FileIO\JSON\JsonExtensionMethods.cs" />
+    <Compile Include="InputData\FileIO\XML\Declaration\AbstractDeclarationXMLComponentDataProvider.cs" />
+    <Compile Include="InputData\FileIO\XML\Declaration\XMLDeclarationAngledriveDataProvider.cs" />
+    <Compile Include="InputData\FileIO\XML\Declaration\XMLDeclarationAuxiliaryDataProvider.cs" />
+    <Compile Include="InputData\FileIO\XML\Declaration\XMLDeclarationAxlegearDataProvider.cs" />
+    <Compile Include="InputData\FileIO\XML\Declaration\XMLDeclarationDriverDataProvider.cs" />
+    <Compile Include="InputData\FileIO\XML\Declaration\XMLDeclarationEngineDataProvider.cs" />
+    <Compile Include="InputData\FileIO\XML\Declaration\XMLDeclarationGearboxDataProvider.cs" />
+    <Compile Include="InputData\FileIO\XML\Declaration\XMLDeclarationJobInputDataProvider.cs" />
+    <Compile Include="InputData\FileIO\XML\Declaration\XMLDeclarationRetarderDataProvider.cs" />
+    <Compile Include="InputData\FileIO\XML\Declaration\XMLDeclarationTorqueConverterDataProvider.cs" />
+    <Compile Include="InputData\FileIO\XML\Declaration\XMLDeclarationVehicleDataProvider.cs" />
+    <Compile Include="InputData\FileIO\XML\Declaration\XMLInputDataProvider.cs" />
+    <Compile Include="InputData\FileIO\XML\Engineering\AbstractEngineeringXMLComponentDataProvider.cs" />
+    <Compile Include="InputData\FileIO\XML\Engineering\XMLEngineeringAngledriveDataProvider.cs" />
+    <Compile Include="InputData\FileIO\XML\Engineering\XMLEngineeringAuxiliaryDataProvider.cs" />
+    <Compile Include="InputData\FileIO\XML\Engineering\XMLEngineeringAxlegearDataProvider.cs" />
+    <Compile Include="InputData\FileIO\XML\Engineering\XMLEngineeringDriverDataProvider.cs" />
+    <Compile Include="InputData\FileIO\XML\Engineering\XMLEngineeringEngineDataProvider.cs" />
+    <Compile Include="InputData\FileIO\XML\Engineering\XMLEngineeringGearboxDataProvider.cs" />
+    <Compile Include="InputData\FileIO\XML\Engineering\XMLEngineeringInputDataProvider.cs" />
+    <Compile Include="InputData\FileIO\XML\Engineering\XMLEngineeringJobInputDataProvider.cs" />
+    <Compile Include="InputData\FileIO\XML\Engineering\XMLEngineeringRetarderDataProvider.cs" />
+    <Compile Include="InputData\FileIO\XML\Engineering\XMLEngineeringTorqueConverterDataProvider.cs" />
+    <Compile Include="InputData\FileIO\XML\Engineering\XMLEngineeringVehicleDataProvider.cs" />
     <Compile Include="InputData\Impl\InputData.cs" />
     <Compile Include="InputData\FileIO\JSON\JSONEngineData.cs" />
     <Compile Include="InputData\FileIO\JSON\JSONGearboxData.cs" />
@@ -163,6 +188,12 @@
     <Compile Include="Models\Simulation\Data\ModalResultField.cs" />
     <Compile Include="OutputData\ModFilter\ActualModalDataFilter.cs" />
     <Compile Include="OutputData\ModFilter\ModalData1HzFilter.cs" />
+    <Compile Include="OutputData\XML\AbstractXMLWriter.cs" />
+    <Compile Include="OutputData\XML\AttributeMappings.cs" />
+    <Compile Include="OutputData\XML\XMLDeclarationReport.cs" />
+    <Compile Include="OutputData\XML\XMLDeclarationWriter.cs" />
+    <Compile Include="OutputData\XML\XMLEngineeringWriter.cs" />
+    <Compile Include="Resources\XMLNames.Designer.cs" />
     <Compile Include="Utils\ProviderExtensions.cs" />
     <Compile Include="Models\Declaration\AirDrag.cs" />
     <Compile Include="Models\Declaration\Fan.cs" />
@@ -302,8 +333,13 @@
     <Compile Include="Utils\SwitchExtension.cs" />
     <Compile Include="Utils\VectoCSVFile.cs" />
     <Compile Include="Utils\DelaunayMap.cs" />
+    <Compile Include="Utils\XmlResourceResolver.cs" />
+    <Compile Include="Utils\XPathHelper.cs" />
   </ItemGroup>
   <ItemGroup>
+    <EmbeddedResource Include="Resources\XMLNames.resx">
+      <SubType>Designer</SubType>
+    </EmbeddedResource>
     <None Include="app.config" />
     <None Include="packages.config" />
     <EmbeddedResource Include="JsonKeys.resx">
@@ -348,6 +384,37 @@
     <EmbeddedResource Include="Resources\Declaration\VAUX\SP-Axles.csv" />
     <EmbeddedResource Include="Resources\Declaration\VAUX\PTO-tech.csv" />
     <EmbeddedResource Include="Resources\Declaration\TorqueConverter.csv" />
+    <EmbeddedResource Include="Resources\XSD\ParameterDocumentation.xsd">
+      <SubType>Designer</SubType>
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </EmbeddedResource>
+    <EmbeddedResource Include="Resources\XSD\VectoComponent.xsd">
+      <SubType>Designer</SubType>
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </EmbeddedResource>
+    <EmbeddedResource Include="Resources\XSD\VectoDeclarationDefinitions.0.6.xsd">
+      <SubType>Designer</SubType>
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </EmbeddedResource>
+    <EmbeddedResource Include="Resources\XSD\VectoEngineeringDefinitions.0.6.xsd">
+      <SubType>Designer</SubType>
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </EmbeddedResource>
+    <EmbeddedResource Include="Resources\XSD\VectoEngineeringDefinitions.0.7.xsd">
+      <SubType>Designer</SubType>
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </EmbeddedResource>
+    <EmbeddedResource Include="Resources\XSD\VectoEngineeringInput.xsd">
+      <SubType>Designer</SubType>
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </EmbeddedResource>
+    <EmbeddedResource Include="Resources\XSD\VectoInput.xsd">
+      <SubType>Designer</SubType>
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </EmbeddedResource>
+    <EmbeddedResource Include="Resources\XSD\VectoOutput.xsd">
+      <SubType>Designer</SubType>
+    </EmbeddedResource>
   </ItemGroup>
   <ItemGroup>
     <EmbeddedResource Include="Resources\Declaration\Report\4x2r.png" />
@@ -375,6 +442,7 @@
       <Name>VectoCommon</Name>
     </ProjectReference>
   </ItemGroup>
+  <ItemGroup />
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
   <PropertyGroup>
     <PreBuildEvent>if $(ConfigurationName) == Release  forfiles /p "$(ProjectDir)." /m "*.tt" /s /c "cmd /c echo Transforming @path &amp;&amp; \"%25CommonProgramFiles(x86)%25\Microsoft Shared\TextTemplating\12.0\TextTransform.exe\" @file"</PreBuildEvent>
