@@ -132,20 +132,18 @@ namespace TUGraz.VectoCore.OutputData
 
 		public static MeterPerSquareSecond AccelerationsPositive(this ModalDataContainer data)
 		{
-			return
-				data.GetValues<MeterPerSquareSecond>(ModalResultField.acc)
-					.Where(x => x < -0.125)
-					.DefaultIfEmpty(0.SI<MeterPerSquareSecond>())
-					.Average();
+			return data.GetValues<MeterPerSquareSecond>(ModalResultField.acc)
+				.Where(x => x > 0.125)
+				.DefaultIfEmpty(0.SI<MeterPerSquareSecond>())
+				.Average();
 		}
 
 		public static MeterPerSquareSecond AccelerationsNegative(this ModalDataContainer data)
 		{
-			return
-				data.GetValues<MeterPerSquareSecond>(ModalResultField.acc)
-					.Where(x => x < -0.125)
-					.DefaultIfEmpty(0.SI<MeterPerSquareSecond>())
-					.Average();
+			return data.GetValues<MeterPerSquareSecond>(ModalResultField.acc)
+				.Where(x => x < -0.125)
+				.DefaultIfEmpty(0.SI<MeterPerSquareSecond>())
+				.Average();
 		}
 
 		public static Scalar AccelerationTimeShare(this ModalDataContainer data)
