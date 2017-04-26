@@ -142,7 +142,7 @@ namespace TUGraz.VectoCore.Models.Declaration
 				var rigidGVWrow = _segmentTable.AsEnumerable().FirstOrDefault(r => {
 					var massMin = r.ParseDouble("gvw_min").SI().Ton;
 					var massMax = r.ParseDouble("gvw_max").SI().Ton;
-					return new[] { "1", "2", "3", "4" }.Contains(r.Field<string>("vehiclecategory"))
+					return new[] { "1", "2", "3", "4" }.Contains(r.Field<string>("hdvclass"))
 							&& massMin <= grossVehicleMassRating && grossVehicleMassRating <= massMax;
 				});
 				if (rigidGVWrow != null)
