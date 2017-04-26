@@ -51,6 +51,6 @@ The .vsum file includes total / average results for each calculation run in one 
 | CruiseTimeShare       | [%]                                  | Time share of cruise phases (-0.125 ≤ a~3s~ ≤ 0.125 \[m/s^2^\])                                                                                                                                                                                                                                                           |
 | StopTimeShare         | [%]                                  | Time share of stop phases (v \< 0.1 \[m/s\])                                                                                                                                                                                                                                                                              |
 
-E_fcmap_pos = E_fcmap_neg + E_powertrain_inertia + E_aux_xxx + E_aux_sum + E_clutch_loss + E_tc_loss + E_gbx_loss + E_ret_loss + E_angle_loss + E_axl_loss + E_brake + E_vehicle_inertia + E_air + E_roll + E_grad + E_PTO_CONSUM + E_PTO_TRANSM
+E_fcmap_pos = E_fcmap_neg + E_powertrain_inertia + E_aux_xxx E_clutch_loss + E_tc_loss + E_gbx_loss + E_ret_loss + E_angle_loss + E_axl_loss + E_brake + E_vehicle_inertia + E_air + E_roll + E_grad + E_PTO_CONSUM + E_PTO_TRANSM
 
 E_fcmap_pos = P_fcmap_pos * time
