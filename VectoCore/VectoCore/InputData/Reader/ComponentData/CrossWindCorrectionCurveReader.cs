@@ -110,9 +110,9 @@ namespace TUGraz.VectoCore.InputData.Reader.ComponentData
 				return ParseSpeedDependentFromColumnNames(data, aerodynamicDragArea);
 			}
 			LogManager.GetLogger(typeof(CrossWindCorrectionCurveReader).FullName).Warn(
-					"Crosswind correction file: Header line is not valid. Expected: '{0}, {1}', Got: '{2}'. Falling back to column index.",
-					FieldsSpeedDependent.Velocity, FieldsSpeedDependent.Cd,
-					string.Join(", ", data.Columns.Cast<DataColumn>().Select(c => c.ColumnName).Reverse()));
+				"Crosswind correction file: Header line is not valid. Expected: '{0}, {1}', Got: '{2}'. Falling back to column index.",
+				FieldsSpeedDependent.Velocity, FieldsSpeedDependent.Cd,
+				string.Join(", ", data.Columns.Cast<DataColumn>().Select(c => c.ColumnName).Reverse()));
 			return ParseSpeedDependentFromColumnIndizes(data, aerodynamicDragArea);
 		}
 
@@ -145,20 +145,20 @@ namespace TUGraz.VectoCore.InputData.Reader.ComponentData
 		{
 			return (from DataRow row in betaTable.Rows
 				select
-				new AirDragBetaEntry {
-					Beta = row.ParseDouble(0),
-					DeltaCdA = row.ParseDouble(1).SI<SquareMeter>()
-				}).ToList();
+					new AirDragBetaEntry {
+						Beta = row.ParseDouble(0),
+						DeltaCdA = row.ParseDouble(1).SI<SquareMeter>()
+					}).ToList();
 		}
 
 		private static List<AirDragBetaEntry> ParseCdxABetaFromColumnNames(DataTable betaTable)
 		{
 			return (from DataRow row in betaTable.Rows
 				select
-				new AirDragBetaEntry {
-					Beta = row.ParseDouble(FieldsCdxABeta.Beta),
-					DeltaCdA = row.ParseDouble(FieldsCdxABeta.DeltaCdxA).SI<SquareMeter>()
-				}).ToList();
+					new AirDragBetaEntry {
+						Beta = row.ParseDouble(FieldsCdxABeta.Beta),
+						DeltaCdA = row.ParseDouble(FieldsCdxABeta.DeltaCdxA).SI<SquareMeter>()
+					}).ToList();
 		}
 
 		private static bool HeaderIsValid(DataColumnCollection columns)
@@ -166,13 +166,13 @@ namespace TUGraz.VectoCore.InputData.Reader.ComponentData
 			return columns.Contains(FieldsCdxABeta.Beta) && columns.Contains(FieldsCdxABeta.DeltaCdxA);
 		}
 
-		private static class FieldsCdxABeta
+		public static class FieldsCdxABeta
 		{
 			public const string Beta = "beta";
 			public const string DeltaCdxA = "delta CdA";
 		}
 
-		private static class FieldsSpeedDependent
+		public static class FieldsSpeedDependent
 		{
 			public const string Velocity = "v_veh";
 			public const string Cd = "Cd";
