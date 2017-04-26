@@ -189,18 +189,18 @@ namespace TUGraz.VectoCore.Tests.Models.Declaration
 			AssertHelper.AreRelativeEqual(a3, value.A3);
 		}
 
-		[TestCase("TractorSemitrailer", 6.46, 0, 2.9, 7.60836548037213),
-		TestCase("TractorSemitrailer", 6.46, 60, 2.9, 7.60836548037213),
-		TestCase("TractorSemitrailer", 6.46, 75, 2.9, 7.28397041412),
-		TestCase("TractorSemitrailer", 6.46, 100, 2.9, 6.9828675026507),
-		TestCase("TractorSemitrailer", 6.46, 52.1234, 2.9, 7.608365),
-		TestCase("TractorSemitrailer", 6.46, 73.5432, 2.9, 7.310589),
-		TestCase("TractorSemitrailer", 6.46, 92.8765, 2.9, 7.049659),
-		TestCase("TractorSemitrailer", 6.46, 100.449, 2.9, 6.9790977232936),
-		TestCase("TractorSemitrailer", 6.46, 103, 2.9, 6.9584590862826),
-		TestCase("TractorSemitrailer", 6.46, 105, 2.9, 6.94315658143895),
-		TestCase("TractorSemitrailer", 6.46, 115, 2.9, 6.876603284338),
-		TestCase("TractorSemitrailer", 6.46, 130, 2.9, 6.80069890446746),]
+		[TestCase("TractorSemitrailer", 6.46, 0, 4.0, 7.71712257),
+		TestCase("TractorSemitrailer", 6.46, 60, 4.0, 7.71712257),
+		TestCase("TractorSemitrailer", 6.46, 75, 3.75, 7.35129203),
+		TestCase("TractorSemitrailer", 6.46, 100, 4.0, 7.03986404),
+		TestCase("TractorSemitrailer", 6.46, 62.1234, 4.0, 7.65751048),
+		TestCase("TractorSemitrailer", 6.46, 73.5432, 3.75, 7.37814098),
+		TestCase("TractorSemitrailer", 6.46, 92.8765, 4.0, 7.11234364),
+		TestCase("TractorSemitrailer", 6.46, 100.449, 4.0, 7.03571556),
+		TestCase("TractorSemitrailer", 6.46, 103, 3.6, 6.99454230),
+		TestCase("TractorSemitrailer", 6.46, 105, 3.9, 6.99177143),
+		TestCase("TractorSemitrailer", 6.46, 115, 4.0, 6.92267778),
+		TestCase("TractorSemitrailer", 6.46, 130, 4.0, 6.83867361),]
 		public void CrossWindCorrectionTest(string parameterSet, double crossSectionArea, double kmph, double height,
 			double expected)
 		{
@@ -210,29 +210,29 @@ namespace TUGraz.VectoCore.Tests.Models.Declaration
 				CrossWindCorrectionMode.DeclarationModeCorrection);
 
 			var tmp = crossWindCorrectionCurve.EffectiveAirDragArea(kmph.KMPHtoMeterPerSecond());
-			AssertHelper.AreRelativeEqual(expected, tmp.Value(), toleranceFactor: Tolerance);
+			AssertHelper.AreRelativeEqual(expected, tmp.Value(), toleranceFactor: 1e-3);
 		}
 
-		[TestCase("TractorSemitrailer", 5.8, 3)]
+		[TestCase("TractorSemitrailer", 5.8, 4.0)]
 		public void CrossWindGetDeclarationAirResistance(string parameterSet, double cdxa0, double height)
 		{
 			var curve =
 				DeclarationDataAdapter.GetDeclarationAirResistanceCurve(parameterSet, cdxa0.SI<SquareMeter>(), height.SI<Meter>());
 
 			AssertHelper.AreRelativeEqual(60.KMPHtoMeterPerSecond(), curve[1].Velocity);
-			AssertHelper.AreRelativeEqual(6.9458665452978.SI<SquareMeter>(), curve[1].EffectiveCrossSectionArea);
+			AssertHelper.AreRelativeEqual(7.0418009.SI<SquareMeter>(), curve[1].EffectiveCrossSectionArea);
 
 			AssertHelper.AreRelativeEqual(65.KMPHtoMeterPerSecond(), curve[2].Velocity);
-			AssertHelper.AreRelativeEqual(6.82099720057797.SI<SquareMeter>(), curve[2].EffectiveCrossSectionArea);
+			AssertHelper.AreRelativeEqual(6.90971991.SI<SquareMeter>(), curve[2].EffectiveCrossSectionArea);
 
 			AssertHelper.AreRelativeEqual(85.KMPHtoMeterPerSecond(), curve[6].Velocity);
-			AssertHelper.AreRelativeEqual(6.47838869554302.SI<SquareMeter>(), curve[6].EffectiveCrossSectionArea);
+			AssertHelper.AreRelativeEqual(6.54224222.SI<SquareMeter>(), curve[6].EffectiveCrossSectionArea);
 
 			AssertHelper.AreRelativeEqual(100.KMPHtoMeterPerSecond(), curve[9].Velocity);
-			AssertHelper.AreRelativeEqual(6.32370528142309.SI<SquareMeter>(), curve[9].EffectiveCrossSectionArea);
+			AssertHelper.AreRelativeEqual(6.37434824.SI<SquareMeter>(), curve[9].EffectiveCrossSectionArea);
 
 			AssertHelper.AreRelativeEqual(105.KMPHtoMeterPerSecond(), curve[10].Velocity);
-			AssertHelper.AreRelativeEqual(6.28404140744208.SI<SquareMeter>(), curve[10].EffectiveCrossSectionArea);
+			AssertHelper.AreRelativeEqual(6.33112792.SI<SquareMeter>(), curve[10].EffectiveCrossSectionArea);
 
 			Assert.Greater(20, curve.Count);
 		}
@@ -595,6 +595,50 @@ namespace TUGraz.VectoCore.Tests.Models.Declaration
 					Assert.AreEqual(expectedTrailerWeight, trailerMission.First().Trailer.First().TrailerCurbWeight.Value());
 				}
 			}
+		}
+
+		[Test,
+		TestCase(VehicleCategory.RigidTruck, AxleConfiguration.AxleConfig_4x2, 10000, 0, VehicleClass.Class1, 3.6,
+			TestName = "SegmentLookupHeight Class1 Rigid"),
+		TestCase(VehicleCategory.Tractor, AxleConfiguration.AxleConfig_4x2, 10000, 0, VehicleClass.Class1, 3.6,
+			TestName = "SegmentLookupHeight Class1 Tractor"),
+		TestCase(VehicleCategory.RigidTruck, AxleConfiguration.AxleConfig_4x2, 12000, 0, VehicleClass.Class2, 3.75,
+			TestName = "SegmentLookupHeight Class2 Rigid"),
+		TestCase(VehicleCategory.Tractor, AxleConfiguration.AxleConfig_4x2, 12000, 0, VehicleClass.Class2, 3.75,
+			TestName = "SegmentLookupHeight Class2 Tractor"),
+		TestCase(VehicleCategory.RigidTruck, AxleConfiguration.AxleConfig_4x2, 16000, 0, VehicleClass.Class3, 3.9,
+			TestName = "SegmentLookupHeight Class3 Rigid"),
+		TestCase(VehicleCategory.Tractor, AxleConfiguration.AxleConfig_4x2, 16000, 0, VehicleClass.Class3, 3.9,
+			TestName = "SegmentLookupHeight Class3 Tractor"),
+		TestCase(VehicleCategory.RigidTruck, AxleConfiguration.AxleConfig_4x2, 18000, 0, VehicleClass.Class4, 4.0,
+			TestName = "SegmentLookupHeight Class4"),
+		TestCase(VehicleCategory.Tractor, AxleConfiguration.AxleConfig_4x2, 18000, 0, VehicleClass.Class5, 4.0,
+			TestName = "SegmentLookupHeight Class5"),
+		TestCase(VehicleCategory.RigidTruck, AxleConfiguration.AxleConfig_6x2, 10000, 0, VehicleClass.Class9, 3.6,
+			TestName = "SegmentLookupHeight Class9 - 1"),
+		TestCase(VehicleCategory.RigidTruck, AxleConfiguration.AxleConfig_6x2, 12000, 0, VehicleClass.Class9, 3.75,
+			TestName = "SegmentLookupHeight Class9 - 2"),
+		TestCase(VehicleCategory.RigidTruck, AxleConfiguration.AxleConfig_6x2, 16000, 0, VehicleClass.Class9, 3.9,
+			TestName = "SegmentLookupHeight Class9 - 3"),
+		TestCase(VehicleCategory.RigidTruck, AxleConfiguration.AxleConfig_6x2, 18000, 0, VehicleClass.Class9, 4.0,
+			TestName = "SegmentLookupHeight Class9 - 4"),
+		TestCase(VehicleCategory.RigidTruck, AxleConfiguration.AxleConfig_6x2, 40000, 0, VehicleClass.Class9, 4.0,
+			TestName = "SegmentLookupHeight Class9 - other"),
+		TestCase(VehicleCategory.Tractor, AxleConfiguration.AxleConfig_6x2, 40000, 0, VehicleClass.Class10, 4.0,
+			TestName = "SegmentLookupHeight Class10"),
+		TestCase(VehicleCategory.RigidTruck, AxleConfiguration.AxleConfig_6x4, 12000, 0, VehicleClass.Class11, 4.0,
+			TestName = "SegmentLookupHeight Class11"),
+		TestCase(VehicleCategory.Tractor, AxleConfiguration.AxleConfig_6x4, 12000, 0, VehicleClass.Class12, 4.0,
+			TestName = "SegmentLookupHeight Class12"),
+		TestCase(VehicleCategory.RigidTruck, AxleConfiguration.AxleConfig_8x4, 12000, 0, VehicleClass.Class16, 3.6,
+			TestName = "SegmentLookupHeight Class16")]
+		public void SegmentLookupHeightTest(VehicleCategory category, AxleConfiguration axleConfiguration, double grossWeight,
+			double curbWeight, VehicleClass expectedClass, double expectedHeight)
+		{
+			var segment = DeclarationData.Segments.Lookup(category, axleConfiguration, grossWeight.SI<Kilogram>(),
+				curbWeight.SI<Kilogram>());
+			Assert.AreEqual(expectedClass, segment.VehicleClass);
+			AssertHelper.AreRelativeEqual(expectedHeight, segment.VehicleHeight);
 		}
 
 		[Test,
