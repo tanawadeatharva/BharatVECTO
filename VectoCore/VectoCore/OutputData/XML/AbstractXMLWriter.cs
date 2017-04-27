@@ -81,7 +81,7 @@ namespace TUGraz.IVT.VectoXML.Writer
 				case CrossWindCorrectionMode.DeclarationModeCorrection:
 					return "Declaration Mode Correction";
 				default:
-					throw new ArgumentOutOfRangeException("mode", mode, null);
+					throw new ArgumentOutOfRangeException("CrosswindCorrection", mode, null);
 			}
 		}
 
@@ -99,7 +99,7 @@ namespace TUGraz.IVT.VectoXML.Writer
 				case RetarderType.LossesIncludedInTransmission:
 					return "Losses included in Gearbox";
 				default:
-					throw new ArgumentOutOfRangeException("retarder", type, null);
+					throw new ArgumentOutOfRangeException("RetarderType", type, null);
 			}
 		}
 

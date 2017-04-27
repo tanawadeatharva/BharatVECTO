@@ -48,8 +48,7 @@ namespace TUGraz.VectoCore.InputData.FileIO.XML.Declaration
 
 		public IList<IAxleDeclarationInputData> Axles
 		{
-			get
-			{
+			get {
 				var axles = Navigator.Select(Helper.Query(VehiclePath, XMLNames.Vehicle_Components, XMLNames.Component_AxleWheels,
 					XMLNames.ComponentDataWrapper, XMLNames.AxleWheels_Axles, XMLNames.AxleWheels_Axles_Axle), Manager);
 
@@ -85,8 +84,7 @@ namespace TUGraz.VectoCore.InputData.FileIO.XML.Declaration
 
 		public RetarderType RetarderType
 		{
-			get
-			{
+			get {
 				var value = GetElementValue(XMLNames.Vehicle_RetarderType); //.ParseEnum<RetarderType>(); 
 				switch (value) {
 					case "None":
@@ -100,7 +98,7 @@ namespace TUGraz.VectoCore.InputData.FileIO.XML.Declaration
 					case "Transmission Output Retarder":
 						return RetarderType.TransmissionOutputRetarder;
 				}
-				throw new ArgumentOutOfRangeException(value);
+				throw new ArgumentOutOfRangeException("RetarderType", value);
 			}
 		}
 

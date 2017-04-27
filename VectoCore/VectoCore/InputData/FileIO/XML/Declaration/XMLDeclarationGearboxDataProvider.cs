@@ -23,8 +23,7 @@ namespace TUGraz.VectoCore.InputData.FileIO.XML.Declaration
 
 		public GearboxType Type
 		{
-			get
-			{
+			get {
 				var value = GetElementValue(XMLNames.Gearbox_TransmissionType);
 				switch (value) {
 					case "MT":
@@ -36,14 +35,13 @@ namespace TUGraz.VectoCore.InputData.FileIO.XML.Declaration
 					case "AT - PowerSplit":
 						return GearboxType.ATPowerSplit;
 				}
-				throw new ArgumentOutOfRangeException(value);
+				throw new ArgumentOutOfRangeException("GearboxType", value);
 			}
 		}
 
 		public IList<ITransmissionInputData> Gears
 		{
-			get
-			{
+			get {
 				var retVal = new List<ITransmissionInputData>();
 				var gears = Navigator.Select(
 					Helper.Query(XBasePath, XMLNames.Gearbox_Gears, XMLNames.Gearbox_Gears_Gear),
