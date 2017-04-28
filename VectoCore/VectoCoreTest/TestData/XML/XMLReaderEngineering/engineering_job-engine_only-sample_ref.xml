@@ -4,16 +4,15 @@
 													xmlns:tns="urn:tugraz:ivt:VectoAPI:EngineeringInput:v0.7"
 													xmlns:vdecdef="urn:tugraz:ivt:VectoAPI:DeclarationDefinitions:v0.6" schemaVersion="0.6"
 													xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
-													xsi:schemaLocation="urn:tugraz:ivt:VectoAPI:EngineeringInput:v0.7 VectoEngineeringInput.xsd">
+													xsi:schemaLocation="urn:tugraz:ivt:VectoAPI:EngineeringInput:v0.7 ../XSD/VectoEngineeringInput.xsd">
 	<EngineOnlyMode>false</EngineOnlyMode>
 	<Engine>
 		<Data id="ENG-gooZah3D">
-			<Vendor>Generic Engine Vendor</Vendor>
+			<Manufacturer>Generic Engine Vendor</Manufacturer>
+			<Model>Generic 40t Long Haul Truck Engine</Model>
 			<Creator>Markus Quaritsch, TUG IVT</Creator>
-			<Date>2016-02-15T11:00:00Z</Date>
-			<MakeAndModel>Generic 40t Long Haul Truck Engine</MakeAndModel>
-			<TypeId>ENG-gooZah3D</TypeId>
-			<Displacement>12730.0</Displacement>
+			<Date>2017-02-15T11:00:00Z</Date>
+			<Displacement>12730</Displacement>
 			<IdlingSpeed>560</IdlingSpeed>
 			<Inertia>0</Inertia>
 			<WHTCEngineering>1</WHTCEngineering>
