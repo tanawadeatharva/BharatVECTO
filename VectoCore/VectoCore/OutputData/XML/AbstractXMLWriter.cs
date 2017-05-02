@@ -33,11 +33,11 @@ namespace TUGraz.IVT.VectoXML.Writer
 		protected XElement[] GetDefaultComponentElements(string typeId, string makeAndModel)
 		{
 			return new[] {
-				new XElement(tns + XMLNames.Component_Vendor, String.Format("{0,-5}", Vendor)),
+				new XElement(tns + XMLNames.Component_Manufacturer, String.Format("{0,-5}", Vendor)),
 				new XElement(tns + XMLNames.Component_Creator, String.Format("{0,-10}", Creator)),
 				new XElement(tns + XMLNames.Component_Date, XmlConvert.ToString(DateTime.Now, XmlDateTimeSerializationMode.Utc)),
-				new XElement(tns + XMLNames.Component_MakeAndModel, String.Format("{0,-10}", makeAndModel)),
-				new XElement(tns + XMLNames.Component_TypeId, String.Format("{0,-10}", typeId)),
+				new XElement(tns + XMLNames.Component_Model, String.Format("{0,-10}", makeAndModel)),
+				new XElement(tns + XMLNames.Component_CertificationNumber, String.Format("{0,-10}", typeId)),
 			};
 		}
 

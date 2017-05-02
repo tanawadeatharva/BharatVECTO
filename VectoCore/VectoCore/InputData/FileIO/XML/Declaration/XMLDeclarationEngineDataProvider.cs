@@ -8,7 +8,7 @@ namespace TUGraz.VectoCore.InputData.FileIO.XML.Declaration
 	public class XMLDeclarationEngineDataProvider : AbstractDeclarationXMLComponentDataProvider,
 		IEngineDeclarationInputData
 	{
-		public XMLDeclarationEngineDataProvider(XMLInputDataProvider xmlInputDataProvider) : base(xmlInputDataProvider)
+		public XMLDeclarationEngineDataProvider(XMLDeclarationInputDataProvider xmlInputDataProvider) : base(xmlInputDataProvider)
 		{
 			XBasePath = Helper.Query(VehiclePath,
 				XMLNames.Vehicle_Components,

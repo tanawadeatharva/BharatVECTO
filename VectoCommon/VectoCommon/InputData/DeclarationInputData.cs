@@ -52,15 +52,17 @@ namespace TUGraz.VectoCommon.InputData
 
 		bool SavedInDeclarationMode { get; }
 
-		string Vendor { get; }
+		string Manufacturer { get; }
 
-		string ModelName { get; }
+		string Model { get; }
 
 		string Creator { get; }
 
 		string Date { get; }
 
-		string TypeId { get; }
+		string TechnicalReportId { get; }
+
+		string CertificationNumber { get; }
 
 		string DigestValue { get; }
 
@@ -85,19 +87,13 @@ namespace TUGraz.VectoCommon.InputData
 		/// P038  Curb Weight Vehicle
 		/// cf. VECTO Input Parameters.xlsx
 		/// </summary>
-		Kilogram CurbWeightChassis { get; }
+		Kilogram CurbMassChassis { get; }
 
 		/// <summary>
 		/// P041  Max. vehicle weight
 		/// cf. VECTO Input Parameters.xlsx
 		/// </summary>
 		Kilogram GrossVehicleMassRating { get; }
-
-		/// <summary>
-		/// P146, P147  DragCoefficient * Cross Section Area - Rigid
-		/// cf. VECTO Input Parameters.xlsx
-		/// </summary>
-		SquareMeter AirDragArea { get; } // without trailer
 
 		///// <summary>
 		///// P117  Powered axle tyres/rims
@@ -111,6 +107,15 @@ namespace TUGraz.VectoCommon.InputData
 		/// cf. VECTO Input Parameters.xlsx
 		/// </summary>
 		IList<IAxleDeclarationInputData> Axles { get; }
+	}
+
+	public interface IAirdragDeclarationInputData : IComponentInputData
+	{
+		/// <summary>
+		/// P146, P147  DragCoefficient * Cross Section Area - Rigid
+		/// cf. VECTO Input Parameters.xlsx
+		/// </summary>
+		SquareMeter AirDragArea { get; } // without trailer
 	}
 
 	public interface IRetarderInputData : IComponentInputData

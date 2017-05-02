@@ -91,13 +91,13 @@ namespace TUGraz.VectoCore.OutputData.XML
 			//var pto = data.PTOTransmissionInputData;
 
 			return new XElement(tns + XMLNames.Component_Vehicle,
-				new XAttribute(XMLNames.Component_ID_Attr, "VEH-" + vehicle.ModelName),
-				GetDefaultComponentElements(vehicle.TypeId, vehicle.ModelName),
+				new XAttribute(XMLNames.Component_ID_Attr, "VEH-" + vehicle.Model),
+				GetDefaultComponentElements(vehicle.TechnicalReportId, vehicle.Model),
 				new XElement(tns + XMLNames.Vehicle_VehicleCategory, GetVehicleCategoryXML(vehicle.VehicleCategory)),
 				new XElement(tns + XMLNames.Vehicle_AxleConfiguration, vehicle.AxleConfiguration.GetName()),
-				new XElement(tns + XMLNames.Vehicle_CurbWeightChassis, vehicle.CurbWeightChassis.Value()),
+				new XElement(tns + XMLNames.Vehicle_CurbWeightChassis, vehicle.CurbMassChassis.Value()),
 				new XElement(tns + XMLNames.Vehicle_GrossVehicleMass, vehicle.GrossVehicleMassRating.Value()),
-				new XElement(tns + XMLNames.Vehicle_AirDragArea, vehicle.AirDragArea.Value()),
+				//new XElement(tns + XMLNames.Vehicle_AirDragArea, vehicle.AirDragArea.Value()),
 				new XElement(tns + XMLNames.Vehicle_SteeredAxles, numSteeredaxles),
 				new XElement(tns + XMLNames.Vehicle_RetarderType, GetRetarterTypeXML(retarder.Type)),
 				retarder.Type.IsDedicatedComponent() ? new XElement(tns + XMLNames.Vehicle_RetarderRatio, retarder.Ratio) : null,
@@ -110,7 +110,8 @@ namespace TUGraz.VectoCore.OutputData.XML
 					retarder.Type.IsDedicatedComponent() ? CreateRetarder(retarder) : null,
 					CreateAxlegear(data.AxleGearInputData),
 					CreateAxleWheels(data.VehicleInputData),
-					CreateAuxiliaries(data.AuxiliaryInputData())
+					CreateAuxiliaries(data.AuxiliaryInputData()),
+					CreateAirdrag(data.AirdragInputData)
 					),
 				new XElement(tns + XMLNames.Vehicle_AdvancedDriverAssist,
 					new XElement(tns + XMLNames.Vehicle_AdvancedDriverAssist_EngineStartStop,
@@ -125,8 +126,8 @@ namespace TUGraz.VectoCore.OutputData.XML
 		{
 			return new XElement(tns + XMLNames.Component_Engine,
 				new XElement(tns + XMLNames.ComponentDataWrapper,
-					new XAttribute(XMLNames.Component_ID_Attr, string.Format("ENG-{0}", data.ModelName)),
-					GetDefaultComponentElements(string.Format("ENG-{0}", data.ModelName), data.ModelName),
+					new XAttribute(XMLNames.Component_ID_Attr, string.Format("ENG-{0}", data.Model)),
+					GetDefaultComponentElements(string.Format("ENG-{0}", data.Model), data.Model),
 					new XElement(tns + XMLNames.Engine_Displacement, data.Displacement.Value() * 1000 * 1000),
 					new XElement(tns + XMLNames.Engine_IdlingSpeed, data.IdleSpeed.AsRPM),
 					new XElement(tns + XMLNames.Engine_WHTCUrban, data.WHTCUrban),
@@ -160,8 +161,8 @@ namespace TUGraz.VectoCore.OutputData.XML
 			}
 			return new XElement(tns + XMLNames.Component_Gearbox,
 				new XElement(tns + XMLNames.ComponentDataWrapper,
-					new XAttribute(XMLNames.Component_ID_Attr, string.Format("GBX-{0}", gbxData.ModelName)),
-					GetDefaultComponentElements(string.Format("GBX-{0}", gbxData.ModelName), gbxData.ModelName),
+					new XAttribute(XMLNames.Component_ID_Attr, string.Format("GBX-{0}", gbxData.Model)),
+					GetDefaultComponentElements(string.Format("GBX-{0}", gbxData.Model), gbxData.Model),
 					new XElement(tns + XMLNames.Gearbox_TransmissionType, GearboxtypeToXML(gbxData.Type)),
 					gears
 					),
@@ -186,8 +187,8 @@ namespace TUGraz.VectoCore.OutputData.XML
 		{
 			return new XElement(tns + XMLNames.Component_Angledrive,
 				new XElement(tns + XMLNames.ComponentDataWrapper,
-					new XAttribute(XMLNames.Component_ID_Attr, "ANGL-" + data.ModelName),
-					GetDefaultComponentElements(data.TypeId, data.ModelName),
+					new XAttribute(XMLNames.Component_ID_Attr, "ANGL-" + data.Model),
+					GetDefaultComponentElements(data.TechnicalReportId, data.Model),
 					new XElement(tns + XMLNames.AngleDrive_Ratio, data.Ratio),
 					new XElement(tns + XMLNames.AngleDrive_TorqueLossMap,
 						EmbedDataTable(data.LossMap, AttributeMappings.TransmissionLossmapMapping))));
@@ -198,7 +199,7 @@ namespace TUGraz.VectoCore.OutputData.XML
 			return new XElement(tns + XMLNames.Component_Retarder,
 				new XElement(tns + XMLNames.ComponentDataWrapper,
 					new XAttribute(XMLNames.Component_ID_Attr, "RET-none"),
-					GetDefaultComponentElements(data.TypeId, data.ModelName),
+					GetDefaultComponentElements(data.TechnicalReportId, data.Model),
 					new XElement(tns + XMLNames.Retarder_RetarderLossMap,
 						EmbedDataTable(data.LossMap, AttributeMappings.RetarderLossmapMapping)
 						)
@@ -269,6 +270,16 @@ namespace TUGraz.VectoCore.OutputData.XML
 			return new XElement(tns + XMLNames.Component_Auxiliaries, aux);
 		}
 
+		private XElement CreateAirdrag(IAirdragDeclarationInputData data)
+		{
+			return new XElement(tns + XMLNames.Component_AirDrag,
+				new XElement(tns + XMLNames.ComponentDataWrapper,
+					new XAttribute(XMLNames.Component_ID_Attr,
+						string.Format("Airdrag-{0}", data.Model)),
+					GetDefaultComponentElements(data.Model, "N.A."),
+					new XElement(tns + XMLNames.AirDrag_DeclaredCdxA, data.AirDragArea.Value()))
+				);
+		}
 
 		private string AuxTypeToXML(AuxiliaryType type)
 		{

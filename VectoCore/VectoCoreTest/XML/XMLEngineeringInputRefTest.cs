@@ -17,7 +17,7 @@ using TUGraz.VectoCore.Utils;
 namespace TUGraz.VectoCore.Tests.XML
 {
 	[TestClass]
-	public class EngineeringApiInputReferencedFilesTest
+	public class XMLEngineeringInputRefTest
 	{
 		public const string EngineeringSampleFile = "TestData/XML/XMLReaderEngineering/engineering_job-sample_ref.xml";
 
@@ -39,7 +39,7 @@ namespace TUGraz.VectoCore.Tests.XML
 
 			Assert.IsFalse(engineDataProvider.SavedInDeclarationMode);
 
-			Assert.AreEqual("Generic 40t Long Haul Truck Engine", engineDataProvider.ModelName);
+			Assert.AreEqual("Generic 40t Long Haul Truck Engine", engineDataProvider.Model);
 			Assert.AreEqual(0.012730, engineDataProvider.Displacement.Value());
 			Assert.AreEqual(0.77, engineDataProvider.Inertia.Value());
 
@@ -72,7 +72,7 @@ namespace TUGraz.VectoCore.Tests.XML
 			var inputDataProvider = new XMLEngineeringInputDataProvider(EngineeringSampleFile, true);
 			var gearboxDataProvider = inputDataProvider.GearboxInputData;
 
-			Assert.AreEqual("Generic 40t Long Haul Truck Gearbox", gearboxDataProvider.ModelName);
+			Assert.AreEqual("Generic 40t Long Haul Truck Gearbox", gearboxDataProvider.Model);
 			Assert.AreEqual(GearboxType.AMT, gearboxDataProvider.Type);
 			var gears = gearboxDataProvider.Gears;
 			Assert.AreEqual(12, gears.Count);
@@ -120,7 +120,7 @@ namespace TUGraz.VectoCore.Tests.XML
 			var inputDataProvider = new XMLEngineeringInputDataProvider(EngineeringSampleFile, true);
 			var angledriveInputData = inputDataProvider.AngledriveInputData;
 
-			Assert.AreEqual("Generic Angledrive", angledriveInputData.ModelName);
+			Assert.AreEqual("Generic Angledrive", angledriveInputData.Model);
 
 			var lossMapData = angledriveInputData.LossMap;
 			Assert.AreEqual(1.2, angledriveInputData.Ratio);
@@ -137,7 +137,7 @@ namespace TUGraz.VectoCore.Tests.XML
 			var inputDataProvider = new XMLEngineeringInputDataProvider(EngineeringSampleFile, true);
 			var axlegearDataProvider = inputDataProvider.AxleGearInputData;
 
-			Assert.AreEqual("Generic 40t Long Haul Truck AxleGear", axlegearDataProvider.ModelName);
+			Assert.AreEqual("Generic 40t Long Haul Truck AxleGear", axlegearDataProvider.Model);
 
 			var lossMapData = axlegearDataProvider.LossMap;
 			Assert.AreEqual(2.59, axlegearDataProvider.Ratio);
@@ -154,7 +154,7 @@ namespace TUGraz.VectoCore.Tests.XML
 			var inputDataProvider = new XMLEngineeringInputDataProvider(EngineeringSampleFile, true);
 			var retarderDataProvider = inputDataProvider.RetarderInputData;
 
-			Assert.AreEqual("Generic Retarder", retarderDataProvider.ModelName);
+			Assert.AreEqual("Generic Retarder", retarderDataProvider.Model);
 
 			var lossMapData = retarderDataProvider.LossMap;
 
@@ -175,11 +175,11 @@ namespace TUGraz.VectoCore.Tests.XML
 			var axles = vehicleDataProvider.Axles;
 
 			Assert.AreEqual("315/70 R22.5", axles[0].Wheels);
-			Assert.AreEqual(0.00555, axles[0].RollResistanceCoefficient);
+			Assert.AreEqual(0.0055, axles[0].RollResistanceCoefficient);
 			Assert.AreEqual(31300, axles[0].TyreTestLoad.Value());
 
 			Assert.AreEqual("315/70 R22.5", axles[1].Wheels);
-			Assert.AreEqual(0.00628, axles[1].RollResistanceCoefficient);
+			Assert.AreEqual(0.0063, axles[1].RollResistanceCoefficient);
 			Assert.AreEqual(31300, axles[1].TyreTestLoad.Value());
 
 			//AssertHelper.Exception<VectoException>(() => { var tmp = vehicleDataProvider.Rim; });
@@ -230,12 +230,12 @@ namespace TUGraz.VectoCore.Tests.XML
 			Assert.AreEqual(VehicleCategory.Tractor, vehicleDataProvider.VehicleCategory);
 			Assert.AreEqual(AxleConfiguration.AxleConfig_4x2, vehicleDataProvider.AxleConfiguration);
 
-			Assert.AreEqual(7100.0, vehicleDataProvider.CurbWeightChassis.Value());
+			Assert.AreEqual(7100.0, vehicleDataProvider.CurbMassChassis.Value());
 			Assert.AreEqual(18000.0, vehicleDataProvider.GrossVehicleMassRating.Value());
-			Assert.AreEqual(6.2985, vehicleDataProvider.AirDragArea.Value());
+			Assert.AreEqual(6.29, inputDataProvider.AirdragInputData.AirDragArea.Value());
 
 			Assert.AreEqual(1500, vehicleDataProvider.Loading.Value());
-			Assert.AreEqual(500, vehicleDataProvider.CurbWeightExtra.Value());
+			Assert.AreEqual(500, vehicleDataProvider.CurbMassExtra.Value());
 
 			Assert.AreEqual(1.0, inputDataProvider.RetarderInputData.Ratio);
 		}

@@ -461,12 +461,12 @@ namespace TUGraz.VectoCore.InputData.FileIO.JSON
 
 		#endregion
 
-		public string Vendor
+		public string Manufacturer
 		{
 			get { return "N/A"; }
 		}
 
-		public string ModelName
+		public string Model
 		{
 			get { return Body.GetEx<string>(JsonKeys.Gearbox_ModelName); }
 		}
@@ -481,7 +481,12 @@ namespace TUGraz.VectoCore.InputData.FileIO.JSON
 			get { return "N/A"; }
 		}
 
-		public string TypeId
+		public string TechnicalReportId
+		{
+			get { return "N/A"; }
+		}
+
+		public string CertificationNumber
 		{
 			get { return "N/A"; }
 		}

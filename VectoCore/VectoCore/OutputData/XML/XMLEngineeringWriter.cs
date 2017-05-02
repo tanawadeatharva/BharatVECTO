@@ -182,26 +182,27 @@ namespace TUGraz.VectoCore.OutputData.XML
 			var retarder = data.RetarderInputData;
 			var gearbox = data.GearboxInputData;
 			var vehicle = data.VehicleInputData;
+			var airdrag = data.AirdragInputData;
 			var angledrive = data.AngledriveInputData;
 			var pto = data.PTOTransmissionInputData;
 
 			return new XElement(tns + XMLNames.Component_Vehicle,
-				new XAttribute(XMLNames.Component_ID_Attr, "VEH-" + vehicle.ModelName),
-				GetDefaultComponentElements(vehicle.TypeId, vehicle.ModelName),
+				new XAttribute(XMLNames.Component_ID_Attr, "VEH-" + vehicle.Model),
+				GetDefaultComponentElements(vehicle.TechnicalReportId, vehicle.Model),
 				new XElement(tns + XMLNames.Vehicle_VehicleCategory, GetVehicleCategoryXML(vehicle.VehicleCategory)),
 				new XElement(tns + XMLNames.Vehicle_AxleConfiguration, vehicle.AxleConfiguration.GetName()),
-				new XElement(tns + XMLNames.Vehicle_CurbWeightChassis, vehicle.CurbWeightChassis.Value()),
+				new XElement(tns + XMLNames.Vehicle_CurbWeightChassis, vehicle.CurbMassChassis.Value()),
 				new XElement(tns + XMLNames.Vehicle_GrossVehicleMass, vehicle.GrossVehicleMassRating.Value()),
-				new XElement(tns + XMLNames.Vehicle_AirDragArea, vehicle.AirDragArea.Value()),
+				new XElement(tns + XMLNames.Vehicle_AirDragArea, airdrag.AirDragArea.Value()),
 				new XElement(tns + XMLNames.Vehicle_RetarderType, GetRetarterTypeXML(retarder.Type)),
 				retarder.Type.IsDedicatedComponent() ? new XElement(tns + XMLNames.Vehicle_RetarderRatio, retarder.Ratio) : null,
 				new XElement(tns + XMLNames.Vehicle_AngledriveType, angledrive.Type),
 				new XElement(tns + XMLNames.Vehicle_PTOType, pto.PTOTransmissionType),
 				GetPTOData(pto),
-				new XElement(tns + XMLNames.Vehicle_CurbWeightExtra, vehicle.CurbWeightExtra.Value()),
+				new XElement(tns + XMLNames.Vehicle_CurbWeightExtra, vehicle.CurbMassExtra.Value()),
 				new XElement(tns + XMLNames.Vehicle_Loading, vehicle.Loading.Value()),
-				new XElement(tns + XMLNames.Vehicle_CrossWindCorrectionMode, GetCorrectionModeXML(vehicle.CrossWindCorrectionMode)),
-				GetCrossWindCorrectionData(vehicle),
+				new XElement(tns + XMLNames.Vehicle_CrossWindCorrectionMode, GetCorrectionModeXML(airdrag.CrossWindCorrectionMode)),
+				GetCrossWindCorrectionData(airdrag),
 				new XElement(tns + XMLNames.Vehicle_Components,
 					CreateEngine(data.EngineInputData),
 					CreateGearbox(gearbox, gearbox.TorqueConverter),
@@ -209,7 +210,7 @@ namespace TUGraz.VectoCore.OutputData.XML
 					retarder.Type.IsDedicatedComponent() ? CreateRetarder(retarder) : null,
 					CreateAxlegear(data.AxleGearInputData),
 					CreateAxleWheels(data.VehicleInputData),
-					CreateAuxiliaries(data.AuxiliaryInputData(), RemoveInvalidFileCharacters(data.VehicleInputData.ModelName))
+					CreateAuxiliaries(data.AuxiliaryInputData(), RemoveInvalidFileCharacters(data.VehicleInputData.Model))
 					),
 				new XElement(tns + XMLNames.Vehicle_AdvancedDriverAssist,
 					new XElement(tns + XMLNames.Vehicle_AdvancedDriverAssist_EngineStartStop,
@@ -239,22 +240,22 @@ namespace TUGraz.VectoCore.OutputData.XML
 			return new object[] { ptoLossMap, ptoCycle };
 		}
 
-		private XElement GetCrossWindCorrectionData(IVehicleEngineeringInputData vehicle)
+		private XElement GetCrossWindCorrectionData(IAirdragEngineeringInputData airdrag)
 		{
-			if (vehicle.CrossWindCorrectionMode == CrossWindCorrectionMode.NoCorrection ||
-				vehicle.CrossWindCorrectionMode == CrossWindCorrectionMode.DeclarationModeCorrection) {
+			if (airdrag.CrossWindCorrectionMode == CrossWindCorrectionMode.NoCorrection ||
+				airdrag.CrossWindCorrectionMode == CrossWindCorrectionMode.DeclarationModeCorrection) {
 				return null;
 			}
 
 			var correctionMap = new XElement(tns + XMLNames.Vehicle_CrosswindCorrectionData);
 
 			if (_singleFile) {
-				correctionMap.Add(EmbedDataTable(vehicle.CrosswindCorrectionMap, AttributeMappings.CrossWindCorrectionMapping));
+				correctionMap.Add(EmbedDataTable(airdrag.CrosswindCorrectionMap, AttributeMappings.CrossWindCorrectionMapping));
 			} else {
-				var ext = vehicle.CrossWindCorrectionMode == CrossWindCorrectionMode.SpeedDependentCorrectionFactor
+				var ext = airdrag.CrossWindCorrectionMode == CrossWindCorrectionMode.SpeedDependentCorrectionFactor
 					? "vcdv"
 					: "vcdb";
-				correctionMap.Add(ExtCSVResource(vehicle.CrosswindCorrectionMap, "CrossWindCorrection." + ext));
+				correctionMap.Add(ExtCSVResource(airdrag.CrosswindCorrectionMap, "CrossWindCorrection." + ext));
 			}
 
 			return correctionMap;
@@ -264,8 +265,9 @@ namespace TUGraz.VectoCore.OutputData.XML
 		{
 			var angledrive = new XElement(tns + XMLNames.Component_Angledrive,
 				new XElement(tns + XMLNames.ComponentDataWrapper,
-					new XAttribute(XMLNames.Component_ID_Attr, "ANGL-" + data.ModelName),
-					GetDefaultComponentElements(data.TypeId, data.ModelName), new XElement(tns + XMLNames.AngleDrive_Ratio, data.Ratio),
+					new XAttribute(XMLNames.Component_ID_Attr, "ANGL-" + data.Model),
+					GetDefaultComponentElements(data.TechnicalReportId, data.Model),
+					new XElement(tns + XMLNames.AngleDrive_Ratio, data.Ratio),
 					data.LossMap == null
 						? new XElement(tns + XMLNames.AngleDrive_Efficiency, data.Efficiency)
 						: new XElement(tns + XMLNames.AngleDrive_TorqueLossMap, GetTransmissionLossMap(data.LossMap))));
@@ -369,11 +371,11 @@ namespace TUGraz.VectoCore.OutputData.XML
 		{
 			var retarder = new XElement(tns + XMLNames.Component_Retarder,
 				new XElement(tns + XMLNames.ComponentDataWrapper, new XAttribute(XMLNames.Component_ID_Attr, "RET-none"),
-					GetDefaultComponentElements(data.TypeId, data.ModelName),
+					GetDefaultComponentElements(data.TechnicalReportId, data.Model),
 					new XElement(tns + XMLNames.Retarder_RetarderLossMap,
 						_singleFile
 							? EmbedDataTable(data.LossMap, AttributeMappings.RetarderLossmapMapping)
-							: ExtCSVResource(data.LossMap, string.Format("RET_{0}.vrlm", RemoveInvalidFileCharacters(data.ModelName))))));
+							: ExtCSVResource(data.LossMap, string.Format("RET_{0}.vrlm", RemoveInvalidFileCharacters(data.Model))))));
 			//if (_singleFile) {
 			return retarder;
 			//}
@@ -405,8 +407,8 @@ namespace TUGraz.VectoCore.OutputData.XML
 			}
 			var gbx = new XElement(tns + XMLNames.Component_Gearbox,
 				new XElement(tns + XMLNames.ComponentDataWrapper,
-					new XAttribute(XMLNames.Component_ID_Attr, string.Format("GBX-{0}", data.ModelName)),
-					GetDefaultComponentElements(string.Format("GBX-{0}", data.ModelName), data.ModelName),
+					new XAttribute(XMLNames.Component_ID_Attr, string.Format("GBX-{0}", data.Model)),
+					GetDefaultComponentElements(string.Format("GBX-{0}", data.Model), data.Model),
 					new XElement(tns + XMLNames.Gearbox_TransmissionType, GearboxtypeToXML(data.Type)),
 					new XElement(tns + XMLNames.Gearbox_Inertia, data.Inertia.Value()),
 					new XElement(tns + XMLNames.Gearbox_TractionInterruption, data.TractionInterruption.Value()), gears),
@@ -415,7 +417,7 @@ namespace TUGraz.VectoCore.OutputData.XML
 			if (_singleFile) {
 				return gbx;
 			}
-			return ExtComponent(XMLNames.Component_Gearbox, gbx, string.Format("GBX-{0}.xml", data.ModelName));
+			return ExtComponent(XMLNames.Component_Gearbox, gbx, string.Format("GBX-{0}.xml", data.Model));
 		}
 
 		private XElement CreateTorqueConverter(ITorqueConverterEngineeringInputData torqueConverterData)
@@ -455,8 +457,8 @@ namespace TUGraz.VectoCore.OutputData.XML
 		{
 			var engine = new XElement(tns + XMLNames.Component_Engine,
 				new XElement(tns + XMLNames.ComponentDataWrapper,
-					new XAttribute(XMLNames.Component_ID_Attr, string.Format("ENG-{0}", data.ModelName)),
-					GetDefaultComponentElements(string.Format("ENG-{0}", data.ModelName), data.ModelName),
+					new XAttribute(XMLNames.Component_ID_Attr, string.Format("ENG-{0}", data.Model)),
+					GetDefaultComponentElements(string.Format("ENG-{0}", data.Model), data.Model),
 					new XElement(tns + XMLNames.Engine_Displacement, data.Displacement.Value() * 1000 * 1000),
 					new XElement(tns + XMLNames.Engine_IdlingSpeed, data.IdleSpeed.AsRPM),
 					new XElement(tns + XMLNames.Engine_Inertia, data.Inertia.Value()),
@@ -466,7 +468,7 @@ namespace TUGraz.VectoCore.OutputData.XML
 			if (!allowSeparateFile || _singleFile) {
 				return engine;
 			}
-			return ExtComponent(XMLNames.Component_Engine, engine, string.Format("ENG-{0}.xml", data.ModelName));
+			return ExtComponent(XMLNames.Component_Engine, engine, string.Format("ENG-{0}.xml", data.Model));
 		}
 
 		private XElement ExtComponent(string component, XElement componentXML, string filename)
@@ -485,7 +487,7 @@ namespace TUGraz.VectoCore.OutputData.XML
 			if (_singleFile) {
 				return EmbedDataTable(data.FullLoadCurve, AttributeMappings.EngineFullLoadCurveMapping);
 			}
-			var filename = string.Format("ENG_{0}.vfld", data.ModelName);
+			var filename = string.Format("ENG_{0}.vfld", data.Model);
 			return ExtCSVResource(data.FullLoadCurve, filename);
 		}
 
@@ -495,7 +497,7 @@ namespace TUGraz.VectoCore.OutputData.XML
 				return EmbedDataTable(data.FuelConsumptionMap, AttributeMappings.FuelConsumptionMapMapping);
 			}
 
-			var filename = string.Format("ENG_{0}.vmap", data.ModelName);
+			var filename = string.Format("ENG_{0}.vmap", data.Model);
 			return ExtCSVResource(data.FuelConsumptionMap, filename);
 		}
 

@@ -125,7 +125,7 @@ namespace TUGraz.VectoCore.InputData.FileIO.XML.Engineering
 			get
 			{
 				return InputData.JobInputData().EngineOnlyMode
-					? InputData.EngineInputData.TypeId
+					? InputData.EngineInputData.TechnicalReportId
 					: InputData._vehicleInputData.GetVehicleID;
 			}
 		}

@@ -7,7 +7,8 @@ namespace TUGraz.VectoCore.InputData.FileIO.XML.Declaration
 {
 	public class XMLDeclarationAxlegearDataProvider : AbstractDeclarationXMLComponentDataProvider, IAxleGearInputData
 	{
-		public XMLDeclarationAxlegearDataProvider(XMLInputDataProvider xmlInputDataProvider) : base(xmlInputDataProvider)
+		public XMLDeclarationAxlegearDataProvider(XMLDeclarationInputDataProvider xmlInputDataProvider)
+			: base(xmlInputDataProvider)
 		{
 			XBasePath = Helper.Query(VehiclePath,
 				XMLNames.Vehicle_Components,
@@ -22,8 +23,7 @@ namespace TUGraz.VectoCore.InputData.FileIO.XML.Declaration
 
 		public TableData LossMap
 		{
-			get
-			{
+			get {
 				return ReadTableData(AttributeMappings.TransmissionLossmapMapping,
 					Helper.Query(XMLNames.Axlegear_TorqueLossMap, XMLNames.Axlegear_TorqueLossMap_Entry));
 			}

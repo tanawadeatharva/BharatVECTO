@@ -8,7 +8,7 @@ namespace TUGraz.VectoCore.InputData.FileIO.XML.Declaration
 {
 	public class XMLDeclarationAngledriveDataProvider : AbstractDeclarationXMLComponentDataProvider, IAngledriveInputData
 	{
-		public XMLDeclarationAngledriveDataProvider(XMLInputDataProvider xmlInputDataProvider) : base(xmlInputDataProvider)
+		public XMLDeclarationAngledriveDataProvider(XMLDeclarationInputDataProvider xmlInputDataProvider) : base(xmlInputDataProvider)
 		{
 			XBasePath = Helper.Query(VehiclePath,
 				XMLNames.Vehicle_Components,

@@ -13,9 +13,15 @@ namespace TUGraz.VectoCore.InputData.FileIO.XML.Declaration
 	public class XMLDeclarationVehicleDataProvider : AbstractDeclarationXMLComponentDataProvider,
 		IVehicleDeclarationInputData
 	{
-		public XMLDeclarationVehicleDataProvider(XMLInputDataProvider xmlInputDataProvider) : base(xmlInputDataProvider)
+		public XMLDeclarationVehicleDataProvider(XMLDeclarationInputDataProvider xmlInputDataProvider)
+			: base(xmlInputDataProvider)
 		{
 			XBasePath = VehiclePath;
+		}
+
+		public override string TechnicalReportId
+		{
+			get { return GetElementValue(XMLNames.Vehicle_VIN); }
 		}
 
 		public VehicleCategory VehicleCategory
@@ -23,9 +29,9 @@ namespace TUGraz.VectoCore.InputData.FileIO.XML.Declaration
 			get { return GetElementValue(XMLNames.Vehicle_VehicleCategory).ParseEnum<VehicleCategory>(); }
 		}
 
-		public Kilogram CurbWeightChassis
+		public Kilogram CurbMassChassis
 		{
-			get { return GetDoubleElementValue(XMLNames.Vehicle_CurbWeightChassis).SI<Kilogram>(); }
+			get { return GetDoubleElementValue(XMLNames.Vehicle_CurbMassChassis).SI<Kilogram>(); }
 		}
 
 
@@ -54,10 +60,6 @@ namespace TUGraz.VectoCore.InputData.FileIO.XML.Declaration
 
 				var retVal = new IAxleDeclarationInputData[axles.Count];
 				while (axles.MoveNext()) {
-					//foreach (var axle in axles) {
-					var dimension = axles.Current.SelectSingleNode(Helper.NSPrefix(XMLNames.AxleWheels_Axles_Axle_Dimension), Manager);
-					var rollResistance = axles.Current.SelectSingleNode(Helper.NSPrefix(XMLNames.AxleWheels_Axles_Axle_RRCISO), Manager);
-					var tyreTestLoad = axles.Current.SelectSingleNode(Helper.NSPrefix(XMLNames.AxleWheels_Axles_Axle_FzISO), Manager);
 					var axleNumber = axles.Current.GetAttribute(XMLNames.AxleWheels_Axles_Axle_AxleNumber_Attr, "").ToInt();
 					if (axleNumber < 1 || axleNumber > retVal.Length) {
 						throw new VectoException("Axle #{0} exceeds axle count", axleNumber);
@@ -65,9 +67,22 @@ namespace TUGraz.VectoCore.InputData.FileIO.XML.Declaration
 					if (retVal[axleNumber - 1] != null) {
 						throw new VectoException("Axle #{0} defined multiple times!", axleNumber);
 					}
+					var axleType = axles.Current.SelectSingleNode(Helper.NSPrefix(XMLNames.AxleWheels_Axles_Axle_AxleType), Manager);
+					var twinTyres = axles.Current.SelectSingleNode(Helper.NSPrefix(XMLNames.AxleWheels_Axles_Axle_TwinTyres), Manager);
+					var steered = axles.Current.SelectSingleNode(Helper.NSPrefix(XMLNames.AxleWheels_Axles_Axle_Steered), Manager);
+					var tyre =
+						axles.Current.SelectSingleNode(Helper.Query(XMLNames.AxleWheels_Axles_Axle_Tyre, XMLNames.ComponentDataWrapper),
+							Manager);
+					if (tyre == null) {
+						throw new VectoException("Axle #{0} contains no tyre definition", axleNumber);
+					}
+					var dimension = tyre.SelectSingleNode(Helper.NSPrefix(XMLNames.AxleWheels_Axles_Axle_Dimension), Manager);
+					var rollResistance = tyre.SelectSingleNode(Helper.NSPrefix(XMLNames.AxleWheels_Axles_Axle_RRCDeclared), Manager);
+					var tyreTestLoad = tyre.SelectSingleNode(Helper.NSPrefix(XMLNames.AxleWheels_Axles_Axle_FzISO), Manager);
 					retVal[axleNumber - 1] = new AxleInputData {
-						AxleType = axles.Current.GetAttribute(XMLNames.AxleWheels_Axles_Axle_AxleType_Attr, "").ParseEnum<AxleType>(),
-						TwinTyres = XmlConvert.ToBoolean(axles.Current.GetAttribute(XMLNames.AxleWheels_Axles_Axle_TwinTyres_Attr, "")),
+						AxleType = axleType == null ? AxleType.VehicleNonDriven : axleType.Value.ParseEnum<AxleType>(),
+						TwinTyres = twinTyres != null && XmlConvert.ToBoolean(twinTyres.Value),
+						Steered = steered != null && XmlConvert.ToBoolean(steered.Value),
 						TyreTestLoad = tyreTestLoad == null ? null : tyreTestLoad.Value.ToDouble().SI<Newton>(),
 						RollResistanceCoefficient = rollResistance == null ? double.NaN : rollResistance.Value.ToDouble(),
 						Wheels = dimension == null ? null : dimension.Value,

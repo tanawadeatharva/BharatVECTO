@@ -32,8 +32,8 @@ Imports TUGraz.VectoCore.Utils
 
 <CustomValidation(GetType(VectoJob), "ValidateJob")>
 Public Class VectoJob
-	Implements IEngineeringInputDataProvider, IDeclarationInputDataProvider, IEngineeringJobInputData,
-				IDeclarationJobInputData, IDriverEngineeringInputData, IDriverDeclarationInputData, IAuxiliariesEngineeringInputData,
+	Implements IEngineeringInputDataProvider, IDeclarationInputDataProvider, IEngineeringJobInputData, 
+				IDeclarationJobInputData, IDriverEngineeringInputData, IDriverDeclarationInputData, IAuxiliariesEngineeringInputData, 
 				IAuxiliariesDeclarationInputData
 
 	'AA-TB
@@ -441,6 +441,21 @@ Public Class VectoJob
 		Get
 			If Not File.Exists(_vehicleFile.FullPath) Then Return Nothing
 			Return New JSONComponentInputData(_vehicleFile.FullPath).VehicleInputData
+		End Get
+	End Property
+
+	Public ReadOnly Property IDeclarationInputDataProvider_AirdragInputData As IAirdragDeclarationInputData _
+		Implements IDeclarationInputDataProvider.AirdragInputData
+		Get
+			Return AirdragInputData
+		End Get
+	End Property
+
+	Public ReadOnly Property AirdragInputData As IAirdragEngineeringInputData _
+		Implements IEngineeringInputDataProvider.AirdragInputData
+		Get
+			If Not File.Exists(_vehicleFile.FullPath) Then Return Nothing
+			Return New JSONComponentInputData(_vehicleFile.FullPath).AirdragInputData
 		End Get
 	End Property
 

@@ -93,7 +93,8 @@ namespace TUGraz.VectoCore.InputData.FileIO.XML.Engineering
 				Path.GetDirectoryName(Path.GetFullPath(FileName)));
 			if (XMLEngineeringJobData.EngineOnlyMode) {
 				EngineInputData = new XMLEngineeringEngineDataProvider(this, Document,
-					helper.QueryAbs(helper.NSPrefix(XMLNames.VectoInputEngineering, Constants.XML.RootNSPrefix), XMLNames.Component_Engine,
+					helper.QueryAbs(helper.NSPrefix(XMLNames.VectoInputEngineering, Constants.XML.RootNSPrefix),
+						XMLNames.Component_Engine,
 						XMLNames.ComponentDataWrapper), Path.GetDirectoryName(Path.GetFullPath(FileName)));
 				return;
 			}
@@ -108,6 +109,7 @@ namespace TUGraz.VectoCore.InputData.FileIO.XML.Engineering
 			GearboxInputData = _vehicleInputData.GetGearboxData(settings);
 			TorqueConverterInputData = GearboxInputData.TorqueConverter;
 			PTOTransmissionInputData = _vehicleInputData.GetPTOData(settings);
+			AirdragInputData = _vehicleInputData.GetAirdragInputData(settings);
 		}
 
 		private static void ValidationCallBack(object sender, ValidationEventArgs args)
@@ -160,7 +162,8 @@ namespace TUGraz.VectoCore.InputData.FileIO.XML.Engineering
 
 		private static XmlSchemaSet GetXMLSchema(string version)
 		{
-			var resource = RessourceHelper.LoadResourceAsStream(RessourceHelper.ResourceType.XMLSchema, "VectoEngineeringInput.xsd");
+			var resource = RessourceHelper.LoadResourceAsStream(RessourceHelper.ResourceType.XMLSchema,
+				"VectoEngineeringInput.xsd");
 			var xset = new XmlSchemaSet() { XmlResolver = new XmlResourceResolver() };
 			var reader = XmlReader.Create(resource, new XmlReaderSettings(), XmlResourceResolver.BaseUri);
 			xset.Add(XmlSchema.Read(reader, null));
@@ -177,6 +180,8 @@ namespace TUGraz.VectoCore.InputData.FileIO.XML.Engineering
 		{
 			get { return _vehicleInputData; }
 		}
+
+		public IAirdragEngineeringInputData AirdragInputData { get; private set; }
 
 
 		public IGearboxEngineeringInputData GearboxInputData { get; private set; }

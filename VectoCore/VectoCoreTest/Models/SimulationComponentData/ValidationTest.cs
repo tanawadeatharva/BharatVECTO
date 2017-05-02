@@ -118,7 +118,7 @@ namespace TUGraz.VectoCore.Tests.Models.SimulationComponentData
 			fullLoad.Rows.Add("3", "3", "-3", "3");
 			fullLoad.Rows.Add("3", "3", "-3", "3");
 			var data = new MockEngineDataProvider {
-				ModelName = "asdf",
+				Model = "asdf",
 				Displacement = 6374.SI().Cubic.Centi.Meter.Cast<CubicMeter>(),
 				IdleSpeed = 560.RPMtoRad(),
 				Inertia = 1.SI<KilogramSquareMeter>(),
@@ -153,7 +153,7 @@ namespace TUGraz.VectoCore.Tests.Models.SimulationComponentData
 			fullLoad.Rows.Add("3", "3", "-3", "3");
 			fullLoad.Rows.Add("3", "3", "-3", "3");
 			var data = new MockEngineDataProvider {
-				ModelName = "asdf",
+				Model = "asdf",
 				Displacement = 6374.SI().Cubic.Centi.Meter.Cast<CubicMeter>(),
 				IdleSpeed = 560.RPMtoRad(),
 				Inertia = 1.SI<KilogramSquareMeter>(),

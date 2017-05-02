@@ -40,7 +40,8 @@ namespace TUGraz.VectoCommon.OutputData
 
 		void SaveGearbox(IGearboxEngineeringInputData gbx, IAxleGearInputData axl, string filename);
 
-		void SaveVehicle(IVehicleEngineeringInputData vehicle, IRetarderInputData retarder,
+		void SaveVehicle(IVehicleEngineeringInputData vehicle, IAirdragEngineeringInputData airdrag,
+			IRetarderInputData retarder,
 			IPTOTransmissionInputData pto, IAngledriveInputData angledrive, string filename);
 
 		void SaveJob(IEngineeringInputDataProvider input, string filename);

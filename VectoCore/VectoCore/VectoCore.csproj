@@ -115,6 +115,7 @@
     <Compile Include="InputData\FileIO\JSON\JSONComponentInputData.cs" />
     <Compile Include="InputData\FileIO\JSON\JsonExtensionMethods.cs" />
     <Compile Include="InputData\FileIO\XML\Declaration\AbstractDeclarationXMLComponentDataProvider.cs" />
+    <Compile Include="InputData\FileIO\XML\Declaration\XMLDeclarationAirdragDataProvider.cs" />
     <Compile Include="InputData\FileIO\XML\Declaration\XMLDeclarationAngledriveDataProvider.cs" />
     <Compile Include="InputData\FileIO\XML\Declaration\XMLDeclarationAuxiliaryDataProvider.cs" />
     <Compile Include="InputData\FileIO\XML\Declaration\XMLDeclarationAxlegearDataProvider.cs" />
@@ -125,8 +126,9 @@
     <Compile Include="InputData\FileIO\XML\Declaration\XMLDeclarationRetarderDataProvider.cs" />
     <Compile Include="InputData\FileIO\XML\Declaration\XMLDeclarationTorqueConverterDataProvider.cs" />
     <Compile Include="InputData\FileIO\XML\Declaration\XMLDeclarationVehicleDataProvider.cs" />
-    <Compile Include="InputData\FileIO\XML\Declaration\XMLInputDataProvider.cs" />
+    <Compile Include="InputData\FileIO\XML\Declaration\XMLDeclarationInputDataProvider.cs" />
     <Compile Include="InputData\FileIO\XML\Engineering\AbstractEngineeringXMLComponentDataProvider.cs" />
+    <Compile Include="InputData\FileIO\XML\Engineering\XMLEngineeringAirdragDataProvider.cs" />
     <Compile Include="InputData\FileIO\XML\Engineering\XMLEngineeringAngledriveDataProvider.cs" />
     <Compile Include="InputData\FileIO\XML\Engineering\XMLEngineeringAuxiliaryDataProvider.cs" />
     <Compile Include="InputData\FileIO\XML\Engineering\XMLEngineeringAxlegearDataProvider.cs" />
@@ -193,7 +195,11 @@
     <Compile Include="OutputData\XML\XMLDeclarationReport.cs" />
     <Compile Include="OutputData\XML\XMLDeclarationWriter.cs" />
     <Compile Include="OutputData\XML\XMLEngineeringWriter.cs" />
-    <Compile Include="Resources\XMLNames.Designer.cs" />
+    <Compile Include="Resources\XMLNames.Designer.cs">
+      <AutoGen>True</AutoGen>
+      <DesignTime>True</DesignTime>
+      <DependentUpon>XMLNames.resx</DependentUpon>
+    </Compile>
     <Compile Include="Utils\ProviderExtensions.cs" />
     <Compile Include="Models\Declaration\AirDrag.cs" />
     <Compile Include="Models\Declaration\Fan.cs" />
@@ -339,6 +345,8 @@
   <ItemGroup>
     <EmbeddedResource Include="Resources\XMLNames.resx">
       <SubType>Designer</SubType>
+      <Generator>PublicResXFileCodeGenerator</Generator>
+      <LastGenOutput>XMLNames.Designer.cs</LastGenOutput>
     </EmbeddedResource>
     <None Include="app.config" />
     <None Include="packages.config" />
@@ -413,6 +421,12 @@
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
     </EmbeddedResource>
     <EmbeddedResource Include="Resources\XSD\VectoOutput.xsd">
+      <SubType>Designer</SubType>
+    </EmbeddedResource>
+    <EmbeddedResource Include="Resources\XSD\VectoDeclarationDefinitions.0.8.xsd">
+      <SubType>Designer</SubType>
+    </EmbeddedResource>
+    <EmbeddedResource Include="Resources\XSD\xmldsig-core-schema.xsd">
       <SubType>Designer</SubType>
     </EmbeddedResource>
   </ItemGroup>

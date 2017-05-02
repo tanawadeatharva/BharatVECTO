@@ -128,7 +128,7 @@ namespace TUGraz.VectoCore.Tests.XML
 			job.Save(outputFile);
 
 			var reader = XmlReader.Create(outputFile);
-			var xml = new XMLInputDataProvider(reader, true);
+			var xml = new XMLDeclarationInputDataProvider(reader, true);
 
 			Assert.IsNotNull(xml);
 			Assert.AreEqual("VEH-N/A", xml.JobInputData().JobName);
@@ -145,12 +145,12 @@ namespace TUGraz.VectoCore.Tests.XML
 
 			var inputData = JSONInputDataFactory.ReadJsonJob(DeclarationJobFull);
 
-			var job = new XMLDeclarationWriter( "TUG_IVT").GenerateVectoJob((IDeclarationInputDataProvider)inputData);
+			var job = new XMLDeclarationWriter("TUG_IVT").GenerateVectoJob((IDeclarationInputDataProvider)inputData);
 
 			job.Save(outputFile);
 
 			var reader = XmlReader.Create(outputFile);
-			var xml = new XMLInputDataProvider(reader, true);
+			var xml = new XMLDeclarationInputDataProvider(reader, true);
 
 			Assert.IsNotNull(xml);
 			Assert.AreEqual("VEH-N/A", xml.JobInputData().JobName);

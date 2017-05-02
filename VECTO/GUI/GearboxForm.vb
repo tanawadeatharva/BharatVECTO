@@ -258,7 +258,7 @@ Public Class GearboxForm
 		End If
 
 		Dim basePath As String = Path.GetDirectoryName(file)
-		TbName.Text = gearbox.ModelName
+		TbName.Text = gearbox.Model
 		TbTracInt.Text = gearbox.TractionInterruption.ToGUIFormat()
 		TBI_getr.Text = gearbox.Inertia.ToGUIFormat()
 
@@ -975,10 +975,10 @@ Public Class GearboxForm
 		End If
 		Dim data As Gearbox = FillGearboxData(_gbxFile)
 		If (Cfg.DeclMode) Then
-			Dim export As XDocument = New XMLDeclarationWriter(data.Vendor).GenerateVectoComponent(data, data)
+			Dim export As XDocument = New XMLDeclarationWriter(data.Manufacturer).GenerateVectoComponent(data, data)
 			export.Save(Path.Combine(dialog.FileName, data.ModelName + ".xml"))
 		Else
-			Dim export As XDocument = New XMLEngineeringWriter(_gbxFile, True, data.Vendor).GenerateVectoComponent(data, data)
+			Dim export As XDocument = New XMLEngineeringWriter(_gbxFile, True, data.Manufacturer).GenerateVectoComponent(data, data)
 			export.Save(Path.Combine(dialog.FileName, data.ModelName + ".xml"))
 		End If
 	End Sub
@@ -991,10 +991,10 @@ Public Class GearboxForm
 		End If
 		Dim data As Gearbox = FillGearboxData(_gbxFile)
 		If (Cfg.DeclMode) Then
-			Dim export As XDocument = New XMLDeclarationWriter(data.Vendor).GenerateVectoComponent(data)
+			Dim export As XDocument = New XMLDeclarationWriter(data.Manufacturer).GenerateVectoComponent(data)
 			export.Save(Path.Combine(dialog.FileName, data.ModelName + ".xml"))
 		Else
-			Dim export As XDocument = New XMLEngineeringWriter(_gbxFile, True, data.Vendor).GenerateVectoComponent(data)
+			Dim export As XDocument = New XMLEngineeringWriter(_gbxFile, True, data.Manufacturer).GenerateVectoComponent(data)
 			export.Save(Path.Combine(dialog.FileName, data.ModelName + ".xml"))
 		End If
 	End Sub

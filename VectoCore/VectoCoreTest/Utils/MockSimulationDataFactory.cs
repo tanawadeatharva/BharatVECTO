@@ -82,7 +82,8 @@ namespace TUGraz.VectoCore.Tests.Utils
 		{
 			var dao = new EngineeringDataAdapter();
 			var vehicleInput = JSONInputDataFactory.ReadJsonVehicle(vehicleDataFile);
-			return dao.CreateVehicleData(vehicleInput);
+			var airdragData = vehicleInput as IAirdragEngineeringInputData;
+			return dao.CreateVehicleData(vehicleInput, airdragData);
 		}
 
 		public static DriverData CreateDriverDataFromFile(string driverDataFile)

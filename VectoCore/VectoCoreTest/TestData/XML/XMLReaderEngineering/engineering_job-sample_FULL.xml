@@ -2553,7 +2553,6 @@
 				<TorqueConverter>
 					<Data>
 						<ReferenceRPM>1000</ReferenceRPM>
-						
 						<Characteristics>
 							<Entry speedRatio="0.0000" inputTorqueRef="300.00" torqueRatio="1.80"/>
 							<Entry speedRatio="1.0000" inputTorqueRef="10.00" torqueRatio="1.00"/>
@@ -3500,9 +3499,17 @@
 			<Entry vehicleSpeed="100" maxAcceleration="1" maxDeceleration="-1"/>
 		</DriverAccelerationCurve>
 		<ShiftStrategyParameters>
-			<UpshiftMinAcceleration>0.1</UpshiftMinAcceleration>
+			<UpshiftMinAcceleration>0.133</UpshiftMinAcceleration>
 			<DownshiftAfterUpshiftDelay>12</DownshiftAfterUpshiftDelay>
 			<UpshiftAfterDownshiftDelay>13</UpshiftAfterDownshiftDelay>
+			<TorqueReserve>0.213</TorqueReserve>
+			<TimeBetweenGearshift>2.33</TimeBetweenGearshift>
+			<StartSpeed>2.11</StartSpeed>
+			<StartAcceleration>0.211</StartAcceleration>
+			<StartTorqueReserve>0.212</StartTorqueReserve>
+			<PowershiftShiftTime>0.811</PowershiftShiftTime>
+			<CLUpshiftMinAcceleration>0.133</CLUpshiftMinAcceleration>
+			<CCUpshiftMinAcceleration>0.134</CCUpshiftMinAcceleration>
 		</ShiftStrategyParameters>
 	</DriverModel>
 	<MissionCycles>
