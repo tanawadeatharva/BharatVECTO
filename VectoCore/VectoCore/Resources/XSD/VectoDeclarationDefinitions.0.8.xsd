@@ -242,7 +242,7 @@
 				<xs:complexType>
 					<xs:complexContent>
 						<xs:extension base="tns:TyreDeclarationType">
-							<xs:attribute name="certificationNumber" type="tns:CertificationNumberType"  use="required">
+							<xs:attribute name="certificationNumber" type="tns:CertificationNumberType" use="required">
 								<xs:annotation>
 									<xs:documentation>P267 - [-]</xs:documentation>
 								</xs:annotation>
