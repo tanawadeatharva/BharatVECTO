@@ -25,7 +25,7 @@
 					<xs:complexType>
 						<xs:complexContent>
 							<xs:extension base="vdecdef:GearboxComponentDeclarationType">
-								<xs:attribute name="certificationNumber" type="tns:CertificationNumberType">
+								<xs:attribute name="certificationNumber" type="vdecdef:CertificationNumberType">
 									<xs:annotation>
 										<xs:documentation>P262 - [-]</xs:documentation>
 									</xs:annotation>
@@ -38,7 +38,7 @@
 					<xs:complexType>
 						<xs:complexContent>
 							<xs:extension base="vdecdef:RetarderComponentDeclarationType">
-								<xs:attribute name="certificationNumber" type="tns:CertificationNumberType">
+								<xs:attribute name="certificationNumber" type="vdecdef:CertificationNumberType">
 									<xs:annotation>
 										<xs:documentation>P266 - [-]</xs:documentation>
 									</xs:annotation>
@@ -51,7 +51,7 @@
 					<xs:complexType>
 						<xs:complexContent>
 							<xs:extension base="vdecdef:AxlegearComponentDeclarationType">
-								<xs:attribute name="certificationNumber" type="tns:CertificationNumberType">
+								<xs:attribute name="certificationNumber" type="vdecdef:CertificationNumberType">
 									<xs:annotation>
 										<xs:documentation>P264 - [-]</xs:documentation>
 									</xs:annotation>
@@ -64,7 +64,7 @@
 					<xs:complexType>
 						<xs:complexContent>
 							<xs:extension base="vdecdef:TyreDeclarationType">
-								<xs:attribute name="certificationNumber" type="tns:CertificationNumberType">
+								<xs:attribute name="certificationNumber" type="vdecdef:CertificationNumberType">
 									<xs:annotation>
 										<xs:documentation>P267 - [-]</xs:documentation>
 									</xs:annotation>
@@ -78,7 +78,7 @@
 					<xs:complexType>
 						<xs:complexContent>
 							<xs:extension base="vdecdef:AngledriveComponentDeclarationType">
-								<xs:attribute name="certificationNumber" type="tns:CertificationNumberType">
+								<xs:attribute name="certificationNumber" type="vdecdef:CertificationNumberType">
 									<xs:annotation>
 										<xs:documentation>P265 - [-]</xs:documentation>
 									</xs:annotation>
@@ -91,7 +91,7 @@
 					<xs:complexType>
 						<xs:complexContent>
 							<xs:extension base="vdecdef:AirDragComponentDeclarationType">
-								<xs:attribute name="certificationNumber" type="tns:CertificationNumberType">
+								<xs:attribute name="certificationNumber" type="vdecdef:CertificationNumberType">
 									<xs:annotation>
 										<xs:documentation>P268 - [-]</xs:documentation>
 									</xs:annotation>
