@@ -1,0 +1,38 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<Project>
+	<Folder FolderName="XML Files" ExtStr="xml;cml;math;rdf;smil;svg;wml">
+		<File FilePath="VectoCoreTest\TestData\XML\XMLReaderEngineering\engineering_axlegear-sample_ref.xml" HomeFolder="Yes"/>
+		<File FilePath="VectoCoreTest\TestData\XML\XMLReaderEngineering\engineering_engine-sample_ref.xml" HomeFolder="Yes"/>
+		<File FilePath="VectoCoreTest\TestData\XML\XMLReaderEngineering\engineering_gearbox-sample_ref.xml" HomeFolder="Yes"/>
+		<File FilePath="VectoCoreTest\TestData\XML\XMLReaderEngineering\engineering_job-engine_only-sample_ref.xml" HomeFolder="Yes"/>
+		<File FilePath="VectoCoreTest\TestData\XML\XMLReaderEngineering\engineering_job-sample.xml" HomeFolder="Yes"/>
+		<File FilePath="VectoCoreTest\TestData\XML\XMLReaderEngineering\engineering_job-sample_FULL.xml" HomeFolder="Yes"/>
+		<File FilePath="VectoCoreTest\TestData\XML\XMLReaderEngineering\engineering_job-sample_ref.xml" HomeFolder="Yes"/>
+		<File FilePath="VectoCoreTest\TestData\XML\XMLReaderEngineering\engineering_retarder-sample_ref.xml" HomeFolder="Yes"/>
+		<File FilePath="VectoCoreTest\TestData\XML\XMLReaderEngineering\engineering_vehicle_ref.xml" HomeFolder="Yes"/>
+		<File FilePath="VectoCoreTest\TestData\XML\XMLReaderDeclaration\vecto_engine-sample.xml" HomeFolder="Yes"/>
+		<File FilePath="VectoCoreTest\TestData\XML\XMLReaderDeclaration\vecto_gearbox-sample.xml" HomeFolder="Yes"/>
+		<File FilePath="VectoCoreTest\TestData\XML\XMLReaderDeclaration\vecto_vehicle-sample.xml" HomeFolder="Yes"/>
+		<File FilePath="VectoCoreTest\TestData\XML\XMLReaderDeclaration\vecto_vehicle-sample_FULL.xml" HomeFolder="Yes"/>
+	</Folder>
+	<Folder FolderName="XSL Files" ExtStr="xsl;xslt">
+		<File FilePath="E:\QUAM\Workspace\VECTO_API\API\RenderTable.xslt" HomeFolder="Yes"/>
+		<File FilePath="E:\QUAM\Workspace\VECTO_API\API\XSD\SortInputData.xslt" HomeFolder="Yes"/>
+	</Folder>
+	<Folder FolderName="XQuery Files" ExtStr="xq;xql;xquery;xqu"/>
+	<Folder FolderName="HTML Files" ExtStr="html;htm;xhtml;asp"/>
+	<Folder FolderName="DTD/Schemas" ExtStr="dtd;dcd;xdr;biz;xsd">
+		<File FilePath="VectoCore\Resources\XSD\ParameterDocumentation.xsd" HomeFolder="Yes"/>
+		<File FilePath="VectoCore\Resources\XSD\VectoComponent.xsd" HomeFolder="Yes"/>
+		<File FilePath="VectoCore\Resources\XSD\VectoDeclarationDefinitions.0.6.xsd" HomeFolder="Yes"/>
+		<File FilePath="VectoCore\Resources\XSD\VectoDeclarationDefinitions.0.8.xsd" HomeFolder="Yes"/>
+		<File FilePath="VectoCore\Resources\XSD\VectoDefinitions.xsd" HomeFolder="Yes"/>
+		<File FilePath="VectoCore\Resources\XSD\VectoEngineeringDefinitions.0.6.xsd" HomeFolder="Yes"/>
+		<File FilePath="VectoCore\Resources\XSD\VectoEngineeringDefinitions.0.7.xsd" HomeFolder="Yes"/>
+		<File FilePath="VectoCore\Resources\XSD\VectoEngineeringInput.xsd" HomeFolder="Yes"/>
+		<File FilePath="VectoCore\Resources\XSD\VectoInput.xsd" HomeFolder="Yes"/>
+		<File FilePath="VectoCore\Resources\XSD\VectoOutput.xsd" HomeFolder="Yes"/>
+		<File FilePath="VectoCore\Resources\XSD\xmldsig-core-schema.xsd" HomeFolder="Yes"/>
+	</Folder>
+	<Folder FolderName="Entities" ExtStr="ent"/>
+</Project>
