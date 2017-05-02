@@ -31,7 +31,7 @@
 					<IdlingSpeed>560</IdlingSpeed>
 					<RatedSpeed>2200</RatedSpeed>
 					<RatedPower>380000</RatedPower>
-					<MaxTorque>2300</MaxTorque>
+					<MaxEngineTorque>2300</MaxEngineTorque>
 					<WHTCUrban>1.0097</WHTCUrban>
 					<WHTCRural>1.0035</WHTCRural>
 					<WHTCMotorway>1.0200</WHTCMotorway>
