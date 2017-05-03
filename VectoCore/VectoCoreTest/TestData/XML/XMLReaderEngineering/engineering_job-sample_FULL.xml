@@ -2552,6 +2552,10 @@
 				</Signature>
 				<TorqueConverter>
 					<Data>
+					<Manufacturer>Generic Torqueconverter Manufacturer</Manufacturer>
+					<Model>Generic Torqueconverter</Model>
+					<Creator>Markus Quaritsch, TUG ITI</Creator>
+					<Date>2017-01-11T11:00:00Z</Date>
 						<ReferenceRPM>1000</ReferenceRPM>
 						<Characteristics>
 							<Entry speedRatio="0.0000" inputTorqueRef="300.00" torqueRatio="1.80"/>

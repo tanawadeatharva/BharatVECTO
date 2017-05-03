@@ -457,11 +457,11 @@ namespace TUGraz.VectoCore.Resources {
         }
         
         /// <summary>
-        ///   Looks up a localized string similar to CertificationNumber.
+        ///   Looks up a localized string similar to certificationNumber.
         /// </summary>
-        public static string Component_CertificationNumber {
+        public static string Component_CertificationNumber_Attr {
             get {
-                return ResourceManager.GetString("Component_CertificationNumber", resourceCulture);
+                return ResourceManager.GetString("Component_CertificationNumber_Attr", resourceCulture);
             }
         }
         
