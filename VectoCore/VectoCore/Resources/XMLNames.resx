@@ -687,4 +687,70 @@
 	<data name="Component_AppVersion" xml:space="preserve">
     <value>AppVersion</value>
   </data>
+	<data name="Component_CertificationMethod" xml:space="preserve">
+    <value>CertificationMethod</value>
+  </data>
+	<data name="Component_Gearbox_CertificationMethod" xml:space="preserve">
+    <value>MainCertificationMethod</value>
+  </data>
+	<data name="Engine_RatedSpeed" xml:space="preserve">
+    <value>RatedSpeed</value>
+  </data>
+	<data name="Engine_RatedPower" xml:space="preserve">
+    <value>RatedPower</value>
+  </data>
+	<data name="Engine_MaxTorque" xml:space="preserve">
+    <value>MaxEngineTorque</value>
+  </data>
+	<data name="Engine_FuelType" xml:space="preserve">
+    <value>FuelType</value>
+  </data>
+	<data name="Engine_CorrecionFactor_NCV" xml:space="preserve">
+    <value>CFNCV</value>
+  </data>
+	<data name="Engine_CorrectionFactor_RegPer" xml:space="preserve">
+    <value>CFRegPer</value>
+  </data>
+	<data name="Vehicle_PTO" xml:space="preserve">
+    <value>PTO</value>
+  </data>
+	<data name="Vehicle_PTO_ShaftsGearWheels" xml:space="preserve">
+    <value>PTOShaftsGearWheels</value>
+  </data>
+	<data name="Vehicle_PTO_OtherElements" xml:space="preserve">
+    <value>PTOOtherElements</value>
+  </data>
+	<data name="Vehicle_IdlingSpeed" xml:space="preserve">
+    <value>IdlingSpeed</value>
+  </data>
+	<data name="Vehicle_LegislativeClass" xml:space="preserve">
+    <value>LegislativeClass</value>
+  </data>
+	<data name="DI_Signature" xml:space="preserve">
+    <value>Signature</value>
+  </data>
+	<data name="DI_Signature_Reference" xml:space="preserve">
+    <value>Reference</value>
+  </data>
+	<data name="DI_Signature_Reference_URI_Attr" xml:space="preserve">
+    <value>URI</value>
+  </data>
+	<data name="DI_Signature_Reference_Transforms" xml:space="preserve">
+    <value>Transforms</value>
+  </data>
+	<data name="DI_Signature_Reference_Transforms_Transform" xml:space="preserve">
+    <value>Transform</value>
+  </data>
+	<data name="DI_Signature_Algorithm_Attr" xml:space="preserve">
+    <value>Algorithm</value>
+  </data>
+	<data name="DI_Signature_Reference_DigestMethod" xml:space="preserve">
+    <value>DigestMethod</value>
+  </data>
+	<data name="DI_Signature_Reference_DigestValue" xml:space="preserve">
+    <value>DigestValue</value>
+  </data>
+	<data name="Component_ManufacturerAddress" xml:space="preserve">
+    <value>ManufacturerAddress</value>
+  </data>
 </root>

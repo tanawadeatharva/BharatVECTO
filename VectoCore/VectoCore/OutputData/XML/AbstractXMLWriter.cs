@@ -20,7 +20,7 @@ namespace TUGraz.IVT.VectoXML.Writer
 		protected XNamespace rootNamespace;
 		protected XNamespace di;
 
-		private const string Creator = "TU Graz, IVT-EM XML Exporter";
+		protected const string Creator = "TU Graz, IVT-EM XML Exporter";
 		protected readonly string Vendor;
 
 		protected readonly string BasePath;
@@ -32,28 +32,6 @@ namespace TUGraz.IVT.VectoXML.Writer
 			Vendor = vendor;
 
 			di = "http://www.w3.org/2000/09/xmldsig#";
-		}
-
-		protected XElement[] GetDefaultComponentElements(string componentId, string makeAndModel)
-		{
-			return new[] {
-				new XElement(tns + XMLNames.Component_Manufacturer, string.Format("{0,-5}", Vendor)),
-				new XElement(tns + XMLNames.Component_Model, string.Format("{0,-10}", makeAndModel)),
-				new XElement(tns + XMLNames.Component_TechnicalReportId, string.Format("{0,-10}", componentId)),
-				new XElement(tns + XMLNames.Component_Date, XmlConvert.ToString(DateTime.Now, XmlDateTimeSerializationMode.Utc)),
-				new XElement(tns + XMLNames.Component_AppVersion, "VectoCore"),
-			};
-		}
-
-		protected XElement[] GetDefaultComponentElements(string vin, string makeAndModel, string address)
-		{
-			return new[] {
-				new XElement(tns + XMLNames.Component_Manufacturer, String.Format("{0,-5}", Vendor)),
-				new XElement(tns + XMLNames.Component_ManufacturerAddress, address),
-				new XElement(tns + XMLNames.Component_Model, string.Format("{0,-10}", makeAndModel)),
-				new XElement(tns + XMLNames.Vehicle_VIN, string.Format("{0,-10}", vin)),
-				new XElement(tns + XMLNames.Component_Date, XmlConvert.ToString(DateTime.Now, XmlDateTimeSerializationMode.Utc)),
-			};
 		}
 
 		protected object[] EmbedDataTable(DataTable table, Dictionary<string, string> mapping, string tagName = "Entry",

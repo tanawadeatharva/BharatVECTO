@@ -43,7 +43,7 @@ namespace TUGraz.VectoCore.Tests.XML
 			var xml = new XMLEngineeringInputDataProvider(outFile, true);
 
 			Assert.IsNotNull(xml);
-			Assert.AreEqual("ENG-175kW 6.8l Engine", xml.JobInputData().JobName);
+			Assert.AreEqual("175kW 6.8l Engine", xml.JobInputData().JobName);
 		}
 
 		[TestMethod]
@@ -59,7 +59,7 @@ namespace TUGraz.VectoCore.Tests.XML
 			var xml = new XMLEngineeringInputDataProvider(outFile, true);
 
 			Assert.IsNotNull(xml);
-			Assert.AreEqual("VEH-N/A", xml.JobInputData().JobName);
+			Assert.AreEqual("VEH-N.A.", xml.JobInputData().JobName);
 		}
 
 		[TestMethod]
@@ -75,7 +75,7 @@ namespace TUGraz.VectoCore.Tests.XML
 			var xml = new XMLEngineeringInputDataProvider(outFile, true);
 
 			Assert.IsNotNull(xml);
-			Assert.AreEqual("VEH-N/A", xml.JobInputData().JobName);
+			Assert.AreEqual("VEH-N.A.", xml.JobInputData().JobName);
 		}
 
 		[TestMethod]
@@ -93,7 +93,7 @@ namespace TUGraz.VectoCore.Tests.XML
 			var xml = new XMLEngineeringInputDataProvider(Path.Combine(outDir, outFile), true);
 
 			Assert.IsNotNull(xml);
-			Assert.AreEqual("VEH-N/A", xml.JobInputData().JobName);
+			Assert.AreEqual("VEH-N.A.", xml.JobInputData().JobName);
 		}
 
 		[TestMethod]

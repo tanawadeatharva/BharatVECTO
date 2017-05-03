@@ -579,47 +579,51 @@
 	</xs:complexType>
 	<xs:complexType name="TorqueConverterComponentEngineeringType"/>
 	<xs:complexType name="TorqueConverterEngineeringDataType">
-		<xs:sequence>
-			<xs:element name="ReferenceRPM" type="tns:TorqueConverterReferenceRPMType">
-				<xs:annotation>
-					<xs:documentation>P092 - [1/min]</xs:documentation>
-				</xs:annotation>
-			</xs:element>
-			<xs:element name="Characteristics">
-				<xs:complexType>
-					<xs:choice>
-						<xs:element name="Entry" type="vdecdef:TorqueConverterCharacteristicsEntryType" minOccurs="2" maxOccurs="unbounded"/>
-						<xs:element name="Resource" type="tns:ExtResourceEngineeringType">
-							<xs:annotation>
-								<xs:documentation>P091</xs:documentation>
-							</xs:annotation>
-						</xs:element>
-					</xs:choice>
-				</xs:complexType>
-			</xs:element>
-			<xs:element name="Inertia" type="tns:TorqueConverterInertiaType">
-				<xs:annotation>
-					<xs:documentation>P127 - [kgm²]</xs:documentation>
-				</xs:annotation>
-			</xs:element>
-			<xs:element name="ShiftPolygon" minOccurs="0">
-				<xs:complexType>
-					<xs:choice>
-						<xs:element name="Entry" type="tns:ShiftPolygonEntryType" minOccurs="2" maxOccurs="unbounded"/>
-						<xs:element name="Resource" type="tns:ExtResourceEngineeringType">
-							<xs:annotation>
-								<xs:documentation>P091</xs:documentation>
-							</xs:annotation>
-						</xs:element>
-					</xs:choice>
-				</xs:complexType>
-			</xs:element>
-			<xs:element name="MaxInputSpeed" type="tns:TorqueConverterMaxInputSpeedType" minOccurs="0">
-				<xs:annotation>
-					<xs:documentation>P187 - [rpm]</xs:documentation>
-				</xs:annotation>
-			</xs:element>
-		</xs:sequence>
+		<xs:complexContent>
+			<xs:extension base="tns:EngineeringPowertrainComponentType">
+				<xs:sequence>
+					<xs:element name="ReferenceRPM" type="tns:TorqueConverterReferenceRPMType">
+						<xs:annotation>
+							<xs:documentation>P092 - [1/min]</xs:documentation>
+						</xs:annotation>
+					</xs:element>
+					<xs:element name="Characteristics">
+						<xs:complexType>
+							<xs:choice>
+								<xs:element name="Entry" type="vdecdef:TorqueConverterCharacteristicsEntryType" minOccurs="2" maxOccurs="unbounded"/>
+								<xs:element name="Resource" type="tns:ExtResourceEngineeringType">
+									<xs:annotation>
+										<xs:documentation>P091</xs:documentation>
+									</xs:annotation>
+								</xs:element>
+							</xs:choice>
+						</xs:complexType>
+					</xs:element>
+					<xs:element name="Inertia" type="tns:TorqueConverterInertiaType">
+						<xs:annotation>
+							<xs:documentation>P127 - [kgm²]</xs:documentation>
+						</xs:annotation>
+					</xs:element>
+					<xs:element name="ShiftPolygon" minOccurs="0">
+						<xs:complexType>
+							<xs:choice>
+								<xs:element name="Entry" type="tns:ShiftPolygonEntryType" minOccurs="2" maxOccurs="unbounded"/>
+								<xs:element name="Resource" type="tns:ExtResourceEngineeringType">
+									<xs:annotation>
+										<xs:documentation>P091</xs:documentation>
+									</xs:annotation>
+								</xs:element>
+							</xs:choice>
+						</xs:complexType>
+					</xs:element>
+					<xs:element name="MaxInputSpeed" type="tns:TorqueConverterMaxInputSpeedType" minOccurs="0">
+						<xs:annotation>
+							<xs:documentation>P187 - [rpm]</xs:documentation>
+						</xs:annotation>
+					</xs:element>
+				</xs:sequence>
+			</xs:extension>
+		</xs:complexContent>
 	</xs:complexType>
 	<xs:complexType name="VectoComponentEngineeringType">
 		<xs:choice>
