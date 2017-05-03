@@ -4,32 +4,29 @@
 		<Data id="ENG-gooZah3D">
 			<Manufacturer>MÄnüfactürer with Speßíâl Chars </Manufacturer>
 			<Model>€eneric 40t Long Haul Œ Truck €ngine</Model>
-
-
-
-
-
-		    
 			<TechnicalReportId>ENG-gooZah3D</TechnicalReportId>
 			<Date>2017-02-15T11:00:00Z</Date>
 			<AppVersion>VectoEngine x.y</AppVersion>
-			<Displacement       >12730</Displacement     ><IdlingSpeed    >560</IdlingSpeed     >
+			<Displacement>12730</Displacement>
+			<IdlingSpeed>560</IdlingSpeed>
 			<RatedSpeed>2200</RatedSpeed>
 			<RatedPower>380000</RatedPower>
 			<MaxEngineTorque>2300</MaxEngineTorque>
-			<WHTCUrban>           1.0097        </WHTCUrban>
+			<WHTCUrban>1.0097</WHTCUrban>
 			<WHTCRural>1.0035</WHTCRural>
 			<WHTCMotorway>1.0200</WHTCMotorway>
-						<BFColdHot>1.0000</BFColdHot>
+			<BFColdHot>1.0000</BFColdHot>
 			<CFRegPer>1.0000</CFRegPer>
 			<CFNCV>1.0000</CFNCV>
 			<FuelType>Diesel CI</FuelType>
 			<FuelConsumptionMap>
-				<Entry engineSpeed   =    "560.00"         torque="-149.00" fuelConsumption="0.00"/>
+				<Entry engineSpeed="560.00" torque="-149.00" fuelConsumption="0.00"/>
 				<Entry engineSpeed="560.00" torque="0.00" fuelConsumption="1256.00"/>
 				<Entry engineSpeed="560.00" torque="200.00" fuelConsumption="3197.00"/>
-				<Entry engineSpeed="560.00" torque="400.00" fuelConsumption="5295.00"/>				<Entry engineSpeed="560.00" torque="600.00" fuelConsumption="7615.00"/>
-				<Entry engineSpeed="560.00" torque="800.00" fuelConsumption="9375.00"/><Entry             engineSpeed="560.00"           torque="1000.00" fuelConsumption="11239.00"/>
+				<Entry engineSpeed="560.00" torque="400.00" fuelConsumption="5295.00"/>
+				<Entry engineSpeed="560.00" torque="600.00" fuelConsumption="7615.00"/>
+				<Entry engineSpeed="560.00" torque="800.00" fuelConsumption="9375.00"/>
+				<Entry engineSpeed="560.00" torque="1000.00" fuelConsumption="11239.00"/>
 				<Entry engineSpeed="560.00" torque="1180.00" fuelConsumption="12869.00"/>
 				<Entry engineSpeed="600.00" torque="-148.00" fuelConsumption="0.00"/>
 				<Entry engineSpeed="600.00" torque="0.00" fuelConsumption="1459.00"/>
