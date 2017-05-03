@@ -55,5 +55,19 @@ namespace TUGraz.VectoCommon.Models
 					throw new ArgumentOutOfRangeException("AngledriveType", type, null);
 			}
 		}
+
+		public static string ToXMLFormat(this AngledriveType type)
+		{
+			switch (type) {
+				case AngledriveType.None:
+					return "None";
+				case AngledriveType.SeparateAngledrive:
+					return "Separate Angledrive";
+				case AngledriveType.LossesIncludedInGearbox:
+					return "Losses included in Gearbox";
+				default:
+					throw new ArgumentOutOfRangeException("Angledrive Type", type, null);
+			}
+		}
 	}
 }

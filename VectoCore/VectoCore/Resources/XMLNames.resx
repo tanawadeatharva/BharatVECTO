@@ -433,10 +433,10 @@
 		<value>axleNumber</value>
 	</data>
 	<data name="AxleWheels_Axles_Axle_TwinTyres_Attr" xml:space="preserve">
-		<value>twinTyres</value>
+		<value>TwinTyres</value>
 	</data>
 	<data name="AxleWheels_Axles_Axle_AxleType_Attr" xml:space="preserve">
-		<value>axleType</value>
+		<value>AxleType</value>
 	</data>
 	<data name="Gearbox_Gear_GearNumber_Attr" xml:space="preserve">
 		<value>number</value>
@@ -683,5 +683,8 @@
   </data>
 	<data name="AxleWheels_Axles_Axle_RRCDeclared" xml:space="preserve">
     <value>RRCDeclared</value>
+  </data>
+	<data name="Component_AppVersion" xml:space="preserve">
+    <value>AppVersion</value>
   </data>
 </root>

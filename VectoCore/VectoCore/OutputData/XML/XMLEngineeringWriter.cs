@@ -409,7 +409,7 @@ namespace TUGraz.VectoCore.OutputData.XML
 				new XElement(tns + XMLNames.ComponentDataWrapper,
 					new XAttribute(XMLNames.Component_ID_Attr, string.Format("GBX-{0}", data.Model)),
 					GetDefaultComponentElements(string.Format("GBX-{0}", data.Model), data.Model),
-					new XElement(tns + XMLNames.Gearbox_TransmissionType, GearboxtypeToXML(data.Type)),
+					new XElement(tns + XMLNames.Gearbox_TransmissionType, data.Type.ToXMLFormat()),
 					new XElement(tns + XMLNames.Gearbox_Inertia, data.Inertia.Value()),
 					new XElement(tns + XMLNames.Gearbox_TractionInterruption, data.TractionInterruption.Value()), gears),
 				data.Type.AutomaticTransmission() ? CreateTorqueConverter(tcData) : null);

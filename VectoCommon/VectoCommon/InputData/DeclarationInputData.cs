@@ -278,7 +278,7 @@ namespace TUGraz.VectoCommon.InputData
 		double Efficiency { get; }
 	}
 
-	public interface ITorqueConverterDeclarationInputData
+	public interface ITorqueConverterDeclarationInputData : IComponentInputData
 	{
 		/// <summary>
 		/// P091

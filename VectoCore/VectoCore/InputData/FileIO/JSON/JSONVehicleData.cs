@@ -310,7 +310,7 @@ namespace TUGraz.VectoCore.InputData.FileIO.JSON
 
 		public string Model
 		{
-			get { return "N/A"; }
+			get { return "N.A."; }
 		}
 
 		public string Creator
@@ -325,12 +325,12 @@ namespace TUGraz.VectoCore.InputData.FileIO.JSON
 
 		public string TechnicalReportId
 		{
-			get { return "N/A"; }
+			get { return "N.A."; }
 		}
 
 		public string CertificationNumber
 		{
-			get { return "N/A"; }
+			get { return "N.A."; }
 		}
 
 		public string DigestValue

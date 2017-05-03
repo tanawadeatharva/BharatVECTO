@@ -98,5 +98,23 @@ namespace TUGraz.VectoCommon.Models
 			}
 			return 0.SI<Second>();
 		}
+
+		public static string ToXMLFormat(this GearboxType type)
+		{
+			switch (type) {
+				case GearboxType.MT:
+					return "SMT";
+				case GearboxType.AMT:
+					return "AMT";
+				case GearboxType.DrivingCycle:
+					return type.ToString();
+				case GearboxType.ATSerial:
+					return "APT-S";
+				case GearboxType.ATPowerSplit:
+					return "APT-P";
+				default:
+					throw new ArgumentOutOfRangeException("GearboxType", type, null);
+			}
+		}
 	}
 }
