@@ -155,7 +155,7 @@ namespace TUGraz.VectoCore.Tests.Models.SimulationComponentData
 		}
 
 		[TestMethod]
-		public void TestPreferredSpeedInvalid()
+		public void TestN95hSpeedInvalid()
 		{
 			var fldData = new[] {
 				"600,539.8228,-59.02274, 1.0",
