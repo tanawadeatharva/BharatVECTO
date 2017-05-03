@@ -132,7 +132,7 @@ namespace TUGraz.VectoCore.OutputData.XML
 			var id = string.Format("ENG-{0}", data.Model.RemoveWhitespace());
 			var fld = EngineFullLoadCurve.Create(data.FullLoadCurve, true);
 			return new XElement(tns + XMLNames.Component_Engine,
-				new XAttribute(XMLNames.Component_CertificationNumber, string.Format("ENG-{0}", data.Model)),
+				new XAttribute(XMLNames.Component_CertificationNumber_Attr, string.Format("ENG-{0}", data.Model)),
 				new XElement(tns + XMLNames.ComponentDataWrapper,
 					new XAttribute(XMLNames.Component_ID_Attr, id),
 					GetDefaultComponentElements(string.Format("ENG-{0}", data.Model), data.Model),
@@ -178,7 +178,7 @@ namespace TUGraz.VectoCore.OutputData.XML
 			}
 			var id = string.Format("GBX-{0}", gbxData.Model.RemoveWhitespace());
 			return new XElement(tns + XMLNames.Component_Gearbox,
-				new XAttribute(XMLNames.Component_CertificationNumber, string.Format("GBX-{0}", gbxData.Model)),
+				new XAttribute(XMLNames.Component_CertificationNumber_Attr, string.Format("GBX-{0}", gbxData.Model)),
 				new XElement(tns + XMLNames.ComponentDataWrapper,
 					new XAttribute(XMLNames.Component_ID_Attr, id),
 					GetDefaultComponentElements(string.Format("GBX-{0}", gbxData.Model), gbxData.Model),
@@ -199,7 +199,7 @@ namespace TUGraz.VectoCore.OutputData.XML
 			}
 			var id = string.Format("TC-{0}", data.Model.RemoveWhitespace());
 			return new XElement(tns + XMLNames.Component_TorqueConverter,
-				new XAttribute(XMLNames.Component_CertificationNumber, id),
+				new XAttribute(XMLNames.Component_CertificationNumber_Attr, id),
 				new XElement(tns + XMLNames.ComponentDataWrapper,
 					new XAttribute(XMLNames.Component_ID_Attr, id),
 					GetDefaultComponentElements(data.TechnicalReportId, data.Model),
@@ -218,7 +218,7 @@ namespace TUGraz.VectoCore.OutputData.XML
 		{
 			var id = string.Format("ANGL-{0}", data.Model.RemoveWhitespace());
 			return new XElement(tns + XMLNames.Component_Angledrive,
-				new XAttribute(XMLNames.Component_CertificationNumber, "ANGL-" + data.Model),
+				new XAttribute(XMLNames.Component_CertificationNumber_Attr, "ANGL-" + data.Model),
 				new XElement(tns + XMLNames.ComponentDataWrapper,
 					new XAttribute(XMLNames.Component_ID_Attr, id),
 					GetDefaultComponentElements(data.TechnicalReportId, data.Model),
@@ -233,7 +233,7 @@ namespace TUGraz.VectoCore.OutputData.XML
 		{
 			var id = string.Format("RET-{0}", data.Model.RemoveWhitespace());
 			return new XElement(tns + XMLNames.Component_Retarder,
-				new XAttribute(XMLNames.Component_CertificationNumber, "RET-none"),
+				new XAttribute(XMLNames.Component_CertificationNumber_Attr, "RET-none"),
 				new XElement(tns + XMLNames.ComponentDataWrapper,
 					new XAttribute(XMLNames.Component_ID_Attr, id),
 					GetDefaultComponentElements(data.TechnicalReportId, data.Model),
@@ -250,7 +250,7 @@ namespace TUGraz.VectoCore.OutputData.XML
 		{
 			var typeId = string.Format("AXLGEAR-{0:0.000}", data.Ratio);
 			return new XElement(tns + XMLNames.Component_Axlegear,
-				new XAttribute(XMLNames.Component_CertificationNumber, string.Format("AXL-{0}", data.Model)),
+				new XAttribute(XMLNames.Component_CertificationNumber_Attr, string.Format("AXL-{0}", data.Model)),
 				new XElement(tns + XMLNames.ComponentDataWrapper,
 					new XAttribute(XMLNames.Component_ID_Attr, typeId),
 					GetDefaultComponentElements(typeId, "N.A."),
@@ -292,7 +292,7 @@ namespace TUGraz.VectoCore.OutputData.XML
 		{
 			var id = string.Format("TYRE-{0}", axle.Wheels).RemoveWhitespace().Replace("/", "_");
 			return new XElement(tns + "Tyre",
-				new XAttribute(XMLNames.Component_CertificationNumber, id),
+				new XAttribute(XMLNames.Component_CertificationNumber_Attr, id),
 				new XElement(tns + XMLNames.ComponentDataWrapper,
 					new XAttribute(XMLNames.Component_ID_Attr, id),
 					GetDefaultComponentElements(string.Format("TYRE-{0}", axle.Wheels), axle.Wheels),
@@ -327,7 +327,7 @@ namespace TUGraz.VectoCore.OutputData.XML
 		{
 			var id = string.Format("Airdrag-{0}", data.Model);
 			return new XElement(tns + XMLNames.Component_AirDrag,
-				new XAttribute(XMLNames.Component_CertificationNumber, string.Format("AD-{0}", data.Model)),
+				new XAttribute(XMLNames.Component_CertificationNumber_Attr, string.Format("AD-{0}", data.Model)),
 				new XElement(tns + XMLNames.ComponentDataWrapper,
 					new XAttribute(XMLNames.Component_ID_Attr, id),
 					GetDefaultComponentElements(data.Model, "N.A."),
