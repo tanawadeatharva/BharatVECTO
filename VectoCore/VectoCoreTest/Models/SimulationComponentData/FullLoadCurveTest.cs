@@ -154,6 +154,32 @@ namespace TUGraz.VectoCore.Tests.Models.SimulationComponentData
 			//AssertHelper.AreRelativeEqual(130.691151551712.SI<PerSecond>(), fldCurve.PreferredSpeed);
 		}
 
+		[TestMethod]
+		public void TestPreferredSpeedInvalid()
+		{
+			var fldData = new[] {
+				"600,539.8228,-59.02274, 1.0",
+				"821,673.5694587,-62.77795, 1.0",
+				"1041,1102.461949,-68.37734, 1.0",
+				"1262,1112.899122,-76.0485, 1.0",
+				"1482,1098.632364,-85.00573, 1.0",
+				"1606,1093.403667,-90.9053, 1.0",
+				"1800,1058.081866,-100.937, 1.0",
+				"1995,992.0155535,-112.1166, 1.0",
+				"2189,926.7779212,-124.9432, 1.0",
+				"4000,811.7189964,-138.7132, 1.0",
+			};
+			var fldEntries = InputDataHelper.InputDataAsStream("n [U/min],Mfull [Nm],Mdrag [Nm],<PT1> [s] ", fldData);
+			var fldCurve = EngineFullLoadCurve.Create(VectoCSVFile.ReadStream(fldEntries));
+			fldCurve.EngineData = new CombustionEngineData { IdleSpeed = 560.RPMtoRad() };
+
+			AssertHelper.Exception<VectoException>(() => { var tmp = fldCurve.N95hSpeed; });
+			//var totalArea = fldCurve.ComputeArea(fldCurve.EngineData.IdleSpeed, );
+			//Assert.AreEqual((0.51 * totalArea).Value(),
+			//	fldCurve.ComputeArea(fldCurve.EngineData.IdleSpeed, fldCurve.PreferredSpeed).Value(), 1E-3);
+			//AssertHelper.AreRelativeEqual(130.691151551712.SI<PerSecond>(), fldCurve.PreferredSpeed);
+		}
+
 		/// <summary>
 		///     [VECTO-78]
 		/// </summary>
