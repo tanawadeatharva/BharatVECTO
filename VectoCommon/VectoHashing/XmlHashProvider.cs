@@ -4,7 +4,7 @@ using System.Security.Cryptography;
 using System.Security.Cryptography.Xml;
 using System.Xml;
 
-namespace VectoDB
+namespace TUGraz.VectoHashing
 {
 	public class XmlHashProvider
 	{
@@ -17,10 +17,10 @@ namespace VectoDB
 
 		public string ComputeHash(string xpath)
 		{
-			var xml = new XmlDocument() { PreserveWhitespace = true };
+			var xml = new XmlDocument();
 			var manager = new XmlNamespaceManager(xml.NameTable);
-			manager.AddNamespace("ved", "urn:tugraz:ivt:VectoAPI:EngineeringDefinitions:v0.6");
-			manager.AddNamespace("tns", "urn:tugraz:ivt:VectoAPI:EngineeringInput:v0.6");
+			manager.AddNamespace("ved", "urn:tugraz:ivt:VectoAPI:EngineeringDefinitions:v0.8");
+			manager.AddNamespace("tns", "urn:tugraz:ivt:VectoAPI:EngineeringInput:v0.8");
 
 			using (var fs = new FileStream(File, FileMode.Open)) {
 				using (var sr = new StreamReader(fs)) {
