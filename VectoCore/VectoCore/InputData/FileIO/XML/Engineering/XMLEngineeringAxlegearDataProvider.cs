@@ -18,8 +18,7 @@ namespace TUGraz.VectoCore.InputData.FileIO.XML.Engineering
 
 		public TableData LossMap
 		{
-			get
-			{
+			get {
 				if (ElementExists(Helper.Query(XMLNames.Axlegear_TorqueLossMap, XMLNames.Axlegear_TorqueLossMap_Entry))) {
 					return ReadTableData(AttributeMappings.TransmissionLossmapMapping,
 						Helper.Query(XMLNames.Axlegear_TorqueLossMap, XMLNames.Axlegear_TorqueLossMap_Entry));
@@ -30,7 +29,7 @@ namespace TUGraz.VectoCore.InputData.FileIO.XML.Engineering
 
 		public double Efficiency
 		{
-			get { return GetDoubleElementValue(XMLNames.Axlegear_Efficiency); }
+			get { return GetDoubleElementValue(Helper.Query(XMLNames.Axlegear_TorqueLossMap, XMLNames.Axlegear_Efficiency)); }
 		}
 	}
 }

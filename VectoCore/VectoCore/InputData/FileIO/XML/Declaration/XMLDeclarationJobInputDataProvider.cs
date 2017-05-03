@@ -6,7 +6,7 @@ namespace TUGraz.VectoCore.InputData.FileIO.XML.Declaration
 	// ReSharper disable once InconsistentNaming
 	public class XMLDeclarationJobInputDataProvider : AbstractDeclarationXMLComponentDataProvider, IDeclarationJobInputData
 	{
-		public XMLDeclarationJobInputDataProvider(XMLInputDataProvider xmlInputDataProvider) : base(xmlInputDataProvider)
+		public XMLDeclarationJobInputDataProvider(XMLDeclarationInputDataProvider xmlInputDataProvider) : base(xmlInputDataProvider)
 		{
 			XBasePath = VehiclePath;
 		}

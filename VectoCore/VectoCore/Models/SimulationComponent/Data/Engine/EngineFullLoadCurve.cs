@@ -32,6 +32,7 @@
 using System.Collections.Generic;
 using System.Data;
 using System.Linq;
+using TUGraz.VectoCommon.Exceptions;
 using TUGraz.VectoCommon.Utils;
 using TUGraz.VectoCore.InputData.Reader;
 using TUGraz.VectoCore.Models.Declaration;
@@ -94,12 +95,32 @@ namespace TUGraz.VectoCore.Models.SimulationComponent.Data.Engine
 
 		public PerSecond N80hSpeed
 		{
-			get { return _n80hSpeed ?? (_n80hSpeed = FindEngineSpeedForPower(0.8 * MaxPower).Last()); }
+			get {
+				if (_n80hSpeed != null) {
+					return _n80hSpeed;
+				}
+				_n80hSpeed = FindEngineSpeedForPower(0.8 * MaxPower).Last();
+				if (_n80hSpeed <= RatedSpeed) {
+					throw new VectoException("failed to compute N80h speed. Preferred speed: {0}, n80h speed: {1}", PreferredSpeed,
+						_n80hSpeed);
+				}
+				return _n80hSpeed;
+			}
 		}
 
 		public PerSecond N95hSpeed
 		{
-			get { return _n95hSpeed ?? (_n95hSpeed = FindEngineSpeedForPower(0.95 * MaxPower).Last()); }
+			get {
+				if (_n95hSpeed != null) {
+					return _n95hSpeed;
+				}
+				_n95hSpeed = FindEngineSpeedForPower(0.95 * MaxPower).Last();
+				if (_n95hSpeed <= RatedSpeed) {
+					throw new VectoException("failed to compute N95h speed. Preferred speed: {0}, n95h speed: {1}", PreferredSpeed,
+						_n95hSpeed);
+				}
+				return _n95hSpeed;
+			}
 		}
 
 		public PerSecond LoSpeed
@@ -109,7 +130,17 @@ namespace TUGraz.VectoCore.Models.SimulationComponent.Data.Engine
 
 		public PerSecond HiSpeed
 		{
-			get { return _engineSpeedHi ?? (_engineSpeedHi = FindEngineSpeedForPower(0.7 * MaxPower).Last()); }
+			get {
+				if (_engineSpeedHi != null) {
+					return _engineSpeedHi;
+				}
+				_engineSpeedHi = FindEngineSpeedForPower(0.7 * MaxPower).Last();
+				if (_engineSpeedHi <= RatedSpeed) {
+					throw new VectoException("failed to compute n70h speed. Preferred speed: {0}, n70h speed: {1}", PreferredSpeed,
+						_engineSpeedHi);
+				}
+				return _engineSpeedHi;
+			}
 		}
 
 		public NewtonMeter MaxLoadTorque

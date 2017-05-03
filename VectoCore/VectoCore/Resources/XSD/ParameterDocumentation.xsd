@@ -8,14 +8,47 @@
 					<xs:complexType>
 						<xs:simpleContent>
 							<xs:extension base="xs:int">
-								<xs:attribute name="name">
+								<xs:attribute name="component" use="required">
 									<xs:simpleType>
-										<xs:restriction base="xs:string">
-											<xs:minLength value="1"/>
+										<xs:restriction base="xs:token">
+											<xs:enumeration value="Engine"/>
+											<xs:enumeration value="Engine/FLD"/>
+											<xs:enumeration value="Engine/FC-map"/>
+											<xs:enumeration value="Airdrag"/>
+											<xs:enumeration value="Angledrive"/>
+											<xs:enumeration value="Angledrive/Lossmap"/>
+											<xs:enumeration value="Auxiliaries"/>
+											<xs:enumeration value="Axlegear"/>
+											<xs:enumeration value="Axlegear/Lossmap"/>
+											<xs:enumeration value="Driver"/>
+											<xs:enumeration value="Engine"/>
+											<xs:enumeration value="ADAS"/>
+											<xs:enumeration value="Gearbox"/>
+											<xs:enumeration value="Gearbox/Gear"/>
+											<xs:enumeration value="Gearbox/Gear/Lossmap"/>
+											<xs:enumeration value="Gearbox/Gear/Shiftpolygon"/>
+											<xs:enumeration value="Job"/>
+											<xs:enumeration value="Retarder"/>
+											<xs:enumeration value="Retarder/Lossmap"/>
+											<xs:enumeration value="Torqueconverter"/>
+											<xs:enumeration value="Torqueconverter/Characteristics"/>
+											<xs:enumeration value="Tyre"/>
+											<xs:enumeration value="Vehicle"/>
+											<xs:enumeration value="Vehicle/Auxiliaries"/>
+											<xs:enumeration value="Vehicle/Axle"/>
+											<xs:enumeration value="Vehicle/TorqueLimits"/>
+											<xs:enumeration value="Gearshiftstrategy"/>
 										</xs:restriction>
 									</xs:simpleType>
 								</xs:attribute>
-								<xs:attribute name="usage"/>
+								<xs:attribute name="status">
+									<xs:simpleType>
+										<xs:restriction base="xs:string">
+											<xs:enumeration value="active"/>
+											<xs:enumeration value="deprecated"/>
+										</xs:restriction>
+									</xs:simpleType>
+								</xs:attribute>
 							</xs:extension>
 						</xs:simpleContent>
 					</xs:complexType>
@@ -53,15 +86,6 @@
 						</xs:restriction>
 					</xs:simpleType>
 				</xs:element>
-				<xs:element name="component" maxOccurs="unbounded">
-					<xs:complexType>
-						<xs:simpleContent>
-							<xs:extension base="xs:string">
-								<xs:attribute name="usage"/>
-							</xs:extension>
-						</xs:simpleContent>
-					</xs:complexType>
-				</xs:element>
 				<xs:element name="genericValueType" minOccurs="0">
 					<xs:simpleType>
 						<xs:restriction base="xs:string">
@@ -80,14 +104,6 @@
 					</xs:simpleType>
 				</xs:element>
 			</xs:sequence>
-			<xs:attribute name="status">
-				<xs:simpleType>
-					<xs:restriction base="xs:string">
-						<xs:enumeration value="active"/>
-						<xs:enumeration value="deprecated"/>
-					</xs:restriction>
-				</xs:simpleType>
-			</xs:attribute>
 		</xs:complexType>
 	</xs:element>
 </xs:schema>

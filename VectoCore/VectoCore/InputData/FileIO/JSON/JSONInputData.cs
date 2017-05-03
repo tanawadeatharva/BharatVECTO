@@ -135,6 +135,7 @@ namespace TUGraz.VectoCore.InputData.FileIO.JSON
 		protected IPTOTransmissionInputData PTOTransmission;
 
 		private readonly string _jobname;
+		private IAirdragEngineeringInputData AirdragData;
 
 		public JSONInputDataV2(JObject data, string filename, bool tolerateMissing = false)
 			: base(data, filename, tolerateMissing)
@@ -155,6 +156,7 @@ namespace TUGraz.VectoCore.InputData.FileIO.JSON
 			Angledrive = VehicleData as IAngledriveInputData;
 			Retarder = VehicleData as IRetarderInputData;
 			PTOTransmission = VehicleData as IPTOTransmissionInputData;
+			AirdragData = VehicleData as IAirdragEngineeringInputData;
 		}
 
 		private IVehicleEngineeringInputData ReadVehicle()
@@ -216,6 +218,16 @@ namespace TUGraz.VectoCore.InputData.FileIO.JSON
 		IVehicleDeclarationInputData IDeclarationInputDataProvider.VehicleInputData
 		{
 			get { return VehicleInputData; }
+		}
+
+		IAirdragDeclarationInputData IDeclarationInputDataProvider.AirdragInputData
+		{
+			get { return AirdragInputData; }
+		}
+
+		public IAirdragEngineeringInputData AirdragInputData
+		{
+			get { return AirdragData; }
 		}
 
 		IGearboxDeclarationInputData IDeclarationInputDataProvider.GearboxInputData

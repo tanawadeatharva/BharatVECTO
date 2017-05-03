@@ -1012,7 +1012,7 @@ lbFound:
 							Case XMLNames.VectoInputEngineering
 								input = New XMLEngineeringInputDataProvider(jobFile, True)
 							Case XMLNames.VectoInputDeclaration
-								input = New XMLInputDataProvider(XmlReader.Create(jobFile), True)
+								input = New XMLDeclarationInputDataProvider(XmlReader.Create(jobFile), True)
 						End Select
 				End Select
 
@@ -2002,7 +2002,7 @@ Lb1:
 						Case XMLNames.VectoInputEngineering
 							input = New XMLEngineeringInputDataProvider(f, True)
 						Case XMLNames.VectoInputDeclaration
-							input = New XMLInputDataProvider(XmlReader.Create(f), True)
+							input = New XMLDeclarationInputDataProvider(XmlReader.Create(f), True)
 					End Select
 			End Select
 

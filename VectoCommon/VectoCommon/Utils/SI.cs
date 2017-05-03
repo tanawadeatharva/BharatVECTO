@@ -2274,5 +2274,11 @@ namespace TUGraz.VectoCommon.Utils
 		{
 			return Val.ToGUIFormat();
 		}
+
+		public string ToXMLFormat(uint? decimals = null)
+		{
+			decimals = decimals ?? 2;
+			return Val.ToString("F" + decimals.Value);
+		}
 	}
 }

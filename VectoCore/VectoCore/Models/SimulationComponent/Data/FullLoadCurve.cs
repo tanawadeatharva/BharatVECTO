@@ -137,7 +137,7 @@ namespace TUGraz.VectoCore.Models.SimulationComponent.Data
 			}
 			var engineSpeedMaxPower = -d / (2 * k);
 			if (engineSpeedMaxPower.IsSmaller(p1.EngineSpeed) || engineSpeedMaxPower.IsGreater(p2.EngineSpeed)) {
-				if (k.IsGreater(0)) {
+				if (p2.TorqueFullLoad * p2.EngineSpeed > p1.TorqueFullLoad * p1.EngineSpeed) {
 					return Tuple.Create(p2.EngineSpeed, p2.TorqueFullLoad * p2.EngineSpeed);
 				}
 				return Tuple.Create(p1.EngineSpeed, p1.TorqueFullLoad * p1.EngineSpeed);

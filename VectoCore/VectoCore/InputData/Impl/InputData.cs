@@ -109,15 +109,17 @@ namespace TUGraz.VectoCore.InputData.Impl
 
 		public string Source { get; internal set; }
 
-		public string Vendor { get; internal set; }
+		public string Manufacturer { get; internal set; }
 
-		public string ModelName { get; internal set; }
+		public string Model { get; internal set; }
 
 		public string Creator { get; internal set; }
 
 		public string Date { get; internal set; }
 
-		public string TypeId { get; internal set; }
+		public string TechnicalReportId { get; internal set; }
+
+		public string CertificationNumber { get; internal set; }
 
 		public string DigestValue { get; internal set; }
 
@@ -126,6 +128,8 @@ namespace TUGraz.VectoCore.InputData.Impl
 		public string Wheels { get; internal set; }
 
 		public bool TwinTyres { get; internal set; }
+
+		public bool Steered { get; internal set; }
 
 		public AxleType AxleType { get; internal set; }
 

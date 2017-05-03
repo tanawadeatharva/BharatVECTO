@@ -43,14 +43,14 @@ namespace TUGraz.VectoCore.InputData.FileIO.XML.Engineering
 			get { return false; }
 		}
 
-		public override string Vendor
+		public override string Manufacturer
 		{
-			get { return GetElementValue(XMLNames.Component_Vendor); }
+			get { return GetElementValue(XMLNames.Component_Manufacturer); }
 		}
 
-		public override string ModelName
+		public override string Model
 		{
-			get { return GetElementValue(XMLNames.Component_MakeAndModel); }
+			get { return GetElementValue(XMLNames.Component_Model); }
 		}
 
 		public override string Creator
@@ -63,9 +63,9 @@ namespace TUGraz.VectoCore.InputData.FileIO.XML.Engineering
 			get { return GetElementValue(XMLNames.Component_Date); }
 		}
 
-		public override string TypeId
+		public override string TechnicalReportId
 		{
-			get { return GetElementValue(XMLNames.Component_TypeId); }
+			get { return "N.A."; }
 		}
 
 		public override string DigestValue
@@ -96,8 +96,7 @@ namespace TUGraz.VectoCore.InputData.FileIO.XML.Engineering
 
 		protected string ExtCsvResourceTag
 		{
-			get
-			{
+			get {
 				return Helper.Query(Helper.QueryConstraint(XMLNames.ExternalResource, XMLNames.ExtResource_Type_Attr,
 					XMLNames.ExtResource_Type_Value_CSV));
 			}

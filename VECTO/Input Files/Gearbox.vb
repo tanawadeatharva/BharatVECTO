@@ -283,7 +283,7 @@ Public Class Gearbox
 		End Get
 	End Property
 
-	Public ReadOnly Property Vendor As String Implements IComponentInputData.Vendor
+	Public ReadOnly Property Manufacturer As String Implements IComponentInputData.Manufacturer
 		Get
 			Return "N.A."  ' Todo MQ 20160915
 		End Get
@@ -301,9 +301,15 @@ Public Class Gearbox
 		End Get
 	End Property
 
-	Public ReadOnly Property TypeId As String Implements IComponentInputData.TypeId
+	Public ReadOnly Property TechnicalReportId As String Implements IComponentInputData.TechnicalReportId
 		Get
 			Return "N.A." ' todo MQ 20160915
+		End Get
+	End Property
+
+	Public ReadOnly Property CertificationNumber As String Implements IComponentInputData.CertificationNumber
+		Get
+			Return "N.A."
 		End Get
 	End Property
 
@@ -319,7 +325,7 @@ Public Class Gearbox
 		End Get
 	End Property
 
-	Public ReadOnly Property IComponentInputData_ModelName As String Implements IComponentInputData.ModelName
+	Public ReadOnly Property Model As String Implements IComponentInputData.Model
 		Get
 			Return ModelName
 		End Get
@@ -456,7 +462,6 @@ Public Class Gearbox
 			Return PSShiftTime.SI(Of Second)()
 		End Get
 	End Property
-
 
 
 	Public ReadOnly Property IGearboxEngineeringInputData_UpshiftMinAcceleration As MeterPerSquareSecond _

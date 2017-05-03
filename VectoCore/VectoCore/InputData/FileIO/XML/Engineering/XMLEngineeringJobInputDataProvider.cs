@@ -38,8 +38,7 @@ namespace TUGraz.VectoCore.InputData.FileIO.XML.Engineering
 
 		public IList<ICycleData> Cycles
 		{
-			get
-			{
+			get {
 				var retVal = new List<ICycleData>();
 				var cycles = Navigator.Select(Helper.Query(XBasePath, XMLNames.VectoJob_MissionCycles,
 					Helper.QueryConstraint(XMLNames.Missions_Cycle, XMLNames.ExtResource_Type_Attr,
@@ -72,8 +71,7 @@ namespace TUGraz.VectoCore.InputData.FileIO.XML.Engineering
 
 		public bool EngineOnlyMode
 		{
-			get
-			{
+			get {
 				return ElementExists(XMLNames.VectoJob_EngineOnlyMode) &&
 						XmlConvert.ToBoolean(GetElementValue(XMLNames.VectoJob_EngineOnlyMode));
 			}
@@ -81,8 +79,7 @@ namespace TUGraz.VectoCore.InputData.FileIO.XML.Engineering
 
 		protected internal Second DownshiftAfterUpshiftDelay
 		{
-			get
-			{
+			get {
 				return
 					ElementExists(Helper.Query(XMLNames.Component_DriverModel, XMLNames.DriverModel_ShiftStrategyParameters,
 						"DownshiftAfterUpshiftDelay"))
@@ -94,8 +91,7 @@ namespace TUGraz.VectoCore.InputData.FileIO.XML.Engineering
 
 		protected internal Second UpshiftAfterDownshiftDelay
 		{
-			get
-			{
+			get {
 				return
 					ElementExists(Helper.Query(XMLNames.Component_DriverModel, XMLNames.DriverModel_ShiftStrategyParameters,
 						"UpshiftAfterDownshiftDelay"))
@@ -107,8 +103,7 @@ namespace TUGraz.VectoCore.InputData.FileIO.XML.Engineering
 
 		protected internal MeterPerSquareSecond UpshiftMinAcceleration
 		{
-			get
-			{
+			get {
 				return
 					ElementExists(Helper.Query(XMLNames.Component_DriverModel, XMLNames.DriverModel_ShiftStrategyParameters,
 						"UpshiftMinAcceleration"))
@@ -122,18 +117,16 @@ namespace TUGraz.VectoCore.InputData.FileIO.XML.Engineering
 
 		public string JobName
 		{
-			get
-			{
+			get {
 				return InputData.JobInputData().EngineOnlyMode
-					? InputData.EngineInputData.TypeId
+					? InputData.EngineInputData.Model
 					: InputData._vehicleInputData.GetVehicleID;
 			}
 		}
 
 		public double TorqueReserve
 		{
-			get
-			{
+			get {
 				return
 					ElementExists(Helper.Query(XMLNames.Component_DriverModel, XMLNames.DriverModel_ShiftStrategyParameters,
 						XMLNames.DriverModel_ShiftStrategyParameters_TorqueReserve))
@@ -145,8 +138,7 @@ namespace TUGraz.VectoCore.InputData.FileIO.XML.Engineering
 
 		public Second MinTimeBetweenGearshift
 		{
-			get
-			{
+			get {
 				return
 					ElementExists(Helper.Query(XMLNames.Component_DriverModel, XMLNames.DriverModel_ShiftStrategyParameters,
 						XMLNames.DriverModel_ShiftStrategyParameters_TimeBetweenGearshift))
@@ -158,8 +150,7 @@ namespace TUGraz.VectoCore.InputData.FileIO.XML.Engineering
 
 		public MeterPerSecond StartSpeed
 		{
-			get
-			{
+			get {
 				return
 					ElementExists(Helper.Query(XMLNames.Component_DriverModel, XMLNames.DriverModel_ShiftStrategyParameters,
 						XMLNames.DriverModel_ShiftStrategyParameters_StartSpeed))
@@ -171,8 +162,7 @@ namespace TUGraz.VectoCore.InputData.FileIO.XML.Engineering
 
 		public MeterPerSquareSecond StartAcceleration
 		{
-			get
-			{
+			get {
 				return
 					ElementExists(Helper.Query(XMLNames.Component_DriverModel, XMLNames.DriverModel_ShiftStrategyParameters,
 						XMLNames.DriverModel_ShiftStrategyParameters_StartAcceleration))
@@ -184,8 +174,7 @@ namespace TUGraz.VectoCore.InputData.FileIO.XML.Engineering
 
 		public double StartTorqueReserve
 		{
-			get
-			{
+			get {
 				return
 					ElementExists(Helper.Query(XMLNames.Component_DriverModel, XMLNames.DriverModel_ShiftStrategyParameters,
 						XMLNames.DriverModel_ShiftStrategyParameters_StartTorqueReserve))
@@ -198,8 +187,7 @@ namespace TUGraz.VectoCore.InputData.FileIO.XML.Engineering
 
 		public Second PowershiftShiftTime
 		{
-			get
-			{
+			get {
 				return
 					ElementExists(Helper.Query(XMLNames.Component_DriverModel, XMLNames.DriverModel_ShiftStrategyParameters,
 						"PowershiftShiftTime"))
@@ -211,8 +199,7 @@ namespace TUGraz.VectoCore.InputData.FileIO.XML.Engineering
 
 		public MeterPerSquareSecond CCUpshiftMinAcceleration
 		{
-			get
-			{
+			get {
 				return
 					ElementExists(Helper.Query(XMLNames.Component_DriverModel, XMLNames.DriverModel_ShiftStrategyParameters,
 						"CCUpshiftMinAcceleration"))
@@ -224,8 +211,7 @@ namespace TUGraz.VectoCore.InputData.FileIO.XML.Engineering
 
 		public MeterPerSquareSecond CLUpshiftMinAcceleration
 		{
-			get
-			{
+			get {
 				return
 					ElementExists(Helper.Query(XMLNames.Component_DriverModel, XMLNames.DriverModel_ShiftStrategyParameters,
 						"CLUpshiftMinAcceleration"))

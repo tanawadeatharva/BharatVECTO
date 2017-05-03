@@ -39,7 +39,7 @@ Public Class JSONFileWriter
 
 		body.Add("SavedInDeclMode", Cfg.DeclMode)
 
-		body.Add("ModelName", eng.ModelName)
+		body.Add("ModelName", eng.Model)
 
 		body.Add("Displacement", eng.Displacement.ConvertTo().Cubic.Centi.Meter.Value().ToString())
 		body.Add("IdlingSpeed", eng.IdleSpeed.AsRPM)
@@ -79,7 +79,7 @@ Public Class JSONFileWriter
 		Dim body As Dictionary(Of String, Object) = New Dictionary(Of String, Object)
 
 		body.Add(JsonKeys.SavedInDeclMode, Cfg.DeclMode)
-		body.Add(JsonKeys.Gearbox_ModelName, gbx.ModelName)
+		body.Add(JsonKeys.Gearbox_ModelName, gbx.Model)
 		body.Add(JsonKeys.Gearbox_Inertia, gbx.Inertia.Value())
 		body.Add(JsonKeys.Gearbox_TractionInterruption, gbx.TractionInterruption.Value())
 
@@ -142,7 +142,8 @@ Public Class JSONFileWriter
 		WriteFile(header, body, filename)
 	End Sub
 
-	Public Sub SaveVehicle(vehicle As IVehicleEngineeringInputData, retarder As IRetarderInputData,
+	Public Sub SaveVehicle(vehicle As IVehicleEngineeringInputData, airdrag As IAirdragEngineeringInputData,
+							retarder As IRetarderInputData,
 							pto As IPTOTransmissionInputData, angledrive As IAngledriveInputData, filename As String) _
 		Implements IOutputFileWriter.SaveVehicle
 		Dim basePath As String = Path.GetDirectoryName(filename)
@@ -189,17 +190,17 @@ Public Class JSONFileWriter
 		Dim body As Dictionary(Of String, Object) = New Dictionary(Of String, Object) From {
 				{"SavedInDeclMode", Cfg.DeclMode},
 				{"VehCat", vehicle.VehicleCategory.ToString()},
-				{"CurbWeight", vehicle.CurbWeightChassis.Value()},
-				{"CurbWeightExtra", vehicle.CurbWeightExtra.Value()},
+				{"CurbWeight", vehicle.CurbMassChassis.Value()},
+				{"CurbWeightExtra", vehicle.CurbMassExtra.Value()},
 				{"Loading", vehicle.Loading.Value()},
 				{"MassMax", vehicle.GrossVehicleMassRating.ConvertTo().Ton.Value()},
-				{"CdA", vehicle.AirDragArea.Value()},
+				{"CdA", airdrag.AirDragArea.Value()},
 				{"rdyn", vehicle.DynamicTyreRadius.ConvertTo().Milli.Meter.Value()},
-				{"CdCorrMode", vehicle.CrossWindCorrectionMode.GetName()},
+				{"CdCorrMode", airdrag.CrossWindCorrectionMode.GetName()},
 				{"CdCorrFile",
-				If((vehicle.CrossWindCorrectionMode = CrossWindCorrectionMode.SpeedDependentCorrectionFactor OrElse
-					vehicle.CrossWindCorrectionMode = CrossWindCorrectionMode.VAirBetaLookupTable) AndAlso
-					Not vehicle.CrosswindCorrectionMap Is Nothing, GetRelativePath(vehicle.CrosswindCorrectionMap.Source, basePath),
+				If((airdrag.CrossWindCorrectionMode = CrossWindCorrectionMode.SpeedDependentCorrectionFactor OrElse
+					airdrag.CrossWindCorrectionMode = CrossWindCorrectionMode.VAirBetaLookupTable) AndAlso
+					Not airdrag.CrosswindCorrectionMap Is Nothing, GetRelativePath(airdrag.CrosswindCorrectionMap.Source, basePath),
 					"")
 				},
 				{"Retarder", retarderOut},

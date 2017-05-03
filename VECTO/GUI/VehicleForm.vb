@@ -325,6 +325,7 @@ Public Class VehicleForm
 		Dim inputData As IEngineeringInputDataProvider = TryCast(JSONInputDataFactory.ReadComponentData(file),
 																IEngineeringInputDataProvider)
 		Dim vehicle As IVehicleEngineeringInputData = inputData.VehicleInputData
+		Dim airdrag As IAirdragEngineeringInputData = inputData.AirdragInputData
 		Dim retarder As IRetarderInputData = inputData.RetarderInputData
 		Dim angledrive As IAngledriveInputData = inputData.AngledriveInputData
 		Dim pto As IPTOTransmissionInputData = inputData.PTOTransmissionInputData
@@ -346,14 +347,14 @@ Public Class VehicleForm
 		CbAxleConfig.SelectedValue = vehicle.AxleConfiguration
 		TbMassMass.Text = (vehicle.GrossVehicleMassRating.Value()/1000).ToGUIFormat()
 
-		TbMass.Text = vehicle.CurbWeightChassis.ToGUIFormat()
-		TbMassExtra.Text = vehicle.CurbWeightExtra.ToGUIFormat()
+		TbMass.Text = vehicle.CurbMassChassis.ToGUIFormat()
+		TbMassExtra.Text = vehicle.CurbMassExtra.ToGUIFormat()
 		TbLoad.Text = vehicle.Loading.ToGUIFormat()
 		TBrdyn.Text = (vehicle.DynamicTyreRadius.Value()*1000).ToGUIFormat()
 
-		CbCdMode.SelectedValue = vehicle.CrossWindCorrectionMode
+		CbCdMode.SelectedValue = airdrag.CrossWindCorrectionMode
 		TbCdFile.Text =
-			If(vehicle.CrosswindCorrectionMap Is Nothing, "", GetRelativePath(vehicle.CrosswindCorrectionMap.Source, basePath))
+			If(airdrag.CrosswindCorrectionMap Is Nothing, "", GetRelativePath(airdrag.CrosswindCorrectionMap.Source, basePath))
 
 		CbRtType.SelectedValue = retarder.Type
 		TbRtRatio.Text = retarder.Ratio.ToGUIFormat()
@@ -381,7 +382,7 @@ Public Class VehicleForm
 
 		'TbMassExtra.Text = veh.MassExtra.ToGUIFormat()
 
-		TBcdA.Text = vehicle.AirDragArea.ToGUIFormat()
+		TBcdA.Text = airdrag.AirDragArea.ToGUIFormat()
 
 		cbPTOType.SelectedValue = pto.PTOTransmissionType
 		tbPTOLossMap.Text = If(pto.PTOLossMap Is Nothing, "", GetRelativePath(pto.PTOLossMap.Source, basePath))
